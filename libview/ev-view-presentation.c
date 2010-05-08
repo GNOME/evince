@@ -116,12 +116,14 @@ static void
 ev_view_presentation_set_normal (EvViewPresentation *pview)
 {
 	GtkWidget *widget = GTK_WIDGET (pview);
+	GtkStyle  *style;
 
 	if (pview->state == EV_PRESENTATION_NORMAL)
 		return;
 
 	pview->state = EV_PRESENTATION_NORMAL;
-	gdk_window_set_background (widget->window, &widget->style->black);
+	style = gtk_widget_get_style (widget);
+	gdk_window_set_background (gtk_widget_get_window (widget), &style->black);
 	gtk_widget_queue_draw (widget);
 }
 
@@ -129,12 +131,14 @@ static void
 ev_view_presentation_set_black (EvViewPresentation *pview)
 {
 	GtkWidget *widget = GTK_WIDGET (pview);
+	GtkStyle  *style;
 
 	if (pview->state == EV_PRESENTATION_BLACK)
 		return;
 
 	pview->state = EV_PRESENTATION_BLACK;
-	gdk_window_set_background (widget->window, &widget->style->black);
+	style = gtk_widget_get_style (widget);
+	gdk_window_set_background (gtk_widget_get_window (widget), &style->black);
 	gtk_widget_queue_draw (widget);
 }
 
@@ -142,12 +146,14 @@ static void
 ev_view_presentation_set_white (EvViewPresentation *pview)
 {
 	GtkWidget *widget = GTK_WIDGET (pview);
+	GtkStyle  *style;
 
 	if (pview->state == EV_PRESENTATION_WHITE)
 		return;
 
 	pview->state = EV_PRESENTATION_WHITE;
-	gdk_window_set_background (widget->window, &widget->style->white);
+	style = gtk_widget_get_style (widget);
+	gdk_window_set_background (gtk_widget_get_window (widget), &style->white);
 	gtk_widget_queue_draw (widget);
 }
 
@@ -188,10 +194,11 @@ static void
 ev_view_presentation_get_page_area (EvViewPresentation *pview,
 				    GdkRectangle       *area)
 {
-	GtkWidget *widget = GTK_WIDGET (pview);
-	gdouble    doc_width, doc_height;
-	gint       view_width, view_height;
-	gdouble    scale;
+	GtkWidget    *widget = GTK_WIDGET (pview);
+	GtkAllocation allocation;
+	gdouble       doc_width, doc_height;
+	gint          view_width, view_height;
+	gdouble       scale;
 
 	ev_document_get_page_size (pview->document,
 				   pview->current_page,
@@ -206,8 +213,10 @@ ev_view_presentation_get_page_area (EvViewPresentation *pview,
 		view_height = (gint)((doc_height * scale) + 0.5);
 	}
 
-	area->x = (MAX (0, widget->allocation.width - view_width)) / 2;
-	area->y = (MAX (0, widget->allocation.height - view_height)) / 2;
+	gtk_widget_get_allocation (widget, &allocation);
+
+	area->x = (MAX (0, allocation.width - view_width)) / 2;
+	area->y = (MAX (0, allocation.height - view_height)) / 2;
 	area->width = view_width;
 	area->height = view_height;
 }
@@ -535,22 +544,14 @@ send_focus_change (GtkWidget *widget,
 {
 	GdkEvent *fevent = gdk_event_new (GDK_FOCUS_CHANGE);
 
-	g_object_ref (widget);
-
-	if (in)
-		GTK_WIDGET_SET_FLAGS (widget, GTK_HAS_FOCUS);
-	else
-		GTK_WIDGET_UNSET_FLAGS (widget, GTK_HAS_FOCUS);
-
 	fevent->focus_change.type = GDK_FOCUS_CHANGE;
-	fevent->focus_change.window = g_object_ref (widget->window);
+	fevent->focus_change.window = gtk_widget_get_window (widget);
 	fevent->focus_change.in = in;
+	if (fevent->focus_change.window)
+		g_object_ref (fevent->focus_change.window);
 
-	gtk_widget_event (widget, fevent);
+	gtk_widget_send_focus_change (widget, fevent);
 
-	g_object_notify (G_OBJECT (widget), "has-focus");
-
-	g_object_unref (widget);
 	gdk_event_free (fevent);
 }
 
@@ -711,7 +712,9 @@ ev_view_presentation_goto_window_send_key_event (EvViewPresentation *pview,
 
 	new_event = (GdkEventKey *) gdk_event_copy (event);
 	g_object_unref (new_event->window);
-	new_event->window = g_object_ref (pview->goto_window->window);
+	new_event->window = gtk_widget_get_window (pview->goto_window);
+	if (new_event->window)
+		g_object_ref (new_event->window);
 	gtk_widget_realize (pview->goto_window);
 
 	gtk_widget_event (pview->goto_window, (GdkEvent *)new_event);
@@ -842,7 +845,7 @@ ev_view_presentation_set_cursor (EvViewPresentation *pview,
 	pview->cursor = view_cursor;
 
 	cursor = ev_view_cursor_new (gtk_widget_get_display (widget), view_cursor);
-	gdk_window_set_cursor (widget->window, cursor);
+	gdk_window_set_cursor (gtk_widget_get_window (widget), cursor);
 	gdk_flush ();
 	if (cursor)
 		gdk_cursor_unref (cursor);
@@ -956,21 +959,13 @@ ev_view_presentation_size_request (GtkWidget      *widget,
 }
 
 static void
-ev_view_presentation_size_allocate (GtkWidget     *widget,
-				    GtkAllocation *allocation)
-{
-	GTK_WIDGET_CLASS (ev_view_presentation_parent_class)->size_allocate (widget, allocation);
-
-	widget->allocation = *allocation;
-}
-
-static void
 ev_view_presentation_draw_end_page (EvViewPresentation *pview)
 {
 	GtkWidget *widget = GTK_WIDGET (pview);
 	PangoLayout *layout;
 	PangoFontDescription *font_desc;
 	gchar *markup;
+	GtkAllocation allocation;
 	GdkRectangle area = {0};
 	const gchar *text = _("End of presentation. Click to exit.");
 
@@ -986,11 +981,12 @@ ev_view_presentation_draw_end_page (EvViewPresentation *pview)
 	pango_font_description_set_size (font_desc, 16 * PANGO_SCALE);
 	pango_layout_set_font_description (layout, font_desc);
 
-	area.width = widget->allocation.width;
-	area.height = widget->allocation.height;
+	gtk_widget_get_allocation (widget, &allocation);
+	area.width = allocation.width;
+	area.height = allocation.height;
 
-	gtk_paint_layout (widget->style,
-			  widget->window,
+	gtk_paint_layout (gtk_widget_get_style (widget),
+			  gtk_widget_get_window (widget),
 			  gtk_widget_get_state (widget),
 			  FALSE,
 			  &area,
@@ -1029,7 +1025,7 @@ ev_view_presentation_expose_event (GtkWidget      *widget,
 		if (ev_transition_animation_ready (pview->animation)) {
 			ev_view_presentation_get_page_area (pview, &page_area);
 
-			cr = gdk_cairo_create (widget->window);
+			cr = gdk_cairo_create (gtk_widget_get_window (widget));
 
 			/* normalize to x=0, y=0 */
 			cairo_translate (cr, page_area.x, page_area.y);
@@ -1056,7 +1052,7 @@ ev_view_presentation_expose_event (GtkWidget      *widget,
 
 	ev_view_presentation_get_page_area (pview, &page_area);
 	if (gdk_rectangle_intersect (&page_area, &(event->area), &overlap)) {
-		cr = gdk_cairo_create (widget->window);
+		cr = gdk_cairo_create (gtk_widget_get_window (widget));
 
 		/* Try to fix rounding errors. See bug #438760 */
 		if (overlap.width == page_area.width)
@@ -1204,7 +1200,7 @@ init_presentation (GtkWidget *widget)
 	GdkRectangle        monitor;
 	gint                monitor_num;
 
-	monitor_num = gdk_screen_get_monitor_at_window (screen, widget->window);
+	monitor_num = gdk_screen_get_monitor_at_window (screen, gtk_widget_get_window (widget));
 	gdk_screen_get_monitor_geometry (screen, monitor_num, &monitor);
 	pview->monitor_width = monitor.width;
 	pview->monitor_height = monitor.height;
@@ -1218,19 +1214,23 @@ init_presentation (GtkWidget *widget)
 static void
 ev_view_presentation_realize (GtkWidget *widget)
 {
+	GdkWindow    *window;
+	GtkStyle     *style;
 	GdkWindowAttr attributes;
+	GtkAllocation allocation;
 
-	GTK_WIDGET_SET_FLAGS (widget, GTK_REALIZED);
+	gtk_widget_set_realized (widget, TRUE);
 
 	attributes.window_type = GDK_WINDOW_CHILD;
 	attributes.wclass = GDK_INPUT_OUTPUT;
 	attributes.visual = gtk_widget_get_visual (widget);
 	attributes.colormap = gtk_widget_get_colormap (widget);
 
-	attributes.x = widget->allocation.x;
-	attributes.y = widget->allocation.y;
-	attributes.width = widget->allocation.width;
-	attributes.height = widget->allocation.height;
+	gtk_widget_get_allocation (widget, &allocation);
+	attributes.x = allocation.x;
+	attributes.y = allocation.y;
+	attributes.width = allocation.width;
+	attributes.height = allocation.height;
 	attributes.event_mask = GDK_EXPOSURE_MASK |
 		GDK_BUTTON_PRESS_MASK |
 		GDK_BUTTON_RELEASE_MASK |
@@ -1241,15 +1241,18 @@ ev_view_presentation_realize (GtkWidget *widget)
 		GDK_ENTER_NOTIFY_MASK |
 		GDK_LEAVE_NOTIFY_MASK;
 
-	widget->window = gdk_window_new (gtk_widget_get_parent_window (widget),
-					 &attributes,
-					 GDK_WA_X | GDK_WA_Y |
-					 GDK_WA_COLORMAP |
-					 GDK_WA_VISUAL);
-	gdk_window_set_user_data (widget->window, widget);
-	widget->style = gtk_style_attach (widget->style, widget->window);
+	window = gdk_window_new (gtk_widget_get_parent_window (widget),
+				 &attributes,
+				 GDK_WA_X | GDK_WA_Y |
+				 GDK_WA_COLORMAP |
+				 GDK_WA_VISUAL);
 
-	gdk_window_set_background (widget->window, &widget->style->black);
+	gdk_window_set_user_data (window, widget);
+	gtk_widget_set_window (widget, window);
+
+	gtk_widget_style_attach (widget);
+	style = gtk_widget_get_style (widget);
+	gdk_window_set_background (window, &style->black);
 
 	g_idle_add ((GSourceFunc)init_presentation, widget);
 }
@@ -1370,7 +1373,6 @@ ev_view_presentation_class_init (EvViewPresentationClass *klass)
 
 	klass->change_page = ev_view_presentation_change_page;
 
-	widget_class->size_allocate = ev_view_presentation_size_allocate;
 	widget_class->size_request = ev_view_presentation_size_request;
 	widget_class->realize = ev_view_presentation_realize;
 	widget_class->expose_event = ev_view_presentation_expose_event;
@@ -1471,7 +1473,7 @@ ev_view_presentation_class_init (EvViewPresentationClass *klass)
 static void
 ev_view_presentation_init (EvViewPresentation *pview)
 {
-	GTK_WIDGET_SET_FLAGS (pview, GTK_CAN_FOCUS);
+	gtk_widget_set_can_focus (GTK_WIDGET (pview), TRUE);
 }
 
 GtkWidget *

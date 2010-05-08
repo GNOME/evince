@@ -89,7 +89,7 @@ ev_view_accessible_get_text (AtkText *text,
 {
   GtkWidget *widget;
 
-  widget = GTK_ACCESSIBLE (text)->widget;
+  widget = gtk_accessible_get_widget (GTK_ACCESSIBLE (text));
   if (widget == NULL)
     /* State is defunct */
     return NULL;
@@ -103,7 +103,7 @@ ev_view_accessible_get_character_at_offset (AtkText *text,
 {
   GtkWidget *widget;
 
-  widget = GTK_ACCESSIBLE (text)->widget;
+  widget = gtk_accessible_get_widget (GTK_ACCESSIBLE (text));
   if (widget == NULL)
     /* State is defunct */
     return '\0';
@@ -120,7 +120,7 @@ ev_view_accessible_get_text_before_offset (AtkText	    *text,
 {
   GtkWidget *widget;
 
-  widget = GTK_ACCESSIBLE (text)->widget;
+  widget = gtk_accessible_get_widget (GTK_ACCESSIBLE (text));
   if (widget == NULL)
     /* State is defunct */
     return NULL;
@@ -137,7 +137,7 @@ ev_view_accessible_get_text_at_offset (AtkText          *text,
 {
   GtkWidget *widget;
 
-  widget = GTK_ACCESSIBLE (text)->widget;
+  widget = gtk_accessible_get_widget (GTK_ACCESSIBLE (text));
   if (widget == NULL)
     /* State is defunct */
     return NULL;
@@ -154,7 +154,7 @@ ev_view_accessible_get_text_after_offset  (AtkText	    *text,
 {
   GtkWidget *widget;
 
-  widget = GTK_ACCESSIBLE (text)->widget;
+  widget = gtk_accessible_get_widget (GTK_ACCESSIBLE (text));
   if (widget == NULL)
     /* State is defunct */
     return NULL;
@@ -167,7 +167,7 @@ ev_view_accessible_get_character_count (AtkText *text)
 {
   GtkWidget *widget;
 
-  widget = GTK_ACCESSIBLE (text)->widget;
+  widget = gtk_accessible_get_widget (GTK_ACCESSIBLE (text));
   if (widget == NULL)
     /* State is defunct */
     return 0;
@@ -180,7 +180,7 @@ ev_view_accessible_get_caret_offset (AtkText *text)
 {
   GtkWidget *widget;
 
-  widget = GTK_ACCESSIBLE (text)->widget;
+  widget = gtk_accessible_get_widget (GTK_ACCESSIBLE (text));
   if (widget == NULL)
     /* State is defunct */
     return 0;
@@ -193,7 +193,7 @@ ev_view_accessible_set_caret_offset (AtkText *text, gint offset)
 {
   GtkWidget *widget;
 
-  widget = GTK_ACCESSIBLE (text)->widget;
+  widget = gtk_accessible_get_widget (GTK_ACCESSIBLE (text));
   if (widget == NULL)
     /* State is defunct */
     return FALSE;
@@ -209,7 +209,7 @@ ev_view_accessible_get_run_attributes (AtkText *text,
 {
   GtkWidget *widget;
 
-  widget = GTK_ACCESSIBLE (text)->widget;
+  widget = gtk_accessible_get_widget (GTK_ACCESSIBLE (text));
   if (widget == NULL)
     /* State is defunct */
     return NULL;
@@ -222,7 +222,7 @@ ev_view_accessible_get_default_attributes (AtkText *text)
 {
   GtkWidget *widget;
 
-  widget = GTK_ACCESSIBLE (text)->widget;
+  widget = gtk_accessible_get_widget (GTK_ACCESSIBLE (text));
   if (widget == NULL)
     /* State is defunct */
     return NULL;
@@ -241,7 +241,7 @@ ev_view_accessible_get_character_extents (AtkText *text,
 {
   GtkWidget *widget;
 
-  widget = GTK_ACCESSIBLE (text)->widget;
+  widget = gtk_accessible_get_widget (GTK_ACCESSIBLE (text));
   if (widget == NULL)
     /* State is defunct */
     return;
@@ -257,7 +257,7 @@ ev_view_accessible_get_offset_at_point (AtkText *text,
 { 
   GtkWidget *widget;
 
-  widget = GTK_ACCESSIBLE (text)->widget;
+  widget = gtk_accessible_get_widget (GTK_ACCESSIBLE (text));
   if (widget == NULL)
     /* State is defunct */
     return -1;
@@ -270,7 +270,7 @@ ev_view_accessible_get_n_selections (AtkText              *text)
 {
   GtkWidget *widget;
 
-  widget = GTK_ACCESSIBLE (text)->widget;
+  widget = gtk_accessible_get_widget (GTK_ACCESSIBLE (text));
   if (widget == NULL)
     /* State is defunct */
     return -1;
@@ -286,7 +286,7 @@ ev_view_accessible_get_selection (AtkText *text,
 {
   GtkWidget *widget;
 
-  widget = GTK_ACCESSIBLE (text)->widget;
+  widget = gtk_accessible_get_widget (GTK_ACCESSIBLE (text));
   if (widget == NULL)
     /* State is defunct */
     return NULL;
@@ -301,7 +301,7 @@ ev_view_accessible_add_selection (AtkText *text,
 {
   GtkWidget *widget;
 
-  widget = GTK_ACCESSIBLE (text)->widget;
+  widget = gtk_accessible_get_widget (GTK_ACCESSIBLE (text));
   if (widget == NULL)
     /* State is defunct */
     return FALSE;
@@ -315,7 +315,7 @@ ev_view_accessible_remove_selection (AtkText *text,
 {
   GtkWidget *widget;
 
-  widget = GTK_ACCESSIBLE (text)->widget;
+  widget = gtk_accessible_get_widget (GTK_ACCESSIBLE (text));
   if (widget == NULL)
     /* State is defunct */
     return FALSE;
@@ -331,7 +331,7 @@ ev_view_accessible_set_selection (AtkText *text,
 {
   GtkWidget *widget;
 
-  widget = GTK_ACCESSIBLE (text)->widget;
+  widget = gtk_accessible_get_widget (GTK_ACCESSIBLE (text));
   if (widget == NULL)
     /* State is defunct */
     return FALSE;
@@ -369,7 +369,7 @@ ev_view_accessible_idle_do_action (gpointer data)
 {
 	EvViewAccessiblePriv* priv = EV_VIEW_ACCESSIBLE_GET_PRIVATE (data);
 	
-	ev_view_scroll (EV_VIEW (GTK_ACCESSIBLE (data)->widget), 
+	ev_view_scroll (EV_VIEW (gtk_accessible_get_widget (GTK_ACCESSIBLE (data))),
 			priv->idle_scroll,
 			FALSE);
 	priv->action_idle_handler = 0;
@@ -382,7 +382,7 @@ ev_view_accessible_action_do_action (AtkAction *action,
 {
 	EvViewAccessiblePriv* priv = EV_VIEW_ACCESSIBLE_GET_PRIVATE (action);
 	
-	if (GTK_ACCESSIBLE (action)->widget == NULL)
+	if (gtk_accessible_get_widget (GTK_ACCESSIBLE (action)) == NULL)
 		return FALSE;
 
 	if (priv->action_idle_handler)

@@ -479,13 +479,15 @@ ev_pixbuf_cache_clear_job_sizes (EvPixbufCache *pixbuf_cache,
 static void
 get_selection_colors (GtkWidget *widget, GdkColor **text, GdkColor **base)
 {
-    if (gtk_widget_has_focus (widget)) {
-	*text = &widget->style->text [GTK_STATE_SELECTED];
-	*base = &widget->style->base [GTK_STATE_SELECTED];
-    } else {
-	*text = &widget->style->text [GTK_STATE_ACTIVE];
-	*base = &widget->style->base [GTK_STATE_ACTIVE];
-    }
+	GtkStyle *style = gtk_widget_get_style (widget);
+
+	if (gtk_widget_has_focus (widget)) {
+		*text = &style->text [GTK_STATE_SELECTED];
+		*base = &style->base [GTK_STATE_SELECTED];
+	} else {
+		*text = &style->text [GTK_STATE_ACTIVE];
+		*base = &style->base [GTK_STATE_ACTIVE];
+	}
 }
 
 static void

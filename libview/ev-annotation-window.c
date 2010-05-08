@@ -84,22 +84,14 @@ send_focus_change (GtkWidget *widget,
 {
 	GdkEvent *fevent = gdk_event_new (GDK_FOCUS_CHANGE);
 
-	g_object_ref (widget);
-
-	if (in)
-		GTK_WIDGET_SET_FLAGS (widget, GTK_HAS_FOCUS);
-	else
-		GTK_WIDGET_UNSET_FLAGS (widget, GTK_HAS_FOCUS);
-
 	fevent->focus_change.type = GDK_FOCUS_CHANGE;
-	fevent->focus_change.window = g_object_ref (widget->window);
+	fevent->focus_change.window = gtk_widget_get_window (widget);
 	fevent->focus_change.in = in;
+	if (fevent->focus_change.window)
+		g_object_ref (fevent->focus_change.window);
 
-	gtk_widget_event (widget, fevent);
+	gtk_widget_send_focus_change (widget, fevent);
 
-	g_object_notify (G_OBJECT (widget), "has-focus");
-
-	g_object_unref (widget);
 	gdk_event_free (fevent);
 }
 
@@ -246,7 +238,9 @@ static void
 ev_annotation_window_set_resize_cursor (GtkWidget          *widget,
 					EvAnnotationWindow *window)
 {
-	if (!widget->window)
+	GdkWindow *gdk_window = gtk_widget_get_window (widget);
+
+	if (!gdk_window)
 		return;
 
 	if (gtk_widget_is_sensitive (widget)) {
@@ -257,10 +251,10 @@ ev_annotation_window_set_resize_cursor (GtkWidget          *widget,
 						     widget == window->resize_sw ?
 						     GDK_BOTTOM_LEFT_CORNER :
 						     GDK_BOTTOM_RIGHT_CORNER);
-		gdk_window_set_cursor (widget->window, cursor);
+		gdk_window_set_cursor (gdk_window, cursor);
 		gdk_cursor_unref (cursor);
 	} else {
-		gdk_window_set_cursor (widget->window, NULL);
+		gdk_window_set_cursor (gdk_window, NULL);
 	}
 }
 
@@ -288,7 +282,7 @@ ev_annotation_window_init (EvAnnotationWindow *window)
 	GtkWidget *icon;
 	GtkWidget *swindow;
 
-	GTK_WIDGET_SET_FLAGS (window, GTK_CAN_FOCUS);
+	gtk_widget_set_can_focus (GTK_WIDGET (window), TRUE);
 
 	vbox = gtk_vbox_new (FALSE, 0);
 
