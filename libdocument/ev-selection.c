@@ -53,13 +53,13 @@ ev_selection_render_selection (EvSelection      *selection,
 
 gchar *
 ev_selection_get_selected_text (EvSelection      *selection,
-				EvRenderContext  *rc,
+				EvPage           *page,
 				EvSelectionStyle  style,
 				EvRectangle      *points)
 {
 	EvSelectionInterface *iface = EV_SELECTION_GET_IFACE (selection);
 
-	return iface->get_selected_text (selection, rc, style, points);
+	return iface->get_selected_text (selection, page, style, points);
 }
 
 GdkRegion *

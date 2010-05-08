@@ -443,7 +443,7 @@ djvu_text_copy (DjvuDocument *djvu_document,
 
 static gchar *
 djvu_selection_get_selected_text (EvSelection     *selection,
-				  EvRenderContext *rc,
+				  EvPage          *page,
 				  EvSelectionStyle style,
 				  EvRectangle     *points)
 {
@@ -453,13 +453,13 @@ djvu_selection_get_selected_text (EvSelection     *selection,
       	gchar *text;
 	     
      	djvu_document_get_page_size (EV_DOCUMENT (djvu_document),
-				     rc->page, &width, &height); 		
+				     page, &width, &height);
       	rectangle.x1 = points->x1 / SCALE_FACTOR;
 	rectangle.y1 = (height - points->y2) / SCALE_FACTOR;
 	rectangle.x2 = points->x2 / SCALE_FACTOR;
 	rectangle.y2 = (height - points->y1) / SCALE_FACTOR;
 		
-      	text = djvu_text_copy (djvu_document, rc->page->index, &rectangle);
+      	text = djvu_text_copy (djvu_document, page->index, &rectangle);
       
       	if (text == NULL)
 		text = g_strdup ("");

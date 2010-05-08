@@ -61,7 +61,7 @@ struct _EvSelectionInterface
 					      GdkColor         *text,
 					      GdkColor         *base);
 	gchar     * (* get_selected_text)    (EvSelection      *selection,
-					      EvRenderContext  *rc,
+					      EvPage           *page,
 					      EvSelectionStyle  style,
 					      EvRectangle      *points);
 	GdkRegion * (* get_selection_map)    (EvSelection      *selection,
@@ -82,7 +82,7 @@ void       ev_selection_render_selection     (EvSelection      *selection,
 					      GdkColor         *text,
 					      GdkColor         *base);
 gchar     *ev_selection_get_selected_text    (EvSelection      *selection,
-					      EvRenderContext  *rc,
+					      EvPage           *page,
 					      EvSelectionStyle  style,
 					      EvRectangle      *points);
 GdkRegion *ev_selection_get_selection_map    (EvSelection      *selection,

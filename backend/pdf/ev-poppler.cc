@@ -1960,7 +1960,7 @@ pdf_selection_render_selection (EvSelection      *selection,
 
 static gchar *
 pdf_selection_get_selected_text (EvSelection     *selection,
-				 EvRenderContext *rc,
+				 EvPage          *page,
 				 EvSelectionStyle style,
 				 EvRectangle     *points)
 {
@@ -1969,7 +1969,7 @@ pdf_selection_get_selected_text (EvSelection     *selection,
 	double height;
 	char *retval;
 	
-	poppler_page = POPPLER_PAGE (rc->page->backend_page);
+	poppler_page = POPPLER_PAGE (page->backend_page);
 
 	poppler_page_get_size (poppler_page, NULL, &height);
 	r.x1 = points->x1;

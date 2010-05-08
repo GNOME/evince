@@ -5523,10 +5523,8 @@ get_selected_text (EvView *view)
 	GString *text;
 	GList *l;
 	gchar *normalized_text;
-	EvRenderContext *rc;
 
 	text = g_string_new (NULL);
-	rc = ev_render_context_new (NULL, view->rotation, view->scale);
 
 	ev_document_doc_mutex_lock ();
 
@@ -5536,19 +5534,14 @@ get_selected_text (EvView *view)
 		gchar *tmp;
 
 		page = ev_document_get_page (view->document, selection->page);
-		ev_render_context_set_page (rc, page);
-		g_object_unref (page);
-		
 		tmp = ev_selection_get_selected_text (EV_SELECTION (view->document),
-						      rc, selection->style,
+						      page, selection->style,
 						      &(selection->rect));
-
+		g_object_unref (page);
 		g_string_append (text, tmp);
 		g_free (tmp);
 	}
 
-	g_object_unref (rc);
-	
 	ev_document_doc_mutex_unlock ();
 	
 	normalized_text = g_utf8_normalize (text->str, text->len, G_NORMALIZE_NFKC);
