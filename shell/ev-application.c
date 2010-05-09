@@ -644,7 +644,9 @@ method_call_cb (GDBusConnection       *connection,
         }
         g_variant_iter_free (iter);
 
-        if (display != NULL)
+        if (display != NULL &&
+            screen_number >= 0 &&
+            screen_number < gdk_display_get_n_screens (display))
                 screen = gdk_display_get_screen (display, screen_number);
         else
                 screen = gdk_screen_get_default ();
