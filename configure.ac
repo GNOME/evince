@@ -294,7 +294,7 @@ AC_SUBST([DBUS_LIBS])
 AM_CONDITIONAL([ENABLE_DBUS], [test "$enable_dbus" = "yes"])
 
 if test "$enable_dbus" = "yes"; then
-   PKG_CHECK_MODULES([EV_DAEMON], [gthread-2.0 gio-2.0 >= $GLIB_REQUIRED dbus-glib-1 >= $DBUS_GLIB_REQUIRED])
+   PKG_CHECK_MODULES([EV_DAEMON], [gthread-2.0 gio-2.0 >= $GLIB_REQUIRED])
 fi
 
 dnl ========= Check for GConf

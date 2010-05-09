@@ -118,10 +118,6 @@ endif
 
 BUILT_SOURCES = ev-marshal.h ev-marshal.c
 
-if ENABLE_DBUS
-BUILT_SOURCES += ev-application-service.h
-endif
-
 evince_convert_metadata_SOURCES=	\
 	ev-convert-metadata.c
 
@@ -129,8 +125,6 @@ evince_convert_metadata_LDADD=		\
 	$(SHELL_LIBS)
 
 if ENABLE_DBUS
-BUILT_SOURCES += ev-daemon-service.h
-
 evinced_SOURCES=			\
 	ev-daemon.c
 
@@ -150,10 +144,8 @@ evinced_LDADD=				\
 endif
 
 EXTRA_DIST = ev-marshal.list		\
-	ev-application-service.xml	\
 	evince-icon.rc			\
 	$(EV_MEDIA_PLAYER_KEYS_SOURCES)
-
 
 ev-marshal.h: $(srcdir)/ev-marshal.list
 	$(AM_V_GEN)$(GLIB_GENMARSHAL) --prefix=ev_marshal $(srcdir)/ev-marshal.list --header > ev-marshal.h
@@ -162,10 +154,6 @@ ev-marshal.c: $(srcdir)/ev-marshal.list
 	echo '#include "ev-marshal.h"' > ev-marshal.c
 	$(AM_V_GEN)$(GLIB_GENMARSHAL) --prefix=ev_marshal $(srcdir)/ev-marshal.list --body >> ev-marshal.c
 
-DISTCLEANFILES= 			\
-	ev-application-service.h
-
-ev-application-service.h: $(srcdir)/ev-application-service.xml
-	$(AM_V_GEN)dbus-binding-tool --prefix=ev_application --mode=glib-server --output=ev-application-service.h $(srcdir)/ev-application-service.xml
+DISTCLEANFILES =
 
 -include $(top_srcdir)/git.mk
