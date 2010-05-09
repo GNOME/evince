@@ -341,7 +341,7 @@ ev_application_register_uri (EvApplication *application,
                              const gchar    *search_string,
 			     guint          timestamp)
 {
-	GVariant *value;
+	GVariant *value, *value2;
 	const gchar *owner;
         GVariantBuilder builder;
 	GError *error = NULL;
@@ -404,7 +404,7 @@ ev_application_register_uri (EvApplication *application,
 
         g_variant_builder_add (&builder, "u", timestamp);
 
-        value = g_dbus_connection_invoke_method_sync
+        value2 = g_dbus_connection_invoke_method_sync
                     (application->connection,
                      owner,
                      APPLICATION_DBUS_OBJECT_PATH,
@@ -415,12 +415,13 @@ ev_application_register_uri (EvApplication *application,
                      -1,
                      NULL,
                      &error);
-        if (value == NULL) {
+        if (value2 == NULL) {
                 g_warning ("%s", error->message);
                 g_error_free (error);
         }
 
 	g_variant_unref (value);
+	g_variant_unref (value2);
 
         /* Do not continue opening this document */
 	return FALSE;

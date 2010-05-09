@@ -402,6 +402,7 @@ main (gint argc, gchar **argv)
         g_dbus_node_info_unref (introspection_data);
         g_list_foreach (ev_daemon_docs, (GFunc)ev_doc_free, NULL);
         g_list_free (ev_daemon_docs);
+        g_object_unref (connection);
 
 	return 0;
 }
