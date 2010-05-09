@@ -2,6 +2,7 @@
  *  this file is part of evince, a gnome document viewer
  *
  * Copyright (C) 2009 Carlos Garcia Campos  <carlosgc@gnome.org>
+ * Copyright © 2010 Christian Persch
  *
  * Evince is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by
@@ -29,51 +30,20 @@
 #include <sys/wait.h>
 #include <fcntl.h>
 #include <unistd.h>
-#include <dbus/dbus-glib-bindings.h>
-#include <dbus/dbus-glib-lowlevel.h>
 
-#define EV_DBUS_DAEMON_NAME        "org.gnome.evince.Daemon"
-#define EV_DBUS_DAEMON_OBJECT_PATH "/org/gnome/evince/Daemon"
+#define EV_DBUS_DAEMON_NAME             "org.gnome.evince.Daemon"
+#define EV_DBUS_DAEMON_INTERFACE_NAME   "org.gnome.evince.Daemon"
+#define EV_DBUS_DAEMON_OBJECT_PATH      "/org/gnome/evince/Daemon"
 
-#define EV_TYPE_DAEMON                     (ev_daemon_get_type ())
-#define EV_DAEMON(object)                  (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_DAEMON, EvDaemon))
-#define EV_DAEMON_CLASS(klass)             (G_TYPE_CHECK_CLASS_CAST((klass), EV_TYPE_DAEMON, EvDaemonClass))
-#define EV_IS_DAEMON(object)               (G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_DAEMON))
+#define DAEMON_TIMEOUT (30) /* seconds */
 
-typedef struct _EvDaemon      EvDaemon;
-typedef struct _EvDaemonClass EvDaemonClass;
-
-struct _EvDaemon {
-	GObject base;
-
-	DBusGProxy *bus_proxy;
-
-	GList      *docs;
-	guint       n_docs;
-
-	guint       timer_id;
-};
-
-struct _EvDaemonClass {
-	GObjectClass base_class;
-};
-
-static GType    ev_daemon_get_type            (void) G_GNUC_CONST;
-static gboolean ev_daemon_register_document   (EvDaemon              *ev_daemon,
-					       const gchar           *uri,
-					       DBusGMethodInvocation *context);
-static gboolean ev_daemon_unregister_document (EvDaemon              *ev_daemon,
-					       const gchar           *uri,
-					       DBusGMethodInvocation *context);
-#include "ev-daemon-service.h"
-
-static EvDaemon *ev_daemon = NULL;
-
-G_DEFINE_TYPE(EvDaemon, ev_daemon, G_TYPE_OBJECT)
+static GList *ev_daemon_docs = NULL;
+static guint kill_timer_id;
 
 typedef struct {
 	gchar *dbus_name;
 	gchar *uri;
+        guint watch_id;
 } EvDoc;
 
 static void
@@ -85,16 +55,17 @@ ev_doc_free (EvDoc *doc)
 	g_free (doc->dbus_name);
 	g_free (doc->uri);
 
+        g_bus_unwatch_name (doc->watch_id);
+
 	g_free (doc);
 }
 
 static EvDoc *
-ev_daemon_find_doc (EvDaemon    *ev_daemon,
-		    const gchar *uri)
+ev_daemon_find_doc (const gchar *uri)
 {
 	GList *l;
 
-	for (l = ev_daemon->docs; l; l = g_list_next (l)) {
+	for (l = ev_daemon_docs; l != NULL; l = l->next) {
 		EvDoc *doc = (EvDoc *)l->data;
 
 		if (strcmp (doc->uri, uri) == 0)
@@ -105,229 +76,34 @@ ev_daemon_find_doc (EvDaemon    *ev_daemon,
 }
 
 static void
-ev_daemon_finalize (GObject *object)
+ev_daemon_stop_killtimer (void)
 {
-	EvDaemon *ev_daemon = EV_DAEMON (object);
-
-	if (ev_daemon->docs) {
-		g_list_foreach (ev_daemon->docs, (GFunc)ev_doc_free, NULL);
-		g_list_free (ev_daemon->docs);
-		ev_daemon->docs = NULL;
-	}
-
-	if (ev_daemon->bus_proxy) {
-		g_object_unref (ev_daemon->bus_proxy);
-		ev_daemon->bus_proxy = NULL;
-	}
-
-	G_OBJECT_CLASS (ev_daemon_parent_class)->finalize (object);
-}
-
-static void
-ev_daemon_init (EvDaemon *ev_daemon)
-{
-}
-
-static void
-ev_daemon_class_init (EvDaemonClass *klass)
-{
-	GObjectClass *g_object_class = G_OBJECT_CLASS (klass);
-
-	g_object_class->finalize = ev_daemon_finalize;
-
-	dbus_g_object_type_install_info (EV_TYPE_DAEMON,
-					 &dbus_glib_ev_daemon_object_info);
+	if (kill_timer_id != 0)
+		g_source_remove (kill_timer_id);
+	kill_timer_id = 0;
 }
 
 static gboolean
-ev_daemon_shutdown (EvDaemon *ev_daemon)
+ev_daemon_shutdown (gpointer user_data)
 {
-	g_object_unref (ev_daemon);
+        GMainLoop *loop = (GMainLoop *) user_data;
 
-	return FALSE;
+        if (g_main_loop_is_running (loop))
+                g_main_loop_quit (loop);
+
+        return FALSE;
 }
 
 static void
-ev_daemon_stop_killtimer (EvDaemon *ev_daemon)
+ev_daemon_maybe_start_killtimer (gpointer data)
 {
-	if (ev_daemon->timer_id != 0)
-		g_source_remove (ev_daemon->timer_id);
-	ev_daemon->timer_id = 0;
-}
+	ev_daemon_stop_killtimer ();
+        if (ev_daemon_docs != NULL)
+                return;
 
-static void
-ev_daemon_start_killtimer (EvDaemon *ev_daemon)
-{
-	ev_daemon_stop_killtimer (ev_daemon);
-	ev_daemon->timer_id =
-		g_timeout_add_seconds (30,
-				       (GSourceFunc) ev_daemon_shutdown,
-				       ev_daemon);
-}
-
-static void
-ev_daemon_name_owner_changed (DBusGProxy  *proxy,
-			      const gchar *name,
-			      const gchar *old_owner,
-			      const gchar *new_owner,
-			      EvDaemon    *ev_daemon)
-{
-	GList *l, *next = NULL;
-
-	if (*name == ':' && *new_owner == '\0') {
-		for (l = ev_daemon->docs; l; l = next) {
-			EvDoc *doc = (EvDoc *)l->data;
-
-			next = l->next;
-			if (strcmp (doc->dbus_name, name) == 0) {
-				ev_doc_free (doc);
-				ev_daemon->docs = g_list_delete_link (ev_daemon->docs, l);
-				if (--ev_daemon->n_docs == 0)
-					ev_daemon_start_killtimer (ev_daemon);
-			}
-		}
-	}
-}
-
-static EvDaemon *
-ev_daemon_get (void)
-{
-	DBusGConnection *connection;
-	guint            request_name_result;
-	GError          *error = NULL;
-
-	if (ev_daemon)
-		return ev_daemon;
-
-	connection = dbus_g_bus_get (DBUS_BUS_STARTER, &error);
-	if (!connection) {
-		g_printerr ("Failed to connect to the D-BUS daemon: %s\n", error->message);
-		g_error_free (error);
-
-		return NULL;
-	}
-
-	ev_daemon = g_object_new (EV_TYPE_DAEMON, NULL);
-
-	ev_daemon->bus_proxy = dbus_g_proxy_new_for_name (connection,
-						       DBUS_SERVICE_DBUS,
-						       DBUS_PATH_DBUS,
-						       DBUS_INTERFACE_DBUS);
-	if (!org_freedesktop_DBus_request_name (ev_daemon->bus_proxy,
-						EV_DBUS_DAEMON_NAME,
-						DBUS_NAME_FLAG_DO_NOT_QUEUE,
-						&request_name_result, &error)) {
-		g_printerr ("Failed to acquire daemon name: %s", error->message);
-		g_error_free (error);
-		g_object_unref (ev_daemon);
-
-		return NULL;
-	}
-
-	switch (request_name_result) {
-	case DBUS_REQUEST_NAME_REPLY_EXISTS:
-		g_printerr ("Evince daemon already running, exiting.\n");
-		g_object_unref (ev_daemon);
-
-		return NULL;
-	case DBUS_REQUEST_NAME_REPLY_PRIMARY_OWNER:
-		dbus_g_connection_register_g_object (connection,
-						     EV_DBUS_DAEMON_OBJECT_PATH,
-						     G_OBJECT (ev_daemon));
-		break;
-	default:
-		g_printerr ("Not primary owner of the service, exiting.\n");
-		g_object_unref (ev_daemon);
-
-		return NULL;
-	}
-
-
-	dbus_g_proxy_add_signal (ev_daemon->bus_proxy,
-				 "NameOwnerChanged",
-				 G_TYPE_STRING,
-				 G_TYPE_STRING,
-				 G_TYPE_STRING,
-				 G_TYPE_INVALID);
-	dbus_g_proxy_connect_signal (ev_daemon->bus_proxy, "NameOwnerChanged",
-				     G_CALLBACK (ev_daemon_name_owner_changed),
-				     ev_daemon, NULL);
-	ev_daemon_start_killtimer (ev_daemon);
-
-	return ev_daemon;
-}
-
-
-
-static gboolean
-ev_daemon_register_document (EvDaemon              *ev_daemon,
-			     const gchar           *uri,
-			     DBusGMethodInvocation *method)
-{
-	EvDoc       *doc;
-	const gchar *owner = NULL;
-
-	doc = ev_daemon_find_doc (ev_daemon, uri);
-	if (doc) {
-		/* Already registered */
-		owner = doc->dbus_name;
-	} else {
-		doc = g_new (EvDoc, 1);
-		doc->dbus_name = dbus_g_method_get_sender (method);
-		doc->uri = g_strdup (uri);
-		ev_daemon->docs = g_list_prepend (ev_daemon->docs, doc);
-		if (ev_daemon->n_docs++ == 0)
-			ev_daemon_stop_killtimer (ev_daemon);
-	}
-
-	dbus_g_method_return (method, owner);
-
-	return TRUE;
-}
-
-static gboolean
-ev_daemon_unregister_document (EvDaemon              *ev_daemon,
-			       const gchar           *uri,
-			       DBusGMethodInvocation *method)
-{
-	EvDoc *doc;
-	gchar *sender;
-
-	doc = ev_daemon_find_doc (ev_daemon, uri);
-	if (!doc) {
-		g_warning ("Document %s is not registered\n", uri);
-		dbus_g_method_return (method);
-
-		return TRUE;
-	}
-
-	sender = dbus_g_method_get_sender (method);
-	if (strcmp (doc->dbus_name, sender) != 0) {
-		g_warning ("Failed to unregister document %s: invalid owner %s, expected %s\n",
-			   uri, sender, doc->dbus_name);
-		g_free (sender);
-		dbus_g_method_return (method);
-
-		return TRUE;
-	}
-	g_free (sender);
-
-	ev_daemon->docs = g_list_remove (ev_daemon->docs, doc);
-	ev_doc_free (doc);
-	if (--ev_daemon->n_docs == 0)
-		ev_daemon_start_killtimer (ev_daemon);
-
-	dbus_g_method_return (method);
-
-	return TRUE;
-}
-
-static void
-do_exit (GMainLoop *loop,
-	 GObject   *object)
-{
-	if (g_main_loop_is_running (loop))
-		g_main_loop_quit (loop);
+	kill_timer_id = g_timeout_add_seconds (DAEMON_TIMEOUT,
+                                               (GSourceFunc) ev_daemon_shutdown,
+                                               data);
 }
 
 static gboolean
@@ -425,28 +201,207 @@ ev_migrate_metadata (void)
 	g_free (metadata);
 }
 
+static void
+name_appeared_cb (GDBusConnection *connection,
+                  const gchar     *name,
+                  const gchar     *name_owner,
+                  gpointer         user_data)
+{
+}
+
+static void
+name_vanished_cb (GDBusConnection *connection,
+                  const gchar     *name,
+                  gpointer         user_data)
+{
+	GList *l;
+
+        for (l = ev_daemon_docs; l != NULL; l = l->next) {
+                EvDoc *doc = (EvDoc *) l->data;
+
+                if (strcmp (doc->dbus_name, name) != 0)
+                        continue;
+
+                ev_daemon_docs = g_list_delete_link (ev_daemon_docs, l);
+                ev_doc_free (doc);
+                
+                ev_daemon_maybe_start_killtimer (user_data);
+                return;
+        }
+}
+
+static void
+method_call_cb (GDBusConnection       *connection,
+                const gchar           *sender,
+                const gchar           *object_path,
+                const gchar           *interface_name,
+                const gchar           *method_name,
+                GVariant              *parameters,
+                GDBusMethodInvocation *invocation,
+                gpointer               user_data)
+{
+        if (g_strcmp0 (interface_name, EV_DBUS_DAEMON_INTERFACE_NAME) != 0)
+                return;
+
+        if (g_strcmp0 (method_name, "RegisterDocument") == 0) {
+                EvDoc       *doc;
+                const gchar *uri;
+                const gchar *owner = NULL;
+
+                g_variant_get (parameters, "(&s)", &uri);
+
+                doc = ev_daemon_find_doc (uri);
+                if (doc) {
+                        /* Already registered */
+                        owner = doc->dbus_name;
+                } else {
+                        ev_daemon_stop_killtimer ();
+
+                        doc = g_new (EvDoc, 1);
+                        doc->dbus_name = g_strdup (sender);
+                        doc->uri = g_strdup (uri);
+
+                        doc->watch_id = g_bus_watch_name (G_BUS_TYPE_STARTER,
+                                                          sender,
+                                                          G_BUS_NAME_WATCHER_FLAGS_NONE,
+                                                          name_appeared_cb,
+                                                          name_vanished_cb,
+                                                          user_data, NULL);
+
+                        ev_daemon_docs = g_list_prepend (ev_daemon_docs, doc);
+                }
+
+                g_dbus_method_invocation_return_value (invocation,
+                                                       g_variant_new_string (owner));
+                return;
+
+        } else if (g_strcmp0 (method_name, "UnregisterDocument") == 0) {
+                EvDoc *doc;
+                const gchar *uri;
+
+                g_variant_get (parameters, "(&s)", &uri);
+
+                doc = ev_daemon_find_doc (uri);
+                if (doc == NULL) {
+                        g_dbus_method_invocation_return_error_literal (invocation,
+                                                                       G_DBUS_ERROR,
+                                                                       G_DBUS_ERROR_INVALID_ARGS,
+                                                                       "URI not registered");
+                        return;
+                }
+
+                if (strcmp (doc->dbus_name, sender) != 0) {
+                        g_dbus_method_invocation_return_error_literal (invocation,
+                                                                       G_DBUS_ERROR,
+                                                                       G_DBUS_ERROR_BAD_ADDRESS,
+                                                                       "Only owner can call this method");
+                        return;
+                }
+
+                ev_daemon_docs = g_list_remove (ev_daemon_docs, doc);
+                ev_doc_free (doc);
+                ev_daemon_maybe_start_killtimer (user_data);
+
+                g_dbus_method_invocation_return_value (invocation, g_variant_new ("()"));
+                return;
+        }
+}
+
+static void
+name_acquired_cb (GDBusConnection *connection,
+                  const gchar     *name,
+                  gpointer         user_data)
+{
+	ev_migrate_metadata ();
+
+	ev_daemon_maybe_start_killtimer (user_data);
+}
+
+static void
+name_lost_cb (GDBusConnection *connection,
+              const gchar     *name,
+              gpointer         user_data)
+{
+          GMainLoop *loop = (GMainLoop *) user_data;
+
+          /* Failed to acquire the name; exit daemon */
+          if (g_main_loop_is_running (loop))
+                  g_main_loop_quit (loop);
+}
+
+static const char introspection_xml[] =
+  "<node>"
+    "<interface name='org.gnome.evince.Daemon'>"
+      "<method name='RegisterDocument'>"
+        "<arg type='s' name='uri' direction='in'/>"
+        "<arg type='s' name='owner' direction='out'/>"
+      "</method>"
+      "<method name='UnregisterDocument'>"
+        "<arg type='s' name='uri' direction='in'/>"
+      "</method>"
+    "</interface>"
+  "</node>";
+
+static const GDBusInterfaceVTable interface_vtable = {
+  method_call_cb,
+  NULL,
+  NULL
+};
+
 gint
 main (gint argc, gchar **argv)
 {
+        GDBusConnection *connection;
 	GMainLoop *loop;
-
-	/* Init glib threads asap */
-	if (!g_thread_supported ())
-		g_thread_init (NULL);
+        GError *error = NULL;
+        guint registration_id, owner_id;
+        GDBusNodeInfo *introspection_data;
 
 	g_type_init ();
 
-	if (!ev_daemon_get ())
-		return 1;
+        connection = g_bus_get_sync (G_BUS_TYPE_STARTER, NULL, &error);
+        if (connection == NULL) {
+                g_printerr ("Failed to get bus connection: %s\n", error->message);
+                g_error_free (error);
+                return 1;
+        }
 
-	ev_migrate_metadata ();
+        introspection_data = g_dbus_node_info_new_for_xml (introspection_xml, NULL);
+        g_assert (introspection_data != NULL);
 
 	loop = g_main_loop_new (NULL, FALSE);
-	g_object_weak_ref (G_OBJECT (ev_daemon),
-			   (GWeakNotify) do_exit,
-			   loop);
-	g_main_loop_run (loop);
-	g_main_loop_unref (loop);
+
+        registration_id = g_dbus_connection_register_object (connection,
+                                                             EV_DBUS_DAEMON_OBJECT_PATH,
+                                                             EV_DBUS_DAEMON_NAME,
+                                                             introspection_data->interfaces[0],
+                                                             &interface_vtable,
+                                                             g_main_loop_ref (loop),
+                                                             (GDestroyNotify) g_main_loop_unref,
+                                                             &error);
+        if (registration_id == 0) {
+                g_printerr ("Failed to register object: %s\n", error->message);
+                g_error_free (error);
+                g_object_unref (connection);
+                return 1;
+        }
+
+        owner_id = g_bus_own_name_on_connection (connection,
+                                                 EV_DBUS_DAEMON_NAME,
+                                                 G_BUS_NAME_OWNER_FLAGS_NONE,
+                                                 name_acquired_cb,
+                                                 name_lost_cb,
+                                                 g_main_loop_ref (loop),
+                                                 (GDestroyNotify) g_main_loop_unref);
+
+        g_main_loop_run (loop);
+
+        g_bus_unown_name (owner_id);
+
+        g_main_loop_unref (loop);
+        g_dbus_node_info_unref (introspection_data);
+        g_list_foreach (ev_daemon_docs, (GFunc)ev_doc_free, NULL);
+        g_list_free (ev_daemon_docs);
 
 	return 0;
 }

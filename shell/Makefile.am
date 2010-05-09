@@ -151,7 +151,6 @@ endif
 
 EXTRA_DIST = ev-marshal.list		\
 	ev-application-service.xml	\
-	ev-daemon-service.xml		\
 	evince-icon.rc			\
 	$(EV_MEDIA_PLAYER_KEYS_SOURCES)
 
@@ -164,13 +163,9 @@ ev-marshal.c: $(srcdir)/ev-marshal.list
 	$(AM_V_GEN)$(GLIB_GENMARSHAL) --prefix=ev_marshal $(srcdir)/ev-marshal.list --body >> ev-marshal.c
 
 DISTCLEANFILES= 			\
-	ev-application-service.h	\
-	ev-daemon-service.h
+	ev-application-service.h
 
 ev-application-service.h: $(srcdir)/ev-application-service.xml
 	$(AM_V_GEN)dbus-binding-tool --prefix=ev_application --mode=glib-server --output=ev-application-service.h $(srcdir)/ev-application-service.xml
-
-ev-daemon-service.h: $(srcdir)/ev-daemon-service.xml
-	$(AM_V_GEN)dbus-binding-tool --prefix=ev_daemon --mode=glib-server --output=ev-daemon-service.h $(srcdir)/ev-daemon-service.xml
 
 -include $(top_srcdir)/git.mk
