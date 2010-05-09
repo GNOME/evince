@@ -2873,7 +2873,10 @@ ev_view_size_allocate (GtkWidget      *widget,
 	gint    root_x, root_y;
 
 	GTK_WIDGET_CLASS (ev_view_parent_class)->size_allocate (widget, allocation);
-	
+
+	if (!view->document)
+		return;
+
 	if (view->sizing_mode == EV_SIZING_FIT_WIDTH ||
 	    view->sizing_mode == EV_SIZING_BEST_FIT) {
 		GtkRequisition req;
