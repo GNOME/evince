@@ -629,7 +629,7 @@ method_call_cb (GDBusConnection       *connection,
 		return;
 	}
 
-        while (g_variant_iter_loop (iter, "{sv}", &key, &value)) {
+        while (g_variant_iter_loop (iter, "{&sv}", &key, &value)) {
                 if (strcmp (key, "display") == 0 && g_variant_classify (value) == G_VARIANT_CLASS_STRING) {
                         display = ev_display_open_if_needed (g_variant_get_string (value, NULL));
                 } else if (strcmp (key, "screen") == 0 && g_variant_classify (value) == G_VARIANT_CLASS_STRING) {
