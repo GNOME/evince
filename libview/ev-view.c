@@ -4887,6 +4887,7 @@ ev_view_zoom_for_size_continuous_and_dual_page (EvView *view,
 	gdouble doc_width, doc_height;
 	GtkBorder border;
 	gdouble scale;
+	gint sb_size;
 
 	ev_document_get_max_page_size (view->document, &doc_width, &doc_height);
 	if (view->rotation == 90 || view->rotation == 270) {
@@ -4903,13 +4904,12 @@ ev_view_zoom_for_size_continuous_and_dual_page (EvView *view,
 	width -= (2 * (border.left + border.right) + 3 * view->spacing);
 	height -= (border.top + border.bottom + 2 * view->spacing - 1);
 
-	if (view->sizing_mode == EV_SIZING_FIT_WIDTH) {
-		gint sb_size;
+	sb_size = ev_view_get_scrollbar_size (view, GTK_ORIENTATION_VERTICAL);
 
-		sb_size = ev_view_get_scrollbar_size (view, GTK_ORIENTATION_VERTICAL);
+	if (view->sizing_mode == EV_SIZING_FIT_WIDTH) {
 		scale = zoom_for_size_fit_width (doc_width, doc_height, width - sb_size, height);
 	} else if (view->sizing_mode == EV_SIZING_BEST_FIT)
-		scale = zoom_for_size_best_fit (doc_width, doc_height, width, height);
+		scale = zoom_for_size_best_fit (doc_width, doc_height, width - sb_size, height);
 	else
 		g_assert_not_reached ();
 
@@ -4924,6 +4924,7 @@ ev_view_zoom_for_size_continuous (EvView *view,
 	gdouble doc_width, doc_height;
 	GtkBorder border;
 	gdouble scale;
+	gint sb_size;
 
 	ev_document_get_max_page_size (view->document, &doc_width, &doc_height);
 	if (view->rotation == 90 || view->rotation == 270) {
@@ -4939,13 +4940,12 @@ ev_view_zoom_for_size_continuous (EvView *view,
 	width -= (border.left + border.right + 2 * view->spacing);
 	height -= (border.top + border.bottom + 2 * view->spacing - 1);
 
-	if (view->sizing_mode == EV_SIZING_FIT_WIDTH) {
-		gint sb_size;
+	sb_size = ev_view_get_scrollbar_size (view, GTK_ORIENTATION_VERTICAL);
 
-		sb_size = ev_view_get_scrollbar_size (view, GTK_ORIENTATION_VERTICAL);
+	if (view->sizing_mode == EV_SIZING_FIT_WIDTH) {
 		scale = zoom_for_size_fit_width (doc_width, doc_height, width - sb_size, height);
 	} else if (view->sizing_mode == EV_SIZING_BEST_FIT)
-		scale = zoom_for_size_best_fit (doc_width, doc_height, width, height);
+		scale = zoom_for_size_best_fit (doc_width, doc_height, width - sb_size, height);
 	else
 		g_assert_not_reached ();
 
