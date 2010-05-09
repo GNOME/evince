@@ -125,6 +125,9 @@ struct _EvView {
 	EvViewCursor cursor;
 	EvJobRender *current_job;
 
+	GtkRequisition requisition;
+	gboolean       internal_size_request;
+
 	/* Scrolling */
 	GtkAdjustment *hadjustment;
 	GtkAdjustment *vadjustment;

@@ -464,12 +464,12 @@ ev_view_get_scrollbar_size (EvView        *view,
 		return 0;
 
 	if (orientation == GTK_ORIENTATION_VERTICAL) {
-		if (widget->allocation.height >= widget->requisition.height)
+		if (widget->allocation.height >= view->requisition.height)
 			sb = gtk_scrolled_window_get_vscrollbar (GTK_SCROLLED_WINDOW (swindow));
 		else
 			return 0;
 	} else {
-		if (widget->allocation.width >= widget->requisition.width)
+		if (widget->allocation.width >= view->requisition.width)
 			sb = gtk_scrolled_window_get_hscrollbar (GTK_SCROLLED_WINDOW (swindow));
 		else
 			return 0;
@@ -554,11 +554,11 @@ view_set_adjustment_values (EvView         *view,
 	gint new_value;
 
 	if (orientation == GTK_ORIENTATION_HORIZONTAL)  {
-		requisition = widget->requisition.width;
+		requisition = view->requisition.width;
 		allocation = widget->allocation.width;
 		adjustment = view->hadjustment;
 	} else {
-		requisition = widget->requisition.height;
+		requisition = view->requisition.height;
 		allocation = widget->allocation.height;
 		adjustment = view->vadjustment;
 	}
@@ -2833,19 +2833,35 @@ ev_view_size_request (GtkWidget      *widget,
 	EvView *view = EV_VIEW (widget);
 	
 	if (view->document == NULL) {
-		requisition->width = 1;
-		requisition->height = 1;
+		view->requisition.width = 1;
+		view->requisition.height = 1;
+
+		*requisition = view->requisition;
+
 		return;
 	}
 
+	/* Get zoom for size here when not called from
+	 * ev_view_size_allocate()
+	 */
+	if (!view->internal_size_request &&
+	    (view->sizing_mode == EV_SIZING_FIT_WIDTH ||
+	     view->sizing_mode == EV_SIZING_BEST_FIT)) {
+		ev_view_zoom_for_size (view,
+				       widget->allocation.width,
+				       widget->allocation.height);
+	}
+
 	if (view->continuous && view->dual_page)
-		ev_view_size_request_continuous_dual_page (view, requisition);
+		ev_view_size_request_continuous_dual_page (view, &view->requisition);
 	else if (view->continuous)
-		ev_view_size_request_continuous (view, requisition);
+		ev_view_size_request_continuous (view, &view->requisition);
 	else if (view->dual_page)
-		ev_view_size_request_dual_page (view, requisition);
+		ev_view_size_request_dual_page (view, &view->requisition);
 	else
-		ev_view_size_request_single_page (view, requisition);
+		ev_view_size_request_single_page (view, &view->requisition);
+
+	*requisition = view->requisition;
 }
 
 static void
@@ -2860,10 +2876,14 @@ ev_view_size_allocate (GtkWidget      *widget,
 	
 	if (view->sizing_mode == EV_SIZING_FIT_WIDTH ||
 	    view->sizing_mode == EV_SIZING_BEST_FIT) {
+		GtkRequisition req;
+
 		ev_view_zoom_for_size (view,
 				       allocation->width,
 				       allocation->height);
-		ev_view_size_request (widget, &widget->requisition);
+		view->internal_size_request = TRUE;
+		ev_view_size_request (widget, &req);
+		view->internal_size_request = FALSE;
 	}
 	
 	view_set_adjustment_values (view, GTK_ORIENTATION_HORIZONTAL);
