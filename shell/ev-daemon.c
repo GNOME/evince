@@ -246,15 +246,11 @@ method_call_cb (GDBusConnection       *connection,
         if (g_strcmp0 (method_name, "RegisterDocument") == 0) {
                 EvDoc       *doc;
                 const gchar *uri;
-                const gchar *owner = NULL;
 
                 g_variant_get (parameters, "(&s)", &uri);
 
                 doc = ev_daemon_find_doc (uri);
-                if (doc) {
-                        /* Already registered */
-                        owner = doc->dbus_name;
-                } else {
+                if (doc == NULL) {
                         ev_daemon_stop_killtimer ();
 
                         doc = g_new (EvDoc, 1);
@@ -272,7 +268,7 @@ method_call_cb (GDBusConnection       *connection,
                 }
 
                 g_dbus_method_invocation_return_value (invocation,
-                                                       g_variant_new_string (owner));
+                                                       g_variant_new ("(s)", doc->dbus_name));
                 return;
 
         } else if (g_strcmp0 (method_name, "UnregisterDocument") == 0) {
@@ -356,6 +352,8 @@ main (gint argc, gchar **argv)
         GError *error = NULL;
         guint registration_id, owner_id;
         GDBusNodeInfo *introspection_data;
+
+        g_set_prgname ("evince-daemon");
 
 	g_type_init ();
 
