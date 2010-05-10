@@ -21,13 +21,15 @@
 
 #include "config.h"
 
-#include <glib.h>
-#include <dbus/dbus-glib.h>
-#include <string.h>
-
 #include "ev-media-player-keys.h"
 
-#include "ev-marshal.h"
+#include <string.h>
+#include <glib.h>
+#include <gio/gio.h>
+
+#define SD_NAME        "org.gnome.SettingsDaemon"
+#define SD_OBJECT_PATH "/org/gnome/SettingsDaemon/MediaKeys"
+#define SD_INTERFACE   "org.gnome.SettingsDaemon.MediaKeys"
 
 enum {
 	KEY_PRESSED,
@@ -37,8 +39,10 @@ enum {
 struct _EvMediaPlayerKeys
 {
 	GObject        parent;
-	
-	DBusGProxy    *proxy;
+
+        GDBusConnection *connection;
+        guint watch_id;
+        guint subscription_id;
 };
 
 struct _EvMediaPlayerKeysClass
@@ -50,7 +54,7 @@ struct _EvMediaPlayerKeysClass
 			      const gchar       *key);
 };
 
-static guint signals[LAST_SIGNAL] = { 0 };
+static guint signals[LAST_SIGNAL];
 
 G_DEFINE_TYPE (EvMediaPlayerKeys, ev_media_player_keys, G_TYPE_OBJECT)
 
@@ -75,17 +79,6 @@ ev_media_player_keys_class_init (EvMediaPlayerKeysClass *klass)
 }
 
 static void
-on_media_player_key_pressed (DBusGProxy        *proxy,
-			     const gchar       *application,
-			     const gchar       *key,
-			     EvMediaPlayerKeys *keys)
-{
-	if (strcmp ("Evince", application) == 0) {
-		g_signal_emit (keys, signals[KEY_PRESSED], 0, key);
-	}
-}
-
-static void
 ev_media_player_keys_grab_keys (EvMediaPlayerKeys *keys)
 {
 	/*
@@ -93,81 +86,110 @@ ev_media_player_keys_grab_keys (EvMediaPlayerKeys *keys)
 	 * if a media player is there it gets higher priority on the keys (0 is
 	 * a special value having maximum priority).
 	 */
-	dbus_g_proxy_call (keys->proxy,
-			   "GrabMediaPlayerKeys", NULL,
-			   G_TYPE_STRING, "Evince",
-			   G_TYPE_UINT, 1,
-			   G_TYPE_INVALID, G_TYPE_INVALID);
+        g_dbus_connection_invoke_method (keys->connection,
+                                         SD_NAME,
+                                         SD_OBJECT_PATH,
+                                         SD_INTERFACE,
+                                         "GrabMediaPlayerKeys",
+                                         g_variant_new ("(su)", "Evince", 1),
+                                         G_DBUS_INVOKE_METHOD_FLAGS_NO_AUTO_START,
+                                         -1,
+                                         NULL, NULL, NULL);
 }
 
 static void
 ev_media_player_keys_release_keys (EvMediaPlayerKeys *keys)
 {
-	dbus_g_proxy_call (keys->proxy,
-			   "ReleaseMediaPlayerKeys", NULL,
-			   G_TYPE_STRING, "Evince",
-			   G_TYPE_INVALID, G_TYPE_INVALID);
+        g_dbus_connection_invoke_method (keys->connection,
+                                         SD_NAME,
+                                         SD_OBJECT_PATH,
+                                         SD_INTERFACE,
+                                         "ReleaseMediaPlayerKeys",
+                                         g_variant_new ("(s)", "Evince"),
+                                         G_DBUS_INVOKE_METHOD_FLAGS_NO_AUTO_START,
+                                         -1,
+                                         NULL, NULL, NULL);
+}
+
+static void
+media_player_key_pressed_cb (GDBusConnection *connection,
+                             const gchar *sender_name,
+                             const gchar *object_path,
+                             const gchar *interface_name,
+                             const gchar *signal_name,
+                             GVariant *parameters,
+                             gpointer user_data)
+{
+        const char *application, *key;
+
+        if (g_strcmp0 (sender_name, SD_NAME) != 0)
+                return;
+        if (g_strcmp0 (signal_name, "MediaPlayerKeyPressed") != 0)
+                return;
+
+        if (!g_variant_is_of_type (parameters, G_VARIANT_TYPE ("(ss)")))
+                return;
+
+        g_variant_get (parameters, "(&s&s)", &application, &key);
+
+        if (strcmp ("Evince", application) == 0) {
+                g_signal_emit (user_data, signals[KEY_PRESSED], 0, key);
+        }
+}
+
+static void
+mediakeys_service_appeared_cb (GDBusConnection *connection,
+                               const char      *name,
+                               const char      *name_owner,
+                               gpointer         user_data)
+{
+        EvMediaPlayerKeys *keys = EV_MEDIA_PLAYER_KEYS (user_data);
+
+        keys->connection = g_object_ref (connection);
+
+        keys->subscription_id = g_dbus_connection_signal_subscribe (connection,
+                                                                    name_owner,
+                                                                    SD_INTERFACE,
+                                                                    "MediaPlayerKeyPressed",
+                                                                    SD_OBJECT_PATH,
+                                                                    NULL,
+                                                                    media_player_key_pressed_cb,
+                                                                    keys, NULL);
+
+	ev_media_player_keys_grab_keys (keys);
+}
+
+static void
+mediakeys_service_disappeared_cb (GDBusConnection *connection,
+                                 const char      *name,
+                                 gpointer         user_data)
+{
+        EvMediaPlayerKeys *keys = EV_MEDIA_PLAYER_KEYS (user_data);
+
+        g_assert (keys->connection == connection);
+
+        g_dbus_connection_signal_unsubscribe (connection, keys->subscription_id);
+        keys->subscription_id = 0;
+
+        g_object_unref (keys->connection);
+        keys->connection = NULL;
 }
 
 static void
 ev_media_player_keys_init (EvMediaPlayerKeys *keys)
 {
-	DBusGConnection *connection;
-	GError *err = NULL;
-
-	connection = dbus_g_bus_get (DBUS_BUS_SESSION, &err);
-	if (connection == NULL) {
-		g_warning ("Error connecting to D-Bus: %s", err->message);
-		return;
-	}
-
-	/* Try the gnome-settings-daemon version,
-	 * then the gnome-control-center version of things */
-	keys->proxy = dbus_g_proxy_new_for_name_owner (connection,
-						       "org.gnome.SettingsDaemon",
-						       "/org/gnome/SettingsDaemon/MediaKeys",
-						       "org.gnome.SettingsDaemon.MediaKeys",
-						       NULL);
-	if (keys->proxy == NULL) {
-		keys->proxy = dbus_g_proxy_new_for_name_owner (connection,
-							       "org.gnome.SettingsDaemon",
-							       "/org/gnome/SettingsDaemon",
-							       "org.gnome.SettingsDaemon",
-							       &err);
-	}
-
-	dbus_g_connection_unref (connection);
-	if (err != NULL) {
-		g_warning ("Failed to create dbus proxy for org.gnome.SettingsDaemon: %s",
-			   err->message);
-		g_error_free (err);
-		
-		if (keys->proxy) {
-			g_object_unref (keys->proxy);
-			keys->proxy = NULL;
-		}
-		
-		return;
-	}
-
-	g_object_add_weak_pointer (G_OBJECT (keys->proxy),
-				   (gpointer) &(keys->proxy));
-
-	ev_media_player_keys_grab_keys (keys);
-
-	dbus_g_object_register_marshaller (ev_marshal_VOID__STRING_STRING,
-					   G_TYPE_NONE, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_INVALID);
-	dbus_g_proxy_add_signal (keys->proxy, "MediaPlayerKeyPressed",
-				 G_TYPE_STRING, G_TYPE_STRING, G_TYPE_INVALID);
-
-	dbus_g_proxy_connect_signal (keys->proxy, "MediaPlayerKeyPressed",
-				     G_CALLBACK (on_media_player_key_pressed), keys, NULL);
+        keys->watch_id = g_bus_watch_name (G_BUS_TYPE_SESSION,
+                                           SD_NAME,
+                                           G_BUS_NAME_WATCHER_FLAGS_NONE,
+                                           mediakeys_service_appeared_cb,
+                                           mediakeys_service_disappeared_cb,
+                                           keys, NULL);
 }
 
 void
 ev_media_player_keys_focused (EvMediaPlayerKeys *keys)
 {
-	if (!keys->proxy)
+	if (keys->connection == NULL)
 		return;
 	
 	ev_media_player_keys_grab_keys (keys);
@@ -178,11 +200,15 @@ ev_media_player_keys_finalize (GObject *object)
 {
 	EvMediaPlayerKeys *keys = EV_MEDIA_PLAYER_KEYS (object);
 
-	if (keys->proxy) {
-		ev_media_player_keys_release_keys (keys);
-		g_object_unref (keys->proxy);
-		keys->proxy = NULL;
-	}
+        ev_media_player_keys_release_keys (keys);
+
+        if (keys->subscription_id != 0) {
+                g_assert (keys->connection != NULL);
+                g_dbus_connection_signal_unsubscribe (keys->connection, keys->subscription_id);
+                g_object_unref (keys->connection);
+        }
+
+        g_bus_unwatch_name (keys->watch_id);
 
 	G_OBJECT_CLASS (ev_media_player_keys_parent_class)->finalize (object);
 }
