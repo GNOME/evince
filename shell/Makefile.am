@@ -30,13 +30,6 @@ if ENABLE_DBUS
 libexec_PROGRAMS += evinced
 endif
 
-EV_MEDIA_PLAYER_KEYS_SOURCES = ev-media-player-keys.c ev-media-player-keys.h
-if ENABLE_DBUS
-DBUS_SOURCES = $(EV_MEDIA_PLAYER_KEYS_SOURCES)
-else
-DBUS_SOURCES = $(null)
-endif
-
 evince_SOURCES=				\
 	eggfindbar.c			\
 	eggfindbar.h			\
@@ -91,6 +84,13 @@ evince_SOURCES=				\
 	ev-sidebar-thumbnails.h		\
 	main.c
 
+if ENABLE_DBUS
+evince_SOURCES += \
+	ev-media-player-keys.c \
+	ev-media-player-keys.h
+endif
+
+
 evince_LDFLAGS = $(AM_LDFLAGS)
 
 if PLATFORM_WIN32
@@ -144,8 +144,7 @@ evinced_LDADD=				\
 endif
 
 EXTRA_DIST = ev-marshal.list		\
-	evince-icon.rc			\
-	$(EV_MEDIA_PLAYER_KEYS_SOURCES)
+	evince-icon.rc
 
 ev-marshal.h: $(srcdir)/ev-marshal.list
 	$(AM_V_GEN)$(GLIB_GENMARSHAL) --prefix=ev_marshal $(srcdir)/ev-marshal.list --header > ev-marshal.h

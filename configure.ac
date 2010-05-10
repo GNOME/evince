@@ -122,7 +122,6 @@ AM_CONDITIONAL([PLATFORM_HILDON],[test "$with_platform" = "hildon"])
 AM_CONDITIONAL([PLATFORM_WIN32],[test "$with_platform" = "win32"])
 
 dnl Specify required versions of dependencies
-DBUS_GLIB_REQUIRED=0.70
 GTK_REQUIRED=2.21.0
 GLIB_REQUIRED=2.25.6
 KEYRING_REQUIRED=2.22.0
@@ -277,25 +276,12 @@ AC_ARG_ENABLE([dbus],
     esac])
 
 if test "$enable_dbus" = "yes"; then
-  PKG_CHECK_MODULES([DBUS],[dbus-glib-1 >= $DBUS_GLIB_REQUIRED],[],
-                    [AC_MSG_ERROR([DBUS not found; use --disable-dbus to disable DBUS support])])
-
-  AC_PATH_PROG([DBUS_BINDING_TOOL], [dbus-binding-tool], [no])
-  if test x$DBUS_BINDING_TOOL = "xno" ; then
-          AC_MSG_ERROR([dbus-binding-tool executable not found in your path - should be installed with dbus glib bindings])
-  fi
-
   AC_DEFINE([ENABLE_DBUS],[1],[Define if DBUS support is enabled])
-fi
 
-AC_SUBST([DBUS_CFLAGS])
-AC_SUBST([DBUS_LIBS])
+   PKG_CHECK_MODULES([EV_DAEMON], [gio-2.0 >= $GLIB_REQUIRED])
+fi
 
 AM_CONDITIONAL([ENABLE_DBUS], [test "$enable_dbus" = "yes"])
-
-if test "$enable_dbus" = "yes"; then
-   PKG_CHECK_MODULES([EV_DAEMON], [gthread-2.0 gio-2.0 >= $GLIB_REQUIRED])
-fi
 
 dnl ========= Check for GConf
 
@@ -360,8 +346,8 @@ BACKEND_LIBS="$BACKEND_LIBS -lm"
 AC_SUBST(BACKEND_CFLAGS)
 AC_SUBST(BACKEND_LIBS)
 
-SHELL_CFLAGS="$SHELL_CORE_CFLAGS $DBUS_CFLAGS $KEYRING_CFLAGS $GCONF_CFLAGS -DGDK_MULTIHEAD_SAFE -DGTK_MULTIHEAD_SAFE $DEBUG_FLAGS"
-SHELL_LIBS="$SHELL_CORE_LIBS $DBUS_LIBS $KEYRING_LIBS $GCONF_LIBS -lz -lm"
+SHELL_CFLAGS="$SHELL_CORE_CFLAGS $KEYRING_CFLAGS $GCONF_CFLAGS -DGDK_MULTIHEAD_SAFE -DGTK_MULTIHEAD_SAFE $DEBUG_FLAGS"
+SHELL_LIBS="$SHELL_CORE_LIBS $KEYRING_LIBS $GCONF_LIBS -lz -lm"
 AC_SUBST(SHELL_CFLAGS)
 AC_SUBST(SHELL_LIBS)
 
