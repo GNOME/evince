@@ -23,6 +23,13 @@
 
 #include "config.h"
 
+/* Evince/Totem differences */
+#ifdef ENABLE_DEBUG
+#define WITH_DBUS
+#else
+#undef WITH_DBUS
+#endif
+
 #include <glib/gi18n.h>
 
 #include <gdk/gdk.h>
@@ -36,14 +43,11 @@
 #endif /* HAVE_XTEST */
 #endif /* GDK_WINDOWING_X11 */
 
-#ifdef ENABLE_DBUS
-#include <dbus/dbus.h>
-#include <dbus/dbus-glib.h>
-
+#ifdef WITH_DBUS
 #define GS_SERVICE   "org.gnome.ScreenSaver"
 #define GS_PATH      "/org/gnome/ScreenSaver"
 #define GS_INTERFACE "org.gnome.ScreenSaver"
-#endif /* ENABLE_DBUS */
+#endif /* WITH_DBUS */
 
 #include "totem-scrsaver.h"
 
@@ -57,11 +61,11 @@ struct TotemScrsaverPrivate {
 	/* Whether the screensaver is disabled */
 	gboolean disabled;
 
-#ifdef ENABLE_DBUS
-	DBusGConnection *connection;
-	DBusGProxy *gs_proxy;
+#ifdef WITH_DBUS
+        GDBusConnection *connection;
+        guint watch_id;
 	guint32 cookie;
-#endif /* ENABLE_DBUS */
+#endif /* WITH_DBUS */
 
 	/* To save the screensaver info */
 	int timeout;
@@ -80,96 +84,99 @@ G_DEFINE_TYPE(TotemScrsaver, totem_scrsaver, G_TYPE_OBJECT)
 static gboolean
 screensaver_is_running_dbus (TotemScrsaver *scr)
 {
-#ifdef ENABLE_DBUS
-	if (! scr->priv->connection)
-		return FALSE;
-
-	if (! scr->priv->gs_proxy)
-		return FALSE;
-
-	return TRUE;
+#ifdef WITH_DBUS
+        return scr->priv->connection != NULL;
 #else
 	return FALSE;
-#endif /* ENABLE_DBUS */
+#endif /* WITH_DBUS */
 }
 
 static void
 screensaver_inhibit_dbus (TotemScrsaver *scr,
 			  gboolean	 inhibit)
 {
-#ifdef ENABLE_DBUS
-	GError *error;
-	gboolean res;
+#ifdef WITH_DBUS
+	GError *error = NULL;
+        GVariant *value;
 
-	g_return_if_fail (scr != NULL);
-	g_return_if_fail (scr->priv->connection != NULL);
-	g_return_if_fail (scr->priv->gs_proxy != NULL);
+        if (scr->priv->connection == NULL)
+                return;
 
-	error = NULL;
 	if (inhibit) {
-		char   *application;
-		char   *reason;
-		guint32 cookie;
-
-		application = g_strdup ("Evince");
-		reason = g_strdup (_("Running in presentation mode"));
-
-		res = dbus_g_proxy_call (scr->priv->gs_proxy,
-					 "Inhibit",
-					 &error,
-					 G_TYPE_STRING, application,
-					 G_TYPE_STRING, reason,
-					 G_TYPE_INVALID,
-					 G_TYPE_UINT, &cookie,
-					 G_TYPE_INVALID);
-
-		if (res) {
-			/* save the cookie */
-			scr->priv->cookie = cookie;
-		} else {
+                value = g_dbus_connection_invoke_method_sync (scr->priv->connection,
+                                                              GS_SERVICE,
+                                                              GS_PATH,
+                                                              GS_INTERFACE,
+                                                              "Inhibit",
+                                                              g_variant_new ("(ss)",
+                                                                             "Evince",
+                                                                             _("Running in presentation mode")),
+                                                              G_DBUS_INVOKE_METHOD_FLAGS_NO_AUTO_START,
+                                                              -1,
+                                                              NULL,
+                                                              &error);
+		if (error && g_error_matches (error, G_DBUS_ERROR, G_DBUS_ERROR_UNKNOWN_METHOD)) {
 			/* try the old API */
-			res = dbus_g_proxy_call (scr->priv->gs_proxy,
-						 "InhibitActivation",
-						 NULL,
-						 G_TYPE_STRING, reason,
-						 G_TYPE_INVALID,
-						 G_TYPE_INVALID);
-			if (res)
-				g_error_free (error);
+                        g_clear_error (&error);
+                        value = g_dbus_connection_invoke_method_sync (scr->priv->connection,
+                                                                      GS_SERVICE,
+                                                                      GS_PATH,
+                                                                      GS_INTERFACE,
+                                                                      "InhibitActivation",
+                                                                      g_variant_new ("(s)",
+                                                                                     _("Running in presentation mode")),
+                                                                      G_DBUS_INVOKE_METHOD_FLAGS_NO_AUTO_START,
+                                                                      -1,
+                                                                      NULL,
+                                                                      &error);
+                }
+                if (value != NULL) {
+			/* save the cookie */
+                        if (g_variant_is_of_type (value, G_VARIANT_TYPE ("(u)")))
+			       g_variant_get (value, "(u)", &scr->priv->cookie);
+                        else
+                                scr->priv->cookie = 0;
+                        g_variant_unref (value);
+		} else {
+			g_warning ("Problem inhibiting the screensaver: %s", error->message);
+                        g_error_free (error);
 		}
-
-		g_free (reason);
-		g_free (application);
 
 	} else {
-		res = dbus_g_proxy_call (scr->priv->gs_proxy,
-					 "UnInhibit",
-					 &error,
-					 G_TYPE_UINT, scr->priv->cookie,
-					 G_TYPE_INVALID,
-					 G_TYPE_INVALID);
-		if (res) {
+                value = g_dbus_connection_invoke_method_sync (scr->priv->connection,
+                                                              GS_SERVICE,
+                                                              GS_PATH,
+                                                              GS_INTERFACE,
+                                                              "UnInhibit",
+                                                              g_variant_new ("(u)", scr->priv->cookie),
+                                                              G_DBUS_INVOKE_METHOD_FLAGS_NO_AUTO_START,
+                                                              -1,
+                                                              NULL,
+                                                              &error);
+		if (error && g_error_matches (error, G_DBUS_ERROR, G_DBUS_ERROR_UNKNOWN_METHOD)) {
+			/* try the old API */
+                        g_clear_error (&error);
+                        value = g_dbus_connection_invoke_method_sync (scr->priv->connection,
+                                                                      GS_SERVICE,
+                                                                      GS_PATH,
+                                                                      GS_INTERFACE,
+                                                                      "AllowActivation",
+                                                                      g_variant_new ("()"),
+                                                                      G_DBUS_INVOKE_METHOD_FLAGS_NO_AUTO_START,
+                                                                      -1,
+                                                                      NULL,
+                                                                      &error);
+                }
+                if (value != NULL) {
 			/* clear the cookie */
 			scr->priv->cookie = 0;
+                        g_variant_unref (value);
 		} else {
-			/* try the old API */
-			res = dbus_g_proxy_call (scr->priv->gs_proxy,
-						 "AllowActivation",
-						 NULL,
-						 G_TYPE_INVALID,
-						 G_TYPE_INVALID);
-			if (res)
-				g_error_free (error);
-		}
-	}
-
-	if (! res) {
-		if (error) {
-			g_warning ("Problem inhibiting the screensaver: %s", error->message);
+			g_warning ("Problem uninhibiting the screensaver: %s", error->message);
 			g_error_free (error);
 		}
 	}
-#endif /* ENABLE_DBUS */
+#endif /* WITH_DBUS */
 }
 
 static void
@@ -184,58 +191,53 @@ screensaver_disable_dbus (TotemScrsaver *scr)
 	screensaver_inhibit_dbus (scr, TRUE);
 }
 
-#ifdef ENABLE_DBUS
+#ifdef WITH_DBUS
 static void
-gs_proxy_destroy_cb (GObject *proxy,
-		     TotemScrsaver *scr)
+screensaver_dbus_appeared_cb (GDBusConnection *connection,
+                              const char      *name,
+                              const char      *name_owner,
+                              gpointer         user_data)
 {
-	g_warning ("Detected that GNOME screensaver has left the bus");
+        TotemScrsaver *scr = TOTEM_SCRSAVER (user_data);
 
-	/* just invalidate for now */
-	scr->priv->gs_proxy = NULL;
+        scr->priv->connection = g_object_ref (connection);
+}
+
+static void
+screensaver_dbus_disappeared_cb (GDBusConnection *connection,
+                                 const char      *name,
+                                 gpointer         user_data)
+{
+        TotemScrsaver *scr = TOTEM_SCRSAVER (user_data);
+
+        g_assert (scr->priv->connection == connection);
+        g_object_unref (scr->priv->connection);
+        scr->priv->connection = NULL;
 }
 #endif
 
 static void
 screensaver_init_dbus (TotemScrsaver *scr)
 {
-#ifdef ENABLE_DBUS
-	GError *error = NULL;
-
-	scr->priv->connection = dbus_g_bus_get (DBUS_BUS_SESSION, &error);
-
-	if (! scr->priv->connection) {
-		if (error) {
-			g_warning ("Failed to connect to the session bus: %s", error->message);
-			g_error_free (error);
-		}
-		return;
-	}
-
-	scr->priv->gs_proxy = dbus_g_proxy_new_for_name_owner (scr->priv->connection,
-							       GS_SERVICE,
-							       GS_PATH,
-							       GS_INTERFACE,
-							       NULL);
-	if (scr->priv->gs_proxy != NULL) {
-		g_signal_connect_object (scr->priv->gs_proxy,
-					 "destroy",
-					 G_CALLBACK (gs_proxy_destroy_cb),
-					 scr,
-					 0);
-
-	}
-#endif /* ENABLE_DBUS */
+#ifdef WITH_DBUS
+        scr->priv->watch_id = g_bus_watch_name (G_BUS_TYPE_SESSION,
+                                                GS_SERVICE,
+                                                G_BUS_NAME_WATCHER_FLAGS_NONE,
+                                                screensaver_dbus_appeared_cb,
+                                                screensaver_dbus_disappeared_cb,
+                                                scr, NULL);
+#endif /* WITH_DBUS */
 }
 
 static void
 screensaver_finalize_dbus (TotemScrsaver *scr)
 {
-#ifdef ENABLE_DBUS
-	if (scr->priv->gs_proxy) {
-		g_object_unref (scr->priv->gs_proxy);
-	}
-#endif /* ENABLE_DBUS */
+#ifdef WITH_DBUS
+        g_bus_unwatch_name (scr->priv->watch_id);
+
+        if (scr->priv->connection != NULL)
+                g_object_unref (scr->priv->connection);
+#endif /* WITH_DBUS */
 }
 
 #ifdef GDK_WINDOWING_X11
