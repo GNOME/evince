@@ -37,6 +37,8 @@
 
 #define DAEMON_TIMEOUT (30) /* seconds */
 
+#define LOG g_printerr
+
 static GList *ev_daemon_docs = NULL;
 static guint kill_timer_id;
 
@@ -87,6 +89,8 @@ static gboolean
 ev_daemon_shutdown (gpointer user_data)
 {
         GMainLoop *loop = (GMainLoop *) user_data;
+
+        LOG ("Timeout; exiting daemon.\n");
 
         if (g_main_loop_is_running (loop))
                 g_main_loop_quit (loop);
@@ -264,7 +268,10 @@ method_call_cb (GDBusConnection       *connection,
                                                           name_vanished_cb,
                                                           user_data, NULL);
 
+                        LOG ("RegisterDocument registered owner '%s' for URI '%s'\n", doc->dbus_name, uri);
                         ev_daemon_docs = g_list_prepend (ev_daemon_docs, doc);
+                } else {
+                        LOG ("RegisterDocument found owner '%s' for URI '%s'\n", doc->dbus_name, uri);
                 }
 
                 g_dbus_method_invocation_return_value (invocation,
@@ -277,8 +284,11 @@ method_call_cb (GDBusConnection       *connection,
 
                 g_variant_get (parameters, "(&s)", &uri);
 
+                LOG ("UnregisterDocument URI '%s'\n", uri);
+
                 doc = ev_daemon_find_doc (uri);
                 if (doc == NULL) {
+                        LOG ("UnregisterDocument URI was not registered!\n");
                         g_dbus_method_invocation_return_error_literal (invocation,
                                                                        G_DBUS_ERROR,
                                                                        G_DBUS_ERROR_INVALID_ARGS,
@@ -287,6 +297,9 @@ method_call_cb (GDBusConnection       *connection,
                 }
 
                 if (strcmp (doc->dbus_name, sender) != 0) {
+                        LOG ("UnregisterDocument called by non-owner (owner '%s' sender '%s')\n",
+                             doc->dbus_name, sender);
+
                         g_dbus_method_invocation_return_error_literal (invocation,
                                                                        G_DBUS_ERROR,
                                                                        G_DBUS_ERROR_BAD_ADDRESS,
