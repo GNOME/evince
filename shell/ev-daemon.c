@@ -211,6 +211,7 @@ name_appeared_cb (GDBusConnection *connection,
                   const gchar     *name_owner,
                   gpointer         user_data)
 {
+        LOG ("Watch name'%s' appeared with owner '%s'\n", name, name_owner);
 }
 
 static void
@@ -220,11 +221,15 @@ name_vanished_cb (GDBusConnection *connection,
 {
 	GList *l;
 
+        LOG ("Watch name'%s' disappeared\n", name);
+
         for (l = ev_daemon_docs; l != NULL; l = l->next) {
                 EvDoc *doc = (EvDoc *) l->data;
 
                 if (strcmp (doc->dbus_name, name) != 0)
                         continue;
+
+                LOG ("Watch found URI '%s' for name; removing\n", doc->uri);
 
                 ev_daemon_docs = g_list_delete_link (ev_daemon_docs, l);
                 ev_doc_free (doc);
