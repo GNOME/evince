@@ -332,6 +332,22 @@ ev_application_get_empty_window (EvApplication *application,
 
 
 #ifdef ENABLE_DBUS
+/*
+ * ev_application_register_uri:
+ * @application:
+ * @uri:
+ * @screen:
+ * @dest:
+ * @mode:
+ * @search_string:
+ * @timestamp:
+ *
+ * Registers @uri with evince-daemon.
+ *
+ * Returns: %TRUE to continue by opening @uri in this instance,
+ *   or %FALSE if the request was forwarded to an existing evince
+ *   instance for @uri
+ */
 static gboolean
 ev_application_register_uri (EvApplication *application,
 			     const gchar   *uri,
@@ -369,7 +385,10 @@ ev_application_register_uri (EvApplication *application,
 
         g_variant_get (value, "(&s)", &owner);
 
-	if (owner[0] != ':') {
+        /* This means that the document wasn't already registered; go
+         * ahead with opening it.
+         */
+	if (owner[0] == '\0') {
                 g_variant_unref (value);
                 return TRUE;
         }
@@ -416,8 +435,9 @@ ev_application_register_uri (EvApplication *application,
                      NULL,
                      &error);
         if (value2 == NULL) {
-                g_warning ("%s", error->message);
+                g_warning ("Failed to OpenURI: %s", error->message);
                 g_error_free (error);
+                return FALSE;
         }
 
 	g_variant_unref (value);

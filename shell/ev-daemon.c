@@ -254,28 +254,30 @@ method_call_cb (GDBusConnection       *connection,
                 g_variant_get (parameters, "(&s)", &uri);
 
                 doc = ev_daemon_find_doc (uri);
-                if (doc == NULL) {
-                        ev_daemon_stop_killtimer ();
-
-                        doc = g_new (EvDoc, 1);
-                        doc->dbus_name = g_strdup (sender);
-                        doc->uri = g_strdup (uri);
-
-                        doc->watch_id = g_bus_watch_name (G_BUS_TYPE_STARTER,
-                                                          sender,
-                                                          G_BUS_NAME_WATCHER_FLAGS_NONE,
-                                                          name_appeared_cb,
-                                                          name_vanished_cb,
-                                                          user_data, NULL);
-
-                        LOG ("RegisterDocument registered owner '%s' for URI '%s'\n", doc->dbus_name, uri);
-                        ev_daemon_docs = g_list_prepend (ev_daemon_docs, doc);
-                } else {
+                if (doc != NULL) {
                         LOG ("RegisterDocument found owner '%s' for URI '%s'\n", doc->dbus_name, uri);
+                        g_dbus_method_invocation_return_value (invocation,
+                                                               g_variant_new ("(s)", doc->dbus_name));
+                        return;
                 }
+        
+                ev_daemon_stop_killtimer ();
 
-                g_dbus_method_invocation_return_value (invocation,
-                                                       g_variant_new ("(s)", doc->dbus_name));
+                doc = g_new (EvDoc, 1);
+                doc->dbus_name = g_strdup (sender);
+                doc->uri = g_strdup (uri);
+
+                doc->watch_id = g_bus_watch_name (G_BUS_TYPE_STARTER,
+                                                  sender,
+                                                  G_BUS_NAME_WATCHER_FLAGS_NONE,
+                                                  name_appeared_cb,
+                                                  name_vanished_cb,
+                                                  user_data, NULL);
+
+                LOG ("RegisterDocument registered owner '%s' for URI '%s'\n", doc->dbus_name, uri);
+                ev_daemon_docs = g_list_prepend (ev_daemon_docs, doc);
+
+                g_dbus_method_invocation_return_value (invocation, g_variant_new ("(s)", ""));
                 return;
 
         } else if (g_strcmp0 (method_name, "UnregisterDocument") == 0) {
