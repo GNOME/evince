@@ -1734,27 +1734,6 @@ egg_editable_toolbar_set_fixed (EggEditableToolbar *etoolbar,
 }
 
 #define DEFAULT_ICON_HEIGHT 20
-#define DEFAULT_ICON_WIDTH 0
-
-static void
-fake_expose_widget (GtkWidget *widget,
-		    GdkPixmap *pixmap)
-{
-  GdkWindow *tmp_window;
-  GdkEventExpose event;
-
-  event.type = GDK_EXPOSE;
-  event.window = pixmap;
-  event.send_event = FALSE;
-  event.area = widget->allocation;
-  event.region = NULL;
-  event.count = 0;
-
-  tmp_window = widget->window;
-  widget->window = pixmap;
-  gtk_widget_send_expose (widget, (GdkEvent *) &event);
-  widget->window = tmp_window;
-}
 
 /* We should probably experiment some more with this.
  * Right now the rendered icon is pretty good for most
@@ -1766,15 +1745,8 @@ new_pixbuf_from_widget (GtkWidget *widget)
 {
   GtkWidget *window;
   GdkPixbuf *pixbuf;
-  GtkRequisition requisition;
-  GtkAllocation allocation;
-  GdkPixmap *pixmap;
-  GdkVisual *visual;
-  gint icon_width;
   gint icon_height;
   GdkScreen *screen;
-
-  icon_width = DEFAULT_ICON_WIDTH;
 
   screen = gtk_widget_get_screen (widget);
 
@@ -1786,46 +1758,16 @@ new_pixbuf_from_widget (GtkWidget *widget)
       icon_height = DEFAULT_ICON_HEIGHT;
     }
 
-  window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+  window = gtk_offscreen_window_new ();
+  /* Set the width to -1 as we want the separator to be as thin as possible. */
+  gtk_widget_set_size_request (widget, -1, icon_height);
 
   gtk_container_add (GTK_CONTAINER (window), widget);
-  gtk_widget_realize (window);
-  gtk_widget_show (widget);
-  gtk_widget_realize (widget);
-  gtk_widget_map (widget);
+  gtk_widget_show_all (window);
 
-  /* Gtk will never set the width or height of a window to 0. So setting the width to
-   * 0 and than getting it will provide us with the minimum width needed to render
-   * the icon correctly, without any additional window background noise.
-   * This is needed mostly for pixmap based themes.
-   */
-  gtk_window_set_default_size (GTK_WINDOW (window), icon_width, icon_height);
-  gtk_window_get_size (GTK_WINDOW (window),&icon_width, &icon_height);
-
-  gtk_widget_size_request (window, &requisition);
-  allocation.x = 0;
-  allocation.y = 0;
-  allocation.width = icon_width;
-  allocation.height = icon_height;
-  gtk_widget_size_allocate (window, &allocation);
-  gtk_widget_size_request (window, &requisition);
-
-  /* Create a pixmap */
-  visual = gtk_widget_get_visual (window);
-  pixmap = gdk_pixmap_new (NULL, icon_width, icon_height, visual->depth);
-  gdk_drawable_set_colormap (GDK_DRAWABLE (pixmap), gtk_widget_get_colormap (window));
-
-  /* Draw the window */
-  gtk_widget_ensure_style (window);
-  g_assert (window->style);
-  g_assert (window->style->font_desc);
-
-  fake_expose_widget (window, pixmap);
-  fake_expose_widget (widget, pixmap);
-
-  pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB, TRUE, 8, icon_width, icon_height);
-  gdk_pixbuf_get_from_drawable (pixbuf, pixmap, NULL, 0, 0, 0, 0, icon_width, icon_height);
-
+  /* Process the waiting events to have the widget actually drawn */
+  gdk_window_process_updates (gtk_widget_get_window (window), TRUE);
+  pixbuf = gtk_offscreen_window_get_pixbuf (GTK_OFFSCREEN_WINDOW (window));
   gtk_widget_destroy (window);
 
   return pixbuf;
