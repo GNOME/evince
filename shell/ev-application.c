@@ -366,14 +366,14 @@ ev_application_register_uri (EvApplication *application,
 		return TRUE;
 
         /* FIXME: Don't make sync dbus calls, they block the UI! */
-        value = g_dbus_connection_invoke_method_sync
+        value = g_dbus_connection_call_sync
                    (application->connection,
                     "org.gnome.evince.Daemon",
                     "/org/gnome/evince/Daemon",
                     "org.gnome.evince.Daemon",
                     "RegisterDocument",
                     g_variant_new ("(s)", uri),
-                    G_DBUS_INVOKE_METHOD_FLAGS_NONE,
+                    G_DBUS_CALL_FLAGS_NONE,
                     -1,
                     NULL,
                     &error);
@@ -423,14 +423,14 @@ ev_application_register_uri (EvApplication *application,
 
         g_variant_builder_add (&builder, "u", timestamp);
 
-        value2 = g_dbus_connection_invoke_method_sync
+        value2 = g_dbus_connection_call_sync
                     (application->connection,
                      owner,
                      APPLICATION_DBUS_OBJECT_PATH,
                      APPLICATION_DBUS_INTERFACE,
                      "OpenURI",
                      g_variant_builder_end (&builder),
-                     G_DBUS_INVOKE_METHOD_FLAGS_NONE,
+                     G_DBUS_CALL_FLAGS_NONE,
                      -1,
                      NULL,
                      &error);
@@ -458,14 +458,14 @@ ev_application_unregister_uri (EvApplication *application,
 		return;
 
         /* FIXME: Don't make sync dbus calls, they block the UI! */
-        value = g_dbus_connection_invoke_method_sync
+        value = g_dbus_connection_call_sync
                    (application->connection,
                     "org.gnome.evince.Daemon",
                     "/org/gnome/evince/Daemon",
                     "org.gnome.evince.Daemon",
                     "UnregisterDocument",
                     g_variant_new ("(s)", uri),
-                    G_DBUS_INVOKE_METHOD_FLAGS_NO_AUTO_START,
+                    G_DBUS_CALL_FLAGS_NO_AUTO_START,
                     -1,
                     NULL,
                     &error);

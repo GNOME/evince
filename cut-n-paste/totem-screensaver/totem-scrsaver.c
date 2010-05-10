@@ -103,32 +103,32 @@ screensaver_inhibit_dbus (TotemScrsaver *scr,
                 return;
 
 	if (inhibit) {
-                value = g_dbus_connection_invoke_method_sync (scr->priv->connection,
-                                                              GS_SERVICE,
-                                                              GS_PATH,
-                                                              GS_INTERFACE,
-                                                              "Inhibit",
-                                                              g_variant_new ("(ss)",
-                                                                             "Evince",
-                                                                             _("Running in presentation mode")),
-                                                              G_DBUS_INVOKE_METHOD_FLAGS_NO_AUTO_START,
-                                                              -1,
-                                                              NULL,
-                                                              &error);
+                value = g_dbus_connection_call_sync (scr->priv->connection,
+                                                     GS_SERVICE,
+                                                     GS_PATH,
+                                                     GS_INTERFACE,
+                                                     "Inhibit",
+                                                     g_variant_new ("(ss)",
+                                                                    "Evince",
+                                                                    _("Running in presentation mode")),
+                                                     G_DBUS_INVOKE_METHOD_FLAGS_NO_AUTO_START,
+                                                     -1,
+                                                     NULL,
+                                                     &error);
 		if (error && g_error_matches (error, G_DBUS_ERROR, G_DBUS_ERROR_UNKNOWN_METHOD)) {
 			/* try the old API */
                         g_clear_error (&error);
-                        value = g_dbus_connection_invoke_method_sync (scr->priv->connection,
-                                                                      GS_SERVICE,
-                                                                      GS_PATH,
-                                                                      GS_INTERFACE,
-                                                                      "InhibitActivation",
-                                                                      g_variant_new ("(s)",
-                                                                                     _("Running in presentation mode")),
-                                                                      G_DBUS_INVOKE_METHOD_FLAGS_NO_AUTO_START,
-                                                                      -1,
-                                                                      NULL,
-                                                                      &error);
+                        value = g_dbus_connection_call_sync (scr->priv->connection,
+                                                             GS_SERVICE,
+                                                             GS_PATH,
+                                                             GS_INTERFACE,
+                                                             "InhibitActivation",
+                                                             g_variant_new ("(s)",
+                                                                            _("Running in presentation mode")),
+                                                             G_DBUS_INVOKE_METHOD_FLAGS_NO_AUTO_START,
+                                                             -1,
+                                                             NULL,
+                                                             &error);
                 }
                 if (value != NULL) {
 			/* save the cookie */
@@ -143,29 +143,29 @@ screensaver_inhibit_dbus (TotemScrsaver *scr,
 		}
 
 	} else {
-                value = g_dbus_connection_invoke_method_sync (scr->priv->connection,
-                                                              GS_SERVICE,
-                                                              GS_PATH,
-                                                              GS_INTERFACE,
-                                                              "UnInhibit",
-                                                              g_variant_new ("(u)", scr->priv->cookie),
-                                                              G_DBUS_INVOKE_METHOD_FLAGS_NO_AUTO_START,
-                                                              -1,
-                                                              NULL,
-                                                              &error);
+                value = g_dbus_connection_call_sync (scr->priv->connection,
+                                                     GS_SERVICE,
+                                                     GS_PATH,
+                                                     GS_INTERFACE,
+                                                     "UnInhibit",
+                                                     g_variant_new ("(u)", scr->priv->cookie),
+                                                     G_DBUS_INVOKE_METHOD_FLAGS_NO_AUTO_START,
+                                                     -1,
+                                                     NULL,
+                                                     &error);
 		if (error && g_error_matches (error, G_DBUS_ERROR, G_DBUS_ERROR_UNKNOWN_METHOD)) {
 			/* try the old API */
                         g_clear_error (&error);
-                        value = g_dbus_connection_invoke_method_sync (scr->priv->connection,
-                                                                      GS_SERVICE,
-                                                                      GS_PATH,
-                                                                      GS_INTERFACE,
-                                                                      "AllowActivation",
-                                                                      g_variant_new ("()"),
-                                                                      G_DBUS_INVOKE_METHOD_FLAGS_NO_AUTO_START,
-                                                                      -1,
-                                                                      NULL,
-                                                                      &error);
+                        value = g_dbus_connection_call_sync (scr->priv->connection,
+                                                             GS_SERVICE,
+                                                             GS_PATH,
+                                                             GS_INTERFACE,
+                                                             "AllowActivation",
+                                                             g_variant_new ("()"),
+                                                             G_DBUS_INVOKE_METHOD_FLAGS_NO_AUTO_START,
+                                                             -1,
+                                                             NULL,
+                                                             &error);
                 }
                 if (value != NULL) {
 			/* clear the cookie */

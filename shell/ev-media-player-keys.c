@@ -86,29 +86,29 @@ ev_media_player_keys_grab_keys (EvMediaPlayerKeys *keys)
 	 * if a media player is there it gets higher priority on the keys (0 is
 	 * a special value having maximum priority).
 	 */
-        g_dbus_connection_invoke_method (keys->connection,
-                                         SD_NAME,
-                                         SD_OBJECT_PATH,
-                                         SD_INTERFACE,
-                                         "GrabMediaPlayerKeys",
-                                         g_variant_new ("(su)", "Evince", 1),
-                                         G_DBUS_INVOKE_METHOD_FLAGS_NO_AUTO_START,
-                                         -1,
-                                         NULL, NULL, NULL);
+        g_dbus_connection_call (keys->connection,
+                                SD_NAME,
+                                SD_OBJECT_PATH,
+                                SD_INTERFACE,
+                                "GrabMediaPlayerKeys",
+                                g_variant_new ("(su)", "Evince", 1),
+                                G_DBUS_CALL_FLAGS_NO_AUTO_START,
+                                -1,
+                                NULL, NULL, NULL);
 }
 
 static void
 ev_media_player_keys_release_keys (EvMediaPlayerKeys *keys)
 {
-        g_dbus_connection_invoke_method (keys->connection,
-                                         SD_NAME,
-                                         SD_OBJECT_PATH,
-                                         SD_INTERFACE,
-                                         "ReleaseMediaPlayerKeys",
-                                         g_variant_new ("(s)", "Evince"),
-                                         G_DBUS_INVOKE_METHOD_FLAGS_NO_AUTO_START,
-                                         -1,
-                                         NULL, NULL, NULL);
+        g_dbus_connection_call (keys->connection,
+                                SD_NAME,
+                                SD_OBJECT_PATH,
+                                SD_INTERFACE,
+                                "ReleaseMediaPlayerKeys",
+                                g_variant_new ("(s)", "Evince"),
+                                G_DBUS_CALL_FLAGS_NO_AUTO_START,
+                                -1,
+                                NULL, NULL, NULL);
 }
 
 static void
