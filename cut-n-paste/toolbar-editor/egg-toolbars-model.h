@@ -98,19 +98,19 @@ typedef struct EggToolbarsItemType EggToolbarsItemType;
 struct EggToolbarsItemType
 {
   GdkAtom type;
-        
+
   gboolean (* has_data) (EggToolbarsItemType *type,
                          const char          *name);
   char *   (* get_data) (EggToolbarsItemType *type,
                          const char          *name);
-  
+
   char *   (* new_name) (EggToolbarsItemType *type,
                          const char          *data);
   char *   (* get_name) (EggToolbarsItemType *type,
                          const char          *data);
 };
 
-GType		  egg_toolbars_model_flags_get_type (void);
+GType		  egg_tb_model_flags_get_type       (void);
 GType		  egg_toolbars_model_get_type       (void);
 EggToolbarsModel *egg_toolbars_model_new	    (void);
 gboolean          egg_toolbars_model_load_names     (EggToolbarsModel *model,
