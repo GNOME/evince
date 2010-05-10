@@ -465,7 +465,7 @@ ev_application_unregister_uri (EvApplication *application,
                     "org.gnome.evince.Daemon",
                     "UnregisterDocument",
                     g_variant_new ("(s)", uri),
-                    G_DBUS_INVOKE_METHOD_FLAGS_NONE,
+                    G_DBUS_INVOKE_METHOD_FLAGS_NO_AUTO_START,
                     -1,
                     NULL,
                     &error);
