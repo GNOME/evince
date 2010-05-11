@@ -4579,6 +4579,8 @@ void
 ev_view_set_loading (EvView 	  *view,
 		     gboolean      loading)
 {
+	if (view->loading && !loading)
+		hide_loading_window (view);
 	view->loading = loading;
 	gtk_widget_queue_draw (GTK_WIDGET (view));
 }
