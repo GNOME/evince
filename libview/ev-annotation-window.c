@@ -381,7 +381,7 @@ ev_annotation_window_init (EvAnnotationWindow *window)
 
 	gtk_container_set_border_width (GTK_CONTAINER (window), 2);
 
-	gtk_window_set_accept_focus (GTK_WINDOW (window), FALSE);
+	gtk_window_set_accept_focus (GTK_WINDOW (window), TRUE);
 	gtk_window_set_decorated (GTK_WINDOW (window), FALSE);
 	gtk_window_set_skip_taskbar_hint (GTK_WINDOW (window), TRUE);
 	gtk_window_set_skip_pager_hint (GTK_WINDOW (window), TRUE);
