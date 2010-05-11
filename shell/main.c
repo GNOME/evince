@@ -143,6 +143,28 @@ launch_previewer (void)
 	return retval;
 }
 
+static gchar *
+get_label_from_filename (const gchar *filename)
+{
+	GFile   *file;
+	gchar   *label;
+	gboolean exists;
+
+	label = g_strrstr (filename, "#");
+	if (!label)
+		return NULL;
+
+	/* Filename contains a #, check
+	 * whether it's part of the path
+	 * or a label
+	 */
+	file = g_file_new_for_commandline_arg (filename);
+	exists = g_file_query_exists (file, NULL);
+	g_object_unref (file);
+
+	return exists ? NULL : label;
+}
+
 static void
 load_files (const char **files)
 {
@@ -174,7 +196,7 @@ load_files (const char **files)
 		const gchar *app_uri;
 
 		filename = files[i];
-		label = strchr (filename, '#');
+		label = get_label_from_filename (filename);
 		if (label) {
 			*label = 0;
 			label++;
