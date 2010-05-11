@@ -177,11 +177,6 @@ static void       ev_view_remove_all                         (EvView            
 static AtkObject *ev_view_get_accessible                     (GtkWidget *widget);
 
 /*** Drawing ***/
-static guint32    ev_gdk_color_to_rgb                        (const GdkColor     *color);
-static void       draw_rubberband                            (GtkWidget          *widget,
-							      GdkWindow          *window,
-							      const GdkRectangle *rect,
-							      guchar              alpha);
 static void       highlight_find_results                     (EvView             *view,
 							      int                 page);
 static void       draw_one_page                              (EvView             *view,
@@ -3928,50 +3923,37 @@ ev_view_style_set (GtkWidget *widget,
 
 /*** Drawing ***/
 
-static guint32
-ev_gdk_color_to_rgb (const GdkColor *color)
-{
-  guint32 result;
-  result = (0xff0000 | (color->red & 0xff00));
-  result <<= 8;
-  result |= ((color->green & 0xff00) | (color->blue >> 8));
-  return result;
-}
-
 static void
-draw_rubberband (GtkWidget *widget, GdkWindow *window,
-		 const GdkRectangle *rect, guchar alpha)
+draw_rubberband (EvView             *view,
+		 GdkWindow          *window,
+		 const GdkRectangle *rect,
+		 gdouble             alpha)
 {
-	GdkGC *gc;
-	GdkPixbuf *pixbuf;
 	GtkStyle *style;
 	GdkColor *fill_color_gdk;
-	guint fill_color;
+	gdouble   r, g, b;
+	cairo_t  *cr;
 
-	style = gtk_widget_get_style (widget);
+	style = gtk_widget_get_style (GTK_WIDGET (view));
 	fill_color_gdk = gdk_color_copy (&style->base[GTK_STATE_SELECTED]);
-	fill_color = ev_gdk_color_to_rgb (fill_color_gdk) << 8 | alpha;
+	r = fill_color_gdk->red / 65535.;
+	g = fill_color_gdk->green / 65535.;
+	b = fill_color_gdk->blue / 65535.;
 
-	pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB, TRUE, 8,
-				 rect->width, rect->height);
-	gdk_pixbuf_fill (pixbuf, fill_color);
+	cr = gdk_cairo_create (window);
 
-	gdk_draw_pixbuf (window, NULL, pixbuf,
-			 0, 0,
-			 rect->x - EV_VIEW (widget)->scroll_x, rect->y - EV_VIEW (widget)->scroll_y,
-			 rect->width, rect->height,
-			 GDK_RGB_DITHER_NONE,
-			 0, 0);
+	cairo_set_source_rgba (cr, r, g, b, alpha);
+	cairo_rectangle (cr,
+			 rect->x - view->scroll_x,
+			 rect->y - view->scroll_y,
+			 rect->width, rect->height);
+	cairo_fill_preserve (cr);
 
-	g_object_unref (pixbuf);
+	cairo_set_line_width (cr, 0.5);
+	cairo_set_source_rgb (cr, r, g, b);
+	cairo_stroke (cr);
 
-	gc = gdk_gc_new (window);
-	gdk_gc_set_rgb_fg_color (gc, fill_color_gdk);
-	gdk_draw_rectangle (window, gc, FALSE,
-			    rect->x - EV_VIEW (widget)->scroll_x, rect->y - EV_VIEW (widget)->scroll_y,
-			    rect->width - 1,
-			    rect->height - 1);
-	g_object_unref (gc);
+	cairo_destroy (cr);
 
 	gdk_color_free (fill_color_gdk);
 }
@@ -3990,18 +3972,17 @@ highlight_find_results (EvView *view, int page)
 	for (i = 0; i < n_results; i++) {
 		EvRectangle *rectangle;
 		GdkRectangle view_rectangle;
-		guchar alpha;
+		gdouble      alpha;
 
 		if (i == view->find_result && page == view->current_page) {
-			alpha = 0x90;
+			alpha = 0.6;
 		} else {
-			alpha = 0x20;
+			alpha = 0.3;
 		}
 
 		rectangle = ev_view_find_get_result (view, page, i);
 		doc_rect_to_view_rect (view, page, rectangle, &view_rectangle);
-		draw_rubberband (GTK_WIDGET (view), bin_window,
-				 &view_rectangle, alpha);
+		draw_rubberband (view, bin_window, &view_rectangle, alpha);
         }
 }
 
