@@ -166,6 +166,9 @@ mediakeys_service_disappeared_cb (GDBusConnection *connection,
 {
         EvMediaPlayerKeys *keys = EV_MEDIA_PLAYER_KEYS (user_data);
 
+        if (keys->connection == NULL)
+                return;
+
         g_assert (keys->connection == connection);
 
         g_dbus_connection_signal_unsubscribe (connection, keys->subscription_id);

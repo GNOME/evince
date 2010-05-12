@@ -210,6 +210,9 @@ screensaver_dbus_disappeared_cb (GDBusConnection *connection,
 {
         TotemScrsaver *scr = TOTEM_SCRSAVER (user_data);
 
+        if (scr->priv->connection == NULL)
+                return;
+
         g_assert (scr->priv->connection == connection);
         g_object_unref (scr->priv->connection);
         scr->priv->connection = NULL;
