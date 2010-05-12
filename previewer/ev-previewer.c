@@ -86,8 +86,12 @@ ev_previewer_load_document (const gchar     *filename,
 {
 	EvJob *job;
 	gchar *uri;
+	GFile  *file;
 
-	uri = g_filename_to_uri (filename, NULL, NULL);
+	file = g_file_new_for_commandline_arg (filename);
+	uri = g_file_get_uri (file);
+	g_object_unref (file);
+
 	job = ev_job_load_new (uri);
 	g_signal_connect (job, "finished",
 			  G_CALLBACK (ev_previewer_load_job_finished),
