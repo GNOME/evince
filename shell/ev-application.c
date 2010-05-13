@@ -841,8 +841,6 @@ ev_application_init (EvApplication *ev_application)
 
 	ev_application_accel_map_load (ev_application);
 
-	ev_application->scr_saver = totem_scrsaver_new ();
-
 #ifdef ENABLE_DBUS
 {
         static const char introspection_xml[] =
@@ -889,7 +887,11 @@ ev_application_init (EvApplication *ev_application)
         }
 
 	ev_application->keys = ev_media_player_keys_new (ev_application->connection);
+
+	ev_application->scr_saver = totem_scrsaver_new (ev_application->connection);
 }
+#else
+        ev_application->scr_saver = totem_scrsaver_new ();
 #endif /* ENABLE_DBUS */
 }
 
