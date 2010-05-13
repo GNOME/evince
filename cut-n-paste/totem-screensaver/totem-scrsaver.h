@@ -23,10 +23,7 @@
 #define TOTEM_SCRSAVER_H
 
 #include <glib.h>
-#include <glib-object.h>
-#ifdef ENABLE_DBUS
 #include <gio/gio.h>
-#endif
 
 G_BEGIN_DECLS
 
@@ -50,11 +47,7 @@ struct TotemScrsaverClass {
 };
 
 GType totem_scrsaver_get_type		(void);
-#ifdef ENABLE_DBUS
-TotemScrsaver *totem_scrsaver_new      (GDBusConnection *connection);
-#else
-TotemScrsaver *totem_scrsaver_new	(void);
-#endif
+TotemScrsaver *totem_scrsaver_new       (GDBusConnection *connection);
 void totem_scrsaver_enable		(TotemScrsaver *scr);
 void totem_scrsaver_disable		(TotemScrsaver *scr);
 void totem_scrsaver_set_state		(TotemScrsaver *scr,

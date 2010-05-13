@@ -36,13 +36,11 @@
 #endif /* HAVE_XTEST */
 #endif /* GDK_WINDOWING_X11 */
 
-#ifdef ENABLE_DBUS
+#include "totem-scrsaver.h"
+
 #define GS_SERVICE   "org.gnome.ScreenSaver"
 #define GS_PATH      "/org/gnome/ScreenSaver"
 #define GS_INTERFACE "org.gnome.ScreenSaver"
-#endif /* ENABLE_DBUS */
-
-#include "totem-scrsaver.h"
 
 #define XSCREENSAVER_MIN_TIMEOUT 60
 
@@ -53,12 +51,10 @@ struct TotemScrsaverPrivate {
 	/* Whether the screensaver is disabled */
 	gboolean disabled;
 
-#ifdef ENABLE_DBUS
         GDBusConnection *connection;
         gboolean have_screensaver_dbus;
         guint watch_id;
 	guint32 cookie;
-#endif /* ENABLE_DBUS */
 
 	/* To save the screensaver info */
 	int timeout;
@@ -72,23 +68,23 @@ struct TotemScrsaverPrivate {
 	gboolean have_xtest;
 };
 
+enum {
+        PROP_0,
+        PROP_CONNECTION
+};
+
 G_DEFINE_TYPE(TotemScrsaver, totem_scrsaver, G_TYPE_OBJECT)
 
 static gboolean
 screensaver_is_running_dbus (TotemScrsaver *scr)
 {
-#ifdef ENABLE_DBUS
-        return scr->priv->connection != NULL;
-#else
-	return FALSE;
-#endif /* ENABLE_DBUS */
+        return scr->priv->have_screensaver_dbus;
 }
 
 static void
 screensaver_inhibit_dbus (TotemScrsaver *scr,
 			  gboolean	 inhibit)
 {
-#ifdef ENABLE_DBUS
         TotemScrsaverPrivate *priv = scr->priv;
 	GError *error = NULL;
         GVariant *value;
@@ -170,7 +166,6 @@ screensaver_inhibit_dbus (TotemScrsaver *scr,
 			g_error_free (error);
 		}
 	}
-#endif /* ENABLE_DBUS */
 }
 
 static void
@@ -185,7 +180,6 @@ screensaver_disable_dbus (TotemScrsaver *scr)
 	screensaver_inhibit_dbus (scr, TRUE);
 }
 
-#ifdef ENABLE_DBUS
 static void
 screensaver_dbus_appeared_cb (GDBusConnection *connection,
                               const char      *name,
@@ -212,32 +206,18 @@ screensaver_dbus_disappeared_cb (GDBusConnection *connection,
 
         priv->have_screensaver_dbus = FALSE;
 }
-#endif
-
-static void
-screensaver_init_dbus (TotemScrsaver *scr)
-{
-#ifdef ENABLE_DBUS
-        TotemScrsaverPrivate *priv = scr->priv;
-
-        priv->watch_id = g_bus_watch_name (G_BUS_TYPE_SESSION,
-                                                GS_SERVICE,
-                                                G_BUS_NAME_WATCHER_FLAGS_NONE,
-                                                screensaver_dbus_appeared_cb,
-                                                screensaver_dbus_disappeared_cb,
-                                                scr, NULL);
-#endif /* ENABLE_DBUS */
-}
 
 static void
 screensaver_finalize_dbus (TotemScrsaver *scr)
 {
-#ifdef ENABLE_DBUS
-        g_bus_unwatch_name (scr->priv->watch_id);
+        TotemScrsaverPrivate *priv = scr->priv;
 
-        if (scr->priv->connection != NULL)
-                g_object_unref (scr->priv->connection);
-#endif /* ENABLE_DBUS */
+        if (priv->connection == NULL)
+                return;
+
+        g_bus_unwatch_name (priv->watch_id);
+
+        g_object_unref (priv->connection);
 }
 
 #ifdef GDK_WINDOWING_X11
@@ -355,18 +335,14 @@ screensaver_finalize_x11 (TotemScrsaver *scr)
 }
 #endif
 
-#ifdef ENABLE_DBUS
-
-enum {
-        PROP_0,
-        PROP_CONNECTION
-};
-
 static void
 totem_scrsaver_constructed (GObject *object)
 {
         TotemScrsaver *scr = TOTEM_SCRSAVER (object);
         TotemScrsaverPrivate *priv = scr->priv;
+
+        if (priv->connection == NULL)
+                return;
 
         priv->watch_id = g_bus_watch_name_on_connection (priv->connection,
                                                          GS_SERVICE,
@@ -395,14 +371,15 @@ totem_scrsaver_set_property (GObject      *object,
 	}
 }
 
-#endif /* ENABLE_DBUS */
-
 static void
 totem_scrsaver_class_init (TotemScrsaverClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
-#ifdef ENABLE_DBUS
+        object_class->set_property = totem_scrsaver_set_property;
+        object_class->constructed = totem_scrsaver_constructed;
+	object_class->finalize = totem_scrsaver_finalize;
+
 	g_object_class_install_property (object_class,
 					 PROP_CONNECTION,
 					 g_param_spec_object ("connection", NULL, NULL,
@@ -410,24 +387,24 @@ totem_scrsaver_class_init (TotemScrsaverClass *klass)
 							      G_PARAM_WRITABLE |
                                                               G_PARAM_CONSTRUCT_ONLY |
                                                               G_PARAM_STATIC_STRINGS));
-        object_class->set_property = totem_scrsaver_set_property;
-        object_class->constructed = totem_scrsaver_constructed;
-#endif
-
-	object_class->finalize = totem_scrsaver_finalize;
 }
 
+/**
+ * totem_scrsaver_new:
+ * @connection: (allow-none): a #GDBusConnection, or %NULL
+ *
+ * Creates a #TotemScrsaver object. If @connection is non-%NULL,
+ * and the GNOME screen saver is running, it uses its DBUS interface to
+ * inhibit the screensaver; otherwise it falls back to using the X
+ * screensaver functionality for this.
+ *
+ * Returns: a newly created #TotemScrsaver
+ */
 TotemScrsaver *
-#ifdef ENABLE_DBUS
 totem_scrsaver_new (GDBusConnection *connection)
-#else
-totem_scrsaver_new (void)
-#endif
 {
 	return g_object_new (TOTEM_TYPE_SCRSAVER,
-#ifdef ENABLE_DBUS
                              "connection", connection,
-#endif
                              NULL);
 }
 
@@ -436,7 +413,6 @@ totem_scrsaver_init (TotemScrsaver *scr)
 {
 	scr->priv = G_TYPE_INSTANCE_GET_PRIVATE (scr, TOTEM_TYPE_SCRSAVER, TotemScrsaverPrivate);
 
-	screensaver_init_dbus (scr);
 #ifdef GDK_WINDOWING_X11
 	screensaver_init_x11 (scr);
 #else

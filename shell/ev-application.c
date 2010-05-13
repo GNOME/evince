@@ -891,7 +891,7 @@ ev_application_init (EvApplication *ev_application)
 	ev_application->scr_saver = totem_scrsaver_new (ev_application->connection);
 }
 #else
-        ev_application->scr_saver = totem_scrsaver_new ();
+        ev_application->scr_saver = totem_scrsaver_new (NULL);
 #endif /* ENABLE_DBUS */
 }
 
