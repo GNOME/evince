@@ -272,12 +272,12 @@ method_call_cb (GDBusConnection       *connection,
                 doc->dbus_name = g_strdup (sender);
                 doc->uri = g_strdup (uri);
 
-                doc->watch_id = g_bus_watch_name (G_BUS_TYPE_STARTER,
-                                                  sender,
-                                                  G_BUS_NAME_WATCHER_FLAGS_NONE,
-                                                  name_appeared_cb,
-                                                  name_vanished_cb,
-                                                  user_data, NULL);
+                doc->watch_id = g_bus_watch_name_on_connection (connection,
+                                                                sender,
+                                                                G_BUS_NAME_WATCHER_FLAGS_NONE,
+                                                                name_appeared_cb,
+                                                                name_vanished_cb,
+                                                                user_data, NULL);
 
                 LOG ("RegisterDocument registered owner '%s' for URI '%s'\n", doc->dbus_name, uri);
                 ev_daemon_docs = g_list_prepend (ev_daemon_docs, doc);
