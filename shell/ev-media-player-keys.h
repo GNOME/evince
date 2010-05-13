@@ -23,6 +23,7 @@
 #define EV_MEDIA_PLAYER_KEYS_H
 
 #include <glib-object.h>
+#include <gio/gio.h>
 
 G_BEGIN_DECLS
 
@@ -39,7 +40,7 @@ typedef struct _EvMediaPlayerKeysClass EvMediaPlayerKeysClass;
 
 GType	           ev_media_player_keys_get_type  (void) G_GNUC_CONST;
 
-EvMediaPlayerKeys *ev_media_player_keys_new	  (void);
+EvMediaPlayerKeys *ev_media_player_keys_new	  (GDBusConnection *connection);
 
 void               ev_media_player_keys_focused	  (EvMediaPlayerKeys *keys);
 

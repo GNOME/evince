@@ -888,7 +888,7 @@ ev_application_init (EvApplication *ev_application)
                 g_error_free (error);
         }
 
-	ev_application->keys = ev_media_player_keys_new ();
+	ev_application->keys = ev_media_player_keys_new (ev_application->connection);
 }
 #endif /* ENABLE_DBUS */
 }

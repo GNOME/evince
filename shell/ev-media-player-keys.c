@@ -32,6 +32,11 @@
 #define SD_INTERFACE   "org.gnome.SettingsDaemon.MediaKeys"
 
 enum {
+        PROP_0,
+        PROP_CONNECTION
+};
+
+enum {
 	KEY_PRESSED,
 	LAST_SIGNAL
 };
@@ -58,12 +63,21 @@ static guint signals[LAST_SIGNAL];
 
 G_DEFINE_TYPE (EvMediaPlayerKeys, ev_media_player_keys, G_TYPE_OBJECT)
 
+static void ev_media_player_keys_set_property (GObject      *object,
+                                               guint         prop_id,
+                                               const GValue *value,
+                                               GParamSpec   *pspec);
+static void ev_media_player_keys_constructed (GObject *object);
 static void ev_media_player_keys_finalize (GObject *object);
 
 static void
 ev_media_player_keys_class_init (EvMediaPlayerKeysClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
+
+        object_class->set_property = ev_media_player_keys_set_property;
+        object_class->constructed = ev_media_player_keys_constructed;
+	object_class->finalize = ev_media_player_keys_finalize;
 
 	signals[KEY_PRESSED] =
 		g_signal_new ("key_pressed",
@@ -74,8 +88,14 @@ ev_media_player_keys_class_init (EvMediaPlayerKeysClass *klass)
 			      g_cclosure_marshal_VOID__STRING,
 			      G_TYPE_NONE,
 			      1, G_TYPE_STRING);
-	
-	object_class->finalize = ev_media_player_keys_finalize;
+
+	g_object_class_install_property (object_class,
+					 PROP_CONNECTION,
+					 g_param_spec_object ("connection", NULL, NULL,
+                                                              G_TYPE_DBUS_CONNECTION,
+							      G_PARAM_WRITABLE |
+                                                              G_PARAM_CONSTRUCT_ONLY |
+                                                              G_PARAM_STATIC_STRINGS));
 }
 
 static void
@@ -145,9 +165,9 @@ mediakeys_service_appeared_cb (GDBusConnection *connection,
 {
         EvMediaPlayerKeys *keys = EV_MEDIA_PLAYER_KEYS (user_data);
 
-        keys->connection = g_object_ref (connection);
+        g_assert (connection == keys->connection);
 
-        keys->subscription_id = g_dbus_connection_signal_subscribe (connection,
+        keys->subscription_id = g_dbus_connection_signal_subscribe (keys->connection,
                                                                     name_owner,
                                                                     SD_INTERFACE,
                                                                     "MediaPlayerKeyPressed",
@@ -166,27 +186,30 @@ mediakeys_service_disappeared_cb (GDBusConnection *connection,
 {
         EvMediaPlayerKeys *keys = EV_MEDIA_PLAYER_KEYS (user_data);
 
-        if (keys->connection == NULL)
-                return;
+        g_assert (connection == keys->connection);
 
-        g_assert (keys->connection == connection);
-
-        g_dbus_connection_signal_unsubscribe (connection, keys->subscription_id);
-        keys->subscription_id = 0;
-
-        g_object_unref (keys->connection);
-        keys->connection = NULL;
+        if (keys->subscription_id != 0) {
+                g_dbus_connection_signal_unsubscribe (connection, keys->subscription_id);
+                keys->subscription_id = 0;
+        }
 }
 
 static void
 ev_media_player_keys_init (EvMediaPlayerKeys *keys)
 {
-        keys->watch_id = g_bus_watch_name (G_BUS_TYPE_SESSION,
-                                           SD_NAME,
-                                           G_BUS_NAME_WATCHER_FLAGS_NONE,
-                                           mediakeys_service_appeared_cb,
-                                           mediakeys_service_disappeared_cb,
-                                           keys, NULL);
+}
+
+static void
+ev_media_player_keys_constructed (GObject *object)
+{
+        EvMediaPlayerKeys *keys = EV_MEDIA_PLAYER_KEYS (object);
+
+        keys->watch_id = g_bus_watch_name_on_connection (keys->connection,
+                                                         SD_NAME,
+                                                         G_BUS_NAME_WATCHER_FLAGS_NONE,
+                                                         mediakeys_service_appeared_cb,
+                                                         mediakeys_service_disappeared_cb,
+                                                         keys, NULL);
 }
 
 void
@@ -205,20 +228,42 @@ ev_media_player_keys_finalize (GObject *object)
 
         ev_media_player_keys_release_keys (keys);
 
+        g_bus_unwatch_name (keys->watch_id);
+
         if (keys->subscription_id != 0) {
-                g_assert (keys->connection != NULL);
                 g_dbus_connection_signal_unsubscribe (keys->connection, keys->subscription_id);
-                g_object_unref (keys->connection);
         }
 
-        g_bus_unwatch_name (keys->watch_id);
+        if (keys->connection != NULL) {
+                g_object_unref (keys->connection);
+        }
 
 	G_OBJECT_CLASS (ev_media_player_keys_parent_class)->finalize (object);
 }
 
-EvMediaPlayerKeys *
-ev_media_player_keys_new (void)
+static void
+ev_media_player_keys_set_property (GObject      *object,
+                                   guint         prop_id,
+                                   const GValue *value,
+                                   GParamSpec   *pspec)
 {
-	return g_object_new (EV_TYPE_MEDIA_PLAYER_KEYS, NULL);
+        EvMediaPlayerKeys *keys = EV_MEDIA_PLAYER_KEYS (object);
+
+	switch (prop_id) {
+        case PROP_CONNECTION:
+                keys->connection = g_value_dup_object (value);
+		break;
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+		break;
+	}
+}
+
+EvMediaPlayerKeys *
+ev_media_player_keys_new (GDBusConnection *connection)
+{
+	return g_object_new (EV_TYPE_MEDIA_PLAYER_KEYS,
+                             "connection", connection,
+                             NULL);
 }
 
