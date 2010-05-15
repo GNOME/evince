@@ -2,6 +2,7 @@
 /* 
  * Copyright (C) 2007 Jan Arne Petersen <jap@gnome.org>
  * Copyright (C) 2008 Bastien Nocera <hadess@hadess.net>
+ * Copyright © 2010 Christian Persch
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

@@ -1,6 +1,7 @@
 /* this file is part of evince, a gnome document viewer
  *
  *  Copyright (C) 2004 Martin Kretzschmar
+ *  Copyright © 2010 Christian Persch
  *
  *  Author:
  *    Martin Kretzschmar <martink@gnome.org>

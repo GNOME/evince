@@ -1,6 +1,7 @@
 /* -*- Mode: C; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8 -*-
 
    Copyright (C) 2004-2006 Bastien Nocera <hadess@hadess.net>
+   Copyright © 2010 Christian Persch
 
    The Gnome Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
