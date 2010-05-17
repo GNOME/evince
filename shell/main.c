@@ -227,6 +227,33 @@ load_files (const char **files)
         }
 }
 
+static gchar*
+ev_get_locale_dir ()
+{
+#ifdef G_OS_WIN32
+	gchar *install_dir = NULL, *locale_dir;
+	gchar *retval = NULL;
+
+	install_dir =
+	    g_win32_get_package_installation_directory_of_module (NULL);
+
+	if (install_dir) {
+		locale_dir = g_build_filename (install_dir,
+					"share", "locale", NULL);
+		retval = g_win32_locale_filename_from_utf8 (locale_dir);
+		g_free (install_dir);
+		g_free (locale_dir);
+	}
+
+	if (retval)
+		return retval;
+	else
+		return g_strdup ("");
+#else
+	return g_strdup (GNOMELOCALEDIR);
+#endif
+}
+
 int
 main (int argc, char *argv[])
 {
@@ -264,7 +291,9 @@ main (int argc, char *argv[])
 
 #ifdef ENABLE_NLS
 	/* Initialize the i18n stuff */
-	bindtextdomain (GETTEXT_PACKAGE, GNOMELOCALEDIR);
+	gchar *tmp = ev_get_locale_dir ();
+	bindtextdomain (GETTEXT_PACKAGE, tmp);
+	g_free (tmp);
 	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
 	textdomain (GETTEXT_PACKAGE);
 #endif
