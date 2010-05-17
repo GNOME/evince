@@ -1,12 +1,13 @@
 # Shavian translation for evince.
-# Copyright (C) 2009 The Gnome Foundation.
-# Thomas Thurman <tthurman@gnome.org>, 2009.
+# Copyright (C) 2009-2010 The Gnome Foundation.
+# Thomas Thurman <tthurman@gnome.org>, 2010.
+# Transliterate Evince as ·𐑦𐑝𐑦𐑯𐑕
 msgid ""
 msgstr ""
-"Project-Id-Version: metacity\n"
+"Project-Id-Version: evince\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=evince&component=general\n"
-"POT-Creation-Date: 2010-05-12 12:47+0000\n"
-"PO-Revision-Date: 2010-05-12 18:35 -0400\n"
+"POT-Creation-Date: 2010-05-12 22:43+0000\n"
+"PO-Revision-Date: 2010-05-16 16:05 -0400\n"
 "Last-Translator: Thomas Thurman <tthurman@gnome.org>\n"
 "Language-Team: Shavian <ubuntu-l10n-en-shaw@launchpad.net>\n"
 "MIME-Version: 1.0\n"
@@ -14,16 +15,18 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n!=1;\n"
 
-#, fuzzy, c-format
+#, c-format
+#, fuzzy
 #: ../backend/comics/comics-document.c:160
 msgid ""
 "Error launching the command “%s” in order to decompress the comic book: %s"
 msgstr "𐑻𐑼 𐑤𐑷𐑯𐑗𐑦𐑙 𐑞 𐑒𐑩𐑥𐑭𐑯𐑛 “%s” 𐑦𐑯 𐑹𐑛𐑼 𐑑 decompress 𐑞 𐑒𐑪𐑥𐑦𐑒 𐑚𐑫𐑒: %s"
 
-#, fuzzy, c-format
+#, c-format
+#, fuzzy
 #: ../backend/comics/comics-document.c:174
 msgid "The command “%s” failed at decompressing the comic book."
-msgstr "𐑞 𐑒𐑩𐑥𐑭𐑯𐑛 “%s” 𐑛𐑦𐑛 𐑯𐑪𐑑 𐑧𐑯𐑛 𐑯𐑹𐑥𐑩𐑤𐑦."
+msgstr "𐑞 𐑒𐑩𐑥𐑭𐑯𐑛 “%s” 𐑓𐑱𐑤𐑛 𐑨𐑑 decompressing 𐑞 𐑒𐑪𐑥𐑦𐑒 𐑚𐑫𐑒."
 
 #, c-format
 #: ../backend/comics/comics-document.c:183
@@ -79,7 +82,6 @@ msgstr "𐑒𐑪𐑥𐑦𐑒 𐑚𐑫𐑒𐑕"
 msgid "DjVu document has incorrect format"
 msgstr "DjVu 𐑛𐑪𐑒𐑿𐑥𐑩𐑯𐑑 𐑣𐑨𐑟 𐑦𐑯𐑒𐑩𐑮𐑧𐑒𐑑 𐑓𐑹𐑥𐑨𐑑"
 
-#, fuzzy
 #: ../backend/djvu/djvu-document.c:250
 msgid ""
 "The document is composed of several files. One or more of these files cannot "
@@ -87,17 +89,14 @@ msgid ""
 msgstr ""
 "𐑞 𐑛𐑪𐑒𐑿𐑥𐑩𐑯𐑑 𐑦𐑟 𐑒𐑩𐑥𐑐𐑴𐑟𐑛 𐑝 𐑕𐑧𐑝𐑼𐑩𐑤 𐑓𐑲𐑤𐑟. 𐑢𐑳𐑯 𐑹 𐑥𐑹 𐑝 𐑞𐑰𐑟 𐑓𐑲𐑤𐑟 𐑒𐑨𐑯𐑪𐑑 𐑚𐑰 𐑨𐑒𐑕𐑧𐑕𐑑."
 
-#, fuzzy
 #: ../backend/djvu/djvudocument.evince-backend.in.h:1
 msgid "DjVu Documents"
 msgstr "DjVu 𐑛𐑪𐑒𐑿𐑥𐑩𐑯𐑑𐑕"
 
-#, fuzzy
 #: ../backend/dvi/dvi-document.c:113
 msgid "DVI document has incorrect format"
 msgstr "DVI 𐑛𐑪𐑒𐑿𐑥𐑩𐑯𐑑 𐑣𐑨𐑟 𐑦𐑯𐑒𐑩𐑮𐑧𐑒𐑑 𐑓𐑹𐑥𐑨𐑑"
 
-#, fuzzy
 #: ../backend/dvi/dvidocument.evince-backend.in.h:1
 msgid "DVI Documents"
 msgstr "DVI 𐑛𐑪𐑒𐑿𐑥𐑩𐑯𐑑𐑕"
@@ -190,17 +189,14 @@ msgstr "𐑯𐑴 𐑻𐑼"
 msgid "Not enough memory"
 msgstr "𐑯𐑪𐑑 𐑦𐑯𐑳𐑓 𐑥𐑧𐑥𐑼𐑦"
 
-#, fuzzy
 #: ../backend/impress/zip.c:59
 msgid "Cannot find ZIP signature"
 msgstr "𐑒𐑨𐑯𐑪𐑑 𐑓𐑲𐑯𐑛 𐑟𐑦𐑐 𐑕𐑦𐑜𐑯𐑩𐑗𐑼"
 
-#, fuzzy
 #: ../backend/impress/zip.c:62
 msgid "Invalid ZIP file"
 msgstr "𐑦𐑯𐑝𐑨𐑤𐑦𐑛 𐑟𐑦𐑐 𐑓𐑲𐑤"
 
-#, fuzzy
 #: ../backend/impress/zip.c:65
 msgid "Multi file ZIPs are not supported"
 msgstr "𐑥𐑩𐑤𐑑𐑰 𐑓𐑲𐑤 𐑟𐑦𐑐𐑕 𐑸 𐑯𐑪𐑑 𐑕𐑩𐑐𐑹𐑑𐑩𐑛"
@@ -213,7 +209,6 @@ msgstr "𐑒𐑨𐑯𐑪𐑑 𐑴𐑐𐑩𐑯 𐑞 𐑓𐑲𐑤"
 msgid "Cannot read data from file"
 msgstr "𐑒𐑨𐑯𐑪𐑑 𐑮𐑰𐑛 𐑛𐑱𐑑𐑩 𐑓𐑮𐑪𐑥 𐑓𐑲𐑤"
 
-#, fuzzy
 #: ../backend/impress/zip.c:74
 msgid "Cannot find file in the ZIP archive"
 msgstr "𐑒𐑨𐑯𐑪𐑑 𐑓𐑲𐑯𐑛 𐑓𐑲𐑤 𐑦𐑯 𐑞 𐑟𐑦𐑐 𐑸𐑒𐑲𐑝"
@@ -236,20 +231,23 @@ msgstr "𐑓𐑱𐑤𐑛 𐑑 𐑕𐑱𐑝 𐑛𐑪𐑒𐑿𐑥𐑩𐑯𐑑 “%
 msgid "PostScript Documents"
 msgstr "𐑐𐑴𐑕𐑑𐑕𐑒𐑮𐑦𐑐𐑑 𐑛𐑪𐑒𐑿𐑥𐑩𐑯𐑑𐑕"
 
-#, fuzzy, c-format
+#, c-format
+#, fuzzy
 #: ../libdocument/ev-attachment.c:304 ../libdocument/ev-attachment.c:325
 msgid "Couldn't save attachment “%s”: %s"
-msgstr "𐑓𐑱𐑤𐑛 𐑑 𐑕𐑱𐑝 𐑛𐑪𐑒𐑿𐑥𐑩𐑯𐑑 “%s”"
+msgstr "𐑒𐑫𐑛𐑯𐑑 𐑕𐑱𐑝 𐑩𐑑𐑨𐑗𐑥𐑩𐑯𐑑 “%s”: %s"
 
-#, fuzzy, c-format
+#, c-format
+#, fuzzy
 #: ../libdocument/ev-attachment.c:372
 msgid "Couldn't open attachment “%s”: %s"
 msgstr "𐑒𐑫𐑛𐑯𐑑 𐑴𐑐𐑩𐑯 𐑩𐑑𐑨𐑗𐑥𐑩𐑯𐑑 “%s”: %s"
 
-#, fuzzy, c-format
+#, c-format
+#, fuzzy
 #: ../libdocument/ev-attachment.c:407
 msgid "Couldn't open attachment “%s”"
-msgstr "𐑳𐑯𐑱𐑚𐑩𐑤 𐑑 𐑴𐑐𐑩𐑯 𐑩𐑑𐑨𐑗𐑥𐑩𐑯𐑑"
+msgstr "𐑒𐑫𐑛𐑯𐑑 𐑴𐑐𐑩𐑯 𐑩𐑑𐑨𐑗𐑥𐑩𐑯𐑑 “%s”"
 
 #, c-format
 #: ../libdocument/ev-document-factory.c:168
@@ -299,12 +297,14 @@ msgstr "𐑩𐑐𐑤𐑦𐑒𐑱𐑕𐑩𐑯 𐑛𐑳𐑟 𐑯𐑪𐑑 𐑨𐑒�
 msgid "Unrecognized launch option: %d"
 msgstr "𐑩𐑯𐑮𐑧𐑒𐑩𐑜𐑯𐑲𐑟𐑛 𐑤𐑷𐑯𐑗 𐑪𐑐𐑖𐑩𐑯: %d"
 
-#, fuzzy, c-format
+#, c-format
+#, fuzzy
 #: ../cut-n-paste/smclient/eggdesktopfile.c:1373
 msgid "Can't pass document URIs to a 'Type=Link' desktop entry"
 msgstr "𐑒𐑭𐑯𐑑 𐑐𐑭𐑕 𐑛𐑪𐑒𐑿𐑥𐑩𐑯𐑑 URIs 𐑑 𐑩 '𐑑𐑲𐑐=𐑤𐑦𐑙𐑒' 𐑛𐑧𐑕𐑒𐑑𐑪𐑐 𐑧𐑯𐑑𐑮𐑦"
 
-#, fuzzy, c-format
+#, c-format
+#, fuzzy
 #: ../cut-n-paste/smclient/eggdesktopfile.c:1392
 msgid "Not a launchable item"
 msgstr "𐑯𐑪𐑑 𐑩 launchable 𐑲𐑑𐑩𐑥"
@@ -324,7 +324,7 @@ msgstr "𐑓𐑲𐑤"
 
 #: ../cut-n-paste/smclient/eggsmclient.c:231
 msgid "Specify session management ID"
-msgstr "𐑕𐑐𐑧𐑕𐑦𐑓𐑲 𐑕𐑧𐑖𐑩𐑯 𐑥𐑨𐑯𐑩𐑡𐑥𐑩𐑯𐑑 𐑦𐑛"
+msgstr "𐑕𐑐𐑧𐑕𐑦𐑓𐑲 𐑕𐑧𐑖𐑩𐑯 𐑥𐑨𐑯𐑩𐑡𐑥𐑩𐑯𐑑 ID"
 
 #: ../cut-n-paste/smclient/eggsmclient.c:231
 msgid "ID"
@@ -345,10 +345,10 @@ msgstr "𐑖𐑴 𐑕𐑧𐑖𐑩𐑯 𐑥𐑨𐑯𐑩𐑡𐑥𐑩𐑯𐑑 𐑪�
 #. * produce duplicates, but don't worry about it. If your language
 #. * normally has a mnemonic at the start, please use the _. If not,
 #. * please remove.
-#, fuzzy, c-format
+#, c-format
 #: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:944
 msgid "Show “_%s”"
-msgstr "𐑜𐑴 𐑑 𐑓𐑲𐑤 “%s”"
+msgstr "𐑖𐑴 “%s”"
 
 #: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1412
 msgid "_Move on Toolbar"
@@ -438,7 +438,6 @@ msgstr "400%"
 msgid "Document Viewer"
 msgstr "𐑛𐑪𐑒𐑿𐑥𐑩𐑯𐑑 𐑝𐑿𐑼"
 
-#, fuzzy
 #: ../data/evince.desktop.in.in.h:2
 msgid "View multi-page documents"
 msgstr "𐑝𐑿 𐑥𐑩𐑤𐑑𐑰-𐑐𐑱𐑡 𐑛𐑪𐑒𐑿𐑥𐑩𐑯𐑑𐑕"
@@ -454,7 +453,7 @@ msgstr "𐑐𐑮𐑦𐑯𐑑 𐑕𐑧𐑑𐑦𐑙𐑟 𐑓𐑲𐑤"
 #, fuzzy
 #: ../previewer/ev-previewer.c:147 ../previewer/ev-previewer.c:181
 msgid "GNOME Document Previewer"
-msgstr "𐑯𐑴𐑥 𐑛𐑪𐑒𐑿𐑥𐑩𐑯𐑑 Previewer"
+msgstr "·𐑜𐑯𐑴𐑥 𐑛𐑪𐑒𐑿𐑥𐑩𐑯𐑑 Previewer"
 
 #: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3020
 msgid "Failed to print document"
@@ -593,20 +592,19 @@ msgstr "𐑯𐑳𐑯"
 #. * Do *not* translate it to "predefinito:mm", if it
 #. * it isn't default:mm or default:inch it will not work
 #.
-#, fuzzy
 #: ../properties/ev-properties-view.c:240
 msgid "default:mm"
-msgstr "𐑛𐑦𐑓𐑷𐑤𐑑:mm"
+msgstr "default:mm"
 
-#, fuzzy, c-format
+#, c-format
 #: ../properties/ev-properties-view.c:284
 msgid "%.0f × %.0f mm"
 msgstr "%.0f × %.0f mm"
 
-#, fuzzy, c-format
+#, c-format
 #: ../properties/ev-properties-view.c:288
 msgid "%.2f × %.2f inch"
-msgstr "%.2f x %.2f 𐑦𐑯𐑗"
+msgstr "%.2f × %.2f 𐑦𐑯𐑗"
 
 #. Note to translators: first placeholder is the paper name (eg.
 #. * A4), second placeholder is the paper size (eg. 297x210 mm)
@@ -633,20 +631,18 @@ msgid "of %d"
 msgstr "𐑝 %d"
 
 #. Initial state
-#, fuzzy
 #: ../libview/ev-print-operation.c:334
 msgid "Preparing to print…"
 msgstr "𐑐𐑮𐑰𐑐𐑺𐑦𐑙 𐑑 𐑐𐑮𐑦𐑯𐑑…"
 
-#, fuzzy
 #: ../libview/ev-print-operation.c:336
 msgid "Finishing…"
 msgstr "𐑓𐑦𐑯𐑦𐑖𐑦𐑙…"
 
-#, fuzzy, c-format
+#, c-format
 #: ../libview/ev-print-operation.c:338
 msgid "Printing page %d of %d…"
-msgstr "𐑐𐑮𐑦𐑯𐑑𐑦𐑙 𐑐𐑱𐑡 %d 𐑝 %d..."
+msgstr "𐑐𐑮𐑦𐑯𐑑𐑦𐑙 𐑐𐑱𐑡 %d 𐑝 %d…"
 
 #: ../libview/ev-print-operation.c:1161
 msgid "Printing is not supported on this printer."
@@ -660,27 +656,22 @@ msgstr "𐑦𐑯𐑝𐑨𐑤𐑦𐑛 𐑐𐑱𐑡 𐑕𐑦𐑤𐑧𐑒𐑖𐑩�
 msgid "Warning"
 msgstr "𐑢𐑹𐑯𐑦𐑙"
 
-#, fuzzy
 #: ../libview/ev-print-operation.c:1229
 msgid "Your print range selection does not include any pages"
 msgstr "𐑿𐑼 𐑐𐑮𐑦𐑯𐑑 𐑮𐑱𐑯𐑡 𐑕𐑦𐑤𐑧𐑒𐑖𐑩𐑯 𐑛𐑳𐑟 𐑯𐑪𐑑 𐑦𐑯𐑒𐑤𐑵𐑛 𐑧𐑯𐑦 𐑐𐑱𐑡𐑧𐑟"
 
-#, fuzzy
 #: ../libview/ev-print-operation.c:1860
 msgid "Page Scaling:"
 msgstr "𐑐𐑱𐑡 𐑕𐑒𐑱𐑤𐑦𐑙:"
 
-#, fuzzy
 #: ../libview/ev-print-operation.c:1866
 msgid "Shrink to Printable Area"
 msgstr "𐑖𐑮𐑰𐑙𐑒 𐑑 𐑐𐑮𐑦𐑯𐑑𐑩𐑚𐑩𐑤 𐑺𐑦𐑩"
 
-#, fuzzy
 #: ../libview/ev-print-operation.c:1867
 msgid "Fit to Printable Area"
 msgstr "𐑓𐑦𐑑 𐑑 𐑐𐑮𐑦𐑯𐑑𐑩𐑚𐑩𐑤 𐑺𐑦𐑩"
 
-#, fuzzy
 #: ../libview/ev-print-operation.c:1870
 msgid ""
 "Scale document pages to fit the selected printer page. Select from one of the "
@@ -696,12 +687,10 @@ msgstr ""
 "𐑝 𐑞 𐑐𐑮𐑦𐑯𐑑𐑼 𐑐𐑱𐑡.\n\n• \"𐑓𐑦𐑑 𐑑 𐑐𐑮𐑦𐑯𐑑𐑩𐑚𐑩𐑤 𐑺𐑦𐑩\": 𐑛𐑪𐑒𐑿𐑥𐑩𐑯𐑑 𐑐𐑱𐑡𐑧𐑟 𐑸 𐑧𐑯𐑤𐑭𐑮𐑡𐑛 𐑹 "
 "𐑮𐑦𐑛𐑿𐑕𐑑 𐑨𐑟 𐑮𐑦𐑒𐑢𐑲𐑼𐑛 𐑑 𐑓𐑦𐑑 𐑞 𐑐𐑮𐑦𐑯𐑑𐑩𐑚𐑩𐑤 𐑺𐑦𐑩 𐑝 𐑞 𐑐𐑮𐑦𐑯𐑑𐑼 𐑐𐑱𐑡.\n"
 
-#, fuzzy
 #: ../libview/ev-print-operation.c:1882
 msgid "Auto Rotate and Center"
 msgstr "𐑷𐑑𐑴 𐑮𐑴𐑑𐑱𐑑 𐑯 𐑕𐑧𐑯𐑑𐑼"
 
-#, fuzzy
 #: ../libview/ev-print-operation.c:1885
 msgid ""
 "Rotate printer page orientation of each page to match orientation of each "
@@ -710,12 +699,10 @@ msgstr ""
 "𐑮𐑴𐑑𐑱𐑑 𐑐𐑮𐑦𐑯𐑑𐑼 𐑐𐑱𐑡 𐑪𐑮𐑦𐑩𐑯𐑑𐑱𐑖𐑩𐑯 𐑝 𐑰𐑗 𐑐𐑱𐑡 𐑑 𐑥𐑨𐑗 𐑪𐑮𐑦𐑩𐑯𐑑𐑱𐑖𐑩𐑯 𐑝 𐑰𐑗 𐑛𐑪𐑒𐑿𐑥𐑩𐑯𐑑 𐑐𐑱𐑡. "
 "𐑛𐑪𐑒𐑿𐑥𐑩𐑯𐑑 𐑐𐑱𐑡𐑧𐑟 𐑢𐑦𐑤 𐑚𐑰 𐑕𐑧𐑯𐑑𐑼𐑛 𐑢𐑦𐑞𐑦𐑯 𐑞 𐑐𐑮𐑦𐑯𐑑𐑼 𐑐𐑱𐑡."
 
-#, fuzzy
 #: ../libview/ev-print-operation.c:1890
 msgid "Select page size using document page size"
 msgstr "𐑕𐑩𐑤𐑧𐑒𐑑 𐑐𐑱𐑡 𐑕𐑲𐑟 𐑿𐑟𐑦𐑙 𐑛𐑪𐑒𐑿𐑥𐑩𐑯𐑑 𐑐𐑱𐑡 𐑕𐑲𐑟"
 
-#, fuzzy
 #: ../libview/ev-print-operation.c:1892
 msgid ""
 "When enabled, each page will be printed on the same size paper as the "
@@ -723,7 +710,6 @@ msgid ""
 msgstr ""
 "𐑢𐑧𐑯 𐑦𐑯𐑱𐑚𐑩𐑤𐑛, 𐑰𐑗 𐑐𐑱𐑡 𐑢𐑦𐑤 𐑚𐑰 𐑐𐑮𐑦𐑯𐑑𐑩𐑛 𐑪𐑯 𐑞 𐑕𐑱𐑥 𐑕𐑲𐑟 𐑐𐑱𐑐𐑼 𐑨𐑟 𐑞 𐑛𐑪𐑒𐑿𐑥𐑩𐑯𐑑 𐑐𐑱𐑡."
 
-#, fuzzy
 #: ../libview/ev-print-operation.c:1974
 msgid "Page Handling"
 msgstr "𐑐𐑱𐑡 𐑣𐑨𐑯𐑛𐑤𐑦𐑙"
@@ -757,7 +743,6 @@ msgstr "𐑛𐑪𐑒𐑿𐑥𐑩𐑯𐑑 𐑝𐑿"
 msgid "Jump to page:"
 msgstr "𐑡𐑳𐑥𐑐 𐑑 𐑐𐑱𐑡:"
 
-#, fuzzy
 #: ../libview/ev-view-presentation.c:970
 msgid "End of presentation. Click to exit."
 msgstr "𐑧𐑯𐑛 𐑝 𐑐𐑮𐑧𐑟𐑩𐑯𐑑𐑱𐑖𐑩𐑯. 𐑒𐑤𐑦𐑒 𐑑 𐑧𐑜𐑟𐑦𐑑."
@@ -810,28 +795,25 @@ msgstr "𐑤𐑷𐑯𐑗 %s"
 msgid "Find:"
 msgstr "𐑓𐑲𐑯𐑛:"
 
-#, fuzzy
 #: ../shell/eggfindbar.c:329 ../shell/ev-window.c:5104
 msgid "Find Pre_vious"
-msgstr "𐑓𐑲𐑯𐑛 Pre_vious"
+msgstr "𐑓𐑲𐑯𐑛 _𐑐𐑮𐑰𐑝𐑦𐑩𐑕"
 
 #: ../shell/eggfindbar.c:333
 msgid "Find previous occurrence of the search string"
 msgstr "𐑓𐑲𐑯𐑛 𐑐𐑮𐑰𐑝𐑦𐑩𐑕 𐑪𐑒𐑻𐑩𐑯𐑕 𐑝 𐑞 𐑕𐑻𐑗 𐑕𐑑𐑮𐑦𐑙"
 
-#, fuzzy
 #: ../shell/eggfindbar.c:337 ../shell/ev-window.c:5102
 msgid "Find Ne_xt"
-msgstr "𐑓𐑲𐑯𐑛 Ne_xt"
+msgstr "𐑓𐑲𐑯𐑛 _𐑯𐑧𐑒𐑕𐑑"
 
 #: ../shell/eggfindbar.c:341
 msgid "Find next occurrence of the search string"
 msgstr "𐑓𐑲𐑯𐑛 𐑯𐑧𐑒𐑕𐑑 𐑪𐑒𐑻𐑩𐑯𐑕 𐑝 𐑞 𐑕𐑻𐑗 𐑕𐑑𐑮𐑦𐑙"
 
-#, fuzzy
 #: ../shell/eggfindbar.c:348
 msgid "C_ase Sensitive"
-msgstr "C_ase 𐑕𐑧𐑯𐑕𐑦𐑑𐑦𐑝"
+msgstr "_𐑒𐑱𐑕 𐑕𐑧𐑯𐑕𐑦𐑑𐑦𐑝"
 
 #: ../shell/eggfindbar.c:351
 msgid "Toggle case sensitive search"
@@ -901,10 +883,9 @@ msgstr "_𐑐𐑭𐑕𐑢𐑼𐑛:"
 msgid "Forget password _immediately"
 msgstr "𐑓𐑼𐑜𐑧𐑑 𐑐𐑭𐑕𐑢𐑼𐑛 _𐑦𐑥𐑰𐑛𐑾𐑑𐑤𐑰"
 
-#, fuzzy
 #: ../shell/ev-password-view.c:380
 msgid "Remember password until you _log out"
-msgstr "𐑮𐑦𐑥𐑧𐑥𐑚𐑼 𐑐𐑭𐑕𐑢𐑼𐑛 𐑳𐑯𐑑𐑦𐑤 𐑿 _log 𐑬𐑑"
+msgstr "𐑮𐑦𐑥𐑧𐑥𐑚𐑼 𐑐𐑭𐑕𐑢𐑼𐑛 𐑳𐑯𐑑𐑦𐑤 𐑿 _𐑤𐑪𐑜 𐑬𐑑"
 
 #: ../shell/ev-password-view.c:392
 msgid "Remember _forever"
@@ -930,10 +911,10 @@ msgstr "𐑛𐑪𐑒𐑿𐑥𐑩𐑯𐑑 𐑤𐑲𐑕𐑩𐑯𐑕"
 msgid "Font"
 msgstr "𐑓𐑪𐑯𐑑"
 
-#, fuzzy, c-format
+#, c-format
 #: ../shell/ev-properties-fonts.c:162
 msgid "Gathering font information… %3d%%"
-msgstr "𐑜𐑨𐑞𐑼𐑦𐑙 𐑓𐑪𐑯𐑑 𐑦𐑯𐑓𐑼𐑥𐑱𐑖𐑩𐑯... %3d%%"
+msgstr "𐑜𐑨𐑞𐑼𐑦𐑙 𐑓𐑪𐑯𐑑 𐑦𐑯𐑓𐑼𐑥𐑱𐑖𐑩𐑯… %3d%%"
 
 #: ../shell/ev-properties-license.c:137
 msgid "Usage terms"
@@ -951,7 +932,6 @@ msgstr "𐑓𐑻𐑞𐑼 𐑦𐑯𐑓𐑼𐑥𐑱𐑖𐑩𐑯"
 msgid "Attachments"
 msgstr "𐑩𐑑𐑨𐑗𐑥𐑩𐑯𐑑𐑕"
 
-#, fuzzy
 #: ../shell/ev-sidebar-layers.c:125 ../shell/ev-sidebar-links.c:262
 msgid "Loading…"
 msgstr "𐑤𐑴𐑛𐑦𐑙…"
@@ -960,7 +940,6 @@ msgstr "𐑤𐑴𐑛𐑦𐑙…"
 msgid "Layers"
 msgstr "𐑤𐑱𐑼𐑟"
 
-#, fuzzy
 #: ../shell/ev-sidebar-links.c:335
 msgid "Print…"
 msgstr "𐑐𐑮𐑦𐑯𐑑…"
@@ -974,10 +953,10 @@ msgstr "𐑦𐑯𐑛𐑧𐑒𐑕"
 msgid "Thumbnails"
 msgstr "Thumbnails"
 
-#, fuzzy, c-format
+#, c-format
 #: ../shell/ev-window.c:840
 msgid "Page %s — %s"
-msgstr "𐑐𐑱𐑡 %s - %s"
+msgstr "𐑐𐑱𐑡 %s — %s"
 
 #, c-format
 #: ../shell/ev-window.c:842
@@ -1010,10 +989,11 @@ msgstr "𐑛𐑬𐑯𐑤𐑴𐑛𐑦𐑙 𐑛𐑪𐑒𐑿𐑥𐑩𐑯𐑑 (%d%%)
 msgid "Failed to load remote file."
 msgstr "𐑓𐑱𐑤𐑛 𐑑 𐑤𐑴𐑛 𐑮𐑦𐑥𐑴𐑑 𐑓𐑲𐑤."
 
-#, fuzzy, c-format
+#, c-format
+#, fuzzy
 #: ../shell/ev-window.c:1998
 msgid "Reloading document from %s"
-msgstr "𐑤𐑴𐑛𐑦𐑙 𐑛𐑪𐑒𐑿𐑥𐑩𐑯𐑑 𐑓𐑮𐑪𐑥 “%s”"
+msgstr "Reloading 𐑛𐑪𐑒𐑿𐑥𐑩𐑯𐑑 𐑓𐑮𐑪𐑥 %s"
 
 #: ../shell/ev-window.c:2030
 msgid "Failed to reload document."
@@ -1105,10 +1085,11 @@ msgstr "𐑑𐑵𐑤𐑚𐑸 𐑧𐑛𐑦𐑑𐑹"
 msgid "There was an error displaying help"
 msgstr "𐑞𐑺 𐑢𐑪𐑟 𐑩𐑯 𐑻𐑼 𐑛𐑦𐑕𐑐𐑤𐑱𐑦𐑙 𐑣𐑧𐑤𐑐"
 
-#, fuzzy, c-format
+#, c-format
+#, fuzzy
 #: ../shell/ev-window.c:4228
 msgid "Document Viewer\nUsing %s (%s)"
-msgstr "𐑛𐑪𐑒𐑿𐑥𐑩𐑯𐑑 𐑝𐑿𐑼"
+msgstr "𐑛𐑪𐑒𐑿𐑥𐑩𐑯𐑑 𐑝𐑿𐑼\n𐑿𐑟𐑦𐑙 %s (%s)"
 
 #: ../shell/ev-window.c:4259
 msgid ""
@@ -1128,11 +1109,10 @@ msgid ""
 "WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR "
 "A PARTICULAR PURPOSE.  See the GNU General Public License for more details.\n"
 msgstr ""
-"𐑦𐑝𐑦𐑯𐑕 𐑦𐑟 𐑛𐑦𐑕𐑑𐑮𐑦𐑚𐑿𐑑𐑩𐑛 𐑦𐑯 𐑞 𐑣𐑴𐑐 𐑞𐑨𐑑 𐑦𐑑 𐑢𐑦𐑤 𐑚𐑰 𐑿𐑕𐑓𐑩𐑤, 𐑚𐑳𐑑 𐑢𐑦𐑞𐑬𐑑 𐑧𐑯𐑦 𐑢𐑪𐑮𐑩𐑯𐑑𐑰; "
+"·𐑦𐑝𐑦𐑯𐑕 𐑦𐑟 𐑛𐑦𐑕𐑑𐑮𐑦𐑚𐑿𐑑𐑩𐑛 𐑦𐑯 𐑞 𐑣𐑴𐑐 𐑞𐑨𐑑 𐑦𐑑 𐑢𐑦𐑤 𐑚𐑰 𐑿𐑕𐑓𐑩𐑤, 𐑚𐑳𐑑 𐑢𐑦𐑞𐑬𐑑 𐑧𐑯𐑦 𐑢𐑪𐑮𐑩𐑯𐑑𐑰; "
 "𐑢𐑦𐑞𐑬𐑑 𐑰𐑝𐑩𐑯 𐑞 𐑦𐑥𐑐𐑤𐑲𐑛 𐑢𐑪𐑮𐑩𐑯𐑑𐑰 𐑝 MERCHANTABILITY 𐑹 𐑓𐑦𐑑𐑯𐑩𐑕 𐑓𐑹 𐑩 𐑐𐑼𐑑𐑦𐑒𐑿𐑤𐑼 𐑐𐑻𐑐𐑩𐑕.  "
 "𐑕𐑰 𐑞 ·𐑜𐑯𐑿 𐑡𐑧𐑯𐑼𐑩𐑤 𐑐𐑳𐑚𐑤𐑦𐑒 𐑤𐑲𐑕𐑩𐑯𐑕 𐑓𐑹 𐑥𐑹 𐑛𐑰𐑑𐑱𐑤𐑟.\n"
 
-#, fuzzy
 #: ../shell/ev-window.c:4267
 msgid ""
 "You should have received a copy of the GNU General Public License along with "
@@ -1140,8 +1120,8 @@ msgid ""
 "Street, Fifth Floor, Boston, MA 02110-1301  USA\n"
 msgstr ""
 "𐑿 𐑖𐑫𐑛 𐑣𐑨𐑝 𐑮𐑦𐑕𐑰𐑝𐑛 𐑩 𐑒𐑪𐑐𐑦 𐑝 𐑞 ·𐑜𐑯𐑿 𐑡𐑧𐑯𐑼𐑩𐑤 𐑐𐑳𐑚𐑤𐑦𐑒 𐑤𐑲𐑕𐑩𐑯𐑕 𐑩𐑤𐑪𐑙 𐑢𐑦𐑞 𐑦𐑝𐑦𐑯𐑕; 𐑦𐑓 𐑯𐑪𐑑, "
-"𐑮𐑲𐑑 𐑑 𐑞 𐑓𐑮𐑰 𐑕𐑪𐑓𐑑𐑢𐑺 𐑓𐑬𐑯𐑛𐑱𐑖𐑩𐑯, 𐑦𐑙𐑒., 51 𐑓𐑮𐑨𐑙𐑒𐑤𐑦𐑯 𐑕𐑑𐑮𐑰𐑑, 𐑓𐑦𐑓𐑔 𐑓𐑤𐑹, ·𐑚𐑪𐑕𐑑𐑩𐑯, 𐑥𐑶 "
-"02110-1301  𐑘𐑵𐑧𐑕𐑱\n"
+"𐑮𐑲𐑑 𐑑 𐑞 𐑓𐑮𐑰 𐑕𐑪𐑓𐑑𐑢𐑺 𐑓𐑬𐑯𐑛𐑱𐑖𐑩𐑯, 𐑦𐑙𐑒., 51 ·𐑓𐑮𐑨𐑙𐑒𐑤𐑦𐑯 𐑕𐑑𐑮𐑰𐑑, 𐑓𐑦𐑓𐑔 𐑓𐑤𐑹, ·𐑚𐑪𐑕𐑑𐑩𐑯, MA "
+"02110-1301  USA\n"
 
 #: ../shell/ev-window.c:4292
 msgid "Evince"
@@ -1191,60 +1171,53 @@ msgid "_Help"
 msgstr "_𐑣𐑧𐑤𐑐"
 
 #. File menu
-#, fuzzy
 #: ../shell/ev-window.c:5077 ../shell/ev-window.c:5342
 msgid "_Open…"
-msgstr "_Open…"
+msgstr "_𐑴𐑐𐑩𐑯…"
 
 #: ../shell/ev-window.c:5078 ../shell/ev-window.c:5343
 msgid "Open an existing document"
 msgstr "𐑴𐑐𐑩𐑯 𐑩𐑯 𐑧𐑒𐑟𐑦𐑕𐑑𐑦𐑙 𐑛𐑪𐑒𐑿𐑥𐑩𐑯𐑑"
 
-#, fuzzy
 #: ../shell/ev-window.c:5080
 msgid "Op_en a Copy"
-msgstr "Op_en 𐑩 𐑒𐑪𐑐𐑦"
+msgstr "_𐑴𐑐𐑩𐑯 𐑩 𐑒𐑪𐑐𐑦"
 
 #: ../shell/ev-window.c:5081
 msgid "Open a copy of the current document in a new window"
 msgstr "𐑴𐑐𐑩𐑯 𐑩 𐑒𐑪𐑐𐑦 𐑝 𐑞 𐑒𐑳𐑮𐑩𐑯𐑑 𐑛𐑪𐑒𐑿𐑥𐑩𐑯𐑑 𐑦𐑯 𐑩 𐑯𐑿 𐑢𐑦𐑯𐑛𐑴"
 
-#, fuzzy
 #: ../shell/ev-window.c:5083
 msgid "_Save a Copy…"
-msgstr "_Save 𐑩 𐑒𐑪𐑐𐑦…"
+msgstr "_𐑕𐑱𐑝 𐑩 𐑒𐑪𐑐𐑦…"
 
 #: ../shell/ev-window.c:5084
 msgid "Save a copy of the current document"
 msgstr "𐑕𐑱𐑝 𐑩 𐑒𐑪𐑐𐑦 𐑝 𐑞 𐑒𐑳𐑮𐑩𐑯𐑑 𐑛𐑪𐑒𐑿𐑥𐑩𐑯𐑑"
 
-#, fuzzy
 #: ../shell/ev-window.c:5086
 msgid "_Print…"
-msgstr "_Print…"
+msgstr "_𐑐𐑮𐑦𐑯𐑑…"
 
-#, fuzzy
 #: ../shell/ev-window.c:5089
 msgid "P_roperties"
-msgstr "P_roperties"
+msgstr "_𐑐𐑮𐑪𐑐𐑼𐑑𐑦𐑟"
 
 #: ../shell/ev-window.c:5097
 msgid "Select _All"
 msgstr "𐑕𐑩𐑤𐑧𐑒𐑑 _𐑷𐑤"
 
-#, fuzzy
 #: ../shell/ev-window.c:5099
 msgid "_Find…"
-msgstr "_Find…"
+msgstr "_𐑓𐑲𐑯𐑛…"
 
 #: ../shell/ev-window.c:5100
 msgid "Find a word or phrase in the document"
 msgstr "𐑓𐑲𐑯𐑛 𐑩 𐑢𐑻𐑛 𐑹 𐑓𐑮𐑱𐑟 𐑦𐑯 𐑞 𐑛𐑪𐑒𐑿𐑥𐑩𐑯𐑑"
 
-#, fuzzy
 #: ../shell/ev-window.c:5106
 msgid "T_oolbar"
-msgstr "T_oolbar"
+msgstr "_𐑑𐑵𐑤𐑚𐑸"
 
 #: ../shell/ev-window.c:5108
 msgid "Rotate _Left"
@@ -1265,7 +1238,7 @@ msgstr "𐑮𐑰𐑤𐑴𐑛 𐑞 𐑛𐑪𐑒𐑿𐑥𐑩𐑯𐑑"
 #, fuzzy
 #: ../shell/ev-window.c:5125
 msgid "Auto_scroll"
-msgstr "Auto_scroll"
+msgstr "_Autoscroll"
 
 #: ../shell/ev-window.c:5135
 msgid "_First Page"
@@ -1353,21 +1326,18 @@ msgstr "_Fullscreen"
 msgid "Expand the window to fill the screen"
 msgstr "𐑦𐑒𐑕𐑐𐑨𐑯𐑛 𐑞 𐑢𐑦𐑯𐑛𐑴 𐑑 𐑓𐑦𐑤 𐑞 𐑕𐑒𐑮𐑰𐑯"
 
-#, fuzzy
 #: ../shell/ev-window.c:5228
 msgid "Pre_sentation"
-msgstr "Pre_sentation"
+msgstr "_𐑐𐑮𐑧𐑟𐑩𐑯𐑑𐑱𐑖𐑩𐑯"
 
 #: ../shell/ev-window.c:5229
 msgid "Run document as a presentation"
 msgstr "𐑮𐑳𐑯 𐑛𐑪𐑒𐑿𐑥𐑩𐑯𐑑 𐑨𐑟 𐑩 𐑐𐑮𐑧𐑟𐑩𐑯𐑑𐑱𐑖𐑩𐑯"
 
-#, fuzzy
 #: ../shell/ev-window.c:5237
 msgid "_Inverted Colors"
-msgstr "_Inverted 𐑒𐑳𐑤𐑼𐑟"
+msgstr "_𐑦𐑯𐑝𐑻𐑑𐑦𐑛 𐑒𐑳𐑤𐑼𐑟"
 
-#, fuzzy
 #: ../shell/ev-window.c:5238
 msgid "Show page contents with the colors inverted"
 msgstr "𐑖𐑴 𐑐𐑱𐑡 𐑒𐑪𐑯𐑑𐑩𐑯𐑑𐑕 𐑢𐑦𐑞 𐑞 𐑒𐑳𐑤𐑼𐑟 𐑦𐑯𐑝𐑻𐑑𐑦𐑛"
@@ -1389,24 +1359,21 @@ msgstr "𐑴𐑐𐑩𐑯 𐑦𐑯 𐑯𐑿 _𐑢𐑦𐑯𐑛𐑴"
 msgid "_Copy Link Address"
 msgstr "_𐑒𐑪𐑐𐑦 𐑤𐑦𐑙𐑒 𐑩𐑛𐑮𐑧𐑕"
 
-#, fuzzy
 #: ../shell/ev-window.c:5254
 msgid "_Save Image As…"
-msgstr "_Save 𐑦𐑥𐑦𐑡 𐑨𐑟…"
+msgstr "_𐑕𐑱𐑝 𐑦𐑥𐑦𐑡 𐑨𐑟…"
 
 #: ../shell/ev-window.c:5256
 msgid "Copy _Image"
 msgstr "𐑒𐑪𐑐𐑦 _𐑦𐑥𐑦𐑡"
 
-#, fuzzy
 #: ../shell/ev-window.c:5261
 msgid "_Open Attachment"
-msgstr "_Open 𐑩𐑑𐑨𐑗𐑥𐑩𐑯𐑑"
+msgstr "_𐑴𐑐𐑩𐑯 𐑩𐑑𐑨𐑗𐑥𐑩𐑯𐑑"
 
-#, fuzzy
 #: ../shell/ev-window.c:5263
 msgid "_Save Attachment As…"
-msgstr "_Save 𐑩𐑑𐑨𐑗𐑥𐑩𐑯𐑑 𐑨𐑟…"
+msgstr "_𐑕𐑱𐑝 𐑩𐑑𐑨𐑗𐑥𐑩𐑯𐑑 𐑨𐑟…"
 
 #: ../shell/ev-window.c:5316
 msgid "Zoom"
@@ -1462,7 +1429,6 @@ msgstr "𐑳𐑯𐑱𐑚𐑩𐑤 𐑑 𐑤𐑷𐑯𐑗 𐑦𐑒𐑕𐑑𐑻𐑯�
 msgid "Unable to open external link"
 msgstr "𐑳𐑯𐑱𐑚𐑩𐑤 𐑑 𐑴𐑐𐑩𐑯 𐑦𐑒𐑕𐑑𐑻𐑯𐑩𐑤 𐑤𐑦𐑙𐑒"
 
-#, fuzzy
 #: ../shell/ev-window.c:5786
 msgid "Couldn't find appropriate format to save image"
 msgstr "𐑒𐑫𐑛𐑯𐑑 𐑓𐑲𐑯𐑛 𐑩𐑐𐑮𐑴𐑐𐑮𐑦𐑱𐑑 𐑓𐑹𐑥𐑨𐑑 𐑑 𐑕𐑱𐑝 𐑦𐑥𐑦𐑡"
@@ -1487,10 +1453,10 @@ msgstr "𐑞 𐑩𐑑𐑨𐑗𐑥𐑩𐑯𐑑 𐑒𐑫𐑛 𐑯𐑪𐑑 𐑚𐑰
 msgid "Save Attachment"
 msgstr "𐑕𐑱𐑝 𐑩𐑑𐑨𐑗𐑥𐑩𐑯𐑑"
 
-#, fuzzy, c-format
+#, c-format
 #: ../shell/ev-window-title.c:162
 msgid "%s — Password Required"
-msgstr "%s - 𐑐𐑭𐑕𐑢𐑼𐑛 𐑮𐑦𐑒𐑢𐑲𐑼𐑛"
+msgstr "%s — 𐑐𐑭𐑕𐑢𐑼𐑛 𐑮𐑦𐑒𐑢𐑲𐑼𐑛"
 
 #: ../shell/ev-utils.c:317
 msgid "By extension"
@@ -1500,7 +1466,6 @@ msgstr "𐑚𐑲 𐑩𐑒𐑕𐑑𐑧𐑯𐑖𐑩𐑯"
 msgid "GNOME Document Viewer"
 msgstr "·𐑜𐑯𐑴𐑥 𐑛𐑪𐑒𐑿𐑥𐑩𐑯𐑑 𐑝𐑿𐑼"
 
-#, fuzzy
 #: ../shell/main.c:80
 msgid "The page label of the document to display."
 msgstr "𐑞 𐑐𐑱𐑡 𐑤𐑱𐑚𐑩𐑤 𐑝 𐑞 𐑛𐑪𐑒𐑿𐑥𐑩𐑯𐑑 𐑑 𐑛𐑦𐑕𐑐𐑤𐑱."
@@ -1509,12 +1474,10 @@ msgstr "𐑞 𐑐𐑱𐑡 𐑤𐑱𐑚𐑩𐑤 𐑝 𐑞 𐑛𐑪𐑒𐑿𐑥�
 msgid "PAGE"
 msgstr "𐑐𐑱𐑡"
 
-#, fuzzy
 #: ../shell/main.c:81
 msgid "The page number of the document to display."
 msgstr "𐑞 𐑐𐑱𐑡 𐑯𐑳𐑥𐑚𐑼 𐑝 𐑞 𐑛𐑪𐑒𐑿𐑥𐑩𐑯𐑑 𐑑 𐑛𐑦𐑕𐑐𐑤𐑱."
 
-#, fuzzy
 #: ../shell/main.c:81
 msgid "NUMBER"
 msgstr "𐑯𐑳𐑥𐑚𐑼"
@@ -1541,7 +1504,6 @@ msgstr "𐑞 𐑢𐑻𐑛 𐑹 𐑓𐑮𐑱𐑟 𐑑 𐑓𐑲𐑯𐑛 𐑦𐑯 �
 msgid "STRING"
 msgstr "𐑕𐑑𐑮𐑦𐑙"
 
-#, fuzzy
 #: ../shell/main.c:89
 msgid "[FILE…]"
 msgstr "[𐑓𐑲𐑤…]"
@@ -1558,7 +1520,7 @@ msgstr ""
 #, fuzzy
 #: ../thumbnailer/evince-thumbnailer.schemas.in.h:2
 msgid "Enable thumbnailing of PDF Documents"
-msgstr "𐑦𐑯𐑱𐑚𐑩𐑤 thumbnailing 𐑝 ·𐑐·𐑛·𐑓 𐑛𐑪𐑒𐑿𐑥𐑩𐑯𐑑𐑕"
+msgstr "𐑦𐑯𐑱𐑚𐑩𐑤 thumbnailing 𐑝 PDF 𐑛𐑪𐑒𐑿𐑥𐑩𐑯𐑑𐑕"
 
 #: ../thumbnailer/evince-thumbnailer.schemas.in.h:3
 msgid "Thumbnail command for PDF Documents"
