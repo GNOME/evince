@@ -50,19 +50,16 @@ endif
 #
 # GSettings schema
 #
-
-# gsettingsschemadir and gschema_compile are defined by the GLIB_GSETTINGS
-# macro in configure.ac
 gsettingsschema_in_files = org.gnome.Evince.gschema.xml.in
-gsettingsschema_DATA = $(gsettingsschema_in_files:.xml.in=.xml)
+# gsettings_SCHEMAS is a list of all the schemas you want to install
+gsettings_SCHEMAS = $(gsettingsschema_in_files:.xml.in=.xml)
+
+.PRECIOUS: $(gsettings_SCHEMAS)
+
 @INTLTOOL_XML_NOMERGE_RULE@
-# This rule will check your schemas for validity before installation
-# Uncomment when porting is done
-# GSETTINGS_CHECK_RULE
-if GSETTINGS_SCHEMAS_INSTALL
-install-data-hook:
-	$(AM_V_GEN) $(GLIB_COMPILE_SCHEMAS) --allow-any-name $(DESTDIR)$(gsettingsschemadir) --targetdir=$(DESTDIR)$(gsettingsschemadir)
-endif
+
+# include the appropriate makefile rules for schema handling
+@GSETTINGS_RULES@
 
 #
 # GTK icon cache

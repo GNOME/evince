@@ -223,13 +223,12 @@ struct _EvWindowPrivate {
 #define NAVIGATION_ACTION	"Navigation"
 
 #define GCONF_LOCKDOWN_DIR          "/desktop/gnome/lockdown"
-#define GCONF_OVERRIDE_RESTRICTIONS "/apps/evince/override_restrictions"
 #define GCONF_LOCKDOWN_SAVE         "/desktop/gnome/lockdown/disable_save_to_disk"
 #define GCONF_LOCKDOWN_PRINT        "/desktop/gnome/lockdown/disable_printing"
 #define GCONF_LOCKDOWN_PRINT_SETUP  "/desktop/gnome/lockdown/disable_print_setup"
 
 #define GS_SCHEMA_NAME           "org.gnome.Evince"
-#define GS_OVERRIDE_RESTRICTIONS "override_restrictions"
+#define GS_OVERRIDE_RESTRICTIONS "override-restrictions"
 
 #define SIDEBAR_DEFAULT_SIZE    132
 #define LINKS_SIDEBAR_ID "links"

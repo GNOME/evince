@@ -238,11 +238,6 @@ main (int argc, char *argv[])
 	GOptionContext *context;
 	GError         *error = NULL;
 
-#ifdef WITH_GCONF
-	/* Remove when porting is done */
-	g_setenv ("GSETTINGS_BACKEND", "gconf", FALSE);
-#endif
-
 #ifdef G_OS_WIN32
 
     if (fileno (stdout) != -1 &&
