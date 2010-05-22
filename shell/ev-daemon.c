@@ -283,8 +283,6 @@ method_call_cb (GDBusConnection       *connection,
                 ev_daemon_docs = g_list_prepend (ev_daemon_docs, doc);
 
                 g_dbus_method_invocation_return_value (invocation, g_variant_new ("(s)", ""));
-                return;
-
         } else if (g_strcmp0 (method_name, "UnregisterDocument") == 0) {
                 EvDoc *doc;
                 const gchar *uri;
@@ -319,8 +317,56 @@ method_call_cb (GDBusConnection       *connection,
                 ev_daemon_maybe_start_killtimer (user_data);
 
                 g_dbus_method_invocation_return_value (invocation, g_variant_new ("()"));
-                return;
         }
+}
+
+static const char introspection_xml[] =
+  "<node>"
+    "<interface name='org.gnome.evince.Daemon'>"
+      "<method name='RegisterDocument'>"
+        "<arg type='s' name='uri' direction='in'/>"
+        "<arg type='s' name='owner' direction='out'/>"
+      "</method>"
+      "<method name='UnregisterDocument'>"
+        "<arg type='s' name='uri' direction='in'/>"
+      "</method>"
+    "</interface>"
+  "</node>";
+
+static const GDBusInterfaceVTable interface_vtable = {
+  method_call_cb,
+  NULL,
+  NULL
+};
+
+static GDBusNodeInfo *introspection_data;
+
+static void
+bus_acquired_cb (GDBusConnection *connection,
+		 const gchar     *name,
+		 gpointer         user_data)
+{
+	GMainLoop *loop = (GMainLoop *) user_data;
+	guint      registration_id;
+	GError    *error = NULL;
+
+	if (!introspection_data)
+		introspection_data = g_dbus_node_info_new_for_xml (introspection_xml, NULL);
+
+	registration_id = g_dbus_connection_register_object (connection,
+							     EV_DBUS_DAEMON_OBJECT_PATH,
+							     introspection_data->interfaces[0],
+							     &interface_vtable,
+							     g_main_loop_ref (loop),
+							     (GDestroyNotify) g_main_loop_unref,
+							     &error);
+	if (registration_id == 0) {
+		g_printerr ("Failed to register object: %s\n", error->message);
+		g_error_free (error);
+
+		if (g_main_loop_is_running (loop))
+			g_main_loop_quit (loop);
+	}
 }
 
 static void
@@ -345,81 +391,36 @@ name_lost_cb (GDBusConnection *connection,
                   g_main_loop_quit (loop);
 }
 
-static const char introspection_xml[] =
-  "<node>"
-    "<interface name='org.gnome.evince.Daemon'>"
-      "<method name='RegisterDocument'>"
-        "<arg type='s' name='uri' direction='in'/>"
-        "<arg type='s' name='owner' direction='out'/>"
-      "</method>"
-      "<method name='UnregisterDocument'>"
-        "<arg type='s' name='uri' direction='in'/>"
-      "</method>"
-    "</interface>"
-  "</node>";
-
-static const GDBusInterfaceVTable interface_vtable = {
-  method_call_cb,
-  NULL,
-  NULL
-};
-
 gint
 main (gint argc, gchar **argv)
 {
-        GDBusConnection *connection;
 	GMainLoop *loop;
-        GError *error = NULL;
-        guint registration_id, owner_id;
-        GDBusNodeInfo *introspection_data;
+        guint owner_id;
 
         g_set_prgname ("evince-daemon");
 
 	g_type_init ();
 
-        connection = g_bus_get_sync (G_BUS_TYPE_SESSION, NULL, &error);
-        if (connection == NULL) {
-                g_printerr ("Failed to get bus connection: %s\n", error->message);
-                g_error_free (error);
-                return 1;
-        }
-
-        introspection_data = g_dbus_node_info_new_for_xml (introspection_xml, NULL);
-        g_assert (introspection_data != NULL);
-
 	loop = g_main_loop_new (NULL, FALSE);
 
-        registration_id = g_dbus_connection_register_object (connection,
-                                                             EV_DBUS_DAEMON_OBJECT_PATH,
-                                                             introspection_data->interfaces[0],
-                                                             &interface_vtable,
-                                                             g_main_loop_ref (loop),
-                                                             (GDestroyNotify) g_main_loop_unref,
-                                                             &error);
-        if (registration_id == 0) {
-                g_printerr ("Failed to register object: %s\n", error->message);
-                g_error_free (error);
-                g_object_unref (connection);
-                return 1;
-        }
-
-        owner_id = g_bus_own_name_on_connection (connection,
-                                                 EV_DBUS_DAEMON_NAME,
-                                                 G_BUS_NAME_OWNER_FLAGS_NONE,
-                                                 name_acquired_cb,
-                                                 name_lost_cb,
-                                                 g_main_loop_ref (loop),
-                                                 (GDestroyNotify) g_main_loop_unref);
+        owner_id = g_bus_own_name (G_BUS_TYPE_SESSION,
+				   EV_DBUS_DAEMON_NAME,
+				   G_BUS_NAME_OWNER_FLAGS_NONE,
+				   bus_acquired_cb,
+				   name_acquired_cb,
+				   name_lost_cb,
+				   g_main_loop_ref (loop),
+				   (GDestroyNotify) g_main_loop_unref);
 
         g_main_loop_run (loop);
 
         g_bus_unown_name (owner_id);
 
         g_main_loop_unref (loop);
-        g_dbus_node_info_unref (introspection_data);
+	if (introspection_data)
+		g_dbus_node_info_unref (introspection_data);
         g_list_foreach (ev_daemon_docs, (GFunc)ev_doc_free, NULL);
         g_list_free (ev_daemon_docs);
-        g_object_unref (connection);
 
 	return 0;
 }
