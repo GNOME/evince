@@ -45,7 +45,6 @@
 
 #define XSCREENSAVER_MIN_TIMEOUT 60
 
-static GObjectClass *parent_class = NULL;
 static void totem_scrsaver_finalize   (GObject *object);
 
 struct TotemScrsaverPrivate {
@@ -346,8 +345,6 @@ totem_scrsaver_class_init (TotemScrsaverClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
-	parent_class = g_type_class_peek_parent (klass);
-
 	object_class->finalize = totem_scrsaver_finalize;
 }
 
@@ -449,5 +446,5 @@ totem_scrsaver_finalize (GObject *object)
 	{}
 #endif
 
-        G_OBJECT_CLASS (parent_class)->finalize (object);
+        G_OBJECT_CLASS (totem_scrsaver_parent_class)->finalize (object);
 }
