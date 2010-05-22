@@ -4874,6 +4874,7 @@ ev_window_dispose (GObject *object)
 	}
 
 	if (priv->last_settings) {
+		g_settings_apply (priv->last_settings);
 		g_object_unref (priv->last_settings);
 		priv->last_settings = NULL;
 	}
@@ -6460,6 +6461,7 @@ ev_window_init (EvWindow *ev_window)
 	gtk_widget_grab_focus (ev_window->priv->view);
 
 	ev_window->priv->last_settings = g_settings_new (GS_SCHEMA_NAME".Default");
+	g_settings_delay (ev_window->priv->last_settings);
 
 	/* Set it user interface params */
 	ev_window_setup_recent (ev_window);
