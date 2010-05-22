@@ -192,7 +192,7 @@ ev_media_player_keys_finalize (GObject *object)
         ev_media_player_keys_release_keys (keys);
 
 	if (keys->watch_id > 0)
-		g_bus_unwatch_name (keys->watch_id);
+		g_bus_unwatch_proxy (keys->watch_id);
 
         if (keys->proxy != NULL)
                 g_object_unref (keys->proxy);
