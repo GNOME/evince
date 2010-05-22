@@ -61,6 +61,9 @@ gsettings_SCHEMAS = $(gsettingsschema_in_files:.xml.in=.xml)
 # include the appropriate makefile rules for schema handling
 @GSETTINGS_RULES@
 
+gsettingsconvertdir = $(datadir)/GConf/gsettings
+gsettingsconvert_DATA = evince.convert
+
 #
 # GTK icon cache
 #
@@ -91,6 +94,7 @@ EXTRA_DIST =					\
 	org.gnome.evince.Daemon.service.in	\
 	$(man_MANS)				\
 	evince.ico				\
+	evince.convert				\
 	$(NULL)
 
 #
