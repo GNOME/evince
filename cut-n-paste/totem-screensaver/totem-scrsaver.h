@@ -46,8 +46,8 @@ struct TotemScrsaverClass {
 	GObjectClass parent_class; 
 };
 
-GType totem_scrsaver_get_type		(void);
-TotemScrsaver *totem_scrsaver_new       (GDBusConnection *connection);
+GType totem_scrsaver_get_type		(void) G_GNUC_CONST;
+TotemScrsaver *totem_scrsaver_new       (void);
 void totem_scrsaver_enable		(TotemScrsaver *scr);
 void totem_scrsaver_disable		(TotemScrsaver *scr);
 void totem_scrsaver_set_state		(TotemScrsaver *scr,
