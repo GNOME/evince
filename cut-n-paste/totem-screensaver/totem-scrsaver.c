@@ -345,6 +345,8 @@ totem_scrsaver_class_init (TotemScrsaverClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
+	g_type_class_add_private (klass, sizeof (TotemScrsaverPrivate));
+
 	object_class->finalize = totem_scrsaver_finalize;
 }
 
@@ -367,7 +369,9 @@ totem_scrsaver_new (void)
 static void
 totem_scrsaver_init (TotemScrsaver *scr)
 {
-	scr->priv = g_new0 (TotemScrsaverPrivate, 1);
+	scr->priv = G_TYPE_INSTANCE_GET_PRIVATE (scr,
+						 TOTEM_TYPE_SCRSAVER,
+						 TotemScrsaverPrivate);
 
 	screensaver_init_dbus (scr);
 #ifdef GDK_WINDOWING_X11
