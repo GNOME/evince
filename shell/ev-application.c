@@ -872,7 +872,6 @@ ev_application_init (EvApplication *ev_application)
                 ev_application->registration_id =
                     g_dbus_connection_register_object (ev_application->connection,
                                                        APPLICATION_DBUS_OBJECT_PATH,
-                                                       APPLICATION_DBUS_INTERFACE,
                                                        introspection_data->interfaces[0],
                                                        &interface_vtable,
                                                        ev_application, NULL,

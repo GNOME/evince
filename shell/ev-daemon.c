@@ -391,7 +391,6 @@ main (gint argc, gchar **argv)
 
         registration_id = g_dbus_connection_register_object (connection,
                                                              EV_DBUS_DAEMON_OBJECT_PATH,
-                                                             EV_DBUS_DAEMON_NAME,
                                                              introspection_data->interfaces[0],
                                                              &interface_vtable,
                                                              g_main_loop_ref (loop),
