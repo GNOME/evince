@@ -40,7 +40,7 @@ typedef struct _EvMediaPlayerKeysClass EvMediaPlayerKeysClass;
 
 GType	           ev_media_player_keys_get_type  (void) G_GNUC_CONST;
 
-EvMediaPlayerKeys *ev_media_player_keys_new	  (GDBusConnection *connection);
+EvMediaPlayerKeys *ev_media_player_keys_new	  (void);
 
 void               ev_media_player_keys_focused	  (EvMediaPlayerKeys *keys);
 
