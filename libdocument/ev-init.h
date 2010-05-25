@@ -28,6 +28,8 @@
 
 G_BEGIN_DECLS
 
+const gchar* ev_get_locale_dir (void);
+
 gboolean    ev_init           (void);
 
 void        ev_shutdown       (void);

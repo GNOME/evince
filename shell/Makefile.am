@@ -15,7 +15,6 @@ INCLUDES=							\
 	-I$(top_builddir)/libview				\
 	-I$(top_srcdir)/libmisc					\
 	-I$(top_srcdir)/properties				\
-	-DGNOMELOCALEDIR=\"$(datadir)/locale\"			\
 	-DGNOMEICONDIR=\""$(datadir)/pixmaps"\" 		\
 	-DBINDIR=\""$(bindir)"\"				\
 	-DLIBEXECDIR=\""$(libexecdir)"\"			\

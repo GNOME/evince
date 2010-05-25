@@ -35,6 +35,7 @@ static int ev_init_count;
 #ifdef G_OS_WIN32
 
 static HMODULE evdocument_dll = NULL;
+static gchar *locale_dir = NULL;
 
 #ifdef DLL_EXPORT
 BOOL WINAPI
@@ -49,34 +50,39 @@ DllMain (HINSTANCE hinstDLL,
 }
 #endif
 
-#endif
-
-static gchar *
-_ev_get_locale_dir (void)
+static const gchar *
+_ev_win32_get_locale_dir (HMODULE module)
 {
-#ifdef G_OS_WIN32
-	gchar *install_dir = NULL, *locale_dir;
+	gchar *install_dir = NULL, *utf8_locale_dir;
 	gchar *retval = NULL;
 
 	if (evdocument_dll != NULL)
-		install_dir = g_win32_get_package_installation_directory_of_module (evdocument_dll);
+		install_dir =
+		g_win32_get_package_installation_directory_of_module (module);
 
 	if (install_dir) {
-		locale_dir = g_build_filename (install_dir,
+		utf8_locale_dir = g_build_filename (install_dir,
 			"share", "locale", NULL);
 
-		retval = g_win32_locale_filename_from_utf8 (locale_dir);
+		locale_dir = g_win32_locale_filename_from_utf8 (utf8_locale_dir);
 
 		g_free (install_dir);
-		g_free (locale_dir);
+		g_free (utf8_locale_dir);
 	}
 
-	if (retval)
-		return retval;
-	else
-		return g_strdup ("");
+	if (!locale_dir)
+		locale_dir = g_strdup ("");
+}
+
+#endif
+
+const gchar *
+ev_get_locale_dir (void)
+{
+#ifdef G_OS_WIN32
+	return _ev_win32_get_locale_dir (evdocument_dll);
 #else
-	return g_strdup (GNOMELOCALEDIR);
+	return GNOMELOCALEDIR;
 #endif
 }
 
@@ -100,9 +106,7 @@ ev_init (void)
                 return have_backends;
 
 	/* set up translation catalog */
-	gchar *tmp = _ev_get_locale_dir ();
-	bindtextdomain (GETTEXT_PACKAGE, tmp);
-	g_free (tmp);
+	bindtextdomain (GETTEXT_PACKAGE, ev_get_locale_dir ());
 	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
 
         _ev_debug_init ();
@@ -124,6 +128,11 @@ ev_shutdown (void)
 
         if (--ev_init_count > 0)
                 return;
+
+#ifdef G_OS_WIN32
+	if (locale_dir != NULL)
+		g_free(locale_dir);
+#endif
 
         _ev_backends_manager_shutdown ();
         _ev_file_helpers_shutdown ();
