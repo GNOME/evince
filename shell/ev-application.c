@@ -64,6 +64,7 @@ struct _EvApplication {
 	GDBusConnection *connection;
         guint registration_id;
 	EvMediaPlayerKeys *keys;
+	gboolean doc_registered;
 #endif
 
 	TotemScrsaver *scr_saver;
@@ -87,9 +88,29 @@ G_DEFINE_TYPE (EvApplication, ev_application, G_TYPE_OBJECT);
 #ifdef ENABLE_DBUS
 #define APPLICATION_DBUS_OBJECT_PATH "/org/gnome/evince/Evince"
 #define APPLICATION_DBUS_INTERFACE   "org.gnome.evince.Application"
+
+#define EVINCE_DAEMON_SERVICE        "org.gnome.evince.Daemon"
+#define EVINCE_DAEMON_OBJECT_PATH    "/org/gnome/evince/Daemon"
+#define EVINCE_DAEMON_INTERFACE      "org.gnome.evince.Daemon"
 #endif
 
 static const gchar *userdir = NULL;
+
+static void _ev_application_open_uri_at_dest (EvApplication  *application,
+					      const gchar    *uri,
+					      GdkScreen      *screen,
+					      EvLinkDest     *dest,
+					      EvWindowRunMode mode,
+					      const gchar    *search_string,
+					      guint           timestamp);
+static void ev_application_open_uri_in_window (EvApplication  *application,
+					       const char     *uri,
+					       EvWindow       *ev_window,
+					       GdkScreen      *screen,
+					       EvLinkDest     *dest,
+					       EvWindowRunMode mode,
+					       const gchar    *search_string,
+					       guint           timestamp);
 
 /**
  * ev_application_get_instance:
@@ -333,6 +354,147 @@ ev_application_get_empty_window (EvApplication *application,
 
 
 #ifdef ENABLE_DBUS
+typedef struct {
+	gchar          *uri;
+	GdkScreen      *screen;
+	EvLinkDest     *dest;
+	EvWindowRunMode mode;
+	gchar          *search_string;
+	guint           timestamp;
+} EvRegisterDocData;
+
+static void
+ev_register_doc_data_free (EvRegisterDocData *data)
+{
+	if (!data)
+		return;
+
+	g_free (data->uri);
+	if (data->search_string)
+		g_free (data->search_string);
+	if (data->dest)
+		g_object_unref (data->dest);
+
+	g_free (data);
+}
+
+static void
+on_open_uri_cb (GObject      *source_object,
+		GAsyncResult *res,
+		gpointer      user_data)
+{
+	GDBusConnection *connection = G_DBUS_CONNECTION (source_object);
+	GVariant        *value;
+	GError          *error = NULL;
+
+	value = g_dbus_connection_call_finish (connection, res, &error);
+	if (!value) {
+		g_warning ("Failed to OpenURI: %s", error->message);
+		g_error_free (error);
+	}
+	g_variant_unref (value);
+
+	ev_application_shutdown (EV_APP);
+}
+
+static void
+on_register_uri_cb (GObject      *source_object,
+		    GAsyncResult *res,
+		    gpointer      user_data)
+{
+	GDBusConnection   *connection = G_DBUS_CONNECTION (source_object);
+	EvRegisterDocData *data = (EvRegisterDocData *)user_data;
+	EvApplication     *application = EV_APP;
+	GVariant          *value;
+	const gchar       *owner;
+	GVariantBuilder    builder;
+	GError            *error = NULL;
+
+	value = g_dbus_connection_call_finish (connection, res, &error);
+	if (!value) {
+		g_warning ("Error registering document: %s\n", error->message);
+		g_error_free (error);
+
+		_ev_application_open_uri_at_dest (application,
+						  data->uri,
+						  data->screen,
+						  data->dest,
+						  data->mode,
+						  data->search_string,
+						  data->timestamp);
+		ev_register_doc_data_free (data);
+
+		return;
+	}
+
+	g_variant_get (value, "(&s)", &owner);
+
+	/* This means that the document wasn't already registered; go
+         * ahead with opening it.
+         */
+	if (owner[0] == '\0') {
+                g_variant_unref (value);
+
+		application->doc_registered = TRUE;
+
+		_ev_application_open_uri_at_dest (application,
+						  data->uri,
+						  data->screen,
+						  data->dest,
+						  data->mode,
+						  data->search_string,
+						  data->timestamp);
+		ev_register_doc_data_free (data);
+
+                return;
+        }
+
+	/* Already registered */
+	g_variant_builder_init (&builder, G_VARIANT_TYPE ("(sa{sv}u)"));
+        g_variant_builder_add (&builder, "s", data->uri);
+
+        g_variant_builder_open (&builder, G_VARIANT_TYPE ("a{sv}"));
+        g_variant_builder_add (&builder, "{sv}",
+                               "display",
+                               g_variant_new_string (gdk_display_get_name (gdk_screen_get_display (data->screen))));
+        g_variant_builder_add (&builder, "{sv}",
+                               "screen",
+                               g_variant_new_int32 (gdk_screen_get_number (data->screen)));
+	if (data->dest) {
+                g_variant_builder_add (&builder, "{sv}",
+                                       "page-label",
+                                       g_variant_new_string (ev_link_dest_get_page_label (data->dest)));
+	}
+	if (data->search_string) {
+                g_variant_builder_add (&builder, "{sv}",
+                                       "find-string",
+                                       g_variant_new_string (data->search_string));
+	}
+	if (data->mode != EV_WINDOW_MODE_NORMAL) {
+                g_variant_builder_add (&builder, "{sv}",
+                                       "mode",
+                                       g_variant_new_uint32 (data->mode));
+	}
+        g_variant_builder_close (&builder);
+
+        g_variant_builder_add (&builder, "u", data->timestamp);
+
+        g_dbus_connection_call (connection,
+				owner,
+				APPLICATION_DBUS_OBJECT_PATH,
+				APPLICATION_DBUS_INTERFACE,
+				"OpenURI",
+				g_variant_builder_end (&builder),
+				NULL,
+				G_DBUS_CALL_FLAGS_NONE,
+				-1,
+				NULL,
+				on_open_uri_cb,
+				NULL);
+	g_variant_unref (value);
+	ev_register_doc_data_free (data);
+}
+
 /*
  * ev_application_register_uri:
  * @application:
@@ -345,109 +507,59 @@ ev_application_get_empty_window (EvApplication *application,
  *
  * Registers @uri with evince-daemon.
  *
- * Returns: %TRUE to continue by opening @uri in this instance,
- *   or %FALSE if the request was forwarded to an existing evince
- *   instance for @uri
  */
-static gboolean
-ev_application_register_uri (EvApplication *application,
-			     const gchar   *uri,
+static void
+ev_application_register_uri (EvApplication  *application,
+			     const gchar    *uri,
                              GdkScreen      *screen,
                              EvLinkDest     *dest,
                              EvWindowRunMode mode,
                              const gchar    *search_string,
-			     guint          timestamp)
+			     guint           timestamp)
 {
-	GVariant *value, *value2;
-	const gchar *owner;
-        GVariantBuilder builder;
-	GError *error = NULL;
+	EvRegisterDocData *data;
 
 	if (!application->connection)
-		return TRUE;
+		return;
 
-        /* FIXME: Don't make sync dbus calls, they block the UI! */
-        value = g_dbus_connection_call_sync
-                   (application->connection,
-                    "org.gnome.evince.Daemon",
-                    "/org/gnome/evince/Daemon",
-                    "org.gnome.evince.Daemon",
-                    "RegisterDocument",
-                    g_variant_new ("(s)", uri),
-		    G_VARIANT_TYPE ("(s)"),
-                    G_DBUS_CALL_FLAGS_NONE,
-                    -1,
-                    NULL,
-                    &error);
-        if (value == NULL) {
-		g_warning ("Error registering document: %s\n", error->message);
-		g_error_free (error);
-		return TRUE;
+	if (application->doc_registered) {
+		/* Already registered, reload */
+		GList *windows, *l;
+
+		windows = ev_application_get_windows (application);
+		for (l = windows; l != NULL; l = g_list_next (l)) {
+			EvWindow *ev_window = EV_WINDOW (l->data);
+
+			ev_application_open_uri_in_window (application, uri, ev_window,
+							   screen, dest, mode,
+							   search_string,
+							   timestamp);
+		}
+		g_list_free (windows);
+
+		return;
 	}
 
-        g_variant_get (value, "(&s)", &owner);
+	data = g_new (EvRegisterDocData, 1);
+	data->uri = g_strdup (uri);
+	data->screen = screen;
+	data->dest = dest ? g_object_ref (dest) : NULL;
+	data->mode = mode;
+	data->search_string = search_string ? g_strdup (search_string) : NULL;
+	data->timestamp = timestamp;
 
-        /* This means that the document wasn't already registered; go
-         * ahead with opening it.
-         */
-	if (owner[0] == '\0') {
-                g_variant_unref (value);
-                return TRUE;
-        }
-
-        /* Already registered */
-        g_variant_builder_init (&builder, G_VARIANT_TYPE ("(sa{sv}u)"));
-        g_variant_builder_add (&builder, "s", uri);
-
-        g_variant_builder_open (&builder, G_VARIANT_TYPE ("a{sv}"));
-        g_variant_builder_add (&builder, "{sv}",
-                               "display",
-                               g_variant_new_string (gdk_display_get_name (gdk_screen_get_display (screen))));
-        g_variant_builder_add (&builder, "{sv}",
-                               "screen",
-                               g_variant_new_int32 (gdk_screen_get_number (screen)));
-	if (dest) {
-                g_variant_builder_add (&builder, "{sv}",
-                                       "page-label",
-                                       g_variant_new_string (ev_link_dest_get_page_label (dest)));
-	}
-	if (search_string) {
-                g_variant_builder_add (&builder, "{sv}",
-                                       "find-string",
-                                       g_variant_new_string (search_string));
-	}
-	if (mode != EV_WINDOW_MODE_NORMAL) {
-                g_variant_builder_add (&builder, "{sv}",
-                                       "mode",
-                                       g_variant_new_uint32 (mode));
-	}
-        g_variant_builder_close (&builder);
-
-        g_variant_builder_add (&builder, "u", timestamp);
-
-        value2 = g_dbus_connection_call_sync
-                    (application->connection,
-                     owner,
-                     APPLICATION_DBUS_OBJECT_PATH,
-                     APPLICATION_DBUS_INTERFACE,
-                     "OpenURI",
-                     g_variant_builder_end (&builder),
-		     NULL,
-                     G_DBUS_CALL_FLAGS_NONE,
-                     -1,
-                     NULL,
-                     &error);
-        if (value2 == NULL) {
-                g_warning ("Failed to OpenURI: %s", error->message);
-                g_error_free (error);
-                return FALSE;
-        }
-
-	g_variant_unref (value);
-	g_variant_unref (value2);
-
-        /* Do not continue opening this document */
-	return FALSE;
+        g_dbus_connection_call (application->connection,
+				EVINCE_DAEMON_SERVICE,
+				EVINCE_DAEMON_OBJECT_PATH,
+				EVINCE_DAEMON_INTERFACE,
+				"RegisterDocument",
+				g_variant_new ("(s)", uri),
+				G_VARIANT_TYPE ("(s)"),
+				G_DBUS_CALL_FLAGS_NONE,
+				-1,
+				NULL,
+				on_register_uri_cb,
+				data);
 }
 
 static void
@@ -455,24 +567,26 @@ ev_application_unregister_uri (EvApplication *application,
 			       const gchar   *uri)
 {
         GVariant *value;
-	GError *error = NULL;
+	GError   *error = NULL;
 
-	if (!application->connection)
+	if (!application->doc_registered)
 		return;
 
-        /* FIXME: Don't make sync dbus calls, they block the UI! */
-        value = g_dbus_connection_call_sync
-                   (application->connection,
-                    "org.gnome.evince.Daemon",
-                    "/org/gnome/evince/Daemon",
-                    "org.gnome.evince.Daemon",
-                    "UnregisterDocument",
-                    g_variant_new ("(s)", uri),
-		    NULL,
-                    G_DBUS_CALL_FLAGS_NO_AUTO_START,
-                    -1,
-                    NULL,
-                    &error);
+	/* This is called from ev_application_shutdown(),
+	 * so it's safe to use the sync api
+	 */
+        value = g_dbus_connection_call_sync (
+		application->connection,
+		EVINCE_DAEMON_SERVICE,
+		EVINCE_DAEMON_OBJECT_PATH,
+		EVINCE_DAEMON_INTERFACE,
+		"UnregisterDocument",
+		g_variant_new ("(s)", uri),
+		NULL,
+		G_DBUS_CALL_FLAGS_NO_AUTO_START,
+		-1,
+		NULL,
+		&error);
         if (value == NULL) {
 		g_warning ("Error unregistering document: %s\n", error->message);
 		g_error_free (error);
@@ -521,6 +635,27 @@ ev_application_open_uri_in_window (EvApplication  *application,
 #endif /* GDK_WINDOWING_X11 */
 }
 
+static void
+_ev_application_open_uri_at_dest (EvApplication  *application,
+				  const gchar    *uri,
+				  GdkScreen      *screen,
+				  EvLinkDest     *dest,
+				  EvWindowRunMode mode,
+				  const gchar    *search_string,
+				  guint           timestamp)
+{
+	EvWindow *ev_window;
+
+	ev_window = ev_application_get_empty_window (application, screen);
+	if (!ev_window)
+		ev_window = EV_WINDOW (ev_window_new ());
+
+	ev_application_open_uri_in_window (application, uri, ev_window,
+					   screen, dest, mode,
+					   search_string,
+					   timestamp);
+}
+
 /**
  * ev_application_open_uri_at_dest:
  * @application: The instance of the application.
@@ -539,37 +674,24 @@ ev_application_open_uri_at_dest (EvApplication  *application,
 				 const gchar    *search_string,
 				 guint           timestamp)
 {
-	EvWindow *ev_window;
-
 	g_return_if_fail (uri != NULL);
 
 	if (application->uri && strcmp (application->uri, uri) != 0) {
 		/* spawn a new evince process */
 		ev_spawn (uri, screen, dest, mode, search_string, timestamp);
 		return;
-	} else {
-#ifdef ENABLE_DBUS
-		gboolean    ret;
-
-		/* Register the uri or send OpenURI to
-		 * remote instance if already registered
-		 */
-		ret = ev_application_register_uri (application, uri, screen, dest, mode, search_string, timestamp);
-		if (!ret)
-			return;
-#endif /* ENABLE_DBUS */
-
-		ev_window = ev_application_get_empty_window (application, screen);
-		if (!ev_window)
-			ev_window = EV_WINDOW (ev_window_new ());
+	} else if (!application->uri) {
+		application->uri = g_strdup (uri);
 	}
 
-	application->uri = g_strdup (uri);
-
-	ev_application_open_uri_in_window (application, uri, ev_window,
-					   screen, dest, mode,
-					   search_string,
-					   timestamp);
+#ifdef ENABLE_DBUS
+	/* Register the uri or send OpenURI to
+	 * remote instance if already registered
+	 */
+	ev_application_register_uri (application, uri, screen, dest, mode, search_string, timestamp);
+#else
+	_ev_application_open_uri_at_dest (application, uri, screen, dest, mode, search_string, timestamp);
+#endif /* ENABLE_DBUS */
 }
 
 /**
@@ -610,6 +732,7 @@ ev_application_open_window (EvApplication *application,
 #endif /* GDK_WINDOWING_X11 */
 }
 
+#ifdef ENABLE_DBUS
 static void
 method_call_cb (GDBusConnection       *connection,
                 const gchar           *sender,
@@ -691,6 +814,26 @@ method_call_cb (GDBusConnection       *connection,
 
 	g_dbus_method_invocation_return_value (invocation, g_variant_new ("()"));
 }
+
+static const char introspection_xml[] =
+        "<node>"
+          "<interface name='org.gnome.evince.Application'>"
+            "<method name='OpenURI'>"
+              "<arg type='s' name='uri' direction='in'/>"
+              "<arg type='a{sv}' name='args' direction='in'/>"
+              "<arg type='u' name='timestamp' direction='in'/>"
+            "</method>"
+          "</interface>"
+        "</node>";
+
+static const GDBusInterfaceVTable interface_vtable = {
+	method_call_cb,
+	NULL,
+	NULL
+};
+
+static GDBusNodeInfo *introspection_data;
+#endif /* ENABLE_DBUS */
 
 void
 ev_application_open_uri_list (EvApplication *application,
@@ -846,31 +989,10 @@ ev_application_init (EvApplication *ev_application)
 	ev_application_accel_map_load (ev_application);
 
 #ifdef ENABLE_DBUS
-{
-        static const char introspection_xml[] =
-                "<node>"
-                  "<interface name='org.gnome.evince.Daemon'>"
-                    "<method name='OpenURI'>"
-                      "<arg type='s' name='uri' direction='in'/>"
-                      "<arg type='a{sv}' name='args' direction='in'/>"
-                      "<arg type='u' name='timestamp' direction='in'/>"
-                    "</method>"
-                  "</interface>"
-                "</node>";
-
-        static const GDBusInterfaceVTable interface_vtable = {
-                method_call_cb,
-                NULL,
-                NULL
-        };
-
-        GDBusNodeInfo *introspection_data;
-
         ev_application->connection = g_bus_get_sync (G_BUS_TYPE_SESSION, NULL, &error);
         if (ev_application->connection != NULL) {
                 introspection_data = g_dbus_node_info_new_for_xml (introspection_xml, NULL);
                 g_assert (introspection_data != NULL);
-
 
                 ev_application->registration_id =
                     g_dbus_connection_register_object (ev_application->connection,
@@ -883,19 +1005,15 @@ ev_application_init (EvApplication *ev_application)
                         g_printerr ("Failed to register bus object: %s\n", error->message);
                         g_error_free (error);
                 }
-                
         } else {
                 g_printerr ("Failed to get bus connection: %s\n", error->message);
                 g_error_free (error);
         }
 
 	ev_application->keys = ev_media_player_keys_new ();
+#endif /* ENABLE_DBUS */
 
 	ev_application->scr_saver = totem_scrsaver_new ();
-}
-#else
-        ev_application->scr_saver = totem_scrsaver_new ();
-#endif /* ENABLE_DBUS */
 }
 
 gboolean

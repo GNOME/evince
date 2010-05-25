@@ -316,14 +316,13 @@ main (int argc, char *argv[])
 
 	ev_application_load_session (EV_APP);
 	load_files (file_arguments);
-	if (ev_application_has_window (EV_APP)) {
-		/* Change directory so we don't prevent unmounting in case the initial cwd
-		 * is on an external device (see bug #575436)
-		 */
-		g_chdir (g_get_home_dir ());
 
-		gtk_main ();
-	}
+	/* Change directory so we don't prevent unmounting in case the initial cwd
+	 * is on an external device (see bug #575436)
+	 */
+	g_chdir (g_get_home_dir ());
+
+	gtk_main ();
 
 	ev_shutdown ();
 	ev_stock_icons_shutdown ();
