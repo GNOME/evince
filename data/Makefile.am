@@ -103,7 +103,7 @@ EXTRA_DIST =					\
 
 DISTCLEANFILES = \
 	$(DESKTOP_FILES)	\
-	$(gsettingsschema_DATA)		\
+	$(gsettings_SCHEMAS)	\
 	$(service_DATA)
 
 -include $(top_srcdir)/git.mk
