@@ -53,6 +53,9 @@ DllMain (HINSTANCE hinstDLL,
 static const gchar *
 _ev_win32_get_locale_dir (HMODULE module)
 {
+	if (locale_dir)
+		return locale_dir;
+
 	gchar *install_dir = NULL, *utf8_locale_dir;
 	gchar *retval = NULL;
 
