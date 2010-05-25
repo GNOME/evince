@@ -1,4 +1,39 @@
 ================
+Evince  2.31.2
+================
+
+New Features and UI Improvements:
+
+    * Port to GDBus (Christian Persch, Carlos Garcia Campos)
+    * Do not use the gconf gsettings backend any more (#619335,
+      Matthias Clasen)
+    * Use cairo to draw search results (Carlos Garcia Campos)
+    * Use a loading window to show loading progress information
+      instead of the old 'Loading ...' text rendered on every page
+      (Carlos Garcia Campos)
+
+Bug fixes:
+
+    * Fix localization on Windows (#610548, Hib Eris)
+    * Convert relative path to absolute path for evince-previewer
+      (Marek Kasik)
+    * Fix opening files with '#' in its name (#616515, Carlos Garcia
+      Campos)
+    * Accept keyboard focus in window annotations (Carlos Garcia
+      Campos)
+    * Fix most of the GSEAL build issues (#605776, Carlos Garcia
+      Campos)
+    * Add .c files to the introspection sources (#617736, Christian
+      Persch)
+
+Translation updates:
+
+    * Thomas Thurman (en@shaw)
+    * Kjartan Maraas (nb)
+    * Wouter Bolsterlee (nl)
+    * Manoj Kumar Giri (or)
+
+================
 Evince  2.31.1
 ================
 
