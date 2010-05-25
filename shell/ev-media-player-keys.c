@@ -189,13 +189,13 @@ ev_media_player_keys_finalize (GObject *object)
 {
 	EvMediaPlayerKeys *keys = EV_MEDIA_PLAYER_KEYS (object);
 
-        ev_media_player_keys_release_keys (keys);
-
 	if (keys->watch_id > 0)
 		g_bus_unwatch_proxy (keys->watch_id);
 
-        if (keys->proxy != NULL)
+        if (keys->proxy != NULL) {
+		ev_media_player_keys_release_keys (keys);
                 g_object_unref (keys->proxy);
+	}
 
 	G_OBJECT_CLASS (ev_media_player_keys_parent_class)->finalize (object);
 }
