@@ -55,6 +55,7 @@ struct TotemScrsaverPrivate {
         gboolean have_screensaver_dbus;
         guint watch_id;
 	guint32 cookie;
+	gboolean old_dbus_api;
 
 	/* To save the screensaver info */
 	int timeout;
@@ -77,77 +78,114 @@ screensaver_is_running_dbus (TotemScrsaver *scr)
 }
 
 static void
+on_inhibit_cb (GObject      *source_object,
+	       GAsyncResult *res,
+	       gpointer      user_data)
+{
+	GDBusProxy    *proxy = G_DBUS_PROXY (source_object);
+	TotemScrsaver *scr = TOTEM_SCRSAVER (user_data);
+	GVariant      *value;
+	GError        *error = NULL;
+
+	value = g_dbus_proxy_call_finish (proxy, res, &error);
+	if (!value) {
+		if (!scr->priv->old_dbus_api &&
+		    g_error_matches (error, G_DBUS_ERROR, G_DBUS_ERROR_UNKNOWN_METHOD)) {
+			/* try the old API */
+			scr->priv->old_dbus_api = TRUE;
+			g_dbus_proxy_call (proxy,
+					   "InhibitActivation",
+					   g_variant_new ("(s)",
+							  _("Running in presentation mode")),
+					   G_DBUS_CALL_FLAGS_NO_AUTO_START,
+					   -1,
+					   NULL,
+					   on_inhibit_cb,
+					   scr);
+		} else {
+			g_warning ("Problem inhibiting the screensaver: %s", error->message);
+		}
+		g_error_free (error);
+
+		return;
+	}
+
+	/* save the cookie */
+	if (g_variant_is_of_type (value, G_VARIANT_TYPE ("(u)")))
+		g_variant_get (value, "(u)", &scr->priv->cookie);
+	else
+		scr->priv->cookie = 0;
+	g_variant_unref (value);
+}
+
+static void
+on_uninhibit_cb (GObject      *source_object,
+		 GAsyncResult *res,
+		 gpointer      user_data)
+{
+	GDBusProxy    *proxy = G_DBUS_PROXY (source_object);
+	TotemScrsaver *scr = TOTEM_SCRSAVER (user_data);
+	GVariant      *value;
+	GError        *error = NULL;
+
+	value = g_dbus_proxy_call_finish (proxy, res, &error);
+	if (!value) {
+		if (!scr->priv->old_dbus_api &&
+		    g_error_matches (error, G_DBUS_ERROR, G_DBUS_ERROR_UNKNOWN_METHOD)) {
+			/* try the old API */
+			scr->priv->old_dbus_api = TRUE;
+			g_dbus_proxy_call (proxy,
+					   "AllowActivation",
+					   g_variant_new ("()"),
+					   G_DBUS_CALL_FLAGS_NO_AUTO_START,
+					   -1,
+					   NULL,
+					   on_uninhibit_cb,
+					   scr);
+		} else {
+			g_warning ("Problem uninhibiting the screensaver: %s", error->message);
+		}
+		g_error_free (error);
+
+		return;
+	}
+
+	/* clear the cookie */
+	scr->priv->cookie = 0;
+	g_variant_unref (value);
+}
+
+static void
 screensaver_inhibit_dbus (TotemScrsaver *scr,
 			  gboolean	 inhibit)
 {
         TotemScrsaverPrivate *priv = scr->priv;
-	GError *error = NULL;
-        GVariant *value;
 
         if (!priv->have_screensaver_dbus)
                 return;
 
-	if (inhibit) {
-                value = g_dbus_proxy_call_sync (priv->gs_proxy,
-						"Inhibit",
-						g_variant_new ("(ss)",
-							       "Evince",
-							       _("Running in presentation mode")),
-						G_DBUS_CALL_FLAGS_NO_AUTO_START,
-						-1,
-						NULL,
-						&error);
-		if (error && g_error_matches (error, G_DBUS_ERROR, G_DBUS_ERROR_UNKNOWN_METHOD)) {
-			/* try the old API */
-                        g_clear_error (&error);
-                        value = g_dbus_proxy_call_sync (priv->gs_proxy,
-							"InhibitActivation",
-							g_variant_new ("(s)",
-								       _("Running in presentation mode")),
-							G_DBUS_CALL_FLAGS_NO_AUTO_START,
-							-1,
-							NULL,
-							&error);
-                }
-                if (value != NULL) {
-			/* save the cookie */
-                        if (g_variant_is_of_type (value, G_VARIANT_TYPE ("(u)")))
-			       g_variant_get (value, "(u)", &priv->cookie);
-                        else
-                                priv->cookie = 0;
-                        g_variant_unref (value);
-		} else {
-			g_warning ("Problem inhibiting the screensaver: %s", error->message);
-                        g_error_free (error);
-		}
+	scr->priv->old_dbus_api = FALSE;
 
+	if (inhibit) {
+		g_dbus_proxy_call (priv->gs_proxy,
+				   "Inhibit",
+				   g_variant_new ("(ss)",
+						  "Evince",
+						  _("Running in presentation mode")),
+				   G_DBUS_CALL_FLAGS_NO_AUTO_START,
+				   -1,
+				   NULL,
+				   on_inhibit_cb,
+				   scr);
 	} else {
-                value = g_dbus_proxy_call_sync (priv->gs_proxy,
-						"UnInhibit",
-						g_variant_new ("(u)", priv->cookie),
-						G_DBUS_CALL_FLAGS_NO_AUTO_START,
-						-1,
-						NULL,
-						&error);
-		if (error && g_error_matches (error, G_DBUS_ERROR, G_DBUS_ERROR_UNKNOWN_METHOD)) {
-			/* try the old API */
-                        g_clear_error (&error);
-                        value = g_dbus_proxy_call_sync (priv->gs_proxy,
-							"AllowActivation",
-							g_variant_new ("()"),
-							G_DBUS_CALL_FLAGS_NO_AUTO_START,
-							-1,
-							NULL,
-							&error);
-                }
-                if (value != NULL) {
-			/* clear the cookie */
-			priv->cookie = 0;
-                        g_variant_unref (value);
-		} else {
-			g_warning ("Problem uninhibiting the screensaver: %s", error->message);
-			g_error_free (error);
-		}
+                g_dbus_proxy_call (priv->gs_proxy,
+				   "UnInhibit",
+				   g_variant_new ("(u)", priv->cookie),
+				   G_DBUS_CALL_FLAGS_NO_AUTO_START,
+				   -1,
+				   NULL,
+				   on_uninhibit_cb,
+				   scr);
 	}
 }
 
