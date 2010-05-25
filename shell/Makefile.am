@@ -42,7 +42,6 @@ evince_SOURCES=				\
 	ev-keyring.c			\
 	ev-marshal.c			\
 	ev-marshal.h			\
-	$(DBUS_SOURCES)			\
 	ev-message-area.c		\
 	ev-message-area.h		\
 	ev-metadata.c			\
