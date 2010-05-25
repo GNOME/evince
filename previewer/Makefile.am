@@ -13,7 +13,6 @@ evince_previewer_CPPFLAGS = \
         -I$(top_srcdir)/libdocument             \
         -I$(top_srcdir)/libview                 \
 	-I$(top_srcdir)/libmisc			\
-	-DGNOMELOCALEDIR=\"$(datadir)/locale\"	\
 	$(AM_CPPFLAGS)
 
 evince_previewer_CFLAGS = \
