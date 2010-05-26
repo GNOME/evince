@@ -15,8 +15,8 @@ msgstr ""
 "Project-Id-Version: Evince MASTER\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evince&component=general\n"
-"POT-Creation-Date: 2010-02-03 16:30+0000\n"
-"PO-Revision-Date: 2010-02-13 22:32+0200\n"
+"POT-Creation-Date: 2010-05-25 17:26+0000\n"
+"PO-Revision-Date: 2010-05-26 19:11+0300\n"
 "Last-Translator: Ivar Smolin <okul@linux.ee>\n"
 "Language-Team: Estonian <gnome-et@linux.ee>\n"
 "MIME-Version: 1.0\n"
@@ -497,6 +497,9 @@ msgstr "(%d %d-st)"
 msgid "of %d"
 msgstr "%d-st"
 
+msgid "Loading…"
+msgstr "Laadimine…"
+
 #. Initial state
 msgid "Preparing to print…"
 msgstr "Printimise ettevalmistamine…"
@@ -504,6 +507,7 @@ msgstr "Printimise ettevalmistamine…"
 msgid "Finishing…"
 msgstr "Lõpetamine…"
 
+#, c-format
 msgid "Printing page %d of %d…"
 msgstr "Lehekülje %d/%d printimine…"
 
@@ -545,8 +549,8 @@ msgstr ""
 "\n"
 "• \"Puudub\": mitte mingit mastaapimist ei teostata.\n"
 "\n"
-"• \"Vähenda prindialale\": prindialast suuremaid dokumendilehti "
-"vähendatakse eesmärgiga mahutada need printerilehe prindialale.\n"
+"• \"Vähenda prindialale\": prindialast suuremaid dokumendilehti vähendatakse "
+"eesmärgiga mahutada need printerilehe prindialale.\n"
 "\n"
 "• \"Täida prindiala\": vastavalt vajadusele dokumendi lehti kas "
 "suurendatakse või vähendatakse nii, et need täidaks kogu printerilehe "
@@ -562,9 +566,8 @@ msgstr ""
 "Igal prinditaval lehel pööratakse paberi suund samaks dokumendi lehe "
 "suunaga. Dokumendi leht paigutatakse paberi keskele."
 
-msgid "Select page size using document page size"
-msgstr "Paberi formaat valitakse vastavalt dokumendi lehe suurusele"
-
+# msgid "Select page size using document page size"
+# msgstr "Paberi formaat valitakse vastavalt dokumendi lehe suurusele"
 msgid ""
 "When enabled, each page will be printed on the same size paper as the "
 "document page."
@@ -632,9 +635,6 @@ msgstr "Liikumine failile „%s”"
 #, c-format
 msgid "Launch %s"
 msgstr "Käivita %s"
-
-msgid "Loading…"
-msgstr "Laadimine…"
 
 msgid "Find:"
 msgstr "Leia:"
@@ -894,21 +894,18 @@ msgstr ""
 
 msgid ""
 "You should have received a copy of the GNU General Public License along with "
-"Evince; if not, write to the Free Software Foundation, Inc., 59 Temple "
-"Place, Suite 330, Boston, MA  02111-1307  USA\n"
+"Evince; if not, write to the Free Software Foundation, Inc., 51 Franklin "
+"Street, Fifth Floor, Boston, MA 02110-1301  USA\n"
 msgstr ""
 "Te peaks olema saanud GNU Üldise Avaliku Litsentsi koopia koos Evince'ga; "
-"kui ei, siis võtke ühendust Free Software Foundation'iga, 59 Temple Place, "
-"Suite 330, Boston, MA 02111-1307 USA\n"
+"kui ei, siis võtke ühendust Free Software Foundation'iga, 51 Franklin "
+"Street, Fifth Floor, Boston, MA 02110-1301  USA\n"
 
 msgid "Evince"
 msgstr "Evince"
 
 msgid "© 1996–2009 The Evince authors"
 msgstr "© 1996–2009 Evince'i autorid"
-
-msgid "© 1996–2010 The Evince authors"
-msgstr "© 1996–2010 Evince'i autorid"
 
 msgid "translator-credits"
 msgstr ""
@@ -963,12 +960,6 @@ msgstr "Sa_lvesta koopia…"
 
 msgid "Save a copy of the current document"
 msgstr "Käesolevast dokumendist koopia salvestamine"
-
-msgid "Page Set_up…"
-msgstr "Lehekülje _sätted…"
-
-msgid "Set up the page settings for printing"
-msgstr "Printimise jaoks paberi sätete seadistamine"
 
 msgid "_Print…"
 msgstr "_Prindi…"
@@ -1174,11 +1165,17 @@ msgstr "Laiendi järgi"
 msgid "GNOME Document Viewer"
 msgstr "GNOME dokumendinäitaja"
 
-msgid "The page of the document to display."
-msgstr "Mitmendat dokumendi lehekülge näidata"
+msgid "The page label of the document to display."
+msgstr "Millise sildiga lehekülge dokumendist näidata."
 
 msgid "PAGE"
 msgstr "LEHEKÜLG"
+
+msgid "The page number of the document to display."
+msgstr "Mitmendat dokumendi lehekülge näidata."
+
+msgid "NUMBER"
+msgstr "NUMBER"
 
 msgid "Run evince in fullscreen mode"
 msgstr "Evince käivitamine täisekraanirežiimis"
@@ -1217,3 +1214,12 @@ msgid ""
 msgstr ""
 "PDF-dokumentide pisipilditegija käsk koos argumentidega. Lähema teabe "
 "saamiseks vaata Nautiluse pisipilditegija dokumentatsiooni."
+
+#~ msgid "© 1996–2010 The Evince authors"
+#~ msgstr "© 1996–2010 Evince'i autorid"
+
+#~ msgid "Page Set_up…"
+#~ msgstr "Lehekülje _sätted…"
+
+#~ msgid "Set up the page settings for printing"
+#~ msgstr "Printimise jaoks paberi sätete seadistamine"
