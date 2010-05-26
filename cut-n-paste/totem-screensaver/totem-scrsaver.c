@@ -2,6 +2,7 @@
 
    Copyright (C) 2004-2006 Bastien Nocera <hadess@hadess.net>
    Copyright © 2010 Christian Persch
+   Copyright © 2010 Carlos Garcia Campos
 
    The Gnome Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -18,9 +19,10 @@
    write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
    Boston, MA 02110-1301  USA.
 
-   Author: Bastien Nocera <hadess@hadess.net>
+   Authors: Bastien Nocera <hadess@hadess.net>
+            Christian Persch
+            Carlos Garcia Campos
  */
-
 
 #include "config.h"
 
