@@ -22,8 +22,7 @@
 #ifndef TOTEM_SCRSAVER_H
 #define TOTEM_SCRSAVER_H
 
-#include <glib.h>
-#include <gio/gio.h>
+#include <glib-object.h>
 
 G_BEGIN_DECLS
 
