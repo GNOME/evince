@@ -4,7 +4,7 @@ NOINST_H_FILES =				\
 	ev-debug.h				\
 	ev-module.h
 
-INST_H_FILES = 					\
+INST_H_SRC_FILES = 				\
 	ev-annotation.h				\
 	ev-async-renderer.h			\
 	ev-attachment.h				\
@@ -25,7 +25,6 @@ INST_H_FILES = 					\
 	ev-document-security.h			\
 	ev-document-thumbnails.h		\
 	ev-document-transition.h		\
-	ev-document-type-builtins.h		\
 	ev-file-exporter.h			\
 	ev-file-helpers.h			\
 	ev-form-field.h				\
@@ -41,6 +40,10 @@ INST_H_FILES = 					\
 	ev-selection.h				\
 	ev-transition-effect.h			\
 	ev-version.h
+
+INST_H_FILES = 					\
+	$(INST_H_SRC_FILES)			\
+	ev-document-type-builtins.h
 
 headerdir = $(includedir)/evince/$(EV_API_VERSION)/libdocument
 header_DATA = $(INST_H_FILES)
@@ -112,21 +115,26 @@ BUILT_SOURCES = 			\
 	ev-document-type-builtins.c	\
 	ev-document-type-builtins.h
 
-CLEANFILES = $(BUILT_SOURCES) stamp-ev-document-type-builtins.h
+CLEANFILES = 					\
+	$(BUILT_SOURCES)			\
+	stamp-ev-document-type-builtins.h	\
+	stamp-ev-document-type-builtins.c
 
 ev-document-type-builtins.h: stamp-ev-document-type-builtins.h
 	@true
-
-stamp-ev-document-type-builtins.h: ev-document-type-builtins.h.template $(INST_H_FILES)
+stamp-ev-document-type-builtins.h: ev-document-type-builtins.h.template $(INST_H_SRC_FILES)
 	$(AM_V_GEN)$(GLIB_MKENUMS) --template $< $(filter-out $<,$^) > xgen-etbh \
 	&& (cmp -s xgen-etbh ev-document-type-builtins.h || cp xgen-etbh ev-document-type-builtins.h ) \
 	&& rm -f xgen-etbh \
 	&& echo timestamp > $(@F)
 
-ev-document-type-builtins.c: ev-document-type-builtins.c.template $(INST_H_FILES)
+ev-document-type-builtins.c: stamp-ev-document-type-builtins.c
+	@true
+stamp-ev-document-type-builtins.c: ev-document-type-builtins.c.template $(INST_H_SRC_FILES)
 	$(AM_V_GEN)$(GLIB_MKENUMS) --template $< $(filter-out $<,$^) > xgen-etbc \
 	&& (cmp -s xgen-etbc ev-document-type-builtins.c || cp xgen-etbc ev-document-type-builtins.c ) \
-	&& rm -f xgen-etbc
+	&& rm -f xgen-etbc \
+	&& echo timestamp > $(@F)
 
 EXTRA_DIST = \
 	ev-document-type-builtins.c.template \

@@ -12,14 +12,17 @@ NOINST_H_FILES =			\
 	ev-view-marshal.h		\
 	ev-view-private.h
 
-INST_H_FILES = 				\
+INST_H_SRC_FILES = 			\
 	ev-document-model.h		\
 	ev-jobs.h			\
 	ev-job-scheduler.h		\
 	ev-print-operation.h	        \
 	ev-stock-icons.h		\
 	ev-view.h			\
-	ev-view-presentation.h		\
+	ev-view-presentation.h
+
+INST_H_FILES = 				\
+	$(INST_H_SRC_FILES)		\
 	ev-view-type-builtins.h
 
 headerdir = $(includedir)/evince/$(EV_API_VERSION)/libview
@@ -78,7 +81,10 @@ BUILT_SOURCES = 			\
 	ev-view-type-builtins.c		\
 	ev-view-type-builtins.h
 
-CLEANFILES = $(BUILT_SOURCES) stamp-ev-view-type-builtins.h
+CLEANFILES = 				\
+	$(BUILT_SOURCES)		\
+	stamp-ev-view-type-builtins.h	\
+	stamp-ev-view-type-builtins.c
 
 ev-view-marshal.h: $(srcdir)/ev-view-marshal.list
 	$(AM_V_GEN)$(GLIB_GENMARSHAL) --prefix=ev_view_marshal $(srcdir)/ev-view-marshal.list --header --internal > $@
@@ -89,17 +95,19 @@ ev-view-marshal.c: $(srcdir)/ev-view-marshal.list
 
 ev-view-type-builtins.h: stamp-ev-view-type-builtins.h
 	@true
-
-stamp-ev-view-type-builtins.h: ev-view-type-builtins.h.template $(INST_H_FILES)
+stamp-ev-view-type-builtins.h: ev-view-type-builtins.h.template $(INST_H_SRC_FILES)
 	$(AM_V_GEN)$(GLIB_MKENUMS) --template $< $(filter-out $<,$^) > xgen-etbh \
 	&& (cmp -s xgen-etbh ev-view-type-builtins.h || cp xgen-etbh ev-view-type-builtins.h ) \
 	&& rm -f xgen-etbh \
 	&& echo timestamp > $(@F)
 
-ev-view-type-builtins.c: ev-view-type-builtins.c.template $(INST_H_FILES)
+ev-view-type-builtins.c: stamp-ev-view-type-builtins.c
+	@true
+stamp-ev-view-type-builtins.c: ev-view-type-builtins.c.template $(INST_H_SRC_FILES)
 	$(AM_V_GEN)$(GLIB_MKENUMS) --template $< $(filter-out $<,$^) > xgen-etbc \
 	&& (cmp -s xgen-etbc ev-view-type-builtins.c || cp xgen-etbc ev-view-type-builtins.c ) \
-	&& rm -f xgen-etbc
+	&& rm -f xgen-etbc \
+	&& echo timestamp > $(@F)
 
 EXTRA_DIST = \
 	ev-view-type-builtins.c.template  \
