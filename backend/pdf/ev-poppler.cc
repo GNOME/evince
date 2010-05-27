@@ -1163,6 +1163,14 @@ ev_link_from_action (PdfDocument   *pdf_document,
 	        case POPPLER_ACTION_MOVIE:
 			unimplemented_action = "POPPLER_ACTION_MOVIE";
 			break;
+#if POPPLER_CHECK_VERSION (0, 13, 2)
+	        case POPPLER_ACTION_RENDITION:
+			unimplemented_action = "POPPLER_ACTION_RENDITION";
+			break;
+	        case POPPLER_ACTION_OCG_STATE:
+			unimplemented_action = "POPPLER_ACTION_OCG_STATE";
+			break;
+#endif
 	        case POPPLER_ACTION_UNKNOWN:
 			unimplemented_action = "POPPLER_ACTION_UNKNOWN";
 	}
