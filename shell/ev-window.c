@@ -357,7 +357,6 @@ ev_window_setup_action_sensitivity (EvWindow *ev_window)
 	const EvDocumentInfo *info = NULL;
 	gboolean has_document = FALSE;
 	gboolean ok_to_print = TRUE;
-	gboolean ok_to_print_setup = TRUE;
 	gboolean ok_to_copy = TRUE;
 	gboolean has_properties = TRUE;
 	gboolean override_restrictions = TRUE;
@@ -406,11 +405,6 @@ ev_window_setup_action_sensitivity (EvWindow *ev_window)
 	if (has_document &&
 	    gconf_client_get_bool (ev_window->priv->gconf_client, GCONF_LOCKDOWN_PRINT, NULL)) {
 		ok_to_print = FALSE;
-	}
-
-	if (has_document &&
-	    gconf_client_get_bool (ev_window->priv->gconf_client, GCONF_LOCKDOWN_PRINT_SETUP, NULL)) {
-		ok_to_print_setup = FALSE;
 	}
 #endif
 
