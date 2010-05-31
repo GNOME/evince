@@ -35,6 +35,8 @@ struct _EphyZoomControlPrivate
 {
 	GtkComboBox *combo;
 	float zoom;
+	float min_zoom;
+	float max_zoom;
 	guint handler_id;
 };
 
@@ -47,7 +49,9 @@ enum
 enum
 {
 	PROP_0,
-	PROP_ZOOM
+	PROP_ZOOM,
+	PROP_MIN_ZOOM,
+	PROP_MAX_ZOOM
 };
 
 enum
@@ -86,6 +90,44 @@ sync_zoom_cb (EphyZoomControl *control, GParamSpec *pspec, gpointer data)
 	g_signal_handler_block (p->combo, p->handler_id);
 	gtk_combo_box_set_active (p->combo, index);
 	g_signal_handler_unblock (p->combo, p->handler_id);	
+}
+
+static void
+sync_zoom_max_min_cb (EphyZoomControl *control, GParamSpec *pspec, gpointer data)
+{
+	EphyZoomControlPrivate *p = control->priv;
+	GtkListStore *model = (GtkListStore *)gtk_combo_box_get_model (p->combo);
+	GtkTreeIter iter;
+	gint i;
+
+	g_signal_handler_block (p->combo, p->handler_id);
+	gtk_list_store_clear (model);
+
+	for (i = 0; i < n_zoom_levels; i++)
+	{
+		if (zoom_levels[i].level > 0) {
+			if (zoom_levels[i].level < p->min_zoom)
+				continue;
+
+			if (zoom_levels[i].level > p->max_zoom)
+				break;
+		}
+
+		gtk_list_store_append (model, &iter);
+
+		if (zoom_levels[i].name != NULL) {
+			gtk_list_store_set (model, &iter,
+					    COL_TEXT, _(zoom_levels[i].name),
+					    -1);
+		} else {
+			gtk_list_store_set (model, &iter,
+					    COL_IS_SEP, zoom_levels[i].name == NULL,
+					    -1);
+		}
+	}
+
+	gtk_combo_box_set_active (p->combo, ephy_zoom_get_zoom_level_index (p->zoom));
+	g_signal_handler_unblock (p->combo, p->handler_id);
 }
 
 static gboolean
@@ -169,6 +211,10 @@ ephy_zoom_control_init (EphyZoomControl *control)
 	
 	g_signal_connect_object (control, "notify::zoom",
 				 G_CALLBACK (sync_zoom_cb), NULL, 0);
+	g_signal_connect_object (control, "notify::min-zoom",
+				 G_CALLBACK (sync_zoom_max_min_cb), NULL, 0);
+	g_signal_connect_object (control, "notify::max-zoom",
+				 G_CALLBACK (sync_zoom_max_min_cb), NULL, 0);
 }
 
 static void
@@ -187,6 +233,12 @@ ephy_zoom_control_set_property (GObject *object,
 	{
 		case PROP_ZOOM:
 			p->zoom = g_value_get_float (value);
+			break;
+		case PROP_MIN_ZOOM:
+			p->min_zoom = g_value_get_float (value);
+			break;
+		case PROP_MAX_ZOOM:
+			p->max_zoom = g_value_get_float (value);
 			break;
 	}
 }
@@ -207,6 +259,12 @@ ephy_zoom_control_get_property (GObject *object,
 	{
 		case PROP_ZOOM:
 			g_value_set_float (value, p->zoom);
+			break;
+		case PROP_MIN_ZOOM:
+			g_value_set_float (value, p->min_zoom);
+			break;
+		case PROP_MAX_ZOOM:
+			g_value_set_float (value, p->max_zoom);
 			break;
 	}
 }
@@ -232,6 +290,24 @@ ephy_zoom_control_class_init (EphyZoomControlClass *klass)
 							     ZOOM_MINIMAL,
 							     ZOOM_MAXIMAL,
 							     1.0,
+							     G_PARAM_READWRITE));
+	g_object_class_install_property (object_class,
+					 PROP_MIN_ZOOM,
+					 g_param_spec_float ("min-zoom",
+							     "MinZoom",
+							     "The minimum zoom",
+							     ZOOM_MINIMAL,
+							     ZOOM_MAXIMAL,
+							     ZOOM_MINIMAL,
+							     G_PARAM_READWRITE));
+	g_object_class_install_property (object_class,
+					 PROP_MAX_ZOOM,
+					 g_param_spec_float ("max-zoom",
+							     "MaxZoom",
+							     "The maximum zoom",
+							     ZOOM_MINIMAL,
+							     ZOOM_MAXIMAL,
+							     ZOOM_MAXIMAL,
 							     G_PARAM_READWRITE));
 
 	signals[ZOOM_TO_LEVEL_SIGNAL] =
