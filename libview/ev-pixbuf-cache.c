@@ -464,7 +464,9 @@ ev_pixbuf_cache_get_preload_size (EvPixbufCache *pixbuf_cache,
 static void
 ev_pixbuf_cache_update_range (EvPixbufCache *pixbuf_cache,
 			      gint           start_page,
-			      gint           end_page)
+			      gint           end_page,
+			      guint          rotation,
+			      gdouble        scale)
 {
 	CacheJobInfo *new_job_list;
 	CacheJobInfo *new_prev_job = NULL;
@@ -472,8 +474,6 @@ ev_pixbuf_cache_update_range (EvPixbufCache *pixbuf_cache,
 	gint          new_preload_cache_size;
 	guint         new_job_list_len;
 	int           i, page;
-	gdouble       scale = ev_document_model_get_scale (pixbuf_cache->model);
-	gint          rotation = ev_document_model_get_rotation (pixbuf_cache->model);
 
 	new_preload_cache_size = ev_pixbuf_cache_get_preload_size (pixbuf_cache,
 								   start_page,
@@ -739,10 +739,11 @@ void
 ev_pixbuf_cache_set_page_range (EvPixbufCache  *pixbuf_cache,
 				gint            start_page,
 				gint            end_page,
-				gint            rotation,
-				gfloat          scale,
 				GList          *selection_list)
 {
+	gdouble scale = ev_document_model_get_scale (pixbuf_cache->model);
+	gint    rotation = ev_document_model_get_rotation (pixbuf_cache->model);
+
 	g_return_if_fail (EV_IS_PIXBUF_CACHE (pixbuf_cache));
 
 	g_return_if_fail (start_page >= 0 && start_page < ev_document_get_n_pages (pixbuf_cache->document));
@@ -751,7 +752,7 @@ ev_pixbuf_cache_set_page_range (EvPixbufCache  *pixbuf_cache,
 
 	/* First, resize the page_range as needed.  We cull old pages
 	 * mercilessly. */
-	ev_pixbuf_cache_update_range (pixbuf_cache, start_page, end_page);
+	ev_pixbuf_cache_update_range (pixbuf_cache, start_page, end_page, rotation, scale);
 
 	/* Then, we update the current jobs to see if any of them are the wrong
 	 * size, we remove them if we need to. */

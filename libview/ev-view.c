@@ -730,8 +730,6 @@ view_update_range_and_current_page (EvView *view)
 	ev_pixbuf_cache_set_page_range (view->pixbuf_cache,
 					view->start_page,
 					view->end_page,
-					view->rotation,
-					view->scale,
 					view->selection_info.selections);
 
 	if (ev_pixbuf_cache_get_surface (view->pixbuf_cache, view->current_page))

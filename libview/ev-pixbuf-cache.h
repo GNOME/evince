@@ -63,8 +63,6 @@ void           ev_pixbuf_cache_set_max_size         (EvPixbufCache   *pixbuf_cac
 void           ev_pixbuf_cache_set_page_range       (EvPixbufCache *pixbuf_cache,
 						     gint           start_page,
 						     gint           end_page,
-						     gint	    rotation,
-						     gfloat         scale,
 						     GList          *selection_list);
 cairo_surface_t *ev_pixbuf_cache_get_surface        (EvPixbufCache *pixbuf_cache,
 						     gint           page);
