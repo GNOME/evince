@@ -52,7 +52,7 @@ struct _EphyZoomActionClass
 	void (* zoom_to_level)	(EphyZoomAction *action, float level);
 };
 
-GType	ephy_zoom_action_get_type	    (void);
+GType	ephy_zoom_action_get_type	    (void) G_GNUC_CONST;
 
 void	ephy_zoom_action_set_zoom_level	    (EphyZoomAction *action,
 					     float           zoom);
