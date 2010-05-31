@@ -37,9 +37,12 @@ struct _EvPixbufCache
 	/* We keep a link to our containing view just for style information. */
 	GtkWidget *view;
 	EvDocument *document;
+	EvDocumentModel *model;
 	int start_page;
 	int end_page;
 	gboolean inverted_colors;
+
+	gsize max_size;
 
 	/* preload_cache_size is the number of pages prior to the current
 	 * visible area that we cache.  It's normally 1, but could be 2 in the
@@ -89,18 +92,15 @@ static gboolean      new_selection_surface_needed(EvPixbufCache      *pixbuf_cac
 #define PAGE_CACHE_LEN(pixbuf_cache) \
 	((pixbuf_cache->end_page - pixbuf_cache->start_page) + 1)
 
+#define MAX_PRELOADED_PAGES 3
+
 G_DEFINE_TYPE (EvPixbufCache, ev_pixbuf_cache, G_TYPE_OBJECT)
 
 static void
 ev_pixbuf_cache_init (EvPixbufCache *pixbuf_cache)
 {
-	pixbuf_cache->start_page = 0;
-	pixbuf_cache->end_page = 0;
-	pixbuf_cache->job_list = g_new0 (CacheJobInfo, PAGE_CACHE_LEN (pixbuf_cache));
-
-	pixbuf_cache->preload_cache_size = 2;
-	pixbuf_cache->prev_job = g_new0 (CacheJobInfo, pixbuf_cache->preload_cache_size);
-	pixbuf_cache->next_job = g_new0 (CacheJobInfo, pixbuf_cache->preload_cache_size);
+	pixbuf_cache->start_page = -1;
+	pixbuf_cache->end_page = -1;
 }
 
 static void
@@ -134,6 +134,8 @@ ev_pixbuf_cache_finalize (GObject *object)
 	g_free (pixbuf_cache->prev_job);
 	g_free (pixbuf_cache->job_list);
 	g_free (pixbuf_cache->next_job);
+
+	g_object_unref (pixbuf_cache->model);
 
 	G_OBJECT_CLASS (ev_pixbuf_cache_parent_class)->finalize (object);
 }
@@ -195,17 +197,32 @@ ev_pixbuf_cache_dispose (GObject *object)
 
 
 EvPixbufCache *
-ev_pixbuf_cache_new (GtkWidget  *view,
-		     EvDocument *document)
+ev_pixbuf_cache_new (GtkWidget       *view,
+		     EvDocumentModel *model,
+		     gsize            max_size)
 {
 	EvPixbufCache *pixbuf_cache;
 
 	pixbuf_cache = (EvPixbufCache *) g_object_new (EV_TYPE_PIXBUF_CACHE, NULL);
 	/* This is a backlink, so we don't ref this */ 
 	pixbuf_cache->view = view;
-	pixbuf_cache->document = document;
+	pixbuf_cache->model = g_object_ref (model);
+	pixbuf_cache->document = ev_document_model_get_document (model);
+	pixbuf_cache->max_size = max_size;
 
 	return pixbuf_cache;
+}
+
+void
+ev_pixbuf_cache_set_max_size (EvPixbufCache *pixbuf_cache,
+			      gsize          max_size)
+{
+	if (pixbuf_cache->max_size == max_size)
+		return;
+
+	if (pixbuf_cache->max_size > max_size)
+		ev_pixbuf_cache_clear (pixbuf_cache);
+	pixbuf_cache->max_size = max_size;
 }
 
 static void
@@ -313,6 +330,7 @@ move_one_job (CacheJobInfo  *job_info,
 	      CacheJobInfo  *new_job_list,
 	      CacheJobInfo  *new_prev_job,
 	      CacheJobInfo  *new_next_job,
+	      int            new_preload_cache_size,
 	      int            start_page,
 	      int            end_page,
 	      gint           priority)
@@ -321,25 +339,25 @@ move_one_job (CacheJobInfo  *job_info,
 	int page_offset;
 	gint new_priority;
 
-	if (page < (start_page - pixbuf_cache->preload_cache_size) ||
-	    page > (end_page + pixbuf_cache->preload_cache_size)) {
+	if (page < (start_page - new_preload_cache_size) ||
+	    page > (end_page + new_preload_cache_size)) {
 		dispose_cache_job_info (job_info, pixbuf_cache);
 		return;
 	}
 
 	/* find the target page to copy it over to. */
 	if (page < start_page) {
-		page_offset = (page - (start_page - pixbuf_cache->preload_cache_size));
+		page_offset = (page - (start_page - new_preload_cache_size));
 
 		g_assert (page_offset >= 0 &&
-			  page_offset < pixbuf_cache->preload_cache_size);
+			  page_offset < new_preload_cache_size);
 		target_page = new_prev_job + page_offset;
 		new_priority = EV_JOB_PRIORITY_LOW;
 	} else if (page > end_page) {
 		page_offset = (page - (end_page + 1));
 
 		g_assert (page_offset >= 0 &&
-			  page_offset < pixbuf_cache->preload_cache_size);
+			  page_offset < new_preload_cache_size);
 		target_page = new_next_job + page_offset;
 		new_priority = EV_JOB_PRIORITY_LOW;
 	} else {
@@ -360,23 +378,103 @@ move_one_job (CacheJobInfo  *job_info,
 	}
 }
 
+static gsize
+ev_pixbuf_cache_get_page_size (EvPixbufCache *pixbuf_cache,
+			       gint           page_index,
+			       gdouble        scale,
+			       gint           rotation)
+{
+	gint width, height;
+
+	_get_page_size_for_scale_and_rotation (pixbuf_cache->document,
+					       page_index, scale, rotation,
+					       &width, &height);
+	return height * cairo_format_stride_for_width (CAIRO_FORMAT_RGB24, width);
+}
+
+static gint
+ev_pixbuf_cache_get_preload_size (EvPixbufCache *pixbuf_cache,
+				  gint           start_page,
+				  gint           end_page,
+				  gdouble        scale,
+				  gint           rotation)
+{
+	gsize range_size = 0;
+	gint  new_preload_cache_size = 0;
+	gint  i;
+	guint n_pages = ev_document_get_n_pages (pixbuf_cache->document);
+
+	/* Get the size of the current range */
+	for (i = start_page; i <= end_page; i++) {
+		range_size += ev_pixbuf_cache_get_page_size (pixbuf_cache, i, scale, rotation);
+	}
+
+	if (range_size >= pixbuf_cache->max_size)
+		return new_preload_cache_size;
+
+	i = 1;
+	while (((start_page - i > 0) || (end_page + i < n_pages)) &&
+	       new_preload_cache_size < MAX_PRELOADED_PAGES) {
+		gsize    page_size;
+		gboolean updated = FALSE;
+
+		if (end_page + i < n_pages) {
+			page_size = ev_pixbuf_cache_get_page_size (pixbuf_cache, end_page + i,
+								   scale, rotation);
+			if (page_size + range_size <= pixbuf_cache->max_size) {
+				range_size += page_size;
+				new_preload_cache_size++;
+				updated = TRUE;
+			} else {
+				break;
+			}
+		}
+
+		if (start_page - i > 0) {
+			page_size = ev_pixbuf_cache_get_page_size (pixbuf_cache, start_page - i,
+								   scale, rotation);
+			if (page_size + range_size <= pixbuf_cache->max_size) {
+				range_size += page_size;
+				if (!updated)
+					new_preload_cache_size++;
+			} else {
+				break;
+			}
+		}
+		i++;
+	}
+
+	return new_preload_cache_size;
+}
+
 static void
 ev_pixbuf_cache_update_range (EvPixbufCache *pixbuf_cache,
 			      gint           start_page,
 			      gint           end_page)
 {
 	CacheJobInfo *new_job_list;
-	CacheJobInfo *new_prev_job;
-	CacheJobInfo *new_next_job;
-	int i, page;
+	CacheJobInfo *new_prev_job = NULL;
+	CacheJobInfo *new_next_job = NULL;
+	gint          new_preload_cache_size;
+	int           i, page;
+	gdouble       scale = ev_document_model_get_scale (pixbuf_cache->model);
+	gint          rotation = ev_document_model_get_rotation (pixbuf_cache->model);
 
+	new_preload_cache_size = ev_pixbuf_cache_get_preload_size (pixbuf_cache,
+								   start_page,
+								   end_page,
+								   scale,
+								   rotation);
 	if (pixbuf_cache->start_page == start_page &&
-	    pixbuf_cache->end_page == end_page)
+	    pixbuf_cache->end_page == end_page &&
+	    pixbuf_cache->preload_cache_size == new_preload_cache_size)
 		return;
 
 	new_job_list = g_new0 (CacheJobInfo, (end_page - start_page) + 1);
-	new_prev_job = g_new0 (CacheJobInfo, pixbuf_cache->preload_cache_size);
-	new_next_job = g_new0 (CacheJobInfo, pixbuf_cache->preload_cache_size);
+	if (new_preload_cache_size > 0) {
+		new_prev_job = g_new0 (CacheJobInfo, new_preload_cache_size);
+		new_next_job = g_new0 (CacheJobInfo, new_preload_cache_size);
+	}
 
 	/* We go through each job in the old cache and either clear it or move
 	 * it to a new location. */
@@ -390,16 +488,18 @@ ev_pixbuf_cache_update_range (EvPixbufCache *pixbuf_cache,
 			move_one_job (pixbuf_cache->prev_job + i,
 				      pixbuf_cache, page,
 				      new_job_list, new_prev_job, new_next_job,
+				      new_preload_cache_size,
 				      start_page, end_page, EV_JOB_PRIORITY_LOW);
 		}
 		page ++;
 	}
 
 	page = pixbuf_cache->start_page;
-	for (i = 0; i < PAGE_CACHE_LEN (pixbuf_cache); i++) {
+	for (i = 0; i < PAGE_CACHE_LEN (pixbuf_cache) && page >= 0; i++) {
 		move_one_job (pixbuf_cache->job_list + i,
 			      pixbuf_cache, page,
 			      new_job_list, new_prev_job, new_next_job,
+			      new_preload_cache_size,
 			      start_page, end_page, EV_JOB_PRIORITY_URGENT);
 		page ++;
 	}
@@ -411,6 +511,7 @@ ev_pixbuf_cache_update_range (EvPixbufCache *pixbuf_cache,
 			move_one_job (pixbuf_cache->next_job + i,
 				      pixbuf_cache, page,
 				      new_job_list, new_prev_job, new_next_job,
+				      new_preload_cache_size,
 				      start_page, end_page, EV_JOB_PRIORITY_LOW);
 		}
 		page ++;
@@ -419,6 +520,8 @@ ev_pixbuf_cache_update_range (EvPixbufCache *pixbuf_cache,
 	g_free (pixbuf_cache->job_list);
 	g_free (pixbuf_cache->prev_job);
 	g_free (pixbuf_cache->next_job);
+
+	pixbuf_cache->preload_cache_size = new_preload_cache_size;
 
 	pixbuf_cache->job_list = new_job_list;
 	pixbuf_cache->prev_job = new_prev_job;
@@ -549,6 +652,19 @@ add_job_if_needed (EvPixbufCache *pixbuf_cache,
 	    cairo_image_surface_get_width (job_info->surface) == width &&
 	    cairo_image_surface_get_height (job_info->surface) == height)
 		return;
+
+	/* Free old surfaces for non visible pages */
+	if (priority == EV_JOB_PRIORITY_LOW) {
+		if (job_info->surface) {
+			cairo_surface_destroy (job_info->surface);
+			job_info->surface = NULL;
+		}
+
+		if (job_info->selection) {
+			cairo_surface_destroy (job_info->selection);
+			job_info->selection = NULL;
+		}
+	}
 
 	add_job (pixbuf_cache, job_info, NULL,
 		 width, height, page, rotation, scale,

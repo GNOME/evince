@@ -34,6 +34,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <math.h>
 
 #include <glib/gstdio.h>
 #include <glib/gi18n.h>
@@ -243,7 +244,7 @@ struct _EvWindowPrivate {
 #define EV_TOOLBARS_FILENAME "evince-toolbar.xml"
 
 #define MIN_SCALE 0.05409
-#define MAX_SCALE 4.0
+#define PAGE_CACHE_SIZE 52428800 /* 50MB */
 
 #define MAX_RECENT_ITEM_LEN (40)
 
@@ -325,6 +326,7 @@ static void     ev_window_load_file_remote              (EvWindow         *ev_wi
 static void     ev_window_media_player_key_pressed      (EvWindow         *window,
 							 const gchar      *key,
 							 gpointer          user_data);
+static void     ev_window_update_max_min_scale          (EvWindow         *window);
 
 static guint ev_window_n_copies = 0;
 
@@ -1225,7 +1227,7 @@ ev_window_setup_document (EvWindow *ev_window)
 	GtkAction *action;
 
 	ev_window->priv->setup_document_idle = 0;
-	
+
 	ev_window_refresh_window_thumbnail (ev_window);
 
 	ev_window_set_page_mode (ev_window, PAGE_MODE_DOCUMENT);
@@ -1285,6 +1287,8 @@ ev_window_set_document (EvWindow *ev_window, EvDocument *document)
 	if (ev_window->priv->document)
 		g_object_unref (ev_window->priv->document);
 	ev_window->priv->document = g_object_ref (document);
+
+	ev_window_update_max_min_scale (ev_window);
 
 	ev_window_set_message_area (ev_window, NULL);
 
@@ -3732,22 +3736,46 @@ ev_window_setup_gtk_settings (EvWindow *window)
 }
 
 static void
+ev_window_update_max_min_scale (EvWindow *window)
+{
+	gdouble    dpi;
+	GtkAction *action;
+	gdouble    min_width, min_height;
+	gdouble    width, height;
+	gdouble    max_scale;
+	gint       rotation = ev_document_model_get_rotation (window->priv->model);
+
+	if (!window->priv->document)
+		return;
+
+	dpi = get_screen_dpi (window) / 72.0;
+
+	ev_document_get_min_page_size (window->priv->document, &min_width, &min_height);
+	width = (rotation == 0 || rotation == 180) ? min_width : min_height;
+	height = (rotation == 0 || rotation == 180) ? min_height : min_width;
+	max_scale = sqrt (PAGE_CACHE_SIZE / (width * dpi * 4 * height * dpi));
+
+	action = gtk_action_group_get_action (window->priv->action_group,
+					      ZOOM_CONTROL_ACTION);
+	ephy_zoom_action_set_max_zoom_level (EPHY_ZOOM_ACTION (action), max_scale * dpi);
+
+	ev_document_model_set_min_scale (window->priv->model, MIN_SCALE * dpi);
+	ev_document_model_set_max_scale (window->priv->model, max_scale * dpi);
+}
+
+static void
 ev_window_screen_changed (GtkWidget *widget,
 			  GdkScreen *old_screen)
 {
 	EvWindow *window = EV_WINDOW (widget);
-	EvWindowPrivate *priv = window->priv;
 	GdkScreen *screen;
-	gdouble dpi;
 
 	screen = gtk_widget_get_screen (widget);
 	if (screen == old_screen)
 		return;
 
 	ev_window_setup_gtk_settings (window);
-	dpi = get_screen_dpi (window);
-	ev_document_model_set_min_scale (priv->model, MIN_SCALE * dpi / 72.0);
-	ev_document_model_set_max_scale (priv->model, MAX_SCALE * dpi / 72.0);
+	ev_window_update_max_min_scale (window);
 
 	if (GTK_WIDGET_CLASS (ev_window_parent_class)->screen_changed) {
 		GTK_WIDGET_CLASS (ev_window_parent_class)->screen_changed (widget, old_screen);
@@ -4165,6 +4193,7 @@ ev_window_rotation_changed_cb (EvDocumentModel *model,
 		ev_metadata_set_int (window->priv->metadata, "rotation",
 				     rotation);
 
+	ev_window_update_max_min_scale (window);
 	ev_window_refresh_window_thumbnail (window);
 }
 
@@ -6130,7 +6159,6 @@ ev_window_init (EvWindow *ev_window)
 	EggToolbarsModel *toolbars_model;
 	GObject *mpkeys;
 	gchar *ui_path;
-	gdouble dpi;
 
 	g_signal_connect (ev_window, "configure_event",
 			  G_CALLBACK (window_configure_event_cb), NULL);
@@ -6316,10 +6344,9 @@ ev_window_init (EvWindow *ev_window)
 	gtk_widget_show (ev_window->priv->view_box);
 
 	ev_window->priv->view = ev_view_new ();
+	ev_view_set_page_cache_size (EV_VIEW (ev_window->priv->view), PAGE_CACHE_SIZE);
 	ev_view_set_model (EV_VIEW (ev_window->priv->view), ev_window->priv->model);
-	dpi = get_screen_dpi (ev_window);
-	ev_document_model_set_min_scale (ev_window->priv->model, MIN_SCALE * dpi / 72.0);
-	ev_document_model_set_max_scale (ev_window->priv->model, MAX_SCALE * dpi / 72.0);
+
 	ev_window->priv->password_view = ev_password_view_new (GTK_WINDOW (ev_window));
 	g_signal_connect_swapped (ev_window->priv->password_view,
 				  "unlock",

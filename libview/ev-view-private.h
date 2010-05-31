@@ -120,6 +120,7 @@ struct _EvView {
 
 	EvDocumentModel *model;
 	EvPixbufCache *pixbuf_cache;
+	gsize pixbuf_cache_size;
 	EvPageCache *page_cache;
 	EvHeightToPageCache *height_to_page_cache;
 	EvViewCursor cursor;

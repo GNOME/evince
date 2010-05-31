@@ -44,14 +44,16 @@ typedef enum {
 	EV_VIEW_SELECTION_RECTANGLE,
 } EvViewSelectionMode;
 
-GType		ev_view_get_type	  (void) G_GNUC_CONST;
+GType		ev_view_get_type	    (void) G_GNUC_CONST;
 
-GtkWidget*	ev_view_new		  (void);
-void		ev_view_set_model	  (EvView         *view,
-			   		   EvDocumentModel *model);
-void 		ev_view_set_loading       (EvView 	  *view,
-				           gboolean        loading);
-void            ev_view_reload            (EvView         *view);
+GtkWidget*	ev_view_new		    (void);
+void		ev_view_set_model	    (EvView          *view,
+					     EvDocumentModel *model);
+void 		ev_view_set_loading         (EvView 	     *view,
+					     gboolean         loading);
+void            ev_view_reload              (EvView          *view);
+void            ev_view_set_page_cache_size (EvView          *view,
+					     gsize            cache_size);
 
 /* Clipboard */
 void		ev_view_copy		  (EvView         *view);

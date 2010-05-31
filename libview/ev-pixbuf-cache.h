@@ -31,6 +31,7 @@
 #include <gtk/gtk.h>
 
 #include <evince-document.h>
+#include <evince-view.h>
 
 G_BEGIN_DECLS
 
@@ -55,7 +56,10 @@ typedef struct _EvPixbufCacheClass  EvPixbufCacheClass;
 
 GType          ev_pixbuf_cache_get_type             (void) G_GNUC_CONST;
 EvPixbufCache *ev_pixbuf_cache_new                  (GtkWidget     *view,
-						     EvDocument    *document);
+						     EvDocumentModel *model,
+						     gsize            max_size);
+void           ev_pixbuf_cache_set_max_size         (EvPixbufCache   *pixbuf_cache,
+						     gsize            max_size);
 void           ev_pixbuf_cache_set_page_range       (EvPixbufCache *pixbuf_cache,
 						     gint           start_page,
 						     gint           end_page,

@@ -4554,7 +4554,7 @@ setup_caches (EvView *view)
 	gboolean inverted_colors;
 
 	view->height_to_page_cache = ev_view_get_height_to_page_cache (view);
-	view->pixbuf_cache = ev_pixbuf_cache_new (GTK_WIDGET (view), view->document);
+	view->pixbuf_cache = ev_pixbuf_cache_new (GTK_WIDGET (view), view->model, view->pixbuf_cache_size);
 	view->page_cache = ev_page_cache_new (view->document);
 	inverted_colors = ev_document_model_get_inverted_colors (view->model);
 	ev_pixbuf_cache_set_inverted_colors (view->pixbuf_cache, inverted_colors);
@@ -4573,6 +4573,31 @@ clear_caches (EvView *view)
 		g_object_unref (view->page_cache);
 		view->page_cache = NULL;
 	}
+}
+
+/**
+ * ev_view_set_page_cache_size:
+ * @view:
+ * @cache_size:
+ *
+ * Sets the maximum size in bytes that will be used to cache
+ * rendered pages. Use 0 to disable caching rendered pages.
+ *
+ * Note that this limit doesn't affect the current visible page range,
+ * which will always be rendered. In order to limit the total memory used
+ * you have to use ev_document_model_set_max_scale() too.
+ *
+ */
+void
+ev_view_set_page_cache_size (EvView *view,
+			     gsize   cache_size)
+{
+	if (view->pixbuf_cache_size == cache_size)
+		return;
+
+	view->pixbuf_cache_size = cache_size;
+	if (view->pixbuf_cache)
+		ev_pixbuf_cache_set_max_size (view->pixbuf_cache, cache_size);
 }
 
 void
