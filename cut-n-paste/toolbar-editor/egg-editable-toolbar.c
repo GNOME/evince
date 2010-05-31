@@ -694,11 +694,13 @@ toolbar_drag_data_received_cb (GtkToolbar         *toolbar,
         {
           gint tpos = get_toolbar_position (etoolbar, GTK_WIDGET (toolbar));
           egg_toolbars_model_add_item (etoolbar->priv->model, tpos, ipos, name);
-          gtk_drag_finish (context, TRUE, context->action == GDK_ACTION_MOVE, time);
+          gtk_drag_finish (context, TRUE,
+			   gdk_drag_context_get_action (context) == GDK_ACTION_MOVE, time);
         }
       else
         {
-          gtk_drag_finish (context, FALSE, context->action == GDK_ACTION_MOVE, time);
+          gtk_drag_finish (context, FALSE,
+			   gdk_drag_context_get_action (context) == GDK_ACTION_MOVE, time);
         }
     }
 
@@ -757,7 +759,7 @@ toolbar_drag_motion_cb (GtkToolbar         *toolbar,
                                            etoolbar->priv->dnd_toolitem, ipos);
     }
 
-  gdk_drag_status (context, context->suggested_action, time);
+  gdk_drag_status (context, gdk_drag_context_get_suggested_action (context), time);
 
   return TRUE;
 }
