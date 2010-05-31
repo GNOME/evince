@@ -60,14 +60,6 @@ void            ev_view_copy_link_address (EvView         *view,
 void		ev_view_select_all	  (EvView         *view);
 gboolean        ev_view_get_has_selection (EvView         *view);
 
-/* sizing and behavior */
-/* These are all orthoganal to each other, except 'presentation' trumps all
- * other behaviors
- */
-void     	ev_view_set_presentation  (EvView         *view,
-					   gboolean        presentation);
-gboolean 	ev_view_get_presentation  (EvView         *view);
-
 /* Page size */
 gboolean	ev_view_can_zoom_in       (EvView         *view);
 void		ev_view_zoom_in		  (EvView         *view);
