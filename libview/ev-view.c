@@ -3471,7 +3471,7 @@ ev_view_drag_motion (GtkWidget      *widget,
 	if (gtk_drag_get_source_widget (context) == widget)
 		gdk_drag_status (context, 0, time);
 	else
-		gdk_drag_status (context, context->suggested_action, time);
+		gdk_drag_status (context, gdk_drag_context_get_suggested_action (context), time);
 	
 	return TRUE;
 }

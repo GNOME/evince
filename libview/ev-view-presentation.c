@@ -627,29 +627,28 @@ ev_view_presentation_goto_entry_activate (GtkEntry           *entry,
 static void
 ev_view_presentation_goto_window_create (EvViewPresentation *pview)
 {
-	GtkWidget *frame, *hbox, *toplevel, *label;
+	GtkWidget *frame, *hbox, *label;
+	GtkWindow *toplevel, *goto_window;
 
-	toplevel = gtk_widget_get_toplevel (GTK_WIDGET (pview));
+	toplevel = GTK_WINDOW (gtk_widget_get_toplevel (GTK_WIDGET (pview)));
+	goto_window = GTK_WINDOW (pview->goto_window);
 
 	if (pview->goto_window) {
-		if (GTK_WINDOW (toplevel)->group)
-			gtk_window_group_add_window (GTK_WINDOW (toplevel)->group,
-						     GTK_WINDOW (pview->goto_window));
-		else if (GTK_WINDOW (pview->goto_window)->group)
-			gtk_window_group_remove_window (GTK_WINDOW (pview->goto_window)->group,
-							GTK_WINDOW (pview->goto_window));
+		if (gtk_window_has_group (toplevel))
+			gtk_window_group_add_window (gtk_window_get_group (toplevel), goto_window);
+		else if (gtk_window_has_group (goto_window))
+			gtk_window_group_remove_window (gtk_window_get_group (goto_window), goto_window);
+
 		return;
 	}
 
 	pview->goto_window = gtk_window_new (GTK_WINDOW_POPUP);
-	gtk_window_set_screen (GTK_WINDOW (pview->goto_window),
-			       gtk_widget_get_screen (GTK_WIDGET (pview)));
+	gtk_window_set_screen (goto_window, gtk_widget_get_screen (GTK_WIDGET (pview)));
 
-	if (GTK_WINDOW (toplevel)->group)
-		gtk_window_group_add_window (GTK_WINDOW (toplevel)->group,
-					     GTK_WINDOW (pview->goto_window));
+	if (gtk_window_has_group (toplevel))
+		gtk_window_group_add_window (gtk_window_get_group (toplevel), goto_window);
 
-	gtk_window_set_modal (GTK_WINDOW (pview->goto_window), TRUE);
+	gtk_window_set_modal (goto_window, TRUE);
 
 	g_signal_connect (pview->goto_window, "delete_event",
 			  G_CALLBACK (ev_view_presentation_goto_window_delete_event),
