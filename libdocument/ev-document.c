@@ -46,6 +46,8 @@ struct _EvDocumentPrivate
 
 	gdouble         max_width;
 	gdouble         max_height;
+	gdouble         min_width;
+	gdouble         min_height;
 	gint            max_label;
 
 	gchar         **page_labels;
@@ -264,6 +266,8 @@ ev_document_load (EvDocument  *document,
 				priv->uniform_height = page_height;
 				priv->max_width = priv->uniform_width;
 				priv->max_height = priv->uniform_height;
+				priv->min_width = priv->uniform_width;
+				priv->min_height = priv->uniform_height;
 			} else if (priv->uniform &&
 				   (priv->uniform_width != page_width ||
 				    priv->uniform_height != page_height)) {
@@ -287,9 +291,13 @@ ev_document_load (EvDocument  *document,
 
 				if (page_width > priv->max_width)
 					priv->max_width = page_width;
+				if (page_width < priv->min_width)
+					priv->min_width = page_width;
 
 				if (page_height > priv->max_height)
 					priv->max_height = page_height;
+				if (page_height < priv->min_height)
+					priv->min_height = page_height;
 			}
 
 			page_label = _ev_document_get_page_label (document, page);
@@ -481,6 +489,19 @@ ev_document_get_max_page_size (EvDocument *document,
 		*width = document->priv->max_width;
 	if (height)
 		*height = document->priv->max_height;
+}
+
+void
+ev_document_get_min_page_size (EvDocument *document,
+			       gdouble    *width,
+			       gdouble    *height)
+{
+	g_return_if_fail (EV_IS_DOCUMENT (document));
+
+	if (width)
+		*width = document->priv->min_width;
+	if (height)
+		*height = document->priv->min_height;
 }
 
 gboolean
