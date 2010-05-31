@@ -49,6 +49,8 @@ struct _EvPixbufCache
 	 * case of twin pages.
 	 */
 	int preload_cache_size;
+	guint job_list_len;
+
 	CacheJobInfo *prev_job;
 	CacheJobInfo *job_list;
 	CacheJobInfo *next_job;
@@ -131,9 +133,21 @@ ev_pixbuf_cache_finalize (GObject *object)
 
 	pixbuf_cache = EV_PIXBUF_CACHE (object);
 
-	g_free (pixbuf_cache->prev_job);
-	g_free (pixbuf_cache->job_list);
-	g_free (pixbuf_cache->next_job);
+	if (pixbuf_cache->job_list) {
+		g_slice_free1 (sizeof (CacheJobInfo) * pixbuf_cache->job_list_len,
+			       pixbuf_cache->job_list);
+		pixbuf_cache->job_list = NULL;
+	}
+	if (pixbuf_cache->prev_job) {
+		g_slice_free1 (sizeof (CacheJobInfo) * pixbuf_cache->preload_cache_size,
+			       pixbuf_cache->prev_job);
+		pixbuf_cache->prev_job = NULL;
+	}
+	if (pixbuf_cache->next_job) {
+		g_slice_free1 (sizeof (CacheJobInfo) * pixbuf_cache->preload_cache_size,
+			       pixbuf_cache->next_job);
+		pixbuf_cache->next_job = NULL;
+	}
 
 	g_object_unref (pixbuf_cache->model);
 
@@ -456,6 +470,7 @@ ev_pixbuf_cache_update_range (EvPixbufCache *pixbuf_cache,
 	CacheJobInfo *new_prev_job = NULL;
 	CacheJobInfo *new_next_job = NULL;
 	gint          new_preload_cache_size;
+	guint         new_job_list_len;
 	int           i, page;
 	gdouble       scale = ev_document_model_get_scale (pixbuf_cache->model);
 	gint          rotation = ev_document_model_get_rotation (pixbuf_cache->model);
@@ -470,10 +485,11 @@ ev_pixbuf_cache_update_range (EvPixbufCache *pixbuf_cache,
 	    pixbuf_cache->preload_cache_size == new_preload_cache_size)
 		return;
 
-	new_job_list = g_new0 (CacheJobInfo, (end_page - start_page) + 1);
+	new_job_list_len = (end_page - start_page) + 1;
+	new_job_list = g_slice_alloc0 (sizeof (CacheJobInfo) * new_job_list_len);
 	if (new_preload_cache_size > 0) {
-		new_prev_job = g_new0 (CacheJobInfo, new_preload_cache_size);
-		new_next_job = g_new0 (CacheJobInfo, new_preload_cache_size);
+		new_prev_job = g_slice_alloc0 (sizeof (CacheJobInfo) * new_preload_cache_size);
+		new_next_job = g_slice_alloc0 (sizeof (CacheJobInfo) * new_preload_cache_size);
 	}
 
 	/* We go through each job in the old cache and either clear it or move
@@ -517,11 +533,21 @@ ev_pixbuf_cache_update_range (EvPixbufCache *pixbuf_cache,
 		page ++;
 	}
 
-	g_free (pixbuf_cache->job_list);
-	g_free (pixbuf_cache->prev_job);
-	g_free (pixbuf_cache->next_job);
+	if (pixbuf_cache->job_list) {
+		g_slice_free1 (sizeof (CacheJobInfo) * pixbuf_cache->job_list_len,
+			       pixbuf_cache->job_list);
+	}
+	if (pixbuf_cache->prev_job) {
+		g_slice_free1 (sizeof (CacheJobInfo) * pixbuf_cache->preload_cache_size,
+			       pixbuf_cache->prev_job);
+	}
+	if (pixbuf_cache->next_job) {
+		g_slice_free1 (sizeof (CacheJobInfo) * pixbuf_cache->preload_cache_size,
+			       pixbuf_cache->next_job);
+	}
 
 	pixbuf_cache->preload_cache_size = new_preload_cache_size;
+	pixbuf_cache->job_list_len = new_job_list_len;
 
 	pixbuf_cache->job_list = new_job_list;
 	pixbuf_cache->prev_job = new_prev_job;
