@@ -295,16 +295,16 @@ ev_view_presentation_animation_start (EvViewPresentation *pview,
 
 	pview->animation = ev_transition_animation_new (effect);
 
-	surface = EV_JOB_RENDER (pview->curr_job)->surface;
+	surface = pview->curr_job ? EV_JOB_RENDER (pview->curr_job)->surface : NULL;
 	ev_transition_animation_set_origin_surface (pview->animation,
 						    surface != NULL ?
 						    surface : pview->current_surface);
 
 	jump = new_page - pview->current_page;
 	if (jump == -1)
-		surface = EV_JOB_RENDER (pview->prev_job)->surface;
+		surface = pview->prev_job ? EV_JOB_RENDER (pview->prev_job)->surface : NULL;
 	else if (jump == 1)
-		surface = EV_JOB_RENDER (pview->next_job)->surface;
+		surface = pview->next_job ? EV_JOB_RENDER (pview->next_job)->surface : NULL;
 	else
 		surface = NULL;
 	if (surface)
