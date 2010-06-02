@@ -95,11 +95,9 @@ ev_loading_window_init (EvLoadingWindow *window)
 
 	gtk_container_set_border_width (GTK_CONTAINER (window), 10);
 
+	gtk_window_set_type_hint (gtk_window, GDK_WINDOW_TYPE_HINT_NOTIFICATION);
 	gtk_window_set_accept_focus (gtk_window, FALSE);
-	gtk_window_set_focus_on_map (gtk_window, FALSE);
 	gtk_window_set_decorated (gtk_window, FALSE);
-	gtk_window_set_skip_taskbar_hint (gtk_window, TRUE);
-	gtk_window_set_skip_pager_hint (gtk_window, TRUE);
 	gtk_window_set_resizable (gtk_window, FALSE);
 
 	style = gtk_widget_get_style (widget);
