@@ -196,7 +196,7 @@ paint_surface (cairo_t         *cr,
 	cairo_surface_set_device_offset (surface, x_offset, y_offset);
 	cairo_set_source_surface (cr, surface, 0, 0);
 
-	if (alpha == 0.)
+	if (alpha == 1.)
 		cairo_paint (cr);
 	else
 		cairo_paint_with_alpha (cr, alpha);
@@ -227,7 +227,7 @@ ev_transition_animation_split (cairo_t               *cr,
 		      NULL);
 
 	if (direction == EV_TRANSITION_DIRECTION_INWARD) {
-		paint_surface (cr, priv->dest_surface, 0, 0, 0, page_area);
+		paint_surface (cr, priv->dest_surface, 0, 0, 1., page_area);
 
 		if (alignment == EV_TRANSITION_ALIGNMENT_HORIZONTAL) {
 			cairo_rectangle (cr,
@@ -245,9 +245,9 @@ ev_transition_animation_split (cairo_t               *cr,
 
 		cairo_clip (cr);
 
-		paint_surface (cr, priv->origin_surface, 0, 0, 0, page_area);
+		paint_surface (cr, priv->origin_surface, 0, 0, 1., page_area);
 	} else {
-		paint_surface (cr, priv->origin_surface, 0, 0, 0, page_area);
+		paint_surface (cr, priv->origin_surface, 0, 0, 1., page_area);
 
 		if (alignment == EV_TRANSITION_ALIGNMENT_HORIZONTAL) {
 			cairo_rectangle (cr,
@@ -265,7 +265,7 @@ ev_transition_animation_split (cairo_t               *cr,
 
 		cairo_clip (cr);
 
-		paint_surface (cr, priv->dest_surface, 0, 0, 0, page_area);
+		paint_surface (cr, priv->dest_surface, 0, 0, 1., page_area);
 	}
 }
 
@@ -288,7 +288,7 @@ ev_transition_animation_blinds (cairo_t               *cr,
 		      "alignment", &alignment,
 		      NULL);
 
-	paint_surface (cr, priv->origin_surface, 0, 0, 0, page_area);
+	paint_surface (cr, priv->origin_surface, 0, 0, 1., page_area);
 
 	for (i = 0; i < N_BLINDS; i++) {
 		cairo_save (cr);
@@ -308,7 +308,7 @@ ev_transition_animation_blinds (cairo_t               *cr,
 		}
 
 		cairo_clip (cr);
-		paint_surface (cr, priv->dest_surface, 0, 0, 0, page_area);
+		paint_surface (cr, priv->dest_surface, 0, 0, 1., page_area);
 		cairo_restore (cr);
 	}
 }
@@ -333,7 +333,7 @@ ev_transition_animation_box (cairo_t               *cr,
 		      NULL);
 
 	if (direction == EV_TRANSITION_DIRECTION_INWARD) {
-		paint_surface (cr, priv->dest_surface, 0, 0, 0, page_area);
+		paint_surface (cr, priv->dest_surface, 0, 0, 1., page_area);
 
 		cairo_rectangle (cr,
 				 width * progress / 2,
@@ -342,9 +342,9 @@ ev_transition_animation_box (cairo_t               *cr,
 				 height * (1 - progress));
 		cairo_clip (cr);
 
-		paint_surface (cr, priv->origin_surface, 0, 0, 0, page_area);
+		paint_surface (cr, priv->origin_surface, 0, 0, 1., page_area);
 	} else {
-		paint_surface (cr, priv->origin_surface, 0, 0, 0, page_area);
+		paint_surface (cr, priv->origin_surface, 0, 0, 1., page_area);
 
 		cairo_rectangle (cr,
 				 (width / 2) - (width * progress / 2),
@@ -353,7 +353,7 @@ ev_transition_animation_box (cairo_t               *cr,
 				 height * progress);
 		cairo_clip (cr);
 
-		paint_surface (cr, priv->dest_surface, 0, 0, 0, page_area);
+		paint_surface (cr, priv->dest_surface, 0, 0, 1., page_area);
 	}
 }
 
@@ -376,7 +376,7 @@ ev_transition_animation_wipe (cairo_t               *cr,
 		      "angle", &angle,
 		      NULL);
 
-	paint_surface (cr, priv->origin_surface, 0, 0, 0, page_area);
+	paint_surface (cr, priv->origin_surface, 0, 0, 1., page_area);
 
 	if (angle == 0) {
 		/* left to right */
@@ -408,7 +408,7 @@ ev_transition_animation_wipe (cairo_t               *cr,
 
 	cairo_clip (cr);
 
-	paint_surface (cr, priv->dest_surface, 0, 0, 0, page_area);
+	paint_surface (cr, priv->dest_surface, 0, 0, 1., page_area);
 }
 
 static void
@@ -422,7 +422,7 @@ ev_transition_animation_dissolve (cairo_t               *cr,
 
 	priv = EV_TRANSITION_ANIMATION_GET_PRIVATE (animation);
 
-	paint_surface (cr, priv->dest_surface, 0, 0, 0, page_area);
+	paint_surface (cr, priv->dest_surface, 0, 0, 1., page_area);
 	paint_surface (cr, priv->origin_surface, 0, 0, 1 - progress, page_area);
 }
 
@@ -447,12 +447,12 @@ ev_transition_animation_push (cairo_t               *cr,
 
 	if (angle == 0) {
 		/* left to right */
-		paint_surface (cr, priv->origin_surface, - (width * progress), 0, 0, page_area);
-		paint_surface (cr, priv->dest_surface, width * (1 - progress), 0, 0, page_area);
+		paint_surface (cr, priv->origin_surface, - (width * progress), 0, 1., page_area);
+		paint_surface (cr, priv->dest_surface, width * (1 - progress), 0, 1., page_area);
 	} else {
 		/* top to bottom */
-		paint_surface (cr, priv->origin_surface, 0, - (height * progress), 0, page_area);
-		paint_surface (cr, priv->dest_surface, 0, height * (1 - progress), 0, page_area);
+		paint_surface (cr, priv->origin_surface, 0, - (height * progress), 1., page_area);
+		paint_surface (cr, priv->dest_surface, 0, height * (1 - progress), 1., page_area);
 	}
 }
 
@@ -475,14 +475,14 @@ ev_transition_animation_cover (cairo_t               *cr,
 		      "angle", &angle,
 		      NULL);
 
-	paint_surface (cr, priv->origin_surface, 0, 0, 0, page_area);
+	paint_surface (cr, priv->origin_surface, 0, 0, 1., page_area);
 
 	if (angle == 0) {
 		/* left to right */
-		paint_surface (cr, priv->dest_surface, width * (1 - progress), 0, 0, page_area);
+		paint_surface (cr, priv->dest_surface, width * (1 - progress), 0, 1., page_area);
 	} else {
 		/* top to bottom */
-		paint_surface (cr, priv->dest_surface, 0, height * (1 - progress), 0, page_area);
+		paint_surface (cr, priv->dest_surface, 0, height * (1 - progress), 1., page_area);
 	}
 }
 
@@ -505,14 +505,14 @@ ev_transition_animation_uncover (cairo_t               *cr,
 		      "angle", &angle,
 		      NULL);
 
-	paint_surface (cr, priv->dest_surface, 0, 0, 0, page_area);
+	paint_surface (cr, priv->dest_surface, 0, 0, 1., page_area);
 
 	if (angle == 0) {
 		/* left to right */
-		paint_surface (cr, priv->origin_surface, - (width * progress), 0, 0, page_area);
+		paint_surface (cr, priv->origin_surface, - (width * progress), 0, 1., page_area);
 	} else {
 		/* top to bottom */
-		paint_surface (cr, priv->origin_surface, 0, - (height * progress), 0, page_area);
+		paint_surface (cr, priv->origin_surface, 0, - (height * progress), 1., page_area);
 	}
 }
 
@@ -527,7 +527,7 @@ ev_transition_animation_fade (cairo_t               *cr,
 
 	priv = EV_TRANSITION_ANIMATION_GET_PRIVATE (animation);
 
-	paint_surface (cr, priv->origin_surface, 0, 0, 0, page_area);
+	paint_surface (cr, priv->origin_surface, 0, 0, 1., page_area);
 	paint_surface (cr, priv->dest_surface, 0, 0, progress, page_area);
 }
 
@@ -546,7 +546,7 @@ ev_transition_animation_paint (EvTransitionAnimation *animation,
 
 	if (!priv->dest_surface) {
 		/* animation is still not ready, paint the origin surface */
-		paint_surface (cr, priv->origin_surface, 0, 0, 0, page_area);
+		paint_surface (cr, priv->origin_surface, 0, 0, 1., page_area);
 		return;
 	}
 
@@ -556,7 +556,7 @@ ev_transition_animation_paint (EvTransitionAnimation *animation,
 	switch (type) {
 	case EV_TRANSITION_EFFECT_REPLACE:
 		/* just paint the destination slide */
-		paint_surface (cr, priv->dest_surface, 0, 0, 0, page_area);
+		paint_surface (cr, priv->dest_surface, 0, 0, 1., page_area);
 		break;
 	case EV_TRANSITION_EFFECT_SPLIT:
 		ev_transition_animation_split (cr, animation, priv->effect, progress, page_area);
@@ -596,7 +596,7 @@ ev_transition_animation_paint (EvTransitionAnimation *animation,
 			   enum_value->value_nick);
 
 		/* just paint the destination slide */
-		paint_surface (cr, priv->dest_surface, 0, 0, 0, page_area);
+		paint_surface (cr, priv->dest_surface, 0, 0, 1., page_area);
 		}
 	}
 }
