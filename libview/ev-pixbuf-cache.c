@@ -869,6 +869,9 @@ ev_pixbuf_cache_clear (EvPixbufCache *pixbuf_cache)
 {
 	int i;
 
+	if (!pixbuf_cache->job_list)
+		return;
+
 	for (i = 0; i < pixbuf_cache->preload_cache_size; i++) {
 		dispose_cache_job_info (pixbuf_cache->prev_job + i, pixbuf_cache);
 		dispose_cache_job_info (pixbuf_cache->next_job + i, pixbuf_cache);
@@ -884,6 +887,9 @@ void
 ev_pixbuf_cache_style_changed (EvPixbufCache *pixbuf_cache)
 {
 	gint i;
+
+	if (!pixbuf_cache->job_list)
+		return;
 
 	/* FIXME: doesn't update running jobs. */
 	for (i = 0; i < pixbuf_cache->preload_cache_size; i++) {
