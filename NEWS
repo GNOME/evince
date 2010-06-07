@@ -1,4 +1,37 @@
 ================
+Evince  2.31.3
+================
+
+New Features and UI Improvements:
+
+    * Use a dynamic pixbuf cache size based on document page
+      size. It allows us caching more pages for lower scale factors
+      and increase zoom level by caching fewer pages. (#303365, Carlos
+      Garcia Campos)
+
+Bug fixes:
+
+    * Fix fade animations (#619825, Carlos Garcia Campos)
+    * Fix a crash when starting animation in presentation mode
+      (#619948, Carlos Garcia Campos)
+    * Remove set_focus_on_map and set NOTIFICATION type hint for
+      loading window. It prevents focus stealing and skips taskbar and
+      pager hints (#620548, Carlos Garcia Campos)
+    * Fix build with GSEAL enabled (#605776, Carlos Garcia Campos)
+    * Remove circular dependencies in Makefiles and fix some compiler
+      warnings (Hib Eris)
+
+Translation updates:
+
+    * Jorge González (es)
+    * Ivar Smolin (et)
+    * Fran Diéguez (gl)
+    * Yaron Shahrabani (he)
+    * Kjartan Maraas (nb)
+    * Sira Nokyoongtong (th)
+    * 甘露(Gan Lu) (zh_CN)
+
+================
 Evince  2.31.2
 ================
 
