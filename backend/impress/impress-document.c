@@ -59,7 +59,7 @@ struct _ImpressDocument
 
 typedef struct _ImpressDocumentClass ImpressDocumentClass;
 
-static void impress_document_document_thumbnails_iface_init (EvDocumentThumbnailsIface *iface);
+static void impress_document_document_thumbnails_iface_init (EvDocumentThumbnailsInterface *iface);
 
 EV_BACKEND_REGISTER_WITH_CODE (ImpressDocument, impress_document,
 		         {
@@ -516,7 +516,7 @@ impress_document_thumbnails_get_dimensions (EvDocumentThumbnails *document,
 }
 
 static void
-impress_document_document_thumbnails_iface_init (EvDocumentThumbnailsIface *iface)
+impress_document_document_thumbnails_iface_init (EvDocumentThumbnailsInterface *iface)
 {
   iface->get_thumbnail = impress_document_thumbnails_get_thumbnail;
   iface->get_dimensions = impress_document_thumbnails_get_dimensions;
