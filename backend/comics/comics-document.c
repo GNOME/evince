@@ -1,6 +1,6 @@
 /* -*- Mode: C; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8; c-indent-level: 8 -*- */
 /*
- * Copyright (C) 2009, Juanjo Marín <juanj.marin@juntadeandalucia.es>
+ * Copyright (C) 2009-2010 Juanjo Marín <juanj.marin@juntadeandalucia.es>
  * Copyright (C) 2005, Teemu Tervo <teemu.tervo@gmx.net>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -74,13 +74,15 @@ struct _ComicsDocument
 
 	gchar    *archive, *dir;
 	GPtrArray *page_names;
-	gchar    *selected_command;
+	gchar    *selected_command, *alternative_command;
 	gchar    *extract_command, *list_command, *decompress_tmp;
+	gboolean regex_arg;
 	gint     offset;
 	ComicBookDecompressType command_usage;
 };
 
 #define OFFSET_7Z 53
+#define OFFSET_ZIP 2
 #define NO_OFFSET 0
 
 /* For perfomance reasons of 7z* we've choosen to decompress on the temporary 
@@ -92,6 +94,7 @@ struct _ComicsDocument
  * @list: command line arguments to list the archive contents
  * @decompress_tmp: command line arguments to pass to extract the archive
  *   into a directory.
+ * @regex_arg: whether the command can accept regex expressions
  * @offset: the position offset of the filename on each line in the output of
  *   running the @list command
  */
@@ -99,24 +102,25 @@ typedef struct {
         char *extract;
         char *list;
         char *decompress_tmp;
+        gboolean regex_arg;
         gint offset;
 } ComicBookDecompressCommand;
 
 static const ComicBookDecompressCommand command_usage_def[] = {
         /* RARLABS unrar */
-	{"%s p -c- -ierr --", "%s vb -c- -- %s", NULL             , NO_OFFSET},
+	{"%s p -c- -ierr --", "%s vb -c- -- %s", NULL             , FALSE, NO_OFFSET},
 
         /* GNA! unrar */
-	{NULL               , "%s t %s"        , "%s -xf %s %s"   , NO_OFFSET},
+	{NULL               , "%s t %s"        , "%s -xf %s %s"   , FALSE, NO_OFFSET},
 
         /* unzip */
-	{"%s -p -C --"      , "%s -Z -1 -- %s" , NULL             , NO_OFFSET},
+	{"%s -p -C --"      , "%s %s"          , NULL             , TRUE , OFFSET_ZIP},
 
         /* 7zip */
-	{NULL               , "%s l -- %s"     , "%s x -y %s -o%s", OFFSET_7Z},
+	{NULL               , "%s l -- %s"     , "%s x -y %s -o%s", FALSE, OFFSET_7Z},
 
         /* tar */
-	{"%s -xOf"          , "%s -tf %s"      , NULL             , NO_OFFSET}
+	{"%s -xOf"          , "%s -tf %s"      , NULL             , FALSE, NO_OFFSET}
 };
 
 static void       comics_document_document_thumbnails_iface_init (EvDocumentThumbnailsIface *iface);
@@ -137,6 +141,59 @@ EV_BACKEND_REGISTER_WITH_CODE (ComicsDocument, comics_document,
 		EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_THUMBNAILS,
 						comics_document_document_thumbnails_iface_init);
 	} );
+
+/**
+ * comics_regex_quote:
+ * @unquoted_string: a literal string
+ *
+ * Quotes a string so unzip will not interpret the regex expressions of
+ * @unquoted_string. Basically, this functions uses [] to disable regex 
+ * expressions. The return value must be freed with * g_free()
+ *
+ * Return value: quoted and disabled-regex string
+ **/
+static gchar *
+comics_regex_quote (const gchar *unquoted_string)
+{
+	const gchar *p;
+	GString *dest;
+
+	dest = g_string_new ("'");
+
+	p = unquoted_string;
+
+	while (*p) {
+		switch (*p) {
+			/* * matches a sequence of 0 or more characters */
+			case ('*'):
+			/* ? matches exactly 1 charactere */
+			case ('?'):
+			/* [...]  matches any single character found inside
+			 * the brackets. Disabling the first bracket is enough.
+			 */
+			case ('['):
+				g_string_append (dest, "[");
+				g_string_append_c (dest, *p);
+				g_string_append (dest, "]");
+				break;
+			/* Because \ escapes regex expressions that we are
+			 * disabling for unzip, we need to disable \ too */
+			case ('\\'):
+				g_string_append (dest, "[\\\\]");
+				break;
+			/* Escape single quote inside the string */
+			case ('\''):
+				g_string_append (dest, "'\\''");
+				break;
+			default:
+				g_string_append_c (dest, *p);
+				break;
+		}
+		++p;
+	}
+	g_string_append_c (dest, '\'');
+	return g_string_free (dest, FALSE);
+}
 
 
 /* This function manages the command for decompressing a comic book */
@@ -200,15 +257,23 @@ comics_generate_command_lines (ComicsDocument *comics_document,
 	ComicBookDecompressType type;
 	
 	type = comics_document->command_usage;
-	quoted_file = g_shell_quote (comics_document->archive);
+	comics_document->regex_arg = command_usage_def[type].regex_arg;
 	quoted_command = g_shell_quote (comics_document->selected_command);
-
+	if (comics_document->regex_arg) {
+		quoted_file = comics_regex_quote (comics_document->archive);
+		comics_document->list_command =
+			   g_strdup_printf (command_usage_def[type].list,
+			                    comics_document->alternative_command,
+			                    comics_document->archive);
+	} else {
+		quoted_file = g_shell_quote (comics_document->archive);
+		comics_document->list_command =
+				g_strdup_printf (command_usage_def[type].list,
+				                 quoted_command, quoted_file);
+	}
 	comics_document->extract_command =
 			    g_strdup_printf (command_usage_def[type].extract,
 				             quoted_command);
-	comics_document->list_command =
-			    g_strdup_printf (command_usage_def[type].list,
-				             quoted_command, quoted_file);
 	comics_document->offset = command_usage_def[type].offset;
 	if (command_usage_def[type].decompress_tmp) {
 		comics_document->dir = ev_mkdtemp ("evince-comics-XXXXXX", error);
@@ -307,7 +372,10 @@ comics_check_decompress_command	(gchar          *mime_type,
 		/* InfoZIP's unzip program */
 		comics_document->selected_command = 
 				g_find_program_in_path ("unzip");
-		if (comics_document->selected_command) {
+		comics_document->alternative_command =
+				g_find_program_in_path ("zipnote");
+		if (comics_document->selected_command &&
+		    comics_document->alternative_command) {
 			comics_document->command_usage = UNZIP;
 			return TRUE;
 		}
@@ -727,6 +795,7 @@ comics_document_finalize (GObject *object)
 
 	g_free (comics_document->archive);
 	g_free (comics_document->selected_command);
+	g_free (comics_document->alternative_command);
 	g_free (comics_document->extract_command);
 	g_free (comics_document->list_command);
 
@@ -837,8 +906,14 @@ extract_argv (EvDocument *document, gint page)
         if (page >= comics_document->page_names->len)
                 return NULL;
 
-	quoted_archive = g_shell_quote (comics_document->archive);
-	quoted_filename = g_shell_quote (comics_document->page_names->pdata[page]);
+	if (comics_document->regex_arg) {
+		quoted_archive = comics_regex_quote (comics_document->archive);
+		quoted_filename =
+			comics_regex_quote (comics_document->page_names->pdata[page]);
+	} else {
+		quoted_archive = g_shell_quote (comics_document->archive);
+		quoted_filename = g_shell_quote (comics_document->page_names->pdata[page]);
+	}
 
 	command_line = g_strdup_printf ("%s %s %s",
 					comics_document->extract_command,
