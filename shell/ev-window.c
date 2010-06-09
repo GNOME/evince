@@ -1857,7 +1857,6 @@ ev_window_open_uri (EvWindow       *ev_window,
 	ev_window_close_dialogs (ev_window);
 	ev_window_clear_load_job (ev_window);
 	ev_window_clear_local_uri (ev_window);
-	ev_view_set_loading (EV_VIEW (ev_window->priv->view), TRUE);
 
 	ev_window->priv->window_mode = mode;
 
@@ -1896,6 +1895,7 @@ ev_window_open_uri (EvWindow       *ev_window,
 	if (!g_file_is_native (source_file) && !ev_window->priv->local_uri) {
 		ev_window_load_file_remote (ev_window, source_file);
 	} else {
+		ev_view_set_loading (EV_VIEW (ev_window->priv->view), TRUE);
 		g_object_unref (source_file);
 		ev_job_scheduler_push_job (ev_window->priv->load_job, EV_JOB_PRIORITY_NONE);
 	}
