@@ -47,11 +47,18 @@
 
 #define XSCREENSAVER_MIN_TIMEOUT 60
 
+enum {
+	PROP_0,
+	PROP_REASON
+};
+
 static void totem_scrsaver_finalize   (GObject *object);
 
 struct TotemScrsaverPrivate {
 	/* Whether the screensaver is disabled */
 	gboolean disabled;
+	/* The reason for the inhibition */
+	char *reason;
 
 	GDBusProxy *gs_proxy;
         gboolean have_screensaver_dbus;
@@ -93,12 +100,13 @@ on_inhibit_cb (GObject      *source_object,
 	if (!value) {
 		if (!scr->priv->old_dbus_api &&
 		    g_error_matches (error, G_DBUS_ERROR, G_DBUS_ERROR_UNKNOWN_METHOD)) {
+			g_return_if_fail (scr->priv->reason != NULL);
 			/* try the old API */
 			scr->priv->old_dbus_api = TRUE;
 			g_dbus_proxy_call (proxy,
 					   "InhibitActivation",
 					   g_variant_new ("(s)",
-							  _("Running in presentation mode")),
+							  scr->priv->reason),
 					   G_DBUS_CALL_FLAGS_NO_AUTO_START,
 					   -1,
 					   NULL,
@@ -169,11 +177,12 @@ screensaver_inhibit_dbus (TotemScrsaver *scr,
 	scr->priv->old_dbus_api = FALSE;
 
 	if (inhibit) {
+		g_return_if_fail (scr->priv->reason != NULL);
 		g_dbus_proxy_call (priv->gs_proxy,
 				   "Inhibit",
 				   g_variant_new ("(ss)",
-						  "Evince",
-						  _("Running in presentation mode")),
+						  g_get_application_name (),
+						  scr->priv->reason),
 				   G_DBUS_CALL_FLAGS_NO_AUTO_START,
 				   -1,
 				   NULL,
@@ -381,13 +390,61 @@ screensaver_finalize_x11 (TotemScrsaver *scr)
 #endif
 
 static void
+totem_scrsaver_get_property (GObject *object,
+			     guint property_id,
+			     GValue *value,
+			     GParamSpec *pspec)
+{
+	TotemScrsaver *scr;
+
+	scr = TOTEM_SCRSAVER (object);
+
+	switch (property_id)
+	{
+	case PROP_REASON:
+		g_value_set_string (value, scr->priv->reason);
+		break;
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
+	}
+}
+
+static void
+totem_scrsaver_set_property (GObject *object,
+			     guint property_id,
+			     const GValue *value,
+			     GParamSpec *pspec)
+{
+	TotemScrsaver *scr;
+
+	scr = TOTEM_SCRSAVER (object);
+
+	switch (property_id)
+	{
+	case PROP_REASON:
+		g_free (scr->priv->reason);
+		scr->priv->reason = g_value_dup_string (value);
+		break;
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
+	}
+}
+
+static void
 totem_scrsaver_class_init (TotemScrsaverClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
 	g_type_class_add_private (klass, sizeof (TotemScrsaverPrivate));
 
+	object_class->set_property = totem_scrsaver_set_property;
+	object_class->get_property = totem_scrsaver_get_property;
 	object_class->finalize = totem_scrsaver_finalize;
+
+	g_object_class_install_property (object_class, PROP_REASON,
+					 g_param_spec_string ("reason", NULL, NULL,
+							      NULL, G_PARAM_READWRITE));
+
 }
 
 /**
@@ -454,7 +511,7 @@ totem_scrsaver_enable (TotemScrsaver *scr)
 
 	if (screensaver_is_running_dbus (scr) != FALSE)
 		screensaver_enable_dbus (scr);
-	else 
+	else
 #ifdef GDK_WINDOWING_X11
 		screensaver_enable_x11 (scr);
 #else
@@ -481,6 +538,8 @@ static void
 totem_scrsaver_finalize (GObject *object)
 {
 	TotemScrsaver *scr = TOTEM_SCRSAVER (object);
+
+	g_free (scr->priv->reason);
 
 	screensaver_finalize_dbus (scr);
 #ifdef GDK_WINDOWING_X11

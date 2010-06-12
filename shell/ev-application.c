@@ -1014,6 +1014,9 @@ ev_application_init (EvApplication *ev_application)
 #endif /* ENABLE_DBUS */
 
 	ev_application->scr_saver = totem_scrsaver_new ();
+	g_object_set (ev_application->scr_saver,
+		      "reason", _("Running in presentation mode"),
+		      NULL);
 }
 
 gboolean

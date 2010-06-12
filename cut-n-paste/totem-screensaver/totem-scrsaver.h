@@ -42,7 +42,7 @@ struct TotemScrsaver {
 };
 
 struct TotemScrsaverClass {
-	GObjectClass parent_class; 
+	GObjectClass parent_class;
 };
 
 GType totem_scrsaver_get_type		(void) G_GNUC_CONST;
