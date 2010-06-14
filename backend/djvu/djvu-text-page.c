@@ -233,7 +233,7 @@ djvu_text_page_sexpr_process (DjvuTextPage *page,
                               miniexp_t     end)
 {
 	if (page->bounding_box || p == start) {
-		EvRectangle *new_rectangle = g_new (EvRectangle, 1);
+		EvRectangle *new_rectangle = ev_rectangle_new ();
 		new_rectangle->x1 = miniexp_to_int (miniexp_nth (1, p));
 		new_rectangle->y1 = miniexp_to_int (miniexp_nth (2, p));
 		new_rectangle->x2 = miniexp_to_int (miniexp_nth (3, p));

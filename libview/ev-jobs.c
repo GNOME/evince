@@ -1087,7 +1087,7 @@ ev_job_find_dispose (GObject *object)
 		gint i;
 
 		for (i = 0; i < job->n_pages; i++) {
-			g_list_foreach (job->pages[i], (GFunc)g_free, NULL);
+			g_list_foreach (job->pages[i], (GFunc)ev_rectangle_free, NULL);
 			g_list_free (job->pages[i]);
 		}
 
