@@ -1555,7 +1555,8 @@ pdf_document_find_find_text (EvDocumentFind *document_find,
 	GList *matches, *l;
 	PopplerPage *poppler_page;
 	gdouble height;
-	
+	GList *retval = NULL;
+
 	g_return_val_if_fail (POPPLER_IS_PAGE (page->backend_page), NULL);
 	g_return_val_if_fail (text != NULL, NULL);
 
@@ -1568,14 +1569,22 @@ pdf_document_find_find_text (EvDocumentFind *document_find,
 	poppler_page_get_size (poppler_page, NULL, &height);
 	for (l = matches; l && l->data; l = g_list_next (l)) {
 		PopplerRectangle *rect = (PopplerRectangle *)l->data;
-		gdouble           tmp;
+		EvRectangle      *ev_rect;
 
-		tmp = rect->y1;
-		rect->y1 = height - rect->y2;
-		rect->y2 = height - tmp;
+		ev_rect = ev_rectangle_new ();
+		ev_rect->x1 = rect->x1;
+		ev_rect->x2 = rect->x2;
+		/* Invert this for X-style coordinates */
+		ev_rect->y1 = height - rect->y2;
+		ev_rect->y2 = height - rect->y1;
+
+		retval = g_list_prepend (retval, ev_rect);
 	}
-	
-	return matches;
+
+	g_list_foreach (matches, (GFunc)poppler_rectangle_free, NULL);
+	g_list_free (matches);
+
+	return g_list_reverse (retval);
 }
 
 static void
