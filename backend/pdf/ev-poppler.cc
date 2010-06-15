@@ -73,15 +73,6 @@
 #define LICENSE_URI "/x:xmpmeta/rdf:RDF/rdf:Description/cc:license/@rdf:resource"
 
 typedef struct {
-	PdfDocument *document;
-	char *text;
-	GList **pages;
-	guint idle;
-	int start_page;
-	int search_page;
-} PdfDocumentSearch;
-
-typedef struct {
 	EvFileExporterFormat format;
 
 	/* Pages per sheet */
@@ -116,7 +107,6 @@ struct _PdfDocument
 	PopplerFontsIter *fonts_iter;
 	int fonts_scanned_pages;
 
-	PdfDocumentSearch *search;
 	PdfPrintContext *print_ctx;
 
 	GList *layers;
@@ -148,7 +138,6 @@ static EvLinkDest *ev_link_dest_from_dest    (PdfDocument       *pdf_document,
 					      PopplerDest       *dest);
 static EvLink     *ev_link_from_action       (PdfDocument       *pdf_document,
 					      PopplerAction     *action);
-static void        pdf_document_search_free  (PdfDocumentSearch *search);
 static void        pdf_print_context_free    (PdfPrintContext   *ctx);
 static gboolean    attachment_save_to_buffer (PopplerAttachment *attachment,
 					      gchar            **buffer,
@@ -190,27 +179,6 @@ EV_BACKEND_REGISTER_WITH_CODE (PdfDocument, pdf_document,
 			 });
 
 static void
-pdf_document_search_free (PdfDocumentSearch   *search)
-{
-        PdfDocument *pdf_document = search->document;
-	int n_pages;
-	int i;
-
-        if (search->idle != 0)
-                g_source_remove (search->idle);
-
-	n_pages = pdf_document_get_n_pages (EV_DOCUMENT (pdf_document));
-	for (i = 0; i < n_pages; i++) {
-		g_list_foreach (search->pages[i], (GFunc) g_free, NULL);
-		g_list_free (search->pages[i]);
-	}
-	g_free (search->pages);
-	
-	g_free (search->text);
-	g_free (search);
-}
-
-static void
 pdf_document_dispose (GObject *object)
 {
 	PdfDocument *pdf_document = PDF_DOCUMENT(object);
@@ -218,11 +186,6 @@ pdf_document_dispose (GObject *object)
 	if (pdf_document->print_ctx) {
 		pdf_print_context_free (pdf_document->print_ctx);
 		pdf_document->print_ctx = NULL;
-	}
-	
-	if (pdf_document->search) {
-		pdf_document_search_free (pdf_document->search);
-		pdf_document->search = NULL;
 	}
 
 	if (pdf_document->document) {
