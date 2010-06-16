@@ -1291,6 +1291,12 @@ ev_window_set_document (EvWindow *ev_window, EvDocument *document)
 					   _("The document contains only empty pages"));
 	}
 
+	if (EV_WINDOW_IS_PRESENTATION (ev_window)) {
+		gtk_widget_destroy (ev_window->priv->presentation_view);
+		ev_window->priv->presentation_view = NULL;
+		ev_window_run_presentation (ev_window);
+	}
+
 	if (ev_window->priv->setup_document_idle > 0)
 		g_source_remove (ev_window->priv->setup_document_idle);
 
