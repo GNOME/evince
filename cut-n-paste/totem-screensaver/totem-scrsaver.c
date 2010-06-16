@@ -26,8 +26,6 @@
 
 #include "config.h"
 
-#include <glib/gi18n.h>
-
 #include <gdk/gdk.h>
 
 #ifdef GDK_WINDOWING_X11
