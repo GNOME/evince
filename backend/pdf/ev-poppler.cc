@@ -61,7 +61,7 @@
 #include <libxml/xpath.h>
 #include <libxml/xpathInternals.h>
 
-#if (defined (HAVE_POPPLER_PAGE_RENDER)) && (defined (HAVE_CAIRO_PDF) || defined (HAVE_CAIRO_PS))
+#if (defined (HAVE_CAIRO_PDF) || defined (HAVE_CAIRO_PS))
 #define HAVE_CAIRO_PRINT
 #endif
 
@@ -119,9 +119,7 @@ static void pdf_document_document_images_iface_init      (EvDocumentImagesInterf
 static void pdf_document_document_forms_iface_init       (EvDocumentFormsInterface       *iface);
 static void pdf_document_document_fonts_iface_init       (EvDocumentFontsInterface       *iface);
 static void pdf_document_document_layers_iface_init      (EvDocumentLayersInterface      *iface);
-#ifdef HAVE_POPPLER_PAGE_RENDER
 static void pdf_document_document_print_iface_init       (EvDocumentPrintInterface       *iface);
-#endif
 static void pdf_document_document_annotations_iface_init (EvDocumentAnnotationsInterface *iface);
 static void pdf_document_document_attachments_iface_init (EvDocumentAttachmentsInterface *iface);
 static void pdf_document_find_iface_init                 (EvDocumentFindInterface        *iface);
@@ -160,10 +158,8 @@ EV_BACKEND_REGISTER_WITH_CODE (PdfDocument, pdf_document,
 								 pdf_document_document_fonts_iface_init);
 				 EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_LAYERS,
 								 pdf_document_document_layers_iface_init);
-#ifdef HAVE_POPPLER_PAGE_RENDER
 				 EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_PRINT,
 								 pdf_document_document_print_iface_init);
-#endif
 				 EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_ANNOTATIONS,
 								 pdf_document_document_annotations_iface_init);
 				 EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_ATTACHMENTS,
@@ -339,8 +335,6 @@ pdf_page_render (PopplerPage     *page,
 		 EvRenderContext *rc)
 {
 	cairo_surface_t *surface;
-
-#ifdef HAVE_POPPLER_PAGE_RENDER
 	cairo_t *cr;
 
 	surface = cairo_image_surface_create (CAIRO_FORMAT_ARGB32,
@@ -369,24 +363,8 @@ pdf_page_render (PopplerPage     *page,
 	cairo_paint (cr);
 
 	cairo_destroy (cr);
-#else /* HAVE_POPPLER_PAGE_RENDER */
-	GdkPixbuf *pixbuf;
-	
-	pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB,
-				 FALSE, 8,
-				 width, height);
 
-	poppler_page_render_to_pixbuf (page,
-				       0, 0,
-				       width, height,
-				       rc->scale,
-				       rc->rotation,
-				       pixbuf);
-	surface = ev_document_misc_surface_from_pixbuf (pixbuf);
-	g_object_unref (pixbuf);
-#endif /* HAVE_POPPLER_PAGE_RENDER */
-
-	return surface;	
+	return surface;
 }
 
 static cairo_surface_t *
@@ -1360,7 +1338,6 @@ pdf_document_images_get_image (EvDocumentImages *document_images,
 			       EvImage          *image)
 {
 	GdkPixbuf       *retval = NULL;
-#ifdef HAVE_POPPLER_PAGE_GET_IMAGE
 	PdfDocument     *pdf_document;
 	PopplerPage     *poppler_page;
 	cairo_surface_t *surface;
@@ -1376,7 +1353,7 @@ pdf_document_images_get_image (EvDocumentImages *document_images,
 	}
 
 	g_object_unref (poppler_page);
-#endif
+
 	return retval;
 }
 
@@ -1821,15 +1798,11 @@ pdf_document_file_exporter_get_capabilities (EvFileExporter *exporter)
 		EV_FILE_EXPORTER_CAN_REVERSE |
 		EV_FILE_EXPORTER_CAN_SCALE |
 #ifdef HAVE_CAIRO_PRINT
-#ifdef HAVE_POPPLER_PAGE_RENDER
 		EV_FILE_EXPORTER_CAN_NUMBER_UP |
-#endif
 #endif
 		
 #ifdef HAVE_CAIRO_PDF
-#ifdef HAVE_POPPLER_PAGE_RENDER
 		EV_FILE_EXPORTER_CAN_GENERATE_PDF |
-#endif
 #endif
 		EV_FILE_EXPORTER_CAN_GENERATE_PS);
 }
@@ -1845,7 +1818,6 @@ pdf_document_file_exporter_iface_init (EvFileExporterInterface *iface)
 	iface->get_capabilities = pdf_document_file_exporter_get_capabilities;
 }
 
-#ifdef HAVE_POPPLER_PAGE_RENDER
 /* EvDocumentPrint */
 static void
 pdf_document_print_print_page (EvDocumentPrint *document,
@@ -1862,7 +1834,6 @@ pdf_document_document_print_iface_init (EvDocumentPrintInterface *iface)
 {
 	iface->print_page = pdf_document_print_print_page;
 }
-#endif /* HAVE_POPPLER_PAGE_RENDER */
 
 static void
 pdf_selection_render_selection (EvSelection      *selection,
@@ -1875,6 +1846,8 @@ pdf_selection_render_selection (EvSelection      *selection,
 				GdkColor         *base)
 {
 	PopplerPage *poppler_page;
+	cairo_t *cr;
+	PopplerColor text_color, base_color;
 	double width_points, height_points;
 	gint width, height;
 
@@ -1885,10 +1858,6 @@ pdf_selection_render_selection (EvSelection      *selection,
 	width = (int) ((width_points * rc->scale) + 0.5);
 	height = (int) ((height_points * rc->scale) + 0.5);
 
-#ifdef HAVE_POPPLER_PAGE_RENDER
-	cairo_t *cr;
-	PopplerColor text_color, base_color;
-	
 	text_color.red = text->red;
 	text_color.green = text->green;
 	text_color.blue = text->blue;
@@ -1917,25 +1886,6 @@ pdf_selection_render_selection (EvSelection      *selection,
 				       &text_color,
 				       &base_color);
 	cairo_destroy (cr);
-#else /* HAVE_POPPLER_PAGE_RENDER */
-	GdkPixbuf *pixbuf;
-	
-	pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB,
-				 TRUE, 8,
-				 width, height);
-
-	poppler_page_render_selection_to_pixbuf (poppler_page,
-						 rc->scale, rc->rotation, pixbuf,
-						 (PopplerRectangle *)points,
-						 (PopplerRectangle *)old_points,
-						 (PopplerSelectionStyle)style,
-						 text,
-						 base);
-	if (*surface)
-		cairo_surface_destroy (*surface);
-	*surface = ev_document_misc_surface_from_pixbuf (pixbuf);
-	g_object_unref (pixbuf);
-#endif /* HAVE_POPPLER_PAGE_RENDER */
 }
 
 static gchar *
@@ -2524,7 +2474,6 @@ ev_annot_from_poppler_annot (PopplerAnnot *poppler_annot,
 			ev_annot_text->is_open = poppler_annot_text_get_is_open (poppler_text);
 		}
 			break;
-#ifdef HAVE_POPPLER_ANNOT_FILE_ATTACHMENT_GET_ATTACHMENT
 	        case POPPLER_ANNOT_FILE_ATTACHMENT: {
 			PopplerAnnotFileAttachment *poppler_annot_attachment;
 			EvAnnotationAttachment     *ev_annot_attachment;
@@ -2556,7 +2505,6 @@ ev_annot_from_poppler_annot (PopplerAnnot *poppler_annot,
 				g_object_unref (poppler_attachment);
 		}
 			break;
-#endif /* HAVE_POPPLER_ANNOT_FILE_ATTACHMENT_GET_ATTACHMENT */
 	        case POPPLER_ANNOT_LINK:
 	        case POPPLER_ANNOT_WIDGET:
 			/* Ignore link and widgets annots since they are already handled */
