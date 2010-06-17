@@ -42,7 +42,6 @@ struct _EvMediaPlayerKeys
 	GObject        parent;
 
         GDBusProxy *proxy;
-        guint watch_id;
 };
 
 struct _EvMediaPlayerKeysClass
@@ -131,48 +130,39 @@ media_player_key_pressed_cb (GDBusProxy *proxy,
 }
 
 static void
-mediakeys_service_appeared_cb (GDBusConnection *connection,
-			       const gchar     *name,
-			       const gchar     *name_owner,
-			       GDBusProxy      *proxy,
-			       gpointer         user_data)
+mediakeys_service_appeared_cb (GObject      *source_object,
+			       GAsyncResult *res,
+			       gpointer      user_data)
 {
         EvMediaPlayerKeys *keys = EV_MEDIA_PLAYER_KEYS (user_data);
+	GDBusProxy *proxy;
 
-	keys->proxy = g_object_ref (proxy);
-	g_signal_connect (keys->proxy, "g-signal",
+	proxy = g_dbus_proxy_new_for_bus_finish (res, NULL);
+
+	if (proxy == NULL) {
+		return;
+	}
+
+	g_signal_connect (proxy, "g-signal",
 			  G_CALLBACK (media_player_key_pressed_cb),
 			  keys);
 
+	keys->proxy = proxy;
 	ev_media_player_keys_grab_keys (keys);
-}
-
-static void
-mediakeys_service_disappeared_cb (GDBusConnection *connection,
-				  const gchar     *name,
-				  gpointer         user_data)
-{
-        EvMediaPlayerKeys *keys = EV_MEDIA_PLAYER_KEYS (user_data);
-
-	if (keys->proxy) {
-		g_object_unref (keys->proxy);
-		keys->proxy = NULL;
-	}
 }
 
 static void
 ev_media_player_keys_init (EvMediaPlayerKeys *keys)
 {
-	keys->watch_id = g_bus_watch_proxy (G_BUS_TYPE_SESSION,
-					    SD_NAME,
-					    G_BUS_NAME_WATCHER_FLAGS_NONE,
-					    SD_OBJECT_PATH,
-					    SD_INTERFACE,
-					    G_TYPE_DBUS_PROXY,
-					    G_DBUS_PROXY_FLAGS_DO_NOT_LOAD_PROPERTIES,
-					    mediakeys_service_appeared_cb,
-					    mediakeys_service_disappeared_cb,
-					    keys, NULL);
+	g_dbus_proxy_new_for_bus (G_BUS_TYPE_SESSION,
+				  G_DBUS_PROXY_FLAGS_DO_NOT_LOAD_PROPERTIES,
+				  NULL,
+				  SD_NAME,
+				  SD_OBJECT_PATH,
+				  SD_INTERFACE,
+				  NULL,
+				  mediakeys_service_appeared_cb,
+				  keys);
 }
 
 void
@@ -189,12 +179,10 @@ ev_media_player_keys_finalize (GObject *object)
 {
 	EvMediaPlayerKeys *keys = EV_MEDIA_PLAYER_KEYS (object);
 
-	if (keys->watch_id > 0)
-		g_bus_unwatch_proxy (keys->watch_id);
-
         if (keys->proxy != NULL) {
 		ev_media_player_keys_release_keys (keys);
                 g_object_unref (keys->proxy);
+		keys->proxy = NULL;
 	}
 
 	G_OBJECT_CLASS (ev_media_player_keys_parent_class)->finalize (object);
