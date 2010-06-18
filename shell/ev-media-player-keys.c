@@ -42,6 +42,7 @@ struct _EvMediaPlayerKeys
 	GObject        parent;
 
         GDBusProxy *proxy;
+	gboolean    has_name_owner;
 };
 
 struct _EvMediaPlayerKeysClass
@@ -78,8 +79,26 @@ ev_media_player_keys_class_init (EvMediaPlayerKeysClass *klass)
 }
 
 static void
+ev_media_player_keys_update_has_name_owner (EvMediaPlayerKeys *keys)
+{
+	gchar *name_owner;
+
+	if (!keys->proxy) {
+		keys->has_name_owner = FALSE;
+		return;
+	}
+
+	name_owner = g_dbus_proxy_get_name_owner (keys->proxy);
+	keys->has_name_owner = (name_owner != NULL);
+	g_free (name_owner);
+}
+
+static void
 ev_media_player_keys_grab_keys (EvMediaPlayerKeys *keys)
 {
+	if (!keys->has_name_owner)
+		return;
+
 	/*
 	 * The uint as second argument is time. We give a very low value so that
 	 * if a media player is there it gets higher priority on the keys (0 is
@@ -96,6 +115,9 @@ ev_media_player_keys_grab_keys (EvMediaPlayerKeys *keys)
 static void
 ev_media_player_keys_release_keys (EvMediaPlayerKeys *keys)
 {
+	if (!keys->has_name_owner)
+		return;
+
         g_dbus_proxy_call (keys->proxy,
 			   "ReleaseMediaPlayerKeys",
 			   g_variant_new ("(s)", "Evince"),
@@ -130,6 +152,16 @@ media_player_key_pressed_cb (GDBusProxy *proxy,
 }
 
 static void
+mediakeys_name_owner_changed (GObject    *object,
+			      GParamSpec *pspec,
+			      gpointer    user_data)
+{
+	EvMediaPlayerKeys *keys = EV_MEDIA_PLAYER_KEYS (user_data);
+
+	ev_media_player_keys_update_has_name_owner (keys);
+}
+
+static void
 mediakeys_service_appeared_cb (GObject      *source_object,
 			       GAsyncResult *res,
 			       gpointer      user_data)
@@ -146,8 +178,12 @@ mediakeys_service_appeared_cb (GObject      *source_object,
 	g_signal_connect (proxy, "g-signal",
 			  G_CALLBACK (media_player_key_pressed_cb),
 			  keys);
+	g_signal_connect (proxy, "notify::g-name-owner",
+			  G_CALLBACK (mediakeys_name_owner_changed),
+			  keys);
 
 	keys->proxy = proxy;
+	ev_media_player_keys_update_has_name_owner (keys);
 	ev_media_player_keys_grab_keys (keys);
 }
 
@@ -183,6 +219,7 @@ ev_media_player_keys_finalize (GObject *object)
 		ev_media_player_keys_release_keys (keys);
                 g_object_unref (keys->proxy);
 		keys->proxy = NULL;
+		keys->has_name_owner = FALSE;
 	}
 
 	G_OBJECT_CLASS (ev_media_player_keys_parent_class)->finalize (object);
