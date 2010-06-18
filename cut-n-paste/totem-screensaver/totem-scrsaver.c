@@ -60,7 +60,6 @@ struct TotemScrsaverPrivate {
 
 	GDBusProxy *gs_proxy;
         gboolean have_screensaver_dbus;
-        guint watch_id;
 	guint32 cookie;
 	gboolean old_dbus_api;
 
@@ -211,65 +210,69 @@ screensaver_disable_dbus (TotemScrsaver *scr)
 }
 
 static void
-screensaver_dbus_appeared_cb (GDBusConnection *connection,
-			      const gchar     *name,
-			      const gchar     *name_owner,
-			      GDBusProxy      *proxy,
-			      gpointer         user_data)
+screensaver_update_dbus_presence (TotemScrsaver *scr)
 {
-        TotemScrsaver *scr = TOTEM_SCRSAVER (user_data);
         TotemScrsaverPrivate *priv = scr->priv;
+	gchar *name_owner;
 
-	priv->gs_proxy = g_object_ref (proxy);
-
-        priv->have_screensaver_dbus = TRUE;
+	name_owner = g_dbus_proxy_get_name_owner (priv->gs_proxy);
+	if (name_owner) {
+		priv->have_screensaver_dbus = TRUE;
+		g_free (name_owner);
+	} else {
+		priv->have_screensaver_dbus = FALSE;
+	}
 }
 
 static void
-screensaver_dbus_disappeared_cb (GDBusConnection *connection,
-				 const gchar     *name,
-				 gpointer         user_data)
+screensaver_dbus_owner_changed_cb (GObject    *object,
+                                   GParamSpec *pspec,
+                                   gpointer    user_data)
 {
         TotemScrsaver *scr = TOTEM_SCRSAVER (user_data);
-        TotemScrsaverPrivate *priv = scr->priv;
 
-	if (priv->gs_proxy) {
-		g_object_unref (priv->gs_proxy);
-		priv->gs_proxy = NULL;
-	}
+	screensaver_update_dbus_presence (scr);
+}
 
-        priv->have_screensaver_dbus = FALSE;
+static void
+screensaver_dbus_proxy_new_cb (GObject      *source,
+                               GAsyncResult *result,
+                               gpointer      user_data)
+{
+	TotemScrsaver *scr = TOTEM_SCRSAVER (user_data);
+	TotemScrsaverPrivate *priv = scr->priv;
+
+	priv->gs_proxy = g_dbus_proxy_new_for_bus_finish (result, NULL);
+	if (!priv->gs_proxy)
+		return;
+
+	screensaver_update_dbus_presence (scr);
+
+	g_signal_connect (priv->gs_proxy, "notify::g-name-owner",
+	                  G_CALLBACK (screensaver_dbus_owner_changed_cb),
+	                  scr);
 }
 
 static void
 screensaver_init_dbus (TotemScrsaver *scr)
 {
-	TotemScrsaverPrivate *priv = scr->priv;
-
-        priv->watch_id = g_bus_watch_proxy (G_BUS_TYPE_SESSION,
-					    GS_SERVICE,
-					    G_BUS_NAME_WATCHER_FLAGS_NONE,
-					    GS_PATH,
-					    GS_INTERFACE,
-					    G_TYPE_DBUS_PROXY,
-					    G_DBUS_PROXY_FLAGS_DO_NOT_LOAD_PROPERTIES |
-					    G_DBUS_PROXY_FLAGS_DO_NOT_CONNECT_SIGNALS,
-					    screensaver_dbus_appeared_cb,
-					    screensaver_dbus_disappeared_cb,
-					    scr, NULL);
+        g_dbus_proxy_new_for_bus (G_BUS_TYPE_SESSION,
+	                          G_DBUS_PROXY_FLAGS_DO_NOT_LOAD_PROPERTIES,
+	                          NULL,
+	                          GS_SERVICE,
+	                          GS_PATH,
+	                          GS_INTERFACE,
+	                          NULL,
+	                          screensaver_dbus_proxy_new_cb,
+	                          scr);
 }
 
 static void
 screensaver_finalize_dbus (TotemScrsaver *scr)
 {
-        TotemScrsaverPrivate *priv = scr->priv;
-
 	if (scr->priv->gs_proxy) {
 		g_object_unref (scr->priv->gs_proxy);
 	}
-
-	if (priv->watch_id > 0)
-		g_bus_unwatch_proxy (priv->watch_id);
 }
 
 #ifdef GDK_WINDOWING_X11
