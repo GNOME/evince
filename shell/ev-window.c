@@ -2748,21 +2748,25 @@ ev_window_save_print_settings (EvWindow         *window,
 
 	key_file = get_print_settings_file ();
 	gtk_print_settings_to_key_file (print_settings, key_file, EV_PRINT_SETTINGS_GROUP);
-	save_print_setting_file (key_file);
-	g_key_file_free (key_file);
-
-	if (!window->priv->metadata)
-		return;
 
 	/* Save print settings that are specific to the document */
 	for (i = 0; i < G_N_ELEMENTS (document_print_settings); i++) {
-		const gchar *value;
+		/* Remove it from global settings */
+		g_key_file_remove_key (key_file, EV_PRINT_SETTINGS_GROUP,
+				       document_print_settings[i], NULL);
 
-		value = gtk_print_settings_get (print_settings,
-						document_print_settings[i]);
-		ev_metadata_set_string (window->priv->metadata,
-					document_print_settings[i], value);
+		if (window->priv->metadata) {
+			const gchar *value;
+
+			value = gtk_print_settings_get (print_settings,
+							document_print_settings[i]);
+			ev_metadata_set_string (window->priv->metadata,
+						document_print_settings[i], value);
+		}
 	}
+
+	save_print_setting_file (key_file);
+	g_key_file_free (key_file);
 }
 
 static void
@@ -2773,6 +2777,19 @@ ev_window_save_print_page_setup (EvWindow     *window,
 
 	key_file = get_print_settings_file ();
 	gtk_page_setup_to_key_file (page_setup, key_file, EV_PAGE_SETUP_GROUP);
+
+	/* Do not save document settings in global file */
+	g_key_file_remove_key (key_file, EV_PAGE_SETUP_GROUP,
+			       "page-setup-orientation", NULL);
+	g_key_file_remove_key (key_file, EV_PAGE_SETUP_GROUP,
+			       "page-setup-margin-top", NULL);
+	g_key_file_remove_key (key_file, EV_PAGE_SETUP_GROUP,
+			       "page-setup-margin-bottom", NULL);
+	g_key_file_remove_key (key_file, EV_PAGE_SETUP_GROUP,
+			       "page-setup-margin-left", NULL);
+	g_key_file_remove_key (key_file, EV_PAGE_SETUP_GROUP,
+			       "page-setup-margin-right", NULL);
+
 	save_print_setting_file (key_file);
 	g_key_file_free (key_file);
 
