@@ -1,4 +1,36 @@
 ================
+Evince  2.30.2
+================
+
+Bug fixes:
+
+    * Don't save print settings that are document specific into global
+      file, since they are already saved in per file metadata
+      (#530018, Carlos Garcia Campos)
+    * Reload presentation view when document changes (#621750, Carlos
+      Garcia Campos)
+    * Fix opening cbz files with [] in archive (#619248, Juanjo Marín)
+    * Fix fade animations in presentation mode (#619825, Carlos Garcia
+      Campos)
+    * Fix a crash when starting animations in presentation mode
+      (#619948, Carlos Garcia Campos)
+    * Fix localization on Windows (#610548, Hib Eris)
+    * Allow opening documents specified by relative path in
+      evince-previewer (Marek Kasik)
+    * Fix opening files with '#' in its name (#616515, Carlos Garcia
+      Campos)
+    * Accept input focus on annotation windows (Carlos Garcia Campos)
+    * Respect GNOME22_USER_DIR env variable in ev-daemon (Carlos
+      Garcia Campos)
+    * Fix a crash when user directory doesn't exist (#617154, Carlos
+      Garcia Campos)
+
+Translation updates:
+
+    * Manoj Kumar Giri (or)
+    * 甘露(Gan Lu) (zh_CN)
+
+================
 Evince  2.30.1
 ================
 
