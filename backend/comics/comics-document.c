@@ -252,7 +252,7 @@ static gboolean
 comics_generate_command_lines (ComicsDocument *comics_document, 
 			       GError         **error)
 {
-	gchar *quoted_file;
+	gchar *quoted_file, *quoted_file_aux;
 	gchar *quoted_command;
 	ComicBookDecompressType type;
 	
@@ -261,10 +261,12 @@ comics_generate_command_lines (ComicsDocument *comics_document,
 	quoted_command = g_shell_quote (comics_document->selected_command);
 	if (comics_document->regex_arg) {
 		quoted_file = comics_regex_quote (comics_document->archive);
+		quoted_file_aux = g_shell_quote (comics_document->archive);
 		comics_document->list_command =
 			   g_strdup_printf (command_usage_def[type].list,
 			                    comics_document->alternative_command,
-			                    comics_document->archive);
+			                    quoted_file_aux);
+		g_free (quoted_file_aux);
 	} else {
 		quoted_file = g_shell_quote (comics_document->archive);
 		comics_document->list_command =
