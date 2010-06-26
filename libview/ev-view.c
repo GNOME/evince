@@ -99,10 +99,6 @@ static void       compute_border                             (EvView            
 static void       get_page_y_offset                          (EvView             *view,
 							      int                 page,
 							      int                *y_offset);
-static gboolean   get_page_extents                           (EvView             *view,
-							      gint                page,
-							      GdkRectangle       *page_area,
-							      GtkBorder          *border);
 static void       view_rect_to_doc_rect                      (EvView             *view,
 							      GdkRectangle       *view_rect,
 							      GdkRectangle       *page_area,
@@ -530,7 +526,7 @@ ev_view_scroll_to_page_position (EvView *view, GtkOrientation orientation)
 		GdkRectangle page_area;
 		GtkBorder    border;
 
-		get_page_extents (view, view->current_page, &page_area, &border);
+		ev_view_get_page_extents (view, view->current_page, &page_area, &border);
 		x = page_area.x;
 		y = page_area.y;
 	} else {
@@ -651,7 +647,7 @@ view_update_range_and_current_page (EvView *view)
 
 		for (i = 0; i < ev_document_get_n_pages (view->document); i++) {
 
-			get_page_extents (view, i, &page_area, &border);
+			ev_view_get_page_extents (view, i, &page_area, &border);
 
 			if (gdk_rectangle_intersect (&current_area, &page_area, &unused)) {
 				area = unused.width * unused.height;
@@ -826,7 +822,7 @@ compute_scroll_increment (EvView        *view,
 		return gtk_adjustment_get_page_size (adjustment);
 
 	gtk_widget_get_allocation (widget, &allocation);
-	get_page_extents (view, page, &page_area, &border);
+	ev_view_get_page_extents (view, page, &page_area, &border);
 	rect.x = page_area.x + view->scroll_x;
 	rect.y = view->scroll_y + (scroll == GTK_SCROLL_PAGE_BACKWARD ? 5 : allocation.height - 5);
 	rect.width = page_area.width;
@@ -1098,11 +1094,11 @@ get_page_y_offset (EvView *view, int page, int *y_offset)
 	return;
 }
 
-static gboolean
-get_page_extents (EvView       *view,
-		  gint          page,
-		  GdkRectangle *page_area,
-		  GtkBorder    *border)
+gboolean
+ev_view_get_page_extents (EvView       *view,
+			  gint          page,
+			  GdkRectangle *page_area,
+			  GtkBorder    *border)
 {
 	GtkWidget *widget;
 	int width, height;
@@ -1263,7 +1259,7 @@ doc_point_to_view_point (EvView       *view,
 		g_assert_not_reached ();
 	}
 
-	get_page_extents (view, page, &page_area, &border);
+	ev_view_get_page_extents (view, page, &page_area, &border);
 
 	view_x = CLAMP (x * view->scale, 0, page_area.width);
 	view_y = CLAMP (y * view->scale, 0, page_area.height);
@@ -1308,7 +1304,7 @@ doc_rect_to_view_rect (EvView       *view,
 		g_assert_not_reached ();
 	}
 
-	get_page_extents (view, page, &page_area, &border);
+	ev_view_get_page_extents (view, page, &page_area, &border);
 
 	view_rect->x = x * view->scale + page_area.x;
 	view_rect->y = y * view->scale + page_area.y;
@@ -1343,7 +1339,7 @@ find_page_at_location (EvView  *view,
 		GdkRectangle page_area;
 		GtkBorder border;
 
-		if (! get_page_extents (view, i, &page_area, &border))
+		if (! ev_view_get_page_extents (view, i, &page_area, &border))
 			continue;
 
 		if ((x >= page_area.x + border.left) &&
@@ -2562,7 +2558,7 @@ annotation_window_moved (EvAnnotationWindow *window,
 	view_rect.width = width;
 	view_rect.height = height;
 
-	get_page_extents (view, child->page, &page_area, &border);
+	ev_view_get_page_extents (view, child->page, &page_area, &border);
 	view_rect_to_doc_rect (view, &view_rect, &page_area, &doc_rect);
 	child->orig_x = doc_rect.x1;
 	child->orig_y = doc_rect.y1;
@@ -3130,7 +3126,7 @@ ev_view_expose_event (GtkWidget      *widget,
 		GtkBorder border;
 		gboolean page_ready = TRUE;
 
-		if (!get_page_extents (view, i, &page_area, &border))
+		if (!ev_view_get_page_extents (view, i, &page_area, &border))
 			continue;
 
 		page_area.x -= view->scroll_x;
@@ -5305,7 +5301,7 @@ compute_new_selection_rect (EvView       *view,
 		GdkRectangle page_area;
 		GtkBorder border;
 		
-		if (get_page_extents (view, i, &page_area, &border)) {
+		if (ev_view_get_page_extents (view, i, &page_area, &border)) {
 			GdkRectangle overlap;
 
 			if (gdk_rectangle_intersect (&page_area, &view_rect, &overlap)) {
@@ -5369,7 +5365,7 @@ compute_new_selection_text (EvView          *view,
 		GdkRectangle page_area;
 		GtkBorder border;
 		
-		get_page_extents (view, i, &page_area, &border);
+		ev_view_get_page_extents (view, i, &page_area, &border);
 		if (gdk_rectangle_point_in (&page_area, start) || 
 		    gdk_rectangle_point_in (&page_area, stop)) {
 			if (first == n_pages)
@@ -5396,7 +5392,7 @@ compute_new_selection_text (EvView          *view,
 		selection->rect.x2 = width;
 		selection->rect.y2 = height;
 
-		get_page_extents (view, i, &page_area, &border);
+		ev_view_get_page_extents (view, i, &page_area, &border);
 
 		if (gdk_rectangle_point_in (&page_area, start))
 			point = start;
@@ -5539,7 +5535,7 @@ merge_selection_region (EvView *view,
 			 */
 			gdk_region_shrink (region, -5, -5);
 
-			get_page_extents (view, cur_page, &page_area, &border);
+			ev_view_get_page_extents (view, cur_page, &page_area, &border);
 			gdk_region_offset (region,
 					   page_area.x + border.left - view->scroll_x,
 					   page_area.y + border.top - view->scroll_y);

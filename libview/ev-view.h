@@ -95,6 +95,11 @@ gboolean       ev_view_previous_page	  (EvView         *view);
 void	       ev_view_autoscroll_start   (EvView *view);
 void           ev_view_autoscroll_stop    (EvView *view);
 
+gboolean       ev_view_get_page_extents   (EvView       *view,
+                                           gint          page,
+                                           GdkRectangle *page_area,
+                                           GtkBorder    *border);
+
 G_END_DECLS
 
 #endif /* __EV_VIEW_H__ */
