@@ -19,6 +19,7 @@
 
 #include <config.h>
 
+#include <glib.h>
 #include "ev-jobs.h"
 #include "ev-job-scheduler.h"
 #include "ev-mapping.h"
@@ -27,17 +28,21 @@
 #include "ev-document-forms.h"
 #include "ev-document-images.h"
 #include "ev-document-annotations.h"
+#include "ev-document-text.h"
 #include "ev-page-cache.h"
 
 typedef struct _EvPageCacheData {
-	EvJob     *job;
-	gboolean   done : 1;
+	EvJob       *job;
+	gboolean     done : 1;
 
-	GList     *link_mapping;
-	GList     *image_mapping;
-	GList     *form_field_mapping;
-	GList     *annot_mapping;
-	GdkRegion *text_mapping;
+	GList       *link_mapping;
+	GList       *image_mapping;
+	GList       *form_field_mapping;
+	GList       *annot_mapping;
+	GdkRegion   *text_mapping;
+	EvRectangle *text_layout;
+	guint        text_layout_length;
+	gchar       *text;
 } EvPageCacheData;
 
 struct _EvPageCache {
@@ -89,6 +94,17 @@ ev_page_cache_data_free (EvPageCacheData *data)
 	if (data->text_mapping) {
 		gdk_region_destroy (data->text_mapping);
 		data->text_mapping = NULL;
+	}
+
+	if (data->text_layout) {
+		g_free (data->text_layout);
+		data->text_layout = NULL;
+		data->text_layout_length = 0;
+	}
+
+	if (data->text) {
+		g_free (data->text);
+		data->text = NULL;
 	}
 }
 
@@ -150,8 +166,10 @@ get_flags_for_document (EvDocument *document)
 		flags |= EV_PAGE_DATA_INCLUDE_FORMS;
 	if (EV_IS_DOCUMENT_ANNOTATIONS (document))
 		flags |= EV_PAGE_DATA_INCLUDE_ANNOTS;
-	if (EV_IS_SELECTION (document))
-		flags |= EV_PAGE_DATA_INCLUDE_TEXT;
+	if (EV_IS_SELECTION (document) && EV_IS_DOCUMENT_TEXT (document))
+		flags |= EV_PAGE_DATA_INCLUDE_TEXT_MAPPING;
+	if (EV_IS_DOCUMENT_TEXT (document))
+		flags |= EV_PAGE_DATA_INCLUDE_TEXT | EV_PAGE_DATA_INCLUDE_TEXT_LAYOUT;
 
 	return flags;
 }
@@ -188,6 +206,9 @@ job_page_data_finished_cb (EvJob       *job,
 	data->form_field_mapping = job_data->form_field_mapping;
 	data->annot_mapping = job_data->annot_mapping;
 	data->text_mapping = job_data->text_mapping;
+	data->text_layout = job_data->text_layout;
+	data->text_layout_length = job_data->text_layout_length;
+	data->text = job_data->text;
 	data->done = TRUE;
 
 	g_object_unref (data->job);
@@ -328,7 +349,7 @@ ev_page_cache_get_text_mapping (EvPageCache *cache,
 	g_return_val_if_fail (EV_IS_PAGE_CACHE (cache), NULL);
 	g_return_val_if_fail (page >= 0 && page < cache->n_pages, NULL);
 
-	if (!(cache->flags & EV_PAGE_DATA_INCLUDE_TEXT))
+	if (!(cache->flags & EV_PAGE_DATA_INCLUDE_TEXT_MAPPING))
 		return NULL;
 
 	data = &cache->page_list[page];
@@ -341,3 +362,56 @@ ev_page_cache_get_text_mapping (EvPageCache *cache,
 	return data->text_mapping;
 }
 
+const gchar *
+ev_page_cache_get_text (EvPageCache *cache,
+			     gint         page)
+{
+	EvPageCacheData *data;
+
+	g_return_val_if_fail (EV_IS_PAGE_CACHE (cache), NULL);
+	g_return_val_if_fail (page >= 0 && page < cache->n_pages, NULL);
+
+	if (!(cache->flags & EV_PAGE_DATA_INCLUDE_TEXT))
+		return NULL;
+
+	data = &cache->page_list[page];
+	if (data->done)
+		return data->text;
+
+	if (data->job)
+		return EV_JOB_PAGE_DATA (data->job)->text;
+
+	return data->text;
+}
+
+gboolean
+ev_page_cache_get_text_layout (EvPageCache  *cache,
+			       gint          page,
+			       EvRectangle **areas,
+			       guint        *n_areas)
+{
+	EvPageCacheData *data;
+
+	g_return_val_if_fail (EV_IS_PAGE_CACHE (cache), FALSE);
+	g_return_val_if_fail (page >= 0 && page < cache->n_pages, FALSE);
+
+	if (!(cache->flags & EV_PAGE_DATA_INCLUDE_TEXT_LAYOUT))
+		return FALSE;
+
+	data = &cache->page_list[page];
+	if (data->done)	{
+		*areas = data->text_layout;
+		*n_areas = data->text_layout_length;
+
+		return TRUE;
+	}
+
+	if (data->job) {
+		*areas = EV_JOB_PAGE_DATA (data->job)->text_layout;
+		*n_areas = EV_JOB_PAGE_DATA (data->job)->text_layout_length;
+
+		return TRUE;
+	}
+
+	return FALSE;
+}

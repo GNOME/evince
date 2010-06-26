@@ -594,9 +594,17 @@ ev_job_page_data_run (EvJob *job)
 	ev_document_doc_mutex_lock ();
 	ev_page = ev_document_get_page (job->document, job_pd->page);
 
-	if ((job_pd->flags & EV_PAGE_DATA_INCLUDE_TEXT) && EV_IS_DOCUMENT_TEXT (job->document))
+	if ((job_pd->flags & EV_PAGE_DATA_INCLUDE_TEXT_MAPPING) && EV_IS_DOCUMENT_TEXT (job->document))
 		job_pd->text_mapping =
 			ev_document_text_get_text_mapping (EV_DOCUMENT_TEXT (job->document), ev_page);
+	if ((job_pd->flags & EV_PAGE_DATA_INCLUDE_TEXT) && EV_IS_DOCUMENT_TEXT (job->document))
+		job_pd->text =
+			ev_document_text_get_text (EV_DOCUMENT_TEXT (job->document), ev_page);
+	if ((job_pd->flags & EV_PAGE_DATA_INCLUDE_TEXT_LAYOUT) && EV_IS_DOCUMENT_TEXT (job->document))
+		ev_document_text_get_text_layout (EV_DOCUMENT_TEXT (job->document),
+						  ev_page,
+						  &(job_pd->text_layout),
+						  &(job_pd->text_layout_length));
 	if ((job_pd->flags & EV_PAGE_DATA_INCLUDE_LINKS) && EV_IS_DOCUMENT_LINKS (job->document))
 		job_pd->link_mapping =
 			ev_document_links_get_links (EV_DOCUMENT_LINKS (job->document), ev_page);

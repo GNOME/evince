@@ -57,6 +57,12 @@ GList             *ev_page_cache_get_annot_mapping      (EvPageCache       *cach
 							 gint               page);
 GdkRegion         *ev_page_cache_get_text_mapping       (EvPageCache       *cache,
 							 gint               page);
+const gchar       *ev_page_cache_get_text               (EvPageCache       *cache,
+							 gint               page);
+gboolean           ev_page_cache_get_text_layout        (EvPageCache       *cache,
+							 gint               page,
+							 EvRectangle      **areas,
+							 guint             *n_areas);
 
 G_END_DECLS
 
