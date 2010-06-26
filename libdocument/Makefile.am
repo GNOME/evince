@@ -25,6 +25,7 @@ INST_H_SRC_FILES = 				\
 	ev-document-security.h			\
 	ev-document-thumbnails.h		\
 	ev-document-transition.h		\
+	ev-document-text.h			\
 	ev-file-exporter.h			\
 	ev-file-helpers.h			\
 	ev-form-field.h				\
@@ -74,6 +75,7 @@ libevdocument_la_SOURCES=			\
 	ev-document-transition.c		\
 	ev-document-forms.c			\
 	ev-document-type-builtins.c		\
+	ev-document-text.c			\
 	ev-form-field.c 			\
 	ev-debug.c				\
 	ev-file-exporter.c			\
