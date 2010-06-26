@@ -18,11 +18,18 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
+#include <math.h>
 #include <config.h>
 #include <glib/gi18n-lib.h>
+#include <gtk/gtk.h>
+#include "gailmisc.h"
+#include "gailtextutil.h"
 
+#include "ev-selection.h"
+#include "ev-page-cache.h"
 #include "ev-view-accessible.h"
 #include "ev-view-private.h"
+#include "ev-mapping.h"
 
 #define EV_TYPE_VIEW_ACCESSIBLE      (ev_view_accessible_get_type ())
 #define EV_VIEW_ACCESSIBLE(obj)      (G_TYPE_CHECK_INSTANCE_CAST ((obj), EV_TYPE_VIEW_ACCESSIBLE, EvViewAccessible))
@@ -35,6 +42,24 @@ enum {
 	ACTION_SCROLL_DOWN,
 	LAST_ACTION
 };
+
+static GtkTextBuffer *
+ev_view_accessible_get_text_buffer (EvView *view)
+{
+  EvPageCache *page_cache;
+  GtkTextBuffer *buffer;
+  const gchar *retval = NULL;
+
+  page_cache = view->page_cache;
+  if (!page_cache) {
+    return NULL;
+  }
+  retval = ev_page_cache_get_text (page_cache, view->current_page);
+  buffer = gtk_text_buffer_new (NULL);
+  gtk_text_buffer_set_text (buffer, retval, -1);
+
+  return buffer;
+}
 
 static const gchar *const ev_view_accessible_action_names[] = 
 {
@@ -88,13 +113,25 @@ ev_view_accessible_get_text (AtkText *text,
                      gint    end_pos)
 {
   GtkWidget *widget;
+  GtkTextIter start, end;
+  GtkTextBuffer *buffer;
+  gchar *retval;
 
   widget = gtk_accessible_get_widget (GTK_ACCESSIBLE (text));
   if (widget == NULL)
     /* State is defunct */
     return NULL;
 
-  return NULL;
+  buffer = ev_view_accessible_get_text_buffer (EV_VIEW (widget));
+  if (!buffer)
+    return NULL;
+
+  gtk_text_buffer_get_iter_at_offset (buffer, &start, start_pos);
+  gtk_text_buffer_get_iter_at_offset (buffer, &end, end_pos);
+  retval = gtk_text_buffer_get_text (buffer, &start, &end, FALSE);
+  g_object_unref (buffer);
+
+  return retval;
 }
 
 static gunichar 
@@ -102,13 +139,32 @@ ev_view_accessible_get_character_at_offset (AtkText *text,
                                     gint     offset)
 {
   GtkWidget *widget;
+  GtkTextIter start, end;
+  GtkTextBuffer *buffer;
+  gchar *string;
+  gunichar unichar;
 
   widget = gtk_accessible_get_widget (GTK_ACCESSIBLE (text));
   if (widget == NULL)
     /* State is defunct */
     return '\0';
 
-  return '\0';
+  buffer = ev_view_accessible_get_text_buffer (EV_VIEW (widget));
+  if (!buffer)
+    return '\0';
+
+  if (offset >= gtk_text_buffer_get_char_count (buffer))
+    return '\0';
+
+  gtk_text_buffer_get_iter_at_offset (buffer, &start, offset);
+  end = start;
+  gtk_text_iter_forward_char (&end);
+  string = gtk_text_buffer_get_slice (buffer, &start, &end, FALSE);
+  unichar = g_utf8_get_char (string);
+  g_free(string);
+  g_object_unref (buffer);
+
+  return unichar;
 }
 
 static gchar*
@@ -119,13 +175,29 @@ ev_view_accessible_get_text_before_offset (AtkText	    *text,
 				   gint		    *end_offset)
 {
   GtkWidget *widget;
+  gpointer layout = NULL;
+  GailTextUtil *gail_text = NULL;
+  gchar *retval = NULL;
+  GtkTextBuffer *buffer;
 
   widget = gtk_accessible_get_widget (GTK_ACCESSIBLE (text));
   if (widget == NULL)
     /* State is defunct */
     return NULL;
 
-  return NULL;
+  buffer = ev_view_accessible_get_text_buffer (EV_VIEW (widget));
+  if (!buffer)
+    return NULL;
+
+  gail_text = gail_text_util_new ();
+  gail_text_util_buffer_setup (gail_text, buffer);
+  retval = gail_text_util_get_text (gail_text, layout,
+                                  GAIL_BEFORE_OFFSET, boundary_type,
+                                  offset, start_offset, end_offset);
+  g_object_unref (gail_text);
+  g_object_unref (buffer);
+
+  return retval;
 }
 
 static gchar*
@@ -136,13 +208,29 @@ ev_view_accessible_get_text_at_offset (AtkText          *text,
                                gint             *end_offset)
 {
   GtkWidget *widget;
+  gpointer layout = NULL;
+  GailTextUtil *gail_text = NULL;
+  gchar *retval = NULL;
+  GtkTextBuffer *buffer;
 
   widget = gtk_accessible_get_widget (GTK_ACCESSIBLE (text));
   if (widget == NULL)
     /* State is defunct */
     return NULL;
 
-  return NULL;
+  buffer = ev_view_accessible_get_text_buffer (EV_VIEW (widget));
+  if (!buffer)
+    return NULL;
+
+  gail_text = gail_text_util_new ();
+  gail_text_util_buffer_setup (gail_text, buffer);
+  retval = gail_text_util_get_text (gail_text, layout,
+                                  GAIL_AT_OFFSET, boundary_type,
+                                  offset, start_offset, end_offset);
+  g_object_unref (gail_text);
+  g_object_unref (buffer);
+
+  return retval;
 }
 
 static gchar*
@@ -153,52 +241,100 @@ ev_view_accessible_get_text_after_offset  (AtkText	    *text,
 				   gint		    *end_offset)
 {
   GtkWidget *widget;
+  gpointer layout = NULL;
+  GailTextUtil *gail_text = NULL;
+  gchar *retval = NULL;
+  GtkTextBuffer *buffer;
 
   widget = gtk_accessible_get_widget (GTK_ACCESSIBLE (text));
   if (widget == NULL)
     /* State is defunct */
     return NULL;
 
-  return NULL;
+  buffer = ev_view_accessible_get_text_buffer (EV_VIEW (widget));
+  if (!buffer)
+    return NULL;
+
+  gail_text = gail_text_util_new ();
+  gail_text_util_buffer_setup (gail_text, buffer);
+  retval = gail_text_util_get_text (gail_text, layout,
+                                  GAIL_AFTER_OFFSET, boundary_type,
+                                  offset, start_offset, end_offset);
+  g_object_unref (gail_text);
+  g_object_unref (buffer);
+
+  return retval;
 }
 
 static gint
 ev_view_accessible_get_character_count (AtkText *text)
 {
   GtkWidget *widget;
+  GtkTextBuffer *buffer;
+  gint retval;
 
   widget = gtk_accessible_get_widget (GTK_ACCESSIBLE (text));
   if (widget == NULL)
     /* State is defunct */
     return 0;
 
-  return 0;
+  buffer = ev_view_accessible_get_text_buffer (EV_VIEW (widget));
+  if (!buffer)
+    return 0;
+
+  retval = gtk_text_buffer_get_char_count (buffer);
+  g_object_unref (buffer);
+
+  return retval;
 }
 
 static gint
 ev_view_accessible_get_caret_offset (AtkText *text)
 {
   GtkWidget *widget;
+  GtkTextBuffer *buffer;
+  GtkTextMark *cursor_mark;
+  GtkTextIter cursor_itr;
+  gint retval;
 
   widget = gtk_accessible_get_widget (GTK_ACCESSIBLE (text));
   if (widget == NULL)
     /* State is defunct */
     return 0;
- 
-  return 0;
+
+  buffer = ev_view_accessible_get_text_buffer (EV_VIEW (widget));
+  if (!buffer)
+    return 0;
+
+  cursor_mark = gtk_text_buffer_get_insert (buffer);
+  gtk_text_buffer_get_iter_at_mark (buffer, &cursor_itr, cursor_mark);
+  retval = gtk_text_iter_get_offset (&cursor_itr);
+  g_object_unref (buffer);
+
+  return retval;
 }
 
 static gboolean
 ev_view_accessible_set_caret_offset (AtkText *text, gint offset)
 {
   GtkWidget *widget;
+  GtkTextBuffer *buffer;
+  GtkTextIter pos_itr;
 
   widget = gtk_accessible_get_widget (GTK_ACCESSIBLE (text));
   if (widget == NULL)
     /* State is defunct */
     return FALSE;
 
-  return FALSE;
+  buffer = ev_view_accessible_get_text_buffer (EV_VIEW (widget));
+  if (!buffer)
+    return FALSE;
+
+  gtk_text_buffer_get_iter_at_offset (buffer,  &pos_itr, offset);
+  gtk_text_buffer_place_cursor (buffer, &pos_itr);
+  g_object_unref (buffer);
+
+  return TRUE;
 }
 
 static AtkAttributeSet*
@@ -208,13 +344,23 @@ ev_view_accessible_get_run_attributes (AtkText *text,
                                gint    *end_offset)
 {
   GtkWidget *widget;
+  GtkTextBuffer *buffer;
+  AtkAttributeSet *retval;
 
   widget = gtk_accessible_get_widget (GTK_ACCESSIBLE (text));
   if (widget == NULL)
     /* State is defunct */
     return NULL;
- 
-  return NULL;
+
+  buffer = ev_view_accessible_get_text_buffer (EV_VIEW (widget));
+  if (!buffer)
+    return NULL;
+
+  retval = gail_misc_buffer_get_run_attributes (buffer, offset,
+						start_offset, end_offset);
+  g_object_unref (buffer);
+
+  return retval;
 }
 
 static AtkAttributeSet*
@@ -226,56 +372,171 @@ ev_view_accessible_get_default_attributes (AtkText *text)
   if (widget == NULL)
     /* State is defunct */
     return NULL;
-
   return NULL;
 }
-  
+
 static void
 ev_view_accessible_get_character_extents (AtkText *text,
-				  gint    offset,
-		                  gint    *x,
-                    		  gint 	  *y,
-                                  gint 	  *width,
-                                  gint 	  *height,
-			          AtkCoordType coords)
+                                          gint    offset,
+                                          gint    *x,
+                                          gint    *y,
+                                          gint    *width,
+                                          gint    *height,
+                                          AtkCoordType coords)
 {
-  GtkWidget *widget;
+  GtkWidget *widget, *toplevel;
+  EvRectangle *areas = NULL;
+  EvRectangle *rect = NULL;
+  guint n_areas = 0;
+  EvPageCache *page_cache;
+  gint x_widget, y_widget, x_window, y_window;
+  gdouble scale;
+  GtkBorder border;
+  GdkRectangle page_area;
 
   widget = gtk_accessible_get_widget (GTK_ACCESSIBLE (text));
   if (widget == NULL)
     /* State is defunct */
     return;
 
-  return;
-} 
+  page_cache = EV_VIEW (widget)->page_cache;
+  if (!page_cache)
+    return;
 
-static gint 
-ev_view_accessible_get_offset_at_point (AtkText *text,
-                                gint x,
-                                gint y,
-			        AtkCoordType coords)
-{ 
-  GtkWidget *widget;
+  ev_view_get_page_extents (EV_VIEW (widget), EV_VIEW (widget)->current_page,
+                            &page_area, &border);
 
-  widget = gtk_accessible_get_widget (GTK_ACCESSIBLE (text));
-  if (widget == NULL)
-    /* State is defunct */
-    return -1;
+  scale = EV_VIEW (widget)->scale;
+  ev_page_cache_get_text_layout (page_cache, EV_VIEW (widget)->current_page, &areas, &n_areas);
+  if (!areas)
+    return;
 
-  return -1;
+  if (offset > n_areas)
+    return;
+
+  rect = areas + offset;
+  *x = (int)(rect->x1 * scale);
+  *y = (int)(rect->y1 * scale);
+
+  *width = (int)(fabs (rect->x2 - rect->x1) * scale);
+  *height = (int)(fabs (rect->y2 - rect->y1) * scale);
+
+  toplevel = gtk_widget_get_toplevel (widget);
+  gtk_widget_translate_coordinates (widget, toplevel, 0, 0, &x_widget, &y_widget);
+  *x += x_widget;
+  *y += y_widget;
+
+  if (coords == ATK_XY_SCREEN)
+  {
+    gdk_window_get_origin (toplevel->window, &x_window, &y_window);
+    *x += x_window;
+    *y += y_window;
+  }
+
+  *x -= EV_VIEW (widget)->scroll_x;
+  *y -= EV_VIEW (widget)->scroll_y;
+
+  *x += page_area.x;
+  *y += page_area.y;
 }
 
 static gint
-ev_view_accessible_get_n_selections (AtkText              *text)
+ev_view_accessible_get_offset_at_point (AtkText *text,
+                                        gint x,
+                                        gint y,
+                                        AtkCoordType coords)
 {
-  GtkWidget *widget;
+  GtkWidget *widget, *toplevel;
+  EvRectangle *areas = NULL;
+  EvRectangle *rect = NULL;
+  guint n_areas = 0;
+  guint i = 0;
+  EvPageCache *page_cache;
+  gint x_window, y_window, x_widget, y_widget;
+  gint offset=-1, rx, ry;
+  gdouble scale;
+  GtkBorder border;
+  GdkRectangle page_area;
 
   widget = gtk_accessible_get_widget (GTK_ACCESSIBLE (text));
   if (widget == NULL)
     /* State is defunct */
     return -1;
-    
-  return -1;
+
+  page_cache = EV_VIEW (widget)->page_cache;
+  if (!page_cache)
+    return -1;
+
+  ev_view_get_page_extents (EV_VIEW (widget), EV_VIEW (widget)->current_page,
+			    &page_area, &border);
+
+  scale = EV_VIEW (widget)->scale;
+  ev_page_cache_get_text_layout (page_cache, EV_VIEW (widget)->current_page, &areas, &n_areas);
+  if (!areas)
+    return -1;
+
+  rx = x;
+  ry = y;
+
+  rx -= page_area.x;
+  ry -= page_area.y;
+
+  rx += EV_VIEW (widget)->scroll_x;
+  ry += EV_VIEW (widget)->scroll_y;
+
+  toplevel = gtk_widget_get_toplevel (widget);
+  gtk_widget_translate_coordinates (widget, toplevel, 0, 0, &x_widget, &y_widget);
+  rx -= x_widget;
+  ry -= y_widget;
+
+  if (coords == ATK_XY_SCREEN)
+  {
+    gdk_window_get_origin (toplevel->window, &x_window, &y_window);
+    rx -= x_window;
+    ry -= y_window;
+  }
+
+  rx /= scale;
+  ry /= scale;
+
+  for (i = 0; i < n_areas; i++)
+  {
+    rect = areas + i;
+    if (rx >= rect->x1 && rx <= rect->x2 &&
+        ry >= rect->y1 && ry <= rect->y2)
+        offset = i;
+  }
+
+  return offset;
+}
+
+static gint
+ev_view_accessible_get_n_selections (AtkText *text)
+{
+  GtkWidget *widget;
+  GtkTextBuffer *buffer;
+  GtkTextIter start, end;
+  gint select_start, select_end;
+
+  widget = gtk_accessible_get_widget (GTK_ACCESSIBLE (text));
+  if (widget == NULL)
+    /* State is defunct */
+    return -1;
+
+  buffer = ev_view_accessible_get_text_buffer (EV_VIEW (widget));
+  if (!buffer)
+    return -1;
+
+  gtk_text_buffer_get_selection_bounds (buffer, &start, &end);
+  select_start = gtk_text_iter_get_offset (&start);
+  select_end = gtk_text_iter_get_offset (&end);
+
+  g_object_unref (buffer);
+
+  if (select_start != select_end)
+     return 1;
+  else
+     return 0;
 }
 
 static gchar*
@@ -285,13 +546,32 @@ ev_view_accessible_get_selection (AtkText *text,
                           gint    *end_pos)
 {
   GtkWidget *widget;
+  GtkTextBuffer *buffer;
+  GtkTextIter start, end;
+  gchar *retval = NULL;
 
   widget = gtk_accessible_get_widget (GTK_ACCESSIBLE (text));
   if (widget == NULL)
     /* State is defunct */
     return NULL;
 
-  return NULL;
+  if (selection_num != 0)
+     return NULL;
+
+  buffer = ev_view_accessible_get_text_buffer (EV_VIEW (widget));
+  if (!buffer)
+    return NULL;
+
+  gtk_text_buffer_get_selection_bounds (buffer, &start, &end);
+  *start_pos = gtk_text_iter_get_offset (&start);
+  *end_pos = gtk_text_iter_get_offset (&end);
+
+  if (*start_pos != *end_pos)
+    retval = gtk_text_buffer_get_text (buffer, &start, &end, FALSE);
+
+  g_object_unref (buffer);
+
+  return retval;
 }
 
 static gboolean
@@ -300,27 +580,81 @@ ev_view_accessible_add_selection (AtkText *text,
                           gint    end_pos)
 {
   GtkWidget *widget;
+  GtkTextBuffer *buffer;
+  GtkTextIter pos_itr;
+  GtkTextIter start, end;
+  gint select_start, select_end;
+  gboolean retval = FALSE;
 
   widget = gtk_accessible_get_widget (GTK_ACCESSIBLE (text));
   if (widget == NULL)
     /* State is defunct */
     return FALSE;
 
-  return FALSE;
+  buffer = ev_view_accessible_get_text_buffer (EV_VIEW (widget));
+  if (!buffer)
+    return FALSE;
+
+  gtk_text_buffer_get_selection_bounds (buffer, &start, &end);
+  select_start = gtk_text_iter_get_offset (&start);
+  select_end = gtk_text_iter_get_offset (&end);
+
+ /* If there is already a selection, then don't allow
+  * another to be added
+  */
+  if (select_start == select_end) {
+    gtk_text_buffer_get_iter_at_offset (buffer,  &pos_itr, start_pos);
+    gtk_text_buffer_move_mark_by_name (buffer, "selection_bound", &pos_itr);
+    gtk_text_buffer_get_iter_at_offset (buffer,  &pos_itr, end_pos);
+    gtk_text_buffer_move_mark_by_name (buffer, "insert", &pos_itr);
+
+    retval = TRUE;
+  }
+
+  g_object_unref (buffer);
+
+  return retval;
 }
 
 static gboolean
 ev_view_accessible_remove_selection (AtkText *text,
-                             gint    selection_num)
+                                     gint     selection_num)
 {
   GtkWidget *widget;
+  GtkTextBuffer *buffer;
+  GtkTextMark *cursor_mark;
+  GtkTextIter cursor_itr;
+  GtkTextIter start, end;
+  gint select_start, select_end;
+  gboolean retval = FALSE;
 
   widget = gtk_accessible_get_widget (GTK_ACCESSIBLE (text));
   if (widget == NULL)
     /* State is defunct */
     return FALSE;
 
-  return FALSE;
+  buffer = ev_view_accessible_get_text_buffer (EV_VIEW (widget));
+  if (!buffer)
+    return FALSE;
+
+  gtk_text_buffer_get_selection_bounds(buffer, &start, &end);
+  select_start = gtk_text_iter_get_offset(&start);
+  select_end = gtk_text_iter_get_offset(&end);
+
+  if (select_start != select_end) {
+   /* Setting the start & end of the selected region
+    * to the caret position turns off the selection.
+    */
+    cursor_mark = gtk_text_buffer_get_insert (buffer);
+    gtk_text_buffer_get_iter_at_mark (buffer, &cursor_itr, cursor_mark);
+    gtk_text_buffer_move_mark_by_name (buffer, "selection_bound", &cursor_itr);
+
+    retval = TRUE;
+  }
+
+  g_object_unref (buffer);
+
+  return retval;
 }
 
 static gboolean
@@ -330,15 +664,38 @@ ev_view_accessible_set_selection (AtkText *text,
                           gint    end_pos)
 {
   GtkWidget *widget;
+  GtkTextBuffer *buffer;
+  GtkTextIter pos_itr;
+  GtkTextIter start, end;
+  gint select_start, select_end;
+  gboolean retval = FALSE;
 
   widget = gtk_accessible_get_widget (GTK_ACCESSIBLE (text));
   if (widget == NULL)
     /* State is defunct */
     return FALSE;
 
-  return FALSE;
-}
+  buffer = ev_view_accessible_get_text_buffer (EV_VIEW (widget));
+  if (!buffer)
+    return FALSE;
 
+  gtk_text_buffer_get_selection_bounds(buffer, &start, &end);
+  select_start = gtk_text_iter_get_offset(&start);
+  select_end = gtk_text_iter_get_offset(&end);
+
+  if (select_start != select_end) {
+    gtk_text_buffer_get_iter_at_offset (buffer,  &pos_itr, start_pos);
+    gtk_text_buffer_move_mark_by_name (buffer, "selection_bound", &pos_itr);
+    gtk_text_buffer_get_iter_at_offset (buffer,  &pos_itr, end_pos);
+    gtk_text_buffer_move_mark_by_name (buffer, "insert", &pos_itr);
+
+    retval = TRUE;
+  }
+
+  g_object_unref (buffer);
+
+  return retval;
+}
 
 static void ev_view_accessible_text_iface_init (AtkTextIface * iface)
 {
