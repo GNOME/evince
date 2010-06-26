@@ -36,6 +36,7 @@
 #include "ev-document-print.h"
 #include "ev-document-annotations.h"
 #include "ev-document-attachments.h"
+#include "ev-document-text.h"
 #include "ev-debug.h"
 
 #include <errno.h>
@@ -593,9 +594,9 @@ ev_job_page_data_run (EvJob *job)
 	ev_document_doc_mutex_lock ();
 	ev_page = ev_document_get_page (job->document, job_pd->page);
 
-	if ((job_pd->flags & EV_PAGE_DATA_INCLUDE_TEXT) && EV_IS_SELECTION (job->document))
+	if ((job_pd->flags & EV_PAGE_DATA_INCLUDE_TEXT) && EV_IS_DOCUMENT_TEXT (job->document))
 		job_pd->text_mapping =
-			ev_selection_get_selection_map (EV_SELECTION (job->document), ev_page);
+			ev_document_text_get_text_mapping (EV_DOCUMENT_TEXT (job->document), ev_page);
 	if ((job_pd->flags & EV_PAGE_DATA_INCLUDE_LINKS) && EV_IS_DOCUMENT_LINKS (job->document))
 		job_pd->link_mapping =
 			ev_document_links_get_links (EV_DOCUMENT_LINKS (job->document), ev_page);

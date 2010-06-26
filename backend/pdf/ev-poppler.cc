@@ -51,6 +51,7 @@
 #include "ev-document-print.h"
 #include "ev-document-annotations.h"
 #include "ev-document-attachments.h"
+#include "ev-document-text.h"
 #include "ev-selection.h"
 #include "ev-transition-effect.h"
 #include "ev-attachment.h"
@@ -126,6 +127,7 @@ static void pdf_document_find_iface_init                 (EvDocumentFindInterfac
 static void pdf_document_file_exporter_iface_init        (EvFileExporterInterface        *iface);
 static void pdf_selection_iface_init                     (EvSelectionInterface           *iface);
 static void pdf_document_page_transition_iface_init      (EvDocumentTransitionInterface  *iface);
+static void pdf_document_text_iface_init                 (EvDocumentTextInterface        *iface);
 static void pdf_document_thumbnails_get_dimensions       (EvDocumentThumbnails           *document_thumbnails,
 							  EvRenderContext                *rc,
 							  gint                           *width,
@@ -172,6 +174,8 @@ EV_BACKEND_REGISTER_WITH_CODE (PdfDocument, pdf_document,
 								 pdf_selection_iface_init);
 				 EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_TRANSITION,
 								 pdf_document_page_transition_iface_init);
+				 EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_TEXT,
+								 pdf_document_text_iface_init);
 			 });
 
 static void
@@ -1962,21 +1966,33 @@ pdf_selection_get_selection_region (EvSelection     *selection,
 	return retval;
 }
 
+static void
+pdf_selection_iface_init (EvSelectionInterface *iface)
+{
+        iface->render_selection = pdf_selection_render_selection;
+	iface->get_selected_text = pdf_selection_get_selected_text;
+        iface->get_selection_region = pdf_selection_get_selection_region;
+}
+
+
+/* EvDocumentText */
 static GdkRegion *
-pdf_selection_get_selection_map (EvSelection *selection,
-				 EvPage      *page)
+pdf_document_text_get_text_mapping (EvDocumentText *document_text,
+				    EvPage         *page)
 {
 	PopplerPage *poppler_page;
 	PopplerRectangle points;
 	GList *region;
 	GdkRegion *retval;
 
+	g_return_val_if_fail (POPPLER_IS_PAGE (page->backend_page), NULL);
+
 	poppler_page = POPPLER_PAGE (page->backend_page);
 
 	points.x1 = 0.0;
 	points.y1 = 0.0;
 	poppler_page_get_size (poppler_page, &(points.x2), &(points.y2));
-	
+
 	region = poppler_page_get_selection_region (poppler_page, 1.0,
 						    POPPLER_SELECTION_GLYPH,
 						    &points);
@@ -1986,13 +2002,49 @@ pdf_selection_get_selection_map (EvSelection *selection,
 	return retval;
 }
 
-static void
-pdf_selection_iface_init (EvSelectionInterface *iface)
+static gchar *
+pdf_document_text_get_text (EvDocumentText  *selection,
+			    EvPage          *page)
 {
-        iface->render_selection = pdf_selection_render_selection;
-	iface->get_selected_text = pdf_selection_get_selected_text;
-        iface->get_selection_region = pdf_selection_get_selection_region;
-        iface->get_selection_map = pdf_selection_get_selection_map;
+	PopplerPage *poppler_page;
+	PopplerRectangle r;
+
+	g_return_val_if_fail (POPPLER_IS_PAGE (page->backend_page), NULL);
+
+	poppler_page = POPPLER_PAGE (page->backend_page);
+
+	r.x1 = 0;
+	r.y1 = 0;
+	poppler_page_get_size (poppler_page, &(r.x2), &(r.y2));
+
+	return poppler_page_get_text (poppler_page,
+				      POPPLER_SELECTION_WORD,
+				      &r);
+}
+
+static gboolean
+pdf_document_text_get_text_layout (EvDocumentText  *selection,
+				   EvPage          *page,
+				   EvRectangle    **areas,
+				   guint           *n_areas)
+{
+	PopplerPage *poppler_page;
+
+	g_return_val_if_fail (POPPLER_IS_PAGE (page->backend_page), NULL);
+
+	poppler_page = POPPLER_PAGE (page->backend_page);
+
+	return poppler_page_get_text_layout (poppler_page, (PopplerRectangle **)areas, n_areas);
+}
+
+static void
+pdf_document_text_iface_init (EvDocumentTextInterface *iface)
+{
+        iface->get_text_mapping = pdf_document_text_get_text_mapping;
+        iface->get_text = pdf_document_text_get_text;
+#ifdef HAVE_POPPLER_PAGE_GET_TEXT_LAYOUT
+        iface->get_text_layout = pdf_document_text_get_text_layout;
+#endif
 }
 
 /* Page Transitions */

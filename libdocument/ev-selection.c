@@ -75,15 +75,3 @@ ev_selection_get_selection_region (EvSelection     *selection,
 	
 	return iface->get_selection_region (selection, rc, style, points);
 }
-
-GdkRegion *
-ev_selection_get_selection_map (EvSelection *selection,
-				EvPage      *page)
-{
-	EvSelectionInterface *iface = EV_SELECTION_GET_IFACE (selection);
-
-	if (!iface->get_selection_map)
-		return NULL;
-
-	return iface->get_selection_map (selection, page);
-}

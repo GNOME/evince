@@ -64,8 +64,6 @@ struct _EvSelectionInterface
 					      EvPage           *page,
 					      EvSelectionStyle  style,
 					      EvRectangle      *points);
-	GdkRegion * (* get_selection_map)    (EvSelection      *selection,
-					      EvPage           *page);
 	GdkRegion * (* get_selection_region) (EvSelection      *selection,
 					      EvRenderContext  *rc,
 					      EvSelectionStyle  style,
@@ -85,13 +83,11 @@ gchar     *ev_selection_get_selected_text    (EvSelection      *selection,
 					      EvPage           *page,
 					      EvSelectionStyle  style,
 					      EvRectangle      *points);
-GdkRegion *ev_selection_get_selection_map    (EvSelection      *selection,
-					      EvPage           *page);
 GdkRegion *ev_selection_get_selection_region (EvSelection      *selection,
 					      EvRenderContext  *rc,
 					      EvSelectionStyle  style,
 					      EvRectangle      *points);
-				  
+
 G_END_DECLS
 
 #endif
