@@ -798,6 +798,12 @@ pdf_document_get_backend_info (EvDocument *document, EvDocumentBackendInfo *info
 	return TRUE;
 }
 
+static gboolean
+pdf_document_support_synctex (EvDocument *document)
+{
+	return TRUE;
+}
+
 static void
 pdf_document_class_init (PdfDocumentClass *klass)
 {
@@ -815,6 +821,7 @@ pdf_document_class_init (PdfDocumentClass *klass)
 	ev_document_class->render = pdf_document_render;
 	ev_document_class->get_info = pdf_document_get_info;
 	ev_document_class->get_backend_info = pdf_document_get_backend_info;
+	ev_document_class->support_synctex = pdf_document_support_synctex;
 }
 
 /* EvDocumentSecurity */
