@@ -25,6 +25,7 @@
 #include <string.h>
 
 #include "ev-document.h"
+#include "synctex_parser.h"
 
 #define EV_DOCUMENT_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), EV_TYPE_DOCUMENT, EvDocumentPrivate))
 
@@ -53,16 +54,19 @@ struct _EvDocumentPrivate
 	gchar         **page_labels;
 	EvPageSize     *page_sizes;
 	EvDocumentInfo *info;
+
+	synctex_scanner_t synctex_scanner;
 };
 
-static gint            _ev_document_get_n_pages   (EvDocument  *document);
-static void            _ev_document_get_page_size (EvDocument *document,
-						   EvPage     *page,
-						   double     *width,
-						   double     *height);
-static gchar          *_ev_document_get_page_label (EvDocument *document,
-						    EvPage     *page);
-static EvDocumentInfo *_ev_document_get_info       (EvDocument *document);
+static gint            _ev_document_get_n_pages     (EvDocument *document);
+static void            _ev_document_get_page_size   (EvDocument *document,
+						     EvPage     *page,
+						     double     *width,
+						     double     *height);
+static gchar          *_ev_document_get_page_label  (EvDocument *document,
+						     EvPage     *page);
+static EvDocumentInfo *_ev_document_get_info        (EvDocument *document);
+static gboolean        _ev_document_support_synctex (EvDocument *document);
 
 GMutex *ev_doc_mutex = NULL;
 GMutex *ev_fc_mutex = NULL;
@@ -120,6 +124,11 @@ ev_document_finalize (GObject *object)
 	if (document->priv->info) {
 		ev_document_info_free (document->priv->info);
 		document->priv->info = NULL;
+	}
+
+	if (document->priv->synctex_scanner) {
+		synctex_scanner_free (document->priv->synctex_scanner);
+		document->priv->synctex_scanner = NULL;
 	}
 
 	G_OBJECT_CLASS (ev_document_parent_class)->finalize (object);
@@ -314,6 +323,16 @@ ev_document_load (EvDocument  *document,
 		}
 
 		priv->info = _ev_document_get_info (document);
+		if (_ev_document_support_synctex (document)) {
+			gchar *filename;
+
+			filename = g_filename_from_uri (uri, NULL, NULL);
+			if (filename != NULL) {
+				priv->synctex_scanner =
+					synctex_scanner_new_with_output_file (filename, NULL, 1);
+				g_free (filename);
+			}
+		}
 	}
 
 	return retval;
@@ -346,6 +365,119 @@ ev_document_get_page (EvDocument *document,
 	EvDocumentClass *klass = EV_DOCUMENT_GET_CLASS (document);
 
 	return klass->get_page (document, index);
+}
+
+static gboolean
+_ev_document_support_synctex (EvDocument *document)
+{
+	EvDocumentClass *klass = EV_DOCUMENT_GET_CLASS (document);
+
+	return klass->support_synctex ? klass->support_synctex (document) : FALSE;
+}
+
+gboolean
+ev_document_has_synctex (EvDocument *document)
+{
+	g_return_val_if_fail (EV_IS_DOCUMENT (document), FALSE);
+
+	return document->priv->synctex_scanner != NULL;
+}
+
+/**
+ * ev_document_synctex_backward_search:
+ * @document:
+ * @page: the target page
+ * @x:
+ * @y:
+ *
+ * Peforms a Synctex backward search to obtain the TeX input file, line and
+ * (possibly) column  corresponding to the  position (@x,@y) (in 72dpi
+ * coordinates) in the  @page of @document.
+ *
+ * Returns: A pointer to the EvSourceLink structure that holds the result. @NULL if synctex
+ * is not enabled for the document or no result is found.
+ * The EvSourceLink pointer should be freed with g_free after it is used.
+ */
+EvSourceLink *
+ev_document_synctex_backward_search (EvDocument *document,
+                                     gint        page_index,
+                                     gfloat      x,
+                                     gfloat      y)
+{
+        EvSourceLink *result = NULL;
+        synctex_scanner_t scanner;
+
+        g_return_val_if_fail (EV_IS_DOCUMENT (document), NULL);
+
+        scanner = document->priv->synctex_scanner;
+        if (!scanner)
+                return NULL;
+
+        if (synctex_edit_query (scanner, page_index + 1, x, y) > 0) {
+                synctex_node_t node;
+
+                /* We assume that a backward search returns either zero or one result_node */
+                node = synctex_next_result (scanner);
+                if (node != NULL) {
+                        result = g_new (EvSourceLink, 1);
+                        result->filename = synctex_scanner_get_name (scanner,
+                                                                     synctex_node_tag (node));
+                        result->line = synctex_node_line (node);
+                        result->col = synctex_node_column (node);
+                }
+        }
+
+        return result;
+}
+
+/**
+ * ev_document_synctex_forward_search:
+ * @document:
+ * @filename: the source filename
+ * @line: line number in the source file
+ * @col: column number in the source file
+ *
+ * Peforms a Synctex forward search to obtain the area in the document
+ * corresponding to the position @line and @column number in the source Tex file
+ *
+ * Returns: An EvMapping with the page number and area corresponfing to
+ * the given line in the source file. It must be free with g_free when done
+ */
+EvMapping *
+ev_document_synctex_forward_search (EvDocument  *document,
+                                    const gchar *filename,
+                                    gint         line,
+                                    gint         col)
+{
+        EvMapping        *result = NULL;
+        synctex_scanner_t scanner;
+
+        g_return_val_if_fail (EV_IS_DOCUMENT (document), NULL);
+
+        scanner = document->priv->synctex_scanner;
+        if (!scanner)
+                return NULL;
+
+        if (synctex_display_query (scanner, filename, line, col) > 0) {
+                synctex_node_t node;
+                gint           page;
+
+                if ((node = synctex_next_result (scanner))) {
+                        result = g_new (EvMapping, 1);
+
+                        page = synctex_node_page (node) - 1;
+                        result->data = GINT_TO_POINTER (page);
+
+                        result->area.x1 = synctex_node_box_visible_h (node);
+                        result->area.y1 = synctex_node_box_visible_v (node) -
+                                synctex_node_box_visible_height (node);
+                        result->area.x2 = synctex_node_box_visible_width (node) + result->area.x1;
+                        result->area.y2 = synctex_node_box_visible_depth (node) +
+                                synctex_node_box_visible_height (node) + result->area.y1;
+                }
+        }
+
+        return result;
 }
 
 static gint

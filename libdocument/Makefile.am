@@ -100,9 +100,10 @@ libevdocument_la_CPPFLAGS = \
 	$(AM_CPPFLAGS)
 
 libevdocument_la_CFLAGS = \
-	$(LIBDOCUMENT_CFLAGS)	\
-	$(WARN_CFLAGS)		\
-	$(DISABLE_DEPRECATED)	\
+	$(LIBDOCUMENT_CFLAGS)			\
+	-I$(top_srcdir)/cut-n-paste/synctex	\
+	$(WARN_CFLAGS)				\
+	$(DISABLE_DEPRECATED)			\
 	$(AM_CFLAGS)
 
 libevdocument_la_LDFLAGS = \
@@ -111,7 +112,10 @@ libevdocument_la_LDFLAGS = \
 	-export-symbols-regex "^ev_*"	\
 	$(AM_LDFLAGS)
 
-libevdocument_la_LIBADD = $(LIBDOCUMENT_LIBS)
+libevdocument_la_LIBADD = \
+	$(LIBDOCUMENT_LIBS)	\
+	$(top_builddir)/cut-n-paste/synctex/libsynctex.la
+
 
 BUILT_SOURCES = 			\
 	ev-document-type-builtins.c	\

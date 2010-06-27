@@ -29,13 +29,6 @@
 
 G_BEGIN_DECLS
 
-typedef struct _EvMapping EvMapping;
-
-struct _EvMapping {
-	EvRectangle area;
-	gpointer    data;
-};
-
 EvMapping *ev_mapping_list_find        (GList         *mapping_list,
 					gconstpointer  data);
 EvMapping *ev_mapping_list_find_custom (GList         *mapping_list,

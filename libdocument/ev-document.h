@@ -65,6 +65,7 @@ typedef struct {
 } EvPoint;
 
 typedef struct _EvRectangle EvRectangle;
+typedef struct _EvMapping EvMapping;
 
 typedef struct _EvDocumentBackendInfo EvDocumentBackendInfo;
 struct _EvDocumentBackendInfo
@@ -72,6 +73,12 @@ struct _EvDocumentBackendInfo
 	const gchar *name;
 	const gchar *version;
 };
+
+typedef struct {
+	const gchar *filename;
+	gint         line;
+	gint         col;
+} EvSourceLink;
 
 struct _EvDocument
 {
@@ -105,6 +112,7 @@ struct _EvDocumentClass
         EvDocumentInfo  * (* get_info)        (EvDocument      *document);
         gboolean          (* get_backend_info)(EvDocument      *document,
                                                EvDocumentBackendInfo *info);
+        gboolean	  (* support_synctex) (EvDocument      *document);
 };
 
 GType            ev_document_get_type             (void) G_GNUC_CONST;
@@ -157,6 +165,19 @@ gboolean         ev_document_has_text_page_labels (EvDocument      *document);
 gboolean         ev_document_find_page_by_label   (EvDocument      *document,
 						   const gchar     *page_label,
 						   gint            *page_index);
+gboolean	 ev_document_has_synctex 	  (EvDocument      *document);
+
+EvSourceLink    *ev_document_synctex_backward_search
+                                                  (EvDocument      *document,
+                                                   gint             page_index,
+                                                   gfloat           x,
+                                                   gfloat           y);
+
+EvMapping       *ev_document_synctex_forward_search
+                                                  (EvDocument      *document,
+                                                   const gchar     *filename,
+                                                   gint             line,
+                                                   gint             col);
 
 gint             ev_rect_cmp                      (EvRectangle     *a,
 					           EvRectangle     *b);
@@ -174,6 +195,11 @@ GType        ev_rectangle_get_type (void) G_GNUC_CONST;
 EvRectangle *ev_rectangle_new      (void);
 EvRectangle *ev_rectangle_copy     (EvRectangle *ev_rect);
 void         ev_rectangle_free     (EvRectangle *ev_rect);
+
+struct _EvMapping {
+	EvRectangle area;
+	gpointer    data;
+};
 
 /* convenience macro to ease interface addition in the CODE
  * section of EV_BACKEND_REGISTER_WITH_CODE (this macro relies on
