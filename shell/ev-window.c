@@ -212,6 +212,11 @@ struct _EvWindowPrivate {
 #ifdef WITH_GCONF
 	GConfClient *gconf_client;
 #endif
+#ifdef ENABLE_DBUS
+	/* DBus */
+	guint  dbus_object_id;
+	gchar *dbus_object_path;
+#endif
 };
 
 #define EV_WINDOW_GET_PRIVATE(object) \
@@ -227,6 +232,11 @@ struct _EvWindowPrivate {
 #define GCONF_LOCKDOWN_SAVE         "/desktop/gnome/lockdown/disable_save_to_disk"
 #define GCONF_LOCKDOWN_PRINT        "/desktop/gnome/lockdown/disable_printing"
 #define GCONF_LOCKDOWN_PRINT_SETUP  "/desktop/gnome/lockdown/disable_print_setup"
+
+#ifdef ENABLE_DBUS
+#define EV_WINDOW_DBUS_OBJECT_PATH "/org/gnome/evince/Window/%d"
+#define EV_WINDOW_DBUS_INTERFACE   "org.gnome.evince.Window"
+#endif
 
 #define GS_SCHEMA_NAME           "org.gnome.Evince"
 #define GS_OVERRIDE_RESTRICTIONS "override-restrictions"
@@ -4854,6 +4864,19 @@ ev_window_dispose (GObject *object)
 						      window);
 	}
 
+#ifdef ENABLE_DBUS
+	if (priv->dbus_object_id > 0) {
+		g_dbus_connection_unregister_object (ev_application_get_dbus_connection (EV_APP),
+						     priv->dbus_object_id);
+		priv->dbus_object_id = 0;
+	}
+
+	if (priv->dbus_object_path) {
+		g_free (priv->dbus_object_path);
+		priv->dbus_object_path = NULL;
+	}
+#endif /* ENABLE_DBUS */
+
 	if (priv->metadata) {
 		g_object_unref (priv->metadata);
 		priv->metadata = NULL;
@@ -6171,6 +6194,87 @@ get_toolbars_model (void)
 	return toolbars_model;
 }
 
+#ifdef ENABLE_DBUS
+static void
+ev_window_sync_source (EvWindow     *window,
+		       EvSourceLink *link)
+{
+	GDBusConnection *connection;
+	GError          *error = NULL;
+
+	if (window->priv->dbus_object_id <= 0)
+		return;
+
+	connection = ev_application_get_dbus_connection (EV_APP);
+	if (!connection)
+		return;
+
+	g_dbus_connection_emit_signal (connection,
+				       NULL,
+				       window->priv->dbus_object_path,
+				       EV_WINDOW_DBUS_INTERFACE,
+				       "SyncSource",
+				       g_variant_new ("(s(ii))",
+						      link->filename,
+						      link->line,
+						      link->col),
+				       &error);
+	if (error) {
+		g_printerr ("Failed to emit DBus signal SyncSource: %s\n",
+			    error->message);
+		g_error_free (error);
+	}
+}
+
+static void
+method_call_cb (GDBusConnection       *connection,
+                const gchar           *sender,
+                const gchar           *object_path,
+                const gchar           *interface_name,
+                const gchar           *method_name,
+                GVariant              *parameters,
+                GDBusMethodInvocation *invocation,
+                gpointer               user_data)
+{
+        EvWindow *window = EV_WINDOW (user_data);
+
+        if (g_strcmp0 (method_name, "SyncView") != 0)
+                return;
+
+	if (window->priv->document && ev_document_has_synctex (window->priv->document)) {
+		EvSourceLink link;
+
+		g_variant_get (parameters, "(&s(ii))", &link.filename, &link.line, &link.col);
+		ev_view_highlight_forward_search (EV_VIEW (window->priv->view), &link);
+		gtk_window_present (GTK_WINDOW (window));
+	}
+
+	g_dbus_method_invocation_return_value (invocation, g_variant_new ("()"));
+}
+
+static const char introspection_xml[] =
+        "<node>"
+          "<interface name='org.gnome.evince.Window'>"
+            "<method name='SyncView'>"
+              "<arg type='s' name='source_file' direction='in'/>"
+              "<arg type='(ii)' name='source_point' direction='in'/>"
+            "</method>"
+	    "<signal name='SyncSource'>"
+	      "<arg type='s' name='source_file' direction='out'/>"
+	      "<arg type='(ii)' name='source_point' direction='out'/>"
+	    "</signal>"
+          "</interface>"
+        "</node>";
+
+static const GDBusInterfaceVTable interface_vtable = {
+	method_call_cb,
+	NULL,
+	NULL
+};
+
+static GDBusNodeInfo *introspection_data;
+#endif /* ENABLE_DBUS */
+
 static void
 ev_window_init (EvWindow *ev_window)
 {
@@ -6182,6 +6286,10 @@ ev_window_init (EvWindow *ev_window)
 	EggToolbarsModel *toolbars_model;
 	GObject *mpkeys;
 	gchar *ui_path;
+#ifdef ENABLE_DBUS
+	GDBusConnection *connection;
+	static gint window_id = 0;
+#endif
 
 	g_signal_connect (ev_window, "configure_event",
 			  G_CALLBACK (window_configure_event_cb), NULL);
@@ -6189,6 +6297,35 @@ ev_window_init (EvWindow *ev_window)
 			  G_CALLBACK (window_state_event_cb), NULL);
 
 	ev_window->priv = EV_WINDOW_GET_PRIVATE (ev_window);
+
+#ifdef ENABLE_DBUS
+	connection = ev_application_get_dbus_connection (EV_APP);
+        if (connection) {
+		if (!introspection_data) {
+			introspection_data = g_dbus_node_info_new_for_xml (introspection_xml, &error);
+			if (error) g_warning ("%s\n", error->message);
+		}
+                g_assert (introspection_data != NULL);
+
+		ev_window->priv->dbus_object_path = g_strdup_printf (EV_WINDOW_DBUS_OBJECT_PATH, window_id++);
+                ev_window->priv->dbus_object_id =
+                    g_dbus_connection_register_object (connection,
+                                                       ev_window->priv->dbus_object_path,
+                                                       introspection_data->interfaces[0],
+                                                       &interface_vtable,
+                                                       ev_window, NULL,
+                                                       &error);
+                if (ev_window->priv->dbus_object_id == 0) {
+                        g_printerr ("Failed to register bus object %s: %s\n",
+				    ev_window->priv->dbus_object_path, error->message);
+                        g_error_free (error);
+			g_free (ev_window->priv->dbus_object_path);
+			ev_window->priv->dbus_object_path = NULL;
+			error = NULL;
+                }
+        }
+
+#endif /* ENABLE_DBUS */
 
 	ev_window->priv->model = ev_document_model_new ();
 
@@ -6393,6 +6530,11 @@ ev_window_init (EvWindow *ev_window)
 	g_signal_connect_object (ev_window->priv->view, "selection-changed",
 				 G_CALLBACK (view_selection_changed_cb),
 				 ev_window, 0);
+#ifdef ENABLE_DBUS
+	g_signal_connect_swapped (ev_window->priv->view, "sync-source",
+				  G_CALLBACK (ev_window_sync_source),
+				  ev_window);
+#endif
 	gtk_widget_show (ev_window->priv->view);
 	gtk_widget_show (ev_window->priv->password_view);
 
@@ -6549,3 +6691,4 @@ ev_window_new (void)
 
 	return ev_window;
 }
+
