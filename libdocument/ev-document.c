@@ -433,9 +433,7 @@ ev_document_synctex_backward_search (EvDocument *document,
 /**
  * ev_document_synctex_forward_search:
  * @document:
- * @filename: the source filename
- * @line: line number in the source file
- * @col: column number in the source file
+ * @source_link:
  *
  * Peforms a Synctex forward search to obtain the area in the document
  * corresponding to the position @line and @column number in the source Tex file
@@ -444,10 +442,8 @@ ev_document_synctex_backward_search (EvDocument *document,
  * the given line in the source file. It must be free with g_free when done
  */
 EvMapping *
-ev_document_synctex_forward_search (EvDocument  *document,
-                                    const gchar *filename,
-                                    gint         line,
-                                    gint         col)
+ev_document_synctex_forward_search (EvDocument   *document,
+				    EvSourceLink *link)
 {
         EvMapping        *result = NULL;
         synctex_scanner_t scanner;
@@ -458,7 +454,7 @@ ev_document_synctex_forward_search (EvDocument  *document,
         if (!scanner)
                 return NULL;
 
-        if (synctex_display_query (scanner, filename, line, col) > 0) {
+        if (synctex_display_query (scanner, link->filename, link->line, link->col) > 0) {
                 synctex_node_t node;
                 gint           page;
 

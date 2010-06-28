@@ -175,9 +175,7 @@ EvSourceLink    *ev_document_synctex_backward_search
 
 EvMapping       *ev_document_synctex_forward_search
                                                   (EvDocument      *document,
-                                                   const gchar     *filename,
-                                                   gint             line,
-                                                   gint             col);
+						   EvSourceLink    *source_link);
 
 gint             ev_rect_cmp                      (EvRectangle     *a,
 					           EvRectangle     *b);
