@@ -376,9 +376,9 @@ ev_register_doc_data_free (EvRegisterDocData *data)
 }
 
 static void
-on_open_uri_cb (GObject      *source_object,
-		GAsyncResult *res,
-		gpointer      user_data)
+on_reload_cb (GObject      *source_object,
+	      GAsyncResult *res,
+	      gpointer      user_data)
 {
 	GDBusConnection *connection = G_DBUS_CONNECTION (source_object);
 	GVariant        *value;
@@ -386,7 +386,7 @@ on_open_uri_cb (GObject      *source_object,
 
 	value = g_dbus_connection_call_finish (connection, res, &error);
 	if (!value) {
-		g_warning ("Failed to OpenURI: %s", error->message);
+		g_warning ("Failed to Reload: %s", error->message);
 		g_error_free (error);
 	}
 	g_variant_unref (value);
@@ -447,9 +447,7 @@ on_register_uri_cb (GObject      *source_object,
         }
 
 	/* Already registered */
-	g_variant_builder_init (&builder, G_VARIANT_TYPE ("(sa{sv}u)"));
-        g_variant_builder_add (&builder, "s", data->uri);
-
+	g_variant_builder_init (&builder, G_VARIANT_TYPE ("(a{sv}u)"));
         g_variant_builder_open (&builder, G_VARIANT_TYPE ("a{sv}"));
         g_variant_builder_add (&builder, "{sv}",
                                "display",
@@ -480,13 +478,13 @@ on_register_uri_cb (GObject      *source_object,
 				owner,
 				APPLICATION_DBUS_OBJECT_PATH,
 				APPLICATION_DBUS_INTERFACE,
-				"OpenURI",
+				"Reload",
 				g_variant_builder_end (&builder),
 				NULL,
 				G_DBUS_CALL_FLAGS_NONE,
 				-1,
 				NULL,
-				on_open_uri_cb,
+				on_reload_cb,
 				NULL);
 	g_variant_unref (value);
 	ev_register_doc_data_free (data);
@@ -682,7 +680,7 @@ ev_application_open_uri_at_dest (EvApplication  *application,
 	}
 
 #ifdef ENABLE_DBUS
-	/* Register the uri or send OpenURI to
+	/* Register the uri or send Reload to
 	 * remote instance if already registered
 	 */
 	ev_application_register_uri (application, uri, screen, dest, mode, search_string, timestamp);
@@ -742,7 +740,6 @@ method_call_cb (GDBusConnection       *connection,
 {
         EvApplication   *application = EV_APPLICATION (user_data);
 	GList           *windows, *l;
-        const gchar     *uri;
         guint            timestamp;
         GVariantIter    *iter;
         const gchar     *key;
@@ -754,24 +751,10 @@ method_call_cb (GDBusConnection       *connection,
 	const gchar     *search_string = NULL;
 	GdkScreen       *screen = NULL;
 
-        if (g_strcmp0 (method_name, "OpenURI") != 0)
+        if (g_strcmp0 (method_name, "Reload") != 0)
                 return;
 
-        g_variant_get (parameters, "(&sa{sv}u)", &uri, &iter, &timestamp);
-
-	/* FIXME: we don't need uri anymore,
-	 * maybe this method should be renamed
-	 * as reload, refresh or something like that
-	 */
-	if (g_strcmp0 (application->uri, uri) != 0) {
-                g_dbus_method_invocation_return_error (invocation,
-                                                       G_DBUS_ERROR,
-                                                       G_DBUS_ERROR_INVALID_ARGS,
-                                                       "Unexpected URI \"%s\"",
-                                                       uri);
-                g_variant_iter_free (iter);
-		return;
-	}
+        g_variant_get (parameters, "(a{sv}u)", &iter, &timestamp);
 
         while (g_variant_iter_loop (iter, "{&sv}", &key, &value)) {
                 if (strcmp (key, "display") == 0 && g_variant_classify (value) == G_VARIANT_CLASS_STRING) {
@@ -799,7 +782,8 @@ method_call_cb (GDBusConnection       *connection,
 	for (l = windows; l != NULL; l = g_list_next (l)) {
 		EvWindow *ev_window = EV_WINDOW (l->data);
 
-		ev_application_open_uri_in_window (application, uri, ev_window,
+		ev_application_open_uri_in_window (application, application->uri,
+						   ev_window,
 						   screen, dest, mode,
 						   search_string,
 						   timestamp);
@@ -815,8 +799,7 @@ method_call_cb (GDBusConnection       *connection,
 static const char introspection_xml[] =
         "<node>"
           "<interface name='org.gnome.evince.Application'>"
-            "<method name='OpenURI'>"
-              "<arg type='s' name='uri' direction='in'/>"
+            "<method name='Reload'>"
               "<arg type='a{sv}' name='args' direction='in'/>"
               "<arg type='u' name='timestamp' direction='in'/>"
             "</method>"
