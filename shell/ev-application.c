@@ -49,9 +49,6 @@
 #include "ev-media-player-keys.h"
 #endif /* ENABLE_DBUS */
 
-#ifdef ENABLE_DBUS
-#endif
-
 struct _EvApplication {
 	GObject base_instance;
 
@@ -936,6 +933,10 @@ ev_application_shutdown (EvApplication *application)
                 g_object_unref (application->connection);
                 application->connection = NULL;
         }
+	if (introspection_data) {
+		g_dbus_node_info_ref (introspection_data);
+		introspection_data = NULL;
+	}
 #endif /* ENABLE_DBUS */
 	
         g_free (application->dot_dir);
