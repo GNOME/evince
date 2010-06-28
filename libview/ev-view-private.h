@@ -184,6 +184,9 @@ struct _EvView {
 	/* Annotations */
 	GList             *window_children;
 	EvViewWindowChild *window_child_focus;
+
+	/* Synctex */
+	EvMapping *synctex_result;
 };
 
 struct _EvViewClass {
@@ -199,6 +202,8 @@ struct _EvViewClass {
 	void    (*popup_menu)		  (EvView         *view,
 					   GList          *items);
 	void    (*selection_changed)      (EvView         *view);
+	void    (*sync_source)            (EvView         *view,
+					   EvSourceLink   *link);
 };
 
 void _get_page_size_for_scale_and_rotation (EvDocument *document,

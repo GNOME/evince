@@ -79,6 +79,10 @@ void            ev_view_find_changed              (EvView         *view,
 						   gint            page);
 void            ev_view_find_cancel               (EvView         *view);
 
+/* Synctex */
+void            ev_view_highlight_forward_search (EvView       *view,
+						  EvSourceLink *link);
+
 /* Cursor */
 void           ev_view_hide_cursor        (EvView         *view);
 void           ev_view_show_cursor        (EvView         *view);

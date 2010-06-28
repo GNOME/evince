@@ -54,6 +54,7 @@ enum {
 	SIGNAL_EXTERNAL_LINK,
 	SIGNAL_POPUP_MENU,
 	SIGNAL_SELECTION_CHANGED,
+	SIGNAL_SYNC_SOURCE,
 	N_SIGNALS
 };
 
@@ -175,6 +176,8 @@ static AtkObject *ev_view_get_accessible                     (GtkWidget *widget)
 /*** Drawing ***/
 static void       highlight_find_results                     (EvView             *view,
 							      int                 page);
+static void       highlight_forward_search_results           (EvView             *view,
+							      int                 page);
 static void       draw_one_page                              (EvView             *view,
 							      gint                page,
 							      cairo_t            *cr,
@@ -253,7 +256,6 @@ static void       jump_to_find_result                        (EvView            
 static void       jump_to_find_page                          (EvView             *view, 
 							      EvViewFindDirection direction,
 							      gint                shift);
-
 /*** Selection ***/
 static void       compute_selections                         (EvView             *view,
 							      EvSelectionStyle    style,
@@ -2735,6 +2737,32 @@ ev_view_handle_annotation (EvView       *view,
 	}
 }
 
+static gboolean
+ev_view_synctex_backward_search (EvView *view,
+				 gdouble x,
+				 gdouble y)
+{
+	gint page = -1;
+	gint x_new = 0, y_new = 0;
+	EvSourceLink *link;
+
+	if (!ev_document_has_synctex (view->document))
+		return FALSE;
+
+	if (!get_doc_point_from_location (view, x, y, &page, &x_new, &y_new))
+		return FALSE;
+
+	link = ev_document_synctex_backward_search (view->document, page, x_new, y_new);
+	if (link) {
+		g_signal_emit (view, signals[SIGNAL_SYNC_SOURCE], 0, link);
+		g_free (link);
+
+		return TRUE;
+	}
+
+	return FALSE;
+}
+
 /*** GtkWidget implementation ***/
 
 static void
@@ -3138,6 +3166,8 @@ ev_view_expose_event (GtkWidget      *widget,
 			highlight_find_results (view, i);
 		if (page_ready && EV_IS_DOCUMENT_ANNOTATIONS (view->document))
 			show_annotation_windows (view, i);
+		if (page_ready && view->synctex_result)
+			highlight_forward_search_results (view, i);
 	}
 
 	cairo_destroy (cr);
@@ -3334,6 +3364,9 @@ ev_view_button_press_event (GtkWidget      *widget,
 			EvAnnotation *annot;
 			EvFormField *field;
 
+			if (event->state & GDK_CONTROL_MASK)
+				return ev_view_synctex_backward_search (view, event->x , event->y);
+
 			if (EV_IS_SELECTION (view->document) && view->selection_info.selections) {
 				if (event->type == GDK_3BUTTON_PRESS) {
 					start_selection_for_event (view, event);
@@ -3362,7 +3395,13 @@ ev_view_button_press_event (GtkWidget      *widget,
 				view->image_dnd_info.start.y = event->y + view->scroll_y;
 			} else {
 				ev_view_remove_all (view);
-				
+
+				if (view->synctex_result) {
+					g_free (view->synctex_result);
+					view->synctex_result = NULL;
+					gtk_widget_queue_draw (widget);
+				}
+
 				if (EV_IS_SELECTION (view->document))
 					start_selection_for_event (view, event);
 			}
@@ -3981,6 +4020,30 @@ highlight_find_results (EvView *view, int page)
 }
 
 static void
+highlight_forward_search_results (EvView *view, int page)
+{
+	GdkWindow   *bin_window;
+	GdkRectangle rect;
+	cairo_t     *cr;
+	EvMapping   *mapping = view->synctex_result;
+
+	if (GPOINTER_TO_INT (mapping->data) != page)
+		return;
+
+	bin_window = gtk_layout_get_bin_window (GTK_LAYOUT (view));
+	doc_rect_to_view_rect (view, page, &mapping->area, &rect);
+
+	cr = gdk_cairo_create (bin_window);
+	cairo_set_source_rgb (cr, 1., 0., 0.);
+	cairo_rectangle (cr,
+			 rect.x - view->scroll_x,
+			 rect.y - view->scroll_y,
+			 rect.width, rect.height);
+	cairo_stroke (cr);
+	cairo_destroy (cr);
+}
+
+static void
 ev_view_loading_window_move (EvView *view)
 {
 	GtkWidget       *widget = GTK_WIDGET (view);
@@ -4184,6 +4247,11 @@ ev_view_finalize (GObject *object)
 	clear_selection (view);
 	clear_link_selected (view);
 
+	if (view->synctex_result) {
+		g_free (view->synctex_result);
+		view->synctex_result = NULL;
+	}
+
 	if (view->image_dnd_info.image)
 		g_object_unref (view->image_dnd_info.image);
 	view->image_dnd_info.image = NULL;
@@ -4362,6 +4430,14 @@ ev_view_class_init (EvViewClass *class)
 			 g_cclosure_marshal_VOID__VOID,
                          G_TYPE_NONE, 0,
                          G_TYPE_NONE);
+	signals[SIGNAL_SYNC_SOURCE] = g_signal_new ("sync-source",
+	  	         G_TYPE_FROM_CLASS (object_class),
+		         G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
+		         G_STRUCT_OFFSET (EvViewClass, sync_source),
+		         NULL, NULL,
+		         g_cclosure_marshal_VOID__POINTER,
+		         G_TYPE_NONE, 1,
+			 G_TYPE_POINTER);
 
 	binding_set = gtk_binding_set_by_class (class);
 
@@ -5272,6 +5348,34 @@ void
 ev_view_find_cancel (EvView *view)
 {
 	view->find_pages = NULL;
+}
+
+/*** Synctex ***/
+void
+ev_view_highlight_forward_search (EvView       *view,
+				  EvSourceLink *link)
+{
+	EvMapping   *mapping;
+	gint         page;
+	GdkRectangle view_rect;
+
+	if (!ev_document_has_synctex (view->document))
+		return;
+
+	mapping = ev_document_synctex_forward_search (view->document, link);
+	if (!mapping)
+		return;
+
+	if (view->synctex_result)
+		g_free (view->synctex_result);
+	view->synctex_result = mapping;
+
+	page = GPOINTER_TO_INT (mapping->data);
+	ev_document_model_set_page (view->model, page);
+
+	doc_rect_to_view_rect (view, page, &mapping->area, &view_rect);
+	ensure_rectangle_is_visible (view, &view_rect);
+	gtk_widget_queue_draw (GTK_WIDGET (view));
 }
 
 /*** Selections ***/
