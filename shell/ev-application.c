@@ -1003,6 +1003,16 @@ ev_application_init (EvApplication *ev_application)
 		      NULL);
 }
 
+GDBusConnection *
+ev_application_get_dbus_connection (EvApplication *application)
+{
+#ifdef ENABLE_DBUS
+	return application->connection;
+#else
+	return NULL;
+#endif
+}
+
 gboolean
 ev_application_has_window (EvApplication *application)
 {

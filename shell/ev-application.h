@@ -65,6 +65,7 @@ void	          ev_application_open_uri_list       (EvApplication   *application,
 		  			              GSList          *uri_list,
 						      GdkScreen       *screen,
     						      guint32          timestamp);
+GDBusConnection  *ev_application_get_dbus_connection (EvApplication   *application);
 gboolean	  ev_application_has_window	     (EvApplication   *application);
 const gchar *     ev_application_get_uri             (EvApplication   *application);
 GObject		 *ev_application_get_media_keys	     (EvApplication   *application);
