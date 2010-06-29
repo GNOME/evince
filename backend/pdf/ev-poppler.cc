@@ -2029,6 +2029,7 @@ pdf_document_text_get_text (EvDocumentText  *selection,
 				      &r);
 }
 
+#ifdef HAVE_POPPLER_PAGE_GET_TEXT_LAYOUT
 static gboolean
 pdf_document_text_get_text_layout (EvDocumentText  *selection,
 				   EvPage          *page,
@@ -2043,6 +2044,7 @@ pdf_document_text_get_text_layout (EvDocumentText  *selection,
 
 	return poppler_page_get_text_layout (poppler_page, (PopplerRectangle **)areas, n_areas);
 }
+#endif
 
 static void
 pdf_document_text_iface_init (EvDocumentTextInterface *iface)
