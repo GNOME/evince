@@ -43,24 +43,6 @@ enum {
 	LAST_ACTION
 };
 
-static GtkTextBuffer *
-ev_view_accessible_get_text_buffer (EvView *view)
-{
-  EvPageCache *page_cache;
-  GtkTextBuffer *buffer;
-  const gchar *retval = NULL;
-
-  page_cache = view->page_cache;
-  if (!page_cache) {
-    return NULL;
-  }
-  retval = ev_page_cache_get_text (page_cache, view->current_page);
-  buffer = gtk_text_buffer_new (NULL);
-  gtk_text_buffer_set_text (buffer, retval, -1);
-
-  return buffer;
-}
-
 static const gchar *const ev_view_accessible_action_names[] = 
 {
 	N_("Scroll Up"),
@@ -80,9 +62,12 @@ typedef struct {
 	gchar *action_descriptions[LAST_ACTION];
 	guint action_idle_handler;  
 	GtkScrollType idle_scroll;	 
+	GtkTextBuffer *buffer;
+	guint current_page;
 } EvViewAccessiblePriv;
 
 typedef GtkAccessibleClass EvViewAccessibleClass;
+typedef GtkAccessible EvViewAccessible;
 
 #define EV_VIEW_ACCESSIBLE_GET_PRIVATE(inst) (G_TYPE_INSTANCE_GET_PRIVATE ((inst), EV_TYPE_VIEW_ACCESSIBLE, EvViewAccessiblePriv))
 
@@ -96,6 +81,9 @@ ev_view_accessible_finalize (GObject *object)
 		g_source_remove (priv->action_idle_handler);
 	for (i = 0; i < LAST_ACTION; i++)	
 		g_free (priv->action_descriptions [i]);
+	if (priv->buffer)
+		g_object_unref (priv->buffer);
+
 }
 
 static void ev_view_accessible_class_init (EvViewAccessibleClass *klass)
@@ -105,6 +93,34 @@ static void ev_view_accessible_class_init (EvViewAccessibleClass *klass)
   object_class->finalize = ev_view_accessible_finalize;
 
   g_type_class_add_private (klass, sizeof (EvViewAccessiblePriv));
+}
+
+static GtkTextBuffer *
+ev_view_accessible_get_text_buffer (EvViewAccessible *accessible, EvView *view)
+{
+  EvPageCache *page_cache;
+  const gchar *retval = NULL;
+  EvViewAccessiblePriv* priv = EV_VIEW_ACCESSIBLE_GET_PRIVATE (accessible);
+
+  page_cache = view->page_cache;
+  if (!page_cache) {
+    return NULL;
+  }
+
+  if (view->current_page == priv->current_page && priv->buffer) {
+    return priv->buffer;
+  }
+
+  priv->current_page = view->current_page;
+
+  if (!priv->buffer) {
+    priv->buffer = gtk_text_buffer_new (NULL);
+  }
+
+  retval = ev_page_cache_get_text (page_cache, view->current_page);
+  gtk_text_buffer_set_text (priv->buffer, retval, -1);
+
+  return priv->buffer;
 }
 
 static gchar*
@@ -122,14 +138,13 @@ ev_view_accessible_get_text (AtkText *text,
     /* State is defunct */
     return NULL;
 
-  buffer = ev_view_accessible_get_text_buffer (EV_VIEW (widget));
+  buffer = ev_view_accessible_get_text_buffer (EV_VIEW_ACCESSIBLE (text), EV_VIEW (widget));
   if (!buffer)
     return NULL;
 
   gtk_text_buffer_get_iter_at_offset (buffer, &start, start_pos);
   gtk_text_buffer_get_iter_at_offset (buffer, &end, end_pos);
   retval = gtk_text_buffer_get_text (buffer, &start, &end, FALSE);
-  g_object_unref (buffer);
 
   return retval;
 }
@@ -149,7 +164,7 @@ ev_view_accessible_get_character_at_offset (AtkText *text,
     /* State is defunct */
     return '\0';
 
-  buffer = ev_view_accessible_get_text_buffer (EV_VIEW (widget));
+  buffer = ev_view_accessible_get_text_buffer (EV_VIEW_ACCESSIBLE (text), EV_VIEW (widget));
   if (!buffer)
     return '\0';
 
@@ -162,7 +177,6 @@ ev_view_accessible_get_character_at_offset (AtkText *text,
   string = gtk_text_buffer_get_slice (buffer, &start, &end, FALSE);
   unichar = g_utf8_get_char (string);
   g_free(string);
-  g_object_unref (buffer);
 
   return unichar;
 }
@@ -185,7 +199,7 @@ ev_view_accessible_get_text_before_offset (AtkText	    *text,
     /* State is defunct */
     return NULL;
 
-  buffer = ev_view_accessible_get_text_buffer (EV_VIEW (widget));
+  buffer = ev_view_accessible_get_text_buffer (EV_VIEW_ACCESSIBLE (text), EV_VIEW (widget));
   if (!buffer)
     return NULL;
 
@@ -195,7 +209,6 @@ ev_view_accessible_get_text_before_offset (AtkText	    *text,
                                   GAIL_BEFORE_OFFSET, boundary_type,
                                   offset, start_offset, end_offset);
   g_object_unref (gail_text);
-  g_object_unref (buffer);
 
   return retval;
 }
@@ -218,7 +231,7 @@ ev_view_accessible_get_text_at_offset (AtkText          *text,
     /* State is defunct */
     return NULL;
 
-  buffer = ev_view_accessible_get_text_buffer (EV_VIEW (widget));
+  buffer = ev_view_accessible_get_text_buffer (EV_VIEW_ACCESSIBLE (text), EV_VIEW (widget));
   if (!buffer)
     return NULL;
 
@@ -228,7 +241,6 @@ ev_view_accessible_get_text_at_offset (AtkText          *text,
                                   GAIL_AT_OFFSET, boundary_type,
                                   offset, start_offset, end_offset);
   g_object_unref (gail_text);
-  g_object_unref (buffer);
 
   return retval;
 }
@@ -251,7 +263,7 @@ ev_view_accessible_get_text_after_offset  (AtkText	    *text,
     /* State is defunct */
     return NULL;
 
-  buffer = ev_view_accessible_get_text_buffer (EV_VIEW (widget));
+  buffer = ev_view_accessible_get_text_buffer (EV_VIEW_ACCESSIBLE (text), EV_VIEW (widget));
   if (!buffer)
     return NULL;
 
@@ -261,7 +273,6 @@ ev_view_accessible_get_text_after_offset  (AtkText	    *text,
                                   GAIL_AFTER_OFFSET, boundary_type,
                                   offset, start_offset, end_offset);
   g_object_unref (gail_text);
-  g_object_unref (buffer);
 
   return retval;
 }
@@ -278,12 +289,11 @@ ev_view_accessible_get_character_count (AtkText *text)
     /* State is defunct */
     return 0;
 
-  buffer = ev_view_accessible_get_text_buffer (EV_VIEW (widget));
+  buffer = ev_view_accessible_get_text_buffer (EV_VIEW_ACCESSIBLE (text), EV_VIEW (widget));
   if (!buffer)
     return 0;
 
   retval = gtk_text_buffer_get_char_count (buffer);
-  g_object_unref (buffer);
 
   return retval;
 }
@@ -302,14 +312,13 @@ ev_view_accessible_get_caret_offset (AtkText *text)
     /* State is defunct */
     return 0;
 
-  buffer = ev_view_accessible_get_text_buffer (EV_VIEW (widget));
+  buffer = ev_view_accessible_get_text_buffer (EV_VIEW_ACCESSIBLE (text), EV_VIEW (widget));
   if (!buffer)
     return 0;
 
   cursor_mark = gtk_text_buffer_get_insert (buffer);
   gtk_text_buffer_get_iter_at_mark (buffer, &cursor_itr, cursor_mark);
   retval = gtk_text_iter_get_offset (&cursor_itr);
-  g_object_unref (buffer);
 
   return retval;
 }
@@ -326,13 +335,12 @@ ev_view_accessible_set_caret_offset (AtkText *text, gint offset)
     /* State is defunct */
     return FALSE;
 
-  buffer = ev_view_accessible_get_text_buffer (EV_VIEW (widget));
+  buffer = ev_view_accessible_get_text_buffer (EV_VIEW_ACCESSIBLE (text), EV_VIEW (widget));
   if (!buffer)
     return FALSE;
 
   gtk_text_buffer_get_iter_at_offset (buffer,  &pos_itr, offset);
   gtk_text_buffer_place_cursor (buffer, &pos_itr);
-  g_object_unref (buffer);
 
   return TRUE;
 }
@@ -352,13 +360,12 @@ ev_view_accessible_get_run_attributes (AtkText *text,
     /* State is defunct */
     return NULL;
 
-  buffer = ev_view_accessible_get_text_buffer (EV_VIEW (widget));
+  buffer = ev_view_accessible_get_text_buffer (EV_VIEW_ACCESSIBLE (text), EV_VIEW (widget));
   if (!buffer)
     return NULL;
 
   retval = gail_misc_buffer_get_run_attributes (buffer, offset,
 						start_offset, end_offset);
-  g_object_unref (buffer);
 
   return retval;
 }
@@ -523,15 +530,13 @@ ev_view_accessible_get_n_selections (AtkText *text)
     /* State is defunct */
     return -1;
 
-  buffer = ev_view_accessible_get_text_buffer (EV_VIEW (widget));
+  buffer = ev_view_accessible_get_text_buffer (EV_VIEW_ACCESSIBLE (text), EV_VIEW (widget));
   if (!buffer)
     return -1;
 
   gtk_text_buffer_get_selection_bounds (buffer, &start, &end);
   select_start = gtk_text_iter_get_offset (&start);
   select_end = gtk_text_iter_get_offset (&end);
-
-  g_object_unref (buffer);
 
   if (select_start != select_end)
      return 1;
@@ -558,7 +563,7 @@ ev_view_accessible_get_selection (AtkText *text,
   if (selection_num != 0)
      return NULL;
 
-  buffer = ev_view_accessible_get_text_buffer (EV_VIEW (widget));
+  buffer = ev_view_accessible_get_text_buffer (EV_VIEW_ACCESSIBLE (text), EV_VIEW (widget));
   if (!buffer)
     return NULL;
 
@@ -568,8 +573,6 @@ ev_view_accessible_get_selection (AtkText *text,
 
   if (*start_pos != *end_pos)
     retval = gtk_text_buffer_get_text (buffer, &start, &end, FALSE);
-
-  g_object_unref (buffer);
 
   return retval;
 }
@@ -591,7 +594,7 @@ ev_view_accessible_add_selection (AtkText *text,
     /* State is defunct */
     return FALSE;
 
-  buffer = ev_view_accessible_get_text_buffer (EV_VIEW (widget));
+  buffer = ev_view_accessible_get_text_buffer (EV_VIEW_ACCESSIBLE (text), EV_VIEW (widget));
   if (!buffer)
     return FALSE;
 
@@ -610,8 +613,6 @@ ev_view_accessible_add_selection (AtkText *text,
 
     retval = TRUE;
   }
-
-  g_object_unref (buffer);
 
   return retval;
 }
@@ -633,7 +634,7 @@ ev_view_accessible_remove_selection (AtkText *text,
     /* State is defunct */
     return FALSE;
 
-  buffer = ev_view_accessible_get_text_buffer (EV_VIEW (widget));
+  buffer = ev_view_accessible_get_text_buffer (EV_VIEW_ACCESSIBLE (text), EV_VIEW (widget));
   if (!buffer)
     return FALSE;
 
@@ -651,8 +652,6 @@ ev_view_accessible_remove_selection (AtkText *text,
 
     retval = TRUE;
   }
-
-  g_object_unref (buffer);
 
   return retval;
 }
@@ -675,7 +674,7 @@ ev_view_accessible_set_selection (AtkText *text,
     /* State is defunct */
     return FALSE;
 
-  buffer = ev_view_accessible_get_text_buffer (EV_VIEW (widget));
+  buffer = ev_view_accessible_get_text_buffer (EV_VIEW_ACCESSIBLE (text), EV_VIEW (widget));
   if (!buffer)
     return FALSE;
 
@@ -691,8 +690,6 @@ ev_view_accessible_set_selection (AtkText *text,
 
     retval = TRUE;
   }
-
-  g_object_unref (buffer);
 
   return retval;
 }
