@@ -319,6 +319,7 @@ ev_annotation_window_init (EvAnnotationWindow *window)
 					GTK_POLICY_AUTOMATIC,
 					GTK_POLICY_AUTOMATIC);
 	window->text_view = gtk_text_view_new ();
+	gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (window->text_view), GTK_WRAP_WORD);
 	g_signal_connect (window->text_view, "button_press_event",
 			  G_CALLBACK (text_view_button_press),
 			  window);
