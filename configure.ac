@@ -141,7 +141,7 @@ dnl Check dependencies
 # SHELL_LIBS
 
 PKG_CHECK_MODULES(LIBDOCUMENT, gtk+-2.0 >= $GTK_REQUIRED gio-2.0 >= $GLIB_REQUIRED)
-PKG_CHECK_MODULES(LIBVIEW, gtk+-2.0 >= $GTK_REQUIRED gthread-2.0 gio-2.0 >= $GLIB_REQUIRED)
+PKG_CHECK_MODULES(LIBVIEW, gtk+-2.0 >= $GTK_REQUIRED gail >= $GTK_REQUIRED gthread-2.0 gio-2.0 >= $GLIB_REQUIRED)
 PKG_CHECK_MODULES(BACKEND, gtk+-2.0 >= $GTK_REQUIRED)
 PKG_CHECK_MODULES(FRONTEND_CORE, gtk+-2.0 >= $GTK_REQUIRED gthread-2.0 gio-2.0 >= $GLIB_REQUIRED)
 PKG_CHECK_MODULES(PREVIEWER, gtk+-2.0 >= $GTK_REQUIRED gthread-2.0 gio-2.0 >= $GLIB_REQUIRED)
@@ -778,7 +778,6 @@ cut-n-paste/smclient/Makefile
 cut-n-paste/toolbar-editor/Makefile
 cut-n-paste/zoom-control/Makefile
 cut-n-paste/totem-screensaver/Makefile
-cut-n-paste/gail-util/Makefile
 cut-n-paste/synctex/Makefile
 data/evince.desktop.in
 data/Makefile

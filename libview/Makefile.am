@@ -57,7 +57,6 @@ libevview_la_CPPFLAGS = \
 	-I$(top_srcdir)				\
 	-I$(top_srcdir)/libdocument		\
 	-I$(top_builddir)			\
-	-I$(top_srcdir)/cut-n-paste/gail-util/	\
 	$(AM_CPPFLAGS)
 
 libevview_la_CFLAGS = \
@@ -74,7 +73,6 @@ libevview_la_LDFLAGS = \
 
 libevview_la_LIBADD = \
 	$(top_builddir)/libdocument/libevdocument.la \
-	$(top_builddir)/cut-n-paste/gail-util/libgail.la \
 	$(LIBVIEW_LIBS)
 
 BUILT_SOURCES = 			\

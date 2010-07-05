@@ -22,8 +22,7 @@
 #include <config.h>
 #include <glib/gi18n-lib.h>
 #include <gtk/gtk.h>
-#include "gailmisc.h"
-#include "gailtextutil.h"
+#include <libgail-util/gail-util.h>
 
 #include "ev-selection.h"
 #include "ev-page-cache.h"
