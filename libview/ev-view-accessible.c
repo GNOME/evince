@@ -434,7 +434,7 @@ ev_view_accessible_get_character_extents (AtkText *text,
 
   if (coords == ATK_XY_SCREEN)
   {
-    gdk_window_get_origin (toplevel->window, &x_window, &y_window);
+    gdk_window_get_origin (gtk_widget_get_window (toplevel), &x_window, &y_window);
     *x += x_window;
     *y += y_window;
   }
@@ -497,7 +497,7 @@ ev_view_accessible_get_offset_at_point (AtkText *text,
 
   if (coords == ATK_XY_SCREEN)
   {
-    gdk_window_get_origin (toplevel->window, &x_window, &y_window);
+    gdk_window_get_origin (gtk_widget_get_window (toplevel), &x_window, &y_window);
     rx -= x_window;
     ry -= y_window;
   }
