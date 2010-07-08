@@ -1906,11 +1906,17 @@ pdf_selection_get_selected_text (EvSelection     *selection,
 				 EvRectangle     *points)
 {
 	PopplerPage *poppler_page;
+	char *retval;
+
+	poppler_page = POPPLER_PAGE (page->backend_page);
+
+#ifdef HAVE_POPPLER_PAGE_GET_SELECTED_TEXT
+	retval = poppler_page_get_selected_text (poppler_page,
+						 (PopplerSelectionStyle)style,
+						 (PopplerRectangle *)points);
+#else
 	PopplerRectangle r;
 	double height;
-	char *retval;
-	
-	poppler_page = POPPLER_PAGE (page->backend_page);
 
 	poppler_page_get_size (poppler_page, NULL, &height);
 	r.x1 = points->x1;
@@ -1921,6 +1927,7 @@ pdf_selection_get_selected_text (EvSelection     *selection,
 	retval = poppler_page_get_text (poppler_page,
 					(PopplerSelectionStyle)style,
 					&r);
+#endif /* HAVE_POPPLER_PAGE_GET_SELECTED_TEXT */
 
 	return retval;
 }
@@ -2008,6 +2015,20 @@ pdf_document_text_get_text_mapping (EvDocumentText *document_text,
 	return retval;
 }
 
+#ifdef HAVE_POPPLER_PAGE_GET_SELECTED_TEXT
+static gchar *
+pdf_document_text_get_text (EvDocumentText  *selection,
+			    EvPage          *page)
+{
+	PopplerPage *poppler_page;
+
+	g_return_val_if_fail (POPPLER_IS_PAGE (page->backend_page), NULL);
+
+	poppler_page = POPPLER_PAGE (page->backend_page);
+
+	return poppler_page_get_text (poppler_page);
+}
+#else
 static gchar *
 pdf_document_text_get_text (EvDocumentText  *selection,
 			    EvPage          *page)
@@ -2027,6 +2048,7 @@ pdf_document_text_get_text (EvDocumentText  *selection,
 				      POPPLER_SELECTION_WORD,
 				      &r);
 }
+#endif /* HAVE_POPPLER_PAGE_GET_SELECTED_TEXT */
 
 #ifdef HAVE_POPPLER_PAGE_GET_TEXT_LAYOUT
 static gboolean
