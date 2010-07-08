@@ -47,7 +47,7 @@ G_BEGIN_DECLS
 typedef struct {
 	int page;
 	EvRectangle rect;
-	GdkRegion *covered_region;
+	cairo_region_t *covered_region;
 	EvSelectionStyle style;
 } EvViewSelection;
 
@@ -68,18 +68,18 @@ cairo_surface_t *ev_pixbuf_cache_get_surface        (EvPixbufCache *pixbuf_cache
 						     gint           page);
 void           ev_pixbuf_cache_clear                (EvPixbufCache *pixbuf_cache);
 void           ev_pixbuf_cache_style_changed        (EvPixbufCache *pixbuf_cache);
-void           ev_pixbuf_cache_reload_page 	    (EvPixbufCache *pixbuf_cache,
-						     GdkRegion     *region,
-                    				     gint           page,
-			                             gint           rotation,
-						     gdouble        scale);
+void           ev_pixbuf_cache_reload_page 	    (EvPixbufCache  *pixbuf_cache,
+						     cairo_region_t *region,
+                    				     gint            page,
+			                             gint            rotation,
+						     gdouble         scale);
 void           ev_pixbuf_cache_set_inverted_colors  (EvPixbufCache *pixbuf_cache,
 						     gboolean       inverted_colors);
 /* Selection */
-cairo_surface_t *ev_pixbuf_cache_get_selection_surface (EvPixbufCache *pixbuf_cache,
-							gint           page,
-							gfloat         scale,
-							GdkRegion     **region);
+cairo_surface_t *ev_pixbuf_cache_get_selection_surface (EvPixbufCache   *pixbuf_cache,
+							gint             page,
+							gfloat           scale,
+							cairo_region_t **region);
 void           ev_pixbuf_cache_set_selection_list   (EvPixbufCache *pixbuf_cache,
 						     GList         *selection_list);
 GList         *ev_pixbuf_cache_get_selection_list   (EvPixbufCache *pixbuf_cache);

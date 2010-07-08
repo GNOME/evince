@@ -462,7 +462,7 @@ ev_job_render_dispose (GObject *object)
 	}
 
 	if (job->selection_region) {
-		gdk_region_destroy (job->selection_region);
+		cairo_region_destroy (job->selection_region);
 		job->selection_region = NULL;
 	}
 

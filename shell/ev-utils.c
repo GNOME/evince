@@ -187,9 +187,8 @@ ev_pixbuf_add_shadow (GdkPixbuf *src, int size,
  * the region code.
  */
 void
-ev_print_region_contents (GdkRegion *region)
+ev_print_region_contents (cairo_region_t *region)
 {
-	GdkRectangle *rectangles = NULL;
 	gint n_rectangles, i;
 
 	if (region == NULL) {
@@ -198,17 +197,19 @@ ev_print_region_contents (GdkRegion *region)
 	}
 
 	g_print ("<region %p>\n", region);
-	gdk_region_get_rectangles (region, &rectangles, &n_rectangles);
+	n_rectangles = cairo_region_num_rectangles (region);
 	for (i = 0; i < n_rectangles; i++) {
+		GdkRectangle rect;
+
+		cairo_region_get_rectangle (region, i, &rect);
 		g_print ("\t(%d %d, %d %d) [%dx%d]\n",
-			 rectangles[i].x,
-			 rectangles[i].y,
-			 rectangles[i].x + rectangles[i].width,
-			 rectangles[i].y + rectangles[i].height,
-			 rectangles[i].width,
-			 rectangles[i].height);
+			 rect.x,
+			 rect.y,
+			 rect.x + rect.width,
+			 rect.y + rect.height,
+			 rect.width,
+			 rect.height);
 	}
-	g_free (rectangles);
 }
 
 static void

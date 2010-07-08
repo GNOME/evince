@@ -189,14 +189,14 @@ static void       show_loading_window                        (EvView            
 static void       hide_loading_window                        (EvView             *view);
 static void       ev_view_reload_page                        (EvView             *view,
 							      gint                page,
-							      GdkRegion          *region);
+							      cairo_region_t     *region);
 static void       ev_view_loading_window_move                (EvView             *view);
 
 /*** Callbacks ***/
 static void       ev_view_change_page                        (EvView             *view,
 							      gint                new_page);
 static void       job_finished_cb                            (EvPixbufCache      *pixbuf_cache,
-							      GdkRegion          *region,
+							      cairo_region_t     *region,
 							      EvView             *view);
 static void       ev_view_page_changed_cb                    (EvDocumentModel    *model,
 							      gint                old_page,
@@ -803,15 +803,13 @@ compute_scroll_increment (EvView        *view,
 {
 	GtkWidget *widget = GTK_WIDGET (view);
 	GtkAdjustment *adjustment = view->vadjustment;
-	GdkRegion *text_region, *region;
+	cairo_region_t *text_region, *region;
 	GtkAllocation allocation;
 	gint page;
 	GdkRectangle rect;
 	EvRectangle doc_rect;
 	GdkRectangle page_area;
 	GtkBorder border;
-	GdkRectangle *recs;
-	gint n_recs;
 	gdouble fraction = 1.0;
 
 	if (scroll != GTK_SCROLL_PAGE_BACKWARD && scroll != GTK_SCROLL_PAGE_FORWARD)
@@ -820,7 +818,7 @@ compute_scroll_increment (EvView        *view,
 	page = scroll == GTK_SCROLL_PAGE_BACKWARD ? view->start_page : view->end_page;
 
 	text_region = ev_page_cache_get_text_mapping (view->page_cache, page);
-	if (!text_region || gdk_region_empty (text_region))
+	if (!text_region || cairo_region_is_empty (text_region))
 		return gtk_adjustment_get_page_size (adjustment);
 
 	gtk_widget_get_allocation (widget, &allocation);
@@ -836,37 +834,37 @@ compute_scroll_increment (EvView        *view,
 	rect.y = doc_rect.y1;
 	rect.width = doc_rect.x2 - doc_rect.x1;
 	rect.height = MAX (1, doc_rect.y2 - doc_rect.y1);
-	region = gdk_region_rectangle (&rect);
+	region = cairo_region_create_rectangle (&rect);
 
-	gdk_region_intersect (region, text_region);
-	gdk_region_get_rectangles (region, &recs, &n_recs);
-	gdk_region_destroy (region);
-	if (n_recs > 0) {
+	cairo_region_intersect (region, text_region);
+	if (cairo_region_num_rectangles (region)) {
 		EvRenderContext *rc;
 		EvPage  *ev_page;
+		cairo_region_t *sel_region;
 
+		cairo_region_get_rectangle (region, 0, &rect);
 		ev_page = ev_document_get_page (view->document, page);
 		rc = ev_render_context_new (ev_page, view->rotation, view->scale);
 		g_object_unref (ev_page);
 		/* Get the selection region to know the height of the line */
-		doc_rect.x1 = doc_rect.x2 = recs[0].x + 0.5;
-		doc_rect.y1 = doc_rect.y2 = recs[0].y + 0.5;
+		doc_rect.x1 = doc_rect.x2 = rect.x + 0.5;
+		doc_rect.y1 = doc_rect.y2 = rect.y + 0.5;
 
 		ev_document_doc_mutex_lock ();
-		region = ev_selection_get_selection_region (EV_SELECTION (view->document),
-							    rc, EV_SELECTION_STYLE_LINE,
-							    &doc_rect);
+		sel_region = ev_selection_get_selection_region (EV_SELECTION (view->document),
+								rc, EV_SELECTION_STYLE_LINE,
+								&doc_rect);
 		ev_document_doc_mutex_unlock ();
 
 		g_object_unref (rc);
-		g_free (recs);
-		gdk_region_get_rectangles (region, &recs, &n_recs);
-		gdk_region_destroy (region);
-		if (n_recs > 0) {
-			fraction = 1 - (recs[0].height / gtk_adjustment_get_page_size (adjustment));
+
+		if (cairo_region_num_rectangles (sel_region) > 0) {
+			cairo_region_get_rectangle (sel_region, 0, &rect);
+			fraction = 1 - (rect.height / gtk_adjustment_get_page_size (adjustment));
 		}
-		g_free (recs);
+		cairo_region_destroy (sel_region);
 	}
+	cairo_region_destroy (region);
 
 	return gtk_adjustment_get_page_size (adjustment) * fraction;
 
@@ -1363,7 +1361,7 @@ location_in_text (EvView  *view,
 		  gdouble  x,
 		  gdouble  y)
 {
-	GdkRegion *region;
+	cairo_region_t *region;
 	gint page = -1;
 	gint x_offset = 0, y_offset = 0;
 
@@ -1375,7 +1373,7 @@ location_in_text (EvView  *view,
 	region = ev_page_cache_get_text_mapping (view->page_cache, page);
 
 	if (region)
-		return gdk_region_point_in (region, x_offset / view->scale, y_offset / view->scale);
+		return cairo_region_contains_point (region, x_offset / view->scale, y_offset / view->scale);
 	else
 		return FALSE;
 }
@@ -1399,7 +1397,7 @@ location_in_selected_text (EvView  *view,
 			continue;
 		
 		if (selection->covered_region &&
-		    gdk_region_point_in (selection->covered_region, x_offset, y_offset))
+		    cairo_region_contains_point (selection->covered_region, x_offset, y_offset))
 			return TRUE;
 	}
 
@@ -1921,7 +1919,7 @@ ev_view_get_form_field_at_location (EvView  *view,
 		return NULL;
 }
 
-static GdkRegion *
+static cairo_region_t *
 ev_view_form_field_get_region (EvView      *view,
 			       EvFormField *field)
 {
@@ -1934,7 +1932,7 @@ ev_view_form_field_get_region (EvView      *view,
 				       forms_mapping,
 				       field, &view_area);
 
-	return gdk_region_rectangle (&view_area);
+	return cairo_region_create_rectangle (&view_area);
 }
 
 static gboolean
@@ -1957,7 +1955,7 @@ ev_view_form_field_button_create_widget (EvView      *view,
 					 EvFormField *field)
 {
 	EvFormFieldButton *field_button = EV_FORM_FIELD_BUTTON (field);
-	GdkRegion         *field_region = NULL;
+	cairo_region_t    *field_region = NULL;
 	
 	switch (field_button->type) {
 	        case EV_FORM_FIELD_BUTTON_PUSH:
@@ -1984,7 +1982,7 @@ ev_view_form_field_button_create_widget (EvView      *view,
 									      field->page->index);
 			for (l = forms_mapping; l; l = g_list_next (l)) {
 				EvFormField *button = ((EvMapping *)(l->data))->data;
-				GdkRegion   *button_region;
+				cairo_region_t *button_region;
 
 				if (button->id == field->id)
 					continue;
@@ -1996,8 +1994,8 @@ ev_view_form_field_button_create_widget (EvView      *view,
 					continue;
 
 				button_region = ev_view_form_field_get_region (view, button);
-				gdk_region_union (field_region, button_region);
-				gdk_region_destroy (button_region);
+				cairo_region_union (field_region, button_region);
+				cairo_region_destroy (button_region);
 			}
 			
 			ev_document_forms_form_field_button_set_state (EV_DOCUMENT_FORMS (view->document),
@@ -2008,7 +2006,7 @@ ev_view_form_field_button_create_widget (EvView      *view,
 	}
 
 	ev_view_reload_page (view, field->page->index, field_region);
-	gdk_region_destroy (field_region);
+	cairo_region_destroy (field_region);
 	
 	return NULL;
 }
@@ -2026,7 +2024,7 @@ ev_view_form_field_text_save (EvView    *view,
 	
 	if (field->changed) {
 		EvFormFieldText *field_text = EV_FORM_FIELD_TEXT (field);
-		GdkRegion       *field_region;
+		cairo_region_t  *field_region;
 
 		field_region = ev_view_form_field_get_region (view, field);
 		
@@ -2034,7 +2032,7 @@ ev_view_form_field_text_save (EvView    *view,
 							    field, field_text->text);
 		field->changed = FALSE;
 		ev_view_reload_page (view, field->page->index, field_region);
-		gdk_region_destroy (field_region);
+		cairo_region_destroy (field_region);
 	}
 }
 
@@ -2134,7 +2132,7 @@ ev_view_form_field_choice_save (EvView    *view,
 	if (field->changed) {
 		GList             *l;
 		EvFormFieldChoice *field_choice = EV_FORM_FIELD_CHOICE (field);
-		GdkRegion         *field_region;
+		cairo_region_t    *field_region;
 
 		field_region = ev_view_form_field_get_region (view, field);
 
@@ -2151,7 +2149,7 @@ ev_view_form_field_choice_save (EvView    *view,
 		}
 		field->changed = FALSE;
 		ev_view_reload_page (view, field->page->index, field_region);
-		gdk_region_destroy (field_region);
+		cairo_region_destroy (field_region);
 	}
 }
 
@@ -4231,6 +4229,7 @@ draw_one_page (EvView       *view,
 		cairo_surface_set_device_offset (selection_surface,
 						 overlap.x - real_page_area.x,
 						 overlap.y - real_page_area.y);
+
 		cairo_set_source_surface (cr, selection_surface, 0, 0);
 		cairo_paint (cr);
 		cairo_restore (cr);
@@ -4510,9 +4509,9 @@ ev_view_change_page (EvView *view,
 }
 
 static void
-job_finished_cb (EvPixbufCache *pixbuf_cache,
-		 GdkRegion     *region,
-		 EvView        *view)
+job_finished_cb (EvPixbufCache  *pixbuf_cache,
+		 cairo_region_t *region,
+		 EvView         *view)
 {
 	if (region) {
 		GdkWindow *bin_window;
@@ -4954,9 +4953,9 @@ ev_view_set_model (EvView          *view,
 }
 
 static void
-ev_view_reload_page (EvView    *view,
-		     gint       page,
-		     GdkRegion *region)
+ev_view_reload_page (EvView         *view,
+		     gint            page,
+		     cairo_region_t *region)
 {
 	ev_pixbuf_cache_reload_page (view->pixbuf_cache,
 				     region,
@@ -5549,7 +5548,7 @@ merge_selection_region (EvView *view,
 	while (new_list_ptr || old_list_ptr) {
 		EvViewSelection *old_sel, *new_sel;
 		int cur_page;
-		GdkRegion *region = NULL;
+		cairo_region_t *region = NULL;
 
 		new_sel = (new_list_ptr) ? (new_list_ptr->data) : NULL;
 		old_sel = (old_list_ptr) ? (old_list_ptr->data) : NULL;
@@ -5584,42 +5583,67 @@ merge_selection_region (EvView *view,
 		/* seed the cache with a new page.  We are going to need the new
 		 * region too. */
 		if (new_sel) {
-			GdkRegion *tmp_region = NULL;
+			cairo_region_t *tmp_region = NULL;
 
 			ev_pixbuf_cache_get_selection_surface (view->pixbuf_cache,
 							       cur_page,
 							       view->scale,
 							       &tmp_region);
 
-			if (tmp_region && !gdk_region_empty (tmp_region)) {
-				new_sel->covered_region = gdk_region_copy (tmp_region);
+			if (tmp_region && !cairo_region_is_empty (tmp_region)) {
+				new_sel->covered_region = cairo_region_reference (tmp_region);
 			}
 		}
 
 		/* Now we figure out what needs redrawing */
 		if (old_sel && new_sel) {
 			if (old_sel->covered_region && new_sel->covered_region) {
+				cairo_region_t *tbr;
+
 				/* We only want to redraw the areas that have
 				 * changed, so we xor the old and new regions
 				 * and redraw if it's different */
-				region = gdk_region_copy (old_sel->covered_region);
-				gdk_region_xor (region, new_sel->covered_region);
-				if (gdk_region_empty (region)) {
-					gdk_region_destroy (region);
+				region = cairo_region_copy (old_sel->covered_region);
+				tbr = cairo_region_copy (new_sel->covered_region);
+
+				/* xor old_sel, new_sel*/
+				cairo_region_subtract (tbr, region);
+				cairo_region_subtract (region, new_sel->covered_region);
+				cairo_region_union (region, tbr);
+				cairo_region_destroy (tbr);
+
+				if (cairo_region_is_empty (region)) {
+					cairo_region_destroy (region);
 					region = NULL;
+				} else {
+					gint num_rectangles = cairo_region_num_rectangles (region);
+					GdkRectangle r;
+
+					/* We need to make the damage region a little bigger
+					 * because the edges of the old selection might change
+					 */
+					cairo_region_get_rectangle (region, 0, &r);
+					r.x -= 5;
+					r.width = 5;
+					cairo_region_union_rectangle (region, &r);
+
+					cairo_region_get_rectangle (region, num_rectangles - 1, &r);
+					r.x += r.width;
+					r.width = 5;
+					cairo_region_union_rectangle (region, &r);
 				}
 			} else if (old_sel->covered_region) {
-				region = gdk_region_copy (old_sel->covered_region);
+				region = cairo_region_copy (old_sel->covered_region);
 			} else if (new_sel->covered_region) {
-				region = gdk_region_copy (new_sel->covered_region);
+				region = cairo_region_copy (new_sel->covered_region);
 			}
 		} else if (old_sel && !new_sel) {
-			if (old_sel->covered_region && !gdk_region_empty (old_sel->covered_region)) {
-				region = gdk_region_copy (old_sel->covered_region);
+			if (old_sel->covered_region && !cairo_region_is_empty (old_sel->covered_region)) {
+				region = cairo_region_copy (old_sel->covered_region);
 			}
 		} else if (!old_sel && new_sel) {
-			if (new_sel->covered_region && !gdk_region_empty (new_sel->covered_region)) {
-				region = gdk_region_copy (new_sel->covered_region);
+			if (new_sel->covered_region && !cairo_region_is_empty (new_sel->covered_region)) {
+				region = cairo_region_copy (new_sel->covered_region);
 			}
 		} else {
 			g_assert_not_reached ();
@@ -5632,19 +5656,12 @@ merge_selection_region (EvView *view,
 			GtkBorder    border;
 
 			bin_window = gtk_layout_get_bin_window (GTK_LAYOUT (view));
-
-			/* I don't know why but the region is smaller
-			 * than expected. This hack fixes it, I guess
-			 * 10 pixels more won't hurt
-			 */
-			gdk_region_shrink (region, -5, -5);
-
 			ev_view_get_page_extents (view, cur_page, &page_area, &border);
-			gdk_region_offset (region,
+			cairo_region_translate (region,
 					   page_area.x + border.left - view->scroll_x,
 					   page_area.y + border.top - view->scroll_y);
 			gdk_window_invalidate_region (bin_window, region, TRUE);
-			gdk_region_destroy (region);
+			cairo_region_destroy (region);
 		}
 	}
 
@@ -5674,7 +5691,7 @@ static void
 selection_free (EvViewSelection *selection)
 {
 	if (selection->covered_region)
-		gdk_region_destroy (selection->covered_region);
+		cairo_region_destroy (selection->covered_region);
 	g_free (selection);
 }
 

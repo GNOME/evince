@@ -57,7 +57,7 @@ ev_document_text_get_text_layout (EvDocumentText   *document_text,
 	return iface->get_text_layout (document_text, page, areas, n_areas);
 }
 
-GdkRegion *
+cairo_region_t *
 ev_document_text_get_text_mapping (EvDocumentText *document_text,
 				   EvPage         *page)
 {

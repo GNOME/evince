@@ -55,7 +55,7 @@ GList             *ev_page_cache_get_form_field_mapping (EvPageCache       *cach
 							 gint               page);
 GList             *ev_page_cache_get_annot_mapping      (EvPageCache       *cache,
 							 gint               page);
-GdkRegion         *ev_page_cache_get_text_mapping       (EvPageCache       *cache,
+cairo_region_t    *ev_page_cache_get_text_mapping       (EvPageCache       *cache,
 							 gint               page);
 const gchar       *ev_page_cache_get_text               (EvPageCache       *cache,
 							 gint               page);

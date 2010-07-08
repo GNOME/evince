@@ -29,7 +29,7 @@ G_BEGIN_DECLS
 GdkPixbuf*		ev_pixbuf_add_shadow (GdkPixbuf *src, int size,
 					      int x_offset, int y_offset, double opacity);
 
-void			ev_print_region_contents (GdkRegion *region);
+void			ev_print_region_contents (cairo_region_t *region);
 
 void 			ev_gui_menu_position_tree_selection (GtkMenu   *menu,
 							     gint      *x,

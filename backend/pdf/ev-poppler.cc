@@ -1925,49 +1925,48 @@ pdf_selection_get_selected_text (EvSelection     *selection,
 	return retval;
 }
 
-static GdkRegion *
-create_gdk_region_from_poppler_region (GList *region)
+static cairo_region_t *
+create_region_from_poppler_region (GList *region, gdouble scale)
 {
 	GList *l;
-	GdkRegion *retval;
-	
-	retval = gdk_region_new ();
-	
+	cairo_region_t *retval;
+
+	retval = cairo_region_create ();
+
 	for (l = region; l; l = g_list_next (l)) {
-		PopplerRectangle *rectangle;
-		GdkRectangle      rect;
-		
+		PopplerRectangle   *rectangle;
+		cairo_rectangle_int_t rect;
+
 		rectangle = (PopplerRectangle *)l->data;
-		
-		rect.x = (gint) rectangle->x1;
-		rect.y = (gint) rectangle->y1;
-		rect.width  = (gint) (rectangle->x2 - rectangle->x1);
-		rect.height = (gint) (rectangle->y2 - rectangle->y1);
-		gdk_region_union_with_rect (retval, &rect);
-		
+
+		rect.x = (gint) ((rectangle->x1 * scale) + 0.5);
+		rect.y = (gint) ((rectangle->y1 * scale) + 0.5);
+		rect.width  = (gint) (((rectangle->x2 - rectangle->x1) * scale) + 0.5);
+		rect.height = (gint) (((rectangle->y2 - rectangle->y1) * scale) + 0.5);
+		cairo_region_union_rectangle (retval, &rect);
+
 		poppler_rectangle_free (rectangle);
 	}
 
 	return retval;
 }
 
-static GdkRegion *
+static cairo_region_t *
 pdf_selection_get_selection_region (EvSelection     *selection,
 				    EvRenderContext *rc,
 				    EvSelectionStyle style,
 				    EvRectangle     *points)
 {
-	PopplerPage *poppler_page;
-	GdkRegion   *retval;
-	GList       *region;
+	PopplerPage    *poppler_page;
+	cairo_region_t *retval;
+	GList          *region;
 
 	poppler_page = POPPLER_PAGE (rc->page->backend_page);
-	
 	region = poppler_page_get_selection_region (poppler_page,
-						    rc->scale,
+						    1.0,
 						    (PopplerSelectionStyle)style,
 						    (PopplerRectangle *) points);
-	retval = create_gdk_region_from_poppler_region (region);
+	retval = create_region_from_poppler_region (region, rc->scale);
 	g_list_free (region);
 	
 	return retval;
@@ -1983,14 +1982,14 @@ pdf_selection_iface_init (EvSelectionInterface *iface)
 
 
 /* EvDocumentText */
-static GdkRegion *
+static cairo_region_t *
 pdf_document_text_get_text_mapping (EvDocumentText *document_text,
 				    EvPage         *page)
 {
 	PopplerPage *poppler_page;
 	PopplerRectangle points;
 	GList *region;
-	GdkRegion *retval;
+	cairo_region_t *retval;
 
 	g_return_val_if_fail (POPPLER_IS_PAGE (page->backend_page), NULL);
 
@@ -2003,7 +2002,7 @@ pdf_document_text_get_text_mapping (EvDocumentText *document_text,
 	region = poppler_page_get_selection_region (poppler_page, 1.0,
 						    POPPLER_SELECTION_GLYPH,
 						    &points);
-	retval = create_gdk_region_from_poppler_region (region);
+	retval = create_region_from_poppler_region (region, 1.0);
 	g_list_free (region);
 
 	return retval;

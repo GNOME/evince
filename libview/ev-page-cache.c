@@ -32,17 +32,17 @@
 #include "ev-page-cache.h"
 
 typedef struct _EvPageCacheData {
-	EvJob       *job;
-	gboolean     done : 1;
+	EvJob          *job;
+	gboolean        done : 1;
 
-	GList       *link_mapping;
-	GList       *image_mapping;
-	GList       *form_field_mapping;
-	GList       *annot_mapping;
-	GdkRegion   *text_mapping;
-	EvRectangle *text_layout;
-	guint        text_layout_length;
-	gchar       *text;
+	GList          *link_mapping;
+	GList          *image_mapping;
+	GList          *form_field_mapping;
+	GList          *annot_mapping;
+	cairo_region_t *text_mapping;
+	EvRectangle    *text_layout;
+	guint           text_layout_length;
+	gchar          *text;
 } EvPageCacheData;
 
 struct _EvPageCache {
@@ -92,7 +92,7 @@ ev_page_cache_data_free (EvPageCacheData *data)
 	}
 
 	if (data->text_mapping) {
-		gdk_region_destroy (data->text_mapping);
+		cairo_region_destroy (data->text_mapping);
 		data->text_mapping = NULL;
 	}
 
@@ -340,7 +340,7 @@ ev_page_cache_get_annot_mapping (EvPageCache *cache,
 	return data->annot_mapping;
 }
 
-GdkRegion *
+cairo_region_t *
 ev_page_cache_get_text_mapping (EvPageCache *cache,
 				gint         page)
 {

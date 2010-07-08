@@ -62,7 +62,7 @@ ev_selection_get_selected_text (EvSelection      *selection,
 	return iface->get_selected_text (selection, page, style, points);
 }
 
-GdkRegion *
+cairo_region_t *
 ev_selection_get_selection_region (EvSelection     *selection,
 				   EvRenderContext *rc,
 				   EvSelectionStyle style,

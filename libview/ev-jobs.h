@@ -212,7 +212,7 @@ struct _EvJobRender
 
 	gboolean include_selection;
 	cairo_surface_t *selection;
-	GdkRegion *selection_region;
+	cairo_region_t *selection_region;
 	EvRectangle selection_points;
 	EvSelectionStyle selection_style;
 	GdkColor base;
@@ -247,7 +247,7 @@ struct _EvJobPageData
 	GList *image_mapping;
 	GList *form_field_mapping;
 	GList *annot_mapping;
-	GdkRegion *text_mapping;
+	cairo_region_t *text_mapping;
 	gchar *text;
 	EvRectangle *text_layout;
 	guint text_layout_length;

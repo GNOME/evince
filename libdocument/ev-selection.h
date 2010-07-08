@@ -52,41 +52,41 @@ struct _EvSelectionInterface
 {
 	GTypeInterface base_iface;
 
-	void        (* render_selection)     (EvSelection      *selection,
-					      EvRenderContext  *rc,
-					      cairo_surface_t **surface,
-					      EvRectangle      *points,
-					      EvRectangle      *old_points,
-					      EvSelectionStyle  style,
-					      GdkColor         *text,
-					      GdkColor         *base);
-	gchar     * (* get_selected_text)    (EvSelection      *selection,
-					      EvPage           *page,
-					      EvSelectionStyle  style,
-					      EvRectangle      *points);
-	GdkRegion * (* get_selection_region) (EvSelection      *selection,
-					      EvRenderContext  *rc,
-					      EvSelectionStyle  style,
-					      EvRectangle      *points);
+	void             (* render_selection)     (EvSelection      *selection,
+						   EvRenderContext  *rc,
+						   cairo_surface_t **surface,
+						   EvRectangle      *points,
+						   EvRectangle      *old_points,
+						   EvSelectionStyle  style,
+						   GdkColor         *text,
+						   GdkColor         *base);
+	gchar          * (* get_selected_text)    (EvSelection      *selection,
+						   EvPage           *page,
+						   EvSelectionStyle  style,
+						   EvRectangle      *points);
+	cairo_region_t * (* get_selection_region) (EvSelection      *selection,
+						   EvRenderContext  *rc,
+						   EvSelectionStyle  style,
+						   EvRectangle      *points);
 };
 
-GType      ev_selection_get_type             (void);
-void       ev_selection_render_selection     (EvSelection      *selection,
-					      EvRenderContext  *rc,
-					      cairo_surface_t **surface,
-					      EvRectangle      *points,
-					      EvRectangle      *old_points,
-					      EvSelectionStyle  style,
-					      GdkColor         *text,
-					      GdkColor         *base);
-gchar     *ev_selection_get_selected_text    (EvSelection      *selection,
-					      EvPage           *page,
-					      EvSelectionStyle  style,
-					      EvRectangle      *points);
-GdkRegion *ev_selection_get_selection_region (EvSelection      *selection,
-					      EvRenderContext  *rc,
-					      EvSelectionStyle  style,
-					      EvRectangle      *points);
+GType           ev_selection_get_type             (void) G_GNUC_CONST;
+void            ev_selection_render_selection     (EvSelection      *selection,
+						   EvRenderContext  *rc,
+						   cairo_surface_t **surface,
+						   EvRectangle      *points,
+						   EvRectangle      *old_points,
+						   EvSelectionStyle  style,
+						   GdkColor         *text,
+						   GdkColor         *base);
+gchar          *ev_selection_get_selected_text    (EvSelection      *selection,
+						   EvPage           *page,
+						   EvSelectionStyle  style,
+						   EvRectangle      *points);
+cairo_region_t *ev_selection_get_selection_region (EvSelection      *selection,
+						   EvRenderContext  *rc,
+						   EvSelectionStyle  style,
+						   EvRectangle      *points);
 
 G_END_DECLS
 

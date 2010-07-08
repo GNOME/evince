@@ -13,7 +13,7 @@ typedef struct _CacheJobInfo
 	gboolean page_ready;
 
 	/* Region of the page that needs to be drawn */
-	GdkRegion *region; 
+	cairo_region_t  *region;
 
 	/* Data we get from rendering */
 	cairo_surface_t *surface;
@@ -27,7 +27,7 @@ typedef struct _CacheJobInfo
 	gboolean         points_set;
 	
 	cairo_surface_t *selection;
-	GdkRegion *selection_region;
+	cairo_region_t  *selection_region;
 } CacheJobInfo;
 
 struct _EvPixbufCache
@@ -174,7 +174,7 @@ dispose_cache_job_info (CacheJobInfo *job_info,
 		job_info->surface = NULL;
 	}
 	if (job_info->region) {
-		gdk_region_destroy (job_info->region);
+		cairo_region_destroy (job_info->region);
 		job_info->region = NULL;
 	}
 	if (job_info->selection) {
@@ -182,7 +182,7 @@ dispose_cache_job_info (CacheJobInfo *job_info,
 		job_info->selection = NULL;
 	}
 	if (job_info->selection_region) {
-		gdk_region_destroy (job_info->selection_region);
+		cairo_region_destroy (job_info->selection_region);
 		job_info->selection_region = NULL;
 	}
 
@@ -259,12 +259,12 @@ copy_job_to_job_info (EvJobRender   *job_render,
 			job_info->selection = NULL;
 		}
 		if (job_info->selection_region) {
-			gdk_region_destroy (job_info->selection_region);
+			cairo_region_destroy (job_info->selection_region);
 			job_info->selection_region = NULL;
 		}
 
 		job_info->selection_points = job_render->selection_points;
-		job_info->selection_region = gdk_region_copy (job_render->selection_region);
+		job_info->selection_region = cairo_region_reference (job_render->selection_region);
 		job_info->selection = cairo_surface_reference (job_render->selection);
 		g_assert (job_info->selection_points.x1 >= 0);
 		job_info->points_set = TRUE;
@@ -620,21 +620,21 @@ get_selection_colors (GtkWidget *widget, GdkColor **text, GdkColor **base)
 }
 
 static void
-add_job (EvPixbufCache *pixbuf_cache,
-	 CacheJobInfo  *job_info,
-	 GdkRegion     *region,
-	 gint           width,
-	 gint           height,
-	 gint           page,
-	 gint           rotation,
-	 gfloat         scale,
-	 EvJobPriority  priority)
+add_job (EvPixbufCache  *pixbuf_cache,
+	 CacheJobInfo   *job_info,
+	 cairo_region_t *region,
+	 gint            width,
+	 gint            height,
+	 gint            page,
+	 gint            rotation,
+	 gfloat          scale,
+	 EvJobPriority   priority)
 {
 	job_info->page_ready = FALSE;
 
 	if (job_info->region)
-		gdk_region_destroy (job_info->region);
-	job_info->region = region ? gdk_region_copy (region) : NULL;
+		cairo_region_destroy (job_info->region);
+	job_info->region = region ? cairo_region_reference (region) : NULL;
 
 	job_info->job = ev_job_render_new (pixbuf_cache->document,
 					   page, rotation, scale,
@@ -920,10 +920,10 @@ ev_pixbuf_cache_style_changed (EvPixbufCache *pixbuf_cache)
 }
 
 cairo_surface_t *
-ev_pixbuf_cache_get_selection_surface (EvPixbufCache  *pixbuf_cache,
-				       gint            page,
-				       gfloat          scale,
-				       GdkRegion     **region)
+ev_pixbuf_cache_get_selection_surface (EvPixbufCache   *pixbuf_cache,
+				       gint             page,
+				       gfloat           scale,
+				       cairo_region_t **region)
 {
 	CacheJobInfo *job_info;
 
@@ -975,7 +975,7 @@ ev_pixbuf_cache_get_selection_surface (EvPixbufCache  *pixbuf_cache,
 		g_object_unref (ev_page);
 
 		if (job_info->selection_region)
-			gdk_region_destroy (job_info->selection_region);
+			cairo_region_destroy (job_info->selection_region);
 		job_info->selection_region =
 			ev_selection_get_selection_region (EV_SELECTION (pixbuf_cache->document),
 							   rc, job_info->selection_style,
@@ -1131,7 +1131,7 @@ ev_pixbuf_cache_get_selection_list (EvPixbufCache *pixbuf_cache)
 			selection->page = page;
 			selection->rect = pixbuf_cache->prev_job[i].selection_points;
 			if (pixbuf_cache->prev_job[i].selection_region)
-				selection->covered_region = gdk_region_copy (pixbuf_cache->prev_job[i].selection_region);
+				selection->covered_region = cairo_region_reference (pixbuf_cache->prev_job[i].selection_region);
 			retval = g_list_append (retval, selection);
 		}
 		
@@ -1145,7 +1145,7 @@ ev_pixbuf_cache_get_selection_list (EvPixbufCache *pixbuf_cache)
 			selection->page = page;
 			selection->rect = pixbuf_cache->job_list[i].selection_points;
 			if (pixbuf_cache->job_list[i].selection_region)
-				selection->covered_region = gdk_region_copy (pixbuf_cache->job_list[i].selection_region);
+				selection->covered_region = cairo_region_reference (pixbuf_cache->job_list[i].selection_region);
 			retval = g_list_append (retval, selection);
 		}
 		
@@ -1161,7 +1161,7 @@ ev_pixbuf_cache_get_selection_list (EvPixbufCache *pixbuf_cache)
 			selection->page = page;
 			selection->rect = pixbuf_cache->next_job[i].selection_points;
 			if (pixbuf_cache->next_job[i].selection_region)
-				selection->covered_region = gdk_region_copy (pixbuf_cache->next_job[i].selection_region);
+				selection->covered_region = cairo_region_reference (pixbuf_cache->next_job[i].selection_region);
 			retval = g_list_append (retval, selection);
 		}
 		
@@ -1172,11 +1172,11 @@ ev_pixbuf_cache_get_selection_list (EvPixbufCache *pixbuf_cache)
 }
 
 void
-ev_pixbuf_cache_reload_page (EvPixbufCache *pixbuf_cache,
-			     GdkRegion     *region,
-			     gint           page,
-			     gint           rotation,
-			     gdouble        scale)
+ev_pixbuf_cache_reload_page (EvPixbufCache  *pixbuf_cache,
+			     cairo_region_t *region,
+			     gint            page,
+			     gint            rotation,
+			     gdouble         scale)
 {
 	CacheJobInfo *job_info;
         gint width, height;

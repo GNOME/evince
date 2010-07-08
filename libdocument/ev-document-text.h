@@ -49,26 +49,26 @@ struct _EvDocumentTextInterface
         GTypeInterface base_iface;
 
         /* Methods */
-        GdkRegion *(* get_text_mapping) (EvDocumentText   *document_text,
-                                         EvPage           *page);
-        gchar     *(* get_text)         (EvDocumentText   *document_text,
-                                         EvPage           *page);
-        gboolean   (* get_text_layout)  (EvDocumentText   *document_text,
-                                         EvPage           *page,
-                                         EvRectangle     **areas,
-                                         guint            *n_areas);
+        cairo_region_t *(* get_text_mapping) (EvDocumentText   *document_text,
+					      EvPage           *page);
+        gchar          *(* get_text)         (EvDocumentText   *document_text,
+					      EvPage           *page);
+        gboolean        (* get_text_layout)  (EvDocumentText   *document_text,
+					      EvPage           *page,
+					      EvRectangle     **areas,
+					      guint            *n_areas);
 };
 
-GType      ev_document_text_get_type         (void) G_GNUC_CONST;
+GType           ev_document_text_get_type         (void) G_GNUC_CONST;
 
-gchar     *ev_document_text_get_text         (EvDocumentText  *document_text,
-                                              EvPage          *page);
-gboolean   ev_document_text_get_text_layout  (EvDocumentText  *document_text,
-                                              EvPage          *page,
-                                              EvRectangle    **areas,
-                                              guint           *n_areas);
-GdkRegion *ev_document_text_get_text_mapping (EvDocumentText  *document_text,
-                                              EvPage          *page);
+gchar          *ev_document_text_get_text         (EvDocumentText  *document_text,
+						   EvPage          *page);
+gboolean        ev_document_text_get_text_layout  (EvDocumentText  *document_text,
+						   EvPage          *page,
+						   EvRectangle    **areas,
+						   guint           *n_areas);
+cairo_region_t *ev_document_text_get_text_mapping (EvDocumentText  *document_text,
+						   EvPage          *page);
 
 G_END_DECLS
 
