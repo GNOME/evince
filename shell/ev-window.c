@@ -6728,3 +6728,12 @@ ev_window_new (void)
 	return ev_window;
 }
 
+const gchar *
+ev_window_get_dbus_object_path (EvWindow *ev_window)
+{
+#ifdef ENABLE_DBUS
+	return ev_window->priv->dbus_object_path;
+#else
+	return NULL;
+#endif
+}

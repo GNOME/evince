@@ -85,6 +85,8 @@ gboolean	ev_window_is_empty	(const EvWindow *ev_window);
 void		ev_window_print_range   (EvWindow       *ev_window,
 					 int             first_page,
 					 int		 last_page);
+const gchar *	ev_window_get_dbus_object_path (EvWindow *ev_window);
+
 
 G_END_DECLS
 
