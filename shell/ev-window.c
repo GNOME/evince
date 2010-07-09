@@ -337,6 +337,9 @@ static void     ev_window_media_player_key_pressed      (EvWindow         *windo
 							 const gchar      *key,
 							 gpointer          user_data);
 static void     ev_window_update_max_min_scale          (EvWindow         *window);
+#ifdef ENABLE_DBUS
+static void	ev_window_emit_closed			(EvWindow         *window);
+#endif
 
 static guint ev_window_n_copies = 0;
 
@@ -4866,6 +4869,7 @@ ev_window_dispose (GObject *object)
 
 #ifdef ENABLE_DBUS
 	if (priv->dbus_object_id > 0) {
+		ev_window_emit_closed (window);
 		g_dbus_connection_unregister_object (ev_application_get_dbus_connection (EV_APP),
 						     priv->dbus_object_id);
 		priv->dbus_object_id = 0;
@@ -6227,6 +6231,37 @@ ev_window_sync_source (EvWindow     *window,
 }
 
 static void
+ev_window_emit_closed (EvWindow *window)
+{
+	GDBusConnection *connection;
+	GError          *error = NULL;
+
+	if (window->priv->dbus_object_id <= 0)
+		return;
+
+	connection = ev_application_get_dbus_connection (EV_APP);
+	if (!connection)
+		return;
+
+	/* TODO: figure out if this is the last window and use
+	 * g_dbus_connection_flush_sync() to make sure the signal
+	 * is emitted.
+	 */
+	g_dbus_connection_emit_signal (connection,
+				       NULL,
+				       window->priv->dbus_object_path,
+				       EV_WINDOW_DBUS_INTERFACE,
+				       "Closed",
+				       NULL,
+				       &error);
+	if (error) {
+		g_printerr ("Failed to emit DBus signal Closed: %s\n",
+			    error->message);
+		g_error_free (error);
+	}
+}
+
+static void
 method_call_cb (GDBusConnection       *connection,
                 const gchar           *sender,
                 const gchar           *object_path,
@@ -6263,6 +6298,7 @@ static const char introspection_xml[] =
 	      "<arg type='s' name='source_file' direction='out'/>"
 	      "<arg type='(ii)' name='source_point' direction='out'/>"
 	    "</signal>"
+            "<signal name='Closed'/>"
           "</interface>"
         "</node>";
 
