@@ -317,7 +317,26 @@ method_call_cb (GDBusConnection       *connection,
                 ev_daemon_maybe_start_killtimer (user_data);
 
                 g_dbus_method_invocation_return_value (invocation, g_variant_new ("()"));
-        }
+	} else if (g_strcmp0 (method_name, "FindDocument") == 0) {
+		EvDoc *doc;
+		const gchar *uri;
+
+		g_variant_get (parameters, "(&s)",  &uri);
+
+		LOG ("FindDocument '%s' \n", uri);
+
+		doc = ev_daemon_find_doc (uri);
+		if (doc == NULL) {
+			LOG ("GetViewerForUri URI was not registered!\n");
+			g_dbus_method_invocation_return_error_literal (invocation,
+								       G_DBUS_ERROR,
+								       G_DBUS_ERROR_INVALID_ARGS,
+								       "URI not registered");
+			return;
+		}
+
+		g_dbus_method_invocation_return_value (invocation, g_variant_new ("(s)", doc->dbus_name));
+	}
 }
 
 static const char introspection_xml[] =
@@ -329,6 +348,10 @@ static const char introspection_xml[] =
       "</method>"
       "<method name='UnregisterDocument'>"
         "<arg type='s' name='uri' direction='in'/>"
+      "</method>"
+      "<method name='FindDocument'>"
+        "<arg type='s' name='uri' direction='in'/>"
+        "<arg type='s' name='owner' direction='out'/>"
       "</method>"
     "</interface>"
   "</node>";
