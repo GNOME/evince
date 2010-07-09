@@ -751,49 +751,66 @@ method_call_cb (GDBusConnection       *connection,
 	const gchar     *search_string = NULL;
 	GdkScreen       *screen = NULL;
 
-        if (g_strcmp0 (method_name, "Reload") != 0)
-                return;
+	if (g_strcmp0 (method_name, "Reload") == 0) {
+		g_variant_get (parameters, "(a{sv}u)", &iter, &timestamp);
 
-        g_variant_get (parameters, "(a{sv}u)", &iter, &timestamp);
+		while (g_variant_iter_loop (iter, "{&sv}", &key, &value)) {
+			if (strcmp (key, "display") == 0 && g_variant_classify (value) == G_VARIANT_CLASS_STRING) {
+				display = ev_display_open_if_needed (g_variant_get_string (value, NULL));
+			} else if (strcmp (key, "screen") == 0 && g_variant_classify (value) == G_VARIANT_CLASS_STRING) {
+				screen_number = g_variant_get_int32 (value);
+			} else if (strcmp (key, "mode") == 0 && g_variant_classify (value) == G_VARIANT_CLASS_UINT32) {
+			mode = g_variant_get_uint32 (value);
+			} else if (strcmp (key, "page-label") == 0 && g_variant_classify (value) == G_VARIANT_CLASS_STRING) {
+				dest = ev_link_dest_new_page_label (g_variant_get_string (value, NULL));
+			} else if (strcmp (key, "find-string") == 0 && g_variant_classify (value) == G_VARIANT_CLASS_STRING) {
+				search_string = g_variant_get_string (value, NULL);
+			}
+		}
+		g_variant_iter_free (iter);
 
-        while (g_variant_iter_loop (iter, "{&sv}", &key, &value)) {
-                if (strcmp (key, "display") == 0 && g_variant_classify (value) == G_VARIANT_CLASS_STRING) {
-                        display = ev_display_open_if_needed (g_variant_get_string (value, NULL));
-                } else if (strcmp (key, "screen") == 0 && g_variant_classify (value) == G_VARIANT_CLASS_STRING) {
-                        screen_number = g_variant_get_int32 (value);
-                } else if (strcmp (key, "mode") == 0 && g_variant_classify (value) == G_VARIANT_CLASS_UINT32) {
-                        mode = g_variant_get_uint32 (value);
-                } else if (strcmp (key, "page-label") == 0 && g_variant_classify (value) == G_VARIANT_CLASS_STRING) {
-                        dest = ev_link_dest_new_page_label (g_variant_get_string (value, NULL));
-                } else if (strcmp (key, "find-string") == 0 && g_variant_classify (value) == G_VARIANT_CLASS_STRING) {
-                        search_string = g_variant_get_string (value, NULL);
-                }
-        }
-        g_variant_iter_free (iter);
+		if (display != NULL &&
+		    screen_number >= 0 &&
+		    screen_number < gdk_display_get_n_screens (display))
+			screen = gdk_display_get_screen (display, screen_number);
+		else
+			screen = gdk_screen_get_default ();
 
-        if (display != NULL &&
-            screen_number >= 0 &&
-            screen_number < gdk_display_get_n_screens (display))
-                screen = gdk_display_get_screen (display, screen_number);
-        else
-                screen = gdk_screen_get_default ();
+		windows = ev_application_get_windows (application);
+		for (l = windows; l != NULL; l = g_list_next (l)) {
+			EvWindow *ev_window = EV_WINDOW (l->data);
 
-	windows = ev_application_get_windows (application);
-	for (l = windows; l != NULL; l = g_list_next (l)) {
-		EvWindow *ev_window = EV_WINDOW (l->data);
+			ev_application_open_uri_in_window (application, application->uri,
+							   ev_window,
+							   screen, dest, mode,
+							   search_string,
+							   timestamp);
+		}
+		g_list_free (windows);
 
-		ev_application_open_uri_in_window (application, application->uri,
-						   ev_window,
-						   screen, dest, mode,
-						   search_string,
-						   timestamp);
+		if (dest)
+			g_object_unref (dest);
+
+		g_dbus_method_invocation_return_value (invocation, g_variant_new ("()"));
+	} else if (g_strcmp0 (method_name, "GetWindowList") == 0) {
+		GList          *windows = ev_application_get_windows (application);
+		GVariantBuilder builder;
+		GList	       *l;
+
+		g_variant_builder_init (&builder, G_VARIANT_TYPE ("(ao)"));
+		g_variant_builder_open (&builder, G_VARIANT_TYPE ("ao"));
+
+		for (l = windows; l; l = g_list_next (l)) {
+			EvWindow *window = (EvWindow *)l->data;
+
+			g_variant_builder_add (&builder, "o", ev_window_get_dbus_object_path (window));
+		}
+
+		g_variant_builder_close (&builder);
+		g_list_free (windows);
+
+		g_dbus_method_invocation_return_value (invocation, g_variant_builder_end (&builder));
 	}
-	g_list_free (windows);
-
-	if (dest)
-		g_object_unref (dest);
-
-	g_dbus_method_invocation_return_value (invocation, g_variant_new ("()"));
 }
 
 static const char introspection_xml[] =
@@ -802,6 +819,9 @@ static const char introspection_xml[] =
             "<method name='Reload'>"
               "<arg type='a{sv}' name='args' direction='in'/>"
               "<arg type='u' name='timestamp' direction='in'/>"
+            "</method>"
+            "<method name='GetWindowList'>"
+              "<arg type='ao' name='window_list' direction='out'/>"
             "</method>"
           "</interface>"
         "</node>";
