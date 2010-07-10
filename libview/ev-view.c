@@ -2400,11 +2400,19 @@ ev_view_window_child_move (EvView            *view,
 			   gint               x,
 			   gint               y)
 {
+	GtkAllocation allocation;
+	gint          width, height;
+
+	gtk_widget_get_allocation (GTK_WIDGET (view), &allocation);
+	gtk_window_get_size (GTK_WINDOW (child->window), &width, &height);
+
 	child->x = x;
 	child->y = y;
 	gtk_window_move (GTK_WINDOW (child->window),
-			 MAX (child->parent_x, x),
-			 MAX (child->parent_y, y));
+			 CLAMP (x, child->parent_x,
+				child->parent_x + allocation.width - width),
+			 CLAMP (y, child->parent_y,
+				child->parent_y + allocation.height - height));
 }
 
 static void
