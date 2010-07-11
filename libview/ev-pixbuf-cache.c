@@ -1,10 +1,6 @@
 #include <config.h>
 #include "ev-pixbuf-cache.h"
 #include "ev-job-scheduler.h"
-#include "ev-mapping.h"
-#include "ev-document-forms.h"
-#include "ev-document-images.h"
-#include "ev-document-annotations.h"
 #include "ev-view-private.h"
 
 typedef struct _CacheJobInfo

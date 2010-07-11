@@ -29,6 +29,7 @@
 
 #include "ev-document.h"
 #include "ev-form-field.h"
+#include "ev-mapping-list.h"
 
 G_BEGIN_DECLS
 
@@ -47,78 +48,78 @@ struct _EvDocumentFormsInterface
 	GTypeInterface base_iface;
 
 	/* Methods  */
-	GList   *(* get_form_fields)                    (EvDocumentForms   *document_forms,
-							 EvPage            *page);
-	gchar   *(* form_field_text_get_text)           (EvDocumentForms   *document_forms,
-							 EvFormField       *field);
-	void     (* form_field_text_set_text)           (EvDocumentForms   *document_forms,
-							 EvFormField       *field,
-							 const gchar       *text);
-	gboolean (* form_field_button_get_state)        (EvDocumentForms   *document_forms,
-							 EvFormField       *field);
-	void     (* form_field_button_set_state)        (EvDocumentForms   *document_forms,
-							 EvFormField       *field,
-							 gboolean           state);
-	gchar   *(* form_field_choice_get_item)         (EvDocumentForms   *document_forms,
-							 EvFormField       *field,
-							 gint               index);
-	gint     (* form_field_choice_get_n_items)      (EvDocumentForms   *document_forms,
-							 EvFormField       *field);
-	gboolean (* form_field_choice_is_item_selected) (EvDocumentForms   *document_forms,
-							 EvFormField       *field,
-							 gint               index);
-	void     (* form_field_choice_select_item)      (EvDocumentForms   *document_forms,
-							 EvFormField       *field,
-							 gint               index);
-	void     (* form_field_choice_toggle_item)      (EvDocumentForms   *document_forms,
-							 EvFormField       *field,
-							 gint               index);
-	void     (* form_field_choice_unselect_all)     (EvDocumentForms   *document_forms,
-							 EvFormField       *field);
-	void     (* form_field_choice_set_text)         (EvDocumentForms   *document_forms,
-							 EvFormField       *field,
-							 const gchar       *text);
-	gchar   *(* form_field_choice_get_text)         (EvDocumentForms   *document_forms,
-							 EvFormField       *field);
+	EvMappingList *(* get_form_fields)                    (EvDocumentForms   *document_forms,
+							       EvPage            *page);
+	gchar         *(* form_field_text_get_text)           (EvDocumentForms   *document_forms,
+							       EvFormField       *field);
+	void           (* form_field_text_set_text)           (EvDocumentForms   *document_forms,
+							       EvFormField       *field,
+							       const gchar       *text);
+	gboolean       (* form_field_button_get_state)        (EvDocumentForms   *document_forms,
+							       EvFormField       *field);
+	void           (* form_field_button_set_state)        (EvDocumentForms   *document_forms,
+							       EvFormField       *field,
+							       gboolean           state);
+	gchar         *(* form_field_choice_get_item)         (EvDocumentForms   *document_forms,
+							       EvFormField       *field,
+							       gint               index);
+	gint           (* form_field_choice_get_n_items)      (EvDocumentForms   *document_forms,
+							       EvFormField       *field);
+	gboolean       (* form_field_choice_is_item_selected) (EvDocumentForms   *document_forms,
+							       EvFormField       *field,
+							       gint               index);
+	void           (* form_field_choice_select_item)      (EvDocumentForms   *document_forms,
+							       EvFormField       *field,
+							       gint               index);
+	void           (* form_field_choice_toggle_item)      (EvDocumentForms   *document_forms,
+							       EvFormField       *field,
+							       gint               index);
+	void           (* form_field_choice_unselect_all)     (EvDocumentForms   *document_forms,
+							       EvFormField       *field);
+	void           (* form_field_choice_set_text)         (EvDocumentForms   *document_forms,
+							       EvFormField       *field,
+							       const gchar       *text);
+	gchar         *(* form_field_choice_get_text)         (EvDocumentForms   *document_forms,
+							       EvFormField       *field);
 };
 
-GType    ev_document_forms_get_type                            (void) G_GNUC_CONST;
-GList   *ev_document_forms_get_form_fields                     (EvDocumentForms   *document_forms,
-								EvPage            *page);
+GType          ev_document_forms_get_type                           (void) G_GNUC_CONST;
+EvMappingList *ev_document_forms_get_form_fields                    (EvDocumentForms   *document_forms,
+								     EvPage            *page);
 
-gchar 	*ev_document_forms_form_field_text_get_text            (EvDocumentForms   *document_forms, 
-								EvFormField       *field);
-void 	 ev_document_forms_form_field_text_set_text            (EvDocumentForms   *document_forms, 
-								EvFormField       *field, 
-								const gchar       *text);
+gchar 	      *ev_document_forms_form_field_text_get_text           (EvDocumentForms   *document_forms,
+								     EvFormField       *field);
+void 	       ev_document_forms_form_field_text_set_text           (EvDocumentForms   *document_forms,
+								     EvFormField       *field,
+								     const gchar       *text);
 
-gboolean ev_document_forms_form_field_button_get_state         (EvDocumentForms   *document_forms,
-								EvFormField       *field);
-void 	 ev_document_forms_form_field_button_set_state         (EvDocumentForms   *document_forms, 
-								EvFormField       *field, 
-								gboolean           state);
+gboolean       ev_document_forms_form_field_button_get_state        (EvDocumentForms   *document_forms,
+								     EvFormField       *field);
+void 	       ev_document_forms_form_field_button_set_state        (EvDocumentForms   *document_forms,
+								     EvFormField       *field,
+								     gboolean           state);
 
-gchar    *ev_document_forms_form_field_choice_get_item         (EvDocumentForms   *document_forms, 
-								EvFormField       *field, 
-								gint               index);
-gint 	  ev_document_forms_form_field_choice_get_n_items      (EvDocumentForms   *document_forms, 
-								EvFormField       *field);
-gboolean  ev_document_forms_form_field_choice_is_item_selected (EvDocumentForms   *document_forms, 
-								EvFormField       *field, 
-								gint               index);
-void 	  ev_document_forms_form_field_choice_select_item      (EvDocumentForms   *document_forms, 
-								EvFormField       *field, 
-								gint               index);
-void 	  ev_document_forms_form_field_choice_toggle_item      (EvDocumentForms   *document_forms, 
-								EvFormField       *field, 
-								gint               index);
-void 	  ev_document_forms_form_field_choice_unselect_all     (EvDocumentForms   *document_forms, 
-								EvFormField       *field);
-void 	  ev_document_forms_form_field_choice_set_text         (EvDocumentForms   *document_forms,
-								EvFormField       *field,
-								const gchar       *text);
-gchar    *ev_document_forms_form_field_choice_get_text         (EvDocumentForms   *document_forms,
-								EvFormField       *field);
+gchar         *ev_document_forms_form_field_choice_get_item         (EvDocumentForms   *document_forms,
+								     EvFormField       *field,
+								     gint               index);
+gint 	       ev_document_forms_form_field_choice_get_n_items      (EvDocumentForms   *document_forms,
+								     EvFormField       *field);
+gboolean       ev_document_forms_form_field_choice_is_item_selected (EvDocumentForms   *document_forms,
+								     EvFormField       *field,
+								     gint               index);
+void 	       ev_document_forms_form_field_choice_select_item      (EvDocumentForms   *document_forms,
+								     EvFormField       *field,
+								     gint               index);
+void 	       ev_document_forms_form_field_choice_toggle_item      (EvDocumentForms   *document_forms,
+								     EvFormField       *field,
+								     gint               index);
+void 	       ev_document_forms_form_field_choice_unselect_all     (EvDocumentForms   *document_forms,
+								     EvFormField       *field);
+void 	       ev_document_forms_form_field_choice_set_text         (EvDocumentForms   *document_forms,
+								     EvFormField       *field,
+								     const gchar       *text);
+gchar         *ev_document_forms_form_field_choice_get_text         (EvDocumentForms   *document_forms,
+								     EvFormField       *field);
 
 G_END_DECLS
 

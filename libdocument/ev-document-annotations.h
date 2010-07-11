@@ -29,6 +29,7 @@
 
 #include "ev-document.h"
 #include "ev-annotation.h"
+#include "ev-mapping-list.h"
 
 G_BEGIN_DECLS
 
@@ -47,20 +48,20 @@ struct _EvDocumentAnnotationsInterface
 	GTypeInterface base_iface;
 
 	/* Methods  */
-	GList *(* get_annotations)         (EvDocumentAnnotations *document_annots,
-					    EvPage                *page);
-	void   (* annotation_set_contents) (EvDocumentAnnotations *document_annots,
-					    EvAnnotation          *annot,
-					    const gchar           *contents);
+	EvMappingList *(* get_annotations)         (EvDocumentAnnotations *document_annots,
+						    EvPage                *page);
+	void           (* annotation_set_contents) (EvDocumentAnnotations *document_annots,
+						    EvAnnotation          *annot,
+						    const gchar           *contents);
 };
 
-GType  ev_document_annotations_get_type                (void) G_GNUC_CONST;
-GList *ev_document_annotations_get_annotations         (EvDocumentAnnotations *document_annots,
-							EvPage                *page);
+GType          ev_document_annotations_get_type                (void) G_GNUC_CONST;
+EvMappingList *ev_document_annotations_get_annotations         (EvDocumentAnnotations *document_annots,
+								EvPage                *page);
 
-void   ev_document_annotations_annotation_set_contents (EvDocumentAnnotations *document_annots,
-							EvAnnotation          *annot,
-							const gchar           *contents);
+void           ev_document_annotations_annotation_set_contents (EvDocumentAnnotations *document_annots,
+								EvAnnotation          *annot,
+								const gchar           *contents);
 
 G_END_DECLS
 

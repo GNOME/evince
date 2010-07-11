@@ -24,12 +24,12 @@
 
 #include <glib.h>
 
-GtkTreeModel *djvu_links_get_links_model    (EvDocumentLinks *document_links);
-GList        *djvu_links_get_links          (EvDocumentLinks *document_links,
-                                             gint             page,
-                                             double           scale_factor);
-EvLinkDest   *djvu_links_find_link_dest     (EvDocumentLinks *document_links,
-                                             const gchar     *link_name);
-gboolean      djvu_links_has_document_links (EvDocumentLinks *document_links);
+GtkTreeModel  *djvu_links_get_links_model    (EvDocumentLinks *document_links);
+EvMappingList *djvu_links_get_links          (EvDocumentLinks *document_links,
+					      gint             page,
+					      double           scale_factor);
+EvLinkDest    *djvu_links_find_link_dest     (EvDocumentLinks *document_links,
+					      const gchar     *link_name);
+gboolean       djvu_links_has_document_links (EvDocumentLinks *document_links);
 
 #endif /* __DJVU_LINK_H__ */

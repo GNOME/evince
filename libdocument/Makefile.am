@@ -35,7 +35,7 @@ INST_H_SRC_FILES = 				\
 	ev-link-action.h			\
 	ev-link-dest.h				\
 	ev-link.h				\
-	ev-mapping.h				\
+	ev-mapping-list.h			\
 	ev-page.h				\
 	ev-render-context.h			\
 	ev-selection.h				\
@@ -80,7 +80,7 @@ libevdocument_la_SOURCES=			\
 	ev-debug.c				\
 	ev-file-exporter.c			\
 	ev-file-helpers.c			\
-	ev-mapping.c				\
+	ev-mapping-list.c			\
 	ev-module.c				\
 	ev-page.c				\
 	ev-render-context.c			\

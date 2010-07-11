@@ -30,6 +30,7 @@
 
 #include "ev-document.h"
 #include "ev-image.h"
+#include "ev-mapping-list.h"
 
 G_BEGIN_DECLS
 
@@ -47,17 +48,17 @@ struct _EvDocumentImagesInterface {
         GTypeInterface base_iface;
 
         /* Methods  */
-        GList     *(* get_image_mapping) (EvDocumentImages *document_images,
-					  EvPage           *page);
-	GdkPixbuf *(* get_image)         (EvDocumentImages *document_images,
-					  EvImage          *image);
+        EvMappingList *(* get_image_mapping) (EvDocumentImages *document_images,
+					      EvPage           *page);
+	GdkPixbuf     *(* get_image)         (EvDocumentImages *document_images,
+					      EvImage          *image);
 };
 
-GType      ev_document_images_get_type            (void) G_GNUC_CONST;
-GList     *ev_document_images_get_image_mapping   (EvDocumentImages *document_images,
-						   EvPage           *page);
-GdkPixbuf *ev_document_images_get_image           (EvDocumentImages *document_images,
-						   EvImage          *image);
+GType          ev_document_images_get_type          (void) G_GNUC_CONST;
+EvMappingList *ev_document_images_get_image_mapping (EvDocumentImages *document_images,
+						     EvPage           *page);
+GdkPixbuf     *ev_document_images_get_image         (EvDocumentImages *document_images,
+						     EvImage          *image);
 
 G_END_DECLS
 

@@ -54,16 +54,13 @@ ev_document_links_get_links_model (EvDocumentLinks *document_links)
 	return retval;
 }
 
-GList *
+EvMappingList *
 ev_document_links_get_links (EvDocumentLinks *document_links,
 			     EvPage          *page)
 {
 	EvDocumentLinksInterface *iface = EV_DOCUMENT_LINKS_GET_IFACE (document_links);
-	GList *retval;
 
-	retval = iface->get_links (document_links, page);
-
-	return retval;
+	return iface->get_links (document_links, page);
 }
 
 EvLinkDest *

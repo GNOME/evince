@@ -30,7 +30,6 @@
 #include "ev-transition-animation.h"
 #include "ev-view-cursor.h"
 #include "ev-page-cache.h"
-#include "ev-mapping.h"
 
 enum {
 	PROP_0,
@@ -749,12 +748,12 @@ ev_view_presentation_get_link_at_location (EvViewPresentation *pview,
 					   gdouble             x,
 					   gdouble             y)
 {
-	GdkRectangle page_area;
-	GList       *link_mapping;
-	EvLink      *link;
-	gdouble      width, height;
-	gdouble      new_x, new_y;
-	gdouble      scale;
+	GdkRectangle   page_area;
+	EvMappingList *link_mapping;
+	EvLink        *link;
+	gdouble        width, height;
+	gdouble        new_x, new_y;
+	gdouble        scale;
 
 	if (!pview->page_cache)
 		return NULL;

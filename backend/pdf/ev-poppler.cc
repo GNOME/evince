@@ -37,7 +37,6 @@
 
 #include "ev-poppler.h"
 #include "ev-file-exporter.h"
-#include "ev-mapping.h"
 #include "ev-document-find.h"
 #include "ev-document-misc.h"
 #include "ev-document-links.h"
@@ -1242,7 +1241,7 @@ pdf_document_links_get_links_model (EvDocumentLinks *document_links)
 	return model;
 }
 
-static GList *
+static EvMappingList *
 pdf_document_links_get_links (EvDocumentLinks *document_links,
 			      EvPage          *page)
 {
@@ -1277,7 +1276,7 @@ pdf_document_links_get_links (EvDocumentLinks *document_links,
 
 	poppler_page_free_link_mapping (mapping_list);
 
-	return g_list_reverse (retval);
+	return ev_mapping_list_new (page->index, g_list_reverse (retval), (GDestroyNotify)g_object_unref);
 }
 
 static EvLinkDest *
@@ -1308,7 +1307,7 @@ pdf_document_document_links_iface_init (EvDocumentLinksInterface *iface)
 	iface->find_link_dest = pdf_document_links_find_link_dest;
 }
 
-static GList *
+static EvMappingList *
 pdf_document_images_get_image_mapping (EvDocumentImages *document_images,
 				       EvPage           *page)
 {
@@ -1341,7 +1340,7 @@ pdf_document_images_get_image_mapping (EvDocumentImages *document_images,
 
 	poppler_page_free_image_mapping (mapping_list);
 
-	return g_list_reverse (retval);
+	return ev_mapping_list_new (page->index, g_list_reverse (retval), (GDestroyNotify)g_object_unref);
 }
 
 GdkPixbuf *
@@ -2265,7 +2264,7 @@ ev_form_field_from_poppler_field (PopplerFormField *poppler_field)
 	return ev_field;
 }
 
-static GList *
+static EvMappingList *
 pdf_document_forms_get_form_fields (EvDocumentForms *document, 
 				    EvPage          *page)
 {
@@ -2310,7 +2309,9 @@ pdf_document_forms_get_form_fields (EvDocumentForms *document,
 	
 	poppler_page_free_form_field_mapping (fields);
 
-	return g_list_reverse (retval);
+	return retval ? ev_mapping_list_new (page->index,
+					     g_list_reverse (retval),
+					     (GDestroyNotify)g_object_unref) : NULL;
 }
 
 static gchar *
@@ -2664,7 +2665,7 @@ ev_annot_from_poppler_annot (PopplerAnnot *poppler_annot,
 	return ev_annot;
 }
 
-static GList *
+static EvMappingList *
 pdf_document_annotations_get_annotations (EvDocumentAnnotations *document_annotations,
 					  EvPage                *page)
 {
@@ -2715,7 +2716,7 @@ pdf_document_annotations_get_annotations (EvDocumentAnnotations *document_annota
 
 	poppler_page_free_annot_mapping (annots);
 
-	return g_list_reverse (retval);
+	return ev_mapping_list_new (page->index, g_list_reverse (retval), (GDestroyNotify)g_object_unref);
 }
 
 static void

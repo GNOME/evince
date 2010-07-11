@@ -243,10 +243,10 @@ struct _EvJobPageData
 	gint page;
 	EvJobPageDataFlags flags;
 
-	GList *link_mapping;
-	GList *image_mapping;
-	GList *form_field_mapping;
-	GList *annot_mapping;
+	EvMappingList  *link_mapping;
+	EvMappingList  *image_mapping;
+	EvMappingList  *form_field_mapping;
+	EvMappingList  *annot_mapping;
 	cairo_region_t *text_mapping;
 	gchar *text;
 	EvRectangle *text_layout;

@@ -28,7 +28,7 @@ ev_document_forms_default_init (EvDocumentFormsInterface *klass)
 {
 }
 
-GList *
+EvMappingList *
 ev_document_forms_get_form_fields (EvDocumentForms *document_forms,
 				   EvPage          *page)
 {

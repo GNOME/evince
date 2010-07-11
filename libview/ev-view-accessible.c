@@ -28,7 +28,6 @@
 #include "ev-page-cache.h"
 #include "ev-view-accessible.h"
 #include "ev-view-private.h"
-#include "ev-mapping.h"
 
 #define EV_TYPE_VIEW_ACCESSIBLE      (ev_view_accessible_get_type ())
 #define EV_VIEW_ACCESSIBLE(obj)      (G_TYPE_CHECK_INSTANCE_CAST ((obj), EV_TYPE_VIEW_ACCESSIBLE, EvViewAccessible))

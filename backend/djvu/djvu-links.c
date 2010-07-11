@@ -26,7 +26,7 @@
 #include "djvu-links.h"
 #include "djvu-document-private.h"
 #include "ev-document-links.h"
-#include "ev-mapping.h"
+#include "ev-mapping-list.h"
 
 static gboolean number_from_miniexp(miniexp_t sexp, int *number)
 {
@@ -354,7 +354,7 @@ djvu_links_has_document_links (EvDocumentLinks *document_links)
 	return FALSE;
 }
 
-GList *
+EvMappingList *
 djvu_links_get_links (EvDocumentLinks *document_links,
                       gint             page,
                       double           scale_factor)
@@ -390,7 +390,7 @@ djvu_links_get_links (EvDocumentLinks *document_links,
 		ddjvu_miniexp_release (djvu_document->d_document, page_annotations);
 	}
 	
-	return retval;
+	return ev_mapping_list_new (page, retval, (GDestroyNotify)g_object_unref);
 }
 
 EvLinkDest *

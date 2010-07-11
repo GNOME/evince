@@ -49,6 +49,7 @@
 #include <libdocument/ev-link-action.h>
 #include <libdocument/ev-link-dest.h>
 #include <libdocument/ev-link.h>
+#include <libdocument/ev-mapping-list.h>
 #include <libdocument/ev-page.h>
 #include <libdocument/ev-render-context.h>
 #include <libdocument/ev-selection.h>

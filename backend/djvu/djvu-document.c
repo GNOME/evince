@@ -689,7 +689,7 @@ djvu_document_find_iface_init (EvDocumentFindInterface *iface)
         iface->find_text = djvu_document_find_find_text;
 }
 
-static GList *
+static EvMappingList *
 djvu_document_links_get_links (EvDocumentLinks *document_links,
 			       EvPage          *page)
 {

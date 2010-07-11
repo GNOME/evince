@@ -28,7 +28,7 @@ ev_document_images_default_init (EvDocumentImagesInterface *klass)
 {
 }
 
-GList *
+EvMappingList *
 ev_document_images_get_image_mapping (EvDocumentImages *document_images,
 				      EvPage           *page)
 {

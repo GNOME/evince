@@ -22,7 +22,7 @@
 #include <glib.h>
 #include "ev-jobs.h"
 #include "ev-job-scheduler.h"
-#include "ev-mapping.h"
+#include "ev-mapping-list.h"
 #include "ev-selection.h"
 #include "ev-document-links.h"
 #include "ev-document-forms.h"
@@ -35,10 +35,10 @@ typedef struct _EvPageCacheData {
 	EvJob          *job;
 	gboolean        done : 1;
 
-	GList          *link_mapping;
-	GList          *image_mapping;
-	GList          *form_field_mapping;
-	GList          *annot_mapping;
+	EvMappingList  *link_mapping;
+	EvMappingList  *image_mapping;
+	EvMappingList  *form_field_mapping;
+	EvMappingList  *annot_mapping;
 	cairo_region_t *text_mapping;
 	EvRectangle    *text_layout;
 	guint           text_layout_length;
@@ -72,22 +72,22 @@ ev_page_cache_data_free (EvPageCacheData *data)
 	}
 
 	if (data->link_mapping) {
-		ev_mapping_list_free (data->link_mapping, g_object_unref);
+		ev_mapping_list_unref (data->link_mapping);
 		data->link_mapping = NULL;
 	}
 
 	if (data->image_mapping) {
-		ev_mapping_list_free (data->image_mapping, g_object_unref);
+		ev_mapping_list_unref (data->image_mapping);
 		data->image_mapping = NULL;
 	}
 
 	if (data->form_field_mapping) {
-		ev_mapping_list_free (data->form_field_mapping, g_object_unref);
+		ev_mapping_list_unref (data->form_field_mapping);
 		data->form_field_mapping = NULL;
 	}
 
 	if (data->annot_mapping) {
-		ev_mapping_list_free (data->annot_mapping, g_object_unref);
+		ev_mapping_list_unref (data->annot_mapping);
 		data->annot_mapping = NULL;
 	}
 
@@ -252,7 +252,7 @@ ev_page_cache_set_flags (EvPageCache       *cache,
 	cache->flags = flags;
 }
 
-GList *
+EvMappingList *
 ev_page_cache_get_link_mapping (EvPageCache *cache,
 				gint         page)
 {
@@ -274,7 +274,7 @@ ev_page_cache_get_link_mapping (EvPageCache *cache,
 	return data->link_mapping;
 }
 
-GList *
+EvMappingList *
 ev_page_cache_get_image_mapping (EvPageCache *cache,
 				 gint         page)
 {
@@ -296,7 +296,7 @@ ev_page_cache_get_image_mapping (EvPageCache *cache,
 	return data->image_mapping;
 }
 
-GList *
+EvMappingList *
 ev_page_cache_get_form_field_mapping (EvPageCache *cache,
 				      gint         page)
 {
@@ -318,7 +318,7 @@ ev_page_cache_get_form_field_mapping (EvPageCache *cache,
 	return data->form_field_mapping;
 }
 
-GList *
+EvMappingList *
 ev_page_cache_get_annot_mapping (EvPageCache *cache,
 				 gint         page)
 {

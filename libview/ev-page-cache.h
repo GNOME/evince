@@ -47,13 +47,13 @@ void               ev_page_cache_set_page_range         (EvPageCache       *cach
 EvJobPageDataFlags ev_page_cache_get_flags              (EvPageCache       *cache);
 void               ev_page_cache_set_flags              (EvPageCache       *cache,
 							 EvJobPageDataFlags flags);
-GList             *ev_page_cache_get_link_mapping       (EvPageCache       *cache,
+EvMappingList     *ev_page_cache_get_link_mapping       (EvPageCache       *cache,
 							 gint               page);
-GList             *ev_page_cache_get_image_mapping      (EvPageCache       *cache,
+EvMappingList     *ev_page_cache_get_image_mapping      (EvPageCache       *cache,
 							 gint               page);
-GList             *ev_page_cache_get_form_field_mapping (EvPageCache       *cache,
+EvMappingList     *ev_page_cache_get_form_field_mapping (EvPageCache       *cache,
 							 gint               page);
-GList             *ev_page_cache_get_annot_mapping      (EvPageCache       *cache,
+EvMappingList     *ev_page_cache_get_annot_mapping      (EvPageCache       *cache,
 							 gint               page);
 cairo_region_t    *ev_page_cache_get_text_mapping       (EvPageCache       *cache,
 							 gint               page);

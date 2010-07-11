@@ -28,7 +28,7 @@ ev_document_annotations_default_init (EvDocumentAnnotationsInterface *klass)
 {
 }
 
-GList *
+EvMappingList *
 ev_document_annotations_get_annotations (EvDocumentAnnotations *document_annots,
 					 EvPage                *page)
 {
