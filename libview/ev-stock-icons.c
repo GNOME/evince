@@ -46,7 +46,8 @@ static const EvStockIcon stock_icons [] = {
 	{ EV_STOCK_RESIZE_SE,        "resize-se"},
 	{ EV_STOCK_RESIZE_SW,        "resize-sw"},
 	{ EV_STOCK_CLOSE,            "close"},
-	{ EV_STOCK_INVERTED_COLORS,  "stock_filters-invert"}
+	{ EV_STOCK_INVERTED_COLORS,  "stock_filters-invert"},
+	{ EV_STOCK_ATTACHMENT,       "mail-attachment"}
 };
 
 static gchar *ev_icons_path;

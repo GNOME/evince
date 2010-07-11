@@ -46,6 +46,7 @@ G_BEGIN_DECLS
 #define EV_STOCK_RESIZE_SW              "resize-sw"
 #define EV_STOCK_CLOSE                  "close"
 #define EV_STOCK_INVERTED_COLORS        "inverted"
+#define EV_STOCK_ATTACHMENT             "mail-attachment"
 
 void ev_stock_icons_init       (void);
 void ev_stock_icons_shutdown   (void);
