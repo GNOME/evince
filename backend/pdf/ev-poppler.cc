@@ -110,6 +110,7 @@ struct _PdfDocument
 	PdfPrintContext *print_ctx;
 
 	GList *layers;
+	GHashTable *annots;
 };
 
 static void pdf_document_security_iface_init             (EvDocumentSecurityInterface    *iface);
@@ -185,6 +186,11 @@ pdf_document_dispose (GObject *object)
 	if (pdf_document->print_ctx) {
 		pdf_print_context_free (pdf_document->print_ctx);
 		pdf_document->print_ctx = NULL;
+	}
+
+	if (pdf_document->annots) {
+		g_hash_table_destroy (pdf_document->annots);
+		pdf_document->annots = NULL;
 	}
 
 	if (pdf_document->document) {
@@ -2681,6 +2687,7 @@ pdf_document_annotations_get_annotations (EvDocumentAnnotations *document_annota
 	GList *retval = NULL;
 	PdfDocument *pdf_document;
 	PopplerPage *poppler_page;
+	EvMappingList *mapping_list;
 	GList *annots;
 	GList *list;
 	gdouble height;
@@ -2688,6 +2695,14 @@ pdf_document_annotations_get_annotations (EvDocumentAnnotations *document_annota
 
 	pdf_document = PDF_DOCUMENT (document_annotations);
 	poppler_page = POPPLER_PAGE (page->backend_page);
+
+	if (pdf_document->annots) {
+		mapping_list = (EvMappingList *)g_hash_table_lookup (pdf_document->annots,
+								     GINT_TO_POINTER (page->index));
+		if (mapping_list)
+			return ev_mapping_list_ref (mapping_list);
+	}
+
 	annots = poppler_page_get_annot_mapping (poppler_page);
 	poppler_page_get_size (poppler_page, NULL, &height);
 
@@ -2725,7 +2740,22 @@ pdf_document_annotations_get_annotations (EvDocumentAnnotations *document_annota
 
 	poppler_page_free_annot_mapping (annots);
 
-	return ev_mapping_list_new (page->index, g_list_reverse (retval), (GDestroyNotify)g_object_unref);
+	if (!retval)
+		return NULL;
+
+	if (!pdf_document->annots) {
+		pdf_document->annots = g_hash_table_new_full (g_direct_hash,
+							      g_direct_equal,
+							      (GDestroyNotify)NULL,
+							      (GDestroyNotify)ev_mapping_list_unref);
+	}
+
+	mapping_list = ev_mapping_list_new (page->index, g_list_reverse (retval), (GDestroyNotify)g_object_unref);
+	g_hash_table_insert (pdf_document->annots,
+			     GINT_TO_POINTER (page->index),
+			     ev_mapping_list_ref (mapping_list));
+
+	return mapping_list;
 }
 
 static void
