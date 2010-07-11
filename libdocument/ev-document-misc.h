@@ -60,6 +60,8 @@ void		 ev_document_misc_invert_pixbuf  (GdkPixbuf       *pixbuf);
 
 gdouble          ev_document_misc_get_screen_dpi (GdkScreen *screen);
 
+gchar           *ev_document_misc_format_date (GTime utime);
+
 G_END_DECLS
 
 #endif /* EV_DOCUMENT_MISC_H */
