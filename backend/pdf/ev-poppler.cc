@@ -2609,9 +2609,18 @@ ev_annot_from_poppler_annot (PopplerAnnot *poppler_annot,
 	}
 
 	if (ev_annot) {
+		time_t utime;
+		gchar *modified;
+
 		ev_annot->contents = poppler_annot_get_contents (poppler_annot);
 		ev_annot->name = poppler_annot_get_name (poppler_annot);
-		ev_annot->modified = poppler_annot_get_modified (poppler_annot);
+		modified = poppler_annot_get_modified (poppler_annot);
+		if (poppler_date_parse (modified, &utime)) {
+			ev_annot->modified = ev_document_misc_format_date (utime);
+			g_free (modified);
+		} else {
+			ev_annot->modified = modified;
+		}
 		poppler_annot_color_to_gdk_color (poppler_annot, &ev_annot->color);
 
 		if (POPPLER_IS_ANNOT_MARKUP (poppler_annot)) {
