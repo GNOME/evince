@@ -122,8 +122,8 @@ AM_CONDITIONAL([PLATFORM_HILDON],[test "$with_platform" = "hildon"])
 AM_CONDITIONAL([PLATFORM_WIN32],[test "$with_platform" = "win32"])
 
 dnl Specify required versions of dependencies
-GTK_REQUIRED=2.90.4
-GLIB_REQUIRED=2.25.9
+GTK_REQUIRED=2.90.5
+GLIB_REQUIRED=2.25.11
 KEYRING_REQUIRED=2.22.0
 AC_SUBST([GLIB_REQUIRED])
 AC_SUBST([GTK_REQUIRED])
