@@ -24,9 +24,9 @@
 #include "ev-annotation.h"
 
 
-static void ev_annotation_markup_iface_base_init       (EvAnnotationMarkupIface *iface);
-static void ev_annotation_text_markup_iface_init       (EvAnnotationMarkupIface *iface);
-static void ev_annotation_attachment_markup_iface_init (EvAnnotationMarkupIface *iface);
+static void ev_annotation_markup_default_init          (EvAnnotationMarkupInterface *iface);
+static void ev_annotation_text_markup_iface_init       (EvAnnotationMarkupInterface *iface);
+static void ev_annotation_attachment_markup_iface_init (EvAnnotationMarkupInterface *iface);
 
 enum {
 	PROP_0,
@@ -38,30 +38,7 @@ enum {
 };
 
 G_DEFINE_ABSTRACT_TYPE (EvAnnotation, ev_annotation, G_TYPE_OBJECT)
-GType
-ev_annotation_markup_get_type (void)
-{
-	static volatile gsize g_define_type_id__volatile = 0;
-
-	if (g_once_init_enter (&g_define_type_id__volatile)) {
-		GType g_define_type_id;
-		const GTypeInfo our_info = {
-			sizeof (EvAnnotationMarkupIface),
-			(GBaseInitFunc) ev_annotation_markup_iface_base_init,
-			NULL,
-		};
-
-		g_define_type_id = g_type_register_static (G_TYPE_INTERFACE,
-							   "EvAnnotationMarkup",
-							   &our_info, (GTypeFlags)0);
-		g_type_interface_add_prerequisite (g_define_type_id, EV_TYPE_ANNOTATION);
-
-		g_once_init_leave (&g_define_type_id__volatile, g_define_type_id);
-	}
-
-	return g_define_type_id__volatile;
-}
-
+G_DEFINE_INTERFACE (EvAnnotationMarkup, ev_annotation_markup, EV_TYPE_ANNOTATION)
 G_DEFINE_TYPE_WITH_CODE (EvAnnotationText, ev_annotation_text, EV_TYPE_ANNOTATION,
 	 {
 		 G_IMPLEMENT_INTERFACE (EV_TYPE_ANNOTATION_MARKUP,
@@ -125,7 +102,7 @@ typedef struct {
 } EvAnnotationMarkupProps;
 
 static void
-ev_annotation_markup_iface_base_init (EvAnnotationMarkupIface *iface)
+ev_annotation_markup_default_init (EvAnnotationMarkupInterface *iface)
 {
 	static gboolean initialized = FALSE;
 
@@ -378,7 +355,7 @@ ev_annotation_text_class_init (EvAnnotationTextClass *klass)
 }
 
 static void
-ev_annotation_text_markup_iface_init (EvAnnotationMarkupIface *iface)
+ev_annotation_text_markup_iface_init (EvAnnotationMarkupInterface *iface)
 {
 }
 
@@ -423,7 +400,7 @@ ev_annotation_attachment_class_init (EvAnnotationAttachmentClass *klass)
 }
 
 static void
-ev_annotation_attachment_markup_iface_init (EvAnnotationMarkupIface *iface)
+ev_annotation_attachment_markup_iface_init (EvAnnotationMarkupInterface *iface)
 {
 }
 
