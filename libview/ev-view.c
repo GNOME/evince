@@ -178,6 +178,9 @@ static void       highlight_find_results                     (EvView            
 							      int                 page);
 static void       highlight_forward_search_results           (EvView             *view,
 							      int                 page);
+static void       focus_annotation                           (EvView             *view,
+							      int                 page,
+							      GdkRectangle       *clip);
 static void       draw_one_page                              (EvView             *view,
 							      gint                page,
 							      cairo_t            *cr,
@@ -2746,6 +2749,30 @@ ev_view_handle_annotation (EvView       *view,
 	}
 }
 
+void
+ev_view_focus_annotation (EvView    *view,
+			  EvMapping *annot_mapping)
+{
+	GdkRectangle  view_rect;
+	EvAnnotation *annot;
+
+	if (!EV_IS_DOCUMENT_ANNOTATIONS (view->document))
+		return;
+
+	if (view->focus_annotation == annot_mapping)
+		return;
+
+	view->focus_annotation = annot_mapping;
+	annot = (EvAnnotation *)annot_mapping->data;
+
+	ev_document_model_set_page (view->model, annot->page->index);
+
+	doc_rect_to_view_rect (view, annot->page->index,
+			       &annot_mapping->area, &view_rect);
+	ensure_rectangle_is_visible (view, &view_rect);
+	gtk_widget_queue_draw (GTK_WIDGET (view));
+}
+
 static gboolean
 ev_view_synctex_backward_search (EvView *view,
 				 gdouble x,
@@ -3175,6 +3202,8 @@ ev_view_expose_event (GtkWidget      *widget,
 			highlight_find_results (view, i);
 		if (page_ready && EV_IS_DOCUMENT_ANNOTATIONS (view->document))
 			show_annotation_windows (view, i);
+		if (page_ready && view->focus_annotation)
+			focus_annotation (view, i, &event->area);
 		if (page_ready && view->synctex_result)
 			highlight_forward_search_results (view, i);
 	}
@@ -3410,6 +3439,9 @@ ev_view_button_press_event (GtkWidget      *widget,
 					view->synctex_result = NULL;
 					gtk_widget_queue_draw (widget);
 				}
+
+				if (view->focus_annotation)
+					view->focus_annotation = NULL;
 
 				if (EV_IS_SELECTION (view->document))
 					start_selection_for_event (view, event);
@@ -4050,6 +4082,29 @@ highlight_forward_search_results (EvView *view, int page)
 			 rect.width, rect.height);
 	cairo_stroke (cr);
 	cairo_destroy (cr);
+}
+
+static void
+focus_annotation (EvView       *view,
+		  gint          page,
+		  GdkRectangle *clip)
+{
+	GtkWidget    *widget = GTK_WIDGET (view);
+	GdkRectangle  rect;
+	EvMapping    *mapping = view->focus_annotation;
+	EvAnnotation *annot = (EvAnnotation *)mapping->data;
+
+	if (annot->page->index != page)
+		return;
+
+	doc_rect_to_view_rect (view, page, &mapping->area, &rect);
+	gtk_paint_focus (gtk_widget_get_style (widget),
+			 gtk_layout_get_bin_window (GTK_LAYOUT (view)),
+			 gtk_widget_get_state (widget),
+			 NULL, widget, NULL,
+			 rect.x - view->scroll_x,
+			 rect.y - view->scroll_y,
+			 rect.width + 1, rect.height + 1);
 }
 
 static void

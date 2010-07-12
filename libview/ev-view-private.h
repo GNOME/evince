@@ -184,6 +184,7 @@ struct _EvView {
 	/* Annotations */
 	GList             *window_children;
 	EvViewWindowChild *window_child_focus;
+	EvMapping         *focus_annotation;
 
 	/* Synctex */
 	EvMapping *synctex_result;
