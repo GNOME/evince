@@ -5664,12 +5664,14 @@ merge_selection_region (EvView *view,
 		/* Now we figure out what needs redrawing */
 		if (old_sel && new_sel) {
 			if (old_sel->covered_region && new_sel->covered_region) {
-				cairo_region_t *tbr;
-
 				/* We only want to redraw the areas that have
 				 * changed, so we xor the old and new regions
 				 * and redraw if it's different */
 				region = cairo_region_copy (old_sel->covered_region);
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1, 9, 12)
+				cairo_region_xor (region, new_sel->covered_region);
+#else
+				cairo_region_t *tbr;
 				tbr = cairo_region_copy (new_sel->covered_region);
 
 				/* xor old_sel, new_sel*/
@@ -5677,6 +5679,7 @@ merge_selection_region (EvView *view,
 				cairo_region_subtract (region, new_sel->covered_region);
 				cairo_region_union (region, tbr);
 				cairo_region_destroy (tbr);
+#endif
 
 				if (cairo_region_is_empty (region)) {
 					cairo_region_destroy (region);
