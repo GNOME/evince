@@ -41,14 +41,22 @@ enum {
 	N_COLUMNS
 };
 
+enum {
+	ANNOT_ACTIVATED,
+	N_SIGNALS
+};
+
 struct _EvSidebarAnnotationsPrivate {
 	GtkWidget  *notebook;
 	GtkWidget  *tree_view;
 
 	EvJob      *job;
+	guint       selection_changed_id;
 };
 
 static void ev_sidebar_annotations_page_iface_init (EvSidebarPageInterface *iface);
+
+static guint signals[N_SIGNALS];
 
 G_DEFINE_TYPE_EXTENDED (EvSidebarAnnotations,
                         ev_sidebar_annotations,
@@ -91,6 +99,7 @@ ev_sidebar_annotations_add_annots_list (EvSidebarAnnotations *ev_annots)
 	GtkTreeModel      *loading_model;
 	GtkCellRenderer   *renderer;
 	GtkTreeViewColumn *column;
+	GtkTreeSelection  *selection;
 
 	swindow = gtk_scrolled_window_new (NULL, NULL);
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (swindow),
@@ -105,6 +114,8 @@ ev_sidebar_annotations_add_annots_list (EvSidebarAnnotations *ev_annots)
 
 	gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (ev_annots->priv->tree_view),
 					   FALSE);
+	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (ev_annots->priv->tree_view));
+	gtk_tree_selection_set_mode (selection, GTK_SELECTION_NONE);
 
 	column = gtk_tree_view_column_new ();
 
@@ -173,6 +184,16 @@ ev_sidebar_annotations_class_init (EvSidebarAnnotationsClass *klass)
 	g_type_class_add_private (g_object_class, sizeof (EvSidebarAnnotationsPrivate));
 
 	g_object_class_override_property (g_object_class, PROP_WIDGET, "main-widget");
+
+	signals[ANNOT_ACTIVATED] =
+		g_signal_new ("annot-activated",
+			      G_TYPE_FROM_CLASS (g_object_class),
+			      G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
+			      G_STRUCT_OFFSET (EvSidebarAnnotationsClass, annot_activated),
+			      NULL, NULL,
+			      g_cclosure_marshal_VOID__POINTER,
+			      G_TYPE_NONE, 1,
+			      G_TYPE_POINTER);
 }
 
 GtkWidget *
@@ -182,11 +203,30 @@ ev_sidebar_annotations_new (void)
 }
 
 static void
+selection_changed_cb (GtkTreeSelection     *selection,
+		      EvSidebarAnnotations *sidebar_annots)
+{
+	GtkTreeModel *model;
+	GtkTreeIter   iter;
+
+	if (gtk_tree_selection_get_selected (selection, &model, &iter)) {
+		EvMapping *mapping = NULL;
+
+		gtk_tree_model_get (model, &iter,
+				    COLUMN_ANNOT_MAPPING, &mapping,
+				    -1);
+		if (mapping)
+			g_signal_emit (sidebar_annots, signals[ANNOT_ACTIVATED], 0, mapping);
+	}
+}
+
+static void
 job_finished_callback (EvJobAnnots          *job,
 		       EvSidebarAnnotations *sidebar_annots)
 {
 	EvSidebarAnnotationsPrivate *priv;
 	GtkTreeStore *model;
+	GtkTreeSelection *selection;
 	GList *l;
 	GdkPixbuf *text_icon = NULL;
 	GdkPixbuf *attachment_icon = NULL;
@@ -204,6 +244,15 @@ job_finished_callback (EvJobAnnots          *job,
 		priv->job = NULL;
 
 		return;
+	}
+
+	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (priv->tree_view));
+	gtk_tree_selection_set_mode (selection, GTK_SELECTION_SINGLE);
+	if (priv->selection_changed_id == 0) {
+		priv->selection_changed_id =
+			g_signal_connect (selection, "changed",
+					  G_CALLBACK (selection_changed_cb),
+					  sidebar_annots);
 	}
 
 	model = gtk_tree_store_new (N_COLUMNS,

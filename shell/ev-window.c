@@ -5376,6 +5376,14 @@ sidebar_layers_visibility_changed (EvSidebarLayers *layers,
 }
 
 static void
+sidebar_annots_annot_activated_cb (EvSidebarAnnotations *sidebar_annots,
+				   EvMapping            *annot_mapping,
+				   EvWindow             *window)
+{
+	ev_view_focus_annotation (EV_VIEW (window->priv->view), annot_mapping);
+}
+
+static void
 register_custom_actions (EvWindow *window, GtkActionGroup *group)
 {
 	GtkAction *action;
@@ -6537,6 +6545,10 @@ ev_window_init (EvWindow *ev_window)
 
 	sidebar_widget = ev_sidebar_annotations_new ();
 	ev_window->priv->sidebar_annots = sidebar_widget;
+	g_signal_connect (sidebar_widget,
+			  "annot_activated",
+			  G_CALLBACK (sidebar_annots_annot_activated_cb),
+			  ev_window);
 	gtk_widget_show (sidebar_widget);
 	ev_sidebar_add_page (EV_SIDEBAR (ev_window->priv->sidebar),
 			     sidebar_widget);

@@ -46,6 +46,8 @@ struct _EvSidebarAnnotations {
 struct _EvSidebarAnnotationsClass {
 	GtkVBoxClass base_class;
 
+	void    (* annot_activated) (EvSidebarAnnotations *sidebar_annots,
+				     EvMapping            *mapping);
 };
 
 GType      ev_sidebar_annotations_get_type (void) G_GNUC_CONST;
