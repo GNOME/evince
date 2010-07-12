@@ -1036,10 +1036,17 @@ ev_application_get_dbus_connection (EvApplication *application)
 gboolean
 ev_application_has_window (EvApplication *application)
 {
-	GList   *windows = ev_application_get_windows (application);
-	gboolean retval = windows != NULL;
+	GList    *l, *toplevels;
+	gboolean  retval = FALSE;
 
-	g_list_free (windows);
+	toplevels = gtk_window_list_toplevels ();
+
+	for (l = toplevels; l != NULL && !retval; l = l->next) {
+		if (EV_IS_WINDOW (l->data))
+			retval = TRUE;
+	}
+
+	g_list_free (toplevels);
 
 	return retval;
 }
