@@ -67,6 +67,7 @@ void	          ev_application_open_uri_list       (EvApplication   *application,
     						      guint32          timestamp);
 GDBusConnection  *ev_application_get_dbus_connection (EvApplication   *application);
 gboolean	  ev_application_has_window	     (EvApplication   *application);
+guint             ev_application_get_n_windows       (EvApplication   *application);
 const gchar *     ev_application_get_uri             (EvApplication   *application);
 GObject		 *ev_application_get_media_keys	     (EvApplication   *application);
 

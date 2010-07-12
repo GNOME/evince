@@ -1051,6 +1051,24 @@ ev_application_has_window (EvApplication *application)
 	return retval;
 }
 
+guint
+ev_application_get_n_windows (EvApplication *application)
+{
+	GList *l, *toplevels;
+	guint  retval = 0;
+
+	toplevels = gtk_window_list_toplevels ();
+
+	for (l = toplevels; l != NULL; l = l->next) {
+		if (EV_IS_WINDOW (l->data))
+			retval++;
+	}
+
+	g_list_free (toplevels);
+
+	return retval;
+}
+
 const gchar *
 ev_application_get_uri (EvApplication *application)
 {
