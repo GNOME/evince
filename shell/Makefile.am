@@ -70,6 +70,8 @@ evince_SOURCES=				\
 	ev-window-title.h		\
 	ev-sidebar.c			\
 	ev-sidebar.h			\
+	ev-sidebar-annotations.c	\
+	ev-sidebar-annotations.h	\
 	ev-sidebar-attachments.c	\
 	ev-sidebar-attachments.h	\
 	ev-sidebar-layers.c		\

@@ -78,6 +78,7 @@
 #include "ev-page-action.h"
 #include "ev-password-view.h"
 #include "ev-properties-dialog.h"
+#include "ev-sidebar-annotations.h"
 #include "ev-sidebar-attachments.h"
 #include "ev-sidebar.h"
 #include "ev-sidebar-links.h"
@@ -140,6 +141,7 @@ struct _EvWindowPrivate {
 	GtkWidget *sidebar_links;
 	GtkWidget *sidebar_attachments;
 	GtkWidget *sidebar_layers;
+	GtkWidget *sidebar_annots;
 
 	/* Settings */
 	GSettings *settings;
@@ -246,6 +248,7 @@ struct _EvWindowPrivate {
 #define THUMBNAILS_SIDEBAR_ID "thumbnails"
 #define ATTACHMENTS_SIDEBAR_ID "attachments"
 #define LAYERS_SIDEBAR_ID "layers"
+#define ANNOTS_SIDEBAR_ID "annotations"
 
 #define EV_PRINT_SETTINGS_FILE  "print-settings"
 #define EV_PRINT_SETTINGS_GROUP "Print Settings"
@@ -933,6 +936,7 @@ setup_sidebar_from_metadata (EvWindow *window)
 	GtkWidget  *links = window->priv->sidebar_links;
 	GtkWidget  *thumbs = window->priv->sidebar_thumbs;
 	GtkWidget  *attachments = window->priv->sidebar_attachments;
+	GtkWidget  *annots = window->priv->sidebar_annots;
 	GtkWidget  *layers = window->priv->sidebar_layers;
 	gchar      *page_id;
 	gint        sidebar_size;
@@ -963,6 +967,8 @@ setup_sidebar_from_metadata (EvWindow *window)
 			ev_sidebar_set_page (EV_SIDEBAR (sidebar), attachments);
 		} else if (strcmp (page_id, LAYERS_SIDEBAR_ID) == 0 && ev_sidebar_page_support_document (EV_SIDEBAR_PAGE (layers), document)) {
 			ev_sidebar_set_page (EV_SIDEBAR (sidebar), layers);
+		} else if (strcmp (page_id, ANNOTS_SIDEBAR_ID) == 0 && ev_sidebar_page_support_document (EV_SIDEBAR_PAGE (annots), document)) {
+			ev_sidebar_set_page (EV_SIDEBAR (sidebar), annots);
 		}
 	} else if (document) {
 		if (ev_sidebar_page_support_document (EV_SIDEBAR_PAGE (links), document)) {
@@ -973,6 +979,8 @@ setup_sidebar_from_metadata (EvWindow *window)
 			ev_sidebar_set_page (EV_SIDEBAR (sidebar), attachments);
 		} else if (ev_sidebar_page_support_document (EV_SIDEBAR_PAGE (layers), document)) {
 			ev_sidebar_set_page (EV_SIDEBAR (sidebar), layers);
+		} else if (ev_sidebar_page_support_document (EV_SIDEBAR_PAGE (annots), document)) {
+			ev_sidebar_set_page (EV_SIDEBAR (sidebar), annots);
 		}
 	}
 }
@@ -4408,6 +4416,8 @@ ev_window_sidebar_current_page_changed_cb (EvSidebar  *ev_sidebar,
 		id = ATTACHMENTS_SIDEBAR_ID;
 	} else if (current_page == ev_window->priv->sidebar_layers) {
 		id = LAYERS_SIDEBAR_ID;
+	} else if (current_page == ev_window->priv->sidebar_annots) {
+		id = ANNOTS_SIDEBAR_ID;
 	} else {
 		g_assert_not_reached();
 	}
@@ -6521,6 +6531,12 @@ ev_window_init (EvWindow *ev_window)
 			  "layers_visibility_changed",
 			  G_CALLBACK (sidebar_layers_visibility_changed),
 			  ev_window);
+	gtk_widget_show (sidebar_widget);
+	ev_sidebar_add_page (EV_SIDEBAR (ev_window->priv->sidebar),
+			     sidebar_widget);
+
+	sidebar_widget = ev_sidebar_annotations_new ();
+	ev_window->priv->sidebar_annots = sidebar_widget;
 	gtk_widget_show (sidebar_widget);
 	ev_sidebar_add_page (EV_SIDEBAR (ev_window->priv->sidebar),
 			     sidebar_widget);
