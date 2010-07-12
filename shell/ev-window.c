@@ -6261,10 +6261,6 @@ ev_window_emit_closed (EvWindow *window)
 	if (!connection)
 		return;
 
-	/* TODO: figure out if this is the last window and use
-	 * g_dbus_connection_flush_sync() to make sure the signal
-	 * is emitted.
-	 */
 	g_dbus_connection_emit_signal (connection,
 				       NULL,
 				       window->priv->dbus_object_path,
@@ -6276,7 +6272,15 @@ ev_window_emit_closed (EvWindow *window)
 		g_printerr ("Failed to emit DBus signal Closed: %s\n",
 			    error->message);
 		g_error_free (error);
+
+		return;
 	}
+
+	/* If this is the last window call g_dbus_connection_flush_sync()
+	 * to make sure the signal is emitted.
+	 */
+	if (ev_application_get_n_windows (EV_APP) == 1)
+		g_dbus_connection_flush_sync (connection, NULL, NULL);
 }
 
 static void
