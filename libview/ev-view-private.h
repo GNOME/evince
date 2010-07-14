@@ -188,6 +188,9 @@ struct _EvView {
 
 	/* Synctex */
 	EvMapping *synctex_result;
+
+	/* Accessibility */
+	gboolean a11y_enabled;
 };
 
 struct _EvViewClass {

@@ -4408,10 +4408,12 @@ ev_view_get_accessible (GtkWidget *widget)
 		factory = atk_registry_get_factory (registry,
 						    derived_type);
 		derived_atk_type = atk_object_factory_get_accessible_type (factory);
-		if (g_type_is_a (derived_atk_type, GTK_TYPE_ACCESSIBLE)) 
-			atk_registry_set_factory_type (registry, 
+		if (g_type_is_a (derived_atk_type, GTK_TYPE_ACCESSIBLE)) {
+			atk_registry_set_factory_type (registry,
 						       EV_TYPE_VIEW,
 						       ev_view_accessible_factory_get_type ());
+			EV_VIEW (widget)->a11y_enabled = TRUE;
+		}
 		first_time = FALSE;
 	} 
 	return GTK_WIDGET_CLASS (ev_view_parent_class)->get_accessible (widget);
@@ -4691,6 +4693,14 @@ setup_caches (EvView *view)
 	view->height_to_page_cache = ev_view_get_height_to_page_cache (view);
 	view->pixbuf_cache = ev_pixbuf_cache_new (GTK_WIDGET (view), view->model, view->pixbuf_cache_size);
 	view->page_cache = ev_page_cache_new (view->document);
+	if (view->a11y_enabled) {
+		EvJobPageDataFlags flags = ev_page_cache_get_flags (view->page_cache);
+
+		ev_page_cache_set_flags (view->page_cache,
+					 flags |
+					 EV_PAGE_DATA_INCLUDE_TEXT_LAYOUT |
+					 EV_PAGE_DATA_INCLUDE_TEXT);
+	}
 	inverted_colors = ev_document_model_get_inverted_colors (view->model);
 	ev_pixbuf_cache_set_inverted_colors (view->pixbuf_cache, inverted_colors);
 	g_signal_connect (view->pixbuf_cache, "job-finished", G_CALLBACK (job_finished_cb), view);
