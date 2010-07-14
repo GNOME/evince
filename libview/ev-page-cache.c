@@ -32,17 +32,18 @@
 #include "ev-page-cache.h"
 
 typedef struct _EvPageCacheData {
-	EvJob          *job;
-	gboolean        done : 1;
+	EvJob             *job;
+	gboolean           done : 1;
+	EvJobPageDataFlags flags;
 
-	EvMappingList  *link_mapping;
-	EvMappingList  *image_mapping;
-	EvMappingList  *form_field_mapping;
-	EvMappingList  *annot_mapping;
-	cairo_region_t *text_mapping;
-	EvRectangle    *text_layout;
-	guint           text_layout_length;
-	gchar          *text;
+	EvMappingList     *link_mapping;
+	EvMappingList     *image_mapping;
+	EvMappingList     *form_field_mapping;
+	EvMappingList     *annot_mapping;
+	cairo_region_t    *text_mapping;
+	EvRectangle       *text_layout;
+	guint              text_layout_length;
+	gchar             *text;
 } EvPageCacheData;
 
 struct _EvPageCache {
@@ -51,6 +52,11 @@ struct _EvPageCache {
 	EvDocument        *document;
 	EvPageCacheData   *page_list;
 	gint               n_pages;
+
+	/* Current range */
+	gint               start_page;
+	gint               end_page;
+
 	EvJobPageDataFlags flags;
 };
 
@@ -58,8 +64,18 @@ struct _EvPageCacheClass {
 	GObjectClass parent_class;
 };
 
+#define EV_PAGE_DATA_FLAGS_DEFAULT (        \
+	EV_PAGE_DATA_INCLUDE_LINKS        | \
+	EV_PAGE_DATA_INCLUDE_TEXT_MAPPING | \
+	EV_PAGE_DATA_INCLUDE_IMAGES       | \
+	EV_PAGE_DATA_INCLUDE_FORMS        | \
+	EV_PAGE_DATA_INCLUDE_ANNOTS)
+
+
 static void job_page_data_finished_cb (EvJob       *job,
 				       EvPageCache *cache);
+static void job_page_data_cancelled_cb (EvJob       *job,
+					EvPageCacheData *data);
 
 G_DEFINE_TYPE (EvPageCache, ev_page_cache, G_TYPE_OBJECT)
 
@@ -120,10 +136,14 @@ ev_page_cache_finalize (GObject *object)
 
 			data = &cache->page_list[i];
 
-			if (data->job)
+			if (data->job) {
 				g_signal_handlers_disconnect_by_func (data->job,
 								      G_CALLBACK (job_page_data_finished_cb),
 								      cache);
+				g_signal_handlers_disconnect_by_func (data->job,
+								      G_CALLBACK (job_page_data_cancelled_cb),
+								      data);
+			}
 			ev_page_cache_data_free (data);
 		}
 
@@ -154,22 +174,56 @@ ev_page_cache_class_init (EvPageCacheClass *klass)
 }
 
 static EvJobPageDataFlags
-get_flags_for_document (EvDocument *document)
+ev_page_cache_get_flags_for_data (EvPageCache     *cache,
+				  EvPageCacheData *data)
 {
 	EvJobPageDataFlags flags = EV_PAGE_DATA_INCLUDE_NONE;
 
-	if (EV_IS_DOCUMENT_LINKS (document))
-		flags |= EV_PAGE_DATA_INCLUDE_LINKS;
-	if (EV_IS_DOCUMENT_IMAGES (document))
-		flags |= EV_PAGE_DATA_INCLUDE_IMAGES;
-	if (EV_IS_DOCUMENT_FORMS (document))
-		flags |= EV_PAGE_DATA_INCLUDE_FORMS;
-	if (EV_IS_DOCUMENT_ANNOTATIONS (document))
-		flags |= EV_PAGE_DATA_INCLUDE_ANNOTS;
-	if (EV_IS_SELECTION (document) && EV_IS_DOCUMENT_TEXT (document))
-		flags |= EV_PAGE_DATA_INCLUDE_TEXT_MAPPING;
-	if (EV_IS_DOCUMENT_TEXT (document))
-		flags |= EV_PAGE_DATA_INCLUDE_TEXT | EV_PAGE_DATA_INCLUDE_TEXT_LAYOUT;
+	if (data->flags == cache->flags)
+		return cache->flags;
+
+	/* Flags changed */
+	if (cache->flags & EV_PAGE_DATA_INCLUDE_LINKS) {
+		flags = (data->link_mapping) ?
+			flags & ~EV_PAGE_DATA_INCLUDE_LINKS :
+			flags | EV_PAGE_DATA_INCLUDE_LINKS;
+	}
+
+	if (cache->flags & EV_PAGE_DATA_INCLUDE_IMAGES) {
+		flags = (data->image_mapping) ?
+			flags & ~EV_PAGE_DATA_INCLUDE_IMAGES :
+			flags | EV_PAGE_DATA_INCLUDE_IMAGES;
+	}
+
+	if (cache->flags & EV_PAGE_DATA_INCLUDE_FORMS) {
+		flags = (data->form_field_mapping) ?
+			flags & ~EV_PAGE_DATA_INCLUDE_FORMS :
+			flags | EV_PAGE_DATA_INCLUDE_FORMS;
+	}
+
+	if (cache->flags & EV_PAGE_DATA_INCLUDE_ANNOTS) {
+		flags = (data->annot_mapping) ?
+			flags & ~EV_PAGE_DATA_INCLUDE_ANNOTS :
+			flags | EV_PAGE_DATA_INCLUDE_ANNOTS;
+	}
+
+	if (cache->flags & EV_PAGE_DATA_INCLUDE_TEXT_MAPPING) {
+		flags = (data->text_mapping) ?
+			flags & ~EV_PAGE_DATA_INCLUDE_TEXT_MAPPING :
+			flags | EV_PAGE_DATA_INCLUDE_TEXT_MAPPING;
+	}
+
+	if (cache->flags & EV_PAGE_DATA_INCLUDE_TEXT) {
+		flags = (data->text) ?
+			flags & ~EV_PAGE_DATA_INCLUDE_TEXT :
+			flags | EV_PAGE_DATA_INCLUDE_TEXT;
+	}
+
+	if (cache->flags & EV_PAGE_DATA_INCLUDE_TEXT_LAYOUT) {
+		flags = (data->text_layout_length > 0) ?
+			flags & ~EV_PAGE_DATA_INCLUDE_TEXT_LAYOUT :
+			flags | EV_PAGE_DATA_INCLUDE_TEXT_LAYOUT;
+	}
 
 	return flags;
 }
@@ -184,11 +238,8 @@ ev_page_cache_new (EvDocument *document)
 	cache = EV_PAGE_CACHE (g_object_new (EV_TYPE_PAGE_CACHE, NULL));
 	cache->document = g_object_ref (document);
 	cache->n_pages = ev_document_get_n_pages (document);
-	cache->flags = get_flags_for_document (document);
-
-	if (cache->flags != EV_PAGE_DATA_INCLUDE_NONE) {
-		cache->page_list = g_new0 (EvPageCacheData, cache->n_pages);
-	}
+	cache->flags = EV_PAGE_DATA_FLAGS_DEFAULT;
+	cache->page_list = g_new0 (EvPageCacheData, cache->n_pages);
 
 	return cache;
 }
@@ -201,16 +252,33 @@ job_page_data_finished_cb (EvJob       *job,
 	EvPageCacheData *data;
 
 	data = &cache->page_list[job_data->page];
-	data->link_mapping = job_data->link_mapping;
-	data->image_mapping = job_data->image_mapping;
-	data->form_field_mapping = job_data->form_field_mapping;
-	data->annot_mapping = job_data->annot_mapping;
-	data->text_mapping = job_data->text_mapping;
-	data->text_layout = job_data->text_layout;
-	data->text_layout_length = job_data->text_layout_length;
-	data->text = job_data->text;
+
+	if (job_data->flags & EV_PAGE_DATA_INCLUDE_LINKS)
+		data->link_mapping = job_data->link_mapping;
+	if (job_data->flags & EV_PAGE_DATA_INCLUDE_IMAGES)
+		data->image_mapping = job_data->image_mapping;
+	if (job_data->flags & EV_PAGE_DATA_INCLUDE_FORMS)
+		data->form_field_mapping = job_data->form_field_mapping;
+	if (job_data->flags & EV_PAGE_DATA_INCLUDE_ANNOTS)
+		data->annot_mapping = job_data->annot_mapping;
+	if (job_data->flags & EV_PAGE_DATA_INCLUDE_TEXT_MAPPING)
+		data->text_mapping = job_data->text_mapping;
+	if (job_data->flags & EV_PAGE_DATA_INCLUDE_TEXT_LAYOUT) {
+		data->text_layout = job_data->text_layout;
+		data->text_layout_length = job_data->text_layout_length;
+	}
+	if (job_data->flags & EV_PAGE_DATA_INCLUDE_TEXT)
+		data->text = job_data->text;
 	data->done = TRUE;
 
+	g_object_unref (data->job);
+	data->job = NULL;
+}
+
+static void
+job_page_data_cancelled_cb (EvJob           *job,
+			    EvPageCacheData *data)
+{
 	g_object_unref (data->job);
 	data->job = NULL;
 }
@@ -225,16 +293,29 @@ ev_page_cache_set_page_range (EvPageCache *cache,
 	if (cache->flags == EV_PAGE_DATA_INCLUDE_NONE)
 		return;
 
-	for (i = start; i <= end; i++) {
-		EvPageCacheData *data = &cache->page_list[i];
+	cache->start_page = start;
+	cache->end_page = end;
 
-		if (data->done || data->job)
+	for (i = start; i <= end; i++) {
+		EvPageCacheData   *data = &cache->page_list[i];
+		EvJobPageDataFlags flags;
+
+		if (data->flags == cache->flags && (data->done || data->job))
 			continue;
 
-		data->job = ev_job_page_data_new (cache->document, i, cache->flags);
+		if (data->job)
+			ev_job_cancel (data->job);
+
+		flags = ev_page_cache_get_flags_for_data (cache, data);
+
+		data->flags = cache->flags;
+		data->job = ev_job_page_data_new (cache->document, i, flags);
 		g_signal_connect (data->job, "finished",
 				  G_CALLBACK (job_page_data_finished_cb),
 				  cache);
+		g_signal_connect (data->job, "cancelled",
+				  G_CALLBACK (job_page_data_cancelled_cb),
+				  data);
 		ev_job_scheduler_push_job (data->job, EV_JOB_PRIORITY_NONE);
 	}
 }
@@ -249,7 +330,13 @@ void
 ev_page_cache_set_flags (EvPageCache       *cache,
 			 EvJobPageDataFlags flags)
 {
+	if (cache->flags == flags)
+		return;
+
 	cache->flags = flags;
+
+	/* Update the current range for new flags */
+	ev_page_cache_set_page_range (cache, cache->start_page, cache->end_page);
 }
 
 EvMappingList *
