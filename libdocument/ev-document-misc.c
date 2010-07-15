@@ -133,7 +133,7 @@ ev_document_misc_get_page_border_size (gint       page_width,
 
 
 void
-ev_document_misc_paint_one_page (GdkDrawable  *drawable,
+ev_document_misc_paint_one_page (cairo_t      *cr,
 				 GtkWidget    *widget,
 				 GdkRectangle *area,
 				 GtkBorder    *border,
@@ -143,35 +143,35 @@ ev_document_misc_paint_one_page (GdkDrawable  *drawable,
 	GtkStyle    *style = gtk_widget_get_style (widget);
 	GtkStateType state = gtk_widget_get_state (widget);
 
-	gdk_draw_rectangle (drawable,
-			    highlight ? style->text_gc[state] : style->dark_gc[state],
-			    TRUE,
-			    area->x,
-			    area->y,
-			    area->width,
-			    area->height);
-	gdk_draw_rectangle (drawable,
-			    inverted_colors ? style->black_gc : style->white_gc,
-			    TRUE,
-			    area->x + border->left,
-			    area->y + border->top,
-			    area->width - (border->left + border->right),
-			    area->height - (border->top + border->bottom));
-	gdk_draw_rectangle (drawable,
-			    style->mid_gc[state],
-			    TRUE,
-			    area->x,
-			    area->y + area->height - (border->bottom - border->top),
-			    border->bottom - border->top,
-			    border->bottom - border->top);
-	gdk_draw_rectangle (drawable,
-			    style->mid_gc[state],
-			    TRUE,
-			    area->x + area->width - (border->right - border->left),
-			    area->y,
-			    border->right - border->left,
-			    border->right - border->left);
+	gdk_cairo_set_source_color (cr, highlight ? &style->text[state] : &style->dark[state]);
+	gdk_cairo_rectangle (cr, area);
+	cairo_fill (cr);
 
+	if (inverted_colors)
+		cairo_set_source_rgb (cr, 0, 0, 0);
+	else
+		cairo_set_source_rgb (cr, 1, 1, 1);
+	cairo_rectangle (cr,
+			 area->x + border->left,
+			 area->y + border->top,
+			 area->width - (border->left + border->right),
+			 area->height - (border->top + border->bottom));
+	cairo_fill (cr);
+
+	gdk_cairo_set_source_color (cr, &style->mid[state]);
+	cairo_rectangle (cr,
+			 area->x,
+			 area->y + area->height - (border->bottom - border->top),
+			 border->bottom - border->top,
+			 border->bottom - border->top);
+	cairo_fill (cr);
+
+	cairo_rectangle (cr,
+			 area->x + area->width - (border->right - border->left),
+			 area->y,
+			 border->right - border->left,
+			 border->right - border->left);
+	cairo_fill (cr);
 }
 
 cairo_surface_t *

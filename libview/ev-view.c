@@ -4214,7 +4214,7 @@ draw_one_page (EvView       *view,
 	bin_window = gtk_layout_get_bin_window (GTK_LAYOUT (view));
 	current_page = ev_document_model_get_page (view->model);
 	inverted_colors = ev_document_model_get_inverted_colors (view->model);
-	ev_document_misc_paint_one_page (bin_window,
+	ev_document_misc_paint_one_page (cr,
 					 GTK_WIDGET (view),
 					 page_area, border,
 					 page == current_page,
