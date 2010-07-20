@@ -47,6 +47,8 @@ void               ev_page_cache_set_page_range         (EvPageCache       *cach
 EvJobPageDataFlags ev_page_cache_get_flags              (EvPageCache       *cache);
 void               ev_page_cache_set_flags              (EvPageCache       *cache,
 							 EvJobPageDataFlags flags);
+void               ev_page_cache_mark_dirty             (EvPageCache       *cache,
+							 gint               page);
 EvMappingList     *ev_page_cache_get_link_mapping       (EvPageCache       *cache,
 							 gint               page);
 EvMappingList     *ev_page_cache_get_image_mapping      (EvPageCache       *cache,

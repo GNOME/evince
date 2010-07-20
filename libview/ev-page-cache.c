@@ -34,6 +34,7 @@
 typedef struct _EvPageCacheData {
 	EvJob             *job;
 	gboolean           done : 1;
+	gboolean           dirty : 1;
 	EvJobPageDataFlags flags;
 
 	EvMappingList     *link_mapping;
@@ -179,10 +180,10 @@ ev_page_cache_get_flags_for_data (EvPageCache     *cache,
 {
 	EvJobPageDataFlags flags = EV_PAGE_DATA_INCLUDE_NONE;
 
-	if (data->flags == cache->flags)
+	if (data->flags == cache->flags && !data->dirty)
 		return cache->flags;
 
-	/* Flags changed */
+	/* Flags changed or data is dirty */
 	if (cache->flags & EV_PAGE_DATA_INCLUDE_LINKS) {
 		flags = (data->link_mapping) ?
 			flags & ~EV_PAGE_DATA_INCLUDE_LINKS :
@@ -270,6 +271,7 @@ job_page_data_finished_cb (EvJob       *job,
 	if (job_data->flags & EV_PAGE_DATA_INCLUDE_TEXT)
 		data->text = job_data->text;
 	data->done = TRUE;
+	data->dirty = FALSE;
 
 	g_object_unref (data->job);
 	data->job = NULL;
@@ -300,7 +302,7 @@ ev_page_cache_set_page_range (EvPageCache *cache,
 		EvPageCacheData   *data = &cache->page_list[i];
 		EvJobPageDataFlags flags;
 
-		if (data->flags == cache->flags && (data->done || data->job))
+		if (data->flags == cache->flags && !data->dirty && (data->done || data->job))
 			continue;
 
 		if (data->job)
@@ -336,6 +338,21 @@ ev_page_cache_set_flags (EvPageCache       *cache,
 	cache->flags = flags;
 
 	/* Update the current range for new flags */
+	ev_page_cache_set_page_range (cache, cache->start_page, cache->end_page);
+}
+
+void
+ev_page_cache_mark_dirty (EvPageCache *cache,
+			  gint         page)
+{
+	EvPageCacheData *data;
+
+	g_return_if_fail (EV_IS_PAGE_CACHE (cache));
+
+	data = &cache->page_list[page];
+	data->dirty = TRUE;
+
+	/* Update the current range */
 	ev_page_cache_set_page_range (cache, cache->start_page, cache->end_page);
 }
 
