@@ -46,13 +46,17 @@ struct _EvSidebarAnnotations {
 struct _EvSidebarAnnotationsClass {
 	GtkVBoxClass base_class;
 
-	void    (* annot_activated) (EvSidebarAnnotations *sidebar_annots,
-				     EvMapping            *mapping);
+	void    (* annot_activated)     (EvSidebarAnnotations *sidebar_annots,
+					 EvMapping            *mapping);
+	void    (* begin_annot_add)     (EvSidebarAnnotations *sidebar_annots,
+					 EvAnnotationType      annot_type);
+	void    (* annot_add_cancelled) (EvSidebarAnnotations *sidebar_annots);
 };
 
-GType      ev_sidebar_annotations_get_type (void) G_GNUC_CONST;
-GtkWidget *ev_sidebar_annotations_new      (void);
-
+GType      ev_sidebar_annotations_get_type    (void) G_GNUC_CONST;
+GtkWidget *ev_sidebar_annotations_new         (void);
+void       ev_sidebar_annotations_annot_added (EvSidebarAnnotations *sidebar_annots,
+					       EvAnnotation         *annot);
 G_END_DECLS
 
 #endif /* __EV_SIDEBAR_ANNOTATIONS_H__ */

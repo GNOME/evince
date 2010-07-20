@@ -2543,6 +2543,69 @@ poppler_annot_color_to_gdk_color (PopplerAnnot *poppler_annot,
 	} /* TODO: else use a default color */
 }
 
+static EvAnnotationTextIcon
+get_annot_text_icon (PopplerAnnotText *poppler_annot)
+{
+	gchar *icon = poppler_annot_text_get_icon (poppler_annot);
+	EvAnnotationTextIcon retval;
+
+	if (!icon)
+		return EV_ANNOTATION_TEXT_ICON_UNKNOWN;
+
+	if (strcmp (icon, POPPLER_ANNOT_TEXT_ICON_NOTE) == 0)
+		retval = EV_ANNOTATION_TEXT_ICON_NOTE;
+	else if (strcmp (icon, POPPLER_ANNOT_TEXT_ICON_COMMENT) == 0)
+		retval = EV_ANNOTATION_TEXT_ICON_COMMENT;
+	else if (strcmp (icon, POPPLER_ANNOT_TEXT_ICON_KEY) == 0)
+		retval = EV_ANNOTATION_TEXT_ICON_KEY;
+	else if (strcmp (icon, POPPLER_ANNOT_TEXT_ICON_HELP) == 0)
+		retval = EV_ANNOTATION_TEXT_ICON_HELP;
+	else if (strcmp (icon, POPPLER_ANNOT_TEXT_ICON_NEW_PARAGRAPH) == 0)
+		retval = EV_ANNOTATION_TEXT_ICON_NEW_PARAGRAPH;
+	else if (strcmp (icon, POPPLER_ANNOT_TEXT_ICON_PARAGRAPH) == 0)
+		retval = EV_ANNOTATION_TEXT_ICON_PARAGRAPH;
+	else if (strcmp (icon, POPPLER_ANNOT_TEXT_ICON_INSERT) == 0)
+		retval = EV_ANNOTATION_TEXT_ICON_INSERT;
+	else if (strcmp (icon, POPPLER_ANNOT_TEXT_ICON_CROSS) == 0)
+		retval = EV_ANNOTATION_TEXT_ICON_CROSS;
+	else if (strcmp (icon, POPPLER_ANNOT_TEXT_ICON_CIRCLE) == 0)
+		retval = EV_ANNOTATION_TEXT_ICON_CIRCLE;
+	else
+		retval = EV_ANNOTATION_TEXT_ICON_UNKNOWN;
+
+	g_free (icon);
+
+	return retval;
+}
+
+static const gchar *
+get_poppler_annot_text_icon (EvAnnotationTextIcon icon)
+{
+	switch (icon) {
+	case EV_ANNOTATION_TEXT_ICON_NOTE:
+		return POPPLER_ANNOT_TEXT_ICON_NOTE;
+	case EV_ANNOTATION_TEXT_ICON_COMMENT:
+		return POPPLER_ANNOT_TEXT_ICON_COMMENT;
+	case EV_ANNOTATION_TEXT_ICON_KEY:
+		return POPPLER_ANNOT_TEXT_ICON_KEY;
+	case EV_ANNOTATION_TEXT_ICON_HELP:
+		return POPPLER_ANNOT_TEXT_ICON_HELP;
+	case EV_ANNOTATION_TEXT_ICON_NEW_PARAGRAPH:
+		return POPPLER_ANNOT_TEXT_ICON_NEW_PARAGRAPH;
+	case EV_ANNOTATION_TEXT_ICON_PARAGRAPH:
+		return POPPLER_ANNOT_TEXT_ICON_PARAGRAPH;
+	case EV_ANNOTATION_TEXT_ICON_INSERT:
+		return POPPLER_ANNOT_TEXT_ICON_INSERT;
+	case EV_ANNOTATION_TEXT_ICON_CROSS:
+		return POPPLER_ANNOT_TEXT_ICON_CROSS;
+	case EV_ANNOTATION_TEXT_ICON_CIRCLE:
+		return POPPLER_ANNOT_TEXT_ICON_CIRCLE;
+	case EV_ANNOTATION_TEXT_ICON_UNKNOWN:
+	default:
+		return POPPLER_ANNOT_TEXT_ICON_NOTE;
+	}
+}
+
 static EvAnnotation *
 ev_annot_from_poppler_annot (PopplerAnnot *poppler_annot,
 			     EvPage       *page)
@@ -2560,7 +2623,9 @@ ev_annot_from_poppler_annot (PopplerAnnot *poppler_annot,
 			ev_annot = ev_annotation_text_new (page);
 
 			ev_annot_text = EV_ANNOTATION_TEXT (ev_annot);
-			ev_annot_text->is_open = poppler_annot_text_get_is_open (poppler_text);
+			ev_annotation_text_set_is_open (ev_annot_text,
+							poppler_annot_text_get_is_open (poppler_text));
+			ev_annotation_text_set_icon (ev_annot_text, get_annot_text_icon (poppler_text));
 		}
 			break;
 	        case POPPLER_ANNOT_FILE_ATTACHMENT: {
@@ -2615,19 +2680,34 @@ ev_annot_from_poppler_annot (PopplerAnnot *poppler_annot,
 	}
 
 	if (ev_annot) {
-		time_t utime;
-		gchar *modified;
+		time_t   utime;
+		gchar   *modified;
+		gchar   *contents;
+		gchar   *name;
+		GdkColor color;
 
-		ev_annot->contents = poppler_annot_get_contents (poppler_annot);
-		ev_annot->name = poppler_annot_get_name (poppler_annot);
+		contents = poppler_annot_get_contents (poppler_annot);
+		if (contents) {
+			ev_annotation_set_contents (ev_annot, contents);
+			g_free (contents);
+		}
+
+		name = poppler_annot_get_name (poppler_annot);
+		if (name) {
+			ev_annotation_set_name (ev_annot, name);
+			g_free (name);
+		}
+
 		modified = poppler_annot_get_modified (poppler_annot);
 		if (poppler_date_parse (modified, &utime)) {
-			ev_annot->modified = ev_document_misc_format_date (utime);
-			g_free (modified);
+			ev_annotation_set_modified_from_time (ev_annot, utime);
 		} else {
-			ev_annot->modified = modified;
+			ev_annotation_set_modified (ev_annot, modified);
 		}
-		poppler_annot_color_to_gdk_color (poppler_annot, &ev_annot->color);
+		g_free (modified);
+
+		poppler_annot_color_to_gdk_color (poppler_annot, &color);
+		ev_annotation_set_color (ev_annot, &color);
 
 		if (POPPLER_IS_ANNOT_MARKUP (poppler_annot)) {
 			PopplerAnnotMarkup *markup;
@@ -2653,13 +2733,10 @@ ev_annot_from_poppler_annot (PopplerAnnot *poppler_annot,
 
 				g_object_set (ev_annot,
 					      "rectangle", &ev_rect,
-					      "is_open", is_open,
+					      "popup_is_open", is_open,
 					      "has_popup", TRUE,
 					      NULL);
 			} else {
-				/* FIXME: Use poppler_annot_markup_has_popup() when
-				 * new poppler is released.
-				 */
 				g_object_set (ev_annot,
 					      "has_popup", FALSE,
 					      NULL);
@@ -2708,7 +2785,7 @@ pdf_document_annotations_get_annotations (EvDocumentAnnotations *document_annota
 
 	for (list = annots; list; list = list->next) {
 		PopplerAnnotMapping *mapping;
-		EvMapping *annot_mapping;
+		EvMapping           *annot_mapping;
 		EvAnnotation        *ev_annot;
 
 		mapping = (PopplerAnnotMapping *)list->data;
@@ -2720,8 +2797,12 @@ pdf_document_annotations_get_annotations (EvDocumentAnnotations *document_annota
 		i++;
 
 		/* Make sure annot has a unique name */
-		if (!ev_annot->name)
-			ev_annot->name = g_strdup_printf ("annot-%d-%d", page->index, i);
+		if (!ev_annotation_get_name (ev_annot)) {
+			gchar *name = g_strdup_printf ("annot-%d-%d", page->index, i);
+
+			ev_annotation_set_name (ev_annot, name);
+			g_free (name);
+		}
 
 		annot_mapping = g_new (EvMapping, 1);
 		annot_mapping->area.x1 = mapping->area.x1;
@@ -2758,10 +2839,115 @@ pdf_document_annotations_get_annotations (EvDocumentAnnotations *document_annota
 	return mapping_list;
 }
 
+#ifdef HAVE_POPPLER_PAGE_ADD_ANNOT
 static void
-pdf_document_annotations_annotation_set_contents (EvDocumentAnnotations *document,
-						  EvAnnotation          *annot,
-						  const gchar           *contents)
+pdf_document_annotations_add_annotation (EvDocumentAnnotations *document_annotations,
+					 EvAnnotation          *annot,
+					 EvRectangle           *rect)
+{
+	PopplerAnnot    *poppler_annot;
+	PdfDocument     *pdf_document;
+	EvPage          *page;
+	PopplerPage     *poppler_page;
+	GList           *list = NULL;
+	EvMappingList   *mapping_list;
+	EvMapping       *annot_mapping;
+	PopplerRectangle poppler_rect;
+	gdouble          height;
+	PopplerColor     poppler_color;
+	GdkColor         color;
+	time_t           utime;
+	gchar           *modified;
+	gchar           *name;
+
+	pdf_document = PDF_DOCUMENT (document_annotations);
+	page = ev_annotation_get_page (annot);
+	poppler_page = POPPLER_PAGE (page->backend_page);
+
+	poppler_page_get_size (poppler_page, NULL, &height);
+	poppler_rect.x1 = rect->x1;
+	poppler_rect.x2 = rect->x2;
+	poppler_rect.y1 = height - rect->y2;
+	poppler_rect.y2 = height - rect->y1;
+	poppler_annot = poppler_annot_text_new (pdf_document->document, &poppler_rect);
+
+	ev_annotation_get_color (annot, &color);
+	poppler_color.red = color.red;
+	poppler_color.green = color.green;
+	poppler_color.blue = color.blue;
+	poppler_annot_set_color (poppler_annot, &poppler_color);
+
+	if (EV_IS_ANNOTATION_MARKUP (annot)) {
+		EvAnnotationMarkup *markup = EV_ANNOTATION_MARKUP (annot);
+		const gchar *label;
+
+		if (ev_annotation_markup_has_popup (markup)) {
+			EvRectangle popup_rect;
+
+			ev_annotation_markup_get_rectangle (markup, &popup_rect);
+			poppler_rect.x1 = popup_rect.x1;
+			poppler_rect.x2 = popup_rect.x2;
+			poppler_rect.y1 = height - popup_rect.y2;
+			poppler_rect.y2 = height - popup_rect.y1;
+			poppler_annot_markup_set_popup (POPPLER_ANNOT_MARKUP (poppler_annot), &poppler_rect);
+			poppler_annot_markup_set_popup_is_open (POPPLER_ANNOT_MARKUP (poppler_annot),
+								ev_annotation_markup_get_popup_is_open (markup));
+		}
+
+		label = ev_annotation_markup_get_label (markup);
+		if (label)
+			poppler_annot_markup_set_label (POPPLER_ANNOT_MARKUP (poppler_annot), label);
+	}
+
+	if (EV_IS_ANNOTATION_TEXT (annot)) {
+		EvAnnotationText    *text = EV_ANNOTATION_TEXT (annot);
+		EvAnnotationTextIcon icon;
+
+		icon = ev_annotation_text_get_icon (text);
+		poppler_annot_text_set_icon (POPPLER_ANNOT_TEXT (poppler_annot),
+					     get_poppler_annot_text_icon (icon));
+	}
+	poppler_page_add_annot (poppler_page, poppler_annot);
+
+	annot_mapping = g_new (EvMapping, 1);
+	annot_mapping->area = *rect;
+	annot_mapping->data = annot;
+	g_object_set_data_full (G_OBJECT (annot),
+				"poppler-annot",
+				g_object_ref (poppler_annot),
+				(GDestroyNotify) g_object_unref);
+
+	if (pdf_document->annots) {
+		mapping_list = (EvMappingList *)g_hash_table_lookup (pdf_document->annots,
+								     GINT_TO_POINTER (page->index));
+		list = ev_mapping_list_get_list (mapping_list);
+		name = g_strdup_printf ("annot-%d-%d", page->index, g_list_length (list) + 1);
+		ev_annotation_set_name (annot, name);
+		g_free (name);
+		list = g_list_append (list, annot_mapping);
+	} else {
+		pdf_document->annots = g_hash_table_new_full (g_direct_hash,
+							      g_direct_equal,
+							      (GDestroyNotify)NULL,
+							      (GDestroyNotify)ev_mapping_list_unref);
+		name = g_strdup_printf ("annot-%d-0", page->index);
+		ev_annotation_set_name (annot, name);
+		g_free (name);
+		list = g_list_append (list, annot_mapping);
+		mapping_list = ev_mapping_list_new (page->index, list, (GDestroyNotify)g_object_unref);
+		g_hash_table_insert (pdf_document->annots,
+				     GINT_TO_POINTER (page->index),
+				     ev_mapping_list_ref (mapping_list));
+	}
+
+	pdf_document->modified = TRUE;
+}
+#endif /* HAVE_POPPLER_PAGE_ADD_ANNOT */
+
+static void
+pdf_document_annotations_save_annotation (EvDocumentAnnotations *document_annotations,
+					  EvAnnotation          *annot,
+					  EvAnnotationsSaveMask  mask)
 {
 	PopplerAnnot *poppler_annot;
 
@@ -2769,15 +2955,61 @@ pdf_document_annotations_annotation_set_contents (EvDocumentAnnotations *documen
 	if (!poppler_annot)
 		return;
 
-	poppler_annot_set_contents (poppler_annot, contents);
-	PDF_DOCUMENT (document)->modified = TRUE;
+	if (mask & EV_ANNOTATIONS_SAVE_CONTENTS)
+		poppler_annot_set_contents (poppler_annot,
+					    ev_annotation_get_contents (annot));
+
+#ifdef HAVE_POPPLER_PAGE_ADD_ANNOT
+	if (mask & EV_ANNOTATIONS_SAVE_COLOR) {
+		PopplerColor color;
+		GdkColor     ev_color;
+
+		ev_annotation_get_color (annot, &ev_color);
+		color.red = ev_color.red;
+		color.green = ev_color.green;
+		color.blue = ev_color.blue;
+		poppler_annot_set_color (poppler_annot, &color);
+	}
+
+	if (EV_IS_ANNOTATION_MARKUP (annot)) {
+		EvAnnotationMarkup *ev_markup = EV_ANNOTATION_MARKUP (annot);
+		PopplerAnnotMarkup *markup = POPPLER_ANNOT_MARKUP (poppler_annot);
+
+		if (mask & EV_ANNOTATIONS_SAVE_LABEL)
+			poppler_annot_markup_set_label (markup, ev_annotation_markup_get_label (ev_markup));
+		if (mask & EV_ANNOTATIONS_SAVE_OPACITY)
+			poppler_annot_markup_set_opacity (markup, ev_annotation_markup_get_opacity (ev_markup));
+		if (mask & EV_ANNOTATIONS_SAVE_POPUP_IS_OPEN)
+			poppler_annot_markup_set_popup_is_open (markup, ev_annotation_markup_get_popup_is_open (ev_markup));
+	}
+
+	if (EV_IS_ANNOTATION_TEXT (annot)) {
+		EvAnnotationText *ev_text = EV_ANNOTATION_TEXT (annot);
+		PopplerAnnotText *text = POPPLER_ANNOT_TEXT (poppler_annot);
+
+		if (mask & EV_ANNOTATIONS_SAVE_TEXT_IS_OPEN) {
+			poppler_annot_text_set_is_open (text,
+							ev_annotation_text_get_is_open (ev_text));
+		}
+		if (mask & EV_ANNOTATIONS_SAVE_TEXT_ICON) {
+			EvAnnotationTextIcon icon;
+
+			icon = ev_annotation_text_get_icon (ev_text);
+			poppler_annot_text_set_icon (text, get_poppler_annot_text_icon (icon));
+		}
+	}
+#endif /* HAVE_POPPLER_PAGE_ADD_ANNOT */
+	PDF_DOCUMENT (document_annotations)->modified = TRUE;
 }
 
 static void
 pdf_document_document_annotations_iface_init (EvDocumentAnnotationsInterface *iface)
 {
 	iface->get_annotations = pdf_document_annotations_get_annotations;
-	iface->annotation_set_contents = pdf_document_annotations_annotation_set_contents;
+#ifdef HAVE_POPPLER_PAGE_ADD_ANNOT
+	iface->add_annotation = pdf_document_annotations_add_annotation;
+#endif
+	iface->save_annotation = pdf_document_annotations_save_annotation;
 }
 
 /* Attachments */

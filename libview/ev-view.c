@@ -55,6 +55,7 @@ enum {
 	SIGNAL_POPUP_MENU,
 	SIGNAL_SELECTION_CHANGED,
 	SIGNAL_SYNC_SOURCE,
+	SIGNAL_ANNOT_ADDED,
 	N_SIGNALS
 };
 
@@ -1832,6 +1833,12 @@ ev_view_handle_cursor_over_xy (EvView *view, gint x, gint y)
 	if (view->cursor == EV_VIEW_CURSOR_HIDDEN)
 		return;
 
+	if (view->adding_annot) {
+		if (view->cursor != EV_VIEW_CURSOR_ADD)
+			ev_view_set_cursor (view, EV_VIEW_CURSOR_ADD);
+		return;
+	}
+
 	if (view->drag_info.in_drag) {
 		if (view->cursor != EV_VIEW_CURSOR_DRAG)
 			ev_view_set_cursor (view, EV_VIEW_CURSOR_DRAG);
@@ -1866,7 +1873,8 @@ ev_view_handle_cursor_over_xy (EvView *view, gint x, gint y)
 		if (view->cursor == EV_VIEW_CURSOR_LINK ||
 		    view->cursor == EV_VIEW_CURSOR_IBEAM ||
 		    view->cursor == EV_VIEW_CURSOR_DRAG ||
-		    view->cursor == EV_VIEW_CURSOR_AUTOSCROLL)
+		    view->cursor == EV_VIEW_CURSOR_AUTOSCROLL ||
+		    view->cursor == EV_VIEW_CURSOR_ADD)
 			ev_view_set_cursor (view, EV_VIEW_CURSOR_NORMAL);
 	}
 
@@ -2494,7 +2502,7 @@ ev_view_find_window_child_for_annot (EvView       *view,
 			continue;
 
 		wannot = ev_annotation_window_get_annotation (EV_ANNOTATION_WINDOW (child->window));
-		if (wannot == annot || strcmp (wannot->name, annot->name) == 0)
+		if (ev_annotation_equal (wannot, annot))
 			return child;
 	}
 
@@ -2577,18 +2585,55 @@ annotation_window_moved (EvAnnotationWindow *window,
 }
 
 static void
-ev_view_annotation_save (EvView       *view,
-			 EvAnnotation *annot)
+ev_view_annotation_save_contents (EvView       *view,
+				  GParamSpec   *pspec,
+				  EvAnnotation *annot)
 {
 	if (!view->document)
 		return;
 
-	if (!annot->changed)
-		return;
+	ev_document_doc_mutex_lock ();
+	ev_document_annotations_save_annotation (EV_DOCUMENT_ANNOTATIONS (view->document),
+						 annot, EV_ANNOTATIONS_SAVE_CONTENTS);
+	ev_document_doc_mutex_unlock ();
+}
 
-	ev_document_annotations_annotation_set_contents (EV_DOCUMENT_ANNOTATIONS (view->document),
-							 annot, annot->contents);
-	annot->changed = FALSE;
+static GtkWidget *
+ev_view_create_annotation_window (EvView       *view,
+				  EvAnnotation *annot,
+				  GtkWindow    *parent)
+{
+	GtkWidget   *window;
+	EvRectangle  doc_rect;
+	GdkRectangle view_rect;
+	guint        page;
+
+	window = ev_annotation_window_new (annot, parent);
+	g_signal_connect (window, "grab_focus",
+			  G_CALLBACK (annotation_window_grab_focus),
+			  view);
+	g_signal_connect (window, "closed",
+			  G_CALLBACK (annotation_window_closed),
+			  view);
+	g_signal_connect (window, "moved",
+			  G_CALLBACK (annotation_window_moved),
+			  view);
+	g_signal_connect_swapped (annot, "notify::contents",
+				  G_CALLBACK (ev_view_annotation_save_contents),
+				  view);
+	g_object_set_data (G_OBJECT (annot), "popup", window);
+
+	page = ev_annotation_get_page_index (annot);
+	ev_annotation_window_get_rectangle (EV_ANNOTATION_WINDOW (window), &doc_rect);
+	doc_rect_to_view_rect (view, page, &doc_rect, &view_rect);
+	view_rect.x -= view->scroll_x;
+	view_rect.y -= view->scroll_y;
+
+	ev_view_window_child_put (view, window, page,
+				  view_rect.x, view_rect.y,
+				  doc_rect.x1, doc_rect.y1);
+
+	return window;
 }
 
 static void
@@ -2607,8 +2652,6 @@ show_annotation_windows (EvView *view,
 		EvAnnotation      *annot;
 		EvViewWindowChild *child;
 		GtkWidget         *window;
-		EvRectangle       *doc_rect;
-		GdkRectangle       view_rect;
 
 		annot = ((EvMapping *)(l->data))->data;
 
@@ -2632,30 +2675,7 @@ show_annotation_windows (EvView *view,
 			g_object_set_data (G_OBJECT (annot), "popup", window);
 			ev_view_window_child_move_with_parent (view, window);
 		} else {
-			window = ev_annotation_window_new (annot, parent);
-			g_signal_connect (window, "grab_focus",
-					  G_CALLBACK (annotation_window_grab_focus),
-					  view);
-			g_signal_connect (window, "closed",
-					  G_CALLBACK (annotation_window_closed),
-					  view);
-			g_signal_connect (window, "moved",
-					  G_CALLBACK (annotation_window_moved),
-					  view);
-			g_object_set_data (G_OBJECT (annot), "popup", window);
-
-			doc_rect = (EvRectangle *)ev_annotation_window_get_rectangle (EV_ANNOTATION_WINDOW (window));
-			doc_rect_to_view_rect (view, page, doc_rect, &view_rect);
-			view_rect.x -= view->scroll_x;
-			view_rect.y -= view->scroll_y;
-
-			ev_view_window_child_put (view, window, page,
-						  view_rect.x, view_rect.y,
-						  doc_rect->x1, doc_rect->y1);
-
-			g_object_weak_ref (G_OBJECT (annot),
-					   (GWeakNotify)ev_view_annotation_save,
-					   view);
+			ev_view_create_annotation_window (view, annot, parent);
 		}
 	}
 }
@@ -2708,6 +2728,23 @@ ev_view_get_annotation_at_location (EvView  *view,
 }
 
 static void
+ev_view_annotation_show_popup_window (EvView    *view,
+				      GtkWidget *window)
+{
+	EvViewWindowChild *child;
+
+	if (!window)
+		return;
+
+	child = ev_view_get_window_child (view, window);
+	if (!child->visible) {
+		child->visible = TRUE;
+		ev_view_window_child_move (view, child, child->x, child->y);
+		gtk_widget_show (window);
+	}
+}
+
+static void
 ev_view_handle_annotation (EvView       *view,
 			   EvAnnotation *annot,
 			   gdouble       x,
@@ -2718,21 +2755,13 @@ ev_view_handle_annotation (EvView       *view,
 		GtkWidget *window;
 
 		window = g_object_get_data (G_OBJECT (annot), "popup");
-		if (window) {
-			EvViewWindowChild *child;
-
-			child = ev_view_get_window_child (view, window);
-			if (!child->visible) {
-				child->visible = TRUE;
-				ev_view_window_child_move (view, child, child->x, child->y);
-				gtk_widget_show (window);
-			}
-		}
+		ev_view_annotation_show_popup_window (view, window);
 	}
 
 	if (EV_IS_ANNOTATION_ATTACHMENT (annot)) {
-		EvAttachment *attachment = EV_ANNOTATION_ATTACHMENT (annot)->attachment;
+		EvAttachment *attachment;
 
+		attachment = ev_annotation_attachment_get_attachment (EV_ANNOTATION_ATTACHMENT (annot));
 		if (attachment) {
 			GError *error = NULL;
 
@@ -2749,12 +2778,97 @@ ev_view_handle_annotation (EvView       *view,
 	}
 }
 
+static void
+ev_view_create_annotation (EvView          *view,
+			   EvAnnotationType annot_type,
+			   gint             x,
+			   gint             y)
+{
+	EvAnnotation   *annot;
+	GdkPoint        point;
+	GdkRectangle    page_area;
+	GtkBorder       border;
+	EvRectangle     doc_rect, popup_rect;
+	EvPage         *page;
+	GdkColor        color = { 0, 65535, 65535, 0 };
+	GdkRectangle    view_rect;
+	cairo_region_t *region;
+
+	point.x = x;
+	point.y = y;
+	ev_view_get_page_extents (view, view->current_page, &page_area, &border);
+	view_point_to_doc_point (view, &point, &page_area,
+				 &doc_rect.x1, &doc_rect.y1);
+	doc_rect.x2 = doc_rect.x1 + 24;
+	doc_rect.y2 = doc_rect.y1 + 24;
+
+	ev_document_doc_mutex_lock ();
+	page = ev_document_get_page (view->document, view->current_page);
+	switch (annot_type) {
+	case EV_ANNOTATION_TYPE_TEXT:
+		annot = ev_annotation_text_new (page);
+		break;
+	case EV_ANNOTATION_TYPE_ATTACHMENT:
+		/* TODO */
+		g_object_unref (page);
+		ev_document_doc_mutex_unlock ();
+		return;
+	default:
+		g_assert_not_reached ();
+	}
+	g_object_unref (page);
+
+	ev_annotation_set_color (annot, &color);
+
+	if (EV_IS_ANNOTATION_MARKUP (annot)) {
+		popup_rect.x1 = doc_rect.x2;
+		popup_rect.x2 = popup_rect.x1 + 200;
+		popup_rect.y1 = doc_rect.y2;
+		popup_rect.y2 = popup_rect.y1 + 150;
+		g_object_set (annot,
+			      "rectangle", &popup_rect,
+			      "has_popup", TRUE,
+			      "popup_is_open", FALSE,
+			      "label", g_get_real_name (),
+			      "opacity", 1.0,
+			      NULL);
+	}
+	ev_document_annotations_add_annotation (EV_DOCUMENT_ANNOTATIONS (view->document),
+						annot, &doc_rect);
+	ev_document_doc_mutex_unlock ();
+
+	/* If the page didn't have annots, mark the cache as dirty */
+	if (!ev_page_cache_get_annot_mapping (view->page_cache, view->current_page))
+		ev_page_cache_mark_dirty (view->page_cache, view->current_page);
+
+	if (EV_IS_ANNOTATION_MARKUP (annot)) {
+		GtkWindow *parent;
+		GtkWidget *window;
+
+		parent = GTK_WINDOW (gtk_widget_get_toplevel (GTK_WIDGET (view)));
+		window = ev_view_create_annotation_window (view, annot, parent);
+
+		/* Show the annot window the first time */
+		ev_view_annotation_show_popup_window (view, window);
+	}
+
+	doc_rect_to_view_rect (view, view->current_page, &doc_rect, &view_rect);
+	view_rect.x -= view->scroll_x;
+	view_rect.y -= view->scroll_y;
+	region = cairo_region_create_rectangle (&view_rect);
+	ev_view_reload_page (view, view->current_page, region);
+	cairo_region_destroy (region);
+
+	g_signal_emit (view, signals[SIGNAL_ANNOT_ADDED], 0, annot);
+}
+
 void
 ev_view_focus_annotation (EvView    *view,
 			  EvMapping *annot_mapping)
 {
 	GdkRectangle  view_rect;
 	EvAnnotation *annot;
+	guint         page;
 
 	if (!EV_IS_DOCUMENT_ANNOTATIONS (view->document))
 		return;
@@ -2765,12 +2879,41 @@ ev_view_focus_annotation (EvView    *view,
 	view->focus_annotation = annot_mapping;
 	annot = (EvAnnotation *)annot_mapping->data;
 
-	ev_document_model_set_page (view->model, annot->page->index);
+	page = ev_annotation_get_page_index (annot);
+	ev_document_model_set_page (view->model, page);
 
-	doc_rect_to_view_rect (view, annot->page->index,
+	doc_rect_to_view_rect (view, page,
 			       &annot_mapping->area, &view_rect);
 	ensure_rectangle_is_visible (view, &view_rect);
 	gtk_widget_queue_draw (GTK_WIDGET (view));
+}
+
+void
+ev_view_begin_add_annotation (EvView          *view,
+			      EvAnnotationType annot_type)
+{
+	if (annot_type == EV_ANNOTATION_TYPE_UNKNOWN)
+		return;
+
+	if (view->adding_annot)
+		return;
+
+	view->adding_annot = TRUE;
+	view->adding_annot_type = annot_type;
+	ev_view_set_cursor (view, EV_VIEW_CURSOR_ADD);
+}
+
+void
+ev_view_cancel_add_annotation (EvView *view)
+{
+	gint x, y;
+
+	if (!view->adding_annot)
+		return;
+
+	view->adding_annot = FALSE;
+	gtk_widget_get_pointer (GTK_WIDGET (view), &x, &y);
+	ev_view_handle_cursor_over_xy (view, x, y);
 }
 
 static gboolean
@@ -3040,7 +3183,7 @@ ev_view_size_allocate (GtkWidget      *widget,
 
 		child = (EvViewWindowChild *)l->data;
 
-		doc_rect = *ev_annotation_window_get_rectangle (EV_ANNOTATION_WINDOW (child->window));
+		ev_annotation_window_get_rectangle (EV_ANNOTATION_WINDOW (child->window), &doc_rect);
 		if (child->moved) {
 			doc_rect.x1 = child->orig_x;
 			doc_rect.y1 = child->orig_y;
@@ -3311,14 +3454,18 @@ ev_view_query_tooltip (GtkWidget  *widget,
 	gchar        *text;
 
 	annot = ev_view_get_annotation_at_location (view, x, y);
-	if (annot && annot->contents) {
-		GdkRectangle annot_area;
+	if (annot) {
+		const gchar *contents;
 
-		get_annot_area (view, x, y, annot, &annot_area);
-		gtk_tooltip_set_text (tooltip, annot->contents);
-		gtk_tooltip_set_tip_area (tooltip, &annot_area);
+		if ((contents = ev_annotation_get_contents (annot))) {
+			GdkRectangle annot_area;
 
-		return TRUE;
+			get_annot_area (view, x, y, annot, &annot_area);
+			gtk_tooltip_set_text (tooltip, contents);
+			gtk_tooltip_set_tip_area (tooltip, &annot_area);
+
+			return TRUE;
+		}
 	}
 
 	link = ev_view_get_link_at_location (view, x, y);
@@ -3386,12 +3533,14 @@ ev_view_button_press_event (GtkWidget      *widget,
 		window = EV_ANNOTATION_WINDOW (view->window_child_focus->window);
 		annot = ev_annotation_window_get_annotation (window);
 		ev_annotation_window_ungrab_focus (window);
-		ev_view_annotation_save (view, annot);
 		view->window_child_focus = NULL;
 	}
 	
 	view->pressed_button = event->button;
 	view->selection_info.in_drag = FALSE;
+
+	if (view->adding_annot)
+		return FALSE;
 
 	if (view->scroll_info.autoscrolling)
 		return TRUE;
@@ -3861,6 +4010,19 @@ ev_view_button_release_event (GtkWidget      *widget,
 
 	view->drag_info.in_drag = FALSE;
 
+	if (view->adding_annot && view->pressed_button == 1) {
+		view->adding_annot = FALSE;
+		ev_view_handle_cursor_over_xy (view, event->x, event->y);
+		view->pressed_button = -1;
+
+		ev_view_create_annotation (view,
+					   view->adding_annot_type,
+					   event->x + view->scroll_x,
+					   event->y + view->scroll_y);
+
+		return FALSE;
+	}
+
 	if (view->pressed_button == 2) {
 		ev_view_handle_cursor_over_xy (view, event->x, event->y);
 	}
@@ -4094,7 +4256,7 @@ focus_annotation (EvView       *view,
 	EvMapping    *mapping = view->focus_annotation;
 	EvAnnotation *annot = (EvAnnotation *)mapping->data;
 
-	if (annot->page->index != page)
+	if (ev_annotation_get_page_index (annot) != page)
 		return;
 
 	doc_rect_to_view_rect (view, page, &mapping->area, &rect);
@@ -4505,6 +4667,14 @@ ev_view_class_init (EvViewClass *class)
 		         g_cclosure_marshal_VOID__POINTER,
 		         G_TYPE_NONE, 1,
 			 G_TYPE_POINTER);
+	signals[SIGNAL_ANNOT_ADDED] = g_signal_new ("annot-added",
+	  	         G_TYPE_FROM_CLASS (object_class),
+		         G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
+		         G_STRUCT_OFFSET (EvViewClass, annot_added),
+		         NULL, NULL,
+		         g_cclosure_marshal_VOID__OBJECT,
+		         G_TYPE_NONE, 1,
+			 EV_TYPE_ANNOTATION);
 
 	binding_set = gtk_binding_set_by_class (class);
 

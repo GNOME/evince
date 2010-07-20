@@ -38,11 +38,30 @@ ev_document_annotations_get_annotations (EvDocumentAnnotations *document_annots,
 }
 
 void
-ev_document_annotations_annotation_set_contents (EvDocumentAnnotations *document_annots,
-						 EvAnnotation          *annot,
-						 const gchar           *contents)
+ev_document_annotations_save_annotation (EvDocumentAnnotations *document_annots,
+					 EvAnnotation          *annot,
+					 EvAnnotationsSaveMask  mask)
 {
 	EvDocumentAnnotationsInterface *iface = EV_DOCUMENT_ANNOTATIONS_GET_IFACE (document_annots);
 
-	iface->annotation_set_contents (document_annots, annot, contents);
+	iface->save_annotation (document_annots, annot, mask);
+}
+
+void
+ev_document_annotations_add_annotation (EvDocumentAnnotations *document_annots,
+					EvAnnotation          *annot,
+					EvRectangle           *rect)
+{
+	EvDocumentAnnotationsInterface *iface = EV_DOCUMENT_ANNOTATIONS_GET_IFACE (document_annots);
+
+	if (iface->add_annotation)
+		iface->add_annotation (document_annots, annot, rect);
+}
+
+gboolean
+ev_document_annotations_can_add_annotation (EvDocumentAnnotations *document_annots)
+{
+	EvDocumentAnnotationsInterface *iface = EV_DOCUMENT_ANNOTATIONS_GET_IFACE (document_annots);
+
+	return iface->add_annotation != NULL;
 }

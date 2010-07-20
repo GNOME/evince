@@ -185,6 +185,8 @@ struct _EvView {
 	GList             *window_children;
 	EvViewWindowChild *window_child_focus;
 	EvMapping         *focus_annotation;
+	gboolean           adding_annot;
+	EvAnnotationType   adding_annot_type;
 
 	/* Synctex */
 	EvMapping *synctex_result;
@@ -208,6 +210,8 @@ struct _EvViewClass {
 	void    (*selection_changed)      (EvView         *view);
 	void    (*sync_source)            (EvView         *view,
 					   EvSourceLink   *link);
+	void    (*annot_added)            (EvView         *view,
+					   EvAnnotation   *annot);
 };
 
 void _get_page_size_for_scale_and_rotation (EvDocument *document,

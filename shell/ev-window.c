@@ -95,6 +95,7 @@
 #include "ev-window-title.h"
 #include "ev-print-operation.h"
 #include "ev-progress-message-area.h"
+#include "ev-annotation-properties-dialog.h"
 
 #ifdef ENABLE_DBUS
 #include "ev-media-player-keys.h"
@@ -172,9 +173,10 @@ struct _EvWindowPrivate {
 	GtkWidget *fullscreen_toolbar;
 
 	/* Popup view */
-	GtkWidget *view_popup;
-	EvLink    *link;
-	EvImage   *image;
+	GtkWidget    *view_popup;
+	EvLink       *link;
+	EvImage      *image;
+	EvAnnotation *annot;
 
 	/* Popup attachment */
 	GtkWidget    *attachment_popup;
@@ -316,6 +318,8 @@ static void     ev_view_popup_cmd_copy_link_address     (GtkAction        *actio
 static void     ev_view_popup_cmd_save_image_as         (GtkAction        *action,
 							 EvWindow         *window);
 static void     ev_view_popup_cmd_copy_image            (GtkAction        *action,
+							 EvWindow         *window);
+static void     ev_view_popup_cmd_annot_properties      (GtkAction        *action,
 							 EvWindow         *window);
 static void	ev_attachment_popup_cmd_open_attachment (GtkAction        *action,
 							 EvWindow         *window);
@@ -3307,6 +3311,8 @@ ev_window_cmd_file_close_window (GtkAction *action, EvWindow *ev_window)
 		ev_document_model_set_page (ev_window->priv->model, current_page);
 	}
 
+	/* TODO: warn about form fields, and annots not saved */
+
 	n_print_jobs = ev_window->priv->print_queue ?
 		g_queue_get_length (ev_window->priv->print_queue) : 0;
 	
@@ -4536,9 +4542,18 @@ view_menu_annot_popup (EvWindow     *ev_window,
 	GtkAction *action;
 	gboolean   show_annot = FALSE;
 
-	if (annot && EV_IS_ANNOTATION_ATTACHMENT (annot)) {
-		EvAttachment *attachment = EV_ANNOTATION_ATTACHMENT (annot)->attachment;
+	if (ev_window->priv->annot)
+		g_object_unref (ev_window->priv->annot);
+	ev_window->priv->annot = (annot) ? g_object_ref (annot) : NULL;
 
+	action = gtk_action_group_get_action (ev_window->priv->view_popup_action_group,
+					      "AnnotProperties");
+	gtk_action_set_visible (action, (annot != NULL && EV_IS_ANNOTATION_MARKUP (annot)));
+
+	if (annot && EV_IS_ANNOTATION_ATTACHMENT (annot)) {
+		EvAttachment *attachment;
+
+		attachment = ev_annotation_attachment_get_attachment (EV_ANNOTATION_ATTACHMENT (annot));
 		if (attachment) {
 			show_annot = TRUE;
 			if (ev_window->priv->attach_list) {
@@ -5029,6 +5044,11 @@ ev_window_dispose (GObject *object)
 		priv->image = NULL;
 	}
 
+	if (priv->annot) {
+		g_object_unref (priv->annot);
+		priv->annot = NULL;
+	}
+
 	if (priv->attach_list) {
 		g_list_foreach (priv->attach_list,
 				(GFunc) g_object_unref,
@@ -5338,6 +5358,8 @@ static const GtkActionEntry view_popup_entries [] = {
 	  NULL, G_CALLBACK (ev_view_popup_cmd_save_image_as) },
 	{ "CopyImage", NULL, N_("Copy _Image"), NULL,
 	  NULL, G_CALLBACK (ev_view_popup_cmd_copy_image) },
+	{ "AnnotProperties", NULL, N_("Annotation Properties…"), NULL,
+	  NULL, G_CALLBACK (ev_view_popup_cmd_annot_properties) }
 };
 
 static const GtkActionEntry attachment_popup_entries [] = {
@@ -5381,6 +5403,30 @@ sidebar_annots_annot_activated_cb (EvSidebarAnnotations *sidebar_annots,
 				   EvWindow             *window)
 {
 	ev_view_focus_annotation (EV_VIEW (window->priv->view), annot_mapping);
+}
+
+static void
+sidebar_annots_begin_annot_add (EvSidebarAnnotations *sidebar_annots,
+				EvAnnotationType      annot_type,
+				EvWindow             *window)
+{
+	ev_view_begin_add_annotation (EV_VIEW (window->priv->view), annot_type);
+}
+
+static void
+view_annot_added (EvView       *view,
+		  EvAnnotation *annot,
+		  EvWindow     *window)
+{
+	ev_sidebar_annotations_annot_added (EV_SIDEBAR_ANNOTATIONS (window->priv->sidebar_annots),
+					    annot);
+}
+
+static void
+sidebar_annots_annot_add_cancelled (EvSidebarAnnotations *sidebar_annots,
+				    EvWindow             *window)
+{
+	ev_view_cancel_add_annotation (EV_VIEW (window->priv->view));
 }
 
 static void
@@ -5995,6 +6041,67 @@ ev_view_popup_cmd_copy_image (GtkAction *action, EvWindow *window)
 }
 
 static void
+ev_view_popup_cmd_annot_properties (GtkAction *action,
+				    EvWindow  *window)
+{
+	const gchar                  *author;
+	GdkColor                      color;
+	gdouble                       opacity;
+	gboolean                      popup_is_open;
+	EvAnnotationPropertiesDialog *dialog;
+	EvAnnotation                 *annot = window->priv->annot;
+	EvAnnotationsSaveMask         mask = EV_ANNOTATIONS_SAVE_NONE;
+
+	if (!annot)
+		return;
+
+	dialog = EV_ANNOTATION_PROPERTIES_DIALOG (ev_annotation_properties_dialog_new_with_annotation (window->priv->annot));
+	if (gtk_dialog_run (GTK_DIALOG (dialog)) != GTK_RESPONSE_APPLY) {
+		gtk_widget_destroy (GTK_WIDGET (dialog));
+
+		return;
+	}
+
+	/* Set annotations changes */
+	author = ev_annotation_properties_dialog_get_author (dialog);
+	if (ev_annotation_markup_set_label (EV_ANNOTATION_MARKUP (annot), author))
+		mask |= EV_ANNOTATIONS_SAVE_LABEL;
+
+	ev_annotation_properties_dialog_get_color (dialog, &color);
+	if (ev_annotation_set_color (annot, &color))
+		mask |= EV_ANNOTATIONS_SAVE_COLOR;
+
+	opacity = ev_annotation_properties_dialog_get_opacity (dialog);
+	if (ev_annotation_markup_set_opacity (EV_ANNOTATION_MARKUP (annot), opacity))
+		mask |= EV_ANNOTATIONS_SAVE_OPACITY;
+
+	popup_is_open = ev_annotation_properties_dialog_get_popup_is_open (dialog);
+	if (ev_annotation_markup_set_popup_is_open (EV_ANNOTATION_MARKUP (annot), popup_is_open))
+		mask |= EV_ANNOTATIONS_SAVE_POPUP_IS_OPEN;
+
+	if (EV_IS_ANNOTATION_TEXT (annot)) {
+		EvAnnotationTextIcon icon;
+
+		icon = ev_annotation_properties_dialog_get_text_icon (dialog);
+		if (ev_annotation_text_set_icon (EV_ANNOTATION_TEXT (annot), icon))
+			mask |= EV_ANNOTATIONS_SAVE_TEXT_ICON;
+	}
+
+	if (mask != EV_ANNOTATIONS_SAVE_NONE) {
+		ev_document_doc_mutex_lock ();
+		ev_document_annotations_save_annotation (EV_DOCUMENT_ANNOTATIONS (window->priv->document),
+							 window->priv->annot,
+							 mask);
+		ev_document_doc_mutex_unlock ();
+
+		/* FIXME: update annot region only */
+		ev_view_reload (EV_VIEW (window->priv->view));
+	}
+
+	gtk_widget_destroy (GTK_WIDGET (dialog));
+}
+
+static void
 ev_attachment_popup_cmd_open_attachment (GtkAction *action, EvWindow *window)
 {
 	GList     *l;
@@ -6553,6 +6660,14 @@ ev_window_init (EvWindow *ev_window)
 			  "annot_activated",
 			  G_CALLBACK (sidebar_annots_annot_activated_cb),
 			  ev_window);
+	g_signal_connect (sidebar_widget,
+			  "begin_annot_add",
+			  G_CALLBACK (sidebar_annots_begin_annot_add),
+			  ev_window);
+	g_signal_connect (sidebar_widget,
+			  "annot_add_cancelled",
+			  G_CALLBACK (sidebar_annots_annot_add_cancelled),
+			  ev_window);
 	gtk_widget_show (sidebar_widget);
 	ev_sidebar_add_page (EV_SIDEBAR (ev_window->priv->sidebar),
 			     sidebar_widget);
@@ -6597,6 +6712,9 @@ ev_window_init (EvWindow *ev_window)
 				 ev_window, 0);
 	g_signal_connect_object (ev_window->priv->view, "selection-changed",
 				 G_CALLBACK (view_selection_changed_cb),
+				 ev_window, 0);
+	g_signal_connect_object (ev_window->priv->view, "annot-added",
+				 G_CALLBACK (view_annot_added),
 				 ev_window, 0);
 #ifdef ENABLE_DBUS
 	g_signal_connect_swapped (ev_window->priv->view, "sync-source",

@@ -40,6 +40,28 @@ G_BEGIN_DECLS
 #define EV_IS_DOCUMENT_ANNOTATIONS_IFACE(k)     (G_TYPE_CHECK_CLASS_TYPE ((k), EV_TYPE_DOCUMENT_ANNOTATIONS))
 #define EV_DOCUMENT_ANNOTATIONS_GET_IFACE(inst) (G_TYPE_INSTANCE_GET_INTERFACE ((inst), EV_TYPE_DOCUMENT_ANNOTATIONS, EvDocumentAnnotationsInterface))
 
+typedef enum {
+	EV_ANNOTATIONS_SAVE_NONE          = 0,
+	EV_ANNOTATIONS_SAVE_CONTENTS      = 1 << 0,
+	EV_ANNOTATIONS_SAVE_COLOR         = 1 << 1,
+
+	/* Markup Annotations */
+	EV_ANNOTATIONS_SAVE_LABEL         = 1 << 2,
+	EV_ANNOTATIONS_SAVE_OPACITY       = 1 << 3,
+	EV_ANNOTATIONS_SAVE_POPUP_RECT    = 1 << 4,
+	EV_ANNOTATIONS_SAVE_POPUP_IS_OPEN = 1 << 5,
+
+	/* Text Annotations */
+	EV_ANNOTATIONS_SAVE_TEXT_IS_OPEN  = 1 << 6,
+	EV_ANNOTATIONS_SAVE_TEXT_ICON     = 1 << 7,
+
+	/* Attachment Annotations */
+	EV_ANNOTATIONS_SAVE_ATTACHMENT    = 1 << 8,
+
+	/* Save all */
+	EV_ANNOTATIONS_SAVE_ALL           = (1 << 9) - 1
+} EvAnnotationsSaveMask;
+
 typedef struct _EvDocumentAnnotations          EvDocumentAnnotations;
 typedef struct _EvDocumentAnnotationsInterface EvDocumentAnnotationsInterface;
 
@@ -48,20 +70,26 @@ struct _EvDocumentAnnotationsInterface
 	GTypeInterface base_iface;
 
 	/* Methods  */
-	EvMappingList *(* get_annotations)         (EvDocumentAnnotations *document_annots,
-						    EvPage                *page);
-	void           (* annotation_set_contents) (EvDocumentAnnotations *document_annots,
-						    EvAnnotation          *annot,
-						    const gchar           *contents);
+	EvMappingList *(* get_annotations) (EvDocumentAnnotations *document_annots,
+					    EvPage                *page);
+	void           (* add_annotation)  (EvDocumentAnnotations *document_annots,
+					    EvAnnotation          *annot,
+					    EvRectangle           *rect);
+	void           (* save_annotation) (EvDocumentAnnotations *document_annots,
+					    EvAnnotation          *annot,
+					    EvAnnotationsSaveMask  mask);
 };
 
-GType          ev_document_annotations_get_type                (void) G_GNUC_CONST;
-EvMappingList *ev_document_annotations_get_annotations         (EvDocumentAnnotations *document_annots,
-								EvPage                *page);
-
-void           ev_document_annotations_annotation_set_contents (EvDocumentAnnotations *document_annots,
-								EvAnnotation          *annot,
-								const gchar           *contents);
+GType          ev_document_annotations_get_type           (void) G_GNUC_CONST;
+EvMappingList *ev_document_annotations_get_annotations    (EvDocumentAnnotations *document_annots,
+							   EvPage                *page);
+void           ev_document_annotations_add_annotation     (EvDocumentAnnotations *document_annots,
+							   EvAnnotation          *annot,
+							   EvRectangle           *rect);
+void           ev_document_annotations_save_annotation    (EvDocumentAnnotations *document_annots,
+							   EvAnnotation          *annot,
+							   EvAnnotationsSaveMask  mask);
+gboolean       ev_document_annotations_can_add_annotation (EvDocumentAnnotations *document_annots);
 
 G_END_DECLS
 

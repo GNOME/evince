@@ -32,6 +32,8 @@ endif
 evince_SOURCES=				\
 	eggfindbar.c			\
 	eggfindbar.h			\
+	ev-annotation-properties-dialog.h \
+	ev-annotation-properties-dialog.c \
 	ev-application.c		\
 	ev-application.h		\
 	ev-file-monitor.h		\

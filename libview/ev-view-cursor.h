@@ -35,7 +35,8 @@ typedef enum {
 	EV_VIEW_CURSOR_WAIT,
 	EV_VIEW_CURSOR_HIDDEN,
 	EV_VIEW_CURSOR_DRAG,
-	EV_VIEW_CURSOR_AUTOSCROLL
+	EV_VIEW_CURSOR_AUTOSCROLL,
+	EV_VIEW_CURSOR_ADD
 } EvViewCursor;
 
 GdkCursor *ev_view_cursor_new (GdkDisplay  *display,

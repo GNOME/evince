@@ -53,7 +53,7 @@ struct _EvAnnotationWindow {
 	GtkWidget    *resize_sw;
 
 	gboolean      is_open;
-	EvRectangle  *rect;
+	EvRectangle   rect;
 
 	gboolean      in_move;
 	gint          x;
@@ -116,7 +116,7 @@ ev_annotation_window_get_icon_size (void)
 }
 
 static void
-ev_annotation_window_check_contents_modified (EvAnnotationWindow *window)
+ev_annotation_window_sync_contents (EvAnnotationWindow *window)
 {
 	gchar         *contents;
 	GtkTextIter    start, end;
@@ -126,23 +126,8 @@ ev_annotation_window_check_contents_modified (EvAnnotationWindow *window)
 	buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (window->text_view));
 	gtk_text_buffer_get_bounds (buffer, &start, &end);
 	contents = gtk_text_buffer_get_text (buffer, &start, &end, FALSE);
-
-	if (contents && annot->contents) {
-		if (strcasecmp (contents, annot->contents) != 0) {
-			g_free (annot->contents);
-			annot->contents = contents;
-			annot->changed = TRUE;
-		} else {
-			g_free (contents);
-		}
-	} else if (annot->contents) {
-		g_free (annot->contents);
-		annot->contents = NULL;
-		annot->changed = TRUE;
-	} else if (contents) {
-		annot->contents = contents;
-		annot->changed = TRUE;
-	}
+	ev_annotation_set_contents (annot, contents);
+	g_free (contents);
 }
 
 static void
@@ -178,19 +163,36 @@ ev_annotation_window_set_color (EvAnnotationWindow *window,
 }
 
 static void
+ev_annotation_window_label_changed (EvAnnotationMarkup *annot,
+				    GParamSpec         *pspec,
+				    EvAnnotationWindow *window)
+{
+	const gchar *label = ev_annotation_markup_get_label (annot);
+
+	gtk_window_set_title (GTK_WINDOW (window), label);
+	gtk_label_set_text (GTK_LABEL (window->title), label);
+}
+
+static void
+ev_annotation_window_color_changed (EvAnnotation       *annot,
+				    GParamSpec         *pspec,
+				    EvAnnotationWindow *window)
+{
+	GdkColor color;
+
+	ev_annotation_get_color (annot, &color);
+	ev_annotation_window_set_color (window, &color);
+}
+
+static void
 ev_annotation_window_dispose (GObject *object)
 {
 	EvAnnotationWindow *window = EV_ANNOTATION_WINDOW (object);
 
 	if (window->annotation) {
-		ev_annotation_window_check_contents_modified (window);
+		ev_annotation_window_sync_contents (window);
 		g_object_unref (window->annotation);
 		window->annotation = NULL;
-	}
-
-	if (window->rect) {
-		ev_rectangle_free (window->rect);
-		window->rect = NULL;
 	}
 
 	(* G_OBJECT_CLASS (ev_annotation_window_parent_class)->dispose) (object);
@@ -391,8 +393,10 @@ ev_annotation_window_constructor (GType                  type,
 	GObject            *object;
 	EvAnnotationWindow *window;
 	EvAnnotation       *annot;
-	gchar              *label;
-	gdouble             opacity;
+	EvAnnotationMarkup *markup;
+	const gchar        *contents;
+	const gchar        *label;
+	GdkColor            color;
 	EvRectangle        *rect;
 	gdouble             scale;
 
@@ -401,36 +405,43 @@ ev_annotation_window_constructor (GType                  type,
 										  construct_params);
 	window = EV_ANNOTATION_WINDOW (object);
 	annot = window->annotation;
+	markup = EV_ANNOTATION_MARKUP (annot);
 
 	gtk_window_set_transient_for (GTK_WINDOW (window), window->parent);
 	gtk_window_set_destroy_with_parent (GTK_WINDOW (window), FALSE);
 
-	g_object_get (annot,
-		      "label", &label,
-		      "opacity", &opacity,
-		      "is_open", &window->is_open,
-		      "rectangle", &window->rect,
-		      NULL);
-	rect = window->rect;
+	label = ev_annotation_markup_get_label (markup);
+	window->is_open = ev_annotation_markup_get_popup_is_open (markup);
+	ev_annotation_markup_get_rectangle (markup, &window->rect);
+
+	rect = &window->rect;
 
 	/* Rectangle is at doc resolution (72.0) */
 	scale = get_screen_dpi (window) / 72.0;
 	gtk_window_resize (GTK_WINDOW (window),
 			   (gint)((rect->x2 - rect->x1) * scale),
 			   (gint)((rect->y2 - rect->y1) * scale));
-	ev_annotation_window_set_color (window, &annot->color);
-	gtk_widget_set_name (GTK_WIDGET (window), annot->name);
+
+	ev_annotation_get_color (annot, &color);
+	ev_annotation_window_set_color (window, &color);
+	gtk_widget_set_name (GTK_WIDGET (window), ev_annotation_get_name (annot));
 	gtk_window_set_title (GTK_WINDOW (window), label);
 	gtk_label_set_text (GTK_LABEL (window->title), label);
-	gtk_window_set_opacity (GTK_WINDOW (window), opacity);
-	g_free (label);
 
-	if (annot->contents) {
+	contents = ev_annotation_get_contents (annot);
+	if (contents) {
 		GtkTextBuffer *buffer;
 
 		buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (window->text_view));
-		gtk_text_buffer_set_text (buffer, annot->contents, -1);
+		gtk_text_buffer_set_text (buffer, contents, -1);
 	}
+
+	g_signal_connect (annot, "notify::label",
+			  G_CALLBACK (ev_annotation_window_label_changed),
+			  window);
+	g_signal_connect (annot, "notify::color",
+			  G_CALLBACK (ev_annotation_window_color_changed),
+			  window);
 
 	return object;
 }
@@ -496,6 +507,8 @@ ev_annotation_window_focus_out_event (GtkWidget     *widget,
 		window->in_move = FALSE;
 		g_signal_emit (window, signals[MOVED], 0, window->x, window->y);
 	}
+
+	ev_annotation_window_sync_contents (window);
 
 	return FALSE;
 }
@@ -587,7 +600,7 @@ ev_annotation_window_set_annotation (EvAnnotationWindow *window,
 
 	g_object_unref (window->annotation);
 	window->annotation = g_object_ref (annot);
-	ev_annotation_window_check_contents_modified (window);
+	ev_annotation_window_sync_contents (window);
 	g_object_notify (G_OBJECT (window), "annotation");
 }
 
@@ -599,22 +612,24 @@ ev_annotation_window_is_open (EvAnnotationWindow *window)
 	return window->is_open;
 }
 
-const EvRectangle *
-ev_annotation_window_get_rectangle (EvAnnotationWindow *window)
-{
-	g_return_val_if_fail (EV_IS_ANNOTATION_WINDOW (window), NULL);
-
-	return window->rect;
-}
-
 void
-ev_annotation_window_set_rectangle (EvAnnotationWindow *window,
+ev_annotation_window_get_rectangle (EvAnnotationWindow *window,
 				    EvRectangle        *rect)
 {
 	g_return_if_fail (EV_IS_ANNOTATION_WINDOW (window));
 	g_return_if_fail (rect != NULL);
 
-	*window->rect = *rect;
+	*rect = window->rect;
+}
+
+void
+ev_annotation_window_set_rectangle (EvAnnotationWindow *window,
+				    const EvRectangle  *rect)
+{
+	g_return_if_fail (EV_IS_ANNOTATION_WINDOW (window));
+	g_return_if_fail (rect != NULL);
+
+	window->rect = *rect;
 }
 
 void
@@ -637,5 +652,5 @@ ev_annotation_window_ungrab_focus (EvAnnotationWindow *window)
 		send_focus_change (window->text_view, FALSE);
 	}
 
-	ev_annotation_window_check_contents_modified (window);
+	ev_annotation_window_sync_contents (window);
 }

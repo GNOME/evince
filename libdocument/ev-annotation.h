@@ -77,80 +77,84 @@ typedef struct _EvAnnotationTextClass       EvAnnotationTextClass;
 typedef struct _EvAnnotationAttachment      EvAnnotationAttachment;
 typedef struct _EvAnnotationAttachmentClass EvAnnotationAttachmentClass;
 
-struct _EvAnnotation
-{
-	GObject parent;
+typedef enum {
+	EV_ANNOTATION_TYPE_UNKNOWN,
+	EV_ANNOTATION_TYPE_TEXT,
+	EV_ANNOTATION_TYPE_ATTACHMENT
+} EvAnnotationType;
 
-	EvPage  *page;
-	gboolean changed;
-
-	gchar   *contents;
-	gchar   *name;
-	gchar   *modified;
-	GdkColor color;
-
-};
-
-struct _EvAnnotationClass
-{
-	GObjectClass parent_class;
-};
-
-struct _EvAnnotationMarkupInterface
-{
-	GTypeInterface base_iface;
-};
-
-struct _EvAnnotationText
-{
-	EvAnnotation parent;
-
-	gboolean is_open : 1;
-};
-
-struct _EvAnnotationTextClass
-{
-	EvAnnotationClass parent_class;
-};
-
-struct _EvAnnotationAttachment
-{
-	EvAnnotation parent;
-
-	EvAttachment *attachment;
-};
-
-struct _EvAnnotationAttachmentClass
-{
-	EvAnnotationClass parent_class;
-};
+typedef enum {
+	EV_ANNOTATION_TEXT_ICON_NOTE,
+	EV_ANNOTATION_TEXT_ICON_COMMENT,
+	EV_ANNOTATION_TEXT_ICON_KEY,
+	EV_ANNOTATION_TEXT_ICON_HELP,
+	EV_ANNOTATION_TEXT_ICON_NEW_PARAGRAPH,
+	EV_ANNOTATION_TEXT_ICON_PARAGRAPH,
+	EV_ANNOTATION_TEXT_ICON_INSERT,
+	EV_ANNOTATION_TEXT_ICON_CROSS,
+	EV_ANNOTATION_TEXT_ICON_CIRCLE,
+	EV_ANNOTATION_TEXT_ICON_UNKNOWN
+} EvAnnotationTextIcon;
 
 /* EvAnnotation */
-GType         ev_annotation_get_type             (void) G_GNUC_CONST;
+GType                ev_annotation_get_type                  (void) G_GNUC_CONST;
+EvAnnotationType     ev_annotation_get_annotation_type       (EvAnnotation           *annot);
+EvPage              *ev_annotation_get_page                  (EvAnnotation           *annot);
+guint                ev_annotation_get_page_index            (EvAnnotation           *annot);
+gboolean             ev_annotation_equal                     (EvAnnotation           *annot,
+							      EvAnnotation           *other);
+const gchar         *ev_annotation_get_contents              (EvAnnotation           *annot);
+gboolean             ev_annotation_set_contents              (EvAnnotation           *annot,
+							      const gchar            *contents);
+const gchar         *ev_annotation_get_name                  (EvAnnotation           *annot);
+gboolean             ev_annotation_set_name                  (EvAnnotation           *annot,
+							      const gchar            *name);
+const gchar         *ev_annotation_get_modified              (EvAnnotation           *annot);
+gboolean             ev_annotation_set_modified              (EvAnnotation           *annot,
+							      const gchar            *modified);
+gboolean             ev_annotation_set_modified_from_time    (EvAnnotation           *annot,
+							      GTime                   utime);
+void                 ev_annotation_get_color                 (EvAnnotation           *annot,
+							      GdkColor               *color);
+gboolean             ev_annotation_set_color                 (EvAnnotation           *annot,
+							      const GdkColor         *color);
 
 /* EvAnnotationMarkup */
-GType         ev_annotation_markup_get_type      (void) G_GNUC_CONST;
-gchar        *ev_annotation_markup_get_label     (EvAnnotationMarkup *markup);
-void          ev_annotation_markup_set_label     (EvAnnotationMarkup *markup,
-						  const gchar        *label);
-gdouble       ev_annotation_markup_get_opacity   (EvAnnotationMarkup *markup);
-void          ev_annotation_markup_set_opacity   (EvAnnotationMarkup *markup,
-						  gdouble             opacity);
-gboolean      ev_annotation_markup_has_popup     (EvAnnotationMarkup *markup);
-void          ev_annotation_markup_get_rectangle (EvAnnotationMarkup *markup,
-						  EvRectangle        *ev_rect);
-gboolean      ev_annotation_markup_get_is_open   (EvAnnotationMarkup *markup);
-void          ev_annotation_markup_set_is_open   (EvAnnotationMarkup *markup,
-						  gboolean            is_open);
+GType                ev_annotation_markup_get_type           (void) G_GNUC_CONST;
+const gchar         *ev_annotation_markup_get_label          (EvAnnotationMarkup     *markup);
+gboolean             ev_annotation_markup_set_label          (EvAnnotationMarkup     *markup,
+							      const gchar            *label);
+gdouble              ev_annotation_markup_get_opacity        (EvAnnotationMarkup     *markup);
+gboolean             ev_annotation_markup_set_opacity        (EvAnnotationMarkup     *markup,
+							      gdouble                 opacity);
+gboolean             ev_annotation_markup_has_popup          (EvAnnotationMarkup     *markup);
+gboolean             ev_annotation_markup_set_has_popup      (EvAnnotationMarkup     *markup,
+							      gboolean                has_popup);
+void                 ev_annotation_markup_get_rectangle      (EvAnnotationMarkup     *markup,
+							      EvRectangle            *ev_rect);
+gboolean             ev_annotation_markup_set_rectangle      (EvAnnotationMarkup     *markup,
+							      const EvRectangle      *ev_rect);
+gboolean             ev_annotation_markup_get_popup_is_open  (EvAnnotationMarkup     *markup);
+gboolean             ev_annotation_markup_set_popup_is_open  (EvAnnotationMarkup     *markup,
+							      gboolean                is_open);
 
 /* EvAnnotationText */
-GType         ev_annotation_text_get_type        (void) G_GNUC_CONST;
-EvAnnotation *ev_annotation_text_new             (EvPage             *page);
+GType                ev_annotation_text_get_type             (void) G_GNUC_CONST;
+EvAnnotation        *ev_annotation_text_new                  (EvPage                 *page);
+EvAnnotationTextIcon ev_annotation_text_get_icon             (EvAnnotationText       *text);
+gboolean             ev_annotation_text_set_icon             (EvAnnotationText       *text,
+							      EvAnnotationTextIcon    icon);
+gboolean             ev_annotation_text_get_is_open          (EvAnnotationText       *text);
+gboolean             ev_annotation_text_set_is_open          (EvAnnotationText       *text,
+							      gboolean                is_open);
 
-/* EvAnnotationText */
-GType         ev_annotation_attachment_get_type  (void) G_GNUC_CONST;
-EvAnnotation *ev_annotation_attachment_new       (EvPage             *page,
-						  EvAttachment       *attachment);
+/* EvAnnotationAttachment */
+GType                ev_annotation_attachment_get_type       (void) G_GNUC_CONST;
+EvAnnotation        *ev_annotation_attachment_new            (EvPage                 *page,
+							      EvAttachment           *attachment);
+EvAttachment        *ev_annotation_attachment_get_attachment (EvAnnotationAttachment *annot);
+gboolean             ev_annotation_attachment_set_attachment (EvAnnotationAttachment *annot,
+							      EvAttachment           *attachment);
 
 G_END_DECLS
 

@@ -103,9 +103,12 @@ gboolean       ev_view_get_page_extents   (EvView       *view,
                                            gint          page,
                                            GdkRectangle *page_area,
                                            GtkBorder    *border);
-
-void           ev_view_focus_annotation   (EvView       *view,
-					   EvMapping    *annot_mapping);
+/* Annotations */
+void           ev_view_focus_annotation      (EvView          *view,
+					      EvMapping       *annot_mapping);
+void           ev_view_begin_add_annotation  (EvView          *view,
+					      EvAnnotationType annot_type);
+void           ev_view_cancel_add_annotation (EvView          *view);
 
 G_END_DECLS
 

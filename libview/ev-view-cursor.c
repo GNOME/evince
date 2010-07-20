@@ -58,6 +58,9 @@ ev_view_cursor_new (GdkDisplay  *display,
 	case EV_VIEW_CURSOR_AUTOSCROLL:
 		cursor = gdk_cursor_new_for_display (display, GDK_DOUBLE_ARROW);
 		break;
+	case EV_VIEW_CURSOR_ADD:
+		cursor = gdk_cursor_new_for_display (display, GDK_PLUS);
+		break;
 	}
 
 	return cursor;
