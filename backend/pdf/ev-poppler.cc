@@ -2546,6 +2546,7 @@ poppler_annot_color_to_gdk_color (PopplerAnnot *poppler_annot,
 static EvAnnotationTextIcon
 get_annot_text_icon (PopplerAnnotText *poppler_annot)
 {
+#ifdef HAVE_POPPLER_PAGE_ADD_ANNOT
 	gchar *icon = poppler_annot_text_get_icon (poppler_annot);
 	EvAnnotationTextIcon retval;
 
@@ -2576,11 +2577,15 @@ get_annot_text_icon (PopplerAnnotText *poppler_annot)
 	g_free (icon);
 
 	return retval;
+#else
+	return EV_ANNOTATION_TEXT_ICON_UNKNOWN;
+#endif
 }
 
 static const gchar *
 get_poppler_annot_text_icon (EvAnnotationTextIcon icon)
 {
+#ifdef HAVE_POPPLER_PAGE_ADD_ANNOT
 	switch (icon) {
 	case EV_ANNOTATION_TEXT_ICON_NOTE:
 		return POPPLER_ANNOT_TEXT_ICON_NOTE;
@@ -2604,6 +2609,9 @@ get_poppler_annot_text_icon (EvAnnotationTextIcon icon)
 	default:
 		return POPPLER_ANNOT_TEXT_ICON_NOTE;
 	}
+#else
+	return "Note";
+#endif
 }
 
 static EvAnnotation *
