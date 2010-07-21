@@ -412,8 +412,8 @@ AC_ARG_ENABLE([previewer],
 		  [Disable the GNOME Document Previewer])],
   [],
   [case "$with_platform" in
-      gnome) enable_previewer=yes ;;
-      *) enable_previewer=no ;;
+      hildon) enable_previewer=no ;;
+      *) enable_previewer=yes ;;
     esac])
 
 if test x$enable_previewer = "xyes" ; then
