@@ -397,8 +397,8 @@ AC_ARG_ENABLE([thumbnailer],
 		  [Disable GNOME thumbnailer])],
   [],
   [case "$with_platform" in
-     gnome) enable_thumbnailer=yes ;;
-     *) enable_thumbnailer=no ;;
+     hildon) enable_thumbnailer=no ;;
+     *) enable_thumbnailer=yes ;;
     esac])
 
 AM_CONDITIONAL([ENABLE_THUMBNAILER],[test "$enable_thumbnailer" = "yes"])
