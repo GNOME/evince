@@ -271,7 +271,7 @@ ev_page_action_widget_class_init (EvPageActionWidgetClass *class)
 		g_signal_new ("activate_link",
 			      G_OBJECT_CLASS_TYPE (object_class),
 			      G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
-			      G_STRUCT_OFFSET (EvPageActionClass, activate_link),
+			      G_STRUCT_OFFSET (EvPageActionWidgetClass, activate_link),
 			      NULL, NULL,
 			      g_cclosure_marshal_VOID__OBJECT,
 			      G_TYPE_NONE, 1,
