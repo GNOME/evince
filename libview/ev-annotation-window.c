@@ -489,8 +489,12 @@ ev_annotation_window_focus_in_event (GtkWidget     *widget,
 	EvAnnotationWindow *window = EV_ANNOTATION_WINDOW (widget);
 
 	if (window->in_move) {
-		window->orig_x = window->x;
-		window->orig_y = window->y;
+		if (window->orig_x != window->x || window->orig_y != window->y) {
+			window->orig_x = window->x;
+			window->orig_y = window->y;
+			g_signal_emit (window, signals[MOVED], 0, window->x, window->y);
+		}
+		window->in_move = FALSE;
 	}
 
 	return FALSE;
@@ -501,12 +505,6 @@ ev_annotation_window_focus_out_event (GtkWidget     *widget,
 				      GdkEventFocus *event)
 {
 	EvAnnotationWindow *window = EV_ANNOTATION_WINDOW (widget);
-
-	if (window->in_move &&
-	    (window->orig_x != window->x || window->orig_y != window->y)) {
-		window->in_move = FALSE;
-		g_signal_emit (window, signals[MOVED], 0, window->x, window->y);
-	}
 
 	ev_annotation_window_sync_contents (window);
 
