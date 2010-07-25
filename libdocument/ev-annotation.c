@@ -93,15 +93,13 @@ enum {
 
 /* EvAnnotationText */
 enum {
-	PROP_TEXT_0,
-	PROP_TEXT_ICON,
+	PROP_TEXT_ICON = PROP_MARKUP_POPUP_IS_OPEN + 1,
 	PROP_TEXT_IS_OPEN
 };
 
 /* EvAnnotationAttachment */
 enum {
-	PROP_ATTACHMENT_0,
-	PROP_ATTACHMENT_ATTACHMENT
+	PROP_ATTACHMENT_ATTACHMENT = PROP_MARKUP_POPUP_IS_OPEN + 1
 };
 
 G_DEFINE_ABSTRACT_TYPE (EvAnnotation, ev_annotation, G_TYPE_OBJECT)
@@ -782,10 +780,10 @@ ev_annotation_text_class_init (EvAnnotationTextClass *klass)
 {
 	GObjectClass *g_object_class = G_OBJECT_CLASS (klass);
 
+	ev_annotation_markup_class_install_properties (g_object_class);
+
 	g_object_class->set_property = ev_annotation_text_set_property;
 	g_object_class->get_property = ev_annotation_text_get_property;
-
-	ev_annotation_markup_class_install_properties (g_object_class);
 
 	g_object_class_install_property (g_object_class,
 					 PROP_TEXT_ICON,
@@ -893,6 +891,11 @@ ev_annotation_attachment_set_property (GObject      *object,
 {
 	EvAnnotationAttachment *annot = EV_ANNOTATION_ATTACHMENT (object);
 
+	if (prop_id < PROP_ATTACHMENT_ATTACHMENT) {
+		ev_annotation_markup_set_property (object, prop_id, value, pspec);
+		return;
+	}
+
 	switch (prop_id) {
 	case PROP_ATTACHMENT_ATTACHMENT:
 		ev_annotation_attachment_set_attachment (annot, g_value_get_object (value));
@@ -910,6 +913,11 @@ ev_annotation_attachment_get_property (GObject    *object,
 {
 	EvAnnotationAttachment *annot = EV_ANNOTATION_ATTACHMENT (object);
 
+	if (prop_id < PROP_ATTACHMENT_ATTACHMENT) {
+		ev_annotation_markup_get_property (object, prop_id, value, pspec);
+		return;
+	}
+
 	switch (prop_id) {
 	case PROP_ATTACHMENT_ATTACHMENT:
 		g_value_set_object (value, annot->attachment);
@@ -924,11 +932,11 @@ ev_annotation_attachment_class_init (EvAnnotationAttachmentClass *klass)
 {
 	GObjectClass *g_object_class = G_OBJECT_CLASS (klass);
 
+	ev_annotation_markup_class_install_properties (g_object_class);
+
 	g_object_class->set_property = ev_annotation_attachment_set_property;
 	g_object_class->get_property = ev_annotation_attachment_get_property;
 	g_object_class->finalize = ev_annotation_attachment_finalize;
-
-	ev_annotation_markup_class_install_properties (g_object_class);
 
 	g_object_class_install_property (g_object_class,
 					 PROP_ATTACHMENT_ATTACHMENT,
