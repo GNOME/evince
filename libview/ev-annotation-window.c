@@ -454,8 +454,8 @@ ev_annotation_window_button_press_event (GtkWidget      *widget,
 
 	if (event->type == GDK_BUTTON_PRESS && event->button == 1) {
 		window->in_move = TRUE;
-		window->x = event->x;
-		window->y = event->y;
+		window->x = event->x_root - event->x;
+		window->y = event->y_root - event->y;
 		gtk_window_begin_move_drag (GTK_WINDOW (widget),
 					    event->button,
 					    event->x_root,
