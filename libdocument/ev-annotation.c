@@ -743,6 +743,11 @@ ev_annotation_text_set_property (GObject      *object,
 {
 	EvAnnotationText *annot = EV_ANNOTATION_TEXT (object);
 
+	if (prop_id < PROP_ATTACHMENT_ATTACHMENT) {
+		ev_annotation_markup_set_property (object, prop_id, value, pspec);
+		return;
+	}
+
 	switch (prop_id) {
 	case PROP_TEXT_ICON:
 		ev_annotation_text_set_icon (annot, g_value_get_enum (value));
@@ -762,6 +767,11 @@ ev_annotation_text_get_property (GObject    *object,
 				 GParamSpec *pspec)
 {
 	EvAnnotationText *annot = EV_ANNOTATION_TEXT (object);
+
+	if (prop_id < PROP_ATTACHMENT_ATTACHMENT) {
+		ev_annotation_markup_get_property (object, prop_id, value, pspec);
+		return;
+	}
 
 	switch (prop_id) {
 	case PROP_TEXT_ICON:
