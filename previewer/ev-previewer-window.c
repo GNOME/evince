@@ -487,7 +487,7 @@ data_dir (void)
 	datadir = g_build_filename (dir, "share", "evince", NULL);
 	g_free (dir);
 #else
-	datadir = g_strdup (DATADIR);
+	datadir = g_strdup (EVINCEDATADIR);
 #endif
 
        return datadir;

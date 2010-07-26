@@ -985,7 +985,7 @@ ev_application_init (EvApplication *ev_application)
 	g_free (dir);
 }
 #else
-	ev_application->data_dir = g_strdup (DATADIR);
+	ev_application->data_dir = g_strdup (EVINCEDATADIR);
 #endif
 
 	ev_application_init_session (ev_application);

@@ -100,7 +100,7 @@ ev_stock_icons_init (void)
 	ev_icons_path = g_build_filename (dir, "share", "evince", "icons", NULL);
 	g_free (dir);
 #else
-	ev_icons_path = g_build_filename (DATADIR, "icons", NULL);
+	ev_icons_path = g_build_filename (EVINCEDATADIR, "icons", NULL);
 #endif
 
         factory = gtk_icon_factory_new ();

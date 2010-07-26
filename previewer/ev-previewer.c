@@ -28,9 +28,6 @@
 #include "ev-previewer-window.h"
 
 #ifdef G_OS_WIN32
-#ifdef DATADIR
-#undef DATADIR
-#endif
 #include <io.h>
 #include <conio.h>
 #if !(_WIN32_WINNT >= 0x0500)

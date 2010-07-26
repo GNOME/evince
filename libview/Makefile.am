@@ -50,7 +50,7 @@ libevview_la_SOURCES = 			\
 	$(INST_H_FILES)
 
 libevview_la_CPPFLAGS = \
-	-DDATADIR=\"$(pkgdatadir)\"		\
+	-DEVINCEDATADIR=\"$(pkgdatadir)\"	\
 	-DG_LOG_DOMAIN=\"EvinceView\"		\
 	-DGNOMELOCALEDIR=\"$(datadir)/locale\"	\
 	-DEVINCE_COMPILATION			\

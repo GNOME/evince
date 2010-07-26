@@ -2,7 +2,7 @@ INCLUDES =					\
 	-I$(top_srcdir)				\
 	-I$(top_srcdir)/libdocument		\
 	-DGNOMELOCALEDIR=\"$(datadir)/locale\"	\
-	-DDATADIR=\""$(datadir)"\"		\
+	-DEVINCEDATADIR=\""$(datadir)"\"	\
 	-DEVINCE_COMPILATION			\
 	$(BACKEND_CFLAGS)			\
 	$(WARN_CFLAGS)				\

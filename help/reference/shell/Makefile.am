@@ -99,7 +99,7 @@ GTKDOC_CFLAGS = \
 	-I$(top_srcdir)/libmisc				\
 	-I$(top_builddir)/libview			\
 	-I$(top_srcdir)/properties			\
-	-DDATADIR=\"$(pkgdatadir)\"			\
+	-DEVINCEDATADIR=\"$(pkgdatadir)\"		\
 	-DGNOMEDATADIR=\"$(datadir)\"			\
 	-DGNOMELOCALEDIR=\"$(datadir)/locale\"		\
 	-DGNOMEICONDIR=\""$(datadir)/pixmaps"\" 	\

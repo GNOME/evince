@@ -7,7 +7,7 @@ evince_previewer_SOURCES = \
 	ev-previewer-window.c
 
 evince_previewer_CPPFLAGS = \
-	-DDATADIR=\"$(pkgdatadir)\"		\
+	-DEVINCEDATADIR=\"$(pkgdatadir)\"	\
 	-I$(top_srcdir)                         \
 	-I$(top_builddir) 			\
         -I$(top_srcdir)/libdocument             \

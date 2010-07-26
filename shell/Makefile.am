@@ -1,5 +1,5 @@
 INCLUDES=							\
-	-DDATADIR=\"$(pkgdatadir)\"				\
+	-DEVINCEDATADIR=\"$(pkgdatadir)\"				\
 	-DGNOMEDATADIR=\"$(datadir)\"				\
 	-I$(top_srcdir)						\
 	-I$(top_builddir)					\
@@ -131,7 +131,7 @@ evinced_SOURCES=			\
 	ev-daemon.c
 
 evinced_CFLAGS=				\
-	-DDATADIR=\"$(pkgdatadir)\"				\
+	-DEVINCEDATADIR=\"$(pkgdatadir)\"			\
 	-DGNOMEDATADIR=\"$(datadir)\"				\
 	-I$(top_srcdir)						\
 	-I$(top_builddir)					\

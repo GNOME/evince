@@ -7,7 +7,7 @@ libevmisc_la_SOURCES = \
 	ev-page-action-widget.h
 
 libevmisc_la_CFLAGS =	\
-	-DDATADIR=\"$(pkgdatadir)\"	\
+	-DEVINCEDATADIR=\"$(pkgdatadir)\"	\
 	-I$(top_srcdir)			\
 	-I$(top_srcdir)/libdocument	\
 	-I$(top_srcdir)/libview		\
