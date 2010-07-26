@@ -1249,18 +1249,22 @@ ev_window_setup_document (EvWindow *ev_window)
 	ev_window_title_set_document (ev_window->priv->title, document);
 	ev_window_title_set_uri (ev_window->priv->title, ev_window->priv->uri);
 
-	ev_window->priv->settings = g_settings_new (GS_SCHEMA_NAME);
-	g_signal_connect (ev_window->priv->settings,
-			  "changed::"GS_OVERRIDE_RESTRICTIONS,
-			  G_CALLBACK (override_restrictions_changed),
-			  ev_window);
+	if (!ev_window->priv->settings) {
+		ev_window->priv->settings = g_settings_new (GS_SCHEMA_NAME);
+		g_signal_connect (ev_window->priv->settings,
+				  "changed::"GS_OVERRIDE_RESTRICTIONS,
+				  G_CALLBACK (override_restrictions_changed),
+				  ev_window);
+	}
 
 #ifdef HAVE_DESKTOP_SCHEMAS
-	ev_window->priv->lockdown_settings = g_settings_new (GS_LOCKDOWN_SCHEMA_NAME);
-	g_signal_connect (ev_window->priv->lockdown_settings,
-			  "changed",
-			  G_CALLBACK (lockdown_changed),
-			  ev_window);
+	if (!ev_window->priv->lockdown_settings) {
+		ev_window->priv->lockdown_settings = g_settings_new (GS_LOCKDOWN_SCHEMA_NAME);
+		g_signal_connect (ev_window->priv->lockdown_settings,
+				  "changed",
+				  G_CALLBACK (lockdown_changed),
+				  ev_window);
+	}
 #endif
 
 	ev_window_setup_action_sensitivity (ev_window);
