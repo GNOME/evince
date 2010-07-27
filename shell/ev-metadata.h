@@ -35,6 +35,7 @@ typedef struct _EvMetadataClass EvMetadataClass;
 
 GType       ev_metadata_get_type              (void) G_GNUC_CONST;
 EvMetadata *ev_metadata_new                   (GFile       *file);
+gboolean    ev_metadata_is_empty              (EvMetadata  *metadata);
 
 gboolean    ev_metadata_get_string            (EvMetadata  *metadata,
 					       const gchar *key,

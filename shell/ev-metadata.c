@@ -137,6 +137,12 @@ ev_metadata_new (GFile *file)
 }
 
 gboolean
+ev_metadata_is_empty (EvMetadata *metadata)
+{
+	return g_hash_table_size (metadata->items) == 0;
+}
+
+gboolean
 ev_metadata_get_string (EvMetadata  *metadata,
 			const gchar *key,
 			gchar     **value)
