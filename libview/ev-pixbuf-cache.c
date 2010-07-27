@@ -777,11 +777,11 @@ ev_pixbuf_cache_set_inverted_colors (EvPixbufCache *pixbuf_cache,
 		CacheJobInfo *job_info;
 
 		job_info = pixbuf_cache->prev_job + i;
-		if (job_info->surface)
+		if (job_info && job_info->surface)
 			ev_document_misc_invert_surface (job_info->surface);
 
 		job_info = pixbuf_cache->next_job + i;
-		if (job_info->surface)
+		if (job_info && job_info->surface)
 			ev_document_misc_invert_surface (job_info->surface);
 	}
 
@@ -789,7 +789,7 @@ ev_pixbuf_cache_set_inverted_colors (EvPixbufCache *pixbuf_cache,
 		CacheJobInfo *job_info;
 
 		job_info = pixbuf_cache->job_list + i;
-		if (job_info->surface)
+		if (job_info && job_info->surface)
 			ev_document_misc_invert_surface (job_info->surface);
 	}
 }
