@@ -1,4 +1,11 @@
 <schemalist>
+
+  <enum id="org.gnome.Evince.SizingMode">
+    <value nick="best-fit" value="0"/>
+    <value nick="fit-width" value="1"/>
+    <value nick="free" value="2"/>
+  </enum>
+
   <schema id="org.gnome.Evince" path="/apps/evince/" gettext-domain="evince">
     <key name="override-restrictions" type="b">
       <default>true</default>
@@ -17,6 +24,27 @@
     </key>
     <key name="window-ratio" type="(dd)">
       <default>(0., 0.)</default>
+    </key>
+    <key name="sizing-mode" enum="org.gnome.Evince.SizingMode">
+      <default>'fit-width'</default>
+    </key>
+    <key name="inverted-colors" type="b">
+      <default>false</default>
+    </key>
+    <key name="continuous" type="b">
+      <default>true</default>
+    </key>
+    <key name="dual-page" type="b">
+      <default>false</default>
+    </key>
+    <key name="fullscreen" type="b">
+      <default>false</default>
+    </key>
+    <key name="sidebar-page" type="s">
+      <default>'links'</default>
+    </key>
+    <key name="sidebar-size" type="i">
+      <default>132</default>
     </key>
   </schema>
 

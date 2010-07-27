@@ -142,7 +142,7 @@ struct _EvWindowPrivate {
 
 	/* Settings */
 	GSettings *settings;
-	GSettings *last_settings;
+	GSettings *default_settings;
 	GSettings *lockdown_settings;
 
 	/* Menubar accels */
@@ -193,6 +193,7 @@ struct _EvWindowPrivate {
 	EvWindowPageMode page_mode;
 	EvWindowTitle *title;
 	EvMetadata *metadata;
+	gboolean is_new_doc;
 
 	/* Load params */
 	EvLinkDest       *dest;
@@ -273,6 +274,8 @@ static const gchar *document_print_settings[] = {
 static void	ev_window_update_actions	 	(EvWindow         *ev_window);
 static void     ev_window_sidebar_visibility_changed_cb (EvSidebar        *ev_sidebar,
 							 GParamSpec       *pspec,
+							 EvWindow         *ev_window);
+static void     ev_window_view_toolbar_cb               (GtkAction        *action,
 							 EvWindow         *ev_window);
 static void     ev_window_set_page_mode                 (EvWindow         *window,
 							 EvWindowPageMode  page_mode);
@@ -652,6 +655,22 @@ update_sizing_buttons (EvWindow *window)
 	}
 }
 
+static void
+update_chrome_actions (EvWindow *window)
+{
+	EvWindowPrivate *priv = window->priv;
+	GtkActionGroup *action_group = priv->action_group;
+	GtkAction *action;
+
+	action= gtk_action_group_get_action (action_group, "ViewToolbar");
+	g_signal_handlers_block_by_func
+		(action, G_CALLBACK (ev_window_view_toolbar_cb), window);
+	gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action),
+				      (priv->chrome & EV_CHROME_TOOLBAR) != 0);
+	g_signal_handlers_unblock_by_func
+		(action, G_CALLBACK (ev_window_view_toolbar_cb), window);
+}
+
 /**
  * ev_window_is_empty:
  * @ev_window: The instance of the #EvWindow.
@@ -895,6 +914,65 @@ ev_window_page_changed_cb (EvWindow        *ev_window,
 		ev_metadata_set_int (ev_window->priv->metadata, "page", new_page);
 }
 
+static const gchar *
+ev_window_sidebar_get_current_page_id (EvWindow *ev_window)
+{
+	GtkWidget   *current_page;
+	const gchar *id;
+
+	g_object_get (ev_window->priv->sidebar,
+		      "current_page", &current_page,
+		      NULL);
+
+	if (current_page == ev_window->priv->sidebar_links) {
+		id = LINKS_SIDEBAR_ID;
+	} else if (current_page == ev_window->priv->sidebar_thumbs) {
+		id = THUMBNAILS_SIDEBAR_ID;
+	} else if (current_page == ev_window->priv->sidebar_attachments) {
+		id = ATTACHMENTS_SIDEBAR_ID;
+	} else if (current_page == ev_window->priv->sidebar_layers) {
+		id = LAYERS_SIDEBAR_ID;
+	} else if (current_page == ev_window->priv->sidebar_annots) {
+		id = ANNOTS_SIDEBAR_ID;
+	} else {
+		g_assert_not_reached();
+	}
+
+	g_object_unref (current_page);
+
+	return id;
+}
+
+static void
+ev_window_sidebar_set_current_page (EvWindow    *window,
+				    const gchar *page_id)
+{
+	EvDocument *document = window->priv->document;
+	EvSidebar  *sidebar = EV_SIDEBAR (window->priv->sidebar);
+	GtkWidget  *links = window->priv->sidebar_links;
+	GtkWidget  *thumbs = window->priv->sidebar_thumbs;
+	GtkWidget  *attachments = window->priv->sidebar_attachments;
+	GtkWidget  *annots = window->priv->sidebar_annots;
+	GtkWidget  *layers = window->priv->sidebar_layers;
+
+	if (strcmp (page_id, LINKS_SIDEBAR_ID) == 0 &&
+	    ev_sidebar_page_support_document (EV_SIDEBAR_PAGE (links), document)) {
+		ev_sidebar_set_page (sidebar, links);
+	} else if (strcmp (page_id, THUMBNAILS_SIDEBAR_ID) == 0 &&
+		   ev_sidebar_page_support_document (EV_SIDEBAR_PAGE (thumbs), document)) {
+		ev_sidebar_set_page (sidebar, thumbs);
+	} else if (strcmp (page_id, ATTACHMENTS_SIDEBAR_ID) == 0 &&
+		   ev_sidebar_page_support_document (EV_SIDEBAR_PAGE (attachments), document)) {
+		ev_sidebar_set_page (sidebar, attachments);
+	} else if (strcmp (page_id, LAYERS_SIDEBAR_ID) == 0 &&
+		   ev_sidebar_page_support_document (EV_SIDEBAR_PAGE (layers), document)) {
+		ev_sidebar_set_page (sidebar, layers);
+	} else if (strcmp (page_id, ANNOTS_SIDEBAR_ID) == 0 &&
+		   ev_sidebar_page_support_document (EV_SIDEBAR_PAGE (annots), document)) {
+		ev_sidebar_set_page (sidebar, annots);
+	}
+}
+
 static void
 update_document_mode (EvWindow *window, EvDocumentMode mode)
 {
@@ -910,17 +988,23 @@ static void
 setup_chrome_from_metadata (EvWindow *window)
 {
 	EvChrome chrome = EV_CHROME_NORMAL;
-	gboolean show_toolbar;
+	gboolean show_toolbar = TRUE;
 
-	if (window->priv->document) {
-		if (!window->priv->metadata ||
-		    !ev_metadata_get_boolean (window->priv->metadata, "show_toolbar", &show_toolbar)) {
-			show_toolbar = g_settings_get_boolean (window->priv->last_settings, "show-toolbar");
-		}
+	if (ev_window_is_empty (window)) {
+		window->priv->chrome = chrome;
 
-		if (!show_toolbar)
-			chrome &= ~EV_CHROME_TOOLBAR;
+		return;
 	}
+
+	if (!window->priv->metadata) {
+		show_toolbar = g_settings_get_boolean (window->priv->default_settings, "show-toolbar");
+	} else if (!ev_metadata_get_boolean (window->priv->metadata, "show_toolbar", &show_toolbar)) {
+		if (window->priv->is_new_doc)
+			show_toolbar = g_settings_get_boolean (window->priv->default_settings, "show-toolbar");
+	}
+
+	if (!show_toolbar)
+		chrome &= ~EV_CHROME_TOOLBAR;
 
 	window->priv->chrome = chrome;
 }
@@ -929,73 +1013,85 @@ static void
 setup_sidebar_from_metadata (EvWindow *window)
 {
 	EvDocument *document = window->priv->document;
-	GtkWidget  *sidebar = window->priv->sidebar;
-	GtkWidget  *links = window->priv->sidebar_links;
-	GtkWidget  *thumbs = window->priv->sidebar_thumbs;
-	GtkWidget  *attachments = window->priv->sidebar_attachments;
-	GtkWidget  *annots = window->priv->sidebar_annots;
-	GtkWidget  *layers = window->priv->sidebar_layers;
+	GSettings  *settings =  window->priv->default_settings;
 	gchar      *page_id;
 	gint        sidebar_size;
-	gboolean    sidebar_visibility;
+	gboolean    sidebar_visibility = TRUE;
 
-	if (document) {
-		if (!window->priv->metadata ||
-		    !ev_metadata_get_boolean (window->priv->metadata, "sidebar_visibility", &sidebar_visibility)) {
-			sidebar_visibility = g_settings_get_boolean (window->priv->last_settings, "show-sidebar");
-		}
-		update_chrome_flag (window, EV_CHROME_SIDEBAR, sidebar_visibility);
-		update_chrome_visibility (window);
+	if (ev_window_is_empty (window))
+		return;
+
+	if (!window->priv->metadata) {
+		sidebar_visibility = g_settings_get_boolean (settings, "show-sidebar");
+	} else if (!ev_metadata_get_boolean (window->priv->metadata, "sidebar_visibility", &sidebar_visibility)) {
+		if (window->priv->is_new_doc)
+			sidebar_visibility = g_settings_get_boolean (settings, "show-sidebar");
 	}
 
-	if (!window->priv->metadata)
+	update_chrome_flag (window, EV_CHROME_SIDEBAR, sidebar_visibility);
+	update_chrome_visibility (window);
+
+	if (!window->priv->metadata) {
+		/* Set default values */
+		gtk_paned_set_position (GTK_PANED (window->priv->hpaned),
+					g_settings_get_int (settings, "sidebar-size"));
+		if (document) {
+			page_id = g_settings_get_string (settings, "sidebar-page");
+			ev_window_sidebar_set_current_page (window, page_id);
+			g_free (page_id);
+		}
+
 		return;
+	}
 
 	if (ev_metadata_get_int (window->priv->metadata, "sidebar_size", &sidebar_size)) {
 		gtk_paned_set_position (GTK_PANED (window->priv->hpaned), sidebar_size);
+	} else if (window->priv->is_new_doc) {
+		gtk_paned_set_position (GTK_PANED (window->priv->hpaned),
+					g_settings_get_int (settings, "sidebar-size"));
 	}
 
-	if (document && ev_metadata_get_string (window->priv->metadata, "sidebar_page", &page_id)) {
-		if (strcmp (page_id, LINKS_SIDEBAR_ID) == 0 && ev_sidebar_page_support_document (EV_SIDEBAR_PAGE (links), document)) {
-			ev_sidebar_set_page (EV_SIDEBAR (sidebar), links);
-		} else if (strcmp (page_id, THUMBNAILS_SIDEBAR_ID) == 0 && ev_sidebar_page_support_document (EV_SIDEBAR_PAGE (thumbs), document)) {
-			ev_sidebar_set_page (EV_SIDEBAR (sidebar), thumbs);
-		} else if (strcmp (page_id, ATTACHMENTS_SIDEBAR_ID) == 0 && ev_sidebar_page_support_document (EV_SIDEBAR_PAGE (attachments), document)) {
-			ev_sidebar_set_page (EV_SIDEBAR (sidebar), attachments);
-		} else if (strcmp (page_id, LAYERS_SIDEBAR_ID) == 0 && ev_sidebar_page_support_document (EV_SIDEBAR_PAGE (layers), document)) {
-			ev_sidebar_set_page (EV_SIDEBAR (sidebar), layers);
-		} else if (strcmp (page_id, ANNOTS_SIDEBAR_ID) == 0 && ev_sidebar_page_support_document (EV_SIDEBAR_PAGE (annots), document)) {
-			ev_sidebar_set_page (EV_SIDEBAR (sidebar), annots);
-		}
-	} else if (document) {
-		if (ev_sidebar_page_support_document (EV_SIDEBAR_PAGE (links), document)) {
-			ev_sidebar_set_page (EV_SIDEBAR (sidebar), links);
-		} else if (ev_sidebar_page_support_document (EV_SIDEBAR_PAGE (thumbs), document)) {
-			ev_sidebar_set_page (EV_SIDEBAR (sidebar), thumbs);
-		} else if (ev_sidebar_page_support_document (EV_SIDEBAR_PAGE (attachments), document)) {
-			ev_sidebar_set_page (EV_SIDEBAR (sidebar), attachments);
-		} else if (ev_sidebar_page_support_document (EV_SIDEBAR_PAGE (layers), document)) {
-			ev_sidebar_set_page (EV_SIDEBAR (sidebar), layers);
-		} else if (ev_sidebar_page_support_document (EV_SIDEBAR_PAGE (annots), document)) {
-			ev_sidebar_set_page (EV_SIDEBAR (sidebar), annots);
-		}
+	if (!document)
+		return;
+
+	if (ev_metadata_get_string (window->priv->metadata, "sidebar_page", &page_id)) {
+		ev_window_sidebar_set_current_page (window, page_id);
+	} else if (window->priv->is_new_doc) {
+		page_id = g_settings_get_string (settings, "sidebar-page");
+		ev_window_sidebar_set_current_page (window, page_id);
+		g_free (page_id);
 	}
 }
 
 static void
 setup_model_from_metadata (EvWindow *window)
 {
-	gint     page;
-	gchar   *sizing_mode;
-	gdouble  zoom;
-	gint     rotation;
-	gboolean inverted_colors = FALSE;
-	gboolean continuous = FALSE;
-	gboolean dual_page = FALSE;
-	gboolean fullscreen = FALSE;
+	GSettings *settings = window->priv->default_settings;
+	gint       page;
+	gchar     *sizing_mode;
+	gdouble    zoom;
+	gint       rotation;
+	gboolean   inverted_colors = FALSE;
+	gboolean   continuous = FALSE;
+	gboolean   dual_page = FALSE;
+	gboolean   fullscreen = FALSE;
 
-	if (!window->priv->metadata)
+	if (!window->priv->metadata) {
+		/* Set default values */
+		ev_document_model_set_sizing_mode (window->priv->model,
+						   g_settings_get_enum (settings, "sizing-mode"));
+		ev_document_model_set_inverted_colors (window->priv->model,
+						       g_settings_get_boolean (settings, "inverted-colors"));
+		ev_document_model_set_continuous (window->priv->model,
+						  g_settings_get_boolean (settings, "continuous"));
+		ev_document_model_set_dual_page (window->priv->model,
+						 g_settings_get_boolean (settings, "dual-page"));
+		fullscreen = g_settings_get_boolean (settings, "fullscreen");
+		if (fullscreen)
+			ev_window_run_fullscreen (window);
+
 		return;
+	}
 
 	/* Current page */
 	if (!window->priv->dest &&
@@ -1010,6 +1106,9 @@ setup_model_from_metadata (EvWindow *window)
 		enum_value = g_enum_get_value_by_nick
 			(g_type_class_peek (EV_TYPE_SIZING_MODE), sizing_mode);
 		ev_document_model_set_sizing_mode (window->priv->model, enum_value->value);
+	} else if (window->priv->is_new_doc) {
+		ev_document_model_set_sizing_mode (window->priv->model,
+						   g_settings_get_enum (settings, "sizing-mode"));
 	}
 
 	/* Zoom */
@@ -1039,25 +1138,37 @@ setup_model_from_metadata (EvWindow *window)
 	}
 
 	/* Inverted Colors */
-	if (ev_metadata_get_boolean (window->priv->metadata, "inverted-colors", &inverted_colors))
+	if (ev_metadata_get_boolean (window->priv->metadata, "inverted-colors", &inverted_colors)) {
 		ev_document_model_set_inverted_colors (window->priv->model, inverted_colors);
+	} else if (window->priv->is_new_doc) {
+		ev_document_model_set_inverted_colors (window->priv->model,
+						       g_settings_get_boolean (settings, "inverted-colors"));
+	}
 
 	/* Continuous */
 	if (ev_metadata_get_boolean (window->priv->metadata, "continuous", &continuous)) {
 		ev_document_model_set_continuous (window->priv->model, continuous);
+	} else if (window->priv->is_new_doc) {
+		ev_document_model_set_continuous (window->priv->model,
+						  g_settings_get_boolean (settings, "continuous"));
 	}
 
 	/* Dual page */
 	if (ev_metadata_get_boolean (window->priv->metadata, "dual-page", &dual_page)) {
 		ev_document_model_set_dual_page (window->priv->model, dual_page);
+	} else if (window->priv->is_new_doc) {
+		ev_document_model_set_dual_page (window->priv->model,
+						 g_settings_get_boolean (settings, "dual-page"));
 	}
 
 	/* Fullscreen */
-	if (ev_metadata_get_boolean (window->priv->metadata, "fullscreen", &fullscreen)) {
-		if (fullscreen) {
-			ev_window_run_fullscreen (window);
-		}
+	if (!ev_metadata_get_boolean (window->priv->metadata, "fullscreen", &fullscreen)) {
+		if (window->priv->is_new_doc)
+			fullscreen = g_settings_get_boolean (settings, "fullscreen");
 	}
+
+	if (fullscreen)
+		ev_window_run_fullscreen (window);
 }
 
 static void
@@ -1069,6 +1180,8 @@ setup_document_from_metadata (EvWindow *window)
 	gdouble width_ratio;
 	gdouble height_ratio;
 
+	setup_sidebar_from_metadata (window);
+
 	if (window->priv->metadata) {
 		/* Make sure to not open a document on the last page,
 		 * since closing it on the last page most likely means the
@@ -1079,14 +1192,12 @@ setup_document_from_metadata (EvWindow *window)
 		if (page == n_pages - 1)
 			ev_document_model_set_page (window->priv->model, 0);
 
-		setup_sidebar_from_metadata (window);
-
 		if (ev_metadata_get_int (window->priv->metadata, "window_width", &width) &&
 		    ev_metadata_get_int (window->priv->metadata, "window_height", &height))
 			return; /* size was already set in setup_size_from_metadata */
 	}
 
-	g_settings_get (window->priv->last_settings, "window-ratio", "(dd)", &width_ratio, &height_ratio);
+	g_settings_get (window->priv->default_settings, "window-ratio", "(dd)", &width_ratio, &height_ratio);
 	if (width_ratio > 0. && height_ratio > 0.) {
 		gdouble    document_width;
 		gdouble    document_height;
@@ -1420,6 +1531,8 @@ ev_window_load_job_cb (EvJob *job,
 	if (!ev_job_is_failed (job)) {
 		ev_document_model_set_document (ev_window->priv->model, document);
 
+		setup_chrome_from_metadata (ev_window);
+		update_chrome_actions (ev_window);
 		setup_document_from_metadata (ev_window);
 		setup_view_from_metadata (ev_window);
 
@@ -1888,11 +2001,12 @@ ev_window_open_uri (EvWindow       *ev_window,
 		g_object_unref (ev_window->priv->metadata);
 
 	source_file = g_file_new_for_uri (uri);
-	if (!ev_file_is_temp (source_file) &&
-	    ev_is_metadata_supported_for_file (source_file))
+	if (!ev_file_is_temp (source_file) && ev_is_metadata_supported_for_file (source_file)) {
 		ev_window->priv->metadata = ev_metadata_new (source_file);
-	else
+		ev_window->priv->is_new_doc = ev_metadata_is_empty (ev_window->priv->metadata);
+	} else {
 		ev_window->priv->metadata = NULL;
+	}
 
 	if (ev_window->priv->search_string)
 		g_free (ev_window->priv->search_string);
@@ -3965,6 +4079,34 @@ ev_window_cmd_edit_toolbar (GtkAction *action, EvWindow *ev_window)
 }
 
 static void
+ev_window_cmd_edit_save_settings (GtkAction *action, EvWindow *ev_window)
+{
+	EvWindowPrivate *priv = ev_window->priv;
+	EvDocumentModel *model = priv->model;
+	GSettings       *settings = priv->default_settings;
+
+	g_settings_set_boolean (settings, "continuous",
+				ev_document_model_get_continuous (model));
+	g_settings_set_boolean (settings, "dual-page",
+				ev_document_model_get_dual_page (model));
+	g_settings_set_boolean (settings, "fullscreen",
+				ev_document_model_get_fullscreen (model));
+	g_settings_set_boolean (settings, "inverted-colors",
+				ev_document_model_get_inverted_colors (model));
+	g_settings_set_enum (settings, "sizing-mode",
+			     ev_document_model_get_sizing_mode (model));
+	g_settings_set_boolean (settings, "show-toolbar",
+				gtk_widget_get_visible (priv->toolbar));
+	g_settings_set_boolean (settings, "show-sidebar",
+				gtk_widget_get_visible (priv->sidebar));
+	g_settings_set_int (settings, "sidebar-size",
+			    gtk_paned_get_position (GTK_PANED (priv->hpaned)));
+	g_settings_set_string (settings, "sidebar-page",
+			       ev_window_sidebar_get_current_page_id (ev_window));
+	g_settings_apply (settings);
+}
+
+static void
 ev_window_cmd_view_zoom_in (GtkAction *action, EvWindow *ev_window)
 {
         g_return_if_fail (EV_IS_WINDOW (ev_window));
@@ -4377,8 +4519,6 @@ ev_window_view_toolbar_cb (GtkAction *action, EvWindow *ev_window)
 	update_chrome_visibility (ev_window);
 	if (ev_window->priv->metadata)
 		ev_metadata_set_boolean (ev_window->priv->metadata, "show_toolbar", active);
-	if (ev_window->priv->document)
-		g_settings_set_boolean (ev_window->priv->last_settings, "show-toolbar", active);
 }
 
 static void
@@ -4397,29 +4537,11 @@ ev_window_sidebar_current_page_changed_cb (EvSidebar  *ev_sidebar,
 					   GParamSpec *pspec,
 					   EvWindow   *ev_window)
 {
-	GtkWidget *current_page;
-	const char *id;
-
-	g_object_get (G_OBJECT (ev_sidebar), "current_page", &current_page, NULL);
-
-	if (current_page == ev_window->priv->sidebar_links) {
-		id = LINKS_SIDEBAR_ID;
-	} else if (current_page == ev_window->priv->sidebar_thumbs) {
-		id = THUMBNAILS_SIDEBAR_ID;
-	} else if (current_page == ev_window->priv->sidebar_attachments) {
-		id = ATTACHMENTS_SIDEBAR_ID;
-	} else if (current_page == ev_window->priv->sidebar_layers) {
-		id = LAYERS_SIDEBAR_ID;
-	} else if (current_page == ev_window->priv->sidebar_annots) {
-		id = ANNOTS_SIDEBAR_ID;
-	} else {
-		g_assert_not_reached();
+	if (ev_window->priv->metadata && !ev_window_is_empty (ev_window)) {
+		ev_metadata_set_string (ev_window->priv->metadata,
+					"sidebar_page",
+					ev_window_sidebar_get_current_page_id (ev_window));
 	}
-
-	g_object_unref (current_page);
-
-	if (ev_window->priv->metadata && !ev_window_is_empty (ev_window))
-		ev_metadata_set_string (ev_window->priv->metadata, "sidebar_page", id);
 }
 
 static void
@@ -4439,8 +4561,6 @@ ev_window_sidebar_visibility_changed_cb (EvSidebar  *ev_sidebar,
 		if (ev_window->priv->metadata)
 			ev_metadata_set_boolean (ev_window->priv->metadata, "sidebar_visibility",
 						 visible);
-		if (ev_window->priv->document)
-			g_settings_set_boolean (ev_window->priv->last_settings, "show-sidebar", visible);
 	}
 }
 
@@ -4951,10 +5071,10 @@ ev_window_dispose (GObject *object)
 		priv->settings = NULL;
 	}
 
-	if (priv->last_settings) {
-		g_settings_apply (priv->last_settings);
-		g_object_unref (priv->last_settings);
-		priv->last_settings = NULL;
+	if (priv->default_settings) {
+		g_settings_apply (priv->default_settings);
+		g_object_unref (priv->default_settings);
+		priv->default_settings = NULL;
 	}
 
 	if (priv->lockdown_settings) {
@@ -5198,6 +5318,8 @@ static const GtkActionEntry entries[] = {
 	  G_CALLBACK (ev_window_cmd_edit_rotate_left) },
 	{ "EditRotateRight", EV_STOCK_ROTATE_RIGHT, N_("Rotate _Right"), "<control>Right", NULL,
 	  G_CALLBACK (ev_window_cmd_edit_rotate_right) },
+	{ "EditSaveSettings", NULL, N_("Save Current Settings as _Default"), "<control>T", NULL,
+	  G_CALLBACK (ev_window_cmd_edit_save_settings) },
 
 
         /* View menu */
@@ -5511,22 +5633,6 @@ set_action_properties (GtkActionGroup *action_group)
 }
 
 static void
-set_chrome_actions (EvWindow *window)
-{
-	EvWindowPrivate *priv = window->priv;
-	GtkActionGroup *action_group = priv->action_group;
-	GtkAction *action;
-
-	action= gtk_action_group_get_action (action_group, "ViewToolbar");
-	g_signal_handlers_block_by_func
-		(action, G_CALLBACK (ev_window_view_toolbar_cb), window);
-	gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action),
-				      (priv->chrome & EV_CHROME_TOOLBAR) != 0);
-	g_signal_handlers_unblock_by_func
-		(action, G_CALLBACK (ev_window_view_toolbar_cb), window);
-}
-
-static void
 sidebar_widget_model_set (EvSidebarLinks *ev_sidebar_links,
 			  GParamSpec     *pspec,
 			  EvWindow       *ev_window)
@@ -5620,7 +5726,7 @@ window_configure_event_cb (EvWindow *window, GdkEventConfigure *event, gpointer 
 		if (window->priv->document) {
 			ev_document_get_max_page_size (window->priv->document,
 						       &document_width, &document_height);
-			g_settings_set (window->priv->last_settings, "window-ratio", "(dd)",
+			g_settings_set (window->priv->default_settings, "window-ratio", "(dd)",
 					(double)event->width / document_width,
 					(double)event->height / document_height);
 
@@ -6817,8 +6923,8 @@ ev_window_init (EvWindow *ev_window)
 	/* Give focus to the document view */
 	gtk_widget_grab_focus (ev_window->priv->view);
 
-	ev_window->priv->last_settings = g_settings_new (GS_SCHEMA_NAME".Default");
-	g_settings_delay (ev_window->priv->last_settings);
+	ev_window->priv->default_settings = g_settings_new (GS_SCHEMA_NAME".Default");
+	g_settings_delay (ev_window->priv->default_settings);
 
 	/* Set it user interface params */
 	ev_window_setup_recent (ev_window);
@@ -6826,7 +6932,7 @@ ev_window_init (EvWindow *ev_window)
 	ev_window_setup_gtk_settings (ev_window);
 
 	setup_chrome_from_metadata (ev_window);
-	set_chrome_actions (ev_window);
+	update_chrome_actions (ev_window);
 	update_chrome_visibility (ev_window);
 
 	gtk_window_set_default_size (GTK_WINDOW (ev_window), 600, 600);
