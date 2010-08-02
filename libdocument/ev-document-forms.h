@@ -50,6 +50,7 @@ struct _EvDocumentFormsInterface
 	/* Methods  */
 	EvMappingList *(* get_form_fields)                    (EvDocumentForms   *document_forms,
 							       EvPage            *page);
+	gboolean       (* document_is_modified)               (EvDocumentForms   *document_forms);
 	gchar         *(* form_field_text_get_text)           (EvDocumentForms   *document_forms,
 							       EvFormField       *field);
 	void           (* form_field_text_set_text)           (EvDocumentForms   *document_forms,
@@ -86,6 +87,7 @@ struct _EvDocumentFormsInterface
 GType          ev_document_forms_get_type                           (void) G_GNUC_CONST;
 EvMappingList *ev_document_forms_get_form_fields                    (EvDocumentForms   *document_forms,
 								     EvPage            *page);
+gboolean       ev_document_forms_document_is_modified               (EvDocumentForms   *document_forms);
 
 gchar 	      *ev_document_forms_form_field_text_get_text           (EvDocumentForms   *document_forms,
 								     EvFormField       *field);

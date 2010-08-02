@@ -37,6 +37,14 @@ ev_document_forms_get_form_fields (EvDocumentForms *document_forms,
 	return iface->get_form_fields (document_forms, page);
 }
 
+gboolean
+ev_document_forms_document_is_modified (EvDocumentForms *document_forms)
+{
+	EvDocumentFormsInterface *iface = EV_DOCUMENT_FORMS_GET_IFACE (document_forms);
+
+	return (iface->document_is_modified) ? iface->document_is_modified (document_forms) : FALSE;
+}
+
 gchar *
 ev_document_forms_form_field_text_get_text (EvDocumentForms *document_forms, 
 					    EvFormField     *field)
