@@ -3397,31 +3397,18 @@ print_jobs_confirmation_dialog_response (GtkDialog *dialog,
 	}
 }
 
-static void
-ev_window_cmd_file_close_window (GtkAction *action, EvWindow *ev_window)
+static gboolean
+ev_window_check_print_queue (EvWindow *ev_window)
 {
 	GtkWidget *dialog;
 	gchar     *text, *markup;
 	gint       n_print_jobs;
 
-	if (EV_WINDOW_IS_PRESENTATION (ev_window)) {
-		gint current_page;
-
-		/* Save current page */
-		current_page = ev_view_presentation_get_current_page (
-			EV_VIEW_PRESENTATION (ev_window->priv->presentation_view));
-		ev_document_model_set_page (ev_window->priv->model, current_page);
-	}
-
-	/* TODO: warn about form fields, and annots not saved */
-
 	n_print_jobs = ev_window->priv->print_queue ?
 		g_queue_get_length (ev_window->priv->print_queue) : 0;
-	
-	if (n_print_jobs == 0) {
-		gtk_widget_destroy (GTK_WIDGET (ev_window));
-		return;
-	}
+
+	if (n_print_jobs == 0)
+		return FALSE;
 
 	dialog = gtk_message_dialog_new (GTK_WINDOW (ev_window),
 					 GTK_DIALOG_MODAL,
@@ -3452,7 +3439,7 @@ ev_window_cmd_file_close_window (GtkAction *action, EvWindow *ev_window)
 	gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog), "%s",
 						  _("If you close the window, pending print "
 						    "jobs will not be printed."));
-	
+
 	gtk_dialog_add_buttons (GTK_DIALOG (dialog),
 				_("Cancel _print and Close"),
 				GTK_RESPONSE_NO,
@@ -3472,6 +3459,33 @@ ev_window_cmd_file_close_window (GtkAction *action, EvWindow *ev_window)
 			  G_CALLBACK (print_jobs_confirmation_dialog_response),
 			  ev_window);
 	gtk_widget_show (dialog);
+
+	return TRUE;
+}
+
+static gboolean
+ev_window_close (EvWindow *ev_window)
+{
+	if (EV_WINDOW_IS_PRESENTATION (ev_window)) {
+		gint current_page;
+
+		/* Save current page */
+		current_page = ev_view_presentation_get_current_page (
+			EV_VIEW_PRESENTATION (ev_window->priv->presentation_view));
+		ev_document_model_set_page (ev_window->priv->model, current_page);
+	}
+
+	if (ev_window_check_print_queue (ev_window))
+		return FALSE;
+
+	return TRUE;
+}
+
+static void
+ev_window_cmd_file_close_window (GtkAction *action, EvWindow *ev_window)
+{
+	if (ev_window_close (ev_window))
+		gtk_widget_destroy (GTK_WIDGET (ev_window));
 }
 
 static void
@@ -5257,6 +5271,13 @@ ev_window_key_press_event (GtkWidget   *widget,
 	return handled;
 }
 
+static gboolean
+ev_window_delete_event (GtkWidget   *widget,
+			GdkEventAny *event)
+{
+	return !ev_window_close (EV_WINDOW (widget));
+}
+
 static void
 ev_window_class_init (EvWindowClass *ev_window_class)
 {
@@ -5266,6 +5287,7 @@ ev_window_class_init (EvWindowClass *ev_window_class)
 	g_object_class->dispose = ev_window_dispose;
 	g_object_class->finalize = ev_window_finalize;
 
+	widget_class->delete_event = ev_window_delete_event;
 	widget_class->key_press_event = ev_window_key_press_event;
 	widget_class->screen_changed = ev_window_screen_changed;
 	widget_class->window_state_event = ev_window_state_event;
