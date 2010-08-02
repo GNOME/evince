@@ -1,4 +1,53 @@
 ================
+Evince  2.31.6
+================
+
+New Features and UI Improvements:
+
+    * Preliminary support for adding new annotations (#168304, Carlos
+      Garcia Campos)
+    * Add confirmation dialog on closing window when document has been
+      modified (Form fields have been filled out or annots have been
+      added/modified) (#168304, Carlos Garcia Campos)
+    * Add an action to edit menu to save current settings as
+      default. Default settings will be used only for new documents
+      that don't have metadata (#620325, Carlos Garcia Campos)
+    * Migrate lockdown to gsettings (Carlos Garcia Campos)
+
+Bug fixes:
+
+    * Update synctex parser from TexLive SVN repository (#624532,
+      Marek Kasik)
+    * Fix a crash when loading document with inverted colors enabled
+      (Carlos Garcia Campos)
+    * Several build improvements (Hib Eris)
+    * Fix memory leaks when document is reloaded (Carlos Garcia Campos)
+    * Fix position of window annotations when moved by the user (Jose
+      Aliste, Carlos Garcia Campos)
+    * Fix build with poppler 0.14 (#624904, Carlos Garcia Campos)
+    * Use cairo instead of gdk_draw API (Carlos Garcia Campos)
+    * Only set text and text_layout flags in page cache when a11y
+      might be enabled (Carlos Garcia Campos)
+
+Translation updates:
+
+    * Xandru Armesto (ast)
+    * Mario Blättermann (de)
+    * Jorge González (es)
+    * Ivar Smolin (et)
+    * Fran Diéguez (gl)
+    * Sweta Kothari (gu)
+    * Yaron Shahrabani (he)
+    * Shankar Prasad (kn)
+    * Sandeep Shedmake (mr)
+    * Kjartan Maraas (nb)
+    * Daniel Nylander (sv)
+    * Krishna Babu K (te)
+    * Eleanor Chen (zh_CN)
+    * Chao-Hsiung Liao (zh_HK)
+    * Chao-Hsiung Liao (zh_TW)
+
+================
 Evince  2.31.5
 ================
 
