@@ -1,12 +1,12 @@
 /* 
-Copyright (c) 2008, 2009 jerome DOT laurens AT u-bourgogne DOT fr
+Copyright (c) 2008, 2009; 2010 jerome DOT laurens AT u-bourgogne DOT fr
 
 This file is part of the SyncTeX package.
 
-Version: 1.9
+Version: 1.12
 See synctex_parser_readme.txt for more details
 
-Latest Revision: Wed Jul  1 11:18:18 UTC 2009
+Latest Revision: Mon Jul 19 21:50:36 UTC 2010
 
 License:
 --------
@@ -2544,9 +2544,9 @@ int __synctex_open(const char * output, char ** synctex_name_ref, gzFile * file_
 int __synctex_open(const char * output, char ** synctex_name_ref, gzFile * file_ref, synctex_bool_t add_quotes, synctex_io_mode_t * io_modeRef) {
 #	define synctex_name (*synctex_name_ref)
 #	define the_file (*file_ref)
-#	define io_mode (*io_modeRef)
 	if(synctex_name_ref && file_ref) {
 		char * quoteless = NULL;
+		synctex_io_mode_t io_mode = *io_modeRef;
 		const char * mode = synctex_io_modes[io_mode];
 		size_t size = 0;
 		/*  now create the synctex file name */
@@ -2650,12 +2650,13 @@ return_on_error:
 				quoteless = NULL;
 			}
 		}
+		/* We are returning properly so we can also return the proper io_mode */
+		*io_modeRef = io_mode;
 		return 0;
 	}
 	return 3;	/*	Bad parameter.	*/
 #	undef synctex_name
 #	undef the_file
-#	undef io_mode
 }
 
 /*	Opens the ouput file, taking into account the eventual build_directory.
