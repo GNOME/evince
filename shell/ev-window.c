@@ -3367,6 +3367,91 @@ ev_window_cmd_file_properties (GtkAction *action, EvWindow *ev_window)
 }
 
 static void
+document_modified_confirmation_dialog_response (GtkDialog *dialog,
+						gint       response,
+						EvWindow  *ev_window)
+{
+	gtk_widget_destroy (GTK_WIDGET (dialog));
+
+	switch (response) {
+	case GTK_RESPONSE_YES:
+		ev_window_cmd_save_as (NULL, ev_window);
+		break;
+	case GTK_RESPONSE_NO:
+		gtk_widget_destroy (GTK_WIDGET (ev_window));
+		break;
+	case GTK_RESPONSE_CANCEL:
+	default:
+		break;
+	}
+}
+
+static gboolean
+ev_window_check_document_modified (EvWindow *ev_window)
+{
+	EvDocument  *document = ev_window->priv->document;
+	GtkWidget   *dialog;
+	gchar       *text, *markup;
+	const gchar *secondary_text;
+
+	if (!document)
+		return FALSE;
+
+	if (EV_IS_DOCUMENT_FORMS (document) &&
+	    ev_document_forms_document_is_modified (EV_DOCUMENT_FORMS (document))) {
+		secondary_text = _("Document contains form fields that have been filled out. "
+				   "If you don't save a copy, changes will be permanently lost.");
+	} else if (EV_IS_DOCUMENT_ANNOTATIONS (document) &&
+		   ev_document_annotations_document_is_modified (EV_DOCUMENT_ANNOTATIONS (document))) {
+		secondary_text = _("Document contains new or modified annotations. "
+				   "If you don't save a copy, changes will be permanently lost.");
+	} else {
+		return FALSE;
+	}
+
+
+	text = g_markup_printf_escaped (_("Save a copy of document “%s” before closing?"),
+					gtk_window_get_title (GTK_WINDOW (ev_window)));
+
+	dialog = gtk_message_dialog_new (GTK_WINDOW (ev_window),
+					 GTK_DIALOG_MODAL,
+					 GTK_MESSAGE_QUESTION,
+					 GTK_BUTTONS_NONE,
+					 NULL);
+
+	markup = g_strdup_printf ("<b>%s</b>", text);
+	g_free (text);
+
+	gtk_message_dialog_set_markup (GTK_MESSAGE_DIALOG (dialog), markup);
+	g_free (markup);
+
+	gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog),
+						  "%s", secondary_text);
+
+	gtk_dialog_add_buttons (GTK_DIALOG (dialog),
+				_("Close _without Saving"),
+				GTK_RESPONSE_NO,
+				GTK_STOCK_CANCEL,
+				GTK_RESPONSE_CANCEL,
+				_("Save a _Copy"),
+				GTK_RESPONSE_YES,
+				NULL);
+	gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_YES);
+        gtk_dialog_set_alternative_button_order (GTK_DIALOG (dialog),
+                                                 GTK_RESPONSE_YES,
+                                                 GTK_RESPONSE_NO,
+                                                 GTK_RESPONSE_CANCEL,
+                                                 -1);
+
+	g_signal_connect (dialog, "response",
+			  G_CALLBACK (document_modified_confirmation_dialog_response),
+			  ev_window);
+	gtk_widget_show (dialog);
+
+	return TRUE;
+}
+
+static void
 print_jobs_confirmation_dialog_response (GtkDialog *dialog,
 					 gint       response,
 					 EvWindow  *ev_window)
@@ -3474,6 +3559,9 @@ ev_window_close (EvWindow *ev_window)
 			EV_VIEW_PRESENTATION (ev_window->priv->presentation_view));
 		ev_document_model_set_page (ev_window->priv->model, current_page);
 	}
+
+	if (ev_window_check_document_modified (ev_window))
+		return FALSE;
 
 	if (ev_window_check_print_queue (ev_window))
 		return FALSE;
