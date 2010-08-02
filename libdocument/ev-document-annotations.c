@@ -37,6 +37,14 @@ ev_document_annotations_get_annotations (EvDocumentAnnotations *document_annots,
 	return iface->get_annotations (document_annots, page);
 }
 
+gboolean
+ev_document_annotations_document_is_modified (EvDocumentAnnotations *document_annots)
+{
+	EvDocumentAnnotationsInterface *iface = EV_DOCUMENT_ANNOTATIONS_GET_IFACE (document_annots);
+
+	return (iface->document_is_modified) ? iface->document_is_modified (document_annots) : FALSE;
+}
+
 void
 ev_document_annotations_save_annotation (EvDocumentAnnotations *document_annots,
 					 EvAnnotation          *annot,

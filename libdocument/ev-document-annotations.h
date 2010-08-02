@@ -70,26 +70,28 @@ struct _EvDocumentAnnotationsInterface
 	GTypeInterface base_iface;
 
 	/* Methods  */
-	EvMappingList *(* get_annotations) (EvDocumentAnnotations *document_annots,
-					    EvPage                *page);
-	void           (* add_annotation)  (EvDocumentAnnotations *document_annots,
-					    EvAnnotation          *annot,
-					    EvRectangle           *rect);
-	void           (* save_annotation) (EvDocumentAnnotations *document_annots,
-					    EvAnnotation          *annot,
-					    EvAnnotationsSaveMask  mask);
+	EvMappingList *(* get_annotations)      (EvDocumentAnnotations *document_annots,
+						 EvPage                *page);
+	gboolean       (* document_is_modified) (EvDocumentAnnotations *document_annots);
+	void           (* add_annotation)       (EvDocumentAnnotations *document_annots,
+						 EvAnnotation          *annot,
+						 EvRectangle           *rect);
+	void           (* save_annotation)      (EvDocumentAnnotations *document_annots,
+						 EvAnnotation          *annot,
+						 EvAnnotationsSaveMask  mask);
 };
 
-GType          ev_document_annotations_get_type           (void) G_GNUC_CONST;
-EvMappingList *ev_document_annotations_get_annotations    (EvDocumentAnnotations *document_annots,
-							   EvPage                *page);
-void           ev_document_annotations_add_annotation     (EvDocumentAnnotations *document_annots,
-							   EvAnnotation          *annot,
-							   EvRectangle           *rect);
-void           ev_document_annotations_save_annotation    (EvDocumentAnnotations *document_annots,
-							   EvAnnotation          *annot,
-							   EvAnnotationsSaveMask  mask);
-gboolean       ev_document_annotations_can_add_annotation (EvDocumentAnnotations *document_annots);
+GType          ev_document_annotations_get_type             (void) G_GNUC_CONST;
+EvMappingList *ev_document_annotations_get_annotations      (EvDocumentAnnotations *document_annots,
+							     EvPage                *page);
+gboolean       ev_document_annotations_document_is_modified (EvDocumentAnnotations *document_annots);
+void           ev_document_annotations_add_annotation       (EvDocumentAnnotations *document_annots,
+							     EvAnnotation          *annot,
+							     EvRectangle           *rect);
+void           ev_document_annotations_save_annotation      (EvDocumentAnnotations *document_annots,
+							     EvAnnotation          *annot,
+							     EvAnnotationsSaveMask  mask);
+gboolean       ev_document_annotations_can_add_annotation   (EvDocumentAnnotations *document_annots);
 
 G_END_DECLS
 
