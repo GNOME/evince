@@ -101,7 +101,8 @@ struct _PdfDocument
 
 	PopplerDocument *document;
 	gchar *password;
-	gboolean modified;
+	gboolean forms_modified;
+	gboolean annots_modified;
 
 	PopplerFontInfo *font_info;
 	PopplerFontsIter *fonts_iter;
@@ -256,9 +257,13 @@ pdf_document_save (EvDocument  *document,
 	gboolean retval;
 	GError *poppler_error = NULL;
 
-	if (pdf_document->modified) {
+	if (pdf_document->forms_modified || pdf_document->annots_modified) {
 		retval = poppler_document_save (pdf_document->document,
 						uri, &poppler_error);
+		if (retval) {
+			pdf_document->forms_modified = FALSE;
+			pdf_document->annots_modified = FALSE;
+		}
 	} else {
 		retval = poppler_document_save_a_copy (pdf_document->document,
 						       uri, &poppler_error);
@@ -2320,6 +2325,12 @@ pdf_document_forms_get_form_fields (EvDocumentForms *document,
 					     (GDestroyNotify)g_object_unref) : NULL;
 }
 
+static gboolean
+pdf_document_forms_document_is_modified (EvDocumentForms *document)
+{
+	return PDF_DOCUMENT (document)->forms_modified;
+}
+
 static gchar *
 pdf_document_forms_form_field_text_get_text (EvDocumentForms *document,
 					     EvFormField     *field)
@@ -2349,7 +2360,7 @@ pdf_document_forms_form_field_text_set_text (EvDocumentForms *document,
 		return;
 	
 	poppler_form_field_text_set_text (poppler_field, text);
-	PDF_DOCUMENT (document)->modified = TRUE;
+	PDF_DOCUMENT (document)->forms_modified = TRUE;
 }
 
 static void
@@ -2364,7 +2375,7 @@ pdf_document_forms_form_field_button_set_state (EvDocumentForms *document,
 		return;
 	
 	poppler_form_field_button_set_state (poppler_field, state);
-	PDF_DOCUMENT (document)->modified = TRUE;
+	PDF_DOCUMENT (document)->forms_modified = TRUE;
 }
 
 static gboolean
@@ -2445,7 +2456,7 @@ pdf_document_forms_form_field_choice_select_item (EvDocumentForms *document,
 		return;
 
 	poppler_form_field_choice_select_item (poppler_field, index);
-	PDF_DOCUMENT (document)->modified = TRUE;
+	PDF_DOCUMENT (document)->forms_modified = TRUE;
 }
 
 static void
@@ -2460,7 +2471,7 @@ pdf_document_forms_form_field_choice_toggle_item (EvDocumentForms *document,
 		return;
 
 	poppler_form_field_choice_toggle_item (poppler_field, index);
-	PDF_DOCUMENT (document)->modified = TRUE;
+	PDF_DOCUMENT (document)->forms_modified = TRUE;
 }
 
 static void
@@ -2474,7 +2485,7 @@ pdf_document_forms_form_field_choice_unselect_all (EvDocumentForms *document,
 		return;
 	
 	poppler_form_field_choice_unselect_all (poppler_field);
-	PDF_DOCUMENT (document)->modified = TRUE;
+	PDF_DOCUMENT (document)->forms_modified = TRUE;
 }
 
 static void
@@ -2489,7 +2500,7 @@ pdf_document_forms_form_field_choice_set_text (EvDocumentForms *document,
 		return;
 	
 	poppler_form_field_choice_set_text (poppler_field, text);
-	PDF_DOCUMENT (document)->modified = TRUE;
+	PDF_DOCUMENT (document)->forms_modified = TRUE;
 }
 
 static gchar *
@@ -2512,6 +2523,7 @@ static void
 pdf_document_document_forms_iface_init (EvDocumentFormsInterface *iface)
 {
 	iface->get_form_fields = pdf_document_forms_get_form_fields;
+	iface->document_is_modified = pdf_document_forms_document_is_modified;
 	iface->form_field_text_get_text = pdf_document_forms_form_field_text_get_text;
 	iface->form_field_text_set_text = pdf_document_forms_form_field_text_set_text;
 	iface->form_field_button_set_state = pdf_document_forms_form_field_button_set_state;
@@ -2847,6 +2859,12 @@ pdf_document_annotations_get_annotations (EvDocumentAnnotations *document_annota
 	return mapping_list;
 }
 
+static gboolean
+pdf_document_annotations_document_is_modified (EvDocumentAnnotations *document_annotations)
+{
+	return PDF_DOCUMENT (document_annotations)->annots_modified;
+}
+
 #ifdef HAVE_POPPLER_PAGE_ADD_ANNOT
 static void
 pdf_document_annotations_add_annotation (EvDocumentAnnotations *document_annotations,
@@ -2948,7 +2966,7 @@ pdf_document_annotations_add_annotation (EvDocumentAnnotations *document_annotat
 				     ev_mapping_list_ref (mapping_list));
 	}
 
-	pdf_document->modified = TRUE;
+	pdf_document->annots_modified = TRUE;
 }
 #endif /* HAVE_POPPLER_PAGE_ADD_ANNOT */
 
@@ -3007,13 +3025,14 @@ pdf_document_annotations_save_annotation (EvDocumentAnnotations *document_annota
 		}
 	}
 #endif /* HAVE_POPPLER_PAGE_ADD_ANNOT */
-	PDF_DOCUMENT (document_annotations)->modified = TRUE;
+	PDF_DOCUMENT (document_annotations)->annots_modified = TRUE;
 }
 
 static void
 pdf_document_document_annotations_iface_init (EvDocumentAnnotationsInterface *iface)
 {
 	iface->get_annotations = pdf_document_annotations_get_annotations;
+	iface->document_is_modified = pdf_document_annotations_document_is_modified;
 #ifdef HAVE_POPPLER_PAGE_ADD_ANNOT
 	iface->add_annotation = pdf_document_annotations_add_annotation;
 #endif
