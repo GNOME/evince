@@ -55,7 +55,9 @@ dvi_cairo_draw_glyph (DviContext  *dvi,
 
 	glyph = &ch->grey;
 
-	isbox = (glyph->data == NULL || (dvi->params.flags & MDVI_PARAM_CHARBOXES));
+	isbox = (glyph->data == NULL ||
+	         (dvi->params.flags & MDVI_PARAM_CHARBOXES) ||
+	         MDVI_GLYPH_ISEMPTY (glyph->data));
 
 	x = - glyph->x + x0 + cairo_device->xmargin;
 	y = - glyph->y + y0 + cairo_device->ymargin;

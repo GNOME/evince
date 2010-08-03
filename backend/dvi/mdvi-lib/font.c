@@ -379,10 +379,12 @@ again:
 		return ch;
 	} else if(MDVI_ENABLED(dvi, MDVI_PARAM_ANTIALIASED)) {
 		if(ch->grey.data && 
+		   !MDVI_GLYPH_ISEMPTY(ch->grey.data) &&
 		   ch->fg == dvi->curr_fg && 
 		   ch->bg == dvi->curr_bg)
 		   	return ch;
-		if(ch->grey.data) {
+		if(ch->grey.data &&
+		   !MDVI_GLYPH_ISEMPTY(ch->grey.data)) {
 			if(dvi->device.free_image)
 				dvi->device.free_image(ch->grey.data);
 			ch->grey.data = NULL;
