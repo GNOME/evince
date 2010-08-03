@@ -41,11 +41,12 @@
 
 static GList *ev_daemon_docs = NULL;
 static guint kill_timer_id;
+static GHashTable *pending_invocations = NULL;
 
 typedef struct {
 	gchar *dbus_name;
 	gchar *uri;
-        guint watch_id;
+        guint  watch_id;
 } EvDoc;
 
 static void
@@ -205,6 +206,29 @@ ev_migrate_metadata (void)
 	g_free (metadata);
 }
 
+static gboolean
+spawn_evince (const gchar *uri)
+{
+	gchar   *argv[3];
+	gboolean retval;
+	GError  *error = NULL;
+
+	/* TODO Check that the uri exists */
+	argv[0] = g_build_filename (BINDIR, "evince", NULL);
+	argv[1] = (gchar *) uri;
+	argv[2] = NULL;
+
+	retval = g_spawn_async (NULL /* wd */, argv, NULL /* env */,
+				0, NULL, NULL, NULL, &error);
+	if (!retval) {
+		g_printerr ("Error spawning evince for uri %s: %s\n", uri, error->message);
+		g_error_free (error);
+	}
+	g_free (argv[0]);
+
+	return retval;
+}
+
 static void
 name_appeared_cb (GDBusConnection *connection,
                   const gchar     *name,
@@ -240,6 +264,28 @@ name_vanished_cb (GDBusConnection *connection,
 }
 
 static void
+process_pending_invocations (const gchar *uri,
+			     const gchar *dbus_name)
+{
+	GList *l;
+	GList *uri_invocations;
+
+	LOG ("RegisterDocument process pending invocations for URI %s\n", uri);
+	uri_invocations = g_hash_table_lookup (pending_invocations, uri);
+
+	for (l = uri_invocations; l != NULL; l = l->next) {
+		GDBusMethodInvocation *invocation;
+
+		invocation = (GDBusMethodInvocation *)l->data;
+		g_dbus_method_invocation_return_value (invocation,
+						       g_variant_new ("(s)", dbus_name));
+	}
+
+	g_list_free (uri_invocations);
+	g_hash_table_remove (pending_invocations, uri);
+}
+
+static void
 method_call_cb (GDBusConnection       *connection,
                 const gchar           *sender,
                 const gchar           *object_path,
@@ -265,12 +311,13 @@ method_call_cb (GDBusConnection       *connection,
                                                                g_variant_new ("(s)", doc->dbus_name));
                         return;
                 }
-        
+
                 ev_daemon_stop_killtimer ();
 
                 doc = g_new (EvDoc, 1);
                 doc->dbus_name = g_strdup (sender);
                 doc->uri = g_strdup (uri);
+                process_pending_invocations (doc->uri, doc->dbus_name);
 
                 doc->watch_id = g_bus_watch_name_on_connection (connection,
                                                                 sender,
@@ -320,22 +367,43 @@ method_call_cb (GDBusConnection       *connection,
 	} else if (g_strcmp0 (method_name, "FindDocument") == 0) {
 		EvDoc *doc;
 		const gchar *uri;
+		gboolean spawn;
 
-		g_variant_get (parameters, "(&s)",  &uri);
+		g_variant_get (parameters, "(&sb)",  &uri, &spawn);
 
-		LOG ("FindDocument '%s' \n", uri);
+		LOG ("FindDocument URI '%s' \n", uri);
 
 		doc = ev_daemon_find_doc (uri);
-		if (doc == NULL) {
-			LOG ("GetViewerForUri URI was not registered!\n");
-			g_dbus_method_invocation_return_error_literal (invocation,
-								       G_DBUS_ERROR,
-								       G_DBUS_ERROR_INVALID_ARGS,
-								       "URI not registered");
+		if (doc != NULL) {
+			g_dbus_method_invocation_return_value (invocation,
+							       g_variant_new ("(s)", doc->dbus_name));
 			return;
 		}
 
-		g_dbus_method_invocation_return_value (invocation, g_variant_new ("(s)", doc->dbus_name));
+		if (spawn) {
+			GList *uri_invocations;
+			gboolean ret_val = TRUE;
+
+			uri_invocations = g_hash_table_lookup (pending_invocations, uri);
+
+			if (uri_invocations == NULL) {
+				/* Only spawn once. */
+				ret_val = spawn_evince (uri);
+			}
+
+			if (ret_val) {
+				/* Only defer DBUS answer if evince was succesfully spawned */
+				uri_invocations = g_list_prepend (uri_invocations, invocation);
+				g_hash_table_insert (pending_invocations,
+						     g_strdup (uri),
+						     uri_invocations);
+				return;
+			}
+		}
+
+		LOG ("FindDocument URI '%s' was not registered!\n", uri);
+		g_dbus_method_invocation_return_value (invocation,
+						       g_variant_new ("(s)",""));
 	}
 }
 
@@ -351,6 +419,7 @@ static const char introspection_xml[] =
       "</method>"
       "<method name='FindDocument'>"
         "<arg type='s' name='uri' direction='in'/>"
+        "<arg type='b' name='spawn' direction='in'/>"
         "<arg type='s' name='owner' direction='out'/>"
       "</method>"
     "</interface>"
@@ -426,6 +495,11 @@ main (gint argc, gchar **argv)
 
 	loop = g_main_loop_new (NULL, FALSE);
 
+	pending_invocations = g_hash_table_new_full (g_str_hash,
+						     g_str_equal,
+						     (GDestroyNotify)g_free,
+						     NULL);
+
         owner_id = g_bus_own_name (G_BUS_TYPE_SESSION,
 				   EV_DBUS_DAEMON_NAME,
 				   G_BUS_NAME_OWNER_FLAGS_NONE,
@@ -444,6 +518,7 @@ main (gint argc, gchar **argv)
 		g_dbus_node_info_unref (introspection_data);
         g_list_foreach (ev_daemon_docs, (GFunc)ev_doc_free, NULL);
         g_list_free (ev_daemon_docs);
+        g_hash_table_destroy (pending_invocations);
 
 	return 0;
 }
