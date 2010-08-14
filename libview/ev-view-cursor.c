@@ -19,18 +19,6 @@
 
 #include "ev-view-cursor.h"
 
-static GdkCursor *
-ev_view_create_invisible_cursor (void)
-{
-	GdkBitmap *empty;
-	GdkColor black = { 0, 0, 0, 0 };
-	static char bits[] = { 0x00 };
-
-	empty = gdk_bitmap_create_from_data (NULL, bits, 1, 1);
-
-	return gdk_cursor_new_from_pixmap (empty, empty, &black, &black, 0, 0);
-}
-
 GdkCursor *
 ev_view_cursor_new (GdkDisplay  *display,
 		    EvViewCursor new_cursor)
@@ -50,7 +38,7 @@ ev_view_cursor_new (GdkDisplay  *display,
 		cursor = gdk_cursor_new_for_display (display, GDK_WATCH);
 		break;
 	case EV_VIEW_CURSOR_HIDDEN:
-		cursor = ev_view_create_invisible_cursor ();
+		cursor = gdk_cursor_new_for_display (display, GDK_BLANK_CURSOR);
 		break;
 	case EV_VIEW_CURSOR_DRAG:
 		cursor = gdk_cursor_new_for_display (display, GDK_FLEUR);
