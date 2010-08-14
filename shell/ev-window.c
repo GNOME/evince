@@ -4858,17 +4858,23 @@ ev_window_update_find_status_message (EvWindow *ev_window)
 		return;
 	
 	if (ev_job_is_finished (ev_window->priv->find_job)) {
-		gint n_results;
+		EvJobFind *job_find = EV_JOB_FIND (ev_window->priv->find_job);
 
-		n_results = ev_job_find_get_n_results (EV_JOB_FIND (ev_window->priv->find_job),
-						       ev_document_model_get_page (ev_window->priv->model));
-		/* TRANS: Sometimes this could be better translated as
-		                      "%d hit(s) on this page".  Therefore this string
-				      contains plural cases. */
-		message = g_strdup_printf (ngettext ("%d found on this page",
-						     "%d found on this page",
-						     n_results),
-					   n_results);
+		if (ev_job_find_has_results (job_find)) {
+			gint n_results;
+
+			n_results = ev_job_find_get_n_results (job_find,
+							       ev_document_model_get_page (ev_window->priv->model));
+			/* TRANS: Sometimes this could be better translated as
+			   "%d hit(s) on this page".  Therefore this string
+			   contains plural cases. */
+			message = g_strdup_printf (ngettext ("%d found on this page",
+							     "%d found on this page",
+							     n_results),
+						   n_results);
+		} else {
+			message = g_strdup (_("Not found"));
+		}
 	} else {
 		gdouble percent;
 
