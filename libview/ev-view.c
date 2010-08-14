@@ -3996,7 +3996,12 @@ ev_view_button_release_event (GtkWidget      *widget,
 		view->pressed_button = -1;
 
 		return TRUE;
-	} 
+	}
+
+	if (view->pressed_button == 1 && event->state & GDK_CONTROL_MASK) {
+		view->pressed_button = -1;
+		return TRUE;
+	}
 
 	if (view->drag_info.in_drag) {
 		view->drag_info.release_timeout_id =
