@@ -32,7 +32,6 @@
 #include <gtk/gtk.h>
 
 #include "ev-document-misc.h"
-#include "ev-document-thumbnails.h"
 #include "ev-job-scheduler.h"
 #include "ev-sidebar-page.h"
 #include "ev-sidebar-thumbnails.h"
@@ -822,8 +821,7 @@ ev_sidebar_thumbnails_document_changed_cb (EvDocumentModel     *model,
 	EvDocument *document = ev_document_model_get_document (model);
 	EvSidebarThumbnailsPrivate *priv = sidebar_thumbnails->priv;
 
-	if (!EV_IS_DOCUMENT_THUMBNAILS (document) ||
-	    ev_document_get_n_pages (document) <= 0 ||
+	if (ev_document_get_n_pages (document) <= 0 ||
 	    !ev_document_check_dimensions (document)) {
 		return;
 	}
@@ -931,7 +929,7 @@ static gboolean
 ev_sidebar_thumbnails_support_document (EvSidebarPage   *sidebar_page,
 				        EvDocument *document)
 {
-	return (EV_IS_DOCUMENT_THUMBNAILS (document));
+	return TRUE;
 }
 
 static const gchar*

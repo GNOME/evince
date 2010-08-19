@@ -31,7 +31,6 @@
 #include "tiff2ps.h"
 #include "tiff-document.h"
 #include "ev-document-misc.h"
-#include "ev-document-thumbnails.h"
 #include "ev-file-exporter.h"
 #include "ev-file-helpers.h"
 
@@ -53,13 +52,10 @@ struct _TiffDocument
 
 typedef struct _TiffDocumentClass TiffDocumentClass;
 
-static void tiff_document_document_thumbnails_iface_init (EvDocumentThumbnailsInterface *iface);
 static void tiff_document_document_file_exporter_iface_init (EvFileExporterInterface *iface);
 
 EV_BACKEND_REGISTER_WITH_CODE (TiffDocument, tiff_document,
 			 {
-			   EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_THUMBNAILS,
-							   tiff_document_document_thumbnails_iface_init);
 			   EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_FILE_EXPORTER,
 							   tiff_document_document_file_exporter_iface_init);
 			 });
@@ -312,7 +308,7 @@ tiff_document_render (EvDocument      *document,
 }
 
 static GdkPixbuf *
-tiff_document_render_pixbuf (EvDocument      *document,
+tiff_document_get_thumbnail (EvDocument      *document,
 			     EvRenderContext *rc)
 {
 	TiffDocument *tiff_document = TIFF_DOCUMENT (document);
@@ -424,32 +420,8 @@ tiff_document_class_init (TiffDocumentClass *klass)
 	ev_document_class->get_n_pages = tiff_document_get_n_pages;
 	ev_document_class->get_page_size = tiff_document_get_page_size;
 	ev_document_class->render = tiff_document_render;
+	ev_document_class->get_thumbnail = tiff_document_get_thumbnail;
 	ev_document_class->get_page_label = tiff_document_get_page_label;
-}
-
-static GdkPixbuf *
-tiff_document_thumbnails_get_thumbnail (EvDocumentThumbnails *document,
-					EvRenderContext      *rc, 
-					gboolean              border)
-{
-	GdkPixbuf *pixbuf;
-
-	pixbuf = tiff_document_render_pixbuf (EV_DOCUMENT (document), rc);
-	
-	if (border) {
-		GdkPixbuf *tmp_pixbuf = pixbuf;
-		
-		pixbuf = ev_document_misc_get_thumbnail_frame (-1, -1, tmp_pixbuf);
-		g_object_unref (tmp_pixbuf);
-	}
-	
-	return pixbuf;
-}
-
-static void
-tiff_document_document_thumbnails_iface_init (EvDocumentThumbnailsInterface *iface)
-{
-	iface->get_thumbnail = tiff_document_thumbnails_get_thumbnail;
 }
 
 /* postscript exporter implementation */

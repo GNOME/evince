@@ -23,7 +23,6 @@ INST_H_SRC_FILES = 				\
 	ev-document-misc.h			\
 	ev-document-print.h			\
 	ev-document-security.h			\
-	ev-document-thumbnails.h		\
 	ev-document-transition.h		\
 	ev-document-text.h			\
 	ev-file-exporter.h			\
@@ -64,7 +63,6 @@ libevdocument3_la_SOURCES=			\
 	ev-document-annotations.c		\
 	ev-document-attachments.c		\
 	ev-document-factory.c			\
-	ev-document-thumbnails.c		\
 	ev-document-fonts.c                     \
 	ev-document-layers.c			\
 	ev-document-links.c			\

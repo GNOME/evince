@@ -27,7 +27,6 @@
 #include "ev-spectre.h"
 
 #include "ev-file-exporter.h"
-#include "ev-document-thumbnails.h"
 #include "ev-document-misc.h"
 
 struct _PSDocument {
@@ -42,12 +41,9 @@ struct _PSDocumentClass {
 };
 
 static void ps_document_file_exporter_iface_init       (EvFileExporterInterface       *iface);
-static void ps_document_document_thumbnails_iface_init (EvDocumentThumbnailsInterface *iface);
 
 EV_BACKEND_REGISTER_WITH_CODE (PSDocument, ps_document,
                          {
-				 EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_THUMBNAILS,
-								 ps_document_document_thumbnails_iface_init);
 				 EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_FILE_EXPORTER,
 								 ps_document_file_exporter_iface_init);
 			 });
@@ -348,42 +344,6 @@ ps_document_class_init (PSDocumentClass *klass)
 	ev_document_class->render = ps_document_render;
 }
 
-/* EvDocumentThumbnailsIface */
-static GdkPixbuf *
-ps_document_thumbnails_get_thumbnail (EvDocumentThumbnails *document_thumbnails,
-				      EvRenderContext      *rc, 
-				      gboolean              border)
-{
-	PSDocument      *ps = PS_DOCUMENT (document_thumbnails);
-	cairo_surface_t *surface;
-	GdkPixbuf       *pixbuf = NULL;
-
-	surface = ps_document_render (EV_DOCUMENT (ps), rc);
-	if (!surface) {
-		g_warning ("Error rendering thumbnail");
-		return NULL;
-	}
-		
-	pixbuf = ev_document_misc_pixbuf_from_surface (surface);
-	cairo_surface_destroy (surface);
-
-	if (border) {
-		GdkPixbuf *border_pixbuf;
-		
-		border_pixbuf = ev_document_misc_get_thumbnail_frame (-1, -1, pixbuf);
-		g_object_unref (pixbuf);
-		pixbuf = border_pixbuf;
-	}
-
-	return pixbuf;
-}
-
-static void
-ps_document_document_thumbnails_iface_init (EvDocumentThumbnailsInterface *iface)
-{
-	iface->get_thumbnail = ps_document_thumbnails_get_thumbnail;
-}
-	
 /* EvFileExporterIface */
 static void
 ps_document_file_exporter_begin (EvFileExporter        *exporter,

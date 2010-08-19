@@ -109,6 +109,8 @@ struct _EvDocumentClass
                                                EvPage          *page);
         cairo_surface_t * (* render)          (EvDocument      *document,
                                                EvRenderContext *rc);
+	GdkPixbuf       * (* get_thumbnail)   (EvDocument      *document,
+					       EvRenderContext *rc);
         EvDocumentInfo  * (* get_info)        (EvDocument      *document);
         gboolean          (* get_backend_info)(EvDocument      *document,
                                                EvDocumentBackendInfo *info);
@@ -149,6 +151,8 @@ void             ev_document_get_page_size        (EvDocument      *document,
 gchar           *ev_document_get_page_label       (EvDocument      *document,
 						   gint             page_index);
 cairo_surface_t *ev_document_render               (EvDocument      *document,
+						   EvRenderContext *rc);
+GdkPixbuf       *ev_document_get_thumbnail        (EvDocument      *document,
 						   EvRenderContext *rc);
 const gchar     *ev_document_get_uri              (EvDocument      *document);
 const gchar     *ev_document_get_title            (EvDocument      *document);

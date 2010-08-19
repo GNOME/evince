@@ -21,7 +21,6 @@
 
 #include "dvi-document.h"
 #include "texmfcnf.h"
-#include "ev-document-thumbnails.h"
 #include "ev-document-misc.h"
 #include "ev-file-exporter.h"
 #include "ev-file-helpers.h"
@@ -74,15 +73,13 @@ struct _DviDocument
 
 typedef struct _DviDocumentClass DviDocumentClass;
 
-static void dvi_document_document_thumbnails_iface_init (EvDocumentThumbnailsInterface *iface);
-static void dvi_document_file_exporter_iface_init	(EvFileExporterInterface       *iface);
-static void dvi_document_do_color_special               (DviContext                    *dvi,
-							 const char                    *prefix,
-							 const char                    *arg);
+static void dvi_document_file_exporter_iface_init (EvFileExporterInterface       *iface);
+static void dvi_document_do_color_special         (DviContext                    *dvi,
+						   const char                    *prefix,
+						   const char                    *arg);
 
 EV_BACKEND_REGISTER_WITH_CODE (DviDocument, dvi_document,
      {
-      EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_THUMBNAILS, dvi_document_document_thumbnails_iface_init);
       EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_FILE_EXPORTER, dvi_document_file_exporter_iface_init);
      });
 
@@ -265,69 +262,6 @@ dvi_document_class_init (DviDocumentClass *klass)
 	ev_document_class->get_page_size = dvi_document_get_page_size;
 	ev_document_class->render = dvi_document_render;
 	ev_document_class->support_synctex = dvi_document_support_synctex;
-}
-
-static GdkPixbuf *
-dvi_document_thumbnails_get_thumbnail (EvDocumentThumbnails *document,
-				       EvRenderContext      *rc,   
-				       gboolean 	     border)
-{
-	DviDocument *dvi_document = DVI_DOCUMENT (document);
-	GdkPixbuf *pixbuf;
-	GdkPixbuf *rotated_pixbuf;
-	cairo_surface_t *surface;
-	gint thumb_width, thumb_height;
-	gint proposed_width, proposed_height;
-
-	thumb_width = (gint) (dvi_document->base_width * rc->scale);
-	thumb_height = (gint) (dvi_document->base_height * rc->scale);
-
-	g_mutex_lock (dvi_context_mutex);
-	
-	mdvi_setpage (dvi_document->context, rc->page->index);
-
-	mdvi_set_shrink (dvi_document->context, 
-			  (int)dvi_document->base_width * dvi_document->params->hshrink / thumb_width,
-			  (int)dvi_document->base_height * dvi_document->params->vshrink / thumb_height);
-
-	proposed_width = dvi_document->context->dvi_page_w * dvi_document->context->params.conv;
-	proposed_height = dvi_document->context->dvi_page_h * dvi_document->context->params.vconv;
-			  
-	if (border) {
-	 	mdvi_cairo_device_set_margins (&dvi_document->context->device, 
-					       MAX (thumb_width - proposed_width, 0) / 2,
-					       MAX (thumb_height - proposed_height, 0) / 2); 	
-	} else {
-	 	mdvi_cairo_device_set_margins (&dvi_document->context->device, 
-					       MAX (thumb_width - proposed_width - 2, 0) / 2,
-					       MAX (thumb_height - proposed_height - 2, 0) / 2); 	
-	}
-
-	mdvi_cairo_device_set_scale (&dvi_document->context->device, rc->scale);
-        mdvi_cairo_device_render (dvi_document->context);
-	surface = mdvi_cairo_device_get_surface (&dvi_document->context->device);
-	g_mutex_unlock (dvi_context_mutex);
-
-	pixbuf = ev_document_misc_pixbuf_from_surface (surface);
-	cairo_surface_destroy (surface);
-
-	rotated_pixbuf = gdk_pixbuf_rotate_simple (pixbuf, 360 - rc->rotation);
-	g_object_unref (pixbuf);
-
-	if (border) {
-		GdkPixbuf *tmp_pixbuf = rotated_pixbuf;
-
-		rotated_pixbuf = ev_document_misc_get_thumbnail_frame (-1, -1, tmp_pixbuf);
-		g_object_unref (tmp_pixbuf);
-	}
-
-	return rotated_pixbuf;
-}
-
-static void
-dvi_document_document_thumbnails_iface_init (EvDocumentThumbnailsInterface *iface)
-{
-	iface->get_thumbnail = dvi_document_thumbnails_get_thumbnail;
 }
 
 /* EvFileExporterIface */

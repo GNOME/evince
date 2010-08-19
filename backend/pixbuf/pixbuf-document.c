@@ -21,7 +21,6 @@
 #include <glib/gi18n-lib.h>
 
 #include "pixbuf-document.h"
-#include "ev-document-thumbnails.h"
 #include "ev-document-misc.h"
 #include "ev-file-helpers.h"
 
@@ -41,13 +40,7 @@ struct _PixbufDocument
 
 typedef struct _PixbufDocumentClass PixbufDocumentClass;
 
-static void pixbuf_document_document_thumbnails_iface_init (EvDocumentThumbnailsInterface *iface);
-
-EV_BACKEND_REGISTER_WITH_CODE (PixbufDocument, pixbuf_document,
-                   {
-			 EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_THUMBNAILS,
-							 pixbuf_document_document_thumbnails_iface_init)				   
-		   });
+EV_BACKEND_REGISTER (PixbufDocument, pixbuf_document)
 
 static gboolean
 pixbuf_document_load (EvDocument  *document,
@@ -127,6 +120,27 @@ pixbuf_document_render (EvDocument      *document,
 	return surface;
 }
 
+static GdkPixbuf *
+pixbuf_document_get_thumbnail (EvDocument      *document,
+			       EvRenderContext *rc)
+{
+	PixbufDocument *pixbuf_document = PIXBUF_DOCUMENT (document);
+	GdkPixbuf *pixbuf, *rotated_pixbuf;
+	gint width, height;
+	
+	width = (gint) (gdk_pixbuf_get_width (pixbuf_document->pixbuf) * rc->scale);
+	height = (gint) (gdk_pixbuf_get_height (pixbuf_document->pixbuf) * rc->scale);
+	
+	pixbuf = gdk_pixbuf_scale_simple (pixbuf_document->pixbuf,
+					  width, height,
+					  GDK_INTERP_BILINEAR);
+
+	rotated_pixbuf = gdk_pixbuf_rotate_simple (pixbuf, 360 - rc->rotation);
+        g_object_unref (pixbuf);
+
+        return rotated_pixbuf;
+}
+
 static void
 pixbuf_document_finalize (GObject *object)
 {
@@ -151,36 +165,8 @@ pixbuf_document_class_init (PixbufDocumentClass *klass)
 	ev_document_class->get_n_pages = pixbuf_document_get_n_pages;
 	ev_document_class->get_page_size = pixbuf_document_get_page_size;
 	ev_document_class->render = pixbuf_document_render;
+	ev_document_class->get_thumbnail = pixbuf_document_get_thumbnail;
 }
-
-static GdkPixbuf *
-pixbuf_document_thumbnails_get_thumbnail (EvDocumentThumbnails *document,
-					  EvRenderContext      *rc,
-					  gboolean              border)
-{
-	PixbufDocument *pixbuf_document = PIXBUF_DOCUMENT (document);
-	GdkPixbuf *pixbuf, *rotated_pixbuf;
-	gint width, height;
-	
-	width = (gint) (gdk_pixbuf_get_width (pixbuf_document->pixbuf) * rc->scale);
-	height = (gint) (gdk_pixbuf_get_height (pixbuf_document->pixbuf) * rc->scale);
-	
-	pixbuf = gdk_pixbuf_scale_simple (pixbuf_document->pixbuf,
-					  width, height,
-					  GDK_INTERP_BILINEAR);
-
-	rotated_pixbuf = gdk_pixbuf_rotate_simple (pixbuf, 360 - rc->rotation);
-        g_object_unref (pixbuf);
-
-        return rotated_pixbuf;
-}
-
-static void
-pixbuf_document_document_thumbnails_iface_init (EvDocumentThumbnailsInterface *iface)
-{
-	iface->get_thumbnail = pixbuf_document_thumbnails_get_thumbnail;
-}
-
 
 static void
 pixbuf_document_init (PixbufDocument *pixbuf_document)

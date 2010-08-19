@@ -56,7 +56,6 @@
 #include "ev-document-fonts.h"
 #include "ev-document-images.h"
 #include "ev-document-links.h"
-#include "ev-document-thumbnails.h"
 #include "ev-document-annotations.h"
 #include "ev-document-type-builtins.h"
 #include "ev-document-misc.h"
@@ -1310,8 +1309,7 @@ ev_window_refresh_window_thumbnail (EvWindow *ev_window)
 	gint rotation;
 	EvDocument *document = ev_window->priv->document;
 
-	if (!EV_IS_DOCUMENT_THUMBNAILS (document) ||
-	    ev_document_get_n_pages (document) <= 0 ||
+	if (ev_document_get_n_pages (document) <= 0 ||
 	    !ev_document_check_dimensions (document)) {
 		return;
 	}

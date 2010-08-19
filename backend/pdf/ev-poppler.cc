@@ -43,7 +43,6 @@
 #include "ev-document-images.h"
 #include "ev-document-fonts.h"
 #include "ev-document-security.h"
-#include "ev-document-thumbnails.h"
 #include "ev-document-transition.h"
 #include "ev-document-forms.h"
 #include "ev-document-layers.h"
@@ -115,7 +114,6 @@ struct _PdfDocument
 };
 
 static void pdf_document_security_iface_init             (EvDocumentSecurityInterface    *iface);
-static void pdf_document_document_thumbnails_iface_init  (EvDocumentThumbnailsInterface  *iface);
 static void pdf_document_document_links_iface_init       (EvDocumentLinksInterface       *iface);
 static void pdf_document_document_images_iface_init      (EvDocumentImagesInterface      *iface);
 static void pdf_document_document_forms_iface_init       (EvDocumentFormsInterface       *iface);
@@ -145,8 +143,6 @@ EV_BACKEND_REGISTER_WITH_CODE (PdfDocument, pdf_document,
 			 {
 				 EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_SECURITY,
 								 pdf_document_security_iface_init);
-				 EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_THUMBNAILS,
-								 pdf_document_document_thumbnails_iface_init);
 				 EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_LINKS,
 								 pdf_document_document_links_iface_init);
 				 EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_IMAGES,
@@ -401,6 +397,102 @@ pdf_document_render (EvDocument      *document,
 	
 	return pdf_page_render (poppler_page,
 				width, height, rc);
+}
+
+static GdkPixbuf *
+make_thumbnail_for_page (PopplerPage     *poppler_page,
+			 EvRenderContext *rc,
+			 gint             width,
+			 gint             height)
+{
+	GdkPixbuf *pixbuf;
+
+#ifdef POPPLER_WITH_GDK
+	pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB, FALSE, 8,
+				 width, height);
+	gdk_pixbuf_fill (pixbuf, 0xffffffff);
+
+	ev_document_fc_mutex_lock ();
+	poppler_page_render_to_pixbuf (poppler_page, 0, 0,
+				       width, height,
+				       rc->scale, rc->rotation, pixbuf);
+	ev_document_fc_mutex_unlock ();
+#else
+	cairo_surface_t *surface;
+
+	ev_document_fc_mutex_lock ();
+	surface = pdf_page_render (poppler_page, width, height, rc);
+	ev_document_fc_mutex_unlock ();
+	
+	pixbuf = ev_document_misc_pixbuf_from_surface (surface);
+	cairo_surface_destroy (surface);
+#endif /* POPPLER_WITH_GDK */
+
+	return pixbuf;
+}
+
+static GdkPixbuf *
+pdf_document_get_thumbnail (EvDocument      *document,
+			    EvRenderContext *rc)
+{
+	PdfDocument *pdf_document = PDF_DOCUMENT (document);
+	PopplerPage *poppler_page;
+	GdkPixbuf *pixbuf = NULL;
+	GdkPixbuf *border_pixbuf;
+	double page_width, page_height;
+	gint width, height;
+
+	poppler_page = POPPLER_PAGE (rc->page->backend_page);
+
+	poppler_page_get_size (poppler_page,
+			       &page_width, &page_height);
+
+	width = MAX ((gint)(page_width * rc->scale + 0.5), 1);
+	height = MAX ((gint)(page_height * rc->scale + 0.5), 1);
+
+	if (rc->rotation == 90 || rc->rotation == 270) {
+		gint  temp;
+
+		temp = width;
+		width = height;
+		height = temp;
+	}
+
+#ifdef POPPLER_WITH_GDK
+	pixbuf = poppler_page_get_thumbnail_pixbuf (poppler_page);
+#else
+	cairo_surface_t *surface;
+	
+	surface = poppler_page_get_thumbnail (poppler_page);
+	if (surface) {
+		pixbuf = ev_document_misc_pixbuf_from_surface (surface);
+		cairo_surface_destroy (surface);
+	}
+#endif /* POPPLER_WITH_GDK */
+
+	if (pixbuf != NULL) {
+		int thumb_width = (rc->rotation == 90 || rc->rotation == 270) ?
+			gdk_pixbuf_get_height (pixbuf) :
+			gdk_pixbuf_get_width (pixbuf);
+
+		if (thumb_width == width) {
+			GdkPixbuf *rotated_pixbuf;
+
+			rotated_pixbuf = gdk_pixbuf_rotate_simple (pixbuf,
+								   (GdkPixbufRotation) (360 - rc->rotation));
+			g_object_unref (pixbuf);
+			pixbuf = rotated_pixbuf;
+		} else {
+			/* The provided thumbnail has a different size */
+			g_object_unref (pixbuf);
+			pixbuf = make_thumbnail_for_page (poppler_page, rc, width, height);
+		}
+	} else {
+		/* There is no provided thumbnail. We need to make one. */
+		pixbuf = make_thumbnail_for_page (poppler_page, rc, width, height);
+	}
+
+	return pixbuf;
 }
 
 /* reference:
@@ -825,6 +917,7 @@ pdf_document_class_init (PdfDocumentClass *klass)
 	ev_document_class->get_page_size = pdf_document_get_page_size;
 	ev_document_class->get_page_label = pdf_document_get_page_label;
 	ev_document_class->render = pdf_document_render;
+	ev_document_class->get_thumbnail = pdf_document_get_thumbnail;
 	ev_document_class->get_info = pdf_document_get_info;
 	ev_document_class->get_backend_info = pdf_document_get_backend_info;
 	ev_document_class->support_synctex = pdf_document_support_synctex;
@@ -1380,116 +1473,6 @@ pdf_document_document_images_iface_init (EvDocumentImagesInterface *iface)
 	iface->get_image_mapping = pdf_document_images_get_image_mapping;
 	iface->get_image = pdf_document_images_get_image;
 }
-
-static GdkPixbuf *
-make_thumbnail_for_page (PopplerPage     *poppler_page,
-			 EvRenderContext *rc,
-			 gint             width,
-			 gint             height)
-{
-	GdkPixbuf *pixbuf;
-
-#ifdef POPPLER_WITH_GDK
-	pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB, FALSE, 8,
-				 width, height);
-	gdk_pixbuf_fill (pixbuf, 0xffffffff);
-
-	ev_document_fc_mutex_lock ();
-	poppler_page_render_to_pixbuf (poppler_page, 0, 0,
-				       width, height,
-				       rc->scale, rc->rotation, pixbuf);
-	ev_document_fc_mutex_unlock ();
-#else
-	cairo_surface_t *surface;
-
-	ev_document_fc_mutex_lock ();
-	surface = pdf_page_render (poppler_page, width, height, rc);
-	ev_document_fc_mutex_unlock ();
-	
-	pixbuf = ev_document_misc_pixbuf_from_surface (surface);
-	cairo_surface_destroy (surface);
-#endif /* POPPLER_WITH_GDK */
-
-	return pixbuf;
-}
-
-static GdkPixbuf *
-pdf_document_thumbnails_get_thumbnail (EvDocumentThumbnails *document_thumbnails,
-				       EvRenderContext      *rc, 
-				       gboolean              border)
-{
-	PdfDocument *pdf_document = PDF_DOCUMENT (document_thumbnails);
-	PopplerPage *poppler_page;
-	GdkPixbuf *pixbuf = NULL;
-	GdkPixbuf *border_pixbuf;
-	double page_width, page_height;
-	gint width, height;
-
-	poppler_page = POPPLER_PAGE (rc->page->backend_page);
-
-	poppler_page_get_size (poppler_page,
-			       &page_width, &page_height);
-
-	width = MAX ((gint)(page_width * rc->scale + 0.5), 1);
-	height = MAX ((gint)(page_height * rc->scale + 0.5), 1);
-
-	if (rc->rotation == 90 || rc->rotation == 270) {
-		gint  temp;
-
-		temp = width;
-		width = height;
-		height = temp;
-	}
-
-#ifdef POPPLER_WITH_GDK
-	pixbuf = poppler_page_get_thumbnail_pixbuf (poppler_page);
-#else
-	cairo_surface_t *surface;
-	
-	surface = poppler_page_get_thumbnail (poppler_page);
-	if (surface) {
-		pixbuf = ev_document_misc_pixbuf_from_surface (surface);
-		cairo_surface_destroy (surface);
-	}
-#endif /* POPPLER_WITH_GDK */
-
-	if (pixbuf != NULL) {
-		int thumb_width = (rc->rotation == 90 || rc->rotation == 270) ?
-			gdk_pixbuf_get_height (pixbuf) :
-			gdk_pixbuf_get_width (pixbuf);
-
-		if (thumb_width == width) {
-			GdkPixbuf *rotated_pixbuf;
-
-			rotated_pixbuf = gdk_pixbuf_rotate_simple (pixbuf,
-								   (GdkPixbufRotation) (360 - rc->rotation));
-			g_object_unref (pixbuf);
-			pixbuf = rotated_pixbuf;
-		} else {
-			/* The provided thumbnail has a different size */
-			g_object_unref (pixbuf);
-			pixbuf = make_thumbnail_for_page (poppler_page, rc, width, height);
-		}
-	} else {
-		/* There is no provided thumbnail. We need to make one. */
-		pixbuf = make_thumbnail_for_page (poppler_page, rc, width, height);
-	}
-
-        if (border && pixbuf) {
-		border_pixbuf = ev_document_misc_get_thumbnail_frame (-1, -1, pixbuf);
-		g_object_unref (pixbuf);
-		pixbuf = border_pixbuf;
-	}		
-
-	return pixbuf;
-}
-
-static void
-pdf_document_document_thumbnails_iface_init (EvDocumentThumbnailsInterface *iface)
-{
-	iface->get_thumbnail = pdf_document_thumbnails_get_thumbnail;
-}
-
 
 static GList *
 pdf_document_find_find_text (EvDocumentFind *document_find,

@@ -25,6 +25,7 @@
 #include <string.h>
 
 #include "ev-document.h"
+#include "ev-document-misc.h"
 #include "synctex_parser.h"
 
 #define EV_DOCUMENT_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), EV_TYPE_DOCUMENT, EvDocumentPrivate))
@@ -579,6 +580,32 @@ ev_document_render (EvDocument      *document,
 	EvDocumentClass *klass = EV_DOCUMENT_GET_CLASS (document);
 
 	return klass->render (document, rc);
+}
+
+static GdkPixbuf *
+_ev_document_get_thumbnail (EvDocument      *document,
+			    EvRenderContext *rc)
+{
+	cairo_surface_t *surface;
+	GdkPixbuf       *pixbuf;
+
+	surface = ev_document_render (document, rc);
+	pixbuf = ev_document_misc_pixbuf_from_surface (surface);
+	cairo_surface_destroy (surface);
+
+	return pixbuf;
+}
+
+GdkPixbuf *
+ev_document_get_thumbnail (EvDocument      *document,
+			   EvRenderContext *rc)
+{
+	EvDocumentClass *klass = EV_DOCUMENT_GET_CLASS (document);
+
+	if (klass->get_thumbnail)
+		return klass->get_thumbnail (document, rc);
+
+	return _ev_document_get_thumbnail (document, rc);
 }
 
 const gchar *

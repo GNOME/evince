@@ -21,7 +21,6 @@
 #include <config.h>
 
 #include "ev-jobs.h"
-#include "ev-document-thumbnails.h"
 #include "ev-document-links.h"
 #include "ev-document-images.h"
 #include "ev-document-forms.h"
@@ -765,6 +764,7 @@ ev_job_thumbnail_run (EvJob *job)
 {
 	EvJobThumbnail  *job_thumb = EV_JOB_THUMBNAIL (job);
 	EvRenderContext *rc;
+	GdkPixbuf       *pixbuf;
 	EvPage          *page;
 
 	ev_debug_message (DEBUG_JOBS, "%d (%p)", job_thumb->page, job);
@@ -776,10 +776,12 @@ ev_job_thumbnail_run (EvJob *job)
 	rc = ev_render_context_new (page, job_thumb->rotation, job_thumb->scale);
 	g_object_unref (page);
 
-	job_thumb->thumbnail = ev_document_thumbnails_get_thumbnail (EV_DOCUMENT_THUMBNAILS (job->document),
-								     rc, TRUE);
+	pixbuf = ev_document_get_thumbnail (job->document, rc);
 	g_object_unref (rc);
 	ev_document_doc_mutex_unlock ();
+
+	job_thumb->thumbnail = ev_document_misc_get_thumbnail_frame (-1, -1, pixbuf);
+	g_object_unref (pixbuf);
 
 	ev_job_succeeded (job);
 	

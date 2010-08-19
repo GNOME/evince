@@ -38,7 +38,6 @@
 #include <libdocument/ev-document-links.h>
 #include <libdocument/ev-document-misc.h>
 #include <libdocument/ev-document-security.h>
-#include <libdocument/ev-document-thumbnails.h>
 #include <libdocument/ev-document-transition.h>
 #include <libdocument/ev-document-type-builtins.h>
 #include <libdocument/ev-file-exporter.h>

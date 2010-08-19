@@ -39,7 +39,6 @@
 
 #include "comics-document.h"
 #include "ev-document-misc.h"
-#include "ev-document-thumbnails.h"
 #include "ev-file-helpers.h"
 
 #ifdef G_OS_WIN32
@@ -123,8 +122,6 @@ static const ComicBookDecompressCommand command_usage_def[] = {
 	{"%s -xOf"          , "%s -tf %s"      , NULL             , FALSE, NO_OFFSET}
 };
 
-static void       comics_document_document_thumbnails_iface_init (EvDocumentThumbnailsInterface *iface);
-
 static GSList*    get_supported_image_extensions (void);
 static void       get_page_size_area_prepared_cb (GdkPixbufLoader *loader,
 						  gpointer data);
@@ -136,11 +133,7 @@ static char**     extract_argv                   (EvDocument *document,
 						  gint page);
 
 
-EV_BACKEND_REGISTER_WITH_CODE (ComicsDocument, comics_document,
-	{
-		EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_THUMBNAILS,
-						comics_document_document_thumbnails_iface_init);
-	} );
+EV_BACKEND_REGISTER (ComicsDocument, comics_document)
 
 /**
  * comics_regex_quote:
@@ -849,31 +842,6 @@ get_supported_image_extensions()
 
 	g_slist_free (formats);
 	return extensions;
-}
-
-static GdkPixbuf *
-comics_document_thumbnails_get_thumbnail (EvDocumentThumbnails *document,
-					  EvRenderContext      *rc,
-					  gboolean              border)
-{
-	GdkPixbuf *thumbnail;
-
-	thumbnail = comics_document_render_pixbuf (EV_DOCUMENT (document), rc);
-
-	if (border) {
-	      GdkPixbuf *tmp_pixbuf = thumbnail;
-	      
-	      thumbnail = ev_document_misc_get_thumbnail_frame (-1, -1, tmp_pixbuf);
-	      g_object_unref (tmp_pixbuf);
-	}
-
-	return thumbnail;
-}
-
-static void
-comics_document_document_thumbnails_iface_init (EvDocumentThumbnailsInterface *iface)
-{
-	iface->get_thumbnail = comics_document_thumbnails_get_thumbnail;
 }
 
 static char**
