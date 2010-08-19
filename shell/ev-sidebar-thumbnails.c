@@ -113,72 +113,47 @@ G_DEFINE_TYPE_EXTENDED (EvSidebarThumbnails,
 /* Thumbnails dimensions cache */
 #define EV_THUMBNAILS_SIZE_CACHE_KEY "ev-thumbnails-size-cache"
 
+static void
+get_thumbnail_size_for_page (EvDocument *document,
+			     guint       page,
+			     gint       *width,
+			     gint       *height)
+{
+	gdouble scale;
+	gdouble w, h;
+
+	ev_document_get_page_size (document, page, &w, &h);
+	scale = (gdouble)THUMBNAIL_WIDTH / w;
+
+	*width = MAX ((gint)(w * scale + 0.5), 1);
+	*height = MAX ((gint)(h * scale + 0.5), 1);
+}
+
 static EvThumbsSizeCache *
 ev_thumbnails_size_cache_new (EvDocument *document)
 {
 	EvThumbsSizeCache *cache;
-	EvRenderContext *rc = NULL;
-	gint i, n_pages;
-	EvThumbsSize *thumb_size;
+	gint               i, n_pages;
+	EvThumbsSize      *thumb_size;
 
 	cache = g_new0 (EvThumbsSizeCache, 1);
 
-	n_pages = ev_document_get_n_pages (document);
-
-	/* Assume all pages are the same size until proven otherwise */
-	cache->uniform = TRUE;
-
-	for (i = 0; i < n_pages; i++) {
-		EvPage *page;
-		gdouble page_width, page_height;
-		gint    thumb_width = 0;
-		gint    thumb_height = 0;
-
-		page = ev_document_get_page (document, i);
-
-		ev_document_get_page_size (document, i, &page_width, &page_height);
-
-		if (!rc) {
-			rc = ev_render_context_new (page, 0, (gdouble)THUMBNAIL_WIDTH / page_width);
-		} else {
-			ev_render_context_set_page (rc, page);
-			ev_render_context_set_scale (rc, (gdouble)THUMBNAIL_WIDTH / page_width);
-		}
-
-		ev_document_thumbnails_get_dimensions (EV_DOCUMENT_THUMBNAILS (document),
-						       rc, &thumb_width, &thumb_height);
-
-		if (i == 0) {
-			cache->uniform_width = thumb_width;
-			cache->uniform_height = thumb_height;
-		} else if (cache->uniform &&
-			   (cache->uniform_width != thumb_width ||
-			    cache->uniform_height != thumb_height)) {
-			/* It's a different thumbnail size.  Backfill the array. */
-			int j;
-
-			cache->sizes = g_new0 (EvThumbsSize, n_pages);
-
-			for (j = 0; j < i; j++) {
-				thumb_size = &(cache->sizes[j]);
-				thumb_size->width = cache->uniform_width;
-				thumb_size->height = cache->uniform_height;
-			}
-			cache->uniform = FALSE;
-		}
-
-		if (! cache->uniform) {
-			thumb_size = &(cache->sizes[i]);
-
-			thumb_size->width = thumb_width;
-			thumb_size->height = thumb_height;
-		}
-
-		g_object_unref (page);
+	if (ev_document_is_page_size_uniform (document)) {
+		cache->uniform = TRUE;
+		get_thumbnail_size_for_page (document, 0,
+					     &cache->uniform_width,
+					     &cache->uniform_height);
+		return cache;
 	}
 
-	if (rc) {
-		g_object_unref (rc);
+	n_pages = ev_document_get_n_pages (document);
+	cache->sizes = g_new0 (EvThumbsSize, n_pages);
+
+	for (i = 0; i < n_pages; i++) {
+		thumb_size = &(cache->sizes[i]);
+		get_thumbnail_size_for_page (document, i,
+					     &thumb_size->width,
+					     &thumb_size->height);
 	}
 
 	return cache;

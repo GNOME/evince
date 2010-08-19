@@ -129,10 +129,6 @@ static void pdf_document_file_exporter_iface_init        (EvFileExporterInterfac
 static void pdf_selection_iface_init                     (EvSelectionInterface           *iface);
 static void pdf_document_page_transition_iface_init      (EvDocumentTransitionInterface  *iface);
 static void pdf_document_text_iface_init                 (EvDocumentTextInterface        *iface);
-static void pdf_document_thumbnails_get_dimensions       (EvDocumentThumbnails           *document_thumbnails,
-							  EvRenderContext                *rc,
-							  gint                           *width,
-							  gint                           *height);
 static int  pdf_document_get_n_pages			 (EvDocument                     *document);
 
 static EvLinkDest *ev_link_dest_from_dest    (PdfDocument       *pdf_document,
@@ -1426,13 +1422,25 @@ pdf_document_thumbnails_get_thumbnail (EvDocumentThumbnails *document_thumbnails
 	PopplerPage *poppler_page;
 	GdkPixbuf *pixbuf = NULL;
 	GdkPixbuf *border_pixbuf;
+	double page_width, page_height;
 	gint width, height;
 
 	poppler_page = POPPLER_PAGE (rc->page->backend_page);
 
-	pdf_document_thumbnails_get_dimensions (EV_DOCUMENT_THUMBNAILS (pdf_document),
-						rc, &width, &height);
-	
+	poppler_page_get_size (poppler_page,
+			       &page_width, &page_height);
+
+	width = MAX ((gint)(page_width * rc->scale + 0.5), 1);
+	height = MAX ((gint)(page_height * rc->scale + 0.5), 1);
+
+	if (rc->rotation == 90 || rc->rotation == 270) {
+		gint  temp;
+
+		temp = width;
+		width = height;
+		height = temp;
+	}
+
 #ifdef POPPLER_WITH_GDK
 	pixbuf = poppler_page_get_thumbnail_pixbuf (poppler_page);
 #else
@@ -1477,33 +1485,9 @@ pdf_document_thumbnails_get_thumbnail (EvDocumentThumbnails *document_thumbnails
 }
 
 static void
-pdf_document_thumbnails_get_dimensions (EvDocumentThumbnails *document_thumbnails,
-					EvRenderContext      *rc,
-					gint                 *width,
-					gint                 *height)
-{
-	double page_width, page_height;
-	
-	poppler_page_get_size (POPPLER_PAGE (rc->page->backend_page),
-			       &page_width, &page_height);
-	
-	*width = MAX ((gint)(page_width * rc->scale + 0.5), 1);
-	*height = MAX ((gint)(page_height * rc->scale + 0.5), 1);
-
-	if (rc->rotation == 90 || rc->rotation == 270) {
-		gint  temp;
-
-		temp = *width;
-		*width = *height;
-		*height = temp;
-	}
-}
-
-static void
 pdf_document_document_thumbnails_iface_init (EvDocumentThumbnailsInterface *iface)
 {
 	iface->get_thumbnail = pdf_document_thumbnails_get_thumbnail;
-	iface->get_dimensions = pdf_document_thumbnails_get_dimensions;
 }
 
 

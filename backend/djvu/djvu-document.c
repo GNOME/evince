@@ -473,27 +473,6 @@ djvu_selection_iface_init (EvSelectionInterface *iface)
 	iface->get_selected_text = djvu_selection_get_selected_text;
 }
 
-static void
-djvu_document_thumbnails_get_dimensions (EvDocumentThumbnails *document,
-					 EvRenderContext      *rc, 
-					 gint                 *width,
-					 gint                 *height)
-{
-	DjvuDocument *djvu_document = DJVU_DOCUMENT (document); 
-	gdouble page_width, page_height;
-	
-	djvu_document_get_page_size (EV_DOCUMENT(djvu_document), rc->page,
-				     &page_width, &page_height);
-
-	if (rc->rotation == 90 || rc->rotation == 270) {
-		*width = (gint) (page_height * rc->scale);
-		*height = (gint) (page_width * rc->scale);
-	} else {
-		*width = (gint) (page_width * rc->scale);
-		*height = (gint) (page_height * rc->scale);
-	}
-}
-
 static GdkPixbuf *
 djvu_document_thumbnails_get_thumbnail (EvDocumentThumbnails *document,
 					EvRenderContext      *rc,
@@ -544,7 +523,6 @@ static void
 djvu_document_document_thumbnails_iface_init (EvDocumentThumbnailsInterface *iface)
 {
 	iface->get_thumbnail = djvu_document_thumbnails_get_thumbnail;
-	iface->get_dimensions = djvu_document_thumbnails_get_dimensions;
 }
 
 /* EvFileExporterIface */

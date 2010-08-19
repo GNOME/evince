@@ -379,32 +379,9 @@ ps_document_thumbnails_get_thumbnail (EvDocumentThumbnails *document_thumbnails,
 }
 
 static void
-ps_document_thumbnails_get_dimensions (EvDocumentThumbnails *document_thumbnails,
-				       EvRenderContext      *rc, 
-				       gint                 *width,
-				       gint                 *height)
-{
-	PSDocument *ps = PS_DOCUMENT (document_thumbnails);
-	gdouble     page_width, page_height;
-
-	ps_document_get_page_size (EV_DOCUMENT (ps),
-				   rc->page,
-				   &page_width, &page_height);
-
-	if (rc->rotation == 90 || rc->rotation == 270) {
-		*width = (gint) (page_height * rc->scale);
-		*height = (gint) (page_width * rc->scale);
-	} else {
-		*width = (gint) (page_width * rc->scale);
-		*height = (gint) (page_height * rc->scale);
-	}
-}
-
-static void
 ps_document_document_thumbnails_iface_init (EvDocumentThumbnailsInterface *iface)
 {
 	iface->get_thumbnail = ps_document_thumbnails_get_thumbnail;
-	iface->get_dimensions = ps_document_thumbnails_get_dimensions;
 }
 	
 /* EvFileExporterIface */

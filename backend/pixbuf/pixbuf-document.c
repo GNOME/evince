@@ -176,29 +176,9 @@ pixbuf_document_thumbnails_get_thumbnail (EvDocumentThumbnails *document,
 }
 
 static void
-pixbuf_document_thumbnails_get_dimensions (EvDocumentThumbnails *document,
-					   EvRenderContext      *rc, 
-					   gint                 *width,
-					   gint                 *height)
-{
-	PixbufDocument *pixbuf_document = PIXBUF_DOCUMENT (document);
-	gint p_width = gdk_pixbuf_get_width (pixbuf_document->pixbuf);
-	gint p_height = gdk_pixbuf_get_height (pixbuf_document->pixbuf);
-
-	if (rc->rotation == 90 || rc->rotation == 270) {
-		*width = (gint) (p_height * rc->scale);
-		*height = (gint) (p_width * rc->scale);
-	} else {
-		*width = (gint) (p_width * rc->scale);
-		*height = (gint) (p_height * rc->scale);
-	}
-}
-
-static void
 pixbuf_document_document_thumbnails_iface_init (EvDocumentThumbnailsInterface *iface)
 {
 	iface->get_thumbnail = pixbuf_document_thumbnails_get_thumbnail;
-	iface->get_dimensions = pixbuf_document_thumbnails_get_dimensions;
 }
 
 

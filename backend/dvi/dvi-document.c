@@ -267,25 +267,6 @@ dvi_document_class_init (DviDocumentClass *klass)
 	ev_document_class->support_synctex = dvi_document_support_synctex;
 }
 
-static void
-dvi_document_thumbnails_get_dimensions (EvDocumentThumbnails *document,
-					EvRenderContext      *rc, 
-					gint                 *width,
-					gint                 *height)
-{	
-	DviDocument *dvi_document = DVI_DOCUMENT (document);
-	gdouble page_width = dvi_document->base_width;
-	gdouble page_height = dvi_document->base_height;
-
-	if (rc->rotation == 90 || rc->rotation == 270) {
-		*width = (gint) (page_height * rc->scale);
-		*height = (gint) (page_width * rc->scale);
-	} else {
-		*width = (gint) (page_width * rc->scale);
-		*height = (gint) (page_height * rc->scale);
-	}
-}
-
 static GdkPixbuf *
 dvi_document_thumbnails_get_thumbnail (EvDocumentThumbnails *document,
 				       EvRenderContext      *rc,   
@@ -347,7 +328,6 @@ static void
 dvi_document_document_thumbnails_iface_init (EvDocumentThumbnailsInterface *iface)
 {
 	iface->get_thumbnail = dvi_document_thumbnails_get_thumbnail;
-	iface->get_dimensions = dvi_document_thumbnails_get_dimensions;
 }
 
 /* EvFileExporterIface */

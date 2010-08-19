@@ -44,20 +44,3 @@ ev_document_thumbnails_get_thumbnail (EvDocumentThumbnails *document,
 	return iface->get_thumbnail (document, rc, border);
 }
 
-void
-ev_document_thumbnails_get_dimensions (EvDocumentThumbnails *document,
-				       EvRenderContext      *rc,
-				       gint                 *width,
-				       gint                 *height)
-{
-	EvDocumentThumbnailsInterface *iface;
-
-	g_return_if_fail (EV_IS_DOCUMENT_THUMBNAILS (document));
-	g_return_if_fail (EV_IS_RENDER_CONTEXT (rc));
-	g_return_if_fail (width != NULL);
-	g_return_if_fail (height != NULL);
-
-	iface = EV_DOCUMENT_THUMBNAILS_GET_IFACE (document);
-	iface->get_dimensions (document, rc, width, height);
-}
-
