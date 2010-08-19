@@ -30,10 +30,6 @@ if ENABLE_COMICS
      SUBDIRS += comics
 endif
 
-if ENABLE_IMPRESS
-     SUBDIRS += impress
-endif
-
 EXTRA_DIST = \
 	backend.symbols
 
