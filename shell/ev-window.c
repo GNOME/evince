@@ -5761,6 +5761,10 @@ set_action_properties (GtkActionGroup *action_group)
 {
 	GtkAction *action;
 
+	action = gtk_action_group_get_action (action_group, "FileOpenContainingFolder");
+	/*translators: this is the label for toolbar button*/
+	g_object_set (action, "short_label", _("Open Folder"), NULL);
+
 	action = gtk_action_group_get_action (action_group, "GoPreviousPage");
 	g_object_set (action, "is-important", TRUE, NULL);
 	/*translators: this is the label for toolbar button*/
