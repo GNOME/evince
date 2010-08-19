@@ -2862,6 +2862,12 @@ ev_window_cmd_save_as (GtkAction *action, EvWindow *ev_window)
 	gtk_widget_show (fc);
 }
 
+static void
+ev_window_cmd_open_containing_folder (GtkAction *action, EvWindow *ev_window)
+{
+	/* FIXME */
+}
+
 static GKeyFile *
 get_print_settings_file (void)
 {
@@ -5406,6 +5412,9 @@ static const GtkActionEntry entries[] = {
        	{ "FileSaveAs", GTK_STOCK_SAVE_AS, N_("_Save a Copy…"), "<control>S",
 	  N_("Save a copy of the current document"),
 	  G_CALLBACK (ev_window_cmd_save_as) },
+	{ "FileOpenContainingFolder", GTK_STOCK_DIRECTORY, N_("Open Containing _Folder"), NULL,
+	  N_("Show the folder which contains this file in the file manager"),
+	  G_CALLBACK (ev_window_cmd_open_containing_folder) },
 	{ "FilePrint", GTK_STOCK_PRINT, N_("_Print…"), "<control>P",
 	  N_("Print this document"),
 	  G_CALLBACK (ev_window_cmd_file_print) },
