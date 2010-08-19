@@ -121,8 +121,8 @@ GTKDOC_LIBS = \
 	$(top_builddir)/cut-n-paste/gimpcellrenderertoggle/libgimpcellrenderertoggle.la	\
 	$(top_builddir)/cut-n-paste/smclient/libsmclient.la		\
 	$(top_builddir)/properties/libevproperties.la			\
-	$(top_builddir)/libdocument/libevdocument.la			\
-	$(top_builddir)/libview/libevview.la				\
+	$(top_builddir)/libdocument/libevdocument3.la			\
+	$(top_builddir)/libview/libevview3.la				\
 	$(top_builddir)/libmisc/libevmisc.la				\
 	$(SHELL_LIBS)							\
 	$(GTK_PRINT_LIBS)						\

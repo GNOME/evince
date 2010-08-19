@@ -1,4 +1,4 @@
-lib_LTLIBRARIES = libevview.la
+lib_LTLIBRARIES = libevview3.la
 
 NOINST_H_FILES =			\
 	ev-annotation-window.h		\
@@ -28,7 +28,7 @@ INST_H_FILES = 				\
 headerdir = $(includedir)/evince/$(EV_API_VERSION)/libview
 header_DATA = $(INST_H_FILES)
 
-libevview_la_SOURCES = 			\
+libevview3_la_SOURCES =			\
 	ev-annotation-window.c		\
 	ev-document-model.c		\
 	ev-loading-window.c		\
@@ -49,7 +49,7 @@ libevview_la_SOURCES = 			\
 	$(NOINST_H_FILES)		\
 	$(INST_H_FILES)
 
-libevview_la_CPPFLAGS = \
+libevview3_la_CPPFLAGS = \
 	-DEVINCEDATADIR=\"$(pkgdatadir)\"	\
 	-DG_LOG_DOMAIN=\"EvinceView\"		\
 	-DGNOMELOCALEDIR=\"$(datadir)/locale\"	\
@@ -59,20 +59,20 @@ libevview_la_CPPFLAGS = \
 	-I$(top_builddir)			\
 	$(AM_CPPFLAGS)
 
-libevview_la_CFLAGS = \
+libevview3_la_CFLAGS = \
 	$(LIBVIEW_CFLAGS)	\
 	$(WARN_CFLAGS)		\
 	$(DISABLE_DEPRECATED)	\
 	$(AM_CFLAGS)
 
-libevview_la_LDFLAGS = \
+libevview3_la_LDFLAGS = \
 	-version-info $(EV_VIEW_LT_VERSION_INFO)	\
 	-no-undefined	\
 	-export-symbols-regex "^ev_*"	\
 	$(AM_LDFLAGS)
 
-libevview_la_LIBADD = \
-	$(top_builddir)/libdocument/libevdocument.la \
+libevview3_la_LIBADD = \
+	$(top_builddir)/libdocument/libevdocument3.la \
 	$(LIBVIEW_LIBS)
 
 BUILT_SOURCES = 			\
@@ -118,7 +118,7 @@ EXTRA_DIST = \
 
 if ENABLE_INTROSPECTION
 
-EvinceView-$(EV_API_VERSION).gir: libevview.la Makefile $(INST_H_FILES) $(filter %.c,$(libevview_la_SOURCES))
+EvinceView-$(EV_API_VERSION).gir: libevview3.la Makefile $(INST_H_FILES) $(filter %.c,$(libevview3_la_SOURCES))
 	$(AM_V_GEN) PKG_CONFIG_PATH=$(top_builddir):$$PKG_CONFIG_PATH \
 	$(G_IR_SCANNER) -v --namespace EvinceView \
 	--add-include-path=$(top_builddir)/libdocument \

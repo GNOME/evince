@@ -24,7 +24,7 @@ libevince_properties_page_la_SOURCES = 	\
 
 libevince_properties_page_la_LIBADD = 		\
 	libevproperties.la			\
-	$(top_builddir)/libdocument/libevdocument.la	\
+	$(top_builddir)/libdocument/libevdocument3.la	\
 	$(FRONTEND_LIBS)			\
 	$(NAUTILUS_LIBS)
 

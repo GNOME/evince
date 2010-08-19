@@ -25,7 +25,7 @@ evince_thumbnailer_LDFLAGS += -mwindows
 endif
 
 evince_thumbnailer_LDADD = \
-	$(top_builddir)/libdocument/libevdocument.la	\
+	$(top_builddir)/libdocument/libevdocument3.la	\
 	$(FRONTEND_LIBS)
 
 schema_files = \

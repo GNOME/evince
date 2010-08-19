@@ -16,7 +16,7 @@ libcomicsdocument_la_SOURCES = \
 
 libcomicsdocument_la_LDFLAGS = $(BACKEND_LIBTOOL_FLAGS)
 libcomicsdocument_la_LIBADD =				\
-	$(top_builddir)/libdocument/libevdocument.la	\
+	$(top_builddir)/libdocument/libevdocument3.la	\
 	$(BACKEND_LIBS)					\
 	$(LIB_LIBS)
 

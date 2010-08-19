@@ -28,8 +28,8 @@ evince_previewer_LDFLAGS += -mwindows
 endif
 
 evince_previewer_LDADD = \
-	$(top_builddir)/libdocument/libevdocument.la	\
-	$(top_builddir)/libview/libevview.la		\
+	$(top_builddir)/libdocument/libevdocument3.la	\
+	$(top_builddir)/libview/libevview3.la		\
 	$(top_builddir)/libmisc/libevmisc.la		\
 	$(PREVIEWER_LIBS)
 

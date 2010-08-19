@@ -16,7 +16,7 @@ libevmisc_la_CFLAGS =	\
 	$(DISABLE_DEPRECATED)
 
 libevmisc_la_LIBADD = \
-	$(top_builddir)/libdocument/libevdocument.la \
-	$(top_builddir)/libview/libevview.la
+	$(top_builddir)/libdocument/libevdocument3.la \
+	$(top_builddir)/libview/libevview3.la
 
 -include $(top_srcdir)/git.mk

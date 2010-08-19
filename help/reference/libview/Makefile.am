@@ -7,7 +7,7 @@ AUTOMAKE_OPTIONS = 1.10
 # of using the various options.
 
 # The name of the module, e.g. 'glib'.
-DOC_MODULE = libevview
+DOC_MODULE = libevview3
 
 # Uncomment for versioned docs and specify the version of the module, e.g. '2'.
 DOC_MODULE_VERSION = $(EV_API_VERSION)
@@ -113,8 +113,8 @@ GTKDOC_CFLAGS = \
 	$(DISABLE_DEPRECATED)
 
 GTKDOC_LIBS = \
-	$(top_builddir)/libdocument/libevdocument.la \
-	$(top_builddir)/libview/libevview.la \
+	$(top_builddir)/libdocument/libevdocument3.la \
+	$(top_builddir)/libview/libevview3.la \
 	$(LIBDOCUMENT_LIBS)
 
 # This includes the standard gtk-doc make rules, copied by gtkdocize.

@@ -27,7 +27,7 @@ libdvidocument_la_LDFLAGS = $(BACKEND_LIBTOOL_FLAGS)
 libdvidocument_la_LIBADD = 				\
 	mdvi-lib/libmdvi.la				\
 	-lkpathsea					\
-	$(top_builddir)/libdocument/libevdocument.la	\
+	$(top_builddir)/libdocument/libevdocument3.la	\
 	$(BACKEND_LIBS)					\
 	$(SPECTRE_LIBS)
 

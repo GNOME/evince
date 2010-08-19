@@ -1,4 +1,4 @@
-lib_LTLIBRARIES = libevdocument.la
+lib_LTLIBRARIES = libevdocument3.la
 
 NOINST_H_FILES =				\
 	ev-debug.h				\
@@ -49,7 +49,7 @@ INST_H_FILES = 					\
 headerdir = $(includedir)/evince/$(EV_API_VERSION)/libdocument
 header_DATA = $(INST_H_FILES)
 
-libevdocument_la_SOURCES=			\
+libevdocument3_la_SOURCES=			\
 	ev-annotation.c				\
 	ev-async-renderer.c			\
 	ev-attachment.c				\
@@ -90,7 +90,7 @@ libevdocument_la_SOURCES=			\
 	$(NOINST_H_FILES)			\
 	$(INST_H_FILES)
 
-libevdocument_la_CPPFLAGS = \
+libevdocument3_la_CPPFLAGS = \
 	-DG_LOG_DOMAIN=\"EvinceDocument\"		\
 	-DEVINCE_UIDIR=\"$(pkgdatadir)\"		\
 	-DGNOMELOCALEDIR=\"$(datadir)/locale\"		\
@@ -99,20 +99,20 @@ libevdocument_la_CPPFLAGS = \
 	-DEVINCE_COMPILATION				\
 	$(AM_CPPFLAGS)
 
-libevdocument_la_CFLAGS = \
+libevdocument3_la_CFLAGS = \
 	$(LIBDOCUMENT_CFLAGS)			\
 	-I$(top_srcdir)/cut-n-paste/synctex	\
 	$(WARN_CFLAGS)				\
 	$(DISABLE_DEPRECATED)			\
 	$(AM_CFLAGS)
 
-libevdocument_la_LDFLAGS = \
+libevdocument3_la_LDFLAGS = \
 	-version-info $(EV_DOCUMENT_LT_VERSION_INFO)	\
 	-no-undefined	\
 	-export-symbols-regex "^ev_*"	\
 	$(AM_LDFLAGS)
 
-libevdocument_la_LIBADD = \
+libevdocument3_la_LIBADD = \
 	$(LIBDOCUMENT_LIBS)	\
 	$(top_builddir)/cut-n-paste/synctex/libsynctex.la
 
@@ -150,7 +150,7 @@ EXTRA_DIST = \
 
 if ENABLE_INTROSPECTION
 
-EvinceDocument-$(EV_API_VERSION).gir: libevdocument.la Makefile $(INST_H_FILES) $(filter %.c,$(libevdocument_la_SOURCES))
+EvinceDocument-$(EV_API_VERSION).gir: libevdocument3.la Makefile $(INST_H_FILES) $(filter %.c,$(libevdocument3_la_SOURCES))
 	$(AM_V_GEN) PKG_CONFIG_PATH=$(top_builddir):$$PKG_CONFIG_PATH \
 	$(G_IR_SCANNER) -v --namespace EvinceDocument \
 	--strip-prefix=Ev \
