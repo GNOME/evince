@@ -12,11 +12,11 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Evince MASTER\n"
+"Project-Id-Version: Evince 2.32\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evince&component=general\n"
-"POT-Creation-Date: 2010-07-28 09:25+0000\n"
-"PO-Revision-Date: 2010-08-01 22:10+0300\n"
+"POT-Creation-Date: 2010-08-19 07:59+0000\n"
+"PO-Revision-Date: 2010-08-24 15:04+0300\n"
 "Last-Translator: Ivar Smolin <okul@linux.ee>\n"
 "Language-Team: Estonian <gnome-et@linux.ee>\n"
 "MIME-Version: 1.0\n"
@@ -929,6 +929,32 @@ msgstr[1] "%d tööd on ootel"
 msgid "Printing job “%s”"
 msgstr "Printimistöö „%s”"
 
+msgid ""
+"Document contains form fields that have been filled out. If you don't save a "
+"copy, changes will be permanently lost."
+msgstr ""
+"Dokument sisaldab täidetud vormivälju. Kui sa ei salvesta koopiat, siis "
+"lähevad muudatused jäädavalt kaotsi."
+
+msgid ""
+"Document contains new or modified annotations. If you don't save a copy, "
+"changes will be permanently lost."
+msgstr ""
+"Dokument sisaldab uusi või muudetud kommentaare. Kui sa ei salvesta koopiat, "
+"siis lähevad muudatused jäädavalt kaotsi."
+
+#, c-format
+#| msgid "Wait until print job “%s” finishes before closing?"
+msgid "Save a copy of document “%s” before closing?"
+msgstr "Kas salvestada enne sulgemist dokumendist „%s” koopia?"
+
+msgid "Close _without Saving"
+msgstr "Sulge _ilma salvestamata"
+
+#| msgid "Save a Copy"
+msgid "Save a _Copy"
+msgstr "Salvesta _koopia"
+
 #, c-format
 msgid "Wait until print job “%s” finishes before closing?"
 msgstr "Kas oodata enne sulgemist, kuni printimistöö „%s” lõpetab?"
@@ -1015,6 +1041,9 @@ msgid "%d found on this page"
 msgid_plural "%d found on this page"
 msgstr[0] "%d vastus sel leheküljel"
 msgstr[1] "%d vastust sel leheküljel"
+
+msgid "Not found"
+msgstr "Ei leitud"
 
 #, c-format
 msgid "%3d%% remaining to search"
@@ -1313,12 +1342,3 @@ msgid ""
 msgstr ""
 "PDF-dokumentide pisipilditegija käsk koos argumentidega. Lähema teabe "
 "saamiseks vaata Nautiluse pisipilditegija dokumentatsiooni."
-
-#~ msgid "© 1996–2010 The Evince authors"
-#~ msgstr "© 1996–2010 Evince'i autorid"
-
-#~ msgid "Page Set_up…"
-#~ msgstr "Lehekülje _sätted…"
-
-#~ msgid "Set up the page settings for printing"
-#~ msgstr "Printimise jaoks paberi sätete seadistamine"
