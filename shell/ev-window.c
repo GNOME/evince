@@ -349,6 +349,7 @@ static void     ev_window_media_player_key_pressed      (EvWindow         *windo
 static void     ev_window_update_max_min_scale          (EvWindow         *window);
 #ifdef ENABLE_DBUS
 static void	ev_window_emit_closed			(EvWindow         *window);
+static void 	ev_window_emit_doc_loaded		(EvWindow	  *window);
 #endif
 
 static guint ev_window_n_copies = 0;
@@ -1544,6 +1545,7 @@ ev_window_load_job_cb (EvJob *job,
 	if (!ev_job_is_failed (job)) {
 		ev_document_model_set_document (ev_window->priv->model, document);
 
+		ev_window_emit_doc_loaded (ev_window);
 		setup_chrome_from_metadata (ev_window);
 		update_chrome_actions (ev_window);
 		setup_document_from_metadata (ev_window);
@@ -6615,6 +6617,35 @@ ev_window_emit_closed (EvWindow *window)
 }
 
 static void
+ev_window_emit_doc_loaded (EvWindow *window)
+{
+	GDBusConnection *connection;
+	GError          *error = NULL;
+
+	if (window->priv->dbus_object_id <= 0)
+		return;
+
+	connection = ev_application_get_dbus_connection (EV_APP);
+	if (!connection)
+		return;
+
+	g_dbus_connection_emit_signal (connection,
+				       NULL,
+				       window->priv->dbus_object_path,
+				       EV_WINDOW_DBUS_INTERFACE,
+				       "DocumentLoaded",
+				       g_variant_new("(s)", window->priv->uri),
+				       &error);
+	if (error) {
+		g_printerr ("Failed to emit DBus signal DocumentLoaded: %s\n",
+			    error->message);
+		g_error_free (error);
+
+		return;
+	}
+}
+
+static void
 method_call_cb (GDBusConnection       *connection,
                 const gchar           *sender,
                 const gchar           *object_path,
@@ -6652,6 +6683,9 @@ static const char introspection_xml[] =
 	      "<arg type='(ii)' name='source_point' direction='out'/>"
 	    "</signal>"
             "<signal name='Closed'/>"
+	    "<signal name='DocumentLoaded'>"
+	      "<arg type='s' name='uri' direction='out'/>"
+	    "</signal>"
           "</interface>"
         "</node>";
 
