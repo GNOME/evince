@@ -1258,36 +1258,7 @@ build_tree (PdfDocument      *pdf_document,
 		if (!action)
 			continue;
 
-		switch (action->type) {
-		        case POPPLER_ACTION_GOTO_DEST: {
-				/* For bookmarks, solve named destinations */
-				if (action->goto_dest.dest->type == POPPLER_DEST_NAMED) {
-					PopplerDest *dest;
-					EvLinkDest *ev_dest = NULL;
-					EvLinkAction *ev_action;
-					
-					dest = poppler_document_find_dest (pdf_document->document,
-									   action->goto_dest.dest->named_dest);
-					if (!dest) {
-						link = ev_link_from_action (pdf_document, action);
-						break;
-					}
-					
-					ev_dest = ev_link_dest_from_dest (pdf_document, dest);
-					poppler_dest_free (dest);
-					
-					ev_action = ev_link_action_new_dest (ev_dest);
-					link = ev_link_new (action->any.title, ev_action);
-				} else {
-					link = ev_link_from_action (pdf_document, action);
-				}
-			}
-				break;
-		        default:
-				link = ev_link_from_action (pdf_document, action);
-				break;
-		}
-		
+		link = ev_link_from_action (pdf_document, action);
 		if (!link || strlen (ev_link_get_title (link)) <= 0) {
 			poppler_action_free (action);
 			if (link)
