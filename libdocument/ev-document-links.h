@@ -81,6 +81,10 @@ gint           ev_document_links_get_dest_page       (EvDocumentLinks *document_
 						      EvLinkDest      *dest);
 gchar         *ev_document_links_get_dest_page_label (EvDocumentLinks *document_links,
 						      EvLinkDest      *dest);
+gint           ev_document_links_get_link_page       (EvDocumentLinks *document_links,
+						      EvLink          *link);
+gchar         *ev_document_links_get_link_page_label (EvDocumentLinks *document_links,
+						      EvLink          *link);
 
 G_END_DECLS
 

@@ -127,3 +127,41 @@ ev_document_links_get_dest_page_label (EvDocumentLinks *document_links,
 
 	return label;
 }
+
+static EvLinkDest *
+get_link_dest (EvLink *link)
+{
+	EvLinkAction *action;
+
+	action = ev_link_get_action (link);
+	if (!action)
+		return NULL;
+
+	if (ev_link_action_get_action_type (action) !=
+	    EV_LINK_ACTION_TYPE_GOTO_DEST)
+		return NULL;
+
+	return ev_link_action_get_dest (action);
+}
+
+gint
+ev_document_links_get_link_page (EvDocumentLinks *document_links,
+				 EvLink          *link)
+{
+	EvLinkDest *dest;
+
+	dest = get_link_dest (link);
+
+	return dest ? ev_document_links_get_dest_page (document_links, dest) : -1;
+}
+
+gchar *
+ev_document_links_get_link_page_label (EvDocumentLinks *document_links,
+				       EvLink          *link)
+{
+	EvLinkDest *dest;
+
+	dest = get_link_dest (link);
+
+	return dest ? ev_document_links_get_dest_page_label (document_links, dest) : NULL;
+}
