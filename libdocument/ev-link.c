@@ -180,23 +180,4 @@ ev_link_new (const char   *title,
 				      NULL));
 }
 
-gint
-ev_link_get_page (EvLink *link)
-{
-	EvLinkAction *action;
-	EvLinkDest *dest;
 
-	action = ev_link_get_action (link);
-	if (!action)
-		return -1;
-
-	if (ev_link_action_get_action_type (action) !=
-	    EV_LINK_ACTION_TYPE_GOTO_DEST)
-		return -1;
-
-	dest = ev_link_action_get_dest (action);
-	if (dest)
-		return ev_link_dest_get_page (dest);
-		
-	return -1;
-}
