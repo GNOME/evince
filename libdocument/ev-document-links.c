@@ -77,6 +77,20 @@ ev_document_links_find_link_dest (EvDocumentLinks *document_links,
 	return retval;
 }
 
+gint
+ev_document_links_find_link_page (EvDocumentLinks *document_links,
+				  const gchar     *link_name)
+{
+	EvDocumentLinksInterface *iface = EV_DOCUMENT_LINKS_GET_IFACE (document_links);
+	gint retval;
+
+	ev_document_doc_mutex_lock ();
+	retval = iface->find_link_page (document_links, link_name);
+	ev_document_doc_mutex_unlock ();
+
+	return retval;
+}
+
 /* Helper functions */
 gint
 ev_document_links_get_dest_page (EvDocumentLinks *document_links,

@@ -67,6 +67,8 @@ struct _EvDocumentLinksInterface
 					       EvPage          *page);
 	EvLinkDest    *(* find_link_dest)     (EvDocumentLinks *document_links,
 					       const gchar     *link_name);
+	gint           (* find_link_page)     (EvDocumentLinks *document_links,
+					       const gchar     *link_name);
 };
 
 GType          ev_document_links_get_type            (void) G_GNUC_CONST;
@@ -76,6 +78,8 @@ GtkTreeModel  *ev_document_links_get_links_model     (EvDocumentLinks *document_
 EvMappingList *ev_document_links_get_links           (EvDocumentLinks *document_links,
 						      EvPage          *page);
 EvLinkDest    *ev_document_links_find_link_dest      (EvDocumentLinks *document_links,
+						      const gchar     *link_name);
+gint           ev_document_links_find_link_page      (EvDocumentLinks *document_links,
 						      const gchar     *link_name);
 gint           ev_document_links_get_dest_page       (EvDocumentLinks *document_links,
 						      EvLinkDest      *dest);
