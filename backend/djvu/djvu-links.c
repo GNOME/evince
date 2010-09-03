@@ -60,8 +60,8 @@ static gboolean number_from_string_10(const gchar *str, guint64 *number)
 	}
 }
 
-static EvLinkDest *
-get_djvu_link_dest (const DjvuDocument *djvu_document, const gchar *link_name, int base_page)
+static guint64
+get_djvu_link_page (const DjvuDocument *djvu_document, const gchar *link_name, int base_page)
 {
 	guint64 page_num = 0;
 
@@ -69,22 +69,28 @@ get_djvu_link_dest (const DjvuDocument *djvu_document, const gchar *link_name, i
 	if (g_str_has_prefix (link_name, "#")) {
 		if (base_page > 0 && g_str_has_prefix (link_name+1, "+")) {
 			if (number_from_string_10 (link_name + 2, &page_num)) {
-				return ev_link_dest_new_page (base_page + page_num);
+				return base_page + page_num;
 			}
 		} else if (base_page > 0 && g_str_has_prefix (link_name+1, "-")) {
 			if (number_from_string_10 (link_name + 2, &page_num)) {
-				return ev_link_dest_new_page (base_page - page_num);
+				return base_page - page_num;
 			}
 		} else {
 			if (number_from_string_10 (link_name + 1, &page_num)) {
-				return ev_link_dest_new_page (page_num - 1);
+				return page_num - 1;
 			}
 		}
 	} else {
 		/* FIXME: component file identifiers */
 	}
 
-	return NULL;
+	return page_num;
+}
+
+static EvLinkDest *
+get_djvu_link_dest (const DjvuDocument *djvu_document, const gchar *link_name, int base_page)
+{
+	return ev_link_dest_new_page (get_djvu_link_page (djvu_document, link_name, base_page));
 }
 
 static EvLinkAction *
@@ -407,6 +413,22 @@ djvu_links_find_link_dest (EvDocumentLinks  *document_links,
 	}
 	
 	return ev_dest;
+}
+
+gint
+djvu_links_find_link_page (EvDocumentLinks  *document_links,
+			   const gchar      *link_name)
+{
+	DjvuDocument *djvu_document = DJVU_DOCUMENT (document_links);
+	gint page;
+
+	page = get_djvu_link_page (djvu_document, link_name, -1);
+
+	if (page == -1) {
+		g_warning ("DjvuLibre error: unknown link destination %s", link_name);
+	}
+
+	return page;
 }
 
 GtkTreeModel *

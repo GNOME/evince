@@ -30,6 +30,8 @@ EvMappingList *djvu_links_get_links          (EvDocumentLinks *document_links,
 					      double           scale_factor);
 EvLinkDest    *djvu_links_find_link_dest     (EvDocumentLinks *document_links,
 					      const gchar     *link_name);
+gint           djvu_links_find_link_page     (EvDocumentLinks *document_links,
+					      const gchar     *link_name);
 gboolean       djvu_links_has_document_links (EvDocumentLinks *document_links);
 
 #endif /* __DJVU_LINK_H__ */

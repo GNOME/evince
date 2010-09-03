@@ -665,4 +665,5 @@ djvu_document_document_links_iface_init  (EvDocumentLinksInterface *iface)
 	iface->get_links_model = djvu_links_get_links_model;
 	iface->get_links = djvu_document_links_get_links;
 	iface->find_link_dest = djvu_links_find_link_dest;
+	iface->find_link_page = djvu_links_find_link_page;
 }
