@@ -1369,6 +1369,25 @@ pdf_document_links_find_link_dest (EvDocumentLinks  *document_links,
 	return ev_dest;
 }
 
+static gint
+pdf_document_links_find_link_page (EvDocumentLinks  *document_links,
+				   const gchar      *link_name)
+{
+	PdfDocument *pdf_document;
+	PopplerDest *dest;
+	gint         retval = -1;
+
+	pdf_document = PDF_DOCUMENT (document_links);
+	dest = poppler_document_find_dest (pdf_document->document,
+					   link_name);
+	if (dest) {
+		retval = dest->page_num - 1;
+		poppler_dest_free (dest);
+	}
+
+	return retval;
+}
+
 static void
 pdf_document_document_links_iface_init (EvDocumentLinksInterface *iface)
 {
@@ -1376,6 +1395,7 @@ pdf_document_document_links_iface_init (EvDocumentLinksInterface *iface)
 	iface->get_links_model = pdf_document_links_get_links_model;
 	iface->get_links = pdf_document_links_get_links;
 	iface->find_link_dest = pdf_document_links_find_link_dest;
+	iface->find_link_page = pdf_document_links_find_link_page;
 }
 
 static EvMappingList *
