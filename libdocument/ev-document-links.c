@@ -100,14 +100,8 @@ ev_document_links_get_dest_page (EvDocumentLinks *document_links,
 
 	switch (ev_link_dest_get_dest_type (dest)) {
 	case EV_LINK_DEST_TYPE_NAMED: {
-		EvLinkDest *dest2;
-
-		dest2 = ev_document_links_find_link_dest (document_links,
-							  ev_link_dest_get_named_dest (dest));
-		if (dest2) {
-			page = ev_link_dest_get_page (dest2);
-			g_object_unref (dest2);
-		}
+		page = ev_document_links_find_link_page (document_links,
+							 ev_link_dest_get_named_dest (dest));
 	}
 		break;
 	case EV_LINK_DEST_TYPE_PAGE_LABEL:
