@@ -7,11 +7,10 @@ AUTOMAKE_OPTIONS = 1.10
 # of using the various options.
 
 # The name of the module, e.g. 'glib'.
-DOC_MODULE = libevdocument3
+DOC_MODULE = libevdocument
 
 # Uncomment for versioned docs and specify the version of the module, e.g. '2'.
 DOC_MODULE_VERSION = $(EV_API_VERSION)
-
 
 # The top-level SGML file. You can change this if you want to.
 DOC_MAIN_SGML_FILE = $(DOC_MODULE)-docs.xml
