@@ -19,23 +19,6 @@ EV_LAYER_GET_CLASS
 </SECTION>
 
 <SECTION>
-<FILE>ev-document-thumbnails</FILE>
-<TITLE>EvDocumentThumbnails</TITLE>
-EV_DOCUMENT_THUMBNAILS_IFACE
-EV_IS_DOCUMENT_THUMBNAILS_IFACE
-EvDocumentThumbnails
-EvDocumentThumbnailsIface
-ev_document_thumbnails_get_thumbnail
-ev_document_thumbnails_get_dimensions
-<SUBSECTION Standard>
-EV_DOCUMENT_THUMBNAILS
-EV_IS_DOCUMENT_THUMBNAILS
-EV_TYPE_DOCUMENT_THUMBNAILS
-ev_document_thumbnails_get_type
-EV_DOCUMENT_THUMBNAILS_GET_IFACE
-</SECTION>
-
-<SECTION>
 <FILE>ev-file-exporter</FILE>
 <TITLE>EvFileExporter</TITLE>
 EvFileExporterFormat
@@ -374,6 +357,7 @@ ev_document_check_dimensions
 ev_document_get_max_label_len
 ev_document_has_text_page_labels
 ev_document_find_page_by_label
+ev_document_get_thumbnail
 ev_rect_cmp
 EV_TYPE_RECTANGLE
 ev_rectangle_get_type
