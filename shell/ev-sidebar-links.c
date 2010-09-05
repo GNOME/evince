@@ -455,38 +455,6 @@ ev_sidebar_links_init (EvSidebarLinks *ev_sidebar_links)
 	ev_sidebar_links_construct (ev_sidebar_links);
 }
 
-static gboolean
-fill_page_labels (GtkTreeModel   *tree_model,
-                  GtkTreePath    *path,
-                  GtkTreeIter    *iter,
-    	          EvSidebarLinks *sidebar_links)
-{
-	EvDocumentLinks *document_links;
-	EvLink          *link;
-	gchar           *page_label;
-
-	gtk_tree_model_get (tree_model, iter,
-			    EV_DOCUMENT_LINKS_COLUMN_LINK, &link,
-			    -1);
-
-	if (!link)
-		return FALSE;
-
-	document_links = EV_DOCUMENT_LINKS (sidebar_links->priv->document);
-	page_label = ev_document_links_get_link_page_label (document_links, link);
-	if (!page_label)
-		return FALSE;
-
-	gtk_tree_store_set (GTK_TREE_STORE (tree_model), iter,
-			    EV_DOCUMENT_LINKS_COLUMN_PAGE_LABEL, page_label,
-			    -1);
-
-	g_free (page_label);
-	g_object_unref (link);
-
-	return FALSE;
-}
-
 /* Public Functions */
 
 GtkWidget *
@@ -652,8 +620,6 @@ job_finished_callback (EvJobLinks     *job,
 	GtkTreeSelection *selection;
 
 	ev_sidebar_links_set_links_model (sidebar_links, job->model);
-
-	gtk_tree_model_foreach (priv->model, (GtkTreeModelForeachFunc)fill_page_labels, sidebar_links);
 
 	gtk_tree_view_set_model (GTK_TREE_VIEW (priv->tree_view), job->model);
 	

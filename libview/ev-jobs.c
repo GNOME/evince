@@ -332,6 +332,38 @@ ev_job_links_dispose (GObject *object)
 }
 
 static gboolean
+fill_page_labels (GtkTreeModel   *tree_model,
+		  GtkTreePath    *path,
+		  GtkTreeIter    *iter,
+		  EvJob          *job)
+{
+	EvDocumentLinks *document_links;
+	EvLink          *link;
+	gchar           *page_label;
+
+	gtk_tree_model_get (tree_model, iter,
+			    EV_DOCUMENT_LINKS_COLUMN_LINK, &link,
+			    -1);
+
+	if (!link)
+		return FALSE;
+
+	document_links = EV_DOCUMENT_LINKS (job->document);
+	page_label = ev_document_links_get_link_page_label (document_links, link);
+	if (!page_label)
+		return FALSE;
+
+	gtk_tree_store_set (GTK_TREE_STORE (tree_model), iter,
+			    EV_DOCUMENT_LINKS_COLUMN_PAGE_LABEL, page_label,
+			    -1);
+
+	g_free (page_label);
+	g_object_unref (link);
+
+	return FALSE;
+}
+
+static gboolean
 ev_job_links_run (EvJob *job)
 {
 	EvJobLinks *job_links = EV_JOB_LINKS (job);
@@ -342,7 +374,9 @@ ev_job_links_run (EvJob *job)
 	ev_document_doc_mutex_lock ();
 	job_links->model = ev_document_links_get_links_model (EV_DOCUMENT_LINKS (job->document));
 	ev_document_doc_mutex_unlock ();
-	
+
+	gtk_tree_model_foreach (job_links->model, (GtkTreeModelForeachFunc)fill_page_labels, job);
+
 	ev_job_succeeded (job);
 	
 	return FALSE;
