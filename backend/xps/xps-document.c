@@ -24,6 +24,7 @@
 
 #include "xps-document.h"
 #include "ev-document-links.h"
+#include "ev-document-print.h"
 #include "ev-document-misc.h"
 
 struct _XPSDocument {
@@ -39,11 +40,14 @@ struct _XPSDocumentClass {
 };
 
 static void xps_document_document_links_iface_init (EvDocumentLinksInterface *iface);
+static void xps_document_document_print_iface_init (EvDocumentPrintInterface *iface);
 
 EV_BACKEND_REGISTER_WITH_CODE (XPSDocument, xps_document,
 	       {
 		       EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_LINKS,
 						       xps_document_document_links_iface_init);
+		       EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_PRINT,
+						       xps_document_document_print_iface_init);
 	       })
 
 /* XPSDocument */
@@ -477,4 +481,26 @@ xps_document_document_links_iface_init (EvDocumentLinksInterface *iface)
 	iface->get_links = xps_document_links_get_links;
 	iface->find_link_dest = xps_document_links_find_link_dest;
 	iface->find_link_page = xps_document_links_find_link_page;
+}
+
+/* EvDocumentPrint */
+static void
+xps_document_print_print_page (EvDocumentPrint *document,
+			       EvPage          *page,
+			       cairo_t         *cr)
+{
+	GError *error = NULL;
+
+	gxps_page_render (GXPS_PAGE (page->backend_page), cr, &error);
+	if (error) {
+		g_warning ("Error rendering page %d for printing: %s\n",
+			   page->index, error->message);
+		g_error_free (error);
+	}
+}
+
+static void
+xps_document_document_print_iface_init (EvDocumentPrintInterface *iface)
+{
+	iface->print_page = xps_document_print_print_page;
 }
