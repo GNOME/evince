@@ -684,6 +684,30 @@ AM_CONDITIONAL(ENABLE_COMICS, test x$enable_comics = xyes)
 
 dnl ================== End of comic book checks ============================================
 
+dnl ================== XPS checks ===================================================
+
+AC_ARG_ENABLE(xps,
+	[AS_HELP_STRING([--enable-xps],
+			[Compile with support for XPS documents.])],
+	[enable_xps=$enableval],
+	[enable_xps=yes])
+
+if test "x$enable_xps" = "xyes"; then
+   GXPS_REQUIRED=0.0.1
+   PKG_CHECK_MODULES(GXPS, libgxps >= $GXPS_REQUIRED,enable_xps=yes,enable_xps=no)
+
+   if test "x$enable_xps" = "xyes"; then
+      AC_DEFINE([ENABLE_XPS], [1], [Enable support for XPS documents.])
+   else
+      enable_xps="no"
+      AC_MSG_WARN(["XPS support is disabled since libgxps (version >= $GXPS_REQUIRED) is needed])
+   fi
+fi
+
+AM_CONDITIONAL(ENABLE_XPS, test x$enable_xps = xyes)
+
+dnl ================== End of XPS checks ===================================================
+
 dnl =================== Mime types list ====================================================
 
 if test "x$enable_pdf" = "xyes" ; then
@@ -706,6 +730,9 @@ if test "x$enable_comics" = "xyes"; then
 fi
 if test "x$enable_pixbuf" = "xyes"; then
 	EVINCE_MIME_TYPES="${EVINCE_MIME_TYPES}image/*;"
+fi
+if test "x$enable_xps" = "xyes"; then
+   	EVINCE_MIME_TYPES="${EVINCE_MIME_TYPES}application/vnd.ms-xpsdocument;"
 fi
 AC_SUBST(EVINCE_MIME_TYPES)
 
@@ -785,6 +812,7 @@ backend/pdf/Makefile
 backend/pixbuf/Makefile
 backend/ps/Makefile
 backend/tiff/Makefile
+backend/xps/Makefile
 cut-n-paste/Makefile
 cut-n-paste/gimpcellrenderertoggle/Makefile
 cut-n-paste/smclient/Makefile
@@ -868,4 +896,5 @@ Configure summary:
 	DVI Backend........:  $enable_dvi
 	Pixbuf Backend.....:  $enable_pixbuf
 	Comics Backend.....:  $enable_comics
+	XPS Backend........:  $enable_xps
 "

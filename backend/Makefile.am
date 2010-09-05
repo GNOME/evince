@@ -30,6 +30,10 @@ if ENABLE_COMICS
      SUBDIRS += comics
 endif
 
+if ENABLE_XPS
+SUBDIRS += xps
+endif
+
 EXTRA_DIST = \
 	backend.symbols
 
