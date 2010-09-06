@@ -319,6 +319,13 @@ ev_link_from_target (XPSDocument    *xps_document,
 
 			dest = ev_link_dest_new_named (anchor);
 			ev_action = ev_link_action_new_dest (dest);
+		} else if (doc == -1 && anchor &&
+			   gxps_document_get_page_for_anchor (xps_document->doc, anchor) >= 0) {
+			/* Internal, but source is not a doc,
+			 * let's try with doc = 0
+			 */
+			dest = ev_link_dest_new_named (anchor);
+			ev_action = ev_link_action_new_dest (dest);
 		} else {
 			gchar *filename;
 
