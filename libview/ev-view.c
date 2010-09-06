@@ -4760,7 +4760,24 @@ job_finished_cb (EvPixbufCache  *pixbuf_cache,
 		GdkWindow *bin_window;
 
 		bin_window = gtk_layout_get_bin_window (GTK_LAYOUT (view));
+#if GTK_CHECK_VERSION(2, 90, 5)
 		gdk_window_invalidate_region (bin_window, region, TRUE);
+#else
+	{
+		GdkRegion *gdk_region = gdk_region_new ();
+		guint      n_recs = cairo_region_num_rectangles (region);
+		guint      i;
+
+		for (i = 0; i < n_recs; i++) {
+			cairo_rectangle_int_t rect;
+
+			cairo_region_get_rectangle (region, i, &rect);
+			gdk_region_union_with_rect (gdk_region, (GdkRectangle *)&rect);
+		}
+		gdk_window_invalidate_region (bin_window, gdk_region, TRUE);
+		gdk_region_destroy (gdk_region);
+	}
+#endif
 	} else {
 		gtk_widget_queue_draw (GTK_WIDGET (view));
 	}
@@ -5914,7 +5931,24 @@ merge_selection_region (EvView *view,
 			cairo_region_translate (region,
 					   page_area.x + border.left - view->scroll_x,
 					   page_area.y + border.top - view->scroll_y);
+#if GTK_CHECK_VERSION(2, 90, 5)
 			gdk_window_invalidate_region (bin_window, region, TRUE);
+#else
+		{
+			GdkRegion *gdk_region = gdk_region_new ();
+			guint      n_recs = cairo_region_num_rectangles (region);
+			guint      i;
+
+			for (i = 0; i < n_recs; i++) {
+				cairo_rectangle_int_t rect;
+
+				cairo_region_get_rectangle (region, i, &rect);
+				gdk_region_union_with_rect (gdk_region, (GdkRectangle *)&rect);
+			}
+			gdk_window_invalidate_region (bin_window, gdk_region, TRUE);
+			gdk_region_destroy (gdk_region);
+		}
+#endif
 			cairo_region_destroy (region);
 		}
 	}
