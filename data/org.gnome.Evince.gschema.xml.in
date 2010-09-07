@@ -6,7 +6,7 @@
     <value nick="free" value="2"/>
   </enum>
 
-  <schema id="org.gnome.Evince" path="/apps/evince/" gettext-domain="evince">
+  <schema id="org.gnome.Evince" path="/org/gnome/evince/" gettext-domain="evince">
     <key name="override-restrictions" type="b">
       <default>true</default>
       <_summary>Override document restrictions</_summary>
@@ -15,7 +15,7 @@
     <child name="default" schema="org.gnome.Evince.Default"/>
   </schema>
 
-  <schema id="org.gnome.Evince.Default" path="/apps/evince/default/" gettext-domain="evince">
+  <schema id="org.gnome.Evince.Default" path="/org/gnome/evince/default/" gettext-domain="evince">
     <key name="show-toolbar" type="b">
       <default>true</default>
     </key>
