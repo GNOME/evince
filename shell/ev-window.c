@@ -41,6 +41,10 @@
 #include <gio/gio.h>
 #include <gtk/gtk.h>
 
+#ifdef WITH_GCONF
+#include <gconf/gconf-client.h>
+#endif
+
 #include "egg-editable-toolbar.h"
 #include "egg-toolbar-editor.h"
 #include "egg-toolbars-model.h"
@@ -143,7 +147,6 @@ struct _EvWindowPrivate {
 	/* Settings */
 	GSettings *settings;
 	GSettings *default_settings;
-	GSettings *lockdown_settings;
 
 	/* Menubar accels */
 	guint           menubar_accel_keyval;
@@ -211,7 +214,9 @@ struct _EvWindowPrivate {
 	GtkPrintSettings *print_settings;
 	GtkPageSetup     *print_page_setup;
 	gboolean          close_after_print;
-
+#ifdef WITH_GCONF
+	GConfClient *gconf_client;
+#endif
 #ifdef ENABLE_DBUS
 	/* DBus */
 	guint  dbus_object_id;
@@ -228,10 +233,10 @@ struct _EvWindowPrivate {
 #define ZOOM_CONTROL_ACTION	"ViewZoom"
 #define NAVIGATION_ACTION	"Navigation"
 
-#define GS_LOCKDOWN_SCHEMA_NAME  "org.gnome.desktop.lockdown"
-#define GS_LOCKDOWN_SAVE         "disable-save-to-disk"
-#define GS_LOCKDOWN_PRINT        "disable-printing"
-#define GS_LOCKDOWN_PRINT_SETUP  "disable-print-setup"
+#define GCONF_LOCKDOWN_DIR          "/desktop/gnome/lockdown"
+#define GCONF_LOCKDOWN_SAVE         "/desktop/gnome/lockdown/disable_save_to_disk"
+#define GCONF_LOCKDOWN_PRINT        "/desktop/gnome/lockdown/disable_printing"
+#define GCONF_LOCKDOWN_PRINT_SETUP  "/desktop/gnome/lockdown/disable_print_setup"
 
 #ifdef ENABLE_DBUS
 #define EV_WINDOW_DBUS_OBJECT_PATH "/org/gnome/evince/Window/%d"
@@ -416,15 +421,17 @@ ev_window_setup_action_sensitivity (EvWindow *ev_window)
 	if (has_document && !ev_print_operation_exists_for_document(document))
 		ok_to_print = FALSE;
 
-	if (has_document && ev_window->priv->lockdown_settings &&
-	    g_settings_get_boolean (ev_window->priv->lockdown_settings, GS_LOCKDOWN_SAVE)) {
+#ifdef WITH_GCONF
+	if (has_document &&
+	    gconf_client_get_bool (ev_window->priv->gconf_client, GCONF_LOCKDOWN_SAVE, NULL)) {
 		ok_to_copy = FALSE;
 	}
 
-	if (has_document && ev_window->priv->lockdown_settings &&
-	    g_settings_get_boolean (ev_window->priv->lockdown_settings, GS_LOCKDOWN_PRINT)) {
+	if (has_document &&
+	    gconf_client_get_bool (ev_window->priv->gconf_client, GCONF_LOCKDOWN_PRINT, NULL)) {
 		ok_to_print = FALSE;
 	}
+#endif
 
 	/* File menu */
 	ev_window_set_action_sensitive (ev_window, "FileOpenCopy", has_document);
@@ -1337,13 +1344,16 @@ override_restrictions_changed (GSettings *settings,
 	ev_window_setup_action_sensitivity (ev_window);
 }
 
+#ifdef WITH_GCONF
 static void
-lockdown_changed (GSettings   *lockdown,
-		  const gchar *key,
+lockdown_changed (GConfClient *client,
+		  guint        cnxn_id,
+		  GConfEntry  *entry,
 		  EvWindow    *ev_window)
 {
 	ev_window_setup_action_sensitivity (ev_window);
 }
+#endif /* WITH_GCONF */
 
 static gboolean
 ev_window_setup_document (EvWindow *ev_window)
@@ -1368,15 +1378,18 @@ ev_window_setup_document (EvWindow *ev_window)
 				  ev_window);
 	}
 
-#ifdef HAVE_DESKTOP_SCHEMAS
-	if (!ev_window->priv->lockdown_settings) {
-		ev_window->priv->lockdown_settings = g_settings_new (GS_LOCKDOWN_SCHEMA_NAME);
-		g_signal_connect (ev_window->priv->lockdown_settings,
-				  "changed",
-				  G_CALLBACK (lockdown_changed),
-				  ev_window);
-	}
-#endif
+#ifdef WITH_GCONF
+	if (!ev_window->priv->gconf_client)
+		ev_window->priv->gconf_client = gconf_client_get_default ();
+	gconf_client_add_dir (ev_window->priv->gconf_client,
+			      GCONF_LOCKDOWN_DIR,
+			      GCONF_CLIENT_PRELOAD_ONELEVEL,
+			      NULL);
+	gconf_client_notify_add (ev_window->priv->gconf_client,
+				 GCONF_LOCKDOWN_DIR,
+				 (GConfClientNotifyFunc)lockdown_changed,
+				 ev_window, NULL, NULL);
+#endif /* WITH_GCONF */
 
 	ev_window_setup_action_sensitivity (ev_window);
 
@@ -3269,7 +3282,6 @@ ev_window_print_range (EvWindow *ev_window,
 	GtkPageSetup     *print_page_setup;
 	gint              current_page;
 	gint              document_last_page;
-	gboolean          embed_page_setup;
 
 	g_return_if_fail (EV_IS_WINDOW (ev_window));
 	g_return_if_fail (ev_window->priv->document != NULL);
@@ -3321,11 +3333,13 @@ ev_window_print_range (EvWindow *ev_window,
 	ev_print_operation_set_current_page (op, current_page);
 	ev_print_operation_set_print_settings (op, print_settings);
 	ev_print_operation_set_default_page_setup (op, print_page_setup);
-	embed_page_setup = ev_window->priv->lockdown_settings ?
-		!g_settings_get_boolean (ev_window->priv->lockdown_settings,
-					 GS_LOCKDOWN_PRINT_SETUP) :
-		TRUE;
-	ev_print_operation_set_embed_page_setup (op, embed_page_setup);
+#ifdef WITH_GCONF
+	ev_print_operation_set_embed_page_setup (op, !gconf_client_get_bool (ev_window->priv->gconf_client,
+									     GCONF_LOCKDOWN_PRINT_SETUP,
+									     NULL));
+#else
+	ev_print_operation_set_embed_page_setup (op, TRUE);
+#endif
 
 	g_object_unref (print_settings);
 	g_object_unref (print_page_setup);
@@ -5132,6 +5146,13 @@ ev_window_dispose (GObject *object)
 		priv->setup_document_idle = 0;
 	}
 
+#ifdef WITH_GCONF
+	if (priv->gconf_client) {
+		g_object_unref (priv->gconf_client);
+		priv->gconf_client = NULL;
+	}
+#endif
+
 	if (priv->monitor) {
 		g_object_unref (priv->monitor);
 		priv->monitor = NULL;
@@ -5183,11 +5204,6 @@ ev_window_dispose (GObject *object)
 		g_settings_apply (priv->default_settings);
 		g_object_unref (priv->default_settings);
 		priv->default_settings = NULL;
-	}
-
-	if (priv->lockdown_settings) {
-		g_object_unref (priv->lockdown_settings);
-		priv->lockdown_settings = NULL;
 	}
 
 	priv->recent_ui_id = 0;

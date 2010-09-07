@@ -306,13 +306,6 @@ fi
 
 AM_CONDITIONAL([ENABLE_DBUS], [test "$enable_dbus" = "yes"])
 
-dnl ========= Check for Desktop Schemas
-PKG_CHECK_MODULES([DESKTOP_SCHEMAS], [gsettings-desktop-schemas],
-                  has_desktop_schemas=yes, has_desktop_schemas=no)
-if test x$has_desktop_schemas = xyes; then
-   AC_DEFINE([HAVE_DESKTOP_SCHEMAS], [1], [Whether GSettings Desktop Schemas are available])
-fi
-
 dnl ========= Check for GConf
 
 AC_MSG_CHECKING([whether GConf support is requested])
@@ -376,8 +369,8 @@ BACKEND_LIBS="$BACKEND_LIBS -lm"
 AC_SUBST(BACKEND_CFLAGS)
 AC_SUBST(BACKEND_LIBS)
 
-SHELL_CFLAGS="$SHELL_CORE_CFLAGS $KEYRING_CFLAGS -DGDK_MULTIHEAD_SAFE -DGTK_MULTIHEAD_SAFE $DEBUG_FLAGS"
-SHELL_LIBS="$SHELL_CORE_LIBS $KEYRING_LIBS -lz -lm"
+SHELL_CFLAGS="$SHELL_CORE_CFLAGS $KEYRING_CFLAGS $GCONF_CFLAGS -DGDK_MULTIHEAD_SAFE -DGTK_MULTIHEAD_SAFE $DEBUG_FLAGS"
+SHELL_LIBS="$SHELL_CORE_LIBS $KEYRING_LIBS $GCONF_LIBS -lz -lm"
 AC_SUBST(SHELL_CFLAGS)
 AC_SUBST(SHELL_LIBS)
 
