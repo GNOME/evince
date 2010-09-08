@@ -732,7 +732,7 @@ if test "x$enable_pixbuf" = "xyes"; then
 	EVINCE_MIME_TYPES="${EVINCE_MIME_TYPES}image/*;"
 fi
 if test "x$enable_xps" = "xyes"; then
-   	EVINCE_MIME_TYPES="${EVINCE_MIME_TYPES}application/vnd.ms-xpsdocument;"
+   	EVINCE_MIME_TYPES="${EVINCE_MIME_TYPES}application/oxps;application/vnd.ms-xpsdocument;"
 fi
 AC_SUBST(EVINCE_MIME_TYPES)
 
