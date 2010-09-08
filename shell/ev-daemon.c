@@ -35,6 +35,8 @@
 #define EV_DBUS_DAEMON_INTERFACE_NAME   "org.gnome.evince.Daemon"
 #define EV_DBUS_DAEMON_OBJECT_PATH      "/org/gnome/evince/Daemon"
 
+#define EV_DBUS_WINDOW_INTERFACE_NAME   "org.gnome.evince.Window"
+
 #define DAEMON_TIMEOUT (30) /* seconds */
 
 #define LOG g_printerr
@@ -47,6 +49,7 @@ typedef struct {
 	gchar *dbus_name;
 	gchar *uri;
         guint  watch_id;
+	guint  loaded_id;
 } EvDoc;
 
 static void
@@ -286,6 +289,23 @@ process_pending_invocations (const gchar *uri,
 }
 
 static void
+document_loaded_cb (GDBusConnection *connection,
+		    const gchar     *sender_name,
+		    const gchar     *object_path,
+		    const gchar     *interface_name,
+		    const gchar     *signal_name,
+		    GVariant        *parameters,
+		    EvDoc           *doc)
+{
+	const gchar *uri;
+
+	g_variant_get (parameters, "(&s)", &uri);
+	if (strcmp (uri, doc->uri) == 0)
+		process_pending_invocations (uri, sender_name);
+	g_dbus_connection_signal_unsubscribe (connection, doc->loaded_id);
+}
+
+static void
 method_call_cb (GDBusConnection       *connection,
                 const gchar           *sender,
                 const gchar           *object_path,
@@ -317,8 +337,17 @@ method_call_cb (GDBusConnection       *connection,
                 doc = g_new (EvDoc, 1);
                 doc->dbus_name = g_strdup (sender);
                 doc->uri = g_strdup (uri);
-                process_pending_invocations (doc->uri, doc->dbus_name);
 
+		doc->loaded_id = g_dbus_connection_signal_subscribe (connection,
+								     doc->dbus_name,
+								     EV_DBUS_WINDOW_INTERFACE_NAME,
+								     "DocumentLoaded",
+								     NULL,
+								     NULL,
+								     0,
+								     (GDBusSignalCallback) document_loaded_cb,
+								     doc,
+								     NULL);
                 doc->watch_id = g_bus_watch_name_on_connection (connection,
                                                                 sender,
                                                                 G_BUS_NAME_WATCHER_FLAGS_NONE,
