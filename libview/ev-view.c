@@ -4358,7 +4358,6 @@ draw_one_page (EvView       *view,
 	       GdkRectangle *expose_area,
 	       gboolean     *page_ready)
 {
-	GdkWindow   *bin_window;
 	GdkRectangle overlap;
 	GdkRectangle real_page_area;
 	gint         current_page;
@@ -4378,7 +4377,6 @@ draw_one_page (EvView       *view,
 	real_page_area.height -= (border->top + border->bottom);
 	*page_ready = TRUE;
 
-	bin_window = gtk_layout_get_bin_window (GTK_LAYOUT (view));
 	current_page = ev_document_model_get_page (view->model);
 	inverted_colors = ev_document_model_get_inverted_colors (view->model);
 	ev_document_misc_paint_one_page (cr,
