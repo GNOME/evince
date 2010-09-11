@@ -534,7 +534,7 @@ ev_view_presentation_previous_page (EvViewPresentation *pview)
 
 /* Goto Window */
 #define KEY_IS_NUMERIC(keyval) \
-	((keyval >= GDK_0 && keyval <= GDK_9) || (keyval >= GDK_KP_0 && keyval <= GDK_KP_9))
+	((keyval >= GDK_KEY_0 && keyval <= GDK_KEY_9) || (keyval >= GDK_KEY_KP_0 && keyval <= GDK_KEY_KP_9))
 
 /* Cut and paste from gtkwindow.c */
 static void
@@ -579,17 +579,17 @@ ev_view_presentation_goto_window_key_press_event (GtkWidget          *widget,
 						  EvViewPresentation *pview)
 {
 	switch (event->keyval) {
-	case GDK_Escape:
-	case GDK_Tab:
-	case GDK_KP_Tab:
-	case GDK_ISO_Left_Tab:
+	case GDK_KEY_Escape:
+	case GDK_KEY_Tab:
+	case GDK_KEY_KP_Tab:
+	case GDK_KEY_ISO_Left_Tab:
 		ev_view_presentation_goto_window_hide (pview);
 		return TRUE;
-	case GDK_Return:
-	case GDK_KP_Enter:
-	case GDK_ISO_Enter:
-	case GDK_BackSpace:
-	case GDK_Delete:
+	case GDK_KEY_Return:
+	case GDK_KEY_KP_Enter:
+	case GDK_KEY_ISO_Enter:
+	case GDK_KEY_BackSpace:
+	case GDK_KEY_Delete:
 		return FALSE;
 	default:
 		if (!KEY_IS_NUMERIC (event->keyval))
@@ -1075,31 +1075,31 @@ ev_view_presentation_key_press_event (GtkWidget   *widget,
 		return gtk_bindings_activate_event (GTK_OBJECT (widget), event);
 
 	switch (event->keyval) {
-	case GDK_b:
-	case GDK_B:
-	case GDK_period:
-	case GDK_KP_Decimal:
+	case GDK_KEY_b:
+	case GDK_KEY_B:
+	case GDK_KEY_period:
+	case GDK_KEY_KP_Decimal:
 		if (pview->state == EV_PRESENTATION_BLACK)
 			ev_view_presentation_set_normal (pview);
 		else
 			ev_view_presentation_set_black (pview);
 
 		return TRUE;
-	case GDK_w:
-	case GDK_W:
+	case GDK_KEY_w:
+	case GDK_KEY_W:
 		if (pview->state == EV_PRESENTATION_WHITE)
 			ev_view_presentation_set_normal (pview);
 		else
 			ev_view_presentation_set_white (pview);
 
 		return TRUE;
-	case GDK_Home:
+	case GDK_KEY_Home:
 		if (pview->state == EV_PRESENTATION_NORMAL) {
 			ev_view_presentation_update_current_page (pview, 0);
 			return TRUE;
 		}
 		break;
-	case GDK_End:
+	case GDK_KEY_End:
 		if (pview->state == EV_PRESENTATION_NORMAL) {
 			gint page;
 
@@ -1303,7 +1303,7 @@ add_change_page_binding_keypad (GtkBindingSet  *binding_set,
 				GdkModifierType modifiers,
 				GtkScrollType   scroll)
 {
-	guint keypad_keyval = keyval - GDK_Left + GDK_KP_Left;
+	guint keypad_keyval = keyval - GDK_KEY_Left + GDK_KEY_KP_Left;
 
 	gtk_binding_entry_add_signal (binding_set, keyval, modifiers,
 				      "change_page", 1,
@@ -1438,32 +1438,32 @@ ev_view_presentation_class_init (EvViewPresentationClass *klass)
 			      G_TYPE_NONE);
 
 	binding_set = gtk_binding_set_by_class (klass);
-	add_change_page_binding_keypad (binding_set, GDK_Left,  0, GTK_SCROLL_PAGE_BACKWARD);
-	add_change_page_binding_keypad (binding_set, GDK_Right, 0, GTK_SCROLL_PAGE_FORWARD);
-	add_change_page_binding_keypad (binding_set, GDK_Up,    0, GTK_SCROLL_PAGE_BACKWARD);
-	add_change_page_binding_keypad (binding_set, GDK_Down,  0, GTK_SCROLL_PAGE_FORWARD);
-	gtk_binding_entry_add_signal (binding_set, GDK_space, 0,
+	add_change_page_binding_keypad (binding_set, GDK_KEY_Left,  0, GTK_SCROLL_PAGE_BACKWARD);
+	add_change_page_binding_keypad (binding_set, GDK_KEY_Right, 0, GTK_SCROLL_PAGE_FORWARD);
+	add_change_page_binding_keypad (binding_set, GDK_KEY_Up,    0, GTK_SCROLL_PAGE_BACKWARD);
+	add_change_page_binding_keypad (binding_set, GDK_KEY_Down,  0, GTK_SCROLL_PAGE_FORWARD);
+	gtk_binding_entry_add_signal (binding_set, GDK_KEY_space, 0,
 				      "change_page", 1,
 				      GTK_TYPE_SCROLL_TYPE, GTK_SCROLL_PAGE_FORWARD);
-	gtk_binding_entry_add_signal (binding_set, GDK_BackSpace, 0,
+	gtk_binding_entry_add_signal (binding_set, GDK_KEY_BackSpace, 0,
 				      "change_page", 1,
 				      GTK_TYPE_SCROLL_TYPE, GTK_SCROLL_PAGE_BACKWARD);
-	gtk_binding_entry_add_signal (binding_set, GDK_Page_Down, 0,
+	gtk_binding_entry_add_signal (binding_set, GDK_KEY_Page_Down, 0,
 				      "change_page", 1,
 				      GTK_TYPE_SCROLL_TYPE, GTK_SCROLL_PAGE_FORWARD);
-	gtk_binding_entry_add_signal (binding_set, GDK_Page_Up, 0,
+	gtk_binding_entry_add_signal (binding_set, GDK_KEY_Page_Up, 0,
 				      "change_page", 1,
 				      GTK_TYPE_SCROLL_TYPE, GTK_SCROLL_PAGE_BACKWARD);
-	gtk_binding_entry_add_signal (binding_set, GDK_J, 0,
+	gtk_binding_entry_add_signal (binding_set, GDK_KEY_J, 0,
 				      "change_page", 1,
 				      GTK_TYPE_SCROLL_TYPE, GTK_SCROLL_PAGE_FORWARD);
-	gtk_binding_entry_add_signal (binding_set, GDK_H, 0,
+	gtk_binding_entry_add_signal (binding_set, GDK_KEY_H, 0,
 				      "change_page", 1,
 				      GTK_TYPE_SCROLL_TYPE, GTK_SCROLL_PAGE_BACKWARD);
-	gtk_binding_entry_add_signal (binding_set, GDK_L, 0,
+	gtk_binding_entry_add_signal (binding_set, GDK_KEY_L, 0,
 				      "change_page", 1,
 				      GTK_TYPE_SCROLL_TYPE, GTK_SCROLL_PAGE_FORWARD);
-	gtk_binding_entry_add_signal (binding_set, GDK_K, 0,
+	gtk_binding_entry_add_signal (binding_set, GDK_KEY_K, 0,
 				      "change_page", 1,
 				      GTK_TYPE_SCROLL_TYPE, GTK_SCROLL_PAGE_BACKWARD);
 }

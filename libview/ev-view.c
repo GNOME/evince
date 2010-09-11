@@ -791,7 +791,7 @@ add_scroll_binding_keypad (GtkBindingSet  *binding_set,
     			   GtkScrollType   scroll,
 			   gboolean        horizontal)
 {
-  guint keypad_keyval = keyval - GDK_Left + GDK_KP_Left;
+  guint keypad_keyval = keyval - GDK_KEY_Left + GDK_KEY_KP_Left;
 
   gtk_binding_entry_add_signal (binding_set, keyval, modifiers,
                                 "binding_activated", 2,
@@ -4726,21 +4726,21 @@ ev_view_class_init (EvViewClass *class)
 
 	binding_set = gtk_binding_set_by_class (class);
 
-	add_scroll_binding_keypad (binding_set, GDK_Left,  0, GTK_SCROLL_STEP_BACKWARD, TRUE);
-	add_scroll_binding_keypad (binding_set, GDK_Right, 0, GTK_SCROLL_STEP_FORWARD,  TRUE);
-	add_scroll_binding_keypad (binding_set, GDK_Left,  GDK_MOD1_MASK, GTK_SCROLL_STEP_DOWN, TRUE);
-	add_scroll_binding_keypad (binding_set, GDK_Right, GDK_MOD1_MASK, GTK_SCROLL_STEP_UP,  TRUE);
-	add_scroll_binding_keypad (binding_set, GDK_Up,    0, GTK_SCROLL_STEP_BACKWARD, FALSE);
-	add_scroll_binding_keypad (binding_set, GDK_Down,  0, GTK_SCROLL_STEP_FORWARD,  FALSE);
-	add_scroll_binding_keypad (binding_set, GDK_Up,    GDK_MOD1_MASK, GTK_SCROLL_STEP_DOWN, FALSE);
-	add_scroll_binding_keypad (binding_set, GDK_Down,  GDK_MOD1_MASK, GTK_SCROLL_STEP_UP,  FALSE);
-	gtk_binding_entry_add_signal (binding_set, GDK_H, 0, "binding_activated", 2, GTK_TYPE_SCROLL_TYPE,
+        add_scroll_binding_keypad (binding_set, GDK_KEY_Left,  0, GTK_SCROLL_STEP_BACKWARD, TRUE);
+        add_scroll_binding_keypad (binding_set, GDK_KEY_Right, 0, GTK_SCROLL_STEP_FORWARD,  TRUE);
+        add_scroll_binding_keypad (binding_set, GDK_KEY_Left,  GDK_MOD1_MASK, GTK_SCROLL_STEP_DOWN, TRUE);
+        add_scroll_binding_keypad (binding_set, GDK_KEY_Right, GDK_MOD1_MASK, GTK_SCROLL_STEP_UP,  TRUE);
+        add_scroll_binding_keypad (binding_set, GDK_KEY_Up,    0, GTK_SCROLL_STEP_BACKWARD, FALSE);
+        add_scroll_binding_keypad (binding_set, GDK_KEY_Down,  0, GTK_SCROLL_STEP_FORWARD,  FALSE);
+        add_scroll_binding_keypad (binding_set, GDK_KEY_Up,    GDK_MOD1_MASK, GTK_SCROLL_STEP_DOWN, FALSE);
+        add_scroll_binding_keypad (binding_set, GDK_KEY_Down,  GDK_MOD1_MASK, GTK_SCROLL_STEP_UP,  FALSE);
+        gtk_binding_entry_add_signal (binding_set, GDK_KEY_H, 0, "binding_activated", 2, GTK_TYPE_SCROLL_TYPE,
 				      GTK_SCROLL_STEP_BACKWARD, G_TYPE_BOOLEAN, TRUE);
-	gtk_binding_entry_add_signal (binding_set, GDK_J, 0, "binding_activated", 2, GTK_TYPE_SCROLL_TYPE,
+	gtk_binding_entry_add_signal (binding_set, GDK_KEY_J, 0, "binding_activated", 2, GTK_TYPE_SCROLL_TYPE,
 				      GTK_SCROLL_STEP_FORWARD, G_TYPE_BOOLEAN, FALSE);
-	gtk_binding_entry_add_signal (binding_set, GDK_K, 0, "binding_activated", 2, GTK_TYPE_SCROLL_TYPE,
+	gtk_binding_entry_add_signal (binding_set, GDK_KEY_K, 0, "binding_activated", 2, GTK_TYPE_SCROLL_TYPE,
 				      GTK_SCROLL_STEP_BACKWARD, G_TYPE_BOOLEAN, FALSE);
-	gtk_binding_entry_add_signal (binding_set, GDK_L, 0, "binding_activated", 2, GTK_TYPE_SCROLL_TYPE,
+	gtk_binding_entry_add_signal (binding_set, GDK_KEY_L, 0, "binding_activated", 2, GTK_TYPE_SCROLL_TYPE,
 				      GTK_SCROLL_STEP_FORWARD, G_TYPE_BOOLEAN, TRUE);
 	
 }
