@@ -1222,7 +1222,9 @@ ev_view_presentation_realize (GtkWidget *widget)
 	attributes.window_type = GDK_WINDOW_CHILD;
 	attributes.wclass = GDK_INPUT_OUTPUT;
 	attributes.visual = gtk_widget_get_visual (widget);
+#if !GTK_CHECK_VERSION (2, 90, 8)
 	attributes.colormap = gtk_widget_get_colormap (widget);
+#endif
 
 	gtk_widget_get_allocation (widget, &allocation);
 	attributes.x = allocation.x;
@@ -1242,7 +1244,9 @@ ev_view_presentation_realize (GtkWidget *widget)
 	window = gdk_window_new (gtk_widget_get_parent_window (widget),
 				 &attributes,
 				 GDK_WA_X | GDK_WA_Y |
+#if !GTK_CHECK_VERSION (2, 90, 8)
 				 GDK_WA_COLORMAP |
+#endif
 				 GDK_WA_VISUAL);
 
 	gdk_window_set_user_data (window, widget);
