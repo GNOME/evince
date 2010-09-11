@@ -177,7 +177,10 @@ ev_loading_window_size_allocate (GtkWidget      *widget,
 				 GtkAllocation  *allocation)
 {
 	EvLoadingWindow *window = EV_LOADING_WINDOW (widget);
-	GdkPixmap       *mask;
+#if GTK_CHECK_VERSION (2, 90, 8)
+        cairo_surface_t *surface;
+        cairo_region_t *shape;
+#endif
 	cairo_t         *cr;
 	double           r;
 
@@ -189,8 +192,15 @@ ev_loading_window_size_allocate (GtkWidget      *widget,
 	window->width = allocation->width;
 	window->height = allocation->height;
 
-	mask = gdk_pixmap_new (NULL, window->width, window->height, 1);
-	cr = gdk_cairo_create (GDK_DRAWABLE (mask));
+#if GTK_CHECK_VERSION (2, 90, 8)
+        surface = cairo_image_surface_create (CAIRO_FORMAT_A8,
+                                              window->width,
+                                              window->height);
+	cr = cairo_create (surface);
+#else
+        mask = gdk_pixmap_new (NULL, window->width, window->height, 1);
+        cr = gdk_cairo_create (GDK_DRAWABLE (mask));
+#endif
 
 	cairo_save (cr);
 	cairo_rectangle (cr, 0, 0, window->width, window->height);
@@ -205,8 +215,16 @@ ev_loading_window_size_allocate (GtkWidget      *widget,
 
 	cairo_destroy (cr);
 
+#if GTK_CHECK_VERSION (2, 90, 8)
+        shape = gdk_cairo_region_create_from_surface (surface);
+        cairo_surface_destroy (surface);
+
+        gtk_widget_shape_combine_region (widget, shape);
+        cairo_region_destroy (shape);
+#else
 	gtk_widget_shape_combine_mask (widget, mask, 0, 0);
 	g_object_unref (mask);
+#endif
 }
 
 static void
