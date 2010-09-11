@@ -164,7 +164,11 @@ show_progress_dialog (ConvertData *data)
 
 	dialog = gtk_dialog_new_with_buttons (_("Converting metadata"),
 					      NULL,
+#if GTK_CHECK_VERSION (2, 90, 8)
+                                              0,
+#else
 					      GTK_DIALOG_NO_SEPARATOR,
+#endif
 					      GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 					      NULL);
 	action_area = gtk_dialog_get_action_area (GTK_DIALOG (dialog));

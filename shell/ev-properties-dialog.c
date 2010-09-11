@@ -61,7 +61,9 @@ ev_properties_dialog_init (EvPropertiesDialog *properties)
 
 	gtk_window_set_title (GTK_WINDOW (properties), _("Properties"));
 	gtk_window_set_destroy_with_parent (GTK_WINDOW (properties), TRUE);
-	gtk_dialog_set_has_separator (GTK_DIALOG (properties), FALSE);
+#if !GTK_CHECK_VERSION (2, 90, 7)
+        gtk_dialog_set_has_separator (GTK_DIALOG (properties), FALSE);
+#endif
 	gtk_container_set_border_width (GTK_CONTAINER (properties), 5);
 	gtk_box_set_spacing (content_area, 2);
 
