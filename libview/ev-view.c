@@ -48,6 +48,7 @@
 #define EV_VIEW_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), EV_TYPE_VIEW, EvViewClass))
 #define EV_IS_VIEW_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), EV_TYPE_VIEW))
 #define EV_VIEW_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), EV_TYPE_VIEW, EvViewClass))
+#include <../gnome-games/libgames-support/games-debug.h>
 
 enum {
 	SIGNAL_BINDING_ACTIVATED,
@@ -157,8 +158,15 @@ static void       ev_view_size_allocate                      (GtkWidget         
 static void       ev_view_realize                            (GtkWidget          *widget);
 static gboolean   ev_view_scroll_event                       (GtkWidget          *widget,
 							      GdkEventScroll     *event);
+#if GTK_CHECK_VERSION (2, 90, 8)
+static gboolean   ev_view_draw                               (GtkWidget          *widget,
+                                                              cairo_t            *cr,
+                                                              int                 draw_width,
+                                                              int                 draw_height);
+#else
 static gboolean   ev_view_expose_event                       (GtkWidget          *widget,
 							      GdkEventExpose     *event);
+#endif
 static gboolean   ev_view_popup_menu                         (GtkWidget 	 *widget);
 static gboolean   ev_view_button_press_event                 (GtkWidget          *widget,
 							      GdkEventButton     *event);
@@ -178,10 +186,13 @@ static AtkObject *ev_view_get_accessible                     (GtkWidget *widget)
 
 /*** Drawing ***/
 static void       highlight_find_results                     (EvView             *view,
+                                                              cairo_t            *cr,
 							      int                 page);
 static void       highlight_forward_search_results           (EvView             *view,
+                                                              cairo_t            *cr,
 							      int                 page);
 static void       focus_annotation                           (EvView             *view,
+                                                              cairo_t            *cr,
 							      int                 page,
 							      GdkRectangle       *clip);
 static void       draw_one_page                              (EvView             *view,
@@ -3340,14 +3351,28 @@ find_selection_for_page (EvView *view,
 	return NULL;
 }
 
+#if GTK_CHECK_VERSION (2, 90, 8)
+static gboolean
+ev_view_draw (GtkWidget *widget,
+              cairo_t   *cr,
+              int        draw_width G_GNUC_UNUSED,
+              int        draw_height G_GNUC_UNUSED)
+#else
 static gboolean
 ev_view_expose_event (GtkWidget      *widget,
 		      GdkEventExpose *event)
+#endif
 {
 	EvView    *view = EV_VIEW (widget);
-	GdkWindow *bin_window;
-	cairo_t   *cr;
 	gint       i;
+#if GTK_CHECK_VERSION (2, 90, 8)
+        cairo_rectangle_int_t clip_rect;
+        GdkRectangle *area = &clip_rect;
+#else
+        GdkWindow *bin_window;
+        cairo_t   *cr;
+        GdkRectangle *area = &event->area;
+#endif
 
 	if (view->loading) {
 		show_loading_window (view);
@@ -3359,8 +3384,13 @@ ev_view_expose_event (GtkWidget      *widget,
 	if (view->document == NULL)
 		return FALSE;
 
-	bin_window = gtk_layout_get_bin_window (GTK_LAYOUT (view));
+#if GTK_CHECK_VERSION (2, 90, 8)
+        if (!gdk_cairo_get_clip_rectangle (cr, &clip_rect))
+                return FALSE;
+#else
+        bin_window = gtk_layout_get_bin_window (GTK_LAYOUT (view));
 	cr = gdk_cairo_create (bin_window);
+#endif
 
 	for (i = view->start_page; i >= 0 && i <= view->end_page; i++) {
 		GdkRectangle page_area;
@@ -3373,22 +3403,31 @@ ev_view_expose_event (GtkWidget      *widget,
 		page_area.x -= view->scroll_x;
 		page_area.y -= view->scroll_y;
 
-		draw_one_page (view, i, cr, &page_area, &border, &(event->area), &page_ready);
+		draw_one_page (view, i, cr, &page_area, &border, area, &page_ready);
 
 		if (page_ready && view->find_pages && view->highlight_find_results)
-			highlight_find_results (view, i);
+			highlight_find_results (view, cr, i);
 		if (page_ready && EV_IS_DOCUMENT_ANNOTATIONS (view->document))
 			show_annotation_windows (view, i);
 		if (page_ready && view->focus_annotation)
-			focus_annotation (view, i, &event->area);
+#if GTK_CHECK_VERSION (2, 90, 8)
+                        focus_annotation (view, cr, i, &clip_rect);
+#else
+			focus_annotation (view, cr, i, &event->area);
+#endif
 		if (page_ready && view->synctex_result)
-			highlight_forward_search_results (view, i);
+			highlight_forward_search_results (view, cr, i);
 	}
 
+#if GTK_CHECK_VERSION (2, 90, 8)
+        if (GTK_WIDGET_CLASS (ev_view_parent_class)->draw)
+                GTK_WIDGET_CLASS (ev_view_parent_class)->draw (widget, cr, draw_width, draw_height);
+#else
 	cairo_destroy (cr);
 
 	if (GTK_WIDGET_CLASS (ev_view_parent_class)->expose_event)
 		(* GTK_WIDGET_CLASS (ev_view_parent_class)->expose_event) (widget, event);
+#endif
 
 	return FALSE;
 }
@@ -4203,22 +4242,21 @@ ev_view_style_set (GtkWidget *widget,
 
 static void
 draw_rubberband (EvView             *view,
-		 GdkWindow          *window,
+		 cairo_t            *cr,
 		 const GdkRectangle *rect,
 		 gdouble             alpha)
 {
 	GtkStyle *style;
-	GdkColor *fill_color_gdk;
+        const GdkColor *fill_color_gdk;
 	gdouble   r, g, b;
-	cairo_t  *cr;
 
 	style = gtk_widget_get_style (GTK_WIDGET (view));
-	fill_color_gdk = gdk_color_copy (&style->base[GTK_STATE_SELECTED]);
+	fill_color_gdk = &style->base[GTK_STATE_SELECTED];
 	r = fill_color_gdk->red / 65535.;
 	g = fill_color_gdk->green / 65535.;
 	b = fill_color_gdk->blue / 65535.;
 
-	cr = gdk_cairo_create (window);
+        cairo_save (cr);
 
 	cairo_set_source_rgba (cr, r, g, b, alpha);
 	cairo_rectangle (cr,
@@ -4231,20 +4269,16 @@ draw_rubberband (EvView             *view,
 	cairo_set_source_rgb (cr, r, g, b);
 	cairo_stroke (cr);
 
-	cairo_destroy (cr);
-
-	gdk_color_free (fill_color_gdk);
+	cairo_restore (cr);
 }
 
 
 static void
-highlight_find_results (EvView *view, int page)
+highlight_find_results (EvView *view,
+                        cairo_t *cr,
+                        int page)
 {
 	gint       i, n_results = 0;
-	GdkWindow *bin_window;
-
-	bin_window = gtk_layout_get_bin_window (GTK_LAYOUT (view));
-
 	n_results = ev_view_find_get_n_results (view, page);
 
 	for (i = 0; i < n_results; i++) {
@@ -4260,36 +4294,36 @@ highlight_find_results (EvView *view, int page)
 
 		rectangle = ev_view_find_get_result (view, page, i);
 		doc_rect_to_view_rect (view, page, rectangle, &view_rectangle);
-		draw_rubberband (view, bin_window, &view_rectangle, alpha);
+		draw_rubberband (view, cr, &view_rectangle, alpha);
         }
 }
 
 static void
-highlight_forward_search_results (EvView *view, int page)
+highlight_forward_search_results (EvView *view,
+                                  cairo_t *cr,
+                                  int page)
 {
-	GdkWindow   *bin_window;
 	GdkRectangle rect;
-	cairo_t     *cr;
 	EvMapping   *mapping = view->synctex_result;
 
 	if (GPOINTER_TO_INT (mapping->data) != page)
 		return;
 
-	bin_window = gtk_layout_get_bin_window (GTK_LAYOUT (view));
 	doc_rect_to_view_rect (view, page, &mapping->area, &rect);
 
-	cr = gdk_cairo_create (bin_window);
+        cairo_save (cr);
 	cairo_set_source_rgb (cr, 1., 0., 0.);
 	cairo_rectangle (cr,
 			 rect.x - view->scroll_x,
 			 rect.y - view->scroll_y,
 			 rect.width, rect.height);
 	cairo_stroke (cr);
-	cairo_destroy (cr);
+	cairo_restore (cr);
 }
 
 static void
 focus_annotation (EvView       *view,
+                  cairo_t      *cr,
 		  gint          page,
 		  GdkRectangle *clip)
 {
@@ -4302,6 +4336,15 @@ focus_annotation (EvView       *view,
 		return;
 
 	doc_rect_to_view_rect (view, page, &mapping->area, &rect);
+#if GTK_CHECK_VERSION (2, 90, 8)
+        gtk_paint_focus (gtk_widget_get_style (widget),
+                         cr,
+                         gtk_widget_get_state (widget),
+                         widget, NULL,
+                         rect.x - view->scroll_x,
+                         rect.y - view->scroll_y,
+                         rect.width + 1, rect.height + 1);
+#else
 	gtk_paint_focus (gtk_widget_get_style (widget),
 			 gtk_layout_get_bin_window (GTK_LAYOUT (view)),
 			 gtk_widget_get_state (widget),
@@ -4309,6 +4352,7 @@ focus_annotation (EvView       *view,
 			 rect.x - view->scroll_x,
 			 rect.y - view->scroll_y,
 			 rect.width + 1, rect.height + 1);
+#endif
 }
 
 static void
@@ -4632,7 +4676,11 @@ ev_view_class_init (EvViewClass *class)
 
 	object_class->finalize = ev_view_finalize;
 
+#if GTK_CHECK_VERSION (2, 90, 8)
+        widget_class->draw = ev_view_draw;
+#else
 	widget_class->expose_event = ev_view_expose_event;
+#endif
 	widget_class->button_press_event = ev_view_button_press_event;
 	widget_class->motion_notify_event = ev_view_motion_notify_event;
 	widget_class->button_release_event = ev_view_button_release_event;
