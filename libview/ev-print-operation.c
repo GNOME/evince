@@ -1846,7 +1846,7 @@ ev_print_operation_print_create_custom_widget (EvPrintOperationPrint *print,
 	gboolean          use_source_size;
 
 	settings = gtk_print_operation_get_print_settings (print->op);
-	page_scale = gtk_print_settings_get_int_with_default (settings, EV_PRINT_SETTING_PAGE_SCALE, 0);
+	page_scale = gtk_print_settings_get_int_with_default (settings, EV_PRINT_SETTING_PAGE_SCALE, 1);
 	autorotate = gtk_print_settings_has_key (settings, EV_PRINT_SETTING_AUTOROTATE) ?
 		gtk_print_settings_get_bool (settings, EV_PRINT_SETTING_AUTOROTATE) :
 		TRUE;
