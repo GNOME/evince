@@ -2866,6 +2866,48 @@ ev_window_cmd_save_as (GtkAction *action, EvWindow *ev_window)
 	gtk_widget_show (fc);
 }
 
+static void
+ev_window_cmd_open_containing_folder (GtkAction *action, EvWindow *ev_window)
+{
+	GtkWidget *ev_window_widget;
+	GFile *file;
+	GFile *parent;
+
+	ev_window_widget = GTK_WIDGET (ev_window);
+
+	file = g_file_new_for_uri (ev_window->priv->uri);
+	parent = g_file_get_parent (file);
+
+	if (parent) {
+		char *parent_uri;
+
+		parent_uri = g_file_get_uri (parent);
+		if (parent_uri) {
+			GdkScreen *screen;
+			guint32 timestamp;
+			GError *error;
+
+			screen = gtk_widget_get_screen (ev_window_widget);
+			timestamp = gtk_get_current_event_time ();
+
+			error = NULL;
+			if (!gtk_show_uri (screen, parent_uri, timestamp, &error)) {
+				ev_window_error_message (ev_window, error, _("Could not open the containing folder"));
+				g_error_free (error);
+			}
+
+			g_free (parent_uri);
+		}
+	}
+
+	if (file)
+		g_object_unref (file);
+
+	if (parent)
+		g_object_unref (parent);
+	
+}
+
 static GKeyFile *
 get_print_settings_file (void)
 {
@@ -5410,6 +5452,9 @@ static const GtkActionEntry entries[] = {
        	{ "FileSaveAs", GTK_STOCK_SAVE_AS, N_("_Save a Copy…"), "<control>S",
 	  N_("Save a copy of the current document"),
 	  G_CALLBACK (ev_window_cmd_save_as) },
+	{ "FileOpenContainingFolder", GTK_STOCK_DIRECTORY, N_("Open Containing _Folder"), NULL,
+	  N_("Show the folder which contains this file in the file manager"),
+	  G_CALLBACK (ev_window_cmd_open_containing_folder) },
 	{ "FilePrint", GTK_STOCK_PRINT, N_("_Print…"), "<control>P",
 	  N_("Print this document"),
 	  G_CALLBACK (ev_window_cmd_file_print) },
@@ -5719,6 +5764,10 @@ static void
 set_action_properties (GtkActionGroup *action_group)
 {
 	GtkAction *action;
+
+	action = gtk_action_group_get_action (action_group, "FileOpenContainingFolder");
+	/*translators: this is the label for toolbar button*/
+	g_object_set (action, "short_label", _("Open Folder"), NULL);
 
 	action = gtk_action_group_get_action (action_group, "GoPreviousPage");
 	g_object_set (action, "is-important", TRUE, NULL);
