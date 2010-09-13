@@ -1530,7 +1530,9 @@ ev_window_load_job_cb (EvJob *job,
 	if (!ev_job_is_failed (job)) {
 		ev_document_model_set_document (ev_window->priv->model, document);
 
+#ifdef ENABLE_DBUS
 		ev_window_emit_doc_loaded (ev_window);
+#endif
 		setup_chrome_from_metadata (ev_window);
 		update_chrome_actions (ev_window);
 		setup_document_from_metadata (ev_window);
