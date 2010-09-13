@@ -1,4 +1,42 @@
 ================
+Evince  2.31.92
+================
+
+Bug fixes:
+
+    * Change gsettings schema path from /apps/evince to
+      /org/gnome/evince (Christian Persch)
+    * A D-Bus signal is now emitted when document is loaded (#626561,
+      José Aliste)
+    * Use GConf again for lockdown settings (#628945, Christian Persch)
+    * Fix a crash during selection when evince is built with gtk2
+      (Carlos Garcia Campos)
+    * Evince daemon can spawn an evince instance when finding a
+      document (#625971, José Aliste)
+
+Translation updates:
+
+    * Khaled Hosny (ar)
+    * Kenneth Nielsen (da)
+    * Christian Kirbach  (de)
+    * Michael Kotsarinis (el)
+    * Bruce Cowan (en_GB)
+    * Ivar Smolin (et)
+    * Gabor Kelemen (hu)
+    * Andika Triwidada (id)
+    * Shushi Kurose (ja)
+    * Baurzhan Muftakhidinov (kk)
+    * Aurimas Černius (lt)
+    * Kjartan Maraas (nb)
+    * Duarte Loreto (pt)
+    * Miloš Popović (sr@latin)
+    * Милош Поповић (sr)
+    * Daniel Nylander (sv)
+    * 朱涛 (zh_CN)
+    * Chao-Hsiung Liao (zh_HK)
+    * Chao-Hsiung Liao (zh_TW)
+
+================
 Evince  2.31.90
 ================
 
