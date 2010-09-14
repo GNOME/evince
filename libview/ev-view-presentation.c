@@ -1014,9 +1014,7 @@ ev_view_presentation_draw_end_page (EvViewPresentation *pview,
 #if GTK_CHECK_VERSION (2, 90, 8)
 static gboolean
 ev_view_presentation_draw (GtkWidget *widget,
-                           cairo_t   *cr,
-                           int        draw_width G_GNUC_UNUSED,
-                           int        draw_height G_GNUC_UNUSED)
+                           cairo_t   *cr)
 #else
 static gboolean
 ev_view_presentation_expose_event (GtkWidget      *widget,
@@ -1056,7 +1054,9 @@ ev_view_presentation_expose_event (GtkWidget      *widget,
 		if (ev_transition_animation_ready (pview->animation)) {
 			ev_view_presentation_get_page_area (pview, &page_area);
 
-#if !GTK_CHECK_VERSION (2, 90, 8)
+#if GTK_CHECK_VERSION (2, 90, 8)
+                        cairo_save (cr);
+#else
 			cr = gdk_cairo_create (gtk_widget_get_window (widget));
 #endif
 
@@ -1069,7 +1069,9 @@ ev_view_presentation_expose_event (GtkWidget      *widget,
 
 			ev_transition_animation_paint (pview->animation, cr, page_area);
 
-#if !GTK_CHECK_VERSION (2, 90, 8)
+#if GTK_CHECK_VERSION (2, 90, 8)
+                        cairo_restore (cr);
+#else
 			cairo_destroy (cr);
 #endif
 		}
@@ -1088,7 +1090,9 @@ ev_view_presentation_expose_event (GtkWidget      *widget,
 
 	ev_view_presentation_get_page_area (pview, &page_area);
 	if (gdk_rectangle_intersect (&page_area, area, &overlap)) {
-#if !GTK_CHECK_VERSION (2, 90, 8)
+#if GTK_CHECK_VERSION (2, 90, 8)
+                        cairo_save (cr);
+#else
 		cr = gdk_cairo_create (gtk_widget_get_window (widget));
 #endif
 
@@ -1100,7 +1104,9 @@ ev_view_presentation_expose_event (GtkWidget      *widget,
 		cairo_set_source_surface (cr, surface, page_area.x, page_area.y);
 		cairo_fill (cr);
 
-#if !GTK_CHECK_VERSION (2, 90, 8)
+#if GTK_CHECK_VERSION (2, 90, 8)
+                cairo_restore (cr);
+#else
                 cairo_destroy (cr);
 #endif
 	}

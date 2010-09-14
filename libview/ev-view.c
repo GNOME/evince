@@ -159,9 +159,7 @@ static gboolean   ev_view_scroll_event                       (GtkWidget         
 							      GdkEventScroll     *event);
 #if GTK_CHECK_VERSION (2, 90, 8)
 static gboolean   ev_view_draw                               (GtkWidget          *widget,
-                                                              cairo_t            *cr,
-                                                              int                 draw_width,
-                                                              int                 draw_height);
+                                                              cairo_t            *cr);
 #else
 static gboolean   ev_view_expose_event                       (GtkWidget          *widget,
 							      GdkEventExpose     *event);
@@ -3353,9 +3351,7 @@ find_selection_for_page (EvView *view,
 #if GTK_CHECK_VERSION (2, 90, 8)
 static gboolean
 ev_view_draw (GtkWidget *widget,
-              cairo_t   *cr,
-              int        draw_width G_GNUC_UNUSED,
-              int        draw_height G_GNUC_UNUSED)
+              cairo_t   *cr)
 #else
 static gboolean
 ev_view_expose_event (GtkWidget      *widget,
@@ -3420,7 +3416,7 @@ ev_view_expose_event (GtkWidget      *widget,
 
 #if GTK_CHECK_VERSION (2, 90, 8)
         if (GTK_WIDGET_CLASS (ev_view_parent_class)->draw)
-                GTK_WIDGET_CLASS (ev_view_parent_class)->draw (widget, cr, draw_width, draw_height);
+                GTK_WIDGET_CLASS (ev_view_parent_class)->draw (widget, cr);
 #else
 	cairo_destroy (cr);
 
