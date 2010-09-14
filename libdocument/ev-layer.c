@@ -22,9 +22,8 @@
 #include "ev-layer.h"
 
 struct _EvLayerPrivate {
-	guint      id;
-	gboolean   is_parent;
-	gint       rb_group;
+	gboolean is_parent;
+	gint     rb_group;
 };
 
 #define EV_LAYER_GET_PRIVATE(object) \
@@ -47,26 +46,16 @@ ev_layer_init (EvLayer *layer)
 }
 
 EvLayer *
-ev_layer_new (guint    layer_id,
-	      gboolean is_parent,
+ev_layer_new (gboolean is_parent,
 	      gint     rb_group)
 {
 	EvLayer *layer;
 
 	layer = EV_LAYER (g_object_new (EV_TYPE_LAYER, NULL));
-	layer->priv->id = layer_id;
 	layer->priv->is_parent = is_parent;
 	layer->priv->rb_group = rb_group;
 
 	return layer;
-}
-
-guint
-ev_layer_get_id (EvLayer *layer)
-{
-	g_return_val_if_fail (EV_IS_LAYER (layer), 0);
-
-	return layer->priv->id;
 }
 
 gboolean

@@ -50,10 +50,8 @@ struct _EvLayerClass {
 };
 
 GType     ev_layer_get_type     (void) G_GNUC_CONST;
-EvLayer  *ev_layer_new          (guint    layer_id,
-				 gboolean is_parent,
+EvLayer  *ev_layer_new          (gboolean is_parent,
 				 gint     rb_group);
-guint     ev_layer_get_id       (EvLayer *layer);
 gboolean  ev_layer_is_parent    (EvLayer *layer);
 gint      ev_layer_get_rb_group (EvLayer *layer);
 

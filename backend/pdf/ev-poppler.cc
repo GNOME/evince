@@ -109,7 +109,6 @@ struct _PdfDocument
 
 	PdfPrintContext *print_ctx;
 
-	GList *layers;
 	GHashTable *annots;
 };
 
@@ -196,11 +195,6 @@ pdf_document_dispose (GObject *object)
 
 	if (pdf_document->fonts_iter) {
 		poppler_fonts_iter_free (pdf_document->fonts_iter);
-	}
-
-	if (pdf_document->layers) {
-		g_list_foreach (pdf_document->layers, (GFunc)g_object_unref, NULL);
-		g_list_free (pdf_document->layers);
 	}
 
 	G_OBJECT_CLASS (pdf_document_parent_class)->dispose (object);
@@ -3149,11 +3143,12 @@ build_layers_tree (PdfDocument       *pdf_document,
 			markup = g_markup_escape_text (poppler_layer_get_title (layer), -1);
 			visible = poppler_layer_is_visible (layer);
 			rb_group = poppler_layer_get_radio_button_group_id (layer);
-			pdf_document->layers = g_list_append (pdf_document->layers,
-							      g_object_ref (layer));
-			ev_layer = ev_layer_new (g_list_length (pdf_document->layers) - 1,
-						 poppler_layer_is_parent (layer),
+			ev_layer = ev_layer_new (poppler_layer_is_parent (layer),
 						 rb_group);
+			g_object_set_data_full (G_OBJECT (ev_layer),
+						"poppler-layer",
+						g_object_ref (layer),
+						(GDestroyNotify) g_object_unref);
 		} else {
 			gchar *title;
 
@@ -3211,30 +3206,33 @@ static void
 pdf_document_layers_show_layer (EvDocumentLayers *document,
 				EvLayer          *layer)
 {
-	PdfDocument *pdf_document = PDF_DOCUMENT (document);
-	guint        layer_id = ev_layer_get_id (layer);
+	PdfDocument  *pdf_document = PDF_DOCUMENT (document);
+	PopplerLayer *poppler_layer;
 
-	poppler_layer_show (POPPLER_LAYER (g_list_nth_data (pdf_document->layers, layer_id)));
+	poppler_layer = POPPLER_LAYER (g_object_get_data (G_OBJECT (layer), "poppler-layer"));
+	poppler_layer_show (poppler_layer);
 }
 
 static void
 pdf_document_layers_hide_layer (EvDocumentLayers *document,
 				EvLayer          *layer)
 {
-	PdfDocument *pdf_document = PDF_DOCUMENT (document);
-	guint        layer_id = ev_layer_get_id (layer);
+	PdfDocument  *pdf_document = PDF_DOCUMENT (document);
+	PopplerLayer *poppler_layer;
 
-	poppler_layer_hide (POPPLER_LAYER (g_list_nth_data (pdf_document->layers, layer_id)));
+	poppler_layer = POPPLER_LAYER (g_object_get_data (G_OBJECT (layer), "poppler-layer"));
+	poppler_layer_hide (poppler_layer);
 }
 
 static gboolean
 pdf_document_layers_layer_is_visible (EvDocumentLayers *document,
 				      EvLayer          *layer)
 {
-	PdfDocument *pdf_document = PDF_DOCUMENT (document);
-	guint        layer_id = ev_layer_get_id (layer);
+	PdfDocument  *pdf_document = PDF_DOCUMENT (document);
+	PopplerLayer *poppler_layer;
 
-	return poppler_layer_is_visible (POPPLER_LAYER (g_list_nth_data (pdf_document->layers, layer_id)));
+	poppler_layer = POPPLER_LAYER (g_object_get_data (G_OBJECT (layer), "poppler-layer"));
+	return poppler_layer_is_visible (poppler_layer);
 }
 
 static void
