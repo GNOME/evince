@@ -32,6 +32,7 @@
 #include "ev-document-forms.h"
 #include "ev-document-images.h"
 #include "ev-document-links.h"
+#include "ev-document-layers.h"
 #include "ev-document-misc.h"
 #include "ev-pixbuf-cache.h"
 #include "ev-page-cache.h"
@@ -56,6 +57,7 @@ enum {
 	SIGNAL_SELECTION_CHANGED,
 	SIGNAL_SYNC_SOURCE,
 	SIGNAL_ANNOT_ADDED,
+	SIGNAL_LAYERS_CHANGED,
 	N_SIGNALS
 };
 
@@ -1736,6 +1738,38 @@ ev_view_handle_link (EvView *view, EvLink *link)
 		
 			dest = ev_link_action_get_dest (action);
 			ev_view_goto_dest (view, dest);
+		}
+			break;
+	        case EV_LINK_ACTION_TYPE_LAYERS_STATE: {
+			GList            *show, *hide, *toggle;
+			GList            *l;
+			EvDocumentLayers *document_layers;
+
+			document_layers = EV_DOCUMENT_LAYERS (view->document);
+
+			show = ev_link_action_get_show_list (action);
+			for (l = show; l; l = g_list_next (l)) {
+				ev_document_layers_show_layer (document_layers, EV_LAYER (l->data));
+			}
+
+			hide = ev_link_action_get_hide_list (action);
+			for (l = hide; l; l = g_list_next (l)) {
+				ev_document_layers_hide_layer (document_layers, EV_LAYER (l->data));
+			}
+
+			toggle = ev_link_action_get_toggle_list (action);
+			for (l = toggle; l; l = g_list_next (l)) {
+				EvLayer *layer = EV_LAYER (l->data);
+
+				if (ev_document_layers_layer_is_visible (document_layers, layer)) {
+					ev_document_layers_hide_layer (document_layers, layer);
+				} else {
+					ev_document_layers_show_layer (document_layers, layer);
+				}
+			}
+
+			g_signal_emit (view, signals[SIGNAL_LAYERS_CHANGED], 0);
+			ev_view_reload_page (view, view->current_page, NULL);
 		}
 			break;
 	        case EV_LINK_ACTION_TYPE_GOTO_REMOTE:
@@ -4678,6 +4712,14 @@ ev_view_class_init (EvViewClass *class)
 		         g_cclosure_marshal_VOID__OBJECT,
 		         G_TYPE_NONE, 1,
 			 EV_TYPE_ANNOTATION);
+	signals[SIGNAL_LAYERS_CHANGED] = g_signal_new ("layers-changed",
+	  	         G_TYPE_FROM_CLASS (object_class),
+		         G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
+		         G_STRUCT_OFFSET (EvViewClass, layers_changed),
+		         NULL, NULL,
+		         g_cclosure_marshal_VOID__VOID,
+		         G_TYPE_NONE, 0,
+			 G_TYPE_NONE);
 
 	binding_set = gtk_binding_set_by_class (class);
 
