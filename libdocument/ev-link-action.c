@@ -29,7 +29,10 @@ enum {
 	PROP_URI,
 	PROP_FILENAME,
 	PROP_PARAMS,
-	PROP_NAME
+	PROP_NAME,
+	PROP_SHOW_LIST,
+	PROP_HIDE_LIST,
+	PROP_TOGGLE_LIST
 };
 
 struct _EvLinkAction {
@@ -49,6 +52,9 @@ struct _EvLinkActionPrivate {
 	gchar            *filename;
 	gchar            *params;
 	gchar            *name;
+	GList            *show_list;
+	GList            *hide_list;
+	GList            *toggle_list;
 };
 
 G_DEFINE_TYPE (EvLinkAction, ev_link_action, G_TYPE_OBJECT)
@@ -104,6 +110,30 @@ ev_link_action_get_name (EvLinkAction *self)
 	return self->priv->name;
 }
 
+GList *
+ev_link_action_get_show_list (EvLinkAction *self)
+{
+	g_return_val_if_fail (EV_IS_LINK_ACTION (self), NULL);
+
+	return self->priv->show_list;
+}
+
+GList *
+ev_link_action_get_hide_list (EvLinkAction *self)
+{
+	g_return_val_if_fail (EV_IS_LINK_ACTION (self), NULL);
+
+	return self->priv->hide_list;
+}
+
+GList *
+ev_link_action_get_toggle_list (EvLinkAction *self)
+{
+	g_return_val_if_fail (EV_IS_LINK_ACTION (self), NULL);
+
+	return self->priv->toggle_list;
+}
+
 static void
 ev_link_action_get_property (GObject    *object,
 			     guint       prop_id,
@@ -132,6 +162,15 @@ ev_link_action_get_property (GObject    *object,
 			break;
 	        case PROP_NAME:
 			g_value_set_string (value, self->priv->name);
+			break;
+	        case PROP_SHOW_LIST:
+			g_value_set_pointer (value, self->priv->show_list);
+			break;
+	        case PROP_HIDE_LIST:
+			g_value_set_pointer (value, self->priv->hide_list);
+			break;
+	        case PROP_TOGGLE_LIST:
+			g_value_set_pointer (value, self->priv->toggle_list);
 			break;
 	        default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object,
@@ -172,6 +211,15 @@ ev_link_action_set_property (GObject      *object,
 			g_free (self->priv->name);
 			self->priv->name = g_value_dup_string (value);
 			break;
+	        case PROP_SHOW_LIST:
+			self->priv->show_list = g_value_get_pointer (value);
+			break;
+	        case PROP_HIDE_LIST:
+			self->priv->hide_list = g_value_get_pointer (value);
+			break;
+	        case PROP_TOGGLE_LIST:
+			self->priv->toggle_list = g_value_get_pointer (value);
+			break;
 	        default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object,
 							   prop_id,
@@ -210,6 +258,24 @@ ev_link_action_finalize (GObject *object)
 	if (priv->name) {
 		g_free (priv->name);
 		priv->name = NULL;
+	}
+
+	if (priv->show_list) {
+		g_list_foreach (priv->show_list, (GFunc)g_object_unref, NULL);
+		g_list_free (priv->show_list);
+		priv->show_list = NULL;
+	}
+
+	if (priv->hide_list) {
+		g_list_foreach (priv->hide_list, (GFunc)g_object_unref, NULL);
+		g_list_free (priv->hide_list);
+		priv->hide_list = NULL;
+	}
+
+	if (priv->toggle_list) {
+		g_list_foreach (priv->toggle_list, (GFunc)g_object_unref, NULL);
+		g_list_free (priv->toggle_list);
+		priv->toggle_list = NULL;
 	}
 
 	G_OBJECT_CLASS (ev_link_action_parent_class)->finalize (object);
@@ -289,6 +355,27 @@ ev_link_action_class_init (EvLinkActionClass *ev_link_action_class)
 							      NULL,
 							      G_PARAM_READWRITE |
 							      G_PARAM_CONSTRUCT_ONLY));
+	g_object_class_install_property (g_object_class,
+					 PROP_SHOW_LIST,
+					 g_param_spec_pointer ("show-list",
+							       "ShowList",
+							       "The list of layers that should be shown",
+							       G_PARAM_READWRITE |
+							       G_PARAM_CONSTRUCT_ONLY));
+	g_object_class_install_property (g_object_class,
+					 PROP_HIDE_LIST,
+					 g_param_spec_pointer ("hide-list",
+							       "HideList",
+							       "The list of layers that should be hidden",
+							       G_PARAM_READWRITE |
+							       G_PARAM_CONSTRUCT_ONLY));
+	g_object_class_install_property (g_object_class,
+					 PROP_TOGGLE_LIST,
+					 g_param_spec_pointer ("toggle-list",
+							       "ToggleList",
+							       "The list of layers that should be toggled",
+							       G_PARAM_READWRITE |
+							       G_PARAM_CONSTRUCT_ONLY));
 }
 
 EvLinkAction *
@@ -337,5 +424,18 @@ ev_link_action_new_named (const gchar *name)
 	return EV_LINK_ACTION (g_object_new (EV_TYPE_LINK_ACTION,
 					     "name", name,
 					     "type", EV_LINK_ACTION_TYPE_NAMED,
+					     NULL));
+}
+
+EvLinkAction *
+ev_link_action_new_layers_state (GList *show_list,
+				 GList *hide_list,
+				 GList *toggle_list)
+{
+	return EV_LINK_ACTION (g_object_new (EV_TYPE_LINK_ACTION,
+					     "show-list", show_list,
+					     "hide-list", hide_list,
+					     "toggle-list", toggle_list,
+					     "type", EV_LINK_ACTION_TYPE_LAYERS_STATE,
 					     NULL));
 }
