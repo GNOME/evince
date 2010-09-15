@@ -1212,8 +1212,47 @@ ev_link_from_action (PdfDocument   *pdf_document,
 	        case POPPLER_ACTION_RENDITION:
 			unimplemented_action = "POPPLER_ACTION_RENDITION";
 			break;
-	        case POPPLER_ACTION_OCG_STATE:
-			unimplemented_action = "POPPLER_ACTION_OCG_STATE";
+	        case POPPLER_ACTION_OCG_STATE: {
+			GList *on_list = NULL;
+			GList *off_list = NULL;
+			GList *toggle_list = NULL;
+			GList *l, *m;
+
+			for (l = action->ocg_state.state_list; l; l = g_list_next (l)) {
+				PopplerActionLayer *action_layer = (PopplerActionLayer *)l->data;
+
+				for (m = action_layer->layers; m; m = g_list_next (m)) {
+					PopplerLayer *layer = (PopplerLayer *)m->data;
+					EvLayer      *ev_layer;
+
+					ev_layer = ev_layer_new (poppler_layer_is_parent (layer),
+								 poppler_layer_get_radio_button_group_id (layer));
+					g_object_set_data_full (G_OBJECT (ev_layer),
+								"poppler-layer",
+								g_object_ref (layer),
+								(GDestroyNotify)g_object_unref);
+
+					switch (action_layer->action) {
+					case POPPLER_ACTION_LAYER_ON:
+						on_list = g_list_prepend (on_list, ev_layer);
+						break;
+					case POPPLER_ACTION_LAYER_OFF:
+						off_list = g_list_prepend (off_list, ev_layer);
+						break;
+					case POPPLER_ACTION_LAYER_TOGGLE:
+						toggle_list = g_list_prepend (toggle_list, ev_layer);
+						break;
+					}
+				}
+			}
+
+			/* The action takes the ownership of the lists */
+			ev_action = ev_link_action_new_layers_state (g_list_reverse (on_list),
+								     g_list_reverse (off_list),
+								     g_list_reverse (toggle_list));
+
+
+		}
 			break;
 #endif
 	        case POPPLER_ACTION_UNKNOWN:
