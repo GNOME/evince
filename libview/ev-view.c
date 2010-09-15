@@ -3513,10 +3513,13 @@ ev_view_query_tooltip (GtkWidget  *widget,
 		get_link_area (view, x, y, link, &link_area);
 		gtk_tooltip_set_text (tooltip, text);
 		gtk_tooltip_set_tip_area (tooltip, &link_area);
+		g_free (text);
+
+		return TRUE;
 	}
 	g_free (text);
 
-	return TRUE;
+	return FALSE;
 }
 
 static void
