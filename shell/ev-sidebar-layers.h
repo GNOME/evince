@@ -50,8 +50,9 @@ struct _EvSidebarLayersClass {
 	void (* layers_visibility_changed) (EvSidebarLayers *ev_layers);
 };
 
-GType      ev_sidebar_layers_get_type (void) G_GNUC_CONST;
-GtkWidget *ev_sidebar_layers_new      (void);
+GType      ev_sidebar_layers_get_type            (void) G_GNUC_CONST;
+GtkWidget *ev_sidebar_layers_new                 (void);
+void       ev_sidebar_layers_update_layers_state (EvSidebarLayers *sidebar_layers);
 
 G_END_DECLS
 

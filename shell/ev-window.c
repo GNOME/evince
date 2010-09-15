@@ -896,6 +896,13 @@ view_selection_changed_cb (EvView   *view,
 }
 
 static void
+view_layers_changed_cb (EvView   *view,
+			EvWindow *window)
+{
+	ev_sidebar_layers_update_layers_state (EV_SIDEBAR_LAYERS (window->priv->sidebar_layers));
+}
+
+static void
 ev_window_page_changed_cb (EvWindow        *ev_window,
 			   gint             old_page,
 			   gint             new_page,
@@ -7006,6 +7013,9 @@ ev_window_init (EvWindow *ev_window)
 				 ev_window, 0);
 	g_signal_connect_object (ev_window->priv->view, "annot-added",
 				 G_CALLBACK (view_annot_added),
+				 ev_window, 0);
+	g_signal_connect_object (ev_window->priv->view, "layers-changed",
+				 G_CALLBACK (view_layers_changed_cb),
 				 ev_window, 0);
 #ifdef ENABLE_DBUS
 	g_signal_connect_swapped (ev_window->priv->view, "sync-source",

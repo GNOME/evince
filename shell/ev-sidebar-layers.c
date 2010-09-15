@@ -332,6 +332,49 @@ ev_sidebar_layers_new (void)
 }
 
 static void
+update_layers_state (GtkTreeModel     *model,
+		     GtkTreeIter      *iter,
+		     EvDocumentLayers *document_layers)
+{
+	EvLayer    *layer;
+	gboolean    visible;
+	GtkTreeIter child_iter;
+
+	do {
+		gtk_tree_model_get (model, iter,
+				    EV_DOCUMENT_LAYERS_COLUMN_VISIBLE, &visible,
+				    EV_DOCUMENT_LAYERS_COLUMN_LAYER, &layer,
+				    -1);
+		if (layer) {
+			gboolean layer_visible;
+
+			layer_visible = ev_document_layers_layer_is_visible (document_layers, layer);
+			if (layer_visible != visible) {
+				gtk_tree_store_set (GTK_TREE_STORE (model), iter,
+						    EV_DOCUMENT_LAYERS_COLUMN_VISIBLE, layer_visible,
+						    -1);
+			}
+		}
+
+		if (gtk_tree_model_iter_children (model, &child_iter, iter))
+			update_layers_state (model, &child_iter, document_layers);
+	} while (gtk_tree_model_iter_next (model, iter));
+}
+
+void
+ev_sidebar_layers_update_layers_state (EvSidebarLayers *sidebar_layers)
+{
+	GtkTreeModel     *model;
+	GtkTreeIter       iter;
+	EvDocumentLayers *document_layers;
+
+	document_layers = EV_DOCUMENT_LAYERS (sidebar_layers->priv->document);
+	model = gtk_tree_view_get_model (GTK_TREE_VIEW (sidebar_layers->priv->tree_view));
+	if (gtk_tree_model_get_iter_first (model, &iter))
+		update_layers_state (model, &iter, document_layers);
+}
+
+static void
 job_finished_callback (EvJobLayers     *job,
 		       EvSidebarLayers *sidebar_layers)
 {
