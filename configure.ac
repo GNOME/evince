@@ -505,6 +505,7 @@ if test "x$enable_pdf" = "xyes"; then
 	    AC_CHECK_FUNCS(poppler_page_get_text_layout)
 	    AC_CHECK_FUNCS(poppler_page_get_selected_text)
 	    AC_CHECK_FUNCS(poppler_page_add_annot)
+	    AC_CHECK_FUNCS(poppler_document_is_linearized)
 	    LIBS=$evince_save_LIBS
 	    PKG_CHECK_MODULES(CAIRO_PDF, cairo-pdf, enable_cairo_pdf=yes, enable_cairo_pdf=no)
 	    if test x$enable_cairo_pdf = xyes; then

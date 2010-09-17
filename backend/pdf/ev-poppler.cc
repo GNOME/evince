@@ -640,6 +640,9 @@ pdf_document_get_info (EvDocument *document)
 	PopplerPermissions permissions;
 	EvPage *page;
 	char *metadata;
+#ifdef HAVE_POPPLER_DOCUMENT_IS_LINEARIZED
+	gboolean linearized;
+#endif
 
 	info = g_new0 (EvDocumentInfo, 1);
 
@@ -676,7 +679,11 @@ pdf_document_get_info (EvDocument *document)
 		      "producer", &(info->producer),
 		      "creation-date", &(info->creation_date),
 		      "mod-date", &(info->modified_date),
+#ifdef HAVE_POPPLER_DOCUMENT_IS_LINEARIZED
+		      "linearized", &linearized,
+#else
 		      "linearized", &(info->linearized),
+#endif
 		      "metadata", &metadata,
 		      NULL);
 
@@ -781,6 +788,10 @@ pdf_document_get_info (EvDocument *document)
 		/* translators: this is the document security state */
 		info->security = g_strdup (_("No"));
 	}
+
+#ifdef HAVE_POPPLER_DOCUMENT_IS_LINEARIZED
+	info->linearized = linearized ? g_strdup (_("Yes")) : g_strdup (_("No"));
+#endif
 
 	return info;
 }
