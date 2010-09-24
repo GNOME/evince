@@ -6704,10 +6704,11 @@ method_call_cb (GDBusConnection       *connection,
 
 	if (window->priv->document && ev_document_has_synctex (window->priv->document)) {
 		EvSourceLink link;
+		guint32	     timestamp;
 
-		g_variant_get (parameters, "(&s(ii))", &link.filename, &link.line, &link.col);
+		g_variant_get (parameters, "(&s(ii)u)", &link.filename, &link.line, &link.col, &timestamp);
 		ev_view_highlight_forward_search (EV_VIEW (window->priv->view), &link);
-		gtk_window_present (GTK_WINDOW (window));
+		gtk_window_present_with_time (GTK_WINDOW (window), timestamp);
 	}
 
 	g_dbus_method_invocation_return_value (invocation, g_variant_new ("()"));
@@ -6719,6 +6720,7 @@ static const char introspection_xml[] =
             "<method name='SyncView'>"
               "<arg type='s' name='source_file' direction='in'/>"
               "<arg type='(ii)' name='source_point' direction='in'/>"
+              "<arg type='u' name='timestamp' direction='in'/>"
             "</method>"
 	    "<signal name='SyncSource'>"
 	      "<arg type='s' name='source_file' direction='out'/>"
