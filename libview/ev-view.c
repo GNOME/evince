@@ -221,7 +221,7 @@ static void       on_adjustment_value_changed                (GtkAdjustment     
 
 /*** GObject ***/
 static void       ev_view_finalize                           (GObject            *object);
-static void       ev_view_destroy                            (GtkObject          *object);
+static void       ev_view_dispose                            (GObject            *object);
 static void       ev_view_class_init                         (EvViewClass        *class);
 static void       ev_view_init                               (EvView             *view);
 
@@ -4177,7 +4177,11 @@ ev_view_key_press_event (GtkWidget   *widget,
 		return FALSE;
 	}
 
-	return gtk_bindings_activate_event (GTK_OBJECT (widget), event);
+#if GTK_CHECK_VERSION (2, 90, 8)
+	return gtk_bindings_activate_event (G_OBJECT (widget), event);
+#else
+        return gtk_bindings_activate_event (GTK_OBJECT (widget), event);
+#endif
 }
 
 static gint
@@ -4566,7 +4570,7 @@ ev_view_finalize (GObject *object)
 }
 
 static void
-ev_view_destroy (GtkObject *object)
+ev_view_dispose (GObject *object)
 {
 	EvView *view = EV_VIEW (object);
 
@@ -4624,7 +4628,7 @@ ev_view_destroy (GtkObject *object)
 
 	ev_view_set_scroll_adjustments (GTK_LAYOUT (view), NULL, NULL);
 
-	GTK_OBJECT_CLASS (ev_view_parent_class)->destroy (object);
+	G_OBJECT_CLASS (ev_view_parent_class)->dispose (object);
 }
 
 static AtkObject *
@@ -4664,11 +4668,11 @@ static void
 ev_view_class_init (EvViewClass *class)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (class);
-	GtkObjectClass *gtk_object_class = GTK_OBJECT_CLASS (class);
 	GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (class);
 	GtkLayoutClass *layout_class = GTK_LAYOUT_CLASS (class);
 	GtkBindingSet *binding_set;
 
+        object_class->dispose = ev_view_dispose;
 	object_class->finalize = ev_view_finalize;
 
 #if GTK_CHECK_VERSION (2, 90, 8)
@@ -4694,8 +4698,6 @@ ev_view_class_init (EvViewClass *class)
 	widget_class->drag_motion = ev_view_drag_motion;
 	widget_class->popup_menu = ev_view_popup_menu;
 	widget_class->query_tooltip = ev_view_query_tooltip;
-
-	gtk_object_class->destroy = ev_view_destroy;
 
 	layout_class->set_scroll_adjustments = ev_view_set_scroll_adjustments;
 	

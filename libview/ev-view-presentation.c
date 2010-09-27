@@ -901,7 +901,7 @@ ev_view_presentation_update_current_surface (EvViewPresentation *pview,
 }
 
 static void
-ev_view_presentation_destroy (GtkObject *object)
+ev_view_presentation_dispose (GObject *object)
 {
 	EvViewPresentation *pview = EV_VIEW_PRESENTATION (object);
 
@@ -945,7 +945,7 @@ ev_view_presentation_destroy (GtkObject *object)
 		pview->goto_entry = NULL;
 	}
 
-	GTK_OBJECT_CLASS (ev_view_presentation_parent_class)->destroy (object);
+	G_OBJECT_CLASS (ev_view_presentation_parent_class)->dispose (object);
 }
 
 static void
@@ -1121,7 +1121,11 @@ ev_view_presentation_key_press_event (GtkWidget   *widget,
 	EvViewPresentation *pview = EV_VIEW_PRESENTATION (widget);
 
 	if (pview->state == EV_PRESENTATION_END)
+#if GTK_CHECK_VERSION (2, 90, 8)
+                return gtk_bindings_activate_event (G_OBJECT (widget), event);
+#else
 		return gtk_bindings_activate_event (GTK_OBJECT (widget), event);
+#endif
 
 	switch (event->keyval) {
 	case GDK_KEY_b:
@@ -1177,7 +1181,11 @@ ev_view_presentation_key_press_event (GtkWidget   *widget,
 		return TRUE;
 	}
 
-	return gtk_bindings_activate_event (GTK_OBJECT (widget), event);
+#if GTK_CHECK_VERSION (2, 90, 8)
+	return gtk_bindings_activate_event (G_OBJECT (widget), event);
+#else
+        return gtk_bindings_activate_event (GTK_OBJECT (widget), event);
+#endif
 }
 
 static gboolean
@@ -1419,10 +1427,11 @@ ev_view_presentation_class_init (EvViewPresentationClass *klass)
 {
 	GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
 	GObjectClass   *gobject_class = G_OBJECT_CLASS (klass);
-	GtkObjectClass *gtk_object_class = GTK_OBJECT_CLASS (klass);
 	GtkBindingSet  *binding_set;
 
 	klass->change_page = ev_view_presentation_change_page;
+
+        gobject_class->dispose = ev_view_presentation_dispose;
 
 	widget_class->size_request = ev_view_presentation_size_request;
 	widget_class->realize = ev_view_presentation_realize;
@@ -1436,8 +1445,6 @@ ev_view_presentation_class_init (EvViewPresentationClass *klass)
 	widget_class->focus_out_event = ev_view_presentation_focus_out;
 	widget_class->motion_notify_event = ev_view_presentation_motion_notify_event;
 	widget_class->scroll_event = ev_view_presentation_scroll_event;
-
-	gtk_object_class->destroy = ev_view_presentation_destroy;
 
 	gobject_class->constructor = ev_view_presentation_constructor;
 	gobject_class->set_property = ev_view_presentation_set_property;
