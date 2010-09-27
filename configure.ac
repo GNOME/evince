@@ -139,11 +139,11 @@ KEYRING_REQUIRED=2.22.0
 case "$with_gtk" in
   2.0) GTK_API_VERSION=2.0
        GAIL_API_VERSION=
-       GTK_REQUIRED=2.21.5
+       GTK_REQUIRED=2.22.0
        ;;
   3.0) GTK_API_VERSION=3.0
        GAIL_API_VERSION=-3.0
-       GTK_REQUIRED=2.90.5
+       GTK_REQUIRED=2.90.8
        ;;
 esac
 
