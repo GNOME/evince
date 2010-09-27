@@ -180,6 +180,8 @@ ev_loading_window_size_allocate (GtkWidget      *widget,
 #if GTK_CHECK_VERSION (2, 90, 8)
         cairo_surface_t *surface;
         cairo_region_t *shape;
+#else
+	GdkPixmap *mask;
 #endif
 	cairo_t         *cr;
 	double           r;
