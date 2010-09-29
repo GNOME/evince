@@ -420,11 +420,16 @@ ev_document_synctex_backward_search (EvDocument *document,
                 /* We assume that a backward search returns either zero or one result_node */
                 node = synctex_next_result (scanner);
                 if (node != NULL) {
-                        result = g_new (EvSourceLink, 1);
-                        result->filename = synctex_scanner_get_name (scanner,
-                                                                     synctex_node_tag (node));
-                        result->line = synctex_node_line (node);
-                        result->col = synctex_node_column (node);
+			const gchar *filename;
+
+			filename = synctex_scanner_get_name (scanner, synctex_node_tag (node));
+			
+			if (filename) {
+				result = g_new (EvSourceLink, 1);
+				result->filename = filename;
+				result->line = synctex_node_line (node);
+				result->col = synctex_node_column (node);
+			}
                 }
         }
 
