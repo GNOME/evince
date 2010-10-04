@@ -1,4 +1,66 @@
 ================
+Evince  2.91.0
+================
+
+New Features and UI Improvements:
+
+    * Add timestamp parameter to SyncView D-Bus method (#630576, José
+      Aliste)
+    * Port to gtk3 (Christian Persch)
+    * Layer actions are now supported for PDF document (Carlos Garcia
+      Campos)
+    * Add 'Open Containing Folder' action to the File menu (#627443,
+      Federico Mena Quintero)
+    * Make "Shrink to Printable Area" default option for Page Scaling
+      (Marek Kasik)
+    * Change gsettings schema path from /apps/evince to
+      /org/gnome/evince (Christian Persch)
+    * A D-Bus signal is now emitted when document is loaded (#626561,
+      José Aliste)
+    * XPS Documents are now supported (#321868, Carlos Garcia Campos)
+    * Evince daemon can spawn an evince instance when finding a
+      document (#625971, José Aliste)
+
+Bug fixes:
+
+    * Fix a crash when synctex backward search fails (#630845, José
+      Aliste)
+    * Don't show an empty tooltip for links that don't have tooltip
+      text (Carlos Garcia Campos)
+    * Fix build with --disable-dbus (#629498, Didier Roche)
+    * Fix a crash during selection when evince is built with gtk2
+      (Carlos Garcia Campos)
+
+Translation updates:
+
+    * Khaled Hosny (ar)
+    * Damyan Ivanov (bg)
+    * Gil Forcada (ca)
+    * Marek Černocký (cs)
+    * Kenneth Nielsen (da)
+    * Christian Kirbach  (de)
+    * Michael Kotsarinis (el)
+    * Bruce Cowan (en_GB)
+    * Ivar Smolin (et)
+    * Milan Bouchet-Valat (fr)
+    * Gabor Kelemen (hu)
+    * Dirgita (id)
+    * Francesco Marletta (it)
+    * Shushi Kurose (ja)
+    * Baurzhan Muftakhidinov (kk)
+    * Aurimas Černius (lt)
+    * Wouter Bolsterlee (nl)
+    * Piotr Drąg (pl)
+    * Duarte Loreto (pt)
+    * Lucian Adrian Grijincu (ro)
+    * Andrej Žnidaršič (sl)
+    * Miloš Popović (sr@latin)
+    * Милош Поповић (sr)
+    * Dr.T.Vasudevan (ta)
+    * Chao-Hsiung Liao (zh_HK)
+    * Chao-Hsiung Liao (zh_TW)
+
+================
 Evince  2.31.90
 ================
 
