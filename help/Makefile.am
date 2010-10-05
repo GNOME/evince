@@ -8,8 +8,6 @@ DOC_INCLUDES = legal.xml
 
 dist-hook: doc-dist-hook
 
-DOC_MODULE = evince
-DOC_INCLUDES = legal.xml
 DOC_FIGURES = \
 	add-text-annotation.png		\
 	annotations-navigate.png	\
