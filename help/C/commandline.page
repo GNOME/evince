@@ -1,0 +1,60 @@
+<page xmlns="http://projectmallard.org/1.0/"
+      type="topic" style="task"
+      id="commandline">
+
+  <info>
+    <link type="guide" xref="index#other"/>
+    <desc>The Document Viewer can be started with the <cmd>evince</cmd> command.</desc>
+
+    <revision pkgversion="2.30.3" version="0.1" date="2010-07-26" status="review"/>
+    <credit type="author">
+      <name>Phil Bull</name>
+      <email>philbull@gmail.com</email>
+    </credit>
+    <license>
+      <p>Creative Commons Share Alike 3.0</p>
+    </license>    
+
+  </info>
+
+<title>Opening The Document Viewer From The Command Line</title>
+
+<p>
+To start the Document Viewer from the command line, type <cmd>evince</cmd>. You 
+can open a specific file by typing the filename after the evince command:
+</p>
+
+<screen>evince file.pdf</screen>
+<p>
+You can open multiple files by typing the filenames after the evince command, separating the filenames by a space:
+</p>
+<screen>evince file1.pdf file2.pdf</screen>
+<p>
+Evince also supports the handling of files on the web.  For example, after the evince command you can give the location of a file on the web:
+</p>
+<screen>evince http://www.claymath.org/millennium/P_vs_NP/pvsnp.pdf</screen>
+<section>
+    <title>Opening A Document At A Specific Page</title>
+    <p>
+    You can use the <cmd>--page-label</cmd> switch to open a document at a 
+    specific page. For example, to open a document to page 3, you would type:
+    </p>
+    <screen>evince --page-label=3</screen>
+    <p>
+    The page label should be in the same format as the page number displayed in 
+    the Document Viewer toolbar.
+    </p>
+</section>
+<section>
+    <title>Opening A Document In Fullscreen Mode</title>
+    <screen>evince --fullscreen file.pdf</screen>
+</section>
+<section>
+    <title>Opening A Document In Presentation Mode</title>
+    <screen>evince --presentation file.pdf</screen>
+</section>
+<section>
+    <title>Opening A Document In Preview Mode</title>
+    <screen>evince --preview file.pdf</screen>
+</section>
+</page>
