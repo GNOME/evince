@@ -1,4 +1,4 @@
-ACLOCAL_AMFLAGS = -I m4
+ACLOCAL_AMFLAGS = -I m4 ${ACLOCAL_FLAGS}
 
 # Set the minimum required Windows version to Windows 2000 (0x0500).
 if PLATFORM_WIN32
