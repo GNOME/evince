@@ -54,7 +54,7 @@ static void gimp_cell_renderer_toggle_set_property (GObject         *object,
                                                     GParamSpec      *pspec);
 static void gimp_cell_renderer_toggle_get_size     (GtkCellRenderer *cell,
                                                     GtkWidget       *widget,
-                                                    GdkRectangle    *rectangle,
+                                                    const GdkRectangle *rectangle,
                                                     gint            *x_offset,
                                                     gint            *y_offset,
                                                     gint            *width,
@@ -69,8 +69,8 @@ static gboolean gimp_cell_renderer_toggle_activate (GtkCellRenderer *cell,
                                                     GdkEvent        *event,
                                                     GtkWidget       *widget,
                                                     const gchar     *path,
-                                                    GdkRectangle    *background_area,
-                                                    GdkRectangle    *cell_area,
+                                                    const GdkRectangle *background_area,
+                                                    const GdkRectangle *cell_area,
                                                     GtkCellRendererState  flags);
 static void gimp_cell_renderer_toggle_create_pixbuf (GimpCellRendererToggle *toggle,
                                                      GtkWidget              *widget);
@@ -206,13 +206,13 @@ gimp_cell_renderer_toggle_set_property (GObject      *object,
 }
 
 static void
-gimp_cell_renderer_toggle_get_size (GtkCellRenderer *cell,
-                                    GtkWidget       *widget,
-                                    GdkRectangle    *cell_area,
-                                    gint            *x_offset,
-                                    gint            *y_offset,
-                                    gint            *width,
-                                    gint            *height)
+gimp_cell_renderer_toggle_get_size (GtkCellRenderer    *cell,
+                                    GtkWidget          *widget,
+                                    const GdkRectangle *cell_area,
+                                    gint               *x_offset,
+                                    gint               *y_offset,
+                                    gint               *width,
+                                    gint               *height)
 {
   GimpCellRendererToggle *toggle = GIMP_CELL_RENDERER_TOGGLE (cell);
   GtkStyle               *style  = gtk_widget_get_style (widget);
@@ -410,8 +410,8 @@ gimp_cell_renderer_toggle_activate (GtkCellRenderer      *cell,
                                     GdkEvent             *event,
                                     GtkWidget            *widget,
                                     const gchar          *path,
-                                    GdkRectangle         *background_area,
-                                    GdkRectangle         *cell_area,
+                                    const GdkRectangle   *background_area,
+                                    const GdkRectangle   *cell_area,
                                     GtkCellRendererState  flags)
 {
   GtkCellRendererToggle *toggle = GTK_CELL_RENDERER_TOGGLE (cell);
