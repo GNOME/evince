@@ -143,7 +143,7 @@ case "$with_gtk" in
        ;;
   3.0) GTK_API_VERSION=3.0
        GAIL_API_VERSION=-3.0
-       GTK_REQUIRED=2.90.8
+       GTK_REQUIRED=2.91.0
        ;;
 esac
 
