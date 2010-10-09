@@ -121,35 +121,14 @@ fi
 AM_CONDITIONAL([PLATFORM_HILDON],[test "$with_platform" = "hildon"])
 AM_CONDITIONAL([PLATFORM_WIN32],[test "$with_platform" = "win32"])
 
-AC_MSG_CHECKING([which gtk+ version to compile against])
-AC_ARG_WITH([gtk],
-  [AS_HELP_STRING([--with-gtk=2.0|3.0],[which gtk+ version to compile against (default: 3.0)])],
-  [case "$with_gtk" in
-     2.0|3.0) ;;
-     *) AC_MSG_ERROR([invalid gtk version specified]) ;;
-   esac],
-  [with_gtk=3.0])
-AC_MSG_RESULT([$with_gtk])
-
 dnl Specify required versions of dependencies
-CAIRO_REQUIRED=1.9.10
+CAIRO_REQUIRED=1.10.0
 GLIB_REQUIRED=2.25.11
 KEYRING_REQUIRED=2.22.0
-
-case "$with_gtk" in
-  2.0) GTK_API_VERSION=2.0
-       GAIL_API_VERSION=
-       GTK_REQUIRED=2.22.0
-       ;;
-  3.0) GTK_API_VERSION=3.0
-       GAIL_API_VERSION=-3.0
-       GTK_REQUIRED=2.91.0
-       ;;
-esac
+GTK_REQUIRED=2.91.0
 
 AC_SUBST([GLIB_REQUIRED])
 AC_SUBST([GTK_REQUIRED])
-AC_SUBST([GTK_API_VERSION])
 
 GNOME_ICON_THEME_REQUIRED=2.17.1
 LIBXML_REQUIRED=2.5.0
@@ -164,10 +143,10 @@ dnl Check dependencies
 # SHELL_LIBS
 
 
-PKG_CHECK_MODULES(LIBDOCUMENT, gtk+-$GTK_API_VERSION >= $GTK_REQUIRED gio-2.0 >= $GLIB_REQUIRED)
-PKG_CHECK_MODULES(LIBVIEW, gtk+-$GTK_API_VERSION >= $GTK_REQUIRED gail$GAIL_API_VERSION >= $GTK_REQUIRED gthread-2.0 gio-2.0 >= $GLIB_REQUIRED)
-PKG_CHECK_MODULES(BACKEND, cairo >= $CAIRO_REQUIRED gtk+-$GTK_API_VERSION >= $GTK_REQUIRED)
-PKG_CHECK_MODULES(FRONTEND_CORE, gtk+-$GTK_API_VERSION >= $GTK_REQUIRED gthread-2.0 gio-2.0 >= $GLIB_REQUIRED)
+PKG_CHECK_MODULES(LIBDOCUMENT, gtk+-3.0 >= $GTK_REQUIRED gio-2.0 >= $GLIB_REQUIRED)
+PKG_CHECK_MODULES(LIBVIEW, gtk+-3.0 >= $GTK_REQUIRED gail-3.0 >= $GTK_REQUIRED gthread-2.0 gio-2.0 >= $GLIB_REQUIRED)
+PKG_CHECK_MODULES(BACKEND, cairo >= $CAIRO_REQUIRED gtk+-3.0 >= $GTK_REQUIRED)
+PKG_CHECK_MODULES(FRONTEND_CORE, gtk+-3.0 >= $GTK_REQUIRED gthread-2.0 gio-2.0 >= $GLIB_REQUIRED)
 
 SHELL_PLATFORM_PKGS=
 case "$with_platform" in
@@ -193,13 +172,13 @@ case "$with_platform" in
         ;;
 esac
 
-PKG_CHECK_MODULES([SHELL_CORE],[libxml-2.0 >= $LIBXML_REQUIRED gtk+-$GTK_API_VERSION >= $GTK_REQUIRED gio-2.0 >= $GLIB_REQUIRED gthread-2.0 $SHELL_PLATFORM_PKGS])
+PKG_CHECK_MODULES([SHELL_CORE],[libxml-2.0 >= $LIBXML_REQUIRED gtk+-3.0 >= $GTK_REQUIRED gio-2.0 >= $GLIB_REQUIRED gthread-2.0 $SHELL_PLATFORM_PKGS])
 
 # *********
 # SM client
 # *********
 
-GDK_TARGET="$($PKG_CONFIG --variable target gdk-$GTK_API_VERSION)"
+GDK_TARGET="$($PKG_CONFIG --variable target gdk-3.0)"
 
 AC_MSG_CHECKING([which smclient backend to use])
 AC_ARG_WITH([smclient],
@@ -225,7 +204,7 @@ if test "$with_smclient" != "no"; then
     *) SMCLIENT_PKGS="" ;;
   esac
 
-  PKG_CHECK_MODULES([SMCLIENT],[gtk+-$GTK_API_VERSION gthread-2.0 $SMCLIENT_PKGS])
+  PKG_CHECK_MODULES([SMCLIENT],[gtk+-3.0 gthread-2.0 $SMCLIENT_PKGS])
   AC_SUBST([SMCLIENT_CFLAGS])
   AC_SUBST([SMCLIENT_LIBS])
 fi
@@ -262,7 +241,7 @@ AC_ARG_WITH([gtk-unix-print],
 AC_MSG_RESULT([$with_gtk_unix_print])
 
 if test "$with_gtk_unix_print" = "yes"; then
-   PKG_CHECK_MODULES(GTKUNIXPRINT, [gtk+-unix-print-$GTK_API_VERSION >= $GTK_REQUIRED])
+   PKG_CHECK_MODULES(GTKUNIXPRINT, [gtk+-unix-print-3.0 >= $GTK_REQUIRED])
    AC_DEFINE([GTKUNIXPRINT_ENABLED], [1], [Define if gtk+-unix-print is enabled.])
 fi
 
@@ -401,7 +380,7 @@ AC_ARG_ENABLE([nautilus],
     esac])
 
 if test "$enable_nautilus" = "yes" ; then
-  PKG_CHECK_MODULES([NAUTILUS],[gtk+-x11-$GTK_API_VERSION $MM gthread-2.0 libnautilus-extension],
+  PKG_CHECK_MODULES([NAUTILUS],[gtk+-x11-3.0 $MM gthread-2.0 libnautilus-extension],
                     [],[AC_MSG_ERROR([libnautilus-extension not found; use --disable-nautilus to disable the nautilus extensions])])
   NAUTILUS_EXTENSION_DIR=`$PKG_CONFIG --variable=extensiondir libnautilus-extension`
   AC_SUBST([nautilusextensiondir],[$NAUTILUS_EXTENSION_DIR])
@@ -440,7 +419,7 @@ AC_ARG_ENABLE([previewer],
     esac])
 
 if test x$enable_previewer = "xyes" ; then
-  PKG_CHECK_MODULES([PREVIEWER],[gtk+-$GTK_API_VERSION >= $GTK_REQUIRED gthread-2.0 gio-2.0 >= $GLIB_REQUIRED])
+  PKG_CHECK_MODULES([PREVIEWER],[gtk+-3.0 >= $GTK_REQUIRED gthread-2.0 gio-2.0 >= $GLIB_REQUIRED])
 fi
 
 AM_CONDITIONAL([ENABLE_PREVIEWER],[test "$enable_previewer" = "yes"])
@@ -774,7 +753,7 @@ AM_CONDITIONAL(ENABLE_HELP, test "x$enable_help" = "xyes")
 GTK_DOC_CHECK([1.13],[--flavour no-tmpl])
 
 AC_SUBST([GLIB_PREFIX],[$($PKG_CONFIG --variable=prefix glib-2.0)])
-AC_SUBST([GTK_PREFIX],[$($PKG_CONFIG --variable=prefix gtk+-$GTK_API_VERSION)])
+AC_SUBST([GTK_PREFIX],[$($PKG_CONFIG --variable=prefix gtk+-3.0)])
 
 # ******************
 # Backends directory
@@ -875,7 +854,6 @@ AC_OUTPUT
 echo "
 Configure summary:
         Platform...........:  $with_platform
-        GTK+ version.......:  $with_gtk
         GConf Support......:  $with_gconf
 	GTK+ Unix Print....:  $with_gtk_unix_print
 	Keyring Support....:  $with_keyring

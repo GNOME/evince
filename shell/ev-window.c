@@ -4211,9 +4211,6 @@ ev_window_cmd_edit_toolbar (GtkAction *action, EvWindow *ev_window)
 	gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_CLOSE);
 	gtk_container_set_border_width (GTK_CONTAINER (GTK_DIALOG (dialog)), 5);
 	gtk_box_set_spacing (GTK_BOX (content_area), 2);
-#if !GTK_CHECK_VERSION (2, 90, 7)
-	gtk_dialog_set_has_separator (GTK_DIALOG (dialog), FALSE);
-#endif
 	gtk_window_set_default_size (GTK_WINDOW (dialog), 500, 400);
 
 	toolbar = EGG_EDITABLE_TOOLBAR (ev_window->priv->toolbar);

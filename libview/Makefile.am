@@ -127,9 +127,9 @@ EvinceView-$(EV_API_VERSION).gir: libevview3.la Makefile $(INST_H_FILES) $(filte
 	--include=GLib-2.0 \
 	--include=GObject-2.0 \
 	--include=Gio-2.0 \
-	--include=Gdk-2.0 \
+	--include=Gdk-3.0 \
 	--include=GdkPixbuf-2.0 \
-	--include=Gtk-2.0 \
+	--include=Gtk-3.0 \
 	--include=EvinceDocument-$(EV_API_VERSION) \
 	--library=evview3 \
 	--libtool="$(LIBTOOL)" \

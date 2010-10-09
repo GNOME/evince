@@ -139,12 +139,6 @@ ev_annotation_window_set_color (EvAnnotationWindow *window,
 
 	gcolor = *color;
 
-#if !GTK_CHECK_VERSION (2, 90, 8)
-	/* Allocate these colors */
-	gdk_colormap_alloc_color (gtk_widget_get_colormap (GTK_WIDGET (window)),
-				  &gcolor, FALSE, TRUE);
-#endif
-
 	/* Apply colors to style */
 	rc_style = gtk_widget_get_modifier_style (GTK_WIDGET (window));
 	rc_style->base[GTK_STATE_NORMAL] = gcolor;

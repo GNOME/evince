@@ -155,9 +155,9 @@ EvinceDocument-$(EV_API_VERSION).gir: libevdocument3.la Makefile $(INST_H_FILES)
 	--nsversion=$(EV_API_VERSION) \
 	--include=GLib-2.0 \
 	--include=Gio-2.0 \
-	--include=Gdk-2.0 \
+	--include=Gdk-3.0 \
 	--include=GdkPixbuf-2.0 \
-	--include=Gtk-2.0 \
+	--include=Gtk-3.0 \
 	--library=evdocument3 \
 	--libtool="$(SAVED_LIBTOOL)" \
 	--output $@ \

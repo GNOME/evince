@@ -984,7 +984,6 @@ ev_view_presentation_draw_end_page (EvViewPresentation *pview,
 	area.width = allocation.width;
 	area.height = allocation.height;
 
-#if GTK_CHECK_VERSION (2, 90, 8)
         gtk_paint_layout (gtk_widget_get_style (widget),
                           cr,
                           gtk_widget_get_state (widget),
@@ -994,50 +993,23 @@ ev_view_presentation_draw_end_page (EvViewPresentation *pview,
                           15,
                           15,
                           layout);
-#else
-	gtk_paint_layout (gtk_widget_get_style (widget),
-			  gtk_widget_get_window (widget),
-			  gtk_widget_get_state (widget),
-			  FALSE,
-			  &area,
-			  widget,
-			  NULL,
-			  15,
-			  15,
-			  layout);
-#endif
 
 	pango_font_description_free (font_desc);
 	g_object_unref (layout);
 }
 
-#if GTK_CHECK_VERSION (2, 90, 8)
 static gboolean
 ev_view_presentation_draw (GtkWidget *widget,
                            cairo_t   *cr)
-#else
-static gboolean
-ev_view_presentation_expose_event (GtkWidget      *widget,
-				   GdkEventExpose *event)
-#endif
 {
 	EvViewPresentation *pview = EV_VIEW_PRESENTATION (widget);
 	GdkRectangle        page_area;
 	GdkRectangle        overlap;
 	cairo_surface_t    *surface;
-#if GTK_CHECK_VERSION (2, 90, 8)
-        cairo_rectangle_int_t clip_rect;
-        GdkRectangle *area = &clip_rect;
-#else
-        GdkWindow *bin_window;
-        cairo_t   *cr = NULL;
-        GdkRectangle *area = &event->area;
-#endif
+        GdkRectangle        clip_rect;
 
-#if GTK_CHECK_VERSION (2, 90, 8)
         if (!gdk_cairo_get_clip_rectangle (cr, &clip_rect))
                 return FALSE;
-#endif
 
 	switch (pview->state) {
 	case EV_PRESENTATION_END:
@@ -1054,11 +1026,7 @@ ev_view_presentation_expose_event (GtkWidget      *widget,
 		if (ev_transition_animation_ready (pview->animation)) {
 			ev_view_presentation_get_page_area (pview, &page_area);
 
-#if GTK_CHECK_VERSION (2, 90, 8)
                         cairo_save (cr);
-#else
-			cr = gdk_cairo_create (gtk_widget_get_window (widget));
-#endif
 
 			/* normalize to x=0, y=0 */
 			cairo_translate (cr, page_area.x, page_area.y);
@@ -1069,11 +1037,7 @@ ev_view_presentation_expose_event (GtkWidget      *widget,
 
 			ev_transition_animation_paint (pview->animation, cr, page_area);
 
-#if GTK_CHECK_VERSION (2, 90, 8)
                         cairo_restore (cr);
-#else
-			cairo_destroy (cr);
-#endif
 		}
 
 		return TRUE;
@@ -1089,12 +1053,8 @@ ev_view_presentation_expose_event (GtkWidget      *widget,
 	}
 
 	ev_view_presentation_get_page_area (pview, &page_area);
-	if (gdk_rectangle_intersect (&page_area, area, &overlap)) {
-#if GTK_CHECK_VERSION (2, 90, 8)
-                        cairo_save (cr);
-#else
-		cr = gdk_cairo_create (gtk_widget_get_window (widget));
-#endif
+	if (gdk_rectangle_intersect (&page_area, &clip_rect, &overlap)) {
+                cairo_save (cr);
 
 		/* Try to fix rounding errors. See bug #438760 */
 		if (overlap.width == page_area.width)
@@ -1104,11 +1064,7 @@ ev_view_presentation_expose_event (GtkWidget      *widget,
 		cairo_set_source_surface (cr, surface, page_area.x, page_area.y);
 		cairo_fill (cr);
 
-#if GTK_CHECK_VERSION (2, 90, 8)
                 cairo_restore (cr);
-#else
-                cairo_destroy (cr);
-#endif
 	}
 
 	return FALSE;
@@ -1121,11 +1077,7 @@ ev_view_presentation_key_press_event (GtkWidget   *widget,
 	EvViewPresentation *pview = EV_VIEW_PRESENTATION (widget);
 
 	if (pview->state == EV_PRESENTATION_END)
-#if GTK_CHECK_VERSION (2, 90, 8)
                 return gtk_bindings_activate_event (G_OBJECT (widget), event);
-#else
-		return gtk_bindings_activate_event (GTK_OBJECT (widget), event);
-#endif
 
 	switch (event->keyval) {
 	case GDK_KEY_b:
@@ -1181,11 +1133,7 @@ ev_view_presentation_key_press_event (GtkWidget   *widget,
 		return TRUE;
 	}
 
-#if GTK_CHECK_VERSION (2, 90, 8)
 	return gtk_bindings_activate_event (G_OBJECT (widget), event);
-#else
-        return gtk_bindings_activate_event (GTK_OBJECT (widget), event);
-#endif
 }
 
 static gboolean
@@ -1279,9 +1227,6 @@ ev_view_presentation_realize (GtkWidget *widget)
 	attributes.window_type = GDK_WINDOW_CHILD;
 	attributes.wclass = GDK_INPUT_OUTPUT;
 	attributes.visual = gtk_widget_get_visual (widget);
-#if !GTK_CHECK_VERSION (2, 90, 8)
-	attributes.colormap = gtk_widget_get_colormap (widget);
-#endif
 
 	gtk_widget_get_allocation (widget, &allocation);
 	attributes.x = allocation.x;
@@ -1301,9 +1246,6 @@ ev_view_presentation_realize (GtkWidget *widget)
 	window = gdk_window_new (gtk_widget_get_parent_window (widget),
 				 &attributes,
 				 GDK_WA_X | GDK_WA_Y |
-#if !GTK_CHECK_VERSION (2, 90, 8)
-				 GDK_WA_COLORMAP |
-#endif
 				 GDK_WA_VISUAL);
 
 	gdk_window_set_user_data (window, widget);
@@ -1435,11 +1377,7 @@ ev_view_presentation_class_init (EvViewPresentationClass *klass)
 
 	widget_class->size_request = ev_view_presentation_size_request;
 	widget_class->realize = ev_view_presentation_realize;
-#if GTK_CHECK_VERSION (2, 90, 8)
         widget_class->draw = ev_view_presentation_draw;
-#else
-	widget_class->expose_event = ev_view_presentation_expose_event;
-#endif
 	widget_class->key_press_event = ev_view_presentation_key_press_event;
 	widget_class->button_release_event = ev_view_presentation_button_release_event;
 	widget_class->focus_out_event = ev_view_presentation_focus_out;

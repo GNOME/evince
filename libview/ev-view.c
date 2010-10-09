@@ -157,13 +157,8 @@ static void       ev_view_size_allocate                      (GtkWidget         
 static void       ev_view_realize                            (GtkWidget          *widget);
 static gboolean   ev_view_scroll_event                       (GtkWidget          *widget,
 							      GdkEventScroll     *event);
-#if GTK_CHECK_VERSION (2, 90, 8)
 static gboolean   ev_view_draw                               (GtkWidget          *widget,
                                                               cairo_t            *cr);
-#else
-static gboolean   ev_view_expose_event                       (GtkWidget          *widget,
-							      GdkEventExpose     *event);
-#endif
 static gboolean   ev_view_popup_menu                         (GtkWidget 	 *widget);
 static gboolean   ev_view_button_press_event                 (GtkWidget          *widget,
 							      GdkEventButton     *event);
@@ -3348,26 +3343,13 @@ find_selection_for_page (EvView *view,
 	return NULL;
 }
 
-#if GTK_CHECK_VERSION (2, 90, 8)
 static gboolean
 ev_view_draw (GtkWidget *widget,
               cairo_t   *cr)
-#else
-static gboolean
-ev_view_expose_event (GtkWidget      *widget,
-		      GdkEventExpose *event)
-#endif
 {
-	EvView    *view = EV_VIEW (widget);
-	gint       i;
-#if GTK_CHECK_VERSION (2, 90, 8)
-        cairo_rectangle_int_t clip_rect;
-        GdkRectangle *area = &clip_rect;
-#else
-        GdkWindow *bin_window;
-        cairo_t   *cr;
-        GdkRectangle *area = &event->area;
-#endif
+	EvView      *view = EV_VIEW (widget);
+	gint         i;
+	GdkRectangle clip_rect;
 
 	if (view->loading) {
 		show_loading_window (view);
@@ -3379,13 +3361,8 @@ ev_view_expose_event (GtkWidget      *widget,
 	if (view->document == NULL)
 		return FALSE;
 
-#if GTK_CHECK_VERSION (2, 90, 8)
         if (!gdk_cairo_get_clip_rectangle (cr, &clip_rect))
                 return FALSE;
-#else
-        bin_window = gtk_layout_get_bin_window (GTK_LAYOUT (view));
-	cr = gdk_cairo_create (bin_window);
-#endif
 
 	for (i = view->start_page; i >= 0 && i <= view->end_page; i++) {
 		GdkRectangle page_area;
@@ -3398,31 +3375,20 @@ ev_view_expose_event (GtkWidget      *widget,
 		page_area.x -= view->scroll_x;
 		page_area.y -= view->scroll_y;
 
-		draw_one_page (view, i, cr, &page_area, &border, area, &page_ready);
+		draw_one_page (view, i, cr, &page_area, &border, &clip_rect, &page_ready);
 
 		if (page_ready && view->find_pages && view->highlight_find_results)
 			highlight_find_results (view, cr, i);
 		if (page_ready && EV_IS_DOCUMENT_ANNOTATIONS (view->document))
 			show_annotation_windows (view, i);
 		if (page_ready && view->focus_annotation)
-#if GTK_CHECK_VERSION (2, 90, 8)
                         focus_annotation (view, cr, i, &clip_rect);
-#else
-			focus_annotation (view, cr, i, &event->area);
-#endif
 		if (page_ready && view->synctex_result)
 			highlight_forward_search_results (view, cr, i);
 	}
 
-#if GTK_CHECK_VERSION (2, 90, 8)
         if (GTK_WIDGET_CLASS (ev_view_parent_class)->draw)
                 GTK_WIDGET_CLASS (ev_view_parent_class)->draw (widget, cr);
-#else
-	cairo_destroy (cr);
-
-	if (GTK_WIDGET_CLASS (ev_view_parent_class)->expose_event)
-		(* GTK_WIDGET_CLASS (ev_view_parent_class)->expose_event) (widget, event);
-#endif
 
 	return FALSE;
 }
@@ -4177,11 +4143,7 @@ ev_view_key_press_event (GtkWidget   *widget,
 		return FALSE;
 	}
 
-#if GTK_CHECK_VERSION (2, 90, 8)
 	return gtk_bindings_activate_event (G_OBJECT (widget), event);
-#else
-        return gtk_bindings_activate_event (GTK_OBJECT (widget), event);
-#endif
 }
 
 static gint
@@ -4335,7 +4297,7 @@ focus_annotation (EvView       *view,
 		return;
 
 	doc_rect_to_view_rect (view, page, &mapping->area, &rect);
-#if GTK_CHECK_VERSION (2, 90, 8)
+
         gtk_paint_focus (gtk_widget_get_style (widget),
                          cr,
                          gtk_widget_get_state (widget),
@@ -4343,15 +4305,6 @@ focus_annotation (EvView       *view,
                          rect.x - view->scroll_x,
                          rect.y - view->scroll_y,
                          rect.width + 1, rect.height + 1);
-#else
-	gtk_paint_focus (gtk_widget_get_style (widget),
-			 gtk_layout_get_bin_window (GTK_LAYOUT (view)),
-			 gtk_widget_get_state (widget),
-			 NULL, widget, NULL,
-			 rect.x - view->scroll_x,
-			 rect.y - view->scroll_y,
-			 rect.width + 1, rect.height + 1);
-#endif
 }
 
 static void
@@ -4675,11 +4628,7 @@ ev_view_class_init (EvViewClass *class)
         object_class->dispose = ev_view_dispose;
 	object_class->finalize = ev_view_finalize;
 
-#if GTK_CHECK_VERSION (2, 90, 8)
         widget_class->draw = ev_view_draw;
-#else
-	widget_class->expose_event = ev_view_expose_event;
-#endif
 	widget_class->button_press_event = ev_view_button_press_event;
 	widget_class->motion_notify_event = ev_view_motion_notify_event;
 	widget_class->button_release_event = ev_view_button_release_event;
@@ -4848,24 +4797,7 @@ job_finished_cb (EvPixbufCache  *pixbuf_cache,
 		GdkWindow *bin_window;
 
 		bin_window = gtk_layout_get_bin_window (GTK_LAYOUT (view));
-#if GTK_CHECK_VERSION(2, 90, 5)
 		gdk_window_invalidate_region (bin_window, region, TRUE);
-#else
-	{
-		GdkRegion *gdk_region = gdk_region_new ();
-		guint      n_recs = cairo_region_num_rectangles (region);
-		guint      i;
-
-		for (i = 0; i < n_recs; i++) {
-			cairo_rectangle_int_t rect;
-
-			cairo_region_get_rectangle (region, i, &rect);
-			gdk_region_union_with_rect (gdk_region, (GdkRectangle *)&rect);
-		}
-		gdk_window_invalidate_region (bin_window, gdk_region, TRUE);
-		gdk_region_destroy (gdk_region);
-	}
-#endif
 	} else {
 		gtk_widget_queue_draw (GTK_WIDGET (view));
 	}
@@ -6019,24 +5951,7 @@ merge_selection_region (EvView *view,
 			cairo_region_translate (region,
 					   page_area.x + border.left - view->scroll_x,
 					   page_area.y + border.top - view->scroll_y);
-#if GTK_CHECK_VERSION(2, 90, 5)
 			gdk_window_invalidate_region (bin_window, region, TRUE);
-#else
-		{
-			GdkRegion *gdk_region = gdk_region_new ();
-			guint      n_recs = cairo_region_num_rectangles (region);
-			guint      i;
-
-			for (i = 0; i < n_recs; i++) {
-				cairo_rectangle_int_t rect;
-
-				cairo_region_get_rectangle (region, i, &rect);
-				gdk_region_union_with_rect (gdk_region, (GdkRectangle *)&rect);
-			}
-			gdk_window_invalidate_region (bin_window, gdk_region, TRUE);
-			gdk_region_destroy (gdk_region);
-		}
-#endif
 			cairo_region_destroy (region);
 		}
 	}

@@ -139,9 +139,6 @@ ev_annotation_properties_dialog_init (EvAnnotationPropertiesDialog *annot_dialog
 	gtk_window_set_title (GTK_WINDOW (annot_dialog), _("Annotation Properties"));
 	gtk_window_set_destroy_with_parent (GTK_WINDOW (annot_dialog), TRUE);
 	gtk_container_set_border_width (GTK_CONTAINER (annot_dialog), 5);
-#if !GTK_CHECK_VERSION (2, 90, 7)
-	gtk_dialog_set_has_separator (dialog, FALSE);
-#endif
 	gtk_dialog_add_buttons (dialog,
 				GTK_STOCK_CLOSE, GTK_RESPONSE_CLOSE,
 				GTK_STOCK_APPLY, GTK_RESPONSE_APPLY,
