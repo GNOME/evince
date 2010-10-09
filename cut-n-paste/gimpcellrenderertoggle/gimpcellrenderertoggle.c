@@ -285,6 +285,7 @@ gimp_cell_renderer_toggle_render (GtkCellRenderer      *cell,
   GtkStyle               *style  = gtk_widget_get_style (widget);
   GdkRectangle            toggle_rect;
   GdkRectangle            draw_rect;
+  GdkRectangle            clip_rect;
   GtkStateType            state;
   gboolean                active;
   gint                    xpad;
@@ -336,6 +337,23 @@ gimp_cell_renderer_toggle_render (GtkCellRenderer      *cell,
         state = GTK_STATE_NORMAL;
       else
         state = GTK_STATE_INSENSITIVE;
+    }
+
+  if ((flags & GTK_CELL_RENDERER_PRELIT) &&
+      gdk_cairo_get_clip_rectangle(cr, &clip_rect) &&
+      gdk_rectangle_intersect (&clip_rect, cell_area, &draw_rect))
+    {
+      cairo_save (cr);
+      gdk_cairo_rectangle (cr, &draw_rect);
+      cairo_clip (cr);
+      gtk_paint_shadow (style,
+                        cr,
+                        state,
+                        active ? GTK_SHADOW_IN : GTK_SHADOW_OUT,
+                        widget, NULL,
+                        toggle_rect.x,     toggle_rect.y,
+                        toggle_rect.width, toggle_rect.height);
+      cairo_restore (cr);
     }
 
   if (active)
