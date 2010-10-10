@@ -91,8 +91,6 @@ G_DEFINE_TYPE (EvApplication, ev_application, G_TYPE_OBJECT);
 #define EVINCE_DAEMON_INTERFACE      "org.gnome.evince.Daemon"
 #endif
 
-static const gchar *userdir = NULL;
-
 static void _ev_application_open_uri_at_dest (EvApplication  *application,
 					      const gchar    *uri,
 					      GdkScreen      *screen,
@@ -857,15 +855,7 @@ ev_application_accel_map_save (EvApplication *application)
 	gchar *tmp_filename;
 	gint   fd;
 
-	if (userdir) {
-		accel_map_file = g_build_filename (userdir, "accels",
-						   "evince", NULL);
-	} else {
-		accel_map_file = g_build_filename (g_get_home_dir (),
-						   ".gnome2", "accels",
-						   "evince", NULL);
-	}
-
+        accel_map_file = g_build_filename (application->dot_dir, "accels", NULL);
 	tmp_filename = g_strdup_printf ("%s.XXXXXX", accel_map_file);
 
 	fd = g_mkstemp (tmp_filename);
@@ -878,6 +868,7 @@ ev_application_accel_map_save (EvApplication *application)
 	gtk_accel_map_save_fd (fd);
 	close (fd);
 
+        g_mkdir_with_parents (application->dot_dir, 0700);
 	if (g_rename (tmp_filename, accel_map_file) == -1) {
 		/* FIXME: win32? */
 		g_unlink (tmp_filename);
@@ -892,17 +883,105 @@ ev_application_accel_map_load (EvApplication *application)
 {
 	gchar *accel_map_file;
 
-	if (userdir) {
-		accel_map_file = g_build_filename (userdir, "accels",
-						   "evince", NULL);
-	} else {
-		accel_map_file = g_build_filename (g_get_home_dir (),
-						   ".gnome2", "accels",
-						   "evince", NULL);
-	}
-
+        accel_map_file = g_build_filename (application->dot_dir, "accels", NULL);
 	gtk_accel_map_load (accel_map_file);
 	g_free (accel_map_file);
+}
+
+static void
+ev_application_migrate_config_dir (EvApplication *application)
+{
+        const gchar        *userdir;
+        gchar              *old_dot_dir;
+        gchar              *old_accels;
+        GError             *error;
+        gint                i;
+        gboolean            dir_created = FALSE;
+        static const gchar *config_files[] = {
+                "evince_toolbar.xml",
+                "print-settings",
+                NULL
+        };
+
+        userdir = g_getenv ("GNOME22_USER_DIR");
+        if (userdir) {
+                old_dot_dir = g_build_filename (userdir, "evince", NULL);
+                old_accels = g_build_filename (userdir, "accels", "evince", NULL);
+        } else {
+                old_dot_dir = g_build_filename (g_get_home_dir (),
+                                                ".gnome2",
+                                                "evince",
+                                                NULL);
+                old_accels = g_build_filename (g_get_home_dir (),
+                                               ".gnome2", "accels",
+                                               "evince", NULL);
+        }
+
+        if (g_file_test (old_dot_dir, G_FILE_TEST_EXISTS | G_FILE_TEST_IS_DIR)) {
+                for (i = 0; config_files[i]; i++) {
+                        gchar   *old_filename;
+                        gchar   *new_filename;
+                        GFile   *old_file;
+                        GFile   *new_file;
+
+                        old_filename = g_build_filename (old_dot_dir, config_files[i], NULL);
+                        if (!g_file_test (old_filename, G_FILE_TEST_EXISTS)) {
+                                g_free (old_filename);
+                                continue;
+                        }
+
+                        if (!dir_created) {
+                                g_mkdir_with_parents (application->dot_dir, 0700);
+                                dir_created = TRUE;
+                        }
+
+                        new_filename = g_build_filename (application->dot_dir, config_files[i], NULL);
+                        old_file = g_file_new_for_path (old_filename);
+                        new_file = g_file_new_for_path (new_filename);
+
+                        error = NULL;
+                        g_file_move (old_file, new_file, 0, NULL, NULL, NULL, &error);
+                        if (error) {
+                                g_warning ("Error migrating config file %s: %s\n",
+                                           old_filename, error->message);
+                                g_error_free (error);
+                        }
+
+                        g_free (old_filename);
+                        g_free (new_filename);
+                        g_object_unref (old_file);
+                        g_object_unref (new_file);
+                }
+        }
+
+        g_free (old_dot_dir);
+
+        if (g_file_test (old_accels, G_FILE_TEST_EXISTS)) {
+                gchar *new_accels;
+                GFile *old_accels_file;
+                GFile *new_accels_file;
+
+                if (!dir_created)
+                        g_mkdir_with_parents (application->dot_dir, 0700);
+
+                new_accels = g_build_filename (application->dot_dir, "accels", NULL);
+                old_accels_file = g_file_new_for_path (old_accels);
+                new_accels_file = g_file_new_for_path (new_accels);
+
+                error = NULL;
+                g_file_move (old_accels_file, new_accels_file, 0, NULL, NULL, NULL, &error);
+                if (error) {
+                        g_warning ("Error migrating accelerator specifications file %s: %s\n",
+                                   old_accels, error->message);
+                        g_error_free (error);
+                }
+
+                g_free (new_accels);
+                g_object_unref (old_accels_file);
+                g_object_unref (new_accels_file);
+        }
+
+        g_free (old_accels);
 }
 
 void
@@ -967,14 +1046,10 @@ ev_application_init (EvApplication *ev_application)
 {
 	GError *error = NULL;
 
-	userdir = g_getenv ("GNOME22_USER_DIR");
-	if (userdir)
-		ev_application->dot_dir = g_build_filename (userdir, "evince", NULL);
-	else
-		ev_application->dot_dir = g_build_filename (g_get_home_dir (),
-							    ".gnome2",
-							    "evince",
-							    NULL);
+        ev_application->dot_dir = g_build_filename (g_get_user_config_dir (),
+                                                    "evince", NULL);
+        if (!g_file_test (ev_application->dot_dir, G_FILE_TEST_EXISTS | G_FILE_TEST_IS_DIR))
+                ev_application_migrate_config_dir (ev_application);
 
 #ifdef G_OS_WIN32
 {
