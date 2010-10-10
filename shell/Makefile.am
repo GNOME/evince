@@ -24,9 +24,8 @@ INCLUDES=							\
 
 bin_PROGRAMS=evince
 
-libexec_PROGRAMS=evince-convert-metadata
 if ENABLE_DBUS
-libexec_PROGRAMS += evinced
+libexec_PROGRAMS = evinced
 endif
 
 evince_SOURCES=				\
@@ -119,12 +118,6 @@ evince-icon.o: $(srcdir)/evince-icon.rc $(top_srcdir)/data/evince.ico
 endif
 
 BUILT_SOURCES = ev-marshal.h ev-marshal.c
-
-evince_convert_metadata_SOURCES=	\
-	ev-convert-metadata.c
-
-evince_convert_metadata_LDADD=		\
-	$(SHELL_LIBS)
 
 if ENABLE_DBUS
 evinced_SOURCES=			\
