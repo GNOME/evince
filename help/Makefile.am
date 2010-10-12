@@ -54,7 +54,7 @@ DOC_PAGES = \
 	tips.page			\
 	zooming.page
 
-DOC_LINGUAS = bg ca cs de el en_GB es eu fi fr it ja nl oc pt_BR ru sl sr sv uk vi zh_CN
+DOC_LINGUAS = bg ca cs de el en_GB es eu fi fr gl it ja nl oc pt_BR ru sl sr sv uk vi zh_CN
 
 -include $(top_srcdir)/git.mk
 
