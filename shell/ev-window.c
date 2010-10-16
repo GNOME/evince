@@ -6596,6 +6596,8 @@ ev_window_sync_source (EvWindow     *window,
 	GDBusConnection *connection;
 	GError          *error = NULL;
 	guint32		 timestamp;
+	gchar		*uri_input;
+	GFile		*input_gfile;
 
 	if (window->priv->dbus_object_id <= 0)
 		return;
@@ -6605,17 +6607,40 @@ ev_window_sync_source (EvWindow     *window,
 		return;
 
 	timestamp = gtk_get_current_event_time ();
+	if (g_path_is_absolute (link->filename)) {
+		input_gfile = g_file_new_for_path (link->filename);
+	} else {
+		GFile *gfile, *parent_gfile;
+
+		gfile = g_file_new_for_uri (window->priv->uri);
+		parent_gfile = g_file_get_parent (gfile);
+
+		/* parent_gfile should never be NULL */
+		if (parent_gfile == NULL) {
+			g_printerr ("Document URI is '/'\n");
+			return;
+		}
+
+		input_gfile = g_file_get_child (parent_gfile, link->filename);
+		g_object_unref (parent_gfile);
+		g_object_unref (gfile);
+	}
+
+	uri_input = g_file_get_uri (input_gfile);
+	g_object_unref (input_gfile);
+
 	g_dbus_connection_emit_signal (connection,
 				       NULL,
 				       window->priv->dbus_object_path,
 				       EV_WINDOW_DBUS_INTERFACE,
 				       "SyncSource",
 				       g_variant_new ("(s(ii)u)",
-						      link->filename,
+						      uri_input,
 						      link->line,
 						      link->col,
 						      timestamp),
 				       &error);
+	g_free (uri_input);
 	if (error) {
 		g_printerr ("Failed to emit DBus signal SyncSource: %s\n",
 			    error->message);
