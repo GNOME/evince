@@ -80,9 +80,6 @@ typedef enum {
 #define SCROLL_TIME 150
 
 /*** Scrolling ***/
-static void       ev_view_set_scroll_adjustments             (GtkLayout          *layout,
-							      GtkAdjustment      *hadjustment,
-							      GtkAdjustment      *vadjustment);
 static void       view_update_range_and_current_page         (EvView             *view);
 static void       set_scroll_adjustment                      (EvView             *view,
 							      GtkOrientation      orientation,
@@ -775,16 +772,22 @@ set_scroll_adjustment (EvView *view,
 }
 
 static void
-ev_view_set_scroll_adjustments (GtkLayout      *layout,
-				GtkAdjustment  *hadjustment,
-				GtkAdjustment  *vadjustment)
+on_hadjustment_notify (EvView *view,
+                       GParamSpec *pspec,
+                       gpointer user_data)
 {
-	EvView *view = EV_VIEW (layout);
-	
-	set_scroll_adjustment (view, GTK_ORIENTATION_HORIZONTAL, hadjustment);
-	set_scroll_adjustment (view, GTK_ORIENTATION_VERTICAL, vadjustment);
-	
-	on_adjustment_value_changed (NULL, view);
+        set_scroll_adjustment (view, GTK_ORIENTATION_HORIZONTAL, gtk_scrollable_get_hadjustment (GTK_SCROLLABLE (view)));
+        on_adjustment_value_changed (NULL, view);
+}
+
+
+static void
+on_vadjustment_notify (EvView *view,
+                       GParamSpec *pspec,
+                       gpointer user_data)
+{
+        set_scroll_adjustment (view, GTK_ORIENTATION_VERTICAL, gtk_scrollable_get_vadjustment (GTK_SCROLLABLE (view)));
+        on_adjustment_value_changed (NULL, view);
 }
 
 static void
@@ -4581,7 +4584,8 @@ ev_view_dispose (GObject *object)
 		view->loading_timeout = 0;
 	}
 
-	ev_view_set_scroll_adjustments (GTK_LAYOUT (view), NULL, NULL);
+        gtk_scrollable_set_hadjustment (GTK_SCROLLABLE (view), NULL);
+        gtk_scrollable_set_vadjustment (GTK_SCROLLABLE (view), NULL);
 
 	G_OBJECT_CLASS (ev_view_parent_class)->dispose (object);
 }
@@ -4624,7 +4628,6 @@ ev_view_class_init (EvViewClass *class)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (class);
 	GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (class);
-	GtkLayoutClass *layout_class = GTK_LAYOUT_CLASS (class);
 	GtkBindingSet *binding_set;
 
         object_class->dispose = ev_view_dispose;
@@ -4650,8 +4653,6 @@ ev_view_class_init (EvViewClass *class)
 	widget_class->popup_menu = ev_view_popup_menu;
 	widget_class->query_tooltip = ev_view_query_tooltip;
 
-	layout_class->set_scroll_adjustments = ev_view_set_scroll_adjustments;
-	
 	class->binding_activated = ev_view_scroll;
 
 	signals[SIGNAL_BINDING_ACTIVATED] = g_signal_new ("binding_activated",
@@ -4767,8 +4768,11 @@ ev_view_init (EvView *view)
 	view->jump_to_find_result = TRUE;
 	view->highlight_find_results = FALSE;
 
-	gtk_layout_set_hadjustment (GTK_LAYOUT (view), NULL);
-	gtk_layout_set_vadjustment (GTK_LAYOUT (view), NULL);
+        g_signal_connect (view, "notify::hadjustment", G_CALLBACK (on_hadjustment_notify), NULL);
+        g_signal_connect (view, "notify::vadjustment", G_CALLBACK (on_vadjustment_notify), NULL);
+
+        gtk_scrollable_set_hadjustment (GTK_SCROLLABLE (view), NULL);
+        gtk_scrollable_set_vadjustment (GTK_SCROLLABLE (view), NULL);
 }
 
 /*** Callbacks ***/
