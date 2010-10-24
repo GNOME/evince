@@ -100,17 +100,17 @@ ev_annotation_properties_dialog_constructed (GObject *object)
 				  GTK_FILL, GTK_FILL, 0, 0);
 		gtk_widget_show (label);
 
-		dialog->icon = gtk_combo_box_new_text ();
-		gtk_combo_box_append_text (GTK_COMBO_BOX (dialog->icon), _("Note"));
-		gtk_combo_box_append_text (GTK_COMBO_BOX (dialog->icon), _("Comment"));
-		gtk_combo_box_append_text (GTK_COMBO_BOX (dialog->icon), _("Key"));
-		gtk_combo_box_append_text (GTK_COMBO_BOX (dialog->icon), _("Help"));
-		gtk_combo_box_append_text (GTK_COMBO_BOX (dialog->icon), _("New Paragraph"));
-		gtk_combo_box_append_text (GTK_COMBO_BOX (dialog->icon), _("Paragraph"));
-		gtk_combo_box_append_text (GTK_COMBO_BOX (dialog->icon), _("Insert"));
-		gtk_combo_box_append_text (GTK_COMBO_BOX (dialog->icon), _("Cross"));
-		gtk_combo_box_append_text (GTK_COMBO_BOX (dialog->icon), _("Circle"));
-		gtk_combo_box_append_text (GTK_COMBO_BOX (dialog->icon), _("Unknown"));
+		dialog->icon = gtk_combo_box_text_new ();
+		gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (dialog->icon), _("Note"));
+		gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (dialog->icon), _("Comment"));
+		gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (dialog->icon), _("Key"));
+		gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (dialog->icon), _("Help"));
+		gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (dialog->icon), _("New Paragraph"));
+		gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (dialog->icon), _("Paragraph"));
+		gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (dialog->icon), _("Insert"));
+		gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (dialog->icon), _("Cross"));
+		gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (dialog->icon), _("Circle"));
+		gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (dialog->icon), _("Unknown"));
 		gtk_combo_box_set_active (GTK_COMBO_BOX (dialog->icon), 0);
 		gtk_table_attach (GTK_TABLE (table), dialog->icon,
 				  1, 2, 5, 6,
@@ -221,9 +221,9 @@ ev_annotation_properties_dialog_init (EvAnnotationPropertiesDialog *annot_dialog
 			  GTK_FILL, GTK_FILL, 0, 0);
 	gtk_widget_show (label);
 
-	annot_dialog->popup_state = gtk_combo_box_new_text ();
-	gtk_combo_box_append_text (GTK_COMBO_BOX (annot_dialog->popup_state), _("Open"));
-	gtk_combo_box_append_text (GTK_COMBO_BOX (annot_dialog->popup_state), _("Close"));
+	annot_dialog->popup_state = gtk_combo_box_text_new ();
+	gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (annot_dialog->popup_state), _("Open"));
+	gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (annot_dialog->popup_state), _("Close"));
 	gtk_combo_box_set_active (GTK_COMBO_BOX (annot_dialog->popup_state), 1);
 	gtk_table_attach (GTK_TABLE (table), annot_dialog->popup_state,
 			  1, 2, 4, 5,
