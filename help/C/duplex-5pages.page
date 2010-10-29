@@ -1,0 +1,147 @@
+<page xmlns="http://projectmallard.org/1.0/"
+      type="guide" style="task"
+      id="duplex-5page">
+
+  <info>
+    <link type="guide" xref="print-booklet#doubleSided"/>
+
+    <desc>Print a 5 page booklet.</desc>
+
+    <revision pkgversion="2.32" version="0.1" date="2010-10-26" sstatus="draft"/>
+    <credit type="author">
+      <name>Tiffany Antopolski</name>
+      <email>tiffany@antopolski.com</email>
+    </credit>
+    <license>
+      <p>Creative Commons Share Alike 3.0</p>
+    </license>    
+
+  </info>
+
+<title>
+ 5-Page Booklet
+</title>
+<steps>
+ <item>
+  <p>
+   Click <guiseq><gui>File</gui><gui>Print</gui></guiseq>.
+  </p>
+ </item>
+
+
+ <item>
+  <p>
+   Choose the <gui>General</gui> tab.
+  </p>
+  <p>
+   Under <em>Range</em>, select <gui>Pages</gui> and type: 1
+  </p>
+
+ </item>
+ <item>
+  <p>
+   Choose the <gui>Page Setup</gui> tab.
+  </p>
+  <p>
+   Under <em>Layout</em>, in the <gui>Two-side</gui> option, select <gui>Short Edge (Flip)</gui>.
+  </p>
+ <p>
+   In the <gui>Pages per side</gui> option, select <gui>2</gui>.
+  </p>
+  <p>
+   In the <gui>Page ordering</gui> menu, select <gui>Right to left</gui>.
+  </p>
+  <p>
+   Click <gui>Print</gui>.
+  </p>
+ </item>
+
+
+ <item>
+  <p>
+    Once the page has printed, take the paper and place it back in the printer, taking care to orient it correctly (page 2 will be printed on the other side).
+  </p>
+ </item>
+ <item>
+  <p>
+      Click <guiseq><gui>File</gui><gui>Print</gui></guiseq> again.
+  </p>
+  <p>
+     Choose the General tab.  
+  </p>
+  <p>
+    Under <em>Range</em>, select <gui>Pages</gui> and type: 2
+  </p>
+ </item>
+ <item>
+  <p>
+   Choose the <gui>Page Setup</gui> tab. 
+  </p>
+  <p>
+   In the <gui>Page ordering</gui>  menu, select <gui>Left to right</gui>.
+  </p>
+<p>
+   Click <gui>Print</gui>.
+  </p>
+ </item>
+
+ <item>
+  <p>
+   To print page 3, click <guiseq><gui>File</gui><gui>Print</gui></guiseq> again. 
+  </p>
+  <p>
+    In the <gui>General</gui> tab enter the page number in the <gui>Pages</gui> selection . 
+  </p>
+ </item>
+ <item>
+ <p>
+In the <gui>Page Setup</gui> tab, set the <gui>Page ordering</gui> to <gui>Right to left</gui>. 
+  </p>
+<p>
+ Click <gui>Print</gui>.
+</p>
+ </item>
+ <item>
+ <p>
+    Once page 3 has printed, place the paper back in the printer (taking care to orient it correctly (pages 4 and 9 will be printed on the other side).
+ </p>
+ </item>
+ <item>
+  <p>
+   Click <guiseq><gui>File</gui><gui>Print</gui></guiseq>. 
+  </p>
+  <p>
+In the <gui>General</gui> tab enter pages 4, 9 in the <gui>Pages</gui> selection menu.  
+  </p>
+  <p>
+In the <gui>Page Setup</gui> tab set <gui>Page ordering</gui> to  <gui>Left to right</gui>.
+  </p>
+ <p>
+   Click <gui>Print</gui>.
+  </p>
+ </item>
+</steps>
+<note>
+   <p>
+    It is easier to print a 8-page booklet.  You may wish to add 3 blank pages to your PDF document to make it 8-pages.  To do so, you can:
+   </p>
+<steps>
+ <item>
+  <p>
+    Create a blank PDF document 3-pages long using <app>Open Office Word Processor</app>.
+  </p>
+ </item>
+ <item>
+  <p>
+   Merge the blank PDF with your PDF document using <app>PDF-Shuffler</app> placing the blank pages at the end.
+  </p>
+
+ </item>
+ <item>
+  <p>
+   Follow the steps for printing a <link xref="duplex-8page">8-page booklet</link>.
+  </p>
+ </item>
+</steps>
+</note>
+</page>
