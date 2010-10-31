@@ -949,11 +949,19 @@ ev_view_presentation_dispose (GObject *object)
 }
 
 static void
-ev_view_presentation_size_request (GtkWidget      *widget,
-				   GtkRequisition *requisition)
+ev_view_presentation_get_preferred_width (GtkWidget *widget,
+                                          gint      *minimum,
+                                          gint      *natural)
 {
-	requisition->width = 0;
-	requisition->height = 0;
+        *minimum = *natural = 0;
+}
+
+static void
+ev_view_presentation_get_preferred_height (GtkWidget *widget,
+                                           gint      *minimum,
+                                           gint      *natural)
+{
+        *minimum = *natural = 0;
 }
 
 static void
@@ -1375,7 +1383,8 @@ ev_view_presentation_class_init (EvViewPresentationClass *klass)
 
         gobject_class->dispose = ev_view_presentation_dispose;
 
-	widget_class->size_request = ev_view_presentation_size_request;
+	widget_class->get_preferred_width = ev_view_presentation_get_preferred_width;
+	widget_class->get_preferred_height = ev_view_presentation_get_preferred_height;
 	widget_class->realize = ev_view_presentation_realize;
         widget_class->draw = ev_view_presentation_draw;
 	widget_class->key_press_event = ev_view_presentation_key_press_event;

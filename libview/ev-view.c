@@ -3135,6 +3135,30 @@ ev_view_size_request (GtkWidget      *widget,
 }
 
 static void
+ev_view_get_preferred_width (GtkWidget *widget,
+                             gint      *minimum,
+                             gint      *natural)
+{
+        GtkRequisition requisition;
+
+        ev_view_size_request (widget, &requisition);
+
+        *minimum = *natural = requisition.width;
+}
+
+static void
+ev_view_get_preferred_height (GtkWidget *widget,
+                              gint      *minimum,
+                              gint      *natural)
+{
+        GtkRequisition requisition;
+
+        ev_view_size_request (widget, &requisition);
+
+        *minimum = *natural = requisition.height;
+}
+
+static void
 ev_view_size_allocate (GtkWidget      *widget,
 		       GtkAllocation  *allocation)
 {
@@ -3189,7 +3213,7 @@ ev_view_size_allocate (GtkWidget      *widget,
 					       form_field_mapping,
 					       field, &view_area);
 
-		gtk_widget_size_request (child, &child_requisition);
+		gtk_widget_get_preferred_size (child, &child_requisition, NULL);
 		if (child_requisition.width != view_area.width ||
 		    child_requisition.height != view_area.height)
 			gtk_widget_set_size_request (child, view_area.width, view_area.height);
@@ -4664,7 +4688,8 @@ ev_view_class_init (EvViewClass *class)
 	widget_class->focus_in_event = ev_view_focus_in;
 	widget_class->focus_out_event = ev_view_focus_out;
  	widget_class->get_accessible = ev_view_get_accessible;
-	widget_class->size_request = ev_view_size_request;
+	widget_class->get_preferred_width = ev_view_get_preferred_width;
+	widget_class->get_preferred_height = ev_view_get_preferred_height;
 	widget_class->size_allocate = ev_view_size_allocate;
 	widget_class->scroll_event = ev_view_scroll_event;
 	widget_class->enter_notify_event = ev_view_enter_notify_event;
