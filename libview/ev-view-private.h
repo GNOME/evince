@@ -132,6 +132,10 @@ struct _EvView {
 	/* Scrolling */
 	GtkAdjustment *hadjustment;
 	GtkAdjustment *vadjustment;
+	/* GtkScrollablePolicy needs to be checked when
+	 * driving the scrollable adjustment values */
+	guint hscroll_policy : 1;
+	guint vscroll_policy : 1;
 
 	gint scroll_x;
 	gint scroll_y;	
