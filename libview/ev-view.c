@@ -4800,6 +4800,8 @@ ev_view_init (EvView *view)
 {
 	gtk_widget_set_has_window (GTK_WIDGET (view), TRUE);
 	gtk_widget_set_can_focus (GTK_WIDGET (view), TRUE);
+	gtk_widget_set_redraw_on_allocate (GTK_WIDGET (view), FALSE);
+	gtk_container_set_resize_mode (GTK_CONTAINER (view), GTK_RESIZE_QUEUE);
 
 	gtk_widget_set_events (GTK_WIDGET (view),
 			       GDK_EXPOSURE_MASK |
