@@ -1,0 +1,70 @@
+<page xmlns="http://projectmallard.org/1.0/"
+      type="topic" style="task"
+      id="synctex-search">
+
+  <info>
+    <link type="guide" xref="index#synctex" group="fifth"/>
+    <desc>Flip between <app>Evince</app> and <app>Gedit</app>.</desc>
+
+    <revision pkgversion="2.32" version="0.1" date="2010-09-28" status="draft"/>
+    <credit type="author">
+      <name>Tiffany Antopolski</name>
+      <email>tiffany@antopolski.com</email>
+    </credit>
+    <license>
+      <p>Creative Commons Share Alike 3.0</p>
+    </license>
+
+  </info>
+
+<title>Search with SyncTex</title>
+<p>
+   After you <link xref="synctex-compile">compile your TeX file with SyncTex</link>, you will be able to search.  SyncTex even supports forward and backward search from an included file.
+</p>
+
+<section id="forward-search">
+    <title>Forward Search: From TeX to PDF (<app>Gedit</app> to <app>Evince</app>)</title>
+     <p>
+     Forward search allows you to click on a specific section of TeX source code, and jump to the associated position in the PDF.  To perform forward search:
+ </p>
+<steps>
+<item>
+<p>
+  Click on a line in the TeX file.
+</p>
+</item>
+<item>
+<p>
+  In <app>Gedit</app>, click <guiseq><gui>Tools</gui> <gui>Forward Search</gui></guiseq>.  The corresponding line in the PDF will be outlined in red.
+</p>
+<p>
+Alternatively, you can click <keyseq><key>Ctrl</key><key>Alt</key><key>F</key></keyseq>. The corresponding line in the PDF will be outlined in red.
+</p>
+</item>
+</steps>
+<note>
+<p>
+   If the corresponding PDF file is not open, performing a forward search will open the PDF in <app>Evince</app>.
+</p>
+</note>
+<p>
+ If you add a complex project with several TeX files you can put
+</p>
+<code>% mainfile: mainfile.tex</code>
+<p>
+either in the first or last three lines of each included TeX file, and forward search will work. Backward search should always work, even if you don't add the modeline.
+</p>
+
+</section>
+
+<section id="backward-search">
+    <title>Backward Search: From PDF to TeX (<app>Evince</app> to <app>Gedit</app>)</title>
+     <p>
+ Backward search allows you to click on a specific line in the PDF file, and jump to the associated line in the TeX source code. 
+</p>
+<p>
+You can perform a backward search by pressing <key>Ctrl</key>+ Left Click in <app>Evince</app>. The corresponding line in the TeX source code will be hightlighted.
+     </p>
+</section>
+
+</page>
