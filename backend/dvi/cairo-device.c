@@ -202,12 +202,9 @@ dvi_cairo_alloc_colors (void  *device_data,
 			int    density)
 {
 	double  frac;
-	GdkColor color, color_fg, color_bg;
+	GdkColor color, color_fg;
 	int     i, n;
-
-	color_bg.red = (bg >> 16) & 0xff;
-	color_bg.green = (bg >> 8) & 0xff;
-	color_bg.blue = (bg >> 0) & 0xff;
+	unsigned int alpha;
 
 	color_fg.red = (fg >> 16) & 0xff;
 	color_fg.green = (fg >> 8) & 0xff;
@@ -219,11 +216,12 @@ dvi_cairo_alloc_colors (void  *device_data,
 			pow ((double)i / n, 1 / gamma) :
 			1 - pow ((double)(n - i) / n, -gamma);
 		
-		color.red = frac * ((double)color_fg.red - color_bg.red) + color_bg.red;
-		color.green = frac * ((double)color_fg.green - color_bg.green) + color_bg.green;
-		color.blue = frac * ((double)color_fg.blue - color_bg.blue) + color_bg.blue;
-		
-		pixels[i] = (color.red << 16) + (color.green << 8) + color.blue + 0xff000000;
+		color.red = frac * color_fg.red;
+		color.green = frac * color_fg.green;
+		color.blue = frac * color_fg.blue;
+		alpha = frac * 0xFF;
+
+		pixels[i] = (alpha << 24) + (color.red << 16) + (color.green << 8) + color.blue;
 	}
 
 	return npixels;
@@ -235,7 +233,7 @@ dvi_cairo_create_image (void *device_data,
 			Uint  height,
 			Uint  bpp)
 {
-	return cairo_image_surface_create (CAIRO_FORMAT_RGB24, width, height);
+	return cairo_image_surface_create (CAIRO_FORMAT_ARGB32, width, height);
 }
 
 static void
@@ -256,6 +254,8 @@ dvi_cairo_put_pixel (void *image, int x, int y, Ulong color)
 	rowstride = cairo_image_surface_get_stride (surface);
 	p = (guint32*) (cairo_image_surface_get_data (surface) + y * rowstride + x * 4);
 
+        /* per cairo docs, must flush before modifying outside of cairo */
+        cairo_surface_flush(surface);
 	*p = color;
 }
 
@@ -343,7 +343,7 @@ mdvi_cairo_device_render (DviContext* dvi)
 	memset (pixels, 0xff, page_height * rowstride);
 
 	surface = cairo_image_surface_create_for_data (pixels,
-						       CAIRO_FORMAT_RGB24,
+						       CAIRO_FORMAT_ARGB32,
 						       page_width, page_height,
 						       rowstride);
 	cairo_surface_set_user_data (surface, &key,
