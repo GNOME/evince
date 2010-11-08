@@ -31,35 +31,14 @@
 </section>
 
 <section id="backward-search">
-<note>
-    <p>
-     Before you can perform backward searching, you will need to perform a forward search from the Beamer-LateX source.
-    </p>
-</note>
+
     <title>Backward Search: From PDF to Beamer-LaTeX source(<app>Evince</app> to <app>Gedit</app>)</title>
      <p>
      With <link xref="synctex-search#backward-search">backward search</link>, you click on some text in a slide, and the corresponding line of LaTex code that ends that particular slide is highlighted.
      </p>
  <code>\end{frame}</code>
 
-   <note style="bug">
-    <p>
-      Frames marked as [fragile] using the <em>listings</em> package may:
-    </p>
    
-    <list>
-     <item>
-       <p>
- open the .vrb file that may or may not correspond to the <em>lstlisting</em>.  Try clicking on the frametitle or the previious slide to get to the general location in the source.
-     </p>
-     </item>
-      <item>
-       <p>
-       cause <app>Evince</app> to close.  If this happens, you will need to close <app>Gedit</app> also, and re-open both files.
-    </p>
-     </item>
-  </list>
-   </note>
 </section>
 
 
