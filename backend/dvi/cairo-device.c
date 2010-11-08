@@ -260,6 +260,12 @@ dvi_cairo_put_pixel (void *image, int x, int y, Ulong color)
 }
 
 static void
+dvi_cairo_image_done (void *ptr)
+{
+        cairo_surface_mark_dirty((cairo_surface_t *)ptr);
+}
+
+static void
 dvi_cairo_set_color (void *device_data, Ulong fg, Ulong bg)
 {
 	DviCairoDevice *cairo_device = (DviCairoDevice *) device_data;
@@ -280,6 +286,7 @@ mdvi_cairo_device_init (DviDevice *device)
 	device->create_image = dvi_cairo_create_image;
 	device->free_image = dvi_cairo_free_image;
 	device->put_pixel = dvi_cairo_put_pixel;
+        device->image_done = dvi_cairo_image_done;
 	device->set_color = dvi_cairo_set_color;
 #ifdef HAVE_SPECTRE
 	device->draw_ps = dvi_cairo_draw_ps;

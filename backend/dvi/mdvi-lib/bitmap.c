@@ -1028,6 +1028,8 @@ void	mdvi_shrink_glyph_grey(DviContext *dvi, DviFont *font,
 		for(x = 0; x < w; x++)
 			dev->put_pixel(image, x, y, pixels[0]);
 	}
+
+        dev->image_done(image);
 	DEBUG((DBG_BITMAPS, "shrink_glyph_grey: (%dw,%dh,%dx,%dy) -> (%dw,%dh,%dx,%dy)\n",
 		glyph->w, glyph->h, glyph->x, glyph->y,
 		dest->w, dest->h, dest->x, dest->y));
