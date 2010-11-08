@@ -326,9 +326,6 @@ mdvi_cairo_device_render (DviContext* dvi)
 	gint             page_width;
 	gint             page_height;
 	cairo_surface_t *surface;
-	guchar          *pixels;
-	gint             rowstride;
-	static const cairo_user_data_key_t key;
 
 	cairo_device = (DviCairoDevice *) dvi->device.device_data;
 
@@ -338,19 +335,14 @@ mdvi_cairo_device_render (DviContext* dvi)
 	page_width = dvi->dvi_page_w * dvi->params.conv + 2 * cairo_device->xmargin;
 	page_height = dvi->dvi_page_h * dvi->params.vconv + 2 * cairo_device->ymargin;
 
-	rowstride = page_width * 4;
-	pixels = (guchar *) g_malloc (page_height * rowstride);
-	memset (pixels, 0xff, page_height * rowstride);
-
-	surface = cairo_image_surface_create_for_data (pixels,
-						       CAIRO_FORMAT_ARGB32,
-						       page_width, page_height,
-						       rowstride);
-	cairo_surface_set_user_data (surface, &key,
-				     pixels, (cairo_destroy_func_t)g_free);
+	surface = cairo_image_surface_create (CAIRO_FORMAT_ARGB32,
+                                              page_width, page_height);
 
 	cairo_device->cr = cairo_create (surface);
-	cairo_surface_destroy (surface);
+        cairo_surface_destroy (surface);
+
+        cairo_set_source_rgb (cairo_device->cr, 1., 1., 1.);
+        cairo_paint (cairo_device->cr);
 
 	mdvi_dopage (dvi, dvi->currpage);
 }
