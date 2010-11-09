@@ -6887,7 +6887,7 @@ ev_window_init (EvWindow *ev_window)
 	gtk_widget_show (ev_window->priv->toolbar);
 
 	/* Add the main area */
-	ev_window->priv->hpaned = gtk_hpaned_new ();
+	ev_window->priv->hpaned = gtk_paned_new (GTK_ORIENTATION_HORIZONTAL);
 	g_signal_connect (ev_window->priv->hpaned,
 			  "notify::position",
 			  G_CALLBACK (ev_window_sidebar_position_change_cb),
