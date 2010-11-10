@@ -740,7 +740,7 @@ ev_sidebar_attachments_init (EvSidebarAttachments *ev_attachbar)
 	/* Data Model */
 	ev_attachbar->priv->model = gtk_list_store_new (N_COLS,
 							GDK_TYPE_PIXBUF, 
-							G_TYPE_STRING,  
+							G_TYPE_STRING,
 							G_TYPE_STRING,
 							EV_TYPE_ATTACHMENT);
 
@@ -753,6 +753,7 @@ ev_sidebar_attachments_init (EvSidebarAttachments *ev_attachbar)
 	g_object_set (G_OBJECT (ev_attachbar->priv->icon_view),
 		      "text-column", COLUMN_NAME,
 		      "pixbuf-column", COLUMN_ICON,
+		      "tooltip-column", COLUMN_DESCRIPTION,
 		      NULL);
 	g_signal_connect_swapped (ev_attachbar->priv->icon_view,
 				  "button-press-event",
@@ -815,19 +816,24 @@ job_finished_callback (EvJobAttachments     *job,
 		GtkTreeIter   iter;
 		GdkPixbuf    *pixbuf = NULL;
 		const gchar  *mime_type;
+		gchar        *description;
 
 		attachment = EV_ATTACHMENT (l->data);
 
 		mime_type = ev_attachment_get_mime_type (attachment);
 		pixbuf = ev_sidebar_attachments_icon_cache_get (ev_attachbar,
 								mime_type);
+		description =  g_markup_printf_escaped ("%s",
+							 ev_attachment_get_description (attachment));
 
 		gtk_list_store_append (ev_attachbar->priv->model, &iter);
 		gtk_list_store_set (ev_attachbar->priv->model, &iter,
 				    COLUMN_NAME, ev_attachment_get_name (attachment),
+				    COLUMN_DESCRIPTION, description,
 				    COLUMN_ICON, pixbuf,
 				    COLUMN_ATTACHMENT, attachment, 
 				    -1);
+		g_free (description);
 	}
 
 	g_object_unref (job);
