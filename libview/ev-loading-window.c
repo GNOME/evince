@@ -71,8 +71,8 @@ ev_loading_window_init (EvLoadingWindow *window)
 	GtkWidget   *widget = GTK_WIDGET (window);
 	GtkWidget   *hbox;
 	GtkWidget   *label;
-	GtkStyle    *style;
-	GdkColor    fg, bg;
+	GtkStyleContext *context;
+	GdkRGBA    fg, bg;
 	const gchar *loading_text = _("Loading…");
 	const gchar *fg_color_name = "info_fg_color";
 	const gchar *bg_color_name = "info_bg_color";
@@ -99,24 +99,22 @@ ev_loading_window_init (EvLoadingWindow *window)
 	gtk_window_set_decorated (gtk_window, FALSE);
 	gtk_window_set_resizable (gtk_window, FALSE);
 
-	style = gtk_widget_get_style (widget);
-	if (!gtk_style_lookup_color (style, fg_color_name, &fg) ||
-	    !gtk_style_lookup_color (style, bg_color_name, &bg)) {
-		fg.pixel = 0;
-		fg.red = 0xb800;
-		fg.green = 0xad00;
-		fg.blue = 0x9d00;
+	context = gtk_widget_get_style_context (widget);
+        if (!gtk_style_context_lookup_color (context, fg_color_name, &fg) ||
+            !gtk_style_context_lookup_color (context, bg_color_name, &bg)) {
+		fg.red = 0.7;
+		fg.green = 0.67;
+		fg.blue = 0.63;
+                fg.alpha = 1.0;
 
-		bg.pixel = 0;
-		bg.red = 0xff00;
-		bg.green = 0xff00;
-		bg.blue = 0xbf00;
+		bg.red = 0.99;
+		bg.green = 0.99;
+		bg.blue = 0.71;
+                bg.alpha = 1.0;
 	}
 
-	if (!gdk_color_equal (&bg, &style->bg[GTK_STATE_NORMAL]))
-		gtk_widget_modify_bg (widget, GTK_STATE_NORMAL, &bg);
-	if (!gdk_color_equal (&fg, &style->fg[GTK_STATE_NORMAL]))
-		gtk_widget_modify_fg (widget, GTK_STATE_NORMAL, &fg);
+        gtk_widget_override_background_color (widget, GTK_STATE_NORMAL, &bg);
+        gtk_widget_override_color (widget, GTK_STATE_NORMAL, &fg);
 }
 
 static GObject *
