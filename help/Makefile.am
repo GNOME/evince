@@ -21,7 +21,6 @@ DOC_FIGURES = \
 	zoom.png
 
 DOC_PAGES = \
-
 	annotation-properties.page	\
 	annotations-delete.page		\
 	annotations-navigate.page	\
