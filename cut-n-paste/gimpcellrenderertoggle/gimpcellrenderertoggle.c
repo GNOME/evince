@@ -346,12 +346,9 @@ gimp_cell_renderer_toggle_render (GtkCellRenderer      *cell,
       cairo_save (cr);
       gdk_cairo_rectangle (cr, &draw_rect);
       cairo_clip (cr);
-      gtk_paint_shadow (style,
+      gtk_render_frame (gtk_widget_get_style_context (widget),
                         cr,
-                        state,
-                        active ? GTK_SHADOW_IN : GTK_SHADOW_OUT,
-                        widget, NULL,
-                        toggle_rect.x,     toggle_rect.y,
+                        toggle_rect.x, toggle_rect.y,
                         toggle_rect.width, toggle_rect.height);
       cairo_restore (cr);
     }
