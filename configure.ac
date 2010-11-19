@@ -4,7 +4,7 @@
 
 m4_define([ev_major_version],[2])
 m4_define([ev_minor_version],[91])
-m4_define([ev_micro_version],[1])
+m4_define([ev_micro_version],[2])
 m4_define([ev_extra_version],[])
 m4_define([ev_version],[ev_major_version.ev_minor_version.ev_micro_version()ev_extra_version])
 
@@ -125,7 +125,7 @@ dnl Specify required versions of dependencies
 CAIRO_REQUIRED=1.10.0
 GLIB_REQUIRED=2.25.11
 KEYRING_REQUIRED=2.22.0
-GTK_REQUIRED=2.91.0
+GTK_REQUIRED=2.91.3
 
 AC_SUBST([GLIB_REQUIRED])
 AC_SUBST([GTK_REQUIRED])

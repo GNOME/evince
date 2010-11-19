@@ -6595,6 +6595,7 @@ ev_window_sync_source (EvWindow     *window,
 {
 	GDBusConnection *connection;
 	GError          *error = NULL;
+	guint32		 timestamp;
 
 	if (window->priv->dbus_object_id <= 0)
 		return;
@@ -6603,15 +6604,17 @@ ev_window_sync_source (EvWindow     *window,
 	if (!connection)
 		return;
 
+	timestamp = gtk_get_current_event_time ();
 	g_dbus_connection_emit_signal (connection,
 				       NULL,
 				       window->priv->dbus_object_path,
 				       EV_WINDOW_DBUS_INTERFACE,
 				       "SyncSource",
-				       g_variant_new ("(s(ii))",
+				       g_variant_new ("(s(ii)u)",
 						      link->filename,
 						      link->line,
-						      link->col),
+						      link->col,
+						      timestamp),
 				       &error);
 	if (error) {
 		g_printerr ("Failed to emit DBus signal SyncSource: %s\n",
@@ -6722,6 +6725,7 @@ static const char introspection_xml[] =
 	    "<signal name='SyncSource'>"
 	      "<arg type='s' name='source_file' direction='out'/>"
 	      "<arg type='(ii)' name='source_point' direction='out'/>"
+	      "<arg type='u' name='timestamp' direction='out'/>"
 	    "</signal>"
             "<signal name='Closed'/>"
 	    "<signal name='DocumentLoaded'>"
@@ -6887,7 +6891,7 @@ ev_window_init (EvWindow *ev_window)
 	gtk_widget_show (ev_window->priv->toolbar);
 
 	/* Add the main area */
-	ev_window->priv->hpaned = gtk_hpaned_new ();
+	ev_window->priv->hpaned = gtk_paned_new (GTK_ORIENTATION_HORIZONTAL);
 	g_signal_connect (ev_window->priv->hpaned,
 			  "notify::position",
 			  G_CALLBACK (ev_window_sidebar_position_change_cb),

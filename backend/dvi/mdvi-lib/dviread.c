@@ -1166,42 +1166,12 @@ static void inline fix_after_horizontal(DviContext *dvi)
 	(a), (b) > 0 ? '+' : '-', \
 	(b) > 0 ? (b) : -(b), (c)
 
-/*
- * Draw rules with some sort of antialias support. Usefult for high-rate
- * scale factors.
- */ 
-
 static void draw_shrink_rule (DviContext *dvi, int x, int y, Uint w, Uint h, int f)
 {		
-	int hs, vs, npixels;
 	Ulong fg, bg;
-	Ulong *pixels;
-	
-	hs = dvi->params.hshrink;
-	vs = dvi->params.vshrink;
+
 	fg = dvi->curr_fg;
 	bg = dvi->curr_bg;
-
-	if (MDVI_ENABLED(dvi, MDVI_PARAM_ANTIALIASED)) {
-		npixels = vs * hs + 1;
-		pixels = get_color_table(&dvi->device, npixels, bg, fg,
-					 dvi->params.gamma, dvi->params.density);
-	
-		if (pixels) {
-		    int color;
-		    
-		    /*  Lines with width 1 should be perfectly visible
-		     *  in shrink about 15. That is the reason of constant
-		     */
-		     
-		    color = (pow (vs / h * hs, 2) + pow (hs / w * vs, 2)) / 225;
-		    if (color < npixels) {
-		        fg = pixels[color];
-    		    } else {	
-			fg = pixels[npixels - 1];
-		    }
-		}
-        }
 
 	mdvi_push_color (dvi, fg, bg);
 	dvi->device.draw_rule(dvi, x, y, w, h, f);

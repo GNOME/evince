@@ -1861,10 +1861,10 @@ ev_print_operation_print_create_custom_widget (EvPrintOperationPrint *print,
 	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 0, 1, GTK_FILL, 0, 0, 0);
 	gtk_widget_show (label);
 
-	print->scale_combo = gtk_combo_box_new_text ();
-	gtk_combo_box_append_text (GTK_COMBO_BOX (print->scale_combo), _("None"));
-	gtk_combo_box_append_text (GTK_COMBO_BOX (print->scale_combo), _("Shrink to Printable Area"));
-	gtk_combo_box_append_text (GTK_COMBO_BOX (print->scale_combo), _("Fit to Printable Area"));
+	print->scale_combo = gtk_combo_box_text_new ();
+	gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (print->scale_combo), _("None"));
+	gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (print->scale_combo), _("Shrink to Printable Area"));
+	gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (print->scale_combo), _("Fit to Printable Area"));
 	gtk_combo_box_set_active (GTK_COMBO_BOX (print->scale_combo), page_scale);
 	gtk_widget_set_tooltip_text (print->scale_combo,
 		_("Scale document pages to fit the selected printer page. Select from one of the following:\n"

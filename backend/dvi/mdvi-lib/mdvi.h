@@ -99,6 +99,7 @@ typedef void *(*DviCreateImage)	__PROTO((void *device_data,
 				         Uint bpp));
 typedef void (*DviFreeImage)	__PROTO((void *image));
 typedef void (*DviPutPixel)	__PROTO((void *image, int x, int y, Ulong color));
+typedef void (*DviImageDone)    __PROTO((void *image));
 typedef void (*DviDevDestroy)   __PROTO((void *data));
 typedef void (*DviRefresh)      __PROTO((DviContext *dvi, void *device_data));
 typedef void (*DviSetColor)	__PROTO((void *device_data, Ulong, Ulong));
@@ -114,6 +115,7 @@ struct _DviDevice {
 	DviCreateImage	create_image;
 	DviFreeImage	free_image;
 	DviPutPixel	put_pixel;
+        DviImageDone    image_done;
 	DviDevDestroy	dev_destroy;
 	DviRefresh	refresh;
 	DviSetColor	set_color;

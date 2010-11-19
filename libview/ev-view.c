@@ -67,6 +67,14 @@ enum {
 	TARGET_DND_IMAGE
 };
 
+enum {
+	PROP_0,
+	PROP_HADJUSTMENT,
+	PROP_VADJUSTMENT,
+	PROP_HSCROLL_POLICY,
+	PROP_VSCROLL_POLICY
+};
+
 static guint signals[N_SIGNALS];
 
 typedef enum {
@@ -80,13 +88,7 @@ typedef enum {
 #define SCROLL_TIME 150
 
 /*** Scrolling ***/
-static void       ev_view_set_scroll_adjustments             (GtkLayout          *layout,
-							      GtkAdjustment      *hadjustment,
-							      GtkAdjustment      *vadjustment);
 static void       view_update_range_and_current_page         (EvView             *view);
-static void       set_scroll_adjustment                      (EvView             *view,
-							      GtkOrientation      orientation,
-							      GtkAdjustment      *adjustment);
 static void       add_scroll_binding_keypad                  (GtkBindingSet      *binding_set,
 							      guint               keyval,
 							      GdkModifierType modifiers,
@@ -154,7 +156,6 @@ static void       ev_view_size_request                       (GtkWidget         
 							      GtkRequisition     *requisition);
 static void       ev_view_size_allocate                      (GtkWidget          *widget,
 							      GtkAllocation      *allocation);
-static void       ev_view_realize                            (GtkWidget          *widget);
 static gboolean   ev_view_scroll_event                       (GtkWidget          *widget,
 							      GdkEventScroll     *event);
 static gboolean   ev_view_draw                               (GtkWidget          *widget,
@@ -282,7 +283,8 @@ static void       ev_view_primary_clear_cb                   (GtkClipboard      
 							      gpointer            data);
 static void       ev_view_update_primary_selection           (EvView             *ev_view);
 
-G_DEFINE_TYPE (EvView, ev_view, GTK_TYPE_LAYOUT)
+G_DEFINE_TYPE_WITH_CODE (EvView, ev_view, GTK_TYPE_FIXED,
+			 G_IMPLEMENT_INTERFACE (GTK_TYPE_SCROLLABLE, NULL))
 
 /* HeightToPage cache */
 #define EV_HEIGHT_TO_PAGE_CACHE_KEY "ev-height-to-page-cache"
@@ -553,8 +555,8 @@ ev_view_scroll_to_page_position (EvView *view, GtkOrientation orientation)
 }
 
 static void
-view_set_adjustment_values (EvView         *view,
-			    GtkOrientation  orientation)
+ev_view_set_adjustment_values (EvView         *view,
+			       GtkOrientation  orientation)
 {
 	GtkWidget *widget = GTK_WIDGET (view);
 	GtkAdjustment *adjustment;
@@ -744,47 +746,40 @@ view_update_range_and_current_page (EvView *view)
 }
 
 static void
-set_scroll_adjustment (EvView *view,
-		       GtkOrientation  orientation,
-		       GtkAdjustment  *adjustment)
+ev_view_set_scroll_adjustment (EvView         *view,
+			       GtkOrientation  orientation,
+			       GtkAdjustment  *adjustment)
 {
 	GtkAdjustment **to_set;
+	const gchar    *prop_name;
 
-	if (orientation == GTK_ORIENTATION_HORIZONTAL)
+	if (orientation == GTK_ORIENTATION_HORIZONTAL) {
 		to_set = &view->hadjustment;
-	else
+		prop_name = "hadjustment";
+	} else {
 		to_set = &view->vadjustment;
-
-	if (*to_set != adjustment) {
-		if (*to_set) {
-			g_signal_handlers_disconnect_by_func (*to_set,
-							      (gpointer) on_adjustment_value_changed,
-							      view);
-			g_object_unref (*to_set);
-		}
-
-		*to_set = adjustment;
-		view_set_adjustment_values (view, orientation);
-
-		if (*to_set) {
-			g_object_ref (*to_set);
-			g_signal_connect (*to_set, "value_changed",
-					  G_CALLBACK (on_adjustment_value_changed), view);
-		}
+		prop_name = "vadjustment";
 	}
-}
 
-static void
-ev_view_set_scroll_adjustments (GtkLayout      *layout,
-				GtkAdjustment  *hadjustment,
-				GtkAdjustment  *vadjustment)
-{
-	EvView *view = EV_VIEW (layout);
-	
-	set_scroll_adjustment (view, GTK_ORIENTATION_HORIZONTAL, hadjustment);
-	set_scroll_adjustment (view, GTK_ORIENTATION_VERTICAL, vadjustment);
-	
-	on_adjustment_value_changed (NULL, view);
+	if (adjustment && adjustment == *to_set)
+		return;
+
+	if (*to_set) {
+		g_signal_handlers_disconnect_by_func (*to_set,
+						      (gpointer) on_adjustment_value_changed,
+						      view);
+		g_object_unref (*to_set);
+	}
+
+	if (!adjustment)
+		adjustment = gtk_adjustment_new (0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+	g_signal_connect (adjustment, "value_changed",
+			  G_CALLBACK (on_adjustment_value_changed),
+			  view);
+	*to_set = g_object_ref_sink (adjustment);
+	ev_view_set_adjustment_values (view, orientation);
+
+	g_object_notify (G_OBJECT (view), prop_name);
 }
 
 static void
@@ -2221,14 +2216,14 @@ ev_view_form_field_choice_changed (GtkWidget   *widget,
 			field->changed = TRUE;
 		}
 
-		if (GTK_IS_COMBO_BOX_ENTRY (widget)) {
-			gchar *text;
-			
-			text = gtk_combo_box_get_active_text (GTK_COMBO_BOX (widget));
+		if (gtk_combo_box_get_has_entry (GTK_COMBO_BOX (widget))) {
+			const gchar *text;
+
+			text = gtk_entry_get_text (GTK_ENTRY (gtk_bin_get_child (GTK_BIN (widget))));
 			if (!field_choice->text ||
 			    (field_choice->text && g_ascii_strcasecmp (field_choice->text, text) != 0)) {
 				g_free (field_choice->text);
-				field_choice->text = text;
+				field_choice->text = g_strdup (text);
 				field->changed = TRUE;
 			}
 		}
@@ -2335,8 +2330,10 @@ ev_view_form_field_choice_create_widget (EvView      *view,
 					view);
 	} else if (field_choice->is_editable) { /* ComboBoxEntry */
 		gchar *text;
-		
-		choice = gtk_combo_box_entry_new_with_model (model, 0);
+
+                /* FIXME once gtk bug 633050 is fixed */
+                choice = g_object_new (GTK_TYPE_COMBO_BOX, "has-entry", TRUE, "model", model, NULL);
+
 		text = ev_document_forms_form_field_choice_get_text (EV_DOCUMENT_FORMS (view->document), field);
 		if (text) {
 			gtk_entry_set_text (GTK_ENTRY (gtk_bin_get_child (GTK_BIN (choice))), text);
@@ -2418,7 +2415,7 @@ ev_view_handle_form_field (EvView      *view,
 				       form_field_mapping,
 				       field, &view_area);
 
-	gtk_layout_put (GTK_LAYOUT (view), field_widget, view_area.x, view_area.y);
+	gtk_fixed_put (GTK_FIXED (view), field_widget, view_area.x, view_area.y);
 	gtk_widget_show (field_widget);
 	gtk_widget_grab_focus (field_widget);
 }
@@ -3138,6 +3135,30 @@ ev_view_size_request (GtkWidget      *widget,
 }
 
 static void
+ev_view_get_preferred_width (GtkWidget *widget,
+                             gint      *minimum,
+                             gint      *natural)
+{
+        GtkRequisition requisition;
+
+        ev_view_size_request (widget, &requisition);
+
+        *minimum = *natural = requisition.width;
+}
+
+static void
+ev_view_get_preferred_height (GtkWidget *widget,
+                              gint      *minimum,
+                              gint      *natural)
+{
+        GtkRequisition requisition;
+
+        ev_view_size_request (widget, &requisition);
+
+        *minimum = *natural = requisition.height;
+}
+
+static void
 ev_view_size_allocate (GtkWidget      *widget,
 		       GtkAllocation  *allocation)
 {
@@ -3162,8 +3183,8 @@ ev_view_size_allocate (GtkWidget      *widget,
 		view->internal_size_request = FALSE;
 	}
 	
-	view_set_adjustment_values (view, GTK_ORIENTATION_HORIZONTAL);
-	view_set_adjustment_values (view, GTK_ORIENTATION_VERTICAL);
+	ev_view_set_adjustment_values (view, GTK_ORIENTATION_HORIZONTAL);
+	ev_view_set_adjustment_values (view, GTK_ORIENTATION_VERTICAL);
 
 	if (view->document)
 		view_update_range_and_current_page (view);
@@ -3192,7 +3213,7 @@ ev_view_size_allocate (GtkWidget      *widget,
 					       form_field_mapping,
 					       field, &view_area);
 
-		gtk_widget_size_request (child, &child_requisition);
+		gtk_widget_get_preferred_size (child, &child_requisition, NULL);
 		if (child_requisition.width != view_area.width ||
 		    child_requisition.height != view_area.height)
 			gtk_widget_set_size_request (child, view_area.width, view_area.height);
@@ -3204,7 +3225,7 @@ ev_view_size_allocate (GtkWidget      *widget,
 					 NULL);
 		if (child_allocation.x != view_area.x ||
 		    child_allocation.y != view_area.y) {
-			gtk_layout_move (GTK_LAYOUT (widget), child, view_area.x, view_area.y);
+			gtk_fixed_move (GTK_FIXED (widget), child, view_area.x, view_area.y);
 		}
 	}
 	g_list_free (children);
@@ -3235,35 +3256,6 @@ ev_view_size_allocate (GtkWidget      *widget,
 			ev_view_window_child_move (view, child, view_rect.x + root_x, view_rect.y + root_y);
 		}
 	}
-}
-
-static void
-ev_view_realize (GtkWidget *widget)
-{
-	EvView    *view = EV_VIEW (widget);
-	GdkWindow *bin_window;
-	GtkStyle  *style;
-
-	if (GTK_WIDGET_CLASS (ev_view_parent_class)->realize)
-		(* GTK_WIDGET_CLASS (ev_view_parent_class)->realize) (widget);
-
-	bin_window = gtk_layout_get_bin_window (GTK_LAYOUT (view));
-	gdk_window_set_events (bin_window,
-			       (gdk_window_get_events (bin_window) |
-				GDK_EXPOSURE_MASK |
-				GDK_BUTTON_PRESS_MASK |
-				GDK_BUTTON_RELEASE_MASK |
-				GDK_SCROLL_MASK |
-				GDK_KEY_PRESS_MASK |
-				GDK_POINTER_MOTION_MASK |
-				GDK_POINTER_MOTION_HINT_MASK |
-				GDK_ENTER_NOTIFY_MASK |
-				GDK_LEAVE_NOTIFY_MASK));
-
-	style = gtk_widget_get_style (widget);
-	gdk_window_set_background (bin_window, &style->mid[GTK_STATE_NORMAL]);
-
-	on_adjustment_value_changed (NULL, view);
 }
 
 static gboolean
@@ -3866,15 +3858,15 @@ ev_view_motion_notify_event (GtkWidget      *widget,
 			     GdkEventMotion *event)
 {
 	EvView    *view = EV_VIEW (widget);
-	GdkWindow *bin_window;
+	GdkWindow *window;
 	gint       x, y;
 
 	if (!view->document)
 		return FALSE;
 
-	bin_window = gtk_layout_get_bin_window (GTK_LAYOUT (view));
+	window = gtk_widget_get_window (widget);
 
-        if (event->is_hint || event->window != bin_window) {
+        if (event->is_hint || event->window != window) {
 	    gtk_widget_get_pointer (widget, &x, &y);
         } else {
 	    x = event->x;
@@ -4579,9 +4571,68 @@ ev_view_dispose (GObject *object)
 		view->loading_timeout = 0;
 	}
 
-	ev_view_set_scroll_adjustments (GTK_LAYOUT (view), NULL, NULL);
+        gtk_scrollable_set_hadjustment (GTK_SCROLLABLE (view), NULL);
+        gtk_scrollable_set_vadjustment (GTK_SCROLLABLE (view), NULL);
 
 	G_OBJECT_CLASS (ev_view_parent_class)->dispose (object);
+}
+
+static void
+ev_view_get_property (GObject     *object,
+		      guint        prop_id,
+		      GValue      *value,
+		      GParamSpec  *pspec)
+{
+	EvView *view = EV_VIEW (object);
+
+	switch (prop_id) {
+	case PROP_HADJUSTMENT:
+		g_value_set_object (value, view->hadjustment);
+		break;
+	case PROP_VADJUSTMENT:
+		g_value_set_object (value, view->vadjustment);
+		break;
+	case PROP_HSCROLL_POLICY:
+		g_value_set_enum (value, view->hscroll_policy);
+		break;
+	case PROP_VSCROLL_POLICY:
+		g_value_set_enum (value, view->vscroll_policy);
+		break;
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+		break;
+	}
+}
+
+static void
+ev_view_set_property (GObject      *object,
+		      guint         prop_id,
+		      const GValue *value,
+		      GParamSpec   *pspec)
+{
+	EvView *view = EV_VIEW (object);
+
+	switch (prop_id) {
+	case PROP_HADJUSTMENT:
+		ev_view_set_scroll_adjustment (view, GTK_ORIENTATION_HORIZONTAL,
+					       (GtkAdjustment *) g_value_get_object (value));
+		break;
+	case PROP_VADJUSTMENT:
+		ev_view_set_scroll_adjustment (view, GTK_ORIENTATION_VERTICAL,
+					       (GtkAdjustment *) g_value_get_object (value));
+		break;
+	case PROP_HSCROLL_POLICY:
+		view->hscroll_policy = g_value_get_enum (value);
+		gtk_widget_queue_resize (GTK_WIDGET (view));
+		break;
+	case PROP_VSCROLL_POLICY:
+		view->vscroll_policy = g_value_get_enum (value);
+		gtk_widget_queue_resize (GTK_WIDGET (view));
+		break;
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+		break;
+	}
 }
 
 static AtkObject *
@@ -4622,9 +4673,10 @@ ev_view_class_init (EvViewClass *class)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (class);
 	GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (class);
-	GtkLayoutClass *layout_class = GTK_LAYOUT_CLASS (class);
 	GtkBindingSet *binding_set;
 
+	object_class->get_property = ev_view_get_property;
+	object_class->set_property = ev_view_set_property;
         object_class->dispose = ev_view_dispose;
 	object_class->finalize = ev_view_finalize;
 
@@ -4636,9 +4688,9 @@ ev_view_class_init (EvViewClass *class)
 	widget_class->focus_in_event = ev_view_focus_in;
 	widget_class->focus_out_event = ev_view_focus_out;
  	widget_class->get_accessible = ev_view_get_accessible;
-	widget_class->size_request = ev_view_size_request;
+	widget_class->get_preferred_width = ev_view_get_preferred_width;
+	widget_class->get_preferred_height = ev_view_get_preferred_height;
 	widget_class->size_allocate = ev_view_size_allocate;
-	widget_class->realize = ev_view_realize;
 	widget_class->scroll_event = ev_view_scroll_event;
 	widget_class->enter_notify_event = ev_view_enter_notify_event;
 	widget_class->leave_notify_event = ev_view_leave_notify_event;
@@ -4648,9 +4700,13 @@ ev_view_class_init (EvViewClass *class)
 	widget_class->popup_menu = ev_view_popup_menu;
 	widget_class->query_tooltip = ev_view_query_tooltip;
 
-	layout_class->set_scroll_adjustments = ev_view_set_scroll_adjustments;
-	
 	class->binding_activated = ev_view_scroll;
+
+	/* Scrollable interface */
+	g_object_class_override_property (object_class, PROP_HADJUSTMENT, "hadjustment");
+	g_object_class_override_property (object_class, PROP_VADJUSTMENT, "vadjustment");
+	g_object_class_override_property (object_class, PROP_HSCROLL_POLICY, "hscroll-policy");
+	g_object_class_override_property (object_class, PROP_VSCROLL_POLICY, "vscroll-policy");
 
 	signals[SIGNAL_BINDING_ACTIVATED] = g_signal_new ("binding_activated",
 	  	         G_TYPE_FROM_CLASS (object_class),
@@ -4742,7 +4798,21 @@ ev_view_class_init (EvViewClass *class)
 static void
 ev_view_init (EvView *view)
 {
+	gtk_widget_set_has_window (GTK_WIDGET (view), TRUE);
 	gtk_widget_set_can_focus (GTK_WIDGET (view), TRUE);
+	gtk_widget_set_redraw_on_allocate (GTK_WIDGET (view), FALSE);
+	gtk_container_set_resize_mode (GTK_CONTAINER (view), GTK_RESIZE_QUEUE);
+
+	gtk_widget_set_events (GTK_WIDGET (view),
+			       GDK_EXPOSURE_MASK |
+			       GDK_BUTTON_PRESS_MASK |
+			       GDK_BUTTON_RELEASE_MASK |
+			       GDK_SCROLL_MASK |
+			       GDK_KEY_PRESS_MASK |
+			       GDK_POINTER_MOTION_MASK |
+			       GDK_POINTER_MOTION_HINT_MASK |
+			       GDK_ENTER_NOTIFY_MASK |
+			       GDK_LEAVE_NOTIFY_MASK);
 
 	view->start_page = -1;
 	view->end_page = -1;
@@ -4764,9 +4834,6 @@ ev_view_init (EvView *view)
 	view->pending_scroll = SCROLL_TO_KEEP_POSITION;
 	view->jump_to_find_result = TRUE;
 	view->highlight_find_results = FALSE;
-
-	gtk_layout_set_hadjustment (GTK_LAYOUT (view), NULL);
-	gtk_layout_set_vadjustment (GTK_LAYOUT (view), NULL);
 }
 
 /*** Callbacks ***/
@@ -4794,10 +4861,7 @@ job_finished_cb (EvPixbufCache  *pixbuf_cache,
 		 EvView         *view)
 {
 	if (region) {
-		GdkWindow *bin_window;
-
-		bin_window = gtk_layout_get_bin_window (GTK_LAYOUT (view));
-		gdk_window_invalidate_region (bin_window, region, TRUE);
+		gdk_window_invalidate_region (gtk_widget_get_window (GTK_WIDGET (view)), region, TRUE);
 	} else {
 		gtk_widget_queue_draw (GTK_WIDGET (view));
 	}
@@ -4859,7 +4923,7 @@ on_adjustment_value_changed (GtkAdjustment *adjustment,
 					 "x", &child_x,
 					 "y", &child_y,
 					 NULL);
-		gtk_layout_move (GTK_LAYOUT (view), child, child_x + dx, child_y + dy);
+		gtk_fixed_move (GTK_FIXED (view), child, child_x + dx, child_y + dy);
 	}
 	g_list_free (children);
 
@@ -4874,10 +4938,7 @@ on_adjustment_value_changed (GtkAdjustment *adjustment,
 	if (view->pending_resize) {
 		gtk_widget_queue_draw (GTK_WIDGET (view));
 	} else {
-		GdkWindow *bin_window;
-
-		bin_window = gtk_layout_get_bin_window (GTK_LAYOUT (view));
-		gdk_window_scroll (bin_window, dx, dy);
+		gdk_window_scroll (gtk_widget_get_window (GTK_WIDGET (view)), dx, dy);
 	}
 
 	gtk_widget_get_pointer (GTK_WIDGET (view), &x, &y);
@@ -5942,16 +6003,14 @@ merge_selection_region (EvView *view,
 
 		/* Redraw the damaged region! */
 		if (region) {
-			GdkWindow   *bin_window;
 			GdkRectangle page_area;
 			GtkBorder    border;
 
-			bin_window = gtk_layout_get_bin_window (GTK_LAYOUT (view));
 			ev_view_get_page_extents (view, cur_page, &page_area, &border);
 			cairo_region_translate (region,
 					   page_area.x + border.left - view->scroll_x,
 					   page_area.y + border.top - view->scroll_y);
-			gdk_window_invalidate_region (bin_window, region, TRUE);
+			gdk_window_invalidate_region (gtk_widget_get_window (GTK_WIDGET (view)), region, TRUE);
 			cairo_region_destroy (region);
 		}
 	}
@@ -6189,7 +6248,7 @@ ev_view_set_cursor (EvView *view, EvViewCursor new_cursor)
 {
 	GdkCursor *cursor = NULL;
 	GtkWidget *widget;
-	GdkWindow *bin_window;
+	GdkWindow *window;
 
 	if (view->cursor == new_cursor) {
 		return;
@@ -6197,10 +6256,10 @@ ev_view_set_cursor (EvView *view, EvViewCursor new_cursor)
 
 	view->cursor = new_cursor;
 
-	bin_window = gtk_layout_get_bin_window (GTK_LAYOUT (view));
+	window = gtk_widget_get_window (GTK_WIDGET (view));
 	widget = gtk_widget_get_toplevel (GTK_WIDGET (view));
 	cursor = ev_view_cursor_new (gtk_widget_get_display (widget), new_cursor);
-	gdk_window_set_cursor (bin_window, cursor);
+	gdk_window_set_cursor (window, cursor);
 	gdk_flush ();
 	if (cursor)
 		gdk_cursor_unref (cursor);
