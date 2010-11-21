@@ -1035,6 +1035,9 @@ ev_pixbuf_cache_set_selection_list (EvPixbufCache *pixbuf_cache,
 	if (!EV_IS_SELECTION (pixbuf_cache->document))
 		return;
 
+        if (pixbuf_cache->start_page == -1 || pixbuf_cache->end_page == -1)
+                return;
+
 	/* We check each area to see what needs updating, and what needs freeing; */
 	page = pixbuf_cache->start_page - pixbuf_cache->preload_cache_size;
 	for (i = 0; i < pixbuf_cache->preload_cache_size; i++) {
@@ -1113,6 +1116,9 @@ ev_pixbuf_cache_get_selection_list (EvPixbufCache *pixbuf_cache)
 	int i;
 
 	g_return_val_if_fail (EV_IS_PIXBUF_CACHE (pixbuf_cache), NULL);
+
+        if (pixbuf_cache->start_page == -1 || pixbuf_cache->end_page == -1)
+                return NULL;
 
 	/* We check each area to see what needs updating, and what needs freeing; */
 	page = pixbuf_cache->start_page - pixbuf_cache->preload_cache_size;
