@@ -283,25 +283,6 @@ register_evince_backend (GTypeModule *module)					\
 #define EV_BACKEND_REGISTER(BackendName, backend_name)			\
 	EV_BACKEND_REGISTER_WITH_CODE(BackendName, backend_name, ;)
 
-/*
- * A convenience macro for boxed type implementations, which defines a
- * type_name_get_type() function registering the boxed type.
- */
-#define EV_DEFINE_BOXED_TYPE(TypeName, type_name, copy_func, free_func)               \
-GType                                                                                 \
-type_name##_get_type (void)                                                           \
-{                                                                                     \
-        static volatile gsize g_define_type_id__volatile = 0;                         \
-	if (g_once_init_enter (&g_define_type_id__volatile)) {                        \
-	        GType g_define_type_id =                                              \
-		    g_boxed_type_register_static (g_intern_static_string (#TypeName), \
-		                                  (GBoxedCopyFunc) copy_func,         \
-						  (GBoxedFreeFunc) free_func);        \
-		g_once_init_leave (&g_define_type_id__volatile, g_define_type_id);    \
-	}                                                                             \
-	return g_define_type_id__volatile;                                            \
-}
-
 G_END_DECLS
 
 #endif /* EV_DOCUMENT_H */

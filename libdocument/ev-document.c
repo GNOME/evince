@@ -738,7 +738,7 @@ ev_document_find_page_by_label (EvDocument  *document,
 }
 
 /* EvDocumentInfo */
-EV_DEFINE_BOXED_TYPE (EvDocumentInfo, ev_document_info, ev_document_info_copy, ev_document_info_free)
+G_DEFINE_BOXED_TYPE (EvDocumentInfo, ev_document_info, ev_document_info_copy, ev_document_info_free)
 
 EvDocumentInfo *
 ev_document_info_copy (EvDocumentInfo *info)
@@ -793,7 +793,7 @@ ev_document_info_free (EvDocumentInfo *info)
 }
 
 /* EvDocumentLicense */
-EV_DEFINE_BOXED_TYPE (EvDocumentLicense, ev_document_license, ev_document_license_copy, ev_document_license_free)
+G_DEFINE_BOXED_TYPE (EvDocumentLicense, ev_document_license, ev_document_license_copy, ev_document_license_free)
 
 EvDocumentLicense *
 ev_document_license_new (void)
@@ -853,7 +853,7 @@ ev_document_license_get_web_statement (EvDocumentLicense *license)
 }
 
 /* EvRectangle */
-EV_DEFINE_BOXED_TYPE (EvRectangle, ev_rectangle, ev_rectangle_copy, ev_rectangle_free)
+G_DEFINE_BOXED_TYPE (EvRectangle, ev_rectangle, ev_rectangle_copy, ev_rectangle_free)
 
 EvRectangle *
 ev_rectangle_new (void)
