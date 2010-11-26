@@ -814,7 +814,8 @@ ev_job_thumbnail_run (EvJob *job)
 	g_object_unref (rc);
 	ev_document_doc_mutex_unlock ();
 
-	job_thumb->thumbnail = ev_document_misc_get_thumbnail_frame (-1, -1, pixbuf);
+	if (pixbuf)
+		job_thumb->thumbnail = ev_document_misc_get_thumbnail_frame (-1, -1, pixbuf);
 	g_object_unref (pixbuf);
 
 	ev_job_succeeded (job);
