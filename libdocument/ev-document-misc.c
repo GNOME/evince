@@ -180,6 +180,8 @@ ev_document_misc_surface_from_pixbuf (GdkPixbuf *pixbuf)
 	cairo_surface_t *surface;
 	cairo_t         *cr;
 
+	g_return_val_if_fail (GDK_IS_PIXBUF (pixbuf), NULL);
+
 	surface = cairo_image_surface_create (gdk_pixbuf_get_has_alpha (pixbuf) ?
 					      CAIRO_FORMAT_ARGB32 : CAIRO_FORMAT_RGB24,
 					      gdk_pixbuf_get_width (pixbuf),
@@ -195,6 +197,8 @@ ev_document_misc_surface_from_pixbuf (GdkPixbuf *pixbuf)
 GdkPixbuf *
 ev_document_misc_pixbuf_from_surface (cairo_surface_t *surface)
 {
+	g_return_val_if_fail (surface, NULL);	
+
         return gdk_pixbuf_get_from_surface (surface,
                                             0, 0,
                                             cairo_image_surface_get_width (surface),
