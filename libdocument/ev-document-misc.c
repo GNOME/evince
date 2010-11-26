@@ -56,7 +56,7 @@ create_thumbnail_frame (int        width,
 	}
 
 	/* make sure no one is passing us garbage */
-	g_assert (width_r >= 0 && height_r >= 0);
+	g_return_val_if_fail (width_r >= 0 && height_r >= 0, NULL);
 
 	retval = gdk_pixbuf_new (GDK_COLORSPACE_RGB,
 				 TRUE, 8,
