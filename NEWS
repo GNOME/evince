@@ -1,4 +1,30 @@
 ================
+Evince  2.91.3
+================
+
+New Features and UI Improvements:
+
+    * Add timestamp parameter to SyncSource DBus signal (#632313, José
+      Aliste)
+    * Use gtk_paned_new() instead gtk_[h|v]paned_new() (Javier Jardón)
+
+Bug fixes:
+
+    * Add sanity-checks to fix several crashes (#594408, #572061, José
+      Aliste)
+    * Use the URI of the input file instead of the local filename in
+      SyncSource DBus signal (#632317, José Aliste)
+    * Fix a crash when clicking the view before document has been
+      loaded (#630999, Carlos Garcia Campos)
+
+Translation updates:
+
+    * Ville-Pekka Vainio (fi)
+    * Fran Diéguez (gl)
+    * Andrej Žnidaršič (sl)
+    * Zeper (ug)
+
+================
 Evince  2.91.2
 ================
 
