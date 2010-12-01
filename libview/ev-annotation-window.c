@@ -328,6 +328,7 @@ ev_annotation_window_init (EvAnnotationWindow *window)
 	gtk_widget_show (swindow);
 
 	/* Resize bar */
+	gtk_window_set_has_resize_grip (GTK_WINDOW(window), FALSE);
 	hbox = gtk_hbox_new (FALSE, 0);
 
 	window->resize_sw = gtk_event_box_new ();
