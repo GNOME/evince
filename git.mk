@@ -40,7 +40,7 @@
 # build dir.
 #
 # This file knows how to handle autoconf, automake, libtool, gtk-doc,
-# gnome-doc-utils, intltool.
+# gnome-doc-utils, intltool, gsettings.
 #
 #
 # KNOWN ISSUES:
@@ -100,9 +100,17 @@ $(srcdir)/.gitignore: Makefile.am $(top_srcdir)/git.mk
 				$(_DOC_OMF_ALL) \
 				$(_DOC_DSK_ALL) \
 				$(_DOC_HTML_ALL) \
+				$(_DOC_MOFILES) \
 				$(_DOC_POFILES) \
+				$(DOC_H_FILE) \
 				"*/.xml2po.mo" \
 				"*/*.omf.out" \
+			; do echo /$$x; done; \
+		fi; \
+		if test "x$(gsettings_SCHEMAS)" = x; then :; else \
+			for x in \
+				$(gsettings_SCHEMAS:.xml=.valid) \
+				$(gsettings__enum_file) \
 			; do echo /$$x; done; \
 		fi; \
 		if test -f $(srcdir)/po/Makefile.in.in; then \
@@ -159,6 +167,7 @@ $(srcdir)/.gitignore: Makefile.am $(top_srcdir)/git.mk
 			"*.bak" \
 			"*~" \
 			".*.sw[nop]" \
+			".dirstamp" \
 		; do echo /$$x; done; \
 	} | \
 	sed "s@^/`echo "$(srcdir)" | sed 's/\(.\)/[\1]/g'`/@/@" | \
@@ -172,8 +181,11 @@ gitignore-recurse-maybe:
 		$(MAKE) $(AM_MAKEFLAGS) gitignore-recurse; \
 	fi;
 gitignore-recurse:
-	@list='$(DIST_SUBDIRS)'; for subdir in $$list; do \
-	  test "$$subdir" = . || (cd $$subdir && $(MAKE) $(AM_MAKEFLAGS) .gitignore gitignore-recurse || echo "Skipping $$subdir"); \
+	@for subdir in $(DIST_SUBDIRS); do \
+	  case " $(SUBDIRS) " in \
+	    *" $$subdir "*) :;; \
+	    *) test "$$subdir" = . || (cd $$subdir && $(MAKE) $(AM_MAKEFLAGS) .gitignore gitignore-recurse || echo "Skipping $$subdir");; \
+	  esac; \
 	done
 gitignore: $(srcdir)/.gitignore gitignore-recurse
 
