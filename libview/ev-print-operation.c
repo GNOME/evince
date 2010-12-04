@@ -1622,7 +1622,10 @@ ev_print_operation_print_cancel (EvPrintOperation *op)
 {
 	EvPrintOperationPrint *print = EV_PRINT_OPERATION_PRINT (op);
 
-	gtk_print_operation_cancel (print->op);
+        if (print->job_print)
+                ev_job_cancel (print->job_print);
+        else
+                gtk_print_operation_cancel (print->op);
 }
 
 static void
@@ -1701,11 +1704,30 @@ print_job_finished (EvJobPrint            *job,
 	ev_job_print_set_cairo (job, NULL);
 }
 
+static gboolean
+draw_page_finish_idle (EvPrintOperationPrint *print)
+{
+        if (ev_job_scheduler_get_running_thread_job () == print->job_print)
+                return TRUE;
+
+        gtk_print_operation_draw_page_finish (print->op);
+
+        return FALSE;
+}
+
 static void
 print_job_cancelled (EvJobPrint            *job,
-		     EvPrintOperationPrint *print)
+                     EvPrintOperationPrint *print)
 {
-	gtk_print_operation_cancel (print->op);
+        /* Finish the current page, so that draw-page
+         * is emitted again and it will cancel the
+         * print operation. If the job is still
+         * running, wait until it finishes.
+         */
+        if (ev_job_scheduler_get_running_thread_job () == print->job_print)
+                g_idle_add ((GSourceFunc)draw_page_finish_idle, print);
+        else
+                gtk_print_operation_draw_page_finish (print->op);
 }
 
 static void
@@ -1770,10 +1792,14 @@ ev_print_operation_print_draw_page (EvPrintOperationPrint *print,
 		g_signal_connect (G_OBJECT (print->job_print), "finished",
 				  G_CALLBACK (print_job_finished),
 				  (gpointer)print);
-		g_signal_connect (G_OBJECT (print->job_print), "cancelled",
-				  G_CALLBACK (print_job_cancelled),
-				  (gpointer)print);
-	}
+                g_signal_connect (G_OBJECT (print->job_print), "cancelled",
+                                  G_CALLBACK (print_job_cancelled),
+                                  (gpointer)print);
+	} else if (g_cancellable_is_cancelled (print->job_print->cancellable)) {
+                gtk_print_operation_cancel (print->op);
+                ev_job_print_set_cairo (EV_JOB_PRINT (print->job_print), NULL);
+                return;
+        }
 
 	ev_job_print_set_page (EV_JOB_PRINT (print->job_print), page);
 
