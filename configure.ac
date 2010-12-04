@@ -675,7 +675,7 @@ dnl ================== End of XPS checks =======================================
 dnl =================== Mime types list ====================================================
 
 if test "x$enable_pdf" = "xyes" ; then
-	EVINCE_MIME_TYPES="application/pdf;application/x-bzpdf;application/x-gzpdf;application/x-wwf;"
+	EVINCE_MIME_TYPES="application/pdf;application/x-bzpdf;application/x-gzpdf;application/x-xzpdf;application/x-wwf;"
 fi
 if test "x$enable_ps" = "xyes" ; then
 	EVINCE_MIME_TYPES="${EVINCE_MIME_TYPES}application/postscript;application/x-bzpostscript;application/x-gzpostscript;image/x-eps;image/x-bzeps;image/x-gzeps;"
