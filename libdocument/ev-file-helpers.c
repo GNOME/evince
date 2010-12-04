@@ -525,8 +525,14 @@ ev_file_get_mime_type (const gchar *uri,
 }
 
 /* Compressed files support */
-#define BZIPCOMMAND "bzip2"
-#define GZIPCOMMAND "gzip"
+
+static const char *compressor_cmds[] = {
+  NULL,
+  "bzip2",
+  "gzip",
+  "xz"
+};
+
 #define N_ARGS      4
 #define BUFFER_SIZE 1024
 
@@ -546,13 +552,13 @@ compression_run (const gchar       *uri,
 	if (type == EV_COMPRESSION_NONE)
 		return NULL;
 
-	cmd = g_find_program_in_path ((type == EV_COMPRESSION_BZIP2) ? BZIPCOMMAND : GZIPCOMMAND);
+	cmd = g_find_program_in_path (compressor_cmds[type]);
 	if (!cmd) {
 		/* FIXME: better error codes! */
 		/* FIXME: i18n later */
 		g_set_error (error, G_FILE_ERROR, G_FILE_ERROR_FAILED,
 			     "Failed to find the \"%s\" command in the search path.",
-			     type == EV_COMPRESSION_BZIP2 ? BZIPCOMMAND : GZIPCOMMAND);
+                             compressor_cmds[type]);
 		return NULL;
 	}
 

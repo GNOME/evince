@@ -32,7 +32,8 @@ G_BEGIN_DECLS
 typedef enum {
 	EV_COMPRESSION_NONE,
 	EV_COMPRESSION_BZIP2,
-	EV_COMPRESSION_GZIP
+	EV_COMPRESSION_GZIP,
+        EV_COMPRESSION_LZMA
 } EvCompressionType;
 
 void        _ev_file_helpers_init     (void);

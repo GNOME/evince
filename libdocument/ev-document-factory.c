@@ -47,6 +47,8 @@ get_compression_from_mime_type (const gchar *mime_type)
 			return EV_COMPRESSION_GZIP;
 		else if (g_ascii_strcasecmp (type, "bz") == 0)
 			return EV_COMPRESSION_BZIP2;
+                else if (g_ascii_strcasecmp (type, "xz") == 0)
+                        return EV_COMPRESSION_LZMA;
 	}
 
 	return EV_COMPRESSION_NONE;
