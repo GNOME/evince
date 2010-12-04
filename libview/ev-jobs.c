@@ -216,7 +216,7 @@ ev_job_run (EvJob *job)
 void
 ev_job_cancel (EvJob *job)
 {
-	if (job->cancelled || (job->finished && job->idle_finished_id == 0))
+	if (job->cancelled)
 		return;
 
 	ev_debug_message (DEBUG_JOBS, "job %s (%p) cancelled", EV_GET_TYPE_NAME (job), job);
@@ -225,6 +225,10 @@ ev_job_cancel (EvJob *job)
 	/* This should never be called from a thread */
 	job->cancelled = TRUE;
 	g_cancellable_cancel (job->cancellable);
+
+        if (job->finished && job->idle_finished_id == 0)
+                return;
+
 	g_signal_emit (job, job_signals[CANCELLED], 0);
 }
 
