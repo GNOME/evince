@@ -38,10 +38,11 @@ typedef enum {
 	EV_JOB_N_PRIORITIES
 } EvJobPriority;
 
-void ev_job_scheduler_push_job   (EvJob        *job,
-				  EvJobPriority priority);
-void ev_job_scheduler_update_job (EvJob        *job,
-				  EvJobPriority priority);
+void   ev_job_scheduler_push_job               (EvJob        *job,
+                                                EvJobPriority priority);
+void   ev_job_scheduler_update_job             (EvJob        *job,
+                                                EvJobPriority priority);
+EvJob *ev_job_scheduler_get_running_thread_job (void);
 
 G_END_DECLS
 

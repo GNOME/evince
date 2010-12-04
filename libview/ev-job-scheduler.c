@@ -30,6 +30,8 @@ typedef struct _EvSchedulerJob {
 G_LOCK_DEFINE_STATIC(job_list);
 static GSList *job_list = NULL;
 
+static volatile EvJob *running_job = NULL;
+
 static gpointer ev_job_thread_proxy               (gpointer        data);
 static void     ev_scheduler_thread_job_cancelled (EvSchedulerJob *job,
 						   GCancellable   *cancellable);
@@ -179,9 +181,13 @@ ev_job_thread (EvJob *job)
 	do {
 		if (g_cancellable_is_cancelled (job->cancellable))
 			result = FALSE;
-		else
+		else {
+                        g_atomic_pointer_set (&running_job, job);
 			result = ev_job_run (job);
+                }
 	} while (result);
+
+        g_atomic_pointer_set (&running_job, NULL);
 }
 
 static gboolean
@@ -303,3 +309,8 @@ ev_job_scheduler_update_job (EvJob         *job,
 	}
 }
 
+EvJob *
+ev_job_scheduler_get_running_thread_job (void)
+{
+        return g_atomic_pointer_get (&running_job);
+}
