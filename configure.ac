@@ -633,22 +633,6 @@ AM_CONDITIONAL(WITH_TYPE1_FONTS, test x$enable_type1_fonts = xyes)
 
 dnl ================== End of dvi checks ===================================================
 
-dnl ================== pixbuf checks ===================================================
-
-AC_ARG_ENABLE(pixbuf,
-            [AS_HELP_STRING([--enable-pixbuf],
-                            [Compile with support of pixbuf])],
-	    [enable_pixbuf=$enableval],
-	    [enable_pixbuf=no])
-	    
-if test "x$enable_pixbuf" = "xyes"; then
-	AC_DEFINE([ENABLE_PIXBUF], [1], [Enable pixbuf support.])
-fi
-
-AM_CONDITIONAL(ENABLE_PIXBUF, test x$enable_pixbuf = xyes)
-
-dnl ================== End of pixbuf checks ===================================================
-
 dnl ================== comic book checks ===================================================
  
 AC_ARG_ENABLE(comics,
@@ -707,9 +691,6 @@ if test "x$enable_tiff" = "xyes"; then
 fi
 if test "x$enable_comics" = "xyes"; then
 	EVINCE_MIME_TYPES="${EVINCE_MIME_TYPES}application/x-cbr;application/x-cbz;application/x-cb7;application/x-cbt;"
-fi
-if test "x$enable_pixbuf" = "xyes"; then
-	EVINCE_MIME_TYPES="${EVINCE_MIME_TYPES}image/*;"
 fi
 if test "x$enable_xps" = "xyes"; then
    	EVINCE_MIME_TYPES="${EVINCE_MIME_TYPES}application/oxps;application/vnd.ms-xpsdocument;"
@@ -789,7 +770,6 @@ backend/djvu/Makefile
 backend/dvi/Makefile
 backend/dvi/mdvi-lib/Makefile
 backend/pdf/Makefile
-backend/pixbuf/Makefile
 backend/ps/Makefile
 backend/tiff/Makefile
 backend/xps/Makefile
@@ -873,7 +853,6 @@ Configure summary:
 	TIFF Backend.......:  $enable_tiff
 	DJVU Backend.......:  $enable_djvu
 	DVI Backend........:  $enable_dvi
-	Pixbuf Backend.....:  $enable_pixbuf
 	Comics Backend.....:  $enable_comics
 	XPS Backend........:  $enable_xps
 "

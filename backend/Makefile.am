@@ -10,10 +10,6 @@ if ENABLE_PS
 SUBDIRS += ps
 endif
 
-if ENABLE_PIXBUF
-SUBDIRS += pixbuf    
-endif
-
 if ENABLE_DJVU
 SUBDIRS += djvu
 endif

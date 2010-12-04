@@ -33,58 +33,6 @@
 #include "ev-document-factory.h"
 #include "ev-file-helpers.h"
 
-#ifdef ENABLE_PIXBUF
-static GList*
-gdk_pixbuf_mime_type_list ()
-{
-	GSList *formats, *list;
-	GList *result = NULL;
-
-	formats = gdk_pixbuf_get_formats ();
-	for (list = formats; list != NULL; list = list->next) {
-		GdkPixbufFormat *format = list->data;
-		gchar          **mime_types;
-
-		if (gdk_pixbuf_format_is_disabled (format))
-			continue;
-
-		mime_types = gdk_pixbuf_format_get_mime_types (format);
-		result = g_list_prepend (result, mime_types); 
-	}
-	g_slist_free (formats);
-
-	return result;
-}
-
-/* Would be nice to have this in gdk-pixbuf */
-static gboolean
-mime_type_supported_by_gdk_pixbuf (const gchar *mime_type)
-{
-	GList *mime_types;
-	GList *list;
-	gboolean retval = FALSE;
-
-	mime_types = gdk_pixbuf_mime_type_list ();
-	for (list = mime_types; list; list = list->next) {
-		gchar      **mtypes = (gchar **)list->data;
-		const gchar *mtype;
-		gint         i = 0;
-
-		while ((mtype = mtypes[i++])) {
-			if (strcmp (mtype, mime_type) == 0) {
-				retval = TRUE;
-				break;
-			}
-		}
-	}
-
-	g_list_foreach (mime_types, (GFunc)g_strfreev, NULL);
-	g_list_free (mime_types);
-
-	return retval;
-}
-#endif /* ENABLE_PIXBUF */
-
 static EvCompressionType
 get_compression_from_mime_type (const gchar *mime_type)
 {
@@ -149,12 +97,6 @@ get_document_from_uri (const char        *uri,
 	}
 
 	document = ev_backends_manager_get_document (mime_type);
-	
-#ifdef ENABLE_PIXBUF
-	if (!document && mime_type_supported_by_gdk_pixbuf (mime_type))
-		document = ev_backends_manager_get_document ("image/*");
-#endif /* ENABLE_PIXBUF */
-
 	if (document == NULL) {
 		gchar *content_type, *mime_desc = NULL;
 
@@ -304,26 +246,6 @@ file_filter_add_mime_types (EvTypeInfo *info, GtkFileFilter *filter)
 	const gchar *mime_type;
 	gint         i = 0;
 
-#ifdef ENABLE_PIXBUF
-	if (g_ascii_strcasecmp (info->mime_types[0], "image/*") == 0) {
-		GList *pixbuf_types, *l;
-
-		pixbuf_types = gdk_pixbuf_mime_type_list ();
-		for (l = pixbuf_types; l; l = g_list_next (l)) {
-			gchar **mime_types = (gchar **)l->data;
-			gint    j = 0;
-			
-			while ((mime_type = mime_types[j++]))
-				gtk_file_filter_add_mime_type (filter, mime_type);
-			
-			g_strfreev (mime_types);
-		}
-		g_list_free (pixbuf_types);
-
-		return;
-	}
-#endif /* ENABLE_PIXBUF */
-	
 	while ((mime_type = info->mime_types[i++]))
 		gtk_file_filter_add_mime_type (filter, mime_type);
 }
