@@ -91,6 +91,8 @@
 #include "ev-print-operation.h"
 #include "ev-progress-message-area.h"
 #include "ev-annotation-properties-dialog.h"
+#include "ev-bookmarks.h"
+#include "ev-bookmark-action.h"
 
 #ifdef ENABLE_DBUS
 #include "ev-media-player-keys.h"
@@ -163,6 +165,8 @@ struct _EvWindowPrivate {
 	GtkRecentManager *recent_manager;
 	GtkActionGroup   *recent_action_group;
 	guint             recent_ui_id;
+	GtkActionGroup   *bookmarks_action_group;
+	guint             bookmarks_ui_id;
 	GtkUIManager     *ui_manager;
 
 	/* Fullscreen mode */
@@ -192,6 +196,7 @@ struct _EvWindowPrivate {
 	EvWindowPageMode page_mode;
 	EvWindowTitle *title;
 	EvMetadata *metadata;
+	EvBookmarks *bookmarks;
 	gboolean is_new_doc;
 
 	/* Load params */
@@ -345,6 +350,7 @@ static void     ev_window_update_max_min_scale          (EvWindow         *windo
 static void	ev_window_emit_closed			(EvWindow         *window);
 static void 	ev_window_emit_doc_loaded		(EvWindow	  *window);
 #endif
+static void     ev_window_setup_bookmarks               (EvWindow         *window);
 
 static guint ev_window_n_copies = 0;
 
@@ -447,6 +453,10 @@ ev_window_setup_action_sensitivity (EvWindow *ev_window)
 	ev_window_set_action_sensitive (ev_window, "ViewReload", has_pages);
 	ev_window_set_action_sensitive (ev_window, "ViewAutoscroll", has_pages);
 	ev_window_set_action_sensitive (ev_window, "ViewInvertedColors", has_pages);
+
+	/* Bookmarks menu */
+	ev_window_set_action_sensitive (ev_window, "BookmarksAdd",
+					has_pages && ev_window->priv->bookmarks);
 
 	/* Toolbar-specific actions: */
 	ev_window_set_action_sensitive (ev_window, PAGE_SELECTOR_ACTION, has_pages);
@@ -784,18 +794,17 @@ ev_window_warning_message (EvWindow    *window,
 	ev_window_set_message_area (window, area);
 }
 
-typedef struct _FindTask {
+typedef struct _PageTitleData {
 	const gchar *page_label;
-	gchar *chapter;
-} FindTask;
+	gchar       *page_title;
+} PageTitleData;
 
 static gboolean
-ev_window_find_chapter (GtkTreeModel *tree_model,
-		        GtkTreePath  *path,
-		        GtkTreeIter  *iter,
-		        gpointer      data)
+ev_window_find_page_title (GtkTreeModel  *tree_model,
+			   GtkTreePath   *path,
+			   GtkTreeIter   *iter,
+			   PageTitleData *data)
 {
-	FindTask *task = (FindTask *)data;
 	gchar *page_string;
 	
 	gtk_tree_model_get (tree_model, iter,
@@ -805,9 +814,9 @@ ev_window_find_chapter (GtkTreeModel *tree_model,
 	if (!page_string)
 		return FALSE;
 	
-	if (!strcmp (page_string, task->page_label)) {
+	if (!strcmp (page_string, data->page_label)) {
 		gtk_tree_model_get (tree_model, iter,
-				    EV_DOCUMENT_LINKS_COLUMN_MARKUP, &task->chapter, 
+				    EV_DOCUMENT_LINKS_COLUMN_MARKUP, &data->page_title, 
 				    -1);
 		g_free (page_string);
 		return TRUE;
@@ -817,12 +826,41 @@ ev_window_find_chapter (GtkTreeModel *tree_model,
 	return FALSE;
 }
 
+static gchar *
+ev_window_get_page_title (EvWindow    *window,
+			  const gchar *page_label)
+{
+	if (EV_IS_DOCUMENT_LINKS (window->priv->document) &&
+	    ev_document_links_has_document_links (EV_DOCUMENT_LINKS (window->priv->document))) {
+		PageTitleData data;
+		GtkTreeModel *model;
+
+		data.page_label = page_label;
+		data.page_title = NULL;
+
+		g_object_get (G_OBJECT (window->priv->sidebar_links),
+			      "model", &model,
+			      NULL);
+		if (model) {
+			gtk_tree_model_foreach (model,
+						(GtkTreeModelForeachFunc)ev_window_find_page_title,
+						&data);
+
+			g_object_unref (model);
+		}
+
+		return data.page_title;
+	}
+
+	return NULL;
+}
+
 static void
 ev_window_add_history (EvWindow *window, gint page, EvLink *link)
 {
 	gchar *page_label = NULL;
+	gchar *page_title;
 	gchar *link_title;
-	FindTask find_task;
 	EvLink *real_link;
 	EvLinkAction *action;
 	EvLinkDest *dest;
@@ -845,34 +883,19 @@ ev_window_add_history (EvWindow *window, gint page, EvLink *link)
 
 	if (!page_label)
 		return;
-	
-	find_task.page_label = page_label;
-	find_task.chapter = NULL;
-	
-	if (ev_document_links_has_document_links (EV_DOCUMENT_LINKS (window->priv->document))) {
-		GtkTreeModel *model;
-	
-		g_object_get (G_OBJECT (window->priv->sidebar_links), "model", &model, NULL);
-		
-		if (model) {
-			gtk_tree_model_foreach (model,
-						ev_window_find_chapter,
-						&find_task);
-	
-			g_object_unref (model);
-		}
+
+	page_title = ev_window_get_page_title (window, page_label);
+	if (page_title) {
+		link_title = g_strdup_printf (_("Page %s — %s"), page_label, page_title);
+		g_free (page_title);
+	} else {
+		link_title = g_strdup_printf (_("Page %s"), page_label);
 	}
 
-	if (find_task.chapter)
-		link_title = g_strdup_printf (_("Page %s — %s"), page_label, find_task.chapter);
-	else
-		link_title = g_strdup_printf (_("Page %s"), page_label);
-	
 	real_link = ev_link_new (link_title, action);
 	
 	ev_history_add_link (window->priv->history, real_link);
 
-	g_free (find_task.chapter);
 	g_free (link_title);
 	g_free (page_label);
 	g_object_unref (real_link);
@@ -2008,6 +2031,8 @@ ev_window_open_uri (EvWindow       *ev_window,
 
 	if (ev_window->priv->metadata)
 		g_object_unref (ev_window->priv->metadata);
+	if (ev_window->priv->bookmarks)
+		g_object_unref (ev_window->priv->bookmarks);
 
 	source_file = g_file_new_for_uri (uri);
 	if (!ev_file_is_temp (source_file) && ev_is_metadata_supported_for_file (source_file)) {
@@ -2015,6 +2040,15 @@ ev_window_open_uri (EvWindow       *ev_window,
 		ev_window->priv->is_new_doc = ev_metadata_is_empty (ev_window->priv->metadata);
 	} else {
 		ev_window->priv->metadata = NULL;
+	}
+
+	if (ev_window->priv->metadata) {
+		ev_window->priv->bookmarks = ev_bookmarks_new (ev_window->priv->metadata);
+		g_signal_connect_swapped (ev_window->priv->bookmarks, "changed",
+					  G_CALLBACK (ev_window_setup_bookmarks),
+					  ev_window);
+	} else {
+		ev_window->priv->bookmarks = NULL;
 	}
 
 	if (ev_window->priv->search_string)
@@ -2028,6 +2062,7 @@ ev_window_open_uri (EvWindow       *ev_window,
 
 	setup_size_from_metadata (ev_window);
 	setup_model_from_metadata (ev_window);
+	ev_window_setup_bookmarks (ev_window);
 
 	ev_window->priv->load_job = ev_job_load_new (uri);
 	g_signal_connect (ev_window->priv->load_job,
@@ -4339,6 +4374,92 @@ ev_window_cmd_go_backward (GtkAction *action, EvWindow *ev_window)
 }
 
 static void
+ev_window_cmd_bookmark_activate (GtkAction *action,
+				 EvWindow  *window)
+{
+	guint page = ev_bookmark_action_get_page (EV_BOOKMARK_ACTION (action));
+
+	ev_document_model_set_page (window->priv->model, page);
+}
+
+static gint
+compare_bookmarks (EvBookmark *a,
+		   EvBookmark *b)
+{
+	return strcmp (a->title, b->title);
+}
+
+static void
+ev_window_setup_bookmarks (EvWindow *window)
+{
+	GList *items, *l;
+
+	if (!window->priv->bookmarks)
+		return;
+
+	if (window->priv->bookmarks_ui_id > 0) {
+		gtk_ui_manager_remove_ui (window->priv->ui_manager,
+					  window->priv->bookmarks_ui_id);
+		gtk_ui_manager_ensure_update (window->priv->ui_manager);
+	}
+	window->priv->bookmarks_ui_id = gtk_ui_manager_new_merge_id (window->priv->ui_manager);
+
+	if (window->priv->bookmarks_action_group) {
+		gtk_ui_manager_remove_action_group (window->priv->ui_manager,
+						    window->priv->bookmarks_action_group);
+		g_object_unref (window->priv->bookmarks_action_group);
+	}
+	window->priv->bookmarks_action_group = gtk_action_group_new ("BookmarksActions");
+	gtk_ui_manager_insert_action_group (window->priv->ui_manager,
+					    window->priv->bookmarks_action_group, -1);
+
+	items = ev_bookmarks_get_bookmarks (window->priv->bookmarks);
+	items = g_list_sort (items, (GCompareFunc)compare_bookmarks);
+
+	for (l = items; l && l->data; l = g_list_next (l)) {
+		EvBookmark *bm = (EvBookmark *)l->data;
+		GtkAction  *action;
+
+		action = ev_bookmark_action_new (bm);
+		g_signal_connect (action, "activate",
+				  G_CALLBACK (ev_window_cmd_bookmark_activate),
+				  window);
+		gtk_action_group_add_action (window->priv->bookmarks_action_group,
+					     action);
+
+		gtk_ui_manager_add_ui (window->priv->ui_manager,
+				       window->priv->bookmarks_ui_id,
+				       "/MainMenu/BookmarksMenu/BookmarksItems",
+				       gtk_action_get_label (action),
+				       gtk_action_get_name (action),
+				       GTK_UI_MANAGER_MENUITEM,
+				       FALSE);
+
+		g_object_unref (action);
+	}
+
+	g_list_free (items);
+}
+
+static void
+ev_window_cmd_bookmarks_add (GtkAction *action,
+			     EvWindow  *window)
+{
+	EvBookmark bm;
+	gchar     *page_label;
+	gchar     *page_title;
+
+	bm.page = ev_document_model_get_page (window->priv->model);
+	page_label = ev_document_get_page_label (window->priv->document, bm.page);
+	page_title = ev_window_get_page_title (window, page_label);
+	bm.title = page_title ? page_title : g_strdup_printf (_("Page %s"), page_label);
+	g_free (page_label);
+
+	/* EvBookmarks takes ownership of bookmark */
+	ev_bookmarks_add (window->priv->bookmarks, &bm);
+}
+
+static void
 ev_window_cmd_view_reload (GtkAction *action, EvWindow *ev_window)
 {
 	ev_window_reload_document (ev_window, NULL);
@@ -5172,6 +5293,11 @@ ev_window_dispose (GObject *object)
 	}
 #endif /* ENABLE_DBUS */
 
+	if (priv->bookmarks) {
+		g_object_unref (priv->bookmarks);
+		priv->bookmarks = NULL;
+	}
+
 	if (priv->metadata) {
 		g_object_unref (priv->metadata);
 		priv->metadata = NULL;
@@ -5215,6 +5341,11 @@ ev_window_dispose (GObject *object)
 	if (priv->recent_action_group) {
 		g_object_unref (priv->recent_action_group);
 		priv->recent_action_group = NULL;
+	}
+
+	if (priv->bookmarks_action_group) {
+		g_object_unref (priv->bookmarks_action_group);
+		priv->bookmarks_action_group = NULL;
 	}
 
 	if (priv->recent_manager) {
@@ -5446,6 +5577,7 @@ static const GtkActionEntry entries[] = {
         { "Edit", NULL, N_("_Edit") },
 	{ "View", NULL, N_("_View") },
         { "Go", NULL, N_("_Go") },
+	{ "Bookmarks", NULL, N_("_Bookmarks") },
 	{ "Help", NULL, N_("_Help") },
 
 	/* File menu */
@@ -5518,6 +5650,11 @@ static const GtkActionEntry entries[] = {
         { "GoLastPage", GTK_STOCK_GOTO_BOTTOM, N_("_Last Page"), "<control>End",
           N_("Go to the last page"),
           G_CALLBACK (ev_window_cmd_go_last_page) },
+
+	/* Bookmarks menu */
+	{ "BookmarksAdd", GTK_STOCK_ADD, N_("_Add Bookmark"), "<control>D",
+	  N_("Add a bookmark for the current page"),
+	  G_CALLBACK (ev_window_cmd_bookmarks_add) },
 
 	/* Help menu */
 	{ "HelpContents", GTK_STOCK_HELP, N_("_Contents"), "F1", NULL,
