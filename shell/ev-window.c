@@ -75,6 +75,7 @@
 #include "ev-properties-dialog.h"
 #include "ev-sidebar-annotations.h"
 #include "ev-sidebar-attachments.h"
+#include "ev-sidebar-bookmarks.h"
 #include "ev-sidebar.h"
 #include "ev-sidebar-links.h"
 #include "ev-sidebar-page.h"
@@ -140,6 +141,7 @@ struct _EvWindowPrivate {
 	GtkWidget *sidebar_attachments;
 	GtkWidget *sidebar_layers;
 	GtkWidget *sidebar_annots;
+	GtkWidget *sidebar_bookmarks;
 
 	/* Settings */
 	GSettings *settings;
@@ -251,6 +253,7 @@ struct _EvWindowPrivate {
 #define ATTACHMENTS_SIDEBAR_ID "attachments"
 #define LAYERS_SIDEBAR_ID "layers"
 #define ANNOTS_SIDEBAR_ID "annotations"
+#define BOOKMARKS_SIDEBAR_ID "bookmarks"
 
 #define EV_PRINT_SETTINGS_FILE  "print-settings"
 #define EV_PRINT_SETTINGS_GROUP "Print Settings"
@@ -964,6 +967,8 @@ ev_window_sidebar_get_current_page_id (EvWindow *ev_window)
 		id = LAYERS_SIDEBAR_ID;
 	} else if (current_page == ev_window->priv->sidebar_annots) {
 		id = ANNOTS_SIDEBAR_ID;
+	} else if (current_page == ev_window->priv->sidebar_bookmarks) {
+		id = BOOKMARKS_SIDEBAR_ID;
 	} else {
 		g_assert_not_reached();
 	}
@@ -984,6 +989,7 @@ ev_window_sidebar_set_current_page (EvWindow    *window,
 	GtkWidget  *attachments = window->priv->sidebar_attachments;
 	GtkWidget  *annots = window->priv->sidebar_annots;
 	GtkWidget  *layers = window->priv->sidebar_layers;
+	GtkWidget  *bookmarks = window->priv->sidebar_bookmarks;
 
 	if (strcmp (page_id, LINKS_SIDEBAR_ID) == 0 &&
 	    ev_sidebar_page_support_document (EV_SIDEBAR_PAGE (links), document)) {
@@ -1000,6 +1006,9 @@ ev_window_sidebar_set_current_page (EvWindow    *window,
 	} else if (strcmp (page_id, ANNOTS_SIDEBAR_ID) == 0 &&
 		   ev_sidebar_page_support_document (EV_SIDEBAR_PAGE (annots), document)) {
 		ev_sidebar_set_page (sidebar, annots);
+	} else if (strcmp (page_id, BOOKMARKS_SIDEBAR_ID) == 0 &&
+		   ev_sidebar_page_support_document (EV_SIDEBAR_PAGE (bookmarks), document)) {
+		ev_sidebar_set_page (sidebar, bookmarks);
 	}
 }
 
@@ -2044,6 +2053,8 @@ ev_window_open_uri (EvWindow       *ev_window,
 
 	if (ev_window->priv->metadata) {
 		ev_window->priv->bookmarks = ev_bookmarks_new (ev_window->priv->metadata);
+		ev_sidebar_bookmarks_set_bookmarks (EV_SIDEBAR_BOOKMARKS (ev_window->priv->sidebar_bookmarks),
+						    ev_window->priv->bookmarks);
 		g_signal_connect_swapped (ev_window->priv->bookmarks, "changed",
 					  G_CALLBACK (ev_window_setup_bookmarks),
 					  ev_window);
@@ -5844,6 +5855,13 @@ sidebar_annots_annot_add_cancelled (EvSidebarAnnotations *sidebar_annots,
 }
 
 static void
+sidebar_bookmarks_add_bookmark (EvSidebarBookmarks *sidebar_bookmarks,
+				EvWindow           *window)
+{
+	ev_window_cmd_bookmarks_add (NULL, window);
+}
+
+static void
 register_custom_actions (EvWindow *window, GtkActionGroup *group)
 {
 	GtkAction *action;
@@ -7132,6 +7150,16 @@ ev_window_init (EvWindow *ev_window)
 	g_signal_connect (sidebar_widget,
 			  "annot_add_cancelled",
 			  G_CALLBACK (sidebar_annots_annot_add_cancelled),
+			  ev_window);
+	gtk_widget_show (sidebar_widget);
+	ev_sidebar_add_page (EV_SIDEBAR (ev_window->priv->sidebar),
+			     sidebar_widget);
+
+	sidebar_widget = ev_sidebar_bookmarks_new ();
+	ev_window->priv->sidebar_bookmarks = sidebar_widget;
+	g_signal_connect (sidebar_widget,
+			  "add-bookmark",
+			  G_CALLBACK (sidebar_bookmarks_add_bookmark),
 			  ev_window);
 	gtk_widget_show (sidebar_widget);
 	ev_sidebar_add_page (EV_SIDEBAR (ev_window->priv->sidebar),
