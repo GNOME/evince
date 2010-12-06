@@ -85,8 +85,10 @@ ev_sidebar_bookmarks_update (EvSidebarBookmarks *sidebar_bookmarks)
         model = GTK_LIST_STORE (gtk_tree_view_get_model (GTK_TREE_VIEW (priv->tree_view)));
         gtk_list_store_clear (model);
 
-        if (!priv->bookmarks)
+        if (!priv->bookmarks) {
+                g_object_set (priv->tree_view, "has-tooltip", FALSE, NULL);
                 return;
+        }
 
         items = ev_bookmarks_get_bookmarks (priv->bookmarks);
         items = g_list_sort (items, (GCompareFunc)compare_bookmarks);
@@ -100,6 +102,7 @@ ev_sidebar_bookmarks_update (EvSidebarBookmarks *sidebar_bookmarks)
                                     -1);
         }
         g_list_free (items);
+        g_object_set (priv->tree_view, "has-tooltip", TRUE, NULL);
 }
 
 static void
@@ -201,6 +204,47 @@ ev_sidebar_bookmarks_bookmark_renamed (GtkCellRendererText *renderer,
         ev_bookmarks_update (priv->bookmarks, &bm);
 }
 
+static gboolean
+ev_sidebar_bookmarks_query_tooltip (GtkWidget          *widget,
+                                    gint                x,
+                                    gint                y,
+                                    gboolean            keyboard_tip,
+                                    GtkTooltip         *tooltip,
+                                    EvSidebarBookmarks *sidebar_bookmarks)
+{
+        EvSidebarBookmarksPrivate *priv = sidebar_bookmarks->priv;
+        GtkTreeModel              *model;
+        GtkTreeIter                iter;
+        GtkTreePath               *path = NULL;
+        EvDocument                *document;
+        guint                      page;
+        gchar                     *page_label;
+        gchar                     *text;
+
+        model = gtk_tree_view_get_model (GTK_TREE_VIEW (priv->tree_view));
+        if (!gtk_tree_view_get_tooltip_context (GTK_TREE_VIEW (priv->tree_view),
+                                                &x, &y, keyboard_tip,
+                                                &model, &path, &iter))
+                return FALSE;
+
+        gtk_tree_model_get (model, &iter,
+                            COLUMN_PAGE, &page,
+                            -1);
+
+        document = ev_document_model_get_document (priv->model);
+        page_label = ev_document_get_page_label (document, page);
+        text = g_strdup_printf (_("Page %s"), page_label);
+        gtk_tooltip_set_text (tooltip, text);
+        g_free (text);
+        g_free (page_label);
+
+        gtk_tree_view_set_tooltip_row (GTK_TREE_VIEW (priv->tree_view),
+                                       tooltip, path);
+        gtk_tree_path_free (path);
+
+        return TRUE;
+}
+
 static void
 ev_sidebar_bookmarks_dispose (GObject *object)
 {
@@ -249,6 +293,9 @@ ev_sidebar_bookmarks_init (EvSidebarBookmarks *sidebar_bookmarks)
         model = gtk_list_store_new (N_COLUMNS, G_TYPE_STRING, G_TYPE_UINT);
         priv->tree_view = gtk_tree_view_new_with_model (GTK_TREE_MODEL (model));
         g_object_unref (model);
+        g_signal_connect (priv->tree_view, "query-tooltip",
+                          G_CALLBACK (ev_sidebar_bookmarks_query_tooltip),
+                          sidebar_bookmarks);
         gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (priv->tree_view), FALSE);
         selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (priv->tree_view));
         g_signal_connect (selection, "changed",
