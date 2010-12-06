@@ -22,6 +22,7 @@
 #define EV_METADATA_H
 
 #include <glib-object.h>
+#include <gio/gio.h>
 
 G_BEGIN_DECLS
 
