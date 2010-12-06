@@ -40,7 +40,7 @@
 # build dir.
 #
 # This file knows how to handle autoconf, automake, libtool, gtk-doc,
-# gnome-doc-utils, intltool, gsettings.
+# gnome-doc-utils, mallard, intltool, gsettings.
 #
 #
 # KNOWN ISSUES:
@@ -52,6 +52,10 @@
 #   And add those files to git.  See vte/gnome-pty-helper/git.mk for
 #   example.
 #
+# ChangeLog
+#
+# - 2010-12-06 Add support for Mallard docs
+# - 2010-12-06 Start this change log
 
 git-all: git-mk-install
 
@@ -93,7 +97,7 @@ $(srcdir)/.gitignore: Makefile.am $(top_srcdir)/git.mk
 				xml html \
 			; do echo /$$x; done; \
 		fi; \
-		if test "x$(DOC_MODULE)" = x -o "x$(DOC_LINGUAS)" = x; then :; else \
+		if test "x$(DOC_MODULE)$(DOC_ID)" = x -o "x$(DOC_LINGUAS)" = x; then :; else \
 			for x in \
 				$(_DOC_C_DOCS) \
 				$(_DOC_LC_DOCS) \
