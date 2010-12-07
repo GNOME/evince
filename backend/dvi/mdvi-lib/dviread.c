@@ -1507,6 +1507,10 @@ int	special(DviContext *dvi, int opcode)
 	Int32	arg;
 	
 	arg = dugetn(dvi, opcode - DVI_XXX1 + 1);
+	if (arg <= 0) {
+		dvierr(dvi, _("malformed special length\n"));
+		return -1;
+	}
 	s = mdvi_malloc(arg + 1);
 	dread(dvi, s, arg);
 	s[arg] = 0;
