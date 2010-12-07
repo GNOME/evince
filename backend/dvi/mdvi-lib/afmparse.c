@@ -160,7 +160,7 @@ static char *token(FILE *stream)
     
     idx = 0;
     while (ch != EOF && ch != ' ' && ch != lineterm 
-           && ch != '\t' && ch != ':' && ch != ';') 
+           && ch != '\t' && ch != ':' && ch != ';' && idx < MAX_NAME)
     {
         ident[idx++] = ch;
         ch = fgetc(stream);
