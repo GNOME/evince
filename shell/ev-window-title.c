@@ -83,7 +83,7 @@ get_filename_from_uri (const char *uri)
 }
 
 /* Some docs report titles with confusing extensions (ex. .doc for pdf).
-   Let's show the filename in this case */
+	   Erase the confusing extension of the title */
 static void
 ev_window_title_sanitize_title (EvWindowTitle *window_title, char **title) {
 	const gchar *backend;
@@ -97,7 +97,7 @@ ev_window_title_sanitize_title (EvWindowTitle *window_title, char **title) {
 			char *new_title;
 			char *filename = get_filename_from_uri (window_title->uri);
 
-			new_title = g_strdup_printf ("%s (%s)", *title, filename);
+			new_title = g_strndup (*title, strlen(*title) - strlen(bad_extensions[i].text));
 			g_free (*title);
 			*title = new_title;
 
@@ -142,7 +142,14 @@ ev_window_title_update (EvWindowTitle *window_title)
 	}
 
 	if (title && window_title->uri) {
+		char *tmp_title = title;
+		char *filename = get_filename_from_uri (window_title->uri);
+
 		ev_window_title_sanitize_title (window_title, &title);
+		title = g_strdup_printf ("%s — %s", filename, title);
+		
+		g_free (tmp_title);
+		g_free (filename);
 	} else if (window_title->uri) {
 		title = get_filename_from_uri (window_title->uri);
 	} else if (!title) {
