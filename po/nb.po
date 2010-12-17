@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince 2.91.x\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-12-06 18:20+0100\n"
-"PO-Revision-Date: 2010-12-06 18:20+0100\n"
+"POT-Creation-Date: 2010-12-17 13:24+0100\n"
+"PO-Revision-Date: 2010-12-17 13:24+0100\n"
 "Last-Translator: Kjartan Maraas <kmaraas@gnome.org>\n"
 "Language-Team: Norwegian bokmal <i18n-nb@lster.ping.uio.no>\n"
 "Language: \n"
@@ -396,7 +396,7 @@ msgstr "6400%"
 
 #. Manually set name and icon
 #: ../data/evince.desktop.in.in.h:1 ../shell/ev-window.c:4718
-#: ../shell/ev-window-title.c:149 ../shell/main.c:310
+#: ../shell/ev-window-title.c:156 ../shell/main.c:310
 #, c-format
 msgid "Document Viewer"
 msgstr "Dokumentvisning"
@@ -1007,6 +1007,16 @@ msgstr "Side %d"
 msgid "Attachments"
 msgstr "Vedlegg"
 
+#: ../shell/ev-sidebar-bookmarks.c:236 ../shell/ev-window.c:895
+#: ../shell/ev-window.c:4466
+#, c-format
+msgid "Page %s"
+msgstr "Side %s"
+
+#: ../shell/ev-sidebar-bookmarks.c:440
+msgid "Bookmarks"
+msgstr "Bokmerker"
+
 #: ../shell/ev-sidebar-layers.c:444
 msgid "Layers"
 msgstr "Lag"
@@ -1027,11 +1037,6 @@ msgstr "Miniatyrer"
 #, c-format
 msgid "Page %s — %s"
 msgstr "Side %s - %s"
-
-#: ../shell/ev-window.c:895 ../shell/ev-window.c:4466
-#, c-format
-msgid "Page %s"
-msgstr "Side %s"
 
 #: ../shell/ev-window.c:1460
 msgid "The document contains no pages"
@@ -1596,7 +1601,7 @@ msgstr "Vedlegget kunne ikke lagres."
 msgid "Save Attachment"
 msgstr "Lagre vedlegg"
 
-#: ../shell/ev-window-title.c:162
+#: ../shell/ev-window-title.c:169
 #, c-format
 msgid "%s — Password Required"
 msgstr "%s - passord kreves"
