@@ -23,17 +23,36 @@ DOC_FIGURES = \
 DOC_PAGES = \
 	annotation-properties.page	\
 	annotations-delete.page		\
+	annotations-disabled.page	\
 	annotations-navigate.page	\
 	annotations.page		\
+	annotations-save.page		\
 	bookmarks.page			\
+	bug-filing.page			\
 	commandline.page		\
 	convertpdf.page			\
 	convertPostScript.page		\
 	convertSVG.page			\
+	duplex-10pages.page		\
+	duplex-11pages.page		\
+	duplex-12pages.page		\
+	duplex-13pages.page		\
+	duplex-14pages.page		\
+	duplex-15pages.page		\
+	duplex-16pages.page		\
+	duplex-3pages.page		\
+	duplex-4pages.page		\
+	duplex-5pages.page		\
+	duplex-6pages.page		\
+	duplex-7pages.page		\
+	duplex-8pages.page		\
+	duplex-9pages.page		\
+	duplex-npages.page		\
 	editing.page			\
 	finding.page			\
 	formats.page			\
 	forms.page			\
+	forms-saving.page		\
 	index.page			\
 	introduction.page		\
 	invert-colors.page		\
@@ -44,15 +63,26 @@ DOC_PAGES = \
 	password.page			\
 	presentations.page		\
 	print-2sided.page		\
+	print-booklet.page		\
 	print-differentsize.page	\
 	printing.page			\
 	print-order.page		\
 	print-select.page		\
 	reload.page			\
 	shortcuts.page			\
-	textselection.page		\
-	tips.page			\
-	zooming.page
+	singlesided-13-16pages.page	\
+	singlesided-17-20pages.page	\
+	singlesided-3-4pages.page	\
+	singlesided-5-8pages.page	\
+	singlesided-9-12pages.page	\
+	singlesided-npages.page		\
+	synctex-beamer.page		\
+	synctex-compile.page		\
+	synctex-editors.page		\
+	synctex.page			\
+	synctex-search.page		\
+	synctex-support.page		\
+	textselection.page
 
 DOC_LINGUAS = bg ca cs de el en_GB es eu fi fr gl it ja nl oc pt_BR ru sl sr sv uk vi zh_CN
 

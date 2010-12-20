@@ -1,0 +1,109 @@
+ <page xmlns="http://projectmallard.org/1.0/"
+      type="topic" style="task"
+      id="singlesided-9-12page">
+
+  <info>
+    <link type="guide" xref="print-booklet#singleSided"/>
+    <title type="sort">09-Page or 12-Page Booklet</title>
+    <desc>Print a 9, 10, 11 or 12 page booklet.</desc>
+
+    <revision pkgversion="2.32" version="0.1" date="2010-10-26" status="draft"/>
+    <credit type="author">
+      <name>Tiffany Antopolski</name>
+      <email>tiffany@antopolski.com</email>
+    </credit>
+    <license>
+      <p>Creative Commons Share Alike 3.0</p>
+    </license>
+
+  </info>
+
+<title>9-Page to 12-Page Booklet</title>
+
+ <p>
+  If you have a 9, 10 or 11 page PDF document you should add the appropriate number of blank pages to make it 12-pages.  To do so, you can:
+   </p>
+ <steps>
+ <item>
+  <p>
+    Create a blank PDF using <app>Open Office Word Processor</app>.
+  </p>
+ </item>
+ <item>
+  <p>
+   Merge the blank pages with your PDF document using <app>PDF-Shuffler</app> placing the blank pages at the end.
+  </p>
+ </item>
+</steps>
+
+ <p>
+  To print:
+ </p>
+  <steps>
+ <item>
+  <p>
+   Click <guiseq><gui>File</gui><gui>Print</gui></guiseq>.
+  </p>
+ </item>
+
+
+ <item>
+  <p>
+   Choose the <gui>General</gui> tab.
+  </p>
+  <p>
+   Under <em>Range</em>, choose <gui>Pages</gui>.
+  </p>
+  <p>
+   Type the numbers of the pages in this order: 12, 1, 2, 11, 10, 3, 4, 9, 8, 5, 6, 7
+  </p>
+ </item>
+ <item>
+  <p>
+   Choose the <gui>Page Setup</gui> tab.
+  </p>
+  <p>
+   Under <em>Layout</em>, in the <gui>Two-side</gui> menu, select <gui>One Sided</gui>.
+  </p>
+  <p>
+   In the <gui>Pages per side</gui> menu, select <gui>2</gui>.
+  </p>
+  <p>
+   In the <gui>Page ordering</gui> menu, select <gui>Left to right</gui>.
+  </p>
+  <p>
+   In the <gui>Only print</gui> menu, select <gui>Odd sheets</gui>.
+  </p>
+ </item>
+ <item>
+  <p>
+   Click <gui>Print</gui>.
+  </p>
+ </item>
+   <item>
+    <p>
+     When all the pages have printed, flip the pages over and place them back in the printer.
+    </p>
+   </item>
+   <item>
+    <p>
+    Click <guiseq><gui>File</gui><gui>Print</gui></guiseq>.
+    </p>
+   </item>
+   <item>
+    <p>
+      Choose the <gui>Page Setup</gui> tab.
+    </p>
+     <p>
+      In the <gui>Only print</gui> menu, select <gui>Even sheets</gui>.
+     </p>
+   </item>
+   <item>
+    <p>
+     Click <gui>Print</gui>.
+    </p>
+   </item>
+
+  </steps>
+
+</page>

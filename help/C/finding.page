@@ -5,9 +5,9 @@
 
   <info>
     <link type="guide" xref="index#reading"/>
-    <desc>Search for a given term on a page.</desc>
+    <desc>Find a word or phrase in a document.</desc>
 
-    <revision pkgversion="2.30.3" version="0.1" date="2010-07-26" status="review"/>
+    <revision pkgversion="2.32" version="0.1" date="2010-11-08" status="review"/>
     <credit type="author">
       <name>Phil Bull</name>
       <email>philbull@gmail.com</email>
@@ -18,31 +18,32 @@
 
   </info>
 
-<title>Finding Things In A Document</title>
+<title>Finding Text In A Document</title>
 <steps>
-    <item><p>Click <guiseq><gui>Edit</gui><gui>Find</gui></guiseq> or press 
-    <keyseq><key>Ctrl</key><key>F</key></keyseq> or <key>/</key> to display a 
+    <item><p>Click <guiseq><gui>Edit</gui><gui>Find</gui></guiseq> or press
+    <keyseq><key>Ctrl</key><key>F</key></keyseq> or <key>/</key> to display a
     search box. </p></item>
 
-    <item><p>Type the word you want to look for and a search will start 
+    <item><p>Type the word or phrase you want to look for and a search will start
     automatically.</p></item>
 
-    <item><p>The <gui>Find Previous</gui> and <gui>Find Next</gui> buttons let you skip from 
+    <item><p>The <gui>Find Previous</gui> and <gui>Find Next</gui> buttons let you skip from
     one search result to another.</p></item>
- 
+
     <item>
      <p>To hide the search bar, click anywhere in the document.</p>
-      <note style = "tip">
-       <p>If the search bar says <em>0 found on this page</em>, and clicking the <gui>Find Next</gui> button has no     effect, then your search word has not been 
-    found in the document.</p>
-     </note>
-    </item>  
+    </item>
 </steps>
 
+<p>
+If the word or phrase you searched does not appear in the entire document <app>Evince</app> will say <em>Not found</em>.  However, if it appears in the document at least once, Evince will tell you how many times the word you searched occurs on each page.  This is apparent if you skip from one result to another as described above or scroll through the document.
+</p>
 
-
-<note><p>Some documents are not searchable because the original text of the document has 
-         been converted into a different format. For example, many PostScript (.ps) files are not searchable.</p>
+<note>
+  <p>
+Only PDF documents are searchable. Some PDF documents are not searchable because their text
+is encoded in the document as an image.
+  </p>
 </note>
 
 </page>

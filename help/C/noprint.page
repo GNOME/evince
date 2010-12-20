@@ -3,7 +3,7 @@
       id="noprint">
 
   <info>
-    <link type="guide" xref="index#printing" group="main" />
+    <link type="guide" xref="index#printing"/>
     <desc>The author may have put printing restrictions on the document.</desc>
     <revision pkgversion="2.30.3" version="0.1" date="2010-07-26" status="review"/>
     <credit type="author">
@@ -12,11 +12,11 @@
     </credit>
     <license>
       <p>Creative Commons Share Alike 3.0</p>
-    </license>    
+    </license>
 
   </info>
 
-<title>Why Can't I Print A Document?</title>
+<title>I Can't Print A Document</title>
 
 <p>A document might not print because of:</p>
  <list>
@@ -28,47 +28,47 @@
 <section>
   <title>Printer Problems</title>
   <p>
-  There are many reasons why your printer might not be working. For example, it 
+  There are many reasons why your printer might not be working. For example, it
   could be out of paper or ink, or unplugged or damaged.
   </p>
 
   <p>To check if your printer is printing correctly:</p>
-  <list>
+  <steps>
    <item><p>Choose <guiseq><gui>System</gui><gui>Administration</gui><gui>Printing</gui></guiseq></p></item>
    <item><p>Double click on your printer in the list.</p></item>
    <item><p>Select <gui>Settings</gui> in the left menu.   Click on <gui>Print Test Page</gui>.  A page should be sent to your printer.</p>
 <note>
  <p>
-If this fails, see your printer's manual 
+If this fails, see your printer's manual
   to see what else you can do.
 </p>
 </note>
 
 </item>
-  </list>
-  
+  </steps>
+
 
 </section>
 
 <section>
   <title>PDF Printing Restrictions</title>
   <p>
-  Some PDF documents have a setting which prevents you from printing them. 
+  Some PDF documents have a setting which prevents you from printing them.
   Authors can set this printing restriction when they write a document.
-  Evince overrides this restriction by default, but you may want to check 
+  Evince overrides this restriction by default, but you may want to check
   that it hasn't been disabled:
   </p>
-  
+
   <steps>
     <item>
       <p>
-      Press <keyseq><key>Alt</key><key>F2</key></keyseq> to open the Run 
+      Press <keyseq><key>Alt</key><key>F2</key></keyseq> to open the Run
       Application window.
       </p>
     </item>
     <item>
       <p>
-      Type <input>gconf-editor</input> into the text box and click 
+      Type <input>gconf-editor</input> into the text box and click
       <gui>Run</gui>. The Configuration Editor will open.
       </p>
     </item>

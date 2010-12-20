@@ -1,0 +1,85 @@
+<page xmlns="http://projectmallard.org/1.0/"
+      type="topic" style="task"
+      id="duplex-3page">
+
+  <info>
+    <link type="guide" xref="print-booklet#doubleSided"/>
+   <title type="sort">03-Page Booklet</title>
+    <desc>Print a 3 page booklet.</desc>
+
+    <revision pkgversion="2.32" version="0.1" date="2010-10-26" status="draft"/>
+    <credit type="author">
+      <name>Tiffany Antopolski</name>
+      <email>tiffany@antopolski.com</email>
+    </credit>
+    <license>
+      <p>Creative Commons Share Alike 3.0</p>
+    </license>
+
+  </info>
+
+
+<title>3-Page Booklet</title>
+
+<steps>
+ <item>
+  <p>
+   Click <guiseq><gui>File</gui><gui>Print</gui></guiseq>.
+  </p>
+ </item>
+ <item>
+  <p>
+   Choose the <gui>General</gui> tab.
+  </p>
+  <p>
+   Under <em>Range</em>, choose <gui>Pages</gui>.  Type the numbers of the pages in this order: 3, 2, 1
+  </p>
+ </item>
+ <item>
+  <p>
+   Choose the <gui>Page Setup</gui> tab.
+  </p>
+  <p>
+   Under <em>Layout</em>, in the <gui>Two-side</gui> option, select <gui>Short Edge (Flip)</gui>.
+  </p>
+  <p>
+   In the <gui>Pages per side</gui> option, select <gui>2</gui>.
+  </p>
+  <p>
+   In the <gui>Page ordering</gui> menu, select <gui>Right to left</gui>.
+  </p>
+ </item>
+ <item>
+  <p>
+   Click <gui>Print</gui>.
+  </p>
+ </item>
+</steps>
+
+
+<note>
+   <p>
+    It is easier to print a 4-page booklet.  You may wish to add a blank page to your PDF document to make it 4-pages.  To do so, you can:
+   </p>
+<steps>
+ <item>
+  <p>
+    Create a blank PDF using <app>Open Office Word Processor</app>.
+  </p>
+ </item>
+ <item>
+  <p>
+   Merge the blank page with your PDF document using <app>PDF-Shuffler</app> placing the blank page at the end.
+  </p>
+
+ </item>
+ <item>
+  <p>
+   Follow the steps for printing a <link xref="duplex-4page">4-page booklet</link>.
+  </p>
+
+ </item>
+</steps>
+</note>
+
+</page>

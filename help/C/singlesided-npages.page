@@ -1,0 +1,114 @@
+ <page xmlns="http://projectmallard.org/1.0/"
+      type="topic" style="task"
+      id="singlesided-npage">
+
+  <info>
+    <link type="guide" xref="print-booklet#singleSided"/>
+
+    <desc>Print a booklet over 20 pages.</desc>
+
+    <revision pkgversion="2.32" version="0.1" date="2010-10-28" status="draft"/>
+    <credit type="author">
+      <name>Tiffany Antopolski</name>
+      <email>tiffany@antopolski.com</email>
+    </credit>
+    <license>
+      <p>Creative Commons Share Alike 3.0</p>
+    </license>
+
+  </info>
+
+<title>n-Page Booklet</title>
+ <note style="important">
+  <p>
+   <em>n</em> is a multiple of 4.
+  </p>
+ </note>
+ <p>
+   If the number of pages in your PDF document is not a multiple of 4, you should add the appropriate number of blank pages (1,2 or 3) to make it a multiple of 4.
+ To do so, you can:
+   </p>
+ <steps>
+ <item>
+  <p>
+    Create a blank PDF using <app>Open Office Word Processor</app>.
+  </p>
+ </item>
+ <item>
+  <p>
+   Merge the blank pages with your PDF document using <app>PDF-Shuffler</app> placing the blank pages at the end.
+  </p>
+ </item>
+</steps>
+
+ <p>
+  To print:
+ </p>
+  <steps>
+ <item>
+  <p>
+   Click <guiseq><gui>File</gui><gui>Print</gui></guiseq>.
+  </p>
+ </item>
+ <item>
+  <p>
+   Choose the <gui>General</gui> tab.
+  </p>
+  <p>
+   Under <em>Range</em>, choose <gui>Pages</gui>.
+  </p>
+  <tree>
+   <item>
+   Type the numbers of the pages in this order:
+       <item>n, 1, 2, n-1, n-2, 3, 4, n-3, n-4, 5, 6, n-5, n-6, 7, 8, n-7, n-8, 9, 10, n-9, n-10, 11, 12, n-11...</item>
+      <item>...until you have typed n-number of pages.</item>
+    </item>
+  </tree>
+ </item>
+ <item>
+  <p>
+   Choose the <gui>Page Setup</gui> tab.
+  </p>
+  <p>
+   Under <em>Layout</em>, in the <gui>Two-side</gui> menu, select <gui>One Sided</gui>.
+  </p>
+  <p>
+   In the <gui>Pages per side</gui> menu, select <gui>2</gui>.
+  </p>
+  <p>
+   In the <gui>Page ordering</gui> menu, select <gui>Left to right</gui>.
+  </p>
+  <p>
+   In the <gui>Only print</gui> menu, select <gui>Odd sheets</gui>.
+  </p>
+ </item>
+ <item>
+  <p>
+   Click <gui>Print</gui>.
+  </p>
+ </item>
+   <item>
+    <p>
+     When all the pages have printed, flip the pages over and place them back in the printer.
+    </p>
+   </item>
+   <item>
+    <p>
+    Click <guiseq><gui>File</gui><gui>Print</gui></guiseq>.
+    </p>
+   </item>
+   <item>
+    <p>
+      Choose the <gui>Page Setup</gui> tab.
+    </p>
+     <p>
+      In the <gui>Only print</gui> menu, select <gui>Even sheets</gui>.
+     </p>
+   </item>
+   <item>
+    <p>
+     Click <gui>Print</gui>.
+    </p>
+   </item>
+  </steps>
+</page>

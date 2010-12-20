@@ -7,7 +7,7 @@
     <link type="seealso" xref="convertpdf"/>
     <link type="seealso" xref="convertPostScript"/>
     <link type="seealso" xref="convertSVG"/>
-    <desc>PDF, PostScript and several other formats are supported.</desc>
+    <desc>PDF, PostScript and many others are.</desc>
 
     <revision pkgversion="2.30.3" version="0.1" date="2010-07-26" status="review"/>
     <credit type="author">
@@ -23,7 +23,7 @@
 <title>Supported Formats</title>
 
 <p>
-The Document Viewer supports the following formats:
+<app>Evince</app> supports the following formats:
 </p>
 <list>
  <item><p>Comic Book Archive (.cbr and .cbz)</p></item>
@@ -35,8 +35,16 @@ The Document Viewer supports the following formats:
  <item><p>Scalable Vector Graphics (.svg)</p></item>
  <item><p>Tagged Image File Format (.tiff, .tif)</p></item>
  <item><p>Other Image Files (.gif, .jpeg, .png)</p></item>
-
-
 </list>
+<note>
+<p>
+In some Linux distributions, not all formats are supported by default, so you might not be able to view all the formats listed above.
+</p>
+<p>
+Support for a format is called a <em>backend</em>.  If <app>Evince</app> gives you the error "Unable to Open Document", you may wish to check whether the backend package for the format is installed.
+</p>
+</note>
+
+
 
 </page>
