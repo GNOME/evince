@@ -134,28 +134,31 @@ static void
 ev_annotation_window_set_color (EvAnnotationWindow *window,
 				GdkColor           *color)
 {
-	GtkRcStyle *rc_style;
-	GdkColor    gcolor;
+        GtkStyleProperties *properties;
+        GtkStyleProvider   *provider;
+	GdkRGBA             rgba;
 
-	gcolor = *color;
+        rgba.red = color->red / 65535.;
+        rgba.green = color->green / 65535.;
+        rgba.blue = color->blue / 65535.;
+        rgba.alpha = 1;
 
-	/* Apply colors to style */
-	rc_style = gtk_widget_get_modifier_style (GTK_WIDGET (window));
-	rc_style->base[GTK_STATE_NORMAL] = gcolor;
-	rc_style->bg[GTK_STATE_PRELIGHT] = gcolor;
-	rc_style->bg[GTK_STATE_NORMAL] = gcolor;
-	rc_style->bg[GTK_STATE_ACTIVE] = gcolor;
-	rc_style->color_flags[GTK_STATE_PRELIGHT] = GTK_RC_BG;
-	rc_style->color_flags[GTK_STATE_NORMAL] = GTK_RC_BG | GTK_RC_BASE;
-	rc_style->color_flags[GTK_STATE_ACTIVE] = GTK_RC_BG;
+        properties = gtk_style_properties_new ();
+        gtk_style_properties_set (properties, 0,
+                                  "color", &rgba,
+                                  "background-color", &rgba,
+                                  NULL);
 
-	/* Apply the style to the widgets */
-	g_object_ref (rc_style);
-	gtk_widget_modify_style (GTK_WIDGET (window), rc_style);
-	gtk_widget_modify_style (window->close_button, rc_style);
-	gtk_widget_modify_style (window->resize_se, rc_style);
-	gtk_widget_modify_style (window->resize_sw, rc_style);
-	g_object_unref (rc_style);
+        provider = GTK_STYLE_PROVIDER (properties);
+        gtk_style_context_add_provider (gtk_widget_get_style_context (GTK_WIDGET (window)),
+                                        provider, GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+        gtk_style_context_add_provider (gtk_widget_get_style_context (window->close_button),
+                                        provider, GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+        gtk_style_context_add_provider (gtk_widget_get_style_context (window->resize_se),
+                                        provider, GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+        gtk_style_context_add_provider (gtk_widget_get_style_context (window->resize_sw),
+                                        provider, GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+        g_object_unref (properties);
 }
 
 static void
