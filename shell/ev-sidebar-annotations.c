@@ -425,18 +425,16 @@ job_finished_callback (EvJobAnnots          *job,
 			if (EV_IS_ANNOTATION_TEXT (annot)) {
 				if (!text_icon) {
 					/* FIXME: use a better icon than EDIT */
-					text_icon = gtk_widget_render_icon (priv->tree_view,
-									    GTK_STOCK_EDIT,
-									    GTK_ICON_SIZE_BUTTON,
-									    NULL);
+					text_icon = gtk_widget_render_icon_pixbuf (priv->tree_view,
+                                                                                   GTK_STOCK_EDIT,
+                                                                                   GTK_ICON_SIZE_BUTTON);
 				}
 				pixbuf = text_icon;
 			} else if (EV_IS_ANNOTATION_ATTACHMENT (annot)) {
 				if (!attachment_icon) {
-					attachment_icon = gtk_widget_render_icon (priv->tree_view,
-										  EV_STOCK_ATTACHMENT,
-										  GTK_ICON_SIZE_BUTTON,
-										  NULL);
+					attachment_icon = gtk_widget_render_icon_pixbuf (priv->tree_view,
+                                                                                         EV_STOCK_ATTACHMENT,
+                                                                                         GTK_ICON_SIZE_BUTTON);
 				}
 				pixbuf = attachment_icon;
 			}
