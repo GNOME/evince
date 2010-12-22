@@ -162,21 +162,6 @@ egg_find_bar_class_init (EggFindBarClass *klass)
                                                          FALSE,
                                                          G_PARAM_READWRITE));
 
-  /* Style properties */
-  gtk_widget_class_install_style_property (widget_class,
-                                           g_param_spec_boxed ("all_matches_color",
-                                                               "Highlight color",
-                                                               "Color of highlight for all matches",
-                                                               GDK_TYPE_COLOR,
-                                                               G_PARAM_READABLE));
-
-  gtk_widget_class_install_style_property (widget_class,
-                                           g_param_spec_boxed ("current_match_color",
-                                                               "Current color",
-                                                               "Color of highlight for the current match",
-                                                               GDK_TYPE_COLOR,
-                                                               G_PARAM_READABLE));
-
   g_type_class_add_private (object_class, sizeof (EggFindBarPrivate));
 
   binding_set = gtk_binding_set_by_class (klass);
@@ -657,61 +642,6 @@ egg_find_bar_get_case_sensitive (EggFindBar *find_bar)
   priv = (EggFindBarPrivate *)find_bar->priv;
 
   return priv->case_sensitive;
-}
-
-static void
-get_style_color (EggFindBar *find_bar,
-                 const char *style_prop_name,
-                 GdkColor   *color)
-{
-  GdkColor *style_color;
-
-  gtk_widget_ensure_style (GTK_WIDGET (find_bar));
-  gtk_widget_style_get (GTK_WIDGET (find_bar),
-                        "color", &style_color, NULL);
-  if (style_color)
-    {
-      *color = *style_color;
-      gdk_color_free (style_color);
-    }
-}
-
-/**
- * egg_find_bar_get_all_matches_color:
- *
- * Gets the color to use to highlight all the
- * known matches.
- *
- * Since: 2.6
- */
-void
-egg_find_bar_get_all_matches_color (EggFindBar *find_bar,
-                                    GdkColor   *color)
-{
-  GdkColor found_color = { 0, 0, 0, 0x0f0f };
-
-  get_style_color (find_bar, "all_matches_color", &found_color);
-
-  *color = found_color;
-}
-
-/**
- * egg_find_bar_get_current_match_color:
- *
- * Gets the color to use to highlight the match
- * we're currently on.
- *
- * Since: 2.6
- */
-void
-egg_find_bar_get_current_match_color (EggFindBar *find_bar,
-                                      GdkColor   *color)
-{
-  GdkColor found_color = { 0, 0, 0, 0xffff };
-
-  get_style_color (find_bar, "current_match_color", &found_color);
-
-  *color = found_color;
 }
 
 /**
