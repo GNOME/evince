@@ -37,7 +37,7 @@
 #include "config.h"
 
 #include "eggsmclient-private.h"
-#include <gdk/gdkquartz.h>
+#include <glib.h>
 #include <Carbon/Carbon.h>
 #include <CoreServices/CoreServices.h>
 
