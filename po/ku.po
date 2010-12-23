@@ -3,27 +3,28 @@
 # Copyright (c) (c) 2005 Canonical Ltd, and Rosetta Contributors 2005
 # This file is distributed under the same license as the evince package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2005.
-# Erdal Ronahi <erdal.ronahi@gmail.com>, 2005.
-#
+# Erdal Ronahi <erdal.ronahi@gmail.com>, 2005, 2009.
 msgid ""
 msgstr ""
 "Project-Id-Version: evince.gnome-2-12\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-03-04 19:43+0100\n"
-"PO-Revision-Date: 2007-03-04 19:48+0100\n"
-"Last-Translator: Erdal Ronahi <erdal.ronahi@gmail.com>\n"
-"Language-Team: Kurdish <gnu-ku-wergerandin@lists.sourceforge.net>\n"
+"PO-Revision-Date: 2009-10-17 23:13+0200\n"
+"Last-Translator: Erdal <erdal.ronahi@gmail.com>\n"
+"Language-Team: Kurdish Team http://pckurd.net\n"
+"Language: ku\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Rosetta-Version: 0.1\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: KBabel 1.10.2\n"
+"X-Generator: Virtaal 0.4.0\n"
+"X-Rosetta-Version: 0.1\n"
 "X-Rosetta-Export-Date: 2007-02-28 23:18+0000\n"
 
 #: ../backend/comics/comics-document.c:148
+#, fuzzy
 msgid "File corrupted."
-msgstr "Pel xera bûye."
+msgstr "Pel xera bûye"
 
 #: ../backend/comics/comics-document.c:184
 #, c-format
@@ -31,7 +32,9 @@ msgid "No images found in archive %s"
 msgstr "Di arşîva %s de wêne nehate dîtin"
 
 #: ../backend/djvu/djvu-document.c:159
-msgid "The document is composed by several files. One or more of such files cannot be accessed."
+msgid ""
+"The document is composed by several files. One or more of such files cannot "
+"be accessed."
 msgstr ""
 
 #: ../backend/dvi/dvi-document.c:89
@@ -102,15 +105,15 @@ msgstr "Neveşartî"
 
 #: ../backend/impress/zip.c:50
 msgid "No error"
-msgstr ""
+msgstr "Bê çewtî"
 
 #: ../backend/impress/zip.c:53
 msgid "Not enough memory"
-msgstr ""
+msgstr "Bîr têrê nake"
 
 #: ../backend/impress/zip.c:56
 msgid "Cannot find zip signature"
-msgstr ""
+msgstr "Destnîşana zip nehate dîtin"
 
 #: ../backend/impress/zip.c:59
 msgid "Invalid zip file"
@@ -209,16 +212,18 @@ msgstr "Quarto"
 msgid "10x14"
 msgstr "10x14"
 
-#: ../backend/ps/ps-document.c:172
-#: ../backend/ps/ps-document.c:186
+#: ../backend/ps/ps-document.c:172 ../backend/ps/ps-document.c:186
 #, c-format
 msgid "Cannot open file “%s”.\n"
 msgstr "Pelê \"%s\" nayê vekirin.\n"
 
 #: ../backend/ps/ps-document.c:233
 #, c-format
-msgid "Failed to load document “%s”. Ghostscript interpreter was not found in path"
-msgstr "Dema belgeya \"%s\" dihate barkirin bi ser neket. Xebatkerê Ghostskrîpt di hundirê \"path\"ê de nehate dîtin."
+msgid ""
+"Failed to load document “%s”. Ghostscript interpreter was not found in path"
+msgstr ""
+"Dema belgeya \"%s\" dihate barkirin bi ser neket. Xebatkerê Ghostskrîpt di "
+"hundirê \"path\"ê de nehate dîtin."
 
 #: ../backend/ps/ps-document.c:250
 #, c-format
@@ -246,8 +251,7 @@ msgstr "Pêkhatina PDF nayê destekkirin"
 msgid "Invalid document"
 msgstr "Belgeya nederbasdar"
 
-#: ../libdocument/ev-attachment.c:303
-#: ../libdocument/ev-attachment.c:316
+#: ../libdocument/ev-attachment.c:303 ../libdocument/ev-attachment.c:316
 #, c-format
 msgid "Couldn't save attachment “%s”: %s"
 msgstr "Pêveka \"%s\" nehate tomarkirin: %s"
@@ -284,8 +288,7 @@ msgstr "Belgeyên PostScript"
 msgid "PDF Documents"
 msgstr "Belgeyên PDF"
 
-#: ../libdocument/ev-document-factory.c:474
-#: ../shell/ev-window.c:4669
+#: ../libdocument/ev-document-factory.c:474 ../shell/ev-window.c:4669
 msgid "Images"
 msgstr "Wêne"
 
@@ -360,19 +363,17 @@ msgid "Separator"
 msgstr "Veqetîner"
 
 #: ../cut-n-paste/totem-screensaver/totem-scrsaver.c:111
-#, fuzzy
 msgid "Running in presentation mode"
-msgstr "Evince di moda pêşkêşiyê de bixebitîne"
+msgstr "Evince di moda pêşkêşiyê de dixebite"
 
 #. translators: this is the label for toolbar button
-#: ../cut-n-paste/zoom-control/ephy-zoom.h:48
-#: ../shell/ev-window.c:4322
+#: ../cut-n-paste/zoom-control/ephy-zoom.h:48 ../shell/ev-window.c:4322
 msgid "Best Fit"
 msgstr "Yek Rûpel"
 
 #: ../cut-n-paste/zoom-control/ephy-zoom.h:49
 msgid "Fit Page Width"
-msgstr "Firehiya Rûpelê"
+msgstr "Berê Rûpelê"
 
 #: ../cut-n-paste/zoom-control/ephy-zoom.h:51
 msgid "50%"
@@ -410,8 +411,7 @@ msgstr "%300"
 msgid "400%"
 msgstr "%400"
 
-#: ../data/evince.desktop.in.in.h:1
-#: ../shell/ev-window.c:3484
+#: ../data/evince.desktop.in.in.h:1 ../shell/ev-window.c:3484
 #: ../shell/ev-window-title.c:127
 msgid "Document Viewer"
 msgstr "Nîşanderê Belgeyan"
@@ -426,6 +426,7 @@ msgid "Password Entry"
 msgstr "Şî_fre:"
 
 #: ../data/evince-password.glade.h:2
+#, fuzzy
 msgid "Remember password for this session"
 msgstr "Bo vê danişînê şîfreyê bibîr bîne"
 
@@ -438,56 +439,69 @@ msgid "_Password:"
 msgstr "Şî_fre:"
 
 #: ../data/evince-properties.glade.h:1
+#, fuzzy
 msgid "<b>Author:</b>"
-msgstr "<b>Nivîskar:</b>"
+msgstr "Nivîskar:"
 
 #: ../data/evince-properties.glade.h:2
+#, fuzzy
 msgid "<b>Created:</b>"
-msgstr "<b>Dîroka afirandinê:</b>"
+msgstr "Dîroka afirandinê:"
 
 #: ../data/evince-properties.glade.h:3
+#, fuzzy
 msgid "<b>Creator:</b>"
-msgstr "<b>Afirandêr:</b>"
+msgstr "Afirandêr:"
 
 #: ../data/evince-properties.glade.h:4
+#, fuzzy
 msgid "<b>Format:</b>"
-msgstr "<b>Format:</b>"
+msgstr "Teşe:"
 
 #: ../data/evince-properties.glade.h:5
+#, fuzzy
 msgid "<b>Keywords:</b>"
-msgstr "<b>Peyvên Mîna Mifteyan:</b>"
+msgstr "Peyvên Mîna Mifteyan:"
 
 #: ../data/evince-properties.glade.h:6
+#, fuzzy
 msgid "<b>Modified:</b>"
-msgstr "<b>Hatiye guheandin:</b>"
+msgstr "Hatiye guherandin:"
 
 #: ../data/evince-properties.glade.h:7
+#, fuzzy
 msgid "<b>Number of Pages:</b>"
-msgstr "<b>Hejmara Rûpelan:</b>"
+msgstr "Hejmara Rûpelan:"
 
 #: ../data/evince-properties.glade.h:8
+#, fuzzy
 msgid "<b>Optimized:</b>"
-msgstr "<b>Herî tekûz:</b>"
+msgstr "Herî tekûz:"
 
 #: ../data/evince-properties.glade.h:9
+#, fuzzy
 msgid "<b>Paper Size:</b>"
-msgstr "<b>Mezinahiya Kaxizê:</b>"
+msgstr "Mezinahiya Kaxizê:"
 
 #: ../data/evince-properties.glade.h:10
+#, fuzzy
 msgid "<b>Producer:</b>"
-msgstr "<b>Hilberîner:</b>"
+msgstr "Hilberîner:"
 
 #: ../data/evince-properties.glade.h:11
+#, fuzzy
 msgid "<b>Security:</b>"
-msgstr "<b>Ewlekarî:</b>"
+msgstr "Ewlehî:"
 
 #: ../data/evince-properties.glade.h:12
+#, fuzzy
 msgid "<b>Subject:</b>"
-msgstr "<b>Mijar:</b>"
+msgstr "Mijar:"
 
 #: ../data/evince-properties.glade.h:13
+#, fuzzy
 msgid "<b>Title:</b>"
-msgstr "<b>Sernivîs:</b>"
+msgstr "Sernav:"
 
 #: ../data/evince.schemas.in.h:1
 msgid "Override document restrictions"
@@ -517,7 +531,7 @@ msgstr "pêşdanasînî:mm"
 
 #. Imperial measurement (inches)
 #: ../properties/ev-properties-view.c:292
-#, c-format
+#, fuzzy, c-format
 msgid "%.2f x %.2f in"
 msgstr "%.2f x %.2f inç"
 
@@ -617,7 +631,8 @@ msgstr "Şîfre pêwîste e"
 
 #: ../shell/ev-password.c:84
 #, c-format
-msgid "The document “%s” is locked and requires a password before it can be opened."
+msgid ""
+"The document “%s” is locked and requires a password before it can be opened."
 msgstr "Belgeya \"%s\" quflekirî ye û ji bo were vekirin şîfre pêwist e."
 
 #: ../shell/ev-password.c:149
@@ -634,8 +649,12 @@ msgid "Incorrect password"
 msgstr "Şîfreya Nederbasdar"
 
 #: ../shell/ev-password-view.c:111
-msgid "This document is locked and can only be read by entering the correct password."
-msgstr "Ev belge quflekirî ye û heke şîfreya rasteqîn were nivîsîn encax dikare were xwendin."
+msgid ""
+"This document is locked and can only be read by entering the correct "
+"password."
+msgstr ""
+"Ev belge quflekirî ye û heke şîfreya rasteqîn were nivîsîn encax dikare were "
+"xwendin."
 
 #: ../shell/ev-password-view.c:120
 msgid "_Unlock Document"
@@ -666,8 +685,7 @@ msgstr "Agahiya curetîpan têne stendin... %3d%%"
 msgid "Attachments"
 msgstr "Pêvek"
 
-#: ../shell/ev-sidebar-links.c:266
-#: ../shell/ev-view.c:2823
+#: ../shell/ev-sidebar-links.c:266 ../shell/ev-view.c:2823
 msgid "Loading..."
 msgstr "Tê bar kirin..."
 
@@ -782,7 +800,7 @@ msgstr "Rûpela %s"
 
 #: ../shell/ev-window.c:1314
 msgid "Unable to open document"
-msgstr "Belge nehate vekirin"
+msgstr "Vekirina belgeyê bi ser neket"
 
 #: ../shell/ev-window.c:1476
 msgid "Open Document"
@@ -815,13 +833,11 @@ msgstr "Kopiyekê Tomar bike"
 msgid "Failed to print document"
 msgstr "Dema belge dihate çapkirin bi ser neket"
 
-#: ../shell/ev-window.c:2125
-#: ../shell/ev-window.c:2310
+#: ../shell/ev-window.c:2125 ../shell/ev-window.c:2310
 msgid "Printing is not supported on this printer."
 msgstr "Çapkirina di vê çaperê de nayê destekkirin."
 
-#: ../shell/ev-window.c:2235
-#: ../shell/ev-window.c:2361
+#: ../shell/ev-window.c:2235 ../shell/ev-window.c:2361
 msgid "Print"
 msgstr "Çap"
 
@@ -831,16 +847,19 @@ msgstr "Pêkhatina PDF nayê destekkirin"
 
 #: ../shell/ev-window.c:2312
 #, c-format
-msgid "You were trying to print to a printer using the “%s” driver. This program requires a PostScript printer driver."
-msgstr "Tu dixwazî ajokerê \"%s\" bikar bîne û ji çaperê deranekê bistîne. Ev bername pêdiviya wê ji ajokera PostSkrîpt heye"
+msgid ""
+"You were trying to print to a printer using the “%s” driver. This program "
+"requires a PostScript printer driver."
+msgstr ""
+"Tu dixwazî ajokerê \"%s\" bikar bîne û ji çaperê deranekê bistîne. Ev "
+"bername pêdiviya wê ji ajokera PostSkrîpt heye"
 
 #: ../shell/ev-window.c:2370
 msgid "Pages"
 msgstr "Rûpel"
 
 #. Toolbar-only
-#: ../shell/ev-window.c:2737
-#: ../shell/ev-window.c:4132
+#: ../shell/ev-window.c:2737 ../shell/ev-window.c:4132
 msgid "Leave Fullscreen"
 msgstr "Ji Dîmender Tije Derkeve"
 
@@ -858,23 +877,34 @@ msgstr ""
 "Popplerên têne bikaranîn %s (%s)"
 
 #: ../shell/ev-window.c:3508
-msgid "Evince is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.\n"
+msgid ""
+"Evince is free software; you can redistribute it and/or modify it under the "
+"terms of the GNU General Public License as published by the Free Software "
+"Foundation; either version 2 of the License, or (at your option) any later "
+"version.\n"
 msgstr ""
 
 #: ../shell/ev-window.c:3512
-msgid "Evince is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.\n"
+msgid ""
+"Evince is distributed in the hope that it will be useful, but WITHOUT ANY "
+"WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS "
+"FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more "
+"details.\n"
 msgstr ""
 
 #: ../shell/ev-window.c:3516
-msgid "You should have received a copy of the GNU General Public License along with Evince; if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA\n"
+msgid ""
+"You should have received a copy of the GNU General Public License along with "
+"Evince; if not, write to the Free Software Foundation, Inc., 59 Temple "
+"Place, Suite 330, Boston, MA  02111-1307  USA\n"
 msgstr ""
 
-#: ../shell/ev-window.c:3540
-#: ../shell/main.c:284
+#: ../shell/ev-window.c:3540 ../shell/main.c:284
 msgid "Evince"
 msgstr "Evince"
 
 #: ../shell/ev-window.c:3543
+#, fuzzy
 msgid "© 1996-2007 The Evince authors"
 msgstr "© 1996-2007 Nivîskarên Evince"
 
@@ -888,7 +918,7 @@ msgstr "_Pel"
 
 #: ../shell/ev-window.c:4050
 msgid "_Edit"
-msgstr "_Biguherîne"
+msgstr "_Guherandin"
 
 #: ../shell/ev-window.c:4051
 msgid "_View"
@@ -903,16 +933,16 @@ msgid "_Help"
 msgstr "_Alîkarî"
 
 #. File menu
-#: ../shell/ev-window.c:4056
-#: ../shell/ev-window.c:4228
+#: ../shell/ev-window.c:4056 ../shell/ev-window.c:4228
 msgid "_Open..."
-msgstr "_Veke..."
+msgstr "_Vekirin..."
 
 #: ../shell/ev-window.c:4057
 msgid "Open an existing document"
 msgstr "Belgeyeke heyî veke"
 
 #: ../shell/ev-window.c:4059
+#, fuzzy
 msgid "Open a _Copy"
 msgstr "_Kopiyekê Veke"
 
@@ -921,8 +951,7 @@ msgstr "_Kopiyekê Veke"
 msgid "Open a copy of the current document in a new window"
 msgstr "Belgeya derbasdar bila paceyê tije bike"
 
-#: ../shell/ev-window.c:4062
-#: ../shell/ev-window.c:4230
+#: ../shell/ev-window.c:4062 ../shell/ev-window.c:4230
 msgid "_Save a Copy..."
 msgstr "Kopiyekê _Tomar Bike..."
 
@@ -931,6 +960,7 @@ msgid "Save a copy of the current document"
 msgstr ""
 
 #: ../shell/ev-window.c:4065
+#, fuzzy
 msgid "Print Set_up..."
 msgstr "_Veavakirina Çapê..."
 
@@ -950,8 +980,7 @@ msgstr "Vê belgeyê çap bike"
 msgid "P_roperties"
 msgstr "Ta_ybetmentî"
 
-#: ../shell/ev-window.c:4080
-#: ../shell/ev-window.c:4082
+#: ../shell/ev-window.c:4080 ../shell/ev-window.c:4082
 msgid "Select _All"
 msgstr "Hemûyî _Hilbijêre"
 
@@ -1087,6 +1116,7 @@ msgid "Expand the window to fill the screen"
 msgstr "Bi qasî dîmenderê tije dike paceyê fireh bike"
 
 #: ../shell/ev-window.c:4199
+#, fuzzy
 msgid "_Presentation"
 msgstr "_Pêşkeşî"
 
@@ -1153,7 +1183,7 @@ msgstr "Asta nêzîkbûnê mîheng bike"
 
 #: ../shell/ev-window.c:4285
 msgid "Navigation"
-msgstr ""
+msgstr "Navîgasiyon"
 
 #: ../shell/ev-window.c:4287
 msgid "Back"
@@ -1186,7 +1216,7 @@ msgstr "Dûr bibe"
 #. translators: this is the label for toolbar button
 #: ../shell/ev-window.c:4326
 msgid "Fit Width"
-msgstr ""
+msgstr "Berê rûpelê"
 
 #: ../shell/ev-window.c:4638
 #, fuzzy
@@ -1247,7 +1277,9 @@ msgid "Evince Document Viewer"
 msgstr "Nîşanderê Belgeyên Evince"
 
 #: ../thumbnailer/evince-thumbnailer.schemas.in.h:1
-msgid "Boolean options available, true enables thumbnailing and false disables the creation of new thumbnails"
+msgid ""
+"Boolean options available, true enables thumbnailing and false disables the "
+"creation of new thumbnails"
 msgstr ""
 
 #: ../thumbnailer/evince-thumbnailer.schemas.in.h:2
@@ -1259,29 +1291,192 @@ msgid "Thumbnail command for PDF Documents"
 msgstr "Ji bo belgehên PDF fermana wêneyên biçûk"
 
 #: ../thumbnailer/evince-thumbnailer.schemas.in.h:4
-msgid "Valid command plus arguments for the PDF Document thumbnailer. See nautilus thumbnailer documentation for more information."
-msgstr "Ji bo wênekerê biçûk yê Pelê PDF parametreyên zêdek yên fermanên derbasdar. Ji bo agahiyên berfireh li belgeya wênekerên biçûk yên nautilusê binihêre."
+msgid ""
+"Valid command plus arguments for the PDF Document thumbnailer. See nautilus "
+"thumbnailer documentation for more information."
+msgstr ""
+"Ji bo wênekerê biçûk yê Pelê PDF parametreyên zêdek yên fermanên derbasdar. "
+"Ji bo agahiyên berfireh li belgeya wênekerên biçûk yên nautilusê binihêre."
 
 #~ msgid "No document loaded."
 #~ msgstr "Tu belge nebarkirî."
+
 #~ msgid "Broken pipe."
 #~ msgstr "Lûleya şikestî."
+
 #~ msgid "Error while decompressing file “%s”:\n"
 #~ msgstr "Dema tengkirina pelê \"%s\" dihate vekirin çewtî derket:\n"
+
 #~ msgid "File is not readable."
 #~ msgstr "Pel nayê xwedin."
+
 #~ msgid "Document loaded."
 #~ msgstr "Belge hatiye barkirin."
+
+#, fuzzy
 #~ msgid "_Remove Toolbar"
-#~ msgstr "Darika amûran jê _bibe"
+#~ msgstr "Ji Darikê Amûran _Rake"
+
 #~ msgid "*"
 #~ msgstr "*"
+
 #~ msgid "F_ind:"
 #~ msgstr "_Bibîne:"
+
 #~ msgid "_Previous"
 #~ msgstr "_Ya berê"
+
 #~ msgid "_Next"
 #~ msgstr "Ya _pêş"
+
 #~ msgid "Not found"
 #~ msgstr "Nehat dîtin"
 
+#~| msgid "No images found in archive %s"
+#~ msgid "No files in archive"
+#~ msgstr "Di arşîvê de pel tune"
+
+#~ msgid "There was an error deleting “%s”."
+#~ msgstr "Dema \"%s\" hate jêbirin çewtiyek çêbû."
+
+#~ msgid "Error %s"
+#~ msgstr "Çewtiya %s"
+
+#, fuzzy
+#~| msgid "DVI document has incorrect format"
+#~ msgid "DJVU document has incorrect format"
+#~ msgstr "Belgeya DVI xwediyê celebê nederbasdar e"
+
+#, fuzzy
+#~| msgid "Failed to load document “%s”"
+#~ msgid "Failed to save document “%s”"
+#~ msgstr "Barkirina belgeya \"%s\" bi ser neket"
+
+#, fuzzy
+#~ msgid "File type %s (%s) is not supported"
+#~ msgstr "Pêkhatina PDF nayê destekkirin"
+
+#~ msgid "Starting %s"
+#~ msgstr "Dest bi %s dike"
+
+#, fuzzy
+#~| msgid "[FILE...]"
+#~ msgid "FILE"
+#~ msgstr "PEL"
+
+#~ msgid "Specify session management ID"
+#~ msgstr "IDa rêveberiyê danişînê diyar bike"
+
+#~ msgid "ID"
+#~ msgstr "ID"
+
+#~ msgid "Session management options:"
+#~ msgstr "Mîhengên gerînendeya danişînê:"
+
+#~| msgid "50%"
+#~ msgid "70%"
+#~ msgstr "%70"
+
+#~| msgid "50%"
+#~ msgid "85%"
+#~ msgstr "%85"
+
+#, fuzzy
+#~| msgid "GNOME Document Viewer"
+#~ msgid "GNOME Document Previewer"
+#~ msgstr "Nîşanderê Belgeyan yê GNOME"
+
+#~ msgid "Location:"
+#~ msgstr "Cih:"
+
+#, fuzzy
+#~| msgid "Failed to print document"
+#~ msgid "Failed to print page %d: %s"
+#~ msgstr "Dema belge dihate çapkirin bi ser neket"
+
+#, fuzzy
+#~| msgid "Reload the document"
+#~ msgid "Recover previous documents?"
+#~ msgstr "Belgeyê ji nû ve bar bike"
+
+#, fuzzy
+#~| msgid "_Remove Toolbar"
+#~ msgid "_Recover"
+#~ msgstr "Darika amûran jê _bibe"
+
+#, fuzzy
+#~| msgid "Open an existing document"
+#~ msgid "Open a recently used document"
+#~ msgstr "Belgeyeke heyî veke"
+
+#~ msgid "Preparing to print ..."
+#~ msgstr "Ji bo çapkirinê tê amadekirin..."
+
+#~| msgid "_Find..."
+#~ msgid "Finishing..."
+#~ msgstr "Diqede..."
+
+#~ msgid "Printing page %d of %d..."
+#~ msgstr "Rûpela %d ji %d tê çapkirin..."
+
+#~| msgid "Invalid zip file"
+#~ msgid "Invalid page selection"
+#~ msgstr "Hilbijartina rûpelê a nederbasdar"
+
+#~ msgid "Warning"
+#~ msgstr "Hişyarî"
+
+#~ msgid "Layers"
+#~ msgstr "Tebeqe"
+
+#~ msgid "The document contains no pages"
+#~ msgstr "Di belgeyê de rûpel tune"
+
+#~ msgid "The document contains only empty pages"
+#~ msgstr "Di belgeyê de tenê rûpelên vala hene"
+
+#~| msgid "Failed to load document “%s”"
+#~ msgid "Loading document from “%s”"
+#~ msgstr "Barkirina belgeya ji \"%s\" bi ser neket"
+
+#~ msgid "Downloading document (%d%%)"
+#~ msgstr "Belge tê daxistin (%d%%)"
+
+#~| msgid "Reload the document"
+#~ msgid "Reloading document from %s"
+#~ msgstr "Belgeya ji %s ji nû ve tê barkirin"
+
+#~| msgid "Failed to print document"
+#~ msgid "Failed to reload document."
+#~ msgstr "Nûbarkirina belgeyê bi ser neket"
+
+#~| msgid "Shrink the document"
+#~ msgid "Saving document to %s"
+#~ msgstr "Belge li %s tê tomarkirin"
+
+#~| msgid "Save Attachment"
+#~ msgid "Saving attachment to %s"
+#~ msgstr "Pêvek li %s tê tomarkirin"
+
+#~ msgid "Saving image to %s"
+#~ msgstr "Wêne li %s tê tomarkirin"
+
+#, fuzzy
+#~| msgid "_Presentation"
+#~ msgid "Start Presentation"
+#~ msgstr "_Pêşkeşî"
+
+#, fuzzy
+#~| msgid "Run document as a presentation"
+#~ msgid "Start a presentation"
+#~ msgstr "Belgeyê wekî pêşkeşî bide xebitandin"
+
+#, fuzzy
+#~| msgid "Unable to open attachment"
+#~ msgid "Unable to open external link"
+#~ msgstr "Pêvek nehate vekirin"
+
+#, fuzzy
+#~| msgid "Find a word or phrase in the document"
+#~ msgid "The word or phrase to find in the document"
+#~ msgstr "Di hundirê dokumanê de li pey an jî biwêjan bigere"
