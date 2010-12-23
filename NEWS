@@ -1,4 +1,51 @@
 ================
+Evince  2.91.4
+================
+
+New Features and UI Improvements:
+
+    * Port to GtkStyleContext (Carlos Garcia Campos)
+    * Use GAppInfo instead of deprecated gdk_spawn methods (Cosimo
+      Cecchi)
+    * Document filename is not shown in the window title (#386292,
+      José Aliste, Wouter Bolsterlee)
+    * Support for interal bookmarks (#590655, Carlos Garcia Campos)
+    * Add support for xz compressed documents (#636481, Christian
+      Persch)
+    * Add support for .wwf files (they are just PDF documents with
+      another file extension (#636415, Bastien Nocera)
+    * The pixbuf backend has been removed. Evince is a document
+      viewer, not an image viewer. Eog does the latter job much better
+      than evince ever could (Christian Persch)
+
+Documentation:
+
+    * Lots of documentation updates (Tiffany Antopolski)
+
+Bug fixes:
+
+    * Stop the GtkSpinner when the loading window is hidden (#637390,
+      Cristian KLEIN)
+    * Fixes crash when printing operation is cancelled (#635619,
+      Carlos Garcia Campos)
+    * Don't draw a resize grip for Annotation Windows (José Aliste)
+
+Translation updates:
+
+    * Daniel Mustieles (es)
+    * Ivar Smolin (et)
+    * Fran Diéguez (gl)
+    * Yaron Shahrabani (he)
+    * Baurzhan Muftakhidinov (kk)
+    * Erdal Ronahî (ku)
+    * Kjartan Maraas (nb)
+    * Matej Urbančič (sl)
+    * Zeper (ug)
+    * Clytie Siddall (vi)
+    * Chao-Hsiung Liao (zh_HK)
+    * Chao-Hsiung Liao (zh_TW)
+
+================
 Evince  2.91.3
 ================
 
