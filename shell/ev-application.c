@@ -222,17 +222,6 @@ ev_display_open_if_needed (const gchar *name)
 }
 
 static void
-child_setup (gpointer user_data)
-{
-	gchar *startup_id;
-
-	startup_id = g_strdup_printf ("_TIME%lu",
-				      (unsigned long)GPOINTER_TO_INT (user_data));
-	g_setenv ("DESKTOP_STARTUP_ID", startup_id, TRUE);
-	g_free (startup_id);
-}
-
-static void
 ev_spawn (const char     *uri,
 	  GdkScreen      *screen,
 	  EvLinkDest     *dest,
@@ -240,69 +229,83 @@ ev_spawn (const char     *uri,
 	  const gchar    *search_string,
 	  guint           timestamp)
 {
-	gchar   *argv[6];
-	guint    arg = 0;
-	gint     i;
-	gboolean res;
+	GString *cmd;
+	gchar *path, *cmdline;
+	GAppInfo *app;
+	GdkAppLaunchContext *ctx;
 	GError  *error = NULL;
+
+	cmd = g_string_new (NULL);
 
 #ifdef G_OS_WIN32
 {
 	gchar *dir;
 
 	dir = g_win32_get_package_installation_directory_of_module (NULL);
-	argv[arg++] = g_build_filename (dir, "bin", "evince", NULL);
+	path = g_build_filename (dir, "bin", "evince", NULL);
+
 	g_free (dir);
 }
 #else
-	argv[arg++] = g_build_filename (BINDIR, "evince", NULL);
+	path = g_build_filename (BINDIR, "evince", NULL);
 #endif
 
+	g_string_append_printf (cmd, " %s", path);
+	g_free (path);
+	
 	/* Page label */
 	if (dest) {
 		const gchar *page_label;
 
 		page_label = ev_link_dest_get_page_label (dest);
+
 		if (page_label)
-			argv[arg++] = g_strdup_printf ("--page-label=%s", page_label);
+			g_string_append_printf (cmd, " --page-label=%s", page_label);
 		else
-			argv[arg++] = g_strdup_printf ("--page-label=%d",
-						       ev_link_dest_get_page (dest));
+			g_string_append_printf (cmd, " --page-label=%d",
+						ev_link_dest_get_page (dest));
 	}
 
 	/* Find string */
 	if (search_string) {
-		argv[arg++] = g_strdup_printf ("--find=%s", search_string);
+		g_string_append_printf (cmd, " --find=%s", search_string);
 	}
 
 	/* Mode */
 	switch (mode) {
 	case EV_WINDOW_MODE_FULLSCREEN:
-		argv[arg++] = g_strdup ("-f");
+		g_string_append (cmd, " -f");
 		break;
 	case EV_WINDOW_MODE_PRESENTATION:
-		argv[arg++] = g_strdup ("-s");
+		g_string_append (cmd, " -s");
 		break;
 	default:
 		break;
 	}
 
-	argv[arg++] = (gchar *)uri;
-	argv[arg] = NULL;
+	g_string_append_printf (cmd, " %s", uri);
 
-	res = gdk_spawn_on_screen (screen, NULL /* wd */, argv, NULL /* env */,
-				   0,
-				   child_setup,
-				   GINT_TO_POINTER(timestamp),
-				   NULL, &error);
-	if (!res) {
+	cmdline = g_string_free (cmd, FALSE);
+	app = g_app_info_create_from_commandline (cmdline, NULL, 0, &error);
+
+	if (app != NULL) {
+		ctx = gdk_display_get_app_launch_context (gdk_screen_get_display (screen));
+		gdk_app_launch_context_set_screen (ctx, screen);
+		gdk_app_launch_context_set_timestamp (ctx, timestamp);
+
+		g_app_info_launch (app, NULL,
+				   G_APP_LAUNCH_CONTEXT (ctx), &error);
+
+		g_object_unref (app);
+		g_object_unref (ctx);
+	}
+
+	if (error != NULL) {
 		g_warning ("Error launching evince %s: %s\n", uri, error->message);
 		g_error_free (error);
 	}
 
-	for (i = 0; i < arg - 1; i++) {
-		g_free (argv[i]);
-	}
+	g_free (cmdline);
 }
 
 static GList *
