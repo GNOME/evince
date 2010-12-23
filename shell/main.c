@@ -92,8 +92,6 @@ launch_previewer (void)
 {
 	GString *cmd_str;
 	gchar   *cmd;
-	gint     argc;
-	gchar  **argv;
 	gboolean retval = FALSE;
 	GError  *error = NULL;
 
@@ -123,22 +121,24 @@ launch_previewer (void)
 	}
 
 	cmd = g_string_free (cmd_str, FALSE);
-	g_shell_parse_argv (cmd, &argc, &argv, &error);
-	g_free (cmd);
-	
+
 	if (!error) {
-		retval = gdk_spawn_on_screen (gdk_screen_get_default (),
-					      NULL, argv, NULL,
-					      G_SPAWN_SEARCH_PATH,
-					      NULL, NULL, NULL,
-					      &error);
-		g_strfreev (argv);
+		GAppInfo *app;
+
+		app = g_app_info_create_from_commandline (cmd, NULL, 0, &error);
+
+		if (app != NULL) {
+			retval = g_app_info_launch (app, NULL, NULL, &error);
+			g_object_unref (app);
+		}
 	}
 
 	if (error) {
 		g_warning ("Error launching previewer: %s\n", error->message);
 		g_error_free (error);
 	}
+
+	g_free (cmd);
 
 	return retval;
 }
