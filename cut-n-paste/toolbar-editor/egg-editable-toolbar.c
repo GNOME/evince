@@ -487,8 +487,8 @@ configure_item_cursor (GtkToolItem *item,
                 }
               else if (stock_id)
                 {
-                  pixbuf = gtk_widget_render_icon (widget, stock_id,
-	                                           GTK_ICON_SIZE_LARGE_TOOLBAR, NULL);
+                  pixbuf = gtk_widget_render_icon_pixbuf (widget, stock_id,
+                                                          GTK_ICON_SIZE_LARGE_TOOLBAR);
                 }
               g_free (icon_name);
               g_free (stock_id);
