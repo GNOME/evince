@@ -855,33 +855,34 @@ export_print_done (EvPrintOperationExport *export)
 		g_key_file_free (key_file);
 
 		if (!error) {
-			gint    argc;
-			gchar **argv;
 			gchar  *cmd;
 			gchar  *quoted_filename;
 			gchar  *quoted_settings_filename;
+                        GAppInfo *app;
+                        GdkAppLaunchContext *ctx;
 
 			quoted_filename = g_shell_quote (export->temp_file);
 			quoted_settings_filename = g_shell_quote (print_settings_file);
 			cmd = g_strdup_printf ("evince-previewer --unlink-tempfile --print-settings %s %s",
 					       quoted_settings_filename, quoted_filename);
 
-			g_shell_parse_argv (cmd, &argc, &argv, &error);
-
 			g_free (quoted_filename);
 			g_free (quoted_settings_filename);
+
+			app = g_app_info_create_from_commandline (cmd, NULL, 0, &error);
+
+			if (app != NULL) {
+				ctx = gdk_display_get_app_launch_context (gtk_widget_get_display (GTK_WIDGET (export->parent_window)));
+				gdk_app_launch_context_set_screen (ctx, gtk_window_get_screen (export->parent_window));
+
+				g_app_info_launch (app, NULL, G_APP_LAUNCH_CONTEXT (ctx), &error);
+
+				g_object_unref (app);
+				g_object_unref (ctx);
+                        }
+
 			g_free (cmd);
-
-			if (!error) {
-				gdk_spawn_on_screen (gtk_window_get_screen (export->parent_window),
-						     NULL, argv, NULL,
-						     G_SPAWN_SEARCH_PATH,
-						     NULL, NULL, NULL,
-						     &error);
-			}
-
-			g_strfreev (argv);
-		}
+                }
 
 		if (error) {
 			if (print_settings_file)
