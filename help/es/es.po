@@ -8,8 +8,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: evince.help.master\n"
-"POT-Creation-Date: 2010-12-20 06:13+0000\n"
-"PO-Revision-Date: 2010-12-21 11:30+0100\n"
+"POT-Creation-Date: 2010-12-22 18:35+0000\n"
+"PO-Revision-Date: 2010-12-23 16:12+0100\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -110,7 +110,7 @@ msgstr ""
 
 #: C/synctex-support.page:7(desc)
 msgid "How to add support for SyncTex."
-msgstr ""
+msgstr "Cómo añadir soporte para SyncTex."
 
 #: C/synctex-support.page:11(name) C/synctex-search.page:11(name)
 #: C/synctex.page:11(name) C/synctex-editors.page:11(name)
@@ -164,7 +164,7 @@ msgstr "tiffany@antopolski.com"
 
 #: C/synctex-support.page:20(title)
 msgid "Set-up SyncTex"
-msgstr ""
+msgstr "Configurar SyncTex"
 
 #: C/synctex-support.page:21(p)
 msgid ""
@@ -174,7 +174,7 @@ msgstr ""
 
 #: C/synctex-support.page:26(p)
 msgid "texlive-extra-utils"
-msgstr ""
+msgstr "texlive-extra-utils"
 
 #: C/synctex-support.page:31(p)
 msgid "gedit-plugins"
@@ -185,18 +185,18 @@ msgid "In <app>Gedit</app>, enable the SyncTex Plugin:"
 msgstr ""
 
 #: C/synctex-support.page:42(p)
-#, fuzzy
 #| msgid "Click <guiseq><gui>File</gui><gui> Print...</gui></guiseq>"
 msgid ""
 "Click <guiseq><gui>Edit</gui><gui>Preferences</gui><gui>Plugins</gui></"
 "guiseq> tab."
-msgstr "Pulse <guiseq><gui>Archivo</gui><gui>Imprimir...</gui></guiseq>"
+msgstr ""
+"Pulse en la solapa <guiseq><gui>Editar</gui><gui>Preferencias</"
+"gui><gui>Complementos</gui></guiseq>."
 
 #: C/synctex-support.page:47(p)
-#, fuzzy
 #| msgid "Click <gui>Print</gui>."
 msgid "Check <gui>SyncTex</gui>."
-msgstr "Pulse <gui>Imprimir</gui>."
+msgstr "Marque <gui>SyncTex</gui>."
 
 #: C/synctex-search.page:7(desc)
 msgid "Flip between <app>Evince</app> and <app>Gedit</app>."
@@ -204,7 +204,7 @@ msgstr ""
 
 #: C/synctex-search.page:20(title)
 msgid "Search with SyncTex"
-msgstr ""
+msgstr "Buscar con SyncTex"
 
 #: C/synctex-search.page:21(p)
 msgid ""
@@ -212,6 +212,9 @@ msgid ""
 "link>, you will be able to search. SyncTex even supports forward and "
 "backward search from an included file."
 msgstr ""
+"Después de <link xref=\"synctex-compile\">compilar su archivo TeX con "
+"SyncTex</link> podrá buscar. SyncTex soporta búsquedas hacia adelante y "
+"hacia atrás en un archivo incluido."
 
 #: C/synctex-search.page:26(title)
 msgid "Forward Search: From TeX to PDF (<app>Gedit</app> to <app>Evince</app>)"
@@ -288,7 +291,7 @@ msgstr ""
 
 #: C/synctex.page:19(title)
 msgid "What is SyncTex?"
-msgstr ""
+msgstr "¿Qué es SyncTex?"
 
 #: C/synctex.page:20(p)
 msgid ""
@@ -480,7 +483,6 @@ msgstr ""
 #: C/singlesided-npages.page:44(p) C/singlesided-9-12pages.page:39(p)
 #: C/singlesided-5-8pages.page:39(p) C/singlesided-3-4pages.page:39(p)
 #: C/singlesided-17-20pages.page:39(p) C/singlesided-13-16pages.page:39(p)
-#| msgid "To print a document:"
 msgid "To print:"
 msgstr "Imprimir:"
 
@@ -728,7 +730,7 @@ msgstr ""
 
 #: C/singlesided-17-20pages.page:58(item)
 msgid "20, 1, 2, 19, 18, 3, 4, 17, 16, 5, 6, 15, 14, 7, 8, 13, 12, 9, 10, 11"
-msgstr ""
+msgstr "20, 1, 2, 19, 18, 3, 4, 17, 16, 5, 6, 15, 14, 7, 8, 13, 12, 9, 10, 11"
 
 #: C/singlesided-17-20pages.page:56(item)
 #: C/singlesided-13-16pages.page:58(item) C/duplex-16pages.page:36(item)
@@ -1166,7 +1168,6 @@ msgid "File"
 msgstr "Archivo"
 
 #: C/print-order.page:33(gui)
-#| msgid "Print..."
 msgid "Print"
 msgstr "Imprimir"
 
@@ -1193,10 +1194,9 @@ msgid "To Collate:"
 msgstr "Cotejar:"
 
 #: C/print-order.page:51(p)
-#, fuzzy
 #| msgid "Click <guiseq><gui>File</gui><gui> Print...</gui></guiseq>"
 msgid "Click<guiseq><gui>File</gui><gui>Print</gui></guiseq>"
-msgstr "Pulse <guiseq><gui>Archivo</gui><gui>Imprimir...</gui></guiseq>"
+msgstr "Pulse<guiseq><gui>Archivo</gui><gui>Imprimir</gui></guiseq>"
 
 #: C/print-order.page:52(p)
 msgid ""
@@ -1308,16 +1308,14 @@ msgid "Reverse landscape"
 msgstr "Apaisado invertido"
 
 #: C/print-booklet.page:8(desc)
-#, fuzzy
 #| msgid "To print a document:"
 msgid "How to print a booklet."
-msgstr "Para imprimir un documento:"
+msgstr "Cómo imprimir un folleto."
 
 #: C/print-booklet.page:21(title)
-#, fuzzy
 #| msgid "Printing A Document"
 msgid "Printing a Booklet"
-msgstr "Imprimir un documento"
+msgstr "Imprimir un folleto"
 
 #: C/print-booklet.page:23(p)
 msgid ""
@@ -1360,23 +1358,19 @@ msgid ""
 msgstr ""
 
 #: C/presentations.page:7(desc)
-#, fuzzy
 #| msgid ""
 #| "You can not remove an annotation in <app>Evince Document Viewer</app>."
 msgid "You can play presentations with <app>Evince</app>."
-msgstr ""
-"No puede quitar una anotación del <app>Visor de documentos Evince</app>."
+msgstr "Puede reproducir presentaciones con <app>Evince</app>."
 
 #: C/presentations.page:20(title)
 msgid "Presentations"
 msgstr "Presentaciones"
 
 #: C/presentations.page:21(p)
-#, fuzzy
 #| msgid "The <app>Document Viewer</app> can be used to display presentations."
 msgid "<app>Evince</app> can be used to display presentations."
-msgstr ""
-"El <app>Visor de documentos</app> se puede usar para mostrar presentaciones."
+msgstr "<app>Evince</app> se puede usar para mostrar presentaciones."
 
 #: C/presentations.page:25(p)
 msgid "To start a presentation:"
@@ -1555,7 +1549,6 @@ msgid "The author may have put printing restrictions on the document."
 msgstr ""
 
 #: C/noprint.page:19(title)
-#| msgid "Why Can't I Print A Document?"
 msgid "I Can't Print A Document"
 msgstr "No puedo imprimir un documento"
 
@@ -1649,10 +1642,9 @@ msgid "@@image: 'zoom.png'; md5=f31883a5718a6bc9828d56db97958e9c"
 msgstr "@@image: 'zoom.png'; md5=f31883a5718a6bc9828d56db97958e9c"
 
 #: C/movingaround.page:7(desc)
-#, fuzzy
 #| msgid "Rotating and zooming"
 msgid "Navigating, scrolling and zooming."
-msgstr "Rotar y ampliar"
+msgstr "Navegar, desplazarse y ampliar."
 
 #: C/movingaround.page:20(title)
 msgid "Moving Around A Document"
@@ -1747,7 +1739,7 @@ msgstr ""
 
 #: C/movingaround.page:90(p)
 msgid "To go to a specific page:"
-msgstr ""
+msgstr "Ir a una página específica:"
 
 #: C/movingaround.page:92(p)
 #, fuzzy
@@ -1824,7 +1816,6 @@ msgid ""
 msgstr ""
 
 #: C/movingaround.page:136(title)
-#| msgid "Zooming In And Out"
 msgid "Zooming In and Out"
 msgstr "Ampliar y reducir"
 
@@ -1949,6 +1940,8 @@ msgid ""
 "<media type=\"image\" src=\"evincelogo.png\">Evince logo</media> Evince "
 "Document Viewer"
 msgstr ""
+"<media type=\"image\" src=\"evincelogo.png\">Logo de Evince</media> Visor de "
+"documentos Evince"
 
 #: C/index.page:23(title)
 msgid "Reading Documents"
@@ -1963,7 +1956,6 @@ msgid "Printing"
 msgstr "Imprimir"
 
 #: C/index.page:35(title)
-#| msgid "Rotating and zooming"
 msgid "Annotations and Bookmarks"
 msgstr "Anotaciones y marcadores"
 
@@ -1980,13 +1972,12 @@ msgid "Advanced"
 msgstr "Avanzado"
 
 #: C/index.page:51(title)
-#| msgid "Tips And Tricks"
 msgid "Tips and Tricks"
 msgstr "Sugerencias y trucos"
 
 #: C/index.page:55(title)
 msgid "SyncTex"
-msgstr ""
+msgstr "SyncTex"
 
 #: C/index.page:59(title)
 msgid "Get Involved"
@@ -2096,7 +2087,6 @@ msgid "Supported Formats"
 msgstr "Formatos soportados"
 
 #: C/formats.page:25(p)
-#| msgid "The Document Viewer supports the following formats:"
 msgid "<app>Evince</app> supports the following formats:"
 msgstr "<app>Evince</app> soporta los siguientes formatos:"
 
@@ -2122,16 +2112,14 @@ msgid ""
 msgstr ""
 
 #: C/finding.page:8(desc)
-#, fuzzy
 #| msgid "Open a copy of the current document."
 msgid "Find a word or phrase in a document."
-msgstr "Abrir una copia del documento actual."
+msgstr "Busca una palabra o frase en el documento."
 
 #: C/finding.page:21(title)
-#, fuzzy
 #| msgid "Finding Things In A Document"
 msgid "Finding Text In A Document"
-msgstr "Encontrar cosas en un documento"
+msgstr "Encontrar texto en un documento"
 
 #: C/finding.page:23(p)
 msgid ""
@@ -3116,12 +3104,10 @@ msgid ""
 msgstr ""
 
 #: C/annotations-delete.page:7(desc)
-#| msgid "You can navigate to annotations."
 msgid "You can not remove annotations."
 msgstr "No puede quitar anotaciones."
 
 #: C/annotations-delete.page:20(title)
-#| msgid "Annotations"
 msgid "Removing Annotations"
 msgstr "Quitar anotaciones"
 
@@ -3143,7 +3129,6 @@ msgid "How to customize the author, color, style or icon of an annotation."
 msgstr "Puede personalizar el autor, color estilo o icono de una anotación."
 
 #: C/annotation-properties.page:20(title)
-#| msgid "Customise an Annotation"
 msgid "Customize Annotations"
 msgstr "Personalizar anotaciones"
 
@@ -3154,7 +3139,6 @@ msgstr ""
 "documento."
 
 #: C/annotation-properties.page:29(p)
-#| msgid "Select <gui>Annotation Properties...</gui>"
 msgid "Select <gui>Annotation Properties.</gui>"
 msgstr ""
 
