@@ -6253,7 +6253,7 @@ ev_view_set_cursor (EvView *view, EvViewCursor new_cursor)
 	gdk_window_set_cursor (window, cursor);
 	gdk_flush ();
 	if (cursor)
-		gdk_cursor_unref (cursor);
+		g_object_unref (cursor);
 }
 
 void

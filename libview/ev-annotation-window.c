@@ -253,7 +253,7 @@ ev_annotation_window_set_resize_cursor (GtkWidget          *widget,
 						     GDK_BOTTOM_LEFT_CORNER :
 						     GDK_BOTTOM_RIGHT_CORNER);
 		gdk_window_set_cursor (gdk_window, cursor);
-		gdk_cursor_unref (cursor);
+		g_object_unref (cursor);
 	} else {
 		gdk_window_set_cursor (gdk_window, NULL);
 	}
