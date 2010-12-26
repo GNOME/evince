@@ -26,6 +26,7 @@
 
 #include "ev-document.h"
 #include "ev-sidebar-page.h"
+#include "ev-utils.h"
 
 enum {
         PROP_0,
@@ -50,6 +51,11 @@ struct _EvSidebarBookmarksPrivate {
         GtkWidget       *tree_view;
         GtkWidget       *del_button;
         GtkWidget       *add_button;
+
+        /* Popup menu */
+        GtkWidget       *popup;
+        GtkUIManager    *ui_manager;
+        GtkActionGroup  *action_group;
 };
 
 static void ev_sidebar_bookmarks_page_iface_init (EvSidebarPageInterface *iface);
@@ -62,6 +68,94 @@ G_DEFINE_TYPE_EXTENDED (EvSidebarBookmarks,
                                                ev_sidebar_bookmarks_page_iface_init))
 
 static guint signals[N_SIGNALS];
+
+static const gchar popup_menu_ui[] =
+        "<popup name=\"BookmarksPopup\" action=\"BookmarksPopupAction\">\n"
+        "  <menuitem name=\"OpenBookmark\" action=\"OpenBookmark\"/>\n"
+        "  <separator/>\n"
+        "  <menuitem name=\"RenameBookmark\" action=\"RenameBookmark\"/>\n"
+        "  <menuitem name=\"RemoveBookmark\" action=\"RemoveBookmark\"/>\n"
+        "</popup>\n";
+
+static gint
+ev_sidebar_bookmarks_get_selected_page (EvSidebarBookmarks *sidebar_bookmarks,
+                                        GtkTreeSelection   *selection)
+{
+        GtkTreeModel *model;
+        GtkTreeIter   iter;
+
+        if (gtk_tree_selection_get_selected (selection, &model, &iter)) {
+                guint page;
+
+                gtk_tree_model_get (model, &iter,
+                                    COLUMN_PAGE, &page,
+                                    -1);
+                return page;
+        }
+
+        return -1;
+}
+
+static void
+ev_bookmarks_popup_cmd_open_bookmark (GtkAction          *action,
+                                      EvSidebarBookmarks *sidebar_bookmarks)
+{
+        EvSidebarBookmarksPrivate *priv = sidebar_bookmarks->priv;
+        GtkTreeSelection          *selection;
+        gint                       page;
+
+        selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (priv->tree_view));
+        page = ev_sidebar_bookmarks_get_selected_page (sidebar_bookmarks, selection);
+        ev_document_model_set_page (priv->model, page);
+}
+
+static void
+ev_bookmarks_popup_cmd_rename_bookmark (GtkAction          *action,
+                                        EvSidebarBookmarks *sidebar_bookmarks)
+{
+        EvSidebarBookmarksPrivate *priv = sidebar_bookmarks->priv;
+        GtkTreeView               *tree_view = GTK_TREE_VIEW (priv->tree_view);
+        GtkTreeSelection          *selection;
+        GtkTreeModel              *model;
+        GtkTreeIter                iter;
+
+
+        selection = gtk_tree_view_get_selection (tree_view);
+        if (gtk_tree_selection_get_selected (selection, &model, &iter)) {
+                GtkTreePath *path;
+
+                path = gtk_tree_model_get_path (model, &iter);
+                gtk_tree_view_set_cursor (tree_view, path,
+                                          gtk_tree_view_get_column (tree_view, 0),
+                                          TRUE);
+                gtk_tree_path_free (path);
+        }
+}
+
+static void
+ev_bookmarks_popup_cmd_remove_bookmark (GtkAction          *action,
+                                        EvSidebarBookmarks *sidebar_bookmarks)
+{
+        EvSidebarBookmarksPrivate *priv = sidebar_bookmarks->priv;
+        GtkTreeSelection          *selection;
+        gint                       page;
+        EvBookmark                 bm;
+
+        selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (priv->tree_view));
+        page = ev_sidebar_bookmarks_get_selected_page (sidebar_bookmarks, selection);
+        bm.page = page;
+        bm.title = NULL;
+        ev_bookmarks_delete (priv->bookmarks, &bm);
+}
+
+static const GtkActionEntry popup_entries[] = {
+        { "OpenBookmark", GTK_STOCK_OPEN, N_("_Open Bookmark"), NULL,
+          NULL, G_CALLBACK (ev_bookmarks_popup_cmd_open_bookmark) },
+        { "RenameBookmark", NULL, N_("_Rename Bookmark"), NULL,
+          NULL, G_CALLBACK (ev_bookmarks_popup_cmd_rename_bookmark) },
+        { "RemoveBookmark", NULL, N_("_Remove Bookmark"), NULL,
+          NULL, G_CALLBACK (ev_bookmarks_popup_cmd_remove_bookmark) }
+};
 
 static gint
 compare_bookmarks (EvBookmark *a,
@@ -110,25 +204,6 @@ ev_sidebar_bookmarks_changed (EvBookmarks        *bookmarks,
                               EvSidebarBookmarks *sidebar_bookmarks)
 {
         ev_sidebar_bookmarks_update (sidebar_bookmarks);
-}
-
-static gint
-ev_sidebar_bookmarks_get_selected_page (EvSidebarBookmarks *sidebar_bookmarks,
-                                        GtkTreeSelection   *selection)
-{
-        GtkTreeModel *model;
-        GtkTreeIter   iter;
-
-        if (gtk_tree_selection_get_selected (selection, &model, &iter)) {
-                guint page;
-
-                gtk_tree_model_get (model, &iter,
-                                    COLUMN_PAGE, &page,
-                                    -1);
-                return page;
-        }
-
-        return -1;
 }
 
 static void
@@ -245,6 +320,68 @@ ev_sidebar_bookmarks_query_tooltip (GtkWidget          *widget,
         return TRUE;
 }
 
+static gboolean
+ev_sidebar_bookmarks_popup_menu_show (EvSidebarBookmarks *sidebar_bookmarks,
+                                      gint                x,
+                                      gint                y,
+                                      gboolean            keyboard_mode)
+{
+        EvSidebarBookmarksPrivate *priv = sidebar_bookmarks->priv;
+        GtkTreeView               *tree_view = GTK_TREE_VIEW (sidebar_bookmarks->priv->tree_view);
+        GtkTreeSelection          *selection = gtk_tree_view_get_selection (tree_view);
+
+        if (keyboard_mode) {
+                if (!gtk_tree_selection_get_selected (selection, NULL, NULL))
+                        return FALSE;
+        } else {
+                GtkTreePath *path;
+
+                if (!gtk_tree_view_get_path_at_pos (tree_view, x, y, &path, NULL, NULL, NULL))
+                        return FALSE;
+
+                g_signal_handlers_block_by_func (selection,
+                                                 ev_sidebar_bookmarks_selection_changed,
+                                                 sidebar_bookmarks);
+                gtk_tree_view_set_cursor (tree_view, path, NULL, FALSE);
+                g_signal_handlers_unblock_by_func (selection,
+                                                   ev_sidebar_bookmarks_selection_changed,
+                                                   sidebar_bookmarks);
+                gtk_tree_path_free (path);
+        }
+
+        if (!priv->popup)
+                priv->popup = gtk_ui_manager_get_widget (priv->ui_manager, "/BookmarksPopup");
+
+        gtk_menu_popup (GTK_MENU (priv->popup),
+                        NULL, NULL,
+                        keyboard_mode ? ev_gui_menu_position_tree_selection : NULL,
+                        keyboard_mode ? tree_view : NULL,
+                        keyboard_mode ? 0 : 3,
+                        gtk_get_current_event_time ());
+        return TRUE;
+}
+
+static gboolean
+ev_sidebar_bookmarks_button_press (GtkWidget          *widget,
+                                   GdkEventButton     *event,
+                                   EvSidebarBookmarks *sidebar_bookmarks)
+{
+        if (event->button != 3)
+                return FALSE;
+
+        return ev_sidebar_bookmarks_popup_menu_show (sidebar_bookmarks, event->x, event->y, FALSE);
+}
+
+static gboolean
+ev_sidebar_bookmarks_popup_menu (GtkWidget *widget)
+{
+        EvSidebarBookmarks *sidebar_bookmarks = EV_SIDEBAR_BOOKMARKS (widget);
+        gint                x, y;
+
+        gtk_widget_get_pointer (widget, &x, &y);
+        return ev_sidebar_bookmarks_popup_menu_show (sidebar_bookmarks, x, y, TRUE);
+}
+
 static void
 ev_sidebar_bookmarks_dispose (GObject *object)
 {
@@ -259,6 +396,16 @@ ev_sidebar_bookmarks_dispose (GObject *object)
         if (priv->bookmarks) {
                 g_object_unref (priv->bookmarks);
                 priv->bookmarks = NULL;
+        }
+
+        if (priv->action_group) {
+                g_object_unref (priv->action_group);
+                priv->action_group = NULL;
+        }
+
+        if (priv->ui_manager) {
+                g_object_unref (priv->ui_manager);
+                priv->ui_manager = NULL;
         }
 
         G_OBJECT_CLASS (ev_sidebar_bookmarks_parent_class)->dispose (object);
@@ -295,6 +442,10 @@ ev_sidebar_bookmarks_init (EvSidebarBookmarks *sidebar_bookmarks)
         g_object_unref (model);
         g_signal_connect (priv->tree_view, "query-tooltip",
                           G_CALLBACK (ev_sidebar_bookmarks_query_tooltip),
+                          sidebar_bookmarks);
+        g_signal_connect (priv->tree_view,
+                          "button-press-event",
+                          G_CALLBACK (ev_sidebar_bookmarks_button_press),
                           sidebar_bookmarks);
         gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (priv->tree_view), FALSE);
         selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (priv->tree_view));
@@ -338,6 +489,17 @@ ev_sidebar_bookmarks_init (EvSidebarBookmarks *sidebar_bookmarks)
         gtk_box_pack_end (GTK_BOX (sidebar_bookmarks), hbox, FALSE, TRUE, 0);
         gtk_widget_show (hbox);
         gtk_widget_show (GTK_WIDGET (sidebar_bookmarks));
+
+        /* Popup menu */
+        priv->action_group = gtk_action_group_new ("BookmarsPopupActions");
+        gtk_action_group_set_translation_domain (priv->action_group, NULL);
+        gtk_action_group_add_actions (priv->action_group, popup_entries,
+                                      G_N_ELEMENTS (popup_entries),
+                                      sidebar_bookmarks);
+        priv->ui_manager = gtk_ui_manager_new ();
+        gtk_ui_manager_insert_action_group (priv->ui_manager,
+                                            priv->action_group, 0);
+        gtk_ui_manager_add_ui_from_string (priv->ui_manager, popup_menu_ui, -1, NULL);
 }
 
 static void
@@ -363,10 +525,13 @@ ev_sidebar_bookmarks_get_property (GObject    *object,
 static void
 ev_sidebar_bookmarks_class_init (EvSidebarBookmarksClass *klass)
 {
-        GObjectClass *g_object_class = G_OBJECT_CLASS (klass);
+        GObjectClass   *g_object_class = G_OBJECT_CLASS (klass);
+        GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
 
         g_object_class->get_property = ev_sidebar_bookmarks_get_property;
         g_object_class->dispose = ev_sidebar_bookmarks_dispose;
+
+        widget_class->popup_menu = ev_sidebar_bookmarks_popup_menu;
 
         g_type_class_add_private (g_object_class, sizeof (EvSidebarBookmarksPrivate));
 
