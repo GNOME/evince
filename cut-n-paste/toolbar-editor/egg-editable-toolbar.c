@@ -439,7 +439,7 @@ configure_item_cursor (GtkToolItem *item,
           cursor = gdk_cursor_new_for_display (gdk_screen_get_display (screen),
 					       GDK_HAND2);
           gdk_window_set_cursor (window, cursor);
-          gdk_cursor_unref (cursor);
+          g_object_unref (cursor);
 
           gtk_drag_source_set (widget, GDK_BUTTON1_MASK, dest_drag_types,
                                G_N_ELEMENTS (dest_drag_types), GDK_ACTION_MOVE);

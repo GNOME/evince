@@ -364,7 +364,7 @@ set_drag_cursor (GtkWidget *widget)
   cursor = gdk_cursor_new_for_display (gdk_screen_get_display (screen),
 				       GDK_HAND2);
   gdk_window_set_cursor (gtk_widget_get_window (widget), cursor);
-  gdk_cursor_unref (cursor);
+  g_object_unref (cursor);
 }
 
 static void
