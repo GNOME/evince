@@ -483,7 +483,7 @@ ev_view_get_scrollbar_size (EvView        *view,
 	}
 
 	gtk_widget_style_get (swindow, "scrollbar_spacing", &spacing, NULL);
-	gtk_widget_size_request (sb, &req);
+	gtk_widget_get_preferred_size (sb, &req, NULL);
 
 	return (orientation == GTK_ORIENTATION_VERTICAL ? req.width : req.height) + spacing;
 }
