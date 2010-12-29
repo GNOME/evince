@@ -8,8 +8,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: evince.help.master\n"
-"POT-Creation-Date: 2010-12-22 18:35+0000\n"
-"PO-Revision-Date: 2010-12-23 16:12+0100\n"
+"POT-Creation-Date: 2010-12-23 19:15+0000\n"
+"PO-Revision-Date: 2010-12-28 20:41+0100\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -83,7 +83,7 @@ msgstr "Creative Commons Compartir Igual 3.0"
 
 #: C/textselection.page:20(title)
 msgid "Why Didn't The Text I Selected Copy Properly?"
-msgstr ""
+msgstr "¿Por qué el texto que he seleccionado no se ha copiado correctamente?"
 
 #: C/textselection.page:23(p)
 msgid ""
@@ -185,7 +185,6 @@ msgid "In <app>Gedit</app>, enable the SyncTex Plugin:"
 msgstr ""
 
 #: C/synctex-support.page:42(p)
-#| msgid "Click <guiseq><gui>File</gui><gui> Print...</gui></guiseq>"
 msgid ""
 "Click <guiseq><gui>Edit</gui><gui>Preferences</gui><gui>Plugins</gui></"
 "guiseq> tab."
@@ -194,7 +193,6 @@ msgstr ""
 "gui><gui>Complementos</gui></guiseq>."
 
 #: C/synctex-support.page:47(p)
-#| msgid "Click <gui>Print</gui>."
 msgid "Check <gui>SyncTex</gui>."
 msgstr "Marque <gui>SyncTex</gui>."
 
@@ -244,6 +242,9 @@ msgid ""
 "key></keyseq>, or <key>Ctrl</key>+Left Click. The corresponding line in the "
 "PDF will be outlined in red."
 msgstr ""
+"Alternativamente, puede pulsar <keyseq><key>Ctrl</key><key>Alt</key><key>F</"
+"key></keyseq>, o <key>Ctrl</key>+pulsación izquierda. La línea "
+"correspondiente del PDF se subrayará en rojo."
 
 #: C/synctex-search.page:46(p)
 msgid ""
@@ -253,12 +254,12 @@ msgstr ""
 
 #: C/synctex-search.page:50(p)
 msgid "If you add a complex project with several TeX files you can put"
-msgstr ""
+msgstr "Si añade un proyecto complejo con varios archivos TeX puede poner"
 
 #: C/synctex-search.page:53(code)
 #, no-wrap
 msgid "% mainfile: mainfile.tex"
-msgstr ""
+msgstr "% mainfile: mainfile.tex"
 
 #: C/synctex-search.page:54(p)
 msgid ""
@@ -287,7 +288,7 @@ msgstr ""
 
 #: C/synctex.page:7(desc)
 msgid "SyncTeX support is available in <app>Evince</app>."
-msgstr ""
+msgstr "El soporte de SyncTeX está disponible en <app>Evince</app>."
 
 #: C/synctex.page:19(title)
 msgid "What is SyncTex?"
@@ -301,11 +302,11 @@ msgstr ""
 
 #: C/synctex-editors.page:7(desc)
 msgid "Which editor can you use to edit your TEX file?"
-msgstr ""
+msgstr "¿Qué editor puede usar para editar su archivo TEX?"
 
 #: C/synctex-editors.page:20(title)
 msgid "Supported Editors"
-msgstr ""
+msgstr "Editores soportados"
 
 #: C/synctex-editors.page:22(app)
 msgid "Gedit"
@@ -348,6 +349,10 @@ msgid ""
 "let g:Tex_DefaultTargetFormat = 'pdf'\n"
 "let g:Tex_CompileRule_pdf = 'pdflatex --synctex=1 -interaction=nonstopmode $*'\n"
 msgstr ""
+"\n"
+"let g:Tex_ViewRule_pdf = 'evince_dbus.py'\n"
+"let g:Tex_DefaultTargetFormat = 'pdf'\n"
+"let g:Tex_CompileRule_pdf = 'pdflatex --synctex=1 -interaction=nonstopmode $*'\n"
 
 #: C/synctex-editors.page:52(p)
 msgid ""
@@ -380,6 +385,13 @@ msgid ""
 "...\n"
 "\\end{document}\n"
 msgstr ""
+"\n"
+"\\documentclass{article}\n"
+"\\synctex=1\n"
+"\\usepackage{fullpage}\n"
+"\\begin{document}\n"
+"...\n"
+"\\end{document}\n"
 
 #: C/synctex-compile.page:31(p)
 msgid ""
@@ -443,7 +455,7 @@ msgstr ""
 #: C/synctex-beamer.page:39(code)
 #, no-wrap
 msgid "\\end{frame}"
-msgstr ""
+msgstr "\\end{frame}"
 
 #: C/singlesided-npages.page:8(desc) C/duplex-npages.page:8(desc)
 msgid "Print a booklet over 20 pages."
@@ -519,10 +531,9 @@ msgstr ""
 #: C/duplex-12pages.page:30(p) C/duplex-11pages.page:31(p)
 #: C/duplex-11pages.page:67(p) C/duplex-10pages.page:30(p)
 #: C/duplex-10pages.page:72(p)
-#, fuzzy
 #| msgid "Select the <gui>Page Setup</gui> tab."
 msgid "Choose the <gui>General</gui> tab."
-msgstr "Seleccione la solapa <gui>Configuración de página</gui>."
+msgstr "Elija la solapa <gui>General</gui>."
 
 #: C/singlesided-npages.page:57(p) C/singlesided-9-12pages.page:54(p)
 #: C/singlesided-5-8pages.page:54(p) C/singlesided-3-4pages.page:54(p)
@@ -536,11 +547,11 @@ msgstr ""
 
 #: C/singlesided-npages.page:63(item) C/duplex-npages.page:62(item)
 msgid ""
-"n, 1, 2, n-1, n-2, 3, 4, n-3, n-4, 5, 6, n-5, n-6, 7, 8, n-7, n-8, 9, 10, n-"
-"9, n-10, 11, 12, n-11..."
+"n, 1, 2, n-1, n-2, 3, 4, n-3, n-4, 5, 6, n-5, n-6, 7, 8, n-7, n-8, 9, 10, "
+"n-9, n-10, 11, 12, n-11..."
 msgstr ""
-"n, 1, 2, n-1, n-2, 3, 4, n-3, n-4, 5, 6, n-5, n-6, 7, 8, n-7, n-8, 9, 10, n-"
-"9, n-10, 11, 12, n-11…"
+"n, 1, 2, n-1, n-2, 3, 4, n-3, n-4, 5, 6, n-5, n-6, 7, 8, n-7, n-8, 9, 10, "
+"n-9, n-10, 11, 12, n-11…"
 
 #: C/singlesided-npages.page:64(item) C/duplex-npages.page:63(item)
 msgid "...until you have typed n-number of pages."
@@ -1194,7 +1205,6 @@ msgid "To Collate:"
 msgstr "Cotejar:"
 
 #: C/print-order.page:51(p)
-#| msgid "Click <guiseq><gui>File</gui><gui> Print...</gui></guiseq>"
 msgid "Click<guiseq><gui>File</gui><gui>Print</gui></guiseq>"
 msgstr "Pulse<guiseq><gui>Archivo</gui><gui>Imprimir</gui></guiseq>"
 
@@ -1308,12 +1318,10 @@ msgid "Reverse landscape"
 msgstr "Apaisado invertido"
 
 #: C/print-booklet.page:8(desc)
-#| msgid "To print a document:"
 msgid "How to print a booklet."
 msgstr "Cómo imprimir un folleto."
 
 #: C/print-booklet.page:21(title)
-#| msgid "Printing A Document"
 msgid "Printing a Booklet"
 msgstr "Imprimir un folleto"
 
@@ -1358,8 +1366,6 @@ msgid ""
 msgstr ""
 
 #: C/presentations.page:7(desc)
-#| msgid ""
-#| "You can not remove an annotation in <app>Evince Document Viewer</app>."
 msgid "You can play presentations with <app>Evince</app>."
 msgstr "Puede reproducir presentaciones con <app>Evince</app>."
 
@@ -1368,7 +1374,6 @@ msgid "Presentations"
 msgstr "Presentaciones"
 
 #: C/presentations.page:21(p)
-#| msgid "The <app>Document Viewer</app> can be used to display presentations."
 msgid "<app>Evince</app> can be used to display presentations."
 msgstr "<app>Evince</app> se puede usar para mostrar presentaciones."
 
@@ -1474,14 +1479,13 @@ msgid "Opening A Document"
 msgstr "Abrir un documento"
 
 #: C/opening.page:24(p)
-#, fuzzy
 #| msgid ""
 #| "You can open a document in <app>Evince Document Viewer</app> using the "
 #| "following ways:"
 msgid "You can open a document in <app>Evince</app> using the following ways:"
 msgstr ""
-"Puede abrir un documento en el <application>Visor de documentos Evince</"
-"application>de las siguientes maneras:"
+"Puede abrir un documento en<application>Evince</application>de las "
+"siguientes maneras:"
 
 #: C/opening.page:27(p)
 msgid "Double-click on the file icon in the file manager or on the Desktop."
@@ -1540,8 +1544,8 @@ msgid ""
 "<gui>Close</gui> to return to the Document Viewer window."
 msgstr ""
 "Si intenta abrir un documento con un formato que el <app>Visor de documentos "
-"Evince</app> no reconoce, aparecerá un mensaje de error: «No se pudo abrir el "
-"documento». Pulse <gui>Cerrar</gui> para volver a la ventana del visor de "
+"Evince</app> no reconoce, aparecerá un mensaje de error: «No se pudo abrir "
+"el documento». Pulse <gui>Cerrar</gui> para volver a la ventana del visor de "
 "documentos."
 
 #: C/noprint.page:7(desc)
@@ -1642,7 +1646,6 @@ msgid "@@image: 'zoom.png'; md5=f31883a5718a6bc9828d56db97958e9c"
 msgstr "@@image: 'zoom.png'; md5=f31883a5718a6bc9828d56db97958e9c"
 
 #: C/movingaround.page:7(desc)
-#| msgid "Rotating and zooming"
 msgid "Navigating, scrolling and zooming."
 msgstr "Navegar, desplazarse y ampliar."
 
@@ -2112,12 +2115,10 @@ msgid ""
 msgstr ""
 
 #: C/finding.page:8(desc)
-#| msgid "Open a copy of the current document."
 msgid "Find a word or phrase in a document."
 msgstr "Busca una palabra o frase en el documento."
 
 #: C/finding.page:21(title)
-#| msgid "Finding Things In A Document"
 msgid "Finding Text In A Document"
 msgstr "Encontrar texto en un documento"
 
@@ -2825,7 +2826,7 @@ msgstr ""
 #: C/commandline.page:44(screen)
 #, no-wrap
 msgid "evince --page-label=3"
-msgstr ""
+msgstr "evince --page-label=3"
 
 #: C/commandline.page:45(p)
 msgid ""
@@ -2840,7 +2841,7 @@ msgstr ""
 #: C/commandline.page:52(screen)
 #, no-wrap
 msgid "evince --fullscreen file.pdf"
-msgstr ""
+msgstr "evince --fullscreen archivo.pdf"
 
 #: C/commandline.page:55(title)
 msgid "Opening A Document In Presentation Mode"
@@ -2849,7 +2850,7 @@ msgstr "Abrir un documento en modo presentación"
 #: C/commandline.page:56(screen)
 #, no-wrap
 msgid "evince --presentation file.pdf"
-msgstr ""
+msgstr "evince --presentation archivo.pdf"
 
 #: C/commandline.page:59(title)
 msgid "Opening A Document In Preview Mode"
@@ -2858,7 +2859,7 @@ msgstr ""
 #: C/commandline.page:60(screen)
 #, no-wrap
 msgid "evince --preview file.pdf"
-msgstr ""
+msgstr "evince --preview archivo.pdf"
 
 #: C/bug-filing.page:7(desc)
 msgid "How and where to report problems."
@@ -2926,7 +2927,7 @@ msgstr "Puede navegar hasta las anotaciones."
 
 #: C/bookmarks.page:20(title)
 msgid "Bookmarks"
-msgstr ""
+msgstr "Marcadores"
 
 #: C/bookmarks.page:21(p)
 msgid ""
@@ -2935,10 +2936,9 @@ msgid ""
 msgstr ""
 
 #: C/annotations-save.page:6(desc)
-#, fuzzy
 #| msgid "You can navigate to annotations."
 msgid "How to save your annotations."
-msgstr "Puede navegar hasta las anotaciones."
+msgstr "Cómo guardar sus anotaciones."
 
 #: C/annotations-save.page:17(title)
 msgid "Save a Copy of an Annotated PDF"
@@ -2978,10 +2978,9 @@ msgid "How to create and customize annotations."
 msgstr "¿Cómo se puede quitar una anotación?"
 
 #: C/annotations.page:20(title)
-#, fuzzy
 #| msgid "Annotations"
 msgid "Adding Annotations"
-msgstr "Anotaciones"
+msgstr "Añadir anotaciones"
 
 #: C/annotations.page:21(p)
 msgid ""
@@ -3092,10 +3091,9 @@ msgid "Annotations can only be added to PDF files."
 msgstr ""
 
 #: C/annotations-disabled.page:18(title)
-#, fuzzy
 #| msgid "Annotations"
 msgid "Can't Add Annotations?"
-msgstr "Anotaciones"
+msgstr "¿No puede añadir anotaciones?"
 
 #: C/annotations-disabled.page:19(p)
 msgid ""
@@ -3512,10 +3510,10 @@ msgstr ""
 #~ msgid ""
 #~ "In <application>Evince Document Viewer</application>, you can perform the "
 #~ "same action in several ways. For example, you can open a document in the "
-#~ "following ways: <informaltable frame=\"all\"><tgroup cols=\"2\" colsep=\"1"
-#~ "\" rowsep=\"1\"><colspec colname=\"COLSPEC0\" colwidth=\"50*\"/><colspec "
-#~ "colname=\"COLSPEC1\" colwidth=\"50*\"/><placeholder-1/><placeholder-2/></"
-#~ "tgroup></informaltable>"
+#~ "following ways: <informaltable frame=\"all\"><tgroup cols=\"2\" colsep="
+#~ "\"1\" rowsep=\"1\"><colspec colname=\"COLSPEC0\" colwidth=\"50*\"/"
+#~ "><colspec colname=\"COLSPEC1\" colwidth=\"50*\"/><placeholder-1/"
+#~ "><placeholder-2/></tgroup></informaltable>"
 #~ msgstr ""
 #~ "En el <application>Visor de documentos Evince</application>, puede "
 #~ "realizar la misma acción de varias formas. Por ejemplo, puede abrir un "
