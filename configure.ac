@@ -292,35 +292,6 @@ if test x$has_desktop_schemas = xyes; then
    AC_DEFINE([HAVE_DESKTOP_SCHEMAS], [1], [Whether GSettings Desktop Schemas are available])
 fi
 
-dnl ========= Check for GConf
-
-AC_MSG_CHECKING([whether GConf support is requested])
-AC_ARG_WITH([gconf],
-  [AS_HELP_STRING([--without-gconf],
-		  [Disable the use of gconf])],
-  [],
-  [case "$os_win32" in
-     yes) with_gconf=no ;;
-     *) with_gconf=yes ;;
-   esac])
-AC_MSG_RESULT([$with_gconf])
-
-AM_CONDITIONAL([WITH_GCONF],[test "$with_gconf" = "yes"])
-
-if test "$with_gconf" = "yes"; then
-   PKG_CHECK_MODULES([GCONF],[gconf-2.0])
-   AC_DEFINE([WITH_GCONF],[1],[Define if GConf support is enabled])
-
-   AM_GCONF_SOURCE_2
-
-   AC_PATH_PROG([GCONFTOOL], [gconftool-2], [false])
-   if test "$GCONFTOOL" = "false"; then
-      AC_MSG_ERROR([gconftool-2 executable not found in your path - should be installed with GConf])
-   fi
-else
-   AM_CONDITIONAL([GCONF_SCHEMAS_INSTALL],false)
-fi
-
 dnl Debug mode
 
 AC_ARG_ENABLE([debug],
@@ -827,7 +798,6 @@ AC_OUTPUT
 echo "
 Configure summary:
         Platform...........:  $with_platform
-        GConf Support......:  $with_gconf
 	GTK+ Unix Print....:  $with_gtk_unix_print
 	Keyring Support....:  $with_keyring
 	DBUS Support.......:  $enable_dbus
