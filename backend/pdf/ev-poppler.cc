@@ -2071,7 +2071,7 @@ pdf_document_text_get_text_layout (EvDocumentText  *selection,
 {
 	PopplerPage *poppler_page;
 
-	g_return_val_if_fail (POPPLER_IS_PAGE (page->backend_page), NULL);
+	g_return_val_if_fail (POPPLER_IS_PAGE (page->backend_page), FALSE);
 
 	poppler_page = POPPLER_PAGE (page->backend_page);
 
