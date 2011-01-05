@@ -482,17 +482,10 @@ AC_ARG_ENABLE([pdf],
   [enable_pdf=yes])
 
 if test "x$enable_pdf" = "xyes"; then
-    POPPLER_REQUIRED=0.14.0
+    POPPLER_REQUIRED=0.16.0
     PKG_CHECK_MODULES(POPPLER, poppler-glib >= $POPPLER_REQUIRED libxml-2.0 >= $LIBXML_REQUIRED,enable_pdf=yes,enable_pdf=no)
 
     if test "x$enable_pdf" = "xyes"; then
-	    evince_save_LIBS=$LIBS
-	    LIBS="$LIBS $POPPLER_LIBS"
-	    AC_CHECK_FUNCS(poppler_page_get_text_layout)
-	    AC_CHECK_FUNCS(poppler_page_get_selected_text)
-	    AC_CHECK_FUNCS(poppler_page_add_annot)
-	    AC_CHECK_FUNCS(poppler_document_is_linearized)
-	    LIBS=$evince_save_LIBS
 	    PKG_CHECK_MODULES(CAIRO_PDF, cairo-pdf, enable_cairo_pdf=yes, enable_cairo_pdf=no)
 	    if test x$enable_cairo_pdf = xyes; then
 	            AC_DEFINE([HAVE_CAIRO_PDF], [1], [defined if cairo-pdf is available])
