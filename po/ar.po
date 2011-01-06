@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince.HEAD\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-01-06 09:32+0200\n"
-"PO-Revision-Date: 2011-01-06 09:30+0300\n"
+"POT-Creation-Date: 2011-01-06 09:54+0200\n"
+"PO-Revision-Date: 2011-01-06 09:54+0300\n"
 "Last-Translator: Khaled Hosny <khaledhosny@eglug.org>\n"
 "Language-Team: Arabic <doc@arabeyes.org>\n"
 "MIME-Version: 1.0\n"
@@ -18,7 +18,8 @@ msgstr ""
 "Language: ar\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
-"X-Generator: Virtaal 0.6.1\n"
+"X-Generator: Virtaal 0.7.0-beta2\n"
+"X-Project-Style: gnome\n"
 
 #: ../backend/comics/comics-document.c:210
 #, c-format
@@ -39,7 +40,7 @@ msgstr "لم ينته الأمر “%s” طبيعيا."
 #: ../backend/comics/comics-document.c:413
 #, c-format
 msgid "Not a comic book MIME type: %s"
-msgstr "ليس نوع MIME  قصص مصوّرة: %s"
+msgstr "ليس نوع MIME قصص مصوّرة: %s"
 
 #: ../backend/comics/comics-document.c:420
 msgid "Can't find an appropriate command to decompress this type of comic book"
@@ -170,7 +171,7 @@ msgstr "مستندات PDF"
 #: ../backend/ps/ev-spectre.c:98
 #, c-format
 msgid "Failed to load document “%s”"
-msgstr "تعذر تحميل المستند \"%s\""
+msgstr "تعذر تحميل المستند “%s”"
 
 #: ../backend/ps/ev-spectre.c:131
 #, c-format
@@ -567,12 +568,12 @@ msgstr "default:mm"
 #: ../properties/ev-properties-view.c:261
 #, c-format
 msgid "%.0f × %.0f mm"
-msgstr "%I.0f × %I.0f مم"
+msgstr "%.0f × %.0f مم"
 
 #: ../properties/ev-properties-view.c:265
 #, c-format
 msgid "%.2f × %.2f inch"
-msgstr "%I.2f × %I.2f بوصة"
+msgstr "%.2f × %.2f بوصة"
 
 #. Note to translators: first placeholder is the paper name (eg.
 #. * A4), second placeholder is the paper size (eg. 297x210 mm)
@@ -591,12 +592,12 @@ msgstr "‏%s، عرضيّ (%s)"
 #: ../libmisc/ev-page-action-widget.c:68
 #, c-format
 msgid "(%d of %d)"
-msgstr "(%Id من %Id)"
+msgstr "(%d من %d)"
 
 #: ../libmisc/ev-page-action-widget.c:70
 #, c-format
 msgid "of %d"
-msgstr "من %Id"
+msgstr "من %d"
 
 #. Create tree view
 #: ../libview/ev-loading-window.c:76 ../shell/ev-sidebar-annotations.c:133
@@ -616,11 +617,11 @@ msgstr "يُنهي…"
 #: ../libview/ev-print-operation.c:338
 #, c-format
 msgid "Printing page %d of %d…"
-msgstr "يطبع الصفحة %Id من %Id…"
+msgstr "يطبع الصفحة %d من %d…"
 
 #: ../libview/ev-print-operation.c:1162
 msgid "Printing is not supported on this printer."
-msgstr "لا يمكن الطباعة من خلال هذه الطابعة"
+msgstr "لا يمكن الطباعة من خلال هذه الطابعة."
 
 #: ../libview/ev-print-operation.c:1227
 msgid "Invalid page selection"
@@ -760,12 +761,12 @@ msgstr "اذهب إلى الصفحة %s"
 #: ../libview/ev-view.c:1831
 #, c-format
 msgid "Go to %s on file “%s”"
-msgstr "اذهب إلى %s في الملف %s"
+msgstr "اذهب إلى %s في الملف “%s”"
 
 #: ../libview/ev-view.c:1834
 #, c-format
 msgid "Go to file “%s”"
-msgstr "اذهب إلى الملف \"%s\""
+msgstr "اذهب إلى الملف “%s”"
 
 #: ../libview/ev-view.c:1842
 #, c-format
@@ -893,7 +894,7 @@ msgstr "فتح مستند استخدما حديثا"
 msgid ""
 "This document is locked and can only be read by entering the correct "
 "password."
-msgstr "هذا المستند مقفل ولا يمكن قراءته إلا بإدخال كلمة السر الصحيحة"
+msgstr "هذا المستند مقفل ولا يمكن قراءته إلا بإدخال كلمة السر الصحيحة."
 
 #: ../shell/ev-password-view.c:153 ../shell/ev-password-view.c:271
 msgid "_Unlock Document"
@@ -911,7 +912,7 @@ msgstr "كلمة السر مطلوبة"
 #, c-format
 msgid ""
 "The document “%s” is locked and requires a password before it can be opened."
-msgstr "المستند \"%s\" مقفل و يتطلب كلمة سر ليُفتح"
+msgstr "المستند “%s” مقفل و يتطلب كلمة سر ليُفتح."
 
 #: ../shell/ev-password-view.c:334
 msgid "_Password:"
@@ -1099,7 +1100,7 @@ msgstr "يحفظ الصورة في %s"
 #: ../shell/ev-window.c:2719 ../shell/ev-window.c:2819
 #, c-format
 msgid "The file could not be saved as “%s”."
-msgstr "تعذر حفظ الملف باسم \"%s\""
+msgstr "تعذر حفظ الملف باسم “%s”."
 
 #: ../shell/ev-window.c:2750
 #, c-format
@@ -1131,9 +1132,9 @@ msgid_plural "%d pending jobs in queue"
 msgstr[0] "لا مهام منتظرة في الطابور"
 msgstr[1] "مهمة واحدة تنتظر في الطابور"
 msgstr[2] "مهمتين منتظرتين في الطابور"
-msgstr[3] "%Id مهام منتظرة في الطابور"
-msgstr[4] "%Id مهمة منتظرة في الطابور"
-msgstr[5] "%Id مهمة منتظرة في الطابور"
+msgstr[3] "%d مهام منتظرة في الطابور"
+msgstr[4] "%d مهمة منتظرة في الطابور"
+msgstr[5] "%d مهمة منتظرة في الطابور"
 
 #: ../shell/ev-window.c:3322
 #, c-format
@@ -1157,7 +1158,7 @@ msgstr ""
 #: ../shell/ev-window.c:3510
 #, c-format
 msgid "Save a copy of document “%s” before closing?"
-msgstr "أأحفظ نسخة من المستند \"%s\" قبل غلقه؟"
+msgstr "أأحفظ نسخة من المستند “%s” قبل غلقه؟"
 
 #: ../shell/ev-window.c:3529
 msgid "Close _without Saving"
@@ -1214,9 +1215,9 @@ msgid ""
 "Foundation; either version 2 of the License, or (at your option) any later "
 "version.\n"
 msgstr ""
-"جلاء برنامج حر؛ بامكانك إعادة توزيعه و/أو تعديله تحت شروط الرخصة العامة لجنو "
+"جلاء برنامج حر؛ بإمكانك إعادة توزيعه و/أو تعديله تحت شروط الرخصة العامة لجنو "
 "والتي نشرتها منظمة البرمجيات الحرة؛ سواء كانت الإصدارة 2 للرخصة أو أي إصدارة "
-"بعدها حسب الرغبة. \n"
+"بعدها حسب الرغبة.\n"
 
 #: ../shell/ev-window.c:4746
 msgid ""
@@ -1225,9 +1226,9 @@ msgid ""
 "FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more "
 "details.\n"
 msgstr ""
-"يوزّع جلاء  على أمل أن يكون مفيدال لمن يستخدمه دون أدنى مسؤولية؛ ولا حتى ضمان "
-"صلاحية العرض في السوق أو توافقه مع أي استخدام محدد. يمكنم مراجعة الرخصة "
-"العامة لجنو لمزيد من التفاصيل. \n"
+"يوزّع جلاء  على أمل أن يكون مفيدا لمن يستخدمه دون أدنى مسؤولية؛ ولا حتى ضمان "
+"صلاحية العرض في السوق أو توافقه مع أي استخدام محدد. يمكنكم مراجعة الرخصة "
+"العامة لجنو لمزيد من التفاصيل.\n"
 
 #: ../shell/ev-window.c:4750
 msgid ""
@@ -1251,9 +1252,9 @@ msgstr "© 1996-2010 لمؤلفي برنامج جلاء"
 #: ../shell/ev-window.c:4784
 msgid "translator-credits"
 msgstr ""
-"فريق عربآيز للترجمة http://www.arabeyes.org :\n"
-"يوسف رفـه\t<yousef@raffah.com>\n"
-"خالد حسني\t<khaledhosny@eglug.org>"
+"فريق عربآيز للترجمة http://www.arabeyes.org:\n"
+"يوسف رفـه <yousef@raffah.com>\n"
+"خالد حسني <khaledhosny@eglug.org>"
 
 #. TRANS: Sometimes this could be better translated as
 #. "%d hit(s) on this page".  Therefore this string
@@ -1265,9 +1266,9 @@ msgid_plural "%d found on this page"
 msgstr[0] "لا يوجد في هذه الصفحة"
 msgstr[1] "واحد موجود في هذه الصفحة"
 msgstr[2] "اثنان موجودان في هذه الصفحة"
-msgstr[3] "%Id موجودة على هذه الصفحة"
-msgstr[4] "%Id موجودة على هذه الصفحة"
-msgstr[5] "%Id موجودة على هذه الصفحة"
+msgstr[3] "%d موجودة على هذه الصفحة"
+msgstr[4] "%d موجودة على هذه الصفحة"
+msgstr[5] "%d موجودة على هذه الصفحة"
 
 #: ../shell/ev-window.c:5055
 msgid "Not found"
@@ -1276,7 +1277,7 @@ msgstr "غير موجود"
 #: ../shell/ev-window.c:5061
 #, c-format
 msgid "%3d%% remaining to search"
-msgstr "%I3d%% متبقية للبحث"
+msgstr "%3d%% متبقية للبحث"
 
 #: ../shell/ev-window.c:5584
 msgid "_File"
@@ -1686,7 +1687,7 @@ msgid ""
 "thumbnailer documentation for more information."
 msgstr ""
 "أمر صالِح بالإضافة إلى متغيرات لمصغّر الصور الخاص بمستندات PDF. راجع توثيق "
-"مصغّر الصور لنوتلس للمزيد من المعلومات"
+"مصغّر الصور لنوتلس للمزيد من المعلومات."
 
 #~ msgid "Converting %s"
 #~ msgstr "يُحوّل %s"
