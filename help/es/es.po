@@ -8,8 +8,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: evince.help.master\n"
-"POT-Creation-Date: 2010-12-29 09:38+0000\n"
-"PO-Revision-Date: 2011-01-03 15:02+0100\n"
+"POT-Creation-Date: 2011-01-03 19:36+0000\n"
+"PO-Revision-Date: 2011-01-04 18:00+0100\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -23,6 +23,8 @@ msgid ""
 "When you copy text, the text that is pasted might be different from what you "
 "had selected."
 msgstr ""
+"Al copiar texto, el texto que pega puede ser diferente del que había "
+"seleccionado."
 
 #: C/textselection.page:11(name) C/shortcuts.page:11(name)
 #: C/reload.page:15(name) C/print-select.page:11(name)
@@ -92,6 +94,10 @@ msgid ""
 "also contain different characters than the original selection. This often "
 "happens when copying text from a PDF document with multiple columns."
 msgstr ""
+"Si resalta y copia texto de un documento usando <app>Evince</app> y lo pega "
+"en otra aplicación, el formato se puede alterar. Puede contener caracteres "
+"diferentes de la selección original. Esto pasa a menudo cuando se copia "
+"texto desde un documento PDF con varias columnas."
 
 #: C/textselection.page:29(p)
 msgid ""
@@ -99,6 +105,9 @@ msgid ""
 "actual text in the document is stored differently from the way it is "
 "displayed. This may result in a copy that does not appear as expected."
 msgstr ""
+"Este problema ocurre debido a cómo algunos documentos manejan formatos de "
+"texto. El texto actual del documento se almacena de forma diferente a como "
+"se muestra. Esto puede dar lugar a una copia que no aparece como se esperaba."
 
 #: C/textselection.page:35(p)
 msgid ""
@@ -107,6 +116,11 @@ msgid ""
 "problem. You can locate a text editor by clicking <guiseq><gui>Applications</"
 "gui><gui>Accessories</gui><gui>Text Editor</gui></guiseq>."
 msgstr ""
+"Por desgracia, no hay una manera de solucionar este problema. Copiar menos "
+"texto cada vez o copiar el texto en un editor de texto puede minimizar el "
+"problema. Puede encontrar un editor de texto pulsando en "
+"<guiseq><gui>Aplicaciones</gui><gui>Accesorios</gui><gui>Editor de texto</"
+"gui></guiseq>."
 
 #: C/synctex-support.page:7(desc)
 msgid "How to add support for SyncTex."
@@ -171,6 +185,7 @@ msgid ""
 "The following packages need to be installed in order to add support for "
 "SyncTex:"
 msgstr ""
+"Para añadir soporte para SyncTex se deben instalar los siguientes paquetes:"
 
 #: C/synctex-support.page:26(p)
 msgid "texlive-extra-utils"
@@ -182,7 +197,7 @@ msgstr "gedit-plugins"
 
 #: C/synctex-support.page:37(p)
 msgid "In <app>Gedit</app>, enable the SyncTex Plugin:"
-msgstr ""
+msgstr "En <app>Gedit</app>, active el complemento SyncTex:"
 
 #: C/synctex-support.page:42(p)
 msgid ""
@@ -198,7 +213,7 @@ msgstr "Marque <gui>SyncTex</gui>."
 
 #: C/synctex-search.page:7(desc)
 msgid "Flip between <app>Evince</app> and <app>Gedit</app>."
-msgstr ""
+msgstr "Alternar entre <app>Evince</app> y <app>Gedit</app>."
 
 #: C/synctex-search.page:20(title)
 msgid "Search with SyncTex"
@@ -225,7 +240,6 @@ msgid ""
 msgstr ""
 
 #: C/synctex-search.page:32(p)
-#| msgid "Double click on your printer in the list."
 msgid "Click on a line in the TeX file."
 msgstr "Pulse sobre una línea en el archivo TeX."
 
@@ -298,6 +312,8 @@ msgid ""
 "SyncTeX is a method that enables synchronization between a TeX source file "
 "and the resulting PDF output."
 msgstr ""
+"SyncTeX es un método que activa la sincronización entre un archivo TeX de "
+"origen y el PDF de salida resultante."
 
 #: C/synctex-editors.page:7(desc)
 msgid "Which editor can you use to edit your TEX file?"
@@ -329,6 +345,9 @@ msgid ""
 "can be used to get Synctex working with Vim. In order to use vim-latex "
 "together with <app>Evince</app> you need to follow the next steps:"
 msgstr ""
+"El complemento de <app>Gedit</app> contiene un script en python (evince_dbus."
+"py) que se puede usar para que Synctex funcione con Vim. Para usar vim-latex "
+"junto con <app>Evince</app> debe seguir los siguientes pasos:"
 
 #: C/synctex-editors.page:35(p)
 msgid ""
@@ -338,7 +357,7 @@ msgstr ""
 
 #: C/synctex-editors.page:41(p)
 msgid "Modify your ~/.vimrc file and add the following lines."
-msgstr ""
+msgstr "Modifique su archivo ~/.vimrc y añada las siguientes líneas."
 
 #: C/synctex-editors.page:44(code)
 #, no-wrap
@@ -361,11 +380,11 @@ msgstr ""
 
 #: C/synctex-compile.page:7(desc)
 msgid "How to compile your TeX document with SyncTex"
-msgstr ""
+msgstr "Como compilar su documento TeX con SyncTex"
 
 #: C/synctex-compile.page:19(title)
 msgid "Compile TeX with SyncTex"
-msgstr ""
+msgstr "Compilar TeX con SyncTex"
 
 #: C/synctex-compile.page:20(p)
 msgid ""
@@ -482,6 +501,7 @@ msgstr ""
 #: C/duplex-15pages.page:29(p)
 msgid "Create a blank PDF using <app>Open Office Word Processor</app>."
 msgstr ""
+"Crear un PDF vacío usando el <app>Procesador de textos de Open Office</app>."
 
 #: C/singlesided-npages.page:38(p) C/singlesided-9-12pages.page:33(p)
 #: C/singlesided-5-8pages.page:33(p) C/singlesided-17-20pages.page:33(p)
@@ -490,6 +510,8 @@ msgid ""
 "Merge the blank pages with your PDF document using <app>PDF-Shuffler</app> "
 "placing the blank pages at the end."
 msgstr ""
+"Combinar las páginas en blanco con su documento PDF usando <app>PDF-"
+"Shuffler</app>, situando las páginas en blanco al final."
 
 #: C/singlesided-npages.page:44(p) C/singlesided-9-12pages.page:39(p)
 #: C/singlesided-5-8pages.page:39(p) C/singlesided-3-4pages.page:39(p)
@@ -515,7 +537,7 @@ msgstr "Imprimir:"
 #: C/duplex-11pages.page:24(p) C/duplex-10pages.page:24(p)
 #: C/duplex-10pages.page:67(p)
 msgid "Click <guiseq><gui>File</gui><gui>Print</gui></guiseq>."
-msgstr ""
+msgstr "Pulse <guiseq><gui>Archivo</gui><gui>Imprimir</gui></guiseq>."
 
 #: C/singlesided-npages.page:54(p) C/singlesided-9-12pages.page:51(p)
 #: C/singlesided-5-8pages.page:51(p) C/singlesided-3-4pages.page:51(p)
@@ -1467,7 +1489,6 @@ msgid "These passwords are set by the person who created the document."
 msgstr "Estas contraseñas las establece la persona que creó el documento."
 
 #: C/opening.page:7(desc)
-#| msgid "How to open a document using Evince Document Viewer."
 msgid "How to open a document using <app>Evince</app>."
 msgstr "Cómo abrir un documento usando <app>Evince</app>."
 
@@ -1526,11 +1547,6 @@ msgid "Why can't I open a file?"
 msgstr ""
 
 #: C/openerror.page:24(p)
-#| msgid ""
-#| "If you try to open a document of a format that <app>Evince Document "
-#| "Viewer</app> does not recognise, you will get an \"Unable to open document"
-#| "\" error message. Click <gui>Close</gui> to return to the Document Viewer "
-#| "window."
 msgid ""
 "If you try to open a document of a format that <app>Evince</app> does not "
 "recognize, you will get an \"Unable to open document\" error message. Click "
@@ -1737,9 +1753,6 @@ msgid "To go to a specific page:"
 msgstr "Ir a una página específica:"
 
 #: C/movingaround.page:92(p)
-#| msgid ""
-#| "type a page number in the text box on the toolbar and press <key>Enter</"
-#| "key>."
 msgid ""
 "Type a page number in the text box on the toolbar and press <key>Enter</key>."
 msgstr ""
@@ -1757,9 +1770,6 @@ msgid ""
 msgstr ""
 
 #: C/movingaround.page:96(p)
-#| msgid ""
-#| "Click <guiseq><gui>View</gui><gui>Presentation</gui></guiseq> (or press "
-#| "<key>F5</key>)."
 msgid ""
 "Click <guiseq><gui>Go</gui><gui>Last Page</gui></guiseq> or press "
 "<keyseq><key>Ctrl</key><key>End</key></keyseq> on your keyboard."
@@ -2037,7 +2047,6 @@ msgid "Copies of encrypted files can not be saved or printed."
 msgstr ""
 
 #: C/forms.page:7(desc)
-#| msgid "Working with fillable forms in <app>Evince Document Viewer</app>."
 msgid "Working with fillable forms in <app>Evince</app>."
 msgstr "Trabajar con formularios rellenables en <app>Evince</app>."
 
@@ -2227,7 +2236,6 @@ msgid ""
 msgstr ""
 
 #: C/duplex-9pages.page:64(p)
-#| msgid "Click <guiseq><gui>File</gui><gui> Print...</gui></guiseq>"
 msgid ""
 "Click <guiseq><gui>File</gui><gui>Print</gui></guiseq> again and choose the "
 "General tab."
@@ -2250,7 +2258,6 @@ msgstr ""
 #: C/duplex-14pages.page:66(p) C/duplex-13pages.page:62(p)
 #: C/duplex-13pages.page:100(p) C/duplex-13pages.page:114(p)
 #: C/duplex-11pages.page:62(p)
-#| msgid "Click <guiseq><gui>File</gui><gui> Print...</gui></guiseq>"
 msgid "Click <guiseq><gui>File</gui><gui>Print</gui></guiseq> again."
 msgstr "Pulse <guiseq><gui>Archivo</gui><gui>Imprimir</gui></guiseq> otra vez."
 
@@ -2445,7 +2452,6 @@ msgid "Choose the General tab."
 msgstr ""
 
 #: C/duplex-5pages.page:87(p)
-#| msgid "Click <guiseq><gui>File</gui><gui> Print...</gui></guiseq>"
 msgid ""
 "To print page 3, click <guiseq><gui>File</gui><gui>Print</gui></guiseq> "
 "again."
@@ -2567,7 +2573,6 @@ msgid "13-Page Booklet"
 msgstr ""
 
 #: C/duplex-13pages.page:81(p)
-#| msgid "Click <guiseq><gui>File</gui><gui> Print...</gui></guiseq>"
 msgid ""
 "To print page 3, Click <guiseq><gui>File</gui><gui>Print</gui></guiseq> "
 "again."
@@ -2909,7 +2914,6 @@ msgid ""
 msgstr ""
 
 #: C/bookmarks.page:7(desc)
-#| msgid "You can navigate to annotations."
 msgid "You can use annotations like bookmarks."
 msgstr "Puede usar las anotaciones como marcadores."
 
@@ -2959,7 +2963,6 @@ msgstr ""
 "@@image: 'add-text-annotation.png'; md5=1add21cd2ec02d5fcc5b06d0e6546901"
 
 #: C/annotations.page:7(desc)
-#| msgid "How can I remove an annotation?"
 msgid "How to create and customize annotations."
 msgstr "Cómo crear y personalizar anotaciones."
 
@@ -3047,7 +3050,6 @@ msgstr ""
 "@@image: 'annotations-nav-to-page.png'; md5=fda82d763b7c81304d1c5949344a073b"
 
 #: C/annotations-navigate.page:7(desc)
-#| msgid "You can navigate to annotations."
 msgid "How to navigate to annotations."
 msgstr "Cómo navegar hasta las anotaciones."
 
@@ -3093,15 +3095,10 @@ msgid "Removing Annotations"
 msgstr "Quitar anotaciones"
 
 #: C/annotations-delete.page:21(p)
-#| msgid ""
-#| "You can not remove an annotation in <app>Evince Document Viewer at this "
-#| "time.</app>"
 msgid "You can not remove an annotation in <app>Evince</app> at this time."
 msgstr "Ahora mismo no puede quitar una anotación en el <app>Evince</app>."
 
 #: C/annotation-properties.page:7(desc)
-#| msgid ""
-#| "You can customise the author, colour, style or icon of an annotation."
 msgid "How to customize the author, color, style or icon of an annotation."
 msgstr ""
 "Cómo personalizar el autor, el color, el estilo o el icono de una anotación."
