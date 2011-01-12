@@ -8,16 +8,15 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: evince 2.91.x\n"
-"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug."
-"cgi?product=evince&component=general\n"
-"POT-Creation-Date: 2010-12-26 12:45+0000\n"
-"PO-Revision-Date: 2010-12-30 22:06+0100\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-01-12 11:36+0100\n"
+"PO-Revision-Date: 2011-01-12 11:39+0100\n"
 "Last-Translator: Torstein Adolf Winterseth <kvikende@fsfe.org>\n"
 "Language-Team: Norwegian Bokmål <i18n-nb@lister.ping.uio.no>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: \n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Lokalize 1.1\n"
 
@@ -25,7 +24,8 @@ msgstr ""
 #, c-format
 msgid ""
 "Error launching the command “%s” in order to decompress the comic book: %s"
-msgstr "Feil under oppstart av kommando «%s» for å dekomprimere tegneserien: %s"
+msgstr ""
+"Feil under oppstart av kommando «%s» for å dekomprimere tegneserien: %s"
 
 #: ../backend/comics/comics-document.c:224
 #, c-format
@@ -105,65 +105,65 @@ msgstr "DVI-dokumentet har feil format"
 msgid "DVI Documents"
 msgstr "DVI-dokumenter"
 
-#: ../backend/pdf/ev-poppler.cc:608
+#: ../backend/pdf/ev-poppler.cc:590
 msgid "This work is in the Public Domain"
 msgstr "Dette arbeidet er Public Domain"
 
 #. translators: this is the document security state
-#: ../backend/pdf/ev-poppler.cc:868 ../backend/pdf/ev-poppler.cc:875
+#: ../backend/pdf/ev-poppler.cc:844 ../backend/pdf/ev-poppler.cc:850
 msgid "Yes"
 msgstr "Ja"
 
 #. translators: this is the document security state
-#: ../backend/pdf/ev-poppler.cc:871 ../backend/pdf/ev-poppler.cc:875
+#: ../backend/pdf/ev-poppler.cc:847 ../backend/pdf/ev-poppler.cc:850
 msgid "No"
 msgstr "Nei"
 
-#: ../backend/pdf/ev-poppler.cc:1004
+#: ../backend/pdf/ev-poppler.cc:978
 msgid "Type 1"
 msgstr "Type 1"
 
-#: ../backend/pdf/ev-poppler.cc:1006
+#: ../backend/pdf/ev-poppler.cc:980
 msgid "Type 1C"
 msgstr "Type 1C"
 
-#: ../backend/pdf/ev-poppler.cc:1008
+#: ../backend/pdf/ev-poppler.cc:982
 msgid "Type 3"
 msgstr "Type 3"
 
-#: ../backend/pdf/ev-poppler.cc:1010
+#: ../backend/pdf/ev-poppler.cc:984
 msgid "TrueType"
 msgstr "TrueType"
 
-#: ../backend/pdf/ev-poppler.cc:1012
+#: ../backend/pdf/ev-poppler.cc:986
 msgid "Type 1 (CID)"
 msgstr "Type 1 (CID)"
 
-#: ../backend/pdf/ev-poppler.cc:1014
+#: ../backend/pdf/ev-poppler.cc:988
 msgid "Type 1C (CID)"
 msgstr "Type 1C (CID)"
 
-#: ../backend/pdf/ev-poppler.cc:1016
+#: ../backend/pdf/ev-poppler.cc:990
 msgid "TrueType (CID)"
 msgstr "TrueType (CID)"
 
-#: ../backend/pdf/ev-poppler.cc:1018
+#: ../backend/pdf/ev-poppler.cc:992
 msgid "Unknown font type"
 msgstr "Ukjent skrifttype"
 
-#: ../backend/pdf/ev-poppler.cc:1044
+#: ../backend/pdf/ev-poppler.cc:1018
 msgid "No name"
 msgstr "Uten navn"
 
-#: ../backend/pdf/ev-poppler.cc:1052
+#: ../backend/pdf/ev-poppler.cc:1026
 msgid "Embedded subset"
 msgstr "Innebygd subsett"
 
-#: ../backend/pdf/ev-poppler.cc:1054
+#: ../backend/pdf/ev-poppler.cc:1028
 msgid "Embedded"
 msgstr "Innebygd"
 
-#: ../backend/pdf/ev-poppler.cc:1056
+#: ../backend/pdf/ev-poppler.cc:1030
 msgid "Not embedded"
 msgstr "Ikke innebygd"
 
@@ -608,21 +608,21 @@ msgstr "av %d"
 #: ../libview/ev-loading-window.c:76 ../shell/ev-sidebar-annotations.c:133
 #: ../shell/ev-sidebar-layers.c:125 ../shell/ev-sidebar-links.c:262
 msgid "Loading…"
-msgstr "Laster…"
+msgstr "Laster …"
 
 #. Initial state
 #: ../libview/ev-print-operation.c:334
 msgid "Preparing to print…"
-msgstr "Forbereder utskrift…"
+msgstr "Forbereder utskrift …"
 
 #: ../libview/ev-print-operation.c:336
 msgid "Finishing…"
-msgstr "Fullfører…"
+msgstr "Fullfører …"
 
 #: ../libview/ev-print-operation.c:338
 #, c-format
 msgid "Printing page %d of %d…"
-msgstr "Skriver ut side %d av %d…"
+msgstr "Skriver ut side %d av %d …"
 
 #: ../libview/ev-print-operation.c:1162
 msgid "Printing is not supported on this printer."
@@ -962,7 +962,7 @@ msgstr "Skrifttype"
 #: ../shell/ev-properties-fonts.c:162
 #, c-format
 msgid "Gathering font information… %3d%%"
-msgstr "Samler informasjon om skrifter… %3d%%"
+msgstr "Samler informasjon om skrifter … %3d%%"
 
 #: ../shell/ev-properties-license.c:137
 msgid "Usage terms"
@@ -1010,22 +1010,16 @@ msgid "Attachments"
 msgstr "Vedlegg"
 
 #: ../shell/ev-sidebar-bookmarks.c:152
-#, fuzzy
-#| msgid "_Bookmarks"
 msgid "_Open Bookmark"
-msgstr "_Bokmerker"
+msgstr "Åpne bokmerke"
 
 #: ../shell/ev-sidebar-bookmarks.c:154
-#, fuzzy
-#| msgid "_Bookmarks"
 msgid "_Rename Bookmark"
-msgstr "_Bokmerker"
+msgstr "End_re navn på bokmerke"
 
 #: ../shell/ev-sidebar-bookmarks.c:156
-#, fuzzy
-#| msgid "_Bookmarks"
 msgid "_Remove Bookmark"
-msgstr "_Bokmerker"
+msgstr "Fje_rn bokmerke"
 
 #: ../shell/ev-sidebar-bookmarks.c:311 ../shell/ev-window.c:895
 #: ../shell/ev-window.c:4463
@@ -1043,7 +1037,7 @@ msgstr "Lag"
 
 #: ../shell/ev-sidebar-links.c:338
 msgid "Print…"
-msgstr "Skriv ut…"
+msgstr "Skriv ut …"
 
 #: ../shell/ev-sidebar-links.c:719
 msgid "Index"
@@ -1317,7 +1311,7 @@ msgstr "_Hjelp"
 #. File menu
 #: ../shell/ev-window.c:5592 ../shell/ev-window.c:5908
 msgid "_Open…"
-msgstr "_Åpne…"
+msgstr "_Åpne …"
 
 #: ../shell/ev-window.c:5593 ../shell/ev-window.c:5909
 msgid "Open an existing document"
@@ -1333,7 +1327,7 @@ msgstr "Åpne en kopi av dette dokumentet i et nytt vindu"
 
 #: ../shell/ev-window.c:5598
 msgid "_Save a Copy…"
-msgstr "_Lagre en kopi…"
+msgstr "_Lagre en kopi …"
 
 #: ../shell/ev-window.c:5599
 msgid "Save a copy of the current document"
@@ -1349,7 +1343,7 @@ msgstr "Vis mappen som inneholder denne filen i filhåndterer"
 
 #: ../shell/ev-window.c:5604
 msgid "_Print…"
-msgstr "_Skriv ut…"
+msgstr "_Skriv ut …"
 
 #: ../shell/ev-window.c:5607
 msgid "P_roperties"
@@ -1361,7 +1355,7 @@ msgstr "Velg _alt"
 
 #: ../shell/ev-window.c:5617
 msgid "_Find…"
-msgstr "_Søk…"
+msgstr "_Søk …"
 
 #: ../shell/ev-window.c:5618
 msgid "Find a word or phrase in the document"
@@ -1522,7 +1516,7 @@ msgstr "_Kopier lenkeadressen"
 
 #: ../shell/ev-window.c:5779
 msgid "_Save Image As…"
-msgstr "Lagre bilde _som…"
+msgstr "Lagre bilde _som …"
 
 #: ../shell/ev-window.c:5781
 msgid "Copy _Image"
@@ -1530,7 +1524,7 @@ msgstr "Kopier b_ilde"
 
 #: ../shell/ev-window.c:5783
 msgid "Annotation Properties…"
-msgstr "Egenskaper for anmerkninger…"
+msgstr "Egenskaper for anmerkninger …"
 
 #: ../shell/ev-window.c:5788
 msgid "_Open Attachment"
@@ -1538,7 +1532,7 @@ msgstr "_Åpne vedlegg"
 
 #: ../shell/ev-window.c:5790
 msgid "_Save Attachment As…"
-msgstr "Lagre vedlegg _som…"
+msgstr "Lagre vedlegg _som …"
 
 #: ../shell/ev-window.c:5882
 msgid "Zoom"
@@ -1674,30 +1668,4 @@ msgstr "STRENG"
 
 #: ../shell/main.c:86
 msgid "[FILE…]"
-msgstr "[FIL…]"
-
-#: ../thumbnailer/evince-thumbnailer.schemas.in.h:1
-msgid ""
-"Boolean options available: true enables thumbnailing and false disables the "
-"creation of new thumbnails"
-msgstr ""
-"Boolske verdier tilgjengelig: «true» aktiverer miniatyrer og «false» "
-"deaktiverer oppretting av nye miniatyrer."
-
-#: ../thumbnailer/evince-thumbnailer.schemas.in.h:2
-msgid "Enable thumbnailing of PDF Documents"
-msgstr "Aktiver generering av miniatyrer for PDF-dokumenter"
-
-#: ../thumbnailer/evince-thumbnailer.schemas.in.h:3
-msgid "Thumbnail command for PDF Documents"
-msgstr "Miniatyrbildekommando for PDF-dokumenter"
-
-#: ../thumbnailer/evince-thumbnailer.schemas.in.h:4
-msgid ""
-"Valid command plus arguments for the PDF Document thumbnailer. See Nautilus "
-"thumbnailer documentation for more information."
-msgstr ""
-"Gyldig kommando pluss argumenter for PDF-dokument miniatyrbilder. Se i "
-"Nautilus sin miniatyrbildedokumentasjon for mer informasjon."
-
-
+msgstr "[FIL …]"
