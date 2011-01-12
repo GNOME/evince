@@ -126,6 +126,7 @@ CAIRO_REQUIRED=1.10.0
 GLIB_REQUIRED=2.25.11
 KEYRING_REQUIRED=2.22.0
 GTK_REQUIRED=2.91.7
+NAUTILUS_REQUIRED=2.91.4
 
 AC_SUBST([GLIB_REQUIRED])
 AC_SUBST([GTK_REQUIRED])
@@ -351,7 +352,7 @@ AC_ARG_ENABLE([nautilus],
     esac])
 
 if test "$enable_nautilus" = "yes" ; then
-  PKG_CHECK_MODULES([NAUTILUS],[gtk+-x11-3.0 $MM gthread-2.0 libnautilus-extension],
+  PKG_CHECK_MODULES([NAUTILUS],[gtk+-x11-3.0 $MM gthread-2.0 libnautilus-extension >= $NAUTILUS_REQUIRED],
                     [],[AC_MSG_ERROR([libnautilus-extension not found; use --disable-nautilus to disable the nautilus extensions])])
   NAUTILUS_EXTENSION_DIR=`$PKG_CONFIG --variable=extensiondir libnautilus-extension`
   AC_SUBST([nautilusextensiondir],[$NAUTILUS_EXTENSION_DIR])
