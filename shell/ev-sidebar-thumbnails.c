@@ -725,7 +725,7 @@ ev_sidebar_thumbnails_set_current_page (EvSidebarThumbnails *sidebar,
 			(sidebar->priv->icon_view,
 			 G_CALLBACK (ev_sidebar_icon_selection_changed), sidebar);
 
-		gtk_icon_view_set_cursor (GTK_ICON_VIEW (sidebar->priv->icon_view), path, NULL, FALSE);
+		gtk_icon_view_scroll_to_path (GTK_ICON_VIEW (sidebar->priv->icon_view), path, FALSE, 0.0, 0.0);
 	}
 
 	gtk_tree_path_free (path);
