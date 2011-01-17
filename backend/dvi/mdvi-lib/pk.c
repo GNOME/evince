@@ -328,13 +328,14 @@ static int pk_load_font(DviParams *unused, DviFont *font)
 {
 	int	i;
 	int	flag_byte;
-	int	loc, hic, maxch;
+	int	hic, maxch;
 	Int32	checksum;
 	FILE	*p;
 #ifndef NODEBUG
 	char	s[256];
 #endif
 	long	alpha, beta, z;
+	unsigned int loc;
 
 	font->chars = xnalloc(DviFontChar, 256);
 	p = font->in;
@@ -521,7 +522,7 @@ static int pk_load_font(DviParams *unused, DviFont *font)
 	}
 
 	/* resize font char data */
-	if(loc > 0 && hic < maxch-1) {
+	if(loc > 0 || hic < maxch-1) {
 		memmove(font->chars, font->chars + loc, 
 			(hic - loc + 1) * sizeof(DviFontChar));
 		font->chars = xresize(font->chars,
