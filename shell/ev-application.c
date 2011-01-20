@@ -392,6 +392,10 @@ on_reload_cb (GObject      *source_object,
 	}
 	g_variant_unref (value);
 
+	/* We did not open a window, so manually clear the startup
+	 * notification. */
+	gdk_notify_startup_complete ();
+
 	ev_application_shutdown (EV_APP);
 }
 
