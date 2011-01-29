@@ -343,6 +343,8 @@ static void     ev_window_cmd_edit_find                 (GtkAction        *actio
 static void     find_bar_search_changed_cb              (EggFindBar       *find_bar,
 							 GParamSpec       *param,
 							 EvWindow         *ev_window);
+static void     view_external_link_cb                   (EvWindow         *window,
+							 EvLinkAction     *action);
 static void     ev_window_load_file_remote              (EvWindow         *ev_window,
 							 GFile            *source_file);
 static void     ev_window_media_player_key_pressed      (EvWindow         *window,
@@ -3992,6 +3994,9 @@ ev_window_run_presentation (EvWindow *window)
 	g_signal_connect_swapped (window->priv->presentation_view, "finished",
 				  G_CALLBACK (ev_window_view_presentation_finished),
 				  window);
+	g_signal_connect_swapped (window->priv->presentation_view, "external-link",
+				  G_CALLBACK (view_external_link_cb),
+				  window);
 
 	gtk_box_pack_start (GTK_BOX (window->priv->main_box),
 			    window->priv->presentation_view,
@@ -6229,7 +6234,7 @@ do_action_named (EvWindow *window, EvLinkAction *action)
 }
 
 static void
-view_external_link_cb (EvView *view, EvLinkAction *action, EvWindow *window)
+view_external_link_cb (EvWindow *window, EvLinkAction *action)
 {
 	switch (ev_link_action_get_action_type (action)) {
 	        case EV_LINK_ACTION_TYPE_GOTO_DEST: {
@@ -7191,9 +7196,9 @@ ev_window_init (EvWindow *ev_window)
 	g_signal_connect_object (ev_window->priv->view, "focus_out_event",
 			         G_CALLBACK (view_actions_focus_out_cb),
 			         ev_window, 0);
-	g_signal_connect_object (ev_window->priv->view, "external-link",
-			         G_CALLBACK (view_external_link_cb),
-			         ev_window, 0);
+	g_signal_connect_swapped (ev_window->priv->view, "external-link",
+				  G_CALLBACK (view_external_link_cb),
+				  ev_window);
 	g_signal_connect_object (ev_window->priv->view, "handle-link",
 			         G_CALLBACK (view_handle_link_cb),
 			         ev_window, 0);

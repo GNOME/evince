@@ -42,6 +42,7 @@ enum {
 enum {
 	CHANGE_PAGE,
 	FINISHED,
+        SIGNAL_EXTERNAL_LINK,
 	N_SIGNALS
 };
 
@@ -94,9 +95,11 @@ struct _EvViewPresentationClass
 	GtkWidgetClass base_class;
 
 	/* signals */
-	void (* change_page) (EvViewPresentation *pview,
-			      GtkScrollType       scroll);
-	void (* finished)    (EvViewPresentation *pview);
+	void (* change_page)   (EvViewPresentation *pview,
+                                GtkScrollType       scroll);
+	void (* finished)      (EvViewPresentation *pview);
+        void (* external_link) (EvViewPresentation *pview,
+                                EvLinkAction       *action);
 };
 
 static guint signals[N_SIGNALS] = { 0 };
@@ -732,6 +735,9 @@ ev_view_presentation_link_is_supported (EvViewPresentation *pview,
 	case EV_LINK_ACTION_TYPE_GOTO_DEST:
 		return ev_link_action_get_dest (action) != NULL;
 	case EV_LINK_ACTION_TYPE_NAMED:
+        case EV_LINK_ACTION_TYPE_GOTO_REMOTE:
+        case EV_LINK_ACTION_TYPE_EXTERNAL_URI:
+        case EV_LINK_ACTION_TYPE_LAUNCH:
 		return TRUE;
 	default:
 		return FALSE;
@@ -790,14 +796,15 @@ ev_view_presentation_get_link_at_location (EvViewPresentation *pview,
 }
 
 static void
-ev_vew_presentation_goto_link_dest (EvViewPresentation *pview,
-				    EvLink             *link)
+ev_vew_presentation_handle_link (EvViewPresentation *pview,
+                                 EvLink             *link)
 {
 	EvLinkAction *action;
 
 	action = ev_link_get_action (link);
 
-	if (ev_link_action_get_action_type (action) == EV_LINK_ACTION_TYPE_NAMED) {
+        switch (ev_link_action_get_action_type (action)) {
+	case EV_LINK_ACTION_TYPE_NAMED: {
 		const gchar *name = ev_link_action_get_name (action);
 
 		if (g_ascii_strcasecmp (name, "FirstPage") == 0) {
@@ -812,13 +819,25 @@ ev_vew_presentation_goto_link_dest (EvViewPresentation *pview,
 			n_pages = ev_document_get_n_pages (pview->document);
 			ev_view_presentation_update_current_page (pview, n_pages - 1);
 		}
-	} else {
+        }
+                break;
+
+	case EV_LINK_ACTION_TYPE_GOTO_DEST: {
 		EvLinkDest *dest;
 		gint        page;
 
 		dest = ev_link_action_get_dest (action);
 		page = ev_document_links_get_dest_page (EV_DOCUMENT_LINKS (pview->document), dest);
 		ev_view_presentation_update_current_page (pview, page);
+        }
+                break;
+        case EV_LINK_ACTION_TYPE_GOTO_REMOTE:
+        case EV_LINK_ACTION_TYPE_EXTERNAL_URI:
+        case EV_LINK_ACTION_TYPE_LAUNCH:
+                g_signal_emit (pview, signals[SIGNAL_EXTERNAL_LINK], 0, action);
+                break;
+        default:
+                break;
 	}
 }
 
@@ -1154,7 +1173,7 @@ ev_view_presentation_button_release_event (GtkWidget      *widget,
 								  event->x,
 								  event->y);
 		if (link)
-			ev_vew_presentation_goto_link_dest (pview, link);
+			ev_vew_presentation_handle_link (pview, link);
 		else
 			ev_view_presentation_next_page (pview);
 	}
@@ -1434,6 +1453,15 @@ ev_view_presentation_class_init (EvViewPresentationClass *klass)
 			      g_cclosure_marshal_VOID__VOID,
 			      G_TYPE_NONE, 0,
 			      G_TYPE_NONE);
+        signals[SIGNAL_EXTERNAL_LINK] =
+                g_signal_new ("external-link",
+                              G_TYPE_FROM_CLASS (gobject_class),
+                              G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
+                              G_STRUCT_OFFSET (EvViewPresentationClass, external_link),
+                              NULL, NULL,
+                              g_cclosure_marshal_VOID__OBJECT,
+                              G_TYPE_NONE, 1,
+                              G_TYPE_OBJECT);
 
 	binding_set = gtk_binding_set_by_class (klass);
 	add_change_page_binding_keypad (binding_set, GDK_KEY_Left,  0, GTK_SCROLL_PAGE_BACKWARD);
