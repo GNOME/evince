@@ -4626,16 +4626,17 @@ ev_view_set_property (GObject      *object,
 	}
 }
 
-static AtkObject *
-ev_view_get_accessible (GtkWidget *widget)
+/* Accessibility */
+static void
+ev_view_init_accessibility (EvView *view)
 {
 	static gboolean first_time = TRUE;
 
 	if (first_time)	{
 		AtkObjectFactory *factory;
 		AtkRegistry *registry;
-		GType derived_type; 
-		GType derived_atk_type; 
+		GType derived_type;
+		GType derived_atk_type;
 
 		/*
 		 * Figure out whether accessibility is enabled by looking at the
@@ -4652,11 +4653,24 @@ ev_view_get_accessible (GtkWidget *widget)
 			atk_registry_set_factory_type (registry,
 						       EV_TYPE_VIEW,
 						       ev_view_accessible_factory_get_type ());
-			EV_VIEW (widget)->a11y_enabled = TRUE;
+			view->a11y_enabled = TRUE;
 		}
 		first_time = FALSE;
-	} 
+	}
+}
+
+static AtkObject *
+ev_view_get_accessible (GtkWidget *widget)
+{
+	ev_view_init_accessibility (EV_VIEW (widget));
 	return GTK_WIDGET_CLASS (ev_view_parent_class)->get_accessible (widget);
+}
+
+static gboolean
+ev_view_is_a11y_enabled (EvView *view)
+{
+	ev_view_init_accessibility (view);
+	return view->a11y_enabled;
 }
 
 static void
@@ -4957,7 +4971,7 @@ setup_caches (EvView *view)
 	view->height_to_page_cache = ev_view_get_height_to_page_cache (view);
 	view->pixbuf_cache = ev_pixbuf_cache_new (GTK_WIDGET (view), view->model, view->pixbuf_cache_size);
 	view->page_cache = ev_page_cache_new (view->document);
-	if (view->a11y_enabled) {
+	if (ev_view_is_a11y_enabled (view)) {
 		EvJobPageDataFlags flags = ev_page_cache_get_flags (view->page_cache);
 
 		ev_page_cache_set_flags (view->page_cache,
