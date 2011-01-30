@@ -2,15 +2,15 @@
 # Francisco Javier F. Serrador <serrador@gnome.org>, 2005.
 # traducción al español del manual de evince
 # spanish transtation for evince
-# Jorge González <jorgegonz@svn.gnome.org>, 2006, 2007, 2009, 2010.
 # Daniel Mustieles <daniel.mustieles@gmail.com>, 2010, 2011.
+# Jorge González <jorgegonz@svn.gnome.org>, 2006, 2007, 2009, 2010, 2011.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: evince.help.master\n"
-"POT-Creation-Date: 2011-01-16 20:22+0000\n"
-"PO-Revision-Date: 2011-01-19 20:22+0100\n"
-"Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
+"POT-Creation-Date: 2011-01-24 20:55+0000\n"
+"PO-Revision-Date: 2011-01-30 13:18+0100\n"
+"Last-Translator: Jorge González <jorgegonz@svn.gnome.org>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -443,10 +443,10 @@ msgstr "Beamer es una clase LaTeX para crear diapositivas para presentaciones."
 #: C/synctex-beamer.page:23(p)
 msgid ""
 "You can perform forward and backward search in a <em>Beamer-LaTeX</em> "
-"presentation in a similar fashion to <link xref=\"synctex-search\">searchng</"
-"link> through other TeX files compiled with SyncTex. However the search "
-"brings you to the corresponding frame (slide), not necessarily the "
-"associated line of text. This difference is outlined in detail below."
+"presentation in a similar fashion to <link xref=\"synctex-search"
+"\">searching</link> through other TeX files compiled with SyncTex. However "
+"the search brings you to the corresponding frame (slide), not necessarily "
+"the associated line of text. This difference is outlined in detail below."
 msgstr ""
 
 #: C/synctex-beamer.page:27(title)
@@ -1065,11 +1065,14 @@ msgid "Enable the /desktop/gnome/interface/can_change_accels flag in gconf:"
 msgstr "Active la opción /desktop/gnome/interface/can_change_accels en gconf:"
 
 #: C/shortcuts.page:158(p)
+#| msgid ""
+#| "Press<keyseq><key>Alt</key><key>F2</key></keyseq>. The Run Application "
+#| "dialogue opens."
 msgid ""
-"Press<keyseq><key>Alt</key><key>F2</key></keyseq>. The Run Application "
+"Press <keyseq><key>Alt</key><key>F2</key></keyseq>. The Run Application "
 "dialogue opens."
 msgstr ""
-"Pulse <keyseq><key>Alt</key><key>F2</key></keyseq>. Se abre el diálogo "
+"Pulse <keyseq><key>Alt</key><key>F2</key></keyseq>. Se abrirá el diálogo "
 "«Ejecutar aplicación»."
 
 #: C/shortcuts.page:163(p)
@@ -1239,7 +1242,7 @@ msgstr "Imprimir"
 
 #: C/print-order.page:34(p)
 msgid ""
-"In the <gui>General</gui> tab of the Print window under <em>Copies</em> "
+"In the <gui>General</gui> tab of the Print window under <em>Copies</em>, "
 "check <gui>Reverse</gui>. The last page will be printed first, and so on."
 msgstr ""
 
@@ -1259,9 +1262,9 @@ msgstr ""
 msgid "To Collate:"
 msgstr "Cotejar:"
 
-#: C/print-order.page:51(p)
-msgid "Click<guiseq><gui>File</gui><gui>Print</gui></guiseq>"
-msgstr "Pulse<guiseq><gui>Archivo</gui><gui>Imprimir</gui></guiseq>"
+#: C/print-order.page:51(p) C/printing.page:27(p)
+msgid "Click <guiseq><gui>File</gui><gui>Print</gui></guiseq>"
+msgstr "Pulse <guiseq><gui>Archivo</gui><gui> Imprimir</gui></guiseq>"
 
 #: C/print-order.page:52(p)
 msgid ""
@@ -1280,10 +1283,6 @@ msgstr "Imprimir un documento"
 #: C/printing.page:25(p)
 msgid "To print a document:"
 msgstr "Para imprimir un documento:"
-
-#: C/printing.page:27(p)
-msgid "Click <guiseq><gui>File</gui><gui>Print</gui></guiseq>"
-msgstr "Pulse <guiseq><gui>Archivo</gui><gui> Imprimir</gui></guiseq>"
 
 #: C/printing.page:28(p)
 msgid "Choose your printer from the list"
@@ -1397,7 +1396,7 @@ msgid "Printer Allows Double-Sided Printing"
 msgstr "La impresora permite impresión a doble cara"
 
 #: C/print-2sided.page:8(desc)
-msgid "Printing two-sided and multi-page per per sheet."
+msgid "Printing two-sided and multi-page per sheet."
 msgstr ""
 
 #: C/print-2sided.page:21(title)
@@ -2098,8 +2097,8 @@ msgstr ""
 
 #: C/forms.page:25(p)
 msgid ""
-"You can make a selection in scrollable list box by clicking on the list box "
-"and scrolling to your choice with your mouse."
+"You can make a selection in a scrollable list box by clicking on the list "
+"box and scrolling to your choice with your mouse."
 msgstr ""
 
 #: C/forms.page:29(p)
@@ -2410,10 +2409,10 @@ msgid ""
 "Create a blank PDF document using <app>Open Office Word Processor</app>."
 msgstr ""
 
-#: C/duplex-7pages.page:99(p)
+#: C/duplex-7pages.page:99(p) C/duplex-11pages.page:97(p)
 msgid ""
 "Merge the blank PDF with your PDF document using <app>PDF-Shuffler</app> "
-"placing the blank page at the end.."
+"placing the blank page at the end."
 msgstr ""
 
 #: C/duplex-7pages.page:105(p) C/duplex-6pages.page:112(p)
@@ -2623,7 +2622,7 @@ msgstr ""
 #: C/duplex-13pages.page:95(p)
 msgid ""
 "Once page 3 has printed, place the paper back in the printer (taking care to "
-"orient it correctly (pages 4 and 13 will be printed on the other side)."
+"orient it correctly, pages 4 and 13 will be printed on the other side)."
 msgstr ""
 
 #: C/duplex-13pages.page:103(p)
@@ -2674,12 +2673,6 @@ msgstr ""
 msgid ""
 "It is easier to print a 12-page booklet. You may wish to add a blank page to "
 "your PDF document to make it 12-pages. To do so, you can:"
-msgstr ""
-
-#: C/duplex-11pages.page:97(p)
-msgid ""
-"Merge the blank PDF with your PDF document using <app>PDF-Shuffler</app> "
-"placing the blank page at the end."
 msgstr ""
 
 #: C/duplex-10pages.page:8(desc)
@@ -3041,17 +3034,19 @@ msgstr ""
 
 #: C/annotations.page:49(p)
 msgid "Select the <gui>Add</gui> tab."
-msgstr ""
+msgstr "Seleccione la solapa <gui>Añadir</gui>."
 
 #: C/annotations.page:54(p)
 msgid "Click on the icon to add a text annotation."
-msgstr ""
+msgstr "Pulse en el icono para añadir una anotación de texto."
 
 #: C/annotations.page:60(p)
 msgid ""
 "Click on the spot in the document window you would like to add the annotion "
 "to. Your <em>annotation</em> window will open."
 msgstr ""
+"Pulse en la posición en la ventana del documento donde quiera añadir la "
+"anotación. Se abrirá la ventana de <em>anotación</em>."
 
 #: C/annotations.page:65(p)
 msgid "Type your text into the <em>annotation</em> window."
@@ -3109,7 +3104,7 @@ msgstr ""
 
 #: C/annotations-disabled.page:7(desc)
 msgid "Annotations can only be added to PDF files."
-msgstr ""
+msgstr "Las anotaciones sólo se pueden añadir a los archivos PDF."
 
 #: C/annotations-disabled.page:18(title)
 msgid "Can't Add Annotations?"
@@ -3120,6 +3115,9 @@ msgid ""
 "Annotations can only be added to PDF files. If your file is of a format "
 "other than PDF, the option to add annotations will be greyed out (disabled)."
 msgstr ""
+"Las anotaciones sólo se pueden añadir a archivos PDF. Si su archivo está en "
+"otro formato diferente de PDF, la opción para añadir anotaciones estará en "
+"gris (desactivada)."
 
 #: C/annotations-delete.page:7(desc)
 msgid "You can not remove annotations."
@@ -3150,7 +3148,7 @@ msgstr ""
 
 #: C/annotation-properties.page:29(p)
 msgid "Select <gui>Annotation Properties.</gui>"
-msgstr ""
+msgstr "Seleccione <gui>Propiedades de la anotación...</gui>"
 
 #: C/annotation-properties.page:34(p)
 msgid ""
@@ -3165,10 +3163,14 @@ msgid ""
 "The annotation properties will be applied to the note for which you made the "
 "changes only. Each note can have a different set of properties."
 msgstr ""
+"Las propiedades de anotación se aplicarán solamente para la nota en la que "
+"realiza los cambios. Cada nota puede tener un conjunto de propiedades "
+"diferentes."
 
 #: C/annotation-properties.page:47(title)
 msgid "Can I permanently change the default annotation properties?"
 msgstr ""
+"¿Puedo cambiar permanentemente las propiedades de anotación predeterminadas?"
 
 #: C/annotation-properties.page:48(p)
 msgid ""
@@ -3179,6 +3181,13 @@ msgid ""
 "individually on each note. There is no way to save different default "
 "settings for annotation properties, at this time."
 msgstr ""
+"Las propiedades de anotación predeterminadas (autor, color, estilo e icono) "
+"sólo se pueden cambiar en una nota particular como se comentó anteriormente. "
+"De tal forma que si quiere que todos los iconos de sus notas sean de color "
+"<gui>rojo</gui> en lugar de <gui>amarillo</gui>, deberá cambiar el valor "
+"predeterminado de <gui>amarillo</gui> a <gui>rojo</gui> individualmente en "
+"cada nota. En este momento no existe una forma de guardar ajustes "
+"predeterminados diferentes para las propiedades de anotación."
 
 #. Put one translator per line, in the form of NAME <EMAIL>, YEAR1, YEAR2
 #: C/index.page:0(None)
@@ -3186,6 +3195,9 @@ msgid "translator-credits"
 msgstr ""
 "Daniel Mustieles <daniel.mustieles@gmail.com>, 2010\n"
 "Jorge González <jorgegonz@svn.gnome.org>, 2010"
+
+#~ msgid "Click<guiseq><gui>File</gui><gui>Print</gui></guiseq>"
+#~ msgstr "Pulse<guiseq><gui>Archivo</gui><gui>Imprimir</gui></guiseq>"
 
 #~ msgid "Change the size of the document by zooming in or out of the page."
 #~ msgstr "Cambiar el tamaño del documento ampliando o reduciendo la página."
