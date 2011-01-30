@@ -6300,6 +6300,30 @@ ev_view_popup_cmd_copy_link_address (GtkAction *action, EvWindow *window)
 				   ev_action);
 }
 
+static GFile *
+create_file_from_uri_for_format (const gchar     *uri,
+				 GdkPixbufFormat *format)
+{
+	GFile  *target_file;
+	gchar **extensions;
+	gchar  *uri_extension;
+	gint    i;
+
+	extensions = gdk_pixbuf_format_get_extensions (format);
+	for (i = 0; extensions[i]; i++) {
+		if (g_str_has_suffix (uri, extensions[i])) {
+			g_strfreev (extensions);
+			return g_file_new_for_uri (uri);
+		}
+	}
+
+	uri_extension = g_strconcat (uri, ".", extensions[0], NULL);
+	target_file = g_file_new_for_uri (uri_extension);
+	g_free (uri_extension);
+	g_strfreev (extensions);
+
+	return target_file;
+}
 
 static void
 image_save_dialog_response_cb (GtkWidget *fc,
@@ -6311,7 +6335,6 @@ image_save_dialog_response_cb (GtkWidget *fc,
 	GError          *error = NULL;
 	GdkPixbuf       *pixbuf;
 	gchar           *uri;
-	gchar 	       **extensions;
 	gchar           *filename;
 	gchar           *file_format;
 	GdkPixbufFormat *format;
@@ -6349,19 +6372,9 @@ image_save_dialog_response_cb (GtkWidget *fc,
 		return;
 	}
 
-	extensions = gdk_pixbuf_format_get_extensions (format);
-	if (!g_str_has_suffix (uri, extensions[0])) {
-		gchar *uri_extension;
-		
-		uri_extension = g_strconcat (uri, ".", extensions[0], NULL);
-		target_file = g_file_new_for_uri (uri_extension);
-		g_free (uri_extension);
-	} else {
-		target_file = g_file_new_for_uri (uri);
-	}
-	g_strfreev (extensions);
+	target_file = create_file_from_uri_for_format (uri, format);
 	g_free (uri);
-	
+
 	is_native = g_file_is_native (target_file);
 	if (is_native) {
 		filename = g_file_get_path (target_file);
