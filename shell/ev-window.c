@@ -1466,8 +1466,15 @@ ev_window_set_document (EvWindow *ev_window, EvDocument *document)
 	}
 
 	if (EV_WINDOW_IS_PRESENTATION (ev_window)) {
+		gint current_page;
+
+		current_page = ev_view_presentation_get_current_page (
+			EV_VIEW_PRESENTATION (ev_window->priv->presentation_view));
 		gtk_widget_destroy (ev_window->priv->presentation_view);
 		ev_window->priv->presentation_view = NULL;
+
+		/* Update the model with the current presentation page */
+		ev_document_model_set_page (ev_window->priv->model, current_page);
 		ev_window_run_presentation (ev_window);
 	}
 
