@@ -6709,9 +6709,15 @@ ev_window_media_player_key_pressed (EvWindow    *window,
 	if (strcmp (key, "Play") == 0) {
 		ev_window_run_presentation (window);
 	} else if (strcmp (key, "Previous") == 0) {
-		ev_window_cmd_go_previous_page (NULL, window);
+		if (EV_WINDOW_IS_PRESENTATION (window))
+			ev_view_presentation_previous_page (EV_VIEW_PRESENTATION (window->priv->presentation_view));
+		else
+			ev_window_cmd_go_previous_page (NULL, window);
 	} else if (strcmp (key, "Next") == 0) {
-		ev_window_cmd_go_next_page (NULL, window);
+		if (EV_WINDOW_IS_PRESENTATION (window))
+			ev_view_presentation_next_page (EV_VIEW_PRESENTATION (window->priv->presentation_view));
+		else
+			ev_window_cmd_go_next_page (NULL, window);
 	} else if (strcmp (key, "FastForward") == 0) {
 		ev_window_cmd_go_last_page (NULL, window);
 	} else if (strcmp (key, "Rewind") == 0) {
