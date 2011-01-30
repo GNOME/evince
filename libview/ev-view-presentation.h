@@ -45,6 +45,8 @@ GtkWidget      *ev_view_presentation_new	      (EvDocument         *document,
 						       guint               rotation,
 						       gboolean            inverted_colors);
 guint           ev_view_presentation_get_current_page (EvViewPresentation *pview);
+void            ev_view_presentation_next_page        (EvViewPresentation *pview);
+void            ev_view_presentation_previous_page    (EvViewPresentation *pview);
 
 G_END_DECLS
 

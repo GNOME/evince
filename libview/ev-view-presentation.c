@@ -104,8 +104,6 @@ struct _EvViewPresentationClass
 
 static guint signals[N_SIGNALS] = { 0 };
 
-static void ev_view_presentation_next_page               (EvViewPresentation *pview);
-static void ev_view_presentation_previous_page           (EvViewPresentation *pview);
 static void ev_view_presentation_set_cursor_for_location (EvViewPresentation *pview,
 							  gdouble             x,
 							  gdouble             y);
@@ -485,7 +483,7 @@ ev_view_presentation_update_current_page (EvViewPresentation *pview,
 		gtk_widget_queue_draw (GTK_WIDGET (pview));
 }
 
-static void
+void
 ev_view_presentation_next_page (EvViewPresentation *pview)
 {
 	guint n_pages;
@@ -510,7 +508,7 @@ ev_view_presentation_next_page (EvViewPresentation *pview)
 		ev_view_presentation_update_current_page (pview, new_page);
 }
 
-static void
+void
 ev_view_presentation_previous_page (EvViewPresentation *pview)
 {
 	gint new_page = 0;
