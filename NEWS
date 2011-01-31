@@ -1,4 +1,48 @@
 ================
+Evince  2.91.6
+================
+
+New Features and UI Improvements:
+
+    * Add support for external links in presentation mode (#628711,
+      Carlos Garcia Campos)
+
+Documentation:
+
+    * Fix a few minor mistakes in the manual (#640345, Christian
+      Kirbach)
+
+Bug fixes:
+
+    * Move to next/previous page with media keys in presentation mode
+      too (#625560, Carlos Garcia Campos)
+    * Remember the current page when document is reloaded in
+      presentation mode (#637594, Carlos Garcia Campos)
+    * Check all extensions when saving an image to avoid adding the
+      extension twice (#637461, Carlos Garcia Campos)
+    * Prevent the sidebar to get the focus when selected thumbnail
+      changes (#639408, Daniel Garcia)
+    * Make sure a11y is initialized before checking whether it's
+      enabled (#639850, Carlos Garcia Campos, Daniel Garcia)
+    * Call gdk_notify_startup_complete() when acting as remote to
+      prevent a hung startup notification when opening a document for
+      the second time (#640115, David Benjamin)
+    * Fix rendering issue with some fonts in dvi backend (José Aliste)
+
+Translation updates:
+
+    * Khaled Hosny (ar)
+    * Krasimir Chonov (bg)
+    * Christian Kirbach (de)
+    * Mario Blättermann (de)
+    * Michael Kotsarinis (el)
+    * Jorge González (es)
+    * Iñaki Larrañaga Murgoitio (eu)
+    * Fran Diéguez (gl)
+    * Torstein Adolf Winterseth (nb)
+    * A S Alam (pa)
+
+================
 Evince  2.91.5
 ================
 
