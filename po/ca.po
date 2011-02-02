@@ -1,297 +1,294 @@
-# Catalan translation of GConf.
-# Copyright © 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008
-#    Free Software Foundation, Inc.
-# This file is distributed under the same licence as the gconf package.
-# Softcatalà <info@softcatala.org>, 2000, 2001, 2002.
-# Gisella Carbonell <gcarbonell@arrakis.es>, 2002.
-# Jordi Mallach <jordi@sindominio.net>, 2003, 2004, 2005, 2006.
-# Gil Forcada <gilforcada@guifi.net>, 2007, 2008.
+# Catalan translation of evince.
+# Copyright © 2005, 2006 Free Software Foundation, Inc.
+# This file is distributed under the same license as the evince package.
+# Gil Forcada <gilforcada@guifi.net>, 2005, 2006, 2007, 2008, 2009, 2010.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gconf\n"
+"Project-Id-Version: evince\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-02-01 23:24+0100\n"
-"PO-Revision-Date: 2011-01-29 10:19+0100\n"
+"POT-Creation-Date: 2011-02-02 22:58+0100\n"
+"PO-Revision-Date: 2011-01-23 23:49+0100\n"
 "Last-Translator: Gil Forcada <gilforcada@guifi.net>\n"
 "Language-Team: Catalan <tradgnome@softcatala.org>\n"
 "Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #: ../backend/comics/comics-document.c:210
 #, c-format
 msgid ""
 "Error launching the command “%s” in order to decompress the comic book: %s"
 msgstr ""
+"S'ha produït un error en executar l'ordre «%s» per poder descomprimir el "
+"còmic: %s"
 
 #: ../backend/comics/comics-document.c:224
 #, c-format
 msgid "The command “%s” failed at decompressing the comic book."
-msgstr ""
+msgstr "No s'ha pogut descomprimir el còmic amb l'ordre «%s»."
 
 #: ../backend/comics/comics-document.c:233
 #, c-format
 msgid "The command “%s” did not end normally."
-msgstr ""
+msgstr "L'ordre «%s» no ha finalitzat correctament."
 
 #: ../backend/comics/comics-document.c:413
 #, c-format
 msgid "Not a comic book MIME type: %s"
-msgstr ""
+msgstr "El tipus MIME no és d'un còmic: %s"
 
 #: ../backend/comics/comics-document.c:420
 msgid "Can't find an appropriate command to decompress this type of comic book"
 msgstr ""
+"No es pot trobar una ordre adequada per descomprimir aquest tipus de còmic"
 
 #: ../backend/comics/comics-document.c:458
 #: ../libdocument/ev-document-factory.c:93
 #: ../libdocument/ev-document-factory.c:230
 msgid "Unknown MIME Type"
-msgstr ""
+msgstr "Tipus MIME desconegut"
 
 #: ../backend/comics/comics-document.c:485
 msgid "File corrupted"
-msgstr ""
+msgstr "El fitxer està malmès"
 
 #: ../backend/comics/comics-document.c:498
 msgid "No files in archive"
-msgstr ""
+msgstr "No hi ha cap fitxer a l'arxiu"
 
 #: ../backend/comics/comics-document.c:537
-#, fuzzy, c-format
+#, c-format
 msgid "No images found in archive %s"
-msgstr "No hi ha cap valor per a la clau %s\n"
+msgstr "No s'han trobat imatges a l'arxiu %s"
 
 #: ../backend/comics/comics-document.c:781
 #, c-format
 msgid "There was an error deleting “%s”."
-msgstr ""
+msgstr "S'ha produït un error en suprimir «%s»."
 
 #: ../backend/comics/comics-document.c:874
-#, fuzzy, c-format
+#, c-format
 msgid "Error %s"
-msgstr "Error: %s\n"
+msgstr "Error %s"
 
 #: ../backend/comics/comicsdocument.evince-backend.in.h:1
 msgid "Comic Books"
-msgstr ""
+msgstr "Còmics"
 
 #: ../backend/djvu/djvu-document.c:170
 msgid "DjVu document has incorrect format"
-msgstr ""
+msgstr "El document DjVu té un format incorrecte"
 
 #: ../backend/djvu/djvu-document.c:247
 msgid ""
 "The document is composed of several files. One or more of these files cannot "
 "be accessed."
 msgstr ""
+"El document és format per diversos fitxers, un o més dels quals són "
+"inaccessibles."
 
 #: ../backend/djvu/djvudocument.evince-backend.in.h:1
 msgid "DjVu Documents"
-msgstr ""
+msgstr "Documents DjVu"
 
 #: ../backend/dvi/dvi-document.c:110
 msgid "DVI document has incorrect format"
-msgstr ""
+msgstr "El document DVI té un format incorrecte"
 
 #: ../backend/dvi/dvidocument.evince-backend.in.h:1
 msgid "DVI Documents"
-msgstr ""
+msgstr "Documents DVI"
 
 #: ../backend/pdf/ev-poppler.cc:590
 msgid "This work is in the Public Domain"
-msgstr ""
+msgstr "Aquest treball és de domini públic"
 
 #. translators: this is the document security state
 #: ../backend/pdf/ev-poppler.cc:844 ../backend/pdf/ev-poppler.cc:850
 msgid "Yes"
-msgstr ""
+msgstr "Sí"
 
 #. translators: this is the document security state
 #: ../backend/pdf/ev-poppler.cc:847 ../backend/pdf/ev-poppler.cc:850
 msgid "No"
-msgstr ""
+msgstr "No"
 
 #: ../backend/pdf/ev-poppler.cc:978
-#, fuzzy
 msgid "Type 1"
-msgstr "Tipus: %s\n"
+msgstr "Tipus 1"
 
 #: ../backend/pdf/ev-poppler.cc:980
-#, fuzzy
 msgid "Type 1C"
-msgstr "Tipus: %s\n"
+msgstr "Tipus 1C"
 
 #: ../backend/pdf/ev-poppler.cc:982
-#, fuzzy
 msgid "Type 3"
-msgstr "Tipus: %s\n"
+msgstr "Tipus 3"
 
 #: ../backend/pdf/ev-poppler.cc:984
 msgid "TrueType"
-msgstr ""
+msgstr "TrueType"
 
 #: ../backend/pdf/ev-poppler.cc:986
 msgid "Type 1 (CID)"
-msgstr ""
+msgstr "Tipus 1 (CID)"
 
 #: ../backend/pdf/ev-poppler.cc:988
 msgid "Type 1C (CID)"
-msgstr ""
+msgstr "Tipus 1C (CID)"
 
 #: ../backend/pdf/ev-poppler.cc:990
 msgid "TrueType (CID)"
-msgstr ""
+msgstr "TrueType (CID)"
 
 #: ../backend/pdf/ev-poppler.cc:992
 msgid "Unknown font type"
-msgstr ""
+msgstr "Tipus de lletra desconegut"
 
 #: ../backend/pdf/ev-poppler.cc:1018
 msgid "No name"
-msgstr ""
+msgstr "Sense nom"
 
 #: ../backend/pdf/ev-poppler.cc:1026
 msgid "Embedded subset"
-msgstr ""
+msgstr "Subconjunt incrustat"
 
 #: ../backend/pdf/ev-poppler.cc:1028
 msgid "Embedded"
-msgstr ""
+msgstr "Incrustat"
 
 #: ../backend/pdf/ev-poppler.cc:1030
 msgid "Not embedded"
-msgstr ""
+msgstr "No incrustat"
 
 #: ../backend/pdf/pdfdocument.evince-backend.in.h:1
 msgid "PDF Documents"
-msgstr ""
+msgstr "Documents PDF"
 
 #: ../backend/ps/ev-spectre.c:98
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to load document “%s”"
-msgstr "No s'ha pogut carregar la font «%s»: %s"
+msgstr "No s'ha pogut carregar el document «%s»"
 
 #: ../backend/ps/ev-spectre.c:131
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to save document “%s”"
-msgstr "No s'ha pogut obtenir l'IOR per al client: %s"
+msgstr "No s'ha pogut desar el document «%s»"
 
 #: ../backend/ps/psdocument.evince-backend.in.h:1
 msgid "PostScript Documents"
-msgstr ""
+msgstr "Documents PostScript"
 
 #: ../backend/tiff/tiff-document.c:109
 msgid "Invalid document"
-msgstr ""
+msgstr "Document invàlid"
 
 #: ../libdocument/ev-attachment.c:304 ../libdocument/ev-attachment.c:325
-#, fuzzy, c-format
+#, c-format
 msgid "Couldn't save attachment “%s”: %s"
-msgstr "No s'ha pogut fer «stat» sobre «%s»: %s"
+msgstr "No s'ha pogut desar l'adjunció «%s»: %s"
 
 #: ../libdocument/ev-attachment.c:372
-#, fuzzy, c-format
+#, c-format
 msgid "Couldn't open attachment “%s”: %s"
-msgstr "No s'ha pogut obrir el fitxer de camins «%s»: %s\n"
+msgstr "No s'ha pogut obrir l'adjunció «%s»: %s"
 
 #: ../libdocument/ev-attachment.c:407
-#, fuzzy, c-format
+#, c-format
 msgid "Couldn't open attachment “%s”"
-msgstr "No s'ha pogut obrir el fitxer de camins «%s»: %s\n"
+msgstr "No s'ha pogut obrir l'adjunció «%s»"
 
 #: ../libdocument/ev-document-factory.c:112
 #, c-format
 msgid "File type %s (%s) is not supported"
-msgstr ""
+msgstr "Encara no es pot gestionar el tipus de fitxer %s (%s)"
 
 #: ../libdocument/ev-document-factory.c:283
 msgid "All Documents"
-msgstr ""
+msgstr "Tots els documents"
 
 #: ../libdocument/ev-document-factory.c:315
 msgid "All Files"
-msgstr ""
+msgstr "Tots els fitxers"
 
 #: ../libdocument/ev-file-helpers.c:146
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to create a temporary file: %s"
-msgstr "No s'ha pogut crear el fitxer «%s»: %s"
+msgstr "No s'ha pogut crear el fitxer temporal: %s"
 
 #: ../libdocument/ev-file-helpers.c:308
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to create a temporary directory: %s"
-msgstr "No s'ha pogut suprimir el directori de blocatge «%s»: %s"
+msgstr "No s'ha pogut crear el directori temporal: %s"
 
 #: ../cut-n-paste/smclient/eggdesktopfile.c:165
 #, c-format
 msgid "File is not a valid .desktop file"
-msgstr ""
+msgstr "El fitxer no és un fitxer .desktop vàlid"
 
 #: ../cut-n-paste/smclient/eggdesktopfile.c:188
 #, c-format
 msgid "Unrecognized desktop file Version '%s'"
-msgstr ""
+msgstr "Es desconeix la versió «%s» del fitxer d'escriptori"
 
 #: ../cut-n-paste/smclient/eggdesktopfile.c:968
 #, c-format
 msgid "Starting %s"
-msgstr ""
+msgstr "S'està iniciant %s"
 
 #: ../cut-n-paste/smclient/eggdesktopfile.c:1110
 #, c-format
 msgid "Application does not accept documents on command line"
-msgstr ""
+msgstr "L'aplicació no accepta documents des de la línia d'ordres"
 
 #: ../cut-n-paste/smclient/eggdesktopfile.c:1178
 #, c-format
 msgid "Unrecognized launch option: %d"
-msgstr ""
+msgstr "Opció d'execució desconeguda: %d"
 
 #: ../cut-n-paste/smclient/eggdesktopfile.c:1383
 #, c-format
 msgid "Can't pass document URIs to a 'Type=Link' desktop entry"
 msgstr ""
+"No es pot passar els URI del document a una entrada d'escriptori del tipus "
+"«Type=Link»"
 
 #: ../cut-n-paste/smclient/eggdesktopfile.c:1404
 #, c-format
 msgid "Not a launchable item"
-msgstr ""
+msgstr "No és un element executable"
 
 #: ../cut-n-paste/smclient/eggsmclient.c:226
-#, fuzzy
 msgid "Disable connection to session manager"
-msgstr "No s'ha pogut obtenir una connexió a la sessió: %s"
+msgstr "Inhabilita la connexió al gestor de sessions"
 
 #: ../cut-n-paste/smclient/eggsmclient.c:229
 msgid "Specify file containing saved configuration"
-msgstr ""
+msgstr "Especifica el fitxer que conté la configuració desada"
 
 #: ../cut-n-paste/smclient/eggsmclient.c:229 ../previewer/ev-previewer.c:45
 #: ../previewer/ev-previewer.c:46
-#, fuzzy
 msgid "FILE"
-msgstr "NOM DEL FITXER"
+msgstr "FITXER"
 
 #: ../cut-n-paste/smclient/eggsmclient.c:232
 msgid "Specify session management ID"
-msgstr ""
+msgstr "Especifica l'identificador de gestió de sessió"
 
 #: ../cut-n-paste/smclient/eggsmclient.c:232
 msgid "ID"
-msgstr ""
+msgstr "Identificador"
 
 #: ../cut-n-paste/smclient/eggsmclient.c:253
-#, fuzzy
 msgid "Session management options:"
-msgstr "Opcions del client:"
+msgstr "Opcions de gestió de la sessió:"
 
 #: ../cut-n-paste/smclient/eggsmclient.c:254
-#, fuzzy
 msgid "Show session management options"
-msgstr "Mostra les opcions del client"
+msgstr "Mostra les opcions de gestió de la sessió"
 
 #. Translaters: This string is for a toggle to display a toolbar.
 #. * The name of the toolbar is automatically computed from the widgets
@@ -303,264 +300,264 @@ msgstr "Mostra les opcions del client"
 #: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:946
 #, c-format
 msgid "Show “_%s”"
-msgstr ""
+msgstr "Mostra «_%s»"
 
 #: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1414
 msgid "_Move on Toolbar"
-msgstr ""
+msgstr "_Mou a la barra d'eines"
 
 #: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1415
 msgid "Move the selected item on the toolbar"
-msgstr ""
+msgstr "Mou l'element seleccionat a la barra d'eines"
 
 #: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1416
 msgid "_Remove from Toolbar"
-msgstr ""
+msgstr "Sup_rimeix de la barra d'eines"
 
 #: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1417
 msgid "Remove the selected item from the toolbar"
-msgstr ""
+msgstr "Suprimeix l'element seleccionat de la barra d'eines"
 
 #: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1418
 msgid "_Delete Toolbar"
-msgstr ""
+msgstr "Sup_rimeix la barra d'eines"
 
 #: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1419
 msgid "Remove the selected toolbar"
-msgstr ""
+msgstr "Suprimeix la barra d'eines seleccionada"
 
 #: ../cut-n-paste/toolbar-editor/egg-toolbar-editor.c:486
 msgid "Separator"
-msgstr ""
+msgstr "Separador"
 
 #. translators: this is the label for toolbar button
 #: ../cut-n-paste/zoom-control/ephy-zoom.h:48 ../shell/ev-window.c:5962
 msgid "Best Fit"
-msgstr ""
+msgstr "Millor ajust"
 
 #: ../cut-n-paste/zoom-control/ephy-zoom.h:49
 msgid "Fit Page Width"
-msgstr ""
+msgstr "Ajusta a l'amplada de la pàgina"
 
 #: ../cut-n-paste/zoom-control/ephy-zoom.h:51
 msgid "50%"
-msgstr ""
+msgstr "50%"
 
 #: ../cut-n-paste/zoom-control/ephy-zoom.h:52
 msgid "70%"
-msgstr ""
+msgstr "70%"
 
 #: ../cut-n-paste/zoom-control/ephy-zoom.h:53
 msgid "85%"
-msgstr ""
+msgstr "85%"
 
 #: ../cut-n-paste/zoom-control/ephy-zoom.h:54
 msgid "100%"
-msgstr ""
+msgstr "100%"
 
 #: ../cut-n-paste/zoom-control/ephy-zoom.h:55
 msgid "125%"
-msgstr ""
+msgstr "125%"
 
 #: ../cut-n-paste/zoom-control/ephy-zoom.h:56
 msgid "150%"
-msgstr ""
+msgstr "150%"
 
 #: ../cut-n-paste/zoom-control/ephy-zoom.h:57
 msgid "175%"
-msgstr ""
+msgstr "175%"
 
 #: ../cut-n-paste/zoom-control/ephy-zoom.h:58
 msgid "200%"
-msgstr ""
+msgstr "200%"
 
 #: ../cut-n-paste/zoom-control/ephy-zoom.h:59
 msgid "300%"
-msgstr ""
+msgstr "300%"
 
 #: ../cut-n-paste/zoom-control/ephy-zoom.h:60
 msgid "400%"
-msgstr ""
+msgstr "400%"
 
 #: ../cut-n-paste/zoom-control/ephy-zoom.h:61
 msgid "800%"
-msgstr ""
+msgstr "800%"
 
 #: ../cut-n-paste/zoom-control/ephy-zoom.h:62
 msgid "1600%"
-msgstr ""
+msgstr "1600%"
 
 #: ../cut-n-paste/zoom-control/ephy-zoom.h:63
 msgid "3200%"
-msgstr ""
+msgstr "3200%"
 
 #: ../cut-n-paste/zoom-control/ephy-zoom.h:64
 msgid "6400%"
-msgstr ""
+msgstr "6400%"
 
 #. Manually set name and icon
 #: ../data/evince.desktop.in.in.h:1 ../shell/ev-window.c:4727
 #: ../shell/ev-window-title.c:157 ../shell/main.c:310
 #, c-format
 msgid "Document Viewer"
-msgstr ""
+msgstr "Visualitzador de documents"
 
 #: ../data/evince.desktop.in.in.h:2
 msgid "View multi-page documents"
-msgstr ""
+msgstr "Visualitzeu documents multi-pàgina"
 
 #: ../data/org.gnome.Evince.gschema.xml.in.h:1
 msgid "Override document restrictions"
-msgstr ""
+msgstr "No facis cas de les restriccions del document"
 
 #: ../data/org.gnome.Evince.gschema.xml.in.h:2
 msgid "Override document restrictions, like restriction to copy or to print."
 msgstr ""
+"No facis cas de les restriccions del document, com les de còpia o "
+"d'impressió."
 
 #: ../previewer/ev-previewer.c:44
 msgid "Delete the temporary file"
-msgstr ""
+msgstr "Suprimeix el fitxer temporal"
 
 #: ../previewer/ev-previewer.c:45
 msgid "Print settings file"
-msgstr ""
+msgstr "Imprimeix el fitxer de configuració"
 
 #: ../previewer/ev-previewer.c:144 ../previewer/ev-previewer.c:178
 msgid "GNOME Document Previewer"
-msgstr ""
+msgstr "Visualitzador de documents del GNOME"
 
 #: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3274
-#, fuzzy
 msgid "Failed to print document"
-msgstr "No s'ha pogut apagar el sistema de rerefons"
+msgstr "No s'ha pogut imprimir el document"
 
 #: ../previewer/ev-previewer-window.c:237
 #, c-format
 msgid "The selected printer '%s' could not be found"
-msgstr ""
+msgstr "No s'ha pogut trobar la impressora «%s»"
 
 #. Go menu
 #: ../previewer/ev-previewer-window.c:284 ../shell/ev-window.c:5661
 msgid "_Previous Page"
-msgstr ""
+msgstr "Pàgina _anterior"
 
 #: ../previewer/ev-previewer-window.c:285 ../shell/ev-window.c:5662
 msgid "Go to the previous page"
-msgstr ""
+msgstr "Vés a la pàgina anterior"
 
 #: ../previewer/ev-previewer-window.c:287 ../shell/ev-window.c:5664
 msgid "_Next Page"
-msgstr ""
+msgstr "Pàgina _següent"
 
 #: ../previewer/ev-previewer-window.c:288 ../shell/ev-window.c:5665
 msgid "Go to the next page"
-msgstr ""
+msgstr "Vés a la pàgina següent"
 
 #: ../previewer/ev-previewer-window.c:291 ../shell/ev-window.c:5648
 msgid "Enlarge the document"
-msgstr ""
+msgstr "Amplia el document"
 
 #: ../previewer/ev-previewer-window.c:294 ../shell/ev-window.c:5651
 msgid "Shrink the document"
-msgstr ""
+msgstr "Encongeix el document"
 
 #: ../previewer/ev-previewer-window.c:297 ../libview/ev-print-operation.c:1308
 msgid "Print"
-msgstr ""
+msgstr "Imprimeix"
 
 #: ../previewer/ev-previewer-window.c:298 ../shell/ev-window.c:5617
 msgid "Print this document"
-msgstr ""
+msgstr "Imprimeix el document"
 
 #: ../previewer/ev-previewer-window.c:342 ../shell/ev-window.c:5768
 msgid "_Best Fit"
-msgstr ""
+msgstr "_Millor ajust"
 
 #: ../previewer/ev-previewer-window.c:343 ../shell/ev-window.c:5769
 msgid "Make the current document fill the window"
-msgstr ""
+msgstr "Fes que el document ompli la finestra"
 
 #: ../previewer/ev-previewer-window.c:345 ../shell/ev-window.c:5771
 msgid "Fit Page _Width"
-msgstr ""
+msgstr "Aj_usta a l'amplada de la pàgina"
 
 #: ../previewer/ev-previewer-window.c:346 ../shell/ev-window.c:5772
 msgid "Make the current document fill the window width"
-msgstr ""
+msgstr "Fes que el document encaixi a l'amplada de la finestra"
 
 #: ../previewer/ev-previewer-window.c:558 ../shell/ev-window.c:5880
 msgid "Page"
-msgstr ""
+msgstr "Pàgina"
 
 #: ../previewer/ev-previewer-window.c:559 ../shell/ev-window.c:5881
 msgid "Select Page"
-msgstr ""
+msgstr "Selecciona la pàgina"
 
 #: ../properties/ev-properties-main.c:116
 msgid "Document"
-msgstr ""
+msgstr "Document"
 
 #: ../properties/ev-properties-view.c:60
 msgid "Title:"
-msgstr ""
+msgstr "Títol:"
 
 #: ../properties/ev-properties-view.c:61
 msgid "Location:"
-msgstr ""
+msgstr "Ubicació:"
 
 #: ../properties/ev-properties-view.c:62
 msgid "Subject:"
-msgstr ""
+msgstr "Assumpte:"
 
 #: ../properties/ev-properties-view.c:63
 #: ../shell/ev-annotation-properties-dialog.c:159
 msgid "Author:"
-msgstr ""
+msgstr "Autor:"
 
 #: ../properties/ev-properties-view.c:64
 msgid "Keywords:"
-msgstr ""
+msgstr "Paraules clau:"
 
 #: ../properties/ev-properties-view.c:65
 msgid "Producer:"
-msgstr ""
+msgstr "Productor:"
 
 #: ../properties/ev-properties-view.c:66
 msgid "Creator:"
-msgstr ""
+msgstr "Creador:"
 
 #: ../properties/ev-properties-view.c:67
 msgid "Created:"
-msgstr ""
+msgstr "Creat:"
 
 #: ../properties/ev-properties-view.c:68
 msgid "Modified:"
-msgstr ""
+msgstr "Modificat:"
 
 #: ../properties/ev-properties-view.c:69
 msgid "Number of Pages:"
-msgstr ""
+msgstr "Nombre de pàgines:"
 
 #: ../properties/ev-properties-view.c:70
 msgid "Optimized:"
-msgstr ""
+msgstr "Optimitzat:"
 
 #: ../properties/ev-properties-view.c:71
 msgid "Format:"
-msgstr ""
+msgstr "Format:"
 
 #: ../properties/ev-properties-view.c:72
 msgid "Security:"
-msgstr ""
+msgstr "Seguretat:"
 
 #: ../properties/ev-properties-view.c:73
 msgid "Paper Size:"
-msgstr ""
+msgstr "Mida del paper:"
 
 #: ../properties/ev-properties-view.c:188 ../libview/ev-print-operation.c:1892
-#, fuzzy
 msgid "None"
-msgstr "cap"
+msgstr "Cap"
 
 #. Translate to the default units to use for presenting
 #. * lengths to the user. Translate to default:inch if you
@@ -570,89 +567,89 @@ msgstr "cap"
 #.
 #: ../properties/ev-properties-view.c:217
 msgid "default:mm"
-msgstr ""
+msgstr "default:mm"
 
 #: ../properties/ev-properties-view.c:261
 #, c-format
 msgid "%.0f × %.0f mm"
-msgstr ""
+msgstr "%.0f × %.0f mm"
 
 #: ../properties/ev-properties-view.c:265
 #, c-format
 msgid "%.2f × %.2f inch"
-msgstr ""
+msgstr "%.2f × %.2f polzades"
 
 #. Note to translators: first placeholder is the paper name (eg.
 #. * A4), second placeholder is the paper size (eg. 297x210 mm)
 #: ../properties/ev-properties-view.c:289
 #, c-format
 msgid "%s, Portrait (%s)"
-msgstr ""
+msgstr "%s, vertical (%s)"
 
 #. Note to translators: first placeholder is the paper name (eg.
 #. * A4), second placeholder is the paper size (eg. 297x210 mm)
 #: ../properties/ev-properties-view.c:296
 #, c-format
 msgid "%s, Landscape (%s)"
-msgstr ""
+msgstr "%s, apaïsat (%s)"
 
 #: ../libmisc/ev-page-action-widget.c:68
 #, c-format
 msgid "(%d of %d)"
-msgstr ""
+msgstr "(%d de %d)"
 
 #: ../libmisc/ev-page-action-widget.c:70
 #, c-format
 msgid "of %d"
-msgstr ""
+msgstr "de %d"
 
 #. Create tree view
 #: ../libview/ev-loading-window.c:76 ../shell/ev-sidebar-annotations.c:133
 #: ../shell/ev-sidebar-layers.c:125 ../shell/ev-sidebar-links.c:262
 msgid "Loading…"
-msgstr ""
+msgstr "S'està carregant…"
 
 #. Initial state
 #: ../libview/ev-print-operation.c:334
 msgid "Preparing to print…"
-msgstr ""
+msgstr "S'està preparant per imprimir…"
 
 #: ../libview/ev-print-operation.c:336
 msgid "Finishing…"
-msgstr ""
+msgstr "S'està acabant…"
 
 #: ../libview/ev-print-operation.c:338
 #, c-format
 msgid "Printing page %d of %d…"
-msgstr ""
+msgstr "S'està imprimint la pàgina %d de %d…"
 
 #: ../libview/ev-print-operation.c:1162
 msgid "Printing is not supported on this printer."
-msgstr ""
+msgstr "No es pot imprimir en aquesta impressora."
 
 #: ../libview/ev-print-operation.c:1227
 msgid "Invalid page selection"
-msgstr ""
+msgstr "La selecció de pàgines no és vàlida"
 
 #: ../libview/ev-print-operation.c:1228
 msgid "Warning"
-msgstr ""
+msgstr "Avís"
 
 #: ../libview/ev-print-operation.c:1230
 msgid "Your print range selection does not include any pages"
-msgstr ""
+msgstr "No hi ha cap pàgina en el rang d'impressió"
 
 #: ../libview/ev-print-operation.c:1887
 msgid "Page Scaling:"
-msgstr ""
+msgstr "Escalat de la pàgina:"
 
 #: ../libview/ev-print-operation.c:1893
 msgid "Shrink to Printable Area"
-msgstr ""
+msgstr "Redueix a l'àrea d'impressió"
 
 #: ../libview/ev-print-operation.c:1894
 msgid "Fit to Printable Area"
-msgstr ""
+msgstr "Ajusta a l'àrea d'impressió"
 
 #: ../libview/ev-print-operation.c:1897
 msgid ""
@@ -667,533 +664,552 @@ msgid ""
 "• \"Fit to Printable Area\": Document pages are enlarged or reduced as "
 "required to fit the printable area of the printer page.\n"
 msgstr ""
+"Escala les pàgines del document per ajustar-les a la pàgina d'impressió "
+"seleccionada. Seleccioneu una de les opcions següents:\n"
+"\n"
+"• «Cap»: No es fa cap escalat.\n"
+"\n"
+"• «Redueix a l'àrea d'impressió»: Es redueixen les pàgines més grans que "
+"l'àrea d'impressió per ajustar-se a l'àrea de la pàgina d'impressió.\n"
+"\n"
+"• «Ajusta a l'àrea d'impressió»: S'amplien o es redueixen segons convingui "
+"per ajustar-se a l'àrea de la pàgina d'impressió.\n"
 
 #: ../libview/ev-print-operation.c:1909
 msgid "Auto Rotate and Center"
-msgstr ""
+msgstr "Gira automàticament i centra"
 
 #: ../libview/ev-print-operation.c:1912
 msgid ""
 "Rotate printer page orientation of each page to match orientation of each "
 "document page. Document pages will be centered within the printer page."
 msgstr ""
+"Gira l'orientació de la pàgina d'impressió de cada pàgina perquè coincideixi "
+"amb cada pàgina del document. Es centraran les pàgines respecte la pàgina "
+"d'impressió."
 
 #: ../libview/ev-print-operation.c:1917
 msgid "Select page size using document page size"
-msgstr ""
+msgstr "Seleccioneu la mida de la pàgina amb la mida de la pàgina del document"
 
 #: ../libview/ev-print-operation.c:1919
 msgid ""
 "When enabled, each page will be printed on the same size paper as the "
 "document page."
 msgstr ""
+"Quan s'habiliti cada pàgina s'imprimirà amb la mateixa mida de paper que la "
+"pàgina del document."
 
 #: ../libview/ev-print-operation.c:2001
 msgid "Page Handling"
-msgstr ""
+msgstr "Gestió de la pàgina"
 
 #: ../libview/ev-jobs.c:1573
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to print page %d: %s"
-msgstr "No s'ha pogut escriure «%s»: %s\n"
+msgstr "No s'ha pogut imprimir la pàgina %d: %s"
 
 #: ../libview/ev-view-accessible.c:46
 msgid "Scroll Up"
-msgstr ""
+msgstr "Desplaça cap amunt"
 
 #: ../libview/ev-view-accessible.c:47
 msgid "Scroll Down"
-msgstr ""
+msgstr "Desplaça cap avall"
 
 #: ../libview/ev-view-accessible.c:53
 msgid "Scroll View Up"
-msgstr ""
+msgstr "Desplaça la visualització cap amunt"
 
 #: ../libview/ev-view-accessible.c:54
 msgid "Scroll View Down"
-msgstr ""
+msgstr "Desplaça la visualització cap avall"
 
 #: ../libview/ev-view-accessible.c:882
 msgid "Document View"
-msgstr ""
+msgstr "Visualització del document"
 
 #: ../libview/ev-view-presentation.c:670
 msgid "Jump to page:"
-msgstr ""
+msgstr "Salta a la pàgina:"
 
 #: ../libview/ev-view-presentation.c:991
 msgid "End of presentation. Click to exit."
-msgstr ""
+msgstr "Final de la presentació. Feu clic per sortir."
 
 #: ../libview/ev-view.c:1787
 msgid "Go to first page"
-msgstr ""
+msgstr "Vés a la primera pàgina"
 
 #: ../libview/ev-view.c:1789
 msgid "Go to previous page"
-msgstr ""
+msgstr "Vés a la pàgina anterior"
 
 #: ../libview/ev-view.c:1791
 msgid "Go to next page"
-msgstr ""
+msgstr "Vés a la pàgina següent"
 
 #: ../libview/ev-view.c:1793
 msgid "Go to last page"
-msgstr ""
+msgstr "Vés a l'última pàgina"
 
 #: ../libview/ev-view.c:1795
 msgid "Go to page"
-msgstr ""
+msgstr "Vés a la pàgina"
 
 #: ../libview/ev-view.c:1797
-#, fuzzy
 msgid "Find"
-msgstr "Ha fallat"
+msgstr "Cerca"
 
 #: ../libview/ev-view.c:1825
 #, c-format
 msgid "Go to page %s"
-msgstr ""
+msgstr "Vés a la pàgina %s"
 
 #: ../libview/ev-view.c:1831
 #, c-format
 msgid "Go to %s on file “%s”"
-msgstr ""
+msgstr "Vés a %s en el fitxer «%s»"
 
 #: ../libview/ev-view.c:1834
 #, c-format
 msgid "Go to file “%s”"
-msgstr ""
+msgstr "Vés al fitxer «%s»"
 
 #: ../libview/ev-view.c:1842
 #, c-format
 msgid "Launch %s"
-msgstr ""
+msgstr "Engega %s"
 
 #: ../shell/eggfindbar.c:305
 msgid "Find:"
-msgstr ""
+msgstr "Cerca:"
 
 #: ../shell/eggfindbar.c:314 ../shell/ev-window.c:5634
 msgid "Find Pre_vious"
-msgstr ""
+msgstr "Cerca l'_anterior"
 
 #: ../shell/eggfindbar.c:318
 msgid "Find previous occurrence of the search string"
-msgstr ""
+msgstr "Cerca l'anterior ocurrència de la cadena de cerca"
 
 #: ../shell/eggfindbar.c:322 ../shell/ev-window.c:5632
 msgid "Find Ne_xt"
-msgstr ""
+msgstr "Cerca el _següent"
 
 #: ../shell/eggfindbar.c:326
 msgid "Find next occurrence of the search string"
-msgstr ""
+msgstr "Cerca la següent ocurrència de cadena de cerca"
 
 #: ../shell/eggfindbar.c:333
 msgid "C_ase Sensitive"
-msgstr ""
+msgstr "_Distingeix entre majúscules i minúscules"
 
 #: ../shell/eggfindbar.c:336
 msgid "Toggle case sensitive search"
-msgstr ""
+msgstr "Commuta a una cerca que distingeixi entre majúscules i minúscules"
 
 #: ../shell/ev-annotation-properties-dialog.c:97
 msgid "Icon:"
-msgstr ""
+msgstr "Icona:"
 
 #: ../shell/ev-annotation-properties-dialog.c:104
 msgid "Note"
-msgstr ""
+msgstr "Nota"
 
 #: ../shell/ev-annotation-properties-dialog.c:105
 msgid "Comment"
-msgstr ""
+msgstr "Comentari"
 
 #: ../shell/ev-annotation-properties-dialog.c:106
 msgid "Key"
-msgstr ""
+msgstr "Clau"
 
 #: ../shell/ev-annotation-properties-dialog.c:107
 msgid "Help"
-msgstr ""
+msgstr "Ajuda"
 
 #: ../shell/ev-annotation-properties-dialog.c:108
 msgid "New Paragraph"
-msgstr ""
+msgstr "Paràgraf nou"
 
 #: ../shell/ev-annotation-properties-dialog.c:109
 msgid "Paragraph"
-msgstr ""
+msgstr "Paràgraf"
 
 #: ../shell/ev-annotation-properties-dialog.c:110
-#, fuzzy
 msgid "Insert"
-msgstr "No definit"
+msgstr "Insereix"
 
 #: ../shell/ev-annotation-properties-dialog.c:111
 msgid "Cross"
-msgstr ""
+msgstr "Creu"
 
 #: ../shell/ev-annotation-properties-dialog.c:112
 msgid "Circle"
-msgstr ""
+msgstr "Cercle"
 
 #: ../shell/ev-annotation-properties-dialog.c:113
 msgid "Unknown"
-msgstr ""
+msgstr "Desconegut"
 
 #: ../shell/ev-annotation-properties-dialog.c:139
-#, fuzzy
 msgid "Annotation Properties"
-msgstr "Opcions d'instal·lació:"
+msgstr "Propietats de l'anotació"
 
 #: ../shell/ev-annotation-properties-dialog.c:172
 msgid "Color:"
-msgstr ""
+msgstr "Color:"
 
 #: ../shell/ev-annotation-properties-dialog.c:184
 msgid "Style:"
-msgstr ""
+msgstr "Estil:"
 
 #: ../shell/ev-annotation-properties-dialog.c:200
 msgid "Transparent"
-msgstr ""
+msgstr "Transparent"
 
 #: ../shell/ev-annotation-properties-dialog.c:207
 msgid "Opaque"
-msgstr ""
+msgstr "Opac"
 
 #: ../shell/ev-annotation-properties-dialog.c:218
 msgid "Initial window state:"
-msgstr ""
+msgstr "Estat inicial de la finestra:"
 
 #: ../shell/ev-annotation-properties-dialog.c:225
 msgid "Open"
-msgstr ""
+msgstr "Obre"
 
 #: ../shell/ev-annotation-properties-dialog.c:226
 msgid "Close"
-msgstr ""
+msgstr "Tanca"
 
+# FIXME
 #: ../shell/ev-application.c:1104
 msgid "Running in presentation mode"
-msgstr ""
+msgstr "S'està executant en mode de presentació"
 
 #: ../shell/ev-keyring.c:102
 #, c-format
 msgid "Password for document %s"
-msgstr ""
+msgstr "Contrasenya per al document %s"
 
 #: ../shell/ev-open-recent-action.c:72
 msgid "Open a recently used document"
-msgstr ""
+msgstr "Obre un document utilitzat recentment"
 
 #: ../shell/ev-password-view.c:144
 msgid ""
 "This document is locked and can only be read by entering the correct "
 "password."
 msgstr ""
+"Aquest document està protegit i només es pot llegir si s'introdueix la "
+"contrasenya correcta."
 
 #: ../shell/ev-password-view.c:153 ../shell/ev-password-view.c:271
 msgid "_Unlock Document"
-msgstr ""
+msgstr "_Desbloca el document"
 
 #: ../shell/ev-password-view.c:263
 msgid "Enter password"
-msgstr ""
+msgstr "Introduïu la contrasenya"
 
 #: ../shell/ev-password-view.c:303
 msgid "Password required"
-msgstr ""
+msgstr "Cal una contrasenya"
 
 #: ../shell/ev-password-view.c:304
 #, c-format
 msgid ""
 "The document “%s” is locked and requires a password before it can be opened."
 msgstr ""
+"El document «%s» està protegit i cal una contrasenya per poder-lo obrir."
 
 #: ../shell/ev-password-view.c:334
 msgid "_Password:"
-msgstr ""
+msgstr "_Contrasenya:"
 
 #: ../shell/ev-password-view.c:367
 msgid "Forget password _immediately"
-msgstr ""
+msgstr "Oblida la contrasenya _immediatament"
 
 #: ../shell/ev-password-view.c:379
 msgid "Remember password until you _log out"
-msgstr ""
+msgstr "Recorda la contrasenya durant aquesta _sessió"
 
 #: ../shell/ev-password-view.c:391
 msgid "Remember _forever"
-msgstr ""
+msgstr "_Recorda-la per sempre"
 
 #: ../shell/ev-properties-dialog.c:62
 msgid "Properties"
-msgstr ""
+msgstr "Propietats"
 
 #: ../shell/ev-properties-dialog.c:94
 msgid "General"
-msgstr ""
+msgstr "General"
 
 #: ../shell/ev-properties-dialog.c:104
 msgid "Fonts"
-msgstr ""
+msgstr "Tipus de lletra"
 
 #: ../shell/ev-properties-dialog.c:117
-#, fuzzy
 msgid "Document License"
-msgstr "Està buit el document «%s»?\n"
+msgstr "Llicència del document"
 
 #: ../shell/ev-properties-fonts.c:135
 msgid "Font"
-msgstr ""
+msgstr "Tipus de lletra"
 
 #: ../shell/ev-properties-fonts.c:162
 #, c-format
 msgid "Gathering font information… %3d%%"
-msgstr ""
+msgstr "S'està recollint informació del tipus de lletra… %3d%%"
 
 #: ../shell/ev-properties-license.c:137
 msgid "Usage terms"
-msgstr ""
+msgstr "Termes d'ús"
 
 #: ../shell/ev-properties-license.c:143
 msgid "Text License"
-msgstr ""
+msgstr "Llicència del text"
 
 #: ../shell/ev-properties-license.c:149
 msgid "Further Information"
-msgstr ""
+msgstr "Més informació"
 
 #: ../shell/ev-sidebar-annotations.c:161
 msgid "List"
-msgstr ""
+msgstr "Llista"
 
 #: ../shell/ev-sidebar-annotations.c:203 ../shell/ev-sidebar-annotations.c:531
 msgid "Annotations"
-msgstr ""
+msgstr "Anotacions"
 
 #: ../shell/ev-sidebar-annotations.c:209
 msgid "Text"
-msgstr ""
+msgstr "Text"
 
 #: ../shell/ev-sidebar-annotations.c:210
 msgid "Add text annotation"
-msgstr ""
+msgstr "Afegeix una anotació de text"
 
 #: ../shell/ev-sidebar-annotations.c:221
 msgid "Add"
-msgstr ""
+msgstr "Afegeix"
 
 #: ../shell/ev-sidebar-annotations.c:364
 msgid "Document contains no annotations"
-msgstr ""
+msgstr "El document no conté cap anotació"
 
 #: ../shell/ev-sidebar-annotations.c:396
 #, c-format
 msgid "Page %d"
-msgstr ""
+msgstr "Pàgina %d"
 
 #: ../shell/ev-sidebar-attachments.c:695
 msgid "Attachments"
-msgstr ""
+msgstr "Adjuncions"
 
 #: ../shell/ev-sidebar-bookmarks.c:152
 msgid "_Open Bookmark"
-msgstr ""
+msgstr "_Obre el punt d'interès"
 
 #: ../shell/ev-sidebar-bookmarks.c:154
 msgid "_Rename Bookmark"
-msgstr ""
+msgstr "_Canvia el nom del punt d'interès"
 
 #: ../shell/ev-sidebar-bookmarks.c:156
 msgid "_Remove Bookmark"
-msgstr ""
+msgstr "Sup_rimeix el punt d'interès"
 
 #: ../shell/ev-sidebar-bookmarks.c:311 ../shell/ev-window.c:897
 #: ../shell/ev-window.c:4475
 #, c-format
 msgid "Page %s"
-msgstr ""
+msgstr "Pàgina %s"
 
 #: ../shell/ev-sidebar-bookmarks.c:605
 msgid "Bookmarks"
-msgstr ""
+msgstr "Punts d'interès"
 
 #: ../shell/ev-sidebar-layers.c:444
 msgid "Layers"
-msgstr ""
+msgstr "Capes"
 
 #: ../shell/ev-sidebar-links.c:338
 msgid "Print…"
-msgstr ""
+msgstr "Imprimeix…"
 
 #: ../shell/ev-sidebar-links.c:719
 msgid "Index"
-msgstr ""
+msgstr "Índex"
 
 #: ../shell/ev-sidebar-thumbnails.c:936
 msgid "Thumbnails"
-msgstr ""
+msgstr "Miniatures"
 
 #: ../shell/ev-window.c:894
 #, c-format
 msgid "Page %s — %s"
-msgstr ""
+msgstr "Pàgina %s — %s"
 
 #: ../shell/ev-window.c:1462
 msgid "The document contains no pages"
-msgstr ""
+msgstr "El document no conté cap pàgina"
 
 #: ../shell/ev-window.c:1465
 msgid "The document contains only empty pages"
-msgstr ""
+msgstr "El document només conté pàgines buides"
 
 #: ../shell/ev-window.c:1677 ../shell/ev-window.c:1843
 msgid "Unable to open document"
-msgstr ""
+msgstr "No es pot obrir el document"
 
 #: ../shell/ev-window.c:1814
 #, c-format
 msgid "Loading document from “%s”"
-msgstr ""
+msgstr "S'està carregant el document des de «%s»"
 
 #: ../shell/ev-window.c:1956 ../shell/ev-window.c:2249
 #, c-format
 msgid "Downloading document (%d%%)"
-msgstr ""
+msgstr "S'està baixant el document (%d%%)"
 
 #: ../shell/ev-window.c:1989
-#, fuzzy
 msgid "Failed to load remote file."
-msgstr "No s'ha pogut carregar el fitxer «%s»: %s"
+msgstr "No s'ha pogut carregar el fitxer remot."
 
 #: ../shell/ev-window.c:2193
 #, c-format
 msgid "Reloading document from %s"
-msgstr ""
+msgstr "S'està tornant a carregar el document des de %s"
 
 #: ../shell/ev-window.c:2225
-#, fuzzy
 msgid "Failed to reload document."
-msgstr "No s'ha pogut obtenir un blocatge"
+msgstr "No s'ha pogut tornar a carregar el document."
 
 #: ../shell/ev-window.c:2380
 msgid "Open Document"
-msgstr ""
+msgstr "Obre un document"
 
 #: ../shell/ev-window.c:2678
 #, c-format
 msgid "Saving document to %s"
-msgstr ""
+msgstr "S'està desant el document a %s"
 
 #: ../shell/ev-window.c:2681
 #, c-format
 msgid "Saving attachment to %s"
-msgstr ""
+msgstr "S'està desant l'adjunció a %s"
 
 #: ../shell/ev-window.c:2684
 #, c-format
 msgid "Saving image to %s"
-msgstr ""
+msgstr "S'està desant la imatge %s"
 
 #: ../shell/ev-window.c:2728 ../shell/ev-window.c:2828
 #, c-format
 msgid "The file could not be saved as “%s”."
-msgstr ""
+msgstr "No s'ha pogut desar el fitxer com a «%s»."
 
 #: ../shell/ev-window.c:2759
 #, c-format
 msgid "Uploading document (%d%%)"
-msgstr ""
+msgstr "S'està pujant el document (%d%%)"
 
 #: ../shell/ev-window.c:2763
 #, c-format
 msgid "Uploading attachment (%d%%)"
-msgstr ""
+msgstr "S'està pujant l'adjunció (%d%%)"
 
 #: ../shell/ev-window.c:2767
 #, c-format
 msgid "Uploading image (%d%%)"
-msgstr ""
+msgstr "S'està pujant la imatge (%d%%)"
 
 #: ../shell/ev-window.c:2891
 msgid "Save a Copy"
-msgstr ""
+msgstr "Desa'n una còpia"
 
 #: ../shell/ev-window.c:2957
 msgid "Could not open the containing folder"
-msgstr ""
+msgstr "No s'ha pogut obrir la carpeta que el conté"
 
 #: ../shell/ev-window.c:3218
 #, c-format
 msgid "%d pending job in queue"
 msgid_plural "%d pending jobs in queue"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%d tasca pendent a la cua"
+msgstr[1] "%d tasques pendents a la cua"
 
 #: ../shell/ev-window.c:3331
 #, c-format
 msgid "Printing job “%s”"
-msgstr ""
+msgstr "S'està imprimint la tasca «%s»"
 
 #: ../shell/ev-window.c:3508
 msgid ""
 "Document contains form fields that have been filled out. If you don't save a "
 "copy, changes will be permanently lost."
 msgstr ""
+"El document conté camps de formulari que s'han emplenat. Si no en deseu una "
+"còpia es perdran els canvis."
 
 #: ../shell/ev-window.c:3512
 msgid ""
 "Document contains new or modified annotations. If you don't save a copy, "
 "changes will be permanently lost."
 msgstr ""
+"El document conté anotacions noves o modificades. Si no en deseu una còpia "
+"es perdran els canvis."
 
 #: ../shell/ev-window.c:3519
 #, c-format
 msgid "Save a copy of document “%s” before closing?"
-msgstr ""
+msgstr "Voleu desar una còpia del document «%s» abans de tancar?"
 
 #: ../shell/ev-window.c:3538
 msgid "Close _without Saving"
-msgstr ""
+msgstr "Tanca _sense desar"
 
 #: ../shell/ev-window.c:3542
 msgid "Save a _Copy"
-msgstr ""
+msgstr "Desa'n una _còpia"
 
 #: ../shell/ev-window.c:3616
 #, c-format
 msgid "Wait until print job “%s” finishes before closing?"
-msgstr ""
+msgstr "Voleu esperar per tancar fins que s'acabi la tasca d'impressió «%s»?"
 
 #: ../shell/ev-window.c:3619
 #, c-format
 msgid ""
 "There are %d print jobs active. Wait until print finishes before closing?"
 msgstr ""
+"Hi ha %d tasques d'impressió actives. Voleu esperar per tancar fins que "
+"s'acabi d'imprimir?"
 
 #: ../shell/ev-window.c:3631
 msgid "If you close the window, pending print jobs will not be printed."
-msgstr ""
+msgstr "Si tanqueu la finestra, no s'imprimiran les tasques pendents."
 
 #: ../shell/ev-window.c:3635
 msgid "Cancel _print and Close"
-msgstr ""
+msgstr "Cancel·la la im_pressió i tanca"
 
 #: ../shell/ev-window.c:3639
 msgid "Close _after Printing"
-msgstr ""
+msgstr "Tanca després d'im_primir"
 
 #: ../shell/ev-window.c:4259
 msgid "Toolbar Editor"
-msgstr ""
+msgstr "Editor de la barra d'eines"
 
 #: ../shell/ev-window.c:4511
 msgid "There was an error displaying help"
-msgstr ""
+msgstr "S'ha produït un error en mostrar l'ajuda"
 
 #: ../shell/ev-window.c:4723
 #, c-format
@@ -1201,6 +1217,8 @@ msgid ""
 "Document Viewer\n"
 "Using %s (%s)"
 msgstr ""
+"Visualitzador de documents.\n"
+"S'utilitza el %s (%s)"
 
 #: ../shell/ev-window.c:4754
 msgid ""
@@ -1209,6 +1227,10 @@ msgid ""
 "Foundation; either version 2 of the License, or (at your option) any later "
 "version.\n"
 msgstr ""
+"L'Evince és programari lliure; podeu redistribuir-lo i/o modificar-lo sota "
+"els termes de la Llicència Pública General GNU tal com ha estat publicada "
+"per la Free Software Foundation; ja sigui la versió 2 de la Llicència o bé "
+"(si ho preferiu) qualsevol altra versió posterior.\n"
 
 #: ../shell/ev-window.c:4758
 msgid ""
@@ -1217,6 +1239,10 @@ msgid ""
 "FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more "
 "details.\n"
 msgstr ""
+"L'Evince es distribueix amb l'expectativa que serà útil, però SENSE CAP "
+"GARANTIA; ni tan sols la garantia implícita de COMERCIABILITAT o ADEQUACIÓ "
+"PER UN PROPÒSIT PARTICULAR. Vegeu la Llicència Pública General GNU per "
+"obtenir-ne més detalls.\n"
 
 #: ../shell/ev-window.c:4762
 msgid ""
@@ -1224,18 +1250,22 @@ msgid ""
 "Evince; if not, write to the Free Software Foundation, Inc., 51 Franklin "
 "Street, Fifth Floor, Boston, MA 02110-1301  USA\n"
 msgstr ""
+"Hauríeu d'haver rebut una còpia de la Llicència Pública General GNU "
+"juntament amb l'Evince; en cas contrari, escriviu a la Free Software "
+"Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 "
+"USA\n"
 
 #: ../shell/ev-window.c:4787
 msgid "Evince"
-msgstr ""
+msgstr "Evince"
 
 #: ../shell/ev-window.c:4790
 msgid "© 1996–2010 The Evince authors"
-msgstr ""
+msgstr "© 1996-2010 Els autors de l'Evince"
 
 #: ../shell/ev-window.c:4796
 msgid "translator-credits"
-msgstr ""
+msgstr "Gil Forcada <gilforcada@guifi.net>"
 
 #. TRANS: Sometimes this could be better translated as
 #. "%d hit(s) on this page".  Therefore this string
@@ -1244,2317 +1274,1122 @@ msgstr ""
 #, c-format
 msgid "%d found on this page"
 msgid_plural "%d found on this page"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "N'hi ha %d en aquesta pàgina"
+msgstr[1] "N'hi ha %d en aquesta pàgina"
 
 #: ../shell/ev-window.c:5067
 msgid "Not found"
-msgstr ""
+msgstr "No s'ha trobat"
 
 #: ../shell/ev-window.c:5073
 #, c-format
 msgid "%3d%% remaining to search"
-msgstr ""
+msgstr "Manca el %3d%% per cercar"
 
 #: ../shell/ev-window.c:5596
-#, fuzzy
 msgid "_File"
-msgstr "Ha fallat"
+msgstr "_Fitxer"
 
 #: ../shell/ev-window.c:5597
 msgid "_Edit"
-msgstr ""
+msgstr "_Edita"
 
 #: ../shell/ev-window.c:5598
 msgid "_View"
-msgstr ""
+msgstr "_Visualitza"
 
 #: ../shell/ev-window.c:5599
 msgid "_Go"
-msgstr ""
+msgstr "Vé_s"
 
 #: ../shell/ev-window.c:5600
 msgid "_Bookmarks"
-msgstr ""
+msgstr "_Punts d'interès"
 
 #: ../shell/ev-window.c:5601
 msgid "_Help"
-msgstr ""
+msgstr "A_juda"
 
 #. File menu
 #: ../shell/ev-window.c:5604 ../shell/ev-window.c:5920
 msgid "_Open…"
-msgstr ""
+msgstr "_Obre…"
 
 #: ../shell/ev-window.c:5605 ../shell/ev-window.c:5921
 msgid "Open an existing document"
-msgstr ""
+msgstr "Obre un document existent"
 
 #: ../shell/ev-window.c:5607
 msgid "Op_en a Copy"
-msgstr ""
+msgstr "Obre'n una _còpia"
 
 #: ../shell/ev-window.c:5608
 msgid "Open a copy of the current document in a new window"
-msgstr ""
+msgstr "Obre una còpia del document actual en una finestra nova"
 
 #: ../shell/ev-window.c:5610
 msgid "_Save a Copy…"
-msgstr ""
+msgstr "Desa'n una còpia…"
 
 #: ../shell/ev-window.c:5611
 msgid "Save a copy of the current document"
-msgstr ""
+msgstr "Desa una còpia del document actual"
 
 #: ../shell/ev-window.c:5613
 msgid "Open Containing _Folder"
-msgstr ""
+msgstr "Obre la _carpeta que el conté"
 
 #: ../shell/ev-window.c:5614
 msgid "Show the folder which contains this file in the file manager"
-msgstr ""
+msgstr "Mostra la carpeta que conté aquest fiter en el gestor de fitxers"
 
 #: ../shell/ev-window.c:5616
 msgid "_Print…"
-msgstr ""
+msgstr "_Imprimeix…"
 
 #: ../shell/ev-window.c:5619
 msgid "P_roperties"
-msgstr ""
+msgstr "_Propietats"
 
 #: ../shell/ev-window.c:5627
 msgid "Select _All"
-msgstr ""
+msgstr "Selecciona-ho _tot"
 
 #: ../shell/ev-window.c:5629
 msgid "_Find…"
-msgstr ""
+msgstr "_Cerca…"
 
 #: ../shell/ev-window.c:5630
 msgid "Find a word or phrase in the document"
-msgstr ""
+msgstr "Cerca una paraula o frase al document"
 
 #: ../shell/ev-window.c:5636
 msgid "T_oolbar"
-msgstr ""
+msgstr "_Barra d'eines"
 
 #: ../shell/ev-window.c:5638
 msgid "Rotate _Left"
-msgstr ""
+msgstr "Gira a l'_esquerra"
 
 #: ../shell/ev-window.c:5640
 msgid "Rotate _Right"
-msgstr ""
+msgstr "Gira a la _dreta"
 
 #: ../shell/ev-window.c:5642
 msgid "Save Current Settings as _Default"
-msgstr ""
+msgstr "Desa la configuració actual com a _predeterminada"
 
 #: ../shell/ev-window.c:5653
 msgid "_Reload"
-msgstr ""
+msgstr "Ac_tualitza"
 
 #: ../shell/ev-window.c:5654
 msgid "Reload the document"
-msgstr ""
+msgstr "Actualitza el document"
 
 #: ../shell/ev-window.c:5657
 msgid "Auto_scroll"
-msgstr ""
+msgstr "Desplaça _automàticament"
 
 #: ../shell/ev-window.c:5667
 msgid "_First Page"
-msgstr ""
+msgstr "_Primera pàgina"
 
 #: ../shell/ev-window.c:5668
 msgid "Go to the first page"
-msgstr ""
+msgstr "Vés a la primera pàgina"
 
 #: ../shell/ev-window.c:5670
 msgid "_Last Page"
-msgstr ""
+msgstr "Úl_tima pàgina"
 
 #: ../shell/ev-window.c:5671
 msgid "Go to the last page"
-msgstr ""
+msgstr "Vés a l'última pàgina"
 
 #. Bookmarks menu
 #: ../shell/ev-window.c:5675
 msgid "_Add Bookmark"
-msgstr ""
+msgstr "_Afegeix un punt d'interès"
 
 #: ../shell/ev-window.c:5676
 msgid "Add a bookmark for the current page"
-msgstr ""
+msgstr "Afegeix un punt d'interès a la pàgina actual"
 
 #. Help menu
 #: ../shell/ev-window.c:5680
-#, fuzzy
 msgid "_Contents"
-msgstr "_Continua"
+msgstr "_Continguts"
 
 #: ../shell/ev-window.c:5683
 msgid "_About"
-msgstr ""
+msgstr "_Quant a"
 
 #. Toolbar-only
 #: ../shell/ev-window.c:5687
 msgid "Leave Fullscreen"
-msgstr ""
+msgstr "Surt de la pantalla completa"
 
 #: ../shell/ev-window.c:5688
 msgid "Leave fullscreen mode"
-msgstr ""
+msgstr "Surt de la pantalla completa"
 
 #: ../shell/ev-window.c:5690
 msgid "Start Presentation"
-msgstr ""
+msgstr "Inicia la presentació"
 
 #: ../shell/ev-window.c:5691
 msgid "Start a presentation"
-msgstr ""
+msgstr "Inicia una presentació"
 
 #. View Menu
 #: ../shell/ev-window.c:5750
 msgid "_Toolbar"
-msgstr ""
+msgstr "Barra d'_eines"
 
 #: ../shell/ev-window.c:5751
 msgid "Show or hide the toolbar"
-msgstr ""
+msgstr "Mostra o amaga la barra d'eines"
 
 #: ../shell/ev-window.c:5753
 msgid "Side _Pane"
-msgstr ""
+msgstr "Barra _lateral"
 
 #: ../shell/ev-window.c:5754
 msgid "Show or hide the side pane"
-msgstr ""
+msgstr "Mostra o amaga la barra lateral"
 
 #: ../shell/ev-window.c:5756
-#, fuzzy
 msgid "_Continuous"
-msgstr "_Continua"
+msgstr "C_ontinu"
 
 #: ../shell/ev-window.c:5757
 msgid "Show the entire document"
-msgstr ""
+msgstr "Mostra el document sencer"
 
 #: ../shell/ev-window.c:5759
 msgid "_Dual"
-msgstr ""
+msgstr "_Dual"
 
 #: ../shell/ev-window.c:5760
-#, fuzzy
 msgid "Show two pages at once"
-msgstr "Mostra les opcions de prova"
+msgstr "Mostra dues pàgines alhora"
 
 #: ../shell/ev-window.c:5762
 msgid "_Fullscreen"
-msgstr ""
+msgstr "Pantalla _completa"
 
 #: ../shell/ev-window.c:5763
 msgid "Expand the window to fill the screen"
-msgstr ""
+msgstr "Expandeix la finestra fins a omplir la pantalla"
 
 #: ../shell/ev-window.c:5765
 msgid "Pre_sentation"
-msgstr ""
+msgstr "_Presentació"
 
+# FIXME
 #: ../shell/ev-window.c:5766
 msgid "Run document as a presentation"
-msgstr ""
+msgstr "Mostra el document com a una presentació"
 
 #: ../shell/ev-window.c:5774
 msgid "_Inverted Colors"
-msgstr ""
+msgstr "_Inverteix els colors"
 
 #: ../shell/ev-window.c:5775
 msgid "Show page contents with the colors inverted"
-msgstr ""
+msgstr "Mostra el contingut de la pàgina amb els colors invertits"
 
 #. Links
 #: ../shell/ev-window.c:5783
 msgid "_Open Link"
-msgstr ""
+msgstr "_Obre l'enllaç"
 
 #: ../shell/ev-window.c:5785
 msgid "_Go To"
-msgstr ""
+msgstr "Vé_s a"
 
 #: ../shell/ev-window.c:5787
 msgid "Open in New _Window"
-msgstr ""
+msgstr "Obre en una _finestra nova"
 
 #: ../shell/ev-window.c:5789
 msgid "_Copy Link Address"
-msgstr ""
+msgstr "_Copia l'adreça de l'enllaç"
 
 #: ../shell/ev-window.c:5791
 msgid "_Save Image As…"
-msgstr ""
+msgstr "_Anomena i desa la imatge…"
 
 #: ../shell/ev-window.c:5793
 msgid "Copy _Image"
-msgstr ""
+msgstr "Copia la _imatge"
 
 #: ../shell/ev-window.c:5795
 msgid "Annotation Properties…"
-msgstr ""
+msgstr "Propietats de l'anotació…"
 
 #: ../shell/ev-window.c:5800
 msgid "_Open Attachment"
-msgstr ""
+msgstr "_Obre l'adjunció"
 
 #: ../shell/ev-window.c:5802
 msgid "_Save Attachment As…"
-msgstr ""
+msgstr "_Desa l'adjunció com a…"
 
 #: ../shell/ev-window.c:5894
 msgid "Zoom"
-msgstr ""
+msgstr "Ampliació"
 
 #: ../shell/ev-window.c:5896
 msgid "Adjust the zoom level"
-msgstr ""
+msgstr "Ajusta el nivell de l'ampliació"
 
 #: ../shell/ev-window.c:5906
 msgid "Navigation"
-msgstr ""
+msgstr "Navegació"
 
 #: ../shell/ev-window.c:5908
 msgid "Back"
-msgstr ""
+msgstr "Enrere"
 
+# "Salta't les pàgines visitades"? (josep)
 #. translators: this is the history action
 #: ../shell/ev-window.c:5911
 msgid "Move across visited pages"
-msgstr ""
+msgstr "Creua les pàgines visitades"
 
 #. translators: this is the label for toolbar button
 #: ../shell/ev-window.c:5940
 msgid "Open Folder"
-msgstr ""
+msgstr "Obre la carpeta"
 
 #. translators: this is the label for toolbar button
 #: ../shell/ev-window.c:5945
 msgid "Previous"
-msgstr ""
+msgstr "Anterior"
 
 #. translators: this is the label for toolbar button
 #: ../shell/ev-window.c:5950
 msgid "Next"
-msgstr ""
+msgstr "Següent"
 
 #. translators: this is the label for toolbar button
 #: ../shell/ev-window.c:5954
 msgid "Zoom In"
-msgstr ""
+msgstr "Apropa"
 
 #. translators: this is the label for toolbar button
 #: ../shell/ev-window.c:5958
-#, fuzzy
 msgid "Zoom Out"
-msgstr "_Surt"
+msgstr "Allunya"
 
 #. translators: this is the label for toolbar button
 #: ../shell/ev-window.c:5966
 msgid "Fit Width"
-msgstr ""
+msgstr "Encaixa a l'amplada"
 
 #: ../shell/ev-window.c:6111 ../shell/ev-window.c:6128
 msgid "Unable to launch external application."
-msgstr ""
+msgstr "No s'ha pogut executar l'aplicació externa."
 
 #: ../shell/ev-window.c:6185
 msgid "Unable to open external link"
-msgstr ""
+msgstr "No s'ha pogut obrir l'enllaç extern"
 
 #: ../shell/ev-window.c:6375
 msgid "Couldn't find appropriate format to save image"
-msgstr ""
+msgstr "No s'ha trobat cap format adequat per desar la imatge"
 
 #: ../shell/ev-window.c:6407
 msgid "The image could not be saved."
-msgstr ""
+msgstr "No s'ha pogut desar la imatge."
 
 #: ../shell/ev-window.c:6439
 msgid "Save Image"
-msgstr ""
+msgstr "Desa la imatge"
 
 #: ../shell/ev-window.c:6567
 msgid "Unable to open attachment"
-msgstr ""
+msgstr "No s'ha pogut obrir l'adjunció"
 
 #: ../shell/ev-window.c:6620
 msgid "The attachment could not be saved."
-msgstr ""
+msgstr "No s'ha pogut desar l'adjunció."
 
 #: ../shell/ev-window.c:6665
 msgid "Save Attachment"
-msgstr ""
+msgstr "Desa l'adjunció"
 
 #: ../shell/ev-window-title.c:170
 #, c-format
 msgid "%s — Password Required"
-msgstr ""
+msgstr "%s — Necessita contrasenya"
 
 #: ../shell/ev-utils.c:318
 msgid "By extension"
-msgstr ""
+msgstr "Per extensió"
 
 #: ../shell/main.c:69 ../shell/main.c:274
 msgid "GNOME Document Viewer"
-msgstr ""
+msgstr "Visualitzador de documents del GNOME"
 
 #: ../shell/main.c:77
 msgid "The page label of the document to display."
-msgstr ""
+msgstr "L'etiqueta de la pàgina del document a mostrar."
 
 #: ../shell/main.c:77
 msgid "PAGE"
-msgstr ""
+msgstr "PÀGINA"
 
 #: ../shell/main.c:78
 msgid "The page number of the document to display."
-msgstr ""
+msgstr "El número de pàgina del document a mostrar."
 
 #: ../shell/main.c:78
 msgid "NUMBER"
-msgstr ""
+msgstr "NÚMERO"
 
 #: ../shell/main.c:79
 msgid "Run evince in fullscreen mode"
-msgstr ""
+msgstr "Executa l'Evince en mode pantalla completa"
 
+# FIXME
 #: ../shell/main.c:80
 msgid "Run evince in presentation mode"
-msgstr ""
+msgstr "Executa l'Evince en mode presentació"
 
 #: ../shell/main.c:81
 msgid "Run evince as a previewer"
-msgstr ""
+msgstr "Executa l'Evince com a previsualitzador"
 
 #: ../shell/main.c:82
 msgid "The word or phrase to find in the document"
-msgstr ""
+msgstr "La paraula o frase que es vol cercar en el document"
 
 #: ../shell/main.c:82
 msgid "STRING"
-msgstr ""
+msgstr "CADENA"
 
 #: ../shell/main.c:86
 msgid "[FILE…]"
-msgstr ""
+msgstr "[FITXER…]"
 
-#~ msgid "Failed to get configuration file path from '%s'"
-#~ msgstr "No s'ha pogut obtenir el camí del fitxer de configuració de «%s»"
+#~ msgid "Impress Slides"
+#~ msgstr "Diapositives de l'Impress"
 
-#~ msgid "Created Evolution/LDAP source using configuration file '%s'"
-#~ msgstr ""
-#~ "S'ha creat una font Evolution/LDAP fent servir el fitxer de configuració "
-#~ "«%s»"
+#~ msgid "No error"
+#~ msgstr "Cap error"
 
-#~ msgid "Unable to parse XML file '%s'"
-#~ msgstr "No s'ha pogut analitzar el fitxer XML «%s»"
+#~ msgid "Not enough memory"
+#~ msgstr "No hi ha prou memòria"
 
-#~ msgid "Config file '%s' is empty"
-#~ msgstr "El fitxer de configuració «%s» està buit"
+#~ msgid "Cannot find ZIP signature"
+#~ msgstr "No s'ha pogut trobar la signatura ZIP"
 
-#~ msgid "Root node of '%s' must be <evoldap>, not <%s>"
-#~ msgstr "El node arrel de «%s» ha de ser <evoldap>, no pas <%s>"
+#~ msgid "Invalid ZIP file"
+#~ msgstr "Fitxer ZIP no vàlid"
 
-#~ msgid "No <template> specified in '%s'"
-#~ msgstr "No s'ha especificat cap <template> a «%s»"
+#~ msgid "Multi file ZIPs are not supported"
+#~ msgstr "Encara no es poden fer servir arxius ZIP amb múltiples fitxers"
 
-#~ msgid "No \"filter\" attribute specified on <template> in '%s'"
-#~ msgstr "No s'ha especificat cap atribut «filter» al <template> de «%s»"
+#~ msgid "Cannot read data from file"
+#~ msgstr "No s'han pogut llegir les dades del fitxer"
 
-#~ msgid "No LDAP server or base DN specified in '%s'"
-#~ msgstr "No s'ha especificat cap servidor d'LDAP o DN base a «%s»"
+#~ msgid "Cannot find file in the ZIP archive"
+#~ msgstr "No s'ha pogut trobar el fitxer a l'arxiu ZIP"
 
-#~ msgid "Contacting LDAP server: host '%s', port '%d', base DN '%s'"
-#~ msgstr ""
-#~ "S'està contactant amb el servidor d'LDAP: servidor «%s», port «%d», DN "
-#~ "base «%s»"
+#~ msgid "Unknown error"
+#~ msgstr "Error desconegut"
 
-#~ msgid "Failed to contact LDAP server: %s"
-#~ msgstr "No s'ha pogut contactar amb el servidor LDAP: %s"
+#~ msgid "Converting %s"
+#~ msgstr "S'està convertint %s"
 
-#~ msgid "Searching for entries using filter: %s"
-#~ msgstr "S'estan cercant les entrades fent servir el filtre: %s"
+#~ msgid "%d of %d documents converted"
+#~ msgstr "S'han convertit %d de %d documents"
 
-#~ msgid "Error querying LDAP server: %s"
-#~ msgstr "S'ha produït un error en consultar el servidor d'LDAP: %s"
-
-#~ msgid "Got %d entries using filter: %s"
-#~ msgstr "S'han obtingut %d entrades utilitzant el filtre: %s"
-
-#~ msgid "Cannot find directory %s\n"
-#~ msgstr "No s'ha pogut trobar el directori %s\n"
-
-#~ msgid "Error saving GConf tree to '%s': %s\n"
-#~ msgstr "S'ha produït un error en desar l'arbre del GConf a «%s»: %s\n"
-
-#~ msgid "Usage: %s <dir>\n"
-#~ msgstr "Forma d'ús: %s <dir>\n"
+#~ msgid "Converting metadata"
+#~ msgstr "S'estan convertint les metadades"
 
 #~ msgid ""
-#~ "Usage: %s <dir>\n"
-#~ "  Merges a markup backend filesystem hierarchy like:\n"
-#~ "    dir/%%gconf.xml\n"
-#~ "        subdir1/%%gconf.xml\n"
-#~ "        subdir2/%%gconf.xml\n"
-#~ "  to:\n"
-#~ "    dir/%%gconf-tree.xml\n"
+#~ "The metadata format used by Evince has changed, and hence it needs to be "
+#~ "migrated. If the migration is cancelled the metadata storage will not "
+#~ "work."
 #~ msgstr ""
-#~ "Forma d'ús: %s <dir>\n"
-#~ "  Fusiona una jerarquia de sistemes de fitxers de rerefons de marques com "
-#~ "ara:\n"
-#~ "    dir/%%gconf.xml\n"
-#~ "        subdir1/%%gconf.xml\n"
-#~ "        subdir2/%%gconf.xml\n"
-#~ "  a:\n"
-#~ "    dir/%%gconf-tree.xml\n"
-
-#~ msgid "Unloading text markup backend module."
-#~ msgstr "S'està descarregant el mòdul de rerefons de marcat de text."
-
-#~ msgid "Couldn't find the XML root directory in the address `%s'"
-#~ msgstr "No s'ha pogut trobar el directori arrel de l'XML a l'adreça «%s»"
-
-#~ msgid "Could not make directory `%s': %s"
-#~ msgstr "No s'ha pogut crear el directori «%s»: %s"
+#~ "L'Evince ha canviat el format de les metadades que utilitzava i s'han de "
+#~ "migrar. Si cancel·leu la migració el magatzem de metadades no funcionarà."
 
 #~ msgid ""
-#~ "Can't read from or write to the XML root directory in the address \"%s\""
+#~ "Boolean options available: true enables thumbnailing and false disables "
+#~ "the creation of new thumbnails"
 #~ msgstr ""
-#~ "No es pot llegir/escriure al directori arrel de l'XML a l'adreça «%s»"
+#~ "Opcions booleanes disponibles: «true» (cert) habilita les miniatures i "
+#~ "«false» (fals) inhabilita la creació de noves miniatures"
 
-#~ msgid "Directory/file permissions for XML source at root %s are: %o/%o"
-#~ msgstr ""
-#~ "Els permisos del directori o fitxer per a la font de l'XML a l'arrel %s "
-#~ "són: %o/%o"
+#~ msgid "Enable thumbnailing of PDF Documents"
+#~ msgstr "Habilita les miniatures per als documents PDF"
+
+#~ msgid "Thumbnail command for PDF Documents"
+#~ msgstr "Ordre de miniatura per als documents PDF"
 
 #~ msgid ""
-#~ "Remove directory operation is no longer supported, just remove all the "
-#~ "values in the directory"
+#~ "Valid command plus arguments for the PDF Document thumbnailer. See "
+#~ "Nautilus thumbnailer documentation for more information."
 #~ msgstr ""
-#~ "Ja no es permet l'operació de supressió de directoris, simplement "
-#~ "suprimiu tots els valors del directori"
+#~ "Ordre vàlida amb arguments addicionals per al miniaturitzador de "
+#~ "documents PDF. Per a més informació vegeu la documentació del "
+#~ "miniaturitzador del Nautilus."
 
-#~ msgid "Could not open lock directory for %s to remove locks: %s\n"
-#~ msgstr ""
-#~ "No s'ha pogut obrir el directori de blocatges per què %s suprimeixi els "
-#~ "blocatges: %s\n"
+#~ msgid "Page Set_up…"
+#~ msgstr "_Configuració de la pàgina…"
 
-#~ msgid "Could not remove file %s: %s\n"
-#~ msgstr "No s'ha pogut suprimir el fitxer %s: %s\n"
+#~ msgid "Set up the page settings for printing"
+#~ msgstr "Configureu els paràmetres de pàgina per a la impressió"
 
-#~ msgid "Initializing Markup backend module"
-#~ msgstr "S'està inicialitzant el mòdul de rerefons de marcat"
+#~ msgid "DJVU document has incorrect format"
+#~ msgstr "El document DJVU té un format incorrecte"
 
-#~ msgid "Failed to give up lock on XML directory \"%s\": %s"
-#~ msgstr ""
-#~ "No s'ha pogut abandonar el blocatge en el directori de l'XML «%s»: %s"
+#~ msgid "Print..."
+#~ msgstr "Imprimeix..."
 
-#~ msgid "Failed to write some configuration data to disk\n"
-#~ msgstr "No s'han pogut escriure algunes configuracions al disc\n"
+#~ msgid "_Save a Copy..."
+#~ msgstr "_Desa'n una còpia..."
 
-#~ msgid "Could not make directory \"%s\": %s"
-#~ msgstr "No s'ha pogut crear el directori «%s»: %s"
+#~ msgid "_Print..."
+#~ msgstr "_Imprimeix..."
 
-#~ msgid "Could not remove \"%s\": %s\n"
-#~ msgstr "No s'ha pogut suprimir «%s»: %s\n"
+#~ msgid "_Find..."
+#~ msgstr "_Cerca..."
 
-#~ msgid "Line %d character %d: %s"
-#~ msgstr "Línia %d caràcter %d: %s"
+#~ msgid "Failed to create file “%s”: %s"
+#~ msgstr "No s'ha pogut crear el fitxer «%s»: %s"
 
-#~ msgid "Attribute \"%s\" is invalid on <%s> element in this context"
-#~ msgstr "L'atribut «%s» no és vàlid en el context de l'element <%s>"
+#~ msgid "Search string"
+#~ msgstr "Cerca una cadena"
 
-#~ msgid "Didn't understand `%s' (expected integer)"
-#~ msgstr "No s'ha pogut processar «%s» (s'esperava un enter)"
+#~ msgid "The name of the string to be found"
+#~ msgstr "El nom de la cadena a cercar"
 
-#~ msgid "Integer `%s' is too large or small"
-#~ msgstr "L'enter «%s» és massa gran o massa petit"
+#~ msgid "Case sensitive"
+#~ msgstr "Distingeix entre majúscules i minúscules"
 
-#~ msgid "Didn't understand `%s' (expected true or false)"
-#~ msgstr "No s'ha pogut processar «%s» (s'esperava cert o fals)"
+#~ msgid "TRUE for a case sensitive search"
+#~ msgstr "Cert per a una cerca que distingeixi majúscules de minúscules"
 
-#~ msgid "Didn't understand `%s' (expected real number)"
-#~ msgstr "No s'ha pogut processar «%s» (s'esperava un nombre real)"
+#~ msgid "Highlight color"
+#~ msgstr "Color del ressaltat"
 
-#~ msgid "Unknown value \"%s\" for \"%s\" attribute on element <%s>"
-#~ msgstr "El valor «%s» és desconegut per a l'atribut «%s» a l'element <%s>"
+#~ msgid "Color of highlight for all matches"
+#~ msgstr "Color del ressaltat per a totes les coincidències"
 
-#~ msgid "No \"%s\" attribute on element <%s>"
-#~ msgstr "No hi ha cap atribut «%s» a l'element <%s>"
+#~ msgid "Current color"
+#~ msgstr "Color actual"
 
-#~ msgid "Invalid ltype \"%s\" on <%s>"
-#~ msgstr "L'ltype «%s» no és vàlid en <%s>"
+#~ msgid "Color of highlight for the current match"
+#~ msgstr "Color del ressaltat de la coincidència actual"
 
-#~ msgid "Invalid first-element type \"%s\" on <%s>"
-#~ msgstr "El tipus first-element «%s» no és vàlid a <%s>"
-
-#~ msgid "Invalid cdr_type \"%s\" on <%s>"
-#~ msgstr "El cdr_type «%s» no és vàlid a <%s>"
-
-#~ msgid "Invalid list_type \"%s\" on <%s>"
-#~ msgstr "El list_type «%s» no és vàlid a <%s>"
-
-#~ msgid "Two <default> elements below a <local_schema>"
-#~ msgstr "Dos elements <default> sota un <local_schema>"
-
-#~ msgid "Two <longdesc> elements below a <local_schema>"
-#~ msgstr "Dos <longdesc> elements sota un <local_schema>"
-
-#~ msgid "Element <%s> is not allowed below <%s>"
-#~ msgstr "L'element <%s> no es permet sota <%s>"
-
-#~ msgid "<%s> provided but current element does not have type %s"
-#~ msgstr "s'ha proporcionat <%s> però l'element actual no té el tipus %s"
-
-#~ msgid "Two <car> elements given for same pair"
-#~ msgstr "S'han donat dos elements <car> per a la mateixa parella"
-
-#~ msgid "Two <cdr> elements given for same pair"
-#~ msgstr "S'han donat dos elements <cdr> per a la mateixa parella"
-
-#~ msgid "<li> has wrong type %s"
-#~ msgstr "<li> té el tipus erroni %s"
-
-#~ msgid "<%s> provided but parent <entry> does not have a value"
-#~ msgstr "s'ha proporcionat <%s> però l'<entry> pare no té cap valor"
-
-#~ msgid "Element <%s> is not allowed inside current element"
-#~ msgstr "L'element <%s> no es permet dins de l'element actual"
-
-#~ msgid "Outermost element in menu file must be <gconf> not <%s>"
-#~ msgstr ""
-#~ "L'element més extern dins d'un fitxer de menú ha de ser <gconf>, i no pas "
-#~ "<%s>"
-
-#~ msgid "Element <%s> is not allowed inside a <%s> element"
-#~ msgstr "No es permet l'element <%s> dins d'un element <%s>"
-
-#~ msgid "No text is allowed inside element <%s>"
-#~ msgstr "No es permet text dins d'un element <%s>"
-
-#~ msgid "Failed to open \"%s\": %s\n"
-#~ msgstr "No s'ha pogut obrir «%s»: %s\n"
-
-#~ msgid "Error reading \"%s\": %s\n"
-#~ msgstr "S'ha produït un error en llegir «%s»: %s\n"
-
-#~ msgid "Could not flush file '%s' to disk: %s"
-#~ msgstr "No s'ha pogut buidar el fitxer «%s» al disc: %s"
-
-#~ msgid "Error writing file \"%s\": %s"
-#~ msgstr "S'ha produït un error en escriure el fitxer «%s»: %s"
-
-#~ msgid "Failed to move temporary file \"%s\" to final location \"%s\": %s"
-#~ msgstr "No s'ha pogut moure el fitxer «%s» a l'emplaçament final «%s»: %s"
-
-#~ msgid "Unloading XML backend module."
-#~ msgstr "S'està descarregant el mòdul de rerefons de l'XML."
-
-#~ msgid "Error syncing the XML backend directory cache: %s"
-#~ msgstr ""
-#~ "S'ha produït un error en sincronitzar la memòria cau del directori del "
-#~ "rerefons de l'XML: %s"
-
-#~ msgid "Initializing XML backend module"
-#~ msgstr "S'està inicialitzant el mòdul de rerefons de l'XML"
-
-#~ msgid "Failed to sync XML cache contents to disk"
-#~ msgstr ""
-#~ "No s'ha pogut sincronitzar el contingut de la memòria cau de l'XML amb el "
-#~ "disc"
+#~ msgid "Recover previous documents?"
+#~ msgstr "Voleu recuperar els documents que tenieu oberts?"
 
 #~ msgid ""
-#~ "Unable to remove directory `%s' from the XML backend cache, because it "
-#~ "has not been successfully synced to disk"
+#~ "Evince appears to have exited unexpectedly the last time it was run. You "
+#~ "can recover the opened documents."
 #~ msgstr ""
-#~ "No es pot suprimir el directori «%s» de la memòria cau de rerefons de "
-#~ "l'XML, perquè no s'ha sincronitzat correctament amb el disc"
+#~ "Sembla que l'última vegada que es va executar l'Evince va finalitzar "
+#~ "sobtadament. Tot i així, podeu recuperar els documents oberts."
 
-#~ msgid "XML filename `%s' is a directory"
-#~ msgstr "El nom de fitxer XML «%s» és un directori"
+#~ msgid "_Don't Recover"
+#~ msgstr "_No els recuperis"
 
-#~ msgid "Failed to delete \"%s\": %s"
-#~ msgstr "No s'ha pogut suprimir «%s»: %s"
+#~ msgid "_Recover"
+#~ msgstr "_Recupera'ls"
 
-#~ msgid "Failed to write file `%s': %s"
-#~ msgstr "No s'ha pogut escriure el fitxer «%s»: %s"
+#~ msgid "Crash Recovery"
+#~ msgstr "Recuperació de documents"
 
-#~ msgid "Failed to set mode on `%s': %s"
-#~ msgstr "No s'ha pogut establir el mode a «%s»: %s"
+#~ msgid "Couldn't create symlink “%s”: "
+#~ msgstr "No s'ha pogut crear l'enllaç simbòlic «%s»: "
 
-#~ msgid "Failed to write XML data to `%s': %s"
-#~ msgstr "No s'ha pogut escriure dades XML a «%s»: %s"
+#~ msgid "Cannot open a copy."
+#~ msgstr "No se n'ha pogut obrir una còpia."
 
-#~ msgid "Failed to close file `%s': %s"
-#~ msgstr "No s'ha pogut tancar el fitxer «%s»: %s"
+#~ msgid "Co_nnect"
+#~ msgstr "Co_nnecta"
 
-#~ msgid "Failed to rename `%s' to `%s': %s"
-#~ msgstr "No s'ha pogut canviar el nom de «%s» per «%s»: %s"
+#~ msgid "Connect _anonymously"
+#~ msgstr "Connecta _anònimament"
 
-#~ msgid "Failed to restore `%s' from `%s': %s"
-#~ msgstr "No s'ha pogut restaurar «%s» de «%s»: %s"
+#~ msgid "Connect as u_ser:"
+#~ msgstr "Connecta com a u_suari:"
 
-#~ msgid "Failed to delete old file `%s': %s"
-#~ msgstr "No s'ha pogut suprimir el fitxer vell «%s»: %s"
+#~ msgid "_Username:"
+#~ msgstr "Nom d'_usuari:"
 
-#~ msgid "Failed to stat `%s': %s"
-#~ msgstr "No s'ha pogut fer «stat» sobre «%s»: %s"
+#~ msgid "_Domain:"
+#~ msgstr "_Domini:"
 
-#~ msgid "Duplicate entry `%s' in `%s', ignoring"
-#~ msgstr "Hi ha una entrada duplicada «%s» a «%s», s'ignora"
+#~ msgid "_Forget password immediately"
+#~ msgstr "_Oblida la contrasenya immediatament"
 
-#~ msgid "Entry with no name in XML file `%s', ignoring"
-#~ msgstr "Hi ha una entrada sense nom al fitxer XML «%s», s'ignora"
+#~ msgid "_Remember password until you logout"
+#~ msgstr "_Recorda la contrasenya durant aquesta sessió"
+
+#~ msgid "_Remember forever"
+#~ msgstr "_Recorda-la per sempre"
+
+#~ msgid "File not available"
+#~ msgstr "El fitxer no està disponible"
+
+#~ msgid "Remote files aren't supported"
+#~ msgstr "La gestió de fitxers remots no està implementada"
+
+#~ msgid "Find Previous"
+#~ msgstr "Cerca l'anterior"
+
+#~ msgid "Find Next"
+#~ msgstr "Cerca la següent"
+
+#~ msgid "Password Entry"
+#~ msgstr "Entrada de la contrasenya"
+
+#~ msgid "Remember password for this session"
+#~ msgstr "Recorda la contrasenya durant aquesta sessió"
+
+#~ msgid "Save password in keyring"
+#~ msgstr "Desa la contrasenya a l'anell de claus"
+
+#~ msgid "<b>Title:</b>"
+#~ msgstr "<b>Títol:</b>"
+
+#~ msgid "%.2f x %.2f in"
+#~ msgstr "%.2f x %.2f in"
+
+#~ msgid "Incorrect password"
+#~ msgstr "Contrasenya errònia"
+
+#~ msgid "Evince Document Viewer"
+#~ msgstr "Visualitzador de documents Evince"
+
+#~ msgid "BBox"
+#~ msgstr "BBox"
+
+#~ msgid "Letter"
+#~ msgstr "Carta"
+
+#~ msgid "Tabloid"
+#~ msgstr "Tabloide"
+
+#~ msgid "Ledger"
+#~ msgstr "Llibre de comptes"
+
+#~ msgid "Legal"
+#~ msgstr "Legal"
+
+#~ msgid "Statement"
+#~ msgstr "Declaració"
+
+#~ msgid "Executive"
+#~ msgstr "Executiu"
+
+#~ msgid "A0"
+#~ msgstr "A0"
+
+#~ msgid "A1"
+#~ msgstr "A1"
+
+#~ msgid "A2"
+#~ msgstr "A2"
+
+#~ msgid "A3"
+#~ msgstr "A3"
+
+#~ msgid "A4"
+#~ msgstr "A4"
+
+#~ msgid "A5"
+#~ msgstr "A5"
+
+#~ msgid "B4"
+#~ msgstr "B4"
+
+#~ msgid "B5"
+#~ msgstr "B5"
+
+#~ msgid "Folio"
+#~ msgstr "Foli"
+
+#~ msgid "Quarto"
+#~ msgstr "En quart"
+
+#~ msgid "10x14"
+#~ msgstr "10x14"
+
+#~ msgid "Cannot open file “%s”."
+#~ msgstr "No s'ha pogut obrir el fitxer «%s»."
 
 #~ msgid ""
-#~ "A toplevel node in XML file `%s' is <%s> rather than <entry>, ignoring"
+#~ "Failed to load document “%s”. Ghostscript interpreter was not found in "
+#~ "path"
 #~ msgstr ""
-#~ "Un node de nivell superior al fitxer XML «%s» és <%s> i no pas <entry>, "
-#~ "s'ignora"
+#~ "No s'ha pogut carregar el document «%s». No s'ha trobat l'intèrpret "
+#~ "Ghostscript en el camí"
 
-#~ msgid "Failed to parse XML file \"%s\""
-#~ msgstr "No s'ha pogut analitzar el fitxer XML «%s»"
+#~ msgid "Encapsulated PostScript"
+#~ msgstr "PostScript encapsulat"
 
-#~ msgid "Ignoring XML node with name `%s': %s"
-#~ msgstr "S'ignora el node XML amb el nom «%s»: %s"
+#~ msgid "PostScript"
+#~ msgstr "PostScript"
 
-#~ msgid "Ignoring schema name `%s', invalid: %s"
-#~ msgstr "S'ignora el nom d'esquema «%s», no és vàlid: %s"
+#~ msgid "Interpreter failed."
+#~ msgstr "L'intèrpret ha fallat."
 
-#~ msgid "Ignoring XML node `%s': %s"
-#~ msgstr "S'ignora el node XML «%s»: %s"
+#~ msgid "Unhandled MIME type: “%s”"
+#~ msgstr "Tipus MIME no gestionat: «%s»"
 
-#~ msgid "Failed reading default value for schema: %s"
-#~ msgstr "No s'ha pogut llegir el valor predeterminat per a l'esquema: %s"
-
-#~ msgid "No \"type\" attribute for <%s> node"
-#~ msgstr "No hi ha l'atribut «type» per al node <%s>"
-
-#~ msgid "A node has unknown \"type\" attribute `%s', ignoring"
-#~ msgstr "Un node té l'atribut «type» desconegut «%s», s'ignora"
-
-#~ msgid "No \"value\" attribute for node"
-#~ msgstr "No hi ha l'atribut «value» per al node"
-
-#~ msgid "Didn't understand XML node <%s> inside an XML list node"
-#~ msgstr ""
-#~ "No s'ha pogut processar el node XML <%s> dins d'un node de llista XML"
-
-#~ msgid "Invalid type (list, pair, or unknown) in a list node"
-#~ msgstr ""
-#~ "El tipus no és vàlid (llista, parella o desconegut) en un node de llista"
-
-#~ msgid "Bad XML node: %s"
-#~ msgstr "El node XML és incorrecte: %s"
-
-#~ msgid "List contains a badly-typed node (%s, should be %s)"
-#~ msgstr "La llista conté un node mal teclejat (%s, hauria de ser %s)"
-
-#~ msgid "Ignoring bad car from XML pair: %s"
-#~ msgstr "S'ignora el car incorrecte de la parella XML: %s"
-
-#~ msgid "parsing XML file: lists and pairs may not be placed inside a pair"
-#~ msgstr ""
-#~ "en analitzar el fitxer XML: les llistes i les parelles no es poden "
-#~ "col·locar dins d'una parella"
-
-#~ msgid "Ignoring bad cdr from XML pair: %s"
-#~ msgstr "S'ignora el cdr incorrecte d'una parella XML: %s"
-
-#~ msgid "Didn't understand XML node <%s> inside an XML pair node"
-#~ msgstr ""
-#~ "No s'ha pogut processar el node XML <%s> dins d'un node de parella XML"
-
-#~ msgid "Didn't find car and cdr for XML pair node"
-#~ msgstr "No s'ha trobat el car i el cdr per al node de parella XML"
-
-#~ msgid "Missing cdr from pair of values in XML file"
-#~ msgstr "Manca el cdr d'una parella de valors al fitxer XML"
-
-#~ msgid "Missing car from pair of values in XML file"
-#~ msgstr "Manca el car d'una parella de valors al fitxer XML"
-
-#~ msgid "Missing both car and cdr values from pair in XML file"
-#~ msgstr "Manca el valor tant del car com del cdr d'una parella al fitxer XML"
-
-#~ msgid "Change GConf mandatory values"
-#~ msgstr "Canvia els valors obligatoris del GConf"
-
-#~ msgid "Change GConf system values"
-#~ msgstr "Canvia els valors de sistema del GConf"
-
-#~ msgid "Privileges are required to change GConf mandatory values"
-#~ msgstr ""
-#~ "Es necessiten privilegis per a canviar els valors obligatoris del GConf"
-
-#~ msgid "Privileges are required to change GConf system values"
-#~ msgstr ""
-#~ "Es necessiten privilegis per a canviar els valors de sistema del GConf"
-
-#~ msgid "`%c' is an invalid character in a configuration storage address"
-#~ msgstr ""
-#~ "«%c» és un caràcter no vàlid en una adreça d'emmagatzematge de "
-#~ "configuració"
-
-#~ msgid "No such file `%s'\n"
-#~ msgstr "No s'ha trobat el fitxer «%s»\n"
-
-#~ msgid "Backend `%s' failed to return a vtable\n"
-#~ msgstr "El rerefons «%s» no ha pogut retornar una «vtable»\n"
-
-#~ msgid "Backend `%s' missing required vtable member `%s'\n"
-#~ msgstr "Al rerefons «%s» li manca el membre «%s» de la «vtable»\n"
-
-#~ msgid "Bad address `%s': %s"
-#~ msgstr "Adreça errònia «%s»: %s"
-
-#~ msgid "Bad address `%s'"
-#~ msgstr "Adreça errònia «%s»"
-
-#~ msgid "GConf won't work without dynamic module support (gmodule)"
-#~ msgstr "El GConf no funcionarà sense la funció de mòduls dinàmics (gmodule)"
-
-#~ msgid "Error opening module `%s': %s\n"
-#~ msgstr "S'ha produït un error en obrir el mòdul «%s»: %s\n"
-
-#~ msgid "Error initializing module `%s': %s\n"
-#~ msgstr "S'ha produït un error en inicialitzar el mòdul «%s»: %s\n"
-
-#~ msgid "Couldn't locate backend module for `%s'"
-#~ msgstr "No s'ha pogut ubicar el mòdul de rerefons per a «%s»"
-
-#~ msgid "GConf Error: %s\n"
-#~ msgstr "Error del GConf: %s\n"
-
-#~ msgid "GConf warning: failure listing pairs in `%s': %s"
-#~ msgstr ""
-#~ "Avís del GConf: s'ha produït una fallada en llistar les parelles a «%s»: "
-#~ "%s"
-
-#~ msgid "Expected `%s' got `%s' for key %s"
-#~ msgstr "S'esperava «%s» però s'ha obtingut «%s» per a la clau %s"
-
-#~ msgid "Received invalid value in set request"
-#~ msgstr "S'ha rebut un valor no vàlid en definir la petició"
+#~ msgid "Generating PDF is not supported"
+#~ msgstr "La generació de PDF no està implementada"
 
 #~ msgid ""
-#~ "Couldn't make sense of CORBA value received in set request for key `%s'"
+#~ "You were trying to print to a printer using the “%s” driver. This program "
+#~ "requires a PostScript printer driver."
 #~ msgstr ""
-#~ "No s'ha pogut tenir en compte el valor CORBA rebut en definir la petició "
-#~ "per a la clau «%s»"
+#~ "Esteu intentant imprimir a una impressora amb el controlador «%s». Aquest "
+#~ "programa requereix un controlador d'impressió PostScript."
 
-#~ msgid "Received request to drop all cached data"
-#~ msgstr "S'ha rebut una petició per a descartar totes les dades intermèdies"
+#~ msgid "Pages"
+#~ msgstr "Pàgines"
 
-#~ msgid "Received request to sync synchronously"
-#~ msgstr "S'ha rebut una petició per a sincronitzar de manera síncrona"
+#~ msgid "Invalid URI: “%s”"
+#~ msgstr "URI invàlid: «%s»"
 
-#~ msgid "Fatal error: failed to get object reference for ConfigDatabase"
-#~ msgstr ""
-#~ "Error fatal: no s'ha pogut obtenir la referència d'objecte per al "
-#~ "ConfigDatabase"
+#~ msgid "Unsupported URI: “%s”"
+#~ msgstr "No es sap gestionar l'URI: «%s»"
 
-#~ msgid "Failed to sync one or more sources: %s"
-#~ msgstr "No s'han pogut sincronitzar una o més fonts: %s"
+#~ msgid "Images"
+#~ msgstr "Imatges"
+
+#~ msgid "Open “%s”"
+#~ msgstr "Obre «%s»"
+
+#~ msgid "Empty"
+#~ msgstr "Buit"
+
+#~ msgid "75%"
+#~ msgstr "75%"
+
+#~ msgid "No document loaded."
+#~ msgstr "No hi ha cap document carregat."
+
+#~ msgid "Broken pipe."
+#~ msgstr "Conducte trencat."
+
+#~ msgid "Error while decompressing file “%s”:\n"
+#~ msgstr "S'ha produït un error en descomprimir el fitxer «%s»:\n"
+
+#~ msgid "File is not readable."
+#~ msgstr "El fitxer no és llegible."
+
+#~ msgid "Document loaded."
+#~ msgstr "S'ha carregat el document."
+
+#~ msgid "_Previous"
+#~ msgstr "_Anterior"
+
+#~ msgid "_Next"
+#~ msgstr "_Següent"
+
+#~ msgid "Hide attachments bar"
+#~ msgstr "Amaga la barra d'adjuncions"
+
+#~ msgid "The \"Find\" feature will not work with this document"
+#~ msgstr "La característica de «Cerca» no funcionarà en aquest document"
+
+#~ msgid "Searching for text is only supported for PDF documents."
+#~ msgstr "Només es pot cercar text en els documents PDF."
+
+#~ msgid "*"
+#~ msgstr "*"
+
+#~ msgid "Default sidebar size"
+#~ msgstr "Mida per defecte de la barra lateral"
+
+#~ msgid "Show sidebar by default"
+#~ msgstr "Mostra la barra lateral per defecte"
+
+#~ msgid "Show statusbar by default"
+#~ msgstr "Mostra la barra d'estat per defecte"
+
+#~ msgid "Show toolbar by default"
+#~ msgstr "Mostra la barra d'eines per defecte"
 
 #~ msgid ""
-#~ "Error obtaining new value for `%s' after change notification from backend "
-#~ "`%s': %s"
+#~ "Sidebar is the side item that contains the Index and Thumbnail lists. The "
+#~ "default size sets the sidebar's width in pixels based from the side of "
+#~ "the window. Any integer will be accepted. The sidebar will never shrink "
+#~ "smaller than the size of the text required to display Thumbnails or "
+#~ "Index. Large values will cause the sidebar to take up as much of the page "
+#~ "display area as possible relative to the window's size."
 #~ msgstr ""
-#~ "S'ha produït un error en obtenir un valor nou per a «%s» després de "
-#~ "canviar la notificació del rerefons «%s»: %s"
+#~ "La barra lateral és l'element lateral que conté les llistes d'índex i "
+#~ "miniatures. La mida per defecte estableix l'amplada en píxels de la barra "
+#~ "lateral basada en el lateral de la finestra. Qualsevol enter s'acceptarà. "
+#~ "La barra lateral mai serà més petita que la mida del text que necessita "
+#~ "per mostrar les miniatures o els índexs. Valors alts faran que la barra "
+#~ "lateral agafi bona part de l'àrea per mostrar la pàgina relatiu a la mida "
+#~ "de la finestra."
 
 #~ msgid ""
-#~ "Failed to log addition of listener %s (%s); will not be able to restore "
-#~ "this listener on gconfd restart, resulting in unreliable notification of "
-#~ "configuration changes."
+#~ "Sidebar is the side item that contains the Index and Thumbnail lists. Two "
+#~ "boolean options, true makes sidebar visible by default while false makes "
+#~ "sidebar not visible by default"
 #~ msgstr ""
-#~ "No s'ha pogut registrar l'addició de l'oient %s (%s); no es podrà "
-#~ "restaurar aquest oient quan es reiniciï el gconfd, fet que resultarà en "
-#~ "una notificació de poca confiança dels canvis de configuració."
-
-#~ msgid "Listener ID %lu doesn't exist"
-#~ msgstr "No existeix l'ID d'oient %lu"
+#~ "La barra lateral és l'element lateral que conté les llistes d'índexs i "
+#~ "miniatures. Admet dues opcions booleanes, cert fa que la barra lateral "
+#~ "sigui visible per defecte, mentre que fals farà que per defecte no sigui "
+#~ "visible."
 
 #~ msgid ""
-#~ "Failed to log removal of listener to logfile (most likely harmless, may "
-#~ "result in a notification weirdly reappearing): %s"
+#~ "Statusbar is the standard bottom bar that display additional information "
+#~ "about links and other actions. Two boolean options, true makes the "
+#~ "statusbar visible by default while false makes sidebar not visible by "
+#~ "default."
 #~ msgstr ""
-#~ "No s'ha pogut registrar la supressió de l'oient del fitxer de registre "
-#~ "(segurament serà inofensiu, pot resultar en una notificació que aparegui "
-#~ "de forma estranya): %s"
-
-#~ msgid "Error getting value for `%s': %s"
-#~ msgstr "S'ha produït un error en obtenir el valor per a «%s»: %s"
-
-#~ msgid "Error setting value for `%s': %s"
-#~ msgstr "S'ha produït un error en assignar el valor per a «%s»: %s"
-
-#~ msgid "Error unsetting `%s': %s"
-#~ msgstr "S'ha produït un error en suprimir el valor de «%s»: %s"
-
-#~ msgid "Error getting default value for `%s': %s"
-#~ msgstr ""
-#~ "S'ha produït un error en obtenir el valor predeterminat per a «%s»: %s"
-
-#~ msgid "Error unsetting \"%s\": %s"
-#~ msgstr "S'ha produït un error en suprimir el valor de «%s»: %s"
-
-#~ msgid "Error getting new value for \"%s\": %s"
-#~ msgstr "S'ha produït un error en obtenir un valor nou per a «%s»: %s"
-
-#~ msgid "Error checking existence of `%s': %s"
-#~ msgstr "S'ha produït un error en comprovar l'existència de «%s»: %s"
-
-#~ msgid "Error removing directory \"%s\": %s"
-#~ msgstr "S'ha produït un error en suprimir el directori «%s»: %s"
-
-#~ msgid "Failed to get all entries in `%s': %s"
-#~ msgstr "No s'han pogut obtenir totes les entrades a «%s»: %s"
-
-#~ msgid "Error listing dirs in `%s': %s"
-#~ msgstr "S'ha produït un error en llistar els directoris a «%s»: %s"
-
-#~ msgid "Error setting schema for `%s': %s"
-#~ msgstr "S'ha produït un error en definir l'esquema per a «%s»: %s"
-
-#~ msgid "Success"
-#~ msgstr "Èxit"
-
-#~ msgid "Configuration server couldn't be contacted"
-#~ msgstr "No s'ha pogut contactar amb el servidor de configuració"
-
-#~ msgid "Permission denied"
-#~ msgstr "Permís denegat"
-
-#~ msgid "Couldn't resolve address for configuration source"
-#~ msgstr "No s'ha pogut resoldre l'adreça per a la font de configuració"
-
-#~ msgid "Bad key or directory name"
-#~ msgstr "Clau o nom de directori incorrecte"
-
-#~ msgid "Parse error"
-#~ msgstr "S'ha produït un error d'anàlisi"
-
-#~ msgid "Corrupt data in configuration source database"
-#~ msgstr "Hi ha dades malmeses a la base de dades de fonts de configuració"
-
-#~ msgid "Type mismatch"
-#~ msgstr "S'ha produït un error de coincidència de tipus"
-
-#~ msgid "Key operation on directory"
-#~ msgstr "Operació de clau sobre el directori"
-
-#~ msgid "Directory operation on key"
-#~ msgstr "Operació de directori sobre la clau"
-
-#~ msgid "Can't overwrite existing read-only value"
-#~ msgstr "No es pot sobreescriure un valor existent de només lectura"
-
-#~ msgid "Object Activation Framework error"
-#~ msgstr "S'ha produït un error de l'Object Activation Framework"
-
-#~ msgid "Operation not allowed without configuration server"
-#~ msgstr "No es permet l'operació sense un servidor de configuració"
-
-#~ msgid "No database available to save your configuration"
-#~ msgstr "No hi ha cap base de dades disponible per a desar la configuració"
-
-#~ msgid "No '/' in key \"%s\""
-#~ msgstr "No hi ha cap «/» a la clau «%s»"
-
-#~ msgid "Invalid UTF-8 in string value in '%s'"
-#~ msgstr "L'UTF-8 no és vàlid al valor de la cadena a «%s»"
-
-#~ msgid "Couldn't interpret CORBA value for list element"
-#~ msgstr ""
-#~ "No s'ha pogut interpretar el valor de CORBA per a l'element de la llista"
-
-#~ msgid "Incorrect type for list element in %s"
-#~ msgstr "Tipus incorrecte per a l'element de llista a %s"
-
-#~ msgid "Received list from gconfd with a bad list type"
-#~ msgstr "S'ha rebut la llista del gconfd amb un tipus de llista incorrecte"
-
-#~ msgid "Failed to convert object to IOR"
-#~ msgstr "No s'ha pogut convertir l'objecte a IOR"
-
-#~ msgid "Invalid UTF-8 in locale for schema"
-#~ msgstr "L'UTF-8 no és vàlid al locale de l'esquema"
-
-#~ msgid "Invalid UTF-8 in short description for schema"
-#~ msgstr "L'UTF-8 no és vàlid a la descripció curta de l'esquema"
-
-#~ msgid "Invalid UTF-8 in long description for schema"
-#~ msgstr "L'UTF-8 no és vàlid a la descripció llarga de l'esquema"
-
-#~ msgid "Invalid UTF-8 in owner for schema"
-#~ msgstr "L'UTF-8 no és vàlid al propietari de l'esquema"
-
-#~ msgid "Adding source `%s'\n"
-#~ msgstr "S'està afegint la font «%s»\n"
-
-#~ msgid "Read error on file `%s': %s\n"
-#~ msgstr "S'ha produït un error de lectura al fitxer «%s»: %s\n"
-
-#~ msgid "Text contains invalid UTF-8"
-#~ msgstr "El text conté un UTF-8 no vàlid"
-
-#~ msgid "Expected list, got %s"
-#~ msgstr "S'esperava una llista però s'ha obtingut %s"
-
-#~ msgid "Expected list of %s, got list of %s"
-#~ msgstr "S'esperava una llista de %s, però s'ha obtingut una llista de %s"
-
-#~ msgid "Expected pair, got %s"
-#~ msgstr "S'esperava una parella però s'ha obtingut %s"
-
-#~ msgid "Expected (%s,%s) pair, got a pair with one or both values missing"
-#~ msgstr ""
-#~ "S'esperava una parella (%s,%s) però s'ha obtingut una parella sense un o "
-#~ "ambdós valors"
-
-#~ msgid "Expected pair of type (%s,%s) got type (%s,%s)"
-#~ msgstr ""
-#~ "S'esperava una parella del tipus (%s,%s) però se n'ha obtingut una del "
-#~ "tipus (%s,%s)"
-
-#~ msgid "Quoted string doesn't begin with a quotation mark"
-#~ msgstr "La cadena entre cometes no comença amb cometes"
-
-#~ msgid "Quoted string doesn't end with a quotation mark"
-#~ msgstr "La cadena entre cometes no acaba amb cometes"
-
-#~ msgid "Encoded value is not valid UTF-8"
-#~ msgstr "El valor codificat no és un UTF-8 vàlid"
-
-#~ msgid "Could not lock temporary file '%s': %s"
-#~ msgstr "No s'ha pogut blocar el fitxer temporal «%s»: %s"
-
-#~ msgid "Could not create file '%s', probably because it already exists"
-#~ msgstr "No s'ha pogut crear el fitxer «%s», segurament perquè ja existeix"
-
-#~ msgid "Failed to create or open '%s'"
-#~ msgstr "No s'ha pogut crear o obrir «%s»"
+#~ "La barra d'estat és la barra estàndard de baix de tot que mostra "
+#~ "informació addicional sobre els enllaços i altres accions. Admet dues "
+#~ "opcions booleanes, cert fa que la barra d'estat sigui visible per "
+#~ "defecte, mentre que fals farà que per defecte no sigui visible."
 
 #~ msgid ""
-#~ "Failed to lock '%s': probably another process has the lock, or your "
-#~ "operating system has NFS file locking misconfigured (%s)"
+#~ "Toolbar is the top bar that contains navigation and zoom controls. Two "
+#~ "boolean options, true makes toolbar visible by default while false makes "
+#~ "toolbar not visible by default."
 #~ msgstr ""
-#~ "No s'ha pogut blocar «%s»: segurament un altre procés l'ha blocat, o el "
-#~ "sistema operatiu té mal configurat el blocatge de fitxers NFS (%s)"
+#~ "La barra d'eines és la barra de dalt de tot que conté els controls de "
+#~ "navegació i d'ampliació. Admet dues opcions boolenaes, cert fa que la "
+#~ "barra d'eines sigui visible per defecte, mentre que fals farà que per "
+#~ "defecte no sigui visible."
 
-#~ msgid "Failed to remove '%s': %s"
-#~ msgstr "No s'ha pogut suprimir «%s»: %s"
-
-#~ msgid "Not running within active session"
-#~ msgstr "No s'està executant dins d'una sessió activa"
-
-#~ msgid "GetIOR failed: %s"
-#~ msgstr "Ha fallat el mètode GetIOR: %s"
-
-#~ msgid "couldn't contact ORB to resolve existing gconfd object reference"
-#~ msgstr ""
-#~ "no s'ha pogut contactar amb l'ORB per a resoldre la referència d'objecte "
-#~ "gconfd existent"
-
-#~ msgid "Failed to convert IOR '%s' to an object reference"
-#~ msgstr "No s'ha pogut convertir l'IOR «%s» a una referència d'objecte"
-
-#~ msgid "couldn't create directory `%s': %s"
-#~ msgstr "no s'ha pogut crear el directori «%s»: %s"
-
-#~ msgid "Can't write to file `%s': %s"
-#~ msgstr "No es pot escriure al fitxer «%s»: %s"
-
-#~ msgid "We didn't have the lock on file `%s', but we should have"
-#~ msgstr "No teníem el blocatge del fitxer «%s», però l'hauríem de tenir"
-
-#~ msgid "Failed to link '%s' to '%s': %s"
-#~ msgstr "No s'ha pogut enllaçar «%s» amb «%s»: %s"
-
-#~ msgid "Failed to remove lock file `%s': %s"
-#~ msgstr "No s'ha pogut suprimir el fitxer de blocatge «%s»: %s"
-
-#~ msgid "Failed to clean up file '%s': %s"
-#~ msgstr "No s'ha pogut netejar el fitxer «%s»: %s"
-
-#~ msgid "Server ping error: %s"
-#~ msgstr "Error de ping del servidor: %s"
+#~ msgid "Unable to find glade file"
+#~ msgstr "No s'ha trobat el fitxer glade"
 
 #~ msgid ""
-#~ "Failed to contact configuration server; the most common cause is a "
-#~ "missing or misconfigured D-Bus session bus daemon. See http://projects."
-#~ "gnome.org/gconf/ for information. (Details - %s)"
+#~ "The glade file, %s, cannot be found.  Please check that your installation "
+#~ "is complete."
 #~ msgstr ""
-#~ "No s'ha pogut contactar amb el servidor de configuració; la causa més "
-#~ "comuna és que el dimoni de bus de la sessió de D-Bus no existeixi o "
-#~ "estigui mal configurat.Vegeu http://projects.gnome.org/gconf/ per obtenir "
-#~ "més informació. (Detalls - %s)"
+#~ "El fitxer glade, %s, no s'ha trobat. Comproveu que la instal·lació "
+#~ "estigui completa."
+
+#~ msgid "Document Viewer - Password Required"
+#~ msgstr "Visualitzador de documents - Es necessita contrasenya"
+
+#~ msgid "Save the current document with a new filename"
+#~ msgstr "Desa el document actual amb un nom nou"
+
+#~ msgid "View the properties of this document"
+#~ msgstr "Mostra les propietats d'aquest document"
+
+#~ msgid "Close this window"
+#~ msgstr "Tanca aquesta finestra"
+
+#~ msgid "Copy text from the document"
+#~ msgstr "Copia el text del document"
+
+#~ msgid "Select the entire page"
+#~ msgstr "Selecciona la pàgina sencera"
+
+#~ msgid "Customize the toolbar"
+#~ msgstr "Personalitza la barra d'eines"
+
+#~ msgid "Rotate the document to the left"
+#~ msgstr "Gira el document cap a l'esquerra"
+
+#~ msgid "Rotate the document to the right"
+#~ msgstr "Gira el document cap a la dreta"
+
+#~ msgid "Display help for the viewer application"
+#~ msgstr "Mostra l'ajuda del visualitzador"
+
+#~ msgid "Display credits for the document viewer creators"
+#~ msgstr "Mostra els crèdits dels creadors del visualitzador de documents"
+
+#~ msgid "Scroll one page forward"
+#~ msgstr "Vés una pàgina endevant"
+
+#~ msgid "Scroll one page backward"
+#~ msgstr "Vés una pàgina enrere"
+
+#~ msgid "Focus the page selector"
+#~ msgstr "Enfoca el selector de pàgina"
+
+#~ msgid "Go ten pages backward"
+#~ msgstr "Vés deu pàgines enrere"
+
+#~ msgid "Go ten pages forward"
+#~ msgstr "Vés deu pàgines endevant"
+
+#~ msgid "_Statusbar"
+#~ msgstr "Barra d'e_stat"
+
+#~ msgid "Show or hide the statusbar"
+#~ msgstr "Mostra o amaga la barra d'estat"
+
+#~ msgid "Name"
+#~ msgstr "Nom"
+
+#~ msgid "<span size=\"smaller\"> </span>"
+#~ msgstr "<span size=\"smaller\"> </span>"
+
+#~ msgid "unexpected EOF\n"
+#~ msgstr "EOF inesperat\n"
+
+#~ msgid "could not load font `%s'\n"
+#~ msgstr "no s'ha pogut carregar la font '%s'\n"
+
+#~ msgid "could not reload `%s'\n"
+#~ msgstr "no s'ha pogut recarregar '%s'\n"
+
+#~ msgid "%s: unsupported DVI format (version %u)\n"
+#~ msgstr "%s: el format DVI no està implementat (versió %u)\n"
+
+#~ msgid "%s: File corrupted, or not a DVI file\n"
+#~ msgstr "%s: El fitxer està malmès, o no és un fitxer DVI\n"
+
+#~ msgid "%s: vf macro had errors\n"
+#~ msgstr "%s: la macro vf conté errors\n"
+
+#~ msgid "%s: stack not empty after vf macro\n"
+#~ msgstr "%s: la pila no és buida després de la macro vf\n"
+
+#~ msgid "%s: could not reopen file (%s)\n"
+#~ msgstr "%s: no es pot tornar a obrir el fitxer (%s)\n"
+
+#~ msgid "%s: page %d out of range\n"
+#~ msgstr "%s: la pàgina %d està fora del rang\n"
+
+#~ msgid "%s: bad offset at page %d\n"
+#~ msgstr "%s: compensació incorrecta a la pàgina %d\n"
+
+#~ msgid "stack not empty at end of page\n"
+#~ msgstr "la pila no és buida al final de la pàgina\n"
+
+#~ msgid "no default font set yet\n"
+#~ msgstr "encara no s'ha establert cap tipus de lletra per defecte\n"
+
+#~ msgid "requested character %d does not exist in `%s'\n"
+#~ msgstr "el caràcter demanat %d no existeix a '%s'\n"
+
+#~ msgid "enlarging stack\n"
+#~ msgstr "s'està engrandint la pila\n"
+
+#~ msgid "font %d is not defined\n"
+#~ msgstr "el tipus de lletra %d no està definit\n"
+
+#~ msgid "unexpected opcode %d\n"
+#~ msgstr "no s'esperava el codi d'operació %d\n"
+
+#~ msgid "undefined opcode %d\n"
+#~ msgstr "el codi d'operació %d no està definit\n"
+
+#~ msgid "%s: no fonts defined\n"
+#~ msgstr "%s: no hi ha cap tipus de lletra definit\n"
+
+#~ msgid "%s: %d: [%s] requested encoding `%s' does not match vector `%s'\n"
+#~ msgstr ""
+#~ "%s: %d: [%s] la codificació sol·licitada '%s' no coincideix amb el vector "
+#~ "'%s'\n"
+
+#~ msgid "%s: could not load fontmap\n"
+#~ msgstr "%s: no s'ha pogut carregar el mapa del tipus de lletra\n"
+
+#~ msgid "%s: could not set as default encoding\n"
+#~ msgstr "%s: no s'ha pogut posar com a codificació per defecte\n"
+
+#~ msgid "encoding vector `%s' is in use\n"
+#~ msgstr "s'està utilitzant el vector de codificació '%s'\n"
+
+#~ msgid "GF: invalid opcode %d in character %d\n"
+#~ msgstr "GF: el codi d'operació %d no és vàlid en el caràcter %d\n"
+
+#~ msgid "(gf) Character %d: invalid opcode %d\n"
+#~ msgstr "(gf) Caràcter %d: el codi d'operació %d no és vàlid\n"
+
+#~ msgid "(gf) character %d has an incorrect bounding box\n"
+#~ msgstr "(gf) el caràcter %d té una caixa de limitació incorrecte\n"
+
+#~ msgid "%s: bad checksum (expected %u, found %u)\n"
+#~ msgstr "%s: suma de verificació errònia (s'esperava %u, s'ha trobat %u)\n"
+
+#~ msgid "%s: File corrupted, or not a GF file\n"
+#~ msgstr "%s: El fitxer està malmès, o no és un fitxer GF\n"
+
+#~ msgid "more than 10 counters in page specification\n"
+#~ msgstr "més de 10 contadors en l'especificació de pàgina\n"
+
+#~ msgid "custom"
+#~ msgstr "personalitzat"
+
+#~ msgid "Bad PK file: More bits than required\n"
+#~ msgstr "Fiter PK erroni: més bits dels requerits\n"
+
+#~ msgid "%s: checksum mismatch (expected %u, got %u)\n"
+#~ msgstr ""
+#~ "%s: la suma de comprovació no coincideix (s'esperava %u, s'ha obtingut "
+#~ "%u)\n"
+
+#~ msgid "%s: unexpected preamble\n"
+#~ msgstr "%s: no s'esperava el preàmbul\n"
+
+#~ msgid "%s: File corrupted, or not a PK file\n"
+#~ msgstr "%s: El fitxer està malmès, o no és un fitxer PK\n"
+
+#~ msgid "%s: malformed value for key `%s'\n"
+#~ msgstr "%s: valor malformat per a la clau '%s'\n"
+
+#~ msgid "%s: unknown key `%s' ignored\n"
+#~ msgstr "%s: s'ha ignorat la clau desconeguda '%s'\n"
+
+#~ msgid "%s: no argument for key `%s', using defaults\n"
+#~ msgstr ""
+#~ "%s: no hi ha argument per a la clau '%s', s'utilitzarà allò per defecte\n"
+
+#~ msgid "%s: argument `%s' ignored for key `%s'\n"
+#~ msgstr "%s: s'ha ignorat l'argument '%s' per a la clau '%s'\n"
+
+#~ msgid "%s: tried to pop top level layer\n"
+#~ msgstr "%s: s'ha provat de desempilar la capa superior\n"
+
+#~ msgid "(t1) failed to reset device resolution\n"
+#~ msgstr "(t1) error al reiniciar la resolució del dispositiu\n"
+
+#~ msgid "%s: could not encode font\n"
+#~ msgstr "%s: no s'ha pogut codificar el tipus de lletra\n"
+
+#~ msgid "(t1) unsupported bitmap pad size %d\n"
+#~ msgstr "(t1) la mida %d del coixí del mapa de bits no està implementada\n"
+
+#~ msgid "%s: Checksum mismatch (got %u, expected %u)\n"
+#~ msgstr ""
+#~ "%s: La suma de comprovació no coincideix (s'ha obtingut %u, s'esperava "
+#~ "%u)\n"
+
+#~ msgid "%s: Error reading AFM data\n"
+#~ msgstr "%s: S'ha produït un error en llegir dades AFM\n"
+
+#~ msgid "Warning: TFM file `%s' has suspicious size\n"
+#~ msgstr "Avís: el fitxer TFM '%s' té una mida sospitosa\n"
+
+#~ msgid "%s: font coding scheme truncated to 40 bytes\n"
+#~ msgstr ""
+#~ "%s: s'ha truncat l'esquema de codificació del tipus de lletra a 40 bytes\n"
+
+#~ msgid "%s: File corrupted, or not a TFM file\n"
+#~ msgstr "%s: El fitxer està malmès, o no és un fitxer TFM\n"
+
+#~ msgid "(tt) %s: no acceptable map found, using #0\n"
+#~ msgstr "(tt) %s: el mapa trobat no és acceptable, s'utilitza #0\n"
+
+#~ msgid "(tt) %s: could not set resolution: %s\n"
+#~ msgstr "(tt) %s: no s'ha pogut establir la resolució: %s\n"
+
+#~ msgid "(tt) %s: could not set point size: %s\n"
+#~ msgstr "(tt) %s: no s'ha pogut establir la mida del punter: %s\n"
+
+#~ msgid "(tt) %s: could not load PS name table\n"
+#~ msgstr "(tt) %s: no s'ha pogut carregar el nom de la taula PS\n"
+
+#~ msgid "%s: no encoding vector found, expect bad output\n"
+#~ msgstr ""
+#~ "%s: no s'ha trobat vector de codificació, excepte una sortida errònia\n"
+
+#~ msgid "Crashing"
+#~ msgstr "Fallant"
+
+#~ msgid "%s: Warning: "
+#~ msgstr "%s: Avís: "
+
+#~ msgid "%s: Fatal: "
+#~ msgstr "%s: Fatal: "
+
+#~ msgid "Fatal"
+#~ msgstr "Fatal"
 
 # FIXME
-#~ msgid "- Sanity checks for GConf"
-#~ msgstr "- Comprovacions de seguretat del GConf"
+#~ msgid "out of memory allocating %u bytes\n"
+#~ msgstr "fora de memòria ubicant %u bytes\n"
 
-#~ msgid ""
-#~ "Error while parsing options: %s.\n"
-#~ "Run '%s --help' to see a full list of available command line options.\n"
-#~ msgstr ""
-#~ "S'ha produït un error en analitzar les opcions: %s.\n"
-#~ "Executeu «%s --help» per a veure una llista completa d'opcions "
-#~ "disponibles per a la línia d'ordres.\n"
-
-#~ msgid ""
-#~ "Please contact your system administrator to resolve the following "
-#~ "problem:\n"
-#~ "Could not open or create the file \"%s\"; this indicates that there may "
-#~ "be a problem with your configuration, as many programs will need to "
-#~ "create files in your home directory. The error was \"%s\" (errno = %d)."
-#~ msgstr ""
-#~ "Contacteu amb l'administrador del sistema per tal de resoldre el problema "
-#~ "següent:\n"
-#~ "No s'ha pogut obrir o crear el fitxer «%s»; això indica que pot haver-hi "
-#~ "un problema amb la vostra configuració, ja que molts programes "
-#~ "necessitaran crear fitxers al directori d'inici. L'error ha estat "
-#~ "«%s» (errno = %d)."
-
-#~ msgid ""
-#~ "Please contact your system administrator to resolve the following "
-#~ "problem:\n"
-#~ "Could not lock the file \"%s\"; this indicates that there may be a "
-#~ "problem with your operating system configuration. If you have an NFS-"
-#~ "mounted home directory, either the client or the server may be set up "
-#~ "incorrectly. See the rpc.statd and rpc.lockd documentation. A common "
-#~ "cause of this error is that the \"nfslock\" service has been disabled.The "
-#~ "error was \"%s\" (errno = %d)."
-#~ msgstr ""
-#~ "Contacteu amb l'administrador del sistema per tal de resoldre el problema "
-#~ "següent:\n"
-#~ "No s'ha pogut blocar el fitxer «%s»; això indica que pot haver-hi un "
-#~ "problema amb la configuració del vostre sistema operatiu. Si teniu un "
-#~ "directori d'inici muntat amb NFS, o el client o bé el servidor s'han "
-#~ "definit incorrectament. Vegeu la documentació de l'rpc.statd i de l'rpc."
-#~ "lockd. Una causa comuna d'aquest error és que el servei «nfslock» ha "
-#~ "estat inhabilitat. L'error ha estat «%s» (errno = %d)."
-
-#~ msgid "Can't remove file %s: %s\n"
-#~ msgstr "No s'ha pogut suprimir el fitxer %s: %s\n"
-
-#~ msgid ""
-#~ "Please contact your system administrator to resolve the following "
-#~ "problem:\n"
-#~ "No configuration sources in the configuration file \"%s\"; this means "
-#~ "that preferences and other settings can't be saved. %s%s"
-#~ msgstr ""
-#~ "Contacteu amb l'administrador del sistema per tal de resoldre el problema "
-#~ "següent:\n"
-#~ "No hi ha fonts de configuració al fitxer de configuració «%s»; això vol "
-#~ "dir que no es poden desar les preferències i altres paràmetres. %s%s"
-
-#~ msgid "Error reading the file: "
-#~ msgstr "S'ha produït un error en llegir el fitxer: "
-
-#~ msgid ""
-#~ "Please contact your system administrator to resolve the following "
-#~ "problem:\n"
-#~ "Could not resolve the address \"%s\" in the configuration file \"%s\": %s"
-#~ msgstr ""
-#~ "Contacteu amb l'administrador del sistema per tal de resoldre el problema "
-#~ "següent:\n"
-#~ "No s'ha pogut resoldre l'adreça «%s» al fitxer de configuració «%s»: %s"
-
-#~ msgid ""
-#~ "The files that contain your preference settings are currently in use.\n"
-#~ "\n"
-#~ "You might be logged in to a session from another computer, and the other "
-#~ "login session is using your preference settings files.\n"
-#~ "\n"
-#~ "You can continue to use the current session, but this might cause "
-#~ "temporary problems with the preference settings in the other session.\n"
-#~ "\n"
-#~ "Do you want to continue?"
-#~ msgstr ""
-#~ "Els fitxers que contenen les vostres configuracions de les preferències "
-#~ "ja estan en ús.\n"
-#~ "\n"
-#~ "Potser esteu dins d'una sessió des d'un altre ordinador, i aquella sessió "
-#~ "utilitza els fitxers de configuracions de preferències.\n"
-#~ "\n"
-#~ "Podeu continuar en la sessió actual, però podria provocar problemes "
-#~ "temporals amb les configuracions de les preferències a l'altra sessió.\n"
-#~ "\n"
-#~ "Voleu continuar?"
-
-#~ msgid "%s Continue (y/n)?"
-#~ msgstr "%s Voleu continuar (s/n)?"
-
-#~ msgid "Schema contains invalid UTF-8"
-#~ msgstr "L'esquema conté un UTF-8 no vàlid"
-
-#~ msgid ""
-#~ "Schema specifies type list but doesn't specify the type of the list "
-#~ "elements"
-#~ msgstr ""
-#~ "L'esquema especifica el tipus llista però no especifica el tipus dels "
-#~ "elements de la llista"
-
-#~ msgid ""
-#~ "Schema specifies type pair but doesn't specify the type of the car/cdr "
-#~ "elements"
-#~ msgstr ""
-#~ "L'esquema especifica el tipus parella però no especifica el tipus dels "
-#~ "elements car/cdr"
-
-#~ msgid ""
-#~ "Resolved address \"%s\" to a writable configuration source at position %d"
-#~ msgstr ""
-#~ "S'ha resolt l'adreça «%s» a una font de configuració d'escriptura a la "
-#~ "posició %d"
-
-#~ msgid ""
-#~ "Resolved address \"%s\" to a read-only configuration source at position %d"
-#~ msgstr ""
-#~ "S'ha resolt l'adreça «%s» a una font de configuració de només lectura a "
-#~ "la posició %d"
-
-#~ msgid ""
-#~ "Resolved address \"%s\" to a partially writable configuration source at "
-#~ "position %d"
-#~ msgstr ""
-#~ "S'ha resolt l'adreça «%s» a una font de configuració parcialment "
-#~ "d'escriptura a la posició %d"
-
-#~ msgid ""
-#~ "None of the resolved addresses are writable; saving configuration "
-#~ "settings will not be possible"
-#~ msgstr ""
-#~ "Cap de les adreces resoltes és d'escriptura; no es podran desar els "
-#~ "paràmetres de configuració"
-
-#~ msgid "Schema `%s' specified for `%s' stores a non-schema value"
-#~ msgstr ""
-#~ "L'esquema «%s» especificat per a «%s» emmagatzema un valor que no és "
-#~ "d'esquema"
-
-#~ msgid "The '/' name can only be a directory, not a key"
-#~ msgstr "El nom «/» només pot ser un directori, no una clau"
-
-#~ msgid ""
-#~ "Value for `%s' set in a read-only source at the front of your "
-#~ "configuration path"
-#~ msgstr ""
-#~ "S'ha definit el valor per a «%s» a una font de només lectura al davant "
-#~ "del vostre camí de configuració"
-
-#~ msgid ""
-#~ "Unable to store a value at key '%s', as the configuration server has no "
-#~ "writable databases. There are some common causes of this problem: 1) your "
-#~ "configuration path file %s/path doesn't contain any databases or wasn't "
-#~ "found 2) somehow we mistakenly created two gconfd processes 3) your "
-#~ "operating system is misconfigured so NFS file locking doesn't work in "
-#~ "your home directory or 4) your NFS client machine crashed and didn't "
-#~ "properly notify the server on reboot that file locks should be dropped. "
-#~ "If you have two gconfd processes (or had two at the time the second was "
-#~ "launched), logging out, killing all copies of gconfd, and logging back in "
-#~ "may help. If you have stale locks, remove ~/.gconf*/*lock. Perhaps the "
-#~ "problem is that you attempted to use GConf from two machines at once, and "
-#~ "ORBit still has its default configuration that prevents remote CORBA "
-#~ "connections - put \"ORBIIOPIPv4=1\" in /etc/orbitrc. As always, check the "
-#~ "user.* syslog for details on problems gconfd encountered. There can only "
-#~ "be one gconfd per home directory, and it must own a lockfile in ~/.gconfd "
-#~ "and also lockfiles in individual storage locations such as ~/.gconf"
-#~ msgstr ""
-#~ "No s'ha pogut d'emmagatzemar un valor a la clau «%s», ja que el servidor "
-#~ "de configuració no té bases de dades d'escriptura. Hi ha algunes causes "
-#~ "comunes d'aquest problema: 1) el vostre fitxer de camins de configuració "
-#~ "%s/camí no conté cap base de dades o no s'han trobat 2) d'alguna manera "
-#~ "hem creat, per equivocació, dos processos del gconfd 3) el vostre sistema "
-#~ "operatiu està mal configurat de manera que el blocatge de fitxers NFS no "
-#~ "funciona al directori d'inici, o bé 4) la màquina client NFS ha fallat i "
-#~ "en arrencar de nou no ha notificat correctament al servidor que els "
-#~ "blocatges de fitxers s'haurien de perdre. Si teniu dos processos del "
-#~ "gconfd (o en teníeu dos al moment en què el segon va ser executat), pot "
-#~ "ajudar que sortiu, mateu totes les còpies del gconfd, i torneu a entrar. "
-#~ "Si teniu blocatges expirats, suprimiu el ~/.gconf*/*lock. Potser el "
-#~ "problema és que heu intentat utilitzar el GConf des de dues màquines "
-#~ "alhora, i l'ORBit encara té la configuració predeterminada que evita "
-#~ "connexions CORBA remotes - poseu «ORBIIOPIPv4=1» a /etc/orbitrc. Com "
-#~ "sempre, comproveu el registre de sistema user.* per veure els detalls "
-#~ "dels problemes que ha trobat el gconfd. Només hi pot haver un gconfd per "
-#~ "cada directori d'inici, i ha de tenir el seu fitxer de blocatge a ~/."
-#~ "gconfd com també fitxers de blocatge en ubicacions d'emmagatzematge "
-#~ "individual com ara a ~/.gconf"
-
-#~ msgid "Error finding metainfo: %s"
-#~ msgstr "S'ha produït un error en trobar metainformació: %s"
-
-#~ msgid "Error getting metainfo: %s"
-#~ msgstr "S'ha produït un error en obtenir metainformació: %s"
-
-#~ msgid "Key `%s' listed as schema for key `%s' actually stores type `%s'"
-#~ msgstr ""
-#~ "La clau «%s» llistada com a esquema per a la clau «%s» realment "
-#~ "emmagatzema el tipus «%s»"
-
-#~ msgid "Didn't understand `%s' (list must start with a '[')"
-#~ msgstr "No s'ha pogut processar «%s» (la llista ha de començar amb un «[»)"
-
-#~ msgid "Didn't understand `%s' (list must end with a ']')"
-#~ msgstr "No s'ha pogut processar «%s» (la llista ha d'acabar amb un «]»)"
-
-#~ msgid "Didn't understand `%s' (extra unescaped ']' found inside list)"
-#~ msgstr ""
-#~ "No s'ha pogut processar «%s» (s'ha trobat un «]» addicional dins la "
-#~ "llista)"
-
-#~ msgid "Didn't understand `%s' (extra trailing characters)"
-#~ msgstr ""
-#~ "No s'ha pogut processar «%s» (hi ha caràcters arrossegats addicionals)"
-
-#~ msgid "Didn't understand `%s' (pair must start with a '(')"
-#~ msgstr "No s'ha pogut processar «%s» (la parella ha de començar amb un «(»)"
-
-#~ msgid "Didn't understand `%s' (pair must end with a ')')"
-#~ msgstr "No s'ha pogut processar «%s» (la parella ha d'acabar amb un «)»)"
-
-#~ msgid "Didn't understand `%s' (wrong number of elements)"
-#~ msgstr "No s'ha pogut processar «%s» (el nombre d'elements és incorrecte)"
-
-#~ msgid "Didn't understand `%s' (extra unescaped ')' found inside pair)"
-#~ msgstr ""
-#~ "No s'ha pogut processar «%s» (s'ha trobat un «)» addicional dins de la "
-#~ "parella)"
-
-#~ msgid "Key is NULL"
-#~ msgstr "La clau és NULL"
-
-#~ msgid "\"%s\": %s"
-#~ msgstr "«%s»: %s"
-
-#~ msgid "Server couldn't resolve the address `%s'"
-#~ msgstr "El servidor no ha pogut resoldre l'adreça «%s»"
-
-#~ msgid "Can't add notifications to a local configuration source"
-#~ msgstr "No es poden afegir notificacions a una font de configuració local"
-
-#~ msgid "Adding client to server's list failed, CORBA error: %s"
-#~ msgstr ""
-#~ "Ha fallat l'addició d'un client a la llista de servidors, error del "
-#~ "CORBA: %s"
-
-#~ msgid "Must begin with a slash '/'"
-#~ msgstr "Ha de començar amb una barra inclinada «/»"
-
-#~ msgid "Can't have two slashes '/' in a row"
-#~ msgstr "No poden haver-hi dues barres inclinades «/» seguides"
-
-#~ msgid "Can't have a period '.' right after a slash '/'"
-#~ msgstr "No pot haver-hi un punt «.» just després d'una barra inclinada «/»"
-
-#~ msgid "'\\%o' is not an ASCII character and thus isn't allowed in key names"
-#~ msgstr ""
-#~ "«\\%o» no és un caràcter ASCII, per tant no és permès en noms de clau"
-
-#~ msgid "`%c' is an invalid character in key/directory names"
-#~ msgstr "«%c» no és un caràcter vàlid en noms de clau o directori"
-
-#~ msgid "Key/directory may not end with a slash '/'"
-#~ msgstr "La clau o el directori no pot acabar amb una barra inclinada «/»"
-
-#~ msgid "Failure shutting down configuration server: %s"
-#~ msgstr "S'ha produït un error en tancar el servidor de configuració: %s"
-
-#~ msgid "Expected float, got %s"
-#~ msgstr "S'esperava valor de coma flotant però s'ha obtingut %s"
-
-#~ msgid "Expected int, got %s"
-#~ msgstr "S'esperava un enter però s'ha obtingut %s"
-
-#~ msgid "Expected string, got %s"
-#~ msgstr "S'esperava una cadena però s'ha obtingut %s"
-
-#~ msgid "Expected bool, got %s"
-#~ msgstr "S'esperava un booleà però s'ha obtingut %s"
-
-#~ msgid "Expected schema, got %s"
-#~ msgstr "S'esperava un esquema però s'ha obtingut %s"
-
-#~ msgid "CORBA error: %s"
-#~ msgstr "Error del CORBA: %s"
-
-#~ msgid "Shutdown request received"
-#~ msgstr "S'ha rebut una petició d'apagada"
-
-#~ msgid ""
-#~ "gconfd compiled with debugging; trying to load gconf.path from the source "
-#~ "directory"
-#~ msgstr ""
-#~ "El gconfd s'ha compilat amb depuració; s'està intentant carregar el gconf."
-#~ "path des del directori font"
-
-#~ msgid ""
-#~ "No configuration files found. Trying to use the default configuration "
-#~ "source `%s'"
-#~ msgstr ""
-#~ "No s'ha trobat cap fitxer de configuració. S'està intentant utilitzar la "
-#~ "font de configuració predeterminada «%s»"
-
-#~ msgid ""
-#~ "No configuration sources in the source path. Configuration won't be "
-#~ "saved; edit %s%s"
-#~ msgstr ""
-#~ "No existeixen fonts de configuració al camí de les fonts. No es desarà la "
-#~ "configuració, editeu %s%s"
-
-#~ msgid "Error loading some configuration sources: %s"
-#~ msgstr "S'ha produït un error en carregar algunes fonts de configuració: %s"
-
-#~ msgid ""
-#~ "No configuration source addresses successfully resolved. Can't load or "
-#~ "store configuration data"
-#~ msgstr ""
-#~ "No s'ha resolt satisfactòriament cap adreça de les fonts de configuració. "
-#~ "No es poden carregar ni desar les dades de configuració"
-
-#~ msgid ""
-#~ "No writable configuration sources successfully resolved. May be unable to "
-#~ "save some configuration changes"
-#~ msgstr ""
-#~ "No s'ha pogut resoldre satisfactòriament cap font de configuració "
-#~ "d'escriptura. Potser no es podran desar alguns canvis de configuració"
-
-#~ msgid "Could not connect to session bus: %s"
-#~ msgstr "No s'ha pogut connectar al bus de la sessió: %s"
-
-#~ msgid "Failed to get bus name for daemon, exiting: %s"
-#~ msgstr ""
-#~ "No s'ha pogut obtenir el nom del bus per al dimoni, s'està sortint: %s"
-
-#~ msgid "Could not connect to system bus: %s"
-#~ msgstr "No s'ha pogut connectar al bus del sistema: %s"
-
-#~ msgid "starting (version %s), pid %u user '%s'"
-#~ msgstr "s'està iniciant (versió %s), pid %u usuari «%s»"
-
-#~ msgid "Failed to get object reference for ConfigServer"
-#~ msgstr "No s'ha pogut obtenir la referència d'objecte per al ConfigServer"
-
-#~ msgid ""
-#~ "Failed to write byte to pipe file descriptor %d so client program may "
-#~ "hang: %s"
-#~ msgstr ""
-#~ "No s'ha pogut escriure el byte al descriptor de fitxer del conducte %d "
-#~ "per tant és possible que el programa client es pengi: %s"
-
-#~ msgid "Error releasing lockfile: %s"
-#~ msgstr "S'ha produït un error en alliberar el fitxer de blocatge: %s"
-
-#~ msgid "Exiting"
-#~ msgstr "S'està sortint"
-
-#~ msgid "SIGHUP received, reloading all databases"
-#~ msgstr ""
-#~ "S'ha rebut un SIGHUP, s'estan tornant a carregar totes les bases de dades"
-
-#~ msgid "GConf server is not in use, shutting down."
-#~ msgstr "No s'està utilitzant el servidor GConf, s'està tancant."
-
-#~ msgid "Error obtaining new value for `%s': %s"
-#~ msgstr "S'ha produït un error en obtenir un valor nou per a «%s»: %s"
-
-#~ msgid "Returning exception: %s"
-#~ msgstr "S'està retornant l'excepció: %s"
-
-#~ msgid ""
-#~ "Failed to open gconfd logfile; won't be able to restore listeners after "
-#~ "gconfd shutdown (%s)"
-#~ msgstr ""
-#~ "No s'ha pogut obrir el fitxer de registre del gconfd; no es podran "
-#~ "restaurar els oients després d'aturar el gconfd (%s)"
-
-#~ msgid ""
-#~ "Failed to close gconfd logfile; data may not have been properly saved (%s)"
-#~ msgstr ""
-#~ "No s'ha pogut tancar el fitxer de registre del gconfd; potser no s'han "
-#~ "desat les dades correctament (%s)"
-
-#~ msgid "Could not open saved state file '%s' for writing: %s"
-#~ msgstr "No s'ha pogut obrir el fitxer d'estat desat «%s» per a escriure: %s"
-
-#~ msgid "Could not write saved state file '%s' fd: %d: %s"
-#~ msgstr "No s'ha pogut escriure el fitxer d'estat desat «%s» fd: %d: %s"
-
-#~ msgid "Could not flush saved state file '%s' to disk: %s"
-#~ msgstr "No s'ha pogut buidar al disc el fitxer d'estat desat «%s»: %s"
-
-#~ msgid "Failed to close new saved state file '%s': %s"
-#~ msgstr "No s'ha pogut tancar el fitxer d'estat desat nou «%s»: %s"
-
-#~ msgid "Could not move aside old saved state file '%s': %s"
-#~ msgstr "No s'ha pogut moure a part el fitxer d'estat desat antic «%s»: %s"
-
-#~ msgid "Failed to move new saved state file into place: %s"
-#~ msgstr "No s'ha pogut moure el nou fitxer d'estat desat a l'emplaçament: %s"
-
-#~ msgid ""
-#~ "Failed to restore original saved state file that had been moved to '%s': "
-#~ "%s"
-#~ msgstr ""
-#~ "No s'ha pogut restaurar el fitxer d'estat desat original que havia estat "
-#~ "mogut a «%s»: %s"
-
-#~ msgid ""
-#~ "Unable to restore a listener on address '%s', couldn't resolve the "
-#~ "database"
-#~ msgstr ""
-#~ "No s'ha pogut restaurar un oient a l'adreça «%s», no s'ha pogut resoldre "
-#~ "la base de dades"
-
-#~ msgid "Error reading saved state file: %s"
-#~ msgstr "S'ha produït un error en llegir el fitxer d'estat desat: %s"
-
-#~ msgid "Unable to open saved state file '%s': %s"
-#~ msgstr "No s'ha pogut obrir el fitxer d'estat desat «%s»: %s"
-
-#~ msgid ""
-#~ "Failed to log addition of listener to gconfd logfile; won't be able to re-"
-#~ "add the listener if gconfd exits or shuts down (%s)"
-#~ msgstr ""
-#~ "No s'ha pogut registrar l'addició de l'oient al fitxer de registre del "
-#~ "gconfd; no es podrà tornar a afegir l'oient si el gconfd surt o es tanca "
-#~ "(%s)"
-
-#~ msgid ""
-#~ "Failed to log removal of listener to gconfd logfile; might erroneously re-"
-#~ "add the listener if gconfd exits or shuts down (%s)"
-#~ msgstr ""
-#~ "No s'ha pogut registrar la supressió de l'oient del fitxer de registre "
-#~ "del gconfd; potser es tornarà a afegir per error l'oient si el gconfd "
-#~ "surt o es tanca (%s)"
-
-#~ msgid "Failed to open saved state file: %s"
-#~ msgstr "No s'ha pogut obrir el fitxer d'estat desat: %s"
-
-#~ msgid "Failed to write client add to saved state file: %s"
-#~ msgstr ""
-#~ "No s'ha pogut escriure l'afegiment del client al fitxer d'estat desat: %s"
-
-# FIXME
-#~ msgid "Failed to flush client add to saved state file: %s"
-#~ msgstr ""
-#~ "No s'ha pogut buidar l'afegiment del client al fitxer d'estat desat: %s"
-
-#~ msgid ""
-#~ "Some client removed itself from the GConf server when it hadn't been "
-#~ "added."
-#~ msgstr ""
-#~ "Algun client s'ha suprimit a si mateix del servidor Gconf quan encara no "
-#~ "s'hi havia afegit."
-
-#~ msgid "Set a key to a value and sync. Use with --type."
-#~ msgstr ""
-#~ "Defineix una clau per a un valor i sincronitza. Utilitzeu-ho amb --type."
-
-#~ msgid "Print the value of a key to standard output."
-#~ msgstr "Imprimeix el valor d'una clau a la sortida estàndard."
-
-#~ msgid "Unset the keys on the command line"
-#~ msgstr "Esborra el valor de les claus a la línia d'ordres"
-
-#~ msgid ""
-#~ "Recursively unset all keys at or below the key/directory names on the "
-#~ "command line"
-#~ msgstr ""
-#~ "Esborra recursivament el valor de totes les claus a o sota el nom de clau "
-#~ "o directori a la línia d'ordres"
-
-#~ msgid "Toggles a boolean key."
-#~ msgstr "Commuta una clau booleana."
-
-#~ msgid "Print all key/value pairs in a directory."
-#~ msgstr "Imprimeix totes les parelles clau/valor d'un directori."
-
-#~ msgid "Print all subdirectories in a directory."
-#~ msgstr "Imprimeix tots els subdirectoris d'un directori."
-
-#~ msgid "Print all subdirectories and entries under a directory, recursively."
-#~ msgstr ""
-#~ "Imprimeix recursivament tots els subdirectoris i les entrades dins d'un "
-#~ "directori."
-
-#~ msgid "Search for a key, recursively."
-#~ msgstr "Cerca recursivament una clau."
-
-#~ msgid "Get the short doc string for a key"
-#~ msgstr "Obtén la cadena de document curta per a una clau"
-
-#~ msgid "Get the long doc string for a key"
-#~ msgstr "Obtén la cadena de document llarga per a una clau"
-
-#~ msgid "Return 0 if the directory exists, 2 if it does not."
-#~ msgstr "Retorna 0 si el directori existeix, i 2 si no existeix."
-
-#~ msgid "Ignore schema defaults when reading values."
-#~ msgstr ""
-#~ "Ignora els predeterminats dels esquemes quan es llegeixin els valors."
-
-#~ msgid ""
-#~ "Dump to standard output an XML description of all entries under a "
-#~ "directory, recursively."
-#~ msgstr ""
-#~ "Bolca recursivament a la sortida estàndard una descripció XML de totes "
-#~ "les entrades dins d'un directori."
-
-#~ msgid ""
-#~ "Load from the specified file an XML description of values and set them "
-#~ "relative to a directory."
-#~ msgstr ""
-#~ "Carrega des del fitxer especificat una descripció XML de valors i "
-#~ "estableix-los relatius a un directori."
-
-#~ msgid "Unload a set of values described in an XML file."
-#~ msgstr "Descarrega un conjunt de valors descrits a un fitxer XML."
-
-#~ msgid "Get the name of the default source"
-#~ msgstr "Obtén el nom de la font predeterminada"
-
-#~ msgid "Shut down gconfd. DON'T USE THIS OPTION WITHOUT GOOD REASON."
-#~ msgstr "Apaga el gconfd. NO UTILITZEU AQUESTA OPCIÓ SENSE UN BON MOTIU."
-
-#~ msgid "Return 0 if gconfd is running, 2 if not."
-#~ msgstr "Retorna 0 si s'està executant el gconfd, i 2 si no és així."
-
-#~ msgid ""
-#~ "Launch the configuration server (gconfd). (Normally happens automatically "
-#~ "when needed.)"
-#~ msgstr ""
-#~ "Executa el servidor de configuració (gconfd). (Normalment ja es fa "
-#~ "automàticament quan és necessari.)"
-
-#~ msgid ""
-#~ "Specify the type of the value being set, or the type of the value a "
-#~ "schema describes. Unique abbreviations OK."
-#~ msgstr ""
-#~ "Especifiqueu el tipus de valor que s'ha de definir, o el tipus de valor "
-#~ "que un esquema descriu. S'accepten les abreviacions úniques."
-
-#~ msgid "int|bool|float|string|list|pair"
-#~ msgstr "int|bool|float|string|list|pair"
-
-#~ msgid "Print the data type of a key to standard output."
-#~ msgstr "Imprimeix el tipus de dades d'una clau a la sortida estàndard."
-
-#~ msgid "Get the number of elements in a list key."
-#~ msgstr "Obtén el nombre d'elements en una clau de llista."
-
-#~ msgid "Get a specific element from a list key, numerically indexed."
-#~ msgstr ""
-#~ "Obtén un element específic d'una clau de llista, indexada numèricament."
-
-#~ msgid ""
-#~ "Specify the type of the list value being set, or the type of the value a "
-#~ "schema describes. Unique abbreviations OK."
-#~ msgstr ""
-#~ "Especifiqueu el tipus del valor de la llista que s'està definint, o el "
-#~ "tipus del valor que descriu un esquema. S'accepten les abreviacions "
-#~ "úniques."
-
-#~ msgid "int|bool|float|string"
-#~ msgstr "int|bool|float|string"
-
-#~ msgid ""
-#~ "Specify the type of the car pair value being set, or the type of the "
-#~ "value a schema describes. Unique abbreviations OK."
-#~ msgstr ""
-#~ "Especifiqueu el tipus del valor de la parella car que s'està definint, o "
-#~ "el tipus del valor que descriu un esquema. S'accepten les abreviacions "
-#~ "úniques."
-
-#~ msgid ""
-#~ "Specify the type of the cdr pair value being set, or the type of the "
-#~ "value a schema describes. Unique abbreviations OK."
-#~ msgstr ""
-#~ "Especifiqueu el tipus del valor de la parella de cdr que s'està definint, "
-#~ "o el tipus del valor que descriu un esquema. S'accepten les abreviacions "
-#~ "úniques."
-
-#~ msgid "Specify a schema file to be installed"
-#~ msgstr "Especifiqueu un fitxer d'esquema per a instal·lar"
-
-#~ msgid "Specify a configuration source to use rather than the default path"
-#~ msgstr ""
-#~ "Especifiqueu una font de configuració per a utilitzar en comptes del camí "
-#~ "predeterminat"
-
-#~ msgid "SOURCE"
-#~ msgstr "FONT"
-
-#~ msgid ""
-#~ "Bypass server, and access the configuration database directly. Requires "
-#~ "that gconfd is not running."
-#~ msgstr ""
-#~ "Accedeix a la base de dades de configuració directament, evitant el "
-#~ "servidor. Això requereix que el gconfd no estigui funcionant."
-
-#~ msgid ""
-#~ "Properly installs schema files on the command line into the database. "
-#~ "Specify a custom configuration source in the GCONF_CONFIG_SOURCE "
-#~ "environment variable, or set set the variable to an empty string to use "
-#~ "the default configuration source."
-#~ msgstr ""
-#~ "Instal·la adequadament els fitxers d'esquema de la línia d'ordres dins la "
-#~ "base de dades. La variable d'entorn GCONF_CONFIG_SOURCE hauria "
-#~ "d'especificar una font de configuració no predeterminada o col·locar-hi "
-#~ "la cadena buida per tal d'utilitzar la predeterminada."
-
-#~ msgid ""
-#~ "Properly uninstalls schema files on the command line from the database. "
-#~ "GCONF_CONFIG_SOURCE environment variable should be set to a non-default "
-#~ "configuration source or set to the empty string to use the default."
-#~ msgstr ""
-#~ "Desinstal·la adequadament els fitxers d'esquema de la línia d'ordres dins "
-#~ "la base de dades. La variable d'entorn GCONF_CONFIG_SOURCE hauria "
-#~ "d'especificar una font de configuració no predeterminada o col·locar-hi "
-#~ "la cadena buida per tal d'utilitzar la predeterminada."
-
-#~ msgid ""
-#~ "Torture-test an application by setting and unsetting a bunch of values of "
-#~ "different types for keys on the command line."
-#~ msgstr ""
-#~ "Realitza una prova d'estrès a una aplicació assignant i esborrant un "
-#~ "conjunt de valors de diferents tipus a les claus a la línia d'ordres."
-
-#~ msgid ""
-#~ "Torture-test an application by setting and unsetting a bunch of keys "
-#~ "inside the directories on the command line."
-#~ msgstr ""
-#~ "Realitza una prova d'estrès a una aplicació assignant i esborrant un "
-#~ "conjunt de claus dins dels directoris a la línia d'ordres."
-
-#~ msgid ""
-#~ "Set a schema and sync. Use with --short-desc, --long-desc, --owner, and --"
-#~ "type."
-#~ msgstr ""
-#~ "Defineix un esquema i sincronitza. Utilitzeu-ho amb --short-desc, --long-"
-#~ "desc, --owner, i --type."
-
-#~ msgid "Specify a short half-line description to go in a schema."
-#~ msgstr ""
-#~ "Especifiqueu una descripció curta de mitja línia per a col·locar a un "
-#~ "esquema."
-
-#~ msgid "DESCRIPTION"
-#~ msgstr "DESCRIPCIÓ"
-
-#~ msgid "Specify a several-line description to go in a schema."
-#~ msgstr ""
-#~ "Especifiqueu una descripció de vàries línies per a col·locar a un esquema."
-
-#~ msgid "Specify the owner of a schema"
-#~ msgstr "Especifiqueu el propietari d'un esquema"
-
-#~ msgid "OWNER"
-#~ msgstr "PROPIETARI"
-
-#~ msgid "Get the name of the schema applied to this key"
-#~ msgstr "Obtén el nom de l'esquema aplicat a aquesta clau"
-
-#~ msgid ""
-#~ "Specify the schema name followed by the key to apply the schema name to"
-#~ msgstr ""
-#~ "Especifiqueu el nom d'esquema seguit de la clau a la que se li ha "
-#~ "d'aplicar el nom d'esquema"
-
-#~ msgid "Remove any schema name applied to the given keys"
-#~ msgstr "Suprimeix qualsevol nom d'esquema aplicat a les claus donades"
-
-#~ msgid "Print version"
-#~ msgstr "Mostra la versió"
-
-#~ msgid "[FILE...]|[KEY...]|[DIR...]"
-#~ msgstr "[FITXER...]|[CLAU...]|[DIRECTORI...]"
-
-#~ msgid "- Tool to manipulate a GConf configuration"
-#~ msgstr "- Una eina per a manipular la configuració del GConf"
-
-#~ msgid "Key type options:"
-#~ msgstr "Opcions de tipus de claus:"
-
-#~ msgid "Show key type options"
-#~ msgstr "Mostra les opcions de tipus de claus"
-
-#~ msgid "Load/Save options:"
-#~ msgstr "Opcions per a carregar/desar:"
-
-#~ msgid "Show load/save options"
-#~ msgstr "Mostra les opcions per a carregar/desar"
-
-#~ msgid "Server options:"
-#~ msgstr "Opcions del servidor:"
-
-#~ msgid "Show server options"
-#~ msgstr "Mostra les opcions del servidor"
-
-#~ msgid "Show installation options"
-#~ msgstr "Mostra les opcions d'instal·lació"
-
-#~ msgid "Test options:"
-#~ msgstr "Opcions de prova:"
-
-#~ msgid "Schema options:"
-#~ msgstr "Opcions d'esquema:"
-
-#~ msgid "Show schema options"
-#~ msgstr "Mostra les opcions d'esquema"
-
-#~ msgid ""
-#~ "Run '%s --help' to see a full list of available command line options.\n"
-#~ msgstr ""
-#~ "Executeu «%s --help» per a veure una llista completa d'opcions "
-#~ "disponibles de la línia d'ordres.\n"
-
-#~ msgid "Can't get and set/unset simultaneously\n"
-#~ msgstr "No es pot obtenir i assignar/esborrar simultàniament\n"
-
-#~ msgid "Can't set and get/unset simultaneously\n"
-#~ msgstr "No es pot assignar i obtenir/esborrar simultàniament\n"
-
-#~ msgid "Can't get type and set/unset simultaneously\n"
-#~ msgstr "No es pot obtenir el tipus i assignar/esborrar simultàniament\n"
-
-#~ msgid "Can't toggle and get/set/unset simultaneously\n"
-#~ msgstr "No es pot commutar i obtenir/assignar/esborrar simultàniament\n"
-
-#~ msgid "Can't use --all-entries with --get or --set\n"
-#~ msgstr "No es pot utilitzar --all-entries amb --get o --set\n"
-
-#~ msgid "Can't use --all-dirs with --get or --set\n"
-#~ msgstr "No es pot utilitzar --all-dirs amb --get o --set\n"
-
-#~ msgid ""
-#~ "--recursive-list should not be used with --get, --set, --unset, --all-"
-#~ "entries, --all-dirs, or --search-key\n"
-#~ msgstr ""
-#~ "--recursive-list no s'hauria d'utilitzar amb --get, --set, --unset, --all-"
-#~ "entries, --all-dirs o --search-key\n"
-
-#~ msgid ""
-#~ "--set_schema should not be used with --get, --set, --unset, --all-"
-#~ "entries, --all-dirs, or --search-key\n"
-#~ msgstr ""
-#~ "--set-schema no s'hauria d'utilitzar amb --get, --set, --unset, --all-"
-#~ "entries, --all-dirs o --search-key\n"
-
-#~ msgid "Value type is only relevant when setting a value\n"
-#~ msgstr "El tipus de valor només és rellevant quan es defineix un valor\n"
-
-#~ msgid "Must specify a type when setting a value\n"
-#~ msgstr "S'ha d'especificar un tipus en assignar un valor\n"
-
-#~ msgid ""
-#~ "--ignore-schema-defaults is only relevant with --get, --all-entries, --"
-#~ "dump, --recursive-list, --get-list-size or --get-list-element\n"
-#~ msgstr ""
-#~ "--ignore-schema-defaults només és rellevant amb --get, --all-entries, --"
-#~ "dump, --recursive-list, --get-list-size o --get-list-element\n"
-
-#~ msgid "%s option must be used by itself.\n"
-#~ msgstr "L'opció %s ha de ser utilitzada per ella mateixa.\n"
-
-#~ msgid ""
-#~ "You must specify a configuration source with --config-source when using --"
-#~ "direct\n"
-#~ msgstr ""
-#~ "Quan s'utilitza --direct heu d'especificar una font de configuració amb --"
-#~ "config-source\n"
-
-#~ msgid "Failed to init GConf: %s\n"
-#~ msgstr "No s'ha pogut iniciar el GConf: %s\n"
-
-#~ msgid ""
-#~ "GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL is set, not installing schemas\n"
-#~ msgstr ""
-#~ "GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL està activat, no s'instal·laran els "
-#~ "esquemes\n"
-
-#~ msgid ""
-#~ "GCONF_DISABLE_MAKEFILE_SCHEMA_UNINSTALL is set, not uninstalling schemas\n"
-#~ msgstr ""
-#~ "GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL està activat, no es desinstal·laran "
-#~ "els esquemes\n"
-
-#~ msgid "Must set the GCONF_CONFIG_SOURCE environment variable\n"
-#~ msgstr "S'ha de definir la variable d'entorn GCONF_CONFIG_SOURCE\n"
-
-#~ msgid "Failed to access configuration source(s): %s\n"
-#~ msgstr "No s'ha pogut accedir a les fonts de configuració: %s\n"
-
-#~ msgid "Shutdown error: %s\n"
-#~ msgstr "S'ha produït un error en tancar: %s\n"
-
-#~ msgid "Must specify one or more directories to recursively list.\n"
-#~ msgstr ""
-#~ "S'han d'especificar un o més directoris per a llistar recursivament.\n"
-
-#~ msgid "Failure listing entries in `%s': %s\n"
-#~ msgstr "S'ha produït un error en llistar les entrades a «%s»: %s\n"
-
-#~ msgid "(no value set)"
-#~ msgstr "(sense valor definit)"
-
-#~ msgid "Must specify a key pattern to search for.\n"
-#~ msgstr "S'ha d'especificar un patró de clau a cercar.\n"
-
-#~ msgid "Must specify a PCRE regex to search for.\n"
-#~ msgstr "S'ha d'especificar un patró d'expressió regular (PCRE) a cercar.\n"
-
-#~ msgid "Error compiling regex: %s\n"
-#~ msgstr "S'ha produït un error en compilar l'expressió regular: %s\n"
-
-#~ msgid "Must specify one or more directories to dump.\n"
-#~ msgstr "S'han d'especificar un o més directoris a bolcar.\n"
-
-#~ msgid "Failed to spawn the configuration server (gconfd): %s\n"
-#~ msgstr "No s'ha pogut engendrar el servidor de configuració (gconfd): %s\n"
-
-#~ msgid "Must specify a key or keys to get\n"
-#~ msgstr "S'ha d'especificar una clau o claus a obtenir\n"
-
-#~ msgid "List Type: %s\n"
-#~ msgstr "Tipus de llista: %s\n"
-
-#~ msgid "Car Type: %s\n"
-#~ msgstr "Tipus de car: %s\n"
-
-#~ msgid "Cdr Type: %s\n"
-#~ msgstr "Tipus de cdr: %s\n"
-
-#~ msgid "Default Value: %s\n"
-#~ msgstr "Valor predeterminat: %s\n"
-
-#~ msgid "Owner: %s\n"
-#~ msgstr "Propietari: %s\n"
-
-#~ msgid "Short Desc: %s\n"
-#~ msgstr "Descripció curta: %s\n"
-
-#~ msgid "Long Desc: %s\n"
-#~ msgstr "Descripció llarga: %s\n"
-
-#~ msgid "No value set for `%s'\n"
-#~ msgstr "No s'ha especificat cap valor per a «%s»\n"
-
-#~ msgid "Failed to get value for `%s': %s\n"
-#~ msgstr "No s'ha pogut obtenir el valor de «%s»: %s\n"
-
-#~ msgid "Don't understand type `%s'\n"
-#~ msgstr "No es comprèn el tipus «%s»\n"
-
-#~ msgid "Must specify alternating keys/values as arguments\n"
-#~ msgstr "S'han d'especificar claus/valors alternats com a arguments\n"
-
-#~ msgid "No value to set for key: `%s'\n"
-#~ msgstr "No hi ha cap valor a assignar per a la clau: «%s»\n"
-
-#~ msgid "Cannot set schema as value\n"
-#~ msgstr "No és possible definir un esquema com a valor\n"
-
-#~ msgid "When setting a list you must specify a primitive list-type\n"
-#~ msgstr ""
-#~ "Quan es defineix una llista heu d'especificar un tipus de llista "
-#~ "primitiu\n"
-
-#~ msgid ""
-#~ "When setting a pair you must specify a primitive car-type and cdr-type\n"
-#~ msgstr ""
-#~ "Quan es defineix una parella heu d'especificar un tipus de car i un tipus "
-#~ "de cdr primitiu\n"
-
-#~ msgid "Error setting value: %s\n"
-#~ msgstr "S'ha produït un error en definir un valor: %s\n"
-
-#~ msgid "Error syncing: %s\n"
-#~ msgstr "S'ha produït un error en sincronitzar: %s\n"
-
-#~ msgid "Must specify one or more keys as arguments\n"
-#~ msgstr "S'han d'especificar una clau, o més, per a esborrar el valor.\n"
-
-#~ msgid "Not a boolean value: %s\n"
-#~ msgstr "No és un valor booleà: %s\n"
-
-#~ msgid "Must specify a key or keys to get type\n"
-#~ msgstr "S'ha d'especificar una clau o claus a obtenir el tipus\n"
-
-#~ msgid "Must specify a key to lookup size of.\n"
-#~ msgstr ""
-#~ "S'ha d'especificar una clau o claus de les quals consultar-ne la mida.\n"
-
-#~ msgid "Key %s is not a list.\n"
-#~ msgstr "La clau %s no és una llista.\n"
-
-#~ msgid "Must specify a key from which to get list element.\n"
-#~ msgstr ""
-#~ "S'ha d'especificar una clau de la qual obtenir un element de la llista.\n"
-
-#~ msgid "Must specify list index.\n"
-#~ msgstr "S'ha d'especificar l'índex de la llista.\n"
-
-#~ msgid "List index must be non-negative.\n"
-#~ msgstr "L'índex de la llista no pot ser negatiu.\n"
-
-#~ msgid "List index is out of bounds.\n"
-#~ msgstr "L'índex de la llista està fora dels límits.\n"
-
-#~ msgid "Must specify a key or keys on the command line\n"
-#~ msgstr "S'ha d'especificar una clau o claus a la línia d'ordres\n"
-
-#~ msgid "No schema known for `%s'\n"
-#~ msgstr "No es coneix cap esquema per a «%s»\n"
-
-#~ msgid "No doc string stored in schema at '%s'\n"
-#~ msgstr ""
-#~ "No hi ha cap cadena de document emmagatzemada en un esquema a «%s»\n"
-
-#~ msgid "Error getting schema at '%s': %s\n"
-#~ msgstr "S'ha produït un error en obtenir un esquema a «%s»: %s\n"
+#~ msgid "attempted to reallocate with zero size\n"
+#~ msgstr "intentat reassignar amb mida zero\n"
 
-#~ msgid "No schema stored at '%s'\n"
-#~ msgstr "No hi ha cap esquema emmagatzemat a «%s»\n"
+#~ msgid "failed to reallocate %u bytes\n"
+#~ msgstr "s'ha produït un error en reubicar %u bytes\n"
 
-#~ msgid "Value at '%s' is not a schema\n"
-#~ msgstr "El valor a «%s» no és un esquema\n"
+#~ msgid "failed to allocate %ux%u bytes\n"
+#~ msgstr "no s'ha pogut ubicar %ux%u bytes\n"
 
-#~ msgid "Must specify a schema name followed by the key name to apply it to\n"
-#~ msgstr ""
-#~ "S'ha d'especificar un nom d'esquema seguit del nom de la clau a la qual "
-#~ "se li ha d'aplicar\n"
-
-#~ msgid "Error associating schema name '%s' with key name '%s': %s\n"
-#~ msgstr ""
-#~ "S'ha produït un error en associar el nom d'esquema «%s» amb el nom de "
-#~ "clau «%s»: %s\n"
-
-#~ msgid "Must specify keys to unapply schema from\n"
-#~ msgstr ""
-#~ "S'han d'especificar les claus de les quals desaplicar els esquemes\n"
-
-#~ msgid "Error removing schema name from '%s': %s\n"
-#~ msgstr "S'ha produït un error en suprimir el nom d'esquema de «%s»: %s\n"
-
-#~ msgid "Must specify key (schema name) as the only argument\n"
-#~ msgstr "S'ha d'especificar una clau (nom d'esquema) com a únic argument\n"
-
-#~ msgid "List type must be a primitive type: string, int, float or bool\n"
-#~ msgstr ""
-#~ "El tipus de llista ha de ser un tipus primitiu: cadena, enter, coma "
-#~ "flotant o booleà\n"
-
-#~ msgid "Pair car type must be a primitive type: string, int, float or bool\n"
-#~ msgstr ""
-#~ "El tipus de car de parella ha de ser un tipus primitiu: cadena, enter, "
-#~ "coma flotant o booleà\n"
-
-#~ msgid "Pair cdr type must be a primitive type: string, int, float or bool\n"
-#~ msgstr ""
-#~ "El tipus de cdr de parella ha de ser un tipus primitiu: cadena, enter, "
-#~ "coma flotant o booleà\n"
-
-#~ msgid "Error setting value: %s"
-#~ msgstr "S'ha produït un error en assignar el valor: %s"
-
-#~ msgid "Error syncing: %s"
-#~ msgstr "S'ha produït un error en sincronitzar: %s"
-
-#~ msgid "Must specify one or more directories to get key/value pairs from.\n"
-#~ msgstr ""
-#~ "S'ha d'especificar un o més directoris dels quals es vulguin obtenir "
-#~ "parelles clau/valor.\n"
-
-#~ msgid "Must specify one or more keys to unset.\n"
-#~ msgstr ""
-#~ "S'ha d'especificar una o més claus de les quals es vulgui esborrar el "
-#~ "valor.\n"
-
-#~ msgid "Error unsetting `%s': %s\n"
-#~ msgstr "S'ha produït un error en esborrar el valor de «%s»: %s\n"
-
-#~ msgid "Must specify one or more keys to recursively unset.\n"
-#~ msgstr ""
-#~ "S'ha d'especificar una o més claus per a esborrar el valor "
-#~ "recursivament.\n"
-
-#~ msgid "Failure during recursive unset of \"%s\": %s\n"
-#~ msgstr ""
-#~ "S'ha produït una errada en esborrar recursivament el valor de «%s»: %s\n"
-
-#~ msgid "Must specify one or more directories to get subdirs from.\n"
-#~ msgstr ""
-#~ "S'ha d'especificar un o més directoris per tal d'obtenir-ne els seus "
-#~ "subdirectoris.\n"
-
-#~ msgid "Error listing dirs: %s\n"
-#~ msgstr "S'ha produït un error en llistar els directoris: %s\n"
-
-#~ msgid "WARNING: must specify both a <car> and a <cdr> in a <pair>\n"
-#~ msgstr "AVÍS: s'ha d'especificar tan un <car> i un <cdr> a un <pair>\n"
-
-#~ msgid "WARNING: key specified (%s) for schema under a <value> - ignoring\n"
-#~ msgstr ""
-#~ "AVÍS: la clau especificada (%s) per a l'esquema sota un <valor> - "
-#~ "s'ignora\n"
-
-#~ msgid "WARNING: must have a child node under <value>\n"
-#~ msgstr "AVÍS: hi ha d'haver un node fill sota <value>\n"
-
-#~ msgid "WARNING: node <%s> not understood\n"
-#~ msgstr "AVÍS: no es comprèn el node <%s>\n"
-
-#~ msgid "WARNING: Failed to parse int value `%s'\n"
-#~ msgstr "AVÍS: no es pot processar el valor enter «%s»\n"
-
-#~ msgid "WARNING: Failed to parse float value `%s'\n"
-#~ msgstr "AVÍS: no es pot processar el valor de coma flotant «%s»\n"
-
-#~ msgid "WARNING: Failed to parse string value `%s'\n"
-#~ msgstr "AVÍS: no es pot processar el valor de cadena «%s»\n"
-
-#~ msgid "WARNING: Failed to parse boolean value `%s'\n"
-#~ msgstr "AVÍS: no es pot processar el valor booleà «%s»\n"
-
-#~ msgid "WARNING: failed to associate schema `%s' with key `%s': %s\n"
-#~ msgstr "AVÍS: no s'ha pogut associar l'esquema «%s» amb la clau «%s»: %s\n"
-
-#~ msgid "WARNING: invalid or missing type for schema (%s)\n"
-#~ msgstr "AVÍS: el tipus d'esquema no és vàlid o manca (%s)\n"
-
-#~ msgid "WARNING: invalid or missing list_type for schema (%s)\n"
-#~ msgstr "AVÍS: el tipus de llista per a l'esquema no és vàlid o manca (%s)\n"
-
-#~ msgid "WARNING: Failed to parse default value `%s' for schema (%s)\n"
-#~ msgstr ""
-#~ "AVÍS: No s'ha pogut processar el valor predeterminat «%s» per a l'esquema "
-#~ "(%s)\n"
-
-#~ msgid "WARNING: invalid or missing car_type or cdr_type for schema (%s)\n"
-#~ msgstr ""
-#~ "AVÍS: el tipus de car o el tipus de cdr per a l'esquema no és vàlid o "
-#~ "manca (%s)\n"
-
-#~ msgid "WARNING: You cannot set a default value for a schema\n"
-#~ msgstr "AVÍS: No podeu definir un valor predeterminat per a un esquema\n"
-
-#~ msgid "WARNING: gconftool internal error, unknown GConfValueType\n"
-#~ msgstr "AVÍS: error intern del gconftool, el desconeix el GconfValueType\n"
-
-#~ msgid "WARNING: failed to parse type name `%s'\n"
-#~ msgstr "AVÍS: no s'ha pogut processar el nom del tipus «%s»\n"
+#~ msgid "attempted to free NULL pointer\n"
+#~ msgstr "s'ha intentat alliberar un punter NULL\n"
 
-#~ msgid ""
-#~ "WARNING: list_type can only be int, float, string or bool and not `%s'\n"
+#~ msgid "%s: Checksum mismatch (expected %u, got %u)\n"
 #~ msgstr ""
-#~ "AVÍS: el tipus de llista només pot ser enter, coma flotant, cadena o "
-#~ "booleà i no pas «%s»\n"
+#~ "%s: la suma de verificació no coincideix (s'esperava %u, s'ha obtingut "
+#~ "%u)\n"
 
-#~ msgid ""
-#~ "WARNING: car_type can only be int, float, string or bool and not `%s'\n"
-#~ msgstr ""
-#~ "AVÍS: el tipus de car només pot ser enter, coma flotant, cadena o booleà, "
-#~ "i no pas «%s»\n"
-
-#~ msgid ""
-#~ "WARNING: cdr_type can only be int, float, string or bool and not `%s'\n"
-#~ msgstr ""
-#~ "AVÍS: el tipus de cdr només pot ser enter, coma flotant, cadena o booleà, "
-#~ "i no pas «%s»\n"
-
-#~ msgid "WARNING: empty <applyto> node"
-#~ msgstr "AVÍS: node <applyto> buit"
-
-#~ msgid "WARNING: node <%s> not understood below <schema>\n"
-#~ msgstr "AVÍS: no es comprèn el node <%s> sota <schema>\n"
-
-#~ msgid "WARNING: no <list_type> specified for schema of type list\n"
-#~ msgstr ""
-#~ "AVÍS: no s'ha especificat un <list_type> per a l'esquema de tipus llista\n"
-
-#~ msgid "WARNING: no <car_type> specified for schema of type pair\n"
-#~ msgstr ""
-#~ "AVÍS: no s'ha especificat un <car_type> per a l'esquema de tipus parella\n"
-
-#~ msgid "WARNING: no <cdr_type> specified for schema of type pair\n"
-#~ msgstr ""
-#~ "AVÍS: no s'ha especificat un <cdr_type> per a l'esquema de tipus parella\n"
-
-#~ msgid ""
-#~ "WARNING: <locale> node has no `name=\"locale\"' attribute, ignoring\n"
-#~ msgstr ""
-#~ "AVÍS: el node <locale> no té l'atribut «name=\"locale\"», s'ignora\n"
-
-#~ msgid ""
-#~ "WARNING: multiple <locale> nodes for locale `%s', ignoring all past "
-#~ "first\n"
-#~ msgstr ""
-#~ "AVÍS: hi ha múltiples nodes <locale> per a «%s» local, s'ignoraran tots "
-#~ "els següents al primer\n"
-
-#~ msgid "WARNING: Invalid node <%s> in a <locale> node\n"
-#~ msgstr "AVÍS: Node <%s> no vàlid en un node <locale>\n"
-
-#~ msgid "Attached schema `%s' to key `%s'\n"
-#~ msgstr "S'ha adjuntat l'esquema «%s» a la clau «%s»\n"
-
-#~ msgid "You must have at least one <locale> entry in a <schema>\n"
-#~ msgstr "Heu de tenir com a mínim una entrada <locale> a un <schema>\n"
-
-#~ msgid "WARNING: failed to install schema `%s', locale `%s': %s\n"
-#~ msgstr "AVÍS: no s'ha pogut instal·lar l'esquema «%s», locale «%s»: %s\n"
-
-#~ msgid "Installed schema `%s' for locale `%s'\n"
-#~ msgstr "S'ha instal·lat l'esquema «%s» per al locale «%s»\n"
-
-#~ msgid "WARNING: failed to uninstall schema `%s', locale `%s': %s\n"
-#~ msgstr "AVÍS: no es pot desinstal·lar l'esquema «%s», locale «%s»: %s\n"
-
-#~ msgid "Uninstalled schema `%s' from locale `%s'\n"
-#~ msgstr "S'ha desinstal·lat l'esquema «%s» per al locale «%s»\n"
-
-#~ msgid "WARNING: no key specified for schema\n"
-#~ msgstr "AVÍS: no s'ha especificat cap clau per a l'esquema\n"
+#~ msgid "(vf) %s: could not load font `%s'\n"
+#~ msgstr "(vf) %s: no s'ha pogut carregar el tipus de lletra '%s'\n"
 
-#~ msgid "WARNING: node <%s> not understood below <%s>\n"
-#~ msgstr "AVÍS: no es comprèn el node <%s> sota <%s>\n"
+#~ msgid "(vf) %s: character %d redefined\n"
+#~ msgstr "(vf) %s: el caràcter %d s'ha redefinit\n"
 
-#~ msgid "Failed to open `%s': %s\n"
-#~ msgstr "No s'ha pogut obrir «%s»: %s\n"
+#~ msgid "(vf) %s: no postamble\n"
+#~ msgstr "(vf) %s: no hi ha postàmbul\n"
 
-#~ msgid ""
-#~ "Document `%s' has the wrong type of root node (<%s>, should be <%s>)\n"
-#~ msgstr ""
-#~ "El document «%s» té un tipus de node arrel incorrecte (<%s>, hauria de "
-#~ "ser <%s>)\n"
-
-#~ msgid "Document `%s' has no top level <%s> node\n"
-#~ msgstr "El document «%s» no té cap node <%s> de nivell superior\n"
-
-#~ msgid "WARNING: node <%s> below <%s> not understood\n"
-#~ msgstr "AVÍS: no es comprèn el node <%s> sota <%s>\n"
-
-#~ msgid "Error syncing configuration data: %s"
-#~ msgstr "S'ha produït un error en sincronitzar les dades de configuració: %s"
-
-#~ msgid "Must specify some schema files to install\n"
-#~ msgstr "S'ha d'especificar alguns fitxers d'esquema per a instal·lar\n"
-
-#~ msgid ""
-#~ "\n"
-#~ "%s\n"
-#~ msgstr ""
-#~ "\n"
-#~ "%s\n"
-
-#~ msgid "Failed to unset breakage key %s: %s\n"
-#~ msgstr "No s'ha pogut esborrar el valor de la clau de trencament %s: %s\n"
-
-#~ msgid "Must specify some keys to break\n"
-#~ msgstr "S'han d'especificar algunes claus per trencar\n"
-
-#~ msgid ""
-#~ "Trying to break your application by setting bad values for key:\n"
-#~ "  %s\n"
-#~ msgstr ""
-#~ "S'està intentant trencar l'aplicació definint valors incorrectes per a la "
-#~ "clau:\n"
-#~ "  %s\n"
+#~ msgid "%s: File corrupted, or not a VF file.\n"
+#~ msgstr "%s: El fitxer està corruput, o no és un fitxer VF.\n"
 
-#~ msgid "Must specify some directories to break\n"
-#~ msgstr "S'han d'especificar alguns directoris per trencar\n"
+#~ msgid "Error while scanning file %s\n"
+#~ msgstr "S'ha produït un error en analitzar el fitxer %s\n"
 
-#~ msgid ""
-#~ "Trying to break your application by setting bad values for keys in "
-#~ "directory:\n"
-#~ "  %s\n"
-#~ msgstr ""
-#~ "S'està intentant trencar l'aplicació definint valors incorrectes per a "
-#~ "claus al directori:\n"
-#~ "  %s\n"
-
-#~ msgid "GSettings Data Conversion"
-#~ msgstr "Conversió de dades a GSettings"
-
-#~ msgid "Migrates user settings from GConf to dconf"
-#~ msgstr "Migra els paràmetres d'usuari del GConf al dconf"
-
-#~ msgid "Could not send message to GConf daemon: %s"
-#~ msgstr "No s'ha pogut enviar el missatge al dimoni del GConf: %s"
-
-#~ msgid "daemon gave erroneous reply: %s"
-#~ msgstr "el dimoni ha donat una resposta errònia: %s"
-
-#~ msgid "Attribute \"%s\" repeated twice on the same <%s> element"
-#~ msgstr "L'atribut «%s» està repetit dues vegades al mateix element <%s>"
+#~ msgid "The file is not a PostScript document."
+#~ msgstr "El fitxer no és un document PostScript."
 
-#~ msgid "IOR file '%s' not opened successfully, no gconfd located: %s"
-#~ msgstr ""
-#~ "El fitxer IOR «%s» no s'ha obert amb èxit, no s'ha ubicat cap gconfd: %s"
-
-#~ msgid "gconftool or other non-gconfd process has the lock file '%s'"
-#~ msgstr ""
-#~ "El gconftool o un altre procés fora del gconfd té el fitxer de blocatge "
-#~ "«%s»"
+#~ msgid "Many..."
+#~ msgstr "Molts..."
 
-#~ msgid "Failed to unlink lock file %s: %s\n"
-#~ msgstr "No s'ha pogut desenllaçar el fitxer de blocatge %s: %s\n"
+#~ msgid "Not so many..."
+#~ msgstr "No tants..."
 
-#~ msgid "Failed to stat %s: %s"
-#~ msgstr "No s'ha pogut fer «stat» sobre %s: %s"
+#~ msgid "Reset the zoom level to the default value"
+#~ msgstr "Reinicia el zoom al valor per defecte"
 
-#~ msgid ""
-#~ "Failed to create pipe for communicating with spawned gconf daemon: %s\n"
-#~ msgstr ""
-#~ "No s'ha pogut crear un conducte per a comunicar-se amb el dimoni del "
-#~ "gconf engendrat: %s\n"
+#~ msgid "Selection Caret"
+#~ msgstr "Cursor de selecció"
 
-#~ msgid "Failed to launch configuration server: %s\n"
-#~ msgstr "No s'ha pogut executar el servidor de configuració: %s\n"
+#~ msgid "Single"
+#~ msgstr "Una a una"
 
-#~ msgid "Failed to open %s: %s"
-#~ msgstr "No s'ha pogut obrir %s: %s"
+#~ msgid "Show the document one page at a time"
+#~ msgstr "Mostra el document pàgina a pàgina"
 
-#~ msgid "Owner of %s is not the current user"
-#~ msgstr "El propietari de %s no és l'usuari actual"
+#~ msgid "Multi"
+#~ msgstr "Totes"
 
-#~ msgid "Bad permissions %lo on directory %s"
-#~ msgstr "Els permisos %lo són erronis per el directori %s"
+#~ msgid "Show the full document at once"
+#~ msgstr "Mostra tot el document alhora"
 
-#~ msgid "Failed to create %s: %s"
-#~ msgstr "No s'ha pogut crear %s: %s"
+#~ msgid "Show sidebar by default."
+#~ msgstr "Per defecte mostra la barra lateral."
 
-#~ msgid "Directory %s has a problem, gconfd can't use it"
-#~ msgstr "El directori %s té un problema, el gconfd no pot utilitzar-lo"
+#~ msgid "Show statusbar by default."
+#~ msgstr "Per defecte mostra la barra d'estat."
 
-#~ msgid "Received signal %d, dumping core. Please report a GConf bug."
-#~ msgstr ""
-#~ "S'ha rebut el senyal %d, s'ha abocat el nucli. Envieu un informe d'error "
-#~ "del GConf"
+#~ msgid "Show toolbar by default."
+#~ msgstr "Per defecte mostra la barra d'eines."
 
-#~ msgid "Received signal %d. Please report a GConf bug."
-#~ msgstr "S'ha rebut el senyal %d. Envieu un informe d'error del GConf."
+#~ msgid "The default sidebar size."
+#~ msgstr "La mida per defecte de la barra lateral."
 
-#~ msgid ""
-#~ "Received signal %d, shutting down abnormally. Please file a GConf bug "
-#~ "report."
-#~ msgstr ""
-#~ "S'ha rebut el senyal %d, s'està tancant de manera anormal. Envieu un "
-#~ "informe d'error del GConf."
+#~ msgid "Error while converting pdf file %s:\n"
+#~ msgstr "S'ha produït un error en convertir el pdf %s:\n"
 
-#~ msgid "Received signal %d, shutting down cleanly"
-#~ msgstr "S'ha rebut el senyal %d, s'està tancant netament."
+#~ msgid "Exit Fullscreen"
+#~ msgstr "Surt de pantalla completa"
