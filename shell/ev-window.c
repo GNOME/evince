@@ -4030,12 +4030,15 @@ ev_window_stop_presentation (EvWindow *window,
 			     gboolean  unfullscreen_window)
 {
 	guint current_page;
+	guint rotation;
 
 	if (!EV_WINDOW_IS_PRESENTATION (window))
 		return;
 
 	current_page = ev_view_presentation_get_current_page (EV_VIEW_PRESENTATION (window->priv->presentation_view));
 	ev_document_model_set_page (window->priv->model, current_page);
+	rotation = ev_view_presentation_get_rotation (EV_VIEW_PRESENTATION (window->priv->presentation_view));
+	ev_document_model_set_rotation (window->priv->model, rotation);
 
 	gtk_container_remove (GTK_CONTAINER (window->priv->main_box),
 			      window->priv->presentation_view);
@@ -4207,17 +4210,33 @@ ev_window_set_page_mode (EvWindow         *window,
 static void
 ev_window_cmd_edit_rotate_left (GtkAction *action, EvWindow *ev_window)
 {
-	gint rotation = ev_document_model_get_rotation (ev_window->priv->model);
+	gint rotation;
 
-	ev_document_model_set_rotation (ev_window->priv->model, rotation - 90);
+	if (EV_WINDOW_IS_PRESENTATION (ev_window)) {
+		rotation = ev_view_presentation_get_rotation (EV_VIEW_PRESENTATION (ev_window->priv->presentation_view));
+		ev_view_presentation_set_rotation (EV_VIEW_PRESENTATION (ev_window->priv->presentation_view),
+						   rotation - 90);
+	} else {
+		rotation = ev_document_model_get_rotation (ev_window->priv->model);
+
+		ev_document_model_set_rotation (ev_window->priv->model, rotation - 90);
+	}
 }
 
 static void
 ev_window_cmd_edit_rotate_right (GtkAction *action, EvWindow *ev_window)
 {
-	gint rotation = ev_document_model_get_rotation (ev_window->priv->model);
+	gint rotation;
 
-	ev_document_model_set_rotation (ev_window->priv->model, rotation + 90);
+	if (EV_WINDOW_IS_PRESENTATION (ev_window)) {
+		rotation = ev_view_presentation_get_rotation (EV_VIEW_PRESENTATION (ev_window->priv->presentation_view));
+		ev_view_presentation_set_rotation (EV_VIEW_PRESENTATION (ev_window->priv->presentation_view),
+						   rotation + 90);
+	} else {
+		rotation = ev_document_model_get_rotation (ev_window->priv->model);
+
+		ev_document_model_set_rotation (ev_window->priv->model, rotation + 90);
+	}
 }
 
 static void
