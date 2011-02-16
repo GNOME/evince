@@ -201,7 +201,7 @@ if test "$with_smclient" != "no"; then
   AC_DEFINE([WITH_SMCLIENT],[1],[Define if smclient is enabled])
 
   case "$with_smclient" in
-    xsmp) SMCLIENT_PKGS="sm >= 1.0.0" ;;
+    xsmp) SMCLIENT_PKGS="sm >= 1.0.0 ice" ;;
     *) SMCLIENT_PKGS="" ;;
   esac
 
