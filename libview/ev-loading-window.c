@@ -266,6 +266,7 @@ ev_loading_window_new (GtkWindow *parent)
 	g_return_val_if_fail (GTK_IS_WINDOW (parent), NULL);
 
 	window = g_object_new (EV_TYPE_LOADING_WINDOW,
+                               "type", GTK_WINDOW_POPUP,
 			       "parent", parent,
 			       NULL);
 	return window;
