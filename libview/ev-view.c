@@ -82,6 +82,18 @@ typedef enum {
 	EV_VIEW_FIND_PREV
 } EvViewFindDirection;
 
+typedef struct {
+	GtkWidget  *widget;
+
+	/* View coords */
+	gint        x;
+	gint        y;
+
+	/* Document */
+	guint       page;
+	EvRectangle doc_rect;
+} EvViewChild;
+
 #define ZOOM_IN_FACTOR  1.2
 #define ZOOM_OUT_FACTOR (1.0/ZOOM_IN_FACTOR)
 
@@ -282,7 +294,7 @@ static void       ev_view_primary_clear_cb                   (GtkClipboard      
 							      gpointer            data);
 static void       ev_view_update_primary_selection           (EvView             *ev_view);
 
-G_DEFINE_TYPE_WITH_CODE (EvView, ev_view, GTK_TYPE_FIXED,
+G_DEFINE_TYPE_WITH_CODE (EvView, ev_view, GTK_TYPE_CONTAINER,
 			 G_IMPLEMENT_INTERFACE (GTK_TYPE_SCROLLABLE, NULL))
 
 /* HeightToPage cache */
@@ -1479,6 +1491,41 @@ ev_view_get_area_from_mapping (EvView        *view,
 	area->y -= view->scroll_y;
 }
 
+static void
+ev_view_put (EvView      *view,
+	     GtkWidget   *child_widget,
+	     gint         x,
+	     gint         y,
+	     guint        page,
+	     EvRectangle *doc_rect)
+{
+	EvViewChild *child;
+
+	child = g_slice_new (EvViewChild);
+
+	child->widget = child_widget;
+	child->x = x;
+	child->y = y;
+	child->page = page;
+	child->doc_rect = *doc_rect;
+
+	gtk_widget_set_parent (child_widget, GTK_WIDGET (view));
+	view->children = g_list_append (view->children, child);
+}
+
+static void
+ev_view_put_to_doc_rect (EvView      *view,
+			 GtkWidget   *child_widget,
+			 guint        page,
+			 EvRectangle *doc_rect)
+{
+	GdkRectangle area;
+
+	doc_rect_to_view_rect (view, page, doc_rect, &area);
+	area.x -= view->scroll_x;
+	area.y -= view->scroll_y;
+	ev_view_put (view, child_widget, area.x, area.y, page, doc_rect);
+}
 
 /*** Hyperref ***/
 static EvLink *
@@ -2385,7 +2432,7 @@ ev_view_handle_form_field (EvView      *view,
 {
 	GtkWidget     *field_widget = NULL;
 	EvMappingList *form_field_mapping;
-	GdkRectangle   view_area;
+	EvMapping     *mapping;
 
 	if (field->is_read_only)
 		return;
@@ -2410,11 +2457,8 @@ ev_view_handle_form_field (EvView      *view,
 
 	form_field_mapping = ev_page_cache_get_form_field_mapping (view->page_cache,
 								   field->page->index);
-	ev_view_get_area_from_mapping (view, field->page->index,
-				       form_field_mapping,
-				       field, &view_area);
-
-	gtk_fixed_put (GTK_FIXED (view), field_widget, view_area.x, view_area.y);
+	mapping = ev_mapping_list_find (form_field_mapping, field);
+	ev_view_put_to_doc_rect (view, field_widget, field->page->index, &mapping->area);
 	gtk_widget_show (field_widget);
 	gtk_widget_grab_focus (field_widget);
 }
@@ -3162,10 +3206,17 @@ ev_view_size_allocate (GtkWidget      *widget,
 		       GtkAllocation  *allocation)
 {
 	EvView *view = EV_VIEW (widget);
-	GList  *children, *l;
+	GList  *l;
 	gint    root_x, root_y;
 
-	GTK_WIDGET_CLASS (ev_view_parent_class)->size_allocate (widget, allocation);
+	gtk_widget_set_allocation (widget, allocation);
+
+	if (gtk_widget_get_realized (widget))
+		gdk_window_move_resize (gtk_widget_get_window (widget),
+					allocation->x,
+					allocation->y,
+					allocation->width,
+					allocation->height);
 
 	if (!view->document)
 		return;
@@ -3181,7 +3232,7 @@ ev_view_size_allocate (GtkWidget      *widget,
 		ev_view_size_request (widget, &req);
 		view->internal_size_request = FALSE;
 	}
-	
+
 	ev_view_set_adjustment_values (view, GTK_ORIENTATION_HORIZONTAL);
 	ev_view_set_adjustment_values (view, GTK_ORIENTATION_VERTICAL);
 
@@ -3193,41 +3244,20 @@ ev_view_size_allocate (GtkWidget      *widget,
 	view->pending_point.x = 0;
 	view->pending_point.y = 0;
 
-	children = gtk_container_get_children (GTK_CONTAINER (widget));
-	for (l = children; l && l->data; l = g_list_next (l)) {
-		EvFormField   *field;
-		GdkRectangle   view_area;
-		EvMappingList *form_field_mapping;
-		GtkAllocation  child_allocation;
-		GtkRequisition child_requisition;
-		GtkWidget     *child = (GtkWidget *)l->data;
-		
-		field = g_object_get_data (G_OBJECT (child), "form-field");
-		if (!field)
+	for (l = view->children; l && l->data; l = g_list_next (l)) {
+		GdkRectangle view_area;
+		EvViewChild *child = (EvViewChild *)l->data;
+
+		if (!gtk_widget_get_visible (child->widget))
 			continue;
 
-		form_field_mapping = ev_page_cache_get_form_field_mapping (view->page_cache,
-									   field->page->index);
-		ev_view_get_area_from_mapping (view, field->page->index,
-					       form_field_mapping,
-					       field, &view_area);
+		doc_rect_to_view_rect (view, child->page, &child->doc_rect, &view_area);
+		view_area.x -= view->scroll_x;
+		view_area.y -= view->scroll_y;
 
-		gtk_widget_get_preferred_size (child, &child_requisition, NULL);
-		if (child_requisition.width != view_area.width ||
-		    child_requisition.height != view_area.height)
-			gtk_widget_set_size_request (child, view_area.width, view_area.height);
-
-		gtk_container_child_get (GTK_CONTAINER (widget),
-					 child,
-					 "x", &child_allocation.x,
-					 "y", &child_allocation.y,
-					 NULL);
-		if (child_allocation.x != view_area.x ||
-		    child_allocation.y != view_area.y) {
-			gtk_fixed_move (GTK_FIXED (widget), child, view_area.x, view_area.y);
-		}
+		gtk_widget_set_size_request (child->widget, view_area.width, view_area.height);
+		gtk_widget_size_allocate (child->widget, &view_area);
 	}
-	g_list_free (children);
 
 	if (view->window_children)
 		gdk_window_get_origin (gtk_widget_get_window (GTK_WIDGET (view)),
@@ -3332,6 +3362,38 @@ find_selection_for_page (EvView *view,
 	}
 
 	return NULL;
+}
+
+static void
+ev_view_realize (GtkWidget *widget)
+{
+	GtkAllocation allocation;
+	GdkWindow *window;
+	GdkWindowAttr attributes;
+	gint attributes_mask;
+
+	gtk_widget_set_realized (widget, TRUE);
+
+	gtk_widget_get_allocation (widget, &allocation);
+
+	attributes.window_type = GDK_WINDOW_CHILD;
+	attributes.x = allocation.x;
+	attributes.y = allocation.y;
+	attributes.width = allocation.width;
+	attributes.height = allocation.height;
+	attributes.wclass = GDK_INPUT_OUTPUT;
+	attributes.visual = gtk_widget_get_visual (widget);
+	attributes.event_mask = gtk_widget_get_events (widget);
+
+	attributes_mask = GDK_WA_X | GDK_WA_Y | GDK_WA_VISUAL;
+
+	window = gdk_window_new (gtk_widget_get_parent_window (widget),
+				 &attributes, attributes_mask);
+	gtk_widget_set_window (widget, window);
+	gdk_window_set_user_data (window, widget);
+
+	gtk_style_context_set_background (gtk_widget_get_style_context (widget),
+					  window);
 }
 
 static gboolean
@@ -3647,14 +3709,7 @@ ev_view_button_press_event (GtkWidget      *widget,
 static void
 ev_view_remove_all (EvView *view)
 {
-	GList *children, *child;
-
-	children = gtk_container_get_children (GTK_CONTAINER (view));
-	for (child = children; child && child->data; child = g_list_next (child)) {
-		gtk_container_remove (GTK_CONTAINER (view),
-				      GTK_WIDGET (child->data));
-	}
-	g_list_free (children);
+	gtk_container_foreach (GTK_CONTAINER (view), (GtkCallback) gtk_widget_destroy, NULL);
 }
 
 /*** Drag and Drop ***/
@@ -4673,11 +4728,56 @@ ev_view_is_a11y_enabled (EvView *view)
 	return view->a11y_enabled;
 }
 
+/* GtkContainer */
+static void
+ev_view_remove (GtkContainer *container,
+		GtkWidget    *widget)
+{
+	EvView *view = EV_VIEW (container);
+	GList *tmp_list = view->children;
+	EvViewChild *child;
+
+	while (tmp_list) {
+		child = tmp_list->data;
+
+		if (child->widget == widget) {
+			gtk_widget_unparent (widget);
+
+			view->children = g_list_remove_link (view->children, tmp_list);
+			g_list_free_1 (tmp_list);
+			g_slice_free (EvViewChild, child);
+
+			return;
+		}
+
+		tmp_list = tmp_list->next;
+	}
+}
+
+static void
+ev_view_forall (GtkContainer *container,
+		gboolean      include_internals,
+		GtkCallback   callback,
+		gpointer      callback_data)
+{
+	EvView *view = EV_VIEW (container);
+	GList *tmp_list = view->children;
+	EvViewChild *child;
+
+	while (tmp_list) {
+		child = tmp_list->data;
+		tmp_list = tmp_list->next;
+
+		(* callback) (child->widget, callback_data);
+	}
+}
+
 static void
 ev_view_class_init (EvViewClass *class)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (class);
 	GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (class);
+	GtkContainerClass *container_class = GTK_CONTAINER_CLASS (class);
 	GtkBindingSet *binding_set;
 
 	object_class->get_property = ev_view_get_property;
@@ -4685,6 +4785,7 @@ ev_view_class_init (EvViewClass *class)
         object_class->dispose = ev_view_dispose;
 	object_class->finalize = ev_view_finalize;
 
+	widget_class->realize = ev_view_realize;
         widget_class->draw = ev_view_draw;
 	widget_class->button_press_event = ev_view_button_press_event;
 	widget_class->motion_notify_event = ev_view_motion_notify_event;
@@ -4704,6 +4805,9 @@ ev_view_class_init (EvViewClass *class)
 	widget_class->drag_motion = ev_view_drag_motion;
 	widget_class->popup_menu = ev_view_popup_menu;
 	widget_class->query_tooltip = ev_view_query_tooltip;
+
+	container_class->remove = ev_view_remove;
+	container_class->forall = ev_view_forall;
 
 	class->binding_activated = ev_view_scroll;
 
@@ -4894,12 +4998,13 @@ static void
 on_adjustment_value_changed (GtkAdjustment *adjustment,
 			     EvView        *view)
 {
+	GtkWidget *widget = GTK_WIDGET (view);
 	int dx = 0, dy = 0;
 	gint x, y;
 	gint value;
-	GList *children, *l;
+	GList *l;
 
-	if (!gtk_widget_get_realized (GTK_WIDGET (view)))
+	if (!gtk_widget_get_realized (widget))
 		return;
 
 	if (view->hadjustment) {
@@ -4918,19 +5023,14 @@ on_adjustment_value_changed (GtkAdjustment *adjustment,
 		view->scroll_y = 0;
 	}
 
-	children = gtk_container_get_children (GTK_CONTAINER (view));
-	for (l = children; l && l->data; l = g_list_next (l)) {
-		gint       child_x, child_y;
-		GtkWidget *child = (GtkWidget *)l->data;
-		
-		gtk_container_child_get (GTK_CONTAINER (view),
-					 child,
-					 "x", &child_x,
-					 "y", &child_y,
-					 NULL);
-		gtk_fixed_move (GTK_FIXED (view), child, child_x + dx, child_y + dy);
+	for (l = view->children; l && l->data; l = g_list_next (l)) {
+		EvViewChild *child = (EvViewChild *)l->data;
+
+		child->x += dx;
+		child->y += dy;
+		if (gtk_widget_get_visible (child->widget) && gtk_widget_get_visible (widget))
+			gtk_widget_queue_resize (widget);
 	}
-	g_list_free (children);
 
 	for (l = view->window_children; l && l->data; l = g_list_next (l)) {
 		EvViewWindowChild *child;
@@ -4939,14 +5039,14 @@ on_adjustment_value_changed (GtkAdjustment *adjustment,
 
 		ev_view_window_child_move (view, child, child->x + dx, child->y + dy);
 	}
-	
+
 	if (view->pending_resize) {
-		gtk_widget_queue_draw (GTK_WIDGET (view));
+		gtk_widget_queue_draw (widget);
 	} else {
-		gdk_window_scroll (gtk_widget_get_window (GTK_WIDGET (view)), dx, dy);
+		gdk_window_scroll (gtk_widget_get_window (widget), dx, dy);
 	}
 
-	gtk_widget_get_pointer (GTK_WIDGET (view), &x, &y);
+	gtk_widget_get_pointer (widget, &x, &y);
 	ev_view_handle_cursor_over_xy (view, x, y);
 
 	if (view->document)
