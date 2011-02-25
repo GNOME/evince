@@ -8,8 +8,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: evince.help.master\n"
-"POT-Creation-Date: 2011-02-20 11:42+0000\n"
-"PO-Revision-Date: 2011-02-20 13:07+0100\n"
+"POT-Creation-Date: 2011-02-24 05:35+0000\n"
+"PO-Revision-Date: 2011-02-25 12:06+0100\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -626,7 +626,7 @@ msgstr ""
 #: C/singlesided-5-8pages.page:68(p) C/singlesided-3-4pages.page:68(p)
 #: C/singlesided-17-20pages.page:69(p) C/singlesided-13-16pages.page:71(p)
 msgid "In the <gui>Pages per side</gui> menu, select <gui>2</gui>."
-msgstr "En el menú <gui>Páginas por cara</gui>, elija <gui>2</gui>."
+msgstr "En el menú <gui>Páginas por hoja</gui>, elija <gui>2</gui>."
 
 #: C/singlesided-npages.page:78(p) C/singlesided-9-12pages.page:71(p)
 #: C/singlesided-5-8pages.page:71(p) C/singlesided-3-4pages.page:71(p)
@@ -1172,6 +1172,9 @@ msgid ""
 "(perhaps because another program has modified it), it will automatically "
 "reload the document and display the most recent version for you."
 msgstr ""
+"Si el visor de documentos detecta que el documento que ha abierto ha "
+"cambiado (tal vez porque otro programa lo ha modificado), lo recargará "
+"automáticamente y le mostrará la versión más reciente."
 
 #: C/reload.page:30(p)
 msgid ""
@@ -1234,6 +1237,8 @@ msgstr "@@image: 'reverse-collate.png'; md5=2e84b930fa1913123b740f8b0997255e"
 #: C/print-order.page:8(desc)
 msgid "Use the Collate and Reverse options to make pages print in order."
 msgstr ""
+"Use las opciones «Intercalar» e «Invertir» para que las páginas se impriman en "
+"orden."
 
 #: C/print-order.page:20(title)
 msgid "Getting Copies To Print In The Correct Order"
@@ -1241,13 +1246,15 @@ msgstr "Imprimir copias en el orden correcto"
 
 #: C/print-order.page:23(title)
 msgid "Reverse"
-msgstr "Inverso"
+msgstr "Invertir"
 
 #: C/print-order.page:26(p)
 msgid ""
 "Printers usually print the first page first, and the last page last, so the "
 "pages end up in reverse order when you pick them up."
 msgstr ""
+"Generalmente, las impresoras imprimen primero la primera página, y luego la "
+"última, por lo que las páginas acaban en orden inverso cuando las coge."
 
 #: C/print-order.page:29(p)
 msgid "To reverse the order:"
@@ -1270,7 +1277,7 @@ msgstr ""
 
 #: C/print-order.page:39(title)
 msgid "Collate"
-msgstr "Cotejar"
+msgstr "Intercalar"
 
 #: C/print-order.page:42(p)
 msgid ""
@@ -1282,7 +1289,7 @@ msgstr ""
 
 #: C/print-order.page:47(p)
 msgid "To Collate:"
-msgstr "Cotejar:"
+msgstr "Intercalar:"
 
 #: C/print-order.page:51(p) C/printing.page:27(p)
 msgid "Click <guiseq><gui>File</gui><gui>Print</gui></guiseq>"
@@ -1293,6 +1300,8 @@ msgid ""
 "In the <gui>General</gui> tab of the Print window under <em>Copies</em> "
 "check <gui>Collate</gui>."
 msgstr ""
+"En la pestaña <gui>General</gui> de la ventana «Imprimir», en <em>Copias</"
+"em>, marque <gui>Intercalar</gui>."
 
 #: C/printing.page:9(desc)
 msgid "How to print, and common questions about printing."
@@ -1448,6 +1457,8 @@ msgid ""
 "You can print more than one page of the document per <em>side</em> of paper "
 "too. Use the <gui>Pages per side</gui> option to do this."
 msgstr ""
+"También puede imprimir más de una página del documento por <em>hoja</em>. "
+"Use la opción <gui>Páginas por hoja</gui> para hacerlo."
 
 #: C/presentations.page:7(desc)
 msgid "You can play presentations with <app>Evince</app>."
@@ -1506,6 +1517,8 @@ msgid ""
 "You can also use the scroll wheel to move back and forth through the "
 "presentation."
 msgstr ""
+"También puede usar la rueda del ratón para moverse hacia adelante y hacia "
+"atrás en la presentación."
 
 #: C/presentations.page:53(p)
 msgid "Use <key>Esc</key> to exit the presentation."
@@ -1811,6 +1824,8 @@ msgid ""
 "Move the mouse pointer over the page and hold down the middle mouse button "
 "to drag it around."
 msgstr ""
+"Mueva el puntero del ratón sobre la página y mantenga pulsado el botón "
+"central del ratón para arrastrarlo alrededor."
 
 #: C/movingaround.page:66(p)
 msgid ""
@@ -1826,6 +1841,8 @@ msgstr "Cambiar entre páginas"
 msgid ""
 "You can move between pages of a document using one of the following methods:"
 msgstr ""
+"Puede moverse entre las páginas de un documento usando uno de los siguientes "
+"métodos:"
 
 #: C/movingaround.page:81(p)
 msgid ""
@@ -2023,7 +2040,7 @@ msgstr ""
 
 #: C/invert-colors.page:8(desc)
 msgid "Inverting the colors can make it easier to read some text."
-msgstr ""
+msgstr "Invertir los colores puede simplificar la lectura de algunos textos."
 
 #: C/invert-colors.page:23(title)
 msgid "Invert Colours On A Page"
@@ -2034,12 +2051,17 @@ msgid ""
 "To swap black for white, white for black, and so on, click "
 "<guiseq><gui>View</gui><gui>Inverted Colors</gui></guiseq>."
 msgstr ""
+"Para cambiar el negro por el blanco, el blanco por el negro, y así "
+"sucesivamente, pulse en <guiseq><gui>Ver</gui><gui>Colores invertidos</gui></"
+"guiseq>."
 
 #: C/invert-colors.page:32(p)
 msgid ""
 "Doing this can make it easier to read text, especially in the case of "
 "certain kinds of visual impairment."
 msgstr ""
+"Hacer esto puede facilitar la lectura de texto, especialmente en el caso de "
+"algunos tipos de deficiencias visuales."
 
 #: C/introduction.page:7(desc)
 msgid "Introduction to the <em>Evince Document Viewer</em>."
@@ -2243,6 +2265,9 @@ msgid ""
 "In some Linux distributions, not all formats are supported by default, so "
 "you might not be able to view all the formats listed above."
 msgstr ""
+"En algunas distribuciones de Linux, no todos los formatos se soportan de "
+"manera predeterminada, por lo que puede no ser capaz de ver todos los "
+"formatos listados anteriormente."
 
 #: C/formats.page:43(p)
 msgid ""
@@ -2318,6 +2343,9 @@ msgid ""
 "use the appropriate editing application for the type of file you want to "
 "change."
 msgstr ""
+"<app>Evince</app> no se puede usar para hacer cambios en documento. Necesita "
+"usar la aplicación de edición adecuada para el tipo de archivo que quiere "
+"cambiar."
 
 #: C/editing.page:29(p)
 msgid ""
@@ -2346,7 +2374,7 @@ msgstr ""
 #: C/duplex-13pages.page:45(p) C/duplex-12pages.page:48(p)
 #: C/duplex-11pages.page:49(p) C/duplex-10pages.page:48(p)
 msgid "In the <gui>Pages per side</gui> option, select <gui>2</gui>."
-msgstr "En la opción <gui>Páginas por cara</gui>, elija <gui>2</gui>."
+msgstr "En la opción <gui>Páginas por hoja</gui>, elija <gui>2</gui>."
 
 #: C/duplex-9pages.page:7(title)
 msgid "09-Page Booklet"
@@ -2459,6 +2487,8 @@ msgid ""
 "Create a blank PDF document 3-pages long using <app>Open Office Word "
 "Processor</app>."
 msgstr ""
+"Crear un documento PDF de 3 páginas usando el <app>Procesador de textos de "
+"Open Office</app>."
 
 #: C/duplex-9pages.page:142(p) C/duplex-6pages.page:106(p)
 #: C/duplex-5pages.page:133(p) C/duplex-14pages.page:103(p)
@@ -2467,6 +2497,8 @@ msgid ""
 "Merge the blank PDF with your PDF document using <app>PDF-Shuffler</app> "
 "placing the blank pages at the end."
 msgstr ""
+"Combine el PDF en blanco con su documento PDF usando <app>PDF-Shuffler</"
+"app>, situando las páginas en blanco al final."
 
 #: C/duplex-9pages.page:148(p) C/duplex-11pages.page:103(p)
 #: C/duplex-10pages.page:110(p)
@@ -2474,6 +2506,8 @@ msgid ""
 "Follow the steps for printing a <link xref=\"duplex-12page\">12-page "
 "booklet</link>."
 msgstr ""
+"Siga los pasos para imprimir un <link xref=\"duplex-12page\">folleto de 12 "
+"páginas</link>."
 
 #: C/duplex-8pages.page:7(title)
 msgid "08-Page Booklet"
@@ -2526,6 +2560,8 @@ msgstr ""
 msgid ""
 "Create a blank PDF document using <app>Open Office Word Processor</app>."
 msgstr ""
+"Crear un documento PDF en blanco usando <app>Procesador de textos de Open "
+"Office</app>."
 
 #: C/duplex-7pages.page:99(p) C/duplex-11pages.page:97(p)
 msgid ""
@@ -2588,6 +2624,8 @@ msgid ""
 "Create a blank PDF document 2-pages long using <app>Open Office Word "
 "Processor</app>."
 msgstr ""
+"Crear un documento PDF de 2 páginas usando el <app>Procesador de textos de "
+"Open Office</app>."
 
 #: C/duplex-5pages.page:7(title)
 msgid "05-Page Booklet"
@@ -2851,6 +2889,7 @@ msgstr "Convertir un documento a SVG"
 #: C/convertSVG.page:21(p)
 msgid "You can convert documents of the following format types to SVG files:"
 msgstr ""
+"Puede convertir documentos de los siguientes tipos de formato a archivos SVG:"
 
 #: C/convertSVG.page:27(p)
 msgid ""
@@ -3022,6 +3061,8 @@ msgid ""
 "The page label should be in the same format as the page number displayed in "
 "the Document Viewer toolbar."
 msgstr ""
+"La etiqueta de la página debería estar en el mismo formato que el número de "
+"página mostrado en la barra de herramientas del visor de documentos."
 
 #: C/commandline.page:51(title)
 msgid "Opening A Document In Fullscreen Mode"
