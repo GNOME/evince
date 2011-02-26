@@ -26,6 +26,8 @@
 
 #include "config.h"
 
+#include <glib/gi18n.h>
+
 #include <gdk/gdk.h>
 
 #ifdef GDK_WINDOWING_X11
@@ -113,6 +115,7 @@ on_inhibit_cb (GObject      *source_object,
 			g_warning ("Problem inhibiting the screensaver: %s", error->message);
 		}
 		g_error_free (error);
+		g_object_unref (scr);
 
 		return;
 	}
@@ -123,6 +126,8 @@ on_inhibit_cb (GObject      *source_object,
 	else
 		scr->priv->cookie = 0;
 	g_variant_unref (value);
+
+	g_object_unref (scr);
 }
 
 static void
@@ -153,6 +158,7 @@ on_uninhibit_cb (GObject      *source_object,
 			g_warning ("Problem uninhibiting the screensaver: %s", error->message);
 		}
 		g_error_free (error);
+		g_object_unref (scr);
 
 		return;
 	}
@@ -160,6 +166,8 @@ on_uninhibit_cb (GObject      *source_object,
 	/* clear the cookie */
 	scr->priv->cookie = 0;
 	g_variant_unref (value);
+
+	g_object_unref (scr);
 }
 
 static void
@@ -172,6 +180,7 @@ screensaver_inhibit_dbus (TotemScrsaver *scr,
                 return;
 
 	scr->priv->old_dbus_api = FALSE;
+	g_object_ref (scr);
 
 	if (inhibit) {
 		g_return_if_fail (scr->priv->reason != NULL);
@@ -219,6 +228,10 @@ screensaver_update_dbus_presence (TotemScrsaver *scr)
 	if (name_owner) {
 		priv->have_screensaver_dbus = TRUE;
 		g_free (name_owner);
+
+		/* screensaver just appeared, or reappeared */
+		if (priv->reason != NULL)
+			screensaver_disable_dbus (scr);
 	} else {
 		priv->have_screensaver_dbus = FALSE;
 	}
@@ -279,7 +292,6 @@ screensaver_finalize_dbus (TotemScrsaver *scr)
 static void
 screensaver_enable_x11 (TotemScrsaver *scr)
 {
-        Display *xdisplay;
 
 #ifdef HAVE_XTEST
 	if (scr->priv->have_xtest != FALSE)
@@ -289,14 +301,13 @@ screensaver_enable_x11 (TotemScrsaver *scr)
 	}
 #endif /* HAVE_XTEST */
 
-        xdisplay = GDK_DISPLAY_XDISPLAY (gdk_display_get_default ());
-	XLockDisplay (xdisplay);
-	XSetScreenSaver (xdisplay,
+	XLockDisplay (GDK_DISPLAY_XDISPLAY (gdk_display_get_default ()));
+	XSetScreenSaver (GDK_DISPLAY_XDISPLAY (gdk_display_get_default ()),
 			scr->priv->timeout,
 			scr->priv->interval,
 			scr->priv->prefer_blanking,
 			scr->priv->allow_exposures);
-	XUnlockDisplay (xdisplay);
+	XUnlockDisplay (GDK_DISPLAY_XDISPLAY (gdk_display_get_default ()));
 }
 
 #ifdef HAVE_XTEST
@@ -305,15 +316,12 @@ fake_event (TotemScrsaver *scr)
 {
 	if (scr->priv->disabled)
 	{
-                Display *display;
-
-                xdisplay = GDK_DISPLAY_XDISPLAY (gdk_display_get_default ());
-		XLockDisplay (xdisplay);
-		XTestFakeKeyEvent (xdisplay, *scr->priv->keycode,
+		XLockDisplay (GDK_DISPLAY_XDISPLAY (gdk_display_get_default ()));
+		XTestFakeKeyEvent (GDK_DISPLAY_XDISPLAY (gdk_display_get_default ()), *scr->priv->keycode,
 				True, CurrentTime);
-		XTestFakeKeyEvent (xdisplay, *scr->priv->keycode,
+		XTestFakeKeyEvent (GDK_DISPLAY_XDISPLAY (gdk_display_get_default ()), *scr->priv->keycode,
 				False, CurrentTime);
-		XUnlockDisplay (xdisplay);
+		XUnlockDisplay (GDK_DISPLAY_XDISPLAY (gdk_display_get_default ()));
 		/* Swap the keycode */
 		if (scr->priv->keycode == &scr->priv->keycode1)
 			scr->priv->keycode = &scr->priv->keycode2;
@@ -328,19 +336,16 @@ fake_event (TotemScrsaver *scr)
 static void
 screensaver_disable_x11 (TotemScrsaver *scr)
 {
-        Display *xdisplay;
-
-        xdisplay = GDK_DISPLAY_XDISPLAY (gdk_display_get_default ());
 
 #ifdef HAVE_XTEST
 	if (scr->priv->have_xtest != FALSE)
 	{
-		XLockDisplay (xdisplay);
-		XGetScreenSaver(xdisplay, &scr->priv->timeout,
+		XLockDisplay (GDK_DISPLAY_XDISPLAY (gdk_display_get_default ()));
+		XGetScreenSaver(GDK_DISPLAY_XDISPLAY (gdk_display_get_default ()), &scr->priv->timeout,
 				&scr->priv->interval,
 				&scr->priv->prefer_blanking,
 				&scr->priv->allow_exposures);
-		XUnlockDisplay (xdisplay);
+		XUnlockDisplay (GDK_DISPLAY_XDISPLAY (gdk_display_get_default ()));
 
 		if (scr->priv->timeout != 0) {
 			g_timeout_add_seconds (scr->priv->timeout / 2,
@@ -354,14 +359,14 @@ screensaver_disable_x11 (TotemScrsaver *scr)
 	}
 #endif /* HAVE_XTEST */
 
-	XLockDisplay (xdisplay);
-	XGetScreenSaver(xdisplay, &scr->priv->timeout,
+	XLockDisplay (GDK_DISPLAY_XDISPLAY (gdk_display_get_default ()));
+	XGetScreenSaver(GDK_DISPLAY_XDISPLAY (gdk_display_get_default ()), &scr->priv->timeout,
 			&scr->priv->interval,
 			&scr->priv->prefer_blanking,
 			&scr->priv->allow_exposures);
-	XSetScreenSaver(xdisplay, 0, 0,
+	XSetScreenSaver(GDK_DISPLAY_XDISPLAY (gdk_display_get_default ()), 0, 0,
 			DontPreferBlanking, DontAllowExposures);
-	XUnlockDisplay (xdisplay);
+	XUnlockDisplay (GDK_DISPLAY_XDISPLAY (gdk_display_get_default ()));
 }
 
 static void
@@ -369,28 +374,25 @@ screensaver_init_x11 (TotemScrsaver *scr)
 {
 #ifdef HAVE_XTEST
 	int a, b, c, d;
-        Display *display;
 
-        xdisplay = GDK_DISPLAY_XDISPLAY (gdk_display_get_default ());
-
-	XLockDisplay (xdisplay);
-	scr->priv->have_xtest = (XTestQueryExtension (xdisplay, &a, &b, &c, &d) == True);
+	XLockDisplay (GDK_DISPLAY_XDISPLAY (gdk_display_get_default ()));
+	scr->priv->have_xtest = (XTestQueryExtension (GDK_DISPLAY_XDISPLAY (gdk_display_get_default ()), &a, &b, &c, &d) == True);
 	if (scr->priv->have_xtest != FALSE)
 	{
-		scr->priv->keycode1 = XKeysymToKeycode (xdisplay, XK_Alt_L);
+		scr->priv->keycode1 = XKeysymToKeycode (GDK_DISPLAY_XDISPLAY (gdk_display_get_default ()), XK_Alt_L);
 		if (scr->priv->keycode1 == 0) {
 			g_warning ("scr->priv->keycode1 not existant");
 		}
-		scr->priv->keycode2 = XKeysymToKeycode (xdisplay, XK_Alt_R);
+		scr->priv->keycode2 = XKeysymToKeycode (GDK_DISPLAY_XDISPLAY (gdk_display_get_default ()), XK_Alt_R);
 		if (scr->priv->keycode2 == 0) {
-			scr->priv->keycode2 = XKeysymToKeycode (xdisplay, XK_Alt_L);
+			scr->priv->keycode2 = XKeysymToKeycode (GDK_DISPLAY_XDISPLAY (gdk_display_get_default ()), XK_Alt_L);
 			if (scr->priv->keycode2 == 0) {
 				g_warning ("scr->priv->keycode2 not existant");
 			}
 		}
 		scr->priv->keycode = &scr->priv->keycode1;
 	}
-	XUnlockDisplay (xdisplay);
+	XUnlockDisplay (GDK_DISPLAY_XDISPLAY (gdk_display_get_default ()));
 #endif /* HAVE_XTEST */
 }
 
