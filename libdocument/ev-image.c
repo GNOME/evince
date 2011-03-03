@@ -144,8 +144,8 @@ ev_image_save_tmp (EvImage   *image,
 	if (image->priv->tmp_uri)
 		return image->priv->tmp_uri;
 
-        if ((fd = ev_mkstemp ("image.XXXXXX", &filename, &error)) == -1)
-                goto had_error;
+	if ((fd = ev_mkstemp ("image.XXXXXX.png", &filename, &error)) == -1)
+		goto had_error;
 
 	gdk_pixbuf_save (pixbuf, filename,
 			 "png", &error,
