@@ -2,15 +2,15 @@
 # Francisco Javier F. Serrador <serrador@gnome.org>, 2005.
 # traducción al español del manual de evince
 # spanish transtation for evince
-# Jorge González <jorgegonz@svn.gnome.org>, 2006, 2007, 2009, 2010, 2011.
 # Daniel Mustieles <daniel.mustieles@gmail.com>, 2010, 2011.
+# Jorge González <jorgegonz@svn.gnome.org>, 2006, 2007, 2009, 2010, 2011.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: evince.help.master\n"
-"POT-Creation-Date: 2011-02-24 05:35+0000\n"
-"PO-Revision-Date: 2011-02-25 12:06+0100\n"
-"Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
+"POT-Creation-Date: 2011-02-25 19:31+0000\n"
+"PO-Revision-Date: 2011-03-06 15:20+0100\n"
+"Last-Translator: Jorge González <jorgegonz@svn.gnome.org>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -232,12 +232,17 @@ msgstr ""
 #: C/synctex-search.page:26(title)
 msgid "Forward Search: From TeX to PDF (<app>Gedit</app> to <app>Evince</app>)"
 msgstr ""
+"Búsqueda hacia adelante: de Tex a PDF (de <app>gedit</app> a <app>Evince</"
+"app>)"
 
 #: C/synctex-search.page:27(p)
 msgid ""
 "Forward search allows you to click on a specific section of TeX source code, "
 "and jump to the associated position in the PDF. To perform forward search:"
 msgstr ""
+"La búsqueda hacia adelante le permite pulsar en una sección específica de un "
+"código fuente en TeX y saltar a la posición asociada en el PDF. Para "
+"realizar una búsqueda hacia adelante:"
 
 #: C/synctex-search.page:32(p)
 msgid "Click on a line in the TeX file."
@@ -248,6 +253,9 @@ msgid ""
 "In <app>Gedit</app>, click <guiseq><gui>Tools</gui><gui>Forward Search</"
 "gui></guiseq>. The corresponding line in the PDF will be outlined in red."
 msgstr ""
+"En <app>gedit</app> pulse <guiseq><gui>Herramientas</gui><gui>Búsqueda hacia "
+"adelante</gui></guiseq>. Se resaltará en rojo la línea correspondiente en el "
+"PDF."
 
 #: C/synctex-search.page:40(p)
 msgid ""
@@ -264,6 +272,8 @@ msgid ""
 "If the corresponding PDF file is not open, performing a forward search will "
 "open the PDF in <app>Evince</app>."
 msgstr ""
+"Si el archivo PDF correspondiente no está abierto, se abrirá en <app>Evince</"
+"app> al realizar una búsqueda hacia adelante."
 
 #: C/synctex-search.page:50(p)
 msgid "If you add a complex project with several TeX files you can put"
@@ -280,17 +290,23 @@ msgid ""
 "forward search will work. Backward search should always work, even if you "
 "don't add the modeline."
 msgstr ""
+"ya sea en las tres primeras o tres últimas líneas de cada archivo TeX "
+"incluido y la búsqueda hacia adelante funcionará. La búsqueda hacia atrás "
+"siempre debería funcionar, incluso si no añade el modo de línea."
 
 #: C/synctex-search.page:61(title)
 msgid ""
 "Backward Search: From PDF to TeX (<app>Evince</app> to <app>Gedit</app>)"
 msgstr ""
+"Búsqueda hacia atrás: de PDF a Tex (de <app>Evince</app> a <app>gedit</app>)"
 
 #: C/synctex-search.page:62(p)
 msgid ""
 "Backward search allows you to click on a specific line in the PDF file, and "
 "jump to the associated line in the TeX source code."
 msgstr ""
+"La búsqueda hacia atrás le permite pulsar en una línea específica en el "
+"archivo PDF y saltar a la línea asociada en el código fuente TeX."
 
 #: C/synctex-search.page:65(p)
 msgid ""
@@ -298,6 +314,9 @@ msgid ""
 "<app>Evince</app>. The corresponding line in the TeX source code will be "
 "hightlighted."
 msgstr ""
+"Puede realizar una búsqueda hacia atrás pulsando <key>Ctrl</key>+ pulsación "
+"izquierda en <app>Evince</app>. Se resaltará la correspondiente línea en el "
+"código fuente TeX."
 
 #: C/synctex.page:7(desc)
 msgid "SyncTeX support is available in <app>Evince</app>."
@@ -334,6 +353,10 @@ msgid ""
 "search#backward-search\">Backward search</link> (from <app>Evince</app> to "
 "<app>Gedit</app>) are both supported."
 msgstr ""
+"Tanto la <link xref=\"synctex-search#forward-search\">Búsqueda hacia "
+"adelante</link> (de <app>gedit</app> a <app>Evince</app>) como la <link xref="
+"\"synctex-search#backward-search\">Búsqueda hacia atrás</link> (de "
+"<app>Evince</app> a <app>Gedit</app>) están soportadas."
 
 #: C/synctex-editors.page:28(title)
 msgid "Vim-latex"
@@ -379,6 +402,8 @@ msgid ""
 "Now you can use Forward search from vim-latex by typing \\ls. Backward "
 "search is not yet supported."
 msgstr ""
+"Ahora puede usar la búsqueda hacia adelante desde vim-latex escribiendo "
+"\\ls. La búsqueda hacia atrás aún no está soportada."
 
 #: C/synctex-compile.page:7(desc)
 msgid "How to compile your TeX document with SyncTex"
@@ -576,11 +601,11 @@ msgstr "En <em>Rango</em>, elija <gui>Páginas</gui>."
 
 #: C/singlesided-npages.page:63(item) C/duplex-npages.page:62(item)
 msgid ""
-"n, 1, 2, n-1, n-2, 3, 4, n-3, n-4, 5, 6, n-5, n-6, 7, 8, n-7, n-8, 9, 10, n-"
-"9, n-10, 11, 12, n-11..."
+"n, 1, 2, n-1, n-2, 3, 4, n-3, n-4, 5, 6, n-5, n-6, 7, 8, n-7, n-8, 9, 10, "
+"n-9, n-10, 11, 12, n-11..."
 msgstr ""
-"n, 1, 2, n-1, n-2, 3, 4, n-3, n-4, 5, 6, n-5, n-6, 7, 8, n-7, n-8, 9, 10, n-"
-"9, n-10, 11, 12, n-11…"
+"n, 1, 2, n-1, n-2, 3, 4, n-3, n-4, 5, 6, n-5, n-6, 7, 8, n-7, n-8, 9, 10, "
+"n-9, n-10, 11, 12, n-11…"
 
 #: C/singlesided-npages.page:64(item) C/duplex-npages.page:63(item)
 msgid "...until you have typed n-number of pages."
@@ -1225,8 +1250,8 @@ msgid ""
 "For example, if you enter \"1,3,5-7,9\" in the <gui>Pages</gui> textbox, "
 "pages 1,3,5,6,7 and 9 will be printed."
 msgstr ""
-"Por ejemplo, si escribe «1,3,5-7,9» en la caja de texto <gui>Páginas</gui>,se "
-"imprimirán las páginas 1,3,5,6,7 y 9."
+"Por ejemplo, si escribe «1,3,5-7,9» en la caja de texto <gui>Páginas</gui>,"
+"se imprimirán las páginas 1,3,5,6,7 y 9."
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
@@ -1237,8 +1262,8 @@ msgstr "@@image: 'reverse-collate.png'; md5=2e84b930fa1913123b740f8b0997255e"
 #: C/print-order.page:8(desc)
 msgid "Use the Collate and Reverse options to make pages print in order."
 msgstr ""
-"Use las opciones «Intercalar» e «Invertir» para que las páginas se impriman en "
-"orden."
+"Use las opciones «Intercalar» e «Invertir» para que las páginas se impriman "
+"en orden."
 
 #: C/print-order.page:20(title)
 msgid "Getting Copies To Print In The Correct Order"
@@ -2715,6 +2740,8 @@ msgid ""
 "Follow the steps for printing a <link xref=\"duplex-4page\">4-page booklet</"
 "link>."
 msgstr ""
+"Siga los pasos para imprimir un <link xref=\"duplex-4page\">folleto de 4 "
+"páginas</link>"
 
 #: C/duplex-16pages.page:21(title)
 msgid "16-Page Booklet"
@@ -2791,24 +2818,34 @@ msgstr ""
 msgid ""
 "In the <gui>General</gui> tab, enter 3 in the <gui>Pages</gui> selection."
 msgstr ""
+"En la pestaña <gui>General</gui> introduzca 3 en la selección de "
+"<gui>Páginas</gui>."
 
 #: C/duplex-13pages.page:95(p)
 msgid ""
 "Once page 3 has printed, place the paper back in the printer (taking care to "
 "orient it correctly, pages 4 and 13 will be printed on the other side)."
 msgstr ""
+"Una vez que se ha imprimido la página 3, vuelva a poner el papel en la "
+"impresora (teniendo cuidado de orientarlo correctamente, las páginas 4 y 13 "
+"se imprimirán en la otra cara)."
 
 #: C/duplex-13pages.page:103(p)
 msgid ""
 "In the <gui>General</gui> tab enter pages 4, 13 in the <gui>Pages</gui> "
 "selection menu."
 msgstr ""
+"En la pestaña <gui>General</gui> introduzca las páginas 4,13 en el menú de "
+"selección <gui>Páginas</gui>."
 
 #: C/duplex-13pages.page:117(p)
 msgid ""
 "Enter pages 8, 9, 10, 7, 6, 11, 12, 5 in the <gui>Pages</gui> selection menu "
 "and set <gui>Page ordering</gui> to <gui>Left to right</gui>."
 msgstr ""
+"Introduzca las páginas 8, 9, 10, 7, 6, 11, 12, 5 en el menú de selección "
+"<gui>Páginas</gui> y establezca <gui>Orden de las hojas</gui> a <gui>de "
+"izquierda a derecha</gui>."
 
 #: C/duplex-13pages.page:126(p)
 msgid ""
@@ -2912,6 +2949,8 @@ msgid ""
 "Choose a name and folder to save the file in, then click <gui>Print</gui>. "
 "The SVG file will be saved in the folder you chose."
 msgstr ""
+"Elija un nombre y una carpeta donde guardar el archivo, después pulse "
+"<gui>Imprimir</gui>. Se guardará el archivo SVG en la carpeta que elija."
 
 #: C/convertPostScript.page:7(desc)
 msgid "You can convert a document to PostScript."
@@ -2925,6 +2964,8 @@ msgstr "Convertir un documento a PostScript"
 msgid ""
 "You can convert documents of the following format types to PostScript files:"
 msgstr ""
+"Puede convertir documentos a archivos PostScrip de los siguientes tipos de "
+"formato:"
 
 #: C/convertPostScript.page:30(p)
 msgid ""
@@ -2947,6 +2988,9 @@ msgid ""
 "Choose a name and folder to save the file in, then click <gui>Print</gui>. "
 "The PostScript file will be saved in the folder you chose."
 msgstr ""
+"Elija un nombre y una carpeta donde guardar el archivo, después pulse "
+"<gui>Imprimir</gui>. Se guardará el archivo PostScript en la carpeta que "
+"elija."
 
 #: C/convertpdf.page:7(desc)
 msgid "You can convert a document to PDF by \"printing\" it to a file."
@@ -2983,6 +3027,14 @@ msgid ""
 "Recognition</em> (OCR) software to extract the text from files if you need "
 "to."
 msgstr ""
+"No puede seleccionar texto en archivos PostScript o .dvi, pero generalmente "
+"puede hacerlo en archivos PDF. Convertir archivos .dvi o PostScript a PDF no "
+"hará que el texto se pueda seleccionar. Esto se debe a que el texto en si no "
+"está almacenado en el archivo (sólo es una imagen de a lo que se parece el "
+"texto), de tal forma que no existe una forma de recuperarlo y ponerlo en el "
+"PDF. Si lo necesita, puede usar un software <em>Optical Character "
+"Recofnition</em> (reconocimiento óptico de caracteres, «OCR») para extraer "
+"el texto desde archivos."
 
 #: C/commandline.page:7(title)
 msgid "Command Line"
@@ -3032,6 +3084,8 @@ msgid ""
 "Evince also supports the handling of files on the web. For example, after "
 "the evince command you can give the location of a file on the web:"
 msgstr ""
+"Evince también soporta gestión de archivos en la web. Por ejemplo, después "
+"del comando «evince» puede proporcionar la ubicación de un archivo en la web:"
 
 #: C/commandline.page:37(screen)
 #, no-wrap
@@ -3455,8 +3509,8 @@ msgstr ""
 #: C/index.page:0(None)
 msgid "translator-credits"
 msgstr ""
-"Daniel Mustieles <daniel.mustieles@gmail.com>, 2010\n"
-"Jorge González <jorgegonz@svn.gnome.org>, 2010"
+"Daniel Mustieles <daniel.mustieles@gmail.com>, 2011\n"
+"Jorge González <jorgegonz@svn.gnome.org>, 2011"
 
 #~ msgid "Click<guiseq><gui>File</gui><gui>Print</gui></guiseq>"
 #~ msgstr "Pulse<guiseq><gui>Archivo</gui><gui>Imprimir</gui></guiseq>"
@@ -3796,10 +3850,10 @@ msgstr ""
 #~ msgid ""
 #~ "In <application>Evince Document Viewer</application>, you can perform the "
 #~ "same action in several ways. For example, you can open a document in the "
-#~ "following ways: <informaltable frame=\"all\"><tgroup cols=\"2\" colsep=\"1"
-#~ "\" rowsep=\"1\"><colspec colname=\"COLSPEC0\" colwidth=\"50*\"/><colspec "
-#~ "colname=\"COLSPEC1\" colwidth=\"50*\"/><placeholder-1/><placeholder-2/></"
-#~ "tgroup></informaltable>"
+#~ "following ways: <informaltable frame=\"all\"><tgroup cols=\"2\" colsep="
+#~ "\"1\" rowsep=\"1\"><colspec colname=\"COLSPEC0\" colwidth=\"50*\"/"
+#~ "><colspec colname=\"COLSPEC1\" colwidth=\"50*\"/><placeholder-1/"
+#~ "><placeholder-2/></tgroup></informaltable>"
 #~ msgstr ""
 #~ "En el <application>Visor de documentos Evince</application>, puede "
 #~ "realizar la misma acción de varias formas. Por ejemplo, puede abrir un "
