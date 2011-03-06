@@ -8,8 +8,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: evince.help.master\n"
-"POT-Creation-Date: 2011-02-25 19:31+0000\n"
-"PO-Revision-Date: 2011-03-06 15:20+0100\n"
+"POT-Creation-Date: 2011-03-06 14:21+0000\n"
+"PO-Revision-Date: 2011-03-06 17:21+0100\n"
 "Last-Translator: Jorge González <jorgegonz@svn.gnome.org>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -473,12 +473,19 @@ msgid ""
 "the search brings you to the corresponding frame (slide), not necessarily "
 "the associated line of text. This difference is outlined in detail below."
 msgstr ""
+"Puede realizar búsquedas hacia adelante y hacia atrás en una presentación "
+"<em>Beamer-LaTeX</em> de forma similar a una <link xref=\"synctex-search"
+"\">búsqueda</link> a través de otros archivos TeX compilados con SyncTex. No "
+"obstante la búsqueda le muestra el marco (diapositiva) correspondiente, no "
+"necesariamente la línea de texto asociada. Esta diferencia se detalla debajo."
 
 #: C/synctex-beamer.page:27(title)
 msgid ""
 "Forward Search: From Beamer-LaTeX source to PDF (<app>Gedit</app> to "
 "<app>Evince</app>)"
 msgstr ""
+"Búsqueda hacia adelante: de código fuente de Beamer-LaTeX a PDF (de "
+"<app>gedit</app> a <app>Evince</app>)"
 
 #: C/synctex-beamer.page:28(p)
 msgid ""
@@ -487,12 +494,18 @@ msgid ""
 "of the corresponding slide in the PDF will be outlined in red. This will "
 "often be the <em>frametitle</em>."
 msgstr ""
+"Con la <link xref=\"synctex-search#forward-search\">búsqueda hacia adelante</"
+"link> puede pulsar en una línea específica del código fuente en Beamer-"
+"LaTeX. Se resaltará en rojo la parte <em>superior</em> de la diapositiva "
+"correspondiente en el PDF. Generalmente será el <em>marco de título</em>."
 
 #: C/synctex-beamer.page:35(title)
 msgid ""
 "Backward Search: From PDF to Beamer-LaTeX source(<app>Evince</app> to "
 "<app>Gedit</app>)"
 msgstr ""
+"Búsqueda hacia atrás. de PDF a código fuente de Beamer-LaTeX (de "
+"<app>Evince</app> a <app>gedit</app>)"
 
 #: C/synctex-beamer.page:36(p)
 msgid ""
@@ -500,6 +513,9 @@ msgid ""
 "you click on some text in a frame, and the corresponding line of LaTex code "
 "that ends that particular frame is highlighted."
 msgstr ""
+"Con la <link xref=\"synctex-search#backward-search\">búsqueda hacia atrás</"
+"link> puede pulsar en algún texto en un marco y se resaltará la "
+"correspondiente línea en el código LaTex."
 
 #: C/synctex-beamer.page:39(code)
 #, no-wrap
@@ -1129,6 +1145,8 @@ msgid ""
 "Check the value box for <gui>can_change_accels</gui> in the right side of "
 "the window."
 msgstr ""
+"Compruebe el valor de la caja para <gui>can_change_accel</gui> en la parte "
+"derecha de la ventana."
 
 #: C/shortcuts.page:178(p)
 msgid "You can add/change the shortcut as follows:"
@@ -1167,6 +1185,8 @@ msgid ""
 "Uncheck the value box for <gui>can_change_accels</gui> in the right side of "
 "the window."
 msgstr ""
+"Desmarque el valor de la caja para <gui>can_change_accels</gui> en la parte "
+"derecha de la ventana."
 
 #: C/shortcuts.page:214(p)
 msgid "The next time Evince starts your custom shortcut key will be preserved."
@@ -1236,6 +1256,8 @@ msgid ""
 "In the <gui>General</gui> tab in the Print window choose <gui>Pages</gui> "
 "from the <gui>Range</gui> section."
 msgstr ""
+"En la pestaña <gui>General</gui>, en la ventana «Imprimir», elija "
+"<gui>Páginas</gui> de la sección <gui>Rango</gui>."
 
 #: C/print-select.page:28(p)
 msgid ""
@@ -1299,6 +1321,9 @@ msgid ""
 "In the <gui>General</gui> tab of the Print window under <em>Copies</em>, "
 "check <gui>Reverse</gui>. The last page will be printed first, and so on."
 msgstr ""
+"En la pestaña <gui>General</gui> de la ventana «Imprimir», bajo <em>Copias</"
+"em>, marque <gui>Invertir</gui>. Se imprimirá la primera página la primera, "
+"así en adelante."
 
 #: C/print-order.page:39(title)
 msgid "Collate"
@@ -1311,6 +1336,10 @@ msgid ""
 "then the copies of page two, etc.) Collating will make each copy come out "
 "with its pages grouped together."
 msgstr ""
+"Si está imprimiendo más de una copia del documento, de forma predeterminada "
+"las impresiones se agruparán por número de página. (Ej.: saldrán todas las "
+"copias de la página uno, después de la página dos, etc.) Agruparlas hará que "
+"cada copia salga con sus páginas agrupadas."
 
 #: C/print-order.page:47(p)
 msgid "To Collate:"
@@ -1476,6 +1505,8 @@ msgid ""
 "Go to the <gui>Page Setup</gui> tab of the Print window and choose an option "
 "from the <gui>Two-sided</gui> drop-down list."
 msgstr ""
+"Vaya a la pestaña <gui>Configuración de página</gui> de la ventana "
+"«Imprimir» y elija una opción en la lista desplegable <gui>Dos caras</gui>."
 
 #: C/print-2sided.page:39(p)
 msgid ""
@@ -1807,16 +1838,22 @@ msgstr "Moverse alrededor de un documento"
 msgid ""
 "You can move around each page of a document by any of the following methods:"
 msgstr ""
+"Puede moverse por cada página de un documento usando cualquiera de los "
+"siguientes métodos."
 
 #: C/movingaround.page:27(p)
 msgid ""
 "Scrolling up and down using the mouse wheel. To move around a page just by "
 "moving the mouse:"
 msgstr ""
+"Desplazarse arriba y abajo usando la rueda del ratón. Para moverse por una "
+"página usando solamente el ratón:"
 
 #: C/movingaround.page:31(p)
 msgid "Right-click the page and select <gui>Autoscroll</gui>."
 msgstr ""
+"Pulse con el botón derecho del ratón en la página y seleccione "
+"<gui>Autodesplazar</gui>."
 
 #: C/movingaround.page:34(p)
 msgid ""
@@ -1842,7 +1879,7 @@ msgstr "Usar las teclas de flechas arriba y abajo de su teclado."
 msgid ""
 "Dragging the page around with your mouse, as if you are grabbing it. To do "
 "this:"
-msgstr ""
+msgstr "Arrastrar la página con su ratón, como si la agarrase. Para ello:"
 
 #: C/movingaround.page:61(p)
 msgid ""
@@ -1857,6 +1894,8 @@ msgid ""
 "If you don't have a middle mouse button, hold down the left and right mouse "
 "buttons at the same time, then drag."
 msgstr ""
+"Si no tiene un botón central del ratón, mantenga pulsados los botones "
+"izquierdo y derecho del ratón al mismo tiempo, después arrastre."
 
 #: C/movingaround.page:76(title)
 msgid "Flipping Between Pages"
@@ -2025,18 +2064,24 @@ msgid ""
 "The <gui>Best Fit</gui> option will make a document page fit the whole "
 "<em>height</em> of the window."
 msgstr ""
+"La opción <gui>Ajuste óptimo</gui> hará que la página de un documento se "
+"ajuste a la <em>altura</em> total de la ventana."
 
 #: C/movingaround.page:152(p)
 msgid ""
 "The <gui>Fit Page Width</gui> option will make a document page fill the "
 "whole <em>width</em> of the window."
 msgstr ""
+"La opción <gui>Ajustar al ancho de página</gui> hará que la página de un "
+"documento llene la <em>anchura</em> total de la ventana."
 
 #: C/movingaround.page:155(p)
 msgid ""
 "If you want to see two pages at once, side by side, like in a book, click "
 "<guiseq><gui>View</gui><gui>Dual</gui></guiseq>."
 msgstr ""
+"Si quiere ver dos páginas a la vez, lado a lado, como en un libro, pulse "
+"<guiseq><gui>Ver</gui><gui>Dual</gui></guiseq>."
 
 #: C/movingaround.page:160(p)
 msgid "You can use the whole of your screen to view the document:"
@@ -2062,6 +2107,8 @@ msgstr "Pulse <key>F11</key> o <key>Escape</key>"
 msgid ""
 "or click the <gui>Leave Fullscreen</gui> button at the top of the screen."
 msgstr ""
+"o pulse el botón <gui>Salir de «Pantalla completa»</gui> en la parte "
+"superior de la pantalla."
 
 #: C/invert-colors.page:8(desc)
 msgid "Inverting the colors can make it easier to read some text."
