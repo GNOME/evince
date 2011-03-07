@@ -7110,6 +7110,10 @@ ev_window_init (EvWindow *ev_window)
 			       NULL));
 	g_object_unref (toolbars_model);
 
+	gtk_style_context_add_class
+		(gtk_widget_get_style_context (GTK_WIDGET (ev_window->priv->toolbar)),
+		 GTK_STYLE_CLASS_PRIMARY_TOOLBAR);
+
 	egg_editable_toolbar_show (EGG_EDITABLE_TOOLBAR (ev_window->priv->toolbar),
 				   "DefaultToolBar");
 	gtk_box_pack_start (GTK_BOX (ev_window->priv->main_box),
