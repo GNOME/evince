@@ -8,8 +8,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: evince.help.master\n"
-"POT-Creation-Date: 2011-03-06 16:21+0000\n"
-"PO-Revision-Date: 2011-03-08 13:44+0100\n"
+"POT-Creation-Date: 2011-03-09 18:33+0000\n"
+"PO-Revision-Date: 2011-03-11 10:50+0100\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -660,7 +660,7 @@ msgid ""
 "Under <em>Layout</em>, in the <gui>Two-side</gui> menu, select <gui>One "
 "Sided</gui>."
 msgstr ""
-"En <em>Diseño</em>, en el menú <gui>Doble cara</gui>, elija<gui>Una cara</"
+"En <em>Diseño</em>, en el menú <gui>Doble cara</gui>, elija <gui>Una cara</"
 "gui>."
 
 #: C/singlesided-npages.page:75(p) C/singlesided-9-12pages.page:68(p)
@@ -679,7 +679,7 @@ msgstr "En el menú <gui>Páginas por hoja</gui>, elija <gui>2</gui>."
 #: C/duplex-11pages.page:78(p) C/duplex-10pages.page:51(p)
 msgid "In the <gui>Page ordering</gui> menu, select <gui>Left to right</gui>."
 msgstr ""
-"En el menú<gui>Ordenación de páginas</gui>, elija<gui>De izquierda a "
+"En el menú<gui>Ordenación de páginas</gui>, elija <gui>De izquierda a "
 "derecha</gui>."
 
 #: C/singlesided-npages.page:81(p) C/singlesided-9-12pages.page:74(p)
@@ -1479,6 +1479,10 @@ msgid ""
 "printing from the list below. Then select the number of printed pages your "
 "booklet will have."
 msgstr ""
+"Si está imprimiendo un folleto (que probablemente se atará o se grapará en "
+"el centro de cada página), seleccione el tipo de impresora que usará de la "
+"siguiente lista. Entonces seleccione el número de páginas impresas que "
+"tendrá su folleto."
 
 #: C/print-booklet.page:28(title)
 msgid "Printer Allows Single-Sided Printing"
@@ -1494,7 +1498,7 @@ msgstr "Imprimir a doble cara y varias páginas por hoja."
 
 #: C/print-2sided.page:21(title)
 msgid "Two-Sided And Multiple Pages Per Side Layout For Printing"
-msgstr ""
+msgstr "Diseño de doble cara y múltiples páginas por cara para imprimir"
 
 #: C/print-2sided.page:23(p)
 msgid "You can print on both sides of each sheet of paper:"
@@ -1860,6 +1864,9 @@ msgid ""
 "Move the mouse pointer towards the bottom of the window to scroll down; it "
 "will scroll faster depending on how far down the window you go."
 msgstr ""
+"Mueva el puntero del ratón hacia la parte inferior de la ventana para "
+"desplazarse hacia abajo; se desplazará más rápido dependiendo de cuánto baje "
+"el puntero."
 
 #: C/movingaround.page:39(p)
 msgid "To stop autoscrolling, click anywhere in the document."
@@ -1984,6 +1991,9 @@ msgid ""
 "between pages just by scrolling or dragging, click <guiseq><gui>View</"
 "gui><gui>Continuous</gui></guiseq>."
 msgstr ""
+"Sólo puede moverse alrededor de una página a la vez. Si quiere moverse entre "
+"páginas desplazándose o arrastrando, pulse <guiseq><gui>Ver</"
+"gui><gui>Continuo</gui></guiseq>."
 
 #: C/movingaround.page:116(title)
 msgid "Navigating With A Page List Or Table Of Contents"
@@ -2303,12 +2313,17 @@ msgid ""
 "by clicking on a field with your mouse. When you are finished filling out a "
 "text field, press <key>Enter</key>."
 msgstr ""
+"Cuando rellena un formulario interactivo, puede navegar desde un campo a "
+"otro pulsando en un campo con el ratón. Cuando termine de rellenar un campo "
+"de texto, pulse <key>Intro</key>."
 
 #: C/forms.page:25(p)
 msgid ""
 "You can make a selection in a scrollable list box by clicking on the list "
 "box and scrolling to your choice with your mouse."
 msgstr ""
+"Puede hacer una selección en una lista desplegable pulsando en la lista y "
+"desplazándose hasta su elección con el ratón."
 
 #: C/forms.page:29(p)
 msgid ""
@@ -2319,10 +2334,16 @@ msgid ""
 "eu/2008/05/03/how-to-annotate-pdf-files-in-linux-using-xournal/\">Xournal</"
 "link>."
 msgstr ""
+"Puede haber algunas partes de un formulario que necesite rellenar a mano "
+"<em>después</em> de imprimirlo. Por ejemplo, puede querer resaltar algunas "
+"cosas o firmar el formulario en uno o más sitios. Si quiere hacer esto "
+"electrónicamente, puede querer probar <link href=\"http://www.g-loaded."
+"eu/2008/05/03/how-to-annotate-pdf-files-in-linux-using-xournal/\">Xournal</"
+"link>."
 
 #: C/formats.page:10(desc)
 msgid "PDF, PostScript and many others are."
-msgstr ""
+msgstr "PDF, PostScript y muchos otros."
 
 #: C/formats.page:23(title)
 msgid "Supported Formats"
@@ -2390,6 +2411,8 @@ msgid ""
 "The <gui>Find Previous</gui> and <gui>Find Next</gui> buttons let you skip "
 "from one search result to another."
 msgstr ""
+"Los botones <gui>Buscar anterior</gui> y <gui>Buscar siguiente</gui>le "
+"permiten saltar de un resultado a otro."
 
 #: C/finding.page:34(p)
 msgid "To hide the search bar, click anywhere in the document."
@@ -2404,6 +2427,11 @@ msgid ""
 "searched occurs on each page. This is apparent if you skip from one result "
 "to another as described above or scroll through the document."
 msgstr ""
+"Si la palabra o la frase que buscó no aparece en todo el documento, "
+"<app>Evince</app> dirá <em>No encontrado</em>. Sin embargo, si aparece en el "
+"documento al menos una vez, Evince le dirá cuántas veces aparece la palabra "
+"que buscó en cada página. Esto es evidente si salta de un resultado a otro "
+"como se describió anteriormente o para desplazarse por el documento."
 
 #: C/finding.page:43(p)
 msgid ""
@@ -2439,6 +2467,10 @@ msgid ""
 "PDF editing software is available. Try <link href=\"http://pdfedit.petricek."
 "net/en/index.html\">pdfedit</link>, for example."
 msgstr ""
+"Los archivos PDF y PostScript (.ps) no están pensados generalmente para que "
+"se editen, pero hay programas de edición de PDF disponibles. Pruebe<link "
+"href=\"http://pdfedit.petricek.net/en/index.html\">pdfedit</link>, por "
+"ejemplo."
 
 #: C/duplex-npages.page:71(p) C/duplex-9pages.page:43(p)
 #: C/duplex-8pages.page:45(p) C/duplex-7pages.page:47(p)
@@ -2451,6 +2483,8 @@ msgid ""
 "Under <em>Layout</em>, in the <gui>Two-side</gui> option, select <gui>Short "
 "Edge (Flip)</gui>."
 msgstr ""
+"En <em>Diseño</em>, en la opción <gui>Doble cara</gui>, seleccione "
+"<gui>Margen corto (girar)</gui>."
 
 #: C/duplex-npages.page:74(p) C/duplex-9pages.page:46(p)
 #: C/duplex-8pages.page:48(p) C/duplex-7pages.page:50(p)
@@ -2486,6 +2520,8 @@ msgstr "En <em>Rango</em>, seleccione <gui>Páginas</gui> y escriba: 1"
 #: C/duplex-10pages.page:84(p)
 msgid "In the <gui>Page ordering</gui> menu, select <gui>Right to left</gui>."
 msgstr ""
+"En el menú<gui>Ordenación de páginas</gui>, elija <gui>De derecha a "
+"izquierda</gui>."
 
 #: C/duplex-9pages.page:59(p) C/duplex-5pages.page:59(p)
 #: C/duplex-13pages.page:57(p)
@@ -2531,6 +2567,8 @@ msgstr "Pulse <guiseq><gui>Archivo</gui><gui>Imprimir</gui></guiseq> otra vez."
 msgid ""
 "In the <gui>General</gui> tab enter 3 in the <gui>Pages</gui> selection."
 msgstr ""
+"En la pestaña <gui>General</gui> introduzca un 3 en el menú de selección "
+"<gui>Páginas</gui>."
 
 #: C/duplex-9pages.page:90(p) C/duplex-5pages.page:95(p)
 #: C/duplex-13pages.page:87(p)
@@ -2538,18 +2576,25 @@ msgid ""
 "In the <gui>Page Setup</gui> tab, set the <gui>Page ordering</gui> to "
 "<gui>Right to left</gui>."
 msgstr ""
+"En la pestaña <gui>Configuración de página</gui>, establezca la "
+"<gui>Ordenación de página</gui> a <gui>De derecha a izquierda</gui>."
 
 #: C/duplex-9pages.page:99(p) C/duplex-5pages.page:103(p)
 msgid ""
 "Once page 3 has printed, place the paper back in the printer (taking care to "
 "orient it correctly (pages 4 and 9 will be printed on the other side)."
 msgstr ""
+"Una vez que la página 3 se ha imprimido, vuelva a colocar el papel en la "
+"impresora, teniendo cuidado de orientarlo correctamente (las páginas 4 y 9 "
+"se imprimirán en la otra cara)."
 
 #: C/duplex-9pages.page:107(p)
 msgid ""
 "In the <gui>General</gui> tab enter pages 4,9 in the <gui>Pages</gui> "
 "selection menu."
 msgstr ""
+"En la pestaña <gui>General</gui> introduzca las páginas 4,9 en el menú de "
+"selección <gui>Páginas</gui>."
 
 #: C/duplex-9pages.page:110(p) C/duplex-5pages.page:114(p)
 #: C/duplex-13pages.page:106(p)
@@ -2557,6 +2602,8 @@ msgid ""
 "In the <gui>Page Setup</gui> tab set <gui>Page ordering</gui> to <gui>Left "
 "to right</gui>."
 msgstr ""
+"En la pestaña <gui>Configuración de página</gui>, establezca la "
+"<gui>Ordenación de página</gui> a <gui>De izquierda a derecha</gui>."
 
 #: C/duplex-9pages.page:123(p)
 msgid ""
@@ -2642,6 +2689,8 @@ msgid ""
 "In the <gui>Page ordering</gui> menu, change the selection to <gui>Left to "
 "right</gui>."
 msgstr ""
+"En el menú<gui>Ordenación de páginas</gui>, cambie la selección a <gui>De "
+"izquierda a derecha</gui>."
 
 #: C/duplex-7pages.page:89(p)
 msgid ""
@@ -2704,6 +2753,9 @@ msgid ""
 "in the printer, taking care to orient it correctly (page 1 will be printed "
 "on the other side)."
 msgstr ""
+"Una vez que las páginas se han imprimido coja la página 2 y vuelva colocarla "
+"en la impresora, teniendo cuidado de orientarla correctamente (la página 1 "
+"se imprimirá en la otra cara)."
 
 #: C/duplex-6pages.page:76(p) C/duplex-14pages.page:74(p)
 #: C/duplex-10pages.page:75(p)
