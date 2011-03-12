@@ -28,7 +28,7 @@
 
 #include <glib/gi18n.h>
 
-#include <gdk/gdk.h>
+#include <gtk/gtk.h>
 
 #ifdef GDK_WINDOWING_X11
 #include <gdk/gdkx.h>
@@ -41,15 +41,18 @@
 
 #include "totem-scrsaver.h"
 
-#define GS_SERVICE   "org.gnome.ScreenSaver"
-#define GS_PATH      "/org/gnome/ScreenSaver"
-#define GS_INTERFACE "org.gnome.ScreenSaver"
+#define GS_SERVICE   "org.gnome.SessionManager"
+#define GS_PATH      "/org/gnome/SessionManager"
+#define GS_INTERFACE "org.gnome.SessionManager"
+/* From org.gnome.SessionManager.xml */
+#define GS_NO_IDLE_FLAG 8
 
 #define XSCREENSAVER_MIN_TIMEOUT 60
 
 enum {
 	PROP_0,
-	PROP_REASON
+	PROP_REASON,
+	PROP_WINDOW
 };
 
 static void totem_scrsaver_finalize   (GObject *object);
@@ -61,9 +64,9 @@ struct TotemScrsaverPrivate {
 	char *reason;
 
 	GDBusProxy *gs_proxy;
-        gboolean have_screensaver_dbus;
+        gboolean have_session_dbus;
 	guint32 cookie;
-	gboolean old_dbus_api;
+	GtkWindow *window;
 
 	/* To save the screensaver info */
 	int timeout;
@@ -82,7 +85,7 @@ G_DEFINE_TYPE(TotemScrsaver, totem_scrsaver, G_TYPE_OBJECT)
 static gboolean
 screensaver_is_running_dbus (TotemScrsaver *scr)
 {
-        return scr->priv->have_screensaver_dbus;
+        return scr->priv->have_session_dbus;
 }
 
 static void
@@ -97,25 +100,9 @@ on_inhibit_cb (GObject      *source_object,
 
 	value = g_dbus_proxy_call_finish (proxy, res, &error);
 	if (!value) {
-		if (!scr->priv->old_dbus_api &&
-		    g_error_matches (error, G_DBUS_ERROR, G_DBUS_ERROR_UNKNOWN_METHOD)) {
-			g_return_if_fail (scr->priv->reason != NULL);
-			/* try the old API */
-			scr->priv->old_dbus_api = TRUE;
-			g_dbus_proxy_call (proxy,
-					   "InhibitActivation",
-					   g_variant_new ("(s)",
-							  scr->priv->reason),
-					   G_DBUS_CALL_FLAGS_NO_AUTO_START,
-					   -1,
-					   NULL,
-					   on_inhibit_cb,
-					   scr);
-		} else {
-			g_warning ("Problem inhibiting the screensaver: %s", error->message);
-		}
-		g_error_free (error);
+		g_warning ("Problem inhibiting the screensaver: %s", error->message);
 		g_object_unref (scr);
+		g_error_free (error);
 
 		return;
 	}
@@ -142,23 +129,9 @@ on_uninhibit_cb (GObject      *source_object,
 
 	value = g_dbus_proxy_call_finish (proxy, res, &error);
 	if (!value) {
-		if (!scr->priv->old_dbus_api &&
-		    g_error_matches (error, G_DBUS_ERROR, G_DBUS_ERROR_UNKNOWN_METHOD)) {
-			/* try the old API */
-			scr->priv->old_dbus_api = TRUE;
-			g_dbus_proxy_call (proxy,
-					   "AllowActivation",
-					   g_variant_new ("()"),
-					   G_DBUS_CALL_FLAGS_NO_AUTO_START,
-					   -1,
-					   NULL,
-					   on_uninhibit_cb,
-					   scr);
-		} else {
-			g_warning ("Problem uninhibiting the screensaver: %s", error->message);
-		}
-		g_error_free (error);
+		g_warning ("Problem uninhibiting the screensaver: %s", error->message);
 		g_object_unref (scr);
+		g_error_free (error);
 
 		return;
 	}
@@ -175,34 +148,49 @@ screensaver_inhibit_dbus (TotemScrsaver *scr,
 			  gboolean	 inhibit)
 {
         TotemScrsaverPrivate *priv = scr->priv;
+        GdkWindow *window;
 
-        if (!priv->have_screensaver_dbus)
+        if (!priv->have_session_dbus)
                 return;
 
-	scr->priv->old_dbus_api = FALSE;
 	g_object_ref (scr);
 
 	if (inhibit) {
+		guint xid;
+
 		g_return_if_fail (scr->priv->reason != NULL);
+
+		xid = 0;
+		if (scr->priv->window != NULL) {
+			window = gtk_widget_get_window (GTK_WIDGET (scr->priv->window));
+			if (window != NULL)
+				xid = gdk_x11_window_get_xid (window);
+		}
+
+
 		g_dbus_proxy_call (priv->gs_proxy,
 				   "Inhibit",
-				   g_variant_new ("(ss)",
+				   g_variant_new ("(susu)",
 						  g_get_application_name (),
-						  scr->priv->reason),
+						  xid,
+						  scr->priv->reason,
+						  GS_NO_IDLE_FLAG),
 				   G_DBUS_CALL_FLAGS_NO_AUTO_START,
 				   -1,
 				   NULL,
 				   on_inhibit_cb,
 				   scr);
 	} else {
-                g_dbus_proxy_call (priv->gs_proxy,
-				   "UnInhibit",
-				   g_variant_new ("(u)", priv->cookie),
-				   G_DBUS_CALL_FLAGS_NO_AUTO_START,
-				   -1,
-				   NULL,
-				   on_uninhibit_cb,
-				   scr);
+		if (priv->cookie > 0) {
+			g_dbus_proxy_call (priv->gs_proxy,
+					   "Uninhibit",
+					   g_variant_new ("(u)", priv->cookie),
+					   G_DBUS_CALL_FLAGS_NO_AUTO_START,
+					   -1,
+					   NULL,
+					   on_uninhibit_cb,
+					   scr);
+		}
 	}
 }
 
@@ -219,35 +207,6 @@ screensaver_disable_dbus (TotemScrsaver *scr)
 }
 
 static void
-screensaver_update_dbus_presence (TotemScrsaver *scr)
-{
-        TotemScrsaverPrivate *priv = scr->priv;
-	gchar *name_owner;
-
-	name_owner = g_dbus_proxy_get_name_owner (priv->gs_proxy);
-	if (name_owner) {
-		priv->have_screensaver_dbus = TRUE;
-		g_free (name_owner);
-
-		/* screensaver just appeared, or reappeared */
-		if (priv->reason != NULL)
-			screensaver_disable_dbus (scr);
-	} else {
-		priv->have_screensaver_dbus = FALSE;
-	}
-}
-
-static void
-screensaver_dbus_owner_changed_cb (GObject    *object,
-                                   GParamSpec *pspec,
-                                   gpointer    user_data)
-{
-        TotemScrsaver *scr = TOTEM_SCRSAVER (user_data);
-
-	screensaver_update_dbus_presence (scr);
-}
-
-static void
 screensaver_dbus_proxy_new_cb (GObject      *source,
                                GAsyncResult *result,
                                gpointer      user_data)
@@ -259,11 +218,9 @@ screensaver_dbus_proxy_new_cb (GObject      *source,
 	if (!priv->gs_proxy)
 		return;
 
-	screensaver_update_dbus_presence (scr);
-
-	g_signal_connect (priv->gs_proxy, "notify::g-name-owner",
-	                  G_CALLBACK (screensaver_dbus_owner_changed_cb),
-	                  scr);
+	priv->have_session_dbus = TRUE;
+	if (priv->reason != NULL && scr->priv->disabled)
+		screensaver_disable_dbus (scr);
 }
 
 static void
@@ -418,6 +375,9 @@ totem_scrsaver_get_property (GObject *object,
 	case PROP_REASON:
 		g_value_set_string (value, scr->priv->reason);
 		break;
+	case PROP_WINDOW:
+		g_value_set_object (value, scr->priv->window);
+		break;
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
 	}
@@ -439,6 +399,11 @@ totem_scrsaver_set_property (GObject *object,
 		g_free (scr->priv->reason);
 		scr->priv->reason = g_value_dup_string (value);
 		break;
+	case PROP_WINDOW:
+		if (scr->priv->window)
+			g_object_unref (scr->priv->window);
+		scr->priv->window = g_value_dup_object (value);
+		break;
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
 	}
@@ -458,7 +423,9 @@ totem_scrsaver_class_init (TotemScrsaverClass *klass)
 	g_object_class_install_property (object_class, PROP_REASON,
 					 g_param_spec_string ("reason", NULL, NULL,
 							      NULL, G_PARAM_READWRITE));
-
+	g_object_class_install_property (object_class, PROP_WINDOW,
+					 g_param_spec_object ("window", NULL, NULL,
+							      GTK_TYPE_WINDOW, G_PARAM_READWRITE));
 }
 
 /**
@@ -495,7 +462,7 @@ totem_scrsaver_init (TotemScrsaver *scr)
 void
 totem_scrsaver_disable (TotemScrsaver *scr)
 {
-	g_return_if_fail (TOTEM_SCRSAVER (scr));
+	g_return_if_fail (TOTEM_IS_SCRSAVER (scr));
 
 	if (scr->priv->disabled != FALSE)
 		return;
@@ -504,7 +471,7 @@ totem_scrsaver_disable (TotemScrsaver *scr)
 
 	if (screensaver_is_running_dbus (scr) != FALSE)
 		screensaver_disable_dbus (scr);
-	else 
+	else
 #ifdef GDK_WINDOWING_X11
 		screensaver_disable_x11 (scr);
 #else
@@ -516,7 +483,7 @@ totem_scrsaver_disable (TotemScrsaver *scr)
 void
 totem_scrsaver_enable (TotemScrsaver *scr)
 {
-	g_return_if_fail (TOTEM_SCRSAVER (scr));
+	g_return_if_fail (TOTEM_IS_SCRSAVER (scr));
 
 	if (scr->priv->disabled == FALSE)
 		return;
@@ -537,7 +504,7 @@ totem_scrsaver_enable (TotemScrsaver *scr)
 void
 totem_scrsaver_set_state (TotemScrsaver *scr, gboolean enable)
 {
-	g_return_if_fail (TOTEM_SCRSAVER (scr));
+	g_return_if_fail (TOTEM_IS_SCRSAVER (scr));
 
 	if (scr->priv->disabled == !enable)
 		return;
@@ -554,6 +521,8 @@ totem_scrsaver_finalize (GObject *object)
 	TotemScrsaver *scr = TOTEM_SCRSAVER (object);
 
 	g_free (scr->priv->reason);
+	if (scr->priv->window != NULL)
+		g_object_unref (scr->priv->window);
 
 	screensaver_finalize_dbus (scr);
 #ifdef GDK_WINDOWING_X11
