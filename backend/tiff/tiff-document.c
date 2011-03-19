@@ -91,7 +91,21 @@ tiff_document_load (EvDocument  *document,
 		return FALSE;
 	
 	push_handlers ();
+
+#ifdef G_OS_WIN32
+{
+	wchar_t *wfilename = g_utf8_to_utf16 (filename, -1, NULL, NULL, error);
+	if (wfilename == NULL) {
+		return FALSE;
+	}
+
+	tiff = TIFFOpenW (wfilename, "r");
+
+	g_free (wfilename);
+}
+#else
 	tiff = TIFFOpen (filename, "r");
+#endif
 	if (tiff) {
 		guint32 w, h;
 		
