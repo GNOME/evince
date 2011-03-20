@@ -435,7 +435,10 @@ ev_sidebar_links_construct (EvSidebarLinks *ev_sidebar_links)
 	gtk_tree_view_column_set_attributes (GTK_TREE_VIEW_COLUMN (column), renderer,
 					     "text", EV_DOCUMENT_LINKS_COLUMN_PAGE_LABEL,
 					     NULL);
-	g_object_set (G_OBJECT (renderer), "style", PANGO_STYLE_ITALIC, NULL);
+	g_object_set (G_OBJECT (renderer),
+                      "style", PANGO_STYLE_ITALIC,
+                      "xalign", 1.0,
+                      NULL);
 
 	g_signal_connect (priv->tree_view,
 			  "button_press_event",
