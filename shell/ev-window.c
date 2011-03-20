@@ -4873,6 +4873,8 @@ ev_window_sidebar_visibility_changed_cb (EvSidebar  *ev_sidebar,
 		if (ev_window->priv->metadata)
 			ev_metadata_set_boolean (ev_window->priv->metadata, "sidebar_visibility",
 						 visible);
+		if (!visible)
+			gtk_widget_grab_focus (ev_window->priv->view);
 	}
 }
 
