@@ -293,6 +293,12 @@ ev_spawn (const char     *uri,
 		gdk_app_launch_context_set_screen (ctx, screen);
 		gdk_app_launch_context_set_timestamp (ctx, timestamp);
 
+                /* Some URIs can be changed when passed through a GFile
+                 * (for instance unsupported uris with strange formats like mailto:),
+                 * so if you have a textual uri you want to pass in as argument,
+                 * consider using g_app_info_launch_uris() instead.
+                 * See https://bugzilla.gnome.org/show_bug.cgi?id=644604
+                 */
                 uri_list.data = (gchar *)uri;
                 uri_list.prev = uri_list.next = NULL;
 		g_app_info_launch_uris (app, &uri_list,
