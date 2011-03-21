@@ -116,7 +116,8 @@ ev_view_accessible_get_text_buffer (EvViewAccessible *accessible, EvView *view)
 	}
 
 	retval = ev_page_cache_get_text (page_cache, view->current_page);
-	gtk_text_buffer_set_text (priv->buffer, retval, -1);
+	if (retval)
+		gtk_text_buffer_set_text (priv->buffer, retval, -1);
 
 	return priv->buffer;
 }
