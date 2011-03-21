@@ -417,7 +417,7 @@ ev_view_accessible_get_character_extents (AtkText      *text,
 	if (!areas)
 		return;
 
-	if (offset > n_areas)
+	if (offset >= n_areas)
 		return;
 
 	rect = areas + offset;
