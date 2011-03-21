@@ -9,16 +9,16 @@ DOC_INCLUDES = legal.xml
 dist-hook: doc-dist-hook
 
 DOC_FIGURES = \
-	add-text-annotation.png		\
-	annotations-navigate.png	\
-	annotations-nav-to-page.png	\
-	evincelogo.png			\
-	gconf-editor.png		\
-	list-add-tabs.png		\
-	print-2sided.png		\
-	print-select.png		\
-	reverse-collate.png		\
-	zoom.png
+	figures/add-text-annotation.png		\
+	figures/annotations-navigate.png	\
+	figures/annotations-nav-to-page.png	\
+	figures/evincelogo.png			\
+	figures/gconf-editor.png		\
+	figures/list-add-tabs.png		\
+	figures/print-2sided.png		\
+	figures/print-select.png		\
+	figures/reverse-collate.png		\
+	figures/zoom.png
 
 DOC_PAGES = \
 	annotation-properties.page	\
