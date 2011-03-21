@@ -881,7 +881,7 @@ static AtkObject *ev_view_accessible_new(GObject * obj)
 	atk_object_initialize (accessible, obj);
 
 	atk_object_set_name (ATK_OBJECT (accessible), _("Document View"));
-	atk_object_set_role (ATK_OBJECT (accessible), ATK_ROLE_UNKNOWN);
+	atk_object_set_role (ATK_OBJECT (accessible), ATK_ROLE_DOCUMENT_FRAME);
 
 	return accessible;
 }
