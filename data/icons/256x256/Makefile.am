@@ -1,3 +1,3 @@
-SUBDIRS = actions mimetypes
+SUBDIRS = apps
 
 -include $(top_srcdir)/git.mk

@@ -1,11 +1,11 @@
 themedir = $(datadir)/icons/hicolor
-size = scalable
+size = 256x256
 context = apps
 
 iconsdir = $(themedir)/$(size)/$(context)
 
 icons_DATA = \
-	evince.svg
+	evince.png
 
 noinst_DATA = 
 
