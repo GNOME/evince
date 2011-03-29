@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Evince documentation\n"
-"POT-Creation-Date: 2010-12-20 20:18+0000\n"
+"POT-Creation-Date: 2011-03-26 18:35+0000\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Andrej Žnidaršič <andrej.znidarsic@gmail.com>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
@@ -448,8 +448,8 @@ msgid "Beamer is a LaTeX class for creating slides for presentations."
 msgstr "Beamer je razred LaTeX za ustvarjanje prosojnic za predstavitve."
 
 #: C/synctex-beamer.page:23(p)
-msgid "You can perform forward and backward search in a <em>Beamer-LaTeX</em> presentation in a similar fashion to <link xref=\"synctex-search\">searchng</link> through other TeX files compiled with SyncTex. However the search brings you to the corresponding frame (slide), not necessarily the associated line of text. This difference is outlined in detail below."
-msgstr "Iskanje naprej in nazaj lahko izvajate v predstavitvi <em>Beamer-LaTeX</em> na podoben način kot <link xref=\"synctex-search\">iskanje</link> skozi druge datoteke TeX, ki so bile prevedene s SyncTex. Vendar vas iskanje pripelje na ustrezen okvir (prosojnico) in ne nujno na povezano vrstico besedilo. Ta razlika je podrobno razložena spodaj."
+msgid "You can perform forward and backward search in a <em>Beamer-LaTeX</em> presentation in a similar fashion to <link xref=\"synctex-search\">searching</link> through other TeX files compiled with SyncTex. However the search brings you to the corresponding frame (slide), not necessarily the associated line of text. This difference is outlined in detail below."
+msgstr "Iskanje naprej in nazaj lahko izvajate v predstavitvi <em>Beamer-LaTeX</em> na podoben način kot <link xref=\"synctex-search\">iskanje</link> skozi druge datoteke TeX, ki so bile prevedene s SyncTex. Vendar vas iskanje pripelje na ustrezen okvir (prosojnico) in ne nujno na povezano vrstico besedila. Ta razlika je podrobno razložena spodaj."
 
 #: C/synctex-beamer.page:27(title)
 msgid "Forward Search: From Beamer-LaTeX source to PDF (<app>Gedit</app> to <app>Evince</app>)"
@@ -1127,7 +1127,7 @@ msgid "Enable the /desktop/gnome/interface/can_change_accels flag in gconf:"
 msgstr "Omogočite zastavico /desktop/gnome/interface/can_change_accels v gconf:"
 
 #: C/shortcuts.page:158(p)
-msgid "Press<keyseq><key>Alt</key><key>F2</key></keyseq>. The Run Application dialogue opens."
+msgid "Press <keyseq><key>Alt</key><key>F2</key></keyseq>. The Run Application dialogue opens."
 msgstr "Pritisnite<keyseq><key>Alt</key><key>F2</key></keyseq>. Odprlo se bo pogovorno okno Zaženi program."
 
 #: C/shortcuts.page:163(p)
@@ -1198,9 +1198,8 @@ msgstr "V primeru, da je bil dokument med vašim pregledovanjem izbrisan, bo v <
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/print-select.page:38(None)
-#, fuzzy
-msgid "@@image: 'print-select.png'; md5=e38a5749ed445a812346602ad58b88b4"
-msgstr "@@image: 'figures/msg-part-select.png'; md5=8265967b3acae486db6f90bddec897e1"
+msgid "@@image: 'figures/print-select.png'; md5=e38a5749ed445a812346602ad58b88b4"
+msgstr "@@image: 'figures/print-select.png'; md5=e38a5749ed445a812346602ad58b88b4"
 
 #: C/print-select.page:7(desc)
 msgid "Print only specific pages, or only a range of pages."
@@ -1233,7 +1232,7 @@ msgstr "Na primer, če v besedilno polje <gui>Strani</gui> vnesete \"1, 3, 5-7, 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/print-order.page:54(None)
-msgid "@@image: 'reverse-collate.png'; md5=2e84b930fa1913123b740f8b0997255e"
+msgid "@@image: 'figures/reverse-collate.png'; md5=2e84b930fa1913123b740f8b0997255e"
 msgstr ""
 
 #: C/print-order.page:8(desc)
@@ -1267,7 +1266,7 @@ msgid "Print"
 msgstr "Natisni"
 
 #: C/print-order.page:34(p)
-msgid "In the <gui>General</gui> tab of the Print window under <em>Copies</em> check <gui>Reverse</gui>. The last page will be printed first, and so on."
+msgid "In the <gui>General</gui> tab of the Print window under <em>Copies</em>, check <gui>Reverse</gui>. The last page will be printed first, and so on."
 msgstr "V zavihku <gui>Splošno</gui> okna tiskanja pod <em>Kopije</em> izberite <gui>Obratno</gui>. Najprej bo natisnjena zadnja stran in tako naprej."
 
 #: C/print-order.page:39(title)
@@ -1283,8 +1282,9 @@ msgid "To Collate:"
 msgstr "Za zbiranje:"
 
 #: C/print-order.page:51(p)
-msgid "Click<guiseq><gui>File</gui><gui>Print</gui></guiseq>"
-msgstr "Kliknite <guiseq><gui>Datoteka</gui><gui>Natistni</gui></guiseq>"
+#: C/printing.page:27(p)
+msgid "Click <guiseq><gui>File</gui><gui>Print</gui></guiseq>"
+msgstr "Kliknite <guiseq><gui>Datoteka</gui><gui>Natisni</gui></guiseq>"
 
 #: C/print-order.page:52(p)
 msgid "In the <gui>General</gui> tab of the Print window under <em>Copies</em> check <gui>Collate</gui>."
@@ -1301,10 +1301,6 @@ msgstr "Tiskanje dokumenta"
 #: C/printing.page:25(p)
 msgid "To print a document:"
 msgstr "Za tiskanje dokumenta:"
-
-#: C/printing.page:27(p)
-msgid "Click <guiseq><gui>File</gui><gui>Print</gui></guiseq>"
-msgstr "Kliknite <guiseq><gui>Datoteka</gui><gui>Natisni</gui></guiseq>"
 
 #: C/printing.page:28(p)
 msgid "Choose your printer from the list"
@@ -1418,7 +1414,7 @@ msgid "Printer Allows Double-Sided Printing"
 msgstr "Tiskalnik dovoli dvostransko tiskanje"
 
 #: C/print-2sided.page:8(desc)
-msgid "Printing two-sided and multi-page per per sheet."
+msgid "Printing two-sided and multi-page per sheet."
 msgstr "Dvostransko tiskanje in tiskanje več strani na stran."
 
 #: C/print-2sided.page:21(title)
@@ -1540,24 +1536,24 @@ msgid "You can open a document in <app>Evince</app> using the following ways:"
 msgstr "Dokument lahko v <application>Evince</application> odprete na naslednje načine:"
 
 #: C/opening.page:27(p)
-msgid "Double-click on the file icon in the file manager or on the Desktop."
-msgstr "Dvokliknite na ikono datoteke v upravljalniku datotek ali na namizju."
+msgid "Double-click on the file icon in the <app>File Manager</app>."
+msgstr "Dvokliknite na ikono datoteke v <app>Upravljalniku datotek</app>."
 
 #: C/opening.page:28(p)
 msgid "Double clicking opens PDF, PostScript, .djvu, .dvi and Comic Book Archive files in the Document Viewer by default."
 msgstr "Dvojni klik v Pregledovalniku dokumentov privzeto odpre datoteke PDF, PostScript, .djvu, .dvi in arhiva Comic Book."
 
 #: C/opening.page:33(p)
-msgid "Right-click on a file icon on the Desktop or in the file manager and click <guiseq><gui>Open With</gui><gui>Document Viewer</gui></guiseq>."
-msgstr "Desno kliknite na ikono na namizju ali v upravljalniku datotek in kliknite <guiseq><gui>Odpri z</gui><gui>Pregledovalnik dokumentov</gui></guiseq>."
+msgid "Right-click on a file icon in the <app>File Manager</app> and click <guiseq><gui>Open With</gui><gui>Document Viewer</gui></guiseq>."
+msgstr "Desno kliknite na ikono na namizju ali v <app>Upravljalniku datotek</app> in kliknite <guiseq><gui>Odpri z</gui><gui>Pregledovalnik dokumentov</gui></guiseq>."
 
 #: C/opening.page:37(p)
 msgid "If a Document View window is already open you can:"
 msgstr "V primeru, da je okno ogleda dokumenta že odprto, lahko:"
 
 #: C/opening.page:39(p)
-msgid "drag a file icon into the window from the Desktop or the file manager. The new file will open in a new window (provided the file is of a file type supported by Document Viewer)."
-msgstr "povlečete ikono datoteke v okno iz namizja ali upravljalnika datotek. Nova datoteka se bo odprla v novem oknu (pod pogojem, da Pregledovalnik dokumentov podpira vrsto datotek)."
+msgid "drag a file icon into the window from the <app>File Manager</app>. The new file will open in a new window (provided the file is of a file type supported by Document Viewer)."
+msgstr "povlečete ikono datoteke v okno iz namizja ali <app>Upravljalnika datotek</app>. Nova datoteka se bo odprla v novem oknu (pod pogojem, da Pregledovalnik dokumentov podpira vrsto datotek)."
 
 #: C/opening.page:40(p)
 msgid "choose <guiseq><gui>File</gui><gui>Open</gui></guiseq> from the Menubar. In the Open Document dialog box, choose the file you wish to open, and click <gui>Open</gui>. The file will open in a new window."
@@ -1654,8 +1650,8 @@ msgstr "Pojdite nazaj v Pregledovalniku dokumentov in znova poskusite natisniti 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/movingaround.page:146(None)
-msgid "@@image: 'zoom.png'; md5=f31883a5718a6bc9828d56db97958e9c"
-msgstr "@@image: 'figures/conduit-login.png'; md5=6e4fe96c2d518d23724e1a70a53fa026"
+msgid "@@image: 'figures/zoom.png'; md5=f31883a5718a6bc9828d56db97958e9c"
+msgstr "@@image: 'figures/zoom.png'; md5=f31883a5718a6bc9828d56db97958e9c"
 
 #: C/movingaround.page:7(desc)
 msgid "Navigating, scrolling and zooming."
@@ -1873,8 +1869,8 @@ msgstr "<app>Evince</app> je pregledovalnik dokumentov. Oglejte si <link xref=\"
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/index.page:19(None)
-msgid "@@image: 'evincelogo.png'; md5=a5856135b500d4c4b74a052eef6e09d2"
-msgstr "@@image: 'figures/conduit-login.png'; md5=6e4fe96c2d518d23724e1a70a53fa026"
+msgid "@@image: 'figures/evincelogo.png'; md5=a5856135b500d4c4b74a052eef6e09d2"
+msgstr "@@image: 'figures/evincelogo.png'; md5=a5856135b500d4c4b74a052eef6e09d2"
 
 #: C/index.page:6(desc)
 msgid "Help for the Evince Document Viewer."
@@ -1886,8 +1882,8 @@ msgid "Evince Document Viewer"
 msgstr "Evince pregledovalnik dokumentov"
 
 #: C/index.page:19(title)
-msgid "<media type=\"image\" src=\"evincelogo.png\">Evince logo</media> Evince Document Viewer"
-msgstr "<media type=\"image\" src=\"evincelogo.png\">Logotip Evince</media> Evince pregledovalnik dokumentov"
+msgid "<media type=\"image\" src=\"figures/evincelogo.png\">Evince logo</media> Evince Document Viewer"
+msgstr "<media type=\"image\" src=\"figures/evincelogo.png\">Logotip Evince</media> Evince pregledovalnik dokumentov"
 
 #: C/index.page:23(title)
 msgid "Reading Documents"
@@ -1993,7 +1989,7 @@ msgid "When filling out an interactive form, you can navigate from field to fiel
 msgstr "Po izpolnitvi vzajemnega obrazca lahko krmarite od polja do polja s klikom s svojo miško. Ko ste končali z izpolnjevanjem besedilnega polja, pritisnite <key>Vnosno tipko</key.."
 
 #: C/forms.page:25(p)
-msgid "You can make a selection in scrollable list box by clicking on the list box and scrolling to your choice with your mouse."
+msgid "You can make a selection in a scrollable list box by clicking on the list box and scrolling to your choice with your mouse."
 msgstr "Izbiro v drsljivem seznamskem polju lahko naredite s klikanjem na polje seznama in drsenjem do svoje izbire."
 
 #: C/forms.page:29(p)
@@ -2271,8 +2267,9 @@ msgid "Create a blank PDF document using <app>Open Office Word Processor</app>."
 msgstr "Z <app>Open Office urejevalnikom besedila</app> ustvarite prazen dokument."
 
 #: C/duplex-7pages.page:99(p)
-msgid "Merge the blank PDF with your PDF document using <app>PDF-Shuffler</app> placing the blank page at the end.."
-msgstr "Združite prazen PDF s svojim dokumentom PDF s programom <app>PDF-Shuffler</app> in na konec postavite prazno stran."
+#: C/duplex-11pages.page:97(p)
+msgid "Merge the blank PDF with your PDF document using <app>PDF-Shuffler</app> placing the blank page at the end."
+msgstr "Združite prazen PDF s svojim dokumentom PDF z uporabo <app>PDF-Shuffler</app> in postavite prazno stran na konec."
 
 #: C/duplex-7pages.page:105(p)
 #: C/duplex-6pages.page:112(p)
@@ -2449,8 +2446,8 @@ msgid "In the <gui>General</gui> tab, enter 3 in the <gui>Pages</gui> selection.
 msgstr "V zavihku <gui>Splošno</gui> okna v izbirni meni <gui>Strani</gui> vnesite 3."
 
 #: C/duplex-13pages.page:95(p)
-msgid "Once page 3 has printed, place the paper back in the printer (taking care to orient it correctly (pages 4 and 13 will be printed on the other side)."
-msgstr "Ko se je stran 3 natisnila, postavite papir nazaj v tiskalnik (prepričajte se, da ste ga pravilno obrnili (na drugo stran bosta natisnjeni strani 4 in 13)."
+msgid "Once page 3 has printed, place the paper back in the printer (taking care to orient it correctly, pages 4 and 13 will be printed on the other side)."
+msgstr "Ko se je stran 3 natisnila, postavite papir nazaj v tiskalnik (prepričajte se, da ste ga pravilno obrnili). Na drugo stran bosta natisnjeni strani 4 in 13."
 
 #: C/duplex-13pages.page:103(p)
 msgid "In the <gui>General</gui> tab enter pages 4, 13 in the <gui>Pages</gui> selection menu."
@@ -2491,10 +2488,6 @@ msgstr "Vtipkajte števila strani v tem vrstnem redu 10, 3, 4, 9, 8, 5, 6, 7, 2"
 #: C/duplex-11pages.page:87(p)
 msgid "It is easier to print a 12-page booklet. You may wish to add a blank page to your PDF document to make it 12-pages. To do so, you can:"
 msgstr "Lažje je natisniti 12-stransko knjižico. Morda bi bilo dobro vašemu dokumentu PDF dodati prazno stran, da bo 12 stranski. Za to lahko:"
-
-#: C/duplex-11pages.page:97(p)
-msgid "Merge the blank PDF with your PDF document using <app>PDF-Shuffler</app> placing the blank page at the end."
-msgstr "Združite prazen PDF s svojim dokumentom PDF z uporabo <app>PDF-Shuffler</app> in postavite prazno stran na konec."
 
 #: C/duplex-10pages.page:8(desc)
 msgid "Print a 10 page booklet."
@@ -2688,8 +2681,8 @@ msgid "To participate you need an account which will give you the ability to gai
 msgstr "Za sodelovanje potrebujete račun, ki vam bo dal zmožnost dostopa, poročanja hroščev in delanja opomb. Vpisati se morate tudi zato, da lahko preko e-pošte prejemate posodobitve o stanju vašega hrošča. Če računa še nimate, kliknite \"Nov\" za njegovo ustvarjanje. "
 
 #: C/bug-filing.page:29(p)
-msgid "Once you have an account, log in, click on <guiseq><gui>Fila a Bug</gui><gui>Desktop</gui><gui>evince</gui></guiseq>. Before reporting a bug, please read the <link href=\"https://bugzilla.gnome.org/page.cgi?id=bug-writing.html\">bug writing guidelines</link>, and please <link href=\"https://bugzilla.gnome.org/browse.cgi?product=evince\">browse</link> for the bug to see if it already exists."
-msgstr "Ko imate račun, se prijavite, kliknite na <guiseq><gui>Poročaj hrošča</gui><gui>Namizje</gui><gui>evince</gui></guiseq>. Pred poročanje hrošča preberite <link href=\"https://bugzilla.gnome.org/page.cgi?id=bug-writing.html\">smernice o poročanju hroščev</link> in  <link href=\"https://bugzilla.gnome.org/browse.cgi?product=evince\">prebrskajte</link> in preverite, če hrošč že obstaja."
+msgid "Once you have an account, log in, click on <guiseq><gui>File a Bug</gui><gui>Desktop</gui><gui>evince</gui></guiseq>. Before reporting a bug, please read the <link href=\"https://bugzilla.gnome.org/page.cgi?id=bug-writing.html\">bug writing guidelines</link>, and please <link href=\"https://bugzilla.gnome.org/browse.cgi?product=evince\">browse</link> for the bug to see if it already exists."
+msgstr "Ko imate račun, se prijavite, kliknite na <guiseq><gui>Poročaj hrošča</gui><gui>Namizje</gui><gui>evince</gui></guiseq>. Pred poročanjem hrošča preberite <link href=\"https://bugzilla.gnome.org/page.cgi?id=bug-writing.html\">smernice o poročanju hroščev</link> in  <link href=\"https://bugzilla.gnome.org/browse.cgi?product=evince\">prebrskajte</link> in preverite, če hrošč že obstaja."
 
 #: C/bug-filing.page:33(p)
 msgid "To file your bug, choose the component in the <gui>Component</gui> menu. If you are not sure which component your bug pertains to, choose <gui>general</gui>."
@@ -2697,11 +2690,11 @@ msgstr "Za poročanje hrošča v meniju <gui>Sestavni del</gui> izberite sestavn
 
 # Na spletni strani Commit najbrž ni preveden, zato tudi tukaj ni
 #: C/bug-filing.page:36(p)
-msgid "If you are requesting an enhancement, choose <gui>enhancement</gui> in the <gui>Severity</gui> menu. Fill in the Summary and Description sections and click <gui>Commit</gui>."
-msgstr "V primeru da zahtevate izboljšavo izberite v meniju <gui>Resnost</gui> izberite <gui>izboljšava</gui> Izpolnite odseka povzetek in opis in kliknite <gui>Commit</gui>."
+msgid "If you are requesting a new feature, choose <gui>enhancement</gui> in the <gui>Severity</gui> menu. Fill in the Summary and Description sections and click <gui>Commit</gui>."
+msgstr "V primeru da zahtevate izboljšavo izberite v meniju <gui>Resnost</gui>, izberite <gui>izboljšava</gui> Izpolnite odseka povzetek in opis in kliknite <gui>Commit</gui>."
 
 #: C/bug-filing.page:40(p)
-msgid "Your report will be given an ID number, and it's status will be updated as it is being dealt with."
+msgid "Your report will be given an ID number, and its status will be updated as it is being dealt with."
 msgstr "Vašemu poročilu bo dano število ID in njegovo stanje bo med upravljanjem posodobljeno."
 
 # najprej sem imel kot sledi, amapk se mi zdi resnično pregrdo ...
@@ -2737,13 +2730,15 @@ msgstr "Zabeležke so dodane v skladu z določili PDF. Zato bi jih morala prebra
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/annotations.page:44(None)
-msgid "@@image: 'list-add-tabs.png'; md5=1bbd81be2223f1b8434dcf746670f5d7"
+#, fuzzy
+msgid "@@image: 'figures/list-add-tabs.png'; md5=1bbd81be2223f1b8434dcf746670f5d7"
 msgstr "@@image: 'list-add-tabs.png'; md5=1bbd81be2223f1b8434dcf746670f5d7"
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/annotations.page:57(None)
-msgid "@@image: 'add-text-annotation.png'; md5=1add21cd2ec02d5fcc5b06d0e6546901"
+#, fuzzy
+msgid "@@image: 'figures/add-text-annotation.png'; md5=1add21cd2ec02d5fcc5b06d0e6546901"
 msgstr "@@image: 'add-text-annotation.png'; md5=1add21cd2ec02d5fcc5b06d0e6546901"
 
 #: C/annotations.page:7(desc)
@@ -2805,13 +2800,15 @@ msgstr "Zaprite opombo s klikom na <gui>x</gui> v zgornjem kotu opombe."
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/annotations-navigate.page:24(None)
-msgid "@@image: 'annotations-navigate.png'; md5=6655cfb976ffea53c622b41cbf439747"
+#, fuzzy
+msgid "@@image: 'figures/annotations-navigate.png'; md5=6655cfb976ffea53c622b41cbf439747"
 msgstr "@@image: 'annotations-navigate.png'; md5=6655cfb976ffea53c622b41cbf439747"
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/annotations-navigate.page:28(None)
-msgid "@@image: 'annotations-nav-to-page.png'; md5=fda82d763b7c81304d1c5949344a073b"
+#, fuzzy
+msgid "@@image: 'figures/annotations-nav-to-page.png'; md5=fda82d763b7c81304d1c5949344a073b"
 msgstr "@@image: 'annotations-nav-to-page.png'; md5=fda82d763b7c81304d1c5949344a073b"
 
 #: C/annotations-navigate.page:7(desc)
@@ -2891,6 +2888,14 @@ msgstr "Lastnosti privzete zabeležke (avtor, barva, slog in ikona) je mogoče s
 msgid "translator-credits"
 msgstr "Andrej Žnidaršič <andrej.znidarsic@gmail.com>, 2010"
 
+#~ msgid "Click<guiseq><gui>File</gui><gui>Print</gui></guiseq>"
+#~ msgstr "Kliknite <guiseq><gui>Datoteka</gui><gui>Natistni</gui></guiseq>"
+#~ msgid ""
+#~ "Merge the blank PDF with your PDF document using <app>PDF-Shuffler</app> "
+#~ "placing the blank page at the end.."
+#~ msgstr ""
+#~ "Združite prazen PDF s svojim dokumentom PDF s programom <app>PDF-"
+#~ "Shuffler</app> in na konec postavite prazno stran."
 #~ msgid "Change the size of the document by zooming in or out of the page."
 #~ msgstr ""
 #~ "Spremenite velikost dokumenta s približanjem ali oddaljevanjem strani."
