@@ -4789,6 +4789,8 @@ ev_window_cmd_help_about (GtkAction *action, EvWindow *ev_window)
 
 	const char *documenters[] = {
 		"Nickolay V. Shmyrev <nshmyrev@yandex.ru>",
+		"Phil Bull <philbull@gmail.com>",
+		"Tiffany Antpolski <tiffany.antopolski@gmail.com>",
 		NULL
 	};
 
