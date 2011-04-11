@@ -120,7 +120,7 @@ struct _EvFormFieldClass
 	
 struct _EvFormFieldText
 {
-	EvFormField partent;
+	EvFormField parent;
 	
 	EvFormFieldTextType type;
 	
@@ -136,12 +136,12 @@ struct _EvFormFieldText
 
 struct _EvFormFieldTextClass
 {
-	EvFormFieldClass partent_class;
+	EvFormFieldClass parent_class;
 };
 
 struct _EvFormFieldButton
 {
-	EvFormField partent;
+	EvFormField parent;
 	
 	EvFormFieldButtonType type;
 
@@ -150,12 +150,12 @@ struct _EvFormFieldButton
 
 struct _EvFormFieldButtonClass
 {
-	EvFormFieldClass partent_class;
+	EvFormFieldClass parent_class;
 };
 
 struct _EvFormFieldChoice
 {
-	EvFormField partent;
+	EvFormField parent;
 
 	EvFormFieldChoiceType type;
 	
@@ -170,19 +170,19 @@ struct _EvFormFieldChoice
 
 struct _EvFormFieldChoiceClass
 {
-	EvFormFieldClass partent_class;
+	EvFormFieldClass parent_class;
 };
 
 struct _EvFormFieldSignature
 {
-	EvFormField partent;
+	EvFormField parent;
 	
 	/* TODO */
 };
 
 struct _EvFormFieldSignatureClass
 {
-	EvFormFieldClass partent_class;
+	EvFormFieldClass parent_class;
 };
 
 /* EvFormField base class */
