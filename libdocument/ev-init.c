@@ -75,6 +75,8 @@ _ev_win32_get_locale_dir (HMODULE module)
 
 	if (!locale_dir)
 		locale_dir = g_strdup ("");
+
+	return locale_dir;
 }
 
 #endif
