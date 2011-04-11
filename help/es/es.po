@@ -2,15 +2,15 @@
 # Francisco Javier F. Serrador <serrador@gnome.org>, 2005.
 # traducción al español del manual de evince
 # spanish transtation for evince
-# Daniel Mustieles <daniel.mustieles@gmail.com>, 2010, 2011.
 # Jorge González <jorgegonz@svn.gnome.org>, 2006, 2007, 2009, 2010, 2011.
+# Daniel Mustieles <daniel.mustieles@gmail.com>, 2010, 2011.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: evince.help.master\n"
-"POT-Creation-Date: 2011-03-21 16:00+0000\n"
-"PO-Revision-Date: 2011-03-21 20:52+0100\n"
-"Last-Translator: Jorge González <jorgegonz@svn.gnome.org>\n"
+"POT-Creation-Date: 2011-04-11 05:52+0000\n"
+"PO-Revision-Date: 2011-04-11 09:49+0200\n"
+"Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -58,7 +58,7 @@ msgstr "philbull@gmail.com"
 #: C/synctex-beamer.page:15(p) C/singlesided-npages.page:16(p)
 #: C/singlesided-9-12pages.page:16(p) C/singlesided-5-8pages.page:16(p)
 #: C/singlesided-3-4pages.page:16(p) C/singlesided-17-20pages.page:16(p)
-#: C/singlesided-13-16pages.page:16(p) C/shortcuts.page:15(p)
+#: C/singlesided-13-16pages.page:16(p) C/shortcuts.page:19(p)
 #: C/reload.page:19(p) C/print-select.page:15(p) C/print-order.page:16(p)
 #: C/printing.page:17(p) C/print-differentsize.page:15(p)
 #: C/print-booklet.page:16(p) C/print-2sided.page:16(p)
@@ -132,10 +132,10 @@ msgstr "Cómo añadir soporte para SyncTex."
 #: C/singlesided-npages.page:12(name) C/singlesided-9-12pages.page:12(name)
 #: C/singlesided-5-8pages.page:12(name) C/singlesided-3-4pages.page:12(name)
 #: C/singlesided-17-20pages.page:12(name)
-#: C/singlesided-13-16pages.page:12(name) C/print-booklet.page:12(name)
-#: C/opening.page:13(name) C/openerror.page:13(name)
-#: C/introduction.page:11(name) C/index.page:13(name)
-#: C/forms-saving.page:13(name) C/forms.page:11(name)
+#: C/singlesided-13-16pages.page:12(name) C/shortcuts.page:15(name)
+#: C/print-booklet.page:12(name) C/opening.page:13(name)
+#: C/openerror.page:13(name) C/introduction.page:11(name)
+#: C/index.page:13(name) C/forms-saving.page:13(name) C/forms.page:11(name)
 #: C/duplex-npages.page:12(name) C/duplex-9pages.page:12(name)
 #: C/duplex-8pages.page:12(name) C/duplex-7pages.page:12(name)
 #: C/duplex-6pages.page:12(name) C/duplex-5pages.page:12(name)
@@ -549,9 +549,10 @@ msgstr ""
 #: C/singlesided-17-20pages.page:28(p) C/singlesided-13-16pages.page:28(p)
 #: C/duplex-npages.page:34(p) C/duplex-3pages.page:66(p)
 #: C/duplex-15pages.page:29(p)
-msgid "Create a blank PDF using <app>Open Office Word Processor</app>."
+#| msgid "Create a blank PDF using <app>Open Office Word Processor</app>."
+msgid "Create a blank PDF using <app>LibreOffice Writer</app>."
 msgstr ""
-"Crear un PDF vacío usando el <app>Procesador de textos de Open Office</app>."
+"Crear un PDF vacío usando el <app>Procesador de textos de LibreOffice</app>."
 
 #: C/singlesided-npages.page:38(p) C/singlesided-9-12pages.page:33(p)
 #: C/singlesided-5-8pages.page:33(p) C/singlesided-17-20pages.page:33(p)
@@ -617,11 +618,11 @@ msgstr "En <em>Rango</em>, elija <gui>Páginas</gui>."
 
 #: C/singlesided-npages.page:63(item) C/duplex-npages.page:62(item)
 msgid ""
-"n, 1, 2, n-1, n-2, 3, 4, n-3, n-4, 5, 6, n-5, n-6, 7, 8, n-7, n-8, 9, 10, "
-"n-9, n-10, 11, 12, n-11..."
+"n, 1, 2, n-1, n-2, 3, 4, n-3, n-4, 5, 6, n-5, n-6, 7, 8, n-7, n-8, 9, 10, n-"
+"9, n-10, 11, 12, n-11..."
 msgstr ""
-"n, 1, 2, n-1, n-2, 3, 4, n-3, n-4, 5, 6, n-5, n-6, 7, 8, n-7, n-8, 9, 10, "
-"n-9, n-10, 11, 12, n-11…"
+"n, 1, 2, n-1, n-2, 3, 4, n-3, n-4, 5, 6, n-5, n-6, 7, 8, n-7, n-8, 9, 10, n-"
+"9, n-10, 11, 12, n-11…"
 
 #: C/singlesided-npages.page:64(item) C/duplex-npages.page:63(item)
 msgid "...until you have typed n-number of pages."
@@ -867,186 +868,183 @@ msgid ""
 msgstr ""
 "Ver una lista de todos los atajos, y aprender cómo crear sus propios atajos."
 
-#: C/shortcuts.page:21(title)
+#: C/shortcuts.page:16(email)
+#| msgid "tiffany@antopolski.com"
+msgid "tiffany.antopolski@gmail.com"
+msgstr "tiffany.antopolski@gmail.com"
+
+#: C/shortcuts.page:25(title)
 msgid "Keyboard Shortcuts"
 msgstr "Combinaciones de teclas"
 
-#: C/shortcuts.page:23(title)
+#: C/shortcuts.page:27(title)
 msgid "Default Shortcuts"
 msgstr "Atajos predeterminados"
 
-#: C/shortcuts.page:25(title)
+#: C/shortcuts.page:29(title)
 msgid "Opening, Closing, Saving And Printing"
 msgstr "Abrir, cerrar, guardar e imprimir"
 
-#: C/shortcuts.page:29(td)
+#: C/shortcuts.page:32(p)
 msgid "Open a document."
 msgstr "Abrir un documento."
 
-#: C/shortcuts.page:29(key) C/shortcuts.page:32(key) C/shortcuts.page:36(key)
-#: C/shortcuts.page:40(key) C/shortcuts.page:44(key) C/shortcuts.page:48(key)
-#: C/shortcuts.page:69(key) C/shortcuts.page:81(key) C/shortcuts.page:85(key)
-#: C/shortcuts.page:95(key) C/shortcuts.page:99(key) C/shortcuts.page:113(key)
-#: C/shortcuts.page:117(key) C/shortcuts.page:121(key)
-#: C/shortcuts.page:131(key) C/shortcuts.page:135(key)
+#: C/shortcuts.page:33(key) C/shortcuts.page:37(key) C/shortcuts.page:42(key)
+#: C/shortcuts.page:46(key) C/shortcuts.page:50(key) C/shortcuts.page:55(key)
+#: C/shortcuts.page:89(key) C/shortcuts.page:93(key) C/shortcuts.page:103(key)
+#: C/shortcuts.page:107(key) C/shortcuts.page:121(key)
+#: C/shortcuts.page:125(key) C/shortcuts.page:129(key)
 #: C/shortcuts.page:139(key) C/shortcuts.page:143(key)
+#: C/shortcuts.page:148(key) C/shortcuts.page:152(key)
 msgid "Ctrl"
 msgstr "Ctrl"
 
-#: C/shortcuts.page:29(key)
+#: C/shortcuts.page:33(key)
 msgid "O"
 msgstr "O"
 
-#: C/shortcuts.page:32(td)
+#: C/shortcuts.page:36(p)
 msgid "Open a copy of the current document."
 msgstr "Abrir una copia del documento actual."
 
-#: C/shortcuts.page:32(key)
+#: C/shortcuts.page:37(key)
 msgid "N"
 msgstr "N"
 
-#: C/shortcuts.page:36(td)
+#: C/shortcuts.page:40(p)
 msgid "Save a copy of the current document with a new file name."
 msgstr "Guardar una copia del documento actual con un nombre nuevo."
 
-#: C/shortcuts.page:36(key)
+#: C/shortcuts.page:42(key)
 msgid "S"
 msgstr "S"
 
-#: C/shortcuts.page:40(td)
+#: C/shortcuts.page:45(p)
 msgid "Print the current document."
 msgstr "Imprimir el documento actual."
 
-#: C/shortcuts.page:40(key)
+#: C/shortcuts.page:46(key)
 msgid "P"
 msgstr "P"
 
-#: C/shortcuts.page:44(td)
+#: C/shortcuts.page:49(p)
 msgid "Close the current document window."
 msgstr "Cerrar la ventana del documento actual."
 
-#: C/shortcuts.page:44(key)
+#: C/shortcuts.page:50(key)
 msgid "W"
 msgstr "W"
 
-#: C/shortcuts.page:48(td)
+#: C/shortcuts.page:53(p)
 msgid "Reload the document (effectively closes and re-opens the document)."
 msgstr ""
 "Recargar el documento (cierra eficazmente el documento y lo vuelve a abrir)."
 
-#: C/shortcuts.page:48(key)
+#: C/shortcuts.page:55(key)
 msgid "R"
 msgstr "R"
 
-#: C/shortcuts.page:57(title)
+#: C/shortcuts.page:61(title)
 msgid "Moving around the document"
 msgstr "Moverse en el documento"
 
-#: C/shortcuts.page:61(td)
+#: C/shortcuts.page:64(p)
 msgid "Move up/down a page."
 msgstr "Mover una página arriba/abajo."
 
-#: C/shortcuts.page:61(key)
-msgid "Arrow"
-msgstr "Flecha"
+#: C/shortcuts.page:65(p)
+#| msgid "Arrow"
+msgid "Arrow keys"
+msgstr "Teclas de flechas"
 
-#: C/shortcuts.page:61(td)
-msgid "<placeholder-1/> keys"
-msgstr "teclas <placeholder-1/> "
-
-#: C/shortcuts.page:65(td)
+#: C/shortcuts.page:68(p)
 msgid "Move up/down a page several lines at a time."
 msgstr "Mover una página arriba/abajo varias líneas a la vez."
 
-#: C/shortcuts.page:65(key) C/shortcuts.page:69(key)
-msgid "Page Up"
-msgstr "Re Pág"
+#: C/shortcuts.page:69(p)
+#| msgid "Press <key>F11</key> or <key>Escape</key>"
+msgid "<key>Page Up</key> / <key>Page Down</key>"
+msgstr "<key>Re Pág</key> / <key>Av Pág</key>"
 
-#: C/shortcuts.page:65(key) C/shortcuts.page:69(key)
-msgid "Page Down"
-msgstr "Av Pág"
-
-#: C/shortcuts.page:65(td)
-msgid "<placeholder-1/> / <placeholder-2/>"
-msgstr "<placeholder-1/> / <placeholder-2/>"
-
-#: C/shortcuts.page:69(td)
+#: C/shortcuts.page:72(p)
 msgid "Go to the previous/next page."
 msgstr "Ir a la página anterior/siguiente."
 
-#: C/shortcuts.page:69(td)
+#: C/shortcuts.page:73(p)
+#| msgid ""
+#| "Press the <keyseq><key>Ctrl</key><key>Page Up</key></keyseq> or "
+#| "<keyseq><key>Ctrl</key><key>Page Down</key></keyseq> buttons on the "
+#| "keyboard."
 msgid ""
-"<keyseq><placeholder-1/><placeholder-2/></keyseq> / <keyseq><placeholder-3/"
-"><placeholder-4/></keyseq>"
+"<keyseq><key>Ctrl</key><key>Page Up</key></keyseq> / <keyseq><key>Ctrl</"
+"key><key>Page Down</key></keyseq>"
 msgstr ""
-"<keyseq><placeholder-1/><placeholder-2/></keyseq> / <keyseq><placeholder-3/"
-"><placeholder-4/></keyseq>"
+"<keyseq><key>Ctrl</key><key>Re Pág</key></keyseq> / <keyseq><key>Ctrl</"
+"key><key>Av Pág</key></keyseq>"
 
-#: C/shortcuts.page:73(gui) C/shortcuts.page:77(gui)
-msgid "View"
-msgstr "Ver"
-
-#: C/shortcuts.page:73(gui) C/shortcuts.page:77(gui)
-msgid "Continuous"
-msgstr "Continuo"
-
-#: C/shortcuts.page:73(td)
+#: C/shortcuts.page:77(p)
+#| msgid ""
+#| "Go to the beginning of a page (beginning of the document if "
+#| "<guiseq><placeholder-1/><placeholder-2/></guiseq> is selected)."
 msgid ""
 "Go to the beginning of a page (beginning of the document if "
-"<guiseq><placeholder-1/><placeholder-2/></guiseq> is selected)."
+"<guiseq><gui>View</gui><gui>Continuous</gui></guiseq> is selected)."
 msgstr ""
 "Ir al principio de una página (el principio de un documento si "
-"<guiseq><placeholder-1/><placeholder-2/></guiseq> está seleccionado)."
+"<guiseq><gui>Ver</gui><gui>Continuo</gui></guiseq> está seleccionado)."
 
-#: C/shortcuts.page:73(key) C/shortcuts.page:81(key)
+#: C/shortcuts.page:80(key) C/shortcuts.page:89(key)
 msgid "Home"
 msgstr "Inicio"
 
-#: C/shortcuts.page:77(td)
+#: C/shortcuts.page:83(p)
+#| msgid ""
+#| "Go to the end of a page (end of the document if <guiseq><placeholder-1/"
+#| "><placeholder-2/></guiseq> is selected)."
 msgid ""
-"Go to the end of a page (end of the document if <guiseq><placeholder-1/"
-"><placeholder-2/></guiseq> is selected)."
+"Go to the end of a page (end of the document if <guiseq><gui>View</"
+"gui><gui>Continuous</gui></guiseq> is selected)."
 msgstr ""
-"Ir al final de la página (final de documento si <guiseq><placeholder-1/"
-"><placeholder-2/></guiseq> está seleccionado)."
+"Ir al final de la página (final de documento si <guiseq><gui>Ver</"
+"gui><gui>Continuo</gui></guiseq> está seleccionado)."
 
-#: C/shortcuts.page:77(key) C/shortcuts.page:85(key)
+#: C/shortcuts.page:85(key) C/shortcuts.page:93(key)
 msgid "End"
 msgstr "Fin"
 
-#: C/shortcuts.page:81(td)
+#: C/shortcuts.page:88(p)
 msgid "Go to the beginning of the document."
 msgstr "Ir al principio del documento."
 
-#: C/shortcuts.page:85(td)
+#: C/shortcuts.page:92(p)
 msgid "Go to the end of the document."
 msgstr "Ir al final del documento."
 
-#: C/shortcuts.page:91(title)
+#: C/shortcuts.page:99(title)
 msgid "Selecting and copying text"
 msgstr "Seleccionar y copiar texto"
 
-#: C/shortcuts.page:95(td)
+#: C/shortcuts.page:102(p)
 msgid "Copy highlighted text."
 msgstr "Copiar el texto resaltado."
 
-#: C/shortcuts.page:95(key)
+#: C/shortcuts.page:103(key)
 msgid "C"
 msgstr "C"
 
-#: C/shortcuts.page:99(td)
+#: C/shortcuts.page:106(p)
 msgid "Select all the text in a document."
 msgstr "Seleccionar todo el texto en un documento."
 
-#: C/shortcuts.page:99(key)
+#: C/shortcuts.page:107(key)
 msgid "A"
 msgstr "A"
 
-#: C/shortcuts.page:105(title)
+#: C/shortcuts.page:113(title)
 msgid "Finding text"
 msgstr "Buscar texto"
 
-#: C/shortcuts.page:109(td)
+#: C/shortcuts.page:116(p)
 msgid ""
 "Show the toolbar that lets you search for words in the document. The search "
 "box is automatically highlighted when you press this, and the search will "
@@ -1056,71 +1054,71 @@ msgstr ""
 "documento. La cada de búsqueda se resalta automáticamente cuando la pulsa, y "
 "la búsqueda empezará tan pronto como escriba algún texto."
 
-#: C/shortcuts.page:113(key)
+#: C/shortcuts.page:121(key)
 msgid "F"
 msgstr "F"
 
-#: C/shortcuts.page:117(td)
+#: C/shortcuts.page:124(p)
 msgid "Go to the next search result."
 msgstr "Ir al siguiente resultado de la búsqueda."
 
-#: C/shortcuts.page:117(key) C/shortcuts.page:121(key)
+#: C/shortcuts.page:125(key) C/shortcuts.page:129(key)
 msgid "G"
 msgstr "G"
 
-#: C/shortcuts.page:121(td)
+#: C/shortcuts.page:128(p)
 msgid "Go to the previous search result."
 msgstr "Ir al resultado anterior de la búsqueda."
 
-#: C/shortcuts.page:121(key)
+#: C/shortcuts.page:129(key)
 msgid "Shift"
 msgstr "Mayús."
 
-#: C/shortcuts.page:127(title)
+#: C/shortcuts.page:135(title)
 msgid "Rotating and zooming"
 msgstr "Rotar y ampliar"
 
-#: C/shortcuts.page:131(td)
+#: C/shortcuts.page:138(p)
 msgid "Rotate the pages 90 degrees counter-clockwise."
 msgstr "Rotar las páginas 90 grados en sentido antihorario."
 
-#: C/shortcuts.page:131(key)
+#: C/shortcuts.page:139(key)
 msgid "Left arrow"
 msgstr "Flecha izquierda"
 
-#: C/shortcuts.page:135(td)
+#: C/shortcuts.page:142(p)
 msgid "Rotate the pages 90 degrees clockwise."
 msgstr "Rotar las páginas 90 grados en sentido horario."
 
-#: C/shortcuts.page:135(key)
+#: C/shortcuts.page:143(key)
 msgid "Right arrow"
 msgstr "Flecha derecha"
 
-#: C/shortcuts.page:139(td)
+#: C/shortcuts.page:147(p)
 msgid "Zoom in."
 msgstr "Ampliar."
 
-#: C/shortcuts.page:139(key)
+#: C/shortcuts.page:148(key)
 msgid "+"
 msgstr "+"
 
-#: C/shortcuts.page:143(td)
+#: C/shortcuts.page:151(p)
 msgid "Zoom out."
 msgstr "Reducir."
 
-#: C/shortcuts.page:143(key)
+#: C/shortcuts.page:152(key)
 msgid "-"
 msgstr "-"
 
-#: C/shortcuts.page:150(title)
+#: C/shortcuts.page:159(title)
 msgid "Create Your Own Custom Shortcuts"
 msgstr "Crear sus propios atajos personalizados"
 
-#: C/shortcuts.page:153(p)
+#: C/shortcuts.page:162(p)
 msgid "Enable the /desktop/gnome/interface/can_change_accels flag in gconf:"
 msgstr "Active la opción /desktop/gnome/interface/can_change_accels en gconf:"
 
-#: C/shortcuts.page:158(p)
+#: C/shortcuts.page:167(p)
 msgid ""
 "Press <keyseq><key>Alt</key><key>F2</key></keyseq>. The Run Application "
 "dialogue opens."
@@ -1128,11 +1126,11 @@ msgstr ""
 "Pulse <keyseq><key>Alt</key><key>F2</key></keyseq>. Se abrirá el diálogo "
 "«Ejecutar aplicación»."
 
-#: C/shortcuts.page:163(p)
+#: C/shortcuts.page:172(p)
 msgid "In the textbox, type 'gconf-editor'."
 msgstr "Escriba «gconf-editor» en la caja de texto."
 
-#: C/shortcuts.page:168(p)
+#: C/shortcuts.page:177(p)
 msgid ""
 "In the Configuration Editor select <guiseq><gui>desktop</gui><gui>gnome</"
 "gui><gui>interface</gui></guiseq>."
@@ -1140,7 +1138,7 @@ msgstr ""
 "En el editor de configuración elija <guiseq><gui>Escritorio</gui><gui>GNOME</"
 "gui><gui>Interfaz</gui></guiseq>."
 
-#: C/shortcuts.page:173(p)
+#: C/shortcuts.page:182(p)
 msgid ""
 "Check the value box for <gui>can_change_accels</gui> in the right side of "
 "the window."
@@ -1148,15 +1146,15 @@ msgstr ""
 "Compruebe el valor de la caja para <gui>can_change_accel</gui> en la parte "
 "derecha de la ventana."
 
-#: C/shortcuts.page:178(p)
+#: C/shortcuts.page:187(p)
 msgid "You can add/change the shortcut as follows:"
 msgstr "Puede añadir/cambiar el atajo como sigue:"
 
-#: C/shortcuts.page:183(p)
+#: C/shortcuts.page:192(p)
 msgid "Open <app>Evince Document Viewer</app>."
 msgstr "Abra el <app>Visor de documentos Evince</app>."
 
-#: C/shortcuts.page:188(p)
+#: C/shortcuts.page:197(p)
 msgid ""
 "Hover the pointer over the menu item you want to change/create the shortcut "
 "for."
@@ -1164,7 +1162,7 @@ msgstr ""
 "Sitúe el puntero encima del elemento del menú para el que quiere cambiar/"
 "crear el atajo."
 
-#: C/shortcuts.page:193(p)
+#: C/shortcuts.page:202(p)
 msgid ""
 "Enter the shortcut you want on the keyboard, e.g. <keyseq><key>Ctrl</"
 "key><key>Shift</key><key>T</key></keyseq>."
@@ -1172,15 +1170,15 @@ msgstr ""
 "Introduzca el atajo de teclado que quiere, ej. <keyseq><key>Ctrl</"
 "key><key>Mayús</key><key>T</key></keyseq>."
 
-#: C/shortcuts.page:198(p)
+#: C/shortcuts.page:207(p)
 msgid "Close <app>Evince Document Viewer</app>."
 msgstr "Cierre el <app>Visor de documentos Evince</app>."
 
-#: C/shortcuts.page:205(p)
+#: C/shortcuts.page:214(p)
 msgid "Repeat steps 1-3."
 msgstr "Repetir los pasos 1-3."
 
-#: C/shortcuts.page:210(p)
+#: C/shortcuts.page:219(p)
 msgid ""
 "Uncheck the value box for <gui>can_change_accels</gui> in the right side of "
 "the window."
@@ -1188,12 +1186,12 @@ msgstr ""
 "Desmarque el valor de la caja para <gui>can_change_accels</gui> en la parte "
 "derecha de la ventana."
 
-#: C/shortcuts.page:214(p)
+#: C/shortcuts.page:223(p)
 msgid "The next time Evince starts your custom shortcut key will be preserved."
 msgstr ""
 "La siguiente vez que inicie Evince se mantendrán sus atajos personalizados."
 
-#: C/shortcuts.page:224(p)
+#: C/shortcuts.page:233(p)
 msgid "Note that this also works for many other Gnome applications as well."
 msgstr ""
 "Tenga en cuenta que esto también funciona con otras muchas aplicaciones de "
@@ -1232,7 +1230,6 @@ msgstr ""
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/print-select.page:38(None)
-#| msgid "@@image: 'print-select.png'; md5=e38a5749ed445a812346602ad58b88b4"
 msgid ""
 "@@image: 'figures/print-select.png'; md5=e38a5749ed445a812346602ad58b88b4"
 msgstr ""
@@ -1250,9 +1247,9 @@ msgstr "Imprimir sólo determinadas páginas"
 msgid "To only print certain pages from the document:"
 msgstr "Imprimir sólo determinadas páginas del documento:"
 
-#: C/print-select.page:26(p)
-msgid "Click <guiseq><gui>File</gui><gui> Print...</gui></guiseq>"
-msgstr "Pulse <guiseq><gui>Archivo</gui><gui>Imprimir...</gui></guiseq>"
+#: C/print-select.page:26(p) C/print-order.page:51(p) C/printing.page:27(p)
+msgid "Click <guiseq><gui>File</gui><gui>Print</gui></guiseq>"
+msgstr "Pulse <guiseq><gui>Archivo</gui><gui> Imprimir</gui></guiseq>"
 
 #: C/print-select.page:27(p)
 msgid ""
@@ -1275,13 +1272,12 @@ msgid ""
 "For example, if you enter \"1,3,5-7,9\" in the <gui>Pages</gui> textbox, "
 "pages 1,3,5,6,7 and 9 will be printed."
 msgstr ""
-"Por ejemplo, si escribe «1,3,5-7,9» en la caja de texto <gui>Páginas</gui>,"
-"se imprimirán las páginas 1,3,5,6,7 y 9."
+"Por ejemplo, si escribe «1,3,5-7,9» en la caja de texto <gui>Páginas</gui>,se "
+"imprimirán las páginas 1,3,5,6,7 y 9."
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/print-order.page:54(None)
-#| msgid "@@image: 'reverse-collate.png'; md5=2e84b930fa1913123b740f8b0997255e"
 msgid ""
 "@@image: 'figures/reverse-collate.png'; md5=2e84b930fa1913123b740f8b0997255e"
 msgstr ""
@@ -1290,8 +1286,8 @@ msgstr ""
 #: C/print-order.page:8(desc)
 msgid "Use the Collate and Reverse options to make pages print in order."
 msgstr ""
-"Use las opciones «Intercalar» e «Invertir» para que las páginas se impriman "
-"en orden."
+"Use las opciones «Intercalar» e «Invertir» para que las páginas se impriman en "
+"orden."
 
 #: C/print-order.page:20(title)
 msgid "Getting Copies To Print In The Correct Order"
@@ -1350,10 +1346,6 @@ msgstr ""
 #: C/print-order.page:47(p)
 msgid "To Collate:"
 msgstr "Intercalar:"
-
-#: C/print-order.page:51(p) C/printing.page:27(p)
-msgid "Click <guiseq><gui>File</gui><gui>Print</gui></guiseq>"
-msgstr "Pulse <guiseq><gui>Archivo</gui><gui> Imprimir</gui></guiseq>"
 
 #: C/print-order.page:52(p)
 msgid ""
@@ -1515,8 +1507,8 @@ msgid ""
 "Go to the <gui>Page Setup</gui> tab of the Print window and choose an option "
 "from the <gui>Two-sided</gui> drop-down list."
 msgstr ""
-"Vaya a la pestaña <gui>Configuración de página</gui> de la ventana "
-"«Imprimir» y elija una opción en la lista desplegable <gui>Dos caras</gui>."
+"Vaya a la pestaña <gui>Configuración de página</gui> de la ventana «Imprimir» "
+"y elija una opción en la lista desplegable <gui>Dos caras</gui>."
 
 #: C/print-2sided.page:39(p)
 msgid ""
@@ -1832,7 +1824,6 @@ msgstr ""
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/movingaround.page:146(None)
-#| msgid "@@image: 'zoom.png'; md5=f31883a5718a6bc9828d56db97958e9c"
 msgid "@@image: 'figures/zoom.png'; md5=f31883a5718a6bc9828d56db97958e9c"
 msgstr "@@image: 'figures/zoom.png'; md5=f31883a5718a6bc9828d56db97958e9c"
 
@@ -2123,8 +2114,8 @@ msgstr "Pulse <key>F11</key> o <key>Escape</key>"
 msgid ""
 "or click the <gui>Leave Fullscreen</gui> button at the top of the screen."
 msgstr ""
-"o pulse el botón <gui>Salir de «Pantalla completa»</gui> en la parte "
-"superior de la pantalla."
+"o pulse el botón <gui>Salir de «Pantalla completa»</gui> en la parte superior "
+"de la pantalla."
 
 #: C/invert-colors.page:8(desc)
 msgid "Inverting the colors can make it easier to read some text."
@@ -2170,7 +2161,6 @@ msgstr ""
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/index.page:19(None)
-#| msgid "@@image: 'evincelogo.png'; md5=a5856135b500d4c4b74a052eef6e09d2"
 msgid "@@image: 'figures/evincelogo.png'; md5=a5856135b500d4c4b74a052eef6e09d2"
 msgstr ""
 "@@image: 'figures/evincelogo.png'; md5=a5856135b500d4c4b74a052eef6e09d2"
@@ -2184,9 +2174,6 @@ msgid "Evince Document Viewer"
 msgstr "Visor de documentos Evince"
 
 #: C/index.page:19(title)
-#| msgid ""
-#| "<media type=\"image\" src=\"evincelogo.png\">Evince logo</media> Evince "
-#| "Document Viewer"
 msgid ""
 "<media type=\"image\" src=\"figures/evincelogo.png\">Evince logo</media> "
 "Evince Document Viewer"
@@ -2636,12 +2623,14 @@ msgstr ""
 
 #: C/duplex-9pages.page:137(p) C/duplex-5pages.page:128(p)
 #: C/duplex-13pages.page:131(p)
+#| msgid ""
+#| "Create a blank PDF document 3-pages long using <app>Open Office Word "
+#| "Processor</app>."
 msgid ""
-"Create a blank PDF document 3-pages long using <app>Open Office Word "
-"Processor</app>."
+"Create a blank PDF document 3-pages long using <app>LibreOffice Writer</app>."
 msgstr ""
 "Crear un documento PDF de 3 páginas usando el <app>Procesador de textos de "
-"Open Office</app>."
+"LibreOffice</app>."
 
 #: C/duplex-9pages.page:142(p) C/duplex-6pages.page:106(p)
 #: C/duplex-5pages.page:133(p) C/duplex-14pages.page:103(p)
@@ -2713,11 +2702,12 @@ msgstr ""
 "puede:"
 
 #: C/duplex-7pages.page:94(p) C/duplex-11pages.page:92(p)
-msgid ""
-"Create a blank PDF document using <app>Open Office Word Processor</app>."
+#| msgid ""
+#| "Create a blank PDF document using <app>Open Office Word Processor</app>."
+msgid "Create a blank PDF document using <app>LibreOffice Writer</app>."
 msgstr ""
-"Crear un documento PDF en blanco usando <app>Procesador de textos de Open "
-"Office</app>."
+"Crear un documento PDF en blanco usando el <app>Procesador de textos de "
+"LibreOffice</app>."
 
 #: C/duplex-7pages.page:99(p) C/duplex-11pages.page:97(p)
 msgid ""
@@ -2784,12 +2774,14 @@ msgstr ""
 
 #: C/duplex-6pages.page:101(p) C/duplex-14pages.page:98(p)
 #: C/duplex-10pages.page:99(p)
+#| msgid ""
+#| "Create a blank PDF document 2-pages long using <app>Open Office Word "
+#| "Processor</app>."
 msgid ""
-"Create a blank PDF document 2-pages long using <app>Open Office Word "
-"Processor</app>."
+"Create a blank PDF document 2-pages long using <app>LibreOffice Writer</app>."
 msgstr ""
 "Crear un documento PDF de 2 páginas usando el <app>Procesador de textos de "
-"Open Office</app>."
+"LibreOffice</app>."
 
 #: C/duplex-5pages.page:7(title)
 msgid "05-Page Booklet"
@@ -3178,8 +3170,8 @@ msgstr ""
 "está almacenado en el archivo (sólo es una imagen de a lo que se parece el "
 "texto), de tal forma que no existe una forma de recuperarlo y ponerlo en el "
 "PDF. Si lo necesita, puede usar un software <em>Optical Character "
-"Recofnition</em> (reconocimiento óptico de caracteres, «OCR») para extraer "
-"el texto desde archivos."
+"Recofnition</em> (reconocimiento óptico de caracteres, «OCR») para extraer el "
+"texto desde archivos."
 
 #: C/commandline.page:7(title)
 msgid "Command Line"
@@ -3418,7 +3410,6 @@ msgstr ""
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/annotations.page:44(None)
-#| msgid "@@image: 'list-add-tabs.png'; md5=1bbd81be2223f1b8434dcf746670f5d7"
 msgid ""
 "@@image: 'figures/list-add-tabs.png'; md5=1bbd81be2223f1b8434dcf746670f5d7"
 msgstr ""
@@ -3427,8 +3418,6 @@ msgstr ""
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/annotations.page:57(None)
-#| msgid ""
-#| "@@image: 'add-text-annotation.png'; md5=1add21cd2ec02d5fcc5b06d0e6546901"
 msgid ""
 "@@image: 'figures/add-text-annotation.png'; "
 "md5=1add21cd2ec02d5fcc5b06d0e6546901"
@@ -3526,8 +3515,6 @@ msgstr ""
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/annotations-navigate.page:24(None)
-#| msgid ""
-#| "@@image: 'annotations-navigate.png'; md5=6655cfb976ffea53c622b41cbf439747"
 msgid ""
 "@@image: 'figures/annotations-navigate.png'; "
 "md5=6655cfb976ffea53c622b41cbf439747"
@@ -3538,9 +3525,6 @@ msgstr ""
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/annotations-navigate.page:28(None)
-#| msgid ""
-#| "@@image: 'annotations-nav-to-page.png'; "
-#| "md5=fda82d763b7c81304d1c5949344a073b"
 msgid ""
 "@@image: 'figures/annotations-nav-to-page.png'; "
 "md5=fda82d763b7c81304d1c5949344a073b"
@@ -3672,6 +3656,34 @@ msgid "translator-credits"
 msgstr ""
 "Daniel Mustieles <daniel.mustieles@gmail.com>, 2011\n"
 "Jorge González <jorgegonz@svn.gnome.org>, 2011"
+
+#~ msgid "<placeholder-1/> keys"
+#~ msgstr "teclas <placeholder-1/> "
+
+#~ msgid "Page Up"
+#~ msgstr "Re Pág"
+
+#~ msgid "Page Down"
+#~ msgstr "Av Pág"
+
+#~ msgid "<placeholder-1/> / <placeholder-2/>"
+#~ msgstr "<placeholder-1/> / <placeholder-2/>"
+
+#~ msgid ""
+#~ "<keyseq><placeholder-1/><placeholder-2/></keyseq> / <keyseq><placeholder-"
+#~ "3/><placeholder-4/></keyseq>"
+#~ msgstr ""
+#~ "<keyseq><placeholder-1/><placeholder-2/></keyseq> / <keyseq><placeholder-"
+#~ "3/><placeholder-4/></keyseq>"
+
+#~ msgid "View"
+#~ msgstr "Ver"
+
+#~ msgid "Continuous"
+#~ msgstr "Continuo"
+
+#~ msgid "Click <guiseq><gui>File</gui><gui> Print...</gui></guiseq>"
+#~ msgstr "Pulse <guiseq><gui>Archivo</gui><gui>Imprimir...</gui></guiseq>"
 
 #~ msgid "Click<guiseq><gui>File</gui><gui>Print</gui></guiseq>"
 #~ msgstr "Pulse<guiseq><gui>Archivo</gui><gui>Imprimir</gui></guiseq>"
@@ -4011,10 +4023,10 @@ msgstr ""
 #~ msgid ""
 #~ "In <application>Evince Document Viewer</application>, you can perform the "
 #~ "same action in several ways. For example, you can open a document in the "
-#~ "following ways: <informaltable frame=\"all\"><tgroup cols=\"2\" colsep="
-#~ "\"1\" rowsep=\"1\"><colspec colname=\"COLSPEC0\" colwidth=\"50*\"/"
-#~ "><colspec colname=\"COLSPEC1\" colwidth=\"50*\"/><placeholder-1/"
-#~ "><placeholder-2/></tgroup></informaltable>"
+#~ "following ways: <informaltable frame=\"all\"><tgroup cols=\"2\" colsep=\"1"
+#~ "\" rowsep=\"1\"><colspec colname=\"COLSPEC0\" colwidth=\"50*\"/><colspec "
+#~ "colname=\"COLSPEC1\" colwidth=\"50*\"/><placeholder-1/><placeholder-2/></"
+#~ "tgroup></informaltable>"
 #~ msgstr ""
 #~ "En el <application>Visor de documentos Evince</application>, puede "
 #~ "realizar la misma acción de varias formas. Por ejemplo, puede abrir un "
