@@ -13,6 +13,8 @@ DOC_FIGURES = \
 	figures/annotations-navigate.png	\
 	figures/annotations-nav-to-page.png	\
 	figures/evincelogo.png			\
+	figures/evince-toolbar-default.png	\
+	figures/evince-toolbar-editor.png	\
 	figures/gconf-editor.png		\
 	figures/list-add-tabs.png		\
 	figures/print-2sided.png		\
@@ -82,7 +84,8 @@ DOC_PAGES = \
 	synctex.page			\
 	synctex-search.page		\
 	synctex-support.page		\
-	textselection.page
+	textselection.page		\
+	toolbar.page
 
 DOC_LINGUAS = bg ca cs de el en_GB es eu fi fr gl hu it ja nl oc pt_BR ru sl sr sv uk vi zh_CN
 
