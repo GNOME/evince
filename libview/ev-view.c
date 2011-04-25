@@ -5234,8 +5234,8 @@ ev_view_document_changed_cb (EvDocumentModel *model,
 	if (document != view->document) {
 		gint current_page;
 
-		clear_caches (view);
 		ev_view_remove_all (view);
+		clear_caches (view);
 
 		if (view->document) {
 			g_object_unref (view->document);
