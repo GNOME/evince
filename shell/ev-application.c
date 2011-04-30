@@ -781,7 +781,7 @@ method_call_cb (GDBusConnection       *connection,
 			} else if (strcmp (key, "screen") == 0 && g_variant_classify (value) == G_VARIANT_CLASS_INT32) {
 				screen_number = g_variant_get_int32 (value);
 			} else if (strcmp (key, "mode") == 0 && g_variant_classify (value) == G_VARIANT_CLASS_UINT32) {
-			mode = g_variant_get_uint32 (value);
+                                mode = g_variant_get_uint32 (value);
 			} else if (strcmp (key, "page-label") == 0 && g_variant_classify (value) == G_VARIANT_CLASS_STRING) {
 				dest = ev_link_dest_new_page_label (g_variant_get_string (value, NULL));
                         } else if (strcmp (key, "page-index") == 0 && g_variant_classify (value) == G_VARIANT_CLASS_UINT32) {
