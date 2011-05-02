@@ -370,6 +370,12 @@ get_screen_dpi (EvWindow *window)
 	return ev_document_misc_get_screen_dpi (screen);
 }
 
+static gboolean
+ev_window_is_editing_toolbar (EvWindow *ev_window)
+{
+	return egg_editable_toolbar_get_edit_mode (EGG_EDITABLE_TOOLBAR (ev_window->priv->toolbar));
+}
+
 static void
 ev_window_set_action_sensitive (EvWindow   *ev_window,
 		    	        const char *name,
@@ -452,6 +458,7 @@ ev_window_setup_action_sensitivity (EvWindow *ev_window)
 	ev_window_set_action_sensitive (ev_window, "EditRotateRight", has_pages);
 
         /* View menu */
+	ev_window_set_action_sensitive (ev_window, "ViewToolbar", !ev_window_is_editing_toolbar (ev_window));
 	ev_window_set_action_sensitive (ev_window, "ViewContinuous", has_pages);
 	ev_window_set_action_sensitive (ev_window, "ViewDual", has_pages);
 	ev_window_set_action_sensitive (ev_window, "ViewBestFit", has_pages);
@@ -4280,6 +4287,7 @@ ev_window_cmd_edit_toolbar_cb (GtkDialog *dialog,
 
 	toolbar = EGG_EDITABLE_TOOLBAR (ev_window->priv->toolbar);
         egg_editable_toolbar_set_edit_mode (toolbar, FALSE);
+	ev_window_set_action_sensitive (ev_window, "ViewToolbar", TRUE);
 
 	toolbars_file = g_build_filename (ev_application_get_dot_dir (EV_APP, TRUE),
 					  "evince_toolbar.xml", NULL);
@@ -4320,6 +4328,7 @@ ev_window_cmd_edit_toolbar (GtkAction *action, EvWindow *ev_window)
         gtk_box_pack_start (GTK_BOX (content_area), editor, TRUE, TRUE, 0);
 
 	egg_editable_toolbar_set_edit_mode (toolbar, TRUE);
+	ev_window_set_action_sensitive (ev_window, "ViewToolbar", FALSE);
 
 	g_signal_connect (dialog, "response",
 			  G_CALLBACK (ev_window_cmd_edit_toolbar_cb),
@@ -6044,7 +6053,8 @@ view_actions_focus_in_cb (GtkWidget *widget, GdkEventFocus *event, EvWindow *win
 #endif /* ENABLE_DBUS */
 
 	update_chrome_flag (window, EV_CHROME_RAISE_TOOLBAR, FALSE);
-	ev_window_set_action_sensitive (window, "ViewToolbar", TRUE);
+	ev_window_set_action_sensitive (window, "ViewToolbar",
+					!ev_window_is_editing_toolbar (window));
 
 	ev_window_set_view_accels_sensitivity (window, TRUE);
 
