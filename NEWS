@@ -1,4 +1,39 @@
 ================
+Evince    3.0.2
+================
+
+Bug fixes:
+
+    * Fix goto window in presentation mode (Carlos Garcia Campos)
+    * Don't allow to hide the toolbar when it's being edited (#648056,
+      Carlos Garcia Campos)
+    * Send page dest as integer to other evince instances when '-i'
+      command line switch is used (#647138, Carlos Garcia Campos)
+    * Don't jump to find result when the findbar is shown with search
+      text (#647378, Carlos Garcia Campos)
+    * Fix error processing some malformed TIFF files (#644806, Juanjo
+      Marín)
+    * Clear caches after destroying child widgets (#648365, Marek
+      Kašík)
+    * Fix ev_win32_get_locale_dir() (Hib Eris)
+
+Documentation:
+
+    * Toolbar documentation (#503638, Tiffany Antopolski)
+    * Fix typo (#637512, Tiffany Antopolski)
+    * Change OpenOffice refs to LibreOffice (Tiffany Antopolski)
+
+Translation updates:
+
+    * Daniel Martinez Cucalon (an)
+    * Mario Blättermann (de)
+    * Jorge González (es)
+    * Gabor Kelemen (hu)
+    * Pavol Klačanský (sk)
+    * Praveen Illa (te)
+    * Korostil Daniel (uk)
+
+================
 Evince    3.0.0
 ================
 
