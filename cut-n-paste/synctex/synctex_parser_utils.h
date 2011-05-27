@@ -1,10 +1,12 @@
 /* 
-Copyright (c) 2008, 2009 jerome DOT laurens AT u-bourgogne DOT fr
+Copyright (c) 2008, 2009, 2010, 2011 jerome DOT laurens AT u-bourgogne DOT fr
 
 This file is part of the SyncTeX package.
 
-Version: 1.8
-Latest Revision: Wed Jul  1 11:16:01 UTC 2009
+Latest Revision: Fri Mar 11 07:39:12 UTC 2011
+
+Version: 1.13
+
 See synctex_parser_readme.txt for more details
 
 License:
@@ -44,7 +46,11 @@ authorization from the copyright holder.
 
 #	define synctex_bool_t int
 #	define synctex_YES -1
+#	define synctex_ADD_QUOTES -1
+#	define synctex_COMPRESS -1
 #	define synctex_NO 0
+#	define synctex_DONT_ADD_QUOTES 0
+#	define synctex_DONT_COMPRESS 0
 
 #ifndef __SYNCTEX_PARSER_UTILS__
 #   define __SYNCTEX_PARSER_UTILS__
@@ -103,18 +109,22 @@ int _synctex_copy_with_quoting_last_path_component(const char * src, char ** des
 extern const char * synctex_suffix;
 extern const char * synctex_suffix_gz;
 
+typedef unsigned int synctex_io_mode_t;
+
 typedef enum {
-	synctex_io_mode_read = 0,
-	synctex_io_mode_append = 2
-} synctex_io_mode_t;
+	synctex_io_append_mask = 1,
+    synctex_io_gz_mask = synctex_io_append_mask<<1
+} synctex_io_mode_masks_t;
 
 typedef enum {
 	synctex_compress_mode_none = 0,
 	synctex_compress_mode_gz = 1
 } synctex_compress_mode_t;
 
-int _synctex_get_name(const char * output, const char * build_directory, char ** synctex_name_ref, synctex_compress_mode_t * compress_mode_ref);
+int _synctex_get_name(const char * output, const char * build_directory, char ** synctex_name_ref, synctex_io_mode_t * io_mode_ref);
 
+/*  returns the correct mode required by fopen and gzopen from the given io_mode */
+const char * _synctex_get_io_mode_name(synctex_io_mode_t io_mode);
 
 #ifdef __cplusplus
 }
