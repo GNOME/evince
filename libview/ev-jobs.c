@@ -1094,6 +1094,7 @@ ev_job_save_run (EvJob *job)
 
 		return FALSE;
 	}
+	close (fd);
 
 	ev_document_doc_mutex_lock ();
 
@@ -1102,8 +1103,6 @@ ev_job_save_run (EvJob *job)
         if (local_uri != NULL) {
                 ev_document_save (job->document, local_uri, &error);
         }
-
-	close (fd);
 
 	ev_document_doc_mutex_unlock ();
 
