@@ -1,9 +1,13 @@
 /* 
-Copyright (c) 2008, 2009 jerome DOT laurens AT u-bourgogne DOT fr
+Copyright (c) 2008, 2009, 2010 , 2011 jerome DOT laurens AT u-bourgogne DOT fr
 
 This file is part of the SyncTeX package.
 
-Latest Revision: Wed Jul  1 11:16:13 UTC 2009
+Latest Revision: Tue Jun 14 08:23:30 UTC 2011
+
+Version: 1.16
+
+See synctex_parser_readme.txt for more details
 
 License:
 --------
