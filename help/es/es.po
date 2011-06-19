@@ -8,21 +8,19 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: evince.help.master\n"
-"POT-Creation-Date: 2011-04-18 02:14+0000\n"
-"PO-Revision-Date: 2011-04-19 20:39+0200\n"
+"POT-Creation-Date: 2011-06-16 17:19+0000\n"
+"PO-Revision-Date: 2011-06-19 17:33+0200\n"
 "Last-Translator: Jorge González <jorgegonz@svn.gnome.org>\n"
-"Language-Team: Español <gnome-es-list@gnome.org>\n"
+"Language-Team: Español; Castellano <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Content-Transfer-Encoding: 8bits\n"
+"Plural-Forms: nplurals=2; plural=(n!=1);\n"
 "X-Generator: KBabel 1.11.4\n"
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/toolbar.page:31(None)
-#| msgid ""
-#| "@@image: 'figures/evincelogo.png'; md5=a5856135b500d4c4b74a052eef6e09d2"
 msgid ""
 "@@image: 'figures/evince-toolbar-default.png'; "
 "md5=2a826732c770c08b11684e28e259bb31"
@@ -33,8 +31,6 @@ msgstr ""
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/toolbar.page:52(None)
-#| msgid ""
-#| "@@image: 'figures/evincelogo.png'; md5=a5856135b500d4c4b74a052eef6e09d2"
 msgid ""
 "@@image: 'figures/evince-toolbar-editor.png'; "
 "md5=e6c66f764c39ab5ba01441d970425cd9"
@@ -141,7 +137,6 @@ msgid "Show or hide the toolbar"
 msgstr "Mostrar u ocultar la barra de herramientas"
 
 #: C/toolbar.page:27(p)
-#| msgid "Click <guiseq><gui>File</gui><gui>Print</gui></guiseq>."
 msgid "Click <guiseq><gui>View</gui><gui>Toolbar</gui></guiseq>."
 msgstr "Pulse <guiseq><gui>Ver</gui><gui>Barra de herramientas</gui></guiseq>."
 
@@ -191,7 +186,6 @@ msgid "<link xref=\"toolbar#view\">Show</link> the toolbar."
 msgstr "<link xref=\"toolbar#view\">Mostrar</link> la barra de herramientas."
 
 #: C/toolbar.page:48(p)
-#| msgid "Click <guiseq><gui>File</gui><gui>Print</gui></guiseq>."
 msgid "Click <guiseq><gui>Edit</gui><gui>Toolbar</gui></guiseq>."
 msgstr ""
 "Pulse <guiseq><gui>Editar</gui><gui>Barra de herramientas</gui></guiseq>."
@@ -301,17 +295,23 @@ msgstr ""
 "se muestra. Esto puede dar lugar a una copia que no aparece como se esperaba."
 
 #: C/textselection.page:35(p)
+#| msgid ""
+#| "Unfortunately, there is no real way of fixing this problem. Copying less "
+#| "text at a time, or copying the text into a text editor may minimise the "
+#| "problem. You can locate a text editor by clicking "
+#| "<guiseq><gui>Applications</gui><gui>Accessories</gui><gui>Text Editor</"
+#| "gui></guiseq>."
 msgid ""
 "Unfortunately, there is no real way of fixing this problem. Copying less "
 "text at a time, or copying the text into a text editor may minimise the "
-"problem. You can locate a text editor by clicking <guiseq><gui>Applications</"
-"gui><gui>Accessories</gui><gui>Text Editor</gui></guiseq>."
+"problem. You can locate a text editor by clicking <guiseq><gui>Activities</"
+"gui><gui>Applications</gui><gui>Accessories</gui><gui>gedit</gui></guiseq>."
 msgstr ""
-"Por desgracia, no hay una manera de solucionar este problema. Copiar menos "
-"texto cada vez o copiar el texto en un editor de texto puede minimizar el "
-"problema. Puede encontrar un editor de texto pulsando en "
-"<guiseq><gui>Aplicaciones</gui><gui>Accesorios</gui><gui>Editor de texto</"
-"gui></guiseq>."
+"Desafortunadamente, no hay una manera de solucionar este problema. Copiar "
+"menos texto cada vez o copiar el texto en un editor de texto puede minimizar "
+"el problema. Puede encontrar un editor de texto pulsando en "
+"<guiseq><gui>Aplicaciones</gui><gui>Accesorios</gui><gui>gedit</gui></"
+"guiseq>."
 
 #: C/synctex-support.page:7(desc)
 msgid "How to add support for SyncTex."
@@ -399,14 +399,18 @@ msgstr ""
 "PDF."
 
 #: C/synctex-search.page:40(p)
+#| msgid ""
+#| "Alternatively, you can click <keyseq><key>Ctrl</key><key>Alt</key><key>F</"
+#| "key></keyseq>, or <key>Ctrl</key>+Left Click. The corresponding line in "
+#| "the PDF will be outlined in red."
 msgid ""
-"Alternatively, you can click <keyseq><key>Ctrl</key><key>Alt</key><key>F</"
+"Alternatively, you can press <keyseq><key>Ctrl</key><key>Alt</key><key>F</"
 "key></keyseq>, or <key>Ctrl</key>+Left Click. The corresponding line in the "
 "PDF will be outlined in red."
 msgstr ""
 "Alternativamente, puede pulsar <keyseq><key>Ctrl</key><key>Alt</key><key>F</"
-"key></keyseq>, o <key>Ctrl</key>+pulsación izquierda. La línea "
-"correspondiente del PDF se subrayará en rojo."
+"key></keyseq>, o <key>Ctrl</key>+pulsación izquierda. Se subrayará en rojo "
+"la línea correspondiente del PDF."
 
 #: C/synctex-search.page:46(p)
 msgid ""
@@ -504,12 +508,16 @@ msgid "Vim-latex"
 msgstr "Vim-latex"
 
 #: C/synctex-editors.page:29(p)
+#| msgid ""
+#| "The <app>Gedit</app> plugin contains a python script (evince_dbus.py) "
+#| "that can be used to get Synctex working with Vim. In order to use vim-"
+#| "latex together with <app>Evince</app> you need to follow the next steps:"
 msgid ""
 "The <app>Gedit</app> plugin contains a python script (evince_dbus.py) that "
-"can be used to get Synctex working with Vim. In order to use vim-latex "
+"can be used to get SyncTex working with Vim. In order to use vim-latex "
 "together with <app>Evince</app> you need to follow the next steps:"
 msgstr ""
-"El complemento de <app>Gedit</app> contiene un script en python (evince_dbus."
+"El complemento de <app>gedit</app> contiene un script en python (evince_dbus."
 "py) que se puede usar para que Synctex funcione con Vim. Para usar vim-latex "
 "junto con <app>Evince</app> debe seguir los siguientes pasos:"
 
@@ -641,27 +649,40 @@ msgstr ""
 "correspondiente en el PDF. Generalmente será el <em>marco de título</em>."
 
 #: C/synctex-beamer.page:35(title)
+#| msgid ""
+#| "Backward Search: From PDF to Beamer-LaTeX source(<app>Evince</app> to "
+#| "<app>Gedit</app>)"
 msgid ""
-"Backward Search: From PDF to Beamer-LaTeX source(<app>Evince</app> to "
+"Backward Search: From PDF to Beamer-LaTeX source (<app>Evince</app> to "
 "<app>Gedit</app>)"
 msgstr ""
-"Búsqueda hacia atrás. de PDF a código fuente de Beamer-LaTeX (de "
+"Búsqueda hacia atrás: de PDF a código fuente de Beamer-LaTeX (de "
 "<app>Evince</app> a <app>gedit</app>)"
 
 #: C/synctex-beamer.page:36(p)
+#| msgid ""
+#| "With <link xref=\"synctex-search#backward-search\">backward search</"
+#| "link>, you click on some text in a frame, and the corresponding line of "
+#| "LaTex code that ends that particular frame is highlighted."
 msgid ""
 "With <link xref=\"synctex-search#backward-search\">backward search</link>, "
 "you click on some text in a frame, and the corresponding line of LaTex code "
-"that ends that particular frame is highlighted."
+"that ends that particular frame is highlighted. This will usually be the "
+"line:"
 msgstr ""
 "Con la <link xref=\"synctex-search#backward-search\">búsqueda hacia atrás</"
 "link> puede pulsar en algún texto en un marco y se resaltará la "
-"correspondiente línea en el código LaTex."
+"correspondiente línea, que terminal el marco, en el código LaTex. "
+"Generalmente será la línea:"
 
 #: C/synctex-beamer.page:39(code)
 #, no-wrap
 msgid "\\end{frame}"
 msgstr "\\end{frame}"
+
+#: C/synctex-beamer.page:40(p)
+msgid "corresponding to the frame you clicked on."
+msgstr "correspondiente al marco que ha pulsado."
 
 #: C/singlesided-npages.page:8(desc) C/duplex-npages.page:8(desc)
 msgid "Print a booklet over 20 pages."
@@ -675,15 +696,19 @@ msgstr "Folleto de n páginas"
 msgid "<em>n</em> is a multiple of 4."
 msgstr "<em>n</em> es múltiplo de 4."
 
-#: C/singlesided-npages.page:27(p) C/duplex-npages.page:28(p)
+#: C/singlesided-npages.page:27(p)
+#| msgid ""
+#| "If the number of pages in your PDF document is not a multiple of 4, you "
+#| "should add the appropriate number of blank pages (1,2 or 3) to make it a "
+#| "multiple of 4. To do so, you can:"
 msgid ""
 "If the number of pages in your PDF document is not a multiple of 4, you "
-"should add the appropriate number of blank pages (1,2 or 3) to make it a "
+"should add the appropriate number of blank pages (1, 2 or 3) to make it a "
 "multiple of 4. To do so, you can:"
 msgstr ""
 "Si el número de páginas de su documento PDF no es múltiplo de 4, debe añadir "
-"el número de páginas en blanco adecuado (1, 2 o 3) para que sea múltiplo de "
-"4. Para hacerlo, puede:"
+"el número de páginas en blanco adecuado (1, 2 ó 3) para que sea múltiplo de "
+"4. Para ello, puede:"
 
 #: C/singlesided-npages.page:33(p) C/singlesided-9-12pages.page:28(p)
 #: C/singlesided-5-8pages.page:28(p) C/singlesided-3-4pages.page:28(p)
@@ -911,12 +936,15 @@ msgid "5-Page to 8-Page Booklet"
 msgstr "Folleto de 5 a 8 páginas"
 
 #: C/singlesided-5-8pages.page:23(p)
+#| msgid ""
+#| "If you have a 5,6 or 7 page PDF document you should add the appropriate "
+#| "number of blank pages to make it 8-pages. To do so, you can:"
 msgid ""
-"If you have a 5,6 or 7 page PDF document you should add the appropriate "
+"If you have a 5, 6 or 7 page PDF document you should add the appropriate "
 "number of blank pages to make it 8-pages. To do so, you can:"
 msgstr ""
-"Si tiene un documento PDF de 5, 6 o 7 páginas, debería añadir el número de "
-"páginas en blanco adecuado para que sea de 8 páginas. Para hacerlo puede:"
+"Si tiene un documento PDF de 5, 6 ó 7 páginas, debería añadir el número de "
+"páginas en blanco adecuado para que sea de 8 páginas. Para ello puede:"
 
 #: C/singlesided-5-8pages.page:57(p) C/duplex-8pages.page:36(p)
 msgid "Type the numbers of the pages in this order: 8, 1, 2, 7, 6, 3, 4, 5"
@@ -925,15 +953,15 @@ msgstr ""
 
 #: C/singlesided-3-4pages.page:7(title)
 msgid "03-Page or 4-Page Booklet"
-msgstr "Folleto de 03 o 4 páginas"
+msgstr "Folleto de 3 ó 4 páginas"
 
 #: C/singlesided-3-4pages.page:8(desc)
 msgid "Print a 3 or 4 page booklet."
-msgstr "Imprimir un folleto de 3 o 4 páginas."
+msgstr "Imprimir un folleto de 3 ó 4 páginas."
 
 #: C/singlesided-3-4pages.page:21(title)
 msgid "3-Page or 4-Page Booklet"
-msgstr "Folleto de 3 o 4 páginas"
+msgstr "Folleto de 3 ó 4 páginas"
 
 #: C/singlesided-3-4pages.page:23(p)
 msgid ""
@@ -958,7 +986,7 @@ msgstr "Escriba los números de las páginas en este orden: 4, 1, 2, 3"
 
 #: C/singlesided-17-20pages.page:8(desc)
 msgid "Print a 17, 18, 19 or 20 page booklet."
-msgstr "Imprimir un folleto de 17, 18, 19 o 20 páginas."
+msgstr "Imprimir un folleto de 17, 18, 19 ó 20 páginas."
 
 #: C/singlesided-17-20pages.page:21(title)
 msgid "17-Page to 20-Page Booklet"
@@ -983,7 +1011,7 @@ msgstr "Escriba los números de página en este orden: <placeholder-1/>"
 
 #: C/singlesided-13-16pages.page:8(desc)
 msgid "Print a 13, 14, 15 or 16 page booklet."
-msgstr "Imprimir un folleto de 13, 14, 15 o 16 páginas."
+msgstr "Imprimir un folleto de 13, 14, 15 ó 16 páginas."
 
 #: C/singlesided-13-16pages.page:21(title)
 msgid "13-Page to 16-Page Booklet"
@@ -994,7 +1022,7 @@ msgid ""
 "If you have a 13, 14 or 15 page PDF document you should add the appropriate "
 "number of blank pages to make it 16-pages. To do so, you can:"
 msgstr ""
-"Si tiene un documento PDF de 13, 14 o 15 páginas, debería añadir el número "
+"Si tiene un documento PDF de 13, 14 ó 15 páginas, debería añadir el número "
 "de páginas en blanco adecuado para que sea de 16 páginas. Para hacerlo puede:"
 
 #: C/singlesided-13-16pages.page:60(item) C/duplex-16pages.page:38(item)
@@ -1375,6 +1403,7 @@ msgid "To only print certain pages from the document:"
 msgstr "Imprimir sólo determinadas páginas del documento:"
 
 #: C/print-select.page:26(p) C/print-order.page:51(p) C/printing.page:27(p)
+#: C/print-differentsize.page:26(p)
 msgid "Click <guiseq><gui>File</gui><gui>Print</gui></guiseq>"
 msgstr "Pulse <guiseq><gui>Archivo</gui><gui> Imprimir</gui></guiseq>"
 
@@ -1544,10 +1573,6 @@ msgstr ""
 "Si quiere cambiar el tamaño del papel de su documento (por ejemplo, imprimir "
 "un PDF tamaño carta en un papel A4), puede cambiar el formato de impresión "
 "del documento."
-
-#: C/print-differentsize.page:26(p)
-msgid "Click <guiseq><gui> File </gui><gui> Print... </gui></guiseq>"
-msgstr "Pulse <guiseq><gui>Archivo</gui><gui>Imprimir...</gui></guiseq>"
 
 #: C/print-differentsize.page:27(p)
 msgid "Select the <gui>Page Setup</gui> tab."
@@ -1875,37 +1900,44 @@ msgid "To check if your printer is printing correctly:"
 msgstr "Para comprobar si su impresora imprime correctamente:"
 
 #: C/noprint.page:37(p)
-msgid ""
-"Choose <guiseq><gui>System</gui><gui>Administration</gui><gui>Printing</"
-"gui></guiseq>"
+#| msgid "Right-click the page and select <gui>Autoscroll</gui>."
+msgid "Click your name on the topbar and select <gui>System Settings</gui>."
 msgstr ""
-"Elija <guiseq><gui>Sistema</gui><gui>Administración</gui><gui>Impresoras</"
-"gui></guiseq>"
+"Pulse sobre su nombre en la barra superior y seleccione <gui>Configuración "
+"del sistema</gui>."
 
 #: C/noprint.page:38(p)
-msgid "Double click on your printer in the list."
+#| msgid "Double click on your printer in the list."
+msgid "Click on your printer in the list."
 msgstr "Doble pulsación en su impresora en la lista."
 
 #: C/noprint.page:39(p)
+#| msgid ""
+#| "Select <gui>Settings</gui> in the left menu. Click on <gui>Print Test "
+#| "Page</gui>. A page should be sent to your printer."
 msgid ""
-"Select <gui>Settings</gui> in the left menu. Click on <gui>Print Test Page</"
-"gui>. A page should be sent to your printer."
+"Click on <gui>Print Test Page</gui>. A page should be sent to your printer."
 msgstr ""
-"Seleccione <gui>Configuración</gui> en el menú de la izquierda. Pulse en "
-"<gui>Imprimir página de prueba</gui>. Se debería enviar una página a su "
-"impresora."
+"Pulse en <gui>Imprimir página de prueba</gui>. Se debería enviar una página "
+"a su impresora."
 
 #: C/noprint.page:41(p)
-msgid "If this fails, see your printer's manual to see what else you can do."
+#| msgid ""
+#| "If this fails, see your printer's manual to see what else you can do."
+msgid ""
+"If this fails, see <link href=\"ghelp:gnome-help?printing\">Printing help</"
+"link>. You may also need to see your printer's manual to see what else you "
+"can do."
 msgstr ""
-"Si esto falla, consulte el manual de su impresora para ver que otra cosa "
-"puede hacer."
+"Si esto falla, consulte la <link href=\"ghelp:gnome-help?printing\">ayuda "
+"sobre impresión</link>. También puede necesitar ver el manual de su "
+"impresora para ver que otra cosa puede hacer."
 
-#: C/noprint.page:54(title)
+#: C/noprint.page:53(title)
 msgid "PDF Printing Restrictions"
 msgstr "Restricciones de impresión de PDF"
 
-#: C/noprint.page:55(p)
+#: C/noprint.page:54(p)
 msgid ""
 "Some PDF documents have a setting which prevents you from printing them. "
 "Authors can set this printing restriction when they write a document. Evince "
@@ -1917,7 +1949,7 @@ msgstr ""
 "cuando escriben el documento. De manera predeterminada, Evince omite esta "
 "restricción, pero puede querer comprobar que no se ha desactivado."
 
-#: C/noprint.page:64(p)
+#: C/noprint.page:63(p)
 msgid ""
 "Press <keyseq><key>Alt</key><key>F2</key></keyseq> to open the Run "
 "Application window."
@@ -1925,7 +1957,7 @@ msgstr ""
 "Pulse <keyseq><key>Alt</key><key>F2</key></keyseq> para abrir la ventana "
 "«Ejecutar aplicación»."
 
-#: C/noprint.page:70(p)
+#: C/noprint.page:69(p)
 msgid ""
 "Type <input>gconf-editor</input> into the text box and click <gui>Run</gui>. "
 "The Configuration Editor will open."
@@ -1933,17 +1965,17 @@ msgstr ""
 "Escriba <input>gconf-editor</input> en la caja de texto y pulse "
 "<gui>Ejecutar</gui>. Se abrirá el editor de configuración."
 
-#: C/noprint.page:75(p)
+#: C/noprint.page:74(p)
 msgid "Browse to <sys>/apps/evince</sys> using the side pane."
 msgstr "Navegue hasta <sys>/apps/evince</sys> usando el panel lateral."
 
-#: C/noprint.page:77(p)
+#: C/noprint.page:76(p)
 msgid "Make sure that the <gui>override_restrictions</gui> option is checked."
 msgstr ""
 "Asegúrese de que la opción <gui>Saltarse las restricciones</gui> está "
 "marcada."
 
-#: C/noprint.page:82(p)
+#: C/noprint.page:81(p)
 msgid "Go back to the Document Viewer and try to print the document again."
 msgstr ""
 "Regrese al visor de documentos e intente imprimir el documento de nuevo."
@@ -1951,7 +1983,6 @@ msgstr ""
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/movingaround.page:148(None)
-#| msgid "@@image: 'figures/zoom.png'; md5=f31883a5718a6bc9828d56db97958e9c"
 msgid "@@image: 'figures/zoom.png'; md5=561963b44d8e90a2a8ac409b8e35aee7"
 msgstr "@@image: 'figures/zoom.png'; md5=561963b44d8e90a2a8ac409b8e35aee7"
 
@@ -2041,8 +2072,6 @@ msgstr ""
 "métodos:"
 
 #: C/movingaround.page:81(p)
-#| msgid ""
-#| "Click the <gui>Previous</gui> or <gui>Next</gui> buttons on the toolbar."
 msgid ""
 "Click the <gui>Previous</gui> or <gui>Next</gui> buttons on the <link xref="
 "\"toolbar\">toolbar</link>."
@@ -2079,9 +2108,6 @@ msgid "To go to a specific page:"
 msgstr "Ir a una página específica:"
 
 #: C/movingaround.page:93(p)
-#| msgid ""
-#| "Type a page number in the text box on the toolbar and press <key>Enter</"
-#| "key>."
 msgid ""
 "Type a page number in the 'page select' tool on the <link xref=\"toolbar"
 "\">toolbar</link> and press <key>Enter</key>."
@@ -2257,7 +2283,8 @@ msgid "Inverting the colors can make it easier to read some text."
 msgstr "Invertir los colores puede simplificar la lectura de algunos textos."
 
 #: C/invert-colors.page:23(title)
-msgid "Invert Colours On A Page"
+#| msgid "Invert Colours On A Page"
+msgid "Invert Colors On A Page"
 msgstr "Invertir colores en una página"
 
 #: C/invert-colors.page:26(p)
@@ -2604,6 +2631,16 @@ msgstr ""
 "se editen, pero hay programas de edición de PDF disponibles. Pruebe<link "
 "href=\"http://pdfedit.petricek.net/en/index.html\">pdfedit</link>, por "
 "ejemplo."
+
+#: C/duplex-npages.page:28(p)
+msgid ""
+"If the number of pages in your PDF document is not a multiple of 4, you "
+"should add the appropriate number of blank pages (1,2 or 3) to make it a "
+"multiple of 4. To do so, you can:"
+msgstr ""
+"Si el número de páginas de su documento PDF no es múltiplo de 4, debe añadir "
+"el número de páginas en blanco adecuado (1, 2 o 3) para que sea múltiplo de "
+"4. Para hacerlo, puede:"
 
 #: C/duplex-npages.page:71(p) C/duplex-9pages.page:43(p)
 #: C/duplex-8pages.page:45(p) C/duplex-7pages.page:47(p)
@@ -3419,10 +3456,13 @@ msgstr "Informar de un error en <app>Evince</app>"
 
 #: C/bug-filing.page:20(p)
 msgid ""
-"To file a bug against <app>Evince</app>, click on the link <link href="
-"\"https://bugzilla.gnome.org/\"/>."
+"<app>Evince</app> is created by a volunteer community. You are welcome to "
+"participate. If you notice a problem you can file a <em>bug report</em>. To "
+"file a bug, go to <link href=\"https://bugzilla.gnome.org/\"/>."
 msgstr ""
-"Para informar de un error en <app>Evince</app>, pulse en el enlace <link "
+"Una comunidad de voluntarios ha creado <app>Evince</app>. Se le dará la "
+"bienvenida si quiere participar. Si descubre un problema, puede rellenar un "
+"<em>informe de error</em>. Para rellenar un informe de error, vaya a <link "
 "href=\"https://bugzilla.gnome.org/\"/>."
 
 #: C/bug-filing.page:23(p)
@@ -3448,9 +3488,16 @@ msgstr ""
 "para crear una."
 
 #: C/bug-filing.page:29(p)
+#| msgid ""
+#| "Once you have an account, log in, click on <guiseq><gui>File a Bug</"
+#| "gui><gui>Desktop</gui><gui>evince</gui></guiseq>. Before reporting a bug, "
+#| "please read the <link href=\"https://bugzilla.gnome.org/page.cgi?id=bug-"
+#| "writing.html\">bug writing guidelines</link>, and please <link href="
+#| "\"https://bugzilla.gnome.org/browse.cgi?product=evince\">browse</link> "
+#| "for the bug to see if it already exists."
 msgid ""
 "Once you have an account, log in, click on <guiseq><gui>File a Bug</"
-"gui><gui>Desktop</gui><gui>evince</gui></guiseq>. Before reporting a bug, "
+"gui><gui>Core</gui><gui>evince</gui></guiseq>. Before reporting a bug, "
 "please read the <link href=\"https://bugzilla.gnome.org/page.cgi?id=bug-"
 "writing.html\">bug writing guidelines</link>, and please <link href="
 "\"https://bugzilla.gnome.org/browse.cgi?product=evince\">browse</link> for "
@@ -3739,9 +3786,12 @@ msgid "Select <gui>Annotation Properties.</gui>"
 msgstr "Seleccione <gui>Propiedades de la anotación...</gui>"
 
 #: C/annotation-properties.page:34(p)
+#| msgid ""
+#| "In the <gui>Annotation Properties</gui> window, you can change the "
+#| "author, colour, style and icon of your note."
 msgid ""
 "In the <gui>Annotation Properties</gui> window, you can change the author, "
-"colour, style and icon of your note."
+"color, style and icon of your note."
 msgstr ""
 "En la ventana <gui>Propiedades de la anotación</gui> puede cambiar el autor, "
 "color estilo e icono de su nota."
@@ -3783,6 +3833,23 @@ msgid "translator-credits"
 msgstr ""
 "Daniel Mustieles <daniel.mustieles@gmail.com>, 2011\n"
 "Jorge González <jorgegonz@svn.gnome.org>, 2011"
+
+#~ msgid "Click <guiseq><gui> File </gui><gui> Print... </gui></guiseq>"
+#~ msgstr "Pulse <guiseq><gui>Archivo</gui><gui>Imprimir...</gui></guiseq>"
+
+#~ msgid ""
+#~ "Choose <guiseq><gui>System</gui><gui>Administration</gui><gui>Printing</"
+#~ "gui></guiseq>"
+#~ msgstr ""
+#~ "Elija <guiseq><gui>Sistema</gui><gui>Administración</gui><gui>Impresoras</"
+#~ "gui></guiseq>"
+
+#~ msgid ""
+#~ "To file a bug against <app>Evince</app>, click on the link <link href="
+#~ "\"https://bugzilla.gnome.org/\"/>."
+#~ msgstr ""
+#~ "Para informar de un error en <app>Evince</app>, pulse en el enlace <link "
+#~ "href=\"https://bugzilla.gnome.org/\"/>."
 
 #~ msgid "<placeholder-1/> keys"
 #~ msgstr "teclas <placeholder-1/> "
