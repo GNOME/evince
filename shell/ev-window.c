@@ -5962,7 +5962,7 @@ register_custom_actions (EvWindow *window, GtkActionGroup *group)
 			       "label", _("Navigation"),
 			       "is_important", TRUE,
 			       "short_label", _("Back"),
-			       "stock_id", GTK_STOCK_GO_DOWN,
+			       "stock_id", GTK_STOCK_GO_BACK,
 			       /*translators: this is the history action*/
 			       "tooltip", _("Move across visited pages"),
 			       NULL);
