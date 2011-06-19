@@ -266,6 +266,14 @@ struct _EvWindowPrivate {
 
 #define MAX_RECENT_ITEM_LEN (40)
 
+#if OFFLINE_HELP_ENABLED
+#define EV_HELP         "ghelp:evince"
+#define EV_HELP_TOOLBAR "ghelp:evince?toolbar"
+#else
+#define EV_HELP         "http://library.gnome.org/users/evince/stable/"
+#define EV_HELP_TOOLBAR "http://library.gnome.org/users/evince/stable/toolbar.html"
+#endif
+
 static const gchar *document_print_settings[] = {
 	GTK_PRINT_SETTINGS_N_COPIES,
 	GTK_PRINT_SETTINGS_COLLATE,
@@ -4285,6 +4293,23 @@ ev_window_cmd_edit_toolbar_cb (GtkDialog *dialog,
 	EggEditableToolbar *toolbar;
 	gchar              *toolbars_file;
 
+	if (response == GTK_RESPONSE_HELP) {
+		GError *error = NULL;
+
+		gtk_show_uri (gtk_window_get_screen (GTK_WINDOW (dialog)),
+			      EV_HELP_TOOLBAR,
+			      gtk_get_current_event_time (),
+			      &error);
+
+		if (error) {
+			ev_window_error_message (ev_window, error,
+						 "%s", _("There was an error displaying help"));
+			g_error_free (error);
+		}
+
+		return;
+	}
+
 	toolbar = EGG_EDITABLE_TOOLBAR (ev_window->priv->toolbar);
         egg_editable_toolbar_set_edit_mode (toolbar, FALSE);
 	ev_window_set_action_sensitive (ev_window, "ViewToolbar", TRUE);
@@ -4311,6 +4336,8 @@ ev_window_cmd_edit_toolbar (GtkAction *action, EvWindow *ev_window)
 				              GTK_DIALOG_DESTROY_WITH_PARENT,
 					      GTK_STOCK_CLOSE,
 					      GTK_RESPONSE_CLOSE,
+					      GTK_STOCK_HELP,
+					      GTK_RESPONSE_HELP,
 					      NULL);
 	content_area = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
 	gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_CLOSE);
@@ -4541,12 +4568,6 @@ ev_window_cmd_view_autoscroll (GtkAction *action, EvWindow *ev_window)
 {
 	ev_view_autoscroll_start (EV_VIEW (ev_window->priv->view));
 }
-
-#if OFFLINE_HELP_ENABLED
-#define EV_HELP "ghelp:evince"
-#else
-#define EV_HELP "http://library.gnome.org/users/evince/stable/"
-#endif
 
 static void
 ev_window_cmd_help_contents (GtkAction *action, EvWindow *ev_window)
