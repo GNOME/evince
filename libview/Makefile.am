@@ -136,6 +136,7 @@ EvinceView-$(EV_API_VERSION).gir: libevview3.la Makefile $(INST_H_FILES) $(filte
 	--output $@ \
 	--pkg evince-document-$(EV_API_VERSION) \
 	--pkg evince-view-$(EV_API_VERSION) \
+	-L$(top_builddir)/libdocument/ \
 	-I$(top_srcdir) \
 	-I$(top_builddir) \
 	-DEVINCE_COMPILATION \
