@@ -571,7 +571,9 @@ static const gchar *view_accels[] = {
 	"KpPlus",
 	"KpMinus",
 	"Equal",
-	"p"
+	"p",
+	"BestFit",
+	"PageWidth"
 };
 
 static void
@@ -3774,6 +3776,12 @@ ev_window_cmd_view_best_fit (GtkAction *action, EvWindow *ev_window)
 }
 
 static void
+ev_window_cmd_best_fit (GtkAction *action, EvWindow *ev_window)
+{
+	ev_document_model_set_sizing_mode (ev_window->priv->model, EV_SIZING_BEST_FIT);
+}
+
+static void
 ev_window_cmd_view_page_width (GtkAction *action, EvWindow *ev_window)
 {
 	ev_window_stop_presentation (ev_window, TRUE);
@@ -3784,6 +3792,12 @@ ev_window_cmd_view_page_width (GtkAction *action, EvWindow *ev_window)
 		ev_document_model_set_sizing_mode (ev_window->priv->model, EV_SIZING_FREE);
 	}
 	ev_window_update_actions (ev_window);
+}
+
+static void
+ev_window_cmd_page_width (GtkAction *action, EvWindow *ev_window)
+{
+	ev_document_model_set_sizing_mode (ev_window->priv->model, EV_SIZING_FIT_WIDTH);
 }
 
 
@@ -5842,6 +5856,10 @@ static const GtkActionEntry entries[] = {
           G_CALLBACK (ev_window_cmd_view_zoom_out) },
 	{ "CtrlInsert", GTK_STOCK_COPY, NULL, "<control>Insert", NULL,
 	  G_CALLBACK (ev_window_cmd_edit_copy) },
+	{ "BestFit", EV_STOCK_ZOOM_PAGE, NULL, "f", NULL,
+	  G_CALLBACK (ev_window_cmd_best_fit) },
+	{ "PageWidth", EV_STOCK_ZOOM_WIDTH, NULL, "w", NULL,
+	  G_CALLBACK (ev_window_cmd_page_width) },
 };
 
 /* Toggle items */
