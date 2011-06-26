@@ -35,12 +35,17 @@
 #endif
 
 #define THUMBNAIL_SIZE 128
+#define DEFAULT_SLEEP_TIME (15 * G_USEC_PER_SEC) /* 15 seconds */
+
+static gboolean finished = TRUE;
 
 static gint size = THUMBNAIL_SIZE;
+static gboolean time_limit = TRUE;
 static const gchar **file_arguments;
 
 static const GOptionEntry goption_options[] = {
 	{ "size", 's', 0, G_OPTION_ARG_INT, &size, NULL, "SIZE" },
+        { "no-limit", 'l', G_OPTION_FLAG_REVERSE, G_OPTION_ARG_NONE, &time_limit, "Don't limit the thumbnailing time to 15 seconds", NULL },
 	{ G_OPTION_REMAINING, 0, 0, G_OPTION_ARG_FILENAME_ARRAY, &file_arguments, NULL, "<input> <ouput>" },
 	{ NULL }
 };
@@ -51,6 +56,41 @@ struct AsyncData {
 	gint         size;
 	gboolean     success;
 };
+
+/* Time monitor: copied from totem */
+G_GNUC_NORETURN static gpointer
+time_monitor (gpointer data)
+{
+        const gchar *app_name;
+
+        g_usleep (DEFAULT_SLEEP_TIME);
+
+        if (finished)
+                g_thread_exit (NULL);
+
+        app_name = g_get_application_name ();
+        if (app_name == NULL)
+                app_name = g_get_prgname ();
+        g_print ("%s couldn't process file: '%s'\n"
+                 "Reason: Took too much time to process.\n",
+                 app_name,
+                 (const char *) data);
+
+        exit (0);
+}
+
+static void
+time_monitor_start (const char *input)
+{
+        finished = FALSE;
+        g_thread_create (time_monitor, (gpointer) input, FALSE, NULL);
+}
+
+static void
+time_monitor_stop (void)
+{
+        finished = TRUE;
+}
 
 static void
 delete_temp_file (GFile *file)
@@ -269,6 +309,9 @@ main (int argc, char *argv[])
 		return -2;
 	}
 
+        if (time_limit)
+                time_monitor_start (input);
+
 	if (EV_IS_ASYNC_RENDERER (document)) {
 		struct AsyncData data;
 
@@ -295,6 +338,7 @@ main (int argc, char *argv[])
 		return -2;
 	}
 
+        time_monitor_stop ();
 	g_object_unref (document);
         ev_shutdown ();
 
