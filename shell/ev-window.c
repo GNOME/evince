@@ -557,33 +557,37 @@ ev_window_update_actions (EvWindow *ev_window)
 	}
 }
 
+static const gchar *view_accels[] = {
+	"PageDown",
+	"PageUp",
+	"Space",
+	"ShiftSpace",
+	"BackSpace",
+	"ShiftBackSpace",
+	"Return",
+	"ShiftReturn",
+	"Plus",
+	"Minus",
+	"KpPlus",
+	"KpMinus",
+	"Equal",
+	"p"
+};
+
 static void
 ev_window_set_view_accels_sensitivity (EvWindow *window, gboolean sensitive)
 {
 	gboolean can_find;
+	gint     i;
 
-	can_find = window->priv->document && 
-	    EV_IS_DOCUMENT_FIND (window->priv->document);
+	if (!window->priv->action_group)
+		return;
 
-	if (window->priv->action_group) {
-		ev_window_set_action_sensitive (window, "PageDown", sensitive);
-		ev_window_set_action_sensitive (window, "PageUp", sensitive);
-		ev_window_set_action_sensitive (window, "Space", sensitive);
-		ev_window_set_action_sensitive (window, "ShiftSpace", sensitive);
-		ev_window_set_action_sensitive (window, "BackSpace", sensitive);
-		ev_window_set_action_sensitive (window, "ShiftBackSpace", sensitive);
-		ev_window_set_action_sensitive (window, "Return", sensitive);
-		ev_window_set_action_sensitive (window, "ShiftReturn", sensitive);
-		ev_window_set_action_sensitive (window, "Plus", sensitive);
-		ev_window_set_action_sensitive (window, "Minus", sensitive);
-		ev_window_set_action_sensitive (window, "KpPlus", sensitive);
-		ev_window_set_action_sensitive (window, "KpMinus", sensitive);
-		ev_window_set_action_sensitive (window, "Equal", sensitive);
-		ev_window_set_action_sensitive (window, "p", sensitive);
-		ev_window_set_action_sensitive (window, "n", sensitive);
+	for (i = 0; i < G_N_ELEMENTS (view_accels); i++)
+		ev_window_set_action_sensitive (window, view_accels[i], sensitive);
 
-		ev_window_set_action_sensitive (window, "Slash", sensitive && can_find);
-	}
+	can_find = window->priv->document && EV_IS_DOCUMENT_FIND (window->priv->document);
+	ev_window_set_action_sensitive (window, "Slash", sensitive && can_find);
 }
 
 static void
