@@ -1134,9 +1134,16 @@ setup_model_from_metadata (EvWindow *window)
 	gboolean   fullscreen = FALSE;
 
 	if (!window->priv->metadata) {
+		EvSizingMode sizing_mode;
+
 		/* Set default values */
-		ev_document_model_set_sizing_mode (window->priv->model,
-						   g_settings_get_enum (settings, "sizing-mode"));
+		sizing_mode = g_settings_get_enum (settings, "sizing-mode");
+		ev_document_model_set_sizing_mode (window->priv->model, sizing_mode);
+		if (sizing_mode == EV_SIZING_FREE) {
+			zoom = g_settings_get_double (settings, "zoom");
+			zoom *= get_screen_dpi (window) / 72.0;
+			ev_document_model_set_scale (window->priv->model, zoom);
+		}
 		ev_document_model_set_inverted_colors (window->priv->model,
 						       g_settings_get_boolean (settings, "inverted-colors"));
 		ev_document_model_set_continuous (window->priv->model,
@@ -1169,10 +1176,15 @@ setup_model_from_metadata (EvWindow *window)
 	}
 
 	/* Zoom */
-	if (ev_document_model_get_sizing_mode (window->priv->model) == EV_SIZING_FREE &&
-	    ev_metadata_get_double (window->priv->metadata, "zoom", &zoom)) {
-		zoom *= get_screen_dpi (window) / 72.0;
-		ev_document_model_set_scale (window->priv->model, zoom);
+	if (ev_document_model_get_sizing_mode (window->priv->model) == EV_SIZING_FREE) {
+		if (ev_metadata_get_double (window->priv->metadata, "zoom", &zoom)) {
+			zoom *= get_screen_dpi (window) / 72.0;
+			ev_document_model_set_scale (window->priv->model, zoom);
+		} else if (window->priv->is_new_doc) {
+			zoom = g_settings_get_double (settings, "zoom");
+			zoom *= get_screen_dpi (window) / 72.0;
+			ev_document_model_set_scale (window->priv->model, zoom);
+		}
 	}
 
 	/* Rotation */
@@ -4369,6 +4381,7 @@ ev_window_cmd_edit_save_settings (GtkAction *action, EvWindow *ev_window)
 	EvWindowPrivate *priv = ev_window->priv;
 	EvDocumentModel *model = priv->model;
 	GSettings       *settings = priv->default_settings;
+	EvSizingMode     sizing_mode;
 
 	g_settings_set_boolean (settings, "continuous",
 				ev_document_model_get_continuous (model));
@@ -4378,8 +4391,14 @@ ev_window_cmd_edit_save_settings (GtkAction *action, EvWindow *ev_window)
 				ev_document_model_get_fullscreen (model));
 	g_settings_set_boolean (settings, "inverted-colors",
 				ev_document_model_get_inverted_colors (model));
-	g_settings_set_enum (settings, "sizing-mode",
-			     ev_document_model_get_sizing_mode (model));
+	sizing_mode = ev_document_model_get_sizing_mode (model);
+	g_settings_set_enum (settings, "sizing-mode", sizing_mode);
+	if (sizing_mode == EV_SIZING_FREE) {
+		gdouble zoom = ev_document_model_get_scale (model);
+
+		zoom *= 72.0 / get_screen_dpi (ev_window);
+		g_settings_set_double (settings, "zoom", zoom);
+	}
 	g_settings_set_boolean (settings, "show-toolbar",
 				gtk_widget_get_visible (priv->toolbar));
 	g_settings_set_boolean (settings, "show-sidebar",
