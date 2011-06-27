@@ -13,7 +13,7 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+ *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
  *  $Id$
  */
@@ -322,8 +322,7 @@ drag_data_get_cb (GtkWidget          *widget,
   target = g_object_get_data (G_OBJECT (widget), "egg-item-name");
   g_return_if_fail (target != NULL);
 
-  gtk_selection_data_set (selection_data,
-			  gtk_selection_data_get_target (selection_data), 8,
+  gtk_selection_data_set (selection_data, gtk_selection_data_get_target (selection_data), 8,
 			  (const guchar *) target, strlen (target));
 }
 
@@ -364,7 +363,11 @@ set_drag_cursor (GtkWidget *widget)
   cursor = gdk_cursor_new_for_display (gdk_screen_get_display (screen),
 				       GDK_HAND2);
   gdk_window_set_cursor (gtk_widget_get_window (widget), cursor);
+#if GTK_CHECK_VERSION (3,0,0)
   g_object_unref (cursor);
+#else
+  gdk_cursor_unref (cursor);
+#endif
 }
 
 static void
