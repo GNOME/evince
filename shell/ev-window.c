@@ -533,11 +533,13 @@ ev_window_update_actions (EvWindow *ev_window)
 		ev_window_set_action_sensitive (ev_window, "GoNextPage", page < n_pages - 1);
 		ev_window_set_action_sensitive (ev_window, "GoFirstPage", page > 0);
 		ev_window_set_action_sensitive (ev_window, "GoLastPage", page < n_pages - 1);
+		ev_window_set_action_sensitive (ev_window, "GoToPage", TRUE);
 	} else {
   		ev_window_set_action_sensitive (ev_window, "GoFirstPage", FALSE);
 		ev_window_set_action_sensitive (ev_window, "GoPreviousPage", FALSE);
 		ev_window_set_action_sensitive (ev_window, "GoNextPage", FALSE);
 		ev_window_set_action_sensitive (ev_window, "GoLastPage", FALSE);
+		ev_window_set_action_sensitive (ev_window, "GoToPage", FALSE);
 	}
 
 	sizing_mode = ev_document_model_get_sizing_mode (ev_window->priv->model);
@@ -5784,6 +5786,9 @@ static const GtkActionEntry entries[] = {
         { "GoLastPage", GTK_STOCK_GOTO_BOTTOM, N_("_Last Page"), "<control>End",
           N_("Go to the last page"),
           G_CALLBACK (ev_window_cmd_go_last_page) },
+        { "GoToPage", GTK_STOCK_GOTO_TOP, N_("Go to Pa_ge"),"<control>L",
+          N_("Go to Page"),
+          G_CALLBACK (ev_window_cmd_focus_page_selector) },
 
 	/* Bookmarks menu */
 	{ "BookmarksAdd", GTK_STOCK_ADD, N_("_Add Bookmark"), "<control>D",
