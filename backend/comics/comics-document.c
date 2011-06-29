@@ -374,6 +374,19 @@ comics_check_decompress_command	(gchar          *mime_type,
 			comics_document->command_usage = UNZIP;
 			return TRUE;
 		}
+		/* fallback mode using 7za and 7z from p7zip project  */
+		comics_document->selected_command =
+				g_find_program_in_path ("7za");
+		if (comics_document->selected_command) {
+			comics_document->command_usage = P7ZIP;
+			return TRUE;
+		}
+		comics_document->selected_command =
+				g_find_program_in_path ("7z");
+		if (comics_document->selected_command) {
+			comics_document->command_usage = P7ZIP;
+			return TRUE;
+		}
 
 	} else if (!strcmp (mime_type, "application/x-cb7") ||
 		   !strcmp (mime_type, "application/x-7z-compressed")) {
