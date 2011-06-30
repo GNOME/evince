@@ -179,7 +179,7 @@ PKG_CHECK_MODULES([SHELL_CORE],[libxml-2.0 >= $LIBXML_REQUIRED gtk+-3.0 >= $GTK_
 # SM client
 # *********
 
-GDK_TARGET="$($PKG_CONFIG --variable target gdk-3.0)"
+GDK_TARGET="$($PKG_CONFIG --variable targets gdk-3.0)"
 
 AC_MSG_CHECKING([which smclient backend to use])
 AC_ARG_WITH([smclient],
