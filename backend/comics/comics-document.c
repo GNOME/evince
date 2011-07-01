@@ -392,24 +392,24 @@ comics_check_decompress_command	(gchar          *mime_type,
 		   !strcmp (mime_type, "application/x-7z-compressed")) {
 		/* 7zr, 7za and 7z are the commands from the p7zip project able 
 		 * to decompress .7z files */ 
-			comics_document->selected_command = 
+		comics_document->selected_command =
 				g_find_program_in_path ("7zr");
-			if (comics_document->selected_command) {
-				comics_document->command_usage = P7ZIP;
-				return TRUE;
-			}
-			comics_document->selected_command = 
+		if (comics_document->selected_command) {
+			comics_document->command_usage = P7ZIP;
+			return TRUE;
+		}
+		comics_document->selected_command =
 				g_find_program_in_path ("7za");
-			if (comics_document->selected_command) {
-				comics_document->command_usage = P7ZIP;
-				return TRUE;
-			}
-			comics_document->selected_command = 
+		if (comics_document->selected_command) {
+			comics_document->command_usage = P7ZIP;
+			return TRUE;
+		}
+		comics_document->selected_command =
 				g_find_program_in_path ("7z");
-			if (comics_document->selected_command) {
-				comics_document->command_usage = P7ZIP;
-				return TRUE;
-			}
+		if (comics_document->selected_command) {
+			comics_document->command_usage = P7ZIP;
+			return TRUE;
+		}
 	} else if (!strcmp (mime_type, "application/x-cbt") ||
 		   !strcmp (mime_type, "application/x-tar")) {
 		/* tar utility (Tape ARchive) */
