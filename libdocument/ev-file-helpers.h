@@ -40,12 +40,12 @@ void        _ev_file_helpers_init     (void);
 
 void        _ev_file_helpers_shutdown (void);
 
-int          ev_mkstemp               (const char        *template,
+int          ev_mkstemp               (const char        *the_template,
                                        char             **file_name,
                                        GError           **error);
-GFile       *ev_mkstemp_file          (const char        *template,
+GFile       *ev_mkstemp_file          (const char        *the_template,
                                        GError           **error);
-gchar       *ev_mkdtemp               (const char        *template,
+gchar       *ev_mkdtemp               (const char        *the_template,
                                        GError           **error);
 void         ev_tmp_filename_unlink   (const gchar       *filename);
 void         ev_tmp_file_unlink       (GFile             *file);
