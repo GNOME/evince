@@ -240,16 +240,19 @@ tiff_document_render (EvDocument      *document,
 	push_handlers ();
 	if (TIFFSetDirectory (tiff_document->tiff, rc->page->index) != 1) {
 		pop_handlers ();
+		g_warning("Failed to select page %d", rc->page->index);
 		return NULL;
 	}
 
 	if (!TIFFGetField (tiff_document->tiff, TIFFTAG_IMAGEWIDTH, &width)) {
 		pop_handlers ();
+		g_warning("Failed to read image width");
 		return NULL;
 	}
 
 	if (! TIFFGetField (tiff_document->tiff, TIFFTAG_IMAGELENGTH, &height)) {
 		pop_handlers ();
+		g_warning("Failed to read image height");
 		return NULL;
 	}
 
@@ -262,26 +265,34 @@ tiff_document_render (EvDocument      *document,
 	pop_handlers ();
   
 	/* Sanity check the doc */
-	if (width <= 0 || height <= 0)
-		return NULL;                
+	if (width <= 0 || height <= 0) {
+		g_warning("Invalid width or height.");
+		return NULL;
+	}
 
 #ifdef HAVE_CAIRO_FORMAT_STRIDE_FOR_WIDTH
 	rowstride = cairo_format_stride_for_width (CAIRO_FORMAT_RGB24, width);
 #else
 	rowstride = width * 4;
 #endif
-	if (rowstride / 4 != width)
+	if (rowstride / 4 != width) {
+		g_warning("Overflow while rendering document.");
 		/* overflow, or cairo was changed in an unsupported way */
 		return NULL;                
+	}
 	
 	bytes = height * rowstride;
-	if (bytes / rowstride != height)
+	if (bytes / rowstride != height) {
+		g_warning("Overflow while rendering document.");
 		/* overflow */
-		return NULL;                
+		return NULL;
+	}
 	
 	pixels = g_try_malloc (bytes);
-	if (!pixels)
+	if (!pixels) {
+		g_warning("Failed to allocate memory for rendering.");
 		return NULL;
+	}
 	
 	surface = cairo_image_surface_create_for_data (pixels,
 						       CAIRO_FORMAT_RGB24,
