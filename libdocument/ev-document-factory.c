@@ -135,6 +135,78 @@ free_uncompressed_uri (gchar *uri_unc)
 	g_free (uri_unc);
 }
 
+/* Try to get and load the document from a file, dealing with errors 
+ * differently depending on whether we are using slow or fast mime detection.
+ */
+static EvDocument *
+ev_document_factory_load_uri (const char *uri, gboolean fast, GError **error)
+{
+	EvDocument *document;
+	int result;
+	EvCompressionType compression;
+	gchar *uri_unc = NULL;
+	GError *err = NULL;
+
+	document = get_document_from_uri (uri, fast, &compression, &err);
+	g_assert (document != NULL || err != NULL);
+
+	if (document == NULL) {
+		if (fast) {
+			/* Try again with slow mime detection */
+			g_clear_error (&err);
+		} else {
+			/* This should have worked, and is usually the second try,
+			 * so set an error for the caller. */
+			g_assert (err != NULL);
+			g_propagate_error (error, err);
+		}
+		
+		return NULL;
+	}
+
+	uri_unc = ev_file_uncompress (uri, compression, &err);
+	if (uri_unc) {
+		g_object_set_data_full (G_OBJECT (document),
+					"uri-uncompressed",
+					uri_unc,
+					(GDestroyNotify) free_uncompressed_uri);
+	} else if (err != NULL) {
+		/* Error uncompressing file */
+		g_object_unref (document);
+		g_propagate_error (error, err);
+
+		return NULL;
+	}
+
+	result = ev_document_load (document, uri_unc ? uri_unc : uri, &err);
+	if (result)
+		return document;
+		
+	if (err) {
+		if (g_error_matches (err, EV_DOCUMENT_ERROR, EV_DOCUMENT_ERROR_ENCRYPTED)) {
+			g_propagate_error (error, err);
+			return document;
+
+			/* else fall through to slow mime code detection. */
+		}
+	} else if (!fast) {
+		/* FIXME: this really should not happen; the backend should
+		 * always return a meaningful error.
+		 */
+		g_set_error_literal (&err,
+			EV_DOCUMENT_ERROR,
+			EV_DOCUMENT_ERROR_INVALID,
+			_("Unknown MIME Type"));
+		g_propagate_error (error, err);
+
+		/* else fall through to slow mime code detection. */
+	}
+
+	g_object_unref (document);
+
+	return NULL;
+}
+
 /**
  * ev_document_factory_get_document:
  * @uri: an URI
@@ -152,93 +224,16 @@ EvDocument *
 ev_document_factory_get_document (const char *uri, GError **error)
 {
 	EvDocument *document;
-	int result;
-	EvCompressionType compression;
-	gchar *uri_unc = NULL;
-	GError *err = NULL;
 
 	g_return_val_if_fail (uri != NULL, NULL);
 
-	document = get_document_from_uri (uri, TRUE, &compression, &err);
-	g_assert (document != NULL || err != NULL);
+	document = ev_document_factory_load_uri (uri, TRUE, error);
+	if (document)
+		return document;
 
-	if (document != NULL) {
-		uri_unc = ev_file_uncompress (uri, compression, &err);
-		if (uri_unc) {
-			g_object_set_data_full (G_OBJECT (document),
-						"uri-uncompressed",
-						uri_unc,
-						(GDestroyNotify) free_uncompressed_uri);
-		} else if (err != NULL) {
-			/* Error uncompressing file */
-			g_object_unref (document);
-			g_propagate_error (error, err);
-			return NULL;
-		}
-
-		result = ev_document_load (document, uri_unc ? uri_unc : uri, &err);
-
-		if (result == FALSE || err) {
-			if (err &&
-			    g_error_matches (err, EV_DOCUMENT_ERROR, EV_DOCUMENT_ERROR_ENCRYPTED)) {
-				g_propagate_error (error, err);
-				return document;
-			    }
-			/* else fall through to slow mime code section below */
-		} else {
-			return document;
-		}
-
-		g_object_unref (document);
-		document = NULL;
-	}
-	
 	/* Try again with slow mime detection */
-	g_clear_error (&err);
-	uri_unc = NULL;
-
-	document = get_document_from_uri (uri, FALSE, &compression, &err);
-	if (document == NULL) {
-		g_assert (err != NULL);
-		g_propagate_error (error, err);
-		return NULL;
-	}
-
-	uri_unc = ev_file_uncompress (uri, compression, &err);
-	if (uri_unc) {
-		g_object_set_data_full (G_OBJECT (document),
-					"uri-uncompressed",
-					uri_unc,
-					(GDestroyNotify) free_uncompressed_uri);
-	} else if (err != NULL) {
-		/* Error uncompressing file */
-		g_propagate_error (error, err);
-
-		g_object_unref (document);
-		return NULL;
-	}
-	
-	result = ev_document_load (document, uri_unc ? uri_unc : uri, &err);
-	if (result == FALSE) {
-		if (err == NULL) {
-			/* FIXME: this really should not happen; the backend should
-			 * always return a meaningful error.
-			 */
-			g_set_error_literal (&err,
-                                             EV_DOCUMENT_ERROR,
-                                             EV_DOCUMENT_ERROR_INVALID,
-                                             _("Unknown MIME Type"));
-		} else if (g_error_matches (err, EV_DOCUMENT_ERROR, EV_DOCUMENT_ERROR_ENCRYPTED)) {
-			g_propagate_error (error, err);
-			return document;
-		}
-
-		g_object_unref (document);
-		document = NULL;
-
-		g_propagate_error (error, err);
-	}
-	
+	g_clear_error (error); /* Though this should always be NULL here. */
+	document = ev_document_factory_load_uri (uri, FALSE, error);
 	return document;
 }
 
