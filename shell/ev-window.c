@@ -573,6 +573,7 @@ static const gchar *view_accels[] = {
 	"KpPlus",
 	"KpMinus",
 	"Equal",
+	"n",
 	"p",
 	"BestFit",
 	"PageWidth"
