@@ -261,6 +261,7 @@ ev_document_misc_surface_rotate_and_scale (cairo_surface_t *surface,
 	        default:
 			cairo_translate (cr, 0, 0);
 	}
+	cairo_rotate (cr, dest_rotation * G_PI / 180.0);
 	
 	if (dest_width != width || dest_height != height) {
 		cairo_pattern_set_filter (cairo_get_source (cr), CAIRO_FILTER_BILINEAR);
@@ -269,7 +270,6 @@ ev_document_misc_surface_rotate_and_scale (cairo_surface_t *surface,
 			     (gdouble)dest_height / height);
 	}
 	
-	cairo_rotate (cr, dest_rotation * G_PI / 180.0);
 	cairo_set_source_surface (cr, surface, 0, 0);
 	cairo_paint (cr);
 	cairo_destroy (cr);
