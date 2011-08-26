@@ -3653,8 +3653,14 @@ ev_window_check_print_queue (EvWindow *ev_window)
 		text = g_strdup_printf (_("Wait until print job “%s” finishes before closing?"),
 					job_name);
 	} else {
-		text = g_strdup_printf (_("There are %d print jobs active. "
-					  "Wait until print finishes before closing?"),
+		/* TRANS: the singular form is not really used as n_print_jobs > 1
+ 			  but some languages distinguish between different plurals forms,
+			  so the ngettext is needed. */
+		text = g_strdup_printf (ngettext("There is %d print job active. "
+						 "Wait until print finishes before closing?",
+						 "There are %d print jobs active. "
+						 "Wait until print finishes before closing?",
+						 n_print_jobs),
 					n_print_jobs);
 	}
 
