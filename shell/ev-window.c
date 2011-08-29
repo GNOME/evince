@@ -2900,7 +2900,6 @@ ev_window_cmd_save_as (GtkAction *action, EvWindow *ev_window)
 	GtkWidget *fc;
 	gchar *base_name;
 	GFile *file;
-	const gchar *folder;
 
 	fc = gtk_file_chooser_dialog_new (
 		_("Save a Copy"),
@@ -2921,10 +2920,6 @@ ev_window_cmd_save_as (GtkAction *action, EvWindow *ev_window)
 	file = g_file_new_for_uri (ev_window->priv->uri);
 	base_name = g_file_get_basename (file);
 	gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER (fc), base_name);
-
-	folder = g_get_user_special_dir (G_USER_DIRECTORY_DOCUMENTS);
-	gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (fc),
-					     folder ? folder : g_get_home_dir ());
 	g_object_unref (file);
 	g_free (base_name);
 
