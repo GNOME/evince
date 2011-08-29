@@ -2858,16 +2858,21 @@ pdf_document_annotations_add_annotation (EvDocumentAnnotations *document_annotat
 	if (pdf_document->annots) {
 		mapping_list = (EvMappingList *)g_hash_table_lookup (pdf_document->annots,
 								     GINT_TO_POINTER (page->index));
+	} else {
+		pdf_document->annots = g_hash_table_new_full (g_direct_hash,
+							      g_direct_equal,
+							      (GDestroyNotify)NULL,
+							      (GDestroyNotify)ev_mapping_list_unref);
+		mapping_list = NULL;
+	}
+
+	if (mapping_list) {
 		list = ev_mapping_list_get_list (mapping_list);
 		name = g_strdup_printf ("annot-%d-%d", page->index, g_list_length (list) + 1);
 		ev_annotation_set_name (annot, name);
 		g_free (name);
 		list = g_list_append (list, annot_mapping);
 	} else {
-		pdf_document->annots = g_hash_table_new_full (g_direct_hash,
-							      g_direct_equal,
-							      (GDestroyNotify)NULL,
-							      (GDestroyNotify)ev_mapping_list_unref);
 		name = g_strdup_printf ("annot-%d-0", page->index);
 		ev_annotation_set_name (annot, name);
 		g_free (name);
