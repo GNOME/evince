@@ -148,7 +148,6 @@ screensaver_inhibit_dbus (TotemScrsaver *scr,
 			  gboolean	 inhibit)
 {
         TotemScrsaverPrivate *priv = scr->priv;
-        GdkWindow *window;
 
         if (!priv->have_session_dbus)
                 return;
@@ -161,12 +160,16 @@ screensaver_inhibit_dbus (TotemScrsaver *scr,
 		g_return_if_fail (scr->priv->reason != NULL);
 
 		xid = 0;
+#ifdef GDK_WINDOWING_X11
 		if (scr->priv->window != NULL) {
+			GdkWindow *window;
 			window = gtk_widget_get_window (GTK_WIDGET (scr->priv->window));
 			if (window != NULL)
 				xid = gdk_x11_window_get_xid (window);
 		}
-
+#else
+#warning Unimplemented
+#endif
 
 		g_dbus_proxy_call (priv->gs_proxy,
 				   "Inhibit",
