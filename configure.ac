@@ -143,6 +143,22 @@ dnl Check dependencies
 # SHELL_CFLAGS     for shell implementation.
 # SHELL_LIBS
 
+AC_CHECK_LIBM
+AC_SUBST(LIBM)
+
+have_zlib=yes
+AC_CHECK_HEADERS([zlib.h],
+	[AC_CHECK_LIB([z], [inflate],
+		[AC_CHECK_LIB([z], [crc32], [have_zlib=yes], [have_zlib=no])],
+		[have_zlib=no])],
+	[have_zlib=no])
+
+if test x$have_zlib = xno; then
+	AC_MSG_ERROR([No sufficient zlib library found on your system.])
+fi
+
+ZLIB_LIBS=-lz
+AC_SUBST(ZLIB_LIBS)
 
 PKG_CHECK_MODULES(LIBDOCUMENT, gtk+-3.0 >= $GTK_REQUIRED gio-2.0 >= $GLIB_REQUIRED)
 PKG_CHECK_MODULES(LIBVIEW, gtk+-3.0 >= $GTK_REQUIRED gail-3.0 >= $GTK_REQUIRED gthread-2.0 gio-2.0 >= $GLIB_REQUIRED)

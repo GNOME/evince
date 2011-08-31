@@ -112,6 +112,8 @@ libevdocument3_la_LDFLAGS = \
 
 libevdocument3_la_LIBADD = \
 	$(LIBDOCUMENT_LIBS)	\
+	$(ZLIB_LIBS)		\
+	$(LIBM)			\
 	$(top_builddir)/cut-n-paste/synctex/libsynctex.la
 
 
