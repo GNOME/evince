@@ -87,7 +87,7 @@ DOC_PAGES = \
 	textselection.page		\
 	toolbar.page
 
-DOC_LINGUAS = bg ca cs de el en_GB es eu fi fr gl hu it ja nl oc pt_BR ru sl sr sv uk vi zh_CN
+DOC_LINGUAS = bg ca cs da de el en_GB es eu fi fr gl hu it ja nl oc pt_BR ru sl sr sv uk vi zh_CN
 
 endif
 
