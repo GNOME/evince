@@ -2,20 +2,20 @@
 # Francisco Javier F. Serrador <serrador@gnome.org>, 2005.
 # traducción al español del manual de evince
 # spanish transtation for evince
-# Daniel Mustieles <daniel.mustieles@gmail.com>, 2010, 2011.
 # Jorge González <jorgegonz@svn.gnome.org>, 2006, 2007, 2009, 2010, 2011.
+# Daniel Mustieles <daniel.mustieles@gmail.com>, 2010, 2011.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: evince.help.master\n"
-"POT-Creation-Date: 2011-09-05 01:19+0000\n"
-"PO-Revision-Date: 2011-09-05 08:13+0200\n"
-"Last-Translator: Jorge González <jorgegonz@svn.gnome.org>\n"
-"Language-Team: Español; Castellano <gnome-es-list@gnome.org>\n"
+"POT-Creation-Date: 2011-09-05 15:15+0000\n"
+"PO-Revision-Date: 2011-09-05 17:42+0200\n"
+"Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
+"Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n!=1);\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: KBabel 1.11.4\n"
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
@@ -165,8 +165,8 @@ msgstr ""
 msgid ""
 "The 'page select' <link xref=\"movingaround#between-pages\">tool.</link>"
 msgstr ""
-"La <link xref=\"movingaround#between-pages\">herramienta</link> de "
-"«selección de página»."
+"La <link xref=\"movingaround#between-pages\">herramienta</link> de «selección "
+"de página»."
 
 #: C/toolbar.page:38(p)
 msgid ""
@@ -309,17 +309,22 @@ msgstr ""
 "guiseq>."
 
 #: C/synctex-support.page:7(desc)
-msgid "How to add support for SyncTex."
+#| msgid "How to add support for SyncTex."
+msgid "How to add support for SyncTeX."
 msgstr "Cómo añadir soporte para SyncTex."
 
 #: C/synctex-support.page:20(title)
-msgid "Set-up SyncTex"
+#| msgid "Set-up SyncTex"
+msgid "Set-up SyncTeX"
 msgstr "Configurar SyncTex"
 
 #: C/synctex-support.page:21(p)
+#| msgid ""
+#| "The following packages need to be installed in order to add support for "
+#| "SyncTex:"
 msgid ""
 "The following packages need to be installed in order to add support for "
-"SyncTex:"
+"SyncTeX:"
 msgstr ""
 "Para añadir soporte para SyncTex se deben instalar los siguientes paquetes:"
 
@@ -332,7 +337,8 @@ msgid "gedit-plugins"
 msgstr "gedit-plugins"
 
 #: C/synctex-support.page:37(p)
-msgid "In <app>gedit</app>, enable the SyncTex Plugin:"
+#| msgid "In <app>gedit</app>, enable the SyncTex Plugin:"
+msgid "In <app>gedit</app>, enable the SyncTeX Plugin:"
 msgstr "En <app>gedit</app>, active el complemento SyncTex:"
 
 #: C/synctex-support.page:42(p)
@@ -344,7 +350,8 @@ msgstr ""
 "gui><gui>Complementos</gui></guiseq>."
 
 #: C/synctex-support.page:47(p)
-msgid "Check <gui>SyncTex</gui>."
+#| msgid "Check <gui>SyncTex</gui>."
+msgid "Check <gui>SyncTeX</gui>."
 msgstr "Marque <gui>SyncTex</gui>."
 
 #: C/synctex-search.page:7(desc)
@@ -352,13 +359,18 @@ msgid "Flip between the <app>document viewer</app> and <app>gedit</app>."
 msgstr "Alternar entre el <app>Visor de documentos</app> y <app>gedit</app>."
 
 #: C/synctex-search.page:20(title)
-msgid "Search with SyncTex"
+#| msgid "Search with SyncTex"
+msgid "Search with SyncTeX"
 msgstr "Buscar con SyncTex"
 
 #: C/synctex-search.page:21(p)
+#| msgid ""
+#| "After you <link xref=\"synctex-compile\">compile your TeX file with "
+#| "SyncTex</link>, you will be able to search. SyncTex even supports forward "
+#| "and backward search from an included file."
 msgid ""
-"After you <link xref=\"synctex-compile\">compile your TeX file with SyncTex</"
-"link>, you will be able to search. SyncTex even supports forward and "
+"After you <link xref=\"synctex-compile\">compile your TeX file with SyncTeX</"
+"link>, you will be able to search. SyncTeX even supports forward and "
 "backward search from an included file."
 msgstr ""
 "Después de <link xref=\"synctex-compile\">compilar su archivo TeX con "
@@ -461,8 +473,6 @@ msgstr ""
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/synctex.page:25(None)
-#| msgid ""
-#| "@@image: 'figures/print-select.png'; md5=e38a5749ed445a812346602ad58b88b4"
 msgid ""
 "@@image: 'figures/synctex_screencast.ogv'; "
 "md5=358d317b4fc69fc7e5c5d4d14f07b6a5"
@@ -475,7 +485,8 @@ msgid "SyncTeX support is available."
 msgstr "Está disponible soporta para SyncTeX."
 
 #: C/synctex.page:19(title)
-msgid "What is SyncTex?"
+#| msgid "What is SyncTex?"
+msgid "What is SyncTeX?"
 msgstr "¿Qué es SyncTex?"
 
 #: C/synctex.page:22(p)
@@ -523,9 +534,14 @@ msgid "Vim-latex"
 msgstr "Vim-latex"
 
 #: C/synctex-editors.page:29(p)
+#| msgid ""
+#| "The <app>gedit</app> plugin contains a python script (evince_dbus.py) "
+#| "that can be used to get SyncTex working with Vim. In order to use vim-"
+#| "latex together with the <app>document viewer</app> you need to follow the "
+#| "next steps:"
 msgid ""
 "The <app>gedit</app> plugin contains a python script (evince_dbus.py) that "
-"can be used to get SyncTex working with Vim. In order to use vim-latex "
+"can be used to get SyncTeX working with Vim. In order to use vim-latex "
 "together with the <app>document viewer</app> you need to follow the next "
 "steps:"
 msgstr ""
@@ -567,39 +583,14 @@ msgstr ""
 "\\ls. La búsqueda hacia atrás aún no está soportada."
 
 #: C/synctex-compile.page:7(desc)
-msgid "How to compile your TeX document with SyncTex"
+#| msgid "How to compile your TeX document with SyncTex"
+msgid "How to compile your TeX document with SyncTeX"
 msgstr "Como compilar su documento TeX con SyncTex"
 
 #: C/synctex-compile.page:19(title)
-msgid "Compile TeX with SyncTex"
+#| msgid "Compile TeX with SyncTex"
+msgid "Compile TeX with SyncTeX"
 msgstr "Compilar TeX con SyncTex"
-
-#: C/synctex-compile.page:20(p)
-msgid ""
-"Adding the line <em>\\synctex=1</em> in the preamble of your TeX file will "
-"trigger synchronization with SyncTeX."
-msgstr ""
-"Añadir la línea <em>\\synctex=1</em> en el preámbulo de su archivo TeX "
-"disparará la sincronización con SyncTeX."
-
-#: C/synctex-compile.page:23(code)
-#, no-wrap
-msgid ""
-"\n"
-"\\documentclass{article}\n"
-"\\synctex=1\n"
-"\\usepackage{fullpage}\n"
-"\\begin{document}\n"
-"...\n"
-"\\end{document}\n"
-msgstr ""
-"\n"
-"\\documentclass{article}\n"
-"\\synctex=1\n"
-"\\usepackage{fullpage}\n"
-"\\begin{document}\n"
-"...\n"
-"\\end{document}\n"
 
 #: C/synctex-compile.page:31(p)
 msgid ""
@@ -614,12 +605,39 @@ msgstr ""
 msgid "pdflatex -synctex=1 yourFile.tex"
 msgstr "pdflatex -synctex=1 suArchivo.tex"
 
+#: C/synctex-compile.page:20(p)
+#| msgid ""
+#| "Adding the line <em>\\synctex=1</em> in the preamble of your TeX file "
+#| "will trigger synchronization with SyncTeX."
+msgid ""
+"Adding the line <em>\\synctex=1</em> in the preamble of your TeX file will "
+"trigger synchronization with SyncTeX. <code>\n"
+"\\documentclass{article}\n"
+"\\synctex=1\n"
+"\\usepackage{fullpage}\n"
+"\\begin{document}\n"
+"...\n"
+"\\end{document}\n"
+"</code><placeholder-1/><placeholder-2/> age&gt;"
+msgstr ""
+"Añadir la línea <em>\\synctex=1</em> en el preámbulo de su archivo TeX "
+"disparará la sincronización con SyncTeX. <code>\n"
+"\\documentclass{article}\n"
+"\\synctex=1\n"
+"\\usepackage{fullpage}\n"
+"\\begin{document}\n"
+"...\n"
+"\\end{document}\n"
+"</code><placeholder-1/><placeholder-2/> age&gt;"
+
 #: C/synctex-beamer.page:7(desc)
-msgid "Using SyncTex with the LaTeX Beamer class."
+#| msgid "Using SyncTex with the LaTeX Beamer class."
+msgid "Using SyncTeX with the LaTeX Beamer class."
 msgstr "Usar SyncTex con la clase Beamer de LaTeX."
 
 #: C/synctex-beamer.page:19(title)
-msgid "Beamer with SyncTex"
+#| msgid "Beamer with SyncTex"
+msgid "Beamer with SyncTeX"
 msgstr "Beamer con SyncTex"
 
 #: C/synctex-beamer.page:20(p)
@@ -627,10 +645,17 @@ msgid "Beamer is a LaTeX class for creating slides for presentations."
 msgstr "Beamer es una clase LaTeX para crear diapositivas para presentaciones."
 
 #: C/synctex-beamer.page:23(p)
+#| msgid ""
+#| "You can perform forward and backward search in a <em>Beamer-LaTeX</em> "
+#| "presentation in a similar fashion to <link xref=\"synctex-search"
+#| "\">searching</link> through other TeX files compiled with SyncTex. "
+#| "However the search brings you to the corresponding frame (slide), not "
+#| "necessarily the associated line of text. This difference is outlined in "
+#| "detail below."
 msgid ""
 "You can perform forward and backward search in a <em>Beamer-LaTeX</em> "
 "presentation in a similar fashion to <link xref=\"synctex-search"
-"\">searching</link> through other TeX files compiled with SyncTex. However "
+"\">searching</link> through other TeX files compiled with SyncTeX. However "
 "the search brings you to the corresponding frame (slide), not necessarily "
 "the associated line of text. This difference is outlined in detail below."
 msgstr ""
@@ -784,11 +809,11 @@ msgstr "En <em>Rango</em>, elija <gui>Páginas</gui>."
 
 #: C/singlesided-npages.page:63(item) C/duplex-npages.page:62(item)
 msgid ""
-"n, 1, 2, n-1, n-2, 3, 4, n-3, n-4, 5, 6, n-5, n-6, 7, 8, n-7, n-8, 9, 10, "
-"n-9, n-10, 11, 12, n-11..."
+"n, 1, 2, n-1, n-2, 3, 4, n-3, n-4, 5, 6, n-5, n-6, 7, 8, n-7, n-8, 9, 10, n-"
+"9, n-10, 11, 12, n-11..."
 msgstr ""
-"n, 1, 2, n-1, n-2, 3, 4, n-3, n-4, 5, 6, n-5, n-6, 7, 8, n-7, n-8, 9, 10, "
-"n-9, n-10, 11, 12, n-11…"
+"n, 1, 2, n-1, n-2, 3, 4, n-3, n-4, 5, 6, n-5, n-6, 7, 8, n-7, n-8, 9, 10, n-"
+"9, n-10, 11, 12, n-11…"
 
 #: C/singlesided-npages.page:64(item) C/duplex-npages.page:63(item)
 msgid "...until you have typed n-number of pages."
@@ -1429,8 +1454,8 @@ msgid ""
 "For example, if you enter \"1,3,5-7,9\" in the <gui>Pages</gui> textbox, "
 "pages 1,3,5,6,7 and 9 will be printed."
 msgstr ""
-"Por ejemplo, si escribe «1,3,5-7,9» en la caja de texto <gui>Páginas</gui>,"
-"se imprimirán las páginas 1,3,5,6,7 y 9."
+"Por ejemplo, si escribe «1,3,5-7,9» en la caja de texto <gui>Páginas</gui>,se "
+"imprimirán las páginas 1,3,5,6,7 y 9."
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
@@ -1443,8 +1468,8 @@ msgstr ""
 #: C/print-order.page:8(desc)
 msgid "Use the Collate and Reverse options to make pages print in order."
 msgstr ""
-"Use las opciones «Intercalar» e «Invertir» para que las páginas se impriman "
-"en orden."
+"Use las opciones «Intercalar» e «Invertir» para que las páginas se impriman en "
+"orden."
 
 #: C/print-order.page:20(title)
 msgid "Getting copies to print in the correct order"
@@ -1660,8 +1685,8 @@ msgid ""
 "Go to the <gui>Page Setup</gui> tab of the Print window and choose an option "
 "from the <gui>Two-sided</gui> drop-down list."
 msgstr ""
-"Vaya a la pestaña <gui>Configuración de página</gui> de la ventana "
-"«Imprimir» y elija una opción en la lista desplegable <gui>Dos caras</gui>."
+"Vaya a la pestaña <gui>Configuración de página</gui> de la ventana «Imprimir» "
+"y elija una opción en la lista desplegable <gui>Dos caras</gui>."
 
 #: C/print-2sided.page:39(p)
 msgid ""
@@ -1948,9 +1973,6 @@ msgstr ""
 "«Ejecutar aplicación»."
 
 #: C/noprint.page:69(p)
-#| msgid ""
-#| "Type <input>gconf-editor</input> into the text box and click <gui>Run</"
-#| "gui>. The Configuration Editor will open."
 msgid ""
 "Type <input>dconf-editor</input> into the text box and click <gui>Run</gui>. "
 "The Configuration Editor will open."
@@ -1959,7 +1981,6 @@ msgstr ""
 "<gui>Ejecutar</gui>. Se abrirá el editor de configuración."
 
 #: C/noprint.page:74(p)
-#| msgid "Browse to <sys>/apps/evince</sys> using the side pane."
 msgid "Browse to <sys>/org/gnome/evince</sys> using the side pane."
 msgstr "Navegue hasta <sys>/org/gnome/evince</sys> usando el panel lateral."
 
@@ -2269,8 +2290,8 @@ msgstr "Pulse <key>F11</key> o <key>Escape</key>"
 msgid ""
 "or click the <gui>Leave Fullscreen</gui> button at the top of the screen."
 msgstr ""
-"o pulse el botón <gui>Salir de «Pantalla completa»</gui> en la parte "
-"superior de la pantalla."
+"o pulse el botón <gui>Salir de «Pantalla completa»</gui> en la parte superior "
+"de la pantalla."
 
 #: C/invert-colors.page:8(desc)
 msgid "Inverting the colors can make it easier to read some text."
@@ -2377,8 +2398,9 @@ msgid "Tips and tricks"
 msgstr "Sugerencias y trucos"
 
 #: C/index.page:56(title)
-msgid "SyncTex"
-msgstr "SyncTex"
+#| msgid "SyncTex"
+msgid "SyncTeX"
+msgstr "SyncTeX"
 
 #: C/index.page:60(title)
 msgid "Get involved"
@@ -2397,8 +2419,11 @@ msgid "Saving a form"
 msgstr "Guardar un formulario"
 
 #: C/forms-saving.page:23(p)
+#| msgid ""
+#| "You may wish to save your form after you have filled it out in one of two "
+#| "ways:"
 msgid ""
-"You may wish to save your form after you have filled it out in one of two "
+"After you have filled it out, you may wish to save your form in one of two "
 "ways:"
 msgstr ""
 "Puede querer guardar su formulario después de haberlo rellenado de una de "
@@ -2415,7 +2440,7 @@ msgstr ""
 msgid "Save a copy"
 msgstr "Guardar una copia"
 
-#: C/forms-saving.page:38(p) C/annotations-save.page:28(p)
+#: C/forms-saving.page:38(p)
 msgid ""
 "Choose a name and folder to save the file in, then click <gui>Save</gui>. "
 "The PDF will be saved in the folder you chose."
@@ -2448,7 +2473,7 @@ msgstr ""
 "Seleccione <gui>Imprimir a un archivo</gui> y elija PDF como el <gui>Formato "
 "de salida</gui>."
 
-#: C/forms-saving.page:62(p) C/convertpdf.page:46(p)
+#: C/forms-saving.page:62(p)
 msgid ""
 "Choose a name and folder to save the file in, then click <gui>Print</gui>. "
 "The PDF will be saved in the folder you chose."
@@ -2457,7 +2482,8 @@ msgstr ""
 "<gui>Imprimir</gui>. El PDF se guardará en la carpeta que elija."
 
 #: C/forms-saving.page:72(p)
-msgid "Copies of encrypted files can not be saved or printed."
+#| msgid "Copies of encrypted files can not be saved or printed."
+msgid "Copies of encrypted files can't be saved or printed."
 msgstr "Las copias de archivos cifrados no se pueden guardar ni imprimir."
 
 #: C/forms.page:7(desc)
@@ -2604,7 +2630,8 @@ msgstr ""
 "puede buscar porque el texto está codificado en el documento como una imagen."
 
 #: C/editing.page:7(desc)
-msgid "You can not use the <app>document viewer</app> to edit files."
+#| msgid "You can not use the <app>document viewer</app> to edit files."
+msgid "You can't the <app>document viewer</app> to edit files."
 msgstr "No puede usar el <app>Visor de documentos</app> para editar archivos."
 
 #: C/editing.page:20(title)
@@ -2612,8 +2639,12 @@ msgid "Can I edit documents in the document viewer?"
 msgstr "¿Puedo editar documentos en el Visor de documentos?"
 
 #: C/editing.page:23(p)
+#| msgid ""
+#| "The <app>document viewer</app> can not be used to make changes to "
+#| "documents. You need to use the appropriate editing application for the "
+#| "type of file you want to change."
 msgid ""
-"The <app>document viewer</app> can not be used to make changes to documents. "
+"The <app>document viewer</app> can't be used to make changes to documents. "
 "You need to use the appropriate editing application for the type of file you "
 "want to change."
 msgstr ""
@@ -3250,9 +3281,12 @@ msgstr ""
 "de salida</gui>."
 
 #: C/convertSVG.page:44(p)
+#| msgid ""
+#| "Choose a name and folder to save the file in, then click <gui>Print</"
+#| "gui>. The SVG file will be saved in the folder you chose."
 msgid ""
-"Choose a name and folder to save the file in, then click <gui>Print</gui>. "
-"The SVG file will be saved in the folder you chose."
+"Choose a name and folder in which to save the file, then click <gui>Print</"
+"gui>. The SVG file will be saved in the folder you chose."
 msgstr ""
 "Elija un nombre y una carpeta donde guardar el archivo, después pulse "
 "<gui>Imprimir</gui>. Se guardará el archivo SVG en la carpeta que elija."
@@ -3289,9 +3323,12 @@ msgstr ""
 "<gui>Formato de salida</gui>."
 
 #: C/convertPostScript.page:47(p)
+#| msgid ""
+#| "Choose a name and folder to save the file in, then click <gui>Print</"
+#| "gui>. The PostScript file will be saved in the folder you chose."
 msgid ""
-"Choose a name and folder to save the file in, then click <gui>Print</gui>. "
-"The PostScript file will be saved in the folder you chose."
+"Choose a name and folder in which to save the file, then click <gui>Print</"
+"gui>. The PostScript file will be saved in the folder you chose."
 msgstr ""
 "Elija un nombre y una carpeta donde guardar el archivo, después pulse "
 "<gui>Imprimir</gui>. Se guardará el archivo PostScript en la carpeta que "
@@ -3318,11 +3355,18 @@ msgstr ""
 "Esto funciona abriendo el documento con el Visor de documentos e "
 "«imprimiéndolo» como un archivo PDF."
 
-#: C/convertpdf.page:52(p)
-msgid "Note:"
-msgstr "Nota:"
+#: C/convertpdf.page:46(p)
+#| msgid ""
+#| "Choose a name and folder to save the file in, then click <gui>Print</"
+#| "gui>. The PDF will be saved in the folder you chose."
+msgid ""
+"Choose a name and folder in which to save the file, then click <gui>Print</"
+"gui>. The PDF will be saved in the folder you chose."
+msgstr ""
+"Elija un nombre y una carpeta donde guardar el archivo y pulse "
+"<gui>Imprimir</gui>. El PDF se guardará en la carpeta que elija."
 
-#: C/convertpdf.page:55(p)
+#: C/convertpdf.page:53(p)
 msgid ""
 "You can't select text in PostScript or .dvi files, but you usually can do "
 "this in PDF files. Converting .dvi or PostScript files to PDF will not make "
@@ -3338,8 +3382,8 @@ msgstr ""
 "está almacenado en el archivo (sólo es una imagen de a lo que se parece el "
 "texto), de tal forma que no existe una forma de recuperarlo y ponerlo en el "
 "PDF. Si lo necesita, puede usar un software <em>Optical Character "
-"Recofnition</em> (reconocimiento óptico de caracteres, «OCR») para extraer "
-"el texto desde archivos."
+"Recofnition</em> (reconocimiento óptico de caracteres, «OCR») para extraer el "
+"texto desde archivos."
 
 #: C/commandline.page:7(title)
 msgid "Command line"
@@ -3414,8 +3458,9 @@ msgstr ""
 
 #: C/commandline.page:44(screen)
 #, no-wrap
-msgid "evince --page-label=3"
-msgstr "evince --page-label=3"
+#| msgid "evince --page-label=3"
+msgid "evince --page-label=3 file.pdf"
+msgstr "evince --page-label=3 archivo.pdf"
 
 #: C/commandline.page:45(p)
 msgid ""
@@ -3572,6 +3617,17 @@ msgstr ""
 "Guardar una copia de su PDF anotado para verlo más adelante usando el "
 "<app>Visor de documentos</app> o cualquier otro visor de documentos <em>que "
 "soporte anotaciones</em>:"
+
+#: C/annotations-save.page:28(p)
+#| msgid ""
+#| "Choose a name and folder to save the file in, then click <gui>Save</gui>. "
+#| "The PDF will be saved in the folder you chose."
+msgid ""
+"Choose a name and folder in which to save the file, then click <gui>Save</"
+"gui>. The PDF will be saved in the folder you chose."
+msgstr ""
+"Elija un nombre y una carpeta donde guardar el archivo y pulse <gui>Guardar</"
+"gui>. El PDF se guardará en la carpeta que elija."
 
 #: C/annotations-save.page:34(p)
 msgid ""
@@ -3758,7 +3814,8 @@ msgstr ""
 "gris (desactivada)."
 
 #: C/annotations-delete.page:7(desc)
-msgid "You can not remove annotations."
+#| msgid "You can not remove annotations."
+msgid "You can't remove annotations."
 msgstr "No puede quitar anotaciones."
 
 #: C/annotations-delete.page:20(title)
@@ -3766,12 +3823,15 @@ msgid "Removing annotations"
 msgstr "Quitar anotaciones"
 
 #: C/annotations-delete.page:21(p)
+#| msgid ""
+#| "You can not remove an annotation in the <app>document viewer</app> at "
+#| "this time."
 msgid ""
-"You can not remove an annotation in the <app>document viewer</app> at this "
+"You can't remove an annotation in the <app>document viewer</app> at this "
 "time."
 msgstr ""
-"Ahora mismo no puede quitar una anotación en el <app>Visor de documentos</"
-"app>."
+"En este momento no puede quitar una anotación en el <app>Visor de "
+"documentos</app>."
 
 #: C/annotation-properties.page:7(desc)
 msgid "How to customize the author, color, style or icon of an annotation."
@@ -3838,6 +3898,26 @@ msgstr ""
 "Daniel Mustieles <daniel.mustieles@gmail.com>, 2011\n"
 "Jorge González <jorgegonz@svn.gnome.org>, 2011"
 
+#~ msgid ""
+#~ "\n"
+#~ "\\documentclass{article}\n"
+#~ "\\synctex=1\n"
+#~ "\\usepackage{fullpage}\n"
+#~ "\\begin{document}\n"
+#~ "...\n"
+#~ "\\end{document}\n"
+#~ msgstr ""
+#~ "\n"
+#~ "\\documentclass{article}\n"
+#~ "\\synctex=1\n"
+#~ "\\usepackage{fullpage}\n"
+#~ "\\begin{document}\n"
+#~ "...\n"
+#~ "\\end{document}\n"
+
+#~ msgid "Note:"
+#~ msgstr "Nota:"
+
 #~ msgid "You can play presentations with <app>Evince</app>."
 #~ msgstr "Puede reproducir presentaciones con <app>Evince</app>."
 
@@ -3883,11 +3963,11 @@ msgstr ""
 #~ msgstr "<placeholder-1/> / <placeholder-2/>"
 
 #~ msgid ""
-#~ "<keyseq><placeholder-1/><placeholder-2/></keyseq> / "
-#~ "<keyseq><placeholder-3/><placeholder-4/></keyseq>"
+#~ "<keyseq><placeholder-1/><placeholder-2/></keyseq> / <keyseq><placeholder-"
+#~ "3/><placeholder-4/></keyseq>"
 #~ msgstr ""
-#~ "<keyseq><placeholder-1/><placeholder-2/></keyseq> / "
-#~ "<keyseq><placeholder-3/><placeholder-4/></keyseq>"
+#~ "<keyseq><placeholder-1/><placeholder-2/></keyseq> / <keyseq><placeholder-"
+#~ "3/><placeholder-4/></keyseq>"
 
 #~ msgid "View"
 #~ msgstr "Ver"
@@ -4233,10 +4313,10 @@ msgstr ""
 #~ msgid ""
 #~ "In <application>Evince Document Viewer</application>, you can perform the "
 #~ "same action in several ways. For example, you can open a document in the "
-#~ "following ways: <informaltable frame=\"all\"><tgroup cols=\"2\" colsep="
-#~ "\"1\" rowsep=\"1\"><colspec colname=\"COLSPEC0\" colwidth=\"50*\"/"
-#~ "><colspec colname=\"COLSPEC1\" colwidth=\"50*\"/><placeholder-1/"
-#~ "><placeholder-2/></tgroup></informaltable>"
+#~ "following ways: <informaltable frame=\"all\"><tgroup cols=\"2\" colsep=\"1"
+#~ "\" rowsep=\"1\"><colspec colname=\"COLSPEC0\" colwidth=\"50*\"/><colspec "
+#~ "colname=\"COLSPEC1\" colwidth=\"50*\"/><placeholder-1/><placeholder-2/></"
+#~ "tgroup></informaltable>"
 #~ msgstr ""
 #~ "En el <application>Visor de documentos Evince</application>, puede "
 #~ "realizar la misma acción de varias formas. Por ejemplo, puede abrir un "
