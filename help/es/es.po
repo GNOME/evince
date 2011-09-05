@@ -8,8 +8,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: evince.help.master\n"
-"POT-Creation-Date: 2011-09-04 14:29+0000\n"
-"PO-Revision-Date: 2011-09-04 17:18+0200\n"
+"POT-Creation-Date: 2011-09-05 01:19+0000\n"
+"PO-Revision-Date: 2011-09-05 08:13+0200\n"
 "Last-Translator: Jorge González <jorgegonz@svn.gnome.org>\n"
 "Language-Team: Español; Castellano <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -458,6 +458,18 @@ msgstr ""
 "izquierda en el <app>Visor de documentos</app>. Se resaltará la "
 "correspondiente línea en el código fuente TeX."
 
+#. When image changes, this message will be marked fuzzy or untranslated for you.
+#. It doesn't matter what you translate it to: it's not used at all.
+#: C/synctex.page:25(None)
+#| msgid ""
+#| "@@image: 'figures/print-select.png'; md5=e38a5749ed445a812346602ad58b88b4"
+msgid ""
+"@@image: 'figures/synctex_screencast.ogv'; "
+"md5=358d317b4fc69fc7e5c5d4d14f07b6a5"
+msgstr ""
+"@@image: 'figures/synctex_screencast.ogv'; "
+"md5=358d317b4fc69fc7e5c5d4d14f07b6a5"
+
 #: C/synctex.page:7(desc)
 msgid "SyncTeX support is available."
 msgstr "Está disponible soporta para SyncTeX."
@@ -466,13 +478,21 @@ msgstr "Está disponible soporta para SyncTeX."
 msgid "What is SyncTex?"
 msgstr "¿Qué es SyncTex?"
 
-#: C/synctex.page:20(p)
+#: C/synctex.page:22(p)
 msgid ""
 "SyncTeX is a method that enables synchronization between a TeX source file "
 "and the resulting PDF output."
 msgstr ""
 "SyncTeX es un método que activa la sincronización entre un archivo TeX de "
 "origen y el PDF de salida resultante."
+
+#: C/synctex.page:26(p)
+msgid "Demo"
+msgstr "Demostración"
+
+#: C/synctex.page:30(p)
+msgid "Press Ctrl+click to sync."
+msgstr "Para sincronizar pulse Ctrl+pulsación"
 
 #: C/synctex-editors.page:7(desc)
 msgid "Which editor can you use to edit your TEX file?"
@@ -1928,16 +1948,20 @@ msgstr ""
 "«Ejecutar aplicación»."
 
 #: C/noprint.page:69(p)
+#| msgid ""
+#| "Type <input>gconf-editor</input> into the text box and click <gui>Run</"
+#| "gui>. The Configuration Editor will open."
 msgid ""
-"Type <input>gconf-editor</input> into the text box and click <gui>Run</gui>. "
+"Type <input>dconf-editor</input> into the text box and click <gui>Run</gui>. "
 "The Configuration Editor will open."
 msgstr ""
 "Escriba <input>gconf-editor</input> en la caja de texto y pulse "
 "<gui>Ejecutar</gui>. Se abrirá el editor de configuración."
 
 #: C/noprint.page:74(p)
-msgid "Browse to <sys>/apps/evince</sys> using the side pane."
-msgstr "Navegue hasta <sys>/apps/evince</sys> usando el panel lateral."
+#| msgid "Browse to <sys>/apps/evince</sys> using the side pane."
+msgid "Browse to <sys>/org/gnome/evince</sys> using the side pane."
+msgstr "Navegue hasta <sys>/org/gnome/evince</sys> usando el panel lateral."
 
 #: C/noprint.page:76(p)
 msgid "Make sure that the <gui>override_restrictions</gui> option is checked."
@@ -3021,7 +3045,6 @@ msgstr ""
 "páginas</link>"
 
 #: C/duplex-16pages.page:8(desc)
-#| msgid "Print a 6 page booklet."
 msgid "Print a 16 page booklet."
 msgstr "Imprimir un folleto de 16 páginas."
 
