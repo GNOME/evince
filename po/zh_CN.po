@@ -17,8 +17,8 @@ msgstr ""
 "Project-Id-Version: evince master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evince&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2011-07-20 16:59+0000\n"
-"PO-Revision-Date: 2011-07-16 13:11+0800\n"
+"POT-Creation-Date: 2011-09-11 21:33+0000\n"
+"PO-Revision-Date: 2011-09-12 21:29+0800\n"
 "Last-Translator: 朱涛 <bill_zt@sina.com>\n"
 "Language-Team: Chinese (simplified) <i18n-zh@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -299,41 +299,41 @@ msgstr "显示会话管理选项"
 #. * produce duplicates, but don't worry about it. If your language
 #. * normally has a mnemonic at the start, please use the _. If not,
 #. * please remove.
-#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:946
+#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:988
 #, c-format
 msgid "Show “_%s”"
 msgstr "显示“%s”"
 
-#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1414
+#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1479
 msgid "_Move on Toolbar"
 msgstr "在工具栏上移动(_M)"
 
-#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1415
+#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1480
 msgid "Move the selected item on the toolbar"
 msgstr "在工具栏上移动选中项"
 
-#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1416
+#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1481
 msgid "_Remove from Toolbar"
 msgstr "从工具栏中删除(_R)"
 
-#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1417
+#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1482
 msgid "Remove the selected item from the toolbar"
 msgstr "从工具栏中删除选中项"
 
-#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1418
+#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1483
 msgid "_Delete Toolbar"
 msgstr "删除工具栏(_D)"
 
-#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1419
+#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1484
 msgid "Remove the selected toolbar"
 msgstr "删除选中的工具栏"
 
-#: ../cut-n-paste/toolbar-editor/egg-toolbar-editor.c:486
+#: ../cut-n-paste/toolbar-editor/egg-toolbar-editor.c:489
 msgid "Separator"
 msgstr "分隔符"
 
 #. translators: this is the label for toolbar button
-#: ../cut-n-paste/zoom-control/ephy-zoom.h:48 ../shell/ev-window.c:6086
+#: ../cut-n-paste/zoom-control/ephy-zoom.h:48 ../shell/ev-window.c:6057
 msgid "Best Fit"
 msgstr "适合页长"
 
@@ -398,7 +398,7 @@ msgid "6400%"
 msgstr "6400%"
 
 #. Manually set name and icon
-#: ../data/evince.desktop.in.in.h:1 ../shell/ev-window.c:4839
+#: ../data/evince.desktop.in.in.h:1 ../shell/ev-window.c:4810
 #: ../shell/ev-window-title.c:157 ../shell/main.c:310
 #, c-format
 msgid "Document Viewer"
@@ -428,7 +428,7 @@ msgstr "打印设置文件"
 msgid "GNOME Document Previewer"
 msgstr "GNOME 文档预览器"
 
-#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3311
+#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3276
 msgid "Failed to print document"
 msgstr "打印文档失败"
 
@@ -438,27 +438,27 @@ msgid "The selected printer '%s' could not be found"
 msgstr "选择的打印机“%s”没有找到"
 
 #. Go menu
-#: ../previewer/ev-previewer-window.c:284 ../shell/ev-window.c:5778
+#: ../previewer/ev-previewer-window.c:284 ../shell/ev-window.c:5749
 msgid "_Previous Page"
 msgstr "上一页(_P)"
 
-#: ../previewer/ev-previewer-window.c:285 ../shell/ev-window.c:5779
+#: ../previewer/ev-previewer-window.c:285 ../shell/ev-window.c:5750
 msgid "Go to the previous page"
 msgstr "转到上一页"
 
-#: ../previewer/ev-previewer-window.c:287 ../shell/ev-window.c:5781
+#: ../previewer/ev-previewer-window.c:287 ../shell/ev-window.c:5752
 msgid "_Next Page"
 msgstr "下一页(_N)"
 
-#: ../previewer/ev-previewer-window.c:288 ../shell/ev-window.c:5782
+#: ../previewer/ev-previewer-window.c:288 ../shell/ev-window.c:5753
 msgid "Go to the next page"
 msgstr "转到下一页"
 
-#: ../previewer/ev-previewer-window.c:291 ../shell/ev-window.c:5765
+#: ../previewer/ev-previewer-window.c:291 ../shell/ev-window.c:5736
 msgid "Enlarge the document"
 msgstr "放大文档"
 
-#: ../previewer/ev-previewer-window.c:294 ../shell/ev-window.c:5768
+#: ../previewer/ev-previewer-window.c:294 ../shell/ev-window.c:5739
 msgid "Shrink the document"
 msgstr "缩小文档"
 
@@ -466,31 +466,31 @@ msgstr "缩小文档"
 msgid "Print"
 msgstr "打印"
 
-#: ../previewer/ev-previewer-window.c:298 ../shell/ev-window.c:5734
+#: ../previewer/ev-previewer-window.c:298 ../shell/ev-window.c:5705
 msgid "Print this document"
 msgstr "打印此文档"
 
-#: ../previewer/ev-previewer-window.c:342 ../shell/ev-window.c:5892
+#: ../previewer/ev-previewer-window.c:342 ../shell/ev-window.c:5863
 msgid "_Best Fit"
 msgstr "适合页长(_B)"
 
-#: ../previewer/ev-previewer-window.c:343 ../shell/ev-window.c:5893
+#: ../previewer/ev-previewer-window.c:343 ../shell/ev-window.c:5864
 msgid "Make the current document fill the window"
 msgstr "让当前文档适合窗口"
 
-#: ../previewer/ev-previewer-window.c:345 ../shell/ev-window.c:5895
+#: ../previewer/ev-previewer-window.c:345 ../shell/ev-window.c:5866
 msgid "Fit Page _Width"
 msgstr "适合页宽(_W)"
 
-#: ../previewer/ev-previewer-window.c:346 ../shell/ev-window.c:5896
+#: ../previewer/ev-previewer-window.c:346 ../shell/ev-window.c:5867
 msgid "Make the current document fill the window width"
 msgstr "让当前文档适合窗口宽度"
 
-#: ../previewer/ev-previewer-window.c:558 ../shell/ev-window.c:6004
+#: ../previewer/ev-previewer-window.c:558 ../shell/ev-window.c:5975
 msgid "Page"
 msgstr "页面"
 
-#: ../previewer/ev-previewer-window.c:559 ../shell/ev-window.c:6005
+#: ../previewer/ev-previewer-window.c:559 ../shell/ev-window.c:5976
 msgid "Select Page"
 msgstr "选择页面"
 
@@ -780,7 +780,7 @@ msgstr "调用 %s"
 msgid "Find:"
 msgstr "查找："
 
-#: ../shell/eggfindbar.c:314 ../shell/ev-window.c:5751
+#: ../shell/eggfindbar.c:314 ../shell/ev-window.c:5722
 msgid "Find Pre_vious"
 msgstr "查找上一个(_V)"
 
@@ -788,7 +788,7 @@ msgstr "查找上一个(_V)"
 msgid "Find previous occurrence of the search string"
 msgstr "查找被搜索字符串的上次出现"
 
-#: ../shell/eggfindbar.c:322 ../shell/ev-window.c:5749
+#: ../shell/eggfindbar.c:322 ../shell/ev-window.c:5720
 msgid "Find Ne_xt"
 msgstr "查找下一个(_X)"
 
@@ -880,7 +880,7 @@ msgstr "打开"
 msgid "Close"
 msgstr "关闭"
 
-#: ../shell/ev-application.c:1122
+#: ../shell/ev-application.c:1115
 msgid "Running in presentation mode"
 msgstr "以放映模式运行"
 
@@ -1016,7 +1016,7 @@ msgid "_Remove Bookmark"
 msgstr "移除书签(_R)"
 
 #: ../shell/ev-sidebar-bookmarks.c:311 ../shell/ev-window.c:922
-#: ../shell/ev-window.c:4593
+#: ../shell/ev-window.c:4564
 #, c-format
 msgid "Page %s"
 msgstr "第 %s 页"
@@ -1081,121 +1081,125 @@ msgstr "正在从 %s 重新载入文档"
 msgid "Failed to reload document."
 msgstr "重新载入文档失败。"
 
-#: ../shell/ev-window.c:2417
+#: ../shell/ev-window.c:2410
 msgid "Open Document"
 msgstr "打开文档"
 
-#: ../shell/ev-window.c:2715
+#: ../shell/ev-window.c:2707
 #, c-format
 msgid "Saving document to %s"
 msgstr "正在保存文档到 %s"
 
-#: ../shell/ev-window.c:2718
+#: ../shell/ev-window.c:2710
 #, c-format
 msgid "Saving attachment to %s"
 msgstr "正在保存附件到 %s"
 
-#: ../shell/ev-window.c:2721
+#: ../shell/ev-window.c:2713
 #, c-format
 msgid "Saving image to %s"
 msgstr "正在保存图片到 %s"
 
-#: ../shell/ev-window.c:2765 ../shell/ev-window.c:2865
+#: ../shell/ev-window.c:2757 ../shell/ev-window.c:2857
 #, c-format
 msgid "The file could not be saved as “%s”."
 msgstr "文件无法另存为“%s”。"
 
-#: ../shell/ev-window.c:2796
+#: ../shell/ev-window.c:2788
 #, c-format
 msgid "Uploading document (%d%%)"
 msgstr "正在上传文档 (%d%%)"
 
-#: ../shell/ev-window.c:2800
+#: ../shell/ev-window.c:2792
 #, c-format
 msgid "Uploading attachment (%d%%)"
 msgstr "正在上传附件 (%d%%)"
 
-#: ../shell/ev-window.c:2804
+#: ../shell/ev-window.c:2796
 #, c-format
 msgid "Uploading image (%d%%)"
 msgstr "上载上传图片 (%d%%)"
 
-#: ../shell/ev-window.c:2928
+#: ../shell/ev-window.c:2905
 msgid "Save a Copy"
 msgstr "保存副本"
 
-#: ../shell/ev-window.c:2994
+#: ../shell/ev-window.c:2959
 msgid "Could not open the containing folder"
 msgstr "无法打开所在的文件夹"
 
-#: ../shell/ev-window.c:3255
+#: ../shell/ev-window.c:3220
 #, c-format
 msgid "%d pending job in queue"
 msgid_plural "%d pending jobs in queue"
 msgstr[0] "队列中有 %d 个等待执行的任务"
 
-#: ../shell/ev-window.c:3368
+#: ../shell/ev-window.c:3333
 #, c-format
 msgid "Printing job “%s”"
 msgstr "正在打印任务“%s”"
 
-#: ../shell/ev-window.c:3545
+#: ../shell/ev-window.c:3510
 msgid ""
 "Document contains form fields that have been filled out. If you don't save a "
 "copy, changes will be permanently lost."
 msgstr "文档包含了已经填写的表单。如果您不保存副本，修改将会永久丢失。"
 
-#: ../shell/ev-window.c:3549
+#: ../shell/ev-window.c:3514
 msgid ""
 "Document contains new or modified annotations. If you don't save a copy, "
 "changes will be permanently lost."
 msgstr "文档包含了新的或修改过的注释。如果您不保存副本，修改将会永久丢失。"
 
-#: ../shell/ev-window.c:3556
+#: ../shell/ev-window.c:3521
 #, c-format
 msgid "Save a copy of document “%s” before closing?"
 msgstr "关闭前保存文档“%s”的副本吗？"
 
-#: ../shell/ev-window.c:3575
+#: ../shell/ev-window.c:3540
 msgid "Close _without Saving"
 msgstr "关闭且不保存(_W)"
 
-#: ../shell/ev-window.c:3579
+#: ../shell/ev-window.c:3544
 msgid "Save a _Copy"
 msgstr "保存副本(_C)"
 
-#: ../shell/ev-window.c:3653
+#: ../shell/ev-window.c:3618
 #, c-format
 msgid "Wait until print job “%s” finishes before closing?"
-msgstr "关闭前先等待至打印任务“%s”完成吗？"
+msgstr "等待打印任务“%s”完成后再关闭吗？"
 
-#: ../shell/ev-window.c:3656
+#. TRANS: the singular form is not really used as n_print_jobs > 1
+#. but some languages distinguish between different plurals forms,
+#. so the ngettext is needed.
+#: ../shell/ev-window.c:3624
 #, c-format
-msgid ""
+msgid "There is %d print job active. Wait until print finishes before closing?"
+msgid_plural ""
 "There are %d print jobs active. Wait until print finishes before closing?"
-msgstr "%d 打印任务激活中。关闭前先等待至打印任务完成吗？"
+msgstr[0] "有 %d 项活动的打印任务。等待打印完成后再关闭吗？"
 
-#: ../shell/ev-window.c:3668
+#: ../shell/ev-window.c:3639
 msgid "If you close the window, pending print jobs will not be printed."
 msgstr "如果你关闭该窗口，正在等待执行的打印任务将不会被打印。"
 
-#: ../shell/ev-window.c:3672
+#: ../shell/ev-window.c:3643
 msgid "Cancel _print and Close"
 msgstr "取消打印并关闭(_P)"
 
-#: ../shell/ev-window.c:3676
+#: ../shell/ev-window.c:3647
 msgid "Close _after Printing"
 msgstr "打印后关闭(_A)"
 
-#: ../shell/ev-window.c:4339 ../shell/ev-window.c:4623
+#: ../shell/ev-window.c:4310 ../shell/ev-window.c:4594
 msgid "There was an error displaying help"
 msgstr "显示帮助时出现一个错误"
 
-#: ../shell/ev-window.c:4367
+#: ../shell/ev-window.c:4338
 msgid "Toolbar Editor"
 msgstr "工具栏编辑器"
 
-#: ../shell/ev-window.c:4835
+#: ../shell/ev-window.c:4806
 #, c-format
 msgid ""
 "Document Viewer\n"
@@ -1204,7 +1208,7 @@ msgstr ""
 "文档查看器\n"
 "使用 %s (%s)"
 
-#: ../shell/ev-window.c:4868
+#: ../shell/ev-window.c:4839
 msgid ""
 "Evince is free software; you can redistribute it and/or modify it under the "
 "terms of the GNU General Public License as published by the Free Software "
@@ -1214,7 +1218,7 @@ msgstr ""
 "Evince 是自由软件；您可以按照自由软件基金会所发布的 GNU GPL 许可对其再发放和/"
 "或修改它；至于 GPL 的版本，您可以使用第二版或任何更新的版本。\n"
 
-#: ../shell/ev-window.c:4872
+#: ../shell/ev-window.c:4843
 msgid ""
 "Evince is distributed in the hope that it will be useful, but WITHOUT ANY "
 "WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS "
@@ -1225,7 +1229,7 @@ msgstr ""
 "它提供任何形式的担保，也无法保证它可以在特定用途中得到您希望的\n"
 "结果。请参看 GNU GPL 许可中的更多细节。\n"
 
-#: ../shell/ev-window.c:4876
+#: ../shell/ev-window.c:4847
 msgid ""
 "You should have received a copy of the GNU General Public License along with "
 "Evince; if not, write to the Free Software Foundation, Inc., 51 Franklin "
@@ -1235,15 +1239,15 @@ msgstr ""
 "的话，您可以写信给自由软件基金会，地址是：\n"
 "51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA\n"
 
-#: ../shell/ev-window.c:4901
+#: ../shell/ev-window.c:4872
 msgid "Evince"
 msgstr "Evince"
 
-#: ../shell/ev-window.c:4904
+#: ../shell/ev-window.c:4875
 msgid "© 1996–2010 The Evince authors"
 msgstr "© 1996–2010 Evince 作者"
 
-#: ../shell/ev-window.c:4910
+#: ../shell/ev-window.c:4881
 msgid "translator-credits"
 msgstr ""
 "Aron Xu <happyaron.xu@gmail.com>, 2009, 2010, 2011\n"
@@ -1272,359 +1276,359 @@ msgstr ""
 #. TRANS: Sometimes this could be better translated as
 #. "%d hit(s) on this page".  Therefore this string
 #. contains plural cases.
-#: ../shell/ev-window.c:5178
+#: ../shell/ev-window.c:5149
 #, c-format
 msgid "%d found on this page"
 msgid_plural "%d found on this page"
 msgstr[0] "本页上找到 %d 次"
 
-#: ../shell/ev-window.c:5183
+#: ../shell/ev-window.c:5154
 msgid "Not found"
 msgstr "未找到"
 
-#: ../shell/ev-window.c:5189
+#: ../shell/ev-window.c:5160
 #, c-format
 msgid "%3d%% remaining to search"
 msgstr "搜索还剩 %3d%%"
 
-#: ../shell/ev-window.c:5713
+#: ../shell/ev-window.c:5684
 msgid "_File"
 msgstr "文件(_F)"
 
-#: ../shell/ev-window.c:5714
+#: ../shell/ev-window.c:5685
 msgid "_Edit"
 msgstr "编辑(_E)"
 
-#: ../shell/ev-window.c:5715
+#: ../shell/ev-window.c:5686
 msgid "_View"
 msgstr "查看(_V)"
 
-#: ../shell/ev-window.c:5716
+#: ../shell/ev-window.c:5687
 msgid "_Go"
 msgstr "转到(_G)"
 
-#: ../shell/ev-window.c:5717
+#: ../shell/ev-window.c:5688
 msgid "_Bookmarks"
 msgstr "书签(_B)"
 
-#: ../shell/ev-window.c:5718
+#: ../shell/ev-window.c:5689
 msgid "_Help"
 msgstr "帮助(_H)"
 
 #. File menu
-#: ../shell/ev-window.c:5721 ../shell/ev-window.c:6044
+#: ../shell/ev-window.c:5692 ../shell/ev-window.c:6015
 msgid "_Open…"
 msgstr "打开(_O)..."
 
-#: ../shell/ev-window.c:5722 ../shell/ev-window.c:6045
+#: ../shell/ev-window.c:5693 ../shell/ev-window.c:6016
 msgid "Open an existing document"
 msgstr "打开已有文档"
 
-#: ../shell/ev-window.c:5724
+#: ../shell/ev-window.c:5695
 msgid "Op_en a Copy"
 msgstr "打开副本(_E)"
 
-#: ../shell/ev-window.c:5725
+#: ../shell/ev-window.c:5696
 msgid "Open a copy of the current document in a new window"
 msgstr "在新窗口中打开当前文档的副本"
 
-#: ../shell/ev-window.c:5727
+#: ../shell/ev-window.c:5698
 msgid "_Save a Copy…"
 msgstr "保存副本(_S)..."
 
-#: ../shell/ev-window.c:5728
+#: ../shell/ev-window.c:5699
 msgid "Save a copy of the current document"
 msgstr "保存当前文档的副本"
 
-#: ../shell/ev-window.c:5730
+#: ../shell/ev-window.c:5701
 msgid "Open Containing _Folder"
 msgstr "打开所在的文件夹(_F)"
 
-#: ../shell/ev-window.c:5731
+#: ../shell/ev-window.c:5702
 msgid "Show the folder which contains this file in the file manager"
 msgstr "在文件管理器中显示该文件所在的文件夹"
 
-#: ../shell/ev-window.c:5733
+#: ../shell/ev-window.c:5704
 msgid "_Print…"
 msgstr "打印(_P)..."
 
-#: ../shell/ev-window.c:5736
+#: ../shell/ev-window.c:5707
 msgid "P_roperties"
 msgstr "属性(_R)"
 
-#: ../shell/ev-window.c:5744
+#: ../shell/ev-window.c:5715
 msgid "Select _All"
 msgstr "全选(_A)"
 
-#: ../shell/ev-window.c:5746
+#: ../shell/ev-window.c:5717
 msgid "_Find…"
 msgstr "查找(_F)..."
 
-#: ../shell/ev-window.c:5747
+#: ../shell/ev-window.c:5718
 msgid "Find a word or phrase in the document"
 msgstr "在文档中查找单词或短语"
 
-#: ../shell/ev-window.c:5753
+#: ../shell/ev-window.c:5724
 msgid "T_oolbar"
 msgstr "工具栏(_O)"
 
-#: ../shell/ev-window.c:5755
+#: ../shell/ev-window.c:5726
 msgid "Rotate _Left"
 msgstr "向左旋转(_L)"
 
-#: ../shell/ev-window.c:5757
+#: ../shell/ev-window.c:5728
 msgid "Rotate _Right"
 msgstr "向右旋转(_R)"
 
-#: ../shell/ev-window.c:5759
+#: ../shell/ev-window.c:5730
 msgid "Save Current Settings as _Default"
 msgstr "将当前设置设为默认值(_D)"
 
-#: ../shell/ev-window.c:5770
+#: ../shell/ev-window.c:5741
 msgid "_Reload"
 msgstr "重新载入(_R)"
 
-#: ../shell/ev-window.c:5771
+#: ../shell/ev-window.c:5742
 msgid "Reload the document"
 msgstr "重新载入文档"
 
-#: ../shell/ev-window.c:5774
+#: ../shell/ev-window.c:5745
 msgid "Auto_scroll"
 msgstr "自动滚屏(_S)"
 
-#: ../shell/ev-window.c:5784
+#: ../shell/ev-window.c:5755
 msgid "_First Page"
 msgstr "第一页(_F)"
 
-#: ../shell/ev-window.c:5785
+#: ../shell/ev-window.c:5756
 msgid "Go to the first page"
 msgstr "转到第一页"
 
-#: ../shell/ev-window.c:5787
+#: ../shell/ev-window.c:5758
 msgid "_Last Page"
 msgstr "最后一页(_L)"
 
-#: ../shell/ev-window.c:5788
+#: ../shell/ev-window.c:5759
 msgid "Go to the last page"
 msgstr "转到最后一页"
 
-#: ../shell/ev-window.c:5790
+#: ../shell/ev-window.c:5761
 msgid "Go to Pa_ge"
 msgstr "转到指定页(_G)"
 
-#: ../shell/ev-window.c:5791
+#: ../shell/ev-window.c:5762
 msgid "Go to Page"
 msgstr "转到指定页"
 
 #. Bookmarks menu
-#: ../shell/ev-window.c:5795
+#: ../shell/ev-window.c:5766
 msgid "_Add Bookmark"
 msgstr "添加书签(_A)"
 
-#: ../shell/ev-window.c:5796
+#: ../shell/ev-window.c:5767
 msgid "Add a bookmark for the current page"
 msgstr "为当前页面添加书签"
 
 #. Help menu
-#: ../shell/ev-window.c:5800
+#: ../shell/ev-window.c:5771
 msgid "_Contents"
 msgstr "目录(_C)"
 
-#: ../shell/ev-window.c:5803
+#: ../shell/ev-window.c:5774
 msgid "_About"
 msgstr "关于(_A)"
 
 #. Toolbar-only
-#: ../shell/ev-window.c:5807
+#: ../shell/ev-window.c:5778
 msgid "Leave Fullscreen"
 msgstr "离开全屏"
 
-#: ../shell/ev-window.c:5808
+#: ../shell/ev-window.c:5779
 msgid "Leave fullscreen mode"
 msgstr "离开全屏模式"
 
-#: ../shell/ev-window.c:5810
+#: ../shell/ev-window.c:5781
 msgid "Start Presentation"
 msgstr "开始演示"
 
-#: ../shell/ev-window.c:5811
+#: ../shell/ev-window.c:5782
 msgid "Start a presentation"
 msgstr "开始演示"
 
 #. View Menu
-#: ../shell/ev-window.c:5874
+#: ../shell/ev-window.c:5845
 msgid "_Toolbar"
 msgstr "工具栏(_T)"
 
-#: ../shell/ev-window.c:5875
+#: ../shell/ev-window.c:5846
 msgid "Show or hide the toolbar"
 msgstr "显示或隐藏工具栏"
 
-#: ../shell/ev-window.c:5877
+#: ../shell/ev-window.c:5848
 msgid "Side _Pane"
 msgstr "侧边栏(_P)"
 
-#: ../shell/ev-window.c:5878
+#: ../shell/ev-window.c:5849
 msgid "Show or hide the side pane"
 msgstr "显示或隐藏侧边栏"
 
-#: ../shell/ev-window.c:5880
+#: ../shell/ev-window.c:5851
 msgid "_Continuous"
 msgstr "连续(_C)"
 
-#: ../shell/ev-window.c:5881
+#: ../shell/ev-window.c:5852
 msgid "Show the entire document"
 msgstr "显示整篇文档"
 
-#: ../shell/ev-window.c:5883
+#: ../shell/ev-window.c:5854
 msgid "_Dual"
 msgstr "双页(_D)"
 
-#: ../shell/ev-window.c:5884
+#: ../shell/ev-window.c:5855
 msgid "Show two pages at once"
 msgstr "一次显示两页"
 
-#: ../shell/ev-window.c:5886
+#: ../shell/ev-window.c:5857
 msgid "_Fullscreen"
 msgstr "全屏(_F)"
 
-#: ../shell/ev-window.c:5887
+#: ../shell/ev-window.c:5858
 msgid "Expand the window to fill the screen"
 msgstr "将窗口展开为全屏幕"
 
-#: ../shell/ev-window.c:5889
+#: ../shell/ev-window.c:5860
 msgid "Pre_sentation"
 msgstr "放映(_S)"
 
-#: ../shell/ev-window.c:5890
+#: ../shell/ev-window.c:5861
 msgid "Run document as a presentation"
 msgstr "将文档以演示文稿放映"
 
-#: ../shell/ev-window.c:5898
+#: ../shell/ev-window.c:5869
 msgid "_Inverted Colors"
 msgstr "反色(_I)"
 
-#: ../shell/ev-window.c:5899
+#: ../shell/ev-window.c:5870
 msgid "Show page contents with the colors inverted"
 msgstr "使用反色来显示页面内容"
 
 #. Links
-#: ../shell/ev-window.c:5907
+#: ../shell/ev-window.c:5878
 msgid "_Open Link"
 msgstr "打开链接(_O)"
 
-#: ../shell/ev-window.c:5909
+#: ../shell/ev-window.c:5880
 msgid "_Go To"
 msgstr "转到(_G)"
 
-#: ../shell/ev-window.c:5911
+#: ../shell/ev-window.c:5882
 msgid "Open in New _Window"
 msgstr "在新窗口中打开(_W)"
 
-#: ../shell/ev-window.c:5913
+#: ../shell/ev-window.c:5884
 msgid "_Copy Link Address"
 msgstr "复制链接地址(_C)"
 
-#: ../shell/ev-window.c:5915
+#: ../shell/ev-window.c:5886
 msgid "_Save Image As…"
 msgstr "图像另存为(_S)..."
 
-#: ../shell/ev-window.c:5917
+#: ../shell/ev-window.c:5888
 msgid "Copy _Image"
 msgstr "复制图像(_I)"
 
-#: ../shell/ev-window.c:5919
+#: ../shell/ev-window.c:5890
 msgid "Annotation Properties…"
 msgstr "注释属性..."
 
-#: ../shell/ev-window.c:5924
+#: ../shell/ev-window.c:5895
 msgid "_Open Attachment"
 msgstr "打开附件(_O)"
 
-#: ../shell/ev-window.c:5926
+#: ../shell/ev-window.c:5897
 msgid "_Save Attachment As…"
 msgstr "保存附件为(_S)..."
 
-#: ../shell/ev-window.c:6018
+#: ../shell/ev-window.c:5989
 msgid "Zoom"
 msgstr "缩放"
 
-#: ../shell/ev-window.c:6020
+#: ../shell/ev-window.c:5991
 msgid "Adjust the zoom level"
 msgstr "调整缩放级别"
 
-#: ../shell/ev-window.c:6030
+#: ../shell/ev-window.c:6001
 msgid "Navigation"
 msgstr "导航"
 
-#: ../shell/ev-window.c:6032
+#: ../shell/ev-window.c:6003
 msgid "Back"
 msgstr "后退"
 
 #. translators: this is the history action
-#: ../shell/ev-window.c:6035
+#: ../shell/ev-window.c:6006
 msgid "Move across visited pages"
 msgstr "在已浏览的页面中移动"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:6064
+#: ../shell/ev-window.c:6035
 msgid "Open Folder"
 msgstr "打开文件夹"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:6069
+#: ../shell/ev-window.c:6040
 msgid "Previous"
 msgstr "上一页"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:6074
+#: ../shell/ev-window.c:6045
 msgid "Next"
 msgstr "下一页"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:6078
+#: ../shell/ev-window.c:6049
 msgid "Zoom In"
 msgstr "放大"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:6082
+#: ../shell/ev-window.c:6053
 msgid "Zoom Out"
 msgstr "缩小"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:6090
+#: ../shell/ev-window.c:6061
 msgid "Fit Width"
 msgstr "适合宽度"
 
-#: ../shell/ev-window.c:6236 ../shell/ev-window.c:6253
+#: ../shell/ev-window.c:6207 ../shell/ev-window.c:6224
 msgid "Unable to launch external application."
 msgstr "无法启动外部程序。"
 
-#: ../shell/ev-window.c:6310
+#: ../shell/ev-window.c:6281
 msgid "Unable to open external link"
 msgstr "无法打开外部链接"
 
-#: ../shell/ev-window.c:6500
+#: ../shell/ev-window.c:6471
 msgid "Couldn't find appropriate format to save image"
 msgstr "无法找到恰当的格式以保存图像"
 
-#: ../shell/ev-window.c:6532
+#: ../shell/ev-window.c:6503
 msgid "The image could not be saved."
 msgstr "无法保存图像。"
 
-#: ../shell/ev-window.c:6564
+#: ../shell/ev-window.c:6535
 msgid "Save Image"
 msgstr "保存图像"
 
-#: ../shell/ev-window.c:6692
+#: ../shell/ev-window.c:6663
 msgid "Unable to open attachment"
 msgstr "无法打开附件"
 
-#: ../shell/ev-window.c:6745
+#: ../shell/ev-window.c:6716
 msgid "The attachment could not be saved."
 msgstr "无法保存附件。"
 
-#: ../shell/ev-window.c:6790
+#: ../shell/ev-window.c:6761
 msgid "Save Attachment"
 msgstr "保存附件"
 
