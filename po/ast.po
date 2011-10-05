@@ -1,22 +1,23 @@
 # Asturian translation for evince.
 # Copyright (C) 2009 evince's COPYRIGHT HOLDER
 # This file is distributed under the same license as the evince package.
-# Xandru Armesto <xandru@softastur.org>, 2010.
+# Xandru Armesto <xandru@softastur.org>, 2010, 2011.
 msgid ""
 msgstr ""
 "Project-Id-Version: evince gnome-2-28\n"
-"Report-Msgid-Bugs-To: "
-"http://bugzilla.gnome.org/enter_bug.cgi?product=evince&component=general\n"
-"POT-Creation-Date: 2010-07-23 07:59+0000\n"
-"PO-Revision-Date: 2010-07-23 15:54+0200\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=evince"
+"&keywords=I18N+L10N&component=general\n"
+"POT-Creation-Date: 2011-08-18 19:30+0000\n"
+"PO-Revision-Date: 2011-10-05 20:38+0200\n"
 "Last-Translator: Xandru Armesto <xandru@softastur.org>\n"
-"Language-Team: Softastur alministradores@softastur.org\n"
+"Language-Team: Softastur <alministradores@softastur.org>\n"
 "Language: ast\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Virtaal 0.5.2\n"
+"X-Poedit-Language: Asturian\n"
 
 #: ../backend/comics/comics-document.c:217
 #, c-format
@@ -103,65 +104,65 @@ msgstr "El documentu DVI tien un formatu incorreutu"
 msgid "DVI Documents"
 msgstr "Documentos DVI"
 
-#: ../backend/pdf/ev-poppler.cc:571
+#: ../backend/pdf/ev-poppler.cc:526
 msgid "This work is in the Public Domain"
 msgstr "Esti trabayu ye de Dominiu Públicu"
 
 #. translators: this is the document security state
-#: ../backend/pdf/ev-poppler.cc:824
+#: ../backend/pdf/ev-poppler.cc:779
 msgid "Yes"
 msgstr "Sí"
 
 #. translators: this is the document security state
-#: ../backend/pdf/ev-poppler.cc:827
+#: ../backend/pdf/ev-poppler.cc:782
 msgid "No"
 msgstr "Non"
 
-#: ../backend/pdf/ev-poppler.cc:948
+#: ../backend/pdf/ev-poppler.cc:910
 msgid "Type 1"
 msgstr "Tipu 1"
 
-#: ../backend/pdf/ev-poppler.cc:950
+#: ../backend/pdf/ev-poppler.cc:912
 msgid "Type 1C"
 msgstr "Tipu 1C"
 
-#: ../backend/pdf/ev-poppler.cc:952
+#: ../backend/pdf/ev-poppler.cc:914
 msgid "Type 3"
 msgstr "Tipu 3"
 
-#: ../backend/pdf/ev-poppler.cc:954
+#: ../backend/pdf/ev-poppler.cc:916
 msgid "TrueType"
 msgstr "TrueType"
 
-#: ../backend/pdf/ev-poppler.cc:956
+#: ../backend/pdf/ev-poppler.cc:918
 msgid "Type 1 (CID)"
 msgstr "Tipu 1 (CID)"
 
-#: ../backend/pdf/ev-poppler.cc:958
+#: ../backend/pdf/ev-poppler.cc:920
 msgid "Type 1C (CID)"
 msgstr "Tipu 1C (CID)"
 
-#: ../backend/pdf/ev-poppler.cc:960
+#: ../backend/pdf/ev-poppler.cc:922
 msgid "TrueType (CID)"
 msgstr "TrueType (CID)"
 
-#: ../backend/pdf/ev-poppler.cc:962
+#: ../backend/pdf/ev-poppler.cc:924
 msgid "Unknown font type"
 msgstr "Tipu de fonte desconocida"
 
-#: ../backend/pdf/ev-poppler.cc:988
+#: ../backend/pdf/ev-poppler.cc:950
 msgid "No name"
 msgstr "Ensin nome"
 
-#: ../backend/pdf/ev-poppler.cc:996
+#: ../backend/pdf/ev-poppler.cc:958
 msgid "Embedded subset"
 msgstr "Soconxuntu incrustáu"
 
-#: ../backend/pdf/ev-poppler.cc:998
+#: ../backend/pdf/ev-poppler.cc:960
 msgid "Embedded"
 msgstr "Incrustáu"
 
-#: ../backend/pdf/ev-poppler.cc:1000
+#: ../backend/pdf/ev-poppler.cc:962
 msgid "Not embedded"
 msgstr "Non incrustáu"
 
@@ -236,12 +237,12 @@ msgstr "Documentos PostScript"
 msgid "Couldn't save attachment “%s”: %s"
 msgstr "Nun se pudo guardar l'axuntu “%s”: %s"
 
-#: ../libdocument/ev-attachment.c:373
+#: ../libdocument/ev-attachment.c:372
 #, c-format
 msgid "Couldn't open attachment “%s”: %s"
 msgstr "Nun se pudo abrir l'axuntu “%s”: %s"
 
-#: ../libdocument/ev-attachment.c:408
+#: ../libdocument/ev-attachment.c:407
 #, c-format
 msgid "Couldn't open attachment “%s”"
 msgstr "Nun se pudo abrir l'axuntu “%s”"
@@ -313,8 +314,8 @@ msgstr "Desactivar la conexón al remanador de sesiones"
 msgid "Specify file containing saved configuration"
 msgstr "Especificar el ficheru que contién la configuración guardada"
 
-#: ../cut-n-paste/smclient/eggsmclient.c:228 ../previewer/ev-previewer.c:48
-#: ../previewer/ev-previewer.c:49
+#: ../cut-n-paste/smclient/eggsmclient.c:228 ../previewer/ev-previewer.c:45
+#: ../previewer/ev-previewer.c:46
 msgid "FILE"
 msgstr "FICHERU"
 
@@ -341,45 +342,41 @@ msgstr "Ver les opciones de remanamientu de la sesión"
 #. * produce duplicates, but don't worry about it. If your language
 #. * normally has a mnemonic at the start, please use the _. If not,
 #. * please remove.
-#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:934
+#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:946
 #, c-format
 msgid "Show “_%s”"
 msgstr "Amosar “_%s”"
 
-#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1397
+#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1414
 msgid "_Move on Toolbar"
 msgstr "_Mover a la Barra de Ferramientes"
 
-#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1398
+#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1415
 msgid "Move the selected item on the toolbar"
 msgstr "Mueve l'elementu seleicionáu a la barra de ferramientes"
 
-#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1399
+#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1416
 msgid "_Remove from Toolbar"
 msgstr "_Quitar de la Barra de Ferramientes"
 
-#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1400
+#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1417
 msgid "Remove the selected item from the toolbar"
 msgstr "Quita l'elementu seleicionáu de la barra de ferramientes"
 
-#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1401
+#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1418
 msgid "_Delete Toolbar"
 msgstr "_Esborrar Barra de Ferramientes"
 
-#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1402
+#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1419
 msgid "Remove the selected toolbar"
 msgstr "Quitar la barra de ferramientes seleicionada"
 
-#: ../cut-n-paste/toolbar-editor/egg-toolbar-editor.c:485
+#: ../cut-n-paste/toolbar-editor/egg-toolbar-editor.c:486
 msgid "Separator"
 msgstr "Separtador"
 
-#: ../cut-n-paste/totem-screensaver/totem-scrsaver.c:115
-msgid "Running in presentation mode"
-msgstr "Executar en mou presentación"
-
 #. translators: this is the label for toolbar button
-#: ../cut-n-paste/zoom-control/ephy-zoom.h:48 ../shell/ev-window.c:5379
+#: ../cut-n-paste/zoom-control/ephy-zoom.h:48 ../shell/ev-window.c:5761
 msgid "Best Fit"
 msgstr "Axuste Óptimu"
 
@@ -427,9 +424,25 @@ msgstr "300%"
 msgid "400%"
 msgstr "400%"
 
+#: ../cut-n-paste/zoom-control/ephy-zoom.h:61
+msgid "800%"
+msgstr "800%"
+
+#: ../cut-n-paste/zoom-control/ephy-zoom.h:62
+msgid "1600%"
+msgstr "1600%"
+
+#: ../cut-n-paste/zoom-control/ephy-zoom.h:63
+msgid "3200%"
+msgstr "3200%"
+
+#: ../cut-n-paste/zoom-control/ephy-zoom.h:64
+msgid "6400%"
+msgstr "6400%"
+
 #. Manually set name and icon
-#: ../data/evince.desktop.in.in.h:1 ../shell/ev-window.c:4235
-#: ../shell/ev-window-title.c:149 ../shell/main.c:308
+#: ../data/evince.desktop.in.in.h:1 ../shell/ev-window.c:4554
+#: ../shell/ev-window-title.c:149 ../shell/main.c:310
 #, c-format
 msgid "Document Viewer"
 msgstr "Visor de Documentos"
@@ -438,29 +451,29 @@ msgstr "Visor de Documentos"
 msgid "View multi-page documents"
 msgstr "Ver documentos multipáxina"
 
-#: ../data/evince.schemas.in.h:1
+#: ../data/org.gnome.Evince.gschema.xml.in.h:1
 msgid "Override document restrictions"
 msgstr "Saltase les restricciones del documentu"
 
-#: ../data/evince.schemas.in.h:2
+#: ../data/org.gnome.Evince.gschema.xml.in.h:2
 msgid "Override document restrictions, like restriction to copy or to print."
 msgstr ""
 "Saltase les restricciones del documentu, como restricción pa copiar o "
 "imprentar."
 
-#: ../previewer/ev-previewer.c:47
+#: ../previewer/ev-previewer.c:44
 msgid "Delete the temporary file"
 msgstr "Esborrar el ficheru temporal"
 
-#: ../previewer/ev-previewer.c:48
+#: ../previewer/ev-previewer.c:45
 msgid "Print settings file"
 msgstr "Ficheru d'axustes d'imprentación"
 
-#: ../previewer/ev-previewer.c:147 ../previewer/ev-previewer.c:181
+#: ../previewer/ev-previewer.c:144 ../previewer/ev-previewer.c:178
 msgid "GNOME Document Previewer"
 msgstr "Visor de Documentos de GNOME"
 
-#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3031
+#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3185
 msgid "Failed to print document"
 msgstr "Nun se pudo imprentar el documentu"
 
@@ -470,59 +483,59 @@ msgid "The selected printer '%s' could not be found"
 msgstr "Nun se pudo atopar la imprentadora actual '%s'"
 
 #. Go menu
-#: ../previewer/ev-previewer-window.c:284 ../shell/ev-window.c:5128
+#: ../previewer/ev-previewer-window.c:284 ../shell/ev-window.c:5476
 msgid "_Previous Page"
 msgstr "_Páxina Anterior"
 
-#: ../previewer/ev-previewer-window.c:285 ../shell/ev-window.c:5129
+#: ../previewer/ev-previewer-window.c:285 ../shell/ev-window.c:5477
 msgid "Go to the previous page"
 msgstr "Dir a la páxina anterior"
 
-#: ../previewer/ev-previewer-window.c:287 ../shell/ev-window.c:5131
+#: ../previewer/ev-previewer-window.c:287 ../shell/ev-window.c:5479
 msgid "_Next Page"
 msgstr "Páxi_na Siguiente"
 
-#: ../previewer/ev-previewer-window.c:288 ../shell/ev-window.c:5132
+#: ../previewer/ev-previewer-window.c:288 ../shell/ev-window.c:5480
 msgid "Go to the next page"
 msgstr "Dir a la páxina siguiente"
 
-#: ../previewer/ev-previewer-window.c:291 ../shell/ev-window.c:5115
+#: ../previewer/ev-previewer-window.c:291 ../shell/ev-window.c:5463
 msgid "Enlarge the document"
 msgstr "Allargar el documentu"
 
-#: ../previewer/ev-previewer-window.c:294 ../shell/ev-window.c:5118
+#: ../previewer/ev-previewer-window.c:294 ../shell/ev-window.c:5466
 msgid "Shrink the document"
 msgstr "Amenorgar el documentu"
 
-#: ../previewer/ev-previewer-window.c:297 ../libview/ev-print-operation.c:1315
+#: ../previewer/ev-previewer-window.c:297 ../libview/ev-print-operation.c:1307
 msgid "Print"
 msgstr "Imprentar"
 
-#: ../previewer/ev-previewer-window.c:298 ../shell/ev-window.c:5086
+#: ../previewer/ev-previewer-window.c:298 ../shell/ev-window.c:5432
 msgid "Print this document"
 msgstr "Imprentar esti documentu"
 
-#: ../previewer/ev-previewer-window.c:342 ../shell/ev-window.c:5230
+#: ../previewer/ev-previewer-window.c:342 ../shell/ev-window.c:5578
 msgid "_Best Fit"
 msgstr "Axus_te Óptimu"
 
-#: ../previewer/ev-previewer-window.c:343 ../shell/ev-window.c:5231
+#: ../previewer/ev-previewer-window.c:343 ../shell/ev-window.c:5579
 msgid "Make the current document fill the window"
 msgstr "Fai que'l documentu actual enllene la ventana"
 
-#: ../previewer/ev-previewer-window.c:345 ../shell/ev-window.c:5233
+#: ../previewer/ev-previewer-window.c:345 ../shell/ev-window.c:5581
 msgid "Fit Page _Width"
 msgstr "Axustar al A_nchor de Páxina"
 
-#: ../previewer/ev-previewer-window.c:346 ../shell/ev-window.c:5234
+#: ../previewer/ev-previewer-window.c:346 ../shell/ev-window.c:5582
 msgid "Make the current document fill the window width"
 msgstr "Fai que'l documentu actual enllene l'anchor de la ventana"
 
-#: ../previewer/ev-previewer-window.c:558 ../shell/ev-window.c:5301
+#: ../previewer/ev-previewer-window.c:558 ../shell/ev-window.c:5683
 msgid "Page"
 msgstr "Páxina"
 
-#: ../previewer/ev-previewer-window.c:559 ../shell/ev-window.c:5302
+#: ../previewer/ev-previewer-window.c:559 ../shell/ev-window.c:5684
 msgid "Select Page"
 msgstr "Seleiciona la páxina"
 
@@ -543,6 +556,7 @@ msgid "Subject:"
 msgstr "Asuntu:"
 
 #: ../properties/ev-properties-view.c:63
+#: ../shell/ev-annotation-properties-dialog.c:160
 msgid "Author:"
 msgstr "Autor:"
 
@@ -586,7 +600,7 @@ msgstr "Seguridá:"
 msgid "Paper Size:"
 msgstr "Tamañu del Papel:"
 
-#: ../properties/ev-properties-view.c:211 ../libview/ev-print-operation.c:1896
+#: ../properties/ev-properties-view.c:188 ../libview/ev-print-operation.c:1865
 msgid "None"
 msgstr "Dengún"
 
@@ -596,30 +610,30 @@ msgstr "Dengún"
 #. * Do *not* translate it to "predefinito:mm", if it
 #. * it isn't default:mm or default:inch it will not work
 #.
-#: ../properties/ev-properties-view.c:240
+#: ../properties/ev-properties-view.c:217
 msgid "default:mm"
 msgstr "default:mm"
 
-#: ../properties/ev-properties-view.c:284
+#: ../properties/ev-properties-view.c:261
 #, c-format
 msgid "%.0f × %.0f mm"
 msgstr "%.0f x %.0f mm"
 
-#: ../properties/ev-properties-view.c:288
+#: ../properties/ev-properties-view.c:265
 #, c-format
 msgid "%.2f × %.2f inch"
 msgstr "%.2f x %.2f pulgaes"
 
 #. Note to translators: first placeholder is the paper name (eg.
 #. * A4), second placeholder is the paper size (eg. 297x210 mm)
-#: ../properties/ev-properties-view.c:312
+#: ../properties/ev-properties-view.c:289
 #, c-format
 msgid "%s, Portrait (%s)"
 msgstr "%s, Vertical (%s)"
 
 #. Note to translators: first placeholder is the paper name (eg.
 #. * A4), second placeholder is the paper size (eg. 297x210 mm)
-#: ../properties/ev-properties-view.c:319
+#: ../properties/ev-properties-view.c:296
 #, c-format
 msgid "%s, Landscape (%s)"
 msgstr "%s, Apaisáu (%s)"
@@ -634,49 +648,55 @@ msgstr "(%d de %d)"
 msgid "of %d"
 msgstr "de %d"
 
+#. Create tree view
+#: ../libview/ev-loading-window.c:76 ../shell/ev-sidebar-annotations.c:133
+#: ../shell/ev-sidebar-layers.c:125 ../shell/ev-sidebar-links.c:262
+msgid "Loading…"
+msgstr "Cargando…"
+
 #. Initial state
-#: ../libview/ev-print-operation.c:341
+#: ../libview/ev-print-operation.c:334
 msgid "Preparing to print…"
 msgstr "Tresnando pa imprentar..."
 
-#: ../libview/ev-print-operation.c:343
+#: ../libview/ev-print-operation.c:336
 msgid "Finishing…"
 msgstr "Finando…"
 
-#: ../libview/ev-print-operation.c:345
+#: ../libview/ev-print-operation.c:338
 #, c-format
 msgid "Printing page %d of %d…"
 msgstr "Imprentando páxina %d de %d…"
 
-#: ../libview/ev-print-operation.c:1169
+#: ../libview/ev-print-operation.c:1161
 msgid "Printing is not supported on this printer."
 msgstr "La impresión nun ta sofitada nesta imprentadora."
 
-#: ../libview/ev-print-operation.c:1234
+#: ../libview/ev-print-operation.c:1226
 msgid "Invalid page selection"
 msgstr "Seleición de páxina inválida"
 
-#: ../libview/ev-print-operation.c:1235
+#: ../libview/ev-print-operation.c:1227
 msgid "Warning"
 msgstr "Avisu"
 
-#: ../libview/ev-print-operation.c:1237
+#: ../libview/ev-print-operation.c:1229
 msgid "Your print range selection does not include any pages"
 msgstr "La escoyeta d'intervalu nun inclúi denguna páxina"
 
-#: ../libview/ev-print-operation.c:1891
+#: ../libview/ev-print-operation.c:1860
 msgid "Page Scaling:"
 msgstr "Escaláu de Páxina:"
 
-#: ../libview/ev-print-operation.c:1897
+#: ../libview/ev-print-operation.c:1866
 msgid "Shrink to Printable Area"
 msgstr "Encoyer a un Área Imprentable"
 
-#: ../libview/ev-print-operation.c:1898
+#: ../libview/ev-print-operation.c:1867
 msgid "Fit to Printable Area"
 msgstr "Axustar a un Área Imprentable"
 
-#: ../libview/ev-print-operation.c:1901
+#: ../libview/ev-print-operation.c:1870
 msgid ""
 "Scale document pages to fit the selected printer page. Select from one of "
 "the following:\n"
@@ -702,11 +722,11 @@ msgstr ""
 "amenórguense según se requiera p'axustase al área d'imprentación de páxina "
 "de la imprentadora.\n"
 
-#: ../libview/ev-print-operation.c:1913
+#: ../libview/ev-print-operation.c:1882
 msgid "Auto Rotate and Center"
 msgstr "Auto Voltiar y Centrar"
 
-#: ../libview/ev-print-operation.c:1916
+#: ../libview/ev-print-operation.c:1885
 msgid ""
 "Rotate printer page orientation of each page to match orientation of each "
 "document page. Document pages will be centered within the printer page."
@@ -715,11 +735,11 @@ msgstr ""
 "con cada páxina del documentu. Les páxines del documentu, van centrase na "
 "páxina d'imprentación."
 
-#: ../libview/ev-print-operation.c:1921
+#: ../libview/ev-print-operation.c:1890
 msgid "Select page size using document page size"
 msgstr "Seleicionar el tamañu de páxina usando tamaños de páxines de documentos"
 
-#: ../libview/ev-print-operation.c:1923
+#: ../libview/ev-print-operation.c:1892
 msgid ""
 "When enabled, each page will be printed on the same size paper as the "
 "document page."
@@ -727,97 +747,92 @@ msgstr ""
 "Cuando ta activáu, cada páxina va imprentase nel mesmu tamañu de papel que "
 "la páxina del documentu."
 
-#: ../libview/ev-print-operation.c:2005
+#: ../libview/ev-print-operation.c:1974
 msgid "Page Handling"
 msgstr "Manexu de Páxines"
 
-#: ../libview/ev-jobs.c:1438
+#: ../libview/ev-jobs.c:1529
 #, c-format
 msgid "Failed to print page %d: %s"
 msgstr "Falló al imprentar la páxina %d: %s"
 
-#: ../libview/ev-view-accessible.c:41
+#: ../libview/ev-view-accessible.c:46
 msgid "Scroll Up"
 msgstr "Mover arriba"
 
-#: ../libview/ev-view-accessible.c:42
+#: ../libview/ev-view-accessible.c:47
 msgid "Scroll Down"
 msgstr "Mover abaxo"
 
-#: ../libview/ev-view-accessible.c:48
+#: ../libview/ev-view-accessible.c:53
 msgid "Scroll View Up"
 msgstr "Mover la Vista Arriba"
 
-#: ../libview/ev-view-accessible.c:49
+#: ../libview/ev-view-accessible.c:54
 msgid "Scroll View Down"
 msgstr "Mover la Vista Abaxo"
 
-#: ../libview/ev-view-accessible.c:533
+#: ../libview/ev-view-accessible.c:882
 msgid "Document View"
 msgstr "Vista de Documentu"
 
-#: ../libview/ev-view-presentation.c:673
+#: ../libview/ev-view-presentation.c:672
 msgid "Jump to page:"
 msgstr "Saltar a la páxina:"
 
-#: ../libview/ev-view-presentation.c:975
+#: ../libview/ev-view-presentation.c:968
 msgid "End of presentation. Click to exit."
 msgstr "Fin de la presentación. Calca pa colar."
 
-#: ../libview/ev-view.c:1727
+#: ../libview/ev-view.c:1756
 msgid "Go to first page"
 msgstr "Dir a la primer páxina"
 
-#: ../libview/ev-view.c:1729
+#: ../libview/ev-view.c:1758
 msgid "Go to previous page"
 msgstr "Dir a la páxina anterior"
 
-#: ../libview/ev-view.c:1731
+#: ../libview/ev-view.c:1760
 msgid "Go to next page"
 msgstr "Dir a la páxina siguiente"
 
-#: ../libview/ev-view.c:1733
+#: ../libview/ev-view.c:1762
 msgid "Go to last page"
 msgstr "Dir a la páxina cabera"
 
-#: ../libview/ev-view.c:1735
+#: ../libview/ev-view.c:1764
 msgid "Go to page"
 msgstr "Dir a la páxina"
 
-#: ../libview/ev-view.c:1737
+#: ../libview/ev-view.c:1766
 msgid "Find"
 msgstr "Alcontrar"
 
-#: ../libview/ev-view.c:1765
+#: ../libview/ev-view.c:1794
 #, c-format
 msgid "Go to page %s"
 msgstr "Dir a la páxina %s"
 
-#: ../libview/ev-view.c:1771
+#: ../libview/ev-view.c:1800
 #, c-format
 msgid "Go to %s on file “%s”"
 msgstr "Dir a %s nel ficheru “%s”"
 
-#: ../libview/ev-view.c:1774
+#: ../libview/ev-view.c:1803
 #, c-format
 msgid "Go to file “%s”"
 msgstr "Dir al ficheru “%s”"
 
-#: ../libview/ev-view.c:1782
+#: ../libview/ev-view.c:1811
 #, c-format
 msgid "Launch %s"
 msgstr "Llanzar %s"
-
-#: ../libview/ev-view.c:3949 ../shell/ev-sidebar-layers.c:125
-#: ../shell/ev-sidebar-links.c:262
-msgid "Loading…"
-msgstr "Cargando…"
 
 #: ../shell/eggfindbar.c:320
 msgid "Find:"
 msgstr "Atopar:"
 
-#: ../shell/eggfindbar.c:329 ../shell/ev-window.c:5103
+#: ../shell/eggfindbar.c:329 ../shell/ev-window.c:5449
 msgid "Find Pre_vious"
 msgstr "Atopar Anter_ior"
 
@@ -825,7 +840,7 @@ msgstr "Atopar Anter_ior"
 msgid "Find previous occurrence of the search string"
 msgstr "Atopar l'apaición anterior de la cadena"
 
-#: ../shell/eggfindbar.c:337 ../shell/ev-window.c:5101
+#: ../shell/eggfindbar.c:337 ../shell/ev-window.c:5447
 msgid "Find Ne_xt"
 msgstr "Atopar Sig_uiente"
 
@@ -840,6 +855,86 @@ msgstr "Sensible _a Mayúscules"
 #: ../shell/eggfindbar.c:351
 msgid "Toggle case sensitive search"
 msgstr "Alternar a gueta sensible a mayúscules"
+
+#: ../shell/ev-annotation-properties-dialog.c:97
+msgid "Icon:"
+msgstr "Iconu:"
+
+#: ../shell/ev-annotation-properties-dialog.c:104
+msgid "Note"
+msgstr "Nota"
+
+#: ../shell/ev-annotation-properties-dialog.c:105
+msgid "Comment"
+msgstr "Comentariu"
+
+#: ../shell/ev-annotation-properties-dialog.c:106
+msgid "Key"
+msgstr "Tecla"
+
+#: ../shell/ev-annotation-properties-dialog.c:107
+msgid "Help"
+msgstr "Aida"
+
+#: ../shell/ev-annotation-properties-dialog.c:108
+msgid "New Paragraph"
+msgstr "Párrafu Nuevu"
+
+#: ../shell/ev-annotation-properties-dialog.c:109
+msgid "Paragraph"
+msgstr "Párrafu"
+
+#: ../shell/ev-annotation-properties-dialog.c:110
+msgid "Insert"
+msgstr "Inxertar"
+
+#: ../shell/ev-annotation-properties-dialog.c:111
+msgid "Cross"
+msgstr "Cruz"
+
+#: ../shell/ev-annotation-properties-dialog.c:112
+msgid "Circle"
+msgstr "Círculu"
+
+#: ../shell/ev-annotation-properties-dialog.c:113
+msgid "Unknown"
+msgstr "Desconocíu"
+
+#: ../shell/ev-annotation-properties-dialog.c:139
+msgid "Annotation Properties"
+msgstr "Propiedaes de l'Anotación"
+
+#: ../shell/ev-annotation-properties-dialog.c:173
+msgid "Color:"
+msgstr "Color:"
+
+#: ../shell/ev-annotation-properties-dialog.c:185
+msgid "Style:"
+msgstr "Estilu:"
+
+#: ../shell/ev-annotation-properties-dialog.c:201
+msgid "Transparent"
+msgstr "Tresparente"
+
+#: ../shell/ev-annotation-properties-dialog.c:208
+msgid "Opaque"
+msgstr "Opacu"
+
+#: ../shell/ev-annotation-properties-dialog.c:219
+msgid "Initial window state:"
+msgstr "Estáu de la ventana nel aniciu:"
+
+#: ../shell/ev-annotation-properties-dialog.c:226
+msgid "Open"
+msgstr "Abrir"
+
+#: ../shell/ev-annotation-properties-dialog.c:227
+msgid "Close"
+msgstr "Zarrar"
+
+#: ../shell/ev-application.c:1022
+msgid "Running in presentation mode"
+msgstr "Executar en mou presentación"
 
 #: ../shell/ev-keyring.c:102
 #, c-format
@@ -856,11 +951,11 @@ msgstr "Convirtiendo %s"
 msgid "%d of %d documents converted"
 msgstr "Convirtiéronse %d de %d documentos"
 
-#: ../shell/ev-convert-metadata.c:164 ../shell/ev-convert-metadata.c:179
+#: ../shell/ev-convert-metadata.c:165 ../shell/ev-convert-metadata.c:181
 msgid "Converting metadata"
 msgstr "Convirtiendo metadatos"
 
-#: ../shell/ev-convert-metadata.c:185
+#: ../shell/ev-convert-metadata.c:187
 msgid ""
 "The metadata format used by Evince has changed, and hence it needs to be "
 "migrated. If the migration is cancelled the metadata storage will not work."
@@ -880,19 +975,19 @@ msgstr ""
 "Esti documentu ta bloquiáu y namái se pue lleer conseñando la contraseña "
 "correuta."
 
-#: ../shell/ev-password-view.c:153 ../shell/ev-password-view.c:269
+#: ../shell/ev-password-view.c:153 ../shell/ev-password-view.c:272
 msgid "_Unlock Document"
 msgstr "Desbloq_uiar Documentu"
 
-#: ../shell/ev-password-view.c:261
+#: ../shell/ev-password-view.c:264
 msgid "Enter password"
 msgstr "Conseñe la contraseña"
 
-#: ../shell/ev-password-view.c:301
+#: ../shell/ev-password-view.c:304
 msgid "Password required"
 msgstr "Necesítase contraseña"
 
-#: ../shell/ev-password-view.c:302
+#: ../shell/ev-password-view.c:305
 #, c-format
 msgid ""
 "The document “%s” is locked and requires a password before it can be opened."
@@ -900,35 +995,35 @@ msgstr ""
 "El documentu “%s” ta bloquiáu y requier d'una contraseña enantes de poder "
 "abrilu."
 
-#: ../shell/ev-password-view.c:332
+#: ../shell/ev-password-view.c:335
 msgid "_Password:"
 msgstr "_Contraseña:"
 
-#: ../shell/ev-password-view.c:365
+#: ../shell/ev-password-view.c:368
 msgid "Forget password _immediately"
 msgstr "Escaecer la contraseña _darréu"
 
-#: ../shell/ev-password-view.c:377
+#: ../shell/ev-password-view.c:380
 msgid "Remember password until you _log out"
 msgstr "Remembra la contraseña hasta que _salgas de la sesión"
 
-#: ../shell/ev-password-view.c:389
+#: ../shell/ev-password-view.c:392
 msgid "Remember _forever"
 msgstr "Remembrar pa _siempre"
 
-#: ../shell/ev-properties-dialog.c:58
+#: ../shell/ev-properties-dialog.c:62
 msgid "Properties"
 msgstr "Propiedaes"
 
-#: ../shell/ev-properties-dialog.c:92
+#: ../shell/ev-properties-dialog.c:95
 msgid "General"
 msgstr "Xeneral"
 
-#: ../shell/ev-properties-dialog.c:102
+#: ../shell/ev-properties-dialog.c:105
 msgid "Fonts"
 msgstr "Fontes"
 
-#: ../shell/ev-properties-dialog.c:115
+#: ../shell/ev-properties-dialog.c:118
 msgid "Document License"
 msgstr "Llicencia del documentu"
 
@@ -941,19 +1036,48 @@ msgstr "Fonte"
 msgid "Gathering font information… %3d%%"
 msgstr "Obteniendo información tipográfica… %3d%%"
 
-#: ../shell/ev-properties-license.c:138
+#: ../shell/ev-properties-license.c:137
 msgid "Usage terms"
 msgstr "Términos d'usu"
 
-#: ../shell/ev-properties-license.c:144
+#: ../shell/ev-properties-license.c:143
 msgid "Text License"
 msgstr "Testu de la Llicencia"
 
-#: ../shell/ev-properties-license.c:150
+#: ../shell/ev-properties-license.c:149
 msgid "Further Information"
 msgstr "Más Información"
 
-#: ../shell/ev-sidebar-attachments.c:712
+#: ../shell/ev-sidebar-annotations.c:161
+msgid "List"
+msgstr "Llista"
+
+#: ../shell/ev-sidebar-annotations.c:203 ../shell/ev-sidebar-annotations.c:533
+msgid "Annotations"
+msgstr "Anotaciones"
+
+#: ../shell/ev-sidebar-annotations.c:209
+msgid "Text"
+msgstr "Testu"
+
+#: ../shell/ev-sidebar-annotations.c:210
+msgid "Add text annotation"
+msgstr "Amestar anotación de testu"
+
+#: ../shell/ev-sidebar-annotations.c:221
+msgid "Add"
+msgstr "Amestar"
+
+#: ../shell/ev-sidebar-annotations.c:364
+msgid "Document contains no annotations"
+msgstr "El documentu nun tien anotaciones"
+
+#: ../shell/ev-sidebar-annotations.c:396
+#, c-format
+msgid "Page %d"
+msgstr "Páxina %d"
+
+#: ../shell/ev-sidebar-attachments.c:697
 msgid "Attachments"
 msgstr "Axuntos"
 
@@ -969,147 +1093,176 @@ msgstr "Imprentar…"
 msgid "Index"
 msgstr "Índiz"
 
-#: ../shell/ev-sidebar-thumbnails.c:956
+#: ../shell/ev-sidebar-thumbnails.c:965
 msgid "Thumbnails"
 msgstr "Miniatures"
 
-#: ../shell/ev-window.c:840
+#: ../shell/ev-window.c:875
 #, c-format
 msgid "Page %s — %s"
 msgstr "Páxina %s — %s"
 
-#: ../shell/ev-window.c:842
+#: ../shell/ev-window.c:877
 #, c-format
 msgid "Page %s"
 msgstr "Páxina %s"
 
-#: ../shell/ev-window.c:1288
+#: ../shell/ev-window.c:1436
 msgid "The document contains no pages"
 msgstr "El documentu nun contién páxina denguna"
 
-#: ../shell/ev-window.c:1291
+#: ../shell/ev-window.c:1439
 msgid "The document contains only empty pages"
 msgstr "El documentu namás tien páxines baleres"
 
-#: ../shell/ev-window.c:1491 ../shell/ev-window.c:1657
+#: ../shell/ev-window.c:1644 ../shell/ev-window.c:1810
 msgid "Unable to open document"
 msgstr "Nun se pudo abrir el documentu"
 
-#: ../shell/ev-window.c:1628
+#: ../shell/ev-window.c:1781
 #, c-format
 msgid "Loading document from “%s”"
 msgstr "Cargando documentu dende “%s”"
 
-#: ../shell/ev-window.c:1770 ../shell/ev-window.c:2047
+#: ../shell/ev-window.c:1923 ../shell/ev-window.c:2202
 #, c-format
 msgid "Downloading document (%d%%)"
 msgstr "Descargando documentu (%d%%)"
 
-#: ../shell/ev-window.c:1803
+#: ../shell/ev-window.c:1956
 msgid "Failed to load remote file."
 msgstr "Falló al recargar el documentu remotu."
 
-#: ../shell/ev-window.c:1991
+#: ../shell/ev-window.c:2146
 #, c-format
 msgid "Reloading document from %s"
 msgstr "Recargando'l documentu dende %s"
 
-#: ../shell/ev-window.c:2023
+#: ../shell/ev-window.c:2178
 msgid "Failed to reload document."
 msgstr "Falló al recargar el documentu."
 
-#: ../shell/ev-window.c:2178
+#: ../shell/ev-window.c:2333
 msgid "Open Document"
 msgstr "Abrir Documentu"
 
-#: ../shell/ev-window.c:2442
+#: ../shell/ev-window.c:2631
 #, c-format
 msgid "Saving document to %s"
 msgstr "Guardando'l documentu en %s"
 
-#: ../shell/ev-window.c:2445
+#: ../shell/ev-window.c:2634
 #, c-format
 msgid "Saving attachment to %s"
 msgstr "Guardando l'axuntu en %s"
 
-#: ../shell/ev-window.c:2448
+#: ../shell/ev-window.c:2637
 #, c-format
 msgid "Saving image to %s"
 msgstr "Guardando la imaxe en %s"
 
-#: ../shell/ev-window.c:2492 ../shell/ev-window.c:2592
+#: ../shell/ev-window.c:2681 ../shell/ev-window.c:2781
 #, c-format
 msgid "The file could not be saved as “%s”."
 msgstr "El ficheru nun se pudo guardar como “%s”."
 
-#: ../shell/ev-window.c:2523
+#: ../shell/ev-window.c:2712
 #, c-format
 msgid "Uploading document (%d%%)"
 msgstr "Xubiendo'l documentu (%d%%)"
 
-#: ../shell/ev-window.c:2527
+#: ../shell/ev-window.c:2716
 #, c-format
 msgid "Uploading attachment (%d%%)"
 msgstr "Xubiendo l'axuntu (%d%%)"
 
-#: ../shell/ev-window.c:2531
+#: ../shell/ev-window.c:2720
 #, c-format
 msgid "Uploading image (%d%%)"
 msgstr "Xubiendo la imaxe (%d%%)"
 
-#: ../shell/ev-window.c:2653
+#: ../shell/ev-window.c:2844
 msgid "Save a Copy"
 msgstr "Guardar una Copia"
 
-#: ../shell/ev-window.c:2975
+#: ../shell/ev-window.c:3129
 #, c-format
 msgid "%d pending job in queue"
 msgid_plural "%d pending jobs in queue"
 msgstr[0] "%d trabayu pendiente na cola"
 msgstr[1] "%d trabayos pendientes na cola"
 
-#: ../shell/ev-window.c:3088
+#: ../shell/ev-window.c:3242
 #, c-format
 msgid "Printing job “%s”"
 msgstr "Imprentando trabayu “%s”"
 
-#: ../shell/ev-window.c:3300
+#: ../shell/ev-window.c:3420
+msgid ""
+"Document contains form fields that have been filled out. If you don't save a "
+"copy, changes will be permanently lost."
+msgstr ""
+"El documentu contién campos de formulariu que s'enllenaron. Los cambeos van "
+"perdese si nun guardes una copia."
+
+#: ../shell/ev-window.c:3424
+msgid ""
+"Document contains new or modified annotations. If you don't save a copy, "
+"changes will be permanently lost."
+msgstr ""
+"El documentu contién anotaciones nueves o modificaciones. Si nun guardes una "
+"copia, van perdese tolos cambeos fechos."
+
+#: ../shell/ev-window.c:3431
+#, c-format
+msgid "Save a copy of document “%s” before closing?"
+msgstr "¿Guardar una copia del documentu “%s” enantes de zarrar?"
+
+#: ../shell/ev-window.c:3450
+msgid "Close _without Saving"
+msgstr "Zarrar _ensin guardar"
+
+#: ../shell/ev-window.c:3454
+msgid "Save a _Copy"
+msgstr "Guardar una copia"
+
+#: ../shell/ev-window.c:3528
 #, c-format
 msgid "Wait until print job “%s” finishes before closing?"
 msgstr ""
 "¿Esperar hasta que fine'l trabayu d'imprentación “%s” enantes de zarrar?"
 
-#: ../shell/ev-window.c:3303
+#: ../shell/ev-window.c:3531
 #, c-format
 msgid ""
 "There are %d print jobs active. Wait until print finishes before closing?"
 msgstr ""
-"Esisten %d trabayos d'impresión activos. ¿Quies esperar a que fine la "
-"imprentadora enantes de zarrar?"
+"Hai %d trabayu d'impresión activu. ¿Quies esperar a que fine la imprentadora "
+"enantes de zarrar?"
 
-#: ../shell/ev-window.c:3315
+#: ../shell/ev-window.c:3543
 msgid "If you close the window, pending print jobs will not be printed."
 msgstr ""
 "Si zarres la ventana, los trabayos d'imprentación pendientes nun se van "
 "imprentar."
 
-#: ../shell/ev-window.c:3319
+#: ../shell/ev-window.c:3547
 msgid "Cancel _print and Close"
 msgstr "Encaboxar la _imprentación y Zarrar"
 
-#: ../shell/ev-window.c:3323
+#: ../shell/ev-window.c:3551
 msgid "Close _after Printing"
 msgstr "Zarrar _dempués d'Imprentar"
 
-#: ../shell/ev-window.c:3888
+#: ../shell/ev-window.c:4171
 msgid "Toolbar Editor"
 msgstr "Editor de la Barra de Ferramientes"
 
-#: ../shell/ev-window.c:4020
+#: ../shell/ev-window.c:4338
 msgid "There was an error displaying help"
 msgstr "Hebo un fallu al amosar l'aida"
 
-#: ../shell/ev-window.c:4231
+#: ../shell/ev-window.c:4550
 #, c-format
 msgid ""
 "Document Viewer\n"
@@ -1118,7 +1271,7 @@ msgstr ""
 "Visor de Documentos.\n"
 "Usando %s (%s)"
 
-#: ../shell/ev-window.c:4262
+#: ../shell/ev-window.c:4581
 msgid ""
 "Evince is free software; you can redistribute it and/or modify it under the "
 "terms of the GNU General Public License as published by the Free Software "
@@ -1129,7 +1282,7 @@ msgstr "Evince ye software llibre; pues redistribuyilu y/o camudalu baxo los "
 "Foundation; yá seya na so versión 2 ó (al so criteriu) nuna versión "
 "postrera.\n"
 
-#: ../shell/ev-window.c:4266
+#: ../shell/ev-window.c:4585
 msgid ""
 "Evince is distributed in the hope that it will be useful, but WITHOUT ANY "
 "WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS "
@@ -1139,24 +1292,24 @@ msgstr "Evince distribúise col enfotu de que seya útil, pero ENSIN GARANTÍA; 
 "nenguna garantía implícita de COMERCIALIDÁ o IDONEIDÁ PA UN FIN DETERMINÁU. "
 " Adique la Llicencia General GNU pa más detáis.\n"
 
-#: ../shell/ev-window.c:4270
+#: ../shell/ev-window.c:4589
 msgid ""
 "You should have received a copy of the GNU General Public License along with "
-"Evince; if not, write to the Free Software Foundation, Inc., 59 Temple "
-"Place, Suite 330, Boston, MA  02111-1307  USA\n"
+"Evince; if not, write to the Free Software Foundation, Inc., 51 Franklin "
+"Street, Fifth Floor, Boston, MA 02110-1301  USA\n"
 msgstr "Deberíes tener recibío una copia de la Llicencia Pública Xeneral de GNU "
 "xunto con Evince; si nun ye'l casu, escribi a Free Software Foundation, "
-"Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA\n"
+"Inc., 51 Franklin Streer, Fifth Floor, Boston, MA  02110-1301  USA\n"
 
-#: ../shell/ev-window.c:4295
+#: ../shell/ev-window.c:4614
 msgid "Evince"
 msgstr "Evince"
 
-#: ../shell/ev-window.c:4298
+#: ../shell/ev-window.c:4617
 msgid "© 1996–2009 The Evince authors"
-msgstr "© 1996-2009 Los autores d'Evince"
+msgstr "© 1996–2009 Los autores d'Evince"
 
-#: ../shell/ev-window.c:4304
+#: ../shell/ev-window.c:4623
 msgid "translator-credits"
 msgstr ""
 "Xandru Armesto: xandru@softastur.org\n"
@@ -1169,322 +1322,326 @@ msgstr ""
 #. TRANS: Sometimes this could be better translated as
 #. "%d hit(s) on this page".  Therefore this string
 #. contains plural cases.
-#: ../shell/ev-window.c:4576
+#: ../shell/ev-window.c:4889
 #, c-format
 msgid "%d found on this page"
 msgid_plural "%d found on this page"
 msgstr[0] "%d alcontráu nesta páxina"
 msgstr[1] "%d alcontraos nesta páxina"
 
-#: ../shell/ev-window.c:4584
+#: ../shell/ev-window.c:4894
+msgid "Not found"
+msgstr "Nun s'alcontró"
+
+#: ../shell/ev-window.c:4900
 #, c-format
 msgid "%3d%% remaining to search"
 msgstr "%3d%% restante pa guetar"
 
-#: ../shell/ev-window.c:5066
+#: ../shell/ev-window.c:5415
 msgid "_File"
 msgstr "_Ficheru"
 
-#: ../shell/ev-window.c:5067
+#: ../shell/ev-window.c:5416
 msgid "_Edit"
 msgstr "_Editar"
 
-#: ../shell/ev-window.c:5068
+#: ../shell/ev-window.c:5417
 msgid "_View"
 msgstr "_Ver"
 
-#: ../shell/ev-window.c:5069
+#: ../shell/ev-window.c:5418
 msgid "_Go"
 msgstr "_Dir"
 
-#: ../shell/ev-window.c:5070
+#: ../shell/ev-window.c:5419
 msgid "_Help"
 msgstr "_Aida"
 
 #. File menu
-#: ../shell/ev-window.c:5073 ../shell/ev-window.c:5341
+#: ../shell/ev-window.c:5422 ../shell/ev-window.c:5723
 msgid "_Open…"
 msgstr "_Abrir…"
 
-#: ../shell/ev-window.c:5074 ../shell/ev-window.c:5342
+#: ../shell/ev-window.c:5423 ../shell/ev-window.c:5724
 msgid "Open an existing document"
 msgstr "Abre un documentu esistente"
 
-#: ../shell/ev-window.c:5076
+#: ../shell/ev-window.c:5425
 msgid "Op_en a Copy"
 msgstr "A_brir una Copia"
 
-#: ../shell/ev-window.c:5077
+#: ../shell/ev-window.c:5426
 msgid "Open a copy of the current document in a new window"
 msgstr "Abre una copia del documentu actual nuna ventana nueva"
 
-#: ../shell/ev-window.c:5079
+#: ../shell/ev-window.c:5428
 msgid "_Save a Copy…"
 msgstr "Guardar una C_opia…"
 
-#: ../shell/ev-window.c:5080
+#: ../shell/ev-window.c:5429
 msgid "Save a copy of the current document"
 msgstr "Guarda una copia del documentu actual"
 
-#: ../shell/ev-window.c:5082
-msgid "Page Set_up…"
-msgstr "_Configurar Páxina…"
-
-#: ../shell/ev-window.c:5083
-msgid "Set up the page settings for printing"
-msgstr "Configura los axustes de páxina pa imprentar"
-
-#: ../shell/ev-window.c:5085
+#: ../shell/ev-window.c:5431
 msgid "_Print…"
 msgstr "Im_prentar..."
 
-#: ../shell/ev-window.c:5088
+#: ../shell/ev-window.c:5434
 msgid "P_roperties"
 msgstr "P_ropiedaes"
 
-#: ../shell/ev-window.c:5096
+#: ../shell/ev-window.c:5442
 msgid "Select _All"
 msgstr "Seleicion_ar Too"
 
-#: ../shell/ev-window.c:5098
+#: ../shell/ev-window.c:5444
 msgid "_Find…"
 msgstr "At_opar…"
 
-#: ../shell/ev-window.c:5099
+#: ../shell/ev-window.c:5445
 msgid "Find a word or phrase in the document"
 msgstr "Guetar una pallabra o fras nel documentu"
 
-#: ../shell/ev-window.c:5105
+#: ../shell/ev-window.c:5451
 msgid "T_oolbar"
 msgstr "_Barra de ferramientes"
 
-#: ../shell/ev-window.c:5107
+#: ../shell/ev-window.c:5453
 msgid "Rotate _Left"
 msgstr "Voltiar a la _Esquierda"
 
-#: ../shell/ev-window.c:5109
+#: ../shell/ev-window.c:5455
 msgid "Rotate _Right"
 msgstr "Voltiar a la D_recha"
 
-#: ../shell/ev-window.c:5120
+#: ../shell/ev-window.c:5457
+msgid "Save Current Settings as _Default"
+msgstr "Guardar los axustes actuales como pr_edeterminaos"
+
+#: ../shell/ev-window.c:5468
 msgid "_Reload"
 msgstr "_Recargar"
 
-#: ../shell/ev-window.c:5121
+#: ../shell/ev-window.c:5469
 msgid "Reload the document"
 msgstr "Recarga'l documentu"
 
-#: ../shell/ev-window.c:5124
+#: ../shell/ev-window.c:5472
 msgid "Auto_scroll"
 msgstr "Autode_splazar"
 
-#: ../shell/ev-window.c:5134
+#: ../shell/ev-window.c:5482
 msgid "_First Page"
 msgstr "_Primer Páxina"
 
-#: ../shell/ev-window.c:5135
+#: ../shell/ev-window.c:5483
 msgid "Go to the first page"
 msgstr "Dir a la primer páxina"
 
-#: ../shell/ev-window.c:5137
+#: ../shell/ev-window.c:5485
 msgid "_Last Page"
 msgstr "Páxina C_abera"
 
-#: ../shell/ev-window.c:5138
+#: ../shell/ev-window.c:5486
 msgid "Go to the last page"
 msgstr "Dir a la páxina cabera"
 
 #. Help menu
-#: ../shell/ev-window.c:5142
+#: ../shell/ev-window.c:5490
 msgid "_Contents"
 msgstr "_Conteníos"
 
-#: ../shell/ev-window.c:5145
+#: ../shell/ev-window.c:5493
 msgid "_About"
 msgstr "Tocante _a"
 
 #. Toolbar-only
-#: ../shell/ev-window.c:5149
+#: ../shell/ev-window.c:5497
 msgid "Leave Fullscreen"
 msgstr "Dexar Pantalla Completa"
 
-#: ../shell/ev-window.c:5150
+#: ../shell/ev-window.c:5498
 msgid "Leave fullscreen mode"
 msgstr "Dexar mou pantalla completa"
 
-#: ../shell/ev-window.c:5152
+#: ../shell/ev-window.c:5500
 msgid "Start Presentation"
 msgstr "Aniciar presentación"
 
-#: ../shell/ev-window.c:5153
+#: ../shell/ev-window.c:5501
 msgid "Start a presentation"
 msgstr "Aniciar una presentación"
 
 #. View Menu
-#: ../shell/ev-window.c:5212
+#: ../shell/ev-window.c:5560
 msgid "_Toolbar"
 msgstr "_Barra Ferramientes"
 
-#: ../shell/ev-window.c:5213
+#: ../shell/ev-window.c:5561
 msgid "Show or hide the toolbar"
 msgstr "Amuesa o anubre la barra de ferramientes"
 
-#: ../shell/ev-window.c:5215
+#: ../shell/ev-window.c:5563
 msgid "Side _Pane"
 msgstr "Barra _Llateral"
 
-#: ../shell/ev-window.c:5216
+#: ../shell/ev-window.c:5564
 msgid "Show or hide the side pane"
 msgstr "Amuesa o anubre'l panel llateral"
 
-#: ../shell/ev-window.c:5218
+#: ../shell/ev-window.c:5566
 msgid "_Continuous"
 msgstr "_Continuu"
 
-#: ../shell/ev-window.c:5219
+#: ../shell/ev-window.c:5567
 msgid "Show the entire document"
 msgstr "Amosar el documentu completu"
 
-#: ../shell/ev-window.c:5221
+#: ../shell/ev-window.c:5569
 msgid "_Dual"
 msgstr "_Dual"
 
-#: ../shell/ev-window.c:5222
+#: ../shell/ev-window.c:5570
 msgid "Show two pages at once"
 msgstr "Amosar dos páxines al empar"
 
-#: ../shell/ev-window.c:5224
+#: ../shell/ev-window.c:5572
 msgid "_Fullscreen"
 msgstr "_Pantalla completa:"
 
-#: ../shell/ev-window.c:5225
+#: ../shell/ev-window.c:5573
 msgid "Expand the window to fill the screen"
 msgstr "Espurrir la ventana hasta enllenar la pantalla"
 
-#: ../shell/ev-window.c:5227
+#: ../shell/ev-window.c:5575
 msgid "Pre_sentation"
 msgstr "Pre_sentación"
 
-#: ../shell/ev-window.c:5228
+#: ../shell/ev-window.c:5576
 msgid "Run document as a presentation"
 msgstr "Ver el documentu como una presentación"
 
-#: ../shell/ev-window.c:5236
+#: ../shell/ev-window.c:5584
 msgid "_Inverted Colors"
 msgstr "Colores _Invertíos"
 
-#: ../shell/ev-window.c:5237
+#: ../shell/ev-window.c:5585
 msgid "Show page contents with the colors inverted"
 msgstr "Amosar los conteníos de la páxina con colores invertíos"
 
 #. Links
-#: ../shell/ev-window.c:5245
+#: ../shell/ev-window.c:5593
 msgid "_Open Link"
 msgstr "_Abrir Enllaz"
 
-#: ../shell/ev-window.c:5247
+#: ../shell/ev-window.c:5595
 msgid "_Go To"
 msgstr "_Dir a"
 
-#: ../shell/ev-window.c:5249
+#: ../shell/ev-window.c:5597
 msgid "Open in New _Window"
 msgstr "Abrir nuna _Ventana Nueva"
 
-#: ../shell/ev-window.c:5251
+#: ../shell/ev-window.c:5599
 msgid "_Copy Link Address"
 msgstr "_Copiar Direición del Enllaz"
 
-#: ../shell/ev-window.c:5253
+#: ../shell/ev-window.c:5601
 msgid "_Save Image As…"
 msgstr "Guardar imaxe _como…"
 
-#: ../shell/ev-window.c:5255
+#: ../shell/ev-window.c:5603
 msgid "Copy _Image"
 msgstr "Copiar _Imaxe"
 
-#: ../shell/ev-window.c:5260
+#: ../shell/ev-window.c:5605
+msgid "Annotation Properties…"
+msgstr "Propiedaes de l'Anotación…"
+
+#: ../shell/ev-window.c:5610
 msgid "_Open Attachment"
 msgstr "Guardar A_xuntos"
 
-#: ../shell/ev-window.c:5262
+#: ../shell/ev-window.c:5612
 msgid "_Save Attachment As…"
 msgstr "Guard_ar Axuntu Como…"
 
-#: ../shell/ev-window.c:5315
+#: ../shell/ev-window.c:5697
 msgid "Zoom"
 msgstr "Zoom"
 
-#: ../shell/ev-window.c:5317
+#: ../shell/ev-window.c:5699
 msgid "Adjust the zoom level"
 msgstr "Axustar el nivel de zoom"
 
-#: ../shell/ev-window.c:5327
+#: ../shell/ev-window.c:5709
 msgid "Navigation"
 msgstr "Navegación"
 
-#: ../shell/ev-window.c:5329
+#: ../shell/ev-window.c:5711
 msgid "Back"
 msgstr "Volver"
 
 #. translators: this is the history action
-#: ../shell/ev-window.c:5332
+#: ../shell/ev-window.c:5714
 msgid "Move across visited pages"
 msgstr "Movese a traviés de les páxines visitaes"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:5362
+#: ../shell/ev-window.c:5744
 msgid "Previous"
 msgstr "Previu"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:5367
+#: ../shell/ev-window.c:5749
 msgid "Next"
 msgstr "Siguiente"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:5371
+#: ../shell/ev-window.c:5753
 msgid "Zoom In"
 msgstr "Aumentar zoom"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:5375
+#: ../shell/ev-window.c:5757
 msgid "Zoom Out"
 msgstr "Amenorgar zoom"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:5383
+#: ../shell/ev-window.c:5765
 msgid "Fit Width"
 msgstr "Axustar Anchor"
 
-#: ../shell/ev-window.c:5544 ../shell/ev-window.c:5561
+#: ../shell/ev-window.c:5910 ../shell/ev-window.c:5927
 msgid "Unable to launch external application."
 msgstr "Nun pudo llanzase l'aplicación esterna."
 
-#: ../shell/ev-window.c:5618
+#: ../shell/ev-window.c:5984
 msgid "Unable to open external link"
 msgstr "Nun se pudo abrir l'enllaz esternu"
 
-#: ../shell/ev-window.c:5785
+#: ../shell/ev-window.c:6151
 msgid "Couldn't find appropriate format to save image"
 msgstr "Nun se pudo alcontrar el formatu afayadizu pa guardar la imaxe"
 
-#: ../shell/ev-window.c:5827
+#: ../shell/ev-window.c:6193
 msgid "The image could not be saved."
 msgstr "La imaxe nun se pudo guardar."
 
-#: ../shell/ev-window.c:5859
+#: ../shell/ev-window.c:6225
 msgid "Save Image"
 msgstr "Guardar Imaxe"
 
-#: ../shell/ev-window.c:5926
+#: ../shell/ev-window.c:6353
 msgid "Unable to open attachment"
 msgstr "Nun se pudo abrir l'axuntu"
 
-#: ../shell/ev-window.c:5979
+#: ../shell/ev-window.c:6406
 msgid "The attachment could not be saved."
 msgstr "L'axuntu nun se pudo guardar."
 
-#: ../shell/ev-window.c:6024
+#: ../shell/ev-window.c:6451
 msgid "Save Attachment"
 msgstr "Guardar Axuntos"
 
@@ -1493,21 +1650,29 @@ msgstr "Guardar Axuntos"
 msgid "%s — Password Required"
 msgstr "%s — Requierse una contraseña"
 
-#: ../shell/ev-utils.c:315
+#: ../shell/ev-utils.c:318
 msgid "By extension"
 msgstr "Per estensión"
 
-#: ../shell/main.c:70 ../shell/main.c:272
+#: ../shell/main.c:69 ../shell/main.c:274
 msgid "GNOME Document Viewer"
 msgstr "Visor de Documentos de GNOME"
 
-#: ../shell/main.c:78
-msgid "The page of the document to display."
-msgstr "La páxina del documentu a amosar."
+#: ../shell/main.c:77
+msgid "The page label of the document to display."
+msgstr "La etiqueta de páxina a amosar."
 
-#: ../shell/main.c:78
+#: ../shell/main.c:77
 msgid "PAGE"
 msgstr "PÁXINA"
+
+#: ../shell/main.c:78
+msgid "The page number of the document to display."
+msgstr "El númberu de páxina a amosar."
+
+#: ../shell/main.c:78
+msgid "NUMBER"
+msgstr "NÚMBERU"
 
 #: ../shell/main.c:79
 msgid "Run evince in fullscreen mode"
@@ -1557,115 +1722,65 @@ msgstr ""
 "Comandu válidu y argumentos pal miniaturizador de documentos PDF. Llei la "
 "documentación pal miniaturizador de Nautilus pa más información."
 
-#~ msgid "800%"
-#~ msgstr "800%"
+#~ msgid "_Open Bookmark"
+#~ msgstr "_Abrir marcador"
 
-#~ msgid "1600%"
-#~ msgstr "1600%"
+#~ msgid "_Rename Bookmark"
+#~ msgstr "_Renomar marcador"
 
-#~ msgid "3200%"
-#~ msgstr "3200%"
+#~ msgid "_Remove Bookmark"
+#~ msgstr "_Desaniciar marcador"
 
-#~ msgid "6400%"
-#~ msgstr "6400%"
+#~ msgid "Bookmarks"
+#~ msgstr "Marcadores"
 
-#~ msgid "Icon:"
-#~ msgstr "Iconu:"
+#~ msgid "Could not open the containing folder"
+#~ msgstr "Nun pue abrise'l conteníu de la carpeta"
 
-#~ msgid "Note"
-#~ msgstr "Nota"
+#~ msgid "© 1996–2010 The Evince authors"
+#~ msgstr "© 1996-2010 Los autores d'Evince"
 
-#~ msgid "Comment"
-#~ msgstr "Comentariu"
+#~ msgid "_Bookmarks"
+#~ msgstr "_Marcadores"
 
-#~ msgid "Key"
-#~ msgstr "Tecla"
+#~ msgid "Open Containing _Folder"
+#~ msgstr "Abrir conteníu de la _carpeta"
 
-#~ msgid "Help"
-#~ msgstr "Aida"
+#~ msgid "Show the folder which contains this file in the file manager"
+#~ msgstr "Amosar nel xestor de ficheros la carpeta que contién esti ficheru"
 
-#~ msgid "New Paragraph"
-#~ msgstr "Párrafu Nuevu"
+#~ msgid "_Add Bookmark"
+#~ msgstr "_Amestar marcador"
 
-#~ msgid "Paragraph"
-#~ msgstr "Párrafu"
+#~ msgid "Add a bookmark for the current page"
+#~ msgstr "Amestar un marcador pa la páxina actual"
 
-#~ msgid "Insert"
-#~ msgstr "Inxertar"
+#~ msgid "Open Folder"
+#~ msgstr "Abrir carpeta"
 
-#~ msgid "Cross"
-#~ msgstr "Cruz"
+#~ msgid "Go to Pa_ge"
+#~ msgstr "Dir a la _páxina"
 
-#~ msgid "Circle"
-#~ msgstr "Círculu"
+#~ msgid "Go to Page"
+#~ msgstr "Dir a la páxina"
 
-#~ msgid "Unknown"
-#~ msgstr "Desconocíu"
-
-#~ msgid "Annotation Properties"
-#~ msgstr "Propiedaes de l'Anotación"
-
-#~ msgid "Color:"
-#~ msgstr "Color:"
-
-#~ msgid "Style:"
-#~ msgstr "Estilu:"
-
-#~ msgid "Transparent"
-#~ msgstr "Tresparente"
-
-#~ msgid "Opaque"
-#~ msgstr "Opacu"
-
-#~ msgid "Initial window state:"
-#~ msgstr "Estáu de la ventana nel aniciu:"
-
-#~ msgid "Open"
-#~ msgstr "Abrir"
-
-#~ msgid "Close"
-#~ msgstr "Zarrar"
-
-#~ msgid "List"
-#~ msgstr "Llista"
-
-#~ msgid "Annotations"
-#~ msgstr "Anotaciones"
-
-#~ msgid "Text"
-#~ msgstr "Testu"
-
-#~ msgid "Add text annotation"
-#~ msgstr "Amestar anotación de testu"
-
-#~ msgid "Add"
-#~ msgstr "Amestar"
-
-#~ msgid "Document contains no annotations"
-#~ msgstr "El documentu nun tien anotaciones"
-
-#, c-format
-#~ msgid "Page %d"
-#~ msgstr "Páxina %d"
-
-#~ msgid "You should have received a copy of the GNU General Public License along with "
-#~ "Evince; if not, write to the Free Software Foundation, Inc., 51 Franklin "
-#~ "Street, Fifth Floor, Boston, MA 02110-1301  USA\n"
-#~ msgstr "Deberíes tener recibío una copia de la Llicencia Pública Xeneral de GNU "
+#~ msgid ""
+#~ "You should have received a copy of the GNU General Public License along "
+#~ "with Evince; if not, write to the Free Software Foundation, Inc., 59 "
+#~ "Temple Place, Suite 330, Boston, MA  02111-1307  USA\n"
+#~ msgstr ""
+#~ "Deberíes tener recibío una copia de la Llicencia Pública Xeneral de GNU "
 #~ "xunto con Evince; si nun ye'l casu, escribi a Free Software Foundation, "
-#~ "Inc., 51 Franklin Streer, Fifth Floor, Boston, MA  02110-1301  USA\n"
+#~ "Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA\n"
 
-#~ msgid "Annotation Properties…"
-#~ msgstr "Propiedaes de l'Anotación…"
+#~ msgid "Page Set_up…"
+#~ msgstr "_Configurar Páxina…"
 
-#~ msgid "The page label of the document to display."
-#~ msgstr "La etiqueta de páxina a amosar."
+#~ msgid "Set up the page settings for printing"
+#~ msgstr "Configura los axustes de páxina pa imprentar"
 
-#~ msgid "The page number of the document to display."
-#~ msgstr "El númberu de páxina a amosar."
-
-#~ msgid "NUMBER"
-#~ msgstr "NÚMBERU"
+#~ msgid "The page of the document to display."
+#~ msgstr "La páxina del documentu a amosar."
 
 #~ msgid "DJVU document has incorrect format"
 #~ msgstr "El documentu DJVU tien formatu incorreutu"
