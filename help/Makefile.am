@@ -20,6 +20,7 @@ DOC_FIGURES = \
 	figures/print-2sided.png		\
 	figures/print-select.png		\
 	figures/reverse-collate.png		\
+	figures/synctex_screencast.ogv		\
 	figures/zoom.png
 
 DOC_PAGES = \
