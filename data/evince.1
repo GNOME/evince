@@ -2,12 +2,13 @@
 .SH NAME
 \fBevince\fP \- GNOME document viewer
 
-The Evince Document Viewer application for GNOME desktop environment
+The Evince Document Viewer application for the GNOME desktop environment
 
 .SH SYNTAX
 .B evince
 .RI [--help]
-.RI [--page-label=<label>]
+.RI [--page-label=PAGE\ |
+.RI --page-index=NUMBER]
 .RI [--fullscreen]
 .RI [--presentation]
 .RI [--preview]
@@ -25,12 +26,14 @@ http://www.gnome.org/projects/evince/
 .SH OPTIONS
 
 .TP
-\fB\-?, \-\-help\fR
+\fB\-?, \-h, \-\-help\fR
 Prints the command line options.
 .TP
-\fB\-p, \-\-page\-label=label\fR
-You can pass a page label or page number here, this page will be selected in
-the document if it exists.
+\fB\-p, \-\-page\-label=PAGE\fR
+Open the document on the page with the specified page label (or page number).
+.TP
+\fB\-p, \-\-page\-index=NUMBER\fR
+Open the document on the page with the specified page index (this is the exact page number, not a page label).
 .TP
 \fB\-f, \-\-fullscreen\fR
 Run evince in fullscreen mode.
