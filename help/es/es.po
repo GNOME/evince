@@ -8,8 +8,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: evince.help.master\n"
-"POT-Creation-Date: 2011-09-05 15:15+0000\n"
-"PO-Revision-Date: 2011-09-05 17:42+0200\n"
+"POT-Creation-Date: 2011-10-12 22:15+0000\n"
+"PO-Revision-Date: 2011-10-14 12:09+0200\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -309,19 +309,14 @@ msgstr ""
 "guiseq>."
 
 #: C/synctex-support.page:7(desc)
-#| msgid "How to add support for SyncTex."
 msgid "How to add support for SyncTeX."
 msgstr "Cómo añadir soporte para SyncTex."
 
 #: C/synctex-support.page:20(title)
-#| msgid "Set-up SyncTex"
 msgid "Set-up SyncTeX"
 msgstr "Configurar SyncTex"
 
 #: C/synctex-support.page:21(p)
-#| msgid ""
-#| "The following packages need to be installed in order to add support for "
-#| "SyncTex:"
 msgid ""
 "The following packages need to be installed in order to add support for "
 "SyncTeX:"
@@ -337,7 +332,6 @@ msgid "gedit-plugins"
 msgstr "gedit-plugins"
 
 #: C/synctex-support.page:37(p)
-#| msgid "In <app>gedit</app>, enable the SyncTex Plugin:"
 msgid "In <app>gedit</app>, enable the SyncTeX Plugin:"
 msgstr "En <app>gedit</app>, active el complemento SyncTex:"
 
@@ -350,7 +344,6 @@ msgstr ""
 "gui><gui>Complementos</gui></guiseq>."
 
 #: C/synctex-support.page:47(p)
-#| msgid "Check <gui>SyncTex</gui>."
 msgid "Check <gui>SyncTeX</gui>."
 msgstr "Marque <gui>SyncTex</gui>."
 
@@ -359,15 +352,10 @@ msgid "Flip between the <app>document viewer</app> and <app>gedit</app>."
 msgstr "Alternar entre el <app>Visor de documentos</app> y <app>gedit</app>."
 
 #: C/synctex-search.page:20(title)
-#| msgid "Search with SyncTex"
 msgid "Search with SyncTeX"
 msgstr "Buscar con SyncTex"
 
 #: C/synctex-search.page:21(p)
-#| msgid ""
-#| "After you <link xref=\"synctex-compile\">compile your TeX file with "
-#| "SyncTex</link>, you will be able to search. SyncTex even supports forward "
-#| "and backward search from an included file."
 msgid ""
 "After you <link xref=\"synctex-compile\">compile your TeX file with SyncTeX</"
 "link>, you will be able to search. SyncTeX even supports forward and "
@@ -485,7 +473,6 @@ msgid "SyncTeX support is available."
 msgstr "Está disponible soporta para SyncTeX."
 
 #: C/synctex.page:19(title)
-#| msgid "What is SyncTex?"
 msgid "What is SyncTeX?"
 msgstr "¿Qué es SyncTex?"
 
@@ -502,8 +489,9 @@ msgid "Demo"
 msgstr "Demostración"
 
 #: C/synctex.page:30(p)
-msgid "Press Ctrl+click to sync."
-msgstr "Para sincronizar pulse Ctrl+pulsación"
+#| msgid "Press Ctrl+click to sync."
+msgid "Press <key>Ctrl</key> + click to sync."
+msgstr "Pulse <key>Ctrl</key> + pulsación para sincronizar."
 
 #: C/synctex-editors.page:7(desc)
 msgid "Which editor can you use to edit your TEX file?"
@@ -534,11 +522,6 @@ msgid "Vim-latex"
 msgstr "Vim-latex"
 
 #: C/synctex-editors.page:29(p)
-#| msgid ""
-#| "The <app>gedit</app> plugin contains a python script (evince_dbus.py) "
-#| "that can be used to get SyncTex working with Vim. In order to use vim-"
-#| "latex together with the <app>document viewer</app> you need to follow the "
-#| "next steps:"
 msgid ""
 "The <app>gedit</app> plugin contains a python script (evince_dbus.py) that "
 "can be used to get SyncTeX working with Vim. In order to use vim-latex "
@@ -583,14 +566,49 @@ msgstr ""
 "\\ls. La búsqueda hacia atrás aún no está soportada."
 
 #: C/synctex-compile.page:7(desc)
-#| msgid "How to compile your TeX document with SyncTex"
 msgid "How to compile your TeX document with SyncTeX"
 msgstr "Como compilar su documento TeX con SyncTex"
 
 #: C/synctex-compile.page:19(title)
-#| msgid "Compile TeX with SyncTex"
 msgid "Compile TeX with SyncTeX"
 msgstr "Compilar TeX con SyncTex"
+
+#: C/synctex-compile.page:20(p)
+#| msgid ""
+#| "Adding the line <em>\\synctex=1</em> in the preamble of your TeX file "
+#| "will trigger synchronization with SyncTeX. <code>\n"
+#| "\\documentclass{article}\n"
+#| "\\synctex=1\n"
+#| "\\usepackage{fullpage}\n"
+#| "\\begin{document}\n"
+#| "...\n"
+#| "\\end{document}\n"
+#| "</code><placeholder-1/><placeholder-2/> age&gt;"
+msgid ""
+"Adding the line <em>\\synctex=1</em> in the preamble of your TeX file will "
+"trigger synchronization with SyncTeX."
+msgstr ""
+"Añadir la línea <em>\\synctex=1</em> en el preámbulo de su archivo TeX "
+"disparará la sincronización con SyncTeX."
+
+#: C/synctex-compile.page:23(code)
+#, no-wrap
+msgid ""
+"\n"
+"\\documentclass{article}\n"
+"\\synctex=1\n"
+"\\usepackage{fullpage}\n"
+"\\begin{document}\n"
+"...\n"
+"\\end{document}\n"
+msgstr ""
+"\n"
+"\\documentclass{article}\n"
+"\\synctex=1\n"
+"\\usepackage{fullpage}\n"
+"\\begin{document}\n"
+"...\n"
+"\\end{document}\n"
 
 #: C/synctex-compile.page:31(p)
 msgid ""
@@ -605,38 +623,11 @@ msgstr ""
 msgid "pdflatex -synctex=1 yourFile.tex"
 msgstr "pdflatex -synctex=1 suArchivo.tex"
 
-#: C/synctex-compile.page:20(p)
-#| msgid ""
-#| "Adding the line <em>\\synctex=1</em> in the preamble of your TeX file "
-#| "will trigger synchronization with SyncTeX."
-msgid ""
-"Adding the line <em>\\synctex=1</em> in the preamble of your TeX file will "
-"trigger synchronization with SyncTeX. <code>\n"
-"\\documentclass{article}\n"
-"\\synctex=1\n"
-"\\usepackage{fullpage}\n"
-"\\begin{document}\n"
-"...\n"
-"\\end{document}\n"
-"</code><placeholder-1/><placeholder-2/> age&gt;"
-msgstr ""
-"Añadir la línea <em>\\synctex=1</em> en el preámbulo de su archivo TeX "
-"disparará la sincronización con SyncTeX. <code>\n"
-"\\documentclass{article}\n"
-"\\synctex=1\n"
-"\\usepackage{fullpage}\n"
-"\\begin{document}\n"
-"...\n"
-"\\end{document}\n"
-"</code><placeholder-1/><placeholder-2/> age&gt;"
-
 #: C/synctex-beamer.page:7(desc)
-#| msgid "Using SyncTex with the LaTeX Beamer class."
 msgid "Using SyncTeX with the LaTeX Beamer class."
 msgstr "Usar SyncTex con la clase Beamer de LaTeX."
 
 #: C/synctex-beamer.page:19(title)
-#| msgid "Beamer with SyncTex"
 msgid "Beamer with SyncTeX"
 msgstr "Beamer con SyncTex"
 
@@ -645,13 +636,6 @@ msgid "Beamer is a LaTeX class for creating slides for presentations."
 msgstr "Beamer es una clase LaTeX para crear diapositivas para presentaciones."
 
 #: C/synctex-beamer.page:23(p)
-#| msgid ""
-#| "You can perform forward and backward search in a <em>Beamer-LaTeX</em> "
-#| "presentation in a similar fashion to <link xref=\"synctex-search"
-#| "\">searching</link> through other TeX files compiled with SyncTex. "
-#| "However the search brings you to the corresponding frame (slide), not "
-#| "necessarily the associated line of text. This difference is outlined in "
-#| "detail below."
 msgid ""
 "You can perform forward and backward search in a <em>Beamer-LaTeX</em> "
 "presentation in a similar fashion to <link xref=\"synctex-search"
@@ -2398,7 +2382,6 @@ msgid "Tips and tricks"
 msgstr "Sugerencias y trucos"
 
 #: C/index.page:56(title)
-#| msgid "SyncTex"
 msgid "SyncTeX"
 msgstr "SyncTeX"
 
@@ -2419,9 +2402,6 @@ msgid "Saving a form"
 msgstr "Guardar un formulario"
 
 #: C/forms-saving.page:23(p)
-#| msgid ""
-#| "You may wish to save your form after you have filled it out in one of two "
-#| "ways:"
 msgid ""
 "After you have filled it out, you may wish to save your form in one of two "
 "ways:"
@@ -2482,7 +2462,6 @@ msgstr ""
 "<gui>Imprimir</gui>. El PDF se guardará en la carpeta que elija."
 
 #: C/forms-saving.page:72(p)
-#| msgid "Copies of encrypted files can not be saved or printed."
 msgid "Copies of encrypted files can't be saved or printed."
 msgstr "Las copias de archivos cifrados no se pueden guardar ni imprimir."
 
@@ -2630,7 +2609,6 @@ msgstr ""
 "puede buscar porque el texto está codificado en el documento como una imagen."
 
 #: C/editing.page:7(desc)
-#| msgid "You can not use the <app>document viewer</app> to edit files."
 msgid "You can't the <app>document viewer</app> to edit files."
 msgstr "No puede usar el <app>Visor de documentos</app> para editar archivos."
 
@@ -2639,10 +2617,6 @@ msgid "Can I edit documents in the document viewer?"
 msgstr "¿Puedo editar documentos en el Visor de documentos?"
 
 #: C/editing.page:23(p)
-#| msgid ""
-#| "The <app>document viewer</app> can not be used to make changes to "
-#| "documents. You need to use the appropriate editing application for the "
-#| "type of file you want to change."
 msgid ""
 "The <app>document viewer</app> can't be used to make changes to documents. "
 "You need to use the appropriate editing application for the type of file you "
@@ -3281,9 +3255,6 @@ msgstr ""
 "de salida</gui>."
 
 #: C/convertSVG.page:44(p)
-#| msgid ""
-#| "Choose a name and folder to save the file in, then click <gui>Print</"
-#| "gui>. The SVG file will be saved in the folder you chose."
 msgid ""
 "Choose a name and folder in which to save the file, then click <gui>Print</"
 "gui>. The SVG file will be saved in the folder you chose."
@@ -3323,9 +3294,6 @@ msgstr ""
 "<gui>Formato de salida</gui>."
 
 #: C/convertPostScript.page:47(p)
-#| msgid ""
-#| "Choose a name and folder to save the file in, then click <gui>Print</"
-#| "gui>. The PostScript file will be saved in the folder you chose."
 msgid ""
 "Choose a name and folder in which to save the file, then click <gui>Print</"
 "gui>. The PostScript file will be saved in the folder you chose."
@@ -3356,9 +3324,6 @@ msgstr ""
 "«imprimiéndolo» como un archivo PDF."
 
 #: C/convertpdf.page:46(p)
-#| msgid ""
-#| "Choose a name and folder to save the file in, then click <gui>Print</"
-#| "gui>. The PDF will be saved in the folder you chose."
 msgid ""
 "Choose a name and folder in which to save the file, then click <gui>Print</"
 "gui>. The PDF will be saved in the folder you chose."
@@ -3458,7 +3423,6 @@ msgstr ""
 
 #: C/commandline.page:44(screen)
 #, no-wrap
-#| msgid "evince --page-label=3"
 msgid "evince --page-label=3 file.pdf"
 msgstr "evince --page-label=3 archivo.pdf"
 
@@ -3619,9 +3583,6 @@ msgstr ""
 "soporte anotaciones</em>:"
 
 #: C/annotations-save.page:28(p)
-#| msgid ""
-#| "Choose a name and folder to save the file in, then click <gui>Save</gui>. "
-#| "The PDF will be saved in the folder you chose."
 msgid ""
 "Choose a name and folder in which to save the file, then click <gui>Save</"
 "gui>. The PDF will be saved in the folder you chose."
@@ -3814,7 +3775,6 @@ msgstr ""
 "gris (desactivada)."
 
 #: C/annotations-delete.page:7(desc)
-#| msgid "You can not remove annotations."
 msgid "You can't remove annotations."
 msgstr "No puede quitar anotaciones."
 
@@ -3823,9 +3783,6 @@ msgid "Removing annotations"
 msgstr "Quitar anotaciones"
 
 #: C/annotations-delete.page:21(p)
-#| msgid ""
-#| "You can not remove an annotation in the <app>document viewer</app> at "
-#| "this time."
 msgid ""
 "You can't remove an annotation in the <app>document viewer</app> at this "
 "time."
@@ -3897,23 +3854,6 @@ msgid "translator-credits"
 msgstr ""
 "Daniel Mustieles <daniel.mustieles@gmail.com>, 2011\n"
 "Jorge González <jorgegonz@svn.gnome.org>, 2011"
-
-#~ msgid ""
-#~ "\n"
-#~ "\\documentclass{article}\n"
-#~ "\\synctex=1\n"
-#~ "\\usepackage{fullpage}\n"
-#~ "\\begin{document}\n"
-#~ "...\n"
-#~ "\\end{document}\n"
-#~ msgstr ""
-#~ "\n"
-#~ "\\documentclass{article}\n"
-#~ "\\synctex=1\n"
-#~ "\\usepackage{fullpage}\n"
-#~ "\\begin{document}\n"
-#~ "...\n"
-#~ "\\end{document}\n"
 
 #~ msgid "Note:"
 #~ msgstr "Nota:"
