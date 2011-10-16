@@ -220,7 +220,21 @@ static char *
 ps_document_get_page_label (EvDocument *document,
 			    EvPage     *page)
 {
-	return g_strdup (spectre_page_get_label ((SpectrePage *)page->backend_page));
+        const gchar *label = spectre_page_get_label ((SpectrePage *)page->backend_page);
+        gchar       *utf8;
+
+        if (!label)
+                return NULL;
+
+        if (g_utf8_validate (label, -1, NULL))
+                return g_strdup (label);
+
+        /* Try with latin1 and ASCII encondings */
+        utf8 = g_convert (label, -1, "utf-8", "latin1", NULL, NULL, NULL);
+        if (!utf8)
+                utf8 = g_convert (label, -1, "utf-8", "ASCII", NULL, NULL, NULL);
+
+        return utf8;
 }
 
 static EvDocumentInfo *
