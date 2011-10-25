@@ -306,6 +306,14 @@ ev_document_model_set_document (EvDocumentModel *model,
 	g_object_notify (G_OBJECT (model), "document");
 }
 
+/**
+ * ev_document_model_get_document:
+ * @model: a #EvDocumentModel
+ *
+ * Returns the #EvDocument referenced by the model.
+ *
+ * Returns: (transfer none): a #EvDocument
+ */
 EvDocument *
 ev_document_model_get_document (EvDocumentModel *model)
 {
