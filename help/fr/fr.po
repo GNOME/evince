@@ -10,7 +10,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: evince-doc\n"
-"POT-Creation-Date: 2011-10-12 22:15+0000\n"
+"POT-Creation-Date: 2011-10-29 10:50+0000\n"
 "PO-Revision-Date: 2011-10-24 17:50+0200\n"
 "Last-Translator: Bruno Brouard <annoa.b@gmail.com>\n"
 "Language-Team: GNOME French Team <gnomefr@traduc.org>\n"
@@ -32,9 +32,6 @@ msgstr ""
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/toolbar.page:51(None)
-#| msgid ""
-#| "@@image: 'figures/evince_start_window.png'; "
-#| "md5=7f4da5e33bcac35738a268d93d497d47"
 msgid ""
 "@@image: 'figures/evince-toolbar-editor.png'; "
 "md5=e6c66f764c39ab5ba01441d970425cd9"
@@ -296,9 +293,9 @@ msgid ""
 "displayed. This may result in a copy that does not appear as expected."
 msgstr ""
 "Ce problème se produit à cause de la façon dont certains formats de document "
-"gèrent le texte. Le texte actuel dans le document est enregistré différemment "
-"de la manière dont il est affiché. Cela peut donner l'impression d'une copie "
-"qui n'est pas réellement celle attendue."
+"gèrent le texte. Le texte actuel dans le document est enregistré "
+"différemment de la manière dont il est affiché. Cela peut donner "
+"l'impression d'une copie qui n'est pas réellement celle attendue."
 
 #: C/textselection.page:35(p)
 msgid ""
@@ -422,10 +419,9 @@ msgstr ""
 "recherche en avant ouvre le PDF dans le <app>visionneur de documents</app>."
 
 #: C/synctex-search.page:50(p)
-#, fuzzy  replace "add"  by "have"
-msgid "If you add a complex project with several TeX files you can put"
+msgid "If you have a complex project with several TeX files you can put"
 msgstr ""
-"Si vous ajoutez un projet complexe contenant plusieurs fichiers TeX, vous "
+"Si vous avez un projet complexe contenant plusieurs fichiers TeX, vous "
 "pouvez mettre "
 
 #: C/synctex-search.page:53(code)
@@ -434,16 +430,14 @@ msgid "% mainfile: mainfile.tex"
 msgstr "% mainfile: mainfile.tex"
 
 #: C/synctex-search.page:54(p)
-#, fuzzy  "first or last three lines" Are you sure about that, it seems strange
-#, fuzzy  "modeline"  --> should be "mode line"?
 msgid ""
 "either in the first or last three lines of each included TeX file, and "
 "forward search will work. Backward search should always work, even if you "
 "don't add the modeline."
 msgstr ""
-"soit en première ligne ou dans les trois dernière lignes de chaque fichier "
+"soit en première ligne ou dans les trois dernières lignes de chaque fichier "
 "TeX inclus et la recherche en avant fonctionnera. La recherche en arrière "
-"doit toujours fonctionner même si vous ajoutez la ligne de mode."
+"doit toujours fonctionner même si vous n'ajoutez pas le modificateur."
 
 #: C/synctex-search.page:61(title)
 msgid ""
@@ -479,8 +473,6 @@ msgid ""
 "@@image: 'figures/synctex_screencast.ogv'; "
 "md5=358d317b4fc69fc7e5c5d4d14f07b6a5"
 msgstr ""
-"@@image: 'figures/synctex_screencast.ogv'; "
-"md5=358d317b4fc69fc7e5c5d4d14f07b6a5"
 
 #: C/synctex.page:7(desc)
 msgid "SyncTeX support is available."
@@ -548,16 +540,12 @@ msgstr ""
 "devez suivre les étapes suivantes :"
 
 #: C/synctex-editors.page:35(p)
-#, fuzzy perhaps some precision could be added about the way to display the 
-#,        user's "path" (with export command?) and
-#, fuzzy how to give the right permissions to the file (chmod u+x)
 msgid ""
 "Copy the evince_dbus.py to some directory in your path and give it +x "
 "permissions."
 msgstr ""
 "Copiez le fichier evince_dbus.py dans un répertoire contenu dans votre "
-"chemin (saisissez la commande « export » dans un terminal et recherchez la "
-"variable « PATH ») et donnez-lui les permissions +x."
+"chemin et donnez-lui les permissions +x."
 
 #: C/synctex-editors.page:41(p)
 msgid "Modify your ~/.vimrc file and add the following lines."
@@ -699,8 +687,8 @@ msgid ""
 msgstr ""
 "Avec <link xref=\"synctex-search#forward-search\">Recherche en arrière</"
 "link>, vous cliquez sur du texte dans une diapositive et la ligne "
-"correspondante du code LaTeX, qui indique la fin de cette diapositive, est mise "
-"en surbrillance. C'est en général la ligne :"
+"correspondante du code LaTeX, qui indique la fin de cette diapositive, est "
+"mise en surbrillance. C'est en général la ligne :"
 
 #: C/synctex-beamer.page:39(code)
 #, no-wrap
@@ -805,11 +793,11 @@ msgstr "Sous <em>Plage</em>, sélectionnez <gui>Pages</gui>."
 
 #: C/singlesided-npages.page:63(item) C/duplex-npages.page:62(item)
 msgid ""
-"n, 1, 2, n-1, n-2, 3, 4, n-3, n-4, 5, 6, n-5, n-6, 7, 8, n-7, n-8, 9, 10, "
-"n-9, n-10, 11, 12, n-11..."
+"n, 1, 2, n-1, n-2, 3, 4, n-3, n-4, 5, 6, n-5, n-6, 7, 8, n-7, n-8, 9, 10, n-"
+"9, n-10, 11, 12, n-11..."
 msgstr ""
-"n, 1, 2, n-1, n-2, 3, 4, n-3, n-4, 5, 6, n-5, n-6, 7, 8, n-7, n-8, 9, 10, "
-"n-9, n-10, 11, 12, n-11..."
+"n, 1, 2, n-1, n-2, 3, 4, n-3, n-4, 5, 6, n-5, n-6, 7, 8, n-7, n-8, 9, 10, n-"
+"9, n-10, 11, 12, n-11..."
 
 #: C/singlesided-npages.page:64(item) C/duplex-npages.page:63(item)
 msgid "...until you have typed n-number of pages."
@@ -819,8 +807,8 @@ msgstr "... jusqu'à ce que vous ayez saisi un nombre n de pages."
 msgid ""
 "Type the numbers of the pages in this order: <placeholder-1/><placeholder-2/>"
 msgstr ""
-"Saisissez le numéro des pages dans cet ordre : <placeholder-1/"
-"><placeholder-2/>"
+"Saisissez le numéro des pages dans cet ordre : <placeholder-1/><placeholder-"
+"2/>"
 
 #: C/singlesided-npages.page:69(p) C/singlesided-npages.page:101(p)
 #: C/singlesided-9-12pages.page:62(p) C/singlesided-9-12pages.page:94(p)
@@ -844,7 +832,6 @@ msgstr "Sélectionnez l'onglet <gui>Mise en page</gui>."
 #: C/singlesided-npages.page:72(p) C/singlesided-9-12pages.page:65(p)
 #: C/singlesided-5-8pages.page:65(p) C/singlesided-3-4pages.page:65(p)
 #: C/singlesided-17-20pages.page:66(p) C/singlesided-13-16pages.page:68(p)
-#, fuzzy  option --> menu
 msgid ""
 "Under <em>Layout</em>, in the <gui>Two-side</gui> menu, select <gui>One "
 "Sided</gui>."
@@ -939,8 +926,8 @@ msgid ""
 "number of blank pages to make it 12-pages. To do so, you can:"
 msgstr ""
 "Si vous avez un document PDF de 9, 10 ou 11 pages, vous devez ajouter le "
-"nombre correct de pages blanches pour compléter jusqu'à 12 pages. Pour "
-"cela, vous pouvez :"
+"nombre correct de pages blanches pour compléter jusqu'à 12 pages. Pour cela, "
+"vous pouvez :"
 
 #: C/singlesided-9-12pages.page:57(p) C/duplex-12pages.page:36(p)
 msgid ""
@@ -989,7 +976,6 @@ msgid "3-page or 4-page booklet"
 msgstr "Livret de 3 à 4 pages"
 
 #: C/singlesided-3-4pages.page:23(p)
-#, fuzzy  the precision "to make it 4-page"  is not necessary?
 msgid ""
 "If you have a 3-Page PDF document you should add a blank page to make it 4-"
 "pages. To do so, you can:"
@@ -1024,8 +1010,8 @@ msgid ""
 "number of blank pages to make it 20-pages. To do so, you can:"
 msgstr ""
 "Si vous avez un document PDF de 17, 18 ou 19 pages, vous devez ajouter le "
-"nombre correct de pages blanches pour compléter jusqu'à 20 pages. Pour "
-"cela, vous pouvez :"
+"nombre correct de pages blanches pour compléter jusqu'à 20 pages. Pour cela, "
+"vous pouvez :"
 
 #: C/singlesided-17-20pages.page:58(item)
 msgid "20, 1, 2, 19, 18, 3, 4, 17, 16, 5, 6, 15, 14, 7, 8, 13, 12, 9, 10, 11"
@@ -1050,8 +1036,8 @@ msgid ""
 "number of blank pages to make it 16-pages. To do so, you can:"
 msgstr ""
 "Si vous avez un document PDF de 13, 14 ou 15 pages, vous devez ajouter le "
-"nombre correct de pages blanches pour compléter jusqu'à 16 pages. Pour "
-"cela, vous pouvez :"
+"nombre correct de pages blanches pour compléter jusqu'à 16 pages. Pour cela, "
+"vous pouvez :"
 
 #: C/singlesided-13-16pages.page:60(item) C/duplex-16pages.page:38(item)
 msgid "16, 1, 2, 15, 14, 3, 4, 13, 12, 5, 6, 11, 10, 7, 8, 9"
@@ -1236,9 +1222,9 @@ msgid ""
 "start as soon as you type some text."
 msgstr ""
 "Afficher la barre d'outils qui vous permet de rechercher des mots dans le "
-"document. La boîte de recherche apparaît automatiquement lorsque "
-"vous utilisez ce raccourci et la recherche commence dès que vous saisissez "
-"du texte."
+"document. La boîte de recherche apparaît automatiquement lorsque vous "
+"utilisez ce raccourci et la recherche commence dès que vous saisissez du "
+"texte."
 
 #: C/shortcuts.page:121(key)
 msgid "F"
@@ -1362,7 +1348,6 @@ msgid "Close the <app>document viewer</app>."
 msgstr "Fermez le <app>visionneur de documents</app>."
 
 #: C/shortcuts.page:214(p)
-#, fuzzy This is not necessary because "gconf-editor" has not been closed
 msgid "Repeat steps 1-3."
 msgstr "Répétez les étapes 1 à 3."
 
@@ -1497,8 +1482,8 @@ msgid ""
 "pages end up in reverse order when you pick them up."
 msgstr ""
 "Généralement les imprimantes impriment la première page en premier et la "
-"dernière en dernier. Ainsi, les pages peuvent se "
-"retrouver dans le mauvais ordre quand vous les récupérez."
+"dernière en dernier. Ainsi, les pages peuvent se retrouver dans le mauvais "
+"ordre quand vous les récupérez."
 
 #: C/print-order.page:29(p)
 msgid "To reverse the order:"
@@ -1535,8 +1520,8 @@ msgid ""
 msgstr ""
 "Si vous imprimez plus d'une copie du document, la sortie papier est par "
 "défaut regroupée par numéro de page (par ex. les copies de la première page "
-"sortent, puis celles de la page deux...). Lorsque vous utilisez "
-"Rassembler, chaque copie du document sort avec ses pages regroupées ensemble."
+"sortent, puis celles de la page deux...). Lorsque vous utilisez Rassembler, "
+"chaque copie du document sort avec ses pages regroupées ensemble."
 
 #: C/print-order.page:47(p)
 msgid "To collate:"
@@ -1750,8 +1735,8 @@ msgid ""
 "click to go to the next slide."
 msgstr ""
 "Utilisez la <key>barre d'espace</key>, la touche flèche droite ou flèche bas "
-"ou cliquez sur le bouton gauche de la souris pour aller à la "
-"diapositive suivante."
+"ou cliquez sur le bouton gauche de la souris pour aller à la diapositive "
+"suivante."
 
 #: C/presentations.page:42(p)
 msgid ""
@@ -1989,8 +1974,8 @@ msgid ""
 msgstr ""
 "Certains documents PDF possèdent un paramètre qui vous empêche de les "
 "imprimer. Les auteurs peuvent définir cette restriction d'impression "
-"lorsqu'ils écrivent un document. Le <app>visionneur de documents</app> outrepasse "
-"par défaut cette restriction, mais il se peut que vous souhaitiez "
+"lorsqu'ils écrivent un document. Le <app>visionneur de documents</app> "
+"outrepasse par défaut cette restriction, mais il se peut que vous souhaitiez "
 "vérifier que cela n'a pas été désactivé :"
 
 #: C/noprint.page:63(p)
@@ -2012,7 +1997,8 @@ msgstr ""
 #: C/noprint.page:74(p)
 msgid "Browse to <sys>/org/gnome/evince</sys> using the side pane."
 msgstr ""
-"Déplacez-vous vers <sys>/org/gnome/evince</sys> en utilisant le panneau latéral."
+"Déplacez-vous vers <sys>/org/gnome/evince</sys> en utilisant le panneau "
+"latéral."
 
 #: C/noprint.page:76(p)
 msgid "Make sure that the <gui>override_restrictions</gui> option is checked."
@@ -2095,8 +2081,8 @@ msgid ""
 "Move the mouse pointer over the page and hold down the middle mouse button "
 "to drag it around."
 msgstr ""
-"Déplacez le pointeur de la souris sur la page en maintenant enfoncé le bouton "
-"central de la souris pour la déplacer."
+"Déplacez le pointeur de la souris sur la page en maintenant enfoncé le "
+"bouton central de la souris pour la déplacer."
 
 #: C/movingaround.page:66(p)
 msgid ""
@@ -2170,9 +2156,9 @@ msgid ""
 "Click <guiseq><gui>Go</gui><gui>First Page</gui></guiseq>. You can also "
 "press <keyseq><key>Ctrl</key><key>Home</key></keyseq> on your keyboard."
 msgstr ""
-"Cliquez sur <guiseq><gui>Aller à</gui><gui>Première page</gui></guiseq> "
-"ou appuyez sur les touches <keyseq><key>Ctrl</"
-"key><key>Origine</key></keyseq> de votre clavier."
+"Cliquez sur <guiseq><gui>Aller à</gui><gui>Première page</gui></guiseq> ou "
+"appuyez sur les touches <keyseq><key>Ctrl</key><key>Origine</key></keyseq> "
+"de votre clavier."
 
 #: C/movingaround.page:98(p)
 msgid ""
@@ -2352,8 +2338,8 @@ msgid ""
 "Doing this can make it easier to read text, especially in the case of "
 "certain kinds of visual impairment."
 msgstr ""
-"Faire cela peut rendre plus facile la lecture du texte, particulièrement pour les "
-"personnes atteintes d'un handicap visuel."
+"Faire cela peut rendre plus facile la lecture du texte, particulièrement "
+"pour les personnes atteintes d'un handicap visuel."
 
 #: C/introduction.page:7(desc)
 msgid "Introduction to the <em>Evince Document Viewer</em>."
@@ -2375,9 +2361,6 @@ msgstr ""
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/index.page:7(None)
-#| msgid ""
-#| "@@image: 'figures/evince_start_window.png'; "
-#| "md5=7f4da5e33bcac35738a268d93d497d47"
 msgid ""
 "@@image: 'figures/evince-trail.png'; md5=a1a70d04c37f05937d0b3e7a0705d2d4"
 msgstr ""
@@ -2386,9 +2369,6 @@ msgstr ""
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/index.page:20(None)
-#| msgid ""
-#| "@@image: 'figures/evince_start_window.png'; "
-#| "md5=7f4da5e33bcac35738a268d93d497d47"
 msgid "@@image: 'figures/evincelogo.png'; md5=a5856135b500d4c4b74a052eef6e09d2"
 msgstr ""
 "@@image: 'figures/evincelogo.png'; md5=a5856135b500d4c4b74a052eef6e09d2"
@@ -2607,9 +2587,10 @@ msgid ""
 "\"Unable to Open Document\", you may wish to check whether the backend "
 "package for the format is installed."
 msgstr ""
-"La prise en charge d'un format s'appelle un <em>moteur de traitement</em> (backend). Si "
-"vous obtenez l'erreur « Impossible d'ouvrir le document », vous devriez "
-"vérifier que le paquet du moteur de traitement pour le format concerné, est installé."
+"La prise en charge d'un format s'appelle un <em>moteur de traitement</em> "
+"(backend). Si vous obtenez l'erreur « Impossible d'ouvrir le document », vous "
+"devriez vérifier que le paquet du moteur de traitement pour le format "
+"concerné, est installé."
 
 #: C/finding.page:8(desc)
 msgid "Find a word or phrase in a document."
@@ -2676,8 +2657,7 @@ msgstr ""
 "le document sous la forme d'images."
 
 #: C/editing.page:7(desc)
-#, fuzzy missing verb "You can't USE the"
-msgid "You can't the <app>document viewer</app> to edit files."
+msgid "You can't use the <app>document viewer</app> to edit files."
 msgstr ""
 "Vous ne pouvez pas utiliser le <app>visionneur de documents</app> pour "
 "modifier des fichiers."
@@ -2694,9 +2674,9 @@ msgid ""
 "You need to use the appropriate editing application for the type of file you "
 "want to change."
 msgstr ""
-"Le <app>visionneur de documents</app> ne peux pas être utiliser pour apporter "
-"des modifications aux documents. Vous devez utiliser l'application d'édition "
-"appropriée au type de fichier que vous voulez modifier."
+"Le <app>visionneur de documents</app> ne peux pas être utiliser pour "
+"apporter des modifications aux documents. Vous devez utiliser l'application "
+"d'édition appropriée au type de fichier que vous voulez modifier."
 
 #: C/editing.page:29(p)
 msgid ""
@@ -2719,16 +2699,12 @@ msgstr ""
 "vous devez ajouter le nombre correct de pages blanches (1, 2 ou 3) pour que "
 "ce nombre soit un multiple de 4. Pour cela, vous pouvez :"
 
-#: C/duplex-npages.page:71(p) C/duplex-9pages.page:43(p)
-#: C/duplex-8pages.page:45(p) C/duplex-7pages.page:47(p)
-#: C/duplex-6pages.page:46(p) C/duplex-5pages.page:43(p)
-#: C/duplex-4pages.page:45(p) C/duplex-3pages.page:42(p)
-#: C/duplex-16pages.page:46(p) C/duplex-14pages.page:44(p)
-#: C/duplex-13pages.page:42(p) C/duplex-12pages.page:45(p)
-#: C/duplex-11pages.page:46(p) C/duplex-10pages.page:45(p)
-#, fuzzy  option --> menu
+#: C/duplex-npages.page:71(p) C/duplex-8pages.page:45(p)
+#: C/duplex-6pages.page:46(p) C/duplex-4pages.page:45(p)
+#: C/duplex-16pages.page:46(p) C/duplex-13pages.page:42(p)
+#: C/duplex-11pages.page:46(p)
 msgid ""
-"Under <em>Layout</em>, in the <gui>Two-side</gui> option, select <gui>Short "
+"Under <em>Layout</em>, in the <gui>Two-side</gui> menu, select <gui>Short "
 "Edge (Flip)</gui>."
 msgstr ""
 "Sous <em>Mise en page</em>, dans le menu <gui>Recto-verso</gui>, choisissez "
@@ -2760,6 +2736,17 @@ msgstr "Livret de 9 pages"
 #: C/duplex-13pages.page:32(p)
 msgid "Under <em>Range</em>, select <gui>Pages</gui> and type: 1"
 msgstr "Sous <em>Plage</em>, choisissez <gui>Pages</gui> et saisissez : 1."
+
+#: C/duplex-9pages.page:43(p) C/duplex-7pages.page:47(p)
+#: C/duplex-5pages.page:43(p) C/duplex-3pages.page:42(p)
+#: C/duplex-14pages.page:44(p) C/duplex-12pages.page:45(p)
+#: C/duplex-10pages.page:45(p)
+msgid ""
+"Under <em>Layout</em>, in the <gui>Two-side</gui> option, select <gui>Short "
+"Edge (Flip)</gui>."
+msgstr ""
+"Sous <em>Mise en page</em>, dans le menu <gui>Recto-verso</gui>, choisissez "
+"<gui>Bord court (retourné)</gui>."
 
 #: C/duplex-9pages.page:49(p) C/duplex-7pages.page:53(p)
 #: C/duplex-6pages.page:86(p) C/duplex-5pages.page:49(p)
@@ -2812,11 +2799,10 @@ msgstr ""
 "Cliquez à nouveau sur <guiseq><gui>Fichier</gui><gui>Imprimer</gui></guiseq>."
 
 #: C/duplex-9pages.page:84(p)
-#, fuzzy "selection menu" partout
 msgid ""
 "In the <gui>General</gui> tab enter 3 in the <gui>Pages</gui> selection."
 msgstr ""
-"Dans l'onglet <gui>Général</gui>, saisissez 3 dans le menu de sélection "
+"Dans l'onglet <gui>Général</gui>, saisissez 3 dans la sélection "
 "<gui>Pages</gui>."
 
 #: C/duplex-9pages.page:90(p) C/duplex-5pages.page:95(p)
@@ -2828,10 +2814,9 @@ msgstr ""
 "Dans l'onglet <gui>Mise en page</gui>, paramétrez l'<gui>Ordre des pages</"
 "gui> à <gui>Droite à gauche</gui>."
 
-#: C/duplex-9pages.page:99(p) C/duplex-5pages.page:103(p)
-#, fuzzy  pb de parenthèses
+#: C/duplex-9pages.page:99(p)
 msgid ""
-"Once page 3 has printed, place the paper back in the printer (taking care to "
+"Once page 3 has printed, place the paper back in the printer taking care to "
 "orient it correctly (pages 4 and 9 will be printed on the other side)."
 msgstr ""
 "Une fois que la page 3 est imprimée, replacez le papier dans l'imprimante, "
@@ -2839,12 +2824,11 @@ msgstr ""
 "imprimées de l'autre côté)."
 
 #: C/duplex-9pages.page:107(p)
-#, fuzzy  selection menu partout
 msgid ""
 "In the <gui>General</gui> tab enter pages 4,9 in the <gui>Pages</gui> "
-"selection menu."
+"selection."
 msgstr ""
-"Dans l'onglet <gui>Général</gui>, saisissez les pages 4, 9 dans le menu de "
+"Dans l'onglet <gui>Général</gui>, saisissez les pages 4, 9 dans la "
 "sélection <gui>Pages</gui>."
 
 #: C/duplex-9pages.page:110(p) C/duplex-5pages.page:114(p)
@@ -3042,7 +3026,7 @@ msgstr "Livret de 5 pages"
 msgid "Choose the General tab."
 msgstr "Sélectionnez l'onglet <gui>Général</gui>."
 
-#: C/duplex-5pages.page:87(p)
+#: C/duplex-5pages.page:87(p) C/duplex-13pages.page:81(p)
 msgid ""
 "To print page 3, click <guiseq><gui>File</gui><gui>Print</gui></guiseq> "
 "again."
@@ -3051,21 +3035,28 @@ msgstr ""
 "gui><gui>Imprimer</gui></guiseq>."
 
 #: C/duplex-5pages.page:90(p)
-#, fuzzy   selection menu partout
 msgid ""
 "In the <gui>General</gui> tab enter the page number in the <gui>Pages</gui> "
 "selection ."
 msgstr ""
-"Dans l'onglet <gui>Général</gui>, saisissez le numéro de la page dans le "
-"menu de sélection <gui>Pages</gui>."
+"Dans l'onglet <gui>Général</gui>, saisissez le numéro de la page dans la "
+"sélection <gui>Pages</gui>."
+
+#: C/duplex-5pages.page:103(p)
+msgid ""
+"Once page 3 has printed, place the paper back in the printer (taking care to "
+"orient it correctly (pages 4 and 9 will be printed on the other side)."
+msgstr ""
+"Une fois que la page 3 est imprimée, replacez le papier dans l'imprimante, "
+"en prenant soin de l'orienter correctement (les pages 4 et 9 seront "
+"imprimées de l'autre côté)."
 
 #: C/duplex-5pages.page:111(p)
-#, fuzzy    selection menu partout
 msgid ""
 "In the <gui>General</gui> tab enter pages 4, 9 in the <gui>Pages</gui> "
-"selection menu."
+"selection."
 msgstr ""
-"Dans l'onglet <gui>Général</gui>, saisissez les pages 4, 9 dans le menu de "
+"Dans l'onglet <gui>Général</gui>, saisissez les pages 4, 9 dans la "
 "sélection <gui>Pages</gui>."
 
 #: C/duplex-5pages.page:123(p)
@@ -3193,41 +3184,29 @@ msgstr "Imprimer un livret de 13 pages."
 msgid "13-page booklet"
 msgstr "Livret de 13 pages"
 
-#: C/duplex-13pages.page:81(p)
-#, fuzzy   majuscule à Click
-msgid ""
-"To print page 3, Click <guiseq><gui>File</gui><gui>Print</gui></guiseq> "
-"again."
-msgstr ""
-"Pour imprimer la page 3, cliquez à nouveau sur <guiseq><gui>Fichier</"
-"gui><gui>Imprimer</gui></guiseq>."
-
 #: C/duplex-13pages.page:84(p)
-#, fuzzy   selection menu partout
 msgid ""
 "In the <gui>General</gui> tab, enter 3 in the <gui>Pages</gui> selection."
 msgstr ""
-"Dans l'onglet <gui>Général</gui>, saisissez 3 dans le menu de sélection "
+"Dans l'onglet <gui>Général</gui>, saisissez 3 dans la sélection "
 "<gui>Pages</gui>."
 
 #: C/duplex-13pages.page:95(p)
-#, fuzzy  (problème de parenthèses)
 msgid ""
-"Once page 3 has printed, place the paper back in the printer (taking care to "
-"orient it correctly, pages 4 and 13 will be printed on the other side)."
+"Once page 3 has printed, place the paper back in the printer taking care to "
+"orient it correctly (pages 4 and 13 will be printed on the other side)."
 msgstr ""
 "Une fois que la page 3 est imprimée, replacez-le dans l'imprimante, en "
 "prenant soin de l'orienter correctement (les pages 4 et 13 seront imprimées "
 "de l'autre côté)."
 
 #: C/duplex-13pages.page:103(p)
-#, fuzzy selection menu partout
 msgid ""
 "In the <gui>General</gui> tab enter pages 4, 13 in the <gui>Pages</gui> "
-"selection menu."
+"selection."
 msgstr ""
-"Dans l'onglet <gui>Général</gui>, saisissez les pages 4, 13 dans le menu de "
-"sélection <gui>Pages</gui>."
+"Dans l'onglet <gui>Général</gui>, saisissez les pages 4, 13 dans la "
+"<gui>Pages</gui>."
 
 #: C/duplex-13pages.page:117(p)
 msgid ""
@@ -3272,8 +3251,8 @@ msgid ""
 "Type the numbers of the remaining pages in this order: 10, 3, 4, 9, 8, 5, 6, "
 "7"
 msgstr ""
-"Saisissez le numéro des pages restantes dans cet ordre : 10, 3, 4, 9, 8, "
-"5, 6, 7"
+"Saisissez le numéro des pages restantes dans cet ordre : 10, 3, 4, 9, 8, 5, "
+"6, 7"
 
 #: C/duplex-11pages.page:87(p)
 msgid ""
@@ -3740,11 +3719,10 @@ msgstr ""
 "barre de menus ou appuyez sur la touche <key>F9</key> du clavier."
 
 #: C/annotations.page:28(p)
-#, fuzzy  pas de deux points final
 msgid ""
 "At the top of this side pane, there is a drop-down menu with options like "
 "<gui>Thumbnails</gui>, <gui>Index</gui> and <gui>Annotations</gui> (some of "
-"which may be <em>dimmed</em> for some documents):"
+"which may be <em>dimmed</em> for some documents)."
 msgstr ""
 "En haut de ce panneau latéral, il y a un menu déroulant contenant des "
 "options comme <gui>Vignettes</gui>, <gui>Sommaire</gui> et <gui>Annotations</"
@@ -3903,8 +3881,7 @@ msgid "Right click on the annotation icon in the document."
 msgstr "Faites un clic droit sur l'icône annotation dans le document."
 
 #: C/annotation-properties.page:29(p)
-#, fuzzy "point final" au mauvais endroit
-msgid "Select <gui>Annotation Properties.</gui>"
+msgid "Select <gui>Annotation Properties</gui>."
 msgstr "Choisissez <gui>Propriétés de l'annotation</gui>."
 
 #: C/annotation-properties.page:34(p)
@@ -3920,8 +3897,8 @@ msgid ""
 "The annotation properties will be applied to the note for which you made the "
 "changes only. Each note can have a different set of properties."
 msgstr ""
-"Les propriétés de l'annotation ne s'appliquent qu'à la note pour laquelle vous "
-"avez fait les modifications. Chaque note possède son propre lot de "
+"Les propriétés de l'annotation ne s'appliquent qu'à la note pour laquelle "
+"vous avez fait les modifications. Chaque note possède son propre lot de "
 "propriétés."
 
 #: C/annotation-properties.page:47(title)
@@ -3930,7 +3907,6 @@ msgstr ""
 "Est-il possible de modifier les propriétés par défaut des annotations ?"
 
 #: C/annotation-properties.page:48(p)
-#, fuzzy  "no way to save (different) default"  : ne pas mettre "different"
 msgid ""
 "The default annotation properties (author, colour, style and icon) can only "
 "be changed on a particular note as stated above. So if you want all icons "
@@ -3944,7 +3920,7 @@ msgstr ""
 "plus haut. Par conséquent, si vous voulez que toutes les icônes de vos notes "
 "soient <gui>rouge</gui> au lieu de <gui>jaune</gui>, vous devez modifier la "
 "valeur par défaut de <gui>jaune</gui> à <gui>rouge</gui> individuellement "
-"pour chaque note. Pour l'instant, il n'est pas possible d'enregistrer des "
+"pour chaque note. Pour l'instant, il n'est pas possible d'enregistrer d'autres "
 "réglages par défaut pour les propriétés d'annotation."
 
 #. Put one translator per line, in the form of NAME <EMAIL>, YEAR1, YEAR2
@@ -3954,3 +3930,4 @@ msgstr ""
 "Jonathan Ernst <jonathan@ernstfamily.ch>, 2006, 2007.\n"
 "Claude Paroz <claude@2xlibre.net>, 2006-2008.\n"
 "Bruno Brouard <annoa.b@gmail.com>, 2011."
+
