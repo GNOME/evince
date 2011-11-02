@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: evince master\n"
-"POT-Creation-Date: 2011-10-12 22:15+0000\n"
-"PO-Revision-Date: 2011-10-14 09:28+0200\n"
+"POT-Creation-Date: 2011-10-29 12:47+0000\n"
+"PO-Revision-Date: 2011-11-02 21:35+0100\n"
 "Last-Translator: Gabor Kelemen <kelemeng at gnome dot hu>\n"
 "Language-Team: Hungarian <gnome-hu-list at gnome dot org>\n"
 "MIME-Version: 1.0\n"
@@ -402,8 +402,9 @@ msgstr ""
 "PDF-fájlt a <app>dokumentummegjelenítőben</app>."
 
 #: C/synctex-search.page:50(p)
-msgid "If you add a complex project with several TeX files you can put"
-msgstr "Ha összetett projektet vesz fel több TeX-fájllal, akkor a"
+#| msgid "If you add a complex project with several TeX files you can put"
+msgid "If you have a complex project with several TeX files you can put"
+msgstr "Ha a projekt összetett és több TeX-fájlból áll, akkor a"
 
 #: C/synctex-search.page:53(code)
 #, no-wrap
@@ -477,7 +478,6 @@ msgid "Demo"
 msgstr "Bemutató"
 
 #: C/synctex.page:30(p)
-#| msgid "Press Ctrl+click to sync."
 msgid "Press <key>Ctrl</key> + click to sync."
 msgstr "Nyomja le a <key>Ctrl</key>-t, és kattintson a szinkronizáláshoz."
 
@@ -563,16 +563,6 @@ msgid "Compile TeX with SyncTeX"
 msgstr "TeX fordítása SyncTeX-hel"
 
 #: C/synctex-compile.page:20(p)
-#| msgid ""
-#| "Adding the line <em>\\synctex=1</em> in the preamble of your TeX file "
-#| "will trigger synchronization with SyncTeX. <code>\n"
-#| "\\documentclass{article}\n"
-#| "\\synctex=1\n"
-#| "\\usepackage{fullpage}\n"
-#| "\\begin{document}\n"
-#| "...\n"
-#| "\\end{document}\n"
-#| "</code><placeholder-1/><placeholder-2/> age&gt;"
 msgid ""
 "Adding the line <em>\\synctex=1</em> in the preamble of your TeX file will "
 "trigger synchronization with SyncTeX."
@@ -2563,7 +2553,8 @@ msgstr ""
 "nem lehet keresni, mert szövegük a dokumentumban képként van tárolva."
 
 #: C/editing.page:7(desc)
-msgid "You can't the <app>document viewer</app> to edit files."
+#| msgid "You can't the <app>document viewer</app> to edit files."
+msgid "You can't use the <app>document viewer</app> to edit files."
 msgstr "A <app>dokumentummegjelenítővel</app> nem szerkeszthet fájlokat."
 
 #: C/editing.page:20(title)
@@ -2599,15 +2590,15 @@ msgstr ""
 "Ha PDF-dokumentumának oldalai száma nem 4 többszöröse, akkor megfelelő számú "
 "üres oldalt (1, 2 vagy 3) kell hozzáadnia, hogy 4 többszöröse legyen. Ehhez:"
 
-#: C/duplex-npages.page:71(p) C/duplex-9pages.page:43(p)
-#: C/duplex-8pages.page:45(p) C/duplex-7pages.page:47(p)
-#: C/duplex-6pages.page:46(p) C/duplex-5pages.page:43(p)
-#: C/duplex-4pages.page:45(p) C/duplex-3pages.page:42(p)
-#: C/duplex-16pages.page:46(p) C/duplex-14pages.page:44(p)
-#: C/duplex-13pages.page:42(p) C/duplex-12pages.page:45(p)
-#: C/duplex-11pages.page:46(p) C/duplex-10pages.page:45(p)
+#: C/duplex-npages.page:71(p) C/duplex-8pages.page:45(p)
+#: C/duplex-6pages.page:46(p) C/duplex-4pages.page:45(p)
+#: C/duplex-16pages.page:46(p) C/duplex-13pages.page:42(p)
+#: C/duplex-11pages.page:46(p)
+#| msgid ""
+#| "Under <em>Layout</em>, in the <gui>Two-side</gui> option, select "
+#| "<gui>Short Edge (Flip)</gui>."
 msgid ""
-"Under <em>Layout</em>, in the <gui>Two-side</gui> option, select <gui>Short "
+"Under <em>Layout</em>, in the <gui>Two-side</gui> menu, select <gui>Short "
 "Edge (Flip)</gui>."
 msgstr ""
 "Az <em>Elrendezés</em> alatt a <gui>Kétoldalas</gui> menüben válassza a "
@@ -2641,6 +2632,17 @@ msgid "Under <em>Range</em>, select <gui>Pages</gui> and type: 1"
 msgstr ""
 "A <em>Tartomány</em> alatt válassza az <gui>Oldalak</gui> lehetőséget, és "
 "írja be az 1 értéket."
+
+#: C/duplex-9pages.page:43(p) C/duplex-7pages.page:47(p)
+#: C/duplex-5pages.page:43(p) C/duplex-3pages.page:42(p)
+#: C/duplex-14pages.page:44(p) C/duplex-12pages.page:45(p)
+#: C/duplex-10pages.page:45(p)
+msgid ""
+"Under <em>Layout</em>, in the <gui>Two-side</gui> option, select <gui>Short "
+"Edge (Flip)</gui>."
+msgstr ""
+"Az <em>Elrendezés</em> alatt a <gui>Kétoldalas</gui> menüben válassza a "
+"<gui>Rövid él (fordított)</gui> lehetőséget."
 
 #: C/duplex-9pages.page:49(p) C/duplex-7pages.page:53(p)
 #: C/duplex-6pages.page:86(p) C/duplex-5pages.page:49(p)
@@ -2710,9 +2712,12 @@ msgstr ""
 "Az <gui>Oldalbeállítás</gui> lap <gui>Oldalsorrend</gui> menüjében válassza "
 "a <gui>Jobbról balra</gui> lehetőséget."
 
-#: C/duplex-9pages.page:99(p) C/duplex-5pages.page:103(p)
+#: C/duplex-9pages.page:99(p)
+#| msgid ""
+#| "Once page 3 has printed, place the paper back in the printer (taking care "
+#| "to orient it correctly (pages 4 and 9 will be printed on the other side)."
 msgid ""
-"Once page 3 has printed, place the paper back in the printer (taking care to "
+"Once page 3 has printed, place the paper back in the printer taking care to "
 "orient it correctly (pages 4 and 9 will be printed on the other side)."
 msgstr ""
 "A 3. oldal kinyomtatása után vegye ki a papírt, és helyezze vissza a "
@@ -2720,11 +2725,14 @@ msgstr ""
 "másik oldalára kerül)."
 
 #: C/duplex-9pages.page:107(p)
+#| msgid ""
+#| "In the <gui>General</gui> tab enter pages 4,9 in the <gui>Pages</gui> "
+#| "selection menu."
 msgid ""
 "In the <gui>General</gui> tab enter pages 4,9 in the <gui>Pages</gui> "
-"selection menu."
+"selection."
 msgstr ""
-"Az <gui>Általános</gui> lapon írja be a 4, 9 értéket az <gui>Oldalak</gui> "
+"Az <gui>Általános</gui> lapon írja be a 4,9 értéket az <gui>Oldalak</gui> "
 "mezőbe."
 
 #: C/duplex-9pages.page:110(p) C/duplex-5pages.page:114(p)
@@ -2918,7 +2926,7 @@ msgstr "5 oldalas füzet"
 msgid "Choose the General tab."
 msgstr "Válassza az <gui>Általános</gui> lapot."
 
-#: C/duplex-5pages.page:87(p)
+#: C/duplex-5pages.page:87(p) C/duplex-13pages.page:81(p)
 msgid ""
 "To print page 3, click <guiseq><gui>File</gui><gui>Print</gui></guiseq> "
 "again."
@@ -2934,12 +2942,24 @@ msgstr ""
 "Az <gui>Általános</gui> lapon írja be az oldalszámot az <gui>Oldalak</gui> "
 "mezőbe."
 
+#: C/duplex-5pages.page:103(p)
+msgid ""
+"Once page 3 has printed, place the paper back in the printer (taking care to "
+"orient it correctly (pages 4 and 9 will be printed on the other side)."
+msgstr ""
+"A 3. oldal kinyomtatása után vegye ki a papírt, és helyezze vissza a "
+"nyomtatóba. Ügyeljen arra, hogy megfelelően fordítsa (a 4. és 9. oldal a "
+"másik oldalára kerül)."
+
 #: C/duplex-5pages.page:111(p)
+#| msgid ""
+#| "In the <gui>General</gui> tab enter pages 4, 9 in the <gui>Pages</gui> "
+#| "selection menu."
 msgid ""
 "In the <gui>General</gui> tab enter pages 4, 9 in the <gui>Pages</gui> "
-"selection menu."
+"selection."
 msgstr ""
-"Az <gui>Általános</gui> lapon írja be a 4, 9 értéket az <gui>Oldalak</gui> "
+"Az <gui>Általános</gui> lapon írja be a 4,9 értéket az <gui>Oldalak</gui> "
 "mezőbe."
 
 #: C/duplex-5pages.page:123(p)
@@ -3063,14 +3083,6 @@ msgstr "13 oldalas füzet nyomtatása."
 msgid "13-page booklet"
 msgstr "13 oldalas füzet"
 
-#: C/duplex-13pages.page:81(p)
-msgid ""
-"To print page 3, Click <guiseq><gui>File</gui><gui>Print</gui></guiseq> "
-"again."
-msgstr ""
-"A 3. oldal kinyomtatásához válassza újra a <guiseq><gui>Fájl</"
-"gui><gui>Nyomtatás</gui></guiseq> menüpontot."
-
 #: C/duplex-13pages.page:84(p)
 msgid "In the <gui>General</gui> tab, enter 3 in the <gui>Pages</gui> selection."
 msgstr ""
@@ -3078,18 +3090,24 @@ msgstr ""
 "mezőbe."
 
 #: C/duplex-13pages.page:95(p)
+#| msgid ""
+#| "Once page 3 has printed, place the paper back in the printer (taking care "
+#| "to orient it correctly, pages 4 and 13 will be printed on the other side)."
 msgid ""
-"Once page 3 has printed, place the paper back in the printer (taking care to "
-"orient it correctly, pages 4 and 13 will be printed on the other side)."
+"Once page 3 has printed, place the paper back in the printer taking care to "
+"orient it correctly (pages 4 and 13 will be printed on the other side)."
 msgstr ""
 "A 3. oldal kinyomtatása után vegye ki a papírt, és helyezze vissza a "
 "nyomtatóba. Ügyeljen arra, hogy megfelelően fordítsa (a 4. és 13. oldal a "
 "másik oldalára kerül)."
 
 #: C/duplex-13pages.page:103(p)
+#| msgid ""
+#| "In the <gui>General</gui> tab enter pages 4, 13 in the <gui>Pages</gui> "
+#| "selection menu."
 msgid ""
 "In the <gui>General</gui> tab enter pages 4, 13 in the <gui>Pages</gui> "
-"selection menu."
+"selection."
 msgstr ""
 "Az <gui>Általános</gui> lapon írja be a 4, 13 értéket az <gui>Oldalak</gui> "
 "mezőbe."
@@ -3579,14 +3597,18 @@ msgstr ""
 "guiseq> menüpontot, vagy nyomja meg az <key>F9</key> billentyűt."
 
 #: C/annotations.page:28(p)
+#| msgid ""
+#| "At the top of this side pane, there is a drop-down menu with options like "
+#| "<gui>Thumbnails</gui>, <gui>Index</gui> and <gui>Annotations</gui> (some "
+#| "of which may be <em>dimmed</em> for some documents):"
 msgid ""
 "At the top of this side pane, there is a drop-down menu with options like "
 "<gui>Thumbnails</gui>, <gui>Index</gui> and <gui>Annotations</gui> (some of "
-"which may be <em>dimmed</em> for some documents):"
+"which may be <em>dimmed</em> for some documents)."
 msgstr ""
 "Az oldalsáv tetején található egy legördülő menü, amely a <gui>Bélyegképek</"
 "gui>, <gui>Index</gui> és <gui>Jegyzetek</gui> menüpontokat tartalmazza "
-"(némelyik lehet, hogy <em>halvány</em> egyes dokumentumok esetén):"
+"(némelyik lehet, hogy <em>halvány</em> egyes dokumentumok esetén)."
 
 #: C/annotations.page:31(p)
 msgid "To create an annotation:"
@@ -3733,7 +3755,8 @@ msgid "Right click on the annotation icon in the document."
 msgstr "Kattintson a jobb egérgombbal a jegyzet ikonjára a dokumentumban."
 
 #: C/annotation-properties.page:29(p)
-msgid "Select <gui>Annotation Properties.</gui>"
+#| msgid "Select <gui>Annotation Properties.</gui>"
+msgid "Select <gui>Annotation Properties</gui>."
 msgstr "Válassza a <gui>Jegyzettulajdonságok</gui> menüpontot."
 
 #: C/annotation-properties.page:34(p)
@@ -3776,4 +3799,11 @@ msgstr ""
 #: C/index.page:0(None)
 msgid "translator-credits"
 msgstr "Kelemen Gábor <kelemeng at gnome dot hu>, 2011."
+
+#~ msgid ""
+#~ "To print page 3, Click <guiseq><gui>File</gui><gui>Print</gui></guiseq> "
+#~ "again."
+#~ msgstr ""
+#~ "A 3. oldal kinyomtatásához válassza újra a <guiseq><gui>Fájl</"
+#~ "gui><gui>Nyomtatás</gui></guiseq> menüpontot."
 
