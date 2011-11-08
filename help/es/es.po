@@ -8,8 +8,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: evince.help.master\n"
-"POT-Creation-Date: 2011-10-12 22:15+0000\n"
-"PO-Revision-Date: 2011-10-14 12:09+0200\n"
+"POT-Creation-Date: 2011-11-02 20:38+0000\n"
+"PO-Revision-Date: 2011-11-08 14:13+0100\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -414,7 +414,8 @@ msgstr ""
 "<app>Visor de documentos</app> al realizar una búsqueda hacia adelante."
 
 #: C/synctex-search.page:50(p)
-msgid "If you add a complex project with several TeX files you can put"
+#| msgid "If you add a complex project with several TeX files you can put"
+msgid "If you have a complex project with several TeX files you can put"
 msgstr "Si añade un proyecto complejo con varios archivos TeX puede poner"
 
 #: C/synctex-search.page:53(code)
@@ -489,7 +490,6 @@ msgid "Demo"
 msgstr "Demostración"
 
 #: C/synctex.page:30(p)
-#| msgid "Press Ctrl+click to sync."
 msgid "Press <key>Ctrl</key> + click to sync."
 msgstr "Pulse <key>Ctrl</key> + pulsación para sincronizar."
 
@@ -574,16 +574,6 @@ msgid "Compile TeX with SyncTeX"
 msgstr "Compilar TeX con SyncTex"
 
 #: C/synctex-compile.page:20(p)
-#| msgid ""
-#| "Adding the line <em>\\synctex=1</em> in the preamble of your TeX file "
-#| "will trigger synchronization with SyncTeX. <code>\n"
-#| "\\documentclass{article}\n"
-#| "\\synctex=1\n"
-#| "\\usepackage{fullpage}\n"
-#| "\\begin{document}\n"
-#| "...\n"
-#| "\\end{document}\n"
-#| "</code><placeholder-1/><placeholder-2/> age&gt;"
 msgid ""
 "Adding the line <em>\\synctex=1</em> in the preamble of your TeX file will "
 "trigger synchronization with SyncTeX."
@@ -2609,7 +2599,8 @@ msgstr ""
 "puede buscar porque el texto está codificado en el documento como una imagen."
 
 #: C/editing.page:7(desc)
-msgid "You can't the <app>document viewer</app> to edit files."
+#| msgid "You can't the <app>document viewer</app> to edit files."
+msgid "You can't use the <app>document viewer</app> to edit files."
 msgstr "No puede usar el <app>Visor de documentos</app> para editar archivos."
 
 #: C/editing.page:20(title)
@@ -2647,15 +2638,15 @@ msgstr ""
 "el número de páginas en blanco adecuado (1, 2 o 3) para que sea múltiplo de "
 "4. Para hacerlo, puede:"
 
-#: C/duplex-npages.page:71(p) C/duplex-9pages.page:43(p)
-#: C/duplex-8pages.page:45(p) C/duplex-7pages.page:47(p)
-#: C/duplex-6pages.page:46(p) C/duplex-5pages.page:43(p)
-#: C/duplex-4pages.page:45(p) C/duplex-3pages.page:42(p)
-#: C/duplex-16pages.page:46(p) C/duplex-14pages.page:44(p)
-#: C/duplex-13pages.page:42(p) C/duplex-12pages.page:45(p)
-#: C/duplex-11pages.page:46(p) C/duplex-10pages.page:45(p)
+#: C/duplex-npages.page:71(p) C/duplex-8pages.page:45(p)
+#: C/duplex-6pages.page:46(p) C/duplex-4pages.page:45(p)
+#: C/duplex-16pages.page:46(p) C/duplex-13pages.page:42(p)
+#: C/duplex-11pages.page:46(p)
+#| msgid ""
+#| "Under <em>Layout</em>, in the <gui>Two-side</gui> option, select "
+#| "<gui>Short Edge (Flip)</gui>."
 msgid ""
-"Under <em>Layout</em>, in the <gui>Two-side</gui> option, select <gui>Short "
+"Under <em>Layout</em>, in the <gui>Two-side</gui> menu, select <gui>Short "
 "Edge (Flip)</gui>."
 msgstr ""
 "En <em>Diseño</em>, en la opción <gui>Doble cara</gui>, seleccione "
@@ -2687,6 +2678,17 @@ msgstr "Folleto de 9 páginas"
 #: C/duplex-13pages.page:32(p)
 msgid "Under <em>Range</em>, select <gui>Pages</gui> and type: 1"
 msgstr "En <em>Rango</em>, seleccione <gui>Páginas</gui> y escriba: 1"
+
+#: C/duplex-9pages.page:43(p) C/duplex-7pages.page:47(p)
+#: C/duplex-5pages.page:43(p) C/duplex-3pages.page:42(p)
+#: C/duplex-14pages.page:44(p) C/duplex-12pages.page:45(p)
+#: C/duplex-10pages.page:45(p)
+msgid ""
+"Under <em>Layout</em>, in the <gui>Two-side</gui> option, select <gui>Short "
+"Edge (Flip)</gui>."
+msgstr ""
+"En <em>Diseño</em>, en la opción <gui>Doble cara</gui>, seleccione "
+"<gui>Margen corto (girar)</gui>."
 
 #: C/duplex-9pages.page:49(p) C/duplex-7pages.page:53(p)
 #: C/duplex-6pages.page:86(p) C/duplex-5pages.page:49(p)
@@ -2754,9 +2756,12 @@ msgstr ""
 "En la pestaña <gui>Configuración de página</gui>, establezca la "
 "<gui>Ordenación de página</gui> a <gui>De derecha a izquierda</gui>."
 
-#: C/duplex-9pages.page:99(p) C/duplex-5pages.page:103(p)
+#: C/duplex-9pages.page:99(p)
+#| msgid ""
+#| "Once page 3 has printed, place the paper back in the printer (taking care "
+#| "to orient it correctly (pages 4 and 9 will be printed on the other side)."
 msgid ""
-"Once page 3 has printed, place the paper back in the printer (taking care to "
+"Once page 3 has printed, place the paper back in the printer taking care to "
 "orient it correctly (pages 4 and 9 will be printed on the other side)."
 msgstr ""
 "Una vez que la página 3 se ha imprimido, vuelva a colocar el papel en la "
@@ -2764,9 +2769,12 @@ msgstr ""
 "se imprimirán en la otra cara)."
 
 #: C/duplex-9pages.page:107(p)
+#| msgid ""
+#| "In the <gui>General</gui> tab enter pages 4,9 in the <gui>Pages</gui> "
+#| "selection menu."
 msgid ""
 "In the <gui>General</gui> tab enter pages 4,9 in the <gui>Pages</gui> "
-"selection menu."
+"selection."
 msgstr ""
 "En la pestaña <gui>General</gui> introduzca las páginas 4,9 en el menú de "
 "selección <gui>Páginas</gui>."
@@ -2968,7 +2976,7 @@ msgstr "Folleto de 5 páginas"
 msgid "Choose the General tab."
 msgstr "Elija la pestaña «General»."
 
-#: C/duplex-5pages.page:87(p)
+#: C/duplex-5pages.page:87(p) C/duplex-13pages.page:81(p)
 msgid ""
 "To print page 3, click <guiseq><gui>File</gui><gui>Print</gui></guiseq> "
 "again."
@@ -2984,10 +2992,22 @@ msgstr ""
 "En la pestaña <gui>General</gui> introduzca lel número de página la "
 "selección <gui>Páginas</gui>."
 
+#: C/duplex-5pages.page:103(p)
+msgid ""
+"Once page 3 has printed, place the paper back in the printer (taking care to "
+"orient it correctly (pages 4 and 9 will be printed on the other side)."
+msgstr ""
+"Una vez que la página 3 se ha imprimido, vuelva a colocar el papel en la "
+"impresora, teniendo cuidado de orientarlo correctamente (las páginas 4 y 9 "
+"se imprimirán en la otra cara)."
+
 #: C/duplex-5pages.page:111(p)
+#| msgid ""
+#| "In the <gui>General</gui> tab enter pages 4, 9 in the <gui>Pages</gui> "
+#| "selection menu."
 msgid ""
 "In the <gui>General</gui> tab enter pages 4, 9 in the <gui>Pages</gui> "
-"selection menu."
+"selection."
 msgstr ""
 "En la pestaña <gui>General</gui> introduzca las páginas 4, 9 en el menú de "
 "selección <gui>Páginas</gui>."
@@ -3116,14 +3136,6 @@ msgstr "Imprimir un folleto de 13 páginas."
 msgid "13-page booklet"
 msgstr "Folleto de 13 páginas"
 
-#: C/duplex-13pages.page:81(p)
-msgid ""
-"To print page 3, Click <guiseq><gui>File</gui><gui>Print</gui></guiseq> "
-"again."
-msgstr ""
-"Para imprimir la página 3, pulse <guiseq><gui>Archivo</gui><gui>Imprimir</"
-"gui></guiseq> otra vez."
-
 #: C/duplex-13pages.page:84(p)
 msgid ""
 "In the <gui>General</gui> tab, enter 3 in the <gui>Pages</gui> selection."
@@ -3132,20 +3144,26 @@ msgstr ""
 "<gui>Páginas</gui>."
 
 #: C/duplex-13pages.page:95(p)
+#| msgid ""
+#| "Once page 3 has printed, place the paper back in the printer (taking care "
+#| "to orient it correctly, pages 4 and 13 will be printed on the other side)."
 msgid ""
-"Once page 3 has printed, place the paper back in the printer (taking care to "
-"orient it correctly, pages 4 and 13 will be printed on the other side)."
+"Once page 3 has printed, place the paper back in the printer taking care to "
+"orient it correctly (pages 4 and 13 will be printed on the other side)."
 msgstr ""
 "Una vez que se ha imprimido la página 3, vuelva a poner el papel en la "
-"impresora (teniendo cuidado de orientarlo correctamente, las páginas 4 y 13 "
+"impresora, teniendo cuidado de orientarlo correctamente, (las páginas 4 y 13 "
 "se imprimirán en la otra cara)."
 
 #: C/duplex-13pages.page:103(p)
+#| msgid ""
+#| "In the <gui>General</gui> tab enter pages 4, 13 in the <gui>Pages</gui> "
+#| "selection menu."
 msgid ""
 "In the <gui>General</gui> tab enter pages 4, 13 in the <gui>Pages</gui> "
-"selection menu."
+"selection."
 msgstr ""
-"En la pestaña <gui>General</gui> introduzca las páginas 4,13 en el menú de "
+"En la pestaña <gui>General</gui> introduzca las páginas 4, 13 en el menú de "
 "selección <gui>Páginas</gui>."
 
 #: C/duplex-13pages.page:117(p)
@@ -3645,15 +3663,19 @@ msgstr ""
 "gui><gui>Panel lateral</gui></guiseq> o <key>F9</key>."
 
 #: C/annotations.page:28(p)
+#| msgid ""
+#| "At the top of this side pane, there is a drop-down menu with options like "
+#| "<gui>Thumbnails</gui>, <gui>Index</gui> and <gui>Annotations</gui> (some "
+#| "of which may be <em>dimmed</em> for some documents):"
 msgid ""
 "At the top of this side pane, there is a drop-down menu with options like "
 "<gui>Thumbnails</gui>, <gui>Index</gui> and <gui>Annotations</gui> (some of "
-"which may be <em>dimmed</em> for some documents):"
+"which may be <em>dimmed</em> for some documents)."
 msgstr ""
 "En la parte superior de este panel lateral hay un menú desplegable con "
 "opciones como <gui>Miniaturas</gui>, <gui>Índice</gui> y <gui>Anotaciones</"
 "gui> (algunas de las cuales pueden estar <em>sombreadas</em> para algunos "
-"documentos):"
+"documentos)."
 
 #: C/annotations.page:31(p)
 msgid "To create an annotation:"
@@ -3806,8 +3828,9 @@ msgstr ""
 "documento."
 
 #: C/annotation-properties.page:29(p)
-msgid "Select <gui>Annotation Properties.</gui>"
-msgstr "Seleccione <gui>Propiedades de la anotación...</gui>"
+#| msgid "Select <gui>Annotation Properties.</gui>"
+msgid "Select <gui>Annotation Properties</gui>."
+msgstr "Seleccione <gui>Propiedades de la anotación</gui>."
 
 #: C/annotation-properties.page:34(p)
 msgid ""
@@ -3854,6 +3877,13 @@ msgid "translator-credits"
 msgstr ""
 "Daniel Mustieles <daniel.mustieles@gmail.com>, 2011\n"
 "Jorge González <jorgegonz@svn.gnome.org>, 2011"
+
+#~ msgid ""
+#~ "To print page 3, Click <guiseq><gui>File</gui><gui>Print</gui></guiseq> "
+#~ "again."
+#~ msgstr ""
+#~ "Para imprimir la página 3, pulse <guiseq><gui>Archivo</gui><gui>Imprimir</"
+#~ "gui></guiseq> otra vez."
 
 #~ msgid "Note:"
 #~ msgstr "Nota:"
