@@ -258,6 +258,14 @@ ev_annotation_get_annotation_type (EvAnnotation *annot)
 	return annot->type;
 }
 
+/**
+ * ev_annotation_get_page:
+ * @annot: an #EvAnnotation
+ *
+ * Get the page where @annot appears.
+ *
+ * Returns: (transfer none): the #EvPage where @annot appears
+ */
 EvPage *
 ev_annotation_get_page (EvAnnotation *annot)
 {
@@ -266,6 +274,15 @@ ev_annotation_get_page (EvAnnotation *annot)
 	return annot->page;
 }
 
+/**
+ * ev_annotation_get_page_index:
+ * @annot: an #EvAnnotation
+ *
+ * Get the index of the page where @annot appears. Note that the index
+ * is 0 based.
+ *
+ * Returns: the page index.
+ */
 guint
 ev_annotation_get_page_index (EvAnnotation *annot)
 {
@@ -274,6 +291,15 @@ ev_annotation_get_page_index (EvAnnotation *annot)
 	return annot->page->index;
 }
 
+/**
+ * ev_annotation_equal:
+ * @annot: an #EvAnnotation
+ * @other: another #EvAnnotation
+ *
+ * Compare @annot and @other.
+ *
+ * Returns: %TRUE if @annot is equal to @other, %FALSE otherwise
+ */
 gboolean
 ev_annotation_equal (EvAnnotation *annot,
 		     EvAnnotation *other)
@@ -284,6 +310,17 @@ ev_annotation_equal (EvAnnotation *annot,
 	return (annot == other || g_strcmp0 (annot->name, other->name) == 0);
 }
 
+/**
+ * ev_annotation_get_contents:
+ * @annot: an #EvAnnotation
+ *
+ * Get the contents of @annot. The contents of
+ * @annot is the text that is displayed in the annotation, or an
+ * alternate description of the annotation's content for non-text annotations
+ *
+ * Returns: a string with the contents of the annotation or
+ * %NULL if @annot has no contents.
+ */
 const gchar *
 ev_annotation_get_contents (EvAnnotation *annot)
 {
@@ -292,6 +329,16 @@ ev_annotation_get_contents (EvAnnotation *annot)
 	return annot->contents;
 }
 
+/**
+ * ev_annotation_set_contents:
+ * @annot: an #EvAnnotation
+ *
+ * Set the contents of @annot. You can monitor
+ * changes in the annotation's  contents by connecting to
+ * notify::contents signal of @annot.
+ *
+ * Returns: %TRUE if the contents have been changed, %FALSE otherwise.
+ */
 gboolean
 ev_annotation_set_contents (EvAnnotation *annot,
 			    const gchar  *contents)
@@ -310,6 +357,16 @@ ev_annotation_set_contents (EvAnnotation *annot,
 	return TRUE;
 }
 
+/**
+ * ev_annotation_get_name:
+ * @annot: an #EvAnnotation
+ *
+ * Get the name of @annot. The name of the annotation is a string
+ * that uniquely indenftifies @annot amongs all the annotations
+ * in the same page.
+ *
+ * Returns: the string with the annotation's name.
+ */
 const gchar *
 ev_annotation_get_name (EvAnnotation *annot)
 {
@@ -318,6 +375,16 @@ ev_annotation_get_name (EvAnnotation *annot)
 	return annot->name;
 }
 
+/**
+ * ev_annotation_set_name:
+ * @annot: an #EvAnnotation
+ *
+ * Set the name of @annot.
+ * You can monitor changes of the annotation name by connecting
+ * to the notify::name signal on @annot.
+ *
+ * Returns: %TRUE when the name has been changed, %FALSE otherwise.
+ */
 gboolean
 ev_annotation_set_name (EvAnnotation *annot,
 			const gchar  *name)
@@ -336,6 +403,14 @@ ev_annotation_set_name (EvAnnotation *annot,
 	return TRUE;
 }
 
+/**
+ * ev_annotation_get_modified:
+ * @annot: an #EvAnnotation
+ *
+ * Get the last modification date of @annot.
+ *
+ * Returns: A string containing the last modification date.
+ */
 const gchar *
 ev_annotation_get_modified (EvAnnotation *annot)
 {
@@ -344,6 +419,19 @@ ev_annotation_get_modified (EvAnnotation *annot)
 	return annot->modified;
 }
 
+/**
+ * ev_annotation_set_modified:
+ * @annot: an #EvAnnotation
+ * @modified: string with the last modification date.
+ *
+ * Set the last modification date of @annot to @modified. To
+ * set the last modification date using a #GTime, use
+ * ev_annotation_set_modified_from_time() instead. You can monitor
+ * changes to the last modification date by connecting to the
+ * notify::modified signal on @annot.
+ *
+ * Returns: %TRUE if the last modification date has been updated, %FALSE otherwise.
+ */
 gboolean
 ev_annotation_set_modified (EvAnnotation *annot,
 			    const gchar  *modified)
@@ -362,6 +450,18 @@ ev_annotation_set_modified (EvAnnotation *annot,
 	return TRUE;
 }
 
+/**
+ * ev_annotation_set_modified_from_time:
+ * @annot: an #EvAnnotation
+ * @utime: a #GTime
+ *
+ * Set the last modification date of @annot to @utime.  You can
+ * monitor changes to the last modification date by connectin to the
+ * notify::modified sinal on @annot.
+ * For the time-format used, see ev_document_misc_format_date().
+ *
+ * Returns: %TRUE if the last modified date has been updated, %FALSE otherwise.
+ */
 gboolean
 ev_annotation_set_modified_from_time (EvAnnotation *annot,
 				      GTime         utime)
@@ -386,6 +486,13 @@ ev_annotation_set_modified_from_time (EvAnnotation *annot,
 	return TRUE;
 }
 
+/**
+ * ev_annotation_get_color:
+ * @annot: an #EvAnnotation
+ * @color (out): a #GdkColor to be filled with the Annotation color.
+ *
+ * Get the color of @annot.
+ */
 void
 ev_annotation_get_color (EvAnnotation *annot,
 			 GdkColor     *color)
@@ -396,6 +503,17 @@ ev_annotation_get_color (EvAnnotation *annot,
 		*color = annot->color;
 }
 
+/**
+ * ev_annotation_set_color:
+ * @annot: an #Evannotation
+ * @color: a #GdkColor
+ *
+ * Set the color of the annotation to @color. You can monitor
+ * changes to the annotation's color by connecting to
+ * notify::color signal on @annot.
+ *
+ * Returns: %TRUE  when the color has been changed, %FALSE otherwise.
+ */
 gboolean
 ev_annotation_set_color (EvAnnotation   *annot,
 			 const GdkColor *color)
