@@ -66,19 +66,14 @@ typedef struct {
 
 typedef struct _EvRectangle EvRectangle;
 typedef struct _EvMapping EvMapping;
-
+typedef struct _EvSourceLink EvSourceLink;
 typedef struct _EvDocumentBackendInfo EvDocumentBackendInfo;
+
 struct _EvDocumentBackendInfo
 {
 	const gchar *name;
 	const gchar *version;
 };
-
-typedef struct {
-	const gchar *filename;
-	gint         line;
-	gint         col;
-} EvSourceLink;
 
 struct _EvDocument
 {
@@ -202,6 +197,21 @@ struct _EvMapping {
 	EvRectangle area;
 	gpointer    data;
 };
+
+#define EV_TYPE_SOURCE_LINK (ev_source_link_get_type ())
+struct _EvSourceLink
+{
+        gchar *filename;
+        gint   line;
+        gint   col;
+};
+
+GType          ev_source_link_get_type (void) G_GNUC_CONST;
+EvSourceLink  *ev_source_link_new      (const gchar *filename,
+					gint         line,
+					gint         col);
+EvSourceLink  *ev_source_link_copy     (EvSourceLink *link);
+void           ev_source_link_free     (EvSourceLink *link);
 
 /* convenience macro to ease interface addition in the CODE
  * section of EV_BACKEND_REGISTER_WITH_CODE (this macro relies on

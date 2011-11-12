@@ -3027,7 +3027,7 @@ ev_view_synctex_backward_search (EvView *view,
 	link = ev_document_synctex_backward_search (view->document, page, x_new, y_new);
 	if (link) {
 		g_signal_emit (view, signals[SIGNAL_SYNC_SOURCE], 0, link);
-		g_free (link);
+		ev_source_link_free (link);
 
 		return TRUE;
 	}
