@@ -74,6 +74,7 @@ MAINTAINERCLEANFILES = \
 	$(srcdir)/depcomp \
 	$(srcdir)/install-sh \
 	$(srcdir)/ltmain.sh \
+	$(srcdir)/m4 \
 	$(srcdir)/missing \
 	$(srcdir)/mkinstalldirs \
 	$(srcdir)/omf.make \
