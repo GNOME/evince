@@ -193,6 +193,11 @@ egg_sm_client_xsmp_class_init (EggSMClientXSMPClass *klass)
 EggSMClient *
 egg_sm_client_xsmp_new (void)
 {
+#if GTK_CHECK_VERSION(3,0,0)
+  if (!GDK_IS_X11_DISPLAY_MANAGER (gdk_display_manager_get ()))
+    return NULL;
+#endif
+
   if (!g_getenv ("SESSION_MANAGER"))
     return NULL;
 
@@ -368,7 +373,7 @@ sm_client_xsmp_startup (EggSMClient *client,
       free (ret_client_id);
 
       gdk_threads_enter ();
-#if !GTK_CHECK_VERSION(2,91,7) && !GTK_CHECK_VERSION(3,0,0)
+#if !GTK_CHECK_VERSION(2,23,3) && !GTK_CHECK_VERSION(3,0,0)
       gdk_set_sm_client_id (xsmp->client_id);
 #else
       gdk_x11_set_sm_client_id (xsmp->client_id);
