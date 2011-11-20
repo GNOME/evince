@@ -1867,7 +1867,7 @@ ev_print_operation_print_create_custom_widget (EvPrintOperationPrint *print,
 {
 	GtkPrintSettings *settings;
 	GtkWidget        *label;
-	GtkWidget        *table;
+	GtkWidget        *grid;
 	EvPrintScale      page_scale;
 	gboolean          autorotate;
 	gboolean          use_source_size;
@@ -1879,13 +1879,13 @@ ev_print_operation_print_create_custom_widget (EvPrintOperationPrint *print,
 		TRUE;
 	use_source_size = gtk_print_settings_get_bool (settings, EV_PRINT_SETTING_PAGE_SIZE);
 
-	table = gtk_table_new (3, 2, FALSE);
-	gtk_table_set_row_spacings (GTK_TABLE (table), 6);
-	gtk_table_set_col_spacings (GTK_TABLE (table), 12);
-	gtk_container_set_border_width (GTK_CONTAINER (table), 12);
+	grid = gtk_grid_new ();
+	gtk_grid_set_row_spacing (GTK_GRID (grid), 6);
+	gtk_grid_set_column_spacing (GTK_GRID (grid), 12);
+	gtk_container_set_border_width (GTK_CONTAINER (grid), 12);
 
-	label =  gtk_label_new (_("Page Scaling:"));
-	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 0, 1, GTK_FILL, 0, 0, 0);
+	label = gtk_label_new (_("Page Scaling:"));
+	gtk_grid_attach (GTK_GRID (grid), label, 0, 0, 1, 1);
 	gtk_widget_show (label);
 
 	print->scale_combo = gtk_combo_box_text_new ();
@@ -1903,7 +1903,7 @@ ev_print_operation_print_create_custom_widget (EvPrintOperationPrint *print,
 		  "\n"
 		  "• \"Fit to Printable Area\": Document pages are enlarged or reduced as"
 		  " required to fit the printable area of the printer page.\n"));
-	gtk_table_attach (GTK_TABLE (table), print->scale_combo, 1, 2, 0, 1, GTK_FILL, 0, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), print->scale_combo, 1, 0, 1, 1);
 	gtk_widget_show (print->scale_combo);
 
 	print->autorotate_button = gtk_check_button_new_with_label (_("Auto Rotate and Center"));
@@ -1911,17 +1911,17 @@ ev_print_operation_print_create_custom_widget (EvPrintOperationPrint *print,
 	gtk_widget_set_tooltip_text (print->autorotate_button,
 		_("Rotate printer page orientation of each page to match orientation of each document page. "
 		  "Document pages will be centered within the printer page."));
-	gtk_table_attach (GTK_TABLE (table), print->autorotate_button, 0, 2, 1, 2, GTK_FILL, 0, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), print->autorotate_button, 0, 1, 2, 1);
 	gtk_widget_show (print->autorotate_button);
 
 	print->source_button = gtk_check_button_new_with_label (_("Select page size using document page size"));
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (print->source_button), use_source_size);
 	gtk_widget_set_tooltip_text (print->source_button, _("When enabled, each page will be printed on "
 							     "the same size paper as the document page."));
-	gtk_table_attach (GTK_TABLE (table), print->source_button, 0, 2, 2, 3, GTK_FILL, 0, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), print->source_button, 0, 2, 2, 1);
 	gtk_widget_show (print->source_button);
 
-	return G_OBJECT (table);
+	return G_OBJECT (grid);
 }
 
 static void

@@ -35,7 +35,7 @@ struct _EvAnnotationPropertiesDialog {
 	EvAnnotationType annot_type;
 	EvAnnotation    *annot;
 
-	GtkWidget       *table;
+	GtkWidget       *grid;
 
 	GtkWidget       *author;
 	GtkWidget       *color;
@@ -87,7 +87,7 @@ ev_annotation_properties_dialog_constructed (GObject *object)
 {
 	EvAnnotationPropertiesDialog *dialog = EV_ANNOTATION_PROPERTIES_DIALOG (object);
 	GtkWidget *contant_area = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
-	GtkWidget *table = dialog->table;
+	GtkWidget *grid = dialog->grid;
 	GtkWidget *label;
 
 	contant_area = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
@@ -96,8 +96,7 @@ ev_annotation_properties_dialog_constructed (GObject *object)
 	case EV_ANNOTATION_TYPE_TEXT:
 		label = gtk_label_new (_("Icon:"));
 		gtk_misc_set_alignment (GTK_MISC (label), 0., 0.5);
-		gtk_table_attach (GTK_TABLE (table), label, 0, 1, 5, 6,
-				  GTK_FILL, GTK_FILL, 0, 0);
+		gtk_grid_attach (GTK_GRID (grid), label, 0, 5, 1, 1);
 		gtk_widget_show (label);
 
 		dialog->icon = gtk_combo_box_text_new ();
@@ -112,9 +111,8 @@ ev_annotation_properties_dialog_constructed (GObject *object)
 		gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (dialog->icon), _("Circle"));
 		gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (dialog->icon), _("Unknown"));
 		gtk_combo_box_set_active (GTK_COMBO_BOX (dialog->icon), 0);
-		gtk_table_attach (GTK_TABLE (table), dialog->icon,
-				  1, 2, 5, 6,
-				  GTK_FILL | GTK_EXPAND, GTK_FILL, 0, 0);
+		gtk_grid_attach (GTK_GRID (grid), dialog->icon, 1, 5, 1, 1);
+                gtk_widget_set_hexpand (dialog->icon, TRUE);
 		gtk_widget_show (dialog->icon);
 
 		break;
@@ -131,7 +129,7 @@ ev_annotation_properties_dialog_init (EvAnnotationPropertiesDialog *annot_dialog
 	GtkDialog *dialog = GTK_DIALOG (annot_dialog);
 	GtkWidget *content_area;
 	GtkWidget *label;
-	GtkWidget *table;
+	GtkWidget *grid;
 	GtkWidget *hbox;
 	gchar     *markup;
 	GdkColor   color = { 0, 65535, 65535, 0 };
@@ -148,50 +146,44 @@ ev_annotation_properties_dialog_init (EvAnnotationPropertiesDialog *annot_dialog
 	content_area = gtk_dialog_get_content_area (dialog);
 	gtk_box_set_spacing (GTK_BOX (content_area), 2);
 
-	table = gtk_table_new (5, 2, FALSE);
-	annot_dialog->table = table;
-	gtk_table_set_col_spacings (GTK_TABLE (table), 12);
-	gtk_table_set_row_spacings (GTK_TABLE (table), 6);
-	gtk_container_set_border_width (GTK_CONTAINER (table), 12);
-	gtk_box_pack_start (GTK_BOX (content_area), table, FALSE, FALSE, 0);
-	gtk_widget_show (table);
+	grid = gtk_grid_new ();
+	annot_dialog->grid = grid;
+	gtk_grid_set_column_spacing (GTK_GRID (grid), 12);
+	gtk_grid_set_row_spacing (GTK_GRID (grid), 6);
+	gtk_container_set_border_width (GTK_CONTAINER (grid), 12);
+	gtk_box_pack_start (GTK_BOX (content_area), grid, FALSE, FALSE, 0);
+	gtk_widget_show (grid);
 
 	label = gtk_label_new (_("Author:"));
 	gtk_misc_set_alignment (GTK_MISC (label), 0., 0.5);
-	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 0, 1,
-			  GTK_FILL, GTK_FILL, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), label, 0, 0, 1, 1);
 	gtk_widget_show (label);
 
 	annot_dialog->author = gtk_entry_new ();
 	gtk_entry_set_text (GTK_ENTRY (annot_dialog->author), g_get_real_name ());
-	gtk_table_attach (GTK_TABLE (table), annot_dialog->author,
-			  1, 2, 0, 1,
-			  GTK_FILL | GTK_EXPAND, GTK_FILL, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), annot_dialog->author, 1, 0, 1, 1);
+        gtk_widget_set_hexpand (annot_dialog->author, TRUE);
 	gtk_widget_show (annot_dialog->author);
 
 	label = gtk_label_new (_("Color:"));
 	gtk_misc_set_alignment (GTK_MISC (label), 0., 0.5);
-	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 1, 2,
-			  GTK_FILL, GTK_FILL, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), label, 0, 2, 1, 1);
 	gtk_widget_show (label);
 
 	annot_dialog->color = gtk_color_button_new_with_color (&color);
-	gtk_table_attach (GTK_TABLE (table), annot_dialog->color,
-			  1, 2, 1, 2,
-			  GTK_FILL | GTK_EXPAND, GTK_FILL, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), annot_dialog->color, 1, 1, 1, 1);
+        gtk_widget_set_hexpand (annot_dialog->color, TRUE);
 	gtk_widget_show (annot_dialog->color);
 
 	label = gtk_label_new (_("Style:"));
 	gtk_misc_set_alignment (GTK_MISC (label), 0., 0.5);
-	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 2, 3,
-			  GTK_FILL, GTK_FILL, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), label, 0, 2, 1, 1);
 	gtk_widget_show (label);
 
 	annot_dialog->opacity = gtk_hscale_new_with_range (0, 100, 5);
 	gtk_range_set_value (GTK_RANGE (annot_dialog->opacity), 100);
-	gtk_table_attach (GTK_TABLE (table), annot_dialog->opacity,
-			  1, 2, 2, 3,
-			  GTK_FILL | GTK_EXPAND, GTK_FILL, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), annot_dialog->opacity, 1, 2, 1, 1);
+        gtk_widget_set_hexpand (annot_dialog->opacity, TRUE);
 	gtk_widget_show (annot_dialog->opacity);
 
 	hbox = gtk_hbox_new (FALSE, 6);
@@ -210,24 +202,21 @@ ev_annotation_properties_dialog_init (EvAnnotationPropertiesDialog *annot_dialog
 	gtk_box_pack_end (GTK_BOX (hbox), label, FALSE, FALSE, 0);
 	gtk_widget_show (label);
 
-	gtk_table_attach (GTK_TABLE (table), hbox,
-			  1, 2, 3, 4,
-			  GTK_FILL | GTK_EXPAND, GTK_FILL, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), hbox, 1, 3, 1, 1);
+        gtk_widget_set_hexpand (hbox, TRUE);
 	gtk_widget_show (hbox);
 
 	label = gtk_label_new (_("Initial window state:"));
 	gtk_misc_set_alignment (GTK_MISC (label), 0., 0.5);
-	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 4, 5,
-			  GTK_FILL, GTK_FILL, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), label, 0, 4, 1, 1);
 	gtk_widget_show (label);
 
 	annot_dialog->popup_state = gtk_combo_box_text_new ();
 	gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (annot_dialog->popup_state), _("Open"));
 	gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (annot_dialog->popup_state), _("Close"));
 	gtk_combo_box_set_active (GTK_COMBO_BOX (annot_dialog->popup_state), 1);
-	gtk_table_attach (GTK_TABLE (table), annot_dialog->popup_state,
-			  1, 2, 4, 5,
-			  GTK_FILL | GTK_EXPAND, GTK_FILL, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), annot_dialog->popup_state, 1, 4, 1, 1);
+        gtk_widget_set_hexpand (annot_dialog->popup_state, TRUE);
 	gtk_widget_show (annot_dialog->popup_state);
 }
 
