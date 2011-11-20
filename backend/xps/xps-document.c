@@ -156,17 +156,7 @@ xps_document_get_page_size (EvDocument *document,
 			    double     *width,
 			    double     *height)
 {
-	GXPSPage *xps_page;
-	guint     w, h;
-
-	xps_page = GXPS_PAGE (page->backend_page);
-
-	gxps_page_get_size (xps_page, &w, &h);
-
-	if (width)
-		*width = (gdouble)w;
-	if (height)
-		*height = (gdouble)h;
+	gxps_page_get_size (GXPS_PAGE (page->backend_page), width, height);
 }
 
 static EvDocumentInfo *
@@ -210,7 +200,7 @@ xps_document_render (EvDocument      *document,
 		     EvRenderContext *rc)
 {
 	GXPSPage        *xps_page;
-	guint            page_width, page_height;
+	gdouble          page_width, page_height;
 	guint            width, height;
 	cairo_surface_t *surface;
 	cairo_t         *cr;
