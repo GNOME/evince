@@ -260,10 +260,6 @@ main (int argc, char *argv[])
 	}
 #endif
 
-	/* Init glib threads asap */
-	if (!g_thread_supported ())
-		g_thread_init (NULL);
-
 #ifdef ENABLE_NLS
 	/* Initialize the i18n stuff */
 	bindtextdomain (GETTEXT_PACKAGE, ev_get_locale_dir());

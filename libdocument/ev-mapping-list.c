@@ -136,7 +136,7 @@ ev_mapping_list_unref (EvMappingList *mapping_list)
 	g_return_if_fail (mapping_list != NULL);
 	g_return_if_fail (mapping_list->ref_count > 0);
 
-	if (g_atomic_int_exchange_and_add (&mapping_list->ref_count, -1) - 1 == 0) {
+	if (g_atomic_int_add (&mapping_list->ref_count, -1) - 1 == 0) {
 		g_list_foreach (mapping_list->list,
 				(GFunc)mapping_list_free_foreach,
 				mapping_list->data_destroy_func);

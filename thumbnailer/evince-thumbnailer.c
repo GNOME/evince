@@ -83,7 +83,7 @@ static void
 time_monitor_start (const char *input)
 {
         finished = FALSE;
-        g_thread_create (time_monitor, (gpointer) input, FALSE, NULL);
+        g_thread_new ("EvThumbnailerTimer", time_monitor, (gpointer) input);
 }
 
 static void
@@ -294,9 +294,6 @@ main (int argc, char *argv[])
 
 	g_type_init ();
 
-	if (!g_thread_supported ())
-		g_thread_init (NULL);
-
         if (!ev_init ())
                 return -1;
 
@@ -321,8 +318,9 @@ main (int argc, char *argv[])
 		data.output = output;
 		data.size = size;
 
-		g_thread_create ((GThreadFunc) evince_thumbnail_pngenc_get_async,
-				 &data, FALSE, NULL);
+		g_thread_new ("EvThumbanilerAsyncRenderer",
+                              (GThreadFunc) evince_thumbnail_pngenc_get_async,
+                              &data);
 		
 		gtk_main ();
 

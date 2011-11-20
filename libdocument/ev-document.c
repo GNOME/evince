@@ -69,8 +69,8 @@ static gchar          *_ev_document_get_page_label  (EvDocument *document,
 static EvDocumentInfo *_ev_document_get_info        (EvDocument *document);
 static gboolean        _ev_document_support_synctex (EvDocument *document);
 
-GMutex *ev_doc_mutex = NULL;
-GMutex *ev_fc_mutex = NULL;
+static GMutex ev_doc_mutex;
+static GMutex ev_fc_mutex;
 
 G_DEFINE_ABSTRACT_TYPE (EvDocument, ev_document, G_TYPE_OBJECT)
 
@@ -158,58 +158,40 @@ ev_document_class_init (EvDocumentClass *klass)
 	g_object_class->finalize = ev_document_finalize;
 }
 
-GMutex *
-ev_document_get_doc_mutex (void)
-{
-	if (ev_doc_mutex == NULL) {
-		ev_doc_mutex = g_mutex_new ();
-	}
-	return ev_doc_mutex;
-}
-
 void
 ev_document_doc_mutex_lock (void)
 {
-	g_mutex_lock (ev_document_get_doc_mutex ());
+	g_mutex_lock (&ev_doc_mutex);
 }
 
 void
 ev_document_doc_mutex_unlock (void)
 {
-	g_mutex_unlock (ev_document_get_doc_mutex ());
+	g_mutex_unlock (&ev_doc_mutex);
 }
 
 gboolean
 ev_document_doc_mutex_trylock (void)
 {
-	return g_mutex_trylock (ev_document_get_doc_mutex ());
-}
-
-GMutex *
-ev_document_get_fc_mutex (void)
-{
-	if (ev_fc_mutex == NULL) {
-		ev_fc_mutex = g_mutex_new ();
-	}
-	return ev_fc_mutex;
+	return g_mutex_trylock (&ev_doc_mutex);
 }
 
 void
 ev_document_fc_mutex_lock (void)
 {
-	g_mutex_lock (ev_document_get_fc_mutex ());
+	g_mutex_lock (&ev_fc_mutex);
 }
 
 void
 ev_document_fc_mutex_unlock (void)
 {
-	g_mutex_unlock (ev_document_get_fc_mutex ());
+	g_mutex_unlock (&ev_fc_mutex);
 }
 
 gboolean
 ev_document_fc_mutex_trylock (void)
 {
-	return g_mutex_trylock (ev_document_get_fc_mutex ());
+	return g_mutex_trylock (&ev_fc_mutex);
 }
 
 /**
