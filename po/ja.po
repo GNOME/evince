@@ -6,6 +6,7 @@
 # Takayuki KUSANO <AE5T-KSN@asahi-net.or.jp>, 2009.
 # Shushi Kurose <md81bird@hitaki.net>, 2009-2010.
 # Hideki Yamane (Debian-JP) <henrich@debian.or.jp>, 2009.
+# Hideki Yamane <henrich@debian.org>, 2011.
 # Jiro Matsuzawa <jmatsuzawa@src.gnome.org>, 2011.
 #
 msgid ""
@@ -13,9 +14,9 @@ msgstr ""
 "Project-Id-Version: evince master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evince&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2011-09-09 20:53+0000\n"
-"PO-Revision-Date: 2011-09-11 00:28+0900\n"
-"Last-Translator: Jiro Matsuzawa <jmatsuzawa@src.gnome.org>\n"
+"POT-Creation-Date: 2011-11-22 17:59+0000\n"
+"PO-Revision-Date: 2011-11-27 17:35+0900\n"
+"Last-Translator: Hideki Yamane <henrich@debian.org>\n"
 "Language-Team: Japanese <gnome-translation@gnome.gr.jp>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,7 +45,7 @@ msgstr "コマンド “%s” が正常に終了しませんでした。"
 #: ../backend/comics/comics-document.c:426
 #, c-format
 msgid "Not a comic book MIME type: %s"
-msgstr "コミックブックの MIME タイプではありません: %s"
+msgstr "コミックブックの MIME 型ではありません: %s"
 
 #: ../backend/comics/comics-document.c:433
 msgid "Can't find an appropriate command to decompress this type of comic book"
@@ -54,7 +55,7 @@ msgstr "このタイプのコミックブックを解凍するのに適したコ
 #: ../libdocument/ev-document-factory.c:93
 #: ../libdocument/ev-document-factory.c:199
 msgid "Unknown MIME Type"
-msgstr "不明な MIME タイプです"
+msgstr "不明な MIME 型です"
 
 #: ../backend/comics/comics-document.c:498
 msgid "File corrupted"
@@ -196,12 +197,12 @@ msgstr "不正なドキュメントです"
 msgid "Couldn't save attachment “%s”: %s"
 msgstr "添付ファイル \"%s\" を保存できませんでした: %s"
 
-#: ../libdocument/ev-attachment.c:372
+#: ../libdocument/ev-attachment.c:373
 #, c-format
 msgid "Couldn't open attachment “%s”: %s"
 msgstr "添付ファイル \"%s\" を開けませんでした: %s"
 
-#: ../libdocument/ev-attachment.c:407
+#: ../libdocument/ev-attachment.c:408
 #, c-format
 msgid "Couldn't open attachment “%s”"
 msgstr "添付ファイル \"%s\" を開けませんでした"
@@ -234,39 +235,44 @@ msgstr "一時ディレクトリの作成に失敗しました: %s"
 msgid "File is not a valid .desktop file"
 msgstr "ファイルは無効な .desktop ファイルです"
 
-#: ../cut-n-paste/smclient/eggdesktopfile.c:188
+#. translators: 'Version' is from a desktop file, and
+#. * should not be translated. '%s' would probably be a
+#. * version number.
+#: ../cut-n-paste/smclient/eggdesktopfile.c:191
 #, c-format
 msgid "Unrecognized desktop file Version '%s'"
 msgstr "desktop ファイルのバージョン '%s' を認識できません"
 
-#: ../cut-n-paste/smclient/eggdesktopfile.c:968
+#: ../cut-n-paste/smclient/eggdesktopfile.c:974
 #, c-format
 msgid "Starting %s"
 msgstr "%s の起動中"
 
-#: ../cut-n-paste/smclient/eggdesktopfile.c:1110
+#: ../cut-n-paste/smclient/eggdesktopfile.c:1116
 #, c-format
 msgid "Application does not accept documents on command line"
 msgstr "コマンドラインからドキュメントを指定できません"
 
-#: ../cut-n-paste/smclient/eggdesktopfile.c:1178
+#: ../cut-n-paste/smclient/eggdesktopfile.c:1184
 #, c-format
 msgid "Unrecognized launch option: %d"
 msgstr "起動オプションが認識できません: %d"
 
-#: ../cut-n-paste/smclient/eggdesktopfile.c:1383
+#. translators: The 'Type=Link' string is found in a
+#. * desktop file, and should not be translated.
+#: ../cut-n-paste/smclient/eggdesktopfile.c:1391
 #, c-format
 msgid "Can't pass document URIs to a 'Type=Link' desktop entry"
 msgstr "ドキュメントの URI を 'Type=Link' という desktop エントリに渡せません"
 
-#: ../cut-n-paste/smclient/eggdesktopfile.c:1404
+#: ../cut-n-paste/smclient/eggdesktopfile.c:1412
 #, c-format
 msgid "Not a launchable item"
 msgstr "起動できないアイテムです"
 
 #: ../cut-n-paste/smclient/eggsmclient.c:226
 msgid "Disable connection to session manager"
-msgstr "セッション・マネージャーに接続しない"
+msgstr "セッションマネージャーに接続しない"
 
 #: ../cut-n-paste/smclient/eggsmclient.c:229
 msgid "Specify file containing saved configuration"
@@ -400,10 +406,10 @@ msgstr "6400%"
 
 #. Manually set name and icon
 #: ../data/evince.desktop.in.in.h:1 ../shell/ev-window.c:4810
-#: ../shell/ev-window-title.c:157 ../shell/main.c:310
+#: ../shell/ev-window-title.c:157 ../shell/main.c:306
 #, c-format
 msgid "Document Viewer"
-msgstr "ドキュメント・ビューアー"
+msgstr "ドキュメントビューアー"
 
 #: ../data/evince.desktop.in.in.h:2
 msgid "View multi-page documents"
@@ -425,9 +431,9 @@ msgstr "一時ファイルを削除"
 msgid "Print settings file"
 msgstr "プリンター設定ファイル"
 
-#: ../previewer/ev-previewer.c:144 ../previewer/ev-previewer.c:178
+#: ../previewer/ev-previewer.c:140 ../previewer/ev-previewer.c:174
 msgid "GNOME Document Previewer"
-msgstr "GNOME ドキュメント・プレビューアー"
+msgstr "GNOME ドキュメントプレビューアー"
 
 #: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3276
 msgid "Failed to print document"
@@ -512,7 +518,7 @@ msgid "Subject:"
 msgstr "サブタイトル:"
 
 #: ../properties/ev-properties-view.c:63
-#: ../shell/ev-annotation-properties-dialog.c:159
+#: ../shell/ev-annotation-properties-dialog.c:157
 msgid "Author:"
 msgstr "作者:"
 
@@ -556,7 +562,7 @@ msgstr "セキュリティ:"
 msgid "Paper Size:"
 msgstr "ページサイズ:"
 
-#: ../properties/ev-properties-view.c:188 ../libview/ev-print-operation.c:1892
+#: ../properties/ev-properties-view.c:187 ../libview/ev-print-operation.c:1892
 msgid "None"
 msgstr "なし"
 
@@ -566,30 +572,30 @@ msgstr "なし"
 #. * Do *not* translate it to "predefinito:mm", if it
 #. * it isn't default:mm or default:inch it will not work
 #.
-#: ../properties/ev-properties-view.c:217
+#: ../properties/ev-properties-view.c:215
 msgid "default:mm"
 msgstr "default:mm"
 
-#: ../properties/ev-properties-view.c:261
+#: ../properties/ev-properties-view.c:259
 #, c-format
 msgid "%.0f × %.0f mm"
 msgstr "%.0f x %.0f ミリ"
 
-#: ../properties/ev-properties-view.c:265
+#: ../properties/ev-properties-view.c:263
 #, c-format
 msgid "%.2f × %.2f inch"
 msgstr "%.2f x %.2f インチ"
 
 #. Note to translators: first placeholder is the paper name (eg.
 #. * A4), second placeholder is the paper size (eg. 297x210 mm)
-#: ../properties/ev-properties-view.c:289
+#: ../properties/ev-properties-view.c:287
 #, c-format
 msgid "%s, Portrait (%s)"
 msgstr "%s の縦置き (%s)"
 
 #. Note to translators: first placeholder is the paper name (eg.
 #. * A4), second placeholder is the paper size (eg. 297x210 mm)
-#: ../properties/ev-properties-view.c:296
+#: ../properties/ev-properties-view.c:294
 #, c-format
 msgid "%s, Landscape (%s)"
 msgstr "%s の横置き (%s)"
@@ -730,7 +736,7 @@ msgstr "表示を下にスクロールします"
 
 #: ../libview/ev-view-accessible.c:883
 msgid "Document View"
-msgstr "ドキュメント・ビューアー"
+msgstr "ドキュメントビューアー"
 
 #: ../libview/ev-view-presentation.c:692
 msgid "Jump to page:"
@@ -742,23 +748,23 @@ msgstr "プレゼンテーションの最後です。クリックで終了しま
 
 #: ../libview/ev-view.c:1834
 msgid "Go to first page"
-msgstr "先頭ページへジャンプします"
+msgstr "先頭ページへ移動します"
 
 #: ../libview/ev-view.c:1836
 msgid "Go to previous page"
-msgstr "前のページへジャンプします"
+msgstr "前のページへ移動します"
 
 #: ../libview/ev-view.c:1838
 msgid "Go to next page"
-msgstr "次のページへジャンプします"
+msgstr "次のページへ移動します"
 
 #: ../libview/ev-view.c:1840
 msgid "Go to last page"
-msgstr "最後のページへジャンプします"
+msgstr "最後のページへ移動します"
 
 #: ../libview/ev-view.c:1842
 msgid "Go to page"
-msgstr "ページへジャンプします"
+msgstr "指定したページに移動します"
 
 #: ../libview/ev-view.c:1844
 msgid "Find"
@@ -767,12 +773,12 @@ msgstr "検索"
 #: ../libview/ev-view.c:1872
 #, c-format
 msgid "Go to page %s"
-msgstr "%s ページへジャンプします"
+msgstr "%s ページへ移動します"
 
 #: ../libview/ev-view.c:1878
 #, c-format
 msgid "Go to %s on file “%s”"
-msgstr "ファイル \"%2$s\" の %1$s へジャンプします"
+msgstr "ファイル \"%2$s\" の %1$s へ移動します"
 
 #: ../libview/ev-view.c:1881
 #, c-format
@@ -816,81 +822,81 @@ msgstr "大小文字を区別して検索します"
 msgid "Icon:"
 msgstr "アイコン:"
 
-#: ../shell/ev-annotation-properties-dialog.c:104
+#: ../shell/ev-annotation-properties-dialog.c:103
 msgid "Note"
 msgstr "ノート"
 
-#: ../shell/ev-annotation-properties-dialog.c:105
+#: ../shell/ev-annotation-properties-dialog.c:104
 msgid "Comment"
 msgstr "コメント"
 
-#: ../shell/ev-annotation-properties-dialog.c:106
+#: ../shell/ev-annotation-properties-dialog.c:105
 msgid "Key"
 msgstr "鍵"
 
-#: ../shell/ev-annotation-properties-dialog.c:107
+#: ../shell/ev-annotation-properties-dialog.c:106
 msgid "Help"
 msgstr "ヘルプ"
 
-#: ../shell/ev-annotation-properties-dialog.c:108
+#: ../shell/ev-annotation-properties-dialog.c:107
 msgid "New Paragraph"
 msgstr "新しい段落"
 
-#: ../shell/ev-annotation-properties-dialog.c:109
+#: ../shell/ev-annotation-properties-dialog.c:108
 msgid "Paragraph"
 msgstr "段落"
 
-#: ../shell/ev-annotation-properties-dialog.c:110
+#: ../shell/ev-annotation-properties-dialog.c:109
 msgid "Insert"
 msgstr "挿入"
 
-#: ../shell/ev-annotation-properties-dialog.c:111
+#: ../shell/ev-annotation-properties-dialog.c:110
 msgid "Cross"
 msgstr "クロス"
 
-#: ../shell/ev-annotation-properties-dialog.c:112
+#: ../shell/ev-annotation-properties-dialog.c:111
 msgid "Circle"
 msgstr "円"
 
-#: ../shell/ev-annotation-properties-dialog.c:113
+#: ../shell/ev-annotation-properties-dialog.c:112
 msgid "Unknown"
 msgstr "不明"
 
-#: ../shell/ev-annotation-properties-dialog.c:139
+#: ../shell/ev-annotation-properties-dialog.c:137
 msgid "Annotation Properties"
 msgstr "注釈のプロパティ"
 
-#: ../shell/ev-annotation-properties-dialog.c:172
+#: ../shell/ev-annotation-properties-dialog.c:168
 msgid "Color:"
 msgstr "色:"
 
-#: ../shell/ev-annotation-properties-dialog.c:184
+#: ../shell/ev-annotation-properties-dialog.c:178
 msgid "Style:"
 msgstr "スタイル:"
 
-#: ../shell/ev-annotation-properties-dialog.c:200
+#: ../shell/ev-annotation-properties-dialog.c:192
 msgid "Transparent"
 msgstr "透明度"
 
-#: ../shell/ev-annotation-properties-dialog.c:207
+#: ../shell/ev-annotation-properties-dialog.c:199
 msgid "Opaque"
 msgstr "不透明度"
 
-#: ../shell/ev-annotation-properties-dialog.c:218
+#: ../shell/ev-annotation-properties-dialog.c:209
 msgid "Initial window state:"
 msgstr "初期ウィンドウ状態:"
 
-#: ../shell/ev-annotation-properties-dialog.c:225
+#: ../shell/ev-annotation-properties-dialog.c:215
 msgid "Open"
 msgstr "開く"
 
-#: ../shell/ev-annotation-properties-dialog.c:226
+#: ../shell/ev-annotation-properties-dialog.c:216
 msgid "Close"
 msgstr "閉じる"
 
 #: ../shell/ev-application.c:1115
 msgid "Running in presentation mode"
-msgstr "プレゼンテーション・モードで実行中です"
+msgstr "プレゼンテーションモードで実行中です"
 
 #: ../shell/ev-keyring.c:102
 #, c-format
@@ -931,15 +937,15 @@ msgstr "ロックされているドキュメント \"%s\" を開くにはパス�
 msgid "_Password:"
 msgstr "パスワード(_P):"
 
-#: ../shell/ev-password-view.c:367
+#: ../shell/ev-password-view.c:365
 msgid "Forget password _immediately"
 msgstr "今すぐパスワードを破棄する(_I)"
 
-#: ../shell/ev-password-view.c:379
+#: ../shell/ev-password-view.c:377
 msgid "Remember password until you _log out"
 msgstr "ログアウトするまでパスワードを記憶する(_L)"
 
-#: ../shell/ev-password-view.c:391
+#: ../shell/ev-password-view.c:389
 msgid "Remember _forever"
 msgstr "パスワードを記憶する(_F)"
 
@@ -1187,9 +1193,7 @@ msgstr "印刷ジョブの \"%s\" が完了するまで閉じずに待機しま�
 #. but some languages distinguish between different plurals forms,
 #. so the ngettext is needed.
 #: ../shell/ev-window.c:3624
-#, fuzzy, c-format
-#| msgid ""
-#| "There are %d print jobs active. Wait until print finishes before closing?"
+#, c-format
 msgid "There is %d print job active. Wait until print finishes before closing?"
 msgid_plural ""
 "There are %d print jobs active. Wait until print finishes before closing?"
@@ -1223,7 +1227,7 @@ msgid ""
 "Document Viewer\n"
 "Using %s (%s)"
 msgstr ""
-"ドキュメント・ビューアー\n"
+"ドキュメントビューアー\n"
 "%s (%s) を利用"
 
 #: ../shell/ev-window.c:4839
@@ -1273,7 +1277,7 @@ msgstr ""
 "佐藤 暁 <ss@gnome.gr.jp>\n"
 "草野 貴之 <AE5T-KSN@asahi-net.or.jp>\n"
 "Shushi Kurose <md81bird@hitaki.net>\n"
-"やまねひでき <henrich@debian.or.jp>\n"
+"やまねひでき <henrich@debian.org>\n"
 "松澤 二郎 <jmatsuzawa@src.gnome.org>\n"
 "日本GNOMEユーザー会 <http://www.gnome.gr.jp/>"
 
@@ -1417,16 +1421,12 @@ msgid "Go to the last page"
 msgstr "最後のページに移動します"
 
 #: ../shell/ev-window.c:5761
-#, fuzzy
-#| msgid "Go to page"
 msgid "Go to Pa_ge"
-msgstr "ページへジャンプします"
+msgstr "指定ページ(_G)"
 
 #: ../shell/ev-window.c:5762
-#, fuzzy
-#| msgid "Go to page"
 msgid "Go to Page"
-msgstr "ページへジャンプします"
+msgstr "指定したページに移動します"
 
 #. Bookmarks menu
 #: ../shell/ev-window.c:5766
@@ -1474,11 +1474,11 @@ msgstr "ツールバーの表示を ON/OFF します"
 
 #: ../shell/ev-window.c:5848
 msgid "Side _Pane"
-msgstr "サイド・ペイン(_P)"
+msgstr "サイドペイン(_P)"
 
 #: ../shell/ev-window.c:5849
 msgid "Show or hide the side pane"
-msgstr "サイド・ペインの表示を ON/OFF します"
+msgstr "サイドペインの表示を ON/OFF します"
 
 #: ../shell/ev-window.c:5851
 msgid "_Continuous"
@@ -1563,7 +1563,7 @@ msgstr "ズーム"
 
 #: ../shell/ev-window.c:5991
 msgid "Adjust the zoom level"
-msgstr "ズーム・レベルを調節します"
+msgstr "ズームレベルを調節します"
 
 #: ../shell/ev-window.c:6001
 msgid "Navigation"
@@ -1608,7 +1608,7 @@ msgstr "縮小"
 msgid "Fit Width"
 msgstr "幅に合わせる"
 
-#: ../shell/ev-window.c:6207 ../shell/ev-window.c:6224
+#: ../shell/ev-window.c:6208 ../shell/ev-window.c:6224
 msgid "Unable to launch external application."
 msgstr "外部のアプリケーションを起動できませんでした。"
 
@@ -1618,7 +1618,7 @@ msgstr "外部へのリンクを開けません"
 
 #: ../shell/ev-window.c:6471
 msgid "Couldn't find appropriate format to save image"
-msgstr "画像を保存するのに必要な書式が見つかりませんでした"
+msgstr "画像を保存するのに適切な形式が見つかりませんでした"
 
 #: ../shell/ev-window.c:6503
 msgid "The image could not be saved."
@@ -1643,15 +1643,15 @@ msgstr "添付ファイルの保存"
 #: ../shell/ev-window-title.c:170
 #, c-format
 msgid "%s — Password Required"
-msgstr "%s - パスワードが必要です"
+msgstr "%s — パスワードが必要です"
 
 #: ../shell/ev-utils.c:318
 msgid "By extension"
 msgstr "拡張子順"
 
-#: ../shell/main.c:69 ../shell/main.c:274
+#: ../shell/main.c:69 ../shell/main.c:270
 msgid "GNOME Document Viewer"
-msgstr "GNOME ドキュメント・ビューアー"
+msgstr "GNOME ドキュメントビューアー"
 
 #: ../shell/main.c:77
 msgid "The page label of the document to display."
@@ -1675,7 +1675,7 @@ msgstr "フルスクリーンモードで起動する"
 
 #: ../shell/main.c:80
 msgid "Run evince in presentation mode"
-msgstr "プレゼンテーション・モードで起動する"
+msgstr "プレゼンテーションモードで起動する"
 
 #: ../shell/main.c:81
 msgid "Run evince as a previewer"
@@ -1692,90 +1692,3 @@ msgstr "STRING"
 #: ../shell/main.c:86
 msgid "[FILE…]"
 msgstr "[ファイル…]"
-
-#~ msgid "Converting %s"
-#~ msgstr "%s の変換中"
-
-#~ msgid "%d of %d documents converted"
-#~ msgstr "%d / %d のドキュメントを変換しました"
-
-#~ msgid "Converting metadata"
-#~ msgstr "メタデータの変換中"
-
-#~ msgid ""
-#~ "The metadata format used by Evince has changed, and hence it needs to be "
-#~ "migrated. If the migration is cancelled the metadata storage will not "
-#~ "work."
-#~ msgstr ""
-#~ "Evince で利用されているメタデータ形式が変更されたので、移行をする必要があ"
-#~ "ります。移行作業がキャンセルされるとメタデータストレージは動作しません。"
-
-#~ msgid ""
-#~ "Boolean options available: true enables thumbnailing and false disables "
-#~ "the creation of new thumbnails"
-#~ msgstr ""
-#~ "論理型のオプションが利用可能: TRUE にするとサムネイル表示になり、FALSE に"
-#~ "すると新規にサムネイルを作成しません。"
-
-#~ msgid "Enable thumbnailing of PDF Documents"
-#~ msgstr "PDF ドキュメントのサムネイル表示"
-
-#~ msgid "Thumbnail command for PDF Documents"
-#~ msgstr "PDF ドキュメントのサムネイル表示コマンド"
-
-#~ msgid ""
-#~ "Valid command plus arguments for the PDF Document thumbnailer. See "
-#~ "Nautilus thumbnailer documentation for more information."
-#~ msgstr ""
-#~ "PDF ドキュメントをサムネイル表示するための妥当なコマンドと引数です。詳細"
-#~ "は Nautilus のサムネイル関連のドキュメントを参照してください。"
-
-#~ msgid "Impress Slides"
-#~ msgstr "Impress のスライド"
-
-#~ msgid "No error"
-#~ msgstr "エラーなし"
-
-#~ msgid "Not enough memory"
-#~ msgstr "メモリが足りません"
-
-#~ msgid "Cannot find ZIP signature"
-#~ msgstr "ZIP のシグネチャが見つかりません"
-
-#~ msgid "Invalid ZIP file"
-#~ msgstr "不正な ZIP ファイルです"
-
-#~ msgid "Multi file ZIPs are not supported"
-#~ msgstr "複数ファイルの ZIP はサポートしていません"
-
-#~ msgid "Cannot read data from file"
-#~ msgstr "ファイルからデータを読み込めません"
-
-#~ msgid "Cannot find file in the ZIP archive"
-#~ msgstr "ZIP アーカイブ中にファイルが見つかりません"
-
-#~ msgid "Unknown error"
-#~ msgstr "不明なエラー"
-
-#, fuzzy
-#~ msgid "Page Set_up…"
-#~ msgstr "ページ設定(_U)..."
-
-#, fuzzy
-#~ msgid "Set up the page settings for printing"
-#~ msgstr "印刷用にページを設定します"
-
-#~ msgid "DJVU document has incorrect format"
-#~ msgstr "DJVU ドキュメントの書式が壊れています"
-
-#~ msgid "Print..."
-#~ msgstr "印刷..."
-
-#~ msgid "_Save a Copy..."
-#~ msgstr "別名で保存(_S)..."
-
-#~ msgid "_Print..."
-#~ msgstr "印刷(_P)..."
-
-#~ msgid "_Find..."
-#~ msgstr "検索(_F)..."
