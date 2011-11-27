@@ -161,7 +161,7 @@ EvinceDocument-$(EV_API_VERSION).gir: libevdocument3.la Makefile $(INST_H_FILES)
 	--include=GdkPixbuf-2.0 \
 	--include=Gtk-3.0 \
 	--library=evdocument3 \
-	--libtool="$(SAVED_LIBTOOL)" \
+	--libtool="$(LIBTOOL)" \
 	--output $@ \
 	--pkg evince-document-$(EV_API_VERSION) \
 	-I$(top_srcdir) \
