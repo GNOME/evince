@@ -3634,10 +3634,8 @@ ev_view_button_press_event (GtkWidget      *widget,
 
 	if (view->window_child_focus) {
 		EvAnnotationWindow *window;
-		EvAnnotation       *annot;
 
 		window = EV_ANNOTATION_WINDOW (view->window_child_focus->window);
-		annot = ev_annotation_window_get_annotation (window);
 		ev_annotation_window_ungrab_focus (window);
 		view->window_child_focus = NULL;
 	}

@@ -86,11 +86,8 @@ static void
 ev_annotation_properties_dialog_constructed (GObject *object)
 {
 	EvAnnotationPropertiesDialog *dialog = EV_ANNOTATION_PROPERTIES_DIALOG (object);
-	GtkWidget *contant_area = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
 	GtkWidget *grid = dialog->grid;
 	GtkWidget *label;
-
-	contant_area = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
 
 	switch (dialog->annot_type) {
 	case EV_ANNOTATION_TYPE_TEXT:

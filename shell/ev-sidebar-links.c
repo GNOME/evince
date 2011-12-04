@@ -217,11 +217,9 @@ static void
 selection_changed_callback (GtkTreeSelection   *selection,
 		            EvSidebarLinks     *ev_sidebar_links)
 {
-	EvDocument *document;
 	GtkTreeModel *model;
 	GtkTreeIter iter;
 
-	document = EV_DOCUMENT (ev_sidebar_links->priv->document);
 	g_return_if_fail (ev_sidebar_links->priv->document != NULL);
 
 	if (gtk_tree_selection_get_selected (selection, &model, &iter)) {

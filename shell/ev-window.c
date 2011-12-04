@@ -2360,14 +2360,9 @@ static void
 ev_window_reload_document (EvWindow *ev_window,
 			   EvLinkDest *dest)
 {
-	gint page;
-
-	
 	ev_window_clear_reload_job (ev_window);
 	ev_window->priv->in_reload = TRUE;
 
-	page = ev_document_model_get_page (ev_window->priv->model);
-	
 	if (ev_window->priv->dest)
 		g_object_unref (ev_window->priv->dest);
 	ev_window->priv->dest = dest ? g_object_ref (dest) : NULL;

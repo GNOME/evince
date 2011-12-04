@@ -77,10 +77,8 @@ static void
 ev_password_view_class_init (EvPasswordViewClass *class)
 {
 	GObjectClass *g_object_class;
-	GtkWidgetClass *widget_class;
 
 	g_object_class = G_OBJECT_CLASS (class);
-	widget_class = GTK_WIDGET_CLASS (class);
 
 	password_view_signals[UNLOCK] =
 		g_signal_new ("unlock",

@@ -994,8 +994,6 @@ ev_view_presentation_draw_end_page (EvViewPresentation *pview,
 	PangoLayout *layout;
 	PangoFontDescription *font_desc;
 	gchar *markup;
-	GtkAllocation allocation;
-	GdkRectangle area = {0};
 	const gchar *text = _("End of presentation. Click to exit.");
 
 	if (pview->state != EV_PRESENTATION_END)
@@ -1009,10 +1007,6 @@ ev_view_presentation_draw_end_page (EvViewPresentation *pview,
 	font_desc = pango_font_description_new ();
 	pango_font_description_set_size (font_desc, 16 * PANGO_SCALE);
 	pango_layout_set_font_description (layout, font_desc);
-
-	gtk_widget_get_allocation (widget, &allocation);
-	area.width = allocation.width;
-	area.height = allocation.height;
 
         gtk_render_layout (gtk_widget_get_style_context (widget),
                            cr, 15, 15, layout);
