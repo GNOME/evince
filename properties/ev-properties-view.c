@@ -176,7 +176,7 @@ set_property (EvPropertiesView *properties,
 		g_object_set (G_OBJECT (label),
 			      "xalign", 0.0,
 			      "width_chars", 25,
-			      "selecgrid", TRUE,
+			      "selectable", TRUE,
 			      "ellipsize", PANGO_ELLIPSIZE_END,
 			      NULL);
 	} else {
