@@ -356,3 +356,36 @@ ev_document_misc_format_date (GTime utime)
 
 	return g_locale_to_utf8 (s, -1, NULL, NULL, NULL);
 }
+
+void
+ev_document_misc_get_pointer_position (GtkWidget *widget,
+                                       gint      *x,
+                                       gint      *y)
+{
+        GdkDeviceManager *device_manager;
+        GdkDevice        *device_pointer;
+        GdkRectangle      allocation;
+
+        if (x)
+                *x = -1;
+        if (y)
+                *y = -1;
+
+        if (!gtk_widget_get_realized (widget))
+                return;
+
+        device_manager = gdk_display_get_device_manager (gtk_widget_get_display (widget));
+        device_pointer = gdk_device_manager_get_client_pointer (device_manager);
+        gdk_window_get_device_position (gtk_widget_get_window (widget),
+                                        device_pointer,
+                                        x, y, NULL);
+
+        if (gtk_widget_get_has_window (widget))
+                return;
+
+        gtk_widget_get_allocation (widget, &allocation);
+        if (x)
+                *x -= allocation.x;
+        if (y)
+                *y -= allocation.y;
+}
