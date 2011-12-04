@@ -1238,6 +1238,9 @@ ev_link_from_action (PdfDocument   *pdf_document,
 
 		}
 			break;
+	        case POPPLER_ACTION_JAVASCRIPT:
+			unimplemented_action = "POPPLER_ACTION_JAVASCRIPT";
+			break;
 	        case POPPLER_ACTION_UNKNOWN:
 			unimplemented_action = "POPPLER_ACTION_UNKNOWN";
 	}
