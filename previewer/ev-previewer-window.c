@@ -596,7 +596,7 @@ ev_previewer_window_constructor (GType                  type,
 
 	view_sizing_mode_changed (window->model, NULL, window);
 
-	vbox = gtk_vbox_new (FALSE, 0);
+	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 
 	toolbar = gtk_ui_manager_get_widget (window->ui_manager, "/PreviewToolbar");
 	gtk_box_pack_start (GTK_BOX (vbox), toolbar, FALSE, FALSE, 0);

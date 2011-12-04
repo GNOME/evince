@@ -77,7 +77,7 @@ ev_loading_window_init (EvLoadingWindow *window)
 	const gchar *fg_color_name = "info_fg_color";
 	const gchar *bg_color_name = "info_bg_color";
 
-	hbox = gtk_hbox_new (FALSE, 12);
+	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 12);
 
 	window->spinner = gtk_spinner_new ();
 	gtk_box_pack_start (GTK_BOX (hbox), window->spinner, FALSE, FALSE, 0);

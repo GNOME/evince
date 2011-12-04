@@ -96,10 +96,10 @@ ev_message_area_init (EvMessageArea *area)
 
 	area->priv = EV_MESSAGE_AREA_GET_PRIVATE (area);
 
-	area->priv->main_box = gtk_vbox_new (FALSE, 12);
+	area->priv->main_box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 12);
 
-	hbox = gtk_hbox_new (FALSE, 12);
-	vbox = gtk_vbox_new (FALSE, 12);
+	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 12);
+	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 12);
 
 	area->priv->label = gtk_label_new (NULL);
 	gtk_label_set_use_markup (GTK_LABEL (area->priv->label), TRUE);

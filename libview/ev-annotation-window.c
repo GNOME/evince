@@ -285,10 +285,10 @@ ev_annotation_window_init (EvAnnotationWindow *window)
 
 	gtk_widget_set_can_focus (GTK_WIDGET (window), TRUE);
 
-	vbox = gtk_vbox_new (FALSE, 0);
+	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 
 	/* Title bar */
-	hbox = gtk_hbox_new (FALSE, 0);
+	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
 
 	icon = gtk_image_new (); /* FIXME: use the annot icon */
 	gtk_box_pack_start (GTK_BOX (hbox), icon, FALSE, FALSE, 0);
@@ -332,7 +332,7 @@ ev_annotation_window_init (EvAnnotationWindow *window)
 
 	/* Resize bar */
 	gtk_window_set_has_resize_grip (GTK_WINDOW(window), FALSE);
-	hbox = gtk_hbox_new (FALSE, 0);
+	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
 
 	window->resize_sw = gtk_event_box_new ();
 	gtk_widget_add_events (window->resize_sw, GDK_BUTTON_PRESS_MASK);

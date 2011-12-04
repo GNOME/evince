@@ -297,7 +297,7 @@ egg_find_bar_init (EggFindBar *find_bar)
 
   /* Find: |_____| */
   item = gtk_tool_item_new ();
-  box = gtk_hbox_new (FALSE, 12);
+  box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 12);
   
   alignment = gtk_alignment_new (0.0, 0.5, 1.0, 0.0);
   gtk_alignment_set_padding (GTK_ALIGNMENT (alignment), 0, 0, 2, 2);

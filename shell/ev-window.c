@@ -7104,7 +7104,7 @@ ev_window_init (EvWindow *ev_window)
 	ev_window->priv->page_mode = PAGE_MODE_DOCUMENT;
 	ev_window->priv->title = ev_window_title_new (ev_window);
 
-	ev_window->priv->main_box = gtk_vbox_new (FALSE, 0);
+	ev_window->priv->main_box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 	gtk_container_add (GTK_CONTAINER (ev_window), ev_window->priv->main_box);
 	gtk_widget_show (ev_window->priv->main_box);
 
@@ -7293,7 +7293,7 @@ ev_window_init (EvWindow *ev_window)
 	ev_sidebar_add_page (EV_SIDEBAR (ev_window->priv->sidebar),
 			     sidebar_widget);
 
-	ev_window->priv->view_box = gtk_vbox_new (FALSE, 0);
+	ev_window->priv->view_box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 	ev_window->priv->scrolled_window =
 		GTK_WIDGET (g_object_new (GTK_TYPE_SCROLLED_WINDOW,
 					  "shadow-type", GTK_SHADOW_IN,

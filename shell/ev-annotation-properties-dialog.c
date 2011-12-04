@@ -186,7 +186,7 @@ ev_annotation_properties_dialog_init (EvAnnotationPropertiesDialog *annot_dialog
         gtk_widget_set_hexpand (annot_dialog->opacity, TRUE);
 	gtk_widget_show (annot_dialog->opacity);
 
-	hbox = gtk_hbox_new (FALSE, 6);
+	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
 
 	label = gtk_label_new (NULL);
 	markup = g_strdup_printf ("<small>%s</small>", _("Transparent"));

@@ -347,7 +347,7 @@ ev_sidebar_init (EvSidebar *ev_sidebar)
 					    G_TYPE_INT);
 
 	/* top option menu */
-	hbox = gtk_hbox_new (FALSE, 0);
+	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
 	ev_sidebar->priv->hbox = hbox;
 	gtk_box_pack_start (GTK_BOX (ev_sidebar), hbox, FALSE, FALSE, 0);
 	gtk_widget_show (hbox);
@@ -361,7 +361,7 @@ ev_sidebar_init (EvSidebar *ev_sidebar)
 			  G_CALLBACK (ev_sidebar_select_button_key_press_cb),
 			  ev_sidebar);
 
-	select_hbox = gtk_hbox_new (FALSE, 0);
+	select_hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
 
 	ev_sidebar->priv->label = gtk_label_new ("");
 	gtk_box_pack_start (GTK_BOX (select_hbox),

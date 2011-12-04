@@ -158,7 +158,7 @@ ev_page_action_widget_init (EvPageActionWidget *action_widget)
 	GtkWidget *hbox;
 	AtkObject *obj;
 
-	hbox = gtk_hbox_new (FALSE, 0);
+	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
 	gtk_box_set_spacing (GTK_BOX (hbox), 6);
 
 	action_widget->entry = gtk_entry_new ();

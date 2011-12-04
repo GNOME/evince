@@ -684,7 +684,7 @@ ev_view_presentation_goto_window_create (EvViewPresentation *pview)
 	gtk_container_add (GTK_CONTAINER (pview->goto_window), frame);
 	gtk_widget_show (frame);
 
-	hbox = gtk_hbox_new (FALSE, 0);
+	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
 	gtk_container_set_border_width (GTK_CONTAINER (hbox), 3);
 	gtk_container_add (GTK_CONTAINER (frame), hbox);
 	gtk_widget_show (hbox);
