@@ -180,7 +180,8 @@ ev_annotation_properties_dialog_init (EvAnnotationPropertiesDialog *annot_dialog
 	gtk_grid_attach (GTK_GRID (grid), label, 0, 2, 1, 1);
 	gtk_widget_show (label);
 
-	annot_dialog->opacity = gtk_hscale_new_with_range (0, 100, 5);
+	annot_dialog->opacity = gtk_scale_new_with_range (GTK_ORIENTATION_HORIZONTAL,
+                                                          0, 100, 5);
 	gtk_range_set_value (GTK_RANGE (annot_dialog->opacity), 100);
 	gtk_grid_attach (GTK_GRID (grid), annot_dialog->opacity, 1, 2, 1, 1);
         gtk_widget_set_hexpand (annot_dialog->opacity, TRUE);
