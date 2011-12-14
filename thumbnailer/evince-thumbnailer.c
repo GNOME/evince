@@ -83,7 +83,12 @@ static void
 time_monitor_start (const char *input)
 {
         finished = FALSE;
-        g_thread_new ("EvThumbnailerTimer", time_monitor, (gpointer) input);
+#if (!GLIB_CHECK_VERSION(2,31,0))
+/* Remove this once we bump dependencies to glib >= 2.31.0 */
+        g_thread_create (time_monitor, (gpointer) input, FALSE, NULL);
+#else
+	g_thread_new ("EvThumbnailerTimer", time_monitor, (gpointer) input);
+#endif
 }
 
 static void
@@ -294,6 +299,12 @@ main (int argc, char *argv[])
 
 	g_type_init ();
 
+#if (!GLIB_CHECK_VERSION(2,31,0))
+/* Remove this once we bump dependencies to glib >= 2.31.0 */
+	if (!g_thread_supported ())
+		g_thread_init (NULL);
+#endif
+
         if (!ev_init ())
                 return -1;
 
@@ -318,9 +329,15 @@ main (int argc, char *argv[])
 		data.output = output;
 		data.size = size;
 
+#if (!GLIB_CHECK_VERSION(2,31,0))
+/* Remove this once we bump dependencies to glib >= 2.31.0 */
+		g_thread_create ((GThreadFunc) evince_thumbnail_pngenc_get_async,
+				 &data, FALSE, NULL);
+#else
 		g_thread_new ("EvThumbanilerAsyncRenderer",
-                              (GThreadFunc) evince_thumbnail_pngenc_get_async,
-                              &data);
+				(GThreadFunc) evince_thumbnail_pngenc_get_async,
+				&data);
+#endif
 		
 		gtk_main ();
 

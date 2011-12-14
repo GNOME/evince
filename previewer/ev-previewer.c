@@ -130,6 +130,13 @@ main (gint argc, gchar **argv)
 	}
 #endif
 
+#if (!GLIB_CHECK_VERSION(2,31,0))
+/* Remove this once we bump dependencies to glib >= 2.31.0 */
+	/* Init glib threads asap */
+	if (!g_thread_supported ())
+		g_thread_init (NULL);
+#endif
+
 #ifdef ENABLE_NLS
 	/* Initialize the i18n stuff */
 	bindtextdomain (GETTEXT_PACKAGE, ev_get_locale_dir());

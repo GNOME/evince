@@ -42,8 +42,21 @@ static GQueue queue_high = G_QUEUE_INIT;
 static GQueue queue_low = G_QUEUE_INIT;
 static GQueue queue_none = G_QUEUE_INIT;
 
+#if (!GLIB_CHECK_VERSION(2,31,0))
+/* Remove this once we bump dependencies to glib >= 2.31.0 */
+static GCond *p_job_queue_cond = NULL;
+static GMutex *p_job_queue_mutex = NULL;
+#else
 static GCond job_queue_cond;
 static GMutex job_queue_mutex;
+/* Remove these defines once we bump dependencies to glib >= 2.31.0
+   and replace occurences in this file of p_job_queue_{cond|mutex} with 
+   &job_queue_{cond|mutex}.
+ */
+#define p_job_queue_cond (&job_queue_cond)
+#define p_job_queue_mutex (&job_queue_mutex)
+#endif
+
 static GQueue *job_queue[EV_JOB_N_PRIORITIES] = {
 	&queue_urgent,
 	&queue_high,
@@ -57,12 +70,12 @@ ev_job_queue_push (EvSchedulerJob *job,
 {
 	ev_debug_message (DEBUG_JOBS, "%s priority %d", EV_GET_TYPE_NAME (job->job), priority);
 	
-	g_mutex_lock (&job_queue_mutex);
+	g_mutex_lock (p_job_queue_mutex);
 
 	g_queue_push_tail (job_queue[priority], job);
-	g_cond_broadcast (&job_queue_cond);
+	g_cond_broadcast (p_job_queue_cond);
 	
-	g_mutex_unlock (&job_queue_mutex);
+	g_mutex_unlock (p_job_queue_mutex);
 }
 
 static EvSchedulerJob *
@@ -85,7 +98,14 @@ ev_job_queue_get_next_unlocked (void)
 static gpointer
 ev_job_scheduler_init (gpointer data)
 {
+#if (!GLIB_CHECK_VERSION(2,31,0))
+/* Remove this once we bump dependencies to glib >= 2.31.0 */
+	p_job_queue_cond = g_cond_new ();
+	p_job_queue_mutex = g_mutex_new ();
+	g_thread_create (ev_job_thread_proxy, NULL, FALSE, NULL);
+#else
 	g_thread_new ("EvJobScheduler", ev_job_thread_proxy, NULL);
+#endif
 
 	return NULL;
 }
@@ -152,7 +172,7 @@ ev_scheduler_thread_job_cancelled (EvSchedulerJob *job,
 	
 	ev_debug_message (DEBUG_JOBS, "%s", EV_GET_TYPE_NAME (job->job));
 
-	g_mutex_lock (&job_queue_mutex);
+	g_mutex_lock (p_job_queue_mutex);
 
 	/* If the job is not still running,
 	 * remove it from the job queue and job list.
@@ -162,10 +182,10 @@ ev_scheduler_thread_job_cancelled (EvSchedulerJob *job,
 	list = g_queue_find (job_queue[job->priority], job);
 	if (list) {
 		g_queue_delete_link (job_queue[job->priority], list);
-		g_mutex_unlock (&job_queue_mutex);
+		g_mutex_unlock (p_job_queue_mutex);
 		ev_scheduler_job_destroy (job);
 	} else {
-		g_mutex_unlock (&job_queue_mutex);
+		g_mutex_unlock (p_job_queue_mutex);
 	}
 }
 
@@ -205,14 +225,14 @@ ev_job_thread_proxy (gpointer data)
 	while (TRUE) {
 		EvSchedulerJob *job;
 
-		g_mutex_lock (&job_queue_mutex);
+		g_mutex_lock (p_job_queue_mutex);
 		job = ev_job_queue_get_next_unlocked ();
 		if (!job) {
-			g_cond_wait (&job_queue_cond, &job_queue_mutex);
-			g_mutex_unlock (&job_queue_mutex);
+			g_cond_wait (p_job_queue_cond, p_job_queue_mutex);
+			g_mutex_unlock (p_job_queue_mutex);
 			continue;
 		}
-		g_mutex_unlock (&job_queue_mutex);
+		g_mutex_unlock (p_job_queue_mutex);
 		
 		ev_job_thread (job->job);
 		ev_scheduler_job_destroy (job);
@@ -292,7 +312,7 @@ ev_job_scheduler_update_job (EvJob         *job,
 	if (need_resort) {
 		GList *list;
 	
-		g_mutex_lock (&job_queue_mutex);
+		g_mutex_lock (p_job_queue_mutex);
 		
 		list = g_queue_find (job_queue[s_job->priority], s_job);
 		if (list) {
@@ -300,10 +320,10 @@ ev_job_scheduler_update_job (EvJob         *job,
 					  EV_GET_TYPE_NAME (job), s_job->priority, priority);
 			g_queue_delete_link (job_queue[s_job->priority], list);
 			g_queue_push_tail (job_queue[priority], s_job);
-			g_cond_broadcast (&job_queue_cond);
+			g_cond_broadcast (p_job_queue_cond);
 		}
 		
-		g_mutex_unlock (&job_queue_mutex);
+		g_mutex_unlock (p_job_queue_mutex);
 	}
 }
 

@@ -69,8 +69,22 @@ static gchar          *_ev_document_get_page_label  (EvDocument *document,
 static EvDocumentInfo *_ev_document_get_info        (EvDocument *document);
 static gboolean        _ev_document_support_synctex (EvDocument *document);
 
+#if (!GLIB_CHECK_VERSION(2,31,0))
+/* Remove this once we bump dependencies to glib >= 2.31.0 */
+GMutex *ev_doc_mutex = NULL;
+GMutex *ev_fc_mutex = NULL;
+#define p_ev_doc_mutex ((ev_doc_mutex == NULL) ? ev_doc_mutex = g_mutex_new () : ev_doc_mutex)
+#define p_ev_fc_mutex ((ev_fc_mutex == NULL) ? ev_fc_mutex = g_mutex_new () : ev_fc_mutex)
+#else
 static GMutex ev_doc_mutex;
 static GMutex ev_fc_mutex;
+/* Remove these defines once we bump dependencies to glib >= 2.31.0
+   and replace occurences in this file of p_ev_{doc|fc}_mutex with 
+   &ev_{doc|fc}_mutex.
+ */
+#define p_ev_doc_mutex (&ev_doc_mutex)
+#define p_ev_fc_mutex (&ev_fc_mutex)
+#endif
 
 G_DEFINE_ABSTRACT_TYPE (EvDocument, ev_document, G_TYPE_OBJECT)
 
@@ -161,37 +175,37 @@ ev_document_class_init (EvDocumentClass *klass)
 void
 ev_document_doc_mutex_lock (void)
 {
-	g_mutex_lock (&ev_doc_mutex);
+	g_mutex_lock (p_ev_doc_mutex);
 }
 
 void
 ev_document_doc_mutex_unlock (void)
 {
-	g_mutex_unlock (&ev_doc_mutex);
+	g_mutex_unlock (p_ev_doc_mutex);
 }
 
 gboolean
 ev_document_doc_mutex_trylock (void)
 {
-	return g_mutex_trylock (&ev_doc_mutex);
+	return g_mutex_trylock (p_ev_doc_mutex);
 }
 
 void
 ev_document_fc_mutex_lock (void)
 {
-	g_mutex_lock (&ev_fc_mutex);
+	g_mutex_lock (p_ev_fc_mutex);
 }
 
 void
 ev_document_fc_mutex_unlock (void)
 {
-	g_mutex_unlock (&ev_fc_mutex);
+	g_mutex_unlock (p_ev_fc_mutex);
 }
 
 gboolean
 ev_document_fc_mutex_trylock (void)
 {
-	return g_mutex_trylock (&ev_fc_mutex);
+	return g_mutex_trylock (p_ev_fc_mutex);
 }
 
 /**
