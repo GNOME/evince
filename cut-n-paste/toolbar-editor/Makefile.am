@@ -24,10 +24,15 @@ libtoolbareditor_la_CPPFLAGS = \
 
 libtoolbareditor_la_CFLAGS = \
 	$(SHELL_CORE_CFLAGS)			\
+	$(LIBXML_CFLAGS)			\
 	$(WARN_CFLAGS)				\
 	$(DISABLE_DEPRECATED)			\
 	-DCURSOR_DIR=\"$(pkgdatadir)\"		\
 	$(AM_CFLAGS)
+
+libtoolbareditor_la_LIBADD = 	\
+	$(SHELL_CORE_LIBS)	\
+	$(LIBXML_LIBS)
 
 BUILT_SOURCES = \
 	eggmarshalers.c \

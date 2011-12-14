@@ -189,7 +189,8 @@ case "$with_platform" in
         ;;
 esac
 
-PKG_CHECK_MODULES([SHELL_CORE],[libxml-2.0 >= $LIBXML_REQUIRED gtk+-3.0 >= $GTK_REQUIRED gio-2.0 >= $GLIB_REQUIRED gthread-2.0 $SHELL_PLATFORM_PKGS])
+PKG_CHECK_MODULES([SHELL_CORE],[gtk+-3.0 >= $GTK_REQUIRED gio-2.0 >= $GLIB_REQUIRED gthread-2.0 $SHELL_PLATFORM_PKGS])
+PKG_CHECK_MODULES([LIBXML],[libxml-2.0 >= $LIBXML_REQUIRED])
 
 # *********
 # SM client
@@ -471,7 +472,7 @@ AC_ARG_ENABLE([pdf],
 
 if test "x$enable_pdf" = "xyes"; then
     POPPLER_REQUIRED=0.18.0
-    PKG_CHECK_MODULES(POPPLER, poppler-glib >= $POPPLER_REQUIRED libxml-2.0 >= $LIBXML_REQUIRED,enable_pdf=yes,enable_pdf=no)
+    PKG_CHECK_MODULES(POPPLER, [poppler-glib >= $POPPLER_REQUIRED], enable_pdf=yes, enable_pdf=no)
 
     if test "x$enable_pdf" = "xyes"; then
 	    PKG_CHECK_MODULES(CAIRO_PDF, cairo-pdf, enable_cairo_pdf=yes, enable_cairo_pdf=no)
