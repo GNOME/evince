@@ -371,7 +371,9 @@ if test "$enable_nautilus" = "yes" ; then
   PKG_CHECK_MODULES([NAUTILUS],[gtk+-x11-3.0 $MM gthread-2.0 libnautilus-extension >= $NAUTILUS_REQUIRED],
                     [],[AC_MSG_ERROR([libnautilus-extension not found; use --disable-nautilus to disable the nautilus extensions])])
   NAUTILUS_EXTENSION_DIR=`$PKG_CONFIG --variable=extensiondir libnautilus-extension`
-  AC_SUBST([nautilusextensiondir],[$NAUTILUS_EXTENSION_DIR])
+  NAUTILUS_EXTENSION_DIR=${NAUTILUS_EXTENSION_DIR#`$PKG_CONFIG --variable=libdir libnautilus-extension`}
+  NAUTILUS_EXTENSION_DIR=${NAUTILUS_EXTENSION_DIR#/}
+  AC_SUBST(NAUTILUS_EXTENSION_DIR)
   AC_SUBST(NAUTILUS_CFLAGS)
   AC_SUBST(NAUTILUS_LIBS)
 

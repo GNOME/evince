@@ -16,6 +16,7 @@ libevproperties_la_SOURCES=			\
 
 if ENABLE_NAUTILUS
 
+nautilusextensiondir=$(libdir)/$(NAUTILUS_EXTENSION_DIR)
 nautilusextension_LTLIBRARIES = libevince-properties-page.la
 
 libevince_properties_page_la_CFLAGS = -I$(top_srcdir)
