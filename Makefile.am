@@ -11,14 +11,14 @@ SUBDIRS = \
 	libdocument \
 	backend \
 	libview \
-	libmisc
+	libmisc \
+	properties
 
 if ENABLE_VIEWER
 SUBDIRS += shell
 endif
 
 SUBDIRS += \
-	properties \
 	po \
 	help
 
