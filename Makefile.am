@@ -55,7 +55,6 @@ EXTRA_DIST = \
 	MAINTAINERS
 
 DISTCLEANFILES = 		\
-	gnome-doc-utils.make	\
 	intltool-extract 	\
 	intltool-merge 		\
 	intltool-update
@@ -80,6 +79,7 @@ MAINTAINERCLEANFILES = \
 	$(srcdir)/omf.make \
 	$(srcdir)/xmldocs.make \
 	$(srcdir)/gtk-doc.make \
+	$(srcdir)/gnome-doc-utils.make	\
 	$(srcdir)/po/Makefile.in.in \
 	`find "$(srcdir)" -type f -name Makefile.in -print`
 
