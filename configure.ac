@@ -380,7 +380,21 @@ fi
 
 AM_CONDITIONAL([ENABLE_NAUTILUS],[test "$enable_nautilus" = "yes"])
 
-# Check for thumbnailer build
+# ***************
+# Document Viewer
+# ***************
+
+AC_ARG_ENABLE(
+  [viewer],
+  [AS_HELP_STRING([--disable-viewer], [Disable GNOME Document viewer])],
+  [],
+  [enable_viewer=yes]
+)
+AM_CONDITIONAL([ENABLE_VIEWER],[test "$enable_viewer" = "yes"])
+
+# ***************
+# Thumbnailer
+# ***************
 
 AC_ARG_ENABLE([thumbnailer],
   [AS_HELP_STRING([--disable-thumbnailer],
@@ -825,7 +839,7 @@ Tests ....................:  $enable_tests
 
 FRONTENDS
 
-Viewer ...................:  yes
+Viewer ...................:  $enable_viewer
 Previewer ................:  $enable_previewer
 Thumbnailer ..............:  $enable_thumbnailer
 Nautilus Extensions.......:  $enable_nautilus
