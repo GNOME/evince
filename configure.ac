@@ -813,27 +813,43 @@ AC_CONFIG_FILES(evince-view-[]ev_api_version[].pc:evince-view.pc.in)
 
 AC_OUTPUT
 
-echo "
-Configure summary:
-        Platform...........:  $with_platform
-	GTK+ Unix Print....:  $with_gtk_unix_print
-	Keyring Support....:  $with_keyring
-	DBUS Support.......:  $enable_dbus
-	SM client support..:  $with_smclient
-	Help files.........:  $enable_help
-	Nautilus Plugin....:  $enable_nautilus
-	Thumbnailer........:  $enable_thumbnailer
-	Previewer..........:  $enable_previewer
-	Gtk-Doc Support....:  $enable_gtk_doc
-	Debug mode.........:  $enable_debug
-	GObj. Introspection:  $enable_introspection
-	Tests..............:  $enable_tests
+AC_MSG_NOTICE([
 
-	PDF Backend........:  $enable_pdf
-	PostScript Backend.:  $enable_ps
-	TIFF Backend.......:  $enable_tiff
-	DJVU Backend.......:  $enable_djvu
-	DVI Backend........:  $enable_dvi
-	Comics Backend.....:  $enable_comics
-	XPS Backend........:  $enable_xps
-"
+Evince configure summary
+========================
+
+Platform .................:  $with_platform
+Debug mode ...............:  $enable_debug
+Tests ....................:  $enable_tests
+
+
+FRONTENDS
+
+Viewer ...................:  yes
+Previewer ................:  $enable_previewer
+Thumbnailer ..............:  $enable_thumbnailer
+Nautilus Extensions.......:  $enable_nautilus
+
+
+BACKENDS
+
+PDF ......................:  $enable_pdf
+PostScript ...............:  $enable_ps
+TIFF .....................:  $enable_tiff
+DJVU .....................:  $enable_djvu
+DVI ......................:  $enable_dvi
+Comics ...................:  $enable_comics
+XPS ......................:  $enable_xps
+
+
+FEATURES
+
+User documentation .......:  $enable_help
+Developer documentation ..:  $enable_gtk_doc
+GObject Introspection ....:  $enable_introspection
+DBUS communication .......:  $enable_dbus
+Keyring integration ......:  $with_keyring
+Session Manager client ...:  $with_smclient
+GTK+ Unix Print ..........:  $with_gtk_unix_print
+
+])
