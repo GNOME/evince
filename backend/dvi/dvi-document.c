@@ -40,7 +40,18 @@
 #endif
 #include <stdlib.h>
 
-GMutex dvi_context_mutex;
+#if (!GLIB_CHECK_VERSION(2,31,0))
+/* Remove this once we bump dependencies to glib >= 2.31.0 */
+GMutex *dvi_context_mutex = NULL;
+#define p_dvi_context_mutex ((dvi_context_mutex == NULL) ? dvi_context_mutex = g_mutex_new () : dvi_context_mutex)
+#else
+static GMutex dvi_context_mutex;
+/* Remove these defines once we bump dependencies to glib >= 2.31.0
+   and replace occurences in this file of p_dvi_context_mutex with 
+   &dvi_context_mutex.
+ */
+#define p_dvi_context_mutex (&dvi_context_mutex)
+#endif
 
 enum {
 	PROP_0,
@@ -95,12 +106,12 @@ dvi_document_load (EvDocument  *document,
 	if (!filename)
         	return FALSE;
 	
-	g_mutex_lock (&dvi_context_mutex);
+	g_mutex_lock (p_dvi_context_mutex);
 	if (dvi_document->context)
 		mdvi_destroy_context (dvi_document->context);
 
 	dvi_document->context = mdvi_init_context(dvi_document->params, dvi_document->spec, filename);
-	g_mutex_unlock (&dvi_context_mutex);
+	g_mutex_unlock (p_dvi_context_mutex);
 	g_free (filename);
 	
 	if (!dvi_document->context) {
@@ -172,7 +183,7 @@ dvi_document_render (EvDocument      *document,
 	 * thread safe. The work to the future - 
 	 * let context render page independently
 	 */
-	g_mutex_lock (&dvi_context_mutex);
+	g_mutex_lock (p_dvi_context_mutex);
 	
 	mdvi_setpage (dvi_document->context, rc->page->index);
 	
@@ -195,7 +206,7 @@ dvi_document_render (EvDocument      *document,
 	mdvi_cairo_device_render (dvi_document->context);
 	surface = mdvi_cairo_device_get_surface (&dvi_document->context->device);
 
-	g_mutex_unlock (&dvi_context_mutex);
+	g_mutex_unlock (p_dvi_context_mutex);
 
 	rotated_surface = ev_document_misc_surface_rotate_and_scale (surface,
 								     required_width,
@@ -211,12 +222,12 @@ dvi_document_finalize (GObject *object)
 {	
 	DviDocument *dvi_document = DVI_DOCUMENT(object);
 	
-	g_mutex_lock (&dvi_context_mutex);
+	g_mutex_lock (p_dvi_context_mutex);
 	if (dvi_document->context) {
 		mdvi_cairo_device_free (&dvi_document->context->device);
 		mdvi_destroy_context (dvi_document->context);
 	}
-	g_mutex_unlock (&dvi_context_mutex);
+	g_mutex_unlock (p_dvi_context_mutex);
 
 	if (dvi_document->params)
 		g_free (dvi_document->params);
