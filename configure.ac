@@ -858,8 +858,8 @@ XPS ......................:  $enable_xps
 
 FEATURES
 
-User documentation .......:  $enable_help
-Developer documentation ..:  $enable_gtk_doc
+Help .....................:  $enable_help
+GTK Doc reference ........:  $enable_gtk_doc
 GObject Introspection ....:  $enable_introspection
 DBUS communication .......:  $enable_dbus
 Keyring integration ......:  $with_keyring
