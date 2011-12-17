@@ -37,6 +37,7 @@ struct _EvDocumentModel
 	EvSizingMode sizing_mode;
 	guint continuous : 1;
 	guint dual_page  : 1;
+	guint dual_page_odd_left : 1;
 	guint fullscreen : 1;
 	guint inverted_colors : 1;
 
@@ -64,6 +65,7 @@ enum {
 	PROP_SIZING_MODE,
 	PROP_CONTINUOUS,
 	PROP_DUAL_PAGE,
+	PROP_DUAL_PAGE_ODD_LEFT,
 	PROP_FULLSCREEN
 };
 
@@ -123,6 +125,9 @@ ev_document_model_set_property (GObject      *object,
 	case PROP_DUAL_PAGE:
 		ev_document_model_set_dual_page (model, g_value_get_boolean (value));
 		break;
+	case PROP_DUAL_PAGE_ODD_LEFT:
+		ev_document_model_set_dual_page_odd_pages_left (model, g_value_get_boolean (value));
+		break;
 	case PROP_FULLSCREEN:
 		ev_document_model_set_fullscreen (model, g_value_get_boolean (value));
 		break;
@@ -163,6 +168,9 @@ ev_document_model_get_property (GObject    *object,
 		break;
 	case PROP_DUAL_PAGE:
 		g_value_set_boolean (value, ev_document_model_get_dual_page (model));
+		break;
+	case PROP_DUAL_PAGE_ODD_LEFT:
+		g_value_set_boolean (value, ev_document_model_get_dual_page_odd_pages_left (model));
 		break;
 	case PROP_FULLSCREEN:
 		g_value_set_boolean (value, ev_document_model_get_fullscreen (model));
@@ -237,6 +245,13 @@ ev_document_model_class_init (EvDocumentModelClass *klass)
 					 g_param_spec_boolean ("dual-page",
 							       "Dual Page",
 							       "Whether document is displayed in dual page mode",
+							       FALSE,
+							       G_PARAM_READWRITE));
+	g_object_class_install_property (g_object_class,
+					 PROP_DUAL_PAGE_ODD_LEFT,
+					 g_param_spec_boolean ("dual-odd-left",
+							       "Odd Pages Left",
+							       "Whether odd pages are displayed on left side in dual mode",
 							       FALSE,
 							       G_PARAM_READWRITE));
 	g_object_class_install_property (g_object_class,
@@ -552,6 +567,30 @@ ev_document_model_get_dual_page (EvDocumentModel *model)
 	g_return_val_if_fail (EV_IS_DOCUMENT_MODEL (model), FALSE);
 
 	return model->dual_page;
+}
+
+void
+ev_document_model_set_dual_page_odd_pages_left (EvDocumentModel *model,
+						gboolean         odd_left)
+{
+	g_return_if_fail (EV_IS_DOCUMENT_MODEL (model));
+
+	odd_left = odd_left != FALSE;
+
+	if (odd_left == model->dual_page_odd_left)
+		return;
+
+	model->dual_page_odd_left = odd_left;
+
+	g_object_notify (G_OBJECT (model), "dual-odd-left");
+}
+
+gboolean
+ev_document_model_get_dual_page_odd_pages_left (EvDocumentModel *model)
+{
+	g_return_val_if_fail (EV_IS_DOCUMENT_MODEL (model), FALSE);
+
+	return model->dual_page_odd_left;
 }
 
 void
