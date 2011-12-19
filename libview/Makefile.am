@@ -90,7 +90,7 @@ ev-view-marshal.h: $(srcdir)/ev-view-marshal.list
 	$(AM_V_GEN)$(GLIB_GENMARSHAL) --prefix=ev_view_marshal $(srcdir)/ev-view-marshal.list --header --internal > $@
 
 ev-view-marshal.c: $(srcdir)/ev-view-marshal.list
-	echo '#include <config.h>' > ev-view-marshal.c
+	$(AM_V_at)echo '#include <config.h>' > ev-view-marshal.c
 	$(AM_V_GEN)$(GLIB_GENMARSHAL) --prefix=ev_view_marshal $(srcdir)/ev-view-marshal.list --header --internal --body >> $@
 
 ev-view-type-builtins.h: stamp-ev-view-type-builtins.h

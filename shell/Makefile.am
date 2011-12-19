@@ -151,7 +151,7 @@ ev-marshal.h: $(srcdir)/ev-marshal.list
 	$(AM_V_GEN)$(GLIB_GENMARSHAL) --prefix=ev_marshal $(srcdir)/ev-marshal.list --header > ev-marshal.h
 
 ev-marshal.c: $(srcdir)/ev-marshal.list
-	echo '#include "ev-marshal.h"' > ev-marshal.c
+	$(AM_V_at)echo '#include "ev-marshal.h"' > ev-marshal.c
 	$(AM_V_GEN)$(GLIB_GENMARSHAL) --prefix=ev_marshal $(srcdir)/ev-marshal.list --body >> ev-marshal.c
 
 DISTCLEANFILES =
