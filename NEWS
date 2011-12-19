@@ -1,4 +1,39 @@
 ================
+Evince     3.3.3
+================
+
+New features and improvements:
+
+    * Add an option to show odd pages on the left in dual mode. This
+      option has been added to libevince but it's not exposed by the
+      evine UI yet. (#444587, Cyril Soldani)
+    * Add Office category to desktop file (#666346, Carlos Garcia
+      Campos)
+    * Add configure option --disable-viewer (Hib Eris)
+    * Allow compiling with glib < 2.31.0 (Hib Eris)
+
+Bug fixes:
+
+    * Refresh thumbnail only when there's a document loaded (Hib Eris)
+    * Add x-ext-<type> fallback mime-types to fix mime-type detection
+      on windows (Hib Eris)
+    * Fix rotation of tiff documents with different X/Y resolution
+      (Hib Eris)
+    * Close descriptor of temporary files before copying to them. It
+      seems that on Windows, g_file_copy() does not work on files with
+      a file desciptor open (Hib Eris)
+    * Remove use of several deprecated GTK+ API (Carlos Garcia Campos)
+
+Translation updates:
+
+    * Mario Blättermann (de)
+    * Hideki Yamane (ja)
+    * Baurzhan Muftakhidinov (kk)
+    * Yuri Myasoedov (ru)
+    * Matej Urbančič (sl)
+    * Xiaoran Zhao (zh_CN)
+
+================
 Evince     3.3.2
 ================
 
