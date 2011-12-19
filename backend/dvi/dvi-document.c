@@ -356,17 +356,17 @@ dvi_document_file_exporter_iface_init (EvFileExporterInterface *iface)
 static gboolean
 hsb2rgb (float h, float s, float v, guchar *red, guchar *green, guchar *blue)
 {
-        float i, f, p, q, t, r, g, b;
-
-        if (h == 360)
-                h = 0;
-        else if ((h > 360) || (h < 0))
-                return FALSE;
+        float f, p, q, t, r, g, b;
+        int i;
 
         s /= 100;
         v /= 100;
         h /= 60;
         i = floor (h);
+        if (i == 6)
+                i = 0;
+        else if ((i > 6) || (i < 0))
+                return FALSE;
         f = h - i;
         p = v * (1 - s);
         q = v * (1 - (s * f));
