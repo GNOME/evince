@@ -298,7 +298,7 @@ error:
 
 static int ofm1_load_file(FILE *in, TFMInfo *info)
 {
-	int	lf, lh, bc, ec, nw, nh, nd;
+	int	lh, bc, ec, nw, nh, nd;
 	int	nco, ncw, npc;
 	int	i;
 	int	n;
@@ -310,7 +310,6 @@ static int ofm1_load_file(FILE *in, TFMInfo *info)
 	TFMChar	*tch;
 	TFMChar	*end;
 	
-	lf = fuget4(in);
 	lh = fuget4(in);
 	bc = fuget4(in);
 	ec = fuget4(in);

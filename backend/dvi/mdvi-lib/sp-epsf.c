@@ -79,7 +79,6 @@ static char *parse_epsf_special(EpsfBox *box, char **ret,
 #define NKEYS	(sizeof(keys) / sizeof(keys[0]))
 	char	*ptr;
 	char	*filename;
-	int	quoted;
 	double	value[NKEYS];
 	Uchar	present[NKEYS];
 	Buffer	buffer;
@@ -121,7 +120,6 @@ static char *parse_epsf_special(EpsfBox *box, char **ret,
 	buff_init(&buffer);
 	buff_add(&buffer, "@beginspecial ", 0);
 
-	quoted = 0;
 	while(*ptr) {
 		const char *keyname;
 		char	*val;

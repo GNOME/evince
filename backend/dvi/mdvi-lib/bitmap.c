@@ -131,7 +131,6 @@ BITMAP	*bitmap_convert_lsb8(Uchar *bits, int w, int h, int stride)
 	int	i;
 	Uchar	*unit;
 	register Uchar *curr;
-	Uchar	*end;
 	int	bytes;
 	
 	DEBUG((DBG_BITMAP_OPS, "convert LSB %dx%d@8 -> bitmap\n", w, h));	
@@ -141,7 +140,6 @@ BITMAP	*bitmap_convert_lsb8(Uchar *bits, int w, int h, int stride)
 	/* this is the number of bytes in the original bitmap */
 	bytes = ROUND(w, 8);
 	unit  = (Uchar *)bm->data;
-	end   = unit + bm->stride;
 	curr = bits;
 	/* we try to do this as fast as we can */	
 	for(i = 0; i < h; i++) {
