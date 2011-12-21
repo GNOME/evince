@@ -3,7 +3,6 @@
       id="index">
 
   <info>
-    <desc>Help for the Evince Document Viewer.</desc>
     <title type='link' role="trail"><media type="image" src="figures/evince-trail.png"/></title>
     <title type='link'>Evince Document Viewer</title>
     <title type='text'>Evince Document Viewer</title>
@@ -11,14 +10,17 @@
     <credit type="author">
       <name>Phil Bull</name>
       <email>philbull@gmail.com</email>
+     </credit>
+     <credit type="editor"> 
       <name>Tiffany Antopolski</name>
       <email>tiffany@antopolski.com</email>
     </credit>
-    <include href="legal.xml" xmlns="http://www.w3.org/2001/XInclude" />
-  </info>
+   <license>
+    <p>Creative Commons Share Alike 3.0</p>
+   </license> 
+ </info>
 
-<title><media type="image" src="figures/evincelogo.png">Evince logo</media>
-Evince document viewer</title>
+<title><media type="image" src="figures/evincelogo.png">Evince logo</media>Evince document viewer</title>
 
 <section id="reading" style="2column">
     <title>Reading documents</title>
@@ -52,11 +54,12 @@ Evince document viewer</title>
     <title>Tips and tricks</title>
 </section>
 
-<section id="synctex" style="2column" groups="first second third fourth fifth sixth">
+<section id="synctex">
     <title>SyncTeX</title>
+    <links type="topic" style="2column" groups="first second third fourth fifth sixth"/>
 </section>
 
-<section id="getInvolved" style="2column" >
+<section id="getInvolved" style="2column">
     <title>Get involved</title>
 </section>
 </page>

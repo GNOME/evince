@@ -10,17 +10,17 @@
     <credit type="author">
       <name>Phil Bull</name>
       <email>philbull@gmail.com</email>
+    </credit>
+    <credit type="editor">
     <name>Tiffany Antopolski</name>
     <email>tiffany@antopolski.com</email>
     </credit>
     <license>
       <p>Creative Commons Share Alike 3.0</p>
     </license>
-
   </info>
 
 <title>The command line</title>
-
 <p>
 To start the Document Viewer from the command line, type <cmd>evince</cmd>. You
 can open a specific file by typing the filename after the evince command:
@@ -35,7 +35,7 @@ You can open multiple files by typing the filenames after the evince command, se
 The <app>document viewer</app> also supports the handling of files on the web.  For example, after the evince command you can give the location of a file on the web:
 </p>
 <screen>evince http://www.claymath.org/millennium/P_vs_NP/pvsnp.pdf</screen>
-<section>
+<section id="open">
     <title>Opening a document at a specific page</title>
     <p>
     You can use the <cmd>--page-label</cmd> switch to open a document at a
@@ -47,15 +47,15 @@ The <app>document viewer</app> also supports the handling of files on the web.  
     the Document Viewer toolbar.
     </p>
 </section>
-<section>
+<section id="fullsreen">
     <title>Opening a document in fullscreen mode</title>
     <screen>evince --fullscreen file.pdf</screen>
 </section>
-<section>
+<section id="presentation">
     <title>Opening a document in presentation mode</title>
     <screen>evince --presentation file.pdf</screen>
 </section>
-<section>
+<section id="preview">
     <title>Opening a document in preview mode</title>
     <screen>evince --preview file.pdf</screen>
 </section>
