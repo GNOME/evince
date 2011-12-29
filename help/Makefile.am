@@ -15,6 +15,7 @@ DOC_FIGURES = \
 	figures/evincelogo.png			\
 	figures/evince-toolbar-default.png	\
 	figures/evince-toolbar-editor.png	\
+	figures/evince-trail.png		\
 	figures/gconf-editor.png		\
 	figures/list-add-tabs.png		\
 	figures/print-2sided.png		\
