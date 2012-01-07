@@ -290,6 +290,13 @@ ev_metadata_set_boolean (EvMetadata  *metadata,
 }
 
 gboolean
+ev_metadata_has_key (EvMetadata  *metadata,
+                     const gchar *key)
+{
+        return g_hash_table_lookup (metadata->items, key) != NULL;
+}
+
+gboolean
 ev_is_metadata_supported_for_file (GFile *file)
 {
 	GFileAttributeInfoList *namespaces;

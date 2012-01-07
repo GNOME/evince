@@ -199,7 +199,6 @@ struct _EvWindowPrivate {
 	EvWindowTitle *title;
 	EvMetadata *metadata;
 	EvBookmarks *bookmarks;
-	gboolean is_new_doc;
 
 	/* Load params */
 	EvLinkDest       *dest;
@@ -1051,120 +1050,110 @@ update_document_mode (EvWindow *window, EvDocumentMode mode)
 }
 
 static void
+ev_window_init_metadata_with_default_values (EvWindow *window)
+{
+	GSettings  *settings = window->priv->default_settings;
+	EvMetadata *metadata = window->priv->metadata;
+
+	/* Chrome */
+	if (!ev_metadata_has_key (metadata, "show_toolbar")) {
+		ev_metadata_set_boolean (metadata, "show_toolbar",
+					 g_settings_get_boolean (settings, "show-toolbar"));
+	}
+	if (!ev_metadata_has_key (metadata, "sidebar_visibility")) {
+		ev_metadata_set_boolean (metadata, "sidebar_visibility",
+					 g_settings_get_boolean (settings, "show-sidebar"));
+	}
+
+	/* Sidebar */
+	if (!ev_metadata_has_key (metadata, "sidebar_size")) {
+		ev_metadata_set_int (metadata, "sidebar_size",
+				     g_settings_get_int (settings, "sidebar-size"));
+	}
+	if (!ev_metadata_has_key (metadata, "sidebar_page")) {
+		gchar *sidebar_page_id = g_settings_get_string (settings, "sidebar-page");
+
+		ev_metadata_set_string (metadata, "sidebar_page", sidebar_page_id);
+		g_free (sidebar_page_id);
+	}
+
+	/* Document model */
+	if (!ev_metadata_has_key (metadata, "continuous")) {
+		ev_metadata_set_boolean (metadata, "continuous",
+					 g_settings_get_boolean (settings, "continuous"));
+	}
+	if (!ev_metadata_has_key (metadata, "dual-page")) {
+		ev_metadata_set_boolean (metadata, "dual-page",
+					 g_settings_get_boolean (settings, "dual-page"));
+	}
+	if (!ev_metadata_has_key (metadata, "inverted-colors")) {
+		ev_metadata_set_boolean (metadata, "inverted-colors",
+					 g_settings_get_boolean (settings, "inverted-colors"));
+	}
+	if (!ev_metadata_has_key (metadata, "sizing_mode")) {
+		EvSizingMode mode = g_settings_get_enum (settings, "sizing-mode");
+		GEnumValue *enum_value = g_enum_get_value (g_type_class_peek (EV_TYPE_SIZING_MODE), mode);
+
+		ev_metadata_set_string (metadata, "sizing_mode", enum_value->value_nick);
+	}
+
+	if (!ev_metadata_has_key (metadata, "zoom")) {
+		ev_metadata_set_double (metadata, "zoom",
+					g_settings_get_double (settings, "zoom"));
+	}
+
+	if (!ev_metadata_has_key (metadata, "fullscreen")) {
+		ev_metadata_set_boolean (metadata, "fullscreen",
+					 g_settings_get_boolean (settings, "fullscreen"));
+	}
+}
+
+static void
 setup_chrome_from_metadata (EvWindow *window)
 {
-	EvChrome chrome = EV_CHROME_NORMAL;
-	gboolean show_toolbar = TRUE;
+	gboolean show_toolbar;
+	gboolean show_sidebar;
 
-	if (ev_window_is_empty (window)) {
-		window->priv->chrome = chrome;
-
+	if (!window->priv->metadata)
 		return;
-	}
 
-	if (!window->priv->metadata) {
-		show_toolbar = g_settings_get_boolean (window->priv->default_settings, "show-toolbar");
-	} else if (!ev_metadata_get_boolean (window->priv->metadata, "show_toolbar", &show_toolbar)) {
-		if (window->priv->is_new_doc)
-			show_toolbar = g_settings_get_boolean (window->priv->default_settings, "show-toolbar");
-	}
-
-	if (!show_toolbar)
-		chrome &= ~EV_CHROME_TOOLBAR;
-
-	window->priv->chrome = chrome;
+	if (ev_metadata_get_boolean (window->priv->metadata, "show_toolbar", &show_toolbar))
+		update_chrome_flag (window, EV_CHROME_TOOLBAR, show_toolbar);
+	if (ev_metadata_get_boolean (window->priv->metadata, "sidebar_visibility", &show_sidebar))
+		update_chrome_flag (window, EV_CHROME_SIDEBAR, show_sidebar);
+	update_chrome_visibility (window);
 }
 
 static void
 setup_sidebar_from_metadata (EvWindow *window)
 {
-	EvDocument *document = window->priv->document;
-	GSettings  *settings =  window->priv->default_settings;
-	gchar      *page_id;
-	gint        sidebar_size;
-	gboolean    sidebar_visibility = TRUE;
+	gchar *page_id;
+	gint   sidebar_size;
 
-	if (ev_window_is_empty (window))
+	if (!window->priv->metadata)
 		return;
 
-	if (!window->priv->metadata) {
-		sidebar_visibility = g_settings_get_boolean (settings, "show-sidebar");
-	} else if (!ev_metadata_get_boolean (window->priv->metadata, "sidebar_visibility", &sidebar_visibility)) {
-		if (window->priv->is_new_doc)
-			sidebar_visibility = g_settings_get_boolean (settings, "show-sidebar");
-	}
-
-	update_chrome_flag (window, EV_CHROME_SIDEBAR, sidebar_visibility);
-	update_chrome_visibility (window);
-
-	if (!window->priv->metadata) {
-		/* Set default values */
-		gtk_paned_set_position (GTK_PANED (window->priv->hpaned),
-					g_settings_get_int (settings, "sidebar-size"));
-		if (document) {
-			page_id = g_settings_get_string (settings, "sidebar-page");
-			ev_window_sidebar_set_current_page (window, page_id);
-			g_free (page_id);
-		}
-
-		return;
-	}
-
-	if (ev_metadata_get_int (window->priv->metadata, "sidebar_size", &sidebar_size)) {
+	if (ev_metadata_get_int (window->priv->metadata, "sidebar_size", &sidebar_size))
 		gtk_paned_set_position (GTK_PANED (window->priv->hpaned), sidebar_size);
-	} else if (window->priv->is_new_doc) {
-		gtk_paned_set_position (GTK_PANED (window->priv->hpaned),
-					g_settings_get_int (settings, "sidebar-size"));
-	}
 
-	if (!document)
-		return;
-
-	if (ev_metadata_get_string (window->priv->metadata, "sidebar_page", &page_id)) {
+	if (ev_metadata_get_string (window->priv->metadata, "sidebar_page", &page_id))
 		ev_window_sidebar_set_current_page (window, page_id);
-	} else if (window->priv->is_new_doc) {
-		page_id = g_settings_get_string (settings, "sidebar-page");
-		ev_window_sidebar_set_current_page (window, page_id);
-		g_free (page_id);
-	}
 }
 
 static void
 setup_model_from_metadata (EvWindow *window)
 {
-	GSettings *settings = window->priv->default_settings;
-	gint       page;
-	gchar     *sizing_mode;
-	gdouble    zoom;
-	gint       rotation;
-	gboolean   inverted_colors = FALSE;
-	gboolean   continuous = FALSE;
-	gboolean   dual_page = FALSE;
-	gboolean   fullscreen = FALSE;
+	gint     page;
+	gchar   *sizing_mode;
+	gdouble  zoom;
+	gint     rotation;
+	gboolean inverted_colors = FALSE;
+	gboolean continuous = FALSE;
+	gboolean dual_page = FALSE;
+	gboolean fullscreen = FALSE;
 
-	if (!window->priv->metadata) {
-		EvSizingMode sizing_mode;
-
-		/* Set default values */
-		sizing_mode = g_settings_get_enum (settings, "sizing-mode");
-		ev_document_model_set_sizing_mode (window->priv->model, sizing_mode);
-		if (sizing_mode == EV_SIZING_FREE) {
-			zoom = g_settings_get_double (settings, "zoom");
-			zoom *= get_screen_dpi (window) / 72.0;
-			ev_document_model_set_scale (window->priv->model, zoom);
-		}
-		ev_document_model_set_inverted_colors (window->priv->model,
-						       g_settings_get_boolean (settings, "inverted-colors"));
-		ev_document_model_set_continuous (window->priv->model,
-						  g_settings_get_boolean (settings, "continuous"));
-		ev_document_model_set_dual_page (window->priv->model,
-						 g_settings_get_boolean (settings, "dual-page"));
-		fullscreen = g_settings_get_boolean (settings, "fullscreen");
-		if (fullscreen)
-			ev_window_run_fullscreen (window);
-
+	if (!window->priv->metadata)
 		return;
-	}
 
 	/* Current page */
 	if (!window->priv->dest &&
@@ -1179,18 +1168,11 @@ setup_model_from_metadata (EvWindow *window)
 		enum_value = g_enum_get_value_by_nick
 			(g_type_class_peek (EV_TYPE_SIZING_MODE), sizing_mode);
 		ev_document_model_set_sizing_mode (window->priv->model, enum_value->value);
-	} else if (window->priv->is_new_doc) {
-		ev_document_model_set_sizing_mode (window->priv->model,
-						   g_settings_get_enum (settings, "sizing-mode"));
 	}
 
 	/* Zoom */
 	if (ev_document_model_get_sizing_mode (window->priv->model) == EV_SIZING_FREE) {
 		if (ev_metadata_get_double (window->priv->metadata, "zoom", &zoom)) {
-			zoom *= get_screen_dpi (window) / 72.0;
-			ev_document_model_set_scale (window->priv->model, zoom);
-		} else if (window->priv->is_new_doc) {
-			zoom = g_settings_get_double (settings, "zoom");
 			zoom *= get_screen_dpi (window) / 72.0;
 			ev_document_model_set_scale (window->priv->model, zoom);
 		}
@@ -1218,35 +1200,23 @@ setup_model_from_metadata (EvWindow *window)
 	/* Inverted Colors */
 	if (ev_metadata_get_boolean (window->priv->metadata, "inverted-colors", &inverted_colors)) {
 		ev_document_model_set_inverted_colors (window->priv->model, inverted_colors);
-	} else if (window->priv->is_new_doc) {
-		ev_document_model_set_inverted_colors (window->priv->model,
-						       g_settings_get_boolean (settings, "inverted-colors"));
 	}
 
 	/* Continuous */
 	if (ev_metadata_get_boolean (window->priv->metadata, "continuous", &continuous)) {
 		ev_document_model_set_continuous (window->priv->model, continuous);
-	} else if (window->priv->is_new_doc) {
-		ev_document_model_set_continuous (window->priv->model,
-						  g_settings_get_boolean (settings, "continuous"));
 	}
 
 	/* Dual page */
 	if (ev_metadata_get_boolean (window->priv->metadata, "dual-page", &dual_page)) {
 		ev_document_model_set_dual_page (window->priv->model, dual_page);
-	} else if (window->priv->is_new_doc) {
-		ev_document_model_set_dual_page (window->priv->model,
-						 g_settings_get_boolean (settings, "dual-page"));
 	}
 
 	/* Fullscreen */
-	if (!ev_metadata_get_boolean (window->priv->metadata, "fullscreen", &fullscreen)) {
-		if (window->priv->is_new_doc)
-			fullscreen = g_settings_get_boolean (settings, "fullscreen");
+	if (ev_metadata_get_boolean (window->priv->metadata, "fullscreen", &fullscreen)) {
+		if (fullscreen)
+			ev_window_run_fullscreen (window);
 	}
-
-	if (fullscreen)
-		ev_window_run_fullscreen (window);
 }
 
 static void
@@ -1258,22 +1228,23 @@ setup_document_from_metadata (EvWindow *window)
 	gdouble width_ratio;
 	gdouble height_ratio;
 
+	if (!window->priv->metadata)
+		return;
+
 	setup_sidebar_from_metadata (window);
 
-	if (window->priv->metadata) {
-		/* Make sure to not open a document on the last page,
-		 * since closing it on the last page most likely means the
-		 * user was finished reading the document. In that case, reopening should
-		 * show the first page. */
-		page = ev_document_model_get_page (window->priv->model);
-		n_pages = ev_document_get_n_pages (window->priv->document);
-		if (page == n_pages - 1)
-			ev_document_model_set_page (window->priv->model, 0);
+	/* Make sure to not open a document on the last page,
+	 * since closing it on the last page most likely means the
+	 * user was finished reading the document. In that case, reopening should
+	 * show the first page. */
+	page = ev_document_model_get_page (window->priv->model);
+	n_pages = ev_document_get_n_pages (window->priv->document);
+	if (page == n_pages - 1)
+		ev_document_model_set_page (window->priv->model, 0);
 
-		if (ev_metadata_get_int (window->priv->metadata, "window_width", &width) &&
-		    ev_metadata_get_int (window->priv->metadata, "window_height", &height))
-			return; /* size was already set in setup_size_from_metadata */
-	}
+	if (ev_metadata_get_int (window->priv->metadata, "window_width", &width) &&
+	    ev_metadata_get_int (window->priv->metadata, "window_height", &height))
+		return; /* size was already set in setup_size_from_metadata */
 
 	g_settings_get (window->priv->default_settings, "window-ratio", "(dd)", &width_ratio, &height_ratio);
 	if (width_ratio > 0. && height_ratio > 0.) {
@@ -1345,10 +1316,35 @@ setup_view_from_metadata (EvWindow *window)
 
 	/* Presentation */
 	if (ev_metadata_get_boolean (window->priv->metadata, "presentation", &presentation)) {
-		if (presentation) {
+		if (presentation)
 			ev_window_run_presentation (window);
-		}
 	}
+}
+
+static void
+ev_window_setup_default (EvWindow *ev_window)
+{
+	EvDocumentModel *model = ev_window->priv->model;
+	GSettings       *settings = ev_window->priv->default_settings;
+
+	/* Chrome */
+	update_chrome_flag (ev_window, EV_CHROME_TOOLBAR,
+			    g_settings_get_boolean (settings, "show-toolbar"));
+	update_chrome_flag (ev_window, EV_CHROME_SIDEBAR,
+			    g_settings_get_boolean (settings, "show-sidebar"));
+	update_chrome_visibility (ev_window);
+
+	/* Sidebar */
+	gtk_paned_set_position (GTK_PANED (ev_window->priv->hpaned),
+				g_settings_get_int (settings, "sidebar-size"));
+
+	/* Document model */
+	ev_document_model_set_continuous (model, g_settings_get_boolean (settings, "continuous"));
+	ev_document_model_set_dual_page (model, g_settings_get_boolean (settings, "dual-page"));
+	ev_document_model_set_inverted_colors (model, g_settings_get_boolean (settings, "inverted-colors"));
+	ev_document_model_set_sizing_mode (model, g_settings_get_enum (settings, "sizing-mode"));
+	if (ev_document_model_get_sizing_mode (model) == EV_SIZING_FREE)
+		ev_document_model_set_scale (model, g_settings_get_double (settings, "zoom"));
 }
 
 static void
@@ -2092,7 +2088,7 @@ ev_window_open_uri (EvWindow       *ev_window,
 	source_file = g_file_new_for_uri (uri);
 	if (!ev_file_is_temp (source_file) && ev_is_metadata_supported_for_file (source_file)) {
 		ev_window->priv->metadata = ev_metadata_new (source_file);
-		ev_window->priv->is_new_doc = ev_metadata_is_empty (ev_window->priv->metadata);
+		ev_window_init_metadata_with_default_values (ev_window);
 	} else {
 		ev_window->priv->metadata = NULL;
 	}
@@ -7097,6 +7093,7 @@ ev_window_init (EvWindow *ev_window)
 	ev_window->priv->model = ev_document_model_new ();
 
 	ev_window->priv->page_mode = PAGE_MODE_DOCUMENT;
+	ev_window->priv->chrome = EV_CHROME_NORMAL;
 	ev_window->priv->title = ev_window_title_new (ev_window);
 
 	ev_window->priv->main_box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
@@ -7452,20 +7449,15 @@ ev_window_init (EvWindow *ev_window)
 
 	ev_window->priv->default_settings = g_settings_new (GS_SCHEMA_NAME".Default");
 	g_settings_delay (ev_window->priv->default_settings);
+	ev_window_setup_default (ev_window);
+	update_chrome_actions (ev_window);
 
 	/* Set it user interface params */
 	ev_window_setup_recent (ev_window);
 
 	ev_window_setup_gtk_settings (ev_window);
 
-	setup_chrome_from_metadata (ev_window);
-	update_chrome_actions (ev_window);
-	update_chrome_visibility (ev_window);
-
 	gtk_window_set_default_size (GTK_WINDOW (ev_window), 600, 600);
-
-	setup_view_from_metadata (ev_window);
-	setup_sidebar_from_metadata (ev_window);
 
         ev_window_sizing_mode_changed_cb (ev_window->priv->model, NULL, ev_window);
 	ev_window_setup_action_sensitivity (ev_window);

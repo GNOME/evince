@@ -62,6 +62,8 @@ gboolean    ev_metadata_get_boolean           (EvMetadata  *metadata,
 gboolean    ev_metadata_set_boolean           (EvMetadata  *metadata,
 					       const gchar *key,
 					       gboolean     value);
+gboolean    ev_metadata_has_key               (EvMetadata  *metadata,
+                                               const gchar *key);
 
 gboolean    ev_is_metadata_supported_for_file (GFile       *file);
 
