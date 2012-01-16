@@ -102,7 +102,7 @@ egg_find_bar_class_init (EggFindBarClass *klass)
   find_bar_signals[NEXT] =
     g_signal_new ("next",
 		  G_OBJECT_CLASS_TYPE (object_class),
-		  G_SIGNAL_RUN_FIRST,
+		  G_SIGNAL_RUN_FIRST | G_SIGNAL_ACTION,
                   G_STRUCT_OFFSET (EggFindBarClass, next),
 		  NULL, NULL,
 		  g_cclosure_marshal_VOID__VOID,
@@ -110,7 +110,7 @@ egg_find_bar_class_init (EggFindBarClass *klass)
   find_bar_signals[PREVIOUS] =
     g_signal_new ("previous",
 		  G_OBJECT_CLASS_TYPE (object_class),
-		  G_SIGNAL_RUN_FIRST,
+		  G_SIGNAL_RUN_FIRST | G_SIGNAL_ACTION,
                   G_STRUCT_OFFSET (EggFindBarClass, previous),
 		  NULL, NULL,
 		  g_cclosure_marshal_VOID__VOID,
@@ -187,6 +187,11 @@ egg_find_bar_class_init (EggFindBarClass *klass)
   gtk_binding_entry_add_signal (binding_set, GDK_KEY_KP_Page_Down, 0,
 				"scroll", 1,
 				GTK_TYPE_SCROLL_TYPE, GTK_SCROLL_PAGE_FORWARD);
+
+  gtk_binding_entry_add_signal (binding_set, GDK_KEY_Up, GDK_CONTROL_MASK,
+                                "previous", 0);
+  gtk_binding_entry_add_signal (binding_set, GDK_KEY_Down, GDK_CONTROL_MASK,
+                                "next", 0);
 }
 
 static void
