@@ -259,8 +259,8 @@ ev_spawn (const char     *uri,
 		if (page_label)
 			g_string_append_printf (cmd, " --page-label=%s", page_label);
 		else
-			g_string_append_printf (cmd, " --page-label=%d",
-						ev_link_dest_get_page (dest));
+			g_string_append_printf (cmd, " --page-index=%d",
+						ev_link_dest_get_page (dest) + 1);
 	}
 
 	/* Find string */
