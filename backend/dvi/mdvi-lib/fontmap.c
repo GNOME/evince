@@ -737,7 +737,7 @@ static int	mdvi_init_fontmaps(void)
 		return -1;
 	dstring_init(&input);
 	while((line = dgets(&input, in)) != NULL) {
-		char	*arg;
+		char	*arg, *map_file;
 		
 		SKIPSP(line);
 		if(*line < ' ' || *line == '#' || *line == '%')
@@ -748,6 +748,11 @@ static int	mdvi_init_fontmaps(void)
 			arg = getstring(line + 7, " \t", &line); *line = 0;
 			DEBUG((DBG_FMAP, "%s: loading fontmap\n", arg));
 			ent = mdvi_load_fontmap(arg);
+			if(ent == NULL) {
+				map_file = kpse_find_file(arg, kpse_fontmap_format, 0);
+				if (map_file)
+					ent = mdvi_load_fontmap(map_file);
+			}
 			if(ent == NULL)
 				mdvi_warning(_("%s: could not load fontmap\n"), arg);
 			else {
