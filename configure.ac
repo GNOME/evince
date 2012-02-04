@@ -653,7 +653,7 @@ AC_ARG_ENABLE(xps,
 	[enable_xps=yes])
 
 if test "x$enable_xps" = "xyes"; then
-   GXPS_REQUIRED=0.2.0
+   GXPS_REQUIRED=0.2.1
    PKG_CHECK_MODULES(GXPS, libgxps >= $GXPS_REQUIRED,enable_xps=yes,enable_xps=no)
 
    if test "x$enable_xps" = "xyes"; then

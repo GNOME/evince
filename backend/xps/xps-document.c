@@ -189,8 +189,7 @@ xps_document_get_backend_info (EvDocument            *document,
 			       EvDocumentBackendInfo *info)
 {
 	info->name = "libgxps";
-	/* FIXME */
-	info->version = "";
+	info->version = GXPS_VERSION_STRING;
 
 	return TRUE;
 }
