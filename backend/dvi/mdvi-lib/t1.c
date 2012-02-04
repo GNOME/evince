@@ -143,7 +143,7 @@ char	*t1_lookup_font(const char *name, Ushort *hdpi, Ushort *vdpi)
 
 	/* get the `base' name */
 	if(ext) {
-		newname = mdvi_strdup(name);
+		newname = mdvi_strdup(info.fontfile);
 		newname[ext - info.fontfile - 1] = 0;
 	} else
 		newname = (char *)name; /* we don't modify this */
