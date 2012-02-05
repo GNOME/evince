@@ -366,6 +366,8 @@ static void     ev_window_setup_bookmarks               (EvWindow         *windo
 
 static guint ev_window_n_copies = 0;
 
+static gchar *nautilus_sendto = NULL;
+
 G_DEFINE_TYPE (EvWindow, ev_window, GTK_TYPE_WINDOW)
 
 static gdouble
@@ -456,6 +458,7 @@ ev_window_setup_action_sensitivity (EvWindow *ev_window)
 	ev_window_set_action_sensitive (ev_window, "FilePrint", has_pages && ok_to_print);
 	ev_window_set_action_sensitive (ev_window, "FileProperties", has_document && has_properties);
 	ev_window_set_action_sensitive (ev_window, "FileOpenContainingFolder", has_document);
+	ev_window_set_action_sensitive (ev_window, "FileSendTo", has_document);
 
         /* Edit menu */
 	ev_window_set_action_sensitive (ev_window, "EditSelectAll", has_pages && can_get_text);
@@ -2921,6 +2924,40 @@ ev_window_cmd_save_as (GtkAction *action, EvWindow *ev_window)
 			  ev_window);
 
 	gtk_widget_show (fc);
+}
+
+static void
+ev_window_cmd_send_to (GtkAction *action,
+		       EvWindow  *ev_window)
+{
+	GAppInfo   *app_info;
+	gchar      *command;
+	const char *uri;
+	GError     *error = NULL;
+
+	uri = ev_window->priv->local_uri ? ev_window->priv->local_uri : ev_window->priv->uri;
+	command = g_strdup_printf ("%s %s", nautilus_sendto, uri);
+	app_info = g_app_info_create_from_commandline (command, NULL, 0, &error);
+	if (app_info) {
+		GdkAppLaunchContext *context;
+		GdkScreen           *screen;
+
+		screen = gtk_window_get_screen (GTK_WINDOW (ev_window));
+		context = gdk_display_get_app_launch_context (gdk_screen_get_display (screen));
+		gdk_app_launch_context_set_screen (context, screen);
+		gdk_app_launch_context_set_timestamp (context, gtk_get_current_event_time ());
+		g_app_info_launch (app_info, NULL, G_APP_LAUNCH_CONTEXT (context), &error);
+		g_object_unref (context);
+
+		g_object_unref (app_info);
+	}
+	g_free (command);
+
+	if (error) {
+		ev_window_error_message (ev_window, error, "%s",
+					 _("Could not send current document"));
+		g_error_free (error);
+	}
 }
 
 static void
@@ -5672,6 +5709,8 @@ ev_window_class_init (EvWindowClass *ev_window_class)
 	widget_class->window_state_event = ev_window_state_event;
 	widget_class->drag_data_received = ev_window_drag_data_received;
 
+	nautilus_sendto = g_find_program_in_path ("nautilus-sendto");
+
 	g_type_class_add_private (g_object_class, sizeof (EvWindowPrivate));
 }
 
@@ -5694,6 +5733,9 @@ static const GtkActionEntry entries[] = {
        	{ "FileSaveAs", GTK_STOCK_SAVE_AS, N_("_Save a Copy…"), "<control>S",
 	  N_("Save a copy of the current document"),
 	  G_CALLBACK (ev_window_cmd_save_as) },
+	{ "FileSendTo", NULL, N_("Send _To..."), NULL,
+	  N_("Send current document by mail, instant message..."),
+	  G_CALLBACK (ev_window_cmd_send_to) },
 	{ "FileOpenContainingFolder", GTK_STOCK_DIRECTORY, N_("Open Containing _Folder"), NULL,
 	  N_("Show the folder which contains this file in the file manager"),
 	  G_CALLBACK (ev_window_cmd_open_containing_folder) },
@@ -6029,6 +6071,9 @@ set_action_properties (GtkActionGroup *action_group)
 	action = gtk_action_group_get_action (action_group, "FileOpenContainingFolder");
 	/*translators: this is the label for toolbar button*/
 	g_object_set (action, "short_label", _("Open Folder"), NULL);
+
+	action = gtk_action_group_get_action (action_group, "FileSendTo");
+	gtk_action_set_visible (action, nautilus_sendto != NULL);
 
 	action = gtk_action_group_get_action (action_group, "GoPreviousPage");
 	g_object_set (action, "is-important", TRUE, NULL);
