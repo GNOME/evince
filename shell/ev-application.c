@@ -252,15 +252,22 @@ ev_spawn (const char     *uri,
 	
 	/* Page label */
 	if (dest) {
-		const gchar *page_label;
-
-		page_label = ev_link_dest_get_page_label (dest);
-
-		if (page_label)
-			g_string_append_printf (cmd, " --page-label=%s", page_label);
-		else
-			g_string_append_printf (cmd, " --page-index=%d",
-						ev_link_dest_get_page (dest) + 1);
+                switch (ev_link_dest_get_dest_type (dest)) {
+                case EV_LINK_DEST_TYPE_PAGE_LABEL:
+                        g_string_append_printf (cmd, " --page-label=%s",
+                                                ev_link_dest_get_page_label (dest));
+                        break;
+                case EV_LINK_DEST_TYPE_PAGE:
+                        g_string_append_printf (cmd, " --page-index=%d",
+                                                ev_link_dest_get_page (dest) + 1);
+                        break;
+                case EV_LINK_DEST_TYPE_NAMED:
+                        g_string_append_printf (cmd, " --named-dest=%s",
+                                                ev_link_dest_get_named_dest (dest));
+                        break;
+                default:
+                        break;
+                }
 	}
 
 	/* Find string */
@@ -466,16 +473,21 @@ on_register_uri_cb (GObject      *source_object,
                                "screen",
                                g_variant_new_int32 (gdk_screen_get_number (data->screen)));
 	if (data->dest) {
-                const gchar *page_label = ev_link_dest_get_page_label (data->dest);
-
-                if (page_label) {
-                        g_variant_builder_add (&builder, "{sv}",
-                                               "page-label",
-                                               g_variant_new_string (page_label));
-                } else {
-                        g_variant_builder_add (&builder, "{sv}",
-                                               "page-index",
+                switch (ev_link_dest_get_dest_type (data->dest)) {
+                case EV_LINK_DEST_TYPE_PAGE_LABEL:
+                        g_variant_builder_add (&builder, "{sv}", "page-label",
+                                               g_variant_new_string (ev_link_dest_get_page_label (data->dest)));
+                        break;
+                case EV_LINK_DEST_TYPE_PAGE:
+                        g_variant_builder_add (&builder, "{sv}", "page-index",
                                                g_variant_new_uint32 (ev_link_dest_get_page (data->dest)));
+                        break;
+                case EV_LINK_DEST_TYPE_NAMED:
+                        g_variant_builder_add (&builder, "{sv}", "named-dest",
+                                               g_variant_new_string (ev_link_dest_get_named_dest (data->dest)));
+                        break;
+                default:
+                        break;
                 }
 	}
 	if (data->search_string) {
@@ -781,6 +793,8 @@ method_call_cb (GDBusConnection       *connection,
                                 mode = g_variant_get_uint32 (value);
 			} else if (strcmp (key, "page-label") == 0 && g_variant_classify (value) == G_VARIANT_CLASS_STRING) {
 				dest = ev_link_dest_new_page_label (g_variant_get_string (value, NULL));
+			} else if (strcmp (key, "named-dest") == 0 && g_variant_classify (value) == G_VARIANT_CLASS_STRING) {
+				dest = ev_link_dest_new_named (g_variant_get_string (value, NULL));
                         } else if (strcmp (key, "page-index") == 0 && g_variant_classify (value) == G_VARIANT_CLASS_UINT32) {
                                 dest = ev_link_dest_new_page (g_variant_get_uint32 (value));
 			} else if (strcmp (key, "find-string") == 0 && g_variant_classify (value) == G_VARIANT_CLASS_STRING) {
