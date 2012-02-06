@@ -5733,7 +5733,7 @@ static const GtkActionEntry entries[] = {
        	{ "FileSaveAs", GTK_STOCK_SAVE_AS, N_("_Save a Copy…"), "<control>S",
 	  N_("Save a copy of the current document"),
 	  G_CALLBACK (ev_window_cmd_save_as) },
-	{ "FileSendTo", NULL, N_("Send _To..."), NULL,
+	{ "FileSendTo", EV_STOCK_SEND_TO, N_("Send _To..."), NULL,
 	  N_("Send current document by mail, instant message..."),
 	  G_CALLBACK (ev_window_cmd_send_to) },
 	{ "FileOpenContainingFolder", GTK_STOCK_DIRECTORY, N_("Open Containing _Folder"), NULL,
