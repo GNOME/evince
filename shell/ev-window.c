@@ -6073,6 +6073,8 @@ set_action_properties (GtkActionGroup *action_group)
 	g_object_set (action, "short_label", _("Open Folder"), NULL);
 
 	action = gtk_action_group_get_action (action_group, "FileSendTo");
+	/*translators: this is the label for toolbar button*/
+	g_object_set (action, "short_label", _("Send To"), NULL);
 	gtk_action_set_visible (action, nautilus_sendto != NULL);
 
 	action = gtk_action_group_get_action (action_group, "GoPreviousPage");
