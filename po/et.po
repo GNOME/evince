@@ -8,15 +8,15 @@
 # Sven Sapelson <sven.sapelson gmail com>, 2005.
 # Ivar Smolin <okul linux ee>, 2005–2010.
 # Priit Laes <amd store20 com>, 2005–2007.
-# Mattias Põldaru <mahfiaz@gmail.com>, 2010, 2011.
+# Mattias Põldaru <mahfiaz@gmail.com>, 2010, 2011, 2012.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: Evince MASTER\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evince&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2011-11-04 00:37+0000\n"
-"PO-Revision-Date: 2011-11-06 02:07+0200\n"
+"POT-Creation-Date: 2012-02-07 10:52+0000\n"
+"PO-Revision-Date: 2012-02-08 09:31+0200\n"
 "Last-Translator: Mattias Põldaru <mahfiaz@gmail.com>\n"
 "Language-Team: Estonian <>\n"
 "Language: et\n"
@@ -187,9 +187,12 @@ msgstr "Tõrge ajutise kataloogi loomisel: %s"
 msgid "File is not a valid .desktop file"
 msgstr "Fail pole korrektne .desktop fail"
 
+#. translators: 'Version' is from a desktop file, and
+#. * should not be translated. '%s' would probably be a
+#. * version number.
 #, c-format
 msgid "Unrecognized desktop file Version '%s'"
-msgstr "Töölauafaili tundmatu versioon '%s'"
+msgstr "Töölauafailis tundmatu Version '%s'"
 
 #, c-format
 msgid "Starting %s"
@@ -203,10 +206,12 @@ msgstr "Rakendus ei luba käsureadokumente"
 msgid "Unrecognized launch option: %d"
 msgstr "Tundmatu käivitusvalik: %d"
 
+#. translators: The 'Type=Link' string is found in a
+#. * desktop file, and should not be translated.
 #, c-format
 msgid "Can't pass document URIs to a 'Type=Link' desktop entry"
 msgstr ""
-"Dokumendi URI-sid pole võimalik 'Liik=Viit' töölauakirjetele edasi anda"
+"Dokumendi URI-sid pole võimalik 'Type=Link' töölauakirjetele edasi anda"
 
 #, c-format
 msgid "Not a launchable item"
@@ -879,6 +884,9 @@ msgstr "Pildi üleslaadimine (%d%%)"
 msgid "Save a Copy"
 msgstr "Koopia salvestamine"
 
+msgid "Could not send current document"
+msgstr "Käesolevat dokumenti polnud võimalik saata"
+
 msgid "Could not open the containing folder"
 msgstr "Faili kataloogi pole võimalik avada"
 
@@ -1053,6 +1061,12 @@ msgstr "Sa_lvesta koopia…"
 
 msgid "Save a copy of the current document"
 msgstr "Käesolevast dokumendist koopia salvestamine"
+
+msgid "Send _To..."
+msgstr "Saada _kuhu..."
+
+msgid "Send current document by mail, instant message..."
+msgstr "Avatud dokumendi saatmine meiliga, kiirsõnumina..."
 
 msgid "Open Containing _Folder"
 msgstr "Ava _dokumendi kataloog"
@@ -1234,6 +1248,10 @@ msgid "Open Folder"
 msgstr "Kausta avamine"
 
 #. translators: this is the label for toolbar button
+msgid "Send To"
+msgstr "Teistele saatmine"
+
+#. translators: this is the label for toolbar button
 msgid "Previous"
 msgstr "Eelmine"
 
@@ -1298,6 +1316,12 @@ msgstr "Mitmendat dokumendi lehekülge näidata."
 
 msgid "NUMBER"
 msgstr "NUMBER"
+
+msgid "Named destination to display."
+msgstr "Nimeline sihtkoht, mida kuvatakse."
+
+msgid "DEST"
+msgstr "SIHT"
 
 msgid "Run evince in fullscreen mode"
 msgstr "Evince käivitamine täisekraanirežiimis"
