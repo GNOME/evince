@@ -471,6 +471,7 @@ ev_window_setup_action_sensitivity (EvWindow *ev_window)
 	ev_window_set_action_sensitive (ev_window, "ViewToolbar", !ev_window_is_editing_toolbar (ev_window));
 	ev_window_set_action_sensitive (ev_window, "ViewContinuous", has_pages);
 	ev_window_set_action_sensitive (ev_window, "ViewDual", has_pages);
+	ev_window_set_action_sensitive (ev_window, "ViewDualOddLeft", has_pages);
 	ev_window_set_action_sensitive (ev_window, "ViewBestFit", has_pages);
 	ev_window_set_action_sensitive (ev_window, "ViewPageWidth", has_pages);
 	ev_window_set_action_sensitive (ev_window, "ViewReload", has_pages);
@@ -1089,6 +1090,10 @@ ev_window_init_metadata_with_default_values (EvWindow *window)
 		ev_metadata_set_boolean (metadata, "dual-page",
 					 g_settings_get_boolean (settings, "dual-page"));
 	}
+	if (!ev_metadata_has_key (metadata, "dual-page-odd-left")) {
+		ev_metadata_set_boolean (metadata, "dual-page-odd-left",
+					 g_settings_get_boolean (settings, "dual-page-odd-left"));
+	}
 	if (!ev_metadata_has_key (metadata, "inverted-colors")) {
 		ev_metadata_set_boolean (metadata, "inverted-colors",
 					 g_settings_get_boolean (settings, "inverted-colors"));
@@ -1153,6 +1158,7 @@ setup_model_from_metadata (EvWindow *window)
 	gboolean inverted_colors = FALSE;
 	gboolean continuous = FALSE;
 	gboolean dual_page = FALSE;
+	gboolean dual_page_odd_left = FALSE;
 	gboolean fullscreen = FALSE;
 
 	if (!window->priv->metadata)
@@ -1213,6 +1219,11 @@ setup_model_from_metadata (EvWindow *window)
 	/* Dual page */
 	if (ev_metadata_get_boolean (window->priv->metadata, "dual-page", &dual_page)) {
 		ev_document_model_set_dual_page (window->priv->model, dual_page);
+	}
+
+	/* Dual page odd pages left */
+	if (ev_metadata_get_boolean (window->priv->metadata, "dual-page-odd-left", &dual_page_odd_left)) {
+		ev_document_model_set_dual_page_odd_pages_left (window->priv->model, dual_page_odd_left);
 	}
 
 	/* Fullscreen */
@@ -1344,6 +1355,7 @@ ev_window_setup_default (EvWindow *ev_window)
 	/* Document model */
 	ev_document_model_set_continuous (model, g_settings_get_boolean (settings, "continuous"));
 	ev_document_model_set_dual_page (model, g_settings_get_boolean (settings, "dual-page"));
+	ev_document_model_set_dual_page_odd_pages_left (model, g_settings_get_boolean (settings, "dual-page-odd-left"));
 	ev_document_model_set_inverted_colors (model, g_settings_get_boolean (settings, "inverted-colors"));
 	ev_document_model_set_sizing_mode (model, g_settings_get_enum (settings, "sizing-mode"));
 	if (ev_document_model_get_sizing_mode (model) == EV_SIZING_FREE)
@@ -3767,6 +3779,17 @@ ev_window_cmd_dual (GtkAction *action, EvWindow *ev_window)
 }
 
 static void
+ev_window_cmd_dual_odd_pages_left (GtkAction *action, EvWindow *ev_window)
+{
+	gboolean dual_page_odd_left;
+
+	ev_window_stop_presentation (ev_window, TRUE);
+	dual_page_odd_left = gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action));
+	ev_document_model_set_dual_page_odd_pages_left (ev_window->priv->model,
+							dual_page_odd_left);
+}
+
+static void
 ev_window_cmd_view_best_fit (GtkAction *action, EvWindow *ev_window)
 {
 	ev_window_stop_presentation (ev_window, TRUE);
@@ -4412,6 +4435,8 @@ ev_window_cmd_edit_save_settings (GtkAction *action, EvWindow *ev_window)
 				ev_document_model_get_continuous (model));
 	g_settings_set_boolean (settings, "dual-page",
 				ev_document_model_get_dual_page (model));
+	g_settings_set_boolean (settings, "dual-page-odd-left",
+				ev_document_model_get_dual_page_odd_pages_left (model));
 	g_settings_set_boolean (settings, "fullscreen",
 				ev_document_model_get_fullscreen (model));
 	g_settings_set_boolean (settings, "inverted-colors",
@@ -4746,20 +4771,6 @@ ev_window_update_continuous_action (EvWindow *window)
 }
 
 static void
-ev_window_update_dual_page_action (EvWindow *window)
-{
-	GtkAction *action;
-
-	action = gtk_action_group_get_action (window->priv->action_group, "ViewDual");
-	g_signal_handlers_block_by_func
-		(action, G_CALLBACK (ev_window_cmd_dual), window);
-	gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action),
-				      ev_document_model_get_dual_page (window->priv->model));
-	g_signal_handlers_unblock_by_func
-		(action, G_CALLBACK (ev_window_cmd_dual), window);
-}
-
-static void
 ev_window_continuous_changed_cb (EvDocumentModel *model,
 				 GParamSpec      *pspec,
 				 EvWindow        *ev_window)
@@ -4817,6 +4828,20 @@ ev_window_inverted_colors_changed_cb (EvDocumentModel *model,
 }
 
 static void
+ev_window_update_dual_page_action (EvWindow *window)
+{
+	GtkAction *action;
+
+	action = gtk_action_group_get_action (window->priv->action_group, "ViewDual");
+	g_signal_handlers_block_by_func
+		(action, G_CALLBACK (ev_window_cmd_dual), window);
+	gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action),
+				      ev_document_model_get_dual_page (window->priv->model));
+	g_signal_handlers_unblock_by_func
+		(action, G_CALLBACK (ev_window_cmd_dual), window);
+}
+
+static void
 ev_window_dual_mode_changed_cb (EvDocumentModel *model,
 				GParamSpec      *pspec,
 				EvWindow        *ev_window)
@@ -4826,6 +4851,32 @@ ev_window_dual_mode_changed_cb (EvDocumentModel *model,
 	if (ev_window->priv->metadata && !ev_window_is_empty (ev_window))
 		ev_metadata_set_boolean (ev_window->priv->metadata, "dual-page",
 					 ev_document_model_get_dual_page (model));
+}
+
+static void
+ev_window_update_dual_page_odd_pages_left_action (EvWindow *window)
+{
+	GtkAction *action;
+
+	action = gtk_action_group_get_action (window->priv->action_group, "ViewDualOddLeft");
+	g_signal_handlers_block_by_func
+		(action, G_CALLBACK (ev_window_cmd_dual_odd_pages_left), window);
+	gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action),
+				      ev_document_model_get_dual_page_odd_pages_left (window->priv->model));
+	g_signal_handlers_unblock_by_func
+		(action, G_CALLBACK (ev_window_cmd_dual_odd_pages_left), window);
+}
+
+static void
+ev_window_dual_mode_odd_pages_left_changed_cb (EvDocumentModel *model,
+					       GParamSpec      *pspec,
+					       EvWindow        *ev_window)
+{
+	ev_window_update_dual_page_odd_pages_left_action (ev_window);
+
+	if (ev_window->priv->metadata && !ev_window_is_empty (ev_window))
+		ev_metadata_set_boolean (ev_window->priv->metadata, "dual-page-odd-left",
+					 ev_document_model_get_dual_page_odd_pages_left (model));
 }
 
 static char *
@@ -5889,9 +5940,12 @@ static const GtkToggleActionEntry toggle_entries[] = {
         { "ViewContinuous", EV_STOCK_VIEW_CONTINUOUS, N_("_Continuous"), NULL,
 	  N_("Show the entire document"),
 	  G_CALLBACK (ev_window_cmd_continuous), TRUE },
-        { "ViewDual", EV_STOCK_VIEW_DUAL, N_("_Dual"), NULL,
-	  N_("Show two pages at once"),
+        { "ViewDual", EV_STOCK_VIEW_DUAL, N_("_Dual (Even pages left)"), NULL,
+	  N_("Show two pages at once with even pages on the left"),
 	  G_CALLBACK (ev_window_cmd_dual), FALSE },
+	{ "ViewDualOddLeft", EV_STOCK_VIEW_DUAL, N_("Dual (_Odd pages left)"), NULL,
+	  N_("Show two pages at once with odd pages on the left"),
+	  G_CALLBACK (ev_window_cmd_dual_odd_pages_left), FALSE },
         { "ViewFullscreen", GTK_STOCK_FULLSCREEN, N_("_Fullscreen"), "F11",
           N_("Expand the window to fill the screen"),
           G_CALLBACK (ev_window_cmd_view_fullscreen) },
@@ -7433,6 +7487,10 @@ ev_window_init (EvWindow *ev_window)
 	g_signal_connect (ev_window->priv->model,
 			  "notify::dual-page",
 			  G_CALLBACK (ev_window_dual_mode_changed_cb),
+			  ev_window);
+	g_signal_connect (ev_window->priv->model,
+			  "notify::dual-odd-left",
+			  G_CALLBACK (ev_window_dual_mode_odd_pages_left_changed_cb),
 			  ev_window);
 	g_signal_connect (ev_window->priv->model,
 			  "notify::inverted-colors",
