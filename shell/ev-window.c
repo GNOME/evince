@@ -245,6 +245,7 @@ struct _EvWindowPrivate {
 
 #define GS_SCHEMA_NAME           "org.gnome.Evince"
 #define GS_OVERRIDE_RESTRICTIONS "override-restrictions"
+#define GS_AUTO_RELOAD           "auto-reload"
 
 #define SIDEBAR_DEFAULT_SIZE    132
 #define LINKS_SIDEBAR_ID "links"
@@ -1536,7 +1537,9 @@ static void
 ev_window_document_changed (EvWindow *ev_window,
 			    gpointer  user_data)
 {
-	ev_window_reload_document (ev_window, NULL);
+	if (ev_window->priv->settings &&
+	    g_settings_get_boolean (ev_window->priv->settings, GS_AUTO_RELOAD))
+		ev_window_reload_document (ev_window, NULL);
 }
 
 static void
