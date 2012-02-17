@@ -91,10 +91,15 @@ typedef int		INT;
 typedef unsigned short	UINT;
 typedef short		INT;
 #else
+#if SIZEOF_LONG_LONG == SIZEOF_VOID_P
+typedef unsigned long long	UINT;
+typedef long long		INT;
+#else
 #ifdef __cplusplus
 #include "No.native.pointer-compatible.integer.type.found.Fix.sysdeps.h"
 #else
 #error No native pointer-compatible integer type found. Fix sysdeps.h
+#endif
 #endif
 #endif
 #endif

@@ -603,6 +603,7 @@ if test "x$enable_dvi" = "xyes"; then
     AC_CHECK_SIZEOF(long, 4)
     AC_CHECK_SIZEOF(int, 4)
     AC_CHECK_SIZEOF(short, 2)
+    AC_CHECK_SIZEOF(long long, 4)
     AC_CHECK_SIZEOF(void *, 4)
     AC_CHECK_LIB([kpathsea],[kpse_init_prog],[enable_dvi=yes],[enable_dvi=no])
 
