@@ -678,12 +678,9 @@ ev_sidebar_thumbnails_init (EvSidebarThumbnails *ev_sidebar_thumbnails)
 					       EV_TYPE_JOB_THUMBNAIL);
 
 	priv->swindow = gtk_scrolled_window_new (NULL, NULL);
-	
-	/* We actually don't want GTK_POLICY_AUTOMATIC for horizontal scrollbar here
-	 * it's just a workaround for bug #449462
-	 */
+
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (priv->swindow),
-					GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+					GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
 	gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (priv->swindow),
 					     GTK_SHADOW_IN);
 	priv->vadjustment = gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW (priv->swindow));
