@@ -58,7 +58,6 @@ _ev_win32_get_locale_dir (HMODULE module)
 		return locale_dir;
 
 	gchar *install_dir = NULL, *utf8_locale_dir;
-	gchar *retval = NULL;
 
 	if (evdocument_dll != NULL)
 		install_dir =
