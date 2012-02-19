@@ -1127,7 +1127,7 @@ PS_Lvl2page(TIFF2PSContext* ctx, TIFF* tif, uint32 w, uint32 h)
 	}
 	buf_data = (unsigned char *)_TIFFmalloc(chunk_size);
 	if (!buf_data) {
-		TIFFError(ctx->filename, "Can't alloc %u bytes for %s.",
+		TIFFError(ctx->filename, "Can't alloc %i bytes for %s.",
 			chunk_size, tiled_image ? "tiles" : "strips");
 		return(FALSE);
 	}
