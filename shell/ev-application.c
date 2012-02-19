@@ -186,6 +186,7 @@ ev_application_init_session (EvApplication *application)
 #endif
 }
 
+#ifdef ENABLE_DBUS
 /**
  * ev_display_open_if_needed:
  * @name: the name of the display to be open if it's needed.
@@ -217,6 +218,7 @@ ev_display_open_if_needed (const gchar *name)
 
 	return display != NULL ? display : gdk_display_open (name);
 }
+#endif
 
 static void
 ev_spawn (const char     *uri,
@@ -229,7 +231,6 @@ ev_spawn (const char     *uri,
 	GString *cmd;
 	gchar *path, *cmdline;
 	GAppInfo *app;
-	GdkAppLaunchContext *ctx;
 	GError  *error = NULL;
 
 	cmd = g_string_new (NULL);
@@ -292,6 +293,7 @@ ev_spawn (const char     *uri,
 
 	if (app != NULL) {
                 GList uri_list;
+		GdkAppLaunchContext *ctx;
 
 		ctx = gdk_display_get_app_launch_context (gdk_screen_get_display (screen));
 		gdk_app_launch_context_set_screen (ctx, screen);
@@ -1076,7 +1078,9 @@ ev_application_class_init (EvApplicationClass *ev_application_class)
 static void
 ev_application_init (EvApplication *ev_application)
 {
+#ifdef ENABLE_DBUS
 	GError *error = NULL;
+#endif
 
         ev_application->dot_dir = g_build_filename (g_get_user_config_dir (),
                                                     "evince", NULL);

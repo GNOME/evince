@@ -1426,6 +1426,7 @@ override_restrictions_changed (GSettings *settings,
 	ev_window_setup_action_sensitivity (ev_window);
 }
 
+#ifdef HAVE_DESKTOP_SCHEMAS
 static void
 lockdown_changed (GSettings   *lockdown,
 		  const gchar *key,
@@ -1433,6 +1434,7 @@ lockdown_changed (GSettings   *lockdown,
 {
 	ev_window_setup_action_sensitivity (ev_window);
 }
+#endif
 
 static gboolean
 ev_window_setup_document (EvWindow *ev_window)

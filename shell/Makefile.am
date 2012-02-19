@@ -120,7 +120,7 @@ if PLATFORM_WIN32
 evince_LDADD += evince-icon.o
 
 evince-icon.o: $(srcdir)/evince-icon.rc $(top_srcdir)/data/evince.ico
-	$(WINDRES) $(srcdir)/evince-icon.rc -I $(top_srcdir)/data evince-icon.o
+	$(AM_V_GEN)$(WINDRES) $(srcdir)/evince-icon.rc -I $(top_srcdir)/data evince-icon.o
 endif
 
 BUILT_SOURCES = ev-marshal.h ev-marshal.c
