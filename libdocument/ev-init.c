@@ -38,6 +38,7 @@ static HMODULE evdocument_dll = NULL;
 static gchar *locale_dir = NULL;
 
 #ifdef DLL_EXPORT
+BOOL WINAPI DllMain (HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved);
 BOOL WINAPI
 DllMain (HINSTANCE hinstDLL,
 	 DWORD     fdwReason,
