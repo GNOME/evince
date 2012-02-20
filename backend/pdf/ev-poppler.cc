@@ -1418,7 +1418,6 @@ pdf_document_images_get_image_mapping (EvDocumentImages *document_images,
 				       EvPage           *page)
 {
 	GList *retval = NULL;
-	PdfDocument *pdf_document;
 	PopplerPage *poppler_page;
 	GList *mapping_list;
 	GList *list;
