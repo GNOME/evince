@@ -4351,8 +4351,8 @@ synctex_updater_t synctex_updater_new_with_output_file(const char * output, cons
 		_synctex_error("!  synctex_updater_new_with_file: malloc problem");
 		return NULL;
 	}
-	if (_synctex_open(output,build_directory,&synctex,&SYNCTEX_FILE,synctex_ADD_QUOTES,&io_mode)
-		&& _synctex_open(output,build_directory,&synctex,&SYNCTEX_FILE,synctex_DONT_ADD_QUOTES,&io_mode)) {
+	if (_synctex_open(output,build_directory,&synctex,(gzFile *)&SYNCTEX_FILE,synctex_ADD_QUOTES,&io_mode)
+		&& _synctex_open(output,build_directory,&synctex,(gzFile *)&SYNCTEX_FILE,synctex_DONT_ADD_QUOTES,&io_mode)) {
 return_on_error:
 		free(updater);
         updater = NULL;
