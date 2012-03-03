@@ -1,7 +1,7 @@
 # Vietnamese translation for Evince.
 # Copyright © 2009 GNOME i18n Project for Vietnamese.
 # Clytie Siddall <clytie@riverland.net.au>, 2005-2009.
-# Nguyễn Thái Ngọc Duy <pclouds@gmail.com>, 2008,2011.
+# Nguyễn Thái Ngọc Duy <pclouds@gmail.com>, 2008,2012.
 # Nguyễn Đình Trung <nguyendinhtrung141@gmail.com>, 2008.
 #
 msgid ""
@@ -10,7 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evince&keywords=I18N+L10N&component=general\n"
 "POT-Creation-Date: 2012-02-19 18:47+0000\n"
-"PO-Revision-Date: 2012-03-03 23:22+0700\n"
+"PO-Revision-Date: 2012-03-03 23:25+0700\n"
 "Last-Translator: Nguyễn Thái Ngọc Duy <pclouds@gmail.com>\n"
 "Language-Team: Vietnamese <vi-VN@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -417,14 +417,13 @@ msgid "Override document restrictions, like restriction to copy or to print."
 msgstr "Bỏ qua những hạn chế của tài liệu, như hạn chế sao chép hay in."
 
 #: ../data/org.gnome.Evince.gschema.xml.in.h:3
-#, fuzzy
 #| msgid "Reload the document"
 msgid "Automatically reload the document"
-msgstr "Cập nhật nội dung tài liệu"
+msgstr "Cập nhật tài liệu tự động"
 
 #: ../data/org.gnome.Evince.gschema.xml.in.h:4
 msgid "The document is automatically reloaded on file change."
-msgstr ""
+msgstr "Tài liệu được tự động nạp lại nếu có thay đổi."
 
 #: ../previewer/ev-previewer.c:44
 msgid "Delete the temporary file"
@@ -1136,10 +1135,9 @@ msgid "Save a Copy"
 msgstr "Lưu một bản sao"
 
 #: ../shell/ev-window.c:2973
-#, fuzzy
 #| msgid "Save a copy of the current document"
 msgid "Could not send current document"
-msgstr "Lưu bản sao của tài liệu hiện có"
+msgstr "Không thể gửi tài liệu hiện tại"
 
 #: ../shell/ev-window.c:3004
 msgid "Could not open the containing folder"
@@ -1194,7 +1192,7 @@ msgstr "Đợi đến khi hoàn tất công việc in \"%s\" trước khi đóng
 #. but some languages distinguish between different plurals forms,
 #. so the ngettext is needed.
 #: ../shell/ev-window.c:3669
-#, fuzzy, c-format
+#, c-format
 #| msgid ""
 #| "There are %d print jobs active. Wait until print finishes before closing?"
 msgid "There is %d print job active. Wait until print finishes before closing?"
@@ -1353,11 +1351,11 @@ msgstr "Lưu bản sao của tài liệu hiện có"
 
 #: ../shell/ev-window.c:5790
 msgid "Send _To..."
-msgstr ""
+msgstr "_Gửi đến..."
 
 #: ../shell/ev-window.c:5791
 msgid "Send current document by mail, instant message..."
-msgstr ""
+msgstr "Gửi tài liệu qua thư, tin nhắn..."
 
 #: ../shell/ev-window.c:5793
 msgid "Open Containing _Folder"
@@ -1432,16 +1430,14 @@ msgid "Go to the last page"
 msgstr "Tới trang cuối"
 
 #: ../shell/ev-window.c:5853
-#, fuzzy
 #| msgid "Go to page"
 msgid "Go to Pa_ge"
-msgstr "Tới trang"
+msgstr "Đến _trang"
 
 #: ../shell/ev-window.c:5854
-#, fuzzy
 #| msgid "Go to page"
 msgid "Go to Page"
-msgstr "Tới trang"
+msgstr "Đi đến trang"
 
 #. Bookmarks menu
 #: ../shell/ev-window.c:5858
@@ -1505,23 +1501,21 @@ msgstr "Hiển thị toàn tài liệu"
 
 #: ../shell/ev-window.c:5946
 msgid "_Dual (Even pages left)"
-msgstr ""
+msgstr "_Kép (trang chẵn bên trái)"
 
 #: ../shell/ev-window.c:5947
-#, fuzzy
 #| msgid "Show two pages at once"
 msgid "Show two pages at once with even pages on the left"
-msgstr "Hiển thị đồng thời hai trang"
+msgstr "Hiển thị đồng thời hai trang với trang chẵn bên trái"
 
 #: ../shell/ev-window.c:5949
 msgid "Dual (_Odd pages left)"
-msgstr ""
+msgstr "Ké_p (trang lẻ bên trái)"
 
 #: ../shell/ev-window.c:5950
-#, fuzzy
 #| msgid "Show two pages at once"
 msgid "Show two pages at once with odd pages on the left"
-msgstr "Hiển thị đồng thời hai trang"
+msgstr "Hiển thị đồng thời hai trang với trang lẻ bên trái"
 
 #: ../shell/ev-window.c:5952
 msgid "_Fullscreen"
@@ -1613,7 +1607,7 @@ msgstr "Mở thư mục"
 #. translators: this is the label for toolbar button
 #: ../shell/ev-window.c:6134
 msgid "Send To"
-msgstr ""
+msgstr "Gửi đến"
 
 #. translators: this is the label for toolbar button
 #: ../shell/ev-window.c:6140
@@ -1703,11 +1697,11 @@ msgstr "SỐ"
 
 #: ../shell/main.c:80
 msgid "Named destination to display."
-msgstr ""
+msgstr "Tên đích đến cần hiển thị."
 
 #: ../shell/main.c:80
 msgid "DEST"
-msgstr ""
+msgstr "ĐÍCH"
 
 #: ../shell/main.c:81
 msgid "Run evince in fullscreen mode"
