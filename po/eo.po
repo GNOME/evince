@@ -9,23 +9,25 @@
 # Serge LEBLANC < >, 2010.
 # Michael MORONI < >, 2009, 2010, 2011.
 # Denizo PRISKORN <tradukado@riseup.net>, 2011.
-# Kristjan SCHMIDT <kristjan.schmidt@googlemail.com>, 2010, 2011.
-# Tiffany Antopolski <tiffany.antopolski@gmail.com>, 2011.
+# Tiffany Antopolski <tiffany.antopolski@gmail.com>, 2011, 2012.
+# Kristjan SCHMIDT <kristjan.schmidt@googlemail.com>, 2010, 2011, 2012.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: evince\n"
-"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=evince"
-"&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2011-08-28 12:56+0000\n"
-"PO-Revision-Date: 2011-09-05 10:36-0400\n"
-"Last-Translator: Tiffany Antopolski <tiffany.antopolski@gmail.com>\n"
-"Language-Team: Esperanto\n"
-"Language: eo\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
+"product=evince&keywords=I18N+L10N&component=general\n"
+"POT-Creation-Date: 2012-03-06 21:33+0000\n"
+"PO-Revision-Date: 2012-03-09 19:37+0100\n"
+"Last-Translator: Kristjan SCHMIDT <kristjan.schmidt@googlemail.com>\n"
+"Language-Team: Esperanto <gnome-l10n-eo@lists.launchpad.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Virtaal 0.7.0\n"
+"Language: eo\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"X-Generator: Virtaal 0.7.1\n"
+"X-DamnedLies-Scope: partial\n"
 "X-Launchpad-Export-Date: 2011-05-18 03:08+0000\n"
 "X-Project-Style: gnome\n"
 
@@ -73,12 +75,12 @@ msgstr "Neniu dosiero en arkivo"
 msgid "No images found in archive %s"
 msgstr "Trovis neniun bildon en arkivo %s"
 
-#: ../backend/comics/comics-document.c:794
+#: ../backend/comics/comics-document.c:797
 #, c-format
 msgid "There was an error deleting “%s”."
 msgstr "Okazis eraro dum forigo de \"%s\"."
 
-#: ../backend/comics/comics-document.c:887
+#: ../backend/comics/comics-document.c:890
 #, c-format
 msgid "Error %s"
 msgstr "Eraro %s"
@@ -103,7 +105,7 @@ msgstr ""
 msgid "DjVu Documents"
 msgstr "DjVu-dokumentoj"
 
-#: ../backend/dvi/dvi-document.c:110
+#: ../backend/dvi/dvi-document.c:121
 msgid "DVI document has incorrect format"
 msgstr "La DVI-dokumento havas nekorektan strukturon"
 
@@ -111,65 +113,65 @@ msgstr "La DVI-dokumento havas nekorektan strukturon"
 msgid "DVI Documents"
 msgstr "DVI-dokumentoj"
 
-#: ../backend/pdf/ev-poppler.cc:590
+#: ../backend/pdf/ev-poppler.cc:587
 msgid "This work is in the Public Domain"
 msgstr "Tiu ĉi verko estas publika havaĵo"
 
 #. translators: this is the document security state
-#: ../backend/pdf/ev-poppler.cc:844 ../backend/pdf/ev-poppler.cc:850
+#: ../backend/pdf/ev-poppler.cc:840 ../backend/pdf/ev-poppler.cc:846
 msgid "Yes"
 msgstr "Jes"
 
 #. translators: this is the document security state
-#: ../backend/pdf/ev-poppler.cc:847 ../backend/pdf/ev-poppler.cc:850
+#: ../backend/pdf/ev-poppler.cc:843 ../backend/pdf/ev-poppler.cc:846
 msgid "No"
 msgstr "Ne"
 
-#: ../backend/pdf/ev-poppler.cc:978
+#: ../backend/pdf/ev-poppler.cc:974
 msgid "Type 1"
 msgstr "Tipo 1"
 
-#: ../backend/pdf/ev-poppler.cc:980
+#: ../backend/pdf/ev-poppler.cc:976
 msgid "Type 1C"
 msgstr "Tipo 1C"
 
-#: ../backend/pdf/ev-poppler.cc:982
+#: ../backend/pdf/ev-poppler.cc:978
 msgid "Type 3"
 msgstr "Tipo 3"
 
-#: ../backend/pdf/ev-poppler.cc:984
+#: ../backend/pdf/ev-poppler.cc:980
 msgid "TrueType"
 msgstr "Trutajpa"
 
-#: ../backend/pdf/ev-poppler.cc:986
+#: ../backend/pdf/ev-poppler.cc:982
 msgid "Type 1 (CID)"
 msgstr "Tipo 1 (CID)"
 
-#: ../backend/pdf/ev-poppler.cc:988
+#: ../backend/pdf/ev-poppler.cc:984
 msgid "Type 1C (CID)"
 msgstr "Tipo 1C (CID)"
 
-#: ../backend/pdf/ev-poppler.cc:990
+#: ../backend/pdf/ev-poppler.cc:986
 msgid "TrueType (CID)"
 msgstr "Trutajpa (CID)"
 
-#: ../backend/pdf/ev-poppler.cc:992
+#: ../backend/pdf/ev-poppler.cc:988
 msgid "Unknown font type"
 msgstr "Nekonata tipo de tiparo"
 
-#: ../backend/pdf/ev-poppler.cc:1018
+#: ../backend/pdf/ev-poppler.cc:1014
 msgid "No name"
 msgstr "Neniu nomo"
 
-#: ../backend/pdf/ev-poppler.cc:1026
+#: ../backend/pdf/ev-poppler.cc:1022
 msgid "Embedded subset"
 msgstr "Enkorpigita subaro"
 
-#: ../backend/pdf/ev-poppler.cc:1028
+#: ../backend/pdf/ev-poppler.cc:1024
 msgid "Embedded"
 msgstr "Enkorpigite"
 
-#: ../backend/pdf/ev-poppler.cc:1030
+#: ../backend/pdf/ev-poppler.cc:1026
 msgid "Not embedded"
 msgstr "Ne enkorpigite"
 
@@ -200,12 +202,12 @@ msgstr "Nevalida dokumento"
 msgid "Couldn't save attachment “%s”: %s"
 msgstr "Ne eblis konservi kunsendaĵon “%s”: %s"
 
-#: ../libdocument/ev-attachment.c:372
+#: ../libdocument/ev-attachment.c:373
 #, c-format
 msgid "Couldn't open attachment “%s”: %s"
 msgstr "Ne eblis malfermi kunsendaĵon “%s”: %s"
 
-#: ../libdocument/ev-attachment.c:407
+#: ../libdocument/ev-attachment.c:408
 #, c-format
 msgid "Couldn't open attachment “%s”"
 msgstr "Ne eblis malfermi kunsendaĵon “%s”"
@@ -238,32 +240,38 @@ msgstr "Fiaskis krei provizoran dosierujon: %s"
 msgid "File is not a valid .desktop file"
 msgstr "Dosiero ne estas valida .desktop-dosiero"
 
-#: ../cut-n-paste/smclient/eggdesktopfile.c:188
+#. translators: 'Version' is from a desktop file, and
+#. * should not be translated. '%s' would probably be a
+#. * version number.
+#: ../cut-n-paste/smclient/eggdesktopfile.c:191
 #, c-format
 msgid "Unrecognized desktop file Version '%s'"
 msgstr "Nerekonata versio '%s' de labortabla dosiero"
 
-#: ../cut-n-paste/smclient/eggdesktopfile.c:968
+#: ../cut-n-paste/smclient/eggdesktopfile.c:974
 #, c-format
 msgid "Starting %s"
 msgstr "Lanĉante %s"
 
-#: ../cut-n-paste/smclient/eggdesktopfile.c:1110
+#: ../cut-n-paste/smclient/eggdesktopfile.c:1116
 #, c-format
 msgid "Application does not accept documents on command line"
 msgstr "Aplikaĵo ne akceptas dokumentojn per komandlinio"
 
-#: ../cut-n-paste/smclient/eggdesktopfile.c:1178
+#: ../cut-n-paste/smclient/eggdesktopfile.c:1184
 #, c-format
 msgid "Unrecognized launch option: %d"
 msgstr "Nerekonata lanĉparametro: %d"
 
-#: ../cut-n-paste/smclient/eggdesktopfile.c:1383
+#. translators: The 'Type=Link' string is found in a
+#. * desktop file, and should not be translated.
+#: ../cut-n-paste/smclient/eggdesktopfile.c:1391
 #, c-format
 msgid "Can't pass document URIs to a 'Type=Link' desktop entry"
-msgstr "Ne eblas transdoni dokument-URIojn al labortabla elemento 'Type=Link'"
+msgstr ""
+"Ne eblas transdoni URI-ojn de dokumentoj al labortabla elemento 'Type=Link'"
 
-#: ../cut-n-paste/smclient/eggdesktopfile.c:1404
+#: ../cut-n-paste/smclient/eggdesktopfile.c:1412
 #, c-format
 msgid "Not a launchable item"
 msgstr "Nelanĉebla elemento"
@@ -304,32 +312,32 @@ msgstr "Montri agordojn de la seancoadministrilo"
 #. * produce duplicates, but don't worry about it. If your language
 #. * normally has a mnemonic at the start, please use the _. If not,
 #. * please remove.
-#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:988
+#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:992
 #, c-format
 msgid "Show “_%s”"
 msgstr "Montri \"_%s\""
 
-#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1479
+#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1485
 msgid "_Move on Toolbar"
 msgstr "_Movi sur ilobreton"
 
-#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1480
+#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1486
 msgid "Move the selected item on the toolbar"
 msgstr "Movi la elektitan eron sur la ilobreton"
 
-#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1481
+#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1487
 msgid "_Remove from Toolbar"
 msgstr "Fo_rigi de la ilobreto"
 
-#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1482
+#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1488
 msgid "Remove the selected item from the toolbar"
 msgstr "Forigi la elektitan eron de la ilobreto"
 
-#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1483
+#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1489
 msgid "_Delete Toolbar"
 msgstr "_Forigi ilobreton"
 
-#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1484
+#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1490
 msgid "Remove the selected toolbar"
 msgstr "Forigi la elektitan ilobreton"
 
@@ -338,7 +346,7 @@ msgid "Separator"
 msgstr "Disigilo"
 
 #. translators: this is the label for toolbar button
-#: ../cut-n-paste/zoom-control/ephy-zoom.h:48 ../shell/ev-window.c:6092
+#: ../cut-n-paste/zoom-control/ephy-zoom.h:48 ../shell/ev-window.c:6159
 msgid "Best Fit"
 msgstr "Plej bona adapto"
 
@@ -403,8 +411,8 @@ msgid "6400%"
 msgstr "6400%"
 
 #. Manually set name and icon
-#: ../data/evince.desktop.in.in.h:1 ../shell/ev-window.c:4845
-#: ../shell/ev-window-title.c:157 ../shell/main.c:310
+#: ../data/evince.desktop.in.in.h:1 ../shell/ev-window.c:4899
+#: ../shell/ev-window-title.c:157 ../shell/main.c:317
 #, c-format
 msgid "Document Viewer"
 msgstr "Dokumentmontrilo"
@@ -422,6 +430,14 @@ msgid "Override document restrictions, like restriction to copy or to print."
 msgstr ""
 "Superskribi rajtlimigojn de dokumento, kiel rajtlimigo por kopii aŭ presi."
 
+#: ../data/org.gnome.Evince.gschema.xml.in.h:3
+msgid "Automatically reload the document"
+msgstr "Autoreŝargi la dokumenton"
+
+#: ../data/org.gnome.Evince.gschema.xml.in.h:4
+msgid "The document is automatically reloaded on file change."
+msgstr "La dokumento estas autoreŝargata kiam la dosiero ŝanĝas."
+
 #: ../previewer/ev-previewer.c:44
 msgid "Delete the temporary file"
 msgstr "Forigi la provizorajn dosierojn"
@@ -430,11 +446,11 @@ msgstr "Forigi la provizorajn dosierojn"
 msgid "Print settings file"
 msgstr "Dosiero de la presagordoj"
 
-#: ../previewer/ev-previewer.c:144 ../previewer/ev-previewer.c:178
+#: ../previewer/ev-previewer.c:147 ../previewer/ev-previewer.c:181
 msgid "GNOME Document Previewer"
 msgstr "Dokument-antaŭrigardilo de GNOMEo"
 
-#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3311
+#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3323
 msgid "Failed to print document"
 msgstr "Malsukcesis presi la dokumenton"
 
@@ -444,27 +460,27 @@ msgid "The selected printer '%s' could not be found"
 msgstr "La elektita presilo '%s' ne estas trovita"
 
 #. Go menu
-#: ../previewer/ev-previewer-window.c:284 ../shell/ev-window.c:5784
+#: ../previewer/ev-previewer-window.c:284 ../shell/ev-window.c:5843
 msgid "_Previous Page"
 msgstr "_Antaŭa paĝo"
 
-#: ../previewer/ev-previewer-window.c:285 ../shell/ev-window.c:5785
+#: ../previewer/ev-previewer-window.c:285 ../shell/ev-window.c:5844
 msgid "Go to the previous page"
 msgstr "Iri al la antaŭa paĝo"
 
-#: ../previewer/ev-previewer-window.c:287 ../shell/ev-window.c:5787
+#: ../previewer/ev-previewer-window.c:287 ../shell/ev-window.c:5846
 msgid "_Next Page"
 msgstr "_Sekva paĝo"
 
-#: ../previewer/ev-previewer-window.c:288 ../shell/ev-window.c:5788
+#: ../previewer/ev-previewer-window.c:288 ../shell/ev-window.c:5847
 msgid "Go to the next page"
 msgstr "Iri al la sekva paĝo"
 
-#: ../previewer/ev-previewer-window.c:291 ../shell/ev-window.c:5771
+#: ../previewer/ev-previewer-window.c:291 ../shell/ev-window.c:5830
 msgid "Enlarge the document"
 msgstr "Pligrandigi la dokumenton"
 
-#: ../previewer/ev-previewer-window.c:294 ../shell/ev-window.c:5774
+#: ../previewer/ev-previewer-window.c:294 ../shell/ev-window.c:5833
 msgid "Shrink the document"
 msgstr "Malpligrandigi la dokumenton"
 
@@ -472,31 +488,31 @@ msgstr "Malpligrandigi la dokumenton"
 msgid "Print"
 msgstr "Presi"
 
-#: ../previewer/ev-previewer-window.c:298 ../shell/ev-window.c:5740
+#: ../previewer/ev-previewer-window.c:298 ../shell/ev-window.c:5799
 msgid "Print this document"
 msgstr "Presi tiun dokumenton"
 
-#: ../previewer/ev-previewer-window.c:342 ../shell/ev-window.c:5898
+#: ../previewer/ev-previewer-window.c:342 ../shell/ev-window.c:5960
 msgid "_Best Fit"
 msgstr "_Plej bona adapto"
 
-#: ../previewer/ev-previewer-window.c:343 ../shell/ev-window.c:5899
+#: ../previewer/ev-previewer-window.c:343 ../shell/ev-window.c:5961
 msgid "Make the current document fill the window"
 msgstr "Plenumi la fenestron per la aktuala dokumento"
 
-#: ../previewer/ev-previewer-window.c:345 ../shell/ev-window.c:5901
+#: ../previewer/ev-previewer-window.c:345 ../shell/ev-window.c:5963
 msgid "Fit Page _Width"
 msgstr "Laŭ _larĝo de paĝo"
 
-#: ../previewer/ev-previewer-window.c:346 ../shell/ev-window.c:5902
+#: ../previewer/ev-previewer-window.c:346 ../shell/ev-window.c:5964
 msgid "Make the current document fill the window width"
 msgstr "Fari ke la aktuala dokumento plenumos la larĝon de la fenestro"
 
-#: ../previewer/ev-previewer-window.c:558 ../shell/ev-window.c:6010
+#: ../previewer/ev-previewer-window.c:558 ../shell/ev-window.c:6072
 msgid "Page"
 msgstr "Paĝo"
 
-#: ../previewer/ev-previewer-window.c:559 ../shell/ev-window.c:6011
+#: ../previewer/ev-previewer-window.c:559 ../shell/ev-window.c:6073
 msgid "Select Page"
 msgstr "Elekti paĝon"
 
@@ -517,7 +533,7 @@ msgid "Subject:"
 msgstr "Temo:"
 
 #: ../properties/ev-properties-view.c:63
-#: ../shell/ev-annotation-properties-dialog.c:159
+#: ../shell/ev-annotation-properties-dialog.c:154
 msgid "Author:"
 msgstr "Aŭtoro:"
 
@@ -561,7 +577,7 @@ msgstr "Sekureco:"
 msgid "Paper Size:"
 msgstr "Papergrando:"
 
-#: ../properties/ev-properties-view.c:188 ../libview/ev-print-operation.c:1892
+#: ../properties/ev-properties-view.c:187 ../libview/ev-print-operation.c:1892
 msgid "None"
 msgstr "Neniu"
 
@@ -571,30 +587,30 @@ msgstr "Neniu"
 #. * Do *not* translate it to "predefinito:mm", if it
 #. * it isn't default:mm or default:inch it will not work
 #.
-#: ../properties/ev-properties-view.c:217
+#: ../properties/ev-properties-view.c:215
 msgid "default:mm"
 msgstr "default:mm"
 
-#: ../properties/ev-properties-view.c:261
+#: ../properties/ev-properties-view.c:259
 #, c-format
 msgid "%.0f × %.0f mm"
 msgstr "%.0f × %.0f mm"
 
-#: ../properties/ev-properties-view.c:265
+#: ../properties/ev-properties-view.c:263
 #, c-format
 msgid "%.2f × %.2f inch"
 msgstr "%.2f × %.2f colo"
 
 #. Note to translators: first placeholder is the paper name (eg.
 #. * A4), second placeholder is the paper size (eg. 297x210 mm)
-#: ../properties/ev-properties-view.c:289
+#: ../properties/ev-properties-view.c:287
 #, c-format
 msgid "%s, Portrait (%s)"
 msgstr "%s, Portreto (%s)"
 
 #. Note to translators: first placeholder is the paper name (eg.
 #. * A4), second placeholder is the paper size (eg. 297x210 mm)
-#: ../properties/ev-properties-view.c:296
+#: ../properties/ev-properties-view.c:294
 #, c-format
 msgid "%s, Landscape (%s)"
 msgstr "%s, Pejzaĝo (%s)"
@@ -611,7 +627,7 @@ msgstr "de %d"
 
 #. Create tree view
 #: ../libview/ev-loading-window.c:76 ../shell/ev-sidebar-annotations.c:133
-#: ../shell/ev-sidebar-layers.c:125 ../shell/ev-sidebar-links.c:262
+#: ../shell/ev-sidebar-layers.c:125 ../shell/ev-sidebar-links.c:260
 msgid "Loading…"
 msgstr "Ŝargante…"
 
@@ -709,7 +725,7 @@ msgstr ""
 msgid "Page Handling"
 msgstr "Paĝtraktado"
 
-#: ../libview/ev-jobs.c:1573
+#: ../libview/ev-jobs.c:1572
 #, c-format
 msgid "Failed to print page %d: %s"
 msgstr "Fiaskis presi la paĝon %d: %s"
@@ -738,160 +754,160 @@ msgstr "Vido de dokumento"
 msgid "Jump to page:"
 msgstr "Salti al la paĝo:"
 
-#: ../libview/ev-view-presentation.c:999
+#: ../libview/ev-view-presentation.c:997
 msgid "End of presentation. Click to exit."
 msgstr "Jen la fino de la prezentaĵo. Klaku por eliri."
 
-#: ../libview/ev-view.c:1834
+#: ../libview/ev-view.c:1816
 msgid "Go to first page"
 msgstr "Iri al la unua paĝo"
 
-#: ../libview/ev-view.c:1836
+#: ../libview/ev-view.c:1818
 msgid "Go to previous page"
 msgstr "Iri al la antaŭa paĝo"
 
-#: ../libview/ev-view.c:1838
+#: ../libview/ev-view.c:1820
 msgid "Go to next page"
 msgstr "Iri al la sekva paĝo"
 
-#: ../libview/ev-view.c:1840
+#: ../libview/ev-view.c:1822
 msgid "Go to last page"
 msgstr "Iri al la lasta paĝo"
 
-#: ../libview/ev-view.c:1842
+#: ../libview/ev-view.c:1824
 msgid "Go to page"
 msgstr "Iri al paĝo"
 
-#: ../libview/ev-view.c:1844
+#: ../libview/ev-view.c:1826
 msgid "Find"
 msgstr "Serĉi"
 
-#: ../libview/ev-view.c:1872
+#: ../libview/ev-view.c:1854
 #, c-format
 msgid "Go to page %s"
 msgstr "Iri al paĝo %s"
 
-#: ../libview/ev-view.c:1878
+#: ../libview/ev-view.c:1860
 #, c-format
 msgid "Go to %s on file “%s”"
 msgstr "Iri al %s en dosiero “%s”"
 
-#: ../libview/ev-view.c:1881
+#: ../libview/ev-view.c:1863
 #, c-format
 msgid "Go to file “%s”"
 msgstr "Iri al dosiero “%s”"
 
-#: ../libview/ev-view.c:1889
+#: ../libview/ev-view.c:1871
 #, c-format
 msgid "Launch %s"
 msgstr "Lanĉi %s"
 
-#: ../shell/eggfindbar.c:305
+#: ../shell/eggfindbar.c:310
 msgid "Find:"
 msgstr "Serĉi:"
 
-#: ../shell/eggfindbar.c:314 ../shell/ev-window.c:5757
+#: ../shell/eggfindbar.c:319 ../shell/ev-window.c:5816
 msgid "Find Pre_vious"
-msgstr "Serĉi la _antaŭan"
+msgstr "Serĉi la _antaŭan"
 
-#: ../shell/eggfindbar.c:318
+#: ../shell/eggfindbar.c:323
 msgid "Find previous occurrence of the search string"
 msgstr "Trovi antaŭan aperon de la serĉata ĉeno"
 
-#: ../shell/eggfindbar.c:322 ../shell/ev-window.c:5755
+#: ../shell/eggfindbar.c:327 ../shell/ev-window.c:5814
 msgid "Find Ne_xt"
-msgstr "Serĉi la se_kvan"
+msgstr "Serĉi la se_kvan"
 
-#: ../shell/eggfindbar.c:326
+#: ../shell/eggfindbar.c:331
 msgid "Find next occurrence of the search string"
 msgstr "Trovi sekvan aperon de la serĉata ĉeno"
 
-#: ../shell/eggfindbar.c:333
+#: ../shell/eggfindbar.c:338
 msgid "C_ase Sensitive"
 msgstr "Us_klecodistinga"
 
-#: ../shell/eggfindbar.c:336
+#: ../shell/eggfindbar.c:341
 msgid "Toggle case sensitive search"
-msgstr "Baskuli usklecodistingan serĉon"
+msgstr "Baskuligi usklecodistingan serĉon"
 
-#: ../shell/ev-annotation-properties-dialog.c:97
+#: ../shell/ev-annotation-properties-dialog.c:94
 msgid "Icon:"
 msgstr "Piktogramo:"
 
-#: ../shell/ev-annotation-properties-dialog.c:104
+#: ../shell/ev-annotation-properties-dialog.c:100
 msgid "Note"
 msgstr "Noto"
 
-#: ../shell/ev-annotation-properties-dialog.c:105
+#: ../shell/ev-annotation-properties-dialog.c:101
 msgid "Comment"
 msgstr "Komento"
 
-#: ../shell/ev-annotation-properties-dialog.c:106
+#: ../shell/ev-annotation-properties-dialog.c:102
 msgid "Key"
 msgstr "Ŝlosilo"
 
-#: ../shell/ev-annotation-properties-dialog.c:107
+#: ../shell/ev-annotation-properties-dialog.c:103
 msgid "Help"
 msgstr "Helpo"
 
-#: ../shell/ev-annotation-properties-dialog.c:108
+#: ../shell/ev-annotation-properties-dialog.c:104
 msgid "New Paragraph"
 msgstr "Nova alineo"
 
-#: ../shell/ev-annotation-properties-dialog.c:109
+#: ../shell/ev-annotation-properties-dialog.c:105
 msgid "Paragraph"
 msgstr "Alineo"
 
-#: ../shell/ev-annotation-properties-dialog.c:110
+#: ../shell/ev-annotation-properties-dialog.c:106
 msgid "Insert"
 msgstr "Enmeti"
 
-#: ../shell/ev-annotation-properties-dialog.c:111
+#: ../shell/ev-annotation-properties-dialog.c:107
 msgid "Cross"
 msgstr "Kruco"
 
-#: ../shell/ev-annotation-properties-dialog.c:112
+#: ../shell/ev-annotation-properties-dialog.c:108
 msgid "Circle"
 msgstr "Cirklo"
 
-#: ../shell/ev-annotation-properties-dialog.c:113
+#: ../shell/ev-annotation-properties-dialog.c:109
 msgid "Unknown"
 msgstr "Nekonate"
 
-#: ../shell/ev-annotation-properties-dialog.c:139
+#: ../shell/ev-annotation-properties-dialog.c:134
 msgid "Annotation Properties"
 msgstr "Notaj ecoj"
 
-#: ../shell/ev-annotation-properties-dialog.c:172
+#: ../shell/ev-annotation-properties-dialog.c:165
 msgid "Color:"
 msgstr "Koloro:"
 
-#: ../shell/ev-annotation-properties-dialog.c:184
+#: ../shell/ev-annotation-properties-dialog.c:175
 msgid "Style:"
 msgstr "Stilo:"
 
-#: ../shell/ev-annotation-properties-dialog.c:200
+#: ../shell/ev-annotation-properties-dialog.c:190
 msgid "Transparent"
 msgstr "Travideble"
 
 # laŭ la vortaro de Wells (2010)
-#: ../shell/ev-annotation-properties-dialog.c:207
+#: ../shell/ev-annotation-properties-dialog.c:197
 msgid "Opaque"
 msgstr "Maldiafana"
 
-#: ../shell/ev-annotation-properties-dialog.c:218
+#: ../shell/ev-annotation-properties-dialog.c:207
 msgid "Initial window state:"
 msgstr "Dekomenca fenstrostato:"
 
-#: ../shell/ev-annotation-properties-dialog.c:225
+#: ../shell/ev-annotation-properties-dialog.c:213
 msgid "Open"
 msgstr "Malfermi"
 
-#: ../shell/ev-annotation-properties-dialog.c:226
+#: ../shell/ev-annotation-properties-dialog.c:214
 msgid "Close"
 msgstr "Fermi"
 
-#: ../shell/ev-application.c:1122
+#: ../shell/ev-application.c:1133
 msgid "Running in presentation mode"
 msgstr "Lanĉante prezentaĵe"
 
@@ -904,44 +920,44 @@ msgstr "Pasvorto por dokumento %s"
 msgid "Open a recently used document"
 msgstr "Malfermi lasttempe uzita dokumenton"
 
-#: ../shell/ev-password-view.c:144
+#: ../shell/ev-password-view.c:142
 msgid ""
 "This document is locked and can only be read by entering the correct "
 "password."
 msgstr ""
 "Tiu dokumento estas ŝlosita kaj nur estos legebla per la ĝusta pasvorto."
 
-#: ../shell/ev-password-view.c:153 ../shell/ev-password-view.c:271
+#: ../shell/ev-password-view.c:151 ../shell/ev-password-view.c:269
 msgid "_Unlock Document"
 msgstr "_Malŝlosi dokumenton"
 
-#: ../shell/ev-password-view.c:263
+#: ../shell/ev-password-view.c:261
 msgid "Enter password"
 msgstr "Enigi la pasvorton"
 
-#: ../shell/ev-password-view.c:303
+#: ../shell/ev-password-view.c:301
 msgid "Password required"
 msgstr "Pasvorto bezonatas"
 
-#: ../shell/ev-password-view.c:304
+#: ../shell/ev-password-view.c:302
 #, c-format
 msgid ""
 "The document “%s” is locked and requires a password before it can be opened."
 msgstr "La dokumento “%s” estas ŝlosita kaj bezonas pasvorton por malfermado."
 
-#: ../shell/ev-password-view.c:334
+#: ../shell/ev-password-view.c:332
 msgid "_Password:"
 msgstr "_Pasvorto:"
 
-#: ../shell/ev-password-view.c:367
+#: ../shell/ev-password-view.c:363
 msgid "Forget password _immediately"
 msgstr "_Forgesi pasvorton tuj"
 
-#: ../shell/ev-password-view.c:379
+#: ../shell/ev-password-view.c:375
 msgid "Remember password until you _log out"
 msgstr "Memori la pasvorton ĝis via e_lsalutado"
 
-#: ../shell/ev-password-view.c:391
+#: ../shell/ev-password-view.c:387
 msgid "Remember _forever"
 msgstr "Memori _porĉiame"
 
@@ -1012,29 +1028,29 @@ msgstr "La dokumento ne enhavas notojn"
 msgid "Page %d"
 msgstr "Paĝo %d"
 
-#: ../shell/ev-sidebar-attachments.c:695
+#: ../shell/ev-sidebar-attachments.c:696
 msgid "Attachments"
 msgstr "Kunsendaĵoj"
 
-#: ../shell/ev-sidebar-bookmarks.c:152
+#: ../shell/ev-sidebar-bookmarks.c:153
 msgid "_Open Bookmark"
 msgstr "_Malfermi legosignon"
 
-#: ../shell/ev-sidebar-bookmarks.c:154
+#: ../shell/ev-sidebar-bookmarks.c:155
 msgid "_Rename Bookmark"
 msgstr "_Alinomi legosignon"
 
-#: ../shell/ev-sidebar-bookmarks.c:156
+#: ../shell/ev-sidebar-bookmarks.c:157
 msgid "_Remove Bookmark"
 msgstr "Fo_rigi la legosignon"
 
-#: ../shell/ev-sidebar-bookmarks.c:311 ../shell/ev-window.c:922
-#: ../shell/ev-window.c:4599
+#: ../shell/ev-sidebar-bookmarks.c:312 ../shell/ev-window.c:926
+#: ../shell/ev-window.c:4627
 #, c-format
 msgid "Page %s"
 msgstr "Paĝo %s"
 
-#: ../shell/ev-sidebar-bookmarks.c:605
+#: ../shell/ev-sidebar-bookmarks.c:606
 msgid "Bookmarks"
 msgstr "Legosignoj"
 
@@ -1042,118 +1058,122 @@ msgstr "Legosignoj"
 msgid "Layers"
 msgstr "Tavoloj"
 
-#: ../shell/ev-sidebar-links.c:338
+#: ../shell/ev-sidebar-links.c:336
 msgid "Print…"
 msgstr "Presi…"
 
-#: ../shell/ev-sidebar-links.c:722
+#: ../shell/ev-sidebar-links.c:720
 msgid "Index"
 msgstr "Indekso"
 
-#: ../shell/ev-sidebar-thumbnails.c:936
+#: ../shell/ev-sidebar-thumbnails.c:933
 msgid "Thumbnails"
 msgstr "Miniaturoj"
 
-#: ../shell/ev-window.c:919
+#: ../shell/ev-window.c:923
 #, c-format
 msgid "Page %s — %s"
 msgstr "Paĝo %s — %s"
 
-#: ../shell/ev-window.c:1499
+#: ../shell/ev-window.c:1513
 msgid "The document contains no pages"
 msgstr "Tiu dokumento ne enhavas paĝojn"
 
-#: ../shell/ev-window.c:1502
+#: ../shell/ev-window.c:1516
 msgid "The document contains only empty pages"
 msgstr "La dokumento enhavas nur malplenajn paĝojn"
 
-#: ../shell/ev-window.c:1714 ../shell/ev-window.c:1880
+#: ../shell/ev-window.c:1731 ../shell/ev-window.c:1897
 msgid "Unable to open document"
 msgstr "Ne eblis malfermi la dokumenton"
 
-#: ../shell/ev-window.c:1851
+#: ../shell/ev-window.c:1868
 #, c-format
 msgid "Loading document from “%s”"
 msgstr "Ŝargante dokumenton de \"%s\""
 
-#: ../shell/ev-window.c:1993 ../shell/ev-window.c:2286
+#: ../shell/ev-window.c:2010 ../shell/ev-window.c:2304
 #, c-format
 msgid "Downloading document (%d%%)"
 msgstr "Elŝutante la dokumenton (%d%%)"
 
-#: ../shell/ev-window.c:2026
+#: ../shell/ev-window.c:2043
 msgid "Failed to load remote file."
 msgstr "Elŝuto de fora dosiero fiaskis."
 
-#: ../shell/ev-window.c:2230
+#: ../shell/ev-window.c:2248
 #, c-format
 msgid "Reloading document from %s"
 msgstr "Reŝargi la dokumenton de %s"
 
-#: ../shell/ev-window.c:2262
+#: ../shell/ev-window.c:2280
 msgid "Failed to reload document."
 msgstr "Malsukcesis reŝargi dokumenton."
 
-#: ../shell/ev-window.c:2417
+#: ../shell/ev-window.c:2423
 msgid "Open Document"
 msgstr "Malfermi dokumenton"
 
-#: ../shell/ev-window.c:2715
+#: ../shell/ev-window.c:2720
 #, c-format
 msgid "Saving document to %s"
 msgstr "Konservas la dokumenton al %s"
 
-#: ../shell/ev-window.c:2718
+#: ../shell/ev-window.c:2723
 #, c-format
 msgid "Saving attachment to %s"
 msgstr "Konservi la kunsendaĵon al %s"
 
-#: ../shell/ev-window.c:2721
+#: ../shell/ev-window.c:2726
 #, c-format
 msgid "Saving image to %s"
 msgstr "Konservi la bildon al %s"
 
-#: ../shell/ev-window.c:2765 ../shell/ev-window.c:2865
+#: ../shell/ev-window.c:2770 ../shell/ev-window.c:2870
 #, c-format
 msgid "The file could not be saved as “%s”."
-msgstr "La dosiero ne povas esti konservita kiel “%s”."
+msgstr "Ne eblas konservi la dosieron kiel “%s”."
 
-#: ../shell/ev-window.c:2796
+#: ../shell/ev-window.c:2801
 #, c-format
 msgid "Uploading document (%d%%)"
 msgstr "Alŝuti dokumenton (%d%%)"
 
-#: ../shell/ev-window.c:2800
+#: ../shell/ev-window.c:2805
 #, c-format
 msgid "Uploading attachment (%d%%)"
 msgstr "Alŝutante la kunsendaĵon (%d%%)"
 
-#: ../shell/ev-window.c:2804
+#: ../shell/ev-window.c:2809
 #, c-format
 msgid "Uploading image (%d%%)"
 msgstr "Alŝutante bildon (%d%%)"
 
-#: ../shell/ev-window.c:2928
+#: ../shell/ev-window.c:2918
 msgid "Save a Copy"
 msgstr "Konservi kopion"
 
-#: ../shell/ev-window.c:2994
+#: ../shell/ev-window.c:2975
+msgid "Could not send current document"
+msgstr "Ne eblis sendi aktualan dokumenton"
+
+#: ../shell/ev-window.c:3006
 msgid "Could not open the containing folder"
 msgstr "Ne eblas malfermi la enhavantan dosierujon"
 
-#: ../shell/ev-window.c:3255
+#: ../shell/ev-window.c:3267
 #, c-format
 msgid "%d pending job in queue"
 msgid_plural "%d pending jobs in queue"
 msgstr[0] "%d okazota tasko en la atendovico"
 msgstr[1] "%d okazotaj taskoj en la atendovico"
 
-#: ../shell/ev-window.c:3368
+#: ../shell/ev-window.c:3380
 #, c-format
 msgid "Printing job “%s”"
 msgstr "Prestasko “%s”"
 
-#: ../shell/ev-window.c:3545
+#: ../shell/ev-window.c:3557
 msgid ""
 "Document contains form fields that have been filled out. If you don't save a "
 "copy, changes will be permanently lost."
@@ -1161,7 +1181,7 @@ msgstr ""
 "La dokumento entenas formularkampojn kiuj estas plenigitaj. Se vi ne "
 "konservas kopion, la ŝanĝoj malaperos por ĉiam."
 
-#: ../shell/ev-window.c:3549
+#: ../shell/ev-window.c:3561
 msgid ""
 "Document contains new or modified annotations. If you don't save a copy, "
 "changes will be permanently lost."
@@ -1169,20 +1189,20 @@ msgstr ""
 "La dokumento enhavas novajn aŭ redaktitajn notojn. Se vi ne konservas "
 "kopion, la ŝanĝoj perdiĝos. "
 
-#: ../shell/ev-window.c:3556
+#: ../shell/ev-window.c:3568
 #, c-format
 msgid "Save a copy of document “%s” before closing?"
 msgstr "Ĉu konservi kopion de dokumento “%s” antaŭ fermo?"
 
-#: ../shell/ev-window.c:3575
+#: ../shell/ev-window.c:3587
 msgid "Close _without Saving"
 msgstr "Fermi _sen konservado"
 
-#: ../shell/ev-window.c:3579
+#: ../shell/ev-window.c:3591
 msgid "Save a _Copy"
 msgstr "Konservi _kopion"
 
-#: ../shell/ev-window.c:3653
+#: ../shell/ev-window.c:3665
 #, c-format
 msgid "Wait until print job “%s” finishes before closing?"
 msgstr "Ĉu atendi ĝis la fino de la prestasko \"%s\" antaŭ fermo?"
@@ -1190,40 +1210,37 @@ msgstr "Ĉu atendi ĝis la fino de la prestasko \"%s\" antaŭ fermo?"
 #. TRANS: the singular form is not really used as n_print_jobs > 1
 #. but some languages distinguish between different plurals forms,
 #. so the ngettext is needed.
-#: ../shell/ev-window.c:3659
+#: ../shell/ev-window.c:3671
 #, c-format
-#| msgid ""
-#| "There are %d print jobs active. Wait until print finishes before closing?"
 msgid "There is %d print job active. Wait until print finishes before closing?"
 msgid_plural ""
 "There are %d print jobs active. Wait until print finishes before closing?"
 msgstr[0] ""
 "Estas %d aktiva prestasko. Ĉu atendi ĝis la fino de la presado antaŭ fermo?"
 msgstr[1] ""
-"Estas %d aktivaj prestaskoj. Ĉu atendi ĝis la fino de la presado antaŭ "
-"fermo?"
+"Estas %d aktivaj prestaskoj. Ĉu atendi ĝis la fino de la presado antaŭ fermo?"
 
-#: ../shell/ev-window.c:3674
+#: ../shell/ev-window.c:3686
 msgid "If you close the window, pending print jobs will not be printed."
 msgstr "Se vi fermos la fenestron, okazontaj prestaskoj ne estos presotaj."
 
-#: ../shell/ev-window.c:3678
+#: ../shell/ev-window.c:3690
 msgid "Cancel _print and Close"
 msgstr "Nuligi _presadon kaj eliri"
 
-#: ../shell/ev-window.c:3682
+#: ../shell/ev-window.c:3694
 msgid "Close _after Printing"
 msgstr "Fermi _post presado"
 
-#: ../shell/ev-window.c:4345 ../shell/ev-window.c:4629
+#: ../shell/ev-window.c:4371 ../shell/ev-window.c:4657
 msgid "There was an error displaying help"
 msgstr "Eraro okazis dum montrado de helpo"
 
-#: ../shell/ev-window.c:4373
+#: ../shell/ev-window.c:4399
 msgid "Toolbar Editor"
 msgstr "Redaktilo de ilobreto"
 
-#: ../shell/ev-window.c:4841
+#: ../shell/ev-window.c:4895
 #, c-format
 msgid ""
 "Document Viewer\n"
@@ -1232,7 +1249,7 @@ msgstr ""
 "Dokumentrigardilo\n"
 "Uzante %s (%s)"
 
-#: ../shell/ev-window.c:4874
+#: ../shell/ev-window.c:4928
 msgid ""
 "Evince is free software; you can redistribute it and/or modify it under the "
 "terms of the GNU General Public License as published by the Free Software "
@@ -1244,7 +1261,7 @@ msgstr ""
 "eldonita de Free Software Foundation; aŭ versio 2 de la permesilo, aŭ (laŭ "
 "via volo) iu sekva versio.\n"
 
-#: ../shell/ev-window.c:4878
+#: ../shell/ev-window.c:4932
 msgid ""
 "Evince is distributed in the hope that it will be useful, but WITHOUT ANY "
 "WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS "
@@ -1256,7 +1273,7 @@ msgstr ""
 "DIFINITA CELO. Vidu la Ĝeneralan Publikan Permesilon de GNU por pli da "
 "detaloj.\n"
 
-#: ../shell/ev-window.c:4882
+#: ../shell/ev-window.c:4936
 msgid ""
 "You should have received a copy of the GNU General Public License along with "
 "Evince; if not, write to the Free Software Foundation, Inc., 51 Franklin "
@@ -1266,15 +1283,15 @@ msgstr ""
 "Evinco; se ne, skribu al Free Software Foundation, Inc., 51 Franklin Street, "
 "Fifth Floor, Boston, MA 02110-1301  USA\n"
 
-#: ../shell/ev-window.c:4907
+#: ../shell/ev-window.c:4961
 msgid "Evince"
 msgstr "Evinco"
 
-#: ../shell/ev-window.c:4910
+#: ../shell/ev-window.c:4964
 msgid "© 1996–2010 The Evince authors"
 msgstr "© 1996-2010 La aŭtoroj de Evinco"
 
-#: ../shell/ev-window.c:4916
+#: ../shell/ev-window.c:4970
 msgid "translator-credits"
 msgstr ""
 "Dominique PELLÉ <dominique.pelle@free.fr>\n"
@@ -1292,363 +1309,382 @@ msgstr ""
 #. TRANS: Sometimes this could be better translated as
 #. "%d hit(s) on this page".  Therefore this string
 #. contains plural cases.
-#: ../shell/ev-window.c:5184
+#: ../shell/ev-window.c:5238
 #, c-format
 msgid "%d found on this page"
 msgid_plural "%d found on this page"
 msgstr[0] "Trovis %d en tiu ĉi paĝo"
 msgstr[1] "Trovis %d en tiu ĉi paĝo"
 
-#: ../shell/ev-window.c:5189
+#: ../shell/ev-window.c:5243
 msgid "Not found"
 msgstr "Ne trovite"
 
-#: ../shell/ev-window.c:5195
+#: ../shell/ev-window.c:5249
 #, c-format
 msgid "%3d%% remaining to search"
 msgstr "Restas %3d%% por serĉi"
 
-#: ../shell/ev-window.c:5719
+#: ../shell/ev-window.c:5775
 msgid "_File"
 msgstr "_Dosiero"
 
-#: ../shell/ev-window.c:5720
+#: ../shell/ev-window.c:5776
 msgid "_Edit"
 msgstr "R_edakti"
 
-#: ../shell/ev-window.c:5721
+#: ../shell/ev-window.c:5777
 msgid "_View"
 msgstr "_Vido"
 
-#: ../shell/ev-window.c:5722
+#: ../shell/ev-window.c:5778
 msgid "_Go"
 msgstr "_Ek"
 
-#: ../shell/ev-window.c:5723
+#: ../shell/ev-window.c:5779
 msgid "_Bookmarks"
 msgstr "_Legosignoj"
 
-#: ../shell/ev-window.c:5724
+#: ../shell/ev-window.c:5780
 msgid "_Help"
 msgstr "_Helpo"
 
 #. File menu
-#: ../shell/ev-window.c:5727 ../shell/ev-window.c:6050
+#: ../shell/ev-window.c:5783 ../shell/ev-window.c:6112
 msgid "_Open…"
 msgstr "_Malfermi…"
 
-#: ../shell/ev-window.c:5728 ../shell/ev-window.c:6051
+#: ../shell/ev-window.c:5784 ../shell/ev-window.c:6113
 msgid "Open an existing document"
 msgstr "Malfermi ekzistan dokumenton"
 
-#: ../shell/ev-window.c:5730
+#: ../shell/ev-window.c:5786
 msgid "Op_en a Copy"
 msgstr "Malf_ermi kopion"
 
-#: ../shell/ev-window.c:5731
+#: ../shell/ev-window.c:5787
 msgid "Open a copy of the current document in a new window"
 msgstr "Malfermi kopion de la aktuala dokumento en nova fenestro"
 
-#: ../shell/ev-window.c:5733
+#: ../shell/ev-window.c:5789
 msgid "_Save a Copy…"
 msgstr "Kon_servi kopion…"
 
-#: ../shell/ev-window.c:5734
+#: ../shell/ev-window.c:5790
 msgid "Save a copy of the current document"
 msgstr "Konservi kopion de la aktuala dokumento"
 
-#: ../shell/ev-window.c:5736
+#: ../shell/ev-window.c:5792
+msgid "Send _To..."
+msgstr "Sendi _al..."
+
+#: ../shell/ev-window.c:5793
+msgid "Send current document by mail, instant message..."
+msgstr "Sendi aktualan dokumenton per poŝto, tujmesaĝo..."
+
+#: ../shell/ev-window.c:5795
 msgid "Open Containing _Folder"
 msgstr "Malfermi enhavantan _dosierujon"
 
-#: ../shell/ev-window.c:5737
+#: ../shell/ev-window.c:5796
 msgid "Show the folder which contains this file in the file manager"
 msgstr "Montri la dosierujon kiu enhavas la dosieron en la dosieradministrilo"
 
-#: ../shell/ev-window.c:5739
+#: ../shell/ev-window.c:5798
 msgid "_Print…"
 msgstr "_Presi…"
 
-#: ../shell/ev-window.c:5742
+#: ../shell/ev-window.c:5801
 msgid "P_roperties"
 msgstr "At_ributoj"
 
-#: ../shell/ev-window.c:5750
+#: ../shell/ev-window.c:5809
 msgid "Select _All"
 msgstr "_Elekti ĉiujn"
 
-#: ../shell/ev-window.c:5752
+#: ../shell/ev-window.c:5811
 msgid "_Find…"
 msgstr "_Serĉi…"
 
-#: ../shell/ev-window.c:5753
+#: ../shell/ev-window.c:5812
 msgid "Find a word or phrase in the document"
 msgstr "Serĉi vorton aŭ frazon en la dokumento"
 
-#: ../shell/ev-window.c:5759
+#: ../shell/ev-window.c:5818
 msgid "T_oolbar"
 msgstr "Il_obreto"
 
-#: ../shell/ev-window.c:5761
+#: ../shell/ev-window.c:5820
 msgid "Rotate _Left"
 msgstr "Turni _maldekstren"
 
-#: ../shell/ev-window.c:5763
+#: ../shell/ev-window.c:5822
 msgid "Rotate _Right"
 msgstr "Turni _dekstren"
 
-#: ../shell/ev-window.c:5765
+#: ../shell/ev-window.c:5824
 msgid "Save Current Settings as _Default"
 msgstr "Konservi aktualajn agordoj kiel _defaŭlto"
 
-#: ../shell/ev-window.c:5776
+#: ../shell/ev-window.c:5835
 msgid "_Reload"
 msgstr "_Reŝargi"
 
-#: ../shell/ev-window.c:5777
+#: ../shell/ev-window.c:5836
 msgid "Reload the document"
 msgstr "Reŝargi la dokumenton"
 
-#: ../shell/ev-window.c:5780
+#: ../shell/ev-window.c:5839
 msgid "Auto_scroll"
 msgstr "Aŭtomata _rulumado"
 
-#: ../shell/ev-window.c:5790
+#: ../shell/ev-window.c:5849
 msgid "_First Page"
 msgstr "_Unua paĝo"
 
-#: ../shell/ev-window.c:5791
+#: ../shell/ev-window.c:5850
 msgid "Go to the first page"
 msgstr "Iri al la unua paĝo"
 
-#: ../shell/ev-window.c:5793
+#: ../shell/ev-window.c:5852
 msgid "_Last Page"
 msgstr "_Lasta paĝo"
 
-#: ../shell/ev-window.c:5794
+#: ../shell/ev-window.c:5853
 msgid "Go to the last page"
 msgstr "Iri al la lasta paĝo"
 
-#: ../shell/ev-window.c:5796
-#| msgid "Go to page"
+#: ../shell/ev-window.c:5855
 msgid "Go to Pa_ge"
 msgstr "Iri al _paĝo"
 
-#: ../shell/ev-window.c:5797
-#| msgid "Go to page"
+#: ../shell/ev-window.c:5856
 msgid "Go to Page"
 msgstr "Iri al paĝo"
 
 #. Bookmarks menu
-#: ../shell/ev-window.c:5801
+#: ../shell/ev-window.c:5860
 msgid "_Add Bookmark"
 msgstr "_Aldoni legosignon"
 
 # ĉu "por" aŭ "je"?
-#: ../shell/ev-window.c:5802
+#: ../shell/ev-window.c:5861
 msgid "Add a bookmark for the current page"
-msgstr "Aldoni legosignon por la aktuala paĝo"
+msgstr "Aldoni legosignon por la aktuala paĝo"
 
 #. Help menu
-#: ../shell/ev-window.c:5806
+#: ../shell/ev-window.c:5865
 msgid "_Contents"
 msgstr "_Enhavo"
 
-#: ../shell/ev-window.c:5809
+#: ../shell/ev-window.c:5868
 msgid "_About"
 msgstr "_Pri"
 
 #. Toolbar-only
-#: ../shell/ev-window.c:5813
+#: ../shell/ev-window.c:5872
 msgid "Leave Fullscreen"
 msgstr "Forlasi plenekranan reĝimon"
 
-#: ../shell/ev-window.c:5814
+#: ../shell/ev-window.c:5873
 msgid "Leave fullscreen mode"
 msgstr "Forlasi plenekranan reĝimon"
 
-#: ../shell/ev-window.c:5816
+#: ../shell/ev-window.c:5875
 msgid "Start Presentation"
 msgstr "Komenci prezentadon"
 
-#: ../shell/ev-window.c:5817
+#: ../shell/ev-window.c:5876
 msgid "Start a presentation"
 msgstr "Komenci prezentadon"
 
 #. View Menu
-#: ../shell/ev-window.c:5880
+#: ../shell/ev-window.c:5939
 msgid "_Toolbar"
 msgstr "Ilobre_to"
 
-#: ../shell/ev-window.c:5881
+#: ../shell/ev-window.c:5940
 msgid "Show or hide the toolbar"
 msgstr "Montri aŭ kaŝi la ilobreton"
 
-#: ../shell/ev-window.c:5883
+#: ../shell/ev-window.c:5942
 msgid "Side _Pane"
 msgstr "Flanka _panelo"
 
-#: ../shell/ev-window.c:5884
+#: ../shell/ev-window.c:5943
 msgid "Show or hide the side pane"
 msgstr "Montri aŭ kaŝi la flankan panelon"
 
-#: ../shell/ev-window.c:5886
+#: ../shell/ev-window.c:5945
 msgid "_Continuous"
 msgstr "_Kontinue"
 
-#: ../shell/ev-window.c:5887
+#: ../shell/ev-window.c:5946
 msgid "Show the entire document"
 msgstr "Montri la tutan dokumenton"
 
-#: ../shell/ev-window.c:5889
-msgid "_Dual"
-msgstr "_Duale"
+#: ../shell/ev-window.c:5948
+msgid "_Dual (Even pages left)"
+msgstr "_Duale (Para paĝoj maldekstre)"
 
-#: ../shell/ev-window.c:5890
-msgid "Show two pages at once"
-msgstr "Montri du paĝojn samtempe"
+#: ../shell/ev-window.c:5949
+msgid "Show two pages at once with even pages on the left"
+msgstr "Montri du paĝojn samtempe kun para paĝoj maldekstre"
 
-#: ../shell/ev-window.c:5892
+#: ../shell/ev-window.c:5951
+msgid "Dual (_Odd pages left)"
+msgstr "_Duale (Malpara paĝoj maldekstre)"
+
+#: ../shell/ev-window.c:5952
+msgid "Show two pages at once with odd pages on the left"
+msgstr "Montri du paĝojn samtempe kun malpara paĝoj maldekstre"
+
+#: ../shell/ev-window.c:5954
 msgid "_Fullscreen"
 msgstr "_Tutekrane"
 
-#: ../shell/ev-window.c:5893
+#: ../shell/ev-window.c:5955
 msgid "Expand the window to fill the screen"
 msgstr "Ekspansii la fenestron por plenigi la ekranon"
 
-#: ../shell/ev-window.c:5895
+#: ../shell/ev-window.c:5957
 msgid "Pre_sentation"
 msgstr "Pre_zentaĵo"
 
-#: ../shell/ev-window.c:5896
+#: ../shell/ev-window.c:5958
 msgid "Run document as a presentation"
 msgstr "Ruli la dokumenton kiel prezentaĵo"
 
-#: ../shell/ev-window.c:5904
+#: ../shell/ev-window.c:5966
 msgid "_Inverted Colors"
 msgstr "_Inversigitaj koloroj"
 
-#: ../shell/ev-window.c:5905
+#: ../shell/ev-window.c:5967
 msgid "Show page contents with the colors inverted"
 msgstr "Montri paĝ-enhavon per inversigitaj koloroj"
 
 #. Links
-#: ../shell/ev-window.c:5913
+#: ../shell/ev-window.c:5975
 msgid "_Open Link"
 msgstr "Malfermi la ligil_on"
 
-#: ../shell/ev-window.c:5915
+#: ../shell/ev-window.c:5977
 msgid "_Go To"
 msgstr "_Iri al"
 
-#: ../shell/ev-window.c:5917
+#: ../shell/ev-window.c:5979
 msgid "Open in New _Window"
 msgstr "Malfermi en nova _fenestro"
 
-#: ../shell/ev-window.c:5919
+#: ../shell/ev-window.c:5981
 msgid "_Copy Link Address"
 msgstr "_Kopii la ligiladreson"
 
-#: ../shell/ev-window.c:5921
+#: ../shell/ev-window.c:5983
 msgid "_Save Image As…"
 msgstr "Kon_servi la bildon kiel…"
 
-#: ../shell/ev-window.c:5923
+#: ../shell/ev-window.c:5985
 msgid "Copy _Image"
 msgstr "Kopii la _bildon"
 
-#: ../shell/ev-window.c:5925
+#: ../shell/ev-window.c:5987
 msgid "Annotation Properties…"
 msgstr "Notaj ecoj…"
 
-#: ../shell/ev-window.c:5930
+#: ../shell/ev-window.c:5992
 msgid "_Open Attachment"
 msgstr "_Malfermi la kunsendaĵon"
 
-#: ../shell/ev-window.c:5932
+#: ../shell/ev-window.c:5994
 msgid "_Save Attachment As…"
 msgstr "Kon_servi la kunsendaĵon kiel…"
 
-#: ../shell/ev-window.c:6024
+#: ../shell/ev-window.c:6086
 msgid "Zoom"
 msgstr "Zomo"
 
-#: ../shell/ev-window.c:6026
+#: ../shell/ev-window.c:6088
 msgid "Adjust the zoom level"
 msgstr "Ĝustigi la zomnivelon"
 
-#: ../shell/ev-window.c:6036
+#: ../shell/ev-window.c:6098
 msgid "Navigation"
 msgstr "Navigado"
 
-#: ../shell/ev-window.c:6038
+#: ../shell/ev-window.c:6100
 msgid "Back"
 msgstr "Malantaŭen"
 
 #. translators: this is the history action
-#: ../shell/ev-window.c:6041
+#: ../shell/ev-window.c:6103
 msgid "Move across visited pages"
 msgstr "Moviĝi inter vizititaj paĝoj"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:6070
+#: ../shell/ev-window.c:6132
 msgid "Open Folder"
 msgstr "Malfermi dosierujon"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:6075
+#: ../shell/ev-window.c:6136
+msgid "Send To"
+msgstr "Sendi al"
+
+#. translators: this is the label for toolbar button
+#: ../shell/ev-window.c:6142
 msgid "Previous"
 msgstr "Antaŭa"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:6080
+#: ../shell/ev-window.c:6147
 msgid "Next"
 msgstr "Sekva"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:6084
+#: ../shell/ev-window.c:6151
 msgid "Zoom In"
 msgstr "Enzomi"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:6088
+#: ../shell/ev-window.c:6155
 msgid "Zoom Out"
 msgstr "Elzomi"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:6096
+#: ../shell/ev-window.c:6163
 msgid "Fit Width"
 msgstr "Adapti larĝon"
 
-#: ../shell/ev-window.c:6242 ../shell/ev-window.c:6259
+#: ../shell/ev-window.c:6310 ../shell/ev-window.c:6326
 msgid "Unable to launch external application."
 msgstr "Neeblas lanĉi eksteran aplikaĵon."
 
-#: ../shell/ev-window.c:6316
+#: ../shell/ev-window.c:6383
 msgid "Unable to open external link"
 msgstr "Malsukcesis malfermi eksteran ligilon"
 
-#: ../shell/ev-window.c:6506
+#: ../shell/ev-window.c:6573
 msgid "Couldn't find appropriate format to save image"
 msgstr "Ne eblas trovi taŭgan aranĝon per kiu konservi la bildon"
 
-#: ../shell/ev-window.c:6538
+#: ../shell/ev-window.c:6605
 msgid "The image could not be saved."
-msgstr "Ne povas konservi la bildon."
+msgstr "Ne eblas konservi la bildon."
 
-#: ../shell/ev-window.c:6570
+#: ../shell/ev-window.c:6637
 msgid "Save Image"
 msgstr "Konservi la bildon"
 
-#: ../shell/ev-window.c:6698
+#: ../shell/ev-window.c:6765
 msgid "Unable to open attachment"
 msgstr "Malsukcesis malfermi la kunsendaĵon."
 
-#: ../shell/ev-window.c:6751
+#: ../shell/ev-window.c:6818
 msgid "The attachment could not be saved."
-msgstr "Ne povis konservi la kunsendaĵon."
+msgstr "Ne eblis konservi la kunsendaĵon."
 
-#: ../shell/ev-window.c:6796
+#: ../shell/ev-window.c:6863
 msgid "Save Attachment"
 msgstr "Konservi la kunsendaĵon"
 
@@ -1661,49 +1697,60 @@ msgstr "%s — Pasvorto bezonatas"
 msgid "By extension"
 msgstr "Laŭ finaĵo"
 
-#: ../shell/main.c:69 ../shell/main.c:274
+#: ../shell/main.c:70 ../shell/main.c:281
 msgid "GNOME Document Viewer"
 msgstr "GNOMEa vidigilo de dokumentoj"
 
-#: ../shell/main.c:77
+#: ../shell/main.c:78
 msgid "The page label of the document to display."
 msgstr "La paĝ-etikedo de la dokumento por vidigi."
 
-#: ../shell/main.c:77
+#: ../shell/main.c:78
 msgid "PAGE"
 msgstr "PAĜO"
 
-#: ../shell/main.c:78
+#: ../shell/main.c:79
 msgid "The page number of the document to display."
 msgstr "La paĝnumero de la dokumento por vidigi."
 
-#: ../shell/main.c:78
+#: ../shell/main.c:79
 msgid "NUMBER"
 msgstr "NUMERO"
 
-#: ../shell/main.c:79
+#: ../shell/main.c:80
+msgid "Named destination to display."
+msgstr "Nomo de celloko por montri."
+
+#: ../shell/main.c:80
+msgid "DEST"
+msgstr "CELLOKO"
+
+#: ../shell/main.c:81
 msgid "Run evince in fullscreen mode"
 msgstr "Ruli Evincon tutekrane"
 
-#: ../shell/main.c:80
+#: ../shell/main.c:82
 msgid "Run evince in presentation mode"
 msgstr "Ruli Evincon prezentaĵe"
 
-#: ../shell/main.c:81
+#: ../shell/main.c:83
 msgid "Run evince as a previewer"
 msgstr "Lanĉi Evincon kiel antaŭvidilo"
 
-#: ../shell/main.c:82
+#: ../shell/main.c:84
 msgid "The word or phrase to find in the document"
 msgstr "La vorto aŭ frazo por trovi en la dokumento"
 
-#: ../shell/main.c:82
+#: ../shell/main.c:84
 msgid "STRING"
 msgstr "SIGNOĈENO"
 
-#: ../shell/main.c:86
+#: ../shell/main.c:88
 msgid "[FILE…]"
 msgstr "[DOSIERO…]"
+
+#~ msgid "_Dual"
+#~ msgstr "_Duale"
 
 #, fuzzy
 #~ msgid "Impress Slides"
