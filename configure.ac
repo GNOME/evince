@@ -4,7 +4,7 @@
 
 m4_define([ev_major_version],[3])
 m4_define([ev_minor_version],[3])
-m4_define([ev_micro_version],[90])
+m4_define([ev_micro_version],[92])
 m4_define([ev_extra_version],[])
 m4_define([ev_version],[ev_major_version.ev_minor_version.ev_micro_version()ev_extra_version])
 
@@ -21,7 +21,7 @@ m4_define([ev_api_version], [3.0])
 # - If the interface is the same as the previous version, change to C:R+1:A
 
 # Libtool version of the backend library
-m4_define([ev_document_lt_current],[3])
+m4_define([ev_document_lt_current],[4])
 m4_define([ev_document_lt_revision],[0])
 m4_define([ev_document_lt_age],[0])
 m4_define([ev_document_lt_version_info],[ev_document_lt_current:ev_document_lt_revision:ev_document_lt_age])
