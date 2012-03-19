@@ -8,8 +8,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: evince.help.master\n"
-"POT-Creation-Date: 2012-01-10 18:37+0000\n"
-"PO-Revision-Date: 2012-01-11 14:39+0100\n"
+"POT-Creation-Date: 2012-03-18 14:18+0000\n"
+"PO-Revision-Date: 2012-03-19 13:15+0100\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -165,8 +165,8 @@ msgstr ""
 msgid ""
 "The 'page select' <link xref=\"movingaround#between-pages\">tool.</link>"
 msgstr ""
-"La <link xref=\"movingaround#between-pages\">herramienta</link> de «selección "
-"de página»."
+"La <link xref=\"movingaround#between-pages\">herramienta</link> de "
+"«selección de página»."
 
 #: C/toolbar.page:38(p)
 msgid ""
@@ -396,10 +396,14 @@ msgstr ""
 "PDF."
 
 #: C/synctex-search.page:40(p)
+#| msgid ""
+#| "Alternatively, you can press <keyseq><key>Ctrl</key><key>Alt</key><key>F</"
+#| "key></keyseq>, or <key>Ctrl</key>+Left Click. The corresponding line in "
+#| "the PDF will be outlined in red."
 msgid ""
 "Alternatively, you can press <keyseq><key>Ctrl</key><key>Alt</key><key>F</"
-"key></keyseq>, or <key>Ctrl</key>+Left Click. The corresponding line in the "
-"PDF will be outlined in red."
+"key></keyseq>, or <keyseq><key>Ctrl</key>left click</keyseq>. The "
+"corresponding line in the PDF will be outlined in red."
 msgstr ""
 "Alternativamente, puede pulsar <keyseq><key>Ctrl</key><key>Alt</key><key>F</"
 "key></keyseq>, o <key>Ctrl</key>+pulsación izquierda. Se subrayará en rojo "
@@ -449,14 +453,18 @@ msgstr ""
 "archivo PDF y saltar a la línea asociada en el código fuente TeX."
 
 #: C/synctex-search.page:65(p)
+#| msgid ""
+#| "You can perform a backward search by pressing <key>Ctrl</key>+ Left Click "
+#| "in the <app>document viewer</app>. The corresponding line in the TeX "
+#| "source code will be hightlighted."
 msgid ""
-"You can perform a backward search by pressing <key>Ctrl</key>+ Left Click in "
-"the <app>document viewer</app>. The corresponding line in the TeX source "
-"code will be hightlighted."
+"You can perform a backward search by pressing <keyseq><key>Ctrl</key>left "
+"click</keyseq> in the <app>document viewer</app>. The corresponding line in "
+"the TeX source code will be hightlighted."
 msgstr ""
-"Puede realizar una búsqueda hacia atrás pulsando <key>Ctrl</key>+ pulsación "
-"izquierda en el <app>Visor de documentos</app>. Se resaltará la "
-"correspondiente línea en el código fuente TeX."
+"Puede realizar una búsqueda hacia atrás pulsando<keyseq><key>Ctrl</key>"
+"+pulsación izquierda</keyseq> en el <app>Visor de documentos</app>. Se "
+"resaltará la correspondiente línea en el código fuente TeX."
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
@@ -489,8 +497,9 @@ msgid "Video Demonstration"
 msgstr "Vídeo de demostración"
 
 #: C/synctex.page:30(p)
-msgid "Press <key>Ctrl</key> + click to sync."
-msgstr "Pulse <key>Ctrl</key> + pulsación para sincronizar."
+#| msgid "Press <key>Ctrl</key> + click to sync."
+msgid "Press <keyseq><key>Ctrl</key>click</keyseq> to sync."
+msgstr "Pulse <keyseq><key>Ctrl</key>+pulsación</keyseq> para sincronizar."
 
 #: C/synctex-editors.page:7(desc)
 msgid "Which editor can you use to edit your TEX file?"
@@ -782,11 +791,11 @@ msgstr "En <em>Rango</em>, elija <gui>Páginas</gui>."
 
 #: C/singlesided-npages.page:63(item) C/duplex-npages.page:62(item)
 msgid ""
-"n, 1, 2, n-1, n-2, 3, 4, n-3, n-4, 5, 6, n-5, n-6, 7, 8, n-7, n-8, 9, 10, n-"
-"9, n-10, 11, 12, n-11..."
+"n, 1, 2, n-1, n-2, 3, 4, n-3, n-4, 5, 6, n-5, n-6, 7, 8, n-7, n-8, 9, 10, "
+"n-9, n-10, 11, 12, n-11..."
 msgstr ""
-"n, 1, 2, n-1, n-2, 3, 4, n-3, n-4, 5, 6, n-5, n-6, 7, 8, n-7, n-8, 9, 10, n-"
-"9, n-10, 11, 12, n-11…"
+"n, 1, 2, n-1, n-2, 3, 4, n-3, n-4, 5, 6, n-5, n-6, 7, 8, n-7, n-8, 9, 10, "
+"n-9, n-10, 11, 12, n-11…"
 
 #: C/singlesided-npages.page:64(item) C/duplex-npages.page:63(item)
 msgid "...until you have typed n-number of pages."
@@ -1364,13 +1373,19 @@ msgid "Why does the document keep reloading?"
 msgstr "¿Por qué el documento no deja de recargarse?"
 
 #: C/reload.page:25(p)
+#| msgid ""
+#| "If the Document Viewer detects that the document you have open has "
+#| "changed (perhaps because another program has modified it), it will "
+#| "automatically reload the document and display the most recent version for "
+#| "you."
 msgid ""
-"If the Document Viewer detects that the document you have open has changed "
-"(perhaps because another program has modified it), it will automatically "
-"reload the document and display the most recent version for you."
+"If the <app>Document Viewer</app> detects that the document you have open "
+"has changed (perhaps because another program has modified it), it will "
+"automatically reload the document and display the most recent version for "
+"you."
 msgstr ""
-"Si el Visor de documentos detecta que el documento que ha abierto ha "
-"cambiado (tal vez porque otro programa lo ha modificado), lo recargará "
+"Si el <app>Visor de documentos</app> detecta que el documento que ha abierto "
+"ha cambiado (tal vez porque otro programa lo ha modificado), lo recargará "
 "automáticamente y le mostrará la versión más reciente."
 
 #: C/reload.page:29(p)
@@ -1427,8 +1442,8 @@ msgid ""
 "For example, if you enter \"1,3,5-7,9\" in the <gui>Pages</gui> textbox, "
 "pages 1,3,5,6,7 and 9 will be printed."
 msgstr ""
-"Por ejemplo, si escribe «1,3,5-7,9» en la caja de texto <gui>Páginas</gui>,se "
-"imprimirán las páginas 1,3,5,6,7 y 9."
+"Por ejemplo, si escribe «1,3,5-7,9» en la caja de texto <gui>Páginas</gui>,"
+"se imprimirán las páginas 1,3,5,6,7 y 9."
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
@@ -1441,8 +1456,8 @@ msgstr ""
 #: C/print-order.page:8(desc)
 msgid "Use the Collate and Reverse options to make pages print in order."
 msgstr ""
-"Use las opciones «Intercalar» e «Invertir» para que las páginas se impriman en "
-"orden."
+"Use las opciones «Intercalar» e «Invertir» para que las páginas se impriman "
+"en orden."
 
 #: C/print-order.page:20(title)
 msgid "Getting copies to print in the correct order"
@@ -1658,8 +1673,8 @@ msgid ""
 "Go to the <gui>Page Setup</gui> tab of the Print window and choose an option "
 "from the <gui>Two-sided</gui> drop-down list."
 msgstr ""
-"Vaya a la pestaña <gui>Configuración de página</gui> de la ventana «Imprimir» "
-"y elija una opción en la lista desplegable <gui>Dos caras</gui>."
+"Vaya a la pestaña <gui>Configuración de página</gui> de la ventana "
+"«Imprimir» y elija una opción en la lista desplegable <gui>Dos caras</gui>."
 
 #: C/print-2sided.page:39(p)
 msgid ""
@@ -1706,20 +1721,26 @@ msgid "Moving through a presentation"
 msgstr "Moverse a través de una presentación"
 
 #: C/presentations.page:40(p)
+#| msgid ""
+#| "Use the <key>spacebar</key>, right arrow key, down arrow key, or left "
+#| "mouse click to go to the next slide."
 msgid ""
-"Use the <key>spacebar</key>, right arrow key, down arrow key, or left mouse "
-"click to go to the next slide."
+"Use the <key>spacebar</key>, <key>→</key>, <key>↓</key>, or left mouse click "
+"to go to the next slide."
 msgstr ""
-"Use las teclas <key>espacio</key>, flecha derecha, flecha abajo o el botón "
+"Use las teclas <key>espacio</key>, <key>→</key>, <key>↓</key> o el botón "
 "izquierdo del ratón para pasar a la siguiente diapositiva."
 
 #: C/presentations.page:43(p)
+#| msgid ""
+#| "Use the left arrow key, up arrow key or right mouse click to go to the "
+#| "previous slide."
 msgid ""
-"Use the left arrow key, up arrow key or right mouse click to go to the "
+"Use the <key>←</key>, <key>↑</key> or right mouse click to go to the "
 "previous slide."
 msgstr ""
-"Use las teclas flecha izquierda, flecha arriba o el botón derecho del ratón "
-"para ir a la diapositiva anterior."
+"Use las teclas <key>←</key>, <key>↑</key> o el botón derecho del ratón para "
+"ir a la diapositiva anterior."
 
 #: C/presentations.page:47(p)
 msgid ""
@@ -1806,12 +1827,16 @@ msgstr ""
 "Doble pulsación en el icono del archivo en el <app>Gestor de archivos</app>."
 
 #: C/opening.page:28(p)
+#| msgid ""
+#| "Double clicking opens PDF, PostScript, .djvu, .dvi and Comic Book Archive "
+#| "files in the Document Viewer by default."
 msgid ""
 "Double clicking opens PDF, PostScript, .djvu, .dvi and Comic Book Archive "
-"files in the Document Viewer by default."
+"files in the <app>Document Viewer</app> by default."
 msgstr ""
 "De manera predeterminada, una pulsación doble abre archivos PDF, "
-"PostScript, .djvu, .dvi y archivos de cómic en el Visor de documentos."
+"PostScript, .djvu, .dvi y archivos de cómic en el <app>Visor de documentos</"
+"app>."
 
 #: C/opening.page:33(p)
 msgid ""
@@ -1855,15 +1880,21 @@ msgid "Why can't I open a file?"
 msgstr "¿Por qué no puedo abrir un archivo?"
 
 #: C/openerror.page:24(p)
+#| msgid ""
+#| "If you try to open a document of a format that the <app>document viewer</"
+#| "app> does not recognize, you will get an \"Unable to open document\" "
+#| "error message. Click <gui>Close</gui> to return to the Document Viewer "
+#| "window."
 msgid ""
 "If you try to open a document of a format that the <app>document viewer</"
 "app> does not recognize, you will get an \"Unable to open document\" error "
-"message. Click <gui>Close</gui> to return to the Document Viewer window."
+"message. Click <gui>Close</gui> to return to the <app>Document Viewer</app> "
+"window."
 msgstr ""
 "Si intenta abrir un documento con un formato que el <app>Visor de "
 "documentos</app> no reconoce, aparecerá un mensaje de error: «No se pudo "
 "abrir el documento». Pulse <gui>Cerrar</gui> para volver a la ventana del "
-"Visor de documentos."
+"<app>Visor de documentos</app>."
 
 #: C/noprint.page:7(desc)
 msgid "The author may have put printing restrictions on the document."
@@ -1976,9 +2007,13 @@ msgstr ""
 "marcada."
 
 #: C/noprint.page:83(p)
-msgid "Go back to the Document Viewer and try to print the document again."
+#| msgid "Go back to the Document Viewer and try to print the document again."
+msgid ""
+"Go back to the <app>Document Viewer</app> and try to print the document "
+"again."
 msgstr ""
-"Regrese al Visor de documentos e intente imprimir el documento de nuevo."
+"Regrese al <app>Visor de documentos</app> e intente imprimir el documento de "
+"nuevo."
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
@@ -2275,8 +2310,8 @@ msgstr "Pulse <key>F11</key> o <key>Escape</key>"
 msgid ""
 "or click the <gui>Leave Fullscreen</gui> button at the top of the screen."
 msgstr ""
-"o pulse el botón <gui>Salir de «Pantalla completa»</gui> en la parte superior "
-"de la pantalla."
+"o pulse el botón <gui>Salir de «Pantalla completa»</gui> en la parte "
+"superior de la pantalla."
 
 #: C/invert-colors.page:8(desc)
 msgid "Inverting the colors can make it easier to read some text."
@@ -2635,7 +2670,6 @@ msgstr ""
 "ejemplo."
 
 #: C/duplex-npages.page:8(desc)
-#| msgid "Print a booklet over 20 pages."
 msgid "Print a booklet over 16 pages."
 msgstr "Imprimir un folleto de 16 páginas."
 
@@ -3250,11 +3284,14 @@ msgstr ""
 "Puede convertir documentos de los siguientes tipos de formato a archivos SVG:"
 
 #: C/convertSVG.page:27(p)
+#| msgid ""
+#| "This works by opening the file in Document Viewer and \"printing\" the "
+#| "document as an SVG file."
 msgid ""
-"This works by opening the file in Document Viewer and \"printing\" the "
-"document as an SVG file."
+"This works by opening the file in <app>Document Viewer</app> and \"printing"
+"\" the document as an SVG file."
 msgstr ""
-"Esto funciona abriendo el documento con el Visor de documentos e "
+"Esto funciona abriendo el documento con el <app>Visor de documentos</app> e "
 "«imprimiéndolo» como un archivo SVG."
 
 #: C/convertSVG.page:38(p)
@@ -3289,11 +3326,14 @@ msgstr ""
 "formato:"
 
 #: C/convertPostScript.page:30(p)
+#| msgid ""
+#| "This works by opening the file in Document Viewer and \"printing\" the "
+#| "document as a PostScript file."
 msgid ""
-"This works by opening the file in Document Viewer and \"printing\" the "
-"document as a PostScript file."
+"This works by opening the file in <app>Document Viewer</app> and \"printing"
+"\" the document as a PostScript file."
 msgstr ""
-"Esto funciona abriendo el documento con el Visor de documentos e "
+"Esto funciona abriendo el documento con el <app>Visor de documentos</app> e "
 "«imprimiéndolo» como un archivo PostScript."
 
 #: C/convertPostScript.page:41(p)
@@ -3327,11 +3367,14 @@ msgid ""
 msgstr "Puede convertir documentos de los siguientes tipos de formato a PDF:"
 
 #: C/convertpdf.page:29(p)
+#| msgid ""
+#| "This works by opening the file in Document Viewer and \"printing\" the "
+#| "document as a PDF file."
 msgid ""
-"This works by opening the file in Document Viewer and \"printing\" the "
-"document as a PDF file."
+"This works by opening the file in <app>Document Viewer</app> and \"printing"
+"\" the document as a PDF file."
 msgstr ""
-"Esto funciona abriendo el documento con el Visor de documentos e "
+"Esto funciona abriendo el documento con el <app>Visor de documentos</app> e "
 "«imprimiéndolo» como un archivo PDF."
 
 #: C/convertpdf.page:46(p)
@@ -3358,8 +3401,8 @@ msgstr ""
 "está almacenado en el archivo (sólo es una imagen de a lo que se parece el "
 "texto), de tal forma que no existe una forma de recuperarlo y ponerlo en el "
 "PDF. Si lo necesita, puede usar un software <em>Optical Character "
-"Recofnition</em> (reconocimiento óptico de caracteres, «OCR») para extraer el "
-"texto desde archivos."
+"Recofnition</em> (reconocimiento óptico de caracteres, «OCR») para extraer "
+"el texto desde archivos."
 
 #: C/commandline.page:7(title)
 msgid "Command line"
@@ -3378,13 +3421,18 @@ msgid "The command line"
 msgstr "La línea de comandos"
 
 #: C/commandline.page:24(p)
+#| msgid ""
+#| "To start the Document Viewer from the command line, type <cmd>evince</"
+#| "cmd>. You can open a specific file by typing the filename after the "
+#| "evince command:"
 msgid ""
-"To start the Document Viewer from the command line, type <cmd>evince</cmd>. "
-"You can open a specific file by typing the filename after the evince command:"
+"To start the <app>Document Viewer</app> from the command line, type "
+"<cmd>evince</cmd>. You can open a specific file by typing the filename after "
+"the evince command:"
 msgstr ""
-"Para iniciar el Visor de documentos desde la línea de comandos, escriba "
-"<cmd>evince</cmd>. Puede especificar un archivo escribiendo el nombre del "
-"archivo después del comando «evince»:"
+"Para iniciar el <app>Visor de documentos</app> desde la línea de comandos, "
+"escriba <cmd>evince</cmd>. Puede especificar un archivo escribiendo el "
+"nombre del archivo después del comando «evince»:"
 
 #: C/commandline.page:29(screen)
 #, no-wrap
@@ -3438,12 +3486,16 @@ msgid "evince --page-label=3 file.pdf"
 msgstr "evince --page-label=3 archivo.pdf"
 
 #: C/commandline.page:45(p)
+#| msgid ""
+#| "The page label should be in the same format as the page number displayed "
+#| "in the Document Viewer toolbar."
 msgid ""
 "The page label should be in the same format as the page number displayed in "
-"the Document Viewer toolbar."
+"the <app>Document Viewer</app> toolbar."
 msgstr ""
 "La etiqueta de la página debería estar en el mismo formato que el número de "
-"página mostrado en la barra de herramientas del Visor de documentos."
+"página mostrado en la barra de herramientas del <app>Visor de documentos</"
+"app>."
 
 #: C/commandline.page:51(title)
 msgid "Opening a document in fullscreen mode"
@@ -3602,14 +3654,18 @@ msgstr ""
 "gui>. El PDF se guardará en la carpeta que elija."
 
 #: C/annotations-save.page:34(p)
+#| msgid ""
+#| "Annotations are added according to the PDF specification. Therefore, most "
+#| "PDF readers should be able to read them. <app>Okular</app> Document "
+#| "Viewer does not support them. Adobe Reader is known to work."
 msgid ""
 "Annotations are added according to the PDF specification. Therefore, most "
-"PDF readers should be able to read them. <app>Okular</app> Document Viewer "
-"does not support them. Adobe Reader is known to work."
+"PDF readers should be able to read them. The Okular document viewer does not "
+"support them. Adobe Reader is known to work."
 msgstr ""
 "Las anotaciones se añaden de acuerdo con la especificación PDF. Por lo "
 "tanto, la mayoría de los lectores de PDF debería poder leerlas. El visor de "
-"documentos <app>Okular</app> no las soporta. Adobe Reader sí las soporta."
+"documentos Okular no las soporta. Adobe Reader sí las soporta."
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
@@ -3927,11 +3983,11 @@ msgstr ""
 #~ msgstr "<placeholder-1/> / <placeholder-2/>"
 
 #~ msgid ""
-#~ "<keyseq><placeholder-1/><placeholder-2/></keyseq> / <keyseq><placeholder-"
-#~ "3/><placeholder-4/></keyseq>"
+#~ "<keyseq><placeholder-1/><placeholder-2/></keyseq> / "
+#~ "<keyseq><placeholder-3/><placeholder-4/></keyseq>"
 #~ msgstr ""
-#~ "<keyseq><placeholder-1/><placeholder-2/></keyseq> / <keyseq><placeholder-"
-#~ "3/><placeholder-4/></keyseq>"
+#~ "<keyseq><placeholder-1/><placeholder-2/></keyseq> / "
+#~ "<keyseq><placeholder-3/><placeholder-4/></keyseq>"
 
 #~ msgid "View"
 #~ msgstr "Ver"
@@ -4277,10 +4333,10 @@ msgstr ""
 #~ msgid ""
 #~ "In <application>Evince Document Viewer</application>, you can perform the "
 #~ "same action in several ways. For example, you can open a document in the "
-#~ "following ways: <informaltable frame=\"all\"><tgroup cols=\"2\" colsep=\"1"
-#~ "\" rowsep=\"1\"><colspec colname=\"COLSPEC0\" colwidth=\"50*\"/><colspec "
-#~ "colname=\"COLSPEC1\" colwidth=\"50*\"/><placeholder-1/><placeholder-2/></"
-#~ "tgroup></informaltable>"
+#~ "following ways: <informaltable frame=\"all\"><tgroup cols=\"2\" colsep="
+#~ "\"1\" rowsep=\"1\"><colspec colname=\"COLSPEC0\" colwidth=\"50*\"/"
+#~ "><colspec colname=\"COLSPEC1\" colwidth=\"50*\"/><placeholder-1/"
+#~ "><placeholder-2/></tgroup></informaltable>"
 #~ msgstr ""
 #~ "En el <application>Visor de documentos Evince</application>, puede "
 #~ "realizar la misma acción de varias formas. Por ejemplo, puede abrir un "
