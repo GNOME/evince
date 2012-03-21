@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: evince master\n"
-"POT-Creation-Date: 2012-03-18 05:50+0000\n"
-"PO-Revision-Date: 2012-03-18 14:30+0100\n"
+"POT-Creation-Date: 2012-03-18 14:18+0000\n"
+"PO-Revision-Date: 2012-03-21 11:04+0100\n"
 "Last-Translator: Gabor Kelemen <kelemeng at gnome dot hu>\n"
 "Language-Team: Magyar <gnome-hu-list at gnome dot org>\n"
 "MIME-Version: 1.0\n"
@@ -386,15 +386,18 @@ msgstr ""
 "kiemelésre."
 
 #: C/synctex-search.page:40(p)
+#| msgid ""
+#| "Alternatively, you can press <keyseq><key>Ctrl</key><key>Alt</key><key>F</"
+#| "key></keyseq>, or <key>Ctrl</key>+Left Click. The corresponding line in "
+#| "the PDF will be outlined in red."
 msgid ""
 "Alternatively, you can press <keyseq><key>Ctrl</key><key>Alt</key><key>F</"
-"key></keyseq>, or <key>Ctrl</key>+Left Click. The corresponding line in the "
-"PDF will be outlined in red."
+"key></keyseq>, or <keyseq><key>Ctrl</key>left click</keyseq>. The "
+"corresponding line in the PDF will be outlined in red."
 msgstr ""
 "Ennek alternatívájaként megnyomhatja a <keyseq><key>Ctrl</key><key>Alt</"
-"key><key>F</key></keyseq> kombinációt, vagy a <key>Ctrl</key> lenyomva "
-"tartása mellett használhatja a bal kattintást. A PDF-ben megfelelő sor vörös "
-"színnel kerül kiemelésre."
+"key><key>F</key></keyseq> kombinációt, vagy a <keyseq><key>Ctrl</key>bal "
+"kattintást</keyseq>. A PDF-ben megfelelő sor vörös színnel kerül kiemelésre."
 
 #: C/synctex-search.page:46(p)
 msgid ""
@@ -440,14 +443,18 @@ msgstr ""
 "ahhoz tartozó sorra ugrást a TeX forráskódban."
 
 #: C/synctex-search.page:65(p)
+#| msgid ""
+#| "You can perform a backward search by pressing <key>Ctrl</key>+ Left Click "
+#| "in the <app>document viewer</app>. The corresponding line in the TeX "
+#| "source code will be hightlighted."
 msgid ""
-"You can perform a backward search by pressing <key>Ctrl</key>+ Left Click in "
-"the <app>document viewer</app>. The corresponding line in the TeX source "
-"code will be hightlighted."
+"You can perform a backward search by pressing <keyseq><key>Ctrl</key>left "
+"click</keyseq> in the <app>document viewer</app>. The corresponding line in "
+"the TeX source code will be hightlighted."
 msgstr ""
-"Hátra keresést a <app>dokumentummegjelenítőben</app> a <key>Ctrl</key> "
-"lenyomásával és bal kattintással végezhet. A megfelelő sor a TeX "
-"forráskódban kiemelésre kerül."
+"Hátra keresést a <app>dokumentummegjelenítőben</app> a <keyseq><key>Ctrl</key>"
+"bal kattintással</keyseq> végezhet. A megfelelő sor a TeX forráskódban "
+"kiemelésre kerül."
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
@@ -480,7 +487,8 @@ msgid "Video Demonstration"
 msgstr "Videobemutató"
 
 #: C/synctex.page:30(p)
-msgid "Press <key>Ctrl</key> + click to sync."
+#| msgid "Press <key>Ctrl</key> + click to sync."
+msgid "Press <keyseq><key>Ctrl</key>click</keyseq> to sync."
 msgstr "Nyomja le a <key>Ctrl</key>-t, és kattintson a szinkronizáláshoz."
 
 #: C/synctex-editors.page:7(desc)
@@ -1356,11 +1364,6 @@ msgid "Why does the document keep reloading?"
 msgstr "Miért töltődik újra folyamatosan a dokumentum?"
 
 #: C/reload.page:25(p)
-#| msgid ""
-#| "If the Document Viewer detects that the document you have open has "
-#| "changed (perhaps because another program has modified it), it will "
-#| "automatically reload the document and display the most recent version for "
-#| "you."
 msgid ""
 "If the <app>Document Viewer</app> detects that the document you have open "
 "has changed (perhaps because another program has modified it), it will "
@@ -1702,9 +1705,6 @@ msgid "Moving through a presentation"
 msgstr "Lépkedés a bemutatóban"
 
 #: C/presentations.page:40(p)
-#| msgid ""
-#| "Use the <key>spacebar</key>, right arrow key, down arrow key, or left "
-#| "mouse click to go to the next slide."
 msgid ""
 "Use the <key>spacebar</key>, <key>→</key>, <key>↓</key>, or left mouse click "
 "to go to the next slide."
@@ -1713,9 +1713,6 @@ msgstr ""
 "segítségével a következő diára léphet."
 
 #: C/presentations.page:43(p)
-#| msgid ""
-#| "Use the left arrow key, up arrow key or right mouse click to go to the "
-#| "previous slide."
 msgid ""
 "Use the <key>←</key>, <key>↑</key> or right mouse click to go to the "
 "previous slide."
@@ -1804,9 +1801,6 @@ msgid "Double-click on the file icon in the <app>File Manager</app>."
 msgstr "Kattintson duplán a fájl ikonjára a <app>Fájlkezelőben</app>."
 
 #: C/opening.page:28(p)
-#| msgid ""
-#| "Double clicking opens PDF, PostScript, .djvu, .dvi and Comic Book Archive "
-#| "files in the Document Viewer by default."
 msgid ""
 "Double clicking opens PDF, PostScript, .djvu, .dvi and Comic Book Archive "
 "files in the <app>Document Viewer</app> by default."
@@ -1856,11 +1850,6 @@ msgid "Why can't I open a file?"
 msgstr "Miért nem tudom megnyitni a fájlt?"
 
 #: C/openerror.page:24(p)
-#| msgid ""
-#| "If you try to open a document of a format that the <app>document viewer</"
-#| "app> does not recognize, you will get an \"Unable to open document\" "
-#| "error message. Click <gui>Close</gui> to return to the Document Viewer "
-#| "window."
 msgid ""
 "If you try to open a document of a format that the <app>document viewer</"
 "app> does not recognize, you will get an \"Unable to open document\" error "
@@ -1982,14 +1971,12 @@ msgstr ""
 "van jelölve."
 
 #: C/noprint.page:83(p)
-#| msgid "Go back to the Document Viewer and try to print the document again."
 msgid ""
 "Go back to the <app>Document Viewer</app> and try to print the document "
 "again."
 msgstr ""
 "Térjen vissza a <app>Dokumentummegjelenítőhöz</app>, és próbálja meg újra "
-"kinyomtatni a "
-"dokumentumot."
+"kinyomtatni a dokumentumot."
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
@@ -3234,16 +3221,12 @@ msgid "You can convert documents of the following format types to SVG files:"
 msgstr "A következő formátumú dokumentumokat konvertálhatja SVG-fájlokká:"
 
 #: C/convertSVG.page:27(p)
-#| msgid ""
-#| "This works by opening the file in Document Viewer and \"printing\" the "
-#| "document as an SVG file."
 msgid ""
 "This works by opening the file in <app>Document Viewer</app> and \"printing"
 "\" the document as an SVG file."
 msgstr ""
-"Ez a fájl <app>Dokumentummegjelenítőben</app> való megnyitásával, és "
-"SVG-fájlként való "
-"„kinyomtatásával” működik."
+"Ez a fájl <app>Dokumentummegjelenítőben</app> való megnyitásával, és SVG-"
+"fájlként való „kinyomtatásával” működik."
 
 #: C/convertSVG.page:38(p)
 msgid ""
@@ -3278,15 +3261,12 @@ msgid ""
 msgstr "A következő formátumú dokumentumokat konvertálhatja PostScript-fájlokká:"
 
 #: C/convertPostScript.page:30(p)
-#| msgid ""
-#| "This works by opening the file in Document Viewer and \"printing\" the "
-#| "document as a PostScript file."
 msgid ""
 "This works by opening the file in <app>Document Viewer</app> and \"printing"
 "\" the document as a PostScript file."
 msgstr ""
-"Ez a fájl <app>Dokumentummegjelenítőben</app> való megnyitásával, és PostScript-"
-"fájlként való „kinyomtatásával” működik."
+"Ez a fájl <app>Dokumentummegjelenítőben</app> való megnyitásával, és "
+"PostScript-fájlként való „kinyomtatásával” működik."
 
 #: C/convertPostScript.page:41(p)
 msgid ""
@@ -3318,16 +3298,12 @@ msgid "You can convert documents of the following format types into PDF format:"
 msgstr "A következő formátumú dokumentumokat konvertálhatja PDF-fájlokká:"
 
 #: C/convertpdf.page:29(p)
-#| msgid ""
-#| "This works by opening the file in Document Viewer and \"printing\" the "
-#| "document as a PDF file."
 msgid ""
 "This works by opening the file in <app>Document Viewer</app> and \"printing"
 "\" the document as a PDF file."
 msgstr ""
-"Ez a fájl <app>Dokumentummegjelenítőben</app> való megnyitásával, és "
-"PDF-fájlként való "
-"„kinyomtatásával” működik."
+"Ez a fájl <app>Dokumentummegjelenítőben</app> való megnyitásával, és PDF-"
+"fájlként való „kinyomtatásával” működik."
 
 #: C/convertpdf.page:46(p)
 msgid ""
@@ -3372,17 +3348,13 @@ msgid "The command line"
 msgstr "A parancssor"
 
 #: C/commandline.page:24(p)
-#| msgid ""
-#| "To start the Document Viewer from the command line, type <cmd>evince</"
-#| "cmd>. You can open a specific file by typing the filename after the "
-#| "evince command:"
 msgid ""
 "To start the <app>Document Viewer</app> from the command line, type "
 "<cmd>evince</cmd>. You can open a specific file by typing the filename after "
 "the evince command:"
 msgstr ""
-"A <app>Dokumentummegjelenítő</app> parancssorból való elindításához írja be az "
-"<cmd>evince</cmd> parancsot. Egy adott fájl megnyitásához írja be a "
+"A <app>Dokumentummegjelenítő</app> parancssorból való elindításához írja be "
+"az <cmd>evince</cmd> parancsot. Egy adott fájl megnyitásához írja be a "
 "fájlnevet az evince parancs után:"
 
 #: C/commandline.page:29(screen)
@@ -3436,9 +3408,6 @@ msgid "evince --page-label=3 file.pdf"
 msgstr "evince --page-label=3 fájl.pdf"
 
 #: C/commandline.page:45(p)
-#| msgid ""
-#| "The page label should be in the same format as the page number displayed "
-#| "in the Document Viewer toolbar."
 msgid ""
 "The page label should be in the same format as the page number displayed in "
 "the <app>Document Viewer</app> toolbar."
@@ -3603,18 +3572,14 @@ msgstr ""
 "<gui>Mentés</gui> gombot. A PDF a kiválasztott mappába kerül elmentésre."
 
 #: C/annotations-save.page:34(p)
-#| msgid ""
-#| "Annotations are added according to the PDF specification. Therefore, most "
-#| "PDF readers should be able to read them. <app>Okular</app> Document "
-#| "Viewer does not support them. Adobe Reader is known to work."
 msgid ""
 "Annotations are added according to the PDF specification. Therefore, most "
 "PDF readers should be able to read them. The Okular document viewer does not "
 "support them. Adobe Reader is known to work."
 msgstr ""
 "A jegyzetek a PDF-specifikációnak megfelelően kerülnek hozzáadásra. Emiatt a "
-"legtöbb PDF-olvasó képes azokat elolvasni. Az Okular dokumentummegjelenítő nem "
-"támogatja ezeket. Az Adobe Reader azonban igen."
+"legtöbb PDF-olvasó képes azokat elolvasni. Az Okular dokumentummegjelenítő "
+"nem támogatja ezeket. Az Adobe Reader azonban igen."
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
