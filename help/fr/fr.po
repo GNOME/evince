@@ -1,5 +1,5 @@
 # French translation of evince documentation.
-# Copyright (C) 2006-2011 Free Software Foundation, Inc.
+# Copyright (C) 2006-2012 Free Software Foundation, Inc.
 # This file is distributed under the same license as the evince
 # documentation package.
 #
@@ -10,8 +10,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: evince-doc\n"
-"POT-Creation-Date: 2012-01-29 20:10+0000\n"
-"PO-Revision-Date: 2012-02-12 11:22+0100\n"
+"POT-Creation-Date: 2012-03-18 14:18+0000\n"
+"PO-Revision-Date: 2012-03-25 11:22+0100\n"
 "Last-Translator: Bruno Brouard <annoa.b@gmail.com>\n"
 "Language-Team: GNOME French Team <gnomefr@traduc.org>\n"
 "MIME-Version: 1.0\n"
@@ -403,11 +403,11 @@ msgstr ""
 #: C/synctex-search.page:40(p)
 msgid ""
 "Alternatively, you can press <keyseq><key>Ctrl</key><key>Alt</key><key>F</"
-"key></keyseq>, or <key>Ctrl</key>+Left Click. The corresponding line in the "
-"PDF will be outlined in red."
+"key></keyseq>, or <keyseq><key>Ctrl</key>left click</keyseq>. The "
+"corresponding line in the PDF will be outlined in red."
 msgstr ""
 "Vous pouvez aussi appuyer sur <keyseq><key>Ctrl</key><key>Alt</key><key>F</"
-"key></keyseq> ou <key>Ctrl</key> + clic gauche. La ligne correspondante dans "
+"key></keyseq> ou <keyseq><key>Ctrl</key>clic gauche</keyseq>. La ligne correspondante dans "
 "le PDF est alors entourée en rouge."
 
 #: C/synctex-search.page:46(p)
@@ -458,12 +458,12 @@ msgstr ""
 
 #: C/synctex-search.page:65(p)
 msgid ""
-"You can perform a backward search by pressing <key>Ctrl</key>+ Left Click in "
-"the <app>document viewer</app>. The corresponding line in the TeX source "
-"code will be hightlighted."
+"You can perform a backward search by pressing <keyseq><key>Ctrl</key>left "
+"click</keyseq> in the <app>document viewer</app>. The corresponding line in "
+"the TeX source code will be hightlighted."
 msgstr ""
-"Vous pouvez réaliser une recherche inverse en appuyant sur <key>Ctrl</"
-"key> + clic gauche dans le <app>visionneur de documents</app>. La ligne "
+"Vous pouvez réaliser une recherche inverse en appuyant sur <keyseq><key>Ctrl</key>"
+"clic gauche</keyseq> dans le <app>visionneur de documents</app>. La ligne "
 "correspondante dans le fichier source TeX est mise en évidence."
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
@@ -497,8 +497,8 @@ msgid "Video Demonstration"
 msgstr "Démonstration vidéo"
 
 #: C/synctex.page:30(p)
-msgid "Press <key>Ctrl</key> + click to sync."
-msgstr "Appuyez sur <key>Ctrl</key> et cliquez pour synchroniser."
+msgid "Press <keyseq><key>Ctrl</key>click</keyseq> to sync."
+msgstr "Appuyez sur <keyseq><key>Ctrl</key>clic</keyseq> pour synchroniser."
 
 #: C/synctex-editors.page:7(desc)
 msgid "Which editor can you use to edit your TEX file?"
@@ -1388,9 +1388,10 @@ msgstr "Pourquoi le document est constamment recharger ?"
 
 #: C/reload.page:25(p)
 msgid ""
-"If the Document Viewer detects that the document you have open has changed "
-"(perhaps because another program has modified it), it will automatically "
-"reload the document and display the most recent version for you."
+"If the <app>Document Viewer</app> detects that the document you have open "
+"has changed (perhaps because another program has modified it), it will "
+"automatically reload the document and display the most recent version for "
+"you."
 msgstr ""
 "Si le <app>visionneur de documents</app> détecte que le document que vous "
 "avez ouvert, a été modifié (peut-être parce qu'un autre programme l'a "
@@ -1737,19 +1738,19 @@ msgstr "Navigation au sein de la présentation"
 
 #: C/presentations.page:40(p)
 msgid ""
-"Use the <key>spacebar</key>, right arrow key, down arrow key, or left mouse "
-"click to go to the next slide."
+"Use the <key>spacebar</key>, <key>→</key>, <key>↓</key>, or left mouse click "
+"to go to the next slide."
 msgstr ""
-"Utilisez la <key>barre d'espace</key>, la touche flèche droite ou flèche bas "
+"Utilisez la <key>barre d'espace</key>, <key>→</key>, <key>↓</key> "
 "ou cliquez sur le bouton gauche de la souris pour aller à la diapositive "
 "suivante."
 
 #: C/presentations.page:43(p)
 msgid ""
-"Use the left arrow key, up arrow key or right mouse click to go to the "
+"Use the <key>←</key>, <key>↑</key> or right mouse click to go to the "
 "previous slide."
 msgstr ""
-"Utilisez la touche flèche gauche ou flèche haut ou cliquez sur le bouton "
+"Utilisez <key>←</key>, <key>↑</key> ou cliquez sur le bouton "
 "droite de la souris pour aller à la diapositive précédente."
 
 #: C/presentations.page:47(p)
@@ -1845,7 +1846,7 @@ msgstr ""
 #: C/opening.page:28(p)
 msgid ""
 "Double clicking opens PDF, PostScript, .djvu, .dvi and Comic Book Archive "
-"files in the Document Viewer by default."
+"files in the <app>Document Viewer</app> by default."
 msgstr ""
 "Un double clic ouvre les fichiers PDF, PostScript, .djvu, .dvi et les "
 "archives Comic Book dans le <app>visionneur de documents</app> par défaut."
@@ -1899,7 +1900,8 @@ msgstr "Pourquoi n'est-il pas possible d'ouvrir un fichier ?"
 msgid ""
 "If you try to open a document of a format that the <app>document viewer</"
 "app> does not recognize, you will get an \"Unable to open document\" error "
-"message. Click <gui>Close</gui> to return to the Document Viewer window."
+"message. Click <gui>Close</gui> to return to the <app>Document Viewer</app> "
+"window."
 msgstr ""
 "Si vous essayez d'ouvrir un document dans un format que le <app>visionneur "
 "de documents</app> ne reconnaît pas, vous obtenez un message d'erreur "
@@ -2019,7 +2021,9 @@ msgid "Make sure that the <gui>override_restrictions</gui> option is checked."
 msgstr "Vérifiez que l'option <gui>override_restrictions</gui> est cochée."
 
 #: C/noprint.page:83(p)
-msgid "Go back to the Document Viewer and try to print the document again."
+msgid ""
+"Go back to the <app>Document Viewer</app> and try to print the document "
+"again."
 msgstr ""
 "Retournez dans le <app>visionneur de documents</app> et essayez d'imprimer "
 "le document à nouveau."
@@ -3316,8 +3320,8 @@ msgstr ""
 
 #: C/convertSVG.page:27(p)
 msgid ""
-"This works by opening the file in Document Viewer and \"printing\" the "
-"document as an SVG file."
+"This works by opening the file in <app>Document Viewer</app> and \"printing"
+"\" the document as an SVG file."
 msgstr ""
 "Il suffit d'ouvrir le fichier dans le <app>visionneur de documents</app> et "
 "« d'imprimer » le document en tant que fichier SVG."
@@ -3356,8 +3360,8 @@ msgstr ""
 
 #: C/convertPostScript.page:30(p)
 msgid ""
-"This works by opening the file in Document Viewer and \"printing\" the "
-"document as a PostScript file."
+"This works by opening the file in <app>Document Viewer</app> and \"printing"
+"\" the document as a PostScript file."
 msgstr ""
 "Il suffit d'ouvrir le fichier dans le <app>visionneur de documents</app> et "
 "« d'imprimer » le document en tant que fichier PostScript."
@@ -3396,8 +3400,8 @@ msgstr ""
 
 #: C/convertpdf.page:29(p)
 msgid ""
-"This works by opening the file in Document Viewer and \"printing\" the "
-"document as a PDF file."
+"This works by opening the file in <app>Document Viewer</app> and \"printing"
+"\" the document as a PDF file."
 msgstr ""
 "Il suffit d'ouvrir le fichier dans le <app>visionneur de documents</app> et "
 "« d'imprimer » le document en tant que fichier PDF."
@@ -3449,8 +3453,9 @@ msgstr "La ligne de commande"
 
 #: C/commandline.page:24(p)
 msgid ""
-"To start the Document Viewer from the command line, type <cmd>evince</cmd>. "
-"You can open a specific file by typing the filename after the evince command:"
+"To start the <app>Document Viewer</app> from the command line, type "
+"<cmd>evince</cmd>. You can open a specific file by typing the filename after "
+"the evince command:"
 msgstr ""
 "Pour lancer le <app>visionneur de documents</app> à partir de la ligne de "
 "commande, saisissez <cmd>evince</cmd>. Vous pouvez ouvrir un fichier "
@@ -3511,7 +3516,7 @@ msgstr "evince --page-label=3 fichier.pdf"
 #: C/commandline.page:45(p)
 msgid ""
 "The page label should be in the same format as the page number displayed in "
-"the Document Viewer toolbar."
+"the <app>Document Viewer</app> toolbar."
 msgstr ""
 "Le numéro de page doit être dans le même format que le numéro affiché dans "
 "la barre d'outils du <app>visionneur de documents</app>."
@@ -3679,12 +3684,12 @@ msgstr ""
 #: C/annotations-save.page:34(p)
 msgid ""
 "Annotations are added according to the PDF specification. Therefore, most "
-"PDF readers should be able to read them. <app>Okular</app> Document Viewer "
-"does not support them. Adobe Reader is known to work."
+"PDF readers should be able to read them. The Okular document viewer does not "
+"support them. Adobe Reader is known to work."
 msgstr ""
 "Les annotations sont ajoutées en respectant les spécifications PDF. Par "
 "conséquent, la plupart des lecteurs de PDF devraient être capables de les "
-"lire. Le visionneur de documents <app>Okular</app> ne les prend pas en "
+"lire. Le visionneur de documents Okular ne les prend pas en "
 "charge. Adobe Reader le fait."
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
