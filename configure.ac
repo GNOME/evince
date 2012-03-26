@@ -202,7 +202,7 @@ AC_ARG_WITH([smclient],
 		  [Setting smclient backend (default:auto)])],
   [],
   [case "$GDK_TARGET" in
-    x11) case "$with_platform" in
+    x11*) case "$with_platform" in
            gnome) with_smclient=xsmp ;;
            *) with_smclient=no ;;
          esac ;;
