@@ -37,6 +37,8 @@ DOC_PAGES = \
 	convertpdf.page			\
 	convertPostScript.page		\
 	convertSVG.page			\
+	develop.page			\
+	documentation.page		\
 	duplex-10pages.page		\
 	duplex-11pages.page		\
 	duplex-12pages.page		\
@@ -60,6 +62,7 @@ DOC_PAGES = \
 	index.page			\
 	introduction.page		\
 	invert-colors.page		\
+	license.page			\
 	movingaround.page		\
 	noprint.page			\
 	openerror.page			\
@@ -87,7 +90,8 @@ DOC_PAGES = \
 	synctex-search.page		\
 	synctex-support.page		\
 	textselection.page		\
-	toolbar.page
+	toolbar.page			\
+	translate.page
 
 DOC_LINGUAS = bg ca cs da de el en_GB es eu fi fr gl hu it ja lv nl oc pt_BR ru sl sr sv te uk vi zh_CN zh_HK zh_TW
 
