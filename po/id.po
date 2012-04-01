@@ -4,14 +4,14 @@
 #
 # Ahmad Riza H Nst <rizahnst@gnome.org>, 2006.
 # Mdamt <mdamt@gnome.org>, 2005.
-# Andika Triwidada <andika@gmail.com>, 2009 - 2011.
+# Andika Triwidada <andika@gmail.com>, 2009 - 2012.
 # Dirgita <dirgitadevina@yahoo.co.id>, 2010.
 msgid ""
 msgstr ""
 "Project-Id-Version: evince master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=evince&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2011-09-24 14:41+0000\n"
-"PO-Revision-Date: 2011-09-25 14:05+0700\n"
+"POT-Creation-Date: 2012-02-19 18:47+0000\n"
+"PO-Revision-Date: 2012-04-01 09:09+0700\n"
 "Last-Translator: Andika Triwidada <andika@gmail.com>\n"
 "Language-Team: GNOME Indonesian Translation Team <gnome@i15n.org>\n"
 "MIME-Version: 1.0\n"
@@ -65,12 +65,12 @@ msgstr "Tidak ada berkas dalam arsip"
 msgid "No images found in archive %s"
 msgstr "Tidak menemukan gambar dalam arsip %s"
 
-#: ../backend/comics/comics-document.c:794
+#: ../backend/comics/comics-document.c:797
 #, c-format
 msgid "There was an error deleting “%s”."
 msgstr "Galat sewaktu menghapus “%s”."
 
-#: ../backend/comics/comics-document.c:887
+#: ../backend/comics/comics-document.c:890
 #, c-format
 msgid "Error %s"
 msgstr "Galat %s"
@@ -91,7 +91,7 @@ msgstr "Dokumen ini terdiri atas sejumlah berkas. Satu atau lebih berkas tersebu
 msgid "DjVu Documents"
 msgstr "Dokumen DjVu"
 
-#: ../backend/dvi/dvi-document.c:110
+#: ../backend/dvi/dvi-document.c:121
 msgid "DVI document has incorrect format"
 msgstr "Format dokumen DVI salah"
 
@@ -191,12 +191,12 @@ msgstr "Dokumen tidak sah"
 msgid "Couldn't save attachment “%s”: %s"
 msgstr "Tidak dapat menyimpan lampiran “%s”: %s"
 
-#: ../libdocument/ev-attachment.c:372
+#: ../libdocument/ev-attachment.c:373
 #, c-format
 msgid "Couldn't open attachment “%s”: %s"
 msgstr "Tidak dapat membuka lampiran “%s”: %s"
 
-#: ../libdocument/ev-attachment.c:407
+#: ../libdocument/ev-attachment.c:408
 #, c-format
 msgid "Couldn't open attachment “%s”"
 msgstr "Tidak dapat membuka lampiran “%s”"
@@ -229,32 +229,37 @@ msgstr "Gagal membuat direktori temporer: %s"
 msgid "File is not a valid .desktop file"
 msgstr "Ini bukan berkas .desktop yang sah"
 
-#: ../cut-n-paste/smclient/eggdesktopfile.c:188
+#. translators: 'Version' is from a desktop file, and
+#. * should not be translated. '%s' would probably be a
+#. * version number.
+#: ../cut-n-paste/smclient/eggdesktopfile.c:191
 #, c-format
 msgid "Unrecognized desktop file Version '%s'"
 msgstr "Berkas desktop Versi '%s' tak dikenal"
 
-#: ../cut-n-paste/smclient/eggdesktopfile.c:968
+#: ../cut-n-paste/smclient/eggdesktopfile.c:974
 #, c-format
 msgid "Starting %s"
 msgstr "Memulai %s"
 
-#: ../cut-n-paste/smclient/eggdesktopfile.c:1110
+#: ../cut-n-paste/smclient/eggdesktopfile.c:1116
 #, c-format
 msgid "Application does not accept documents on command line"
 msgstr "Aplikasi tidak menerima dokumen pada baris perintah"
 
-#: ../cut-n-paste/smclient/eggdesktopfile.c:1178
+#: ../cut-n-paste/smclient/eggdesktopfile.c:1184
 #, c-format
 msgid "Unrecognized launch option: %d"
 msgstr "Opsi peluncuran tak dikenal: %d"
 
-#: ../cut-n-paste/smclient/eggdesktopfile.c:1383
+#. translators: The 'Type=Link' string is found in a
+#. * desktop file, and should not be translated.
+#: ../cut-n-paste/smclient/eggdesktopfile.c:1391
 #, c-format
 msgid "Can't pass document URIs to a 'Type=Link' desktop entry"
 msgstr "Tidak dapat melewatkan URI dokumen pada entri desktop 'Type=Link'"
 
-#: ../cut-n-paste/smclient/eggdesktopfile.c:1404
+#: ../cut-n-paste/smclient/eggdesktopfile.c:1412
 #, c-format
 msgid "Not a launchable item"
 msgstr "Bukan objek yang dapat dieksekusi"
@@ -296,32 +301,32 @@ msgstr "Menampilkan opsi manajemen sesi"
 #. * produce duplicates, but don't worry about it. If your language
 #. * normally has a mnemonic at the start, please use the _. If not,
 #. * please remove.
-#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:988
+#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:992
 #, c-format
 msgid "Show “_%s”"
 msgstr "Menampilkan “_%s”"
 
-#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1479
+#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1485
 msgid "_Move on Toolbar"
 msgstr "Pin_dahkan Bilah Alat"
 
-#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1480
+#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1486
 msgid "Move the selected item on the toolbar"
 msgstr "Memindahkan item yang dipilih pada bilah alat"
 
-#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1481
+#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1487
 msgid "_Remove from Toolbar"
 msgstr "Hapus da_ri Bilah Alat"
 
-#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1482
+#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1488
 msgid "Remove the selected item from the toolbar"
 msgstr "Membuang item yang dipilih dari bilah alat"
 
-#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1483
+#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1489
 msgid "_Delete Toolbar"
 msgstr "_Hapus Bilah Alat"
 
-#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1484
+#: ../cut-n-paste/toolbar-editor/egg-editable-toolbar.c:1490
 msgid "Remove the selected toolbar"
 msgstr "Menghapus bilah alat yang dipilih"
 
@@ -331,7 +336,7 @@ msgstr "Pemisah"
 
 #. translators: this is the label for toolbar button
 #: ../cut-n-paste/zoom-control/ephy-zoom.h:48
-#: ../shell/ev-window.c:6057
+#: ../shell/ev-window.c:6157
 msgid "Best Fit"
 msgstr "Sehalaman Penuh"
 
@@ -397,9 +402,9 @@ msgstr "6400%"
 
 #. Manually set name and icon
 #: ../data/evince.desktop.in.in.h:1
-#: ../shell/ev-window.c:4810
+#: ../shell/ev-window.c:4897
 #: ../shell/ev-window-title.c:157
-#: ../shell/main.c:310
+#: ../shell/main.c:317
 #, c-format
 msgid "Document Viewer"
 msgstr "Penampil Dokumen"
@@ -416,6 +421,15 @@ msgstr "Timpa restriksi dokumen"
 msgid "Override document restrictions, like restriction to copy or to print."
 msgstr "Menimpa restriksi dokumen, seperti larangan untuk menyalin atau menceta."
 
+#: ../data/org.gnome.Evince.gschema.xml.in.h:3
+#| msgid "Reload the document"
+msgid "Automatically reload the document"
+msgstr "Otomatis memuat ulang dokumen"
+
+#: ../data/org.gnome.Evince.gschema.xml.in.h:4
+msgid "The document is automatically reloaded on file change."
+msgstr "Dokumen otomatis dimuat ulang ketika berkas berubah."
+
 #: ../previewer/ev-previewer.c:44
 msgid "Delete the temporary file"
 msgstr "Hapus berkas temporer"
@@ -424,13 +438,13 @@ msgstr "Hapus berkas temporer"
 msgid "Print settings file"
 msgstr "Cetak berkas pengaturan"
 
-#: ../previewer/ev-previewer.c:144
-#: ../previewer/ev-previewer.c:178
+#: ../previewer/ev-previewer.c:147
+#: ../previewer/ev-previewer.c:181
 msgid "GNOME Document Previewer"
 msgstr "Penampil Dokumen GNOME"
 
 #: ../previewer/ev-previewer-window.c:91
-#: ../shell/ev-window.c:3276
+#: ../shell/ev-window.c:3321
 msgid "Failed to print document"
 msgstr "Gagal mencetak dokumen"
 
@@ -441,32 +455,32 @@ msgstr "Pencetak '%s' yang dipilih tidak ditemukan"
 
 #. Go menu
 #: ../previewer/ev-previewer-window.c:284
-#: ../shell/ev-window.c:5749
+#: ../shell/ev-window.c:5841
 msgid "_Previous Page"
 msgstr "Halaman _Sebelumnya"
 
 #: ../previewer/ev-previewer-window.c:285
-#: ../shell/ev-window.c:5750
+#: ../shell/ev-window.c:5842
 msgid "Go to the previous page"
 msgstr "Halaman sebelumnya"
 
 #: ../previewer/ev-previewer-window.c:287
-#: ../shell/ev-window.c:5752
+#: ../shell/ev-window.c:5844
 msgid "_Next Page"
 msgstr "Halama_n Selanjutnya"
 
 #: ../previewer/ev-previewer-window.c:288
-#: ../shell/ev-window.c:5753
+#: ../shell/ev-window.c:5845
 msgid "Go to the next page"
 msgstr "Halaman selanjutnya"
 
 #: ../previewer/ev-previewer-window.c:291
-#: ../shell/ev-window.c:5736
+#: ../shell/ev-window.c:5828
 msgid "Enlarge the document"
 msgstr "Memperbesar tampilan dokumen"
 
 #: ../previewer/ev-previewer-window.c:294
-#: ../shell/ev-window.c:5739
+#: ../shell/ev-window.c:5831
 msgid "Shrink the document"
 msgstr "Memperkecil tampilan dokumen"
 
@@ -476,37 +490,37 @@ msgid "Print"
 msgstr "Cetak"
 
 #: ../previewer/ev-previewer-window.c:298
-#: ../shell/ev-window.c:5705
+#: ../shell/ev-window.c:5797
 msgid "Print this document"
 msgstr "Mencetak dokumen ini"
 
 #: ../previewer/ev-previewer-window.c:342
-#: ../shell/ev-window.c:5863
+#: ../shell/ev-window.c:5958
 msgid "_Best Fit"
 msgstr "Sehalaman Penuh"
 
 #: ../previewer/ev-previewer-window.c:343
-#: ../shell/ev-window.c:5864
+#: ../shell/ev-window.c:5959
 msgid "Make the current document fill the window"
 msgstr "Menyesuaikan dokumen dengan jendela"
 
 #: ../previewer/ev-previewer-window.c:345
-#: ../shell/ev-window.c:5866
+#: ../shell/ev-window.c:5961
 msgid "Fit Page _Width"
 msgstr "Selebar _Halaman"
 
 #: ../previewer/ev-previewer-window.c:346
-#: ../shell/ev-window.c:5867
+#: ../shell/ev-window.c:5962
 msgid "Make the current document fill the window width"
 msgstr "Menyesuaikan dokumen hingga memenuhi lebar jendela"
 
 #: ../previewer/ev-previewer-window.c:558
-#: ../shell/ev-window.c:5975
+#: ../shell/ev-window.c:6070
 msgid "Page"
 msgstr "Halaman"
 
 #: ../previewer/ev-previewer-window.c:559
-#: ../shell/ev-window.c:5976
+#: ../shell/ev-window.c:6071
 msgid "Select Page"
 msgstr "Memilih Halaman"
 
@@ -527,7 +541,7 @@ msgid "Subject:"
 msgstr "Subjek:"
 
 #: ../properties/ev-properties-view.c:63
-#: ../shell/ev-annotation-properties-dialog.c:159
+#: ../shell/ev-annotation-properties-dialog.c:154
 msgid "Author:"
 msgstr "Penulis:"
 
@@ -571,7 +585,7 @@ msgstr "Keamanan:"
 msgid "Paper Size:"
 msgstr "Ukuran Kertas:"
 
-#: ../properties/ev-properties-view.c:188
+#: ../properties/ev-properties-view.c:187
 #: ../libview/ev-print-operation.c:1892
 msgid "None"
 msgstr "Nihil"
@@ -582,30 +596,30 @@ msgstr "Nihil"
 #. * Do *not* translate it to "predefinito:mm", if it
 #. * it isn't default:mm or default:inch it will not work
 #.
-#: ../properties/ev-properties-view.c:217
+#: ../properties/ev-properties-view.c:215
 msgid "default:mm"
 msgstr "default:mm"
 
-#: ../properties/ev-properties-view.c:261
+#: ../properties/ev-properties-view.c:259
 #, c-format
 msgid "%.0f × %.0f mm"
 msgstr "%.0f × %.0f mm"
 
-#: ../properties/ev-properties-view.c:265
+#: ../properties/ev-properties-view.c:263
 #, c-format
 msgid "%.2f × %.2f inch"
 msgstr "%.2f × %.2f inci"
 
 #. Note to translators: first placeholder is the paper name (eg.
 #. * A4), second placeholder is the paper size (eg. 297x210 mm)
-#: ../properties/ev-properties-view.c:289
+#: ../properties/ev-properties-view.c:287
 #, c-format
 msgid "%s, Portrait (%s)"
 msgstr "%s, Tegak (%s)"
 
 #. Note to translators: first placeholder is the paper name (eg.
 #. * A4), second placeholder is the paper size (eg. 297x210 mm)
-#: ../properties/ev-properties-view.c:296
+#: ../properties/ev-properties-view.c:294
 #, c-format
 msgid "%s, Landscape (%s)"
 msgstr "%s, Tumbang (%s)"
@@ -624,7 +638,7 @@ msgstr "dari %d"
 #: ../libview/ev-loading-window.c:76
 #: ../shell/ev-sidebar-annotations.c:133
 #: ../shell/ev-sidebar-layers.c:125
-#: ../shell/ev-sidebar-links.c:262
+#: ../shell/ev-sidebar-links.c:260
 msgid "Loading…"
 msgstr "Memuat…"
 
@@ -708,7 +722,7 @@ msgstr "Bila diaktifkan, setiap halaman akan dicetak dengan ukuran kertas sepert
 msgid "Page Handling"
 msgstr "Penanganan Halaman"
 
-#: ../libview/ev-jobs.c:1573
+#: ../libview/ev-jobs.c:1572
 #, c-format
 msgid "Failed to print page %d: %s"
 msgstr "Gagal mencetak halaman %d: %s"
@@ -737,161 +751,161 @@ msgstr "Tampilan Dokumen"
 msgid "Jump to page:"
 msgstr "Ke halaman:"
 
-#: ../libview/ev-view-presentation.c:999
+#: ../libview/ev-view-presentation.c:997
 msgid "End of presentation. Click to exit."
 msgstr "Akhir presentasi. Klik untuk keluar."
 
-#: ../libview/ev-view.c:1834
+#: ../libview/ev-view.c:1816
 msgid "Go to first page"
 msgstr "Menuju halaman pertama"
 
-#: ../libview/ev-view.c:1836
+#: ../libview/ev-view.c:1818
 msgid "Go to previous page"
 msgstr "Menuju halaman sebelumnya"
 
-#: ../libview/ev-view.c:1838
+#: ../libview/ev-view.c:1820
 msgid "Go to next page"
 msgstr "Menuju halaman selanjutnya"
 
-#: ../libview/ev-view.c:1840
+#: ../libview/ev-view.c:1822
 msgid "Go to last page"
 msgstr "Menuju halaman terakhir"
 
-#: ../libview/ev-view.c:1842
+#: ../libview/ev-view.c:1824
 msgid "Go to page"
 msgstr "Menuju halaman"
 
-#: ../libview/ev-view.c:1844
+#: ../libview/ev-view.c:1826
 msgid "Find"
 msgstr "Cari"
 
-#: ../libview/ev-view.c:1872
+#: ../libview/ev-view.c:1854
 #, c-format
 msgid "Go to page %s"
 msgstr "Menuju halaman %s"
 
-#: ../libview/ev-view.c:1878
+#: ../libview/ev-view.c:1860
 #, c-format
 msgid "Go to %s on file “%s”"
 msgstr "Menuju %s pada berkas “%s”"
 
-#: ../libview/ev-view.c:1881
+#: ../libview/ev-view.c:1863
 #, c-format
 msgid "Go to file “%s”"
 msgstr "Menuju berkas “%s”"
 
-#: ../libview/ev-view.c:1889
+#: ../libview/ev-view.c:1871
 #, c-format
 msgid "Launch %s"
 msgstr "Luncurkan %s"
 
-#: ../shell/eggfindbar.c:305
+#: ../shell/eggfindbar.c:310
 msgid "Find:"
 msgstr "Cari:"
 
-#: ../shell/eggfindbar.c:314
-#: ../shell/ev-window.c:5722
+#: ../shell/eggfindbar.c:319
+#: ../shell/ev-window.c:5814
 msgid "Find Pre_vious"
 msgstr "Cari _Sebelumnya"
 
-#: ../shell/eggfindbar.c:318
+#: ../shell/eggfindbar.c:323
 msgid "Find previous occurrence of the search string"
 msgstr "Menuju string yang ditemukan sebelumnya"
 
-#: ../shell/eggfindbar.c:322
-#: ../shell/ev-window.c:5720
+#: ../shell/eggfindbar.c:327
+#: ../shell/ev-window.c:5812
 msgid "Find Ne_xt"
 msgstr "_Cari Selanjutnya"
 
-#: ../shell/eggfindbar.c:326
+#: ../shell/eggfindbar.c:331
 msgid "Find next occurrence of the search string"
 msgstr "Menuju string yang ditemukan sebelumnya"
 
-#: ../shell/eggfindbar.c:333
+#: ../shell/eggfindbar.c:338
 msgid "C_ase Sensitive"
 msgstr "Sesuai Bes_ar/Kecil Huruf"
 
-#: ../shell/eggfindbar.c:336
+#: ../shell/eggfindbar.c:341
 msgid "Toggle case sensitive search"
 msgstr "Mencari dengan menyesuaikan besar atau kecilnya huruf"
 
-#: ../shell/ev-annotation-properties-dialog.c:97
+#: ../shell/ev-annotation-properties-dialog.c:94
 msgid "Icon:"
 msgstr "Ikon:"
 
-#: ../shell/ev-annotation-properties-dialog.c:104
+#: ../shell/ev-annotation-properties-dialog.c:100
 msgid "Note"
 msgstr "Catatan"
 
-#: ../shell/ev-annotation-properties-dialog.c:105
+#: ../shell/ev-annotation-properties-dialog.c:101
 msgid "Comment"
 msgstr "Komentar"
 
-#: ../shell/ev-annotation-properties-dialog.c:106
+#: ../shell/ev-annotation-properties-dialog.c:102
 msgid "Key"
 msgstr "Kunci"
 
-#: ../shell/ev-annotation-properties-dialog.c:107
+#: ../shell/ev-annotation-properties-dialog.c:103
 msgid "Help"
 msgstr "Bantuan"
 
-#: ../shell/ev-annotation-properties-dialog.c:108
+#: ../shell/ev-annotation-properties-dialog.c:104
 msgid "New Paragraph"
 msgstr "Paragraf Baru"
 
-#: ../shell/ev-annotation-properties-dialog.c:109
+#: ../shell/ev-annotation-properties-dialog.c:105
 msgid "Paragraph"
 msgstr "Paragraf"
 
-#: ../shell/ev-annotation-properties-dialog.c:110
+#: ../shell/ev-annotation-properties-dialog.c:106
 msgid "Insert"
 msgstr "Sisip"
 
-#: ../shell/ev-annotation-properties-dialog.c:111
+#: ../shell/ev-annotation-properties-dialog.c:107
 msgid "Cross"
 msgstr "Silang"
 
-#: ../shell/ev-annotation-properties-dialog.c:112
+#: ../shell/ev-annotation-properties-dialog.c:108
 msgid "Circle"
 msgstr "Lingkaran"
 
-#: ../shell/ev-annotation-properties-dialog.c:113
+#: ../shell/ev-annotation-properties-dialog.c:109
 msgid "Unknown"
 msgstr "Tak Dikenal"
 
-#: ../shell/ev-annotation-properties-dialog.c:139
+#: ../shell/ev-annotation-properties-dialog.c:134
 msgid "Annotation Properties"
 msgstr "Properti Anotasi"
 
-#: ../shell/ev-annotation-properties-dialog.c:172
+#: ../shell/ev-annotation-properties-dialog.c:165
 msgid "Color:"
 msgstr "Warna:"
 
-#: ../shell/ev-annotation-properties-dialog.c:184
+#: ../shell/ev-annotation-properties-dialog.c:175
 msgid "Style:"
 msgstr "Gaya:"
 
-#: ../shell/ev-annotation-properties-dialog.c:200
+#: ../shell/ev-annotation-properties-dialog.c:190
 msgid "Transparent"
 msgstr "Transparan"
 
-#: ../shell/ev-annotation-properties-dialog.c:207
+#: ../shell/ev-annotation-properties-dialog.c:197
 msgid "Opaque"
 msgstr "Buram"
 
-#: ../shell/ev-annotation-properties-dialog.c:218
+#: ../shell/ev-annotation-properties-dialog.c:207
 msgid "Initial window state:"
 msgstr "Kondisi awal jendela:"
 
-#: ../shell/ev-annotation-properties-dialog.c:225
+#: ../shell/ev-annotation-properties-dialog.c:213
 msgid "Open"
 msgstr "Buka"
 
-#: ../shell/ev-annotation-properties-dialog.c:226
+#: ../shell/ev-annotation-properties-dialog.c:214
 msgid "Close"
 msgstr "Tutup"
 
-#: ../shell/ev-application.c:1115
+#: ../shell/ev-application.c:1129
 msgid "Running in presentation mode"
 msgstr "Berjalan dalam mode presentasi"
 
@@ -904,41 +918,41 @@ msgstr "Sandi untuk dokumen %s"
 msgid "Open a recently used document"
 msgstr "Membuka dokumen yang baru-baru ini digunakan"
 
-#: ../shell/ev-password-view.c:144
+#: ../shell/ev-password-view.c:142
 msgid "This document is locked and can only be read by entering the correct password."
 msgstr "Dokumen ini dalam keadaan terkunci dan harus dibuka dengan sandi."
 
-#: ../shell/ev-password-view.c:153
-#: ../shell/ev-password-view.c:271
+#: ../shell/ev-password-view.c:151
+#: ../shell/ev-password-view.c:269
 msgid "_Unlock Document"
 msgstr "B_uka Kunci Dokumen"
 
-#: ../shell/ev-password-view.c:263
+#: ../shell/ev-password-view.c:261
 msgid "Enter password"
 msgstr "Masukkan sandi"
 
-#: ../shell/ev-password-view.c:303
+#: ../shell/ev-password-view.c:301
 msgid "Password required"
 msgstr "Memerlukan sandi"
 
-#: ../shell/ev-password-view.c:304
+#: ../shell/ev-password-view.c:302
 #, c-format
 msgid "The document “%s” is locked and requires a password before it can be opened."
 msgstr "Dokumen \"%s\" dalam keadaan terkunci dan harus dibuka dengan sandi."
 
-#: ../shell/ev-password-view.c:334
+#: ../shell/ev-password-view.c:332
 msgid "_Password:"
 msgstr "_Sandi:"
 
-#: ../shell/ev-password-view.c:367
+#: ../shell/ev-password-view.c:363
 msgid "Forget password _immediately"
 msgstr "Lupakan sandi seket_ika"
 
-#: ../shell/ev-password-view.c:379
+#: ../shell/ev-password-view.c:375
 msgid "Remember password until you _log out"
 msgstr "Ingat sandi sampai Anda _log keluar"
 
-#: ../shell/ev-password-view.c:391
+#: ../shell/ev-password-view.c:387
 msgid "Remember _forever"
 msgstr "Ingat sela_manya"
 
@@ -1009,30 +1023,30 @@ msgstr "Dokumen tidak memiliki anotasi"
 msgid "Page %d"
 msgstr "Halaman %d"
 
-#: ../shell/ev-sidebar-attachments.c:695
+#: ../shell/ev-sidebar-attachments.c:696
 msgid "Attachments"
 msgstr "Lampiran"
 
-#: ../shell/ev-sidebar-bookmarks.c:152
+#: ../shell/ev-sidebar-bookmarks.c:153
 msgid "_Open Bookmark"
 msgstr "_Buka Penanda Taut"
 
-#: ../shell/ev-sidebar-bookmarks.c:154
+#: ../shell/ev-sidebar-bookmarks.c:155
 msgid "_Rename Bookmark"
 msgstr "Ubah _Nama Penanda Taut"
 
-#: ../shell/ev-sidebar-bookmarks.c:156
+#: ../shell/ev-sidebar-bookmarks.c:157
 msgid "_Remove Bookmark"
 msgstr "Hapus _Penanda Taut"
 
-#: ../shell/ev-sidebar-bookmarks.c:311
-#: ../shell/ev-window.c:922
-#: ../shell/ev-window.c:4564
+#: ../shell/ev-sidebar-bookmarks.c:312
+#: ../shell/ev-window.c:926
+#: ../shell/ev-window.c:4625
 #, c-format
 msgid "Page %s"
 msgstr "Halaman %s"
 
-#: ../shell/ev-sidebar-bookmarks.c:605
+#: ../shell/ev-sidebar-bookmarks.c:606
 msgid "Bookmarks"
 msgstr "Penanda Taut"
 
@@ -1040,11 +1054,11 @@ msgstr "Penanda Taut"
 msgid "Layers"
 msgstr "Lapisan"
 
-#: ../shell/ev-sidebar-links.c:338
+#: ../shell/ev-sidebar-links.c:336
 msgid "Print…"
 msgstr "Cetak…"
 
-#: ../shell/ev-sidebar-links.c:722
+#: ../shell/ev-sidebar-links.c:720
 msgid "Index"
 msgstr "Indeks"
 
@@ -1052,129 +1066,134 @@ msgstr "Indeks"
 msgid "Thumbnails"
 msgstr "Miniatur"
 
-#: ../shell/ev-window.c:919
+#: ../shell/ev-window.c:923
 #, c-format
 msgid "Page %s — %s"
 msgstr "Halaman %s — %s"
 
-#: ../shell/ev-window.c:1499
+#: ../shell/ev-window.c:1511
 msgid "The document contains no pages"
 msgstr "Dokumen tak memuat halaman"
 
-#: ../shell/ev-window.c:1502
+#: ../shell/ev-window.c:1514
 msgid "The document contains only empty pages"
 msgstr "Dokumen hanya memuat halaman kosong"
 
-#: ../shell/ev-window.c:1714
-#: ../shell/ev-window.c:1880
+#: ../shell/ev-window.c:1729
+#: ../shell/ev-window.c:1895
 msgid "Unable to open document"
 msgstr "Tidak dapat membuka dokumen"
 
-#: ../shell/ev-window.c:1851
+#: ../shell/ev-window.c:1866
 #, c-format
 msgid "Loading document from “%s”"
 msgstr "Memuat dokumen dari “%s”"
 
-#: ../shell/ev-window.c:1993
-#: ../shell/ev-window.c:2286
+#: ../shell/ev-window.c:2008
+#: ../shell/ev-window.c:2302
 #, c-format
 msgid "Downloading document (%d%%)"
 msgstr "Mengunduh dokumen (%d%%)"
 
-#: ../shell/ev-window.c:2026
+#: ../shell/ev-window.c:2041
 msgid "Failed to load remote file."
 msgstr "Gagal memuat berkas jauh."
 
-#: ../shell/ev-window.c:2230
+#: ../shell/ev-window.c:2246
 #, c-format
 msgid "Reloading document from %s"
 msgstr "Memuat ulang dokumen dari %s"
 
-#: ../shell/ev-window.c:2262
+#: ../shell/ev-window.c:2278
 msgid "Failed to reload document."
 msgstr "Gagal memuat ulang dokumen."
 
-#: ../shell/ev-window.c:2410
+#: ../shell/ev-window.c:2421
 msgid "Open Document"
 msgstr "Buka Dokumen"
 
-#: ../shell/ev-window.c:2707
+#: ../shell/ev-window.c:2718
 #, c-format
 msgid "Saving document to %s"
 msgstr "Menyimpan dokumen ke %s"
 
-#: ../shell/ev-window.c:2710
+#: ../shell/ev-window.c:2721
 #, c-format
 msgid "Saving attachment to %s"
 msgstr "Menyimpan lampiran ke %s"
 
-#: ../shell/ev-window.c:2713
+#: ../shell/ev-window.c:2724
 #, c-format
 msgid "Saving image to %s"
 msgstr "Menyimpan gambar ke %s"
 
-#: ../shell/ev-window.c:2757
-#: ../shell/ev-window.c:2857
+#: ../shell/ev-window.c:2768
+#: ../shell/ev-window.c:2868
 #, c-format
 msgid "The file could not be saved as “%s”."
 msgstr "Berkas tidak dapat disimpan sebagai “%s”."
 
-#: ../shell/ev-window.c:2788
+#: ../shell/ev-window.c:2799
 #, c-format
 msgid "Uploading document (%d%%)"
 msgstr "Mengunggah dokumen (%d%%)"
 
-#: ../shell/ev-window.c:2792
+#: ../shell/ev-window.c:2803
 #, c-format
 msgid "Uploading attachment (%d%%)"
 msgstr "Mengunggah lampiran (%d%%)"
 
-#: ../shell/ev-window.c:2796
+#: ../shell/ev-window.c:2807
 #, c-format
 msgid "Uploading image (%d%%)"
 msgstr "Mengunggah gambar (%d%%)"
 
-#: ../shell/ev-window.c:2905
+#: ../shell/ev-window.c:2916
 msgid "Save a Copy"
 msgstr "Simpan Salinan"
 
-#: ../shell/ev-window.c:2959
+#: ../shell/ev-window.c:2973
+#| msgid "Save a copy of the current document"
+msgid "Could not send current document"
+msgstr "Tak bisa mengirim dokumen kini"
+
+#: ../shell/ev-window.c:3004
 msgid "Could not open the containing folder"
 msgstr "Tak bisa membuka folder yang memuatnya"
 
-#: ../shell/ev-window.c:3220
+#: ../shell/ev-window.c:3265
 #, c-format
 msgid "%d pending job in queue"
 msgid_plural "%d pending jobs in queue"
 msgstr[0] "%d tugas tertunda di antrian"
 
-#: ../shell/ev-window.c:3333
+#: ../shell/ev-window.c:3378
 #, c-format
 msgid "Printing job “%s”"
 msgstr "Tugas mencetak “%s”"
 
-#: ../shell/ev-window.c:3510
+#: ../shell/ev-window.c:3555
 msgid "Document contains form fields that have been filled out. If you don't save a copy, changes will be permanently lost."
 msgstr "Dokumen mengandung kolom isian formulir yang telah diisi. Apabila Anda tidak menyimpan salinannya, perubahan tersebut akan hilang."
 
-#: ../shell/ev-window.c:3514
+#: ../shell/ev-window.c:3559
 msgid "Document contains new or modified annotations. If you don't save a copy, changes will be permanently lost."
 msgstr "Dokumen mengandung anotasi baru atau telah diubah. Jika Anda tidak menyimpan salinannya, perubahan tersebut akan hilang."
 
-#: ../shell/ev-window.c:3521
+#: ../shell/ev-window.c:3566
 #, c-format
 msgid "Save a copy of document “%s” before closing?"
 msgstr "Simpan salinan dokumen “%s” sebelum ditutup?"
 
-#: ../shell/ev-window.c:3540
+#: ../shell/ev-window.c:3585
 msgid "Close _without Saving"
 msgstr "_Tutup tanpa menyimpan"
 
-#: ../shell/ev-window.c:3544
+#: ../shell/ev-window.c:3589
 msgid "Save a _Copy"
 msgstr "_Simpan Salinan"
 
-#: ../shell/ev-window.c:3618
+#: ../shell/ev-window.c:3663
 #, c-format
 msgid "Wait until print job “%s” finishes before closing?"
 msgstr "Tunggu sampai tugas pencetakan \"%s\" selesai sebelum"
@@ -1182,34 +1201,34 @@ msgstr "Tunggu sampai tugas pencetakan \"%s\" selesai sebelum"
 #. TRANS: the singular form is not really used as n_print_jobs > 1
 #. but some languages distinguish between different plurals forms,
 #. so the ngettext is needed.
-#: ../shell/ev-window.c:3624
+#: ../shell/ev-window.c:3669
 #, c-format
 msgid "There is %d print job active. Wait until print finishes before closing?"
 msgid_plural "There are %d print jobs active. Wait until print finishes before closing?"
 msgstr[0] "Ada %d tugas pencetakan aktif. Tunggu sampai pencetakan selesai sebelum menutup?"
 
-#: ../shell/ev-window.c:3639
+#: ../shell/ev-window.c:3684
 msgid "If you close the window, pending print jobs will not be printed."
 msgstr "Bila Anda menutup jendela, tugas cetak yang ditunda tak akan dicetak."
 
-#: ../shell/ev-window.c:3643
+#: ../shell/ev-window.c:3688
 msgid "Cancel _print and Close"
 msgstr "Batal _Mencetak dan Keluar"
 
-#: ../shell/ev-window.c:3647
+#: ../shell/ev-window.c:3692
 msgid "Close _after Printing"
 msgstr "Tutup setel_ah Mencetak"
 
-#: ../shell/ev-window.c:4310
-#: ../shell/ev-window.c:4594
+#: ../shell/ev-window.c:4369
+#: ../shell/ev-window.c:4655
 msgid "There was an error displaying help"
 msgstr "Terjadi galat sewaktu menampilkan bantuan"
 
-#: ../shell/ev-window.c:4338
+#: ../shell/ev-window.c:4397
 msgid "Toolbar Editor"
 msgstr "Penyunting Bilah Alat"
 
-#: ../shell/ev-window.c:4806
+#: ../shell/ev-window.c:4893
 #, c-format
 msgid ""
 "Document Viewer\n"
@@ -1218,393 +1237,416 @@ msgstr ""
 "Penampil Dokumen.\n"
 "Menggunakan %s (%s)"
 
-#: ../shell/ev-window.c:4839
+#: ../shell/ev-window.c:4926
 msgid "Evince is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.\n"
 msgstr "Evince adalah perangkat lunak bebas; Anda dapat mendistribusikan ulang dan/atau mengubahnya di bawah ketentuan GNU General Public License sebagaimana dipublikasikan oleh Free Software Foundation; Lisensi versi 2, atau (sesuai pilihan Anda) menggunakan versi selanjutnya.\n"
 
-#: ../shell/ev-window.c:4843
+#: ../shell/ev-window.c:4930
 msgid "Evince is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.\n"
 msgstr "Evince didistribusikan dengan harapan dapat berguna, tetapi TANPA ADANYA JAMINAN; termasuk tanpa jaminan DAYA JUAL atau KELAIKAN UNTUK TUJUAN TERTENTU. Lihat GNU General Public License untuk rincian lebih lanjut.\n"
 
-#: ../shell/ev-window.c:4847
+#: ../shell/ev-window.c:4934
 msgid "You should have received a copy of the GNU General Public License along with Evince; if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA\n"
 msgstr "Anda seharusnya menerima salinan dari GNU General Public License bersama Evince; jika tidak, kirimkan surat Anda ke Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.\n"
 
-#: ../shell/ev-window.c:4872
+#: ../shell/ev-window.c:4959
 msgid "Evince"
 msgstr "Evince"
 
-#: ../shell/ev-window.c:4875
+#: ../shell/ev-window.c:4962
 msgid "© 1996–2010 The Evince authors"
 msgstr "© 1996-2010 Para penulis Evince"
 
-#: ../shell/ev-window.c:4881
+#: ../shell/ev-window.c:4968
 msgid "translator-credits"
 msgstr ""
 "Mohammad DAMT <mdamt@gnome.org>, 2005.\n"
 "Ahmad Riza H Nst <rizahnst@gnome.org>, 2006.\n"
 "Dirgita <dirgitadevina@yahoo.co.id>, 2010.\n"
-"Andika Triwidada <andika@gmail.com>, 2009 - 2011."
+"Andika Triwidada <andika@gmail.com>, 2009 - 2012."
 
 #. TRANS: Sometimes this could be better translated as
 #. "%d hit(s) on this page".  Therefore this string
 #. contains plural cases.
-#: ../shell/ev-window.c:5149
+#: ../shell/ev-window.c:5236
 #, c-format
 msgid "%d found on this page"
 msgid_plural "%d found on this page"
 msgstr[0] "%d ditemukan pada halaman ini"
 
-#: ../shell/ev-window.c:5154
+#: ../shell/ev-window.c:5241
 msgid "Not found"
 msgstr "Tidak ditemukan"
 
-#: ../shell/ev-window.c:5160
+#: ../shell/ev-window.c:5247
 #, c-format
 msgid "%3d%% remaining to search"
 msgstr "%3d%% lagi dalam pencarian"
 
-#: ../shell/ev-window.c:5684
+#: ../shell/ev-window.c:5773
 msgid "_File"
 msgstr "_Berkas"
 
-#: ../shell/ev-window.c:5685
+#: ../shell/ev-window.c:5774
 msgid "_Edit"
 msgstr "_Sunting"
 
-#: ../shell/ev-window.c:5686
+#: ../shell/ev-window.c:5775
 msgid "_View"
 msgstr "_Tampilan"
 
-#: ../shell/ev-window.c:5687
+#: ../shell/ev-window.c:5776
 msgid "_Go"
 msgstr "_Ke"
 
-#: ../shell/ev-window.c:5688
+#: ../shell/ev-window.c:5777
 msgid "_Bookmarks"
 msgstr "_Penanda Taut"
 
-#: ../shell/ev-window.c:5689
+#: ../shell/ev-window.c:5778
 msgid "_Help"
 msgstr "Ba_ntuan"
 
 #. File menu
-#: ../shell/ev-window.c:5692
-#: ../shell/ev-window.c:6015
+#: ../shell/ev-window.c:5781
+#: ../shell/ev-window.c:6110
 msgid "_Open…"
 msgstr "_Buka…"
 
-#: ../shell/ev-window.c:5693
-#: ../shell/ev-window.c:6016
+#: ../shell/ev-window.c:5782
+#: ../shell/ev-window.c:6111
 msgid "Open an existing document"
 msgstr "Membuka dokumen"
 
-#: ../shell/ev-window.c:5695
+#: ../shell/ev-window.c:5784
 msgid "Op_en a Copy"
 msgstr "_Buka Salinan"
 
-#: ../shell/ev-window.c:5696
+#: ../shell/ev-window.c:5785
 msgid "Open a copy of the current document in a new window"
 msgstr "Membuka salinan dokumen yang sedang aktif pada jendela baru"
 
-#: ../shell/ev-window.c:5698
+#: ../shell/ev-window.c:5787
 msgid "_Save a Copy…"
 msgstr "_Simpan Salinan…"
 
-#: ../shell/ev-window.c:5699
+#: ../shell/ev-window.c:5788
 msgid "Save a copy of the current document"
 msgstr "Menyimpan salinan dokumen yang sedang aktif"
 
-#: ../shell/ev-window.c:5701
+#: ../shell/ev-window.c:5790
+msgid "Send _To..."
+msgstr "Kirim _Ke..."
+
+#: ../shell/ev-window.c:5791
+msgid "Send current document by mail, instant message..."
+msgstr "Kirim dokumen kini melalui surel, pesan instan..."
+
+#: ../shell/ev-window.c:5793
 msgid "Open Containing _Folder"
 msgstr "Buka _Folder Pemuat"
 
-#: ../shell/ev-window.c:5702
+#: ../shell/ev-window.c:5794
 msgid "Show the folder which contains this file in the file manager"
 msgstr "Tampilkan folder yang memuat berkas ini di dalam manajer berkas"
 
-#: ../shell/ev-window.c:5704
+#: ../shell/ev-window.c:5796
 msgid "_Print…"
 msgstr "_Cetak…"
 
-#: ../shell/ev-window.c:5707
+#: ../shell/ev-window.c:5799
 msgid "P_roperties"
 msgstr "P_roperti"
 
-#: ../shell/ev-window.c:5715
+#: ../shell/ev-window.c:5807
 msgid "Select _All"
 msgstr "Pilih Semu_a"
 
-#: ../shell/ev-window.c:5717
+#: ../shell/ev-window.c:5809
 msgid "_Find…"
 msgstr "_Cari…"
 
-#: ../shell/ev-window.c:5718
+#: ../shell/ev-window.c:5810
 msgid "Find a word or phrase in the document"
 msgstr "Mencari kata atau frasa dalam dokumen"
 
-#: ../shell/ev-window.c:5724
+#: ../shell/ev-window.c:5816
 msgid "T_oolbar"
 msgstr "_Bilah Alat"
 
-#: ../shell/ev-window.c:5726
+#: ../shell/ev-window.c:5818
 msgid "Rotate _Left"
 msgstr "Putar _Kiri"
 
-#: ../shell/ev-window.c:5728
+#: ../shell/ev-window.c:5820
 msgid "Rotate _Right"
 msgstr "_Putar Kanan"
 
-#: ../shell/ev-window.c:5730
+#: ../shell/ev-window.c:5822
 msgid "Save Current Settings as _Default"
 msgstr "_Pengaturan Saat Ini sebagai Bawaan"
 
-#: ../shell/ev-window.c:5741
+#: ../shell/ev-window.c:5833
 msgid "_Reload"
 msgstr "_Muat Ulang"
 
-#: ../shell/ev-window.c:5742
+#: ../shell/ev-window.c:5834
 msgid "Reload the document"
 msgstr "Memuat ulang dokumen"
 
-#: ../shell/ev-window.c:5745
+#: ../shell/ev-window.c:5837
 msgid "Auto_scroll"
 msgstr "Menggulung Otomati_s"
 
-#: ../shell/ev-window.c:5755
+#: ../shell/ev-window.c:5847
 msgid "_First Page"
 msgstr "Halaman _Pertama"
 
-#: ../shell/ev-window.c:5756
+#: ../shell/ev-window.c:5848
 msgid "Go to the first page"
 msgstr "Menuju halaman pertama"
 
-#: ../shell/ev-window.c:5758
+#: ../shell/ev-window.c:5850
 msgid "_Last Page"
 msgstr "Halaman _Terakhir"
 
-#: ../shell/ev-window.c:5759
+#: ../shell/ev-window.c:5851
 msgid "Go to the last page"
 msgstr "Menuju halaman terakhir"
 
-#: ../shell/ev-window.c:5761
+#: ../shell/ev-window.c:5853
 msgid "Go to Pa_ge"
 msgstr "Ke _Halaman"
 
-#: ../shell/ev-window.c:5762
+#: ../shell/ev-window.c:5854
 msgid "Go to Page"
 msgstr "Ke Halaman"
 
 #. Bookmarks menu
-#: ../shell/ev-window.c:5766
+#: ../shell/ev-window.c:5858
 msgid "_Add Bookmark"
 msgstr "T_ambah Penanda Taut"
 
-#: ../shell/ev-window.c:5767
+#: ../shell/ev-window.c:5859
 msgid "Add a bookmark for the current page"
 msgstr "Tambahkan penanda taut bagi halaman kini"
 
 #. Help menu
-#: ../shell/ev-window.c:5771
+#: ../shell/ev-window.c:5863
 msgid "_Contents"
 msgstr "_Isi"
 
-#: ../shell/ev-window.c:5774
+#: ../shell/ev-window.c:5866
 msgid "_About"
 msgstr "Tent_ang"
 
 #. Toolbar-only
-#: ../shell/ev-window.c:5778
+#: ../shell/ev-window.c:5870
 msgid "Leave Fullscreen"
 msgstr "Keluar dari Layar Penuh"
 
-#: ../shell/ev-window.c:5779
+#: ../shell/ev-window.c:5871
 msgid "Leave fullscreen mode"
 msgstr "Meninggalkan mode layar penuh"
 
-#: ../shell/ev-window.c:5781
+#: ../shell/ev-window.c:5873
 msgid "Start Presentation"
 msgstr "Mulai Presentasi"
 
-#: ../shell/ev-window.c:5782
+#: ../shell/ev-window.c:5874
 msgid "Start a presentation"
 msgstr "Memulai presentasi"
 
 #. View Menu
-#: ../shell/ev-window.c:5845
+#: ../shell/ev-window.c:5937
 msgid "_Toolbar"
 msgstr "Bilah Ala_t"
 
-#: ../shell/ev-window.c:5846
+#: ../shell/ev-window.c:5938
 msgid "Show or hide the toolbar"
 msgstr "Menampilkan atau menyembunyikan bilah alat."
 
-#: ../shell/ev-window.c:5848
+#: ../shell/ev-window.c:5940
 msgid "Side _Pane"
 msgstr "_Panel Samping"
 
-#: ../shell/ev-window.c:5849
+#: ../shell/ev-window.c:5941
 msgid "Show or hide the side pane"
 msgstr "Menampilkan atau menyembunyikan panel samping"
 
-#: ../shell/ev-window.c:5851
+#: ../shell/ev-window.c:5943
 msgid "_Continuous"
 msgstr "Berkelanju_tan"
 
-#: ../shell/ev-window.c:5852
+#: ../shell/ev-window.c:5944
 msgid "Show the entire document"
 msgstr "Menampilkan seluruh isi dokumen"
 
-#: ../shell/ev-window.c:5854
-msgid "_Dual"
-msgstr "Gan_da"
+#: ../shell/ev-window.c:5946
+msgid "_Dual (Even pages left)"
+msgstr "Gan_da (Halaman genap kiri)"
 
-#: ../shell/ev-window.c:5855
-msgid "Show two pages at once"
-msgstr "Menampilkan dua halaman sekaligus"
+#: ../shell/ev-window.c:5947
+#| msgid "Show two pages at once"
+msgid "Show two pages at once with even pages on the left"
+msgstr "Menampilkan dua halaman sekaligus dengan halaman genap di sebelah kiri"
 
-#: ../shell/ev-window.c:5857
+#: ../shell/ev-window.c:5949
+msgid "Dual (_Odd pages left)"
+msgstr "_Ganda (Halaman ganjil kiri)"
+
+#: ../shell/ev-window.c:5950
+#| msgid "Show two pages at once"
+msgid "Show two pages at once with odd pages on the left"
+msgstr "Menampilkan dua halaman sekaligus dengan halaman ganjil di sebelah kiri"
+
+#: ../shell/ev-window.c:5952
 msgid "_Fullscreen"
 msgstr "Layar _Penuh"
 
-#: ../shell/ev-window.c:5858
+#: ../shell/ev-window.c:5953
 msgid "Expand the window to fill the screen"
 msgstr "Membuka jendela hingga memenuhi layar"
 
-#: ../shell/ev-window.c:5860
+#: ../shell/ev-window.c:5955
 msgid "Pre_sentation"
 msgstr "Pre_sentasi"
 
-#: ../shell/ev-window.c:5861
+#: ../shell/ev-window.c:5956
 msgid "Run document as a presentation"
 msgstr "Membuka dokumen sebagai presentasi"
 
-#: ../shell/ev-window.c:5869
+#: ../shell/ev-window.c:5964
 msgid "_Inverted Colors"
 msgstr "Warna Terbal_ik"
 
-#: ../shell/ev-window.c:5870
+#: ../shell/ev-window.c:5965
 msgid "Show page contents with the colors inverted"
 msgstr "Menampilkan isi halaman dengan warna yang terbalik"
 
 #. Links
-#: ../shell/ev-window.c:5878
+#: ../shell/ev-window.c:5973
 msgid "_Open Link"
 msgstr "_Buka Taut"
 
-#: ../shell/ev-window.c:5880
+#: ../shell/ev-window.c:5975
 msgid "_Go To"
 msgstr "_Ke"
 
-#: ../shell/ev-window.c:5882
+#: ../shell/ev-window.c:5977
 msgid "Open in New _Window"
 msgstr "Buka di Jendela _Baru"
 
-#: ../shell/ev-window.c:5884
+#: ../shell/ev-window.c:5979
 msgid "_Copy Link Address"
 msgstr "Salin _Alamat Taut"
 
-#: ../shell/ev-window.c:5886
+#: ../shell/ev-window.c:5981
 msgid "_Save Image As…"
 msgstr "_Simpan Gambar Sebagai…"
 
-#: ../shell/ev-window.c:5888
+#: ../shell/ev-window.c:5983
 msgid "Copy _Image"
 msgstr "Sal_in Gambar"
 
-#: ../shell/ev-window.c:5890
+#: ../shell/ev-window.c:5985
 msgid "Annotation Properties…"
 msgstr "Properti Anotasi…"
 
-#: ../shell/ev-window.c:5895
+#: ../shell/ev-window.c:5990
 msgid "_Open Attachment"
 msgstr "_Buka Lampiran"
 
-#: ../shell/ev-window.c:5897
+#: ../shell/ev-window.c:5992
 msgid "_Save Attachment As…"
 msgstr "_Simpan Lampiran Sebagai…"
 
-#: ../shell/ev-window.c:5989
+#: ../shell/ev-window.c:6084
 msgid "Zoom"
 msgstr "Zum"
 
-#: ../shell/ev-window.c:5991
+#: ../shell/ev-window.c:6086
 msgid "Adjust the zoom level"
 msgstr "Atur tingkat perbesaran"
 
-#: ../shell/ev-window.c:6001
+#: ../shell/ev-window.c:6096
 msgid "Navigation"
 msgstr "Navigasi"
 
-#: ../shell/ev-window.c:6003
+#: ../shell/ev-window.c:6098
 msgid "Back"
 msgstr "Mundur"
 
 #. translators: this is the history action
-#: ../shell/ev-window.c:6006
+#: ../shell/ev-window.c:6101
 msgid "Move across visited pages"
 msgstr "Pindahkan melintasi halaman yang telah dikunjungi"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:6035
+#: ../shell/ev-window.c:6130
 msgid "Open Folder"
 msgstr "Buka Folder"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:6040
+#: ../shell/ev-window.c:6134
+msgid "Send To"
+msgstr "Kirim Ke"
+
+#. translators: this is the label for toolbar button
+#: ../shell/ev-window.c:6140
 msgid "Previous"
 msgstr "Sebelumnya"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:6045
+#: ../shell/ev-window.c:6145
 msgid "Next"
 msgstr "Selanjutnya"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:6049
+#: ../shell/ev-window.c:6149
 msgid "Zoom In"
 msgstr "Perbesar Tampilan"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:6053
+#: ../shell/ev-window.c:6153
 msgid "Zoom Out"
 msgstr "Perkecil Tampilan"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:6061
+#: ../shell/ev-window.c:6161
 msgid "Fit Width"
 msgstr "Selebar Halaman"
 
-#: ../shell/ev-window.c:6207
-#: ../shell/ev-window.c:6224
+#: ../shell/ev-window.c:6308
+#: ../shell/ev-window.c:6324
 msgid "Unable to launch external application."
 msgstr "Tidak dapat meluncurkan aplikasi luar"
 
-#: ../shell/ev-window.c:6281
+#: ../shell/ev-window.c:6381
 msgid "Unable to open external link"
 msgstr "Tidak dapat membuka taut luar"
 
-#: ../shell/ev-window.c:6471
+#: ../shell/ev-window.c:6571
 msgid "Couldn't find appropriate format to save image"
 msgstr "Tidak menemukan format yang cocok untuk menyimpan gambar"
 
-#: ../shell/ev-window.c:6503
+#: ../shell/ev-window.c:6603
 msgid "The image could not be saved."
 msgstr "Gambar tidak dapat disimpan."
 
-#: ../shell/ev-window.c:6535
+#: ../shell/ev-window.c:6635
 msgid "Save Image"
 msgstr "Simpan Gambar"
 
-#: ../shell/ev-window.c:6663
+#: ../shell/ev-window.c:6763
 msgid "Unable to open attachment"
 msgstr "Tidak dapat membuka lampiran"
 
-#: ../shell/ev-window.c:6716
+#: ../shell/ev-window.c:6816
 msgid "The attachment could not be saved."
 msgstr "Lampiran tidak dapat disimpan."
 
-#: ../shell/ev-window.c:6761
+#: ../shell/ev-window.c:6861
 msgid "Save Attachment"
 msgstr "Simpan Lampiran"
 
@@ -1617,48 +1659,56 @@ msgstr "%s — Memerlukan Sandi"
 msgid "By extension"
 msgstr "Berdasarkan ekstensi"
 
-#: ../shell/main.c:69
-#: ../shell/main.c:274
+#: ../shell/main.c:70
+#: ../shell/main.c:281
 msgid "GNOME Document Viewer"
 msgstr "Penampil Dokumen GNOME"
 
-#: ../shell/main.c:77
+#: ../shell/main.c:78
 msgid "The page label of the document to display."
 msgstr "Label halaman dari dokumen yang ingin ditampilkan."
 
-#: ../shell/main.c:77
+#: ../shell/main.c:78
 msgid "PAGE"
 msgstr "HALAMAN"
 
-#: ../shell/main.c:78
+#: ../shell/main.c:79
 msgid "The page number of the document to display."
 msgstr "Nomor halaman dari dokumen yang ingin ditampilkan."
 
-#: ../shell/main.c:78
+#: ../shell/main.c:79
 msgid "NUMBER"
 msgstr "NOMOR"
 
-#: ../shell/main.c:79
+#: ../shell/main.c:80
+msgid "Named destination to display."
+msgstr "Tujuan yang dinamai untuk ditampilkan."
+
+#: ../shell/main.c:80
+msgid "DEST"
+msgstr "TUJUAN"
+
+#: ../shell/main.c:81
 msgid "Run evince in fullscreen mode"
 msgstr "Menjalankan evince dalam mode layar penuh"
 
-#: ../shell/main.c:80
+#: ../shell/main.c:82
 msgid "Run evince in presentation mode"
 msgstr "Menjalankan evince dalam mode presentasi"
 
-#: ../shell/main.c:81
+#: ../shell/main.c:83
 msgid "Run evince as a previewer"
 msgstr "Menjalankan evince sebagai pemratinjau"
 
-#: ../shell/main.c:82
+#: ../shell/main.c:84
 msgid "The word or phrase to find in the document"
 msgstr "Kata atau frasa yang akan dicari dalam dokumen"
 
-#: ../shell/main.c:82
+#: ../shell/main.c:84
 msgid "STRING"
 msgstr "STRING"
 
-#: ../shell/main.c:86
+#: ../shell/main.c:88
 msgid "[FILE…]"
 msgstr "[BERKAS…]"
 
