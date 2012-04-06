@@ -206,6 +206,8 @@ egg_find_bar_class_init (EggFindBarClass *klass)
 				"scroll", 1,
 				GTK_TYPE_SCROLL_TYPE, GTK_SCROLL_PAGE_FORWARD);
 
+  gtk_binding_entry_add_signal (binding_set, GDK_KEY_Return, GDK_SHIFT_MASK,
+                                "previous", 0);
   gtk_binding_entry_add_signal (binding_set, GDK_KEY_Up, GDK_CONTROL_MASK,
                                 "previous", 0);
   gtk_binding_entry_add_signal (binding_set, GDK_KEY_Down, GDK_CONTROL_MASK,
