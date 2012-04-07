@@ -86,10 +86,10 @@ GLIB_GSETTINGS
 
 AC_MSG_CHECKING([for which platform to build])
 AC_ARG_WITH([platform],
-  [AS_HELP_STRING([--with-platform=gnome|win32|hildon],
+  [AS_HELP_STRING([--with-platform=gnome|win32],
                   [Setting platform (default: gnome)])],
   [case "$withval" in
-    gnome|win32|hildon) ;;
+    gnome|win32) ;;
     *) AC_MSG_ERROR([invalid argument "$withval" for --with-platform]) ;;
    esac],
   [case "$host" in
@@ -113,7 +113,6 @@ if test "$with_platform" = "win32"; then
   AC_MSG_RESULT([$os_win32])
 fi
 
-AM_CONDITIONAL([PLATFORM_HILDON],[test "$with_platform" = "hildon"])
 AM_CONDITIONAL([PLATFORM_WIN32],[test "$with_platform" = "win32"])
 
 dnl Specify required versions of dependencies
@@ -162,9 +161,6 @@ PKG_CHECK_MODULES(FRONTEND_CORE, gtk+-3.0 >= $GTK_REQUIRED gthread-2.0 gio-2.0 >
 
 SHELL_PLATFORM_PKGS=
 case "$with_platform" in
-  hildon) AC_DEFINE([PLATFORM_HILDON],[1],[Define if building for the hildon platform])
-          SHELL_PLATFORM_PKGS="hildon-1 hildon-fm-2 libosso"
-          ;;
   gnome)
         # Evince has a rather soft run-time dependency on hicolor-icon-theme.
         # If the hicolor theme is not available, Evince fails to display some
@@ -267,7 +263,7 @@ AC_ARG_WITH(keyring,
         [],
         [case "$with_platform" in
            gnome) with_keyring=yes ;;
-           hildon|win32) with_keyring=no ;;
+           win32) with_keyring=no ;;
          esac])
 
 AM_CONDITIONAL([WITH_KEYRING],[test "$with_keyring" = "yes"])
@@ -286,7 +282,6 @@ AC_ARG_ENABLE([dbus],
   [],
   [case "$with_platform" in
       gnome) enable_dbus=yes ;;
-      hildon) enable_dbus=no ;;
     esac])
 
 if test "$enable_dbus" = "yes"; then
@@ -397,10 +392,7 @@ AC_ARG_ENABLE([thumbnailer],
   [AS_HELP_STRING([--disable-thumbnailer],
 		  [Disable GNOME thumbnailer])],
   [],
-  [case "$with_platform" in
-     hildon) enable_thumbnailer=no ;;
-     *) enable_thumbnailer=yes ;;
-    esac])
+  [enable_thumbnailer=yes])
 
 AM_CONDITIONAL([ENABLE_THUMBNAILER],[test "$enable_thumbnailer" = "yes"])
 
@@ -412,10 +404,7 @@ AC_ARG_ENABLE([previewer],
   [AS_HELP_STRING([--disable-previewer],
 		  [Disable the GNOME Document Previewer])],
   [],
-  [case "$with_platform" in
-      hildon) enable_previewer=no ;;
-      *) enable_previewer=yes ;;
-    esac])
+  [enable_previewer=yes])
 
 if test x$enable_previewer = "xyes" ; then
   PKG_CHECK_MODULES([PREVIEWER],[gtk+-3.0 >= $GTK_REQUIRED gthread-2.0 gio-2.0 >= $GLIB_REQUIRED])
