@@ -58,9 +58,6 @@ get_license_text_widget (EvDocumentLicense *license)
 	gtk_text_buffer_set_text (buffer, ev_document_license_get_text (license), -1);
 
 	swindow = gtk_scrolled_window_new (NULL, NULL);
-	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (swindow),
-					GTK_POLICY_AUTOMATIC,
-					GTK_POLICY_AUTOMATIC);
 	gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (swindow),
 					     GTK_SHADOW_IN);
 	gtk_container_add (GTK_CONTAINER (swindow), textview);

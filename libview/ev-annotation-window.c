@@ -316,9 +316,6 @@ ev_annotation_window_init (EvAnnotationWindow *window)
 
 	/* Contents */
 	swindow = gtk_scrolled_window_new (NULL, NULL);
-	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (swindow),
-					GTK_POLICY_AUTOMATIC,
-					GTK_POLICY_AUTOMATIC);
 	window->text_view = gtk_text_view_new ();
 	gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (window->text_view), GTK_WRAP_WORD);
 	g_signal_connect (window->text_view, "button_press_event",

@@ -603,9 +603,6 @@ ev_previewer_window_constructor (GType                  type,
 	gtk_widget_show (toolbar);
 
 	window->swindow = gtk_scrolled_window_new (NULL, NULL);
-	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (window->swindow),
-					GTK_POLICY_AUTOMATIC,
-					GTK_POLICY_AUTOMATIC);
 
 	window->view = EV_VIEW (ev_view_new ());
 	g_signal_connect_object (window->view, "focus_in_event",

@@ -2360,9 +2360,6 @@ ev_view_form_field_choice_create_widget (EvView      *view,
 							     NULL);
 
 		choice = gtk_scrolled_window_new (NULL, NULL);
-		gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (choice),
-						GTK_POLICY_AUTOMATIC,
-						GTK_POLICY_AUTOMATIC);
 		gtk_container_add (GTK_CONTAINER (choice), tree_view);
 		gtk_widget_show (tree_view);
 
