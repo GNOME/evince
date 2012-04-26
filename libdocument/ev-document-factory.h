@@ -32,6 +32,7 @@
 G_BEGIN_DECLS
 
 EvDocument* ev_document_factory_get_document (const char *uri, GError **error);
+EvDocument* ev_document_factory_get_document_from_data (const guchar *data, gsize length, GError **error);
 void 	    ev_document_factory_add_filters  (GtkWidget *chooser, EvDocument *document);
 
 G_END_DECLS

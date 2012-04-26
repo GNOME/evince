@@ -125,6 +125,79 @@ get_document_from_uri (const char        *uri,
         return document;
 }
 
+/*
+ * get_document_from_data:
+ * @data: The contents of a file.
+ * @length: The number of bytes in @data.
+ * @compression: a location to store the document's compression type
+ * @error: a #GError location to store an error, or %NULL
+ *
+ * Creates a #EvDocument instance for the document contents.
+ * If a document could be created,
+ * @compression is filled in with the document's compression type.
+ * On error, %NULL is returned and @error filled in.
+ *
+ * Returns: a new #EvDocument instance, or %NULL on error with @error filled in
+ */
+static EvDocument *
+get_document_from_data (const guchar      *data,
+			gsize		   length,
+		        EvCompressionType *compression,
+		        GError           **error)
+{
+	EvDocument *document = NULL;
+	gchar	   *content_type = NULL;
+	gchar      *mime_type = NULL;
+
+	*compression = EV_COMPRESSION_NONE;
+
+	content_type = g_content_type_guess (NULL, data, length, NULL);
+	if (!content_type) {
+		g_set_error_literal (error,
+                                     EV_DOCUMENT_ERROR,
+                                     EV_DOCUMENT_ERROR_INVALID,
+                                     _("Unknown MIME Type"));
+
+		return NULL;
+	}
+
+	mime_type = g_content_type_get_mime_type (content_type);
+	if (!mime_type) {
+		g_set_error_literal (error,
+                                     EV_DOCUMENT_ERROR,
+                                     EV_DOCUMENT_ERROR_INVALID,
+                                     _("Unknown MIME Type"));
+		g_free (content_type);
+
+		return NULL;
+	}
+
+	document = ev_backends_manager_get_document (mime_type);
+	if (document == NULL) {
+		gchar *mime_desc = NULL;
+
+		mime_desc = g_content_type_get_description (content_type);
+
+		g_set_error (error,
+			     EV_DOCUMENT_ERROR,
+			     EV_DOCUMENT_ERROR_INVALID,
+			     _("File type %s (%s) is not supported"),
+			     mime_desc ? mime_desc : "-", mime_type);
+		g_free (mime_desc);
+		g_free (content_type);
+		g_free (mime_type);
+
+		return NULL;
+	}
+
+	*compression = get_compression_from_mime_type (mime_type);
+
+	g_free (content_type);
+	g_free (mime_type);
+
+        return document;
+}
+
 static void
 free_uncompressed_uri (gchar *uri_unc)
 {
@@ -235,6 +308,102 @@ ev_document_factory_get_document (const char *uri, GError **error)
 	g_clear_error (error); /* Though this should always be NULL here. */
 	document = ev_document_factory_load_uri (uri, FALSE, error);
 	return document;
+}
+
+static EvDocument *
+ev_document_factory_load_data (const guchar *data, gsize length, GError **error)
+{
+	EvDocument *document;
+	int result;
+	guchar* data_unc = NULL;
+	gsize data_unc_length = 0;
+	EvCompressionType compression;
+	GError *err = NULL;
+
+	document = get_document_from_data (data, length, &compression, &err);
+	g_assert (document != NULL || err != NULL);
+
+	if (document == NULL) {
+		/* Set an error for the caller. */
+		g_assert (err != NULL);
+		g_propagate_error (error, err);
+
+		return NULL;
+	}
+
+	/* TODO: Implement uncompress for data,
+	 * returning data, not a URI.
+	 * This currently uses command-line utilities on files.
+	 * data_unc = ev_file_uncompress (data, length, compression, &data_unc_length, &err);
+	 */
+	if (data_unc) {
+		g_object_set_data_full (G_OBJECT (document),
+					"data-uncompressed",
+					data_unc,
+					g_free);
+		g_object_set_data_full (G_OBJECT (document),
+					"data-length-uncompressed",
+					GSIZE_TO_POINTER(data_unc_length),
+					(GDestroyNotify) NULL);
+	} else if (err != NULL) {
+		/* Error uncompressing file */
+		g_object_unref (document);
+		g_propagate_error (error, err);
+		return NULL;
+	}
+
+	result = ev_document_load_from_data (document,
+					     data_unc ? data_unc : data,
+					     data_unc ? data_unc_length : length,
+					     &err);
+	if (result)
+		return document;
+
+	if (err) {
+		if (g_error_matches (err, EV_DOCUMENT_ERROR, EV_DOCUMENT_ERROR_ENCRYPTED)) {
+			g_propagate_error (error, err);
+			return document;
+		}
+	} else {
+		/* FIXME: this really should not happen; the backend should
+		 * always return a meaningful error.
+		 */
+		g_set_error_literal (&err,
+				     EV_DOCUMENT_ERROR,
+				     EV_DOCUMENT_ERROR_INVALID,
+				     _("Unknown MIME Type"));
+		g_propagate_error (error, err);
+	}
+
+	g_object_unref (document);
+
+	return NULL;
+}
+
+/**
+ * ev_document_factory_get_document_from_data:
+ * @data: The contents of a file.
+ * @length: The number of bytes in @data.
+ * @error: a #GError location to store an error, or %NULL
+ *
+ * Creates an #EvDocument for the document contents; or, if no backend handling
+ * the document's type is found, or an error occurred on opening the document,
+ * returns %NULL and fills in @error.
+ * If the document is encrypted, it is returned but also @error is set to
+ * %EV_DOCUMENT_ERROR_ENCRYPTED.
+ *
+ * Returns: (transfer full): a new #EvDocument, or %NULL.
+ */
+EvDocument *
+ev_document_factory_get_document_from_data (const guchar *data, gsize length, GError **error)
+{
+	g_return_val_if_fail (data != NULL, NULL);
+	g_return_val_if_fail (length != 0, NULL);
+
+	/* Note that, unlike ev_document_factory_get_document() we can't use
+	 * both slow and fast mime-type detection, so this is simpler.
+	 */
+	return ev_document_factory_load_data (data, length, error);
 }
 
 static void

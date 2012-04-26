@@ -280,6 +280,28 @@ pdf_document_load (EvDocument   *document,
 	return TRUE;
 }
 
+static gboolean
+pdf_document_load_data (EvDocument    *document,
+			const guchar  *data,
+			gsize          length,
+			GError       **error)
+{
+	GError *poppler_error = NULL;
+	PdfDocument *pdf_document = PDF_DOCUMENT (document);
+
+	// The cast should not really be necessary.
+	// See https://bugs.freedesktop.org/show_bug.cgi?id=39322
+	pdf_document->document =
+		poppler_document_new_from_data ((char*)data, length, pdf_document->password, &poppler_error);
+
+	if (pdf_document->document == NULL) {
+		convert_error (poppler_error, error);
+		return FALSE;
+	}
+
+	return TRUE;
+}
+
 static int
 pdf_document_get_n_pages (EvDocument *document)
 {
@@ -887,6 +909,7 @@ pdf_document_class_init (PdfDocumentClass *klass)
 
 	ev_document_class->save = pdf_document_save;
 	ev_document_class->load = pdf_document_load;
+	ev_document_class->load_data = pdf_document_load_data;
 	ev_document_class->get_n_pages = pdf_document_get_n_pages;
 	ev_document_class->get_page = pdf_document_get_page;
 	ev_document_class->get_page_size = pdf_document_get_page_size;

@@ -56,7 +56,8 @@ typedef struct _EvDocumentPrivate EvDocumentPrivate;
 typedef enum
 {
         EV_DOCUMENT_ERROR_INVALID,
-        EV_DOCUMENT_ERROR_ENCRYPTED
+        EV_DOCUMENT_ERROR_ENCRYPTED,
+	EV_DOCUMENT_ERROR_UNSUPPORTED
 } EvDocumentError;
 
 typedef struct {
@@ -89,6 +90,10 @@ struct _EvDocumentClass
         /* Virtual Methods  */
         gboolean          (* load)            (EvDocument      *document,
                                                const char      *uri,
+                                               GError         **error);
+        gboolean          (* load_data)       (EvDocument      *document,
+                                               const guchar    *data,
+                                               gsize            length,
                                                GError         **error);
         gboolean          (* save)            (EvDocument      *document,
                                                const char      *uri,
@@ -132,6 +137,10 @@ gboolean         ev_document_get_backend_info     (EvDocument      *document,
 						   EvDocumentBackendInfo *info);
 gboolean         ev_document_load                 (EvDocument      *document,
 						   const char      *uri,
+						   GError         **error);
+gboolean         ev_document_load_from_data       (EvDocument      *document,
+						   const guchar    *data,
+						   gsize            length,
 						   GError         **error);
 gboolean         ev_document_save                 (EvDocument      *document,
 						   const char      *uri,

@@ -972,8 +972,6 @@ ev_job_load_run (EvJob *job)
 	   because, e.g., a password is required - if so, just reload rather than
 	   creating a new instance */
 	if (job->document) {
-		const gchar *uncompressed_uri;
-
 		if (job_load->password) {
 			ev_document_security_set_password (EV_DOCUMENT_SECURITY (job->document),
 							   job_load->password);
@@ -983,14 +981,30 @@ ev_job_load_run (EvJob *job)
 		job->finished = FALSE;
 		g_clear_error (&job->error);
 
-		uncompressed_uri = g_object_get_data (G_OBJECT (job->document),
-						      "uri-uncompressed");
-		ev_document_load (job->document,
-				  uncompressed_uri ? uncompressed_uri : job_load->uri,
-				  &error);
-	} else {
+		if (job_load->uri) {
+			const gchar *uncompressed_uri = g_object_get_data (G_OBJECT (job->document),
+									   "uri-uncompressed");
+			ev_document_load (job->document,
+					  uncompressed_uri ? uncompressed_uri : job_load->uri,
+					  &error);
+		} else {
+			const guchar *uncompressed_data = g_object_get_data (G_OBJECT (job->document),
+									    "data-uncompressed");
+			gsize uncompressed_data_length = GPOINTER_TO_SIZE (g_object_get_data (G_OBJECT (job->document),
+											      "data-length-uncompressed"));
+
+			ev_document_load_from_data (job->document,
+						    uncompressed_data ? uncompressed_data : job_load->data,
+						    uncompressed_data ? uncompressed_data_length : job_load->data_length,
+						    &error);
+		}
+	} else if (job_load->uri) {
 		job->document = ev_document_factory_get_document (job_load->uri,
 								  &error);
+	} else {
+		job->document = ev_document_factory_get_document_from_data(job_load->data,
+									   job_load->data_length,
+									   &error);
 	}
 
 	ev_document_fc_mutex_unlock ();
@@ -1024,6 +1038,20 @@ ev_job_load_new (const gchar *uri)
 	
 	job = g_object_new (EV_TYPE_JOB_LOAD, NULL);
 	job->uri = g_strdup (uri);
+
+	return EV_JOB (job);
+}
+
+EvJob *
+ev_job_load_new_with_data (const guchar *data, gsize length)
+{
+	EvJobLoad *job;
+
+	ev_debug_message (DEBUG_JOBS, "data");
+
+	job = g_object_new (EV_TYPE_JOB_LOAD, NULL);
+	job->data = data;
+	job->data_length = length;
 
 	return EV_JOB (job);
 }
