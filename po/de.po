@@ -24,7 +24,7 @@ msgstr ""
 "Project-Id-Version: Evince master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evince&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2012-03-04 00:41+0000\n"
+"POT-Creation-Date: 2012-05-02 17:27+0000\n"
 "PO-Revision-Date: 2012-03-04 13:19+0100\n"
 "Last-Translator: Mario Blättermann <mario.blaettermann@gmail.com>\n"
 "Language-Team: Deutsch <gnome-de@gnome.org>\n"
@@ -64,7 +64,10 @@ msgstr ""
 
 #: ../backend/comics/comics-document.c:471
 #: ../libdocument/ev-document-factory.c:93
-#: ../libdocument/ev-document-factory.c:199
+#: ../libdocument/ev-document-factory.c:159
+#: ../libdocument/ev-document-factory.c:169
+#: ../libdocument/ev-document-factory.c:272
+#: ../libdocument/ev-document-factory.c:374
 msgid "Unknown MIME Type"
 msgstr "Unbekannter MIME-Typ"
 
@@ -119,65 +122,65 @@ msgstr "Das DVI-Dokument besitzt ein ungültiges Format"
 msgid "DVI Documents"
 msgstr "DVI-Dokumente"
 
-#: ../backend/pdf/ev-poppler.cc:587
+#: ../backend/pdf/ev-poppler.cc:609
 msgid "This work is in the Public Domain"
 msgstr "Dieses Werk ist Gemeinfrei"
 
 #. translators: this is the document security state
-#: ../backend/pdf/ev-poppler.cc:840 ../backend/pdf/ev-poppler.cc:846
+#: ../backend/pdf/ev-poppler.cc:862 ../backend/pdf/ev-poppler.cc:868
 msgid "Yes"
 msgstr "Ja"
 
 #. translators: this is the document security state
-#: ../backend/pdf/ev-poppler.cc:843 ../backend/pdf/ev-poppler.cc:846
+#: ../backend/pdf/ev-poppler.cc:865 ../backend/pdf/ev-poppler.cc:868
 msgid "No"
 msgstr "Nein"
 
-#: ../backend/pdf/ev-poppler.cc:974
+#: ../backend/pdf/ev-poppler.cc:997
 msgid "Type 1"
 msgstr "Type 1"
 
-#: ../backend/pdf/ev-poppler.cc:976
+#: ../backend/pdf/ev-poppler.cc:999
 msgid "Type 1C"
 msgstr "Type 1C"
 
-#: ../backend/pdf/ev-poppler.cc:978
+#: ../backend/pdf/ev-poppler.cc:1001
 msgid "Type 3"
 msgstr "Type 3"
 
-#: ../backend/pdf/ev-poppler.cc:980
+#: ../backend/pdf/ev-poppler.cc:1003
 msgid "TrueType"
 msgstr "TrueType"
 
-#: ../backend/pdf/ev-poppler.cc:982
+#: ../backend/pdf/ev-poppler.cc:1005
 msgid "Type 1 (CID)"
 msgstr "Type 1 (CID)"
 
-#: ../backend/pdf/ev-poppler.cc:984
+#: ../backend/pdf/ev-poppler.cc:1007
 msgid "Type 1C (CID)"
 msgstr "Type 1C (CID)"
 
-#: ../backend/pdf/ev-poppler.cc:986
+#: ../backend/pdf/ev-poppler.cc:1009
 msgid "TrueType (CID)"
 msgstr "TrueType (CID)"
 
-#: ../backend/pdf/ev-poppler.cc:988
+#: ../backend/pdf/ev-poppler.cc:1011
 msgid "Unknown font type"
 msgstr "Unbekannter Schrifttyp"
 
-#: ../backend/pdf/ev-poppler.cc:1014
+#: ../backend/pdf/ev-poppler.cc:1037
 msgid "No name"
 msgstr "Kein Name"
 
-#: ../backend/pdf/ev-poppler.cc:1022
+#: ../backend/pdf/ev-poppler.cc:1045
 msgid "Embedded subset"
 msgstr "Eingebetteter Teilsatz"
 
-#: ../backend/pdf/ev-poppler.cc:1024
+#: ../backend/pdf/ev-poppler.cc:1047
 msgid "Embedded"
 msgstr "Eingebettet"
 
-#: ../backend/pdf/ev-poppler.cc:1026
+#: ../backend/pdf/ev-poppler.cc:1049
 msgid "Not embedded"
 msgstr "Nicht eingebettet"
 
@@ -203,6 +206,14 @@ msgstr "PostScript-Dokumente"
 msgid "Invalid document"
 msgstr "Ungültiges Dokument"
 
+#: ../backend/tiff/tiffdocument.evince-backend.in.h:1
+msgid "TIFF Documents"
+msgstr "TIFF-Dokumente"
+
+#: ../backend/xps/xpsdocument.evince-backend.in.h:1
+msgid "XPS Documents"
+msgstr "XPS-Dokumente"
+
 #: ../libdocument/ev-attachment.c:304 ../libdocument/ev-attachment.c:325
 #, c-format
 msgid "Couldn't save attachment “%s”: %s"
@@ -219,15 +230,16 @@ msgid "Couldn't open attachment “%s”"
 msgstr "Anlage »%s« konnte nicht geöffnet werden"
 
 #: ../libdocument/ev-document-factory.c:112
+#: ../libdocument/ev-document-factory.c:184
 #, c-format
 msgid "File type %s (%s) is not supported"
 msgstr "Der Dateityp %s (%s) wird nicht unterstützt."
 
-#: ../libdocument/ev-document-factory.c:278
+#: ../libdocument/ev-document-factory.c:447
 msgid "All Documents"
 msgstr "Alle Dokumente"
 
-#: ../libdocument/ev-document-factory.c:310
+#: ../libdocument/ev-document-factory.c:479
 msgid "All Files"
 msgstr "Alle Dateien"
 
@@ -637,7 +649,7 @@ msgid "of %d"
 msgstr "von %d"
 
 #. Create tree view
-#: ../libview/ev-loading-window.c:76 ../shell/ev-sidebar-annotations.c:133
+#: ../libview/ev-loading-window.c:76 ../shell/ev-sidebar-annotations.c:131
 #: ../shell/ev-sidebar-layers.c:125 ../shell/ev-sidebar-links.c:260
 msgid "Loading…"
 msgstr "Wird geladen …"
@@ -736,7 +748,7 @@ msgstr ""
 msgid "Page Handling"
 msgstr "Seitenverarbeitung"
 
-#: ../libview/ev-jobs.c:1572
+#: ../libview/ev-jobs.c:1604
 #, c-format
 msgid "Failed to print page %d: %s"
 msgstr "Fehler beim Drucken der Seite %d: %s"
@@ -918,7 +930,7 @@ msgstr "Öffnen"
 msgid "Close"
 msgstr "Schließen"
 
-#: ../shell/ev-application.c:1133
+#: ../shell/ev-application.c:1137
 msgid "Running in presentation mode"
 msgstr "Derzeit im Präsentationsmodus"
 
@@ -991,52 +1003,52 @@ msgstr "Schrift"
 msgid "Document License"
 msgstr "Lizenz des Dokuments"
 
-#: ../shell/ev-properties-fonts.c:135
+#: ../shell/ev-properties-fonts.c:132
 msgid "Font"
 msgstr "Schrift"
 
-#: ../shell/ev-properties-fonts.c:162
+#: ../shell/ev-properties-fonts.c:159
 #, c-format
 msgid "Gathering font information… %3d%%"
 msgstr "Schriftinformationen werden gesammelt … %3d%%"
 
-#: ../shell/ev-properties-license.c:137
+#: ../shell/ev-properties-license.c:134
 msgid "Usage terms"
 msgstr "Nutzungsbedingungen"
 
-#: ../shell/ev-properties-license.c:143
+#: ../shell/ev-properties-license.c:140
 msgid "Text License"
 msgstr "Lizenztext"
 
-#: ../shell/ev-properties-license.c:149
+#: ../shell/ev-properties-license.c:146
 msgid "Further Information"
 msgstr "Weitere Informationen"
 
-#: ../shell/ev-sidebar-annotations.c:161
+#: ../shell/ev-sidebar-annotations.c:159
 msgid "List"
 msgstr "Liste"
 
-#: ../shell/ev-sidebar-annotations.c:203 ../shell/ev-sidebar-annotations.c:531
+#: ../shell/ev-sidebar-annotations.c:199 ../shell/ev-sidebar-annotations.c:527
 msgid "Annotations"
 msgstr "Anmerkungen"
 
-#: ../shell/ev-sidebar-annotations.c:209
+#: ../shell/ev-sidebar-annotations.c:205
 msgid "Text"
 msgstr "Text"
 
-#: ../shell/ev-sidebar-annotations.c:210
+#: ../shell/ev-sidebar-annotations.c:206
 msgid "Add text annotation"
 msgstr "Textanmerkung hinzufügen"
 
-#: ../shell/ev-sidebar-annotations.c:221
+#: ../shell/ev-sidebar-annotations.c:217
 msgid "Add"
 msgstr "Hinzufügen"
 
-#: ../shell/ev-sidebar-annotations.c:364
+#: ../shell/ev-sidebar-annotations.c:360
 msgid "Document contains no annotations"
 msgstr "Das Dokument enthält keine Anmerkungen"
 
-#: ../shell/ev-sidebar-annotations.c:396
+#: ../shell/ev-sidebar-annotations.c:392
 #, c-format
 msgid "Page %d"
 msgstr "Seite %d"
@@ -1063,7 +1075,7 @@ msgstr "Lesezeichen _entfernen"
 msgid "Page %s"
 msgstr "Seite %s"
 
-#: ../shell/ev-sidebar-bookmarks.c:606
+#: ../shell/ev-sidebar-bookmarks.c:603
 msgid "Bookmarks"
 msgstr "Lesezeichen"
 
@@ -1075,7 +1087,7 @@ msgstr "Ebenen"
 msgid "Print…"
 msgstr "Drucken …"
 
-#: ../shell/ev-sidebar-links.c:720
+#: ../shell/ev-sidebar-links.c:718
 msgid "Index"
 msgstr "Inhalt"
 
