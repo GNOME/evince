@@ -54,6 +54,9 @@ gboolean     ev_file_is_temp          (GFile             *file);
 gboolean     ev_xfer_uri_simple       (const char        *from,
 				       const char        *to,
 				       GError           **error);
+gboolean     ev_file_copy_metadata    (const char        *from,
+                                       const char        *to,
+                                       GError           **error);
 
 gchar       *ev_file_get_mime_type    (const gchar       *uri,
 				       gboolean           fast,

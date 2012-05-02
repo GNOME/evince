@@ -426,6 +426,44 @@ ev_xfer_uri_simple (const char *from,
 	return result;
 }
 
+/**
+ * ev_file_copy_metadata:
+ * @from: the source URI
+ * @to: the target URI
+ * @error: a #GError location to store an error, or %NULL
+ *
+ * Performs a g_file_copy_attributes() with %G_FILE_COPY_ALL_METADATA
+ * from @from to @to.
+ *
+ * Returns: %TRUE if the attributes were copied successfully, %FALSE otherwise.
+ *
+ * Since: 3.4
+ */
+gboolean
+ev_file_copy_metadata (const char *from,
+                       const char *to,
+                       GError     **error)
+{
+        GFile *source_file;
+        GFile *target_file;
+        gboolean result;
+
+        g_return_val_if_fail (from != NULL, FALSE);
+        g_return_val_if_fail (to != NULL, FALSE);
+
+        source_file = g_file_new_for_uri (from);
+        target_file = g_file_new_for_uri (to);
+
+        result = g_file_copy_attributes (source_file, target_file,
+                                         G_FILE_COPY_ALL_METADATA,
+                                         NULL, error);
+
+        g_object_unref (target_file);
+        g_object_unref (source_file);
+
+        return result;
+}
+
 static gchar *
 get_mime_type_from_uri (const gchar *uri, GError **error)
 {
