@@ -18,12 +18,12 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: evince\n"
-"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
-"product=evince&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2012-03-20 08:00+0000\n"
-"PO-Revision-Date: 2012-03-20 09:38-0300\n"
-"Last-Translator: Antonio Fernandes C. Neto <fernandesn@gnome.org>\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-05-02 09:10-0300\n"
+"PO-Revision-Date: 2012-05-02 09:10-0300\n"
+"Last-Translator: Jonh Wendell <jwendell@gnome.org>\n"
 "Language-Team: Brazilian Portuguese <gnome-pt_br-list@gnome.org>\n"
+"Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -199,6 +199,14 @@ msgstr "Documentos PostScript"
 #: ../backend/tiff/tiff-document.c:123
 msgid "Invalid document"
 msgstr "Documento inválido"
+
+#: ../backend/tiff/tiffdocument.evince-backend.in.h:1
+msgid "Tiff Documents"
+msgstr "Documentos TIFF"
+
+#: ../backend/xps/xpsdocument.evince-backend.in.h:1
+msgid "XPS Documents"
+msgstr "Documentos XPS"
 
 #: ../libdocument/ev-attachment.c:304 ../libdocument/ev-attachment.c:325
 #, c-format
@@ -426,17 +434,17 @@ msgid "View multi-page documents"
 msgstr "Visualize documentos de múltiplas páginas"
 
 #: ../data/org.gnome.Evince.gschema.xml.in.h:1
+msgid "Automatically reload the document"
+msgstr "Recarregar o documento automaticamente"
+
+#: ../data/org.gnome.Evince.gschema.xml.in.h:2
 msgid "Override document restrictions"
 msgstr "Sobrescrever restrições do documento"
 
-#: ../data/org.gnome.Evince.gschema.xml.in.h:2
+#: ../data/org.gnome.Evince.gschema.xml.in.h:3
 msgid "Override document restrictions, like restriction to copy or to print."
 msgstr ""
 "Ignora restrições do documento original, como restrição a cópia ou impressão."
-
-#: ../data/org.gnome.Evince.gschema.xml.in.h:3
-msgid "Automatically reload the document"
-msgstr "Recarregar o documento automaticamente"
 
 #: ../data/org.gnome.Evince.gschema.xml.in.h:4
 msgid "The document is automatically reloaded on file change."
@@ -630,7 +638,7 @@ msgid "of %d"
 msgstr "de %d"
 
 #. Create tree view
-#: ../libview/ev-loading-window.c:76 ../shell/ev-sidebar-annotations.c:133
+#: ../libview/ev-loading-window.c:76 ../shell/ev-sidebar-annotations.c:131
 #: ../shell/ev-sidebar-layers.c:125 ../shell/ev-sidebar-links.c:260
 msgid "Loading…"
 msgstr "Carregando..."
@@ -913,7 +921,7 @@ msgstr "Abrir"
 msgid "Close"
 msgstr "Fechar"
 
-#: ../shell/ev-application.c:1133
+#: ../shell/ev-application.c:1137
 msgid "Running in presentation mode"
 msgstr "Executando em modo de apresentação"
 
@@ -983,52 +991,52 @@ msgstr "Fontes"
 msgid "Document License"
 msgstr "Licença do documento"
 
-#: ../shell/ev-properties-fonts.c:135
+#: ../shell/ev-properties-fonts.c:132
 msgid "Font"
 msgstr "Fonte"
 
-#: ../shell/ev-properties-fonts.c:162
+#: ../shell/ev-properties-fonts.c:159
 #, c-format
 msgid "Gathering font information… %3d%%"
 msgstr "Reunindo informações de fontes... %3d%%"
 
-#: ../shell/ev-properties-license.c:137
+#: ../shell/ev-properties-license.c:134
 msgid "Usage terms"
 msgstr "Termos de uso"
 
-#: ../shell/ev-properties-license.c:143
+#: ../shell/ev-properties-license.c:140
 msgid "Text License"
 msgstr "Texto da licença"
 
-#: ../shell/ev-properties-license.c:149
+#: ../shell/ev-properties-license.c:146
 msgid "Further Information"
 msgstr "Informações adicionais"
 
-#: ../shell/ev-sidebar-annotations.c:161
+#: ../shell/ev-sidebar-annotations.c:159
 msgid "List"
 msgstr "Lista"
 
-#: ../shell/ev-sidebar-annotations.c:203 ../shell/ev-sidebar-annotations.c:531
+#: ../shell/ev-sidebar-annotations.c:199 ../shell/ev-sidebar-annotations.c:527
 msgid "Annotations"
 msgstr "Anotações"
 
-#: ../shell/ev-sidebar-annotations.c:209
+#: ../shell/ev-sidebar-annotations.c:205
 msgid "Text"
 msgstr "Texto"
 
-#: ../shell/ev-sidebar-annotations.c:210
+#: ../shell/ev-sidebar-annotations.c:206
 msgid "Add text annotation"
 msgstr "Adicionar anotação de texto"
 
-#: ../shell/ev-sidebar-annotations.c:221
+#: ../shell/ev-sidebar-annotations.c:217
 msgid "Add"
 msgstr "Adicionar"
 
-#: ../shell/ev-sidebar-annotations.c:364
+#: ../shell/ev-sidebar-annotations.c:360
 msgid "Document contains no annotations"
 msgstr "O documento não contém anotações"
 
-#: ../shell/ev-sidebar-annotations.c:396
+#: ../shell/ev-sidebar-annotations.c:392
 #, c-format
 msgid "Page %d"
 msgstr "Página %d"
@@ -1055,7 +1063,7 @@ msgstr "Rem_over marcador"
 msgid "Page %s"
 msgstr "Página %s"
 
-#: ../shell/ev-sidebar-bookmarks.c:606
+#: ../shell/ev-sidebar-bookmarks.c:603
 msgid "Bookmarks"
 msgstr "Marcadores"
 
@@ -1067,7 +1075,7 @@ msgstr "Camadas"
 msgid "Print…"
 msgstr "Imprimir..."
 
-#: ../shell/ev-sidebar-links.c:720
+#: ../shell/ev-sidebar-links.c:718
 msgid "Index"
 msgstr "Índice"
 
