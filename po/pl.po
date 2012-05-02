@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-03-04 00:11+0100\n"
-"PO-Revision-Date: 2012-03-04 00:12+0100\n"
+"POT-Creation-Date: 2012-05-02 17:24+0200\n"
+"PO-Revision-Date: 2012-05-02 17:25+0200\n"
 "Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
 "Language-Team: Polish <gnomepl@aviary.pl>\n"
 "Language: pl\n"
@@ -189,6 +189,14 @@ msgstr "Dokumenty PostScript"
 #: ../backend/tiff/tiff-document.c:123
 msgid "Invalid document"
 msgstr "Nieprawidłowy dokument"
+
+#: ../backend/tiff/tiffdocument.evince-backend.in.h:1
+msgid "Tiff Documents"
+msgstr "Dokumenty TIFF"
+
+#: ../backend/xps/xpsdocument.evince-backend.in.h:1
+msgid "XPS Documents"
+msgstr "Dokumenty XPS"
 
 #: ../libdocument/ev-attachment.c:304 ../libdocument/ev-attachment.c:325
 #, c-format
@@ -415,18 +423,18 @@ msgid "View multi-page documents"
 msgstr "Wyświetlanie wielostronicowych dokumentów"
 
 #: ../data/org.gnome.Evince.gschema.xml.in.h:1
-msgid "Automatically reload the document"
-msgstr "Automatyczne ponownie wczytywanie dokumentu"
-
-#: ../data/org.gnome.Evince.gschema.xml.in.h:2
 msgid "Override document restrictions"
 msgstr "Bez uwzględniania ograniczeń dokumentu"
 
-#: ../data/org.gnome.Evince.gschema.xml.in.h:3
+#: ../data/org.gnome.Evince.gschema.xml.in.h:2
 msgid "Override document restrictions, like restriction to copy or to print."
 msgstr ""
 "Bez uwzględniania ograniczeń dokumentu, takich jak ograniczenie kopiowania "
 "lub drukowania."
+
+#: ../data/org.gnome.Evince.gschema.xml.in.h:3
+msgid "Automatically reload the document"
+msgstr "Automatyczne ponownie wczytywanie dokumentu"
 
 #: ../data/org.gnome.Evince.gschema.xml.in.h:4
 msgid "The document is automatically reloaded on file change."
@@ -620,7 +628,7 @@ msgid "of %d"
 msgstr "z %d"
 
 #. Create tree view
-#: ../libview/ev-loading-window.c:76 ../shell/ev-sidebar-annotations.c:133
+#: ../libview/ev-loading-window.c:76 ../shell/ev-sidebar-annotations.c:131
 #: ../shell/ev-sidebar-layers.c:125 ../shell/ev-sidebar-links.c:260
 msgid "Loading…"
 msgstr "Wczytywanie…"
@@ -902,7 +910,7 @@ msgstr "Otwarte"
 msgid "Close"
 msgstr "Zamknięte"
 
-#: ../shell/ev-application.c:1133
+#: ../shell/ev-application.c:1137
 msgid "Running in presentation mode"
 msgstr "Praca w trybie prezentacji"
 
@@ -974,52 +982,52 @@ msgstr "Czcionki"
 msgid "Document License"
 msgstr "Licencja dokumentu"
 
-#: ../shell/ev-properties-fonts.c:135
+#: ../shell/ev-properties-fonts.c:132
 msgid "Font"
 msgstr "Czcionka"
 
-#: ../shell/ev-properties-fonts.c:162
+#: ../shell/ev-properties-fonts.c:159
 #, c-format
 msgid "Gathering font information… %3d%%"
 msgstr "Zbieranie informacji o czcionce… %3d%%"
 
-#: ../shell/ev-properties-license.c:137
+#: ../shell/ev-properties-license.c:134
 msgid "Usage terms"
 msgstr "Warunki używania"
 
-#: ../shell/ev-properties-license.c:143
+#: ../shell/ev-properties-license.c:140
 msgid "Text License"
 msgstr "Tekst licencji"
 
-#: ../shell/ev-properties-license.c:149
+#: ../shell/ev-properties-license.c:146
 msgid "Further Information"
 msgstr "Więcej informacji"
 
-#: ../shell/ev-sidebar-annotations.c:161
+#: ../shell/ev-sidebar-annotations.c:159
 msgid "List"
 msgstr "Lista"
 
-#: ../shell/ev-sidebar-annotations.c:203 ../shell/ev-sidebar-annotations.c:531
+#: ../shell/ev-sidebar-annotations.c:199 ../shell/ev-sidebar-annotations.c:527
 msgid "Annotations"
 msgstr "Adnotacje"
 
-#: ../shell/ev-sidebar-annotations.c:209
+#: ../shell/ev-sidebar-annotations.c:205
 msgid "Text"
 msgstr "Tekst"
 
-#: ../shell/ev-sidebar-annotations.c:210
+#: ../shell/ev-sidebar-annotations.c:206
 msgid "Add text annotation"
 msgstr "Dodanie adnotacji tekstowej"
 
-#: ../shell/ev-sidebar-annotations.c:221
+#: ../shell/ev-sidebar-annotations.c:217
 msgid "Add"
 msgstr "Dodawanie"
 
-#: ../shell/ev-sidebar-annotations.c:364
+#: ../shell/ev-sidebar-annotations.c:360
 msgid "Document contains no annotations"
 msgstr "Dokument nie zawiera adnotacji"
 
-#: ../shell/ev-sidebar-annotations.c:396
+#: ../shell/ev-sidebar-annotations.c:392
 #, c-format
 msgid "Page %d"
 msgstr "Strona %d"
@@ -1046,7 +1054,7 @@ msgstr "_Usuń zakładkę"
 msgid "Page %s"
 msgstr "Strona %s"
 
-#: ../shell/ev-sidebar-bookmarks.c:606
+#: ../shell/ev-sidebar-bookmarks.c:603
 msgid "Bookmarks"
 msgstr "Zakładki"
 
@@ -1058,7 +1066,7 @@ msgstr "Warstwy"
 msgid "Print…"
 msgstr "Wydrukuj…"
 
-#: ../shell/ev-sidebar-links.c:720
+#: ../shell/ev-sidebar-links.c:718
 msgid "Index"
 msgstr "Indeks"
 
