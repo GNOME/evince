@@ -1185,6 +1185,10 @@ ev_job_save_run (EvJob *job)
 	ev_xfer_uri_simple (local_uri, job_save->uri, &error);
 	ev_tmp_uri_unlink (local_uri);
 
+        /* Copy the metadata from the original file */
+        if (!error)
+                ev_file_copy_metadata (job_save->document_uri, job_save->uri, &error);
+
 	if (error) {
 		ev_job_failed_from_error (job, error);
 		g_error_free (error);
