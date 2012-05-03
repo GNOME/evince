@@ -15,8 +15,8 @@ msgstr ""
 "Project-Id-Version: evince.master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evince&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2012-05-02 10:44+0000\n"
-"PO-Revision-Date: 2012-05-02 14:05+0200\n"
+"POT-Creation-Date: 2012-05-03 08:07+0000\n"
+"PO-Revision-Date: 2012-05-03 10:31+0200\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -55,7 +55,10 @@ msgstr ""
 
 #: ../backend/comics/comics-document.c:471
 #: ../libdocument/ev-document-factory.c:93
-#: ../libdocument/ev-document-factory.c:199
+#: ../libdocument/ev-document-factory.c:159
+#: ../libdocument/ev-document-factory.c:169
+#: ../libdocument/ev-document-factory.c:272
+#: ../libdocument/ev-document-factory.c:374
 msgid "Unknown MIME Type"
 msgstr "Tipo MIME desconocido"
 
@@ -110,65 +113,65 @@ msgstr "El documento DVI tiene un formato incorrecto"
 msgid "DVI Documents"
 msgstr "Documentos DVI"
 
-#: ../backend/pdf/ev-poppler.cc:587
+#: ../backend/pdf/ev-poppler.cc:609
 msgid "This work is in the Public Domain"
 msgstr "Este trabajo está en Dominio público"
 
 #. translators: this is the document security state
-#: ../backend/pdf/ev-poppler.cc:840 ../backend/pdf/ev-poppler.cc:846
+#: ../backend/pdf/ev-poppler.cc:862 ../backend/pdf/ev-poppler.cc:868
 msgid "Yes"
 msgstr "Sí"
 
 #. translators: this is the document security state
-#: ../backend/pdf/ev-poppler.cc:843 ../backend/pdf/ev-poppler.cc:846
+#: ../backend/pdf/ev-poppler.cc:865 ../backend/pdf/ev-poppler.cc:868
 msgid "No"
 msgstr "No"
 
-#: ../backend/pdf/ev-poppler.cc:974
+#: ../backend/pdf/ev-poppler.cc:997
 msgid "Type 1"
 msgstr "Tipo 1"
 
-#: ../backend/pdf/ev-poppler.cc:976
+#: ../backend/pdf/ev-poppler.cc:999
 msgid "Type 1C"
 msgstr "Tipo 1C"
 
-#: ../backend/pdf/ev-poppler.cc:978
+#: ../backend/pdf/ev-poppler.cc:1001
 msgid "Type 3"
 msgstr "Tipo 3"
 
-#: ../backend/pdf/ev-poppler.cc:980
+#: ../backend/pdf/ev-poppler.cc:1003
 msgid "TrueType"
 msgstr "TrueType"
 
-#: ../backend/pdf/ev-poppler.cc:982
+#: ../backend/pdf/ev-poppler.cc:1005
 msgid "Type 1 (CID)"
 msgstr "Tipo 1 (CID)"
 
-#: ../backend/pdf/ev-poppler.cc:984
+#: ../backend/pdf/ev-poppler.cc:1007
 msgid "Type 1C (CID)"
 msgstr "Tipo 1C (CID)"
 
-#: ../backend/pdf/ev-poppler.cc:986
+#: ../backend/pdf/ev-poppler.cc:1009
 msgid "TrueType (CID)"
 msgstr "TrueType (CID)"
 
-#: ../backend/pdf/ev-poppler.cc:988
+#: ../backend/pdf/ev-poppler.cc:1011
 msgid "Unknown font type"
 msgstr "Tipo de tipografía desconocida"
 
-#: ../backend/pdf/ev-poppler.cc:1014
+#: ../backend/pdf/ev-poppler.cc:1037
 msgid "No name"
 msgstr "Sin nombre"
 
-#: ../backend/pdf/ev-poppler.cc:1022
+#: ../backend/pdf/ev-poppler.cc:1045
 msgid "Embedded subset"
 msgstr "Subconjunto incrustado"
 
-#: ../backend/pdf/ev-poppler.cc:1024
+#: ../backend/pdf/ev-poppler.cc:1047
 msgid "Embedded"
 msgstr "Incrustado"
 
-#: ../backend/pdf/ev-poppler.cc:1026
+#: ../backend/pdf/ev-poppler.cc:1049
 msgid "Not embedded"
 msgstr "No incrustado"
 
@@ -196,11 +199,10 @@ msgstr "Documento no válido"
 
 #: ../backend/tiff/tiffdocument.evince-backend.in.h:1
 #| msgid "DVI Documents"
-msgid "Tiff Documents"
-msgstr "Documentos Tiff"
+msgid "TIFF Documents"
+msgstr "Documentos TIFF"
 
 #: ../backend/xps/xpsdocument.evince-backend.in.h:1
-#| msgid "PDF Documents"
 msgid "XPS Documents"
 msgstr "Documentos XPS"
 
@@ -220,15 +222,16 @@ msgid "Couldn't open attachment “%s”"
 msgstr "No se pudo abrir el adjunto «%s»"
 
 #: ../libdocument/ev-document-factory.c:112
+#: ../libdocument/ev-document-factory.c:184
 #, c-format
 msgid "File type %s (%s) is not supported"
 msgstr "El tipo de archivo %s (%s) no está soportado"
 
-#: ../libdocument/ev-document-factory.c:278
+#: ../libdocument/ev-document-factory.c:447
 msgid "All Documents"
 msgstr "Todos los documentos"
 
-#: ../libdocument/ev-document-factory.c:310
+#: ../libdocument/ev-document-factory.c:479
 msgid "All Files"
 msgstr "Todos los archivos"
 
@@ -275,8 +278,7 @@ msgstr "Opción de lanzamiento no reconocida: %d"
 #: ../cut-n-paste/smclient/eggdesktopfile.c:1391
 #, c-format
 msgid "Can't pass document URIs to a 'Type=Link' desktop entry"
-msgstr ""
-"No se pueden pasar URI de documentos a un aentrada .desktop «Type=Link»"
+msgstr "No se pueden pasar URI de documentos a un aentrada .desktop «Type=Link»"
 
 #: ../cut-n-paste/smclient/eggdesktopfile.c:1412
 #, c-format
@@ -737,7 +739,7 @@ msgstr ""
 msgid "Page Handling"
 msgstr "Gestión de páginas"
 
-#: ../libview/ev-jobs.c:1572
+#: ../libview/ev-jobs.c:1604
 #, c-format
 msgid "Failed to print page %d: %s"
 msgstr "Falló al imprimir la página %d: %s"
@@ -956,8 +958,8 @@ msgstr "Se requiere una contraseña"
 msgid ""
 "The document “%s” is locked and requires a password before it can be opened."
 msgstr ""
-"El documento «%s» está bloqueado y requiere una contraseña antes de que "
-"pueda abrirse."
+"El documento «%s» está bloqueado y requiere una contraseña antes de que pueda "
+"abrirse."
 
 #: ../shell/ev-password-view.c:332
 msgid "_Password:"
@@ -1757,6 +1759,10 @@ msgstr "CADENA"
 #: ../shell/main.c:88
 msgid "[FILE…]"
 msgstr "[ARCHIVO…]"
+
+#~| msgid "DVI Documents"
+#~ msgid "Tiff Documents"
+#~ msgstr "Documentos Tiff"
 
 #~ msgid "_Dual"
 #~ msgstr "_Dual"
