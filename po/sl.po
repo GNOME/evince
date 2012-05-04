@@ -11,14 +11,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=evince&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2012-02-23 16:10+0000\n"
-"PO-Revision-Date: 2012-04-14 11:07+0200\n"
-"Last-Translator: Andrej Žnidaršič <andrej.znidarsic@gmail.com>\n"
+"POT-Creation-Date: 2012-05-02 12:02+0000\n"
+"PO-Revision-Date: 2012-05-04 13:37+0100\n"
+"Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenščina <gnome-si@googlegroups.com>\n"
-"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: \n"
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n%100==4 ? 3 : 0)\n"
 "X-Poedit-Country: SLOVENIA\n"
 "X-Poedit-Language: Slovenian\n"
@@ -186,6 +186,16 @@ msgstr "Dokumenti PostScript"
 #: ../backend/tiff/tiff-document.c:123
 msgid "Invalid document"
 msgstr "Neveljaven dokument"
+
+#: ../backend/tiff/tiffdocument.evince-backend.in.h:1
+#| msgid "DVI Documents"
+msgid "Tiff Documents"
+msgstr "Dokumenti Tiff"
+
+#: ../backend/xps/xpsdocument.evince-backend.in.h:1
+#| msgid "PDF Documents"
+msgid "XPS Documents"
+msgstr "Dokumenti XPS"
 
 #: ../libdocument/ev-attachment.c:304
 #: ../libdocument/ev-attachment.c:325
@@ -637,7 +647,7 @@ msgstr "od %d"
 
 #. Create tree view
 #: ../libview/ev-loading-window.c:76
-#: ../shell/ev-sidebar-annotations.c:133
+#: ../shell/ev-sidebar-annotations.c:131
 #: ../shell/ev-sidebar-layers.c:125
 #: ../shell/ev-sidebar-links.c:260
 msgid "Loading…"
@@ -906,7 +916,7 @@ msgstr "Odpri"
 msgid "Close"
 msgstr "Zapri"
 
-#: ../shell/ev-application.c:1133
+#: ../shell/ev-application.c:1137
 msgid "Running in presentation mode"
 msgstr "Zagon v predstavitvenem načinu"
 
@@ -973,53 +983,53 @@ msgstr "Pisave"
 msgid "Document License"
 msgstr "Dovoljenja dokumenta"
 
-#: ../shell/ev-properties-fonts.c:135
+#: ../shell/ev-properties-fonts.c:132
 msgid "Font"
 msgstr "Pisava"
 
-#: ../shell/ev-properties-fonts.c:162
+#: ../shell/ev-properties-fonts.c:159
 #, c-format
 msgid "Gathering font information… %3d%%"
 msgstr "Zbiranje podrobnosti o pisavah ... %3d%%"
 
-#: ../shell/ev-properties-license.c:137
+#: ../shell/ev-properties-license.c:134
 msgid "Usage terms"
 msgstr "Pogoji uporabe"
 
-#: ../shell/ev-properties-license.c:143
+#: ../shell/ev-properties-license.c:140
 msgid "Text License"
 msgstr "Besedilo dovoljenja"
 
-#: ../shell/ev-properties-license.c:149
+#: ../shell/ev-properties-license.c:146
 msgid "Further Information"
 msgstr "Več podrobnosti"
 
-#: ../shell/ev-sidebar-annotations.c:161
+#: ../shell/ev-sidebar-annotations.c:159
 msgid "List"
 msgstr "Seznam"
 
-#: ../shell/ev-sidebar-annotations.c:203
-#: ../shell/ev-sidebar-annotations.c:531
+#: ../shell/ev-sidebar-annotations.c:199
+#: ../shell/ev-sidebar-annotations.c:527
 msgid "Annotations"
 msgstr "Pripombe"
 
-#: ../shell/ev-sidebar-annotations.c:209
+#: ../shell/ev-sidebar-annotations.c:205
 msgid "Text"
 msgstr "Besedilo"
 
-#: ../shell/ev-sidebar-annotations.c:210
+#: ../shell/ev-sidebar-annotations.c:206
 msgid "Add text annotation"
 msgstr "Dodaj pripombo k besedilu ..."
 
-#: ../shell/ev-sidebar-annotations.c:221
+#: ../shell/ev-sidebar-annotations.c:217
 msgid "Add"
 msgstr "Dodaj"
 
-#: ../shell/ev-sidebar-annotations.c:364
+#: ../shell/ev-sidebar-annotations.c:360
 msgid "Document contains no annotations"
 msgstr "Dokument ne vsebuje pripomb"
 
-#: ../shell/ev-sidebar-annotations.c:396
+#: ../shell/ev-sidebar-annotations.c:392
 #, c-format
 msgid "Page %d"
 msgstr "Stran %d"
@@ -1047,7 +1057,7 @@ msgstr "_Odstrani zaznamek"
 msgid "Page %s"
 msgstr "Stran %s"
 
-#: ../shell/ev-sidebar-bookmarks.c:606
+#: ../shell/ev-sidebar-bookmarks.c:603
 msgid "Bookmarks"
 msgstr "Zaznamki"
 
@@ -1059,7 +1069,7 @@ msgstr "Plasti"
 msgid "Print…"
 msgstr "Natisni ..."
 
-#: ../shell/ev-sidebar-links.c:720
+#: ../shell/ev-sidebar-links.c:718
 msgid "Index"
 msgstr "Kazalo"
 
