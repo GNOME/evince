@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince.HEAD.he\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-03-02 14:09+0200\n"
-"PO-Revision-Date: 2012-03-02 14:09+0200\n"
+"POT-Creation-Date: 2012-05-05 01:23+0300\n"
+"PO-Revision-Date: 2012-05-05 01:23+0200\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: Gezer (Hebrew)\n"
 "Language: he\n"
@@ -53,7 +53,10 @@ msgstr "Can't find an appropriate command to decompress this type of comic book"
 
 #: ../backend/comics/comics-document.c:471
 #: ../libdocument/ev-document-factory.c:93
-#: ../libdocument/ev-document-factory.c:199
+#: ../libdocument/ev-document-factory.c:159
+#: ../libdocument/ev-document-factory.c:169
+#: ../libdocument/ev-document-factory.c:272
+#: ../libdocument/ev-document-factory.c:374
 msgid "Unknown MIME Type"
 msgstr "סוג MIME לא ידוע"
 
@@ -104,67 +107,67 @@ msgstr "DVI document has incorrect format"
 msgid "DVI Documents"
 msgstr "מסמכי DVI"
 
-#: ../backend/pdf/ev-poppler.cc:587
+#: ../backend/pdf/ev-poppler.cc:609
 msgid "This work is in the Public Domain"
 msgstr "יצירה זו היא לרשות הציבור"
 
 #. translators: this is the document security state
-#: ../backend/pdf/ev-poppler.cc:840
-#: ../backend/pdf/ev-poppler.cc:846
+#: ../backend/pdf/ev-poppler.cc:862
+#: ../backend/pdf/ev-poppler.cc:868
 msgid "Yes"
 msgstr "כן"
 
 #. translators: this is the document security state
-#: ../backend/pdf/ev-poppler.cc:843
-#: ../backend/pdf/ev-poppler.cc:846
+#: ../backend/pdf/ev-poppler.cc:865
+#: ../backend/pdf/ev-poppler.cc:868
 msgid "No"
 msgstr "לא"
 
-#: ../backend/pdf/ev-poppler.cc:974
+#: ../backend/pdf/ev-poppler.cc:997
 msgid "Type 1"
 msgstr "Type 1"
 
-#: ../backend/pdf/ev-poppler.cc:976
+#: ../backend/pdf/ev-poppler.cc:999
 msgid "Type 1C"
 msgstr "Type 1C"
 
-#: ../backend/pdf/ev-poppler.cc:978
+#: ../backend/pdf/ev-poppler.cc:1001
 msgid "Type 3"
 msgstr "Type 3"
 
-#: ../backend/pdf/ev-poppler.cc:980
+#: ../backend/pdf/ev-poppler.cc:1003
 msgid "TrueType"
 msgstr "TrueType"
 
-#: ../backend/pdf/ev-poppler.cc:982
+#: ../backend/pdf/ev-poppler.cc:1005
 msgid "Type 1 (CID)"
 msgstr "Type 1 (CID)"
 
-#: ../backend/pdf/ev-poppler.cc:984
+#: ../backend/pdf/ev-poppler.cc:1007
 msgid "Type 1C (CID)"
 msgstr "Type 1C (CID)"
 
-#: ../backend/pdf/ev-poppler.cc:986
+#: ../backend/pdf/ev-poppler.cc:1009
 msgid "TrueType (CID)"
 msgstr "TrueType (CID)"
 
-#: ../backend/pdf/ev-poppler.cc:988
+#: ../backend/pdf/ev-poppler.cc:1011
 msgid "Unknown font type"
 msgstr "סוג גופן לא ידוע"
 
-#: ../backend/pdf/ev-poppler.cc:1014
+#: ../backend/pdf/ev-poppler.cc:1037
 msgid "No name"
 msgstr "ללא שם"
 
-#: ../backend/pdf/ev-poppler.cc:1022
+#: ../backend/pdf/ev-poppler.cc:1045
 msgid "Embedded subset"
 msgstr "תת־קבוצה מוטמעת"
 
-#: ../backend/pdf/ev-poppler.cc:1024
+#: ../backend/pdf/ev-poppler.cc:1047
 msgid "Embedded"
 msgstr "מוטמע"
 
-#: ../backend/pdf/ev-poppler.cc:1026
+#: ../backend/pdf/ev-poppler.cc:1049
 msgid "Not embedded"
 msgstr "לא מוטמע"
 
@@ -190,6 +193,14 @@ msgstr "מסמכי PostScript"
 msgid "Invalid document"
 msgstr "מסמך לא תקין"
 
+#: ../backend/tiff/tiffdocument.evince-backend.in.h:1
+msgid "TIFF Documents"
+msgstr "מסמכי TIFF"
+
+#: ../backend/xps/xpsdocument.evince-backend.in.h:1
+msgid "XPS Documents"
+msgstr "מסמכי XPS"
+
 #: ../libdocument/ev-attachment.c:304
 #: ../libdocument/ev-attachment.c:325
 #, c-format
@@ -207,15 +218,16 @@ msgid "Couldn't open attachment “%s”"
 msgstr "לא ניתן לפתוח את הצרופה “%s”"
 
 #: ../libdocument/ev-document-factory.c:112
+#: ../libdocument/ev-document-factory.c:184
 #, c-format
 msgid "File type %s (%s) is not supported"
 msgstr "סוג הקובץ %s ‏(%s) אינו נתמך"
 
-#: ../libdocument/ev-document-factory.c:278
+#: ../libdocument/ev-document-factory.c:447
 msgid "All Documents"
 msgstr "כל המסמכים"
 
-#: ../libdocument/ev-document-factory.c:310
+#: ../libdocument/ev-document-factory.c:479
 msgid "All Files"
 msgstr "כל הקבצים"
 
@@ -419,16 +431,16 @@ msgid "View multi-page documents"
 msgstr "הצגת מסמכים מרובי עמודים"
 
 #: ../data/org.gnome.Evince.gschema.xml.in.h:1
-msgid "Automatically reload the document"
-msgstr "Automatically reload the document"
-
-#: ../data/org.gnome.Evince.gschema.xml.in.h:2
 msgid "Override document restrictions"
 msgstr "Override document restrictions"
 
-#: ../data/org.gnome.Evince.gschema.xml.in.h:3
+#: ../data/org.gnome.Evince.gschema.xml.in.h:2
 msgid "Override document restrictions, like restriction to copy or to print."
 msgstr "Override document restrictions, like restriction to copy or to print."
+
+#: ../data/org.gnome.Evince.gschema.xml.in.h:3
+msgid "Automatically reload the document"
+msgstr "Automatically reload the document"
 
 #: ../data/org.gnome.Evince.gschema.xml.in.h:4
 msgid "The document is automatically reloaded on file change."
@@ -640,7 +652,7 @@ msgstr "מתוך %d"
 
 #. Create tree view
 #: ../libview/ev-loading-window.c:76
-#: ../shell/ev-sidebar-annotations.c:133
+#: ../shell/ev-sidebar-annotations.c:131
 #: ../shell/ev-sidebar-layers.c:125
 #: ../shell/ev-sidebar-links.c:260
 msgid "Loading…"
@@ -726,7 +738,7 @@ msgstr "כאשר פעיל, כל עמוד יודפס באותו גודל הדף �
 msgid "Page Handling"
 msgstr "טיפול בעמודים"
 
-#: ../libview/ev-jobs.c:1572
+#: ../libview/ev-jobs.c:1604
 #, c-format
 msgid "Failed to print page %d: %s"
 msgstr "ארע כשל בהדפסת עמוד %d: ‏%s"
@@ -909,7 +921,7 @@ msgstr "פתיחה"
 msgid "Close"
 msgstr "סגירה"
 
-#: ../shell/ev-application.c:1133
+#: ../shell/ev-application.c:1137
 msgid "Running in presentation mode"
 msgstr "מופעל מצב מצגת"
 
@@ -976,53 +988,53 @@ msgstr "גופנים"
 msgid "Document License"
 msgstr "רישיון המסמך"
 
-#: ../shell/ev-properties-fonts.c:135
+#: ../shell/ev-properties-fonts.c:132
 msgid "Font"
 msgstr "גופן"
 
-#: ../shell/ev-properties-fonts.c:162
+#: ../shell/ev-properties-fonts.c:159
 #, c-format
 msgid "Gathering font information… %3d%%"
 msgstr "נאסף מידע על הגופנים... %3d%%"
 
-#: ../shell/ev-properties-license.c:137
+#: ../shell/ev-properties-license.c:134
 msgid "Usage terms"
 msgstr "תנאי שימוש"
 
-#: ../shell/ev-properties-license.c:143
+#: ../shell/ev-properties-license.c:140
 msgid "Text License"
 msgstr "רישיון הטקסט"
 
-#: ../shell/ev-properties-license.c:149
+#: ../shell/ev-properties-license.c:146
 msgid "Further Information"
 msgstr "מידע נוסף"
 
-#: ../shell/ev-sidebar-annotations.c:161
+#: ../shell/ev-sidebar-annotations.c:159
 msgid "List"
 msgstr "רשימה"
 
-#: ../shell/ev-sidebar-annotations.c:203
-#: ../shell/ev-sidebar-annotations.c:531
+#: ../shell/ev-sidebar-annotations.c:199
+#: ../shell/ev-sidebar-annotations.c:527
 msgid "Annotations"
 msgstr "הערות"
 
-#: ../shell/ev-sidebar-annotations.c:209
+#: ../shell/ev-sidebar-annotations.c:205
 msgid "Text"
 msgstr "טקסט"
 
-#: ../shell/ev-sidebar-annotations.c:210
+#: ../shell/ev-sidebar-annotations.c:206
 msgid "Add text annotation"
 msgstr "הוספת פרשנות טקסט"
 
-#: ../shell/ev-sidebar-annotations.c:221
+#: ../shell/ev-sidebar-annotations.c:217
 msgid "Add"
 msgstr "הוספה"
 
-#: ../shell/ev-sidebar-annotations.c:364
+#: ../shell/ev-sidebar-annotations.c:360
 msgid "Document contains no annotations"
 msgstr "המסמך אינו מכיל הערות"
 
-#: ../shell/ev-sidebar-annotations.c:396
+#: ../shell/ev-sidebar-annotations.c:392
 #, c-format
 msgid "Page %d"
 msgstr "עמוד %d"
@@ -1050,7 +1062,7 @@ msgstr "ה_סרת הסימנייה"
 msgid "Page %s"
 msgstr "עמוד %s"
 
-#: ../shell/ev-sidebar-bookmarks.c:606
+#: ../shell/ev-sidebar-bookmarks.c:603
 msgid "Bookmarks"
 msgstr "סימניות"
 
@@ -1062,7 +1074,7 @@ msgstr "שכבות"
 msgid "Print…"
 msgstr "הדפסה..."
 
-#: ../shell/ev-sidebar-links.c:720
+#: ../shell/ev-sidebar-links.c:718
 msgid "Index"
 msgstr "מפתח"
 
