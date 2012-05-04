@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: evience.master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evince&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2012-05-03 10:46+0000\n"
-"PO-Revision-Date: 2012-05-04 12:10+0530\n"
+"POT-Creation-Date: 2012-05-04 06:42+0000\n"
+"PO-Revision-Date: 2012-05-04 12:17+0530\n"
 "Last-Translator: Praveen Illa <mail2ipn@gmail.com>\n"
 "Language-Team: Telugu <indlinux-telugu@lists.sourceforge.net>\n"
 "Language: te\n"
@@ -51,7 +51,10 @@ msgstr "ఈ రకమైన కామిక్ పుస్తకమును �
 
 #: ../backend/comics/comics-document.c:471
 #: ../libdocument/ev-document-factory.c:93
-#: ../libdocument/ev-document-factory.c:199
+#: ../libdocument/ev-document-factory.c:159
+#: ../libdocument/ev-document-factory.c:169
+#: ../libdocument/ev-document-factory.c:272
+#: ../libdocument/ev-document-factory.c:374
 msgid "Unknown MIME Type"
 msgstr "తెలియని MIME రకం"
 
@@ -104,65 +107,65 @@ msgstr "DVI పత్రము సరియైన ఫార్మేట్‌ల
 msgid "DVI Documents"
 msgstr "DVI పత్రాలు"
 
-#: ../backend/pdf/ev-poppler.cc:587
+#: ../backend/pdf/ev-poppler.cc:609
 msgid "This work is in the Public Domain"
 msgstr "ఈ పని పబ్లిక్ డొమైన్‌లో ఉంది"
 
 #. translators: this is the document security state
-#: ../backend/pdf/ev-poppler.cc:840 ../backend/pdf/ev-poppler.cc:846
+#: ../backend/pdf/ev-poppler.cc:862 ../backend/pdf/ev-poppler.cc:868
 msgid "Yes"
 msgstr "అవును"
 
 #. translators: this is the document security state
-#: ../backend/pdf/ev-poppler.cc:843 ../backend/pdf/ev-poppler.cc:846
+#: ../backend/pdf/ev-poppler.cc:865 ../backend/pdf/ev-poppler.cc:868
 msgid "No"
 msgstr "లేదు"
 
-#: ../backend/pdf/ev-poppler.cc:974
+#: ../backend/pdf/ev-poppler.cc:997
 msgid "Type 1"
 msgstr "రకం 1"
 
-#: ../backend/pdf/ev-poppler.cc:976
+#: ../backend/pdf/ev-poppler.cc:999
 msgid "Type 1C"
 msgstr "రకం 1C"
 
-#: ../backend/pdf/ev-poppler.cc:978
+#: ../backend/pdf/ev-poppler.cc:1001
 msgid "Type 3"
 msgstr "రకం 3"
 
-#: ../backend/pdf/ev-poppler.cc:980
+#: ../backend/pdf/ev-poppler.cc:1003
 msgid "TrueType"
 msgstr "నిజమైన రకం"
 
-#: ../backend/pdf/ev-poppler.cc:982
+#: ../backend/pdf/ev-poppler.cc:1005
 msgid "Type 1 (CID)"
 msgstr "రకం 1 (CID)"
 
-#: ../backend/pdf/ev-poppler.cc:984
+#: ../backend/pdf/ev-poppler.cc:1007
 msgid "Type 1C (CID)"
 msgstr "రకం 1C (CID)"
 
-#: ../backend/pdf/ev-poppler.cc:986
+#: ../backend/pdf/ev-poppler.cc:1009
 msgid "TrueType (CID)"
 msgstr "నిజమైన రకం (CID)"
 
-#: ../backend/pdf/ev-poppler.cc:988
+#: ../backend/pdf/ev-poppler.cc:1011
 msgid "Unknown font type"
 msgstr "తెలియని ఫాంటు రకము"
 
-#: ../backend/pdf/ev-poppler.cc:1014
+#: ../backend/pdf/ev-poppler.cc:1037
 msgid "No name"
 msgstr "పేరు లేదు"
 
-#: ../backend/pdf/ev-poppler.cc:1022
+#: ../backend/pdf/ev-poppler.cc:1045
 msgid "Embedded subset"
 msgstr "ఎంబెడెడ్ ఉపసమితి"
 
-#: ../backend/pdf/ev-poppler.cc:1024
+#: ../backend/pdf/ev-poppler.cc:1047
 msgid "Embedded"
 msgstr "ఎంబెడెడ్"
 
-#: ../backend/pdf/ev-poppler.cc:1026
+#: ../backend/pdf/ev-poppler.cc:1049
 msgid "Not embedded"
 msgstr "ఎంబెడెడ్ కాదు"
 
@@ -189,8 +192,8 @@ msgid "Invalid document"
 msgstr "సరియైన పత్రము కాదు"
 
 #: ../backend/tiff/tiffdocument.evince-backend.in.h:1
-msgid "Tiff Documents"
-msgstr "Tiff పత్రాలు"
+msgid "TIFF Documents"
+msgstr "TIFF పత్రములు"
 
 #: ../backend/xps/xpsdocument.evince-backend.in.h:1
 msgid "XPS Documents"
@@ -212,15 +215,16 @@ msgid "Couldn't open attachment “%s”"
 msgstr "“%s” అనుబంధపత్రాన్ని తెరవడం వీలుకాదు"
 
 #: ../libdocument/ev-document-factory.c:112
+#: ../libdocument/ev-document-factory.c:184
 #, c-format
 msgid "File type %s (%s) is not supported"
 msgstr "ఫైలు రకము %s (%s) కు సహకారం లేదు"
 
-#: ../libdocument/ev-document-factory.c:278
+#: ../libdocument/ev-document-factory.c:447
 msgid "All Documents"
 msgstr "అన్ని పత్రాలు"
 
-#: ../libdocument/ev-document-factory.c:310
+#: ../libdocument/ev-document-factory.c:479
 msgid "All Files"
 msgstr "అన్ని ఫైళ్ళు"
 
@@ -720,7 +724,7 @@ msgstr "ఎప్పుడైతే చేతనమైందో, ప్రతీ
 msgid "Page Handling"
 msgstr "పేజీ సంభాలన"
 
-#: ../libview/ev-jobs.c:1572
+#: ../libview/ev-jobs.c:1604
 #, c-format
 msgid "Failed to print page %d: %s"
 msgstr "%d పేజీ ముద్రించులో విఫలమైంది: %s"
@@ -1731,6 +1735,9 @@ msgstr "పదబంధం"
 #: ../shell/main.c:88
 msgid "[FILE…]"
 msgstr "[FILE…]"
+
+#~ msgid "Tiff Documents"
+#~ msgstr "Tiff పత్రాలు"
 
 #~ msgid "_Dual"
 #~ msgstr "ద్వయము (_D)"
