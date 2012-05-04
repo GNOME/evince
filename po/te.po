@@ -3,29 +3,31 @@
 # This file is distributed under the same license as the evince package.
 # Bharat Kumar <jonnalagaddabharat@gmail.com>, 2007.
 # Krishna Babu K <kkrothap@redhat.com>, 2009, 2010, 2012.
-# Praveen Illa <mail2ipn@gmail.com>, 2011, 2012.
 # Sasi Bhushan Boddepalli <sasi@swecha.net>, 2012.
+# Praveen Illa <mail2ipn@gmail.com>, 2011, 2012.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: evience.master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evince&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2012-03-19 09:33+0000\n"
-"PO-Revision-Date: 2012-03-15 12:27+0530\n"
-"Last-Translator: Krishnababu Krothapalli <kkrothap@redhat.com>\n"
+"POT-Creation-Date: 2012-05-03 10:46+0000\n"
+"PO-Revision-Date: 2012-05-04 12:10+0530\n"
+"Last-Translator: Praveen Illa <mail2ipn@gmail.com>\n"
 "Language-Team: Telugu <indlinux-telugu@lists.sourceforge.net>\n"
+"Language: te\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"Language: te\n"
-"Plural-Forms: nplurals=2; plural=(n!=1);\n"
+"Content-Transfer-Encoding: 8bits\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
 "X-Generator: Lokalize 1.2\n"
 "X-Poedit-Language: Telugu\n"
 "X-Poedit-Country: INDIA\n"
 
 #: ../backend/comics/comics-document.c:210
 #, c-format
-msgid "Error launching the command “%s” in order to decompress the comic book: %s"
+msgid ""
+"Error launching the command “%s” in order to decompress the comic book: %s"
 msgstr "కామిక్ పుస్తకమును డికంప్రెస్ చేయడానికి “%s” ఆదేశము ప్రయోగించుటలో దోషము ఏర్పడినది: %s"
 
 #: ../backend/comics/comics-document.c:224
@@ -85,7 +87,9 @@ msgid "DjVu document has incorrect format"
 msgstr "DjVu పత్రము సరియైన ఫార్మేటులో లేదు"
 
 #: ../backend/djvu/djvu-document.c:247
-msgid "The document is composed of several files. One or more of these files cannot be accessed."
+msgid ""
+"The document is composed of several files. One or more of these files cannot "
+"be accessed."
 msgstr "ఈ పత్రము వివిధ ఫైళ్ళచే ఏర్పడినది. ఇలా ఏర్పడిన ఒకటి లేదా కొన్ని ఫైళ్ళకు దర్శనసౌలభ్యత లేదు."
 
 #: ../backend/djvu/djvudocument.evince-backend.in.h:1
@@ -105,14 +109,12 @@ msgid "This work is in the Public Domain"
 msgstr "ఈ పని పబ్లిక్ డొమైన్‌లో ఉంది"
 
 #. translators: this is the document security state
-#: ../backend/pdf/ev-poppler.cc:840
-#: ../backend/pdf/ev-poppler.cc:846
+#: ../backend/pdf/ev-poppler.cc:840 ../backend/pdf/ev-poppler.cc:846
 msgid "Yes"
 msgstr "అవును"
 
 #. translators: this is the document security state
-#: ../backend/pdf/ev-poppler.cc:843
-#: ../backend/pdf/ev-poppler.cc:846
+#: ../backend/pdf/ev-poppler.cc:843 ../backend/pdf/ev-poppler.cc:846
 msgid "No"
 msgstr "లేదు"
 
@@ -186,8 +188,15 @@ msgstr "పోస్ట్‍స్క్రిప్ట్ పత్రము�
 msgid "Invalid document"
 msgstr "సరియైన పత్రము కాదు"
 
-#: ../libdocument/ev-attachment.c:304
-#: ../libdocument/ev-attachment.c:325
+#: ../backend/tiff/tiffdocument.evince-backend.in.h:1
+msgid "Tiff Documents"
+msgstr "Tiff పత్రాలు"
+
+#: ../backend/xps/xpsdocument.evince-backend.in.h:1
+msgid "XPS Documents"
+msgstr "XPS పత్రములు"
+
+#: ../libdocument/ev-attachment.c:304 ../libdocument/ev-attachment.c:325
 #, c-format
 msgid "Couldn't save attachment “%s”: %s"
 msgstr "“%s” అనుబంధపత్రాన్ని భద్రపరచడం వీలుకాదు: %s"
@@ -273,8 +282,7 @@ msgstr "చర్యాకాల నిర్వాహికకు అనుస�
 msgid "Specify file containing saved configuration"
 msgstr "భద్రపరచబడిన స్వరూపణాన్ని కలిగివున్న ఫైలును తెలుపుము"
 
-#: ../cut-n-paste/smclient/eggsmclient.c:229
-#: ../previewer/ev-previewer.c:45
+#: ../cut-n-paste/smclient/eggsmclient.c:229 ../previewer/ev-previewer.c:45
 #: ../previewer/ev-previewer.c:46
 msgid "FILE"
 msgstr "FILE"
@@ -333,13 +341,12 @@ msgstr "ఎంచుకున్న సాధనపట్టీని తొల�
 
 #: ../cut-n-paste/toolbar-editor/egg-toolbar-editor.c:489
 msgid "Separator"
-msgstr "వేరుచేయునది"
+msgstr "విచ్ఛేదకం"
 
 #. translators: this is the label for toolbar button
-#: ../cut-n-paste/zoom-control/ephy-zoom.h:48
-#: ../shell/ev-window.c:6159
+#: ../cut-n-paste/zoom-control/ephy-zoom.h:48 ../shell/ev-window.c:6159
 msgid "Best Fit"
-msgstr "ఉత్తమఅమరిక"
+msgstr "ఉత్తమ అమరిక"
 
 #: ../cut-n-paste/zoom-control/ephy-zoom.h:49
 msgid "Fit Page Width"
@@ -402,10 +409,8 @@ msgid "6400%"
 msgstr "6400%"
 
 #. Manually set name and icon
-#: ../data/evince.desktop.in.in.h:1
-#: ../shell/ev-window.c:4899
-#: ../shell/ev-window-title.c:157
-#: ../shell/main.c:317
+#: ../data/evince.desktop.in.in.h:1 ../shell/ev-window.c:4899
+#: ../shell/ev-window-title.c:157 ../shell/main.c:317
 #, c-format
 msgid "Document Viewer"
 msgstr "పత్ర వీక్షకం"
@@ -438,13 +443,11 @@ msgstr "తాత్కాలిక ఫైలును తొలగించు�
 msgid "Print settings file"
 msgstr "అమరికల ఫైలును ముద్రించుము"
 
-#: ../previewer/ev-previewer.c:147
-#: ../previewer/ev-previewer.c:181
+#: ../previewer/ev-previewer.c:147 ../previewer/ev-previewer.c:181
 msgid "GNOME Document Previewer"
-msgstr "GNOME డాక్యుమెంట్ ప్రివ్యూయర్"
+msgstr "గ్నోమ్ పత్ర మునుజూపకం"
 
-#: ../previewer/ev-previewer-window.c:91
-#: ../shell/ev-window.c:3323
+#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3323
 msgid "Failed to print document"
 msgstr "పత్రమును మద్రించుటలో విఫలమైంది"
 
@@ -454,73 +457,59 @@ msgid "The selected printer '%s' could not be found"
 msgstr "ఎంచుకున్న ముద్రణాయంత్రము '%s' కనుగొనబడలేకపోయింది"
 
 #. Go menu
-#: ../previewer/ev-previewer-window.c:284
-#: ../shell/ev-window.c:5843
+#: ../previewer/ev-previewer-window.c:284 ../shell/ev-window.c:5843
 msgid "_Previous Page"
 msgstr "మునుపటి పేజీ (_P)"
 
-#: ../previewer/ev-previewer-window.c:285
-#: ../shell/ev-window.c:5844
+#: ../previewer/ev-previewer-window.c:285 ../shell/ev-window.c:5844
 msgid "Go to the previous page"
 msgstr "మునుపటి పేజీకి వెళ్ళు"
 
-#: ../previewer/ev-previewer-window.c:287
-#: ../shell/ev-window.c:5846
+#: ../previewer/ev-previewer-window.c:287 ../shell/ev-window.c:5846
 msgid "_Next Page"
 msgstr "తరువాతి పేజీ (_N)"
 
-#: ../previewer/ev-previewer-window.c:288
-#: ../shell/ev-window.c:5847
+#: ../previewer/ev-previewer-window.c:288 ../shell/ev-window.c:5847
 msgid "Go to the next page"
 msgstr "తరువాతి పేజీకి వెళ్ళు"
 
-#: ../previewer/ev-previewer-window.c:291
-#: ../shell/ev-window.c:5830
+#: ../previewer/ev-previewer-window.c:291 ../shell/ev-window.c:5830
 msgid "Enlarge the document"
 msgstr "పత్రమును పెంచు"
 
-#: ../previewer/ev-previewer-window.c:294
-#: ../shell/ev-window.c:5833
+#: ../previewer/ev-previewer-window.c:294 ../shell/ev-window.c:5833
 msgid "Shrink the document"
 msgstr "పత్రమును తగ్గించు"
 
-#: ../previewer/ev-previewer-window.c:297
-#: ../libview/ev-print-operation.c:1308
+#: ../previewer/ev-previewer-window.c:297 ../libview/ev-print-operation.c:1308
 msgid "Print"
 msgstr "ముద్రణ"
 
-#: ../previewer/ev-previewer-window.c:298
-#: ../shell/ev-window.c:5799
+#: ../previewer/ev-previewer-window.c:298 ../shell/ev-window.c:5799
 msgid "Print this document"
 msgstr "ఈ పత్రాన్ని ముద్రించు"
 
-#: ../previewer/ev-previewer-window.c:342
-#: ../shell/ev-window.c:5960
+#: ../previewer/ev-previewer-window.c:342 ../shell/ev-window.c:5960
 msgid "_Best Fit"
 msgstr "ఉత్తమ అమరిక (_B)"
 
-#: ../previewer/ev-previewer-window.c:343
-#: ../shell/ev-window.c:5961
+#: ../previewer/ev-previewer-window.c:343 ../shell/ev-window.c:5961
 msgid "Make the current document fill the window"
 msgstr " ప్రస్థుత పత్రాన్ని విండోకు సరిపోయే విధంగా చేయి"
 
-#: ../previewer/ev-previewer-window.c:345
-#: ../shell/ev-window.c:5963
+#: ../previewer/ev-previewer-window.c:345 ../shell/ev-window.c:5963
 msgid "Fit Page _Width"
 msgstr "పేజీ వెడల్పునకు అమర్చు (_W)"
 
-#: ../previewer/ev-previewer-window.c:346
-#: ../shell/ev-window.c:5964
+#: ../previewer/ev-previewer-window.c:346 ../shell/ev-window.c:5964
 msgid "Make the current document fill the window width"
 msgstr "విండో వెడల్పుకు సరిపోయేవిధముగా పత్రాన్ని నింపుము"
 
-#: ../previewer/ev-previewer-window.c:558
-#: ../shell/ev-window.c:6072
+#: ../previewer/ev-previewer-window.c:558 ../shell/ev-window.c:6072
 msgid "Page"
 msgstr "పేజీ"
 
-#: ../previewer/ev-previewer-window.c:559
-#: ../shell/ev-window.c:6073
+#: ../previewer/ev-previewer-window.c:559 ../shell/ev-window.c:6073
 msgid "Select Page"
 msgstr "పేజీని ఎంచుకోండి"
 
@@ -585,8 +574,7 @@ msgstr "రక్షణ:"
 msgid "Paper Size:"
 msgstr "కాగిత పరిమాణము:"
 
-#: ../properties/ev-properties-view.c:187
-#: ../libview/ev-print-operation.c:1892
+#: ../properties/ev-properties-view.c:187 ../libview/ev-print-operation.c:1892
 msgid "None"
 msgstr "ఏమీలేదు"
 
@@ -635,10 +623,8 @@ msgid "of %d"
 msgstr "%d యొక్క"
 
 #. Create tree view
-#: ../libview/ev-loading-window.c:76
-#: ../shell/ev-sidebar-annotations.c:133
-#: ../shell/ev-sidebar-layers.c:125
-#: ../shell/ev-sidebar-links.c:260
+#: ../libview/ev-loading-window.c:76 ../shell/ev-sidebar-annotations.c:131
+#: ../shell/ev-sidebar-layers.c:125 ../shell/ev-sidebar-links.c:260
 msgid "Loading…"
 msgstr "లోడవుతున్నది..."
 
@@ -686,36 +672,48 @@ msgstr "ముద్రించగలిగిన వైశాల్యము�
 
 #: ../libview/ev-print-operation.c:1897
 msgid ""
-"Scale document pages to fit the selected printer page. Select from one of the following:\n"
+"Scale document pages to fit the selected printer page. Select from one of "
+"the following:\n"
 "\n"
 "• \"None\": No page scaling is performed.\n"
 "\n"
-"• \"Shrink to Printable Area\": Document pages larger than the printable area are reduced to fit the printable area of the printer page.\n"
+"• \"Shrink to Printable Area\": Document pages larger than the printable "
+"area are reduced to fit the printable area of the printer page.\n"
 "\n"
-"• \"Fit to Printable Area\": Document pages are enlarged or reduced as required to fit the printable area of the printer page.\n"
+"• \"Fit to Printable Area\": Document pages are enlarged or reduced as "
+"required to fit the printable area of the printer page.\n"
 msgstr ""
-"ఎంపికచేసిన ముద్రణ పేజీనకు అమరునట్లు పత్రము పేజీలను సరిదిద్దుము. కింది వాటిలో ఒకదానినుండి ఎంపికచేయుము:\n"
+"ఎంపికచేసిన ముద్రణ పేజీనకు అమరునట్లు పత్రము పేజీలను సరిదిద్దుము. కింది వాటిలో ఒకదానినుండి "
+"ఎంపికచేయుము:\n"
 "\n"
 "• \"ఏదీకాదు\": ఎటువంటి పేజీ స్కేలింగ్ జరుపబడదు.\n"
 "\n"
-"• \"ముద్రించగల వైశాల్యమునకు కుచింపుము\": ముద్రించగల వైశాల్యము కంటే పెద్దవైన పత్రము పేజీలు ముద్రణ పేజీ యొక్క ముద్రించగల వైశాల్యమునకు అమరునట్లు తగ్గించబడును.\n"
+"• \"ముద్రించగల వైశాల్యమునకు కుచింపుము\": ముద్రించగల వైశాల్యము కంటే పెద్దవైన పత్రము పేజీలు "
+"ముద్రణ పేజీ యొక్క ముద్రించగల వైశాల్యమునకు అమరునట్లు తగ్గించబడును.\n"
 "\n"
-"• \"ముద్రించగల ప్రాంతమునకు అమర్చుము\": ముద్రణ పేజీ యొక్క ముద్రించగల వైశాల్యమునకు అమరునట్లు పత్రము పేజీలు పెద్దవిచేయబడును లేదా తగ్గించబడును.\n"
+"• \"ముద్రించగల ప్రాంతమునకు అమర్చుము\": ముద్రణ పేజీ యొక్క ముద్రించగల వైశాల్యమునకు అమరునట్లు "
+"పత్రము పేజీలు పెద్దవిచేయబడును లేదా తగ్గించబడును.\n"
 
 #: ../libview/ev-print-operation.c:1909
 msgid "Auto Rotate and Center"
 msgstr "స్వయంచాలకంగా తిప్పి మధ్యనవుంచుము"
 
 #: ../libview/ev-print-operation.c:1912
-msgid "Rotate printer page orientation of each page to match orientation of each document page. Document pages will be centered within the printer page."
-msgstr "పత్రము యొక్క ప్రతి పేజీతో సరిపోలునట్లు ప్రతి ముద్రణ పేజీ యొక్క సర్దుబాటును తిప్పుము. పత్రము పేజీలు ముద్రణ పేజీ లోపల మధ్యన వుంచబడుతాయి."
+msgid ""
+"Rotate printer page orientation of each page to match orientation of each "
+"document page. Document pages will be centered within the printer page."
+msgstr ""
+"పత్రము యొక్క ప్రతి పేజీతో సరిపోలునట్లు ప్రతి ముద్రణ పేజీ యొక్క సర్దుబాటును తిప్పుము. పత్రము పేజీలు "
+"ముద్రణ పేజీ లోపల మధ్యన వుంచబడుతాయి."
 
 #: ../libview/ev-print-operation.c:1917
 msgid "Select page size using document page size"
 msgstr "పత్రము పేజీ పరిమాణమును వాడి పేజీ పరిమాణాన్ని ఎంచుకోండి"
 
 #: ../libview/ev-print-operation.c:1919
-msgid "When enabled, each page will be printed on the same size paper as the document page."
+msgid ""
+"When enabled, each page will be printed on the same size paper as the "
+"document page."
 msgstr "ఎప్పుడైతే చేతనమైందో, ప్రతీ పేజీ అదే పరిమాణంలోవున్న పేపరు పై పత్ర పేజీ వలె ముద్రించబడుతుంది."
 
 #: ../libview/ev-print-operation.c:2001
@@ -803,8 +801,7 @@ msgstr "%s ని ప్రారంభించు"
 msgid "Find:"
 msgstr "కనుగొను:"
 
-#: ../shell/eggfindbar.c:319
-#: ../shell/ev-window.c:5816
+#: ../shell/eggfindbar.c:319 ../shell/ev-window.c:5816
 msgid "Find Pre_vious"
 msgstr "మునుపటిదానిని కనుగొనుము (_v)"
 
@@ -812,8 +809,7 @@ msgstr "మునుపటిదానిని కనుగొనుము (_v)
 msgid "Find previous occurrence of the search string"
 msgstr "శోధన పదం యొక్క పూర్వసంభవాన్ని కనుగొనుము"
 
-#: ../shell/eggfindbar.c:327
-#: ../shell/ev-window.c:5814
+#: ../shell/eggfindbar.c:327 ../shell/ev-window.c:5814
 msgid "Find Ne_xt"
 msgstr "తరువాతదానిని కనుగొనుము (_x)"
 
@@ -905,7 +901,7 @@ msgstr "తెరువు"
 msgid "Close"
 msgstr "మూసివేయి"
 
-#: ../shell/ev-application.c:1133
+#: ../shell/ev-application.c:1137
 msgid "Running in presentation mode"
 msgstr "ప్రదర్శన విధములో నడుస్తున్నది"
 
@@ -919,11 +915,12 @@ msgid "Open a recently used document"
 msgstr "ఇటీవలి ఉపయోగించిన పత్రమును తెరువుము"
 
 #: ../shell/ev-password-view.c:142
-msgid "This document is locked and can only be read by entering the correct password."
+msgid ""
+"This document is locked and can only be read by entering the correct "
+"password."
 msgstr "ఈ పత్రము లాక్‌చేయబడినది కేవలం సంకేతపదం ప్రవేశపెట్టుట ద్వారా మాత్రమే దీనిని చదువగలరు."
 
-#: ../shell/ev-password-view.c:151
-#: ../shell/ev-password-view.c:269
+#: ../shell/ev-password-view.c:151 ../shell/ev-password-view.c:269
 msgid "_Unlock Document"
 msgstr "పత్రాన్ని అన్‌లాక్‌చేయండి (_U)"
 
@@ -937,7 +934,8 @@ msgstr "సంకేతపదం అవసరం"
 
 #: ../shell/ev-password-view.c:302
 #, c-format
-msgid "The document “%s” is locked and requires a password before it can be opened."
+msgid ""
+"The document “%s” is locked and requires a password before it can be opened."
 msgstr "%s పత్రము లాక్‌చేయబడినది కాబట్టి దీనిని తెరుచుటకు ముందుగా సంకేతపదం అవసరం."
 
 #: ../shell/ev-password-view.c:332
@@ -972,53 +970,52 @@ msgstr "ఖతులు"
 msgid "Document License"
 msgstr "పత్రము లైసెన్సు"
 
-#: ../shell/ev-properties-fonts.c:135
+#: ../shell/ev-properties-fonts.c:132
 msgid "Font"
 msgstr "ఖతి"
 
-#: ../shell/ev-properties-fonts.c:162
+#: ../shell/ev-properties-fonts.c:159
 #, c-format
 msgid "Gathering font information… %3d%%"
 msgstr "ఖతి సమాచారాన్ని సేకరిస్తున్నది... %3d%%"
 
-#: ../shell/ev-properties-license.c:137
+#: ../shell/ev-properties-license.c:134
 msgid "Usage terms"
 msgstr "వాడుక షరతులు"
 
-#: ../shell/ev-properties-license.c:143
+#: ../shell/ev-properties-license.c:140
 msgid "Text License"
 msgstr "పాఠ్య లైసెన్సు"
 
-#: ../shell/ev-properties-license.c:149
+#: ../shell/ev-properties-license.c:146
 msgid "Further Information"
 msgstr "మరింత సమాచారం"
 
-#: ../shell/ev-sidebar-annotations.c:161
+#: ../shell/ev-sidebar-annotations.c:159
 msgid "List"
 msgstr "జాబితా"
 
-#: ../shell/ev-sidebar-annotations.c:203
-#: ../shell/ev-sidebar-annotations.c:531
+#: ../shell/ev-sidebar-annotations.c:199 ../shell/ev-sidebar-annotations.c:527
 msgid "Annotations"
 msgstr "వివరణలు:"
 
-#: ../shell/ev-sidebar-annotations.c:209
+#: ../shell/ev-sidebar-annotations.c:205
 msgid "Text"
 msgstr "పాఠ్యం"
 
-#: ../shell/ev-sidebar-annotations.c:210
+#: ../shell/ev-sidebar-annotations.c:206
 msgid "Add text annotation"
 msgstr "పాఠ్య వివరణను జతచేయి"
 
-#: ../shell/ev-sidebar-annotations.c:221
+#: ../shell/ev-sidebar-annotations.c:217
 msgid "Add"
 msgstr "జతచేయి"
 
-#: ../shell/ev-sidebar-annotations.c:364
+#: ../shell/ev-sidebar-annotations.c:360
 msgid "Document contains no annotations"
 msgstr "పత్రము ఎటువంటి వివరణలను కలిగిలేదు"
 
-#: ../shell/ev-sidebar-annotations.c:396
+#: ../shell/ev-sidebar-annotations.c:392
 #, c-format
 msgid "Page %d"
 msgstr "పేజీ %d"
@@ -1039,14 +1036,13 @@ msgstr "ఇష్టాంశము పేరుమార్చు (_R)"
 msgid "_Remove Bookmark"
 msgstr "ఇష్టాంశమును తొలగించు (_R)"
 
-#: ../shell/ev-sidebar-bookmarks.c:312
-#: ../shell/ev-window.c:926
+#: ../shell/ev-sidebar-bookmarks.c:312 ../shell/ev-window.c:926
 #: ../shell/ev-window.c:4627
 #, c-format
 msgid "Page %s"
 msgstr "%s పేజీ"
 
-#: ../shell/ev-sidebar-bookmarks.c:606
+#: ../shell/ev-sidebar-bookmarks.c:603
 msgid "Bookmarks"
 msgstr "ఇష్టాంశాలు"
 
@@ -1058,7 +1054,7 @@ msgstr "పొరలు"
 msgid "Print…"
 msgstr "ముద్రించు..."
 
-#: ../shell/ev-sidebar-links.c:720
+#: ../shell/ev-sidebar-links.c:718
 msgid "Index"
 msgstr "సూచిక"
 
@@ -1079,8 +1075,7 @@ msgstr "పత్రము ఎటువంటి పేజీలను కలి
 msgid "The document contains only empty pages"
 msgstr "పత్రము ఖాళీ పేజీలను మాత్రమే కలిగివుంది"
 
-#: ../shell/ev-window.c:1731
-#: ../shell/ev-window.c:1897
+#: ../shell/ev-window.c:1731 ../shell/ev-window.c:1897
 msgid "Unable to open document"
 msgstr "పత్రాన్ని తెరవలేకపోతుంది"
 
@@ -1089,8 +1084,7 @@ msgstr "పత్రాన్ని తెరవలేకపోతుంది"
 msgid "Loading document from “%s”"
 msgstr "పత్రమును “%s” నుండి లోడుచేయుచున్నది"
 
-#: ../shell/ev-window.c:2010
-#: ../shell/ev-window.c:2304
+#: ../shell/ev-window.c:2010 ../shell/ev-window.c:2304
 #, c-format
 msgid "Downloading document (%d%%)"
 msgstr "(%d%%) పత్రమును డౌనులోడుచేయుచున్నది"
@@ -1127,8 +1121,7 @@ msgstr "అనుబంధపత్రాన్ని %sకు భద్రప�
 msgid "Saving image to %s"
 msgstr "బొమ్మను %sకు భద్రపరుస్తున్నది"
 
-#: ../shell/ev-window.c:2770
-#: ../shell/ev-window.c:2870
+#: ../shell/ev-window.c:2770 ../shell/ev-window.c:2870
 #, c-format
 msgid "The file could not be saved as “%s”."
 msgstr "ఈ దస్త్రం “%s” గా దాచుట సాధ్యముకాదు"
@@ -1173,12 +1166,20 @@ msgid "Printing job “%s”"
 msgstr "జాబ్ “%s” ముద్రించుచున్నది"
 
 #: ../shell/ev-window.c:3557
-msgid "Document contains form fields that have been filled out. If you don't save a copy, changes will be permanently lost."
-msgstr "పత్రము కొన్ని నింపబడిన  రూప క్షేత్రములను కలిగివుంది. ఒకవేళ మీరు ఒక నకలును భద్రపరుచకపోతే, మార్పులను శాశ్వతంగా కోల్పోతారు."
+msgid ""
+"Document contains form fields that have been filled out. If you don't save a "
+"copy, changes will be permanently lost."
+msgstr ""
+"పత్రము కొన్ని నింపబడిన  రూప క్షేత్రములను కలిగివుంది. ఒకవేళ మీరు ఒక నకలును భద్రపరుచకపోతే, "
+"మార్పులను శాశ్వతంగా కోల్పోతారు."
 
 #: ../shell/ev-window.c:3561
-msgid "Document contains new or modified annotations. If you don't save a copy, changes will be permanently lost."
-msgstr "పత్రము కొన్ని కొత్త లేక సవరించబడిన వివరణలను కలిగవున్నది. ఒకవేళ మీరు ఒక నకలును భద్రపరుచకపోతే, మార్పులను శాశ్వతంగా కోల్పోతారు."
+msgid ""
+"Document contains new or modified annotations. If you don't save a copy, "
+"changes will be permanently lost."
+msgstr ""
+"పత్రము కొన్ని కొత్త లేక సవరించబడిన వివరణలను కలిగవున్నది. ఒకవేళ మీరు ఒక నకలును భద్రపరుచకపోతే, "
+"మార్పులను శాశ్వతంగా కోల్పోతారు."
 
 #: ../shell/ev-window.c:3568
 #, c-format
@@ -1204,9 +1205,13 @@ msgstr "మూసివేసే ముందు ముద్రణ కార్
 #: ../shell/ev-window.c:3671
 #, c-format
 msgid "There is %d print job active. Wait until print finishes before closing?"
-msgid_plural "There are %d print jobs active. Wait until print finishes before closing?"
-msgstr[0] "అక్కడ %d ముద్రణా కార్యము క్రియాశీలముగా ఉంది. మూసివేసే ముందుగా ముద్రణ పూర్తయ్యేంత వరకు వేచివుండాలా?"
-msgstr[1] "అక్కడ %d ముద్రణా కార్యములు క్రియాశీలముగా ఉన్నాయి. మూసివేసే ముందుగా ముద్రణ పూర్తయ్యేంత వరకు వేచివుండాలా?"
+msgid_plural ""
+"There are %d print jobs active. Wait until print finishes before closing?"
+msgstr[0] ""
+"అక్కడ %d ముద్రణా కార్యము క్రియాశీలముగా ఉంది. మూసివేసే ముందుగా ముద్రణ పూర్తయ్యేంత వరకు వేచివుండాలా?"
+msgstr[1] ""
+"అక్కడ %d ముద్రణా కార్యములు క్రియాశీలముగా ఉన్నాయి. మూసివేసే ముందుగా ముద్రణ పూర్తయ్యేంత వరకు "
+"వేచివుండాలా?"
 
 #: ../shell/ev-window.c:3686
 msgid "If you close the window, pending print jobs will not be printed."
@@ -1220,8 +1225,7 @@ msgstr "ముద్రణను రద్దుచేసి, మూసివే
 msgid "Close _after Printing"
 msgstr "ముద్రణ తర్వాత మూసివేయి (_a)"
 
-#: ../shell/ev-window.c:4371
-#: ../shell/ev-window.c:4657
+#: ../shell/ev-window.c:4371 ../shell/ev-window.c:4657
 msgid "There was an error displaying help"
 msgstr "అక్కడ వొక దోషము సహాయమును ప్రదర్శించుతున్నది"
 
@@ -1239,16 +1243,38 @@ msgstr ""
 "%s (%s) ఉపయోగిస్తున్నది"
 
 #: ../shell/ev-window.c:4928
-msgid "Evince is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.\n"
-msgstr "ఎవిన్స్ అనేది ఫ్రీ సాఫ్ట్‍వేర్; మీరు దానిని మరలపంచవచ్చు/సవరించవచ్చు ఫ్రీ సాఫ్ట్‍వేర్ ఫౌండేషన్ సంస్థ వెలువరిచిన గ్నూ సర్వసామన్యమైన ప్రజా లైసెన్సు వివరణం 2 లైసెన్సు లేదా వేరే (మీ ఐచ్చికం వద్ద) వివరణల ప్రకారం మార్చవచ్చు.\n"
+msgid ""
+"Evince is free software; you can redistribute it and/or modify it under the "
+"terms of the GNU General Public License as published by the Free Software "
+"Foundation; either version 2 of the License, or (at your option) any later "
+"version.\n"
+msgstr ""
+"ఎవిన్స్ అనేది ఫ్రీ సాఫ్ట్‍వేర్; మీరు దానిని మరలపంచవచ్చు/సవరించవచ్చు ఫ్రీ సాఫ్ట్‍వేర్ ఫౌండేషన్ సంస్థ వెలువరిచిన "
+"గ్నూ సర్వసామన్యమైన ప్రజా లైసెన్సు వివరణం 2 లైసెన్సు లేదా వేరే (మీ ఐచ్చికం వద్ద) వివరణల ప్రకారం "
+"మార్చవచ్చు.\n"
 
 #: ../shell/ev-window.c:4932
-msgid "Evince is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.\n"
-msgstr "ఎవిన్స్ ఉపయోగపడుతుందనే నమ్మకంతో పంపిణీచేయబడుతోంది, అయితే ఏ హామీ లేకుండా;  వ్యాపారసంబంధంగా కాని లేదా ఒక నిర్దిష్ట అవసరానికిచెందినదని కాని హామీ లేదు. ఎక్కువ సమాచారం కొరకు GNU జనరల్ పబ్లిక్ లైసెన్స్  ను చూడండి. మీరు ఈ ప్రోగ్రామ్ నకలు తోటి ఒక GNU జనరల్ పబ్లిక్ లైసెన్స్  నకలుగూడా పొందిఉంటారు; పొందక పోతే, Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USAకు వ్రాయండి.\n"
+msgid ""
+"Evince is distributed in the hope that it will be useful, but WITHOUT ANY "
+"WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS "
+"FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more "
+"details.\n"
+msgstr ""
+"ఎవిన్స్ ఉపయోగపడుతుందనే నమ్మకంతో పంపిణీచేయబడుతోంది, అయితే ఏ హామీ లేకుండా;  వ్యాపారసంబంధంగా కాని లేదా ఒక "
+"నిర్దిష్ట అవసరానికిచెందినదని కాని హామీ లేదు. ఎక్కువ సమాచారం కొరకు GNU జనరల్ పబ్లిక్ లైసెన్స్  ను చూడండి. "
+"మీరు ఈ ప్రోగ్రామ్ నకలు తోటి ఒక GNU జనరల్ పబ్లిక్ లైసెన్స్  నకలుగూడా పొందిఉంటారు; పొందక పోతే, Free "
+"Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA "
+"02110-1301, USAకు వ్రాయండి.\n"
 
 #: ../shell/ev-window.c:4936
-msgid "You should have received a copy of the GNU General Public License along with Evince; if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA\n"
-msgstr "మీరు Evince నకలుతోపాటు ఒక GNU జనరల్ పబ్లిక్ లైసెన్స్  నకలుగూడా పొందిఉంటారు; ఒకవేళ పొందక పోతే, Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USAకు వ్రాయండి.\n"
+msgid ""
+"You should have received a copy of the GNU General Public License along with "
+"Evince; if not, write to the Free Software Foundation, Inc., 51 Franklin "
+"Street, Fifth Floor, Boston, MA 02110-1301  USA\n"
+msgstr ""
+"మీరు Evince నకలుతోపాటు ఒక GNU జనరల్ పబ్లిక్ లైసెన్స్  నకలుగూడా పొందిఉంటారు; ఒకవేళ పొందక పోతే, "
+"Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  "
+"02111-1307  USAకు వ్రాయండి.\n"
 
 #: ../shell/ev-window.c:4961
 msgid "Evince"
@@ -1308,13 +1334,11 @@ msgid "_Help"
 msgstr "సహాయం (_H)"
 
 #. File menu
-#: ../shell/ev-window.c:5783
-#: ../shell/ev-window.c:6112
+#: ../shell/ev-window.c:5783 ../shell/ev-window.c:6112
 msgid "_Open…"
 msgstr "తెరువు...(_O)"
 
-#: ../shell/ev-window.c:5784
-#: ../shell/ev-window.c:6113
+#: ../shell/ev-window.c:5784 ../shell/ev-window.c:6113
 msgid "Open an existing document"
 msgstr "ఉనికిలోవున్న పత్రాన్ని తెరువుము"
 
@@ -1569,11 +1593,11 @@ msgstr "జూమ్ స్థాయిని సవరించు"
 
 #: ../shell/ev-window.c:6098
 msgid "Navigation"
-msgstr "విహరించుట"
+msgstr "విహరణ"
 
 #: ../shell/ev-window.c:6100
 msgid "Back"
-msgstr "వెనుకకి"
+msgstr "వెనక్కి"
 
 #. translators: this is the history action
 #: ../shell/ev-window.c:6103
@@ -1615,8 +1639,7 @@ msgstr "చిన్నదిగాచేయి"
 msgid "Fit Width"
 msgstr "వెడల్పుకు అమర్చు"
 
-#: ../shell/ev-window.c:6310
-#: ../shell/ev-window.c:6326
+#: ../shell/ev-window.c:6310 ../shell/ev-window.c:6326
 msgid "Unable to launch external application."
 msgstr "బహిర్గత అనువర్తనమును ప్రారంభించలేకపోతున్నది."
 
@@ -1657,8 +1680,7 @@ msgstr "%s — సంకేతపదం అవసరం"
 msgid "By extension"
 msgstr "పొడిగింతను బట్టి"
 
-#: ../shell/main.c:70
-#: ../shell/main.c:281
+#: ../shell/main.c:70 ../shell/main.c:281
 msgid "GNOME Document Viewer"
 msgstr "గ్నోమ్ పత్ర వీక్షకం"
 
