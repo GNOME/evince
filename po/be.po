@@ -4,17 +4,18 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: evince.master\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-02-20 17:09+0300\n"
-"PO-Revision-Date: 2012-02-20 17:09+0300\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
+"product=evince&keywords=I18N+L10N&component=general\n"
+"POT-Creation-Date: 2012-05-02 12:02+0000\n"
+"PO-Revision-Date: 2012-05-05 15:10+0300\n"
 "Last-Translator: Ihar Hrachyshka <ihar.hrachyshka@gmail.com>\n"
 "Language-Team: Belarusian <i18n-bel-gnome@googlegroups.com>\n"
-"Language: be\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Language: be\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%"
+"10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #: ../backend/comics/comics-document.c:210
 #, c-format
@@ -182,6 +183,14 @@ msgstr "PostScript-дакументы"
 #: ../backend/tiff/tiff-document.c:123
 msgid "Invalid document"
 msgstr "Хібны дакумент"
+
+#: ../backend/tiff/tiffdocument.evince-backend.in.h:1
+msgid "Tiff Documents"
+msgstr "Tiff-дакументы"
+
+#: ../backend/xps/xpsdocument.evince-backend.in.h:1
+msgid "XPS Documents"
+msgstr "XPS-дакументы"
 
 #: ../libdocument/ev-attachment.c:304 ../libdocument/ev-attachment.c:325
 #, c-format
@@ -612,7 +621,7 @@ msgid "of %d"
 msgstr "з %d"
 
 #. Create tree view
-#: ../libview/ev-loading-window.c:76 ../shell/ev-sidebar-annotations.c:133
+#: ../libview/ev-loading-window.c:76 ../shell/ev-sidebar-annotations.c:131
 #: ../shell/ev-sidebar-layers.c:125 ../shell/ev-sidebar-links.c:260
 msgid "Loading…"
 msgstr "Загрузка..."
@@ -892,7 +901,7 @@ msgstr "Адкрыць"
 msgid "Close"
 msgstr "Закрыць"
 
-#: ../shell/ev-application.c:1133
+#: ../shell/ev-application.c:1137
 msgid "Running in presentation mode"
 msgstr "У рэжыме прэзентацыі"
 
@@ -961,52 +970,52 @@ msgstr "Шрыфты"
 msgid "Document License"
 msgstr "Ліцэнзія дакумэнта"
 
-#: ../shell/ev-properties-fonts.c:135
+#: ../shell/ev-properties-fonts.c:132
 msgid "Font"
 msgstr "Шрыфт"
 
-#: ../shell/ev-properties-fonts.c:162
+#: ../shell/ev-properties-fonts.c:159
 #, c-format
 msgid "Gathering font information… %3d%%"
 msgstr "Збор інфармацыі аб шрыфтах... %3d%%"
 
-#: ../shell/ev-properties-license.c:137
+#: ../shell/ev-properties-license.c:134
 msgid "Usage terms"
 msgstr "Умовы выкарыстання"
 
-#: ../shell/ev-properties-license.c:143
+#: ../shell/ev-properties-license.c:140
 msgid "Text License"
 msgstr "Тэкст ліцэнзіі"
 
-#: ../shell/ev-properties-license.c:149
+#: ../shell/ev-properties-license.c:146
 msgid "Further Information"
 msgstr "Больш інфармацыі"
 
-#: ../shell/ev-sidebar-annotations.c:161
+#: ../shell/ev-sidebar-annotations.c:159
 msgid "List"
 msgstr "Спіс"
 
-#: ../shell/ev-sidebar-annotations.c:203 ../shell/ev-sidebar-annotations.c:531
+#: ../shell/ev-sidebar-annotations.c:199 ../shell/ev-sidebar-annotations.c:527
 msgid "Annotations"
 msgstr "Анатацыі"
 
-#: ../shell/ev-sidebar-annotations.c:209
+#: ../shell/ev-sidebar-annotations.c:205
 msgid "Text"
 msgstr "Тэкст"
 
-#: ../shell/ev-sidebar-annotations.c:210
+#: ../shell/ev-sidebar-annotations.c:206
 msgid "Add text annotation"
 msgstr "Дадаць тэкставыя анатацыі"
 
-#: ../shell/ev-sidebar-annotations.c:221
+#: ../shell/ev-sidebar-annotations.c:217
 msgid "Add"
 msgstr "Дадаць"
 
-#: ../shell/ev-sidebar-annotations.c:364
+#: ../shell/ev-sidebar-annotations.c:360
 msgid "Document contains no annotations"
 msgstr "Дакумент не змяшчае анатацый"
 
-#: ../shell/ev-sidebar-annotations.c:396
+#: ../shell/ev-sidebar-annotations.c:392
 #, c-format
 msgid "Page %d"
 msgstr "Старонка %d"
@@ -1033,7 +1042,7 @@ msgstr "_Выдаліць закладку"
 msgid "Page %s"
 msgstr "Старонка %s"
 
-#: ../shell/ev-sidebar-bookmarks.c:606
+#: ../shell/ev-sidebar-bookmarks.c:603
 msgid "Bookmarks"
 msgstr "Закладкі"
 
@@ -1045,11 +1054,11 @@ msgstr "Слаі"
 msgid "Print…"
 msgstr "Надрукаваць..."
 
-#: ../shell/ev-sidebar-links.c:720
+#: ../shell/ev-sidebar-links.c:718
 msgid "Index"
 msgstr "Індэкс"
 
-#: ../shell/ev-sidebar-thumbnails.c:936
+#: ../shell/ev-sidebar-thumbnails.c:933
 msgid "Thumbnails"
 msgstr "Мініяцюры"
 
