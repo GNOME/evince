@@ -1,9 +1,9 @@
 # Japanese messages catalogue for evince - PS/PDF viewer for GNOME
-# Copyright (C) 2005-2011 THE evince's COPYRIGHT HOLDER
+# Copyright (C) 2005-2012 THE evince's COPYRIGHT HOLDER
 # This file is distributed under the same license as the evince package.
 # Satoru SATOH <ss@gnome.gr.jp>, 2005, 2006.
 # Takeshi AIHANA <takshi.aihana@gmail.com>, 2005-2009.
-# Takayuki KUSANO <AE5T-KSN@asahi-net.or.jp>, 2009.
+# Takayuki KUSANO <AE5T-KSN@asahi-net.or.jp>, 2009, 2012.
 # Shushi Kurose <md81bird@hitaki.net>, 2009-2010.
 # Hideki Yamane (Debian-JP) <henrich@debian.or.jp>, 2009.
 # Hideki Yamane <henrich@debian.org>, 2011.
@@ -13,25 +13,21 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: evince master\n"
-"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
-"product=evince&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2012-03-08 20:29+0000\n"
-"PO-Revision-Date: 2012-03-09 08:43+0900\n"
-"Last-Translator: Ikuya Awashiro <ikuya@fruitsbasket.info>\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=evince&keywords=I18N+L10N&component=general\n"
+"POT-Creation-Date: 2012-05-07 04:35+0000\n"
+"PO-Revision-Date: 2012-05-07 20:20+0900\n"
+"Last-Translator: Takayuki KUSANO <AE5T-KSN@asahi-net.or.jp>\n"
 "Language-Team: Japanese <gnome-translation@gnome.gr.jp>\n"
+"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #: ../backend/comics/comics-document.c:210
 #, c-format
-msgid ""
-"Error launching the command “%s” in order to decompress the comic book: %s"
-msgstr ""
-"コミックブックを解凍するためコマンド “%s” を起動する際にエラーが発生しまし"
-"た: %s"
+msgid "Error launching the command “%s” in order to decompress the comic book: %s"
+msgstr "コミックブックを解凍するためコマンド “%s” を起動する際にエラーが発生しました: %s"
 
 #: ../backend/comics/comics-document.c:224
 #, c-format
@@ -90,12 +86,8 @@ msgid "DjVu document has incorrect format"
 msgstr "DjVu ドキュメントの書式が壊れています"
 
 #: ../backend/djvu/djvu-document.c:247
-msgid ""
-"The document is composed of several files. One or more of these files cannot "
-"be accessed."
-msgstr ""
-"そのドキュメントは複数のファイルを結合したものです。それらのファイルは個別に"
-"アクセスすることはできません。"
+msgid "The document is composed of several files. One or more of these files cannot be accessed."
+msgstr "そのドキュメントは複数のファイルを結合したものです。それらのファイルは個別にアクセスすることはできません。"
 
 #: ../backend/djvu/djvudocument.evince-backend.in.h:1
 msgid "DjVu Documents"
@@ -192,6 +184,14 @@ msgstr "PostScript ドキュメント"
 #: ../backend/tiff/tiff-document.c:123
 msgid "Invalid document"
 msgstr "不正なドキュメントです"
+
+#: ../backend/tiff/tiffdocument.evince-backend.in.h:1
+msgid "Tiff Documents"
+msgstr "TIFF ドキュメント"
+
+#: ../backend/xps/xpsdocument.evince-backend.in.h:1
+msgid "XPS Documents"
+msgstr "XPS ドキュメント"
 
 #: ../libdocument/ev-attachment.c:304 ../libdocument/ev-attachment.c:325
 #, c-format
@@ -620,7 +620,7 @@ msgid "of %d"
 msgstr "/ %d"
 
 #. Create tree view
-#: ../libview/ev-loading-window.c:76 ../shell/ev-sidebar-annotations.c:133
+#: ../libview/ev-loading-window.c:76 ../shell/ev-sidebar-annotations.c:131
 #: ../shell/ev-sidebar-layers.c:125 ../shell/ev-sidebar-links.c:260
 msgid "Loading…"
 msgstr "読み込み中です…"
@@ -669,50 +669,37 @@ msgstr "印刷可能な領域に合わせる"
 
 #: ../libview/ev-print-operation.c:1897
 msgid ""
-"Scale document pages to fit the selected printer page. Select from one of "
-"the following:\n"
+"Scale document pages to fit the selected printer page. Select from one of the following:\n"
 "\n"
 "• \"None\": No page scaling is performed.\n"
 "\n"
-"• \"Shrink to Printable Area\": Document pages larger than the printable "
-"area are reduced to fit the printable area of the printer page.\n"
+"• \"Shrink to Printable Area\": Document pages larger than the printable area are reduced to fit the printable area of the printer page.\n"
 "\n"
-"• \"Fit to Printable Area\": Document pages are enlarged or reduced as "
-"required to fit the printable area of the printer page.\n"
+"• \"Fit to Printable Area\": Document pages are enlarged or reduced as required to fit the printable area of the printer page.\n"
 msgstr ""
-"選択されたプリンターページに合わせてドキュメントページを拡大縮小します。以下"
-"から1つ選択してください:\n"
+"選択されたプリンターページに合わせてドキュメントページを拡大縮小します。以下から1つ選択してください:\n"
 "\n"
 "• \"なし\": ページの拡大縮小は行われません。\n"
 "\n"
-"• \"印刷可能な領域に合わせて縮小\": 印刷可能な領域よりドキュメントページが大"
-"きな場合はプリンターページの印刷可能な領域に合わせて縮小します。\n"
+"• \"印刷可能な領域に合わせて縮小\": 印刷可能な領域よりドキュメントページが大きな場合はプリンターページの印刷可能な領域に合わせて縮小します。\n"
 "\n"
-"• \"印刷可能な領域に合わせる\": 必要に応じてプリンターページの印刷可能な領域"
-"に合わせてドキュメントページの拡大または縮小を行ないます。\n"
+"• \"印刷可能な領域に合わせる\": 必要に応じてプリンターページの印刷可能な領域に合わせてドキュメントページの拡大または縮小を行ないます。\n"
 
 #: ../libview/ev-print-operation.c:1909
 msgid "Auto Rotate and Center"
 msgstr "自動回転して中央揃え"
 
 #: ../libview/ev-print-operation.c:1912
-msgid ""
-"Rotate printer page orientation of each page to match orientation of each "
-"document page. Document pages will be centered within the printer page."
-msgstr ""
-"各ページのプリンターページ方向を回転して各ドキュメントページの方向に合わせま"
-"す。ドキュメントページはプリンターページ内の中央に配置されます。"
+msgid "Rotate printer page orientation of each page to match orientation of each document page. Document pages will be centered within the printer page."
+msgstr "各ページのプリンターページ方向を回転して各ドキュメントページの方向に合わせます。ドキュメントページはプリンターページ内の中央に配置されます。"
 
 #: ../libview/ev-print-operation.c:1917
 msgid "Select page size using document page size"
 msgstr "ドキュメントのページサイズを利用してページサイズを選択する"
 
 #: ../libview/ev-print-operation.c:1919
-msgid ""
-"When enabled, each page will be printed on the same size paper as the "
-"document page."
-msgstr ""
-"有効にした場合、各ページはドキュメントページと同じサイズの紙に印刷されます。"
+msgid "When enabled, each page will be printed on the same size paper as the document page."
+msgstr "有効にした場合、各ページはドキュメントページと同じサイズの紙に印刷されます。"
 
 #: ../libview/ev-print-operation.c:2001
 msgid "Page Handling"
@@ -903,7 +890,7 @@ msgstr "開く"
 msgid "Close"
 msgstr "閉じる"
 
-#: ../shell/ev-application.c:1133
+#: ../shell/ev-application.c:1137
 msgid "Running in presentation mode"
 msgstr "プレゼンテーションモードで実行中です"
 
@@ -917,12 +904,8 @@ msgid "Open a recently used document"
 msgstr "最近開いたドキュメントを再び開きます"
 
 #: ../shell/ev-password-view.c:142
-msgid ""
-"This document is locked and can only be read by entering the correct "
-"password."
-msgstr ""
-"このドキュメントはロックされているので、正しいパスワードを入力したときのみ読"
-"み込みが可能です。"
+msgid "This document is locked and can only be read by entering the correct password."
+msgstr "このドキュメントはロックされているので、正しいパスワードを入力したときのみ読み込みが可能です。"
 
 #: ../shell/ev-password-view.c:151 ../shell/ev-password-view.c:269
 msgid "_Unlock Document"
@@ -938,8 +921,7 @@ msgstr "パスワードが必要です"
 
 #: ../shell/ev-password-view.c:302
 #, c-format
-msgid ""
-"The document “%s” is locked and requires a password before it can be opened."
+msgid "The document “%s” is locked and requires a password before it can be opened."
 msgstr "ロックされているドキュメント \"%s\" を開くにはパスワードが必要です。"
 
 #: ../shell/ev-password-view.c:332
@@ -974,52 +956,52 @@ msgstr "フォント"
 msgid "Document License"
 msgstr "ドキュメントのライセンス"
 
-#: ../shell/ev-properties-fonts.c:135
+#: ../shell/ev-properties-fonts.c:132
 msgid "Font"
 msgstr "フォント"
 
-#: ../shell/ev-properties-fonts.c:162
+#: ../shell/ev-properties-fonts.c:159
 #, c-format
 msgid "Gathering font information… %3d%%"
 msgstr "フォント情報を収集中… %3d%%"
 
-#: ../shell/ev-properties-license.c:137
+#: ../shell/ev-properties-license.c:134
 msgid "Usage terms"
 msgstr "利用規約"
 
-#: ../shell/ev-properties-license.c:143
+#: ../shell/ev-properties-license.c:140
 msgid "Text License"
 msgstr "テキストのライセンス"
 
-#: ../shell/ev-properties-license.c:149
+#: ../shell/ev-properties-license.c:146
 msgid "Further Information"
 msgstr "より詳しい情報"
 
-#: ../shell/ev-sidebar-annotations.c:161
+#: ../shell/ev-sidebar-annotations.c:159
 msgid "List"
 msgstr "リスト"
 
-#: ../shell/ev-sidebar-annotations.c:203 ../shell/ev-sidebar-annotations.c:531
+#: ../shell/ev-sidebar-annotations.c:199 ../shell/ev-sidebar-annotations.c:527
 msgid "Annotations"
 msgstr "注釈"
 
-#: ../shell/ev-sidebar-annotations.c:209
+#: ../shell/ev-sidebar-annotations.c:205
 msgid "Text"
 msgstr "テキスト"
 
-#: ../shell/ev-sidebar-annotations.c:210
+#: ../shell/ev-sidebar-annotations.c:206
 msgid "Add text annotation"
 msgstr "テキストの注釈を追加"
 
-#: ../shell/ev-sidebar-annotations.c:221
+#: ../shell/ev-sidebar-annotations.c:217
 msgid "Add"
 msgstr "追加"
 
-#: ../shell/ev-sidebar-annotations.c:364
+#: ../shell/ev-sidebar-annotations.c:360
 msgid "Document contains no annotations"
 msgstr "ドキュメントには注釈がありません"
 
-#: ../shell/ev-sidebar-annotations.c:396
+#: ../shell/ev-sidebar-annotations.c:392
 #, c-format
 msgid "Page %d"
 msgstr "%d ページ"
@@ -1046,7 +1028,7 @@ msgstr "ブックマークを削除(_R)"
 msgid "Page %s"
 msgstr "%s ページ"
 
-#: ../shell/ev-sidebar-bookmarks.c:606
+#: ../shell/ev-sidebar-bookmarks.c:603
 msgid "Bookmarks"
 msgstr "ブックマーク"
 
@@ -1058,7 +1040,7 @@ msgstr "レイヤー"
 msgid "Print…"
 msgstr "印刷…"
 
-#: ../shell/ev-sidebar-links.c:720
+#: ../shell/ev-sidebar-links.c:718
 msgid "Index"
 msgstr "目次"
 
@@ -1169,20 +1151,12 @@ msgid "Printing job “%s”"
 msgstr "印刷ジョブ \"%s\""
 
 #: ../shell/ev-window.c:3557
-msgid ""
-"Document contains form fields that have been filled out. If you don't save a "
-"copy, changes will be permanently lost."
-msgstr ""
-"ドキュメントには内容を埋めたフォームフィールドが含まれています。別名で保存し"
-"ない場合は変更点は失われます。"
+msgid "Document contains form fields that have been filled out. If you don't save a copy, changes will be permanently lost."
+msgstr "ドキュメントには内容を埋めたフォームフィールドが含まれています。別名で保存しない場合は変更点は失われます。"
 
 #: ../shell/ev-window.c:3561
-msgid ""
-"Document contains new or modified annotations. If you don't save a copy, "
-"changes will be permanently lost."
-msgstr ""
-"ドキュメントには新規もしくは更新された注釈が含まれています。別名で保存しない"
-"場合は変更点は失われます。"
+msgid "Document contains new or modified annotations. If you don't save a copy, changes will be permanently lost."
+msgstr "ドキュメントには新規もしくは更新された注釈が含まれています。別名で保存しない場合は変更点は失われます。"
 
 #: ../shell/ev-window.c:3568
 #, c-format
@@ -1208,11 +1182,8 @@ msgstr "印刷ジョブの \"%s\" が完了するまで閉じずに待機しま�
 #: ../shell/ev-window.c:3671
 #, c-format
 msgid "There is %d print job active. Wait until print finishes before closing?"
-msgid_plural ""
-"There are %d print jobs active. Wait until print finishes before closing?"
-msgstr[0] ""
-"現在 %d 個の印刷ジョブがあります。すべてのジョブが完了するまで、閉じずに待機"
-"しますか?"
+msgid_plural "There are %d print jobs active. Wait until print finishes before closing?"
+msgstr[0] "現在 %d 個の印刷ジョブがあります。すべてのジョブが完了するまで、閉じずに待機しますか?"
 
 #: ../shell/ev-window.c:3686
 msgid "If you close the window, pending print jobs will not be printed."
@@ -1244,36 +1215,16 @@ msgstr ""
 "%s (%s) を利用"
 
 #: ../shell/ev-window.c:4928
-msgid ""
-"Evince is free software; you can redistribute it and/or modify it under the "
-"terms of the GNU General Public License as published by the Free Software "
-"Foundation; either version 2 of the License, or (at your option) any later "
-"version.\n"
-msgstr ""
-"Evince はフリーソフトウェアです; フリーソフトウェア財団が発行する GNU 一般公"
-"衆利用許諾契約書の第二版、あるいはそれ以降の版が定める条項の下で本プログラム"
-"を再頒布または変更することができます。\n"
+msgid "Evince is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.\n"
+msgstr "Evince はフリーソフトウェアです; フリーソフトウェア財団が発行する GNU 一般公衆利用許諾契約書の第二版、あるいはそれ以降の版が定める条項の下で本プログラムを再頒布または変更することができます。\n"
 
 #: ../shell/ev-window.c:4932
-msgid ""
-"Evince is distributed in the hope that it will be useful, but WITHOUT ANY "
-"WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS "
-"FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more "
-"details.\n"
-msgstr ""
-"Evince は役立つものであることを期待して配布されていますが、完全に無保証です。"
-"商用利用または特定の目的における適合性の保証はありません。詳細は GNU 一般公衆"
-"利用許諾契約書をご覧ください。\n"
+msgid "Evince is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.\n"
+msgstr "Evince は役立つものであることを期待して配布されていますが、完全に無保証です。商用利用または特定の目的における適合性の保証はありません。詳細は GNU 一般公衆利用許諾契約書をご覧ください。\n"
 
 #: ../shell/ev-window.c:4936
-msgid ""
-"You should have received a copy of the GNU General Public License along with "
-"Evince; if not, write to the Free Software Foundation, Inc., 51 Franklin "
-"Street, Fifth Floor, Boston, MA 02110-1301  USA\n"
-msgstr ""
-"あなたは、本プログラムと一緒に GNU 一般公衆利用許諾契約書の写しを受け取ってい"
-"るはずです。そうでない場合は、Free Software Foundation, Inc., 51 Franklin "
-"Street, Fifth Floor, Boston, MA 02110-1301  USA まで手紙を書いてください。\n"
+msgid "You should have received a copy of the GNU General Public License along with Evince; if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA\n"
+msgstr "あなたは、本プログラムと一緒に GNU 一般公衆利用許諾契約書の写しを受け取っているはずです。そうでない場合は、Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA まで手紙を書いてください。\n"
 
 #: ../shell/ev-window.c:4961
 msgid "Evince"
