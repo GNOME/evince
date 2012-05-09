@@ -315,8 +315,6 @@ struct _EvJobLoad
 
 	gchar *uri;
 	gchar *password;
-	const guchar *data;
-	gsize data_length;
 };
 
 struct _EvJobLoadClass
@@ -459,8 +457,6 @@ EvJob 	       *ev_job_fonts_new 	  (EvDocument      *document);
 /* EvJobLoad */
 GType 		ev_job_load_get_type 	  (void) G_GNUC_CONST;
 EvJob 	       *ev_job_load_new 	  (const gchar 	   *uri);
-EvJob	       *ev_job_load_new_with_data (const guchar	   *data,
-					   gsize	    length);
 void            ev_job_load_set_uri       (EvJobLoad       *load,
 					   const gchar     *uri);
 void            ev_job_load_set_password  (EvJobLoad       *job,
