@@ -2,6 +2,7 @@ lib_LTLIBRARIES = libevdocument3.la
 
 NOINST_H_FILES =				\
 	ev-debug.h				\
+	ev-backend-info.h			\
 	ev-module.h
 
 INST_H_SRC_FILES = 				\
@@ -52,7 +53,7 @@ libevdocument3_la_SOURCES=			\
 	ev-annotation.c				\
 	ev-async-renderer.c			\
 	ev-attachment.c				\
-	ev-backends-manager.c			\
+	ev-backend-info.c			\
 	ev-layer.c				\
 	ev-link.c				\
 	ev-link-action.c			\

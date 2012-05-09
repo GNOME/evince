@@ -19,7 +19,6 @@
 
 #include <config.h>
 #include "ev-window-title.h"
-#include "ev-backends-manager.h"
 #include "ev-utils.h"
 
 #include <string.h>
@@ -27,8 +26,8 @@
 #include <glib/gi18n.h>
 
 /* Known backends (for bad extensions fix) */
-#define EV_BACKEND_PS  "psdocument"
-#define EV_BACKEND_PDF "pdfdocument"
+#define EV_BACKEND_PS  "PSDocument"
+#define EV_BACKEND_PDF "PdfDocument"
 
 typedef struct
 {
@@ -89,7 +88,7 @@ ev_window_title_sanitize_title (EvWindowTitle *window_title, char **title) {
 	const gchar *backend;
 	int i;
 
-	backend = ev_backends_manager_get_document_module_name (window_title->document);
+	backend = G_OBJECT_TYPE_NAME (window_title->document);
 
 	for (i = 0; i < G_N_ELEMENTS (bad_extensions); i++) {
 		if (g_ascii_strcasecmp (bad_extensions[i].backend, backend) == 0 && 

@@ -17,33 +17,38 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-#if !defined (__EV_EVINCE_DOCUMENT_H_INSIDE__) && !defined (EVINCE_COMPILATION)
-#error "Only <evince-document.h> can be included directly."
+#if !defined (EVINCE_COMPILATION)
+#error "This is a private header."
 #endif
 
-#ifndef EV_BACKENDS_MANAGER
-#define EV_BACKENDS_MANAGER
+#ifndef EV_BACKEND_INFO
+#define EV_BACKEND_INFO
 
 #include <glib.h>
 
-#include "ev-document.h"
+#include "ev-module.h"
 
 G_BEGIN_DECLS
 
-typedef struct _EvTypeInfo {
-	const gchar  *desc;
-	const gchar **mime_types;
-} EvTypeInfo;
+typedef struct _EvBackendInfo EvBackendInfo;
 
-EvDocument  *ev_backends_manager_get_document             (const gchar *mime_type);
+struct _EvBackendInfo {
+        /* These two fields must be first for API/ABI compat with EvTypeInfo */
+        gchar       *type_desc;
+        gchar      **mime_types;
 
-G_GNUC_DEPRECATED
-const gchar *ev_backends_manager_get_document_module_name (EvDocument  *document);
-G_GNUC_DEPRECATED
-EvTypeInfo  *ev_backends_manager_get_document_type_info   (EvDocument  *document);
+	gchar       *module_name;
+	GTypeModule *module;
+	gboolean     resident;
+};
 
-GList       *ev_backends_manager_get_all_types_info       (void);
+void            _ev_backend_info_free           (EvBackendInfo *info);
+
+EvBackendInfo  *_ev_backend_info_new_from_file  (const char *file,
+                                                 GError **error);
+
+GList          *_ev_backend_info_load_from_dir  (const char *path);
 
 G_END_DECLS
 
-#endif /* EV_BACKENDS_MANAGER */
+#endif /* !EV_BACKEND_INFO */

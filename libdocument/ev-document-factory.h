@@ -31,6 +31,9 @@
 
 G_BEGIN_DECLS
 
+gboolean   _ev_document_factory_init         (void);
+void       _ev_document_factory_shutdown     (void);
+
 EvDocument* ev_document_factory_get_document (const char *uri, GError **error);
 void 	    ev_document_factory_add_filters  (GtkWidget *chooser, EvDocument *document);
 

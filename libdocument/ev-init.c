@@ -26,7 +26,7 @@
 #endif
 
 #include "ev-init.h"
-#include "ev-backends-manager.h"
+#include "ev-document-factory.h"
 #include "ev-debug.h"
 #include "ev-file-helpers.h"
 
@@ -116,7 +116,7 @@ ev_init (void)
 
         _ev_debug_init ();
         _ev_file_helpers_init ();
-        have_backends = _ev_backends_manager_init ();
+        have_backends = _ev_document_factory_init ();
 
         return have_backends;
 }
@@ -139,7 +139,7 @@ ev_shutdown (void)
 		g_free(locale_dir);
 #endif
 
-        _ev_backends_manager_shutdown ();
+        _ev_document_factory_shutdown ();
         _ev_file_helpers_shutdown ();
         _ev_debug_shutdown ();
 }

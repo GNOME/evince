@@ -29,9 +29,94 @@
 #include <glib/gi18n-lib.h>
 #include <gtk/gtk.h>
 
-#include "ev-backends-manager.h"
+#include "ev-backend-info.h"
 #include "ev-document-factory.h"
 #include "ev-file-helpers.h"
+
+#include "ev-backends-manager.h"
+
+/* Backends manager */
+
+static GList *ev_backends_list = NULL;
+static gchar *ev_backends_dir = NULL;
+
+static EvDocument* ev_document_factory_new_document_for_mime_type (const char *mime_type);
+
+static EvBackendInfo *
+get_backend_info_for_mime_type (const gchar *mime_type)
+{
+        GList *l;
+
+        for (l = ev_backends_list; l; l = l->next) {
+                EvBackendInfo *info = (EvBackendInfo *) l->data;
+                char **mime_types = info->mime_types;
+                guint i;
+
+                for (i = 0; mime_types[i] != NULL; ++i) {
+                        if (g_ascii_strcasecmp (mime_type, mime_types[i]) == 0)
+                                return info;
+                }
+        }
+
+        return NULL;
+}
+
+static EvBackendInfo *
+get_backend_info_for_document (EvDocument *document)
+{
+        GList *l;
+
+        for (l = ev_backends_list; l; l = l->next) {
+                EvBackendInfo *info = (EvBackendInfo *) l->data;
+                GType type;
+
+                if (!info->module)
+                        continue;
+
+                type = ev_module_get_object_type (EV_MODULE (info->module));
+
+                if (G_TYPE_CHECK_INSTANCE_TYPE (document, type))
+                        return info;
+        }
+
+        return NULL;
+}
+
+static EvDocument *
+ev_document_factory_new_document_for_mime_type (const gchar *mime_type)
+{
+        EvDocument    *document;
+        EvBackendInfo *info;
+
+        info = get_backend_info_for_mime_type (mime_type);
+        if (!info)
+                return NULL;
+
+        if (!info->module) {
+                gchar *path;
+
+                path = g_module_build_path (ev_backends_dir, info->module_name);
+                info->module = G_TYPE_MODULE (ev_module_new (path, info->resident));
+                g_free (path);
+        }
+
+        if (!g_type_module_use (info->module)) {
+                const char *err;
+
+                err = g_module_error ();
+                g_warning ("Cannot load backend '%s': %s",
+                          info->module_name, err ? err : "unknown error");
+                g_object_unref (G_OBJECT (info->module));
+                info->module = NULL;
+
+                return NULL;
+        }
+
+        document = EV_DOCUMENT (ev_module_new_object (EV_MODULE (info->module)));
+        g_type_module_unuse (info->module);
+
+        return document;
+}
 
 static EvCompressionType
 get_compression_from_mime_type (const gchar *mime_type)
@@ -56,7 +141,7 @@ get_compression_from_mime_type (const gchar *mime_type)
 
 
 /*
- * get_document_from_uri:
+ * new_document_for_uri:
  * @uri: the document URI
  * @fast: whether to use fast MIME type detection
  * @compression: a location to store the document's compression type
@@ -70,10 +155,10 @@ get_compression_from_mime_type (const gchar *mime_type)
  * Returns: a new #EvDocument instance, or %NULL on error with @error filled in
  */
 static EvDocument *
-get_document_from_uri (const char        *uri,
-		       gboolean           fast,
-		       EvCompressionType *compression,
-		       GError           **error)
+new_document_for_uri (const char        *uri,
+                      gboolean           fast,
+                      EvCompressionType *compression,
+                      GError           **error)
 {
 	EvDocument *document = NULL;
 	gchar      *mime_type = NULL;
@@ -98,7 +183,7 @@ get_document_from_uri (const char        *uri,
 		return NULL;
 	}
 
-	document = ev_backends_manager_get_document (mime_type);
+	document = ev_document_factory_new_document_for_mime_type (mime_type);
 	if (document == NULL) {
 		gchar *content_type, *mime_desc = NULL;
 
@@ -135,76 +220,52 @@ free_uncompressed_uri (gchar *uri_unc)
 	g_free (uri_unc);
 }
 
-/* Try to get and load the document from a file, dealing with errors 
- * differently depending on whether we are using slow or fast mime detection.
+/*
+ * _ev_document_factory_init:
+ *
+ * Initializes the evince document factory.
+ *
+ * Returns: %TRUE if there were any backends found; %FALSE otherwise
  */
-static EvDocument *
-ev_document_factory_load_uri (const char *uri, gboolean fast, GError **error)
+gboolean
+_ev_document_factory_init (void)
 {
-	EvDocument *document;
-	int result;
-	EvCompressionType compression;
-	gchar *uri_unc = NULL;
-	GError *err = NULL;
+	if (ev_backends_list)
+		return TRUE;
 
-	document = get_document_from_uri (uri, fast, &compression, &err);
-	g_assert (document != NULL || err != NULL);
+#ifdef G_OS_WIN32
+{
+        gchar *dir;
 
-	if (document == NULL) {
-		if (fast) {
-			/* Try again with slow mime detection */
-			g_clear_error (&err);
-		} else {
-			/* This should have worked, and is usually the second try,
-			 * so set an error for the caller. */
-			g_assert (err != NULL);
-			g_propagate_error (error, err);
-		}
-		
-		return NULL;
-	}
+        dir = g_win32_get_package_installation_directory_of_module (NULL);
+        ev_backends_dir = g_build_filename (dir, "lib", "evince",
+                                        EV_BACKENDSBINARYVERSION,
+                                        "backends", NULL);
+        g_free (dir);
+}
+#else
+        ev_backends_dir = g_strdup (EV_BACKENDSDIR);
+#endif
 
-	uri_unc = ev_file_uncompress (uri, compression, &err);
-	if (uri_unc) {
-		g_object_set_data_full (G_OBJECT (document),
-					"uri-uncompressed",
-					uri_unc,
-					(GDestroyNotify) free_uncompressed_uri);
-	} else if (err != NULL) {
-		/* Error uncompressing file */
-		g_object_unref (document);
-		g_propagate_error (error, err);
+        ev_backends_list = _ev_backend_info_load_from_dir (ev_backends_dir);
 
-		return NULL;
-	}
+        return ev_backends_list != NULL;
+}
 
-	result = ev_document_load (document, uri_unc ? uri_unc : uri, &err);
-	if (result)
-		return document;
-		
-	if (err) {
-		if (g_error_matches (err, EV_DOCUMENT_ERROR, EV_DOCUMENT_ERROR_ENCRYPTED)) {
-			g_propagate_error (error, err);
-			return document;
+/*
+ * _ev_document_factory_shutdown:
+ *
+ * Shuts the evince document factory down.
+ */
+void
+_ev_document_factory_shutdown (void)
+{
+	g_list_foreach (ev_backends_list, (GFunc) _ev_backend_info_free, NULL);
+	g_list_free (ev_backends_list);
+	ev_backends_list = NULL;
 
-			/* else fall through to slow mime code detection. */
-		}
-	} else if (!fast) {
-		/* FIXME: this really should not happen; the backend should
-		 * always return a meaningful error.
-		 */
-		g_set_error_literal (&err,
-			EV_DOCUMENT_ERROR,
-			EV_DOCUMENT_ERROR_INVALID,
-			_("Unknown MIME Type"));
-		g_propagate_error (error, err);
-
-		/* else fall through to slow mime code detection. */
-	}
-
-	g_object_unref (document);
-
-	return NULL;
+	g_free (ev_backends_dir);
+        ev_backends_dir = NULL;
 }
 
 /**
@@ -218,33 +279,114 @@ ev_document_factory_load_uri (const char *uri, gboolean fast, GError **error)
  * If the document is encrypted, it is returned but also @error is set to
  * %EV_DOCUMENT_ERROR_ENCRYPTED.
  *
- * Returns: (transfer full): a new #EvDocument, or %NULL.
+ * Returns: (transfer full): a new #EvDocument, or %NULL
  */
 EvDocument *
 ev_document_factory_get_document (const char *uri, GError **error)
 {
 	EvDocument *document;
+	int result;
+	EvCompressionType compression;
+	gchar *uri_unc = NULL;
+	GError *err = NULL;
 
 	g_return_val_if_fail (uri != NULL, NULL);
 
-	document = ev_document_factory_load_uri (uri, TRUE, error);
-	if (document)
-		return document;
+	document = new_document_for_uri (uri, TRUE, &compression, &err);
+	g_assert (document != NULL || err != NULL);
+
+	if (document != NULL) {
+		uri_unc = ev_file_uncompress (uri, compression, &err);
+		if (uri_unc) {
+			g_object_set_data_full (G_OBJECT (document),
+						"uri-uncompressed",
+						uri_unc,
+						(GDestroyNotify) free_uncompressed_uri);
+		} else if (err != NULL) {
+			/* Error uncompressing file */
+			g_object_unref (document);
+			g_propagate_error (error, err);
+			return NULL;
+		}
+
+		result = ev_document_load (document, uri_unc ? uri_unc : uri, &err);
+
+		if (result == FALSE || err) {
+			if (err &&
+			    g_error_matches (err, EV_DOCUMENT_ERROR, EV_DOCUMENT_ERROR_ENCRYPTED)) {
+				g_propagate_error (error, err);
+				return document;
+			    }
+			/* else fall through to slow mime code section below */
+		} else {
+			return document;
+		}
+
+		g_object_unref (document);
+		document = NULL;
+	}
 
 	/* Try again with slow mime detection */
-	g_clear_error (error); /* Though this should always be NULL here. */
-	document = ev_document_factory_load_uri (uri, FALSE, error);
+	g_clear_error (&err);
+	uri_unc = NULL;
+
+	document = new_document_for_uri (uri, FALSE, &compression, &err);
+	if (document == NULL) {
+		g_assert (err != NULL);
+		g_propagate_error (error, err);
+		return NULL;
+	}
+
+	uri_unc = ev_file_uncompress (uri, compression, &err);
+	if (uri_unc) {
+		g_object_set_data_full (G_OBJECT (document),
+					"uri-uncompressed",
+					uri_unc,
+					(GDestroyNotify) free_uncompressed_uri);
+	} else if (err != NULL) {
+		/* Error uncompressing file */
+		g_propagate_error (error, err);
+
+		g_object_unref (document);
+		return NULL;
+	}
+
+	result = ev_document_load (document, uri_unc ? uri_unc : uri, &err);
+	if (result == FALSE) {
+		if (err == NULL) {
+			/* FIXME: this really should not happen; the backend should
+			 * always return a meaningful error.
+			 */
+			g_set_error_literal (&err,
+                                             EV_DOCUMENT_ERROR,
+                                             EV_DOCUMENT_ERROR_INVALID,
+                                             _("Unknown MIME Type"));
+		} else if (g_error_matches (err, EV_DOCUMENT_ERROR, EV_DOCUMENT_ERROR_ENCRYPTED)) {
+			g_propagate_error (error, err);
+			return document;
+		}
+
+		g_object_unref (document);
+		document = NULL;
+
+		g_propagate_error (error, err);
+	}
+
 	return document;
 }
 
 static void
-file_filter_add_mime_types (EvTypeInfo *info, GtkFileFilter *filter)
+file_filter_add_mime_types (EvBackendInfo *info, GtkFileFilter *filter)
 {
-	const gchar *mime_type;
-	gint         i = 0;
+        char **mime_types;
+	guint i;
 
-	while ((mime_type = info->mime_types[i++]))
-		gtk_file_filter_add_mime_type (filter, mime_type);
+        mime_types = info->mime_types;
+        if (mime_types == NULL)
+                return;
+
+        for (i = 0; mime_types[i] != NULL; ++i)
+                gtk_file_filter_add_mime_type (filter, mime_types[i]);
 }
 
 /**
@@ -264,7 +406,6 @@ file_filter_add_mime_types (EvTypeInfo *info, GtkFileFilter *filter)
 void
 ev_document_factory_add_filters (GtkWidget *chooser, EvDocument *document)
 {
-	GList         *all_types;
 	GtkFileFilter *filter;
 	GtkFileFilter *default_filter;
 	GtkFileFilter *document_filter;
@@ -272,39 +413,33 @@ ev_document_factory_add_filters (GtkWidget *chooser, EvDocument *document)
         g_return_if_fail (GTK_IS_FILE_CHOOSER (chooser));
         g_return_if_fail (document == NULL || EV_IS_DOCUMENT (document));
 
-	all_types = ev_backends_manager_get_all_types_info ();
-	
 	default_filter = document_filter = filter = gtk_file_filter_new ();
 	gtk_file_filter_set_name (filter, _("All Documents"));
-	g_list_foreach (all_types, (GFunc)file_filter_add_mime_types, filter);
+	g_list_foreach (ev_backends_list, (GFunc)file_filter_add_mime_types, filter);
 	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (chooser), filter);
 
 	if (document) {
-		EvTypeInfo *info;
+		EvBackendInfo *info;
 
-		info = ev_backends_manager_get_document_type_info (document);
+		info = get_backend_info_for_document (document);
+                g_assert (info != NULL);
 		default_filter = filter = gtk_file_filter_new ();
-		gtk_file_filter_set_name (filter, info->desc);
+		gtk_file_filter_set_name (filter, info->type_desc);
 		file_filter_add_mime_types (info, filter);
 		g_free (info);
 		gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (chooser), filter);
 	} else {
 		GList *l;
 
-		for (l = all_types; l; l = g_list_next (l)){
-			EvTypeInfo *info;
-
-			info = (EvTypeInfo *)l->data;
+		for (l = ev_backends_list; l; l = l->next) {
+                        EvBackendInfo *info = (EvBackendInfo *) l->data;
 
 			default_filter = filter = gtk_file_filter_new ();
-			gtk_file_filter_set_name (filter, info->desc);
+			gtk_file_filter_set_name (filter, info->type_desc);
 			file_filter_add_mime_types (info, filter);
 			gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (chooser), filter);
 		}
 	}
-
-	g_list_foreach (all_types, (GFunc)g_free, NULL);
-	g_list_free (all_types);
 
 	filter = gtk_file_filter_new ();
 	gtk_file_filter_set_name (filter, _("All Files"));
@@ -313,4 +448,32 @@ ev_document_factory_add_filters (GtkWidget *chooser, EvDocument *document)
 
 	gtk_file_chooser_set_filter (GTK_FILE_CHOOSER (chooser),
 				     document == NULL ? document_filter : default_filter);
+}
+
+/* Deprecated API/ABI compatibility wrappers */
+
+EvDocument  *ev_backends_manager_get_document (const gchar *mime_type)
+{
+        return ev_document_factory_new_document_for_mime_type (mime_type);
+}
+
+const gchar *
+ev_backends_manager_get_document_module_name (EvDocument  *document)
+{
+        EvBackendInfo *info = get_backend_info_for_document (document);
+        if (info == NULL)
+                return NULL;
+
+        return info->module_name;
+}
+
+EvTypeInfo *ev_backends_manager_get_document_type_info (EvDocument  *document)
+{
+        return (EvTypeInfo *) get_backend_info_for_document (document);
+}
+
+GList *
+ev_backends_manager_get_all_types_info       (void)
+{
+        return g_list_copy (ev_backends_list);
 }
