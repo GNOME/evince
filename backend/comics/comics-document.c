@@ -461,18 +461,8 @@ comics_document_load (EvDocument *document,
 		return FALSE;
 
 	mime_type = ev_file_get_mime_type (uri, FALSE, &err);
-	if (!mime_type) {
-		if (err) {
-			g_propagate_error (error, err);
-		} else {
-			g_set_error_literal (error,
-					     EV_DOCUMENT_ERROR,
-					     EV_DOCUMENT_ERROR_INVALID,
-					     _("Unknown MIME Type"));
-		}
-
+	if (mime_type == NULL)
 		return FALSE;
-	}
 	
 	if (!comics_check_decompress_command (mime_type, comics_document, 
 	error)) {	

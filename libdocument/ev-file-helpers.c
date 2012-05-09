@@ -482,8 +482,12 @@ get_mime_type_from_uri (const gchar *uri, GError **error)
 		return NULL;
 
 	content_type = g_file_info_get_content_type (file_info);
-	if (content_type) {
+	if (content_type != NULL) {
                 mime_type = g_content_type_get_mime_type (content_type);
+        }
+        if (mime_type == NULL) {
+                g_set_error_literal (error, G_IO_ERROR, G_IO_ERROR_FAILED,
+                                     _("Unknown MIME Type"));
         }
 
 	g_object_unref (file_info);
@@ -498,7 +502,8 @@ get_mime_type_from_data (const gchar *uri, GError **error)
 	gssize            size_read;
 	guchar            buffer[1024];
 	gboolean          retval;
-	gchar            *content_type, *mime_type;
+	gchar            *content_type;
+        gchar            *mime_type = NULL;
 
 	file = g_file_new_for_uri (uri);
 	
@@ -526,21 +531,30 @@ get_mime_type_from_data (const gchar *uri, GError **error)
 	content_type = g_content_type_guess (NULL, /* no filename */
 					     buffer, size_read,
 					     NULL);
-	if (!content_type)
-		return NULL;
+        if (content_type == NULL) {
+                g_set_error_literal (error, G_IO_ERROR, G_IO_ERROR_FAILED,
+                                     _("Unknown MIME Type"));
+                return NULL;
+        }
 
-#ifdef G_OS_WIN32
-	/* On Windows, the implementation of g_content_type_guess() is 
-	 * sometimes too limited, so we do use get_mime_type_from_uri() 
-	 * as a fallback */
-	if (strcmp (content_type, "*") == 0) {
-		g_free (content_type);
-		return get_mime_type_from_uri (uri, error);
-	}
+#ifndef G_OS_WIN32
+       /* On Windows, the implementation of g_content_type_guess() is
+        * sometimes too limited, so we do use get_mime_type_from_uri()
+        * as a fallback */
+       if (strcmp (content_type, "*") == 0) {
+               g_free (content_type);
+               return get_mime_type_from_uri (uri, error);
+       }
 #endif /* G_OS_WIN32 */
 
-	mime_type = g_content_type_get_mime_type (content_type);
-	g_free (content_type);
+        mime_type = g_content_type_get_mime_type (content_type);
+        g_free (content_type);
+
+        if (mime_type == NULL) {
+                g_set_error_literal (error, G_IO_ERROR, G_IO_ERROR_FAILED,
+                                     _("Unknown MIME Type"));
+        }
+
 	return mime_type;
 }
 
@@ -550,9 +564,6 @@ get_mime_type_from_data (const gchar *uri, GError **error)
  * @fast: whether to use fast MIME type detection
  * @error: a #GError location to store an error, or %NULL
  *
- * Note: on unknown MIME types, this may return NULL without @error
- * being filled in.
- * 
  * Returns: a newly allocated string with the MIME type of the file at
  *   @uri, or %NULL on error or if the MIME type could not be determined
  */
