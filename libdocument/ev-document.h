@@ -29,6 +29,7 @@
 
 #include <glib-object.h>
 #include <glib.h>
+#include <gio/gio.h>
 #include <gdk/gdk.h>
 #include <cairo.h>
 
@@ -52,6 +53,10 @@ typedef struct _EvDocumentPrivate EvDocumentPrivate;
 #define EV_DOCUMENT_ERROR ev_document_error_quark ()
 #define EV_DOC_MUTEX_LOCK (ev_document_doc_mutex_lock ())
 #define EV_DOC_MUTEX_UNLOCK (ev_document_doc_mutex_unlock ())
+
+typedef enum /*< flags >*/ {
+        EV_DOCUMENT_LOAD_FLAG_NONE = 0
+} EvDocumentLoadFlags;
 
 typedef enum
 {
@@ -110,6 +115,18 @@ struct _EvDocumentClass
         gboolean          (* get_backend_info)(EvDocument      *document,
                                                EvDocumentBackendInfo *info);
         gboolean	  (* support_synctex) (EvDocument      *document);
+
+        /* GIO streams */
+        gboolean          (* load_stream)     (EvDocument          *document,
+                                               GInputStream        *stream,
+                                               EvDocumentLoadFlags  flags,
+                                               GCancellable        *cancellable,
+                                               GError             **error);
+        gboolean          (* load_gfile)      (EvDocument          *document,
+                                               GFile               *file,
+                                               EvDocumentLoadFlags  flags,
+                                               GCancellable        *cancellable,
+                                               GError             **error);
 };
 
 GType            ev_document_get_type             (void) G_GNUC_CONST;
@@ -133,6 +150,16 @@ gboolean         ev_document_get_backend_info     (EvDocument      *document,
 gboolean         ev_document_load                 (EvDocument      *document,
 						   const char      *uri,
 						   GError         **error);
+gboolean         ev_document_load_stream          (EvDocument         *document,
+                                                   GInputStream       *stream,
+                                                   EvDocumentLoadFlags flags,
+                                                   GCancellable       *cancellable,
+                                                   GError            **error);
+gboolean         ev_document_load_gfile           (EvDocument         *document,
+                                                   GFile              *file,
+                                                   EvDocumentLoadFlags flags,
+                                                   GCancellable       *cancellable,
+                                                   GError            **error);
 gboolean         ev_document_save                 (EvDocument      *document,
 						   const char      *uri,
 						   GError         **error);

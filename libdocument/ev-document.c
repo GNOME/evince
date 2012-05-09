@@ -208,6 +208,79 @@ ev_document_fc_mutex_trylock (void)
 	return g_mutex_trylock (p_ev_fc_mutex);
 }
 
+static void
+ev_document_setup_cache (EvDocument *document)
+{
+        EvDocumentPrivate *priv = document->priv;
+        gint i;
+
+        /* Cache some info about the document to avoid
+         * going to the backends since it requires locks
+         */
+        priv->n_pages = _ev_document_get_n_pages (document);
+
+        for (i = 0; i < priv->n_pages; i++) {
+                EvPage     *page = ev_document_get_page (document, i);
+                gdouble     page_width = 0;
+                gdouble     page_height = 0;
+                EvPageSize *page_size;
+                gchar      *page_label;
+
+                _ev_document_get_page_size (document, page, &page_width, &page_height);
+
+                if (i == 0) {
+                        priv->uniform_width = page_width;
+                        priv->uniform_height = page_height;
+                        priv->max_width = priv->uniform_width;
+                        priv->max_height = priv->uniform_height;
+                        priv->min_width = priv->uniform_width;
+                        priv->min_height = priv->uniform_height;
+                } else if (priv->uniform &&
+                            (priv->uniform_width != page_width ||
+                            priv->uniform_height != page_height)) {
+                        /* It's a different page size.  Backfill the array. */
+                        int j;
+
+                        priv->page_sizes = g_new0 (EvPageSize, priv->n_pages);
+
+                        for (j = 0; j < i; j++) {
+                                page_size = &(priv->page_sizes[j]);
+                                page_size->width = priv->uniform_width;
+                                page_size->height = priv->uniform_height;
+                        }
+                        priv->uniform = FALSE;
+                }
+                if (!priv->uniform) {
+                        page_size = &(priv->page_sizes[i]);
+
+                        page_size->width = page_width;
+                        page_size->height = page_height;
+
+                        if (page_width > priv->max_width)
+                                priv->max_width = page_width;
+                        if (page_width < priv->min_width)
+                                priv->min_width = page_width;
+
+                        if (page_height > priv->max_height)
+                                priv->max_height = page_height;
+                        if (page_height < priv->min_height)
+                                priv->min_height = page_height;
+                }
+
+                page_label = _ev_document_get_page_label (document, page);
+                if (page_label) {
+                        if (!priv->page_labels)
+                                priv->page_labels = g_new0 (gchar *, priv->n_pages);
+
+                        priv->page_labels[i] = page_label;
+                        priv->max_label = MAX (priv->max_label,
+                                                g_utf8_strlen (page_label, 256));
+                }
+
+                g_object_unref (page);
+        }
+}
+
 /**
  * ev_document_load:
  * @document: a #EvDocument
@@ -249,90 +322,113 @@ ev_document_load (EvDocument  *document,
 					     "Internal error in backend");
 		}
 	} else {
-		gint i;
-		EvDocumentPrivate *priv = document->priv;
+                EvDocumentPrivate *priv = document->priv;
 
-		/* Cache some info about the document to avoid
-		 * going to the backends since it requires locks
-		 */
-		priv->uri = g_strdup (uri);
-		priv->n_pages = _ev_document_get_n_pages (document);
+                ev_document_setup_cache (document);
 
-		for (i = 0; i < priv->n_pages; i++) {
-			EvPage     *page = ev_document_get_page (document, i);
-			gdouble     page_width = 0;
-			gdouble     page_height = 0;
-			EvPageSize *page_size;
-			gchar      *page_label;
+                priv->uri = g_strdup (uri);
+                priv->info = _ev_document_get_info (document);
+                if (_ev_document_support_synctex (document)) {
+                        gchar *filename;
 
-			_ev_document_get_page_size (document, page, &page_width, &page_height);
-
-			if (i == 0) {
-				priv->uniform_width = page_width;
-				priv->uniform_height = page_height;
-				priv->max_width = priv->uniform_width;
-				priv->max_height = priv->uniform_height;
-				priv->min_width = priv->uniform_width;
-				priv->min_height = priv->uniform_height;
-			} else if (priv->uniform &&
-				   (priv->uniform_width != page_width ||
-				    priv->uniform_height != page_height)) {
-				/* It's a different page size.  Backfill the array. */
-				int j;
-
-				priv->page_sizes = g_new0 (EvPageSize, priv->n_pages);
-
-				for (j = 0; j < i; j++) {
-					page_size = &(priv->page_sizes[j]);
-					page_size->width = priv->uniform_width;
-					page_size->height = priv->uniform_height;
-				}
-				priv->uniform = FALSE;
-			}
-			if (!priv->uniform) {
-				page_size = &(priv->page_sizes[i]);
-
-				page_size->width = page_width;
-				page_size->height = page_height;
-
-				if (page_width > priv->max_width)
-					priv->max_width = page_width;
-				if (page_width < priv->min_width)
-					priv->min_width = page_width;
-
-				if (page_height > priv->max_height)
-					priv->max_height = page_height;
-				if (page_height < priv->min_height)
-					priv->min_height = page_height;
-			}
-
-			page_label = _ev_document_get_page_label (document, page);
-			if (page_label) {
-				if (!priv->page_labels)
-					priv->page_labels = g_new0 (gchar *, priv->n_pages);
-
-				priv->page_labels[i] = page_label;
-				priv->max_label = MAX (priv->max_label,
-						       g_utf8_strlen (page_label, 256));
-			}
-
-			g_object_unref (page);
-		}
-
-		priv->info = _ev_document_get_info (document);
-		if (_ev_document_support_synctex (document)) {
-			gchar *filename;
-
-			filename = g_filename_from_uri (uri, NULL, NULL);
-			if (filename != NULL) {
-				priv->synctex_scanner =
-					synctex_scanner_new_with_output_file (filename, NULL, 1);
-				g_free (filename);
-			}
-		}
-	}
+                        filename = g_filename_from_uri (uri, NULL, NULL);
+                        if (filename != NULL) {
+                                priv->synctex_scanner =
+                                        synctex_scanner_new_with_output_file (filename, NULL, 1);
+                                g_free (filename);
+                        }
+                }
+        }
 
 	return retval;
+}
+
+/**
+ * ev_document_load_stream:
+ * @document: a #EvDocument
+ * @stream: a #GInputStream
+ * @flags: flags from #EvDocumentLoadFlags
+ * @cancellable: (allow-none): a #GCancellable, or %NULL
+ * @error: (allow-none): a #GError location to store an error, or %NULL
+ *
+ * Synchronously loads the document from @stream.
+ * See ev_document_load() for more information.
+ *
+ * Returns: %TRUE if loading succeeded, or %FALSE on error with @error filled in
+ *
+ * Since: 3.6
+ */
+gboolean
+ev_document_load_stream (EvDocument         *document,
+                         GInputStream       *stream,
+                         EvDocumentLoadFlags flags,
+                         GCancellable       *cancellable,
+                         GError            **error)
+{
+        EvDocumentClass *klass;
+
+        g_return_val_if_fail (EV_IS_DOCUMENT (document), FALSE);
+        g_return_val_if_fail (G_IS_INPUT_STREAM (stream), FALSE);
+        g_return_val_if_fail (cancellable == NULL || G_IS_CANCELLABLE (cancellable), FALSE);
+        g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
+
+        klass = EV_DOCUMENT_GET_CLASS (document);
+        if (!klass->load_stream) {
+                g_set_error_literal (error, G_IO_ERROR, G_IO_ERROR_NOT_SUPPORTED,
+                                     "Backend does not support loading from stream");
+                return FALSE;
+        }
+
+        if (!klass->load_stream (document, stream, flags, cancellable, error))
+                return FALSE;
+
+        ev_document_setup_cache (document);
+
+        return TRUE;
+}
+
+/**
+ * ev_document_load_gfile:
+ * @document: a #EvDocument
+ * @file: a #GFile
+ * @flags: flags from #EvDocumentLoadFlags
+ * @cancellable: (allow-none): a #GCancellable, or %NULL
+ * @error: (allow-none): a #GError location to store an error, or %NULL
+ *
+ * Synchronously loads the document from @file.
+ * See ev_document_load() for more information.
+ *
+ * Returns: %TRUE if loading succeeded, or %FALSE on error with @error filled in
+ *
+ * Since: 3.6
+ */
+gboolean
+ev_document_load_gfile (EvDocument         *document,
+                        GFile              *file,
+                        EvDocumentLoadFlags flags,
+                        GCancellable       *cancellable,
+                        GError            **error)
+{
+        EvDocumentClass *klass;
+
+        g_return_val_if_fail (EV_IS_DOCUMENT (document), FALSE);
+        g_return_val_if_fail (G_IS_FILE (file), FALSE);
+        g_return_val_if_fail (cancellable == NULL || G_IS_CANCELLABLE (cancellable), FALSE);
+        g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
+
+        klass = EV_DOCUMENT_GET_CLASS (document);
+        if (!klass->load_gfile) {
+                g_set_error_literal (error, G_IO_ERROR, G_IO_ERROR_NOT_SUPPORTED,
+                                     "Backend does not support loading from GFile");
+                return FALSE;
+        }
+
+        if (!klass->load_gfile (document, file, flags, cancellable, error))
+                return FALSE;
+
+        ev_document_setup_cache (document);
+
+        return TRUE;
 }
 
 /**

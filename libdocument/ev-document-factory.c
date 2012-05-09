@@ -376,6 +376,140 @@ ev_document_factory_get_document (const char *uri, GError **error)
 	return document;
 }
 
+/**
+ * ev_document_factory_get_document_for_gfile:
+ * @file: a #GFile
+ * @flags: flags from #EvDocumentLoadFlags
+ * @cancellable: (allow-none): a #GCancellable, or %NULL
+ * @error: (allow-none): a #GError location to store an error, or %NULL
+ *
+ * Synchronously creates a #EvDocument for the document at @file; or, if no
+ * backend handling the document's type is found, or an error occurred on
+ * opening the document, returns %NULL and fills in @error.
+ * If the document is encrypted, it is returned but also @error is set to
+ * %EV_DOCUMENT_ERROR_ENCRYPTED.
+ *
+ * Returns: a new #EvDocument, or %NULL
+ *
+ * Since: 3.6
+ */
+EvDocument*
+ev_document_factory_get_document_for_gfile (GFile *file,
+                                            EvDocumentLoadFlags flags,
+                                            GCancellable *cancellable,
+                                            GError **error)
+{
+        EvDocument *document;
+        GFileInfo *file_info;
+        const char *content_type;
+        char *mime_type = NULL;
+
+        g_return_val_if_fail (G_IS_FILE (file), NULL);
+        g_return_val_if_fail (error == NULL || *error == NULL, NULL);
+
+
+        file_info = g_file_query_info (file,
+                                       G_FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE,
+                                       G_FILE_QUERY_INFO_NONE,
+                                       cancellable,
+                                       error);
+        if (file_info == NULL)
+                return NULL;
+
+        content_type = g_file_info_get_content_type (file_info);
+        if (content_type == NULL) {
+                g_set_error_literal (error, G_IO_ERROR, G_IO_ERROR_FAILED,
+                                     "Failed to query file mime type");
+                return NULL;
+        }
+
+        mime_type = g_content_type_get_mime_type (content_type);
+        g_object_unref (file_info);
+
+        document = ev_document_factory_new_document_for_mime_type (mime_type, error);
+        g_free (mime_type);
+        if (document == NULL)
+                return NULL;
+
+        if (!ev_document_load_gfile (document, file, flags, cancellable, error)) {
+                g_object_unref (document);
+                return NULL;
+        }
+
+        return document;
+}
+
+/**
+ * ev_document_factory_get_document_for_stream:
+ * @stream: a #GInputStream
+ * @mime_type: (allow-none): a mime type hint
+ * @flags: flags from #EvDocumentLoadFlags
+ * @cancellable: (allow-none): a #GCancellable, or %NULL
+ * @error: (allow-none): a #GError location to store an error, or %NULL
+ *
+ * Synchronously creates a #EvDocument for the document from @stream; or, if no
+ * backend handling the document's type is found, or an error occurred
+ * on opening the document, returns %NULL and fills in @error.
+ * If the document is encrypted, it is returned but also @error is set to
+ * %EV_DOCUMENT_ERROR_ENCRYPTED.
+ *
+ * If @mime_type is non-%NULL, this overrides any type inferred from the stream.
+ * If the mime type cannot be inferred from the stream, and @mime_type is %NULL,
+ * an error is returned.
+ *
+ * Returns: a new #EvDocument, or %NULL
+ *
+ * Since: 3.6
+ */
+EvDocument*
+ev_document_factory_get_document_for_stream (GInputStream *stream,
+                                             const char *mime_type,
+                                             EvDocumentLoadFlags flags,
+                                             GCancellable *cancellable,
+                                             GError **error)
+{
+        EvDocument *document;
+        char *mime = NULL;
+
+        g_return_val_if_fail (G_IS_INPUT_STREAM (stream), NULL);
+        g_return_val_if_fail (error == NULL || *error == NULL, NULL);
+
+        if (mime_type == NULL && G_IS_FILE_INPUT_STREAM (stream)) {
+                GFileInfo *file_info;
+                const char *content_type;
+
+                file_info = g_file_input_stream_query_info (G_FILE_INPUT_STREAM (stream),
+                                                            G_FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE,
+                                                            cancellable,
+                                                            error);
+                if (file_info != NULL) {
+                        content_type = g_file_info_get_content_type (file_info);
+                        if (content_type)
+                                mime_type = mime = g_content_type_get_mime_type (content_type);
+                        g_object_unref (file_info);
+                }
+        }
+
+        if (mime_type == NULL) {
+                g_set_error_literal (error, G_IO_ERROR, G_IO_ERROR_NOT_SUPPORTED,
+                                     "Cannot query mime type from stream");
+                return NULL;
+        }
+
+        document = ev_document_factory_new_document_for_mime_type (mime_type, error);
+        g_free (mime);
+
+        if (document == NULL)
+                return NULL;
+
+        if (!ev_document_load_stream (document, stream, flags, cancellable, error)) {
+                g_object_unref (document);
+                return NULL;
+        }
+
+        return document;
+}
+
 static void
 file_filter_add_mime_types (EvBackendInfo *info, GtkFileFilter *filter)
 {

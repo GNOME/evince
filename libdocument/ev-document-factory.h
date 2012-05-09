@@ -35,6 +35,16 @@ gboolean   _ev_document_factory_init         (void);
 void       _ev_document_factory_shutdown     (void);
 
 EvDocument* ev_document_factory_get_document (const char *uri, GError **error);
+EvDocument* ev_document_factory_get_document_for_gfile (GFile *file,
+                                                        EvDocumentLoadFlags flags,
+                                                        GCancellable *cancellable,
+                                                        GError **error);
+EvDocument* ev_document_factory_get_document_for_stream (GInputStream *stream,
+                                                         const char *mime_type,
+                                                         EvDocumentLoadFlags flags,
+                                                         GCancellable *cancellable,
+                                                         GError **error);
+
 void 	    ev_document_factory_add_filters  (GtkWidget *chooser, EvDocument *document);
 
 G_END_DECLS

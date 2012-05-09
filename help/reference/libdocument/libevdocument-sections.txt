@@ -343,6 +343,8 @@ ev_document_fc_mutex_trylock
 ev_document_get_info
 ev_document_get_backend_info
 ev_document_load
+ev_document_load_stream
+ev_document_load_gfile
 ev_document_save
 ev_document_get_n_pages
 ev_document_get_page
@@ -659,6 +661,8 @@ EV_DOCUMENT_FONTS_GET_IFACE
 <SECTION>
 <FILE>ev-document-factory</FILE>
 ev_document_factory_get_document
+ev_document_factory_get_document_for_gfile
+ev_document_factory_get_document_for_stream
 ev_document_factory_add_filters
 </SECTION>
 
