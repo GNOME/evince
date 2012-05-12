@@ -1029,6 +1029,11 @@ pdf_document_fonts_fill_model (EvDocumentFonts *document_fonts,
 		const char *name;
 		const char *type;
 		const char *embedded;
+		const gchar *substitute;
+		const gchar *substitute_text;
+		const gchar *filename;
+		const gchar *encoding;
+		const gchar *encoding_text;
 		char *details;
 		
 		name = poppler_fonts_iter_get_name (iter);
@@ -1036,6 +1041,10 @@ pdf_document_fonts_fill_model (EvDocumentFonts *document_fonts,
 		if (name == NULL) {
 			name = _("No name");
 		}
+
+		encoding = poppler_fonts_iter_get_encoding (iter);
+		if (!encoding)
+			encoding = _("None");
 
 		type = font_type_to_string (
 			poppler_fonts_iter_get_font_type (iter));
@@ -1049,7 +1058,17 @@ pdf_document_fonts_fill_model (EvDocumentFonts *document_fonts,
 			embedded = _("Not embedded");
 		}
 
-		details = g_markup_printf_escaped ("%s\n%s", type, embedded);
+		substitute = poppler_fonts_iter_get_substitute_name (iter);
+		filename = poppler_fonts_iter_get_file_name (iter);
+		encoding_text = _("Encoding");
+		substitute_text = _("substituting with");
+
+		if (substitute && filename)
+			details = g_markup_printf_escaped ("%s\n%s: %s\n%s, %s <b>%s</b>\n(%s)",
+							   type, encoding_text, encoding, embedded,
+							   substitute_text, substitute, filename);
+		else
+			details = g_markup_printf_escaped ("%s\n%s: %s\n%s", type, encoding_text, encoding, embedded);
 
 		gtk_list_store_append (GTK_LIST_STORE (model), &list_iter);
 		gtk_list_store_set (GTK_LIST_STORE (model), &list_iter,
