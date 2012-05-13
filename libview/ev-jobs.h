@@ -60,6 +60,12 @@ typedef struct _EvJobFontsClass EvJobFontsClass;
 typedef struct _EvJobLoad EvJobLoad;
 typedef struct _EvJobLoadClass EvJobLoadClass;
 
+typedef struct _EvJobLoadStream EvJobLoadStream;
+typedef struct _EvJobLoadStreamClass EvJobLoadStreamClass;
+
+typedef struct _EvJobLoadGFile EvJobLoadGFile;
+typedef struct _EvJobLoadGFileClass EvJobLoadGFileClass;
+
 typedef struct _EvJobSave EvJobSave;
 typedef struct _EvJobSaveClass EvJobSaveClass;
 
@@ -120,6 +126,16 @@ typedef struct _EvJobPrintClass EvJobPrintClass;
 #define EV_JOB_LOAD(object)	     	     (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_JOB_LOAD, EvJobLoad))
 #define EV_JOB_LOAD_CLASS(klass)	     (G_TYPE_CHECK_CLASS_CAST((klass), EV_TYPE_JOB_LOAD, EvJobLoadClass))
 #define EV_IS_JOB_LOAD(object)		     (G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_JOB_LOAD))
+
+#define EV_TYPE_JOB_LOAD_STREAM                     (ev_job_load_stream_get_type())
+#define EV_JOB_LOAD_STREAM(object)                  (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_JOB_LOAD_STREAM, EvJobLoadStream))
+#define EV_JOB_LOAD_STREAM_CLASS(klass)             (G_TYPE_CHECK_CLASS_CAST((klass), EV_TYPE_JOB_LOAD_STREAM, EvJobLoadStreamClass))
+#define EV_IS_JOB_LOAD_STREAM(object)               (G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_JOB_LOAD_STREAM))
+
+#define EV_TYPE_JOB_LOAD_GFILE                     (ev_job_load_gfile_get_type())
+#define EV_JOB_LOAD_GFILE(object)                  (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_JOB_LOAD_GFILE, EvJobLoadGFile))
+#define EV_JOB_LOAD_GFILE_CLASS(klass)             (G_TYPE_CHECK_CLASS_CAST((klass), EV_TYPE_JOB_LOAD_GFILE, EvJobLoadGFileClass))
+#define EV_IS_JOB_LOAD_GFILE(object)               (G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_JOB_LOAD_GFILE))
 
 #define EV_TYPE_JOB_SAVE		     (ev_job_save_get_type())
 #define EV_JOB_SAVE(object)	     	     (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_JOB_SAVE, EvJobSave))
@@ -322,6 +338,34 @@ struct _EvJobLoadClass
 	EvJobClass parent_class;
 };
 
+struct _EvJobLoadStream
+{
+        EvJob parent;
+
+        char *password;
+        GInputStream *stream;
+        EvDocumentLoadFlags flags;
+};
+
+struct _EvJobLoadStreamClass
+{
+        EvJobClass parent_class;
+};
+
+struct _EvJobLoadGFile
+{
+        EvJob parent;
+
+        char *password;
+        GFile *gfile;
+        EvDocumentLoadFlags flags;
+};
+
+struct _EvJobLoadGFileClass
+{
+        EvJobClass parent_class;
+};
+
 struct _EvJobSave
 {
 	EvJob parent;
@@ -461,6 +505,28 @@ void            ev_job_load_set_uri       (EvJobLoad       *load,
 					   const gchar     *uri);
 void            ev_job_load_set_password  (EvJobLoad       *job,
 					   const gchar     *password);
+
+/* EvJobLoadStream */
+GType           ev_job_load_stream_get_type       (void) G_GNUC_CONST;
+EvJob          *ev_job_load_stream_new            (GInputStream       *stream,
+                                                   EvDocumentLoadFlags flags);
+void            ev_job_load_stream_set_stream     (EvJobLoadStream    *job,
+                                                   GInputStream       *stream);
+void            ev_job_load_stream_set_load_flags (EvJobLoadStream    *job,
+                                                   EvDocumentLoadFlags flags);
+void            ev_job_load_stream_set_password   (EvJobLoadStream    *job,
+                                                   const gchar        *password);
+
+/* EvJobLoadGFile */
+GType           ev_job_load_gfile_get_type        (void) G_GNUC_CONST;
+EvJob          *ev_job_load_gfile_new             (GFile              *gfile,
+                                                   EvDocumentLoadFlags flags);
+void            ev_job_load_gfile_set_gfile       (EvJobLoadGFile     *job,
+                                                   GFile              *gfile);
+void            ev_job_load_gfile_set_load_flags  (EvJobLoadGFile     *job,
+                                                   EvDocumentLoadFlags flags);
+void            ev_job_load_gfile_set_password    (EvJobLoadGFile     *job,
+                                                   const gchar        *password);
 
 /* EvJobSave */
 GType           ev_job_save_get_type      (void) G_GNUC_CONST;

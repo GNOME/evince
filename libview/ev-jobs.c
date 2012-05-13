@@ -99,6 +99,8 @@ G_DEFINE_TYPE (EvJobPageData, ev_job_page_data, EV_TYPE_JOB)
 G_DEFINE_TYPE (EvJobThumbnail, ev_job_thumbnail, EV_TYPE_JOB)
 G_DEFINE_TYPE (EvJobFonts, ev_job_fonts, EV_TYPE_JOB)
 G_DEFINE_TYPE (EvJobLoad, ev_job_load, EV_TYPE_JOB)
+G_DEFINE_TYPE (EvJobLoadStream, ev_job_load_stream, EV_TYPE_JOB)
+G_DEFINE_TYPE (EvJobLoadGFile, ev_job_load_gfile, EV_TYPE_JOB)
 G_DEFINE_TYPE (EvJobSave, ev_job_save, EV_TYPE_JOB)
 G_DEFINE_TYPE (EvJobFind, ev_job_find, EV_TYPE_JOB)
 G_DEFINE_TYPE (EvJobLayers, ev_job_layers, EV_TYPE_JOB)
@@ -1046,6 +1048,292 @@ ev_job_load_set_password (EvJobLoad *job, const gchar *password)
 	if (job->password)
 		g_free (job->password);
 	job->password = password ? g_strdup (password) : NULL;
+}
+
+/* EvJobLoadStream */
+
+/**
+ * EvJobLoadStream:
+ *
+ * A job class to load a #EvDocument from a #GInputStream.
+ *
+ * Since: 3.6
+ */
+
+static void
+ev_job_load_stream_init (EvJobLoadStream *job)
+{
+        job->flags = EV_DOCUMENT_LOAD_FLAG_NONE;
+
+        EV_JOB (job)->run_mode = EV_JOB_RUN_THREAD;
+}
+
+static void
+ev_job_load_stream_dispose (GObject *object)
+{
+        EvJobLoadStream *job = EV_JOB_LOAD_STREAM (object);
+
+        if (job->stream) {
+                g_object_unref (job->stream);
+                job->stream = NULL;
+        }
+
+        g_free (job->password);
+        job->password = NULL;
+
+        G_OBJECT_CLASS (ev_job_load_stream_parent_class)->dispose (object);
+}
+
+static gboolean
+ev_job_load_stream_run (EvJob *job)
+{
+        EvJobLoadStream *job_load_stream = EV_JOB_LOAD_STREAM (job);
+        GError *error = NULL;
+
+        ev_profiler_start (EV_PROFILE_JOBS, "%s (%p)", EV_GET_TYPE_NAME (job), job);
+
+        ev_document_fc_mutex_lock ();
+
+        /* This job may already have a document even if the job didn't complete
+           because, e.g., a password is required - if so, just reload_stream rather than
+           creating a new instance */
+        /* FIXME: do we need to rewind the stream here?? */
+        if (job->document) {
+
+                if (job_load_stream->password) {
+                        ev_document_security_set_password (EV_DOCUMENT_SECURITY (job->document),
+                                                           job_load_stream->password);
+                }
+
+                job->failed = FALSE;
+                job->finished = FALSE;
+                g_clear_error (&job->error);
+
+                ev_document_load_stream (job->document,
+                                         job_load_stream->stream,
+                                         job_load_stream->flags,
+                                         job->cancellable,
+                                         &error);
+        } else {
+                job->document = ev_document_factory_get_document_for_stream (job_load_stream->stream,
+                                                                             NULL /* mime-type FIXME? */,
+                                                                             job_load_stream->flags,
+                                                                             job->cancellable,
+                                                                             &error);
+        }
+
+        ev_document_fc_mutex_unlock ();
+
+        if (error) {
+                ev_job_failed_from_error (job, error);
+                g_error_free (error);
+        } else {
+                ev_job_succeeded (job);
+        }
+
+        return FALSE;
+}
+
+static void
+ev_job_load_stream_class_init (EvJobLoadStreamClass *class)
+{
+        GObjectClass *oclass = G_OBJECT_CLASS (class);
+        EvJobClass   *job_class = EV_JOB_CLASS (class);
+
+        oclass->dispose = ev_job_load_stream_dispose;
+        job_class->run = ev_job_load_stream_run;
+}
+
+EvJob *
+ev_job_load_stream_new (GInputStream       *stream,
+                        EvDocumentLoadFlags flags)
+{
+        EvJobLoadStream *job;
+
+        job = g_object_new (EV_TYPE_JOB_LOAD_STREAM, NULL);
+        ev_job_load_stream_set_stream (job, stream);
+        ev_job_load_stream_set_load_flags (job, flags);
+
+        return EV_JOB (job);
+}
+
+void
+ev_job_load_stream_set_stream (EvJobLoadStream *job,
+                               GInputStream    *stream)
+{
+        g_return_if_fail (EV_IS_JOB_LOAD_STREAM (job));
+        g_return_if_fail (G_IS_INPUT_STREAM (stream));
+
+        g_object_ref (stream);
+        if (job->stream)
+              g_object_unref (job->stream);
+        job->stream = stream;
+}
+
+void
+ev_job_load_stream_set_load_flags (EvJobLoadStream    *job,
+                                   EvDocumentLoadFlags flags)
+{
+        g_return_if_fail (EV_IS_JOB_LOAD_STREAM (job));
+
+        job->flags = flags;
+}
+
+void
+ev_job_load_stream_set_password (EvJobLoadStream *job,
+                                 const char *password)
+{
+        char *old_password;
+
+        ev_debug_message (DEBUG_JOBS, NULL);
+
+        g_return_if_fail (EV_IS_JOB_LOAD_STREAM (job));
+
+        old_password = job->password;
+        job->password = g_strdup (password);
+        g_free (old_password);
+}
+
+/* EvJobLoadGFile */
+
+/**
+ * EvJobLoadGFile:
+ *
+ * A job class to load a #EvDocument from a #GFile.
+ *
+ * Since: 3.6
+ */
+
+static void
+ev_job_load_gfile_init (EvJobLoadGFile *job)
+{
+        job->flags = EV_DOCUMENT_LOAD_FLAG_NONE;
+
+        EV_JOB (job)->run_mode = EV_JOB_RUN_THREAD;
+}
+
+static void
+ev_job_load_gfile_dispose (GObject *object)
+{
+        EvJobLoadGFile *job = EV_JOB_LOAD_GFILE (object);
+
+        if (job->gfile) {
+                g_object_unref (job->gfile);
+                job->gfile = NULL;
+        }
+
+        g_free (job->password);
+        job->password = NULL;
+
+        G_OBJECT_CLASS (ev_job_load_gfile_parent_class)->dispose (object);
+}
+
+static gboolean
+ev_job_load_gfile_run (EvJob *job)
+{
+        EvJobLoadGFile *job_load_gfile = EV_JOB_LOAD_GFILE (job);
+        GError    *error = NULL;
+
+        ev_profiler_start (EV_PROFILE_JOBS, "%s (%p)", EV_GET_TYPE_NAME (job), job);
+
+        ev_document_fc_mutex_lock ();
+
+        /* This job may already have a document even if the job didn't complete
+           because, e.g., a password is required - if so, just reload_gfile rather than
+           creating a new instance */
+        if (job->document) {
+
+                if (job_load_gfile->password) {
+                        ev_document_security_set_password (EV_DOCUMENT_SECURITY (job->document),
+                                                           job_load_gfile->password);
+                }
+
+                job->failed = FALSE;
+                job->finished = FALSE;
+                g_clear_error (&job->error);
+
+                ev_document_load_gfile (job->document,
+                                        job_load_gfile->gfile,
+                                        job_load_gfile->flags,
+                                        job->cancellable,
+                                        &error);
+        } else {
+                job->document = ev_document_factory_get_document_for_gfile (job_load_gfile->gfile,
+                                                                            job_load_gfile->flags,
+                                                                            job->cancellable,
+                                                                            &error);
+        }
+
+        ev_document_fc_mutex_unlock ();
+
+        if (error) {
+                ev_job_failed_from_error (job, error);
+                g_error_free (error);
+        } else {
+                ev_job_succeeded (job);
+        }
+
+        return FALSE;
+}
+
+static void
+ev_job_load_gfile_class_init (EvJobLoadGFileClass *class)
+{
+        GObjectClass *oclass = G_OBJECT_CLASS (class);
+        EvJobClass   *job_class = EV_JOB_CLASS (class);
+
+        oclass->dispose = ev_job_load_gfile_dispose;
+        job_class->run = ev_job_load_gfile_run;
+}
+
+EvJob *
+ev_job_load_gfile_new (GFile              *gfile,
+                       EvDocumentLoadFlags flags)
+{
+        EvJobLoadGFile *job;
+
+        job = g_object_new (EV_TYPE_JOB_LOAD_GFILE, NULL);
+        ev_job_load_gfile_set_gfile (job, gfile);
+        ev_job_load_gfile_set_load_flags (job, flags);
+
+        return EV_JOB (job);
+}
+
+void
+ev_job_load_gfile_set_gfile (EvJobLoadGFile *job,
+                             GFile          *gfile)
+{
+        g_return_if_fail (EV_IS_JOB_LOAD_GFILE (job));
+        g_return_if_fail (G_IS_FILE (gfile));
+
+        g_object_ref (gfile);
+        if (job->gfile)
+              g_object_unref (job->gfile);
+        job->gfile = gfile;
+}
+
+void
+ev_job_load_gfile_set_load_flags (EvJobLoadGFile     *job,
+                                  EvDocumentLoadFlags flags)
+{
+        g_return_if_fail (EV_IS_JOB_LOAD_GFILE (job));
+
+        job->flags = flags;
+}
+
+void
+ev_job_load_gfile_set_password (EvJobLoadGFile *job,
+                                const char *password)
+{
+        char *old_password;
+
+        ev_debug_message (DEBUG_JOBS, NULL);
+
+        g_return_if_fail (EV_IS_JOB_LOAD_GFILE (job));
+
+        old_password = job->password;
+        job->password = g_strdup (password);
+        g_free (old_password);
 }
 
 /* EvJobSave */
