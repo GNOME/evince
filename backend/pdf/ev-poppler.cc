@@ -280,6 +280,58 @@ pdf_document_load (EvDocument   *document,
 	return TRUE;
 }
 
+#ifdef HAVE_POPPLER_DOCUMENT_NEW_FROM_STREAM
+static gboolean
+pdf_document_load_stream (EvDocument          *document,
+                          GInputStream        *stream,
+                          EvDocumentLoadFlags  flags,
+                          GCancellable        *cancellable,
+                          GError             **error)
+{
+        GError *err = NULL;
+        PdfDocument *pdf_document = PDF_DOCUMENT (document);
+
+        pdf_document->document =
+                poppler_document_new_from_stream (stream, -1,
+                                                  pdf_document->password,
+                                                  cancellable,
+                                                  &err);
+
+        if (pdf_document->document == NULL) {
+                convert_error (err, error);
+                return FALSE;
+        }
+
+        return TRUE;
+}
+#endif
+
+#ifdef HAVE_POPPLER_DOCUMENT_NEW_FROM_GFILE
+static gboolean
+pdf_document_load_gfile (EvDocument          *document,
+                         GFile               *file,
+                         EvDocumentLoadFlags  flags,
+                         GCancellable        *cancellable,
+                         GError             **error)
+{
+        GError *err = NULL;
+        PdfDocument *pdf_document = PDF_DOCUMENT (document);
+
+        pdf_document->document =
+                poppler_document_new_from_gfile (file,
+                                                 pdf_document->password,
+                                                 cancellable,
+                                                 &err);
+
+        if (pdf_document->document == NULL) {
+                convert_error (err, error);
+                return FALSE;
+        }
+
+        return TRUE;
+}
+#endif
+
 static int
 pdf_document_get_n_pages (EvDocument *document)
 {
@@ -887,6 +939,12 @@ pdf_document_class_init (PdfDocumentClass *klass)
 
 	ev_document_class->save = pdf_document_save;
 	ev_document_class->load = pdf_document_load;
+#ifdef HAVE_POPPLER_DOCUMENT_NEW_FROM_STREAM
+        ev_document_class->load_stream = pdf_document_load_stream;
+#endif
+#ifdef HAVE_POPPLER_DOCUMENT_NEW_FROM_GFILE
+        ev_document_class->load_gfile = pdf_document_load_gfile;
+#endif
 	ev_document_class->get_n_pages = pdf_document_get_n_pages;
 	ev_document_class->get_page = pdf_document_get_page;
 	ev_document_class->get_page_size = pdf_document_get_page_size;

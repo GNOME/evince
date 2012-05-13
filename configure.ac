@@ -486,6 +486,10 @@ if test "x$enable_pdf" = "xyes"; then
     else
 	    AC_MSG_ERROR("PDF support is disabled since poppler-glib library version $POPPLER_REQUIRED or newer not found")
     fi 
+    evince_save_LIBS=$LIBS
+    LIBS="$LIBS $POPPLER_LIBS"
+    AC_CHECK_FUNCS(poppler_document_new_from_stream poppler_document_new_from_gfile)
+    LIBS=$evince_save_LIBS
 fi
 
 AM_CONDITIONAL(ENABLE_PDF, test x$enable_pdf = xyes)
