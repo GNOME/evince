@@ -1,5 +1,5 @@
 # French translation of evince.
-# Copyright (C) 2005-201 The Free Software Foundation, Inc.
+# Copyright (C) 2005-2012 The Free Software Foundation, Inc.
 # This file is distributed under the GNU General Public License Version 2.
 #
 # Vincent Carriere <carriere_vincent@yahoo.fr>, 2005.
@@ -21,7 +21,7 @@ msgstr ""
 "Project-Id-Version: Evince HEAD\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evince&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2012-05-02 19:46+0000\n"
+"POT-Creation-Date: 2012-05-16 19:22+0000\n"
 "PO-Revision-Date: 2012-03-06 22:31+0100\n"
 "Last-Translator: Bruno Brouard <annoa.b@gmail.com>\n"
 "Language-Team: GNOME French Team <gnomefr@traduc.org>\n"
@@ -62,7 +62,10 @@ msgstr ""
 
 #: ../backend/comics/comics-document.c:471
 #: ../libdocument/ev-document-factory.c:93
-#: ../libdocument/ev-document-factory.c:199
+#: ../libdocument/ev-document-factory.c:159
+#: ../libdocument/ev-document-factory.c:169
+#: ../libdocument/ev-document-factory.c:272
+#: ../libdocument/ev-document-factory.c:374
 msgid "Unknown MIME Type"
 msgstr "Type MIME inconnu"
 
@@ -117,65 +120,65 @@ msgstr "Le document DVI a un format incorrect"
 msgid "DVI Documents"
 msgstr "Documents DVI"
 
-#: ../backend/pdf/ev-poppler.cc:587
+#: ../backend/pdf/ev-poppler.cc:609
 msgid "This work is in the Public Domain"
 msgstr "Cette œuvre est dans le domaine public"
 
 #. translators: this is the document security state
-#: ../backend/pdf/ev-poppler.cc:840 ../backend/pdf/ev-poppler.cc:846
+#: ../backend/pdf/ev-poppler.cc:862 ../backend/pdf/ev-poppler.cc:868
 msgid "Yes"
 msgstr "Oui"
 
 #. translators: this is the document security state
-#: ../backend/pdf/ev-poppler.cc:843 ../backend/pdf/ev-poppler.cc:846
+#: ../backend/pdf/ev-poppler.cc:865 ../backend/pdf/ev-poppler.cc:868
 msgid "No"
 msgstr "Non"
 
-#: ../backend/pdf/ev-poppler.cc:974
+#: ../backend/pdf/ev-poppler.cc:997
 msgid "Type 1"
 msgstr "Type 1"
 
-#: ../backend/pdf/ev-poppler.cc:976
+#: ../backend/pdf/ev-poppler.cc:999
 msgid "Type 1C"
 msgstr "Type 1C"
 
-#: ../backend/pdf/ev-poppler.cc:978
+#: ../backend/pdf/ev-poppler.cc:1001
 msgid "Type 3"
 msgstr "Type 3"
 
-#: ../backend/pdf/ev-poppler.cc:980
+#: ../backend/pdf/ev-poppler.cc:1003
 msgid "TrueType"
 msgstr "TrueType"
 
-#: ../backend/pdf/ev-poppler.cc:982
+#: ../backend/pdf/ev-poppler.cc:1005
 msgid "Type 1 (CID)"
 msgstr "Type 1 (CID)"
 
-#: ../backend/pdf/ev-poppler.cc:984
+#: ../backend/pdf/ev-poppler.cc:1007
 msgid "Type 1C (CID)"
 msgstr "Type 1C (CID)"
 
-#: ../backend/pdf/ev-poppler.cc:986
+#: ../backend/pdf/ev-poppler.cc:1009
 msgid "TrueType (CID)"
 msgstr "TrueType (CID)"
 
-#: ../backend/pdf/ev-poppler.cc:988
+#: ../backend/pdf/ev-poppler.cc:1011
 msgid "Unknown font type"
 msgstr "Type de police inconnu"
 
-#: ../backend/pdf/ev-poppler.cc:1014
+#: ../backend/pdf/ev-poppler.cc:1037
 msgid "No name"
 msgstr "Sans nom"
 
-#: ../backend/pdf/ev-poppler.cc:1022
+#: ../backend/pdf/ev-poppler.cc:1045
 msgid "Embedded subset"
 msgstr "Sous-ensemble intégré"
 
-#: ../backend/pdf/ev-poppler.cc:1024
+#: ../backend/pdf/ev-poppler.cc:1047
 msgid "Embedded"
 msgstr "Intégré"
 
-#: ../backend/pdf/ev-poppler.cc:1026
+#: ../backend/pdf/ev-poppler.cc:1049
 msgid "Not embedded"
 msgstr "Non intégré"
 
@@ -202,8 +205,8 @@ msgid "Invalid document"
 msgstr "Document non valide"
 
 #: ../backend/tiff/tiffdocument.evince-backend.in.h:1
-msgid "Tiff Documents"
-msgstr "Documents Tiff"
+msgid "TIFF Documents"
+msgstr "Documents TIFF"
 
 #: ../backend/xps/xpsdocument.evince-backend.in.h:1
 msgid "XPS Documents"
@@ -225,15 +228,16 @@ msgid "Couldn't open attachment “%s”"
 msgstr "Impossible d'ouvrir la pièce jointe « %s »"
 
 #: ../libdocument/ev-document-factory.c:112
+#: ../libdocument/ev-document-factory.c:184
 #, c-format
 msgid "File type %s (%s) is not supported"
 msgstr "Le type de fichier %s (%s) n'est pas pris en charge"
 
-#: ../libdocument/ev-document-factory.c:278
+#: ../libdocument/ev-document-factory.c:447
 msgid "All Documents"
 msgstr "Tous les documents"
 
-#: ../libdocument/ev-document-factory.c:310
+#: ../libdocument/ev-document-factory.c:479
 msgid "All Files"
 msgstr "Tous les fichiers"
 
@@ -743,7 +747,7 @@ msgstr ""
 msgid "Page Handling"
 msgstr "Gestion des pages"
 
-#: ../libview/ev-jobs.c:1572
+#: ../libview/ev-jobs.c:1604
 #, c-format
 msgid "Failed to print page %d: %s"
 msgstr "Impossible d'imprimer la page %d : %s"
@@ -1770,3 +1774,4 @@ msgstr "CHAÎNE"
 #: ../shell/main.c:88
 msgid "[FILE…]"
 msgstr "[FICHIER…]"
+
