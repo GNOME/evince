@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince 3.5.x\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-05-03 13:35+0200\n"
-"PO-Revision-Date: 2012-05-03 13:35+0200\n"
+"POT-Creation-Date: 2012-05-19 11:34+0200\n"
+"PO-Revision-Date: 2012-05-19 11:35+0200\n"
 "Last-Translator: Kjartan Maraas <kmaraas@gnome.org>\n"
 "Language-Team: Norwegian bokmål <i18n-nb@lister.ping.uio.no>\n"
 "Language: \n"
@@ -151,21 +151,34 @@ msgstr "TrueType (CID)"
 msgid "Unknown font type"
 msgstr "Ukjent skrifttype"
 
-#: ../backend/pdf/ev-poppler.cc:1037
+#: ../backend/pdf/ev-poppler.cc:1042
 msgid "No name"
 msgstr "Uten navn"
 
-#: ../backend/pdf/ev-poppler.cc:1045
+#: ../backend/pdf/ev-poppler.cc:1047 ../properties/ev-properties-view.c:187
+#: ../libview/ev-print-operation.c:1892
+msgid "None"
+msgstr "Ingen"
+
+#: ../backend/pdf/ev-poppler.cc:1054
 msgid "Embedded subset"
 msgstr "Innebygd subsett"
 
-#: ../backend/pdf/ev-poppler.cc:1047
+#: ../backend/pdf/ev-poppler.cc:1056
 msgid "Embedded"
 msgstr "Innebygd"
 
-#: ../backend/pdf/ev-poppler.cc:1049
+#: ../backend/pdf/ev-poppler.cc:1058
 msgid "Not embedded"
 msgstr "Ikke innebygd"
+
+#: ../backend/pdf/ev-poppler.cc:1063
+msgid "Encoding"
+msgstr "Koding"
+
+#: ../backend/pdf/ev-poppler.cc:1064
+msgid "substituting with"
+msgstr "erstatter med"
 
 #: ../backend/pdf/pdfdocument.evince-backend.in.h:1
 msgid "PDF Documents"
@@ -577,10 +590,6 @@ msgstr "Sikkerhet:"
 #: ../properties/ev-properties-view.c:73
 msgid "Paper Size:"
 msgstr "Papirstørrelse:"
-
-#: ../properties/ev-properties-view.c:187 ../libview/ev-print-operation.c:1892
-msgid "None"
-msgstr "Ingen"
 
 #. Translate to the default units to use for presenting
 #. * lengths to the user. Translate to default:inch if you
