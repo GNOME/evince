@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince-master-po-gl-7620\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-05-05 15:07+0200\n"
-"PO-Revision-Date: 2012-05-05 15:07+0200\n"
+"POT-Creation-Date: 2012-05-20 18:03+0200\n"
+"PO-Revision-Date: 2012-05-20 18:03+0200\n"
 "Last-Translator: Fran Dieguez <frandieguez@gnome.org>\n"
 "Language-Team: Galician <gnome-l10n-gl@gnome.org>\n"
 "Language: gl\n"
@@ -160,21 +160,34 @@ msgstr "TrueType (CID)"
 msgid "Unknown font type"
 msgstr "Tipo de letra descoñecido"
 
-#: ../backend/pdf/ev-poppler.cc:1037
+#: ../backend/pdf/ev-poppler.cc:1042
 msgid "No name"
 msgstr "Sen nome"
 
-#: ../backend/pdf/ev-poppler.cc:1045
+#: ../backend/pdf/ev-poppler.cc:1047 ../properties/ev-properties-view.c:187
+#: ../libview/ev-print-operation.c:1892
+msgid "None"
+msgstr "Ningún"
+
+#: ../backend/pdf/ev-poppler.cc:1054
 msgid "Embedded subset"
 msgstr "Subconxunto incorporado"
 
-#: ../backend/pdf/ev-poppler.cc:1047
+#: ../backend/pdf/ev-poppler.cc:1056
 msgid "Embedded"
 msgstr "Incorporado"
 
-#: ../backend/pdf/ev-poppler.cc:1049
+#: ../backend/pdf/ev-poppler.cc:1058
 msgid "Not embedded"
 msgstr "Non incorporado"
+
+#: ../backend/pdf/ev-poppler.cc:1063
+msgid "Encoding"
+msgstr "Codificación"
+
+#: ../backend/pdf/ev-poppler.cc:1064
+msgid "substituting with"
+msgstr "substituíndo con"
 
 #: ../backend/pdf/pdfdocument.evince-backend.in.h:1
 msgid "PDF Documents"
@@ -588,10 +601,6 @@ msgstr "Seguranza:"
 #: ../properties/ev-properties-view.c:73
 msgid "Paper Size:"
 msgstr "Tamaño do papel:"
-
-#: ../properties/ev-properties-view.c:187 ../libview/ev-print-operation.c:1892
-msgid "None"
-msgstr "Ningún"
 
 #. Translate to the default units to use for presenting
 #. * lengths to the user. Translate to default:inch if you
