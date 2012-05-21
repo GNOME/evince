@@ -15,8 +15,8 @@ msgstr ""
 "Project-Id-Version: evince.master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evince&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2012-05-03 08:07+0000\n"
-"PO-Revision-Date: 2012-05-03 10:31+0200\n"
+"POT-Creation-Date: 2012-05-19 07:37+0000\n"
+"PO-Revision-Date: 2012-05-21 12:58+0200\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -159,21 +159,34 @@ msgstr "TrueType (CID)"
 msgid "Unknown font type"
 msgstr "Tipo de tipografía desconocida"
 
-#: ../backend/pdf/ev-poppler.cc:1037
+#: ../backend/pdf/ev-poppler.cc:1042
 msgid "No name"
 msgstr "Sin nombre"
 
-#: ../backend/pdf/ev-poppler.cc:1045
+#: ../backend/pdf/ev-poppler.cc:1047 ../properties/ev-properties-view.c:187
+#: ../libview/ev-print-operation.c:1892
+msgid "None"
+msgstr "Ninguno"
+
+#: ../backend/pdf/ev-poppler.cc:1054
 msgid "Embedded subset"
 msgstr "Subconjunto incrustado"
 
-#: ../backend/pdf/ev-poppler.cc:1047
+#: ../backend/pdf/ev-poppler.cc:1056
 msgid "Embedded"
 msgstr "Incrustado"
 
-#: ../backend/pdf/ev-poppler.cc:1049
+#: ../backend/pdf/ev-poppler.cc:1058
 msgid "Not embedded"
 msgstr "No incrustado"
+
+#: ../backend/pdf/ev-poppler.cc:1063
+msgid "Encoding"
+msgstr "Codificación"
+
+#: ../backend/pdf/ev-poppler.cc:1064
+msgid "substituting with"
+msgstr "sustituyendo con"
 
 #: ../backend/pdf/pdfdocument.evince-backend.in.h:1
 msgid "PDF Documents"
@@ -198,7 +211,6 @@ msgid "Invalid document"
 msgstr "Documento no válido"
 
 #: ../backend/tiff/tiffdocument.evince-backend.in.h:1
-#| msgid "DVI Documents"
 msgid "TIFF Documents"
 msgstr "Documentos TIFF"
 
@@ -586,10 +598,6 @@ msgstr "Seguridad:"
 #: ../properties/ev-properties-view.c:73
 msgid "Paper Size:"
 msgstr "Tamaño del papel:"
-
-#: ../properties/ev-properties-view.c:187 ../libview/ev-print-operation.c:1892
-msgid "None"
-msgstr "Ninguno"
 
 #. Translate to the default units to use for presenting
 #. * lengths to the user. Translate to default:inch if you
