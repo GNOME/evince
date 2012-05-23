@@ -11,9 +11,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=evince&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2012-02-23 16:10+0000\n"
-"PO-Revision-Date: 2012-04-14 11:07+0200\n"
-"Last-Translator: Andrej Žnidaršič <andrej.znidarsic@gmail.com>\n"
+"POT-Creation-Date: 2012-05-21 11:57+0000\n"
+"PO-Revision-Date: 2012-05-23 19:59+0100\n"
+"Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenščina <gnome-si@googlegroups.com>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
@@ -50,7 +50,10 @@ msgstr "Ni mogoče najti ustreznega ukaza za razširjanje te vrste stripa."
 
 #: ../backend/comics/comics-document.c:471
 #: ../libdocument/ev-document-factory.c:93
-#: ../libdocument/ev-document-factory.c:199
+#: ../libdocument/ev-document-factory.c:159
+#: ../libdocument/ev-document-factory.c:169
+#: ../libdocument/ev-document-factory.c:272
+#: ../libdocument/ev-document-factory.c:374
 msgid "Unknown MIME Type"
 msgstr "Neznana MIME vrsta"
 
@@ -101,69 +104,83 @@ msgstr "Dokument DVI nima prave oblike zapisa"
 msgid "DVI Documents"
 msgstr "DVI Dokumenti"
 
-#: ../backend/pdf/ev-poppler.cc:587
+#: ../backend/pdf/ev-poppler.cc:609
 msgid "This work is in the Public Domain"
 msgstr "Projekt je v javni domeni"
 
 #. translators: this is the document security state
-#: ../backend/pdf/ev-poppler.cc:840
-#: ../backend/pdf/ev-poppler.cc:846
+#: ../backend/pdf/ev-poppler.cc:862
+#: ../backend/pdf/ev-poppler.cc:868
 msgid "Yes"
 msgstr "Da"
 
 #. translators: this is the document security state
-#: ../backend/pdf/ev-poppler.cc:843
-#: ../backend/pdf/ev-poppler.cc:846
+#: ../backend/pdf/ev-poppler.cc:865
+#: ../backend/pdf/ev-poppler.cc:868
 msgid "No"
 msgstr "Ne"
 
-#: ../backend/pdf/ev-poppler.cc:974
+#: ../backend/pdf/ev-poppler.cc:997
 msgid "Type 1"
 msgstr "Vrsta 1"
 
-#: ../backend/pdf/ev-poppler.cc:976
+#: ../backend/pdf/ev-poppler.cc:999
 msgid "Type 1C"
 msgstr "Vrsta 1C"
 
-#: ../backend/pdf/ev-poppler.cc:978
+#: ../backend/pdf/ev-poppler.cc:1001
 msgid "Type 3"
 msgstr "Vrsta 3"
 
-#: ../backend/pdf/ev-poppler.cc:980
+#: ../backend/pdf/ev-poppler.cc:1003
 msgid "TrueType"
 msgstr "TrueType"
 
-#: ../backend/pdf/ev-poppler.cc:982
+#: ../backend/pdf/ev-poppler.cc:1005
 msgid "Type 1 (CID)"
 msgstr "Vrsta 1 (CID)"
 
-#: ../backend/pdf/ev-poppler.cc:984
+#: ../backend/pdf/ev-poppler.cc:1007
 msgid "Type 1C (CID)"
 msgstr "Vrsta 1C (CID)"
 
-#: ../backend/pdf/ev-poppler.cc:986
+#: ../backend/pdf/ev-poppler.cc:1009
 msgid "TrueType (CID)"
 msgstr "TrueType (CID)"
 
-#: ../backend/pdf/ev-poppler.cc:988
+#: ../backend/pdf/ev-poppler.cc:1011
 msgid "Unknown font type"
 msgstr "Neznana vrsta pisave"
 
-#: ../backend/pdf/ev-poppler.cc:1014
+#: ../backend/pdf/ev-poppler.cc:1042
 msgid "No name"
 msgstr "Brez imena"
 
-#: ../backend/pdf/ev-poppler.cc:1022
+#: ../backend/pdf/ev-poppler.cc:1047
+#: ../properties/ev-properties-view.c:187
+#: ../libview/ev-print-operation.c:1892
+msgid "None"
+msgstr "Brez"
+
+#: ../backend/pdf/ev-poppler.cc:1054
 msgid "Embedded subset"
 msgstr "Vgrajena podmnožica"
 
-#: ../backend/pdf/ev-poppler.cc:1024
+#: ../backend/pdf/ev-poppler.cc:1056
 msgid "Embedded"
 msgstr "Vgrajeno"
 
-#: ../backend/pdf/ev-poppler.cc:1026
+#: ../backend/pdf/ev-poppler.cc:1058
 msgid "Not embedded"
 msgstr "Ni vgrajeno"
+
+#: ../backend/pdf/ev-poppler.cc:1063
+msgid "Encoding"
+msgstr "Kodiranje"
+
+#: ../backend/pdf/ev-poppler.cc:1064
+msgid "substituting with"
+msgstr "zamenjava z"
 
 #: ../backend/pdf/pdfdocument.evince-backend.in.h:1
 msgid "PDF Documents"
@@ -187,6 +204,14 @@ msgstr "Dokumenti PostScript"
 msgid "Invalid document"
 msgstr "Neveljaven dokument"
 
+#: ../backend/tiff/tiffdocument.evince-backend.in.h:1
+msgid "TIFF Documents"
+msgstr "Dokumenti TIFF"
+
+#: ../backend/xps/xpsdocument.evince-backend.in.h:1
+msgid "XPS Documents"
+msgstr "Dokumenti XPS"
+
 #: ../libdocument/ev-attachment.c:304
 #: ../libdocument/ev-attachment.c:325
 #, c-format
@@ -204,15 +229,16 @@ msgid "Couldn't open attachment “%s”"
 msgstr "Ni mogoče odpreti priloge \"%s\""
 
 #: ../libdocument/ev-document-factory.c:112
+#: ../libdocument/ev-document-factory.c:184
 #, c-format
 msgid "File type %s (%s) is not supported"
 msgstr "Vrsta datoteke %s (%s) ni podprta"
 
-#: ../libdocument/ev-document-factory.c:278
+#: ../libdocument/ev-document-factory.c:447
 msgid "All Documents"
 msgstr "Vsi dokumenti"
 
-#: ../libdocument/ev-document-factory.c:310
+#: ../libdocument/ev-document-factory.c:479
 msgid "All Files"
 msgstr "Vse datoteke"
 
@@ -586,11 +612,6 @@ msgstr "Varnost:"
 msgid "Paper Size:"
 msgstr "Velikost papirja:"
 
-#: ../properties/ev-properties-view.c:187
-#: ../libview/ev-print-operation.c:1892
-msgid "None"
-msgstr "Brez"
-
 #. Translate to the default units to use for presenting
 #. * lengths to the user. Translate to default:inch if you
 #. * want inches, otherwise translate to default:mm.
@@ -637,7 +658,7 @@ msgstr "od %d"
 
 #. Create tree view
 #: ../libview/ev-loading-window.c:76
-#: ../shell/ev-sidebar-annotations.c:133
+#: ../shell/ev-sidebar-annotations.c:131
 #: ../shell/ev-sidebar-layers.c:125
 #: ../shell/ev-sidebar-links.c:260
 msgid "Loading…"
@@ -723,7 +744,7 @@ msgstr "Izbrana možnost omogoča, da bo stran natisnjena na enako velikost papi
 msgid "Page Handling"
 msgstr "Upravljanje strani"
 
-#: ../libview/ev-jobs.c:1572
+#: ../libview/ev-jobs.c:1604
 #, c-format
 msgid "Failed to print page %d: %s"
 msgstr "Napaka med tiskanjem strani %d: %s"
@@ -906,7 +927,7 @@ msgstr "Odpri"
 msgid "Close"
 msgstr "Zapri"
 
-#: ../shell/ev-application.c:1133
+#: ../shell/ev-application.c:1137
 msgid "Running in presentation mode"
 msgstr "Zagon v predstavitvenem načinu"
 
@@ -973,53 +994,53 @@ msgstr "Pisave"
 msgid "Document License"
 msgstr "Dovoljenja dokumenta"
 
-#: ../shell/ev-properties-fonts.c:135
+#: ../shell/ev-properties-fonts.c:132
 msgid "Font"
 msgstr "Pisava"
 
-#: ../shell/ev-properties-fonts.c:162
+#: ../shell/ev-properties-fonts.c:159
 #, c-format
 msgid "Gathering font information… %3d%%"
 msgstr "Zbiranje podrobnosti o pisavah ... %3d%%"
 
-#: ../shell/ev-properties-license.c:137
+#: ../shell/ev-properties-license.c:134
 msgid "Usage terms"
 msgstr "Pogoji uporabe"
 
-#: ../shell/ev-properties-license.c:143
+#: ../shell/ev-properties-license.c:140
 msgid "Text License"
 msgstr "Besedilo dovoljenja"
 
-#: ../shell/ev-properties-license.c:149
+#: ../shell/ev-properties-license.c:146
 msgid "Further Information"
 msgstr "Več podrobnosti"
 
-#: ../shell/ev-sidebar-annotations.c:161
+#: ../shell/ev-sidebar-annotations.c:159
 msgid "List"
 msgstr "Seznam"
 
-#: ../shell/ev-sidebar-annotations.c:203
-#: ../shell/ev-sidebar-annotations.c:531
+#: ../shell/ev-sidebar-annotations.c:199
+#: ../shell/ev-sidebar-annotations.c:527
 msgid "Annotations"
 msgstr "Pripombe"
 
-#: ../shell/ev-sidebar-annotations.c:209
+#: ../shell/ev-sidebar-annotations.c:205
 msgid "Text"
 msgstr "Besedilo"
 
-#: ../shell/ev-sidebar-annotations.c:210
+#: ../shell/ev-sidebar-annotations.c:206
 msgid "Add text annotation"
 msgstr "Dodaj pripombo k besedilu ..."
 
-#: ../shell/ev-sidebar-annotations.c:221
+#: ../shell/ev-sidebar-annotations.c:217
 msgid "Add"
 msgstr "Dodaj"
 
-#: ../shell/ev-sidebar-annotations.c:364
+#: ../shell/ev-sidebar-annotations.c:360
 msgid "Document contains no annotations"
 msgstr "Dokument ne vsebuje pripomb"
 
-#: ../shell/ev-sidebar-annotations.c:396
+#: ../shell/ev-sidebar-annotations.c:392
 #, c-format
 msgid "Page %d"
 msgstr "Stran %d"
@@ -1047,7 +1068,7 @@ msgstr "_Odstrani zaznamek"
 msgid "Page %s"
 msgstr "Stran %s"
 
-#: ../shell/ev-sidebar-bookmarks.c:606
+#: ../shell/ev-sidebar-bookmarks.c:603
 msgid "Bookmarks"
 msgstr "Zaznamki"
 
@@ -1059,7 +1080,7 @@ msgstr "Plasti"
 msgid "Print…"
 msgstr "Natisni ..."
 
-#: ../shell/ev-sidebar-links.c:720
+#: ../shell/ev-sidebar-links.c:718
 msgid "Index"
 msgstr "Kazalo"
 
