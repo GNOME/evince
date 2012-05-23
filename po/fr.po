@@ -21,7 +21,7 @@ msgstr ""
 "Project-Id-Version: Evince HEAD\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evince&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2012-05-16 19:22+0000\n"
+"POT-Creation-Date: 2012-05-19 07:37+0000\n"
 "PO-Revision-Date: 2012-03-06 22:31+0100\n"
 "Last-Translator: Bruno Brouard <annoa.b@gmail.com>\n"
 "Language-Team: GNOME French Team <gnomefr@traduc.org>\n"
@@ -166,21 +166,34 @@ msgstr "TrueType (CID)"
 msgid "Unknown font type"
 msgstr "Type de police inconnu"
 
-#: ../backend/pdf/ev-poppler.cc:1037
+#: ../backend/pdf/ev-poppler.cc:1042
 msgid "No name"
 msgstr "Sans nom"
 
-#: ../backend/pdf/ev-poppler.cc:1045
+#: ../backend/pdf/ev-poppler.cc:1047 ../properties/ev-properties-view.c:187
+#: ../libview/ev-print-operation.c:1892
+msgid "None"
+msgstr "Aucun"
+
+#: ../backend/pdf/ev-poppler.cc:1054
 msgid "Embedded subset"
 msgstr "Sous-ensemble intégré"
 
-#: ../backend/pdf/ev-poppler.cc:1047
+#: ../backend/pdf/ev-poppler.cc:1056
 msgid "Embedded"
 msgstr "Intégré"
 
-#: ../backend/pdf/ev-poppler.cc:1049
+#: ../backend/pdf/ev-poppler.cc:1058
 msgid "Not embedded"
 msgstr "Non intégré"
+
+#: ../backend/pdf/ev-poppler.cc:1063
+msgid "Encoding"
+msgstr "Codage"
+
+#: ../backend/pdf/ev-poppler.cc:1064
+msgid "substituting with"
+msgstr "substituant par"
 
 #: ../backend/pdf/pdfdocument.evince-backend.in.h:1
 msgid "PDF Documents"
@@ -596,10 +609,6 @@ msgstr "Sécurité :"
 #: ../properties/ev-properties-view.c:73
 msgid "Paper Size:"
 msgstr "Format de papier :"
-
-#: ../properties/ev-properties-view.c:187 ../libview/ev-print-operation.c:1892
-msgid "None"
-msgstr "Aucun"
 
 #. Translate to the default units to use for presenting
 #. * lengths to the user. Translate to default:inch if you
@@ -1774,4 +1783,3 @@ msgstr "CHAÎNE"
 #: ../shell/main.c:88
 msgid "[FILE…]"
 msgstr "[FICHIER…]"
-
