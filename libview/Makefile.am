@@ -131,6 +131,7 @@ EvinceView-$(EV_API_VERSION).gir: libevview3.la Makefile $(INST_H_FILES) $(filte
 	--include=GdkPixbuf-2.0 \
 	--include=Gtk-3.0 \
 	--include=EvinceDocument-$(EV_API_VERSION) \
+	--library=$(top_builddir)/libdocument/libevdocument3.la \
 	--library=evview3 \
 	--libtool="$(LIBTOOL)" \
 	--output $@ \
