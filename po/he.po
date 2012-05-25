@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince.HEAD.he\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-05-05 01:23+0300\n"
-"PO-Revision-Date: 2012-05-05 01:23+0200\n"
+"POT-Creation-Date: 2012-05-25 10:32+0300\n"
+"PO-Revision-Date: 2012-05-25 10:32+0200\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: Gezer (Hebrew)\n"
 "Language: he\n"
@@ -155,21 +155,35 @@ msgstr "TrueType (CID)"
 msgid "Unknown font type"
 msgstr "סוג גופן לא ידוע"
 
-#: ../backend/pdf/ev-poppler.cc:1037
+#: ../backend/pdf/ev-poppler.cc:1042
 msgid "No name"
 msgstr "ללא שם"
 
-#: ../backend/pdf/ev-poppler.cc:1045
+#: ../backend/pdf/ev-poppler.cc:1047
+#: ../properties/ev-properties-view.c:187
+#: ../libview/ev-print-operation.c:1892
+msgid "None"
+msgstr "ללא"
+
+#: ../backend/pdf/ev-poppler.cc:1054
 msgid "Embedded subset"
 msgstr "תת־קבוצה מוטמעת"
 
-#: ../backend/pdf/ev-poppler.cc:1047
+#: ../backend/pdf/ev-poppler.cc:1056
 msgid "Embedded"
 msgstr "מוטמע"
 
-#: ../backend/pdf/ev-poppler.cc:1049
+#: ../backend/pdf/ev-poppler.cc:1058
 msgid "Not embedded"
 msgstr "לא מוטמע"
+
+#: ../backend/pdf/ev-poppler.cc:1063
+msgid "Encoding"
+msgstr "קידוד"
+
+#: ../backend/pdf/ev-poppler.cc:1064
+msgid "substituting with"
+msgstr "יוחלף ב"
 
 #: ../backend/pdf/pdfdocument.evince-backend.in.h:1
 msgid "PDF Documents"
@@ -600,11 +614,6 @@ msgstr "‏אבטחה:"
 #: ../properties/ev-properties-view.c:73
 msgid "Paper Size:"
 msgstr "‏גודל דף:"
-
-#: ../properties/ev-properties-view.c:187
-#: ../libview/ev-print-operation.c:1892
-msgid "None"
-msgstr "ללא"
 
 #. Translate to the default units to use for presenting
 #. * lengths to the user. Translate to default:inch if you
