@@ -2643,8 +2643,7 @@ ev_window_setup_recent (EvWindow *ev_window)
 
 		info = (GtkRecentInfo *) l->data;
 
-		if (!gtk_recent_info_has_application (info, evince) ||
-		    (gtk_recent_info_is_local (info) && !gtk_recent_info_exists (info)))
+		if (!gtk_recent_info_has_application (info, evince))
 			continue;
 
 		action_name = g_strdup_printf ("RecentFile%u", i++);
