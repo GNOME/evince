@@ -41,7 +41,7 @@ m4_define([ev_binary_version],[ev_document_lt_current])
 
 AC_PREREQ([2.57])
 AC_INIT([Evince],[ev_version],[http://bugzilla.gnome.org/enter_bug.cgi?product=evince],[evince])
-AM_INIT_AUTOMAKE([1.10 foreign dist-bzip2 no-dist-gzip])
+AM_INIT_AUTOMAKE([1.10 foreign dist-xz no-dist-gzip tar-ustar])
 
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4])
