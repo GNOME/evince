@@ -1,4 +1,74 @@
 ================
+Evince     3.5.2
+================
+
+New features and improvements:
+
+    * Add API to load EvDocument from GInputStream and GFile. Only
+      implemented by the PDF backend for now (#654832, Christian Persch)
+    * Rework backends management and document factory to make it easy
+      to add a module cache (Christian Persch)
+    * Improve error handling in EvDocumentFactory (Christian Persch)
+    * Include substitute font name and file in font list (Adrian
+      Johnson)
+    * Use primary-toolbar style class in evince-previewer (#675310,
+      Volker Sobek)
+    * Copy document metadata to the new file when saving a copy
+      (#674629, Carlos Garcia Campos)
+
+Bug fixes:
+
+    * Fix memory leak when document is encrypted (Christian Persch)
+    * Do not remove unexistent files from recent menu (#674188, Carlos
+      Garcia Campos)
+    * Fix underlinking with >=glib-2.32 detected by gold linker
+      (Justin Lecher)
+    * Removed deprecated use of GTK_POLICY_AUTOMATIC (Daniel
+      Mustieles)
+    * Fix a crash when running with Broadway GDK backend (#673664,
+      justin)
+    * Remove remnants of Hildon support from configure (#673679,
+      Adrian Bunk)
+    * Remove old workaround inconfigure to build with deprecated
+      symbols (#673680, Adrian Bunk)
+
+Documentation:
+
+    * Add Get Involved section and legal information to the
+      documentation (Tiffany Antopolski)
+
+Translation updates:
+
+    * Daniel Martinez (an)
+    * Khaled Hosny (ar)
+    * Krasimir Chonov (bg)
+    * Gil Forcada (ca)
+    * Gil Forcada (ca@valencia)
+    * Marek Černocký (cs)
+    * Mario Blättermann (de)
+    * Daniel Mustieles (es)
+    * Alain Lojewski (fr)
+    * Bruno Brouard (fr)
+    * Fran Dieguez (gl)
+    * Yaron Shahrabani (he)
+    * Gabor Kelemen (hu)
+    * Andika Triwidada (id)
+    * Claudio Arseni (it)
+    * Takayuki KUSANO (ja)
+    * Rūdolfs Mazurs (lv)
+    * Kjartan Maraas (nb)
+    * Piotr Drąg (pl)
+    * Jonh Wendell (pt_BR)
+    * Aleksej Kabanov (ru)
+    * Yuri Kozlov (ru)
+    * Pavol Klačanský (sk)
+    * Andrej Žnidaršič (sl)
+    * Matej Urbančič (sl)
+    * Miroslav Nikolić (sr@latin)
+    * Мирослав Николић (sr)
+    * Praveen Illa (te)
+
+================
 Evince     3.4.0
 ================
 
