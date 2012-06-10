@@ -99,6 +99,10 @@ evince_SOURCES += \
 	ev-media-player-keys.c \
 	ev-media-player-keys.h \
 	$(NULL)
+nodist_evince_SOURCES += \
+	ev-gdbus-generated.c \
+	ev-gdbus-generated.h \
+	$(NULL)
 endif
 
 evince_LDFLAGS = $(AM_LDFLAGS)
@@ -132,6 +136,10 @@ BUILT_SOURCES = \
 	ev-resources.c
 
 if ENABLE_DBUS
+BUILT_SOURCES += ev-gdbus-generated.c ev-gdbus-generated.h
+endif
+
+if ENABLE_DBUS
 evinced_SOURCES = \
 	ev-daemon.c \
 	$(NULL)
@@ -153,7 +161,8 @@ EXTRA_DIST = \
 	evince-icon.rc \
 	evince-ui.xml \
 	evince-toolbar.xml \
-	evince.gresource.xml
+	evince.gresource.xml \
+	ev-gdbus.xml
 
 ev-marshal.h: $(srcdir)/ev-marshal.list
 	$(AM_V_GEN)$(GLIB_GENMARSHAL) --prefix=ev_marshal $(srcdir)/ev-marshal.list --header > ev-marshal.h
@@ -164,6 +173,14 @@ ev-marshal.c: $(srcdir)/ev-marshal.list
 
 ev-resources.c: evince.gresource.xml Makefile $(shell $(GLIB_COMPILE_RESOURCES) --generate-dependencies --sourcedir $(srcdir) $(srcdir)/evince.gresource.xml)
 	$(AM_V_GEN) XMLLINT=$(XMLLINT) $(GLIB_COMPILE_RESOURCES) --target $@ --sourcedir $(srcdir) --generate-source --c-name ev $<
+
+ev-gdbus-generated.c ev-gdbus-generated.h: ev-gdbus.xml Makefile
+	$(AM_V_GEN) $(GDBUS_CODEGEN) \
+			--interface-prefix=org.gnome.evince \
+			--c-namespace=Ev \
+			--c-generate-object-manager \
+			--generate-c-code ev-gdbus-generated \
+			$<
 
 DISTCLEANFILES = $(BUILT_SOURCES)
 

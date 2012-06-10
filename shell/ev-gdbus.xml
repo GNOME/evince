@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Introspection 0.1//EN"
+                      "http://www.freedesktop.org/software/dbus/introspection.dtd">
+<node>
+  <interface name='org.gnome.evince.Application'>
+    <annotation name="org.gtk.GDBus.C.Name" value="EvinceApplication" />
+    <method name='Reload'>
+      <arg type='a{sv}' name='args' direction='in'/>
+      <arg type='u' name='timestamp' direction='in'/>
+    </method>
+    <method name='GetWindowList'>
+      <arg type='ao' name='window_list' direction='out'/>
+    </method>
+  </interface>
+</node>

@@ -46,6 +46,7 @@
 #include "ev-stock-icons.h"
 
 #ifdef ENABLE_DBUS
+#include "ev-gdbus-generated.h"
 #include "ev-media-player-keys.h"
 #endif /* ENABLE_DBUS */
 
@@ -57,8 +58,8 @@ struct _EvApplication {
 	gchar *dot_dir;
 
 #ifdef ENABLE_DBUS
-	GDBusConnection *connection;
-        guint registration_id;
+        GDBusConnection *connection;
+        EvEvinceApplication *skeleton;
 	EvMediaPlayerKeys *keys;
 	gboolean doc_registered;
 #endif
@@ -636,6 +637,9 @@ ev_application_open_uri_in_window (EvApplication  *application,
 	GdkWindow *gdk_window;
 #endif
 
+        if (uri == NULL)
+                uri = application->uri;
+
 	if (screen) {
 		ev_stock_icons_set_screen (screen);
 		gtk_window_set_screen (GTK_WINDOW (ev_window), screen);
@@ -763,115 +767,97 @@ ev_application_open_window (EvApplication *application,
 }
 
 #ifdef ENABLE_DBUS
-static void
-method_call_cb (GDBusConnection       *connection,
-                const gchar           *sender,
-                const gchar           *object_path,
-                const gchar           *interface_name,
-                const gchar           *method_name,
-                GVariant              *parameters,
-                GDBusMethodInvocation *invocation,
-                gpointer               user_data)
+static gboolean
+handle_get_window_list_cb (EvEvinceApplication   *object,
+                           GDBusMethodInvocation *invocation,
+                           EvApplication         *application)
 {
-        EvApplication   *application = EV_APPLICATION (user_data);
-	GList           *windows, *l;
-        guint            timestamp;
-        GVariantIter    *iter;
+        GList     *windows, *l;
+        GPtrArray *paths;
+
+        paths = g_ptr_array_new ();
+
+        windows = ev_application_get_windows (application);
+        for (l = windows; l; l = g_list_next (l)) {
+                EvWindow *window = (EvWindow *)l->data;
+
+                g_ptr_array_add (paths, (gpointer) ev_window_get_dbus_object_path (window));
+        }
+        g_list_free (windows);
+
+        g_ptr_array_add (paths, NULL);
+        ev_evince_application_complete_get_window_list (object, invocation,
+                                                        (const char * const *) paths->pdata);
+
+        g_ptr_array_free (paths, TRUE);
+
+        return TRUE;
+}
+
+static gboolean
+handle_reload_cb (EvEvinceApplication   *object,
+                  GDBusMethodInvocation *invocation,
+                  GVariant              *args,
+                  guint                  timestamp,
+                  EvApplication         *application)
+{
+        GList           *windows, *l;
+        GVariantIter     iter;
         const gchar     *key;
         GVariant        *value;
         GdkDisplay      *display = NULL;
         int              screen_number = 0;
-	EvLinkDest      *dest = NULL;
-	EvWindowRunMode  mode = EV_WINDOW_MODE_NORMAL;
-	const gchar     *search_string = NULL;
-	GdkScreen       *screen = NULL;
+        EvLinkDest      *dest = NULL;
+        EvWindowRunMode  mode = EV_WINDOW_MODE_NORMAL;
+        const gchar     *search_string = NULL;
+        GdkScreen       *screen = NULL;
 
-	if (g_strcmp0 (method_name, "Reload") == 0) {
-		g_variant_get (parameters, "(a{sv}u)", &iter, &timestamp);
+        g_variant_iter_init (&iter, args);
 
-		while (g_variant_iter_loop (iter, "{&sv}", &key, &value)) {
-			if (strcmp (key, "display") == 0 && g_variant_classify (value) == G_VARIANT_CLASS_STRING) {
-				display = ev_display_open_if_needed (g_variant_get_string (value, NULL));
-			} else if (strcmp (key, "screen") == 0 && g_variant_classify (value) == G_VARIANT_CLASS_INT32) {
-				screen_number = g_variant_get_int32 (value);
-			} else if (strcmp (key, "mode") == 0 && g_variant_classify (value) == G_VARIANT_CLASS_UINT32) {
-                                mode = g_variant_get_uint32 (value);
-			} else if (strcmp (key, "page-label") == 0 && g_variant_classify (value) == G_VARIANT_CLASS_STRING) {
-				dest = ev_link_dest_new_page_label (g_variant_get_string (value, NULL));
-			} else if (strcmp (key, "named-dest") == 0 && g_variant_classify (value) == G_VARIANT_CLASS_STRING) {
-				dest = ev_link_dest_new_named (g_variant_get_string (value, NULL));
-                        } else if (strcmp (key, "page-index") == 0 && g_variant_classify (value) == G_VARIANT_CLASS_UINT32) {
-                                dest = ev_link_dest_new_page (g_variant_get_uint32 (value));
-			} else if (strcmp (key, "find-string") == 0 && g_variant_classify (value) == G_VARIANT_CLASS_STRING) {
-				search_string = g_variant_get_string (value, NULL);
-			}
-		}
-		g_variant_iter_free (iter);
+        while (g_variant_iter_loop (&iter, "{&sv}", &key, &value)) {
+                if (strcmp (key, "display") == 0 && g_variant_classify (value) == G_VARIANT_CLASS_STRING) {
+                        display = ev_display_open_if_needed (g_variant_get_string (value, NULL));
+                } else if (strcmp (key, "screen") == 0 && g_variant_classify (value) == G_VARIANT_CLASS_INT32) {
+                        screen_number = g_variant_get_int32 (value);
+                } else if (strcmp (key, "mode") == 0 && g_variant_classify (value) == G_VARIANT_CLASS_UINT32) {
+                        mode = g_variant_get_uint32 (value);
+                } else if (strcmp (key, "page-label") == 0 && g_variant_classify (value) == G_VARIANT_CLASS_STRING) {
+                        dest = ev_link_dest_new_page_label (g_variant_get_string (value, NULL));
+                } else if (strcmp (key, "named-dest") == 0 && g_variant_classify (value) == G_VARIANT_CLASS_STRING) {
+                        dest = ev_link_dest_new_named (g_variant_get_string (value, NULL));
+                } else if (strcmp (key, "page-index") == 0 && g_variant_classify (value) == G_VARIANT_CLASS_UINT32) {
+                        dest = ev_link_dest_new_page (g_variant_get_uint32 (value));
+                } else if (strcmp (key, "find-string") == 0 && g_variant_classify (value) == G_VARIANT_CLASS_STRING) {
+                        search_string = g_variant_get_string (value, NULL);
+                }
+        }
 
-		if (display != NULL &&
-		    screen_number >= 0 &&
-		    screen_number < gdk_display_get_n_screens (display))
-			screen = gdk_display_get_screen (display, screen_number);
-		else
-			screen = gdk_screen_get_default ();
+        if (display != NULL &&
+                        screen_number >= 0 &&
+            screen_number < gdk_display_get_n_screens (display))
+                screen = gdk_display_get_screen (display, screen_number);
+        else
+                screen = gdk_screen_get_default ();
 
-		windows = ev_application_get_windows (application);
-		for (l = windows; l != NULL; l = g_list_next (l)) {
-			EvWindow *ev_window = EV_WINDOW (l->data);
+        windows = ev_application_get_windows (application);
+        for (l = windows; l != NULL; l = g_list_next (l)) {
+                EvWindow *ev_window = EV_WINDOW (l->data);
 
-			ev_application_open_uri_in_window (application, application->uri,
-							   ev_window,
-							   screen, dest, mode,
-							   search_string,
-							   timestamp);
-		}
-		g_list_free (windows);
+                ev_application_open_uri_in_window (application, NULL,
+                                                   ev_window,
+                                                   screen, dest, mode,
+                                                   search_string,
+                                                   timestamp);
+        }
+        g_list_free (windows);
 
-		if (dest)
-			g_object_unref (dest);
+        if (dest)
+                g_object_unref (dest);
 
-		g_dbus_method_invocation_return_value (invocation, g_variant_new ("()"));
-	} else if (g_strcmp0 (method_name, "GetWindowList") == 0) {
-		GList          *windows = ev_application_get_windows (application);
-		GVariantBuilder builder;
-		GList	       *l;
+        ev_evince_application_complete_reload (object, invocation);
 
-		g_variant_builder_init (&builder, G_VARIANT_TYPE ("(ao)"));
-		g_variant_builder_open (&builder, G_VARIANT_TYPE ("ao"));
-
-		for (l = windows; l; l = g_list_next (l)) {
-			EvWindow *window = (EvWindow *)l->data;
-
-			g_variant_builder_add (&builder, "o", ev_window_get_dbus_object_path (window));
-		}
-
-		g_variant_builder_close (&builder);
-		g_list_free (windows);
-
-		g_dbus_method_invocation_return_value (invocation, g_variant_builder_end (&builder));
-	}
+        return TRUE;
 }
-
-static const char introspection_xml[] =
-        "<node>"
-          "<interface name='org.gnome.evince.Application'>"
-            "<method name='Reload'>"
-              "<arg type='a{sv}' name='args' direction='in'/>"
-              "<arg type='u' name='timestamp' direction='in'/>"
-            "</method>"
-            "<method name='GetWindowList'>"
-              "<arg type='ao' name='window_list' direction='out'/>"
-            "</method>"
-          "</interface>"
-        "</node>";
-
-static const GDBusInterfaceVTable interface_vtable = {
-	method_call_cb,
-	NULL,
-	NULL
-};
-
-static GDBusNodeInfo *introspection_data;
 #endif /* ENABLE_DBUS */
 
 void
@@ -1047,19 +1033,15 @@ ev_application_shutdown (EvApplication *application)
 		g_object_unref (application->keys);
 		application->keys = NULL;
 	}
-        if (application->registration_id != 0) {
-                g_dbus_connection_unregister_object (application->connection,
-                                                     application->registration_id);
-                application->registration_id = 0;
+        if (application->skeleton != NULL) {
+                g_dbus_interface_skeleton_unexport (G_DBUS_INTERFACE_SKELETON (application->skeleton));
+                g_object_unref (application->skeleton);
+                application->skeleton = NULL;
         }
         if (application->connection != NULL) {
                 g_object_unref (application->connection);
                 application->connection = NULL;
         }
-	if (introspection_data) {
-		g_dbus_node_info_ref (introspection_data);
-		introspection_data = NULL;
-	}
 #endif /* ENABLE_DBUS */
 	
         g_free (application->dot_dir);
@@ -1095,17 +1077,22 @@ ev_application_init (EvApplication *ev_application)
 #ifdef ENABLE_DBUS
         ev_application->connection = g_bus_get_sync (G_BUS_TYPE_SESSION, NULL, &error);
         if (ev_application->connection != NULL) {
-                introspection_data = g_dbus_node_info_new_for_xml (introspection_xml, NULL);
-                g_assert (introspection_data != NULL);
+                EvEvinceApplication *skeleton;
 
-                ev_application->registration_id =
-                    g_dbus_connection_register_object (ev_application->connection,
-                                                       APPLICATION_DBUS_OBJECT_PATH,
-                                                       introspection_data->interfaces[0],
-                                                       &interface_vtable,
-                                                       ev_application, NULL,
-                                                       &error);
-                if (ev_application->registration_id == 0) {
+                skeleton = ev_evince_application_skeleton_new ();
+                if (g_dbus_interface_skeleton_export (G_DBUS_INTERFACE_SKELETON (skeleton),
+                                                      ev_application->connection,
+                                                      APPLICATION_DBUS_OBJECT_PATH,
+                                                      &error)) {
+                        ev_application->skeleton = skeleton;
+                        g_signal_connect (skeleton, "handle-get-window-list",
+                                          G_CALLBACK (handle_get_window_list_cb),
+                                          ev_application);
+                        g_signal_connect (skeleton, "handle-reload",
+                                          G_CALLBACK (handle_reload_cb),
+                                          ev_application);
+                } else {
+                        g_object_unref (skeleton);
                         g_printerr ("Failed to register bus object: %s\n", error->message);
                         g_error_free (error);
                 }

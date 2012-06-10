@@ -208,6 +208,12 @@ if test -z "$XMLLINT"; then
   AC_MSG_ERROR([xmllint not found])
 fi
 
+AC_ARG_VAR([GDBUS_CODEGEN],[the gdbus-codegen programme])
+AC_PATH_PROG([GDBUS_CODEGEN],[gdbus-codegen],[])
+if test -z "$GDBUS_CODEGEN"; then
+  AC_MSG_ERROR([gdbus-codegen not found])
+fi
+
 # *********
 # SM client
 # *********
