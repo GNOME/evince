@@ -1556,22 +1556,33 @@ pdf_document_document_images_iface_init (EvDocumentImagesInterface *iface)
 }
 
 static GList *
-pdf_document_find_find_text (EvDocumentFind *document_find,
-			     EvPage         *page,
-			     const gchar    *text,
-			     gboolean        case_sensitive)
+pdf_document_find_find_text_with_options (EvDocumentFind *document_find,
+					  EvPage         *page,
+					  const gchar    *text,
+					  EvFindOptions   options)
 {
 	GList *matches, *l;
 	PopplerPage *poppler_page;
 	gdouble height;
 	GList *retval = NULL;
+#ifdef HAVE_POPPLER_PAGE_FIND_TEXT_WITH_OPTIONS
+	guint find_flags = 0;
+#endif
 
 	g_return_val_if_fail (POPPLER_IS_PAGE (page->backend_page), NULL);
 	g_return_val_if_fail (text != NULL, NULL);
 
 	poppler_page = POPPLER_PAGE (page->backend_page);
-	
+
+#ifdef HAVE_POPPLER_PAGE_FIND_TEXT_WITH_OPTIONS
+	if (options & EV_FIND_CASE_SENSITIVE)
+		find_flags |= POPPLER_FIND_CASE_SENSITIVE;
+	if (options & EV_FIND_WHOLE_WORDS_ONLY)
+		find_flags |= POPPLER_FIND_WHOLE_WORDS_ONLY;
+	matches = poppler_page_find_text_with_options (poppler_page, text, (PopplerFindFlags)find_flags);
+#else
 	matches = poppler_page_find_text (poppler_page, text);
+#endif
 	if (!matches)
 		return NULL;
 
@@ -1596,10 +1607,38 @@ pdf_document_find_find_text (EvDocumentFind *document_find,
 	return g_list_reverse (retval);
 }
 
+static GList *
+pdf_document_find_find_text (EvDocumentFind *document_find,
+			     EvPage         *page,
+			     const gchar    *text,
+			     gboolean        case_sensitive)
+{
+	guint options = 0;
+
+	if (case_sensitive)
+		options |= EV_FIND_CASE_SENSITIVE;
+
+	return pdf_document_find_find_text_with_options (document_find, page, text, (EvFindOptions)options);
+}
+
+static EvFindOptions
+pdf_document_find_get_supported_options (EvDocumentFind *document_find)
+{
+#ifdef HAVE_POPPLER_PAGE_FIND_TEXT_WITH_OPTIONS
+	return (EvFindOptions)(EV_FIND_CASE_SENSITIVE | EV_FIND_WHOLE_WORDS_ONLY);
+#else
+	return 0;
+#endif
+}
+
 static void
 pdf_document_find_iface_init (EvDocumentFindInterface *iface)
 {
         iface->find_text = pdf_document_find_find_text;
+#ifdef HAVE_POPPLER_PAGE_FIND_TEXT_WITH_OPTIONS
+	iface->find_text_with_options = pdf_document_find_find_text_with_options;
+#endif
+	iface->get_supported_options = pdf_document_find_get_supported_options;
 }
 
 static void

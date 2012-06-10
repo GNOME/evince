@@ -488,7 +488,7 @@ if test "x$enable_pdf" = "xyes"; then
     fi 
     evince_save_LIBS=$LIBS
     LIBS="$LIBS $POPPLER_LIBS"
-    AC_CHECK_FUNCS(poppler_document_new_from_stream poppler_document_new_from_gfile)
+    AC_CHECK_FUNCS(poppler_document_new_from_stream poppler_document_new_from_gfile poppler_page_find_text_with_options)
     LIBS=$evince_save_LIBS
 fi
 
