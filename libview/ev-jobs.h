@@ -390,6 +390,7 @@ struct _EvJobFind
 	gchar *text;
 	gboolean case_sensitive;
 	gboolean has_results;
+        EvFindOptions options;
 };
 
 struct _EvJobFindClass
@@ -540,6 +541,9 @@ EvJob          *ev_job_find_new           (EvDocument      *document,
 					   gint             n_pages,
 					   const gchar     *text,
 					   gboolean         case_sensitive);
+void            ev_job_find_set_options   (EvJobFind       *job,
+                                           EvFindOptions    options);
+EvFindOptions   ev_job_find_get_options   (EvJobFind       *job);
 gint            ev_job_find_get_n_results (EvJobFind       *job,
 					   gint             pages);
 gdouble         ev_job_find_get_progress  (EvJobFind       *job);

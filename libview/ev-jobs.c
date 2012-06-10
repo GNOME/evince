@@ -1542,8 +1542,8 @@ ev_job_find_run (EvJob *job)
 #endif
 
 	ev_page = ev_document_get_page (job->document, job_find->current_page);
-	matches = ev_document_find_find_text (find, ev_page, job_find->text,
-					      job_find->case_sensitive);
+	matches = ev_document_find_find_text_with_options (find, ev_page, job_find->text,
+                                                           job_find->options);
 	g_object_unref (ev_page);
 	
 	ev_document_doc_mutex_unlock ();
@@ -1603,10 +1603,28 @@ ev_job_find_new (EvDocument  *document,
 	job->n_pages = n_pages;
 	job->pages = g_new0 (GList *, n_pages);
 	job->text = g_strdup (text);
+        /* Keep for compatibility */
 	job->case_sensitive = case_sensitive;
 	job->has_results = FALSE;
+        if (case_sensitive)
+                job->options |= EV_FIND_CASE_SENSITIVE;
 
 	return EV_JOB (job);
+}
+
+void
+ev_job_find_set_options (EvJobFind     *job,
+                         EvFindOptions  options)
+{
+        job->options = options;
+        /* Keep compatibility */
+        job->case_sensitive = options & EV_FIND_CASE_SENSITIVE;
+}
+
+EvFindOptions
+ev_job_find_get_options (EvJobFind *job)
+{
+        return job->options;
 }
 
 gint
