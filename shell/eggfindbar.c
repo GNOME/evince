@@ -34,13 +34,15 @@ struct _EggFindBarPrivate
   GtkToolItem *previous_button;
   GtkToolItem *status_separator;
   GtkToolItem *status_item;
-  GtkToolItem *case_button;
 
   GtkWidget *find_entry;
   GtkWidget *status_label;
 
   gulong set_focus_handler;
   guint case_sensitive : 1;
+  guint case_sensitive_enabled : 1;
+  guint whole_words_only : 1;
+  guint whole_words_only_enabled : 1;
 };
 
 #define EGG_FIND_BAR_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), EGG_TYPE_FIND_BAR, EggFindBarPrivate))
@@ -48,7 +50,8 @@ struct _EggFindBarPrivate
 enum {
     PROP_0,
     PROP_SEARCH_STRING,
-    PROP_CASE_SENSITIVE
+    PROP_CASE_SENSITIVE,
+    PROP_WHOLE_WORDS_ONLY
 };
 
 static void egg_find_bar_finalize      (GObject        *object);
@@ -162,6 +165,19 @@ egg_find_bar_class_init (EggFindBarClass *klass)
                                                          FALSE,
                                                          G_PARAM_READWRITE));
 
+  /**
+   * EggFindBar:whole-words-only:
+   *
+   * Whether search whole words only
+   */
+  g_object_class_install_property (object_class,
+                                   PROP_WHOLE_WORDS_ONLY,
+                                   g_param_spec_boolean ("whole-words-only",
+                                                         "Whole words only",
+                                                         "Whether search whole words only",
+                                                         FALSE,
+                                                         G_PARAM_READWRITE));
+
   g_type_class_add_private (object_class, sizeof (EggFindBarPrivate));
 
   binding_set = gtk_binding_set_by_class (klass);
@@ -225,13 +241,21 @@ previous_clicked_callback (GtkButton *button,
 }
 
 static void
-case_sensitive_toggled_callback (GtkCheckButton *button,
-                                 void           *data)
+case_sensitive_toggled_callback (GtkCheckMenuItem *menu_item,
+                                 void             *data)
 {
   EggFindBar *find_bar = EGG_FIND_BAR (data);
 
-  egg_find_bar_set_case_sensitive (find_bar,
-                                   gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (button)));
+  egg_find_bar_set_case_sensitive (find_bar, gtk_check_menu_item_get_active (menu_item));
+}
+
+static void
+whole_words_only_toggled_callback (GtkCheckMenuItem *menu_item,
+                                   void             *data)
+{
+  EggFindBar *find_bar = EGG_FIND_BAR (data);
+
+  egg_find_bar_set_whole_words_only (find_bar, gtk_check_menu_item_get_active (menu_item));
 }
 
 static void
@@ -242,6 +266,76 @@ entry_activate_callback (GtkEntry *entry,
 
   if (find_bar->priv->search_string != NULL)
     egg_find_bar_emit_next (find_bar);
+}
+
+static void
+egg_find_bar_entry_populate_popup (EggFindBar *find_bar,
+                                   GtkWidget  *menu)
+{
+  GtkWidget *menu_item;
+
+  if (find_bar->priv->whole_words_only_enabled)
+    {
+      menu_item = gtk_check_menu_item_new_with_mnemonic (_("_Whole Words Only"));
+      g_signal_connect (menu_item, "toggled",
+                        G_CALLBACK (whole_words_only_toggled_callback),
+                        find_bar);
+      gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (menu_item),
+                                      find_bar->priv->whole_words_only);
+      gtk_menu_shell_prepend (GTK_MENU_SHELL (menu), menu_item);
+      gtk_widget_show (menu_item);
+    }
+
+  if (find_bar->priv->case_sensitive_enabled)
+    {
+      menu_item = gtk_check_menu_item_new_with_mnemonic (_("C_ase Sensitive"));
+      g_signal_connect (menu_item, "toggled",
+                        G_CALLBACK (case_sensitive_toggled_callback),
+                        find_bar);
+      gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (menu_item),
+                                      find_bar->priv->case_sensitive);
+      gtk_menu_shell_prepend (GTK_MENU_SHELL (menu), menu_item);
+      gtk_widget_show (menu_item);
+    }
+}
+
+static void
+entry_icon_release_callback (GtkEntry            *entry,
+                             GtkEntryIconPosition icon_pos,
+                             GdkEventButton      *event,
+                             void                *data)
+{
+  EggFindBar *find_bar = EGG_FIND_BAR (data);
+  GtkWidget  *menu;
+
+  if (!find_bar->priv->case_sensitive_enabled &&
+      !find_bar->priv->whole_words_only_enabled)
+    return;
+
+  menu = gtk_menu_new ();
+  egg_find_bar_entry_populate_popup (find_bar, menu);
+  gtk_widget_show (menu);
+
+  gtk_menu_popup (GTK_MENU (menu), NULL, NULL, NULL, NULL,
+                  event->button, event->time);
+}
+
+static void
+entry_populate_popup_callback (GtkEntry *entry,
+                               GtkMenu  *menu,
+                               void     *data)
+{
+  EggFindBar *find_bar = EGG_FIND_BAR (data);
+  GtkWidget  *separator;
+
+  if (!find_bar->priv->case_sensitive_enabled &&
+      !find_bar->priv->whole_words_only_enabled)
+    return;
+
+  separator = gtk_separator_menu_item_new ();
+  gtk_menu_shell_prepend (GTK_MENU_SHELL (menu), separator);
+  gtk_widget_show (separator);
+  egg_find_bar_entry_populate_popup (find_bar, GTK_WIDGET (menu));
 }
 
 static void
@@ -314,6 +408,17 @@ egg_find_bar_init (EggFindBar *find_bar)
   gtk_entry_set_max_length (GTK_ENTRY (priv->find_entry), 512);
   gtk_label_set_mnemonic_widget (GTK_LABEL (label), priv->find_entry);
 
+  /* Find options */
+  gtk_entry_set_icon_from_stock (GTK_ENTRY (priv->find_entry),
+                                 GTK_ENTRY_ICON_PRIMARY,
+                                 GTK_STOCK_FIND);
+  gtk_entry_set_icon_activatable (GTK_ENTRY (priv->find_entry),
+                                  GTK_ENTRY_ICON_PRIMARY,
+                                  TRUE);
+  gtk_entry_set_icon_tooltip_text (GTK_ENTRY (priv->find_entry),
+                                   GTK_ENTRY_ICON_PRIMARY,
+                                   _("Find options"));
+
   /* Prev */
   arrow = gtk_arrow_new (GTK_ARROW_LEFT, GTK_SHADOW_NONE);
   priv->previous_button = gtk_tool_button_new (arrow, Q_("Find Pre_vious"));
@@ -333,13 +438,6 @@ egg_find_bar_init (EggFindBar *find_bar)
   /* Separator*/
   priv->status_separator = gtk_separator_tool_item_new();
 
-  /* Case button */
-  priv->case_button = gtk_toggle_tool_button_new ();
-  g_object_set (G_OBJECT (priv->case_button), "label", _("C_ase Sensitive"), NULL);
-  gtk_tool_item_set_is_important (priv->case_button, TRUE);
-  gtk_widget_set_tooltip_text (GTK_WIDGET (priv->case_button),
-			       _("Toggle case sensitive search"));
-
   /* Status */
   priv->status_item = gtk_tool_item_new();
   gtk_tool_item_set_expand (priv->status_item, TRUE);
@@ -355,14 +453,17 @@ egg_find_bar_init (EggFindBar *find_bar)
   g_signal_connect (priv->find_entry, "activate",
                     G_CALLBACK (entry_activate_callback),
                     find_bar);
+  g_signal_connect (priv->find_entry, "icon-release",
+                    G_CALLBACK (entry_icon_release_callback),
+                    find_bar);
+  g_signal_connect (priv->find_entry, "populate-popup",
+                    G_CALLBACK (entry_populate_popup_callback),
+                    find_bar);
   g_signal_connect (priv->next_button, "clicked",
                     G_CALLBACK (next_clicked_callback),
                     find_bar);
   g_signal_connect (priv->previous_button, "clicked",
                     G_CALLBACK (previous_clicked_callback),
-                    find_bar);
-  g_signal_connect (priv->case_button, "toggled",
-                    G_CALLBACK (case_sensitive_toggled_callback),
                     find_bar);
 
   gtk_box_pack_start (GTK_BOX (box), label, FALSE, FALSE, 0);
@@ -372,7 +473,6 @@ egg_find_bar_init (EggFindBar *find_bar)
   gtk_toolbar_insert (GTK_TOOLBAR (find_bar), item, -1);
   gtk_toolbar_insert (GTK_TOOLBAR (find_bar), priv->previous_button, -1);
   gtk_toolbar_insert (GTK_TOOLBAR (find_bar), priv->next_button, -1);
-  gtk_toolbar_insert (GTK_TOOLBAR (find_bar), priv->case_button, -1);
   gtk_toolbar_insert (GTK_TOOLBAR (find_bar), priv->status_separator, -1);
   gtk_container_add  (GTK_CONTAINER (priv->status_item), priv->status_label);
   gtk_toolbar_insert (GTK_TOOLBAR (find_bar), priv->status_item, -1);
@@ -412,6 +512,9 @@ egg_find_bar_set_property (GObject      *object,
     case PROP_CASE_SENSITIVE:
       egg_find_bar_set_case_sensitive (find_bar, g_value_get_boolean (value));
       break;
+    case PROP_WHOLE_WORDS_ONLY:
+      egg_find_bar_set_whole_words_only (find_bar, g_value_get_boolean (value));
+      break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
       break;
@@ -434,6 +537,9 @@ egg_find_bar_get_property (GObject    *object,
       break;
     case PROP_CASE_SENSITIVE:
       g_value_set_boolean (value, priv->case_sensitive);
+      break;
+    case PROP_WHOLE_WORDS_ONLY:
+      g_value_set_boolean (value, priv->whole_words_only);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -617,12 +723,7 @@ egg_find_bar_set_case_sensitive (EggFindBar *find_bar,
   if (priv->case_sensitive != case_sensitive)
     {
       priv->case_sensitive = case_sensitive;
-
-      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->case_button),
-                                    priv->case_sensitive);
-
-      g_object_notify (G_OBJECT (find_bar),
-                       "case_sensitive");
+      g_object_notify (G_OBJECT (find_bar), "case_sensitive");
     }
 
   g_object_thaw_notify (G_OBJECT (find_bar));
@@ -646,7 +747,96 @@ egg_find_bar_get_case_sensitive (EggFindBar *find_bar)
 
   priv = (EggFindBarPrivate *)find_bar->priv;
 
+  if (!priv->case_sensitive_enabled)
+    return FALSE;
+
   return priv->case_sensitive;
+}
+
+/**
+ * egg_find_bar_enable_case_sensitive:
+ *
+ * Enable or disable the case sensitive option
+ */
+void
+egg_find_bar_enable_case_sensitive (EggFindBar *find_bar,
+                                    gboolean    enable)
+{
+  EggFindBarPrivate *priv;
+
+  g_return_if_fail (EGG_IS_FIND_BAR (find_bar));
+
+  priv = (EggFindBarPrivate *)find_bar->priv;
+
+  priv->case_sensitive_enabled = !!enable;
+}
+
+/**
+ * egg_find_bar_set_whole_words_only:
+ *
+ * Sets whether search whole words only
+ */
+void
+egg_find_bar_set_whole_words_only (EggFindBar *find_bar,
+                                   gboolean    whole_words_only)
+{
+  EggFindBarPrivate *priv;
+
+  g_return_if_fail (EGG_IS_FIND_BAR (find_bar));
+
+  priv = (EggFindBarPrivate *)find_bar->priv;
+
+  g_object_freeze_notify (G_OBJECT (find_bar));
+
+  whole_words_only = whole_words_only != FALSE;
+
+  if (priv->whole_words_only != whole_words_only)
+    {
+      priv->whole_words_only = whole_words_only;
+      g_object_notify (G_OBJECT (find_bar), "whole-words-only");
+    }
+
+  g_object_thaw_notify (G_OBJECT (find_bar));
+}
+
+/**
+ * egg_find_bar_get_whole_words_only:
+ *
+ * Gets whether search whole words only
+ *
+ * Returns: %TRUE if only whole words are searched
+ */
+gboolean
+egg_find_bar_get_whole_words_only (EggFindBar *find_bar)
+{
+  EggFindBarPrivate *priv;
+
+  g_return_val_if_fail (EGG_IS_FIND_BAR (find_bar), FALSE);
+
+  priv = (EggFindBarPrivate *)find_bar->priv;
+
+  if (!priv->whole_words_only_enabled)
+    return FALSE;
+
+  return priv->whole_words_only;
+}
+
+/**
+ * egg_find_bar_enable_whole_words_only:
+ *
+ * Enable or disable the whole words only option
+ */
+void
+egg_find_bar_enable_whole_words_only (EggFindBar *find_bar,
+                                      gboolean    enable)
+{
+  EggFindBarPrivate *priv;
+
+  g_return_if_fail (EGG_IS_FIND_BAR (find_bar));
+
+  priv = (EggFindBarPrivate *)find_bar->priv;
+
+  priv->whole_words_only_enabled = !!enable;
 }
 
 /**

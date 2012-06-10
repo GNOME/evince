@@ -68,6 +68,13 @@ const char* egg_find_bar_get_search_string       (EggFindBar *find_bar);
 void        egg_find_bar_set_case_sensitive      (EggFindBar *find_bar,
                                                   gboolean    case_sensitive);
 gboolean    egg_find_bar_get_case_sensitive      (EggFindBar *find_bar);
+void        egg_find_bar_enable_case_sensitive   (EggFindBar *find_bar,
+                                                  gboolean    enable);
+void        egg_find_bar_set_whole_words_only    (EggFindBar *find_bar,
+                                                  gboolean    whole_words_only);
+gboolean    egg_find_bar_get_whole_words_only    (EggFindBar *find_bar);
+void        egg_find_bar_enable_whole_words_only (EggFindBar *find_bar,
+                                                  gboolean    enable);
 void        egg_find_bar_get_all_matches_color   (EggFindBar *find_bar,
                                                   GdkColor   *color);
 void        egg_find_bar_get_current_match_color (EggFindBar *find_bar,
