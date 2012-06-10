@@ -645,10 +645,17 @@ djvu_document_find_find_text (EvDocumentFind   *document,
 	return matches;
 }
 
+static EvFindOptions
+djvu_document_find_get_supported_options (EvDocumentFind *document)
+{
+	return EV_FIND_CASE_SENSITIVE;
+}
+
 static void
 djvu_document_find_iface_init (EvDocumentFindInterface *iface)
 {
         iface->find_text = djvu_document_find_find_text;
+	iface->get_supported_options = djvu_document_find_get_supported_options;
 }
 
 static EvMappingList *
