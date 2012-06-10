@@ -43,22 +43,38 @@ G_BEGIN_DECLS
 typedef struct _EvDocumentFind	        EvDocumentFind;
 typedef struct _EvDocumentFindInterface EvDocumentFindInterface;
 
+typedef enum {
+	EV_FIND_DEFAULT          = 0,
+	EV_FIND_CASE_SENSITIVE   = 1 << 0,
+	EV_FIND_WHOLE_WORDS_ONLY = 1 << 1
+} EvFindOptions;
+
 struct _EvDocumentFindInterface
 {
 	GTypeInterface base_iface;
 
         /* Methods */
-	GList 	*(* find_text)     (EvDocumentFind *document_find,
-				    EvPage         *page,
-				    const gchar    *text,
-				    gboolean        case_sensitive);
+	GList 	     *(* find_text)              (EvDocumentFind *document_find,
+						  EvPage         *page,
+						  const gchar    *text,
+						  gboolean        case_sensitive);
+	GList        *(* find_text_with_options) (EvDocumentFind *document_find,
+						  EvPage         *page,
+						  const gchar    *text,
+						  EvFindOptions   options);
+	EvFindOptions (*get_supported_options)   (EvDocumentFind *document_find);
 };
 
-GType  ev_document_find_get_type  (void) G_GNUC_CONST;
-GList *ev_document_find_find_text (EvDocumentFind *document_find,
-				   EvPage         *page,
-				   const gchar    *text,
-				   gboolean        case_sensitive);
+GType         ev_document_find_get_type               (void) G_GNUC_CONST;
+GList        *ev_document_find_find_text              (EvDocumentFind *document_find,
+						       EvPage         *page,
+						       const gchar    *text,
+						       gboolean        case_sensitive);
+GList        *ev_document_find_find_text_with_options (EvDocumentFind *document_find,
+						       EvPage         *page,
+						       const gchar    *text,
+						       EvFindOptions   options);
+EvFindOptions ev_document_find_get_supported_options  (EvDocumentFind *document_find);
 
 G_END_DECLS
 

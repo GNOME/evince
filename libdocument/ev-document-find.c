@@ -40,3 +40,26 @@ ev_document_find_find_text (EvDocumentFind *document_find,
 	return iface->find_text (document_find, page, text, case_sensitive);
 }
 
+GList *
+ev_document_find_find_text_with_options (EvDocumentFind *document_find,
+					 EvPage         *page,
+					 const gchar    *text,
+					 EvFindOptions   options)
+{
+	EvDocumentFindInterface *iface = EV_DOCUMENT_FIND_GET_IFACE (document_find);
+
+	if (iface->find_text_with_options)
+		return iface->find_text_with_options (document_find, page, text, options);
+
+	return ev_document_find_find_text (document_find, page, text, options & EV_FIND_CASE_SENSITIVE);
+}
+
+EvFindOptions
+ev_document_find_get_supported_options (EvDocumentFind *document_find)
+{
+	EvDocumentFindInterface *iface = EV_DOCUMENT_FIND_GET_IFACE (document_find);
+
+	if (iface->get_supported_options)
+		return iface->get_supported_options (document_find);
+	return 0;
+}
