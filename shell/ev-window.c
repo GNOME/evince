@@ -1486,6 +1486,16 @@ ev_window_setup_document (EvWindow *ev_window)
 	info = ev_document_get_info (document);
 	update_document_mode (ev_window, info->mode);
 
+	if (EV_IS_DOCUMENT_FIND (document)) {
+		EvFindOptions options;
+
+		options = ev_document_find_get_supported_options (EV_DOCUMENT_FIND (document));
+		egg_find_bar_enable_case_sensitive (EGG_FIND_BAR (ev_window->priv->find_bar),
+						    options & EV_FIND_CASE_SENSITIVE);
+		egg_find_bar_enable_whole_words_only (EGG_FIND_BAR (ev_window->priv->find_bar),
+						      options & EV_FIND_WHOLE_WORDS_ONLY);
+	}
+
 	if (EV_WINDOW_IS_PRESENTATION (ev_window))
 		gtk_widget_grab_focus (ev_window->priv->presentation_view);
 	else
@@ -5328,11 +5338,20 @@ ev_window_search_start (EvWindow *ev_window)
 
 	ev_window_clear_find_job (ev_window);
 	if (search_string && search_string[0]) {
+		EvFindOptions options = EV_FIND_DEFAULT;
+
 		ev_window->priv->find_job = ev_job_find_new (ev_window->priv->document,
 							     ev_document_model_get_page (ev_window->priv->model),
 							     ev_document_get_n_pages (ev_window->priv->document),
 							     search_string,
-							     egg_find_bar_get_case_sensitive (find_bar));
+							     FALSE);
+
+		if (egg_find_bar_get_case_sensitive (find_bar))
+			options |= EV_FIND_CASE_SENSITIVE;
+		if (egg_find_bar_get_whole_words_only (find_bar))
+			options |= EV_FIND_WHOLE_WORDS_ONLY;
+		ev_job_find_set_options (EV_JOB_FIND (ev_window->priv->find_job), options);
+
 		g_signal_connect (ev_window->priv->find_job, "finished",
 				  G_CALLBACK (ev_window_find_job_finished_cb),
 				  ev_window);
@@ -7530,6 +7549,10 @@ ev_window_init (EvWindow *ev_window)
 			  ev_window);
 	g_signal_connect (ev_window->priv->find_bar,
 			  "notify::case-sensitive",
+			  G_CALLBACK (find_bar_search_changed_cb),
+			  ev_window);
+	g_signal_connect (ev_window->priv->find_bar,
+			  "notify::whole-words-only",
 			  G_CALLBACK (find_bar_search_changed_cb),
 			  ev_window);
 	g_signal_connect (ev_window->priv->find_bar,
