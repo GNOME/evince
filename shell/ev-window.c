@@ -96,6 +96,7 @@
 #include "ev-bookmark-action.h"
 
 #ifdef ENABLE_DBUS
+#include "ev-gdbus-generated.h"
 #include "ev-media-player-keys.h"
 #endif /* ENABLE_DBUS */
 
@@ -219,8 +220,8 @@ struct _EvWindowPrivate {
 
 #ifdef ENABLE_DBUS
 	/* DBus */
-	guint  dbus_object_id;
-	gchar *dbus_object_path;
+	EvEvinceWindow *skeleton;
+	gchar          *dbus_object_path;
 #endif
 };
 
@@ -5565,16 +5566,14 @@ ev_window_dispose (GObject *object)
 	}
 
 #ifdef ENABLE_DBUS
-	if (priv->dbus_object_id > 0) {
-		ev_window_emit_closed (window);
-		g_dbus_connection_unregister_object (ev_application_get_dbus_connection (EV_APP),
-						     priv->dbus_object_id);
-		priv->dbus_object_id = 0;
-	}
+	if (priv->skeleton != NULL) {
+                ev_window_emit_closed (window);
 
-	if (priv->dbus_object_path) {
-		g_free (priv->dbus_object_path);
-		priv->dbus_object_path = NULL;
+                g_dbus_interface_skeleton_unexport (G_DBUS_INTERFACE_SKELETON (priv->skeleton));
+                g_object_unref (priv->skeleton);
+                priv->skeleton = NULL;
+                g_free (priv->dbus_object_path);
+                priv->dbus_object_path = NULL;
 	}
 #endif /* ENABLE_DBUS */
 
@@ -7070,17 +7069,11 @@ static void
 ev_window_sync_source (EvWindow     *window,
 		       EvSourceLink *link)
 {
-	GDBusConnection *connection;
-	GError          *error = NULL;
 	guint32		 timestamp;
 	gchar		*uri_input;
 	GFile		*input_gfile;
 
-	if (window->priv->dbus_object_id <= 0)
-		return;
-
-	connection = ev_application_get_dbus_connection (EV_APP);
-	if (!connection)
+        if (window->priv->skeleton == NULL)
 		return;
 
 	timestamp = gtk_get_current_event_time ();
@@ -7106,143 +7099,58 @@ ev_window_sync_source (EvWindow     *window,
 	uri_input = g_file_get_uri (input_gfile);
 	g_object_unref (input_gfile);
 
-	g_dbus_connection_emit_signal (connection,
-				       NULL,
-				       window->priv->dbus_object_path,
-				       EV_WINDOW_DBUS_INTERFACE,
-				       "SyncSource",
-				       g_variant_new ("(s(ii)u)",
-						      uri_input,
-						      link->line,
-						      link->col,
-						      timestamp),
-				       &error);
+        ev_evince_window_emit_sync_source (window->priv->skeleton,
+                                           uri_input,
+                                           g_variant_new ("(ii)", link->line, link->col),
+                                           timestamp);
 	g_free (uri_input);
-	if (error) {
-		g_printerr ("Failed to emit DBus signal SyncSource: %s\n",
-			    error->message);
-		g_error_free (error);
-	}
 }
 
 static void
 ev_window_emit_closed (EvWindow *window)
 {
-	GDBusConnection *connection;
-	GError          *error = NULL;
-
-	if (window->priv->dbus_object_id <= 0)
+	if (window->priv->skeleton == NULL)
 		return;
 
-	connection = ev_application_get_dbus_connection (EV_APP);
-	if (!connection)
-		return;
-
-	g_dbus_connection_emit_signal (connection,
-				       NULL,
-				       window->priv->dbus_object_path,
-				       EV_WINDOW_DBUS_INTERFACE,
-				       "Closed",
-				       NULL,
-				       &error);
-	if (error) {
-		g_printerr ("Failed to emit DBus signal Closed: %s\n",
-			    error->message);
-		g_error_free (error);
-
-		return;
-	}
+        ev_evince_window_emit_closed (window->priv->skeleton);
 
 	/* If this is the last window call g_dbus_connection_flush_sync()
 	 * to make sure the signal is emitted.
 	 */
 	if (ev_application_get_n_windows (EV_APP) == 1)
-		g_dbus_connection_flush_sync (connection, NULL, NULL);
+		g_dbus_connection_flush_sync (ev_application_get_dbus_connection (EV_APP), NULL, NULL);
 }
 
 static void
 ev_window_emit_doc_loaded (EvWindow *window)
 {
-	GDBusConnection *connection;
-	GError          *error = NULL;
-
-	if (window->priv->dbus_object_id <= 0)
-		return;
-
-	connection = ev_application_get_dbus_connection (EV_APP);
-	if (!connection)
-		return;
-
-	g_dbus_connection_emit_signal (connection,
-				       NULL,
-				       window->priv->dbus_object_path,
-				       EV_WINDOW_DBUS_INTERFACE,
-				       "DocumentLoaded",
-				       g_variant_new("(s)", window->priv->uri),
-				       &error);
-	if (error) {
-		g_printerr ("Failed to emit DBus signal DocumentLoaded: %s\n",
-			    error->message);
-		g_error_free (error);
-
-		return;
-	}
-}
-
-static void
-method_call_cb (GDBusConnection       *connection,
-                const gchar           *sender,
-                const gchar           *object_path,
-                const gchar           *interface_name,
-                const gchar           *method_name,
-                GVariant              *parameters,
-                GDBusMethodInvocation *invocation,
-                gpointer               user_data)
-{
-        EvWindow *window = EV_WINDOW (user_data);
-
-        if (g_strcmp0 (method_name, "SyncView") != 0)
+        if (window->priv->skeleton == NULL)
                 return;
 
+        ev_evince_window_emit_document_loaded (window->priv->skeleton, window->priv->uri);
+}
+
+static gboolean
+handle_sync_view_cb (EvEvinceWindow        *object,
+		     GDBusMethodInvocation *invocation,
+		     const gchar           *source_file,
+		     GVariant              *source_point,
+		     guint                  timestamp,
+		     EvWindow              *window)
+{
 	if (window->priv->document && ev_document_has_synctex (window->priv->document)) {
 		EvSourceLink link;
-		guint32	     timestamp;
 
-		g_variant_get (parameters, "(&s(ii)u)", &link.filename, &link.line, &link.col, &timestamp);
+		link.filename = (char *) source_file;
+		g_variant_get (source_point, "(ii)", &link.line, &link.col);
 		ev_view_highlight_forward_search (EV_VIEW (window->priv->view), &link);
 		gtk_window_present_with_time (GTK_WINDOW (window), timestamp);
 	}
 
-	g_dbus_method_invocation_return_value (invocation, g_variant_new ("()"));
+	ev_evince_window_complete_sync_view (object, invocation);
+
+	return TRUE;
 }
-
-static const char introspection_xml[] =
-        "<node>"
-          "<interface name='org.gnome.evince.Window'>"
-            "<method name='SyncView'>"
-              "<arg type='s' name='source_file' direction='in'/>"
-              "<arg type='(ii)' name='source_point' direction='in'/>"
-              "<arg type='u' name='timestamp' direction='in'/>"
-            "</method>"
-	    "<signal name='SyncSource'>"
-	      "<arg type='s' name='source_file' direction='out'/>"
-	      "<arg type='(ii)' name='source_point' direction='out'/>"
-	      "<arg type='u' name='timestamp' direction='out'/>"
-	    "</signal>"
-            "<signal name='Closed'/>"
-	    "<signal name='DocumentLoaded'>"
-	      "<arg type='s' name='uri' direction='out'/>"
-	    "</signal>"
-          "</interface>"
-        "</node>";
-
-static const GDBusInterfaceVTable interface_vtable = {
-	method_call_cb,
-	NULL,
-	NULL
-};
-
-static GDBusNodeInfo *introspection_data;
 #endif /* ENABLE_DBUS */
 
 static void
@@ -7270,30 +7178,31 @@ ev_window_init (EvWindow *ev_window)
 #ifdef ENABLE_DBUS
 	connection = ev_application_get_dbus_connection (EV_APP);
         if (connection) {
-		if (!introspection_data) {
-			introspection_data = g_dbus_node_info_new_for_xml (introspection_xml, &error);
-			if (error) g_warning ("%s\n", error->message);
-		}
-                g_assert (introspection_data != NULL);
+                EvEvinceWindow *skeleton;
 
 		ev_window->priv->dbus_object_path = g_strdup_printf (EV_WINDOW_DBUS_OBJECT_PATH, window_id++);
-                ev_window->priv->dbus_object_id =
-                    g_dbus_connection_register_object (connection,
-                                                       ev_window->priv->dbus_object_path,
-                                                       introspection_data->interfaces[0],
-                                                       &interface_vtable,
-                                                       ev_window, NULL,
-                                                       &error);
-                if (ev_window->priv->dbus_object_id == 0) {
+
+                skeleton = ev_evince_window_skeleton_new ();
+                if (g_dbus_interface_skeleton_export (G_DBUS_INTERFACE_SKELETON (skeleton),
+                                                      connection,
+                                                      ev_window->priv->dbus_object_path,
+                                                      &error)) {
+                        ev_window->priv->skeleton = skeleton;
+			g_signal_connect (skeleton, "handle-sync-view",
+					  G_CALLBACK (handle_sync_view_cb),
+					  ev_window);
+                } else {
                         g_printerr ("Failed to register bus object %s: %s\n",
 				    ev_window->priv->dbus_object_path, error->message);
                         g_error_free (error);
 			g_free (ev_window->priv->dbus_object_path);
 			ev_window->priv->dbus_object_path = NULL;
 			error = NULL;
+
+                        g_object_unref (skeleton);
+                        ev_window->priv->skeleton = NULL;
                 }
         }
-
 #endif /* ENABLE_DBUS */
 
 	ev_window->priv->model = ev_document_model_new ();
