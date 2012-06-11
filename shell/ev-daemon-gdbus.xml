@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Introspection 0.1//EN"
+                      "http://www.freedesktop.org/software/dbus/introspection.dtd">
+<node>
+  <interface name="org.gnome.evince.Daemon">
+    <method name="RegisterDocument">
+      <arg type="s" name="uri" direction="in"/>
+      <arg type="s" name="owner" direction="out"/>
+    </method>
+    <method name="UnregisterDocument">
+      <arg type="s" name="uri" direction="in"/>
+    </method>
+    <method name="FindDocument">
+      <arg type="s" name="uri" direction="in"/>
+      <arg type="b" name="spawn" direction="in"/>
+      <arg type="s" name="owner" direction="out"/>
+    </method>
+  </interface>
+</node>

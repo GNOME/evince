@@ -30,6 +30,8 @@
 #include <fcntl.h>
 #include <unistd.h>
 
+#include "ev-daemon-gdbus-generated.h"
+
 #define EV_DBUS_DAEMON_NAME             "org.gnome.evince.Daemon"
 #define EV_DBUS_DAEMON_INTERFACE_NAME   "org.gnome.evince.Daemon"
 #define EV_DBUS_DAEMON_OBJECT_PATH      "/org/gnome/evince/Daemon"
@@ -209,162 +211,145 @@ document_loaded_cb (GDBusConnection *connection,
 	g_dbus_connection_signal_unsubscribe (connection, doc->loaded_id);
 }
 
-static void
-method_call_cb (GDBusConnection       *connection,
-                const gchar           *sender,
-                const gchar           *object_path,
-                const gchar           *interface_name,
-                const gchar           *method_name,
-                GVariant              *parameters,
-                GDBusMethodInvocation *invocation,
-                gpointer               user_data)
+static gboolean
+handle_register_document_cb (EvDaemon *object,
+                             GDBusMethodInvocation *invocation,
+                             const gchar *uri,
+                             gpointer user_data)
 {
-        if (g_strcmp0 (interface_name, EV_DBUS_DAEMON_INTERFACE_NAME) != 0)
-                return;
+        GDBusConnection *connection;
+        const char *sender;
+        EvDoc       *doc;
 
-        if (g_strcmp0 (method_name, "RegisterDocument") == 0) {
-                EvDoc       *doc;
-                const gchar *uri;
+        doc = ev_daemon_find_doc (uri);
+        if (doc != NULL) {
+                LOG ("RegisterDocument found owner '%s' for URI '%s'\n", doc->dbus_name, uri);
+                ev_daemon_complete_register_document (object, invocation, doc->dbus_name);
 
-                g_variant_get (parameters, "(&s)", &uri);
+                return TRUE;
+        }
 
-                doc = ev_daemon_find_doc (uri);
-                if (doc != NULL) {
-                        LOG ("RegisterDocument found owner '%s' for URI '%s'\n", doc->dbus_name, uri);
-                        g_dbus_method_invocation_return_value (invocation,
-                                                               g_variant_new ("(s)", doc->dbus_name));
-                        return;
-                }
+        ev_daemon_stop_killtimer ();
 
-                ev_daemon_stop_killtimer ();
+        sender = g_dbus_method_invocation_get_sender (invocation);
+        connection = g_dbus_method_invocation_get_connection (invocation);
 
-                doc = g_new (EvDoc, 1);
-                doc->dbus_name = g_strdup (sender);
-                doc->uri = g_strdup (uri);
+        doc = g_new (EvDoc, 1);
+        doc->dbus_name = g_strdup (sender);
+        doc->uri = g_strdup (uri);
 
-		doc->loaded_id = g_dbus_connection_signal_subscribe (connection,
-								     doc->dbus_name,
-								     EV_DBUS_WINDOW_INTERFACE_NAME,
-								     "DocumentLoaded",
-								     NULL,
-								     NULL,
-								     0,
-								     (GDBusSignalCallback) document_loaded_cb,
-								     doc,
-								     NULL);
-                doc->watch_id = g_bus_watch_name_on_connection (connection,
-                                                                sender,
-                                                                G_BUS_NAME_WATCHER_FLAGS_NONE,
-                                                                name_appeared_cb,
-                                                                name_vanished_cb,
-                                                                user_data, NULL);
+        doc->loaded_id = g_dbus_connection_signal_subscribe (connection,
+                                                             doc->dbus_name,
+                                                             EV_DBUS_WINDOW_INTERFACE_NAME,
+                                                             "DocumentLoaded",
+                                                             NULL,
+                                                             NULL,
+                                                             0,
+                                                             (GDBusSignalCallback) document_loaded_cb,
+                                                             doc,
+                                                             NULL);
+        doc->watch_id = g_bus_watch_name_on_connection (connection,
+                                                        sender,
+                                                        G_BUS_NAME_WATCHER_FLAGS_NONE,
+                                                        name_appeared_cb,
+                                                        name_vanished_cb,
+                                                        user_data, NULL);
 
-                LOG ("RegisterDocument registered owner '%s' for URI '%s'\n", doc->dbus_name, uri);
-                ev_daemon_docs = g_list_prepend (ev_daemon_docs, doc);
+        LOG ("RegisterDocument registered owner '%s' for URI '%s'\n", doc->dbus_name, uri);
+        ev_daemon_docs = g_list_prepend (ev_daemon_docs, doc);
 
-                g_dbus_method_invocation_return_value (invocation, g_variant_new ("(s)", ""));
-        } else if (g_strcmp0 (method_name, "UnregisterDocument") == 0) {
-                EvDoc *doc;
-                const gchar *uri;
+        ev_daemon_complete_register_document (object, invocation, "");
 
-                g_variant_get (parameters, "(&s)", &uri);
-
-                LOG ("UnregisterDocument URI '%s'\n", uri);
-
-                doc = ev_daemon_find_doc (uri);
-                if (doc == NULL) {
-                        LOG ("UnregisterDocument URI was not registered!\n");
-                        g_dbus_method_invocation_return_error_literal (invocation,
-                                                                       G_DBUS_ERROR,
-                                                                       G_DBUS_ERROR_INVALID_ARGS,
-                                                                       "URI not registered");
-                        return;
-                }
-
-                if (strcmp (doc->dbus_name, sender) != 0) {
-                        LOG ("UnregisterDocument called by non-owner (owner '%s' sender '%s')\n",
-                             doc->dbus_name, sender);
-
-                        g_dbus_method_invocation_return_error_literal (invocation,
-                                                                       G_DBUS_ERROR,
-                                                                       G_DBUS_ERROR_BAD_ADDRESS,
-                                                                       "Only owner can call this method");
-                        return;
-                }
-
-                ev_daemon_docs = g_list_remove (ev_daemon_docs, doc);
-                ev_doc_free (doc);
-                ev_daemon_maybe_start_killtimer (user_data);
-
-                g_dbus_method_invocation_return_value (invocation, g_variant_new ("()"));
-	} else if (g_strcmp0 (method_name, "FindDocument") == 0) {
-		EvDoc *doc;
-		const gchar *uri;
-		gboolean spawn;
-
-		g_variant_get (parameters, "(&sb)",  &uri, &spawn);
-
-		LOG ("FindDocument URI '%s' \n", uri);
-
-		doc = ev_daemon_find_doc (uri);
-		if (doc != NULL) {
-			g_dbus_method_invocation_return_value (invocation,
-							       g_variant_new ("(s)", doc->dbus_name));
-			return;
-		}
-
-		if (spawn) {
-			GList *uri_invocations;
-			gboolean ret_val = TRUE;
-
-			uri_invocations = g_hash_table_lookup (pending_invocations, uri);
-
-			if (uri_invocations == NULL) {
-				/* Only spawn once. */
-				ret_val = spawn_evince (uri);
-			}
-
-			if (ret_val) {
-				/* Only defer DBUS answer if evince was succesfully spawned */
-				uri_invocations = g_list_prepend (uri_invocations, invocation);
-				g_hash_table_insert (pending_invocations,
-						     g_strdup (uri),
-						     uri_invocations);
-				return;
-			}
-		}
-
-		LOG ("FindDocument URI '%s' was not registered!\n", uri);
-		g_dbus_method_invocation_return_value (invocation,
-						       g_variant_new ("(s)",""));
-	}
+        return TRUE;
 }
 
-static const char introspection_xml[] =
-  "<node>"
-    "<interface name='org.gnome.evince.Daemon'>"
-      "<method name='RegisterDocument'>"
-        "<arg type='s' name='uri' direction='in'/>"
-        "<arg type='s' name='owner' direction='out'/>"
-      "</method>"
-      "<method name='UnregisterDocument'>"
-        "<arg type='s' name='uri' direction='in'/>"
-      "</method>"
-      "<method name='FindDocument'>"
-        "<arg type='s' name='uri' direction='in'/>"
-        "<arg type='b' name='spawn' direction='in'/>"
-        "<arg type='s' name='owner' direction='out'/>"
-      "</method>"
-    "</interface>"
-  "</node>";
+static gboolean
+handle_unregister_document_cb (EvDaemon *object,
+                               GDBusMethodInvocation *invocation,
+                               const gchar *uri,
+                               gpointer user_data)
+{
+        EvDoc *doc;
+        const char *sender;
 
-static const GDBusInterfaceVTable interface_vtable = {
-  method_call_cb,
-  NULL,
-  NULL
-};
+        LOG ("UnregisterDocument URI '%s'\n", uri);
 
-static GDBusNodeInfo *introspection_data;
+        doc = ev_daemon_find_doc (uri);
+        if (doc == NULL) {
+                LOG ("UnregisterDocument URI was not registered!\n");
+                g_dbus_method_invocation_return_error_literal (invocation,
+                                                               G_DBUS_ERROR,
+                                                               G_DBUS_ERROR_INVALID_ARGS,
+                                                               "URI not registered");
+                return TRUE;
+        }
+
+        sender = g_dbus_method_invocation_get_sender (invocation);
+        if (strcmp (doc->dbus_name, sender) != 0) {
+                LOG ("UnregisterDocument called by non-owner (owner '%s' sender '%s')\n",
+                     doc->dbus_name, sender);
+
+                g_dbus_method_invocation_return_error_literal (invocation,
+                                                               G_DBUS_ERROR,
+                                                               G_DBUS_ERROR_BAD_ADDRESS,
+                                                               "Only owner can call this method");
+                return TRUE;
+        }
+
+        ev_daemon_docs = g_list_remove (ev_daemon_docs, doc);
+        ev_doc_free (doc);
+        ev_daemon_maybe_start_killtimer (user_data);
+
+        ev_daemon_complete_unregister_document (object, invocation);
+
+        return TRUE;
+}
+
+static gboolean
+handle_find_document_cb (EvDaemon *object,
+                         GDBusMethodInvocation *invocation,
+                         const gchar *uri,
+                         gboolean spawn,
+                         gpointer user_data)
+{
+        EvDoc *doc;
+
+        LOG ("FindDocument URI '%s' \n", uri);
+
+        doc = ev_daemon_find_doc (uri);
+        if (doc != NULL) {
+                ev_daemon_complete_find_document (object, invocation, doc->dbus_name);
+
+                return TRUE;
+        }
+
+        if (spawn) {
+                GList *uri_invocations;
+                gboolean ret_val = TRUE;
+
+                uri_invocations = g_hash_table_lookup (pending_invocations, uri);
+
+                if (uri_invocations == NULL) {
+                        /* Only spawn once. */
+                        ret_val = spawn_evince (uri);
+                }
+
+                if (ret_val) {
+                        /* Only defer DBUS answer if evince was succesfully spawned */
+                        uri_invocations = g_list_prepend (uri_invocations, invocation);
+                        g_hash_table_insert (pending_invocations,
+                                             g_strdup (uri),
+                                             uri_invocations);
+                        return TRUE;
+                }
+        }
+
+        LOG ("FindDocument URI '%s' was not registered!\n", uri);
+        // FIXME: shouldn't this return an error then?
+        ev_daemon_complete_find_document (object, invocation, "");
+
+        return TRUE;
+}
 
 static void
 bus_acquired_cb (GDBusConnection *connection,
@@ -372,26 +357,27 @@ bus_acquired_cb (GDBusConnection *connection,
 		 gpointer         user_data)
 {
 	GMainLoop *loop = (GMainLoop *) user_data;
-	guint      registration_id;
+        EvDaemon *skeleton;
 	GError    *error = NULL;
 
-	if (!introspection_data)
-		introspection_data = g_dbus_node_info_new_for_xml (introspection_xml, NULL);
-
-	registration_id = g_dbus_connection_register_object (connection,
-							     EV_DBUS_DAEMON_OBJECT_PATH,
-							     introspection_data->interfaces[0],
-							     &interface_vtable,
-							     g_main_loop_ref (loop),
-							     (GDestroyNotify) g_main_loop_unref,
-							     &error);
-	if (registration_id == 0) {
-		g_printerr ("Failed to register object: %s\n", error->message);
+        skeleton = ev_daemon_skeleton_new ();
+        if (!g_dbus_interface_skeleton_export (G_DBUS_INTERFACE_SKELETON (skeleton),
+                                               connection,
+                                               EV_DBUS_DAEMON_OBJECT_PATH,
+                                               &error)) {
+                g_printerr ("Failed to export object: %s\n", error->message);
 		g_error_free (error);
 
 		if (g_main_loop_is_running (loop))
 			g_main_loop_quit (loop);
 	}
+
+        g_signal_connect (skeleton, "handle-register-document",
+                          G_CALLBACK (handle_register_document_cb), loop);
+        g_signal_connect (skeleton, "handle-unregister-document",
+                          G_CALLBACK (handle_unregister_document_cb), loop);
+        g_signal_connect (skeleton, "handle-find-document",
+                          G_CALLBACK (handle_find_document_cb), loop);
 }
 
 static void
@@ -445,8 +431,6 @@ main (gint argc, gchar **argv)
         g_bus_unown_name (owner_id);
 
         g_main_loop_unref (loop);
-	if (introspection_data)
-		g_dbus_node_info_unref (introspection_data);
         g_list_foreach (ev_daemon_docs, (GFunc)ev_doc_free, NULL);
         g_list_free (ev_daemon_docs);
         g_hash_table_destroy (pending_invocations);

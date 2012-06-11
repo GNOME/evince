@@ -136,12 +136,20 @@ BUILT_SOURCES = \
 	ev-resources.c
 
 if ENABLE_DBUS
-BUILT_SOURCES += ev-gdbus-generated.c ev-gdbus-generated.h
+BUILT_SOURCES += \
+	ev-gdbus-generated.c \
+	ev-gdbus-generated.h \
+	ev-daemon-gdbus-generated.c \
+	ev-daemon-gdbus-generated.h
 endif
 
 if ENABLE_DBUS
 evinced_SOURCES = \
 	ev-daemon.c \
+	$(NULL)
+nodist_evinced_SOURCES = \
+	ev-daemon-gdbus-generated.c \
+	ev-daemon-gdbus-generated.h
 	$(NULL)
 
 evinced_CFLAGS=				\
@@ -162,7 +170,8 @@ EXTRA_DIST = \
 	evince-ui.xml \
 	evince-toolbar.xml \
 	evince.gresource.xml \
-	ev-gdbus.xml
+	ev-gdbus.xml \
+	ev-daemon-gdbus.xml
 
 ev-marshal.h: $(srcdir)/ev-marshal.list
 	$(AM_V_GEN)$(GLIB_GENMARSHAL) --prefix=ev_marshal $(srcdir)/ev-marshal.list --header > ev-marshal.h
@@ -180,6 +189,14 @@ ev-gdbus-generated.c ev-gdbus-generated.h: ev-gdbus.xml Makefile
 			--c-namespace=Ev \
 			--c-generate-object-manager \
 			--generate-c-code ev-gdbus-generated \
+			$<
+
+ev-daemon-gdbus-generated.c ev-daemon-gdbus-generated.h: ev-daemon-gdbus.xml Makefile
+	$(AM_V_GEN) $(GDBUS_CODEGEN) \
+			--interface-prefix=org.gnome.evince \
+			--c-namespace=Ev \
+			--c-generate-object-manager \
+			--generate-c-code ev-daemon-gdbus-generated \
 			$<
 
 DISTCLEANFILES = $(BUILT_SOURCES)
