@@ -1627,7 +1627,7 @@ pdf_document_find_get_supported_options (EvDocumentFind *document_find)
 #ifdef HAVE_POPPLER_PAGE_FIND_TEXT_WITH_OPTIONS
 	return (EvFindOptions)(EV_FIND_CASE_SENSITIVE | EV_FIND_WHOLE_WORDS_ONLY);
 #else
-	return 0;
+	return EV_FIND_DEFAULT;
 #endif
 }
 
