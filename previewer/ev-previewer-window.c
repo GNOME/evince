@@ -263,8 +263,14 @@ ev_previewer_window_enumerate_printers (GtkPrinter        *printer,
 }
 
 static void
-ev_previewer_window_print (GtkAction         *action,
-			   EvPreviewerWindow *window)
+ev_previewer_window_print_cb (GtkAction         *action,
+                              EvPreviewerWindow *window)
+{
+        ev_previewer_window_print (window);
+}
+
+void
+ev_previewer_window_print (EvPreviewerWindow *window)
 {
 	if (!window->print_settings)
 		window->print_settings = gtk_print_settings_new ();
@@ -296,7 +302,7 @@ static const GtkActionEntry action_entries[] = {
 #if GTKUNIXPRINT_ENABLED
 	{ "PreviewPrint", GTK_STOCK_PRINT, N_("Print"), NULL,
 	  N_("Print this document"),
-	  G_CALLBACK (ev_previewer_window_print) }
+	  G_CALLBACK (ev_previewer_window_print_cb) }
 #endif
 };
 
@@ -574,7 +580,7 @@ ev_previewer_window_constructor (GType                  type,
 
 	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 
-	toolbar = gtk_ui_manager_get_widget (window->ui_manager, "/PreviewToolbar");
+	toolbar = gtk_ui_manager_get_widget (window->ui_manager, "/Toolbar");
 	gtk_style_context_add_class (gtk_widget_get_style_context (toolbar),
 				     GTK_STYLE_CLASS_PRIMARY_TOOLBAR);
 	gtk_box_pack_start (GTK_BOX (vbox), toolbar, FALSE, FALSE, 0);
@@ -621,7 +627,8 @@ ev_previewer_window_class_init (EvPreviewerWindowClass *klass)
 							      "The document model",
 							      EV_TYPE_DOCUMENT_MODEL,
 							      G_PARAM_WRITABLE |
-							      G_PARAM_CONSTRUCT_ONLY));
+                                                               G_PARAM_CONSTRUCT_ONLY |
+                                                               G_PARAM_STATIC_STRINGS));
 }
 
 /* Public methods */

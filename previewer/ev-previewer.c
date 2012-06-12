@@ -92,6 +92,59 @@ ev_previewer_load_document (GFile           *file,
 	g_free (uri);
 }
 
+#if GTKUNIXPRINT_ENABLED
+static void
+app_print_cb (GSimpleAction *action,
+              GVariant      *parameter,
+              gpointer       data)
+{
+        if (window)
+                ev_previewer_window_print (window);
+}
+#endif
+
+static void
+app_close_cb (GSimpleAction *action,
+              GVariant      *parameter,
+              gpointer       user_data)
+{
+        if (window)
+                gtk_widget_destroy (GTK_WIDGET (window));
+}
+
+static void
+startup_cb (GApplication *application,
+            gpointer user_data)
+{
+        const GActionEntry app_menu_actions[] = {
+#if GTKUNIXPRINT_ENABLED
+                { "print", app_print_cb, NULL, NULL, NULL },
+#endif
+                { "close", app_close_cb, NULL, NULL, NULL }
+        };
+
+        GtkBuilder *builder;
+        GError *error = NULL;
+        gboolean shell_shows_app_menu;
+
+        /* We only want to add an application menu when it's actually used! */
+        g_object_get (gtk_settings_get_for_screen (gdk_screen_get_default ()), "gtk-shell-shows-app-menu", &shell_shows_app_menu, NULL);
+        if (!shell_shows_app_menu)
+          return;
+
+        g_action_map_add_action_entries (G_ACTION_MAP (application),
+                                         app_menu_actions, G_N_ELEMENTS (app_menu_actions),
+                                         application);
+
+        builder = gtk_builder_new ();
+        gtk_builder_add_from_resource (builder, "/org/gnome/evince/previewer/ui/appmenu.ui", &error);
+        g_assert_no_error (error);
+
+        gtk_application_set_app_menu (GTK_APPLICATION (application),
+                                      G_MENU_MODEL (gtk_builder_get_object (builder, "appmenu")));
+        g_object_unref (builder);
+}
+
 static void
 activate_cb (GApplication *application,
              gpointer user_data)
@@ -210,6 +263,7 @@ main (gint argc, gchar **argv)
         application = gtk_application_new (NULL,
                                            G_APPLICATION_NON_UNIQUE |
                                            G_APPLICATION_HANDLES_OPEN);
+        g_signal_connect (application, "startup", G_CALLBACK (startup_cb), NULL);
         g_signal_connect (application, "activate", G_CALLBACK (activate_cb), NULL);
         g_signal_connect (application, "open", G_CALLBACK (open_cb), NULL);
 

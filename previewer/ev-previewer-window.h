@@ -45,6 +45,7 @@ void       ev_previewer_window_set_print_settings (EvPreviewerWindow *window,
 						   const gchar       *print_settings);
 void       ev_previewer_window_set_source_file    (EvPreviewerWindow *window,
 						   const gchar       *source_file);
+void       ev_previewer_window_print             (EvPreviewerWindow *window);
 
 G_END_DECLS
 
