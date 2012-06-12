@@ -223,6 +223,8 @@ struct _EvWindowPrivate {
 	EvEvinceWindow *skeleton;
 	gchar          *dbus_object_path;
 #endif
+
+        guint presentation_mode_inhibit_id;
 };
 
 #define EV_WINDOW_GET_PRIVATE(object) \
@@ -4113,6 +4115,35 @@ ev_window_cmd_view_fullscreen (GtkAction *action, EvWindow *window)
 }
 
 static void
+ev_window_inhibit_screensaver (EvWindow *window)
+{
+        EvWindowPrivate *priv = window->priv;
+
+        if (priv->presentation_mode_inhibit_id != 0)
+                return;
+
+        priv->presentation_mode_inhibit_id =
+                gtk_application_inhibit (GTK_APPLICATION (g_application_get_default ()),
+                                         GTK_WINDOW (window),
+                                         GTK_APPLICATION_INHIBIT_IDLE,
+                                         _("Running in presentation mode"));
+}
+
+
+static void
+ev_window_uninhibit_screensaver (EvWindow *window)
+{
+        EvWindowPrivate *priv = window->priv;
+
+        if (priv->presentation_mode_inhibit_id == 0)
+                return;
+
+        gtk_application_uninhibit (GTK_APPLICATION (g_application_get_default ()),
+                                   priv->presentation_mode_inhibit_id);
+        priv->presentation_mode_inhibit_id = 0;
+}
+
+static void
 ev_window_update_presentation_action (EvWindow *window)
 {
 	GtkAction *action;
@@ -4135,7 +4166,7 @@ ev_window_view_presentation_finished (EvWindow *window)
 static gboolean
 ev_window_view_presentation_focus_in (EvWindow *window)
 {
-	ev_application_screensaver_disable (EV_APP);
+        ev_window_inhibit_screensaver (window);
 
 	return FALSE;
 }
@@ -4143,7 +4174,7 @@ ev_window_view_presentation_focus_in (EvWindow *window)
 static gboolean
 ev_window_view_presentation_focus_out (EvWindow *window)
 {
-	ev_application_screensaver_enable (EV_APP);
+        ev_window_uninhibit_screensaver (window);
 
 	return FALSE;
 }
@@ -4198,7 +4229,7 @@ ev_window_run_presentation (EvWindow *window)
 
 	gtk_widget_show (window->priv->presentation_view);
 
-	ev_application_screensaver_disable (EV_APP);
+        ev_window_inhibit_screensaver (window);
 
 	if (window->priv->metadata && !ev_window_is_empty (window))
 		ev_metadata_set_boolean (window->priv->metadata, "presentation", TRUE);
@@ -4231,7 +4262,7 @@ ev_window_stop_presentation (EvWindow *window,
 
 	gtk_widget_grab_focus (window->priv->view);
 
-	ev_application_screensaver_enable (EV_APP);
+        ev_window_uninhibit_screensaver (window);
 
 	if (window->priv->metadata && !ev_window_is_empty (window))
 		ev_metadata_set_boolean (window->priv->metadata, "presentation", FALSE);
@@ -7192,6 +7223,7 @@ ev_window_init (EvWindow *ev_window)
 
 	ev_window->priv->page_mode = PAGE_MODE_DOCUMENT;
 	ev_window->priv->chrome = EV_CHROME_NORMAL;
+        ev_window->priv->presentation_mode_inhibit_id = 0;
 	ev_window->priv->title = ev_window_title_new (ev_window);
 
 	ev_window->priv->main_box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
