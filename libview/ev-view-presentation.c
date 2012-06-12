@@ -1308,6 +1308,8 @@ ev_view_presentation_scroll_event (GtkWidget      *widget,
 	case GDK_SCROLL_LEFT:
 		ev_view_presentation_change_page (pview, GTK_SCROLL_PAGE_BACKWARD);
 		break;
+        case GDK_SCROLL_SMOOTH:
+                return FALSE;
 	}
 
 	return TRUE;

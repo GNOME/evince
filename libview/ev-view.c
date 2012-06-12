@@ -3292,6 +3292,9 @@ ev_view_scroll_event (GtkWidget *widget, GdkEventScroll *event)
 	EvView *view = EV_VIEW (widget);
 	guint state;
 
+        if (event->direction == GDK_SCROLL_SMOOTH)
+                return FALSE;
+
 	state = event->state & gtk_accelerator_get_default_mod_mask ();
 
 	if (state == GDK_CONTROL_MASK) {
@@ -3337,6 +3340,8 @@ ev_view_scroll_event (GtkWidget *widget, GdkEventScroll *event)
 		        case GDK_SCROLL_LEFT:
 				ev_view_previous_page (view);
 				break;
+                        case GDK_SCROLL_SMOOTH:
+                                g_assert_not_reached ();
 		}
 
 		return TRUE;
