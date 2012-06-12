@@ -30,7 +30,7 @@
 #include "ev-previewer-window.h"
 
 struct _EvPreviewerWindow {
-	GtkWindow         base_instance;
+	GtkApplicationWindow base_instance;
 
 	EvDocumentModel  *model;
 	EvDocument       *document;
@@ -54,7 +54,7 @@ struct _EvPreviewerWindow {
 };
 
 struct _EvPreviewerWindowClass {
-	GtkWindowClass base_class;
+	GtkApplicationWindowClass base_class;
 };
 
 enum {
@@ -65,7 +65,7 @@ enum {
 #define MIN_SCALE 0.05409
 #define MAX_SCALE 4.0
 
-G_DEFINE_TYPE (EvPreviewerWindow, ev_previewer_window, GTK_TYPE_WINDOW)
+G_DEFINE_TYPE (EvPreviewerWindow, ev_previewer_window, GTK_TYPE_APPLICATION_WINDOW)
 
 static gdouble
 get_screen_dpi (EvPreviewerWindow *window)
@@ -467,10 +467,10 @@ ev_previewer_window_dispose (GObject *object)
 		window->print_job_title = NULL;
 	}
 
-	if (window->source_file) {
-		g_free (window->source_file);
-		window->source_file = NULL;
-	}
+        if (window->source_file) {
+                g_free (window->source_file);
+                window->source_file = NULL;
+        }
 
 	G_OBJECT_CLASS (ev_previewer_window_parent_class)->dispose (object);
 }
@@ -625,10 +625,13 @@ ev_previewer_window_class_init (EvPreviewerWindowClass *klass)
 }
 
 /* Public methods */
-GtkWidget *
+EvPreviewerWindow *
 ev_previewer_window_new (EvDocumentModel *model)
 {
-	return GTK_WIDGET (g_object_new (EV_TYPE_PREVIEWER_WINDOW, "model", model, NULL));
+	return g_object_new (EV_TYPE_PREVIEWER_WINDOW, 
+                             "application", g_application_get_default (),
+                             "model", model,
+                             NULL);
 }
 
 void
