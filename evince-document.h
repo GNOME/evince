@@ -55,6 +55,7 @@
 #include <libdocument/ev-selection.h>
 #include <libdocument/ev-transition-effect.h>
 #include <libdocument/ev-version.h>
+#include <libdocument/ev-macros.h>
 
 #undef __EV_EVINCE_DOCUMENT_H_INSIDE__
 

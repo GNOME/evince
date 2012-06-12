@@ -35,6 +35,7 @@ INST_H_SRC_FILES = 				\
 	ev-link-action.h			\
 	ev-link-dest.h				\
 	ev-link.h				\
+	ev-macros.h				\
 	ev-mapping-list.h			\
 	ev-page.h				\
 	ev-render-context.h			\
