@@ -67,6 +67,8 @@ evince_SOURCES=				\
 	ev-properties-license.h		\
 	ev-open-recent-action.c		\
 	ev-open-recent-action.h		\
+	ev-resources.c			\
+	ev-resources.h			\
 	ev-utils.c			\
 	ev-utils.h			\
 	ev-window.c			\
@@ -123,7 +125,10 @@ evince-icon.o: $(srcdir)/evince-icon.rc $(top_srcdir)/data/evince.ico
 	$(AM_V_GEN)$(WINDRES) $(srcdir)/evince-icon.rc -I $(top_srcdir)/data evince-icon.o
 endif
 
-BUILT_SOURCES = ev-marshal.h ev-marshal.c
+BUILT_SOURCES = \
+	ev-marshal.c \
+	ev-marshal.h \
+	ev-resources.c
 
 if ENABLE_DBUS
 evinced_SOURCES=			\
@@ -144,8 +149,12 @@ evinced_LDADD=				\
 	$(EV_DAEMON_LIBS)
 endif
 
-EXTRA_DIST = ev-marshal.list		\
-	evince-icon.rc
+EXTRA_DIST = \
+	ev-marshal.list \
+	evince-icon.rc \
+	evince-ui.xml \
+	evince-toolbar.xml \
+	evince.gresource.xml
 
 ev-marshal.h: $(srcdir)/ev-marshal.list
 	$(AM_V_GEN)$(GLIB_GENMARSHAL) --prefix=ev_marshal $(srcdir)/ev-marshal.list --header > ev-marshal.h
@@ -153,6 +162,9 @@ ev-marshal.h: $(srcdir)/ev-marshal.list
 ev-marshal.c: $(srcdir)/ev-marshal.list
 	$(AM_V_at)echo '#include "ev-marshal.h"' > ev-marshal.c
 	$(AM_V_GEN)$(GLIB_GENMARSHAL) --prefix=ev_marshal $(srcdir)/ev-marshal.list --body >> ev-marshal.c
+
+ev-resources.c: evince.gresource.xml Makefile $(shell $(GLIB_COMPILE_RESOURCES) --generate-dependencies --sourcedir $(srcdir) $(srcdir)/evince.gresource.xml)
+	$(AM_V_GEN) XMLLINT=$(XMLLINT) $(GLIB_COMPILE_RESOURCES) --target $@ --sourcedir $(srcdir) --generate-source --c-name ev $<
 
 DISTCLEANFILES =
 

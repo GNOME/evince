@@ -15,8 +15,6 @@ man_MANS=evince.1
 
 uidir = $(pkgdatadir)
 ui_DATA =				\
-	evince-ui.xml			\
-	evince-toolbar.xml		\
 	hand-open.png
 
 #

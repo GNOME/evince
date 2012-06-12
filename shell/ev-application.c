@@ -55,7 +55,6 @@ struct _EvApplication {
 	gchar *uri;
 
 	gchar *dot_dir;
-	gchar *data_dir;
 
 #ifdef ENABLE_DBUS
 	GDBusConnection *connection;
@@ -1065,8 +1064,6 @@ ev_application_shutdown (EvApplication *application)
 	
         g_free (application->dot_dir);
         application->dot_dir = NULL;
-        g_free (application->data_dir);
-        application->data_dir = NULL;
 
 	g_object_unref (application);
         instance = NULL;
@@ -1090,18 +1087,6 @@ ev_application_init (EvApplication *ev_application)
                                                     "evince", NULL);
         if (!g_file_test (ev_application->dot_dir, G_FILE_TEST_EXISTS | G_FILE_TEST_IS_DIR))
                 ev_application_migrate_config_dir (ev_application);
-
-#ifdef G_OS_WIN32
-{
-	gchar *dir;
-
-	dir = g_win32_get_package_installation_directory_of_module (NULL);
-	ev_application->data_dir = g_build_filename (dir, "share", "evince", NULL);
-	g_free (dir);
-}
-#else
-	ev_application->data_dir = g_strdup (EVINCEDATADIR);
-#endif
 
 	ev_application_init_session (ev_application);
 
@@ -1228,10 +1213,4 @@ ev_application_get_dot_dir (EvApplication *application,
                 g_mkdir_with_parents (application->dot_dir, 0700);
 
 	return application->dot_dir;
-}
-
-const gchar *
-ev_application_get_data_dir (EvApplication   *application)
-{
-	return application->data_dir;
 }

@@ -75,7 +75,6 @@ void		  ev_application_screensaver_enable  (EvApplication   *application);
 void		  ev_application_screensaver_disable (EvApplication   *application);
 const gchar      *ev_application_get_dot_dir         (EvApplication   *application,
                                                       gboolean         create);
-const gchar      *ev_application_get_data_dir        (EvApplication   *application);
 
 G_END_DECLS
 
