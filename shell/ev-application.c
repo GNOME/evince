@@ -1,7 +1,7 @@
 /* this file is part of evince, a gnome document viewer
  *
  *  Copyright (C) 2004 Martin Kretzschmar
- *  Copyright © 2010 Christian Persch
+ *  Copyright © 2010, 2012 Christian Persch
  *
  *  Author:
  *    Martin Kretzschmar <martink@gnome.org>
@@ -51,14 +51,13 @@
 #endif /* ENABLE_DBUS */
 
 struct _EvApplication {
-	GObject base_instance;
+	GtkApplication base_instance;
 
 	gchar *uri;
 
 	gchar *dot_dir;
 
 #ifdef ENABLE_DBUS
-        GDBusConnection *connection;
         EvEvinceApplication *skeleton;
 	EvMediaPlayerKeys *keys;
 	gboolean doc_registered;
@@ -72,12 +71,10 @@ struct _EvApplication {
 };
 
 struct _EvApplicationClass {
-	GObjectClass base_class;
+	GtkApplicationClass base_class;
 };
 
-static EvApplication *instance;
-
-G_DEFINE_TYPE (EvApplication, ev_application, G_TYPE_OBJECT);
+G_DEFINE_TYPE (EvApplication, ev_application, GTK_TYPE_APPLICATION)
 
 #ifdef ENABLE_DBUS
 #define APPLICATION_DBUS_OBJECT_PATH "/org/gnome/evince/Evince"
@@ -105,20 +102,21 @@ static void ev_application_open_uri_in_window (EvApplication  *application,
 					       guint           timestamp);
 
 /**
- * ev_application_get_instance:
+ * ev_application_new:
  *
- * Checks for #EvApplication instance, if it doesn't exist it does create it.
+ * Creates a new #EvApplication instance.
  *
- * Returns: an instance of the #EvApplication data.
+ * Returns: (transfer full): a newly created #EvApplication
  */
 EvApplication *
-ev_application_get_instance (void)
+ev_application_new (void)
 {
-	if (!instance) {
-		instance = EV_APPLICATION (g_object_new (EV_TYPE_APPLICATION, NULL));
-	}
+  const GApplicationFlags flags = G_APPLICATION_NON_UNIQUE;
 
-	return instance;
+  return g_object_new (EV_TYPE_APPLICATION,
+                       "application-id", NULL,
+                       "flags", flags,
+                       NULL);
 }
 
 /* Session */
@@ -165,10 +163,10 @@ smclient_save_state_cb (EggSMClient   *client,
 }
 
 static void
-smclient_quit_cb (EggSMClient   *client,
-		  EvApplication *application)
+smclient_quit_cb (EggSMClient  *client,
+		  GApplication *application)
 {
-	ev_application_shutdown (application);
+        g_application_quit (application);
 }
 #endif /* WITH_SMCLIENT */
 
@@ -322,35 +320,21 @@ ev_spawn (const char     *uri,
 	g_free (cmdline);
 }
 
-static GList *
-ev_application_get_windows (EvApplication *application)
-{
-	GList *l, *toplevels;
-	GList *windows = NULL;
-
-	toplevels = gtk_window_list_toplevels ();
-
-	for (l = toplevels; l != NULL; l = l->next) {
-		if (EV_IS_WINDOW (l->data)) {
-			windows = g_list_append (windows, l->data);
-		}
-	}
-
-	g_list_free (toplevels);
-
-	return windows;
-}
-
 static EvWindow *
 ev_application_get_empty_window (EvApplication *application,
 				 GdkScreen     *screen)
 {
 	EvWindow *empty_window = NULL;
-	GList    *windows = ev_application_get_windows (application);
-	GList    *l;
+	GList    *windows, *l;
 
+        windows = gtk_application_get_windows (GTK_APPLICATION (application));
 	for (l = windows; l != NULL; l = l->next) {
-		EvWindow *window = EV_WINDOW (l->data);
+		EvWindow *window;
+
+                if (!EV_IS_WINDOW (l->data))
+                          continue;
+
+                window = EV_WINDOW (l->data);
 
 		if (ev_window_is_empty (window) &&
 		    gtk_window_get_screen (GTK_WINDOW (window)) == screen) {
@@ -358,8 +342,6 @@ ev_application_get_empty_window (EvApplication *application,
 			break;
 		}
 	}
-
-	g_list_free (windows);
 
 	return empty_window;
 }
@@ -399,18 +381,19 @@ on_reload_cb (GObject      *source_object,
 	GVariant        *value;
 	GError          *error = NULL;
 
+        g_application_release (g_application_get_default ());
+
 	value = g_dbus_connection_call_finish (connection, res, &error);
-	if (!value) {
-		g_warning ("Failed to Reload: %s", error->message);
+	if (value != NULL) {
+                g_variant_unref (value);
+        } else {
+		g_printerr ("Failed to Reload: %s\n", error->message);
 		g_error_free (error);
 	}
-	g_variant_unref (value);
 
 	/* We did not open a window, so manually clear the startup
 	 * notification. */
 	gdk_notify_startup_complete ();
-
-	ev_application_shutdown (EV_APP);
 }
 
 static void
@@ -425,6 +408,8 @@ on_register_uri_cb (GObject      *source_object,
 	const gchar       *owner;
 	GVariantBuilder    builder;
 	GError            *error = NULL;
+
+        g_application_release (G_APPLICATION (application));
 
 	value = g_dbus_connection_call_finish (connection, res, &error);
 	if (!value) {
@@ -518,6 +503,7 @@ on_register_uri_cb (GObject      *source_object,
 				NULL,
 				on_reload_cb,
 				NULL);
+        g_application_hold (G_APPLICATION (application));
 	g_variant_unref (value);
 	ev_register_doc_data_free (data);
 }
@@ -546,23 +532,24 @@ ev_application_register_uri (EvApplication  *application,
 {
 	EvRegisterDocData *data;
 
-	if (!application->connection)
+	if (!application->skeleton)
 		return;
 
 	if (application->doc_registered) {
 		/* Already registered, reload */
 		GList *windows, *l;
 
-		windows = ev_application_get_windows (application);
+		windows = gtk_application_get_windows (GTK_APPLICATION (application));
 		for (l = windows; l != NULL; l = g_list_next (l)) {
-			EvWindow *ev_window = EV_WINDOW (l->data);
+                        if (!EV_IS_WINDOW (l->data))
+                                continue;
 
-			ev_application_open_uri_in_window (application, uri, ev_window,
+			ev_application_open_uri_in_window (application, uri,
+                                                           EV_WINDOW (l->data),
 							   screen, dest, mode,
 							   search_string,
 							   timestamp);
 		}
-		g_list_free (windows);
 
 		return;
 	}
@@ -575,7 +562,7 @@ ev_application_register_uri (EvApplication  *application,
 	data->search_string = search_string ? g_strdup (search_string) : NULL;
 	data->timestamp = timestamp;
 
-        g_dbus_connection_call (application->connection,
+        g_dbus_connection_call (g_application_get_dbus_connection (G_APPLICATION (application)),
 				EVINCE_DAEMON_SERVICE,
 				EVINCE_DAEMON_OBJECT_PATH,
 				EVINCE_DAEMON_INTERFACE,
@@ -587,6 +574,8 @@ ev_application_register_uri (EvApplication  *application,
 				NULL,
 				on_register_uri_cb,
 				data);
+
+        g_application_hold (G_APPLICATION (application));
 }
 
 static void
@@ -603,7 +592,7 @@ ev_application_unregister_uri (EvApplication *application,
 	 * so it's safe to use the sync api
 	 */
         value = g_dbus_connection_call_sync (
-		application->connection,
+		g_application_get_dbus_connection (G_APPLICATION (application)),
 		EVINCE_DAEMON_SERVICE,
 		EVINCE_DAEMON_OBJECT_PATH,
 		EVINCE_DAEMON_INTERFACE,
@@ -777,13 +766,13 @@ handle_get_window_list_cb (EvEvinceApplication   *object,
 
         paths = g_ptr_array_new ();
 
-        windows = ev_application_get_windows (application);
+        windows = gtk_application_get_windows (GTK_APPLICATION (application));
         for (l = windows; l; l = g_list_next (l)) {
-                EvWindow *window = (EvWindow *)l->data;
+                if (!EV_IS_WINDOW (l->data))
+                        continue;
 
-                g_ptr_array_add (paths, (gpointer) ev_window_get_dbus_object_path (window));
+                g_ptr_array_add (paths, (gpointer) ev_window_get_dbus_object_path (EV_WINDOW (l->data)));
         }
-        g_list_free (windows);
 
         g_ptr_array_add (paths, NULL);
         ev_evince_application_complete_get_window_list (object, invocation,
@@ -839,17 +828,17 @@ handle_reload_cb (EvEvinceApplication   *object,
         else
                 screen = gdk_screen_get_default ();
 
-        windows = ev_application_get_windows (application);
+        windows = gtk_application_get_windows (GTK_APPLICATION ((application)));
         for (l = windows; l != NULL; l = g_list_next (l)) {
-                EvWindow *ev_window = EV_WINDOW (l->data);
+                if (!EV_IS_WINDOW (l->data))
+                        continue;
 
                 ev_application_open_uri_in_window (application, NULL,
-                                                   ev_window,
+                                                   EV_WINDOW (l->data),
                                                    screen, dest, mode,
                                                    search_string,
                                                    timestamp);
         }
-        g_list_free (windows);
 
         if (dest)
                 g_object_unref (dest);
@@ -1011,9 +1000,11 @@ ev_application_migrate_config_dir (EvApplication *application)
         g_free (old_accels);
 }
 
-void
-ev_application_shutdown (EvApplication *application)
+static void
+ev_application_shutdown (GApplication *gapplication)
 {
+        EvApplication *application = EV_APPLICATION (gapplication);
+
 	if (application->uri) {
 #ifdef ENABLE_DBUS
 		ev_application_unregister_uri (application,
@@ -1028,43 +1019,106 @@ ev_application_shutdown (EvApplication *application)
 	g_object_unref (application->scr_saver);
 	application->scr_saver = NULL;
 
+        g_free (application->dot_dir);
+        application->dot_dir = NULL;
+
+        G_APPLICATION_CLASS (ev_application_parent_class)->shutdown (gapplication);
+}
+
+static void
+ev_application_activate (GApplication *gapplication)
+{
+        EvApplication *application = EV_APPLICATION (gapplication);
+        GList *windows, *l;
+
+        windows = gtk_application_get_windows (GTK_APPLICATION (application));
+        for (l = windows; l != NULL; l = l->next) {
+                if (!EV_IS_WINDOW (l->data))
+                        continue;
+
+                gtk_window_present (GTK_WINDOW (l->data));
+        }
+}
+
 #ifdef ENABLE_DBUS
-	if (application->keys) {
-		g_object_unref (application->keys);
-		application->keys = NULL;
-	}
+static gboolean
+ev_application_dbus_register (GApplication    *gapplication,
+                              GDBusConnection *connection,
+                              const gchar     *object_path,
+                              GError         **error)
+{
+        EvApplication *application = EV_APPLICATION (gapplication);
+        EvEvinceApplication *skeleton;
+
+        if (!G_APPLICATION_CLASS (ev_application_parent_class)->dbus_register (gapplication,
+                                                                               connection,
+                                                                               object_path,
+                                                                               error))
+                return FALSE;
+
+        skeleton = ev_evince_application_skeleton_new ();
+        if (!g_dbus_interface_skeleton_export (G_DBUS_INTERFACE_SKELETON (skeleton),
+                                               connection,
+                                               APPLICATION_DBUS_OBJECT_PATH,
+                                               error)) {
+                g_object_unref (skeleton);
+
+                return FALSE;
+        }
+
+        application->skeleton = skeleton;
+        g_signal_connect (skeleton, "handle-get-window-list",
+                          G_CALLBACK (handle_get_window_list_cb),
+                          application);
+        g_signal_connect (skeleton, "handle-reload",
+                          G_CALLBACK (handle_reload_cb),
+                          application);
+        application->keys = ev_media_player_keys_new ();
+
+        return TRUE;
+}
+
+static void
+ev_application_dbus_unregister (GApplication    *gapplication,
+                                GDBusConnection *connection,
+                                const gchar     *object_path)
+{
+        EvApplication *application = EV_APPLICATION (gapplication);
+
+        if (application->keys) {
+                g_object_unref (application->keys);
+                application->keys = NULL;
+        }
         if (application->skeleton != NULL) {
                 g_dbus_interface_skeleton_unexport (G_DBUS_INTERFACE_SKELETON (application->skeleton));
                 g_object_unref (application->skeleton);
                 application->skeleton = NULL;
         }
-        if (application->connection != NULL) {
-                g_object_unref (application->connection);
-                application->connection = NULL;
-        }
-#endif /* ENABLE_DBUS */
-	
-        g_free (application->dot_dir);
-        application->dot_dir = NULL;
 
-	g_object_unref (application);
-        instance = NULL;
-	
-	gtk_main_quit ();
+        G_APPLICATION_CLASS (ev_application_parent_class)->dbus_unregister (gapplication,
+                                                                            connection,
+                                                                            object_path);
 }
+
+#endif /* ENABLE_DBUS */
 
 static void
 ev_application_class_init (EvApplicationClass *ev_application_class)
 {
+        GApplicationClass *g_application_class = G_APPLICATION_CLASS (ev_application_class);
+
+        g_application_class->activate = ev_application_activate;
+        g_application_class->shutdown = ev_application_shutdown;
+
+#ifdef ENABLE_DBUS
+        g_application_class->dbus_register = ev_application_dbus_register;
+        g_application_class->dbus_unregister = ev_application_dbus_unregister;
+#endif
 }
 
 static void
 ev_application_init (EvApplication *ev_application)
 {
-#ifdef ENABLE_DBUS
-	GError *error = NULL;
-#endif
-
         ev_application->dot_dir = g_build_filename (g_get_user_config_dir (),
                                                     "evince", NULL);
         if (!g_file_test (ev_application->dot_dir, G_FILE_TEST_EXISTS | G_FILE_TEST_IS_DIR))
@@ -1074,84 +1128,41 @@ ev_application_init (EvApplication *ev_application)
 
 	ev_application_accel_map_load (ev_application);
 
-#ifdef ENABLE_DBUS
-        ev_application->connection = g_bus_get_sync (G_BUS_TYPE_SESSION, NULL, &error);
-        if (ev_application->connection != NULL) {
-                EvEvinceApplication *skeleton;
-
-                skeleton = ev_evince_application_skeleton_new ();
-                if (g_dbus_interface_skeleton_export (G_DBUS_INTERFACE_SKELETON (skeleton),
-                                                      ev_application->connection,
-                                                      APPLICATION_DBUS_OBJECT_PATH,
-                                                      &error)) {
-                        ev_application->skeleton = skeleton;
-                        g_signal_connect (skeleton, "handle-get-window-list",
-                                          G_CALLBACK (handle_get_window_list_cb),
-                                          ev_application);
-                        g_signal_connect (skeleton, "handle-reload",
-                                          G_CALLBACK (handle_reload_cb),
-                                          ev_application);
-                } else {
-                        g_object_unref (skeleton);
-                        g_printerr ("Failed to register bus object: %s\n", error->message);
-                        g_error_free (error);
-                }
-        } else {
-                g_printerr ("Failed to get bus connection: %s\n", error->message);
-                g_error_free (error);
-        }
-
-	ev_application->keys = ev_media_player_keys_new ();
-#endif /* ENABLE_DBUS */
-
 	ev_application->scr_saver = totem_scrsaver_new ();
 	g_object_set (ev_application->scr_saver,
 		      "reason", _("Running in presentation mode"),
 		      NULL);
 }
 
-GDBusConnection *
-ev_application_get_dbus_connection (EvApplication *application)
-{
-#ifdef ENABLE_DBUS
-	return application->connection;
-#else
-	return NULL;
-#endif
-}
-
 gboolean
 ev_application_has_window (EvApplication *application)
 {
-	GList    *l, *toplevels;
-	gboolean  retval = FALSE;
+	GList *l, *windows;
 
-	toplevels = gtk_window_list_toplevels ();
+	windows = gtk_application_get_windows (GTK_APPLICATION (application));
+	for (l = windows; l != NULL; l = l->next) {
+		if (!EV_IS_WINDOW (l->data))
+                        continue;
 
-	for (l = toplevels; l != NULL && !retval; l = l->next) {
-		if (EV_IS_WINDOW (l->data))
-			retval = TRUE;
+                return TRUE;
 	}
 
-	g_list_free (toplevels);
-
-	return retval;
+	return FALSE;
 }
 
 guint
 ev_application_get_n_windows (EvApplication *application)
 {
-	GList *l, *toplevels;
-	guint  retval = 0;
+        GList *l, *windows;
+        guint retval = 0;
 
-	toplevels = gtk_window_list_toplevels ();
+        windows = gtk_application_get_windows (GTK_APPLICATION (application));
+        for (l = windows; l != NULL && !retval; l = l->next) {
+                if (!EV_IS_WINDOW (l->data))
+                        continue;
 
-	for (l = toplevels; l != NULL; l = l->next) {
-		if (EV_IS_WINDOW (l->data))
-			retval++;
+                retval++;
 	}
-
-	g_list_free (toplevels);
 
 	return retval;
 }

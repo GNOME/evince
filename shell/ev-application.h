@@ -44,12 +44,11 @@ typedef struct _EvApplicationClass EvApplicationClass;
 #define EV_IS_APPLICATION_CLASS(klass)		(G_TYPE_CHECK_CLASS_TYPE((klass), EV_TYPE_APPLICATION))
 #define EV_APPLICATION_GET_CLASS(object)	(G_TYPE_INSTANCE_GET_CLASS((object), EV_TYPE_APPLICATION, EvApplicationClass))
 
-#define EV_APP					(ev_application_get_instance ())
+#define EV_APP					((EvApplication *) g_application_get_default ())
 
 GType	          ev_application_get_type	     (void) G_GNUC_CONST;
-EvApplication    *ev_application_get_instance        (void);
+EvApplication    *ev_application_new                 (void);
 
-void              ev_application_shutdown            (EvApplication   *application);
 gboolean          ev_application_load_session        (EvApplication   *application);
 void              ev_application_open_window         (EvApplication   *application,
 						      GdkScreen       *screen,
@@ -65,7 +64,6 @@ void	          ev_application_open_uri_list       (EvApplication   *application,
 		  			              GSList          *uri_list,
 						      GdkScreen       *screen,
     						      guint32          timestamp);
-GDBusConnection  *ev_application_get_dbus_connection (EvApplication   *application);
 gboolean	  ev_application_has_window	     (EvApplication   *application);
 guint             ev_application_get_n_windows       (EvApplication   *application);
 const gchar *     ev_application_get_uri             (EvApplication   *application);
