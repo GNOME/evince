@@ -63,8 +63,6 @@ AC_PROG_CXX
 AC_STDC_HEADERS
 
 AC_PROG_SED
-AC_PATH_PROG([GLIB_GENMARSHAL], [glib-genmarshal])
-AC_PATH_PROG([GLIB_MKENUMS],[glib-mkenums])
 
 GNOME_COMPILE_WARNINGS
 GNOME_CXX_WARNINGS
@@ -181,6 +179,34 @@ case "$with_platform" in
 esac
 
 PKG_CHECK_MODULES([SHELL_CORE],[libxml-2.0 >= $LIBXML_REQUIRED gtk+-3.0 >= $GTK_REQUIRED gio-2.0 >= $GLIB_REQUIRED gmodule-no-export-2.0 >= $GLIB_REQUIRED gthread-2.0 $SHELL_PLATFORM_PKGS])
+
+# ***************
+# Build utilities
+# ***************
+
+AC_ARG_VAR([GLIB_GENMARSHAL],[the glib-genmarschal programme])
+AC_PATH_PROG([GLIB_GENMARSHAL],[glib-genmarshal],[])
+if test -z "$GLIB_GENMARSHAL"; then
+  AC_MSG_ERROR([glib-genmarshal not found])
+fi
+
+AC_ARG_VAR([GLIB_MKENUMS],[the glib-mkenums programme])
+AC_PATH_PROG([GLIB_MKENUMS],[glib-mkenums],[])
+if test -z "$GLIB_MKENUMS"; then
+  AC_MSG_ERROR([glib-mkenums not found])
+fi
+
+AC_ARG_VAR([GLIB_COMPILE_RESOURCES],[the glib-compile-resources programme])
+AC_PATH_PROG([GLIB_COMPILE_RESOURCES],[glib-compile-resources],[])
+if test -z "$GLIB_COMPILE_RESOURCES"; then
+  AC_MSG_ERROR([glib-compile-resources not found])
+fi
+
+AC_ARG_VAR([XMLLINT],[the xmllint programme])
+AC_PATH_PROG([XMLLINT],[xmllint],[])
+if test -z "$XMLLINT"; then
+  AC_MSG_ERROR([xmllint not found])
+fi
 
 # *********
 # SM client
