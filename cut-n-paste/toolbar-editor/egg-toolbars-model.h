@@ -23,6 +23,7 @@
 
 #include <glib.h>
 #include <glib-object.h>
+#include <gio/gio.h>
 #include <gdk/gdk.h>
 
 G_BEGIN_DECLS
@@ -116,10 +117,14 @@ EggToolbarsModel *egg_toolbars_model_new	    (void);
 gboolean          egg_toolbars_model_load_names     (EggToolbarsModel *model,
 						     const char *xml_file);
 gboolean          egg_toolbars_model_load_toolbars  (EggToolbarsModel *model,
-						     const char *xml_file);
+                                                     const char *xml_file);
 void              egg_toolbars_model_save_toolbars  (EggToolbarsModel *model,
 						     const char *xml_file,
 						     const char *version);
+gboolean          egg_toolbars_model_load_names_from_resource    (EggToolbarsModel *model,
+                                                                  const char *path);
+gboolean          egg_toolbars_model_load_toolbars_from_resource (EggToolbarsModel *model,
+                                                                  const char *path);
 
 /* Functions for manipulating the types of portable data this toolbar understands. */
 GList *           egg_toolbars_model_get_types      (EggToolbarsModel *model);

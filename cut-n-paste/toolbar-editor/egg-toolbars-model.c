@@ -607,6 +607,36 @@ egg_toolbars_model_load_toolbars (EggToolbarsModel *model,
   return TRUE;
 }
 
+gboolean
+egg_toolbars_model_load_toolbars_from_resource (EggToolbarsModel *model,
+                                                const char *path)
+{
+  xmlDocPtr doc;
+  xmlNodePtr root;
+  GBytes *bytes;
+  GError *error = NULL;
+  const guint8 *data;
+  gsize data_len;
+
+  g_return_val_if_fail (EGG_IS_TOOLBARS_MODEL (model), FALSE);
+
+  bytes = g_resources_lookup_data (path, G_RESOURCE_LOOKUP_FLAGS_NONE, &error);
+  g_assert_no_error (error);
+
+  data = g_bytes_get_data (bytes, &data_len);
+  doc = xmlParseMemory ((const char *) data, data_len);
+  if (doc == NULL)
+    g_error ("Failed to load XML data from resource %s", path);
+
+  root = xmlDocGetRootElement (doc);
+  parse_toolbars (model, root->children);
+
+  xmlFreeDoc (doc);
+  g_bytes_unref (bytes);
+
+  return TRUE;
+}
+
 static void
 parse_available_list (EggToolbarsModel *model,
 		      xmlNodePtr        child)
@@ -667,6 +697,36 @@ egg_toolbars_model_load_names (EggToolbarsModel *model,
   parse_names (model, root->children);
 
   xmlFreeDoc (doc);
+
+  return TRUE;
+}
+
+gboolean
+egg_toolbars_model_load_names_from_resource (EggToolbarsModel *model,
+                                             const char *path)
+{
+  xmlDocPtr doc;
+  xmlNodePtr root;
+  GBytes *bytes;
+  GError *error = NULL;
+  const guint8 *data;
+  gsize data_len;
+
+  g_return_val_if_fail (EGG_IS_TOOLBARS_MODEL (model), FALSE);
+
+  bytes = g_resources_lookup_data (path, G_RESOURCE_LOOKUP_FLAGS_NONE, &error);
+  g_assert_no_error (error);
+
+  data = g_bytes_get_data (bytes, &data_len);
+  doc = xmlParseMemory ((const char *) data, data_len);
+  if (doc == NULL)
+    g_error ("Failed to load XML data from resource %s", path);
+
+  root = xmlDocGetRootElement (doc);
+  parse_names (model, root->children);
+
+  xmlFreeDoc (doc);
+  g_bytes_unref (bytes);
 
   return TRUE;
 }
