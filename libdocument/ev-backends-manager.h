@@ -27,6 +27,7 @@
 #include <glib.h>
 
 #include "ev-document.h"
+#include "ev-macros.h"
 
 G_BEGIN_DECLS
 
@@ -37,9 +38,9 @@ typedef struct _EvTypeInfo {
 
 EvDocument  *ev_backends_manager_get_document             (const gchar *mime_type);
 
-G_GNUC_DEPRECATED
+EV_DEPRECATED
 const gchar *ev_backends_manager_get_document_module_name (EvDocument  *document);
-G_GNUC_DEPRECATED
+EV_DEPRECATED
 EvTypeInfo  *ev_backends_manager_get_document_type_info   (EvDocument  *document);
 
 GList       *ev_backends_manager_get_all_types_info       (void);
