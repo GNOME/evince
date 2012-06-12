@@ -19,10 +19,6 @@ ui_DATA =				\
 	evince-toolbar.xml		\
 	hand-open.png
 
-if ENABLE_PREVIEWER
-ui_DATA += evince-previewer-ui.xml
-endif
-
 #
 # Desktop file
 #
