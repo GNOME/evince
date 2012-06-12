@@ -30,6 +30,7 @@
 
 #include "ev-document.h"
 #include "ev-attachment.h"
+#include "ev-macros.h"
 
 G_BEGIN_DECLS
 
@@ -114,10 +115,16 @@ gboolean             ev_annotation_set_modified              (EvAnnotation      
 							      const gchar            *modified);
 gboolean             ev_annotation_set_modified_from_time    (EvAnnotation           *annot,
 							      GTime                   utime);
+EV_DEPRECATED_FOR(ev_annotaion_get_rgba)
 void                 ev_annotation_get_color                 (EvAnnotation           *annot,
 							      GdkColor               *color);
+EV_DEPRECATED_FOR(ev_annotaion_set_rgba)
 gboolean             ev_annotation_set_color                 (EvAnnotation           *annot,
 							      const GdkColor         *color);
+void                 ev_annotation_get_rgba                  (EvAnnotation           *annot,
+                                                              GdkRGBA                *color);
+gboolean             ev_annotation_set_rgba                  (EvAnnotation           *annot,
+                                                              const GdkRGBA          *color);
 
 /* EvAnnotationMarkup */
 GType                ev_annotation_markup_get_type           (void) G_GNUC_CONST;
