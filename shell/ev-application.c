@@ -997,6 +997,48 @@ ev_application_migrate_config_dir (EvApplication *application)
 }
 
 static void
+app_help_cb (GSimpleAction *action,
+             GVariant      *parameter,
+             gpointer       user_data)
+{
+        EvApplication *application = user_data;
+
+        ev_application_show_help (application, NULL, NULL);
+}
+
+static void
+ev_application_startup (GApplication *gapplication)
+{
+        const GActionEntry app_menu_actions[] = {
+                { "help", app_help_cb, NULL, NULL, NULL },
+        };
+
+        EvApplication *application = EV_APPLICATION (gapplication);
+        GtkBuilder *builder;
+        GError *error = NULL;
+        gboolean shell_shows_app_menu;
+
+        G_APPLICATION_CLASS (ev_application_parent_class)->startup (gapplication);
+
+        /* We only want to add an application menu when it's actually used! */
+        g_object_get (gtk_settings_get_for_screen (gdk_screen_get_default ()), "gtk-shell-shows-app-menu", &shell_shows_app_menu, NULL);
+        if (!shell_shows_app_menu)
+          return;
+
+        g_action_map_add_action_entries (G_ACTION_MAP (application),
+                                         app_menu_actions, G_N_ELEMENTS (app_menu_actions),
+                                         application);
+
+        builder = gtk_builder_new ();
+        gtk_builder_add_from_resource (builder, "/org/gnome/evince/shell/ui/appmenu.ui", &error);
+        g_assert_no_error (error);
+
+        gtk_application_set_app_menu (GTK_APPLICATION (application),
+                                      G_MENU_MODEL (gtk_builder_get_object (builder, "appmenu")));
+        g_object_unref (builder);
+}
+
+static void
 ev_application_shutdown (GApplication *gapplication)
 {
         EvApplication *application = EV_APPLICATION (gapplication);
@@ -1100,6 +1142,7 @@ ev_application_class_init (EvApplicationClass *ev_application_class)
 {
         GApplicationClass *g_application_class = G_APPLICATION_CLASS (ev_application_class);
 
+        g_application_class->startup = ev_application_startup;
         g_application_class->activate = ev_application_activate;
         g_application_class->shutdown = ev_application_shutdown;
 
@@ -1187,4 +1230,32 @@ ev_application_get_dot_dir (EvApplication *application,
                 g_mkdir_with_parents (application->dot_dir, 0700);
 
 	return application->dot_dir;
+}
+
+/**
+ * ev_application_show_help:
+ * @application: the #EvApplication
+ * @screen: (allow-none): a #GdkScreen, or %NULL to use the default screen
+ * @topic: (allow-none): the help topic, or %NULL to show the index
+ *
+ * Launches the help viewer on @screen to show the evince help.
+ * If @topic is %NULL, shows the help index; otherwise the topic.
+ */
+void
+ev_application_show_help (EvApplication *application,
+                          GdkScreen     *screen,
+                          const char    *topic)
+{
+        char *escaped_topic, *uri;
+
+        if (topic != NULL) {
+                escaped_topic = g_uri_escape_string (topic, NULL, TRUE);
+                uri = g_strdup_printf ("help:evince/%s", escaped_topic);
+                g_free (escaped_topic);
+        } else {
+                uri = g_strdup ("help:evince");
+        }
+
+        gtk_show_uri (screen, uri, gtk_get_current_event_time (), NULL);
+        g_free (uri);
 }

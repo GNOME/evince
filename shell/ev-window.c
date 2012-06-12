@@ -276,9 +276,6 @@ struct _EvWindowPrivate {
 
 #define MAX_RECENT_ITEM_LEN (40)
 
-#define EV_HELP         "help:evince"
-#define EV_HELP_TOOLBAR "help:evince/toolbar"
-
 #define TOOLBAR_RESOURCE_PATH "/org/gnome/evince/shell/ui/toolbar.xml"
 
 static const gchar *document_print_settings[] = {
@@ -4492,20 +4489,10 @@ ev_window_cmd_edit_toolbar_cb (GtkDialog *dialog,
 	gchar              *toolbars_file;
 
 	if (response == GTK_RESPONSE_HELP) {
-		GError *error = NULL;
-
-		gtk_show_uri (gtk_window_get_screen (GTK_WINDOW (dialog)),
-			      EV_HELP_TOOLBAR,
-			      gtk_get_current_event_time (),
-			      &error);
-
-		if (error) {
-			ev_window_error_message (ev_window, error,
-						 "%s", _("There was an error displaying help"));
-			g_error_free (error);
-		}
-
-		return;
+                ev_application_show_help (EV_APP, 
+                                          gtk_widget_get_screen (GTK_WIDGET (ev_window)),
+                                          "toolbar");
+                return;
 	}
 
 	toolbar = EGG_EDITABLE_TOOLBAR (ev_window->priv->toolbar);
@@ -4779,17 +4766,9 @@ ev_window_cmd_view_autoscroll (GtkAction *action, EvWindow *ev_window)
 static void
 ev_window_cmd_help_contents (GtkAction *action, EvWindow *ev_window)
 {
-	GError  *error = NULL;
-
-	gtk_show_uri (gtk_window_get_screen (GTK_WINDOW (ev_window)),
-		      EV_HELP,
-		      gtk_get_current_event_time (),
-		      &error);
-	if (error) {
-		ev_window_error_message (ev_window, error, 
-					 "%s", _("There was an error displaying help"));
-		g_error_free (error);
-	}
+        ev_application_show_help (EV_APP,
+                                  gtk_widget_get_screen (GTK_WIDGET (ev_window)),
+                                  NULL);
 }
 
 static void

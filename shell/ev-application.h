@@ -72,6 +72,10 @@ GObject		 *ev_application_get_media_keys	     (EvApplication   *application);
 const gchar      *ev_application_get_dot_dir         (EvApplication   *application,
                                                       gboolean         create);
 
+void              ev_application_show_help           (EvApplication   *application,
+                                                      GdkScreen       *screen,
+                                                      const char      *topic);
+
 G_END_DECLS
 
 #endif /* !EV_APPLICATION_H */
