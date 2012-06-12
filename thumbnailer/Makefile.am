@@ -5,11 +5,8 @@ evince_thumbnailer_SOURCES = \
 	evince-thumbnailer.c
 
 evince_thumbnailer_CPPFLAGS = \
-	-DEVINCEDATADIR=\"$(pkgdatadir)\"	\
 	-I$(top_srcdir)				\
 	-I$(top_builddir)			\
-	-DGNOMELOCALEDIR=\"$(datadir)/locale\"	\
-	-DGNOMEICONDIR=\""$(datadir)/pixmaps"\" \
 	$(AM_CPPFLAGS)
 
 evince_thumbnailer_CFLAGS = \
