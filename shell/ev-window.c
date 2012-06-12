@@ -6705,7 +6705,7 @@ ev_view_popup_cmd_annot_properties (GtkAction *action,
 				    EvWindow  *window)
 {
 	const gchar                  *author;
-	GdkColor                      color;
+	GdkRGBA                       rgba;
 	gdouble                       opacity;
 	gboolean                      popup_is_open;
 	EvAnnotationPropertiesDialog *dialog;
@@ -6727,8 +6727,8 @@ ev_view_popup_cmd_annot_properties (GtkAction *action,
 	if (ev_annotation_markup_set_label (EV_ANNOTATION_MARKUP (annot), author))
 		mask |= EV_ANNOTATIONS_SAVE_LABEL;
 
-	ev_annotation_properties_dialog_get_color (dialog, &color);
-	if (ev_annotation_set_color (annot, &color))
+	ev_annotation_properties_dialog_get_rgba (dialog, &rgba);
+	if (ev_annotation_set_rgba (annot, &rgba))
 		mask |= EV_ANNOTATIONS_SAVE_COLOR;
 
 	opacity = ev_annotation_properties_dialog_get_opacity (dialog);

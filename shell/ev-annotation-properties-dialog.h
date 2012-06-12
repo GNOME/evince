@@ -43,8 +43,8 @@ GtkWidget           *ev_annotation_properties_dialog_new                 (EvAnno
 GtkWidget           *ev_annotation_properties_dialog_new_with_annotation (EvAnnotation                 *annot);
 
 const gchar         *ev_annotation_properties_dialog_get_author          (EvAnnotationPropertiesDialog *dialog);
-void                 ev_annotation_properties_dialog_get_color           (EvAnnotationPropertiesDialog *dialog,
-									  GdkColor                     *color);
+void                 ev_annotation_properties_dialog_get_rgba            (EvAnnotationPropertiesDialog *dialog,
+									  GdkRGBA                      *rgba);
 gdouble              ev_annotation_properties_dialog_get_opacity         (EvAnnotationPropertiesDialog *dialog);
 gboolean             ev_annotation_properties_dialog_get_popup_is_open   (EvAnnotationPropertiesDialog *dialog);
 EvAnnotationTextIcon ev_annotation_properties_dialog_get_text_icon       (EvAnnotationPropertiesDialog *dialog);

@@ -129,7 +129,7 @@ ev_annotation_properties_dialog_init (EvAnnotationPropertiesDialog *annot_dialog
 	GtkWidget *grid;
 	GtkWidget *hbox;
 	gchar     *markup;
-	GdkColor   color = { 0, 65535, 65535, 0 };
+        const GdkRGBA yellow = { 1., 1., 0., 1. };
 
 	gtk_window_set_title (GTK_WINDOW (annot_dialog), _("Annotation Properties"));
 	gtk_window_set_destroy_with_parent (GTK_WINDOW (annot_dialog), TRUE);
@@ -167,7 +167,7 @@ ev_annotation_properties_dialog_init (EvAnnotationPropertiesDialog *annot_dialog
 	gtk_grid_attach (GTK_GRID (grid), label, 0, 1, 1, 1);
 	gtk_widget_show (label);
 
-	annot_dialog->color = gtk_color_button_new_with_color (&color);
+	annot_dialog->color = gtk_color_button_new_with_rgba (&yellow);
 	gtk_grid_attach (GTK_GRID (grid), annot_dialog->color, 1, 1, 1, 1);
         gtk_widget_set_hexpand (annot_dialog->color, TRUE);
 	gtk_widget_show (annot_dialog->color);
@@ -252,7 +252,7 @@ ev_annotation_properties_dialog_new_with_annotation (EvAnnotation *annot)
 	const gchar                  *label;
 	gdouble                       opacity;
 	gboolean                      is_open;
-	GdkColor                      color;
+	GdkRGBA                       rgba;
 
 	dialog = (EvAnnotationPropertiesDialog *)ev_annotation_properties_dialog_new (ev_annotation_get_annotation_type (annot));
 	dialog->annot = g_object_ref (annot);
@@ -261,8 +261,8 @@ ev_annotation_properties_dialog_new_with_annotation (EvAnnotation *annot)
 	if (label)
 		gtk_entry_set_text (GTK_ENTRY (dialog->author), label);
 
-	ev_annotation_get_color (annot, &color);
-	gtk_color_button_set_color (GTK_COLOR_BUTTON (dialog->color), &color);
+	ev_annotation_get_rgba (annot, &rgba);
+	gtk_color_chooser_set_rgba (GTK_COLOR_CHOOSER (dialog->color), &rgba);
 
 	opacity = ev_annotation_markup_get_opacity (EV_ANNOTATION_MARKUP (annot));
 	gtk_range_set_value (GTK_RANGE (dialog->opacity), opacity * 100);
@@ -288,10 +288,10 @@ ev_annotation_properties_dialog_get_author (EvAnnotationPropertiesDialog *dialog
 }
 
 void
-ev_annotation_properties_dialog_get_color (EvAnnotationPropertiesDialog *dialog,
-					   GdkColor                     *color)
+ev_annotation_properties_dialog_get_rgba (EvAnnotationPropertiesDialog *dialog,
+					  GdkRGBA                      *rgba)
 {
-	gtk_color_button_get_color (GTK_COLOR_BUTTON (dialog->color), color);
+	gtk_color_chooser_get_rgba (GTK_COLOR_CHOOSER (dialog->color), rgba);
 }
 
 gdouble
