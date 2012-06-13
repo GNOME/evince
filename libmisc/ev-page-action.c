@@ -233,7 +233,8 @@ ev_page_action_class_init (EvPageActionClass *class)
 							      "Model",
 							      "Current Links Model",
 							      GTK_TYPE_TREE_MODEL,
-							      G_PARAM_READWRITE));
+							      G_PARAM_READWRITE |
+                                                              G_PARAM_STATIC_STRINGS));
 
 	g_type_class_add_private (object_class, sizeof (EvPageActionPrivate));
 }
