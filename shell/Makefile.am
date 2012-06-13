@@ -1,3 +1,5 @@
+NULL =
+
 INCLUDES=							\
 	-DEVINCEDATADIR=\"$(pkgdatadir)\"				\
 	-DGNOMEDATADIR=\"$(datadir)\"				\
@@ -45,8 +47,6 @@ evince_SOURCES=				\
 	ev-history.h			\
 	ev-keyring.h			\
 	ev-keyring.c			\
-	ev-marshal.c			\
-	ev-marshal.h			\
 	ev-message-area.c		\
 	ev-message-area.h		\
 	ev-metadata.c			\
@@ -67,8 +67,6 @@ evince_SOURCES=				\
 	ev-properties-license.h		\
 	ev-open-recent-action.c		\
 	ev-open-recent-action.h		\
-	ev-resources.c			\
-	ev-resources.h			\
 	ev-utils.c			\
 	ev-utils.h			\
 	ev-window.c			\
@@ -93,12 +91,18 @@ evince_SOURCES=				\
 	ev-sidebar-thumbnails.h		\
 	main.c
 
+nodist_evince_SOURCES = \
+	ev-marshal.c \
+	ev-marshal.h \
+	ev-resources.c \
+	$(NULL)
+
 if ENABLE_DBUS
 evince_SOURCES += \
 	ev-media-player-keys.c \
-	ev-media-player-keys.h
+	ev-media-player-keys.h \
+	$(NULL)
 endif
-
 
 evince_LDFLAGS = $(AM_LDFLAGS)
 
@@ -131,8 +135,9 @@ BUILT_SOURCES = \
 	ev-resources.c
 
 if ENABLE_DBUS
-evinced_SOURCES=			\
-	ev-daemon.c
+evinced_SOURCES = \
+	ev-daemon.c \
+	$(NULL)
 
 evinced_CFLAGS=				\
 	-DEVINCEDATADIR=\"$(pkgdatadir)\"			\
