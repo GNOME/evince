@@ -1,6 +1,6 @@
 lib_LTLIBRARIES = libevview3.la
 
-NOINST_H_FILES =			\
+NOINST_H_SRC_FILES =			\
 	ev-annotation-window.h		\
 	ev-loading-window.h		\
 	ev-page-cache.h			\
@@ -9,8 +9,10 @@ NOINST_H_FILES =			\
 	ev-transition-animation.h	\
 	ev-view-accessible.h		\
 	ev-view-cursor.h		\
-	ev-view-marshal.h		\
 	ev-view-private.h
+
+NOINST_H_BUILT_FILES = \
+	ev-view-marshal.h
 
 INST_H_SRC_FILES = 			\
 	ev-document-model.h		\
@@ -21,12 +23,12 @@ INST_H_SRC_FILES = 			\
 	ev-view.h			\
 	ev-view-presentation.h
 
-INST_H_FILES = 				\
-	$(INST_H_SRC_FILES)		\
+INST_H_BUILT_FILES = \
 	ev-view-type-builtins.h
 
 headerdir = $(includedir)/evince/$(EV_API_VERSION)/libview
-header_DATA = $(INST_H_FILES)
+header_DATA = $(INST_H_SRC_FILES)
+nodist_header_DATA = $(INST_H_BUILT_FILES)
 
 libevview3_la_SOURCES =			\
 	ev-annotation-window.c		\
@@ -42,12 +44,16 @@ libevview3_la_SOURCES =			\
 	ev-transition-animation.c	\
 	ev-view.c			\
 	ev-view-accessible.c		\
-	ev-view-marshal.c		\
 	ev-view-cursor.c		\
 	ev-view-presentation.c		\
-	ev-view-type-builtins.c		\
-	$(NOINST_H_FILES)		\
-	$(INST_H_FILES)
+	$(NOINST_H_SRC_FILES)		\
+	$(INST_H_SRC_FILES)
+
+nodist_libevview3_la_SOURCES = \
+	ev-view-marshal.c \
+	ev-view-type-builtins.c \
+	$(NOINST_H_BUILT_FILES) \
+	$(INST_H_BUILT_FILES)
 
 libevview3_la_CPPFLAGS = \
 	-DEVINCEDATADIR=\"$(pkgdatadir)\"	\

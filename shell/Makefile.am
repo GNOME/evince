@@ -166,6 +166,6 @@ ev-marshal.c: $(srcdir)/ev-marshal.list
 ev-resources.c: evince.gresource.xml Makefile $(shell $(GLIB_COMPILE_RESOURCES) --generate-dependencies --sourcedir $(srcdir) $(srcdir)/evince.gresource.xml)
 	$(AM_V_GEN) XMLLINT=$(XMLLINT) $(GLIB_COMPILE_RESOURCES) --target $@ --sourcedir $(srcdir) --generate-source --c-name ev $<
 
-DISTCLEANFILES =
+DISTCLEANFILES = $(BUILT_SOURCES)
 
 -include $(top_srcdir)/git.mk
