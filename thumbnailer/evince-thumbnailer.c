@@ -71,10 +71,10 @@ time_monitor (gpointer data)
         app_name = g_get_application_name ();
         if (app_name == NULL)
                 app_name = g_get_prgname ();
-        g_print ("%s couldn't process file: '%s'\n"
-                 "Reason: Took too much time to process.\n",
-                 app_name,
-                 (const char *) data);
+        g_printerr ("%s couldn't process file: '%s'\n"
+                    "Reason: Took too much time to process.\n",
+                    app_name,
+                    (const char *) data);
 
         exit (0);
 }
@@ -252,7 +252,7 @@ main (int argc, char *argv[])
 	g_option_context_free (context);
 
 	if (size < 1) {
-		g_print ("Size cannot be smaller than 1 pixel\n");
+		g_printerr ("Size cannot be smaller than 1 pixel\n");
 		return -1;
 	}
 
