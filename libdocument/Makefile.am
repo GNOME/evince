@@ -95,7 +95,6 @@ nodist_libevdocument3_la_SOURCES = \
 
 libevdocument3_la_CPPFLAGS = \
 	-DG_LOG_DOMAIN=\"EvinceDocument\"		\
-	-DEVINCE_UIDIR=\"$(pkgdatadir)\"		\
 	-DGNOMELOCALEDIR=\"$(datadir)/locale\"		\
 	-DEV_BACKENDSDIR=\"$(backenddir)\"		\
 	-DEV_BACKENDSBINARYVERSION=\"$(backend_binary_version)\"	\
