@@ -33,13 +33,6 @@
 #include "ev-stock-icons.h"
 #include "ev-metadata.h"
 
-#ifdef WITH_SMCLIENT
-#include "eggsmclient.h"
-#ifdef GDK_WINDOWING_X11
-#include "eggdesktopfile.h"
-#endif
-#endif /* WITH_SMCLIENT */
-
 #ifdef G_OS_WIN32
 #include <io.h>
 #include <conio.h>
@@ -277,10 +270,6 @@ main (int argc, char *argv[])
 	g_option_context_set_translation_domain(context, GETTEXT_PACKAGE);
 	g_option_context_add_main_entries (context, goption_options, GETTEXT_PACKAGE);
 
-#ifdef WITH_SMCLIENT
-	g_option_context_add_group (context, egg_sm_client_get_option_group ());
-#endif
-
 	g_option_context_add_group (context, gtk_get_option_group (TRUE));
 
 	if (!g_option_context_parse (context, &argc, &argv, &error)) {
@@ -305,13 +294,9 @@ main (int argc, char *argv[])
 
 	ev_stock_icons_init ();
 
-#if defined(WITH_SMCLIENT) && defined(GDK_WINDOWING_X11)
-	egg_set_desktop_file (GNOMEDATADIR "/applications/evince.desktop");
-#else
 	/* Manually set name and icon */
 	g_set_application_name (_("Document Viewer"));
 	gtk_window_set_default_icon_name ("evince");
-#endif /* WITH_SMCLIENT && GDK_WINDOWING_X11 */
 
         application = ev_application_new ();
         if (!g_application_register (G_APPLICATION (application), NULL, &error)) {
@@ -321,7 +306,6 @@ main (int argc, char *argv[])
                 goto done;
         }
 
-	ev_application_load_session (application);
 	load_files (file_arguments);
 
 	/* Change directory so we don't prevent unmounting in case the initial cwd
