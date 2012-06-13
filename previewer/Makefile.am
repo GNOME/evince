@@ -4,9 +4,12 @@ bin_PROGRAMS = evince-previewer
 
 evince_previewer_SOURCES = \
 	ev-previewer.c \
-	ev-previewer-resources.c \
 	ev-previewer-window.h \
 	ev-previewer-window.c \
+	$(NULL)
+
+nodist_evince_previewer_SOURCES = \
+	ev-previewer-resources.c \
 	$(NULL)
 
 evince_previewer_CPPFLAGS = \
