@@ -205,7 +205,8 @@ ev_sidebar_links_class_init (EvSidebarLinksClass *ev_sidebar_links_class)
 							      "Model",
 							      "Current Model",
 							      GTK_TYPE_TREE_MODEL,
-							      G_PARAM_READWRITE));
+							      G_PARAM_READWRITE |
+                                                              G_PARAM_STATIC_STRINGS));
 	g_object_class_override_property (g_object_class,
 					  PROP_WIDGET,
 					  "main-widget");

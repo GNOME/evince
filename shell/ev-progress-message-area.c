@@ -63,14 +63,16 @@ ev_progress_message_area_class_init (EvProgressMessageAreaClass *class)
 							      "Status",
 							      "The status text of the progress area",
 							      NULL,
-							      G_PARAM_READWRITE));
+							      G_PARAM_READWRITE |
+                                                              G_PARAM_STATIC_STRINGS));
 	g_object_class_install_property (gobject_class,
 					 PROP_FRACTION,
 					 g_param_spec_double ("fraction",
 							      "Fraction",
 							      "The fraction of total work that has been completed",
 							      0.0, 1.0, 0.0,
-							      G_PARAM_READWRITE));
+							      G_PARAM_READWRITE |
+                                                              G_PARAM_STATIC_STRINGS));
 
 	g_type_class_add_private (gobject_class, sizeof (EvProgressMessageAreaPrivate));
 }

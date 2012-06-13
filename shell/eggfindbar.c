@@ -149,7 +149,8 @@ egg_find_bar_class_init (EggFindBarClass *klass)
 							"Search string",
 							"The name of the string to be found",
 							NULL,
-							G_PARAM_READWRITE));
+							G_PARAM_READWRITE |
+                                                        G_PARAM_STATIC_STRINGS));
 
   /**
    * EggFindBar:case_sensitive:
@@ -163,7 +164,8 @@ egg_find_bar_class_init (EggFindBarClass *klass)
                                                          "Case sensitive",
                                                          "TRUE for a case sensitive search",
                                                          FALSE,
-                                                         G_PARAM_READWRITE));
+                                                         G_PARAM_READWRITE |
+                                                         G_PARAM_STATIC_STRINGS));
 
   /**
    * EggFindBar:whole-words-only:
@@ -176,7 +178,8 @@ egg_find_bar_class_init (EggFindBarClass *klass)
                                                          "Whole words only",
                                                          "Whether search whole words only",
                                                          FALSE,
-                                                         G_PARAM_READWRITE));
+                                                         G_PARAM_READWRITE |
+                                                         G_PARAM_STATIC_STRINGS));
 
   g_type_class_add_private (object_class, sizeof (EggFindBarPrivate));
 

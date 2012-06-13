@@ -189,7 +189,8 @@ ev_sidebar_class_init (EvSidebarClass *ev_sidebar_class)
 							      "Current page",
 							      "The currently visible page",
 							      GTK_TYPE_WIDGET,
-							      G_PARAM_READWRITE));
+							      G_PARAM_READWRITE |
+                                                              G_PARAM_STATIC_STRINGS));
 }
 
 static void

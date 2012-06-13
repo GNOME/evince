@@ -69,21 +69,24 @@ ev_message_area_class_init (EvMessageAreaClass *class)
 							      "Text",
 							      "The primary text of the message dialog",
 							      NULL,
-							      G_PARAM_READWRITE));
+							      G_PARAM_READWRITE |
+                                                              G_PARAM_STATIC_STRINGS));
 	g_object_class_install_property (gobject_class,
 					 PROP_SECONDARY_TEXT,
 					 g_param_spec_string ("secondary-text",
 							      "Secondary Text",
 							      "The secondary text of the message dialog",
 							      NULL,
-							      G_PARAM_READWRITE));
+							      G_PARAM_READWRITE |
+                                                              G_PARAM_STATIC_STRINGS));
 	g_object_class_install_property (gobject_class,
 					 PROP_IMAGE,
 					 g_param_spec_object ("image",
 							      "Image",
 							      "The image",
 							      GTK_TYPE_WIDGET,
-							      G_PARAM_READWRITE));
+							      G_PARAM_READWRITE |
+                                                              G_PARAM_STATIC_STRINGS));
 
 	g_type_class_add_private (gobject_class, sizeof (EvMessageAreaPrivate));
 }

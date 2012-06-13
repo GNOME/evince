@@ -167,7 +167,8 @@ ev_bookmarks_class_init (EvBookmarksClass *klass)
                                                               "Metadata",
                                                               "The document metadata",
                                                               EV_TYPE_METADATA,
-                                                              G_PARAM_CONSTRUCT_ONLY | G_PARAM_WRITABLE));
+                                                              G_PARAM_CONSTRUCT_ONLY | G_PARAM_WRITABLE |
+                                                              G_PARAM_STATIC_STRINGS));
         /* Signals */
         signals[CHANGED] =
                 g_signal_new ("changed",

@@ -74,7 +74,8 @@ ev_bookmark_action_class_init (EvBookmarkActionClass *klass)
                                                             "Page",
                                                             "The bookmark page",
                                                             0, G_MAXUINT, 0,
-                                                            G_PARAM_CONSTRUCT_ONLY | G_PARAM_WRITABLE));
+                                                            G_PARAM_CONSTRUCT_ONLY | G_PARAM_WRITABLE |
+                                                            G_PARAM_STATIC_STRINGS));
 }
 
 GtkAction *

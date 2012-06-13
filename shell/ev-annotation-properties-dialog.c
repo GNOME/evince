@@ -234,7 +234,8 @@ ev_annotation_properties_dialog_class_init (EvAnnotationPropertiesDialogClass *k
 							    "The type of annotation",
 							    EV_TYPE_ANNOTATION_TYPE,
 							    EV_ANNOTATION_TYPE_TEXT,
-							    G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY));
+							    G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY |
+                                                            G_PARAM_STATIC_STRINGS));
 }
 
 GtkWidget *
