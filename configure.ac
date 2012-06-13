@@ -212,46 +212,6 @@ if test -z "$GDBUS_CODEGEN"; then
   AC_MSG_ERROR([gdbus-codegen not found])
 fi
 
-# *********
-# SM client
-# *********
-
-GDK_TARGET="$($PKG_CONFIG --variable targets gdk-3.0)"
-
-AC_MSG_CHECKING([which smclient backend to use])
-AC_ARG_WITH([smclient],
-  [AS_HELP_STRING([--with-smclient-backend=no|xsmp|win32|quartz],
-		  [Setting smclient backend (default:auto)])],
-  [],
-  [case "$GDK_TARGET" in
-    x11*) case "$with_platform" in
-           gnome) with_smclient=xsmp ;;
-           *) with_smclient=no ;;
-         esac ;;
-    win32|quartz) with_smclient=$GDK_TARGET ;;
-    *) with_smclient=no ;;
-   esac])
-   
-AC_MSG_RESULT([$with_smclient])
-
-if test "$with_smclient" != "no"; then
-  AC_DEFINE([WITH_SMCLIENT],[1],[Define if smclient is enabled])
-
-  case "$with_smclient" in
-    xsmp) SMCLIENT_PKGS="sm >= 1.0.0 ice x11" ;;
-    *) SMCLIENT_PKGS="" ;;
-  esac
-
-  PKG_CHECK_MODULES([SMCLIENT],[gtk+-3.0 gthread-2.0 $SMCLIENT_PKGS])
-  AC_SUBST([SMCLIENT_CFLAGS])
-  AC_SUBST([SMCLIENT_LIBS])
-fi
-
-AM_CONDITIONAL([WITH_SMCLIENT],[test "$with_smclient" != "no"])
-AM_CONDITIONAL([WITH_SMCLIENT_XSMP],[test "$with_smclient" = "xsmp"])
-AM_CONDITIONAL([WITH_SMCLIENT_WIN32],[test "$with_smclient" = "win32"])
-AM_CONDITIONAL([WITH_SMCLIENT_QUARTZ],[test "$with_smclient" = "quartz"])
-
 # ***
 
 BACKEND_LIBTOOL_FLAGS="-module -avoid-version -no-undefined -export-symbols \$(top_srcdir)/backend/backend.symbols"
@@ -756,7 +716,6 @@ backend/tiff/Makefile
 backend/xps/Makefile
 cut-n-paste/Makefile
 cut-n-paste/gimpcellrenderertoggle/Makefile
-cut-n-paste/smclient/Makefile
 cut-n-paste/synctex/Makefile
 data/evince.desktop.in
 data/evince-previewer.desktop.in
@@ -846,7 +805,6 @@ GTK Doc reference ........:  $enable_gtk_doc
 GObject Introspection ....:  $enable_introspection
 DBUS communication .......:  $enable_dbus
 Keyring integration ......:  $with_keyring
-Session Manager client ...:  $with_smclient
 GTK+ Unix Print ..........:  $with_gtk_unix_print
 
 ])

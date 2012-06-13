@@ -35,10 +35,6 @@
 #endif
 #include <unistd.h>
 
-#ifdef WITH_SMCLIENT
-#include "eggsmclient.h"
-#endif
-
 #include "ev-application.h"
 #include "ev-file-helpers.h"
 #include "ev-stock-icons.h"
@@ -59,10 +55,6 @@ struct _EvApplication {
         EvEvinceApplication *skeleton;
 	EvMediaPlayerKeys *keys;
 	gboolean doc_registered;
-#endif
-
-#ifdef WITH_SMCLIENT
-	EggSMClient *smclient;
 #endif
 };
 
@@ -113,71 +105,6 @@ ev_application_new (void)
                        "application-id", NULL,
                        "flags", flags,
                        NULL);
-}
-
-/* Session */
-gboolean
-ev_application_load_session (EvApplication *application)
-{
-	GKeyFile *state_file;
-	gchar    *uri;
-
-#ifdef WITH_SMCLIENT
-	if (egg_sm_client_is_resumed (application->smclient)) {
-		state_file = egg_sm_client_get_state_file (application->smclient);
-		if (!state_file)
-			return FALSE;
-	} else
-#endif /* WITH_SMCLIENT */
-		return FALSE;
-
-	uri = g_key_file_get_string (state_file, "Evince", "uri", NULL);
-	if (!uri)
-		return FALSE;
-
-	ev_application_open_uri_at_dest (application, uri,
-					 gdk_screen_get_default (),
-					 NULL, 0, NULL,
-					 GDK_CURRENT_TIME);
-	g_free (uri);
-	g_key_file_free (state_file);
-
-	return TRUE;
-}
-
-#ifdef WITH_SMCLIENT
-
-static void
-smclient_save_state_cb (EggSMClient   *client,
-			GKeyFile      *state_file,
-			EvApplication *application)
-{
-	if (!application->uri)
-		return;
-
-	g_key_file_set_string (state_file, "Evince", "uri", application->uri);
-}
-
-static void
-smclient_quit_cb (EggSMClient  *client,
-		  GApplication *application)
-{
-        g_application_quit (application);
-}
-#endif /* WITH_SMCLIENT */
-
-static void
-ev_application_init_session (EvApplication *application)
-{
-#ifdef WITH_SMCLIENT
-	application->smclient = egg_sm_client_get ();
-	g_signal_connect (application->smclient, "save_state",
-			  G_CALLBACK (smclient_save_state_cb),
-			  application);
-	g_signal_connect (application->smclient, "quit",
-			  G_CALLBACK (smclient_quit_cb),
-			  application);
-#endif
 }
 
 #ifdef ENABLE_DBUS
@@ -1157,8 +1084,6 @@ ev_application_init (EvApplication *ev_application)
                                                     "evince", NULL);
         if (!g_file_test (ev_application->dot_dir, G_FILE_TEST_EXISTS | G_FILE_TEST_IS_DIR))
                 ev_application_migrate_config_dir (ev_application);
-
-	ev_application_init_session (ev_application);
 
 	ev_application_accel_map_load (ev_application);
 }

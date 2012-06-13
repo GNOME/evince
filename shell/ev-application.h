@@ -49,7 +49,6 @@ typedef struct _EvApplicationClass EvApplicationClass;
 GType	          ev_application_get_type	     (void) G_GNUC_CONST;
 EvApplication    *ev_application_new                 (void);
 
-gboolean          ev_application_load_session        (EvApplication   *application);
 void              ev_application_open_window         (EvApplication   *application,
 						      GdkScreen       *screen,
 						      guint32          timestamp);

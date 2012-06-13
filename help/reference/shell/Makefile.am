@@ -113,7 +113,6 @@ FILTER_OUT = \
 
 GTKDOC_LIBS = \
 	$(top_builddir)/cut-n-paste/gimpcellrenderertoggle/libgimpcellrenderertoggle.la	\
-	$(top_builddir)/cut-n-paste/smclient/libsmclient.la		\
 	$(top_builddir)/properties/libevproperties.la			\
 	$(top_builddir)/libdocument/libevdocument3.la			\
 	$(top_builddir)/libview/libevview3.la				\
