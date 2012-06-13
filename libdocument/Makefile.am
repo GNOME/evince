@@ -40,15 +40,15 @@ INST_H_SRC_FILES = 				\
 	ev-page.h				\
 	ev-render-context.h			\
 	ev-selection.h				\
-	ev-transition-effect.h			\
+	ev-transition-effect.h
+
+INST_H_BUILT_FILES = \
+	ev-document-type-builtins.h \
 	ev-version.h
 
-INST_H_FILES = 					\
-	$(INST_H_SRC_FILES)			\
-	ev-document-type-builtins.h
-
 headerdir = $(includedir)/evince/$(EV_API_VERSION)/libdocument
-header_DATA = $(INST_H_FILES)
+header_DATA = $(INST_H_SRC_FILES)
+nodist_header_DATA = $(INST_H_BUILT_FILES)
 
 libevdocument3_la_SOURCES=			\
 	ev-annotation.c				\
@@ -74,7 +74,6 @@ libevdocument3_la_SOURCES=			\
 	ev-document-find.c			\
 	ev-document-transition.c		\
 	ev-document-forms.c			\
-	ev-document-type-builtins.c		\
 	ev-document-text.c			\
 	ev-form-field.c 			\
 	ev-debug.c				\
@@ -88,7 +87,11 @@ libevdocument3_la_SOURCES=			\
 	ev-transition-effect.c			\
 	ev-document-misc.c			\
 	$(NOINST_H_FILES)			\
-	$(INST_H_FILES)
+	$(INST_H_SRC_FILES)
+
+nodist_libevdocument3_la_SOURCES = \
+	ev-document-type-builtins.c \
+	$(INST_H_BUILT_FILES)
 
 libevdocument3_la_CPPFLAGS = \
 	-DG_LOG_DOMAIN=\"EvinceDocument\"		\
@@ -117,7 +120,6 @@ libevdocument3_la_LIBADD = \
 	$(ZLIB_LIBS)		\
 	$(LIBM)			\
 	$(top_builddir)/cut-n-paste/synctex/libsynctex.la
-
 
 BUILT_SOURCES = 			\
 	ev-document-type-builtins.c	\
