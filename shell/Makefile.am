@@ -1,7 +1,6 @@
 NULL =
 
 INCLUDES=							\
-	-DEVINCEDATADIR=\"$(pkgdatadir)\"				\
 	-DGNOMEDATADIR=\"$(datadir)\"				\
 	-I$(top_srcdir)						\
 	-I$(top_builddir)					\
@@ -16,9 +15,7 @@ INCLUDES=							\
 	-I$(top_builddir)/libview				\
 	-I$(top_srcdir)/libmisc					\
 	-I$(top_srcdir)/properties				\
-	-DGNOMEICONDIR=\""$(datadir)/pixmaps"\" 		\
 	-DBINDIR=\""$(bindir)"\"				\
-	-DLIBEXECDIR=\""$(libexecdir)"\"			\
 	-DEVINCE_COMPILATION					\
 	$(SHELL_CFLAGS)						\
 	$(WARN_CFLAGS)						\
@@ -140,11 +137,8 @@ evinced_SOURCES = \
 	$(NULL)
 
 evinced_CFLAGS=				\
-	-DEVINCEDATADIR=\"$(pkgdatadir)\"			\
-	-DGNOMEDATADIR=\"$(datadir)\"				\
 	-I$(top_srcdir)						\
 	-I$(top_builddir)					\
-	-DLIBEXECDIR=\""$(libexecdir)"\"			\
 	-DEVINCE_COMPILATION					\
 	$(EV_DAEMON_CFLAGS)					\
 	$(WARN_CFLAGS)						\
