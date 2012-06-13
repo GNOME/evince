@@ -115,10 +115,10 @@ libevdocument3_la_LDFLAGS = \
 	$(AM_LDFLAGS)
 
 libevdocument3_la_LIBADD = \
+	$(top_builddir)/cut-n-paste/synctex/libsynctex.la \
 	$(LIBDOCUMENT_LIBS)	\
 	$(ZLIB_LIBS)		\
-	$(LIBM)			\
-	$(top_builddir)/cut-n-paste/synctex/libsynctex.la
+	$(LIBM)
 
 BUILT_SOURCES = 			\
 	ev-document-type-builtins.c	\
