@@ -58,7 +58,6 @@ nodist_libevview3_la_SOURCES = \
 libevview3_la_CPPFLAGS = \
 	-DEVINCEDATADIR=\"$(pkgdatadir)\"	\
 	-DG_LOG_DOMAIN=\"EvinceView\"		\
-	-DGNOMELOCALEDIR=\"$(datadir)/locale\"	\
 	-DEVINCE_COMPILATION			\
 	-I$(top_srcdir)				\
 	-I$(top_srcdir)/libdocument		\
