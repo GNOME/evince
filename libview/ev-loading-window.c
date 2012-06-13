@@ -254,7 +254,8 @@ ev_loading_window_class_init (EvLoadingWindowClass *klass)
 							      "The parent window",
 							      GTK_TYPE_WINDOW,
 							      G_PARAM_WRITABLE |
-							      G_PARAM_CONSTRUCT_ONLY));
+							      G_PARAM_CONSTRUCT_ONLY |
+                                                              G_PARAM_STATIC_STRINGS));
 }
 
 /* Public methods */

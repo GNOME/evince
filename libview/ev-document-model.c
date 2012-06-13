@@ -196,35 +196,40 @@ ev_document_model_class_init (EvDocumentModelClass *klass)
 							      "Document",
 							      "The current document",
 							      EV_TYPE_DOCUMENT,
-							      G_PARAM_READWRITE));
+							      G_PARAM_READWRITE |
+                                                              G_PARAM_STATIC_STRINGS));
 	g_object_class_install_property (g_object_class,
 					 PROP_PAGE,
 					 g_param_spec_int ("page",
 							   "Page",
 							   "Current page",
 							   -1, G_MAXINT, -1,
-							   G_PARAM_READWRITE));
+							   G_PARAM_READWRITE |
+                                                           G_PARAM_STATIC_STRINGS));
 	g_object_class_install_property (g_object_class,
 					 PROP_ROTATION,
 					 g_param_spec_int ("rotation",
 							   "Rotation",
 							   "Current rotation angle",
 							   0, 360, 0,
-							   G_PARAM_READWRITE));
+							   G_PARAM_READWRITE |
+                                                           G_PARAM_STATIC_STRINGS));
 	g_object_class_install_property (g_object_class,
 					 PROP_INVERTED_COLORS,
 					 g_param_spec_boolean ("inverted-colors",
 							       "Inverted Colors",
 							       "Whether document is displayed with inverted colors",
 							       FALSE,
-							       G_PARAM_READWRITE));
+							       G_PARAM_READWRITE |
+                                                               G_PARAM_STATIC_STRINGS));
 	g_object_class_install_property (g_object_class,
 					 PROP_SCALE,
 					 g_param_spec_double ("scale",
 							      "Scale",
 							      "Current scale factor",
 							      0., G_MAXDOUBLE, 1.,
-							      G_PARAM_READWRITE));
+							      G_PARAM_READWRITE |
+                                                              G_PARAM_STATIC_STRINGS));
 	g_object_class_install_property (g_object_class,
 					 PROP_SIZING_MODE,
 					 g_param_spec_enum ("sizing-mode",
@@ -232,35 +237,40 @@ ev_document_model_class_init (EvDocumentModelClass *klass)
 							    "Current sizing mode",
 							    EV_TYPE_SIZING_MODE,
 							    EV_SIZING_FIT_WIDTH,
-							    G_PARAM_READWRITE));
+							    G_PARAM_READWRITE |
+                                                            G_PARAM_STATIC_STRINGS));
 	g_object_class_install_property (g_object_class,
 					 PROP_CONTINUOUS,
 					 g_param_spec_boolean ("continuous",
 							       "Continuous",
 							       "Whether document is displayed in continuous mode",
 							       TRUE,
-							       G_PARAM_READWRITE));
+							       G_PARAM_READWRITE |
+                                                               G_PARAM_STATIC_STRINGS));
 	g_object_class_install_property (g_object_class,
 					 PROP_DUAL_PAGE,
 					 g_param_spec_boolean ("dual-page",
 							       "Dual Page",
 							       "Whether document is displayed in dual page mode",
 							       FALSE,
-							       G_PARAM_READWRITE));
+							       G_PARAM_READWRITE |
+                                                               G_PARAM_STATIC_STRINGS));
 	g_object_class_install_property (g_object_class,
 					 PROP_DUAL_PAGE_ODD_LEFT,
 					 g_param_spec_boolean ("dual-odd-left",
 							       "Odd Pages Left",
 							       "Whether odd pages are displayed on left side in dual mode",
 							       FALSE,
-							       G_PARAM_READWRITE));
+							       G_PARAM_READWRITE |
+                                                               G_PARAM_STATIC_STRINGS));
 	g_object_class_install_property (g_object_class,
 					 PROP_FULLSCREEN,
 					 g_param_spec_boolean ("fullscreen",
 							       "Fullscreen",
 							       "Whether document is displayed in fullscreen mode",
 							       FALSE,
-							       G_PARAM_READWRITE));
+							       G_PARAM_READWRITE |
+                                                               G_PARAM_STATIC_STRINGS));
 
 	/* Signals */
 	signals [PAGE_CHANGED] =

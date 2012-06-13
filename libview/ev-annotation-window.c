@@ -550,7 +550,8 @@ ev_annotation_window_class_init (EvAnnotationWindowClass *klass)
 							      "The annotation associated to the window",
 							      EV_TYPE_ANNOTATION_MARKUP,
 							      G_PARAM_WRITABLE |
-							      G_PARAM_CONSTRUCT_ONLY));
+							      G_PARAM_CONSTRUCT_ONLY |
+                                                              G_PARAM_STATIC_STRINGS));
 	g_object_class_install_property (g_object_class,
 					 PROP_PARENT,
 					 g_param_spec_object ("parent",
@@ -558,7 +559,8 @@ ev_annotation_window_class_init (EvAnnotationWindowClass *klass)
 							      "The parent window",
 							      GTK_TYPE_WINDOW,
 							      G_PARAM_WRITABLE |
-							      G_PARAM_CONSTRUCT_ONLY));
+							      G_PARAM_CONSTRUCT_ONLY |
+                                                              G_PARAM_STATIC_STRINGS));
 	signals[CLOSED] =
 		g_signal_new ("closed",
 			      G_TYPE_FROM_CLASS (g_object_class),

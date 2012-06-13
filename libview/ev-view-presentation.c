@@ -1429,7 +1429,8 @@ ev_view_presentation_class_init (EvViewPresentationClass *klass)
 							      "Document",
 							      EV_TYPE_DOCUMENT,
 							      G_PARAM_WRITABLE |
-							      G_PARAM_CONSTRUCT_ONLY));
+							      G_PARAM_CONSTRUCT_ONLY |
+                                                              G_PARAM_STATIC_STRINGS));
 	g_object_class_install_property (gobject_class,
 					 PROP_CURRENT_PAGE,
 					 g_param_spec_uint ("current-page",
@@ -1437,7 +1438,8 @@ ev_view_presentation_class_init (EvViewPresentationClass *klass)
 							    "The current page",
 							    0, G_MAXUINT, 0,
 							    G_PARAM_WRITABLE |
-							    G_PARAM_CONSTRUCT_ONLY));
+							    G_PARAM_CONSTRUCT_ONLY |
+                                                            G_PARAM_STATIC_STRINGS));
 	g_object_class_install_property (gobject_class,
 					 PROP_ROTATION,
 					 g_param_spec_uint ("rotation",
@@ -1445,7 +1447,8 @@ ev_view_presentation_class_init (EvViewPresentationClass *klass)
 							    "Current rotation angle",
 							    0, 360, 0,
 							    G_PARAM_READWRITE |
-							    G_PARAM_CONSTRUCT));
+							    G_PARAM_CONSTRUCT |
+                                                            G_PARAM_STATIC_STRINGS));
 	g_object_class_install_property (gobject_class,
 					 PROP_INVERTED_COLORS,
 					 g_param_spec_boolean ("inverted-colors",
@@ -1453,7 +1456,8 @@ ev_view_presentation_class_init (EvViewPresentationClass *klass)
 							       "Whether presentation is displayed with inverted colors",
 							       FALSE,
 							       G_PARAM_WRITABLE |
-							       G_PARAM_CONSTRUCT_ONLY));
+							       G_PARAM_CONSTRUCT_ONLY |
+                                                               G_PARAM_STATIC_STRINGS));
 
 	signals[CHANGE_PAGE] =
 		g_signal_new ("change_page",

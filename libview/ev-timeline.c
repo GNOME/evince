@@ -222,7 +222,8 @@ ev_timeline_class_init (EvTimelineClass *class)
 							    1,
 							    G_MAXUINT,
 							    DEFAULT_FPS,
-							    G_PARAM_READWRITE));
+							    G_PARAM_READWRITE |
+                                                            G_PARAM_STATIC_STRINGS));
 	g_object_class_install_property (object_class,
 					 PROP_DURATION,
 					 g_param_spec_uint ("duration",
@@ -231,14 +232,16 @@ ev_timeline_class_init (EvTimelineClass *class)
 							    0,
 							    G_MAXUINT,
 							    0,
-							    G_PARAM_READWRITE));
+							    G_PARAM_READWRITE |
+                                                            G_PARAM_STATIC_STRINGS));
 	g_object_class_install_property (object_class,
 					 PROP_LOOP,
 					 g_param_spec_boolean ("loop",
 							       "Loop",
 							       "Whether the timeline loops or not",
 							       FALSE,
-							       G_PARAM_READWRITE));
+							       G_PARAM_READWRITE |
+                                                               G_PARAM_STATIC_STRINGS));
 	signals[STARTED] =
 		g_signal_new ("started",
 			      G_TYPE_FROM_CLASS (object_class),

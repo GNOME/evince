@@ -142,7 +142,8 @@ ev_print_operation_class_init (EvPrintOperationClass *klass)
 							      "The document to print",
 							      EV_TYPE_DOCUMENT,
 							      G_PARAM_WRITABLE |
-							      G_PARAM_CONSTRUCT_ONLY));
+							      G_PARAM_CONSTRUCT_ONLY |
+                                                              G_PARAM_STATIC_STRINGS));
 	signals[DONE] =
 		g_signal_new ("done",
 			      G_TYPE_FROM_CLASS (g_object_class),
