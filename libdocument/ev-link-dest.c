@@ -300,7 +300,8 @@ ev_link_dest_class_init (EvLinkDestClass *ev_link_dest_class)
 							     EV_TYPE_LINK_DEST_TYPE,
 							     EV_LINK_DEST_TYPE_UNKNOWN,
 							     G_PARAM_READWRITE |
-							     G_PARAM_CONSTRUCT_ONLY));
+							     G_PARAM_CONSTRUCT_ONLY |
+                                                             G_PARAM_STATIC_STRINGS));
 	g_object_class_install_property (g_object_class,
 					 PROP_PAGE,
 					 g_param_spec_int ("page",
@@ -310,7 +311,8 @@ ev_link_dest_class_init (EvLinkDestClass *ev_link_dest_class)
 							   G_MAXINT,
 							   0,
 							   G_PARAM_READWRITE |
-							   G_PARAM_CONSTRUCT_ONLY));
+							   G_PARAM_CONSTRUCT_ONLY |
+                                                           G_PARAM_STATIC_STRINGS));
 	g_object_class_install_property (g_object_class,
 					 PROP_LEFT,
 					 g_param_spec_double ("left",
@@ -320,7 +322,8 @@ ev_link_dest_class_init (EvLinkDestClass *ev_link_dest_class)
 							      G_MAXDOUBLE,
 							      0,
 							      G_PARAM_READWRITE |
-							      G_PARAM_CONSTRUCT_ONLY));
+							      G_PARAM_CONSTRUCT_ONLY |
+                                                              G_PARAM_STATIC_STRINGS));
 	g_object_class_install_property (g_object_class,
 					 PROP_TOP,
 					 g_param_spec_double ("top",
@@ -330,7 +333,8 @@ ev_link_dest_class_init (EvLinkDestClass *ev_link_dest_class)
 							      G_MAXDOUBLE,
 							      0,
 							      G_PARAM_READWRITE |
-							      G_PARAM_CONSTRUCT_ONLY));
+							      G_PARAM_CONSTRUCT_ONLY |
+                                                              G_PARAM_STATIC_STRINGS));
 	g_object_class_install_property (g_object_class,
 					 PROP_BOTTOM,
 					 g_param_spec_double ("bottom",
@@ -340,7 +344,8 @@ ev_link_dest_class_init (EvLinkDestClass *ev_link_dest_class)
 							      G_MAXDOUBLE,
 							      0,
 							      G_PARAM_READWRITE |
-							      G_PARAM_CONSTRUCT_ONLY));
+							      G_PARAM_CONSTRUCT_ONLY |
+                                                              G_PARAM_STATIC_STRINGS));
 	g_object_class_install_property (g_object_class,
 					 PROP_RIGHT,
 					 g_param_spec_double ("right",
@@ -350,7 +355,8 @@ ev_link_dest_class_init (EvLinkDestClass *ev_link_dest_class)
 							      G_MAXDOUBLE,
 							      0,
 							      G_PARAM_READWRITE |
-							      G_PARAM_CONSTRUCT_ONLY));
+							      G_PARAM_CONSTRUCT_ONLY |
+                                                              G_PARAM_STATIC_STRINGS));
 
 	g_object_class_install_property (g_object_class,
 					 PROP_ZOOM,
@@ -361,7 +367,8 @@ ev_link_dest_class_init (EvLinkDestClass *ev_link_dest_class)
 							      G_MAXDOUBLE,
 							      0,
 							      G_PARAM_READWRITE |
-							      G_PARAM_CONSTRUCT_ONLY));
+							      G_PARAM_CONSTRUCT_ONLY |
+                                                              G_PARAM_STATIC_STRINGS));
 	g_object_class_install_property (g_object_class,
 					 PROP_CHANGE,
 					 g_param_spec_uint ("change",
@@ -371,7 +378,8 @@ ev_link_dest_class_init (EvLinkDestClass *ev_link_dest_class)
 							    G_MAXUINT,
 							    0,
 							    G_PARAM_READWRITE |
-							    G_PARAM_CONSTRUCT_ONLY));
+							    G_PARAM_CONSTRUCT_ONLY |
+                                                            G_PARAM_STATIC_STRINGS));
 	g_object_class_install_property (g_object_class,
 					 PROP_NAMED,
 					 g_param_spec_string ("named",
@@ -379,15 +387,17 @@ ev_link_dest_class_init (EvLinkDestClass *ev_link_dest_class)
 							      "The named destination",
 							      NULL,
 							      G_PARAM_READWRITE |
-							      G_PARAM_CONSTRUCT_ONLY));
+							      G_PARAM_CONSTRUCT_ONLY |
+                                                              G_PARAM_STATIC_STRINGS));
 	g_object_class_install_property (g_object_class,
 					 PROP_PAGE_LABEL,
-					 g_param_spec_string ("page_label",
+					 g_param_spec_string ("page-label",
 							      "Label of the page",
 							      "The label of the destination page",
 							      NULL,
 							      G_PARAM_READWRITE |
-							      G_PARAM_CONSTRUCT_ONLY));
+							      G_PARAM_CONSTRUCT_ONLY |
+                                                              G_PARAM_STATIC_STRINGS));
 }
 
 EvLinkDest *

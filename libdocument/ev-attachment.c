@@ -162,7 +162,8 @@ ev_attachment_class_init (EvAttachmentClass *klass)
 							      "The attachment name",
 							      NULL,
 							      G_PARAM_WRITABLE |
-							      G_PARAM_CONSTRUCT_ONLY));
+							      G_PARAM_CONSTRUCT_ONLY |
+                                                              G_PARAM_STATIC_STRINGS));
 	g_object_class_install_property (g_object_class,
 					 PROP_DESCRIPTION,
 					 g_param_spec_string ("description",
@@ -170,7 +171,8 @@ ev_attachment_class_init (EvAttachmentClass *klass)
 							      "The attachment description",
 							      NULL,
 							      G_PARAM_WRITABLE |
-							      G_PARAM_CONSTRUCT_ONLY));
+							      G_PARAM_CONSTRUCT_ONLY |
+                                                              G_PARAM_STATIC_STRINGS));
 	g_object_class_install_property (g_object_class,
 					 PROP_MTIME,
 					 g_param_spec_ulong ("mtime",
@@ -178,7 +180,8 @@ ev_attachment_class_init (EvAttachmentClass *klass)
 							     "The attachment modification date",
 							     0, G_MAXULONG, 0,
 							     G_PARAM_WRITABLE |
-							     G_PARAM_CONSTRUCT_ONLY));
+							     G_PARAM_CONSTRUCT_ONLY |
+                                                             G_PARAM_STATIC_STRINGS));
 	g_object_class_install_property (g_object_class,
 					 PROP_CTIME,
 					 g_param_spec_ulong ("ctime",
@@ -186,7 +189,8 @@ ev_attachment_class_init (EvAttachmentClass *klass)
 							     "The attachment creation date",
 							     0, G_MAXULONG, 0,
 							     G_PARAM_WRITABLE |
-							     G_PARAM_CONSTRUCT_ONLY));
+							     G_PARAM_CONSTRUCT_ONLY |
+                                                             G_PARAM_STATIC_STRINGS));
 	g_object_class_install_property (g_object_class,
 					 PROP_SIZE,
 					 g_param_spec_uint ("size",
@@ -194,14 +198,16 @@ ev_attachment_class_init (EvAttachmentClass *klass)
 							    "The attachment size",
 							    0, G_MAXUINT, 0,
 							    G_PARAM_WRITABLE |
-							    G_PARAM_CONSTRUCT_ONLY));
+							    G_PARAM_CONSTRUCT_ONLY |
+                                                            G_PARAM_STATIC_STRINGS));
 	g_object_class_install_property (g_object_class,
 					 PROP_DATA,
 					 g_param_spec_pointer ("data",
 							       "Data",
 							       "The attachment data",
 							       G_PARAM_WRITABLE |
-							       G_PARAM_CONSTRUCT_ONLY));
+							       G_PARAM_CONSTRUCT_ONLY |
+                                                               G_PARAM_STATIC_STRINGS));
 	
 	g_object_class->finalize = ev_attachment_finalize;
 }

@@ -145,7 +145,7 @@ egg_find_bar_class_init (EggFindBarClass *klass)
    */
   g_object_class_install_property (object_class,
 				   PROP_SEARCH_STRING,
-				   g_param_spec_string ("search_string",
+				   g_param_spec_string ("search-string",
 							"Search string",
 							"The name of the string to be found",
 							NULL,
@@ -159,7 +159,7 @@ egg_find_bar_class_init (EggFindBarClass *klass)
    */
   g_object_class_install_property (object_class,
 				   PROP_CASE_SENSITIVE,
-				   g_param_spec_boolean ("case_sensitive",
+				   g_param_spec_boolean ("case-sensitive",
                                                          "Case sensitive",
                                                          "TRUE for a case sensitive search",
                                                          FALSE,

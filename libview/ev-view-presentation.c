@@ -1432,7 +1432,7 @@ ev_view_presentation_class_init (EvViewPresentationClass *klass)
 							      G_PARAM_CONSTRUCT_ONLY));
 	g_object_class_install_property (gobject_class,
 					 PROP_CURRENT_PAGE,
-					 g_param_spec_uint ("current_page",
+					 g_param_spec_uint ("current-page",
 							    "Current Page",
 							    "The current page",
 							    0, G_MAXUINT, 0,
@@ -1448,7 +1448,7 @@ ev_view_presentation_class_init (EvViewPresentationClass *klass)
 							    G_PARAM_CONSTRUCT));
 	g_object_class_install_property (gobject_class,
 					 PROP_INVERTED_COLORS,
-					 g_param_spec_boolean ("inverted_colors",
+					 g_param_spec_boolean ("inverted-colors",
 							       "Inverted Colors",
 							       "Whether presentation is displayed with inverted colors",
 							       FALSE,

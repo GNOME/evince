@@ -154,7 +154,8 @@ ev_transition_effect_class_init (EvTransitionEffectClass *klass)
 							    "Page transition effect type",
 							    EV_TYPE_TRANSITION_EFFECT_TYPE,
 							    EV_TRANSITION_EFFECT_REPLACE,
-							    G_PARAM_READWRITE));
+							    G_PARAM_READWRITE |
+                                                            G_PARAM_STATIC_STRINGS));
 	g_object_class_install_property (object_class,
 					 PROP_ALIGNMENT,
 					 g_param_spec_enum ("alignment",
@@ -162,7 +163,8 @@ ev_transition_effect_class_init (EvTransitionEffectClass *klass)
 							    "Alignment for the effect",
 							    EV_TYPE_TRANSITION_EFFECT_ALIGNMENT,
 							    EV_TRANSITION_ALIGNMENT_HORIZONTAL,
-							    G_PARAM_READWRITE));
+							    G_PARAM_READWRITE |
+                                                            G_PARAM_STATIC_STRINGS));
 	g_object_class_install_property (object_class,
 					 PROP_DIRECTION,
 					 g_param_spec_enum ("direction",
@@ -170,14 +172,16 @@ ev_transition_effect_class_init (EvTransitionEffectClass *klass)
 							    "Direction for the effect",
 							    EV_TYPE_TRANSITION_EFFECT_DIRECTION,
 							    EV_TRANSITION_DIRECTION_INWARD,
-							    G_PARAM_READWRITE));
+							    G_PARAM_READWRITE |
+                                                            G_PARAM_STATIC_STRINGS));
 	g_object_class_install_property (object_class,
 					 PROP_DURATION,
 					 g_param_spec_int ("duration",
 							   "Effect duration",
 							   "Effect duration in seconds",
 							   0, G_MAXINT, 0,
-							   G_PARAM_READWRITE));
+							   G_PARAM_READWRITE |
+                                                           G_PARAM_STATIC_STRINGS));
 	g_object_class_install_property (object_class,
 					 PROP_ANGLE,
 					 g_param_spec_int ("angle",
@@ -185,21 +189,24 @@ ev_transition_effect_class_init (EvTransitionEffectClass *klass)
 							   "Effect angle in degrees, counted "
 							   "counterclockwise from left to right",
 							   0, 360, 0,
-							   G_PARAM_READWRITE));
+							   G_PARAM_READWRITE |
+                                                           G_PARAM_STATIC_STRINGS));
 	g_object_class_install_property (object_class,
 					 PROP_SCALE,
 					 g_param_spec_double ("scale",
 							      "Effect scale",
 							      "Scale at which the effect is applied",
 							      0., 1., 1.,
-							      G_PARAM_READWRITE));
+							      G_PARAM_READWRITE |
+                                                              G_PARAM_STATIC_STRINGS));
 	g_object_class_install_property (object_class,
 					 PROP_RECTANGULAR,
 					 g_param_spec_boolean ("rectangular",
 							       "Rectangular area",
 							       "Whether the covered area is rectangular",
 							       FALSE,
-							       G_PARAM_READWRITE));
+							       G_PARAM_READWRITE |
+                                                               G_PARAM_STATIC_STRINGS));
 
 	g_type_class_add_private (klass, sizeof (EvTransitionEffectPrivate));
 }

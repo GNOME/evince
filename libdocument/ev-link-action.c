@@ -315,14 +315,16 @@ ev_link_action_class_init (EvLinkActionClass *ev_link_action_class)
 							     EV_TYPE_LINK_ACTION_TYPE,
 							     EV_LINK_ACTION_TYPE_GOTO_DEST,
 							     G_PARAM_READWRITE |
-							     G_PARAM_CONSTRUCT_ONLY));
+							     G_PARAM_CONSTRUCT_ONLY |
+                                                             G_PARAM_STATIC_STRINGS));
 	g_object_class_install_property (g_object_class,
 					 PROP_DEST,
 					 g_param_spec_pointer ("dest",
 							       "Action destination",
 							       "The link action destination",
 							       G_PARAM_READWRITE |
-							       G_PARAM_CONSTRUCT_ONLY));
+							       G_PARAM_CONSTRUCT_ONLY |
+                                                               G_PARAM_STATIC_STRINGS));
 	g_object_class_install_property (g_object_class,
 					 PROP_URI,
 					 g_param_spec_string ("uri",
@@ -330,7 +332,8 @@ ev_link_action_class_init (EvLinkActionClass *ev_link_action_class)
 							      "The link action URI",
 							      NULL,
 							      G_PARAM_READWRITE |
-							      G_PARAM_CONSTRUCT_ONLY));
+							      G_PARAM_CONSTRUCT_ONLY |
+                                                              G_PARAM_STATIC_STRINGS));
 	g_object_class_install_property (g_object_class,
 					 PROP_FILENAME,
 					 g_param_spec_string ("filename",
@@ -338,7 +341,8 @@ ev_link_action_class_init (EvLinkActionClass *ev_link_action_class)
 							      "The link action filename",
 							      NULL,
 							      G_PARAM_READWRITE |
-							      G_PARAM_CONSTRUCT_ONLY));
+							      G_PARAM_CONSTRUCT_ONLY |
+                                                              G_PARAM_STATIC_STRINGS));
 	g_object_class_install_property (g_object_class,
 					 PROP_PARAMS,
 					 g_param_spec_string ("params",
@@ -346,7 +350,8 @@ ev_link_action_class_init (EvLinkActionClass *ev_link_action_class)
 							      "The link action params",
 							      NULL,
 							      G_PARAM_READWRITE |
-							      G_PARAM_CONSTRUCT_ONLY));
+							      G_PARAM_CONSTRUCT_ONLY |
+                                                              G_PARAM_STATIC_STRINGS));
 	g_object_class_install_property (g_object_class,
 					 PROP_NAME,
 					 g_param_spec_string ("name",
@@ -354,28 +359,32 @@ ev_link_action_class_init (EvLinkActionClass *ev_link_action_class)
 							      "The link action name",
 							      NULL,
 							      G_PARAM_READWRITE |
-							      G_PARAM_CONSTRUCT_ONLY));
+							      G_PARAM_CONSTRUCT_ONLY |
+                                                              G_PARAM_STATIC_STRINGS));
 	g_object_class_install_property (g_object_class,
 					 PROP_SHOW_LIST,
 					 g_param_spec_pointer ("show-list",
 							       "ShowList",
 							       "The list of layers that should be shown",
 							       G_PARAM_READWRITE |
-							       G_PARAM_CONSTRUCT_ONLY));
+							       G_PARAM_CONSTRUCT_ONLY |
+                                                               G_PARAM_STATIC_STRINGS));
 	g_object_class_install_property (g_object_class,
 					 PROP_HIDE_LIST,
 					 g_param_spec_pointer ("hide-list",
 							       "HideList",
 							       "The list of layers that should be hidden",
 							       G_PARAM_READWRITE |
-							       G_PARAM_CONSTRUCT_ONLY));
+							       G_PARAM_CONSTRUCT_ONLY |
+                                                               G_PARAM_STATIC_STRINGS));
 	g_object_class_install_property (g_object_class,
 					 PROP_TOGGLE_LIST,
 					 g_param_spec_pointer ("toggle-list",
 							       "ToggleList",
 							       "The list of layers that should be toggled",
 							       G_PARAM_READWRITE |
-							       G_PARAM_CONSTRUCT_ONLY));
+							       G_PARAM_CONSTRUCT_ONLY |
+                                                               G_PARAM_STATIC_STRINGS));
 }
 
 EvLinkAction *

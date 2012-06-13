@@ -160,14 +160,16 @@ ev_link_class_init (EvLinkClass *ev_window_class)
 				     			      "The link title",
 							      NULL,
 							      G_PARAM_READWRITE |
-				     			      G_PARAM_CONSTRUCT_ONLY));
+				     			      G_PARAM_CONSTRUCT_ONLY |
+                                                              G_PARAM_STATIC_STRINGS));
 	g_object_class_install_property (g_object_class,
 					 PROP_ACTION,
 					 g_param_spec_pointer ("action",
 							       "Link Action",
 							       "The link action",
 							       G_PARAM_READWRITE |
-							       G_PARAM_CONSTRUCT_ONLY));
+							       G_PARAM_CONSTRUCT_ONLY |
+                                                               G_PARAM_STATIC_STRINGS));
 }
 
 EvLink *
