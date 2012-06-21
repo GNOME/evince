@@ -561,7 +561,6 @@ ev_document_factory_add_filters (GtkWidget *chooser, EvDocument *document)
 		default_filter = filter = gtk_file_filter_new ();
 		gtk_file_filter_set_name (filter, info->type_desc);
 		file_filter_add_mime_types (info, filter);
-		g_free (info);
 		gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (chooser), filter);
 	} else {
 		GList *l;
