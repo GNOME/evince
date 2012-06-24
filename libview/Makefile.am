@@ -121,49 +121,36 @@ EXTRA_DIST = \
 
 # GObject Introspection
 
-if ENABLE_INTROSPECTION
+if HAVE_INTROSPECTION
 
-EvinceView-$(EV_API_VERSION).gir: libevview3.la Makefile $(INST_H_SRC_FILES) $(INST_H_BUILT_FILES) $(filter %.c,$(libevview3_la_SOURCES)) $(filter %.c,$(nodist_libevview3_la_SOURCES))
-	$(AM_V_GEN) PKG_CONFIG_PATH=$(top_builddir):$$PKG_CONFIG_PATH \
-	$(G_IR_SCANNER) -v --namespace EvinceView \
-	--add-include-path=$(top_builddir)/libdocument \
-	--strip-prefix=Ev \
-	--nsversion=$(EV_API_VERSION) \
-	--include=GLib-2.0 \
-	--include=GObject-2.0 \
-	--include=Gio-2.0 \
-	--include=Gdk-3.0 \
-	--include=GdkPixbuf-2.0 \
-	--include=Gtk-3.0 \
-	--include=EvinceDocument-$(EV_API_VERSION) \
-	--library=$(top_builddir)/libdocument/libevdocument3.la \
-	--library=evview3 \
-	--libtool="$(LIBTOOL)" \
-	--output $@ \
-	--pkg evince-document-$(EV_API_VERSION) \
-	--pkg evince-view-$(EV_API_VERSION) \
-	-L$(top_builddir)/libdocument/ \
-	-I$(top_srcdir) \
-	-I$(top_builddir) \
-	-DEVINCE_COMPILATION \
-	$(filter %.h,$^) \
-	$(filter %.c,$^)
+include $(INTROSPECTION_MAKEFILE)
+INTROSPECTION_COMPILER_ARGS = --includedir=$(top_builddir)/libdocument
 
-girdir = $(GIRDIR)
+EvinceView-$(EV_API_VERSION).gir: libevview3.la
+EvinceView_@EV_API_VERSION_U@_gir_FILES = \
+	$(INST_H_SRC_FILES)	\
+	$(INST_H_BUILT_FILES)	\
+	 $(filter %.c,$(libevview3_la_SOURCES))
+EvinceView_@EV_API_VERSION_U@_gir_INCLUDES = GLib-2.0 GObject-2.0 Gio-2.0 Gdk-3.0 GdkPixbuf-2.0 Gtk-3.0 EvinceDocument-$(EV_API_VERSION)
+EvinceView_@EV_API_VERSION_U@_gir_LIBS = libevview3.la
+EvinceView_@EV_API_VERSION_U@_gir_CFLAGS = \
+	-I$(top_srcdir)		\
+	 -I$(top_builddir)	\
+	 -DEVINCE_COMPILATION
+EvinceView_@EV_API_VERSION_U@_gir_EXPORT_PACKAGES = evince-view-$(EV_API_VERSION)
+EvinceView_@EV_API_VERSION_U@_gir_SCANNERFLAGS = \
+	--add-include-path=$(top_builddir)/libdocument	\
+	--identifier-prefix=Ev				\
+	--symbol-prefix=ev
+INTROSPECTION_GIRS = EvinceView-$(EV_API_VERSION).gir
+
+girdir = $(datadir)/gir-1.0
 gir_DATA = EvinceView-$(EV_API_VERSION).gir
 
-typelibsdir = $(GIRTYPELIBDIR)
+typelibsdir = $(libdir)/girepository-1.0
 typelibs_DATA = EvinceView-$(EV_API_VERSION).typelib
 
-EXTRA_DIST += $(gir_DATA)
 CLEANFILES += $(gir_DATA) $(typelibs_DATA)
-
-%.typelib: %.gir
-	$(AM_V_GEN) LD_LIBRARY_PATH=$${LD_LIBRARY_PATH:+$$LD_LIBRARY_PATH:}. $(G_IR_COMPILER) \
-	--includedir=$(srcdir) \
-	--includedir=$(top_builddir)/libdocument \
-	$(G_IR_COMPILER_OPTS) \
-	$< -o $@
 
 endif # ENABLE_INTROSPECTION
 

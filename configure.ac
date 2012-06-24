@@ -446,38 +446,12 @@ AC_SUBST(PREVIEWER_LIBS)
 # GIR
 # ***
 
-AC_MSG_CHECKING([whether GObject introspection is requested])
-AC_ARG_ENABLE([introspection],
-        AS_HELP_STRING([--enable-introspection],
-		       [Enable GObject introspection]),
-       	[enable_introspection=$enableval],
-	[enable_introspection=no])
-AC_MSG_RESULT([$enable_introspection])
-
-G_IR_SCANNER=
-G_IR_COMPILER=
-G_IR_GENERATE=
-GIRDIR=
-GIRTYPELIBDIR=
-
-if test "$enable_introspection" = "yes"; then
-  GOBJECT_INTROSPECTION_REQUIRED=0.6
-  PKG_CHECK_MODULES([GOBJECT_INTROSPECTION],[gobject-introspection-1.0 >= $GOBJECT_INTROSPECTION_REQUIRED])
-
-  G_IR_SCANNER="$($PKG_CONFIG --variable=g_ir_scanner gobject-introspection-1.0)"
-  G_IR_COMPILER="$($PKG_CONFIG --variable=g_ir_compiler gobject-introspection-1.0)"
-  G_IR_GENERATE="$($PKG_CONFIG --variable=g_ir_generate gobject-introspection-1.0)"
-  GIRDIR="$($PKG_CONFIG --variable=girdir gobject-introspection-1.0)"
-  GIRTYPELIBDIR="$($PKG_CONFIG --variable=typelibdir gobject-introspection-1.0)"
+# No automagic please!
+if test -z "$enable_introspection"; then
+  enable_introspection=no
 fi
 
-AC_SUBST([G_IR_SCANNER])
-AC_SUBST([G_IR_COMPILER])
-AC_SUBST([G_IR_GENERATE])
-AC_SUBST([GIRDIR])
-AC_SUBST([GIRTYPELIBDIR])
-
-AM_CONDITIONAL([ENABLE_INTROSPECTION],[test "$enable_introspection" = "yes"])
+GOBJECT_INTROSPECTION_CHECK([1.0])
 
 dnl ================== portability checks ===========================================
 

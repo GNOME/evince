@@ -151,45 +151,32 @@ EXTRA_DIST = \
 
 # GObject Introspection
 
-if ENABLE_INTROSPECTION
+if HAVE_INTROSPECTION
 
-EvinceDocument-$(EV_API_VERSION).gir: libevdocument3.la Makefile $(INST_H_SRC_FILES) $(INST_H_BUILT_FILES) $(filter %.c,$(libevdocument3_la_SOURCES)) $(filter %.c,$(nodist_libevdocument3_la_SOURCES))
-	$(AM_V_GEN) PKG_CONFIG_PATH=$(top_builddir):$$PKG_CONFIG_PATH \
-	$(G_IR_SCANNER) -v --namespace EvinceDocument \
-	--strip-prefix=Ev \
-	--nsversion=$(EV_API_VERSION) \
-	--include=GLib-2.0 \
-	--include=Gio-2.0 \
-	--include=Gdk-3.0 \
-	--include=GdkPixbuf-2.0 \
-	--include=Gtk-3.0 \
-	--library=evdocument3 \
-	--libtool="$(LIBTOOL)" \
-	--output $@ \
-	--pkg evince-document-$(EV_API_VERSION) \
-	-I$(top_srcdir) \
-	-I$(top_builddir) \
-	-I$(srcdir) \
-	-I$(builddir) \
-	-DEVINCE_COMPILATION \
-	$(filter %.h,$^) \
-	$(filter %.c,$^)
+include $(INTROSPECTION_MAKEFILE)
+EvinceDocument-$(EV_API_VERSION).gir: libevdocument3.la
+EvinceDocument_@EV_API_VERSION_U@_gir_FILES = $(INST_H_SRC_FILES) $(INST_H_BUILT_FILES) $(filter %.c,$(libevdocument3_la_SOURCES))
+EvinceDocument_@EV_API_VERSION_U@_gir_LIBS = libevdocument3.la
+EvinceDocument_@EV_API_VERSION_U@_gir_SCANNERFLAGS = \
+	--identifier-prefix=Ev	\
+	--symbol-prefix=ev
+EvinceDocument_@EV_API_VERSION_U@_gir_INCLUDES = GLib-2.0 Gio-2.0 Gdk-3.0 GdkPixbuf-2.0 Gtk-3.0
+EvinceDocument_@EV_API_VERSION_U@_gir_CFLAGS = \
+	-DEVINCE_COMPILATION	\
+	-I$(top_srcdir)		\
+	-I$(top_builddir)	\
+	-I$(srcdir)		\
+	-I$(builddir)
+EvinceDocument_@EV_API_VERSION_U@_gir_EXPORT_PACKAGES = evince-document-$(EV_API_VERSION)
+INTROSPECTION_GIRS = EvinceDocument-$(EV_API_VERSION).gir
 
-girdir = $(GIRDIR)
+girdir = $(datadir)/gir-1.0
 gir_DATA = EvinceDocument-$(EV_API_VERSION).gir
 
-typelibsdir = $(GIRTYPELIBDIR)
+typelibsdir = $(libdir)/girepository-1.0
 typelibs_DATA = EvinceDocument-$(EV_API_VERSION).typelib
 
-EXTRA_DIST += $(gir_DATA)
 CLEANFILES += $(gir_DATA) $(typelibs_DATA)
-
-%.typelib: %.gir
-	$(AM_V_GEN) LD_LIBRARY_PATH=$${LD_LIBRARY_PATH:+$$LD_LIBRARY_PATH:}. $(G_IR_COMPILER) \
-	--includedir=$(srcdir) \
-	--includedir=. \
-	$(G_IR_COMPILER_OPTS) \
-	$< -o $@
 
 endif # ENABLE_INTROSPECTION
 

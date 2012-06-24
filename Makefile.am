@@ -94,7 +94,8 @@ DISTCHECK_CONFIGURE_FLAGS = \
 	--enable-gtk-doc \
 	--disable-nautilus \
 	--disable-tests \
-	--disable-silent-rules
+	--disable-silent-rules \
+	--enable-introspection
 
 # Ignore scrollkeeper issues for now.  @#*$& scrollkeeper
 distuninstallcheck_listfiles = find . -type f -print | grep -v scrollkeeper | grep -v /share/gnome/help/ | grep -v \.omf
