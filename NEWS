@@ -1,4 +1,39 @@
 ================
+Evince     3.5.3
+================
+
+New features and improvements:
+
+    * Add find options to the find bar. Find options available depend
+      on every backend. (Carlos Garcia Campos)
+    * Use GResource for data files (Christian Persch)
+    * Add new API to EvAnnotation that uses GdkRGBA (#677983,
+      Christian Persch)
+    * Use G_PARAM_STATIC_STRINGS flag for properties (Christian Persch)
+
+Bug fixes:
+
+    * Fix the build with poppler versions not including the new find
+      options API (#677867, Cosimo Cecchi)
+    * Fix crash due to an invalid free (#678563, José Aliste,
+      Christian Persch)
+
+Documentation:
+
+    * Add missing EvAnnotation API to sections.txt (Christian Persch)
+
+Translation updates:
+
+    * Khaled Hosny (ar)
+    * Nilamdyuti Goswami (as)
+    * Tom Tryfonidis (el)
+    * Daniel Mustieles (es)
+    * Fran Dieguez (gl)
+    * Kjartan Maraas (nb)
+    * Yuri Kozlov (ru)
+    * Matej Urbančič (sl)
+
+================
 Evince     3.5.2
 ================
 
