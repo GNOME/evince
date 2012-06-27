@@ -123,7 +123,7 @@ EXTRA_DIST = \
 
 if ENABLE_INTROSPECTION
 
-EvinceView-$(EV_API_VERSION).gir: libevview3.la Makefile $(INST_H_FILES) $(filter %.c,$(libevview3_la_SOURCES))
+EvinceView-$(EV_API_VERSION).gir: libevview3.la Makefile $(INST_H_SRC_FILES) $(INST_H_BUILT_FILES) $(filter %.c,$(libevview3_la_SOURCES)) $(filter %.c,$(nodist_libevview3_la_SOURCES))
 	$(AM_V_GEN) PKG_CONFIG_PATH=$(top_builddir):$$PKG_CONFIG_PATH \
 	$(G_IR_SCANNER) -v --namespace EvinceView \
 	--add-include-path=$(top_builddir)/libdocument \

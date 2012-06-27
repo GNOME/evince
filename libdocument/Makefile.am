@@ -153,7 +153,7 @@ EXTRA_DIST = \
 
 if ENABLE_INTROSPECTION
 
-EvinceDocument-$(EV_API_VERSION).gir: libevdocument3.la Makefile $(INST_H_FILES) $(filter %.c,$(libevdocument3_la_SOURCES))
+EvinceDocument-$(EV_API_VERSION).gir: libevdocument3.la Makefile $(INST_H_SRC_FILES) $(INST_H_BUILT_FILES) $(filter %.c,$(libevdocument3_la_SOURCES)) $(filter %.c,$(nodist_libevdocument3_la_SOURCES))
 	$(AM_V_GEN) PKG_CONFIG_PATH=$(top_builddir):$$PKG_CONFIG_PATH \
 	$(G_IR_SCANNER) -v --namespace EvinceDocument \
 	--strip-prefix=Ev \
