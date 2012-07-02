@@ -437,6 +437,13 @@ ev_document_save (EvDocument  *document,
 	return klass->save (document, uri, error);
 }
 
+/**
+ * ev_document_get_page:
+ * @document: a #EvDocument
+ * @page_index: index of page
+ *
+ * Returns: (transfer full): Newly created #EvPage for the given index.
+ */
 EvPage *
 ev_document_get_page (EvDocument *document,
 		      gint        index)
@@ -586,6 +593,13 @@ _ev_document_get_page_size (EvDocument *document,
 	klass->get_page_size (document, page, width, height);
 }
 
+/**
+ * ev_document_get_page_size:
+ * @document: a #EvDocument
+ * @page_index: index of page
+ * @width: (out) (allow-none): return location for the width of the page, or %NULL
+ * @height: (out) (allow-none): return location for the height of the page, or %NULL
+ */
 void
 ev_document_get_page_size (EvDocument *document,
 			   gint        page_index,
