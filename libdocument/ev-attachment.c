@@ -421,13 +421,16 @@ ev_attachment_open (EvAttachment *attachment,
 		retval = ev_attachment_launch_app (attachment, screen,
 						   timestamp, error);
 	} else {
+                char *basename;
                 char *template;
 		GFile *file;
 
                 /* FIXMEchpe: convert to filename encoding first! */
-                template = g_strdup_printf ("%s.XXXXXX", ev_attachment_get_name (attachment));
+                basename = g_path_get_basename (ev_attachment_get_name (attachment));
+                template = g_strdup_printf ("%s.XXXXXX", basename);
                 file = ev_mkstemp_file (template, error);
                 g_free (template);
+                g_free (basename);
 
 		if (file != NULL && ev_attachment_save (attachment, file, error)) {
 			if (attachment->priv->tmp_file)
