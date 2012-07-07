@@ -1944,6 +1944,7 @@ static void
 ev_print_operation_print_finalize (GObject *object)
 {
 	EvPrintOperationPrint *print = EV_PRINT_OPERATION_PRINT (object);
+	GApplication *application;
 
 	if (print->op) {
 		g_object_unref (print->op);
@@ -1969,11 +1970,17 @@ ev_print_operation_print_finalize (GObject *object)
 	}
 
 	(* G_OBJECT_CLASS (ev_print_operation_print_parent_class)->finalize) (object);
+
+        application = g_application_get_default ();
+        if (application)
+        	g_application_release (application);
 }
 
 static void
 ev_print_operation_print_init (EvPrintOperationPrint *print)
 {
+	GApplication *application;
+
 	print->op = gtk_print_operation_new ();
 	g_signal_connect_swapped (print->op, "begin_print",
 				  G_CALLBACK (ev_print_operation_print_begin_print),
@@ -2000,6 +2007,10 @@ ev_print_operation_print_init (EvPrintOperationPrint *print)
 	gtk_print_operation_set_use_full_page (print->op, TRUE);
 	gtk_print_operation_set_unit (print->op, GTK_UNIT_POINTS);
 	gtk_print_operation_set_custom_tab_label (print->op, _("Page Handling"));
+
+	application = g_application_get_default ();
+	if (application)
+	        g_application_hold (application);
 }
 
 static void
