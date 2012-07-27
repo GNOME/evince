@@ -6,14 +6,14 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: evince master\n"
-"POT-Creation-Date: 2012-07-22 19:05+0000\n"
-"PO-Revision-Date: 2012-07-24 10:16+0700\n"
+"POT-Creation-Date: 2012-07-24 04:13+0000\n"
+"PO-Revision-Date: 2012-07-27 20:20+0700\n"
 "Last-Translator: Andika Triwidada <andika@gmail.com>\n"
 "Language-Team: Indonesian <gnome@i15n.org>\n"
+"Language: id\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: id\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Poedit-Language: Indonesian\n"
 "X-Poedit-Country: INDONESIA\n"
@@ -460,11 +460,11 @@ msgstr "Sebagai alternatif, Anda dapat menekan <keyseq><key>Ctrl</key><key>Alt</
 
 #: C/synctex-search.page:46(p)
 msgid "If the corresponding PDF file is not open, performing a forward search will open the PDF in the <app>document viewer</app>."
-msgstr ""
+msgstr "Bila berkas PDF yang terkait tidak terbuka, melakukan pencarian maju akan membuka PDF dalam <app>penilik dokumen</app>."
 
 #: C/synctex-search.page:50(p)
 msgid "If you have a complex project with several TeX files you can put"
-msgstr ""
+msgstr "Bila Anda memiliki suatu projek kompleks dengan beberapa berkas TeX Anda dapat meletakkan"
 
 #: C/synctex-search.page:53(code)
 #, no-wrap
@@ -473,7 +473,7 @@ msgstr "% mainfile: mainfile.tex"
 
 #: C/synctex-search.page:54(p)
 msgid "either in the first or last three lines of each included TeX file, and forward search will work. Backward search should always work, even if you don't add the modeline."
-msgstr ""
+msgstr "pada baris pertama atau tiga baris terakhir dari setiap berkas TeX yang disertaka, maka pencarian maju akan bekerja. Pencarian mundur mesti selalu bekerja, bahkan bila Anda tak menambah baris mode."
 
 #: C/synctex-search.page:61(title)
 msgid "Backward search: from PDF to TeX (from the <app>document viewer</app> to <app>gedit</app>)"
@@ -485,7 +485,7 @@ msgstr "Pencarian mundur memungkinkan Anda mengklik pada baris tertentu dalam be
 
 #: C/synctex-search.page:65(p)
 msgid "You can perform a backward search by pressing <keyseq><key>Ctrl</key>left click</keyseq> in the <app>document viewer</app>. The corresponding line in the TeX source code will be hightlighted."
-msgstr ""
+msgstr "Anda dapat melakukan pencarian mundur dengan menekan <keyseq><key>Ctrl</key>klik kiri</keyseq> dalam <app>penilik dokumen</app>. Baris terkait dalam kode sumber TeX akan disorot."
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
@@ -503,7 +503,7 @@ msgstr "Apa itu SyncTeX?"
 
 #: C/synctex.page:20(p)
 msgid "SyncTeX is a method that enables synchronization between a TeX source file and the resulting PDF output."
-msgstr ""
+msgstr "SyncTeX adalah metoda yang memungkinkan penyelarasan antara berkas sumber TeX dan keluaran PDF hasilnya."
 
 #: C/synctex.page:25(title)
 msgid "Video Demonstration"
@@ -515,7 +515,7 @@ msgstr "Tekan <keyseq><key>Ctrl</key>klik</keyseq> untuk menyelaraskan."
 
 #: C/synctex-editors.page:7(desc)
 msgid "Which editor can you use to edit your TEX file?"
-msgstr ""
+msgstr "Penyunting mana yang dapat dipakai untuk menyunting berkas TEX?"
 
 #: C/synctex-editors.page:20(title)
 msgid "Supported editors"
@@ -527,7 +527,7 @@ msgstr "gedit"
 
 #: C/synctex-editors.page:23(p)
 msgid "<link xref=\"synctex-search#forward-search\">Forward Search</link> (from <app>gedit</app> to the <app>document viewer</app>) and <link xref=\"synctex-search#backward-search\">Backward search</link> (from the <app>document viewer</app> to <app>gedit</app>) are both supported."
-msgstr ""
+msgstr "<link xref=\"synctex-search#forward-search\">Pencarian maju</link> (dari <app>gedit</app> ke <app>penilik dokumen</app>) dan <link xref=\"synctex-search#backward-search\">Pencarian mundur</link> (dari <app>penilik dokumen</app> ke <app>gedit</app>) keduanya didukung."
 
 #: C/synctex-editors.page:28(title)
 msgid "Vim-latex"
@@ -535,11 +535,11 @@ msgstr "Vim-latex"
 
 #: C/synctex-editors.page:29(p)
 msgid "The <app>gedit</app> plugin contains a python script (evince_dbus.py) that can be used to get SyncTeX working with Vim. In order to use vim-latex together with the <app>document viewer</app> you need to follow the next steps:"
-msgstr ""
+msgstr "Plugin <app>gedit</app> memuat skrip python (evince_dbus.py) yang dapat dipakai agar SyncTeX bekerja dengan Vim. Untuk memakai vim-latex bersama dengan <app>peniliki dokumen</app> Anda perlu mengikut langkah-langkah berikut:"
 
 #: C/synctex-editors.page:35(p)
 msgid "Copy the evince_dbus.py to some directory in your path and give it +x permissions."
-msgstr ""
+msgstr "Salin evince_dbus.py ke salah satu direktori pada path Anda dan berikan hak akses +x."
 
 #: C/synctex-editors.page:41(p)
 msgid "Modify your ~/.vimrc file and add the following lines."
@@ -560,7 +560,7 @@ msgstr ""
 
 #: C/synctex-editors.page:52(p)
 msgid "Now you can use Forward search from vim-latex by typing \\ls. Backward search is not yet supported."
-msgstr ""
+msgstr "Kini Anda dapat memakai Pencarian maju dari vim-latex dengan mengetikkan \\ls. Pencarian mundur belum didukung."
 
 #: C/synctex-compile.page:7(desc)
 msgid "How to compile your TeX document with SyncTeX"
@@ -572,7 +572,7 @@ msgstr "Mengkompail TeX dengan SyncTeX"
 
 #: C/synctex-compile.page:20(p)
 msgid "Adding the line <em>\\synctex=1</em> in the preamble of your TeX file will trigger synchronization with SyncTeX."
-msgstr ""
+msgstr "Menambahkan baris <em>\\synctex=1</em> dalam preambul dari berkas TeX Anda akan memicu penyelarasan dengan SyncTeX."
 
 #: C/synctex-compile.page:23(code)
 #, no-wrap
@@ -595,7 +595,7 @@ msgstr ""
 
 #: C/synctex-compile.page:31(p)
 msgid "Alternatively, you can run the pdflatex command with the <em>-synctex=1</em> option:"
-msgstr ""
+msgstr "Sebagai alternatif, Anda dapat menjalankan perintah pdflatex dengan opsi <em>-synctex=1</em>:"
 
 #: C/synctex-compile.page:34(screen)
 #, no-wrap
@@ -612,27 +612,27 @@ msgstr "Beamer dengan SyncTeX"
 
 #: C/synctex-beamer.page:20(p)
 msgid "Beamer is a LaTeX class for creating slides for presentations."
-msgstr ""
+msgstr "Beamer adalah kelas LaTeX untuk membuat slide bagi presentasi."
 
 #: C/synctex-beamer.page:23(p)
 msgid "You can perform forward and backward search in a <em>Beamer-LaTeX</em> presentation in a similar fashion to <link xref=\"synctex-search\">searching</link> through other TeX files compiled with SyncTeX. However the search brings you to the corresponding frame (slide), not necessarily the associated line of text. This difference is outlined in detail below."
-msgstr ""
+msgstr "Anda dapat melakukan pencarian maju dan mundur dalam presentasi <em>Beamer-LaTeX</em> serupa dengan <link xref=\"synctex-search\">pencarian</link> dalam berkas TeX lain yang dikompail dengan SyncTeX. Namun pencarian akan membawa Anda ke rangka (salindia) yang terkait, bukan ke baris teks yang terkait. Perbedaan ini diuraikan secara rinci di bawah."
 
 #: C/synctex-beamer.page:27(title)
 msgid "Forward search: from Beamer-LaTeX source to PDF (<app>gedit</app> to the <app>document viewer</app>)"
-msgstr ""
+msgstr "Pencarian maju: dari sumber Beamer-LaTeX ke PDF (<app>gedit</app> ke <app>penilik dokumen</app>)"
 
 #: C/synctex-beamer.page:28(p)
 msgid "With <link xref=\"synctex-search#forward-search\">forward search</link>, you can click on a specific line of Beamer-LaTeX source code. The <em>top</em> of the corresponding slide in the PDF will be outlined in red. This will often be the <em>frametitle</em>."
-msgstr ""
+msgstr "Dengan <link xref=\"synctex-search#forward-search\">pencarian maju</link>, Anda dapat mengklik baris tertentu kode sumber Beamer-LaTeX. <em>Puncak</em> dari salindia yang terkait dalam PDF akan ditandai dengan warna merah. Ini seringkali adalah <em>frametitle</em>."
 
 #: C/synctex-beamer.page:35(title)
 msgid "Backward search: from PDF to Beamer-LaTeX source (from the <app>document viewer</app> to <app>gedit</app>)"
-msgstr ""
+msgstr "Pencarian mundur: dari PDF ke sumber Beamer-LaTeX (dari <app>penilik dokumen</app> ke <app>gedit</app>)"
 
 #: C/synctex-beamer.page:36(p)
 msgid "With <link xref=\"synctex-search#backward-search\">backward search</link>, you click on some text in a frame, and the corresponding line of LaTex code that ends that particular frame is highlighted. This will usually be the line:"
-msgstr ""
+msgstr "Dengan <link xref=\"synctex-search#backward-search\">pencarian mundur</link>, Anda mengklik teks dalam suatu rangka, dan baris terkait dari kode LaTeX yang menghasilkan rangka tersebut disorot. Ini biasanya adalah baris:"
 
 #: C/synctex-beamer.page:39(code)
 #, no-wrap
@@ -641,7 +641,7 @@ msgstr "\\end{frame}"
 
 #: C/synctex-beamer.page:40(p)
 msgid "corresponding to the frame you clicked on."
-msgstr ""
+msgstr "yang terkait dengan kerangka yang Anda klik."
 
 #: C/singlesided-npages.page:8(desc)
 msgid "Print a booklet over 20 pages."
@@ -680,7 +680,7 @@ msgstr "Membuat PDF kosong memakai <app>LibreOffice Writer</app>."
 #: C/singlesided-13-16pages.page:33(p)
 #: C/duplex-npages.page:39(p)
 msgid "Merge the blank pages with your PDF document using <app>PDF-Shuffler</app> placing the blank pages at the end."
-msgstr ""
+msgstr "Gabungkan halaman kosong dengan dokumen PDF Anda memakai <app>PDF_Shuffer</app> dengan menempatkan halaman-halaman kosong di akhir."
 
 #: C/singlesided-npages.page:44(p)
 #: C/singlesided-9-12pages.page:39(p)
@@ -769,7 +769,7 @@ msgstr "Pilih tab <gui>Umum</gui>."
 #: C/duplex-12pages.page:33(p)
 #: C/duplex-11pages.page:34(p)
 msgid "Under <em>Range</em>, choose <gui>Pages</gui>."
-msgstr ""
+msgstr "Di bawah <em>Jangkauan</em>, pilih <gui>Halaman</gui>."
 
 #: C/singlesided-npages.page:63(item)
 #: C/duplex-npages.page:62(item)
@@ -779,7 +779,7 @@ msgstr "n, 1, 2, n-1, n-2, 3, 4, n-3, n-4, 5, 6, n-5, n-6, 7, 8, n-7, n-8, 9, 10
 #: C/singlesided-npages.page:64(item)
 #: C/duplex-npages.page:63(item)
 msgid "...until you have typed n-number of pages."
-msgstr ""
+msgstr "... sampai Anda telah mengetikkan nomor-n halaman."
 
 #: C/singlesided-npages.page:61(item)
 #: C/duplex-npages.page:60(item)
@@ -828,7 +828,7 @@ msgstr "Pilih tab <gui>Penyiapan Halaman</gui>."
 #: C/singlesided-17-20pages.page:66(p)
 #: C/singlesided-13-16pages.page:68(p)
 msgid "Under <em>Layout</em>, in the <gui>Two-side</gui> menu, select <gui>One Sided</gui>."
-msgstr ""
+msgstr "Di bawah <em>Tata letak</em>, dalam menu <gui>Dua sisi</em>, pilih <gui>Satu sisi</em>."
 
 #: C/singlesided-npages.page:75(p)
 #: C/singlesided-9-12pages.page:68(p)
@@ -837,7 +837,7 @@ msgstr ""
 #: C/singlesided-17-20pages.page:69(p)
 #: C/singlesided-13-16pages.page:71(p)
 msgid "In the <gui>Pages per side</gui> menu, select <gui>2</gui>."
-msgstr ""
+msgstr "Dalam menu <gui>Halaman tiap sisi</gui>, pilih <gui>2</gui>."
 
 #: C/singlesided-npages.page:78(p)
 #: C/singlesided-9-12pages.page:71(p)
@@ -856,7 +856,7 @@ msgstr ""
 #: C/duplex-11pages.page:78(p)
 #: C/duplex-10pages.page:51(p)
 msgid "In the <gui>Page ordering</gui> menu, select <gui>Left to right</gui>."
-msgstr ""
+msgstr "Dalam menu <gui>Pengurutan halaman</gui>, pilih <gui>Kiri ke kanan</gui>."
 
 #: C/singlesided-npages.page:81(p)
 #: C/singlesided-9-12pages.page:74(p)
@@ -865,7 +865,7 @@ msgstr ""
 #: C/singlesided-17-20pages.page:75(p)
 #: C/singlesided-13-16pages.page:77(p)
 msgid "In the <gui>Only print</gui> menu, select <gui>Odd sheets</gui>."
-msgstr ""
+msgstr "Dalam menu <gui>Hanya cetak</gui>, pilih <gui>Lembar ganjil</gui>."
 
 #: C/singlesided-npages.page:86(p)
 #: C/singlesided-npages.page:109(p)
@@ -920,7 +920,7 @@ msgstr "Klik <gui>Cetak</gui>"
 #: C/singlesided-17-20pages.page:85(p)
 #: C/singlesided-13-16pages.page:87(p)
 msgid "When all the pages have printed, flip the pages over and place them back in the printer."
-msgstr ""
+msgstr "Setelah semua halaman dicetak, balikkan halaman dan tempatkan lagi mereka ke dalam pencetak."
 
 #: C/singlesided-npages.page:104(p)
 #: C/singlesided-9-12pages.page:97(p)
@@ -929,7 +929,7 @@ msgstr ""
 #: C/singlesided-17-20pages.page:98(p)
 #: C/singlesided-13-16pages.page:100(p)
 msgid "In the <gui>Only print</gui> menu, select <gui>Even sheets</gui>."
-msgstr ""
+msgstr "Dalam menu <gui>Hanya cetak</gui>, pilih <gui>Lembar genap</gui>."
 
 #: C/singlesided-9-12pages.page:7(title)
 msgid "09-Page or 12-Page Booklet"
@@ -993,7 +993,7 @@ msgstr "Bila Anda memiliki dokumen PDF 3 halaman, Anda mesti menambahkan satu ha
 #: C/duplex-3pages.page:71(p)
 #: C/duplex-15pages.page:34(p)
 msgid "Merge the blank page with your PDF document using <app>PDF-Shuffler</app> placing the blank page at the end."
-msgstr ""
+msgstr "Gabungkan halaman kosong dengan dokumen PDF Anda memakai <app>PDF_Shuffer</app> dengan menempatkan halaman-halaman kosong di akhir."
 
 #: C/singlesided-3-4pages.page:57(p)
 #: C/duplex-4pages.page:37(p)
@@ -1041,7 +1041,7 @@ msgstr "16, 1, 2, 15, 14, 3, 4, 13, 12, 5, 6, 11, 10, 7, 8, 9"
 
 #: C/shortcuts.page:7(desc)
 msgid "See a list of all shortcuts, and learn how to create your own custom shortcuts."
-msgstr ""
+msgstr "Lihat daftar semua pintasan, dan pelajari bagaimana membuat pintasan ubahan Anda sendiri."
 
 #: C/shortcuts.page:25(title)
 msgid "Keyboard shortcuts"
@@ -1117,7 +1117,7 @@ msgstr "W"
 
 #: C/shortcuts.page:53(p)
 msgid "Reload the document (effectively closes and re-opens the document)."
-msgstr ""
+msgstr "Memuat ulang dokumen (secara efektif menutup dan membuka ulang dokumen)."
 
 #: C/shortcuts.page:55(key)
 msgid "R"
@@ -1125,12 +1125,11 @@ msgstr "R"
 
 #: C/shortcuts.page:61(title)
 msgid "Moving around the document"
-msgstr ""
+msgstr "Bergerak di sekitar dokumen"
 
 #: C/shortcuts.page:64(p)
-#, fuzzy
 msgid "Move up/down a page."
-msgstr "<key>Page Up</key> / <key>Page Down</key>"
+msgstr "Berpindah sehalaman naik/turun."
 
 #: C/shortcuts.page:65(p)
 msgid "Arrow keys"
@@ -1138,7 +1137,7 @@ msgstr "Tombol panah"
 
 #: C/shortcuts.page:68(p)
 msgid "Move up/down a page several lines at a time."
-msgstr ""
+msgstr "Berpindah naik/turun dalam halaman beberapa baris setiap saat."
 
 #: C/shortcuts.page:69(p)
 msgid "<key>Page Up</key> / <key>Page Down</key>"
@@ -1154,7 +1153,7 @@ msgstr "<keyseq><key>Ctrl</key><key>Page Up</key></keyseq> / <keyseq><key>Ctrl</
 
 #: C/shortcuts.page:77(p)
 msgid "Go to the beginning of a page (beginning of the document if <guiseq><gui>View</gui><gui>Continuous</gui></guiseq> is selected)."
-msgstr ""
+msgstr "Pergi ke awal halaman (awal dokumen bila <guiseq><gui>Tilikan</gui><gui>Menyambung</gui></guiseq> dipilih)."
 
 #: C/shortcuts.page:80(key)
 #: C/shortcuts.page:89(key)
@@ -1163,7 +1162,7 @@ msgstr "Home"
 
 #: C/shortcuts.page:83(p)
 msgid "Go to the end of a page (end of the document if <guiseq><gui>View</gui><gui>Continuous</gui></guiseq> is selected)."
-msgstr ""
+msgstr "Pergi ke akhir halaman (akhir dokumen bila <guiseq><gui>Tilikan</gui><gui>Menyambung</gui></guiseq> dipilih)."
 
 #: C/shortcuts.page:85(key)
 #: C/shortcuts.page:93(key)
@@ -1204,7 +1203,7 @@ msgstr "Mencari teks"
 
 #: C/shortcuts.page:116(p)
 msgid "Show the toolbar that lets you search for words in the document. The search box is automatically highlighted when you press this, and the search will start as soon as you type some text."
-msgstr ""
+msgstr "Tampilkan bilah alat yang memungkinkan Anda mencari kata dalam dokumen. Kotak pencarian otomatis disorot ketika Anda menekan ini, dan pencarian akan dimulai ketika Anda mengetikkan teks."
 
 #: C/shortcuts.page:121(key)
 msgid "F"
@@ -1265,49 +1264,47 @@ msgstr "-"
 
 #: C/shortcuts.page:159(title)
 msgid "Create your own custom shortcuts"
-msgstr ""
+msgstr "Buat pintasan Anda sendiri"
 
 #: C/shortcuts.page:162(p)
 msgid "Enable the /desktop/gnome/interface/can_change_accels flag in gconf:"
-msgstr ""
+msgstr "Fungsikan flag /desktop/gnome/interface/can_change_accels dalam gconf:"
 
 #: C/shortcuts.page:167(p)
 msgid "Press <keyseq><key>Alt</key><key>F2</key></keyseq>. The Run Application dialogue opens."
-msgstr ""
+msgstr "Tekan <keyseq><key>Alt</key><key>F2</key></keyseq>. Dialog Jalankan Aplikasi membuka."
 
 #: C/shortcuts.page:172(p)
 msgid "In the textbox, type 'gconf-editor'."
-msgstr ""
+msgstr "Pada kotak teks, ketikkan 'gconf-editor'."
 
 #: C/shortcuts.page:177(p)
 msgid "In the Configuration Editor select <guiseq><gui>desktop</gui><gui>gnome</gui><gui>interface</gui></guiseq>."
-msgstr ""
+msgstr "Dalam Penyunting Konfigurasi pilih <guiseq><gui>desktop</gui><gui>gnome</gui><gui>antar muka</gui></guiseq>."
 
 #: C/shortcuts.page:182(p)
 msgid "Check the value box for <gui>can_change_accels</gui> in the right side of the window."
-msgstr ""
+msgstr "Contreng kotak bagi <gui>can_change_accels</gui> di sisi kanan jendela."
 
 #: C/shortcuts.page:187(p)
 msgid "You can add/change the shortcut as follows:"
-msgstr ""
+msgstr "Anda dapat menambah/mengubah pintasan dengan cara berikut:"
 
 #: C/shortcuts.page:192(p)
-#, fuzzy
 msgid "Open the <app>document viewer</app>."
-msgstr "Lokalkan <app>Penilik Dokumen</app>."
+msgstr "Buka <app>penilik dokumen</app>."
 
 #: C/shortcuts.page:197(p)
 msgid "Hover the pointer over the menu item you want to change/create the shortcut for."
-msgstr ""
+msgstr "Ambangkan penunjuk di atas butir menu yang ingin Anda ubah/buat pintasannya."
 
 #: C/shortcuts.page:202(p)
 msgid "Enter the shortcut you want on the keyboard, e.g. <keyseq><key>Ctrl</key><key>Shift</key><key>T</key></keyseq>."
-msgstr ""
+msgstr "Masukkan pintasan yang Anda inginkan pada papan tik, mis. <keyseq><key>Ctrl</key><key>Shift</key><key>T</key></keyseq>."
 
 #: C/shortcuts.page:207(p)
-#, fuzzy
 msgid "Close the <app>document viewer</app>."
-msgstr "Lokalkan <app>Penilik Dokumen</app>."
+msgstr "Tutup <app>penilik dokumen</app>."
 
 #: C/shortcuts.page:214(p)
 msgid "Repeat steps 1-3."
@@ -1315,31 +1312,31 @@ msgstr "Ulangi langkah 1-3."
 
 #: C/shortcuts.page:219(p)
 msgid "Uncheck the value box for <gui>can_change_accels</gui> in the right side of the window."
-msgstr ""
+msgstr "Hapus contreng dalam kotak bagi <gui>can_change_accels</gui> di sisi kanan jendela."
 
 #: C/shortcuts.page:223(p)
 msgid "The next time the <app>document viewer</app> launches, your custom shortcut key will be preserved."
-msgstr ""
+msgstr "Saat berikutnya <app>penilik dokumen</app> diluncurkan, pintasan ubahan Anda akan dilestarikan."
 
 #: C/shortcuts.page:233(p)
 msgid "Note that this also works for many other Gnome applications as well."
-msgstr ""
+msgstr "Perhatikan bahwa ini juga bekerja bagi banyak aplikasi Gnome lain."
 
 #: C/reload.page:8(desc)
 msgid "Your document will be automatically reloaded if another program changes it while you're viewing it."
-msgstr ""
+msgstr "Dokumen Anda akan dimuat ulang secara otomatis bila program lain mengubahnya ketika Anda sedang meniliknya."
 
 #: C/reload.page:23(title)
 msgid "Why does the document keep reloading?"
-msgstr ""
+msgstr "Kenapa dokumen tersebut dimuat ulang terus?"
 
 #: C/reload.page:25(p)
 msgid "If the <app>Document Viewer</app> detects that the document you have open has changed (perhaps because another program has modified it), it will automatically reload the document and display the most recent version for you."
-msgstr ""
+msgstr "Bila <app>Penilik Dokumen</app> mendeteksi bahwa dokumen yang Anda buka telah berubah (barangkali karena program lain telah memodifikasinya), itu akan memuat ulang dokumen secara otomatis dan menampilkan versi terbaru bagi Anda."
 
 #: C/reload.page:29(p)
 msgid "If the document is deleted while you are still viewing it, it will still remain open."
-msgstr ""
+msgstr "Bila dokumen dihapus ketika Anda sedang menilikinya, itu akan tetap terbuka."
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
@@ -1349,15 +1346,15 @@ msgstr "-"
 
 #: C/print-select.page:7(desc)
 msgid "Print only specific pages, or only a range of pages."
-msgstr ""
+msgstr "Mencetak hanya halaman tertentu, atau hanya suatu jangkauan halaman."
 
 #: C/print-select.page:19(title)
 msgid "Only printing certain pages"
-msgstr ""
+msgstr "Hanya mencetak halaman tertentu"
 
 #: C/print-select.page:22(p)
 msgid "To only print certain pages from the document:"
-msgstr ""
+msgstr "Untuk mencetak hanya halaman tertentu dari dokumen:"
 
 #: C/print-select.page:26(p)
 #: C/print-order.page:51(p)
@@ -1368,15 +1365,15 @@ msgstr "Klik <guiseq><gui>Berkas</gui><gui>Cetak</gui></guiseq>"
 
 #: C/print-select.page:27(p)
 msgid "In the <gui>General</gui> tab in the Print window choose <gui>Pages</gui> from the <gui>Range</gui> section."
-msgstr ""
+msgstr "Dalam tab <gui>Umum</gui> dalam jendela Cetak pilih <gui>Halaman</gui> dari seksi <gui>Jangkauan</gui>."
 
 #: C/print-select.page:28(p)
 msgid "Type the numbers of the pages you want to print in the textbox, separated by commas. Use a dash to denote a range of pages."
-msgstr ""
+msgstr "Ketikkan nomor-nomor halaman yang ingin Anda cetak dalam kotak teks, dipisah dengan koma. Gunakan strip untuk menandai jangkauan halaman."
 
 #: C/print-select.page:35(p)
 msgid "For example, if you enter \"1,3,5-7,9\" in the <gui>Pages</gui> textbox, pages 1,3,5,6,7 and 9 will be printed."
-msgstr ""
+msgstr "Sebagai contoh, bila Anda masukkan \"1,3,5-7,9\" dalam kotak teks <gui>Halaman</gui>, makan halaman 1, 3, 5, 6, 7, dan 9 akan dicetak."
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
@@ -1386,11 +1383,11 @@ msgstr "-"
 
 #: C/print-order.page:8(desc)
 msgid "Use the Collate and Reverse options to make pages print in order."
-msgstr ""
+msgstr "Gunakan opsi Kolasi dan Balik untuk membuat pencetakan halaman berurut."
 
 #: C/print-order.page:20(title)
 msgid "Getting copies to print in the correct order"
-msgstr ""
+msgstr "Mengatur salinan aga dicetak dalam urutan yang benar"
 
 #: C/print-order.page:23(title)
 msgid "Reverse"
@@ -1398,7 +1395,7 @@ msgstr "Balik"
 
 #: C/print-order.page:26(p)
 msgid "Printers usually print the first page first, and the last page last, so the pages end up in reverse order when you pick them up."
-msgstr ""
+msgstr "Pencetak biasanya mencetak halaman pertama terlebih dahulu, dan halaman terakhir di akhir, sehingga halaman tertata dalam urutan terbalik ketika Anda ambil."
 
 #: C/print-order.page:29(p)
 msgid "To reverse the order:"
@@ -1416,7 +1413,7 @@ msgstr "Cetak"
 
 #: C/print-order.page:34(p)
 msgid "In the <gui>General</gui> tab of the Print window under <em>Copies</em>, check <gui>Reverse</gui>. The last page will be printed first, and so on."
-msgstr ""
+msgstr "Dalam tab <gui>Umum</gui> dari jendela Cetak di bawah <em>Salinan</em>, contreng <gui>Balik</gui>. Halaman terakhir akan dicetak pertama, dan seterusnya."
 
 #: C/print-order.page:39(title)
 msgid "Collate"
@@ -1424,20 +1421,19 @@ msgstr "Kolasi"
 
 #: C/print-order.page:42(p)
 msgid "If you are printing more than one copy of the document, the print outs will be grouped by page number by default. (e.g. The copies of page one come out, then the copies of page two, etc.) Collating will make each copy come out with its pages grouped together."
-msgstr ""
+msgstr "Bila Anda mencetak lebih dari satu salinan dokumen, secara baku cetakan akan dikelompokkan menurut nomor halamannya. (yaitu salinan dari halaman pertama keluar, lalu salinan halaman kedua, dst.) Kolasi akan membuat setiap salinan keluar dengan halaman-halamannya dikelompokkan menjadi satu."
 
 #: C/print-order.page:47(p)
-#, fuzzy
 msgid "To collate:"
-msgstr "Kirim Ke:"
+msgstr "Untuk kolasi:"
 
 #: C/print-order.page:52(p)
 msgid "In the <gui>General</gui> tab of the Print window under <em>Copies</em> check <gui>Collate</gui>."
-msgstr ""
+msgstr "Dalam tab <gui>Umum</gui> dari jendela Cetak di bawah <em>Salinan</em> contreng <gui>Kolasi</gui>."
 
 #: C/printing.page:9(desc)
 msgid "How to print, and common questions about printing."
-msgstr ""
+msgstr "Bagaimana cara mencetak, dan pertanyaan umum tentang pencetakan."
 
 #: C/printing.page:22(title)
 msgid "Printing a document"
@@ -1500,24 +1496,23 @@ msgstr "Mengubah ukuran kertas ketika mencetak"
 
 #: C/print-differentsize.page:21(p)
 msgid "If you want to change the paper size of your document (for example, print a US Letter-sized PDF on A4 paper), you can change the printing format for the document."
-msgstr ""
+msgstr "Bila Anda ingin mengubah ukuran kertas dari dokumen Anda (sebagai contoh, mencetak PDF berukuran US-Letter pada kertas A4), Anda dapat mengubah format pencetakan bagi dokumen."
 
 #: C/print-differentsize.page:27(p)
-#, fuzzy
 msgid "Select the <gui>Page Setup</gui> tab."
 msgstr "Pilih tab <gui>Penyiapan Halaman</gui>."
 
 #: C/print-differentsize.page:28(p)
 msgid "Under the <em>Paper</em> column, choose your <em>Paper size</em> from the dropdown list."
-msgstr ""
+msgstr "Di bawah kolom <em>Kertas</em>, pilih <em>Ukuran kertas</em> Anda dari daftar drop down."
 
 #: C/print-differentsize.page:29(p)
 msgid "Click <gui>Print</gui> and your document should print."
-msgstr ""
+msgstr "Klik <gui>Cetak</gui> dan dokumen Anda mesti tercetak."
 
 #: C/print-differentsize.page:32(p)
 msgid "You can also use the <em>Orientation</em> menu to choose a different orientation:"
-msgstr ""
+msgstr "Anda juga dapat memakai menu <em>Orientasi</em> untuk memilih orientasi lain:"
 
 #: C/print-differentsize.page:37(gui)
 msgid "Portrait"
@@ -1532,9 +1527,8 @@ msgid "Reverse portrait"
 msgstr "Potret terbalik"
 
 #: C/print-differentsize.page:40(gui)
-#, fuzzy
 msgid "Reverse landscape"
-msgstr "Potret terbalik"
+msgstr "Lansekap terbalik"
 
 #: C/print-booklet.page:8(desc)
 msgid "How to print a booklet."
@@ -1546,7 +1540,7 @@ msgstr "Mencetak booklet"
 
 #: C/print-booklet.page:23(p)
 msgid "If you are printing a booklet (which will perhaps be bound or stapled in the middle of each page), select the type of printer you will be using for printing from the list below. Then select the number of printed pages your booklet will have."
-msgstr ""
+msgstr "Bila Anda mencetak booklet (yang mungkin akan diikat atau distaple di tengah setiap halaman), pilih tipe pencetak yang akan Anda pakai untuk mencetak dari daftar di bawah. Lalu pilih cacah halaman tercetak yang akan dimiliki oleh booklet Anda."
 
 #: C/print-booklet.page:28(title)
 msgid "Printer allows single-sided printing"
@@ -1570,15 +1564,15 @@ msgstr "Anda dapat mencetak pada kedua sisi dari tiap lembar kertas:"
 
 #: C/print-2sided.page:34(p)
 msgid "Go to the <gui>Page Setup</gui> tab of the Print window and choose an option from the <gui>Two-sided</gui> drop-down list."
-msgstr ""
+msgstr "Pergilah ke tab <gui>Penyiapan Halaman</gui> dari jendela Cetak dan pilih opsi dari daftar drop down <gui>Dua sisi</gui>."
 
 #: C/print-2sided.page:39(p)
 msgid "You can print more than one page of the document per <em>side</em> of paper too. Use the <gui>Pages per side</gui> option to do this."
-msgstr ""
+msgstr "Anda juga dapat mencetak lebih dari satu halaman dokumen pada setiap <em>sisi</em> kertas. Gunakan opsi <gui>Halaman setiap sisi</gui> untuk melakukan hal ini."
 
 #: C/presentations.page:7(desc)
 msgid "How to play presentations."
-msgstr ""
+msgstr "Bagaimana menyajikan presentasi."
 
 #: C/presentations.page:20(title)
 msgid "Presentations"
@@ -1598,7 +1592,7 @@ msgstr "Membuka berkas"
 
 #: C/presentations.page:29(p)
 msgid "Click <guiseq><gui>View</gui><gui>Presentation</gui></guiseq> (or press <key>F5</key>)."
-msgstr ""
+msgstr "Klik <guiseq><gui>Tilik</gui><gui>Presentasi</gui></guiseq> (atau tekan <key>F5</key>)."
 
 #: C/presentations.page:30(p)
 msgid "The presentation will be displayed full screen."
@@ -1656,19 +1650,19 @@ msgstr ""
 
 #: C/password.page:24(p)
 msgid "There are two types of passwords:"
-msgstr ""
+msgstr "Ada dua tipe sandi:"
 
 #: C/password.page:27(p)
 msgid "The <em>user password</em> is needed to view the document."
-msgstr ""
+msgstr "<em>Sandi pengguna</em> diperlukan untuk melihat dokumen."
 
 #: C/password.page:28(p)
 msgid "The <em>master password</em> is required to print the document as well as view it."
-msgstr ""
+msgstr "<em>Sandi induk</em> diperlukan untuk mencetak maupun untuk melihatnya."
 
 #: C/password.page:32(p)
 msgid "These passwords are set by the person who created the document."
-msgstr ""
+msgstr "Sandi-sandi tersebut dipasang oleh pembuat dokumen itu."
 
 #: C/opening.page:7(desc)
 msgid "How to open a document."
@@ -1680,11 +1674,11 @@ msgstr "Membuka dokumen"
 
 #: C/opening.page:24(p)
 msgid "You can open a document using any one of the following ways:"
-msgstr ""
+msgstr "Anda dapat membuka suatu dokumen dengan salah satu cara berikut:"
 
 #: C/opening.page:27(p)
 msgid "Double-click on the file icon in the <app>File Manager</app>."
-msgstr ""
+msgstr "Klik ganda pada ikon berkas dalam <app>Manajer Berkas</app>."
 
 #: C/opening.page:28(p)
 msgid "Double clicking opens PDF, PostScript, .djvu, .dvi and Comic Book Archive files in the <app>Document Viewer</app> by default."
@@ -1707,9 +1701,8 @@ msgid "choose <guiseq><gui>File</gui><gui>Open</gui></guiseq> from the Menubar. 
 msgstr ""
 
 #: C/openerror.page:7(desc)
-#, fuzzy
 msgid "Error When Opening A File."
-msgstr "Galat membuka berkas basis data tersandi \"%s\": %s"
+msgstr "Galat Saat Membuka Berkas."
 
 #: C/openerror.page:22(title)
 msgid "Why can't I open a file?"
@@ -2124,9 +2117,8 @@ msgid "Advanced"
 msgstr "Tingkat Lanjut"
 
 #: C/index.page:54(title)
-#, fuzzy
 msgid "Tips and tricks"
-msgstr "Tip dan pertanyaan"
+msgstr "Tip dan trik"
 
 #: C/index.page:58(title)
 msgid "SyncTeX"
@@ -3085,7 +3077,7 @@ msgstr ""
 
 #: C/annotations-disabled.page:7(desc)
 msgid "Annotations can only be added to PDF files."
-msgstr ""
+msgstr "Anotasi hanya dapat ditambahkan ke berkas PDF."
 
 #: C/annotations-disabled.page:18(title)
 msgid "Can't add annotations?"
@@ -3093,7 +3085,7 @@ msgstr "Tak bisa menambah anotasi?"
 
 #: C/annotations-disabled.page:19(p)
 msgid "Annotations can only be added to PDF files. If your file is of a format other than PDF, the option to add annotations will be greyed out (disabled)."
-msgstr ""
+msgstr "Anotasi hanya dapat ditambahkan ke berkas PDF. Bila berkas Anda memiliki format selain PDF, opsi untuk menambahkan anotasi akan dicetak kelabu (dinonaktifkan)."
 
 #: C/annotations-delete.page:7(desc)
 msgid "You can't remove annotations."
@@ -3105,11 +3097,11 @@ msgstr "Menghapus anotasi"
 
 #: C/annotations-delete.page:21(p)
 msgid "You can't remove an annotation in the <app>document viewer</app> at this time."
-msgstr ""
+msgstr "Anda tak bisa menghapus anotasi dalam <app>penilik dokumen</app> saat ini."
 
 #: C/annotation-properties.page:7(desc)
 msgid "How to customize the author, color, style or icon of an annotation."
-msgstr ""
+msgstr "Bagaimana menggubah pengarang, warna, gaya, atau ikon anotasi."
 
 #: C/annotation-properties.page:20(title)
 msgid "Customize annotations"
@@ -3117,7 +3109,7 @@ msgstr "Sesuaikan anotasi"
 
 #: C/annotation-properties.page:24(p)
 msgid "Right click on the annotation icon in the document."
-msgstr ""
+msgstr "Klik kanan pada ikon anotasi dalam dokumen."
 
 #: C/annotation-properties.page:29(p)
 msgid "Select <gui>Annotation Properties</gui>."
@@ -3125,15 +3117,15 @@ msgstr "Pilih <gui>Properti Anotasi</gui>."
 
 #: C/annotation-properties.page:34(p)
 msgid "In the <gui>Annotation Properties</gui> window, you can change the author, color, style and icon of your note."
-msgstr ""
+msgstr "Dalam jendela <gui>Properti Anotasi</gui>, Anda dapat mengubah pengarang, warna, gaya, dan ikon dari catatan Anda."
 
 #: C/annotation-properties.page:38(p)
 msgid "The annotation properties will be applied to the note for which you made the changes only. Each note can have a different set of properties."
-msgstr ""
+msgstr "Properti anotasi hanya akan diterapkan ke catatan yang telah Anda ubah. Setiap catatan bisa memiliki set properti yang berbeda."
 
 #: C/annotation-properties.page:47(title)
 msgid "Can I permanently change the default annotation properties?"
-msgstr ""
+msgstr "Apakah saya dapat mengubah properti anotasi baku secara permanen?"
 
 #: C/annotation-properties.page:48(p)
 msgid "The default annotation properties (author, colour, style and icon) can only be changed on a particular note as stated above. So if you want all icons for your notes to be <gui>red</gui> instead of <gui>yellow</gui>, you will have to change the default from <gui>yellow</gui> to <gui>red</gui> individually on each note. There is no way to save different default settings for annotation properties, at this time."
