@@ -150,7 +150,7 @@ ev_timeline_run_frame (EvTimeline *timeline)
 	gdouble         progress;
 	guint           elapsed_time;
 
-	GDK_THREADS_ENTER ();
+	gdk_threads_enter ();
 
 	priv = EV_TIMELINE_GET_PRIV (timeline);
 
@@ -174,7 +174,7 @@ ev_timeline_run_frame (EvTimeline *timeline)
 		}
 	}
 
-	GDK_THREADS_LEAVE ();
+	gdk_threads_leave ();
 
 	return TRUE;
 }
