@@ -1,4 +1,39 @@
 ================
+Evince     3.5.5
+================
+
+New features and improvements:
+
+    * Use GtkApplication to inhibit the screensaver (Christian Persch)
+    * Port EvApplication to GtkApplication and make EvWindow a
+      GtkApplicationWindow (Christian Persch)
+    * Port evince daemon to GApplication (Christian Persch)
+    * Use gdbus-codegen for D-Bus interfaces (Christian Persch, Carlos
+      Garcia Campos)
+
+Bug fixes:
+
+    * Fix sent to when filename contains spaces (#681144, Carlos
+      Garcia Campos)
+    * Apply default settings also for documents opened from /tmp
+      (#680145, Carlos Garcia Campos)
+    * Replace GDK_THREADS_ENTER/LEAVE with gdk_threads_enter/leave
+      (#681215, Matthias Clasen)
+
+Translation updates:
+
+    * Dimitris Spingos (Δημήτρης Σπίγγος) (el)
+    * Fran Dieguez (gl)
+    * Sweta Kothari (gu)
+    * Andika Triwidada (id)
+    * OKANO Takayoshi (ja)
+    * Baurzhan Muftakhidinov (kk)
+    * Matej Urbančič (sl)
+    * Miroslav Nikolić (sr@latin)
+    * Мирослав Николић (sr)
+    * Praveen Illa (te)
+
+================
 Evince     3.5.4
 ================
 
