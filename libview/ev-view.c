@@ -244,6 +244,10 @@ static double	zoom_for_size_best_fit 			     (gdouble doc_width,
 							      gdouble doc_height,
 							      int     target_width,
 							      int     target_height);
+static gboolean ev_view_can_zoom                             (EvView *view,
+                                                              gdouble factor);
+static void     ev_view_zoom                                 (EvView *view,
+                                                              gdouble factor);
 static void     ev_view_zoom_for_size                        (EvView *view,
 							      int     width,
 							      int     height);
@@ -5438,41 +5442,55 @@ ev_view_reload (EvView *view)
 }
 
 /*** Zoom and sizing mode ***/
+static gboolean
+ev_view_can_zoom (EvView *view, gdouble factor)
+{
+	gdouble scale = view->scale * factor;
+
+	if (factor == 1.0)
+		return TRUE;
+
+	else if (factor < 1.0)
+		return ev_document_model_get_min_scale (view->model) <= scale;
+
+	else
+		return scale <= ev_document_model_get_max_scale (view->model);
+}
 
 gboolean
 ev_view_can_zoom_in (EvView *view)
 {
-	return view->scale * ZOOM_IN_FACTOR <= ev_document_model_get_max_scale (view->model);
+	return ev_view_can_zoom (view, ZOOM_IN_FACTOR);
 }
 
 gboolean
 ev_view_can_zoom_out (EvView *view)
 {
-	return view->scale * ZOOM_OUT_FACTOR >= ev_document_model_get_min_scale (view->model);
+	return ev_view_can_zoom (view, ZOOM_OUT_FACTOR);
+}
+
+static void
+ev_view_zoom (EvView *view, gdouble factor)
+{
+	gdouble scale;
+
+	g_return_if_fail (view->sizing_mode == EV_SIZING_FREE);
+
+	view->pending_scroll = SCROLL_TO_CENTER;
+	scale = ev_document_model_get_scale (view->model) * factor;
+	ev_document_model_set_scale (view->model, scale);
 }
 
 void
 ev_view_zoom_in (EvView *view)
 {
-	gdouble scale;
-
-	g_return_if_fail (view->sizing_mode == EV_SIZING_FREE);
-
-	view->pending_scroll = SCROLL_TO_CENTER;
-	scale = ev_document_model_get_scale (view->model) * ZOOM_IN_FACTOR;
-	ev_document_model_set_scale (view->model, scale);
+	ev_view_zoom (view, ZOOM_IN_FACTOR);
 }
 
 void
 ev_view_zoom_out (EvView *view)
 {
-	gdouble scale;
-
-	g_return_if_fail (view->sizing_mode == EV_SIZING_FREE);
-
-	view->pending_scroll = SCROLL_TO_CENTER;
-	scale = ev_document_model_get_scale (view->model) * ZOOM_OUT_FACTOR;
-	ev_document_model_set_scale (view->model, scale);
+	ev_view_zoom (view, ZOOM_OUT_FACTOR);
 }
 
 static double
