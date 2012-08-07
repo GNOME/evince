@@ -315,7 +315,7 @@ ev_spawn (const char     *uri,
 	}
 
 	if (error != NULL) {
-		g_warning ("Error launching evince %s: %s\n", uri, error->message);
+		g_printerr ("Error launching evince %s: %s\n", uri, error->message);
 		g_error_free (error);
 	}
 
@@ -428,7 +428,7 @@ on_register_uri_cb (GObject      *source_object,
 
 	value = g_dbus_connection_call_finish (connection, res, &error);
 	if (!value) {
-		g_warning ("Error registering document: %s\n", error->message);
+		g_printerr ("Error registering document: %s\n", error->message);
 		g_error_free (error);
 
 		_ev_application_open_uri_at_dest (application,
@@ -615,7 +615,7 @@ ev_application_unregister_uri (EvApplication *application,
 		NULL,
 		&error);
         if (value == NULL) {
-		g_warning ("Error unregistering document: %s\n", error->message);
+		g_printerr ("Error unregistering document: %s\n", error->message);
 		g_error_free (error);
 	} else {
                 g_variant_unref (value);
@@ -969,8 +969,8 @@ ev_application_migrate_config_dir (EvApplication *application)
                         error = NULL;
                         g_file_move (old_file, new_file, 0, NULL, NULL, NULL, &error);
                         if (error) {
-                                g_warning ("Error migrating config file %s: %s\n",
-                                           old_filename, error->message);
+                                g_printerr ("Error migrating config file %s: %s\n",
+                                            old_filename, error->message);
                                 g_error_free (error);
                         }
 
@@ -998,8 +998,8 @@ ev_application_migrate_config_dir (EvApplication *application)
                 error = NULL;
                 g_file_move (old_accels_file, new_accels_file, 0, NULL, NULL, NULL, &error);
                 if (error) {
-                        g_warning ("Error migrating accelerator specifications file %s: %s\n",
-                                   old_accels, error->message);
+                        g_printerr ("Error migrating accelerator specifications file %s: %s\n",
+                                    old_accels, error->message);
                         g_error_free (error);
                 }
 
