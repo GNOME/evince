@@ -92,7 +92,6 @@ GTKDOC_CFLAGS = \
 	-I$(top_builddir)/shell				\
 	-I$(top_srcdir)/cut-n-paste/zoom-control/	\
 	-I$(top_srcdir)/cut-n-paste/toolbar-editor/	\
-	-I$(top_srcdir)/cut-n-paste/totem-screensaver/	\
 	-I$(top_srcdir)/libdocument			\
 	-I$(top_builddir)/libdocument			\
 	-I$(top_srcdir)/libview				\
@@ -112,12 +111,12 @@ GTKDOC_CFLAGS = \
 FILTER_OUT = \
 	$(top_builddir)/shell/main.o			\
 	$(top_builddir)/shell/evinced-ev-daemon.o	\
-	$(top_builddir)/shell/ev-convert-metadata.o
+	$(top_builddir)/shell/ev-convert-metadata.o	\
+	$(top_builddir)/shell/evinced-ev-daemon-gdbus-generated.o
 
 GTKDOC_LIBS = \
 	$(top_builddir)/cut-n-paste/zoom-control/libephyzoom.la		\
 	$(top_builddir)/cut-n-paste/toolbar-editor/libtoolbareditor.la	\
-	$(top_builddir)/cut-n-paste/totem-screensaver/libtotemscrsaver.la	\
 	$(top_builddir)/cut-n-paste/gimpcellrenderertoggle/libgimpcellrenderertoggle.la	\
 	$(top_builddir)/cut-n-paste/smclient/libsmclient.la		\
 	$(top_builddir)/properties/libevproperties.la			\
