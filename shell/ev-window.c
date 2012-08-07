@@ -3028,10 +3028,13 @@ ev_window_cmd_send_to (GtkAction *action,
 	GAppInfo   *app_info;
 	gchar      *command;
 	const char *uri;
+	char       *unescaped_uri;
 	GError     *error = NULL;
 
 	uri = ev_window->priv->local_uri ? ev_window->priv->local_uri : ev_window->priv->uri;
-	command = g_strdup_printf ("%s %s", nautilus_sendto, uri);
+	unescaped_uri = g_uri_unescape_string (uri, NULL);
+	command = g_strdup_printf ("%s \"%s\"", nautilus_sendto, unescaped_uri);
+	g_free (unescaped_uri);
 	app_info = g_app_info_create_from_commandline (command, NULL, 0, &error);
 	if (app_info) {
 		GdkAppLaunchContext *context;
