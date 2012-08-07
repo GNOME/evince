@@ -2132,7 +2132,7 @@ ev_window_open_uri (EvWindow       *ev_window,
 		g_object_unref (ev_window->priv->bookmarks);
 
 	source_file = g_file_new_for_uri (uri);
-	if (!ev_file_is_temp (source_file) && ev_is_metadata_supported_for_file (source_file)) {
+	if (ev_is_metadata_supported_for_file (source_file)) {
 		ev_window->priv->metadata = ev_metadata_new (source_file);
 		ev_window_init_metadata_with_default_values (ev_window);
 	} else {

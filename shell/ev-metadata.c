@@ -22,6 +22,7 @@
 #include <string.h>
 
 #include "ev-metadata.h"
+#include "ev-file-helpers.h"
 
 struct _EvMetadata {
 	GObject base;
@@ -129,9 +130,10 @@ ev_metadata_new (GFile *file)
 	g_return_val_if_fail (G_IS_FILE (file), NULL);
 
 	metadata = EV_METADATA (g_object_new (EV_TYPE_METADATA, NULL));
-	metadata->file = g_object_ref (file);
-
-	ev_metadata_load (metadata);
+        if (!ev_file_is_temp (file)) {
+                metadata->file = g_object_ref (file);
+                ev_metadata_load (metadata);
+        }
 
 	return metadata;
 }
@@ -178,6 +180,10 @@ ev_metadata_set_string (EvMetadata  *metadata,
 	GFileInfo *info;
 	gchar     *gio_key;
 
+        g_hash_table_insert (metadata->items, g_strdup (key), g_strdup (value));
+        if (!metadata->file)
+                return TRUE;
+
 	info = g_file_info_new ();
 
 	gio_key = g_strconcat (EV_METADATA_NAMESPACE"::", key, NULL);
@@ -190,7 +196,6 @@ ev_metadata_set_string (EvMetadata  *metadata,
 	}
 	g_free (gio_key);
 
-	g_hash_table_insert (metadata->items, g_strdup (key), g_strdup (value));
 	g_file_set_attributes_async (metadata->file,
 				     info,
 				     0,
