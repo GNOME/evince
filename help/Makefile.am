@@ -1,14 +1,10 @@
+@YELP_HELP_RULES@
+
 SUBDIRS = reference
 
-if ENABLE_HELP
-include $(top_srcdir)/gnome-doc-utils.make
+HELP_ID = evince
 
-DOC_ID = evince
-DOC_INCLUDES = legal.xml
-
-dist-hook: doc-dist-hook
-
-DOC_FIGURES = \
+HELP_MEDIA = \
 	figures/add-text-annotation.png		\
 	figures/annotations-navigate.png	\
 	figures/annotations-nav-to-page.png	\
@@ -24,7 +20,7 @@ DOC_FIGURES = \
 	figures/synctex_screencast.ogv		\
 	figures/zoom.png
 
-DOC_PAGES = \
+HELP_FILES = \
 	annotation-properties.page	\
 	annotations-delete.page		\
 	annotations-disabled.page	\
@@ -63,6 +59,7 @@ DOC_PAGES = \
 	introduction.page		\
 	invert-colors.page		\
 	license.page			\
+	legal.xml			\
 	movingaround.page		\
 	noprint.page			\
 	openerror.page			\
@@ -93,8 +90,6 @@ DOC_PAGES = \
 	toolbar.page			\
 	translate.page
 
-DOC_LINGUAS = bg ca cs da de el en_GB es eu fi fr gl hu id it ja lv nl oc pt_BR ru sl sr sv te uk vi zh_CN zh_HK zh_TW
-
-endif
+HELP_LINGUAS = bg ca cs da de el en_GB es eu fi fr gl hu id it ja lv nl oc pt_BR ru sl sr sv te uk vi zh_CN zh_HK zh_TW
 
 -include $(top_srcdir)/git.mk

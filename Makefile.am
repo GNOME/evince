@@ -56,7 +56,6 @@ EXTRA_DIST = \
 	$(intltool_extra) \
 	$(header_DATA) \
 	autogen.sh \
-	gnome-doc-utils.make \
 	MAINTAINERS
 
 DISTCLEANFILES = 		\
@@ -81,10 +80,7 @@ MAINTAINERCLEANFILES = \
 	$(srcdir)/m4 \
 	$(srcdir)/missing \
 	$(srcdir)/mkinstalldirs \
-	$(srcdir)/omf.make \
-	$(srcdir)/xmldocs.make \
 	$(srcdir)/gtk-doc.make \
-	$(srcdir)/gnome-doc-utils.make	\
 	$(srcdir)/po/Makefile.in.in \
 	`find "$(srcdir)" -type f -name Makefile.in -print`
 

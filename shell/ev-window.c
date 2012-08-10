@@ -272,8 +272,8 @@ struct _EvWindowPrivate {
 #define MAX_RECENT_ITEM_LEN (40)
 
 #if OFFLINE_HELP_ENABLED
-#define EV_HELP         "ghelp:evince"
-#define EV_HELP_TOOLBAR "ghelp:evince?toolbar"
+#define EV_HELP         "help:evince"
+#define EV_HELP_TOOLBAR "help:evince/toolbar"
 #else
 #define EV_HELP         "http://library.gnome.org/users/evince/stable/"
 #define EV_HELP_TOOLBAR "http://library.gnome.org/users/evince/stable/toolbar.html"
