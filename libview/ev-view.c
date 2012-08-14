@@ -4563,6 +4563,7 @@ ev_view_dispose (GObject *object)
 	EvView *view = EV_VIEW (object);
 
 	if (view->model) {
+		g_signal_handlers_disconnect_by_data (view->model, view);
 		g_object_unref (view->model);
 		view->model = NULL;
 	}
@@ -5371,12 +5372,7 @@ ev_view_set_model (EvView          *view,
 		return;
 
 	if (view->model) {
-		g_signal_handlers_disconnect_by_func (view->model,
-						      ev_view_document_changed_cb,
-						      view);
-		g_signal_handlers_disconnect_by_func (view->model,
-						      ev_view_page_changed_cb,
-						      view);
+		g_signal_handlers_disconnect_by_data (view->model, view);
 		g_object_unref (view->model);
 	}
 	view->model = g_object_ref (model);
