@@ -271,13 +271,8 @@ struct _EvWindowPrivate {
 
 #define MAX_RECENT_ITEM_LEN (40)
 
-#if OFFLINE_HELP_ENABLED
 #define EV_HELP         "help:evince"
 #define EV_HELP_TOOLBAR "help:evince/toolbar"
-#else
-#define EV_HELP         "http://library.gnome.org/users/evince/stable/"
-#define EV_HELP_TOOLBAR "http://library.gnome.org/users/evince/stable/toolbar.html"
-#endif
 
 #define TOOLBAR_RESOURCE_PATH "/org/gnome/evince/shell/ui/toolbar.xml"
 
