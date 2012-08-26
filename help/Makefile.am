@@ -90,6 +90,6 @@ HELP_FILES = \
 	toolbar.page			\
 	translate.page
 
-HELP_LINGUAS = bg ca cs da de el en_GB es eu fi fr gl hu id it ja lv nl oc pt_BR ru sl sr sv te uk vi zh_CN zh_HK zh_TW
+HELP_LINGUAS = bg ca cs da de el en_GB es eu fi fr gl hu id it ja ko lv nl oc pt_BR ru sl sr sv te uk vi zh_CN zh_HK zh_TW
 
 -include $(top_srcdir)/git.mk
