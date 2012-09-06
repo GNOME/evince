@@ -411,6 +411,20 @@ ev_job_links_new (EvDocument *document)
 	return job;
 }
 
+/**
+ * ev_job_links_get_model:
+ * @job: #EvJobLinks
+ *
+ * Get a #GtkTreeModel loaded with the links
+ *
+ * Return value: (transfer none): The #GtkTreeModel loaded
+ */
+GtkTreeModel *
+ev_job_links_get_model (EvJobLinks *job)
+{
+	return job->model;
+}
+
 /* EvJobAttachments */
 static void
 ev_job_attachments_init (EvJobAttachments *job)

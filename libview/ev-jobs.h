@@ -461,6 +461,7 @@ void            ev_job_set_run_mode       (EvJob          *job,
 /* EvJobLinks */
 GType           ev_job_links_get_type     (void) G_GNUC_CONST;
 EvJob          *ev_job_links_new          (EvDocument     *document);
+GtkTreeModel   *ev_job_links_get_model    (EvJobLinks     *job);
 
 /* EvJobAttachments */
 GType           ev_job_attachments_get_type (void) G_GNUC_CONST;
