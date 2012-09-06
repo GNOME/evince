@@ -5766,6 +5766,18 @@ jump_to_find_page (EvView *view, EvViewFindDirection direction, gint shift)
 	}
 }
 
+static void
+find_job_updated_cb (EvJobFind *job, gint page, EvView *view)
+{
+	ev_view_find_changed (view, ev_job_find_get_results (job), page);
+}
+
+void
+ev_view_find_started (EvView *view, EvJobFind *job)
+{
+	g_signal_connect (job, "updated", G_CALLBACK (find_job_updated_cb), view);
+}
+
 void
 ev_view_find_changed (EvView *view, GList **results, gint page)
 {

@@ -5377,10 +5377,6 @@ ev_window_find_job_updated_cb (EvJobFind *job,
 			       EvWindow  *ev_window)
 {
 	ev_window_update_actions (ev_window);
-	
-	ev_view_find_changed (EV_VIEW (ev_window->priv->view),
-			      ev_job_find_get_results (job),
-			      page);
 	ev_window_update_find_status_message (ev_window);
 }
 
@@ -5452,6 +5448,8 @@ ev_window_search_start (EvWindow *ev_window)
 		if (egg_find_bar_get_whole_words_only (find_bar))
 			options |= EV_FIND_WHOLE_WORDS_ONLY;
 		ev_job_find_set_options (EV_JOB_FIND (ev_window->priv->find_job), options);
+
+		ev_view_find_started (EV_VIEW (ev_window->priv->view), EV_JOB_FIND (ev_window->priv->find_job));
 
 		g_signal_connect (ev_window->priv->find_job, "finished",
 				  G_CALLBACK (ev_window_find_job_finished_cb),
