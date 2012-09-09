@@ -76,6 +76,7 @@ void            ev_view_find_previous             (EvView         *view);
 void            ev_view_find_search_changed       (EvView         *view);
 void     	ev_view_find_set_highlight_search (EvView         *view,
 						   gboolean        value);
+EV_DEPRECATED_FOR(ev_view_find_started)
 void            ev_view_find_changed              (EvView         *view,
 						   GList         **results,
 						   gint            page);
