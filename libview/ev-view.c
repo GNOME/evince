@@ -4588,6 +4588,8 @@ ev_view_dispose (GObject *object)
 		view->page_cache = NULL;
 	}
 
+	ev_view_find_cancel (view);
+
 	ev_view_window_children_free (view);
 
 	if (view->selection_scroll_id) {
@@ -5775,6 +5777,12 @@ find_job_updated_cb (EvJobFind *job, gint page, EvView *view)
 void
 ev_view_find_started (EvView *view, EvJobFind *job)
 {
+	if (view->find_job == job)
+		return;
+
+	ev_view_find_cancel (view);
+	view->find_job = g_object_ref (job);
+
 	g_signal_connect (job, "updated", G_CALLBACK (find_job_updated_cb), view);
 }
 
@@ -5830,7 +5838,7 @@ ev_view_find_search_changed (EvView *view)
 {
 	/* search string has changed, focus on new search result */
 	view->jump_to_find_result = TRUE;
-	view->find_pages = NULL;
+	ev_view_find_cancel (view);
 }
 
 void
@@ -5844,6 +5852,13 @@ void
 ev_view_find_cancel (EvView *view)
 {
 	view->find_pages = NULL;
+
+	if (!view->find_job)
+		return;
+
+	g_signal_handlers_disconnect_by_func (view->find_job, find_job_updated_cb, view);
+	g_object_unref (view->find_job);
+	view->find_job = NULL;
 }
 
 /*** Synctex ***/
