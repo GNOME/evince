@@ -1,948 +1,4130 @@
 # Japanese help translation for evince.
-# Satoru SATOH <ss@gnome.gr.jp>, 2007.
+# Copyright (C) 2012 the Japnese translators of help for evince
+# This file is distributed under a Creative Commons Attribution-Share Alike
+# 3.0 United States License.
+# Yasumichi Akahoshi <yasumichi@vinelinux.org>, 2012.
+# Jiro Matsuzawa <jmatsuzawa@gnome.org>, 2012.
 #
-# TODO: 印刷の節などは実際の動作とは異なる説明となってしまっている。
 msgid ""
 msgstr ""
-"Project-Id-Version: evince/help trunk\n"
-"POT-Creation-Date: 2007-08-20 03:16+0100\n"
-"PO-Revision-Date: 2007-08-22 05:49+0900\n"
-"Last-Translator: Satoru SATOH <ss@gnome.gr.jp>\n"
+"Project-Id-Version: evince/help gnome-3-2\n"
+"POT-Creation-Date: 2012-09-12 15:49+0000\n"
+"PO-Revision-Date: 2012-09-13 21:29+0900\n"
+"Last-Translator: Yasumichi Akahoshi <yasumichi@vinelinux.org>\n"
 "Language-Team: Japanese <gnome-translation@gnome.gr.jp>\n"
+"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
-#. When image changes, this message will be marked fuzzy or untranslated for you.
-#. It doesn't matter what you translate it to: it's not used at all.
-#: C/evince.xml:146(None)
-msgid ""
-"@@image: 'figures/evince_start_window.png'; "
-"md5=7f4da5e33bcac35738a268d93d497d47"
-msgstr "@@image: 'figures/evince_start_window.png'; "
-"md5=facb0196a444d6ffdc4fd53ea7ee632b"
-
-#: C/evince.xml:25(title)
-msgid "Evince Document Viewer Manual"
-msgstr "Evince ドキュメントビューア マニュアル"
-
-#: C/evince.xml:27(para)
-msgid ""
-"The Evince Document Viewer application enables you to view documents of "
-"various formats like Portable Document Format (PDF) files and PostScript "
-"files"
-msgstr "Evince ドキュメントビューアで PDF や PostScript のような様々な"
-"フォーマットのドキュメントを見ることができます。"
-
-#: C/evince.xml:33(year)
-msgid "2005"
-msgstr "2005"
-
-#: C/evince.xml:34(holder) C/evince.xml:91(para)
-msgid "Nickolay V. Shmyrev"
-msgstr "Nickolay V. Shmyrev"
-
-#: C/evince.xml:37(year)
-msgid "2004"
-msgstr "2004"
-
-#: C/evince.xml:38(holder) C/evince.xml:61(orgname)
-msgid "Sun Microsystems"
-msgstr "サンマイクロシステムズ"
-
-#: C/evince.xml:49(publishername) C/evince.xml:67(orgname)
-#: C/evince.xml:92(para)
-msgid "GNOME Documentation Project"
-msgstr "GNOME ドキュメントプロジェクト"
-
-# 参考訳: http://www.opensource.jp/fdl/fdl.ja.html
-#: C/evince.xml:2(para)
-msgid ""
-"Permission is granted to copy, distribute and/or modify this document under "
-"the terms of the GNU Free Documentation License (GFDL), Version 1.1 or any "
-"later version published by the Free Software Foundation with no Invariant "
-"Sections, no Front-Cover Texts, and no Back-Cover Texts. You can find a copy "
-"of the GFDL at this <ulink type=\"help\" url=\"ghelp:fdl\">link</ulink> or "
-"in the file COPYING-DOCS distributed with this manual."
-msgstr "この文書を、フリーソフトウェア財団発行の GNU フリー文書利用許諾契約書 (GFDL) "
-"のバージョン 1.1 かそれ以降が定める条件の下で複製、頒布、あるいは改変すること"
-"を許可します。変更不可部分、表カバーテキスト、裏カバーテキストは存在しませ"
-"ん。この利用許諾契約書 (GFDL) の複製は<ulink type=\"help\" url=\"ghelp:fdl\">"
-"このリンク</ulink> またはこのマニュアルと一緒に配布されているファイル "
-"COPYING-DOCS を参照して下さい。"
-
-#: C/evince.xml:12(para)
-msgid ""
-"This manual is part of a collection of GNOME manuals distributed under the "
-"GFDL. If you want to distribute this manual separately from the collection, "
-"you can do so by adding a copy of the license to the manual, as described in "
-"section 6 of the license."
-msgstr "このマニュアルは GFDL の下で配布される GNOME マニュアルのコレクションの一部で"
-"す。コレクションと別にこのマニュアルを配布したい場合は、ライセンスの第六節に"
-"あるようにライセンスのコピーをマニュアルに加えれば配布できます。"
-
-#: C/evince.xml:19(para)
-msgid ""
-"Many of the names used by companies to distinguish their products and "
-"services are claimed as trademarks. Where those names appear in any GNOME "
-"documentation, and the members of the GNOME Documentation Project are made "
-"aware of those trademarks, then the names are in capital letters or initial "
-"capital letters."
-msgstr "製品やサービスを区別するために企業によって利用されている名称の多くは登録商標"
-"です。これらの名称が GNOME ドキュメントで使われていて GNOME ドキュメントプロ"
-"ジェクトのメンバーが商標と認識している場合、これらの名前を大文字あるいは語句"
-"の最初の文字を大文字で記述しています。"
-
-# 訳すべきか?
-#: C/evince.xml:35(para)
-msgid ""
-"DOCUMENT IS PROVIDED ON AN \"AS IS\" BASIS, WITHOUT WARRANTY OF ANY KIND, "
-"EITHER EXPRESSED OR IMPLIED, INCLUDING, WITHOUT LIMITATION, WARRANTIES THAT "
-"THE DOCUMENT OR MODIFIED VERSION OF THE DOCUMENT IS FREE OF DEFECTS "
-"MERCHANTABLE, FIT FOR A PARTICULAR PURPOSE OR NON-INFRINGING. THE ENTIRE "
-"RISK AS TO THE QUALITY, ACCURACY, AND PERFORMANCE OF THE DOCUMENT OR "
-"MODIFIED VERSION OF THE DOCUMENT IS WITH YOU. SHOULD ANY DOCUMENT OR "
-"MODIFIED VERSION PROVE DEFECTIVE IN ANY RESPECT, YOU (NOT THE INITIAL "
-"WRITER, AUTHOR OR ANY CONTRIBUTOR) ASSUME THE COST OF ANY NECESSARY "
-"SERVICING, REPAIR OR CORRECTION. THIS DISCLAIMER OF WARRANTY CONSTITUTES AN "
-"ESSENTIAL PART OF THIS LICENSE. NO USE OF ANY DOCUMENT OR MODIFIED VERSION "
-"OF THE DOCUMENT IS AUTHORIZED HEREUNDER EXCEPT UNDER THIS DISCLAIMER; AND"
+#. Put one translator per line, in the form NAME <EMAIL>, YEAR1, YEAR2
+msgctxt "_"
+msgid "translator-credits"
 msgstr ""
-"DOCUMENT IS PROVIDED ON AN \"AS IS\" BASIS, WITHOUT WARRANTY OF ANY KIND, "
-"EITHER EXPRESSED OR IMPLIED, INCLUDING, WITHOUT LIMITATION, WARRANTIES THAT "
-"THE DOCUMENT OR MODIFIED VERSION OF THE DOCUMENT IS FREE OF DEFECTS "
-"MERCHANTABLE, FIT FOR A PARTICULAR PURPOSE OR NON-INFRINGING. THE ENTIRE "
-"RISK AS TO THE QUALITY, ACCURACY, AND PERFORMANCE OF THE DOCUMENT OR "
-"MODIFIED VERSION OF THE DOCUMENT IS WITH YOU. SHOULD ANY DOCUMENT OR "
-"MODIFIED VERSION PROVE DEFECTIVE IN ANY RESPECT, YOU (NOT THE INITIAL "
-"WRITER, AUTHOR OR ANY CONTRIBUTOR) ASSUME THE COST OF ANY NECESSARY "
-"SERVICING, REPAIR OR CORRECTION. THIS DISCLAIMER OF WARRANTY CONSTITUTES AN "
-"ESSENTIAL PART OF THIS LICENSE. NO USE OF ANY DOCUMENT OR MODIFIED VERSION "
-"OF THE DOCUMENT IS AUTHORIZED HEREUNDER EXCEPT UNDER THIS DISCLAIMER; AND"
+"赤星 柔充 <yasumichi@vinelinux.org>\n"
+"松澤 二郎 <jmatsuzawa@gnome.org>\n"
+"日本 GNOME ユーザー会 http://www.gnome.gr.jp"
 
-#: C/evince.xml:55(para)
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#.
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/index.page:6(media)
+msgctxt "_"
 msgid ""
-"UNDER NO CIRCUMSTANCES AND UNDER NO LEGAL THEORY, WHETHER IN TORT (INCLUDING "
-"NEGLIGENCE), CONTRACT, OR OTHERWISE, SHALL THE AUTHOR, INITIAL WRITER, ANY "
-"CONTRIBUTOR, OR ANY DISTRIBUTOR OF THE DOCUMENT OR MODIFIED VERSION OF THE "
-"DOCUMENT, OR ANY SUPPLIER OF ANY OF SUCH PARTIES, BE LIABLE TO ANY PERSON "
-"FOR ANY DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES OF "
-"ANY CHARACTER INCLUDING, WITHOUT LIMITATION, DAMAGES FOR LOSS OF GOODWILL, "
-"WORK STOPPAGE, COMPUTER FAILURE OR MALFUNCTION, OR ANY AND ALL OTHER DAMAGES "
-"OR LOSSES ARISING OUT OF OR RELATING TO USE OF THE DOCUMENT AND MODIFIED "
-"VERSIONS OF THE DOCUMENT, EVEN IF SUCH PARTY SHALL HAVE BEEN INFORMED OF THE "
-"POSSIBILITY OF SUCH DAMAGES."
+"external ref='figures/evince-trail.png' "
+"md5='a1a70d04c37f05937d0b3e7a0705d2d4'"
 msgstr ""
-"UNDER NO CIRCUMSTANCES AND UNDER NO LEGAL THEORY, WHETHER IN TORT (INCLUDING "
-"NEGLIGENCE), CONTRACT, OR OTHERWISE, SHALL THE AUTHOR, INITIAL WRITER, ANY "
-"CONTRIBUTOR, OR ANY DISTRIBUTOR OF THE DOCUMENT OR MODIFIED VERSION OF THE "
-"DOCUMENT, OR ANY SUPPLIER OF ANY OF SUCH PARTIES, BE LIABLE TO ANY PERSON "
-"FOR ANY DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES OF "
-"ANY CHARACTER INCLUDING, WITHOUT LIMITATION, DAMAGES FOR LOSS OF GOODWILL, "
-"WORK STOPPAGE, COMPUTER FAILURE OR MALFUNCTION, OR ANY AND ALL OTHER DAMAGES "
-"OR LOSSES ARISING OUT OF OR RELATING TO USE OF THE DOCUMENT AND MODIFIED "
-"VERSIONS OF THE DOCUMENT, EVEN IF SUCH PARTY SHALL HAVE BEEN INFORMED OF THE "
-"POSSIBILITY OF SUCH DAMAGES."
+"external ref='figures/evince-trail.png' "
+"md5='a1a70d04c37f05937d0b3e7a0705d2d4'"
 
-#: C/evince.xml:28(para)
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#.
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/index.page:23(media)
+msgctxt "_"
 msgid ""
-"DOCUMENT AND MODIFIED VERSIONS OF THE DOCUMENT ARE PROVIDED UNDER THE TERMS "
-"OF THE GNU FREE DOCUMENTATION LICENSE WITH THE FURTHER UNDERSTANDING THAT: "
-"<placeholder-1/>"
-msgstr "ドキュメントおよび変更されているドキュメントは次の GNU フリー文書利用許諾契約"
-"書 (GFDL) の下で頒布されます: <placeholder-1/>"
+"external ref='figures/evincelogo.png' md5='a5856135b500d4c4b74a052eef6e09d2'"
+msgstr ""
+"external ref='figures/evincelogo.png' md5='a5856135b500d4c4b74a052eef6e09d2'"
 
-#: C/evince.xml:59(firstname)
-msgid "Sun"
-msgstr "Sun"
-
-#: C/evince.xml:60(surname)
-msgid "GNOME Documentation Team"
-msgstr "GNOME ドキュメントチーム"
-
-#: C/evince.xml:64(firstname)
-msgid "Nickolay V."
-msgstr "Nickolay V."
-
-#: C/evince.xml:65(surname)
-msgid "Shmyrev"
-msgstr "Shmyrev"
-
-#: C/evince.xml:68(email)
-msgid "nshmyrev@yandex.ru"
-msgstr "nshmyrev@yandex.ru"
-
-#: C/evince.xml:88(revnumber)
-msgid "Evince Document Viewer Manual V1.0"
-msgstr "Evince ドキュメントビューア マニュアル v1.0"
-
-#: C/evince.xml:89(date)
-msgid "2005-04-06"
-msgstr "2005-04-06"
-
-#: C/evince.xml:97(releaseinfo)
-msgid "This manual describes version 0.2 of Evince Document Viewer"
-msgstr "このマニュアルは Evince ドキュメントビューアの 0.2 について説明しています。"
-
-#: C/evince.xml:100(title)
-msgid "Feedback"
-msgstr "フィードバック"
-
-#: C/evince.xml:101(para)
-msgid ""
-"To report a bug or make a suggestion regarding the Evince Document Viewer "
-"application or this manual, follow the directions in the <ulink url=\"ghelp:"
-"gnome-feedback\" type=\"help\">GNOME Feedback Page</ulink>."
-msgstr "Evince ドキュメントビューアまたはこのマニュアルの"
-"バグや提案を報告して頂く場合、"
-"<ulink url=\"ghelp:gnome-feedback\" type=\"help\">GNOME "
-"フィードバックページ</ulink> 内の指示に従って下さい。"
-
-#: C/evince.xml:108(primary)
+#: C/index.page:7(info/title)
+msgctxt "link"
 msgid "Evince Document Viewer"
-msgstr "Evince ドキュメントビューア"
+msgstr "Evince ドキュメントビューアー"
 
-#: C/evince.xml:111(primary)
-msgid "evince"
-msgstr "evince"
+#: C/index.page:8(info/title)
+msgctxt "text"
+msgid "Evince Document Viewer"
+msgstr "Evince ドキュメントビューアー"
 
-#: C/evince.xml:119(title)
-msgid "Introduction"
-msgstr "概要"
+#: C/index.page:11(credit/name) C/commandline.page:11(credit/name)
+#: C/convertpdf.page:11(credit/name) C/convertPostScript.page:11(credit/name)
+#: C/convertSVG.page:11(credit/name) C/editing.page:11(credit/name)
+#: C/finding.page:12(credit/name) C/formats.page:14(credit/name)
+#: C/invert-colors.page:14(credit/name) C/movingaround.page:11(credit/name)
+#: C/noprint.page:10(credit/name) C/password.page:11(credit/name)
+#: C/presentations.page:11(credit/name) C/print-2sided.page:12(credit/name)
+#: C/print-differentsize.page:11(credit/name) C/printing.page:13(credit/name)
+#: C/print-order.page:12(credit/name) C/print-select.page:11(credit/name)
+#: C/reload.page:14(credit/name) C/shortcuts.page:11(credit/name)
+#: C/textselection.page:11(credit/name)
+msgid "Phil Bull"
+msgstr "Phil Bull"
 
-#: C/evince.xml:120(para)
+#: C/index.page:15(credit/name) C/annotation-properties.page:11(credit/name)
+#: C/annotations-delete.page:11(credit/name)
+#: C/annotations-disabled.page:11(credit/name)
+#: C/annotations-navigate.page:11(credit/name)
+#: C/annotations.page:11(credit/name) C/annotations-save.page:10(credit/name)
+#: C/bookmarks.page:11(credit/name) C/bug-filing.page:11(credit/name)
+#: C/commandline.page:15(credit/name) C/develop.page:10(credit/name)
+#: C/documentation.page:9(credit/name) C/duplex-10pages.page:12(credit/name)
+#: C/duplex-11pages.page:12(credit/name) C/duplex-12pages.page:12(credit/name)
+#: C/duplex-13pages.page:12(credit/name) C/duplex-14pages.page:12(credit/name)
+#: C/duplex-15pages.page:12(credit/name) C/duplex-16pages.page:12(credit/name)
+#: C/duplex-3pages.page:12(credit/name) C/duplex-4pages.page:12(credit/name)
+#: C/duplex-5pages.page:12(credit/name) C/duplex-6pages.page:12(credit/name)
+#: C/duplex-7pages.page:12(credit/name) C/duplex-8pages.page:12(credit/name)
+#: C/duplex-9pages.page:12(credit/name) C/duplex-npages.page:12(credit/name)
+#: C/forms.page:11(credit/name) C/forms-saving.page:13(credit/name)
+#: C/introduction.page:11(credit/name) C/openerror.page:13(credit/name)
+#: C/opening.page:13(credit/name) C/print-booklet.page:12(credit/name)
+#: C/shortcuts.page:15(credit/name)
+#: C/singlesided-13-16pages.page:12(credit/name)
+#: C/singlesided-17-20pages.page:12(credit/name)
+#: C/singlesided-3-4pages.page:12(credit/name)
+#: C/singlesided-5-8pages.page:12(credit/name)
+#: C/singlesided-9-12pages.page:12(credit/name)
+#: C/singlesided-npages.page:12(credit/name)
+#: C/synctex-beamer.page:11(credit/name)
+#: C/synctex-compile.page:11(credit/name)
+#: C/synctex-editors.page:11(credit/name) C/synctex.page:11(credit/name)
+#: C/synctex-search.page:11(credit/name)
+#: C/synctex-support.page:11(credit/name) C/toolbar.page:13(credit/name)
+#: C/translate.page:10(credit/name)
+msgid "Tiffany Antopolski"
+msgstr "Tiffany Antopolski"
+
+#: C/index.page:19(license/p) C/annotation-properties.page:15(license/p)
+#: C/annotations-delete.page:15(license/p)
+#: C/annotations-disabled.page:15(license/p)
+#: C/annotations-navigate.page:15(license/p) C/annotations.page:15(license/p)
+#: C/annotations-save.page:14(license/p) C/bookmarks.page:15(license/p)
+#: C/bug-filing.page:15(license/p) C/commandline.page:19(license/p)
+#: C/convertpdf.page:15(license/p) C/convertPostScript.page:15(license/p)
+#: C/convertSVG.page:15(license/p) C/develop.page:15(license/p)
+#: C/documentation.page:14(license/p) C/duplex-10pages.page:16(license/p)
+#: C/duplex-11pages.page:16(license/p) C/duplex-12pages.page:16(license/p)
+#: C/duplex-13pages.page:16(license/p) C/duplex-14pages.page:16(license/p)
+#: C/duplex-15pages.page:16(license/p) C/duplex-16pages.page:16(license/p)
+#: C/duplex-3pages.page:16(license/p) C/duplex-4pages.page:16(license/p)
+#: C/duplex-5pages.page:16(license/p) C/duplex-6pages.page:16(license/p)
+#: C/duplex-7pages.page:16(license/p) C/duplex-8pages.page:16(license/p)
+#: C/duplex-9pages.page:16(license/p) C/duplex-npages.page:16(license/p)
+#: C/editing.page:15(license/p) C/finding.page:16(license/p)
+#: C/formats.page:18(license/p) C/forms.page:15(license/p)
+#: C/forms-saving.page:17(license/p) C/introduction.page:15(license/p)
+#: C/invert-colors.page:18(license/p) C/movingaround.page:15(license/p)
+#: C/noprint.page:14(license/p) C/openerror.page:17(license/p)
+#: C/opening.page:17(license/p) C/password.page:15(license/p)
+#: C/presentations.page:15(license/p) C/print-2sided.page:16(license/p)
+#: C/print-booklet.page:16(license/p) C/print-differentsize.page:15(license/p)
+#: C/printing.page:17(license/p) C/print-order.page:16(license/p)
+#: C/print-select.page:15(license/p) C/reload.page:18(license/p)
+#: C/shortcuts.page:19(license/p) C/singlesided-13-16pages.page:16(license/p)
+#: C/singlesided-17-20pages.page:16(license/p)
+#: C/singlesided-3-4pages.page:16(license/p)
+#: C/singlesided-5-8pages.page:16(license/p)
+#: C/singlesided-9-12pages.page:16(license/p)
+#: C/singlesided-npages.page:16(license/p) C/synctex-beamer.page:15(license/p)
+#: C/synctex-compile.page:15(license/p) C/synctex-editors.page:15(license/p)
+#: C/synctex.page:15(license/p) C/synctex-search.page:15(license/p)
+#: C/synctex-support.page:15(license/p) C/textselection.page:15(license/p)
+#: C/toolbar.page:17(license/p) C/translate.page:19(license/p)
+msgid "Creative Commons Share Alike 3.0"
+msgstr "Creative Commons Share Alike 3.0"
+
+#: C/index.page:23(page/title)
 msgid ""
-"The <application>Evince Document Viewer</application> application enables "
-"you to view documents of various formats like Portable Document Format (PDF) "
-"files and PostScript files. <application>Evince Document Viewer</"
-"application> follows Freedesktop.org and GNOME standards to provide "
-"integration with Desktop Environment."
-msgstr "<application>Evince ドキュメントビューア</application> によって"
-"Portable Document Format (PDF) ファイルや PostScript ファイルのような"
-"様々な形式のドキュメントを見ることができます。"
-"<application>Evince ドキュメントビューア</application> はデスクトップ"
-"環境との統合を提供するために Freedesktop.org と GNOME の標準に従っています。"
+"<media type=\"image\" src=\"figures/evincelogo.png\">Evince logo</"
+"media>Evince document viewer"
+msgstr ""
+"<media type=\"image\" src=\"figures/evincelogo.png\">Evince ロゴ</"
+"media>Evince ドキュメントビューアー"
 
-#: C/evince.xml:127(title)
-msgid "Getting Started"
+#: C/index.page:26(section/title)
+msgid "Reading documents"
+msgstr "ドキュメントを読む"
+
+#: C/index.page:30(section/title)
+msgid "Presentations and other supported formats"
+msgstr "プレゼンテーションおよびサポートされている形式"
+
+#: C/index.page:34(section/title)
+msgid "Printing"
+msgstr "印刷"
+
+#: C/index.page:38(section/title)
+msgid "Annotations and bookmarks"
+msgstr "注釈とブックマーク"
+
+#: C/index.page:42(section/title)
+msgid "Interactive forms"
+msgstr "対話型のフォーム"
+
+#: C/index.page:46(section/title)
+msgid "Frequently asked questions"
+msgstr "よくある質問"
+
+#: C/index.page:50(section/title)
+msgid "Advanced"
+msgstr "上級編"
+
+#: C/index.page:54(section/title)
+msgid "Tips and tricks"
+msgstr "ヒントとコツ"
+
+#: C/index.page:58(section/title)
+msgid "SyncTeX"
+msgstr "SyncTeX"
+
+#: C/index.page:63(section/title)
+msgid "Get involved"
+msgstr "参加しましょう"
+
+#: C/annotation-properties.page:7(info/desc)
+msgid "How to customize the author, color, style or icon of an annotation."
+msgstr "注釈の作成者、色、スタイルやアイコンのカスタマイズ方法。"
+
+#: C/annotation-properties.page:20(page/title)
+msgid "Customize annotations"
+msgstr "注釈のカスタマイズ"
+
+#: C/annotation-properties.page:24(item/p)
+msgid "Right click on the annotation icon in the document."
+msgstr "ドキュメント内の注釈アイコンを右クリックします。"
+
+#: C/annotation-properties.page:29(item/p)
+msgid "Select <gui>Annotation Properties</gui>."
+msgstr "<gui>注釈のプロパティ</gui>を選択します。"
+
+#: C/annotation-properties.page:34(item/p)
+msgid ""
+"In the <gui>Annotation Properties</gui> window, you can change the author, "
+"color, style and icon of your note."
+msgstr ""
+"<gui>注釈のプロパティ</gui>というウィンドウで注釈の作成者、色、スタイルおよび"
+"アイコンを変更できます。"
+
+#: C/annotation-properties.page:38(note/p)
+msgid ""
+"The annotation properties will be applied to the note for which you made the "
+"changes only. Each note can have a different set of properties."
+msgstr ""
+"注釈のプロパティは、変更を加えた場合にのみ適用されます。それぞれの注釈は、個"
+"別にプロパティを持っています。"
+
+#: C/annotation-properties.page:47(section/title)
+msgid "Can I permanently change the default annotation properties?"
+msgstr "恒常的にデフォルトの注釈のプロパティを変更できませんか?"
+
+#: C/annotation-properties.page:48(section/p)
+msgid ""
+"The default annotation properties (author, colour, style and icon) can only "
+"be changed on a particular note as stated above. So if you want all icons "
+"for your notes to be <gui>red</gui> instead of <gui>yellow</gui>, you will "
+"have to change the default from <gui>yellow</gui> to <gui>red</gui> "
+"individually on each note. There is no way to save different default "
+"settings for annotation properties, at this time."
+msgstr ""
+"デフォルトの注釈のプロパティ (作成者、色、スタイルおよびアイコン) は、上記の"
+"ように特定の注釈について変更可能であるのみです。もし、注釈のすべてのアイコン"
+"を<gui>黄色</gui>の代わりに<gui>赤</gui>にしたいならば、それぞれの注釈で個別"
+"に<gui>黄色</gui>から<gui>赤</gui>に既定値を変更する必要があります。現時点で"
+"は、注釈のプロパティのデフォルト設定を保存する方法はありません。"
+
+#: C/annotations-delete.page:7(info/desc)
+msgid "You can't remove annotations."
+msgstr "注釈は削除できません。"
+
+#: C/annotations-delete.page:20(page/title)
+msgid "Removing annotations"
+msgstr "注釈の削除"
+
+#: C/annotations-delete.page:21(page/p)
+msgid ""
+"You can't remove an annotation in the <app>document viewer</app> at this "
+"time."
+msgstr "現時点では、<app>ドキュメントビューアー</app>で注釈を削除できません。"
+
+#: C/annotations-disabled.page:7(info/desc)
+msgid "Annotations can only be added to PDF files."
+msgstr "注釈は PDF ファイルにだけ追加できます。"
+
+#: C/annotations-disabled.page:18(page/title)
+msgid "Can't add annotations?"
+msgstr "注釈は追加できないのですか?"
+
+#: C/annotations-disabled.page:19(page/p)
+msgid ""
+"Annotations can only be added to PDF files. If your file is of a format "
+"other than PDF, the option to add annotations will be greyed out (disabled)."
+msgstr ""
+"注釈は、PDF ファイルにだけ追加できます。PDF 以外の形式のファイルである場合、"
+"注釈を追加するオプションは淡色表示 (無効) になります。"
+
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/annotations-navigate.page:24(media)
+msgctxt "_"
+msgid ""
+"external ref='figures/annotations-navigate.png' "
+"md5='6655cfb976ffea53c622b41cbf439747'"
+msgstr ""
+"external ref='figures/annotations-navigate.png' "
+"md5='b4a45ce56c15009847a6170d2c071f3b'"
+
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/annotations-navigate.page:28(media)
+msgctxt "_"
+msgid ""
+"external ref='figures/annotations-nav-to-page.png' "
+"md5='fda82d763b7c81304d1c5949344a073b'"
+msgstr ""
+"external ref='figures/annotations-nav-to-page.png' "
+"md5='2803bfc5467b0df17139b99a7e8649d3'"
+
+#: C/annotations-navigate.page:7(info/desc)
+msgid "How to navigate to annotations."
+msgstr "注釈への移動方法。"
+
+#: C/annotations-navigate.page:20(page/title)
+msgid "Annotation navigation"
+msgstr "注釈への移動"
+
+#: C/annotations-navigate.page:21(page/p)
+msgid ""
+"If you have created annotations on your document, you can use the <gui>List</"
+"gui> tab to display the list of all the annotations in the document. The "
+"list indicates the type, page number, author and date of the annotation."
+msgstr ""
+"ドキュメントに注釈が作成されていれば、<gui>リスト</gui>タブを使ってドキュメン"
+"ト内のすべての注釈の一覧を表示できます。このリストには、注釈の種類、ページ番"
+"号、作成者および日付が表示されます。"
+
+#: C/annotations-navigate.page:25(page/p)
+msgid ""
+"To quickly navigate to the location of a particular annotation, click on the "
+"arrow to the left of the page number. You will see a list of annotations on "
+"that page. Click on the annotation you are interested in, and the "
+"<app>document viewer</app> will navigate to the location of the annotation "
+"in the document."
+msgstr ""
+"特定の注釈がある場所へすばやく移動するには、ページ番号の左側にあるプラス記号"
+"をクリックします。該当するページ内にある注釈の一覧を確認できます。興味のある"
+"注釈をクリックすると<app>ドキュメントビューアー</app>は、ドキュメント内の注釈"
+"がある場所に移動します。"
+
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/annotations.page:44(media)
+msgctxt "_"
+msgid ""
+"external ref='figures/list-add-tabs.png' "
+"md5='1bbd81be2223f1b8434dcf746670f5d7'"
+msgstr ""
+"external ref='figures/list-add-tabs.png' "
+"md5='6221b01283a3d56d1a3ad1bb1dddb290'"
+
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/annotations.page:57(media)
+msgctxt "_"
+msgid ""
+"external ref='figures/add-text-annotation.png' "
+"md5='1add21cd2ec02d5fcc5b06d0e6546901'"
+msgstr ""
+"external ref='figures/add-text-annotation.png' "
+"md5='79967d0a45bafde4f6fd08412844079e'"
+
+#: C/annotations.page:7(info/desc)
+msgid "How to create and customize annotations."
+msgstr "注釈の作成およびカスタマイズ方法。"
+
+#: C/annotations.page:20(page/title)
+msgid "Adding annotations"
+msgstr "注釈の追加"
+
+#: C/annotations.page:21(page/p)
+msgid ""
+"An annotation is a note or comment added to a PDF document. You can add "
+"annotations using the <app>document viewer</app>."
+msgstr ""
+"注釈は、PDF ドキュメントに加えられるメモやコメントです。<app>ドキュメント"
+"ビューアー</app>を使って注釈を追加できます。"
+
+#: C/annotations.page:24(page/p)
+msgid ""
+"When you open a file, you should have a side pane on the left side of the "
+"window. If you do not have a visible side pane, click <guiseq><gui>View</"
+"gui><gui>Side Pane</gui></guiseq> or press <key>F9</key>."
+msgstr ""
+"ファイルを開くとウィンドウの左側にサイドペインがあるはずです。もし、サイドペ"
+"インが表示されていなければ、<guiseq><gui>表示</gui><gui>サイドペイン</gui></"
+"guiseq>をクリックするか、<key>F9</key> を押します。"
+
+#: C/annotations.page:28(page/p)
+msgid ""
+"At the top of this side pane, there is a drop-down menu with options like "
+"<gui>Thumbnails</gui>, <gui>Index</gui> and <gui>Annotations</gui> (some of "
+"which may be <em>dimmed</em> for some documents)."
+msgstr ""
+"サイドペインの上部に<gui>サムネイル</gui>、<gui>目次</gui>および<gui>注釈</"
+"gui>のなどのオプションからなるドロップダウンリストがあります (ドキュメントに"
+"よっては、<em>淡くなっている</em>オプションもあります)。"
+
+#: C/annotations.page:31(page/p)
+msgid "To create an annotation:"
+msgstr "注釈を作成する方法は次のとおりです。"
+
+#: C/annotations.page:36(item/p)
+msgid "Select <gui>Annotations</gui> from the drop-down menu."
+msgstr "ドロップダウンメニューから、<gui>注釈</gui>を選択します。"
+
+#: C/annotations.page:41(item/p)
+msgid ""
+"You should now see <gui>List</gui> and <gui>Add</gui> tabs under the drop-"
+"down menu."
+msgstr ""
+"ドロップダウンメニューの下に <gui>リスト</gui>および<gui>追加</gui>というタブ"
+"が表示されます。"
+
+#: C/annotations.page:49(item/p)
+msgid "Select the <gui>Add</gui> tab."
+msgstr "<gui>追加</gui>タブを選択します。"
+
+#: C/annotations.page:54(item/p)
+msgid "Click on the icon to add a text annotation."
+msgstr "テキストの注釈を追加するには、図で示すアイコンをクリックします。"
+
+#: C/annotations.page:60(item/p)
+msgid ""
+"Click on the spot in the document window you would like to add the annotion "
+"to. Your <em>annotation</em> window will open."
+msgstr ""
+"ドキュメントウィンドウ内の注釈を追加したい場所をクリックします。<em>注釈</em>"
+"ウィンドウが開きます。"
+
+#: C/annotations.page:65(item/p)
+msgid "Type your text into the <em>annotation</em> window."
+msgstr "<em>注釈</em>ウィンドウにテキストを入力します。"
+
+#: C/annotations.page:69(note/p)
+msgid ""
+"You can resize the note by clicking and holding the left mouse button on one "
+"of the bottom corners of the note, and moving it around."
+msgstr ""
+"注釈の下部にある角のいずれかをマウスの左ボタンをクリックしたまま移動すること"
+"でサイズ変更できます。"
+
+#: C/annotations.page:75(item/p)
+msgid ""
+"Close the note by clicking on the <gui>x</gui> in the top corner of the note."
+msgstr "注釈の右上角にある <gui>x</gui> をクリックすると注釈を閉じます。"
+
+#: C/annotations-save.page:6(info/desc)
+msgid "How to save your annotations."
+msgstr "注釈を保存する方法。"
+
+#: C/annotations-save.page:17(page/title)
+msgid "Save a copy of an annotated PDF"
+msgstr "注釈が付けられた PDF のコピーを保存"
+
+#: C/annotations-save.page:18(page/p)
+msgid ""
+"To save a copy of your annotated PDF for future viewing using the "
+"<app>document viewer</app> or any other PDF viewer <em>that supports "
+"annotations</em>:"
+msgstr ""
+"将来的に<app>ドキュメントビューアー</app>や<em>注釈をサポートする</em>他の "
+"PDF ビューアーを使って閲覧するために注釈が付けられた PDF のコピーを保存するに"
+"は注釈付き PDF のコピーを保存すると、<app>ドキュメントビューアー</app>や、"
+"<em>注釈をサポートする</em>他の PDF ビューアーを使って、あとで閲覧できます。"
+"保存する方法は次のとおりです。"
+
+#: C/annotations-save.page:23(item/p) C/forms-saving.page:33(item/p)
+msgid "<guiseq><gui>File</gui><gui>Save a copy</gui></guiseq>"
+msgstr ""
+"<guiseq><gui>ファイル</gui><gui>別名で保存</gui></guiseq>をクリックします。"
+
+#: C/annotations-save.page:28(item/p)
+msgid ""
+"Choose a name and folder in which to save the file, then click <gui>Save</"
+"gui>. The PDF will be saved in the folder you chose."
+msgstr ""
+"ファイル名、およびファイルを保存するフォルダーを選択し、<gui>保存</gui>をク"
+"リックします。選択したフォルダーに PDF が保存されます。"
+
+#: C/annotations-save.page:34(page/p)
+msgid ""
+"Annotations are added according to the PDF specification. Therefore, most "
+"PDF readers should be able to read them. The Okular document viewer does not "
+"support them. Adobe Reader is known to work."
+msgstr ""
+"注釈は、PDF の仕様に基づいて加えられます。そのため、ほとんどの PDF ビューアー"
+"で読むことができます。Okular ドキュメントビューアーは、注釈をサポートしていま"
+"せん。Adobe Reader は、機能することが知られています。"
+
+#: C/bookmarks.page:7(info/desc)
+msgid "You can use annotations like bookmarks."
+msgstr "ブックマークのように注釈を使用できます。"
+
+#: C/bookmarks.page:20(page/title)
+msgid "Bookmarks"
+msgstr "ブックマーク"
+
+#: C/bookmarks.page:21(page/p)
+msgid ""
+"The <app>document viewer</app> does not have a bookmark system. However, you "
+"can use <link xref=\"annotations\">annotations</link> like bookmarks."
+msgstr ""
+"<app>ドキュメントビューアー</app>は、ブックマークシステムを保有していません。"
+"しかしながら、ブックマークのように<link xref=\"annotations\">注釈</link>を使"
+"用できます。(訳注: 翻訳時点では、ブックマーク機能が存在するため、原文の更新が"
+"必要です。)"
+
+#: C/bug-filing.page:7(info/desc)
+msgid "How and where to report problems."
+msgstr "問題の報告方法と報告先。"
+
+#: C/bug-filing.page:19(page/title)
+msgid "File a bug against the <app>document viewer</app>"
+msgstr "<app>ドキュメントビューアー</app>に対するバグの報告"
+
+#: C/bug-filing.page:20(page/p)
+msgid ""
+"The <app>document viewer</app> is maintained by a volunteer community. You "
+"are welcome to participate. If you notice a problem you can file a <em>bug "
+"report</em>. To file a bug, go to <link href=\"https://bugzilla.gnome.org/\"/"
+">."
+msgstr ""
+"<app>ドキュメントビューアー</app>は、ボランティアコミュニティによって保守され"
+"ています。あなたの参加を歓迎します。もし何か問題を見つけたら、<em>バグレポー"
+"ト</em>を提出してください。バグを報告するには、<link href=\"https://bugzilla."
+"gnome.org/\"/> にアクセスします。"
+
+#: C/bug-filing.page:23(page/p)
+msgid ""
+"This is a bug tracking system where users and developers can file details "
+"about bugs, crashes and request enhancements."
+msgstr ""
+"これはバグ追跡システムで、ユーザーや開発者はこれを使って、バグやクラッシュの"
+"情報、また機能要望について報告します。"
+
+#: C/bug-filing.page:26(page/p)
+msgid ""
+"To participate you need an account which will give you the ability to gain "
+"access, file bugs, and make comments. Also, you need to register so you can "
+"receive updates by e-mail about the status of your bug. If you don't already "
+"have an account, just click on the <gui>New Account</gui> link to create one."
+msgstr ""
+"参加するには、ログイン、バグの提出およびコメントの書き込みを行うアカウントが"
+"必要になります。また、報告したバグの状態について メールで更新を受信できるよう"
+"登録する必要があります。まだ、アカウントを取得していない場合は、<gui>New "
+"Account</gui> というリンクをクリックしてアカウントを作成してください。"
+
+#: C/bug-filing.page:29(page/p)
+msgid ""
+"Once you have an account, log in, click on <guiseq><gui>File a Bug</"
+"gui><gui>Core</gui><gui>evince</gui></guiseq>. Before reporting a bug, "
+"please read the <link href=\"https://bugzilla.gnome.org/page.cgi?id=bug-"
+"writing.html\">bug writing guidelines</link>, and please <link href="
+"\"https://bugzilla.gnome.org/browse.cgi?product=evince\">browse</link> for "
+"the bug to see if it already exists."
+msgstr ""
+"アカウントを取得すれば、ログインして、<guiseq><gui>File a Bug</"
+"gui><gui>Core</gui><gui>evince</gui></guiseq> の順にクリックします。バグを報"
+"告する前に <link href=\"https://bugzilla.gnome.org/page.cgi?id=bug-writing."
+"html\">bug writing guidelines</link> を一読いてください。また、<link href="
+"\"https://bugzilla.gnome.org/browse.cgi?product=evince\">browse</link> をク"
+"リックして、同じバグレポートがすでに存在しないか確認してください。"
+
+#: C/bug-filing.page:33(page/p)
+msgid ""
+"To file your bug, choose the component in the <gui>Component</gui> menu. If "
+"you are not sure which component your bug pertains to, choose <gui>general</"
+"gui>."
+msgstr ""
+"バグを報告するには、<gui>Component</gui> メニューから対応するコンポーネントを"
+"選択します。どのコンポーネントを選べばよいかわからない場合は、<gui>general</"
+"gui> を選択してください。"
+
+#: C/bug-filing.page:36(page/p)
+msgid ""
+"If you are requesting a new feature, choose <gui>enhancement</gui> in the "
+"<gui>Severity</gui> menu. Fill in the Summary and Description sections and "
+"click <gui>Commit</gui>."
+msgstr ""
+"新しい機能を要望する場合は、<gui>Severity</gui> というメニューで "
+"<gui>enhancement</gui> を選択します。Summary (概要) と Description (詳細説"
+"明) の欄を記入して、<gui>Commit</gui> をクリックします。"
+
+#: C/bug-filing.page:40(page/p)
+msgid ""
+"Your report will be given an ID number, and its status will be updated as it "
+"is being dealt with."
+msgstr ""
+"バグレポートには ID 番号が与えられ、処理すべきものとして状態が更新されます。"
+
+# 原文の表示順序を引き継ぐため sort コンテキストは原文のままとする
+#: C/commandline.page:7(info/title)
+msgctxt "sort"
+msgid "Command line"
+msgstr "Command line"
+
+#: C/commandline.page:8(info/desc)
+msgid ""
+"The <cmd>evince</cmd> command can open any number of files, at specific "
+"pages and in various modes."
+msgstr ""
+"<cmd>evince</cmd> コマンドを使えば、任意の複数のファイルを開いたり、指定した"
+"ページを開いたり、さまざまなモードで開くことができます。"
+
+#: C/commandline.page:23(page/title)
+msgid "The command line"
+msgstr "コマンドライン"
+
+#: C/commandline.page:24(page/p)
+msgid ""
+"To start the <app>Document Viewer</app> from the command line, type "
+"<cmd>evince</cmd>. You can open a specific file by typing the filename after "
+"the evince command:"
+msgstr ""
+"コマンドラインから<app>ドキュメントビューアー</app>を起動するには、"
+"<cmd>evince</cmd> と入力します。evince コマンドの後ろにファイル名を入力するこ"
+"とにより、指定したファイルを開くことができます。"
+
+#: C/commandline.page:29(page/screen)
+#, no-wrap
+msgid "evince file.pdf"
+msgstr "evince file.pdf"
+
+#: C/commandline.page:30(page/p)
+msgid ""
+"You can open multiple files by typing the filenames after the evince "
+"command, separating the filenames by a space:"
+msgstr ""
+"evince コマンドの後ろに複数のファイル名を空白で区切って入力することにより、複"
+"数のファイルを開くことができます。"
+
+#: C/commandline.page:33(page/screen)
+#, no-wrap
+msgid "evince file1.pdf file2.pdf"
+msgstr "evince file1.pdf file2.pdf"
+
+#: C/commandline.page:34(page/p)
+msgid ""
+"The <app>document viewer</app> also supports the handling of files on the "
+"web. For example, after the evince command you can give the location of a "
+"file on the web:"
+msgstr ""
+"<app>ドキュメントビューアー</app>は、web 上のファイルの操作もサポートしていま"
+"す。たとえば、evince コマンドの後ろに web 上のファイルの場所を与えることがで"
+"きます。"
+
+#: C/commandline.page:37(page/screen)
+#, no-wrap
+msgid "evince http://www.claymath.org/millennium/P_vs_NP/pvsnp.pdf"
+msgstr "evince http://www.claymath.org/millennium/P_vs_NP/pvsnp.pdf"
+
+#: C/commandline.page:39(section/title)
+msgid "Opening a document at a specific page"
+msgstr "指定したページでドキュメントを開く"
+
+#: C/commandline.page:40(section/p)
+msgid ""
+"You can use the <cmd>--page-label</cmd> switch to open a document at a "
+"specific page. For example, to open a document to page 3, you would type:"
+msgstr ""
+"<cmd>--page-label</cmd> というスイッチを使えば、指定したページでドキュメント"
+"を開くことができます。たとえば、ドキュメントの 3 ページ目を開くには、次のよう"
+"に入力します。"
+
+#: C/commandline.page:44(section/screen)
+#, no-wrap
+msgid "evince --page-label=3 file.pdf"
+msgstr "evince --page-label=3 file.pdf"
+
+#: C/commandline.page:45(section/p)
+msgid ""
+"The page label should be in the same format as the page number displayed in "
+"the <app>Document Viewer</app> toolbar."
+msgstr ""
+"ページラベルは、<app>ドキュメントビューアー</app>のツールバーに表示されるペー"
+"ジ番号と同じ書式である必要があります。"
+
+#: C/commandline.page:51(section/title)
+msgid "Opening a document in fullscreen mode"
+msgstr "フルスクリーンモードでドキュメントを開く"
+
+#: C/commandline.page:52(section/screen)
+#, no-wrap
+msgid "evince --fullscreen file.pdf"
+msgstr "evince --fullscreen file.pdf"
+
+#: C/commandline.page:55(section/title)
+msgid "Opening a document in presentation mode"
+msgstr "プレゼンテーションモードでドキュメントを開く"
+
+#: C/commandline.page:56(section/screen)
+#, no-wrap
+msgid "evince --presentation file.pdf"
+msgstr "evince --presentation file.pdf"
+
+#: C/commandline.page:59(section/title)
+msgid "Opening a document in preview mode"
+msgstr "プレビューモードでドキュメントを開く"
+
+#: C/commandline.page:60(section/screen)
+#, no-wrap
+msgid "evince --preview file.pdf"
+msgstr "evince --preview file.pdf"
+
+#: C/convertpdf.page:7(info/desc)
+msgid "You can convert a document to PDF by \"printing\" it to a file."
+msgstr "ファイルに「印刷」することによりドキュメントを PDF に変換できます。"
+
+#: C/convertpdf.page:20(page/title)
+msgid "Converting a document to PDF"
+msgstr "ドキュメントを PDF に変換"
+
+#: C/convertpdf.page:22(page/p)
+msgid ""
+"You can convert documents of the following format types into PDF format:"
+msgstr "以下の形式のドキュメントを PDF 形式に変換できます。"
+
+#: C/convertpdf.page:26(item/p) C/formats.page:30(item/p)
+#: C/presentations.page:63(item/p) C/printing.page:38(item/p)
+msgid "Device Independent file format (.dvi)"
+msgstr "デバイス独立フォーマット (.dvi)"
+
+#: C/convertpdf.page:27(item/p) C/formats.page:34(item/p)
+#: C/presentations.page:67(item/p) C/printing.page:41(item/p)
+msgid "PostScript (.ps)"
+msgstr "PostScript (.ps)"
+
+#: C/convertpdf.page:29(page/p)
+msgid ""
+"This works by opening the file in <app>Document Viewer</app> and \"printing"
+"\" the document as a PDF file."
+msgstr ""
+"これは、<app>ドキュメントビューアー</app>でファイルを開き、PDF ファイルとして"
+"ドキュメントを「印刷」することにより機能します。"
+
+#: C/convertpdf.page:34(item/p) C/convertPostScript.page:35(item/p)
+#: C/convertSVG.page:32(item/p) C/forms-saving.page:50(item/p)
+msgid ""
+"Click <guiseq><gui>File</gui><gui>Print</gui></guiseq> and go to the "
+"<gui>General</gui> tab."
+msgstr ""
+"<guiseq><gui>ファイル</gui><gui>印刷</gui></guiseq>をクリックし、<gui>全般</"
+"gui>タブを開きます。"
+
+#: C/convertpdf.page:40(item/p) C/forms-saving.page:56(item/p)
+msgid ""
+"Select <gui>Print to File</gui> and choose PDF as the <gui>Output format</"
+"gui>."
+msgstr ""
+"<gui>ファイルに出力する</gui>を選択し、<gui>出力の形式</gui>として PDF を選択"
+"します。"
+
+#: C/convertpdf.page:46(item/p)
+msgid ""
+"Choose a name and folder in which to save the file, then click <gui>Print</"
+"gui>. The PDF will be saved in the folder you chose."
+msgstr ""
+"ファイル名、およびファイルを保存するフォルダーを選択し、<gui>印刷</gui>をク"
+"リックします。選択したフォルダーに PDF が保存されます。"
+
+#: C/convertpdf.page:53(note/p)
+msgid ""
+"You can't select text in PostScript or .dvi files, but you usually can do "
+"this in PDF files. Converting .dvi or PostScript files to PDF will not make "
+"the text selectable. This is because the text itself isn't stored in the "
+"file (it's just an image of what the text looks like), so there is no way to "
+"recover it and put it in the PDF. You can use <em>Optical Character "
+"Recognition</em> (OCR) software to extract the text from files if you need "
+"to."
+msgstr ""
+"PostScript や .dvi のファイル内でテキストを選択することはできませんが、たいて"
+"いは PDF ファイルでテキストを選択することができます。ただし、PostScript や ."
+"dvi のファイルを PDF に変換してもテキストを選択できるようにはなりません。これ"
+"は、ファイル内にテキストが保存されていないため(テキストに見えるのは、まさしく"
+"画像です)、テキストを修復する方法がなく、PDF に保存されないためです。必要であ"
+"れば、<em>光学文字認識</em> (OCR) ソフトウェアを使うことにより、ファイルから"
+"テキストを抽出することができます。"
+
+#: C/convertPostScript.page:7(info/desc)
+msgid "You can convert a document to PostScript."
+msgstr "ドキュメントを PostScript に変換できます。"
+
+#: C/convertPostScript.page:20(page/title)
+msgid "Converting a document to PostScript"
+msgstr "ドキュメントを PostScript に変換"
+
+#: C/convertPostScript.page:22(page/p)
+msgid ""
+"You can convert documents of the following format types to PostScript files:"
+msgstr "以下の形式のドキュメントを PostScript ファイルに変換できます。"
+
+#: C/convertPostScript.page:26(item/p) C/formats.page:31(item/p)
+#: C/presentations.page:64(item/p) C/printing.page:39(item/p)
+msgid "DjVu (.djvu, .djv)"
+msgstr "DjVu (.djvu, .djv)"
+
+#: C/convertPostScript.page:27(item/p) C/convertSVG.page:25(item/p)
+#: C/formats.page:33(item/p) C/presentations.page:66(item/p)
+#: C/printing.page:40(item/p)
+msgid "Portable Document Format (.pdf)"
+msgstr "ポータブル・ドキュメント・フォーマット (.pdf)"
+
+#: C/convertPostScript.page:28(item/p) C/formats.page:36(item/p)
+#: C/printing.page:42(item/p)
+msgid "Tagged Image File Format (.tiff, .tif)"
+msgstr "TIFF 画像 (.tiff, .tif)"
+
+#: C/convertPostScript.page:30(page/p)
+msgid ""
+"This works by opening the file in <app>Document Viewer</app> and \"printing"
+"\" the document as a PostScript file."
+msgstr ""
+"これは、<app>ドキュメントビューアー</app>でファイルを開き、PostScript ファイ"
+"ルとしてドキュメントを「印刷」することにより機能します。"
+
+#: C/convertPostScript.page:41(item/p)
+msgid ""
+"Select <gui>Print to File</gui> and choose PostScript as the <gui>Output "
+"format</gui>."
+msgstr ""
+"<gui>ファイルに出力する</gui>を選択し、<gui>出力の形式</gui>として "
+"PostScript を選択します。"
+
+#: C/convertPostScript.page:47(item/p)
+msgid ""
+"Choose a name and folder in which to save the file, then click <gui>Print</"
+"gui>. The PostScript file will be saved in the folder you chose."
+msgstr ""
+"ファイル名、およびファイルを保存するフォルダーを選択し、<gui>印刷</gui>をク"
+"リックします。選択したフォルダーに PostScript ファイルが保存されます。"
+
+#: C/convertSVG.page:7(info/desc)
+msgid "You can convert a document to SVG by \"printing\" it to a file."
+msgstr "ファイルに「印刷」することによりドキュメントを SVG に変換できます。"
+
+#: C/convertSVG.page:20(page/title)
+msgid "Converting a document to SVG"
+msgstr "ドキュメントを SVG に変換"
+
+#: C/convertSVG.page:21(page/p)
+msgid "You can convert documents of the following format types to SVG files:"
+msgstr "次の形式のドキュメントを SVG ファイルに変換できます。"
+
+#: C/convertSVG.page:27(page/p)
+msgid ""
+"This works by opening the file in <app>Document Viewer</app> and \"printing"
+"\" the document as an SVG file."
+msgstr ""
+"これは、<app>ドキュメントビューアー</app>でファイルを開き、SVG ファイルとして"
+"ドキュメントを「印刷」することにより機能します。"
+
+#: C/convertSVG.page:38(item/p)
+msgid ""
+"Select <gui>Print to File</gui> and choose SVG as the <gui>Output format</"
+"gui>."
+msgstr ""
+"<gui>ファイルに出力する</gui>を選択し、<gui>出力の形式</gui>として SVG を選択"
+"します。"
+
+#: C/convertSVG.page:44(item/p)
+msgid ""
+"Choose a name and folder in which to save the file, then click <gui>Print</"
+"gui>. The SVG file will be saved in the folder you chose."
+msgstr ""
+"ファイル名、およびファイルを保存するフォルダーを選択し、<gui>印刷</gui>をク"
+"リックします。選択したフォルダーに SVG ファイルが保存されます。"
+
+#: C/develop.page:7(info/desc)
+msgid "Improve the <app>Document Viewer</app>."
+msgstr "<app>ドキュメントビューアー</app>を改善します。"
+
+#: C/develop.page:12(credit/years) C/documentation.page:11(credit/years)
+#: C/translate.page:12(credit/years)
+msgid "2011"
+msgstr "2011"
+
+#: C/develop.page:19(page/title)
+msgid "Help develop"
+msgstr "開発の協力"
+
+#: C/develop.page:20(page/p)
+msgid ""
+"The <app>Document Viewer</app> is developed and maintained by a volunteer "
+"community. You are welcome to participate."
+msgstr ""
+"<app>ドキュメントビューアー</app>は、ボランティアコミュニティによって開発およ"
+"び維持されています。あなたの参加を歓迎します。"
+
+#: C/develop.page:23(page/p)
+msgid ""
+"If you would like to <link href=\"https://live.gnome.org/Evince\">help "
+"develop</link> the <app>Document Viewer</app>, you can get in touch with the "
+"developers using <link href=\"https://cbe005.chat.mibbit.com/?url=irc%3A%2F"
+"%2Firc.gnome.org%2Fevince\">irc</link>, or via our <link href=\"https://mail."
+"gnome.org/mailman/listinfo/evince-list\">mailing list</link>."
+msgstr ""
+"<app>ドキュメントビューアー</app>の<link href=\"https://live.gnome.org/Evince"
+"\">開発を援助</link>したい場合、<link href=\"https://cbe005.chat.mibbit.com/?"
+"url=irc%3A%2F%2Firc.gnome.org%2Fevince\">irc</link> や<link href=\"https://"
+"mail.gnome.org/mailman/listinfo/evince-list\">メーリングリスト</link>を使って"
+"開発者に接触することができます。"
+
+#: C/documentation.page:7(info/desc)
+msgid "Contact the Documentation Team."
+msgstr "ドキュメンテーションチームに連絡します。"
+
+#: C/documentation.page:18(page/title)
+msgid "Help write documentation"
+msgstr "ドキュメント作成の援助"
+
+#: C/documentation.page:20(page/p)
+msgid ""
+"The <app>Document Viewer</app> documentation is maintained by a volunteer "
+"community. You are welcome to participate."
+msgstr ""
+"<app>ドキュメントビューアー</app>のドキュメントは、ボランティアコミュニティに"
+"より整備されています。あなたの参加を歓迎します。"
+
+#: C/documentation.page:23(page/p)
+msgid ""
+"To contribute to the Documentation Project, feel free to get in touch with "
+"us using <link href=\"https://cbe003.chat.mibbit.com/?url=irc%3A%2F%2Firc."
+"gnome.org%2Fdocs\">irc</link>, or via our <link href=\"http://mail.gnome.org/"
+"mailman/listinfo/gnome-doc-list\">mailing list</link>."
+msgstr ""
+"ドキュメンテーションプロジェクトに貢献するには、<link href=\"https://cbe003."
+"chat.mibbit.com/?url=irc%3A%2F%2Firc.gnome.org%2Fdocs\">IRC</link> や<link "
+"href=\"http://mail.gnome.org/mailman/listinfo/gnome-doc-list\">メーリングリス"
+"ト</link>を使ってお気軽に連絡してください。"
+
+#: C/documentation.page:25(page/p)
+msgid ""
+"Our <link href=\"https://live.gnome.org/DocumentationProject/Contributing"
+"\">wiki</link> page contains useful information."
+msgstr ""
+"ドキュメンテーションプロジェクトの <link href=\"https://live.gnome.org/"
+"DocumentationProject/Contributing\">wiki</link> ページには、有用な情報が含ま"
+"れています。"
+
+#: C/duplex-10pages.page:8(info/desc)
+msgid "Print a 10 page booklet."
+msgstr "10 ページの小冊子を印刷します。"
+
+#: C/duplex-10pages.page:21(page/title)
+msgid "10-page booklet"
+msgstr "10 ページの小冊子"
+
+#: C/duplex-10pages.page:24(item/p) C/duplex-10pages.page:67(item/p)
+#: C/duplex-11pages.page:24(item/p) C/duplex-12pages.page:24(item/p)
+#: C/duplex-13pages.page:24(item/p) C/duplex-14pages.page:24(item/p)
+#: C/duplex-16pages.page:24(item/p) C/duplex-3pages.page:26(item/p)
+#: C/duplex-4pages.page:24(item/p) C/duplex-5pages.page:24(item/p)
+#: C/duplex-5pages.page:108(item/p) C/duplex-6pages.page:25(item/p)
+#: C/duplex-6pages.page:68(item/p) C/duplex-7pages.page:25(item/p)
+#: C/duplex-7pages.page:62(item/p) C/duplex-8pages.page:24(item/p)
+#: C/duplex-9pages.page:24(item/p) C/duplex-9pages.page:104(item/p)
+#: C/duplex-9pages.page:120(item/p) C/duplex-npages.page:48(item/p)
+#: C/print-2sided.page:29(item/p) C/singlesided-13-16pages.page:44(item/p)
+#: C/singlesided-13-16pages.page:92(item/p)
+#: C/singlesided-17-20pages.page:44(item/p)
+#: C/singlesided-17-20pages.page:90(item/p)
+#: C/singlesided-3-4pages.page:44(item/p)
+#: C/singlesided-3-4pages.page:89(item/p)
+#: C/singlesided-5-8pages.page:44(item/p)
+#: C/singlesided-5-8pages.page:89(item/p)
+#: C/singlesided-9-12pages.page:44(item/p)
+#: C/singlesided-9-12pages.page:89(item/p)
+#: C/singlesided-npages.page:49(item/p) C/singlesided-npages.page:96(item/p)
+msgid "Click <guiseq><gui>File</gui><gui>Print</gui></guiseq>."
+msgstr "<guiseq><gui>ファイル</gui><gui>印刷</gui></guiseq>をクリックします。"
+
+#: C/duplex-10pages.page:30(item/p) C/duplex-10pages.page:72(item/p)
+#: C/duplex-11pages.page:31(item/p) C/duplex-11pages.page:67(item/p)
+#: C/duplex-12pages.page:30(item/p) C/duplex-13pages.page:29(item/p)
+#: C/duplex-14pages.page:29(item/p) C/duplex-14pages.page:71(item/p)
+#: C/duplex-16pages.page:29(item/p) C/duplex-3pages.page:31(item/p)
+#: C/duplex-4pages.page:31(item/p) C/duplex-5pages.page:31(item/p)
+#: C/duplex-6pages.page:30(item/p) C/duplex-6pages.page:73(item/p)
+#: C/duplex-7pages.page:32(item/p) C/duplex-7pages.page:67(item/p)
+#: C/duplex-8pages.page:30(item/p) C/duplex-9pages.page:31(item/p)
+#: C/duplex-npages.page:53(item/p) C/singlesided-13-16pages.page:51(item/p)
+#: C/singlesided-17-20pages.page:49(item/p)
+#: C/singlesided-3-4pages.page:51(item/p)
+#: C/singlesided-5-8pages.page:51(item/p)
+#: C/singlesided-9-12pages.page:51(item/p)
+#: C/singlesided-npages.page:54(item/p)
+msgid "Choose the <gui>General</gui> tab."
+msgstr "<gui>全般</gui>タブを選択します。"
+
+#: C/duplex-10pages.page:33(item/p) C/duplex-14pages.page:32(item/p)
+#: C/duplex-6pages.page:33(item/p)
+msgid "Under <em>Range</em>, select <gui>Pages</gui>."
+msgstr "<em>範囲</em>の下の<gui>ページ</gui>を選択します。"
+
+#: C/duplex-10pages.page:36(item/p)
+msgid "Type the numbers of the pages in this order: 10, 3, 4, 9, 8, 5, 6, 7, 2"
+msgstr "10, 3, 4, 9, 8, 5, 6, 7, 2 の順番でページ番号を入力します。"
+
+#: C/duplex-10pages.page:42(item/p) C/duplex-10pages.page:81(item/p)
+#: C/duplex-11pages.page:43(item/p) C/duplex-11pages.page:75(item/p)
+#: C/duplex-12pages.page:42(item/p) C/duplex-13pages.page:39(item/p)
+#: C/duplex-14pages.page:41(item/p) C/duplex-14pages.page:81(item/p)
+#: C/duplex-16pages.page:43(item/p) C/duplex-3pages.page:39(item/p)
+#: C/duplex-4pages.page:42(item/p) C/duplex-5pages.page:40(item/p)
+#: C/duplex-5pages.page:75(item/p) C/duplex-6pages.page:43(item/p)
+#: C/duplex-6pages.page:83(item/p) C/duplex-7pages.page:44(item/p)
+#: C/duplex-7pages.page:77(item/p) C/duplex-8pages.page:42(item/p)
+#: C/duplex-9pages.page:40(item/p) C/duplex-npages.page:68(item/p)
+#: C/singlesided-13-16pages.page:65(item/p)
+#: C/singlesided-13-16pages.page:97(item/p)
+#: C/singlesided-17-20pages.page:63(item/p)
+#: C/singlesided-17-20pages.page:95(item/p)
+#: C/singlesided-3-4pages.page:62(item/p)
+#: C/singlesided-3-4pages.page:94(item/p)
+#: C/singlesided-5-8pages.page:62(item/p)
+#: C/singlesided-5-8pages.page:94(item/p)
+#: C/singlesided-9-12pages.page:62(item/p)
+#: C/singlesided-9-12pages.page:94(item/p)
+#: C/singlesided-npages.page:69(item/p) C/singlesided-npages.page:101(item/p)
+msgid "Choose the <gui>Page Setup</gui> tab."
+msgstr "<gui>ページの設定</gui>タブを選択します。"
+
+#: C/duplex-10pages.page:45(item/p) C/duplex-12pages.page:45(item/p)
+#: C/duplex-14pages.page:44(item/p) C/duplex-3pages.page:42(item/p)
+#: C/duplex-5pages.page:43(item/p) C/duplex-7pages.page:47(item/p)
+#: C/duplex-9pages.page:43(item/p)
+msgid ""
+"Under <em>Layout</em>, in the <gui>Two-side</gui> option, select <gui>Short "
+"Edge (Flip)</gui>."
+msgstr ""
+"<em>レイアウト</em>の下にある<gui>両面印刷</gui>というオプションで<gui>短辺 "
+"(折り返し)</gui>を選択します。"
+
+#: C/duplex-10pages.page:48(item/p) C/duplex-11pages.page:49(item/p)
+#: C/duplex-12pages.page:48(item/p) C/duplex-13pages.page:45(item/p)
+#: C/duplex-14pages.page:47(item/p) C/duplex-16pages.page:49(item/p)
+#: C/duplex-3pages.page:45(item/p) C/duplex-4pages.page:48(item/p)
+#: C/duplex-5pages.page:46(item/p) C/duplex-6pages.page:49(item/p)
+#: C/duplex-7pages.page:50(item/p) C/duplex-8pages.page:48(item/p)
+#: C/duplex-9pages.page:46(item/p) C/duplex-npages.page:74(item/p)
+msgid "In the <gui>Pages per side</gui> option, select <gui>2</gui>."
+msgstr "<gui>段組み印刷</gui>というオプションで <gui>2</gui> を選択します。"
+
+#: C/duplex-10pages.page:51(item/p) C/duplex-11pages.page:78(item/p)
+#: C/duplex-12pages.page:51(item/p) C/duplex-14pages.page:50(item/p)
+#: C/duplex-16pages.page:52(item/p) C/duplex-4pages.page:51(item/p)
+#: C/duplex-5pages.page:78(item/p) C/duplex-6pages.page:52(item/p)
+#: C/duplex-8pages.page:51(item/p) C/duplex-npages.page:77(item/p)
+#: C/singlesided-13-16pages.page:74(item/p)
+#: C/singlesided-17-20pages.page:72(item/p)
+#: C/singlesided-3-4pages.page:71(item/p)
+#: C/singlesided-5-8pages.page:71(item/p)
+#: C/singlesided-9-12pages.page:71(item/p)
+#: C/singlesided-npages.page:78(item/p)
+msgid "In the <gui>Page ordering</gui> menu, select <gui>Left to right</gui>."
+msgstr ""
+"<gui>ページの順番</gui>というオプションで<gui>左から右へ</gui>を選択します。"
+
+#: C/duplex-10pages.page:54(item/p) C/duplex-10pages.page:87(item/p)
+#: C/duplex-11pages.page:55(item/p) C/duplex-11pages.page:81(item/p)
+#: C/duplex-12pages.page:54(item/p) C/duplex-13pages.page:51(item/p)
+#: C/duplex-13pages.page:76(item/p) C/duplex-13pages.page:90(item/p)
+#: C/duplex-13pages.page:109(item/p) C/duplex-13pages.page:120(item/p)
+#: C/duplex-14pages.page:53(item/p) C/duplex-14pages.page:87(item/p)
+#: C/duplex-16pages.page:57(item/p) C/duplex-3pages.page:53(item/p)
+#: C/duplex-4pages.page:56(item/p) C/duplex-5pages.page:52(item/p)
+#: C/duplex-5pages.page:81(item/p) C/duplex-5pages.page:98(item/p)
+#: C/duplex-5pages.page:117(item/p) C/duplex-6pages.page:55(item/p)
+#: C/duplex-6pages.page:89(item/p) C/duplex-7pages.page:56(item/p)
+#: C/duplex-7pages.page:83(item/p) C/duplex-8pages.page:54(item/p)
+#: C/duplex-9pages.page:52(item/p) C/duplex-9pages.page:75(item/p)
+#: C/duplex-9pages.page:94(item/p) C/duplex-9pages.page:114(item/p)
+#: C/duplex-9pages.page:126(item/p) C/duplex-npages.page:82(item/p)
+#: C/printing.page:29(item/p) C/singlesided-13-16pages.page:82(item/p)
+#: C/singlesided-13-16pages.page:105(item/p)
+#: C/singlesided-17-20pages.page:80(item/p)
+#: C/singlesided-17-20pages.page:103(item/p)
+#: C/singlesided-3-4pages.page:79(item/p)
+#: C/singlesided-3-4pages.page:102(item/p)
+#: C/singlesided-5-8pages.page:79(item/p)
+#: C/singlesided-5-8pages.page:102(item/p)
+#: C/singlesided-9-12pages.page:79(item/p)
+#: C/singlesided-9-12pages.page:102(item/p)
+#: C/singlesided-npages.page:86(item/p) C/singlesided-npages.page:109(item/p)
+msgid "Click <gui>Print</gui>."
+msgstr "<gui>印刷</gui>をクリックします。"
+
+#: C/duplex-10pages.page:62(item/p) C/duplex-14pages.page:61(item/p)
+#: C/duplex-6pages.page:63(item/p)
+msgid ""
+"Once the pages have printed, take the paper with page 2 on it, place it back "
+"in the printer, taking care to orient it correctly (page 1 will be printed "
+"on the other side)."
+msgstr ""
+"印刷が完了したら、2 ページ目を取り、(1 ページが裏面に印刷されるように) 向きに"
+"注意しながらプリンターに戻します。"
+
+#: C/duplex-10pages.page:75(item/p) C/duplex-14pages.page:74(item/p)
+#: C/duplex-6pages.page:76(item/p)
+msgid "Under <em>Range</em> select the <gui>Pages</gui> option and type: 1"
+msgstr "<em>範囲</em>の下の<gui>ページ</gui>を選択し、1 と入力します。"
+
+#: C/duplex-10pages.page:84(item/p) C/duplex-11pages.page:52(item/p)
+#: C/duplex-13pages.page:48(item/p) C/duplex-14pages.page:84(item/p)
+#: C/duplex-3pages.page:48(item/p) C/duplex-5pages.page:49(item/p)
+#: C/duplex-6pages.page:86(item/p) C/duplex-7pages.page:53(item/p)
+#: C/duplex-9pages.page:49(item/p)
+msgid "In the <gui>Page ordering</gui> menu, select <gui>Right to left</gui>."
+msgstr ""
+"<gui>ページの順番</gui>というオプションで<gui>右から左へ</gui>を選択します。"
+
+#: C/duplex-10pages.page:94(note/p)
+msgid ""
+"It is easier to print a 12-page booklet. You may wish to add 2 blank pages "
+"to your PDF document to make it 12-pages. To do so, you can:"
+msgstr ""
+"12 ページの小冊子を印刷することは簡単です。PDF ドキュメントを 12 ページにする"
+"ために空白の 2 ページを追加すると良いでしょう。そのために次のようなことができ"
+"ます。"
+
+#: C/duplex-10pages.page:99(item/p) C/duplex-14pages.page:98(item/p)
+#: C/duplex-6pages.page:101(item/p)
+msgid ""
+"Create a blank PDF document 2-pages long using <app>LibreOffice Writer</app>."
+msgstr ""
+"<app>LibreOffice Writer</app> を使って、空白 2 ページの PDF ドキュメントを作"
+"成します。"
+
+#: C/duplex-10pages.page:104(item/p) C/duplex-13pages.page:136(item/p)
+#: C/duplex-14pages.page:103(item/p) C/duplex-5pages.page:133(item/p)
+#: C/duplex-6pages.page:106(item/p) C/duplex-9pages.page:142(item/p)
+msgid ""
+"Merge the blank PDF with your PDF document using <app>PDF-Shuffler</app> "
+"placing the blank pages at the end."
+msgstr ""
+"<app>PDF-Shuffler</app> を使って、PDF ドキュメントに空のページを最後に置くよ"
+"うに結合します。"
+
+#: C/duplex-10pages.page:110(item/p) C/duplex-11pages.page:103(item/p)
+#: C/duplex-9pages.page:148(item/p)
+msgid ""
+"Follow the steps for printing a <link xref=\"duplex-12page\">12-page "
+"booklet</link>."
+msgstr ""
+"<link xref=\"duplex-12page\">12 ページの小冊子</link>を印刷する手順に従いま"
+"す。"
+
+#: C/duplex-11pages.page:8(info/desc)
+msgid "Print a 11 page booklet."
+msgstr "11 ページの小冊子を印刷します。"
+
+#: C/duplex-11pages.page:21(page/title)
+msgid "11-page booklet"
+msgstr "11 ページの小冊子"
+
+#: C/duplex-11pages.page:34(item/p) C/duplex-12pages.page:33(item/p)
+#: C/duplex-16pages.page:32(item/p) C/duplex-4pages.page:34(item/p)
+#: C/duplex-7pages.page:35(item/p) C/duplex-8pages.page:33(item/p)
+#: C/duplex-npages.page:56(item/p) C/singlesided-13-16pages.page:54(item/p)
+#: C/singlesided-17-20pages.page:52(item/p)
+#: C/singlesided-3-4pages.page:54(item/p)
+#: C/singlesided-5-8pages.page:54(item/p)
+#: C/singlesided-9-12pages.page:54(item/p)
+#: C/singlesided-npages.page:57(item/p)
+msgid "Under <em>Range</em>, choose <gui>Pages</gui>."
+msgstr "<em>範囲</em>の下にある<gui>ページ</gui>を選択します。"
+
+#: C/duplex-11pages.page:37(item/p)
+msgid "Type the numbers of the pages in this order: 11, 2, 1"
+msgstr "11, 2, 1 の順番でページ番号を入力します。"
+
+#: C/duplex-11pages.page:46(item/p) C/duplex-13pages.page:42(item/p)
+#: C/duplex-16pages.page:46(item/p) C/duplex-4pages.page:45(item/p)
+#: C/duplex-6pages.page:46(item/p) C/duplex-8pages.page:45(item/p)
+#: C/duplex-npages.page:71(item/p)
+msgid ""
+"Under <em>Layout</em>, in the <gui>Two-side</gui> menu, select <gui>Short "
+"Edge (Flip)</gui>."
+msgstr ""
+"<em>レイアウト</em>の下にある<gui>両面印刷</gui>というオプションで<gui>短辺 "
+"(折り返し)</gui>を選択します。"
+
+#: C/duplex-11pages.page:62(item/p) C/duplex-13pages.page:62(item/p)
+#: C/duplex-13pages.page:100(item/p) C/duplex-13pages.page:114(item/p)
+#: C/duplex-14pages.page:66(item/p) C/duplex-5pages.page:64(item/p)
+#: C/duplex-9pages.page:81(item/p)
+msgid "Click <guiseq><gui>File</gui><gui>Print</gui></guiseq> again."
+msgstr ""
+"再び<guiseq><gui>ファイル</gui><gui>印刷</gui></guiseq>をクリックします。"
+
+#: C/duplex-11pages.page:70(item/p)
+msgid ""
+"Type the numbers of the remaining pages in this order: 10, 3, 4, 9, 8, 5, 6, "
+"7"
+msgstr "残りのページ番号を 10, 3, 4, 9, 8, 5, 6, 7 の順番で入力します。"
+
+#: C/duplex-11pages.page:87(note/p)
+msgid ""
+"It is easier to print a 12-page booklet. You may wish to add a blank page to "
+"your PDF document to make it 12-pages. To do so, you can:"
+msgstr ""
+"12 ページの小冊子を印刷することは簡単です。PDF ドキュメントを 12 ページにする"
+"ために空白の 1 ページを追加すると良いでしょう。そのために次のようなことができ"
+"ます。"
+
+#: C/duplex-11pages.page:92(item/p) C/duplex-7pages.page:94(item/p)
+msgid "Create a blank PDF document using <app>LibreOffice Writer</app>."
+msgstr ""
+"<app>LibreOffice Writer</app> を使って、空白 1 ページの PDF ドキュメントを作"
+"成します。"
+
+#: C/duplex-11pages.page:97(item/p) C/duplex-7pages.page:99(item/p)
+msgid ""
+"Merge the blank PDF with your PDF document using <app>PDF-Shuffler</app> "
+"placing the blank page at the end."
+msgstr ""
+"<app>PDF-Shuffler</app> を使って、PDF ドキュメントに空のページを最後に置くよ"
+"うに結合します。"
+
+#: C/duplex-12pages.page:8(info/desc)
+msgid "Print a 12 page booklet."
+msgstr "12 ページの小冊子を印刷します。"
+
+#: C/duplex-12pages.page:21(page/title)
+msgid "12-page booklet"
+msgstr "12 ページの小冊子"
+
+# ページの区切りにカンマを使用する必要があるため、カンマのままとする。
+#: C/duplex-12pages.page:36(item/p) C/singlesided-9-12pages.page:57(item/p)
+msgid ""
+"Type the numbers of the pages in this order: 12, 1, 2, 11, 10, 3, 4, 9, 8, "
+"5, 6, 7"
+msgstr "12, 1, 2, 11, 10, 3, 4, 9, 8, 5, 6, 7 の順番でページ番号を入力します。"
+
+#: C/duplex-13pages.page:8(info/desc)
+msgid "Print a 13 page booklet."
+msgstr "13 ページの小冊子を印刷します。"
+
+#: C/duplex-13pages.page:21(page/title)
+msgid "13-page booklet"
+msgstr "13 ページの小冊子"
+
+#: C/duplex-13pages.page:32(item/p) C/duplex-5pages.page:34(item/p)
+#: C/duplex-9pages.page:34(item/p)
+msgid "Under <em>Range</em>, select <gui>Pages</gui> and type: 1"
+msgstr "<em>範囲</em>の下の<gui>ページ</gui>を選択し、1 と入力します。"
+
+#: C/duplex-13pages.page:57(item/p) C/duplex-5pages.page:59(item/p)
+#: C/duplex-9pages.page:59(item/p)
+msgid ""
+"Once the page has printed, take the paper and place it back in the printer, "
+"taking care to orient it correctly (page 2 will be printed on the other "
+"side)."
+msgstr ""
+"印刷が完了したら、印刷物を (2 ページが裏面に印刷されるように) 向きに注意しな"
+"がらひっくり返してプリンターへ戻します。"
+
+#: C/duplex-13pages.page:65(item/p) C/duplex-5pages.page:67(item/p)
+msgid "Choose the General tab."
+msgstr "全般タブを選択します。"
+
+#: C/duplex-13pages.page:68(item/p) C/duplex-5pages.page:70(item/p)
+#: C/duplex-9pages.page:67(item/p)
+msgid "Under <em>Range</em>, select <gui>Pages</gui> and type: 2"
+msgstr "<em>範囲</em>の下にある<gui>ページ</gui>を選択し、2 と入力します。"
+
+#: C/duplex-13pages.page:73(item/p) C/duplex-9pages.page:72(item/p)
+msgid ""
+"Choose the <gui>Page Setup</gui> tab and in the <gui>Page ordering</gui> "
+"menu, select <gui>Left to right</gui>."
+msgstr ""
+"<gui>ページ設定</gui>タブを開き、<gui>ページの順番</gui>というオプションで"
+"<gui>左から右へ</gui>を選択します。"
+
+#: C/duplex-13pages.page:81(item/p) C/duplex-5pages.page:87(item/p)
+msgid ""
+"To print page 3, click <guiseq><gui>File</gui><gui>Print</gui></guiseq> "
+"again."
+msgstr ""
+"3 ページ目を印刷するには再度、<guiseq><gui>ファイル</gui><gui>印刷</gui></"
+"guiseq>をクリックします。"
+
+#: C/duplex-13pages.page:84(item/p)
+msgid ""
+"In the <gui>General</gui> tab, enter 3 in the <gui>Pages</gui> selection."
+msgstr ""
+"<gui>全般</gui>タブで<gui>ページ</gui>という選択肢の入力欄に 3 と入力してくだ"
+"さい。"
+
+#: C/duplex-13pages.page:87(item/p) C/duplex-5pages.page:95(item/p)
+#: C/duplex-9pages.page:90(item/p)
+msgid ""
+"In the <gui>Page Setup</gui> tab, set the <gui>Page ordering</gui> to "
+"<gui>Right to left</gui>."
+msgstr ""
+"<gui>ページの設定</gui>タブで<gui>ページの順番</gui>を<gui>右から左へ</gui>に"
+"設定します。"
+
+#: C/duplex-13pages.page:95(item/p)
+msgid ""
+"Once page 3 has printed, place the paper back in the printer taking care to "
+"orient it correctly (pages 4 and 13 will be printed on the other side)."
+msgstr ""
+"3 ページが印刷されたならば、(4 および 13 ページが裏面に印刷されるように) 向き"
+"に注意して用紙をプリンターに戻します。"
+
+#: C/duplex-13pages.page:103(item/p)
+msgid ""
+"In the <gui>General</gui> tab enter pages 4, 13 in the <gui>Pages</gui> "
+"selection."
+msgstr ""
+"<gui>全般</gui>タブで<gui>ページ</gui>という選択肢の入力欄に 4, 13 と入力して"
+"ください。"
+
+#: C/duplex-13pages.page:106(item/p) C/duplex-5pages.page:114(item/p)
+#: C/duplex-9pages.page:110(item/p)
+msgid ""
+"In the <gui>Page Setup</gui> tab set <gui>Page ordering</gui> to <gui>Left "
+"to right</gui>."
+msgstr ""
+"<gui>ページの設定</gui>タブで<gui>ページの順番</gui>を<gui>左から右へ</gui>に"
+"設定します。"
+
+#: C/duplex-13pages.page:117(item/p)
+msgid ""
+"Enter pages 8, 9, 10, 7, 6, 11, 12, 5 in the <gui>Pages</gui> selection menu "
+"and set <gui>Page ordering</gui> to <gui>Left to right</gui>."
+msgstr ""
+"<gui>ページ</gui>という選択肢の入力欄に 8, 9, 10, 7, 6, 11, 12, 5 とページ番"
+"号を入力し、<gui>ページの順番</gui>を<gui>左から右へ</gui>に設定します。"
+
+#: C/duplex-13pages.page:126(note/p)
+msgid ""
+"It is easier to print a 16-page booklet. You may wish to add 3 blank pages "
+"to your PDF document to make it 16-pages. To do so, you can:"
+msgstr ""
+"16 ページの小冊子を印刷することは簡単です。PDF ドキュメントを 16 ページにする"
+"ために空白の 3 ページを追加すると良いでしょう。そのために次のようなことができ"
+"ます。"
+
+#: C/duplex-13pages.page:131(item/p) C/duplex-5pages.page:128(item/p)
+#: C/duplex-9pages.page:137(item/p)
+msgid ""
+"Create a blank PDF document 3-pages long using <app>LibreOffice Writer</app>."
+msgstr ""
+"<app>LibreOffice Writer</app> を使って、空白 3 ページの PDF ドキュメントを作"
+"成します。"
+
+#: C/duplex-13pages.page:142(item/p) C/duplex-14pages.page:109(item/p)
+#: C/duplex-15pages.page:40(item/p)
+msgid ""
+"Follow the steps for printing a <link xref=\"duplex-16page\">16-page "
+"booklet</link>."
+msgstr ""
+"<link xref=\"duplex-16page\">16 ページの小冊子</link>を印刷する手順に従いま"
+"す。"
+
+#: C/duplex-14pages.page:8(info/desc)
+msgid "Print a 14 page booklet."
+msgstr "14 ページの小冊子を印刷します。"
+
+#: C/duplex-14pages.page:21(page/title)
+msgid "14-page booklet"
+msgstr "14 ページの小冊子"
+
+#: C/duplex-14pages.page:35(item/p)
+msgid ""
+"Type the numbers of the pages in this order: 14, 3, 4, 13, 12, 5, 6, 11, 10, "
+"7, 8, 9, 2"
+msgstr ""
+"14, 3, 4, 13, 12, 5, 6, 11, 10, 7, 8, 9, 2 の順番でページ番号を入力します。"
+
+#: C/duplex-14pages.page:93(note/p)
+msgid ""
+"It is easier to print a 16-page booklet. You may wish to add 2 blank pages "
+"to your PDF document to make it 16-pages. To do so, you can:"
+msgstr ""
+"16 ページの小冊子を印刷することは簡単です。PDF ドキュメントを 16 ページにする"
+"ために空白の 2 ページを追加すると良いでしょう。そのために次のようなことができ"
+"ます。"
+
+#: C/duplex-15pages.page:8(info/desc)
+msgid "Print a 15 page booklet."
+msgstr "15 ページの小冊子を印刷します。"
+
+#: C/duplex-15pages.page:21(page/title)
+msgid "15-page booklet"
+msgstr "15 ページの小冊子"
+
+#: C/duplex-15pages.page:24(page/p)
+msgid ""
+"It is easier to print a 16-page booklet. You may wish to add a blank page to "
+"your PDF document to make it 16-pages. To do so, you can:"
+msgstr ""
+"16 ページの小冊子を印刷することは簡単です。PDF ドキュメントを 16 ページにする"
+"ために空白の 1 ページを追加すると良いでしょう。そのために次のようなことができ"
+"ます。"
+
+#: C/duplex-15pages.page:29(item/p) C/duplex-3pages.page:66(item/p)
+#: C/duplex-npages.page:34(item/p) C/singlesided-13-16pages.page:28(item/p)
+#: C/singlesided-17-20pages.page:28(item/p)
+#: C/singlesided-3-4pages.page:28(item/p)
+#: C/singlesided-5-8pages.page:28(item/p)
+#: C/singlesided-9-12pages.page:28(item/p)
+#: C/singlesided-npages.page:33(item/p)
+msgid "Create a blank PDF using <app>LibreOffice Writer</app>."
+msgstr "<app>LibreOffice Writer</app> を利用して空の PDF を作成します。"
+
+#: C/duplex-15pages.page:34(item/p) C/duplex-3pages.page:71(item/p)
+#: C/singlesided-3-4pages.page:33(item/p)
+msgid ""
+"Merge the blank page with your PDF document using <app>PDF-Shuffler</app> "
+"placing the blank page at the end."
+msgstr ""
+"<app>PDF-Shuffler</app> を使って、PDF ドキュメントに空のページを最後に置くよ"
+"うに結合します。"
+
+#: C/duplex-16pages.page:8(info/desc)
+msgid "Print a 16 page booklet."
+msgstr "16 ページの小冊子を印刷します。"
+
+#: C/duplex-16pages.page:21(page/title)
+msgid "16-page booklet"
+msgstr "16 ページの小冊子"
+
+#: C/duplex-16pages.page:38(item/item)
+#: C/singlesided-13-16pages.page:60(item/item)
+msgid "16, 1, 2, 15, 14, 3, 4, 13, 12, 5, 6, 11, 10, 7, 8, 9"
+msgstr "16, 1, 2, 15, 14, 3, 4, 13, 12, 5, 6, 11, 10, 7, 8, 9"
+
+#: C/duplex-16pages.page:36(tree/item)
+#: C/singlesided-13-16pages.page:58(tree/item)
+#: C/singlesided-17-20pages.page:56(tree/item)
+msgid "Type the numbers of the pages in this order: <_:item-1/>"
+msgstr "次の順番でページ番号を入力します。 <_:item-1/>"
+
+# 原文の表示順序を引き継ぐため sort コンテキストは原文のままとする
+#: C/duplex-3pages.page:7(info/title)
+msgctxt "sort"
+msgid "03-Page Booklet"
+msgstr "03-Page Booklet"
+
+#: C/duplex-3pages.page:8(info/desc)
+msgid "Print a 3 page booklet."
+msgstr "3 ページの小冊子を印刷します。"
+
+#: C/duplex-3pages.page:22(page/title)
+msgid "3-page booklet"
+msgstr "3 ページの小冊子"
+
+#: C/duplex-3pages.page:34(item/p)
+msgid ""
+"Under <em>Range</em>, choose <gui>Pages</gui>. Type the numbers of the pages "
+"in this order: 3, 2, 1"
+msgstr ""
+"<em>範囲</em>の下の<gui>ページ</gui>を選択します。3, 2, 1 の順番でページ番号"
+"を入力します。"
+
+#: C/duplex-3pages.page:61(note/p)
+msgid ""
+"It is easier to print a 4-page booklet. You may wish to add a blank page to "
+"your PDF document to make it 4-pages. To do so, you can:"
+msgstr ""
+"4 ページの小冊子を印刷することは簡単です。PDF ドキュメントを 4 ページにするた"
+"めに空白の 1 ページを追加すると良いでしょう。そのために次のようなことができま"
+"す。"
+
+#: C/duplex-3pages.page:77(item/p)
+msgid ""
+"Follow the steps for printing a <link xref=\"duplex-4page\">4-page booklet</"
+"link>."
+msgstr ""
+"<link xref=\"duplex-4page\">4 ページの小冊子</link>を印刷する手順に従います。"
+
+# 原文の表示順序を引き継ぐため sort コンテキストは原文のままとする
+#: C/duplex-4pages.page:7(info/title)
+msgctxt "sort"
+msgid "04-Page Booklet"
+msgstr "04-Page Booklet"
+
+#: C/duplex-4pages.page:8(info/desc)
+msgid "Print a 4 page booklet."
+msgstr "4 ページの小冊子を印刷します。"
+
+#: C/duplex-4pages.page:21(page/title)
+msgid "4-page booklet"
+msgstr "4 ページの小冊子"
+
+# ページの区切りにカンマを使用する必要があるため、カンマのままとする。
+#: C/duplex-4pages.page:37(item/p) C/singlesided-3-4pages.page:57(item/p)
+msgid "Type the numbers of the pages in this order: 4, 1, 2, 3"
+msgstr "4, 1, 2, 3 の順番でページ番号を入力します。"
+
+# 原文の表示順序を引き継ぐため sort コンテキストは原文のままとする
+#: C/duplex-5pages.page:7(info/title)
+msgctxt "sort"
+msgid "05-Page Booklet"
+msgstr "05-Page Booklet"
+
+#: C/duplex-5pages.page:8(info/desc)
+msgid "Print a 5 page booklet."
+msgstr "5 ページの小冊子を印刷します。"
+
+#: C/duplex-5pages.page:21(page/title)
+msgid "5-page booklet"
+msgstr "5 ページの小冊子"
+
+#: C/duplex-5pages.page:90(item/p)
+msgid ""
+"In the <gui>General</gui> tab enter the page number in the <gui>Pages</gui> "
+"selection ."
+msgstr ""
+"<gui>全般</gui>タブで<gui>ページ</gui>という選択肢の入力欄にページ番号を入力"
+"してください。"
+
+#: C/duplex-5pages.page:103(item/p)
+msgid ""
+"Once page 3 has printed, place the paper back in the printer (taking care to "
+"orient it correctly (pages 4 and 9 will be printed on the other side)."
+msgstr ""
+"3 ページが印刷されたならば、(4 および 9 ページが裏面に印刷されるように) 向き"
+"に注意して用紙をプリンターに戻します。"
+
+#: C/duplex-5pages.page:111(item/p)
+msgid ""
+"In the <gui>General</gui> tab enter pages 4, 9 in the <gui>Pages</gui> "
+"selection."
+msgstr ""
+"<gui>全般</gui>タブで<gui>ページ</gui>という選択肢の入力欄に 4, 9 と入力して"
+"ください。"
+
+#: C/duplex-5pages.page:123(note/p)
+msgid ""
+"It is easier to print a 8-page booklet. You may wish to add 3 blank pages to "
+"your PDF document to make it 8-pages. To do so, you can:"
+msgstr ""
+"8 ページの小冊子を印刷することは簡単です。PDF ドキュメントを 8 ページにするた"
+"めに空白の 3 ページを追加すると良いでしょう。そのために次のようなことができま"
+"す。"
+
+#: C/duplex-5pages.page:139(item/p) C/duplex-6pages.page:112(item/p)
+#: C/duplex-7pages.page:105(item/p)
+msgid ""
+"Follow the steps for printing a <link xref=\"duplex-8page\">8-page booklet</"
+"link>."
+msgstr ""
+"<link xref=\"duplex-8page\">8 ページの小冊子</link>を印刷する手順に従います。"
+
+# 原文の表示順序を引き継ぐため sort コンテキストは原文のままとする
+#: C/duplex-6pages.page:7(info/title)
+msgctxt "sort"
+msgid "06-Page Booklet"
+msgstr "06-Page Booklet"
+
+#: C/duplex-6pages.page:8(info/desc)
+msgid "Print a 6 page booklet."
+msgstr "6 ページの小冊子を印刷します。"
+
+#: C/duplex-6pages.page:21(page/title)
+msgid "6-page booklet"
+msgstr "6 ページの小冊子"
+
+#: C/duplex-6pages.page:36(item/p)
+msgid "Type the numbers of the pages in this order: 6, 3, 4, 5, 2"
+msgstr "6, 3, 4, 5, 2 の順番でページ番号を入力します。"
+
+#: C/duplex-6pages.page:96(note/p)
+msgid ""
+"It is easier to print a 8-page booklet. You may wish to add 2 blank pages to "
+"your PDF document to make it 8-pages. To do so, you can:"
+msgstr ""
+"8 ページの小冊子を印刷することは簡単です。PDF ドキュメントを 8 ページにするた"
+"めに空白の 2 ページを追加すると良いでしょう。そのために次のようなことができま"
+"す。"
+
+# 原文の表示順序を引き継ぐため sort コンテキストは原文のままとする
+#: C/duplex-7pages.page:7(info/title)
+msgctxt "sort"
+msgid "07-Page Booklet"
+msgstr "07-Page Booklet"
+
+#: C/duplex-7pages.page:8(info/desc)
+msgid "Print a 7 page booklet."
+msgstr "7 ページの小冊子を印刷します。"
+
+#: C/duplex-7pages.page:21(page/title)
+msgid "7-page booklet"
+msgstr "7 ページの小冊子"
+
+#: C/duplex-7pages.page:38(item/p)
+msgid "Type the numbers of the pages in this order: 7, 2, 1"
+msgstr "7, 2, 1 の順番でページ番号を入力します。"
+
+#: C/duplex-7pages.page:70(item/p)
+msgid "Type the numbers of the remaining pages in this order: 6, 3, 4, 5"
+msgstr "残りのページ番号を 6, 3, 4, 5 の順番で入力します。"
+
+#: C/duplex-7pages.page:80(item/p)
+msgid ""
+"In the <gui>Page ordering</gui> menu, change the selection to <gui>Left to "
+"right</gui>."
+msgstr ""
+"<gui>ページの順番</gui>というオプションを<gui>左から右へ</gui>に変更します。"
+
+#: C/duplex-7pages.page:89(note/p)
+msgid ""
+"It is easier to print a 8-page booklet. You may wish to add a blank page to "
+"your PDF document to make it 8-pages. To do so, you can:"
+msgstr ""
+"8 ページの小冊子を印刷することは簡単です。PDF ドキュメントを 8 ページにするた"
+"めに空白の 1 ページを追加すると良いでしょう。そのために次のようなことができま"
+"す。"
+
+# 原文の表示順序を引き継ぐため sort コンテキストは原文のままとする
+#: C/duplex-8pages.page:7(info/title)
+msgctxt "sort"
+msgid "08-Page Booklet"
+msgstr "08-Page Booklet"
+
+#: C/duplex-8pages.page:8(info/desc)
+msgid "Print an 8 page booklet."
+msgstr "8 ページの小冊子を印刷します。"
+
+#: C/duplex-8pages.page:21(page/title)
+msgid "8-page booklet"
+msgstr "8 ページの小冊子"
+
+# ページの区切りにカンマを使用する必要があるため、カンマのままとする。
+#: C/duplex-8pages.page:36(item/p) C/singlesided-5-8pages.page:57(item/p)
+msgid "Type the numbers of the pages in this order: 8, 1, 2, 7, 6, 3, 4, 5"
+msgstr "8, 1, 2, 7, 6, 3, 4, 5 の順番でページ番号を入力します。"
+
+# 原文の表示順序を引き継ぐため sort コンテキストは原文のままとする
+#: C/duplex-9pages.page:7(info/title)
+msgctxt "sort"
+msgid "09-Page Booklet"
+msgstr "09-Page Booklet"
+
+#: C/duplex-9pages.page:8(info/desc)
+msgid "Print a 9 page booklet."
+msgstr "9 ページの小冊子を印刷します。"
+
+#: C/duplex-9pages.page:21(page/title)
+msgid "9-page booklet"
+msgstr "9 ページの小冊子"
+
+#: C/duplex-9pages.page:64(item/p)
+msgid ""
+"Click <guiseq><gui>File</gui><gui>Print</gui></guiseq> again and choose the "
+"General tab."
+msgstr ""
+"再び<guiseq><gui>ファイル</gui><gui>印刷</gui></guiseq>をクリックし、全般タブ"
+"を選択します。"
+
+#: C/duplex-9pages.page:84(item/p)
+msgid ""
+"In the <gui>General</gui> tab enter 3 in the <gui>Pages</gui> selection."
+msgstr ""
+"<gui>全般</gui>タブで<gui>ページ</gui>という選択肢の入力欄に 3 と入力してくだ"
+"さい。"
+
+#: C/duplex-9pages.page:99(item/p)
+msgid ""
+"Once page 3 has printed, place the paper back in the printer taking care to "
+"orient it correctly (pages 4 and 9 will be printed on the other side)."
+msgstr ""
+"3 ページが印刷されたならば、(4 および 9 ページが裏面に印刷されるように) 向き"
+"に注意して用紙をプリンターに戻します。"
+
+#: C/duplex-9pages.page:107(item/p)
+msgid ""
+"In the <gui>General</gui> tab enter pages 4,9 in the <gui>Pages</gui> "
+"selection."
+msgstr ""
+"<gui>全般</gui>タブで<gui>ページ</gui>という選択肢の入力欄に 4, 9 と入力して"
+"ください。"
+
+#: C/duplex-9pages.page:123(item/p)
+msgid ""
+"Enter pages 8, 5, 6, 7 in the <gui>Pages</gui> selection menu and set "
+"<gui>Page ordering</gui> to <gui>Left to right</gui>."
+msgstr ""
+"<gui>ページ</gui>という選択肢の入力欄に 8, 5, 6, 7 と入力し、<gui>ページの順"
+"番</gui>を<gui>左から右へ</gui>に設定します。"
+
+#: C/duplex-9pages.page:132(note/p)
+msgid ""
+"It is easier to print a 12-page booklet. You may wish to add 3 blank pages "
+"to your PDF document to make it 12-pages. To do so, you can:"
+msgstr ""
+"12 ページの小冊子を印刷することは簡単です。PDF ドキュメントを 12 ページにする"
+"ために空白の 3 ページを追加すると良いでしょう。そのために次のようなことができ"
+"ます。"
+
+#: C/duplex-npages.page:8(info/desc)
+msgid "Print a booklet over 16 pages."
+msgstr "16 ページを超える小冊子を印刷します。"
+
+#: C/duplex-npages.page:21(page/title)
+#: C/singlesided-npages.page:21(page/title)
+msgid "n-page booklet"
+msgstr "n ページの小冊子"
+
+#: C/duplex-npages.page:23(note/p) C/singlesided-npages.page:23(note/p)
+msgid "<em>n</em> is a multiple of 4."
+msgstr "<em>n</em> は、4 の倍数です。"
+
+#: C/duplex-npages.page:28(page/p)
+msgid ""
+"If the number of pages in your PDF document is not a multiple of 4, you "
+"should add the appropriate number of blank pages (1,2 or 3) to make it a "
+"multiple of 4. To do so, you can:"
+msgstr ""
+"PDF ドキュメントのページ数が 4 の倍数でない場合、4 の倍数にするために適切な"
+"数 (1、2 または 3) の空白ページを追加する必要があります。そのために次のような"
+"ことができます。"
+
+#: C/duplex-npages.page:39(item/p) C/singlesided-13-16pages.page:33(item/p)
+#: C/singlesided-17-20pages.page:33(item/p)
+#: C/singlesided-5-8pages.page:33(item/p)
+#: C/singlesided-9-12pages.page:33(item/p)
+#: C/singlesided-npages.page:38(item/p)
+msgid ""
+"Merge the blank pages with your PDF document using <app>PDF-Shuffler</app> "
+"placing the blank pages at the end."
+msgstr ""
+"<app>PDF-Shuffler</app> を使って、PDF ドキュメントに空のページを最後に置くよ"
+"うに結合します。"
+
+#: C/duplex-npages.page:62(item/item) C/singlesided-npages.page:63(item/item)
+msgid ""
+"n, 1, 2, n-1, n-2, 3, 4, n-3, n-4, 5, 6, n-5, n-6, 7, 8, n-7, n-8, 9, 10, "
+"n-9, n-10, 11, 12, n-11..."
+msgstr ""
+"n, 1, 2, n-1, n-2, 3, 4, n-3, n-4, 5, 6, n-5, n-6, 7, 8, n-7, n-8, 9, 10, "
+"n-9, n-10, 11, 12, n-11..."
+
+#: C/duplex-npages.page:63(item/item) C/singlesided-npages.page:64(item/item)
+msgid "...until you have typed n-number of pages."
+msgstr "...ページ数分入力するまで"
+
+#: C/duplex-npages.page:60(tree/item) C/singlesided-npages.page:61(tree/item)
+msgid "Type the numbers of the pages in this order: <_:item-1/> <_:item-2/>"
+msgstr "次の順番でページ番号を入力します。<_:item-1/> <_:item-2/>"
+
+#: C/editing.page:7(info/desc)
+msgid "You can't use the <app>document viewer</app> to edit files."
+msgstr "ファイルを編集するのに<app>ドキュメントビューアー</app>は使えません。"
+
+#: C/editing.page:20(page/title)
+msgid "Can I edit documents in the document viewer?"
+msgstr "ドキュメントビューアーでドキュメントを編集できないのですが?"
+
+#: C/editing.page:23(page/p)
+msgid ""
+"The <app>document viewer</app> can't be used to make changes to documents. "
+"You need to use the appropriate editing application for the type of file you "
+"want to change."
+msgstr ""
+"<app>ドキュメントビューアー</app>は、ドキュメントに変更を加えるために使用する"
+"ことはできません。変更したいファイル形式に合った適切な編集アプリケーションを"
+"使用する必要があります。"
+
+#: C/editing.page:29(note/p)
+msgid ""
+"PDF and PostScript (.ps) files are not usually intended to be edited, but "
+"PDF editing software is available. Try <link href=\"http://pdfedit.petricek."
+"net/en/index.html\">pdfedit</link>, for example."
+msgstr ""
+"PDF および PostScript (.ps) ファイルは通常、編集されることを意図していません"
+"が、PDF 編集ソフトウェアが利用可能です。たとえば、<link href=\"http://"
+"pdfedit.petricek.net/en/index.html\">pdfedit</link> を試してください。"
+
+#: C/finding.page:8(info/desc)
+msgid "Find a word or phrase in a document."
+msgstr "ドキュメント内の単語や語句を検索します。"
+
+#: C/finding.page:21(page/title)
+msgid "Finding text in a document"
+msgstr "ドキュメント内のテキストの検索"
+
+#: C/finding.page:23(item/p)
+msgid ""
+"Click <guiseq><gui>Edit</gui><gui>Find</gui></guiseq> or press "
+"<keyseq><key>Ctrl</key><key>F</key></keyseq> or <key>/</key> to display a "
+"search box."
+msgstr ""
+"検索ボックスを表示するには、<guiseq><gui>編集</gui><gui>検索</gui></guiseq>を"
+"クリックするか、<keyseq><key>Ctrl</key><key>F</key></keyseq> または <key>/</"
+"key> を押します。"
+
+#: C/finding.page:27(item/p)
+msgid ""
+"Type the word or phrase you want to look for and a search will start "
+"automatically."
+msgstr "探したい単語や句を入力すると検索が自動的に開始されます。"
+
+#: C/finding.page:30(item/p)
+msgid ""
+"The <gui>Find Previous</gui> and <gui>Find Next</gui> buttons let you skip "
+"from one search result to another."
+msgstr ""
+"<gui>前を検索</gui>および<gui>次を検索</gui>というボタンを使うと現在の検索結"
+"果から他の検索結果に移動できます。"
+
+#: C/finding.page:34(item/p)
+msgid "To hide the search bar, click anywhere in the document."
+msgstr "検索バーを隠すには、ドキュメント内のどこかをクリックします。"
+
+#: C/finding.page:38(page/p)
+msgid ""
+"If the word or phrase you searched is not present in the entire document, "
+"the message will say <em>Not found</em>. However, if it appears in the "
+"document at least once, the message will inform you of how many times the "
+"word you searched occur on each page. This is apparent if you skip from one "
+"result to another as described above or scroll through the document."
+msgstr ""
+"探している単語や句がドキュメント内のどこにも存在しない場合、<em>見つかりませ"
+"ん</em>というメッセージが表示されます。反対に探している語句がドキュメント内に"
+"一箇所でも現れる場合、ページごとに探している語句が見つかった数を通知するメッ"
+"セージが表示されます。上記のようにある結果から他の結果へ移動するか、ドキュメ"
+"ントをスクロールした際にメッセージが更新されます。"
+
+#: C/finding.page:43(note/p)
+msgid ""
+"Only PDF documents are searchable. Some PDF documents are not searchable "
+"because their text is encoded in the document as an image."
+msgstr ""
+"PDF ドキュメントのみ検索可能です。PDF ドキュメントによっては、テキストが画像"
+"として保存されているために検索できないことがあります。"
+
+#: C/formats.page:10(info/desc)
+msgid "PDF, PostScript and many others are."
+msgstr "PDF、PostScript、およびその他多くのファイル形式をサポートしています。"
+
+#: C/formats.page:23(page/title)
+msgid "Supported formats"
+msgstr "サポートされているファイル形式"
+
+#: C/formats.page:25(page/p)
+msgid "The <app>document viewer</app> supports the following formats:"
+msgstr ""
+"<app>ドキュメントビューアー</app>は、次のファイル形式をサポートしています。"
+
+#: C/formats.page:29(item/p) C/presentations.page:62(item/p)
+msgid "Comic Book Archive (.cbr and .cbz)"
+msgstr "Comic Book Archive (.cbr および .cbz)"
+
+#: C/formats.page:32(item/p) C/presentations.page:65(item/p)
+msgid "OpenOffice Presentation (.odp)"
+msgstr "OpenOffice プレゼンテーション (.odp)"
+
+#: C/formats.page:35(item/p)
+msgid "Scalable Vector Graphics (.svg)"
+msgstr "スケーラブル・ベクター・グラフィックス (.svg)"
+
+#: C/formats.page:37(item/p)
+msgid "Other Image Files (.gif, .jpeg, .png)"
+msgstr "その他の画像ファイル (.gif, .jpeg, .png)"
+
+#: C/formats.page:40(note/p)
+msgid ""
+"In some Linux distributions, not all formats are supported by default, so "
+"you might not be able to view all the formats listed above."
+msgstr ""
+"Linux ディストリビューションによっては、必ずしもすべてのファイル形式をデフォ"
+"ルトでサポートするわけではありません。そのため、上に列挙したファイル形式に"
+"よっては閲覧できない場合もあります。"
+
+#: C/formats.page:43(note/p)
+msgid ""
+"Support for a format is called a <em>backend</em>. If you get the error "
+"\"Unable to Open Document\", you may wish to check whether the backend "
+"package for the format is installed."
+msgstr ""
+"ファイル形式のサポート機能は、<em>バックエンド</em>と呼ばれます。もし、「ド"
+"キュメントを開けません」というエラーが発生した場合は、そのファイル形式のバッ"
+"クエンドパッケージがインストールされているか確認してください。"
+
+#: C/forms.page:7(info/desc)
+msgid "Working with fillable forms."
+msgstr "入力可能なフォームでの作業。"
+
+#: C/forms.page:20(page/title)
+msgid "Forms"
+msgstr "フォーム"
+
+#: C/forms.page:21(page/p)
+msgid ""
+"When filling out an interactive form, you can navigate from field to field "
+"by clicking on a field with your mouse. When you are finished filling out a "
+"text field, press <key>Enter</key>."
+msgstr ""
+"対話型のフォームを埋める際、マウスで任意のフィールドをクリックすることによ"
+"り、フィールドからフィールドへ移動できます。テキストフィールドの入力が完了す"
+"れば、<key>Enter</key> を押します。"
+
+#: C/forms.page:25(page/p)
+msgid ""
+"You can make a selection in a scrollable list box by clicking on the list "
+"box and scrolling to your choice with your mouse."
+msgstr ""
+"スクロール可能なリストボックスでは、リストボックスをクリックしてマウスで選択"
+"したい項目にスクロールすることにより、アイテムを選択できます。"
+
+#: C/forms.page:29(note/p)
+msgid ""
+"There may be some parts of a form that you may need to fill out by hand "
+"<em>after</em> you print the form. For example, you might have to circle "
+"certain things, or sign the form in one or more places. If you wish to do "
+"this electronically, you may want to try <link href=\"http://www.g-loaded."
+"eu/2008/05/03/how-to-annotate-pdf-files-in-linux-using-xournal/\">Xournal</"
+"link>."
+msgstr ""
+"フォームを印刷した<em>後で</em>、手書きで埋める必要があるフォームの箇所も存在"
+"します。たとえば、特定のものに丸を付けなければならない、署名が必要である、な"
+"どの場合です。もし、これを電子的に行いたい場合、<link href=\"http://www.g-"
+"loaded.eu/2008/05/03/how-to-annotate-pdf-files-in-linux-using-xournal/"
+"\">Xournal</link> を試してみてください。"
+
+#: C/forms-saving.page:7(info/desc)
+msgid ""
+"Make sure you save the form, otherwise all of the information you entered "
+"will be lost."
+msgstr ""
+"忘れずにフォームを保存してください。さもないと入力したすべての情報が失われま"
+"す。"
+
+#: C/forms-saving.page:21(page/title)
+msgid "Saving a form"
+msgstr "フォームの保存"
+
+#: C/forms-saving.page:23(page/p)
+msgid ""
+"After you have filled it out, you may wish to save your form in one of two "
+"ways:"
+msgstr "フォームを埋めた後、2 つの方法の内のいずれかで保存するとよいでしょう。"
+
+#: C/forms-saving.page:28(item/p)
+msgid ""
+"To save a copy that can be edited in the future (form remains interactive):"
+msgstr ""
+"あとで編集できるようにコピーを保存する (フォームを操作可能なままにする) 方法"
+"は次のとおりです。"
+
+#: C/forms-saving.page:38(item/p)
+msgid ""
+"Choose a name and folder to save the file in, then click <gui>Save</gui>. "
+"The PDF will be saved in the folder you chose."
+msgstr ""
+"ファイル名、およびファイルを保存するフォルダーを選択し、<gui>保存</gui>をク"
+"リックします。選択したフォルダーに PDF が保存されます。"
+
+#: C/forms-saving.page:45(item/p)
+msgid ""
+"To save a copy that can no longer be edited (for example, to e-mail the form "
+"or submit it on-line):"
+msgstr ""
+"もう編集できないようにコピーを保存する (たとえば、フォームをメールで送信した"
+"り、オンラインで投稿したりするためなど) 方法は次のとおりです。"
+
+#: C/forms-saving.page:62(item/p)
+msgid ""
+"Choose a name and folder to save the file in, then click <gui>Print</gui>. "
+"The PDF will be saved in the folder you chose."
+msgstr ""
+"ファイル名、およびファイルを保存するフォルダーを選択し、<gui>印刷</gui>をク"
+"リックします。選択したフォルダーに PDF が保存されます。"
+
+#: C/forms-saving.page:72(note/p)
+msgid "Copies of encrypted files can't be saved or printed."
+msgstr "暗号化されたファイルのコピーは、保存や印刷ができません。"
+
+#: C/introduction.page:7(info/desc)
+msgid "Introduction to the <em>Evince Document Viewer</em>."
+msgstr "<em>Evince ドキュメントビューアー</em>の紹介です。"
+
+#: C/introduction.page:20(page/title)
+msgid "Introduction"
 msgstr "はじめに"
 
-#: C/evince.xml:130(title)
-msgid "To Start Evince Document Viewer"
-msgstr "Evince ドキュメントビューアの起動"
-
-#: C/evince.xml:131(para)
+#: C/introduction.page:25(page/p)
 msgid ""
-"<application>Evince Document Viewer</application> starts when you open a "
-"document such as a PDF or PostScript file."
-msgstr "PDF または PostScript ファイルのドキュメントを開くと "
-"<application>Evince ドキュメントビューア</application> が起動します。"
+"<app>Evince</app> is a document viewer. See <link xref=\"formats\"/> for a "
+"list of file types you can view."
+msgstr ""
+"<app>Evince</app> は、ドキュメントビューアーです。閲覧できるファイルの種類に"
+"ついては、<link xref=\"formats\"/>を参照してください。"
 
-#: C/evince.xml:132(para)
+#: C/invert-colors.page:8(info/desc)
+msgid "Inverting the colors can make it easier to read some text."
+msgstr "色を反転しテキストを読みやすくします。"
+
+#: C/invert-colors.page:23(page/title)
+msgid "Invert colors on a page"
+msgstr "ページ上の色の反転"
+
+#: C/invert-colors.page:26(page/p)
 msgid ""
-"Alternatively, you can start <application>Evince Document Viewer</"
-"application> from the command line, with the command: <command>evince</"
-"command>."
-msgstr "あるいは、コマンド <command>evince</command> をコマンド行で"
-"入力して <application>Evince ドキュメントビューア</application> を"
-"起動することもできます。"
+"To swap black for white, white for black, and so on, click "
+"<guiseq><gui>View</gui><gui>Inverted Colors</gui></guiseq>."
+msgstr ""
+"白から黒、黒から白など、色を交換するには、<guiseq><gui>表示</gui><gui>色を反"
+"転する</gui></guiseq>をクリックします。"
 
-#: C/evince.xml:137(title)
-msgid "When You Start Evince Document Viewer"
-msgstr "Evince ドキュメントビューアのメインウィンドウ"
-
-#: C/evince.xml:138(para)
+#: C/invert-colors.page:32(note/p)
 msgid ""
-"When you start <application>Evince Document Viewer</application>, the "
-"following window is displayed."
-msgstr "<application>Evince ドキュメントビューア</application> を"
-"起動すると、次のようなウィンドウが表示されます。"
+"Doing this can make it easier to read text, especially in the case of "
+"certain kinds of visual impairment."
+msgstr ""
+"とりわけ特定の視覚障害がある場合には、色の反転を行うとテキストが読みやすくな"
+"ります。"
 
-#: C/evince.xml:142(title)
-msgid "Evince Document Viewer Window"
-msgstr "Evince ドキュメントビューアのメインウィンドウ"
+#: C/license.page:8(info/desc)
+msgid "Legal information."
+msgstr "Legal information."
 
-#: C/evince.xml:149(phrase)
+#: C/license.page:11(page/title)
+msgid "License"
+msgstr "License"
+
+#: C/license.page:12(page/p)
 msgid ""
-"Shows Evince Document Viewer main window. Contains titlebar, menubar, "
-"toolbar and display area. Menubar contains File, Edit, View, Go and Help "
-"menus."
-msgstr "Evince ドキュメントビューアのメインウィンドウです。"
-"タイトルバーとメニューバー、ツールバーそして表示領域があります。"
-"メニューバーにはファイル、編集、表示、移動そしてヘルプメニューが"
-"含まれています。"
+"This work is distributed under a CreativeCommons Attribution-Share Alike 3.0 "
+"Unported license."
+msgstr ""
+"This work is distributed under a CreativeCommons Attribution-Share Alike 3.0 "
+"Unported license."
 
-#: C/evince.xml:155(para)
+#: C/license.page:20(page/p)
+msgid "You are free:"
+msgstr "You are free:"
+
+#: C/license.page:25(item/title)
+msgid "<em>To share</em>"
+msgstr "<em>To share</em>"
+
+#: C/license.page:26(item/p)
+msgid "To copy, distribute and transmit the work."
+msgstr "To copy, distribute and transmit the work."
+
+#: C/license.page:29(item/title)
+msgid "<em>To remix</em>"
+msgstr "<em>To remix</em>"
+
+#: C/license.page:30(item/p)
+msgid "To adapt the work."
+msgstr "To adapt the work."
+
+#: C/license.page:33(page/p)
+msgid "Under the following conditions:"
+msgstr "Under the following conditions:"
+
+#: C/license.page:38(item/title)
+msgid "<em>Attribution</em>"
+msgstr "<em>Attribution</em>"
+
+#: C/license.page:39(item/p)
 msgid ""
-"The <application>Evince Document Viewer</application> window contains the "
-"following elements:"
-msgstr "<application>Evince ドキュメントビューア</application> の"
-"ウィンドウには次の要素が含まれています:"
+"You must attribute the work in the manner specified by the author or "
+"licensor (but not in any way that suggests that they endorse you or your use "
+"of the work)."
+msgstr ""
+"You must attribute the work in the manner specified by the author or "
+"licensor (but not in any way that suggests that they endorse you or your use "
+"of the work)."
 
-#: C/evince.xml:159(term) C/evince.xml:207(para)
-msgid "Menubar"
-msgstr "メニューバー"
+#: C/license.page:46(item/title)
+msgid "<em>Share Alike</em>"
+msgstr "<em>Share Alike</em>"
 
-#: C/evince.xml:161(para)
+#: C/license.page:47(item/p)
 msgid ""
-"The menus on the menubar contain all of the commands that you need to work "
-"with documents in <application>Evince Document Viewer</application>."
-msgstr "<application>Evince ドキュメントビューア</application> で"
-"ドキュメントについて作業するのに必要なすべてのコマンドのメニューが"
-"あります。"
+"If you alter, transform, or build upon this work, you may distribute the "
+"resulting work only under the same, similar or a compatible license."
+msgstr ""
+"If you alter, transform, or build upon this work, you may distribute the "
+"resulting work only under the same, similar or a compatible license."
 
-#: C/evince.xml:165(term)
+#: C/license.page:53(page/p)
+msgid ""
+"For the full text of the license, see the <link href=\"http://"
+"creativecommons.org/licenses/by-sa/3.0/legalcode\">CreativeCommons website</"
+"link>, or read the full <link href=\"http://creativecommons.org/licenses/by-"
+"sa/3.0/\">Commons Deed</link>."
+msgstr ""
+"For the full text of the license, see the <link href=\"http://"
+"creativecommons.org/licenses/by-sa/3.0/legalcode\">CreativeCommons website</"
+"link>, or read the full <link href=\"http://creativecommons.org/licenses/by-"
+"sa/3.0/\">Commons Deed</link>."
+
+#: C/legal.xml:4(p/link)
+msgid "Creative Commons Attribution-Share Alike 3.0 United States License"
+msgstr "Creative Commons Attribution-Share Alike 3.0 United States License"
+
+#: C/legal.xml:3(license/p)
+msgid "This work is licensed under a <_:link-1/>."
+msgstr "This work is licensed under a <_:link-1/>."
+
+#: C/legal.xml:6(license/p)
+msgid ""
+"As a special exception, the copyright holders give you permission to copy, "
+"modify, and distribute the example code contained in this document under the "
+"terms of your choosing, without restriction."
+msgstr ""
+"As a special exception, the copyright holders give you permission to copy, "
+"modify, and distribute the example code contained in this document under the "
+"terms of your choosing, without restriction."
+
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/movingaround.page:146(media)
+msgctxt "_"
+msgid "external ref='figures/zoom.png' md5='561963b44d8e90a2a8ac409b8e35aee7'"
+msgstr "external ref='figures/zoom.png' md5='ccf312fd4c9443ba3d8dffea405bfa68'"
+
+#: C/movingaround.page:7(info/desc)
+msgid "Navigating, scrolling and zooming."
+msgstr "移動、スクロールおよび拡大・縮小。"
+
+#: C/movingaround.page:20(page/title)
+msgid "Moving around a document"
+msgstr "ドキュメント内の移動"
+
+#: C/movingaround.page:21(page/p)
+msgid ""
+"You can move around each page of a document by any of the following methods:"
+msgstr "以下の方法のいずれかによってドキュメントの各ページへ移動できます。"
+
+#: C/movingaround.page:26(item/p)
+msgid ""
+"Scrolling up and down using the mouse wheel. To move around a page just by "
+"moving the mouse:"
+msgstr ""
+"マウスホイールを使って上下にスクロールします。マウスを移動させることで任意の"
+"ページに移動するには"
+
+#: C/movingaround.page:30(item/p)
+msgid "Right-click the page and select <gui>Autoscroll</gui>."
+msgstr "ページを右クリックし、<gui>自動スクロール</gui>を選択します。"
+
+#: C/movingaround.page:33(item/p)
+msgid ""
+"Move the mouse pointer towards the bottom of the window to scroll down; it "
+"will scroll faster depending on how far down the window you go."
+msgstr ""
+"スクロールダウンするには、マウスポインターをウィンドウの下の方へ移動します。"
+"どのくらい下に移動するかによってスクロールの速さが変わってきます。"
+
+#: C/movingaround.page:38(item/p)
+msgid "To stop autoscrolling, click anywhere in the document."
+msgstr ""
+"自動スクロールを停止するには、ドキュメント内の任意の場所をクリックします。"
+
+#: C/movingaround.page:44(item/p)
+msgid "Using the scroll bar on the document window."
+msgstr "ドキュメントウィンドウのスクロールバーを使います。"
+
+#: C/movingaround.page:49(item/p)
+msgid "Using the up and down arrow keys of your keyboard."
+msgstr "キーボードの↑および↓キーを使います。"
+
+#: C/movingaround.page:54(item/p)
+msgid ""
+"Dragging the page around with your mouse, as if you are grabbing it. To do "
+"this:"
+msgstr "マウスを使ってページをつかむようにドラッグします。これを行うには"
+
+#: C/movingaround.page:60(item/p)
+msgid ""
+"Move the mouse pointer over the page and hold down the middle mouse button "
+"to drag it around."
+msgstr ""
+"ページ上へマウスポインターを移動し、ドラッグするためにマウスの中ボタンを押し"
+"たままにします。"
+
+#: C/movingaround.page:65(item/p)
+msgid ""
+"If you don't have a middle mouse button, hold down the left and right mouse "
+"buttons at the same time, then drag."
+msgstr ""
+"もし、マウスに中ボタンがない場合、マウスの左と右のボタンを同時に押したままに"
+"してドラッグします。"
+
+#: C/movingaround.page:74(section/title)
+msgid "Flipping between pages"
+msgstr "ページ間の切り替え"
+
+#: C/movingaround.page:76(section/p)
+msgid ""
+"You can move between pages of a document using one of the following methods:"
+msgstr "以下の方法のいずれかを使ってドキュメントのページ間を移動できます。"
+
+#: C/movingaround.page:79(item/p)
+msgid ""
+"Click the <gui>Previous</gui> or <gui>Next</gui> buttons on the <link xref="
+"\"toolbar\">toolbar</link>."
+msgstr ""
+"<link xref=\"toolbar\">ツールバー</link>上の<gui>前へ</gui>または<gui>次へ</"
+"gui>というボタンをクリックします。"
+
+#: C/movingaround.page:81(item/p)
+msgid "Use the Go Menu:"
+msgstr "メニューを使って"
+
+#: C/movingaround.page:83(item/p)
+msgid "<guiseq><gui>Go</gui><gui>Next Page</gui></guiseq>"
+msgstr ""
+"<guiseq><gui>移動</gui><gui>次のページ</gui></guiseq>をクリックします。"
+
+#: C/movingaround.page:84(item/p)
+msgid "<guiseq><gui>Go</gui><gui>Previous Page</gui></guiseq>"
+msgstr "<guiseq><gui>移動</gui><gui>前のページ</gui></guiseq>をクリック"
+
+#: C/movingaround.page:87(item/p)
+msgid ""
+"Press the <keyseq><key>Ctrl</key><key>Page Up</key></keyseq> or "
+"<keyseq><key>Ctrl</key><key>Page Down</key></keyseq> buttons on the keyboard."
+msgstr ""
+"キーボードで <keyseq><key>Ctrl</key><key>Page Up</key></keyseq> または "
+"<keyseq><key>Ctrl</key><key>Page Down</key></keyseq> というボタンを押します。"
+
+#: C/movingaround.page:89(item/p)
+msgid "To go to a specific page:"
+msgstr "指定したページへ移動するには"
+
+#: C/movingaround.page:91(item/p)
+msgid ""
+"Type a page number in the 'page select' tool on the <link xref=\"toolbar"
+"\">toolbar</link> and press <key>Enter</key>."
+msgstr ""
+"<link xref=\"toolbar\">ツールバー</link>上の「ページ選択」ツール内にページ番"
+"号を入力して <key>Enter</key> を押します。"
+
+#: C/movingaround.page:93(item/p)
+msgid "If you want to go to the beginning or the end of the document:"
+msgstr "ドキュメントの冒頭または末尾へ移動したい場合"
+
+#: C/movingaround.page:95(item/p)
+msgid ""
+"Click <guiseq><gui>Go</gui><gui>First Page</gui></guiseq>. You can also "
+"press <keyseq><key>Ctrl</key><key>Home</key></keyseq> on your keyboard."
+msgstr ""
+"<guiseq><gui>移動</gui><gui>先頭のページ</gui></guiseq>をクリックします。キー"
+"ボードで <keyseq><key>Ctrl</key><key>Home</key></keyseq> を押すこともできま"
+"す。"
+
+#: C/movingaround.page:96(item/p)
+msgid ""
+"Click <guiseq><gui>Go</gui><gui>Last Page</gui></guiseq> or press "
+"<keyseq><key>Ctrl</key><key>End</key></keyseq> on your keyboard."
+msgstr ""
+"<guiseq><gui>移動</gui><gui>最後のページ</gui></guiseq>をクリックするか、キー"
+"ボードで <keyseq><key>Ctrl</key><key>End</key></keyseq> を押します。"
+
+#: C/movingaround.page:99(item/p)
+msgid ""
+"To move ten pages at a time, press <keyseq><key>Shift</key><key>Page Up</"
+"key></keyseq> or <keyseq><key>Shift</key><key>Page Down</key></keyseq>."
+msgstr ""
+"一度に 10 ページ移動するには、<keyseq><key>Shift</key><key>Page Up</key></"
+"keyseq> または <keyseq><key>Shift</key><key>Page Down</key></keyseq> を押しま"
+"す。"
+
+#: C/movingaround.page:105(note/p)
+msgid ""
+"You can only move around one page at a time, by default. If you want to move "
+"between pages just by scrolling or dragging, click <guiseq><gui>View</"
+"gui><gui>Continuous</gui></guiseq>."
+msgstr ""
+"デフォルトでは、一度に 1 ページのみ移動できます。スクロールやドラッグにより"
+"ページ間を移動したい場合、<guiseq><gui>表示</gui><gui>連続ページ</gui></"
+"guiseq>をクリックします。"
+
+#: C/movingaround.page:116(section/title)
+msgid "Navigating with a page list or table of contents"
+msgstr "ページの一覧または目次による移動"
+
+# toolbar ではなく menubar の誤りであると思われる
+#: C/movingaround.page:118(section/p)
+msgid ""
+"To make the side pane visible click <guiseq><gui>View</gui><gui>Side Pane</"
+"gui></guiseq> on the toolbar, or press <key>F9</key> on the keyboard. You "
+"should see a preview of all of the pages in the document."
+msgstr ""
+"サイドペインを表示するには、<guiseq><gui>表示</gui><gui>サイドペイン</gui></"
+"guiseq>をクリックするか、キーボードで <key>F9</key> を押します。ドキュメント"
+"内のすべてのページのプレビューが表示されます。"
+
+#: C/movingaround.page:122(section/p)
+msgid "You can move between pages by clicking on them in the side pane."
+msgstr ""
+"サイドペイン内のプレビューをクリックすることによりページ間を移動できます。"
+
+#: C/movingaround.page:125(note/p)
+msgid ""
+"Some documents have an index or table of contents, which you can display in "
+"the side pane. Click the drop-down list at the top of the side pane and "
+"select <gui>Index</gui> to view it."
+msgstr ""
+"ドキュメントによってはサイドペインに表示できる目次を含んでいます。目次を表示"
+"するには、サイドペインの上部にあるドロップダウンリストをクリックして<gui>目次"
+"</gui>を選択します。"
+
+#: C/movingaround.page:129(note/p)
+msgid ""
+"Most documents don't use this feature, so you won't be able to view their "
+"index in the side pane."
+msgstr ""
+"ほとんどのドキュメントがこの機能を使っていないため、サイドペイン内で目次を表"
+"示できません。"
+
+#: C/movingaround.page:136(section/title)
+msgid "Zooming in and out"
+msgstr "拡大および縮小"
+
+#: C/movingaround.page:138(item/p)
+msgid ""
+"Click <guiseq><gui>View</gui><gui>Zoom In</gui></guiseq> or use the keyboard "
+"shortcuts <keyseq><key>Ctrl</key><key>+</key></keyseq> to zoom in."
+msgstr ""
+"拡大するには、<guiseq><gui>表示</gui><gui>拡大</gui></guiseq>をクリックする"
+"か、<keyseq><key>Ctrl</key><key>+</key></keyseq> というキーボードショートカッ"
+"トを使います。"
+
+#: C/movingaround.page:139(item/p)
+msgid ""
+"Click <guiseq><gui>View</gui><gui>Zoom Out</gui></guiseq> or use the "
+"keyboard shortcuts <keyseq><key>Ctrl</key><key>-</key></keyseq> to zoom out."
+msgstr ""
+"縮小するには、<guiseq><gui>表示</gui><gui>縮小</gui></guiseq>をクリックする"
+"か、<keyseq><key>Ctrl</key><key>-</key></keyseq> というキーボードショートカッ"
+"トを使います。"
+
+#: C/movingaround.page:142(section/p)
+msgid "Alternatively, you can do one of the following:"
+msgstr "代わりに以下の方法のいずれかを行えます。"
+
+#: C/movingaround.page:144(item/p)
+msgid "hold down <key>Ctrl</key> and use your mouse scroll wheel to zoom."
+msgstr ""
+"<key>Ctrl</key> を押したまま、マウスのスクロールホイールを使って拡大・縮小し"
+"ます。"
+
+#: C/movingaround.page:145(item/p)
+msgid ""
+"select desired zoom percentage from the drop down menu above the window."
+msgstr "ウィンドウ上のドロップダウンメニューから、希望の表示倍率を選択します。"
+
+#: C/movingaround.page:150(note/p)
+msgid ""
+"The <gui>Best Fit</gui> option will make a document page fit the whole "
+"<em>height</em> of the window."
+msgstr ""
+"<gui>全体に合わせる</gui>というオプションは、ウィンドウの<em>高さ</em>にド"
+"キュメントのページを合わせます。"
+
+#: C/movingaround.page:152(note/p)
+msgid ""
+"The <gui>Fit Page Width</gui> option will make a document page fill the "
+"whole <em>width</em> of the window."
+msgstr ""
+"<gui>幅に合わせる</gui>というオプションは、ドキュメントのページをウィンドウの"
+"<em>幅</em>いっぱいにします。"
+
+#: C/movingaround.page:155(note/p)
+msgid ""
+"If you want to see two pages at once, side by side, like in a book, click "
+"<guiseq><gui>View</gui><gui>Dual</gui></guiseq>."
+msgstr ""
+"本のように一度に 2 ページを並べて見たい場合、<guiseq><gui>表示</gui><gui>見開"
+"きページ</gui></guiseq>をクリックします。"
+
+#: C/movingaround.page:160(section/p)
+msgid "You can use the whole of your screen to view the document:"
+msgstr "ドキュメントを閲覧するために画面全体を使うことができます。"
+
+#: C/movingaround.page:163(item/p)
+msgid ""
+"Click <guiseq><gui>View</gui><gui>Fullscreen</gui></guiseq> or press "
+"<key>F11</key>."
+msgstr ""
+"<guiseq><gui>表示</gui><gui>フルスクリーン</gui></guiseq>をクリックするか、 "
+"<key>F11</key> を押します。"
+
+#: C/movingaround.page:164(item/p)
+msgid "To exit from the full screen mode:"
+msgstr "フルスクリーンモードを終了するには"
+
+#: C/movingaround.page:166(item/p)
+msgid "Press <key>F11</key> or <key>Escape</key>"
+msgstr "<key>F11</key> または <key>Esc</key> を押します。"
+
+#: C/movingaround.page:167(item/p)
+msgid ""
+"or click the <gui>Leave Fullscreen</gui> button at the top of the screen."
+msgstr ""
+"あるいは、画面上部にある<gui>フルスクリーンの解除</gui>というボタンをクリック"
+"します。"
+
+#: C/noprint.page:7(info/desc)
+msgid "The author may have put printing restrictions on the document."
+msgstr "作者がドキュメントの印刷を制限している場合もあります。"
+
+#: C/noprint.page:19(page/title)
+msgid "I can't print a document"
+msgstr "ドキュメントを印刷できない場合"
+
+#: C/noprint.page:21(section/title)
+msgid "Possible reasons for printing failure"
+msgstr "印刷に失敗する場合の考えられる原因"
+
+#: C/noprint.page:22(section/p)
+msgid "A document might not print because of:"
+msgstr "ドキュメントが印刷できない原因には、次のものがあります。"
+
+#: C/noprint.page:24(item/p)
+msgid "Printer problems or,"
+msgstr "プリンターの問題"
+
+#: C/noprint.page:25(item/p)
+msgid "PDF printing restrictions."
+msgstr "PDF の印刷制限"
+
+#: C/noprint.page:31(section/title)
+msgid "Printer problems"
+msgstr "プリンターの問題"
+
+#: C/noprint.page:32(section/p)
+msgid ""
+"There are many reasons why your printer might not be working. For example, "
+"it could be out of paper or ink, or unplugged or damaged."
+msgstr ""
+"プリンターが機能しない理由は、たくさん考えられます。たとえば、用紙やインクが"
+"切れていたり、プリンターが接続されていなかったり、故障している場合などです。"
+
+#: C/noprint.page:37(section/p)
+msgid "To check if your printer is printing correctly:"
+msgstr "プリンターが正常に印刷しているか確認する方法は次のとおりです。"
+
+#: C/noprint.page:39(item/p)
+msgid "Click your name on the topbar and select <gui>System Settings</gui>."
+msgstr ""
+"トップバーにあるユーザー名をクリックし、<gui>システム設定</gui>を選択します。"
+
+#: C/noprint.page:40(item/p)
+msgid "Click on your printer in the list."
+msgstr "一覧から、該当するプリンターをクリックします。"
+
+#: C/noprint.page:41(item/p)
+msgid ""
+"Click on <gui>Print Test Page</gui>. A page should be sent to your printer."
+msgstr ""
+"<gui>テストページを印刷</gui>をクリックします。テストページが、プリンターへ送"
+"信されます。"
+
+#: C/noprint.page:43(note/p)
+msgid ""
+"If this fails, see <link href=\"help:gnome-help/printing\">Printing help</"
+"link>. You may also need to see your printer's manual to see what else you "
+"can do."
+msgstr ""
+"これが失敗した場合、<link href=\"help:gnome-help/printing\">Printing help</"
+"link>を参照してください。このほかにもプリンターのマニュアルも参照する必要があ"
+"る場合もあります。"
+
+#: C/noprint.page:55(section/title)
+msgid "PDF printing restrictions"
+msgstr "PDF の印刷制限"
+
+#: C/noprint.page:56(section/p)
+msgid ""
+"Some PDF documents have a setting which prevents you from printing them. "
+"Authors can set this printing restriction when they write a document. The "
+"<app>document viewer</app> overrides this restriction by default, but you "
+"may want to check that it hasn't been disabled:"
+msgstr ""
+"PDF ドキュメントによっては、印刷を制限するように設定されています。作者は、ド"
+"キュメントを書く時に印刷制限を設定することができます。デフォルトでは、<app>ド"
+"キュメントビューアー</app>はこの制限を無視しますが、これが無効になっていない"
+"かを確認したい場合は以下の手順を踏みます。"
+
+#: C/noprint.page:65(item/p)
+msgid ""
+"Press <keyseq><key>Alt</key><key>F2</key></keyseq> to open the Run "
+"Application window."
+msgstr ""
+"<keyseq><key>Alt</key><key>F2</key></keyseq> を押して、アプリケーションの実行"
+"というウィンドウを開きます。"
+
+#: C/noprint.page:71(item/p)
+msgid ""
+"Type <input>dconf-editor</input> into the text box and click <gui>Run</gui>. "
+"The Configuration Editor will open."
+msgstr ""
+"テキストボックスに <input>dconf-editor</input> と入力して<gui>実行</gui>をク"
+"リックします。Configuration Editor が開きます。"
+
+#: C/noprint.page:76(item/p)
+msgid "Browse to <sys>/org/gnome/evince</sys> using the side pane."
+msgstr "サイドペインから <sys>/org/gnome/evince</sys> を表示します。"
+
+#: C/noprint.page:78(item/p)
+msgid "Make sure that the <gui>override_restrictions</gui> option is checked."
+msgstr ""
+"<gui>override_restrictions</gui> というオプションがチェックされていることを確"
+"認します。"
+
+#: C/noprint.page:83(item/p)
+msgid ""
+"Go back to the <app>Document Viewer</app> and try to print the document "
+"again."
+msgstr ""
+"<app>ドキュメントビューアー</app>へ戻り、再度、ドキュメントの印刷を試みます。"
+
+#: C/openerror.page:7(info/desc)
+msgid "Error When Opening A File."
+msgstr "ファイルを開く際のエラー。"
+
+#: C/openerror.page:22(page/title)
+msgid "Why can't I open a file?"
+msgstr "なぜファイルが開けないのですか?"
+
+#: C/openerror.page:24(page/p)
+msgid ""
+"If you try to open a document of a format that the <app>document viewer</"
+"app> does not recognize, you will get an \"Unable to open document\" error "
+"message. Click <gui>Close</gui> to return to the <app>Document Viewer</app> "
+"window."
+msgstr ""
+"<app>ドキュメントビューアー</app>が認識できない形式のドキュメントを開こうとし"
+"た場合、「ドキュメントを開けません」というエラーメッセージが表示されます。"
+"<gui>閉じる</gui>をクリックして、<app>ドキュメントビューアー</app>のウィンド"
+"ウに戻ります。"
+
+#: C/opening.page:7(info/desc)
+msgid "How to open a document."
+msgstr "ドキュメントの開き方。"
+
+#: C/opening.page:22(page/title)
+msgid "Opening a document"
+msgstr "ドキュメントを開く"
+
+#: C/opening.page:24(page/p)
+msgid "You can open a document using any one of the following ways:"
+msgstr "以下の方法のいずれかを使ってドキュメントを開くことができます。"
+
+#: C/opening.page:27(item/p)
+msgid "Double-click on the file icon in the <app>File Manager</app>."
+msgstr ""
+"<app>ファイルマネージャー</app>内のファイルアイコンをダブルクリックします。"
+
+#: C/opening.page:28(note/p)
+msgid ""
+"Double clicking opens PDF, PostScript, .djvu, .dvi and Comic Book Archive "
+"files in the <app>Document Viewer</app> by default."
+msgstr ""
+"デフォルトでは、PDF、PostScript、.djvu、.dvi および Comic Book Archive のファ"
+"イルをダブルクリックすると<app>ドキュメントビューアー</app>で開かれます。"
+
+#: C/opening.page:33(item/p)
+msgid ""
+"Right-click on a file icon in the <app>File Manager</app> and click "
+"<guiseq><gui>Open With</gui><gui>Document Viewer</gui></guiseq>."
+msgstr ""
+"<app>ファイルマネージャー</app>内のファイルアイコンを右クリックし、"
+"<guiseq><gui>別のアプリで開く</gui><gui>ドキュメントビューアー</gui></guiseq>"
+"をクリックします。"
+
+#: C/opening.page:37(page/p)
+msgid "If a Document View window is already open you can:"
+msgstr ""
+"すでにドキュメントビューアーのウィンドウが開いている場合、次のようなことが可"
+"能です。"
+
+#: C/opening.page:39(item/p)
+msgid ""
+"drag a file icon into the window from the <app>File Manager</app>. The new "
+"file will open in a new window (provided the file is of a file type "
+"supported by Document Viewer)."
+msgstr ""
+"<app>ファイルマネージャー</app>からドキュメントビューアーのウィンドウへファイ"
+"ルアイコンをドラッグします。新たなウィンドウでドラッグしたファイルが開きます "
+"(ドラッグされたファイルがドキュメントビューアーでサポートされている場合に限り"
+"ます)。"
+
+#: C/opening.page:40(item/p)
+msgid ""
+"choose <guiseq><gui>File</gui><gui>Open</gui></guiseq> from the Menubar. In "
+"the Open Document dialog box, choose the file you wish to open, and click "
+"<gui>Open</gui>. The file will open in a new window."
+msgstr ""
+"メニューバーから、<guiseq><gui>ファイル</gui><gui>開く</gui></guiseq>を選択し"
+"ます。ドキュメントを開くというダイアログボックスで開きたいファイルを選択し、"
+"<gui>開く</gui>をクリックします。新しいウィンドウでそのファイルが開きます。"
+
+#: C/password.page:7(info/desc)
+msgid "Handling password protected PDFs."
+msgstr "パスワードで保護された PDF の操作。"
+
+#: C/password.page:20(page/title)
+msgid "Password-protected documents"
+msgstr "パスワードで保護されたドキュメント"
+
+#: C/password.page:22(page/p)
+msgid ""
+"If you try to open a PDF document that is protected with a password, a "
+"window will appear asking you to enter the document password. Enter the "
+"password and click <gui>Open Document</gui>."
+msgstr ""
+"パスワードで保護された PDF ドキュメントを開こうとするとドキュメントのパスワー"
+"ド入力を促すウィンドウが表示されます。パスワードを入力して、<gui>ドキュメント"
+"を開く</gui>をクリックします。"
+
+#: C/password.page:24(page/p)
+msgid "There are two types of passwords:"
+msgstr "パスワードには、2 種類あります。"
+
+#: C/password.page:27(item/p)
+msgid "The <em>user password</em> is needed to view the document."
+msgstr "ドキュメントを閲覧するために必要な<em>ユーザーパスワード</em>"
+
+#: C/password.page:28(item/p)
+msgid ""
+"The <em>master password</em> is required to print the document as well as "
+"view it."
+msgstr ""
+"ドキュメントの閲覧と同様、ドキュメントを印刷するために必要な<em>マスターパス"
+"ワード</em>"
+
+#: C/password.page:32(note/p)
+msgid "These passwords are set by the person who created the document."
+msgstr "ドキュメントの作成者により設定されたパスワードです。"
+
+#: C/presentations.page:7(info/desc)
+msgid "How to play presentations."
+msgstr "プレゼンテーションの再生方法。"
+
+#: C/presentations.page:20(page/title)
+msgid "Presentations"
+msgstr "プレゼンテーション"
+
+#: C/presentations.page:22(section/title)
+msgid "Starting a presentation"
+msgstr "プレゼンテーションの開始"
+
+#: C/presentations.page:23(section/p)
+msgid "To start a presentation:"
+msgstr "プレゼンテーションを開始するには"
+
+#: C/presentations.page:26(item/p)
+msgid "<link xref=\"opening\">Open a file</link>"
+msgstr "<link xref=\"opening\">ファイルを開きます</link>"
+
+#: C/presentations.page:29(item/p)
+msgid ""
+"Click <guiseq><gui>View</gui><gui>Presentation</gui></guiseq> (or press "
+"<key>F5</key>)."
+msgstr ""
+"<guiseq><gui>表示</gui><gui>プレゼンテーション</gui></guiseq>をクリックしま"
+"す (または <key>F5</key> を押します)。"
+
+#: C/presentations.page:30(item/p)
+msgid "The presentation will be displayed full screen."
+msgstr "プレゼンテーションが、フルスクリーンで表示されます。"
+
+#: C/presentations.page:37(section/title)
+msgid "Moving through a presentation"
+msgstr "プレゼンテーション内の移動"
+
+#: C/presentations.page:40(section/p)
+msgid ""
+"Use the <key>spacebar</key>, <key>→</key>, <key>↓</key>, or left mouse click "
+"to go to the next slide."
+msgstr ""
+"<key>スペースバー</key>、<key>→</key>キー、<key>↓</key>キー、あるいはマウスの"
+"左クリックを使うと次のスライドへ移動します。"
+
+#: C/presentations.page:43(section/p)
+msgid ""
+"Use the <key>←</key>, <key>↑</key> or right mouse click to go to the "
+"previous slide."
+msgstr ""
+"<key>←</key>キー、<key>↑</key>キー、あるいはマウスの右クリックを使うと前のス"
+"ライドへ移動します。"
+
+#: C/presentations.page:47(note/p)
+msgid ""
+"You can also use the scroll wheel to move back and forth through the "
+"presentation."
+msgstr ""
+"プレゼンテーションの前後に移動するためにスクロールホイールを使うこともできま"
+"す。"
+
+#: C/presentations.page:51(section/p)
+msgid "Use <key>Esc</key> to exit the presentation."
+msgstr "プレゼンテーションを終了するには、<key>Esc</key> を使います。"
+
+#: C/presentations.page:57(section/title)
+msgid "Supported presentation file formats"
+msgstr "サポートされているプレゼンテーションファイル形式"
+
+#: C/presentations.page:58(section/p)
+msgid "The following file formats can be used for presentations:"
+msgstr "以下のファイル形式でプレゼンテーションを利用できます。"
+
+#: C/print-2sided.page:8(info/desc)
+msgid "Printing two-sided and multi-page per sheet."
+msgstr "1 枚の用紙に対する両面および複数ページの印刷。"
+
+#: C/print-2sided.page:21(page/title)
+msgid "Two-sided and multiple pages per side layout for printing"
+msgstr "両面および複数ページの段組み印刷"
+
+#: C/print-2sided.page:23(page/p)
+msgid "You can print on both sides of each sheet of paper:"
+msgstr "各用紙の両面に印刷できます。"
+
+#: C/print-2sided.page:34(item/p)
+msgid ""
+"Go to the <gui>Page Setup</gui> tab of the Print window and choose an option "
+"from the <gui>Two-sided</gui> drop-down list."
+msgstr ""
+"印刷ウィンドウの<gui>ページの設定</gui>タブを開き、<gui>両面印刷</gui>のド"
+"ロップダウンリストから任意のオプションを選択します。"
+
+#: C/print-2sided.page:39(item/p)
+msgid ""
+"You can print more than one page of the document per <em>side</em> of paper "
+"too. Use the <gui>Pages per side</gui> option to do this."
+msgstr ""
+"ドキュメントの 2 ページ以上を用紙の<em>片面</em>に印刷することもできます。そ"
+"のためには、<gui>段組み印刷</gui>というオプションを使います。"
+
+#: C/print-booklet.page:8(info/desc)
+msgid "How to print a booklet."
+msgstr "小冊子の印刷方法。"
+
+#: C/print-booklet.page:21(page/title)
+msgid "Printing a booklet"
+msgstr "小冊子の印刷"
+
+#: C/print-booklet.page:23(page/p)
+msgid ""
+"If you are printing a booklet (which will perhaps be bound or stapled in the "
+"middle of each page), select the type of printer you will be using for "
+"printing from the list below. Then select the number of printed pages your "
+"booklet will have."
+msgstr ""
+"小冊子を印刷する場合 (小冊子とは、ページの真ん中で折り曲げたりステープラーで"
+"留めたりする冊子のことです) 、以下の一覧から、印刷に使用するプリンターの種類"
+"を選択し、印刷する小冊子のページ数に応じた項目を参照してください。"
+
+#: C/print-booklet.page:28(section/title)
+msgid "Printer allows single-sided printing"
+msgstr "片面印刷が可能なプリンター"
+
+#: C/print-booklet.page:32(section/title)
+msgid "Printer allows double-sided printing"
+msgstr "両面印刷が可能なプリンター"
+
+#: C/print-differentsize.page:7(info/desc)
+msgid "Printing a document on paper of a different size, shape or orientation."
+msgstr "異なるサイズ、形、向きの用紙へのドキュメントの印刷。"
+
+#: C/print-differentsize.page:19(page/title)
+msgid "Changing the paper size when printing"
+msgstr "印刷時に用紙サイズを変更"
+
+#: C/print-differentsize.page:21(page/p)
+msgid ""
+"If you want to change the paper size of your document (for example, print a "
+"US Letter-sized PDF on A4 paper), you can change the printing format for the "
+"document."
+msgstr ""
+"ドキュメントの用紙サイズを変更したい場合(たとえば、US Letter サイズの PDF を "
+"A4 用紙へ印刷したい場合)、ドキュメントの印刷形式を変更できます。"
+
+#: C/print-differentsize.page:26(item/p) C/printing.page:27(item/p)
+#: C/print-order.page:51(item/p) C/print-select.page:26(item/p)
+msgid "Click <guiseq><gui>File</gui><gui>Print</gui></guiseq>"
+msgstr "<guiseq><gui>ファイル</gui><gui>印刷</gui></guiseq>をクリックします。"
+
+#: C/print-differentsize.page:27(item/p)
+msgid "Select the <gui>Page Setup</gui> tab."
+msgstr "<gui>ページの設定</gui>タブを選択します。"
+
+#: C/print-differentsize.page:28(item/p)
+msgid ""
+"Under the <em>Paper</em> column, choose your <em>Paper size</em> from the "
+"dropdown list."
+msgstr ""
+"<em>用紙</em>の列にあるドロップダウンリストから、<em>用紙サイズ</em>を選択し"
+"ます。"
+
+#: C/print-differentsize.page:29(item/p)
+msgid "Click <gui>Print</gui> and your document should print."
+msgstr "<gui>印刷</gui>をクリックして、ドキュメントを印刷します。"
+
+#: C/print-differentsize.page:32(page/p)
+msgid ""
+"You can also use the <em>Orientation</em> menu to choose a different "
+"orientation:"
+msgstr ""
+"<em>用紙の向き</em>というメニューを使って異なる向きを選択することもできます。"
+
+#: C/print-differentsize.page:37(item/p)
+msgid "<gui>Portrait</gui>"
+msgstr "<gui>縦方向</gui>"
+
+#: C/print-differentsize.page:38(item/p)
+msgid "<gui>Landscape</gui>"
+msgstr "<gui>横方向</gui>"
+
+#: C/print-differentsize.page:39(item/p)
+msgid "<gui>Reverse portrait</gui>"
+msgstr "<gui>縦方向(逆向き)</gui>"
+
+#: C/print-differentsize.page:40(item/p)
+msgid "<gui>Reverse landscape</gui>"
+msgstr "<gui>横方向(逆向き)</gui>"
+
+#: C/printing.page:9(info/desc)
+msgid "How to print, and common questions about printing."
+msgstr "印刷方法、および印刷関連のよくある質問。"
+
+#: C/printing.page:22(page/title)
+msgid "Printing a document"
+msgstr "ドキュメントの印刷"
+
+#: C/printing.page:25(item/p)
+msgid "To print a document:"
+msgstr "ドキュメントを印刷する方法は次のとおりです。"
+
+#: C/printing.page:28(item/p)
+msgid "Choose your printer from the list"
+msgstr "一覧からプリンターを選択します。"
+
+#: C/printing.page:36(item/p)
+msgid "Printing is enabled for the following file formats:"
+msgstr "次のファイル形式が印刷できます。"
+
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/print-order.page:54(media)
+msgctxt "_"
+msgid ""
+"external ref='figures/reverse-collate.png' "
+"md5='2e84b930fa1913123b740f8b0997255e'"
+msgstr ""
+"external ref='figures/reverse-collate.png' "
+"md5='1f8669a4b513eb01dfc48f1667be6a6b'"
+
+#: C/print-order.page:8(info/desc)
+msgid "Use the Collate and Reverse options to make pages print in order."
+msgstr ""
+"ページを順番に印刷するために「ページを揃える」および「ページを逆順にする」と"
+"いうオプションを使用します。"
+
+#: C/print-order.page:20(page/title)
+msgid "Getting copies to print in the correct order"
+msgstr "正しい順序で印刷されたコピーを取得"
+
+#: C/print-order.page:23(section/title)
+msgid "Reverse"
+msgstr "ページを逆順に印刷する"
+
+#: C/print-order.page:26(section/p)
+msgid ""
+"Printers usually print the first page first, and the last page last, so the "
+"pages end up in reverse order when you pick them up."
+msgstr ""
+"プリンターはたいてい最初のページを最初に、最後のページを最後に印刷するため、"
+"印刷物を手に取る時は逆順になっています。"
+
+#: C/print-order.page:29(section/p)
+msgid "To reverse the order:"
+msgstr "順序を逆にするには"
+
+#: C/print-order.page:33(item/p)
+msgid "<guiseq><gui>File</gui><gui>Print</gui></guiseq>"
+msgstr "<guiseq><gui>ファイル</gui><gui>印刷</gui></guiseq>をクリックします。"
+
+#: C/print-order.page:34(item/p)
+msgid ""
+"In the <gui>General</gui> tab of the Print window under <em>Copies</em>, "
+"check <gui>Reverse</gui>. The last page will be printed first, and so on."
+msgstr ""
+"印刷ウィンドウの<gui>全般</gui>タブにある<em>コピー</em>の下の<gui>ページを逆"
+"順にする</gui>をチェックします。すると最後のページが最初に印刷されます。"
+
+#: C/print-order.page:39(section/title)
+msgid "Collate"
+msgstr "ページを揃える"
+
+#: C/print-order.page:42(section/p)
+msgid ""
+"If you are printing more than one copy of the document, the print outs will "
+"be grouped by page number by default. (e.g. The copies of page one come out, "
+"then the copies of page two, etc.) Collating will make each copy come out "
+"with its pages grouped together."
+msgstr ""
+"2 部以上のドキュメントのコピーを印刷する場合、デフォルトでは、ページ番号でグ"
+"ループ化されて印刷されます。(たとえば、1 ページ目のコピーがすべて印刷されてか"
+"ら、2 ページ目のコピーが印刷されるなど。) ページを揃えると部単位でページがグ"
+"ループ化されて印刷されます。"
+
+#: C/print-order.page:47(section/p)
+msgid "To collate:"
+msgstr "ページを揃えるには"
+
+#: C/print-order.page:52(item/p)
+msgid ""
+"In the <gui>General</gui> tab of the Print window under <em>Copies</em> "
+"check <gui>Collate</gui>."
+msgstr ""
+"印刷ウィンドウの<gui>全般</gui>タブにある<em>コピー</em>の下の<gui>ページを揃"
+"える</gui>にチェックを入れます。"
+
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/print-select.page:38(media)
+msgctxt "_"
+msgid ""
+"external ref='figures/print-select.png' "
+"md5='e38a5749ed445a812346602ad58b88b4'"
+msgstr ""
+"external ref='figures/print-select.png' "
+"md5='3d8fab8c045613c3c62fdc9fac349562'"
+
+#: C/print-select.page:7(info/desc)
+msgid "Print only specific pages, or only a range of pages."
+msgstr "指定したページのみ、またはページ範囲のみの印刷。"
+
+#: C/print-select.page:19(page/title)
+msgid "Only printing certain pages"
+msgstr "特定のページのみの印刷"
+
+#: C/print-select.page:22(page/p)
+msgid "To only print certain pages from the document:"
+msgstr "ドキュメントの特定のページのみを印刷する方法は次のとおりです。"
+
+#: C/print-select.page:27(item/p)
+msgid ""
+"In the <gui>General</gui> tab in the Print window choose <gui>Pages</gui> "
+"from the <gui>Range</gui> section."
+msgstr ""
+"印刷ウィンドウの<gui>全般</gui>タブで<gui>範囲</gui>セクションから<gui>ページ"
+"</gui>を選択します。"
+
+#: C/print-select.page:28(item/p)
+msgid ""
+"Type the numbers of the pages you want to print in the textbox, separated by "
+"commas. Use a dash to denote a range of pages."
+msgstr ""
+"テキストボックスに印刷したいページ番号をカンマ区切りで入力します。ページ範囲"
+"を示すには、ダッシュ (-) を使います。"
+
+#: C/print-select.page:35(note/p)
+msgid ""
+"For example, if you enter \"1,3,5-7,9\" in the <gui>Pages</gui> textbox, "
+"pages 1,3,5,6,7 and 9 will be printed."
+msgstr ""
+"たとえば、<gui>ページ</gui>のテキストボックスに「1,3,5-7,9」と入力した場合、"
+"1、3、5、6、7 および 9 ページが印刷されます。"
+
+#: C/reload.page:8(info/desc)
+msgid ""
+"Your document will be automatically reloaded if another program changes it "
+"while you're viewing it."
+msgstr ""
+"閲覧中のドキュメントが他のプログラムにより変更された場合、自動的に再読み込み"
+"されます。"
+
+#: C/reload.page:23(page/title)
+msgid "Why does the document keep reloading?"
+msgstr "なぜドキュメントが再読み込みされるのですか?"
+
+#: C/reload.page:25(page/p)
+msgid ""
+"If the <app>Document Viewer</app> detects that the document you have open "
+"has changed (perhaps because another program has modified it), it will "
+"automatically reload the document and display the most recent version for "
+"you."
+msgstr ""
+"<app>ドキュメントビューアー</app>は開いているドキュメントの変更を検知すると "
+"(おそらく他のプログラムにより変更されたのが原因です)、ドキュメントを自動で再"
+"読み込みし最新のバージョンを表示します。"
+
+#: C/reload.page:29(page/p)
+msgid ""
+"If the document is deleted while you are still viewing it, it will still "
+"remain open."
+msgstr ""
+"まだ閲覧中のドキュメントが削除された場合、ドキュメントは開いたままになりま"
+"す。"
+
+#: C/shortcuts.page:7(info/desc)
+msgid ""
+"See a list of all shortcuts, and learn how to create your own custom "
+"shortcuts."
+msgstr ""
+"すべてのショートカットの一覧、およびカスタムショートカットの作成方法につい"
+"て。"
+
+#: C/shortcuts.page:25(page/title)
+msgid "Keyboard shortcuts"
+msgstr "キーボードショートカット"
+
+#: C/shortcuts.page:27(section/title)
+msgid "Default shortcuts"
+msgstr "デフォルトのショートカット"
+
+#: C/shortcuts.page:29(section/title)
+msgid "Opening, closing, saving and printing"
+msgstr "開く、閉じる、保存および印刷"
+
+#: C/shortcuts.page:32(td/p)
+msgid "Open a document."
+msgstr "ドキュメントを開く"
+
+#: C/shortcuts.page:33(td/p)
+msgid "<keyseq><key>Ctrl</key><key>O</key></keyseq>"
+msgstr "<keyseq><key>Ctrl</key><key>O</key></keyseq>"
+
+#: C/shortcuts.page:36(td/p)
+msgid "Open a copy of the current document."
+msgstr "現在のドキュメントのコピーを開く"
+
+#: C/shortcuts.page:37(td/p)
+msgid "<keyseq><key>Ctrl</key><key>N</key></keyseq>"
+msgstr "<keyseq><key>Ctrl</key><key>N</key></keyseq>"
+
+#: C/shortcuts.page:40(td/p)
+msgid "Save a copy of the current document with a new file name."
+msgstr "現在のドキュメントのコピーを新しい名前で保存する"
+
+#: C/shortcuts.page:42(td/p)
+msgid "<keyseq><key>Ctrl</key><key>S</key></keyseq>"
+msgstr "<keyseq><key>Ctrl</key><key>S</key></keyseq>"
+
+#: C/shortcuts.page:45(td/p)
+msgid "Print the current document."
+msgstr "現在のドキュメントを印刷"
+
+#: C/shortcuts.page:46(td/p)
+msgid "<keyseq><key>Ctrl</key><key>P</key></keyseq>"
+msgstr "<keyseq><key>Ctrl</key><key>P</key></keyseq>"
+
+#: C/shortcuts.page:49(td/p)
+msgid "Close the current document window."
+msgstr "現在のドキュメントウィンドウを閉じる"
+
+#: C/shortcuts.page:50(td/p)
+msgid "<keyseq><key>Ctrl</key><key>W</key></keyseq>"
+msgstr "<keyseq><key>Ctrl</key><key>W</key></keyseq>"
+
+#: C/shortcuts.page:53(td/p)
+msgid "Reload the document (effectively closes and re-opens the document)."
+msgstr "ドキュメントの再読み込み (実際にはドキュメントを閉じて開き直す)"
+
+#: C/shortcuts.page:55(td/p)
+msgid "<keyseq><key>Ctrl</key><key>R</key></keyseq>"
+msgstr "<keyseq><key>Ctrl</key><key>R</key></keyseq>"
+
+#: C/shortcuts.page:61(section/title)
+msgid "Moving around the document"
+msgstr "ドキュメント内の移動"
+
+#: C/shortcuts.page:64(td/p)
+msgid "Move up/down a page."
+msgstr "ページを上下に移動"
+
+#: C/shortcuts.page:65(td/p)
+msgid "Arrow keys"
+msgstr "矢印キー"
+
+#: C/shortcuts.page:68(td/p)
+msgid "Move up/down a page several lines at a time."
+msgstr "一度に複数行ページを上下に移動"
+
+#: C/shortcuts.page:69(td/p)
+msgid "<key>Page Up</key> / <key>Page Down</key>"
+msgstr "<key>Page Up</key> / <key>Page Down</key>"
+
+#: C/shortcuts.page:72(td/p)
+msgid "Go to the previous/next page."
+msgstr "前後のページへ移動"
+
+#: C/shortcuts.page:73(td/p)
+msgid ""
+"<keyseq><key>Ctrl</key><key>Page Up</key></keyseq> / <keyseq><key>Ctrl</"
+"key><key>Page Down</key></keyseq>"
+msgstr ""
+"<keyseq><key>Ctrl</key><key>Page Up</key></keyseq> / <keyseq><key>Ctrl</"
+"key><key>Page Down</key></keyseq>"
+
+#: C/shortcuts.page:77(td/p)
+msgid ""
+"Go to the beginning of a page (beginning of the document if "
+"<guiseq><gui>View</gui> <gui>Continuous</gui></guiseq> is selected)."
+msgstr ""
+"ページの冒頭へ移動 (<guiseq><gui>表示</gui><gui>連続ページ</gui></guiseq>が選"
+"択されている場合はドキュメントの冒頭)"
+
+#: C/shortcuts.page:80(td/p)
+msgid "<key>Home</key>"
+msgstr "<key>Home</key>"
+
+#: C/shortcuts.page:83(td/p)
+msgid ""
+"Go to the end of a page (end of the document if <guiseq><gui>View</"
+"gui><gui>Continuous</gui></guiseq> is selected)."
+msgstr ""
+"ページの末尾へ移動 (<guiseq><gui>表示</gui><gui>連続ページ</gui></guiseq>が選"
+"択されている場合はドキュメントの末尾)"
+
+#: C/shortcuts.page:85(td/p)
+msgid "<key>End</key>"
+msgstr "<key>End</key>"
+
+#: C/shortcuts.page:88(td/p)
+msgid "Go to the beginning of the document."
+msgstr "ドキュメントの冒頭へ移動"
+
+#: C/shortcuts.page:89(td/p)
+msgid "<keyseq><key>Ctrl</key><key>Home</key></keyseq>"
+msgstr "<keyseq><key>Ctrl</key><key>Home</key></keyseq>"
+
+#: C/shortcuts.page:92(td/p)
+msgid "Go to the end of the document."
+msgstr "ドキュメントの末尾へ移動"
+
+#: C/shortcuts.page:93(td/p)
+msgid "<keyseq><key>Ctrl</key><key>End</key></keyseq>"
+msgstr "<keyseq><key>Ctrl</key><key>End</key></keyseq>"
+
+#: C/shortcuts.page:99(section/title)
+msgid "Selecting and copying text"
+msgstr "テキストの選択とコピー"
+
+#: C/shortcuts.page:102(td/p)
+msgid "Copy highlighted text."
+msgstr "ハイライトされたテキストのコピー"
+
+#: C/shortcuts.page:103(td/p)
+msgid "<keyseq><key>Ctrl</key><key>C</key></keyseq>"
+msgstr "<keyseq><key>Ctrl</key><key>C</key></keyseq>"
+
+#: C/shortcuts.page:106(td/p)
+msgid "Select all the text in a document."
+msgstr "ドキュメント内のすべてのテキストを選択"
+
+#: C/shortcuts.page:107(td/p)
+msgid "<keyseq><key>Ctrl</key><key>A</key></keyseq>"
+msgstr "<keyseq><key>Ctrl</key><key>A</key></keyseq>"
+
+#: C/shortcuts.page:113(section/title)
+msgid "Finding text"
+msgstr "テキストの検索"
+
+#: C/shortcuts.page:116(td/p)
+msgid ""
+"Show the toolbar that lets you search for words in the document. The search "
+"box is automatically highlighted when you press this, and the search will "
+"start as soon as you type some text."
+msgstr ""
+"ドキュメント内の語句を検索可能なツールバーを表示する。このキーを押すと検索"
+"ボックスが自動的にハイライトされ、任意のテキストを入力すると検索を開始する。"
+
+#: C/shortcuts.page:121(td/p)
+msgid "<keyseq><key>Ctrl</key><key>F</key></keyseq>"
+msgstr "<keyseq><key>Ctrl</key><key>F</key></keyseq>"
+
+#: C/shortcuts.page:124(td/p)
+msgid "Go to the next search result."
+msgstr "次の検索結果へ移動"
+
+#: C/shortcuts.page:125(td/p)
+msgid "<keyseq><key>Ctrl</key><key>G</key></keyseq>"
+msgstr "<keyseq><key>Ctrl</key><key>G</key></keyseq>"
+
+#: C/shortcuts.page:128(td/p)
+msgid "Go to the previous search result."
+msgstr "前の検索結果へ移動"
+
+#: C/shortcuts.page:129(td/p)
+msgid "<keyseq><key>Ctrl</key><key>Shift</key><key>G</key></keyseq>"
+msgstr "<keyseq><key>Ctrl</key><key>Shift</key><key>G</key></keyseq>"
+
+#: C/shortcuts.page:135(section/title)
+msgid "Rotating and zooming"
+msgstr "回転と拡大・縮小"
+
+#: C/shortcuts.page:138(td/p)
+msgid "Rotate the pages 90 degrees counter-clockwise."
+msgstr "ページを反時計回りに 90 度回転"
+
+#: C/shortcuts.page:139(td/p)
+msgid "<keyseq><key>Ctrl</key><key>Left arrow</key></keyseq>"
+msgstr "<keyseq><key>Ctrl</key><key>Left arrow</key></keyseq>"
+
+#: C/shortcuts.page:142(td/p)
+msgid "Rotate the pages 90 degrees clockwise."
+msgstr "ページを時計回りに 90 度回転"
+
+#: C/shortcuts.page:143(td/p)
+msgid "<keyseq><key>Ctrl</key><key>Right arrow</key></keyseq>"
+msgstr "<keyseq><key>Ctrl</key><key>Right arrow</key></keyseq>"
+
+#: C/shortcuts.page:147(td/p)
+msgid "Zoom in."
+msgstr "拡大"
+
+#: C/shortcuts.page:148(td/p)
+msgid "<keyseq><key>Ctrl</key><key>+</key></keyseq>"
+msgstr "<keyseq><key>Ctrl</key><key>+</key></keyseq>"
+
+#: C/shortcuts.page:151(td/p)
+msgid "Zoom out."
+msgstr "縮小"
+
+#: C/shortcuts.page:152(td/p)
+msgid "<keyseq><key>Ctrl</key><key>-</key></keyseq>"
+msgstr "<keyseq><key>Ctrl</key><key>-</key></keyseq>"
+
+#: C/shortcuts.page:159(section/title)
+msgid "Create your own custom shortcuts"
+msgstr "カスタムショートカットの作成"
+
+#: C/shortcuts.page:162(section/p)
+msgid "Enable the /desktop/gnome/interface/can_change_accels flag in gconf:"
+msgstr ""
+"gconf で /desktop/gnome/interface/can_change_accels フラグを有効にします。"
+
+#: C/shortcuts.page:167(item/p)
+msgid ""
+"Press <keyseq><key>Alt</key><key>F2</key></keyseq>. The Run Application "
+"dialogue opens."
+msgstr ""
+"<keyseq><key>Alt</key><key>F2</key></keyseq> を押します。アプリケーションの実"
+"行ダイアログが開きます。"
+
+#: C/shortcuts.page:172(item/p)
+msgid "In the textbox, type 'gconf-editor'."
+msgstr "テキストボックスに 'gconf-editor' と入力します。"
+
+#: C/shortcuts.page:177(item/p)
+msgid ""
+"In the Configuration Editor select <guiseq><gui>desktop</gui><gui>gnome</"
+"gui><gui>interface</gui></guiseq>."
+msgstr ""
+"設定エディターで <guiseq><gui>desktop</gui><gui>gnome</gui><gui>interface</"
+"gui></guiseq> を選択します。"
+
+#: C/shortcuts.page:182(item/p)
+msgid ""
+"Check the value box for <gui>can_change_accels</gui> in the right side of "
+"the window."
+msgstr ""
+"ウィンドウの右側にある <gui>can_change_accels</gui> の値の欄にチェックをいれ"
+"ます。"
+
+#: C/shortcuts.page:187(item/p)
+msgid "You can add/change the shortcut as follows:"
+msgstr "以下のようにショートカットを追加・変更可能です。"
+
+#: C/shortcuts.page:192(item/p)
+msgid "Open the <app>document viewer</app>."
+msgstr "<app>ドキュメントビューアー</app>を開きます。"
+
+#: C/shortcuts.page:197(item/p)
+msgid ""
+"Hover the pointer over the menu item you want to change/create the shortcut "
+"for."
+msgstr ""
+"ショートカットを変更・作成したいメニュー項目上にマウスポインターを当てます。"
+
+#: C/shortcuts.page:202(item/p)
+msgid ""
+"Enter the shortcut you want on the keyboard, e.g. <keyseq><key>Ctrl</"
+"key><key>Shift</key><key>T</key></keyseq>."
+msgstr ""
+"キーボードで利用したいショートカットを入力します。(例: <keyseq><key>Ctrl</"
+"key><key>Shift</key><key>T</key></keyseq>)"
+
+#: C/shortcuts.page:207(item/p)
+msgid "Close the <app>document viewer</app>."
+msgstr "<app>ドキュメントビューアー</app>を閉じます。"
+
+#: C/shortcuts.page:214(item/p)
+msgid "Repeat steps 1-3."
+msgstr "1 から 3 の手順を再度、実行します。"
+
+#: C/shortcuts.page:219(item/p)
+msgid ""
+"Uncheck the value box for <gui>can_change_accels</gui> in the right side of "
+"the window."
+msgstr ""
+"ウィンドウ右側にある <gui>can_change_accels</gui>　の値の欄のチェックをはずし"
+"ます。"
+
+#: C/shortcuts.page:223(note/p)
+msgid ""
+"The next time the <app>document viewer</app> launches, your custom shortcut "
+"key will be preserved."
+msgstr ""
+"次回、<app>ドキュメントビューアー</app>を起動するとカスタムショートカットキー"
+"が記憶されています。"
+
+#: C/shortcuts.page:233(note/p)
+msgid "Note that this also works for many other Gnome applications as well."
+msgstr ""
+"他の多くの Gnome アプリケーションでも同様に機能することに注意してください。"
+
+#: C/singlesided-13-16pages.page:8(info/desc)
+msgid "Print a 13, 14, 15 or 16 page booklet."
+msgstr "13、14、15 または 16 ページの小冊子を印刷します。"
+
+#: C/singlesided-13-16pages.page:21(page/title)
+msgid "13-page to 16-page booklet"
+msgstr "13 ページから 16 ページの小冊子"
+
+#: C/singlesided-13-16pages.page:23(page/p)
+msgid ""
+"If you have a 13, 14 or 15 page PDF document you should add the appropriate "
+"number of blank pages to make it 16-pages. To do so, you can:"
+msgstr ""
+"13、14 または 15 ページの PDF ドキュメントには、16 ページになるように適切な数"
+"の空白ページを追加する必要があります。そのために次のようなことができます。"
+
+#: C/singlesided-13-16pages.page:39(page/p)
+#: C/singlesided-17-20pages.page:39(page/p)
+#: C/singlesided-3-4pages.page:39(page/p)
+#: C/singlesided-5-8pages.page:39(page/p)
+#: C/singlesided-9-12pages.page:39(page/p)
+#: C/singlesided-npages.page:44(page/p)
+msgid "To print:"
+msgstr "印刷するには"
+
+#: C/singlesided-13-16pages.page:68(item/p)
+#: C/singlesided-17-20pages.page:66(item/p)
+#: C/singlesided-3-4pages.page:65(item/p)
+#: C/singlesided-5-8pages.page:65(item/p)
+#: C/singlesided-9-12pages.page:65(item/p)
+#: C/singlesided-npages.page:72(item/p)
+msgid ""
+"Under <em>Layout</em>, in the <gui>Two-side</gui> menu, select <gui>One "
+"Sided</gui>."
+msgstr ""
+"<em>レイアウト</em>の下にある<gui>両面印刷</gui>というメニューで<gui>片面印刷"
+"</gui>を選択します。"
+
+#: C/singlesided-13-16pages.page:71(item/p)
+#: C/singlesided-17-20pages.page:69(item/p)
+#: C/singlesided-3-4pages.page:68(item/p)
+#: C/singlesided-5-8pages.page:68(item/p)
+#: C/singlesided-9-12pages.page:68(item/p)
+#: C/singlesided-npages.page:75(item/p)
+msgid "In the <gui>Pages per side</gui> menu, select <gui>2</gui>."
+msgstr "<gui>段組み印刷</gui>というオプションで <gui>2</gui> を選択します。"
+
+#: C/singlesided-13-16pages.page:77(item/p)
+#: C/singlesided-17-20pages.page:75(item/p)
+#: C/singlesided-3-4pages.page:74(item/p)
+#: C/singlesided-5-8pages.page:74(item/p)
+#: C/singlesided-9-12pages.page:74(item/p)
+#: C/singlesided-npages.page:81(item/p)
+msgid "In the <gui>Only print</gui> menu, select <gui>Odd sheets</gui>."
+msgstr ""
+"<gui>印刷の対象</gui>というオプションで<gui>奇数ページ</gui>を選択します。"
+
+#: C/singlesided-13-16pages.page:87(item/p)
+#: C/singlesided-17-20pages.page:85(item/p)
+#: C/singlesided-3-4pages.page:84(item/p)
+#: C/singlesided-5-8pages.page:84(item/p)
+#: C/singlesided-9-12pages.page:84(item/p)
+#: C/singlesided-npages.page:91(item/p)
+msgid ""
+"When all the pages have printed, flip the pages over and place them back in "
+"the printer."
+msgstr ""
+"すべてのページが印刷されたら、印刷物をひっくり返してプリンターへ戻します。"
+
+#: C/singlesided-13-16pages.page:100(item/p)
+#: C/singlesided-17-20pages.page:98(item/p)
+#: C/singlesided-3-4pages.page:97(item/p)
+#: C/singlesided-5-8pages.page:97(item/p)
+#: C/singlesided-9-12pages.page:97(item/p)
+#: C/singlesided-npages.page:104(item/p)
+msgid "In the <gui>Only print</gui> menu, select <gui>Even sheets</gui>."
+msgstr ""
+"<gui>印刷の対象</gui>というオプションで<gui>偶数ページ</gui>を選択します。"
+
+#: C/singlesided-17-20pages.page:8(info/desc)
+msgid "Print a 17, 18, 19 or 20 page booklet."
+msgstr "17、18、19 または 20 ページの小冊子を印刷します。"
+
+#: C/singlesided-17-20pages.page:21(page/title)
+msgid "17-page to 20-page booklet"
+msgstr "17 ページから 20 ページの小冊子"
+
+#: C/singlesided-17-20pages.page:23(page/p)
+msgid ""
+"If you have a 17, 18 or 19 page PDF document you should add the appropriate "
+"number of blank pages to make it 20-pages. To do so, you can:"
+msgstr ""
+"17、18 または 19 ページの PDF ドキュメントには、20 ページになるように適切な数"
+"の空白ページを追加する必要があります。そのために次のようなことができます。"
+
+#: C/singlesided-17-20pages.page:58(item/item)
+msgid "20, 1, 2, 19, 18, 3, 4, 17, 16, 5, 6, 15, 14, 7, 8, 13, 12, 9, 10, 11"
+msgstr "20, 1, 2, 19, 18, 3, 4, 17, 16, 5, 6, 15, 14, 7, 8, 13, 12, 9, 10, 11"
+
+# 原文の表示順序を引き継ぐため sort コンテキストは原文のままとする
+#: C/singlesided-3-4pages.page:7(info/title)
+msgctxt "sort"
+msgid "03-Page or 4-Page Booklet"
+msgstr "03-Page or 4-Page Booklet"
+
+#: C/singlesided-3-4pages.page:8(info/desc)
+msgid "Print a 3 or 4 page booklet."
+msgstr "3 または 4 ページの小冊子を印刷します。"
+
+#: C/singlesided-3-4pages.page:21(page/title)
+msgid "3-page or 4-page booklet"
+msgstr "3 ページまたは 4 ページの小冊子"
+
+#: C/singlesided-3-4pages.page:23(page/p)
+msgid ""
+"If you have a 3-Page PDF document you should add a blank page to make it 4-"
+"pages. To do so, you can:"
+msgstr ""
+"3 ページの PDF ドキュメントには、4 ページになるように空白ページを追加する必要"
+"があります。そのために次のようなことができます。"
+
+# 原文の表示順序を引き継ぐため sort コンテキストは原文のままとする
+#: C/singlesided-5-8pages.page:7(info/title)
+msgctxt "sort"
+msgid "05-Page or 4-Page Booklet"
+msgstr "05-Page or 4-Page Booklet"
+
+#: C/singlesided-5-8pages.page:8(info/desc)
+msgid "Print a 5, 6, 7 or 8 page booklet."
+msgstr "5、6、7 または 8 ページの小冊子を印刷します。"
+
+#: C/singlesided-5-8pages.page:21(page/title)
+msgid "5-page to 8-page booklet"
+msgstr "5 ページから 8 ページの小冊子"
+
+#: C/singlesided-5-8pages.page:23(page/p)
+msgid ""
+"If you have a 5, 6 or 7 page PDF document you should add the appropriate "
+"number of blank pages to make it 8-pages. To do so, you can:"
+msgstr ""
+"5、6 または 7 ページの PDF ドキュメントには、8 ページになるように適切な数の空"
+"白ページを追加する必要があります。そのために次のようなことができます。"
+
+# 原文の表示順序を引き継ぐため sort コンテキストは原文のままとする
+#: C/singlesided-9-12pages.page:7(info/title)
+msgctxt "sort"
+msgid "09-Page or 12-Page Booklet"
+msgstr "09-Page or 12-Page Booklet"
+
+#: C/singlesided-9-12pages.page:8(info/desc)
+msgid "Print a 9, 10, 11 or 12 page booklet."
+msgstr "9、10、11 または 12 ページの小冊子を印刷します。"
+
+#: C/singlesided-9-12pages.page:21(page/title)
+msgid "9-page to 12-page booklet"
+msgstr "9 ページから 12 ページの小冊子"
+
+#: C/singlesided-9-12pages.page:23(page/p)
+msgid ""
+"If you have a 9, 10 or 11 page PDF document you should add the appropriate "
+"number of blank pages to make it 12-pages. To do so, you can:"
+msgstr ""
+"9、10 または 11 ページの PDF ドキュメントには、12 ページにするために適切な数"
+"の空白のページを追加する必要があります。そのために次のようなことができます。"
+
+#: C/singlesided-npages.page:8(info/desc)
+msgid "Print a booklet over 20 pages."
+msgstr "20 ページを超える小冊子を印刷します。"
+
+#: C/singlesided-npages.page:27(page/p)
+msgid ""
+"If the number of pages in your PDF document is not a multiple of 4, you "
+"should add the appropriate number of blank pages (1, 2 or 3) to make it a "
+"multiple of 4. To do so, you can:"
+msgstr ""
+"PDF ドキュメントのページ数が 4 の倍数でない場合、4 の倍数にするために適切な"
+"数 (1、2 または 3) の空白ページを追加する必要があります。そのために次のような"
+"ことができます。"
+
+#: C/synctex-beamer.page:7(info/desc)
+msgid "Using SyncTeX with the LaTeX Beamer class."
+msgstr "LaTeX Beamer クラスでの SyncTeX の利用。"
+
+#: C/synctex-beamer.page:19(page/title)
+msgid "Beamer with SyncTeX"
+msgstr "Beamer と SyncTeX"
+
+#: C/synctex-beamer.page:20(page/p)
+msgid "Beamer is a LaTeX class for creating slides for presentations."
+msgstr ""
+"Beamer は、プレゼンテーションのスライドを作成するための LaTeX クラスです。"
+
+#: C/synctex-beamer.page:23(page/p)
+msgid ""
+"You can perform forward and backward search in a <em>Beamer-LaTeX</em> "
+"presentation in a similar fashion to <link xref=\"synctex-search"
+"\">searching</link> through other TeX files compiled with SyncTeX. However "
+"the search brings you to the corresponding frame (slide), not necessarily "
+"the associated line of text. This difference is outlined in detail below."
+msgstr ""
+"SyncTeX を有効にしてコンパイルされた他の TeX ファイルで<link xref=\"synctex-"
+"search\">検索</link>を行うのと同様の方法で <em>Beamer-LaTeX</em> で前方および"
+"後方検索を実行できます。しかしながら、検索により関連する行ではなく対応するフ"
+"レーム (スライド) が表示されます。この違いについて、以下に概説します。"
+
+#: C/synctex-beamer.page:27(section/title)
+msgid ""
+"Forward search: from Beamer-LaTeX source to PDF (<app>gedit</app> to the "
+"<app>document viewer</app>)"
+msgstr ""
+"前方検索: Beamer-LaTeX ソースから PDF (<app>gedit</app> から <app>ドキュメン"
+"トビューアー</app>)"
+
+#: C/synctex-beamer.page:28(section/p)
+msgid ""
+"With <link xref=\"synctex-search#forward-search\">forward search</link>, you "
+"can click on a specific line of Beamer-LaTeX source code. The <em>top</em> "
+"of the corresponding slide in the PDF will be outlined in red. This will "
+"often be the <em>frametitle</em>."
+msgstr ""
+"<link xref=\"synctex-search#forward-search\">前方検索</link>では、Beamer-"
+"LaTeX の特定の行をクリックすると PDF の対応するスライドの<em>上部</em>が赤枠"
+"で囲まれます。たいていは、<em>フレームタイトル</em>です。"
+
+#: C/synctex-beamer.page:35(section/title)
+msgid ""
+"Backward search: from PDF to Beamer-LaTeX source (from the <app>document "
+"viewer</app> to <app>gedit</app>)"
+msgstr ""
+"後方検索: PDF から Beamer-LaTeX ソース (<app>ドキュメントビューアー</app> か"
+"ら <app>gedit</app>)"
+
+#: C/synctex-beamer.page:36(section/p)
+msgid ""
+"With <link xref=\"synctex-search#backward-search\">backward search</link>, "
+"you click on some text in a frame, and the corresponding line of LaTex code "
+"that ends that particular frame is highlighted. This will usually be the "
+"line:"
+msgstr ""
+"<link xref=\"synctex-search#backward-search\">後方検索</link>では、フレームの"
+"任意のテキストをクリックすると特に対応するフレームを終了する行がハイライトさ"
+"れます。たいていは、次の行です。"
+
+#: C/synctex-beamer.page:39(section/code)
+#, no-wrap
+msgid "\\end{frame}"
+msgstr "\\end{frame}"
+
+#: C/synctex-beamer.page:40(section/p)
+msgid "corresponding to the frame you clicked on."
+msgstr "クリックしたフレームに対応しています。"
+
+#: C/synctex-compile.page:7(info/desc)
+msgid "How to compile your TeX document with SyncTeX"
+msgstr "SyncTeX を有効にして TeX ドキュメントをコンパイルする方法。"
+
+#: C/synctex-compile.page:19(page/title)
+msgid "Compile TeX with SyncTeX"
+msgstr "SyncTeX を有効にする TeX のコンパイル"
+
+#: C/synctex-compile.page:20(page/p)
+msgid ""
+"Adding the line <em>\\synctex=1</em> in the preamble of your TeX file will "
+"trigger synchronization with SyncTeX."
+msgstr ""
+"TeX ファイルの前文に <em>\\synctex=1</em> という行を追加することで SyncTeX で"
+"同期をとるきっかけとなります。"
+
+#: C/synctex-compile.page:23(page/code)
+#, no-wrap
+msgid ""
+"\n"
+"\\documentclass{article}\n"
+"\\synctex=1\n"
+"\\usepackage{fullpage}\n"
+"\\begin{document}\n"
+"...\n"
+"\\end{document}\n"
+msgstr ""
+"\n"
+"\\documentclass{article}\n"
+"\\synctex=1\n"
+"\\usepackage{fullpage}\n"
+"\\begin{document}\n"
+"...\n"
+"\\end{document}\n"
+
+#: C/synctex-compile.page:31(page/p)
+msgid ""
+"Alternatively, you can run the pdflatex command with the <em>-synctex=1</em> "
+"option:"
+msgstr ""
+"代わりに、pdflatex コマンドを <em>-synctex=1</em> というオプション付きで実行"
+"できます。"
+
+#: C/synctex-compile.page:34(page/screen)
+#, no-wrap
+msgid "pdflatex -synctex=1 yourFile.tex"
+msgstr "pdflatex -synctex=1 yourFile.tex"
+
+#: C/synctex-editors.page:7(info/desc)
+msgid "Which editor can you use to edit your TEX file?"
+msgstr "TeX ファイル編集に利用可能なエディター。"
+
+#: C/synctex-editors.page:20(page/title)
+msgid "Supported editors"
+msgstr "サポートされているエディター"
+
+#: C/synctex-editors.page:22(section/title)
+msgid "<app>gedit</app>"
+msgstr "<app>gedit</app>"
+
+#: C/synctex-editors.page:23(section/p)
+msgid ""
+"<link xref=\"synctex-search#forward-search\">Forward Search</link> (from "
+"<app>gedit</app> to the <app>document viewer</app>) and <link xref=\"synctex-"
+"search#backward-search\">Backward search</link> (from the <app>document "
+"viewer</app> to <app>gedit</app>) are both supported."
+msgstr ""
+"<link xref=\"synctex-search#forward-search\">前方検索</link> (<app>gedit</"
+"app> から<app>ドキュメントビューアー</app>) および <link xref=\"synctex-"
+"search#backward-search\">後方検索</link> (<app>ドキュメントビューアー</app>か"
+"ら <app>gedit</app>) の両方をサポートしています。"
+
+#: C/synctex-editors.page:28(section/title)
+msgid "Vim-latex"
+msgstr "Vim-latex"
+
+#: C/synctex-editors.page:29(section/p)
+msgid ""
+"The <app>gedit</app> plugin contains a python script (evince_dbus.py) that "
+"can be used to get SyncTeX working with Vim. In order to use vim-latex "
+"together with the <app>document viewer</app> you need to follow the next "
+"steps:"
+msgstr ""
+"<app>gedit</app> プラグインには、Vim で SyncTeX を機能させるのに利用できる "
+"python スクリプト (evince_dbus.py) が含まれています。vim-latex と<app>ドキュ"
+"メントビューアー</app>を連携できるようにするには、以下の手順を踏む必要があり"
+"ます。"
+
+#: C/synctex-editors.page:35(item/p)
+msgid ""
+"Copy the evince_dbus.py to some directory in your path and give it +x "
+"permissions."
+msgstr ""
+"パスが通る任意のフォルダーに evince_dbus.py をコピーし、実行権を与えます。"
+
+#: C/synctex-editors.page:41(item/p)
+msgid "Modify your ~/.vimrc file and add the following lines."
+msgstr "~/.vimrc というファイルを編集し、以下の行を追加します。"
+
+#: C/synctex-editors.page:44(item/code)
+#, no-wrap
+msgid ""
+"\n"
+"let g:Tex_ViewRule_pdf = 'evince_dbus.py'\n"
+"let g:Tex_DefaultTargetFormat = 'pdf'\n"
+"let g:Tex_CompileRule_pdf = 'pdflatex --synctex=1 -interaction=nonstopmode $*'\n"
+msgstr ""
+"\n"
+"let g:Tex_ViewRule_pdf = 'evince_dbus.py'\n"
+"let g:Tex_DefaultTargetFormat = 'pdf'\n"
+"let g:Tex_CompileRule_pdf = 'pdflatex --synctex=1 -interaction=nonstopmode $*'\n"
+
+#: C/synctex-editors.page:52(item/p)
+msgid ""
+"Now you can use Forward search from vim-latex by typing \\ls. Backward "
+"search is not yet supported."
+msgstr ""
+"これで \\ls とタイプすることにより、vim-latex から前方検索を利用できるように"
+"なります。後方検索は、まだサポートされていません。"
+
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/synctex.page:26(media)
+msgctxt "_"
+msgid ""
+"external ref='figures/synctex_screencast.ogv' "
+"md5='358d317b4fc69fc7e5c5d4d14f07b6a5'"
+msgstr ""
+
+#: C/synctex.page:7(info/desc)
+msgid "SyncTeX support is available."
+msgstr "SyncTeX サポートが利用できます。"
+
+#: C/synctex.page:19(page/title)
+msgid "What is SyncTeX?"
+msgstr "SyncTeX とは?"
+
+#: C/synctex.page:20(page/p)
+msgid ""
+"SyncTeX is a method that enables synchronization between a TeX source file "
+"and the resulting PDF output."
+msgstr ""
+"SyncTeX は、TeX ソースファイルとその変換結果である PDF 出力との間で同期を可能"
+"とする方法です。"
+
+#: C/synctex.page:25(section/title)
+msgid "Video Demonstration"
+msgstr "ビデオデモンストレーション"
+
+#: C/synctex.page:30(div/p)
+msgid "Press <keyseq><key>Ctrl</key>click</keyseq> to sync."
+msgstr "同期するには、<keyseq><key>Ctrl</key>クリック</keyseq>します。"
+
+#: C/synctex-search.page:7(info/desc)
+msgid "Flip between the <app>document viewer</app> and <app>gedit</app>."
+msgstr ""
+"<app>ドキュメントビューアー</app>と <app>gedit</app> 間を行ったり来たり。"
+
+#: C/synctex-search.page:20(page/title)
+msgid "Search with SyncTeX"
+msgstr "SyncTeX による検索"
+
+#: C/synctex-search.page:21(page/p)
+msgid ""
+"After you <link xref=\"synctex-compile\">compile your TeX file with SyncTeX</"
+"link>, you will be able to search. SyncTeX even supports forward and "
+"backward search from an included file."
+msgstr ""
+"<link xref=\"synctex-compile\">TeX ファイルを SyncTeX でコンパイル</link>する"
+"と検索を行うことができます。SyncTeX は、インクルードファイルからの前方検索お"
+"よび後方検索をサポートしています。"
+
+#: C/synctex-search.page:26(section/title)
+msgid ""
+"Forward search: from TeX to PDF (from <app>gedit</app> to the <app>document "
+"viewer</app>)"
+msgstr ""
+"前方検索: TeX から PDF (<app>gedit</app> から<app>ドキュメントビューアー</"
+"app>)"
+
+#: C/synctex-search.page:27(section/p)
+msgid ""
+"Forward search allows you to click on a specific section of TeX source code, "
+"and jump to the associated position in the PDF. To perform forward search:"
+msgstr ""
+"前方検索では、TeX ソースコードの特定の節をクリックすると PDF の関連する位置へ"
+"ジャンプできます。前方検索を行うには、以下の手順を踏みます。"
+
+#: C/synctex-search.page:32(item/p)
+msgid "Click on a line in the TeX file."
+msgstr "TeX ファイルの任意の行をクリックします。"
+
+#: C/synctex-search.page:37(item/p)
+msgid ""
+"In <app>gedit</app>, click <guiseq><gui>Tools</gui> <gui>Forward Search</"
+"gui></guiseq>. The corresponding line in the PDF will be outlined in red."
+msgstr ""
+"<app>gedit</app> の <guiseq><gui>ツール</gui><gui>Forward Search</gui></"
+"guiseq> をクリックします。PDF の対応する行が、赤枠で囲まれます。"
+
+#: C/synctex-search.page:40(item/p)
+msgid ""
+"Alternatively, you can press <keyseq><key>Ctrl</key><key>Alt</key><key>F</"
+"key></keyseq>, or <keyseq><key>Ctrl</key>left click</keyseq>. The "
+"corresponding line in the PDF will be outlined in red."
+msgstr ""
+"代わりに <keyseq><key>Ctrl</key><key>Alt</key><key>F</key></keyseq> を押すか "
+"<keyseq><key>Ctrl</key>左クリック</keyseq>も利用できます。PDF の対応する行"
+"が、赤枠で囲まれます。"
+
+#: C/synctex-search.page:46(note/p)
+msgid ""
+"If the corresponding PDF file is not open, performing a forward search will "
+"open the PDF in the <app>document viewer</app>."
+msgstr ""
+"対応する PDF ファイルが開かれていない場合、前方検索を実行すると<app>ドキュメ"
+"ントビューアー</app>で PDF を開きます。"
+
+#: C/synctex-search.page:50(section/p)
+msgid "If you have a complex project with several TeX files you can put"
+msgstr "複数の TeX ファイルからなる複雑なプロジェクトがある場合、"
+
+#: C/synctex-search.page:53(section/code)
+#, no-wrap
+msgid "% mainfile: mainfile.tex"
+msgstr "% mainfile: mainfile.tex"
+
+#: C/synctex-search.page:54(section/p)
+msgid ""
+"either in the first or last three lines of each included TeX file, and "
+"forward search will work. Backward search should always work, even if you "
+"don't add the modeline."
+msgstr ""
+"という行を TeX の各インクルードファイルの最初か最後の 3 行に含めることで前方"
+"検索が機能します。このモードラインを追加しない場合でも後方検索は常に機能しま"
+"す。"
+
+#: C/synctex-search.page:61(section/title)
+msgid ""
+"Backward search: from PDF to TeX (from the <app>document viewer</app> to "
+"<app>gedit</app>)"
+msgstr ""
+"後方検索: PDF から TeX (<app>ドキュメントビューアー</app>から <app>gedit</"
+"app>)"
+
+#: C/synctex-search.page:62(section/p)
+msgid ""
+"Backward search allows you to click on a specific line in the PDF file, and "
+"jump to the associated line in the TeX source code."
+msgstr ""
+"後方検索では、PDF ファイルの特定の行をクリックすると TeX ソースコードの関連す"
+"る行へジャンプできます。"
+
+#: C/synctex-search.page:65(section/p)
+msgid ""
+"You can perform a backward search by pressing <keyseq><key>Ctrl</key>left "
+"click</keyseq> in the <app>document viewer</app>. The corresponding line in "
+"the TeX source code will be hightlighted."
+msgstr ""
+"<app>ドキュメントビューアー</app>で <keyseq><key>Ctrl</key>左クリック</"
+"keyseq>を行うことで後方検索を実行できます。TeX ソースコードの対応する行がハイ"
+"ライトされます。"
+
+#: C/synctex-support.page:7(info/desc)
+msgid "How to add support for SyncTeX."
+msgstr "SyncTeX サポートを追加する方法。"
+
+#: C/synctex-support.page:20(page/title)
+msgid "Set-up SyncTeX"
+msgstr "SyncTeX のセットアップ"
+
+#: C/synctex-support.page:21(page/p)
+msgid ""
+"The following packages need to be installed in order to add support for "
+"SyncTeX:"
+msgstr ""
+"SyncTeX サポートを追加するには、以下のパッケージをインストールする必要があり"
+"ます。"
+
+#: C/synctex-support.page:26(item/p)
+msgid "texlive-extra-utils"
+msgstr "texlive-extra-utils"
+
+#: C/synctex-support.page:31(item/p)
+msgid "gedit-plugins"
+msgstr "gedit-plugins"
+
+#: C/synctex-support.page:37(page/p)
+msgid "In <app>gedit</app>, enable the SyncTeX Plugin:"
+msgstr "<app>gedit</app> で SyncTeX プラグインを有効にします。"
+
+#: C/synctex-support.page:42(item/p)
+msgid ""
+"Click <guiseq><gui>Edit</gui><gui>Preferences</gui><gui>Plugins</gui></"
+"guiseq> tab."
+msgstr ""
+"<guiseq><gui>編集</gui><gui>設定</gui><gui>プラグイン</gui></guiseq>タブをク"
+"リックします。"
+
+#: C/synctex-support.page:47(item/p)
+msgid "Check <gui>SyncTeX</gui>."
+msgstr "<gui>SyncTeX</gui> にチェックを入れます。"
+
+#: C/textselection.page:7(info/desc)
+msgid ""
+"When you copy text, the text that is pasted might be different from what you "
+"had selected."
+msgstr ""
+"テキストをコピーした時、貼り付けたテキストが選択したテキストと異なる場合があ"
+"ります。"
+
+#: C/textselection.page:20(page/title)
+msgid "Why didn't the text I selected copy properly?"
+msgstr "なぜ選択したテキストが正確にコピーされないのですか?"
+
+#: C/textselection.page:23(page/p)
+msgid ""
+"If you highlight and copy text from a document using the <app>document "
+"viewer</app> and then paste it into another application, the formatting may "
+"alter. It may also contain different characters than the original selection. "
+"This often happens when copying text from a PDF document with multiple "
+"columns."
+msgstr ""
+"<app>ドキュメントビューアー</app>を使ってドキュメントからテキストを選択してコ"
+"ピーし、他のアプリケーションへ貼り付けた場合、形式が変わる場合があります。元"
+"の選択部分と異なる文字が含まれる場合などです。段組された PDF ドキュメントから"
+"コピーした時によく起こります。"
+
+#: C/textselection.page:29(page/p)
+msgid ""
+"This problem happens because of how some document formats handle text. The "
+"actual text in the document is stored differently from the way it is "
+"displayed. This may result in a copy that does not appear as expected."
+msgstr ""
+"この問題は、ドキュメント形式によるテキストの扱い方に起因します。ドキュメント"
+"内の実際のテキストは、表示される方法とは異なる方法で格納されています。このた"
+"め、コピー結果が期待通りに表示されないものと思われます。"
+
+#: C/textselection.page:35(page/p)
+msgid ""
+"Unfortunately, there is no real way of fixing this problem. Copying less "
+"text at a time, or copying the text into a text editor may minimise the "
+"problem. You can locate a text editor by clicking <guiseq><gui>Activities</"
+"gui><gui>Applications</gui><gui>Accessories</gui><gui>gedit</gui></guiseq>."
+msgstr ""
+"残念ながら、この問題を解決する現実的な方法はありません。一度により少ないテキ"
+"ストをコピーするか、テキストエディターへテキストをコピーすることにより、問題"
+"を最小限に抑えることができるでしょう。<guiseq><gui>アクティビティ</gui><gui>"
+"アプリケーション</gui><gui>アクセサリー</gui><gui>gedit</gui></guiseq>をク"
+"リックすることでテキストエディターを起動できます。"
+
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/toolbar.page:30(media)
+msgctxt "_"
+msgid ""
+"external ref='figures/evince-toolbar-default.png' "
+"md5='2a826732c770c08b11684e28e259bb31'"
+msgstr ""
+"external ref='figures/evince-toolbar-default.png' "
+"md5='cd4b35783442d4301d601dabd5abbda8'"
+
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/toolbar.page:51(media)
+msgctxt "_"
+msgid ""
+"external ref='figures/evince-toolbar-editor.png' "
+"md5='e6c66f764c39ab5ba01441d970425cd9'"
+msgstr ""
+"external ref='figures/evince-toolbar-editor.png' "
+"md5='40466bf5e5549bd8918ad15e2239fc42'"
+
+#: C/toolbar.page:7(info/desc)
+msgid ""
+"<link xref=\"toolbar#view\">Show, hide</link> or <link xref=\"toolbar#edit"
+"\">edit</link> the toolbar."
+msgstr ""
+"ツールバーの<link xref=\"toolbar#view\">表示、非表示</link>または<link xref="
+"\"toolbar#edit\">編集</link>。"
+
+#: C/toolbar.page:22(page/title)
 msgid "Toolbar"
 msgstr "ツールバー"
 
-#: C/evince.xml:167(para)
-msgid ""
-"The toolbar contains a subset of the commands that you can access from the "
-"menubar."
-msgstr "ツールバーにはメニューバーからアクセスできるコマンドのサブセットが"
-"含まれています。"
-
-#: C/evince.xml:171(term)
-msgid "Display area"
-msgstr "表示領域"
-
-#: C/evince.xml:173(para)
-msgid "The display area displays the document."
-msgstr "ドキュメントの内容を表示する領域です。"
-
-#: C/evince.xml:187(para)
-msgid "UI Component"
-msgstr "UI コンポーネント"
-
-#: C/evince.xml:189(para)
-msgid "Action"
-msgstr "アクション"
-
-#: C/evince.xml:194(para)
-msgid "Window"
-msgstr "ウィンドウ"
-
-#: C/evince.xml:198(para)
-msgid ""
-"Drag a file into the <application>Evince Document Viewer</application> "
-"window from another application such as a file manager."
-msgstr "ファイルマネージャのような他のアプリケーションから "
-"<application>Evince ドキュメントビューア</application> の"
-"ウィンドウにファイルをドラッグ"
-
-#: C/evince.xml:201(para)
-msgid "Double-click on the file name in the file manager"
-msgstr "ファイルマネージャ内でファイル名をダブルクリック"
-
-#: C/evince.xml:208(para) C/evince.xml:235(para)
-msgid ""
-"Choose <menuchoice><guimenu>File</guimenu><guimenuitem>Open</guimenuitem></"
-"menuchoice>."
-msgstr "<menuchoice><guimenu>ファイル</guimenu><guimenuitem>開く"
-"</guimenuitem></menuchoice> を選択"
-
-#: C/evince.xml:212(para)
-msgid "Shortcut keys"
-msgstr "ショートカット"
-
-#: C/evince.xml:213(para)
-msgid "Press <keycombo><keycap>Ctrl</keycap><keycap>O</keycap></keycombo>."
-msgstr "<keycombo><keycap>Ctrl</keycap><keycap>O</keycap></keycombo> を押す"
-
-#: C/evince.xml:178(para)
-msgid ""
-"In <application>Evince Document Viewer</application>, you can perform the "
-"same action in several ways. For example, you can open a document in the "
-"following ways: <informaltable frame=\"all\"><tgroup cols=\"2\" colsep=\"1\" "
-"rowsep=\"1\"><colspec colname=\"COLSPEC0\" colwidth=\"50*\"/><colspec "
-"colname=\"COLSPEC1\" colwidth=\"50*\"/><placeholder-1/><placeholder-2/></"
-"tgroup></informaltable>"
-msgstr "<application>Evince ドキュメントビューア</application> では"
-"同じアクションをいくつかの方法で実行できます。例えばドキュメントを"
-"開くには次のようにします: <informaltable frame=\"all\"><tgroup cols=\"2\" colsep=\"1\" "
-"rowsep=\"1\"><colspec colname=\"COLSPEC0\" colwidth=\"50*\"/><colspec "
-"colname=\"COLSPEC1\" colwidth=\"50*\"/><placeholder-1/><placeholder-2/></"
-"tgroup></informaltable>"
-
-# 唐突なので少し意訳
-#: C/evince.xml:219(para)
-msgid "This manual documents functionality from the menubar."
-msgstr "メニューバーからこのマニュアルを開くこともできます。"
-
-#: C/evince.xml:227(title)
-msgid "Usage"
-msgstr "使い方"
-
-#: C/evince.xml:231(title)
-msgid "To Open A Document"
-msgstr "ドキュメントを開く"
-
-#: C/evince.xml:232(para)
-msgid "To open a document, perform the following steps:"
-msgstr "ドキュメントを開くには次のステップを実行します:"
-
-#: C/evince.xml:239(para)
-msgid ""
-"In the <guilabel>Open Document</guilabel> dialog, select the file you want "
-"to open."
-msgstr "<guilabel>ドキュメントを開く</guilabel> ダイアログで"
-"開きたいファイルを選択します。"
-
-#: C/evince.xml:244(para)
-msgid ""
-"Click <guibutton>Open</guibutton>. <application>Evince Document Viewer</"
-"application> displays the name of the document in the titlebar of the window."
-msgstr "<guibutton>開く</guibutton> をクリックします。"
-"<application>Evince ドキュメントビューア</application> の"
-"ウィンドウのタイトルバーにドキュメントの名前が表示されます。"
-
-#: C/evince.xml:249(para)
-msgid ""
-"To open another document, choose <menuchoice><guimenu>File</"
-"guimenu><guimenuitem>Open</guimenuitem></menuchoice> again. "
-"<application>Evince Document Viewer</application> opens each file in a new "
-"window."
-msgstr "他のドキュメントを開くには再度 <menuchoice><guimenu>ファイル"
-"</guimenu><guimenuitem>開く</guimenuitem></menuchoice> を選択します。"
-"<application>Evince ドキュメントビューア</application> は"
-"新しいウィンドウでそれぞれのファイルを開きます。"
-
-#: C/evince.xml:252(para)
-msgid ""
-"If you try to open a document with format that <application>Evince Document "
-"Viewer</application> does not recognize, the application displays an error "
-"message."
-msgstr "<application>Evince ドキュメントビューア</application> が"
-"認識しないファイル形式のドキュメントを開こうとすると"
-"エラーメッセージが表示されます。"
-
-#: C/evince.xml:258(title)
-msgid "To Navigate Through a Document"
-msgstr "ドキュメントをナビゲート"
-
-#: C/evince.xml:259(para)
-msgid "You can navigate through a file as follows:"
-msgstr "ファイルは次のようにしてナビゲートできます:"
-
-#: C/evince.xml:262(para)
-msgid ""
-"To view the next page, choose <menuchoice><guimenu>Go</"
-"guimenu><guimenuitem>Next Page</guimenuitem></menuchoice>."
-msgstr "次のページを見るには <menuchoice><guimenu>移動</guimenu>"
-"<guimenuitem>次のページ</guimenuitem></menuchoice> を選択します。"
-
-#: C/evince.xml:266(para)
-msgid ""
-"To view the previous page, choose <menuchoice><guimenu>Go</"
-"guimenu><guimenuitem>Previous Page</guimenuitem></menuchoice>."
-msgstr "前のページを見るには <menuchoice><guimenu>移動</guimenu>"
-"<guimenuitem>前のページ</guimenuitem></menuchoice> を選択します。"
-
-#: C/evince.xml:270(para)
-msgid ""
-"To view the first page in the document, choose <menuchoice><guimenu>Go</"
-"guimenu><guimenuitem>First Page</guimenuitem></menuchoice>."
-msgstr "最初のページを見るには <menuchoice><guimenu>移動</guimenu>"
-"<guimenuitem>先頭のページ</guimenuitem></menuchoice> を選択します。"
-
-#: C/evince.xml:274(para)
-msgid ""
-"To view the last page in the document, choose <menuchoice><guimenu>Go</"
-"guimenu><guimenuitem>Last Page</guimenuitem></menuchoice>."
-msgstr "最後のページを見るには <menuchoice><guimenu>移動</guimenu>"
-"<guimenuitem>最後のページ</guimenuitem></menuchoice> を選択します。"
-
-#: C/evince.xml:278(para)
-msgid ""
-"To view a particular page, enter the page number or page label in the text "
-"box on the toolbar, then press <keycap>Return</keycap>."
-msgstr "特定のページを見るにはツールバーのテキストボックスに"
-"ページ番号かページラベルを入力して、<keycap>Return</keycap> を押します。"
-
-#: C/evince.xml:285(title)
-msgid "To Scroll a Page"
-msgstr "ページのスクロール"
-
-#: C/evince.xml:286(para)
-msgid ""
-"To display the page contents that are not currently displayed in the display "
-"area, use the following methods:"
-msgstr "表示領域に現在表示されていないページの内容を表示するには"
-"次のようにします:"
-
-#: C/evince.xml:289(para)
-msgid "Use the arrow keys or space key on the keyboard."
-msgstr "キーボードのカーソルキーかスペースキーを使います。"
-
-#: C/evince.xml:292(para)
-msgid ""
-"Drag the display area by clicking with the middle mouse button somewhere in "
-"the document and then moving the mouse. For example, to scroll down the "
-"page, drag the display area upwards in the window."
-msgstr "ドキュメントのどこかをマウスの中央ボタンでクリックし、"
-"表示エリアをドラッグしてマウスを移動します。例えばページを下に"
-"スクロールするには表示領域をウィンドウの上の方にドラッグします。"
-
-#: C/evince.xml:295(para)
-msgid "Use the scrollbars on the window."
-msgstr "ウィンドウのスクロールバーを使います。"
-
-#: C/evince.xml:302(title)
-msgid "To Change the Page Size"
-msgstr "ページサイズの変更"
-
-#: C/evince.xml:303(para)
-msgid ""
-"You can use the following methods to resize a page in the "
-"<application>Evince Document Viewer</application> display area:"
-msgstr "<application>Evince ドキュメントビューア</application> の"
-"表示領域の中のページの大きさを変更するには次のようにします:"
-
-#: C/evince.xml:308(para)
-msgid ""
-"To increase the page size, choose <menuchoice><guimenu>View</"
-"guimenu><guimenuitem>Zoom In</guimenuitem></menuchoice>."
-msgstr "ページサイズを大きくするには <menuchoice><guimenu>表示</guimenu>"
-"<guimenuitem>拡大</guimenuitem></menuchoice> を選択します。"
-
-#: C/evince.xml:313(para)
-msgid ""
-"To decrease the page size, choose <menuchoice><guimenu>View</"
-"guimenu><guimenuitem>Zoom Out</guimenuitem></menuchoice>."
-msgstr "ページサイズを小さくするには <menuchoice><guimenu>表示</guimenu>"
-"<guimenuitem>縮小</guimenuitem></menuchoice> を選択します。"
-
-#: C/evince.xml:318(para)
-msgid ""
-"To resize a page to have the same width as the <application>Evince Document "
-"Viewer</application> display area, choose <menuchoice><guimenu>View</"
-"guimenu><guimenuitem>Fit page width</guimenuitem></menuchoice>."
-msgstr "ページをリサイズして <application>Evince ドキュメントビューア"
-"</application> の表示領域と同じ幅にするには <menuchoice><guimenu>表示</guimenu>"
-"<guimenuitem>幅に合わせる</guimenuitem></menuchoice> を選択します。"
-
-#: C/evince.xml:323(para)
-msgid ""
-"To resize a page to fit within the <application>Evince Document Viewer</"
-"application> display area, choose <menuchoice><guimenu>View</"
-"guimenu><guimenuitem>Best Fit</guimenuitem></menuchoice>."
-msgstr "ページをリサイズして <application>Evince ドキュメントビューア"
-"</application> の表示領域の大きさにちょうど合うようにするには "
-"<menuchoice><guimenu>表示</guimenu><guimenuitem>全体に合わせる</guimenuitem>"
-"</menuchoice> を選択します。"
-
-#: C/evince.xml:328(para)
-msgid ""
-"To resize the <application>Evince Document Viewer</application> window to "
-"have the same width and height as the screen, choose "
-"<menuchoice><guimenu>View</guimenu><guimenuitem>Full Screen</guimenuitem></"
-"menuchoice>. To resize the <application>Evince Document Viewer</application> "
-"window to the original size, click on the <guibutton>Exit Full Screen</"
-"guibutton> button."
-msgstr "<application>Evince ドキュメントビューア</application> の"
-"ウィンドウをリサイズして画面と同じ幅と高さにするには "
-"<menuchoice><guimenu>表示</guimenu><guimenuitem>フルスクリーン表示"
-"</guimenuitem></menuchoice> を選択します。"
-"<application>Evince ドキュメントビューア</application> の"
-"ウィンドウをリサイズして元の大きさに戻すには <guibutton>フルスクリーンの"
-"解除</guibutton> ボタンをクリックします。"
-
-#: C/evince.xml:336(title)
-msgid "To View Pages or Document Structure"
-msgstr "ページまたはドキュメントの構造を表示"
-
-# Adobe Reader では 'bookmarks' は 'しおり' と訳されているようだ。
-#: C/evince.xml:337(para)
-msgid "To view bookmarks or pages, perform the following steps:"
-msgstr "しおりまたはページのサムネイルを表示するには次のステップを"
-"実行します:"
-
-#: C/evince.xml:341(para)
-msgid ""
-"Choose <menuchoice><guimenu>View</guimenu><guimenuitem>Sidebar</"
-"guimenuitem></menuchoice> or press <keycap>F9</keycap>."
-msgstr "<menuchoice><guimenu>表示</guimenu><guimenuitem>サイドペイン"
-"</guimenuitem></menuchoice> または <keycap>F9</keycap> を押します。"
-
-#: C/evince.xml:346(para)
-msgid ""
-"Use the drop-down list in the side-pane header to select whether to display "
-"document structure or pages in the side pane."
-msgstr "サイドペインのへッダのドロップダウンリストを使って、サイドペインに"
-"ドキュメントの構造とページのどちらを表示するか選択します。"
-
-#: C/evince.xml:351(para)
-msgid ""
-"Use the side-pane scrollbars to display the required item or page in the "
-"side pane."
-msgstr "サイドペインのスクロールバーを使って、サイドペインに"
-"求めるアイテムまたはページを表示します。"
-
-#: C/evince.xml:356(para)
-msgid ""
-"Click on an entry to navigate to that location in the document. Click on a "
-"page to navigate to that page in the document."
-msgstr "エントリをクリックするとドキュメントのその位置に移動できます。"
-"ページをクリックするとドキュメントのそのページに移動できます。"
-
-#: C/evince.xml:362(title)
-msgid "To View the Properties of a Document"
-msgstr "ドキュメントのプロパティを表示"
-
-#: C/evince.xml:363(para)
-msgid ""
-"To view the properties of a document, choose <menuchoice><guimenu>File</"
-"guimenu><guimenuitem>Properties</guimenuitem></menuchoice>."
-msgstr "ドキュメントのプロパティを見るには <menuchoice><guimenu>"
-"ファイル</guimenu><guimenuitem>プロパティ</guimenuitem></menuchoice>"
-" を選択します。"
-
-#: C/evince.xml:369(para)
-msgid ""
-"The <guilabel>Properties</guilabel> dialog displays all information available"
-msgstr "<guilabel>プロパティ</guilabel> ダイアログには利用できる"
-"すべての情報が表示されます。"
-
-#: C/evince.xml:375(title)
-msgid "To Print a Document"
-msgstr "ドキュメントの印刷"
-
-#: C/evince.xml:376(para)
-msgid ""
-"To print a Document, choose <menuchoice><guimenu>File</"
-"guimenu><guimenuitem>Print</guimenuitem></menuchoice>."
-msgstr "ドキュメントを印刷するには <menuchoice><guimenu>ファイル</guimenu>"
-"<guimenuitem>印刷</guimenuitem></menuchoice> を選択します。"
-
-#: C/evince.xml:380(para)
-msgid ""
-"If you cannot choose the <guimenuitem>Print</guimenuitem> menu item, the "
-"author of the document has disabled the print option for this document. To "
-"enable the print option, you must enter the master password when you open "
-"the document. See <xref linkend=\"evince-password\"/> for more information "
-"about password-protected files."
-msgstr "<guimenuitem>印刷</guimenuitem> メニューアイテムを選択できない場合は"
-"そのドキュメントの作者は印刷オプションを無効にしています。印刷オプションを"
-"有効にするにはドキュメントを開く際にマスターパスワードを入力しなければ"
-"いけません。パスワードで保護されたファイルの詳細については "
-"<xref linkend=\"evince-password\"/> を参照して下さい。"
-
-#: C/evince.xml:384(para)
-msgid ""
-"The <guilabel>Print</guilabel> dialog has the following tabbed sections:"
-msgstr "<guilabel>印刷</guilabel> ダイアログには次のタブセクションがあります:"
-
-#: C/evince.xml:390(link) C/evince.xml:406(title)
-msgid "Job"
-msgstr "ジョブ"
-
-#: C/evince.xml:395(link) C/evince.xml:428(title) C/evince.xml:430(guilabel)
-msgid "Printer"
-msgstr "プリンタ"
-
-#: C/evince.xml:400(link) C/evince.xml:522(title)
-msgid "Paper"
-msgstr "用紙"
-
-#: C/evince.xml:408(guilabel)
-msgid "Print range"
-msgstr "印刷範囲"
-
-#: C/evince.xml:410(para)
-msgid ""
-"Select one of the following options to determine how many pages to print:"
-msgstr "次のいずれかのオプションを選択して、出力するページ数を指定します。"
-
-#: C/evince.xml:413(guilabel)
-msgid "All"
-msgstr "全て"
-
-#: C/evince.xml:414(para)
-msgid "Select this option to print all of the pages in the document."
-msgstr "ドキュメントのすべてのページを印刷する場合はこのオプションを選択します。"
-
-#: C/evince.xml:417(guilabel)
-msgid "Pages From"
-msgstr "範囲"
-
-#: C/evince.xml:418(para)
-msgid ""
-"Select this option to print the selected range of pages in the document. Use "
-"the spin boxes to specify the first page and last page of the range."
-msgstr "ドキュメントの指定のページ範囲を印刷するにはこのオプションを選択します。"
-"ページの範囲の最初と最後をスピンボックスを使って指定します。"
-
-#: C/evince.xml:432(para)
-msgid ""
-"Use this drop-down list to select the printer to which you want to print the "
-"document."
-msgstr "ドキュメントを印刷するプリンタを選択するにはこのドロップダウンリストを"
-"使います。"
-
-#: C/evince.xml:434(para)
-msgid ""
-"The <guilabel>Create a PDF document</guilabel> option is not supported in "
-"this version of <application>Evince Document Viewer</application>."
-msgstr "<guilabel>PDF ドキュメントの作成</guilabel> オプションは"
-"<application>Evince ドキュメントビューア</application> の"
-"このバージョンではサポートされていません。"
-
-#: C/evince.xml:440(guilabel)
-msgid "Settings"
-msgstr "設定"
-
-#: C/evince.xml:442(para)
-msgid "Use this drop-down list to select the printer settings."
-msgstr "ドロップダウンリストから印刷設定を選択します。"
-
-#: C/evince.xml:444(para)
-msgid ""
-"To configure the printer, click <guibutton>Configure</guibutton>. For "
-"example, you can enable or disable duplex printing, or schedule delayed "
-"printing, if this functionality is supported by the printer."
-msgstr "プリンタを設定するには <guibutton>設定</guibutton> をクリックします。"
-"プリンタが機能をサポートしていれば、例えば、両面印刷を有効または"
-"無効にしたり、後で印刷させたりできます。"
-
-#: C/evince.xml:448(guilabel)
-msgid "Location"
-msgstr "場所"
-
-#: C/evince.xml:450(para)
-msgid ""
-"Use this drop-down list to select one of the following print destinations:"
-msgstr "ドロップダウンリストから次の中のどれかの印刷先を選択します:"
-
-#: C/evince.xml:455(guilabel)
-msgid "CUPS"
-msgstr "CUPS"
-
-#: C/evince.xml:457(para)
-msgid "Print the document to a CUPS printer."
-msgstr "CUPS プリンタに印刷します。"
-
-#: C/evince.xml:461(para)
-msgid ""
-"If the selected printer is a CUPS printer, <guilabel>CUPS</guilabel> is the "
-"only entry in this drop-down list."
-msgstr "選択されたプリンタが CUPS プリンタである場合は <guilabel>CUPS"
-"</guilabel> だけがこのドロップダウンリストの唯一のエントリとなります。"
-
-#: C/evince.xml:468(guilabel)
-msgid "lpr"
-msgstr "lpr"
-
-#: C/evince.xml:470(para)
-msgid "Print the document to a printer."
-msgstr "ドキュメントを一つのプリンタで印刷します。"
-
-#: C/evince.xml:476(guilabel)
-msgid "File"
-msgstr "ファイル"
-
-#: C/evince.xml:478(para)
-msgid "Print the document to a PostScript file."
-msgstr "ドキュメントを PostScript ファイルに出力します。"
-
-#: C/evince.xml:481(para)
-msgid ""
-"Click <guibutton>Save As</guibutton> to display a dialog where you specify "
-"the name and location of the PostScript file."
-msgstr "<guibutton>別名で保存</guibutton> をクリックして "
-"PostScript ファイルの名前と場所を指定するためのダイアログを"
-"表示させます。"
-
-#: C/evince.xml:487(guilabel)
-msgid "Custom"
-msgstr "カスタム"
-
-#: C/evince.xml:489(para)
-msgid "Use the specified command to print the document."
-msgstr "ドキュメントを印刷するために特定のコマンドを使用します。"
-
-#: C/evince.xml:492(para)
-msgid ""
-"Type the name of the command in the text box. Include all command-line "
-"arguments."
-msgstr "テキストボックスにコマンド名を入力します。"
-"すべてのコマンド行引数を含めます。"
-
-#: C/evince.xml:500(guilabel)
-msgid "State"
-msgstr "状態"
-
-#: C/evince.xml:502(para) C/evince.xml:508(para) C/evince.xml:514(para)
-msgid ""
-"This functionality is not supported in this version of <application>Evince "
-"Document Viewer</application>."
-msgstr "この機能はこのバージョンの "
-"<application>Evince ドキュメントビューア</application> では"
-"サポートされていません。"
-
-# ?
-#: C/evince.xml:506(guilabel)
-msgid "Type"
-msgstr "種類"
-
-#: C/evince.xml:512(guilabel)
-msgid "Comment"
-msgstr "コメント"
-
-#: C/evince.xml:524(guilabel)
-msgid "Paper size"
-msgstr "用紙サイズ"
-
-#: C/evince.xml:526(para)
-msgid ""
-"Use this drop-down list to select the size of the paper to which you want to "
-"print the document."
-msgstr "ドキュメントを印刷する用紙のサイズを選択するには"
-"このドロップダウンリストを使います。"
-
-#: C/evince.xml:529(guilabel)
-msgid "Width"
-msgstr "幅"
-
-#: C/evince.xml:531(para)
-msgid ""
-"Use this spin box to specify the width of the paper. Use the adjacent drop-"
-"down list to change the measurement unit."
-msgstr "用紙の幅を指定するにはこのスピンボックスを使います。"
-"サイズの単位を変更するには隣のドロップダウンリストを使います。"
-
-#: C/evince.xml:534(guilabel)
-msgid "Height"
-msgstr "高さ"
-
-#: C/evince.xml:536(para)
-msgid "Use this spin box to specify the height of the paper."
-msgstr "用紙の高さを指定します。"
-
-#: C/evince.xml:539(guilabel)
-msgid "Feed orientation"
-msgstr "用紙の向き"
-
-#: C/evince.xml:541(para)
-msgid ""
-"Use this drop-down list to select the orientation of the paper in the "
-"printer."
-msgstr "ドロップダウンリストからプリンタ内の用紙の向きを選択します。"
-
-#: C/evince.xml:544(guilabel)
-msgid "Page orientation"
-msgstr "ページの向き"
-
-#: C/evince.xml:546(para)
-msgid "Use this drop-down list to select the page orientation."
-msgstr "ドロップダウンリストから用紙の向きを選択します。"
-
-#: C/evince.xml:549(guilabel)
-msgid "Layout"
-msgstr "レイアウト"
-
-#: C/evince.xml:551(para)
-msgid ""
-"Use this drop-down list to select the page layout. A preview of each layout "
-"that you select is displayed in the <guilabel>Preview</guilabel> area."
+#: C/toolbar.page:25(section/title)
+msgid "Show or hide the toolbar"
+msgstr "ツールバーの表示または非表示"
+
+#: C/toolbar.page:26(section/p)
+msgid "Click <guiseq><gui>View</gui><gui>Toolbar</gui></guiseq>."
 msgstr ""
-"ページレイアウトを選択するにはこのドロップダウンリストを使います。<guilabel>「プレ"
-"ビュー」</guilabel>領域には、選択した各レイアウトのプレビューが表示されます。"
+"<guiseq><gui>表示</gui><gui>ツールバー</gui></guiseq>をクリックします。"
 
-#: C/evince.xml:554(guilabel)
-msgid "Paper Tray"
-msgstr "用紙トレイ"
+#: C/toolbar.page:27(section/p)
+msgid "The default toolbar contains only a basic set of tools:"
+msgstr ""
+"デフォルトのツールバーには、基本的なツールのセットのみが含まれています。"
 
-#: C/evince.xml:556(para)
-msgid "Use this drop-down list to select the paper tray."
-msgstr "用紙のトレイを選択するにはこのドロップダウンリストを使います。"
-
-#: C/evince.xml:566(title)
-msgid "To Copy a Document"
-msgstr "ドキュメントのコピー"
-
-#: C/evince.xml:567(para)
-msgid "To copy a file, perform the following steps:"
-msgstr "ファイルをコピーするには次のステップを実行します:"
-
-#: C/evince.xml:571(para)
+#: C/toolbar.page:32(item/p)
 msgid ""
-"Choose <menuchoice><guimenu>File</guimenu><guimenuitem>Save a Copy</"
-"guimenuitem></menuchoice>."
-msgstr "<menuchoice><guimenu>ファイル</guimenu><guimenuitem>"
-"別名で保存</guimenuitem></menuchoice> を選択します。"
+"<gui>Previous</gui> and <gui>Next</gui> for <link xref="
+"\"movingaround#between-pages\">moving</link> from page to page."
+msgstr ""
+"ページからページへの<link xref=\"movingaround#between-pages\">移動</link>を行"
+"う<gui>前へ</gui>および<gui>次へ</gui>"
 
-#: C/evince.xml:576(para)
+#: C/toolbar.page:34(item/p)
 msgid ""
-"Type the new filename in the <guilabel>Filename</guilabel> text box in the "
-"<guilabel>Save a Copy</guilabel> dialog."
-msgstr "<guilabel>別名で保存</guilabel> ダイアログの "
-"<guilabel>名前</guilabel> テキストボックスに新しいファイル名を"
-"入力します。"
+"A tool to adjust the <link xref=\"movingaround#zoom\">zoom</link> level."
+msgstr ""
+"<link xref=\"movingaround#zoom\">ズーム</link>・レベルを調整するためのツール"
 
-#: C/evince.xml:579(para)
+#: C/toolbar.page:35(item/p)
 msgid ""
-"If necessary, specify the location of the copied document. By default, "
-"copies are saved in your home directory."
-msgstr "必要ならコピーしたドキュメントの場所も指定します。デフォルトでは"
-"コピーはホームディレクトリに保存されます。"
+"The 'page select' <link xref=\"movingaround#between-pages\">tool.</link>"
+msgstr "ページ選択<link xref=\"movingaround#between-pages\">ツール</link>"
 
-#: C/evince.xml:584(para)
-msgid "Click <guibutton>Save</guibutton>."
-msgstr "<guibutton>保存</guibutton> をクリックします。"
-
-#: C/evince.xml:593(title)
-msgid "To Work With Password-Protected Documents"
-msgstr "パスワードで保護されたドキュメントを扱う"
-
-#: C/evince.xml:594(para)
-msgid "An author can use the following password levels to protect a document:"
-msgstr "ドキュメントの作成者はドキュメントを保護するのに次のパスワード"
-"レベルを使うことができます:"
-
-#: C/evince.xml:599(para)
-msgid "User password that allows others only to read the document."
-msgstr "他者にドキュメントの読み込みだけを許可するユーザーパスワード"
-
-#: C/evince.xml:603(para)
+#: C/toolbar.page:38(section/p)
 msgid ""
-"Master password that allows others to perform additional actions, such as "
-"print the document."
-msgstr "他者にドキュメントの印刷などの追加のアクションを許可するマスターパスワード"
+"You can <link xref=\"toolbar#modify\">modify</link> the toolbar if you "
+"prefer a different set."
+msgstr ""
+"異なるツールのセットがお好みの場合、ツールバーを<link xref=\"toolbar#modify"
+"\">編集</link>できます。"
 
-#: C/evince.xml:607(para)
+#: C/toolbar.page:44(section/title)
+msgid "Add, remove and rearrange the tools in the toolbar."
+msgstr "ツールバーへのツールの追加、削除および整理"
+
+#: C/toolbar.page:46(item/p)
+msgid "<link xref=\"toolbar#view\">Show</link> the toolbar."
+msgstr "ツールバーを<link xref=\"toolbar#view\">表示</link>します。"
+
+#: C/toolbar.page:47(item/p)
+msgid "Click <guiseq><gui>Edit</gui><gui>Toolbar</gui></guiseq>."
+msgstr ""
+"<guiseq><gui>編集</gui><gui>ツールバー</gui></guiseq>をクリックします。"
+
+#: C/toolbar.page:49(section/p)
 msgid ""
-"When you try to open a password-protected document, <application>Evince "
-"Document Viewer</application> displays a security dialog. Type either the "
-"user password or the master password in the <guilabel>Enter document "
-"password</guilabel> text box, then click <guibutton>Open Document</"
-"guibutton>."
-msgstr "パスワードで保護されたドキュメントを開こうとすると "
-"<application>Evince ドキュメントビューア</application> は"
-"セキュリティダイアログを表示します。ユーザーパスワードまたは"
-"マスターパスワードを <guilabel>パスワードの入力</guilabel> "
-"テキストボックスに入力し、<guibutton>ドキュメントを開く</guibutton> を"
-"クリックします。"
+"The <gui>toolbar editor</gui> contains the items that are not in the toolbar "
+"and the separator item."
+msgstr ""
+"<gui>ツールバーエディター</gui>は、ツールバーにない項目とセパレーターを含んで"
+"います。"
 
-#: C/evince.xml:614(title)
-msgid "To Close a Document"
-msgstr "ドキュメントを閉じる"
+#: C/toolbar.page:54(item/title)
+msgid "To add new items to the toolbar:"
+msgstr "ツールバーに新しい項目を追加するには"
 
-#: C/evince.xml:615(para)
+#: C/toolbar.page:55(item/p)
+msgid "drag them from the toolbar editor to the toolbar."
+msgstr "ツールバーエディターからツールバーへ追加したい項目をドラッグします。"
+
+#: C/toolbar.page:57(item/title)
+msgid "To remove items from the toolbar:"
+msgstr "ツールバーから項目を削除するには"
+
+#: C/toolbar.page:58(item/p)
+msgid "drag them from the toolbar to the toolbar editor."
+msgstr "ツールバーからツールバーエディターへ削除したい項目をドラッグします。"
+
+#: C/toolbar.page:60(item/title)
+msgid "To rearrange items on the toolbar:"
+msgstr "ツールバー上の項目を整理するには"
+
+#: C/toolbar.page:61(item/p)
+msgid "drag them to their new position on the toolbar."
+msgstr "ツールバー上の新しい位置へ移動したい項目をドラッグします。"
+
+#: C/toolbar.page:63(section/p)
 msgid ""
-"To close a document, choose <menuchoice><guimenu>File</"
-"guimenu><guimenuitem>Close</guimenuitem></menuchoice>."
-msgstr "ドキュメントを閉じるには <menuchoice><guimenu>ファイル</guimenu>"
-"<guimenuitem>閉じる</guimenuitem></menuchoice> を選択します。"
+"When you have finish editing the toolbar, click <gui>Close</gui> in the "
+"toolbar editor window."
+msgstr ""
+"ツールバーの編集が完了したならば、ツールバーエディターのウィンドウにある<gui>"
+"閉じる</gui>をクリックします。"
 
-#: C/evince.xml:617(para)
+#: C/translate.page:7(info/desc)
+msgid "Localize the <app>Document Viewer.</app>"
+msgstr "<app>ドキュメントビューアー</app>をローカライズします。"
+
+#: C/translate.page:15(credit/name)
+msgid "Michael Hill"
+msgstr "Michael Hill"
+
+#: C/translate.page:23(page/title)
+msgid "Help translate"
+msgstr "翻訳の協力"
+
+#: C/translate.page:24(page/p)
 msgid ""
-"If the window is the last <application>Evince Document Viewer</application> "
-"window open, the application exits."
-msgstr "ウィンドウが <application>Evince ドキュメントビューア</application> の"
-"最後の残りのウィンドウならアプリケーションは終了します。"
+"The <app>Document Viewer</app> user interface and documentation is being "
+"translated by a world-wide volunteer community. You are welcome to "
+"participate."
+msgstr ""
+"<app>ドキュメントビューアー</app>のユーザーインターフェースとドキュメントは、"
+"世界的なボランティアコミュニティによって翻訳されています。あなたの参加を歓迎"
+"します。"
 
-#. Put one translator per line, in the form of NAME <EMAIL>, YEAR1, YEAR2.
-#: C/evince.xml:0(None)
-msgid "translator-credits"
-msgstr "佐藤 暁 <ss@gnome.gr.jp>\n"
-"日本 GNOME ユーザー会 http://www.gnome.gr.jp"
+#: C/translate.page:27(page/p)
+msgid ""
+"There are <link href=\"http://l10n.gnome.org/module/evince/\">many "
+"languages</link> for which translations are still needed."
+msgstr ""
+"まだ翻訳を必要としている<link href=\"http://l10n.gnome.org/module/evince/\">"
+"多くの言語</link>があります。"
+
+#: C/translate.page:30(page/p)
+msgid ""
+"To start translating you will need to <link href=\"http:l10n.gnome.org"
+"\">create an account</link> and join the <link href=\"http://l10n.gnome.org/"
+"teams/\">translation team</link> for your language. This will give you the "
+"ability to upload new translations."
+msgstr ""
+"翻訳を始めるには、<link href=\"http:l10n.gnome.org\">アカウントを作成</link>"
+"し、あなたの言語の<link href=\"http://l10n.gnome.org/teams/\">翻訳チーム</"
+"link>に参加する必要があります。これにより、新しい翻訳をアップロードすることが"
+"できるようになります。"
+
+#: C/translate.page:34(page/p)
+msgid ""
+"You can chat with GNOME translators using <link href=\"https://cbe003.chat."
+"mibbit.com/?url=irc%3A%2F%2Firc.gnome.org%2Fi18n\">irc</link>. People on the "
+"channel are located worldwide, so you may not get an immediate response as a "
+"result of timezone differences."
+msgstr ""
+"<link href=\"https://cbe003.chat.mibbit.com/?url=irc%3A%2F%2Firc.gnome.org"
+"%2Fi18n\">IRC</link> を使って、GNOME の翻訳者たちとチャットできます。チャンネ"
+"ル上の人々は世界各地に住んでいます。したがって、タイムゾーンの違いにより、た"
+"だちに返事を得られないこともあります。"
+
+#: C/translate.page:37(page/p)
+msgid ""
+"Alternatively, you can contact the Internationalization Team using their "
+"<link href=\"http://mail.gnome.org/mailman/listinfo/gnome-i18n\">mailing "
+"list</link>."
+msgstr ""
+"あるいは、<link href=\"http://mail.gnome.org/mailman/listinfo/gnome-i18n\">"
+"メーリングリスト</link>を使って、国際化チームに連絡することもできます。"
