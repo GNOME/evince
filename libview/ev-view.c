@@ -592,7 +592,8 @@ ev_view_set_adjustment_values (EvView         *view,
 	upper = gtk_adjustment_get_upper (adjustment);
 	page_size = gtk_adjustment_get_page_size (adjustment);
 
-	switch (view->pending_scroll) {
+	if (upper != .0) {
+		switch (view->pending_scroll) {
     	        case SCROLL_TO_KEEP_POSITION:
     	        case SCROLL_TO_FIND_LOCATION:
 			factor = value / upper;
@@ -602,6 +603,7 @@ ev_view_set_adjustment_values (EvView         *view,
     	        case SCROLL_TO_CENTER:
 			factor = (value + page_size * 0.5) / upper;
 			break;
+		}
 	}
 
 	upper = MAX (alloc_size, req_size);
