@@ -15,14 +15,14 @@ msgstr ""
 "Project-Id-Version: Evince MASTER\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evince&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2012-02-27 08:14+0000\n"
-"PO-Revision-Date: 2012-02-27 11:38+0200\n"
+"POT-Creation-Date: 2012-09-22 23:04+0000\n"
+"PO-Revision-Date: 2012-09-23 09:21+0300\n"
 "Last-Translator: Mattias Põldaru <mahfiaz@gmail.com>\n"
 "Language-Team: Estonian <>\n"
 "Language: et\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bits\n"
+"Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n!=1);\n"
 
 #, c-format
@@ -45,9 +45,6 @@ msgstr "Pole koomiksiraamatu MIME-tüüp: %s"
 msgid "Can't find an appropriate command to decompress this type of comic book"
 msgstr ""
 "Seda liiki koomiksiraamatu lahtipakkimiseks ei leitud ühtegi sobivat käsku"
-
-msgid "Unknown MIME Type"
-msgstr "Tundmatu MIME-tüüp"
 
 msgid "File corrupted"
 msgstr "Fail on rikutud"
@@ -127,6 +124,9 @@ msgstr "Tundmatu kirjatüüp"
 msgid "No name"
 msgstr "Nimi puudub"
 
+msgid "None"
+msgstr "Puudub"
+
 msgid "Embedded subset"
 msgstr "Põimitud alamhulk"
 
@@ -135,6 +135,12 @@ msgstr "Põimitud"
 
 msgid "Not embedded"
 msgstr "Põimimata"
+
+msgid "Encoding"
+msgstr "Kodeering"
+
+msgid "substituting with"
+msgstr "asendatakse"
 
 msgid "PDF Documents"
 msgstr "PDF-dokumendid"
@@ -153,6 +159,12 @@ msgstr "PostScript-dokumendid"
 msgid "Invalid document"
 msgstr "Vigane dokument"
 
+msgid "TIFF Documents"
+msgstr "TIFF-dokumendid"
+
+msgid "XPS Documents"
+msgstr "XPS-dokumendid"
+
 #, c-format
 msgid "Couldn't save attachment “%s”: %s"
 msgstr "Manust „%s” pole võimalik salvestada: %s"
@@ -168,6 +180,9 @@ msgstr "Manust „%s” pole võimalik avada"
 #, c-format
 msgid "File type %s (%s) is not supported"
 msgstr "Failitüüp %s (%s) pole toetatud"
+
+msgid "Unknown MIME Type"
+msgstr "Tundmatu MIME-tüüp"
 
 msgid "All Documents"
 msgstr "Kõik dokumendid"
@@ -340,6 +355,12 @@ msgstr "Dokumendi automaatne uuestilaadimine"
 msgid "The document is automatically reloaded on file change."
 msgstr "Faili muutumisel laaditakse dokument automaatselt uuesti."
 
+msgid "The URI of the directory last used to open or save a document"
+msgstr "Viimati dokumendi avamiseks või salvestamiseks kasutatud kataloogi URI"
+
+msgid "The URI of the directory last used to save a picture"
+msgstr "Viimati pildi salvestamiseks kasutatud kataloogi URI"
+
 msgid "Delete the temporary file"
 msgstr "Ajutise faili kustutamine"
 
@@ -443,9 +464,6 @@ msgstr "Turvalisus:"
 
 msgid "Paper Size:"
 msgstr "Paberi suurus:"
-
-msgid "None"
-msgstr "Puudub"
 
 #. Translate to the default units to use for presenting
 #. * lengths to the user. Translate to default:inch if you
@@ -625,8 +643,17 @@ msgstr "Liikumine failile „%s”"
 msgid "Launch %s"
 msgstr "Käivita %s"
 
+msgid "_Whole Words Only"
+msgstr "_Ainult terved sõnad"
+
+msgid "C_ase Sensitive"
+msgstr "_Tõstutundlik"
+
 msgid "Find:"
 msgstr "Leia:"
+
+msgid "Find options"
+msgstr "Otsimise valikud"
 
 msgid "Find Pre_vious"
 msgstr "Leia _eelmine"
@@ -639,12 +666,6 @@ msgstr "Leia _järgmine"
 
 msgid "Find next occurrence of the search string"
 msgstr "Järgmise sarnase sõna või lause leidmine"
-
-msgid "C_ase Sensitive"
-msgstr "_Tõstutundlik"
-
-msgid "Toggle case sensitive search"
-msgstr "Tõstutundliku otsingu sisse- ja väljalülitamine"
 
 msgid "Icon:"
 msgstr "Ikoon:"
@@ -702,9 +723,6 @@ msgstr "Avamine"
 
 msgid "Close"
 msgstr "Sulgemine"
-
-msgid "Running in presentation mode"
-msgstr "Evince käivitamine esitlusrežiimis"
 
 #, c-format
 msgid "Password for document %s"
@@ -957,6 +975,9 @@ msgstr "_Katkesta printimine ja sulge"
 msgid "Close _after Printing"
 msgstr "Sulge _pärast printimist"
 
+msgid "Running in presentation mode"
+msgstr "Evince käivitamine esitlusrežiimis"
+
 msgid "There was an error displaying help"
 msgstr "Abiteabe kuvamisel tekkis viga"
 
@@ -1005,8 +1026,8 @@ msgstr ""
 msgid "Evince"
 msgstr "Evince"
 
-msgid "© 1996–2010 The Evince authors"
-msgstr "© 1996–2010 Evince'i autorid"
+msgid "© 1996–2012 The Evince authors"
+msgstr "© 1996–2012 Evince'i autorid"
 
 msgid "translator-credits"
 msgstr ""
