@@ -159,6 +159,7 @@ evinced_LDADD=				\
 endif
 
 EXTRA_DIST = \
+	evince.css \
 	evince-icon.rc \
 	evince-ui.xml \
 	evince-toolbar.xml \

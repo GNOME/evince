@@ -4013,24 +4013,6 @@ fullscreen_toolbar_setup_item_properties (GtkUIManager *ui_manager)
 }
 
 static void
-fullscreen_toolbar_remove_shadow (GtkWidget *toolbar)
-{
-	GtkCssProvider *provider;
-
-	gtk_widget_set_name (toolbar, "ev-fullscreen-toolbar");
-
-	provider = gtk_css_provider_new ();
-	gtk_css_provider_load_from_data (provider,
-					 "#ev-fullscreen-toolbar {\n"
-					 " -GtkToolbar-shadow-type: none; }",
-					 -1, NULL);
-	gtk_style_context_add_provider (gtk_widget_get_style_context (toolbar),
-					GTK_STYLE_PROVIDER (provider),
-					GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
-	g_object_unref (provider);
-}
-
-static void
 ev_window_run_fullscreen (EvWindow *window)
 {
 	gboolean fullscreen_window = TRUE;
@@ -4043,9 +4025,10 @@ ev_window_run_fullscreen (EvWindow *window)
 			gtk_ui_manager_get_widget (window->priv->ui_manager,
 						   "/FullscreenToolbar");
 
+		gtk_widget_set_name (window->priv->fullscreen_toolbar,
+				     "ev-fullscreen-toolbar");
 		gtk_toolbar_set_style (GTK_TOOLBAR (window->priv->fullscreen_toolbar),
 				       GTK_TOOLBAR_BOTH_HORIZ);
-		fullscreen_toolbar_remove_shadow (window->priv->fullscreen_toolbar);
 		fullscreen_toolbar_setup_item_properties (window->priv->ui_manager);
 
 		gtk_box_pack_start (GTK_BOX (window->priv->main_box),
@@ -7168,11 +7151,33 @@ handle_sync_view_cb (EvEvinceWindow        *object,
 }
 #endif /* ENABLE_DBUS */
 
+static gboolean
+_gtk_css_provider_load_from_resource (GtkCssProvider *provider,
+				      const char     *resource_path,
+				      GError        **error)
+{
+	GBytes  *data;
+	gboolean retval;
+
+	data = g_resources_lookup_data (resource_path, 0, error);
+	if (!data)
+		return FALSE;
+
+	retval = gtk_css_provider_load_from_data (provider,
+						  g_bytes_get_data (data, NULL),
+						  g_bytes_get_size (data),
+						  error);
+	g_bytes_unref (data);
+
+	return retval;
+}
+
 static void
 ev_window_init (EvWindow *ev_window)
 {
 	GtkActionGroup *action_group;
 	GtkAccelGroup *accel_group;
+	GtkCssProvider *css_provider;
 	GError *error = NULL;
 	GtkWidget *sidebar_widget;
 	GtkWidget *menuitem;
@@ -7274,6 +7279,16 @@ ev_window_init (EvWindow *ev_window)
                                              "/org/gnome/evince/shell/ui/evince.xml",
                                              &error);
         g_assert_no_error (error);
+
+	css_provider = gtk_css_provider_new ();
+	_gtk_css_provider_load_from_resource (css_provider,
+					      "/org/gnome/evince/shell/ui/evince.css",
+					      &error);
+	g_assert_no_error (error);
+	gtk_style_context_add_provider_for_screen (gtk_widget_get_screen (GTK_WIDGET (ev_window)),
+					GTK_STYLE_PROVIDER (css_provider),
+					GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+	g_object_unref (css_provider);
 
 	ev_window->priv->recent_manager = gtk_recent_manager_get_default ();
 	ev_window->priv->recent_action_group = NULL;
