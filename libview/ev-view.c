@@ -39,7 +39,6 @@
 #include "ev-view-marshal.h"
 #include "ev-document-annotations.h"
 #include "ev-annotation-window.h"
-#include "ev-loading-window.h"
 #include "ev-view.h"
 #include "ev-view-accessible.h"
 #include "ev-view-private.h"
@@ -69,6 +68,7 @@ enum {
 
 enum {
 	PROP_0,
+	PROP_IS_LOADING,
 	PROP_HADJUSTMENT,
 	PROP_VADJUSTMENT,
 	PROP_HSCROLL_POLICY,
@@ -205,13 +205,9 @@ static void       draw_one_page                              (EvView            
 							      GtkBorder          *border,
 							      GdkRectangle       *expose_area,
 							      gboolean		 *page_ready);
-static void       show_loading_window                        (EvView             *view);
-static void       hide_loading_window                        (EvView             *view);
 static void       ev_view_reload_page                        (EvView             *view,
 							      gint                page,
 							      cairo_region_t     *region);
-static void       ev_view_loading_window_move                (EvView             *view);
-
 /*** Callbacks ***/
 static void       ev_view_change_page                        (EvView             *view,
 							      gint                new_page);
@@ -700,7 +696,7 @@ view_update_range_and_current_page (EvView *view)
 
 			if (view->current_page != best_current_page) {
 				view->current_page = best_current_page;
-				hide_loading_window (view);
+				ev_view_set_loading (view, FALSE);
 				ev_document_model_set_page (view->model, best_current_page);
 			}
 		}
@@ -3410,13 +3406,6 @@ ev_view_draw (GtkWidget *widget,
 	gint         i;
 	GdkRectangle clip_rect;
 
-	if (view->loading) {
-		show_loading_window (view);
-	} else if (view->loading_window &&
-		   gtk_widget_get_visible (view->loading_window)) {
-		ev_view_loading_window_move (view);
-	}
-
 	if (view->document == NULL)
 		return FALSE;
 
@@ -4350,81 +4339,6 @@ focus_annotation (EvView       *view,
 }
 
 static void
-ev_view_loading_window_move (EvView *view)
-{
-	GtkWidget       *widget = GTK_WIDGET (view);
-	EvLoadingWindow *window = EV_LOADING_WINDOW (view->loading_window);
-	gint             root_x, root_y;
-	gint             window_width;
-	GtkAllocation    allocation;
-
-	gtk_widget_get_allocation (widget, &allocation);
-	gdk_window_get_origin (gtk_widget_get_window (widget), &root_x, &root_y);
-	ev_loading_window_get_size (window, &window_width, NULL);
-
-	root_x += allocation.width - window_width - 10;
-	root_y += 10;
-
-	ev_loading_window_move (window, root_x, root_y);
-}
-
-static gboolean
-show_loading_window_cb (EvView *view)
-{
-	if (!view->loading_window) {
-		GtkWindow *parent;
-		GdkScreen *screen;
-
-		parent = GTK_WINDOW (gtk_widget_get_toplevel (GTK_WIDGET (view)));
-		view->loading_window = ev_loading_window_new (parent);
-
-		/* Show the window off screen to get a valid size asap */
-		screen = gtk_widget_get_screen (GTK_WIDGET (view));
-		gtk_window_move (GTK_WINDOW (view->loading_window),
-				 gdk_screen_get_width (screen) + 1,
-				 gdk_screen_get_height (screen) + 1);
-		gtk_widget_show (view->loading_window);
-	}
-
-	ev_view_loading_window_move (view);
-
-	gtk_widget_show (view->loading_window);
-
-	view->loading_timeout = 0;
-
-	return FALSE;
-}
-
-static void
-show_loading_window (EvView *view)
-{
-	if (view->loading_window && gtk_widget_get_visible (view->loading_window)) {
-		ev_view_loading_window_move (view);
-		return;
-	}
-
-	if (!view->loading_timeout) {
-		view->loading_timeout =
-			g_timeout_add_full (G_PRIORITY_LOW,
-					    0.5, (GSourceFunc)show_loading_window_cb,
-					    view, NULL);
-	}
-}
-
-static void
-hide_loading_window (EvView *view)
-{
-	if (view->loading_timeout) {
-		g_source_remove (view->loading_timeout);
-		view->loading_timeout = 0;
-	}
-
-	if (view->loading_window && gtk_widget_get_visible (view->loading_window)) {
-		gtk_widget_hide (view->loading_window);
-	}
-}
-
-static void
 draw_one_page (EvView       *view,
 	       gint          page,
 	       cairo_t      *cr,
@@ -4471,7 +4385,7 @@ draw_one_page (EvView       *view,
 
 		if (!page_surface) {
 			if (page == current_page)
-				show_loading_window (view);
+				ev_view_set_loading (view, TRUE);
 
 			*page_ready = FALSE;
 
@@ -4479,7 +4393,7 @@ draw_one_page (EvView       *view,
 		}
 
 		if (page == current_page)
-			hide_loading_window (view);
+			ev_view_set_loading (view, FALSE);
 
 		ev_view_get_page_size (view, page, &width, &height);
 
@@ -4619,11 +4533,6 @@ ev_view_dispose (GObject *object)
 		view->drag_info.release_timeout_id = 0;
 	}
 
-	if (view->loading_timeout) {
-		g_source_remove (view->loading_timeout);
-		view->loading_timeout = 0;
-	}
-
         gtk_scrollable_set_hadjustment (GTK_SCROLLABLE (view), NULL);
         gtk_scrollable_set_vadjustment (GTK_SCROLLABLE (view), NULL);
 
@@ -4639,6 +4548,9 @@ ev_view_get_property (GObject     *object,
 	EvView *view = EV_VIEW (object);
 
 	switch (prop_id) {
+	case PROP_IS_LOADING:
+		g_value_set_boolean (value, view->loading);
+		break;
 	case PROP_HADJUSTMENT:
 		g_value_set_object (value, view->hadjustment);
 		break;
@@ -4666,6 +4578,9 @@ ev_view_set_property (GObject      *object,
 	EvView *view = EV_VIEW (object);
 
 	switch (prop_id) {
+	case PROP_IS_LOADING:
+		ev_view_set_loading (view, g_value_get_boolean (value));
+		break;
 	case PROP_HADJUSTMENT:
 		ev_view_set_scroll_adjustment (view, GTK_ORIENTATION_HORIZONTAL,
 					       (GtkAdjustment *) g_value_get_object (value));
@@ -4818,6 +4733,15 @@ ev_view_class_init (EvViewClass *class)
 
 	class->binding_activated = ev_view_scroll;
 
+	g_object_class_install_property (object_class,
+					 PROP_IS_LOADING,
+					 g_param_spec_boolean ("is-loading",
+							       "Is Loading",
+							       "Whether the view is loading",
+							       FALSE,
+							       G_PARAM_READABLE |
+							       G_PARAM_STATIC_STRINGS));
+
 	/* Scrollable interface */
 	g_object_class_override_property (object_class, PROP_HADJUSTMENT, "hadjustment");
 	g_object_class_override_property (object_class, PROP_VADJUSTMENT, "vadjustment");
@@ -4964,7 +4888,7 @@ ev_view_change_page (EvView *view,
 	view->current_page = new_page;
 	view->pending_scroll = SCROLL_TO_PAGE_POSITION;
 
-	hide_loading_window (view);
+	ev_view_set_loading (view, FALSE);
 
 	ev_document_misc_get_pointer_position (GTK_WIDGET (view), &x, &y);
 	ev_view_handle_cursor_over_xy (view, x, y);
@@ -5135,10 +5059,17 @@ void
 ev_view_set_loading (EvView 	  *view,
 		     gboolean      loading)
 {
-	if (view->loading && !loading)
-		hide_loading_window (view);
+	if (view->loading == loading)
+		return;
+
 	view->loading = loading;
-	gtk_widget_queue_draw (GTK_WIDGET (view));
+	g_object_notify (G_OBJECT (view), "is-loading");
+}
+
+gboolean
+ev_view_is_loading (EvView *view)
+{
+	return view->loading;
 }
 
 static gboolean
@@ -5237,7 +5168,7 @@ ev_view_document_changed_cb (EvDocumentModel *model,
 		view->find_result = 0;
 
 		if (view->document) {
-			view->loading = FALSE;
+			ev_view_set_loading (view, FALSE);
 			g_object_ref (view->document);
 			setup_caches (view);
                 }

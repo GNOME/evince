@@ -43,6 +43,8 @@ evince_SOURCES=				\
 	ev-history.h			\
 	ev-keyring.h			\
 	ev-keyring.c			\
+	ev-loading-message.c		\
+	ev-loading-message.h		\
 	ev-message-area.c		\
 	ev-message-area.h		\
 	ev-metadata.c			\

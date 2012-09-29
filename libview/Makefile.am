@@ -2,7 +2,6 @@ lib_LTLIBRARIES = libevview3.la
 
 NOINST_H_SRC_FILES =			\
 	ev-annotation-window.h		\
-	ev-loading-window.h		\
 	ev-page-cache.h			\
 	ev-pixbuf-cache.h		\
 	ev-timeline.h			\
@@ -33,7 +32,6 @@ nodist_header_DATA = $(INST_H_BUILT_FILES)
 libevview3_la_SOURCES =			\
 	ev-annotation-window.c		\
 	ev-document-model.c		\
-	ev-loading-window.c		\
 	ev-jobs.c			\
 	ev-job-scheduler.c		\
 	ev-page-cache.c			\

@@ -399,7 +399,6 @@ ev_previewer_window_set_document (EvPreviewerWindow *window,
 	g_signal_connect (model, "notify::sizing-mode",
 			  G_CALLBACK (view_sizing_mode_changed),
 			  window);
-	ev_view_set_loading (window->view, FALSE);
 	gtk_action_group_set_sensitive (window->action_group, TRUE);
 	gtk_action_group_set_sensitive (window->accels_group, TRUE);
 }
@@ -592,7 +591,6 @@ ev_previewer_window_constructor (GType                  type,
 				 window, 0);
 	ev_view_set_model (window->view, window->model);
 	ev_document_model_set_continuous (window->model, FALSE);
-	ev_view_set_loading (window->view, TRUE);
 
 	gtk_container_add (GTK_CONTAINER (window->swindow), GTK_WIDGET (window->view));
 	gtk_widget_show (GTK_WIDGET (window->view));
