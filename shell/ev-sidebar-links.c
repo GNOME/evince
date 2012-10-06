@@ -426,8 +426,11 @@ ev_sidebar_links_construct (EvSidebarLinks *ev_sidebar_links)
 					     "markup", EV_DOCUMENT_LINKS_COLUMN_MARKUP,
 					     NULL);
 
-	
-	renderer = gtk_cell_renderer_text_new ();
+	renderer = (GtkCellRenderer*)
+		g_object_new (GTK_TYPE_CELL_RENDERER_TEXT,
+			      "ellipsize", PANGO_ELLIPSIZE_MIDDLE,
+			      "max-width-chars", 12,
+			      NULL);
 	gtk_tree_view_column_pack_end (GTK_TREE_VIEW_COLUMN (column), renderer, FALSE);
 	gtk_tree_view_column_set_attributes (GTK_TREE_VIEW_COLUMN (column), renderer,
 					     "text", EV_DOCUMENT_LINKS_COLUMN_PAGE_LABEL,
