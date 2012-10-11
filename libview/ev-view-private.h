@@ -145,6 +145,8 @@ struct _EvView {
 	gint scroll_x;
 	gint scroll_y;	
 
+	/* Delta sum for emulating normal scrolling */
+	gdouble       total_delta;
 	PendingScroll pending_scroll;
 	gboolean      pending_resize;
 	EvPoint       pending_point;

@@ -3392,22 +3392,30 @@ ev_view_scroll_event (GtkWidget *widget, GdkEventScroll *event)
 	EvView *view = EV_VIEW (widget);
 	guint state;
 
-        if (event->direction == GDK_SCROLL_SMOOTH)
-                return FALSE;
-
 	state = event->state & gtk_accelerator_get_default_mod_mask ();
 
 	if (state == GDK_CONTROL_MASK) {
 		ev_document_model_set_sizing_mode (view->model, EV_SIZING_FREE);
-		if (event->direction == GDK_SCROLL_UP ||
-		    event->direction == GDK_SCROLL_LEFT) {
-			if (ev_view_can_zoom_in (view)) {
-				ev_view_zoom_in (view);
-			}
-		} else {
-			if (ev_view_can_zoom_out (view)) {
+		switch (event->direction) {
+		case GDK_SCROLL_DOWN:
+		case GDK_SCROLL_RIGHT:
+			if (ev_view_can_zoom_out (view))
 				ev_view_zoom_out (view);
-			}
+			break;
+		case GDK_SCROLL_UP:
+		case GDK_SCROLL_LEFT:
+			if (ev_view_can_zoom_in (view))
+				ev_view_zoom_in (view);
+			break;
+		case GDK_SCROLL_SMOOTH: {
+			gdouble delta = event->delta_x + event->delta_y;
+			gdouble factor = pow (delta < 0 ? ZOOM_IN_FACTOR : ZOOM_OUT_FACTOR, fabs (delta));
+
+			if ((factor < 1.0 && ev_view_can_zoom_out (view)) ||
+			    (factor >= 1.0 && ev_view_can_zoom_in (view)))
+				ev_view_zoom (view, factor);
+		}
+			break;
 		}
 
 		return TRUE;
@@ -3425,6 +3433,13 @@ ev_view_scroll_event (GtkWidget *widget, GdkEventScroll *event)
 			event->direction = GDK_SCROLL_RIGHT;
 		else if (event->direction == GDK_SCROLL_RIGHT)
 			event->direction = GDK_SCROLL_DOWN;
+		else if (event->direction == GDK_SCROLL_SMOOTH) {
+			/* Swap the deltas for perpendicular direction */
+			gdouble tmp_delta = event->delta_x;
+
+			event->delta_x = event->delta_y;
+			event->delta_y = tmp_delta;
+		}
 
 		event->state &= ~GDK_SHIFT_MASK;
 		state &= ~GDK_SHIFT_MASK;
@@ -3432,16 +3447,29 @@ ev_view_scroll_event (GtkWidget *widget, GdkEventScroll *event)
 
 	if (state == 0 && view->sizing_mode == EV_SIZING_FIT_PAGE && !view->continuous) {
 		switch (event->direction) {
-		        case GDK_SCROLL_DOWN:
-		        case GDK_SCROLL_RIGHT:
-				ev_view_next_page (view);	
-				break;
-		        case GDK_SCROLL_UP:
-		        case GDK_SCROLL_LEFT:
-				ev_view_previous_page (view);
-				break;
-                        case GDK_SCROLL_SMOOTH:
-                                g_assert_not_reached ();
+		case GDK_SCROLL_DOWN:
+		case GDK_SCROLL_RIGHT:
+			ev_view_next_page (view);
+			break;
+		case GDK_SCROLL_UP:
+		case GDK_SCROLL_LEFT:
+			ev_view_previous_page (view);
+			break;
+		case GDK_SCROLL_SMOOTH: {
+			gdouble decrement;
+
+			/* Emulate normal scrolling by summing the deltas */
+			view->total_delta += event->delta_x + event->delta_y;
+
+			decrement = view->total_delta < 0 ? -1.0 : 1.0;
+			for (; fabs (view->total_delta) >= 1.0; view->total_delta -= decrement) {
+				if (decrement < 0)
+					ev_view_previous_page (view);
+				else
+					ev_view_next_page (view);
+			}
+		}
+			break;
 		}
 
 		return TRUE;
@@ -5014,6 +5042,7 @@ ev_view_init (EvView *view)
 			       GDK_BUTTON_PRESS_MASK |
 			       GDK_BUTTON_RELEASE_MASK |
 			       GDK_SCROLL_MASK |
+			       GDK_SMOOTH_SCROLL_MASK |
 			       GDK_KEY_PRESS_MASK |
 			       GDK_POINTER_MOTION_MASK |
 			       GDK_POINTER_MOTION_HINT_MASK |
