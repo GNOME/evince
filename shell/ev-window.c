@@ -7667,3 +7667,19 @@ ev_window_get_dbus_object_path (EvWindow *ev_window)
 	return NULL;
 #endif
 }
+
+GtkUIManager *
+ev_window_get_ui_manager (EvWindow *ev_window)
+{
+	g_return_val_if_fail (EV_WINDOW (ev_window), NULL);
+
+	return ev_window->priv->ui_manager;
+}
+
+GtkActionGroup *
+ev_window_get_main_action_group (EvWindow *ev_window)
+{
+	g_return_val_if_fail (EV_WINDOW (ev_window), NULL);
+
+	return ev_window->priv->action_group;
+}
