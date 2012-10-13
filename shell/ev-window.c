@@ -104,13 +104,12 @@ typedef enum {
 } EvWindowPageMode;
 
 typedef enum {
-	EV_CHROME_MENUBAR	= 1 << 0,
-	EV_CHROME_TOOLBAR	= 1 << 1,
-	EV_CHROME_FINDBAR	= 1 << 2,
-	EV_CHROME_RAISE_TOOLBAR	= 1 << 3,
-	EV_CHROME_FULLSCREEN_TOOLBAR	= 1 << 4,
-	EV_CHROME_SIDEBAR	= 1 << 5,
-	EV_CHROME_NORMAL	= EV_CHROME_TOOLBAR | EV_CHROME_SIDEBAR
+        EV_CHROME_TOOLBAR            = 1 << 0,
+        EV_CHROME_FINDBAR            = 1 << 1,
+        EV_CHROME_RAISE_TOOLBAR      = 1 << 2,
+        EV_CHROME_FULLSCREEN_TOOLBAR = 1 << 3,
+        EV_CHROME_SIDEBAR            = 1 << 4,
+        EV_CHROME_NORMAL             = EV_CHROME_TOOLBAR | EV_CHROME_SIDEBAR
 } EvChrome;
 
 typedef enum {
@@ -124,7 +123,6 @@ struct _EvWindowPrivate {
 	EvChrome chrome;
 
 	GtkWidget *main_box;
-	GtkWidget *menubar;
 	GtkWidget *toolbar;
 	GtkWidget *hpaned;
 	GtkWidget *view_box;
@@ -147,10 +145,6 @@ struct _EvWindowPrivate {
 	GSettings *settings;
 	GSettings *default_settings;
 	GSettings *lockdown_settings;
-
-	/* Menubar accels */
-	guint           menubar_accel_keyval;
-	GdkModifierType menubar_accel_modifier;
 
 	/* Progress Messages */
 	guint progress_idle;
@@ -496,9 +490,9 @@ ev_window_update_actions (EvWindow *ev_window)
 	ev_window_set_action_sensitive (ev_window, "EditCopy",
 					has_pages &&
 					ev_view_get_has_selection (view));
-	ev_window_set_action_sensitive (ev_window, "EditFindNext",
+	ev_window_set_action_sensitive (ev_window, "CtrlG",
 					has_pages && can_find_in_page);
-	ev_window_set_action_sensitive (ev_window, "EditFindPrevious",
+	ev_window_set_action_sensitive (ev_window, "ShiftCtrlG",
 					has_pages && can_find_in_page);
         ev_window_set_action_sensitive (ev_window, "F3",
                                         has_pages && can_find_in_page);
@@ -597,20 +591,16 @@ static void
 update_chrome_visibility (EvWindow *window)
 {
 	EvWindowPrivate *priv = window->priv;
-	gboolean menubar, toolbar, findbar, sidebar;
-	gboolean fullscreen_mode, presentation, fullscreen;
+	gboolean toolbar, findbar, sidebar;
+	gboolean presentation;
 
 	presentation = EV_WINDOW_IS_PRESENTATION (window);
-	fullscreen = ev_document_model_get_fullscreen (priv->model);
-	fullscreen_mode = fullscreen || presentation;
 
-	menubar = (priv->chrome & EV_CHROME_MENUBAR) != 0 && !fullscreen_mode;
 	toolbar = ((priv->chrome & EV_CHROME_TOOLBAR) != 0  || 
 		   (priv->chrome & EV_CHROME_RAISE_TOOLBAR) != 0) && !presentation;
 	findbar = (priv->chrome & EV_CHROME_FINDBAR) != 0;
 	sidebar = (priv->chrome & EV_CHROME_SIDEBAR) != 0 && priv->document && !presentation;
 
-	set_widget_visibility (priv->menubar, menubar);	
 	set_widget_visibility (priv->toolbar, toolbar);
 	set_widget_visibility (priv->find_bar, findbar);
 	set_widget_visibility (priv->sidebar, sidebar);
@@ -4208,35 +4198,6 @@ ev_window_cmd_view_presentation (GtkAction *action, EvWindow *window)
 }
 
 static void
-ev_window_setup_gtk_settings (EvWindow *window)
-{
-	GtkSettings *settings;
-	GdkScreen   *screen;
-	gchar       *menubar_accel_accel;
-
-	screen = gtk_window_get_screen (GTK_WINDOW (window));
-	settings = gtk_settings_get_for_screen (screen);
-
-	g_object_get (settings,
-		      "gtk-menu-bar-accel", &menubar_accel_accel,
-		      NULL);
-	if (menubar_accel_accel != NULL && menubar_accel_accel[0] != '\0') {
-		gtk_accelerator_parse (menubar_accel_accel,
-				       &window->priv->menubar_accel_keyval,
-				       &window->priv->menubar_accel_modifier);
-		if (window->priv->menubar_accel_keyval == 0) {
-			g_warning ("Failed to parse menu bar accelerator '%s'\n",
-				   menubar_accel_accel);
-		}
-	} else {
-		window->priv->menubar_accel_keyval = 0;
-		window->priv->menubar_accel_modifier = 0;
-	}
-
-	g_free (menubar_accel_accel);
-}
-
-static void
 ev_window_screen_changed (GtkWidget *widget,
 			  GdkScreen *old_screen)
 {
@@ -4246,8 +4207,6 @@ ev_window_screen_changed (GtkWidget *widget,
 	screen = gtk_widget_get_screen (widget);
 	if (screen == old_screen)
 		return;
-
-	ev_window_setup_gtk_settings (window);
 
 	if (GTK_WIDGET_CLASS (ev_window_parent_class)->screen_changed) {
 		GTK_WIDGET_CLASS (ev_window_parent_class)->screen_changed (widget, old_screen);
@@ -5600,19 +5559,6 @@ ev_window_dispose (GObject *object)
 	G_OBJECT_CLASS (ev_window_parent_class)->dispose (object);
 }
 
-static void
-menubar_deactivate_cb (GtkWidget *menubar,
-		       EvWindow  *window)
-{
-	g_signal_handlers_disconnect_by_func (menubar,
-					      G_CALLBACK (menubar_deactivate_cb),
-					      window);
-
-	gtk_menu_shell_deselect (GTK_MENU_SHELL (menubar));
-
-	update_chrome_visibility (window);
-}
-
 static gboolean
 ev_window_key_press_event (GtkWidget   *widget,
 			   GdkEventKey *event)
@@ -5630,26 +5576,6 @@ ev_window_key_press_event (GtkWidget   *widget,
 		if (gtk_widget_is_sensitive (priv->view))
 			handled = gtk_widget_event (priv->view, (GdkEvent*) event);
 		g_object_unref (priv->view);
-	}
-
-	if (!handled && !EV_WINDOW_IS_PRESENTATION (ev_window)) {
-		guint modifier = event->state & gtk_accelerator_get_default_mod_mask ();
-
-		if (priv->menubar_accel_keyval != 0 &&
-		    event->keyval == priv->menubar_accel_keyval &&
-		    modifier == priv->menubar_accel_modifier) {
-			if (!gtk_widget_get_visible (priv->menubar)) {
-				g_signal_connect (priv->menubar, "deactivate",
-						  G_CALLBACK (menubar_deactivate_cb),
-						  ev_window);
-
-				gtk_widget_show (priv->menubar);
-				gtk_menu_shell_select_first (GTK_MENU_SHELL (priv->menubar),
-							     FALSE);
-
-				handled = TRUE;
-			}
-		}
 	}
 
 	if (!handled)
@@ -5686,12 +5612,7 @@ ev_window_class_init (EvWindowClass *ev_window_class)
 
 /* Normal items */
 static const GtkActionEntry entries[] = {
-	{ "File", NULL, N_("_File") },
-        { "Edit", NULL, N_("_Edit") },
-	{ "View", NULL, N_("_View") },
-        { "Go", NULL, N_("_Go") },
 	{ "Bookmarks", NULL, N_("_Bookmarks") },
-	{ "Help", NULL, N_("_Help") },
 	{ "RecentFiles", NULL, N_("_Recent") },
 
 	/* File menu */
@@ -5726,10 +5647,6 @@ static const GtkActionEntry entries[] = {
         { "EditFind", GTK_STOCK_FIND, N_("_Find…"), "<control>F",
           N_("Find a word or phrase in the document"),
           G_CALLBACK (ev_window_cmd_edit_find) },
-	{ "EditFindNext", NULL, N_("Find Ne_xt"), "<control>G", NULL,
-	  G_CALLBACK (ev_window_cmd_edit_find_next) },
-	{ "EditFindPrevious", NULL, N_("Find Pre_vious"), "<shift><control>G", NULL,
-	  G_CALLBACK (ev_window_cmd_edit_find_previous) },
 	{ "EditRotateLeft", EV_STOCK_ROTATE_LEFT, N_("Rotate _Left"), "<control>Left", NULL,
 	  G_CALLBACK (ev_window_cmd_edit_rotate_left) },
 	{ "EditRotateRight", EV_STOCK_ROTATE_RIGHT, N_("Rotate _Right"), "<control>Right", NULL,
@@ -5792,10 +5709,16 @@ static const GtkActionEntry entries[] = {
 	/* Accellerators */
 	{ "Escape", NULL, "", "Escape", "",
 	  G_CALLBACK (ev_window_cmd_escape) },
+	{ "CtrlF", GTK_STOCK_FIND, NULL, "<control>F", NULL,
+	  G_CALLBACK (ev_window_cmd_edit_find) },
         { "Slash", GTK_STOCK_FIND, NULL, "slash", NULL,
           G_CALLBACK (ev_window_cmd_edit_find) },
         { "F3", NULL, "", "F3", NULL,
           G_CALLBACK (ev_window_cmd_edit_find_next) },
+	{ "CtrlG", NULL, "", "<control>G", NULL,
+	  G_CALLBACK (ev_window_cmd_edit_find_next) },
+	{ "ShiftCtrlG", NULL, "", "<shift><control>G", NULL,
+	  G_CALLBACK (ev_window_cmd_edit_find_previous) },
         { "PageDown", NULL, "", "Page_Down", NULL,
           G_CALLBACK (ev_window_cmd_scroll_forward) },
         { "PageUp", NULL, "", "Page_Up", NULL,
@@ -6961,7 +6884,6 @@ ev_window_init (EvWindow *ev_window)
 	GtkCssProvider *css_provider;
 	GError *error = NULL;
 	GtkWidget *sidebar_widget;
-	GtkWidget *menuitem;
 	GtkWidget *overlay;
 	GObject *mpkeys;
 #ifdef ENABLE_DBUS
@@ -7079,18 +7001,6 @@ ev_window_init (EvWindow *ev_window)
 				  G_CALLBACK (ev_window_setup_recent),
 				  ev_window);
 
-	ev_window->priv->menubar =
-		 gtk_ui_manager_get_widget (ev_window->priv->ui_manager,
-					    "/MainMenu");
-	gtk_box_pack_start (GTK_BOX (ev_window->priv->main_box),
-			    ev_window->priv->menubar,
-			    FALSE, FALSE, 0);
-	menuitem = gtk_ui_manager_get_widget (ev_window->priv->ui_manager,
-					      "/MainMenu/EditMenu/EditRotateLeftMenu");
-	gtk_image_menu_item_set_always_show_image (GTK_IMAGE_MENU_ITEM (menuitem), TRUE);
-	menuitem = gtk_ui_manager_get_widget (ev_window->priv->ui_manager,
-					      "/MainMenu/EditMenu/EditRotateRightMenu");
-	gtk_image_menu_item_set_always_show_image (GTK_IMAGE_MENU_ITEM (menuitem), TRUE);
 	ev_window->priv->toolbar = ev_toolbar_new (ev_window);
 	gtk_box_pack_start (GTK_BOX (ev_window->priv->main_box),
 			    ev_window->priv->toolbar,
@@ -7386,8 +7296,6 @@ ev_window_init (EvWindow *ev_window)
 
 	/* Set it user interface params */
 	ev_window_setup_recent (ev_window);
-
-	ev_window_setup_gtk_settings (ev_window);
 
 	gtk_window_set_default_size (GTK_WINDOW (ev_window), 600, 600);
 

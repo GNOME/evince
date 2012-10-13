@@ -1,78 +1,4 @@
 <ui>
-  <menubar name="MainMenu">
-    <menu name="FileMenu" action="File">
-      <menuitem name="FileOpenMenu" action="FileOpen"/>
-      <menuitem name="FileOpenCopyMenu" action="FileOpenCopy"/>
-      <menuitem name="FileSaveAsMenu" action="FileSaveAs"/>
-      <menuitem name="FileSendToMenu" action="FileSendTo"/>
-      <menuitem name="FileOpenContainingFolderMenu" action="FileOpenContainingFolder"/>
-      <separator/>
-      <menuitem name="FilePrintMenu" action="FilePrint"/>
-      <separator/>
-      <menuitem name="FilePropertiesMenu" action="FileProperties"/>
-      <separator/>
-      <placeholder name="RecentFilesMenu"/>
-      <separator/>
-      <menuitem name="FileCloseWindowMenu" action="FileCloseWindow"/>
-    </menu>
-
-    <menu name="EditMenu" action="Edit">
-      <menuitem name="EditCopyMenu" action="EditCopy"/>
-      <separator/>
-      <menuitem name="EditSelectAllMenu" action="EditSelectAll"/>
-      <separator/>
-      <menuitem name="EditFindMenu" action="EditFind"/>
-      <menuitem name="EditFindNextMenu" action="EditFindNext"/>
-      <menuitem name="EditFindPreviousMenu" action="EditFindPrevious"/>
-      <separator/>
-      <menuitem name="EditRotateLeftMenu" action="EditRotateLeft"/>
-      <menuitem name="EditRotateRightMenu" action="EditRotateRight"/>
-      <separator/>
-      <menuitem name="EditSaveSettingsMenu" action="EditSaveSettings"/>
-    </menu>
-
-    <menu name="ViewMenu" action="View">
-      <menuitem name="ViewSidebarMenu" action="ViewSidebar"/>
-      <separator/>
-      <menuitem name="ViewFullscreenMenu" action="ViewFullscreen"/>
-      <menuitem name="ViewPresentationMenu" action="ViewPresentation"/>
-      <separator/>
-      <menuitem name="ViewContinuousMenu" action="ViewContinuous"/>
-      <menuitem name="ViewDualMenu" action="ViewDual"/>
-      <menuitem name="ViewDualOddLeftMenu" action="ViewDualOddLeft"/>
-      <separator/>
-      <menuitem name="ViewInvertedColors" action="ViewInvertedColors"/>
-      <separator/>
-      <menuitem name="ViewZoomInMenu" action="ViewZoomIn"/>
-      <menuitem name="ViewZoomOutMenu" action="ViewZoomOut"/>
-      <menuitem name="ViewBestFitMenu" action="ViewBestFit"/>
-      <menuitem name="ViewPageWidthMenu" action="ViewPageWidth"/>
-      <separator/>
-      <menuitem name="ViewReload" action="ViewReload"/>
-    </menu>
-
-    <menu name="GoMenu" action="Go">
-      <menuitem name="GoPreviousPageMenu" action="GoPreviousPage"/>
-      <menuitem name="GoNextPageMenu" action="GoNextPage"/>
-      <separator/>
-      <menuitem name="GoFirstPageMenu" action="GoFirstPage"/>
-      <menuitem name="GoLastPageMenu" action="GoLastPage"/>
-      <separator/>
-      <menuitem name="GoToPage" action="GoToPage"/>
-    </menu>
-
-    <menu name="BookmarksMenu" action="Bookmarks">
-      <menuitem name="BookmarksAddMenu" action="BookmarksAdd"/>
-      <separator/>
-      <placeholder name="BookmarksItems"/>
-    </menu>
-
-    <menu name="HelpMenu" action="Help">
-      <menuitem name="HelpContentsMenu" action="HelpContents"/>
-      <menuitem name="HelpAboutMenu" action="HelpAbout"/>
-    </menu>
-  </menubar>
-
   <popup name="ActionMenu">
     <menuitem name="FileOpenMenu" action="FileOpen"/>
     <menuitem name="FileOpenCopyMenu" action="FileOpenCopy"/>
@@ -157,8 +83,11 @@
   <accelerator name="GoBackwardFastAccel" action="GoBackwardFast"/>
   <accelerator name="GoForwardFastAccel" action="GoForwardFast"/>
   <accelerator name="EscapeAccel" action="Escape"/>
+  <accelerator name="CtrlFAccel" action="CtrlF"/>
   <accelerator name="SlashAccel" action="Slash"/>
   <accelerator name="F3Accel" action="F3"/>
+  <accelerator name="CtrlGAccel" action="CtrlG"/>
+  <accelerator name="ShiftCtrlGAccel" action="ShiftCtrlG"/>
   <accelerator name="SpaceAccel" action="Space"/>
   <accelerator name="ReturnAccel" action="Return"/>
   <accelerator name="BackSpaceAccel" action="BackSpace"/>
