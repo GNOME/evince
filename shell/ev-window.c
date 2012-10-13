@@ -41,10 +41,6 @@
 #include <gio/gio.h>
 #include <gtk/gtk.h>
 
-#include "egg-editable-toolbar.h"
-#include "egg-toolbar-editor.h"
-#include "egg-toolbars-model.h"
-
 #include "eggfindbar.h"
 
 #include "ephy-zoom-action.h"
@@ -618,8 +614,6 @@ update_chrome_visibility (EvWindow *window)
 	set_widget_visibility (priv->toolbar, toolbar);
 	set_widget_visibility (priv->find_bar, findbar);
 	set_widget_visibility (priv->sidebar, sidebar);
-	
-	ev_window_set_action_sensitive (window, "EditToolbar", toolbar);
 }
 
 static void
@@ -4363,72 +4357,6 @@ ev_window_cmd_view_inverted_colors (GtkAction *action, EvWindow *ev_window)
 }
 
 static void
-ev_window_cmd_edit_toolbar_cb (GtkDialog *dialog,
-			       gint       response,
-			       EvWindow  *ev_window)
-{
-	EggEditableToolbar *toolbar;
-	gchar              *toolbars_file;
-
-	if (response == GTK_RESPONSE_HELP) {
-                ev_application_show_help (EV_APP, 
-                                          gtk_widget_get_screen (GTK_WIDGET (ev_window)),
-                                          "toolbar");
-                return;
-	}
-
-	toolbar = EGG_EDITABLE_TOOLBAR (ev_window->priv->toolbar);
-        egg_editable_toolbar_set_edit_mode (toolbar, FALSE);
-
-	toolbars_file = g_build_filename (ev_application_get_dot_dir (EV_APP, TRUE),
-					  "evince_toolbar.xml", NULL);
-	egg_toolbars_model_save_toolbars (egg_editable_toolbar_get_model (toolbar),
-					  toolbars_file, "1.0");
-	g_free (toolbars_file);
-
-        gtk_widget_destroy (GTK_WIDGET (dialog));
-}
-
-static void
-ev_window_cmd_edit_toolbar (GtkAction *action, EvWindow *ev_window)
-{
-	GtkWidget          *dialog;
-	GtkWidget          *editor;
-	GtkWidget          *content_area;
-	EggEditableToolbar *toolbar;
-
-	dialog = gtk_dialog_new_with_buttons (_("Toolbar Editor"),
-					      GTK_WINDOW (ev_window),
-				              GTK_DIALOG_DESTROY_WITH_PARENT,
-					      GTK_STOCK_CLOSE,
-					      GTK_RESPONSE_CLOSE,
-					      GTK_STOCK_HELP,
-					      GTK_RESPONSE_HELP,
-					      NULL);
-	content_area = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
-	gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_CLOSE);
-	gtk_container_set_border_width (GTK_CONTAINER (GTK_DIALOG (dialog)), 5);
-	gtk_box_set_spacing (GTK_BOX (content_area), 2);
-	gtk_window_set_default_size (GTK_WINDOW (dialog), 500, 400);
-
-	toolbar = EGG_EDITABLE_TOOLBAR (ev_window->priv->toolbar);
-	editor = egg_toolbar_editor_new (ev_window->priv->ui_manager,
-					 egg_editable_toolbar_get_model (toolbar));
-
-	gtk_container_set_border_width (GTK_CONTAINER (editor), 5);
-	gtk_box_set_spacing (GTK_BOX (EGG_TOOLBAR_EDITOR (editor)), 5);
-
-        gtk_box_pack_start (GTK_BOX (content_area), editor, TRUE, TRUE, 0);
-
-	egg_editable_toolbar_set_edit_mode (toolbar, TRUE);
-
-	g_signal_connect (dialog, "response",
-			  G_CALLBACK (ev_window_cmd_edit_toolbar_cb),
-			  ev_window);
-	gtk_widget_show_all (dialog);
-}
-
-static void
 ev_window_cmd_edit_save_settings (GtkAction *action, EvWindow *ev_window)
 {
 	EvWindowPrivate *priv = ev_window->priv;
@@ -5802,8 +5730,6 @@ static const GtkActionEntry entries[] = {
 	  G_CALLBACK (ev_window_cmd_edit_find_next) },
 	{ "EditFindPrevious", NULL, N_("Find Pre_vious"), "<shift><control>G", NULL,
 	  G_CALLBACK (ev_window_cmd_edit_find_previous) },
-        { "EditToolbar", NULL, N_("T_oolbar"), NULL, NULL,
-          G_CALLBACK (ev_window_cmd_edit_toolbar) },
 	{ "EditRotateLeft", EV_STOCK_ROTATE_LEFT, N_("Rotate _Left"), "<control>Left", NULL,
 	  G_CALLBACK (ev_window_cmd_edit_rotate_left) },
 	{ "EditRotateRight", EV_STOCK_ROTATE_RIGHT, N_("Rotate _Right"), "<control>Right", NULL,
