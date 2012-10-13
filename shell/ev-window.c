@@ -95,6 +95,7 @@
 #include "ev-annotation-properties-dialog.h"
 #include "ev-bookmarks.h"
 #include "ev-bookmark-action.h"
+#include "ev-toolbar.h"
 
 #ifdef ENABLE_DBUS
 #include "ev-gdbus-generated.h"
@@ -113,7 +114,7 @@ typedef enum {
 	EV_CHROME_RAISE_TOOLBAR	= 1 << 3,
 	EV_CHROME_FULLSCREEN_TOOLBAR	= 1 << 4,
 	EV_CHROME_SIDEBAR	= 1 << 5,
-	EV_CHROME_NORMAL	= EV_CHROME_MENUBAR | EV_CHROME_TOOLBAR | EV_CHROME_SIDEBAR
+	EV_CHROME_NORMAL	= EV_CHROME_TOOLBAR | EV_CHROME_SIDEBAR
 } EvChrome;
 
 typedef enum {
@@ -291,8 +292,6 @@ static void	ev_window_update_actions	 	(EvWindow         *ev_window);
 static void     ev_window_sidebar_visibility_changed_cb (EvSidebar        *ev_sidebar,
 							 GParamSpec       *pspec,
 							 EvWindow         *ev_window);
-static void     ev_window_view_toolbar_cb               (GtkAction        *action,
-							 EvWindow         *ev_window);
 static void     ev_window_set_page_mode                 (EvWindow         *window,
 							 EvWindowPageMode  page_mode);
 static void	ev_window_load_job_cb  			(EvJob            *job,
@@ -378,12 +377,6 @@ get_screen_dpi (EvWindow *window)
 	return ev_document_misc_get_screen_dpi (screen);
 }
 
-static gboolean
-ev_window_is_editing_toolbar (EvWindow *ev_window)
-{
-	return egg_editable_toolbar_get_edit_mode (EGG_EDITABLE_TOOLBAR (ev_window->priv->toolbar));
-}
-
 static void
 ev_window_set_action_sensitive (EvWindow   *ev_window,
 		    	        const char *name,
@@ -467,7 +460,6 @@ ev_window_setup_action_sensitivity (EvWindow *ev_window)
 	ev_window_set_action_sensitive (ev_window, "EditRotateRight", has_pages);
 
         /* View menu */
-	ev_window_set_action_sensitive (ev_window, "ViewToolbar", !ev_window_is_editing_toolbar (ev_window));
 	ev_window_set_action_sensitive (ev_window, "ViewContinuous", has_pages);
 	ev_window_set_action_sensitive (ev_window, "ViewDual", has_pages);
 	ev_window_set_action_sensitive (ev_window, "ViewDualOddLeft", has_pages);
@@ -695,22 +687,6 @@ update_sizing_buttons (EvWindow *window)
 		ephy_zoom_action_set_zoom_level (EPHY_ZOOM_ACTION (action), 
 						 EPHY_ZOOM_FIT_WIDTH);
 	}
-}
-
-static void
-update_chrome_actions (EvWindow *window)
-{
-	EvWindowPrivate *priv = window->priv;
-	GtkActionGroup *action_group = priv->action_group;
-	GtkAction *action;
-
-	action= gtk_action_group_get_action (action_group, "ViewToolbar");
-	g_signal_handlers_block_by_func
-		(action, G_CALLBACK (ev_window_view_toolbar_cb), window);
-	gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action),
-				      (priv->chrome & EV_CHROME_TOOLBAR) != 0);
-	g_signal_handlers_unblock_by_func
-		(action, G_CALLBACK (ev_window_view_toolbar_cb), window);
 }
 
 /**
@@ -1099,10 +1075,6 @@ ev_window_init_metadata_with_default_values (EvWindow *window)
 	EvMetadata *metadata = window->priv->metadata;
 
 	/* Chrome */
-	if (!ev_metadata_has_key (metadata, "show_toolbar")) {
-		ev_metadata_set_boolean (metadata, "show_toolbar",
-					 g_settings_get_boolean (settings, "show-toolbar"));
-	}
 	if (!ev_metadata_has_key (metadata, "sidebar_visibility")) {
 		ev_metadata_set_boolean (metadata, "sidebar_visibility",
 					 g_settings_get_boolean (settings, "show-sidebar"));
@@ -1381,8 +1353,6 @@ ev_window_setup_default (EvWindow *ev_window)
 	GSettings       *settings = ev_window->priv->default_settings;
 
 	/* Chrome */
-	update_chrome_flag (ev_window, EV_CHROME_TOOLBAR,
-			    g_settings_get_boolean (settings, "show-toolbar"));
 	update_chrome_flag (ev_window, EV_CHROME_SIDEBAR,
 			    g_settings_get_boolean (settings, "show-sidebar"));
 	update_chrome_visibility (ev_window);
@@ -1691,7 +1661,6 @@ ev_window_load_job_cb (EvJob *job,
 		ev_window_emit_doc_loaded (ev_window);
 #endif
 		setup_chrome_from_metadata (ev_window);
-		update_chrome_actions (ev_window);
 		setup_document_from_metadata (ev_window);
 		setup_view_from_metadata (ev_window);
 
@@ -2782,7 +2751,7 @@ ev_window_setup_recent (EvWindow *ev_window)
 
 		gtk_ui_manager_add_ui (ev_window->priv->ui_manager,
 				       ev_window->priv->recent_ui_id,
-				       "/MainMenu/FileMenu/RecentFilesMenu",
+				       "/ActionMenu/RecentFilesMenu/RecentFiles",
 				       label,
 				       action_name,
 				       GTK_UI_MANAGER_MENUITEM,
@@ -3855,7 +3824,6 @@ ev_window_cmd_focus_page_selector (GtkAction *act, EvWindow *window)
 	GtkAction *action;
 	
 	update_chrome_flag (window, EV_CHROME_RAISE_TOOLBAR, TRUE);
-	ev_window_set_action_sensitive (window, "ViewToolbar", FALSE);
 	update_chrome_visibility (window);
 	
 	action = gtk_action_group_get_action (window->priv->action_group,
@@ -4462,7 +4430,6 @@ ev_window_cmd_edit_toolbar_cb (GtkDialog *dialog,
 
 	toolbar = EGG_EDITABLE_TOOLBAR (ev_window->priv->toolbar);
         egg_editable_toolbar_set_edit_mode (toolbar, FALSE);
-	ev_window_set_action_sensitive (ev_window, "ViewToolbar", TRUE);
 
 	toolbars_file = g_build_filename (ev_application_get_dot_dir (EV_APP, TRUE),
 					  "evince_toolbar.xml", NULL);
@@ -4505,7 +4472,6 @@ ev_window_cmd_edit_toolbar (GtkAction *action, EvWindow *ev_window)
         gtk_box_pack_start (GTK_BOX (content_area), editor, TRUE, TRUE, 0);
 
 	egg_editable_toolbar_set_edit_mode (toolbar, TRUE);
-	ev_window_set_action_sensitive (ev_window, "ViewToolbar", FALSE);
 
 	g_signal_connect (dialog, "response",
 			  G_CALLBACK (ev_window_cmd_edit_toolbar_cb),
@@ -4539,8 +4505,6 @@ ev_window_cmd_edit_save_settings (GtkAction *action, EvWindow *ev_window)
 		zoom *= 72.0 / get_screen_dpi (ev_window);
 		g_settings_set_double (settings, "zoom", zoom);
 	}
-	g_settings_set_boolean (settings, "show-toolbar",
-				gtk_widget_get_visible (priv->toolbar));
 	g_settings_set_boolean (settings, "show-sidebar",
 				gtk_widget_get_visible (priv->sidebar));
 	g_settings_set_int (settings, "sidebar-size",
@@ -4686,7 +4650,7 @@ ev_window_setup_bookmarks (EvWindow *window)
 
 		gtk_ui_manager_add_ui (window->priv->ui_manager,
 				       window->priv->bookmarks_ui_id,
-				       "/MainMenu/BookmarksMenu/BookmarksItems",
+				       "/ActionMenu/BookmarksMenu/BookmarksItems",
 				       gtk_action_get_label (action),
 				       gtk_action_get_name (action),
 				       GTK_UI_MANAGER_MENUITEM,
@@ -5062,18 +5026,6 @@ ev_window_cmd_help_about (GtkAction *action, EvWindow *ev_window)
 
 	g_free (comments);
 	g_free (license_trans);
-}
-
-static void
-ev_window_view_toolbar_cb (GtkAction *action, EvWindow *ev_window)
-{
-	gboolean active;
-	
-	active = gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action));
-	update_chrome_flag (ev_window, EV_CHROME_TOOLBAR, active);
-	update_chrome_visibility (ev_window);
-	if (ev_window->priv->metadata)
-		ev_metadata_set_boolean (ev_window->priv->metadata, "show_toolbar", active);
 }
 
 static void
@@ -5863,6 +5815,7 @@ static const GtkActionEntry entries[] = {
         { "Go", NULL, N_("_Go") },
 	{ "Bookmarks", NULL, N_("_Bookmarks") },
 	{ "Help", NULL, N_("_Help") },
+	{ "RecentFiles", NULL, N_("_Recent") },
 
 	/* File menu */
 	{ "FileOpen", GTK_STOCK_OPEN, N_("_Open…"), "<control>O",
@@ -6021,9 +5974,6 @@ static const GtkActionEntry entries[] = {
 /* Toggle items */
 static const GtkToggleActionEntry toggle_entries[] = {
 	/* View Menu */
-	{ "ViewToolbar", NULL, N_("_Toolbar"), NULL,
-	  N_("Show or hide the toolbar"),
-	  G_CALLBACK (ev_window_view_toolbar_cb), TRUE },
         { "ViewSidebar", GTK_STOCK_INDEX, N_("Side _Pane"), "F9",
 	  N_("Show or hide the side pane"),
 	  G_CALLBACK (ev_window_view_sidebar_cb), TRUE },
@@ -6279,8 +6229,6 @@ view_actions_focus_in_cb (GtkWidget *widget, GdkEventFocus *event, EvWindow *win
 #endif /* ENABLE_DBUS */
 
 	update_chrome_flag (window, EV_CHROME_RAISE_TOOLBAR, FALSE);
-	ev_window_set_action_sensitive (window, "ViewToolbar",
-					!ev_window_is_editing_toolbar (window));
 
 	ev_window_set_view_accels_sensitivity (window, TRUE);
 
@@ -7020,48 +6968,6 @@ ev_window_media_player_key_pressed (EvWindow    *window,
 	}
 }
 
-static EggToolbarsModel *
-get_toolbars_model (void)
-{
-	EggToolbarsModel *toolbars_model;
-	gchar            *toolbars_file;
-	gint              i;
-
-	toolbars_model = egg_toolbars_model_new ();
-
-	toolbars_file = g_build_filename (ev_application_get_dot_dir (EV_APP, FALSE),
-					  "evince_toolbar.xml", NULL);
-	egg_toolbars_model_load_names_from_resource (toolbars_model, TOOLBAR_RESOURCE_PATH);
-
-	if (!egg_toolbars_model_load_toolbars (toolbars_model, toolbars_file)) {
-		egg_toolbars_model_load_toolbars_from_resource (toolbars_model, TOOLBAR_RESOURCE_PATH);
-                goto skip_conversion;
-	}
-
-	/* Open item doesn't exist anymore,
-	 * convert it to OpenRecent for compatibility
-	 */
-	for (i = 0; i < egg_toolbars_model_n_items (toolbars_model, 0); i++) {
-		const gchar *item;
-
-		item = egg_toolbars_model_item_nth (toolbars_model, 0, i);
-		if (g_ascii_strcasecmp (item, "FileOpen") == 0) {
-			egg_toolbars_model_remove_item (toolbars_model, 0, i);
-			egg_toolbars_model_add_item (toolbars_model, 0, i,
-						     "FileOpenRecent");
-			egg_toolbars_model_save_toolbars (toolbars_model, toolbars_file, "1.0");
-			break;
-		}
-	}
-
-    skip_conversion:
-	g_free (toolbars_file);
-
-	egg_toolbars_model_set_flags (toolbars_model, 0, EGG_TB_MODEL_NOT_REMOVABLE);
-
-	return toolbars_model;
-}
-
 #ifdef ENABLE_DBUS
 static void
 ev_window_sync_source (EvWindow     *window,
@@ -7182,7 +7088,6 @@ ev_window_init (EvWindow *ev_window)
 	GtkWidget *sidebar_widget;
 	GtkWidget *menuitem;
 	GtkWidget *overlay;
-	EggToolbarsModel *toolbars_model;
 	GObject *mpkeys;
 #ifdef ENABLE_DBUS
 	GDBusConnection *connection;
@@ -7311,25 +7216,10 @@ ev_window_init (EvWindow *ev_window)
 	menuitem = gtk_ui_manager_get_widget (ev_window->priv->ui_manager,
 					      "/MainMenu/EditMenu/EditRotateRightMenu");
 	gtk_image_menu_item_set_always_show_image (GTK_IMAGE_MENU_ITEM (menuitem), TRUE);
-
-	toolbars_model = get_toolbars_model ();
-	ev_window->priv->toolbar = GTK_WIDGET
-		(g_object_new (EGG_TYPE_EDITABLE_TOOLBAR,
-			       "ui-manager", ev_window->priv->ui_manager,
-			       "popup-path", "/ToolbarPopup",
-			       "model", toolbars_model,
-			       NULL));
-	g_object_unref (toolbars_model);
-
-	gtk_style_context_add_class
-		(gtk_widget_get_style_context (GTK_WIDGET (ev_window->priv->toolbar)),
-		 GTK_STYLE_CLASS_PRIMARY_TOOLBAR);
-
-	egg_editable_toolbar_show (EGG_EDITABLE_TOOLBAR (ev_window->priv->toolbar),
-				   "DefaultToolBar");
+	ev_window->priv->toolbar = ev_toolbar_new (ev_window);
 	gtk_box_pack_start (GTK_BOX (ev_window->priv->main_box),
 			    ev_window->priv->toolbar,
-			    FALSE, FALSE, 0);
+			    FALSE, TRUE, 0);
 	gtk_widget_show (ev_window->priv->toolbar);
 
 	/* Add the main area */
@@ -7618,7 +7508,6 @@ ev_window_init (EvWindow *ev_window)
 	ev_window->priv->default_settings = g_settings_new (GS_SCHEMA_NAME".Default");
 	g_settings_delay (ev_window->priv->default_settings);
 	ev_window_setup_default (ev_window);
-	update_chrome_actions (ev_window);
 
 	/* Set it user interface params */
 	ev_window_setup_recent (ev_window);
