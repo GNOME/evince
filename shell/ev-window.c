@@ -178,9 +178,6 @@ struct _EvWindowPrivate {
 	guint             bookmarks_ui_id;
 	GtkUIManager     *ui_manager;
 
-	/* Fullscreen mode */
-	GtkWidget *fullscreen_toolbar;
-
 	/* Popup view */
 	GtkWidget    *view_popup;
 	EvLink       *link;
@@ -604,7 +601,7 @@ static void
 update_chrome_visibility (EvWindow *window)
 {
 	EvWindowPrivate *priv = window->priv;
-	gboolean menubar, toolbar, findbar, fullscreen_toolbar, sidebar;
+	gboolean menubar, toolbar, findbar, sidebar;
 	gboolean fullscreen_mode, presentation, fullscreen;
 
 	presentation = EV_WINDOW_IS_PRESENTATION (window);
@@ -613,9 +610,7 @@ update_chrome_visibility (EvWindow *window)
 
 	menubar = (priv->chrome & EV_CHROME_MENUBAR) != 0 && !fullscreen_mode;
 	toolbar = ((priv->chrome & EV_CHROME_TOOLBAR) != 0  || 
-		   (priv->chrome & EV_CHROME_RAISE_TOOLBAR) != 0) && !fullscreen_mode;
-	fullscreen_toolbar = ((priv->chrome & EV_CHROME_FULLSCREEN_TOOLBAR) != 0 || 
-			      (priv->chrome & EV_CHROME_RAISE_TOOLBAR) != 0) && fullscreen;
+		   (priv->chrome & EV_CHROME_RAISE_TOOLBAR) != 0) && !presentation;
 	findbar = (priv->chrome & EV_CHROME_FINDBAR) != 0;
 	sidebar = (priv->chrome & EV_CHROME_SIDEBAR) != 0 && priv->document && !presentation;
 
@@ -625,10 +620,6 @@ update_chrome_visibility (EvWindow *window)
 	set_widget_visibility (priv->sidebar, sidebar);
 	
 	ev_window_set_action_sensitive (window, "EditToolbar", toolbar);
-
-	if (priv->fullscreen_toolbar != NULL) {
-		set_widget_visibility (priv->fullscreen_toolbar, fullscreen_toolbar);
-	}
 }
 
 static void
@@ -3994,48 +3985,12 @@ ev_window_update_fullscreen_action (EvWindow *window)
 }
 
 static void
-fullscreen_toolbar_setup_item_properties (GtkUIManager *ui_manager)
-{
-	GtkWidget *item;
-
-	item = gtk_ui_manager_get_widget (ui_manager, "/FullscreenToolbar/GoPreviousPage");
-	g_object_set (item, "is-important", FALSE, NULL);
-
-	item = gtk_ui_manager_get_widget (ui_manager, "/FullscreenToolbar/GoNextPage");
-	g_object_set (item, "is-important", FALSE, NULL);
-
-	item = gtk_ui_manager_get_widget (ui_manager, "/FullscreenToolbar/StartPresentation");
-	g_object_set (item, "is-important", TRUE, NULL);
-	
-	item = gtk_ui_manager_get_widget (ui_manager, "/FullscreenToolbar/LeaveFullscreen");
-	g_object_set (item, "is-important", TRUE, NULL);
-}
-
-static void
 ev_window_run_fullscreen (EvWindow *window)
 {
 	gboolean fullscreen_window = TRUE;
 
 	if (ev_document_model_get_fullscreen (window->priv->model))
 		return;
-	
-	if (!window->priv->fullscreen_toolbar) {
-		window->priv->fullscreen_toolbar =
-			gtk_ui_manager_get_widget (window->priv->ui_manager,
-						   "/FullscreenToolbar");
-
-		gtk_widget_set_name (window->priv->fullscreen_toolbar,
-				     "ev-fullscreen-toolbar");
-		gtk_toolbar_set_style (GTK_TOOLBAR (window->priv->fullscreen_toolbar),
-				       GTK_TOOLBAR_BOTH_HORIZ);
-		fullscreen_toolbar_setup_item_properties (window->priv->ui_manager);
-
-		gtk_box_pack_start (GTK_BOX (window->priv->main_box),
-				    window->priv->fullscreen_toolbar,
-				    FALSE, FALSE, 0);
-		gtk_box_reorder_child (GTK_BOX (window->priv->main_box),
-				       window->priv->fullscreen_toolbar, 1);
-	}
 
 	if (EV_WINDOW_IS_PRESENTATION (window)) {
 		ev_window_stop_presentation (window, FALSE);
@@ -4049,11 +4004,6 @@ ev_window_run_fullscreen (EvWindow *window)
 	ev_document_model_set_fullscreen (window->priv->model, TRUE);
 	ev_window_update_fullscreen_action (window);
 
-	/* If the user doesn't have the main toolbar he/she won't probably want
-	 * the toolbar in fullscreen mode. See bug #483048
-	 */
-	update_chrome_flag (window, EV_CHROME_FULLSCREEN_TOOLBAR,
-			    (window->priv->chrome & EV_CHROME_TOOLBAR) != 0);
 	update_chrome_visibility (window);
 
 	if (fullscreen_window)
@@ -4077,7 +4027,6 @@ ev_window_stop_fullscreen (EvWindow *window,
 
 	ev_document_model_set_fullscreen (window->priv->model, FALSE);
 	ev_window_update_fullscreen_action (window);
-	update_chrome_flag (window, EV_CHROME_FULLSCREEN_TOOLBAR, FALSE);
 	update_chrome_visibility (window);
 	if (unfullscreen_window)
 		gtk_window_unfullscreen (GTK_WINDOW (window));
