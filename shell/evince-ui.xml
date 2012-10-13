@@ -76,6 +76,55 @@
     </menu>
   </menubar>
 
+  <popup name="ActionMenu">
+    <menuitem name="FileOpenMenu" action="FileOpen"/>
+    <menuitem name="FileOpenCopyMenu" action="FileOpenCopy"/>
+    <menu name="RecentFilesMenu" action="RecentFiles">
+      <placeholder name="RecentFiles"/>
+    </menu>
+    <menuitem name="FileSaveAsMenu" action="FileSaveAs"/>
+    <menuitem name="FileSendToMenu" action="FileSendTo"/>
+    <menuitem name="FileOpenContainingFolderMenu" action="FileOpenContainingFolder"/>
+    <menuitem name="FilePrintMenu" action="FilePrint"/>
+    <separator/>
+    <menuitem name="FilePropertiesMenu" action="FileProperties"/>
+    <separator/>
+    <menuitem name="EditCopyMenu" action="EditCopy"/>
+    <menuitem name="EditSelectAllMenu" action="EditSelectAll"/>
+    <separator/>
+    <menuitem name="EditSaveSettingsMenu" action="EditSaveSettings"/>
+    <separator/>
+    <menuitem name="GoFirstPageMenu" action="GoFirstPage"/>
+    <menuitem name="GoLastPageMenu" action="GoLastPage"/>
+    <separator/>
+    <menuitem name="BookmarksAddMenu" action="BookmarksAdd"/>
+    <menu name="BookmarksMenu" action="Bookmarks">
+      <placeholder name="BookmarksItems"/>
+    </menu>
+    <separator/>
+    <menuitem name="FileCloseWindowMenu" action="FileCloseWindow"/>
+    <separator/>
+    <menuitem name="HelpAboutMenu" action="HelpAbout"/>
+    <menuitem name="HelpContentsMenu" action="HelpContents"/>
+  </popup>
+
+  <popup name="ViewMenuPopup">
+    <menuitem name="ViewSidebarMenu" action="ViewSidebar"/>
+    <separator/>
+    <menuitem name="ViewFullscreenMenu" action="ViewFullscreen"/>
+    <menuitem name="ViewPresentationMenu" action="ViewPresentation"/>
+    <separator/>
+    <menuitem name="EditRotateLeftMenu" action="EditRotateLeft"/>
+    <menuitem name="EditRotateRightMenu" action="EditRotateRight"/>
+    <separator/>
+    <menuitem name="ViewZoomInMenu" action="ViewZoomIn"/>
+    <menuitem name="ViewZoomOutMenu" action="ViewZoomOut"/>
+    <separator/>
+    <menuitem name="ViewInvertedColors" action="ViewInvertedColors"/>
+    <separator/>
+    <menuitem name="ViewReload" action="ViewReload"/>
+  </popup>
+
   <popup name="DocumentPopup" action="DocumentPopupAction">
     <menuitem name="OpenLink" action="OpenLink"/>
     <menuitem name="CopyLinkAddress" action="CopyLinkAddress"/>
