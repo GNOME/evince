@@ -62,6 +62,7 @@ void    ephy_zoom_action_set_min_zoom_level (EphyZoomAction *action,
 					     float           zoom);
 void    ephy_zoom_action_set_max_zoom_level (EphyZoomAction *action,
 					     float           zoom);
+gboolean ephy_zoom_action_get_popup_shown   (EphyZoomAction *action);
 
 G_END_DECLS
 

@@ -58,6 +58,8 @@ void	ephy_zoom_control_set_zoom_level (EphyZoomControl *control, float zoom);
 
 float	ephy_zoom_control_get_zoom_level (EphyZoomControl *control);
 
+gboolean ephy_zoom_control_get_popup_shown (EphyZoomControl *control);
+
 G_END_DECLS
 
 #endif

@@ -38,6 +38,7 @@ struct _EphyZoomActionPrivate
 	float zoom;
 	float min_zoom;
 	float max_zoom;
+        gboolean popup_shown;
 };
 
 enum
@@ -95,6 +96,12 @@ sync_max_zoom_cb (GtkAction *action, GParamSpec *pspec, GtkWidget *proxy)
 }
 
 static void
+popup_shown_cb (EphyZoomControl *control, GParamSpec *pspec, EphyZoomAction *zoom_action)
+{
+        zoom_action->priv->popup_shown = ephy_zoom_control_get_popup_shown (control);
+}
+
+static void
 connect_proxy (GtkAction *action, GtkWidget *proxy)
 {
 	if (EPHY_IS_ZOOM_CONTROL (proxy))
@@ -107,6 +114,8 @@ connect_proxy (GtkAction *action, GtkWidget *proxy)
 					 G_CALLBACK (sync_max_zoom_cb), proxy, 0);
 		g_signal_connect (proxy, "zoom_to_level",
 				  G_CALLBACK (zoom_to_level_cb), action);
+                g_signal_connect (proxy, "notify::popup-shown",
+                                  G_CALLBACK (popup_shown_cb), action);
 	}
 
 	GTK_ACTION_CLASS (ephy_zoom_action_parent_class)->connect_proxy (action, proxy);
@@ -333,4 +342,12 @@ ephy_zoom_action_set_max_zoom_level (EphyZoomAction *action,
 		ephy_zoom_action_set_zoom_level (action, zoom);
 
 	g_object_notify (G_OBJECT (action), "max-zoom");
+}
+
+gboolean
+ephy_zoom_action_get_popup_shown (EphyZoomAction *action)
+{
+        g_return_val_if_fail (EPHY_IS_ZOOM_ACTION (action), FALSE);
+
+        return action->priv->popup_shown;
 }

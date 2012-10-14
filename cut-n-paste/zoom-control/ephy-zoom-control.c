@@ -51,7 +51,8 @@ enum
 	PROP_0,
 	PROP_ZOOM,
 	PROP_MIN_ZOOM,
-	PROP_MAX_ZOOM
+	PROP_MAX_ZOOM,
+        PROP_POPUP_SHOWN
 };
 
 enum
@@ -128,6 +129,12 @@ sync_zoom_max_min_cb (EphyZoomControl *control, GParamSpec *pspec, gpointer data
 
 	gtk_combo_box_set_active (p->combo, ephy_zoom_get_zoom_level_index (p->zoom));
 	g_signal_handler_unblock (p->combo, p->handler_id);
+}
+
+static void
+popup_shown_cb (GtkComboBox *combo, GParamSpec *pspec, EphyZoomControl *control)
+{
+        g_object_notify (G_OBJECT (control), "popup-shown");
 }
 
 static gboolean
@@ -208,6 +215,8 @@ ephy_zoom_control_init (EphyZoomControl *control)
 
 	p->handler_id = g_signal_connect (p->combo, "changed",
 					  G_CALLBACK (combo_changed_cb), control);
+        g_signal_connect (p->combo, "notify::popup-shown",
+                          G_CALLBACK (popup_shown_cb), control);
 	
 	g_signal_connect_object (control, "notify::zoom",
 				 G_CALLBACK (sync_zoom_cb), NULL, 0);
@@ -266,6 +275,9 @@ ephy_zoom_control_get_property (GObject *object,
 		case PROP_MAX_ZOOM:
 			g_value_set_float (value, p->max_zoom);
 			break;
+                case PROP_POPUP_SHOWN:
+                        g_value_set_boolean (value, ephy_zoom_control_get_popup_shown (control));
+                        break;
 	}
 }
 
@@ -307,6 +319,13 @@ ephy_zoom_control_class_init (EphyZoomControlClass *klass)
 							     ZOOM_MAXIMAL,
 							     ZOOM_MAXIMAL,
 							     G_PARAM_READWRITE));
+        g_object_class_install_property (object_class,
+                                         PROP_POPUP_SHOWN,
+                                         g_param_spec_boolean ("popup-shown",
+                                                               "Popup shown",
+                                                               "Whether the combo's dropdown is shown",
+                                                               FALSE,
+                                                               G_PARAM_READABLE));
 
 	signals[ZOOM_TO_LEVEL_SIGNAL] =
 		g_signal_new ("zoom_to_level",
@@ -340,4 +359,16 @@ ephy_zoom_control_get_zoom_level (EphyZoomControl *control)
 	g_return_val_if_fail (EPHY_IS_ZOOM_CONTROL (control), 1.0);
 	
 	return control->priv->zoom;
+}
+
+gboolean
+ephy_zoom_control_get_popup_shown (EphyZoomControl *control)
+{
+        gboolean retval;
+
+        g_return_val_if_fail (EPHY_IS_ZOOM_CONTROL (control), FALSE);
+
+        g_object_get (control->priv->combo, "popup-shown", &retval, NULL);
+
+        return retval;
 }
