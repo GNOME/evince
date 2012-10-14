@@ -30,9 +30,8 @@ struct _EggFindBarPrivate
 {
   gchar *search_string;
 
-  GtkToolItem *next_button;
-  GtkToolItem *previous_button;
-  GtkToolItem *status_separator;
+  GtkWidget *next_button;
+  GtkWidget *previous_button;
   GtkToolItem *status_item;
 
   GtkWidget *find_entry;
@@ -383,11 +382,10 @@ static void
 egg_find_bar_init (EggFindBar *find_bar)
 {
   EggFindBarPrivate *priv;
-  GtkWidget *label;
   GtkWidget *alignment;
   GtkWidget *box;
   GtkToolItem *item;
-  GtkWidget *arrow;
+  GtkStyleContext *style_context;
 
   /* Data */
   priv = EGG_FIND_BAR_GET_PRIVATE (find_bar);
@@ -397,19 +395,18 @@ egg_find_bar_init (EggFindBar *find_bar)
 
   gtk_toolbar_set_style (GTK_TOOLBAR (find_bar), GTK_TOOLBAR_BOTH_HORIZ);
 
-  /* Find: |_____| */
-  item = gtk_tool_item_new ();
-  box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 12);
-  
+  box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
+  style_context = gtk_widget_get_style_context (box);
+  gtk_style_context_add_class (style_context, GTK_STYLE_CLASS_LINKED);
+  gtk_style_context_add_class (style_context, GTK_STYLE_CLASS_RAISED);
+
   alignment = gtk_alignment_new (0.0, 0.5, 1.0, 0.0);
   gtk_alignment_set_padding (GTK_ALIGNMENT (alignment), 0, 0, 2, 2);
 
-  label = gtk_label_new_with_mnemonic (_("Find:"));
-
+  /* Entry */
   priv->find_entry = gtk_entry_new ();
   gtk_entry_set_width_chars (GTK_ENTRY (priv->find_entry), 32);
   gtk_entry_set_max_length (GTK_ENTRY (priv->find_entry), 512);
-  gtk_label_set_mnemonic_widget (GTK_LABEL (label), priv->find_entry);
 
   /* Find options */
   gtk_entry_set_icon_from_stock (GTK_ENTRY (priv->find_entry),
@@ -422,24 +419,36 @@ egg_find_bar_init (EggFindBar *find_bar)
                                    GTK_ENTRY_ICON_PRIMARY,
                                    _("Find options"));
 
+  gtk_box_pack_start (GTK_BOX (box), priv->find_entry, TRUE, TRUE, 0);
+  gtk_widget_show (priv->find_entry);
+
   /* Prev */
-  arrow = gtk_arrow_new (GTK_ARROW_LEFT, GTK_SHADOW_NONE);
-  priv->previous_button = gtk_tool_button_new (arrow, Q_("Find Pre_vious"));
-  gtk_tool_button_set_use_underline (GTK_TOOL_BUTTON (priv->previous_button), TRUE);
-  gtk_tool_item_set_is_important (priv->previous_button, TRUE);
-  gtk_widget_set_tooltip_text (GTK_WIDGET (priv->previous_button),
-			       _("Find previous occurrence of the search string"));
+  priv->previous_button = gtk_button_new ();
+  gtk_button_set_image (GTK_BUTTON (priv->previous_button),
+                        gtk_image_new_from_icon_name ("go-up-symbolic", GTK_ICON_SIZE_MENU));
+  gtk_widget_set_tooltip_text (priv->previous_button, _("Find previous occurrence of the search string"));
+  gtk_widget_set_can_focus (priv->previous_button, FALSE);
+  gtk_widget_set_sensitive (priv->previous_button, FALSE);
+  gtk_container_add (GTK_CONTAINER (box), priv->previous_button);
+  gtk_widget_show (priv->previous_button);
 
   /* Next */
-  arrow = gtk_arrow_new (GTK_ARROW_RIGHT, GTK_SHADOW_NONE);
-  priv->next_button = gtk_tool_button_new (arrow, Q_("Find Ne_xt"));
-  gtk_tool_button_set_use_underline (GTK_TOOL_BUTTON (priv->next_button), TRUE);
-  gtk_tool_item_set_is_important (priv->next_button, TRUE);
-  gtk_widget_set_tooltip_text (GTK_WIDGET (priv->next_button),
-			       _("Find next occurrence of the search string"));
+  priv->next_button = gtk_button_new ();
+  gtk_button_set_image (GTK_BUTTON (priv->next_button),
+                        gtk_image_new_from_icon_name ("go-down-symbolic", GTK_ICON_SIZE_MENU));
+  gtk_widget_set_tooltip_text (priv->next_button, _("Find next occurrence of the search string"));
+  gtk_widget_set_can_focus (priv->next_button, FALSE);
+  gtk_widget_set_sensitive (priv->next_button, FALSE);
+  gtk_container_add (GTK_CONTAINER (box), priv->next_button);
+  gtk_widget_show (priv->next_button);
 
-  /* Separator*/
-  priv->status_separator = gtk_separator_tool_item_new();
+  item = gtk_tool_item_new ();
+  gtk_widget_set_margin_right (GTK_WIDGET (item), 12);
+  gtk_container_add (GTK_CONTAINER (item), box);
+  gtk_widget_show (box);
+
+  gtk_container_add (GTK_CONTAINER (find_bar), GTK_WIDGET (item));
+  gtk_widget_show (GTK_WIDGET (item));
 
   /* Status */
   priv->status_item = gtk_tool_item_new();
@@ -448,7 +457,9 @@ egg_find_bar_init (EggFindBar *find_bar)
   gtk_label_set_ellipsize (GTK_LABEL (priv->status_label),
                            PANGO_ELLIPSIZE_END);
   gtk_misc_set_alignment (GTK_MISC (priv->status_label), 0.0, 0.5);
-
+  gtk_container_add (GTK_CONTAINER (priv->status_item), priv->status_label);
+  gtk_widget_show (priv->status_label);
+  gtk_container_add (GTK_CONTAINER (find_bar), GTK_WIDGET (priv->status_item));
 
   g_signal_connect (priv->find_entry, "changed",
                     G_CALLBACK (entry_changed_callback),
@@ -468,24 +479,6 @@ egg_find_bar_init (EggFindBar *find_bar)
   g_signal_connect (priv->previous_button, "clicked",
                     G_CALLBACK (previous_clicked_callback),
                     find_bar);
-
-  gtk_box_pack_start (GTK_BOX (box), label, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (box), priv->find_entry, TRUE, TRUE, 0);
-  gtk_container_add (GTK_CONTAINER (alignment), box);
-  gtk_container_add (GTK_CONTAINER (item), alignment);
-  gtk_toolbar_insert (GTK_TOOLBAR (find_bar), item, -1);
-  gtk_toolbar_insert (GTK_TOOLBAR (find_bar), priv->previous_button, -1);
-  gtk_toolbar_insert (GTK_TOOLBAR (find_bar), priv->next_button, -1);
-  gtk_toolbar_insert (GTK_TOOLBAR (find_bar), priv->status_separator, -1);
-  gtk_container_add  (GTK_CONTAINER (priv->status_item), priv->status_label);
-  gtk_toolbar_insert (GTK_TOOLBAR (find_bar), priv->status_item, -1);
-
-  /* don't show status separator/label until they are set */
-
-  gtk_widget_show_all (GTK_WIDGET (item));
-  gtk_widget_show_all (GTK_WIDGET (priv->next_button));
-  gtk_widget_show_all (GTK_WIDGET (priv->previous_button));
-  gtk_widget_show (priv->status_label);
 }
 
 static void
@@ -863,6 +856,5 @@ egg_find_bar_set_status_text (EggFindBar *find_bar,
   priv = (EggFindBarPrivate *)find_bar->priv;
   
   gtk_label_set_text (GTK_LABEL (priv->status_label), text);
-  g_object_set (priv->status_separator, "visible", text != NULL && *text != '\0', NULL);
   g_object_set (priv->status_item, "visible", text != NULL && *text !='\0', NULL);
 }
