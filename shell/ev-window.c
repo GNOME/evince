@@ -7287,6 +7287,14 @@ ev_window_init (EvWindow *ev_window)
 
 	ev_window->priv->view_box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 
+	/* Find Bar */
+	ev_window->priv->find_bar = egg_find_bar_new ();
+	gtk_style_context_add_class (gtk_widget_get_style_context (ev_window->priv->find_bar),
+				     GTK_STYLE_CLASS_PRIMARY_TOOLBAR);
+	gtk_box_pack_start (GTK_BOX (ev_window->priv->view_box),
+			    ev_window->priv->find_bar,
+			    FALSE, TRUE, 0);
+
 	overlay = gtk_overlay_new ();
 	ev_window->priv->scrolled_window =
 		GTK_WIDGET (g_object_new (GTK_TYPE_SCROLLED_WINDOW,
@@ -7353,12 +7361,6 @@ ev_window_init (EvWindow *ev_window)
 #endif
 	gtk_widget_show (ev_window->priv->view);
 	gtk_widget_show (ev_window->priv->password_view);
-
-	/* Find Bar */
-	ev_window->priv->find_bar = egg_find_bar_new ();
-	gtk_box_pack_end (GTK_BOX (ev_window->priv->main_box),
-			  ev_window->priv->find_bar,
-			  FALSE, TRUE, 0);
 
 	/* We own a ref on these widgets, as we can swap them in and out */
 	g_object_ref (ev_window->priv->view);
