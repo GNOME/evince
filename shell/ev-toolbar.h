@@ -47,8 +47,9 @@ struct _EvToolbarClass {
         GtkToolbarClass base_class;
 };
 
-GType      ev_toolbar_get_type (void);
-GtkWidget *ev_toolbar_new      (EvWindow *window);
+GType      ev_toolbar_get_type           (void);
+GtkWidget *ev_toolbar_new                (EvWindow *window);
+gboolean   ev_toolbar_has_visible_popups (EvToolbar *ev_toolbar);
 
 G_END_DECLS
 

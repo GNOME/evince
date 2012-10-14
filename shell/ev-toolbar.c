@@ -25,6 +25,7 @@
 #include "ev-toolbar.h"
 
 #include "ev-stock-icons.h"
+#include "ephy-zoom-action.h"
 #include <math.h>
 
 enum
@@ -34,7 +35,10 @@ enum
 };
 
 struct _EvToolbarPrivate {
-        EvWindow *window;
+        EvWindow  *window;
+
+        GtkWidget *view_menu_button;
+        GtkWidget *action_menu_button;
 };
 
 G_DEFINE_TYPE (EvToolbar, ev_toolbar, GTK_TYPE_TOOLBAR)
@@ -245,6 +249,7 @@ ev_toolbar_constructed (GObject *object)
         menu = gtk_ui_manager_get_widget (ui_manager, "/ViewMenuPopup");
         button = ev_toolbar_create_menu_button (ev_toolbar, "go-down-symbolic",
                                                 menu, GTK_ALIGN_END);
+        ev_toolbar->priv->view_menu_button = button;
         gtk_container_add (GTK_CONTAINER (hbox), button);
         gtk_widget_show (button);
 
@@ -260,6 +265,7 @@ ev_toolbar_constructed (GObject *object)
         menu = gtk_ui_manager_get_widget (ui_manager, "/ActionMenu");
         button = ev_toolbar_create_menu_button (ev_toolbar, "emblem-system-symbolic",
                                                 menu, GTK_ALIGN_END);
+        ev_toolbar->priv->action_menu_button = button;
         tool_item = GTK_WIDGET (gtk_tool_item_new ());
         gtk_container_add (GTK_CONTAINER (tool_item), button);
         gtk_widget_show (button);
@@ -305,3 +311,30 @@ ev_toolbar_new (EvWindow *window)
                                          NULL));
 }
 
+gboolean
+ev_toolbar_has_visible_popups (EvToolbar *ev_toolbar)
+{
+        GtkAction        *action;
+        GtkActionGroup   *action_group;
+        GtkMenu          *popup_menu;
+        EvToolbarPrivate *priv;
+
+        g_return_val_if_fail (EV_IS_TOOLBAR (ev_toolbar), FALSE);
+
+        priv = ev_toolbar->priv;
+
+        popup_menu = gtk_menu_button_get_popup (GTK_MENU_BUTTON (priv->view_menu_button));
+        if (gtk_widget_get_visible (GTK_WIDGET (popup_menu)))
+                return TRUE;
+
+        popup_menu = gtk_menu_button_get_popup (GTK_MENU_BUTTON (priv->action_menu_button));
+        if (gtk_widget_get_visible (GTK_WIDGET (popup_menu)))
+                return TRUE;
+
+        action_group = ev_window_get_main_action_group (ev_toolbar->priv->window);
+        action = gtk_action_group_get_action (action_group, "ViewZoom");
+        if (ephy_zoom_action_get_popup_shown (EPHY_ZOOM_ACTION (action)))
+                return TRUE;
+
+        return FALSE;
+}
