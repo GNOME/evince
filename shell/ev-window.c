@@ -367,6 +367,9 @@ static void 	ev_window_emit_doc_loaded		(EvWindow	  *window);
 #endif
 static void     ev_window_setup_bookmarks               (EvWindow         *window);
 
+static void     ev_window_show_find_bar                 (EvWindow         *ev_window);
+static void     ev_window_close_find_bar                (EvWindow         *ev_window);
+
 static gchar *nautilus_sendto = NULL;
 
 G_DEFINE_TYPE (EvWindow, ev_window, GTK_TYPE_APPLICATION_WINDOW)
@@ -1689,7 +1692,7 @@ ev_window_load_job_cb (EvJob *job,
 
 		if (ev_window->priv->search_string && EV_IS_DOCUMENT_FIND (document) &&
 		    ev_window->priv->window_mode != EV_WINDOW_MODE_PRESENTATION) {
-			ev_window_cmd_edit_find (NULL, ev_window);
+			ev_window_show_find_bar (ev_window);
 			egg_find_bar_set_search_string (EGG_FIND_BAR (ev_window->priv->find_bar),
 							ev_window->priv->search_string);
 		}
@@ -2227,7 +2230,7 @@ ev_window_open_document (EvWindow       *ev_window,
 
 	if (search_string && EV_IS_DOCUMENT_FIND (document) &&
 	    mode != EV_WINDOW_MODE_PRESENTATION) {
-		ev_window_cmd_edit_find (NULL, ev_window);
+		ev_window_show_find_bar (ev_window);
 		egg_find_bar_set_search_string (EGG_FIND_BAR (ev_window->priv->find_bar),
 						search_string);
 	}
@@ -3913,19 +3916,21 @@ ev_window_cmd_edit_select_all (GtkAction *action, EvWindow *ev_window)
 }
 
 static void
+ev_window_cmd_toggle_find (GtkAction *action, EvWindow *ev_window)
+{
+	gboolean show_find_bar;
+
+	show_find_bar = gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action));
+	if (show_find_bar)
+		ev_window_show_find_bar (ev_window);
+	else
+		ev_window_close_find_bar (ev_window);
+}
+
+static void
 ev_window_cmd_edit_find (GtkAction *action, EvWindow *ev_window)
 {
-	if (ev_window->priv->document == NULL || !EV_IS_DOCUMENT_FIND (ev_window->priv->document)) {
-		g_error ("Find action should be insensitive since document doesn't support find");
-		return;
-	}
-
-	if (EV_WINDOW_IS_PRESENTATION (ev_window))
-		return;
-
-	update_chrome_flag (ev_window, EV_CHROME_FINDBAR, TRUE);
-	update_chrome_visibility (ev_window);
-	gtk_widget_grab_focus (ev_window->priv->find_bar);
+	ev_window_show_find_bar (ev_window);
 }
 
 static void
@@ -3934,9 +3939,7 @@ ev_window_cmd_edit_find_next (GtkAction *action, EvWindow *ev_window)
 	if (EV_WINDOW_IS_PRESENTATION (ev_window))
 		return;
 
-	update_chrome_flag (ev_window, EV_CHROME_FINDBAR, TRUE);
-	update_chrome_visibility (ev_window);
-	gtk_widget_grab_focus (ev_window->priv->find_bar);
+	ev_window_show_find_bar (ev_window);
 	ev_view_find_next (EV_VIEW (ev_window->priv->view));
 }
 
@@ -3946,9 +3949,7 @@ ev_window_cmd_edit_find_previous (GtkAction *action, EvWindow *ev_window)
 	if (EV_WINDOW_IS_PRESENTATION (ev_window))
 		return;
 
-	update_chrome_flag (ev_window, EV_CHROME_FINDBAR, TRUE);
-	update_chrome_visibility (ev_window);
-	gtk_widget_grab_focus (ev_window->priv->find_bar);
+	ev_window_show_find_bar (ev_window);
 	ev_view_find_previous (EV_VIEW (ev_window->priv->view));
 }
 
@@ -4735,9 +4736,7 @@ ev_window_cmd_escape (GtkAction *action, EvWindow *window)
 	
 	widget = gtk_window_get_focus (GTK_WINDOW (window));
 	if (widget && gtk_widget_get_ancestor (widget, EGG_TYPE_FIND_BAR)) {
-		update_chrome_flag (window, EV_CHROME_FINDBAR, FALSE);
-		update_chrome_visibility (window);
-		gtk_widget_grab_focus (window->priv->view);
+		ev_window_close_find_bar (window);
 	} else {
 		gboolean fullscreen;
 
@@ -5360,10 +5359,7 @@ static void
 find_bar_close_cb (EggFindBar *find_bar,
 		   EvWindow   *ev_window)
 {
-	ev_view_find_cancel (EV_VIEW (ev_window->priv->view));
-	ev_window_clear_find_job (ev_window);
-	update_chrome_flag (ev_window, EV_CHROME_FINDBAR, FALSE);
-	update_chrome_visibility (ev_window);
+	ev_window_close_find_bar (ev_window);
 }
 
 static void
@@ -5446,6 +5442,55 @@ find_bar_scroll (EggFindBar   *find_bar,
 		 EvWindow     *ev_window)
 {
 	ev_view_scroll (EV_VIEW (ev_window->priv->view), scroll, FALSE);
+}
+
+static void
+update_toggle_find_action (EvWindow *ev_window,
+			   gboolean  active)
+{
+	GtkAction *action;
+
+	action = gtk_action_group_get_action (ev_window->priv->action_group, "EditFind");
+	if (gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action)) == active)
+		return;
+
+	g_signal_handlers_block_by_func (action, G_CALLBACK (ev_window_cmd_toggle_find), ev_window);
+	gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action), active);
+	g_signal_handlers_unblock_by_func (action, G_CALLBACK (ev_window_cmd_toggle_find), ev_window);
+}
+
+static void
+ev_window_show_find_bar (EvWindow *ev_window)
+{
+	if (gtk_widget_get_visible (ev_window->priv->find_bar))
+		return;
+
+	if (ev_window->priv->document == NULL || !EV_IS_DOCUMENT_FIND (ev_window->priv->document)) {
+		g_error ("Find action should be insensitive since document doesn't support find");
+		return;
+	}
+
+	if (EV_WINDOW_IS_PRESENTATION (ev_window))
+		return;
+
+	update_chrome_flag (ev_window, EV_CHROME_FINDBAR, TRUE);
+	update_chrome_visibility (ev_window);
+	gtk_widget_grab_focus (ev_window->priv->find_bar);
+	update_toggle_find_action (ev_window, TRUE);
+}
+
+static void
+ev_window_close_find_bar (EvWindow *ev_window)
+{
+	if (!gtk_widget_get_visible (ev_window->priv->find_bar))
+		return;
+
+	ev_view_find_cancel (EV_VIEW (ev_window->priv->view));
+	ev_window_clear_find_job (ev_window);
+	update_chrome_flag (ev_window, EV_CHROME_FINDBAR, FALSE);
+	update_chrome_visibility (ev_window);
+	gtk_widget_grab_focus (ev_window->priv->view);
+	update_toggle_find_action (ev_window, FALSE);
 }
 
 static void
@@ -5824,9 +5869,6 @@ static const GtkActionEntry entries[] = {
           G_CALLBACK (ev_window_cmd_edit_copy) },
  	{ "EditSelectAll", GTK_STOCK_SELECT_ALL, N_("Select _All"), "<control>A", NULL,
 	  G_CALLBACK (ev_window_cmd_edit_select_all) },
-        { "EditFind", GTK_STOCK_FIND, N_("_Find…"), "<control>F",
-          N_("Find a word or phrase in the document"),
-          G_CALLBACK (ev_window_cmd_edit_find) },
 	{ "EditRotateLeft", EV_STOCK_ROTATE_LEFT, N_("Rotate _Left"), "<control>Left", NULL,
 	  G_CALLBACK (ev_window_cmd_edit_rotate_left) },
 	{ "EditRotateRight", EV_STOCK_ROTATE_RIGHT, N_("Rotate _Right"), "<control>Right", NULL,
@@ -5979,6 +6021,10 @@ static const GtkToggleActionEntry toggle_entries[] = {
 	{ "ViewInvertedColors", EV_STOCK_INVERTED_COLORS, N_("_Inverted Colors"), "<control>I",
 	  N_("Show page contents with the colors inverted"),
 	  G_CALLBACK (ev_window_cmd_view_inverted_colors) },
+
+	{ "EditFind", GTK_STOCK_FIND, N_("_Find…"), "<control>F",
+	  N_("Find a word or phrase in the document"),
+	  G_CALLBACK (ev_window_cmd_toggle_find) },
 
 };
 
@@ -6436,7 +6482,7 @@ do_action_named (EvWindow *window, EvLinkAction *action)
 	} else if (g_ascii_strcasecmp (name, "GoToPage") == 0) {
 		ev_window_cmd_focus_page_selector (NULL, window);
 	} else if (g_ascii_strcasecmp (name, "Find") == 0) {
-		ev_window_cmd_edit_find (NULL, window);
+		ev_window_show_find_bar (window);
 	} else if (g_ascii_strcasecmp (name, "Close") == 0) {
 		ev_window_cmd_file_close_window (NULL, window);
 	} else if (g_ascii_strcasecmp (name, "Print") == 0) {
