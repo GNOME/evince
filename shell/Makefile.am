@@ -162,6 +162,7 @@ endif
 
 EXTRA_DIST = \
 	evince.css \
+	evince-appmenu.ui \
 	evince-icon.rc \
 	evince-ui.xml \
 	evince-toolbar.xml \
