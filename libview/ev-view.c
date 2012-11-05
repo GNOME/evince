@@ -5485,7 +5485,7 @@ ev_view_zoom_for_size_continuous_and_dual_page (EvView *view,
 
 	doc_width *= 2;
 	width -= (2 * (border.left + border.right) + 3 * view->spacing);
-	height -= (border.top + border.bottom + 2 * view->spacing - 1);
+	height -= (border.top + border.bottom + 2 * view->spacing);
 
 	sb_size = ev_view_get_scrollbar_size (view, GTK_ORIENTATION_VERTICAL);
 
@@ -5521,7 +5521,7 @@ ev_view_zoom_for_size_continuous (EvView *view,
 	compute_border (view, doc_width, doc_height, &border);
 
 	width -= (border.left + border.right + 2 * view->spacing);
-	height -= (border.top + border.bottom + 2 * view->spacing - 1);
+	height -= (border.top + border.bottom + 2 * view->spacing);
 
 	sb_size = ev_view_get_scrollbar_size (view, GTK_ORIENTATION_VERTICAL);
 
