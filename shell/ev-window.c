@@ -71,6 +71,7 @@
 #include "ev-sidebar-attachments.h"
 #include "ev-sidebar-bookmarks.h"
 #include "ev-sidebar.h"
+#include "ev-sidebar-find-results.h"
 #include "ev-sidebar-links.h"
 #include "ev-sidebar-page.h"
 #include "ev-sidebar-thumbnails.h"
@@ -139,6 +140,7 @@ struct _EvWindowPrivate {
 	GtkWidget *password_view;
 	GtkWidget *sidebar_thumbs;
 	GtkWidget *sidebar_links;
+	GtkWidget *sidebar_find_results;
 	GtkWidget *sidebar_attachments;
 	GtkWidget *sidebar_layers;
 	GtkWidget *sidebar_annots;
@@ -256,6 +258,7 @@ struct _EvWindowPrivate {
 #define GS_LAST_PICTURES_DIRECTORY "pictures-directory"
 
 #define SIDEBAR_DEFAULT_SIZE    132
+#define FIND_RESULTS_SIDEBAR_ID "find_results"
 #define LINKS_SIDEBAR_ID "links"
 #define THUMBNAILS_SIDEBAR_ID "thumbnails"
 #define ATTACHMENTS_SIDEBAR_ID "attachments"
@@ -807,6 +810,49 @@ typedef struct _LinkTitleData {
 	EvLink      *link;
 	const gchar *link_title;
 } LinkTitleData;
+static void
+ev_view_find_result_highlight_changed_cb (EvView *view,
+		gpointer find_result,
+		gint page,
+		gint result,
+		EvWindow *window)
+{
+
+	find_result_activate_result (
+		EV_SIDEBAR_FIND_RESULTS (window->priv->sidebar_find_results),
+		find_result,
+		page,
+		result);
+}
+
+static void
+sidebar_find_results_find_result_activated_cb (EvSidebarFindResults *sidebar_find_results,
+					EvJobFind *job,
+					gint pageno,
+					gint resultno,
+					EvWindow *window)
+{
+	if (window->priv->view == NULL) return;
+	if (gtk_widget_get_visible (window->priv->find_bar)) return;
+	if (job == NULL) {
+		ev_view_find_changed (EV_VIEW (window->priv->view), NULL, 0);
+		ev_view_find_set_highlight_search (EV_VIEW (window->priv->view), FALSE);
+	}
+	else {
+		ev_view_find_changed (EV_VIEW (window->priv->view),
+			ev_job_find_get_results (job),
+			pageno);
+		ev_view_find_set_highlight_search (EV_VIEW (window->priv->view), TRUE);
+		ev_view_find_highlight_result (EV_VIEW (window->priv->view), pageno, resultno);
+	};
+
+}
+
+typedef struct _PageTitleData {
+
+	const gchar *page_label;
+	gchar       *page_title;
+} PageTitleData;
 
 static gboolean
 find_link_cb (GtkTreeModel  *tree_model,
@@ -959,6 +1005,8 @@ ev_window_sidebar_get_current_page_id (EvWindow *ev_window)
 		id = ANNOTS_SIDEBAR_ID;
 	} else if (current_page == ev_window->priv->sidebar_bookmarks) {
 		id = BOOKMARKS_SIDEBAR_ID;
+	} else if (current_page == ev_window->priv->sidebar_find_results) {
+		id = FIND_RESULTS_SIDEBAR_ID;
 	} else {
 		g_assert_not_reached();
 	}
@@ -980,7 +1028,8 @@ ev_window_sidebar_set_current_page (EvWindow    *window,
 	GtkWidget  *annots = window->priv->sidebar_annots;
 	GtkWidget  *layers = window->priv->sidebar_layers;
 	GtkWidget  *bookmarks = window->priv->sidebar_bookmarks;
-
+	GtkWidget  *find_results = window->priv->sidebar_find_results;
+	
 	if (strcmp (page_id, LINKS_SIDEBAR_ID) == 0 &&
 	    ev_sidebar_page_support_document (EV_SIDEBAR_PAGE (links), document)) {
 		ev_sidebar_set_page (sidebar, links);
@@ -999,6 +1048,9 @@ ev_window_sidebar_set_current_page (EvWindow    *window,
 	} else if (strcmp (page_id, BOOKMARKS_SIDEBAR_ID) == 0 &&
 		   ev_sidebar_page_support_document (EV_SIDEBAR_PAGE (bookmarks), document)) {
 		ev_sidebar_set_page (sidebar, bookmarks);
+	} else if (strcmp (page_id, FIND_RESULTS_SIDEBAR_ID) == 0 &&
+		  ev_sidebar_page_support_document (EV_SIDEBAR_PAGE (find_results), document)) {
+		ev_sidebar_set_page (sidebar, find_results);
 	}
 }
 
@@ -5224,6 +5276,9 @@ ev_window_find_job_finished_cb (EvJobFind *job,
 				EvWindow  *ev_window)
 {
 	ev_window_update_find_status_message (ev_window);
+	ev_sidebar_find_results_update (
+			EV_SIDEBAR_FIND_RESULTS (ev_window->priv->sidebar_find_results),
+			EV_JOB_FIND (ev_window->priv->find_job));
 }
 
 /**
@@ -5258,6 +5313,7 @@ ev_window_find_job_updated_cb (EvJobFind *job,
 	if (find_check_refresh_rate (job, FIND_PAGE_RATE_REFRESH)) {
 		ev_window_update_actions_sensitivity (ev_window);
 		ev_window_update_find_status_message (ev_window);
+		ev_sidebar_find_results_update (EV_SIDEBAR_FIND_RESULTS (ev_window->priv->sidebar_find_results), job);
 	}
 }
 
@@ -7255,6 +7311,17 @@ ev_window_init (EvWindow *ev_window)
 			    FALSE, TRUE, 0);
 
 	overlay = gtk_overlay_new ();
+	sidebar_widget = ev_sidebar_find_results_new ();
+	ev_window->priv->sidebar_find_results = sidebar_widget;
+	g_signal_connect (sidebar_widget,
+			"notify::model",
+			G_CALLBACK (sidebar_widget_model_set),
+			ev_window);
+	sidebar_page_main_widget_update_cb (G_OBJECT (sidebar_widget), NULL, ev_window);
+	gtk_widget_show (sidebar_widget);
+	ev_sidebar_add_page (EV_SIDEBAR (ev_window->priv->sidebar),
+			sidebar_widget);
+
 	ev_window->priv->scrolled_window =
 		GTK_WIDGET (g_object_new (GTK_TYPE_SCROLLED_WINDOW,
 					  "shadow-type", GTK_SHADOW_IN,
@@ -7320,6 +7387,14 @@ ev_window_init (EvWindow *ev_window)
 #endif
 	gtk_widget_show (ev_window->priv->view);
 	gtk_widget_show (ev_window->priv->password_view);
+
+	/* Find results sidebar */
+	g_signal_connect (ev_window->priv->sidebar_find_results,
+			"find-result-activated",
+			G_CALLBACK (sidebar_find_results_find_result_activated_cb),
+			ev_window);
+	g_signal_connect (ev_window->priv->view, "find-result-highlight-changed",
+			G_CALLBACK (ev_view_find_result_highlight_changed_cb), ev_window);
 
 	/* We own a ref on these widgets, as we can swap them in and out */
 	g_object_ref (ev_window->priv->view);

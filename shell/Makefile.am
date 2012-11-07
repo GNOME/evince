@@ -83,6 +83,8 @@ evince_SOURCES=				\
 	ev-sidebar-attachments.h	\
 	ev-sidebar-bookmarks.h		\
 	ev-sidebar-bookmarks.c		\
+	ev-sidebar-find-results.c 	\
+	ev-sidebar-find-results.h 	\
 	ev-sidebar-layers.c		\
 	ev-sidebar-layers.h		\
 	ev-sidebar-links.c		\
