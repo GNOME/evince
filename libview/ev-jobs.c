@@ -1519,6 +1519,142 @@ ev_job_save_new (EvDocument  *document,
 }
 
 /* EvJobFind */
+static gchar *
+get_surrounding_text_markup (GtkTextIter *match_start,
+		             GtkTextIter *match_end)
+{
+	gchar *match, *prec, *succ, *markup;
+	GtkTextIter surrounding_start = *match_start;
+	GtkTextIter surrounding_end = *match_end;
+
+	gtk_text_iter_backward_word_start (&surrounding_start);
+	gtk_text_iter_forward_word_ends (&surrounding_end, 2);
+	
+	match = gtk_text_iter_get_text (match_start, match_end);
+	prec = gtk_text_iter_get_text (&surrounding_start, match_start);
+	succ = gtk_text_iter_get_text (match_end, &surrounding_end);
+
+	markup = g_markup_printf_escaped ("%s<span weight = \"bold\">%s</span>%s",
+                                	  prec, match, succ);
+	g_free (match);
+	g_free (prec);
+	g_free (succ);
+
+	return markup;
+}
+
+static gchar *
+ev_job_find_get_matched_line (EvJob *job, EvPage *page, EvRectangle *match)
+{
+	EvRectangle r;
+	gchar *tmp, *result;
+
+	r = *match;
+	r.y1 = r.y2 = (r.y1 + r.y2)/2;
+	r.x1 = r.x2 = (r.x1 + r.x2)/2;
+
+	tmp = ev_selection_get_selected_text (
+			EV_SELECTION (job->document),
+			page,
+			EV_SELECTION_STYLE_LINE,
+			&r);
+	result = g_utf8_normalize (tmp, -1, G_NORMALIZE_ALL);
+	g_free (tmp);
+
+	return result;
+
+}
+
+static void
+ev_job_find_process_matches (EvJob *job)
+{
+	EvJobFind *job_find;
+	GList *matches;
+	EvPage *page;
+	GtkTreeIter iter;
+	gint occ_number, j, k;
+	gchar *matched_line, *text_to_find;
+	GtkTextBuffer *buffer = NULL;
+	GtkTextIter find_iter, start, end;
+
+	job_find = EV_JOB_FIND (job);
+	matches = job_find->pages[job_find->current_page];
+
+	if (!matches)
+		return;
+
+	buffer = gtk_text_buffer_new (NULL);
+	page = ev_document_get_page (job->document, job_find->current_page);
+	occ_number = 0;
+	j = 0;
+
+	if (job_find->case_sensitive)
+		text_to_find = g_strdup (job_find->text);
+	else
+		text_to_find = g_utf8_strdown (job_find->text, -1);
+	
+	while (matches != NULL) {
+
+		matched_line = ev_job_find_get_matched_line (job, page, (EvRectangle *) matches->data);
+		g_assert (matched_line != NULL);
+
+		if (!job_find->case_sensitive) {
+			gchar *tmp = matched_line;
+
+			matched_line = g_utf8_strdown (tmp, -1);
+			g_free (tmp);
+		} 
+		gtk_text_buffer_set_text (buffer, matched_line, -1);
+		gtk_text_buffer_get_start_iter (buffer, &find_iter);
+
+		/* search the proper occurrence of text in the line */
+		occ_number++;
+		for (k = 0; k < occ_number; k++ ) {
+			if (!gtk_text_iter_forward_search (&find_iter, text_to_find, 0, &start, &end, NULL))
+				break;
+			 
+			 find_iter = end;
+			 gtk_text_iter_forward_char (&find_iter);
+		}
+		
+		/* additional search to determine that current match is the last one on the line */
+		if (!gtk_text_iter_forward_search (&find_iter, text_to_find,
+						   GTK_TEXT_SEARCH_CASE_INSENSITIVE, NULL, NULL, NULL)) 
+			occ_number = 0;
+	
+		if (k == 0) {
+			/* This should not be reached as the matched line should contain 
+ 			 * the text_to_find at least once. However with poppler-0.22 
+ 			 * we get some false positives, so we play safe by 
+ 			 * just ignoring them */
+		} else {
+			gchar *markup = get_surrounding_text_markup (&start, &end);
+
+			if (job_find->current_page >= job_find->start_page) {
+				gtk_list_store_append (GTK_LIST_STORE (job_find->model), &iter);
+			} else {
+				gtk_list_store_insert (
+						GTK_LIST_STORE (job_find->model),
+						&iter,
+						job_find->insert_position);
+				job_find->insert_position++;
+			}
+			gtk_list_store_set (GTK_LIST_STORE (job_find->model), &iter,
+				0, markup,
+				1, job_find->current_page + 1,
+				2, j,
+				- 1);
+			g_free (markup);
+		}
+		g_free (matched_line);
+		
+		matches = g_list_next (matches);
+		j++;
+	}
+	g_free (text_to_find);
+	g_object_unref (buffer);
+}
+
 static void
 ev_job_find_init (EvJobFind *job)
 {
@@ -1548,7 +1684,12 @@ ev_job_find_dispose (GObject *object)
 		g_free (job->pages);
 		job->pages = NULL;
 	}
-	
+
+	if (job->model)	{
+		g_object_unref (job->model);
+		job->model = NULL;
+	};
+
 	(* G_OBJECT_CLASS (ev_job_find_parent_class)->dispose) (object);
 }
 
@@ -1577,12 +1718,15 @@ ev_job_find_run (EvJob *job)
                                                            job_find->options);
 	g_object_unref (ev_page);
 	
-	ev_document_doc_mutex_unlock ();
 
 	if (!job_find->has_results)
 		job_find->has_results = (matches != NULL);
 
 	job_find->pages[job_find->current_page] = matches;
+	ev_job_find_process_matches (job);
+	
+	ev_document_doc_mutex_unlock ();
+
 	g_signal_emit (job_find, job_find_signals[FIND_UPDATED], 0, job_find->current_page);
 		       
 	job_find->current_page = (job_find->current_page + 1) % job_find->n_pages;
@@ -1640,6 +1784,11 @@ ev_job_find_new (EvDocument  *document,
         if (case_sensitive)
                 job->options |= EV_FIND_CASE_SENSITIVE;
 
+	job->model = (GtkTreeModel *)gtk_list_store_new (3,
+						G_TYPE_STRING,
+						G_TYPE_INT,
+						G_TYPE_INT);
+	job->insert_position = 0;
 	return EV_JOB (job);
 }
 

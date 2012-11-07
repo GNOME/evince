@@ -57,6 +57,7 @@ enum {
 	SIGNAL_SYNC_SOURCE,
 	SIGNAL_ANNOT_ADDED,
 	SIGNAL_LAYERS_CHANGED,
+	SIGNAL_FIND_RESULT_HIGHLIGHT_CHANGED,
 	N_SIGNALS
 };
 
@@ -4925,6 +4926,15 @@ ev_view_class_init (EvViewClass *class)
 		         g_cclosure_marshal_VOID__VOID,
 		         G_TYPE_NONE, 0,
 			 G_TYPE_NONE);
+	signals[SIGNAL_FIND_RESULT_HIGHLIGHT_CHANGED] = g_signal_new ("find-result-highlight-changed",
+		G_TYPE_FROM_CLASS (object_class),
+		G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
+		0,
+		NULL, NULL,
+		ev_view_marshal_VOID__POINTER_INT_INT,
+		G_TYPE_NONE, 3,
+		G_TYPE_POINTER, G_TYPE_INT, G_TYPE_INT);
+
 
 	binding_set = gtk_binding_set_by_class (class);
 
@@ -5042,6 +5052,13 @@ ev_view_page_changed_cb (EvDocumentModel *model,
 	}
 
 	view->find_result = 0;
+
+	g_signal_emit (view,
+		signals[SIGNAL_FIND_RESULT_HIGHLIGHT_CHANGED],
+		0,
+		view->find_pages,
+		new_page,
+		view->find_result);
 }
 
 static void
@@ -5878,6 +5895,13 @@ jump_to_find_result (EvView *view)
 		ensure_rectangle_is_visible (view, &view_rect);
 		view->jump_to_find_result = FALSE;
 	}
+
+	g_signal_emit (view,
+		signals[SIGNAL_FIND_RESULT_HIGHLIGHT_CHANGED],
+		0,
+		view->find_pages,
+		page,
+		view->find_result);
 }
 
 /**
@@ -5987,6 +6011,15 @@ ev_view_find_previous (EvView *view)
 		jump_to_find_result (view);
 		gtk_widget_queue_draw (GTK_WIDGET (view));
 	}
+}
+
+void
+ev_view_find_highlight_result (EvView *view, gint page, gint result)
+{
+	ev_document_model_set_page (view->model, page);
+	view->find_result = result;
+	jump_to_find_page (view, EV_VIEW_FIND_NEXT, 0);
+	jump_to_find_result (view);
 }
 
 void

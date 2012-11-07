@@ -392,6 +392,9 @@ struct _EvJobFind
 	gboolean case_sensitive;
 	gboolean has_results;
         EvFindOptions options;
+
+	GtkTreeModel *model;
+	gint insert_position;
 };
 
 struct _EvJobFindClass
