@@ -25,7 +25,7 @@
 #include "ev-toolbar.h"
 
 #include "ev-stock-icons.h"
-#include "ephy-zoom-action.h"
+#include "ev-zoom-action.h"
 #include <math.h>
 
 enum
@@ -333,7 +333,7 @@ ev_toolbar_has_visible_popups (EvToolbar *ev_toolbar)
 
         action_group = ev_window_get_main_action_group (ev_toolbar->priv->window);
         action = gtk_action_group_get_action (action_group, "ViewZoom");
-        if (ephy_zoom_action_get_popup_shown (EPHY_ZOOM_ACTION (action)))
+        if (ev_zoom_action_get_popup_shown (EV_ZOOM_ACTION (action)))
                 return TRUE;
 
         return FALSE;

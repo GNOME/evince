@@ -43,9 +43,6 @@
 
 #include "eggfindbar.h"
 
-#include "ephy-zoom-action.h"
-#include "ephy-zoom.h"
-
 #include "ev-application.h"
 #include "ev-document-factory.h"
 #include "ev-document-find.h"
@@ -91,6 +88,7 @@
 #include "ev-annotation-properties-dialog.h"
 #include "ev-bookmarks.h"
 #include "ev-bookmark-action.h"
+#include "ev-zoom-action.h"
 #include "ev-toolbar.h"
 
 #ifdef ENABLE_DBUS
@@ -495,7 +493,6 @@ ev_window_update_actions (EvWindow *ev_window)
 	gboolean has_pages = FALSE;
 	gboolean presentation_mode;
 	gboolean can_find_in_page = FALSE;
-	EvSizingMode sizing_mode;
 
 	if (ev_window->priv->document) {
 		page = ev_document_model_get_page (ev_window->priv->model);
@@ -540,22 +537,6 @@ ev_window_update_actions (EvWindow *ev_window)
 		ev_window_set_action_sensitive (ev_window, "GoNextPage", FALSE);
 		ev_window_set_action_sensitive (ev_window, "GoLastPage", FALSE);
 		ev_window_set_action_sensitive (ev_window, "GoToPage", FALSE);
-	}
-
-	sizing_mode = ev_document_model_get_sizing_mode (ev_window->priv->model);
-	if (has_pages && sizing_mode != EV_SIZING_FIT_WIDTH && sizing_mode != EV_SIZING_BEST_FIT) {
-		GtkAction *action;
-		float      zoom;
-		float      real_zoom;
-
-		action = gtk_action_group_get_action (ev_window->priv->action_group,
-						      ZOOM_CONTROL_ACTION);
-
-		real_zoom = ev_document_model_get_scale (ev_window->priv->model);
-		real_zoom *= 72.0 / get_screen_dpi (ev_window);
-		zoom = ephy_zoom_get_nearest_zoom_level (real_zoom);
-
-		ephy_zoom_action_set_zoom_level (EPHY_ZOOM_ACTION (action), zoom);
 	}
 }
 
@@ -671,16 +652,6 @@ update_sizing_buttons (EvWindow *window)
 	gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action), page_width);
 	g_signal_handlers_unblock_by_func
 		(action, G_CALLBACK (ev_window_cmd_view_page_width), window);
-
-	action = gtk_action_group_get_action (window->priv->action_group, 
-					      ZOOM_CONTROL_ACTION);	
-	if (best_fit) {
-		ephy_zoom_action_set_zoom_level (EPHY_ZOOM_ACTION (action), 
-						 EPHY_ZOOM_BEST_FIT);
-	} else if (page_width) {
-		ephy_zoom_action_set_zoom_level (EPHY_ZOOM_ACTION (action), 
-						 EPHY_ZOOM_FIT_WIDTH);
-	}
 }
 
 /**
@@ -4824,7 +4795,7 @@ ev_window_max_zoom_changed_cb (EvDocumentModel *model, GParamSpec *pspec, EvWind
 	max_scale = ev_document_model_get_max_scale (model);
 	action = gtk_action_group_get_action (window->priv->action_group,
 					      ZOOM_CONTROL_ACTION);
-	ephy_zoom_action_set_max_zoom_level (EPHY_ZOOM_ACTION (action), max_scale);
+	ev_zoom_action_set_max_zoom_level (EV_ZOOM_ACTION (action), max_scale);
 }
 
 static void
@@ -5494,29 +5465,6 @@ ev_window_close_find_bar (EvWindow *ev_window)
 }
 
 static void
-zoom_control_changed_cb (EphyZoomAction *action,
-			 float           zoom,
-			 EvWindow       *ev_window)
-{
-	EvSizingMode mode;
-
-	if (zoom == EPHY_ZOOM_BEST_FIT) {
-		mode = EV_SIZING_BEST_FIT;
-	} else if (zoom == EPHY_ZOOM_FIT_WIDTH) {
-		mode = EV_SIZING_FIT_WIDTH;
-	} else {
-		mode = EV_SIZING_FREE;
-	}
-
-	ev_document_model_set_sizing_mode (ev_window->priv->model, mode);
-
-	if (mode == EV_SIZING_FREE) {
-		ev_document_model_set_scale (ev_window->priv->model,
-					     zoom * get_screen_dpi (ev_window) / 72.0);
-	}
-}
-
-static void
 ev_window_drag_data_received (GtkWidget        *widget,
 			      GdkDragContext   *context,
 			      gint              x,
@@ -6122,6 +6070,13 @@ sidebar_bookmarks_add_bookmark (EvSidebarBookmarks *sidebar_bookmarks,
 }
 
 static void
+zoom_action_activated_cb (EvZoomAction *action,
+			  EvWindow     *window)
+{
+	gtk_widget_grab_focus (window->priv->view);
+}
+
+static void
 register_custom_actions (EvWindow *window, GtkActionGroup *group)
 {
 	GtkAction *action;
@@ -6140,15 +6095,16 @@ register_custom_actions (EvWindow *window, GtkActionGroup *group)
 	gtk_action_group_add_action (group, action);
 	g_object_unref (action);
 
-	action = g_object_new (EPHY_TYPE_ZOOM_ACTION,
+	action = g_object_new (EV_TYPE_ZOOM_ACTION,
 			       "name", ZOOM_CONTROL_ACTION,
 			       "label", _("Zoom"),
 			       "stock_id", EV_STOCK_ZOOM,
 			       "tooltip", _("Adjust the zoom level"),
-			       "zoom", 1.0,
 			       NULL);
-	g_signal_connect (action, "zoom_to_level",
-			  G_CALLBACK (zoom_control_changed_cb), window);
+	ev_zoom_action_set_model (EV_ZOOM_ACTION (action),
+				  window->priv->model);
+	g_signal_connect (action, "activated",
+			  G_CALLBACK (zoom_action_activated_cb), window);
 	gtk_action_group_add_action (group, action);
 	g_object_unref (action);
 
