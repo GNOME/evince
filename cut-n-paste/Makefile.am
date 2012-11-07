@@ -1,3 +1,3 @@
-SUBDIRS = zoom-control smclient gimpcellrenderertoggle synctex
+SUBDIRS = smclient gimpcellrenderertoggle synctex
 
 -include $(top_srcdir)/git.mk
