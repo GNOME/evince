@@ -132,7 +132,7 @@ EvinceView_@EV_API_VERSION_U@_gir_FILES = \
 	$(INST_H_BUILT_FILES)	\
 	 $(filter %.c,$(libevview3_la_SOURCES))
 EvinceView_@EV_API_VERSION_U@_gir_INCLUDES = GLib-2.0 GObject-2.0 Gio-2.0 Gdk-3.0 GdkPixbuf-2.0 Gtk-3.0
-EvinceView_@EV_API_VERSION_U@_gir_LIBS = libevview3.la
+EvinceView_@EV_API_VERSION_U@_gir_LIBS = libevview3.la $(top_builddir)/libdocument/libevdocument3.la
 EvinceView_@EV_API_VERSION_U@_gir_CFLAGS = \
 	-I$(top_srcdir)			\
 	-I$(top_builddir)		\
