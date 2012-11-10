@@ -85,7 +85,7 @@ update_pages_label (EvPageActionWidget *action_widget,
                 label_text = g_strdup_printf (_("(%d of %d)"), page + 1, n_pages);
         else
                 label_text = g_strdup_printf (_("of %d"), n_pages);
-	gtk_label_set_text (GTK_LABEL (action_widget->label), label_text);
+	gtk_entry_set_text (GTK_ENTRY (action_widget->label), label_text);
 	g_free (label_text);
 }
 
@@ -96,10 +96,6 @@ ev_page_action_widget_set_current_page (EvPageActionWidget *action_widget,
 	if (page >= 0) {
 		gchar *page_label;
 
-		gtk_entry_set_width_chars (GTK_ENTRY (action_widget->entry),
-					   CLAMP (ev_document_get_max_label_len (action_widget->document),
-						  6, 12));
-
 		page_label = ev_document_get_page_label (action_widget->document, page);
 		gtk_entry_set_text (GTK_ENTRY (action_widget->entry), page_label);
 		gtk_editable_set_position (GTK_EDITABLE (action_widget->entry), -1);
@@ -109,6 +105,34 @@ ev_page_action_widget_set_current_page (EvPageActionWidget *action_widget,
 	}
 
 	update_pages_label (action_widget, page);
+}
+
+static void
+ev_page_action_widget_update_max_width (EvPageActionWidget *action_widget)
+{
+        gchar *max_label;
+        gint   n_pages;
+        gint   max_label_len;
+        gchar *max_page_label;
+        gchar *max_page_numeric_label;
+
+        n_pages = ev_document_get_n_pages (action_widget->document);
+
+        max_page_label = ev_document_get_page_label (action_widget->document, n_pages - 1);
+        max_page_numeric_label = g_strdup_printf ("%d", n_pages);
+        if (strcmp (max_page_label, max_page_numeric_label) != 0)
+                max_label = g_strdup_printf (_("(%d of %d)"), n_pages, n_pages);
+        else
+                max_label = g_strdup_printf (_("of %d"), n_pages);
+        g_free (max_page_label);
+
+        gtk_entry_set_width_chars (GTK_ENTRY (action_widget->label), strlen (max_label));
+        g_free (max_label);
+
+        max_label_len = ev_document_get_max_label_len (action_widget->document);
+        gtk_entry_set_width_chars (GTK_ENTRY (action_widget->entry),
+                                   CLAMP (max_label_len, strlen (max_page_numeric_label) + 1, 12));
+        g_free (max_page_numeric_label);
 }
 
 static void
@@ -172,9 +196,13 @@ ev_page_action_widget_init (EvPageActionWidget *action_widget)
 {
 	GtkWidget *hbox;
 	AtkObject *obj;
+        GtkStyleContext *style_context;
 
 	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
-	gtk_box_set_spacing (GTK_BOX (hbox), 6);
+
+        style_context = gtk_widget_get_style_context (hbox);
+        gtk_style_context_add_class (style_context, GTK_STYLE_CLASS_RAISED);
+        gtk_style_context_add_class (style_context, GTK_STYLE_CLASS_LINKED);
 
 	action_widget->entry = gtk_entry_new ();
 	gtk_widget_add_events (action_widget->entry,
@@ -195,7 +223,9 @@ ev_page_action_widget_init (EvPageActionWidget *action_widget)
 			    FALSE, FALSE, 0);
 	gtk_widget_show (action_widget->entry);
 
-	action_widget->label = gtk_label_new (NULL);
+	action_widget->label = gtk_entry_new ();
+        gtk_widget_set_sensitive (action_widget->label, FALSE);
+        gtk_entry_set_width_chars (GTK_ENTRY (action_widget->label), 5);
 	gtk_box_pack_start (GTK_BOX (hbox), action_widget->label,
 			    FALSE, FALSE, 0);
 	gtk_widget_show (action_widget->label);
@@ -231,6 +261,7 @@ ev_page_action_widget_document_changed_cb (EvDocumentModel    *model,
 
 	ev_page_action_widget_set_current_page (action_widget,
 						ev_document_model_get_page (model));
+        ev_page_action_widget_update_max_width (action_widget);
 }
 
 void
