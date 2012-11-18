@@ -122,7 +122,7 @@ ev_zoom_action_widget_update_sizing_mode (EvZoomActionWidget *control)
 
         switch (mode) {
         case EV_SIZING_BEST_FIT:
-                icon_name = EV_STOCK_ZOOM_PAGE;
+                icon_name = "zoom-fit-best-symbolic";
                 tooltip = _("Best Fit");
                 break;
         case EV_SIZING_FIT_WIDTH:

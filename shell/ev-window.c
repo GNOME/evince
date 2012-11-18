@@ -5840,10 +5840,10 @@ static const GtkActionEntry entries[] = {
 	  G_CALLBACK (ev_window_cmd_view_autoscroll) },
 
         /* Go menu */
-        { "GoPreviousPage", GTK_STOCK_GO_UP, N_("_Previous Page"), "<control>Page_Up",
+        { "GoPreviousPage", "go-up-symbolic", N_("_Previous Page"), "<control>Page_Up",
           N_("Go to the previous page"),
           G_CALLBACK (ev_window_cmd_go_previous_page) },
-        { "GoNextPage", GTK_STOCK_GO_DOWN, N_("_Next Page"), "<control>Page_Down",
+        { "GoNextPage", "go-down-symbolic", N_("_Next Page"), "<control>Page_Down",
           N_("Go to the next page"),
           G_CALLBACK (ev_window_cmd_go_next_page) },
         { "GoFirstPage", GTK_STOCK_GOTO_TOP, N_("_First Page"), "<control>Home",
@@ -5970,7 +5970,7 @@ static const GtkToggleActionEntry toggle_entries[] = {
 	  N_("Show page contents with the colors inverted"),
 	  G_CALLBACK (ev_window_cmd_view_inverted_colors) },
 
-	{ "EditFind", GTK_STOCK_FIND, N_("_Find…"), "<control>F",
+	{ "EditFind", "edit-find-symbolic", N_("_Find…"), "<control>F",
 	  N_("Find a word or phrase in the document"),
 	  G_CALLBACK (ev_window_cmd_toggle_find) },
 

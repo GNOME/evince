@@ -409,9 +409,9 @@ egg_find_bar_init (EggFindBar *find_bar)
   gtk_entry_set_max_length (GTK_ENTRY (priv->find_entry), 512);
 
   /* Find options */
-  gtk_entry_set_icon_from_stock (GTK_ENTRY (priv->find_entry),
-                                 GTK_ENTRY_ICON_PRIMARY,
-                                 GTK_STOCK_FIND);
+  gtk_entry_set_icon_from_icon_name (GTK_ENTRY (priv->find_entry),
+                                     GTK_ENTRY_ICON_PRIMARY,
+                                     "edit-find-symbolic");
   gtk_entry_set_icon_activatable (GTK_ENTRY (priv->find_entry),
                                   GTK_ENTRY_ICON_PRIMARY,
                                   TRUE);
