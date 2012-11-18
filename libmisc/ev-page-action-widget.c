@@ -210,10 +210,10 @@ ev_page_action_widget_document_changed_cb (EvDocumentModel    *model,
 		action_widget->signal_id = 0;
 	}
 	action_widget->signal_id =
-		g_signal_connect_object (action_widget->doc_model,
-					 "page-changed",
-					 G_CALLBACK (page_changed_cb),
-					 action_widget, 0);
+		g_signal_connect (action_widget->doc_model,
+                                  "page-changed",
+                                  G_CALLBACK (page_changed_cb),
+                                  action_widget);
 
 	ev_page_action_widget_set_current_page (action_widget,
 						ev_document_model_get_page (model));
