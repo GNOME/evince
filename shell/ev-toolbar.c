@@ -218,7 +218,10 @@ ev_toolbar_constructed (GObject *object)
 
         /* Find */
         action = gtk_action_group_get_action (action_group, "EditFind");
-        tool_item = gtk_action_create_tool_item (action);
+        button = ev_toolbar_create_toggle_button (ev_toolbar, action);
+        tool_item = GTK_WIDGET (gtk_tool_item_new ());
+        gtk_container_add (GTK_CONTAINER (tool_item), button);
+        gtk_widget_show (button);
         gtk_widget_set_margin_right (tool_item, 12);
         gtk_container_add (GTK_CONTAINER (ev_toolbar), tool_item);
         gtk_widget_show (tool_item);
