@@ -243,13 +243,6 @@ ev_toolbar_constructed (GObject *object)
         gtk_container_add (GTK_CONTAINER (hbox), button);
         gtk_widget_show (button);
 
-        action = gtk_action_group_get_action (action_group, "ViewDualOddLeft");
-        /* I don't know why our icon name is not set for our stock icons */
-        gtk_action_set_icon_name (action, EV_STOCK_VIEW_DUAL);
-        button = ev_toolbar_create_toggle_button (ev_toolbar, action);
-        gtk_container_add (GTK_CONTAINER (hbox), button);
-        gtk_widget_show (button);
-
         menu = gtk_ui_manager_get_widget (ui_manager, "/ViewMenuPopup");
         button = ev_toolbar_create_menu_button (ev_toolbar, "go-down-symbolic",
                                                 menu, GTK_ALIGN_END);

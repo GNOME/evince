@@ -5408,9 +5408,7 @@ ev_view_dual_page_changed_cb (EvDocumentModel *model,
 			      GParamSpec      *pspec,
 			      EvView          *view)
 {
-	gboolean dual_page = ev_document_model_get_dual_page (model);
-
-	view->dual_page = dual_page || ev_document_model_get_dual_page_odd_pages_left (model);
+	view->dual_page = ev_document_model_get_dual_page (model);
 	view->pending_scroll = SCROLL_TO_PAGE_POSITION;
 	/* FIXME: if we're keeping the pixbuf cache around, we should extend the
 	 * preload_cache_size to be 2 if dual_page is set.
@@ -5423,11 +5421,7 @@ ev_view_dual_odd_left_changed_cb (EvDocumentModel *model,
 				  GParamSpec      *pspec,
 				  EvView          *view)
 {
-	gboolean dual_odd_left = ev_document_model_get_dual_page_odd_pages_left (model);
-
-	view->dual_page = dual_odd_left || ev_document_model_get_dual_page (model);
-	view->dual_even_left = !dual_odd_left;
-
+	view->dual_even_left = !ev_document_model_get_dual_page_odd_pages_left (model);
 	view->pending_scroll = SCROLL_TO_PAGE_POSITION;
 	gtk_widget_queue_resize (GTK_WIDGET (view));
 }

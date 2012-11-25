@@ -493,11 +493,13 @@ ev_window_update_actions_sensitivity (EvWindow *ev_window)
 	gboolean has_pages = FALSE;
 	gboolean presentation_mode;
 	gboolean can_find_in_page = FALSE;
+	gboolean dual_mode = FALSE;
 
 	if (ev_window->priv->document) {
 		page = ev_document_model_get_page (ev_window->priv->model);
 		n_pages = ev_document_get_n_pages (ev_window->priv->document);
 		has_pages = n_pages > 0;
+		dual_mode = ev_document_model_get_dual_page (ev_window->priv->model);
 	}
 
 	can_find_in_page = (ev_window->priv->find_job &&
@@ -523,7 +525,8 @@ ev_window_update_actions_sensitivity (EvWindow *ev_window)
 					has_pages &&
 					ev_view_can_zoom_out (view) &&
 					!presentation_mode);
-	
+	ev_window_set_action_sensitive (ev_window, "ViewDualOddLeft", dual_mode);
+
         /* Go menu */
 	if (has_pages) {
 		ev_window_set_action_sensitive (ev_window, "GoPreviousPage", page > 0);
@@ -3833,10 +3836,8 @@ ev_window_cmd_dual_odd_pages_left (GtkAction *action, EvWindow *ev_window)
 {
 	gboolean dual_page_odd_left;
 
-	ev_window_stop_presentation (ev_window, TRUE);
 	dual_page_odd_left = gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action));
-	ev_document_model_set_dual_page_odd_pages_left (ev_window->priv->model,
-							dual_page_odd_left);
+	ev_document_model_set_dual_page_odd_pages_left (ev_window->priv->model, dual_page_odd_left);
 }
 
 static void
@@ -5948,11 +5949,11 @@ static const GtkToggleActionEntry toggle_entries[] = {
         { "ViewContinuous", EV_STOCK_VIEW_CONTINUOUS, N_("_Continuous"), NULL,
 	  N_("Show the entire document"),
 	  G_CALLBACK (ev_window_cmd_continuous), TRUE },
-        { "ViewDual", EV_STOCK_VIEW_DUAL, N_("_Dual (Even pages left)"), NULL,
-	  N_("Show two pages at once with even pages on the left"),
+        { "ViewDual", EV_STOCK_VIEW_DUAL, N_("_Dual"), NULL,
+	  N_("Show two pages at once"),
 	  G_CALLBACK (ev_window_cmd_dual), FALSE },
-	{ "ViewDualOddLeft", EV_STOCK_VIEW_DUAL, N_("Dual (_Odd pages left)"), NULL,
-	  N_("Show two pages at once with odd pages on the left"),
+	{ "ViewDualOddLeft", NULL, N_("_Odd pages left"), NULL,
+	  N_("Show odd pages on the left in dual mode"),
 	  G_CALLBACK (ev_window_cmd_dual_odd_pages_left), FALSE },
         { "ViewFullscreen", GTK_STOCK_FULLSCREEN, N_("_Fullscreen"), "F11",
           N_("Expand the window to fill the screen"),
