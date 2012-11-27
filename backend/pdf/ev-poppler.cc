@@ -106,6 +106,7 @@ struct _PdfDocument
 	PopplerFontInfo *font_info;
 	PopplerFontsIter *fonts_iter;
 	int fonts_scanned_pages;
+	gboolean missing_fonts;
 
 	PdfPrintContext *print_ctx;
 
@@ -1047,6 +1048,54 @@ font_type_to_string (PopplerFontType type)
 	}
 }
 
+static gboolean
+is_standard_font (const gchar *name, PopplerFontType type)
+{
+	/* list borrowed from Poppler: poppler/GfxFont.cc */
+	static const char *base_14_subst_fonts[14] = {
+	  "Courier",
+	  "Courier-Oblique",
+	  "Courier-Bold",
+	  "Courier-BoldOblique",
+	  "Helvetica",
+	  "Helvetica-Oblique",
+	  "Helvetica-Bold",
+	  "Helvetica-BoldOblique",
+	  "Times-Roman",
+	  "Times-Italic",
+	  "Times-Bold",
+	  "Times-BoldItalic",
+	  "Symbol",
+	  "ZapfDingbats"
+	};
+	unsigned int i;
+
+	/* The Standard 14 fonts are all Type 1 fonts. A non embedded TrueType
+	 * font with the same name is not a Standard 14 font. */
+	if (type != POPPLER_FONT_TYPE_TYPE1)
+		return FALSE;
+
+	for (i = 0; i < G_N_ELEMENTS (base_14_subst_fonts); i++) {
+		if (g_str_equal (name, base_14_subst_fonts[i]))
+			return TRUE;
+	}
+	return FALSE;
+}
+
+static const gchar *
+pdf_document_fonts_get_fonts_summary (EvDocumentFonts *document_fonts)
+{
+	PdfDocument *pdf_document = PDF_DOCUMENT (document_fonts);
+
+	if (pdf_document->missing_fonts)
+		return _("This document contains non-embedded fonts that are not from the "
+			 "PDF Standard 14 fonts. If the substitute fonts selected by fontconfig "
+			 "are not the same as the fonts used to create the PDF, the rendering may "
+			 "not be correct.");
+	else
+		return _("All fonts are either standard or embedded.");
+}
+
 static void
 pdf_document_fonts_fill_model (EvDocumentFonts *document_fonts,
 			       GtkTreeModel    *model)
@@ -1062,8 +1111,10 @@ pdf_document_fonts_fill_model (EvDocumentFonts *document_fonts,
 	do {
 		GtkTreeIter list_iter;
 		const char *name;
-		const char *type;
+		PopplerFontType type;
+		const char *type_str;
 		const char *embedded;
+		const char *standard_str = "";
 		const gchar *substitute;
 		const gchar *substitute_text;
 		const gchar *filename;
@@ -1081,8 +1132,8 @@ pdf_document_fonts_fill_model (EvDocumentFonts *document_fonts,
 		if (!encoding)
 			encoding = _("None");
 
-		type = font_type_to_string (
-			poppler_fonts_iter_get_font_type (iter));
+		type = poppler_fonts_iter_get_font_type (iter);
+		type_str = font_type_to_string (type);
 
 		if (poppler_fonts_iter_is_embedded (iter)) {
 			if (poppler_fonts_iter_is_subset (iter))
@@ -1091,19 +1142,38 @@ pdf_document_fonts_fill_model (EvDocumentFonts *document_fonts,
 				embedded = _("Embedded");
 		} else {
 			embedded = _("Not embedded");
+			if (is_standard_font (name, type)) {
+				/* Translators: string starting with a space
+				 * because it is directly appended to the font
+				 * type. Example:
+				 * "Type 1 (One of the Standard 14 Fonts)"
+				 */
+				standard_str = _(" (One of the Standard 14 Fonts)");
+			} else {
+				/* Translators: string starting with a space
+				 * because it is directly appended to the font
+				 * type. Example:
+				 * "TrueType (Not one of the Standard 14 Fonts)"
+				 */
+				standard_str = _(" (Not one of the Standard 14 Fonts)");
+				pdf_document->missing_fonts = TRUE;
+			}
 		}
 
 		substitute = poppler_fonts_iter_get_substitute_name (iter);
 		filename = poppler_fonts_iter_get_file_name (iter);
 		encoding_text = _("Encoding");
-		substitute_text = _("substituting with");
+		substitute_text = _("Substituting with");
 
 		if (substitute && filename)
-			details = g_markup_printf_escaped ("%s\n%s: %s\n%s, %s <b>%s</b>\n(%s)",
-							   type, encoding_text, encoding, embedded,
+			details = g_markup_printf_escaped ("%s%s\n%s: %s\n%s\n%s <b>%s</b>\n(%s)",
+							   type_str, standard_str,
+							   encoding_text, encoding, embedded,
 							   substitute_text, substitute, filename);
 		else
-			details = g_markup_printf_escaped ("%s\n%s: %s\n%s", type, encoding_text, encoding, embedded);
+			details = g_markup_printf_escaped ("%s%s\n%s: %s\n%s",
+							   type_str, standard_str,
+							   encoding_text, encoding, embedded);
 
 		gtk_list_store_append (GTK_LIST_STORE (model), &list_iter);
 		gtk_list_store_set (GTK_LIST_STORE (model), &list_iter,
@@ -1119,6 +1189,7 @@ static void
 pdf_document_document_fonts_iface_init (EvDocumentFontsInterface *iface)
 {
 	iface->fill_model = pdf_document_fonts_fill_model;
+	iface->get_fonts_summary = pdf_document_fonts_get_fonts_summary;
 	iface->scan = pdf_document_fonts_scan;
 	iface->get_progress = pdf_document_fonts_get_progress;
 }

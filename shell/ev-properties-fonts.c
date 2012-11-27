@@ -35,6 +35,7 @@ struct _EvPropertiesFonts {
 
 	GtkWidget *fonts_treeview;
 	GtkWidget *fonts_progress_label;
+	GtkWidget *fonts_summary;
 	EvJob     *fonts_job;
 
 	EvDocument *document;
@@ -112,10 +113,19 @@ ev_properties_fonts_init (EvPropertiesFonts *properties)
 	gtk_container_set_border_width (GTK_CONTAINER (properties), 12);
 	gtk_box_set_spacing (GTK_BOX (properties), 6);
 	
+	properties->fonts_summary = gtk_label_new (NULL);
+	g_object_set (G_OBJECT (properties->fonts_summary),
+		      "xalign", 0.0,
+		      NULL);
+	gtk_label_set_line_wrap (GTK_LABEL (properties->fonts_summary), TRUE);
+	gtk_box_pack_start (GTK_BOX (properties),
+			    properties->fonts_summary,
+			    FALSE, FALSE, 0);
+
 	swindow = gtk_scrolled_window_new (NULL, NULL);
 	gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (swindow),
 					     GTK_SHADOW_IN);
-	
+
 	properties->fonts_treeview = gtk_tree_view_new ();
 	gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (properties->fonts_treeview),
 					   FALSE);
@@ -169,9 +179,21 @@ update_progress_label (GtkWidget *label, double progress)
 static void
 job_fonts_finished_cb (EvJob *job, EvPropertiesFonts *properties)
 {
+	EvDocumentFonts *document_fonts = EV_DOCUMENT_FONTS (properties->document);
+	const gchar     *font_summary;
+
 	g_signal_handlers_disconnect_by_func (job, job_fonts_finished_cb, properties);
 	g_object_unref (properties->fonts_job);
 	properties->fonts_job = NULL;
+
+	font_summary = ev_document_fonts_get_fonts_summary (document_fonts);
+	if (font_summary) {
+		gtk_label_set_text (GTK_LABEL (properties->fonts_summary),
+				    font_summary);
+		/* show the label only when fonts are scanned, so the label
+		 * does not take space while it is loading */
+		gtk_widget_show (properties->fonts_summary);
+	}
 }
 
 static void

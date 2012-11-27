@@ -57,3 +57,14 @@ ev_document_fonts_fill_model (EvDocumentFonts *document_fonts,
 
 	iface->fill_model (document_fonts, model);
 }
+
+const gchar *
+ev_document_fonts_get_fonts_summary (EvDocumentFonts *document_fonts)
+{
+	EvDocumentFontsInterface *iface = EV_DOCUMENT_FONTS_GET_IFACE (document_fonts);
+
+        if (!iface->get_fonts_summary)
+                return NULL;
+
+	return iface->get_fonts_summary (document_fonts);
+}
