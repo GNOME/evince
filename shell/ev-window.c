@@ -4353,7 +4353,7 @@ ev_window_update_max_min_scale (EvWindow *window)
 
 	action = gtk_action_group_get_action (window->priv->action_group,
 					      ZOOM_CONTROL_ACTION);
-	ephy_zoom_action_set_max_zoom_level (EPHY_ZOOM_ACTION (action), max_scale * dpi);
+	ephy_zoom_action_set_max_zoom_level (EPHY_ZOOM_ACTION (action), max_scale);
 
 	ev_document_model_set_min_scale (window->priv->model, MIN_SCALE * dpi);
 	ev_document_model_set_max_scale (window->priv->model, max_scale * dpi);
