@@ -99,6 +99,8 @@ typedef struct {
 
 #define SCROLL_TIME 150
 
+#define DEFAULT_PIXBUF_CACHE_SIZE 52428800 /* 50MB */
+
 /*** Scrolling ***/
 static void       view_update_range_and_current_page         (EvView             *view);
 static void       add_scroll_binding_keypad                  (GtkBindingSet      *binding_set,
@@ -4875,6 +4877,7 @@ ev_view_init (EvView *view)
 	view->pending_scroll = SCROLL_TO_KEEP_POSITION;
 	view->jump_to_find_result = TRUE;
 	view->highlight_find_results = FALSE;
+	view->pixbuf_cache_size = DEFAULT_PIXBUF_CACHE_SIZE;
 }
 
 /*** Callbacks ***/
