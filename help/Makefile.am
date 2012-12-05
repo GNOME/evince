@@ -33,6 +33,7 @@ HELP_FILES = \
 	convertpdf.page			\
 	convertPostScript.page		\
 	convertSVG.page			\
+	default-settings.page		\
 	develop.page			\
 	documentation.page		\
 	duplex-10pages.page		\
