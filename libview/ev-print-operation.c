@@ -1160,7 +1160,7 @@ ev_print_operation_export_print_dialog_response_cb (GtkDialog              *dial
 		g_set_error_literal (&export->error,
                                      GTK_PRINT_ERROR,
                                      GTK_PRINT_ERROR_GENERAL,
-                                     _("Printing is not supported on this printer."));
+                                     _("Postscript is not supported by this printer."));
 		g_signal_emit (op, signals[DONE], 0, GTK_PRINT_OPERATION_RESULT_ERROR);
 		
 		return;
