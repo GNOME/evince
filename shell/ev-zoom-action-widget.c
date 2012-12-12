@@ -113,41 +113,6 @@ zoom_changed_cb (EvDocumentModel    *model,
 }
 
 static void
-ev_zoom_action_widget_update_sizing_mode (EvZoomActionWidget *control)
-{
-        GtkWidget   *entry = gtk_bin_get_child (GTK_BIN (control->priv->combo));
-        EvSizingMode mode = ev_document_model_get_sizing_mode (control->priv->model);
-        const gchar *icon_name = NULL;
-        const gchar *tooltip = NULL;
-
-        switch (mode) {
-        case EV_SIZING_FIT_PAGE:
-                icon_name = "zoom-fit-best-symbolic";
-                tooltip = _("Fit Page");
-                break;
-        case EV_SIZING_FIT_WIDTH:
-                icon_name = EV_STOCK_ZOOM_WIDTH;
-                tooltip = _("Fit Width");
-                break;
-        case EV_SIZING_AUTOMATIC:
-                /* TODO */
-        case EV_SIZING_FREE:
-                break;
-        }
-
-        gtk_entry_set_icon_from_icon_name (GTK_ENTRY (entry), GTK_ENTRY_ICON_SECONDARY, icon_name);
-        gtk_entry_set_icon_tooltip_text (GTK_ENTRY (entry), GTK_ENTRY_ICON_SECONDARY, tooltip);
-}
-
-static void
-sizing_mode_changed_cb (EvDocumentModel    *model,
-                        GParamSpec         *pspec,
-                        EvZoomActionWidget *control)
-{
-        ev_zoom_action_widget_update_sizing_mode (control);
-}
-
-static void
 document_changed_cb (EvDocumentModel    *model,
                      GParamSpec         *pspec,
                      EvZoomActionWidget *control)
@@ -156,7 +121,6 @@ document_changed_cb (EvDocumentModel    *model,
                 return;
 
         ev_zoom_action_widget_update_zoom_level (control);
-        ev_zoom_action_widget_update_sizing_mode (control);
 }
 
 static void
@@ -347,9 +311,6 @@ ev_zoom_action_widget_set_model (EvZoomActionWidget *control,
                 g_signal_handlers_disconnect_by_func (control->priv->model,
                                                       G_CALLBACK (zoom_changed_cb),
                                                       control);
-                g_signal_handlers_disconnect_by_func (control->priv->model,
-                                                      G_CALLBACK (sizing_mode_changed_cb),
-                                                      control);
         }
         control->priv->model = model;
         if (!model)
@@ -360,7 +321,6 @@ ev_zoom_action_widget_set_model (EvZoomActionWidget *control,
 
         if (ev_document_model_get_document (model)) {
                 ev_zoom_action_widget_update_zoom_level (control);
-                ev_zoom_action_widget_update_sizing_mode (control);
         } else {
                 ev_zoom_action_widget_set_zoom_level (control, 1.);
         }
@@ -370,9 +330,6 @@ ev_zoom_action_widget_set_model (EvZoomActionWidget *control,
                           control);
         g_signal_connect (control->priv->model, "notify::scale",
                           G_CALLBACK (zoom_changed_cb),
-                          control);
-        g_signal_connect (control->priv->model, "notify::sizing-mode",
-                          G_CALLBACK (sizing_mode_changed_cb),
                           control);
 }
 
