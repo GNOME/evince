@@ -243,6 +243,8 @@ ev_zoom_action_widget_init (EvZoomActionWidget *control)
         GtkWidget                 *vbox;
         GtkCellRenderer           *renderer;
         GtkListStore              *store;
+        int                        i;
+        int                        width;
 
         control->priv = G_TYPE_INSTANCE_GET_PRIVATE (control, EV_TYPE_ZOOM_ACTION_WIDGET, EvZoomActionWidgetPrivate);
         priv = control->priv;
@@ -255,9 +257,19 @@ ev_zoom_action_widget_init (EvZoomActionWidget *control)
         g_object_unref (store);
 
         entry = gtk_bin_get_child (GTK_BIN (priv->combo));
-        /* Longest name + two digits + % + icon(3) */
-        gtk_entry_set_width_chars (GTK_ENTRY (entry),
-                                   strlen (zoom_levels[G_N_ELEMENTS (zoom_levels) - 1].name) + 3 + 3);
+
+        /* Find the longest name */
+        width = 0;
+        for (i = 0; i < 3; i++) {
+                if (zoom_levels[i].name != NULL) {
+                        int length;
+
+                        length = strlen (zoom_levels[i].name);
+                        if (length > width)
+                                width = length;
+                }
+        }
+        gtk_entry_set_width_chars (GTK_ENTRY (entry), width);
 
         renderer = gtk_cell_renderer_text_new ();
         gtk_cell_layout_pack_start (GTK_CELL_LAYOUT (priv->combo), renderer, FALSE);
