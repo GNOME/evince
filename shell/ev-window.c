@@ -271,9 +271,6 @@ struct _EvWindowPrivate {
 
 #define EV_TOOLBARS_FILENAME "evince-toolbar.xml"
 
-#define MIN_SCALE 0.05409
-#define PAGE_CACHE_SIZE 52428800 /* 50MB */
-
 #define MAX_RECENT_ITEM_LEN (40)
 
 #define TOOLBAR_RESOURCE_PATH "/org/gnome/evince/shell/ui/toolbar.xml"
@@ -362,7 +359,6 @@ static void     ev_window_load_file_remote              (EvWindow         *ev_wi
 static void     ev_window_media_player_key_pressed      (EvWindow         *window,
 							 const gchar      *key,
 							 gpointer          user_data);
-static void     ev_window_update_max_min_scale          (EvWindow         *window);
 #ifdef ENABLE_DBUS
 static void	ev_window_emit_closed			(EvWindow         *window);
 static void 	ev_window_emit_doc_loaded		(EvWindow	  *window);
@@ -1565,8 +1561,6 @@ ev_window_set_document (EvWindow *ev_window, EvDocument *document)
 	if (ev_window->priv->document)
 		g_object_unref (ev_window->priv->document);
 	ev_window->priv->document = g_object_ref (document);
-
-	ev_window_update_max_min_scale (ev_window);
 
 	ev_window_set_message_area (ev_window, NULL);
 
@@ -4332,34 +4326,6 @@ ev_window_setup_gtk_settings (EvWindow *window)
 }
 
 static void
-ev_window_update_max_min_scale (EvWindow *window)
-{
-	gdouble    dpi;
-	GtkAction *action;
-	gdouble    min_width, min_height;
-	gdouble    width, height;
-	gdouble    max_scale;
-	gint       rotation = ev_document_model_get_rotation (window->priv->model);
-
-	if (!window->priv->document)
-		return;
-
-	dpi = get_screen_dpi (window) / 72.0;
-
-	ev_document_get_min_page_size (window->priv->document, &min_width, &min_height);
-	width = (rotation == 0 || rotation == 180) ? min_width : min_height;
-	height = (rotation == 0 || rotation == 180) ? min_height : min_width;
-	max_scale = sqrt (PAGE_CACHE_SIZE / (width * dpi * 4 * height * dpi));
-
-	action = gtk_action_group_get_action (window->priv->action_group,
-					      ZOOM_CONTROL_ACTION);
-	ephy_zoom_action_set_max_zoom_level (EPHY_ZOOM_ACTION (action), max_scale);
-
-	ev_document_model_set_min_scale (window->priv->model, MIN_SCALE * dpi);
-	ev_document_model_set_max_scale (window->priv->model, max_scale * dpi);
-}
-
-static void
 ev_window_screen_changed (GtkWidget *widget,
 			  GdkScreen *old_screen)
 {
@@ -4371,7 +4337,6 @@ ev_window_screen_changed (GtkWidget *widget,
 		return;
 
 	ev_window_setup_gtk_settings (window);
-	ev_window_update_max_min_scale (window);
 
 	if (GTK_WIDGET_CLASS (ev_window_parent_class)->screen_changed) {
 		GTK_WIDGET_CLASS (ev_window_parent_class)->screen_changed (widget, old_screen);
@@ -4874,6 +4839,18 @@ ev_window_zoom_changed_cb (EvDocumentModel *model, GParamSpec *pspec, EvWindow *
 }
 
 static void
+ev_window_max_zoom_changed_cb (EvDocumentModel *model, GParamSpec *pspec, EvWindow *window)
+{
+	GtkAction *action;
+	gdouble max_scale;
+
+	max_scale = ev_document_model_get_max_scale (model);
+	action = gtk_action_group_get_action (window->priv->action_group,
+					      ZOOM_CONTROL_ACTION);
+	ephy_zoom_action_set_max_zoom_level (EPHY_ZOOM_ACTION (action), max_scale);
+}
+
+static void
 ev_window_update_continuous_action (EvWindow *window)
 {
 	GtkAction *action;
@@ -4910,7 +4887,6 @@ ev_window_rotation_changed_cb (EvDocumentModel *model,
 		ev_metadata_set_int (window->priv->metadata, "rotation",
 				     rotation);
 
-	ev_window_update_max_min_scale (window);
 	ev_window_refresh_window_thumbnail (window);
 }
 
@@ -7478,7 +7454,6 @@ ev_window_init (EvWindow *ev_window)
 	gtk_widget_show (ev_window->priv->view_box);
 
 	ev_window->priv->view = ev_view_new ();
-	ev_view_set_page_cache_size (EV_VIEW (ev_window->priv->view), PAGE_CACHE_SIZE);
 	ev_view_set_model (EV_VIEW (ev_window->priv->view), ev_window->priv->model);
 
 	ev_window->priv->password_view = ev_password_view_new (GTK_WINDOW (ev_window));
@@ -7546,6 +7521,10 @@ ev_window_init (EvWindow *ev_window)
 	g_signal_connect (ev_window->priv->model,
 			  "notify::scale",
 			  G_CALLBACK (ev_window_zoom_changed_cb),
+			  ev_window);
+	g_signal_connect (ev_window->priv->model,
+			  "notify::max-scale",
+			  G_CALLBACK (ev_window_max_zoom_changed_cb),
 			  ev_window);
 	g_signal_connect (ev_window->priv->model,
 			  "notify::sizing-mode",

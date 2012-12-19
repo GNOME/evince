@@ -94,6 +94,7 @@ typedef struct {
 	EvRectangle doc_rect;
 } EvViewChild;
 
+#define MIN_SCALE 0.2
 #define ZOOM_IN_FACTOR  1.2
 #define ZOOM_OUT_FACTOR (1.0/ZOOM_IN_FACTOR)
 
@@ -4697,6 +4698,50 @@ ev_view_forall (GtkContainer *container,
 }
 
 static void
+view_update_scale_limits (EvView *view)
+{
+	gdouble    min_width, min_height;
+	gdouble    width, height;
+	gdouble    max_scale;
+	gdouble    dpi;
+	gint       rotation;
+	GdkScreen *screen;
+
+	if (!view->model)
+		return;
+
+	rotation = ev_document_model_get_rotation (view->model);
+	screen = gtk_widget_get_screen (GTK_WIDGET (view));
+	dpi = ev_document_misc_get_screen_dpi (screen) / 72.0;
+
+	ev_document_get_min_page_size (view->document, &min_width, &min_height);
+	width = (rotation == 0 || rotation == 180) ? min_width : min_height;
+	height = (rotation == 0 || rotation == 180) ? min_height : min_width;
+	max_scale = sqrt (view->pixbuf_cache_size / (width * dpi * 4 * height * dpi));
+
+	ev_document_model_set_min_scale (view->model, MIN_SCALE * dpi);
+	ev_document_model_set_max_scale (view->model, max_scale * dpi);
+}
+
+static void
+ev_view_screen_changed (GtkWidget *widget,
+			GdkScreen *old_screen)
+{
+	EvView *view = EV_VIEW (widget);
+	GdkScreen *screen;
+
+	screen = gtk_widget_get_screen (widget);
+	if (screen == old_screen)
+		return;
+
+	view_update_scale_limits (view);
+
+	if (GTK_WIDGET_CLASS (ev_view_parent_class)->screen_changed) {
+		GTK_WIDGET_CLASS (ev_view_parent_class)->screen_changed (widget, old_screen);
+	}
+}
+
+static void
 ev_view_class_init (EvViewClass *class)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (class);
@@ -4729,6 +4774,7 @@ ev_view_class_init (EvViewClass *class)
 	widget_class->drag_motion = ev_view_drag_motion;
 	widget_class->popup_menu = ev_view_popup_menu;
 	widget_class->query_tooltip = ev_view_query_tooltip;
+	widget_class->screen_changed = ev_view_screen_changed;
 
 	container_class->remove = ev_view_remove;
 	container_class->forall = ev_view_forall;
@@ -5056,6 +5102,8 @@ ev_view_set_page_cache_size (EvView *view,
 	view->pixbuf_cache_size = cache_size;
 	if (view->pixbuf_cache)
 		ev_pixbuf_cache_set_max_size (view->pixbuf_cache, cache_size);
+
+	view_update_scale_limits (view);
 }
 
 void
@@ -5183,6 +5231,8 @@ ev_view_document_changed_cb (EvDocumentModel *model,
 			view->pending_scroll = SCROLL_TO_KEEP_POSITION;
 			gtk_widget_queue_resize (GTK_WIDGET (view));
 		}
+
+		view_update_scale_limits (view);
 	}
 }
 
@@ -5203,6 +5253,7 @@ ev_view_rotation_changed_cb (EvDocumentModel *model,
 	}
 
 	ev_view_remove_all (view);
+	view_update_scale_limits (view);
 
 	if (rotation != 0)
 		clear_selection (view);

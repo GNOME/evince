@@ -66,7 +66,9 @@ enum {
 	PROP_CONTINUOUS,
 	PROP_DUAL_PAGE,
 	PROP_DUAL_PAGE_ODD_LEFT,
-	PROP_FULLSCREEN
+	PROP_FULLSCREEN,
+	PROP_MIN_SCALE,
+	PROP_MAX_SCALE
 };
 
 enum
@@ -78,6 +80,9 @@ enum
 static guint signals[N_SIGNALS] = { 0 };
 
 G_DEFINE_TYPE (EvDocumentModel, ev_document_model, G_TYPE_OBJECT)
+
+#define DEFAULT_MIN_SCALE 0.25
+#define DEFAULT_MAX_SCALE 5.0
 
 static void
 ev_document_model_finalize (GObject *object)
@@ -115,6 +120,12 @@ ev_document_model_set_property (GObject      *object,
 		break;
 	case PROP_SCALE:
 		ev_document_model_set_scale (model, g_value_get_double (value));
+		break;
+	case PROP_MIN_SCALE:
+		ev_document_model_set_min_scale (model, g_value_get_double (value));
+		break;
+	case PROP_MAX_SCALE:
+		ev_document_model_set_max_scale (model, g_value_get_double (value));
 		break;
 	case PROP_SIZING_MODE:
 		ev_document_model_set_sizing_mode (model, g_value_get_enum (value));
@@ -159,6 +170,12 @@ ev_document_model_get_property (GObject    *object,
 		break;
 	case PROP_SCALE:
 		g_value_set_double (value, model->scale);
+		break;
+	case PROP_MIN_SCALE:
+		g_value_set_double (value, model->min_scale);
+		break;
+	case PROP_MAX_SCALE:
+		g_value_set_double (value, model->max_scale);
 		break;
 	case PROP_SIZING_MODE:
 		g_value_set_enum (value, model->sizing_mode);
@@ -231,6 +248,22 @@ ev_document_model_class_init (EvDocumentModelClass *klass)
 							      G_PARAM_READWRITE |
                                                               G_PARAM_STATIC_STRINGS));
 	g_object_class_install_property (g_object_class,
+					 PROP_SCALE,
+					 g_param_spec_double ("min-scale",
+							      "Minimum Scale",
+							      "Minium scale factor",
+							      0., G_MAXDOUBLE, DEFAULT_MIN_SCALE,
+							      G_PARAM_READWRITE |
+                                                              G_PARAM_STATIC_STRINGS));
+	g_object_class_install_property (g_object_class,
+					 PROP_SCALE,
+					 g_param_spec_double ("max-scale",
+							      "Maximum Scale",
+							      "Maximum scale factor",
+							      0., G_MAXDOUBLE, DEFAULT_MAX_SCALE,
+							      G_PARAM_READWRITE |
+                                                              G_PARAM_STATIC_STRINGS));
+	g_object_class_install_property (g_object_class,
 					 PROP_SIZING_MODE,
 					 g_param_spec_enum ("sizing-mode",
 							    "Sizing Mode",
@@ -292,8 +325,8 @@ ev_document_model_init (EvDocumentModel *model)
 	model->sizing_mode = EV_SIZING_FIT_WIDTH;
 	model->continuous = TRUE;
 	model->inverted_colors = FALSE;
-	model->min_scale = 0.;
-	model->max_scale = G_MAXDOUBLE;
+	model->min_scale = DEFAULT_MIN_SCALE;
+	model->max_scale = DEFAULT_MAX_SCALE;
 }
 
 EvDocumentModel *
@@ -427,6 +460,8 @@ ev_document_model_set_max_scale (EvDocumentModel *model,
 
 	if (model->scale > max_scale)
 		ev_document_model_set_scale (model, max_scale);
+
+	g_object_notify (G_OBJECT (model), "max-scale");
 }
 
 gdouble
@@ -450,6 +485,8 @@ ev_document_model_set_min_scale (EvDocumentModel *model,
 
 	if (model->scale < min_scale)
 		ev_document_model_set_scale (model, min_scale);
+
+	g_object_notify (G_OBJECT (model), "min-scale");
 }
 
 gdouble
