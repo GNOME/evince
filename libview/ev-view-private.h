@@ -160,6 +160,8 @@ struct _EvView {
 	gint spacing;
 
 	gboolean loading;
+	gboolean can_zoom_in;
+	gboolean can_zoom_out;
 	gboolean continuous;
 	gboolean dual_page;
 	gboolean dual_even_left;
