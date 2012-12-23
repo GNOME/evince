@@ -834,9 +834,11 @@ ev_job_thumbnail_run (EvJob *job)
 	g_object_unref (rc);
 	ev_document_doc_mutex_unlock ();
 
-	if (pixbuf)
-		job_thumb->thumbnail = ev_document_misc_get_thumbnail_frame (-1, -1, pixbuf);
-	g_object_unref (pixbuf);
+        if (pixbuf) {
+                job_thumb->thumbnail = job_thumb->has_frame ?
+                        ev_document_misc_get_thumbnail_frame (-1, -1, pixbuf) : g_object_ref (pixbuf);
+                g_object_unref (pixbuf);
+        }
 
 	ev_job_succeeded (job);
 	
@@ -869,8 +871,16 @@ ev_job_thumbnail_new (EvDocument *document,
 	job->page = page;
 	job->rotation = rotation;
 	job->scale = scale;
+        job->has_frame = TRUE;
 
 	return EV_JOB (job);
+}
+
+void
+ev_job_thumbnail_set_has_frame (EvJobThumbnail  *job,
+                                gboolean         has_frame)
+{
+        job->has_frame = has_frame;
 }
 
 /* EvJobFonts */

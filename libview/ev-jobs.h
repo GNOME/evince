@@ -301,8 +301,9 @@ struct _EvJobThumbnail
 	gint page;
 	gint rotation;
 	gdouble scale;
-	
+
 	GdkPixbuf *thumbnail;
+        gboolean has_frame;
 };
 
 struct _EvJobThumbnailClass
@@ -491,11 +492,13 @@ EvJob          *ev_job_page_data_new      (EvDocument      *document,
 					   EvJobPageDataFlags flags);
 
 /* EvJobThumbnail */
-GType           ev_job_thumbnail_get_type (void) G_GNUC_CONST;
-EvJob          *ev_job_thumbnail_new      (EvDocument      *document,
-					   gint             page,
-					   gint             rotation,
-					   gdouble          scale);
+GType           ev_job_thumbnail_get_type      (void) G_GNUC_CONST;
+EvJob          *ev_job_thumbnail_new           (EvDocument      *document,
+                                                gint             page,
+                                                gint             rotation,
+                                                gdouble          scale);
+void            ev_job_thumbnail_set_has_frame (EvJobThumbnail  *job,
+                                                gboolean         has_frame);
 /* EvJobFonts */
 GType 		ev_job_fonts_get_type 	  (void) G_GNUC_CONST;
 EvJob 	       *ev_job_fonts_new 	  (EvDocument      *document);
