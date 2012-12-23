@@ -110,6 +110,78 @@ ev_document_misc_get_loading_thumbnail (int      width,
 	return create_thumbnail_frame (width, height, NULL, !inverted_colors);
 }
 
+static GdkPixbuf *
+ev_document_misc_render_thumbnail_frame (GtkWidget *widget,
+                                         int        width,
+                                         int        height,
+                                         gboolean   inverted_colors,
+                                         GdkPixbuf *source_pixbuf)
+{
+        GtkStyleContext *context = gtk_widget_get_style_context (widget);
+        GtkStateFlags    state = gtk_widget_get_state_flags (widget);
+        int              width_r, height_r;
+        int              width_f, height_f;
+        cairo_surface_t *surface;
+        cairo_t         *cr;
+        GtkBorder        border = {0, };
+        GdkPixbuf       *retval;
+
+        if (source_pixbuf) {
+                g_return_val_if_fail (GDK_IS_PIXBUF (source_pixbuf), NULL);
+
+                width_r = gdk_pixbuf_get_width (source_pixbuf);
+                height_r = gdk_pixbuf_get_height (source_pixbuf);
+        } else {
+                width_r = width;
+                height_r = height;
+        }
+
+        gtk_style_context_save (context);
+
+        gtk_style_context_add_class (context, "page-thumbnail");
+        if (inverted_colors)
+                gtk_style_context_add_class (context, "inverted");
+
+        gtk_style_context_get_border (context, state, &border);
+        width_f = width_r + border.left + border.right;
+        height_f = height_r + border.top + border.bottom;
+
+        surface = cairo_image_surface_create (CAIRO_FORMAT_ARGB32,
+                                              width_f, height_f);
+        cr = cairo_create (surface);
+        if (source_pixbuf) {
+                gdk_cairo_set_source_pixbuf (cr, source_pixbuf, border.left, border.top);
+                cairo_paint (cr);
+        } else {
+                gtk_render_background (context, cr, 0, 0, width_f, height_f);
+        }
+        gtk_render_frame (context, cr, 0, 0, width_f, height_f);
+        cairo_destroy (cr);
+
+        gtk_style_context_restore (context);
+
+        retval = gdk_pixbuf_get_from_surface (surface, 0, 0, width_f, height_f);
+        cairo_surface_destroy (surface);
+
+        return retval;
+}
+
+GdkPixbuf *
+ev_document_misc_render_loading_thumbnail (GtkWidget *widget,
+                                           int        width,
+                                           int        height,
+                                           gboolean   inverted_colors)
+{
+        return ev_document_misc_render_thumbnail_frame (widget, width, height, inverted_colors, NULL);
+}
+
+GdkPixbuf *
+ev_document_misc_render_thumbnail_with_frame (GtkWidget *widget,
+                                              GdkPixbuf *source_pixbuf)
+{
+        return ev_document_misc_render_thumbnail_frame (widget, -1, -1, FALSE, source_pixbuf);
+}
+
 void
 ev_document_misc_get_page_border_size (gint       page_width,
 				       gint       page_height,
