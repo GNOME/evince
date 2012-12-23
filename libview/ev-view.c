@@ -4730,7 +4730,7 @@ view_update_scale_limits (EvView *view)
 	gint       rotation;
 	GdkScreen *screen;
 
-	if (!view->model)
+	if (!view->document)
 		return;
 
 	rotation = ev_document_model_get_rotation (view->model);
