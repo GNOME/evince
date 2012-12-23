@@ -30,6 +30,7 @@
 
 #include <gdk-pixbuf/gdk-pixbuf.h>
 #include <gtk/gtk.h>
+#include "ev-macros.h"
 
 G_BEGIN_DECLS
 
@@ -39,9 +40,11 @@ GdkPixbuf *ev_document_misc_get_thumbnail_frame  (int           width,
 GdkPixbuf *ev_document_misc_get_loading_thumbnail (int      width,
 						   int      height,
 						   gboolean inverted_colors);
+EV_DEPRECATED
 void       ev_document_misc_get_page_border_size (gint          page_width,
 						  gint          page_height,
 						  GtkBorder    *border);
+EV_DEPRECATED
 void       ev_document_misc_paint_one_page       (cairo_t      *cr,
 						  GtkWidget    *widget,
 						  GdkRectangle *area,
