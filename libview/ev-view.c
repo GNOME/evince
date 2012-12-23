@@ -105,6 +105,7 @@ typedef struct {
 #define DEFAULT_PIXBUF_CACHE_SIZE 52428800 /* 50MB */
 
 #define EV_STYLE_CLASS_DOCUMENT_PAGE "document-page"
+#define EV_STYLE_CLASS_INVERTED      "inverted"
 
 /*** Scrolling ***/
 static void       view_update_range_and_current_page         (EvView             *view);
@@ -4380,10 +4381,13 @@ draw_one_page (EvView       *view,
 
 	gtk_style_context_save (context);
 	gtk_style_context_add_class (context, EV_STYLE_CLASS_DOCUMENT_PAGE);
+	if (ev_document_model_get_inverted_colors (view->model))
+		gtk_style_context_add_class (context, EV_STYLE_CLASS_INVERTED);
 
 	if (view->continuous && page == current_page)
 		gtk_style_context_set_state (context, GTK_STATE_FLAG_ACTIVE);
 
+	gtk_render_background (context, cr, page_area->x, page_area->y, page_area->width, page_area->height);
 	gtk_render_frame (context, cr, page_area->x, page_area->y, page_area->width, page_area->height);
 	gtk_style_context_restore (context);
 
