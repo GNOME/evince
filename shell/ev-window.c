@@ -460,6 +460,7 @@ ev_window_setup_action_sensitivity (EvWindow *ev_window)
 	ev_window_set_action_sensitive (ev_window, "EditSelectAll", has_pages && can_get_text);
 	ev_window_set_action_sensitive (ev_window, "EditFind", can_find);
 	ev_window_set_action_sensitive (ev_window, "Slash", can_find);
+	ev_window_set_action_sensitive (ev_window, "CtrlF", can_find);
 	ev_window_set_action_sensitive (ev_window, "EditRotateLeft", has_pages);
 	ev_window_set_action_sensitive (ev_window, "EditRotateRight", has_pages);
 
@@ -577,6 +578,7 @@ ev_window_set_view_accels_sensitivity (EvWindow *window, gboolean sensitive)
 
 	can_find = window->priv->document && EV_IS_DOCUMENT_FIND (window->priv->document);
 	ev_window_set_action_sensitive (window, "Slash", sensitive && can_find);
+	ev_window_set_action_sensitive (window, "CtrlF", sensitive && can_find);
 }
 
 static void
