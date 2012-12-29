@@ -39,9 +39,9 @@ static const struct {
         const gchar *name;
         float        level;
 } zoom_levels[] = {
-        { N_("Fit Page"),       EV_ZOOM_FIT_PAGE  },
-        { N_("Fit Page Width"), EV_ZOOM_FIT_WIDTH },
-        { NULL,                 EV_ZOOM_SEPARATOR },
+        { N_("Fit Page"),  EV_ZOOM_FIT_PAGE  },
+        { N_("Fit Width"), EV_ZOOM_FIT_WIDTH },
+        { NULL,            EV_ZOOM_SEPARATOR },
         { N_("50%"), 0.5 },
         { N_("70%"), 0.7071067811 },
         { N_("85%"), 0.8408964152 },
@@ -127,7 +127,7 @@ ev_zoom_action_widget_update_sizing_mode (EvZoomActionWidget *control)
                 break;
         case EV_SIZING_FIT_WIDTH:
                 icon_name = EV_STOCK_ZOOM_WIDTH;
-                tooltip = _("Fit Page Width");
+                tooltip = _("Fit Width");
                 break;
         case EV_SIZING_FREE:
                 break;

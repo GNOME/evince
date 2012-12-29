@@ -341,7 +341,7 @@ static void	ev_attachment_popup_cmd_save_attachment_as (GtkAction     *action,
 							 EvWindow         *window);
 static void	ev_window_cmd_view_fit_page 		(GtkAction 	  *action,
 							 EvWindow 	  *ev_window);
-static void	ev_window_cmd_view_page_width 		(GtkAction 	  *action, 
+static void	ev_window_cmd_view_fit_width 		(GtkAction 	  *action,
 							 EvWindow 	  *ev_window);
 static void	view_handle_link_cb 			(EvView           *view, 
 							 EvLink           *link, 
@@ -469,7 +469,7 @@ ev_window_setup_action_sensitivity (EvWindow *ev_window)
 	ev_window_set_action_sensitive (ev_window, "ViewDual", has_pages);
 	ev_window_set_action_sensitive (ev_window, "ViewDualOddLeft", has_pages);
 	ev_window_set_action_sensitive (ev_window, "ViewFitPage", has_pages);
-	ev_window_set_action_sensitive (ev_window, "ViewPageWidth", has_pages);
+	ev_window_set_action_sensitive (ev_window, "ViewFitWidth", has_pages);
 	ev_window_set_action_sensitive (ev_window, "ViewReload", has_pages);
 	ev_window_set_action_sensitive (ev_window, "ViewAutoscroll", has_pages);
 	ev_window_set_action_sensitive (ev_window, "ViewInvertedColors", has_pages);
@@ -561,7 +561,7 @@ static const gchar *view_accels[] = {
 	"n",
 	"p",
 	"FitPage",
-	"PageWidth"
+	"FitWidth"
 };
 
 static void
@@ -628,19 +628,19 @@ update_sizing_buttons (EvWindow *window)
 {
 	GtkActionGroup *action_group = window->priv->action_group;
 	GtkAction *action;
-	gboolean fit_page, page_width;
+	gboolean fit_page, fit_width;
 
 	switch (ev_document_model_get_sizing_mode (window->priv->model)) {
 	        case EV_SIZING_FIT_PAGE:
 			fit_page = TRUE;
-			page_width = FALSE;
+			fit_width = FALSE;
 			break;
 	        case EV_SIZING_FIT_WIDTH:
 			fit_page = FALSE;
-			page_width = TRUE;
+			fit_width = TRUE;
 			break;
 	        default:
-			fit_page = page_width = FALSE;
+			fit_page = fit_width = FALSE;
 			break;
 	}
 
@@ -651,12 +651,12 @@ update_sizing_buttons (EvWindow *window)
 	g_signal_handlers_unblock_by_func
 		(action, G_CALLBACK (ev_window_cmd_view_fit_page), window);
 
-	action = gtk_action_group_get_action (action_group, "ViewPageWidth");	
+	action = gtk_action_group_get_action (action_group, "ViewFitWidth");
 	g_signal_handlers_block_by_func
-		(action, G_CALLBACK (ev_window_cmd_view_page_width), window);
-	gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action), page_width);
+		(action, G_CALLBACK (ev_window_cmd_view_fit_width), window);
+	gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action), fit_width);
 	g_signal_handlers_unblock_by_func
-		(action, G_CALLBACK (ev_window_cmd_view_page_width), window);
+		(action, G_CALLBACK (ev_window_cmd_view_fit_width), window);
 }
 
 /**
@@ -3862,7 +3862,7 @@ ev_window_cmd_fit_page (GtkAction *action, EvWindow *ev_window)
 }
 
 static void
-ev_window_cmd_view_page_width (GtkAction *action, EvWindow *ev_window)
+ev_window_cmd_view_fit_width (GtkAction *action, EvWindow *ev_window)
 {
 	ev_window_stop_presentation (ev_window, TRUE);
 
@@ -3875,7 +3875,7 @@ ev_window_cmd_view_page_width (GtkAction *action, EvWindow *ev_window)
 }
 
 static void
-ev_window_cmd_page_width (GtkAction *action, EvWindow *ev_window)
+ev_window_cmd_fit_width (GtkAction *action, EvWindow *ev_window)
 {
 	ev_document_model_set_sizing_mode (ev_window->priv->model, EV_SIZING_FIT_WIDTH);
 }
@@ -5938,8 +5938,8 @@ static const GtkActionEntry entries[] = {
 	  G_CALLBACK (ev_window_cmd_edit_copy) },
 	{ "FitPage", EV_STOCK_ZOOM_PAGE, NULL, "f", NULL,
 	  G_CALLBACK (ev_window_cmd_fit_page) },
-	{ "PageWidth", EV_STOCK_ZOOM_WIDTH, NULL, "w", NULL,
-	  G_CALLBACK (ev_window_cmd_page_width) },
+	{ "FitWidth", EV_STOCK_ZOOM_WIDTH, NULL, "w", NULL,
+	  G_CALLBACK (ev_window_cmd_fit_width) },
 };
 
 /* Toggle items */
@@ -5966,9 +5966,9 @@ static const GtkToggleActionEntry toggle_entries[] = {
         { "ViewFitPage", EV_STOCK_ZOOM_PAGE, N_("Fit Pa_ge"), NULL,
           N_("Make the current document fill the window"),
           G_CALLBACK (ev_window_cmd_view_fit_page) },
-        { "ViewPageWidth", EV_STOCK_ZOOM_WIDTH, N_("Fit Page _Width"), NULL,
+        { "ViewFitWidth", EV_STOCK_ZOOM_WIDTH, N_("Fit _Width"), NULL,
           N_("Make the current document fill the window width"),
-          G_CALLBACK (ev_window_cmd_view_page_width) },
+          G_CALLBACK (ev_window_cmd_view_fit_width) },
 	{ "ViewInvertedColors", EV_STOCK_INVERTED_COLORS, N_("_Inverted Colors"), "<control>I",
 	  N_("Show page contents with the colors inverted"),
 	  G_CALLBACK (ev_window_cmd_view_inverted_colors) },
@@ -6176,7 +6176,7 @@ set_action_properties (GtkActionGroup *action_group)
 	/*translators: this is the label for toolbar button*/
 	g_object_set (action, "short_label", _("Fit Page"), NULL);
 
-	action = gtk_action_group_get_action (action_group, "ViewPageWidth");
+	action = gtk_action_group_get_action (action_group, "ViewFitWidth");
 	/*translators: this is the label for toolbar button*/
 	g_object_set (action, "short_label", _("Fit Width"), NULL);
 
