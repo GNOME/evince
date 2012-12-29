@@ -5,7 +5,6 @@ INCLUDES=							\
 	-I$(top_srcdir)						\
 	-I$(top_builddir)					\
 	-I$(top_srcdir)/cut-n-paste/zoom-control/		\
-	-I$(top_srcdir)/cut-n-paste/toolbar-editor/		\
 	-I$(top_srcdir)/cut-n-paste/gimpcellrenderertoggle/	\
 	-I$(top_srcdir)/cut-n-paste/smclient/			\
 	-I$(top_srcdir)/libdocument				\
@@ -118,7 +117,6 @@ endif
 
 evince_LDADD=										\
 	$(top_builddir)/cut-n-paste/zoom-control/libephyzoom.la				\
-	$(top_builddir)/cut-n-paste/toolbar-editor/libtoolbareditor.la			\
 	$(top_builddir)/cut-n-paste/gimpcellrenderertoggle/libgimpcellrenderertoggle.la	\
 	$(top_builddir)/cut-n-paste/smclient/libsmclient.la				\
 	$(top_builddir)/properties/libevproperties.la					\
@@ -171,7 +169,6 @@ EXTRA_DIST = \
 	evince-appmenu.ui \
 	evince-icon.rc \
 	evince-ui.xml \
-	evince-toolbar.xml \
 	evince.gresource.xml \
 	ev-gdbus.xml \
 	ev-daemon-gdbus.xml
