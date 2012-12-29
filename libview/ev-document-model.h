@@ -38,6 +38,7 @@ typedef enum {
 	EV_SIZING_BEST_FIT = EV_SIZING_FIT_PAGE, /* Deprecated */
 	EV_SIZING_FIT_WIDTH,
 	EV_SIZING_FREE,
+        EV_SIZING_AUTOMATIC,
 } EvSizingMode;
 
 typedef struct _EvDocumentModel        EvDocumentModel;
