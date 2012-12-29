@@ -134,12 +134,12 @@ ev_previewer_window_zoom_out (GtkAction         *action,
 }
 
 static void
-ev_previewer_window_zoom_best_fit (GtkToggleAction   *action,
+ev_previewer_window_zoom_fit_page (GtkToggleAction   *action,
 				   EvPreviewerWindow *window)
 {
 	ev_document_model_set_sizing_mode (window->model,
 					   gtk_toggle_action_get_active (action) ?
-					   EV_SIZING_BEST_FIT : EV_SIZING_FREE);
+					   EV_SIZING_FIT_PAGE : EV_SIZING_FREE);
 }
 
 static void
@@ -339,9 +339,9 @@ static const GtkActionEntry accel_entries[] = {
 };
 
 static const GtkToggleActionEntry toggle_action_entries[] = {
-	{ "ViewBestFit", EV_STOCK_ZOOM_PAGE, N_("_Best Fit"), NULL,
+	{ "ViewFitPage", EV_STOCK_ZOOM_PAGE, N_("Fit Pa_ge"), NULL,
 	  N_("Make the current document fill the window"),
-	  G_CALLBACK (ev_previewer_window_zoom_best_fit) },
+	  G_CALLBACK (ev_previewer_window_zoom_fit_page) },
 	{ "ViewPageWidth", EV_STOCK_ZOOM_WIDTH, N_("Fit Page _Width"), NULL,
 	  N_("Make the current document fill the window width"),
 	  G_CALLBACK (ev_previewer_window_zoom_page_width) }
@@ -366,14 +366,14 @@ view_sizing_mode_changed (EvDocumentModel   *model,
 	EvSizingMode sizing_mode = ev_document_model_get_sizing_mode (model);
 	GtkAction   *action;
 
-	action = gtk_action_group_get_action (window->action_group, "ViewBestFit");
+	action = gtk_action_group_get_action (window->action_group, "ViewFitPage");
 	g_signal_handlers_block_by_func (action,
-					 G_CALLBACK (ev_previewer_window_zoom_best_fit),
+					 G_CALLBACK (ev_previewer_window_zoom_fit_page),
 					 window);
 	gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action),
-				      sizing_mode == EV_SIZING_BEST_FIT);
+				      sizing_mode == EV_SIZING_FIT_PAGE);
 	g_signal_handlers_unblock_by_func (action,
-					   G_CALLBACK (ev_previewer_window_zoom_best_fit),
+					   G_CALLBACK (ev_previewer_window_zoom_fit_page),
 					   window);
 
 	action = gtk_action_group_get_action (window->action_group, "ViewPageWidth");

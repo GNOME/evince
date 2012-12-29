@@ -31,7 +31,7 @@ struct _EvZoomActionWidgetPrivate {
         gulong           combo_changed_handler;
 };
 
-#define EV_ZOOM_BEST_FIT  (-3.0)
+#define EV_ZOOM_FIT_PAGE  (-3.0)
 #define EV_ZOOM_FIT_WIDTH (-4.0)
 #define EV_ZOOM_SEPARATOR (-5.0)
 
@@ -39,7 +39,7 @@ static const struct {
         const gchar *name;
         float        level;
 } zoom_levels[] = {
-        { N_("Best Fit"),       EV_ZOOM_BEST_FIT  },
+        { N_("Fit Page"),       EV_ZOOM_FIT_PAGE  },
         { N_("Fit Page Width"), EV_ZOOM_FIT_WIDTH },
         { NULL,                 EV_ZOOM_SEPARATOR },
         { N_("50%"), 0.5 },
@@ -121,9 +121,9 @@ ev_zoom_action_widget_update_sizing_mode (EvZoomActionWidget *control)
         const gchar *tooltip = NULL;
 
         switch (mode) {
-        case EV_SIZING_BEST_FIT:
+        case EV_SIZING_FIT_PAGE:
                 icon_name = "zoom-fit-best-symbolic";
-                tooltip = _("Best Fit");
+                tooltip = _("Fit Page");
                 break;
         case EV_SIZING_FIT_WIDTH:
                 icon_name = EV_STOCK_ZOOM_WIDTH;
@@ -170,8 +170,8 @@ combo_changed_cb (GtkComboBox        *combo,
                 return;
 
         zoom = zoom_levels[index].level;
-        if (zoom == EV_ZOOM_BEST_FIT)
-                mode = EV_SIZING_BEST_FIT;
+        if (zoom == EV_ZOOM_FIT_PAGE)
+                mode = EV_SIZING_FIT_PAGE;
         else if (zoom == EV_ZOOM_FIT_WIDTH)
                 mode = EV_SIZING_FIT_WIDTH;
         else

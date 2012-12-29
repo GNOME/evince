@@ -339,7 +339,7 @@ static void	ev_attachment_popup_cmd_open_attachment (GtkAction        *action,
 							 EvWindow         *window);
 static void	ev_attachment_popup_cmd_save_attachment_as (GtkAction     *action, 
 							 EvWindow         *window);
-static void	ev_window_cmd_view_best_fit 		(GtkAction 	  *action, 
+static void	ev_window_cmd_view_fit_page 		(GtkAction 	  *action,
 							 EvWindow 	  *ev_window);
 static void	ev_window_cmd_view_page_width 		(GtkAction 	  *action, 
 							 EvWindow 	  *ev_window);
@@ -468,7 +468,7 @@ ev_window_setup_action_sensitivity (EvWindow *ev_window)
 	ev_window_set_action_sensitive (ev_window, "ViewContinuous", has_pages);
 	ev_window_set_action_sensitive (ev_window, "ViewDual", has_pages);
 	ev_window_set_action_sensitive (ev_window, "ViewDualOddLeft", has_pages);
-	ev_window_set_action_sensitive (ev_window, "ViewBestFit", has_pages);
+	ev_window_set_action_sensitive (ev_window, "ViewFitPage", has_pages);
 	ev_window_set_action_sensitive (ev_window, "ViewPageWidth", has_pages);
 	ev_window_set_action_sensitive (ev_window, "ViewReload", has_pages);
 	ev_window_set_action_sensitive (ev_window, "ViewAutoscroll", has_pages);
@@ -560,7 +560,7 @@ static const gchar *view_accels[] = {
 	"Equal",
 	"n",
 	"p",
-	"BestFit",
+	"FitPage",
 	"PageWidth"
 };
 
@@ -628,28 +628,28 @@ update_sizing_buttons (EvWindow *window)
 {
 	GtkActionGroup *action_group = window->priv->action_group;
 	GtkAction *action;
-	gboolean best_fit, page_width;
+	gboolean fit_page, page_width;
 
 	switch (ev_document_model_get_sizing_mode (window->priv->model)) {
-	        case EV_SIZING_BEST_FIT:
-			best_fit = TRUE;
+	        case EV_SIZING_FIT_PAGE:
+			fit_page = TRUE;
 			page_width = FALSE;
 			break;
 	        case EV_SIZING_FIT_WIDTH:
-			best_fit = FALSE;
+			fit_page = FALSE;
 			page_width = TRUE;
 			break;
 	        default:
-			best_fit = page_width = FALSE;
+			fit_page = page_width = FALSE;
 			break;
 	}
 
-	action = gtk_action_group_get_action (action_group, "ViewBestFit");
+	action = gtk_action_group_get_action (action_group, "ViewFitPage");
 	g_signal_handlers_block_by_func
-		(action, G_CALLBACK (ev_window_cmd_view_best_fit), window);
-	gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action), best_fit);
+		(action, G_CALLBACK (ev_window_cmd_view_fit_page), window);
+	gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action), fit_page);
 	g_signal_handlers_unblock_by_func
-		(action, G_CALLBACK (ev_window_cmd_view_best_fit), window);
+		(action, G_CALLBACK (ev_window_cmd_view_fit_page), window);
 
 	action = gtk_action_group_get_action (action_group, "ViewPageWidth");	
 	g_signal_handlers_block_by_func
@@ -3843,12 +3843,12 @@ ev_window_cmd_dual_odd_pages_left (GtkAction *action, EvWindow *ev_window)
 }
 
 static void
-ev_window_cmd_view_best_fit (GtkAction *action, EvWindow *ev_window)
+ev_window_cmd_view_fit_page (GtkAction *action, EvWindow *ev_window)
 {
 	ev_window_stop_presentation (ev_window, TRUE);
 
 	if (gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action))) {
-		ev_document_model_set_sizing_mode (ev_window->priv->model, EV_SIZING_BEST_FIT);
+		ev_document_model_set_sizing_mode (ev_window->priv->model, EV_SIZING_FIT_PAGE);
 	} else {
 		ev_document_model_set_sizing_mode (ev_window->priv->model, EV_SIZING_FREE);
 	}
@@ -3856,9 +3856,9 @@ ev_window_cmd_view_best_fit (GtkAction *action, EvWindow *ev_window)
 }
 
 static void
-ev_window_cmd_best_fit (GtkAction *action, EvWindow *ev_window)
+ev_window_cmd_fit_page (GtkAction *action, EvWindow *ev_window)
 {
-	ev_document_model_set_sizing_mode (ev_window->priv->model, EV_SIZING_BEST_FIT);
+	ev_document_model_set_sizing_mode (ev_window->priv->model, EV_SIZING_FIT_PAGE);
 }
 
 static void
@@ -5936,8 +5936,8 @@ static const GtkActionEntry entries[] = {
           G_CALLBACK (ev_window_cmd_view_zoom_out) },
 	{ "CtrlInsert", GTK_STOCK_COPY, NULL, "<control>Insert", NULL,
 	  G_CALLBACK (ev_window_cmd_edit_copy) },
-	{ "BestFit", EV_STOCK_ZOOM_PAGE, NULL, "f", NULL,
-	  G_CALLBACK (ev_window_cmd_best_fit) },
+	{ "FitPage", EV_STOCK_ZOOM_PAGE, NULL, "f", NULL,
+	  G_CALLBACK (ev_window_cmd_fit_page) },
 	{ "PageWidth", EV_STOCK_ZOOM_WIDTH, NULL, "w", NULL,
 	  G_CALLBACK (ev_window_cmd_page_width) },
 };
@@ -5963,9 +5963,9 @@ static const GtkToggleActionEntry toggle_entries[] = {
         { "ViewPresentation", EV_STOCK_RUN_PRESENTATION, N_("Pre_sentation"), "F5",
           N_("Run document as a presentation"),
           G_CALLBACK (ev_window_cmd_view_presentation) },
-        { "ViewBestFit", EV_STOCK_ZOOM_PAGE, N_("_Best Fit"), NULL,
+        { "ViewFitPage", EV_STOCK_ZOOM_PAGE, N_("Fit Pa_ge"), NULL,
           N_("Make the current document fill the window"),
-          G_CALLBACK (ev_window_cmd_view_best_fit) },
+          G_CALLBACK (ev_window_cmd_view_fit_page) },
         { "ViewPageWidth", EV_STOCK_ZOOM_WIDTH, N_("Fit Page _Width"), NULL,
           N_("Make the current document fill the window width"),
           G_CALLBACK (ev_window_cmd_view_page_width) },
@@ -6172,9 +6172,9 @@ set_action_properties (GtkActionGroup *action_group)
 	/*translators: this is the label for toolbar button*/
 	g_object_set (action, "short_label", _("Zoom Out"), NULL);
 
-	action = gtk_action_group_get_action (action_group, "ViewBestFit");
+	action = gtk_action_group_get_action (action_group, "ViewFitPage");
 	/*translators: this is the label for toolbar button*/
-	g_object_set (action, "short_label", _("Best Fit"), NULL);
+	g_object_set (action, "short_label", _("Fit Page"), NULL);
 
 	action = gtk_action_group_get_action (action_group, "ViewPageWidth");
 	/*translators: this is the label for toolbar button*/
