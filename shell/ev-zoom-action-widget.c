@@ -129,6 +129,8 @@ ev_zoom_action_widget_update_sizing_mode (EvZoomActionWidget *control)
                 icon_name = EV_STOCK_ZOOM_WIDTH;
                 tooltip = _("Fit Width");
                 break;
+        case EV_SIZING_AUTOMATIC:
+                /* TODO */
         case EV_SIZING_FREE:
                 break;
         }
