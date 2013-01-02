@@ -4682,14 +4682,6 @@ ev_window_cmd_view_autoscroll (GtkAction *action, EvWindow *ev_window)
 }
 
 static void
-ev_window_cmd_help_contents (GtkAction *action, EvWindow *ev_window)
-{
-        ev_application_show_help (EV_APP,
-                                  gtk_widget_get_screen (GTK_WIDGET (ev_window)),
-                                  NULL);
-}
-
-static void
 ev_window_cmd_leave_fullscreen (GtkAction *action, EvWindow *window)
 {
 	ev_window_stop_fullscreen (window, TRUE);
@@ -5863,10 +5855,6 @@ static const GtkActionEntry entries[] = {
 	{ "BookmarksAdd", GTK_STOCK_ADD, N_("_Add Bookmark"), "<control>D",
 	  N_("Add a bookmark for the current page"),
 	  G_CALLBACK (ev_window_cmd_bookmarks_add) },
-
-	/* Help menu */
-	{ "HelpContents", GTK_STOCK_HELP, N_("_Contents"), "F1", NULL,
-	  G_CALLBACK (ev_window_cmd_help_contents) },
 
 	{ "HelpAbout", GTK_STOCK_ABOUT, N_("_About"), NULL, NULL,
 	  G_CALLBACK (ev_window_cmd_help_about) },
