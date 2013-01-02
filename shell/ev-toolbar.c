@@ -222,38 +222,19 @@ ev_toolbar_constructed (GObject *object)
         tool_item = GTK_WIDGET (gtk_tool_item_new ());
         gtk_container_add (GTK_CONTAINER (tool_item), button);
         gtk_widget_show (button);
-        gtk_widget_set_margin_right (tool_item, 12);
+        gtk_widget_set_margin_right (tool_item, 6);
         gtk_container_add (GTK_CONTAINER (ev_toolbar), tool_item);
         gtk_widget_show (tool_item);
 
-        /* View */
-        hbox = ev_toolbar_create_button_group (ev_toolbar);
-
-        action = gtk_action_group_get_action (action_group, "ViewContinuous");
-        /* I don't know why our icon name is not set for our stock icons */
-        gtk_action_set_icon_name (action, EV_STOCK_VIEW_CONTINUOUS);
-        button = ev_toolbar_create_toggle_button (ev_toolbar, action);
-        gtk_container_add (GTK_CONTAINER (hbox), button);
-        gtk_widget_show (button);
-
-        action = gtk_action_group_get_action (action_group, "ViewDual");
-        /* I don't know why our icon name is not set for our stock icons */
-        gtk_action_set_icon_name (action, EV_STOCK_VIEW_DUAL);
-        button = ev_toolbar_create_toggle_button (ev_toolbar, action);
-        gtk_container_add (GTK_CONTAINER (hbox), button);
-        gtk_widget_show (button);
-
+        /* View Menu */
         menu = gtk_ui_manager_get_widget (ui_manager, "/ViewMenuPopup");
-        button = ev_toolbar_create_menu_button (ev_toolbar, "go-down-symbolic",
+        button = ev_toolbar_create_menu_button (ev_toolbar, "document-properties-symbolic",
                                                 menu, GTK_ALIGN_END);
         ev_toolbar->priv->view_menu_button = button;
-        gtk_container_add (GTK_CONTAINER (hbox), button);
-        gtk_widget_show (button);
-
         tool_item = GTK_WIDGET (gtk_tool_item_new ());
-        gtk_widget_set_margin_right (tool_item, 12);
-        gtk_container_add (GTK_CONTAINER (tool_item), hbox);
-        gtk_widget_show (hbox);
+        gtk_container_add (GTK_CONTAINER (tool_item), button);
+        gtk_widget_show (button);
+        gtk_widget_set_margin_right (tool_item, 6);
 
         gtk_container_add (GTK_CONTAINER (ev_toolbar), tool_item);
         gtk_widget_show (tool_item);
