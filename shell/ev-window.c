@@ -4350,22 +4350,6 @@ ev_window_cmd_view_presentation (GtkAction *action, EvWindow *window)
 	}
 }
 
-static void
-ev_window_screen_changed (GtkWidget *widget,
-			  GdkScreen *old_screen)
-{
-	EvWindow *window = EV_WINDOW (widget);
-	GdkScreen *screen;
-
-	screen = gtk_widget_get_screen (widget);
-	if (screen == old_screen)
-		return;
-
-	if (GTK_WIDGET_CLASS (ev_window_parent_class)->screen_changed) {
-		GTK_WIDGET_CLASS (ev_window_parent_class)->screen_changed (widget, old_screen);
-	}
-}
-
 static gboolean
 ev_window_state_event (GtkWidget           *widget,
 		       GdkEventWindowState *event)
@@ -5769,7 +5753,6 @@ ev_window_class_init (EvWindowClass *ev_window_class)
 
 	widget_class->delete_event = ev_window_delete_event;
 	widget_class->key_press_event = ev_window_key_press_event;
-	widget_class->screen_changed = ev_window_screen_changed;
 	widget_class->window_state_event = ev_window_state_event;
 	widget_class->drag_data_received = ev_window_drag_data_received;
 
