@@ -149,7 +149,7 @@ ev_link_action_get_property (GObject    *object,
 		        g_value_set_enum (value, self->priv->type);
 		        break;
 	        case PROP_DEST:
-		        g_value_set_pointer (value, self->priv->dest);
+		        g_value_set_object (value, self->priv->dest);
 			break;
 	        case PROP_URI:
 			g_value_set_string (value, self->priv->uri);
@@ -193,7 +193,7 @@ ev_link_action_set_property (GObject      *object,
 			self->priv->type = g_value_get_enum (value);
 			break;
 	        case PROP_DEST:
-			self->priv->dest = g_value_get_pointer (value);
+			self->priv->dest = g_value_dup_object (value);
 			break;
 	        case PROP_URI:
 			g_free (self->priv->uri);
@@ -235,10 +235,7 @@ ev_link_action_finalize (GObject *object)
 
 	priv = EV_LINK_ACTION (object)->priv;
 
-	if (priv->dest) {
-		g_object_unref (priv->dest);
-		priv->dest = NULL;
-	}
+	g_clear_object (&priv->dest);
 
 	if (priv->uri) {
 		g_free (priv->uri);
@@ -319,12 +316,13 @@ ev_link_action_class_init (EvLinkActionClass *ev_link_action_class)
                                                              G_PARAM_STATIC_STRINGS));
 	g_object_class_install_property (g_object_class,
 					 PROP_DEST,
-					 g_param_spec_pointer ("dest",
-							       "Action destination",
-							       "The link action destination",
-							       G_PARAM_READWRITE |
-							       G_PARAM_CONSTRUCT_ONLY |
-                                                               G_PARAM_STATIC_STRINGS));
+					 g_param_spec_object ("dest",
+							      "Action destination",
+							      "The link action destination",
+							      EV_TYPE_LINK_DEST,
+							      G_PARAM_READWRITE |
+							      G_PARAM_CONSTRUCT_ONLY |
+                                                              G_PARAM_STATIC_STRINGS));
 	g_object_class_install_property (g_object_class,
 					 PROP_URI,
 					 g_param_spec_string ("uri",

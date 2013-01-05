@@ -885,6 +885,7 @@ ev_window_add_history (EvWindow *window, gint page, EvLink *link)
 	} else {
 		dest = ev_link_dest_new_page (page);
 		action = ev_link_action_new_dest (dest);
+		g_object_unref (dest);
 		page_label = ev_document_get_page_label (window->priv->document, page);
 	}
 
@@ -900,7 +901,8 @@ ev_window_add_history (EvWindow *window, gint page, EvLink *link)
 	}
 
 	real_link = ev_link_new (link_title, action);
-	
+	g_object_unref (action);
+
 	ev_history_add_link (window->priv->history, real_link);
 
 	g_free (link_title);
@@ -1599,6 +1601,7 @@ ev_window_handle_link (EvWindow *ev_window,
 		link_action = ev_link_action_new_dest (dest);
 		link = ev_link_new (NULL, link_action);
 		ev_view_handle_link (EV_VIEW (ev_window->priv->view), link);
+		g_object_unref (link_action);
 		g_object_unref (link);
 	}
 }
@@ -1649,11 +1652,7 @@ ev_window_load_job_cb (EvJob *job,
 		}
 
 		ev_window_handle_link (ev_window, ev_window->priv->dest);
-		/* Already unrefed by ev_link_action
-		 * FIXME: link action should inc dest ref counting
-		 * or not unref it at all
-		 */
-		ev_window->priv->dest = NULL;
+		g_clear_object (&ev_window->priv->dest);
 
 		switch (ev_window->priv->window_mode) {
 		        case EV_WINDOW_MODE_FULLSCREEN:
@@ -1749,11 +1748,7 @@ ev_window_reload_job_cb (EvJob    *job,
 					job->document);
 	if (ev_window->priv->dest) {
 		ev_window_handle_link (ev_window, ev_window->priv->dest);
-		/* Already unrefed by ev_link_action
-		 * FIXME: link action should inc dest ref counting
-		 * or not unref it at all
-		 */
-		ev_window->priv->dest = NULL;
+		g_clear_object (&ev_window->priv->dest);
 	}
 
 	/* Restart the search after reloading */
@@ -2186,10 +2181,7 @@ ev_window_open_document (EvWindow       *ev_window,
 		link_action = ev_link_action_new_dest (dest);
 		link = ev_link_new (NULL, link_action);
 		ev_view_handle_link (EV_VIEW (ev_window->priv->view), link);
-		/* FIXME: link action should inc dest ref counting
-		 * or not unref it at all
-		 */
-		g_object_ref (dest);
+		g_object_unref (link_action);
 		g_object_unref (link);
 	}
 

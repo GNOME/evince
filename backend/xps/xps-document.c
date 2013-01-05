@@ -291,6 +291,7 @@ static EvLink *
 ev_link_from_target (XPSDocument    *xps_document,
 		     GXPSLinkTarget *target)
 {
+	EvLink *link;
 	EvLinkAction *ev_action;
 
 	if (gxps_link_target_is_internal (target)) {
@@ -308,6 +309,7 @@ ev_link_from_target (XPSDocument    *xps_document,
 
 			dest = ev_link_dest_new_named (anchor);
 			ev_action = ev_link_action_new_dest (dest);
+			g_object_unref (dest);
 		} else if (doc == -1 && anchor &&
 			   gxps_document_get_page_for_anchor (xps_document->doc, anchor) >= 0) {
 			/* Internal, but source is not a doc,
@@ -315,6 +317,7 @@ ev_link_from_target (XPSDocument    *xps_document,
 			 */
 			dest = ev_link_dest_new_named (anchor);
 			ev_action = ev_link_action_new_dest (dest);
+			g_object_unref (dest);
 		} else {
 			gchar *filename;
 
@@ -324,6 +327,7 @@ ev_link_from_target (XPSDocument    *xps_document,
 			if (anchor)
 				dest = ev_link_dest_new_named (anchor);
 			ev_action = ev_link_action_new_remote (dest, filename);
+			g_clear_object (&dest);
 			g_free (filename);
 		}
 	} else {
@@ -333,7 +337,10 @@ ev_link_from_target (XPSDocument    *xps_document,
 		ev_action = ev_link_action_new_external_uri (uri);
 	}
 
-	return ev_link_new (NULL, ev_action);
+	link = ev_link_new (NULL, ev_action);
+	g_object_unref (ev_action);
+
+	return link;
 }
 
 static void

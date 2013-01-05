@@ -184,6 +184,8 @@ activate_cb (EvPageActionWidget *action_widget)
 
 	g_signal_emit (action_widget, widget_signals[WIDGET_ACTIVATE_LINK], 0, link);
 
+	g_object_unref (link_dest);
+	g_object_unref (link_action);
 	g_object_unref (link);
 	g_free (link_text);
 

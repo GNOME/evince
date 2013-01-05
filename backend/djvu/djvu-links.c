@@ -103,6 +103,7 @@ get_djvu_link_action (const DjvuDocument *djvu_document, const gchar *link_name,
 
 	if (ev_dest) {
 		ev_action = ev_link_action_new_dest (ev_dest);
+		g_object_unref (ev_dest);
 	} else if (strstr(link_name, "://") != NULL) {
 		/* It's probably an URI */
 		ev_action = ev_link_action_new_external_uri (link_name);
@@ -201,6 +202,7 @@ build_tree (const DjvuDocument *djvu_document,
 					    EV_DOCUMENT_LINKS_COLUMN_LINK, ev_link,
 					    EV_DOCUMENT_LINKS_COLUMN_EXPAND, FALSE,
 					    -1);
+			g_object_unref (ev_action);
 			g_object_unref (ev_link);
 		} else {
 			gtk_tree_store_append (GTK_TREE_STORE (model), &tree_iter, parent);
@@ -333,7 +335,8 @@ get_djvu_hyperlink_mapping (DjvuDocument     *djvu_document,
 	if (!ev_action) goto unknown_mapping;
 
 	ev_link_mapping->data = ev_link_new (comment, ev_action);
-			
+	g_object_unref (ev_action);
+
 	return ev_link_mapping;
 
  unknown_mapping:

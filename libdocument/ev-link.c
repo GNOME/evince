@@ -77,7 +77,7 @@ ev_link_get_property (GObject    *object,
 			g_value_set_string (value, self->priv->title);
 			break;
 	        case PROP_ACTION:
-			g_value_set_pointer (value, self->priv->action);
+			g_value_set_object (value, self->priv->action);
 			break;
 	        default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object,
@@ -100,7 +100,7 @@ ev_link_set_property (GObject      *object,
 			self->priv->title = g_value_dup_string (value);	
 			break;
 	        case PROP_ACTION:
-			self->priv->action = g_value_get_pointer (value);
+			self->priv->action = g_value_dup_object (value);
 			break;
 	        default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object,
@@ -122,10 +122,7 @@ ev_link_finalize (GObject *object)
 		priv->title = NULL;
 	}
 
-	if (priv->action) {
-		g_object_unref (priv->action);
-		priv->action = NULL;
-	}
+	g_clear_object (&priv->action);
 
 	G_OBJECT_CLASS (ev_link_parent_class)->finalize (object);
 }
@@ -164,12 +161,13 @@ ev_link_class_init (EvLinkClass *ev_window_class)
                                                               G_PARAM_STATIC_STRINGS));
 	g_object_class_install_property (g_object_class,
 					 PROP_ACTION,
-					 g_param_spec_pointer ("action",
-							       "Link Action",
-							       "The link action",
-							       G_PARAM_READWRITE |
-							       G_PARAM_CONSTRUCT_ONLY |
-                                                               G_PARAM_STATIC_STRINGS));
+					 g_param_spec_object ("action",
+							      "Link Action",
+							      "The link action",
+							      EV_TYPE_LINK_ACTION,
+							      G_PARAM_READWRITE |
+							      G_PARAM_CONSTRUCT_ONLY |
+							      G_PARAM_STATIC_STRINGS));
 }
 
 EvLink *
