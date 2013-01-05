@@ -25,9 +25,30 @@
 #ifndef __EV_VIEW_ACCESSIBLE_H__
 #define __EV_VIEW_ACCESSIBLE_H__
 
-#include "ev-view.h"
+#include <gtk/gtk-a11y.h>
 
-GType ev_view_accessible_factory_get_type (void);
+#define EV_TYPE_VIEW_ACCESSIBLE      (ev_view_accessible_get_type ())
+#define EV_VIEW_ACCESSIBLE(obj)      (G_TYPE_CHECK_INSTANCE_CAST ((obj), EV_TYPE_VIEW_ACCESSIBLE, EvViewAccessible))
+#define EV_IS_VIEW_ACCESSIBLE(obj)   (G_TYPE_CHECK_INSTANCE_TYPE ((obj), EV_TYPE_VIEW_ACCESSIBLE))
+
+typedef struct _EvViewAccessible        EvViewAccessible;
+typedef struct _EvViewAccessibleClass   EvViewAccessibleClass;
+typedef struct _EvViewAccessiblePrivate EvViewAccessiblePrivate;
+
+struct _EvViewAccessible
+{
+	GtkContainerAccessible parent;
+
+	EvViewAccessiblePrivate *priv;
+};
+
+struct _EvViewAccessibleClass
+{
+	GtkContainerAccessibleClass parent_class;
+};
+
+GType      ev_view_accessible_get_type (void);
+AtkObject *ev_view_accessible_new      (GtkWidget *widget);
 
 #endif  /* __EV_VIEW_ACCESSIBLE_H__ */
 

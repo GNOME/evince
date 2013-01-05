@@ -4565,6 +4565,8 @@ ev_view_dispose (GObject *object)
         gtk_scrollable_set_hadjustment (GTK_SCROLLABLE (view), NULL);
         gtk_scrollable_set_vadjustment (GTK_SCROLLABLE (view), NULL);
 
+	g_clear_object(&view->accessible);
+
 	G_OBJECT_CLASS (ev_view_parent_class)->dispose (object);
 }
 
@@ -4639,50 +4641,14 @@ ev_view_set_property (GObject      *object,
 }
 
 /* Accessibility */
-static void
-ev_view_init_accessibility (EvView *view)
-{
-	static gboolean first_time = TRUE;
-
-	if (first_time)	{
-		AtkObjectFactory *factory;
-		AtkRegistry *registry;
-		GType derived_type;
-		GType derived_atk_type;
-
-		/*
-		 * Figure out whether accessibility is enabled by looking at the
-		 * type of the accessible object which would be created for
-		 * the parent type of EvView.
-		 */
-		derived_type = g_type_parent (EV_TYPE_VIEW);
-
-		registry = atk_get_default_registry ();
-		factory = atk_registry_get_factory (registry,
-						    derived_type);
-		derived_atk_type = atk_object_factory_get_accessible_type (factory);
-		if (g_type_is_a (derived_atk_type, GTK_TYPE_ACCESSIBLE)) {
-			atk_registry_set_factory_type (registry,
-						       EV_TYPE_VIEW,
-						       ev_view_accessible_factory_get_type ());
-			view->a11y_enabled = TRUE;
-		}
-		first_time = FALSE;
-	}
-}
-
 static AtkObject *
 ev_view_get_accessible (GtkWidget *widget)
 {
-	ev_view_init_accessibility (EV_VIEW (widget));
-	return GTK_WIDGET_CLASS (ev_view_parent_class)->get_accessible (widget);
-}
+	EvView *view = EV_VIEW (widget);
 
-static gboolean
-ev_view_is_a11y_enabled (EvView *view)
-{
-	ev_view_init_accessibility (view);
-	return view->a11y_enabled;
+	if (!view->accessible)
+		view->accessible = ev_view_accessible_new (widget);
+	return view->accessible;
 }
 
 /* GtkContainer */
@@ -4928,7 +4894,6 @@ ev_view_class_init (EvViewClass *class)
 				      GTK_SCROLL_STEP_BACKWARD, G_TYPE_BOOLEAN, FALSE);
 	gtk_binding_entry_add_signal (binding_set, GDK_KEY_L, 0, "binding_activated", 2, GTK_TYPE_SCROLL_TYPE,
 				      GTK_SCROLL_STEP_FORWARD, G_TYPE_BOOLEAN, TRUE);
-	
 }
 
 static void
@@ -5106,14 +5071,12 @@ setup_caches (EvView *view)
 	view->height_to_page_cache = ev_view_get_height_to_page_cache (view);
 	view->pixbuf_cache = ev_pixbuf_cache_new (GTK_WIDGET (view), view->model, view->pixbuf_cache_size);
 	view->page_cache = ev_page_cache_new (view->document);
-	if (ev_view_is_a11y_enabled (view)) {
-		EvJobPageDataFlags flags = ev_page_cache_get_flags (view->page_cache);
 
-		ev_page_cache_set_flags (view->page_cache,
-					 flags |
-					 EV_PAGE_DATA_INCLUDE_TEXT_LAYOUT |
-					 EV_PAGE_DATA_INCLUDE_TEXT);
-	}
+	ev_page_cache_set_flags (view->page_cache,
+				 ev_page_cache_get_flags (view->page_cache) |
+				 EV_PAGE_DATA_INCLUDE_TEXT_LAYOUT |
+				 EV_PAGE_DATA_INCLUDE_TEXT);
+
 	inverted_colors = ev_document_model_get_inverted_colors (view->model);
 	ev_pixbuf_cache_set_inverted_colors (view->pixbuf_cache, inverted_colors);
 	g_signal_connect (view->pixbuf_cache, "job-finished", G_CALLBACK (job_finished_cb), view);
