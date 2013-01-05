@@ -25,24 +25,25 @@
 #include "ev-keyring.h"
 
 #ifdef WITH_KEYRING
-#include <gnome-keyring.h>
+#include <libsecret/secret.h>
 
-static const GnomeKeyringPasswordSchema doc_password_schema = {
-	GNOME_KEYRING_ITEM_GENERIC_SECRET,
+static const SecretSchema doc_password_schema = {
+	"org.gnome.Evince.Document",
+	SECRET_SCHEMA_DONT_MATCH_NAME,
 	{
-		{ "type", GNOME_KEYRING_ATTRIBUTE_TYPE_STRING },
-		{ "uri",  GNOME_KEYRING_ATTRIBUTE_TYPE_STRING },
+		{ "type", SECRET_SCHEMA_ATTRIBUTE_STRING },
+		{ "uri",  SECRET_SCHEMA_ATTRIBUTE_STRING },
 		{ NULL, 0 }
 	}
 };
-const GnomeKeyringPasswordSchema *EV_DOCUMENT_PASSWORD_SCHEMA = &doc_password_schema;
+const SecretSchema *EV_DOCUMENT_PASSWORD_SCHEMA = &doc_password_schema;
 #endif /* WITH_KEYRING */
 
 gboolean
 ev_keyring_is_available (void)
 {
 #ifdef WITH_KEYRING
-	return gnome_keyring_is_available ();
+	return TRUE;
 #else
 	return FALSE;
 #endif
@@ -51,31 +52,17 @@ ev_keyring_is_available (void)
 gchar *
 ev_keyring_lookup_password (const gchar *uri)
 {
-	gchar             *retval = NULL;
 #ifdef WITH_KEYRING
-	GnomeKeyringResult result;
-	gchar             *password = NULL;
-	
 	g_return_val_if_fail (uri != NULL, NULL);
 
-	if (!gnome_keyring_is_available ())
-		return NULL;
-	
-	result = gnome_keyring_find_password_sync (EV_DOCUMENT_PASSWORD_SCHEMA,
-						   &password,
-						   "type", "document_password",
-						   "uri", uri,
-						   NULL);
-	if (result != GNOME_KEYRING_RESULT_OK || !password) {
-		if (password)
-			gnome_keyring_free_password (password);
-		return NULL;
-	}
-
-	retval = g_strdup (password);
-	gnome_keyring_free_password (password);
+	return secret_password_lookup_sync (EV_DOCUMENT_PASSWORD_SCHEMA,
+                                            NULL, NULL,
+                                            "type", "document_password",
+                                            "uri", uri,
+                                            NULL);
+#else
+        return NULL;
 #endif /* WITH_KEYRING */
-	return retval;
 }
 
 gboolean
@@ -84,32 +71,29 @@ ev_keyring_save_password (const gchar  *uri,
 			  GPasswordSave flags)
 {
 #ifdef WITH_KEYRING
-	GnomeKeyringResult result;
-	const gchar       *keyring;
-	gchar             *name;
-	gchar             *unescaped_uri;
+	const gchar *keyring;
+	gchar       *name;
+	gchar       *unescaped_uri;
+        gboolean     retval;
 
 	g_return_val_if_fail (uri != NULL, FALSE);
 
-	if (!gnome_keyring_is_available ())
-		return FALSE;
-	
 	if (flags == G_PASSWORD_SAVE_NEVER)
 		return FALSE;
 
-	keyring = (flags == G_PASSWORD_SAVE_FOR_SESSION) ? "session" : NULL;
+	keyring = (flags == G_PASSWORD_SAVE_FOR_SESSION) ? SECRET_COLLECTION_SESSION : NULL;
 	unescaped_uri = g_uri_unescape_string (uri, NULL);
 	name = g_strdup_printf (_("Password for document %s"), unescaped_uri);
 	g_free (unescaped_uri);
-	
-	result = gnome_keyring_store_password_sync (EV_DOCUMENT_PASSWORD_SCHEMA,
-						    keyring, name, password,
-						    "type", "document_password",
-						    "uri", uri,
-						    NULL);
+
+	retval = secret_password_store_sync (EV_DOCUMENT_PASSWORD_SCHEMA, keyring,
+                                             name, password, NULL, NULL,
+                                             "type", "document_password",
+                                             "uri", uri,
+                                             NULL);
 	g_free (name);
 
-	return (result == GNOME_KEYRING_RESULT_OK);
+	return retval;
 #else
 	return FALSE;
 #endif /* WITH_KEYRING */
