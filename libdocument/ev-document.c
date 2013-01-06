@@ -440,7 +440,7 @@ ev_document_save (EvDocument  *document,
 /**
  * ev_document_get_page:
  * @document: a #EvDocument
- * @page_index: index of page
+ * @index: index of page
  *
  * Returns: (transfer full): Newly created #EvPage for the given index.
  */
@@ -472,7 +472,7 @@ ev_document_has_synctex (EvDocument *document)
 /**
  * ev_document_synctex_backward_search:
  * @document:
- * @page: the target page
+ * @page_index: the target page
  * @x:
  * @y:
  *
