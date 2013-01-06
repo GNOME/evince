@@ -122,9 +122,9 @@ EV_DEPRECATED_FOR(ev_annotaion_set_rgba)
 gboolean             ev_annotation_set_color                 (EvAnnotation           *annot,
 							      const GdkColor         *color);
 void                 ev_annotation_get_rgba                  (EvAnnotation           *annot,
-                                                              GdkRGBA                *color);
+                                                              GdkRGBA                *rgba);
 gboolean             ev_annotation_set_rgba                  (EvAnnotation           *annot,
-                                                              const GdkRGBA          *color);
+                                                              const GdkRGBA          *rgba);
 
 /* EvAnnotationMarkup */
 GType                ev_annotation_markup_get_type           (void) G_GNUC_CONST;
