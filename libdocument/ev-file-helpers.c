@@ -115,7 +115,7 @@ _ev_file_helpers_shutdown (void)
 
 /**
  * ev_mkstemp:
- * @template: a template string; must contain 'XXXXXX', but not necessarily as a suffix
+ * @tmpl: a template string; must contain 'XXXXXX', but not necessarily as a suffix
  * @file_name: a location to store the filename of the temp file
  * @error: a location to store a #GError
  *
@@ -125,7 +125,7 @@ _ev_file_helpers_shutdown (void)
  *   on error with @error filled in
  */
 int
-ev_mkstemp (const char  *template,
+ev_mkstemp (const char  *tmpl,
             char       **file_name,
             GError     **error)
 {
@@ -136,7 +136,7 @@ ev_mkstemp (const char  *template,
         if ((tmp = _ev_tmp_dir (error)) == NULL)
               return -1;
 
-        name = g_build_filename (tmp, template, NULL);
+        name = g_build_filename (tmp, tmpl, NULL);
         fd = g_mkstemp (name);
 
         if (fd == -1) {
@@ -166,7 +166,7 @@ close_fd_cb (gpointer fdptr)
 
 /**
  * ev_mkstemp_file:
- * @template: a template string; must contain 'XXXXXX', but not necessarily as a suffix
+ * @tmpl: a template string; must contain 'XXXXXX', but not necessarily as a suffix
  * @error: a location to store a #GError
  *
  * Creates a temp #GFile in the evince temp directory. See ev_mkstemp() for more information.
@@ -175,14 +175,14 @@ close_fd_cb (gpointer fdptr)
  *   on error with @error filled in
  */
 GFile *
-ev_mkstemp_file (const char        *template,
+ev_mkstemp_file (const char        *tmpl,
                  GError           **error)
 {
         char *file_name;
         int fd;
         GFile *file;
 
-        fd = ev_mkstemp (template, &file_name, error);
+        fd = ev_mkstemp (tmpl, &file_name, error);
         if (fd == -1)
                 return NULL;
 
@@ -282,7 +282,7 @@ _ev_g_mkdtemp (gchar *tmpl)
 
 /**
  * ev_mkdtemp:
- * @template: a template string; must end in 'XXXXXX'
+ * @tmpl: a template string; must end in 'XXXXXX'
  * @error: a location to store a #GError
  *
  * Creates a temp directory in the evince temp directory.
@@ -291,7 +291,7 @@ _ev_g_mkdtemp (gchar *tmpl)
  *   on error with @error filled in
  */
 gchar *
-ev_mkdtemp (const char        *template,
+ev_mkdtemp (const char        *tmpl,
             GError           **error)
 {
         const char *tmp;
@@ -300,7 +300,7 @@ ev_mkdtemp (const char        *template,
         if ((tmp = _ev_tmp_dir (error)) == NULL)
               return NULL;
 
-        name = g_build_filename (tmp, template, NULL);
+        name = g_build_filename (tmp, tmpl, NULL);
         if (_ev_g_mkdtemp (name) == NULL) {
 		int errsv = errno;
 
