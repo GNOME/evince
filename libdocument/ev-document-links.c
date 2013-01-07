@@ -43,6 +43,12 @@ ev_document_links_has_document_links (EvDocumentLinks *document_links)
 	return retval;
 }
 
+/**
+ * ev_document_links_get_links_model:
+ * @document_links: an #EvDocumentLinks
+ *
+ * Returns: (transfer full): a #GtkTreeModel
+ */
 GtkTreeModel *
 ev_document_links_get_links_model (EvDocumentLinks *document_links)
 {
@@ -63,6 +69,13 @@ ev_document_links_get_links (EvDocumentLinks *document_links,
 	return iface->get_links (document_links, page);
 }
 
+/**
+ * ev_document_links_find_link_dest:
+ * @document_links: an #EvDocumentLinks
+ * @link_name: the link name
+ *
+ * Returns: (transfer full): an #EvLinkDest
+ */
 EvLinkDest *
 ev_document_links_find_link_dest (EvDocumentLinks *document_links,
 				  const gchar     *link_name)

@@ -40,6 +40,13 @@ ev_document_transition_get_page_duration (EvDocumentTransition *document_trans,
 	return -1;
 }
 
+/**
+ * ev_document_transition_get_effect:
+ * @document_trans: an #EvDocumentTransition
+ * @page: a page index
+ *
+ * Returns: (transfer full): an #EvTransitionEffect
+ */
 EvTransitionEffect *
 ev_document_transition_get_effect (EvDocumentTransition *document_trans,
 				   gint                  page)

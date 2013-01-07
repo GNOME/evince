@@ -389,7 +389,7 @@ ev_document_factory_get_document (const char *uri, GError **error)
  * If the document is encrypted, it is returned but also @error is set to
  * %EV_DOCUMENT_ERROR_ENCRYPTED.
  *
- * Returns: a new #EvDocument, or %NULL
+ * Returns: (transfer full): a new #EvDocument, or %NULL
  *
  * Since: 3.6
  */
@@ -457,7 +457,7 @@ ev_document_factory_get_document_for_gfile (GFile *file,
  * If the mime type cannot be inferred from the stream, and @mime_type is %NULL,
  * an error is returned.
  *
- * Returns: a new #EvDocument, or %NULL
+ * Returns: (transfer full): a new #EvDocument, or %NULL
  *
  * Since: 3.6
  */
@@ -586,6 +586,12 @@ ev_document_factory_add_filters (GtkWidget *chooser, EvDocument *document)
 
 /* Deprecated API/ABI compatibility wrappers */
 
+/**
+ * ev_backends_manager_get_document:
+ * @mime_type: a mime type hint
+ *
+ * Returns: (transfer full): a new #EvDocument
+ */
 EvDocument  *ev_backends_manager_get_document (const gchar *mime_type)
 {
         return ev_document_factory_new_document_for_mime_type (mime_type, NULL);

@@ -94,6 +94,14 @@ create_thumbnail_frame (int        width,
 	return retval;
 }
 
+/**
+ * ev_document_misc_get_thumbnail_frame:
+ * @width: the desired width
+ * @height: the desired height
+ * @source_pixbuf: a #GdkPixbuf
+ *
+ * Returns: (transfer full): a #GdkPixbuf
+ */
 GdkPixbuf *
 ev_document_misc_get_thumbnail_frame (int        width,
 				      int        height,
@@ -102,6 +110,14 @@ ev_document_misc_get_thumbnail_frame (int        width,
 	return create_thumbnail_frame (width, height, source_pixbuf, TRUE);
 }
 
+/**
+ * ev_document_misc_get_loading_thumbnail:
+ * @width: the desired width
+ * @height: the desired height
+ * @inverted_colors: whether to invert colors
+ *
+ * Returns: (transfer full): a #GdkPixbuf
+ */
 GdkPixbuf *
 ev_document_misc_get_loading_thumbnail (int      width,
 					int      height,
@@ -166,6 +182,15 @@ ev_document_misc_render_thumbnail_frame (GtkWidget *widget,
         return retval;
 }
 
+/**
+ * ev_document_misc_render_loading_thumbnail:
+ * @widget: a #GtkWidget to use for style information
+ * @width: the desired width
+ * @height: the desired height
+ * @inverted_colors: whether to invert colors
+ *
+ * Returns: (transfer full): a #GdkPixbuf
+ */
 GdkPixbuf *
 ev_document_misc_render_loading_thumbnail (GtkWidget *widget,
                                            int        width,
@@ -175,6 +200,13 @@ ev_document_misc_render_loading_thumbnail (GtkWidget *widget,
         return ev_document_misc_render_thumbnail_frame (widget, width, height, inverted_colors, NULL);
 }
 
+/**
+ * ev_document_misc_render_thumbnail_with_frame:
+ * @widget: a #GtkWidget to use for style information
+ * @source_pixbuf: a #GdkPixbuf
+ *
+ * Returns: (transfer full): a #GdkPixbuf
+ */
 GdkPixbuf *
 ev_document_misc_render_thumbnail_with_frame (GtkWidget *widget,
                                               GdkPixbuf *source_pixbuf)
@@ -271,6 +303,12 @@ ev_document_misc_surface_from_pixbuf (GdkPixbuf *pixbuf)
 	return surface;
 }
 
+/**
+ * ev_document_misc_pixbuf_from_surface:
+ * @surface: a #cairo_surface_t
+ *
+ * Returns: (transfer full): a #GdkPixbuf
+ */
 GdkPixbuf *
 ev_document_misc_pixbuf_from_surface (cairo_surface_t *surface)
 {

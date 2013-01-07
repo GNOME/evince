@@ -54,6 +54,12 @@ ev_link_get_title (EvLink *self)
 	return self->priv->title;
 }
 
+/**
+ * ev_link_get_action:
+ * @self: an #EvLink
+ *
+ * Returns: (transfer none): an #EvLinkAction
+ */
 EvLinkAction *
 ev_link_get_action (EvLink *self)
 {

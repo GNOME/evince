@@ -70,6 +70,12 @@ ev_link_action_get_action_type (EvLinkAction *self)
 	return self->priv->type;
 }
 
+/**
+ * ev_link_action_get_dest:
+ * @self: an #EvLinkAction
+ *
+ * Returns: (transfer none): an #EvLinkDest
+ */
 EvLinkDest *
 ev_link_action_get_dest (EvLinkAction *self)
 {
@@ -110,6 +116,12 @@ ev_link_action_get_name (EvLinkAction *self)
 	return self->priv->name;
 }
 
+/**
+ * ev_link_action_get_show_list:
+ * @self: an #EvLinkAction
+ *
+ * Returns: (transfer none) (element-type EvLayer): a list of #EvLayer objects
+ */
 GList *
 ev_link_action_get_show_list (EvLinkAction *self)
 {
@@ -118,6 +130,12 @@ ev_link_action_get_show_list (EvLinkAction *self)
 	return self->priv->show_list;
 }
 
+/**
+ * ev_link_action_get_hide_list:
+ * @self: an #EvLinkAction
+ *
+ * Returns: (transfer none) (element-type EvLayer): a list of #EvLayer objects
+ */
 GList *
 ev_link_action_get_hide_list (EvLinkAction *self)
 {
@@ -126,6 +144,12 @@ ev_link_action_get_hide_list (EvLinkAction *self)
 	return self->priv->hide_list;
 }
 
+/**
+ * ev_link_action_get_toggle_list:
+ * @self: an #EvLinkAction
+ *
+ * Returns: (transfer none) (element-type EvLayer): a list of #EvLayer objects
+ */
 GList *
 ev_link_action_get_toggle_list (EvLinkAction *self)
 {
@@ -434,6 +458,14 @@ ev_link_action_new_named (const gchar *name)
 					     NULL));
 }
 
+/**
+ * ev_link_action_new_layers_state:
+ * @show_list: (element-type EvLayer): a list of #EvLayer objects
+ * @hide_list: (element-type EvLayer): a list of #EvLayer objects
+ * @toggle_list: (element-type EvLayer): a list of #EvLayer objects
+ *
+ * Returns: (transfer full): a new #EvLinkAction
+ */
 EvLinkAction *
 ev_link_action_new_layers_state (GList *show_list,
 				 GList *hide_list,

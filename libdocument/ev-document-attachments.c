@@ -38,6 +38,12 @@ ev_document_attachments_has_attachments (EvDocumentAttachments *document_attachm
 	return iface->has_attachments (document_attachments);
 }
 
+/**
+ * ev_document_attachments_get_attachments:
+ * @document_attachments: an #EvDocumentAttachments
+ *
+ * Returns: (transfer full) (element-type EvAttachment): a list of #EvAttachment objects
+ */
 GList *
 ev_document_attachments_get_attachments (EvDocumentAttachments *document_attachments)
 {

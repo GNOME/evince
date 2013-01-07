@@ -29,6 +29,15 @@ ev_document_find_default_init (EvDocumentFindInterface *klass)
 {
 }
 
+/**
+ * ev_document_find_find_text:
+ * @document_find: an #EvDocumentFind
+ * @page: an #EvPage
+ * @text: text to find
+ * @case_sensitive: whether to match the string case
+ *
+ * Returns: (transfer full) (element-type EvRectangle): a list of results
+ */
 GList *
 ev_document_find_find_text (EvDocumentFind *document_find,
 			    EvPage         *page,
@@ -40,6 +49,15 @@ ev_document_find_find_text (EvDocumentFind *document_find,
 	return iface->find_text (document_find, page, text, case_sensitive);
 }
 
+/**
+ * ev_document_find_find_text_with_options:
+ * @document_find: an #EvDocumentFind
+ * @page: an #EvPage
+ * @text: text to find
+ * @options: a set of #EvFindOptions
+ *
+ * Returns: (transfer full) (element-type EvRectangle): a list of results
+ */
 GList *
 ev_document_find_find_text_with_options (EvDocumentFind *document_find,
 					 EvPage         *page,

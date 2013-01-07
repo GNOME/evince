@@ -38,6 +38,12 @@ ev_document_layers_has_layers (EvDocumentLayers *document_layers)
 	return iface->has_layers (document_layers);
 }
 
+/**
+ * ev_document_layers_get_layers:
+ * @document_layers: an #EvDocumentLayers
+ *
+ * Returns: (transfer full): a #GtkTreeModel
+ */
 GtkTreeModel *
 ev_document_layers_get_layers (EvDocumentLayers *document_layers)
 {

@@ -692,6 +692,13 @@ _ev_document_get_thumbnail (EvDocument      *document,
 	return pixbuf;
 }
 
+/**
+ * ev_document_get_thumbnail:
+ * @document: an #EvDocument
+ * @rc: an #EvRenderContext
+ *
+ * Returns: (transfer full): a #GdkPixbuf
+ */
 GdkPixbuf *
 ev_document_get_thumbnail (EvDocument      *document,
 			   EvRenderContext *rc)

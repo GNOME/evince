@@ -171,7 +171,7 @@ close_fd_cb (gpointer fdptr)
  *
  * Creates a temp #GFile in the evince temp directory. See ev_mkstemp() for more information.
  *
- * Returns: a newly allocated #GFile for the newly created temp file name, or %NULL
+ * Returns: (transfer full): a newly allocated #GFile for the newly created temp file name, or %NULL
  *   on error with @error filled in
  */
 GFile *

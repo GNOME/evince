@@ -121,6 +121,12 @@ ev_image_get_id (EvImage *image)
 	return image->priv->id;
 }
 
+/**
+ * ev_image_get_pixbuf:
+ * @image: an #EvImage
+ *
+ * Returns: (transfer none): a #GdkPixbuf
+ */
 GdkPixbuf *
 ev_image_get_pixbuf (EvImage *image)
 {
