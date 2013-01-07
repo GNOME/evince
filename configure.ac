@@ -53,13 +53,16 @@ AM_MAINTAINER_MODE([enable])
 
 m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])])
 
-AM_PROG_LIBTOOL
-
 AC_PROG_CC
 AM_PROG_CC_C_O
 AC_PROG_CXX
 
 AC_PROG_SED
+
+# Initialize libtool
+LT_PREREQ([2.2])
+LT_INIT
+LT_LIB_M
 
 GNOME_COMPILE_WARNINGS
 GNOME_CXX_WARNINGS
@@ -131,9 +134,6 @@ dnl Check dependencies
 # FRONTEND_LIBS
 # SHELL_CFLAGS     for shell implementation.
 # SHELL_LIBS
-
-AC_CHECK_LIBM
-AC_SUBST(LIBM)
 
 have_zlib=yes
 AC_CHECK_HEADERS([zlib.h],
