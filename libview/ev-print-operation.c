@@ -196,6 +196,12 @@ ev_print_operation_set_print_settings (EvPrintOperation *op,
 	class->set_print_settings (op, print_settings);
 }
 
+/**
+ * ev_print_operation_get_print_settings:
+ * @op: an #EvPrintOperation
+ *
+ * Returns: (transfer none): a #GtkPrintSettings
+ */
 GtkPrintSettings *
 ev_print_operation_get_print_settings (EvPrintOperation *op)
 {
@@ -218,6 +224,12 @@ ev_print_operation_set_default_page_setup (EvPrintOperation *op,
 	class->set_default_page_setup (op, page_setup);
 }
 
+/**
+ * ev_print_operation_get_default_page_setup:
+ * @op: an #EvPrintOperation
+ *
+ * Returns: (transfer none): a #GtkPageSetup
+ */
 GtkPageSetup *
 ev_print_operation_get_default_page_setup (EvPrintOperation *op)
 {

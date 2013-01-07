@@ -307,6 +307,11 @@ ev_job_scheduler_update_job (EvJob         *job,
 	}
 }
 
+/**
+ * ev_job_scheduler_get_running_thread_job:
+ *
+ * Returns: (transfer none): an #EvJob
+ */
 EvJob *
 ev_job_scheduler_get_running_thread_job (void)
 {
