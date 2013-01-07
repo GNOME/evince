@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: as\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evince&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2013-01-03 10:04+0000\n"
-"PO-Revision-Date: 2013-01-04 13:20+0530\n"
+"POT-Creation-Date: 2013-01-05 12:12+0000\n"
+"PO-Revision-Date: 2013-01-07 17:57+0530\n"
 "Last-Translator: Nilamdyuti Goswami <ngoswami@redhat.com>\n"
 "Language-Team: Assamese <kde-i18n-doc@kde.org>\n"
 "Language: as_IN\n"
@@ -97,80 +97,115 @@ msgstr "DVI দস্তাবেজৰ বিন্যাস সঠিক ন�
 msgid "DVI Documents"
 msgstr "DVI দস্তাবেজসমূহ"
 
-#: ../backend/pdf/ev-poppler.cc:639
+#: ../backend/pdf/ev-poppler.cc:640
 msgid "This work is in the Public Domain"
 msgstr "এই কাৰ্য্য ৰাজহুৱা ডমেইনত আছে"
 
 #. translators: this is the document security state
-#: ../backend/pdf/ev-poppler.cc:892 ../backend/pdf/ev-poppler.cc:898
+#: ../backend/pdf/ev-poppler.cc:893 ../backend/pdf/ev-poppler.cc:899
 msgid "Yes"
 msgstr "হয়"
 
 #. translators: this is the document security state
-#: ../backend/pdf/ev-poppler.cc:895 ../backend/pdf/ev-poppler.cc:898
+#: ../backend/pdf/ev-poppler.cc:896 ../backend/pdf/ev-poppler.cc:899
 msgid "No"
 msgstr "নহয়"
 
-#: ../backend/pdf/ev-poppler.cc:1032
+#: ../backend/pdf/ev-poppler.cc:1033
 msgid "Type 1"
 msgstr "ধৰণ 1"
 
-#: ../backend/pdf/ev-poppler.cc:1034
+#: ../backend/pdf/ev-poppler.cc:1035
 msgid "Type 1C"
 msgstr "ধৰণ 1C"
 
-#: ../backend/pdf/ev-poppler.cc:1036
+#: ../backend/pdf/ev-poppler.cc:1037
 msgid "Type 3"
 msgstr "ধৰণ 3"
 
-#: ../backend/pdf/ev-poppler.cc:1038
+#: ../backend/pdf/ev-poppler.cc:1039
 msgid "TrueType"
 msgstr "TrueType"
 
-#: ../backend/pdf/ev-poppler.cc:1040
+#: ../backend/pdf/ev-poppler.cc:1041
 msgid "Type 1 (CID)"
 msgstr "ধৰণ 1 (CID)"
 
-#: ../backend/pdf/ev-poppler.cc:1042
+#: ../backend/pdf/ev-poppler.cc:1043
 msgid "Type 1C (CID)"
 msgstr "ধৰণ 1C (CID)"
 
-#: ../backend/pdf/ev-poppler.cc:1044
+#: ../backend/pdf/ev-poppler.cc:1045
 msgid "TrueType (CID)"
 msgstr "TrueType (CID)"
 
-#: ../backend/pdf/ev-poppler.cc:1046
+#: ../backend/pdf/ev-poppler.cc:1047
 msgid "Unknown font type"
 msgstr "অজ্ঞাত ফন্টৰ ধৰণ"
 
-#: ../backend/pdf/ev-poppler.cc:1077
+#: ../backend/pdf/ev-poppler.cc:1091
+msgid ""
+"This document contains non-embedded fonts that are not from the PDF Standard "
+"14 fonts. If the substitute fonts selected by fontconfig are not the same as "
+"the fonts used to create the PDF, the rendering may not be correct."
+msgstr ""
+"এই দস্তাবেজে নন-এমবেডেড ফন্টসমূহ অন্তৰ্ভুক্ত কৰে যি PDF প্ৰামাণিক ১৪ "
+"ফন্টসমূহৰ পৰা নহয়। "
+"যদি fontconfig দ্বাৰা নিৰ্বাচন কৰা প্ৰতিস্থাপন ফন্টসমূহ PDF সৃষ্টি কৰিবলে "
+"ব্যৱহাৰ কৰা ফন্টৰ সৈতে "
+"একে নহয়, ৰেণ্ডাৰিং সঠিক নহবও পাৰে।"
+
+#: ../backend/pdf/ev-poppler.cc:1096
+msgid "All fonts are either standard or embedded."
+msgstr "সকলো ফন্ট প্ৰামাণিক অথবা এমবেডেড।"
+
+#: ../backend/pdf/ev-poppler.cc:1128
 msgid "No name"
 msgstr "নামবিহীন"
 
-#: ../backend/pdf/ev-poppler.cc:1082 ../libview/ev-print-operation.c:1893
+#: ../backend/pdf/ev-poppler.cc:1133 ../libview/ev-print-operation.c:1893
 #: ../properties/ev-properties-view.c:187
 msgid "None"
 msgstr "শূণ্য"
 
-#: ../backend/pdf/ev-poppler.cc:1089
+#: ../backend/pdf/ev-poppler.cc:1140
 msgid "Embedded subset"
 msgstr "অন্তৰ্ভুক্ত কৰা উপসংহতি"
 
-#: ../backend/pdf/ev-poppler.cc:1091
+#: ../backend/pdf/ev-poppler.cc:1142
 msgid "Embedded"
 msgstr "অন্তৰ্ভুক্ত"
 
-#: ../backend/pdf/ev-poppler.cc:1093
+#: ../backend/pdf/ev-poppler.cc:1144
 msgid "Not embedded"
 msgstr "অন্তৰ্ভুক্ত নহয়"
 
-#: ../backend/pdf/ev-poppler.cc:1098
+#. Translators: string starting with a space
+#. * because it is directly appended to the font
+#. * type. Example:
+#. * "Type 1 (One of the Standard 14 Fonts)"
+#.
+#: ../backend/pdf/ev-poppler.cc:1151
+msgid " (One of the Standard 14 Fonts)"
+msgstr " (প্ৰামাণিক 14 ফন্টসমূহৰ এটা)"
+
+#. Translators: string starting with a space
+#. * because it is directly appended to the font
+#. * type. Example:
+#. * "TrueType (Not one of the Standard 14 Fonts)"
+#.
+#: ../backend/pdf/ev-poppler.cc:1158
+msgid " (Not one of the Standard 14 Fonts)"
+msgstr " (প্ৰামাণিক ১৪ ফন্টসমূহৰ এটা নহয়)"
+
+#: ../backend/pdf/ev-poppler.cc:1165
 msgid "Encoding"
 msgstr "এনক'ডিং"
 
-#: ../backend/pdf/ev-poppler.cc:1099
-msgid "substituting with"
-msgstr "সৈতে প্ৰতিস্থাপন"
+#: ../backend/pdf/ev-poppler.cc:1166
+#| msgid "substituting with"
+msgid "Substituting with"
+msgstr "চিহ্নিত বস্তুৰ সৈতে প্ৰতিস্থাপন কৰা হৈছে"
 
 #: ../backend/pdf/pdfdocument.evince-backend.in.h:1
 msgid "PDF Documents"
@@ -271,7 +306,7 @@ msgid "Show session management options"
 msgstr "অধিবেশন ব্যৱস্থাপনা  বিকল্পসমূহ দেখুৱাওক"
 
 #. Manually set name and icon
-#: ../data/evince.desktop.in.in.h:1 ../shell/ev-window.c:4930
+#: ../data/evince.desktop.in.in.h:1 ../shell/ev-window.c:4914
 #: ../shell/ev-window-title.c:156 ../shell/main.c:312
 #, c-format
 msgid "Document Viewer"
@@ -569,58 +604,56 @@ msgid "The selected printer '%s' could not be found"
 msgstr "নিৰ্বাচিত প্ৰিন্টাৰ '%s' পোৱা নাযায়"
 
 #. Go menu
-#: ../previewer/ev-previewer-window.c:284 ../shell/ev-window.c:5838
+#: ../previewer/ev-previewer-window.c:284 ../shell/ev-window.c:5821
 msgid "_Previous Page"
 msgstr "পূৰ্ববৰ্তী পৃষ্ঠা (_P)"
 
-#: ../previewer/ev-previewer-window.c:285 ../shell/ev-window.c:5839
+#: ../previewer/ev-previewer-window.c:285 ../shell/ev-window.c:5822
 msgid "Go to the previous page"
 msgstr "পূৰ্ববৰ্তী পৃষ্ঠাত যাওক"
 
-#: ../previewer/ev-previewer-window.c:287 ../shell/ev-window.c:5841
+#: ../previewer/ev-previewer-window.c:287 ../shell/ev-window.c:5824
 msgid "_Next Page"
 msgstr "পৰবৰ্তী পৃষ্ঠা (_N)"
 
-#: ../previewer/ev-previewer-window.c:288 ../shell/ev-window.c:5842
+#: ../previewer/ev-previewer-window.c:288 ../shell/ev-window.c:5825
 msgid "Go to the next page"
 msgstr "পৰবৰ্তী পৃষ্ঠাত যাওক"
 
-#: ../previewer/ev-previewer-window.c:291 ../shell/ev-window.c:5825
+#: ../previewer/ev-previewer-window.c:291 ../shell/ev-window.c:5808
 msgid "Enlarge the document"
 msgstr "দস্তাবেজৰ আকাৰ বৃদ্ধি কৰক"
 
-#: ../previewer/ev-previewer-window.c:294 ../shell/ev-window.c:5828
+#: ../previewer/ev-previewer-window.c:294 ../shell/ev-window.c:5811
 msgid "Shrink the document"
 msgstr "দস্তাবেজৰ আকাৰ হ্ৰাস কৰক"
 
-#: ../previewer/ev-previewer-window.c:298 ../shell/ev-window.c:5803
+#: ../previewer/ev-previewer-window.c:298 ../shell/ev-window.c:5786
 msgid "Print this document"
 msgstr "এই দস্তাবেজ প্ৰিন্ট কৰক"
 
-#: ../previewer/ev-previewer-window.c:342 ../shell/ev-window.c:5954
-#| msgid "_First Page"
+#: ../previewer/ev-previewer-window.c:342 ../shell/ev-window.c:5937
 msgid "Fit Pa_ge"
 msgstr "পৃষ্ঠাৰ সৈতে খাপ খাওক (_g)"
 
-#: ../previewer/ev-previewer-window.c:343 ../shell/ev-window.c:5955
+#: ../previewer/ev-previewer-window.c:343 ../shell/ev-window.c:5938
 msgid "Make the current document fill the window"
 msgstr "সম্পূৰ্ণ উইন্ডোত প্ৰদৰ্শনৰ বাবে দস্তাবেজৰ আকাৰ বৃদ্ধি কৰক"
 
-#: ../previewer/ev-previewer-window.c:345 ../shell/ev-window.c:5957
-#| msgid "Fit Width"
+#: ../previewer/ev-previewer-window.c:345 ../shell/ev-window.c:5940
 msgid "Fit _Width"
 msgstr "প্ৰস্থৰ সৈতে খাপ খাওক (_W)"
 
-#: ../previewer/ev-previewer-window.c:346 ../shell/ev-window.c:5958
+#: ../previewer/ev-previewer-window.c:346 ../shell/ev-window.c:5941
 msgid "Make the current document fill the window width"
 msgstr ""
 "উইন্ডোৰ সম্পূৰ্ণ প্ৰস্থৰ আকাৰ অনুসাৰে প্ৰদৰ্শনৰ বাবে দস্তাবেজৰ আকাৰ বৃদ্ধি কৰক"
 
-#: ../previewer/ev-previewer-window.c:539 ../shell/ev-window.c:6077
+#: ../previewer/ev-previewer-window.c:539 ../shell/ev-window.c:6060
 msgid "Page"
 msgstr "পৃষ্ঠা"
 
-#: ../previewer/ev-previewer-window.c:540 ../shell/ev-window.c:6078
+#: ../previewer/ev-previewer-window.c:540 ../shell/ev-window.c:6061
 msgid "Select Page"
 msgstr "পৃষ্ঠা নিৰ্বাচন কৰক"
 
@@ -815,7 +848,7 @@ msgstr "খোলক"
 msgid "Close"
 msgstr "বন্ধ কৰক"
 
-#: ../shell/ev-keyring.c:102
+#: ../shell/ev-keyring.c:86
 #, c-format
 msgid "Password for document %s"
 msgstr "%s দস্তাবেজৰ পাছৱাৰ্ড"
@@ -890,11 +923,11 @@ msgstr "ফন্টসমূহ"
 msgid "Document License"
 msgstr "দস্তাবেজ অনুজ্ঞা"
 
-#: ../shell/ev-properties-fonts.c:132
+#: ../shell/ev-properties-fonts.c:142
 msgid "Font"
 msgstr "ফন্ট"
 
-#: ../shell/ev-properties-fonts.c:159
+#: ../shell/ev-properties-fonts.c:169
 #, c-format
 msgid "Gathering font information… %3d%%"
 msgstr "ফন্ট তথ্য সংগ্ৰহ কৰা হৈছে... %3d%%"
@@ -957,7 +990,7 @@ msgid "_Remove Bookmark"
 msgstr "পত্ৰচিহ্ন আতৰাওক (_R)"
 
 #: ../shell/ev-sidebar-bookmarks.c:312 ../shell/ev-window.c:899
-#: ../shell/ev-window.c:4665
+#: ../shell/ev-window.c:4649
 #, c-format
 msgid "Page %s"
 msgstr "পৃষ্ঠা %s"
@@ -1156,7 +1189,7 @@ msgstr "প্ৰিন্টৰ পিছত বন্ধ কৰক (_a)"
 msgid "Running in presentation mode"
 msgstr "প্ৰদৰ্শন অৱস্থাত চলি আছে"
 
-#: ../shell/ev-window.c:4926
+#: ../shell/ev-window.c:4910
 #, c-format
 msgid ""
 "Document Viewer\n"
@@ -1165,7 +1198,7 @@ msgstr ""
 "দস্তাবেজ দৰ্শক\n"
 "%s (%s) ব্যৱহাৰ কৰা হৈছে"
 
-#: ../shell/ev-window.c:4959
+#: ../shell/ev-window.c:4943
 msgid ""
 "Evince is free software; you can redistribute it and/or modify it under the "
 "terms of the GNU General Public License as published by the Free Software "
@@ -1179,7 +1212,7 @@ msgstr ""
 "কৰিব পাৰিব; হৈতো অনুজ্ঞাৰ সংস্কৰণ ২, অথবা (আপুনাৰ বিকল্পত) যিকোনো পৰৱৰ্তী "
 "সংস্কৰণ।\n"
 
-#: ../shell/ev-window.c:4963
+#: ../shell/ev-window.c:4947
 msgid ""
 "Evince is distributed in the hope that it will be useful, but WITHOUT ANY "
 "WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS "
@@ -1192,7 +1225,7 @@ msgstr ""
 "অধিক "
 "যানিবলৈ  GNU General Public License চাওক।\n"
 
-#: ../shell/ev-window.c:4967
+#: ../shell/ev-window.c:4951
 msgid ""
 "You should have received a copy of the GNU General Public License along with "
 "Evince; if not, write to the Free Software Foundation, Inc., 51 Franklin "
@@ -1202,15 +1235,15 @@ msgstr ""
 "পোৱা, Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, "
 "Boston, MA 02110-1301 USA লে লিখক\n"
 
-#: ../shell/ev-window.c:4992
+#: ../shell/ev-window.c:4976
 msgid "Evince"
 msgstr "Evince"
 
-#: ../shell/ev-window.c:4995
+#: ../shell/ev-window.c:4979
 msgid "© 1996–2012 The Evince authors"
 msgstr "© ১৯৯৬–২০১২ Evince লেখকসমূহ"
 
-#: ../shell/ev-window.c:5001
+#: ../shell/ev-window.c:4985
 msgid "translator-credits"
 msgstr ""
 "অমিতাক্ষ ফুকন (aphukan@fedoraproject.org), নীলমদ্যুতি গোস্বামী "
@@ -1220,356 +1253,353 @@ msgstr ""
 #. TRANS: Sometimes this could be better translated as
 #. "%d hit(s) on this page".  Therefore this string
 #. contains plural cases.
-#: ../shell/ev-window.c:5257
+#: ../shell/ev-window.c:5241
 #, c-format
 msgid "%d found on this page"
 msgid_plural "%d found on this page"
 msgstr[0] "এই পৃষ্ঠাত %d মিল বিচাৰি পোৱা গৈছে"
 msgstr[1] "এই পৃষ্ঠাত %d মিল বিচাৰি পোৱা গৈছে"
 
-#: ../shell/ev-window.c:5262
+#: ../shell/ev-window.c:5246
 msgid "Not found"
 msgstr "পোৱা নগল"
 
-#: ../shell/ev-window.c:5268
+#: ../shell/ev-window.c:5252
 #, c-format
 msgid "%3d%% remaining to search"
 msgstr "%3d%% সন্ধান অবশিষ্ট আছে"
 
-#: ../shell/ev-window.c:5783
+#: ../shell/ev-window.c:5766
 msgid "_Bookmarks"
 msgstr "পত্ৰচিহ্নসমূহ (_B)"
 
-#: ../shell/ev-window.c:5784
+#: ../shell/ev-window.c:5767
 msgid "_Recent"
 msgstr "শেহতীয়া (_R)"
 
 #. File menu
-#: ../shell/ev-window.c:5787 ../shell/ev-window.c:6118
+#: ../shell/ev-window.c:5770 ../shell/ev-window.c:6101
 msgid "_Open…"
 msgstr "খোলক (_O)…"
 
-#: ../shell/ev-window.c:5788 ../shell/ev-window.c:6119
+#: ../shell/ev-window.c:5771 ../shell/ev-window.c:6102
 msgid "Open an existing document"
 msgstr "কোনো উপস্থিত দস্তাবেজ খোলক"
 
-#: ../shell/ev-window.c:5790
+#: ../shell/ev-window.c:5773
 msgid "Op_en a Copy"
 msgstr "এটা কপি খোলক (_e)"
 
-#: ../shell/ev-window.c:5791
+#: ../shell/ev-window.c:5774
 msgid "Open a copy of the current document in a new window"
 msgstr "বৰ্তমান দস্তাবেজৰ এটা কপি এটা নতুন উইন্ডোত খোলক"
 
-#: ../shell/ev-window.c:5793
+#: ../shell/ev-window.c:5776
 msgid "_Save a Copy…"
 msgstr "এটা কপি সংৰক্ষণ কৰক (_S)…"
 
-#: ../shell/ev-window.c:5794
+#: ../shell/ev-window.c:5777
 msgid "Save a copy of the current document"
 msgstr "বৰ্তমান দস্তাবেজৰ এটা কপি সংৰক্ষণ কৰক"
 
-#: ../shell/ev-window.c:5796
+#: ../shell/ev-window.c:5779
 msgid "Send _To..."
 msgstr "লে পঠাওক (_T)..."
 
-#: ../shell/ev-window.c:5797
+#: ../shell/ev-window.c:5780
 msgid "Send current document by mail, instant message..."
 msgstr "বৰ্তমান দস্তাবেজক মেইল, তৎক্ষনাত বাৰ্তা দ্বাৰা পঠাওক..."
 
-#: ../shell/ev-window.c:5799
+#: ../shell/ev-window.c:5782
 msgid "Open Containing _Folder"
 msgstr "অন্তৰ্ভুক্ত ফোল্ডাৰ খোলক (_F)"
 
-#: ../shell/ev-window.c:5800
+#: ../shell/ev-window.c:5783
 msgid "Show the folder which contains this file in the file manager"
 msgstr "ফাইল ব্যৱস্থাপকত এই ফাইল থকা ফোল্ডাৰটো দেখুৱাওক"
 
-#: ../shell/ev-window.c:5802
+#: ../shell/ev-window.c:5785
 msgid "_Print…"
 msgstr "প্ৰিন্ট কৰক (_P)…"
 
-#: ../shell/ev-window.c:5805
+#: ../shell/ev-window.c:5788
 msgid "P_roperties"
 msgstr "বৈশিষ্টসমূহ (_r)"
 
-#: ../shell/ev-window.c:5813
+#: ../shell/ev-window.c:5796
 msgid "Select _All"
 msgstr "সমস্ত নিৰ্বাচন কৰক (_A)"
 
-#: ../shell/ev-window.c:5815
+#: ../shell/ev-window.c:5798
 msgid "Rotate _Left"
 msgstr "বাঁওফালে ঘুৰাওক (_L)"
 
-#: ../shell/ev-window.c:5817
+#: ../shell/ev-window.c:5800
 msgid "Rotate _Right"
 msgstr "সোঁফালে ঘুৰাওক (_R)"
 
-#: ../shell/ev-window.c:5819
+#: ../shell/ev-window.c:5802
 msgid "Save Current Settings as _Default"
 msgstr "বৰ্তমান সংহতিসমূহক অবিকল্পিত হিচাপে সংৰক্ষণ কৰক (_D)"
 
-#: ../shell/ev-window.c:5830
+#: ../shell/ev-window.c:5813
 msgid "_Reload"
 msgstr "পুনৰ ল'ড কৰক (_R)"
 
-#: ../shell/ev-window.c:5831
+#: ../shell/ev-window.c:5814
 msgid "Reload the document"
 msgstr "দস্তাবেজ পুনৰ ল'ড কৰক"
 
-#: ../shell/ev-window.c:5834
+#: ../shell/ev-window.c:5817
 msgid "Auto_scroll"
 msgstr "স্বচালিত স্ক্ৰল (_s)"
 
-#: ../shell/ev-window.c:5844
+#: ../shell/ev-window.c:5827
 msgid "_First Page"
 msgstr "প্ৰথম পৃষ্ঠা (_F)"
 
-#: ../shell/ev-window.c:5845
+#: ../shell/ev-window.c:5828
 msgid "Go to the first page"
 msgstr "প্ৰথম পৃষ্ঠাত যাওক"
 
-#: ../shell/ev-window.c:5847
+#: ../shell/ev-window.c:5830
 msgid "_Last Page"
 msgstr "সৰ্বশেষ পৃষ্ঠা (_L)"
 
-#: ../shell/ev-window.c:5848
+#: ../shell/ev-window.c:5831
 msgid "Go to the last page"
 msgstr "শেষ পৃষ্ঠাত যাওক"
 
-#: ../shell/ev-window.c:5850
+#: ../shell/ev-window.c:5833
 msgid "Go to Pa_ge"
 msgstr "পৃষ্ঠালে যাওক (_g)"
 
-#: ../shell/ev-window.c:5851
+#: ../shell/ev-window.c:5834
 msgid "Go to Page"
 msgstr "পৃষ্ঠালে যাওক"
 
 #. Bookmarks menu
-#: ../shell/ev-window.c:5855
+#: ../shell/ev-window.c:5838
 msgid "_Add Bookmark"
 msgstr "পত্ৰচিহ্ন যোগ কৰক (_A)"
 
-#: ../shell/ev-window.c:5856
+#: ../shell/ev-window.c:5839
 msgid "Add a bookmark for the current page"
 msgstr "বৰ্তমান পৃষ্ঠাৰ বাবে এটা পত্ৰচিহ্ন যোগ কৰক"
 
-#: ../shell/ev-window.c:5859
+#: ../shell/ev-window.c:5842
 msgid "_About"
 msgstr "বিষয়ে (_A)"
 
 #. Toolbar-only
-#: ../shell/ev-window.c:5863
+#: ../shell/ev-window.c:5846
 msgid "Leave Fullscreen"
 msgstr "পূৰ্ণপৰ্দা ত্যাগ কৰক"
 
-#: ../shell/ev-window.c:5864
+#: ../shell/ev-window.c:5847
 msgid "Leave fullscreen mode"
 msgstr "পূৰ্ণপৰ্দা ত্যাগ কৰক"
 
-#: ../shell/ev-window.c:5866
+#: ../shell/ev-window.c:5849
 msgid "Start Presentation"
 msgstr "পৰিৱেশন আৰম্ভ কৰক"
 
-#: ../shell/ev-window.c:5867
+#: ../shell/ev-window.c:5850
 msgid "Start a presentation"
 msgstr "এটা পৰিৱেশন আৰম্ভ কৰক"
 
 #. View Menu
-#: ../shell/ev-window.c:5936
+#: ../shell/ev-window.c:5919
 msgid "Side _Pane"
 msgstr "কাষৰ পেইন (_P)"
 
-#: ../shell/ev-window.c:5937
+#: ../shell/ev-window.c:5920
 msgid "Show or hide the side pane"
 msgstr "কাষৰ পেইন প্ৰদৰ্শন কৰক অথবা লুকাওক"
 
-#: ../shell/ev-window.c:5939
+#: ../shell/ev-window.c:5922
 msgid "_Continuous"
 msgstr "অনবৰত (_C)"
 
-#: ../shell/ev-window.c:5940
+#: ../shell/ev-window.c:5923
 msgid "Show the entire document"
 msgstr "সম্পূৰ্ণ দস্তাবেজ দেখুৱাওক"
 
-#: ../shell/ev-window.c:5942
+#: ../shell/ev-window.c:5925
 msgid "_Dual"
 msgstr "দ্বৈত (_D)"
 
-#: ../shell/ev-window.c:5943
-#| msgid "Show two pages at once with odd pages on the left"
+#: ../shell/ev-window.c:5926
 msgid "Show two pages at once"
 msgstr "একে সময়তে দুটা পৃষ্ঠা দেখুৱাওক"
 
-#: ../shell/ev-window.c:5945
-#| msgid "Dual (_Odd pages left)"
+#: ../shell/ev-window.c:5928
 msgid "_Odd pages left"
 msgstr "অযুগ্ম পৃষ্ঠা বাঁওফালে (_O)"
 
-#: ../shell/ev-window.c:5946
+#: ../shell/ev-window.c:5929
 msgid "Show odd pages on the left in dual mode"
 msgstr "অযুগ্ম পৃষ্ঠাসমূহ দ্বৈত অৱস্থাত বাঁওফালে দেখুৱাওক"
 
-#: ../shell/ev-window.c:5948
+#: ../shell/ev-window.c:5931
 msgid "_Fullscreen"
 msgstr "পূৰ্ণপৰ্দা (_F)"
 
-#: ../shell/ev-window.c:5949
+#: ../shell/ev-window.c:5932
 msgid "Expand the window to fill the screen"
 msgstr "পৰ্দাৰ সম্পূৰ্ণ আকাৰ অনুযায়ী প্ৰদৰ্শনৰ বাবে উইন্ডোৰ আকাৰ বৃদ্ধি কৰক"
 
-#: ../shell/ev-window.c:5951
+#: ../shell/ev-window.c:5934
 msgid "Pre_sentation"
 msgstr "পৰিৱেশন (_s)"
 
-#: ../shell/ev-window.c:5952
+#: ../shell/ev-window.c:5935
 msgid "Run document as a presentation"
 msgstr "পৰিৱেশন ৰূপে দস্তাবেজ প্ৰদৰ্শিত হ'ব"
 
-#: ../shell/ev-window.c:5960
+#: ../shell/ev-window.c:5943
 msgid "_Inverted Colors"
 msgstr "উলোটা ৰঙসমূহ (_I)"
 
-#: ../shell/ev-window.c:5961
+#: ../shell/ev-window.c:5944
 msgid "Show page contents with the colors inverted"
 msgstr "ৰঙ উলোটাই পৃষ্ঠা সমলসমূহ দেখুৱাওক"
 
-#: ../shell/ev-window.c:5964
+#: ../shell/ev-window.c:5947
 msgid "_Find…"
 msgstr "সন্ধান কৰক (_F)…"
 
-#: ../shell/ev-window.c:5965
+#: ../shell/ev-window.c:5948
 msgid "Find a word or phrase in the document"
 msgstr "দস্তাবেজত এটা শব্দ অথবা বাক্যাংশ সন্ধান কৰক"
 
 #. Links
-#: ../shell/ev-window.c:5973
+#: ../shell/ev-window.c:5956
 msgid "_Open Link"
 msgstr "লিঙ্ক খোলক (_O)"
 
-#: ../shell/ev-window.c:5975
+#: ../shell/ev-window.c:5958
 msgid "_Go To"
 msgstr "ইয়াত যাওক (_G)"
 
-#: ../shell/ev-window.c:5977
+#: ../shell/ev-window.c:5960
 msgid "Open in New _Window"
 msgstr "নতুন উইন্ডোত প্ৰদৰ্শন কৰক (_W)"
 
-#: ../shell/ev-window.c:5979
+#: ../shell/ev-window.c:5962
 msgid "_Copy Link Address"
 msgstr "লিঙ্ক দ্বাৰা চিহ্নিত অবস্থান কপি কৰক (_C)"
 
-#: ../shell/ev-window.c:5981
+#: ../shell/ev-window.c:5964
 msgid "_Save Image As…"
 msgstr "ছবিক এই হিচাপে সংৰক্ষণ কৰক (_S)…"
 
-#: ../shell/ev-window.c:5983
+#: ../shell/ev-window.c:5966
 msgid "Copy _Image"
 msgstr "ছবি কপি কৰক (_I)"
 
-#: ../shell/ev-window.c:5985
+#: ../shell/ev-window.c:5968
 msgid "Annotation Properties…"
 msgstr "বাৰ্তিক বৈশিষ্টসমূহ…"
 
-#: ../shell/ev-window.c:5990
+#: ../shell/ev-window.c:5973
 msgid "_Open Attachment"
 msgstr "এটাচমেন্ট খোলক (_O)"
 
-#: ../shell/ev-window.c:5992
+#: ../shell/ev-window.c:5975
 msgid "_Save Attachment As…"
 msgstr "এটাচমেন্টক এই হিচাপে সংৰক্ষণ কৰক (_S)…"
 
-#: ../shell/ev-window.c:6091
+#: ../shell/ev-window.c:6074
 msgid "Zoom"
 msgstr "জুম কৰক"
 
-#: ../shell/ev-window.c:6093
+#: ../shell/ev-window.c:6076
 msgid "Adjust the zoom level"
 msgstr "প্ৰদৰ্শনৰ মাত্ৰা পৰিবৰ্তন কৰক"
 
-#: ../shell/ev-window.c:6104
+#: ../shell/ev-window.c:6087
 msgid "Navigation"
 msgstr "দিশনিৰ্ণয়"
 
-#: ../shell/ev-window.c:6106
+#: ../shell/ev-window.c:6089
 msgid "Back"
 msgstr "পিছলৈ"
 
 #. translators: this is the history action
-#: ../shell/ev-window.c:6109
+#: ../shell/ev-window.c:6092
 msgid "Move across visited pages"
 msgstr "ভ্ৰমণ কৰা পৃষ্ঠাসমূহৰে স্থানান্তৰ কৰক"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:6138
+#: ../shell/ev-window.c:6121
 msgid "Open Folder"
 msgstr "ফোল্ডাৰ খোলক"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:6142
+#: ../shell/ev-window.c:6125
 msgid "Send To"
 msgstr "লে পঠাওক"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:6148
+#: ../shell/ev-window.c:6131
 msgid "Previous"
 msgstr "পূৰ্বাবস্থা"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:6153
+#: ../shell/ev-window.c:6136
 msgid "Next"
 msgstr "পৰবৰ্তী"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:6157
+#: ../shell/ev-window.c:6140
 msgid "Zoom In"
 msgstr "জুম ইন কৰক"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:6161
+#: ../shell/ev-window.c:6144
 msgid "Zoom Out"
 msgstr "জুম আউট কৰক"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:6165 ../shell/ev-zoom-action-widget.c:42
-#| msgid "_First Page"
+#: ../shell/ev-window.c:6148 ../shell/ev-zoom-action-widget.c:42
 msgid "Fit Page"
 msgstr "পৃষ্ঠাৰ সৈতে খাপ খাওক"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:6169 ../shell/ev-zoom-action-widget.c:43
+#: ../shell/ev-window.c:6152 ../shell/ev-zoom-action-widget.c:43
 msgid "Fit Width"
 msgstr "প্ৰস্থ অনুযায়ী নিৰ্ধাৰণ"
 
-#: ../shell/ev-window.c:6314 ../shell/ev-window.c:6330
+#: ../shell/ev-window.c:6297 ../shell/ev-window.c:6313
 msgid "Unable to launch external application."
 msgstr "বহিৰ্তম এপ্লিকেচন লঞ্চ কৰিবলে অক্ষম"
 
-#: ../shell/ev-window.c:6387
+#: ../shell/ev-window.c:6370
 msgid "Unable to open external link"
 msgstr "বহিৰ্তম লিঙ্ক খোলিবলে অক্ষম"
 
-#: ../shell/ev-window.c:6580
+#: ../shell/ev-window.c:6563
 msgid "Couldn't find appropriate format to save image"
 msgstr "ছবি সংৰক্ষণ কৰিবলে সঠিক বিন্যাস পোৱা নগল"
 
-#: ../shell/ev-window.c:6612
+#: ../shell/ev-window.c:6595
 msgid "The image could not be saved."
 msgstr "ছবি সংৰক্ষণ কৰিব নোৱাৰি।"
 
-#: ../shell/ev-window.c:6644
+#: ../shell/ev-window.c:6627
 msgid "Save Image"
 msgstr "ছবি সংৰক্ষণ কৰক"
 
-#: ../shell/ev-window.c:6775
+#: ../shell/ev-window.c:6758
 msgid "Unable to open attachment"
 msgstr "এটাচমেন্ট খোলিবলে অক্ষম"
 
-#: ../shell/ev-window.c:6831
+#: ../shell/ev-window.c:6814
 msgid "The attachment could not be saved."
 msgstr "এটাচমেন্ট সংৰক্ষণ কৰিবলৈ ব্যৰ্থ।"
 
-#: ../shell/ev-window.c:6876
+#: ../shell/ev-window.c:6859
 msgid "Save Attachment"
 msgstr "এটাচমেন্ট সংৰক্ষণ কৰক "
 
