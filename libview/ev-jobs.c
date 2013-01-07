@@ -261,6 +261,13 @@ ev_job_failed (EvJob       *job,
 	ev_job_emit_finished (job);                                                                                                               
 }
 
+/**
+ * ev_job_failed_from_error:
+ * @job: an #EvJob
+ * @error: a #GError
+ *
+ * Rename to: ev_job_failed
+ */
 void
 ev_job_failed_from_error (EvJob  *job,
 			  GError *error)
