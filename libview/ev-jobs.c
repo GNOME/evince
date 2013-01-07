@@ -1690,6 +1690,12 @@ ev_job_find_has_results (EvJobFind *job)
 	return job->has_results;
 }
 
+/**
+ * ev_job_find_get_results: (skip)
+ * @job: an #EvJobFind
+ *
+ * Returns: a #GList of #GList<!-- -->s containing #EvRectangle<!-- -->s
+ */
 GList **
 ev_job_find_get_results (EvJobFind *job)
 {

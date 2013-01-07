@@ -5929,6 +5929,12 @@ ev_view_find_started (EvView *view, EvJobFind *job)
 	g_signal_connect (job, "updated", G_CALLBACK (find_job_updated_cb), view);
 }
 
+/**
+ * ev_view_find_changed: (skip)
+ * @view: an #EvView
+ * @results: the results as returned by ev_job_find_get_results()
+ * @page: page index
+ */
 void
 ev_view_find_changed (EvView *view, GList **results, gint page)
 {
