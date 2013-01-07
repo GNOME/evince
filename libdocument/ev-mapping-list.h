@@ -31,6 +31,9 @@ G_BEGIN_DECLS
 
 typedef struct _EvMappingList EvMappingList;
 
+#define        EV_TYPE_MAPPING_LIST        (ev_mapping_list_get_type())
+GType          ev_mapping_list_get_type    (void) G_GNUC_CONST;
+
 EvMappingList *ev_mapping_list_new         (guint          page,
 					    GList         *list,
 					    GDestroyNotify data_destroy_func);
