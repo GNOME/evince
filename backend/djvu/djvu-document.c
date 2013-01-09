@@ -319,6 +319,7 @@ djvu_document_render (EvDocument      *document,
 	ddjvu_rect_t prect;
 	ddjvu_page_t *d_page;
 	ddjvu_page_rotation_t rotation;
+	gint buffer_modified;
 	double page_width, page_height, tmp;
 
 	d_page = ddjvu_page_create_by_pageno (djvu_document->d_document, rc->page->index);
@@ -354,6 +355,7 @@ djvu_document_render (EvDocument      *document,
 
 	surface = cairo_image_surface_create (CAIRO_FORMAT_RGB24,
 					      page_width, page_height);
+
 	rowstride = cairo_image_surface_get_stride (surface);
 	pixels = (gchar *)cairo_image_surface_get_data (surface);
 
@@ -365,14 +367,22 @@ djvu_document_render (EvDocument      *document,
 
 	ddjvu_page_set_rotation (d_page, rotation);
 	
-	ddjvu_page_render (d_page, DDJVU_RENDER_COLOR,
-			   &prect,
-			   &rrect,
-			   djvu_document->d_format,
-			   rowstride,
-			   pixels);
+	buffer_modified = ddjvu_page_render (d_page, DDJVU_RENDER_COLOR,
+					     &prect,
+					     &rrect,
+					     djvu_document->d_format,
+					     rowstride,
+					     pixels);
 
-	cairo_surface_mark_dirty (surface);
+	if (!buffer_modified) {
+		cairo_t *cr = cairo_create (surface);
+
+		cairo_set_source_rgb (cr, 1.0, 1.0, 1.0);
+		cairo_paint (cr);
+		cairo_destroy (cr);
+	} else {
+		cairo_surface_mark_dirty (surface);
+	}
 
 	return surface;
 }
