@@ -35,6 +35,7 @@ struct _EvDocumentModel
 	gint rotation;
 	gdouble scale;
 	EvSizingMode sizing_mode;
+	EvPageLayout page_layout;
 	guint continuous : 1;
 	guint dual_page  : 1;
 	guint dual_page_odd_left : 1;
@@ -68,7 +69,8 @@ enum {
 	PROP_DUAL_PAGE_ODD_LEFT,
 	PROP_FULLSCREEN,
 	PROP_MIN_SCALE,
-	PROP_MAX_SCALE
+	PROP_MAX_SCALE,
+	PROP_PAGE_LAYOUT
 };
 
 enum
@@ -133,6 +135,9 @@ ev_document_model_set_property (GObject      *object,
 	case PROP_CONTINUOUS:
 		ev_document_model_set_continuous (model, g_value_get_boolean (value));
 		break;
+	case PROP_PAGE_LAYOUT:
+		ev_document_model_set_page_layout (model, g_value_get_enum (value));
+		break;
 	case PROP_DUAL_PAGE:
 		ev_document_model_set_dual_page (model, g_value_get_boolean (value));
 		break;
@@ -182,6 +187,9 @@ ev_document_model_get_property (GObject    *object,
 		break;
 	case PROP_CONTINUOUS:
 		g_value_set_boolean (value, ev_document_model_get_continuous (model));
+		break;
+	case PROP_PAGE_LAYOUT:
+		g_value_set_enum (value, model->page_layout);
 		break;
 	case PROP_DUAL_PAGE:
 		g_value_set_boolean (value, ev_document_model_get_dual_page (model));
@@ -272,6 +280,15 @@ ev_document_model_class_init (EvDocumentModelClass *klass)
 							    EV_SIZING_FIT_WIDTH,
 							    G_PARAM_READWRITE |
                                                             G_PARAM_STATIC_STRINGS));
+	g_object_class_install_property (g_object_class,
+					 PROP_PAGE_LAYOUT,
+					 g_param_spec_enum ("page-layout",
+							    "Page Layout",
+							    "Current page layout",
+							    EV_TYPE_PAGE_LAYOUT,
+							    EV_PAGE_LAYOUT_SINGLE,
+							    G_PARAM_READWRITE |
+							    G_PARAM_STATIC_STRINGS));
 	g_object_class_install_property (g_object_class,
 					 PROP_CONTINUOUS,
 					 g_param_spec_boolean ("continuous",
@@ -519,6 +536,47 @@ ev_document_model_get_sizing_mode (EvDocumentModel *model)
 	return model->sizing_mode;
 }
 
+static void
+_ev_document_model_set_dual_page_internal (EvDocumentModel *model,
+                                           gboolean         dual_page)
+{
+	g_return_if_fail (EV_IS_DOCUMENT_MODEL (model));
+
+	dual_page = dual_page != FALSE;
+
+	if (dual_page == model->dual_page)
+		return;
+
+	model->dual_page = dual_page;
+
+	g_object_notify (G_OBJECT (model), "dual-page");
+}
+
+void
+ev_document_model_set_page_layout (EvDocumentModel *model,
+				   EvPageLayout	    layout)
+{
+	g_return_if_fail (EV_IS_DOCUMENT_MODEL (model));
+
+	if (layout == model->page_layout)
+		return;
+
+	model->page_layout = layout;
+
+	g_object_notify (G_OBJECT (model), "page-layout");
+
+	/* set deprecated property as well */
+	_ev_document_model_set_dual_page_internal (model, layout == EV_PAGE_LAYOUT_DUAL);
+}
+
+EvPageLayout
+ev_document_model_get_page_layout (EvDocumentModel *model)
+{
+	g_return_val_if_fail (EV_IS_DOCUMENT_MODEL (model), EV_PAGE_LAYOUT_SINGLE);
+
+	return model->page_layout;
+}
+
 void
 ev_document_model_set_rotation (EvDocumentModel *model,
 				gint             rotation)
@@ -596,16 +654,12 @@ void
 ev_document_model_set_dual_page (EvDocumentModel *model,
 				 gboolean         dual_page)
 {
+	EvPageLayout layout;
+
 	g_return_if_fail (EV_IS_DOCUMENT_MODEL (model));
 
-	dual_page = dual_page != FALSE;
-
-	if (dual_page == model->dual_page)
-		return;
-
-	model->dual_page = dual_page;
-
-	g_object_notify (G_OBJECT (model), "dual-page");
+	layout = dual_page ? EV_PAGE_LAYOUT_DUAL : EV_PAGE_LAYOUT_SINGLE;
+	ev_document_model_set_page_layout (model, layout);
 }
 
 gboolean
