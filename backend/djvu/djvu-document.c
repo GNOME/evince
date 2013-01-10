@@ -36,8 +36,6 @@
 #include <glib/gi18n-lib.h>
 #include <string.h>
 
-#define SCALE_FACTOR 0.2
-
 enum {
 	PROP_0,
 	PROP_TITLE
@@ -278,7 +276,8 @@ static void
 document_get_page_size (DjvuDocument *djvu_document,
 			gint          page,
 			double       *width,
-			double       *height)
+			double       *height,
+			double	     *dpi)
 {
 	ddjvu_pageinfo_t info;
 	ddjvu_status_t r;
@@ -289,8 +288,12 @@ document_get_page_size (DjvuDocument *djvu_document,
 	if (r >= DDJVU_JOB_FAILED)
 		djvu_handle_events(djvu_document, TRUE, NULL);
 
-        *width = info.width * SCALE_FACTOR; 
-        *height = info.height * SCALE_FACTOR;
+	if (width)
+		*width = info.width * 72.0 / info.dpi;
+	if (height)
+		*height = info.height * 72.0 / info.dpi;
+	if (dpi)
+		*dpi = info.dpi;
 }
 
 static void
@@ -304,7 +307,7 @@ djvu_document_get_page_size (EvDocument   *document,
 	g_return_if_fail (djvu_document->d_document);
 
 	document_get_page_size (djvu_document, page->index,
-				width, height);
+				width, height, NULL);
 }
 
 static cairo_surface_t *
@@ -327,8 +330,10 @@ djvu_document_render (EvDocument      *document,
 	while (!ddjvu_page_decoding_done (d_page))
 		djvu_handle_events(djvu_document, TRUE, NULL);
 
-	page_width = ddjvu_page_get_width (d_page) * rc->scale * SCALE_FACTOR + 0.5;
-	page_height = ddjvu_page_get_height (d_page) * rc->scale * SCALE_FACTOR + 0.5;
+	document_get_page_size (djvu_document, rc->page->index, &page_width, &page_height, NULL);
+
+	page_width = page_width * rc->scale + 0.5;
+	page_height = page_height * rc->scale + 0.5;
 	
 	switch (rc->rotation) {
 	        case 90:
@@ -494,16 +499,15 @@ djvu_selection_get_selected_text (EvSelection     *selection,
 				  EvRectangle     *points)
 {
       	DjvuDocument *djvu_document = DJVU_DOCUMENT (selection);
-      	double width, height;
+	double width, height, dpi;
       	EvRectangle rectangle;
       	gchar *text;
-	     
-     	djvu_document_get_page_size (EV_DOCUMENT (djvu_document),
-				     page, &width, &height);
-      	rectangle.x1 = points->x1 / SCALE_FACTOR;
-	rectangle.y1 = (height - points->y2) / SCALE_FACTOR;
-	rectangle.x2 = points->x2 / SCALE_FACTOR;
-	rectangle.y2 = (height - points->y1) / SCALE_FACTOR;
+
+        document_get_page_size (djvu_document, page->index, &width, &height, &dpi);
+        rectangle.x1 = points->x1 * dpi / 72.0;
+        rectangle.y1 = (height - points->y2) * dpi / 72.0;
+        rectangle.x2 = points->x2 * dpi / 72.0;
+        rectangle.y2 = (height - points->y1) * dpi / 72.0;
 		
       	text = djvu_text_copy (djvu_document, page->index, &rectangle);
       
@@ -611,7 +615,7 @@ djvu_document_find_find_text (EvDocumentFind   *document,
 {
         DjvuDocument *djvu_document = DJVU_DOCUMENT (document);
 	miniexp_t page_text;
-	gdouble width, height;
+	gdouble width, height, dpi;
 	GList *matches = NULL, *l;
 
 	g_return_val_if_fail (text != NULL, NULL);
@@ -632,23 +636,22 @@ djvu_document_find_find_text (EvDocumentFind   *document,
 		djvu_text_page_free (tpage);
 		ddjvu_miniexp_release (djvu_document->d_document, page_text);
 	}
-
 	if (!matches)
 		return NULL;
 
-	document_get_page_size (djvu_document, page->index, &width, &height);
+	document_get_page_size (djvu_document, page->index, &width, &height, &dpi);
 	for (l = matches; l && l->data; l = g_list_next (l)) {
 		EvRectangle *r = (EvRectangle *)l->data;
 		gdouble      tmp;
 
 		tmp = r->y1;
 		
-		r->x1 *= SCALE_FACTOR;
-		r->x2 *= SCALE_FACTOR;
+		r->x1 *= 72.0 / dpi;
+		r->x2 *= 72.0 / dpi;
 
 		tmp = r->y1;
-		r->y1 = height - r->y2 * SCALE_FACTOR;
-		r->y2 = height - tmp * SCALE_FACTOR;
+		r->y1 = height - r->y2 * 72.0 / dpi;
+		r->y2 = height - tmp * 72.0 / dpi;
 	}
 	
 
@@ -672,7 +675,10 @@ static EvMappingList *
 djvu_document_links_get_links (EvDocumentLinks *document_links,
 			       EvPage          *page)
 {
-	return djvu_links_get_links (document_links, page->index, SCALE_FACTOR);
+	gdouble dpi;
+
+	document_get_page_size (DJVU_DOCUMENT (document_links), page->index, NULL, NULL, &dpi);
+	return djvu_links_get_links (document_links, page->index, 72.0 / dpi);
 }
 
 static void
