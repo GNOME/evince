@@ -39,9 +39,7 @@ G_DEFINE_TYPE (EvLoadingMessage, ev_loading_message, GTK_TYPE_BOX)
 static void
 ev_loading_message_init (EvLoadingMessage *message)
 {
-        GtkWidget       *widget = GTK_WIDGET (message);
-        GtkWidget       *label;
-        GtkStyleContext *context;
+        GtkWidget *label;
 
         gtk_container_set_border_width (GTK_CONTAINER (message), 10);
 
@@ -70,7 +68,6 @@ static void
 ev_loading_message_size_allocate (GtkWidget     *widget,
                                   GtkAllocation *allocation)
 {
-        EvLoadingMessage *message = EV_LOADING_MESSAGE (widget);
         GtkAllocation child_allocation;
         GtkBorder padding;
 
