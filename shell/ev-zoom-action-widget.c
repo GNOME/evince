@@ -235,16 +235,30 @@ fill_combo_model (GtkListStore *model,
         }
 }
 
+static gint
+get_max_zoom_level_label (void)
+{
+        gint i;
+        gint width = 0;
+
+        for (i = 0; i < G_N_ELEMENTS (zoom_levels); i++) {
+                int length;
+
+                length = zoom_levels[i].name ? strlen (_(zoom_levels[i].name)) : 0;
+                if (length > width)
+                        width = length;
+        }
+
+        return width;
+}
+
 static void
 ev_zoom_action_widget_init (EvZoomActionWidget *control)
 {
         EvZoomActionWidgetPrivate *priv;
         GtkWidget                 *entry;
         GtkWidget                 *vbox;
-        GtkCellRenderer           *renderer;
         GtkListStore              *store;
-        int                        i;
-        int                        width;
 
         control->priv = G_TYPE_INSTANCE_GET_PRIVATE (control, EV_TYPE_ZOOM_ACTION_WIDGET, EvZoomActionWidgetPrivate);
         priv = control->priv;
@@ -254,30 +268,14 @@ ev_zoom_action_widget_init (EvZoomActionWidget *control)
 
         priv->combo = gtk_combo_box_new_with_model_and_entry (GTK_TREE_MODEL (store));
         gtk_combo_box_set_focus_on_click (GTK_COMBO_BOX (priv->combo), FALSE);
-        g_object_unref (store);
-
-        entry = gtk_bin_get_child (GTK_BIN (priv->combo));
-
-        /* Find the longest name */
-        width = 0;
-        for (i = 0; i < 3; i++) {
-                if (zoom_levels[i].name != NULL) {
-                        int length;
-
-                        length = strlen (zoom_levels[i].name);
-                        if (length > width)
-                                width = length;
-                }
-        }
-        gtk_entry_set_width_chars (GTK_ENTRY (entry), width);
-
-        renderer = gtk_cell_renderer_text_new ();
-        gtk_cell_layout_pack_start (GTK_CELL_LAYOUT (priv->combo), renderer, FALSE);
-        gtk_cell_layout_set_attributes (GTK_CELL_LAYOUT (priv->combo), renderer,
-                                        "text", TEXT_COLUMN, NULL);
+        gtk_combo_box_set_entry_text_column (GTK_COMBO_BOX (priv->combo), TEXT_COLUMN);
         gtk_combo_box_set_row_separator_func (GTK_COMBO_BOX (priv->combo),
                                               (GtkTreeViewRowSeparatorFunc)row_is_separator,
                                               NULL, NULL);
+        g_object_unref (store);
+
+        entry = gtk_bin_get_child (GTK_BIN (priv->combo));
+        gtk_entry_set_width_chars (GTK_ENTRY (entry), get_max_zoom_level_label ());
 
         vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
         gtk_box_pack_start (GTK_BOX (vbox), priv->combo, TRUE, FALSE, 0);
