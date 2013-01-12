@@ -511,7 +511,6 @@ is_dual_page (EvView   *view,
 		double        doc_width;
 		double        doc_height;
 		GtkAllocation allocation;
-		int n_pages;
 
 		screen = gtk_widget_get_screen (GTK_WIDGET (view));
 		scale = ev_document_misc_get_screen_dpi (screen) / 72.0;
