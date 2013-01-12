@@ -185,15 +185,9 @@ combo_format_entry_text (GtkComboBox        *combo,
                          const gchar        *path,
                          EvZoomActionWidget *control)
 {
-        GtkTreeModel *model;
-        GtkTreeIter   iter;
-        gchar        *text;
+        GtkWidget *entry = gtk_bin_get_child (GTK_BIN (combo));
 
-        model = gtk_combo_box_get_model (combo);
-        gtk_tree_model_get_iter_from_string (model, &iter, path);
-        gtk_tree_model_get (model, &iter, TEXT_COLUMN, &text, -1);
-
-        return text;
+        return g_strdup (gtk_entry_get_text (GTK_ENTRY (entry)));
 }
 
 static gboolean
