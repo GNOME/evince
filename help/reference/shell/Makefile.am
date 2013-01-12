@@ -90,8 +90,6 @@ GTKDOC_CFLAGS = \
 	-I$(top_builddir)				\
 	-I$(top_srcdir)/shell				\
 	-I$(top_builddir)/shell				\
-	-I$(top_srcdir)/cut-n-paste/zoom-control/	\
-	-I$(top_srcdir)/cut-n-paste/toolbar-editor/	\
 	-I$(top_srcdir)/libdocument			\
 	-I$(top_builddir)/libdocument			\
 	-I$(top_srcdir)/libview				\
@@ -115,8 +113,6 @@ FILTER_OUT = \
 	$(top_builddir)/shell/evinced-ev-daemon-gdbus-generated.o
 
 GTKDOC_LIBS = \
-	$(top_builddir)/cut-n-paste/zoom-control/libephyzoom.la		\
-	$(top_builddir)/cut-n-paste/toolbar-editor/libtoolbareditor.la	\
 	$(top_builddir)/cut-n-paste/gimpcellrenderertoggle/libgimpcellrenderertoggle.la	\
 	$(top_builddir)/cut-n-paste/smclient/libsmclient.la		\
 	$(top_builddir)/properties/libevproperties.la			\
