@@ -382,7 +382,6 @@ static void
 egg_find_bar_init (EggFindBar *find_bar)
 {
   EggFindBarPrivate *priv;
-  GtkWidget *alignment;
   GtkWidget *box;
   GtkToolItem *item;
   GtkStyleContext *style_context;
@@ -399,9 +398,6 @@ egg_find_bar_init (EggFindBar *find_bar)
   style_context = gtk_widget_get_style_context (box);
   gtk_style_context_add_class (style_context, GTK_STYLE_CLASS_LINKED);
   gtk_style_context_add_class (style_context, GTK_STYLE_CLASS_RAISED);
-
-  alignment = gtk_alignment_new (0.0, 0.5, 1.0, 0.0);
-  gtk_alignment_set_padding (GTK_ALIGNMENT (alignment), 0, 0, 2, 2);
 
   /* Entry */
   priv->find_entry = gtk_entry_new ();
