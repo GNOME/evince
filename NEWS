@@ -1,4 +1,89 @@
 ================
+Evince     3.7.4
+================
+
+The UI has been re-designed to follow the GNOME 3 style:
+
+    * The main menu has been removed.
+    * A new toolbar has been added with a gear menu and view menu
+      containing the previous main menu items.
+    * The zoom control has now an entry that always shows the current
+      zoom factor and allows to enter custom zoom factors in addition
+      to the predefined ones.
+    * In the page selector, the entry and the total pages label are
+      linked to look like the same widget.
+    * The find bar has also been re-designed and moved to the top of
+      the main view.
+    * The toolbar in fullscreen mode is now automatically hidden.
+    * The view and thumbnail frames can now be styled with CSS.
+
+New features and improvements:
+
+    * The font properties dialog now shows a message to inform whether
+      any of the non-embedded font is one of the 14 standard fonts
+      (#527222, Alban Crequy)
+    * Migrate from libgnome-keyring to libsecret (#679855, Stef
+      Walter)
+    * Add a new layout mode that automatically determines if dual page
+      mode should be used when the window is large enough. It's not
+      used by Evince yet, but it's available to libview users
+      (#689468, William Jon McCann)
+    * Make EvLink:link-action and EvLinkAction:dest object properties
+      instead of pointers to be properly refcounted (#691214, William
+      Jon McCann)
+    * A new 'Automatic' zoom mode has been added to libview. It's not
+      used by Evince yet, but it's available to libview users
+      (#689468, William Jon McCann)
+    * Best fit mode has been renamed to Fit Page (#689468, William Jon
+      McCann)
+    * Make can-zoom-in and can-zoom-out properties of EvView (#690510,
+      William Jon McCann)
+    * Move the limits on zoom handling to libview (#690510, William
+      Jon McCann)
+    * Set a default value of 50MB for the pixbuf cache in EvView
+      (#689674, William Jon McCann)
+    * Add keywords to the desktop file to make gnome-shell search more
+      pleasant and useful (#687604, Matthias Clasen)
+
+Bug fixes:
+
+    * Fix a11y support by not using AtkFactory to create the
+      EvViewAccessible anymore (#685828, Carlos Garcia Campos, Daniel
+      Garcia )
+    * Fix empty pages in DJVU document to be white instead of black
+      (#669017, José Aliste)
+    * Use new libtool syntax in configure (Javier Jardón)
+    * Remove obsolete autoconf macros (Javier Jardón)
+    * Fix the error message shown when postscript is not supported by
+      the selected printer (#683528, José Aliste)
+    * Fix the computation of the scale factor in fit page mode to make
+      sure scrollbars are never shown (#665856, José Aliste)
+
+Documentation:
+
+    * Added documentation for saving Current Settings as Default in
+      the FAQ section of help pages (#689238, Sindhu S)
+
+Translation updates:
+
+    * Khaled Hosny (ar)
+    * Nilamdyuti Goswami (as)
+    * Krasimir Chonov (bg)
+    * Dimitris Spingos (Δημήτρης Σπίγγος) (el)
+    * Daniel Mustieles (es)
+    * Mattias Põldaru (et)
+    * Fran Dieguez (gl)
+    * Yaron Shahrabani (he)
+    * Gabor Kelemen (hu)
+    * Baurzhan Muftakhidinov (kk)
+    * Aurimas Černius (lt)
+    * Kjartan Maraas (nb)
+    * Piotr Drąg (pl)
+    * Florencio Neves (pt_BR)
+    * Aleksej Kabanov (ru)
+    * Matej Urbančič (sl)
+
+================
 Evince     3.7.1
 ================
 
