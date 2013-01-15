@@ -233,6 +233,23 @@ void _get_page_size_for_scale_and_rotation (EvDocument *document,
 					    gint        rotation,
 					    gint       *page_width,
 					    gint       *page_height);
+void _ev_view_transform_view_point_to_doc_point (EvView       *view,
+						 GdkPoint     *view_point,
+						 GdkRectangle *page_area,
+						 double       *doc_point_x,
+						 double       *doc_point_y);
+void _ev_view_transform_view_rect_to_doc_rect (EvView       *view,
+					       GdkRectangle *view_rect,
+					       GdkRectangle *page_area,
+					       EvRectangle  *doc_rect);
+void _ev_view_transform_doc_point_to_view_point (EvView   *view,
+						 int       page,
+						 EvPoint  *doc_point,
+						 GdkPoint *view_point);
+void _ev_view_transform_doc_rect_to_view_rect (EvView       *view,
+					       int           page,
+					       EvRectangle  *doc_rect,
+					       GdkRectangle *view_rect);
 
 #endif  /* __EV_VIEW_PRIVATE_H__ */
 
