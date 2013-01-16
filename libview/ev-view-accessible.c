@@ -469,14 +469,15 @@ ev_view_accessible_get_offset_at_point (AtkText      *text,
 					AtkCoordType coords)
 {
 	GtkWidget *widget, *toplevel;
+	EvView *view;
 	EvRectangle *areas = NULL;
 	EvRectangle *rect = NULL;
 	guint n_areas = 0;
-	guint i = 0;
-	EvPageCache *page_cache;
-	gint x_window, y_window, x_widget, y_widget;
-	gint offset=-1, rx, ry;
-	gdouble scale;
+	guint i;
+	gint x_widget, y_widget;
+	gint offset=-1;
+	GdkPoint view_point;
+	gdouble doc_x, doc_y;
 	GtkBorder border;
 	GdkRectangle page_area;
 
@@ -485,45 +486,36 @@ ev_view_accessible_get_offset_at_point (AtkText      *text,
 		/* State is defunct */
 		return -1;
 
-	page_cache = EV_VIEW (widget)->page_cache;
-	if (!page_cache)
+	view = EV_VIEW (widget);
+	if (!view->page_cache)
 		return -1;
 
-	ev_view_get_page_extents (EV_VIEW (widget), EV_VIEW (widget)->current_page,
-	                          &page_area, &border);
-
-	scale = EV_VIEW (widget)->scale;
-	ev_page_cache_get_text_layout (page_cache, EV_VIEW (widget)->current_page, &areas, &n_areas);
+	ev_page_cache_get_text_layout (view->page_cache, view->current_page, &areas, &n_areas);
 	if (!areas)
 		return -1;
 
-	rx = x;
-	ry = y;
-
-	rx -= page_area.x;
-	ry -= page_area.y;
-
-	rx += EV_VIEW (widget)->scroll_x;
-	ry += EV_VIEW (widget)->scroll_y;
-
+	view_point.x = x;
+	view_point.y = y;
 	toplevel = gtk_widget_get_toplevel (widget);
 	gtk_widget_translate_coordinates (widget, toplevel, 0, 0, &x_widget, &y_widget);
-	rx -= x_widget;
-	ry -= y_widget;
+	view_point.x -= x_widget;
+	view_point.y -= y_widget;
 
 	if (coords == ATK_XY_SCREEN) {
+		gint x_window, y_window;
+
 		gdk_window_get_origin (gtk_widget_get_window (toplevel), &x_window, &y_window);
-		rx -= x_window;
-		ry -= y_window;
+		view_point.x -= x_window;
+		view_point.y -= y_window;
 	}
 
-	rx /= scale;
-	ry /= scale;
+	ev_view_get_page_extents (view, view->current_page, &page_area, &border);
+	_ev_view_transform_view_point_to_doc_point (view, &view_point, &page_area, &doc_x, &doc_y);
 
 	for (i = 0; i < n_areas; i++) {
 		rect = areas + i;
-		if (rx >= rect->x1 && rx <= rect->x2 &&
-		    ry >= rect->y1 && ry <= rect->y2)
+		if (doc_x >= rect->x1 && doc_x <= rect->x2 &&
+		    doc_y >= rect->y1 && doc_y <= rect->y2)
 			offset = i;
 	}
 
