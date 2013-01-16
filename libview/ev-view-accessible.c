@@ -408,58 +408,48 @@ ev_view_accessible_get_character_extents (AtkText      *text,
 					  AtkCoordType coords)
 {
 	GtkWidget *widget, *toplevel;
+	EvView *view;
 	EvRectangle *areas = NULL;
-	EvRectangle *rect = NULL;
+	EvRectangle *doc_rect;
 	guint n_areas = 0;
-	EvPageCache *page_cache;
-	gint x_widget, y_widget, x_window, y_window;
-	gdouble scale;
-	GtkBorder border;
-	GdkRectangle page_area;
+	gint x_widget, y_widget;
+	GdkRectangle view_rect;
 
 	widget = gtk_accessible_get_widget (GTK_ACCESSIBLE (text));
 	if (widget == NULL)
 		/* State is defunct */
 		return;
 
-	page_cache = EV_VIEW (widget)->page_cache;
-	if (!page_cache)
+	view = EV_VIEW (widget);
+	if (!view->page_cache)
 		return;
 
-	ev_view_get_page_extents (EV_VIEW (widget), EV_VIEW (widget)->current_page,
-	                          &page_area, &border);
-
-	scale = EV_VIEW (widget)->scale;
-	ev_page_cache_get_text_layout (page_cache, EV_VIEW (widget)->current_page, &areas, &n_areas);
-	if (!areas)
+	ev_page_cache_get_text_layout (view->page_cache, view->current_page, &areas, &n_areas);
+	if (!areas || offset >= n_areas)
 		return;
 
-	if (offset >= n_areas)
-		return;
-
-	rect = areas + offset;
-	*x = (int)(rect->x1 * scale);
-	*y = (int)(rect->y1 * scale);
-
-	*width = (int)(fabs (rect->x2 - rect->x1) * scale);
-	*height = (int)(fabs (rect->y2 - rect->y1) * scale);
+	doc_rect = areas + offset;
+	_ev_view_transform_doc_rect_to_view_rect (view, view->current_page, doc_rect, &view_rect);
+	view_rect.x -= view->scroll_x;
+	view_rect.y -= view->scroll_y;
 
 	toplevel = gtk_widget_get_toplevel (widget);
 	gtk_widget_translate_coordinates (widget, toplevel, 0, 0, &x_widget, &y_widget);
-	*x += x_widget;
-	*y += y_widget;
+	view_rect.x += x_widget;
+	view_rect.y += y_widget;
 
 	if (coords == ATK_XY_SCREEN) {
+		gint x_window, y_window;
+
 		gdk_window_get_origin (gtk_widget_get_window (toplevel), &x_window, &y_window);
-		*x += x_window;
-		*y += y_window;
+		view_rect.x += x_window;
+		view_rect.y += y_window;
 	}
 
-	*x -= EV_VIEW (widget)->scroll_x;
-	*y -= EV_VIEW (widget)->scroll_y;
-
-	*x += page_area.x;
-	*y += page_area.y;
+	*x = view_rect.x;
+	*y = view_rect.y;
+	*width = view_rect.width;
+	*height = view_rect.height;
 }
 
 static gint
