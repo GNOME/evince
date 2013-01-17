@@ -29,6 +29,7 @@
 #include <evince-document.h>
 
 #include "ev-document-model.h"
+#include "ev-jobs.h"
 
 G_BEGIN_DECLS
 
