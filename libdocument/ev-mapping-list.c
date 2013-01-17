@@ -60,6 +60,15 @@ ev_mapping_list_find_custom (EvMappingList *mapping_list,
 	return NULL;
 }
 
+EvMapping *
+ev_mapping_list_nth (EvMappingList *mapping_list,
+                     guint          n)
+{
+        g_return_val_if_fail (mapping_list != NULL, NULL);
+
+        return (EvMapping *)g_list_nth_data (mapping_list->list, n);
+}
+
 gpointer
 ev_mapping_list_get_data (EvMappingList *mapping_list,
 			  gdouble        x,
@@ -91,6 +100,14 @@ guint
 ev_mapping_list_get_page (EvMappingList *mapping_list)
 {
 	return mapping_list->page;
+}
+
+guint
+ev_mapping_list_length (EvMappingList *mapping_list)
+{
+        g_return_val_if_fail (mapping_list != NULL, 0);
+
+        return g_list_length (mapping_list->list);
 }
 
 EvMappingList *

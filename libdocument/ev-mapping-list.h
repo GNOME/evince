@@ -47,6 +47,9 @@ EvMapping     *ev_mapping_list_find_custom (EvMappingList *mapping_list,
 gpointer       ev_mapping_list_get_data    (EvMappingList *mapping_list,
 					    gdouble        x,
 					    gdouble        y);
+EvMapping     *ev_mapping_list_nth         (EvMappingList *mapping_list,
+                                            guint          n);
+guint          ev_mapping_list_length      (EvMappingList *mapping_list);
 
 G_END_DECLS
 
