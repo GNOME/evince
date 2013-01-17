@@ -192,9 +192,11 @@ ev_hyperlink_init (EvHyperlink *link)
 }
 
 static void ev_link_accessible_hyperlink_impl_iface_init (AtkHyperlinkImplIface *iface);
+static void ev_link_accessible_action_interface_init     (AtkActionIface        *iface);
 
 G_DEFINE_TYPE_WITH_CODE (EvLinkAccessible, ev_link_accessible, ATK_TYPE_OBJECT,
-			 G_IMPLEMENT_INTERFACE (ATK_TYPE_HYPERLINK_IMPL, ev_link_accessible_hyperlink_impl_iface_init))
+			 G_IMPLEMENT_INTERFACE (ATK_TYPE_HYPERLINK_IMPL, ev_link_accessible_hyperlink_impl_iface_init)
+			 G_IMPLEMENT_INTERFACE (ATK_TYPE_ACTION, ev_link_accessible_action_interface_init))
 
 static void
 ev_link_accessible_finalize (GObject *object)
@@ -242,6 +244,56 @@ static void
 ev_link_accessible_hyperlink_impl_iface_init (AtkHyperlinkImplIface *iface)
 {
         iface->get_hyperlink = ev_link_accessible_get_hyperlink;
+}
+
+static gboolean
+ev_link_accessible_action_do_action (AtkAction *atk_action,
+				     gint      i)
+{
+	EvLinkAccessiblePrivate *priv = EV_LINK_ACCESSIBLE (atk_action)->priv;
+	GtkWidget               *widget;
+
+	widget = gtk_accessible_get_widget (GTK_ACCESSIBLE (priv->view));
+	if (widget == NULL)
+		/* State is defunct */
+		return FALSE;
+
+	if (!ev_link_get_action (priv->link))
+		return FALSE;
+
+	ev_view_handle_link (EV_VIEW (widget), priv->link);
+
+	return TRUE;
+}
+
+static gint
+ev_link_accessible_action_get_n_actions (AtkAction *atk_action)
+{
+	return 1;
+}
+
+static const gchar *
+ev_link_accessible_action_get_description (AtkAction *atk_action,
+					   gint      i)
+{
+	/* TODO */
+	return NULL;
+}
+
+static const gchar *
+ev_link_accessible_action_get_name (AtkAction *atk_action,
+				    gint      i)
+{
+	return i == 0 ? "activate" : NULL;
+}
+
+static void
+ev_link_accessible_action_interface_init (AtkActionIface *iface)
+{
+	iface->do_action = ev_link_accessible_action_do_action;
+	iface->get_n_actions = ev_link_accessible_action_get_n_actions;
+	iface->get_description = ev_link_accessible_action_get_description;
+	iface->get_name = ev_link_accessible_action_get_name;
 }
 
 EvLinkAccessible *
