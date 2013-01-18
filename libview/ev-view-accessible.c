@@ -27,10 +27,12 @@
 #include "ev-selection.h"
 #include "ev-page-cache.h"
 #include "ev-view-accessible.h"
+#include "ev-link-accessible.h"
 #include "ev-view-private.h"
 
-static void ev_view_accessible_text_iface_init   (AtkTextIface *iface);
-static void ev_view_accessible_action_iface_init (AtkActionIface *iface);
+static void ev_view_accessible_text_iface_init      (AtkTextIface      *iface);
+static void ev_view_accessible_action_iface_init    (AtkActionIface    *iface);
+static void ev_view_accessible_hypertext_iface_init (AtkHypertextIface *iface);
 
 enum {
 	ACTION_SCROLL_UP,
@@ -53,17 +55,24 @@ static const gchar *const ev_view_accessible_action_descriptions[] =
 };
 
 struct _EvViewAccessiblePrivate {
-	/* Action */
-	gchar *action_descriptions[LAST_ACTION];
-	guint action_idle_handler;
+	guint         current_page;
+
+	/* AtkAction */
+	gchar        *action_descriptions[LAST_ACTION];
+	guint         action_idle_handler;
 	GtkScrollType idle_scroll;
+
+	/* AtkText */
 	GtkTextBuffer *buffer;
-	guint current_page;
+
+	/* AtkHypertext */
+	GHashTable    *links;
 };
 
 G_DEFINE_TYPE_WITH_CODE (EvViewAccessible, ev_view_accessible, GTK_TYPE_CONTAINER_ACCESSIBLE,
-			 G_IMPLEMENT_INTERFACE (ATK_TYPE_TEXT, ev_view_accessible_text_iface_init);
-			 G_IMPLEMENT_INTERFACE (ATK_TYPE_ACTION, ev_view_accessible_action_iface_init);
+			 G_IMPLEMENT_INTERFACE (ATK_TYPE_TEXT, ev_view_accessible_text_iface_init)
+			 G_IMPLEMENT_INTERFACE (ATK_TYPE_ACTION, ev_view_accessible_action_iface_init)
+			 G_IMPLEMENT_INTERFACE (ATK_TYPE_HYPERTEXT, ev_view_accessible_hypertext_iface_init)
 	)
 
 static void
@@ -78,7 +87,10 @@ ev_view_accessible_finalize (GObject *object)
 		g_free (priv->action_descriptions [i]);
 	if (priv->buffer)
 		g_object_unref (priv->buffer);
+	if (priv->links)
+		g_hash_table_destroy (priv->links);
 
+	G_OBJECT_CLASS (ev_view_accessible_parent_class)->finalize (object);
 }
 
 static void
@@ -808,6 +820,117 @@ static void ev_view_accessible_action_iface_init (AtkActionIface * iface)
 	iface->get_description = ev_view_accessible_action_get_description;
 	iface->get_name = ev_view_accessible_action_get_name;
 	iface->set_description = ev_view_accessible_action_set_description;
+}
+
+static GHashTable *
+ev_view_accessible_get_links (EvViewAccessible *accessible,
+			      EvView           *view)
+{
+	EvViewAccessiblePrivate* priv = accessible->priv;
+
+	if (view->current_page == priv->current_page && priv->links)
+		return priv->links;
+
+	priv->current_page = view->current_page;
+
+	if (priv->links)
+		g_hash_table_destroy (priv->links);
+	priv->links = g_hash_table_new_full (g_direct_hash,
+					     g_direct_equal,
+					     NULL,
+					     (GDestroyNotify)g_object_unref);
+	return priv->links;
+}
+
+static AtkHyperlink *
+ev_view_accessible_get_link (AtkHypertext *hypertext,
+			     gint          link_index)
+{
+	GtkWidget        *widget;
+	EvView           *view;
+	GHashTable       *links;
+	EvMappingList    *link_mapping;
+	gint              n_links;
+	EvMapping        *mapping;
+	EvLinkAccessible *atk_link;
+
+	widget = gtk_accessible_get_widget (GTK_ACCESSIBLE (hypertext));
+	if (widget == NULL)
+		/* State is defunct */
+		return NULL;
+
+	view = EV_VIEW (widget);
+	if (!EV_IS_DOCUMENT_LINKS (view->document))
+		return NULL;
+
+	links = ev_view_accessible_get_links (EV_VIEW_ACCESSIBLE (hypertext), view);
+
+	atk_link = g_hash_table_lookup (links, GINT_TO_POINTER (link_index));
+	if (atk_link)
+		return atk_hyperlink_impl_get_hyperlink (ATK_HYPERLINK_IMPL (atk_link));
+
+	link_mapping = ev_page_cache_get_link_mapping (view->page_cache, view->current_page);
+	if (!link_mapping)
+		return NULL;
+
+	n_links = ev_mapping_list_length (link_mapping);
+	mapping = ev_mapping_list_nth (link_mapping, n_links - link_index - 1);
+	atk_link = ev_link_accessible_new (EV_VIEW_ACCESSIBLE (hypertext),
+					   EV_LINK (mapping->data),
+					   &mapping->area);
+	g_hash_table_insert (links, GINT_TO_POINTER (link_index), atk_link);
+
+	return atk_hyperlink_impl_get_hyperlink (ATK_HYPERLINK_IMPL (atk_link));
+}
+
+static gint
+ev_view_accessible_get_n_links (AtkHypertext *hypertext)
+{
+	GtkWidget     *widget;
+	EvView        *view;
+	EvMappingList *link_mapping;
+
+	widget = gtk_accessible_get_widget (GTK_ACCESSIBLE (hypertext));
+	if (widget == NULL)
+		/* State is defunct */
+		return 0;
+
+	view = EV_VIEW (widget);
+	if (!EV_IS_DOCUMENT_LINKS (view->document))
+		return 0;
+
+	link_mapping = ev_page_cache_get_link_mapping (view->page_cache, view->current_page);
+
+	return link_mapping ? ev_mapping_list_length (link_mapping) : 0;
+}
+
+static gint
+ev_view_accessible_get_link_index (AtkHypertext *hypertext,
+				   gint          offset)
+{
+	guint i;
+
+	for (i = 0; i < ev_view_accessible_get_n_links (hypertext); i++) {
+		AtkHyperlink *hyperlink;
+		gint          start_index, end_index;
+
+		hyperlink = ev_view_accessible_get_link (hypertext, i);
+		start_index = atk_hyperlink_get_start_index (hyperlink);
+		end_index = atk_hyperlink_get_end_index (hyperlink);
+
+		if (start_index <= offset && end_index >= offset)
+			return i;
+	}
+
+	return -1;
+}
+
+static void
+ev_view_accessible_hypertext_iface_init (AtkHypertextIface *iface)
+{
+	iface->get_link = ev_view_accessible_get_link;
+	iface->get_n_links = ev_view_accessible_get_n_links;
+	iface->get_link_index = ev_view_accessible_get_link_index;
 }
 
 AtkObject *
