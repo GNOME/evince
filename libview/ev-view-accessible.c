@@ -106,7 +106,8 @@ ev_view_accessible_initialize (AtkObject *obj,
 	atk_object_set_role (obj, ATK_ROLE_DOCUMENT_FRAME);
 }
 
-static void ev_view_accessible_class_init (EvViewAccessibleClass *klass)
+static void
+ev_view_accessible_class_init (EvViewAccessibleClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 	AtkObjectClass *atk_class = ATK_OBJECT_CLASS (klass);
@@ -117,7 +118,8 @@ static void ev_view_accessible_class_init (EvViewAccessibleClass *klass)
 	g_type_class_add_private (klass, sizeof (EvViewAccessiblePrivate));
 }
 
-static void ev_view_accessible_init (EvViewAccessible *accessible)
+static void
+ev_view_accessible_init (EvViewAccessible *accessible)
 {
 	accessible->priv = G_TYPE_INSTANCE_GET_PRIVATE (accessible, EV_TYPE_VIEW_ACCESSIBLE, EvViewAccessiblePrivate);
 }
@@ -151,10 +153,10 @@ ev_view_accessible_get_text_buffer (EvViewAccessible *accessible, EvView *view)
 	return priv->buffer;
 }
 
-static gchar*
+static gchar *
 ev_view_accessible_get_text (AtkText *text,
-			     gint    start_pos,
-			     gint    end_pos)
+			     gint     start_pos,
+			     gint     end_pos)
 {
 	GtkWidget *widget;
 	GtkTextIter start, end;
@@ -179,7 +181,7 @@ ev_view_accessible_get_text (AtkText *text,
 
 static gunichar
 ev_view_accessible_get_character_at_offset (AtkText *text,
-					    gint    offset)
+					    gint     offset)
 {
 	GtkWidget *widget;
 	GtkTextIter start, end;
@@ -525,9 +527,9 @@ ev_view_accessible_get_n_selections (AtkText *text)
 		return 0;
 }
 
-static gchar*
+static gchar *
 ev_view_accessible_get_selection (AtkText *text,
-				  gint    selection_num,
+				  gint     selection_num,
 				  gint    *start_pos,
 				  gint    *end_pos)
 {
@@ -560,8 +562,8 @@ ev_view_accessible_get_selection (AtkText *text,
 
 static gboolean
 ev_view_accessible_add_selection (AtkText *text,
-				  gint    start_pos,
-				  gint    end_pos)
+				  gint     start_pos,
+				  gint     end_pos)
 {
 	GtkWidget *widget;
 	GtkTextBuffer *buffer;
@@ -600,7 +602,7 @@ ev_view_accessible_add_selection (AtkText *text,
 
 static gboolean
 ev_view_accessible_remove_selection (AtkText *text,
-				     gint    selection_num)
+				     gint     selection_num)
 {
 	GtkWidget *widget;
 	GtkTextBuffer *buffer;
@@ -639,9 +641,9 @@ ev_view_accessible_remove_selection (AtkText *text,
 
 static gboolean
 ev_view_accessible_set_selection (AtkText *text,
-				  gint	  selection_num,
-				  gint    start_pos,
-				  gint    end_pos)
+				  gint	   selection_num,
+				  gint     start_pos,
+				  gint     end_pos)
 {
 	GtkWidget *widget;
 	GtkTextBuffer *buffer;
@@ -675,10 +677,9 @@ ev_view_accessible_set_selection (AtkText *text,
 	return retval;
 }
 
-static void ev_view_accessible_text_iface_init (AtkTextIface * iface)
+static void
+ev_view_accessible_text_iface_init (AtkTextIface * iface)
 {
-	g_return_if_fail (iface != NULL);
-
 	iface->get_text = ev_view_accessible_get_text;
 	iface->get_character_at_offset = ev_view_accessible_get_character_at_offset;
 	iface->get_text_before_offset = ev_view_accessible_get_text_before_offset;
@@ -696,7 +697,6 @@ static void ev_view_accessible_text_iface_init (AtkTextIface * iface)
 	iface->get_default_attributes = ev_view_accessible_get_default_attributes;
 	iface->get_character_extents = ev_view_accessible_get_character_extents;
 	iface->get_offset_at_point = ev_view_accessible_get_offset_at_point;
-	return;
 }
 
 static gboolean
@@ -713,7 +713,7 @@ ev_view_accessible_idle_do_action (gpointer data)
 
 static gboolean
 ev_view_accessible_action_do_action (AtkAction *action,
-				     gint      i)
+				     gint       i)
 {
 	EvViewAccessiblePrivate* priv = EV_VIEW_ACCESSIBLE (action)->priv;
 
@@ -746,7 +746,7 @@ ev_view_accessible_action_get_n_actions (AtkAction *action)
 
 static const gchar *
 ev_view_accessible_action_get_description (AtkAction *action,
-					   gint      i)
+					   gint       i)
 {
 	EvViewAccessiblePrivate* priv = EV_VIEW_ACCESSIBLE (action)->priv;
 
@@ -761,7 +761,7 @@ ev_view_accessible_action_get_description (AtkAction *action,
 
 static const gchar *
 ev_view_accessible_action_get_name (AtkAction *action,
-				    gint      i)
+				    gint       i)
 {
 	if (i < 0 || i >= LAST_ACTION)
 		return NULL;
@@ -771,7 +771,7 @@ ev_view_accessible_action_get_name (AtkAction *action,
 
 static gboolean
 ev_view_accessible_action_set_description (AtkAction   *action,
-					   gint        i,
+					   gint         i,
 					   const gchar *description)
 {
 	EvViewAccessiblePrivate* priv = EV_VIEW_ACCESSIBLE (action)->priv;
@@ -787,7 +787,8 @@ ev_view_accessible_action_set_description (AtkAction   *action,
 	return TRUE;
 }
 
-static void ev_view_accessible_action_iface_init (AtkActionIface * iface)
+static void
+ev_view_accessible_action_iface_init (AtkActionIface * iface)
 {
 	iface->do_action = ev_view_accessible_action_do_action;
 	iface->get_n_actions = ev_view_accessible_action_get_n_actions;
