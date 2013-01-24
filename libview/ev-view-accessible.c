@@ -209,100 +209,74 @@ ev_view_accessible_get_character_at_offset (AtkText *text,
 	return unichar;
 }
 
-static gchar*
-ev_view_accessible_get_text_before_offset (AtkText	    *text,
-					   gint		    offset,
-					   AtkTextBoundary  boundary_type,
-					   gint		    *start_offset,
-					   gint		    *end_offset)
+static gchar *
+ev_view_accessible_get_text_for_offset (EvViewAccessible *view_accessible,
+                                        gint              offset,
+                                        GailOffsetType    offset_type,
+                                        AtkTextBoundary   boundary_type,
+                                        gint             *start_offset,
+                                        gint             *end_offset)
 {
-	GtkWidget *widget;
-	gpointer layout = NULL;
-	GailTextUtil *gail_text = NULL;
-	gchar *retval = NULL;
-	GtkTextBuffer *buffer;
+        GtkWidget     *widget;
+        GtkTextBuffer *buffer;
+        GailTextUtil  *gail_text;
+        gchar         *retval;
 
-	widget = gtk_accessible_get_widget (GTK_ACCESSIBLE (text));
-	if (widget == NULL)
-		/* State is defunct */
-		return NULL;
+        widget = gtk_accessible_get_widget (GTK_ACCESSIBLE (view_accessible));
+        if (widget == NULL)
+                /* State is defunct */
+                return NULL;
 
-	buffer = ev_view_accessible_get_text_buffer (EV_VIEW_ACCESSIBLE (text), EV_VIEW (widget));
-	if (!buffer)
-		return NULL;
+        buffer = ev_view_accessible_get_text_buffer (view_accessible, EV_VIEW (widget));
+        if (!buffer)
+                return NULL;
 
-	gail_text = gail_text_util_new ();
-	gail_text_util_buffer_setup (gail_text, buffer);
-	retval = gail_text_util_get_text (gail_text, layout,
-	                                  GAIL_BEFORE_OFFSET, boundary_type,
-	                                  offset, start_offset, end_offset);
-	g_object_unref (gail_text);
+        gail_text = gail_text_util_new ();
+        gail_text_util_buffer_setup (gail_text, buffer);
+        retval = gail_text_util_get_text (gail_text, NULL, offset_type, boundary_type,
+                                          offset, start_offset, end_offset);
+        g_object_unref (gail_text);
 
-	return retval;
+        return retval;
 }
 
-static gchar*
-ev_view_accessible_get_text_at_offset (AtkText          *text,
-				       gint             offset,
-				       AtkTextBoundary  boundary_type,
-				       gint             *start_offset,
-				       gint             *end_offset)
+static gchar *
+ev_view_accessible_get_text_before_offset (AtkText        *text,
+                                           gint            offset,
+                                           AtkTextBoundary boundary_type,
+                                           gint           *start_offset,
+                                           gint           *end_offset)
 {
-	GtkWidget *widget;
-	gpointer layout = NULL;
-	GailTextUtil *gail_text = NULL;
-	gchar *retval = NULL;
-	GtkTextBuffer *buffer;
-
-	widget = gtk_accessible_get_widget (GTK_ACCESSIBLE (text));
-	if (widget == NULL)
-		/* State is defunct */
-		return NULL;
-
-	buffer = ev_view_accessible_get_text_buffer (EV_VIEW_ACCESSIBLE (text), EV_VIEW (widget));
-	if (!buffer)
-		return NULL;
-
-	gail_text = gail_text_util_new ();
-	gail_text_util_buffer_setup (gail_text, buffer);
-	retval = gail_text_util_get_text (gail_text, layout,
-	                                  GAIL_AT_OFFSET, boundary_type,
-	                                  offset, start_offset, end_offset);
-	g_object_unref (gail_text);
-
-	return retval;
+        return ev_view_accessible_get_text_for_offset (EV_VIEW_ACCESSIBLE (text),
+                                                       offset, GAIL_BEFORE_OFFSET,
+                                                       boundary_type,
+                                                       start_offset, end_offset);
 }
 
-static gchar*
-ev_view_accessible_get_text_after_offset (AtkText	    *text,
-					  gint		    offset,
-					  AtkTextBoundary   boundary_type,
-					  gint		    *start_offset,
-					  gint		    *end_offset)
+static gchar *
+ev_view_accessible_get_text_at_offset (AtkText        *text,
+                                       gint            offset,
+                                       AtkTextBoundary boundary_type,
+                                       gint           *start_offset,
+                                       gint           *end_offset)
 {
-	GtkWidget *widget;
-	gpointer layout = NULL;
-	GailTextUtil *gail_text = NULL;
-	gchar *retval = NULL;
-	GtkTextBuffer *buffer;
+        return ev_view_accessible_get_text_for_offset (EV_VIEW_ACCESSIBLE (text),
+                                                       offset, GAIL_AT_OFFSET,
+                                                       boundary_type,
+                                                       start_offset, end_offset);
+}
 
-	widget = gtk_accessible_get_widget (GTK_ACCESSIBLE (text));
-	if (widget == NULL)
-		/* State is defunct */
-		return NULL;
-
-	buffer = ev_view_accessible_get_text_buffer (EV_VIEW_ACCESSIBLE (text), EV_VIEW (widget));
-	if (!buffer)
-		return NULL;
-
-	gail_text = gail_text_util_new ();
-	gail_text_util_buffer_setup (gail_text, buffer);
-	retval = gail_text_util_get_text (gail_text, layout,
-	                                  GAIL_AFTER_OFFSET, boundary_type,
-	                                  offset, start_offset, end_offset);
-	g_object_unref (gail_text);
-
-	return retval;
+static gchar *
+ev_view_accessible_get_text_after_offset (AtkText        *text,
+                                          gint            offset,
+                                          AtkTextBoundary boundary_type,
+                                          gint            *start_offset,
+                                          gint           *end_offset)
+{
+        return ev_view_accessible_get_text_for_offset (EV_VIEW_ACCESSIBLE (text),
+                                                       offset, GAIL_AFTER_OFFSET,
+                                                       boundary_type,
+                                                       start_offset, end_offset);
 }
 
 static gint
