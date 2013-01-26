@@ -164,8 +164,6 @@ case "$with_platform" in
         # the hicolor-icon-theme does not have a pkgconfig file, on gnome we
         # require the gnome icon theme instead.
         SHELL_PLATFORM_PKGS="gnome-icon-theme >= $GNOME_ICON_THEME_REQUIRED"
-        # The totem-screensaver and egg_smclient code use x11 directly.
-        SHELL_PLATFORM_PKGS="$SHELL_PLATFORM_PKGS x11"
         ;;
   *)
         # On all other platforms we issue a warning about the runtime
@@ -237,7 +235,7 @@ if test "$with_smclient" != "no"; then
   AC_DEFINE([WITH_SMCLIENT],[1],[Define if smclient is enabled])
 
   case "$with_smclient" in
-    xsmp) SMCLIENT_PKGS="sm >= 1.0.0 ice" ;;
+    xsmp) SMCLIENT_PKGS="sm >= 1.0.0 ice x11" ;;
     *) SMCLIENT_PKGS="" ;;
   esac
 
