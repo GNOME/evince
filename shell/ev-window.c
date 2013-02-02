@@ -6179,7 +6179,8 @@ view_actions_focus_in_cb (GtkWidget *widget, GdkEventFocus *event, EvWindow *win
 	GObject *keys;
 
 	keys = ev_application_get_media_keys (EV_APP);
-	ev_media_player_keys_focused (EV_MEDIA_PLAYER_KEYS (keys));
+	if (keys)
+		ev_media_player_keys_focused (EV_MEDIA_PLAYER_KEYS (keys));
 #endif /* ENABLE_DBUS */
 
 	update_chrome_flag (window, EV_CHROME_RAISE_TOOLBAR, FALSE);

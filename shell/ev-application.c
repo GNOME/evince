@@ -528,8 +528,11 @@ ev_application_register_uri (EvApplication  *application,
 {
 	EvRegisterDocData *data;
 
-	if (!application->skeleton)
+	/* If connection hasn't been made fall back to opening without D-BUS features */
+	if (!application->skeleton) {
+		_ev_application_open_uri_at_dest (application, uri, screen, dest, mode, search_string, timestamp);
 		return;
+	}
 
 	if (application->doc_registered) {
 		/* Already registered, reload */
