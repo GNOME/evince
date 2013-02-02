@@ -1,4 +1,47 @@
 ================
+Evince     3.7.5
+================
+
+New features and improvements:
+
+    * Use DPI of pages to compute scaling factor in DJVU documents
+      (#580891, José Aliste)
+    * Show accelerators in gear menu (#692960, Carlos Garcia Campos)
+    * Show the gear menu with F10 (#692909, Carlos Garcia Campos)
+    * Improve the scrolling performance (#692988, Cosimo Cecchi)
+    * Add a lot of missing introspection annotations to libview and
+      libdocument (#691354, Cosimo Cecchi)
+    * Make document links accessible with Orca by implementing the
+      AtkHypertext interface (#639403, Carlos Garcia Campos)
+
+Bug fixes:
+
+    * Fix a crash when failed to connect to D-BUS daemon (#691672,
+      Brennan Shacklett)
+    * Fix the font color of annotation popup windows (#677471, Carlos
+      Garcia Campos)
+    * Move x11 dependency to xsmp support (#692591, Quentin Glidic)
+    * Add missing include to libdocument main public header (#692778,
+      William Jon McCann)
+    * Make introspection build against the internal libevdocument
+      (#692136, Alban Browaeys)
+    * Several fixes in gtk-doc comments (#691354, Cosimo Cecchi)
+
+Translation updates:
+
+    * Khaled Hosny (ar)
+    * Iñaki Larrañaga Murgoitio (eu)
+    * Fran Dieguez (gl)
+    * Kjartan Maraas (nb)
+    * Wouter Bolsterlee (nl)
+    * Piotr Drąg (pl)
+    * Matej Urbančič (sl)
+    * Miroslav Nikolić (sr@latin)
+    * Мирослав Николић (sr)
+    * Theppitak Karoonboonyanan (th)
+    * Gheyret Kenji (ug)
+
+================
 Evince     3.7.4
 ================
 
