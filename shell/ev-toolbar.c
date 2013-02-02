@@ -316,3 +316,12 @@ ev_toolbar_has_visible_popups (EvToolbar *ev_toolbar)
 
         return FALSE;
 }
+
+void
+ev_toolbar_action_menu_popup (EvToolbar *ev_toolbar)
+{
+        g_return_if_fail (EV_IS_TOOLBAR (ev_toolbar));
+
+        gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (ev_toolbar->priv->action_menu_button),
+                                      TRUE);
+}

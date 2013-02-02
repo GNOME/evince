@@ -4984,6 +4984,12 @@ ev_window_cmd_help_about (GtkAction *action, EvWindow *ev_window)
 }
 
 static void
+ev_window_cmd_action_menu (GtkAction *action, EvWindow *ev_window)
+{
+	ev_toolbar_action_menu_popup (EV_TOOLBAR (ev_window->priv->toolbar));
+}
+
+static void
 ev_window_view_sidebar_cb (GtkAction *action, EvWindow *ev_window)
 {
 	if (EV_WINDOW_IS_PRESENTATION (ev_window))
@@ -5903,6 +5909,8 @@ static const GtkActionEntry entries[] = {
 	  G_CALLBACK (ev_window_cmd_fit_page) },
 	{ "FitWidth", EV_STOCK_ZOOM_WIDTH, NULL, "w", NULL,
 	  G_CALLBACK (ev_window_cmd_fit_width) },
+	{ "F10", NULL, "", "F10", NULL,
+	  G_CALLBACK (ev_window_cmd_action_menu) },
 };
 
 /* Toggle items */
