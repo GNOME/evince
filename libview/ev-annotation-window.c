@@ -145,7 +145,6 @@ ev_annotation_window_set_color (EvAnnotationWindow *window,
 
         properties = gtk_style_properties_new ();
         gtk_style_properties_set (properties, 0,
-                                  "color", &rgba,
                                   "background-color", &rgba,
                                   NULL);
 
