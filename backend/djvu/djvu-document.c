@@ -331,32 +331,34 @@ djvu_document_render (EvDocument      *document,
 		djvu_handle_events(djvu_document, TRUE, NULL);
 
 	document_get_page_size (djvu_document, rc->page->index, &page_width, &page_height, NULL);
+	rotation = ddjvu_page_get_initial_rotation (d_page);
 
 	page_width = page_width * rc->scale + 0.5;
 	page_height = page_height * rc->scale + 0.5;
 	
 	switch (rc->rotation) {
 	        case 90:
-			rotation = DDJVU_ROTATE_90;
+			rotation += DDJVU_ROTATE_90;
 			tmp = page_height;
 			page_height = page_width;
 			page_width = tmp;
 			
 			break;
 	        case 180:
-			rotation = DDJVU_ROTATE_180;
+			rotation += DDJVU_ROTATE_180;
 			
 			break;
 	        case 270:
-			rotation = DDJVU_ROTATE_270;
+			rotation += DDJVU_ROTATE_270;
 			tmp = page_height;
 			page_height = page_width;
 			page_width = tmp;
 			
 			break;
 	        default:
-			rotation = DDJVU_ROTATE_0;
+			rotation += DDJVU_ROTATE_0;
 	}
+	rotation = rotation % 4;
 
 	surface = cairo_image_surface_create (CAIRO_FORMAT_RGB24,
 					      page_width, page_height);
