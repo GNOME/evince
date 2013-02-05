@@ -151,7 +151,11 @@ djvu_document_load (EvDocument  *document,
 	ddjvu_document_t *doc;
 	gchar *filename;
 	gboolean missing_files = FALSE;
+	gboolean check_for_missing_files = FALSE;
 	GError *djvu_error = NULL;
+	gint n_files;
+	gint i;
+	gchar *base;
 
 	/* FIXME: We could actually load uris  */
 	filename = g_filename_from_uri (uri, NULL, error);
@@ -207,35 +211,43 @@ djvu_document_load (EvDocument  *document,
 	g_free (djvu_document->uri);
 	djvu_document->uri = g_strdup (uri);
 
-	if (ddjvu_document_get_type (djvu_document->d_document) == DDJVU_DOCTYPE_INDIRECT) {
-		gint n_files;
-		gint i;
-		gchar *base;
+	djvu_document->n_pages = ddjvu_document_get_pagenum (djvu_document->d_document);
 
-		base = g_path_get_dirname (filename);
+	if (djvu_document->n_pages > 0) {
+		djvu_document->fileinfo_pages = g_new0 (ddjvu_fileinfo_t, djvu_document->n_pages);
+	}
 
-		n_files = ddjvu_document_get_filenum (djvu_document->d_document);
-		for (i = 0; i < n_files; i++) {
-			struct ddjvu_fileinfo_s fileinfo;
-			gchar *file;
+	if (ddjvu_document_get_type (djvu_document->d_document) == DDJVU_DOCTYPE_INDIRECT)
+		check_for_missing_files = TRUE;
+
+	base = g_path_get_dirname (filename);
+
+	n_files = ddjvu_document_get_filenum (djvu_document->d_document);
+	for (i = 0; i < n_files; i++) {
+		ddjvu_fileinfo_t fileinfo;
+		gchar *file;
 			
-			ddjvu_document_get_fileinfo (djvu_document->d_document,
-						     i, &fileinfo);
+		ddjvu_document_get_fileinfo (djvu_document->d_document,
+					     i, &fileinfo);
 
-			if (fileinfo.type != 'P')
-				continue;
+		if (fileinfo.type != 'P')
+			continue;
 
+		if (fileinfo.pageno >= 0 && fileinfo.pageno < djvu_document->n_pages) {
+			djvu_document->fileinfo_pages[fileinfo.pageno] = fileinfo;
+		}
+
+
+		if (check_for_missing_files && !missing_files) {
 			file = g_build_filename (base, fileinfo.id, NULL);
 			if (!g_file_test (file, G_FILE_TEST_EXISTS)) {
 				missing_files = TRUE;
 				g_free (file);
-				
-				break;
 			}
 			g_free (file);
 		}
-		g_free (base);
 	}
+	g_free (base);
 	g_free (filename);
 
 	if (missing_files) {
@@ -394,6 +406,27 @@ djvu_document_render (EvDocument      *document,
 	return surface;
 }
 
+static char *
+djvu_document_get_page_label (EvDocument *document,
+                              EvPage     *page)
+{
+	DjvuDocument *djvu_document = DJVU_DOCUMENT (document);
+	const gchar *title = NULL;
+	gchar *label = NULL;
+
+	g_assert (page->index >= 0 && page->index < djvu_document->n_pages);
+
+	if (djvu_document->fileinfo_pages == NULL)
+		return NULL;
+
+	title = djvu_document->fileinfo_pages[page->index].title;
+
+	if (!g_str_has_suffix (title, ".djvu"))
+		label = g_strdup (title);
+
+	return label;
+}
+
 static GdkPixbuf *
 djvu_document_get_thumbnail (EvDocument      *document,
 			     EvRenderContext *rc)
@@ -446,6 +479,9 @@ djvu_document_finalize (GObject *object)
 	if (djvu_document->ps_filename)
 	    g_free (djvu_document->ps_filename);
 	    
+	if (djvu_document->fileinfo_pages) 
+	    g_free (djvu_document->fileinfo_pages);
+	
 	ddjvu_context_release (djvu_document->d_context);
 	ddjvu_format_release (djvu_document->d_format);
 	ddjvu_format_release (djvu_document->thumbs_format);
@@ -465,6 +501,7 @@ djvu_document_class_init (DjvuDocumentClass *klass)
 	ev_document_class->load = djvu_document_load;
 	ev_document_class->save = djvu_document_save;
 	ev_document_class->get_n_pages = djvu_document_get_n_pages;
+	ev_document_class->get_page_label = djvu_document_get_page_label;
 	ev_document_class->get_page_size = djvu_document_get_page_size;
 	ev_document_class->render = djvu_document_render;
 	ev_document_class->get_thumbnail = djvu_document_get_thumbnail;

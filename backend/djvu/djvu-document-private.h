@@ -38,6 +38,8 @@ struct _DjvuDocument {
         /* PS exporter */
         gchar		 *ps_filename;
         GString 	 *opts;
+	ddjvu_fileinfo_t *fileinfo_pages;
+	gint		  n_pages;
 };
 
 int  djvu_document_get_n_pages (EvDocument   *document);
