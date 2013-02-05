@@ -215,8 +215,8 @@ djvu_document_load (EvDocument  *document,
 
 	if (djvu_document->n_pages > 0) {
 		djvu_document->fileinfo_pages = g_new0 (ddjvu_fileinfo_t, djvu_document->n_pages);
+		djvu_document->file_ids = g_hash_table_new (g_str_hash, g_str_equal);
 	}
-
 	if (ddjvu_document_get_type (djvu_document->d_document) == DDJVU_DOCTYPE_INDIRECT)
 		check_for_missing_files = TRUE;
 
@@ -237,6 +237,9 @@ djvu_document_load (EvDocument  *document,
 			djvu_document->fileinfo_pages[fileinfo.pageno] = fileinfo;
 		}
 
+		g_hash_table_insert (djvu_document->file_ids,
+				     (gpointer) djvu_document->fileinfo_pages[fileinfo.pageno].id,
+				     GINT_TO_POINTER(fileinfo.pageno));
 
 		if (check_for_missing_files && !missing_files) {
 			file = g_build_filename (base, fileinfo.id, NULL);
@@ -482,6 +485,9 @@ djvu_document_finalize (GObject *object)
 	if (djvu_document->fileinfo_pages) 
 	    g_free (djvu_document->fileinfo_pages);
 	
+	if (djvu_document->file_ids)
+	    g_hash_table_destroy (djvu_document->file_ids);
+
 	ddjvu_context_release (djvu_document->d_context);
 	ddjvu_format_release (djvu_document->d_format);
 	ddjvu_format_release (djvu_document->thumbs_format);

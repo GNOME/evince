@@ -67,11 +67,18 @@ get_djvu_link_page (const DjvuDocument *djvu_document, const gchar *link_name, i
 
 	/* #pagenum, #+pageoffset, #-pageoffset */
 	if (g_str_has_prefix (link_name, "#")) {
-		if (base_page > 0 && g_str_has_prefix (link_name+1, "+")) {
+		if (g_str_has_suffix (link_name,".djvu")) {
+			/* File identifiers */
+			gpointer page = NULL;
+
+			if (g_hash_table_lookup_extended (djvu_document->file_ids, link_name + 1, NULL, &page)) {
+				return GPOINTER_TO_INT (page);
+			}
+		} else if (base_page > 0 && g_str_has_prefix (link_name + 1, "+")) {
 			if (number_from_string_10 (link_name + 2, &page_num)) {
 				return base_page + page_num;
 			}
-		} else if (base_page > 0 && g_str_has_prefix (link_name+1, "-")) {
+		} else if (base_page > 0 && g_str_has_prefix (link_name + 1, "-")) {
 			if (number_from_string_10 (link_name + 2, &page_num)) {
 				return base_page - page_num;
 			}
@@ -81,7 +88,7 @@ get_djvu_link_page (const DjvuDocument *djvu_document, const gchar *link_name, i
 			}
 		}
 	} else {
-		/* FIXME: component file identifiers */
+		/* FIXME: should we handle this case */
 	}
 
 	return page_num;
@@ -90,7 +97,21 @@ get_djvu_link_page (const DjvuDocument *djvu_document, const gchar *link_name, i
 static EvLinkDest *
 get_djvu_link_dest (const DjvuDocument *djvu_document, const gchar *link_name, int base_page)
 {
-	return ev_link_dest_new_page (get_djvu_link_page (djvu_document, link_name, base_page));
+	/* #+pagenum #-pagenum #file_id.djvu */
+	if (g_str_has_prefix (link_name, "#")) {
+		if (g_str_has_suffix (link_name, ".djvu") ||
+		    (base_page > 0 && g_str_has_prefix (link_name + 1, "+")) ||
+		    (base_page > 0 && g_str_has_prefix (link_name + 1, "-"))) {
+			return ev_link_dest_new_page (get_djvu_link_page (djvu_document, link_name, base_page));
+		} else {
+			/* #pagenum #page_label: the djvu spec is not clear on whether #pagenum represents
+			 * a link to a page number or to a page label. Here we mimick djview,
+			 * and always treat #pagenum as a link to a page label */
+			return ev_link_dest_new_page_label (link_name + 1);
+		}
+	}
+
+	return NULL;
 }
 
 static EvLinkAction *
@@ -99,16 +120,15 @@ get_djvu_link_action (const DjvuDocument *djvu_document, const gchar *link_name,
 	EvLinkDest *ev_dest = NULL;
 	EvLinkAction *ev_action = NULL;
 
-	ev_dest = get_djvu_link_dest (djvu_document, link_name, base_page);
+	/* File component identifiers are handled by get_djvu_link_dest */
 
+	ev_dest = get_djvu_link_dest (djvu_document, link_name, base_page);
 	if (ev_dest) {
 		ev_action = ev_link_action_new_dest (ev_dest);
 		g_object_unref (ev_dest);
 	} else if (strstr(link_name, "://") != NULL) {
 		/* It's probably an URI */
 		ev_action = ev_link_action_new_external_uri (link_name);
-	} else {
-		/* FIXME: component file identifiers */
 	}
 
 	return ev_action;
@@ -191,10 +211,8 @@ build_tree (const DjvuDocument *djvu_document,
 		}
 
 		ev_action = get_djvu_link_action (djvu_document, link_dest, -1);
-		
-		if (g_str_has_suffix (link_dest, ".djvu")) {
-			/* FIXME: component file identifiers */
-		} else if (ev_action) {
+
+		if (ev_action) {
 			ev_link = ev_link_new (utf8_title ? utf8_title : title, ev_action);
 			gtk_tree_store_append (GTK_TREE_STORE (model), &tree_iter, parent);
 			gtk_tree_store_set (GTK_TREE_STORE (model), &tree_iter,

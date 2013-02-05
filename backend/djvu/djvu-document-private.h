@@ -40,6 +40,7 @@ struct _DjvuDocument {
         GString 	 *opts;
 	ddjvu_fileinfo_t *fileinfo_pages;
 	gint		  n_pages;
+	GHashTable	 *file_ids;
 };
 
 int  djvu_document_get_n_pages (EvDocument   *document);
