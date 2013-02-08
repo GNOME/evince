@@ -4407,6 +4407,40 @@ focus_annotation (EvView       *view,
 }
 
 static void
+draw_surface (cairo_t 	      *cr,
+	      cairo_surface_t *surface,
+	      gint             x,
+	      gint             y,
+	      gint             offset_x,
+	      gint             offset_y,
+	      gint             target_width,
+	      gint             target_height)
+{
+	gint width, height;
+
+	width = cairo_image_surface_get_width (surface);
+	height = cairo_image_surface_get_height (surface);
+
+	cairo_save (cr);
+	cairo_translate (cr, x, y);
+
+	if (width != target_width || height != target_height) {
+		cairo_pattern_set_filter (cairo_get_source (cr),
+					  CAIRO_FILTER_FAST);
+		cairo_scale (cr,
+			     (gdouble)target_width / width,
+			     (gdouble)target_height / height);
+	}
+
+	cairo_surface_set_device_offset (surface,
+					 offset_x,
+					 offset_y);
+	cairo_set_source_surface (cr, surface, 0, 0);
+	cairo_paint (cr);
+	cairo_restore (cr);
+}
+
+static void
 draw_one_page (EvView       *view,
 	       gint          page,
 	       cairo_t      *cr,
@@ -4451,10 +4485,9 @@ draw_one_page (EvView       *view,
 
 	if (gdk_rectangle_intersect (&real_page_area, expose_area, &overlap)) {
 		gint             width, height;
-		gint             page_width, page_height;
 		cairo_surface_t *page_surface = NULL;
-		gint             selection_width, selection_height;
 		cairo_surface_t *selection_surface = NULL;
+		gint offset_x, offset_y;
 
 		page_surface = ev_pixbuf_cache_get_surface (view->pixbuf_cache, page);
 
@@ -4471,27 +4504,10 @@ draw_one_page (EvView       *view,
 			ev_view_set_loading (view, FALSE);
 
 		ev_view_get_page_size (view, page, &width, &height);
+		offset_x = overlap.x - real_page_area.x;
+		offset_y = overlap.y - real_page_area.y;
 
-		page_width = cairo_image_surface_get_width (page_surface);
-		page_height = cairo_image_surface_get_height (page_surface);
-
-		cairo_save (cr);
-		cairo_translate (cr, overlap.x, overlap.y);
-
-		if (width != page_width || height != page_height) {
-			cairo_pattern_set_filter (cairo_get_source (cr),
-						  CAIRO_FILTER_FAST);
-			cairo_scale (cr,
-				     (gdouble)width / page_width,
-				     (gdouble)height / page_height);
-		}
-
-		cairo_surface_set_device_offset (page_surface,
-						 overlap.x - real_page_area.x,
-						 overlap.y - real_page_area.y);
-		cairo_set_source_surface (cr, page_surface, 0, 0);
-		cairo_paint (cr);
-		cairo_restore (cr);
+		draw_surface (cr, page_surface, overlap.x, overlap.y, offset_x, offset_y, width, height);
 		
 		/* Get the selection pixbuf iff we have something to draw */
 		if (find_selection_for_page (view, page) &&
@@ -4506,28 +4522,8 @@ draw_one_page (EvView       *view,
 		if (!selection_surface) {
 			return;
 		}
+		draw_surface (cr, selection_surface, overlap.x, overlap.y, offset_x, offset_y, width, height);
 
-		selection_width = cairo_image_surface_get_width (selection_surface);
-		selection_height = cairo_image_surface_get_height (selection_surface);
-
-		cairo_save (cr);
-		cairo_translate (cr, overlap.x, overlap.y);
-
-		if (width != selection_width || height != selection_height) {
-			cairo_pattern_set_filter (cairo_get_source (cr),
-						  CAIRO_FILTER_FAST);
-			cairo_scale (cr,
-				     (gdouble)width / selection_width,
-				     (gdouble)height / selection_height);
-		}
-
-		cairo_surface_set_device_offset (selection_surface,
-						 overlap.x - real_page_area.x,
-						 overlap.y - real_page_area.y);
-
-		cairo_set_source_surface (cr, selection_surface, 0, 0);
-		cairo_paint (cr);
-		cairo_restore (cr);
 	}
 }
 
