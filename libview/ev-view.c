@@ -4425,11 +4425,16 @@ draw_surface (cairo_t 	      *cr,
 	cairo_translate (cr, x, y);
 
 	if (width != target_width || height != target_height) {
+		gdouble scale_x, scale_y;
+
+		scale_x = (gdouble)target_width / width;
+		scale_y = (gdouble)target_height / height;
 		cairo_pattern_set_filter (cairo_get_source (cr),
 					  CAIRO_FILTER_FAST);
-		cairo_scale (cr,
-			     (gdouble)target_width / width,
-			     (gdouble)target_height / height);
+		cairo_scale (cr, scale_x, scale_y);
+
+		offset_x /= scale_x;
+		offset_y /= scale_y;
 	}
 
 	cairo_surface_set_device_offset (surface,
