@@ -2429,8 +2429,8 @@ ev_view_form_field_choice_create_widget (EvView      *view,
 	} else if (field_choice->is_editable) { /* ComboBoxEntry */
 		gchar *text;
 
-                /* FIXME once gtk bug 633050 is fixed */
-                choice = g_object_new (GTK_TYPE_COMBO_BOX, "has-entry", TRUE, "model", model, NULL);
+		choice = gtk_combo_box_new_with_model_and_entry (model);
+		gtk_combo_box_set_entry_text_column (GTK_COMBO_BOX (choice), 0);
 
 		text = ev_document_forms_form_field_choice_get_text (EV_DOCUMENT_FORMS (view->document), field);
 		if (text) {
