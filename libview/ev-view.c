@@ -2246,7 +2246,7 @@ ev_view_form_field_text_create_widget (EvView      *view,
 				g_free (txt);
 			}
 
-			g_signal_connect( buffer, "focus-out-event",
+			g_signal_connect (text, "focus-out-event",
 					  G_CALLBACK (ev_view_form_field_text_focus_out),
 					  view);
 			g_signal_connect (buffer, "changed",
