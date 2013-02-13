@@ -2488,6 +2488,9 @@ ev_view_handle_form_field (EvView      *view,
 
 	if (field->is_read_only)
 		return;
+
+	if (field->activation_link)
+		ev_view_handle_link (view, field->activation_link);
 	
 	if (EV_IS_FORM_FIELD_BUTTON (field)) {
 		field_widget = ev_view_form_field_button_create_widget (view, field);
