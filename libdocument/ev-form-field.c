@@ -55,6 +55,8 @@ ev_form_field_finalize (GObject *object)
 	g_object_unref (field->page);
 	field->page = NULL;
 
+	g_clear_object (&field->activation_link);
+
 	(* G_OBJECT_CLASS (ev_form_field_parent_class)->finalize) (object);
 }
 

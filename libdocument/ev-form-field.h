@@ -28,6 +28,7 @@
 #include <glib-object.h>
 
 #include "ev-document.h"
+#include "ev-link.h"
 
 G_BEGIN_DECLS
 
@@ -108,6 +109,7 @@ struct _EvFormField
 	gint     id;
 	gboolean is_read_only;
 	gdouble  font_size;
+	EvLink  *activation_link;
 
 	EvPage  *page;
 	gboolean changed;
