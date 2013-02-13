@@ -2279,16 +2279,19 @@ pdf_document_get_crop_box (EvDocument  *document,
 #endif
 
 static EvFormField *
-ev_form_field_from_poppler_field (PopplerFormField *poppler_field)
+ev_form_field_from_poppler_field (PdfDocument      *pdf_document,
+				  PopplerFormField *poppler_field)
 {
 	EvFormField *ev_field = NULL;
 	gint         id;
 	gdouble      font_size;
 	gboolean     is_read_only;
+	PopplerAction *action;
 
 	id = poppler_form_field_get_id (poppler_field);
 	font_size = poppler_form_field_get_font_size (poppler_field);
 	is_read_only = poppler_form_field_is_read_only (poppler_field);
+	action = poppler_form_field_get_action (poppler_field);
 
 	switch (poppler_form_field_get_field_type (poppler_field)) {
 	        case POPPLER_FORM_FIELD_TEXT: {
@@ -2379,6 +2382,9 @@ ev_form_field_from_poppler_field (PopplerFormField *poppler_field)
 	ev_field->font_size = font_size;
 	ev_field->is_read_only = is_read_only;
 
+	if (action)
+		ev_field->activation_link = ev_link_from_action (pdf_document, action);
+
 	return ev_field;
 }
 
@@ -2405,7 +2411,7 @@ pdf_document_forms_get_form_fields (EvDocumentForms *document,
 
  		mapping = (PopplerFormFieldMapping *)list->data;
 
-		ev_field = ev_form_field_from_poppler_field (mapping->field);
+		ev_field = ev_form_field_from_poppler_field (PDF_DOCUMENT (document), mapping->field);
 		if (!ev_field)
 			continue;
 
