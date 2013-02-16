@@ -390,7 +390,7 @@ ev_properties_view_new (const gchar *uri)
 	EvPropertiesView *properties;
 
 	properties = g_object_new (EV_TYPE_PROPERTIES, NULL);
-	properties->uri = g_strdup (uri);
+	properties->uri = g_uri_unescape_string (uri, NULL);
 
 	return GTK_WIDGET (properties);
 }
