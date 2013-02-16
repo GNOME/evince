@@ -1019,14 +1019,8 @@ ev_application_startup (GApplication *gapplication)
         EvApplication *application = EV_APPLICATION (gapplication);
         GtkBuilder *builder;
         GError *error = NULL;
-        gboolean shell_shows_app_menu;
 
         G_APPLICATION_CLASS (ev_application_parent_class)->startup (gapplication);
-
-        /* We only want to add an application menu when it's actually used! */
-        g_object_get (gtk_settings_get_for_screen (gdk_screen_get_default ()), "gtk-shell-shows-app-menu", &shell_shows_app_menu, NULL);
-        if (!shell_shows_app_menu)
-          return;
 
         g_action_map_add_action_entries (G_ACTION_MAP (application),
                                          app_menu_actions, G_N_ELEMENTS (app_menu_actions),

@@ -7487,6 +7487,7 @@ ev_window_new (void)
 	ev_window = GTK_WIDGET (g_object_new (EV_TYPE_WINDOW,
 					      "type", GTK_WINDOW_TOPLEVEL,
                                               "application", g_application_get_default (),
+					      "show-menubar", FALSE,
 					      NULL));
 
 	return ev_window;
