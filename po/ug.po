@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=evince&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2013-01-13 08:24+0000\n"
-"PO-Revision-Date: 2013-02-02 11:45+0900\n"
+"POT-Creation-Date: 2013-02-02 02:52+0000\n"
+"PO-Revision-Date: 2013-02-16 12:38+0900\n"
 "Last-Translator: Gheyret Kenji <gheyret@gmail.com>\n"
 "Language-Team: Uyghur Computer Science Association <UKIJ@yahoogroups.com>\n"
 "Language: \n"
@@ -154,7 +154,7 @@ msgstr "بارلىق خەت نۇسخىلىرى ئۆلچەملىك ياكى ئى�
 msgid "No name"
 msgstr "ئاتسىز"
 
-#: ../backend/pdf/ev-poppler.cc:1133 ../libview/ev-print-operation.c:1893
+#: ../backend/pdf/ev-poppler.cc:1133 ../libview/ev-print-operation.c:1905
 #: ../properties/ev-properties-view.c:187
 msgid "None"
 msgstr "يوق"
@@ -199,7 +199,7 @@ msgstr "ئالمىشىدىغىنى"
 
 #: ../backend/pdf/pdfdocument.evince-backend.in.h:1
 msgid "PDF Documents"
-msgstr "PDF پۈتۈكى"
+msgstr "PDF پۈتۈكلىرى"
 
 #: ../backend/ps/ev-spectre.c:98
 #, c-format
@@ -308,7 +308,7 @@ msgstr "كۆپ بەتلىك پۈتۈكلەرنى كۆرۈش"
 
 #: ../data/evince.desktop.in.in.h:3
 msgid "pdf;ps;postscript;dvi;xps;djvu;tiff;document;presentation;"
-msgstr "pdf;ps;postscript;dvi;xps;djvu;tiff;document;presentation;پۈتۈك؛سۇنۇلما؛"
+msgstr "pdf;ps;postscript;dvi;xps;djvu;tiff;document;presentation;پۈتۈك;سۇنۇلما;"
 
 #: ../data/org.gnome.Evince.gschema.xml.in.h:1
 msgid "Override document restrictions"
@@ -390,58 +390,58 @@ msgstr "(%d / %d)"
 msgid "of %d"
 msgstr "of %d"
 
-#: ../libview/ev-jobs.c:1906
+#: ../libview/ev-jobs.c:1919
 #, c-format
 msgid "Failed to print page %d: %s"
 msgstr "بەت %d نى بېسىش مەغلۇپ بولدى: %s"
 
 #. Initial state
-#: ../libview/ev-print-operation.c:335
+#: ../libview/ev-print-operation.c:347
 msgid "Preparing to print…"
 msgstr "بېسىشقا تەييارلىنىۋاتىدۇ…"
 
-#: ../libview/ev-print-operation.c:337
+#: ../libview/ev-print-operation.c:349
 msgid "Finishing…"
 msgstr "تاماملاۋاتىدۇ..."
 
-#: ../libview/ev-print-operation.c:339
+#: ../libview/ev-print-operation.c:351
 #, c-format
 msgid "Printing page %d of %d…"
 msgstr "بەتنى بېسىۋاتىدۇ %d/%d ..."
 
-#: ../libview/ev-print-operation.c:1163
+#: ../libview/ev-print-operation.c:1175
 msgid "Postscript is not supported by this printer."
 msgstr "مەزكۇر پرىنتېر Postscript نى قوللىمايدۇ."
 
-#: ../libview/ev-print-operation.c:1228
+#: ../libview/ev-print-operation.c:1240
 msgid "Invalid page selection"
 msgstr "ئىناۋەتسىز بەت تاللاش"
 
-#: ../libview/ev-print-operation.c:1229
+#: ../libview/ev-print-operation.c:1241
 msgid "Warning"
 msgstr "ئاگاھلاندۇرۇش"
 
-#: ../libview/ev-print-operation.c:1231
+#: ../libview/ev-print-operation.c:1243
 msgid "Your print range selection does not include any pages"
 msgstr "تاللانغان بېسىش دائىرىسىدە ھېچقانداق بەت يوق"
 
-#: ../libview/ev-print-operation.c:1309 ../previewer/ev-previewer-window.c:297
+#: ../libview/ev-print-operation.c:1321 ../previewer/ev-previewer-window.c:297
 msgid "Print"
 msgstr "بېسىپ چىقار"
 
-#: ../libview/ev-print-operation.c:1888
+#: ../libview/ev-print-operation.c:1900
 msgid "Page Scaling:"
 msgstr "بەت كۆرسىتىش نىسبىتى:"
 
-#: ../libview/ev-print-operation.c:1894
+#: ../libview/ev-print-operation.c:1906
 msgid "Shrink to Printable Area"
 msgstr "بېسىشچان رايونغا كىچىكلەت"
 
-#: ../libview/ev-print-operation.c:1895
+#: ../libview/ev-print-operation.c:1907
 msgid "Fit to Printable Area"
 msgstr "بېسىشچان رايونغا ماسلاش"
 
-#: ../libview/ev-print-operation.c:1898
+#: ../libview/ev-print-operation.c:1910
 msgid ""
 "Scale document pages to fit the selected printer page. Select from one of "
 "the following:\n"
@@ -461,90 +461,90 @@ msgstr "پۈتۈكنى بېتىنى پرىنتېرنىڭ تاللانغان بې
 "\n"
 "• \"بېسىلىدىغان رايونغا دەل كەلتۈرۈش\": پۈتۈك بېتىنى چوڭايتىش ياكى كىچىكلىتىش ئارقىلىق، بېسىلىدىغان رايونغا دەل كەلتۈرۈپ باسىدۇ(شىلمايدۇ).\n"
 
-#: ../libview/ev-print-operation.c:1910
+#: ../libview/ev-print-operation.c:1922
 msgid "Auto Rotate and Center"
 msgstr "ئۆزلۈكىدىن ئايلاندۇر ھەم ئوتتۇرىغا توغرىلا"
 
-#: ../libview/ev-print-operation.c:1913
+#: ../libview/ev-print-operation.c:1925
 msgid ""
 "Rotate printer page orientation of each page to match orientation of each "
 "document page. Document pages will be centered within the printer page."
 msgstr "پرىنتېردىكى ھەر بىر بەت يۆنىلىشىنى پۈتۈكتىكى ھەر بىر بەتنىڭ يۆنىلىشىگە ماسلاشتۇرىدۇ. پۈتۈك بەتنىڭ ئوتتۇرىسىغا توغرىلىنىپ بېسىلىدۇ."
 
-#: ../libview/ev-print-operation.c:1918
+#: ../libview/ev-print-operation.c:1930
 msgid "Select page size using document page size"
 msgstr "پۈتۈك چوڭلۇقىغا ئاساسەن بەت چوڭلۇقىنى تاللا"
 
-#: ../libview/ev-print-operation.c:1920
+#: ../libview/ev-print-operation.c:1932
 msgid ""
 "When enabled, each page will be printed on the same size paper as the "
 "document page."
 msgstr "چەكلەنمىگەندە ھەر بىر بەت پۈتۈك بېتىگە ئوخشاش چوڭلۇقتا بېسىلىدۇ."
 
-#: ../libview/ev-print-operation.c:2009
+#: ../libview/ev-print-operation.c:2021
 msgid "Page Handling"
 msgstr "بەت بىر تەرەپ قىلىش ئۇسۇلى"
 
-#: ../libview/ev-view-accessible.c:43
+#: ../libview/ev-view-accessible.c:45
 msgid "Scroll Up"
 msgstr "ئۈستىگە سىيرىش"
 
-#: ../libview/ev-view-accessible.c:44
+#: ../libview/ev-view-accessible.c:46
 msgid "Scroll Down"
 msgstr "ئاستىغا سىيرىش"
 
-#: ../libview/ev-view-accessible.c:50
+#: ../libview/ev-view-accessible.c:52
 msgid "Scroll View Up"
 msgstr "كۆرۈنۈشنى يۇقىرىغا سىيرىش"
 
-#: ../libview/ev-view-accessible.c:51
+#: ../libview/ev-view-accessible.c:53
 msgid "Scroll View Down"
 msgstr "كۆرۈنۈشنى تۆۋەنگە سىيرىش"
 
-#: ../libview/ev-view-accessible.c:93
+#: ../libview/ev-view-accessible.c:105
 msgid "Document View"
 msgstr "پۈتۈك كۆرۈنۈشى"
 
-#: ../libview/ev-view.c:1885
+#: ../libview/ev-view.c:1873
 msgid "Go to first page"
 msgstr "بىرىنچى بەتكە يۆتكەل"
 
-#: ../libview/ev-view.c:1887
+#: ../libview/ev-view.c:1875
 msgid "Go to previous page"
 msgstr "ئالدىنقى بەتكە يۆتكەل"
 
-#: ../libview/ev-view.c:1889
+#: ../libview/ev-view.c:1877
 msgid "Go to next page"
 msgstr "كېيىنكى بەتكە يۆتكەل"
 
-#: ../libview/ev-view.c:1891
+#: ../libview/ev-view.c:1879
 msgid "Go to last page"
 msgstr "ئاخىرقى بەتكە يۆتكەل"
 
-#: ../libview/ev-view.c:1893
+#: ../libview/ev-view.c:1881
 msgid "Go to page"
 msgstr "بەتكە يۆتكەل"
 
-#: ../libview/ev-view.c:1895
+#: ../libview/ev-view.c:1883
 msgid "Find"
 msgstr "ئىزدە"
 
-#: ../libview/ev-view.c:1923
+#: ../libview/ev-view.c:1911
 #, c-format
 msgid "Go to page %s"
 msgstr "%s بەتكە يۆتكەل"
 
-#: ../libview/ev-view.c:1929
+#: ../libview/ev-view.c:1917
 #, c-format
 msgid "Go to %s on file “%s”"
 msgstr "%s غا يۆتكەل(ھۆججەت «%s» دىكى)"
 
-#: ../libview/ev-view.c:1932
+#: ../libview/ev-view.c:1920
 #, c-format
 msgid "Go to file “%s”"
 msgstr "ھۆججەت «%s» كە يۆتكەل"
 
-#: ../libview/ev-view.c:1940
+#: ../libview/ev-view.c:1928
 #, c-format
 msgid "Launch %s"
 msgstr "%s نى ئىجرا قىل"
@@ -831,7 +831,7 @@ msgstr "پۈتۈك  %s نىڭ ئىمى"
 #: ../shell/ev-loading-message.c:50 ../shell/ev-sidebar-annotations.c:131
 #: ../shell/ev-sidebar-layers.c:125 ../shell/ev-sidebar-links.c:261
 msgid "Loading…"
-msgstr "يۈكلەۋاتىدۇ…"
+msgstr "ئوقۇۋاتىدۇ…"
 
 #: ../shell/ev-open-recent-action.c:72
 msgid "Open a recently used document"
