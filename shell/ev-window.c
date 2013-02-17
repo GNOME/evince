@@ -4633,12 +4633,10 @@ ev_window_cmd_bookmarks_add (GtkAction *action,
 {
 	EvBookmark bm;
 	gchar     *page_label;
-	gchar     *page_title;
 
 	bm.page = ev_document_model_get_page (window->priv->model);
 	page_label = ev_document_get_page_label (window->priv->document, bm.page);
-	page_title = ev_window_get_page_title (window, page_label);
-	bm.title = page_title ? page_title : g_strdup_printf (_("Page %s"), page_label);
+	bm.title = g_strdup_printf (_("Page %s"), page_label);
 	g_free (page_label);
 
 	/* EvBookmarks takes ownership of bookmark */
