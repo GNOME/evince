@@ -417,29 +417,28 @@ ev_sidebar_links_construct (EvSidebarLinks *ev_sidebar_links)
 	gtk_tree_view_column_set_expand (GTK_TREE_VIEW_COLUMN (column), TRUE);
 	gtk_tree_view_append_column (GTK_TREE_VIEW (priv->tree_view), column);
 
-	renderer = gtk_cell_renderer_text_new ();
-	g_object_set (G_OBJECT (renderer),
-		      "ellipsize", PANGO_ELLIPSIZE_END,
-		      NULL);
+	renderer = (GtkCellRenderer*)
+		g_object_new (GTK_TYPE_CELL_RENDERER_TEXT,
+			      "ellipsize", PANGO_ELLIPSIZE_END,
+			      NULL);
 	gtk_tree_view_column_pack_start (GTK_TREE_VIEW_COLUMN (column), renderer, TRUE);
 	gtk_tree_view_column_set_attributes (GTK_TREE_VIEW_COLUMN (column), renderer,
 					     "markup", EV_DOCUMENT_LINKS_COLUMN_MARKUP,
 					     NULL);
 
-	column = gtk_tree_view_column_new ();
-	gtk_tree_view_append_column (GTK_TREE_VIEW (priv->tree_view), column);
-
-	renderer = gtk_cell_renderer_text_new ();
-	g_object_set (G_OBJECT (renderer),
-		      "ellipsize", PANGO_ELLIPSIZE_MIDDLE,
-		      "width-chars", 6,
-		      "style", PANGO_STYLE_ITALIC,
-		      "xalign", 1.0,
-		      NULL);
-	gtk_tree_view_column_pack_start (GTK_TREE_VIEW_COLUMN (column), renderer, FALSE);
+	renderer = (GtkCellRenderer*)
+		g_object_new (GTK_TYPE_CELL_RENDERER_TEXT,
+			      "ellipsize", PANGO_ELLIPSIZE_MIDDLE,
+			      "max-width-chars", 12,
+			      NULL);
+	gtk_tree_view_column_pack_end (GTK_TREE_VIEW_COLUMN (column), renderer, FALSE);
 	gtk_tree_view_column_set_attributes (GTK_TREE_VIEW_COLUMN (column), renderer,
 					     "text", EV_DOCUMENT_LINKS_COLUMN_PAGE_LABEL,
 					     NULL);
+	g_object_set (G_OBJECT (renderer),
+                      "style", PANGO_STYLE_ITALIC,
+                      "xalign", 1.0,
+                      NULL);
 
 	g_signal_connect (priv->tree_view,
 			  "button_press_event",
