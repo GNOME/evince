@@ -26,6 +26,7 @@
 
 #include "ev-stock-icons.h"
 #include "ev-zoom-action.h"
+#include "ev-history-action.h"
 #include <math.h>
 
 enum
@@ -203,6 +204,13 @@ ev_toolbar_constructed (GObject *object)
         gtk_container_add (GTK_CONTAINER (ev_toolbar), tool_item);
         gtk_widget_show (tool_item);
 
+        /* History */
+        action = gtk_action_group_get_action (action_group, "History");
+        tool_item = gtk_action_create_tool_item (action);
+        gtk_widget_set_margin_right (tool_item, 12);
+        gtk_container_add (GTK_CONTAINER (ev_toolbar), tool_item);
+        gtk_widget_show (tool_item);
+
         /* Zoom selector */
         action = gtk_action_group_get_action (action_group, "ViewZoom");
         tool_item = gtk_action_create_tool_item (action);
@@ -312,6 +320,10 @@ ev_toolbar_has_visible_popups (EvToolbar *ev_toolbar)
         action_group = ev_window_get_main_action_group (ev_toolbar->priv->window);
         action = gtk_action_group_get_action (action_group, "ViewZoom");
         if (ev_zoom_action_get_popup_shown (EV_ZOOM_ACTION (action)))
+                return TRUE;
+
+        action = gtk_action_group_get_action (action_group, "History");
+        if (ev_history_action_get_popup_shown (EV_HISTORY_ACTION (action)))
                 return TRUE;
 
         return FALSE;
