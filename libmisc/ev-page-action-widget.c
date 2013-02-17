@@ -179,7 +179,7 @@ activate_cb (EvPageActionWidget *action_widget)
 
 	link_dest = ev_link_dest_new_page_label (text);
 	link_action = ev_link_action_new_dest (link_dest);
-	link_text = g_strdup_printf ("Page: %s", text);
+	link_text = g_strdup_printf (_("Page %s"), text);
 	link = ev_link_new (link_text, link_action);
 
 	g_signal_emit (action_widget, widget_signals[WIDGET_ACTIVATE_LINK], 0, link);
