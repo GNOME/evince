@@ -478,3 +478,41 @@ ev_link_action_new_layers_state (GList *show_list,
 					     "type", EV_LINK_ACTION_TYPE_LAYERS_STATE,
 					     NULL));
 }
+
+gboolean
+ev_link_action_equal (EvLinkAction *a,
+                      EvLinkAction *b)
+{
+        g_return_val_if_fail (EV_IS_LINK_ACTION (a), FALSE);
+        g_return_val_if_fail (EV_IS_LINK_ACTION (b), FALSE);
+
+        if (a == b)
+                return TRUE;
+
+        if (a->priv->type != b->priv->type)
+                return FALSE;
+
+        switch (a->priv->type) {
+        case EV_LINK_ACTION_TYPE_GOTO_DEST:
+                return ev_link_dest_equal (a->priv->dest, b->priv->dest);
+
+        case EV_LINK_ACTION_TYPE_GOTO_REMOTE:
+                return ev_link_dest_equal (a->priv->dest, b->priv->dest) &&
+                        !g_strcmp0 (a->priv->filename, b->priv->filename);
+
+        case EV_LINK_ACTION_TYPE_EXTERNAL_URI:
+                return !g_strcmp0 (a->priv->uri, b->priv->uri);
+
+        case EV_LINK_ACTION_TYPE_LAUNCH:
+                return !g_strcmp0 (a->priv->filename, b->priv->filename) &&
+                        !g_strcmp0 (a->priv->params, b->priv->params);
+
+        case EV_LINK_ACTION_TYPE_NAMED:
+                return !g_strcmp0 (a->priv->name, b->priv->name);
+
+        default:
+                return FALSE;
+        }
+
+        return FALSE;
+}

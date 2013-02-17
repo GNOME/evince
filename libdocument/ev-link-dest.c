@@ -519,3 +519,61 @@ ev_link_dest_new_page_label (const gchar *page_label)
 					   "type", EV_LINK_DEST_TYPE_PAGE_LABEL,
 					   NULL));
 }
+
+gboolean
+ev_link_dest_equal (EvLinkDest *a,
+                    EvLinkDest *b)
+{
+        g_return_val_if_fail (EV_IS_LINK_DEST (a), FALSE);
+        g_return_val_if_fail (EV_IS_LINK_DEST (b), FALSE);
+
+        if (a == b)
+                return TRUE;
+
+        if (a->priv->type != b->priv->type)
+                return FALSE;
+
+        switch (a->priv->type) {
+        case EV_LINK_DEST_TYPE_PAGE:
+                return a->priv->page == b->priv->page;
+
+        case EV_LINK_DEST_TYPE_XYZ:
+                return a->priv->page == b->priv->page &&
+                        a->priv->left == b->priv->left &&
+                        a->priv->top == b->priv->top &&
+                        a->priv->zoom == b->priv->zoom &&
+                        a->priv->change == b->priv->change;
+
+        case EV_LINK_DEST_TYPE_FIT:
+                return a->priv->page == b->priv->page;
+
+        case EV_LINK_DEST_TYPE_FITH:
+                return a->priv->page == b->priv->page &&
+                        a->priv->top == b->priv->top &&
+                        a->priv->change == b->priv->change;
+
+        case EV_LINK_DEST_TYPE_FITV:
+                return a->priv->page == b->priv->page &&
+                        a->priv->left == b->priv->left &&
+                        a->priv->change == b->priv->change;
+
+        case EV_LINK_DEST_TYPE_FITR:
+                return a->priv->page == b->priv->page &&
+                        a->priv->left == b->priv->left &&
+                        a->priv->top == b->priv->top &&
+                        a->priv->right == b->priv->right &&
+                        a->priv->bottom == b->priv->bottom &&
+                        a->priv->change == b->priv->change;
+
+        case EV_LINK_DEST_TYPE_NAMED:
+                return !g_strcmp0 (a->priv->named, b->priv->named);
+
+        case EV_LINK_DEST_TYPE_PAGE_LABEL:
+                return !g_strcmp0 (a->priv->page_label, b->priv->page_label);
+
+        default:
+                return FALSE;
+        }
+
+        return FALSE;
+}

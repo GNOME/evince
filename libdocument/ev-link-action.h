@@ -75,6 +75,9 @@ EvLinkAction    *ev_link_action_new_layers_state (GList        *show_list,
 						  GList        *hide_list,
 						  GList        *toggle_list);
 
+gboolean         ev_link_action_equal            (EvLinkAction *a,
+                                                  EvLinkAction *b);
+
 G_END_DECLS
 
 #endif /* EV_LINK_ACTION_H */
