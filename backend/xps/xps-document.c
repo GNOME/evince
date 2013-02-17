@@ -424,7 +424,6 @@ xps_document_links_get_links (EvDocumentLinks *document_links,
 		ev_link_mapping = g_new (EvMapping, 1);
 		gxps_link_get_area (xps_link, &area);
 		target = gxps_link_get_target (xps_link);
-		gxps_link_get_area (xps_link, &area);
 		ev_link_mapping->data = ev_link_from_target (xps_document, target);
 
 		ev_link_mapping->area.x1 = area.x;
