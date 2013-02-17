@@ -5981,16 +5981,8 @@ sidebar_links_link_activated_cb (EvSidebarLinks *sidebar_links, EvLink *link, Ev
 }
 
 static void
-activate_link_cb (EvPageAction *page_action, EvLink *link, EvWindow *window)
+activate_link_cb (GObject *object, EvLink *link, EvWindow *window)
 {
-	ev_view_handle_link (EV_VIEW (window->priv->view), link);
-	gtk_widget_grab_focus (window->priv->view);
-}
-
-static void
-navigation_action_activate_link_cb (EvNavigationAction *action, EvLink *link, EvWindow *window)
-{
-	
 	ev_view_handle_link (EV_VIEW (window->priv->view), link);
 	gtk_widget_grab_focus (window->priv->view);
 }
