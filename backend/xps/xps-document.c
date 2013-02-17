@@ -287,11 +287,10 @@ xps_document_links_has_document_links (EvDocumentLinks *document_links)
 	return retval;
 }
 
-static EvLink *
-ev_link_from_target (XPSDocument    *xps_document,
-		     GXPSLinkTarget *target)
+static EvLinkAction *
+link_action_from_target (XPSDocument    *xps_document,
+                         GXPSLinkTarget *target)
 {
-	EvLink *link;
 	EvLinkAction *ev_action;
 
 	if (gxps_link_target_is_internal (target)) {
@@ -337,10 +336,7 @@ ev_link_from_target (XPSDocument    *xps_document,
 		ev_action = ev_link_action_new_external_uri (uri);
 	}
 
-	link = ev_link_new (NULL, ev_action);
-	g_object_unref (ev_action);
-
-	return link;
+        return ev_action;
 }
 
 static void
@@ -352,13 +348,16 @@ build_tree (XPSDocument     *xps_document,
 	do {
 		GtkTreeIter     tree_iter;
 		GXPSOutlineIter child_iter;
+                EvLinkAction   *action;
 		EvLink         *link;
 		GXPSLinkTarget *target;
 		gchar          *title;
 
 		target = gxps_outline_iter_get_target (iter);
 		title = g_markup_escape_text (gxps_outline_iter_get_description (iter), -1);
-		link = ev_link_from_target (xps_document, target);
+                action = link_action_from_target (xps_document, target);
+		link = ev_link_new (title, action);
+                g_object_unref (action);
 		gxps_link_target_free (target);
 
 		gtk_tree_store_append (GTK_TREE_STORE (model), &tree_iter, parent);
@@ -417,6 +416,7 @@ xps_document_links_get_links (EvDocumentLinks *document_links,
 	for (list = mapping_list; list; list = list->next) {
 		GXPSLink *xps_link;
 		GXPSLinkTarget *target;
+                EvLinkAction *action;
 		EvMapping *ev_link_mapping;
 		cairo_rectangle_t area;
 
@@ -424,8 +424,9 @@ xps_document_links_get_links (EvDocumentLinks *document_links,
 		ev_link_mapping = g_new (EvMapping, 1);
 		gxps_link_get_area (xps_link, &area);
 		target = gxps_link_get_target (xps_link);
-		ev_link_mapping->data = ev_link_from_target (xps_document, target);
+                action = link_action_from_target (xps_document, target);
 
+		ev_link_mapping->data = ev_link_new (NULL, action);
 		ev_link_mapping->area.x1 = area.x;
 		ev_link_mapping->area.x2 = area.x + area.width;
 		ev_link_mapping->area.y1 = area.y;
@@ -433,6 +434,7 @@ xps_document_links_get_links (EvDocumentLinks *document_links,
 
 		retval = g_list_prepend (retval, ev_link_mapping);
 		gxps_link_free (xps_link);
+                g_object_unref (action);
 	}
 
 	g_list_free (mapping_list);
