@@ -23,7 +23,7 @@ ui_DATA =				\
 
 @INTLTOOL_DESKTOP_RULE@
 
-DESKTOP_IN_FILES= evince.desktop.in.in
+DESKTOP_IN_FILES= evince.desktop.in.in evince-previewer.desktop.in.in
 DESKTOP_FILES= $(DESKTOP_IN_FILES:.desktop.in.in=.desktop)
 
 desktopdir = $(datadir)/applications

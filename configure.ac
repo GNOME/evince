@@ -743,6 +743,7 @@ cut-n-paste/gimpcellrenderertoggle/Makefile
 cut-n-paste/smclient/Makefile
 cut-n-paste/synctex/Makefile
 data/evince.desktop.in
+data/evince-previewer.desktop.in
 data/Makefile
 data/icons/Makefile
 data/icons/16x16/Makefile
