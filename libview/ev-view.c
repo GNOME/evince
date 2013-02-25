@@ -7596,9 +7596,9 @@ ev_view_class_init (EvViewClass *class)
 		         G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
 		         G_STRUCT_OFFSET (EvViewClass, sync_source),
 		         NULL, NULL,
-		         g_cclosure_marshal_VOID__POINTER,
+		         g_cclosure_marshal_VOID__BOXED,
 		         G_TYPE_NONE, 1,
-			 G_TYPE_POINTER);
+			 EV_TYPE_SOURCE_LINK | G_SIGNAL_TYPE_STATIC_SCOPE);
 	signals[SIGNAL_ANNOT_ADDED] = g_signal_new ("annot-added",
 	  	         G_TYPE_FROM_CLASS (object_class),
 		         G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
