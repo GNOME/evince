@@ -506,13 +506,13 @@ on_register_uri_cb (GObject      *source_object,
 
 /*
  * ev_application_register_uri:
- * @application:
- * @uri:
- * @screen:
- * @dest:
- * @mode:
- * @search_string:
- * @timestamp:
+ * @application: The instance of the application.
+ * @uri: The uri to be opened.
+ * @screen: The screen where the link will be shown.
+ * @dest: The #EvLinkDest of the document.
+ * @mode: The run mode of the window.
+ * @search_string: The word or phrase to find in the document.
+ * @timestamp: Current time value.
  *
  * Registers @uri with evince-daemon.
  *
