@@ -419,7 +419,7 @@ ev_document_load_gfile (EvDocument         *document,
 
 /**
  * ev_document_save:
- * @document:
+ * @document: a #EvDocument
  * @uri: the target URI
  * @error: a #GError location to store an error, or %NULL
  *
@@ -471,10 +471,10 @@ ev_document_has_synctex (EvDocument *document)
 
 /**
  * ev_document_synctex_backward_search:
- * @document:
+ * @document: a #EvDocument
  * @page_index: the target page
- * @x:
- * @y:
+ * @x: X coordinate
+ * @y: Y coordinate
  *
  * Peforms a Synctex backward search to obtain the TeX input file, line and
  * (possibly) column  corresponding to the  position (@x,@y) (in 72dpi
@@ -522,8 +522,8 @@ ev_document_synctex_backward_search (EvDocument *document,
 
 /**
  * ev_document_synctex_forward_search:
- * @document:
- * @source_link:
+ * @document: a #EvDocument
+ * @source_link: a #EvSourceLink
  *
  * Peforms a Synctex forward search to obtain the area in the document
  * corresponding to the position @line and @column number in the source Tex file
