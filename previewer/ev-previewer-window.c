@@ -294,6 +294,7 @@ static const GtkActionEntry action_entries[] = {
           N_("Shrink the document"),
           G_CALLBACK (ev_previewer_window_zoom_out) },
 #if GTKUNIXPRINT_ENABLED
+	/* translators: Print document currently shown in the Print Preview window */
 	{ "PreviewPrint", GTK_STOCK_PRINT, N_("Print"), NULL,
 	  N_("Print this document"),
 	  G_CALLBACK (ev_previewer_window_print) }

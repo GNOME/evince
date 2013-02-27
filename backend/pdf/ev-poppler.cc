@@ -1129,8 +1129,13 @@ pdf_document_fonts_fill_model (EvDocumentFonts *document_fonts,
 		}
 
 		encoding = poppler_fonts_iter_get_encoding (iter);
-		if (!encoding)
+		if (!encoding) {
+			/* translators: When a font type does not have
+			   encoding information or it is unknown.  Example:
+			   Encoding: None
+			*/
 			encoding = _("None");
+		}
 
 		type = poppler_fonts_iter_get_font_type (iter);
 		type_str = font_type_to_string (type);

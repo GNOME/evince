@@ -184,6 +184,11 @@ set_property (EvPropertiesView *properties,
 	}
 
 	if (text == NULL || text[0] == '\000') {
+		/* translators: This is used when a document property does
+		   not have a value.  Examples:
+		   Author: None
+		   Keywords: None
+		*/
 		markup = g_markup_printf_escaped ("<i>%s</i>", _("None"));
 		gtk_label_set_markup (GTK_LABEL (label), markup);
 		g_free (markup);

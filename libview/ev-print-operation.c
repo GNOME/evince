@@ -1318,6 +1318,7 @@ ev_print_operation_export_run (EvPrintOperation *op,
 	export->parent_window = parent;
 	export->error = NULL;
 	
+	/* translators: Title of the print dialog */
 	dialog = gtk_print_unix_dialog_new (_("Print"), parent);
 	gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
 	
@@ -1902,6 +1903,7 @@ ev_print_operation_print_create_custom_widget (EvPrintOperationPrint *print,
 	gtk_widget_show (label);
 
 	print->scale_combo = gtk_combo_box_text_new ();
+	/* translators: Value for 'Page Scaling:' to not scale the document pages on printing */
 	gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (print->scale_combo), _("None"));
 	gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (print->scale_combo), _("Shrink to Printable Area"));
 	gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (print->scale_combo), _("Fit to Printable Area"));
