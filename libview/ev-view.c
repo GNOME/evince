@@ -5148,8 +5148,8 @@ clear_caches (EvView *view)
 
 /**
  * ev_view_set_page_cache_size:
- * @view:
- * @cache_size:
+ * @view: #EvView instance
+ * @cache_size: size in bytes
  *
  * Sets the maximum size in bytes that will be used to cache
  * rendered pages. Use 0 to disable caching rendered pages.
