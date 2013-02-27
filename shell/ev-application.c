@@ -683,6 +683,7 @@ _ev_application_open_uri_at_dest (EvApplication  *application,
  * @screen: Thee screen where the link will be shown.
  * @dest: The #EvLinkDest of the document.
  * @mode: The run mode of the window.
+ * @search_string: The word or phrase to find in the document.
  * @timestamp: Current time value.
  */
 void
