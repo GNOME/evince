@@ -277,6 +277,8 @@ struct _EvWindowPrivate {
 #define FULLSCREEN_MOTION_TIME 200 /* in milliseconds */
 #define FULLSCREEN_MOTION_NUM_EVENTS 15
 
+#define FIND_PAGE_RATE_REFRESH	100
+
 static const gchar *document_print_settings[] = {
 	GTK_PRINT_SETTINGS_N_COPIES,
 	GTK_PRINT_SETTINGS_COLLATE,
@@ -5224,13 +5226,39 @@ ev_window_find_job_finished_cb (EvJobFind *job,
 	ev_window_update_find_status_message (ev_window);
 }
 
+/**
+  * find_bar_check_refresh_rate:
+  *
+  * Check whether the current page should trigger an status update in the
+  * find bar given its document size and the rate page.
+  *
+  * For documents with less pages than page_rate, it will return TRUE for
+  * every page.  For documents with more pages, it will return TRUE every
+  * ((total_pages / page rate) + 1).
+  *
+  * This slow down the update rate in the GUI, making the search more
+  * responsive.
+  */
+static inline gboolean
+find_check_refresh_rate (EvJobFind *job, gint page_rate)
+{
+	return ((job->current_page % (gint)((job->n_pages / page_rate) + 1)) == 0);
+}
+
 static void
 ev_window_find_job_updated_cb (EvJobFind *job,
 			       gint       page,
 			       EvWindow  *ev_window)
 {
-	ev_window_update_actions_sensitivity (ev_window);
-	ev_window_update_find_status_message (ev_window);
+	/* Adjust the status update when searching for a term according
+	 * to the document size in pages.  For documents smaller (or equal)
+	 * than 100 pages, it will be updated in every page.  A value of
+	 * 100 is enough to update the find bar every 1%.
+	 */
+	if (find_check_refresh_rate (job, FIND_PAGE_RATE_REFRESH)) {
+		ev_window_update_actions_sensitivity (ev_window);
+		ev_window_update_find_status_message (ev_window);
+	}
 }
 
 static void
