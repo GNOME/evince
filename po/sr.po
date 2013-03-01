@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: Evince\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=evince"
 "&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2013-02-17 19:07+0000\n"
-"PO-Revision-Date: 2013-02-19 11:00+0200\n"
+"POT-Creation-Date: 2013-02-28 18:48+0000\n"
+"PO-Revision-Date: 2013-03-01 11:01+0200\n"
 "Last-Translator: Мирослав Николић <miroslavnikolic@rocketmail.com>\n"
 "Language-Team: Serbian <gnom@prevod.org>\n"
 "Language: sr\n"
@@ -164,20 +164,30 @@ msgstr "Сви словни ликови су стандардни или угњ
 msgid "No name"
 msgstr "Без назива"
 
-#: ../backend/pdf/ev-poppler.cc:1133 ../libview/ev-print-operation.c:1905
-#: ../properties/ev-properties-view.c:187
+#. translators: When a font type does not have
+#. encoding information or it is unknown.  Example:
+#. Encoding: None
+#.
+#. translators: Value for 'Page Scaling:' to not scale the document pages on printing
+#. translators: This is used when a document property does
+#. not have a value.  Examples:
+#. Author: None
+#. Keywords: None
+#.
+#: ../backend/pdf/ev-poppler.cc:1137 ../libview/ev-print-operation.c:1907
+#: ../properties/ev-properties-view.c:192
 msgid "None"
 msgstr "Ништа"
 
-#: ../backend/pdf/ev-poppler.cc:1140
+#: ../backend/pdf/ev-poppler.cc:1145
 msgid "Embedded subset"
 msgstr "Угњеждени подскуп"
 
-#: ../backend/pdf/ev-poppler.cc:1142
+#: ../backend/pdf/ev-poppler.cc:1147
 msgid "Embedded"
 msgstr "Угњежден"
 
-#: ../backend/pdf/ev-poppler.cc:1144
+#: ../backend/pdf/ev-poppler.cc:1149
 msgid "Not embedded"
 msgstr "Није угњежден"
 
@@ -186,7 +196,7 @@ msgstr "Није угњежден"
 #. * type. Example:
 #. * "Type 1 (One of the Standard 14 Fonts)"
 #.
-#: ../backend/pdf/ev-poppler.cc:1151
+#: ../backend/pdf/ev-poppler.cc:1156
 msgid " (One of the Standard 14 Fonts)"
 msgstr " (Један од словних ликова Стандардни 14)"
 
@@ -195,15 +205,15 @@ msgstr " (Један од словних ликова Стандардни 14)"
 #. * type. Example:
 #. * "TrueType (Not one of the Standard 14 Fonts)"
 #.
-#: ../backend/pdf/ev-poppler.cc:1158
+#: ../backend/pdf/ev-poppler.cc:1163
 msgid " (Not one of the Standard 14 Fonts)"
 msgstr " (Ни један од словних ликова Стандардни 14)"
 
-#: ../backend/pdf/ev-poppler.cc:1165
+#: ../backend/pdf/ev-poppler.cc:1170
 msgid "Encoding"
 msgstr "Кодирање"
 
-#: ../backend/pdf/ev-poppler.cc:1166
+#: ../backend/pdf/ev-poppler.cc:1171
 msgid "Substituting with"
 msgstr "Заменићу са"
 
@@ -320,6 +330,14 @@ msgstr "Прегледајте вишестраничне документе"
 msgid "pdf;ps;postscript;dvi;xps;djvu;tiff;document;presentation;"
 msgstr ""
 "пдф;пс;пост-скрипт;дви;икспс;дежави;тифф;документ;презентација;приказивање;"
+
+#: ../data/evince-previewer.desktop.in.in.h:1
+msgid "Print Preview"
+msgstr "Претпреглед штампе"
+
+#: ../data/evince-previewer.desktop.in.in.h:2
+msgid "Preview before printing"
+msgstr "Преглед пре штампања"
 
 #: ../data/org.gnome.Evince.gschema.xml.in.h:1
 msgid "Override document restrictions"
@@ -447,23 +465,25 @@ msgstr "Упозорење"
 msgid "Your print range selection does not include any pages"
 msgstr "Задати опсег за штампу не садржи ни једну страницу"
 
-#: ../libview/ev-print-operation.c:1321 ../previewer/ev-previewer-window.c:297
+#. translators: Title of the print dialog
+#. translators: Print document currently shown in the Print Preview window
+#: ../libview/ev-print-operation.c:1322 ../previewer/ev-previewer-window.c:298
 msgid "Print"
 msgstr "Штампај"
 
-#: ../libview/ev-print-operation.c:1900
+#: ../libview/ev-print-operation.c:1901
 msgid "Page Scaling:"
 msgstr "Развуци страницу:"
 
-#: ../libview/ev-print-operation.c:1906
+#: ../libview/ev-print-operation.c:1908
 msgid "Shrink to Printable Area"
 msgstr "Скупи на област за штампу"
 
-#: ../libview/ev-print-operation.c:1907
+#: ../libview/ev-print-operation.c:1909
 msgid "Fit to Printable Area"
 msgstr "Уклопи у област за штампу"
 
-#: ../libview/ev-print-operation.c:1910
+#: ../libview/ev-print-operation.c:1912
 msgid ""
 "Scale document pages to fit the selected printer page. Select from one of "
 "the following:\n"
@@ -487,11 +507,11 @@ msgstr ""
 "• „Уклопи у област за штампу“: Смањује или повећава странице документа тако "
 "да се уклопе на папир штампача.\n"
 
-#: ../libview/ev-print-operation.c:1922
+#: ../libview/ev-print-operation.c:1924
 msgid "Auto Rotate and Center"
 msgstr "Сам ротирај и центрирај"
 
-#: ../libview/ev-print-operation.c:1925
+#: ../libview/ev-print-operation.c:1927
 msgid ""
 "Rotate printer page orientation of each page to match orientation of each "
 "document page. Document pages will be centered within the printer page."
@@ -499,18 +519,18 @@ msgstr ""
 "Окрените сваку страницу штампача, тако да буде иста оној унутар документа и "
 "поставља странице документа на средину папира за штампу."
 
-#: ../libview/ev-print-operation.c:1930
+#: ../libview/ev-print-operation.c:1932
 msgid "Select page size using document page size"
 msgstr "Одреди величину странице на основу документа"
 
-#: ../libview/ev-print-operation.c:1932
+#: ../libview/ev-print-operation.c:1934
 msgid ""
 "When enabled, each page will be printed on the same size paper as the "
 "document page."
 msgstr ""
 "Поставља величину сваке одштампане странице на величину странице у документу."
 
-#: ../libview/ev-print-operation.c:2021
+#: ../libview/ev-print-operation.c:2023
 msgid "Page Handling"
 msgstr "Рад са страницама"
 
@@ -578,11 +598,11 @@ msgstr "Иди на датотеку „%s“"
 msgid "Launch %s"
 msgstr "Покрени %s"
 
-#: ../libview/ev-view-presentation.c:692
+#: ../libview/ev-view-presentation.c:710
 msgid "Jump to page:"
 msgstr "Скочи на страну:"
 
-#: ../libview/ev-view-presentation.c:997
+#: ../libview/ev-view-presentation.c:1015
 msgid "End of presentation. Click to exit."
 msgstr "Крај презентације. Кликните за излазак."
 
@@ -632,31 +652,31 @@ msgstr "Увећајте документ"
 msgid "Shrink the document"
 msgstr "Умањите документ"
 
-#: ../previewer/ev-previewer-window.c:298 ../shell/ev-window.c:5745
+#: ../previewer/ev-previewer-window.c:299 ../shell/ev-window.c:5745
 msgid "Print this document"
 msgstr "Одштампајте овај документ"
 
-#: ../previewer/ev-previewer-window.c:342 ../shell/ev-window.c:5898
+#: ../previewer/ev-previewer-window.c:343 ../shell/ev-window.c:5898
 msgid "Fit Pa_ge"
 msgstr "Испуни _страницу"
 
-#: ../previewer/ev-previewer-window.c:343 ../shell/ev-window.c:5899
+#: ../previewer/ev-previewer-window.c:344 ../shell/ev-window.c:5899
 msgid "Make the current document fill the window"
 msgstr "Учините да текући документ испуни прозор"
 
-#: ../previewer/ev-previewer-window.c:345 ../shell/ev-window.c:5901
+#: ../previewer/ev-previewer-window.c:346 ../shell/ev-window.c:5901
 msgid "Fit _Width"
 msgstr "Уклопи _ширину"
 
-#: ../previewer/ev-previewer-window.c:346 ../shell/ev-window.c:5902
+#: ../previewer/ev-previewer-window.c:347 ../shell/ev-window.c:5902
 msgid "Make the current document fill the window width"
 msgstr "Учините да текући документ испуни ширину прозора"
 
-#: ../previewer/ev-previewer-window.c:539 ../shell/ev-window.c:6013
+#: ../previewer/ev-previewer-window.c:540 ../shell/ev-window.c:6013
 msgid "Page"
 msgstr "Страна"
 
-#: ../previewer/ev-previewer-window.c:540 ../shell/ev-window.c:6014
+#: ../previewer/ev-previewer-window.c:541 ../shell/ev-window.c:6014
 msgid "Select Page"
 msgstr "Изаберите страну"
 
@@ -727,30 +747,30 @@ msgstr "Величина папира:"
 #. * Do *not* translate it to "predefinito:mm", if it
 #. * it isn't default:mm or default:inch it will not work
 #.
-#: ../properties/ev-properties-view.c:215
+#: ../properties/ev-properties-view.c:220
 msgid "default:mm"
 msgstr "default:mm"
 
-#: ../properties/ev-properties-view.c:259
+#: ../properties/ev-properties-view.c:264
 #, c-format
 msgid "%.0f × %.0f mm"
 msgstr "%.0f × %.0f mm"
 
-#: ../properties/ev-properties-view.c:263
+#: ../properties/ev-properties-view.c:268
 #, c-format
 msgid "%.2f × %.2f inch"
 msgstr "%.2f × %.2f инча"
 
 #. Note to translators: first placeholder is the paper name (eg.
 #. * A4), second placeholder is the paper size (eg. 297x210 mm)
-#: ../properties/ev-properties-view.c:287
+#: ../properties/ev-properties-view.c:292
 #, c-format
 msgid "%s, Portrait (%s)"
 msgstr "%s, Усправно (%s)"
 
 #. Note to translators: first placeholder is the paper name (eg.
 #. * A4), second placeholder is the paper size (eg. 297x210 mm)
-#: ../properties/ev-properties-view.c:294
+#: ../properties/ev-properties-view.c:299
 #, c-format
 msgid "%s, Landscape (%s)"
 msgstr "%s, Положено (%s)"
@@ -852,12 +872,10 @@ msgid "Close"
 msgstr "Затворен"
 
 #: ../shell/ev-history-action-widget.c:223
-#| msgid "Go to previous page"
 msgid "Go to previous history item"
 msgstr "Идите на претходну ставку историјата"
 
 #: ../shell/ev-history-action-widget.c:227
-#| msgid "Go to next page"
 msgid "Go to next history item"
 msgstr "Идите на следећу ставку историјата"
 
@@ -1014,7 +1032,7 @@ msgstr "Слојеви"
 msgid "Print…"
 msgstr "Штампај…"
 
-#: ../shell/ev-sidebar-links.c:722
+#: ../shell/ev-sidebar-links.c:723
 msgid "Index"
 msgstr "Попис"
 
