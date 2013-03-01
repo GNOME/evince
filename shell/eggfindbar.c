@@ -846,11 +846,16 @@ egg_find_bar_set_status_text (EggFindBar *find_bar,
                               const char *text)
 {
   EggFindBarPrivate *priv;
+  const gchar *current_text;
 
   g_return_if_fail (EGG_IS_FIND_BAR (find_bar));
 
   priv = (EggFindBarPrivate *)find_bar->priv;
   
-  gtk_label_set_text (GTK_LABEL (priv->status_label), text);
+  current_text = gtk_label_get_text (GTK_LABEL (priv->status_label));
+
+  if (g_strcmp0 (current_text, text) != 0)
+	  gtk_label_set_text (GTK_LABEL (priv->status_label), text);
+
   g_object_set (priv->status_item, "visible", text != NULL && *text !='\0', NULL);
 }
