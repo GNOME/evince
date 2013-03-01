@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: evince.HEAD\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evince&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2013-02-17 19:07+0000\n"
-"PO-Revision-Date: 2013-02-20 01:29+0000\n"
+"POT-Creation-Date: 2013-02-28 18:48+0000\n"
+"PO-Revision-Date: 2013-03-01 08:09+0530\n"
 "Last-Translator: A S Alam <aalam@users.sf.net>\n"
 "Language-Team: Punjabi/Panjabi <punjabi-users@lists.sf.net>\n"
 "Language: pa\n"
@@ -148,9 +148,10 @@ msgid ""
 "the fonts used to create the PDF, the rendering may not be correct."
 msgstr ""
 "ਇਹ ਡੌਕੂਮੈਂਟ ਵਿੱਚ ਗੈਰ-ਇੰਬੈਡ ਕੀਤੇ ਫੋਂਟ ਹਨ, ਜੋ ਕਿ ਮਿਆਰੀ ਪੀਡੀਐਫ ਮਿਆਰੀ ੧੪ ਫੋਂਟ "
-"ਨਹੀਂ ਹਨ। ਜੇ fontconfig "
-"ਵਲੋਂ ਚੁਣੇ ਬਦਲਵੇਂ ਫੋਂਟ ਪੀਡੀਐਫ ਬਣਾਉਣ ਲਈ ਵਰਤੇ ਫੋਂਟ ਵਾਂਗ ਨਾ ਹੋਏ ਤਾਂ ਰੈਡਰਿੰਗ ਠੀਕ "
-"ਨਹੀਂ ਹੋ ਸਕਦੀ ਹੈ।"
+"ਨਹੀਂ ਹਨ। ਜੇ "
+"fontconfig ਵਲੋਂ ਚੁਣੇ ਬਦਲਵੇਂ ਫੋਂਟ ਪੀਡੀਐਫ ਬਣਾਉਣ ਲਈ ਵਰਤੇ ਫੋਂਟ ਵਾਂਗ ਨਾ ਹੋਏ ਤਾਂ "
+"ਰੈਡਰਿੰਗ ਠੀਕ ਨਹੀਂ ਹੋ "
+"ਸਕਦੀ ਹੈ।"
 
 #: ../backend/pdf/ev-poppler.cc:1096
 msgid "All fonts are either standard or embedded."
@@ -160,20 +161,30 @@ msgstr "ਸਭ ਫੋਂਟ ਜਾਂ ਤਾਂ ਮਿਆਰੀ ਹੋਣੇ ਚ
 msgid "No name"
 msgstr "ਕੋਈ ਨਾਂ ਨਹੀਂ"
 
-#: ../backend/pdf/ev-poppler.cc:1133 ../libview/ev-print-operation.c:1905
-#: ../properties/ev-properties-view.c:187
+#. translators: When a font type does not have
+#. encoding information or it is unknown.  Example:
+#. Encoding: None
+#.
+#. translators: Value for 'Page Scaling:' to not scale the document pages on printing
+#. translators: This is used when a document property does
+#. not have a value.  Examples:
+#. Author: None
+#. Keywords: None
+#.
+#: ../backend/pdf/ev-poppler.cc:1137 ../libview/ev-print-operation.c:1907
+#: ../properties/ev-properties-view.c:192
 msgid "None"
 msgstr "ਕੋਈ ਨਹੀਂ"
 
-#: ../backend/pdf/ev-poppler.cc:1140
+#: ../backend/pdf/ev-poppler.cc:1145
 msgid "Embedded subset"
 msgstr "ਇੰਬੈੱਡ ਸਬ-ਸੈੱਟ"
 
-#: ../backend/pdf/ev-poppler.cc:1142
+#: ../backend/pdf/ev-poppler.cc:1147
 msgid "Embedded"
 msgstr "ਇੰਬੈੱਡ"
 
-#: ../backend/pdf/ev-poppler.cc:1144
+#: ../backend/pdf/ev-poppler.cc:1149
 msgid "Not embedded"
 msgstr "ਇੰਬੈੱਡ ਨਹੀਂ"
 
@@ -182,7 +193,7 @@ msgstr "ਇੰਬੈੱਡ ਨਹੀਂ"
 #. * type. Example:
 #. * "Type 1 (One of the Standard 14 Fonts)"
 #.
-#: ../backend/pdf/ev-poppler.cc:1151
+#: ../backend/pdf/ev-poppler.cc:1156
 msgid " (One of the Standard 14 Fonts)"
 msgstr " (ਮਿਆਰੀ ੧੪ ਫੋਂਟ ਵਿੱਚੋਂ)"
 
@@ -191,16 +202,15 @@ msgstr " (ਮਿਆਰੀ ੧੪ ਫੋਂਟ ਵਿੱਚੋਂ)"
 #. * type. Example:
 #. * "TrueType (Not one of the Standard 14 Fonts)"
 #.
-#: ../backend/pdf/ev-poppler.cc:1158
+#: ../backend/pdf/ev-poppler.cc:1163
 msgid " (Not one of the Standard 14 Fonts)"
 msgstr " (ਮਿਆਰੀ ੧੪ ਫੋਂਟ ਵਿੱਚੋਂ ਨਹੀਂ)"
 
-#: ../backend/pdf/ev-poppler.cc:1165
+#: ../backend/pdf/ev-poppler.cc:1170
 msgid "Encoding"
 msgstr "ਇੰਕੋਡਿੰਗ"
 
-#: ../backend/pdf/ev-poppler.cc:1166
-#| msgid "substituting with"
+#: ../backend/pdf/ev-poppler.cc:1171
 msgid "Substituting with"
 msgstr "ਇਸ ਨਾਲ ਬਦਲੋ"
 
@@ -317,7 +327,16 @@ msgstr "ਮਲਟੀ-ਪੇਜ਼ ਡੌਕੂਮੈਂਟ ਵੇਖੋ"
 msgid "pdf;ps;postscript;dvi;xps;djvu;tiff;document;presentation;"
 msgstr ""
 "ਪੀਡੀਐਫ;ਪੋਸਟਸਕ੍ਰਿਪਟ;ਡੀਵੀਆਈ;ਡੌਕੂਮੈਂਟ;ਪਰਿਜੈਂਟੇਸ਼ਨ;pdf;ps;postscript;dvi;xps;djvu;t"
-"iff;document;presentation;"
+"iff;"
+"document;presentation;"
+
+#: ../data/evince-previewer.desktop.in.in.h:1
+msgid "Print Preview"
+msgstr "ਪਰਿੰਟ ਝਲਕ"
+
+#: ../data/evince-previewer.desktop.in.in.h:2
+msgid "Preview before printing"
+msgstr "ਪਰਿੰਟ ਕਰਨ ਤੋਂ ਪਹਿਲਾਂ ਝਲਕ"
 
 #: ../data/org.gnome.Evince.gschema.xml.in.h:1
 msgid "Override document restrictions"
@@ -428,7 +447,6 @@ msgid "Printing page %d of %d…"
 msgstr "%2$d  ਵਿਚੋਂ %1$d ਪੇਜ਼ ਪਰਿੰਟ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ…"
 
 #: ../libview/ev-print-operation.c:1175
-#| msgid "Printing is not supported on this printer."
 msgid "Postscript is not supported by this printer."
 msgstr "ਇਸ ਪਰਿੰਟਰ ਉੱਤੇ ਪੋਸਟਸਕ੍ਰਿਪਟ ਸਹਾਇਕ ਨਹੀਂ ਹੈ।"
 
@@ -444,23 +462,25 @@ msgstr "ਚੇਤਾਵਨੀ"
 msgid "Your print range selection does not include any pages"
 msgstr "ਤੁਹਾਡੀ ਪਰਿੰਟ ਰੇਜ਼ ਵਿੱਚ ਕੋਈ ਵੀ ਪੇਜ਼ ਸ਼ਾਮਲ ਨਹੀਂ ਹੈ"
 
-#: ../libview/ev-print-operation.c:1321 ../previewer/ev-previewer-window.c:297
+#. translators: Title of the print dialog
+#. translators: Print document currently shown in the Print Preview window
+#: ../libview/ev-print-operation.c:1322 ../previewer/ev-previewer-window.c:298
 msgid "Print"
 msgstr "ਪਰਿੰਟ ਕਰੋ"
 
-#: ../libview/ev-print-operation.c:1900
+#: ../libview/ev-print-operation.c:1901
 msgid "Page Scaling:"
 msgstr "ਪੇਜ਼ ਸਕੇਲਿੰਗ:"
 
-#: ../libview/ev-print-operation.c:1906
+#: ../libview/ev-print-operation.c:1908
 msgid "Shrink to Printable Area"
 msgstr "ਪਰਿੰਟ ਹੋਣ ਯੋਗ ਖੇਤਰ ਲਈ ਸੁੰਘੜੋ"
 
-#: ../libview/ev-print-operation.c:1907
+#: ../libview/ev-print-operation.c:1909
 msgid "Fit to Printable Area"
 msgstr "ਪਰਿੰਟ ਹੋਣਯੋਗ ਖੇਤਰ ਲਈ ਫਿੱਟ"
 
-#: ../libview/ev-print-operation.c:1910
+#: ../libview/ev-print-operation.c:1912
 msgid ""
 "Scale document pages to fit the selected printer page. Select from one of "
 "the following:\n"
@@ -487,11 +507,11 @@ msgstr ""
 "ਪਰਿੰਟਰ ਪੇਜ਼ ਦੇ "
 "ਪਰਿੰਟ ਹੋਣ ਯੋਗ ਖੇਤਰ ਵਿੱਚ ਫਿੱਟ ਕਰਨ ਲਈ ਵੱਡਾ ਜਾਂ ਛੋਟਾ ਕੀਤਾ ਜਾਵੇਗਾ।\n"
 
-#: ../libview/ev-print-operation.c:1922
+#: ../libview/ev-print-operation.c:1924
 msgid "Auto Rotate and Center"
 msgstr "ਆਟੋ ਘੁੰਮਾਓ ਅਤੇ ਸੈਂਟਰ"
 
-#: ../libview/ev-print-operation.c:1925
+#: ../libview/ev-print-operation.c:1927
 msgid ""
 "Rotate printer page orientation of each page to match orientation of each "
 "document page. Document pages will be centered within the printer page."
@@ -500,11 +520,11 @@ msgstr ""
 "ਡੌਕੂਮੈਂਟ ਪੇਜ਼ ਨੂੰ ਪਰਿੰਟਰ ਪੇਜ਼ ਦੇ "
 "ਸੈਂਟਰ ਵਿੱਚ ਰੱਖਿਆ ਜਾਵੇਗਾ।"
 
-#: ../libview/ev-print-operation.c:1930
+#: ../libview/ev-print-operation.c:1932
 msgid "Select page size using document page size"
 msgstr "ਡੌਕੂਮੈਂਟ ਪੇਜ਼ ਸਾਈਜ਼ ਦੀ ਵਰਤੋਂ ਕਰਕੇ ਪੇਜ਼ ਸਾਈਜ਼ ਚੁਣੋ"
 
-#: ../libview/ev-print-operation.c:1932
+#: ../libview/ev-print-operation.c:1934
 msgid ""
 "When enabled, each page will be printed on the same size paper as the "
 "document page."
@@ -513,7 +533,7 @@ msgstr ""
 "ਜਿਵੇਂ ਕਿ ਡੌਕੂਮੈਂਟ ਪੇਜ਼ ਦਾ "
 "ਹੈ।"
 
-#: ../libview/ev-print-operation.c:2021
+#: ../libview/ev-print-operation.c:2023
 msgid "Page Handling"
 msgstr "ਪੇਜ਼ ਹੈਡਲਿੰਗ"
 
@@ -581,11 +601,11 @@ msgstr "ਫਾਇਲ “%s” ਉੱਤੇ ਜਾਓ"
 msgid "Launch %s"
 msgstr "%s ਚਲਾਓ"
 
-#: ../libview/ev-view-presentation.c:692
+#: ../libview/ev-view-presentation.c:710
 msgid "Jump to page:"
 msgstr "ਪੇਜ਼ ਉੱਤੇ ਜਾਓ:"
 
-#: ../libview/ev-view-presentation.c:997
+#: ../libview/ev-view-presentation.c:1015
 msgid "End of presentation. Click to exit."
 msgstr "ਪਰਿਜ਼ੈੱਨਟੇਸ਼ਨ ਪੂਰੀ ਹੋਈ। ਬੰਦ ਕਰਨ ਲਈ ਕਲਿੱਕ ਕਰੋ।"
 
@@ -635,33 +655,31 @@ msgstr "ਡੌਕੂਮੈਂਟ ਵੱਡਾ ਕਰੋ"
 msgid "Shrink the document"
 msgstr "ਡੌਕੂਮੈਂਟ ਸੁੰਘੜੋ"
 
-#: ../previewer/ev-previewer-window.c:298 ../shell/ev-window.c:5745
+#: ../previewer/ev-previewer-window.c:299 ../shell/ev-window.c:5745
 msgid "Print this document"
 msgstr "ਇਹ ਡੌਕੂਮੈਂਟ ਪਰਿੰਟ ਕਰੋ"
 
-#: ../previewer/ev-previewer-window.c:342 ../shell/ev-window.c:5898
-#| msgid "_First Page"
+#: ../previewer/ev-previewer-window.c:343 ../shell/ev-window.c:5898
 msgid "Fit Pa_ge"
 msgstr "ਪੇਜ਼ ਫਿੱਟ(_F)"
 
-#: ../previewer/ev-previewer-window.c:343 ../shell/ev-window.c:5899
+#: ../previewer/ev-previewer-window.c:344 ../shell/ev-window.c:5899
 msgid "Make the current document fill the window"
 msgstr "ਮੌਜੂਦਾ ਡੌਕੂਮੈਂਟ ਨੂੰ ਪੂਰੀ ਸਕਰੀਨ ਉੱਤੇ ਫਿੱਟ ਕਰੋ"
 
-#: ../previewer/ev-previewer-window.c:345 ../shell/ev-window.c:5901
-#| msgid "Fit Width"
+#: ../previewer/ev-previewer-window.c:346 ../shell/ev-window.c:5901
 msgid "Fit _Width"
 msgstr "ਚੌੜਾਈ ਫਿੱਟ(_W)"
 
-#: ../previewer/ev-previewer-window.c:346 ../shell/ev-window.c:5902
+#: ../previewer/ev-previewer-window.c:347 ../shell/ev-window.c:5902
 msgid "Make the current document fill the window width"
 msgstr "ਮੌਜੂਦਾ ਡੌਕੂਮੈਂਟ ਨੂੰ ਵਿੰਡੋ ਚੌੜਾਈ 'ਚ ਫਿੱਟ ਕਰੋ"
 
-#: ../previewer/ev-previewer-window.c:539 ../shell/ev-window.c:6013
+#: ../previewer/ev-previewer-window.c:540 ../shell/ev-window.c:6013
 msgid "Page"
 msgstr "ਪੇਜ਼"
 
-#: ../previewer/ev-previewer-window.c:540 ../shell/ev-window.c:6014
+#: ../previewer/ev-previewer-window.c:541 ../shell/ev-window.c:6014
 msgid "Select Page"
 msgstr "ਪੇਜ਼ ਚੁਣੋ"
 
@@ -732,30 +750,30 @@ msgstr "ਪੇਪਰ ਸਾਈਜ਼:"
 #. * Do *not* translate it to "predefinito:mm", if it
 #. * it isn't default:mm or default:inch it will not work
 #.
-#: ../properties/ev-properties-view.c:215
+#: ../properties/ev-properties-view.c:220
 msgid "default:mm"
 msgstr "default:mm"
 
-#: ../properties/ev-properties-view.c:259
+#: ../properties/ev-properties-view.c:264
 #, c-format
 msgid "%.0f × %.0f mm"
 msgstr "%.0f × %.0f mm"
 
-#: ../properties/ev-properties-view.c:263
+#: ../properties/ev-properties-view.c:268
 #, c-format
 msgid "%.2f × %.2f inch"
 msgstr "%.2f × %.2f ਇੰਚ"
 
 #. Note to translators: first placeholder is the paper name (eg.
 #. * A4), second placeholder is the paper size (eg. 297x210 mm)
-#: ../properties/ev-properties-view.c:287
+#: ../properties/ev-properties-view.c:292
 #, c-format
 msgid "%s, Portrait (%s)"
 msgstr "%s, ਪੋਰਟਰੇਟ (%s)"
 
 #. Note to translators: first placeholder is the paper name (eg.
 #. * A4), second placeholder is the paper size (eg. 297x210 mm)
-#: ../properties/ev-properties-view.c:294
+#: ../properties/ev-properties-view.c:299
 #, c-format
 msgid "%s, Landscape (%s)"
 msgstr "%s, ਲੈਡਸਕੇਪ (%s)"
@@ -857,12 +875,10 @@ msgid "Close"
 msgstr "ਬੰਦ ਕਰੋ"
 
 #: ../shell/ev-history-action-widget.c:223
-#| msgid "Go to previous page"
 msgid "Go to previous history item"
 msgstr "ਪਿਛਲੀ ਅਤੀਤ ਆਈਟਮ 'ਤੇ ਜਾਓ"
 
 #: ../shell/ev-history-action-widget.c:227
-#| msgid "Go to next page"
 msgid "Go to next history item"
 msgstr "ਅਗਲੀ ਅਤੀਤ ਆਈਟਮ 'ਤੇ ਜਾਓ"
 
@@ -1015,7 +1031,7 @@ msgstr "ਪਰਤਾਂ"
 msgid "Print…"
 msgstr "ਪਰਿੰਟ…"
 
-#: ../shell/ev-sidebar-links.c:722
+#: ../shell/ev-sidebar-links.c:723
 msgid "Index"
 msgstr "ਇੰਡੈਕਸ"
 
@@ -1277,7 +1293,6 @@ msgid "_Bookmarks"
 msgstr "ਬੁੱਕਮਾਰਕ(_B)"
 
 #: ../shell/ev-window.c:5726
-#| msgid "_Recover"
 msgid "_Recent"
 msgstr "ਤਾਜ਼ਾ(_R)"
 
@@ -1434,12 +1449,10 @@ msgid "_Dual"
 msgstr "ਦੂਹਰਾ(_D)"
 
 #: ../shell/ev-window.c:5887
-#| msgid "Show two pages at once with odd pages on the left"
 msgid "Show two pages at once"
 msgstr "ਇੱਕ ਵਾਰ ਹੀ ਦੋ ਪੇਜ਼ ਵੇਖਾਓ"
 
 #: ../shell/ev-window.c:5889
-#| msgid "Dual (_Odd pages left)"
 msgid "_Odd pages left"
 msgstr "ਟਾਂਕ ਸਫ਼ੇ ਖੱਬੇ(_O)"
 
@@ -1560,7 +1573,6 @@ msgstr "ਜ਼ੂਮ ਆਉਟ"
 
 #. translators: this is the label for toolbar button
 #: ../shell/ev-window.c:6096 ../shell/ev-zoom-action-widget.c:42
-#| msgid "_First Page"
 msgid "Fit Page"
 msgstr "ਪੇਜ਼ ਫਿੱਟ"
 
