@@ -1,7 +1,7 @@
 # Vietnamese translation for Evince.
 # Copyright © 2009 GNOME i18n Project for Vietnamese.
 # Clytie Siddall <clytie@riverland.net.au>, 2005-2009.
-# Nguyễn Thái Ngọc Duy <pclouds@gmail.com>, 2008,2012.
+# Nguyễn Thái Ngọc Duy <pclouds@gmail.com>, 2008,2012-2013.
 # Nguyễn Đình Trung <nguyendinhtrung141@gmail.com>, 2008.
 #
 msgid ""
@@ -10,7 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evince&keywords=I18N+L10N&component=general\n"
 "POT-Creation-Date: 2013-02-28 18:48+0000\n"
-"PO-Revision-Date: 2013-03-02 21:48+0700\n"
+"PO-Revision-Date: 2013-03-02 21:56+0700\n"
 "Last-Translator: Nguyễn Thái Ngọc Duy <pclouds@gmail.com>\n"
 "Language-Team: Vietnamese <vi-VN@googlegroups.com>\n"
 "Language: vi\n"
@@ -148,10 +148,13 @@ msgid ""
 "14 fonts. If the substitute fonts selected by fontconfig are not the same as "
 "the fonts used to create the PDF, the rendering may not be correct."
 msgstr ""
+"Tài liệu chứa phông không nhúng không phải PDF chuẩn 14. Nếu phông thay thế "
+"chọn bởi fontconfig không giống phông dùng để tạo PDF, hiển thị có thể không "
+"chính xác."
 
 #: ../backend/pdf/ev-poppler.cc:1096
 msgid "All fonts are either standard or embedded."
-msgstr ""
+msgstr "Mọi phông hoặc chuẩn hoặc nhúng."
 
 #: ../backend/pdf/ev-poppler.cc:1128
 msgid "No name"
@@ -191,7 +194,7 @@ msgstr "Không nhúng"
 #.
 #: ../backend/pdf/ev-poppler.cc:1156
 msgid " (One of the Standard 14 Fonts)"
-msgstr ""
+msgstr " (Một trong những phông chuẩn 14)"
 
 #. Translators: string starting with a space
 #. * because it is directly appended to the font
@@ -200,17 +203,15 @@ msgstr ""
 #.
 #: ../backend/pdf/ev-poppler.cc:1163
 msgid " (Not one of the Standard 14 Fonts)"
-msgstr ""
+msgstr " (Không phải một trong những phông chuẩn 14)"
 
 #: ../backend/pdf/ev-poppler.cc:1170
 msgid "Encoding"
 msgstr "Mã hoá"
 
 #: ../backend/pdf/ev-poppler.cc:1171
-#, fuzzy
-#| msgid "substituting with"
 msgid "Substituting with"
-msgstr "thay bằng"
+msgstr "Thay bằng"
 
 #: ../backend/pdf/pdfdocument.evince-backend.in.h:1
 msgid "PDF Documents"
@@ -324,14 +325,16 @@ msgstr "Xem tài liệu nhiều trang"
 #: ../data/evince.desktop.in.in.h:3
 msgid "pdf;ps;postscript;dvi;xps;djvu;tiff;document;presentation;"
 msgstr ""
+"pdf;ps;postscript;dvi;xps;djvu;tiff;document;tài;liệu;tai;lieu;;presentation;"
+"trình;diễn;trinh;dien;"
 
 #: ../data/evince-previewer.desktop.in.in.h:1
 msgid "Print Preview"
-msgstr ""
+msgstr "Xem trước"
 
 #: ../data/evince-previewer.desktop.in.in.h:2
 msgid "Preview before printing"
-msgstr ""
+msgstr "Xem trước khi in"
 
 #: ../data/org.gnome.Evince.gschema.xml.in.h:1
 msgid "Override document restrictions"
@@ -351,11 +354,11 @@ msgstr "Tài liệu được tự động nạp lại nếu có thay đổi."
 
 #: ../data/org.gnome.Evince.gschema.xml.in.h:5
 msgid "The URI of the directory last used to open or save a document"
-msgstr ""
+msgstr "URI của thư mục dùng lần cuối để mở hoặc lưu tài liệu"
 
 #: ../data/org.gnome.Evince.gschema.xml.in.h:6
 msgid "The URI of the directory last used to save a picture"
-msgstr ""
+msgstr "URI của thư mục dùng lần cuối để lưu hình"
 
 #: ../libdocument/ev-attachment.c:310 ../libdocument/ev-attachment.c:331
 #, c-format
@@ -440,10 +443,8 @@ msgid "Printing page %d of %d…"
 msgstr "Đang in trang %d trên %d…"
 
 #: ../libview/ev-print-operation.c:1175
-#, fuzzy
-#| msgid "Printing is not supported on this printer."
 msgid "Postscript is not supported by this printer."
-msgstr "Không hỗ trợ việc in trên máy in này."
+msgstr "Không hỗ trợ PostScript trên máy in này."
 
 #: ../libview/ev-print-operation.c:1240
 msgid "Invalid page selection"
@@ -647,20 +648,16 @@ msgid "Print this document"
 msgstr "In tài liệu này"
 
 #: ../previewer/ev-previewer-window.c:343 ../shell/ev-window.c:5898
-#, fuzzy
-#| msgid "_First Page"
 msgid "Fit Pa_ge"
-msgstr "Trang đầ_u"
+msgstr "Vừa khít _trang"
 
 #: ../previewer/ev-previewer-window.c:344 ../shell/ev-window.c:5899
 msgid "Make the current document fill the window"
 msgstr "Hiển thị toàn bộ trang trong cửa sổ"
 
 #: ../previewer/ev-previewer-window.c:346 ../shell/ev-window.c:5901
-#, fuzzy
-#| msgid "Fit Width"
 msgid "Fit _Width"
-msgstr "Vừa độ rộng"
+msgstr "Vừa _bề ngang"
 
 #: ../previewer/ev-previewer-window.c:347 ../shell/ev-window.c:5902
 msgid "Make the current document fill the window width"
@@ -866,16 +863,12 @@ msgid "Close"
 msgstr "Đóng"
 
 #: ../shell/ev-history-action-widget.c:223
-#, fuzzy
-#| msgid "Go to previous page"
 msgid "Go to previous history item"
-msgstr "Về trang trước"
+msgstr "Về mục lịch sử trước"
 
 #: ../shell/ev-history-action-widget.c:227
-#, fuzzy
-#| msgid "Go to next page"
 msgid "Go to next history item"
-msgstr "Tới trang tiếp theo"
+msgstr "Về mục lịch sử kế"
 
 #: ../shell/ev-keyring.c:86
 #, c-format
@@ -1245,10 +1238,8 @@ msgid "Evince"
 msgstr "Evince"
 
 #: ../shell/ev-window.c:4932
-#, fuzzy
-#| msgid "© 1996–2010 The Evince authors"
 msgid "© 1996–2012 The Evince authors"
-msgstr "© 1996–2010 Các tác giả của Evince"
+msgstr "© 1996–2012 Các tác giả của Evince"
 
 #: ../shell/ev-window.c:4938
 msgid "translator-credits"
@@ -1283,7 +1274,7 @@ msgstr "Đánh _dấu"
 
 #: ../shell/ev-window.c:5726
 msgid "_Recent"
-msgstr ""
+msgstr "_Gần đây"
 
 #. File menu
 #: ../shell/ev-window.c:5729 ../shell/ev-window.c:6049
@@ -1438,20 +1429,16 @@ msgid "_Dual"
 msgstr "_Phân đôi"
 
 #: ../shell/ev-window.c:5887
-#, fuzzy
-#| msgid "Show two pages at once with odd pages on the left"
 msgid "Show two pages at once"
-msgstr "Hiển thị đồng thời hai trang với trang lẻ bên trái"
+msgstr "Hiện hai trang cùng lúc"
 
 #: ../shell/ev-window.c:5889
-#, fuzzy
-#| msgid "Dual (_Odd pages left)"
 msgid "_Odd pages left"
-msgstr "Ké_p (trang lẻ bên trái)"
+msgstr "Trang _lẻ bên trái"
 
 #: ../shell/ev-window.c:5890
 msgid "Show odd pages on the left in dual mode"
-msgstr ""
+msgstr "Hiện trang lẻ bên trái trong chế độ hai trang"
 
 #: ../shell/ev-window.c:5892
 msgid "_Fullscreen"
@@ -1532,7 +1519,7 @@ msgstr "Chỉnh cấp phóng"
 
 #: ../shell/ev-window.c:6040
 msgid "History"
-msgstr ""
+msgstr "Lịch sử"
 
 #. translators: this is the label for toolbar button
 #: ../shell/ev-window.c:6069
@@ -1566,10 +1553,8 @@ msgstr "Thu nhỏ"
 
 #. translators: this is the label for toolbar button
 #: ../shell/ev-window.c:6096 ../shell/ev-zoom-action-widget.c:42
-#, fuzzy
-#| msgid "_First Page"
 msgid "Fit Page"
-msgstr "Trang đầ_u"
+msgstr "Khít trang"
 
 #. translators: this is the label for toolbar button
 #: ../shell/ev-window.c:6100 ../shell/ev-zoom-action-widget.c:43
