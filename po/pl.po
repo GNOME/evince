@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-17 21:07+0100\n"
-"PO-Revision-Date: 2013-02-17 21:08+0100\n"
+"POT-Creation-Date: 2013-03-02 01:46+0100\n"
+"PO-Revision-Date: 2013-03-02 01:47+0100\n"
 "Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
 "Language-Team: Polish <gnomepl@aviary.pl>\n"
 "Language: pl\n"
@@ -172,20 +172,30 @@ msgstr "Wszystkie czcionki są standardowe lub osadzone."
 msgid "No name"
 msgstr "Bez nazwy"
 
-#: ../backend/pdf/ev-poppler.cc:1133 ../libview/ev-print-operation.c:1905
-#: ../properties/ev-properties-view.c:187
+#. translators: When a font type does not have
+#. encoding information or it is unknown.  Example:
+#. Encoding: None
+#.
+#. translators: Value for 'Page Scaling:' to not scale the document pages on printing
+#. translators: This is used when a document property does
+#. not have a value.  Examples:
+#. Author: None
+#. Keywords: None
+#.
+#: ../backend/pdf/ev-poppler.cc:1137 ../libview/ev-print-operation.c:1907
+#: ../properties/ev-properties-view.c:192
 msgid "None"
 msgstr "Brak"
 
-#: ../backend/pdf/ev-poppler.cc:1140
+#: ../backend/pdf/ev-poppler.cc:1145
 msgid "Embedded subset"
 msgstr "Osadzony podzestaw"
 
-#: ../backend/pdf/ev-poppler.cc:1142
+#: ../backend/pdf/ev-poppler.cc:1147
 msgid "Embedded"
 msgstr "Osadzone"
 
-#: ../backend/pdf/ev-poppler.cc:1144
+#: ../backend/pdf/ev-poppler.cc:1149
 msgid "Not embedded"
 msgstr "Niesadzone"
 
@@ -194,7 +204,7 @@ msgstr "Niesadzone"
 #. * type. Example:
 #. * "Type 1 (One of the Standard 14 Fonts)"
 #.
-#: ../backend/pdf/ev-poppler.cc:1151
+#: ../backend/pdf/ev-poppler.cc:1156
 msgid " (One of the Standard 14 Fonts)"
 msgstr " (jedna ze standardowych czcionek 14)"
 
@@ -203,15 +213,15 @@ msgstr " (jedna ze standardowych czcionek 14)"
 #. * type. Example:
 #. * "TrueType (Not one of the Standard 14 Fonts)"
 #.
-#: ../backend/pdf/ev-poppler.cc:1158
+#: ../backend/pdf/ev-poppler.cc:1163
 msgid " (Not one of the Standard 14 Fonts)"
 msgstr " (nie jest jedną ze standardowych czcionek 14)"
 
-#: ../backend/pdf/ev-poppler.cc:1165
+#: ../backend/pdf/ev-poppler.cc:1170
 msgid "Encoding"
 msgstr "Kodowanie"
 
-#: ../backend/pdf/ev-poppler.cc:1166
+#: ../backend/pdf/ev-poppler.cc:1171
 msgid "Substituting with"
 msgstr "Zastępowanie za pomocą"
 
@@ -328,6 +338,14 @@ msgstr "Wyświetlanie wielostronicowych dokumentów"
 #: ../data/evince.desktop.in.in.h:3
 msgid "pdf;ps;postscript;dvi;xps;djvu;tiff;document;presentation;"
 msgstr "pdf;ps;postscript;dvi;xps;djvu;tiff;dokument;prezentacja;"
+
+#: ../data/evince-previewer.desktop.in.in.h:1
+msgid "Print Preview"
+msgstr "Podgląd wydruku"
+
+#: ../data/evince-previewer.desktop.in.in.h:2
+msgid "Preview before printing"
+msgstr "Podgląd przed drukowaniem"
 
 #: ../data/org.gnome.Evince.gschema.xml.in.h:1
 msgid "Override document restrictions"
@@ -454,23 +472,25 @@ msgstr "Ostrzeżenie"
 msgid "Your print range selection does not include any pages"
 msgstr "Wybór zakresu wydruku nie zawiera żadnej strony"
 
-#: ../libview/ev-print-operation.c:1321 ../previewer/ev-previewer-window.c:297
+#. translators: Title of the print dialog
+#. translators: Print document currently shown in the Print Preview window
+#: ../libview/ev-print-operation.c:1322 ../previewer/ev-previewer-window.c:298
 msgid "Print"
 msgstr "Wydrukuj"
 
-#: ../libview/ev-print-operation.c:1900
+#: ../libview/ev-print-operation.c:1901
 msgid "Page Scaling:"
 msgstr "Skalowanie strony:"
 
-#: ../libview/ev-print-operation.c:1906
+#: ../libview/ev-print-operation.c:1908
 msgid "Shrink to Printable Area"
 msgstr "Zmniejszenie do drukowalnego obszaru"
 
-#: ../libview/ev-print-operation.c:1907
+#: ../libview/ev-print-operation.c:1909
 msgid "Fit to Printable Area"
 msgstr "Dopasowanie do drukowalnego obszaru"
 
-#: ../libview/ev-print-operation.c:1910
+#: ../libview/ev-print-operation.c:1912
 msgid ""
 "Scale document pages to fit the selected printer page. Select from one of "
 "the following:\n"
@@ -496,11 +516,11 @@ msgstr ""
 "powiększane lub zmniejszane, aby dopasować do obszaru drukowalnego stron "
 "drukarki.\n"
 
-#: ../libview/ev-print-operation.c:1922
+#: ../libview/ev-print-operation.c:1924
 msgid "Auto Rotate and Center"
 msgstr "Automatyczne obracanie i wyśrodkowanie"
 
-#: ../libview/ev-print-operation.c:1925
+#: ../libview/ev-print-operation.c:1927
 msgid ""
 "Rotate printer page orientation of each page to match orientation of each "
 "document page. Document pages will be centered within the printer page."
@@ -508,11 +528,11 @@ msgstr ""
 "Obraca układ strony drukarki każdej strony na pasujący do układu stron "
 "dokumentu. Strony dokumentu będą wyśrodkowane na stronie drukarki."
 
-#: ../libview/ev-print-operation.c:1930
+#: ../libview/ev-print-operation.c:1932
 msgid "Select page size using document page size"
 msgstr "Wybór rozmiaru strony na podstawie rozmiaru stron dokumentu"
 
-#: ../libview/ev-print-operation.c:1932
+#: ../libview/ev-print-operation.c:1934
 msgid ""
 "When enabled, each page will be printed on the same size paper as the "
 "document page."
@@ -520,7 +540,7 @@ msgstr ""
 "Kiedy jest włączone, każda strona będzie drukowana na tym samym rozmiarze "
 "papieru, który używają strony dokumentu."
 
-#: ../libview/ev-print-operation.c:2021
+#: ../libview/ev-print-operation.c:2023
 msgid "Page Handling"
 msgstr "Obsługa stron"
 
@@ -588,11 +608,11 @@ msgstr "Przejdź do pliku \"%s\""
 msgid "Launch %s"
 msgstr "Uruchom %s"
 
-#: ../libview/ev-view-presentation.c:692
+#: ../libview/ev-view-presentation.c:710
 msgid "Jump to page:"
 msgstr "Przejdź do strony:"
 
-#: ../libview/ev-view-presentation.c:997
+#: ../libview/ev-view-presentation.c:1015
 msgid "End of presentation. Click to exit."
 msgstr "Koniec prezentacji. Kliknięcie zamknie okno."
 
@@ -642,31 +662,31 @@ msgstr "Powiększa widok dokumentu"
 msgid "Shrink the document"
 msgstr "Zmniejsza widok dokumentu"
 
-#: ../previewer/ev-previewer-window.c:298 ../shell/ev-window.c:5745
+#: ../previewer/ev-previewer-window.c:299 ../shell/ev-window.c:5745
 msgid "Print this document"
 msgstr "Drukuje bieżący dokument"
 
-#: ../previewer/ev-previewer-window.c:342 ../shell/ev-window.c:5898
+#: ../previewer/ev-previewer-window.c:343 ../shell/ev-window.c:5898
 msgid "Fit Pa_ge"
 msgstr "Dopasowanie do _strony"
 
-#: ../previewer/ev-previewer-window.c:343 ../shell/ev-window.c:5899
+#: ../previewer/ev-previewer-window.c:344 ../shell/ev-window.c:5899
 msgid "Make the current document fill the window"
 msgstr "Dopasowuje rozmiar dokumentu do rozmiaru okna"
 
-#: ../previewer/ev-previewer-window.c:345 ../shell/ev-window.c:5901
+#: ../previewer/ev-previewer-window.c:346 ../shell/ev-window.c:5901
 msgid "Fit _Width"
 msgstr "Dopasowanie do s_zerokości"
 
-#: ../previewer/ev-previewer-window.c:346 ../shell/ev-window.c:5902
+#: ../previewer/ev-previewer-window.c:347 ../shell/ev-window.c:5902
 msgid "Make the current document fill the window width"
 msgstr "Dopasowuje szerokość dokumentu do szerokości okna"
 
-#: ../previewer/ev-previewer-window.c:539 ../shell/ev-window.c:6013
+#: ../previewer/ev-previewer-window.c:540 ../shell/ev-window.c:6013
 msgid "Page"
 msgstr "Strona"
 
-#: ../previewer/ev-previewer-window.c:540 ../shell/ev-window.c:6014
+#: ../previewer/ev-previewer-window.c:541 ../shell/ev-window.c:6014
 msgid "Select Page"
 msgstr "Wybiera stronę"
 
@@ -737,30 +757,30 @@ msgstr "Rozmiar papieru:"
 #. * Do *not* translate it to "predefinito:mm", if it
 #. * it isn't default:mm or default:inch it will not work
 #.
-#: ../properties/ev-properties-view.c:215
+#: ../properties/ev-properties-view.c:220
 msgid "default:mm"
 msgstr "default:mm"
 
-#: ../properties/ev-properties-view.c:259
+#: ../properties/ev-properties-view.c:264
 #, c-format
 msgid "%.0f × %.0f mm"
 msgstr "%.0f × %.0f mm"
 
-#: ../properties/ev-properties-view.c:263
+#: ../properties/ev-properties-view.c:268
 #, c-format
 msgid "%.2f × %.2f inch"
 msgstr "%.2f × %.2f cali"
 
 #. Note to translators: first placeholder is the paper name (eg.
 #. * A4), second placeholder is the paper size (eg. 297x210 mm)
-#: ../properties/ev-properties-view.c:287
+#: ../properties/ev-properties-view.c:292
 #, c-format
 msgid "%s, Portrait (%s)"
 msgstr "%s, pionowo (%s)"
 
 #. Note to translators: first placeholder is the paper name (eg.
 #. * A4), second placeholder is the paper size (eg. 297x210 mm)
-#: ../properties/ev-properties-view.c:294
+#: ../properties/ev-properties-view.c:299
 #, c-format
 msgid "%s, Landscape (%s)"
 msgstr "%s, poziomo (%s)"
@@ -1021,7 +1041,7 @@ msgstr "Warstwy"
 msgid "Print…"
 msgstr "Wydrukuj…"
 
-#: ../shell/ev-sidebar-links.c:722
+#: ../shell/ev-sidebar-links.c:723
 msgid "Index"
 msgstr "Indeks"
 
