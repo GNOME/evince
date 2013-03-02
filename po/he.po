@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince.HEAD.he\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-21 19:49+0200\n"
-"PO-Revision-Date: 2013-02-21 19:33+0200\n"
+"POT-Creation-Date: 2013-03-02 23:56+0200\n"
+"PO-Revision-Date: 2013-03-02 23:57+0200\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: Gezer (Hebrew)\n"
 "Language: he\n"
@@ -24,10 +24,8 @@ msgstr ""
 
 #: ../backend/comics/comics-document.c:210
 #, c-format
-msgid ""
-"Error launching the command “%s” in order to decompress the comic book: %s"
-msgstr ""
-"Error launching the command “%s” in order to decompress the comic book: %s"
+msgid "Error launching the command “%s” in order to decompress the comic book: %s"
+msgstr "Error launching the command “%s” in order to decompress the comic book: %s"
 
 #: ../backend/comics/comics-document.c:224
 #, c-format
@@ -46,8 +44,7 @@ msgstr "Not a comic book MIME type: %s"
 
 #: ../backend/comics/comics-document.c:433
 msgid "Can't find an appropriate command to decompress this type of comic book"
-msgstr ""
-"Can't find an appropriate command to decompress this type of comic book"
+msgstr "Can't find an appropriate command to decompress this type of comic book"
 
 #: ../backend/comics/comics-document.c:488
 msgid "File corrupted"
@@ -81,9 +78,7 @@ msgid "DjVu document has incorrect format"
 msgstr "DjVu document has incorrect format"
 
 #: ../backend/djvu/djvu-document.c:245
-msgid ""
-"The document is composed of several files. One or more of these files cannot "
-"be accessed."
+msgid "The document is composed of several files. One or more of these files cannot be accessed."
 msgstr "המסמך מורכב ממספר קבצים. לא ניתן לגשת לאחד או יותר מהם."
 
 #: ../backend/djvu/djvudocument.evince-backend.in.h:1
@@ -103,12 +98,14 @@ msgid "This work is in the Public Domain"
 msgstr "יצירה זו היא לרשות הציבור"
 
 #. translators: this is the document security state
-#: ../backend/pdf/ev-poppler.cc:893 ../backend/pdf/ev-poppler.cc:899
+#: ../backend/pdf/ev-poppler.cc:893
+#: ../backend/pdf/ev-poppler.cc:899
 msgid "Yes"
 msgstr "כן"
 
 #. translators: this is the document security state
-#: ../backend/pdf/ev-poppler.cc:896 ../backend/pdf/ev-poppler.cc:899
+#: ../backend/pdf/ev-poppler.cc:896
+#: ../backend/pdf/ev-poppler.cc:899
 msgid "No"
 msgstr "לא"
 
@@ -145,14 +142,8 @@ msgid "Unknown font type"
 msgstr "סוג גופן לא ידוע"
 
 #: ../backend/pdf/ev-poppler.cc:1091
-msgid ""
-"This document contains non-embedded fonts that are not from the PDF Standard "
-"14 fonts. If the substitute fonts selected by fontconfig are not the same as "
-"the fonts used to create the PDF, the rendering may not be correct."
-msgstr ""
-"מסמך זה מכיל גופנים שאינם מוטמעים ושאינם חלק מ־14 גופני התקן של PDF. אם "
-"גופני ההחלפה שנבחרו על ידי fontconfig אינם זהים לגופנים בהם נעשה שימוש "
-"ליצירת ה־PDF, העיבוד עשוי להיות שגוי."
+msgid "This document contains non-embedded fonts that are not from the PDF Standard 14 fonts. If the substitute fonts selected by fontconfig are not the same as the fonts used to create the PDF, the rendering may not be correct."
+msgstr "מסמך זה מכיל גופנים שאינם מוטמעים ושאינם חלק מ־14 גופני התקן של PDF. אם גופני ההחלפה שנבחרו על ידי fontconfig אינם זהים לגופנים בהם נעשה שימוש ליצירת ה־PDF, העיבוד עשוי להיות שגוי."
 
 #: ../backend/pdf/ev-poppler.cc:1096
 msgid "All fonts are either standard or embedded."
@@ -162,20 +153,31 @@ msgstr "כל הגופנים הם תקניים או מוטמעים."
 msgid "No name"
 msgstr "ללא שם"
 
-#: ../backend/pdf/ev-poppler.cc:1133 ../libview/ev-print-operation.c:1905
-#: ../properties/ev-properties-view.c:187
+#. translators: When a font type does not have
+#. encoding information or it is unknown.  Example:
+#. Encoding: None
+#.
+#. translators: Value for 'Page Scaling:' to not scale the document pages on printing
+#. translators: This is used when a document property does
+#. not have a value.  Examples:
+#. Author: None
+#. Keywords: None
+#.
+#: ../backend/pdf/ev-poppler.cc:1137
+#: ../libview/ev-print-operation.c:1907
+#: ../properties/ev-properties-view.c:192
 msgid "None"
 msgstr "ללא"
 
-#: ../backend/pdf/ev-poppler.cc:1140
+#: ../backend/pdf/ev-poppler.cc:1145
 msgid "Embedded subset"
 msgstr "תת־קבוצה מוטמעת"
 
-#: ../backend/pdf/ev-poppler.cc:1142
+#: ../backend/pdf/ev-poppler.cc:1147
 msgid "Embedded"
 msgstr "מוטמע"
 
-#: ../backend/pdf/ev-poppler.cc:1144
+#: ../backend/pdf/ev-poppler.cc:1149
 msgid "Not embedded"
 msgstr "לא מוטמע"
 
@@ -184,7 +186,7 @@ msgstr "לא מוטמע"
 #. * type. Example:
 #. * "Type 1 (One of the Standard 14 Fonts)"
 #.
-#: ../backend/pdf/ev-poppler.cc:1151
+#: ../backend/pdf/ev-poppler.cc:1156
 msgid " (One of the Standard 14 Fonts)"
 msgstr "(אחד מ־14 הגופנים הרגילים)"
 
@@ -193,15 +195,15 @@ msgstr "(אחד מ־14 הגופנים הרגילים)"
 #. * type. Example:
 #. * "TrueType (Not one of the Standard 14 Fonts)"
 #.
-#: ../backend/pdf/ev-poppler.cc:1158
+#: ../backend/pdf/ev-poppler.cc:1163
 msgid " (Not one of the Standard 14 Fonts)"
 msgstr "(אף אחד מ־14 הגופנים הרגילים)"
 
-#: ../backend/pdf/ev-poppler.cc:1165
+#: ../backend/pdf/ev-poppler.cc:1170
 msgid "Encoding"
 msgstr "קידוד"
 
-#: ../backend/pdf/ev-poppler.cc:1166
+#: ../backend/pdf/ev-poppler.cc:1171
 msgid "Substituting with"
 msgstr "מוחלף ב־"
 
@@ -283,7 +285,8 @@ msgstr "Disable connection to session manager"
 msgid "Specify file containing saved configuration"
 msgstr "Specify file containing saved configuration"
 
-#: ../cut-n-paste/smclient/eggsmclient.c:229 ../previewer/ev-previewer.c:46
+#: ../cut-n-paste/smclient/eggsmclient.c:229
+#: ../previewer/ev-previewer.c:46
 msgid "FILE"
 msgstr "FILE"
 
@@ -304,8 +307,10 @@ msgid "Show session management options"
 msgstr "Show session management options"
 
 #. Manually set name and icon
-#: ../data/evince.desktop.in.in.h:1 ../shell/ev-window.c:4867
-#: ../shell/ev-window-title.c:156 ../shell/main.c:312
+#: ../data/evince.desktop.in.in.h:1
+#: ../shell/ev-window.c:4867
+#: ../shell/ev-window-title.c:156
+#: ../shell/main.c:312
 #, c-format
 msgid "Document Viewer"
 msgstr "מציג מסמכים"
@@ -317,6 +322,14 @@ msgstr "הצגת מסמכים מרובי עמודים"
 #: ../data/evince.desktop.in.in.h:3
 msgid "pdf;ps;postscript;dvi;xps;djvu;tiff;document;presentation;"
 msgstr "pdf;ps;פוסטסקריפט;dvi;xps;djvu;tiff;מסמך;מצגת;"
+
+#: ../data/evince-previewer.desktop.in.in.h:1
+msgid "Print Preview"
+msgstr "תצוגה מקדימה"
+
+#: ../data/evince-previewer.desktop.in.in.h:2
+msgid "Preview before printing"
+msgstr "תצוגה מקדימה להדפסה"
 
 #: ../data/org.gnome.Evince.gschema.xml.in.h:1
 msgid "Override document restrictions"
@@ -342,7 +355,8 @@ msgstr "The URI of the directory last used to open or save a document"
 msgid "The URI of the directory last used to save a picture"
 msgstr "The URI of the directory last used to save a picture"
 
-#: ../libdocument/ev-attachment.c:310 ../libdocument/ev-attachment.c:331
+#: ../libdocument/ev-attachment.c:310
+#: ../libdocument/ev-attachment.c:331
 #, c-format
 msgid "Couldn't save attachment “%s”: %s"
 msgstr "לא ניתן לשמור את הצרופה “%s”:‏ %s"
@@ -363,7 +377,8 @@ msgid "File type %s (%s) is not supported"
 msgstr "סוג הקובץ %s ‏(%s) אינו נתמך"
 
 #: ../libdocument/ev-document-factory.c:364
-#: ../libdocument/ev-file-helpers.c:490 ../libdocument/ev-file-helpers.c:536
+#: ../libdocument/ev-file-helpers.c:490
+#: ../libdocument/ev-file-helpers.c:536
 #: ../libdocument/ev-file-helpers.c:555
 msgid "Unknown MIME Type"
 msgstr "סוג MIME לא ידוע"
@@ -398,8 +413,10 @@ msgstr "‏(%d מתוך %d)"
 msgid "of %d"
 msgstr "מתוך %d"
 
-#: ../libmisc/ev-page-action-widget.c:182 ../shell/ev-history.c:345
-#: ../shell/ev-sidebar-bookmarks.c:312 ../shell/ev-window.c:885
+#: ../libmisc/ev-page-action-widget.c:182
+#: ../shell/ev-history.c:345
+#: ../shell/ev-sidebar-bookmarks.c:312
+#: ../shell/ev-window.c:885
 #: ../shell/ev-window.c:4602
 #, c-format
 msgid "Page %s"
@@ -440,68 +457,60 @@ msgstr "אזהרה"
 msgid "Your print range selection does not include any pages"
 msgstr "בחירת טווח ההדפסה שלך אינו כולל עמודים כלשהם"
 
-#: ../libview/ev-print-operation.c:1321 ../previewer/ev-previewer-window.c:297
+#. translators: Title of the print dialog
+#. translators: Print document currently shown in the Print Preview window
+#: ../libview/ev-print-operation.c:1322
+#: ../previewer/ev-previewer-window.c:298
 msgid "Print"
 msgstr "הדפס"
 
-#: ../libview/ev-print-operation.c:1900
+#: ../libview/ev-print-operation.c:1901
 msgid "Page Scaling:"
 msgstr "מידות העמוד:"
 
-#: ../libview/ev-print-operation.c:1906
+#: ../libview/ev-print-operation.c:1908
 msgid "Shrink to Printable Area"
 msgstr "כיווץ לאזור הניתן להדפסה"
 
-#: ../libview/ev-print-operation.c:1907
+#: ../libview/ev-print-operation.c:1909
 msgid "Fit to Printable Area"
 msgstr "התאמה לאזור הניתן להדפסה"
 
-#: ../libview/ev-print-operation.c:1910
+#: ../libview/ev-print-operation.c:1912
 msgid ""
-"Scale document pages to fit the selected printer page. Select from one of "
-"the following:\n"
+"Scale document pages to fit the selected printer page. Select from one of the following:\n"
 "\n"
 "• \"None\": No page scaling is performed.\n"
 "\n"
-"• \"Shrink to Printable Area\": Document pages larger than the printable "
-"area are reduced to fit the printable area of the printer page.\n"
+"• \"Shrink to Printable Area\": Document pages larger than the printable area are reduced to fit the printable area of the printer page.\n"
 "\n"
-"• \"Fit to Printable Area\": Document pages are enlarged or reduced as "
-"required to fit the printable area of the printer page.\n"
+"• \"Fit to Printable Area\": Document pages are enlarged or reduced as required to fit the printable area of the printer page.\n"
 msgstr ""
 "התאמת עמודי המסמך לגודל העמוד במדפסת. יש לבחור מהבאים:\n"
 "\n"
 "• \"ללא\": לא מתבצעות התאמות לעמוד.\n"
 "\n"
-"• \"כיווץ לאזור הניתן להדפסה\": עמודי המסמך גדולים מהאזור הניתן להדפסה "
-"מוקטנים כדי שיתאימו לאזור עליו ניתן להדפיס בדפי המדפסת.\n"
+"• \"כיווץ לאזור הניתן להדפסה\": עמודי המסמך גדולים מהאזור הניתן להדפסה מוקטנים כדי שיתאימו לאזור עליו ניתן להדפיס בדפי המדפסת.\n"
 "\n"
-"• \"התאמה לאזור הניתן להדפסה\": עמודי המסמך מוגדלים או מוקטנים כדי להתאים "
-"לאזור הניתן להדפסה בדף המדפסת.\n"
+"• \"התאמה לאזור הניתן להדפסה\": עמודי המסמך מוגדלים או מוקטנים כדי להתאים לאזור הניתן להדפסה בדף המדפסת.\n"
 
-#: ../libview/ev-print-operation.c:1922
+#: ../libview/ev-print-operation.c:1924
 msgid "Auto Rotate and Center"
 msgstr "הטיה ומרכוז אוטומטיים"
 
-#: ../libview/ev-print-operation.c:1925
-msgid ""
-"Rotate printer page orientation of each page to match orientation of each "
-"document page. Document pages will be centered within the printer page."
-msgstr ""
-"הטיית כיוון העמוד של כל עמוד בנפרד כך שיתאים להטיה של כל עמוד במסמך. עמודי "
-"המסמך ימורכזו בדף המדפסת."
+#: ../libview/ev-print-operation.c:1927
+msgid "Rotate printer page orientation of each page to match orientation of each document page. Document pages will be centered within the printer page."
+msgstr "הטיית כיוון העמוד של כל עמוד בנפרד כך שיתאים להטיה של כל עמוד במסמך. עמודי המסמך ימורכזו בדף המדפסת."
 
-#: ../libview/ev-print-operation.c:1930
+#: ../libview/ev-print-operation.c:1932
 msgid "Select page size using document page size"
 msgstr "בחירת גודל העמוד באמצעות גודל עמוד המסמך"
 
-#: ../libview/ev-print-operation.c:1932
-msgid ""
-"When enabled, each page will be printed on the same size paper as the "
-"document page."
+#: ../libview/ev-print-operation.c:1934
+msgid "When enabled, each page will be printed on the same size paper as the document page."
 msgstr "כאשר פעיל, כל עמוד יודפס באותו גודל הדף כמו עמוד המסמך."
 
-#: ../libview/ev-print-operation.c:2021
+#: ../libview/ev-print-operation.c:2023
 msgid "Page Handling"
 msgstr "טיפול בעמודים"
 
@@ -569,11 +578,11 @@ msgstr "מעבר לקובץ „%s“"
 msgid "Launch %s"
 msgstr "שיגור %s"
 
-#: ../libview/ev-view-presentation.c:692
+#: ../libview/ev-view-presentation.c:710
 msgid "Jump to page:"
 msgstr "קפיצה לעמוד:"
 
-#: ../libview/ev-view-presentation.c:997
+#: ../libview/ev-view-presentation.c:1015
 msgid "End of presentation. Click to exit."
 msgstr "סוף המצגת. נא ללחוץ ליציאה."
 
@@ -585,11 +594,13 @@ msgstr "מחיקת הקובץ הזמני"
 msgid "Print settings file"
 msgstr "הדפסת קובץ ההגדרות"
 
-#: ../previewer/ev-previewer.c:175 ../previewer/ev-previewer.c:207
+#: ../previewer/ev-previewer.c:175
+#: ../previewer/ev-previewer.c:207
 msgid "GNOME Document Previewer"
 msgstr "כלי להצגה מקדימה של מסמכים מבית GNOME"
 
-#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3329
+#: ../previewer/ev-previewer-window.c:91
+#: ../shell/ev-window.c:3329
 msgid "Failed to print document"
 msgstr "הדפסת המסמך נכשלה"
 
@@ -599,55 +610,68 @@ msgid "The selected printer '%s' could not be found"
 msgstr "המדפסת הנבחרת '%s' לא נמצאה"
 
 #. Go menu
-#: ../previewer/ev-previewer-window.c:284 ../shell/ev-window.c:5780
+#: ../previewer/ev-previewer-window.c:284
+#: ../shell/ev-window.c:5780
 msgid "_Previous Page"
 msgstr "העמוד ה_קודם"
 
-#: ../previewer/ev-previewer-window.c:285 ../shell/ev-window.c:5781
+#: ../previewer/ev-previewer-window.c:285
+#: ../shell/ev-window.c:5781
 msgid "Go to the previous page"
 msgstr "מעבר לעמוד הקודם"
 
-#: ../previewer/ev-previewer-window.c:287 ../shell/ev-window.c:5783
+#: ../previewer/ev-previewer-window.c:287
+#: ../shell/ev-window.c:5783
 msgid "_Next Page"
 msgstr "העמוד ה_בא"
 
-#: ../previewer/ev-previewer-window.c:288 ../shell/ev-window.c:5784
+#: ../previewer/ev-previewer-window.c:288
+#: ../shell/ev-window.c:5784
 msgid "Go to the next page"
 msgstr "מעבר לעמוד הבא"
 
-#: ../previewer/ev-previewer-window.c:291 ../shell/ev-window.c:5767
+#: ../previewer/ev-previewer-window.c:291
+#: ../shell/ev-window.c:5767
 msgid "Enlarge the document"
 msgstr "הגדלת המסמך"
 
-#: ../previewer/ev-previewer-window.c:294 ../shell/ev-window.c:5770
+#: ../previewer/ev-previewer-window.c:294
+#: ../shell/ev-window.c:5770
 msgid "Shrink the document"
 msgstr "הקטנת המסמך"
 
-#: ../previewer/ev-previewer-window.c:298 ../shell/ev-window.c:5745
+#: ../previewer/ev-previewer-window.c:299
+#: ../shell/ev-window.c:5745
 msgid "Print this document"
 msgstr "הדפסת מסמך זה"
 
-#: ../previewer/ev-previewer-window.c:342 ../shell/ev-window.c:5898
+#: ../previewer/ev-previewer-window.c:343
+#: ../shell/ev-window.c:5898
 msgid "Fit Pa_ge"
 msgstr "התאמה ל_עמוד"
 
-#: ../previewer/ev-previewer-window.c:343 ../shell/ev-window.c:5899
+#: ../previewer/ev-previewer-window.c:344
+#: ../shell/ev-window.c:5899
 msgid "Make the current document fill the window"
 msgstr "הצגת המסמך הנוכחי כך שימלא את החלון"
 
-#: ../previewer/ev-previewer-window.c:345 ../shell/ev-window.c:5901
+#: ../previewer/ev-previewer-window.c:346
+#: ../shell/ev-window.c:5901
 msgid "Fit _Width"
 msgstr "התאמה ל_רוחב"
 
-#: ../previewer/ev-previewer-window.c:346 ../shell/ev-window.c:5902
+#: ../previewer/ev-previewer-window.c:347
+#: ../shell/ev-window.c:5902
 msgid "Make the current document fill the window width"
 msgstr "הצגת המסמך הנוכחי כך שימלא את רוחב העמוד"
 
-#: ../previewer/ev-previewer-window.c:539 ../shell/ev-window.c:6013
+#: ../previewer/ev-previewer-window.c:540
+#: ../shell/ev-window.c:6013
 msgid "Page"
 msgstr "עמוד"
 
-#: ../previewer/ev-previewer-window.c:540 ../shell/ev-window.c:6014
+#: ../previewer/ev-previewer-window.c:541
+#: ../shell/ev-window.c:6014
 msgid "Select Page"
 msgstr "בחירת עמוד"
 
@@ -718,30 +742,30 @@ msgstr "‏גודל דף:"
 #. * Do *not* translate it to "predefinito:mm", if it
 #. * it isn't default:mm or default:inch it will not work
 #.
-#: ../properties/ev-properties-view.c:215
+#: ../properties/ev-properties-view.c:220
 msgid "default:mm"
 msgstr "default:mm"
 
-#: ../properties/ev-properties-view.c:259
+#: ../properties/ev-properties-view.c:264
 #, c-format
 msgid "%.0f × %.0f mm"
 msgstr "%.0f x %.0f מילימטרים"
 
-#: ../properties/ev-properties-view.c:263
+#: ../properties/ev-properties-view.c:268
 #, c-format
 msgid "%.2f × %.2f inch"
 msgstr "%.2f x %.2f אינטשים"
 
 #. Note to translators: first placeholder is the paper name (eg.
 #. * A4), second placeholder is the paper size (eg. 297x210 mm)
-#: ../properties/ev-properties-view.c:287
+#: ../properties/ev-properties-view.c:292
 #, c-format
 msgid "%s, Portrait (%s)"
 msgstr "‏%s, דיוקן (%s)"
 
 #. Note to translators: first placeholder is the paper name (eg.
 #. * A4), second placeholder is the paper size (eg. 297x210 mm)
-#: ../properties/ev-properties-view.c:294
+#: ../properties/ev-properties-view.c:299
 #, c-format
 msgid "%s, Landscape (%s)"
 msgstr "‏%s, נוף (%s)"
@@ -856,8 +880,10 @@ msgid "Password for document %s"
 msgstr "ססמת המסמך %s"
 
 #. Create tree view
-#: ../shell/ev-loading-message.c:50 ../shell/ev-sidebar-annotations.c:131
-#: ../shell/ev-sidebar-layers.c:125 ../shell/ev-sidebar-links.c:261
+#: ../shell/ev-loading-message.c:50
+#: ../shell/ev-sidebar-annotations.c:131
+#: ../shell/ev-sidebar-layers.c:125
+#: ../shell/ev-sidebar-links.c:261
 msgid "Loading…"
 msgstr "בטעינה…"
 
@@ -866,12 +892,11 @@ msgid "Open a recently used document"
 msgstr "פתיחת מסמך שהיה בשימוש לאחרונה"
 
 #: ../shell/ev-password-view.c:142
-msgid ""
-"This document is locked and can only be read by entering the correct "
-"password."
+msgid "This document is locked and can only be read by entering the correct password."
 msgstr "מסמך זה נעול, ויש צורך בססמה כדי לקרוא אותו."
 
-#: ../shell/ev-password-view.c:151 ../shell/ev-password-view.c:269
+#: ../shell/ev-password-view.c:151
+#: ../shell/ev-password-view.c:269
 msgid "_Unlock Document"
 msgstr "_שחרור המסמך"
 
@@ -885,8 +910,7 @@ msgstr "נדרשת ססמה"
 
 #: ../shell/ev-password-view.c:302
 #, c-format
-msgid ""
-"The document “%s” is locked and requires a password before it can be opened."
+msgid "The document “%s” is locked and requires a password before it can be opened."
 msgstr "המסמך „%s“ נעול ונדרשת ססמה כדי לפתוח אותו."
 
 #: ../shell/ev-password-view.c:332
@@ -946,7 +970,8 @@ msgstr "מידע נוסף"
 msgid "List"
 msgstr "רשימה"
 
-#: ../shell/ev-sidebar-annotations.c:199 ../shell/ev-sidebar-annotations.c:527
+#: ../shell/ev-sidebar-annotations.c:199
+#: ../shell/ev-sidebar-annotations.c:527
 msgid "Annotations"
 msgstr "הערות"
 
@@ -1019,7 +1044,8 @@ msgstr "המסמך אינו מכיל עמודים"
 msgid "The document contains only empty pages"
 msgstr "המסמך מכיל עמודים ריקים בלבד"
 
-#: ../shell/ev-window.c:1688 ../shell/ev-window.c:1850
+#: ../shell/ev-window.c:1688
+#: ../shell/ev-window.c:1850
 msgid "Unable to open document"
 msgstr "לא ניתן לפתוח את המסמך"
 
@@ -1028,7 +1054,8 @@ msgstr "לא ניתן לפתוח את המסמך"
 msgid "Loading document from “%s”"
 msgstr "המסמך מ־„%s“ נטען"
 
-#: ../shell/ev-window.c:1963 ../shell/ev-window.c:2254
+#: ../shell/ev-window.c:1963
+#: ../shell/ev-window.c:2254
 #, c-format
 msgid "Downloading document (%d%%)"
 msgstr "מוריד מסמך (%d%%)"
@@ -1065,7 +1092,8 @@ msgstr "הצרופה נשמרת ל־%s"
 msgid "Saving image to %s"
 msgstr "התמונה נשמרת ל־%s"
 
-#: ../shell/ev-window.c:2766 ../shell/ev-window.c:2866
+#: ../shell/ev-window.c:2766
+#: ../shell/ev-window.c:2866
 #, c-format
 msgid "The file could not be saved as “%s”."
 msgstr "לא ניתן לשמור את הקובץ בשם „%s“."
@@ -1110,17 +1138,12 @@ msgid "Printing job “%s”"
 msgstr "המשימה „%s“ מודפסת"
 
 #: ../shell/ev-window.c:3563
-msgid ""
-"Document contains form fields that have been filled out. If you don't save a "
-"copy, changes will be permanently lost."
+msgid "Document contains form fields that have been filled out. If you don't save a copy, changes will be permanently lost."
 msgstr "המסמך מכיל שדות טופס שיש למלא. אם לא יישמר עותק, השינויים יאבדו לעד."
 
 #: ../shell/ev-window.c:3567
-msgid ""
-"Document contains new or modified annotations. If you don't save a copy, "
-"changes will be permanently lost."
-msgstr ""
-"המסמך מכיל הערות חדשות או ערוכות. אם לא יישמר עותק, השינויים יאבדו לעד."
+msgid "Document contains new or modified annotations. If you don't save a copy, changes will be permanently lost."
+msgstr "המסמך מכיל הערות חדשות או ערוכות. אם לא יישמר עותק, השינויים יאבדו לעד."
 
 #: ../shell/ev-window.c:3574
 #, c-format
@@ -1146,8 +1169,7 @@ msgstr "האם להמתין לסיום משימת ההדפסה „%s“ לפני
 #: ../shell/ev-window.c:3677
 #, c-format
 msgid "There is %d print job active. Wait until print finishes before closing?"
-msgid_plural ""
-"There are %d print jobs active. Wait until print finishes before closing?"
+msgid_plural "There are %d print jobs active. Wait until print finishes before closing?"
 msgstr[0] "יש משימת הדפסה אחת פעילה. האם להמתין לסיום ההדפסה לפני הסגירה?"
 msgstr[1] "יש %d משימות הדפסה פעילות. האם להמתין לסיום ההדפסות לפני הסגירה?"
 
@@ -1177,38 +1199,16 @@ msgstr ""
 "בעזרת %s (‏%s)"
 
 #: ../shell/ev-window.c:4896
-msgid ""
-"Evince is free software; you can redistribute it and/or modify it under the "
-"terms of the GNU General Public License as published by the Free Software "
-"Foundation; either version 2 of the License, or (at your option) any later "
-"version.\n"
-msgstr ""
-"Evince is free software; you can redistribute it and/or modify it under the "
-"terms of the GNU General Public License as published by the Free Software "
-"Foundation; either version 2 of the License, or (at your option) any later "
-"version.\n"
+msgid "Evince is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.\n"
+msgstr "Evince is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.\n"
 
 #: ../shell/ev-window.c:4900
-msgid ""
-"Evince is distributed in the hope that it will be useful, but WITHOUT ANY "
-"WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS "
-"FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more "
-"details.\n"
-msgstr ""
-"Evince is distributed in the hope that it will be useful, but WITHOUT ANY "
-"WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS "
-"FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more "
-"details.\n"
+msgid "Evince is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.\n"
+msgstr "Evince is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.\n"
 
 #: ../shell/ev-window.c:4904
-msgid ""
-"You should have received a copy of the GNU General Public License along with "
-"Evince; if not, write to the Free Software Foundation, Inc., 51 Franklin "
-"Street, Fifth Floor, Boston, MA 02110-1301  USA\n"
-msgstr ""
-"ל־Evince אמור היה להיות מצורף עותק של הרישיון הציבורי הכללי של GNU; אם לא, "
-"יש לכתוב אל Free Software Foundation, Inc., 59 Temple Place, Suite 330, "
-"Boston, MA  02111-1307  USA\n"
+msgid "You should have received a copy of the GNU General Public License along with Evince; if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA\n"
+msgstr "ל־Evince אמור היה להיות מצורף עותק של הרישיון הציבורי הכללי של GNU; אם לא, יש לכתוב אל Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA\n"
 
 #: ../shell/ev-window.c:4929
 msgid "Evince"
@@ -1255,11 +1255,13 @@ msgid "_Recent"
 msgstr "_אחרונים"
 
 #. File menu
-#: ../shell/ev-window.c:5729 ../shell/ev-window.c:6049
+#: ../shell/ev-window.c:5729
+#: ../shell/ev-window.c:6049
 msgid "_Open…"
 msgstr "_פתיחה…"
 
-#: ../shell/ev-window.c:5730 ../shell/ev-window.c:6050
+#: ../shell/ev-window.c:5730
+#: ../shell/ev-window.c:6050
 msgid "Open an existing document"
 msgstr "פתיחת מסמך קיים"
 
@@ -1530,16 +1532,19 @@ msgid "Zoom Out"
 msgstr "התרחקות"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:6096 ../shell/ev-zoom-action-widget.c:42
+#: ../shell/ev-window.c:6096
+#: ../shell/ev-zoom-action-widget.c:42
 msgid "Fit Page"
 msgstr "התאמה לעמוד"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:6100 ../shell/ev-zoom-action-widget.c:43
+#: ../shell/ev-window.c:6100
+#: ../shell/ev-zoom-action-widget.c:43
 msgid "Fit Width"
 msgstr "התאמה לרוחב"
 
-#: ../shell/ev-window.c:6246 ../shell/ev-window.c:6262
+#: ../shell/ev-window.c:6246
+#: ../shell/ev-window.c:6262
 msgid "Unable to launch external application."
 msgstr "לא ניתן לשגר יישום חיצוני"
 
@@ -1632,7 +1637,8 @@ msgstr "3200%"
 msgid "6400%"
 msgstr "6400%"
 
-#: ../shell/main.c:70 ../shell/main.c:276
+#: ../shell/main.c:70
+#: ../shell/main.c:276
 msgid "GNOME Document Viewer"
 msgstr "GNOME Document Viewer"
 
