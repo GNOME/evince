@@ -25,8 +25,8 @@ msgstr ""
 "Project-Id-Version: Evince master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evince&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2013-02-17 19:07+0000\n"
-"PO-Revision-Date: 2013-02-16 19:40+0100\n"
+"POT-Creation-Date: 2013-02-28 18:48+0000\n"
+"PO-Revision-Date: 2013-03-03 19:18+0100\n"
 "Last-Translator: Mario Blättermann <mario.blaettermann@gmail.com>\n"
 "Language-Team: Deutsch <gnome-de@gnome.org>\n"
 "Language: de_DE\n"
@@ -101,8 +101,8 @@ msgid ""
 "The document is composed of several files. One or more of these files cannot "
 "be accessed."
 msgstr ""
-"Das Dokument besteht aus mehreren Dateien. Auf eine oder mehrere Dateien "
-"kann nicht zugegriffen werden."
+"Das Dokument besteht aus mehreren Dateien. Auf eine oder mehrere Dateien kann "
+"nicht zugegriffen werden."
 
 #: ../backend/djvu/djvudocument.evince-backend.in.h:1
 msgid "DjVu Documents"
@@ -184,20 +184,30 @@ msgstr ""
 msgid "No name"
 msgstr "Kein Name"
 
-#: ../backend/pdf/ev-poppler.cc:1133 ../libview/ev-print-operation.c:1905
-#: ../properties/ev-properties-view.c:187
+#. translators: When a font type does not have
+#. encoding information or it is unknown.  Example:
+#. Encoding: None
+#.
+#. translators: Value for 'Page Scaling:' to not scale the document pages on printing
+#. translators: This is used when a document property does
+#. not have a value.  Examples:
+#. Author: None
+#. Keywords: None
+#.
+#: ../backend/pdf/ev-poppler.cc:1137 ../libview/ev-print-operation.c:1907
+#: ../properties/ev-properties-view.c:192
 msgid "None"
 msgstr "Kein"
 
-#: ../backend/pdf/ev-poppler.cc:1140
+#: ../backend/pdf/ev-poppler.cc:1145
 msgid "Embedded subset"
 msgstr "Eingebetteter Teilsatz"
 
-#: ../backend/pdf/ev-poppler.cc:1142
+#: ../backend/pdf/ev-poppler.cc:1147
 msgid "Embedded"
 msgstr "Eingebettet"
 
-#: ../backend/pdf/ev-poppler.cc:1144
+#: ../backend/pdf/ev-poppler.cc:1149
 msgid "Not embedded"
 msgstr "Nicht eingebettet"
 
@@ -206,7 +216,7 @@ msgstr "Nicht eingebettet"
 #. * type. Example:
 #. * "Type 1 (One of the Standard 14 Fonts)"
 #.
-#: ../backend/pdf/ev-poppler.cc:1151
+#: ../backend/pdf/ev-poppler.cc:1156
 msgid " (One of the Standard 14 Fonts)"
 msgstr " (Eine der 14 Standardschriftarten)"
 
@@ -215,15 +225,15 @@ msgstr " (Eine der 14 Standardschriftarten)"
 #. * type. Example:
 #. * "TrueType (Not one of the Standard 14 Fonts)"
 #.
-#: ../backend/pdf/ev-poppler.cc:1158
+#: ../backend/pdf/ev-poppler.cc:1163
 msgid " (Not one of the Standard 14 Fonts)"
 msgstr " (Keine Standardschriftart)"
 
-#: ../backend/pdf/ev-poppler.cc:1165
+#: ../backend/pdf/ev-poppler.cc:1170
 msgid "Encoding"
 msgstr "Zeichenkodierung"
 
-#: ../backend/pdf/ev-poppler.cc:1166
+#: ../backend/pdf/ev-poppler.cc:1171
 msgid "Substituting with"
 msgstr "Wird ersetzt durch"
 
@@ -342,6 +352,14 @@ msgstr "Mehrseitige Dokumente anzeigen"
 msgid "pdf;ps;postscript;dvi;xps;djvu;tiff;document;presentation;"
 msgstr "pdf;ps;postscript;dvi;xps;djvu;tiff;Dokument;Präsentation;"
 
+#: ../data/evince-previewer.desktop.in.in.h:1
+msgid "Print Preview"
+msgstr "Druckvorschau"
+
+#: ../data/evince-previewer.desktop.in.in.h:2
+msgid "Preview before printing"
+msgstr "Vorschau auf das Dokument vor dem Druck"
+
 #: ../data/org.gnome.Evince.gschema.xml.in.h:1
 msgid "Override document restrictions"
 msgstr "Restriktionen des Dokuments übergehen"
@@ -417,14 +435,12 @@ msgstr "Erstellung einer temporären Datei ist gescheitert: %s"
 msgid "Failed to create a temporary directory: %s"
 msgstr "Erstellung eines temporären Ordners ist gescheitert: %s"
 
-#: ../libmisc/ev-page-action-widget.c:85
-#: ../libmisc/ev-page-action-widget.c:124
+#: ../libmisc/ev-page-action-widget.c:85 ../libmisc/ev-page-action-widget.c:124
 #, c-format
 msgid "(%d of %d)"
 msgstr "(%d von %d)"
 
-#: ../libmisc/ev-page-action-widget.c:87
-#: ../libmisc/ev-page-action-widget.c:126
+#: ../libmisc/ev-page-action-widget.c:87 ../libmisc/ev-page-action-widget.c:126
 #, c-format
 msgid "of %d"
 msgstr "von %d"
@@ -471,37 +487,39 @@ msgstr "Warnung"
 msgid "Your print range selection does not include any pages"
 msgstr "Ihre Druckbereichsauswahl enthält keine Seiten"
 
-#: ../libview/ev-print-operation.c:1321 ../previewer/ev-previewer-window.c:297
+#. translators: Title of the print dialog
+#. translators: Print document currently shown in the Print Preview window
+#: ../libview/ev-print-operation.c:1322 ../previewer/ev-previewer-window.c:298
 msgid "Print"
 msgstr "Drucken"
 
-#: ../libview/ev-print-operation.c:1900
+#: ../libview/ev-print-operation.c:1901
 msgid "Page Scaling:"
 msgstr "Seitenskalierung:"
 
-#: ../libview/ev-print-operation.c:1906
+#: ../libview/ev-print-operation.c:1908
 msgid "Shrink to Printable Area"
 msgstr "Auf Druckbereich verkleinern"
 
-#: ../libview/ev-print-operation.c:1907
+#: ../libview/ev-print-operation.c:1909
 msgid "Fit to Printable Area"
 msgstr "Auf Druckbereich anpassen"
 
-#: ../libview/ev-print-operation.c:1910
+#: ../libview/ev-print-operation.c:1912
 msgid ""
-"Scale document pages to fit the selected printer page. Select from one of "
-"the following:\n"
+"Scale document pages to fit the selected printer page. Select from one of the "
+"following:\n"
 "\n"
 "• \"None\": No page scaling is performed.\n"
 "\n"
-"• \"Shrink to Printable Area\": Document pages larger than the printable "
-"area are reduced to fit the printable area of the printer page.\n"
+"• \"Shrink to Printable Area\": Document pages larger than the printable area "
+"are reduced to fit the printable area of the printer page.\n"
 "\n"
 "• \"Fit to Printable Area\": Document pages are enlarged or reduced as "
 "required to fit the printable area of the printer page.\n"
 msgstr ""
-"Die Dokumentseiten skalieren, so dass sie auf die gewählte Druckseite "
-"passen. Wählen Sie eine der folgenden Optionen:\n"
+"Die Dokumentseiten skalieren, so dass sie auf die gewählte Druckseite passen. "
+"Wählen Sie eine der folgenden Optionen:\n"
 "\n"
 "• »Kein«: Es wird keine Skalierung durchgeführt.\n"
 "\n"
@@ -511,11 +529,11 @@ msgstr ""
 "• »Auf Druckbereich anpassen«: Dokumentseiten werden bei Bedarf vergrößert "
 "oder verkleinert, um in den Druckbereich der Seite zu passen.\n"
 
-#: ../libview/ev-print-operation.c:1922
+#: ../libview/ev-print-operation.c:1924
 msgid "Auto Rotate and Center"
 msgstr "Automatisch drehen und zentrieren"
 
-#: ../libview/ev-print-operation.c:1925
+#: ../libview/ev-print-operation.c:1927
 msgid ""
 "Rotate printer page orientation of each page to match orientation of each "
 "document page. Document pages will be centered within the printer page."
@@ -523,11 +541,11 @@ msgstr ""
 "Druckseiten auf das Hoch-/Querformat jeder Dokumentseite anpassen. Die "
 "Dokumentseiten werden in der Druckseite zentriert."
 
-#: ../libview/ev-print-operation.c:1930
+#: ../libview/ev-print-operation.c:1932
 msgid "Select page size using document page size"
 msgstr "Die Seitengröße anhand der Größe der Dokumentseite wählen"
 
-#: ../libview/ev-print-operation.c:1932
+#: ../libview/ev-print-operation.c:1934
 msgid ""
 "When enabled, each page will be printed on the same size paper as the "
 "document page."
@@ -535,7 +553,7 @@ msgstr ""
 "Legt fest, ob jede Seite auf der gleichen Papiergröße wie die Dokumentseite "
 "gedruckt werden soll."
 
-#: ../libview/ev-print-operation.c:2021
+#: ../libview/ev-print-operation.c:2023
 msgid "Page Handling"
 msgstr "Seitenverarbeitung"
 
@@ -603,11 +621,11 @@ msgstr "Zu Datei »%s« gehen"
 msgid "Launch %s"
 msgstr "%s starten"
 
-#: ../libview/ev-view-presentation.c:692
+#: ../libview/ev-view-presentation.c:710
 msgid "Jump to page:"
 msgstr "Zu folgender Seite gehen:"
 
-#: ../libview/ev-view-presentation.c:997
+#: ../libview/ev-view-presentation.c:1015
 msgid "End of presentation. Click to exit."
 msgstr "Ende der Präsentation. Klicken Sie zum Schließen."
 
@@ -657,33 +675,33 @@ msgstr "Ansicht vergrößern"
 msgid "Shrink the document"
 msgstr "Ansicht verkleinern"
 
-#: ../previewer/ev-previewer-window.c:298 ../shell/ev-window.c:5745
+#: ../previewer/ev-previewer-window.c:299 ../shell/ev-window.c:5745
 msgid "Print this document"
 msgstr "Dieses Dokument drucken"
 
-#: ../previewer/ev-previewer-window.c:342 ../shell/ev-window.c:5898
+#: ../previewer/ev-previewer-window.c:343 ../shell/ev-window.c:5898
 msgid "Fit Pa_ge"
 msgstr "An _Seite anpassen"
 
-#: ../previewer/ev-previewer-window.c:343 ../shell/ev-window.c:5899
+#: ../previewer/ev-previewer-window.c:344 ../shell/ev-window.c:5899
 msgid "Make the current document fill the window"
 msgstr "Das momentan angezeigte Dokument in das Fenster einpassen"
 
-#: ../previewer/ev-previewer-window.c:345 ../shell/ev-window.c:5901
+#: ../previewer/ev-previewer-window.c:346 ../shell/ev-window.c:5901
 msgid "Fit _Width"
 msgstr "An _Breite anpassen"
 
-#: ../previewer/ev-previewer-window.c:346 ../shell/ev-window.c:5902
+#: ../previewer/ev-previewer-window.c:347 ../shell/ev-window.c:5902
 msgid "Make the current document fill the window width"
 msgstr ""
 "Die Seitenbreite des momentan angezeigten Dokuments an die Fensterbreite "
 "anpassen"
 
-#: ../previewer/ev-previewer-window.c:539 ../shell/ev-window.c:6013
+#: ../previewer/ev-previewer-window.c:540 ../shell/ev-window.c:6013
 msgid "Page"
 msgstr "Seite"
 
-#: ../previewer/ev-previewer-window.c:540 ../shell/ev-window.c:6014
+#: ../previewer/ev-previewer-window.c:541 ../shell/ev-window.c:6014
 msgid "Select Page"
 msgstr "Seite auswählen"
 
@@ -754,30 +772,30 @@ msgstr "Papiergröße:"
 #. * Do *not* translate it to "predefinito:mm", if it
 #. * it isn't default:mm or default:inch it will not work
 #.
-#: ../properties/ev-properties-view.c:215
+#: ../properties/ev-properties-view.c:220
 msgid "default:mm"
 msgstr "default:mm"
 
-#: ../properties/ev-properties-view.c:259
+#: ../properties/ev-properties-view.c:264
 #, c-format
 msgid "%.0f × %.0f mm"
 msgstr "%.0f × %.0f mm"
 
-#: ../properties/ev-properties-view.c:263
+#: ../properties/ev-properties-view.c:268
 #, c-format
 msgid "%.2f × %.2f inch"
 msgstr "%.2f × %.2f Zoll"
 
 #. Note to translators: first placeholder is the paper name (eg.
 #. * A4), second placeholder is the paper size (eg. 297x210 mm)
-#: ../properties/ev-properties-view.c:287
+#: ../properties/ev-properties-view.c:292
 #, c-format
 msgid "%s, Portrait (%s)"
 msgstr "%s, Hochformat (%s)"
 
 #. Note to translators: first placeholder is the paper name (eg.
 #. * A4), second placeholder is the paper size (eg. 297x210 mm)
-#: ../properties/ev-properties-view.c:294
+#: ../properties/ev-properties-view.c:299
 #, c-format
 msgid "%s, Landscape (%s)"
 msgstr "%s, Querformat (%s)"
@@ -879,16 +897,12 @@ msgid "Close"
 msgstr "Schließen"
 
 #: ../shell/ev-history-action-widget.c:223
-#, fuzzy
-#| msgid "Go to previous page"
 msgid "Go to previous history item"
-msgstr "Zur vorherigen Seite gehen"
+msgstr "Zum vorherigen Chronikeintrag gehen"
 
 #: ../shell/ev-history-action-widget.c:227
-#, fuzzy
-#| msgid "Go to next page"
 msgid "Go to next history item"
-msgstr "Zur nächsten Seite gehen"
+msgstr "Zum nächsten Chronikeintrag gehen"
 
 #: ../shell/ev-keyring.c:86
 #, c-format
@@ -907,8 +921,7 @@ msgstr "Eines der zuletzt geöffneten Dokumente öffnen"
 
 #: ../shell/ev-password-view.c:142
 msgid ""
-"This document is locked and can only be read by entering the correct "
-"password."
+"This document is locked and can only be read by entering the correct password."
 msgstr ""
 "Dieses Dokument ist gesperrt und kann nur nach Eingabe des korrekten "
 "Passworts gelesen werden."
@@ -1043,7 +1056,7 @@ msgstr "Ebenen"
 msgid "Print…"
 msgstr "Drucken …"
 
-#: ../shell/ev-sidebar-links.c:722
+#: ../shell/ev-sidebar-links.c:723
 msgid "Index"
 msgstr "Inhalt"
 
@@ -1246,9 +1259,8 @@ msgstr ""
 #: ../shell/ev-window.c:4900
 msgid ""
 "Evince is distributed in the hope that it will be useful, but WITHOUT ANY "
-"WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS "
-"FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more "
-"details.\n"
+"WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR "
+"A PARTICULAR PURPOSE.  See the GNU General Public License for more details.\n"
 msgstr ""
 "Die Veröffentlichung von Evince erfolgt in der Hoffnung, dass es Ihnen von "
 "Nutzen sein wird, aber OHNE IRGENDEINE GARANTIE, sogar ohne die implizite "
@@ -1559,7 +1571,7 @@ msgstr "Die Vergrößerungsstufe anpassen"
 
 #: ../shell/ev-window.c:6040
 msgid "History"
-msgstr ""
+msgstr "Chronik"
 
 #. translators: this is the label for toolbar button
 #: ../shell/ev-window.c:6069
@@ -1758,223 +1770,3 @@ msgstr "_Hilfe"
 
 #~ msgid "Back"
 #~ msgstr "Zurück"
-
-# CHECK
-#~ msgid "Move across visited pages"
-#~ msgstr "Durch die betrachteten Seiten bewegen"
-
-#~ msgid "Show “_%s”"
-#~ msgstr "»_%s« anzeigen"
-
-#~ msgid "_Move on Toolbar"
-#~ msgstr "Auf Werkzeugleiste _verschieben"
-
-#~ msgid "Move the selected item on the toolbar"
-#~ msgstr "Das gewählte Objekt auf der Werkzeugleiste verschieben"
-
-#~ msgid "_Remove from Toolbar"
-#~ msgstr "Aus Werkzeugleiste _entfernen"
-
-#~ msgid "Remove the selected item from the toolbar"
-#~ msgstr "Das gewählte Objekt aus der Werkzeugleiste entfernen"
-
-#~ msgid "_Delete Toolbar"
-#~ msgstr "Werkzeugleiste _entfernen"
-
-#~ msgid "Remove the selected toolbar"
-#~ msgstr "Die gewählte Werkzeugleiste entfernen"
-
-#~ msgid "Separator"
-#~ msgstr "Trennlinie"
-
-#~ msgid "Best Fit"
-#~ msgstr "Einpassen"
-
-#~ msgid "Fit Page Width"
-#~ msgstr "Auf Seitenbreite einpassen"
-
-#~ msgid "_Best Fit"
-#~ msgstr "_Einpassen"
-
-#~ msgid "Fit Page _Width"
-#~ msgstr "_Seitenbreite einpassen"
-
-#~ msgid "Find:"
-#~ msgstr "Suchen:"
-
-#~ msgid "Find Pre_vious"
-#~ msgstr "_Rückwärts suchen"
-
-#~ msgid "Find Ne_xt"
-#~ msgstr "_Weitersuchen"
-
-#~ msgid "There was an error displaying help"
-#~ msgstr "Beim Anzeigen der Hilfe ist ein Fehler aufgetreten"
-
-#~ msgid "Toolbar Editor"
-#~ msgstr "Werkzeugleisteneditor"
-
-#~ msgid "_File"
-#~ msgstr "_Datei"
-
-#~ msgid "_Edit"
-#~ msgstr "_Bearbeiten"
-
-#~ msgid "_View"
-#~ msgstr "_Ansicht"
-
-#~ msgid "_Go"
-#~ msgstr "_Gehe zu"
-
-#~ msgid "T_oolbar"
-#~ msgstr "_Werkzeugleiste"
-
-#~ msgid "_Contents"
-#~ msgstr "I_nhalt"
-
-#~ msgid "_Toolbar"
-#~ msgstr "_Werkzeugleiste"
-
-#~ msgid "Show or hide the toolbar"
-#~ msgstr "Die Werkzeugleiste anzeigen/verbergen"
-
-#~ msgid "_Dual (Even pages left)"
-#~ msgstr "_Zweiseitig (gerade Seitenzahlen links)"
-
-#~ msgid "Show two pages at once with even pages on the left"
-#~ msgstr "Zwei Seiten gleichzeitig anzeigen, mit geraden Seitenzahlen links"
-
-#~ msgid "Toggle case sensitive search"
-#~ msgstr ""
-#~ "Legt fest, ob bei der Suche die Groß-/Kleinschreibung berücksichtigt wird"
-
-#~ msgid ""
-#~ "Boolean options available: true enables thumbnailing and false disables "
-#~ "the creation of new thumbnails"
-#~ msgstr ""
-#~ "Verfügbare boolesche Werte: Wahr (true) aktiviert die Erstellung von "
-#~ "Vorschaubildern, während falsch (false) das Erzeugen neuer Vorschaubilder "
-#~ "deaktiviert."
-
-#~ msgid "Enable thumbnailing of PDF Documents"
-#~ msgstr "Vorschaubilder von PDF-Dokumenten aktivieren"
-
-#~ msgid "Thumbnail command for PDF Documents"
-#~ msgstr "Vorschaubefehl für PDF-Dokumente"
-
-#~ msgid ""
-#~ "Valid command plus arguments for the PDF Document thumbnailer. See "
-#~ "Nautilus thumbnailer documentation for more information."
-#~ msgstr ""
-#~ "Gültiger Befehl plus Argumente für die PDF-Dokumentenvorschau. Bitte "
-#~ "schauen Sie für weiterführende Informationen in der Dokumentation der "
-#~ "Nautilus-Dokumentvorschau nach."
-
-#~ msgid "Converting %s"
-#~ msgstr "%s wird umgewandelt"
-
-#~ msgid "%d of %d documents converted"
-#~ msgstr "%d von %d Dokumenten umgewandelt"
-
-#~ msgid "Converting metadata"
-#~ msgstr "Metadaten werden umgewandelt"
-
-#~ msgid ""
-#~ "The metadata format used by Evince has changed, and hence it needs to be "
-#~ "migrated. If the migration is cancelled the metadata storage will not "
-#~ "work."
-#~ msgstr ""
-#~ "Das von Evince verwendete Metadaten-Format wurde geändert. Nun muss eine "
-#~ "Migration vorgenommen werden. Wenn diese Migration abgebrochen wird, dann "
-#~ "wird die Speicherung von Metadaten nicht funktionieren."
-
-#~ msgid "Impress Slides"
-#~ msgstr "Impress-Präsentationen"
-
-#~ msgid "No error"
-#~ msgstr "Kein Fehler"
-
-#~ msgid "Not enough memory"
-#~ msgstr "Nicht genug Speicher"
-
-#~ msgid "Cannot find ZIP signature"
-#~ msgstr "Keine ZIP-Signatur gefunden"
-
-#~ msgid "Invalid ZIP file"
-#~ msgstr "Ungültige ZIP-Datei"
-
-#~ msgid "Multi file ZIPs are not supported"
-#~ msgstr "ZIP-Archive mit mehreren Dateien werden nicht unterstützt"
-
-#~ msgid "Cannot read data from file"
-#~ msgstr "Die Daten der Datei konnten nicht gelesen werden"
-
-#~ msgid "Cannot find file in the ZIP archive"
-#~ msgstr "Datei im ZIP-Archiv nicht gefunden"
-
-#~ msgid "Unknown error"
-#~ msgstr "Unbekannter Fehler"
-
-#~ msgid "Page Set_up…"
-#~ msgstr "Seite einric_hten …"
-
-#~ msgid "Set up the page settings for printing"
-#~ msgstr "Die Seiteneinstellungen zum Drucken festlegen"
-
-#~ msgid "DJVU document has incorrect format"
-#~ msgstr "Das DJVU-Dokument besitzt ein ungültiges Format"
-
-#~ msgid "Print..."
-#~ msgstr "Drucken …"
-
-#~ msgid "_Save a Copy..."
-#~ msgstr "Eine Kopie _speichern …"
-
-#~ msgid "_Print..."
-#~ msgstr "_Drucken …"
-
-#~ msgid "_Find..."
-#~ msgstr "_Suchen …"
-
-#~ msgid "Failed to create file “%s”: %s"
-#~ msgstr "Datei »%s« konnte nicht erstellt werden: %s"
-
-#~ msgid "Search string"
-#~ msgstr "Suchausdruck"
-
-#~ msgid "The name of the string to be found"
-#~ msgstr "Die zu suchende Zeichenkette"
-
-#~ msgid "Case sensitive"
-#~ msgstr "Groß-/Kleinschreibung beachten"
-
-#~ msgid "TRUE for a case sensitive search"
-#~ msgstr "TRUE für Suche unter Beachtung der Groß-/Kleinschreibung"
-
-#~ msgid "Highlight color"
-#~ msgstr "Hervorhebungsfarbe"
-
-#~ msgid "Color of highlight for all matches"
-#~ msgstr "Farbe zur Hervorhebung aller Übereinstimmungen"
-
-#~ msgid "Current color"
-#~ msgstr "Farbe für aktuelle Übereinstimmung"
-
-#~ msgid "Color of highlight for the current match"
-#~ msgstr "Farbe zur Hervorhebung der aktuellen Übereinstimmung"
-
-#~ msgid "Recover previous documents?"
-#~ msgstr "Vorherige Dokumente wiederherstellen?"
-
-#~ msgid ""
-#~ "Evince appears to have exited unexpectedly the last time it was run. You "
-#~ "can recover the opened documents."
-#~ msgstr ""
-#~ "Evince scheint beim letzten Mal abgestürzt oder abgewürgt worden zu sein. "
-#~ "Sie können die geöffneten Dokumente wiederherstellen."
-
-#~ msgid "_Don't Recover"
-#~ msgstr "_Nicht wiederherstellen"
-
-#~ msgid "Crash Recovery"
-#~ msgstr "Absturz-Wiederherstellung"
