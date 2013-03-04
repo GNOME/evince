@@ -2742,6 +2742,7 @@ ev_annot_from_poppler_annot (PopplerAnnot *poppler_annot,
 {
 	EvAnnotation *ev_annot = NULL;
 	const gchar  *unimplemented_annot = NULL;
+	gboolean reported_annot = FALSE;
 
 	switch (poppler_annot_get_annot_type (poppler_annot)) {
 	        case POPPLER_ANNOT_TEXT: {
@@ -2792,8 +2793,34 @@ ev_annot_from_poppler_annot (PopplerAnnot *poppler_annot,
 	        case POPPLER_ANNOT_WIDGET:
 			/* Ignore link and widgets annots since they are already handled */
 			break;
+		case POPPLER_ANNOT_3D:
+		case POPPLER_ANNOT_CARET:
+		case POPPLER_ANNOT_FREE_TEXT:
+		case POPPLER_ANNOT_HIGHLIGHT:
+		case POPPLER_ANNOT_LINE:
+		case POPPLER_ANNOT_SCREEN:
+		case POPPLER_ANNOT_SOUND:
+		case POPPLER_ANNOT_SQUARE:
+		case POPPLER_ANNOT_SQUIGGLY:
+		case POPPLER_ANNOT_STAMP:
+		case POPPLER_ANNOT_STRIKE_OUT:
+		case POPPLER_ANNOT_UNDERLINE: {
+			/* FIXME: These annotations are unimplemented, but they were already
+			 * reported in Evince Bugzilla with test case.  We add a special
+			 * warning to let the user know it is unimplemented, yet we do not
+			 * want more duplicates of known issues.
+			 */
+			GEnumValue *enum_value;
+			reported_annot = TRUE;
+
+			enum_value = g_enum_get_value ((GEnumClass *) g_type_class_ref (POPPLER_TYPE_ANNOT_TYPE),
+						       poppler_annot_get_annot_type (poppler_annot));
+			unimplemented_annot = enum_value ? enum_value->value_name : "Unknown annotation";
+		}
+			break;
 	        default: {
 			GEnumValue *enum_value;
+			reported_annot = FALSE;
 
 			enum_value = g_enum_get_value ((GEnumClass *) g_type_class_ref (POPPLER_TYPE_ANNOT_TYPE),
 						       poppler_annot_get_annot_type (poppler_annot));
@@ -2802,10 +2829,16 @@ ev_annot_from_poppler_annot (PopplerAnnot *poppler_annot,
 	}
 
 	if (unimplemented_annot) {
-		g_warning ("Unimplemented annotation: %s, please post a "
-		           "bug report in Evince bugzilla "
-		           "(http://bugzilla.gnome.org) with a testcase.",
-			   unimplemented_annot);
+		if (reported_annot) {
+			g_warning ("Unimplemented annotation: %s.  It is a known issue "
+			           "and it might be implemented in the future.",
+				   unimplemented_annot);
+		} else {
+			g_warning ("Unimplemented annotation: %s, please post a "
+			           "bug report in Evince bugzilla "
+			           "(http://bugzilla.gnome.org) with a testcase.",
+				   unimplemented_annot);
+		}
 	}
 
 	if (ev_annot) {
