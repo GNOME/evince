@@ -1624,7 +1624,7 @@ static void
 goto_fitr_dest (EvView *view, EvLinkDest *dest)
 {
 	EvPoint doc_point;
-	gdouble zoom, left, top;
+	gdouble zoom, left, top, doc_width, doc_height;
 	gboolean change_left, change_top;
 	GtkAllocation allocation;
 
@@ -1633,13 +1633,20 @@ goto_fitr_dest (EvView *view, EvLinkDest *dest)
 	left = ev_link_dest_get_left (dest, &change_left);
 	top = ev_link_dest_get_top (dest, &change_top);
 
-	zoom = zoom_for_size_fit_page (ev_link_dest_get_right (dest) - left,
-				       ev_link_dest_get_bottom (dest) - top,
+	doc_width = ev_link_dest_get_right (dest) - left;
+	doc_height = ev_link_dest_get_bottom (dest) - top;
+
+	zoom = zoom_for_size_fit_page (doc_width,
+				       doc_height,
 				       allocation.width,
 				       allocation.height);
 
 	ev_document_model_set_sizing_mode (view->model, EV_SIZING_FREE);
 	ev_document_model_set_scale (view->model, zoom);
+
+	/* center the target box within the view */
+	left -= (allocation.width / zoom - doc_width) / 2;
+	top -= (allocation.height / zoom - doc_height) / 2;
 
 	doc_point.x = change_left ? left : 0;
 	doc_point.y = change_top ? top : 0;
