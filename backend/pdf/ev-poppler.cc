@@ -1273,11 +1273,13 @@ ev_link_dest_from_dest (PdfDocument *pdf_document,
 			poppler_page = poppler_document_get_page (pdf_document->document,
 								  MAX (0, dest->page_num - 1));
 			poppler_page_get_size (poppler_page, NULL, &height);
+			/* for evince we ensure that bottom <= top and left <= right */
+			/* also evince has its origin in the top left, so we invert the y axis. */
 			ev_dest = ev_link_dest_new_fitr (dest->page_num - 1,
-							 dest->left,
-							 height - MIN (height, dest->bottom),
-							 dest->right,
-							 height - MIN (height, dest->top));
+							 MIN (dest->left, dest->right),
+							 height - MIN (height, MIN (dest->bottom, dest->top)),
+							 MAX (dest->left, dest->right),
+							 height - MIN (height, MAX (dest->bottom, dest->top)));
 			g_object_unref (poppler_page);
 		}
 			break;
