@@ -8,15 +8,15 @@
 # Sven Sapelson <sven.sapelson gmail com>, 2005.
 # Ivar Smolin <okul linux ee>, 2005–2010.
 # Priit Laes <amd store20 com>, 2005–2007.
-# Mattias Põldaru <mahfiaz@gmail.com>, 2010, 2011, 2012.
+# Mattias Põldaru <mahfiaz@gmail.com>, 2010, 2011, 2012, 2013.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: Evince MASTER\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evince&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2012-12-19 12:26+0000\n"
-"PO-Revision-Date: 2012-12-19 15:12+0300\n"
+"POT-Creation-Date: 2013-03-12 15:02+0000\n"
+"PO-Revision-Date: 2013-03-12 22:02+0300\n"
 "Last-Translator: Mattias Põldaru <mahfiaz@gmail.com>\n"
 "Language-Team: Estonian <>\n"
 "Language: et\n"
@@ -121,9 +121,31 @@ msgstr "TrueType (CID)"
 msgid "Unknown font type"
 msgstr "Tundmatu kirjatüüp"
 
+msgid ""
+"This document contains non-embedded fonts that are not from the PDF Standard "
+"14 fonts. If the substitute fonts selected by fontconfig are not the same as "
+"the fonts used to create the PDF, the rendering may not be correct."
+msgstr ""
+"Dokument kasutab fonte, mis ei ole kaasa pandud ega kuulu PDFi standardsete "
+"14 fondi hulka. Kui fontconfig'i poolt valitud asendusfondid ei ole samad, "
+"nagu kasutati PDFi loomisel, võidakse dokumenti valesti kuvada."
+
+msgid "All fonts are either standard or embedded."
+msgstr "Kõik fondid on standardsed või dokumendiga kaasas."
+
 msgid "No name"
 msgstr "Nimi puudub"
 
+#. translators: When a font type does not have
+#. encoding information or it is unknown.  Example:
+#. Encoding: None
+#.
+#. translators: Value for 'Page Scaling:' to not scale the document pages on printing
+#. translators: This is used when a document property does
+#. not have a value.  Examples:
+#. Author: None
+#. Keywords: None
+#.
 msgid "None"
 msgstr "Puudub"
 
@@ -136,11 +158,27 @@ msgstr "Põimitud"
 msgid "Not embedded"
 msgstr "Põimimata"
 
+#. Translators: string starting with a space
+#. * because it is directly appended to the font
+#. * type. Example:
+#. * "Type 1 (One of the Standard 14 Fonts)"
+#.
+msgid " (One of the Standard 14 Fonts)"
+msgstr "(üks standardsest 14-st fondist)"
+
+#. Translators: string starting with a space
+#. * because it is directly appended to the font
+#. * type. Example:
+#. * "TrueType (Not one of the Standard 14 Fonts)"
+#.
+msgid " (Not one of the Standard 14 Fonts)"
+msgstr "(pole üks standardsest 14-st fondist)"
+
 msgid "Encoding"
 msgstr "Kodeering"
 
-msgid "substituting with"
-msgstr "asendatakse"
+msgid "Substituting with"
+msgstr "Asendatakse millega"
 
 msgid "PDF Documents"
 msgstr "PDF-dokumendid"
@@ -220,87 +258,6 @@ msgstr "Seansihalduse valikud:"
 msgid "Show session management options"
 msgstr "Seansihalduse valikute näitamine"
 
-#. Translaters: This string is for a toggle to display a toolbar.
-#. * The name of the toolbar is automatically computed from the widgets
-#. * on the toolbar, and is placed at the %s. Note the _ before the %s
-#. * which is used to add mnemonics. We know that this is likely to
-#. * produce duplicates, but don't worry about it. If your language
-#. * normally has a mnemonic at the start, please use the _. If not,
-#. * please remove.
-#, c-format
-msgid "Show “_%s”"
-msgstr "Näita „_%s”"
-
-msgid "_Move on Toolbar"
-msgstr "_Liiguta tööriistaribal"
-
-msgid "Move the selected item on the toolbar"
-msgstr "Valitud kirje liigutamine tööriistaribal"
-
-msgid "_Remove from Toolbar"
-msgstr "_Eemalda tööriistaribalt"
-
-msgid "Remove the selected item from the toolbar"
-msgstr "Valitud kirje eemaldamine tööriistaribalt"
-
-msgid "_Delete Toolbar"
-msgstr "_Kustuta tööriistariba"
-
-msgid "Remove the selected toolbar"
-msgstr "Valitud tööriistariba eemaldamine"
-
-msgid "Separator"
-msgstr "Eraldaja"
-
-#. translators: this is the label for toolbar button
-msgid "Best Fit"
-msgstr "Parim sobitus"
-
-msgid "Fit Page Width"
-msgstr "Sobitus laiuse järgi"
-
-msgid "50%"
-msgstr "50%"
-
-msgid "70%"
-msgstr "70%"
-
-msgid "85%"
-msgstr "85%"
-
-msgid "100%"
-msgstr "100%"
-
-msgid "125%"
-msgstr "125%"
-
-msgid "150%"
-msgstr "150%"
-
-msgid "175%"
-msgstr "175%"
-
-msgid "200%"
-msgstr "200%"
-
-msgid "300%"
-msgstr "300%"
-
-msgid "400%"
-msgstr "400%"
-
-msgid "800%"
-msgstr "800%"
-
-msgid "1600%"
-msgstr "1600%"
-
-msgid "3200%"
-msgstr "3200%"
-
-msgid "6400%"
-msgstr "6400%"
-
 #. Manually set name and icon
 #, c-format
 msgid "Document Viewer"
@@ -311,6 +268,12 @@ msgstr "Mitmeleheküljeliste dokumentide vaatamine"
 
 msgid "pdf;ps;postscript;dvi;xps;djvu;tiff;document;presentation;"
 msgstr "pdf;ps;postscript;dvi;xps;djvu;tiff;dokument;dokumendid;esitlused;"
+
+msgid "Print Preview"
+msgstr "Printimise eelvaade"
+
+msgid "Preview before printing"
+msgstr "Eelvaatlus enne printimist"
 
 msgid "Override document restrictions"
 msgstr "Dokumendi piirangute eiramine"
@@ -373,6 +336,10 @@ msgid "of %d"
 msgstr "%d-st"
 
 #, c-format
+msgid "Page %s"
+msgstr "Lehekülg %s"
+
+#, c-format
 msgid "Failed to print page %d: %s"
 msgstr "Tõrge lehekülje %d printimisel: %s"
 
@@ -399,8 +366,10 @@ msgstr "Hoiatus"
 msgid "Your print range selection does not include any pages"
 msgstr "Sinu määratud printimisvahemik ei sisalda ühtegi lehekülge"
 
+#. translators: Title of the print dialog
+#. translators: Print document currently shown in the Print Preview window
 msgid "Print"
-msgstr "Prindi"
+msgstr "Printimine"
 
 msgid "Page Scaling:"
 msgstr "Lehekülje mastaapimine:"
@@ -550,14 +519,14 @@ msgstr "Dokumendi kahandamine"
 msgid "Print this document"
 msgstr "Selle dokumendi printimine"
 
-msgid "_Best Fit"
-msgstr "Par_im sobitus"
+msgid "Fit Pa_ge"
+msgstr "Lehekülje _sobitamine"
 
 msgid "Make the current document fill the window"
 msgstr "Dokumendi lehekülje mahutamine aknasse"
 
-msgid "Fit Page _Width"
-msgstr "Sobitus _laiuse järgi"
+msgid "Fit _Width"
+msgstr "_Laiuse sobitamine"
 
 msgid "Make the current document fill the window width"
 msgstr "Dokumendi laiuse sobitamine akna laiusega"
@@ -648,20 +617,11 @@ msgstr "_Ainult terved sõnad"
 msgid "C_ase Sensitive"
 msgstr "_Tõstutundlik"
 
-msgid "Find:"
-msgstr "Leia:"
-
 msgid "Find options"
 msgstr "Otsimise valikud"
 
-msgid "Find Pre_vious"
-msgstr "Leia _eelmine"
-
 msgid "Find previous occurrence of the search string"
 msgstr "Eelmise sarnase sõna või lause leidmine"
-
-msgid "Find Ne_xt"
-msgstr "Leia _järgmine"
 
 msgid "Find next occurrence of the search string"
 msgstr "Järgmise sarnase sõna või lause leidmine"
@@ -722,6 +682,12 @@ msgstr "Avamine"
 
 msgid "Close"
 msgstr "Sulgemine"
+
+msgid "Go to previous history item"
+msgstr "Eelmisele ajalookirjele liikumine"
+
+msgid "Go to next history item"
+msgstr "Järgmisele ajalookirjele liikumine"
 
 #, c-format
 msgid "Password for document %s"
@@ -827,10 +793,6 @@ msgstr "Muuda järjehoidja _nime"
 msgid "_Remove Bookmark"
 msgstr "_Eemalda järjehoidja"
 
-#, c-format
-msgid "Page %s"
-msgstr "Lehekülg %s"
-
 msgid "Bookmarks"
 msgstr "Järjehoidjad"
 
@@ -848,10 +810,6 @@ msgstr "Pisipildid"
 
 msgid "By extension"
 msgstr "Laiendi järgi"
-
-#, c-format
-msgid "Page %s — %s"
-msgstr "Lehekülg %s — %s"
 
 msgid "The document contains no pages"
 msgstr "Dokumendis pole ühtegi lehekülge"
@@ -984,9 +942,6 @@ msgstr "Sulge _pärast printimist"
 msgid "Running in presentation mode"
 msgstr "Evince käivitamine esitlusrežiimis"
 
-msgid "Toolbar Editor"
-msgstr "Tööriistariba redaktor"
-
 #, c-format
 msgid ""
 "Document Viewer\n"
@@ -1055,23 +1010,11 @@ msgstr "Ei leitud"
 msgid "%3d%% remaining to search"
 msgstr "%3d%% otsingu lõpuni"
 
-msgid "_File"
-msgstr "_Fail"
-
-msgid "_Edit"
-msgstr "_Redaktor"
-
-msgid "_View"
-msgstr "_Vaade"
-
-msgid "_Go"
-msgstr "_Liikumine"
-
 msgid "_Bookmarks"
 msgstr "_Järjehoidjad"
 
-msgid "_Help"
-msgstr "A_bi"
+msgid "_Recent"
+msgstr "_Hiljutised"
 
 #. File menu
 msgid "_Open…"
@@ -1112,15 +1055,6 @@ msgstr "_Omadused"
 
 msgid "Select _All"
 msgstr "V_ali kõik"
-
-msgid "_Find…"
-msgstr "_Leia…"
-
-msgid "Find a word or phrase in the document"
-msgstr "Dokumendist sõna või fraasi leidmine"
-
-msgid "T_oolbar"
-msgstr "_Tööriistariba"
 
 msgid "Rotate _Left"
 msgstr "Pööra _vasakule"
@@ -1165,10 +1099,6 @@ msgstr "_Lisa järjehoidja"
 msgid "Add a bookmark for the current page"
 msgstr "Käesoleva lehe kohta järjehoidja lisamine"
 
-#. Help menu
-msgid "_Contents"
-msgstr "_Sisu"
-
 msgid "_About"
 msgstr "_Evince'ist lähemalt"
 
@@ -1186,12 +1116,6 @@ msgid "Start a presentation"
 msgstr "Esitluse alustamine"
 
 #. View Menu
-msgid "_Toolbar"
-msgstr "_Tööriistariba"
-
-msgid "Show or hide the toolbar"
-msgstr "Tööriistariba näitamine või peitmine"
-
 msgid "Side _Pane"
 msgstr "Kül_gpaan"
 
@@ -1204,17 +1128,17 @@ msgstr "Jät_kuv"
 msgid "Show the entire document"
 msgstr "Kogu dokumendi näitamine"
 
-msgid "_Dual (Even pages left)"
-msgstr "_Kaksikvaade (paarisleheküljed vasakul)"
+msgid "_Dual"
+msgstr "_Kahekaupa"
 
-msgid "Show two pages at once with even pages on the left"
-msgstr "Kahe lehekülje korraga näitamine, paarisleheküljed on vasakul"
+msgid "Show two pages at once"
+msgstr "Kahe lehekülje korraga näitamine"
 
-msgid "Dual (_Odd pages left)"
-msgstr "Kaksikvaade (_paaritud leheküljed vasakul)"
+msgid "_Odd pages left"
+msgstr "_Paaritud leheküljed vasakul"
 
-msgid "Show two pages at once with odd pages on the left"
-msgstr "Kahe lehekülje korraga näitamine, paaritud leheküljed on vasakul"
+msgid "Show odd pages on the left in dual mode"
+msgstr "Kahekaupa vaates näidatakse paarituid lehekülgi vasakul"
 
 msgid "_Fullscreen"
 msgstr "Täisek_raan"
@@ -1234,6 +1158,12 @@ msgstr "Pööratud värvi_d"
 
 msgid "Show page contents with the colors inverted"
 msgstr "Lehe sisu näitamine inverteeritud värvides"
+
+msgid "_Find…"
+msgstr "_Otsi…"
+
+msgid "Find a word or phrase in the document"
+msgstr "Dokumendist sõna või fraasi otsimine"
 
 #. Links
 msgid "_Open Link"
@@ -1269,15 +1199,8 @@ msgstr "Suurendus"
 msgid "Adjust the zoom level"
 msgstr "Muuda suurendusastet"
 
-msgid "Navigation"
-msgstr "Ringiliikumine"
-
-msgid "Back"
-msgstr "Tagasi"
-
-#. translators: this is the history action
-msgid "Move across visited pages"
-msgstr "Üle kõigi külastatud lehtede liikumine"
+msgid "History"
+msgstr "Ajalugu"
 
 #. translators: this is the label for toolbar button
 msgid "Open Folder"
@@ -1302,6 +1225,10 @@ msgstr "Suurendamine"
 #. translators: this is the label for toolbar button
 msgid "Zoom Out"
 msgstr "Vähendamine"
+
+#. translators: this is the label for toolbar button
+msgid "Fit Page"
+msgstr "Lehekülg korraga"
 
 #. translators: this is the label for toolbar button
 msgid "Fit Width"
@@ -1334,6 +1261,48 @@ msgstr "Manuse salvestamine"
 #, c-format
 msgid "%s — Password Required"
 msgstr "%s — Vajalik on parool"
+
+msgid "50%"
+msgstr "50%"
+
+msgid "70%"
+msgstr "70%"
+
+msgid "85%"
+msgstr "85%"
+
+msgid "100%"
+msgstr "100%"
+
+msgid "125%"
+msgstr "125%"
+
+msgid "150%"
+msgstr "150%"
+
+msgid "175%"
+msgstr "175%"
+
+msgid "200%"
+msgstr "200%"
+
+msgid "300%"
+msgstr "300%"
+
+msgid "400%"
+msgstr "400%"
+
+msgid "800%"
+msgstr "800%"
+
+msgid "1600%"
+msgstr "1600%"
+
+msgid "3200%"
+msgstr "3200%"
+
+msgid "6400%"
+msgstr "6400%"
 
 msgid "GNOME Document Viewer"
 msgstr "GNOME dokumendinäitaja"
@@ -1373,6 +1342,99 @@ msgstr "STRING"
 
 msgid "[FILE…]"
 msgstr "[FAIL…]"
+
+msgid "_Help"
+msgstr "A_bi"
+
+#~ msgid "Show “_%s”"
+#~ msgstr "Näita „_%s”"
+
+#~ msgid "_Move on Toolbar"
+#~ msgstr "_Liiguta tööriistaribal"
+
+#~ msgid "Move the selected item on the toolbar"
+#~ msgstr "Valitud kirje liigutamine tööriistaribal"
+
+#~ msgid "_Remove from Toolbar"
+#~ msgstr "_Eemalda tööriistaribalt"
+
+#~ msgid "Remove the selected item from the toolbar"
+#~ msgstr "Valitud kirje eemaldamine tööriistaribalt"
+
+#~ msgid "_Delete Toolbar"
+#~ msgstr "_Kustuta tööriistariba"
+
+#~ msgid "Remove the selected toolbar"
+#~ msgstr "Valitud tööriistariba eemaldamine"
+
+#~ msgid "Separator"
+#~ msgstr "Eraldaja"
+
+#~ msgid "Best Fit"
+#~ msgstr "Parim sobitus"
+
+#~ msgid "Fit Page Width"
+#~ msgstr "Sobitus laiuse järgi"
+
+#~ msgid "_Best Fit"
+#~ msgstr "Par_im sobitus"
+
+#~ msgid "Fit Page _Width"
+#~ msgstr "Sobitus _laiuse järgi"
+
+#~ msgid "Find:"
+#~ msgstr "Leia:"
+
+#~ msgid "Find Pre_vious"
+#~ msgstr "Leia _eelmine"
+
+#~ msgid "Find Ne_xt"
+#~ msgstr "Leia _järgmine"
+
+#~ msgid "Page %s — %s"
+#~ msgstr "Lehekülg %s — %s"
+
+#~ msgid "Toolbar Editor"
+#~ msgstr "Tööriistariba redaktor"
+
+#~ msgid "_File"
+#~ msgstr "_Fail"
+
+#~ msgid "_Edit"
+#~ msgstr "_Redaktor"
+
+#~ msgid "_View"
+#~ msgstr "_Vaade"
+
+#~ msgid "_Go"
+#~ msgstr "_Liikumine"
+
+#~ msgid "T_oolbar"
+#~ msgstr "_Tööriistariba"
+
+#~ msgid "_Contents"
+#~ msgstr "_Sisu"
+
+#~ msgid "_Toolbar"
+#~ msgstr "_Tööriistariba"
+
+#~ msgid "Show or hide the toolbar"
+#~ msgstr "Tööriistariba näitamine või peitmine"
+
+#~ msgid "_Dual (Even pages left)"
+#~ msgstr "_Kaksikvaade (paarisleheküljed vasakul)"
+
+#~ msgid "Show two pages at once with even pages on the left"
+#~ msgstr "Kahe lehekülje korraga näitamine, paarisleheküljed on vasakul"
+
+#~ msgid "Navigation"
+#~ msgstr "Ringiliikumine"
+
+#~ msgid "Back"
+#~ msgstr "Tagasi"
+
+#~ msgid "Move across visited pages"
+#~ msgstr "Üle kõigi külastatud lehtede liikumine"
 
 #~ msgid "There was an error displaying help"
 #~ msgstr "Abiteabe kuvamisel tekkis viga"
