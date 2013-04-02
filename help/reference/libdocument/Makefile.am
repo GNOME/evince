@@ -69,7 +69,9 @@ EXTRA_HFILES =
 IGNORE_HFILES = \
 	config.h \
 	ev-debug.h \
-	ev-module.h
+	ev-macros.h \
+	ev-module.h \
+	ev-backend-info.h
 
 # Images to copy into HTML directory.
 # e.g. HTML_IMAGES=$(top_srcdir)/gtk/stock-icons/stock_about_24.png

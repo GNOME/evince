@@ -5,7 +5,6 @@ EvLayer
 EvLayerClass
 EvLayerPrivate
 ev_layer_new
-ev_layer_get_id
 ev_layer_is_parent
 ev_layer_get_rb_group
 <SUBSECTION Standard>
@@ -53,6 +52,7 @@ EV_DOCUMENT_FORMS_IFACE
 EV_IS_DOCUMENT_FORMS_IFACE
 EvDocumentForms
 EvDocumentFormsIface
+ev_document_forms_document_is_modified
 ev_document_forms_get_form_fields
 ev_document_forms_form_field_text_get_text
 ev_document_forms_form_field_text_set_text
@@ -127,7 +127,6 @@ EvLinkPrivate
 ev_link_new
 ev_link_get_title
 ev_link_get_action
-ev_link_get_page
 <SUBSECTION Standard>
 ev_link_action_type_get_type
 EV_TYPE_LINK_ACTION_TYPE
@@ -175,6 +174,9 @@ ev_document_links_get_links
 ev_document_links_find_link_dest
 ev_document_links_get_dest_page
 ev_document_links_get_dest_page_label
+ev_document_links_find_link_page
+ev_document_links_get_link_page
+ev_document_links_get_link_page_label
 <SUBSECTION Standard>
 EV_DOCUMENT_LINKS
 EV_IS_DOCUMENT_LINKS
@@ -309,13 +311,18 @@ EV_DOCUMENT_FIND_IFACE
 EV_IS_DOCUMENT_FIND_IFACE
 EvDocumentFind
 EvDocumentFindIface
+EvFindOptions
 ev_document_find_find_text
+ev_document_find_find_text_with_options
+ev_document_find_get_supported_options
 <SUBSECTION Standard>
 EV_DOCUMENT_FIND
 EV_IS_DOCUMENT_FIND
 EV_TYPE_DOCUMENT_FIND
 ev_document_find_get_type
 EV_DOCUMENT_FIND_GET_IFACE
+EV_TYPE_FIND_OPTIONS
+ev_find_options_get_type
 </SECTION>
 
 <SECTION>
@@ -329,8 +336,10 @@ EV_DOC_MUTEX_LOCK
 EV_DOC_MUTEX_UNLOCK
 EvDocumentError
 EvPoint
+EvSourceLink
 EvRectangle
 EvDocumentBackendInfo
+EvDocumentLoadFlags
 ev_document_error_quark
 ev_document_get_doc_mutex
 ev_document_doc_mutex_lock
@@ -350,6 +359,7 @@ ev_document_get_n_pages
 ev_document_get_page
 ev_document_get_page_size
 ev_document_get_page_label
+ev_document_get_min_page_size
 ev_document_render
 ev_document_get_uri
 ev_document_get_title
@@ -360,17 +370,19 @@ ev_document_get_max_label_len
 ev_document_has_text_page_labels
 ev_document_find_page_by_label
 ev_document_get_thumbnail
+ev_document_has_synctex
+ev_document_synctex_backward_search
+ev_document_synctex_forward_search
+ev_source_link_copy
+ev_source_link_free
+ev_source_link_new
 ev_rect_cmp
-EV_TYPE_RECTANGLE
-ev_rectangle_get_type
 ev_rectangle_new
 ev_rectangle_copy
 ev_rectangle_free
 EV_BACKEND_IMPLEMENT_INTERFACE
 EV_BACKEND_REGISTER_WITH_CODE
 EV_BACKEND_REGISTER
-EV_DEFINE_BOXED_TYPE
-EV_DEFINE_INTERFACE
 <SUBSECTION Standard>
 EV_DOCUMENT
 EV_IS_DOCUMENT
@@ -379,6 +391,12 @@ ev_document_get_type
 EV_DOCUMENT_CLASS
 EV_IS_DOCUMENT_CLASS
 EV_DOCUMENT_GET_CLASS
+EV_TYPE_RECTANGLE
+ev_rectangle_get_type
+EV_TYPE_SOURCE_LINK
+ev_source_link_get_type
+EV_TYPE_DOCUMENT_LOAD_FLAGS
+ev_document_load_flags_get_type
 </SECTION>
 
 <SECTION>
@@ -387,6 +405,7 @@ EvLinkDest
 EvLinkDestClass
 EvLinkDestPrivate
 EvLinkDestType
+ev_link_dest_equal
 ev_link_dest_get_dest_type
 ev_link_dest_get_page
 ev_link_dest_get_top
@@ -420,12 +439,17 @@ EvLinkAction
 EvLinkActionClass
 EvLinkActionPrivate
 EvLinkActionType
+ev_link_action_equal
 ev_link_action_get_action_type
 ev_link_action_get_dest
 ev_link_action_get_uri
 ev_link_action_get_filename
 ev_link_action_get_params
 ev_link_action_get_name
+ev_link_action_get_hide_list
+ev_link_action_get_show_list
+ev_link_action_get_toggle_list
+ev_link_action_new_layers_state
 ev_link_action_new_dest
 ev_link_action_new_remote
 ev_link_action_new_external_uri
@@ -484,7 +508,6 @@ EvSelection
 EvSelectionIface
 ev_selection_render_selection
 ev_selection_get_selected_text
-ev_selection_get_selection_map
 ev_selection_get_selection_region
 <SUBSECTION Standard>
 ev_selection_style_get_type
@@ -537,10 +560,13 @@ EvAnnotation
 EvAnnotationClass
 EvAnnotationMarkup
 EvAnnotationMarkupIface
+EvAnnotationMarkupInterface
 EvAnnotationText
 EvAnnotationTextClass
 EvAnnotationAttachment
 EvAnnotationAttachmentClass
+EvAnnotationTextIcon
+EvAnnotationType
 ev_annotation_get_annotation_type
 ev_annotation_get_page
 ev_annotation_get_page_index
@@ -561,10 +587,11 @@ ev_annotation_markup_set_label
 ev_annotation_markup_get_opacity
 ev_annotation_markup_set_opacity
 ev_annotation_markup_has_popup
+ev_annotation_markup_set_has_popup
 ev_annotation_markup_get_rectangle
 ev_annotation_markup_set_rectangle
-ev_annotation_markup_get_is_open
-ev_annotation_markup_set_is_open
+ev_annotation_markup_get_popup_is_open
+ev_annotation_markup_set_popup_is_open
 ev_annotation_text_new
 ev_annotation_text_get_icon
 ev_annotation_text_set_icon
@@ -602,6 +629,28 @@ EV_ANNOTATION_ATTACHMENT_CLASS
 EV_IS_ANNOTATION_ATTACHMENT
 EV_IS_ANNOTATION_ATTACHMENT_CLASS
 EV_ANNOTATION_ATTACHMENT_GET_CLASS
+EV_TYPE_ANNOTATION_TEXT_ICON
+ev_annotation_text_icon_get_type
+EV_TYPE_ANNOTATION_TYPE
+ev_annotation_type_get_type
+</SECTION>
+
+<SECTION>
+<FILE>ev-document-text</FILE>
+<TITLE>EvDocumentText</TITLE>
+EvDocumentText
+EvDocumentTextInterface
+ev_document_text_get_text
+ev_document_text_get_text_layout
+ev_document_text_get_text_mapping
+<SUBSECTION Standard>
+EV_DOCUMENT_TEXT_IFACE
+EV_IS_DOCUMENT_TEXT_IFACE
+EV_DOCUMENT_TEXT
+EV_IS_DOCUMENT_TEXT
+EV_DOCUMENT_TEXT_GET_IFACE
+EV_TYPE_DOCUMENT_TEXT
+ev_document_text_get_type
 </SECTION>
 
 <SECTION>
@@ -652,14 +701,20 @@ EV_DOCUMENT_ANNOTATIONS_IFACE
 EV_IS_DOCUMENT_ANNOTATIONS_IFACE
 EvDocumentAnnotations
 EvDocumentAnnotationsIface
+EvAnnotationsSaveMask
 ev_document_annotations_get_annotations
-ev_document_annotations_annotation_set_contents
+ev_document_annotations_add_annotation
+ev_document_annotations_can_add_annotation
+ev_document_annotations_document_is_modified
+ev_document_annotations_save_annotation
 <SUBSECTION Standard>
 EV_DOCUMENT_ANNOTATIONS
 EV_IS_DOCUMENT_ANNOTATIONS
 EV_TYPE_DOCUMENT_ANNOTATIONS
 ev_document_annotations_get_type
 EV_DOCUMENT_ANNOTATIONS_GET_IFACE
+EV_TYPE_ANNOTATIONS_SAVE_MASK
+ev_annotations_save_mask_get_type
 </SECTION>
 
 <SECTION>
@@ -672,6 +727,7 @@ EvDocumentFontsIface
 ev_document_fonts_scan
 ev_document_fonts_get_progress
 ev_document_fonts_fill_model
+ev_document_fonts_get_fonts_summary
 <SUBSECTION Standard>
 EV_DOCUMENT_FONTS
 EV_IS_DOCUMENT_FONTS
@@ -697,10 +753,20 @@ ev_shutdown
 <SECTION>
 <FILE>ev-mapping</FILE>
 EvMapping
+EvMappingList
+ev_mapping_list_new
+ev_mapping_list_ref
+ev_mapping_list_unref
+ev_mapping_list_get_data
+ev_mapping_list_get_list
+ev_mapping_list_get_page
+ev_mapping_list_length
+ev_mapping_list_nth
 ev_mapping_list_find
 ev_mapping_list_find_custom
-ev_mapping_list_get_data
-ev_mapping_list_free
+<SUBSECTION Standard>
+EV_TYPE_MAPPING_LIST
+ev_mapping_list_get_type
 </SECTION>
 
 <SECTION>
@@ -728,6 +794,8 @@ ev_file_copy_metadata
 ev_file_get_mime_type
 ev_file_uncompress
 ev_file_compress
+ev_file_is_temp
+ev_get_locale_dir
 <SUBSECTION Standard>
 ev_compression_type_get_type
 EV_TYPE_COMPRESSION_TYPE
@@ -747,12 +815,18 @@ EV_CHECK_VERSION
 <TITLE>EvDocumentMisc</TITLE>
 ev_document_misc_get_thumbnail_frame
 ev_document_misc_get_page_border_size
+ev_document_misc_get_loading_thumbnail
+ev_document_misc_get_pointer_position
+ev_document_misc_get_screen_dpi
 ev_document_misc_paint_one_page
 ev_document_misc_surface_from_pixbuf
 ev_document_misc_pixbuf_from_surface
 ev_document_misc_surface_rotate_and_scale
 ev_document_misc_invert_surface
 ev_document_misc_invert_pixbuf
+ev_document_misc_format_date
+ev_document_misc_render_loading_thumbnail
+ev_document_misc_render_thumbnail_with_frame
 </SECTION>
 
 <SECTION>
