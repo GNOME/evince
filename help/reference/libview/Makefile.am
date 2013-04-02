@@ -69,6 +69,7 @@ EXTRA_HFILES =
 # e.g. IGNORE_HFILES=gtkdebug.h gtkintl.h
 IGNORE_HFILES = \
 	config.h \
+	ev-link-accessible.h \
 	ev-pixbuf-cache.h \
 	ev-timeline.h \
 	ev-transition-animation.h \
