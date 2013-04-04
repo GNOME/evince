@@ -1576,6 +1576,7 @@ ev_job_find_process_matches (EvJob *job)
 	gchar *matched_line, *text_to_find;
 	GtkTextBuffer *buffer = NULL;
 	GtkTextIter find_iter, start, end;
+	GtkTextSearchFlags search_flags = 0;
 
 	job_find = EV_JOB_FIND (job);
 	matches = job_find->pages[job_find->current_page];
@@ -1587,30 +1588,23 @@ ev_job_find_process_matches (EvJob *job)
 	page = ev_document_get_page (job->document, job_find->current_page);
 	occ_number = 0;
 	j = 0;
+	text_to_find = g_strdup (job_find->text);
 
-	if (job_find->case_sensitive)
-		text_to_find = g_strdup (job_find->text);
-	else
-		text_to_find = g_utf8_strdown (job_find->text, -1);
-	
+	if (!job_find->case_sensitive)
+		search_flags = GTK_TEXT_SEARCH_CASE_INSENSITIVE;
+
 	while (matches != NULL) {
 
 		matched_line = ev_job_find_get_matched_line (job, page, (EvRectangle *) matches->data);
 		g_assert (matched_line != NULL);
 
-		if (!job_find->case_sensitive) {
-			gchar *tmp = matched_line;
-
-			matched_line = g_utf8_strdown (tmp, -1);
-			g_free (tmp);
-		} 
 		gtk_text_buffer_set_text (buffer, matched_line, -1);
 		gtk_text_buffer_get_start_iter (buffer, &find_iter);
 
 		/* search the proper occurrence of text in the line */
 		occ_number++;
 		for (k = 0; k < occ_number; k++ ) {
-			if (!gtk_text_iter_forward_search (&find_iter, text_to_find, 0, &start, &end, NULL))
+			if (!gtk_text_iter_forward_search (&find_iter, text_to_find, search_flags, &start, &end, NULL))
 				break;
 			 
 			 find_iter = end;
@@ -1619,7 +1613,7 @@ ev_job_find_process_matches (EvJob *job)
 		
 		/* additional search to determine that current match is the last one on the line */
 		if (!gtk_text_iter_forward_search (&find_iter, text_to_find,
-						   GTK_TEXT_SEARCH_CASE_INSENSITIVE, NULL, NULL, NULL)) 
+						   search_flags, NULL, NULL, NULL)) 
 			occ_number = 0;
 	
 		if (k == 0) {
