@@ -140,6 +140,7 @@ struct _EvWindowPrivate {
 	GtkWidget *password_view;
 	GtkWidget *sidebar_thumbs;
 	GtkWidget *sidebar_links;
+	GtkWidget *find_results_window;
 	GtkWidget *sidebar_find_results;
 	GtkWidget *sidebar_attachments;
 	GtkWidget *sidebar_layers;
@@ -810,6 +811,7 @@ typedef struct _LinkTitleData {
 	EvLink      *link;
 	const gchar *link_title;
 } LinkTitleData;
+
 static void
 ev_view_find_result_highlight_changed_cb (EvView *view,
 		gpointer find_result,
@@ -817,23 +819,25 @@ ev_view_find_result_highlight_changed_cb (EvView *view,
 		gint result,
 		EvWindow *window)
 {
-
+	if (window->priv->sidebar_find_results) { 
 	find_result_activate_result (
 		EV_SIDEBAR_FIND_RESULTS (window->priv->sidebar_find_results),
 		find_result,
 		page,
 		result);
+	}
 }
 
 static void
 sidebar_find_results_find_result_activated_cb (EvSidebarFindResults *sidebar_find_results,
-					EvJobFind *job,
-					gint pageno,
-					gint resultno,
-					EvWindow *window)
+					       EvJobFind            *job,
+					       gint                  pageno,
+					       gint                  resultno,
+					       EvWindow             *window)
 {
-	if (window->priv->view == NULL) return;
-	if (gtk_widget_get_visible (window->priv->find_bar)) return;
+	if (window->priv->view == NULL)
+		return;
+//	if (gtk_widget_get_visible (window->priv->find_bar)) return;
 	if (job == NULL) {
 		ev_view_find_changed (EV_VIEW (window->priv->view), NULL, 0);
 		ev_view_find_set_highlight_search (EV_VIEW (window->priv->view), FALSE);
@@ -5276,7 +5280,8 @@ ev_window_find_job_finished_cb (EvJobFind *job,
 				EvWindow  *ev_window)
 {
 	ev_window_update_find_status_message (ev_window);
-	ev_sidebar_find_results_update (
+	if (ev_window->priv->sidebar_find_results)
+		ev_sidebar_find_results_update (
 			EV_SIDEBAR_FIND_RESULTS (ev_window->priv->sidebar_find_results),
 			EV_JOB_FIND (ev_window->priv->find_job));
 }
@@ -5313,7 +5318,8 @@ ev_window_find_job_updated_cb (EvJobFind *job,
 	if (find_check_refresh_rate (job, FIND_PAGE_RATE_REFRESH)) {
 		ev_window_update_actions_sensitivity (ev_window);
 		ev_window_update_find_status_message (ev_window);
-		ev_sidebar_find_results_update (EV_SIDEBAR_FIND_RESULTS (ev_window->priv->sidebar_find_results), job);
+		if (ev_window->priv->sidebar_find_results)
+			ev_sidebar_find_results_update (EV_SIDEBAR_FIND_RESULTS (ev_window->priv->sidebar_find_results), job);
 	}
 }
 
@@ -6203,6 +6209,50 @@ sidebar_widget_model_set (EvSidebarLinks *ev_sidebar_links,
 	action = gtk_action_group_get_action (ev_window->priv->action_group, PAGE_SELECTOR_ACTION);
 	ev_page_action_set_links_model (EV_PAGE_ACTION (action), model);
 	g_object_unref (model);
+}
+
+static void
+show_find_results (EvWindow *ev_window)
+{
+	if (ev_window->priv->find_results_window == NULL) {
+		GtkWidget *sidebar_widget = ev_sidebar_find_results_new ();
+		
+		ev_window->priv->find_results_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+		gtk_container_add (GTK_CONTAINER (ev_window->priv->find_results_window), sidebar_widget);
+        	g_signal_connect (sidebar_widget,
+                        "notify::model",
+                        G_CALLBACK (sidebar_widget_model_set),
+                        ev_window);
+		gtk_widget_show (sidebar_widget);
+		ev_window->priv->sidebar_find_results = sidebar_widget;
+		     g_signal_connect (ev_window->priv->sidebar_find_results,
+                        "find-result-activated",
+                        G_CALLBACK (sidebar_find_results_find_result_activated_cb),
+                        ev_window);
+
+	}
+
+	gtk_widget_show (ev_window->priv->find_results_window);
+	
+	
+}
+
+static void
+hide_find_results (EvWindow *ev_window)
+{
+	if (ev_window->priv->find_results_window != NULL) 
+		gtk_widget_hide (ev_window->priv->find_results_window);
+}
+
+static void
+find_results_toggled_cb (GtkToggleToolButton *tool_button,
+			 EvWindow *window)
+{
+	if (gtk_toggle_tool_button_get_active (tool_button))
+		show_find_results (window);
+	else
+		hide_find_results (window);
+
 }
 
 static gboolean
@@ -7304,23 +7354,17 @@ ev_window_init (EvWindow *ev_window)
 
 	/* Find Bar */
 	ev_window->priv->find_bar = egg_find_bar_new ();
+
 	gtk_style_context_add_class (gtk_widget_get_style_context (ev_window->priv->find_bar),
 				     GTK_STYLE_CLASS_PRIMARY_TOOLBAR);
 	gtk_box_pack_start (GTK_BOX (ev_window->priv->view_box),
 			    ev_window->priv->find_bar,
 			    FALSE, TRUE, 0);
+  GtkToolItem *find_results = gtk_toggle_tool_button_new_from_stock (GTK_STOCK_INFO);
+  gtk_widget_show (GTK_WIDGET (find_results));
+  gtk_container_add (GTK_CONTAINER (ev_window->priv->find_bar), GTK_WIDGET (find_results));
 
 	overlay = gtk_overlay_new ();
-	sidebar_widget = ev_sidebar_find_results_new ();
-	ev_window->priv->sidebar_find_results = sidebar_widget;
-	g_signal_connect (sidebar_widget,
-			"notify::model",
-			G_CALLBACK (sidebar_widget_model_set),
-			ev_window);
-	sidebar_page_main_widget_update_cb (G_OBJECT (sidebar_widget), NULL, ev_window);
-	gtk_widget_show (sidebar_widget);
-	ev_sidebar_add_page (EV_SIDEBAR (ev_window->priv->sidebar),
-			sidebar_widget);
 
 	ev_window->priv->scrolled_window =
 		GTK_WIDGET (g_object_new (GTK_TYPE_SCROLLED_WINDOW,
@@ -7349,6 +7393,9 @@ ev_window_init (EvWindow *ev_window)
 	ev_view_set_model (EV_VIEW (ev_window->priv->view), ev_window->priv->model);
 
 	ev_window->priv->password_view = ev_password_view_new (GTK_WINDOW (ev_window));
+	g_signal_connect (find_results, "toggled",
+			  G_CALLBACK (find_results_toggled_cb),
+			  ev_window);
 	g_signal_connect_swapped (ev_window->priv->password_view,
 				  "unlock",
 				  G_CALLBACK (ev_window_password_view_unlock),
@@ -7388,11 +7435,6 @@ ev_window_init (EvWindow *ev_window)
 	gtk_widget_show (ev_window->priv->view);
 	gtk_widget_show (ev_window->priv->password_view);
 
-	/* Find results sidebar */
-	g_signal_connect (ev_window->priv->sidebar_find_results,
-			"find-result-activated",
-			G_CALLBACK (sidebar_find_results_find_result_activated_cb),
-			ev_window);
 	g_signal_connect (ev_window->priv->view, "find-result-highlight-changed",
 			G_CALLBACK (ev_view_find_result_highlight_changed_cb), ev_window);
 
