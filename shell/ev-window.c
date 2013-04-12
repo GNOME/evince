@@ -1595,6 +1595,8 @@ ev_window_load_job_cb (EvJob *job,
 	EvWindow *ev_window = EV_WINDOW (data);
 	EvDocument *document = EV_JOB (job)->document;
 	EvJobLoad *job_load = EV_JOB_LOAD (job);
+	gchar     *text;
+	gchar 	  *display_name;
 
 	g_assert (job_load->uri);
 
@@ -1685,8 +1687,13 @@ ev_window_load_job_cb (EvJob *job,
 		ev_job_load_set_password (job_load, NULL);
 		ev_password_view_ask_password (EV_PASSWORD_VIEW (ev_window->priv->password_view));
 	} else {
+		text = g_uri_unescape_string (job_load->uri, NULL);
+		display_name = g_markup_escape_text (text, -1);
+		g_free (text);
 		ev_window_error_message (ev_window, job->error, 
-					 "%s", _("Unable to open document"));
+					 _("Unable to open document “%s”."),
+					 display_name);
+		g_free (display_name);
 		ev_window_clear_load_job (ev_window);
 	}	
 }
@@ -1845,10 +1852,19 @@ static void
 ev_window_load_remote_failed (EvWindow *ev_window,
 			      GError   *error)
 {
+	gchar *text;
+	gchar *display_name;
+
 	ev_window_hide_loading_message (ev_window);
 	ev_window->priv->in_reload = FALSE;
+
+	text = g_uri_unescape_string (ev_window->priv->local_uri, NULL);
+	display_name = g_markup_escape_text (text, -1);
+	g_free (text);
 	ev_window_error_message (ev_window, error, 
-				 "%s", _("Unable to open document"));
+				 _("Unable to open document “%s”."),
+				 display_name);
+	g_free (display_name);
 	g_free (ev_window->priv->local_uri);
 	ev_window->priv->local_uri = NULL;
 	ev_window->priv->uri_mtime = 0;
