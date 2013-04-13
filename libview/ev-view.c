@@ -1299,23 +1299,38 @@ _ev_view_transform_doc_point_to_view_point (EvView   *view,
 	GdkRectangle page_area;
 	GtkBorder border;
 	double x, y, view_x, view_y;
-	gdouble width, height;
 
-	get_doc_page_size (view, page, &width, &height);
-
-	if (view->rotation == 0) {
+	switch (view->rotation) {
+	case 0:
 		x = doc_point->x;
 		y = doc_point->y;
-	} else if (view->rotation == 90) {
+
+		break;
+	case 90: {
+		gdouble width;
+
+		get_doc_page_size (view, page, &width, NULL);
 		x = width - doc_point->y;
 		y = doc_point->x;
-	} else if (view->rotation == 180) {
+	}
+		break;
+	case 180: {
+		gdouble width, height;
+
+		get_doc_page_size (view, page, &width, &height);
 		x = width - doc_point->x;
 		y = height - doc_point->y;
-	} else if (view->rotation == 270) {
+	}
+		break;
+	case 270: {
+		gdouble height;
+
+		get_doc_page_size (view, page, NULL, &height);
 		x = doc_point->y;
 		y = height - doc_point->x;
-	} else {
+	}
+		break;
+	default:
 		g_assert_not_reached ();
 	}
 
@@ -1336,31 +1351,46 @@ _ev_view_transform_doc_rect_to_view_rect (EvView       *view,
 	GdkRectangle page_area;
 	GtkBorder border;
 	double x, y, w, h;
-	gdouble width, height;
 
-	get_doc_page_size (view, page, &width, &height);
-
-	if (view->rotation == 0) {
+	switch (view->rotation) {
+	case 0:
 		x = doc_rect->x1;
 		y = doc_rect->y1;
 		w = doc_rect->x2 - doc_rect->x1;
 		h = doc_rect->y2 - doc_rect->y1;
-	} else if (view->rotation == 90) {
+
+		break;
+	case 90: {
+		gdouble width;
+
+		get_doc_page_size (view, page, &width, NULL);
 		x = width - doc_rect->y2;
 		y = doc_rect->x1;
 		w = doc_rect->y2 - doc_rect->y1;
 		h = doc_rect->x2 - doc_rect->x1;
-	} else if (view->rotation == 180) {
+	}
+		break;
+	case 180: {
+		gdouble width, height;
+
+		get_doc_page_size (view, page, &width, &height);
 		x = width - doc_rect->x2;
 		y = height - doc_rect->y2;
 		w = doc_rect->x2 - doc_rect->x1;
 		h = doc_rect->y2 - doc_rect->y1;
-	} else if (view->rotation == 270) {
+	}
+		break;
+	case 270: {
+		gdouble height;
+
+		get_doc_page_size (view, page, NULL, &height);
 		x = doc_rect->y1;
 		y = height - doc_rect->x2;
 		w = doc_rect->y2 - doc_rect->y1;
 		h = doc_rect->x2 - doc_rect->x1;
-	} else {
+	}
+		break;
+	default:
 		g_assert_not_reached ();
 	}
 
