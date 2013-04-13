@@ -1321,10 +1321,10 @@ _ev_view_transform_doc_point_to_view_point (EvView   *view,
 
 	ev_view_get_page_extents (view, page, &page_area, &border);
 
-	view_x = CLAMP (x * view->scale, 0, page_area.width);
-	view_y = CLAMP (y * view->scale, 0, page_area.height);
-	view_point->x = view_x + page_area.x;
-	view_point->y = view_y + page_area.y;
+	view_x = CLAMP ((gint)(x * view->scale + 0.5), 0, page_area.width);
+	view_y = CLAMP ((gint)(y * view->scale + 0.5), 0, page_area.height);
+	view_point->x = view_x + page_area.x + border.left;
+	view_point->y = view_y + page_area.y + border.top;
 }
 
 void
@@ -1366,10 +1366,10 @@ _ev_view_transform_doc_rect_to_view_rect (EvView       *view,
 
 	ev_view_get_page_extents (view, page, &page_area, &border);
 
-	view_rect->x = x * view->scale + page_area.x;
-	view_rect->y = y * view->scale + page_area.y;
-	view_rect->width = w * view->scale;
-	view_rect->height = h * view->scale;
+	view_rect->x = (gint)(x * view->scale + 0.5) + page_area.x + border.left;
+	view_rect->y = (gint)(y * view->scale+ 0.5) + page_area.y + border.right;
+	view_rect->width = (gint)(w * view->scale + 0.5);
+	view_rect->height = (gint)(h * view->scale + 0.5);
 }
 
 static void
