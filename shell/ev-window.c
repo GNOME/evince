@@ -5411,6 +5411,8 @@ ev_window_show_find_bar (EvWindow *ev_window)
 	if (EV_WINDOW_IS_PRESENTATION (ev_window))
 		return;
 
+	ev_history_freeze (ev_window->priv->history);
+
 	update_chrome_flag (ev_window, EV_CHROME_FINDBAR, TRUE);
 	update_chrome_visibility (ev_window);
 	gtk_widget_grab_focus (ev_window->priv->find_bar);
@@ -5429,6 +5431,8 @@ ev_window_close_find_bar (EvWindow *ev_window)
 	update_chrome_visibility (ev_window);
 	gtk_widget_grab_focus (ev_window->priv->view);
 	update_toggle_find_action (ev_window, FALSE);
+
+	ev_history_thaw (ev_window->priv->history);
 }
 
 static void
