@@ -67,6 +67,9 @@ gboolean        ev_history_go_to_link       (EvHistory       *history,
 GList          *ev_history_get_back_list    (EvHistory       *history);
 GList          *ev_history_get_forward_list (EvHistory       *history);
 
+void            ev_history_freeze           (EvHistory       *history);
+void            ev_history_thaw             (EvHistory       *history);
+
 G_END_DECLS
 
 #endif

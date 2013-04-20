@@ -41,6 +41,8 @@ struct _EvHistoryPrivate {
         EvDocumentModel *model;
         gulong           page_changed_handler_id;
         gboolean         activating_current_link;
+
+        guint            frozen;
 };
 
 G_DEFINE_TYPE (EvHistory, ev_history, G_TYPE_OBJECT)
@@ -106,6 +108,12 @@ ev_history_init (EvHistory *history)
 	history->priv = G_TYPE_INSTANCE_GET_PRIVATE (history, EV_TYPE_HISTORY, EvHistoryPrivate);
 }
 
+static gboolean
+ev_history_is_frozen (EvHistory *history)
+{
+        return history->priv->frozen > 0;
+}
+
 void
 ev_history_add_link (EvHistory *history,
                      EvLink    *link)
@@ -113,7 +121,7 @@ ev_history_add_link (EvHistory *history,
 	g_return_if_fail (EV_IS_HISTORY (history));
 	g_return_if_fail (EV_IS_LINK (link));
 
-        if (history->priv->activating_current_link)
+        if (ev_history_is_frozen (history) || history->priv->activating_current_link)
                 return;
 
         if (ev_history_go_to_link (history, link))
@@ -151,7 +159,7 @@ ev_history_can_go_back (EvHistory *history)
 {
         g_return_val_if_fail (EV_IS_HISTORY (history), FALSE);
 
-        return history->priv->back_list != NULL;
+        return history->priv->back_list != NULL && !ev_history_is_frozen (history);
 }
 
 void
@@ -159,7 +167,7 @@ ev_history_go_back (EvHistory *history)
 {
         g_return_if_fail (EV_IS_HISTORY (history));
 
-        if (!history->priv->current || !history->priv->back_list)
+        if (!history->priv->current || !history->priv->back_list || ev_history_is_frozen (history))
                 return;
 
         history->priv->forward_list = g_list_prepend (history->priv->forward_list,
@@ -176,7 +184,7 @@ ev_history_can_go_forward (EvHistory *history)
 {
         g_return_val_if_fail (EV_IS_HISTORY (history), FALSE);
 
-        return history->priv->forward_list != NULL;
+        return history->priv->forward_list != NULL && !ev_history_is_frozen (history);
 }
 
 void
@@ -184,7 +192,7 @@ ev_history_go_forward (EvHistory *history)
 {
         g_return_if_fail (EV_IS_HISTORY (history));
 
-        if (!history->priv->current || !history->priv->forward_list)
+        if (!history->priv->current || !history->priv->forward_list || ev_history_is_frozen (history))
                 return;
 
         history->priv->back_list = g_list_prepend (history->priv->back_list,
@@ -215,7 +223,7 @@ ev_history_go_to_link (EvHistory *history,
         g_return_val_if_fail (EV_IS_HISTORY (history), FALSE);
         g_return_val_if_fail (EV_IS_LINK (link), FALSE);
 
-        if (!history->priv->current || (!history->priv->back_list && !history->priv->forward_list))
+        if (!history->priv->current || (!history->priv->back_list && !history->priv->forward_list) || ev_history_is_frozen (history))
                 return FALSE;
 
         l = g_list_find_custom (history->priv->back_list, link, (GCompareFunc)compare_link);
@@ -277,6 +285,23 @@ ev_history_get_forward_list (EvHistory *history)
         return history->priv->forward_list;
 }
 
+void
+ev_history_freeze (EvHistory *history)
+{
+        g_return_if_fail (EV_IS_HISTORY (history));
+
+        history->priv->frozen++;
+}
+
+void
+ev_history_thaw (EvHistory *history)
+{
+        g_return_if_fail (EV_IS_HISTORY (history));
+        g_return_if_fail (history->priv->frozen > 0);
+
+        history->priv->frozen--;
+}
+
 static gint
 ev_history_get_current_page (EvHistory *history)
 {
@@ -330,6 +355,9 @@ ev_history_add_link_for_page (EvHistory *history,
         EvLink       *link;
         gchar        *page_label;
         gchar        *title;
+
+        if (ev_history_is_frozen (history))
+                return;
 
         if (ev_history_get_current_page (history) == page)
                 return;
