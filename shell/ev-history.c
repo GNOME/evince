@@ -40,7 +40,6 @@ struct _EvHistoryPrivate {
 
         EvDocumentModel *model;
         gulong           page_changed_handler_id;
-        gboolean         activating_current_link;
 
         guint            frozen;
 };
@@ -121,7 +120,7 @@ ev_history_add_link (EvHistory *history,
 	g_return_if_fail (EV_IS_HISTORY (history));
 	g_return_if_fail (EV_IS_LINK (link));
 
-        if (ev_history_is_frozen (history) || history->priv->activating_current_link)
+        if (ev_history_is_frozen (history))
                 return;
 
         if (ev_history_go_to_link (history, link))
@@ -145,11 +144,11 @@ ev_history_add_link (EvHistory *history,
 static void
 ev_history_activate_current_link (EvHistory *history)
 {
-        history->priv->activating_current_link = TRUE;
+        ev_history_freeze (history);
         g_signal_handler_block (history->priv->model, history->priv->page_changed_handler_id);
         g_signal_emit (history, signals[ACTIVATE_LINK], 0, history->priv->current);
         g_signal_handler_unblock (history->priv->model, history->priv->page_changed_handler_id);
-        history->priv->activating_current_link = FALSE;
+        ev_history_thaw (history);
 
         g_signal_emit (history, signals[CHANGED], 0);
 }
