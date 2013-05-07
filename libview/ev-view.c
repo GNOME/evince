@@ -4254,6 +4254,36 @@ ev_view_button_release_event (GtkWidget      *widget,
 }
 
 static gboolean
+ev_view_forward_key_event_to_focused_child (EvView      *view,
+					    GdkEventKey *event)
+{
+	GtkWidget   *child_widget = NULL;
+	GdkEventKey *new_event;
+	gboolean     handled;
+
+	if (view->window_child_focus) {
+		child_widget = view->window_child_focus->window;
+	} else if (view->children) {
+		EvViewChild *child = (EvViewChild *)view->children->data;
+
+		child_widget = child->widget;
+	} else {
+		return FALSE;
+	}
+
+	new_event = (GdkEventKey *) gdk_event_copy ((GdkEvent *)event);
+	g_object_unref (new_event->window);
+	new_event->window = gtk_widget_get_window (child_widget);
+	if (new_event->window)
+		g_object_ref (new_event->window);
+	gtk_widget_realize (child_widget);
+	handled = gtk_widget_event (child_widget, (GdkEvent *)new_event);
+	gdk_event_free ((GdkEvent *)new_event);
+
+	return handled;
+}
+
+static gboolean
 ev_view_key_press_event (GtkWidget   *widget,
 			 GdkEventKey *event)
 {
@@ -4262,26 +4292,8 @@ ev_view_key_press_event (GtkWidget   *widget,
 	if (!view->document)
 		return FALSE;
 
-	if (!gtk_widget_has_focus (widget)) {
-		/* Forward key events to current focused window child */
-		if (view->window_child_focus) {
-			GdkEventKey *new_event;
-			gboolean     handled;
-
-			new_event = (GdkEventKey *) gdk_event_copy ((GdkEvent *)event);
-			g_object_unref (new_event->window);
-			new_event->window = gtk_widget_get_window (view->window_child_focus->window);
-			if (new_event->window)
-				g_object_ref (new_event->window);
-			gtk_widget_realize (view->window_child_focus->window);
-			handled = gtk_widget_event (view->window_child_focus->window, (GdkEvent *)new_event);
-			gdk_event_free ((GdkEvent *)new_event);
-
-			return handled;
-		}
-
-		return FALSE;
-	}
+	if (!gtk_widget_has_focus (widget))
+		return ev_view_forward_key_event_to_focused_child (view, event);
 
 	return gtk_bindings_activate_event (G_OBJECT (widget), event);
 }
