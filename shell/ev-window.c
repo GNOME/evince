@@ -2033,7 +2033,11 @@ ev_window_open_uri (EvWindow       *ev_window,
 	GFile *source_file;
 
 	ev_window->priv->in_reload = FALSE;
-	
+
+	g_clear_pointer (&ev_window->priv->search_string, g_free);
+	ev_window->priv->search_string = search_string ?
+		g_strdup (search_string) : NULL;
+
 	if (ev_window->priv->uri &&
 	    g_ascii_strcasecmp (ev_window->priv->uri, uri) == 0) {
 		ev_window_reload_document (ev_window, dest);
@@ -2078,11 +2082,6 @@ ev_window_open_uri (EvWindow       *ev_window,
 	} else {
 		ev_window->priv->bookmarks = NULL;
 	}
-
-	if (ev_window->priv->search_string)
-		g_free (ev_window->priv->search_string);
-	ev_window->priv->search_string = search_string ?
-		g_strdup (search_string) : NULL;
 
 	if (ev_window->priv->dest)
 		g_object_unref (ev_window->priv->dest);
