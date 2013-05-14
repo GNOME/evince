@@ -7012,22 +7012,6 @@ _gtk_css_provider_load_from_resource (GtkCssProvider *provider,
 }
 
 static void
-ev_window_set_default_size (EvWindow *ev_window)
-{
-	GdkScreen *screen;
-	gint height;
-	gint width;
-	gdouble height_ratio;
-	gdouble width_ratio;
-
-	screen = gtk_window_get_screen (GTK_WINDOW (ev_window));
-	height = gdk_screen_get_height (screen);
-	g_settings_get (ev_window->priv->default_settings, "window-ratio", "(dd)", &width_ratio, &height_ratio);
-	width = floor (height / height_ratio * width_ratio);
-	gtk_window_set_default_size (GTK_WINDOW (ev_window), width, height);
-}
-
-static void
 ev_window_init (EvWindow *ev_window)
 {
 	GtkActionGroup *action_group;
@@ -7458,7 +7442,7 @@ ev_window_init (EvWindow *ev_window)
 	/* Set it user interface params */
 	ev_window_setup_recent (ev_window);
 
-	ev_window_set_default_size (ev_window);
+	gtk_window_set_default_size (GTK_WINDOW (ev_window), 600, 600);
 
         ev_window_sizing_mode_changed_cb (ev_window->priv->model, NULL, ev_window);
 	ev_window_setup_action_sensitivity (ev_window);
