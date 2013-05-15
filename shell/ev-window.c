@@ -3862,24 +3862,55 @@ ev_window_cmd_edit_find (GtkAction *action, EvWindow *ev_window)
 	ev_window_show_find_bar (ev_window);
 }
 
+
+static gboolean
+find_next_idle_cb (EvView *view)
+{
+	ev_view_find_next (view);
+	return FALSE;
+}
+
 static void
 ev_window_cmd_edit_find_next (GtkAction *action, EvWindow *ev_window)
 {
+	gboolean find_bar_hidden;
+
 	if (EV_WINDOW_IS_PRESENTATION (ev_window))
 		return;
 
+	find_bar_hidden = !gtk_widget_get_visible (ev_window->priv->find_bar);
 	ev_window_show_find_bar (ev_window);
-	ev_view_find_next (EV_VIEW (ev_window->priv->view));
+
+	/* Use idle to make sure view allocation happens before find */
+	if (find_bar_hidden)
+		g_idle_add ((GSourceFunc)find_next_idle_cb, ev_window->priv->view);
+	else
+		ev_view_find_next (EV_VIEW (ev_window->priv->view));
+}
+
+static gboolean
+find_previous_idle_cb (EvView *view)
+{
+	ev_view_find_previous (view);
+	return FALSE;
 }
 
 static void
 ev_window_cmd_edit_find_previous (GtkAction *action, EvWindow *ev_window)
 {
+	gboolean find_bar_hidden;
+
 	if (EV_WINDOW_IS_PRESENTATION (ev_window))
 		return;
 
+	find_bar_hidden = !gtk_widget_get_visible (ev_window->priv->find_bar);
 	ev_window_show_find_bar (ev_window);
-	ev_view_find_previous (EV_VIEW (ev_window->priv->view));
+
+	/* Use idle to make sure view allocation happens before find */
+	if (find_bar_hidden)
+		g_idle_add ((GSourceFunc)find_previous_idle_cb, ev_window->priv->view);
+	else
+		ev_view_find_previous (EV_VIEW (ev_window->priv->view));
 }
 
 static void
@@ -5364,9 +5395,7 @@ find_bar_visibility_changed_cb (EggFindBar *find_bar,
 		ev_view_find_set_highlight_search (EV_VIEW (ev_window->priv->view), visible);
 		ev_window_update_actions_sensitivity (ev_window);
 
-		if (visible)
-			ev_window_search_start (ev_window);
-		else
+		if (!visible)
 			egg_find_bar_set_status_text (EGG_FIND_BAR (ev_window->priv->find_bar), NULL);
 	}
 }
@@ -5422,8 +5451,6 @@ ev_window_close_find_bar (EvWindow *ev_window)
 	if (!gtk_widget_get_visible (ev_window->priv->find_bar))
 		return;
 
-	ev_view_find_cancel (EV_VIEW (ev_window->priv->view));
-	ev_window_clear_find_job (ev_window);
 	update_chrome_flag (ev_window, EV_CHROME_FINDBAR, FALSE);
 	update_chrome_visibility (ev_window);
 	gtk_widget_grab_focus (ev_window->priv->view);
