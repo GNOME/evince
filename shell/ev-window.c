@@ -3447,6 +3447,9 @@ ev_window_print_range (EvWindow *ev_window,
 	gint              current_page;
 	gint              document_last_page;
 	gboolean          embed_page_setup;
+	gchar            *output_basename;
+	const gchar      *document_uri;
+	gchar            *dot;
 
 	g_return_if_fail (EV_IS_WINDOW (ev_window));
 	g_return_if_fail (ev_window->priv->document != NULL);
@@ -3493,6 +3496,18 @@ ev_window_print_range (EvWindow *ev_window,
 		gtk_print_settings_set_page_ranges (print_settings,
 						    &range, 1);
 	}
+
+	document_uri = ev_document_get_uri (ev_window->priv->document);
+	output_basename = g_path_get_basename (document_uri);
+	dot = g_strrstr (output_basename, ".");
+	if (dot)
+		dot[0] = '\0';
+
+	/* Set output basename for printing to file */
+	gtk_print_settings_set (print_settings,
+			        GTK_PRINT_SETTINGS_OUTPUT_BASENAME,
+			        output_basename);
+	g_free (output_basename);
 
 	ev_print_operation_set_job_name (op, gtk_window_get_title (GTK_WINDOW (ev_window)));
 	ev_print_operation_set_current_page (op, current_page);
