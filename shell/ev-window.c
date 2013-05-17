@@ -251,6 +251,7 @@ struct _EvWindowPrivate {
 
 #define GS_SCHEMA_NAME           "org.gnome.Evince"
 #define GS_OVERRIDE_RESTRICTIONS "override-restrictions"
+#define GS_PAGE_CACHE_SIZE       "page-cache-size"
 #define GS_AUTO_RELOAD           "auto-reload"
 #define GS_LAST_DOCUMENT_DIRECTORY "document-directory"
 #define GS_LAST_PICTURES_DIRECTORY "pictures-directory"
@@ -1255,6 +1256,18 @@ setup_view_from_metadata (EvWindow *window)
 }
 
 static void
+page_cache_size_changed (GSettings *settings,
+			 gchar     *key,
+			 EvWindow  *ev_window)
+{
+	guint page_cache_mb;
+
+	page_cache_mb = g_settings_get_uint (settings, GS_PAGE_CACHE_SIZE);
+	ev_view_set_page_cache_size (EV_VIEW (ev_window->priv->view),
+				     page_cache_mb * 1024 * 1024);
+}
+
+static void
 ev_window_setup_default (EvWindow *ev_window)
 {
 	EvDocumentModel *model = ev_window->priv->model;
@@ -1365,6 +1378,11 @@ ev_window_ensure_settings (EvWindow *ev_window)
                           "changed::"GS_OVERRIDE_RESTRICTIONS,
                           G_CALLBACK (override_restrictions_changed),
                           ev_window);
+        g_signal_connect (priv->settings,
+			  "changed::"GS_PAGE_CACHE_SIZE,
+			  G_CALLBACK (page_cache_size_changed),
+			  ev_window);
+
         return priv->settings;
 }
 
@@ -7035,6 +7053,7 @@ ev_window_init (EvWindow *ev_window)
 	GtkWidget *sidebar_widget;
 	GtkWidget *overlay;
 	GObject *mpkeys;
+	guint page_cache_mb;
 #ifdef ENABLE_DBUS
 	GDBusConnection *connection;
 	static gint window_id = 0;
@@ -7292,6 +7311,10 @@ ev_window_init (EvWindow *ev_window)
 	gtk_widget_show (ev_window->priv->view_box);
 
 	ev_window->priv->view = ev_view_new ();
+	page_cache_mb = g_settings_get_uint (ev_window_ensure_settings (ev_window),
+					     GS_PAGE_CACHE_SIZE);
+	ev_view_set_page_cache_size (EV_VIEW (ev_window->priv->view),
+				     page_cache_mb * 1024 * 1024);
 	ev_view_set_model (EV_VIEW (ev_window->priv->view), ev_window->priv->model);
 
 	ev_window->priv->password_view = ev_password_view_new (GTK_WINDOW (ev_window));
