@@ -22,6 +22,8 @@
 #include "config.h"
 #endif
 
+#include <glib/gi18n.h>
+
 #include "ev-toolbar.h"
 
 #include "ev-stock-icons.h"
@@ -215,6 +217,7 @@ ev_toolbar_constructed (GObject *object)
         menu = gtk_ui_manager_get_widget (ui_manager, "/ViewMenuPopup");
         button = ev_toolbar_create_menu_button (ev_toolbar, "document-properties-symbolic",
                                                 menu, GTK_ALIGN_END);
+        gtk_widget_set_tooltip_text (button, _("View options"));
         ev_toolbar->priv->view_menu_button = button;
         tool_item = GTK_WIDGET (gtk_tool_item_new ());
         gtk_container_add (GTK_CONTAINER (tool_item), button);
@@ -228,6 +231,7 @@ ev_toolbar_constructed (GObject *object)
         menu = gtk_ui_manager_get_widget (ui_manager, "/ActionMenu");
         button = ev_toolbar_create_menu_button (ev_toolbar, "emblem-system-symbolic",
                                                 menu, GTK_ALIGN_END);
+        gtk_widget_set_tooltip_text (button, _("File options"));
         ev_toolbar->priv->action_menu_button = button;
         tool_item = GTK_WIDGET (gtk_tool_item_new ());
         gtk_container_add (GTK_CONTAINER (tool_item), button);
