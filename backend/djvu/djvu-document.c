@@ -537,6 +537,95 @@ djvu_text_copy (DjvuDocument *djvu_document,
 	return text;
 }
 
+static void
+djvu_convert_to_doc_rect (EvRectangle *dest,
+			  EvRectangle *source,
+			  gdouble height,
+			  gdouble dpi)
+{
+	dest->x1 = source->x1 * dpi / 72;
+	dest->x2 = source->x2 * dpi / 72;
+	dest->y1 = (height - source->y2) * dpi / 72;
+	dest->y2 = (height - source->y1) * dpi / 72;
+}
+
+static GList *
+djvu_selection_get_selection_rects (DjvuDocument    *djvu_document,
+				    gint             page,
+				    EvRectangle     *points,
+				    gdouble          height,
+				    gdouble          dpi)
+{
+	miniexp_t   page_text;
+	EvRectangle rectangle;
+	GList      *rects = NULL;
+
+	djvu_convert_to_doc_rect (&rectangle, points, height, dpi);
+
+	while ((page_text = ddjvu_document_get_pagetext (djvu_document->d_document,
+							 page, "char")) == miniexp_dummy)
+		djvu_handle_events (djvu_document, TRUE, NULL);
+
+	if (page_text != miniexp_nil) {
+		DjvuTextPage *tpage = djvu_text_page_new (page_text);
+
+		rects = djvu_text_page_get_selection_region (tpage, &rectangle);
+		djvu_text_page_free (tpage);
+		ddjvu_miniexp_release (djvu_document->d_document, page_text);
+	}
+
+	return rects;
+}
+
+static cairo_region_t *
+djvu_get_selection_region (DjvuDocument *djvu_document,
+                           gint page,
+                           gdouble scale,
+                           EvRectangle *points)
+{
+	double          height, dpi;
+	GList          *rects = NULL, *l;
+	cairo_region_t *region;
+
+	document_get_page_size (djvu_document, page, NULL, &height, &dpi);
+	rects = djvu_selection_get_selection_rects (djvu_document, page, points,
+						    height, dpi);
+	region = cairo_region_create ();
+	for (l = rects; l && l->data; l = g_list_next (l)) {
+		cairo_rectangle_int_t rect;
+		EvRectangle          *r = (EvRectangle *)l->data;
+		gdouble               tmp;
+
+		tmp = r->y1;
+		r->x1 *= 72 / dpi;
+		r->x2 *= 72 / dpi;
+		r->y1 = height - r->y2 * 72 / dpi;
+		r->y2 = height - tmp * 72 / dpi;
+
+		rect.x = (gint) ((r->x1 * scale) + 0.5);
+		rect.y = (gint) ((r->y1 * scale) + 0.5);
+		rect.width = (gint) (((r->x2 - r->x1) * scale) + 0.5);
+		rect.height = (gint) (((r->y2 - r->y1) * scale) + 0.5);
+		cairo_region_union_rectangle (region, &rect);
+		ev_rectangle_free (r);
+	}
+	g_list_free (l);
+
+	return region;
+}
+
+static cairo_region_t *
+djvu_selection_get_selection_region (EvSelection    *selection,
+				     EvRenderContext *rc,
+				     EvSelectionStyle style,
+				     EvRectangle     *points)
+{
+	DjvuDocument *djvu_document = DJVU_DOCUMENT (selection);
+
+	return djvu_get_selection_region (djvu_document, rc->page->index,
+					  rc->scale, points);
+}
+
 static gchar *
 djvu_selection_get_selected_text (EvSelection     *selection,
 				  EvPage          *page,
@@ -544,16 +633,12 @@ djvu_selection_get_selected_text (EvSelection     *selection,
 				  EvRectangle     *points)
 {
       	DjvuDocument *djvu_document = DJVU_DOCUMENT (selection);
-	double width, height, dpi;
+	double height, dpi;
       	EvRectangle rectangle;
       	gchar *text;
 
-        document_get_page_size (djvu_document, page->index, &width, &height, &dpi);
-        rectangle.x1 = points->x1 * dpi / 72.0;
-        rectangle.y1 = (height - points->y2) * dpi / 72.0;
-        rectangle.x2 = points->x2 * dpi / 72.0;
-        rectangle.y2 = (height - points->y1) * dpi / 72.0;
-		
+	document_get_page_size (djvu_document, page->index, NULL, &height, &dpi);
+	djvu_convert_to_doc_rect (&rectangle, points, height, dpi);
       	text = djvu_text_copy (djvu_document, page->index, &rectangle);
       
       	if (text == NULL)
@@ -566,6 +651,7 @@ static void
 djvu_selection_iface_init (EvSelectionInterface *iface)
 {
 	iface->get_selected_text = djvu_selection_get_selected_text;
+	iface->get_selection_region = djvu_selection_get_selection_region;
 }
 
 /* EvFileExporterIface */

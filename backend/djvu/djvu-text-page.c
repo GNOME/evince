@@ -25,7 +25,68 @@
 
 
 /**
- * djvu_text_page_selection_process:
+ * djvu_text_page_union:
+ * @target: first rectangle and result
+ * @source: second rectangle
+ *
+ * Calculates the bounding box of two rectangles and stores the result
+ * in the first.
+ */
+static void
+djvu_text_page_union (EvRectangle *target,
+		      EvRectangle *source)
+{
+	if (source->x1 < target->x1)
+		target->x1 = source->x1;
+	if (source->x2 > target->x2)
+		target->x2 = source->x2;
+	if (source->y1 < target->y1)
+		target->y1 = source->y1;
+	if (source->y2 > target->y2)
+		target->y2 = source->y2;
+}
+
+/**
+ * djvu_text_page_selection_process_box:
+ * @page: #DjvuTextPage instance
+ * @p: s-expression to append bounding box of
+ * @delimit: character/word/... delimiter
+ *
+ * Appends bounding box of the line containing miniexp_t to page->results
+ *
+ * Returns: whether the end was not reached in this s-expression
+ */
+static gboolean
+djvu_text_page_selection_process_box (DjvuTextPage *page,
+				      miniexp_t     p,
+				      int           delimit)
+{
+	if (page->results || p == page->start) {
+		EvRectangle box;
+
+		box.x1 = miniexp_to_int (miniexp_nth (1, p));
+		box.y1 = miniexp_to_int (miniexp_nth (2, p));
+		box.x2 = miniexp_to_int (miniexp_nth (3, p));
+		box.y2 = miniexp_to_int (miniexp_nth (4, p));
+
+		if (!(delimit & 2) && page->results != NULL) {
+			EvRectangle *union_box = (EvRectangle *)page->results->data;
+
+                        /* If still on the same line, add box to union */
+			djvu_text_page_union (union_box, &box);
+		} else {
+			/* A new line, a new box */
+			page->results = g_list_prepend (page->results, ev_rectangle_copy (&box));
+		}
+
+		if (p == page->end)
+			return FALSE;
+	}
+	return TRUE;
+}
+
+/**
+ * djvu_text_page_selection_process_text:
  * @page: #DjvuTextPage instance
  * @p: s-expression to append
  * @delimit: character/word/... delimiter
@@ -35,9 +96,9 @@
  * Returns: whether the end was not reached in this s-expression
  */
 static gboolean
-djvu_text_page_selection_process (DjvuTextPage *page, 
-                                  miniexp_t     p,
-                                  int           delimit)
+djvu_text_page_selection_process_text (DjvuTextPage *page,
+                                       miniexp_t     p,
+                                       int           delimit)
 {
 	if (page->text || p == page->start) {
 		char *token_text = (char *) miniexp_to_str (miniexp_nth (5, p));
@@ -63,16 +124,17 @@ djvu_text_page_selection_process (DjvuTextPage *page,
  * @p: tree to append
  * @delimit: character/word/... delimiter
  * 
- * Walks the tree in @p and appends the text with
- * djvu_text_page_selection_process() for all s-expressions 
+ * Walks the tree in @p and appends the text or bounding boxes with
+ * djvu_text_page_selection_process_{text|box}() for all s-expressions
  * between the start and end fields.
  * 
  * Returns: whether the end was not reached in this subtree
  */
 static gboolean
-djvu_text_page_selection (DjvuTextPage *page, 
-		          miniexp_t     p,
-		          int           delimit)
+djvu_text_page_selection (DjvuSelectionType type,
+			  DjvuTextPage *page,
+			  miniexp_t     p,
+			  int           delimit)
 {
 	g_return_val_if_fail (miniexp_consp (p) && miniexp_symbolp
 			      (miniexp_car (p)), FALSE);
@@ -84,12 +146,15 @@ djvu_text_page_selection (DjvuTextPage *page,
 	while (deeper != miniexp_nil) {
 		miniexp_t str = miniexp_car (deeper);
 		if (miniexp_stringp (str)) {
-			if (!djvu_text_page_selection_process
-			    (page, p, delimit))
-				return FALSE;
+			if (type == DJVU_SELECTION_TEXT) {
+				if (!djvu_text_page_selection_process_text (page, p, delimit))
+					return FALSE;
+			} else {
+				if (!djvu_text_page_selection_process_box (page, p, delimit))
+					return FALSE;
+			}
 		} else {
-			if (!djvu_text_page_selection
-			    (page, str, delimit))
+			if (!djvu_text_page_selection (type, page, str, delimit))
 				return FALSE;
 		}
 		delimit = 0;
@@ -138,6 +203,29 @@ djvu_text_page_limits (DjvuTextPage *page,
 	}
 }
 
+/**
+ * djvu_text_page_get_selection:
+ * @page: #DjvuTextPage instance
+ * @rectangle: #EvRectangle of the selection
+ *
+ * Returns: The bounding boxes of the selection
+ */
+GList *
+djvu_text_page_get_selection_region (DjvuTextPage *page,
+                                     EvRectangle  *rectangle)
+{
+	page->start = miniexp_nil;
+	page->end = miniexp_nil;
+
+	/* Get page->start and page->end filled from selection rectangle */
+	djvu_text_page_limits (page, page->text_structure, rectangle);
+	/* Fills page->results with the bouding boxes */
+	djvu_text_page_selection (DJVU_SELECTION_BOX,
+	                          page, page->text_structure, 0);
+
+	return g_list_reverse (page->results);
+}
+
 char *
 djvu_text_page_copy (DjvuTextPage *page, 
 		     EvRectangle  *rectangle)
@@ -147,7 +235,8 @@ djvu_text_page_copy (DjvuTextPage *page,
 	page->start = miniexp_nil;
 	page->end = miniexp_nil;
 	djvu_text_page_limits (page, page->text_structure, rectangle);
-	djvu_text_page_selection (page, page->text_structure, 0);
+	djvu_text_page_selection (DJVU_SELECTION_TEXT, page,
+	                          page->text_structure, 0);
 	
 	/* Do not free the string */	  
 	text = page->text;
@@ -191,28 +280,6 @@ djvu_text_page_position (DjvuTextPage *page,
 	}
 
 	return g_array_index (page->links, DjvuTextLink, mid).pair;
-}
-
-/**
- * djvu_text_page_union:
- * @target: first rectangle and result
- * @source: second rectangle
- * 
- * Calculates the bounding box of two rectangles and stores the reuslt 
- * in the first.
- */
-static void
-djvu_text_page_union (EvRectangle *target, 
-		      EvRectangle *source)
-{
-	if (source->x1 < target->x1)
-		target->x1 = source->x1;
-	if (source->x2 > target->x2)
-		target->x2 = source->x2;
-	if (source->y1 < target->y1)
-		target->y1 = source->y1;
-	if (source->y2 > target->y2)
-		target->y2 = source->y2;
 }
 
 /**
