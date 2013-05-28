@@ -5758,29 +5758,36 @@ ev_window_dispose (GObject *object)
 	G_OBJECT_CLASS (ev_window_parent_class)->dispose (object);
 }
 
+
+/*
+ * GtkWindow catches keybindings for the menu items _before_ passing them to
+ * the focused widget. This is unfortunate and means that pressing Ctrl+a,
+ * Ctrl+left or Ctrl+right in the search bar ends up selecting text in the EvView
+ * or rotating it.
+ * Here we override GtkWindow's handler to do the same things that it
+ * does, but in the opposite order and then we chain up to the grand
+ * parent handler, skipping gtk_window_key_press_event.
+ */
 static gboolean
 ev_window_key_press_event (GtkWidget   *widget,
 			   GdkEventKey *event)
 {
-	EvWindow        *ev_window = EV_WINDOW (widget);
-	EvWindowPrivate *priv = ev_window->priv;
-	gboolean         handled = FALSE;
+	static gpointer grand_parent_class = NULL;
+	GtkWindow *window = GTK_WINDOW (widget);
 
-	/* Propagate the event to the view first
-	 * It's needed to be able to type in
-	 * annot popups windows
-	 */
-	if (priv->view) {
-		g_object_ref (priv->view);
-		if (gtk_widget_is_sensitive (priv->view))
-			handled = gtk_widget_event (priv->view, (GdkEvent*) event);
-		g_object_unref (priv->view);
-	}
+	if (grand_parent_class == NULL)
+                grand_parent_class = g_type_class_peek_parent (ev_window_parent_class);
 
-	if (!handled)
-		handled = GTK_WIDGET_CLASS (ev_window_parent_class)->key_press_event (widget, event);
+        /* Handle focus widget key events */
+        if (gtk_window_propagate_key_event (window, event))
+		return TRUE;
 
-	return handled;
+	/* Handle mnemonics and accelerators */
+	if (gtk_window_activate_key (window, event))
+		return TRUE;
+
+        /* Chain up, invokes binding set on window */
+	return GTK_WIDGET_CLASS (grand_parent_class)->key_press_event (widget, event);
 }
 
 static gboolean
