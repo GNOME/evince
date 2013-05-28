@@ -546,43 +546,6 @@ ev_window_update_actions_sensitivity (EvWindow *ev_window)
 	}
 }
 
-static const gchar *view_accels[] = {
-	"PageDown",
-	"PageUp",
-	"Space",
-	"ShiftSpace",
-	"BackSpace",
-	"ShiftBackSpace",
-	"Return",
-	"ShiftReturn",
-	"Plus",
-	"Minus",
-	"KpPlus",
-	"KpMinus",
-	"Equal",
-	"n",
-	"p",
-	"FitPage",
-	"FitWidth"
-};
-
-static void
-ev_window_set_view_accels_sensitivity (EvWindow *window, gboolean sensitive)
-{
-	gboolean can_find;
-	gint     i;
-
-	if (!window->priv->action_group)
-		return;
-
-	for (i = 0; i < G_N_ELEMENTS (view_accels); i++)
-		ev_window_set_action_sensitive (window, view_accels[i], sensitive);
-
-	can_find = window->priv->document && EV_IS_DOCUMENT_FIND (window->priv->document);
-	ev_window_set_action_sensitive (window, "Slash", sensitive && can_find);
-	ev_window_set_action_sensitive (window, "CtrlF", sensitive && can_find);
-}
-
 static void
 set_widget_visibility (GtkWidget *widget, gboolean visible)
 {
@@ -6227,9 +6190,6 @@ view_actions_focus_in_cb (GtkWidget *widget, GdkEventFocus *event, EvWindow *win
 #endif /* ENABLE_DBUS */
 
 	update_chrome_flag (window, EV_CHROME_RAISE_TOOLBAR, FALSE);
-
-	ev_window_set_view_accels_sensitivity (window, TRUE);
-
 	update_chrome_visibility (window);
 
 	return FALSE;
@@ -6238,8 +6198,6 @@ view_actions_focus_in_cb (GtkWidget *widget, GdkEventFocus *event, EvWindow *win
 static gboolean
 view_actions_focus_out_cb (GtkWidget *widget, GdkEventFocus *event, EvWindow *window)
 {
-	ev_window_set_view_accels_sensitivity (window, FALSE);
-
 	return FALSE;
 }
 
@@ -7162,8 +7120,6 @@ ev_window_init (EvWindow *ev_window)
 	accel_group =
 		gtk_ui_manager_get_accel_group (ev_window->priv->ui_manager);
 	gtk_window_add_accel_group (GTK_WINDOW (ev_window), accel_group);
-
-	ev_window_set_view_accels_sensitivity (ev_window, FALSE);
 
 	action_group = gtk_action_group_new ("ViewPopupActions");
 	ev_window->priv->view_popup_action_group = action_group;
