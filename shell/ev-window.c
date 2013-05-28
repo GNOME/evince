@@ -6195,12 +6195,6 @@ view_actions_focus_in_cb (GtkWidget *widget, GdkEventFocus *event, EvWindow *win
 	return FALSE;
 }
 
-static gboolean
-view_actions_focus_out_cb (GtkWidget *widget, GdkEventFocus *event, EvWindow *window)
-{
-	return FALSE;
-}
-
 static void
 sidebar_page_main_widget_update_cb (GObject *ev_sidebar_page,
 				    GParamSpec         *pspec,
@@ -6213,9 +6207,6 @@ sidebar_page_main_widget_update_cb (GObject *ev_sidebar_page,
     	if (widget != NULL) {		
 		g_signal_connect_object (widget, "focus_in_event",
 				         G_CALLBACK (view_actions_focus_in_cb),
-					 ev_window, 0);
-		g_signal_connect_object (widget, "focus_out_event",
-				         G_CALLBACK (view_actions_focus_out_cb),
 					 ev_window, 0);
 		g_object_unref (widget);
 	}
@@ -7311,9 +7302,6 @@ ev_window_init (EvWindow *ev_window)
 	g_signal_connect_object (ev_window->priv->view, "focus_in_event",
 			         G_CALLBACK (view_actions_focus_in_cb),
 				 ev_window, 0);
-	g_signal_connect_object (ev_window->priv->view, "focus_out_event",
-			         G_CALLBACK (view_actions_focus_out_cb),
-			         ev_window, 0);
 	g_signal_connect_swapped (ev_window->priv->view, "external-link",
 				  G_CALLBACK (view_external_link_cb),
 				  ev_window);
