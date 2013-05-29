@@ -1,4 +1,76 @@
 ================
+Evince     3.9.2
+================
+
+New features and improvements:
+
+    * Forward key events received in the toplevel window to the
+      focused widget (#676040, José Aliste)
+    * Use the document filename as output basename when printing to a
+      file (#700466, Jonas Danielsson)
+    * Enable GDK_SMOOTH_SCROLL events for EvView (#674098, Xiao-Long
+      Chen)
+    * Show the document URI in the error message when it fails to open
+      (#697900, Pietro Battiston)
+    * Allow to browse all files from Save Image dialog by adding more
+      filters to the file chooser (#523071, Jonas Danielsson)
+    * Added Shift+Enter shortcut to search backwards (#641797, Ondrej
+      Danko)
+    * Make shortcuts for find next/previous work even when the fin bar
+      is closed (#625225, Jonas Danielsson)
+    * Add support for file identifiers to DJVU backend (#619410, José
+      Aliste)
+    * Add support for page labels to DJVU backend (#619407, José
+      Aliste)
+    * Use ellipsis character in translatable strings (#695597, Gökçen
+      Eraslan)
+
+Bug fixes:
+
+    * Make annotation windows always accept input focus (#668446, José
+      Aliste, Florian Echtler)
+    * Fix capitalization in a menu item (#699108, Adam Dingle)
+    * Fix typo in PostScript printer error message (#695597, Gökçen
+      Eraslan)
+    * Fix zoom and position of FitR link destinations (#695524, Simon
+      Budig)
+    * Update the search string when the document is reloaded (#694143,
+      aakash)
+    * Fix --find command line option to actually show the find bar
+      (#604327, Carlos Garcia Campos)
+    * Forward EvView key events to the focused form field, so that
+      it's possible to move between words with CTRL+Left/Right in text
+      form fields instead of rotating the view (#699630, Carlos Garcia
+      Campos)
+    * Do not update the history while searching to prevent the find
+      bar from begin closed unexpectedly (#697194, Carlos Garcia
+      Campos)
+    * Fix document to view coordinates transformation to take page
+      borders into account. This makes search results, form fields,
+      annotations and other items to be correctly placed on the view
+      (Carlos Garcia Campos)
+
+Documentation:
+
+    * Update gtk-doc API files adding new symbols and removing the
+      ones that no longer exist (#697152, Cosimo Cecchi)
+    * Update the man page (Marek Kasik)
+
+Translation updates:
+
+    * flemming christensen (da)
+    * Christian Kirbach (de)
+    * Bruce Cowan (en_GB)
+    * Daniel Mustieles (es)
+    * Yaron Shahrabani (he)
+    * Gabor Kelemen (hu)
+    * OKANO Takayoshi (ja)
+    * Kjartan Maraas (nb)
+    * Pavol Klačanský (sk)
+    * Matej Urbančič (sl)
+    * tuhaihe (zh_CN)
+
+================
 Evince     3.8.0
 ================
 
