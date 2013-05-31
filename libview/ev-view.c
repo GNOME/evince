@@ -5321,6 +5321,10 @@ ev_view_document_changed_cb (EvDocumentModel *model,
 {
 	EvDocument *document = ev_document_model_get_document (model);
 
+	if (ev_document_get_n_pages (document) <= 0 ||
+	    !ev_document_check_dimensions (document))
+		return;
+
 	if (document != view->document) {
 		gint current_page;
 
