@@ -5321,10 +5321,6 @@ ev_view_document_changed_cb (EvDocumentModel *model,
 {
 	EvDocument *document = ev_document_model_get_document (model);
 
-	if (ev_document_get_n_pages (document) <= 0 ||
-	    !ev_document_check_dimensions (document))
-		return;
-
 	if (document != view->document) {
 		gint current_page;
 
@@ -5335,12 +5331,15 @@ ev_view_document_changed_cb (EvDocumentModel *model,
 			g_object_unref (view->document);
                 }
 
-		view->document = document;
+		view->document = document ? g_object_ref (document) : NULL;
 		view->find_result = 0;
 
 		if (view->document) {
+			if (ev_document_get_n_pages (view->document) <= 0 ||
+			    !ev_document_check_dimensions (view->document))
+				return;
+
 			ev_view_set_loading (view, FALSE);
-			g_object_ref (view->document);
 			setup_caches (view);
                 }
 
