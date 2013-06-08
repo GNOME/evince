@@ -84,7 +84,8 @@ _ev_tmp_dir (GError **error)
 {
 
         if (tmp_dir == NULL) {
-                gchar *dirname, *prgname;
+                gchar *dirname;
+                const gchar *prgname;
 
                 prgname = g_get_prgname ();
                 dirname = g_strdup_printf ("%s-%u", prgname ? prgname : "unknown", getpid ());
