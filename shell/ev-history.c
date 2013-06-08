@@ -34,9 +34,8 @@ enum {
 static guint signals[N_SIGNALS] = {0, };
 
 struct _EvHistoryPrivate {
-        EvLink          *current;
-	GList           *back_list;
-        GList           *forward_list;
+	GList           *list;
+        GList           *current;
 
         EvDocumentModel *model;
         gulong           page_changed_handler_id;
@@ -50,15 +49,18 @@ static void ev_history_set_model (EvHistory       *history,
                                   EvDocumentModel *model);
 
 static void
+clear_list (GList *list)
+{
+        g_list_free_full (list, (GDestroyNotify) g_object_unref);
+}
+
+static void
 ev_history_clear (EvHistory *history)
 {
-        g_clear_object (&history->priv->current);
+        clear_list (history->priv->list);
+        history->priv->list = NULL;
 
-        g_list_free_full (history->priv->back_list, (GDestroyNotify)g_object_unref);
-        history->priv->back_list = NULL;
-
-        g_list_free_full (history->priv->forward_list, (GDestroyNotify)g_object_unref);
-        history->priv->forward_list = NULL;
+        history->priv->current = NULL;
 }
 
 static void
@@ -117,6 +119,8 @@ void
 ev_history_add_link (EvHistory *history,
                      EvLink    *link)
 {
+        EvHistoryPrivate *priv;
+
 	g_return_if_fail (EV_IS_HISTORY (history));
 	g_return_if_fail (EV_IS_LINK (link));
 
@@ -126,15 +130,17 @@ ev_history_add_link (EvHistory *history,
         if (ev_history_go_to_link (history, link))
             return;
 
-        if (history->priv->current) {
-                history->priv->back_list = g_list_prepend (history->priv->back_list,
-                                                           history->priv->current);
+        priv = history->priv;
+
+        if (priv->current) {
+                /* Truncate forward history at @current */
+                clear_list (priv->current->next);
+                priv->current->next = NULL;
         }
 
-        history->priv->current = g_object_ref (link);
-
-        g_list_free_full (history->priv->forward_list, (GDestroyNotify)g_object_unref);
-        history->priv->forward_list = NULL;
+        /* Push @link to the list */
+        priv->current = g_list_append (NULL, g_object_ref (link));
+        priv->list = g_list_concat (priv->list, priv->current);
 
         /* TODO: Decide a history limit and delete old links when the limit is reached */
 
@@ -144,9 +150,11 @@ ev_history_add_link (EvHistory *history,
 static void
 ev_history_activate_current_link (EvHistory *history)
 {
+        g_assert (history->priv->current);
+
         ev_history_freeze (history);
         g_signal_handler_block (history->priv->model, history->priv->page_changed_handler_id);
-        g_signal_emit (history, signals[ACTIVATE_LINK], 0, history->priv->current);
+        g_signal_emit (history, signals[ACTIVATE_LINK], 0, history->priv->current->data);
         g_signal_handler_unblock (history->priv->model, history->priv->page_changed_handler_id);
         ev_history_thaw (history);
 
@@ -156,24 +164,31 @@ ev_history_activate_current_link (EvHistory *history)
 gboolean
 ev_history_can_go_back (EvHistory *history)
 {
+        EvHistoryPrivate *priv;
+
         g_return_val_if_fail (EV_IS_HISTORY (history), FALSE);
 
-        return history->priv->back_list != NULL && !ev_history_is_frozen (history);
+        if (ev_history_is_frozen (history))
+                return FALSE;
+
+        priv = history->priv;
+        return priv->current && priv->current->prev;
 }
 
 void
 ev_history_go_back (EvHistory *history)
 {
+        EvHistoryPrivate *priv;
+
         g_return_if_fail (EV_IS_HISTORY (history));
 
-        if (!history->priv->current || !history->priv->back_list || ev_history_is_frozen (history))
+        if (!ev_history_can_go_back (history))
                 return;
 
-        history->priv->forward_list = g_list_prepend (history->priv->forward_list,
-                                                      history->priv->current);
-        history->priv->current = EV_LINK (history->priv->back_list->data);
-        history->priv->back_list = g_list_delete_link (history->priv->back_list,
-                                                       history->priv->back_list);
+        priv = history->priv;
+
+        /* Move current back one step */
+        priv->current = priv->current->prev;
 
         ev_history_activate_current_link (history);
 }
@@ -181,24 +196,31 @@ ev_history_go_back (EvHistory *history)
 gboolean
 ev_history_can_go_forward (EvHistory *history)
 {
+        EvHistoryPrivate *priv;
+
         g_return_val_if_fail (EV_IS_HISTORY (history), FALSE);
 
-        return history->priv->forward_list != NULL && !ev_history_is_frozen (history);
+        if (ev_history_is_frozen (history))
+                return FALSE;
+
+        priv = history->priv;
+        return priv->current && priv->current->next;
 }
 
 void
 ev_history_go_forward (EvHistory *history)
 {
+        EvHistoryPrivate *priv;
+
         g_return_if_fail (EV_IS_HISTORY (history));
 
-        if (!history->priv->current || !history->priv->forward_list || ev_history_is_frozen (history))
+        if (!ev_history_can_go_forward (history))
                 return;
 
-        history->priv->back_list = g_list_prepend (history->priv->back_list,
-                                                   history->priv->current);
-        history->priv->current = EV_LINK (history->priv->forward_list->data);
-        history->priv->forward_list = g_list_delete_link (history->priv->forward_list,
-                                                          history->priv->forward_list);
+        priv = history->priv;
+
+        /* Move current forward one step */
+        priv->current = priv->current->next;
 
         ev_history_activate_current_link (history);
 }
@@ -213,75 +235,80 @@ compare_link (EvLink *a,
         return ev_link_action_equal (ev_link_get_action (a), ev_link_get_action (b)) ? 0 : 1;
 }
 
+/*
+ * ev_history_go_to_link:
+ * @history: a #EvHistory
+ * @link: a #EvLink
+ *
+ * Goes to the link, if it is in the history.
+ *
+ * Returns: %TRUE if the link was in the history and history isn't frozen; %FALSE otherwise
+ */
 gboolean
 ev_history_go_to_link (EvHistory *history,
                        EvLink    *link)
 {
+        EvHistoryPrivate *priv;
         GList *l;
 
         g_return_val_if_fail (EV_IS_HISTORY (history), FALSE);
         g_return_val_if_fail (EV_IS_LINK (link), FALSE);
 
-        if (!history->priv->current || (!history->priv->back_list && !history->priv->forward_list) || ev_history_is_frozen (history))
+        if (ev_history_is_frozen (history))
                 return FALSE;
 
-        l = g_list_find_custom (history->priv->back_list, link, (GCompareFunc)compare_link);
-        if (l) {
-                if (l->next)
-                        l->next->prev = NULL;
-                if (l->prev)
-                        l->prev->next = NULL;
+        priv = history->priv;
 
-                history->priv->forward_list = g_list_prepend (history->priv->forward_list,
-                                                              history->priv->current);
-                history->priv->forward_list = g_list_concat (g_list_reverse (history->priv->back_list),
-                                                             history->priv->forward_list);
-                history->priv->back_list = l->next;
-                history->priv->current = EV_LINK (l->data);
-                g_list_free_1 (l);
+        l = g_list_find_custom (priv->list, link, (GCompareFunc) compare_link);
+        if (l == NULL)
+                return FALSE;
 
-                ev_history_activate_current_link (history);
+        /* Set the link as current */
+        priv->current = l;
 
-                return TRUE;
-        }
+        ev_history_activate_current_link (history);
 
-        l = g_list_find_custom (history->priv->forward_list, link, (GCompareFunc)compare_link);
-        if (l) {
-                if (l->next)
-                        l->next->prev = NULL;
-                if (l->prev)
-                        l->prev->next = NULL;
-
-                history->priv->back_list = g_list_prepend (history->priv->back_list,
-                                                           history->priv->current);
-                history->priv->back_list = g_list_concat (g_list_reverse (history->priv->forward_list),
-                                                          history->priv->back_list);
-                history->priv->forward_list = l->next;
-                history->priv->current = EV_LINK (l->data);
-                g_list_free_1 (l);
-
-                ev_history_activate_current_link (history);
-
-                return TRUE;
-        }
-
-        return FALSE;
+        return TRUE;
 }
 
+/**
+ * ev_history_get_back_list:
+ * @history: a #EvHistory
+ *
+ * Returns: (transfer container): the back history
+ */
 GList *
 ev_history_get_back_list (EvHistory *history)
 {
+        EvHistoryPrivate *priv;
+        GList *list, *l;
+
         g_return_val_if_fail (EV_IS_HISTORY (history), NULL);
 
-        return history->priv->back_list;
+        priv = history->priv;
+
+        if (priv->current == NULL)
+                return NULL;
+
+        list = NULL;
+        for (l = priv->current->prev; l != NULL; l = l->prev)
+                list = g_list_prepend (list, l->data);
+
+        return g_list_reverse (list);
 }
 
+/**
+ * ev_history_get_forward_list:
+ * @history: a #EvHistory
+ *
+ * Returns: (transfer container): the forward history
+ */
 GList *
 ev_history_get_forward_list (EvHistory *history)
 {
         g_return_val_if_fail (EV_IS_HISTORY (history), NULL);
 
-        return history->priv->forward_list;
+        return g_list_copy (history->priv->current->next);
 }
 
 void
@@ -304,6 +331,7 @@ ev_history_thaw (EvHistory *history)
 static gint
 ev_history_get_current_page (EvHistory *history)
 {
+        EvLink       *link;
         EvDocument   *document;
         EvLinkDest   *dest;
         EvLinkAction *action;
@@ -311,7 +339,8 @@ ev_history_get_current_page (EvHistory *history)
         if (!history->priv->current)
                 return -1;
 
-        action = ev_link_get_action (history->priv->current);
+        link = history->priv->current->data;
+        action = ev_link_get_action (link);
         if (!action)
                 return -1;
 
