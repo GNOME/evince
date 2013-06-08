@@ -36,7 +36,7 @@ struct _EvPropertiesLicenseClass {
 	GtkVBoxClass base_class;
 };
 
-G_DEFINE_TYPE (EvPropertiesLicense, ev_properties_license, GTK_TYPE_VBOX)
+G_DEFINE_TYPE (EvPropertiesLicense, ev_properties_license, GTK_TYPE_BOX)
 
 static void
 ev_properties_license_class_init (EvPropertiesLicenseClass *properties_license_class)
@@ -160,7 +160,9 @@ ev_properties_license_new (void)
 {
 	EvPropertiesLicense *properties_license;
 
-	properties_license = g_object_new (EV_TYPE_PROPERTIES_LICENSE, NULL);
+	properties_license = g_object_new (EV_TYPE_PROPERTIES_LICENSE,
+					   "orientation", GTK_ORIENTATION_VERTICAL,
+					   NULL);
 
 	return GTK_WIDGET (properties_license);
 }

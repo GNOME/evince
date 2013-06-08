@@ -48,7 +48,7 @@ struct _EvPropertiesFontsClass {
 static void
 job_fonts_finished_cb (EvJob *job, EvPropertiesFonts *properties);
 
-G_DEFINE_TYPE (EvPropertiesFonts, ev_properties_fonts, GTK_TYPE_VBOX)
+G_DEFINE_TYPE (EvPropertiesFonts, ev_properties_fonts, GTK_TYPE_BOX)
 
 static void
 ev_properties_fonts_dispose (GObject *object)
@@ -237,7 +237,9 @@ ev_properties_fonts_new ()
 {
 	EvPropertiesFonts *properties;
 
-	properties = g_object_new (EV_TYPE_PROPERTIES_FONTS, NULL);
+	properties = g_object_new (EV_TYPE_PROPERTIES_FONTS,
+				   "orientation", GTK_ORIENTATION_VERTICAL,
+				   NULL);
 
 	return GTK_WIDGET (properties);
 }

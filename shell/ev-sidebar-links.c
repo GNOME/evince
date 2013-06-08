@@ -82,7 +82,7 @@ static guint signals[N_SIGNALS];
 
 G_DEFINE_TYPE_EXTENDED (EvSidebarLinks, 
                         ev_sidebar_links, 
-                        GTK_TYPE_VBOX,
+                        GTK_TYPE_BOX,
                         0, 
                         G_IMPLEMENT_INTERFACE (EV_TYPE_SIDEBAR_PAGE, 
 					       ev_sidebar_links_page_iface_init))
@@ -466,7 +466,9 @@ ev_sidebar_links_new (void)
 {
 	GtkWidget *ev_sidebar_links;
 
-	ev_sidebar_links = g_object_new (EV_TYPE_SIDEBAR_LINKS, NULL);
+	ev_sidebar_links = g_object_new (EV_TYPE_SIDEBAR_LINKS,
+				   "orientation", GTK_ORIENTATION_VERTICAL,
+				   NULL);
 
 	return ev_sidebar_links;
 }

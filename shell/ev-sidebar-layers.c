@@ -55,7 +55,7 @@ static guint signals[N_SIGNALS];
 
 G_DEFINE_TYPE_EXTENDED (EvSidebarLayers,
                         ev_sidebar_layers,
-                        GTK_TYPE_VBOX,
+                        GTK_TYPE_BOX,
                         0, 
                         G_IMPLEMENT_INTERFACE (EV_TYPE_SIDEBAR_PAGE, 
 					       ev_sidebar_layers_page_iface_init))
@@ -328,7 +328,9 @@ ev_sidebar_layers_class_init (EvSidebarLayersClass *ev_layers_class)
 GtkWidget *
 ev_sidebar_layers_new (void)
 {
-	return GTK_WIDGET (g_object_new (EV_TYPE_SIDEBAR_LAYERS, NULL));
+	return GTK_WIDGET (g_object_new (EV_TYPE_SIDEBAR_LAYERS,
+				   "orientation", GTK_ORIENTATION_VERTICAL,
+                                         NULL));
 }
 
 static void

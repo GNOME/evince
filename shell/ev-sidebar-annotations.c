@@ -67,7 +67,7 @@ static guint signals[N_SIGNALS];
 
 G_DEFINE_TYPE_EXTENDED (EvSidebarAnnotations,
                         ev_sidebar_annotations,
-                        GTK_TYPE_VBOX,
+                        GTK_TYPE_BOX,
                         0,
                         G_IMPLEMENT_INTERFACE (EV_TYPE_SIDEBAR_PAGE,
 					       ev_sidebar_annotations_page_iface_init))
@@ -300,7 +300,9 @@ ev_sidebar_annotations_class_init (EvSidebarAnnotationsClass *klass)
 GtkWidget *
 ev_sidebar_annotations_new (void)
 {
-	return GTK_WIDGET (g_object_new (EV_TYPE_SIDEBAR_ANNOTATIONS, NULL));
+	return GTK_WIDGET (g_object_new (EV_TYPE_SIDEBAR_ANNOTATIONS,
+                                         "orientation", GTK_ORIENTATION_VERTICAL,
+                                         NULL));
 }
 
 void

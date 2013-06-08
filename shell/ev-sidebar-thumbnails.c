@@ -101,7 +101,7 @@ static void         adjustment_changed_cb                  (EvSidebarThumbnails 
 
 G_DEFINE_TYPE_EXTENDED (EvSidebarThumbnails, 
                         ev_sidebar_thumbnails, 
-                        GTK_TYPE_VBOX,
+                        GTK_TYPE_BOX,
                         0, 
                         G_IMPLEMENT_INTERFACE (EV_TYPE_SIDEBAR_PAGE, 
 					       ev_sidebar_thumbnails_page_iface_init))
@@ -294,7 +294,10 @@ ev_sidebar_thumbnails_new (void)
 {
 	GtkWidget *ev_sidebar_thumbnails;
 
-	ev_sidebar_thumbnails = g_object_new (EV_TYPE_SIDEBAR_THUMBNAILS, NULL);
+	ev_sidebar_thumbnails = g_object_new (EV_TYPE_SIDEBAR_THUMBNAILS,
+                                              "orientation", GTK_ORIENTATION_VERTICAL,
+                                              NULL);
+
 
 	return ev_sidebar_thumbnails;
 }

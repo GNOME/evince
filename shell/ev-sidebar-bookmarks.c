@@ -63,7 +63,7 @@ static void ev_sidebar_bookmarks_page_iface_init (EvSidebarPageInterface *iface)
 
 G_DEFINE_TYPE_EXTENDED (EvSidebarBookmarks,
                         ev_sidebar_bookmarks,
-                        GTK_TYPE_VBOX,
+                        GTK_TYPE_BOX,
                         0,
                         G_IMPLEMENT_INTERFACE (EV_TYPE_SIDEBAR_PAGE,
                                                ev_sidebar_bookmarks_page_iface_init))
@@ -549,7 +549,9 @@ ev_sidebar_bookmarks_class_init (EvSidebarBookmarksClass *klass)
 GtkWidget *
 ev_sidebar_bookmarks_new (void)
 {
-        return GTK_WIDGET (g_object_new (EV_TYPE_SIDEBAR_BOOKMARKS, NULL));
+        return GTK_WIDGET (g_object_new (EV_TYPE_SIDEBAR_BOOKMARKS,
+                                         "orientation", GTK_ORIENTATION_VERTICAL,
+                                         NULL));
 }
 
 void

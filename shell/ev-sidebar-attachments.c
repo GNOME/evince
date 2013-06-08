@@ -72,7 +72,7 @@ static void ev_sidebar_attachments_page_iface_init (EvSidebarPageInterface *ifac
 
 G_DEFINE_TYPE_EXTENDED (EvSidebarAttachments,
                         ev_sidebar_attachments,
-                        GTK_TYPE_VBOX,
+                        GTK_TYPE_BOX,
                         0, 
                         G_IMPLEMENT_INTERFACE (EV_TYPE_SIDEBAR_PAGE, 
 					       ev_sidebar_attachments_page_iface_init))
@@ -600,7 +600,9 @@ ev_sidebar_attachments_new (void)
 {
 	GtkWidget *ev_attachbar;
 
-	ev_attachbar = g_object_new (EV_TYPE_SIDEBAR_ATTACHMENTS, NULL);
+	ev_attachbar = g_object_new (EV_TYPE_SIDEBAR_ATTACHMENTS,
+                                     "orientation", GTK_ORIENTATION_VERTICAL,
+                                     NULL);
 
 	return ev_attachbar;
 }
