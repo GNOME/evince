@@ -47,7 +47,7 @@ static EvProfileSection ev_profile = EV_NO_PROFILE;
 static GHashTable *timers = NULL;
 
 static void
-debug_init ()
+debug_init (void)
 {
 	if (g_getenv ("EV_DEBUG") != NULL) {
 		/* enable all debugging */
@@ -60,7 +60,7 @@ debug_init ()
 }
 
 static void
-profile_init ()
+profile_init (void)
 {
 	if (g_getenv ("EV_PROFILE") != NULL) {
 		/* enable all profiling */
@@ -79,14 +79,14 @@ profile_init ()
 }
 
 void
-_ev_debug_init ()
+_ev_debug_init (void)
 {
 	debug_init ();
 	profile_init ();
 }
 
 void
-_ev_debug_shutdown ()
+_ev_debug_shutdown (void)
 {
 	if (timers) {
 		g_hash_table_destroy (timers);
