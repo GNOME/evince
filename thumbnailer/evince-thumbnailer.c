@@ -259,8 +259,6 @@ main (int argc, char *argv[])
 	input = file_arguments[0];
 	output = file_arguments[1];
 
-	g_type_init ();
-
         if (!ev_init ())
                 return -1;
 
