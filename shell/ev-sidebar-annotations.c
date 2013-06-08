@@ -232,7 +232,7 @@ ev_sidebar_annotations_init (EvSidebarAnnotations *ev_annots)
 	gtk_notebook_set_show_border (GTK_NOTEBOOK (ev_annots->priv->notebook), FALSE);
 	ev_sidebar_annotations_add_annots_list (ev_annots);
 	ev_sidebar_annotations_add_annots_palette (ev_annots);
-	gtk_container_add (GTK_CONTAINER (ev_annots), ev_annots->priv->notebook);
+        gtk_box_pack_start (GTK_BOX (ev_annots), ev_annots->priv->notebook, TRUE, TRUE, 0);
 	gtk_widget_show (ev_annots->priv->notebook);
 }
 

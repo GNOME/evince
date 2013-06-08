@@ -299,7 +299,7 @@ ev_sidebar_layers_init (EvSidebarLayers *ev_layers)
 	gtk_container_add (GTK_CONTAINER (swindow),
 			   GTK_WIDGET (ev_layers->priv->tree_view));
 
-	gtk_container_add (GTK_CONTAINER (ev_layers), swindow);
+        gtk_box_pack_start (GTK_BOX (ev_layers), swindow, TRUE, TRUE, 0);
 	gtk_widget_show_all (GTK_WIDGET (ev_layers));
 }
 
