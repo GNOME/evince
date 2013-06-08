@@ -459,8 +459,6 @@ main (gint argc, gchar **argv)
 
         g_set_prgname ("evince-daemon");
 
-	g_type_init ();
-
         application = g_object_new (EV_TYPE_DAEMON_APPLICATION,
                                     "application-id", EV_DBUS_DAEMON_NAME,
                                     "flags", flags,
