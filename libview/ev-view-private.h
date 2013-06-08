@@ -207,6 +207,10 @@ struct _EvView {
 
 	/* Accessibility */
 	AtkObject *accessible;
+
+	/* Caret navigation */
+	gboolean caret_enabled;
+	gint     cursor_offset;
 };
 
 struct _EvViewClass {

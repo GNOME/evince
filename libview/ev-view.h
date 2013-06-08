@@ -116,6 +116,11 @@ void           ev_view_begin_add_annotation  (EvView          *view,
 					      EvAnnotationType annot_type);
 void           ev_view_cancel_add_annotation (EvView          *view);
 
+/* Caret navigation */
+gboolean       ev_view_is_caret_navigation_enabled  (EvView  *view);
+void           ev_view_set_caret_navigation_enabled (EvView  *view,
+                                                     gboolean enabled);
+
 G_END_DECLS
 
 #endif /* __EV_VIEW_H__ */

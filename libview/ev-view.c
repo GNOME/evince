@@ -3112,6 +3112,27 @@ ev_view_synctex_backward_search (EvView *view,
 	return FALSE;
 }
 
+/* Caret navigation */
+void
+ev_view_set_caret_navigation_enabled (EvView   *view,
+				      gboolean enabled)
+{
+	g_return_if_fail (EV_IS_VIEW (view));
+
+	if (view->caret_enabled != enabled) {
+		view->caret_enabled = enabled;
+		gtk_widget_queue_draw (GTK_WIDGET (view));
+	}
+}
+
+gboolean
+ev_view_is_caret_navigation_enabled (EvView *view)
+{
+	g_return_val_if_fail (EV_IS_VIEW (view), FALSE);
+
+	return view->caret_enabled;
+}
+
 /*** GtkWidget implementation ***/
 
 static void
@@ -3529,6 +3550,125 @@ ev_view_realize (GtkWidget *widget)
 }
 
 static gboolean
+get_caret_cursor_rect_from_offset (EvView       *view,
+				   gint          offset,
+				   gint          page,
+				   GdkRectangle *rect)
+{
+	EvRectangle *areas = NULL;
+	EvRectangle *doc_rect;
+	guint        n_areas = 0;
+
+	if (!view->caret_enabled)
+		return FALSE;
+
+	/* Disable caret navigation on rotated pages */
+	if (view->rotation != 0)
+		return FALSE;
+
+	if (!view->page_cache)
+		return FALSE;
+
+	ev_page_cache_get_text_layout (view->page_cache, page, &areas, &n_areas);
+	if (!areas)
+		return FALSE;
+
+	if (offset > n_areas)
+		return FALSE;
+
+	doc_rect = areas + offset;
+	if (offset == n_areas ||
+	    ((doc_rect->x1 == doc_rect->x2 || doc_rect->y1 == doc_rect->y2) && offset > 0)) {
+		EvRectangle *prev;
+		EvRectangle  last_rect;
+
+		/* Special characters like \n have an empty bounding box
+		 * and the end of a page doesn't have any bounding box,
+		 * use the size of the previous area.
+		 */
+		prev = areas + offset - 1;
+		last_rect.x1 = prev->x2;
+		last_rect.y1 = prev->y1;
+		last_rect.x2 = prev->x2 + (prev->x2 - prev->x1);
+		last_rect.y2 = prev->y2;
+
+		_ev_view_transform_doc_rect_to_view_rect (view, page, &last_rect, rect);
+
+		return TRUE;
+	}
+
+	_ev_view_transform_doc_rect_to_view_rect (view, page, doc_rect, rect);
+
+	return TRUE;
+}
+
+static void
+get_cursor_color (GtkStyleContext *context,
+		  GdkRGBA         *color)
+{
+	GdkColor *style_color;
+
+	gtk_style_context_get_style (context,
+				     "cursor-color",
+				     &style_color,
+				     NULL);
+
+	if (style_color) {
+		color->red = style_color->red / 65535.0;
+		color->green = style_color->green / 65535.0;
+		color->blue = style_color->blue / 65535.0;
+		color->alpha = 1;
+
+		gdk_color_free (style_color);
+	} else {
+		gtk_style_context_get_color (context, GTK_STATE_FLAG_NORMAL, color);
+	}
+}
+
+/* This is a clone of the deprecated function gtk_draw_insertion_cursor. */
+static void
+render_cursor (GtkWidget    *widget,
+	       cairo_t      *cr,
+	       GdkRectangle *rect)
+{
+
+	GtkStyleContext *context;
+	GdkRGBA cursor_color;
+	gfloat cursor_aspect_ratio;
+	gint stem_width;
+
+	context = gtk_widget_get_style_context (widget);
+	get_cursor_color (context, &cursor_color);
+
+	gtk_style_context_get_style (context,
+				     "cursor-aspect-ratio", &cursor_aspect_ratio,
+				     NULL);
+
+	stem_width = rect->height * cursor_aspect_ratio + 1;
+
+	cairo_save (cr);
+	gdk_cairo_set_source_rgba (cr, &cursor_color);
+	cairo_rectangle (cr, rect->x - (stem_width / 2), rect->y, stem_width, rect->height);
+	cairo_fill (cr);
+	cairo_restore (cr);
+}
+
+static void
+draw_caret_cursor (EvView  *view,
+		   cairo_t *cr)
+{
+	GdkRectangle view_rect;
+
+	if (!get_caret_cursor_rect_from_offset (view, view->cursor_offset, view->current_page, &view_rect))
+		return;
+
+	view_rect.x = view_rect.x - view->scroll_x;
+	view_rect.y = view_rect.y - view->scroll_y;
+
+	render_cursor (GTK_WIDGET (view), cr, &view_rect);
+}
+
+static gboolean
 ev_view_draw (GtkWidget *widget,
               cairo_t   *cr)
 {
@@ -3561,6 +3701,8 @@ ev_view_draw (GtkWidget *widget,
 
 		draw_one_page (view, i, cr, &page_area, &border, &clip_rect, &page_ready);
 
+		if (page_ready && view->caret_enabled && view->current_page == i)
+			draw_caret_cursor (view, cr);
 		if (page_ready && view->find_pages && view->highlight_find_results)
 			highlight_find_results (view, cr, i);
 		if (page_ready && EV_IS_DOCUMENT_ANNOTATIONS (view->document))
@@ -4319,6 +4461,293 @@ ev_view_forward_key_event_to_focused_child (EvView      *view,
 }
 
 static gboolean
+cursor_backward_char (EvView *view)
+{
+	EvRectangle *areas = NULL;
+	guint        n_areas = 0;
+
+	if (!view->page_cache)
+		return FALSE;
+
+	ev_page_cache_get_text_layout (view->page_cache, view->current_page, &areas, &n_areas);
+	if (!areas)
+		return FALSE;
+
+	if (view->cursor_offset == 0)
+		return ev_view_previous_page (view);
+
+	view->cursor_offset--;
+
+	return TRUE;
+}
+
+static gboolean
+cursor_forward_char (EvView *view)
+{
+	EvRectangle *areas = NULL;
+	guint        n_areas = 0;
+
+	if (!view->page_cache)
+		return FALSE;
+
+	ev_page_cache_get_text_layout (view->page_cache, view->current_page, &areas, &n_areas);
+	if (!areas)
+		return FALSE;
+
+	if (view->cursor_offset >= n_areas)
+		return ev_view_next_page (view);
+
+	view->cursor_offset++;
+
+	return TRUE;
+}
+
+static gboolean
+cursor_backward_word_start (EvView *view)
+{
+	EvRectangle *areas = NULL;
+	guint        n_areas = 0;
+	const gchar *page_text;
+	gint         i, j;
+
+	if (!view->page_cache)
+		return FALSE;
+
+	ev_page_cache_get_text_layout (view->page_cache, view->current_page, &areas, &n_areas);
+	if (!areas)
+		return FALSE;
+
+	page_text = ev_page_cache_get_text (view->page_cache, view->current_page);
+	if (!page_text)
+		return FALSE;
+
+	/* Skip blanks and new lines. */
+	/* FIXME: Text is not ASCII but utf8, use pango for word breaking. */
+	for (i = view->cursor_offset - 1; i >= 0 && g_ascii_isspace (page_text[i]); i--);
+
+	if (i <= 0) {
+		if (ev_view_previous_page (view))
+			return cursor_backward_word_start (view);
+		return FALSE;
+	}
+
+	/* Move to the beginning of the word */
+	/* FIXME: Text is not ASCII but utf8, use pango for word breaking. */
+	for (j = i; j >= 0 && !g_ascii_isspace (page_text[j]); j--);
+
+	if (j <= 0)
+		view->cursor_offset = 0;
+	else
+		view->cursor_offset = j + 1;
+
+	return TRUE;
+}
+
+static gboolean
+cursor_forward_word_end (EvView *view)
+{
+	EvRectangle *areas = NULL;
+	guint        n_areas = 0;
+	const gchar *page_text;
+	gint         i, j;
+
+	if (!view->page_cache)
+		return FALSE;
+
+	ev_page_cache_get_text_layout (view->page_cache, view->current_page, &areas, &n_areas);
+	if (!areas)
+		return FALSE;
+
+	page_text = ev_page_cache_get_text (view->page_cache, view->current_page);
+	if (!page_text)
+		return FALSE;
+
+	/* Skip blanks and new lines. */
+	/* FIXME: Text is not ASCII but utf8, use pango for word breaking. */
+	for (i = view->cursor_offset; i < n_areas && g_ascii_isspace (page_text[i]); i++);
+
+	if (i >= n_areas) {
+		if (ev_view_next_page (view))
+			return cursor_forward_word_end (view);
+		return FALSE;
+	}
+
+	/* Move to the end of the word. */
+	/* FIXME: Text is not ASCII but utf8, use pango for word breaking. */
+	for (j = i; j < (gint)n_areas && !g_ascii_isspace (page_text[j]); j++);
+
+	if (j >= n_areas)
+		view->cursor_offset = n_areas;
+	else
+		view->cursor_offset = j;
+
+	return TRUE;
+}
+
+static gboolean
+cursor_go_to_line_start (EvView *view)
+{
+	EvRectangle *areas = NULL;
+	guint        n_areas = 0;
+	const gchar *page_text;
+	gint         i;
+
+	if (!view->page_cache)
+		return FALSE;
+
+	ev_page_cache_get_text_layout (view->page_cache, view->current_page, &areas, &n_areas);
+	if (!areas)
+		return FALSE;
+
+	page_text = ev_page_cache_get_text (view->page_cache, view->current_page);
+	if (!page_text)
+		return FALSE;
+
+	/* FIXME: Text is not ASCII but utf8, use pango for line breaking. */
+	for (i = view->cursor_offset - 1; i >= 0 && page_text[i] != '\n'; i--);
+
+	if (i <= 0)
+		view->cursor_offset = 0;
+	else
+		view->cursor_offset = i + 1;
+
+	return TRUE;
+}
+
+static gboolean
+cursor_backward_line (EvView *view)
+{
+	/* FIXME: Keep the line offset when moving between lines */
+	if (!cursor_go_to_line_start (view))
+		return FALSE;
+
+	if (view->cursor_offset == 0)
+		ev_view_previous_page (view);
+	else
+		view->cursor_offset--;
+
+	return TRUE;
+}
+
+static gboolean
+cursor_go_to_line_end (EvView *view)
+{
+	EvRectangle *areas = NULL;
+	guint        n_areas = 0;
+	const gchar *page_text;
+	gint         i;
+
+	if (!view->page_cache)
+		return FALSE;
+
+	ev_page_cache_get_text_layout (view->page_cache, view->current_page, &areas, &n_areas);
+	if (!areas)
+		return FALSE;
+
+	page_text = ev_page_cache_get_text (view->page_cache, view->current_page);
+	if (!page_text)
+		return FALSE;
+
+	/* FIXME: Text is not ASCII but utf8, use pango for line breaking. */
+	for (i = view->cursor_offset; i < (gint)n_areas && page_text[i] != '\n'; i++);
+
+	if (i >= n_areas)
+		view->cursor_offset = n_areas;
+	else
+		view->cursor_offset = i;
+
+	return TRUE;
+}
+
+static gboolean
+cursor_forward_line (EvView *view)
+{
+	EvRectangle *areas = NULL;
+	guint        n_areas = 0;
+
+	/* FIXME: Keep the line offset when moving between lines */
+	if (!cursor_go_to_line_end (view))
+		return FALSE;
+
+	ev_page_cache_get_text_layout (view->page_cache, view->current_page, &areas, &n_areas);
+	if (!areas)
+		return FALSE;
+
+	if (view->cursor_offset == n_areas)
+		ev_view_next_page (view);
+	else
+		view->cursor_offset++;
+
+	return TRUE;
+}
+
+static gboolean
+cursor_go_to_page_start (EvView *view)
+{
+	view->cursor_offset = 0;
+
+	return TRUE;
+}
+
+static gboolean
+cursor_go_to_page_end (EvView *view)
+{
+	EvRectangle *areas = NULL;
+	guint        n_areas = 0;
+
+	if (!view->page_cache)
+		return FALSE;
+
+	ev_page_cache_get_text_layout (view->page_cache, view->current_page, &areas, &n_areas);
+	if (!areas)
+		return FALSE;
+
+	view->cursor_offset = n_areas;
+
+	return TRUE;
+}
+
+static gboolean
+caret_key_press_event (EvView      *view,
+		       GdkEventKey *event)
+{
+	/* Disable caret navigation on rotated pages */
+	if (view->rotation != 0)
+		return FALSE;
+
+	switch (event->keyval) {
+	case GDK_KEY_Left:
+		if (event->state & GDK_CONTROL_MASK)
+			cursor_backward_word_start (view);
+		else
+			cursor_backward_char (view);
+		break;
+	case GDK_KEY_Right:
+		if (event->state & GDK_CONTROL_MASK)
+			cursor_forward_word_end (view);
+		else
+			cursor_forward_char (view);
+		break;
+	case GDK_KEY_Up:
+		cursor_backward_line (view);
+		break;
+	case GDK_KEY_Down:
+		cursor_forward_line (view);
+		break;
+	case GDK_KEY_Home:
+		cursor_go_to_line_start (view);
+		break;
+	case GDK_KEY_End:
+		cursor_go_to_line_end (view);
+		break;
+	default:
+		return FALSE;
+	}
+
+	return TRUE;
+}
+
+static gboolean
 ev_view_key_press_event (GtkWidget   *widget,
 			 GdkEventKey *event)
 {
@@ -4326,6 +4755,19 @@ ev_view_key_press_event (GtkWidget   *widget,
 
 	if (!view->document)
 		return FALSE;
+
+	if (view->caret_enabled && caret_key_press_event (view, event)) {
+		GdkRectangle view_rect;
+
+		/* scroll to view the text caret */
+		if (!get_caret_cursor_rect_from_offset (view, view->cursor_offset, view->current_page, &view_rect))
+			return TRUE;
+
+		ensure_rectangle_is_visible (view, &view_rect);
+		gtk_widget_queue_draw (GTK_WIDGET (view));
+
+		return TRUE;
+	}
 
 	if (!gtk_widget_has_focus (widget))
 		return ev_view_forward_key_event_to_focused_child (view, event);
@@ -5071,6 +5513,7 @@ ev_view_init (EvView *view)
 	view->jump_to_find_result = TRUE;
 	view->highlight_find_results = FALSE;
 	view->pixbuf_cache_size = DEFAULT_PIXBUF_CACHE_SIZE;
+	view->caret_enabled = FALSE;
 }
 
 /*** Callbacks ***/
@@ -6700,13 +7143,16 @@ ev_view_next_page (EvView *view)
 
 	if (page < n_pages) {
 		ev_document_model_set_page (view->model, page);
-		return TRUE;
 	} else if (dual_page && page == n_pages) {
 		ev_document_model_set_page (view->model, page - 1);
-		return TRUE;
 	} else {
 		return FALSE;
 	}
+
+	if (view->caret_enabled)
+		cursor_go_to_page_start (view);
+
+	return TRUE;
 }
 
 gboolean
@@ -6730,12 +7176,15 @@ ev_view_previous_page (EvView *view)
 
 	if (page >= 0) {
 		ev_document_model_set_page (view->model, page);
-		return TRUE;
 	} else if (dual_page && page == -1) {
 		ev_document_model_set_page (view->model, 0);
-		return TRUE;
 	} else {	
 		return FALSE;
 	}
+
+	if (view->caret_enabled)
+		cursor_go_to_page_end (view);
+
+	return TRUE;
 }
 		
