@@ -143,6 +143,7 @@ ev_history_action_widget_show_popup (EvHistoryActionWidget *history_widget,
                 gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
                 gtk_widget_show (item);
         }
+        g_list_free (list);
 
         ev_history_action_widget_set_popup_shown (history_widget, TRUE);
         g_signal_connect (menu, "hide",
