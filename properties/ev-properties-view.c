@@ -85,7 +85,7 @@ struct _EvPropertiesViewClass {
 	GtkVBoxClass base_class;
 };
 
-G_DEFINE_TYPE (EvPropertiesView, ev_properties_view, GTK_TYPE_VBOX)
+G_DEFINE_TYPE (EvPropertiesView, ev_properties_view, GTK_TYPE_BOX)
 
 static void
 ev_properties_view_dispose (GObject *object)
@@ -394,7 +394,9 @@ ev_properties_view_new (const gchar *uri)
 {
 	EvPropertiesView *properties;
 
-	properties = g_object_new (EV_TYPE_PROPERTIES, NULL);
+	properties = g_object_new (EV_TYPE_PROPERTIES,
+				   "orientation", GTK_ORIENTATION_VERTICAL,
+				   NULL);
 	properties->uri = g_uri_unescape_string (uri, NULL);
 
 	return GTK_WIDGET (properties);
