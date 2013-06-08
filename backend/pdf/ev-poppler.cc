@@ -1405,7 +1405,8 @@ ev_link_from_action (PdfDocument   *pdf_document,
 	}
 	
 	link = ev_link_new (action->any.title, ev_action);
-	g_object_unref (ev_action);
+	if (ev_action)
+		g_object_unref (ev_action);
 
 	return link;	
 }
