@@ -423,8 +423,6 @@ add_range (EvSidebarThumbnails *sidebar_thumbnails,
 						    page, priv->rotation,
 						    get_scale_for_page (sidebar_thumbnails, page));
                         ev_job_thumbnail_set_has_frame (EV_JOB_THUMBNAIL (job), FALSE);
-			ev_job_scheduler_push_job (EV_JOB (job), EV_JOB_PRIORITY_HIGH);
-			
 			g_object_set_data_full (G_OBJECT (job), "tree_iter",
 						gtk_tree_iter_copy (&iter),
 						(GDestroyNotify) gtk_tree_iter_free);
@@ -434,6 +432,7 @@ add_range (EvSidebarThumbnails *sidebar_thumbnails,
 			gtk_list_store_set (priv->list_store, &iter,
 					    COLUMN_JOB, job,
 					    -1);
+			ev_job_scheduler_push_job (EV_JOB (job), EV_JOB_PRIORITY_HIGH);
 			
 			/* The queue and the list own a ref to the job now */
 			g_object_unref (job);
