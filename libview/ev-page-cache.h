@@ -65,7 +65,10 @@ gboolean           ev_page_cache_get_text_layout        (EvPageCache       *cach
 							 gint               page,
 							 EvRectangle      **areas,
 							 guint             *n_areas);
-
+gboolean           ev_page_cache_get_text_log_attrs     (EvPageCache       *cache,
+                                                         gint               page,
+                                                         PangoLogAttr     **log_attrs,
+                                                         gulong            *n_attrs);
 G_END_DECLS
 
 #endif /* EV_PAGE_CACHE_H */

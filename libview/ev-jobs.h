@@ -261,15 +261,16 @@ struct _EvJobRenderClass
 };
 
 typedef enum {
-	EV_PAGE_DATA_INCLUDE_NONE         = 0,
-	EV_PAGE_DATA_INCLUDE_LINKS        = 1 << 0,
-	EV_PAGE_DATA_INCLUDE_TEXT         = 1 << 1,
-	EV_PAGE_DATA_INCLUDE_TEXT_MAPPING = 1 << 2,
-	EV_PAGE_DATA_INCLUDE_TEXT_LAYOUT  = 1 << 3,
-	EV_PAGE_DATA_INCLUDE_IMAGES       = 1 << 4,
-	EV_PAGE_DATA_INCLUDE_FORMS        = 1 << 5,
-	EV_PAGE_DATA_INCLUDE_ANNOTS       = 1 << 6,
-	EV_PAGE_DATA_INCLUDE_ALL          = (1 << 7) - 1
+        EV_PAGE_DATA_INCLUDE_NONE           = 0,
+        EV_PAGE_DATA_INCLUDE_LINKS          = 1 << 0,
+        EV_PAGE_DATA_INCLUDE_TEXT           = 1 << 1,
+        EV_PAGE_DATA_INCLUDE_TEXT_MAPPING   = 1 << 2,
+        EV_PAGE_DATA_INCLUDE_TEXT_LAYOUT    = 1 << 3,
+        EV_PAGE_DATA_INCLUDE_TEXT_LOG_ATTRS = 1 << 4,
+        EV_PAGE_DATA_INCLUDE_IMAGES         = 1 << 5,
+        EV_PAGE_DATA_INCLUDE_FORMS          = 1 << 6,
+        EV_PAGE_DATA_INCLUDE_ANNOTS         = 1 << 7,
+        EV_PAGE_DATA_INCLUDE_ALL            = (1 << 8) - 1
 } EvJobPageDataFlags;
 
 struct _EvJobPageData
@@ -287,6 +288,8 @@ struct _EvJobPageData
 	gchar *text;
 	EvRectangle *text_layout;
 	guint text_layout_length;
+        PangoLogAttr *text_log_attrs;
+        gulong text_log_attrs_length;
 };
 
 struct _EvJobPageDataClass

@@ -747,6 +747,13 @@ ev_job_page_data_run (EvJob *job)
 						  ev_page,
 						  &(job_pd->text_layout),
 						  &(job_pd->text_layout_length));
+        if ((job_pd->flags & EV_PAGE_DATA_INCLUDE_TEXT_LOG_ATTRS) && job_pd->text) {
+                job_pd->text_log_attrs_length = g_utf8_strlen (job_pd->text, -1);
+                job_pd->text_log_attrs = g_new0 (PangoLogAttr, job_pd->text_log_attrs_length + 1);
+
+                /* FIXME: We need API to get the language of the document */
+                pango_get_log_attrs (job_pd->text, -1, -1, NULL, job_pd->text_log_attrs, job_pd->text_log_attrs_length + 1);
+        }
 	if ((job_pd->flags & EV_PAGE_DATA_INCLUDE_LINKS) && EV_IS_DOCUMENT_LINKS (job->document))
 		job_pd->link_mapping =
 			ev_document_links_get_links (EV_DOCUMENT_LINKS (job->document), ev_page);
