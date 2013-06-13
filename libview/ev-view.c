@@ -3810,7 +3810,7 @@ draw_caret_cursor (EvView  *view,
 {
 	GdkRectangle view_rect;
 
-	if (!get_caret_cursor_rect_from_offset (view, view->cursor_offset, view->current_page, &view_rect))
+	if (!get_caret_cursor_rect_from_offset (view, view->cursor_offset, view->cursor_page, &view_rect))
 		return;
 
 	view_rect.x = view_rect.x - view->scroll_x;
@@ -3852,7 +3852,7 @@ ev_view_draw (GtkWidget *widget,
 
 		draw_one_page (view, i, cr, &page_area, &border, &clip_rect, &page_ready);
 
-		if (page_ready && view->caret_enabled && view->current_page == i && view->cursor_visible)
+		if (page_ready && view->caret_enabled && view->cursor_page == i && view->cursor_visible)
 			draw_caret_cursor (view, cr);
 		if (page_ready && view->find_pages && view->highlight_find_results)
 			highlight_find_results (view, cr, i);
@@ -4612,6 +4612,100 @@ ev_view_forward_key_event_to_focused_child (EvView      *view,
 }
 
 static gboolean
+go_to_next_page (EvView *view,
+		 gint    page)
+{
+	int      n_pages;
+	gboolean dual_page;
+
+	if (!view->document)
+		return FALSE;
+
+	n_pages = ev_document_get_n_pages (view->document);
+
+	dual_page = is_dual_page (view, NULL);
+	page += dual_page ? 2 : 1;
+
+	if (page < n_pages)
+		ev_document_model_set_page (view->model, page);
+	else if (dual_page && page == n_pages)
+		ev_document_model_set_page (view->model, page - 1);
+	else
+		return FALSE;
+
+	return TRUE;
+}
+
+static gboolean
+go_to_previous_page (EvView *view,
+		     gint    page)
+{
+	gboolean dual_page;
+
+	if (!view->document)
+		return FALSE;
+
+	dual_page = is_dual_page (view, NULL);
+	page -= dual_page ? 2 : 1;
+
+	if (page >= 0)
+		ev_document_model_set_page (view->model, page);
+	else if (dual_page && page == -1)
+		ev_document_model_set_page (view->model, 0);
+	else
+		return FALSE;
+
+	return TRUE;
+}
+
+static gboolean
+cursor_go_to_page_start (EvView *view)
+{
+	view->cursor_offset = 0;
+
+	return TRUE;
+}
+
+static gboolean
+cursor_go_to_page_end (EvView *view)
+{
+	PangoLogAttr *log_attrs = NULL;
+	gulong        n_attrs;
+
+	if (!view->page_cache)
+		return FALSE;
+
+	ev_page_cache_get_text_log_attrs (view->page_cache, view->cursor_page, &log_attrs, &n_attrs);
+	if (!log_attrs)
+		return FALSE;
+
+	view->cursor_offset = n_attrs;
+
+	return TRUE;
+}
+
+static gboolean
+cursor_go_to_next_page (EvView *view)
+{
+	if (go_to_next_page (view, view->cursor_page)) {
+		view->cursor_page = ev_document_model_get_page (view->model);
+		return cursor_go_to_page_start (view);
+	}
+
+	return FALSE;
+}
+
+static gboolean
+cursor_go_to_previous_page (EvView *view)
+{
+	if (go_to_previous_page (view, view->cursor_page)) {
+		view->cursor_page = ev_document_model_get_page (view->model);
+		return cursor_go_to_page_end (view);
+	}
+	return FALSE;
+}
+
+static gboolean
 cursor_backward_char (EvView *view)
 {
 	PangoLogAttr *log_attrs = NULL;
@@ -4620,12 +4714,12 @@ cursor_backward_char (EvView *view)
 	if (!view->page_cache)
 		return FALSE;
 
-	ev_page_cache_get_text_log_attrs (view->page_cache, view->current_page, &log_attrs, &n_attrs);
+	ev_page_cache_get_text_log_attrs (view->page_cache, view->cursor_page, &log_attrs, &n_attrs);
 	if (!log_attrs)
 		return FALSE;
 
 	if (view->cursor_offset == 0)
-		return ev_view_previous_page (view);
+		return cursor_go_to_previous_page (view);
 
 	do {
 		view->cursor_offset--;
@@ -4643,12 +4737,12 @@ cursor_forward_char (EvView *view)
 	if (!view->page_cache)
 		return FALSE;
 
-	ev_page_cache_get_text_log_attrs (view->page_cache, view->current_page, &log_attrs, &n_attrs);
+	ev_page_cache_get_text_log_attrs (view->page_cache, view->cursor_page, &log_attrs, &n_attrs);
 	if (!log_attrs)
 		return FALSE;
 
 	if (view->cursor_offset >= n_attrs)
-		return ev_view_next_page (view);
+		return cursor_go_to_next_page (view);
 
 	do {
 		view->cursor_offset++;
@@ -4667,14 +4761,14 @@ cursor_backward_word_start (EvView *view)
 	if (!view->page_cache)
 		return FALSE;
 
-	ev_page_cache_get_text_log_attrs (view->page_cache, view->current_page, &log_attrs, &n_attrs);
+	ev_page_cache_get_text_log_attrs (view->page_cache, view->cursor_page, &log_attrs, &n_attrs);
 	if (!log_attrs)
 		return FALSE;
 
 	/* Skip current word starts */
 	for (i = view->cursor_offset; i >= 0 && log_attrs[i].is_word_start; i--);
 	if (i <= 0) {
-		if (ev_view_previous_page (view))
+		if (cursor_go_to_previous_page (view))
 			return cursor_backward_word_start (view);
 		return FALSE;
 	}
@@ -4696,14 +4790,14 @@ cursor_forward_word_end (EvView *view)
 	if (!view->page_cache)
 		return FALSE;
 
-	ev_page_cache_get_text_log_attrs (view->page_cache, view->current_page, &log_attrs, &n_attrs);
+	ev_page_cache_get_text_log_attrs (view->page_cache, view->cursor_page, &log_attrs, &n_attrs);
 	if (!log_attrs)
 		return FALSE;
 
 	/* Skip current current word ends */
 	for (i = view->cursor_offset; i < n_attrs && log_attrs[i].is_word_end; i++);
 	if (i >= n_attrs) {
-		if (ev_view_next_page (view))
+		if (cursor_go_to_next_page (view))
 			return cursor_forward_word_end (view);
 		return FALSE;
 	}
@@ -4725,7 +4819,7 @@ cursor_go_to_line_start (EvView *view)
 	if (!view->page_cache)
 		return FALSE;
 
-	ev_page_cache_get_text_log_attrs (view->page_cache, view->current_page, &log_attrs, &n_attrs);
+	ev_page_cache_get_text_log_attrs (view->page_cache, view->cursor_page, &log_attrs, &n_attrs);
 	if (!log_attrs)
 		return FALSE;
 
@@ -4746,9 +4840,9 @@ cursor_backward_line (EvView *view)
 		return FALSE;
 
 	if (view->cursor_offset == 0)
-		return ev_view_previous_page (view);
+		return cursor_go_to_previous_page (view);
 
-	ev_page_cache_get_text_log_attrs (view->page_cache, view->current_page, &log_attrs, &n_attrs);
+	ev_page_cache_get_text_log_attrs (view->page_cache, view->cursor_page, &log_attrs, &n_attrs);
 
 	do {
 		view->cursor_offset--;
@@ -4767,7 +4861,7 @@ cursor_go_to_line_end (EvView *view)
 	if (!view->page_cache)
 		return FALSE;
 
-	ev_page_cache_get_text_log_attrs (view->page_cache, view->current_page, &log_attrs, &n_attrs);
+	ev_page_cache_get_text_log_attrs (view->page_cache, view->cursor_page, &log_attrs, &n_attrs);
 	if (!log_attrs)
 		return FALSE;
 
@@ -4794,10 +4888,10 @@ cursor_forward_line (EvView *view)
 	if (!cursor_go_to_line_end (view))
 		return FALSE;
 
-	ev_page_cache_get_text_log_attrs (view->page_cache, view->current_page, &log_attrs, &n_attrs);
+	ev_page_cache_get_text_log_attrs (view->page_cache, view->cursor_page, &log_attrs, &n_attrs);
 
 	if (view->cursor_offset == n_attrs)
-		return ev_view_next_page (view);
+		return cursor_go_to_next_page (view);
 
 	do {
 		view->cursor_offset++;
@@ -4807,40 +4901,20 @@ cursor_forward_line (EvView *view)
 }
 
 static gboolean
-cursor_go_to_page_start (EvView *view)
-{
-	view->cursor_offset = 0;
-
-	return TRUE;
-}
-
-static gboolean
-cursor_go_to_page_end (EvView *view)
-{
-	PangoLogAttr *log_attrs = NULL;
-	gulong        n_attrs;
-
-	if (!view->page_cache)
-		return FALSE;
-
-	ev_page_cache_get_text_log_attrs (view->page_cache, view->current_page, &log_attrs, &n_attrs);
-	if (!log_attrs)
-		return FALSE;
-
-	view->cursor_offset = n_attrs;
-
-	return TRUE;
-}
-
-static gboolean
 caret_key_press_event (EvView      *view,
 		       GdkEventKey *event)
 {
+	gint prev_offset;
+	gint prev_page;
+
 	/* Disable caret navigation on rotated pages */
 	if (view->rotation != 0)
 		return FALSE;
 
 	view->cursor_blink_time = 0;
+
+	prev_offset = view->cursor_offset;
+	prev_page = view->cursor_page;
 
 	switch (event->keyval) {
 	case GDK_KEY_Left:
@@ -4873,6 +4947,18 @@ caret_key_press_event (EvView      *view,
 
 	ev_view_pend_cursor_blink (view);
 
+	/* If the caret cursor was updated, make it visible */
+	if (prev_offset != view->cursor_offset || prev_page != view->cursor_page) {
+		GdkRectangle view_rect;
+
+		/* scroll to view the text caret */
+		if (!get_caret_cursor_rect_from_offset (view, view->cursor_offset, view->cursor_page, &view_rect))
+			return TRUE;
+
+		ensure_rectangle_is_visible (view, &view_rect);
+		gtk_widget_queue_draw (GTK_WIDGET (view));
+	}
+
 	return TRUE;
 }
 
@@ -4885,18 +4971,8 @@ ev_view_key_press_event (GtkWidget   *widget,
 	if (!view->document)
 		return FALSE;
 
-	if (view->caret_enabled && caret_key_press_event (view, event)) {
-		GdkRectangle view_rect;
-
-		/* scroll to view the text caret */
-		if (!get_caret_cursor_rect_from_offset (view, view->cursor_offset, view->current_page, &view_rect))
-			return TRUE;
-
-		ensure_rectangle_is_visible (view, &view_rect);
-		gtk_widget_queue_draw (GTK_WIDGET (view));
-
+	if (view->caret_enabled && caret_key_press_event (view, event))
 		return TRUE;
-	}
 
 	if (!gtk_widget_has_focus (widget))
 		return ev_view_forward_key_event_to_focused_child (view, event);
@@ -5656,6 +5732,7 @@ ev_view_init (EvView *view)
 	view->highlight_find_results = FALSE;
 	view->pixbuf_cache_size = DEFAULT_PIXBUF_CACHE_SIZE;
 	view->caret_enabled = FALSE;
+	view->cursor_page = 0;
 }
 
 /*** Callbacks ***/
@@ -7266,67 +7343,16 @@ ev_view_show_cursor (EvView *view)
 gboolean
 ev_view_next_page (EvView *view)
 {
-	int page, n_pages;
-	gboolean dual_page;
-
 	g_return_val_if_fail (EV_IS_VIEW (view), FALSE);
-	
-	if (!view->document)
-		return FALSE;
 
-	page = ev_document_model_get_page (view->model);
-	n_pages = ev_document_get_n_pages (view->document);
-
-	dual_page = is_dual_page (view, NULL);
-	if (dual_page)
-	        page = page + 2; 
-	else 
-		page = page + 1;
-
-	if (page < n_pages) {
-		ev_document_model_set_page (view->model, page);
-	} else if (dual_page && page == n_pages) {
-		ev_document_model_set_page (view->model, page - 1);
-	} else {
-		return FALSE;
-	}
-
-	if (view->caret_enabled)
-		cursor_go_to_page_start (view);
-
-	return TRUE;
+	return go_to_next_page (view, view->current_page);
 }
 
 gboolean
 ev_view_previous_page (EvView *view)
 {
-	int page;
-	gboolean dual_page;
-
 	g_return_val_if_fail (EV_IS_VIEW (view), FALSE);
 
-	if (!view->document)
-		return FALSE;
-
-	page = ev_document_model_get_page (view->model);
-
-	dual_page = is_dual_page (view, NULL);
-	if (dual_page)
-	        page = page - 2; 
-	else 
-		page = page - 1;
-
-	if (page >= 0) {
-		ev_document_model_set_page (view->model, page);
-	} else if (dual_page && page == -1) {
-		ev_document_model_set_page (view->model, 0);
-	} else {	
-		return FALSE;
-	}
-
-	if (view->caret_enabled)
-		cursor_go_to_page_end (view);
-
-	return TRUE;
+	return go_to_previous_page (view, view->current_page);
 }
 		
