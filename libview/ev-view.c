@@ -739,7 +739,7 @@ view_update_range_and_current_page (EvView *view)
 		if (view->pending_scroll == SCROLL_TO_KEEP_POSITION) {
 			best_current_page = MAX (best_current_page, view->start_page);
 
-			if (view->current_page != best_current_page) {
+			if (best_current_page >= 0 && view->current_page != best_current_page) {
 				view->current_page = best_current_page;
 				ev_view_set_loading (view, FALSE);
 				ev_document_model_set_page (view->model, best_current_page);
@@ -6692,6 +6692,8 @@ ev_view_find_started (EvView *view, EvJobFind *job)
 void
 ev_view_find_changed (EvView *view, GList **results, gint page)
 {
+	g_return_if_fail (view->current_page >= 0);
+
 	view->find_pages = results;
 	
 	if (view->jump_to_find_result == TRUE) {
