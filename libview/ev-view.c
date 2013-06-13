@@ -4611,7 +4611,7 @@ ev_view_forward_key_event_to_focused_child (EvView      *view,
 	return handled;
 }
 
-static gboolean
+static gint
 go_to_next_page (EvView *view,
 		 gint    page)
 {
@@ -4619,7 +4619,7 @@ go_to_next_page (EvView *view,
 	gboolean dual_page;
 
 	if (!view->document)
-		return FALSE;
+		return -1;
 
 	n_pages = ev_document_get_n_pages (view->document);
 
@@ -4627,35 +4627,33 @@ go_to_next_page (EvView *view,
 	page += dual_page ? 2 : 1;
 
 	if (page < n_pages)
-		ev_document_model_set_page (view->model, page);
-	else if (dual_page && page == n_pages)
-		ev_document_model_set_page (view->model, page - 1);
-	else
-		return FALSE;
+		return page;
 
-	return TRUE;
+	if (dual_page && page == n_pages)
+		return page - 1;
+
+	return -1;
 }
 
-static gboolean
+static gint
 go_to_previous_page (EvView *view,
 		     gint    page)
 {
 	gboolean dual_page;
 
 	if (!view->document)
-		return FALSE;
+		return -1;
 
 	dual_page = is_dual_page (view, NULL);
 	page -= dual_page ? 2 : 1;
 
 	if (page >= 0)
-		ev_document_model_set_page (view->model, page);
-	else if (dual_page && page == -1)
-		ev_document_model_set_page (view->model, 0);
-	else
-		return FALSE;
+		return page;
 
-	return TRUE;
+	if (dual_page && page == -1)
+		return 0;
+
+	return -1;
 }
 
 static gboolean
@@ -4687,8 +4685,11 @@ cursor_go_to_page_end (EvView *view)
 static gboolean
 cursor_go_to_next_page (EvView *view)
 {
-	if (go_to_next_page (view, view->cursor_page)) {
-		view->cursor_page = ev_document_model_get_page (view->model);
+	gint new_page;
+
+	new_page = go_to_next_page (view, view->cursor_page);
+	if (new_page != -1) {
+		view->cursor_page = new_page;
 		return cursor_go_to_page_start (view);
 	}
 
@@ -4698,8 +4699,11 @@ cursor_go_to_next_page (EvView *view)
 static gboolean
 cursor_go_to_previous_page (EvView *view)
 {
-	if (go_to_previous_page (view, view->cursor_page)) {
-		view->cursor_page = ev_document_model_get_page (view->model);
+	gint new_page;
+
+	new_page = go_to_previous_page (view, view->cursor_page);
+	if (new_page != -1) {
+		view->cursor_page = new_page;
 		return cursor_go_to_page_end (view);
 	}
 	return FALSE;
@@ -4955,6 +4959,7 @@ caret_key_press_event (EvView      *view,
 		if (!get_caret_cursor_rect_from_offset (view, view->cursor_offset, view->cursor_page, &view_rect))
 			return TRUE;
 
+		ev_document_model_set_page (view->model, view->cursor_page);
 		ensure_rectangle_is_visible (view, &view_rect);
 		gtk_widget_queue_draw (GTK_WIDGET (view));
 	}
@@ -7343,16 +7348,31 @@ ev_view_show_cursor (EvView *view)
 gboolean
 ev_view_next_page (EvView *view)
 {
+	gint next_page;
+
 	g_return_val_if_fail (EV_IS_VIEW (view), FALSE);
 
-	return go_to_next_page (view, view->current_page);
+	next_page = go_to_next_page (view, view->current_page);
+	if (next_page == -1)
+		return FALSE;
+
+	ev_document_model_set_page (view->model, next_page);
+
+	return TRUE;
 }
 
 gboolean
 ev_view_previous_page (EvView *view)
 {
+	gint prev_page;
+
 	g_return_val_if_fail (EV_IS_VIEW (view), FALSE);
 
-	return go_to_previous_page (view, view->current_page);
+	prev_page = go_to_previous_page (view, view->current_page);
+	if (prev_page == -1)
+		return FALSE;
+
+	ev_document_model_set_page (view->model, prev_page);
+
+	return TRUE;
 }
-		
