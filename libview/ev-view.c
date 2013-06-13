@@ -3113,6 +3113,209 @@ ev_view_synctex_backward_search (EvView *view,
 }
 
 /* Caret navigation */
+#define CURSOR_ON_MULTIPLIER 2
+#define CURSOR_OFF_MULTIPLIER 1
+#define CURSOR_PEND_MULTIPLIER 3
+#define CURSOR_DIVIDER 3
+
+static gboolean
+cursor_should_blink (EvView *view)
+{
+	if (view->caret_enabled &&
+	    view->rotation == 0 &&
+	    gtk_widget_has_focus (GTK_WIDGET (view))) {
+		GtkSettings *settings;
+		gboolean blink;
+
+		settings = gtk_widget_get_settings (GTK_WIDGET (view));
+		g_object_get (settings, "gtk-cursor-blink", &blink, NULL);
+
+		return blink;
+	}
+
+	return FALSE;
+}
+
+static gint
+get_cursor_blink_time (EvView *view)
+{
+	GtkSettings *settings = gtk_widget_get_settings (GTK_WIDGET (view));
+	gint time;
+
+	g_object_get (settings, "gtk-cursor-blink-time", &time, NULL);
+
+	return time;
+}
+
+static gint
+get_cursor_blink_timeout_id (EvView *view)
+{
+	GtkSettings *settings = gtk_widget_get_settings (GTK_WIDGET (view));
+	gint timeout;
+
+	g_object_get (settings, "gtk-cursor-blink-timeout", &timeout, NULL);
+
+	return timeout;
+}
+
+static gboolean
+get_caret_cursor_rect_from_offset (EvView       *view,
+				   gint          offset,
+				   gint          page,
+				   GdkRectangle *rect)
+{
+	EvRectangle *areas = NULL;
+	EvRectangle *doc_rect;
+	guint        n_areas = 0;
+
+	if (!view->caret_enabled)
+		return FALSE;
+
+	/* Disable caret navigation on rotated pages */
+	if (view->rotation != 0)
+		return FALSE;
+
+	if (!view->page_cache)
+		return FALSE;
+
+	ev_page_cache_get_text_layout (view->page_cache, page, &areas, &n_areas);
+	if (!areas)
+		return FALSE;
+
+	if (offset > n_areas)
+		return FALSE;
+
+	doc_rect = areas + offset;
+	if (offset == n_areas ||
+	    ((doc_rect->x1 == doc_rect->x2 || doc_rect->y1 == doc_rect->y2) && offset > 0)) {
+		EvRectangle *prev;
+		EvRectangle  last_rect;
+
+		/* Special characters like \n have an empty bounding box
+		 * and the end of a page doesn't have any bounding box,
+		 * use the size of the previous area.
+		 */
+		prev = areas + offset - 1;
+		last_rect.x1 = prev->x2;
+		last_rect.y1 = prev->y1;
+		last_rect.x2 = prev->x2 + (prev->x2 - prev->x1);
+		last_rect.y2 = prev->y2;
+
+		_ev_view_transform_doc_rect_to_view_rect (view, page, &last_rect, rect);
+
+		return TRUE;
+	}
+
+	_ev_view_transform_doc_rect_to_view_rect (view, page, doc_rect, rect);
+
+	return TRUE;
+}
+
+static void
+show_cursor (EvView *view)
+{
+	GtkWidget   *widget;
+	GdkRectangle view_rect;
+
+	if (view->cursor_visible)
+		return;
+
+	widget = GTK_WIDGET (view);
+	view->cursor_visible = TRUE;
+	if (gtk_widget_has_focus (widget)
+	    && get_caret_cursor_rect_from_offset (view, view->cursor_offset, view->current_page, &view_rect)) {
+		view_rect.x = view_rect.x - view->scroll_x;
+		view_rect.y = view_rect.y - view->scroll_y;
+		gtk_widget_queue_draw_area (widget, view_rect.x, view_rect.y, view_rect.width, view_rect.height);
+	}
+}
+
+static void
+hide_cursor (EvView *view)
+{
+	GtkWidget   *widget;
+	GdkRectangle view_rect;
+
+	if (!view->cursor_visible)
+		return;
+
+	widget = GTK_WIDGET (view);
+	view->cursor_visible = FALSE;
+	if (gtk_widget_has_focus (widget)
+	    && get_caret_cursor_rect_from_offset (view, view->cursor_offset, view->current_page, &view_rect)) {
+		view_rect.x = view_rect.x - view->scroll_x;
+		view_rect.y = view_rect.y - view->scroll_y;
+		gtk_widget_queue_draw_area (widget, view_rect.x, view_rect.y, view_rect.width, view_rect.height);
+	}
+}
+
+static gboolean
+blink_cb (EvView *view)
+{
+	gint blink_timeout;
+	guint blink_time;
+
+	blink_timeout = get_cursor_blink_timeout_id (view);
+	if (view->cursor_blink_time > 1000 * blink_timeout && blink_timeout < G_MAXINT / 1000) {
+		/* We've blinked enough without the user doing anything, stop blinking */
+		show_cursor (view);
+		view->cursor_blink_timeout_id = 0;
+
+		return FALSE;
+	}
+
+	blink_time = get_cursor_blink_time (view);
+	if (view->cursor_visible) {
+		hide_cursor (view);
+		blink_time *= CURSOR_OFF_MULTIPLIER;
+	} else {
+		show_cursor (view);
+		view->cursor_blink_time += blink_time;
+		blink_time *= CURSOR_ON_MULTIPLIER;
+	}
+
+	view->cursor_blink_timeout_id = gdk_threads_add_timeout (blink_time / CURSOR_DIVIDER, (GSourceFunc)blink_cb, view);
+
+	return FALSE;
+}
+
+static void
+ev_view_check_cursor_blink (EvView *view)
+{
+	if (cursor_should_blink (view))	{
+		if (view->cursor_blink_timeout_id == 0) {
+			show_cursor (view);
+			view->cursor_blink_timeout_id = gdk_threads_add_timeout (get_cursor_blink_time (view) * CURSOR_ON_MULTIPLIER / CURSOR_DIVIDER,
+										 (GSourceFunc)blink_cb, view);
+		}
+
+		return;
+	}
+
+	if (view->cursor_blink_timeout_id > 0) {
+		g_source_remove (view->cursor_blink_timeout_id);
+		view->cursor_blink_timeout_id = 0;
+	}
+
+	view->cursor_visible = TRUE;
+	view->cursor_blink_time = 0;
+}
+
+static void
+ev_view_pend_cursor_blink (EvView *view)
+{
+	if (!cursor_should_blink (view))
+		return;
+
+	if (view->cursor_blink_timeout_id > 0)
+		g_source_remove (view->cursor_blink_timeout_id);
+
+	show_cursor (view);
+	view->cursor_blink_timeout_id = gdk_threads_add_timeout (get_cursor_blink_time (view) * CURSOR_PEND_MULTIPLIER / CURSOR_DIVIDER,
+								 (GSourceFunc)blink_cb, view);
+}
+
+
 void
 ev_view_set_caret_navigation_enabled (EvView   *view,
 				      gboolean enabled)
@@ -3121,6 +3324,7 @@ ev_view_set_caret_navigation_enabled (EvView   *view,
 
 	if (view->caret_enabled != enabled) {
 		view->caret_enabled = enabled;
+		ev_view_check_cursor_blink (view);
 		gtk_widget_queue_draw (GTK_WIDGET (view));
 	}
 }
@@ -3549,59 +3753,6 @@ ev_view_realize (GtkWidget *widget)
 					  window);
 }
 
-static gboolean
-get_caret_cursor_rect_from_offset (EvView       *view,
-				   gint          offset,
-				   gint          page,
-				   GdkRectangle *rect)
-{
-	EvRectangle *areas = NULL;
-	EvRectangle *doc_rect;
-	guint        n_areas = 0;
-
-	if (!view->caret_enabled)
-		return FALSE;
-
-	/* Disable caret navigation on rotated pages */
-	if (view->rotation != 0)
-		return FALSE;
-
-	if (!view->page_cache)
-		return FALSE;
-
-	ev_page_cache_get_text_layout (view->page_cache, page, &areas, &n_areas);
-	if (!areas)
-		return FALSE;
-
-	if (offset > n_areas)
-		return FALSE;
-
-	doc_rect = areas + offset;
-	if (offset == n_areas ||
-	    ((doc_rect->x1 == doc_rect->x2 || doc_rect->y1 == doc_rect->y2) && offset > 0)) {
-		EvRectangle *prev;
-		EvRectangle  last_rect;
-
-		/* Special characters like \n have an empty bounding box
-		 * and the end of a page doesn't have any bounding box,
-		 * use the size of the previous area.
-		 */
-		prev = areas + offset - 1;
-		last_rect.x1 = prev->x2;
-		last_rect.y1 = prev->y1;
-		last_rect.x2 = prev->x2 + (prev->x2 - prev->x1);
-		last_rect.y2 = prev->y2;
-
-		_ev_view_transform_doc_rect_to_view_rect (view, page, &last_rect, rect);
-
-		return TRUE;
-	}
-
-	_ev_view_transform_doc_rect_to_view_rect (view, page, doc_rect, rect);
-
-	return TRUE;
-}
-
 static void
 get_cursor_color (GtkStyleContext *context,
 		  GdkRGBA         *color)
@@ -3701,7 +3852,7 @@ ev_view_draw (GtkWidget *widget,
 
 		draw_one_page (view, i, cr, &page_area, &border, &clip_rect, &page_ready);
 
-		if (page_ready && view->caret_enabled && view->current_page == i)
+		if (page_ready && view->caret_enabled && view->current_page == i && view->cursor_visible)
 			draw_caret_cursor (view, cr);
 		if (page_ready && view->find_pages && view->highlight_find_results)
 			highlight_find_results (view, cr, i);
@@ -4689,6 +4840,8 @@ caret_key_press_event (EvView      *view,
 	if (view->rotation != 0)
 		return FALSE;
 
+	view->cursor_blink_time = 0;
+
 	switch (event->keyval) {
 	case GDK_KEY_Left:
 		if (event->state & GDK_CONTROL_MASK)
@@ -4717,6 +4870,8 @@ caret_key_press_event (EvView      *view,
 	default:
 		return FALSE;
 	}
+
+	ev_view_pend_cursor_blink (view);
 
 	return TRUE;
 }
@@ -4753,8 +4908,12 @@ static gint
 ev_view_focus_in (GtkWidget     *widget,
 		  GdkEventFocus *event)
 {
-	if (EV_VIEW (widget)->pixbuf_cache)
-		ev_pixbuf_cache_style_changed (EV_VIEW (widget)->pixbuf_cache);
+	EvView *view = EV_VIEW (widget);
+
+	if (view->pixbuf_cache)
+		ev_pixbuf_cache_style_changed (view->pixbuf_cache);
+
+	ev_view_check_cursor_blink (view);
 	gtk_widget_queue_draw (widget);
 
 	return FALSE;
@@ -4764,8 +4923,12 @@ static gint
 ev_view_focus_out (GtkWidget     *widget,
 		   GdkEventFocus *event)
 {
-	if (EV_VIEW (widget)->pixbuf_cache)
-		ev_pixbuf_cache_style_changed (EV_VIEW (widget)->pixbuf_cache);
+	EvView *view = EV_VIEW (widget);
+
+	if (view->pixbuf_cache)
+		ev_pixbuf_cache_style_changed (view->pixbuf_cache);
+
+	ev_view_check_cursor_blink (view);
 	gtk_widget_queue_draw (widget);
 
 	return FALSE;
@@ -5103,6 +5266,11 @@ ev_view_dispose (GObject *object)
 	if (view->drag_info.release_timeout_id) {
 		g_source_remove (view->drag_info.release_timeout_id);
 		view->drag_info.release_timeout_id = 0;
+	}
+
+	if (view->cursor_blink_timeout_id) {
+		g_source_remove (view->cursor_blink_timeout_id);
+		view->cursor_blink_timeout_id = 0;
 	}
 
         gtk_scrollable_set_hadjustment (GTK_SCROLLABLE (view), NULL);
