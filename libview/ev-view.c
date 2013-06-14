@@ -3211,6 +3211,29 @@ get_caret_cursor_rect_from_offset (EvView       *view,
 	return TRUE;
 }
 
+static gboolean
+get_caret_cursor_area (EvView       *view,
+		       GdkRectangle *area)
+{
+	gfloat cursor_aspect_ratio;
+	gint   stem_width;
+
+	if (!get_caret_cursor_rect_from_offset (view, view->cursor_offset, view->cursor_page, area))
+		return FALSE;
+
+	area->x = area->x - view->scroll_x;
+	area->y = area->y - view->scroll_y;
+
+	gtk_style_context_get_style (gtk_widget_get_style_context (GTK_WIDGET (view)),
+				     "cursor-aspect-ratio", &cursor_aspect_ratio,
+				     NULL);
+	stem_width = area->height * cursor_aspect_ratio + 1;
+	area->x = area->x - (stem_width / 2);
+	area->width = stem_width;
+
+	return TRUE;
+}
+
 static void
 show_cursor (EvView *view)
 {
@@ -3222,11 +3245,10 @@ show_cursor (EvView *view)
 
 	widget = GTK_WIDGET (view);
 	view->cursor_visible = TRUE;
-	if (gtk_widget_has_focus (widget)
-	    && get_caret_cursor_rect_from_offset (view, view->cursor_offset, view->current_page, &view_rect)) {
-		view_rect.x = view_rect.x - view->scroll_x;
-		view_rect.y = view_rect.y - view->scroll_y;
-		gtk_widget_queue_draw_area (widget, view_rect.x, view_rect.y, view_rect.width, view_rect.height);
+	if (gtk_widget_has_focus (widget) && get_caret_cursor_area (view, &view_rect)) {
+		gtk_widget_queue_draw_area (widget,
+					    view_rect.x, view_rect.y,
+					    view_rect.width, view_rect.height);
 	}
 }
 
@@ -3241,11 +3263,10 @@ hide_cursor (EvView *view)
 
 	widget = GTK_WIDGET (view);
 	view->cursor_visible = FALSE;
-	if (gtk_widget_has_focus (widget)
-	    && get_caret_cursor_rect_from_offset (view, view->cursor_offset, view->current_page, &view_rect)) {
-		view_rect.x = view_rect.x - view->scroll_x;
-		view_rect.y = view_rect.y - view->scroll_y;
-		gtk_widget_queue_draw_area (widget, view_rect.x, view_rect.y, view_rect.width, view_rect.height);
+	if (gtk_widget_has_focus (widget) && get_caret_cursor_area (view, &view_rect)) {
+		gtk_widget_queue_draw_area (widget,
+					    view_rect.x, view_rect.y,
+					    view_rect.width, view_rect.height);
 	}
 }
 
@@ -3776,47 +3797,24 @@ get_cursor_color (GtkStyleContext *context,
 	}
 }
 
-/* This is a clone of the deprecated function gtk_draw_insertion_cursor. */
-static void
-render_cursor (GtkWidget    *widget,
-	       cairo_t      *cr,
-	       GdkRectangle *rect)
-{
-
-	GtkStyleContext *context;
-	GdkRGBA cursor_color;
-	gfloat cursor_aspect_ratio;
-	gint stem_width;
-
-	context = gtk_widget_get_style_context (widget);
-	get_cursor_color (context, &cursor_color);
-
-	gtk_style_context_get_style (context,
-				     "cursor-aspect-ratio", &cursor_aspect_ratio,
-				     NULL);
-
-	stem_width = rect->height * cursor_aspect_ratio + 1;
-
-	cairo_save (cr);
-	gdk_cairo_set_source_rgba (cr, &cursor_color);
-	cairo_rectangle (cr, rect->x - (stem_width / 2), rect->y, stem_width, rect->height);
-	cairo_fill (cr);
-	cairo_restore (cr);
-}
-
+/* This is based on the deprecated function gtk_draw_insertion_cursor. */
 static void
 draw_caret_cursor (EvView  *view,
 		   cairo_t *cr)
 {
 	GdkRectangle view_rect;
+	GdkRGBA      cursor_color;
 
-	if (!get_caret_cursor_rect_from_offset (view, view->cursor_offset, view->cursor_page, &view_rect))
+	if (!get_caret_cursor_area (view, &view_rect))
 		return;
 
-	view_rect.x = view_rect.x - view->scroll_x;
-	view_rect.y = view_rect.y - view->scroll_y;
+	get_cursor_color (gtk_widget_get_style_context (GTK_WIDGET (view)), &cursor_color);
 
-	render_cursor (GTK_WIDGET (view), cr, &view_rect);
+	cairo_save (cr);
+	gdk_cairo_set_source_rgba (cr, &cursor_color);
+	cairo_rectangle (cr, view_rect.x, view_rect.y, view_rect.width, view_rect.height);
+	cairo_fill (cr);
+	cairo_restore (cr);
 }
 
 static gboolean
