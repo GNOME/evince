@@ -5183,6 +5183,45 @@ draw_surface (cairo_t 	      *cr,
 	cairo_restore (cr);
 }
 
+void
+_ev_view_get_selection_colors (EvView  *view,
+			       GdkRGBA *bg_color,
+			       GdkRGBA *fg_color)
+{
+	GtkWidget       *widget = GTK_WIDGET (view);
+	GtkStateFlags    state;
+	GtkStyleContext *context;
+
+	state = gtk_widget_has_focus (widget) ? GTK_STATE_FLAG_SELECTED : GTK_STATE_FLAG_ACTIVE;
+	context = gtk_widget_get_style_context (widget);
+
+	if (bg_color)
+		gtk_style_context_get_background_color (context, state, bg_color);
+
+	if (fg_color)
+		gtk_style_context_get_color (context, state, fg_color);
+}
+
+static void
+draw_selection_region (cairo_t        *cr,
+		       cairo_region_t *region,
+		       GdkRGBA        *color,
+		       gint            x,
+		       gint            y,
+		       gdouble         scale_x,
+		       gdouble         scale_y)
+{
+	cairo_save (cr);
+	cairo_translate (cr, x, y);
+	cairo_scale (cr, scale_x, scale_y);
+	gdk_cairo_region (cr, region);
+	cairo_set_source_rgb (cr, color->red, color->green, color->blue);
+	cairo_set_operator (cr, CAIRO_OPERATOR_MULTIPLY);
+	cairo_set_antialias (cr, CAIRO_ANTIALIAS_NONE);
+	cairo_fill (cr);
+	cairo_restore (cr);
+}
+
 static void
 draw_one_page (EvView       *view,
 	       gint          page,
@@ -5231,6 +5270,7 @@ draw_one_page (EvView       *view,
 		cairo_surface_t *page_surface = NULL;
 		cairo_surface_t *selection_surface = NULL;
 		gint offset_x, offset_y;
+		cairo_region_t *region = NULL;
 
 		page_surface = ev_pixbuf_cache_get_surface (view->pixbuf_cache, page);
 
@@ -5251,22 +5291,31 @@ draw_one_page (EvView       *view,
 		offset_y = overlap.y - real_page_area.y;
 
 		draw_surface (cr, page_surface, overlap.x, overlap.y, offset_x, offset_y, width, height);
-		
-		/* Get the selection pixbuf iff we have something to draw */
-		if (find_selection_for_page (view, page) &&
-		    view->selection_mode == EV_VIEW_SELECTION_TEXT) {
-			selection_surface =
-				ev_pixbuf_cache_get_selection_surface (view->pixbuf_cache,
-								       page,
-								       view->scale,
-								       NULL);
-		}
 
-		if (!selection_surface) {
+		/* Get the selection pixbuf iff we have something to draw */
+		if (!find_selection_for_page (view, page))
+			return;
+
+		selection_surface = ev_pixbuf_cache_get_selection_surface (view->pixbuf_cache,
+									   page,
+									   view->scale,
+									   &region);
+		if (selection_surface) {
+			draw_surface (cr, selection_surface, overlap.x, overlap.y, offset_x, offset_y,
+				      width, height);
 			return;
 		}
-		draw_surface (cr, selection_surface, overlap.x, overlap.y, offset_x, offset_y, width, height);
 
+		if (region) {
+			double scale_x, scale_y;
+			GdkRGBA color;
+
+			scale_x = (gdouble)width / cairo_image_surface_get_width (page_surface);
+			scale_y = (gdouble)height / cairo_image_surface_get_height (page_surface);
+			_ev_view_get_selection_colors (view, &color, NULL);
+			draw_selection_region (cr, region, &color, real_page_area.x, real_page_area.y,
+					       scale_x, scale_y);
+		}
 	}
 }
 

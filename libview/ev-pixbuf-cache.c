@@ -24,6 +24,7 @@ typedef struct _CacheJobInfo
 	
 	cairo_surface_t *selection;
 	cairo_region_t  *selection_region;
+	gdouble          selection_scale;
 } CacheJobInfo;
 
 struct _EvPixbufCache
@@ -262,6 +263,7 @@ copy_job_to_job_info (EvJobRender   *job_render,
 		job_info->selection_points = job_render->selection_points;
 		job_info->selection_region = cairo_region_reference (job_render->selection_region);
 		job_info->selection = cairo_surface_reference (job_render->selection);
+		job_info->selection_scale = job_render->scale;
 		g_assert (job_info->selection_points.x1 >= 0);
 		job_info->points_set = TRUE;
 	}
@@ -602,21 +604,17 @@ ev_pixbuf_cache_clear_job_sizes (EvPixbufCache *pixbuf_cache,
 }
 
 static void
-get_selection_colors (GtkWidget *widget, GdkColor *text, GdkColor *base)
+get_selection_colors (EvView *view, GdkColor *text, GdkColor *base)
 {
-	GtkStyleContext *context = gtk_widget_get_style_context (widget);
-        GtkStateFlags    state = 0;
-        GdkRGBA          fg, bg;
+        GdkRGBA fg, bg;
 
-        state |= gtk_widget_has_focus (widget) ? GTK_STATE_FLAG_SELECTED : GTK_STATE_FLAG_ACTIVE;
+        _ev_view_get_selection_colors (view, &bg, &fg);
 
-        gtk_style_context_get_color (context, state, &fg);
         text->pixel = 0;
         text->red = CLAMP ((guint) (fg.red * 65535), 0, 65535);
         text->green = CLAMP ((guint) (fg.green * 65535), 0, 65535);
         text->blue = CLAMP ((guint) (fg.blue * 65535), 0, 65535);
 
-        gtk_style_context_get_background_color (context, state, &bg);
         base->pixel = 0;
         base->red = CLAMP ((guint) (bg.red * 65535), 0, 65535);
         base->green = CLAMP ((guint) (bg.green * 65535), 0, 65535);
@@ -647,7 +645,7 @@ add_job (EvPixbufCache  *pixbuf_cache,
 	if (new_selection_surface_needed (pixbuf_cache, job_info, page, scale)) {
 		GdkColor text, base;
 
-		get_selection_colors (pixbuf_cache->view, &text, &base);
+		get_selection_colors (EV_VIEW (pixbuf_cache->view), &text, &base);
 		ev_job_render_set_selection_info (EV_JOB_RENDER (job_info->job), 
 						  &(job_info->target_points),
 						  job_info->selection_style,
@@ -830,24 +828,8 @@ new_selection_surface_needed (EvPixbufCache *pixbuf_cache,
 			      gint           page,
 			      gfloat         scale)
 {
-	if (job_info->selection) {
-		gint width, height;
-		gint selection_width, selection_height;
-
-		_get_page_size_for_scale_and_rotation (pixbuf_cache->document,
-						       page, scale, 0,
-						       &width, &height);
-
-		selection_width = cairo_image_surface_get_width (job_info->selection);
-		selection_height = cairo_image_surface_get_height (job_info->selection);
-		
-		if (width != selection_width || height != selection_height)
-			return TRUE;
-	} else {
-		if (job_info->points_set)
-			return TRUE;
-	}
-	
+	if (job_info->selection || job_info->points_set)
+		return job_info->selection_scale != scale;
 	return FALSE;
 }
 
@@ -902,12 +884,14 @@ ev_pixbuf_cache_style_changed (EvPixbufCache *pixbuf_cache)
 		if (job_info->selection) {
 			cairo_surface_destroy (job_info->selection);
 			job_info->selection = NULL;
+			job_info->selection_points.x1 = -1;
 		}
 
 		job_info = pixbuf_cache->next_job + i;
 		if (job_info->selection) {
 			cairo_surface_destroy (job_info->selection);
 			job_info->selection = NULL;
+			job_info->selection_points.x1 = -1;
 		}
 	}
 
@@ -918,6 +902,7 @@ ev_pixbuf_cache_style_changed (EvPixbufCache *pixbuf_cache)
 		if (job_info->selection) {
 			cairo_surface_destroy (job_info->selection);
 			job_info->selection = NULL;
+			job_info->selection_points.x1 = -1;
 		}
 	}
 }
@@ -945,8 +930,11 @@ ev_pixbuf_cache_get_selection_surface (EvPixbufCache   *pixbuf_cache,
 	/* If we have a running job, we just return what we have under the
 	 * assumption that it'll be updated later and we can scale it as need
 	 * be */
-	if (job_info->job && EV_JOB_RENDER (job_info->job)->include_selection)
+	if (job_info->job && EV_JOB_RENDER (job_info->job)->include_selection) {
+		if (region)
+			*region = job_info->selection_region;
 		return job_info->selection;
+	}
 
 	/* Now, lets see if we need to resize the image.  If we do, we clear the
 	 * old one. */
@@ -969,7 +957,6 @@ ev_pixbuf_cache_get_selection_surface (EvPixbufCache   *pixbuf_cache,
 			g_assert (job_info->selection == NULL);
 			old_points = NULL;
 		} else {
-			g_assert (job_info->selection != NULL);
 			old_points = &(job_info->selection_points);
 		}
 
@@ -984,7 +971,7 @@ ev_pixbuf_cache_get_selection_surface (EvPixbufCache   *pixbuf_cache,
 							   rc, job_info->selection_style,
 							   &(job_info->target_points));
 
-		get_selection_colors (pixbuf_cache->view, &text, &base);
+		get_selection_colors (EV_VIEW (pixbuf_cache->view), &text, &base);
 
 		ev_selection_render_selection (EV_SELECTION (pixbuf_cache->document),
 					       rc, &(job_info->selection),
@@ -993,6 +980,7 @@ ev_pixbuf_cache_get_selection_surface (EvPixbufCache   *pixbuf_cache,
 					       job_info->selection_style,
 					       &text, &base);
 		job_info->selection_points = job_info->target_points;
+		job_info->selection_scale = scale;
 		g_object_unref (rc);
 		ev_document_doc_mutex_unlock ();
 	}
