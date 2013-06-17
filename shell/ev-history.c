@@ -127,9 +127,6 @@ ev_history_add_link (EvHistory *history,
         if (ev_history_is_frozen (history))
                 return;
 
-        if (ev_history_go_to_link (history, link))
-            return;
-
         priv = history->priv;
 
         if (priv->current) {
