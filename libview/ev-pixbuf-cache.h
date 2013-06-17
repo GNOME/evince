@@ -78,8 +78,10 @@ void           ev_pixbuf_cache_set_inverted_colors  (EvPixbufCache *pixbuf_cache
 /* Selection */
 cairo_surface_t *ev_pixbuf_cache_get_selection_surface (EvPixbufCache   *pixbuf_cache,
 							gint             page,
-							gfloat           scale,
-							cairo_region_t **region);
+							gfloat           scale);
+cairo_region_t *ev_pixbuf_cache_get_selection_region (EvPixbufCache *pixbuf_cache,
+						      gint           page,
+						      gfloat         scale);
 void           ev_pixbuf_cache_set_selection_list   (EvPixbufCache *pixbuf_cache,
 						     GList         *selection_list);
 GList         *ev_pixbuf_cache_get_selection_list   (EvPixbufCache *pixbuf_cache);

@@ -17,14 +17,17 @@ typedef struct _CacheJobInfo
 	/* Selection data. 
 	 * Selection_points are the coordinates encapsulated in selection.
 	 * target_points is the target selection size. */
-	EvRectangle      selection_points;
 	EvRectangle      target_points;
 	EvSelectionStyle selection_style;
 	gboolean         points_set;
 	
 	cairo_surface_t *selection;
-	cairo_region_t  *selection_region;
 	gdouble          selection_scale;
+	EvRectangle      selection_points;
+
+	cairo_region_t *selection_region;
+	gdouble         selection_region_scale;
+	EvRectangle     selection_region_points;
 } CacheJobInfo;
 
 struct _EvPixbufCache
@@ -261,10 +264,14 @@ copy_job_to_job_info (EvJobRender   *job_render,
 		}
 
 		job_info->selection_points = job_render->selection_points;
-		job_info->selection_region = cairo_region_reference (job_render->selection_region);
 		job_info->selection = cairo_surface_reference (job_render->selection);
 		job_info->selection_scale = job_render->scale;
 		g_assert (job_info->selection_points.x1 >= 0);
+
+		job_info->selection_region_points = job_render->selection_points;
+		job_info->selection_region = cairo_region_reference (job_render->selection_region);
+		job_info->selection_region_scale = job_render->scale;
+
 		job_info->points_set = TRUE;
 	}
 
@@ -833,17 +840,42 @@ new_selection_surface_needed (EvPixbufCache *pixbuf_cache,
 	return FALSE;
 }
 
+static gboolean
+new_selection_region_needed (EvPixbufCache *pixbuf_cache,
+			     CacheJobInfo  *job_info,
+			     gint           page,
+			     gfloat         scale)
+{
+	if (job_info->selection_region || job_info->points_set)
+		return job_info->selection_region_scale != scale;
+	return FALSE;
+}
+
 static void
-clear_selection_if_needed (EvPixbufCache *pixbuf_cache,
-			   CacheJobInfo  *job_info,
-			   gint           page,
-			   gfloat         scale)
+clear_selection_surface_if_needed (EvPixbufCache *pixbuf_cache,
+                                   CacheJobInfo  *job_info,
+                                   gint           page,
+                                   gfloat         scale)
 {
 	if (new_selection_surface_needed (pixbuf_cache, job_info, page, scale)) {
 		if (job_info->selection)
 			cairo_surface_destroy (job_info->selection);
 		job_info->selection = NULL;
 		job_info->selection_points.x1 = -1;
+	}
+}
+
+static void
+clear_selection_region_if_needed (EvPixbufCache *pixbuf_cache,
+                                  CacheJobInfo  *job_info,
+                                  gint           page,
+                                  gfloat         scale)
+{
+	if (new_selection_region_needed (pixbuf_cache, job_info, page, scale)) {
+		if (job_info->selection_region)
+			cairo_region_destroy (job_info->selection_region);
+		job_info->selection_region = NULL;
+		job_info->selection_region_points.x1 = -1;
 	}
 }
 
@@ -910,8 +942,7 @@ ev_pixbuf_cache_style_changed (EvPixbufCache *pixbuf_cache)
 cairo_surface_t *
 ev_pixbuf_cache_get_selection_surface (EvPixbufCache   *pixbuf_cache,
 				       gint             page,
-				       gfloat           scale,
-				       cairo_region_t **region)
+				       gfloat           scale)
 {
 	CacheJobInfo *job_info;
 
@@ -930,15 +961,12 @@ ev_pixbuf_cache_get_selection_surface (EvPixbufCache   *pixbuf_cache,
 	/* If we have a running job, we just return what we have under the
 	 * assumption that it'll be updated later and we can scale it as need
 	 * be */
-	if (job_info->job && EV_JOB_RENDER (job_info->job)->include_selection) {
-		if (region)
-			*region = job_info->selection_region;
+	if (job_info->job && EV_JOB_RENDER (job_info->job)->include_selection)
 		return job_info->selection;
-	}
 
 	/* Now, lets see if we need to resize the image.  If we do, we clear the
 	 * old one. */
-	clear_selection_if_needed (pixbuf_cache, job_info, page, scale);
+	clear_selection_surface_if_needed (pixbuf_cache, job_info, page, scale);
 
 	/* Finally, we see if the two scales are the same, and get a new pixbuf
 	 * if needed.  We do this synchronously for now.  At some point, we
@@ -964,15 +992,7 @@ ev_pixbuf_cache_get_selection_surface (EvPixbufCache   *pixbuf_cache,
 		rc = ev_render_context_new (ev_page, 0, scale);
 		g_object_unref (ev_page);
 
-		if (job_info->selection_region)
-			cairo_region_destroy (job_info->selection_region);
-		job_info->selection_region =
-			ev_selection_get_selection_region (EV_SELECTION (pixbuf_cache->document),
-							   rc, job_info->selection_style,
-							   &(job_info->target_points));
-
 		get_selection_colors (EV_VIEW (pixbuf_cache->view), &text, &base);
-
 		ev_selection_render_selection (EV_SELECTION (pixbuf_cache->document),
 					       rc, &(job_info->selection),
 					       &(job_info->target_points),
@@ -984,9 +1004,62 @@ ev_pixbuf_cache_get_selection_surface (EvPixbufCache   *pixbuf_cache,
 		g_object_unref (rc);
 		ev_document_doc_mutex_unlock ();
 	}
-	if (region)
-		*region = job_info->selection_region;
 	return job_info->selection;
+}
+
+cairo_region_t *
+ev_pixbuf_cache_get_selection_region (EvPixbufCache *pixbuf_cache,
+				      gint           page,
+				      gfloat         scale)
+{
+	CacheJobInfo *job_info;
+
+	/* the document does not implement the selection interface */
+	if (!EV_IS_SELECTION (pixbuf_cache->document))
+		return NULL;
+
+	job_info = find_job_cache (pixbuf_cache, page);
+	if (job_info == NULL)
+		return NULL;
+
+	/* No selection on this page */
+	if (!job_info->points_set)
+		return NULL;
+
+	/* If we have a running job, we just return what we have under the
+	 * assumption that it'll be updated later and we can scale it as need
+	 * be */
+	if (job_info->job && EV_JOB_RENDER (job_info->job)->include_selection)
+		return job_info->selection_region;
+
+	/* Now, lets see if we need to resize the region.  If we do, we clear the
+	 * old one. */
+	clear_selection_region_if_needed (pixbuf_cache, job_info, page, scale);
+
+	/* Finally, we see if the two scales are the same, and get a new region
+	 * if needed.
+	 */
+	if (ev_rect_cmp (&(job_info->target_points), &(job_info->selection_region_points))) {
+		EvRenderContext *rc;
+		EvPage *ev_page;
+
+		ev_document_doc_mutex_lock ();
+		ev_page = ev_document_get_page (pixbuf_cache->document, page);
+		rc = ev_render_context_new (ev_page, 0, scale);
+		g_object_unref (ev_page);
+
+		if (job_info->selection_region)
+			cairo_region_destroy (job_info->selection_region);
+		job_info->selection_region =
+			ev_selection_get_selection_region (EV_SELECTION (pixbuf_cache->document),
+							   rc, job_info->selection_style,
+							   &(job_info->target_points));
+		job_info->selection_region_points = job_info->target_points;
+		job_info->selection_region_scale = scale;
+		g_object_unref (rc);
+		ev_document_doc_mutex_unlock ();
+	}
+	return job_info->selection_region;
 }
 
 static void

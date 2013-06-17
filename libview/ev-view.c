@@ -5298,14 +5298,16 @@ draw_one_page (EvView       *view,
 
 		selection_surface = ev_pixbuf_cache_get_selection_surface (view->pixbuf_cache,
 									   page,
-									   view->scale,
-									   &region);
+									   view->scale);
 		if (selection_surface) {
 			draw_surface (cr, selection_surface, overlap.x, overlap.y, offset_x, offset_y,
 				      width, height);
 			return;
 		}
 
+		region = ev_pixbuf_cache_get_selection_region (view->pixbuf_cache,
+							       page,
+							       view->scale);
 		if (region) {
 			double scale_x, scale_y;
 			GdkRGBA color;
@@ -7049,13 +7051,11 @@ merge_selection_region (EvView *view,
 		/* seed the cache with a new page.  We are going to need the new
 		 * region too. */
 		if (new_sel) {
-			cairo_region_t *tmp_region = NULL;
+			cairo_region_t *tmp_region;
 
-			ev_pixbuf_cache_get_selection_surface (view->pixbuf_cache,
-							       cur_page,
-							       view->scale,
-							       &tmp_region);
-
+			tmp_region = ev_pixbuf_cache_get_selection_region (view->pixbuf_cache,
+									   cur_page,
+									   view->scale);
 			if (tmp_region && !cairo_region_is_empty (tmp_region)) {
 				new_sel->covered_region = cairo_region_reference (tmp_region);
 			}
