@@ -4022,6 +4022,51 @@ start_selection_for_event (EvView         *view,
 }
 
 static gboolean
+get_caret_cursor_offset_at_location (EvView *view,
+				     gdouble x,
+				     gdouble y,
+				     gint   *page,
+				     gint   *offset)
+{
+	gint doc_x, doc_y;
+	EvRectangle *areas;
+	EvRectangle *rect;
+	guint n_areas = 0;
+	guint i;
+
+	if (!view->caret_enabled || view->rotation != 0)
+		return FALSE;
+
+	if (!view->page_cache)
+		return FALSE;
+
+	/* Get the offset from the doc point */
+	if (!get_doc_point_from_location (view, x, y, page, &doc_x, &doc_y))
+		return FALSE;
+
+	ev_page_cache_get_text_layout (view->page_cache, *page, &areas, &n_areas);
+	if (!areas)
+		return FALSE;
+
+	for (i = 0; i < n_areas; i++) {
+		rect = areas + i;
+		if (doc_x >= rect->x1 && doc_x <= rect->x2 &&
+		    doc_y >= rect->y1 && doc_y <= rect->y2) {
+			/* Position the caret before or after the character, depending on whether
+			   the point falls within the left or right half of the bounding box. */
+			if (doc_x <= rect->x1 + (rect->x2 - rect->x1) / 2)
+				*offset = i;
+			else
+				*offset = i + 1;
+
+			return TRUE;
+		}
+	}
+
+	return FALSE;
+}
+
+static gboolean
 ev_view_button_press_event (GtkWidget      *widget,
 			    GdkEventButton *event)
 {
@@ -4087,6 +4132,8 @@ ev_view_button_press_event (GtkWidget      *widget,
 				view->image_dnd_info.start.x = event->x + view->scroll_x;
 				view->image_dnd_info.start.y = event->y + view->scroll_y;
 			} else {
+				gint page, offset;
+
 				ev_view_remove_all (view);
 
 				if (view->synctex_result) {
@@ -4100,6 +4147,12 @@ ev_view_button_press_event (GtkWidget      *widget,
 
 				if (EV_IS_SELECTION (view->document))
 					start_selection_for_event (view, event);
+
+				if (get_caret_cursor_offset_at_location (view, event->x, event->y, &page, &offset)) {
+					view->cursor_offset = offset;
+					view->cursor_page = page;
+					gtk_widget_queue_draw (widget);
+				}
 			}
 		}			
 			return TRUE;
