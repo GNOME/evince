@@ -1,4 +1,46 @@
 ================
+Evince     3.9.3
+================
+
+New features and improvements:
+
+    * Make the history behave more like a web browser (Christian
+      Persch)
+    * Add a fallback implementation of text selection for backends
+      that implement get_selection_region but not render_selection
+      (#669022, Jason Crain)
+    * Initial implementation of caret navigation added to libview
+      (#638905, #702076, #702068, Antia Puentes, Carlos Garcia Campos)
+    * Add a GSetting to set a custom page cache size (#642683, Jonas
+      Danielsson)
+
+Bug fixes:
+
+    * Fix memory corruption in EvHistory implementation (#697397,
+      Christian Persch)
+    * Fix drag and drop of selected text after zooming with a
+      selection (#702406, Jason Crain)
+    * Fix a crash when searching with a negative current page
+      (#683172, Germán Poo-Caamaño)
+    * Fix race condition in sidebar-thumbnails (#701900, aakash)
+    * Use horzontal/vertical GtkBoxes instead of deprecated
+      GtkHBox/GtkVBox (Christian Persch)
+    * Fix runtime critical warning for links with NULL action
+      (Christian Persch)
+    * Fix -Wstrict-prototypes warnings (Christian Persch)
+    * Remove obsolete g_type_init calls (Christian Persch)
+    * Fix crash on corrupted PDF with no pages (#701302, Germán
+      Poo-Caamaño)
+
+Translation updates:
+
+    * Marek Černocký (cs)
+    * Daniel Mustieles (es)
+    * Fran Dieguez (gl)
+    * OKANO Takayoshi (ja)
+    * Yasumichi Akahoshi (ja)
+
+================
 Evince     3.9.2
 ================
 
