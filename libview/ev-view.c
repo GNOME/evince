@@ -1467,25 +1467,21 @@ location_in_selected_text (EvView  *view,
 			   gdouble  x,
 			   gdouble  y)
 {
+	cairo_region_t *region;
 	gint page = -1;
 	gint x_offset = 0, y_offset = 0;
-	EvViewSelection *selection;
-	GList *l = NULL;
 
-	for (l = view->selection_info.selections; l != NULL; l = l->next) {
-		selection = (EvViewSelection *)l->data;
-		
-		find_page_at_location (view, x, y, &page, &x_offset, &y_offset);
-		
-		if (page != selection->page)
-			continue;
-		
-		if (selection->covered_region &&
-		    cairo_region_contains_point (selection->covered_region, x_offset, y_offset))
-			return TRUE;
-	}
+	find_page_at_location (view, x, y, &page, &x_offset, &y_offset);
 
-	return FALSE;
+	if (page == -1)
+		return FALSE;
+
+	region = ev_pixbuf_cache_get_selection_region (view->pixbuf_cache, page, view->scale);
+
+	if (region)
+		return cairo_region_contains_point (region, x_offset, y_offset);
+	else
+		return FALSE;
 }
 
 static gboolean
