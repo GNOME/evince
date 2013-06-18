@@ -31,6 +31,8 @@ enum {
 	N_SIGNALS
 };
 
+#define EV_HISTORY_MAX_LENGTH (32)
+
 static guint signals[N_SIGNALS] = {0, };
 
 struct _EvHistoryPrivate {
@@ -61,6 +63,32 @@ ev_history_clear (EvHistory *history)
         history->priv->list = NULL;
 
         history->priv->current = NULL;
+}
+
+static void
+ev_history_prune (EvHistory *history)
+{
+        EvHistoryPrivate *priv = history->priv;
+        GList *l;
+        guint i;
+
+        g_assert (priv->current->next == NULL);
+
+        for (i = 0, l = priv->current; i < EV_HISTORY_MAX_LENGTH && l != NULL; i++, l = l->prev)
+                /* empty */;
+
+        if (l == NULL)
+                return;
+
+        /* Throw away all history up to @l */
+        l = l->next;
+        l->prev->next = NULL;
+        l->prev = NULL;
+
+        clear_list (priv->list);
+        priv->list = l;
+
+        g_assert (g_list_length (priv->list) == EV_HISTORY_MAX_LENGTH);
 }
 
 static void
@@ -139,7 +167,7 @@ ev_history_add_link (EvHistory *history,
         priv->current = g_list_append (NULL, g_object_ref (link));
         priv->list = g_list_concat (priv->list, priv->current);
 
-        /* TODO: Decide a history limit and delete old links when the limit is reached */
+        ev_history_prune (history);
 
 	g_signal_emit (history, signals[CHANGED], 0);
 }
