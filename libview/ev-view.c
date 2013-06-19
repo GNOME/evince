@@ -4155,7 +4155,8 @@ ev_view_button_press_event (GtkWidget      *widget,
 				if (EV_IS_SELECTION (view->document))
 					start_selection_for_event (view, event);
 
-				if (get_caret_cursor_offset_at_location (view, event->x, event->y, &page, &offset)) {
+				if (get_caret_cursor_offset_at_location (view, event->x, event->y, &page, &offset) &&
+				    (view->cursor_offset != offset || view->cursor_page != page)) {
 					view->cursor_offset = offset;
 					view->cursor_page = page;
 					gtk_widget_queue_draw (widget);
