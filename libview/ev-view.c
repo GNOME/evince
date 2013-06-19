@@ -5030,6 +5030,9 @@ ev_view_move_cursor (EvView         *view,
 		ev_document_model_set_page (view->model, view->cursor_page);
 		ensure_rectangle_is_visible (view, &view_rect);
 		gtk_widget_queue_draw (GTK_WIDGET (view));
+	} else {
+		/* Notify the user that it was not possible to move the caret cursor */
+		gtk_widget_error_bell (GTK_WIDGET (view));
 	}
 
 	return TRUE;
