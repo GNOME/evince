@@ -57,6 +57,7 @@ enum {
 	SIGNAL_SYNC_SOURCE,
 	SIGNAL_ANNOT_ADDED,
 	SIGNAL_LAYERS_CHANGED,
+	SIGNAL_MOVE_CURSOR,
 	N_SIGNALS
 };
 
@@ -927,6 +928,9 @@ ev_view_scroll (EvView        *view,
 	gdouble step_increment;
 	gboolean first_page = FALSE;
 	gboolean last_page = FALSE;
+
+	if (view->key_binding_handled)
+		return;
 
 	view->jump_to_find_result = FALSE;
 
@@ -4955,48 +4959,61 @@ cursor_forward_line (EvView *view)
 }
 
 static gboolean
-caret_key_press_event (EvView      *view,
-		       GdkEventKey *event)
+ev_view_move_cursor (EvView         *view,
+		     GtkMovementStep step,
+		     gint            count)
 {
 	gint prev_offset;
 	gint prev_page;
 
-	/* Disable caret navigation on rotated pages */
-	if (view->rotation != 0)
+	if (!view->caret_enabled || view->rotation != 0)
 		return FALSE;
 
+	view->key_binding_handled = TRUE;
 	view->cursor_blink_time = 0;
 
 	prev_offset = view->cursor_offset;
 	prev_page = view->cursor_page;
 
-	switch (event->keyval) {
-	case GDK_KEY_Left:
-		if (event->state & GDK_CONTROL_MASK)
-			cursor_backward_word_start (view);
-		else
-			cursor_backward_char (view);
-		break;
-	case GDK_KEY_Right:
-		if (event->state & GDK_CONTROL_MASK)
-			cursor_forward_word_end (view);
-		else
+	switch (step) {
+	case GTK_MOVEMENT_VISUAL_POSITIONS:
+		while (count > 0) {
 			cursor_forward_char (view);
+			count--;
+		}
+		while (count < 0) {
+			cursor_backward_char (view);
+			count++;
+		}
 		break;
-	case GDK_KEY_Up:
-		cursor_backward_line (view);
+	case GTK_MOVEMENT_WORDS:
+		while (count > 0) {
+			cursor_forward_word_end (view);
+			count--;
+		}
+		while (count < 0) {
+			cursor_backward_word_start (view);
+			count++;
+		}
 		break;
-	case GDK_KEY_Down:
-		cursor_forward_line (view);
+	case GTK_MOVEMENT_DISPLAY_LINES:
+		while (count > 0) {
+			cursor_forward_line (view);
+			count--;
+		}
+		while (count < 0) {
+			cursor_backward_line (view);
+			count++;
+		}
 		break;
-	case GDK_KEY_Home:
-		cursor_go_to_line_start (view);
-		break;
-	case GDK_KEY_End:
-		cursor_go_to_line_end (view);
+	case GTK_MOVEMENT_DISPLAY_LINE_ENDS:
+		if (count > 0)
+			cursor_go_to_line_end (view);
+		else if (count < 0)
+			cursor_go_to_line_start (view);
 		break;
 	default:
-		return FALSE;
+		g_assert_not_reached ();
 	}
 
 	ev_view_pend_cursor_blink (view);
@@ -5005,7 +5022,7 @@ caret_key_press_event (EvView      *view,
 	if (prev_offset != view->cursor_offset || prev_page != view->cursor_page) {
 		GdkRectangle view_rect;
 
-		/* scroll to view the text caret */
+		/* scroll to view the caret cursor */
 		if (!get_caret_cursor_rect_from_offset (view, view->cursor_offset, view->cursor_page, &view_rect))
 			return TRUE;
 
@@ -5021,18 +5038,23 @@ static gboolean
 ev_view_key_press_event (GtkWidget   *widget,
 			 GdkEventKey *event)
 {
-	EvView *view = EV_VIEW (widget);
+	EvView  *view = EV_VIEW (widget);
+	gboolean retval;
 
 	if (!view->document)
 		return FALSE;
 
-	if (view->caret_enabled && caret_key_press_event (view, event))
-		return TRUE;
-
 	if (!gtk_widget_has_focus (widget))
 		return ev_view_forward_key_event_to_focused_child (view, event);
 
-	return gtk_bindings_activate_event (G_OBJECT (widget), event);
+	/* I expected GTK+ do this for me, but it doesn't cancel
+	 * the propagation of bindings handled for the same binding set
+	 */
+	view->key_binding_handled = FALSE;
+	retval = gtk_bindings_activate_event (G_OBJECT (widget), event);
+	view->key_binding_handled = FALSE;
+
+	return retval;
 }
 
 static gint
@@ -5633,6 +5655,25 @@ ev_view_screen_changed (GtkWidget *widget,
 }
 
 static void
+add_move_binding_keypad (GtkBindingSet  *binding_set,
+			 guint           keyval,
+			 GdkModifierType modifiers,
+			 GtkMovementStep step,
+			 gint            count)
+{
+	guint keypad_keyval = keyval - GDK_KEY_Left + GDK_KEY_KP_Left;
+
+	gtk_binding_entry_add_signal (binding_set, keyval, modifiers,
+				      "move-cursor", 2,
+				      GTK_TYPE_MOVEMENT_STEP, step,
+				      G_TYPE_INT, count);
+	gtk_binding_entry_add_signal (binding_set, keypad_keyval, modifiers,
+				      "move-cursor", 2,
+				      GTK_TYPE_MOVEMENT_STEP, step,
+				      G_TYPE_INT, count);
+}
+
+static void
 ev_view_class_init (EvViewClass *class)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (class);
@@ -5671,6 +5712,7 @@ ev_view_class_init (EvViewClass *class)
 	container_class->forall = ev_view_forall;
 
 	class->scroll = ev_view_scroll_internal;
+	class->move_cursor = ev_view_move_cursor;
 
 	g_object_class_install_property (object_class,
 					 PROP_IS_LOADING,
@@ -5768,8 +5810,26 @@ ev_view_class_init (EvViewClass *class)
 		         g_cclosure_marshal_VOID__VOID,
 		         G_TYPE_NONE, 0,
 			 G_TYPE_NONE);
+	signals[SIGNAL_MOVE_CURSOR] = g_signal_new ("move-cursor",
+		         G_TYPE_FROM_CLASS (object_class),
+		         G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
+		         G_STRUCT_OFFSET (EvViewClass, move_cursor),
+		         NULL, NULL,
+		         ev_view_marshal_BOOLEAN__ENUM_INT,
+		         G_TYPE_BOOLEAN, 2,
+		         GTK_TYPE_MOVEMENT_STEP,
+			 G_TYPE_INT);
 
 	binding_set = gtk_binding_set_by_class (class);
+
+	add_move_binding_keypad (binding_set, GDK_KEY_Left,  0, GTK_MOVEMENT_VISUAL_POSITIONS, -1);
+	add_move_binding_keypad (binding_set, GDK_KEY_Right, 0, GTK_MOVEMENT_VISUAL_POSITIONS, 1);
+	add_move_binding_keypad (binding_set, GDK_KEY_Left,  GDK_CONTROL_MASK, GTK_MOVEMENT_WORDS, -1);
+	add_move_binding_keypad (binding_set, GDK_KEY_Right, GDK_CONTROL_MASK, GTK_MOVEMENT_WORDS, 1);
+	add_move_binding_keypad (binding_set, GDK_KEY_Up,    0, GTK_MOVEMENT_DISPLAY_LINES, -1);
+	add_move_binding_keypad (binding_set, GDK_KEY_Down,  0, GTK_MOVEMENT_DISPLAY_LINES, 1);
+	add_move_binding_keypad (binding_set, GDK_KEY_Home,  0, GTK_MOVEMENT_DISPLAY_LINE_ENDS, -1);
+	add_move_binding_keypad (binding_set, GDK_KEY_End,   0, GTK_MOVEMENT_DISPLAY_LINE_ENDS, 1);
 
         add_scroll_binding_keypad (binding_set, GDK_KEY_Left,  0, GTK_SCROLL_STEP_BACKWARD, GTK_ORIENTATION_HORIZONTAL);
         add_scroll_binding_keypad (binding_set, GDK_KEY_Right, 0, GTK_SCROLL_STEP_FORWARD, GTK_ORIENTATION_HORIZONTAL);

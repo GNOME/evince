@@ -175,6 +175,9 @@ struct _EvView {
 	/* Common for button press handling */
 	int pressed_button;
 
+	/* Key bindings propagation */
+	gboolean key_binding_handled;
+
 	/* Information for middle clicking and dragging around. */
 	DragInfo drag_info;
 	
@@ -220,21 +223,24 @@ struct _EvView {
 struct _EvViewClass {
 	GtkContainerClass parent_class;
 
-	void    (*scroll)	          (EvView         *view,
-					   GtkScrollType   scroll,
-					   GtkOrientation  orientation);
-	void    (*handle_link)		  (EvView         *view,
-					   EvLink         *link);
-	void    (*external_link)	  (EvView         *view,
-					   EvLinkAction   *action);
-	void    (*popup_menu)		  (EvView         *view,
-					   GList          *items);
-	void    (*selection_changed)      (EvView         *view);
-	void    (*sync_source)            (EvView         *view,
-					   EvSourceLink   *link);
-	void    (*annot_added)            (EvView         *view,
-					   EvAnnotation   *annot);
-	void    (*layers_changed)         (EvView         *view);
+        void     (*scroll)            (EvView         *view,
+				       GtkScrollType   scroll,
+				       GtkOrientation  orientation);
+        void     (*handle_link)       (EvView         *view,
+				       EvLink         *link);
+        void     (*external_link)     (EvView         *view,
+				       EvLinkAction   *action);
+        void     (*popup_menu)        (EvView         *view,
+				       GList          *items);
+        void     (*selection_changed) (EvView         *view);
+        void     (*sync_source)       (EvView         *view,
+				       EvSourceLink   *link);
+        void     (*annot_added)       (EvView         *view,
+				       EvAnnotation   *annot);
+        void     (*layers_changed)    (EvView         *view);
+        gboolean (*move_cursor)       (EvView         *view,
+				       GtkMovementStep step,
+				       gint            count);
 };
 
 void _get_page_size_for_scale_and_rotation (EvDocument *document,
