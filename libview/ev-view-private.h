@@ -220,9 +220,9 @@ struct _EvView {
 struct _EvViewClass {
 	GtkContainerClass parent_class;
 
-	void    (*binding_activated)	  (EvView         *view,
+	void    (*scroll)	          (EvView         *view,
 					   GtkScrollType   scroll,
-					   gboolean        horizontal);
+					   GtkOrientation  orientation);
 	void    (*handle_link)		  (EvView         *view,
 					   EvLink         *link);
 	void    (*external_link)	  (EvView         *view,
