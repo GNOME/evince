@@ -4954,11 +4954,31 @@ cursor_forward_line (EvView *view)
 	return TRUE;
 }
 
+static void
+extend_selection_from_cursor (EvView *view,
+			      GdkPoint *start_point,
+			      GdkPoint *end_point)
+{
+	if (!(view->selection_info.in_selection && view->selection_info.selections)) {
+		clear_selection (view);
+		view->selection_info.start.x = start_point->x;
+		view->selection_info.start.y = start_point->y;
+		view->selection_info.in_selection = TRUE;
+	}
+
+	compute_selections (view,
+			    EV_SELECTION_STYLE_GLYPH,
+			    &(view->selection_info.start),
+			    end_point);
+}
+
 static gboolean
 ev_view_move_cursor (EvView         *view,
 		     GtkMovementStep step,
-		     gint            count)
+		     gint            count,
+		     gboolean        extend_selection)
 {
+	GdkRectangle rect;
 	gint prev_offset;
 	gint prev_page;
 
@@ -5014,24 +5034,41 @@ ev_view_move_cursor (EvView         *view,
 
 	ev_view_pend_cursor_blink (view);
 
-	/* If the caret cursor was updated, make it visible */
-	if (prev_offset != view->cursor_offset || prev_page != view->cursor_page) {
-		GdkRectangle view_rect;
+	/* Notify the user that it was not possible to move the caret cursor */
+	if (prev_offset == view->cursor_offset && prev_page == view->cursor_page) {
+		gtk_widget_error_bell (GTK_WIDGET (view));
+		return TRUE;
+	}
 
-		/* scroll to view the caret cursor */
-		if (!get_caret_cursor_area (view, view->cursor_page, view->cursor_offset, &view_rect))
+	/* Scroll to make the caret visible */
+	if (!get_caret_cursor_area (view, view->cursor_page, view->cursor_offset, &rect))
+		return TRUE;
+
+	rect.x += view->scroll_x;
+	rect.y += view->scroll_y;
+
+	ev_document_model_set_page (view->model, view->cursor_page);
+	ensure_rectangle_is_visible (view, &rect);
+
+	/* Select text */
+	if (extend_selection && EV_IS_SELECTION (view->document)) {
+		GdkRectangle prev_rect;
+		GdkPoint start_point, end_point;
+
+		if (!get_caret_cursor_area (view, prev_page, prev_offset, &prev_rect))
 			return TRUE;
 
-		view_rect.x += view->scroll_x;
-		view_rect.y += view->scroll_y;
+		start_point.x = prev_rect.x + view->scroll_x;
+		start_point.y = prev_rect.y + (prev_rect.height / 2) + view->scroll_y;
 
-		ev_document_model_set_page (view->model, view->cursor_page);
-		ensure_rectangle_is_visible (view, &view_rect);
-		gtk_widget_queue_draw (GTK_WIDGET (view));
-	} else {
-		/* Notify the user that it was not possible to move the caret cursor */
-		gtk_widget_error_bell (GTK_WIDGET (view));
-	}
+		end_point.x = rect.x;
+		end_point.y = rect.y + rect.height / 2;
+
+		extend_selection_from_cursor (view, &start_point, &end_point);
+	} else
+		clear_selection (view);
+
+	gtk_widget_queue_draw (GTK_WIDGET (view));
 
 	return TRUE;
 }
@@ -5666,13 +5703,27 @@ add_move_binding_keypad (GtkBindingSet  *binding_set,
 	guint keypad_keyval = keyval - GDK_KEY_Left + GDK_KEY_KP_Left;
 
 	gtk_binding_entry_add_signal (binding_set, keyval, modifiers,
-				      "move-cursor", 2,
+				      "move-cursor", 3,
 				      GTK_TYPE_MOVEMENT_STEP, step,
-				      G_TYPE_INT, count);
+				      G_TYPE_INT, count,
+				      G_TYPE_BOOLEAN, FALSE);
 	gtk_binding_entry_add_signal (binding_set, keypad_keyval, modifiers,
-				      "move-cursor", 2,
+				      "move-cursor", 3,
 				      GTK_TYPE_MOVEMENT_STEP, step,
-				      G_TYPE_INT, count);
+				      G_TYPE_INT, count,
+				      G_TYPE_BOOLEAN, FALSE);
+
+	/* Selection-extending version */
+	gtk_binding_entry_add_signal (binding_set, keyval, modifiers | GDK_SHIFT_MASK,
+				      "move-cursor", 3,
+				      GTK_TYPE_MOVEMENT_STEP, step,
+				      G_TYPE_INT, count,
+				      G_TYPE_BOOLEAN, TRUE);
+	gtk_binding_entry_add_signal (binding_set, keypad_keyval, modifiers | GDK_SHIFT_MASK,
+				      "move-cursor", 3,
+				      GTK_TYPE_MOVEMENT_STEP, step,
+				      G_TYPE_INT, count,
+				      G_TYPE_BOOLEAN, TRUE);
 }
 
 static void
@@ -5817,10 +5868,11 @@ ev_view_class_init (EvViewClass *class)
 		         G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
 		         G_STRUCT_OFFSET (EvViewClass, move_cursor),
 		         NULL, NULL,
-		         ev_view_marshal_BOOLEAN__ENUM_INT,
-		         G_TYPE_BOOLEAN, 2,
+		         ev_view_marshal_BOOLEAN__ENUM_INT_BOOLEAN,
+		         G_TYPE_BOOLEAN, 3,
 		         GTK_TYPE_MOVEMENT_STEP,
-			 G_TYPE_INT);
+			 G_TYPE_INT,
+			 G_TYPE_BOOLEAN);
 
 	binding_set = gtk_binding_set_by_class (class);
 

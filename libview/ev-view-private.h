@@ -240,7 +240,8 @@ struct _EvViewClass {
         void     (*layers_changed)    (EvView         *view);
         gboolean (*move_cursor)       (EvView         *view,
 				       GtkMovementStep step,
-				       gint            count);
+				       gint            count,
+				       gboolean        extend_selection);
 };
 
 void _get_page_size_for_scale_and_rotation (EvDocument *document,
