@@ -7044,7 +7044,7 @@ compute_new_selection_rect (EvView       *view,
 			if (gdk_rectangle_intersect (&page_area, &view_rect, &overlap)) {
 				EvViewSelection *selection;
 
-				selection = g_new0 (EvViewSelection, 1);
+				selection = g_slice_new0 (EvViewSelection);
 				selection->page = i;
 				_ev_view_transform_view_rect_to_doc_rect (view, &overlap, &page_area,
 									  &(selection->rect));
@@ -7122,7 +7122,7 @@ compute_new_selection_text (EvView          *view,
 
 		get_doc_page_size (view, i, &width, &height);
 
-		selection = g_new0 (EvViewSelection, 1);
+		selection = g_slice_new0 (EvViewSelection);
 		selection->page = i;
 		selection->style = style;
 		selection->rect.x1 = selection->rect.y1 = 0;
@@ -7175,8 +7175,7 @@ merge_selection_region (EvView *view,
 
 	/* Update the selection */
 	old_list = ev_pixbuf_cache_get_selection_list (view->pixbuf_cache);
-	g_list_foreach (view->selection_info.selections, (GFunc)selection_free, NULL);
-	g_list_free (view->selection_info.selections);
+	g_list_free_full (view->selection_info.selections, (GDestroyNotify)selection_free);
 	view->selection_info.selections = new_list;
 	ev_pixbuf_cache_set_selection_list (view->pixbuf_cache, new_list);
 	g_signal_emit (view, signals[SIGNAL_SELECTION_CHANGED], 0, NULL);
@@ -7304,8 +7303,7 @@ merge_selection_region (EvView *view,
 	}
 
 	/* Free the old list, now that we're done with it. */
-	g_list_foreach (old_list, (GFunc) selection_free, NULL);
-	g_list_free (old_list);
+	g_list_free_full (old_list, (GDestroyNotify)selection_free);
 }
 
 static void
@@ -7330,15 +7328,14 @@ selection_free (EvViewSelection *selection)
 {
 	if (selection->covered_region)
 		cairo_region_destroy (selection->covered_region);
-	g_free (selection);
+	g_slice_free (EvViewSelection, selection);
 }
 
 static void
 clear_selection (EvView *view)
 {
 	if (view->selection_info.selections) {
-		g_list_foreach (view->selection_info.selections, (GFunc)selection_free, NULL);
-		g_list_free (view->selection_info.selections);
+		g_list_free_full (view->selection_info.selections, (GDestroyNotify)selection_free);
 		view->selection_info.selections = NULL;
 
 		g_signal_emit (view, signals[SIGNAL_SELECTION_CHANGED], 0, NULL);
@@ -7367,7 +7364,7 @@ ev_view_select_all (EvView *view)
 
 		get_doc_page_size (view, i, &width, &height);
 
-		selection = g_new0 (EvViewSelection, 1);
+		selection = g_slice_new0 (EvViewSelection);
 		selection->page = i;
 		selection->style = EV_SELECTION_STYLE_GLYPH;
 		selection->rect.x1 = selection->rect.y1 = 0;
