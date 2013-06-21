@@ -4144,6 +4144,10 @@ ev_view_button_press_event (GtkWidget      *widget,
 				    (view->cursor_offset != offset || view->cursor_page != page)) {
 					view->cursor_offset = offset;
 					view->cursor_page = page;
+
+					view->cursor_blink_time = 0;
+					ev_view_pend_cursor_blink (view);
+
 					gtk_widget_queue_draw (widget);
 				}
 			}
