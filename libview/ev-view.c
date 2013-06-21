@@ -3162,20 +3162,18 @@ get_cursor_blink_timeout_id (EvView *view)
 }
 
 static gboolean
-get_caret_cursor_rect_from_offset (EvView       *view,
-				   gint          offset,
-				   gint          page,
-				   GdkRectangle *rect)
+get_caret_cursor_area (EvView       *view,
+		       gint          page,
+		       gint          offset,
+		       GdkRectangle *area)
 {
 	EvRectangle *areas = NULL;
 	EvRectangle *doc_rect;
 	guint        n_areas = 0;
+	gfloat       cursor_aspect_ratio;
+	gint         stem_width;
 
-	if (!view->caret_enabled)
-		return FALSE;
-
-	/* Disable caret navigation on rotated pages */
-	if (view->rotation != 0)
+	if (!view->caret_enabled || view->rotation != 0)
 		return FALSE;
 
 	if (!view->page_cache)
@@ -3204,34 +3202,19 @@ get_caret_cursor_rect_from_offset (EvView       *view,
 		last_rect.x2 = prev->x2 + (prev->x2 - prev->x1);
 		last_rect.y2 = prev->y2;
 
-		_ev_view_transform_doc_rect_to_view_rect (view, page, &last_rect, rect);
-
-		return TRUE;
+		_ev_view_transform_doc_rect_to_view_rect (view, page, &last_rect, area);
+	} else {
+		_ev_view_transform_doc_rect_to_view_rect (view, page, doc_rect, area);
 	}
 
-	_ev_view_transform_doc_rect_to_view_rect (view, page, doc_rect, rect);
-
-	return TRUE;
-}
-
-static gboolean
-get_caret_cursor_area (EvView       *view,
-		       GdkRectangle *area)
-{
-	gfloat cursor_aspect_ratio;
-	gint   stem_width;
-
-	if (!get_caret_cursor_rect_from_offset (view, view->cursor_offset, view->cursor_page, area))
-		return FALSE;
-
-	area->x = area->x - view->scroll_x;
-	area->y = area->y - view->scroll_y;
+	area->x -= view->scroll_x;
+	area->y -= view->scroll_y;
 
 	gtk_style_context_get_style (gtk_widget_get_style_context (GTK_WIDGET (view)),
 				     "cursor-aspect-ratio", &cursor_aspect_ratio,
 				     NULL);
 	stem_width = area->height * cursor_aspect_ratio + 1;
-	area->x = area->x - (stem_width / 2);
+	area->x -= (stem_width / 2);
 	area->width = stem_width;
 
 	return TRUE;
@@ -3248,7 +3231,8 @@ show_cursor (EvView *view)
 
 	widget = GTK_WIDGET (view);
 	view->cursor_visible = TRUE;
-	if (gtk_widget_has_focus (widget) && get_caret_cursor_area (view, &view_rect)) {
+	if (gtk_widget_has_focus (widget) &&
+	    get_caret_cursor_area (view, view->cursor_page, view->cursor_offset, &view_rect)) {
 		gtk_widget_queue_draw_area (widget,
 					    view_rect.x, view_rect.y,
 					    view_rect.width, view_rect.height);
@@ -3266,7 +3250,8 @@ hide_cursor (EvView *view)
 
 	widget = GTK_WIDGET (view);
 	view->cursor_visible = FALSE;
-	if (gtk_widget_has_focus (widget) && get_caret_cursor_area (view, &view_rect)) {
+	if (gtk_widget_has_focus (widget) &&
+	    get_caret_cursor_area (view, view->cursor_page, view->cursor_offset, &view_rect)) {
 		gtk_widget_queue_draw_area (widget,
 					    view_rect.x, view_rect.y,
 					    view_rect.width, view_rect.height);
@@ -3808,7 +3793,7 @@ draw_caret_cursor (EvView  *view,
 	GdkRectangle view_rect;
 	GdkRGBA      cursor_color;
 
-	if (!get_caret_cursor_area (view, &view_rect))
+	if (!get_caret_cursor_area (view, view->cursor_page, view->cursor_offset, &view_rect))
 		return;
 
 	get_cursor_color (gtk_widget_get_style_context (GTK_WIDGET (view)), &cursor_color);
@@ -5024,8 +5009,11 @@ ev_view_move_cursor (EvView         *view,
 		GdkRectangle view_rect;
 
 		/* scroll to view the caret cursor */
-		if (!get_caret_cursor_rect_from_offset (view, view->cursor_offset, view->cursor_page, &view_rect))
+		if (!get_caret_cursor_area (view, view->cursor_page, view->cursor_offset, &view_rect))
 			return TRUE;
+
+		view_rect.x += view->scroll_x;
+		view_rect.y += view->scroll_y;
 
 		ev_document_model_set_page (view->model, view->cursor_page);
 		ensure_rectangle_is_visible (view, &view_rect);
