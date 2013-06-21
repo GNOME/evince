@@ -7375,7 +7375,6 @@ ev_view_select_all (EvView *view)
 	}
 
 	merge_selection_region (view, g_list_reverse (selections));
-	gtk_widget_queue_draw (GTK_WIDGET (view));
 }
 
 gboolean
