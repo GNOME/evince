@@ -4014,17 +4014,17 @@ start_selection_for_event (EvView         *view,
 }
 
 static gboolean
-get_caret_cursor_offset_at_location (EvView *view,
-				     gdouble x,
-				     gdouble y,
-				     gint   *page,
-				     gint   *offset)
+position_caret_cursor_at_location (EvView *view,
+				   gdouble x,
+				   gdouble y)
 {
-	gint doc_x, doc_y;
-	EvRectangle *areas;
+	EvRectangle *areas = NULL;
+	guint        n_areas = 0;
+	gint         page;
+	gint         offset = -1 ;
+	gint         doc_x, doc_y;
 	EvRectangle *rect;
-	guint n_areas = 0;
-	guint i;
+	guint        i;
 
 	if (!view->caret_enabled || view->rotation != 0)
 		return FALSE;
@@ -4033,10 +4033,10 @@ get_caret_cursor_offset_at_location (EvView *view,
 		return FALSE;
 
 	/* Get the offset from the doc point */
-	if (!get_doc_point_from_location (view, x, y, page, &doc_x, &doc_y))
+	if (!get_doc_point_from_location (view, x, y, &page, &doc_x, &doc_y))
 		return FALSE;
 
-	ev_page_cache_get_text_layout (view->page_cache, *page, &areas, &n_areas);
+	ev_page_cache_get_text_layout (view->page_cache, page, &areas, &n_areas);
 	if (!areas)
 		return FALSE;
 
@@ -4047,12 +4047,22 @@ get_caret_cursor_offset_at_location (EvView *view,
 			/* Position the caret before or after the character, depending on whether
 			   the point falls within the left or right half of the bounding box. */
 			if (doc_x <= rect->x1 + (rect->x2 - rect->x1) / 2)
-				*offset = i;
+				offset = i;
 			else
-				*offset = i + 1;
+				offset = i + 1;
 
-			return TRUE;
+			break;
 		}
+	}
+
+	if (offset == -1)
+		return FALSE;
+
+	if (view->cursor_offset != offset || view->cursor_page != page) {
+		view->cursor_offset = offset;
+		view->cursor_page = page;
+
+		return TRUE;
 	}
 
 	return FALSE;
@@ -4124,8 +4134,6 @@ ev_view_button_press_event (GtkWidget      *widget,
 				view->image_dnd_info.start.x = event->x + view->scroll_x;
 				view->image_dnd_info.start.y = event->y + view->scroll_y;
 			} else {
-				gint page, offset;
-
 				ev_view_remove_all (view);
 
 				if (view->synctex_result) {
@@ -4140,11 +4148,7 @@ ev_view_button_press_event (GtkWidget      *widget,
 				if (EV_IS_SELECTION (view->document))
 					start_selection_for_event (view, event);
 
-				if (get_caret_cursor_offset_at_location (view, event->x, event->y, &page, &offset) &&
-				    (view->cursor_offset != offset || view->cursor_page != page)) {
-					view->cursor_offset = offset;
-					view->cursor_page = page;
-
+				if (position_caret_cursor_at_location (view, event->x, event->y)) {
 					view->cursor_blink_time = 0;
 					ev_view_pend_cursor_blink (view);
 
@@ -4595,7 +4599,9 @@ ev_view_button_release_event (GtkWidget      *widget,
 	if (view->selection_info.selections) {
 		clear_link_selected (view);
 		ev_view_update_primary_selection (view);
-		
+
+		position_caret_cursor_at_location (view, event->x, event->y);
+
 		if (view->selection_info.in_drag) {
 			clear_selection (view);
 			gtk_widget_queue_draw (widget);
