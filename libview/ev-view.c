@@ -7094,6 +7094,11 @@ compute_new_selection_text (EvView          *view,
 								    &selection->rect.x2,
 								    &selection->rect.y2);
 
+		selection->rect.x1 -= border.left;
+		selection->rect.y1 -= border.top;
+		selection->rect.x2 -= border.right;
+		selection->rect.y2 -= border.bottom;
+
 		list = g_list_append (list, selection);
 	}
 
