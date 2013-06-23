@@ -37,6 +37,8 @@ evince_SOURCES=				\
 	ev-application.h		\
 	ev-file-monitor.h		\
 	ev-file-monitor.c		\
+	ev-find-sidebar.h		\
+	ev-find-sidebar.c		\
 	ev-history.c			\
 	ev-history.h			\
 	ev-history-action.c		\
