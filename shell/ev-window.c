@@ -7181,6 +7181,14 @@ ev_window_init (EvWindow *ev_window)
 			    FALSE, TRUE, 0);
 	gtk_widget_show (ev_window->priv->toolbar);
 
+	/* Find Bar */
+	ev_window->priv->find_bar = egg_find_bar_new ();
+	gtk_style_context_add_class (gtk_widget_get_style_context (ev_window->priv->find_bar),
+				     GTK_STYLE_CLASS_PRIMARY_TOOLBAR);
+	gtk_box_pack_start (GTK_BOX (ev_window->priv->main_box),
+			    ev_window->priv->find_bar,
+			    FALSE, TRUE, 0);
+
 	/* Add the main area */
 	ev_window->priv->hpaned = gtk_paned_new (GTK_ORIENTATION_HORIZONTAL);
 	g_signal_connect (ev_window->priv->hpaned,
@@ -7277,14 +7285,6 @@ ev_window_init (EvWindow *ev_window)
 			     sidebar_widget);
 
 	ev_window->priv->view_box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
-
-	/* Find Bar */
-	ev_window->priv->find_bar = egg_find_bar_new ();
-	gtk_style_context_add_class (gtk_widget_get_style_context (ev_window->priv->find_bar),
-				     GTK_STYLE_CLASS_PRIMARY_TOOLBAR);
-	gtk_box_pack_start (GTK_BOX (ev_window->priv->view_box),
-			    ev_window->priv->find_bar,
-			    FALSE, TRUE, 0);
 
 	overlay = gtk_overlay_new ();
 	ev_window->priv->scrolled_window =
