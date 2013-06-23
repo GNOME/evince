@@ -6956,6 +6956,14 @@ ev_view_find_previous (EvView *view)
 }
 
 void
+ev_view_find_set_result (EvView *view, gint page, gint result)
+{
+	ev_document_model_set_page (view->model, page);
+	view->find_result = result;
+	jump_to_find_result (view);
+}
+
+void
 ev_view_find_search_changed (EvView *view)
 {
 	/* search string has changed, focus on new search result */
