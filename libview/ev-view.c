@@ -7136,10 +7136,13 @@ compute_new_selection_text (EvView          *view,
 		else
 			point = stop;
 
-		if (i == first)
+		if (i == first) {
 			_ev_view_transform_view_point_to_doc_point (view, point, &page_area,
 								    &selection->rect.x1,
 								    &selection->rect.y1);
+			selection->rect.x1 -= border.left;
+			selection->rect.y1 -= border.top;
+		}
 
 		/* If the selection is contained within just one page,
 		 * make sure we don't write 'start' into both points
@@ -7147,15 +7150,13 @@ compute_new_selection_text (EvView          *view,
 		if (first == last)
 			point = stop;
 
-		if (i == last)
+		if (i == last) {
 			_ev_view_transform_view_point_to_doc_point (view, point, &page_area,
 								    &selection->rect.x2,
 								    &selection->rect.y2);
-
-		selection->rect.x1 -= border.left;
-		selection->rect.y1 -= border.top;
-		selection->rect.x2 -= border.right;
-		selection->rect.y2 -= border.bottom;
+			selection->rect.x2 -= border.right;
+			selection->rect.y2 -= border.bottom;
+		}
 
 		list = g_list_prepend (list, selection);
 	}
