@@ -24,6 +24,7 @@
 #endif
 
 #include "ev-find-sidebar.h"
+#include <string.h>
 
 struct _EvFindSidebarPrivate {
         GtkWidget *tree_view;
@@ -205,52 +206,154 @@ ev_find_sidebar_select_highlighted_result (EvFindSidebar *sidebar)
 }
 
 static gchar *
-get_surrounding_text_markup (GtkTextIter *match_start,
-                             GtkTextIter *match_end)
+sanitized_substring (const gchar  *text,
+                     gint          start,
+                     gint          end)
 {
-        gchar *match, *prec, *succ, *markup;
-        GtkTextIter surrounding_start = *match_start;
-        GtkTextIter surrounding_end = *match_end;
+        const gchar *p;
+        const gchar *start_ptr;
+        const gchar *end_ptr;
+        guint        len = 0;
+        gchar       *retval;
 
-        gtk_text_iter_backward_word_start (&surrounding_start);
-        gtk_text_iter_forward_word_ends (&surrounding_end, 2);
+        if (end - start <= 0)
+                return NULL;
 
-        match = gtk_text_iter_get_text (match_start, match_end);
-        prec = gtk_text_iter_get_text (&surrounding_start, match_start);
-        succ = gtk_text_iter_get_text (match_end, &surrounding_end);
+        start_ptr = g_utf8_offset_to_pointer (text, start);
+        end_ptr = g_utf8_offset_to_pointer (start_ptr, end - start);
 
-        markup = g_markup_printf_escaped ("%s<span weight = \"bold\">%s</span>%s",
-                                          prec, match, succ);
-        g_free (match);
+        retval = g_malloc (end_ptr - start_ptr + 1);
+        p = start_ptr;
+
+        while (p != end_ptr) {
+                const gchar      *next;
+                GUnicodeBreakType break_type;
+
+                next = g_utf8_next_char (p);
+
+                break_type = g_unichar_break_type (g_utf8_get_char (p));
+                if (break_type == G_UNICODE_BREAK_HYPHEN && *next == '\n') {
+                        p = g_utf8_next_char (next);
+                        continue;
+                }
+
+                if (*p != '\n') {
+                        strncpy (retval + len, p, next - p);
+                        len += next - p;
+                } else {
+                        *(retval + len) = ' ';
+                        len++;
+                }
+
+                p = next;
+        }
+
+        if (len == 0) {
+                g_free (retval);
+
+                return NULL;
+        }
+
+        retval[len] = 0;
+
+        return retval;
+}
+
+static gchar *
+get_surrounding_text_markup (const gchar  *text,
+                             const gchar  *find_text,
+                             gboolean      case_sensitive,
+                             PangoLogAttr *log_attrs,
+                             gint          log_attrs_length,
+                             gint          offset)
+{
+        gint   iter;
+        gchar *prec = NULL;
+        gchar *succ = NULL;
+        gchar *match = NULL;
+        gchar *markup;
+        gint   max_chars;
+
+        iter = MAX (0, offset - 1);
+        while (!log_attrs[iter].is_word_start && iter > 0)
+                iter--;
+
+        prec = sanitized_substring (text, iter, offset);
+
+        iter = offset;
+        offset += g_utf8_strlen (find_text, -1);
+        if (!case_sensitive)
+                match = g_utf8_substring (text, iter, offset);
+
+        iter = MIN (log_attrs_length, offset + 1);
+        max_chars = MIN (log_attrs_length - 1, iter + 100);
+        while (TRUE) {
+                gint word = iter;
+
+                while (!log_attrs[word].is_word_end && word < max_chars)
+                        word++;
+
+                if (word > max_chars)
+                        break;
+
+                iter = word + 1;
+        }
+
+        succ = sanitized_substring (text, offset, iter);
+
+        markup = g_markup_printf_escaped ("%s<span weight=\"bold\">%s</span>%s",
+                                          prec ? prec : "", match ? match : find_text, succ ? succ : "");
         g_free (prec);
         g_free (succ);
+        g_free (match);
 
         return markup;
 }
 
 static gchar *
-get_matched_line (EvDocument  *document,
-                  EvPage      *page,
-                  EvRectangle *match)
+get_page_text (EvDocument   *document,
+               EvPage       *page,
+               EvRectangle **areas,
+               guint        *n_areas)
 {
-        EvRectangle rect;
-        gchar      *tmp, *result;
-
-        rect = *match;
-        rect.y1 = rect.y2 = (rect.y1 + rect.y2) / 2;
-        rect.x1 = rect.x2 = (rect.x1 + rect.x2) / 2;
+        gchar   *text;
+        gboolean success;
 
         ev_document_doc_mutex_lock ();
-        tmp = ev_selection_get_selected_text (EV_SELECTION (document),
-                                              page,
-                                              EV_SELECTION_STYLE_LINE,
-                                              &rect);
+        text = ev_document_text_get_text (EV_DOCUMENT_TEXT (document), page);
+        success = ev_document_text_get_text_layout (EV_DOCUMENT_TEXT (document), page, areas, n_areas);
         ev_document_doc_mutex_unlock ();
-        result = g_utf8_normalize (tmp, -1, G_NORMALIZE_ALL);
-        g_free (tmp);
 
-        return result;
+        if (!success) {
+                g_free (text);
+                return NULL;
+        }
 
+        return text;
+}
+
+static gint
+get_match_offset (EvRectangle *areas,
+                  guint        n_areas,
+                  EvRectangle *match,
+                  gint         offset)
+{
+        gdouble x, y;
+        gint i;
+
+        x = match->x1;
+        y = (match->y1 + match->y2) / 2;
+
+        for (i = offset; i < n_areas; i++) {
+                EvRectangle *area = areas + i;
+
+                if (x >= area->x1 && x < area->x2 &&
+                    y >= area->y1 && y <= area->y2) {
+                        return i;
+                }
+        }
+
+        return -1;
 }
 
 static gboolean
@@ -258,8 +361,6 @@ process_matches_idle (EvFindSidebar *sidebar)
 {
         EvFindSidebarPrivate *priv = sidebar->priv;
         GtkTreeModel         *model;
-        GtkTextBuffer        *buffer = NULL;
-        GtkTextSearchFlags    search_flags = 0;
         gint                  current_page;
         EvDocument           *document;
 
@@ -273,14 +374,17 @@ process_matches_idle (EvFindSidebar *sidebar)
 
         document = EV_JOB (priv->job)->document;
         model = gtk_tree_view_get_model (GTK_TREE_VIEW (priv->tree_view));
-        if (!priv->job->case_sensitive)
-                search_flags = GTK_TEXT_SEARCH_CASE_INSENSITIVE;
 
         do {
-                GList  *matches, *l;
-                EvPage *page;
-                gint    occ_number, k;
-                gint    result;
+                GList        *matches, *l;
+                EvPage       *page;
+                gint          result;
+                gchar        *page_text;
+                EvRectangle  *areas = NULL;
+                guint         n_areas;
+                PangoLogAttr *text_log_attrs;
+                gulong        text_log_attrs_length;
+                gint          offset;
 
                 current_page = priv->current_page;
                 priv->current_page = (priv->current_page + 1) % priv->job->n_pages;
@@ -289,52 +393,28 @@ process_matches_idle (EvFindSidebar *sidebar)
                 if (!matches)
                         continue;
 
+                page = ev_document_get_page (document, current_page);
+                page_text = get_page_text (document, page, &areas, &n_areas);
+                if (!page_text)
+                        continue;
+
+                text_log_attrs_length = g_utf8_strlen (page_text, -1);
+                text_log_attrs = g_new0 (PangoLogAttr, text_log_attrs_length + 1);
+                pango_get_log_attrs (page_text, -1, -1, NULL, text_log_attrs, text_log_attrs_length + 1);
+
                 if (priv->first_match_page == -1)
                         priv->first_match_page = current_page;
 
-                page = ev_document_get_page (document, current_page);
-                occ_number = 0;
+                offset = 0;
 
                 for (l = matches, result = 0; l; l = g_list_next (l), result++) {
                         EvRectangle *match = (EvRectangle *)l->data;
-                        gchar       *matched_line;
                         gchar       *markup;
-                        GtkTextIter  find_iter, start, end;
                         GtkTreeIter  iter;
 
-                        matched_line = get_matched_line (document, page, match);
-                        g_assert (matched_line != NULL);
-                        if (!buffer)
-                                buffer = gtk_text_buffer_new (NULL);
-                        gtk_text_buffer_set_text (buffer, matched_line, -1);
-                        g_free (matched_line);
-
-                        gtk_text_buffer_get_start_iter (buffer, &find_iter);
-
-                        /* search the proper occurrence of text in the line */
-                        occ_number++;
-                        for (k = 0; k < occ_number; k++) {
-                                if (!gtk_text_iter_forward_search (&find_iter, priv->job->text, search_flags, &start, &end, NULL))
-                                        break;
-
-                                find_iter = end;
-                                gtk_text_iter_forward_char (&find_iter);
-                        }
-
-                        /* additional search to determine that current match is the last one on the line */
-                        if (!gtk_text_iter_forward_search (&find_iter, priv->job->text,
-                                                           search_flags, NULL, NULL, NULL))
-                                occ_number = 0;
-
-                        if (k == 0) {
-                                /* This should not be reached as the matched line should contain
-                                 * the text_to_find at least once. However with poppler-0.22
-                                 * we get some false positives, so we play safe by
-                                 * just ignoring them */
-                                continue;
-                        }
-
-                        markup = get_surrounding_text_markup (&start, &end);
+                        offset = get_match_offset (areas, n_areas, match, offset);
+                        if (offset == -1)
+                                break;
 
                         if (current_page >= priv->job->start_page) {
                                 gtk_list_store_append (GTK_LIST_STORE (model), &iter);
@@ -343,6 +423,13 @@ process_matches_idle (EvFindSidebar *sidebar)
                                                        priv->insert_position);
                                 priv->insert_position++;
                         }
+
+                        markup = get_surrounding_text_markup (page_text,
+                                                              priv->job->text,
+                                                              priv->job->case_sensitive,
+                                                              text_log_attrs,
+                                                              text_log_attrs_length,
+                                                              offset);
                         gtk_list_store_set (GTK_LIST_STORE (model), &iter,
                                             TEXT_COLUMN, markup,
                                             PAGE_COLUMN, current_page + 1,
@@ -350,10 +437,11 @@ process_matches_idle (EvFindSidebar *sidebar)
                                             -1);
                         g_free (markup);
                 }
-        } while (current_page != priv->job_current_page);
 
-        if (buffer)
-                g_object_unref (buffer);
+                g_free (page_text);
+                g_free (text_log_attrs);
+                g_free (areas);
+        } while (current_page != priv->job_current_page);
 
         if (ev_job_is_finished (EV_JOB (priv->job)) && priv->current_page == priv->job->start_page) {
                 gint index = 0;
