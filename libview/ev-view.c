@@ -4175,6 +4175,11 @@ ev_view_button_press_event (GtkWidget      *widget,
 					start_selection_for_event (view, event);
 
 				if (position_caret_cursor_at_location (view, event->x, event->y)) {
+					GdkRectangle area;
+
+					if (get_caret_cursor_area (view, view->cursor_page, view->cursor_offset, &area))
+						view->cursor_line_offset = area.x;
+
 					view->cursor_blink_time = 0;
 					ev_view_pend_cursor_blink (view);
 
@@ -4626,7 +4631,12 @@ ev_view_button_release_event (GtkWidget      *widget,
 		clear_link_selected (view);
 		ev_view_update_primary_selection (view);
 
-		position_caret_cursor_at_location (view, event->x, event->y);
+		if (position_caret_cursor_at_location (view, event->x, event->y)) {
+			GdkRectangle area;
+
+			if (get_caret_cursor_area (view, view->cursor_page, view->cursor_offset, &area))
+				view->cursor_line_offset = area.x;
+		}
 
 		if (view->selection_info.in_drag) {
 			clear_selection (view);
@@ -5069,6 +5079,13 @@ ev_view_move_cursor (EvView         *view,
 	/* Scroll to make the caret visible */
 	if (!get_caret_cursor_area (view, view->cursor_page, view->cursor_offset, &rect))
 		return TRUE;
+
+	if (step == GTK_MOVEMENT_DISPLAY_LINES) {
+		position_caret_cursor_at_location (view, view->cursor_line_offset,
+						   rect.y + (rect.height / 2));
+	} else {
+		view->cursor_line_offset = rect.x;
+	}
 
 	rect.x += view->scroll_x;
 	rect.y += view->scroll_y;
