@@ -58,6 +58,7 @@ enum {
 	SIGNAL_ANNOT_ADDED,
 	SIGNAL_LAYERS_CHANGED,
 	SIGNAL_MOVE_CURSOR,
+	SIGNAL_CURSOR_MOVED,
 	N_SIGNALS
 };
 
@@ -4108,6 +4109,8 @@ position_caret_cursor_for_event (EvView         *view,
 
 	view->cursor_line_offset = area.x;
 
+	g_signal_emit (view, signals[SIGNAL_CURSOR_MOVED], 0, view->cursor_page, view->cursor_offset);
+
 	return TRUE;
 }
 
@@ -5101,6 +5104,8 @@ ev_view_move_cursor (EvView         *view,
 	ev_document_model_set_page (view->model, view->cursor_page);
 	ensure_rectangle_is_visible (view, &rect);
 
+	g_signal_emit (view, signals[SIGNAL_CURSOR_MOVED], 0, view->cursor_page, view->cursor_offset);
+
 	/* Select text */
 	if (extend_selection && EV_IS_SELECTION (view->document)) {
 		GdkRectangle prev_rect;
@@ -5924,6 +5929,15 @@ ev_view_class_init (EvViewClass *class)
 		         GTK_TYPE_MOVEMENT_STEP,
 			 G_TYPE_INT,
 			 G_TYPE_BOOLEAN);
+	signals[SIGNAL_CURSOR_MOVED] = g_signal_new ("cursor-moved",
+			 G_TYPE_FROM_CLASS (object_class),
+			 G_SIGNAL_RUN_LAST,
+		         0,
+		         NULL, NULL,
+		         ev_view_marshal_VOID__INT_INT,
+		         G_TYPE_NONE, 2,
+		         G_TYPE_INT,
+			 G_TYPE_INT);
 
 	binding_set = gtk_binding_set_by_class (class);
 
