@@ -4095,6 +4095,23 @@ position_caret_cursor_at_location (EvView *view,
 }
 
 static gboolean
+position_caret_cursor_for_event (EvView         *view,
+				 GdkEventButton *event)
+{
+	GdkRectangle area;
+
+	if (!position_caret_cursor_at_location (view, event->x, event->y))
+		return FALSE;
+
+	if (!get_caret_cursor_area (view, view->cursor_page, view->cursor_offset, &area))
+		return FALSE;
+
+	view->cursor_line_offset = area.x;
+
+	return TRUE;
+}
+
+static gboolean
 ev_view_button_press_event (GtkWidget      *widget,
 			    GdkEventButton *event)
 {
@@ -4142,6 +4159,10 @@ ev_view_button_press_event (GtkWidget      *widget,
 					view->selection_info.in_drag = TRUE;
 				} else {
 					start_selection_for_event (view, event);
+					if (position_caret_cursor_for_event (view, event)) {
+						view->cursor_blink_time = 0;
+						ev_view_pend_cursor_blink (view);
+					}
 				}
 
 				gtk_widget_queue_draw (widget);
@@ -4174,12 +4195,7 @@ ev_view_button_press_event (GtkWidget      *widget,
 				if (EV_IS_SELECTION (view->document))
 					start_selection_for_event (view, event);
 
-				if (position_caret_cursor_at_location (view, event->x, event->y)) {
-					GdkRectangle area;
-
-					if (get_caret_cursor_area (view, view->cursor_page, view->cursor_offset, &area))
-						view->cursor_line_offset = area.x;
-
+				if (position_caret_cursor_for_event (view, event)) {
 					view->cursor_blink_time = 0;
 					ev_view_pend_cursor_blink (view);
 
@@ -4630,12 +4646,7 @@ ev_view_button_release_event (GtkWidget      *widget,
 		clear_link_selected (view);
 		ev_view_update_primary_selection (view);
 
-		if (position_caret_cursor_at_location (view, event->x, event->y)) {
-			GdkRectangle area;
-
-			if (get_caret_cursor_area (view, view->cursor_page, view->cursor_offset, &area))
-				view->cursor_line_offset = area.x;
-		}
+		position_caret_cursor_for_event (view, event);
 
 		if (view->selection_info.in_drag) {
 			clear_selection (view);
