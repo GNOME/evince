@@ -4024,7 +4024,7 @@ position_caret_cursor_at_location (EvView *view,
 	gint         offset = -1 ;
 	gint         doc_x, doc_y;
 	EvRectangle *rect;
-	guint        i;
+	guint        i, j;
 
 	if (!view->caret_enabled || view->rotation != 0)
 		return FALSE;
@@ -4040,23 +4040,49 @@ position_caret_cursor_at_location (EvView *view,
 	if (!areas)
 		return FALSE;
 
+	/* First look for the line of text at location */
 	for (i = 0; i < n_areas; i++) {
 		rect = areas + i;
-		if (doc_x >= rect->x1 && doc_x <= rect->x2 &&
-		    doc_y >= rect->y1 && doc_y <= rect->y2) {
-			/* Position the caret before or after the character, depending on whether
-			   the point falls within the left or right half of the bounding box. */
-			if (doc_x <= rect->x1 + (rect->x2 - rect->x1) / 2)
-				offset = i;
-			else
-				offset = i + 1;
 
+		if (doc_y >= rect->y1 && doc_y <= rect->y2)
 			break;
+	}
+
+	if (i == n_areas)
+		return FALSE;
+
+	if (doc_x <= rect->x1) {
+		/* Location is before the start of the line */
+		offset = i;
+	} else {
+		for (j = i; j < n_areas; j++) {
+			rect = areas + j;
+
+			if (doc_y < rect->y1) {
+				/* Location is after the end of the line */
+				offset = j;
+				break;
+			}
+
+			if (doc_x >= rect->x1 && doc_x <= rect->x2) {
+				/* Location is inside the line. Position the caret before
+				 * or after the character, depending on whether the point
+				 * falls within the left or right half of the bounding box.
+				 */
+				if (doc_x <= rect->x1 + (rect->x2 - rect->x1) / 2)
+					offset = j;
+				else
+					offset = j + 1;
+				break;
+			}
+
 		}
 	}
 
-	if (offset == -1)
-		return FALSE;
+	if (offset == -1) {
+		/* This is the last line and loocation is after the end of the line */
+		offset = n_areas;
+	}
 
 	if (view->cursor_offset != offset || view->cursor_page != page) {
 		view->cursor_offset = offset;
