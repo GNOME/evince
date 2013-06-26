@@ -61,7 +61,6 @@ typedef struct {
 typedef struct {
 	gboolean in_drag;
 	GdkPoint start;
-	gboolean in_selection;
 	GList *selections;
 	EvSelectionStyle style;
 } SelectionInfo;
