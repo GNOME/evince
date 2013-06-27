@@ -7290,27 +7290,6 @@ merge_selection_region (EvView *view,
 					 * have changed */
 					region = cairo_region_copy (old_sel->covered_region);
 					cairo_region_union (region, new_sel->covered_region);
-
-					if (cairo_region_is_empty (region)) {
-						cairo_region_destroy (region);
-						region = NULL;
-					} else {
-						gint num_rectangles = cairo_region_num_rectangles (region);
-						GdkRectangle r;
-
-						/* We need to make the damage region a little bigger
-						 * because the edges of the old selection might change
-						 */
-						cairo_region_get_rectangle (region, 0, &r);
-						r.x -= 5;
-						r.width = 5;
-						cairo_region_union_rectangle (region, &r);
-
-						cairo_region_get_rectangle (region, num_rectangles - 1, &r);
-						r.x += r.width;
-						r.width = 5;
-						cairo_region_union_rectangle (region, &r);
-					}
 				}
 			} else if (old_sel->covered_region) {
 				region = cairo_region_copy (old_sel->covered_region);
@@ -7331,15 +7310,34 @@ merge_selection_region (EvView *view,
 
 		/* Redraw the damaged region! */
 		if (region) {
-			GdkRectangle page_area;
-			GtkBorder    border;
+			GdkRectangle    page_area;
+			GtkBorder       border;
+			cairo_region_t *damage_region;
+			gint            i, n_rects;
 
 			ev_view_get_page_extents (view, cur_page, &page_area, &border);
-			cairo_region_translate (region,
-					   page_area.x + border.left - view->scroll_x,
-					   page_area.y + border.top - view->scroll_y);
-			gdk_window_invalidate_region (gtk_widget_get_window (GTK_WIDGET (view)), region, TRUE);
+
+			damage_region = cairo_region_create ();
+			/* Translate the region and grow it 2 pixels because for some zoom levels
+			 * the area actually drawn by cairo is larger than the selected region, due
+			 * to rounding errors or pixel alignment.
+			 */
+			n_rects = cairo_region_num_rectangles (region);
+			for (i = 0; i < n_rects; i++) {
+				cairo_rectangle_int_t rect;
+
+				cairo_region_get_rectangle (region, i, &rect);
+				rect.x += page_area.x + border.left - view->scroll_x - 2;
+				rect.y += page_area.y + border.top - view->scroll_y - 2;
+				rect.width += 4;
+				rect.height += 4;
+				cairo_region_union_rectangle (damage_region, &rect);
+			}
 			cairo_region_destroy (region);
+
+			gdk_window_invalidate_region (gtk_widget_get_window (GTK_WIDGET (view)),
+						      damage_region, TRUE);
+			cairo_region_destroy (damage_region);
 		}
 	}
 
