@@ -7285,30 +7285,32 @@ merge_selection_region (EvView *view,
 		/* Now we figure out what needs redrawing */
 		if (old_sel && new_sel) {
 			if (old_sel->covered_region && new_sel->covered_region) {
-				/* Anything that was previously or currently selected may
-				 * have changed */
-				region = cairo_region_copy (old_sel->covered_region);
-				cairo_region_union (region, new_sel->covered_region);
+				if (!cairo_region_equal (old_sel->covered_region, new_sel->covered_region)) {
+					/* Anything that was previously or currently selected may
+					 * have changed */
+					region = cairo_region_copy (old_sel->covered_region);
+					cairo_region_union (region, new_sel->covered_region);
 
-				if (cairo_region_is_empty (region)) {
-					cairo_region_destroy (region);
-					region = NULL;
-				} else {
-					gint num_rectangles = cairo_region_num_rectangles (region);
-					GdkRectangle r;
+					if (cairo_region_is_empty (region)) {
+						cairo_region_destroy (region);
+						region = NULL;
+					} else {
+						gint num_rectangles = cairo_region_num_rectangles (region);
+						GdkRectangle r;
 
-					/* We need to make the damage region a little bigger
-					 * because the edges of the old selection might change
-					 */
-					cairo_region_get_rectangle (region, 0, &r);
-					r.x -= 5;
-					r.width = 5;
-					cairo_region_union_rectangle (region, &r);
+						/* We need to make the damage region a little bigger
+						 * because the edges of the old selection might change
+						 */
+						cairo_region_get_rectangle (region, 0, &r);
+						r.x -= 5;
+						r.width = 5;
+						cairo_region_union_rectangle (region, &r);
 
-					cairo_region_get_rectangle (region, num_rectangles - 1, &r);
-					r.x += r.width;
-					r.width = 5;
-					cairo_region_union_rectangle (region, &r);
+						cairo_region_get_rectangle (region, num_rectangles - 1, &r);
+						r.x += r.width;
+						r.width = 5;
+						cairo_region_union_rectangle (region, &r);
+					}
 				}
 			} else if (old_sel->covered_region) {
 				region = cairo_region_copy (old_sel->covered_region);
