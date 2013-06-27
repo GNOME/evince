@@ -7292,17 +7292,17 @@ merge_selection_region (EvView *view,
 					cairo_region_union (region, new_sel->covered_region);
 				}
 			} else if (old_sel->covered_region) {
-				region = cairo_region_copy (old_sel->covered_region);
+				region = cairo_region_reference (old_sel->covered_region);
 			} else if (new_sel->covered_region) {
-				region = cairo_region_copy (new_sel->covered_region);
+				region = cairo_region_reference (new_sel->covered_region);
 			}
 		} else if (old_sel && !new_sel) {
 			if (old_sel->covered_region && !cairo_region_is_empty (old_sel->covered_region)) {
-				region = cairo_region_copy (old_sel->covered_region);
+				region = cairo_region_reference (old_sel->covered_region);
 			}
 		} else if (!old_sel && new_sel) {
 			if (new_sel->covered_region && !cairo_region_is_empty (new_sel->covered_region)) {
-				region = cairo_region_copy (new_sel->covered_region);
+				region = cairo_region_reference (new_sel->covered_region);
 			}
 		} else {
 			g_assert_not_reached ();
