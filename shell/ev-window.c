@@ -5452,8 +5452,10 @@ update_toggle_find_action (EvWindow *ev_window,
 static void
 ev_window_show_find_bar (EvWindow *ev_window)
 {
-	if (gtk_widget_get_visible (ev_window->priv->find_bar))
+	if (gtk_widget_get_visible (ev_window->priv->find_bar)) {
+		gtk_widget_grab_focus (ev_window->priv->find_bar);
 		return;
+	}
 
 	if (ev_window->priv->document == NULL || !EV_IS_DOCUMENT_FIND (ev_window->priv->document)) {
 		g_error ("Find action should be insensitive since document doesn't support find");
