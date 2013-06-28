@@ -4691,30 +4691,16 @@ ev_window_cmd_start_presentation (GtkAction *action, EvWindow *window)
 static void
 ev_window_cmd_escape (GtkAction *action, EvWindow *window)
 {
-	GtkWidget *widget;
-
 	ev_view_autoscroll_stop (EV_VIEW (window->priv->view));
-	
-	widget = gtk_window_get_focus (GTK_WINDOW (window));
-	if (widget && gtk_widget_get_ancestor (widget, EGG_TYPE_FIND_BAR)) {
+
+	if (gtk_widget_get_visible (window->priv->find_bar))
 		ev_window_close_find_bar (window);
-	} else {
-		gboolean fullscreen;
-
-		fullscreen = ev_document_model_get_fullscreen (window->priv->model);
-
-		if (fullscreen) {
-			ev_window_stop_fullscreen (window, TRUE);
-		} else if (EV_WINDOW_IS_PRESENTATION (window)) {
-			ev_window_stop_presentation (window, TRUE);
-			gtk_widget_grab_focus (window->priv->view);
-		} else {
-			gtk_widget_grab_focus (window->priv->view);
-		}
-
-		if (fullscreen && EV_WINDOW_IS_PRESENTATION (window))
-			g_warning ("Both fullscreen and presentation set somehow");
-	}
+	else if (ev_document_model_get_fullscreen (window->priv->model))
+		ev_window_stop_fullscreen (window, TRUE);
+	else if (EV_WINDOW_IS_PRESENTATION (window))
+		ev_window_stop_presentation (window, TRUE);
+	else
+		gtk_widget_grab_focus (window->priv->view);
 }
 
 static void
