@@ -74,6 +74,7 @@ struct _EvPageCacheClass {
 	EV_PAGE_DATA_INCLUDE_FORMS        | \
 	EV_PAGE_DATA_INCLUDE_ANNOTS)
 
+#define PRE_CACHE_SIZE 1
 
 static void job_page_data_finished_cb (EvJob       *job,
 				       EvPageCache *cache);
@@ -303,41 +304,66 @@ job_page_data_cancelled_cb (EvJob           *job,
 	data->job = NULL;
 }
 
+static void
+ev_page_cache_schedule_job_if_needed (EvPageCache *cache,
+				      gint page)
+{
+	EvPageCacheData   *data = &cache->page_list[page];
+	EvJobPageDataFlags flags;
+
+	if (data->flags == cache->flags && !data->dirty && (data->done || data->job))
+		return;
+
+	if (data->job)
+		ev_job_cancel (data->job);
+
+	flags = ev_page_cache_get_flags_for_data (cache, data);
+
+	data->flags = cache->flags;
+	data->job = ev_job_page_data_new (cache->document, page, flags);
+	g_signal_connect (data->job, "finished",
+			  G_CALLBACK (job_page_data_finished_cb),
+			  cache);
+	g_signal_connect (data->job, "cancelled",
+			  G_CALLBACK (job_page_data_cancelled_cb),
+			  data);
+	ev_job_scheduler_push_job (data->job, EV_JOB_PRIORITY_NONE);
+
+}
+
 void
 ev_page_cache_set_page_range (EvPageCache *cache,
 			      gint         start,
 			      gint         end)
 {
 	gint i;
+        gint pages_to_pre_cache;
 
 	if (cache->flags == EV_PAGE_DATA_INCLUDE_NONE)
 		return;
 
+	for (i = start; i <= end; i++)
+		ev_page_cache_schedule_job_if_needed (cache, i);
+
 	cache->start_page = start;
 	cache->end_page = end;
 
-	for (i = start; i <= end; i++) {
-		EvPageCacheData   *data = &cache->page_list[i];
-		EvJobPageDataFlags flags;
+        i = 1;
+        pages_to_pre_cache = PRE_CACHE_SIZE * 2;
+        while ((start - i > 0) || (end + i < cache->n_pages)) {
+                if (end + i < cache->n_pages) {
+                        ev_page_cache_schedule_job_if_needed (cache, end + i);
+                        if (--pages_to_pre_cache == 0)
+                                break;
+                }
 
-		if (data->flags == cache->flags && !data->dirty && (data->done || data->job))
-			continue;
-
-		if (data->job)
-			ev_job_cancel (data->job);
-
-		flags = ev_page_cache_get_flags_for_data (cache, data);
-
-		data->flags = cache->flags;
-		data->job = ev_job_page_data_new (cache->document, i, flags);
-		g_signal_connect (data->job, "finished",
-				  G_CALLBACK (job_page_data_finished_cb),
-				  cache);
-		g_signal_connect (data->job, "cancelled",
-				  G_CALLBACK (job_page_data_cancelled_cb),
-				  data);
-		ev_job_scheduler_push_job (data->job, EV_JOB_PRIORITY_NONE);
-	}
+                if (start - i > 0) {
+                        ev_page_cache_schedule_job_if_needed (cache, start - i);
+                        if (--pages_to_pre_cache == 0)
+                                break;
+                }
+                i++;
+        }
 }
 
 EvJobPageDataFlags
