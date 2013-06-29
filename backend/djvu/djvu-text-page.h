@@ -55,7 +55,7 @@ GList        *djvu_text_page_get_selection_region (DjvuTextPage *page,
                                                    EvRectangle  *rectangle);
 char         *djvu_text_page_copy                 (DjvuTextPage *page,
                                                    EvRectangle  *rectangle);
-void          djvu_text_page_prepare_search       (DjvuTextPage *page,
+void          djvu_text_page_index_text           (DjvuTextPage *page,
                                                    gboolean      case_sensitive);
 void          djvu_text_page_search               (DjvuTextPage *page,
                                                    const char   *text);

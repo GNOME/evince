@@ -462,14 +462,14 @@ djvu_text_page_search (DjvuTextPage *page,
 
 
 /**
- * djvu_text_page_prepare_search:
+ * djvu_text_page_index_text:
  * @page: #DjvuTextPage instance
  * @case_sensitive: do not ignore case
  * 
  * Indexes the page text and prepares the page for subsequent searches.
  */
 void
-djvu_text_page_prepare_search (DjvuTextPage *page,
+djvu_text_page_index_text (DjvuTextPage *page,
 	       		       gboolean      case_sensitive)
 {
 	djvu_text_page_append_text (page, page->text_structure, 

@@ -759,7 +759,7 @@ djvu_document_find_find_text (EvDocumentFind   *document,
 	if (page_text != miniexp_nil) {
 		DjvuTextPage *tpage = djvu_text_page_new (page_text);
 		
-		djvu_text_page_prepare_search (tpage, case_sensitive);
+		djvu_text_page_index_text (tpage, case_sensitive);
 		if (tpage->links->len > 0) {
 			djvu_text_page_search (tpage, text);
 			matches = tpage->results;
