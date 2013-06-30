@@ -347,14 +347,18 @@ get_match_offset (EvRectangle *areas,
         x = match->x1;
         y = (match->y1 + match->y2) / 2;
 
-        for (i = offset; i < n_areas; i++) {
+        i = offset;
+
+        do {
                 EvRectangle *area = areas + i;
 
                 if (x >= area->x1 && x < area->x2 &&
                     y >= area->y1 && y <= area->y2) {
                         return i;
                 }
-        }
+
+                i = (i + 1) % n_areas;
+        } while (i != offset);
 
         return -1;
 }
@@ -416,8 +420,11 @@ process_matches_idle (EvFindSidebar *sidebar)
                         GtkTreeIter  iter;
 
                         offset = get_match_offset (areas, n_areas, match, offset);
-                        if (offset == -1)
+                        if (offset == -1) {
+                                g_warning ("No offset found for match \"%s\" at page %d after processing %d results\n",
+                                           priv->job->text, current_page, result);
                                 break;
+                        }
 
                         if (current_page >= priv->job->start_page) {
                                 gtk_list_store_append (GTK_LIST_STORE (model), &iter);
