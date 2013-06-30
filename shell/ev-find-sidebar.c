@@ -226,15 +226,18 @@ sanitized_substring (const gchar  *text,
         p = start_ptr;
 
         while (p != end_ptr) {
-                const gchar      *next;
-                GUnicodeBreakType break_type;
+                const gchar *next;
 
                 next = g_utf8_next_char (p);
 
-                break_type = g_unichar_break_type (g_utf8_get_char (p));
-                if (break_type == G_UNICODE_BREAK_HYPHEN && *next == '\n') {
-                        p = g_utf8_next_char (next);
-                        continue;
+                if (next != end_ptr) {
+                        GUnicodeBreakType break_type;
+
+                        break_type = g_unichar_break_type (g_utf8_get_char (p));
+                        if (break_type == G_UNICODE_BREAK_HYPHEN && *next == '\n') {
+                                p = g_utf8_next_char (next);
+                                continue;
+                        }
                 }
 
                 if (*p != '\n') {
