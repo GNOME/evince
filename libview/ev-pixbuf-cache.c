@@ -723,7 +723,7 @@ ev_pixbuf_cache_add_jobs_if_needed (EvPixbufCache *pixbuf_cache,
 				   EV_JOB_PRIORITY_URGENT);
 	}
 
-	for (i = FIRST_VISIBLE_PREV(pixbuf_cache); i < pixbuf_cache->preload_cache_size; i++) {
+        for (i = pixbuf_cache->preload_cache_size - 1; i >= FIRST_VISIBLE_PREV(pixbuf_cache); i--) {
 		job_info = (pixbuf_cache->prev_job + i);
 		page = pixbuf_cache->start_page - pixbuf_cache->preload_cache_size + i;
 
