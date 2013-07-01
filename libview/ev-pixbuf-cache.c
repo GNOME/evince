@@ -3,6 +3,11 @@
 #include "ev-job-scheduler.h"
 #include "ev-view-private.h"
 
+typedef enum {
+        SCROLL_DIRECTION_DOWN,
+        SCROLL_DIRECTION_UP
+} ScrollDirection;
+
 typedef struct _CacheJobInfo
 {
 	EvJob *job;
@@ -40,6 +45,7 @@ struct _EvPixbufCache
 	EvDocumentModel *model;
 	int start_page;
 	int end_page;
+        ScrollDirection scroll_direction;
 	gboolean inverted_colors;
 
 	gsize max_size;
@@ -706,6 +712,44 @@ add_job_if_needed (EvPixbufCache *pixbuf_cache,
 }
 
 static void
+add_prev_jobs_if_needed (EvPixbufCache *pixbuf_cache,
+                         gint           rotation,
+                         gfloat         scale)
+{
+        CacheJobInfo *job_info;
+        int page;
+        int i;
+
+        for (i = pixbuf_cache->preload_cache_size - 1; i >= FIRST_VISIBLE_PREV(pixbuf_cache); i--) {
+                job_info = (pixbuf_cache->prev_job + i);
+                page = pixbuf_cache->start_page - pixbuf_cache->preload_cache_size + i;
+
+                add_job_if_needed (pixbuf_cache, job_info,
+                                   page, rotation, scale,
+                                   EV_JOB_PRIORITY_LOW);
+        }
+}
+
+static void
+add_next_jobs_if_needed (EvPixbufCache *pixbuf_cache,
+                         gint           rotation,
+                         gfloat         scale)
+{
+        CacheJobInfo *job_info;
+        int page;
+        int i;
+
+        for (i = 0; i < VISIBLE_NEXT_LEN(pixbuf_cache); i++) {
+                job_info = (pixbuf_cache->next_job + i);
+                page = pixbuf_cache->end_page + 1 + i;
+
+                add_job_if_needed (pixbuf_cache, job_info,
+                                   page, rotation, scale,
+                                   EV_JOB_PRIORITY_LOW);
+        }
+}
+
+static void
 ev_pixbuf_cache_add_jobs_if_needed (EvPixbufCache *pixbuf_cache,
 				    gint           rotation,
 				    gfloat         scale)
@@ -723,24 +767,33 @@ ev_pixbuf_cache_add_jobs_if_needed (EvPixbufCache *pixbuf_cache,
 				   EV_JOB_PRIORITY_URGENT);
 	}
 
-        for (i = pixbuf_cache->preload_cache_size - 1; i >= FIRST_VISIBLE_PREV(pixbuf_cache); i--) {
-		job_info = (pixbuf_cache->prev_job + i);
-		page = pixbuf_cache->start_page - pixbuf_cache->preload_cache_size + i;
+        if (pixbuf_cache->scroll_direction == SCROLL_DIRECTION_UP) {
+                add_prev_jobs_if_needed (pixbuf_cache, rotation, scale);
+                add_next_jobs_if_needed (pixbuf_cache, rotation, scale);
+        } else {
+                add_next_jobs_if_needed (pixbuf_cache, rotation, scale);
+                add_prev_jobs_if_needed (pixbuf_cache, rotation, scale);
+        }
+}
 
-		add_job_if_needed (pixbuf_cache, job_info,
-				   page, rotation, scale,
-				   EV_JOB_PRIORITY_LOW);
-	}
+static ScrollDirection
+ev_pixbuf_cache_get_scroll_direction (EvPixbufCache *pixbuf_cache,
+                                      gint           start_page,
+                                      gint           end_page)
+{
+        if (start_page < pixbuf_cache->start_page)
+                return SCROLL_DIRECTION_UP;
 
-	for (i = 0; i < VISIBLE_NEXT_LEN(pixbuf_cache); i++) {
-		job_info = (pixbuf_cache->next_job + i);
-		page = pixbuf_cache->end_page + 1 + i;
+        if (end_page > pixbuf_cache->end_page)
+                return SCROLL_DIRECTION_DOWN;
 
-		add_job_if_needed (pixbuf_cache, job_info,
-				   page, rotation, scale,
-				   EV_JOB_PRIORITY_LOW);
-	}
+        if (start_page > pixbuf_cache->start_page)
+                return SCROLL_DIRECTION_DOWN;
 
+        if (end_page < pixbuf_cache->end_page)
+                return SCROLL_DIRECTION_UP;
+
+        return pixbuf_cache->scroll_direction;
 }
 
 void
@@ -749,14 +802,17 @@ ev_pixbuf_cache_set_page_range (EvPixbufCache  *pixbuf_cache,
 				gint            end_page,
 				GList          *selection_list)
 {
-	gdouble scale = ev_document_model_get_scale (pixbuf_cache->model);
-	gint    rotation = ev_document_model_get_rotation (pixbuf_cache->model);
+	gdouble         scale = ev_document_model_get_scale (pixbuf_cache->model);
+	gint            rotation = ev_document_model_get_rotation (pixbuf_cache->model);
+        ScrollDirection direction;
 
 	g_return_if_fail (EV_IS_PIXBUF_CACHE (pixbuf_cache));
 
 	g_return_if_fail (start_page >= 0 && start_page < ev_document_get_n_pages (pixbuf_cache->document));
 	g_return_if_fail (end_page >= 0 && end_page < ev_document_get_n_pages (pixbuf_cache->document));
 	g_return_if_fail (end_page >= start_page);
+
+        pixbuf_cache->scroll_direction = ev_pixbuf_cache_get_scroll_direction (pixbuf_cache, start_page, end_page);
 
 	/* First, resize the page_range as needed.  We cull old pages
 	 * mercilessly. */
