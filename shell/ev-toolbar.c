@@ -211,13 +211,6 @@ ev_toolbar_constructed (GObject *object)
         gtk_container_add (GTK_CONTAINER (ev_toolbar), tool_item);
         gtk_widget_show (tool_item);
 
-        /* Zoom selector */
-        action = gtk_action_group_get_action (action_group, "ViewZoom");
-        tool_item = gtk_action_create_tool_item (action);
-        gtk_widget_set_margin_right (tool_item, 12);
-        gtk_container_add (GTK_CONTAINER (ev_toolbar), tool_item);
-        gtk_widget_show (tool_item);
-
         /* Separator */
         tool_item = GTK_WIDGET (gtk_tool_item_new ());
         gtk_tool_item_set_expand (GTK_TOOL_ITEM (tool_item), TRUE);
@@ -230,7 +223,14 @@ ev_toolbar_constructed (GObject *object)
         tool_item = GTK_WIDGET (gtk_tool_item_new ());
         gtk_container_add (GTK_CONTAINER (tool_item), button);
         gtk_widget_show (button);
-        gtk_widget_set_margin_right (tool_item, 6);
+        gtk_widget_set_margin_right (tool_item, 12);
+        gtk_container_add (GTK_CONTAINER (ev_toolbar), tool_item);
+        gtk_widget_show (tool_item);
+
+        /* Zoom selector */
+        action = gtk_action_group_get_action (action_group, "ViewZoom");
+        tool_item = gtk_action_create_tool_item (action);
+        gtk_widget_set_margin_right (tool_item, 12);
         gtk_container_add (GTK_CONTAINER (ev_toolbar), tool_item);
         gtk_widget_show (tool_item);
 
