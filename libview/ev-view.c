@@ -4023,9 +4023,11 @@ position_caret_cursor_at_location (EvView *view,
 	guint        n_areas = 0;
 	gint         page;
 	gint         offset = -1 ;
+	gint         first_line_offset;
+	gint         last_line_offset = -1;
 	gint         doc_x, doc_y;
 	EvRectangle *rect;
-	guint        i, j;
+	guint        i;
 
 	if (!view->caret_enabled || view->rotation != 0)
 		return FALSE;
@@ -4041,29 +4043,38 @@ position_caret_cursor_at_location (EvView *view,
 	if (!areas)
 		return FALSE;
 
-	/* First look for the line of text at location */
-	for (i = 0; i < n_areas; i++) {
+	i = 0;
+	while (i < n_areas && offset == -1) {
 		rect = areas + i;
 
-		if (doc_y >= rect->y1 && doc_y <= rect->y2)
-			break;
-	}
+		first_line_offset = -1;
+		while (doc_y >= rect->y1 && doc_y <= rect->y2) {
+			if (first_line_offset == -1) {
+				if (doc_x <= rect->x1) {
+					/* Location is before the start of the line */
+					if (last_line_offset != -1) {
+						EvRectangle *last = areas + last_line_offset;
+						gint         dx1, dx2;
 
-	if (i == n_areas)
-		return FALSE;
+						/* If there's a previous line, check distances */
 
-	if (doc_x <= rect->x1) {
-		/* Location is before the start of the line */
-		offset = i;
-	} else {
-		for (j = i; j < n_areas; j++) {
-			rect = areas + j;
+						dx1 = doc_x - last->x2;
+						dx2 = rect->x1 - doc_x;
 
-			if (doc_y < rect->y1) {
-				/* Location is after the end of the line */
-				offset = j;
-				break;
+						if (dx1 < dx2)
+							offset = last_line_offset;
+						else
+							offset = i;
+					} else {
+						offset = i;
+					}
+
+					last_line_offset = i + 1;
+					break;
+				}
+				first_line_offset = i;
 			}
+			last_line_offset = i + 1;
 
 			if (doc_x >= rect->x1 && doc_x <= rect->x2) {
 				/* Location is inside the line. Position the caret before
@@ -4071,19 +4082,25 @@ position_caret_cursor_at_location (EvView *view,
 				 * falls within the left or right half of the bounding box.
 				 */
 				if (doc_x <= rect->x1 + (rect->x2 - rect->x1) / 2)
-					offset = j;
+					offset = i;
 				else
-					offset = j + 1;
+					offset = i + 1;
 				break;
 			}
 
+			i++;
+			rect = areas + i;
 		}
+
+		if (first_line_offset == -1)
+			i++;
 	}
 
-	if (offset == -1) {
-		/* This is the last line and loocation is after the end of the line */
-		offset = n_areas;
-	}
+	if (last_line_offset == -1)
+		return FALSE;
+
+	if (offset == -1)
+		offset = last_line_offset;
 
 	if (view->cursor_offset != offset || view->cursor_page != page) {
 		view->cursor_offset = offset;
@@ -4938,7 +4955,6 @@ cursor_backward_line (EvView *view)
 	PangoLogAttr *log_attrs = NULL;
 	gulong        n_attrs;
 
-	/* FIXME: Keep the line offset when moving between lines */
 	if (!cursor_go_to_line_start (view))
 		return FALSE;
 
@@ -4949,7 +4965,8 @@ cursor_backward_line (EvView *view)
 
 	do {
 		view->cursor_offset--;
-	} while (view->cursor_offset >= 0 && !log_attrs[view->cursor_offset].is_cursor_position);
+	} while (view->cursor_offset >= 0 && !log_attrs[view->cursor_offset].is_mandatory_break);
+	view->cursor_offset = MAX (0, view->cursor_offset);
 
 	return TRUE;
 }
@@ -4987,7 +5004,6 @@ cursor_forward_line (EvView *view)
 	PangoLogAttr *log_attrs = NULL;
 	gulong        n_attrs;
 
-	/* FIXME: Keep the line offset when moving between lines */
 	if (!cursor_go_to_line_end (view))
 		return FALSE;
 
@@ -5092,7 +5108,8 @@ ev_view_move_cursor (EvView         *view,
 		return TRUE;
 
 	if (step == GTK_MOVEMENT_DISPLAY_LINES) {
-		position_caret_cursor_at_location (view, view->cursor_line_offset,
+		position_caret_cursor_at_location (view,
+						   MAX (rect.x, view->cursor_line_offset),
 						   rect.y + (rect.height / 2));
 	} else {
 		view->cursor_line_offset = rect.x;
