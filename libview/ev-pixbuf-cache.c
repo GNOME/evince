@@ -1085,7 +1085,8 @@ ev_pixbuf_cache_get_selection_region (EvPixbufCache *pixbuf_cache,
 	 * assumption that it'll be updated later and we can scale it as need
 	 * be */
 	if (job_info->job && EV_JOB_RENDER (job_info->job)->include_selection)
-		return job_info->selection_region;
+		return job_info->selection_region && !cairo_region_is_empty(job_info->selection_region) ?
+                        job_info->selection_region : NULL;
 
 	/* Now, lets see if we need to resize the region.  If we do, we clear the
 	 * old one. */
@@ -1114,7 +1115,8 @@ ev_pixbuf_cache_get_selection_region (EvPixbufCache *pixbuf_cache,
 		g_object_unref (rc);
 		ev_document_doc_mutex_unlock ();
 	}
-	return job_info->selection_region;
+	return job_info->selection_region && !cairo_region_is_empty(job_info->selection_region) ?
+                job_info->selection_region : NULL;
 }
 
 static void

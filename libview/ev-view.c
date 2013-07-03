@@ -7326,9 +7326,8 @@ merge_selection_region (EvView *view,
 			tmp_region = ev_pixbuf_cache_get_selection_region (view->pixbuf_cache,
 									   cur_page,
 									   view->scale);
-			if (tmp_region && !cairo_region_is_empty (tmp_region)) {
+			if (tmp_region)
 				new_sel->covered_region = cairo_region_reference (tmp_region);
-			}
 		}
 
 		/* Now we figure out what needs redrawing */
