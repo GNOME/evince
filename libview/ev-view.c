@@ -3813,7 +3813,8 @@ should_draw_caret_cursor (EvView  *view,
 	return (view->caret_enabled &&
 		view->cursor_page == page &&
 		view->cursor_visible &&
-		gtk_widget_has_focus (GTK_WIDGET (view)));
+		gtk_widget_has_focus (GTK_WIDGET (view)) &&
+		!ev_pixbuf_cache_get_selection_region (view->pixbuf_cache, page, view->scale));
 }
 
 static gboolean
