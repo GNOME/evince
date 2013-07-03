@@ -802,9 +802,8 @@ ev_pixbuf_cache_set_page_range (EvPixbufCache  *pixbuf_cache,
 				gint            end_page,
 				GList          *selection_list)
 {
-	gdouble         scale = ev_document_model_get_scale (pixbuf_cache->model);
-	gint            rotation = ev_document_model_get_rotation (pixbuf_cache->model);
-        ScrollDirection direction;
+	gdouble scale = ev_document_model_get_scale (pixbuf_cache->model);
+	gint    rotation = ev_document_model_get_rotation (pixbuf_cache->model);
 
 	g_return_if_fail (EV_IS_PIXBUF_CACHE (pixbuf_cache));
 
