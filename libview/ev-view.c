@@ -3807,6 +3807,16 @@ draw_caret_cursor (EvView  *view,
 }
 
 static gboolean
+should_draw_caret_cursor (EvView  *view,
+			  gint     page)
+{
+	return (view->caret_enabled &&
+		view->cursor_page == page &&
+		view->cursor_visible &&
+		gtk_widget_has_focus (GTK_WIDGET (view)));
+}
+
+static gboolean
 ev_view_draw (GtkWidget *widget,
               cairo_t   *cr)
 {
@@ -3839,7 +3849,7 @@ ev_view_draw (GtkWidget *widget,
 
 		draw_one_page (view, i, cr, &page_area, &border, &clip_rect, &page_ready);
 
-		if (page_ready && view->caret_enabled && view->cursor_page == i && view->cursor_visible)
+		if (page_ready && should_draw_caret_cursor (view, i))
 			draw_caret_cursor (view, cr);
 		if (page_ready && view->find_pages && view->highlight_find_results)
 			highlight_find_results (view, cr, i);
