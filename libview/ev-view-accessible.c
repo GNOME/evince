@@ -908,6 +908,22 @@ ev_view_accessible_hypertext_iface_init (AtkHypertextIface *iface)
 	iface->get_link_index = ev_view_accessible_get_link_index;
 }
 
+static void
+ev_view_accessible_cursor_moved (EvView *view,
+				 gint page,
+				 gint offset,
+				 EvViewAccessible *accessible)
+{
+	g_signal_emit_by_name (accessible, "text-caret-moved", offset);
+}
+
+static void
+ev_view_accessible_selection_changed (EvView *view,
+				      EvViewAccessible *accessible)
+{
+	g_signal_emit_by_name (accessible, "text-selection-changed");
+}
+
 AtkObject *
 ev_view_accessible_new (GtkWidget *widget)
 {
@@ -917,6 +933,13 @@ ev_view_accessible_new (GtkWidget *widget)
 
 	accessible = g_object_new (EV_TYPE_VIEW_ACCESSIBLE, NULL);
 	atk_object_initialize (accessible, widget);
+
+	g_signal_connect (widget, "cursor-moved",
+			  G_CALLBACK (ev_view_accessible_cursor_moved),
+			  accessible);
+	g_signal_connect (widget, "selection-changed",
+			  G_CALLBACK (ev_view_accessible_selection_changed),
+			  accessible);
 
 	return accessible;
 }
