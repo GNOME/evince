@@ -4026,29 +4026,18 @@ start_selection_for_event (EvView         *view,
 }
 
 static gboolean
-position_caret_cursor_at_location (EvView *view,
-				   gdouble x,
-				   gdouble y)
+position_caret_cursor_at_doc_point (EvView *view,
+				    gint    page,
+				    gdouble doc_x,
+				    gdouble doc_y)
 {
 	EvRectangle *areas = NULL;
 	guint        n_areas = 0;
-	gint         page;
-	gint         offset = -1 ;
+	gint         offset = -1;
 	gint         first_line_offset;
 	gint         last_line_offset = -1;
-	gint         doc_x, doc_y;
 	EvRectangle *rect;
 	guint        i;
-
-	if (!view->caret_enabled || view->rotation != 0)
-		return FALSE;
-
-	if (!view->page_cache)
-		return FALSE;
-
-	/* Get the offset from the doc point */
-	if (!get_doc_point_from_location (view, x, y, &page, &doc_x, &doc_y))
-		return FALSE;
 
 	ev_page_cache_get_text_layout (view->page_cache, page, &areas, &n_areas);
 	if (!areas)
@@ -4121,6 +4110,27 @@ position_caret_cursor_at_location (EvView *view,
 	}
 
 	return FALSE;
+}
+
+static gboolean
+position_caret_cursor_at_location (EvView *view,
+				   gdouble x,
+				   gdouble y)
+{
+	gint page;
+	gint doc_x, doc_y;
+
+	if (!view->caret_enabled || view->rotation != 0)
+		return FALSE;
+
+	if (!view->page_cache)
+		return FALSE;
+
+	/* Get the offset from the doc point */
+	if (!get_doc_point_from_location (view, x, y, &page, &doc_x, &doc_y))
+		return FALSE;
+
+	return position_caret_cursor_at_doc_point (view, page, doc_x, doc_y);
 }
 
 static gboolean
@@ -5047,14 +5057,48 @@ extend_selection_from_cursor (EvView *view,
 }
 
 static gboolean
+cursor_clear_selection (EvView  *view,
+			gboolean forward)
+{
+	GList                *l;
+	EvViewSelection      *selection;
+	cairo_rectangle_int_t rect;
+	gint                  doc_x, doc_y;
+
+	/* When clearing the selection, move the cursor to
+	 * the limits of the selection region.
+	 */
+	if (!view->selection_info.selections)
+		return FALSE;
+
+	l = forward ? g_list_last (view->selection_info.selections) : view->selection_info.selections;
+	selection = (EvViewSelection *)l->data;
+	if (!selection->covered_region || cairo_region_is_empty (selection->covered_region))
+		return FALSE;
+
+	cairo_region_get_rectangle (selection->covered_region,
+				    forward ? cairo_region_num_rectangles (selection->covered_region) - 1 : 0,
+				    &rect);
+
+	if (!get_doc_point_from_offset (view, selection->page,
+					forward ? rect.x + rect.width : rect.x,
+					rect.y + (rect.height / 2), &doc_x, &doc_y))
+		return FALSE;
+
+	position_caret_cursor_at_doc_point (view, selection->page, doc_x, doc_y);
+	return TRUE;
+}
+
+static gboolean
 ev_view_move_cursor (EvView         *view,
 		     GtkMovementStep step,
 		     gint            count,
 		     gboolean        extend_selection)
 {
 	GdkRectangle rect;
-	gint prev_offset;
-	gint prev_page;
+	gint         prev_offset;
+	gint         prev_page;
+	gboolean     clearing_selections = FALSE;
 
 	if (!view->caret_enabled || view->rotation != 0)
 		return FALSE;
@@ -5067,13 +5111,17 @@ ev_view_move_cursor (EvView         *view,
 
 	switch (step) {
 	case GTK_MOVEMENT_VISUAL_POSITIONS:
-		while (count > 0) {
-			cursor_forward_char (view);
-			count--;
-		}
-		while (count < 0) {
-			cursor_backward_char (view);
-			count++;
+		if (!extend_selection && cursor_clear_selection (view, count > 0)) {
+			clearing_selections = TRUE;
+		} else {
+			while (count > 0) {
+				cursor_forward_char (view);
+				count--;
+			}
+			while (count < 0) {
+				cursor_backward_char (view);
+				count++;
+			}
 		}
 		break;
 	case GTK_MOVEMENT_WORDS:
@@ -5109,7 +5157,8 @@ ev_view_move_cursor (EvView         *view,
 	ev_view_pend_cursor_blink (view);
 
 	/* Notify the user that it was not possible to move the caret cursor */
-	if (prev_offset == view->cursor_offset && prev_page == view->cursor_page) {
+	if (!clearing_selections &&
+	    prev_offset == view->cursor_offset && prev_page == view->cursor_page) {
 		gtk_widget_error_bell (GTK_WIDGET (view));
 		return TRUE;
 	}
