@@ -1,4 +1,52 @@
 ================
+Evince     3.9.4
+================
+
+New features and improvements:
+
+    * Add a find sidebar to show search results with some more context
+      (#566827, Sergey Pushkin, José Aliste, Carlos Garcia Campos)
+    * Zoom selector has been moved to the right of the toolbar, close
+      to the other view options (#701696, Carlos Garcia Campos)
+    * Implement text selection in djvu backend (#448739, #703108,
+      Jonas Danielsson)
+    * Add 'cursor-moved' signal to notify when the caret cursor has
+      been moved (#702078, Antia Puentes)
+    * Keep the offset inside a line when moving the caret between
+      lines (#702075, Antia Puentes)
+    * Position the caret cursor at beginning/end of the line when
+      clicking outside the line (Carlos Garcia Campos)
+    * Implement text selection with the keyboard when caret navigation
+      is enabled (#702073, Antia Puentes)
+    * Notify about caret navigation errors using the error bell
+      (#702650, Antia Puentes)
+    * Set history button arrow icons according to locale's text
+      direction (#702585, Yosef Or Boczko)
+    * Several performance improvements when selecting text (Carlos
+      Garcia Campos)
+    * Emit the AtkText 'text-caret-moved' and 'text-selection-changed'
+      signals in EvViewAccessible (#701732, Antia Puentes)
+
+Bug fixes:
+
+    * Fix selection of overlapping text (#703024, Jason Crain)
+    * Fix a crash when selecting more than one page (#702874, Carlos
+      Garcia Campos)
+    * Fix a crash due to an infinite loop resolving hyphenations in
+      find results sidebar (Carlos Garcia Campos)
+    * Don't draw the caret cursor when the view is not focused (Carlos
+      Garcia Campos)
+    * Do not show the caret cursor when there are active selections
+      (#702761, Carlos Garcia Campos)
+    * Clear the selection when cursor is moved (Carlos Garcia Campos)
+
+Translation updates:
+
+    * Baurzhan Muftakhidinov (kk)
+    * Kjartan Maraas (nb)
+    * Trần Ngọc Quân (vi)
+
+================
 Evince     3.9.3
 ================
 
