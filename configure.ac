@@ -471,7 +471,7 @@ AC_ARG_ENABLE([pdf],
   [enable_pdf=yes])
 
 if test "x$enable_pdf" = "xyes"; then
-    POPPLER_REQUIRED=0.20.0
+    POPPLER_REQUIRED=0.23.3
     PKG_CHECK_MODULES(POPPLER, poppler-glib >= $POPPLER_REQUIRED libxml-2.0 >= $LIBXML_REQUIRED,enable_pdf=yes,enable_pdf=no)
 
     if test "x$enable_pdf" = "xyes"; then
@@ -487,10 +487,6 @@ if test "x$enable_pdf" = "xyes"; then
     else
 	    AC_MSG_ERROR("PDF support is disabled since poppler-glib library version $POPPLER_REQUIRED or newer not found")
     fi 
-    evince_save_LIBS=$LIBS
-    LIBS="$LIBS $POPPLER_LIBS"
-    AC_CHECK_FUNCS(poppler_document_new_from_stream poppler_document_new_from_gfile poppler_page_find_text_with_options)
-    LIBS=$evince_save_LIBS
 fi
 
 AM_CONDITIONAL(ENABLE_PDF, test x$enable_pdf = xyes)

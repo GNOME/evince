@@ -281,7 +281,6 @@ pdf_document_load (EvDocument   *document,
 	return TRUE;
 }
 
-#ifdef HAVE_POPPLER_DOCUMENT_NEW_FROM_STREAM
 static gboolean
 pdf_document_load_stream (EvDocument          *document,
                           GInputStream        *stream,
@@ -305,9 +304,7 @@ pdf_document_load_stream (EvDocument          *document,
 
         return TRUE;
 }
-#endif
 
-#ifdef HAVE_POPPLER_DOCUMENT_NEW_FROM_GFILE
 static gboolean
 pdf_document_load_gfile (EvDocument          *document,
                          GFile               *file,
@@ -331,7 +328,6 @@ pdf_document_load_gfile (EvDocument          *document,
 
         return TRUE;
 }
-#endif
 
 static int
 pdf_document_get_n_pages (EvDocument *document)
@@ -940,12 +936,8 @@ pdf_document_class_init (PdfDocumentClass *klass)
 
 	ev_document_class->save = pdf_document_save;
 	ev_document_class->load = pdf_document_load;
-#ifdef HAVE_POPPLER_DOCUMENT_NEW_FROM_STREAM
         ev_document_class->load_stream = pdf_document_load_stream;
-#endif
-#ifdef HAVE_POPPLER_DOCUMENT_NEW_FROM_GFILE
         ev_document_class->load_gfile = pdf_document_load_gfile;
-#endif
 	ev_document_class->get_n_pages = pdf_document_get_n_pages;
 	ev_document_class->get_page = pdf_document_get_page;
 	ev_document_class->get_page_size = pdf_document_get_page_size;
@@ -1647,24 +1639,18 @@ pdf_document_find_find_text_with_options (EvDocumentFind *document_find,
 	PopplerPage *poppler_page;
 	gdouble height;
 	GList *retval = NULL;
-#ifdef HAVE_POPPLER_PAGE_FIND_TEXT_WITH_OPTIONS
 	guint find_flags = 0;
-#endif
 
 	g_return_val_if_fail (POPPLER_IS_PAGE (page->backend_page), NULL);
 	g_return_val_if_fail (text != NULL, NULL);
 
 	poppler_page = POPPLER_PAGE (page->backend_page);
 
-#ifdef HAVE_POPPLER_PAGE_FIND_TEXT_WITH_OPTIONS
 	if (options & EV_FIND_CASE_SENSITIVE)
 		find_flags |= POPPLER_FIND_CASE_SENSITIVE;
 	if (options & EV_FIND_WHOLE_WORDS_ONLY)
 		find_flags |= POPPLER_FIND_WHOLE_WORDS_ONLY;
 	matches = poppler_page_find_text_with_options (poppler_page, text, (PopplerFindFlags)find_flags);
-#else
-	matches = poppler_page_find_text (poppler_page, text);
-#endif
 	if (!matches)
 		return NULL;
 
@@ -1706,20 +1692,14 @@ pdf_document_find_find_text (EvDocumentFind *document_find,
 static EvFindOptions
 pdf_document_find_get_supported_options (EvDocumentFind *document_find)
 {
-#ifdef HAVE_POPPLER_PAGE_FIND_TEXT_WITH_OPTIONS
 	return (EvFindOptions)(EV_FIND_CASE_SENSITIVE | EV_FIND_WHOLE_WORDS_ONLY);
-#else
-	return EV_FIND_DEFAULT;
-#endif
 }
 
 static void
 pdf_document_find_iface_init (EvDocumentFindInterface *iface)
 {
         iface->find_text = pdf_document_find_find_text;
-#ifdef HAVE_POPPLER_PAGE_FIND_TEXT_WITH_OPTIONS
 	iface->find_text_with_options = pdf_document_find_find_text_with_options;
-#endif
 	iface->get_supported_options = pdf_document_find_get_supported_options;
 }
 
