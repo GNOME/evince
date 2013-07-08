@@ -1,4 +1,21 @@
 ================
+Evince     3.8.3
+================
+
+Bug fixes:
+
+    * Fix memory corruption in EvHistory implementation (#697397,
+      Christian Persch)
+    * Fix a crash when searching with a negative current page
+      (#683172, Germán Poo-Caamaño)
+    * Fix runtime critical warning for links with NULL action
+      (Christian Persch)
+    * Fix crash on corrupted PDF with no pages (#701302, Germán
+      Poo-Caamaño)
+    * Set history button arrow icons according to locale's text
+      direction (#702585, Yosef Or Boczko)
+
+================
 Evince     3.8.2
 ================
 
