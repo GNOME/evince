@@ -68,3 +68,15 @@ ev_document_text_get_text_mapping (EvDocumentText *document_text,
 
 	return iface->get_text_mapping (document_text, page);
 }
+
+PangoAttrList *
+ev_document_text_get_text_attrs (EvDocumentText *document_text,
+				 EvPage         *page)
+{
+	EvDocumentTextInterface *iface = EV_DOCUMENT_TEXT_GET_IFACE (document_text);
+
+	if (!iface->get_text_attrs)
+		return NULL;
+
+	return iface->get_text_attrs (document_text, page);
+}
