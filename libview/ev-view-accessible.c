@@ -349,29 +349,127 @@ ev_view_accessible_set_caret_offset (AtkText *text, gint offset)
 	return TRUE;
 }
 
+static AtkAttributeSet *
+add_attribute (AtkAttributeSet  *attr_set,
+               AtkTextAttribute  attr_type,
+               gchar            *attr_value)
+{
+  AtkAttribute *attr = g_new (AtkAttribute, 1);
+
+  attr->name = g_strdup (atk_text_attribute_get_name (attr_type));
+  attr->value = attr_value;
+
+  return g_slist_prepend (attr_set, attr);
+}
+
+static AtkAttributeSet *
+get_run_attributes (PangoAttrList   *attrs,
+		    const gchar     *text,
+		    gint             offset,
+		    gint            *start_offset,
+		    gint            *end_offset)
+{
+	AtkAttributeSet   *atk_attr_set = NULL;
+	PangoAttrString   *pango_string;
+	PangoAttrInt      *pango_int;
+	PangoAttrColor    *pango_color;
+	PangoAttrIterator *iter;
+	gint               i, start, end;
+	gboolean           has_attrs = FALSE;
+	glong              text_length;
+	gchar             *attr_value;
+
+	text_length = g_utf8_strlen (text, -1);
+	if (offset < 0 || offset >= text_length)
+		return NULL;
+
+	/* Check if there are attributes for the offset,
+	 * and set the attributes range if positive */
+	iter = pango_attr_list_get_iterator (attrs);
+	i = g_utf8_offset_to_pointer (text, offset) - text;
+
+	do {
+		pango_attr_iterator_range (iter, &start, &end);
+		if (i >= start && i < end) {
+			*start_offset = g_utf8_pointer_to_offset (text, text + start);
+			if (end == G_MAXINT) /* Last iterator */
+				end = text_length;
+			*end_offset = g_utf8_pointer_to_offset (text, text + end);
+			 has_attrs = TRUE;
+		}
+	} while (!has_attrs && pango_attr_iterator_next (iter));
+
+	if (!has_attrs) {
+		pango_attr_iterator_destroy (iter);
+		return NULL;
+	}
+
+	/* Create the AtkAttributeSet from the Pango attributes */
+	pango_string = (PangoAttrString *) pango_attr_iterator_get (iter, PANGO_ATTR_FAMILY);
+	if (pango_string) {
+		attr_value = g_strdup (pango_string->value);
+		atk_attr_set = add_attribute (atk_attr_set, ATK_TEXT_ATTR_FAMILY_NAME, attr_value);
+	}
+
+	pango_int = (PangoAttrInt *) pango_attr_iterator_get (iter, PANGO_ATTR_SIZE);
+	if (pango_int) {
+		attr_value = g_strdup_printf ("%i", pango_int->value / PANGO_SCALE);
+		atk_attr_set = add_attribute (atk_attr_set, ATK_TEXT_ATTR_SIZE, attr_value);
+	}
+
+	pango_int = (PangoAttrInt *) pango_attr_iterator_get (iter, PANGO_ATTR_UNDERLINE);
+	if (pango_int) {
+		atk_attr_set = add_attribute (atk_attr_set,
+					      ATK_TEXT_ATTR_UNDERLINE,
+					      g_strdup (atk_text_attribute_get_value (ATK_TEXT_ATTR_UNDERLINE,
+										      pango_int->value)));
+	}
+
+	pango_color = (PangoAttrColor *) pango_attr_iterator_get (iter, PANGO_ATTR_FOREGROUND);
+	if (pango_color) {
+		attr_value = g_strdup_printf ("%u,%u,%u",
+					      pango_color->color.red,
+					      pango_color->color.green,
+					      pango_color->color.blue);
+		atk_attr_set = add_attribute (atk_attr_set, ATK_TEXT_ATTR_FG_COLOR, attr_value);
+	}
+
+	pango_attr_iterator_destroy (iter);
+
+	return atk_attr_set;
+}
+
 static AtkAttributeSet*
 ev_view_accessible_get_run_attributes (AtkText *text,
-				       gint    offset,
+				       gint     offset,
 				       gint    *start_offset,
 				       gint    *end_offset)
 {
-	GtkWidget *widget;
-	GtkTextBuffer *buffer;
-	AtkAttributeSet *retval;
+	EvView        *view;
+	GtkWidget     *widget;
+	PangoAttrList *attrs;
+	const gchar   *page_text;
+
+	if (offset < 0)
+		return NULL;
 
 	widget = gtk_accessible_get_widget (GTK_ACCESSIBLE (text));
-	if (widget == NULL)
-		/* State is defunct */
+	if (!widget)
 		return NULL;
 
-	buffer = ev_view_accessible_get_text_buffer (EV_VIEW_ACCESSIBLE (text), EV_VIEW (widget));
-	if (!buffer)
+	view = EV_VIEW (widget);
+	if (!view->page_cache)
 		return NULL;
 
-	retval = gail_misc_buffer_get_run_attributes (buffer, offset,
-	                                              start_offset, end_offset);
+	page_text = ev_page_cache_get_text (view->page_cache, view->current_page);
+	if (!page_text)
+		return NULL;
 
-	return retval;
+	attrs = ev_page_cache_get_text_attrs (view->page_cache, view->current_page);
+	if (!attrs)
+		return NULL;
+
+	return get_run_attributes (attrs, page_text, offset, start_offset, end_offset);
 }
 
 static AtkAttributeSet*
