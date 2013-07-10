@@ -2172,12 +2172,65 @@ pdf_document_text_get_text_layout (EvDocumentText  *selection,
 					     (PopplerRectangle **)areas, n_areas);
 }
 
+static PangoAttrList *
+pdf_document_text_get_text_attrs (EvDocumentText *document_text,
+				  EvPage         *page)
+{
+	GList         *backend_attrs_list,  *l;
+	PangoAttrList *attrs_list;
+
+	g_return_val_if_fail (POPPLER_IS_PAGE (page->backend_page), NULL);
+
+	backend_attrs_list = poppler_page_get_text_attributes (POPPLER_PAGE (page->backend_page));
+	if (!backend_attrs_list)
+		return NULL;
+
+	attrs_list = pango_attr_list_new ();
+        for (l = backend_attrs_list; l; l = g_list_next (l)) {
+                PopplerTextAttributes *backend_attrs = (PopplerTextAttributes *)l->data;
+		PangoAttribute        *attr;
+
+		if (backend_attrs->is_underlined) {
+			attr = pango_attr_underline_new (PANGO_UNDERLINE_SINGLE);
+			attr->start_index = backend_attrs->start_index;
+			attr->end_index = backend_attrs->end_index;
+			pango_attr_list_insert (attrs_list, attr);
+		}
+
+		attr = pango_attr_foreground_new (backend_attrs->color.red,
+						  backend_attrs->color.green,
+						  backend_attrs->color.blue);
+		attr->start_index = backend_attrs->start_index;
+		attr->end_index = backend_attrs->end_index;
+		pango_attr_list_insert (attrs_list, attr);
+
+		if (backend_attrs->font_name) {
+			attr = pango_attr_family_new (backend_attrs->font_name);
+			attr->start_index = backend_attrs->start_index;
+			attr->end_index = backend_attrs->end_index;
+			pango_attr_list_insert (attrs_list, attr);
+		}
+
+		if (backend_attrs->font_size) {
+			attr = pango_attr_size_new (backend_attrs->font_size * PANGO_SCALE);
+			attr->start_index = backend_attrs->start_index;
+			attr->end_index = backend_attrs->end_index;
+			pango_attr_list_insert (attrs_list, attr);
+		}
+	}
+
+	poppler_page_free_text_attributes (backend_attrs_list);
+
+	return attrs_list;
+}
+
 static void
 pdf_document_text_iface_init (EvDocumentTextInterface *iface)
 {
         iface->get_text_mapping = pdf_document_text_get_text_mapping;
         iface->get_text = pdf_document_text_get_text;
         iface->get_text_layout = pdf_document_text_get_text_layout;
+	iface->get_text_attrs = pdf_document_text_get_text_attrs;
 }
 
 /* Page Transitions */
