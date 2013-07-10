@@ -45,6 +45,7 @@ typedef struct _EvPageCacheData {
 	EvRectangle       *text_layout;
 	guint              text_layout_length;
 	gchar             *text;
+	PangoAttrList     *text_attrs;
         PangoLogAttr      *text_log_attrs;
         gulong             text_log_attrs_length;
 } EvPageCacheData;
@@ -125,6 +126,11 @@ ev_page_cache_data_free (EvPageCacheData *data)
 	if (data->text) {
 		g_free (data->text);
 		data->text = NULL;
+	}
+
+	if (data->text_attrs) {
+		pango_attr_list_unref (data->text_attrs);
+		data->text_attrs = NULL;
 	}
 
         if (data->text_log_attrs) {
@@ -235,6 +241,12 @@ ev_page_cache_get_flags_for_data (EvPageCache     *cache,
 			flags | EV_PAGE_DATA_INCLUDE_TEXT_LAYOUT;
 	}
 
+        if (cache->flags & EV_PAGE_DATA_INCLUDE_TEXT_ATTRS) {
+                flags = (data->text_attrs) ?
+                        flags & ~EV_PAGE_DATA_INCLUDE_TEXT_ATTRS :
+                        flags | EV_PAGE_DATA_INCLUDE_TEXT_ATTRS;
+        }
+
         if (cache->flags & EV_PAGE_DATA_INCLUDE_TEXT_LOG_ATTRS) {
                 flags = (data->text_log_attrs) ?
                         flags & ~EV_PAGE_DATA_INCLUDE_TEXT_LOG_ATTRS :
@@ -285,10 +297,13 @@ job_page_data_finished_cb (EvJob       *job,
 	}
 	if (job_data->flags & EV_PAGE_DATA_INCLUDE_TEXT)
 		data->text = job_data->text;
+	if (job_data->flags & EV_PAGE_DATA_INCLUDE_TEXT_ATTRS)
+		data->text_attrs = job_data->text_attrs;
         if (job_data->flags & EV_PAGE_DATA_INCLUDE_TEXT_LOG_ATTRS) {
                 data->text_log_attrs = job_data->text_log_attrs;
                 data->text_log_attrs_length = job_data->text_log_attrs_length;
         }
+
 	data->done = TRUE;
 	data->dirty = FALSE;
 
@@ -562,6 +577,28 @@ ev_page_cache_get_text_layout (EvPageCache  *cache,
 	}
 
 	return FALSE;
+}
+
+PangoAttrList *
+ev_page_cache_get_text_attrs (EvPageCache    *cache,
+			      gint            page)
+{
+	EvPageCacheData *data;
+
+	g_return_val_if_fail (EV_IS_PAGE_CACHE (cache), NULL);
+	g_return_val_if_fail (page >= 0 && page < cache->n_pages, NULL);
+
+	if (!(cache->flags & EV_PAGE_DATA_INCLUDE_TEXT_ATTRS))
+	    return NULL;
+
+	data = &cache->page_list[page];
+	if (data->done)
+		return data->text_attrs;
+
+	if (data->job)
+		return EV_JOB_PAGE_DATA(data->job)->text_attrs;
+
+	return data->text_attrs;
 }
 
 gboolean
