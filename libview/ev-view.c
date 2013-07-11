@@ -43,6 +43,7 @@
 #include "ev-view-accessible.h"
 #include "ev-view-private.h"
 #include "ev-view-type-builtins.h"
+#include "ev-debug.h"
 
 #define EV_VIEW_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), EV_TYPE_VIEW, EvViewClass))
 #define EV_IS_VIEW_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), EV_TYPE_VIEW))
@@ -3817,6 +3818,186 @@ should_draw_caret_cursor (EvView  *view,
 		!ev_pixbuf_cache_get_selection_region (view->pixbuf_cache, page, view->scale));
 }
 
+#ifdef EV_ENABLE_DEBUG
+static void
+stroke_view_rect (cairo_t      *cr,
+		  GdkRectangle *clip,
+		  GdkRectangle *view_rect)
+{
+	GdkRectangle intersect;
+
+	if (gdk_rectangle_intersect (view_rect, clip, &intersect)) {
+		cairo_rectangle (cr,
+				 intersect.x, intersect.y,
+				 intersect.width, intersect.height);
+		cairo_stroke (cr);
+	}
+}
+
+static void
+stroke_doc_rect (EvView       *view,
+		 cairo_t      *cr,
+		 gint          page,
+		 GdkRectangle *clip,
+		 EvRectangle  *doc_rect)
+{
+	GdkRectangle view_rect;
+
+	_ev_view_transform_doc_rect_to_view_rect (view, page, doc_rect, &view_rect);
+	view_rect.x -= view->scroll_x;
+	view_rect.y -= view->scroll_y;
+	stroke_view_rect (cr, clip, &view_rect);
+}
+
+static void
+show_chars_border (EvView       *view,
+		   cairo_t      *cr,
+		   gint          page,
+		   GdkRectangle *clip)
+{
+	EvRectangle *areas = NULL;
+	guint        n_areas = 0;
+	guint        i;
+
+	ev_page_cache_get_text_layout (view->page_cache, page, &areas, &n_areas);
+	if (!areas)
+		return;
+
+	cairo_set_source_rgb (cr, 1., 0., 0.);
+
+	for (i = 0; i < n_areas; i++) {
+		EvRectangle  *doc_rect = areas + i;
+
+		stroke_doc_rect (view, cr, page, clip, doc_rect);
+	}
+}
+
+static void
+show_mapping_list_border (EvView        *view,
+			  cairo_t       *cr,
+			  gint           page,
+			  GdkRectangle  *clip,
+			  EvMappingList *mapping_list)
+{
+	GList *l;
+
+	for (l = ev_mapping_list_get_list (mapping_list); l; l = g_list_next (l)) {
+		EvMapping *mapping = (EvMapping *)l->data;
+
+		stroke_doc_rect (view, cr, page, clip, &mapping->area);
+	}
+}
+
+static void
+show_links_border (EvView       *view,
+		   cairo_t      *cr,
+		   gint          page,
+		   GdkRectangle *clip)
+{
+	cairo_set_source_rgb (cr, 0., 0., 1.);
+	show_mapping_list_border (view,cr, page, clip,
+				  ev_page_cache_get_link_mapping (view->page_cache, page));
+}
+
+static void
+show_forms_border (EvView       *view,
+		   cairo_t      *cr,
+		   gint          page,
+		   GdkRectangle *clip)
+{
+	cairo_set_source_rgb (cr, 0., 1., 0.);
+	show_mapping_list_border (view, cr, page, clip,
+				  ev_page_cache_get_form_field_mapping (view->page_cache, page));
+}
+
+static void
+show_annots_border (EvView       *view,
+		    cairo_t      *cr,
+		    gint          page,
+		    GdkRectangle *clip)
+{
+	cairo_set_source_rgb (cr, 0., 1., 1.);
+	show_mapping_list_border (view, cr, page, clip,
+				  ev_page_cache_get_annot_mapping (view->page_cache, page));
+}
+
+static void
+show_images_border (EvView       *view,
+		    cairo_t      *cr,
+		    gint          page,
+		    GdkRectangle *clip)
+{
+	cairo_set_source_rgb (cr, 1., 0., 1.);
+	show_mapping_list_border (view, cr, page, clip,
+				  ev_page_cache_get_image_mapping (view->page_cache, page));
+}
+
+static void
+show_selections_border (EvView       *view,
+			cairo_t      *cr,
+			gint          page,
+			GdkRectangle *clip)
+{
+	cairo_region_t *region;
+	guint           i, n_rects;
+	GdkRectangle    page_area;
+	GtkBorder       border;
+
+	region = ev_page_cache_get_text_mapping (view->page_cache, page);
+	if (!region)
+		return;
+
+	cairo_set_source_rgb (cr, 0.75, 0.50, 0.25);
+
+	ev_view_get_page_extents (view, page, &page_area, &border);
+
+	region = cairo_region_copy (region);
+	cairo_region_intersect_rectangle (region, clip);
+	n_rects = cairo_region_num_rectangles (region);
+	for (i = 0; i < n_rects; i++) {
+		GdkRectangle view_rect;
+
+		cairo_region_get_rectangle (region, i, &view_rect);
+		view_rect.x = (gint)(view_rect.x * view->scale + 0.5);
+		view_rect.y = (gint)(view_rect.y * view->scale + 0.5);
+		view_rect.width = (gint)(view_rect.width * view->scale + 0.5);
+		view_rect.height = (gint)(view_rect.height * view->scale + 0.5);
+
+		view_rect.x += page_area.x + border.left - view->scroll_x;
+		view_rect.y += page_area.y + border.right - view->scroll_y;
+		stroke_view_rect (cr, clip, &view_rect);
+	}
+	cairo_region_destroy (region);
+}
+
+static void
+draw_debug_borders (EvView       *view,
+		    cairo_t      *cr,
+		    gint          page,
+		    GdkRectangle *clip)
+{
+	EvDebugBorders borders = ev_debug_get_debug_borders();
+
+	cairo_save (cr);
+	cairo_set_line_width (cr, 0.5);
+
+	if (borders & EV_DEBUG_BORDER_CHARS)
+		show_chars_border (view, cr, page, clip);
+	if (borders & EV_DEBUG_BORDER_LINKS)
+		show_links_border (view, cr, page, clip);
+	if (borders & EV_DEBUG_BORDER_FORMS)
+		show_forms_border (view, cr, page, clip);
+	if (borders & EV_DEBUG_BORDER_ANNOTS)
+		show_annots_border (view, cr, page, clip);
+	if (borders & EV_DEBUG_BORDER_IMAGES)
+		show_images_border (view, cr, page, clip);
+	if (borders & EV_DEBUG_BORDER_SELECTIONS)
+		show_selections_border (view, cr, page, clip);
+
+	cairo_restore (cr);
+}
+#endif
+
 static gboolean
 ev_view_draw (GtkWidget *widget,
               cairo_t   *cr)
@@ -3860,6 +4041,10 @@ ev_view_draw (GtkWidget *widget,
                         focus_annotation (view, cr, i, &clip_rect);
 		if (page_ready && view->synctex_result)
 			highlight_forward_search_results (view, cr, i);
+#ifdef EV_ENABLE_DEBUG
+		if (page_ready)
+			draw_debug_borders (view, cr, i, &clip_rect);
+#endif
 	}
 
         if (GTK_WIDGET_CLASS (ev_view_parent_class)->draw)
