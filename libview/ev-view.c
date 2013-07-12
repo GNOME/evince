@@ -5278,7 +5278,7 @@ ev_view_move_cursor (EvView         *view,
 	GdkRectangle rect;
 	gint         prev_offset;
 	gint         prev_page;
-	gboolean     clearing_selections = FALSE;
+	gboolean     clear_selections = FALSE;
 
 	if (!view->caret_enabled || view->rotation != 0)
 		return FALSE;
@@ -5289,11 +5289,11 @@ ev_view_move_cursor (EvView         *view,
 	prev_offset = view->cursor_offset;
 	prev_page = view->cursor_page;
 
+	clear_selections = !extend_selection && view->selection_info.selections != NULL;
+
 	switch (step) {
 	case GTK_MOVEMENT_VISUAL_POSITIONS:
-		if (!extend_selection && cursor_clear_selection (view, count > 0)) {
-			clearing_selections = TRUE;
-		} else {
+		if (!clear_selections || !cursor_clear_selection (view, count > 0)) {
 			while (count > 0) {
 				cursor_forward_char (view);
 				count--;
@@ -5337,7 +5337,7 @@ ev_view_move_cursor (EvView         *view,
 	ev_view_pend_cursor_blink (view);
 
 	/* Notify the user that it was not possible to move the caret cursor */
-	if (!clearing_selections &&
+	if (!clear_selections &&
 	    prev_offset == view->cursor_offset && prev_page == view->cursor_page) {
 		gtk_widget_error_bell (GTK_WIDGET (view));
 		return TRUE;
@@ -5351,6 +5351,11 @@ ev_view_move_cursor (EvView         *view,
 		position_caret_cursor_at_location (view,
 						   MAX (rect.x, view->cursor_line_offset),
 						   rect.y + (rect.height / 2));
+		if (!clear_selections &&
+		    prev_offset == view->cursor_offset && prev_page == view->cursor_page) {
+			gtk_widget_error_bell (GTK_WIDGET (view));
+			return TRUE;
+		}
 	} else {
 		view->cursor_line_offset = rect.x;
 	}
@@ -5378,7 +5383,7 @@ ev_view_move_cursor (EvView         *view,
 		end_point.y = rect.y + rect.height / 2;
 
 		extend_selection_from_cursor (view, &start_point, &end_point);
-	} else
+	} else if (clear_selections)
 		clear_selection (view);
 
 	gtk_widget_queue_draw (GTK_WIDGET (view));
