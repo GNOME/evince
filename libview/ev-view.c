@@ -4390,8 +4390,6 @@ ev_view_button_press_event (GtkWidget      *widget,
 						ev_view_pend_cursor_blink (view);
 					}
 				}
-
-				gtk_widget_queue_draw (widget);
 			} else if ((annot = ev_view_get_annotation_at_location (view, event->x, event->y))) {
 				ev_view_handle_annotation (view, annot, event->x, event->y, event->time);
 			} else if ((field = ev_view_get_form_field_at_location (view, event->x, event->y))) {
@@ -4874,11 +4872,8 @@ ev_view_button_release_event (GtkWidget      *widget,
 
 		position_caret_cursor_for_event (view, event);
 
-		if (view->selection_info.in_drag) {
+		if (view->selection_info.in_drag)
 			clear_selection (view);
-			gtk_widget_queue_draw (widget);
-		}
-		
 		view->selection_info.in_drag = FALSE;
 	} else if (link) {
 		if (event->button == 2) {
@@ -5759,7 +5754,10 @@ ev_view_finalize (GObject *object)
 {
 	EvView *view = EV_VIEW (object);
 
-	clear_selection (view);
+	if (view->selection_info.selections) {
+		g_list_free_full (view->selection_info.selections, (GDestroyNotify)selection_free);
+		view->selection_info.selections = NULL;
+	}
 	clear_link_selected (view);
 
 	if (view->synctex_result) {
@@ -7657,15 +7655,7 @@ selection_free (EvViewSelection *selection)
 static void
 clear_selection (EvView *view)
 {
-	if (view->selection_info.selections) {
-		g_list_free_full (view->selection_info.selections, (GDestroyNotify)selection_free);
-		view->selection_info.selections = NULL;
-
-		g_signal_emit (view, signals[SIGNAL_SELECTION_CHANGED], 0, NULL);
-	}
-
-	if (view->pixbuf_cache)
-		ev_pixbuf_cache_set_selection_list (view->pixbuf_cache, NULL);
+	merge_selection_region (view, NULL);
 }
 
 void
@@ -7678,8 +7668,6 @@ ev_view_select_all (EvView *view)
 	if (view->rotation != 0)
 		return;
 
-	clear_selection (view);
-	
 	n_pages = ev_document_get_n_pages (view->document);
 	for (i = 0; i < n_pages; i++) {
 		gdouble width, height;
