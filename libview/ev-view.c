@@ -3128,7 +3128,9 @@ cursor_should_blink (EvView *view)
 {
 	if (view->caret_enabled &&
 	    view->rotation == 0 &&
-	    gtk_widget_has_focus (GTK_WIDGET (view))) {
+	    gtk_widget_has_focus (GTK_WIDGET (view)) &&
+	    view->pixbuf_cache &&
+	    !ev_pixbuf_cache_get_selection_region (view->pixbuf_cache, view->cursor_page, view->scale)) {
 		GtkSettings *settings;
 		gboolean blink;
 
@@ -7642,6 +7644,8 @@ merge_selection_region (EvView *view,
 			cairo_region_destroy (damage_region);
 		}
 	}
+
+	ev_view_check_cursor_blink (view);
 
 	/* Free the old list, now that we're done with it. */
 	g_list_free_full (old_list, (GDestroyNotify)selection_free);
