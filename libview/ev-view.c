@@ -6218,6 +6218,10 @@ ev_view_class_init (EvViewClass *class)
         add_scroll_binding_keypad (binding_set, GDK_KEY_Down,  0, GTK_SCROLL_STEP_FORWARD, GTK_ORIENTATION_VERTICAL);
         add_scroll_binding_keypad (binding_set, GDK_KEY_Up,    GDK_MOD1_MASK, GTK_SCROLL_STEP_DOWN, GTK_ORIENTATION_VERTICAL);
         add_scroll_binding_keypad (binding_set, GDK_KEY_Down,  GDK_MOD1_MASK, GTK_SCROLL_STEP_UP, GTK_ORIENTATION_VERTICAL);
+	add_scroll_binding_keypad (binding_set, GDK_KEY_Page_Up, 0, GTK_SCROLL_PAGE_BACKWARD, GTK_ORIENTATION_VERTICAL);
+	add_scroll_binding_keypad (binding_set, GDK_KEY_Page_Down, 0, GTK_SCROLL_PAGE_FORWARD, GTK_ORIENTATION_VERTICAL);
+	add_scroll_binding_keypad (binding_set, GDK_KEY_Return, 0, GTK_SCROLL_PAGE_FORWARD, GTK_ORIENTATION_VERTICAL);
+	add_scroll_binding_keypad (binding_set, GDK_KEY_Return, GDK_SHIFT_MASK, GTK_SCROLL_PAGE_BACKWARD, GTK_ORIENTATION_VERTICAL);
         gtk_binding_entry_add_signal (binding_set, GDK_KEY_H, 0, "scroll", 2,
 				      GTK_TYPE_SCROLL_TYPE, GTK_SCROLL_STEP_BACKWARD,
 				      GTK_TYPE_ORIENTATION, GTK_ORIENTATION_HORIZONTAL);
@@ -6230,6 +6234,18 @@ ev_view_class_init (EvViewClass *class)
 	gtk_binding_entry_add_signal (binding_set, GDK_KEY_L, 0, "scroll", 2,
 				      GTK_TYPE_SCROLL_TYPE, GTK_SCROLL_STEP_FORWARD,
 				      GTK_TYPE_ORIENTATION, GTK_ORIENTATION_HORIZONTAL);
+	gtk_binding_entry_add_signal (binding_set, GDK_KEY_space, 0, "scroll", 2,
+				      GTK_TYPE_SCROLL_TYPE, GTK_SCROLL_PAGE_FORWARD,
+				      GTK_TYPE_ORIENTATION, GTK_ORIENTATION_VERTICAL);
+	gtk_binding_entry_add_signal (binding_set, GDK_KEY_space, GDK_SHIFT_MASK, "scroll", 2,
+				      GTK_TYPE_SCROLL_TYPE, GTK_SCROLL_PAGE_BACKWARD,
+				      GTK_TYPE_ORIENTATION, GTK_ORIENTATION_VERTICAL);
+	gtk_binding_entry_add_signal (binding_set, GDK_KEY_BackSpace, 0, "scroll", 2,
+				      GTK_TYPE_SCROLL_TYPE, GTK_SCROLL_PAGE_BACKWARD,
+				      GTK_TYPE_ORIENTATION, GTK_ORIENTATION_VERTICAL);
+	gtk_binding_entry_add_signal (binding_set, GDK_KEY_BackSpace, GDK_SHIFT_MASK, "scroll", 2,
+				      GTK_TYPE_SCROLL_TYPE, GTK_SCROLL_PAGE_FORWARD,
+				      GTK_TYPE_ORIENTATION, GTK_ORIENTATION_VERTICAL);
 }
 
 static void
