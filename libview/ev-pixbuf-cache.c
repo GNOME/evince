@@ -1138,6 +1138,11 @@ clear_job_selection (CacheJobInfo *job_info)
 		cairo_surface_destroy (job_info->selection);
 		job_info->selection = NULL;
 	}
+
+        if (job_info->selection_region) {
+                cairo_region_destroy (job_info->selection_region);
+                job_info->selection_region = NULL;
+        }
 }
 
 /* This function will reset the selection on pages that no longer have them, and
