@@ -1062,8 +1062,6 @@ ensure_rectangle_is_visible (EvView *view, GdkRectangle *rect)
 			     allocation.width + MARGIN);
 		gtk_adjustment_set_value (view->hadjustment, value);
 	}
-
-	gtk_widget_queue_resize (GTK_WIDGET (view));
 }
 
 /*** Geometry computations ***/
