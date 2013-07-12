@@ -171,20 +171,6 @@ ev_previewer_window_focus_page_selector (GtkAction         *action,
 	ev_page_action_grab_focus (EV_PAGE_ACTION (page_action));
 }
 
-static void
-ev_previewer_window_scroll_forward (GtkAction         *action,
-				    EvPreviewerWindow *window)
-{
-	ev_view_scroll (window->view, GTK_SCROLL_PAGE_FORWARD, FALSE);
-}
-
-static void
-ev_previewer_window_scroll_backward (GtkAction         *action,
-				     EvPreviewerWindow *window)
-{
-	ev_view_scroll (window->view, GTK_SCROLL_PAGE_BACKWARD, FALSE);
-}
-
 #if GTKUNIXPRINT_ENABLED
 static void
 ev_previewer_window_print_finished (GtkPrintJob       *print_job,
@@ -302,18 +288,6 @@ static const GtkActionEntry action_entries[] = {
 };
 
 static const GtkActionEntry accel_entries[] = {
-	{ "Space", NULL, "", "space", NULL,
-	  G_CALLBACK (ev_previewer_window_scroll_forward) },
-	{ "ShiftSpace", NULL, "", "<shift>space", NULL,
-	  G_CALLBACK (ev_previewer_window_scroll_backward) },
-	{ "BackSpace", NULL, "", "BackSpace", NULL,
-	  G_CALLBACK (ev_previewer_window_scroll_backward) },
-	{ "ShiftBackSpace", NULL, "", "<shift>BackSpace", NULL,
-	  G_CALLBACK (ev_previewer_window_scroll_forward) },
-	{ "Return", NULL, "", "Return", NULL,
-	  G_CALLBACK (ev_previewer_window_scroll_forward) },
-	{ "ShiftReturn", NULL, "", "<shift>Return", NULL,
-	  G_CALLBACK (ev_previewer_window_scroll_backward) },
 	{ "p", GTK_STOCK_GO_UP, "", "p", NULL,
 	  G_CALLBACK (ev_previewer_window_previous_page) },
 	{ "n", GTK_STOCK_GO_DOWN, "", "n", NULL,
