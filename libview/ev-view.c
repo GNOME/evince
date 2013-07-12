@@ -6218,14 +6218,18 @@ ev_view_class_init (EvViewClass *class)
         add_scroll_binding_keypad (binding_set, GDK_KEY_Down,  0, GTK_SCROLL_STEP_FORWARD, GTK_ORIENTATION_VERTICAL);
         add_scroll_binding_keypad (binding_set, GDK_KEY_Up,    GDK_MOD1_MASK, GTK_SCROLL_STEP_DOWN, GTK_ORIENTATION_VERTICAL);
         add_scroll_binding_keypad (binding_set, GDK_KEY_Down,  GDK_MOD1_MASK, GTK_SCROLL_STEP_UP, GTK_ORIENTATION_VERTICAL);
-        gtk_binding_entry_add_signal (binding_set, GDK_KEY_H, 0, "scroll", 2, GTK_TYPE_SCROLL_TYPE,
-				      GTK_SCROLL_STEP_BACKWARD, G_TYPE_BOOLEAN, GTK_ORIENTATION_HORIZONTAL);
-	gtk_binding_entry_add_signal (binding_set, GDK_KEY_J, 0, "scroll", 2, GTK_TYPE_SCROLL_TYPE,
-				      GTK_SCROLL_STEP_FORWARD, G_TYPE_BOOLEAN, GTK_ORIENTATION_VERTICAL);
-	gtk_binding_entry_add_signal (binding_set, GDK_KEY_K, 0, "scroll", 2, GTK_TYPE_SCROLL_TYPE,
-				      GTK_SCROLL_STEP_BACKWARD, G_TYPE_BOOLEAN, GTK_ORIENTATION_VERTICAL);
-	gtk_binding_entry_add_signal (binding_set, GDK_KEY_L, 0, "scroll", 2, GTK_TYPE_SCROLL_TYPE,
-				      GTK_SCROLL_STEP_FORWARD, G_TYPE_BOOLEAN, GTK_ORIENTATION_HORIZONTAL);
+        gtk_binding_entry_add_signal (binding_set, GDK_KEY_H, 0, "scroll", 2,
+				      GTK_TYPE_SCROLL_TYPE, GTK_SCROLL_STEP_BACKWARD,
+				      GTK_TYPE_ORIENTATION, GTK_ORIENTATION_HORIZONTAL);
+	gtk_binding_entry_add_signal (binding_set, GDK_KEY_J, 0, "scroll", 2,
+				      GTK_TYPE_SCROLL_TYPE, GTK_SCROLL_STEP_FORWARD,
+				      GTK_TYPE_ORIENTATION, GTK_ORIENTATION_VERTICAL);
+	gtk_binding_entry_add_signal (binding_set, GDK_KEY_K, 0, "scroll", 2,
+				      GTK_TYPE_SCROLL_TYPE, GTK_SCROLL_STEP_BACKWARD,
+				      GTK_TYPE_ORIENTATION, GTK_ORIENTATION_VERTICAL);
+	gtk_binding_entry_add_signal (binding_set, GDK_KEY_L, 0, "scroll", 2,
+				      GTK_TYPE_SCROLL_TYPE, GTK_SCROLL_STEP_FORWARD,
+				      GTK_TYPE_ORIENTATION, GTK_ORIENTATION_HORIZONTAL);
 }
 
 static void
