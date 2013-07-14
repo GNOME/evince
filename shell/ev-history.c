@@ -137,7 +137,7 @@ ev_history_init (EvHistory *history)
 	history->priv = G_TYPE_INSTANCE_GET_PRIVATE (history, EV_TYPE_HISTORY, EvHistoryPrivate);
 }
 
-static gboolean
+gboolean
 ev_history_is_frozen (EvHistory *history)
 {
         return history->priv->frozen > 0;

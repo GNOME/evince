@@ -69,6 +69,7 @@ GList          *ev_history_get_forward_list (EvHistory       *history);
 
 void            ev_history_freeze           (EvHistory       *history);
 void            ev_history_thaw             (EvHistory       *history);
+gboolean        ev_history_is_frozen        (EvHistory       *history);
 
 G_END_DECLS
 

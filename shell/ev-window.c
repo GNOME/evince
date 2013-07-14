@@ -547,6 +547,9 @@ ev_window_update_actions_sensitivity (EvWindow *ev_window)
 		ev_window_set_action_sensitive (ev_window, "GoLastPage", FALSE);
 		ev_window_set_action_sensitive (ev_window, "GoToPage", FALSE);
 	}
+
+	ev_window_set_action_sensitive (ev_window, "History",
+					!ev_history_is_frozen (ev_window->priv->history));
 }
 
 static void
