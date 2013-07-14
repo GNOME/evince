@@ -180,6 +180,14 @@ combo_activated_cb (GtkEntry           *entry,
                                      zoom * ev_document_misc_get_screen_dpi (screen) / 72.0);
 }
 
+static gboolean
+combo_focus_out_cb (EvZoomActionWidget *control)
+{
+        ev_zoom_action_widget_update_zoom_level (control);
+
+        return FALSE;
+}
+
 static gchar *
 combo_format_entry_text (GtkComboBox        *combo,
                          const gchar        *path,
@@ -288,6 +296,9 @@ ev_zoom_action_widget_init (EvZoomActionWidget *control)
         g_signal_connect (entry, "activate",
                           G_CALLBACK (combo_activated_cb),
                           control);
+        g_signal_connect_swapped (entry, "focus-out-event",
+                                  G_CALLBACK (combo_focus_out_cb),
+                                  control);
 }
 
 static void
