@@ -193,6 +193,14 @@ activate_cb (EvPageActionWidget *action_widget)
 		ev_page_action_widget_set_current_page (action_widget, current_page);
 }
 
+static gboolean
+focus_out_cb (EvPageActionWidget *action_widget)
+{
+        ev_page_action_widget_set_current_page (action_widget,
+                                                ev_document_model_get_page (action_widget->doc_model));
+        return FALSE;
+}
+
 static void
 ev_page_action_widget_init (EvPageActionWidget *action_widget)
 {
@@ -217,6 +225,9 @@ ev_page_action_widget_init (EvPageActionWidget *action_widget)
 	g_signal_connect_swapped (action_widget->entry, "activate",
 				  G_CALLBACK (activate_cb),
 				  action_widget);
+        g_signal_connect_swapped (action_widget->entry, "focus-out-event",
+                                  G_CALLBACK (focus_out_cb),
+                                  action_widget);
 
 	obj = gtk_widget_get_accessible (action_widget->entry);
 	atk_object_set_name (obj, "page-label-entry");
