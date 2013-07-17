@@ -612,27 +612,18 @@ static gint
 ev_view_accessible_get_n_selections (AtkText *text)
 {
 	GtkWidget *widget;
-	GtkTextBuffer *buffer;
-	GtkTextIter start, end;
-	gint select_start, select_end;
+	EvView *view;
 
 	widget = gtk_accessible_get_widget (GTK_ACCESSIBLE (text));
 	if (widget == NULL)
 		/* State is defunct */
 		return -1;
 
-	buffer = ev_view_accessible_get_text_buffer (EV_VIEW_ACCESSIBLE (text), EV_VIEW (widget));
-	if (!buffer)
-		return -1;
-
-	gtk_text_buffer_get_selection_bounds (buffer, &start, &end);
-	select_start = gtk_text_iter_get_offset (&start);
-	select_end = gtk_text_iter_get_offset (&end);
-
-	if (select_start != select_end)
-		return 1;
-	else
+	view = EV_VIEW (widget);
+	if (!EV_IS_SELECTION (view->document) || !view->selection_info.selections)
 		return 0;
+
+	return 1;
 }
 
 static gchar *
