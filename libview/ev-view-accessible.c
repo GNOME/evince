@@ -306,6 +306,7 @@ static gint
 ev_view_accessible_get_caret_offset (AtkText *text)
 {
 	GtkWidget *widget;
+	EvView *view;
 	GtkTextBuffer *buffer;
 	GtkTextMark *cursor_mark;
 	GtkTextIter cursor_itr;
@@ -315,6 +316,15 @@ ev_view_accessible_get_caret_offset (AtkText *text)
 	if (widget == NULL)
 		/* State is defunct */
 		return 0;
+
+	view = EV_VIEW (widget);
+
+	if (view->caret_enabled) {
+		if (view->cursor_page == view->current_page)
+			return view->cursor_offset;
+		else
+			return -1;
+	}
 
 	buffer = ev_view_accessible_get_text_buffer (EV_VIEW_ACCESSIBLE (text), EV_VIEW (widget));
 	if (!buffer)
