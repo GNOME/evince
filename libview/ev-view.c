@@ -4320,9 +4320,14 @@ position_caret_cursor_at_location (EvView *view,
 
 static gboolean
 position_caret_cursor_for_event (EvView         *view,
-				 GdkEventButton *event)
+				 GdkEventButton *event,
+				 gboolean        redraw)
 {
 	GdkRectangle area;
+	GdkRectangle prev_area = { 0, 0, 0, 0 };
+
+	if (redraw)
+		get_caret_cursor_area (view, view->cursor_page, view->cursor_offset, &prev_area);
 
 	if (!position_caret_cursor_at_location (view, event->x, event->y))
 		return FALSE;
@@ -4333,6 +4338,16 @@ position_caret_cursor_for_event (EvView         *view,
 	view->cursor_line_offset = area.x;
 
 	g_signal_emit (view, signals[SIGNAL_CURSOR_MOVED], 0, view->cursor_page, view->cursor_offset);
+
+	if (redraw) {
+		cairo_region_t *damage_region;
+
+		damage_region = cairo_region_create_rectangle (&prev_area);
+		cairo_region_union_rectangle (damage_region, &area);
+		gdk_window_invalidate_region (gtk_widget_get_window (GTK_WIDGET (view)),
+					      damage_region, TRUE);
+		cairo_region_destroy (damage_region);
+	}
 
 	return TRUE;
 }
@@ -4385,7 +4400,7 @@ ev_view_button_press_event (GtkWidget      *widget,
 					view->selection_info.in_drag = TRUE;
 				} else {
 					start_selection_for_event (view, event);
-					if (position_caret_cursor_for_event (view, event)) {
+					if (position_caret_cursor_for_event (view, event, TRUE)) {
 						view->cursor_blink_time = 0;
 						ev_view_pend_cursor_blink (view);
 					}
@@ -4419,11 +4434,9 @@ ev_view_button_press_event (GtkWidget      *widget,
 				if (EV_IS_SELECTION (view->document))
 					start_selection_for_event (view, event);
 
-				if (position_caret_cursor_for_event (view, event)) {
+				if (position_caret_cursor_for_event (view, event, TRUE)) {
 					view->cursor_blink_time = 0;
 					ev_view_pend_cursor_blink (view);
-
-					gtk_widget_queue_draw (widget);
 				}
 			}
 		}			
@@ -4870,7 +4883,7 @@ ev_view_button_release_event (GtkWidget      *widget,
 		clear_link_selected (view);
 		ev_view_update_primary_selection (view);
 
-		position_caret_cursor_for_event (view, event);
+		position_caret_cursor_for_event (view, event, FALSE);
 
 		if (view->selection_info.in_drag)
 			clear_selection (view);
@@ -5275,10 +5288,12 @@ ev_view_move_cursor (EvView         *view,
 		     gint            count,
 		     gboolean        extend_selection)
 {
-	GdkRectangle rect;
-	gint         prev_offset;
-	gint         prev_page;
-	gboolean     clear_selections = FALSE;
+	GdkRectangle    rect;
+	GdkRectangle    prev_rect;
+	gint            prev_offset;
+	gint            prev_page;
+	cairo_region_t *damage_region;
+	gboolean        clear_selections = FALSE;
 
 	if (!view->caret_enabled || view->rotation != 0)
 		return FALSE;
@@ -5363,6 +5378,10 @@ ev_view_move_cursor (EvView         *view,
 		view->cursor_line_offset = rect.x;
 	}
 
+	damage_region = cairo_region_create_rectangle (&rect);
+	if (get_caret_cursor_area (view, prev_page, prev_offset, &prev_rect))
+		cairo_region_union_rectangle (damage_region, &prev_rect);
+
 	rect.x += view->scroll_x;
 	rect.y += view->scroll_y;
 
@@ -5371,13 +5390,13 @@ ev_view_move_cursor (EvView         *view,
 
 	g_signal_emit (view, signals[SIGNAL_CURSOR_MOVED], 0, view->cursor_page, view->cursor_offset);
 
+	gdk_window_invalidate_region (gtk_widget_get_window (GTK_WIDGET (view)),
+				      damage_region, TRUE);
+	cairo_region_destroy (damage_region);
+
 	/* Select text */
 	if (extend_selection && EV_IS_SELECTION (view->document)) {
-		GdkRectangle prev_rect;
 		GdkPoint start_point, end_point;
-
-		if (!get_caret_cursor_area (view, prev_page, prev_offset, &prev_rect))
-			return TRUE;
 
 		start_point.x = prev_rect.x + view->scroll_x;
 		start_point.y = prev_rect.y + (prev_rect.height / 2) + view->scroll_y;
@@ -5388,8 +5407,6 @@ ev_view_move_cursor (EvView         *view,
 		extend_selection_from_cursor (view, &start_point, &end_point);
 	} else if (clear_selections)
 		clear_selection (view);
-
-	gtk_widget_queue_draw (GTK_WIDGET (view));
 
 	return TRUE;
 }
