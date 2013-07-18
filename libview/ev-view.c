@@ -5356,6 +5356,9 @@ ev_view_move_cursor (EvView         *view,
 			gtk_widget_error_bell (GTK_WIDGET (view));
 			return TRUE;
 		}
+
+		if (!get_caret_cursor_area (view, view->cursor_page, view->cursor_offset, &rect))
+			return TRUE;
 	} else {
 		view->cursor_line_offset = rect.x;
 	}
