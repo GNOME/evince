@@ -626,6 +626,42 @@ ev_view_accessible_get_n_selections (AtkText *text)
 	return 1;
 }
 
+static gboolean
+get_selection_bounds (EvView          *view,
+		      EvViewSelection *selection,
+		      gint            *start_offset,
+		      gint            *end_offset)
+{
+	cairo_rectangle_int_t rect;
+	gint start, end;
+
+	if (!selection->covered_region || cairo_region_is_empty (selection->covered_region))
+		return FALSE;
+
+	cairo_region_get_rectangle (selection->covered_region, 0, &rect);
+	start = _ev_view_get_caret_cursor_offset_at_doc_point (view,
+							       selection->page,
+							       rect.x / view->scale,
+							       (rect.y + (rect.height / 2)) / view->scale);
+	if (start == -1)
+		return FALSE;
+
+	cairo_region_get_rectangle (selection->covered_region,
+				    cairo_region_num_rectangles (selection->covered_region) - 1,
+				    &rect);
+	end = _ev_view_get_caret_cursor_offset_at_doc_point (view,
+							     selection->page,
+							     (rect.x + rect.width) / view->scale,
+							     (rect.y + (rect.height / 2)) / view->scale);
+	if (end == -1)
+		return FALSE;
+
+	*start_offset = start;
+	*end_offset = end;
+
+	return TRUE;
+}
+
 static gchar *
 ev_view_accessible_get_selection (AtkText *text,
 				  gint     selection_num,
@@ -633,9 +669,13 @@ ev_view_accessible_get_selection (AtkText *text,
 				  gint    *end_pos)
 {
 	GtkWidget *widget;
-	GtkTextBuffer *buffer;
-	GtkTextIter start, end;
-	gchar *retval = NULL;
+	EvView    *view;
+	gchar *selected_text = NULL;
+	gchar *normalized_text = NULL;
+	GList *l;
+
+	*start_pos = -1;
+	*end_pos = -1;
 
 	widget = gtk_accessible_get_widget (GTK_ACCESSIBLE (text));
 	if (widget == NULL)
@@ -645,18 +685,46 @@ ev_view_accessible_get_selection (AtkText *text,
 	if (selection_num != 0)
 		return NULL;
 
-	buffer = ev_view_accessible_get_text_buffer (EV_VIEW_ACCESSIBLE (text), EV_VIEW (widget));
-	if (!buffer)
+	view = EV_VIEW (widget);
+	if (!EV_IS_SELECTION (view->document) || !view->selection_info.selections)
 		return NULL;
 
-	gtk_text_buffer_get_selection_bounds (buffer, &start, &end);
-	*start_pos = gtk_text_iter_get_offset (&start);
-	*end_pos = gtk_text_iter_get_offset (&end);
 
-	if (*start_pos != *end_pos)
-		retval = gtk_text_buffer_get_text (buffer, &start, &end, FALSE);
+	for (l = view->selection_info.selections; l != NULL; l = l->next) {
+		EvViewSelection *selection = (EvViewSelection *)l->data;
+		gint start, end;
 
-	return retval;
+		if (selection->page != view->current_page)
+			continue;
+
+		if (get_selection_bounds (view, selection, &start, &end) && start != end) {
+			EvPage *page;
+
+			page = ev_document_get_page (view->document, selection->page);
+
+			ev_document_doc_mutex_lock ();
+			selected_text = ev_selection_get_selected_text (EV_SELECTION (view->document),
+									page,
+									selection->style,
+									&(selection->rect));
+
+			ev_document_doc_mutex_unlock ();
+
+			g_object_unref (page);
+
+			*start_pos = start;
+			*end_pos = end;
+		}
+
+		break;
+	}
+
+	if (selected_text) {
+		normalized_text = g_utf8_normalize (selected_text, -1, G_NORMALIZE_NFKC);
+		g_free (selected_text);
+	}
+
+	return normalized_text;
 }
 
 static gboolean

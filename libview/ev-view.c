@@ -4210,11 +4210,11 @@ start_selection_for_event (EvView         *view,
 			    &(view->selection_info.start));
 }
 
-static gboolean
-position_caret_cursor_at_doc_point (EvView *view,
-				    gint    page,
-				    gdouble doc_x,
-				    gdouble doc_y)
+gint
+_ev_view_get_caret_cursor_offset_at_doc_point (EvView *view,
+					       gint    page,
+					       gdouble doc_x,
+					       gdouble doc_y)
 {
 	EvRectangle *areas = NULL;
 	guint        n_areas = 0;
@@ -4226,7 +4226,7 @@ position_caret_cursor_at_doc_point (EvView *view,
 
 	ev_page_cache_get_text_layout (view->page_cache, page, &areas, &n_areas);
 	if (!areas)
-		return FALSE;
+		return -1;
 
 	i = 0;
 	while (i < n_areas && offset == -1) {
@@ -4282,10 +4282,25 @@ position_caret_cursor_at_doc_point (EvView *view,
 	}
 
 	if (last_line_offset == -1)
-		return FALSE;
+		return -1;
 
 	if (offset == -1)
 		offset = last_line_offset;
+
+	return offset;
+}
+
+static gboolean
+position_caret_cursor_at_doc_point (EvView *view,
+				    gint    page,
+				    gdouble doc_x,
+				    gdouble doc_y)
+{
+	gint offset;
+
+	offset = _ev_view_get_caret_cursor_offset_at_doc_point (view, page, doc_x, doc_y);
+	if (offset == -1)
+		return FALSE;
 
 	if (view->cursor_offset != offset || view->cursor_page != page) {
 		view->cursor_offset = offset;
