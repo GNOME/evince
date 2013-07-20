@@ -7460,6 +7460,10 @@ get_selection_page_range (EvView          *view,
 		GtkBorder    border;
 
 		ev_view_get_page_extents (view, i, &page_area, &border);
+		page_area.x -= border.left;
+		page_area.y -= border.top;
+		page_area.width += border.left + border.right;
+		page_area.height += border.top + border.bottom;
 		if (gdk_rectangle_point_in (&page_area, start) ||
 		    gdk_rectangle_point_in (&page_area, stop)) {
 			if (first == -1)
@@ -7511,6 +7515,10 @@ compute_new_selection (EvView          *view,
 		selection->rect.y2 = height;
 
 		ev_view_get_page_extents (view, i, &page_area, &border);
+		page_area.x -= border.left;
+		page_area.y -= border.top;
+		page_area.width += border.left + border.right;
+		page_area.height += border.top + border.bottom;
 
 		if (gdk_rectangle_point_in (&page_area, start))
 			point = start;
