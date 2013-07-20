@@ -167,7 +167,7 @@ ev_hyperlink_get_end_index (AtkHyperlink *atk_hyperlink)
                 c_y = rect->y1 + (rect->y2 - rect->y1) / 2.;
                 if (c_x >= impl_priv->area.x1 && c_x <= impl_priv->area.x2 &&
                     c_y >= impl_priv->area.y1 && c_y <= impl_priv->area.y2)
-                        return i;
+                        return i + 1;
         }
 
         return -1;
