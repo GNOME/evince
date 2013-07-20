@@ -6329,7 +6329,6 @@ ev_view_init (EvView *view)
 	view->scroll_info.autoscrolling = FALSE;
 	view->selection_info.selections = NULL;
 	view->selection_info.in_drag = FALSE;
-	view->selection_mode = EV_VIEW_SELECTION_TEXT;
 	view->continuous = TRUE;
 	view->dual_even_left = TRUE;
 	view->fullscreen = FALSE;
@@ -7409,51 +7408,6 @@ ev_view_highlight_forward_search (EvView       *view,
 }
 
 /*** Selections ***/
-
-/* compute_new_selection_rect/text calculates the area currently selected by
- * view_rect.  each handles a different mode;
- */
-static GList *
-compute_new_selection_rect (EvView       *view,
-			    GdkPoint     *start,
-			    GdkPoint     *stop)
-{
-	GdkRectangle view_rect;
-	int n_pages, i;
-	GList *list = NULL;
-
-	g_assert (view->selection_mode == EV_VIEW_SELECTION_RECTANGLE);
-	
-	view_rect.x = MIN (start->x, stop->x);
-	view_rect.y = MIN (start->y, stop->y);
-	view_rect.width = MAX (start->x, stop->x) - view_rect.x;
-	view_rect.width = MAX (start->y, stop->y) - view_rect.y;
-
-	n_pages = ev_document_get_n_pages (view->document);
-
-	for (i = 0; i < n_pages; i++) {
-		GdkRectangle page_area;
-		GtkBorder border;
-		
-		if (ev_view_get_page_extents (view, i, &page_area, &border)) {
-			GdkRectangle overlap;
-
-			if (gdk_rectangle_intersect (&page_area, &view_rect, &overlap)) {
-				EvViewSelection *selection;
-
-				selection = g_slice_new0 (EvViewSelection);
-				selection->page = i;
-				_ev_view_transform_view_rect_to_doc_rect (view, &overlap, &page_area,
-									  &(selection->rect));
-
-				list = g_list_append (list, selection);
-			}
-		}
-	}
-
-	return list;
-}
-
 static gboolean
 gdk_rectangle_point_in (GdkRectangle *rectangle,
 			GdkPoint     *point)
@@ -7465,18 +7419,16 @@ gdk_rectangle_point_in (GdkRectangle *rectangle,
 }
 
 static GList *
-compute_new_selection_text (EvView          *view,
-			    EvSelectionStyle style,
-			    GdkPoint        *start,
-			    GdkPoint        *stop)
+compute_new_selection (EvView          *view,
+		       EvSelectionStyle style,
+		       GdkPoint        *start,
+		       GdkPoint        *stop)
 {
 	int n_pages, i, first, last;
 	GList *list = NULL;
 	EvViewSelection *selection;
 	gdouble width, height;
 	int start_page, end_page;
-
-	g_assert (view->selection_mode == EV_VIEW_SELECTION_TEXT);
 
 	n_pages = ev_document_get_n_pages (view->document);
 
@@ -7699,13 +7651,7 @@ compute_selections (EvView          *view,
 		    GdkPoint        *start,
 		    GdkPoint        *stop)
 {
-	GList *list;
-
-	if (view->selection_mode == EV_VIEW_SELECTION_RECTANGLE)
-		list = compute_new_selection_rect (view, start, stop);
-	else
-		list = compute_new_selection_text (view, style, start, stop);
-	merge_selection_region (view, list);
+	merge_selection_region (view, compute_new_selection (view, style, start, stop));
 }
 
 /* Free's the selection.  It's up to the caller to queue redraws if needed.

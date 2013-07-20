@@ -188,7 +188,6 @@ struct _EvView {
 	guint selection_update_id;
 	guint selection_scroll_id;
 
-	EvViewSelectionMode selection_mode;
 	SelectionInfo selection_info;
 
 	/* Copy link address selection */

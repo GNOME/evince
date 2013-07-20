@@ -40,11 +40,6 @@ G_BEGIN_DECLS
 typedef struct _EvView       EvView;
 typedef struct _EvViewClass  EvViewClass;
 
-typedef enum {
-	EV_VIEW_SELECTION_TEXT,
-	EV_VIEW_SELECTION_RECTANGLE,
-} EvViewSelectionMode;
-
 GType		ev_view_get_type	    (void) G_GNUC_CONST;
 
 GtkWidget*	ev_view_new		    (void);
