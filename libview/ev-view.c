@@ -7418,56 +7418,88 @@ gdk_rectangle_point_in (GdkRectangle *rectangle,
 		point->y < rectangle->y + rectangle->height;
 }
 
+static inline gboolean
+gdk_point_equal (GdkPoint *a,
+		 GdkPoint *b)
+{
+	return a->x == b->x && a->y == b->y;
+}
+
+static gboolean
+get_selection_page_range (EvView          *view,
+			  EvSelectionStyle style,
+			  GdkPoint        *start,
+			  GdkPoint        *stop,
+			  gint            *first_page,
+			  gint            *last_page)
+{
+	gint start_page, end_page;
+	gint first, last;
+	gint i, n_pages;
+
+	n_pages = ev_document_get_n_pages (view->document);
+
+	if (gdk_point_equal (start, stop)) {
+		start_page = view->start_page;
+		end_page = view->end_page;
+	} else if (view->continuous) {
+		start_page = 0;
+		end_page = n_pages - 1;
+	} else if (is_dual_page (view, NULL)) {
+		start_page = view->start_page;
+		end_page = view->end_page;
+	} else {
+		start_page = view->current_page;
+		end_page = view->current_page;
+	}
+
+	first = -1;
+	last = -1;
+	for (i = start_page; i <= end_page; i++) {
+		GdkRectangle page_area;
+		GtkBorder    border;
+
+		ev_view_get_page_extents (view, i, &page_area, &border);
+		if (gdk_rectangle_point_in (&page_area, start) ||
+		    gdk_rectangle_point_in (&page_area, stop)) {
+			if (first == -1)
+				first = i;
+			last = i;
+		}
+	}
+
+	if (first != -1 && last != -1) {
+		*first_page = first;
+		*last_page = last;
+
+		return TRUE;
+	}
+
+	return FALSE;
+}
+
 static GList *
 compute_new_selection (EvView          *view,
 		       EvSelectionStyle style,
 		       GdkPoint        *start,
 		       GdkPoint        *stop)
 {
-	int n_pages, i, first, last;
+	int i, first, last;
 	GList *list = NULL;
-	EvViewSelection *selection;
-	gdouble width, height;
-	int start_page, end_page;
 
-	n_pages = ev_document_get_n_pages (view->document);
-
-	/* First figure out the range of pages the selection
-	 * affects. */
-	first = n_pages;
-	last = 0;
-	if (view->continuous) {
-		start_page = 0;
-		end_page = n_pages;
-	} else if (is_dual_page (view, NULL)) {
-		start_page = view->start_page;
-		end_page = view->end_page + 1;
-	} else {
-		start_page = view->current_page;
-		end_page = view->current_page + 1;
-	}
-
-	for (i = start_page; i < end_page; i++) {
-		GdkRectangle page_area;
-		GtkBorder border;
-		
-		ev_view_get_page_extents (view, i, &page_area, &border);
-		if (gdk_rectangle_point_in (&page_area, start) || 
-		    gdk_rectangle_point_in (&page_area, stop)) {
-			if (first == n_pages)
-				first = i;
-			last = i;
-		}
-
-	}
+	/* First figure out the range of pages the selection affects. */
+	if (!get_selection_page_range (view, style, start, stop, &first, &last))
+		return list;
 
 	/* Now create a list of EvViewSelection's for the affected
-	 * pages.  This could be an empty list, a list of just one
+	 * pages. This could be an empty list, a list of just one
 	 * page or a number of pages.*/
-	for (i = first; i < last + 1; i++) {
-		GdkRectangle page_area;
-		GtkBorder border;
-		GdkPoint *point;
+	for (i = first; i <= last; i++) {
+		EvViewSelection *selection;
+		GdkRectangle     page_area;
+		GtkBorder        border;
+		GdkPoint        *point;
+		gdouble          width, height;
 
 		get_doc_page_size (view, i, &width, &height);
 
