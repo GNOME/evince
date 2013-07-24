@@ -203,6 +203,7 @@ ev_document_setup_cache (EvDocument *document)
         /* Cache some info about the document to avoid
          * going to the backends since it requires locks
          */
+	priv->info = _ev_document_get_info (document);
         priv->n_pages = _ev_document_get_n_pages (document);
 
         for (i = 0; i < priv->n_pages; i++) {
@@ -267,6 +268,24 @@ ev_document_setup_cache (EvDocument *document)
         }
 }
 
+static void
+ev_document_initialize_synctex (EvDocument  *document,
+				const gchar *uri)
+{
+	EvDocumentPrivate *priv = document->priv;
+
+	if (_ev_document_support_synctex (document)) {
+		gchar *filename;
+
+		filename = g_filename_from_uri (uri, NULL, NULL);
+		if (filename != NULL) {
+			priv->synctex_scanner =
+				synctex_scanner_new_with_output_file (filename, NULL, 1);
+			g_free (filename);
+		}
+	}
+}
+
 /**
  * ev_document_load:
  * @document: a #EvDocument
@@ -308,22 +327,9 @@ ev_document_load (EvDocument  *document,
 					     "Internal error in backend");
 		}
 	} else {
-                EvDocumentPrivate *priv = document->priv;
-
                 ev_document_setup_cache (document);
-
-                priv->uri = g_strdup (uri);
-                priv->info = _ev_document_get_info (document);
-                if (_ev_document_support_synctex (document)) {
-                        gchar *filename;
-
-                        filename = g_filename_from_uri (uri, NULL, NULL);
-                        if (filename != NULL) {
-                                priv->synctex_scanner =
-                                        synctex_scanner_new_with_output_file (filename, NULL, 1);
-                                g_free (filename);
-                        }
-                }
+		document->priv->uri = g_strdup (uri);
+		ev_document_initialize_synctex (document, uri);
         }
 
 	return retval;
@@ -413,6 +419,8 @@ ev_document_load_gfile (EvDocument         *document,
                 return FALSE;
 
         ev_document_setup_cache (document);
+	document->priv->uri = g_file_get_uri (file);
+	ev_document_initialize_synctex (document, document->priv->uri);
 
         return TRUE;
 }
