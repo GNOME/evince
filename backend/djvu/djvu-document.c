@@ -518,7 +518,7 @@ djvu_document_class_init (DjvuDocumentClass *klass)
 
 static gchar *
 djvu_text_copy (DjvuDocument *djvu_document,
-		gint           page,
+		gint           page_num,
 		EvRectangle  *rectangle)
 {
 	miniexp_t page_text;
@@ -526,7 +526,7 @@ djvu_text_copy (DjvuDocument *djvu_document,
 
 	while ((page_text =
 		ddjvu_document_get_pagetext (djvu_document->d_document,
-					     page, "char")) == miniexp_dummy)
+					     page_num, "char")) == miniexp_dummy)
 		djvu_handle_events (djvu_document, TRUE, NULL);
 
 	if (page_text != miniexp_nil) {
