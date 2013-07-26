@@ -629,7 +629,7 @@ compression_run (const gchar       *uri,
 	}
 
 	argv[0] = cmd;
-	argv[1] = compress ? "-c" : "-cd";
+	argv[1] = compress ? (char *) "-c" : (char *) "-cd";
 	argv[2] = filename;
 	argv[3] = NULL;
 
