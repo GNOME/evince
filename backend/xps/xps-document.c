@@ -295,7 +295,7 @@ link_action_from_target (XPSDocument    *xps_document,
 
 	if (gxps_link_target_is_internal (target)) {
 		EvLinkDest  *dest = NULL;
-		guint        doc;
+		gint         doc;
 		const gchar *anchor;
 
 		anchor = gxps_link_target_get_anchor (target);
