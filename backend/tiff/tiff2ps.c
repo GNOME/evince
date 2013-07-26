@@ -167,6 +167,8 @@ static int Ascii85EncodeBlock(TIFF2PSContext*, uint8 * ascii85_p,
 			      unsigned f_eod, const uint8 * raw_p, int raw_l);
 #endif
 
+#define IMAGEOP(ctx) ((ctx)->useImagemask && ((ctx)->bitspersample == 1)) ? "imagemask" : "image"
+
 TIFF2PSContext* tiff2ps_context_new(const gchar *filename) {
 	TIFF2PSContext* ctx;
 
@@ -295,13 +297,18 @@ static	char RGBcolorimage[] = "\
  *
  * It is claimed to be part of some future revision of the EPS spec.
  */
-static void
+G_GNUC_PRINTF (6, 7) static void
 PhotoshopBanner(TIFF2PSContext* ctx, uint32 w, uint32 h, int bs, int nc,
-		char* startline)
+		const char* startline, ...)
 {
+	va_list args;
 	fprintf(ctx->fd, "%%ImageData: %ld %ld %d %d 0 %d 2 \"",
 	    (long) w, (long) h, ctx->bitspersample, nc, bs);
-	fprintf(ctx->fd, startline, nc);
+
+	va_start(args, startline);
+	vfprintf(ctx->fd, startline, args);
+	va_end(args);
+
 	fprintf(ctx->fd, "\"\n");
 }
 
@@ -759,10 +766,6 @@ PS_Lvl2ImageDict(TIFF2PSContext* ctx, TIFF* tif, uint32 w, uint32 h)
 	uint16 predictor, minsamplevalue, maxsamplevalue;
 	int repeat_count;
 	char im_h[64], im_x[64], im_y[64];
-	char * imageOp = "image";
-
-	if ( ctx->useImagemask && (ctx->bitspersample == 1) )
-		imageOp = "imagemask";
 
 	(void)strcpy(im_x, "0");
 	(void)sprintf(im_y, "%lu", (long) h);
@@ -1040,7 +1043,7 @@ PS_Lvl2ImageDict(TIFF2PSContext* ctx, TIFF* tif, uint32 w, uint32 h)
 		fputs(" ]", ctx->fd);
 	}
 
-	fprintf( ctx->fd, "\n >> %s\n", imageOp );
+	fprintf( ctx->fd, "\n >> %s\n", IMAGEOP(ctx) );
 	if (ctx->ascii85)
 		fputs(" im_stream status { im_stream flushfile } if\n", ctx->fd);
 	if (repeat_count > 1) {
@@ -1267,11 +1270,6 @@ PS_Lvl2page(TIFF2PSContext* ctx, TIFF* tif, uint32 w, uint32 h)
 void
 PSpage(TIFF2PSContext* ctx, TIFF* tif, uint32 w, uint32 h)
 {
-	char *imageOp = "image";
-
-	if ( ctx->useImagemask && (ctx->bitspersample == 1) )
-		imageOp = "imagemask";
-
 	if ((ctx->level2 || ctx->level3) && PS_Lvl2page(ctx, tif, w, h))
 		return;
 	ctx->ps_bytesperrow = ctx->tf_bytesperrow - (ctx->extrasamples * ctx->bitspersample / 8)*w;
@@ -1313,7 +1311,7 @@ PSpage(TIFF2PSContext* ctx, TIFF* tif, uint32 w, uint32 h)
 		break;
 	case PHOTOMETRIC_MINISBLACK:
 	case PHOTOMETRIC_MINISWHITE:
-		PhotoshopBanner(ctx, w, h, 1, 1, imageOp);
+		PhotoshopBanner(ctx, w, h, 1, 1, IMAGEOP(ctx));
 		fprintf(ctx->fd, "/scanLine %ld string def\n",
 		    (long) ctx->ps_bytesperrow);
 		fprintf(ctx->fd, "%lu %lu %d\n",
@@ -1322,7 +1320,7 @@ PSpage(TIFF2PSContext* ctx, TIFF* tif, uint32 w, uint32 h)
 		    (unsigned long) w, (unsigned long) h, (unsigned long) h);
 		fprintf(ctx->fd,
 		    "{currentfile scanLine readhexstring pop} bind\n");
-		fprintf(ctx->fd, "%s\n", imageOp);
+		fprintf(ctx->fd, "%s\n", IMAGEOP(ctx));
 		PSDataBW(ctx, tif, w, h);
 		break;
 	}
@@ -1333,7 +1331,7 @@ void
 PSColorContigPreamble(TIFF2PSContext* ctx, uint32 w, uint32 h, int nc)
 {
 	ctx->ps_bytesperrow = nc * (ctx->tf_bytesperrow / ctx->samplesperpixel);
-	PhotoshopBanner(ctx, w, h, 1, nc, "false %d colorimage");
+	PhotoshopBanner(ctx, w, h, 1, nc, "false %d colorimage", nc);
 	fprintf(ctx->fd, "/line %ld string def\n", (long) ctx->ps_bytesperrow);
 	fprintf(ctx->fd, "%lu %lu %d\n",
 	    (unsigned long) w, (unsigned long) h, ctx->bitspersample);
@@ -1348,7 +1346,7 @@ PSColorSeparatePreamble(TIFF2PSContext* ctx, uint32 w, uint32 h, int nc)
 {
 	int i;
 
-	PhotoshopBanner(ctx, w, h, ctx->ps_bytesperrow, nc, "true %d colorimage");
+	PhotoshopBanner(ctx, w, h, ctx->ps_bytesperrow, nc, "true %d colorimage", nc);
 	for (i = 0; i < nc; i++)
 		fprintf(ctx->fd, "/line%d %ld string def\n",
 		    i, (long) ctx->ps_bytesperrow);
