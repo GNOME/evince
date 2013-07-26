@@ -64,7 +64,6 @@ LT_PREREQ([2.2])
 LT_INIT
 LT_LIB_M
 
-GNOME_COMPILE_WARNINGS
 GNOME_CXX_WARNINGS
 
 IT_PROG_INTLTOOL([0.35.0])
@@ -659,6 +658,19 @@ AM_CONDITIONAL(ENABLE_XPS, test x$enable_xps = xyes)
 
 dnl ================== End of XPS checks ===================================================
 
+dnl =================== Compile warnings ===================================================
+
+GNOME_COMPILE_WARNINGS
+
+CC_CHECK_FLAGS_APPEND([AM_CFLAGS],[CFLAGS],[ \
+  -Wno-deprecated-declarations \
+])
+
+AM_CFLAGS="$AM_CFLAGS $WARN_CFLAGS"
+AM_CXXFLAGS="$AM_CXXFLAGS $WARN_CXXFLAGS"
+
+dnl =================== End of compile warnings=============================================
+
 dnl =================== Mime types list ====================================================
 
 if test "x$enable_pdf" = "xyes" ; then
@@ -724,6 +736,11 @@ AC_SUBST([EV_DOCUMENT_LT_VERSION_INFO],[ev_document_lt_version_info])
 AC_SUBST([EV_DOCUMENT_LT_CURRENT_MINUS_AGE],[ev_document_lt_current_minus_age])
 AC_SUBST([EV_VIEW_LT_VERSION_INFO],[ev_view_lt_version_info])
 AC_SUBST([EV_VIEW_LT_CURRENT_MINUS_AGE],[ev_view_lt_current_minus_age])
+
+AC_SUBST([AM_CPPFLAGS])
+AC_SUBST([AM_CFLAGS])
+AC_SUBST([AM_CXXFLAGS])
+AC_SUBST([AM_LDFLAGS])
 
 # *****************************************************************************
 # *****************************************************************************
