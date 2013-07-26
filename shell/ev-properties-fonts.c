@@ -233,7 +233,7 @@ ev_properties_fonts_set_document (EvPropertiesFonts *properties,
 }
 
 GtkWidget *
-ev_properties_fonts_new ()
+ev_properties_fonts_new (void)
 {
 	EvPropertiesFonts *properties;
 

@@ -127,7 +127,7 @@ ev_properties_dialog_set_document (EvPropertiesDialog *properties,
 }
 
 GtkWidget *
-ev_properties_dialog_new ()
+ev_properties_dialog_new (void)
 {
 	EvPropertiesDialog *properties;
 
