@@ -454,7 +454,7 @@ void            ev_job_failed             (EvJob          *job,
 					   GQuark          domain,
 					   gint            code,
 					   const gchar    *format,
-					   ...);
+					   ...) G_GNUC_PRINTF (4, 5);
 void            ev_job_failed_from_error  (EvJob          *job,
 					   GError         *error);
 void            ev_job_succeeded          (EvJob          *job);
