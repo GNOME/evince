@@ -360,7 +360,7 @@ file_chooser_dialog_add_writable_pixbuf_formats (GtkFileChooser *chooser)
 }
 
 GdkPixbufFormat*
-get_gdk_pixbuf_format_by_extension (gchar *uri)
+get_gdk_pixbuf_format_by_extension (const gchar *uri)
 {
 	GSList *pixbuf_formats = NULL;
 	GSList *iter;
