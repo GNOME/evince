@@ -349,6 +349,8 @@ static void	ev_window_cmd_view_fit_page 		(GtkAction 	  *action,
 							 EvWindow 	  *ev_window);
 static void	ev_window_cmd_view_fit_width 		(GtkAction 	  *action,
 							 EvWindow 	  *ev_window);
+static void     ev_window_cmd_view_zoom_automatic       (GtkAction        *action,
+							 EvWindow         *ev_window);
 static void	view_handle_link_cb 			(EvView           *view, 
 							 EvLink           *link, 
 							 EvWindow         *window);
@@ -597,21 +599,23 @@ static void
 update_sizing_buttons (EvWindow *window)
 {
 	GtkActionGroup *action_group = window->priv->zoom_selector_popup_action_group;
-	GtkAction *action;
-	gboolean fit_page, fit_width;
+	GtkAction      *action;
+	gboolean        fit_page = FALSE;
+	gboolean        fit_width = FALSE;
+	gboolean        automatic = FALSE;
 
 	switch (ev_document_model_get_sizing_mode (window->priv->model)) {
-	        case EV_SIZING_FIT_PAGE:
-			fit_page = TRUE;
-			fit_width = FALSE;
-			break;
-	        case EV_SIZING_FIT_WIDTH:
-			fit_page = FALSE;
-			fit_width = TRUE;
-			break;
-	        default:
-			fit_page = fit_width = FALSE;
-			break;
+	case EV_SIZING_FIT_PAGE:
+		fit_page = TRUE;
+		break;
+	case EV_SIZING_FIT_WIDTH:
+		fit_width = TRUE;
+		break;
+	case EV_SIZING_AUTOMATIC:
+		automatic = TRUE;
+		break;
+	case EV_SIZING_FREE:
+		break;
 	}
 
 	action = gtk_action_group_get_action (action_group, "ViewFitPage");
@@ -627,6 +631,13 @@ update_sizing_buttons (EvWindow *window)
 	gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action), fit_width);
 	g_signal_handlers_unblock_by_func
 		(action, G_CALLBACK (ev_window_cmd_view_fit_width), window);
+
+	action = gtk_action_group_get_action (action_group, "ViewZoomAutomatic");
+	g_signal_handlers_block_by_func
+		(action, G_CALLBACK (ev_window_cmd_view_zoom_automatic), window);
+	gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action), automatic);
+	g_signal_handlers_unblock_by_func
+		(action, G_CALLBACK (ev_window_cmd_view_zoom_automatic), window);
 }
 
 /**
@@ -3852,6 +3863,20 @@ ev_window_cmd_fit_width (GtkAction *action, EvWindow *ev_window)
 }
 
 static void
+ev_window_cmd_view_zoom_automatic (GtkAction *action,
+				   EvWindow  *ev_window)
+{
+	ev_window_stop_presentation (ev_window, TRUE);
+
+	if (gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action))) {
+		ev_document_model_set_sizing_mode (ev_window->priv->model, EV_SIZING_AUTOMATIC);
+	} else {
+		ev_document_model_set_sizing_mode (ev_window->priv->model, EV_SIZING_FREE);
+	}
+	ev_window_update_actions_sensitivity (ev_window);
+}
+
+static void
 ev_window_cmd_view_zoom_activate (GtkAction *action,
 				  EvWindow  *ev_window)
 {
@@ -6053,7 +6078,9 @@ static const GtkToggleActionEntry zoom_selector_popup_actions[] = {
 	  G_CALLBACK (ev_window_cmd_view_fit_page) },
 	{ "ViewFitWidth", EV_STOCK_ZOOM_WIDTH, N_("Fit _Width"), NULL,
 	  N_("Make the current document fill the window width"),
-	  G_CALLBACK (ev_window_cmd_view_fit_width) }
+	  G_CALLBACK (ev_window_cmd_view_fit_width) },
+	{ "ViewZoomAutomatic", NULL, N_("_Automatic"), NULL, NULL,
+	  G_CALLBACK (ev_window_cmd_view_zoom_automatic) }
 };
 
 static void
