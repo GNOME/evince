@@ -142,7 +142,6 @@ GList
         while ((dirent = g_dir_read_name (dir))) {
                 EvBackendInfo *info;
                 gchar         *file;
-                GError        *error = NULL;
 
                 if (!g_str_has_suffix (dirent, EV_BACKENDS_EXTENSION))
                         continue;
@@ -152,7 +151,7 @@ GList
                 if (error != NULL) {
                         g_warning ("Failed to load backend info from '%s': %s\n",
                                    file, error->message);
-                        g_error_free (error);
+                        g_clear_error (&error);
                 }
                 g_free (file);
 
