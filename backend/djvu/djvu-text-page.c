@@ -136,13 +136,15 @@ djvu_text_page_selection (DjvuSelectionType type,
 			  miniexp_t     p,
 			  int           delimit)
 {
+        miniexp_t deeper;
+
 	g_return_val_if_fail (miniexp_consp (p) && miniexp_symbolp
 			      (miniexp_car (p)), FALSE);
 
 	if (miniexp_car (p) != page->char_symbol) 
 		delimit |= miniexp_car (p) == page->word_symbol ? 1 : 2;
 		
-	miniexp_t deeper = miniexp_cddr (miniexp_cdddr (p));
+	deeper = miniexp_cddr (miniexp_cdddr (p));
 	while (deeper != miniexp_nil) {
 		miniexp_t str = miniexp_car (deeper);
 		if (miniexp_stringp (str)) {
@@ -188,10 +190,12 @@ djvu_text_page_limits (DjvuTextPage *page,
 			  miniexp_t     p, 
 			  EvRectangle  *rect)
 {
+        miniexp_t deeper;
+
 	g_return_if_fail (miniexp_consp (p) && 
 			  miniexp_symbolp (miniexp_car (p)));
 
-	miniexp_t deeper = miniexp_cddr (miniexp_cdddr (p));
+	deeper = miniexp_cddr (miniexp_cdddr (p));
 	while (deeper != miniexp_nil) {
 		miniexp_t str = miniexp_car (deeper);
 		if (miniexp_stringp (str))
@@ -268,9 +272,10 @@ djvu_text_page_position (DjvuTextPage *page,
 
 	/* Shamelessly copied from GNU classpath */
 	while (low <= hi) {
+                DjvuTextLink *link;
+
 		mid = (low + hi) >> 1;
-		DjvuTextLink *link =
-		    &g_array_index (links, DjvuTextLink, mid);
+		link = &g_array_index (links, DjvuTextLink, mid);
 		if (link->position == position)
 			break;
 		else if (link->position > position)
@@ -335,10 +340,12 @@ djvu_text_page_sexpr (DjvuTextPage *page,
 		      miniexp_t start, 
 		      miniexp_t end)
 {
+        miniexp_t deeper;
+
 	g_return_val_if_fail (miniexp_consp (p) && miniexp_symbolp
 			      (miniexp_car (p)), FALSE);
 
-	miniexp_t deeper = miniexp_cddr (miniexp_cdddr (p));
+	deeper = miniexp_cddr (miniexp_cdddr (p));
 	while (deeper != miniexp_nil) {
 		miniexp_t str = miniexp_car (deeper);
 		if (miniexp_stringp (str)) {
@@ -389,13 +396,14 @@ djvu_text_page_append_text (DjvuTextPage *page,
 			    gboolean      delimit)
 {
 	char *token_text;
+	miniexp_t deeper;
 	
 	g_return_if_fail (miniexp_consp (p) && 
 			  miniexp_symbolp (miniexp_car (p)));
 
 	delimit |= page->char_symbol != miniexp_car (p);
 	
-	miniexp_t deeper = miniexp_cddr (miniexp_cdddr (p));
+	deeper = miniexp_cddr (miniexp_cdddr (p));
 	while (deeper != miniexp_nil) {
 		miniexp_t data = miniexp_car (deeper);
 		if (miniexp_stringp (data)) {

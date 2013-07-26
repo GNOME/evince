@@ -734,6 +734,7 @@ djvu_document_file_exporter_end (EvFileExporter *exporter)
 {
 	int d_optc = 1; 
 	const char *d_optv[d_optc];
+	ddjvu_job_t *job;
 
 	DjvuDocument *djvu_document = DJVU_DOCUMENT (exporter);
 
@@ -745,7 +746,7 @@ djvu_document_file_exporter_end (EvFileExporter *exporter)
 	
 	d_optv[0] = djvu_document->opts->str; 
 
-	ddjvu_job_t * job = ddjvu_document_print(djvu_document->d_document, fn, d_optc, d_optv);
+	job = ddjvu_document_print(djvu_document->d_document, fn, d_optc, d_optv);
 	while (!ddjvu_job_done(job)) {	
 		djvu_handle_events (djvu_document, TRUE, NULL);
 	}
