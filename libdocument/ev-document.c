@@ -668,9 +668,11 @@ ev_document_get_info (EvDocument *document)
 gboolean
 ev_document_get_backend_info (EvDocument *document, EvDocumentBackendInfo *info)
 {
+	EvDocumentClass *klass;
+
 	g_return_val_if_fail (EV_IS_DOCUMENT (document), FALSE);
 
-	EvDocumentClass *klass = EV_DOCUMENT_GET_CLASS (document);
+	klass = EV_DOCUMENT_GET_CLASS (document);
 	if (klass->get_backend_info == NULL)
 		return FALSE;
 
