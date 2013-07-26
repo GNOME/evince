@@ -231,6 +231,9 @@ struct _EvWindowPrivate {
 #endif
 
         guint presentation_mode_inhibit_id;
+
+	/* Caret navigation */
+	GtkWidget *ask_caret_navigation_check;
 };
 
 #define EV_WINDOW_GET_PRIVATE(object) \
@@ -551,6 +554,11 @@ ev_window_update_actions_sensitivity (EvWindow *ev_window)
 
 	ev_window_set_action_sensitive (ev_window, "History",
 					!ev_history_is_frozen (ev_window->priv->history));
+
+	ev_window_set_action_sensitive (ev_window, "F7",
+					has_pages &&
+					ev_view_supports_caret_navigation (view) &&
+					!presentation_mode);
 }
 
 static void
@@ -1258,7 +1266,7 @@ setup_size_from_metadata (EvWindow *window)
 static void
 setup_view_from_metadata (EvWindow *window)
 {
-	gboolean presentation;
+	gboolean presentation, caret_navigation;
 
 	if (!window->priv->metadata)
 		return;
@@ -1267,6 +1275,12 @@ setup_view_from_metadata (EvWindow *window)
 	if (ev_metadata_get_boolean (window->priv->metadata, "presentation", &presentation)) {
 		if (presentation)
 			ev_window_run_presentation (window);
+	}
+
+	/* Caret navigation mode */
+	if (ev_view_supports_caret_navigation (EV_VIEW (window->priv->view)) &&
+	    ev_metadata_get_boolean (window->priv->metadata, "caret-navigation", &caret_navigation)) {
+		ev_view_set_caret_navigation_enabled (EV_VIEW (window->priv->view), caret_navigation);
 	}
 }
 
@@ -5589,6 +5603,85 @@ ev_window_drag_data_received (GtkWidget        *widget,
 }
 
 static void
+ev_window_set_caret_navigation_enabled (EvWindow *window,
+					gboolean enabled)
+{
+	if (window->priv->metadata)
+		ev_metadata_set_boolean (window->priv->metadata, "caret-navigation", enabled);
+
+	ev_view_set_caret_navigation_enabled (EV_VIEW (window->priv->view), enabled);
+}
+
+static void
+ev_window_caret_navigation_message_area_response_cb (EvMessageArea *area,
+						     gint           response_id,
+						     EvWindow      *window)
+{
+	/* Turn the caret navigation mode on */
+	if (response_id == GTK_RESPONSE_YES)
+		ev_window_set_caret_navigation_enabled (window, TRUE);
+
+	/* Turn the confirmation dialog off if the user has requested not to show it again */
+	if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (window->priv->ask_caret_navigation_check))) {
+		g_settings_set_boolean (ev_window_ensure_settings (window), "show-caret-navigation-message", FALSE);
+		g_settings_apply (window->priv->settings);
+	}
+
+	window->priv->ask_caret_navigation_check = NULL;
+	ev_window_set_message_area (window, NULL);
+	gtk_widget_grab_focus (window->priv->view);
+}
+
+static void
+ev_window_cmd_view_toggle_caret_navigation (GtkAction *action,
+					    EvWindow *window)
+{
+	GtkWidget *message_area;
+	GtkWidget *box;
+	GtkWidget *hbox;
+	gboolean   enabled;
+
+	/* Don't ask for user confirmation to turn the caret navigation off when it is active,
+	 * or to turn it on when the confirmation dialog is not to be shown per settings */
+	enabled = ev_view_is_caret_navigation_enabled (EV_VIEW (window->priv->view));
+	if (enabled || !g_settings_get_boolean (ev_window_ensure_settings (window), "show-caret-navigation-message")) {
+		ev_window_set_caret_navigation_enabled (window, !enabled);
+		return;
+	}
+
+	/* Ask for user confirmation to turn the caret navigation mode on */
+	if (window->priv->message_area)
+		return;
+
+	message_area = ev_message_area_new (GTK_MESSAGE_QUESTION,
+					    _("Enable caret navigation?"),
+					    GTK_STOCK_NO,  GTK_RESPONSE_NO,
+					    "_Enable", GTK_RESPONSE_YES,
+					    NULL);
+	ev_message_area_set_secondary_text (EV_MESSAGE_AREA (message_area),
+					    _("Pressing F7 turns the caret navigation on or off. "
+					      "This feature places a moveable cursor in text pages, "
+					      "allowing you to move around and select text with your keyboard. "
+					      "Do you want to enable the caret navigation on?"));
+
+	window->priv->ask_caret_navigation_check = gtk_check_button_new_with_label (_("Don't show this message again"));
+	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 12);
+	gtk_box_pack_start (GTK_BOX (hbox), window->priv->ask_caret_navigation_check,
+			    TRUE, TRUE, 0);
+	gtk_widget_show_all (hbox);
+
+	box = _ev_message_area_get_main_box (EV_MESSAGE_AREA (message_area));
+	gtk_box_pack_start (GTK_BOX (box), hbox, TRUE, TRUE, 0);
+
+	g_signal_connect (message_area, "response",
+			  G_CALLBACK (ev_window_caret_navigation_message_area_response_cb),
+			  window);
+
+	gtk_widget_show (message_area);
+	ev_window_set_message_area (window, message_area);
+}
+
+static void
 ev_window_dispose (GObject *object)
 {
 	EvWindow *window = EV_WINDOW (object);
@@ -6014,6 +6107,8 @@ static const GtkActionEntry entries[] = {
 	  G_CALLBACK (ev_window_cmd_fit_width) },
 	{ "F10", NULL, "", "F10", NULL,
 	  G_CALLBACK (ev_window_cmd_action_menu) },
+	{ "F7", NULL, "", "F7", NULL,
+	  G_CALLBACK (ev_window_cmd_view_toggle_caret_navigation) },
 };
 
 /* Toggle items */
