@@ -244,7 +244,7 @@ ev_password_view_ask_password (EvPasswordView *password_view)
 	GtkWidget *hbox, *main_vbox, *vbox, *icon;
 	GtkWidget *grid;
 	GtkWidget *label;
-	gchar     *format, *markup, *file_name;
+	gchar     *text, *markup, *file_name;
 
 	gtk_widget_set_sensitive (GTK_WIDGET (password_view), FALSE);
 	
@@ -297,12 +297,13 @@ ev_password_view_ask_password (EvPasswordView *password_view)
 	gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
 	gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
 	file_name = g_file_get_basename (password_view->priv->uri_file);
-	format = g_strdup_printf ("<span size=\"larger\" weight=\"bold\">%s</span>\n\n%s",
+        text = g_markup_printf_escaped (_("The document “%s” is locked and requires a password before it can be opened."),
+                                        file_name);
+        markup = g_strdup_printf ("<span size=\"larger\" weight=\"bold\">%s</span>\n\n%s",
 				  _("Password required"),
-				  _("The document “%s” is locked and requires a password before it can be opened."));
-	markup = g_markup_printf_escaped (format, file_name);
+                                  text);
 	gtk_label_set_markup (GTK_LABEL (label), markup);
-	g_free (format);
+	g_free (text);
 	g_free (markup);
 	g_free (file_name);
 	gtk_box_pack_start (GTK_BOX (main_vbox), label,
