@@ -698,7 +698,7 @@ ev_window_message_area_response_cb (EvMessageArea *area,
 	ev_window_set_message_area (window, NULL);
 }
 
-static void
+G_GNUC_PRINTF (3, 4) static void
 ev_window_error_message (EvWindow    *window,
 			 GError      *error,
 			 const gchar *format,
@@ -731,7 +731,7 @@ ev_window_error_message (EvWindow    *window,
 	ev_window_set_message_area (window, area);
 }
 
-static void
+G_GNUC_PRINTF (2, 3) static void
 ev_window_warning_message (EvWindow    *window,
 			   const gchar *format,
 			   ...)
