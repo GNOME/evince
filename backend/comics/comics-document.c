@@ -828,7 +828,7 @@ comics_document_init (ComicsDocument *comics_document)
 
 /* Returns a list of file extensions supported by gdk-pixbuf */
 static GSList*
-get_supported_image_extensions()
+get_supported_image_extensions(void)
 {
 	GSList *extensions = NULL;
 	GSList *formats = gdk_pixbuf_get_formats ();
