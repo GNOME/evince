@@ -109,6 +109,8 @@ if test "$with_platform" = "win32"; then
       ;;
   esac
   AC_MSG_RESULT([$os_win32])
+
+  AM_CFLAGS="$AM_CFLAGS -D_WIN32_WINNT=0x0500"
 fi
 
 AM_CONDITIONAL([PLATFORM_WIN32],[test "$with_platform" = "win32"])
@@ -316,7 +318,7 @@ AC_ARG_ENABLE([dbus],
 if test "$enable_dbus" = "yes"; then
   AC_DEFINE([ENABLE_DBUS],[1],[Define if DBUS support is enabled])
 
-   PKG_CHECK_MODULES([EV_DAEMON], [gio-2.0 >= $GLIB_REQUIRED])
+   PKG_CHECK_MODULES([EV_DAEMON], [gio-2.0 >= $GLIB_REQUIRED gio-unix-2.0])
 fi
 
 AM_CONDITIONAL([ENABLE_DBUS], [test "$enable_dbus" = "yes"])

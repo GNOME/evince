@@ -1,18 +1,20 @@
-INCLUDES = 					\
-	-I$(top_srcdir)				\
-	-I$(top_srcdir)/libdocument		\
-	-DGNOMELOCALEDIR=\"$(datadir)/locale\"	\
-	-DEVINCE_COMPILATION			\
-	$(BACKEND_CFLAGS)			\
-	$(SPECTRE_CFLAGS)			\
-	$(WARN_CFLAGS)				\
-	$(DISABLE_DEPRECATED)
-
 backend_LTLIBRARIES = libpsdocument.la
 
 libpsdocument_la_SOURCES = 	\
 	ev-spectre.c		\
 	ev-spectre.h
+
+libpsdocument_la_CPPFLAGS = \
+	-I$(top_srcdir) \
+	-I$(top_srcdir)/libdocument \
+	-DGNOMELOCALEDIR=\"$(datadir)/locale\" \
+	-DEVINCE_COMPILATION \
+	$(AM_CPPFLAGS)
+
+libpsdocument_la_CFLAGS = \
+	$(BACKEND_CFLAGS) \
+	$(SPECTRE_CFLAGS) \
+	$(AM_CFLAGS)
 
 libpsdocument_la_LDFLAGS = $(BACKEND_LIBTOOL_FLAGS)
 libpsdocument_la_LIBADD = 				\

@@ -8,7 +8,6 @@ libsynctex_la_SOURCES = 	\
 
 libsynctex_la_CFLAGS =	\
 	$(SHELL_CORE_CFLAGS)	\
-	$(WARNING_CFLAGS)	\
-	$(DISABLE_DEPRECATED)
+	$(AM_CFLAGS)
 
 -include $(top_srcdir)/git.mk

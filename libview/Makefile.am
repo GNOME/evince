@@ -66,8 +66,6 @@ libevview3_la_CPPFLAGS = \
 
 libevview3_la_CFLAGS = \
 	$(LIBVIEW_CFLAGS)	\
-	$(WARN_CFLAGS)		\
-	$(DISABLE_DEPRECATED)	\
 	$(AM_CFLAGS)
 
 libevview3_la_LDFLAGS = \

@@ -11,9 +11,7 @@ libevmisc_la_CFLAGS =	\
 	-I$(top_srcdir)			\
 	-I$(top_srcdir)/libdocument	\
 	-I$(top_srcdir)/libview		\
-	$(SHELL_CORE_CFLAGS)    	\
-	$(WARNING_CFLAGS)       	\
-	$(DISABLE_DEPRECATED)
+	$(SHELL_CORE_CFLAGS)
 
 libevmisc_la_LIBADD = \
 	$(top_builddir)/libdocument/libevdocument3.la \

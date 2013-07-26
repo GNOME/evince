@@ -13,8 +13,7 @@ libxpsdocument_la_CPPFLAGS =			\
 libxpsdocument_la_CFLAGS = 	\
 	$(BACKEND_CFLAGS)	\
 	$(GXPS_CFLAGS)		\
-	$(WARN_CFLAGS)		\
-	$(DISABLE_DEPRECATED)
+	$(AM_CFLAGS)
 
 libxpsdocument_la_LDFLAGS = $(BACKEND_LIBTOOL_FLAGS)
 libxpsdocument_la_LIBADD = 				\

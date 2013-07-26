@@ -22,8 +22,6 @@ evince_previewer_CPPFLAGS = \
 
 evince_previewer_CFLAGS = \
 	$(PREVIEWER_CFLAGS)			\
-        $(WARN_CFLAGS)                          \
-        $(DISABLE_DEPRECATED)			\
 	$(AM_CFLAGS)
 
 evince_previewer_LDFLAGS = $(AM_LDFLAGS)

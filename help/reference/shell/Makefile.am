@@ -102,8 +102,6 @@ GTKDOC_CFLAGS = \
 	-DGNOMEICONDIR=\""$(datadir)/pixmaps"\" 	\
 	-DEVINCE_COMPILATION				\
 	$(SHELL_CFLAGS)					\
-	$(WARN_CFLAGS)					\
-	$(DISABLE_DEPRECATED)				\
 	$(GTK_PRINT_CFLAGS)
 
 FILTER_OUT = \

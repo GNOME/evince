@@ -104,8 +104,6 @@ libevdocument3_la_CPPFLAGS = \
 libevdocument3_la_CFLAGS = \
 	$(LIBDOCUMENT_CFLAGS)			\
 	-I$(top_srcdir)/cut-n-paste/synctex	\
-	$(WARN_CFLAGS)				\
-	$(DISABLE_DEPRECATED)			\
 	$(AM_CFLAGS)
 
 libevdocument3_la_LDFLAGS = \

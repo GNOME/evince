@@ -103,9 +103,7 @@ GTKDOC_CFLAGS = \
 	-DEV_BACKENDSDIR=\"$(backenddir)\"		\
 	-DEVINCE_COMPILATION				\
 	$(AM_CFLAGS)					\
-	$(LIBDOCUMENT_CFLAGS)				\
-	$(WARN_CFLAGS)					\
-	$(DISABLE_DEPRECATED)
+	$(LIBDOCUMENT_CFLAGS)
 
 GTKDOC_LIBS = \
 	$(top_builddir)/libdocument/libevdocument3.la	\

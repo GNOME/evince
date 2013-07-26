@@ -1,16 +1,5 @@
 SUBDIRS = mdvi-lib
 
-INCLUDES = 					\
-	-I$(top_srcdir)				\
-	-I$(top_srcdir)/libdocument		\
-	-I$(srcdir)/mdvi-lib			\
-	-DGNOMELOCALEDIR=\"$(datadir)/locale\"	\
-	-DEVINCE_COMPILATION			\
-	$(WARN_CFLAGS)				\
-	$(BACKEND_CFLAGS)			\
-	$(SPECTRE_CFLAGS)			\
-	$(DISABLE_DEPRECATED)
-
 backend_LTLIBRARIES = libdvidocument.la
 
 libdvidocument_la_SOURCES = 	\
@@ -22,6 +11,19 @@ libdvidocument_la_SOURCES = 	\
 	texmfcnf.h		\
 	fonts.c			\
 	fonts.h
+
+libdvidocument_la_CPPFLAGS = \
+	-I$(top_srcdir) \
+	-I$(top_srcdir)/libdocument \
+	-I$(srcdir)/mdvi-lib \
+	-DGNOMELOCALEDIR=\"$(datadir)/locale\" \
+	-DEVINCE_COMPILATION \
+	$(AM_CPPFLAGS)
+
+libdvidocument_la_CFLAGS = \
+	$(BACKEND_CFLAGS) \
+	$(SPECTRE_CFLAGS) \
+	$(AM_CFLAGS)
 
 libdvidocument_la_LDFLAGS = $(BACKEND_LIBTOOL_FLAGS)
 libdvidocument_la_LIBADD = 				\

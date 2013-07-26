@@ -6,8 +6,7 @@ libgimpcellrenderertoggle_la_sources =	\
 
 libgimpcellrenderertoggle_la_CFLAGS =	\
 	$(SHELL_CORE_CFLAGS)		\
-	$(WARNING_CFLAGS)		\
-	$(DISABLE_DEPRECATED)
+	$(AM_CFLAGS)
 
 libgimpcellrenderertoggle_la_built_sources =	\
 	gimpwidgetsmarshal.h			\

@@ -1,23 +1,5 @@
 NULL =
 
-INCLUDES=							\
-	-DGNOMEDATADIR=\"$(datadir)\"				\
-	-I$(top_srcdir)						\
-	-I$(top_builddir)					\
-	-I$(top_srcdir)/cut-n-paste/gimpcellrenderertoggle/	\
-	-I$(top_srcdir)/cut-n-paste/smclient/			\
-	-I$(top_srcdir)/libdocument				\
-	-I$(top_builddir)/libdocument				\
-	-I$(top_srcdir)/libview					\
-	-I$(top_builddir)/libview				\
-	-I$(top_srcdir)/libmisc					\
-	-I$(top_srcdir)/properties				\
-	-DBINDIR=\""$(bindir)"\"				\
-	-DEVINCE_COMPILATION					\
-	$(SHELL_CFLAGS)						\
-	$(WARN_CFLAGS)						\
-	$(DISABLE_DEPRECATED)
-
 bin_PROGRAMS=evince
 
 if ENABLE_DBUS
@@ -110,6 +92,26 @@ nodist_evince_SOURCES += \
 	$(NULL)
 endif
 
+evince_CPPFLAGS = \
+	-DGNOMEDATADIR=\"$(datadir)\" \
+	-I$(top_srcdir) \
+	-I$(top_builddir) \
+	-I$(top_srcdir)/cut-n-paste/gimpcellrenderertoggle \
+	-I$(top_srcdir)/cut-n-paste/smclient \
+	-I$(top_srcdir)/libdocument \
+	-I$(top_builddir)/libdocument \
+	-I$(top_srcdir)/libview \
+	-I$(top_builddir)/libview \
+	-I$(top_srcdir)/libmisc \
+	-I$(top_srcdir)/properties \
+	-DBINDIR=\""$(bindir)"\" \
+	-DEVINCE_COMPILATION \
+	$(AM_CPPFLAGS)
+
+evince_CFLAGS = \
+	$(SHELL_CFLAGS)	\
+	$(AM_CFLAGS)
+
 evince_LDFLAGS = $(AM_LDFLAGS)
 
 if PLATFORM_WIN32
@@ -152,13 +154,17 @@ nodist_evinced_SOURCES = \
 	ev-daemon-gdbus-generated.h
 	$(NULL)
 
+evinced_CPPFLAGS = \
+	-DBINDIR=\""$(bindir)"\" \
+	-DEVINCE_COMPILATION \
+	$(AM_CPPFLAGS)
+
 evinced_CFLAGS=				\
 	-I$(top_srcdir)						\
 	-I$(top_builddir)					\
 	-DEVINCE_COMPILATION					\
 	$(EV_DAEMON_CFLAGS)					\
-	$(WARN_CFLAGS)						\
-	$(DISABLE_DEPRECATED)
+	$(AM_CFLAGS)
 
 evinced_LDADD=				\
 	$(EV_DAEMON_LIBS)

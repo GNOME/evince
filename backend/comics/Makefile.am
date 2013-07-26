@@ -1,18 +1,20 @@
-INCLUDES =                      		\
-	-I$(top_srcdir)				\
-	-I$(top_srcdir)/libdocument 		\
-	-DGNOMELOCALEDIR=\"$(datadir)/locale\"	\
-	-DEVINCE_COMPILATION			\
-	$(BACKEND_CFLAGS)			\
-	$(LIB_CFLAGS)				\
-	$(WARN_CFLAGS)				\
-	$(DISABLE_DEPRECATED)
-
 backend_LTLIBRARIES = libcomicsdocument.la
 
 libcomicsdocument_la_SOURCES = \
 	comics-document.c      \
 	comics-document.h
+
+libcomicsdocument_la_CPPFLAGS = \
+	-I$(top_srcdir) \
+	-I$(top_srcdir)/libdocument \
+	-DGNOMELOCALEDIR=\"$(datadir)/locale\" \
+	-DEVINCE_COMPILATION \
+	$(AM_CPPFLAGS)
+
+libcomicsdocument_la_CFLAGS = \
+	$(BACKEND_CFLAGS) \
+	$(LIB_CFLAGS) \
+	$(AM_CFLAGS)
 
 libcomicsdocument_la_LDFLAGS = $(BACKEND_LIBTOOL_FLAGS)
 libcomicsdocument_la_LIBADD =				\

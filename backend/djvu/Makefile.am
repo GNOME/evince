@@ -1,14 +1,3 @@
-INCLUDES = \
-	-I$(top_srcdir)						\
-	-I$(top_srcdir)/libdocument				\
-	-DGNOMEICONDIR=\""${prefix}/${DATADIRNAME}/pixmaps"\" 	\
-	-DGNOMELOCALEDIR=\"$(datadir)/locale\"			\
-	-DEVINCE_COMPILATION			\
-	$(BACKEND_CFLAGS)					\
-	$(DJVU_CFLAGS)						\
-	$(WARN_CFLAGS)						\
-	$(DISABLE_DEPRECATED)
-
 backend_LTLIBRARIES = libdjvudocument.la
 
 libdjvudocument_la_SOURCES = 	\
@@ -19,6 +8,19 @@ libdjvudocument_la_SOURCES = 	\
 	djvu-links.h		\
 	djvu-text-page.c 	\
 	djvu-text-page.h
+
+libdjvudocument_la_CPPFLAGS = \
+	-I$(top_srcdir) \
+	-I$(top_srcdir)/libdocument \
+	-DGNOMEICONDIR=\""${prefix}/${DATADIRNAME}/pixmaps"\" \
+	-DGNOMELOCALEDIR=\"$(datadir)/locale\" \
+	-DEVINCE_COMPILATION \
+	$(AM_CPPFLAGS)
+
+libdjvudocument_la_CFLAGS = \
+	$(BACKEND_CFLAGS) \
+	$(DJVU_CFLAGS) \
+	$(AM_CFLAGS)
 
 libdjvudocument_la_LDFLAGS = $(BACKEND_LIBTOOL_FLAGS)
 libdjvudocument_la_LIBADD =				\

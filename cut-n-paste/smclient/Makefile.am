@@ -11,12 +11,10 @@ libsmclient_la_SOURCES = \
 
 libsmclient_la_CPPFLAGS = \
 	-DG_LOG_DOMAIN=\""EggSMClient"\" \
-	$(DISABLE_DEPRECATED) \
 	$(AM_CPPFLAGS)
 
 libsmclient_la_CFLAGS = \
 	$(SMCLIENT_CFLAGS) \
-	$(WARNING_CFLAGS) \
 	$(AM_CFLAGS)
 
 libsmclient_la_LIBADD = \

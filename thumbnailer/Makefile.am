@@ -11,8 +11,6 @@ evince_thumbnailer_CPPFLAGS = \
 
 evince_thumbnailer_CFLAGS = \
 	$(FRONTEND_CFLAGS)	\
-	$(DISABLE_DEPRECATED)	\
-	$(WARN_CFLAGS)		\
 	$(AM_CFLAGS)
 
 evince_thumbnailer_LDFLAGS = $(AM_LDFLAGS)
