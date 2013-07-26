@@ -31,8 +31,8 @@ enum {
 
 struct _EvZoomActionPrivate {
         EvDocumentModel *model;
+        EvWindow        *window;
         gboolean         popup_shown;
-        float            max_zoom;
 };
 
 G_DEFINE_TYPE (EvZoomAction, ev_zoom_action, GTK_TYPE_ACTION)
@@ -40,11 +40,11 @@ G_DEFINE_TYPE (EvZoomAction, ev_zoom_action, GTK_TYPE_ACTION)
 static guint signals[LAST_SIGNAL] = { 0 };
 
 static void
-popup_shown_cb (GObject      *combo,
+popup_shown_cb (GObject      *zoom_widget,
                 GParamSpec   *pspec,
                 EvZoomAction *zoom_action)
 {
-        g_object_get (combo, "popup-shown", &zoom_action->priv->popup_shown, NULL);
+        g_object_get (zoom_widget, "popup-shown", &zoom_action->priv->popup_shown, NULL);
 }
 
 static void
@@ -61,16 +61,13 @@ connect_proxy (GtkAction *action,
         if (EV_IS_ZOOM_ACTION_WIDGET (proxy))   {
                 EvZoomAction *zoom_action = EV_ZOOM_ACTION (action);
                 EvZoomActionWidget* zoom_widget = EV_ZOOM_ACTION_WIDGET (proxy);
-                GtkWidget *combo;
 
                 ev_zoom_action_widget_set_model (zoom_widget, zoom_action->priv->model);
-                ev_zoom_action_widget_set_max_zoom_level (zoom_widget, zoom_action->priv->max_zoom);
-
-                combo = ev_zoom_action_widget_get_combo_box (zoom_widget);
-                g_signal_connect (combo, "notify::popup-shown",
+                ev_zoom_action_widget_set_window (zoom_widget, zoom_action->priv->window);
+                g_signal_connect (zoom_widget, "notify::popup-shown",
                                   G_CALLBACK (popup_shown_cb),
                                   action);
-                g_signal_connect (gtk_bin_get_child (GTK_BIN (combo)), "activate",
+                g_signal_connect (ev_zoom_action_widget_get_entry (zoom_widget), "activate",
                                   G_CALLBACK (zoom_widget_activated_cb),
                                   action);
         }
@@ -124,29 +121,31 @@ ev_zoom_action_set_model (EvZoomAction    *action,
         }
 }
 
+void
+ev_zoom_action_set_window (EvZoomAction *action,
+                           EvWindow     *window)
+{
+
+        GSList *proxies, *l;
+
+        g_return_if_fail (EV_IS_ZOOM_ACTION (action));
+        g_return_if_fail (EV_IS_WINDOW (window));
+
+        if (action->priv->window == window)
+                return;
+
+        action->priv->window = window;
+        proxies = gtk_action_get_proxies (GTK_ACTION (action));
+        for (l = proxies; l && l->data; l = g_slist_next (l)) {
+                if (EV_IS_ZOOM_ACTION_WIDGET (l->data))
+                        ev_zoom_action_widget_set_window (EV_ZOOM_ACTION_WIDGET (l->data), window);
+        }
+}
+
 gboolean
 ev_zoom_action_get_popup_shown (EvZoomAction *action)
 {
         g_return_val_if_fail (EV_IS_ZOOM_ACTION (action), FALSE);
 
         return action->priv->popup_shown;
-}
-
-void
-ev_zoom_action_set_max_zoom_level (EvZoomAction *action,
-                                   float         max_zoom)
-{
-        GSList *proxies, *l;
-
-        g_return_if_fail (EV_IS_ZOOM_ACTION (action));
-
-        if (action->priv->max_zoom == max_zoom)
-                return;
-
-        action->priv->max_zoom = max_zoom;
-        proxies = gtk_action_get_proxies (GTK_ACTION (action));
-        for (l = proxies; l && l->data; l = g_slist_next (l)) {
-                if (EV_IS_ZOOM_ACTION_WIDGET (l->data))
-                        ev_zoom_action_widget_set_max_zoom_level (EV_ZOOM_ACTION_WIDGET (l->data), max_zoom);
-        }
 }

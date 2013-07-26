@@ -25,6 +25,8 @@
 #include <evince-document.h>
 #include <evince-view.h>
 
+#include "ev-window.h"
+
 G_BEGIN_DECLS
 
 #define EV_TYPE_ZOOM_ACTION            (ev_zoom_action_get_type ())
@@ -48,13 +50,33 @@ struct _EvZoomActionClass {
         GtkActionClass parent_class;
 };
 
-GType    ev_zoom_action_get_type           (void);
+static const struct {
+        const gchar *name;
+        float        level;
+} zoom_levels[] = {
+        { "50%", 0.5 },
+        { "70%", 0.7071067811 },
+        { "85%", 0.8408964152 },
+        { "100%", 1.0 },
+        { "125%", 1.1892071149 },
+        { "150%", 1.4142135623 },
+        { "175%", 1.6817928304 },
+        { "200%", 2.0 },
+        { "300%", 2.8284271247 },
+        { "400%", 4.0 },
+        { "800%", 8.0 },
+        { "1600%", 16.0 },
+        { "3200%", 32.0 },
+        { "6400%", 64.0 }
+};
 
-void     ev_zoom_action_set_model          (EvZoomAction    *action,
-                                            EvDocumentModel *model);
-gboolean ev_zoom_action_get_popup_shown    (EvZoomAction    *action);
-void     ev_zoom_action_set_max_zoom_level (EvZoomAction    *action,
-                                            float            max_zoom);
+GType    ev_zoom_action_get_type        (void);
+
+void     ev_zoom_action_set_model       (EvZoomAction    *action,
+                                         EvDocumentModel *model);
+gboolean ev_zoom_action_get_popup_shown (EvZoomAction    *action);
+void     ev_zoom_action_set_window      (EvZoomAction    *action,
+                                         EvWindow        *window);
 
 G_END_DECLS
 

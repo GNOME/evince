@@ -25,6 +25,8 @@
 #include <evince-document.h>
 #include <evince-view.h>
 
+#include "ev-window.h"
+
 G_BEGIN_DECLS
 
 #define EV_TYPE_ZOOM_ACTION_WIDGET            (ev_zoom_action_widget_get_type())
@@ -48,13 +50,13 @@ struct _EvZoomActionWidgetClass {
         GtkToolItemClass parent_class;
 };
 
-GType      ev_zoom_action_widget_get_type           (void);
+GType      ev_zoom_action_widget_get_type   (void);
 
-void       ev_zoom_action_widget_set_model          (EvZoomActionWidget *control,
-                                                     EvDocumentModel    *model);
-GtkWidget *ev_zoom_action_widget_get_combo_box      (EvZoomActionWidget *control);
-void       ev_zoom_action_widget_set_max_zoom_level (EvZoomActionWidget *control,
-                                                     float               max_zoom);
+void       ev_zoom_action_widget_set_model  (EvZoomActionWidget *control,
+                                             EvDocumentModel    *model);
+GtkWidget *ev_zoom_action_widget_get_entry  (EvZoomActionWidget *control);
+void       ev_zoom_action_widget_set_window (EvZoomActionWidget *control,
+                                             EvWindow           *window);
 
 G_END_DECLS
 

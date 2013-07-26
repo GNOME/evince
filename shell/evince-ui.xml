@@ -81,6 +81,13 @@
     <menuitem name="SaveAttachmentAs" action="SaveAttachmentAs"/>
   </popup>
 
+  <popup name="ZoomSelectorPopup">
+    <menuitem name="ViewFitPage" action="ViewFitPage"/>
+    <menuitem name="ViewFitWidth" action="ViewFitWidth"/>
+    <separator/>
+    <placeholder name="ViewZoomItems"/>
+  </popup>
+
   <accelerator name="PageDownAccel" action="PageDown"/>
   <accelerator name="PageUpAccel" action="PageUp"/>
   <accelerator name="GoBackwardFastAccel" action="GoBackwardFast"/>

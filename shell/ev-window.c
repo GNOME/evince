@@ -173,6 +173,7 @@ struct _EvWindowPrivate {
 	GtkActionGroup   *action_group;
 	GtkActionGroup   *view_popup_action_group;
 	GtkActionGroup   *attachment_popup_action_group;
+	GtkActionGroup   *zoom_selector_popup_action_group;
 	GtkRecentManager *recent_manager;
 	GtkActionGroup   *recent_action_group;
 	guint             recent_ui_id;
@@ -474,8 +475,6 @@ ev_window_setup_action_sensitivity (EvWindow *ev_window)
 	ev_window_set_action_sensitive (ev_window, "ViewContinuous", has_pages);
 	ev_window_set_action_sensitive (ev_window, "ViewDual", has_pages);
 	ev_window_set_action_sensitive (ev_window, "ViewDualOddLeft", has_pages);
-	ev_window_set_action_sensitive (ev_window, "ViewFitPage", has_pages);
-	ev_window_set_action_sensitive (ev_window, "ViewFitWidth", has_pages);
 	ev_window_set_action_sensitive (ev_window, "ViewReload", has_pages);
 	ev_window_set_action_sensitive (ev_window, "ViewAutoscroll", has_pages);
 	ev_window_set_action_sensitive (ev_window, "ViewInvertedColors", has_pages);
@@ -597,7 +596,7 @@ update_chrome_flag (EvWindow *window, EvChrome flag, gboolean active)
 static void
 update_sizing_buttons (EvWindow *window)
 {
-	GtkActionGroup *action_group = window->priv->action_group;
+	GtkActionGroup *action_group = window->priv->zoom_selector_popup_action_group;
 	GtkAction *action;
 	gboolean fit_page, fit_width;
 
@@ -3852,6 +3851,26 @@ ev_window_cmd_fit_width (GtkAction *action, EvWindow *ev_window)
 	ev_document_model_set_sizing_mode (ev_window->priv->model, EV_SIZING_FIT_WIDTH);
 }
 
+static void
+ev_window_cmd_view_zoom_activate (GtkAction *action,
+				  EvWindow  *ev_window)
+{
+	const char *action_name = gtk_action_get_name (action);
+	gdouble     zoom = 0;
+	guint       i;
+
+	for (i = 0; i < G_N_ELEMENTS (zoom_levels); i++) {
+		if (strcmp (action_name, zoom_levels[i].name) == 0) {
+			zoom = zoom_levels[i].level;
+			break;
+		}
+	}
+	g_assert (zoom > 0);
+
+	ev_document_model_set_sizing_mode (ev_window->priv->model, EV_SIZING_FREE);
+	ev_document_model_set_scale (ev_window->priv->model,
+				     zoom * get_screen_dpi (ev_window) / 72.0);
+}
 
 static void
 ev_window_cmd_edit_select_all (GtkAction *action, EvWindow *ev_window)
@@ -4766,15 +4785,24 @@ ev_window_zoom_changed_cb (EvDocumentModel *model, GParamSpec *pspec, EvWindow *
 }
 
 static void
+ev_window_setup_zoom_actions_visibility (EvWindow *window,
+					 gdouble   max_scale)
+{
+	GtkActionGroup *action_group = window->priv->zoom_selector_popup_action_group;
+	guint           i;
+
+	for (i = 0; i < G_N_ELEMENTS (zoom_levels); i++) {
+		GtkAction *action;
+
+		action = gtk_action_group_get_action (action_group, zoom_levels[i].name);
+		gtk_action_set_visible (action, zoom_levels[i].level <= max_scale);
+	}
+}
+
+static void
 ev_window_max_zoom_changed_cb (EvDocumentModel *model, GParamSpec *pspec, EvWindow *window)
 {
-	GtkAction *action;
-	gdouble max_scale;
-
-	max_scale = ev_document_model_get_max_scale (model);
-	action = gtk_action_group_get_action (window->priv->action_group,
-					      ZOOM_CONTROL_ACTION);
-	ev_zoom_action_set_max_zoom_level (EV_ZOOM_ACTION (action), max_scale);
+	ev_window_setup_zoom_actions_visibility (window, ev_document_model_get_max_scale (model));
 }
 
 static void
@@ -5612,6 +5640,8 @@ ev_window_dispose (GObject *object)
 		priv->attachment_popup_action_group = NULL;
 	}
 
+	g_clear_object (&priv->zoom_selector_popup_action_group);
+
 	if (priv->recent_action_group) {
 		g_object_unref (priv->recent_action_group);
 		priv->recent_action_group = NULL;
@@ -5982,12 +6012,6 @@ static const GtkToggleActionEntry toggle_entries[] = {
         { "ViewPresentation", EV_STOCK_RUN_PRESENTATION, N_("Pre_sentation"), "F5",
           N_("Run document as a presentation"),
           G_CALLBACK (ev_window_cmd_view_presentation) },
-        { "ViewFitPage", EV_STOCK_ZOOM_PAGE, N_("Fit Pa_ge"), NULL,
-          N_("Make the current document fill the window"),
-          G_CALLBACK (ev_window_cmd_view_fit_page) },
-        { "ViewFitWidth", EV_STOCK_ZOOM_WIDTH, N_("Fit _Width"), NULL,
-          N_("Make the current document fill the window width"),
-          G_CALLBACK (ev_window_cmd_view_fit_width) },
 	{ "ViewInvertedColors", EV_STOCK_INVERTED_COLORS, N_("_Inverted Colors"), "<control>I",
 	  N_("Show page contents with the colors inverted"),
 	  G_CALLBACK (ev_window_cmd_view_inverted_colors) },
@@ -5995,7 +6019,6 @@ static const GtkToggleActionEntry toggle_entries[] = {
 	{ "EditFind", "edit-find-symbolic", N_("_Find…"), "<control>F",
 	  N_("Find a word or phrase in the document"),
 	  G_CALLBACK (ev_window_cmd_toggle_find) },
-
 };
 
 /* Popups specific items */
@@ -6022,6 +6045,15 @@ static const GtkActionEntry attachment_popup_entries [] = {
 	  NULL, G_CALLBACK (ev_attachment_popup_cmd_open_attachment) },
 	{ "SaveAttachmentAs", GTK_STOCK_SAVE_AS, N_("_Save Attachment As…"), NULL,
 	  NULL, G_CALLBACK (ev_attachment_popup_cmd_save_attachment_as) },
+};
+
+static const GtkToggleActionEntry zoom_selector_popup_actions[] = {
+	{ "ViewFitPage", EV_STOCK_ZOOM_PAGE, N_("Fit Pa_ge"), NULL,
+	  N_("Make the current document fill the window"),
+	  G_CALLBACK (ev_window_cmd_view_fit_page) },
+	{ "ViewFitWidth", EV_STOCK_ZOOM_WIDTH, N_("Fit _Width"), NULL,
+	  N_("Make the current document fill the window width"),
+	  G_CALLBACK (ev_window_cmd_view_fit_width) }
 };
 
 static void
@@ -6091,6 +6123,36 @@ zoom_action_activated_cb (EvZoomAction *action,
 }
 
 static void
+ev_window_register_zoom_selector_popup_actions (EvWindow *window)
+{
+	GtkActionGroup *action_group = window->priv->zoom_selector_popup_action_group;
+	guint           i, new_ui_id;
+
+	new_ui_id = gtk_ui_manager_new_merge_id (window->priv->ui_manager);
+
+	for (i = 0; i < G_N_ELEMENTS (zoom_levels); i++) {
+		GtkAction *action;
+
+		action = gtk_action_new (zoom_levels[i].name,
+					 _(zoom_levels[i].name),
+					 NULL, NULL);
+		g_signal_connect (action, "activate",
+				  G_CALLBACK (ev_window_cmd_view_zoom_activate),
+				  window);
+		gtk_action_group_add_action (action_group, action);
+		g_object_unref (action);
+
+		gtk_ui_manager_add_ui (window->priv->ui_manager,
+				       new_ui_id,
+				       "/ZoomSelectorPopup/ViewZoomItems",
+				       _(zoom_levels[i].name),
+				       zoom_levels[i].name,
+				       GTK_UI_MANAGER_MENUITEM,
+				       FALSE);
+	}
+}
+
+static void
 register_custom_actions (EvWindow *window, GtkActionGroup *group)
 {
 	GtkAction *action;
@@ -6117,6 +6179,8 @@ register_custom_actions (EvWindow *window, GtkActionGroup *group)
 			       NULL);
 	ev_zoom_action_set_model (EV_ZOOM_ACTION (action),
 				  window->priv->model);
+	ev_zoom_action_set_window (EV_ZOOM_ACTION (action),
+				   window);
 	g_signal_connect (action, "activated",
 			  G_CALLBACK (zoom_action_activated_cb), window);
 	gtk_action_group_add_action (group, action);
@@ -6177,14 +6241,6 @@ set_action_properties (GtkActionGroup *action_group)
 	action = gtk_action_group_get_action (action_group, "ViewZoomOut");
 	/*translators: this is the label for toolbar button*/
 	g_object_set (action, "short_label", _("Zoom Out"), NULL);
-
-	action = gtk_action_group_get_action (action_group, "ViewFitPage");
-	/*translators: this is the label for toolbar button*/
-	g_object_set (action, "short_label", _("Fit Page"), NULL);
-
-	action = gtk_action_group_get_action (action_group, "ViewFitWidth");
-	/*translators: this is the label for toolbar button*/
-	g_object_set (action, "short_label", _("Fit Width"), NULL);
 
 	action = gtk_action_group_get_action (action_group, "LeaveFullscreen");
 	g_object_set (action, "is-important", TRUE, NULL);
@@ -7160,10 +7216,21 @@ ev_window_init (EvWindow *ev_window)
 	gtk_ui_manager_insert_action_group (ev_window->priv->ui_manager,
 					    action_group, 0);
 
+	action_group = gtk_action_group_new ("ZoomSelectorPopupActions");
+	ev_window->priv->zoom_selector_popup_action_group = action_group;
+	gtk_action_group_set_translation_domain (action_group, NULL);
+	gtk_action_group_add_toggle_actions (action_group, zoom_selector_popup_actions,
+					     G_N_ELEMENTS (zoom_selector_popup_actions),
+					     ev_window);
+	gtk_ui_manager_insert_action_group (ev_window->priv->ui_manager,
+					    action_group, 0);
+
         gtk_ui_manager_add_ui_from_resource (ev_window->priv->ui_manager,
                                              "/org/gnome/evince/shell/ui/evince.xml",
                                              &error);
         g_assert_no_error (error);
+
+	ev_window_register_zoom_selector_popup_actions (ev_window);
 
 	css_provider = gtk_css_provider_new ();
 	_gtk_css_provider_load_from_resource (css_provider,
@@ -7546,4 +7613,12 @@ ev_window_get_main_action_group (EvWindow *ev_window)
 	g_return_val_if_fail (EV_WINDOW (ev_window), NULL);
 
 	return ev_window->priv->action_group;
+}
+
+GtkActionGroup *
+ev_window_get_zoom_selector_action_group (EvWindow *ev_window)
+{
+	g_return_val_if_fail (EV_WINDOW (ev_window), NULL);
+
+	return ev_window->priv->zoom_selector_popup_action_group;
 }
