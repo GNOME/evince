@@ -288,6 +288,9 @@ static void       ev_view_primary_clear_cb                   (GtkClipboard      
 							      gpointer            data);
 static void       ev_view_update_primary_selection           (EvView             *ev_view);
 
+/*** Caret navigation ***/
+static void       ev_view_check_cursor_blink                 (EvView             *ev_view);
+
 G_DEFINE_TYPE_WITH_CODE (EvView, ev_view, GTK_TYPE_CONTAINER,
 			 G_IMPLEMENT_INTERFACE (GTK_TYPE_SCROLLABLE, NULL))
 
@@ -775,6 +778,8 @@ view_update_range_and_current_page (EvView *view)
 		for (i = end; i > view->end_page && end != -1; i--) {
 			hide_annotation_windows (view, i);
 		}
+
+		ev_view_check_cursor_blink (view);
 	}
 
 	ev_page_cache_set_page_range (view->page_cache,
@@ -3121,11 +3126,20 @@ ev_view_synctex_backward_search (EvView *view,
 #define CURSOR_PEND_MULTIPLIER 3
 #define CURSOR_DIVIDER 3
 
+static inline gboolean
+cursor_is_in_visible_page (EvView *view)
+{
+	return (view->cursor_page == view->current_page ||
+		(view->cursor_page >= view->start_page &&
+		 view->cursor_page <= view->end_page));
+}
+
 static gboolean
 cursor_should_blink (EvView *view)
 {
 	if (view->caret_enabled &&
 	    view->rotation == 0 &&
+	    cursor_is_in_visible_page (view) &&
 	    gtk_widget_has_focus (GTK_WIDGET (view)) &&
 	    view->pixbuf_cache &&
 	    !ev_pixbuf_cache_get_selection_region (view->pixbuf_cache, view->cursor_page, view->scale)) {
