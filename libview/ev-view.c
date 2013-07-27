@@ -3364,7 +3364,9 @@ ev_view_set_caret_navigation_enabled (EvView   *view,
 	if (view->caret_enabled != enabled) {
 		view->caret_enabled = enabled;
 		ev_view_check_cursor_blink (view);
-		gtk_widget_queue_draw (GTK_WIDGET (view));
+
+		if (cursor_is_in_visible_page (view))
+			gtk_widget_queue_draw (GTK_WIDGET (view));
 	}
 }
 
