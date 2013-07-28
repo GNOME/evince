@@ -737,7 +737,8 @@ view_update_range_and_current_page (EvView *view)
 			}
 		}
 
-		if (view->pending_scroll == SCROLL_TO_KEEP_POSITION) {
+		if (view->pending_scroll == SCROLL_TO_KEEP_POSITION ||
+		    view->pending_scroll == SCROLL_TO_FIND_LOCATION) {
 			best_current_page = MAX (best_current_page, view->start_page);
 
 			if (best_current_page >= 0 && view->current_page != best_current_page) {
