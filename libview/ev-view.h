@@ -120,6 +120,9 @@ gboolean       ev_view_supports_caret_navigation    (EvView  *view);
 gboolean       ev_view_is_caret_navigation_enabled  (EvView  *view);
 void           ev_view_set_caret_navigation_enabled (EvView  *view,
                                                      gboolean enabled);
+void           ev_view_set_caret_cursor_position    (EvView  *view,
+                                                     guint    page,
+                                                     guint    offset);
 G_END_DECLS
 
 #endif /* __EV_VIEW_H__ */

@@ -3379,6 +3379,24 @@ ev_view_is_caret_navigation_enabled (EvView *view)
 	return view->caret_enabled;
 }
 
+void
+ev_view_set_caret_cursor_position (EvView *view,
+				   guint   page,
+				   guint   offset)
+{
+	g_return_if_fail (EV_IS_VIEW (view));
+	g_return_if_fail (EV_IS_DOCUMENT (view->document));
+	g_return_if_fail (page < ev_document_get_n_pages (view->document));
+
+	if (view->cursor_page != page || view->cursor_offset != offset) {
+		view->cursor_page = page;
+		view->cursor_offset = offset;
+
+		if (view->caret_enabled && cursor_is_in_visible_page (view))
+			gtk_widget_queue_draw (GTK_WIDGET (view));
+	}
+}
+
 /*** GtkWidget implementation ***/
 
 static void
