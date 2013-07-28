@@ -911,6 +911,26 @@ view_is_loading_changed_cb (EvView     *view,
 }
 
 static void
+view_caret_cursor_moved_cb (EvView   *view,
+			    guint     page,
+			    guint     offset,
+			    EvWindow *window)
+{
+	GVariant *position;
+	gchar    *caret_position;
+
+	if (!window->priv->metadata)
+		return;
+
+	position = g_variant_new ("(uu)", page, offset);
+	caret_position = g_variant_print (position, FALSE);
+	g_variant_unref (position);
+
+	ev_metadata_set_string (window->priv->metadata, "caret-position", caret_position);
+	g_free (caret_position);
+}
+
+static void
 ev_window_page_changed_cb (EvWindow        *ev_window,
 			   gint             old_page,
 			   gint             new_page,
@@ -1266,7 +1286,7 @@ setup_size_from_metadata (EvWindow *window)
 static void
 setup_view_from_metadata (EvWindow *window)
 {
-	gboolean presentation, caret_navigation;
+	gboolean presentation;
 
 	if (!window->priv->metadata)
 		return;
@@ -1278,9 +1298,27 @@ setup_view_from_metadata (EvWindow *window)
 	}
 
 	/* Caret navigation mode */
-	if (ev_view_supports_caret_navigation (EV_VIEW (window->priv->view)) &&
-	    ev_metadata_get_boolean (window->priv->metadata, "caret-navigation", &caret_navigation)) {
-		ev_view_set_caret_navigation_enabled (EV_VIEW (window->priv->view), caret_navigation);
+	if (ev_view_supports_caret_navigation (EV_VIEW (window->priv->view))) {
+		gboolean caret_navigation;
+		gchar   *caret_position;
+
+		if (ev_metadata_get_string (window->priv->metadata, "caret-position", &caret_position)) {
+			GVariant *position;
+
+			position = g_variant_parse (G_VARIANT_TYPE ("(uu)"), caret_position, NULL, NULL, NULL);
+			if (position) {
+				guint page, offset;
+
+				g_variant_get (position, "(uu)", &page, &offset);
+				g_variant_unref (position);
+
+				ev_view_set_caret_cursor_position (EV_VIEW (window->priv->view),
+								   page, offset);
+			}
+		}
+
+		if (ev_metadata_get_boolean (window->priv->metadata, "caret-navigation", &caret_navigation))
+			ev_view_set_caret_navigation_enabled (EV_VIEW (window->priv->view), caret_navigation);
 	}
 }
 
@@ -7545,6 +7583,9 @@ ev_window_init (EvWindow *ev_window)
 				 ev_window, 0);
 	g_signal_connect_object (ev_window->priv->view, "notify::is-loading",
 				 G_CALLBACK (view_is_loading_changed_cb),
+				 ev_window, 0);
+	g_signal_connect_object (ev_window->priv->view, "cursor-moved",
+				 G_CALLBACK (view_caret_cursor_moved_cb),
 				 ev_window, 0);
 #ifdef ENABLE_DBUS
 	g_signal_connect_swapped (ev_window->priv->view, "sync-source",
