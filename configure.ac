@@ -663,7 +663,6 @@ dnl =================== Compile warnings =======================================
 GNOME_COMPILE_WARNINGS
 
 CC_CHECK_FLAGS_APPEND([AM_CFLAGS],[CFLAGS],[ \
-  -Wno-deprecated-declarations \
 ])
 
 AM_CFLAGS="$AM_CFLAGS $WARN_CFLAGS"
