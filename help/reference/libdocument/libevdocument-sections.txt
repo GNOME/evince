@@ -3,7 +3,6 @@
 <TITLE>EvLayer</TITLE>
 EvLayer
 EvLayerClass
-EvLayerPrivate
 ev_layer_new
 ev_layer_is_parent
 ev_layer_get_rb_group
@@ -11,10 +10,12 @@ ev_layer_get_rb_group
 EV_LAYER
 EV_IS_LAYER
 EV_TYPE_LAYER
-ev_layer_get_type
 EV_LAYER_CLASS
 EV_IS_LAYER_CLASS
 EV_LAYER_GET_CLASS
+<SUBSECTION Private>
+EvLayerPrivate
+ev_layer_get_type
 </SECTION>
 
 <SECTION>
@@ -23,8 +24,6 @@ EV_LAYER_GET_CLASS
 EvFileExporterFormat
 EvFileExporterCapabilities
 EvFileExporterContext
-EV_FILE_EXPORTER_IFACE
-EV_IS_FILE_EXPORTER_IFACE
 EvFileExporter
 EvFileExporterInterface
 ev_file_exporter_begin
@@ -34,22 +33,23 @@ ev_file_exporter_end_page
 ev_file_exporter_end
 ev_file_exporter_get_capabilities
 <SUBSECTION Standard>
-ev_file_exporter_format_get_type
 EV_TYPE_FILE_EXPORTER_FORMAT
-ev_file_exporter_capabilities_get_type
 EV_TYPE_FILE_EXPORTER_CAPABILITIES
 EV_FILE_EXPORTER
 EV_IS_FILE_EXPORTER
 EV_TYPE_FILE_EXPORTER
-ev_file_exporter_get_type
+EV_FILE_EXPORTER_IFACE
+EV_IS_FILE_EXPORTER_IFACE
 EV_FILE_EXPORTER_GET_IFACE
+<SUBSECTION Private>
+ev_file_exporter_format_get_type
+ev_file_exporter_capabilities_get_type
+ev_file_exporter_get_type
 </SECTION>
 
 <SECTION>
 <FILE>ev-document-forms</FILE>
 <TITLE>EvDocumentForms</TITLE>
-EV_DOCUMENT_FORMS_IFACE
-EV_IS_DOCUMENT_FORMS_IFACE
 EvDocumentForms
 EvDocumentFormsInterface
 ev_document_forms_document_is_modified
@@ -67,24 +67,25 @@ ev_document_forms_form_field_choice_unselect_all
 ev_document_forms_form_field_choice_set_text
 ev_document_forms_form_field_choice_get_text
 <SUBSECTION Standard>
-ev_form_field_text_type_get_type
 EV_TYPE_FORM_FIELD_TEXT_TYPE
-ev_form_field_button_type_get_type
 EV_TYPE_FORM_FIELD_BUTTON_TYPE
-ev_form_field_choice_type_get_type
 EV_TYPE_FORM_FIELD_CHOICE_TYPE
 EV_DOCUMENT_FORMS
 EV_IS_DOCUMENT_FORMS
 EV_TYPE_DOCUMENT_FORMS
-ev_document_forms_get_type
+EV_DOCUMENT_FORMS_IFACE
+EV_IS_DOCUMENT_FORMS_IFACE
 EV_DOCUMENT_FORMS_GET_IFACE
+<SUBSECTION Private>
+ev_form_field_text_type_get_type
+ev_form_field_button_type_get_type
+ev_form_field_choice_type_get_type
+ev_document_forms_get_type
 </SECTION>
 
 <SECTION>
 <FILE>ev-document-print</FILE>
 <TITLE>EvDocumentPrint</TITLE>
-EV_DOCUMENT_PRINT_IFACE
-EV_IS_DOCUMENT_PRINT_IFACE
 EvDocumentPrint
 EvDocumentPrintInterface
 ev_document_print_print_page
@@ -92,8 +93,11 @@ ev_document_print_print_page
 EV_DOCUMENT_PRINT
 EV_IS_DOCUMENT_PRINT
 EV_TYPE_DOCUMENT_PRINT
-ev_document_print_get_type
+EV_DOCUMENT_PRINT_IFACE
+EV_IS_DOCUMENT_PRINT_IFACE
 EV_DOCUMENT_PRINT_GET_IFACE
+<SUBSECTION Private>
+ev_document_print_get_type
 </SECTION>
 
 <SECTION>
@@ -101,7 +105,6 @@ EV_DOCUMENT_PRINT_GET_IFACE
 <TITLE>EvImage</TITLE>
 EvImage
 EvImageClass
-EvImagePrivate
 ev_image_new
 ev_image_new_from_pixbuf
 ev_image_get_id
@@ -113,39 +116,40 @@ ev_image_get_tmp_uri
 EV_IMAGE
 EV_IS_IMAGE
 EV_TYPE_IMAGE
-ev_image_get_type
 EV_IMAGE_CLASS
 EV_IS_IMAGE_CLASS
 EV_IMAGE_GET_CLASS
+<SUBSECTION Private>
+EvImagePrivate
+ev_image_get_type
 </SECTION>
 
 <SECTION>
 <FILE>ev-link</FILE>
 EvLink
 EvLinkClass
-EvLinkPrivate
 ev_link_new
 ev_link_get_title
 ev_link_get_action
 <SUBSECTION Standard>
-ev_link_action_type_get_type
 EV_TYPE_LINK_ACTION_TYPE
-ev_link_dest_type_get_type
 EV_TYPE_LINK_DEST_TYPE
 EV_LINK
 EV_IS_LINK
 EV_TYPE_LINK
-ev_link_get_type
 EV_LINK_CLASS
 EV_IS_LINK_CLASS
 EV_LINK_GET_CLASS
+<SUBSECTION Private>
+EvLinkPrivate
+ev_link_action_type_get_type
+ev_link_dest_type_get_type
+ev_link_get_type
 </SECTION>
 
 <SECTION>
 <FILE>ev-document-layers</FILE>
 <TITLE>EvDocumentLayers</TITLE>
-EV_DOCUMENT_LAYERS_IFACE
-EV_IS_DOCUMENT_LAYERS_IFACE
 EvDocumentLayers
 EvDocumentLayersInterface
 ev_document_layers_has_layers
@@ -157,15 +161,16 @@ ev_document_layers_layer_is_visible
 EV_DOCUMENT_LAYERS
 EV_IS_DOCUMENT_LAYERS
 EV_TYPE_DOCUMENT_LAYERS
-ev_document_layers_get_type
+EV_DOCUMENT_LAYERS_IFACE
+EV_IS_DOCUMENT_LAYERS_IFACE
 EV_DOCUMENT_LAYERS_GET_IFACE
+<SUBSECTION Private>
+ev_document_layers_get_type
 </SECTION>
 
 <SECTION>
 <FILE>ev-document-links</FILE>
 <TITLE>EvDocumentLinks</TITLE>
-EV_DOCUMENT_LINKS_IFACE
-EV_IS_DOCUMENT_LINKS_IFACE
 EvDocumentLinks
 EvDocumentLinksInterface
 ev_document_links_has_document_links
@@ -181,8 +186,11 @@ ev_document_links_get_link_page_label
 EV_DOCUMENT_LINKS
 EV_IS_DOCUMENT_LINKS
 EV_TYPE_DOCUMENT_LINKS
-ev_document_links_get_type
+EV_DOCUMENT_LINKS_IFACE
+EV_IS_DOCUMENT_LINKS_IFACE
 EV_DOCUMENT_LINKS_GET_IFACE
+<SUBSECTION Private>
+ev_document_links_get_type
 </SECTION>
 
 <SECTION>
@@ -190,9 +198,6 @@ EV_DOCUMENT_LINKS_GET_IFACE
 <TITLE>EvAttachment</TITLE>
 EvAttachment
 EvAttachmentClass
-EvAttachmentPrivate
-EV_ATTACHMENT_ERROR
-ev_attachment_error_quark
 ev_attachment_new
 ev_attachment_get_name
 ev_attachment_get_description
@@ -202,13 +207,17 @@ ev_attachment_get_mime_type
 ev_attachment_save
 ev_attachment_open
 <SUBSECTION Standard>
+EV_ATTACHMENT_ERROR
 EV_ATTACHMENT
 EV_IS_ATTACHMENT
 EV_TYPE_ATTACHMENT
-ev_attachment_get_type
 EV_ATTACHMENT_CLASS
 EV_IS_ATTACHMENT_CLASS
 EV_ATTACHMENT_GET_CLASS
+<SUBSECTION Private>
+EvAttachmentPrivate
+ev_attachment_get_type
+ev_attachment_error_quark
 </SECTION>
 
 <SECTION>
@@ -223,10 +232,11 @@ ev_page_new
 EV_PAGE
 EV_IS_PAGE
 EV_TYPE_PAGE
-ev_page_get_type
 EV_PAGE_CLASS
 EV_IS_PAGE_CLASS
 EV_PAGE_GET_CLASS
+<SUBSECTION Private>
+ev_page_get_type
 </SECTION>
 
 <SECTION>
@@ -242,8 +252,9 @@ ev_render_context_set_scale
 EV_RENDER_CONTEXT
 EV_IS_RENDER_CONTEXT
 EV_TYPE_RENDER_CONTEXT
-ev_render_context_get_type
 EV_RENDER_CONTEXT_CLASS
+<SUBSECTION Private>
+ev_render_context_get_type
 </SECTION>
 
 <SECTION>
@@ -270,45 +281,44 @@ ev_form_field_signature_new
 EV_FORM_FIELD
 EV_IS_FORM_FIELD
 EV_TYPE_FORM_FIELD
-ev_form_field_get_type
 EV_FORM_FIELD_CLASS
 EV_IS_FORM_FIELD_CLASS
 EV_FORM_FIELD_GET_CLASS
 EV_TYPE_FORM_FIELD_TEXT
-ev_form_field_text_get_type
 EV_FORM_FIELD_TEXT
 EV_FORM_FIELD_TEXT_CLASS
 EV_IS_FORM_FIELD_TEXT
 EV_IS_FORM_FIELD_TEXT_CLASS
 EV_FORM_FIELD_TEXT_GET_CLASS
 EV_TYPE_FORM_FIELD_BUTTON
-ev_form_field_button_get_type
 EV_FORM_FIELD_BUTTON
 EV_FORM_FIELD_BUTTON_CLASS
 EV_IS_FORM_FIELD_BUTTON
 EV_IS_FORM_FIELD_BUTTON_CLASS
 EV_FORM_FIELD_BUTTON_GET_CLASS
 EV_TYPE_FORM_FIELD_CHOICE
-ev_form_field_choice_get_type
 EV_FORM_FIELD_CHOICE
 EV_FORM_FIELD_CHOICE_CLASS
 EV_IS_FORM_FIELD_CHOICE
 EV_IS_FORM_FIELD_CHOICE_CLASS
 EV_FORM_FIELD_CHOICE_GET_CLASS
 EV_TYPE_FORM_FIELD_SIGNATURE
-ev_form_field_signature_get_type
 EV_FORM_FIELD_SIGNATURE
 EV_FORM_FIELD_SIGNATURE_CLASS
 EV_IS_FORM_FIELD_SIGNATURE
 EV_IS_FORM_FIELD_SIGNATURE_CLASS
 EV_FORM_FIELD_SIGNATURE_GET_CLASS
+<SUBSECTION Private>
+ev_form_field_get_type
+ev_form_field_text_get_type
+ev_form_field_button_get_type
+ev_form_field_choice_get_type
+ev_form_field_signature_get_type
 </SECTION>
 
 <SECTION>
 <FILE>ev-document-find</FILE>
 <TITLE>EvDocumentFind</TITLE>
-EV_DOCUMENT_FIND_IFACE
-EV_IS_DOCUMENT_FIND_IFACE
 EvDocumentFind
 EvDocumentFindInterface
 EvFindOptions
@@ -319,9 +329,12 @@ ev_document_find_get_supported_options
 EV_DOCUMENT_FIND
 EV_IS_DOCUMENT_FIND
 EV_TYPE_DOCUMENT_FIND
-ev_document_find_get_type
+EV_DOCUMENT_FIND_IFACE
+EV_IS_DOCUMENT_FIND_IFACE
 EV_DOCUMENT_FIND_GET_IFACE
 EV_TYPE_FIND_OPTIONS
+<SUBSECTION Private>
+ev_document_find_get_type
 ev_find_options_get_type
 </SECTION>
 
@@ -330,8 +343,6 @@ ev_find_options_get_type
 <TITLE>EvDocument</TITLE>
 EvDocument
 EvDocumentClass
-EvDocumentPrivate
-EV_DOCUMENT_ERROR
 EV_DOC_MUTEX_LOCK
 EV_DOC_MUTEX_UNLOCK
 EvDocumentError
@@ -340,7 +351,6 @@ EvSourceLink
 EvRectangle
 EvDocumentBackendInfo
 EvDocumentLoadFlags
-ev_document_error_quark
 ev_document_get_doc_mutex
 ev_document_doc_mutex_lock
 ev_document_doc_mutex_unlock
@@ -384,18 +394,22 @@ EV_BACKEND_IMPLEMENT_INTERFACE
 EV_BACKEND_REGISTER_WITH_CODE
 EV_BACKEND_REGISTER
 <SUBSECTION Standard>
+EV_DOCUMENT_ERROR
 EV_DOCUMENT
 EV_IS_DOCUMENT
 EV_TYPE_DOCUMENT
-ev_document_get_type
 EV_DOCUMENT_CLASS
 EV_IS_DOCUMENT_CLASS
 EV_DOCUMENT_GET_CLASS
 EV_TYPE_RECTANGLE
-ev_rectangle_get_type
 EV_TYPE_SOURCE_LINK
-ev_source_link_get_type
 EV_TYPE_DOCUMENT_LOAD_FLAGS
+<SUBSECTION Private>
+ev_document_error_quark
+EvDocumentPrivate
+ev_document_get_type
+ev_rectangle_get_type
+ev_source_link_get_type
 ev_document_load_flags_get_type
 </SECTION>
 
@@ -403,7 +417,6 @@ ev_document_load_flags_get_type
 <FILE>ev-link-dest</FILE>
 EvLinkDest
 EvLinkDestClass
-EvLinkDestPrivate
 EvLinkDestType
 ev_link_dest_equal
 ev_link_dest_get_dest_type
@@ -427,17 +440,18 @@ ev_link_dest_new_page_label
 EV_LINK_DEST
 EV_IS_LINK_DEST
 EV_TYPE_LINK_DEST
-ev_link_dest_get_type
 EV_LINK_DEST_CLASS
 EV_IS_LINK_DEST_CLASS
 EV_LINK_DEST_GET_CLASS
+<SUBSECTION Private>
+EvLinkDestPrivate
+ev_link_dest_get_type
 </SECTION>
 
 <SECTION>
 <FILE>ev-link-action</FILE>
 EvLinkAction
 EvLinkActionClass
-EvLinkActionPrivate
 EvLinkActionType
 ev_link_action_equal
 ev_link_action_get_action_type
@@ -459,17 +473,17 @@ ev_link_action_new_named
 EV_LINK_ACTION
 EV_IS_LINK_ACTION
 EV_TYPE_LINK_ACTION
-ev_link_action_get_type
 EV_LINK_ACTION_CLASS
 EV_IS_LINK_ACTION_CLASS
 EV_LINK_ACTION_GET_CLASS
+<SUBSECTION Private>
+EvLinkActionPrivate
+ev_link_action_get_type
 </SECTION>
 
 <SECTION>
 <FILE>ev-document-images</FILE>
 <TITLE>EvDocumentImages</TITLE>
-EV_DOCUMENT_IMAGES_IFACE
-EV_IS_DOCUMENT_IMAGES_IFACE
 EvDocumentImages
 EvDocumentImagesInterface
 ev_document_images_get_image_mapping
@@ -478,15 +492,16 @@ ev_document_images_get_image
 EV_DOCUMENT_IMAGES
 EV_IS_DOCUMENT_IMAGES
 EV_TYPE_DOCUMENT_IMAGES
-ev_document_images_get_type
+EV_DOCUMENT_IMAGES_IFACE
+EV_IS_DOCUMENT_IMAGES_IFACE
 EV_DOCUMENT_IMAGES_GET_IFACE
+<SUBSECTION Private>
+ev_document_images_get_type
 </SECTION>
 
 <SECTION>
 <FILE>ev-async-renderer</FILE>
 <TITLE>EvAsyncRenderer</TITLE>
-EV_ASYNC_RENDERER_IFACE
-EV_IS_ASYNC_RENDERER_IFACE
 EvAsyncRenderer
 EvAsyncRendererInterface
 ev_async_renderer_render_pixbuf
@@ -494,15 +509,16 @@ ev_async_renderer_render_pixbuf
 EV_ASYNC_RENDERER
 EV_IS_ASYNC_RENDERER
 EV_TYPE_ASYNC_RENDERER
-ev_async_renderer_get_type
+EV_ASYNC_RENDERER_IFACE
+EV_IS_ASYNC_RENDERER_IFACE
 EV_ASYNC_RENDERER_GET_IFACE
+<SUBSECTION Private>
+ev_async_renderer_get_type
 </SECTION>
 
 <SECTION>
 <FILE>ev-selection</FILE>
 <TITLE>EvSelection</TITLE>
-EV_SELECTION_IFACE
-EV_IS_SELECTION_IFACE
 EvSelectionStyle
 EvSelection
 EvSelectionInterface
@@ -510,20 +526,21 @@ ev_selection_render_selection
 ev_selection_get_selected_text
 ev_selection_get_selection_region
 <SUBSECTION Standard>
-ev_selection_style_get_type
 EV_TYPE_SELECTION_STYLE
 EV_SELECTION
 EV_IS_SELECTION
 EV_TYPE_SELECTION
-ev_selection_get_type
+EV_SELECTION_IFACE
+EV_IS_SELECTION_IFACE
 EV_SELECTION_GET_IFACE
+<SUBSECTION Private>
+ev_selection_style_get_type
+ev_selection_get_type
 </SECTION>
 
 <SECTION>
 <FILE>ev-document-attachments</FILE>
 <TITLE>EvDocumentAttachments</TITLE>
-EV_DOCUMENT_ATTACHMENTS_IFACE
-EV_IS_DOCUMENT_ATTACHMENTS_IFACE
 EvDocumentAttachments
 EvDocumentAttachmentsInterface
 ev_document_attachments_has_attachments
@@ -532,15 +549,16 @@ ev_document_attachments_get_attachments
 EV_DOCUMENT_ATTACHMENTS
 EV_IS_DOCUMENT_ATTACHMENTS
 EV_TYPE_DOCUMENT_ATTACHMENTS
-ev_document_attachments_get_type
+EV_DOCUMENT_ATTACHMENTS_IFACE
+EV_IS_DOCUMENT_ATTACHMENTS_IFACE
 EV_DOCUMENT_ATTACHMENTS_GET_IFACE
+<SUBSECTION Private>
+ev_document_attachments_get_type
 </SECTION>
 
 <SECTION>
 <FILE>ev-document-security</FILE>
 <TITLE>EvDocumentSecurity</TITLE>
-EV_DOCUMENT_SECURITY_IFACE
-EV_IS_DOCUMENT_SECURITY_IFACE
 EvDocumentSecurity
 EvDocumentSecurityInterface
 ev_document_security_has_document_security
@@ -549,8 +567,11 @@ ev_document_security_set_password
 EV_DOCUMENT_SECURITY
 EV_IS_DOCUMENT_SECURITY
 EV_TYPE_DOCUMENT_SECURITY
-ev_document_security_get_type
+EV_DOCUMENT_SECURITY_IFACE
+EV_IS_DOCUMENT_SECURITY_IFACE
 EV_DOCUMENT_SECURITY_GET_IFACE
+<SUBSECTION Private>
+ev_document_security_get_type
 </SECTION>
 
 <SECTION>
@@ -603,34 +624,35 @@ ev_annotation_attachment_set_attachment
 EV_ANNOTATION
 EV_IS_ANNOTATION
 EV_TYPE_ANNOTATION
-ev_annotation_get_type
 EV_ANNOTATION_CLASS
 EV_IS_ANNOTATION_CLASS
 EV_ANNOTATION_GET_CLASS
 EV_TYPE_ANNOTATION_MARKUP
-ev_annotation_markup_get_type
 EV_ANNOTATION_MARKUP
 EV_ANNOTATION_MARKUP_IFACE
 EV_IS_ANNOTATION_MARKUP
 EV_IS_ANNOTATION_MARKUP_IFACE
 EV_ANNOTATION_MARKUP_GET_IFACE
 EV_TYPE_ANNOTATION_TEXT
-ev_annotation_text_get_type
 EV_ANNOTATION_TEXT
 EV_ANNOTATION_TEXT_CLASS
 EV_IS_ANNOTATION_TEXT
 EV_IS_ANNOTATION_TEXT_CLASS
 EV_ANNOTATION_TEXT_GET_CLASS
 EV_TYPE_ANNOTATION_ATTACHMENT
-ev_annotation_attachment_get_type
 EV_ANNOTATION_ATTACHMENT
 EV_ANNOTATION_ATTACHMENT_CLASS
 EV_IS_ANNOTATION_ATTACHMENT
 EV_IS_ANNOTATION_ATTACHMENT_CLASS
 EV_ANNOTATION_ATTACHMENT_GET_CLASS
 EV_TYPE_ANNOTATION_TEXT_ICON
-ev_annotation_text_icon_get_type
 EV_TYPE_ANNOTATION_TYPE
+<SUBSECTION Private>
+ev_annotation_get_type
+ev_annotation_markup_get_type
+ev_annotation_text_get_type
+ev_annotation_attachment_get_type
+ev_annotation_text_icon_get_type
 ev_annotation_type_get_type
 </SECTION>
 
@@ -649,14 +671,13 @@ EV_DOCUMENT_TEXT
 EV_IS_DOCUMENT_TEXT
 EV_DOCUMENT_TEXT_GET_IFACE
 EV_TYPE_DOCUMENT_TEXT
+<SUBSECTION Private>
 ev_document_text_get_type
 </SECTION>
 
 <SECTION>
 <FILE>ev-document-transition</FILE>
 <TITLE>EvDocumentTransition</TITLE>
-EV_DOCUMENT_TRANSITION_IFACE
-EV_IS_DOCUMENT_TRANSITION_IFACE
 EvDocumentTransition
 EvDocumentTransitionInterface
 ev_document_transition_get_page_duration
@@ -665,8 +686,11 @@ ev_document_transition_get_effect
 EV_DOCUMENT_TRANSITION
 EV_IS_DOCUMENT_TRANSITION
 EV_TYPE_DOCUMENT_TRANSITION
-ev_document_transition_get_type
+EV_DOCUMENT_TRANSITION_IFACE
+EV_IS_DOCUMENT_TRANSITION_IFACE
 EV_DOCUMENT_TRANSITION_GET_IFACE
+<SUBSECTION Private>
+ev_document_transition_get_type
 </SECTION>
 
 <SECTION>
@@ -678,26 +702,25 @@ EvTransitionEffect
 EvTransitionEffectClass
 ev_transition_effect_new
 <SUBSECTION Standard>
-ev_transition_effect_type_get_type
 EV_TYPE_TRANSITION_EFFECT_TYPE
-ev_transition_effect_alignment_get_type
 EV_TYPE_TRANSITION_EFFECT_ALIGNMENT
-ev_transition_effect_direction_get_type
 EV_TYPE_TRANSITION_EFFECT_DIRECTION
 EV_TRANSITION_EFFECT
 EV_IS_TRANSITION_EFFECT
 EV_TYPE_TRANSITION_EFFECT
-ev_transition_effect_get_type
 EV_TRANSITION_EFFECT_CLASS
 EV_IS_TRANSITION_EFFECT_CLASS
 EV_TRANSITION_EFFECT_GET_CLASS
+<SUBSECTION Private>
+ev_transition_effect_type_get_type
+ev_transition_effect_alignment_get_type
+ev_transition_effect_direction_get_type
+ev_transition_effect_get_type
 </SECTION>
 
 <SECTION>
 <FILE>ev-document-annotations</FILE>
 <TITLE>EvDocumentAnnotations</TITLE>
-EV_DOCUMENT_ANNOTATIONS_IFACE
-EV_IS_DOCUMENT_ANNOTATIONS_IFACE
 EvDocumentAnnotations
 EvDocumentAnnotationsInterface
 EvAnnotationsSaveMask
@@ -710,17 +733,18 @@ ev_document_annotations_save_annotation
 EV_DOCUMENT_ANNOTATIONS
 EV_IS_DOCUMENT_ANNOTATIONS
 EV_TYPE_DOCUMENT_ANNOTATIONS
-ev_document_annotations_get_type
+EV_DOCUMENT_ANNOTATIONS_IFACE
+EV_IS_DOCUMENT_ANNOTATIONS_IFACE
 EV_DOCUMENT_ANNOTATIONS_GET_IFACE
 EV_TYPE_ANNOTATIONS_SAVE_MASK
+<SUBSECTION Private>
+ev_document_annotations_get_type
 ev_annotations_save_mask_get_type
 </SECTION>
 
 <SECTION>
 <FILE>ev-document-fonts</FILE>
 <TITLE>EvDocumentFonts</TITLE>
-EV_DOCUMENT_FONTS_IFACE
-EV_IS_DOCUMENT_FONTS_IFACE
 EvDocumentFonts
 EvDocumentFontsInterface
 ev_document_fonts_scan
@@ -731,8 +755,11 @@ ev_document_fonts_get_fonts_summary
 EV_DOCUMENT_FONTS
 EV_IS_DOCUMENT_FONTS
 EV_TYPE_DOCUMENT_FONTS
-ev_document_fonts_get_type
+EV_DOCUMENT_FONTS_IFACE
+EV_IS_DOCUMENT_FONTS_IFACE
 EV_DOCUMENT_FONTS_GET_IFACE
+<SUBSECTION Private>
+ev_document_fonts_get_type
 </SECTION>
 
 <SECTION>
@@ -765,6 +792,7 @@ ev_mapping_list_find
 ev_mapping_list_find_custom
 <SUBSECTION Standard>
 EV_TYPE_MAPPING_LIST
+<SUBSECTION Private>
 ev_mapping_list_get_type
 </SECTION>
 
@@ -849,18 +877,19 @@ ev_document_license_get_web_statement
 ev_document_error_get_type
 <SUBSECTION Standard>
 EV_TYPE_DOCUMENT_INFO
-ev_document_info_get_type
 EV_TYPE_DOCUMENT_LICENSE
-ev_document_license_get_type
 EV_TYPE_DOCUMENT_ERROR
-ev_document_layout_get_type
 EV_TYPE_DOCUMENT_LAYOUT
-ev_document_mode_get_type
 EV_TYPE_DOCUMENT_MODE
-ev_document_ui_hints_get_type
 EV_TYPE_DOCUMENT_UI_HINTS
-ev_document_permissions_get_type
 EV_TYPE_DOCUMENT_PERMISSIONS
-ev_document_info_fields_get_type
 EV_TYPE_DOCUMENT_INFO_FIELDS
+<SUBSECTION Private>
+ev_document_info_get_type
+ev_document_license_get_type
+ev_document_layout_get_type
+ev_document_mode_get_type
+ev_document_ui_hints_get_type
+ev_document_permissions_get_type
+ev_document_info_fields_get_type
 </SECTION>
