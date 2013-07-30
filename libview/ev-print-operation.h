@@ -34,11 +34,12 @@ G_BEGIN_DECLS
 typedef struct _EvPrintOperation      EvPrintOperation;
 typedef struct _EvPrintOperationClass EvPrintOperationClass;
 
-#define EV_TYPE_PRINT_OPERATION              (ev_print_operation_get_type())
-#define EV_PRINT_OPERATION(object)           (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_PRINT_OPERATION, EvPrintOperation))
-#define EV_PRINT_OPERATION_CLASS(klass)      (G_TYPE_CHECK_CLASS_CAST((klass), EV_TYPE_PRINT_OPERATION, EvPrintOperationClass))
-#define EV_IS_PRINT_OPERATION(object)        (G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_PRINT_OPERATION))
-#define EV_PRINT_OPERATION_GET_CLASS(object) (G_TYPE_INSTANCE_GET_CLASS((object), EV_TYPE_PRINT_OPERATION, EvPrintOperationClass))
+#define EV_TYPE_PRINT_OPERATION            (ev_print_operation_get_type())
+#define EV_PRINT_OPERATION(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), EV_TYPE_PRINT_OPERATION, EvPrintOperation))
+#define EV_IS_PRINT_OPERATION(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), EV_TYPE_PRINT_OPERATION))
+#define EV_PRINT_OPERATION_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), EV_TYPE_PRINT_OPERATION, EvPrintOperationClass))
+#define EV_IS_PRINT_OPERATION_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), EV_TYPE_PRINT_OPERATION))
+#define EV_PRINT_OPERATION_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), EV_TYPE_PRINT_OPERATION, EvPrintOperationClass))
 
 GType             ev_print_operation_get_type               (void) G_GNUC_CONST;
 

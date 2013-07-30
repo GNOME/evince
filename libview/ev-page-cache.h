@@ -31,9 +31,12 @@
 
 G_BEGIN_DECLS
 
-#define EV_TYPE_PAGE_CACHE    (ev_page_cache_get_type ())
-#define EV_PAGE_CACHE(obj)    (G_TYPE_CHECK_INSTANCE_CAST ((obj), EV_TYPE_PAGE_CACHE, EvPageCache))
-#define EV_IS_PAGE_CACHE(obj) (G_TYPE_CHECK_INSTANCE_TYPE ((obj), EV_TYPE_PAGE_CACHE))
+#define EV_TYPE_PAGE_CACHE            (ev_page_cache_get_type ())
+#define EV_PAGE_CACHE(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), EV_TYPE_PAGE_CACHE, EvPageCache))
+#define EV_IS_PAGE_CACHE(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), EV_TYPE_PAGE_CACHE))
+#define EV_PAGE_CACHE_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), EV_TYPE_PAGE_CACHE, EvPageCacheClass))
+#define EV_IS_PAGE_CACHE_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), EV_TYPE_PAGE_CACHE))
+#define EV_PAGE_CACHE_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), EV_TYPE_PAGE_CACHE, EvPageCacheClass))
 
 typedef struct _EvPageCache        EvPageCache;
 typedef struct _EvPageCacheClass   EvPageCacheClass;
