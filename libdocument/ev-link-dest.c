@@ -520,6 +520,17 @@ ev_link_dest_new_page_label (const gchar *page_label)
 					   NULL));
 }
 
+/**
+ * ev_link_dest_equal:
+ * @a: a #EvLinkDest
+ * @b: a #EvLinkDest
+ *
+ * Checks whether @a and @b are equal.
+ *
+ * Returns: %TRUE iff @a and @b are equal
+ *
+ * Since: 3.8
+ */
 gboolean
 ev_link_dest_equal (EvLinkDest *a,
                     EvLinkDest *b)

@@ -69,6 +69,17 @@ ev_document_text_get_text_mapping (EvDocumentText *document_text,
 	return iface->get_text_mapping (document_text, page);
 }
 
+/**
+ * ev_document_text_get_text_attrs:
+ * @document_text: a #EvDocumentText
+ * @page: a #EvPage
+ *
+ * FIXME
+ *
+ * Returns: (transfer full): a newly created #PangoAttrList
+ *
+ * Since: 3.10
+ */
 PangoAttrList *
 ev_document_text_get_text_attrs (EvDocumentText *document_text,
 				 EvPage         *page)

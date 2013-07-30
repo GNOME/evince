@@ -190,6 +190,8 @@ ev_document_misc_render_thumbnail_frame (GtkWidget *widget,
  * @inverted_colors: whether to invert colors
  *
  * Returns: (transfer full): a #GdkPixbuf
+ *
+ * Since: 3.8
  */
 GdkPixbuf *
 ev_document_misc_render_loading_thumbnail (GtkWidget *widget,
@@ -206,6 +208,8 @@ ev_document_misc_render_loading_thumbnail (GtkWidget *widget,
  * @source_pixbuf: a #GdkPixbuf
  *
  * Returns: (transfer full): a #GdkPixbuf
+ *
+ * Since: 3.8
  */
 GdkPixbuf *
 ev_document_misc_render_thumbnail_with_frame (GtkWidget *widget,

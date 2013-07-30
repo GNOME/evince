@@ -479,6 +479,17 @@ ev_link_action_new_layers_state (GList *show_list,
 					     NULL));
 }
 
+/**
+ * ev_link_action_equal:
+ * @a: a #EvLinkAction
+ * @b: a #EvLinkAction
+ *
+ * Checks whether @a and @b are equal.
+ *
+ * Returns: %TRUE iff @a and @b are equal
+ *
+ * Since: 3.8
+ */
 gboolean
 ev_link_action_equal (EvLinkAction *a,
                       EvLinkAction *b)

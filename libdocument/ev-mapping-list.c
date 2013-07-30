@@ -20,6 +20,12 @@
 
 #include "ev-mapping-list.h"
 
+/**
+ * SECTION: ev-mapping-list
+ * @short_description: a refcounted list of #EvMappings.
+ *
+ * Since: 3.8
+ */
 struct _EvMappingList {
 	guint          page;
 	GList         *list;
