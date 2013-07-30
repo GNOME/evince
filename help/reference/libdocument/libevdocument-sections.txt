@@ -26,7 +26,7 @@ EvFileExporterContext
 EV_FILE_EXPORTER_IFACE
 EV_IS_FILE_EXPORTER_IFACE
 EvFileExporter
-EvFileExporterIface
+EvFileExporterInterface
 ev_file_exporter_begin
 ev_file_exporter_begin_page
 ev_file_exporter_do_page
@@ -51,7 +51,7 @@ EV_FILE_EXPORTER_GET_IFACE
 EV_DOCUMENT_FORMS_IFACE
 EV_IS_DOCUMENT_FORMS_IFACE
 EvDocumentForms
-EvDocumentFormsIface
+EvDocumentFormsInterface
 ev_document_forms_document_is_modified
 ev_document_forms_get_form_fields
 ev_document_forms_form_field_text_get_text
@@ -86,7 +86,7 @@ EV_DOCUMENT_FORMS_GET_IFACE
 EV_DOCUMENT_PRINT_IFACE
 EV_IS_DOCUMENT_PRINT_IFACE
 EvDocumentPrint
-EvDocumentPrintIface
+EvDocumentPrintInterface
 ev_document_print_print_page
 <SUBSECTION Standard>
 EV_DOCUMENT_PRINT
@@ -147,7 +147,7 @@ EV_LINK_GET_CLASS
 EV_DOCUMENT_LAYERS_IFACE
 EV_IS_DOCUMENT_LAYERS_IFACE
 EvDocumentLayers
-EvDocumentLayersIface
+EvDocumentLayersInterface
 ev_document_layers_has_layers
 ev_document_layers_get_layers
 ev_document_layers_show_layer
@@ -167,7 +167,7 @@ EV_DOCUMENT_LAYERS_GET_IFACE
 EV_DOCUMENT_LINKS_IFACE
 EV_IS_DOCUMENT_LINKS_IFACE
 EvDocumentLinks
-EvDocumentLinksIface
+EvDocumentLinksInterface
 ev_document_links_has_document_links
 ev_document_links_get_links_model
 ev_document_links_get_links
@@ -310,7 +310,7 @@ EV_FORM_FIELD_SIGNATURE_GET_CLASS
 EV_DOCUMENT_FIND_IFACE
 EV_IS_DOCUMENT_FIND_IFACE
 EvDocumentFind
-EvDocumentFindIface
+EvDocumentFindInterface
 EvFindOptions
 ev_document_find_find_text
 ev_document_find_find_text_with_options
@@ -471,7 +471,7 @@ EV_LINK_ACTION_GET_CLASS
 EV_DOCUMENT_IMAGES_IFACE
 EV_IS_DOCUMENT_IMAGES_IFACE
 EvDocumentImages
-EvDocumentImagesIface
+EvDocumentImagesInterface
 ev_document_images_get_image_mapping
 ev_document_images_get_image
 <SUBSECTION Standard>
@@ -488,7 +488,7 @@ EV_DOCUMENT_IMAGES_GET_IFACE
 EV_ASYNC_RENDERER_IFACE
 EV_IS_ASYNC_RENDERER_IFACE
 EvAsyncRenderer
-EvAsyncRendererIface
+EvAsyncRendererInterface
 ev_async_renderer_render_pixbuf
 <SUBSECTION Standard>
 EV_ASYNC_RENDERER
@@ -505,7 +505,7 @@ EV_SELECTION_IFACE
 EV_IS_SELECTION_IFACE
 EvSelectionStyle
 EvSelection
-EvSelectionIface
+EvSelectionInterface
 ev_selection_render_selection
 ev_selection_get_selected_text
 ev_selection_get_selection_region
@@ -525,7 +525,7 @@ EV_SELECTION_GET_IFACE
 EV_DOCUMENT_ATTACHMENTS_IFACE
 EV_IS_DOCUMENT_ATTACHMENTS_IFACE
 EvDocumentAttachments
-EvDocumentAttachmentsIface
+EvDocumentAttachmentsInterface
 ev_document_attachments_has_attachments
 ev_document_attachments_get_attachments
 <SUBSECTION Standard>
@@ -542,7 +542,7 @@ EV_DOCUMENT_ATTACHMENTS_GET_IFACE
 EV_DOCUMENT_SECURITY_IFACE
 EV_IS_DOCUMENT_SECURITY_IFACE
 EvDocumentSecurity
-EvDocumentSecurityIface
+EvDocumentSecurityInterface
 ev_document_security_has_document_security
 ev_document_security_set_password
 <SUBSECTION Standard>
@@ -559,7 +559,6 @@ EV_DOCUMENT_SECURITY_GET_IFACE
 EvAnnotation
 EvAnnotationClass
 EvAnnotationMarkup
-EvAnnotationMarkupIface
 EvAnnotationMarkupInterface
 EvAnnotationText
 EvAnnotationTextClass
@@ -659,7 +658,7 @@ ev_document_text_get_type
 EV_DOCUMENT_TRANSITION_IFACE
 EV_IS_DOCUMENT_TRANSITION_IFACE
 EvDocumentTransition
-EvDocumentTransitionIface
+EvDocumentTransitionInterface
 ev_document_transition_get_page_duration
 ev_document_transition_get_effect
 <SUBSECTION Standard>
@@ -700,7 +699,7 @@ EV_TRANSITION_EFFECT_GET_CLASS
 EV_DOCUMENT_ANNOTATIONS_IFACE
 EV_IS_DOCUMENT_ANNOTATIONS_IFACE
 EvDocumentAnnotations
-EvDocumentAnnotationsIface
+EvDocumentAnnotationsInterface
 EvAnnotationsSaveMask
 ev_document_annotations_get_annotations
 ev_document_annotations_add_annotation
@@ -723,7 +722,7 @@ ev_annotations_save_mask_get_type
 EV_DOCUMENT_FONTS_IFACE
 EV_IS_DOCUMENT_FONTS_IFACE
 EvDocumentFonts
-EvDocumentFontsIface
+EvDocumentFontsInterface
 ev_document_fonts_scan
 ev_document_fonts_get_progress
 ev_document_fonts_fill_model
