@@ -1,4 +1,59 @@
 ================
+Evince     3.9.5
+================
+
+New features and improvements:
+
+    * Enable/disable the caret navigation with F7 (#702079, Antia
+      Puentes)
+    * Add 'Automatic' zoom mode to the zoom selector (Carlos Garcia
+      Campos)
+    * Use toggle menu items for zoom modes in zoom selector drop-down
+      menu to make it possible to know the zoom mode currently in use
+      (Carlos Garcia Campos)
+    * Implement text selections in EvViewAccessible (#704335, Antia
+      Puentes)
+    * More performance improvements in text selections (Carlos Garcia
+      Campos)
+    * Implement ATK interfaces to expose text attributes (#639932,
+      Antia Puentes)
+
+Bug fixes:
+
+    * Fix a crash in ev_view_accessible_get_link() when the given
+      link index is out of range (#705155, Antia Puentes)
+    * Clear the cached data in EvViewAccessible when the current page
+      or document are updated (#704621, Antia Puentes)
+    * Update API doc files (Christian Persch)
+    * Fix several compile warnings (Christian Persch)
+    * Fix the index/offset of the links returned by EvViewAccessible
+      (#704616, Joanmarie Diggs)
+    * Cache also the URI and document info when loading from a GFile
+      (#704685, Alessandro Campagni)
+    * Fix selections starting/ending in page margins (Carlos Garcia
+      Campos)
+    * Fix the number of selections returned by EvViewAccessible
+      (#704396, Antia Puentes)
+    * Fix the caret offset returned by EvViewAccessible when caret
+      navigation is enabled (#704396, Antia Puentes)
+    * Update the page number and zoom level when page and zoom
+      selectors are unfocused (#704138, Carlos Garcia Campos)
+    * Use MiB instead of Mb in cache size gsettings documentation
+      (#704155, Carlos Garcia Campos)
+    * Disable history action while history is frozen (#704184, Carlos
+      Garcia Campos)
+
+Translation updates:
+
+    * Marek Černocký (cs)
+    * Benjamin Steinwender (de)
+    * Daniel Mustieles (es)
+    * Kjartan Maraas (nb)
+    * Pavol Klačanský (sk)
+    * Victor Ibragimov (tg)
+    * YunQiang Su (zh_CN)
+
+================
 Evince     3.9.4
 ================
 
