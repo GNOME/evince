@@ -425,6 +425,8 @@ ev_job_links_new (EvDocument *document)
  * Get a #GtkTreeModel loaded with the links
  *
  * Return value: (transfer none): The #GtkTreeModel loaded
+ *
+ * Since: 3.6
  */
 GtkTreeModel *
 ev_job_links_get_model (EvJobLinks *job)
@@ -894,6 +896,13 @@ ev_job_thumbnail_new (EvDocument *document,
 	return EV_JOB (job);
 }
 
+/**
+ * ev_job_thumbnail_set_has_frame:
+ * @job:
+ * @has_frame:
+ *
+ * Since: 3.8
+ */
 void
 ev_job_thumbnail_set_has_frame (EvJobThumbnail  *job,
                                 gboolean         has_frame)
@@ -1654,6 +1663,13 @@ ev_job_find_new (EvDocument  *document,
 	return EV_JOB (job);
 }
 
+/**
+ * ev_job_find_set_options:
+ * @job:
+ * @options:
+ *
+ * Since: 3.6
+ */
 void
 ev_job_find_set_options (EvJobFind     *job,
                          EvFindOptions  options)
@@ -1663,6 +1679,14 @@ ev_job_find_set_options (EvJobFind     *job,
         job->case_sensitive = options & EV_FIND_CASE_SENSITIVE;
 }
 
+/**
+ * ev_job_find_get_options:
+ * @job:
+ *
+ * Returns: the job's find options
+ *
+ * Since: 3.6
+ */
 EvFindOptions
 ev_job_find_get_options (EvJobFind *job)
 {

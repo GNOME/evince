@@ -579,6 +579,15 @@ ev_page_cache_get_text_layout (EvPageCache  *cache,
 	return FALSE;
 }
 
+/**
+ * ev_page_cache_get_text_attrs:
+ * @cache: a #EvPageCache
+ * @page:
+ *
+ * FIXME
+ *
+ * Since: 3.10
+ */
 PangoAttrList *
 ev_page_cache_get_text_attrs (EvPageCache    *cache,
 			      gint            page)
@@ -601,6 +610,19 @@ ev_page_cache_get_text_attrs (EvPageCache    *cache,
 	return data->text_attrs;
 }
 
+/**
+ * ev_page_cache_get_text_log_attrs:
+ * @cache: a #EvPageCache
+ * @page:
+ * @log_attrs: (out) (transfer full) (array length=n_attrs):
+ * @n_attrs: (out):
+ *
+ * FIXME
+ *
+ * Returns: %TRUE on success with @log_attrs filled in, %FALSE otherwise
+ *
+ * Since: 3.10
+ */
 gboolean
 ev_page_cache_get_text_log_attrs (EvPageCache   *cache,
                                   gint           page,

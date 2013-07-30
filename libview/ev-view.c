@@ -45,10 +45,6 @@
 #include "ev-view-type-builtins.h"
 #include "ev-debug.h"
 
-#define EV_VIEW_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), EV_TYPE_VIEW, EvViewClass))
-#define EV_IS_VIEW_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), EV_TYPE_VIEW))
-#define EV_VIEW_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), EV_TYPE_VIEW, EvViewClass))
-
 enum {
 	SIGNAL_SCROLL,
 	SIGNAL_HANDLE_LINK,
@@ -924,6 +920,14 @@ compute_scroll_increment (EvView        *view,
 
 }
 
+/**
+ * ev_view_scroll:
+ * @view: a #EvView
+ * @scroll:
+ * @horizontal:
+ *
+ * Deprecated: 3.10
+ */
 void
 ev_view_scroll (EvView        *view,
 	        GtkScrollType  scroll,
@@ -3341,6 +3345,14 @@ ev_view_pend_cursor_blink (EvView *view)
 								 (GSourceFunc)blink_cb, view);
 }
 
+/**
+ * ev_view_supports_caret_navigation:
+ * @view: a #EvView
+ *
+ * Returns: whether the document supports caret navigation
+ *
+ * Since: 3.10
+ */
 gboolean
 ev_view_supports_caret_navigation (EvView *view)
 {
@@ -3356,6 +3368,15 @@ ev_view_supports_caret_navigation (EvView *view)
 	return TRUE;
 }
 
+/**
+ * ev_view_set_caret_navigation_enabled:
+ * @view: a #EvView
+ * @enabled: whether to enable caret navigation mode
+ *
+ * Enables or disables caret navigation mode for the document.
+ *
+ * Since: 3.10
+ */
 void
 ev_view_set_caret_navigation_enabled (EvView   *view,
 				      gboolean enabled)
@@ -3371,6 +3392,14 @@ ev_view_set_caret_navigation_enabled (EvView   *view,
 	}
 }
 
+/**
+ * ev_view_get_caret_navigation_enabled:
+ * @view: a #EvView
+ *
+ * Returns: whether caret navigation mode is enabled for the document
+ *
+ * Since: 3.10
+ */
 gboolean
 ev_view_is_caret_navigation_enabled (EvView *view)
 {
@@ -3379,6 +3408,14 @@ ev_view_is_caret_navigation_enabled (EvView *view)
 	return view->caret_enabled;
 }
 
+/**
+ * ev_view_set_caret_cursor_position:
+ * @view: a #EvView
+ * @page:
+ * @offset:
+ *
+ * Since: 3.10
+ */
 void
 ev_view_set_caret_cursor_position (EvView *view,
 				   guint   page,
@@ -6180,6 +6217,11 @@ ev_view_class_init (EvViewClass *class)
 							       FALSE,
 							       G_PARAM_READABLE |
 							       G_PARAM_STATIC_STRINGS));
+	/**
+	 * EvView:can-zoom-in:
+	 *
+	 * Since: 3.8
+	 */
 	g_object_class_install_property (object_class,
 					 PROP_CAN_ZOOM_IN,
 					 g_param_spec_boolean ("can-zoom-in",
@@ -6188,6 +6230,11 @@ ev_view_class_init (EvViewClass *class)
 							       TRUE,
 							       G_PARAM_READABLE |
 							       G_PARAM_STATIC_STRINGS));
+	/**
+	 * EvView:can-zoom-out:
+	 *
+	 * Since: 3.8
+	 */
 	g_object_class_install_property (object_class,
 					 PROP_CAN_ZOOM_OUT,
 					 g_param_spec_boolean ("can-zoom-out",
@@ -6571,6 +6618,13 @@ ev_view_set_page_cache_size (EvView *view,
 	view_update_scale_limits (view);
 }
 
+/**
+ * ev_view_set_loading:
+ * @view:
+ * @loading:
+ *
+ * Deprecated: 3.8
+ */
 void
 ev_view_set_loading (EvView 	  *view,
 		     gboolean      loading)
@@ -6582,6 +6636,14 @@ ev_view_set_loading (EvView 	  *view,
 	g_object_notify (G_OBJECT (view), "is-loading");
 }
 
+/**
+ * ev_view_is_loading:
+ * @view:
+ *
+ * Returns: %TRUE iff the view is currently loading a document
+ *
+ * Since: 3.8
+ */
 gboolean
 ev_view_is_loading (EvView *view)
 {
@@ -7329,6 +7391,13 @@ find_job_updated_cb (EvJobFind *job, gint page, EvView *view)
 	ev_view_find_changed (view, ev_job_find_get_results (job), page);
 }
 
+/**
+ * ev_view_find_started:
+ * @view:
+ * @job:
+ *
+ * Since: 3.6
+ */
 void
 ev_view_find_started (EvView *view, EvJobFind *job)
 {
@@ -7346,6 +7415,8 @@ ev_view_find_started (EvView *view, EvJobFind *job)
  * @view: an #EvView
  * @results: the results as returned by ev_job_find_get_results()
  * @page: page index
+ *
+ * Deprecated: 3.6: Use ev_view_find_started() instead
  */
 void
 ev_view_find_changed (EvView *view, GList **results, gint page)
@@ -7396,6 +7467,16 @@ ev_view_find_previous (EvView *view)
 	}
 }
 
+/**
+ * ev_view_find_set_result:
+ * @view: a #EvView
+ * @page:
+ * @result:
+ *
+ * FIXME
+ *
+ * Since: 3.10
+ */
 void
 ev_view_find_set_result (EvView *view, gint page, gint result)
 {

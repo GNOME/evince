@@ -552,6 +552,15 @@ _ev_document_model_set_dual_page_internal (EvDocumentModel *model,
 	g_object_notify (G_OBJECT (model), "dual-page");
 }
 
+/**
+ * ev_document_model_set_page_layout:
+ * @model: a #EvDocumentModel
+ * @layout: a #EvPageLayout
+ *
+ * Sets the document model's page layout to @layout.
+ *
+ * Since: 3.8
+ */
 void
 ev_document_model_set_page_layout (EvDocumentModel *model,
 				   EvPageLayout	    layout)
@@ -569,6 +578,14 @@ ev_document_model_set_page_layout (EvDocumentModel *model,
 	_ev_document_model_set_dual_page_internal (model, layout == EV_PAGE_LAYOUT_DUAL);
 }
 
+/**
+ * ev_document_model_get_page_layout:
+ * @model: a #EvDocumentModel
+ *
+ * Returns: the document model's page layout
+ *
+ * Since: 3.8
+ */
 EvPageLayout
 ev_document_model_get_page_layout (EvDocumentModel *model)
 {
@@ -650,6 +667,16 @@ ev_document_model_get_continuous (EvDocumentModel *model)
 	return model->continuous;
 }
 
+/**
+ * ev_document_model_set_dual_page:
+ * @model: a #EvDocumentModel
+ * @dual_page: whether to enable dual page mode
+ *
+ * Sets the document model's page layout to %EV_PAGE_LAYOUT_SINGLE or
+ * %EV_PAGE_LAYOUT_DUAL.
+ *
+ * Deprecated: 3.8: Use ev_document_model_set_page_layout() instead
+ */
 void
 ev_document_model_set_dual_page (EvDocumentModel *model,
 				 gboolean         dual_page)
@@ -662,6 +689,15 @@ ev_document_model_set_dual_page (EvDocumentModel *model,
 	ev_document_model_set_page_layout (model, layout);
 }
 
+/**
+ * ev_document_model_get_dual_page:
+ * @model: a #EvDocumentModel
+ *
+ * Returns: whether the document model's page layout is set to
+ * %EV_PAGE_LAYOUT_DUAL.
+ *
+ * Deprecated: 3.8: Use ev_document_model_get_page_layout() instead
+ */
 gboolean
 ev_document_model_get_dual_page (EvDocumentModel *model)
 {
