@@ -51,7 +51,9 @@ typedef enum {
 	EV_FILE_EXPORTER_CAN_NUMBER_UP    = 1 << 8
 } EvFileExporterCapabilities;
 
-typedef struct {
+typedef struct _EvFileExporterContext EvFileExporterContext;
+
+struct _EvFileExporterContext {
 	EvFileExporterFormat format;
 	const gchar         *filename;
 	gint                 first_page;
@@ -60,7 +62,7 @@ typedef struct {
 	gdouble              paper_height;
 	gboolean             duplex;
 	gint                 pages_per_sheet;
-} EvFileExporterContext;
+};
 
 #define EV_TYPE_FILE_EXPORTER            (ev_file_exporter_get_type ())
 #define EV_FILE_EXPORTER(o)              (G_TYPE_CHECK_INSTANCE_CAST ((o), EV_TYPE_FILE_EXPORTER, EvFileExporter))

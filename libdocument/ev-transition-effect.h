@@ -62,19 +62,18 @@ typedef enum {
 } EvTransitionEffectDirection;
 
 
-typedef struct EvTransitionEffect      EvTransitionEffect;
-typedef struct EvTransitionEffectClass EvTransitionEffectClass;
+typedef struct _EvTransitionEffect      EvTransitionEffect;
+typedef struct _EvTransitionEffectClass EvTransitionEffectClass;
 
-struct EvTransitionEffect
+struct _EvTransitionEffect
 {
 	GObject parent_instance;
 };
 
-struct EvTransitionEffectClass
+struct _EvTransitionEffectClass
 {
 	GObjectClass parent_class;
 };
-
 
 GType                 ev_transition_effect_get_type           (void) G_GNUC_CONST;
 

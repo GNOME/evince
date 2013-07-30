@@ -64,15 +64,16 @@ typedef enum
         EV_DOCUMENT_ERROR_ENCRYPTED
 } EvDocumentError;
 
-typedef struct {
-        double x;
-        double y;
-} EvPoint;
-
+typedef struct _EvPoint EvPoint;
 typedef struct _EvRectangle EvRectangle;
 typedef struct _EvMapping EvMapping;
 typedef struct _EvSourceLink EvSourceLink;
 typedef struct _EvDocumentBackendInfo EvDocumentBackendInfo;
+
+struct _EvPoint {
+        double x;
+        double y;
+};
 
 struct _EvDocumentBackendInfo
 {
