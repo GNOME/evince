@@ -44,12 +44,14 @@ G_BEGIN_DECLS
 /* The coordinates in the rect here are at scale == 1.0, so that we can ignore
  * resizings.  There is one per page, maximum.
  */
-typedef struct {
+typedef struct _EvViewSelection EvViewSelection;
+
+struct _EvViewSelection {
 	int page;
 	EvRectangle rect;
 	cairo_region_t *covered_region;
 	EvSelectionStyle style;
-} EvViewSelection;
+};
 
 typedef struct _EvPixbufCache       EvPixbufCache;
 typedef struct _EvPixbufCacheClass  EvPixbufCacheClass;

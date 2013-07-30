@@ -39,14 +39,14 @@ G_BEGIN_DECLS
 #define EV_IS_TRANSITION_ANIMATION_CLASS(klass)      (G_TYPE_CHECK_CLASS_TYPE ((klass),  EV_TYPE_TRANSITION_ANIMATION))
 #define EV_TRANSITION_ANIMATION_GET_CLASS(obj)       (G_TYPE_INSTANCE_GET_CLASS ((obj),  EV_TYPE_TRANSITION_ANIMATION, EvTransitionAnimationClass))
 
-typedef struct EvTransitionAnimation      EvTransitionAnimation;
-typedef struct EvTransitionAnimationClass EvTransitionAnimationClass;
+typedef struct _EvTransitionAnimation      EvTransitionAnimation;
+typedef struct _EvTransitionAnimationClass EvTransitionAnimationClass;
 
-struct EvTransitionAnimation {
+struct _EvTransitionAnimation {
 	EvTimeline parent_instance;
 };
 
-struct EvTransitionAnimationClass {
+struct _EvTransitionAnimationClass {
 	EvTimelineClass parent_class;
 };
 

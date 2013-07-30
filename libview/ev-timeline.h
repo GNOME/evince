@@ -37,14 +37,14 @@ G_BEGIN_DECLS
 #define EV_IS_TIMELINE_CLASS(klass)      (G_TYPE_CHECK_CLASS_TYPE ((klass),  EV_TYPE_TIMELINE))
 #define EV_TIMELINE_GET_CLASS(obj)       (G_TYPE_INSTANCE_GET_CLASS ((obj),  EV_TYPE_TIMELINE, EvTimelineClass))
 
-typedef struct EvTimeline      EvTimeline;
-typedef struct EvTimelineClass EvTimelineClass;
+typedef struct _EvTimeline      EvTimeline;
+typedef struct _EvTimelineClass EvTimelineClass;
 
-struct EvTimeline {
+struct _EvTimeline {
 	GObject parent_instance;
 };
 
-struct EvTimelineClass {
+struct _EvTimelineClass {
 	GObjectClass parent_class;
 
 	/* vmethods */
