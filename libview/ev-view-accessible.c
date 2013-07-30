@@ -55,7 +55,7 @@ static const gchar *const ev_view_accessible_action_descriptions[] =
 };
 
 struct _EvViewAccessiblePrivate {
-	guint         current_page;
+	EvDocumentModel *model;
 
 	/* AtkAction */
 	gchar        *action_descriptions[LAST_ACTION];
@@ -76,19 +76,30 @@ G_DEFINE_TYPE_WITH_CODE (EvViewAccessible, ev_view_accessible, GTK_TYPE_CONTAINE
 	)
 
 static void
+clear_cache (EvViewAccessible *accessible)
+{
+	EvViewAccessiblePrivate* priv = accessible->priv;
+
+	g_clear_object (&priv->buffer);
+	g_clear_pointer (&priv->links, (GDestroyNotify)g_hash_table_destroy);
+}
+
+static void
 ev_view_accessible_finalize (GObject *object)
 {
 	EvViewAccessiblePrivate *priv = EV_VIEW_ACCESSIBLE (object)->priv;
 	int i;
 
+	if (priv->model) {
+		g_signal_handlers_disconnect_by_data (priv->model, object);
+		g_object_unref (priv->model);
+		priv->model = NULL;
+	}
 	if (priv->action_idle_handler)
 		g_source_remove (priv->action_idle_handler);
 	for (i = 0; i < LAST_ACTION; i++)
 		g_free (priv->action_descriptions [i]);
-	if (priv->buffer)
-		g_object_unref (priv->buffer);
-	if (priv->links)
-		g_hash_table_destroy (priv->links);
+	clear_cache (EV_VIEW_ACCESSIBLE (object));
 
 	G_OBJECT_CLASS (ev_view_accessible_parent_class)->finalize (object);
 }
@@ -131,21 +142,16 @@ ev_view_accessible_get_text_buffer (EvViewAccessible *accessible, EvView *view)
 	const gchar *retval = NULL;
 	EvViewAccessiblePrivate* priv = accessible->priv;
 
+	if (priv->buffer) {
+		return priv->buffer;
+	}
+
 	page_cache = view->page_cache;
 	if (!page_cache) {
 		return NULL;
 	}
 
-	if (view->current_page == priv->current_page && priv->buffer) {
-		return priv->buffer;
-	}
-
-	priv->current_page = view->current_page;
-
-	if (!priv->buffer) {
-		priv->buffer = gtk_text_buffer_new (NULL);
-	}
-
+	priv->buffer = gtk_text_buffer_new (NULL);
 	retval = ev_page_cache_get_text (page_cache, view->current_page);
 	if (retval)
 		gtk_text_buffer_set_text (priv->buffer, retval, -1);
@@ -970,13 +976,9 @@ ev_view_accessible_get_links (EvViewAccessible *accessible,
 {
 	EvViewAccessiblePrivate* priv = accessible->priv;
 
-	if (view->current_page == priv->current_page && priv->links)
+	if (priv->links)
 		return priv->links;
 
-	priv->current_page = view->current_page;
-
-	if (priv->links)
-		g_hash_table_destroy (priv->links);
 	priv->links = g_hash_table_new_full (g_direct_hash,
 					     g_direct_equal,
 					     NULL,
@@ -1091,10 +1093,52 @@ ev_view_accessible_selection_changed (EvView *view,
 	g_signal_emit_by_name (accessible, "text-selection-changed");
 }
 
+static void
+page_changed_cb (EvDocumentModel  *model,
+		 gint              old_page,
+		 gint              new_page,
+		 EvViewAccessible *accessible)
+{
+	clear_cache (accessible);
+}
+
+static void
+document_changed_cb (EvDocumentModel  *model,
+		     GParamSpec       *pspec,
+		     EvViewAccessible *accessible)
+{
+	clear_cache (accessible);
+}
+
+void
+ev_view_accessible_set_model (EvViewAccessible *accessible,
+			      EvDocumentModel  *model)
+{
+	EvViewAccessiblePrivate* priv = accessible->priv;
+
+	if (priv->model == model)
+		return;
+
+	if (priv->model) {
+		g_signal_handlers_disconnect_by_data (priv->model, accessible);
+		g_object_unref (priv->model);
+	}
+
+	priv->model = g_object_ref (model);
+
+	g_signal_connect (priv->model, "page-changed",
+			  G_CALLBACK (page_changed_cb),
+			  accessible);
+	g_signal_connect (priv->model, "notify::document",
+			  G_CALLBACK (document_changed_cb),
+			  accessible);
+}
+
 AtkObject *
 ev_view_accessible_new (GtkWidget *widget)
 {
 	AtkObject *accessible;
+	EvView    *view;
 
 	g_return_val_if_fail (EV_IS_VIEW (widget), NULL);
 
@@ -1107,6 +1151,11 @@ ev_view_accessible_new (GtkWidget *widget)
 	g_signal_connect (widget, "selection-changed",
 			  G_CALLBACK (ev_view_accessible_selection_changed),
 			  accessible);
+
+	view = EV_VIEW (widget);
+	if (view->model)
+		ev_view_accessible_set_model (EV_VIEW_ACCESSIBLE (accessible),
+					      view->model);
 
 	return accessible;
 }

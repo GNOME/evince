@@ -26,6 +26,7 @@
 #define __EV_VIEW_ACCESSIBLE_H__
 
 #include <gtk/gtk-a11y.h>
+#include "ev-document-model.h"
 
 #define EV_TYPE_VIEW_ACCESSIBLE      (ev_view_accessible_get_type ())
 #define EV_VIEW_ACCESSIBLE(obj)      (G_TYPE_CHECK_INSTANCE_CAST ((obj), EV_TYPE_VIEW_ACCESSIBLE, EvViewAccessible))
@@ -47,8 +48,10 @@ struct _EvViewAccessibleClass
 	GtkContainerAccessibleClass parent_class;
 };
 
-GType      ev_view_accessible_get_type (void);
-AtkObject *ev_view_accessible_new      (GtkWidget *widget);
+GType      ev_view_accessible_get_type  (void);
+AtkObject *ev_view_accessible_new       (GtkWidget *widget);
+void       ev_view_accessible_set_model (EvViewAccessible *accessible,
+					 EvDocumentModel  *model);
 
 #endif  /* __EV_VIEW_ACCESSIBLE_H__ */
 

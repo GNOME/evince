@@ -6925,6 +6925,10 @@ ev_view_set_model (EvView          *view,
 	g_signal_connect (view->model, "page-changed",
 			  G_CALLBACK (ev_view_page_changed_cb),
 			  view);
+
+	if (view->accessible)
+		ev_view_accessible_set_model (EV_VIEW_ACCESSIBLE (view->accessible),
+					      view->model);
 }
 
 static void
