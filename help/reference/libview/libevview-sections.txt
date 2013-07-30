@@ -25,10 +25,8 @@ ev_annotation_window_get_type
 <FILE>ev-view</FILE>
 EvView
 EvViewClass
-EvViewSelectionMode
 ev_view_new
 ev_view_set_model
-ev_view_set_loading
 ev_view_is_loading
 ev_view_reload
 ev_view_copy
@@ -43,13 +41,12 @@ ev_view_find_next
 ev_view_find_previous
 ev_view_find_search_changed
 ev_view_find_set_highlight_search
-ev_view_find_changed
 ev_view_find_started
 ev_view_find_cancel
+ev_view_find_set_result
 ev_view_highlight_forward_search
 ev_view_hide_cursor
 ev_view_show_cursor
-ev_view_scroll
 ev_view_handle_link
 ev_view_next_page
 ev_view_previous_page
@@ -60,6 +57,14 @@ ev_view_cancel_add_annotation
 ev_view_focus_annotation
 ev_view_get_page_extents
 ev_view_set_page_cache_size
+ev_view_is_caret_navigation_enabled
+ev_view_set_caret_cursor_position
+ev_view_set_caret_navigation_enabled
+ev_view_supports_caret_navigation
+<SUBSECTION Deprecated>
+ev_view_set_loading
+ev_view_find_changed
+ev_view_scroll
 <SUBSECTION Standard>
 EV_VIEW
 EV_IS_VIEW
@@ -86,6 +91,8 @@ ev_page_cache_get_annot_mapping
 ev_page_cache_get_text_mapping
 ev_page_cache_get_text
 ev_page_cache_get_text_layout
+ev_page_cache_get_text_attrs
+ev_page_cache_get_text_log_attrs
 ev_page_cache_mark_dirty
 <SUBSECTION Standard>
 EV_PAGE_CACHE
@@ -235,7 +242,7 @@ ev_job_annots_new
 EV_TYPE_JOB_RUN_MODE
 EV_TYPE_JOB_PAGE_DATA_FLAGS
 EV_TYPE_JOB_PRIORITY
-EV_JOB_ANNOTS
+EV_JOB
 EV_IS_JOB
 EV_TYPE_JOB
 EV_JOB_CLASS
@@ -380,14 +387,15 @@ ev_document_model_set_inverted_colors
 ev_document_model_get_inverted_colors
 ev_document_model_set_continuous
 ev_document_model_get_continuous
-ev_document_model_set_dual_page
-ev_document_model_get_dual_page
 ev_document_model_set_dual_page_odd_pages_left
 ev_document_model_get_dual_page_odd_pages_left
 ev_document_model_set_page_layout
 ev_document_model_get_page_layout
 ev_document_model_set_fullscreen
 ev_document_model_get_fullscreen
+<SUBSECTION Deprecated>
+ev_document_model_set_dual_page
+ev_document_model_get_dual_page
 <SUBSECTION Standard>
 EV_TYPE_SIZING_MODE
 EV_TYPE_PAGE_LAYOUT
