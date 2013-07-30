@@ -102,10 +102,11 @@ GTKDOC_CFLAGS = \
 	-DGNOMEICONDIR=\""$(datadir)/pixmaps"\" 	\
 	-DEVINCE_COMPILATION				\
 	$(SHELL_CFLAGS)					\
-	$(GTK_PRINT_CFLAGS)
+	$(GTK_PRINT_CFLAGS)				\
+	$(AM_CFLAGS)
 
 FILTER_OUT = \
-	$(top_builddir)/shell/main.o			\
+	$(top_builddir)/shell/evince-main.o		\
 	$(top_builddir)/shell/evinced-ev-daemon.o	\
 	$(top_builddir)/shell/ev-convert-metadata.o	\
 	$(top_builddir)/shell/evinced-ev-daemon-gdbus-generated.o
