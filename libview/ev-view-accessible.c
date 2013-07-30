@@ -998,6 +998,9 @@ ev_view_accessible_get_link (AtkHypertext *hypertext,
 	EvMapping        *mapping;
 	EvLinkAccessible *atk_link;
 
+	if (link_index < 0)
+		return NULL;
+
 	widget = gtk_accessible_get_widget (GTK_ACCESSIBLE (hypertext));
 	if (widget == NULL)
 		/* State is defunct */
@@ -1018,6 +1021,9 @@ ev_view_accessible_get_link (AtkHypertext *hypertext,
 		return NULL;
 
 	n_links = ev_mapping_list_length (link_mapping);
+	if (link_index > n_links - 1)
+		return NULL;
+
 	mapping = ev_mapping_list_nth (link_mapping, n_links - link_index - 1);
 	atk_link = ev_link_accessible_new (EV_VIEW_ACCESSIBLE (hypertext),
 					   EV_LINK (mapping->data),
