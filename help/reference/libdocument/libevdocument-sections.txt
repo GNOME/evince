@@ -841,12 +841,8 @@ EV_CHECK_VERSION
 <SECTION>
 <FILE>ev-document-misc</FILE>
 <TITLE>EvDocumentMisc</TITLE>
-ev_document_misc_get_thumbnail_frame
-ev_document_misc_get_page_border_size
-ev_document_misc_get_loading_thumbnail
 ev_document_misc_get_pointer_position
 ev_document_misc_get_screen_dpi
-ev_document_misc_paint_one_page
 ev_document_misc_surface_from_pixbuf
 ev_document_misc_pixbuf_from_surface
 ev_document_misc_surface_rotate_and_scale
@@ -855,6 +851,11 @@ ev_document_misc_invert_pixbuf
 ev_document_misc_format_date
 ev_document_misc_render_loading_thumbnail
 ev_document_misc_render_thumbnail_with_frame
+<SUBSECTION Deprecated>
+ev_document_misc_get_loading_thumbnail
+ev_document_misc_get_page_border_size
+ev_document_misc_paint_one_page
+ev_document_misc_get_thumbnail_frame
 </SECTION>
 
 <SECTION>
