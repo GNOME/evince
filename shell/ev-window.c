@@ -3496,6 +3496,7 @@ ev_window_print_range (EvWindow *ev_window,
 	gint              document_last_page;
 	gboolean          embed_page_setup;
 	gchar            *output_basename;
+	gchar            *unescaped_basename;
 	const gchar      *document_uri;
 	gchar            *dot;
 
@@ -3551,10 +3552,12 @@ ev_window_print_range (EvWindow *ev_window,
 	if (dot)
 		dot[0] = '\0';
 
+	unescaped_basename = g_uri_unescape_string (output_basename, NULL);
 	/* Set output basename for printing to file */
 	gtk_print_settings_set (print_settings,
 			        GTK_PRINT_SETTINGS_OUTPUT_BASENAME,
-			        output_basename);
+			        unescaped_basename);
+	g_free (unescaped_basename);
 	g_free (output_basename);
 
 	ev_print_operation_set_job_name (op, gtk_window_get_title (GTK_WINDOW (ev_window)));
