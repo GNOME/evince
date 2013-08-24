@@ -32,7 +32,7 @@
 G_BEGIN_DECLS
 
 #define EV_TYPE_VIEW_PRESENTATION            (ev_view_presentation_get_type ())
-#define EV_VIEW_PRESENTATION(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), EV_TYPE_VIEW, EvViewPresentation))
+#define EV_VIEW_PRESENTATION(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), EV_TYPE_VIEW_PRESENTATION, EvViewPresentation))
 #define EV_IS_VIEW_PRESENTATION(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), EV_TYPE_VIEW_PRESENTATION))
 #define EV_VIEW_PRESENTATION_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), EV_TYPE_VIEW_PRESENTATION, EvViewPresentationClass))
 #define EV_IS_VIEW_PRESENTATION_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), EV_TYPE_VIEW_PRESENTATION))
