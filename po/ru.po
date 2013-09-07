@@ -10,35 +10,32 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: evince trunk\n"
-"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
-"product=evince&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2013-02-28 18:48+0000\n"
-"PO-Revision-Date: 2013-03-06 18:57+0400\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=evince&keywords=I18N+L10N&component=general\n"
+"POT-Creation-Date: 2013-09-05 22:41+0000\n"
+"PO-Revision-Date: 2013-09-07 13:41+0300\n"
 "Last-Translator: Yuri Myasoedov <omerta13@yandex.ru>\n"
 "Language-Team: русский <gnome-cyr@gnome.org>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
-"X-Generator: Gtranslator 2.91.6\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Poedit 1.5.7\n"
 
 #: ../backend/comics/comics-document.c:210
 #, c-format
-msgid ""
-"Error launching the command “%s” in order to decompress the comic book: %s"
-msgstr "Ошибка при запуске программы %s для разжатия книги комиксов: %s"
+msgid "Error launching the command “%s” in order to decompress the comic book: %s"
+msgstr "Ошибка при запуске программы «%s» для декомпрессии книги комиксов: %s"
 
 #: ../backend/comics/comics-document.c:224
 #, c-format
 msgid "The command “%s” failed at decompressing the comic book."
-msgstr "Команде %s не удалось выполнить разжатие книги комиксов."
+msgstr "Команде «%s» не удалось выполнить декомпрессию книги комиксов."
 
 #: ../backend/comics/comics-document.c:233
 #, c-format
 msgid "The command “%s” did not end normally."
-msgstr "Команда %s завершилась с ошибкой."
+msgstr "Команда «%s» завершилась с ошибкой."
 
 #: ../backend/comics/comics-document.c:426
 #, c-format
@@ -47,8 +44,7 @@ msgstr "Тип MIME документа не относится к комикса
 
 #: ../backend/comics/comics-document.c:433
 msgid "Can't find an appropriate command to decompress this type of comic book"
-msgstr ""
-"Не удалось найти подходящей команды для разжатия данного типа книги комиксов"
+msgstr "Не удалось найти подходящей команды для разжатия данного типа книги комиксов"
 
 #: ../backend/comics/comics-document.c:488
 msgid "File corrupted"
@@ -66,7 +62,7 @@ msgstr "В архиве %s не найдено изображений"
 #: ../backend/comics/comics-document.c:787
 #, c-format
 msgid "There was an error deleting “%s”."
-msgstr "Произошла ошибка при удалении %s."
+msgstr "Произошла ошибка при удалении «%s»."
 
 #: ../backend/comics/comics-document.c:880
 #, c-format
@@ -77,17 +73,13 @@ msgstr "Ошибка %s"
 msgid "Comic Books"
 msgstr "Книги комиксов"
 
-#: ../backend/djvu/djvu-document.c:168
+#: ../backend/djvu/djvu-document.c:175
 msgid "DjVu document has incorrect format"
 msgstr "Документ DjVu имеет некорректный формат"
 
-#: ../backend/djvu/djvu-document.c:245
-msgid ""
-"The document is composed of several files. One or more of these files cannot "
-"be accessed."
-msgstr ""
-"Документ состоит из нескольких файлов. Один или несколько этих файлов "
-"недоступны."
+#: ../backend/djvu/djvu-document.c:263
+msgid "The document is composed of several files. One or more of these files cannot be accessed."
+msgstr "Документ состоит из нескольких файлов. Один или несколько этих файлов недоступны."
 
 #: ../backend/djvu/djvudocument.evince-backend.in.h:1
 msgid "DjVu Documents"
@@ -101,68 +93,63 @@ msgstr "Документ DVI имеет некорректный формат"
 msgid "DVI Documents"
 msgstr "Документы формата DVI"
 
-#: ../backend/pdf/ev-poppler.cc:640
+#: ../backend/pdf/ev-poppler.cc:636
 msgid "This work is in the Public Domain"
 msgstr "Эта работа находится в общественном достоянии"
 
 #. translators: this is the document security state
-#: ../backend/pdf/ev-poppler.cc:893 ../backend/pdf/ev-poppler.cc:899
+#: ../backend/pdf/ev-poppler.cc:889
+#: ../backend/pdf/ev-poppler.cc:895
 msgid "Yes"
 msgstr "Да"
 
 #. translators: this is the document security state
-#: ../backend/pdf/ev-poppler.cc:896 ../backend/pdf/ev-poppler.cc:899
+#: ../backend/pdf/ev-poppler.cc:892
+#: ../backend/pdf/ev-poppler.cc:895
 msgid "No"
 msgstr "Нет"
 
-#: ../backend/pdf/ev-poppler.cc:1033
+#: ../backend/pdf/ev-poppler.cc:1025
 msgid "Type 1"
 msgstr "Type 1"
 
-#: ../backend/pdf/ev-poppler.cc:1035
+#: ../backend/pdf/ev-poppler.cc:1027
 msgid "Type 1C"
 msgstr "Type 1C"
 
-#: ../backend/pdf/ev-poppler.cc:1037
+#: ../backend/pdf/ev-poppler.cc:1029
 msgid "Type 3"
 msgstr "Type 3"
 
-#: ../backend/pdf/ev-poppler.cc:1039
+#: ../backend/pdf/ev-poppler.cc:1031
 msgid "TrueType"
 msgstr "TrueType"
 
-#: ../backend/pdf/ev-poppler.cc:1041
+#: ../backend/pdf/ev-poppler.cc:1033
 msgid "Type 1 (CID)"
 msgstr "Type 1 (CID)"
 
-#: ../backend/pdf/ev-poppler.cc:1043
+#: ../backend/pdf/ev-poppler.cc:1035
 msgid "Type 1C (CID)"
 msgstr "Type 1C (CID)"
 
-#: ../backend/pdf/ev-poppler.cc:1045
+#: ../backend/pdf/ev-poppler.cc:1037
 msgid "TrueType (CID)"
 msgstr "TrueType (CID)"
 
-#: ../backend/pdf/ev-poppler.cc:1047
+#: ../backend/pdf/ev-poppler.cc:1039
 msgid "Unknown font type"
 msgstr "Неизвестный тип шрифтов"
 
-#: ../backend/pdf/ev-poppler.cc:1091
-msgid ""
-"This document contains non-embedded fonts that are not from the PDF Standard "
-"14 fonts. If the substitute fonts selected by fontconfig are not the same as "
-"the fonts used to create the PDF, the rendering may not be correct."
-msgstr ""
-"Этот документ содержит невстроенные шрифты, которые не входят в набор PDF "
-"Standard 14. Если замещающие шрифты, выбранные fontconfig, отличаются от "
-"шрифтов, использованных при создании PDF, отрисовка документа может быть "
-"выполнена некорректно."
+#: ../backend/pdf/ev-poppler.cc:1083
+msgid "This document contains non-embedded fonts that are not from the PDF Standard 14 fonts. If the substitute fonts selected by fontconfig are not the same as the fonts used to create the PDF, the rendering may not be correct."
+msgstr "Этот документ содержит невстроенные шрифты, которые не входят в набор PDF Standard 14. Если замещающие шрифты, выбранные fontconfig, отличаются от шрифтов, использованных при создании PDF, отрисовка документа может быть выполнена некорректно."
 
-#: ../backend/pdf/ev-poppler.cc:1096
+#: ../backend/pdf/ev-poppler.cc:1088
 msgid "All fonts are either standard or embedded."
 msgstr "Все шрифты являются стандартными или встроенными."
 
-#: ../backend/pdf/ev-poppler.cc:1128
+#: ../backend/pdf/ev-poppler.cc:1120
 msgid "No name"
 msgstr "Без названия"
 
@@ -176,20 +163,21 @@ msgstr "Без названия"
 #. Author: None
 #. Keywords: None
 #.
-#: ../backend/pdf/ev-poppler.cc:1137 ../libview/ev-print-operation.c:1907
+#: ../backend/pdf/ev-poppler.cc:1129
+#: ../libview/ev-print-operation.c:1907
 #: ../properties/ev-properties-view.c:192
 msgid "None"
 msgstr "Отсутствует"
 
-#: ../backend/pdf/ev-poppler.cc:1145
+#: ../backend/pdf/ev-poppler.cc:1137
 msgid "Embedded subset"
 msgstr "Встроенное подмножество"
 
-#: ../backend/pdf/ev-poppler.cc:1147
+#: ../backend/pdf/ev-poppler.cc:1139
 msgid "Embedded"
 msgstr "Встроенный"
 
-#: ../backend/pdf/ev-poppler.cc:1149
+#: ../backend/pdf/ev-poppler.cc:1141
 msgid "Not embedded"
 msgstr "Внешний"
 
@@ -198,7 +186,7 @@ msgstr "Внешний"
 #. * type. Example:
 #. * "Type 1 (One of the Standard 14 Fonts)"
 #.
-#: ../backend/pdf/ev-poppler.cc:1156
+#: ../backend/pdf/ev-poppler.cc:1148
 msgid " (One of the Standard 14 Fonts)"
 msgstr " (один из шрифтов Standard 14)"
 
@@ -207,16 +195,15 @@ msgstr " (один из шрифтов Standard 14)"
 #. * type. Example:
 #. * "TrueType (Not one of the Standard 14 Fonts)"
 #.
-#: ../backend/pdf/ev-poppler.cc:1163
+#: ../backend/pdf/ev-poppler.cc:1155
 msgid " (Not one of the Standard 14 Fonts)"
 msgstr " (не из шрифтов Standard 14)"
 
-#: ../backend/pdf/ev-poppler.cc:1170
+#: ../backend/pdf/ev-poppler.cc:1162
 msgid "Encoding"
 msgstr "Кодировка"
 
-#: ../backend/pdf/ev-poppler.cc:1171
-#| msgid "substituting with"
+#: ../backend/pdf/ev-poppler.cc:1163
 msgid "Substituting with"
 msgstr "Заменяется на"
 
@@ -283,7 +270,7 @@ msgstr "Неопознанный параметр запуска: %d"
 #: ../cut-n-paste/smclient/eggdesktopfile.c:1391
 #, c-format
 msgid "Can't pass document URIs to a 'Type=Link' desktop entry"
-msgstr "Невозможно передать адреса документов записи 'Type=Link' файла desktop"
+msgstr "Невозможно передать URI документов в desktop-запись «Type=Link»"
 
 #: ../cut-n-paste/smclient/eggdesktopfile.c:1412
 #, c-format
@@ -298,7 +285,8 @@ msgstr "Отключить соединение с менеджером сеан
 msgid "Specify file containing saved configuration"
 msgstr "Укажите файл с сохраненными параметрами"
 
-#: ../cut-n-paste/smclient/eggsmclient.c:229 ../previewer/ev-previewer.c:46
+#: ../cut-n-paste/smclient/eggsmclient.c:229
+#: ../previewer/ev-previewer.c:46
 msgid "FILE"
 msgstr "ФАЙЛ"
 
@@ -319,8 +307,10 @@ msgid "Show session management options"
 msgstr "Показать параметры управления сеансом"
 
 #. Manually set name and icon
-#: ../data/evince.desktop.in.in.h:1 ../shell/ev-window.c:4867
-#: ../shell/ev-window-title.c:156 ../shell/main.c:312
+#: ../data/evince.desktop.in.in.h:1
+#: ../shell/ev-window.c:5022
+#: ../shell/ev-window-title.c:156
+#: ../shell/main.c:312
 #, c-format
 msgid "Document Viewer"
 msgstr "Просмотр документов"
@@ -347,9 +337,7 @@ msgstr "Игнорировать ограничения"
 
 #: ../data/org.gnome.Evince.gschema.xml.in.h:2
 msgid "Override document restrictions, like restriction to copy or to print."
-msgstr ""
-"Игнорировать ограничения документа, например, ограничение на копирование и "
-"печать."
+msgstr "Игнорировать ограничения документа, например, ограничение на копирование и печать."
 
 #: ../data/org.gnome.Evince.gschema.xml.in.h:3
 msgid "Automatically reload the document"
@@ -361,15 +349,26 @@ msgstr "Файл автоматически перезагружается пр�
 
 #: ../data/org.gnome.Evince.gschema.xml.in.h:5
 msgid "The URI of the directory last used to open or save a document"
-msgstr ""
-"URI последнего каталога, использовавшегося для открытия или сохранения "
-"документа"
+msgstr "URI последнего каталога, использовавшегося для открытия или сохранения документа"
 
 #: ../data/org.gnome.Evince.gschema.xml.in.h:6
 msgid "The URI of the directory last used to save a picture"
 msgstr "URI последнего каталога, использовавшегося для сохранения изображения"
 
-#: ../libdocument/ev-attachment.c:310 ../libdocument/ev-attachment.c:331
+#: ../data/org.gnome.Evince.gschema.xml.in.h:7
+msgid "Page cache size in MiB"
+msgstr "Размер кэша страницы в МиБ"
+
+#: ../data/org.gnome.Evince.gschema.xml.in.h:8
+msgid "The maximum size that will be used to cache rendered pages, limits maximum zoom level."
+msgstr "Максимальный размер, используемый для кэширования отрисованных страниц, ограничивает максимальный уровень увеличения."
+
+#: ../data/org.gnome.Evince.gschema.xml.in.h:9
+msgid "Show a dialog to confirm that the user wants to activate the caret navigation."
+msgstr "Показать диалог подтверждения включения навигации с помощью курсорных стрелок."
+
+#: ../libdocument/ev-attachment.c:310
+#: ../libdocument/ev-attachment.c:331
 #, c-format
 msgid "Couldn't save attachment “%s”: %s"
 msgstr "Не удалось сохранить вложение «%s»: %s"
@@ -390,8 +389,9 @@ msgid "File type %s (%s) is not supported"
 msgstr "Тип файлов %s (%s) не поддерживается"
 
 #: ../libdocument/ev-document-factory.c:364
-#: ../libdocument/ev-file-helpers.c:490 ../libdocument/ev-file-helpers.c:536
-#: ../libdocument/ev-file-helpers.c:555
+#: ../libdocument/ev-file-helpers.c:491
+#: ../libdocument/ev-file-helpers.c:537
+#: ../libdocument/ev-file-helpers.c:556
 msgid "Unknown MIME Type"
 msgstr "Неизвестный MIME тип документа"
 
@@ -400,15 +400,16 @@ msgid "All Documents"
 msgstr "Все документы"
 
 #: ../libdocument/ev-document-factory.c:579
+#: ../shell/ev-utils.c:336
 msgid "All Files"
 msgstr "Все файлы"
 
-#: ../libdocument/ev-file-helpers.c:146
+#: ../libdocument/ev-file-helpers.c:147
 #, c-format
 msgid "Failed to create a temporary file: %s"
 msgstr "Не удалось создать временный файл: %s"
 
-#: ../libdocument/ev-file-helpers.c:308
+#: ../libdocument/ev-file-helpers.c:309
 #, c-format
 msgid "Failed to create a temporary directory: %s"
 msgstr "Не удалось создать временный каталог: %s"
@@ -425,14 +426,16 @@ msgstr "(%d из %d)"
 msgid "of %d"
 msgstr "из %d"
 
-#: ../libmisc/ev-page-action-widget.c:182 ../shell/ev-history.c:345
-#: ../shell/ev-sidebar-bookmarks.c:312 ../shell/ev-window.c:885
-#: ../shell/ev-window.c:4602
+#: ../libmisc/ev-page-action-widget.c:182
+#: ../shell/ev-history.c:426
+#: ../shell/ev-sidebar-bookmarks.c:312
+#: ../shell/ev-window.c:875
+#: ../shell/ev-window.c:4762
 #, c-format
 msgid "Page %s"
 msgstr "Страница %s"
 
-#: ../libview/ev-jobs.c:1919
+#: ../libview/ev-jobs.c:1954
 #, c-format
 msgid "Failed to print page %d: %s"
 msgstr "Не удалось напечатать страницу %d: %s"
@@ -452,7 +455,7 @@ msgid "Printing page %d of %d…"
 msgstr "Печать страницы %d из %d…"
 
 #: ../libview/ev-print-operation.c:1175
-msgid "Postscript is not supported by this printer."
+msgid "PostScript is not supported by this printer."
 msgstr "Этот принтер не поддерживает Postscript."
 
 #: ../libview/ev-print-operation.c:1240
@@ -469,7 +472,8 @@ msgstr "Выбранный вами диапазон страниц не сод�
 
 #. translators: Title of the print dialog
 #. translators: Print document currently shown in the Print Preview window
-#: ../libview/ev-print-operation.c:1322 ../previewer/ev-previewer-window.c:298
+#: ../libview/ev-print-operation.c:1322
+#: ../previewer/ev-previewer-window.c:284
 msgid "Print"
 msgstr "Напечатать"
 
@@ -487,50 +491,37 @@ msgstr "Уместить в область печати"
 
 #: ../libview/ev-print-operation.c:1912
 msgid ""
-"Scale document pages to fit the selected printer page. Select from one of "
-"the following:\n"
+"Scale document pages to fit the selected printer page. Select from one of the following:\n"
 "\n"
 "• \"None\": No page scaling is performed.\n"
 "\n"
-"• \"Shrink to Printable Area\": Document pages larger than the printable "
-"area are reduced to fit the printable area of the printer page.\n"
+"• \"Shrink to Printable Area\": Document pages larger than the printable area are reduced to fit the printable area of the printer page.\n"
 "\n"
-"• \"Fit to Printable Area\": Document pages are enlarged or reduced as "
-"required to fit the printable area of the printer page.\n"
+"• \"Fit to Printable Area\": Document pages are enlarged or reduced as required to fit the printable area of the printer page.\n"
 msgstr ""
 "Подгонка страниц документа к области печати выбранного принтера. Выберите:\n"
 "\n"
 "• \"Нет\": Не выполнять подгонку.\n"
 "\n"
-"• \"Урезать до области печати\": Страницы документа, большие чем область "
-"печати, будут урезаны до области печати страницы принтера.\n"
+"• \"Урезать до области печати\": Страницы документа, большие чем область печати, будут урезаны до области печати страницы принтера.\n"
 "\n"
-"• \"Уместить в область печати\": Страницы документа будут увеличены или "
-"уменьшены в соответствии с областью печати страницы принтера.\n"
+"• \"Уместить в область печати\": Страницы документа будут увеличены или уменьшены в соответствии с областью печати страницы принтера.\n"
 
 #: ../libview/ev-print-operation.c:1924
 msgid "Auto Rotate and Center"
 msgstr "Автоматическое вращение и центрирование"
 
 #: ../libview/ev-print-operation.c:1927
-msgid ""
-"Rotate printer page orientation of each page to match orientation of each "
-"document page. Document pages will be centered within the printer page."
-msgstr ""
-"Изменять ориентацию страницы принтера в соответствии с каждой страницей "
-"документа. Страницы документа будут центрированы на странице принтера."
+msgid "Rotate printer page orientation of each page to match orientation of each document page. Document pages will be centered within the printer page."
+msgstr "Изменять ориентацию страницы принтера в соответствии с каждой страницей документа. Страницы документа будут центрированы на странице принтера."
 
 #: ../libview/ev-print-operation.c:1932
 msgid "Select page size using document page size"
 msgstr "Выбор размера страницы на основе размера страницы документа"
 
 #: ../libview/ev-print-operation.c:1934
-msgid ""
-"When enabled, each page will be printed on the same size paper as the "
-"document page."
-msgstr ""
-"Если включено, то каждая страница будет напечатана с одним размером бумаги, "
-"как у страницы документа."
+msgid "When enabled, each page will be printed on the same size paper as the document page."
+msgstr "Если включено, то каждая страница будет напечатана с одним размером бумаги, как у страницы документа."
 
 #: ../libview/ev-print-operation.c:2023
 msgid "Page Handling"
@@ -552,50 +543,50 @@ msgstr "Прокрутка документа вверх"
 msgid "Scroll View Down"
 msgstr "Прокрутка документа вниз"
 
-#: ../libview/ev-view-accessible.c:105
+#: ../libview/ev-view-accessible.c:116
 msgid "Document View"
 msgstr "Отображение документа"
 
-#: ../libview/ev-view.c:1873
+#: ../libview/ev-view.c:1923
 msgid "Go to first page"
 msgstr "Перейти к первой странице"
 
-#: ../libview/ev-view.c:1875
+#: ../libview/ev-view.c:1925
 msgid "Go to previous page"
 msgstr "Перейти к предыдущей странице"
 
-#: ../libview/ev-view.c:1877
+#: ../libview/ev-view.c:1927
 msgid "Go to next page"
 msgstr "Перейти к следующей странице"
 
-#: ../libview/ev-view.c:1879
+#: ../libview/ev-view.c:1929
 msgid "Go to last page"
 msgstr "Перейти к последней странице"
 
-#: ../libview/ev-view.c:1881
+#: ../libview/ev-view.c:1931
 msgid "Go to page"
 msgstr "Перейти к странице"
 
-#: ../libview/ev-view.c:1883
+#: ../libview/ev-view.c:1933
 msgid "Find"
 msgstr "Найти"
 
-#: ../libview/ev-view.c:1911
+#: ../libview/ev-view.c:1961
 #, c-format
 msgid "Go to page %s"
 msgstr "Перейти к странице %s"
 
-#: ../libview/ev-view.c:1917
+#: ../libview/ev-view.c:1967
 #, c-format
 msgid "Go to %s on file “%s”"
 msgstr "Перейти к %s в файле «%s»"
 
-#: ../libview/ev-view.c:1920
+#: ../libview/ev-view.c:1970
 #, c-format
 msgid "Go to file “%s”"
 msgstr "Перейти к файлу «%s»"
 
-#: ../libview/ev-view.c:1928
+#: ../libview/ev-view.c:1978
 #, c-format
 msgid "Launch %s"
 msgstr "Запустить %s"
@@ -616,71 +607,84 @@ msgstr "Удалить временный файл"
 msgid "Print settings file"
 msgstr "Напечатать файл параметров"
 
-#: ../previewer/ev-previewer.c:175 ../previewer/ev-previewer.c:207
+#: ../previewer/ev-previewer.c:175
+#: ../previewer/ev-previewer.c:207
 msgid "GNOME Document Previewer"
 msgstr "Предварительный просмотр документов"
 
-#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3329
+#: ../previewer/ev-previewer-window.c:91
+#: ../shell/ev-window.c:3393
 msgid "Failed to print document"
 msgstr "Не удалось напечатать документ"
 
-#: ../previewer/ev-previewer-window.c:237
+#: ../previewer/ev-previewer-window.c:223
 #, c-format
 msgid "The selected printer '%s' could not be found"
 msgstr "Выбранный принтер «%s» не найден"
 
 #. Go menu
-#: ../previewer/ev-previewer-window.c:284 ../shell/ev-window.c:5780
+#: ../previewer/ev-previewer-window.c:270
+#: ../shell/ev-window.c:6068
 msgid "_Previous Page"
 msgstr "_Назад"
 
-#: ../previewer/ev-previewer-window.c:285 ../shell/ev-window.c:5781
+#: ../previewer/ev-previewer-window.c:271
+#: ../shell/ev-window.c:6069
 msgid "Go to the previous page"
 msgstr "Перейти к предыдущей странице"
 
-#: ../previewer/ev-previewer-window.c:287 ../shell/ev-window.c:5783
+#: ../previewer/ev-previewer-window.c:273
+#: ../shell/ev-window.c:6071
 msgid "_Next Page"
 msgstr "_Вперёд"
 
-#: ../previewer/ev-previewer-window.c:288 ../shell/ev-window.c:5784
+#: ../previewer/ev-previewer-window.c:274
+#: ../shell/ev-window.c:6072
 msgid "Go to the next page"
 msgstr "Перейти к следующей странице"
 
-#: ../previewer/ev-previewer-window.c:291 ../shell/ev-window.c:5767
+#: ../previewer/ev-previewer-window.c:277
+#: ../shell/ev-window.c:6055
 msgid "Enlarge the document"
 msgstr "Увеличить размер страницы"
 
-#: ../previewer/ev-previewer-window.c:294 ../shell/ev-window.c:5770
+#: ../previewer/ev-previewer-window.c:280
+#: ../shell/ev-window.c:6058
 msgid "Shrink the document"
 msgstr "Уменьшить размер страницы"
 
-#: ../previewer/ev-previewer-window.c:299 ../shell/ev-window.c:5745
+#: ../previewer/ev-previewer-window.c:285
+#: ../shell/ev-window.c:6033
 msgid "Print this document"
 msgstr "Напечатать документ"
 
-#: ../previewer/ev-previewer-window.c:343 ../shell/ev-window.c:5898
-#| msgid "_First Page"
+#: ../previewer/ev-previewer-window.c:317
+#: ../shell/ev-window.c:6212
 msgid "Fit Pa_ge"
 msgstr "По размеру _страницы"
 
-#: ../previewer/ev-previewer-window.c:344 ../shell/ev-window.c:5899
+#: ../previewer/ev-previewer-window.c:318
+#: ../shell/ev-window.c:6213
 msgid "Make the current document fill the window"
 msgstr "Масштабировать документ для соответствия окну"
 
-#: ../previewer/ev-previewer-window.c:346 ../shell/ev-window.c:5901
-#| msgid "Fit Width"
+#: ../previewer/ev-previewer-window.c:320
+#: ../shell/ev-window.c:6215
 msgid "Fit _Width"
 msgstr "По _ширине страницы"
 
-#: ../previewer/ev-previewer-window.c:347 ../shell/ev-window.c:5902
+#: ../previewer/ev-previewer-window.c:321
+#: ../shell/ev-window.c:6216
 msgid "Make the current document fill the window width"
 msgstr "Масштабировать документ для соответствия ширине окна"
 
-#: ../previewer/ev-previewer-window.c:540 ../shell/ev-window.c:6013
+#: ../previewer/ev-previewer-window.c:514
+#: ../shell/ev-window.c:6325
 msgid "Page"
 msgstr "Страница"
 
-#: ../previewer/ev-previewer-window.c:541 ../shell/ev-window.c:6014
+#: ../previewer/ev-previewer-window.c:515
+#: ../shell/ev-window.c:6326
 msgid "Select Page"
 msgstr "Выделить страницу"
 
@@ -779,23 +783,23 @@ msgstr "%s, прямая (%s)"
 msgid "%s, Landscape (%s)"
 msgstr "%s, повёрнутая (%s)"
 
-#: ../shell/eggfindbar.c:281
+#: ../shell/eggfindbar.c:277
 msgid "_Whole Words Only"
 msgstr "Только _целые слова"
 
-#: ../shell/eggfindbar.c:293
+#: ../shell/eggfindbar.c:289
 msgid "C_ase Sensitive"
 msgstr "Учитывать _регистр"
 
-#: ../shell/eggfindbar.c:416
+#: ../shell/eggfindbar.c:391
 msgid "Find options"
 msgstr "Параметры поиска"
 
-#: ../shell/eggfindbar.c:425
+#: ../shell/eggfindbar.c:400
 msgid "Find previous occurrence of the search string"
 msgstr "Найти предыдущее вхождение строки"
 
-#: ../shell/eggfindbar.c:435
+#: ../shell/eggfindbar.c:410
 msgid "Find next occurrence of the search string"
 msgstr "Найти следующее вхождение слова"
 
@@ -875,13 +879,11 @@ msgstr "Открыть"
 msgid "Close"
 msgstr "Закрыть"
 
-#: ../shell/ev-history-action-widget.c:223
-#| msgid "Go to previous page"
+#: ../shell/ev-history-action-widget.c:227
 msgid "Go to previous history item"
 msgstr "Перейти к предыдущему элементу журнала"
 
-#: ../shell/ev-history-action-widget.c:227
-#| msgid "Go to next page"
+#: ../shell/ev-history-action-widget.c:231
 msgid "Go to next history item"
 msgstr "Перейти к следующему элементу журнала"
 
@@ -891,8 +893,10 @@ msgid "Password for document %s"
 msgstr "Пароль к документу %s"
 
 #. Create tree view
-#: ../shell/ev-loading-message.c:50 ../shell/ev-sidebar-annotations.c:131
-#: ../shell/ev-sidebar-layers.c:125 ../shell/ev-sidebar-links.c:261
+#: ../shell/ev-loading-message.c:50
+#: ../shell/ev-sidebar-annotations.c:131
+#: ../shell/ev-sidebar-layers.c:125
+#: ../shell/ev-sidebar-links.c:261
 msgid "Loading…"
 msgstr "Загрузка…"
 
@@ -901,13 +905,11 @@ msgid "Open a recently used document"
 msgstr "Открыть недавно использовавшийся документ"
 
 #: ../shell/ev-password-view.c:142
-msgid ""
-"This document is locked and can only be read by entering the correct "
-"password."
-msgstr ""
-"Этот документ заблокирован и может быть прочитан только после ввода пароля."
+msgid "This document is locked and can only be read by entering the correct password."
+msgstr "Этот документ заблокирован и может быть прочитан только после ввода пароля."
 
-#: ../shell/ev-password-view.c:151 ../shell/ev-password-view.c:269
+#: ../shell/ev-password-view.c:151
+#: ../shell/ev-password-view.c:269
 msgid "_Unlock Document"
 msgstr "_Разблокировать документ"
 
@@ -915,29 +917,28 @@ msgstr "_Разблокировать документ"
 msgid "Enter password"
 msgstr "Введите пароль"
 
-#: ../shell/ev-password-view.c:301
+#: ../shell/ev-password-view.c:300
+#, c-format
+msgid "The document “%s” is locked and requires a password before it can be opened."
+msgstr "Документ «%s» заблокирован и требует пароль для чтения."
+
+#: ../shell/ev-password-view.c:303
 msgid "Password required"
 msgstr "Требуется пароль"
 
-#: ../shell/ev-password-view.c:302
-#, c-format
-msgid ""
-"The document “%s” is locked and requires a password before it can be opened."
-msgstr "Документ «%s» заблокирован и требует пароль для чтения."
-
-#: ../shell/ev-password-view.c:332
+#: ../shell/ev-password-view.c:333
 msgid "_Password:"
 msgstr "_Пароль:"
 
-#: ../shell/ev-password-view.c:363
+#: ../shell/ev-password-view.c:364
 msgid "Forget password _immediately"
 msgstr "_Немедленно забыть пароль"
 
-#: ../shell/ev-password-view.c:375
+#: ../shell/ev-password-view.c:376
 msgid "Remember password until you _log out"
 msgstr "Запомнить пароль для этого _сеанса"
 
-#: ../shell/ev-password-view.c:387
+#: ../shell/ev-password-view.c:388
 msgid "Remember _forever"
 msgstr "Запомнить _навсегда"
 
@@ -982,7 +983,8 @@ msgstr "Дополнительная информация"
 msgid "List"
 msgstr "Список"
 
-#: ../shell/ev-sidebar-annotations.c:199 ../shell/ev-sidebar-annotations.c:527
+#: ../shell/ev-sidebar-annotations.c:199
+#: ../shell/ev-sidebar-annotations.c:529
 msgid "Annotations"
 msgstr "Примечания"
 
@@ -998,16 +1000,16 @@ msgstr "Добавить текстовое примечание"
 msgid "Add"
 msgstr "Добавить"
 
-#: ../shell/ev-sidebar-annotations.c:360
+#: ../shell/ev-sidebar-annotations.c:362
 msgid "Document contains no annotations"
 msgstr "Документ не содержит примечаний"
 
-#: ../shell/ev-sidebar-annotations.c:392
+#: ../shell/ev-sidebar-annotations.c:394
 #, c-format
 msgid "Page %d"
 msgstr "Страница %d"
 
-#: ../shell/ev-sidebar-attachments.c:696
+#: ../shell/ev-sidebar-attachments.c:697
 msgid "Attachments"
 msgstr "Вложения"
 
@@ -1023,11 +1025,11 @@ msgstr "Пе_реименовать закладку"
 msgid "_Remove Bookmark"
 msgstr "_Удалить закладку"
 
-#: ../shell/ev-sidebar-bookmarks.c:603
+#: ../shell/ev-sidebar-bookmarks.c:605
 msgid "Bookmarks"
 msgstr "Закладки"
 
-#: ../shell/ev-sidebar-layers.c:444
+#: ../shell/ev-sidebar-layers.c:446
 msgid "Layers"
 msgstr "Слои"
 
@@ -1035,105 +1037,109 @@ msgstr "Слои"
 msgid "Print…"
 msgstr "Печать…"
 
-#: ../shell/ev-sidebar-links.c:723
+#: ../shell/ev-sidebar-links.c:725
 msgid "Index"
 msgstr "Содержание"
 
-#: ../shell/ev-sidebar-thumbnails.c:958
+#: ../shell/ev-sidebar-thumbnails.c:960
 msgid "Thumbnails"
 msgstr "Образцы страниц"
 
-#: ../shell/ev-utils.c:318
-msgid "By extension"
-msgstr "По расширению"
+#: ../shell/ev-utils.c:332
+msgid "Supported Image Files"
+msgstr "Поддерживаемые файлы изображений"
 
-#: ../shell/ev-window.c:1474
+#: ../shell/ev-window.c:1533
 msgid "The document contains no pages"
 msgstr "Документ не содержит страниц"
 
-#: ../shell/ev-window.c:1477
+#: ../shell/ev-window.c:1536
 msgid "The document contains only empty pages"
 msgstr "Документ содержит только пустые страницы"
 
-#: ../shell/ev-window.c:1688 ../shell/ev-window.c:1850
-msgid "Unable to open document"
-msgstr "Не удалось открыть документ"
+#: ../shell/ev-window.c:1742
+#: ../shell/ev-window.c:1913
+#, c-format
+msgid "Unable to open document “%s”."
+msgstr "Не удалось открыть документ «%s»."
 
-#: ../shell/ev-window.c:1821
+#: ../shell/ev-window.c:1877
 #, c-format
 msgid "Loading document from “%s”"
 msgstr "Загрузка документа из «%s»"
 
-#: ../shell/ev-window.c:1963 ../shell/ev-window.c:2254
+#: ../shell/ev-window.c:2028
+#: ../shell/ev-window.c:2318
 #, c-format
 msgid "Downloading document (%d%%)"
 msgstr "Загрузка документа (%d%%)"
 
-#: ../shell/ev-window.c:1996
+#: ../shell/ev-window.c:2061
 msgid "Failed to load remote file."
 msgstr "Не удалось загрузить файл извне."
 
-#: ../shell/ev-window.c:2198
+#: ../shell/ev-window.c:2262
 #, c-format
 msgid "Reloading document from %s"
 msgstr "Обновление документа из %s"
 
-#: ../shell/ev-window.c:2230
+#: ../shell/ev-window.c:2294
 msgid "Failed to reload document."
 msgstr "Не удалось обновить документ."
 
-#: ../shell/ev-window.c:2443
+#: ../shell/ev-window.c:2507
 msgid "Open Document"
 msgstr "Открыть документ"
 
-#: ../shell/ev-window.c:2716
+#: ../shell/ev-window.c:2780
 #, c-format
 msgid "Saving document to %s"
 msgstr "Сохранение документа в %s"
 
-#: ../shell/ev-window.c:2719
+#: ../shell/ev-window.c:2783
 #, c-format
 msgid "Saving attachment to %s"
 msgstr "Сохранение вложения в %s"
 
-#: ../shell/ev-window.c:2722
+#: ../shell/ev-window.c:2786
 #, c-format
 msgid "Saving image to %s"
 msgstr "Сохранение изображения в %s"
 
-#: ../shell/ev-window.c:2766 ../shell/ev-window.c:2866
+#: ../shell/ev-window.c:2830
+#: ../shell/ev-window.c:2930
 #, c-format
 msgid "The file could not be saved as “%s”."
 msgstr "Документ не может быть сохранён в файле «%s»."
 
-#: ../shell/ev-window.c:2797
+#: ../shell/ev-window.c:2861
 #, c-format
 msgid "Uploading document (%d%%)"
 msgstr "Сохранение удалённого документа (%d%%)"
 
-#: ../shell/ev-window.c:2801
+#: ../shell/ev-window.c:2865
 #, c-format
 msgid "Uploading attachment (%d%%)"
 msgstr "Сохранение удалённого приложения (%d%%)"
 
-#: ../shell/ev-window.c:2805
+#: ../shell/ev-window.c:2869
 #, c-format
 msgid "Uploading image (%d%%)"
 msgstr "Сохранение удалённого изображения (%d%%)"
 
-#: ../shell/ev-window.c:2917
+#: ../shell/ev-window.c:2981
 msgid "Save a Copy"
 msgstr "Сохранить копию"
 
-#: ../shell/ev-window.c:2981
+#: ../shell/ev-window.c:3045
 msgid "Could not send current document"
 msgstr "Не удалось отправить текущий документ"
 
-#: ../shell/ev-window.c:3012
+#: ../shell/ev-window.c:3076
 msgid "Could not open the containing folder"
 msgstr "Не удалось открыть папку с файлом"
 
-#: ../shell/ev-window.c:3273
+#: ../shell/ev-window.c:3337
 #, c-format
 msgid "%d pending job in queue"
 msgid_plural "%d pending jobs in queue"
@@ -1141,41 +1147,33 @@ msgstr[0] "%d задание ожидает в очереди"
 msgstr[1] "%d задания ожидают в очереди"
 msgstr[2] "%d заданий ожидает в очереди"
 
-#: ../shell/ev-window.c:3386
+#: ../shell/ev-window.c:3450
 #, c-format
 msgid "Printing job “%s”"
 msgstr "Печать задания «%s»"
 
-#: ../shell/ev-window.c:3563
-msgid ""
-"Document contains form fields that have been filled out. If you don't save a "
-"copy, changes will be permanently lost."
-msgstr ""
-"Документ содержит поля форм, которые были заполнены. Если вы не сохраните "
-"копию, изменения будут навсегда потеряны."
+#: ../shell/ev-window.c:3645
+msgid "Document contains form fields that have been filled out. If you don't save a copy, changes will be permanently lost."
+msgstr "Документ содержит поля форм, которые были заполнены. Если вы не сохраните копию, изменения будут навсегда потеряны."
 
-#: ../shell/ev-window.c:3567
-msgid ""
-"Document contains new or modified annotations. If you don't save a copy, "
-"changes will be permanently lost."
-msgstr ""
-"Документ содержит новые или изменённые примечания. Если вы не сохраните "
-"копию, изменения будут навсегда потеряны."
+#: ../shell/ev-window.c:3649
+msgid "Document contains new or modified annotations. If you don't save a copy, changes will be permanently lost."
+msgstr "Документ содержит новые или изменённые примечания. Если вы не сохраните копию, изменения будут навсегда потеряны."
 
-#: ../shell/ev-window.c:3574
+#: ../shell/ev-window.c:3656
 #, c-format
 msgid "Save a copy of document “%s” before closing?"
 msgstr "Сохранить копию документа «%s» перед закрытием?"
 
-#: ../shell/ev-window.c:3593
+#: ../shell/ev-window.c:3675
 msgid "Close _without Saving"
 msgstr "Закрыть _без сохранения"
 
-#: ../shell/ev-window.c:3597
+#: ../shell/ev-window.c:3679
 msgid "Save a _Copy"
 msgstr "Сохранить _копию"
 
-#: ../shell/ev-window.c:3671
+#: ../shell/ev-window.c:3753
 #, c-format
 msgid "Wait until print job “%s” finishes before closing?"
 msgstr "Ожидать завершения задания на печать «%s» перед закрытием?"
@@ -1183,40 +1181,31 @@ msgstr "Ожидать завершения задания на печать «%
 #. TRANS: the singular form is not really used as n_print_jobs > 1
 #. but some languages distinguish between different plurals forms,
 #. so the ngettext is needed.
-#: ../shell/ev-window.c:3677
+#: ../shell/ev-window.c:3759
 #, c-format
 msgid "There is %d print job active. Wait until print finishes before closing?"
-msgid_plural ""
-"There are %d print jobs active. Wait until print finishes before closing?"
-msgstr[0] ""
-"Имеется %d активное задание для печати. Подождать их завершения перед "
-"закрытием?"
-msgstr[1] ""
-"Имеется %d активных задания для печати. Подождать их завершения перед "
-"закрытием?"
-msgstr[2] ""
-"Имеется %d активных заданий для печати. Подождать их завершения перед "
-"закрытием?"
+msgid_plural "There are %d print jobs active. Wait until print finishes before closing?"
+msgstr[0] "Имеется %d активное задание для печати. Подождать их завершения перед закрытием?"
+msgstr[1] "Имеется %d активных задания для печати. Подождать их завершения перед закрытием?"
+msgstr[2] "Имеется %d активных заданий для печати. Подождать их завершения перед закрытием?"
 
-#: ../shell/ev-window.c:3692
+#: ../shell/ev-window.c:3774
 msgid "If you close the window, pending print jobs will not be printed."
-msgstr ""
-"Если вы закроете окно, задания на печать, поставленные в очередь, не будут "
-"выполнены."
+msgstr "Если вы закроете окно, задания на печать, поставленные в очередь, не будут выполнены."
 
-#: ../shell/ev-window.c:3696
+#: ../shell/ev-window.c:3778
 msgid "Cancel _print and Close"
 msgstr "Отменить _печать и закрыть"
 
-#: ../shell/ev-window.c:3700
+#: ../shell/ev-window.c:3782
 msgid "Close _after Printing"
 msgstr "Закрыть п_осле печати"
 
-#: ../shell/ev-window.c:4155
+#: ../shell/ev-window.c:4315
 msgid "Running in presentation mode"
 msgstr "Запущен режим презентации"
 
-#: ../shell/ev-window.c:4863
+#: ../shell/ev-window.c:5018
 #, c-format
 msgid ""
 "Document Viewer\n"
@@ -1225,56 +1214,34 @@ msgstr ""
 "Просмотр документов\n"
 "Использует %s (%s)"
 
-#: ../shell/ev-window.c:4896
-msgid ""
-"Evince is free software; you can redistribute it and/or modify it under the "
-"terms of the GNU General Public License as published by the Free Software "
-"Foundation; either version 2 of the License, or (at your option) any later "
-"version.\n"
-msgstr ""
-"Evince ― свободное программное обеспечение. Вы можете распространять или "
-"изменять его при условиях соответствия GNU General Public License "
-"опубликованной Free Software Foundation; либо версии 2 лицензии, либо (на "
-"ваше усмотрение) любой более поздней версии.\n"
+#: ../shell/ev-window.c:5051
+msgid "Evince is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.\n"
+msgstr "Evince ― свободное программное обеспечение. Вы можете распространять или изменять его при условиях соответствия GNU General Public License опубликованной Free Software Foundation; либо версии 2 лицензии, либо (на ваше усмотрение) любой более поздней версии.\n"
 
-#: ../shell/ev-window.c:4900
-msgid ""
-"Evince is distributed in the hope that it will be useful, but WITHOUT ANY "
-"WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS "
-"FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more "
-"details.\n"
-msgstr ""
-"Evince распространяется в надежде на то, что приложение будет полезно, но "
-"БЕЗ ВСЯКИХ ГАРАНТИЙ; не гарантируется даже ПРИГОДНОСТЬ или СООТВЕТСТВИЕ "
-"КАКИМ-ЛИБО ТРЕБОВАНИЯМ. Для получения дополнительной информации ознакомьтесь "
-"с GNU General Public License.\n"
+#: ../shell/ev-window.c:5055
+msgid "Evince is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.\n"
+msgstr "Evince распространяется в надежде на то, что приложение будет полезно, но БЕЗ ВСЯКИХ ГАРАНТИЙ; не гарантируется даже ПРИГОДНОСТЬ или СООТВЕТСТВИЕ КАКИМ-ЛИБО ТРЕБОВАНИЯМ. Для получения дополнительной информации ознакомьтесь с GNU General Public License.\n"
 
-#: ../shell/ev-window.c:4904
-msgid ""
-"You should have received a copy of the GNU General Public License along with "
-"Evince; if not, write to the Free Software Foundation, Inc., 51 Franklin "
-"Street, Fifth Floor, Boston, MA 02110-1301  USA\n"
-msgstr ""
-"Вы должны были получить копию GNU General Public License вместе с Evince. "
-"Если этого не произошло, напишите to the Free Software Foundation, Inc., 51 "
-"Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA\n"
+#: ../shell/ev-window.c:5059
+msgid "You should have received a copy of the GNU General Public License along with Evince; if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA\n"
+msgstr "Вы должны были получить копию GNU General Public License вместе с Evince. Если этого не произошло, напишите to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA\n"
 
-#: ../shell/ev-window.c:4929
+#: ../shell/ev-window.c:5084
 msgid "Evince"
 msgstr "Evince"
 
-#: ../shell/ev-window.c:4932
+#: ../shell/ev-window.c:5087
 msgid "© 1996–2012 The Evince authors"
 msgstr "© 1996-2012 авторы Evince"
 
-#: ../shell/ev-window.c:4938
+#: ../shell/ev-window.c:5093
 msgid "translator-credits"
 msgstr "Николай В. Шмырёв <nshmyrev@yandex.ru>"
 
 #. TRANS: Sometimes this could be better translated as
 #. "%d hit(s) on this page".  Therefore this string
 #. contains plural cases.
-#: ../shell/ev-window.c:5200
+#: ../shell/ev-window.c:5364
 #, c-format
 msgid "%d found on this page"
 msgid_plural "%d found on this page"
@@ -1282,340 +1249,346 @@ msgstr[0] "%d совпадение"
 msgstr[1] "%d совпадения"
 msgstr[2] "%d совпадений"
 
-#: ../shell/ev-window.c:5205
+#: ../shell/ev-window.c:5369
 msgid "Not found"
 msgstr "Не найдено"
 
-#: ../shell/ev-window.c:5211
+#: ../shell/ev-window.c:5375
 #, c-format
 msgid "%3d%% remaining to search"
 msgstr "%3d%% остаётся для поиска"
 
-#: ../shell/ev-window.c:5725
+#: ../shell/ev-window.c:5698
+msgid "Enable caret navigation?"
+msgstr "Включить курсорную навигацию?"
+
+#: ../shell/ev-window.c:5703
+msgid "Pressing F7 turns the caret navigation on or off. This feature places a moveable cursor in text pages, allowing you to move around and select text with your keyboard. Do you want to enable the caret navigation on?"
+msgstr "Нажатие клавиши F7 включает или выключает курсорную навигацию. Эта функция позволяет перемещать курсор на текстовых страницах и выделять текст с помощью клавиатуры. Хотите включить курсорную навигацию?"
+
+#: ../shell/ev-window.c:5708
+msgid "Don't show this message again"
+msgstr "Не показывать больше это сообщение"
+
+#: ../shell/ev-window.c:6013
 msgid "_Bookmarks"
 msgstr "_Закладки"
 
-#: ../shell/ev-window.c:5726
+#: ../shell/ev-window.c:6014
 msgid "_Recent"
 msgstr "_Недавние"
 
 #. File menu
-#: ../shell/ev-window.c:5729 ../shell/ev-window.c:6049
+#: ../shell/ev-window.c:6017
+#: ../shell/ev-window.c:6363
 msgid "_Open…"
 msgstr "_Открыть…"
 
-#: ../shell/ev-window.c:5730 ../shell/ev-window.c:6050
+#: ../shell/ev-window.c:6018
+#: ../shell/ev-window.c:6364
 msgid "Open an existing document"
 msgstr "Открыть документ"
 
-#: ../shell/ev-window.c:5732
+#: ../shell/ev-window.c:6020
 msgid "Op_en a Copy"
 msgstr "Открыть _копию"
 
-#: ../shell/ev-window.c:5733
+#: ../shell/ev-window.c:6021
 msgid "Open a copy of the current document in a new window"
 msgstr "Открыть копию текущего документа в новом окне"
 
-#: ../shell/ev-window.c:5735
+#: ../shell/ev-window.c:6023
 msgid "_Save a Copy…"
 msgstr "_Сохранить копию…"
 
-#: ../shell/ev-window.c:5736
+#: ../shell/ev-window.c:6024
 msgid "Save a copy of the current document"
 msgstr "Сохранить копию текущего документа"
 
-#: ../shell/ev-window.c:5738
-msgid "Send _To..."
-msgstr "_Отправить…"
+#: ../shell/ev-window.c:6026
+msgid "Send _To…"
+msgstr "О_тправить…"
 
-#: ../shell/ev-window.c:5739
-msgid "Send current document by mail, instant message..."
-msgstr "Отправить текущий документ почтой, мгновенным сообщением…"
+#: ../shell/ev-window.c:6027
+msgid "Send current document by mail, instant message…"
+msgstr "Отправить текущий документ электронной почтой, мгновенным сообщением…"
 
-#: ../shell/ev-window.c:5741
+#: ../shell/ev-window.c:6029
 msgid "Open Containing _Folder"
 msgstr "Открыть _папку с документом"
 
-#: ../shell/ev-window.c:5742
+#: ../shell/ev-window.c:6030
 msgid "Show the folder which contains this file in the file manager"
 msgstr "Показать в файловом менеджере папку, которая содержит этот файл"
 
-#: ../shell/ev-window.c:5744
+#: ../shell/ev-window.c:6032
 msgid "_Print…"
 msgstr "_Печать…"
 
-#: ../shell/ev-window.c:5747
+#: ../shell/ev-window.c:6035
 msgid "P_roperties"
 msgstr "_Свойства"
 
-#: ../shell/ev-window.c:5755
+#: ../shell/ev-window.c:6043
 msgid "Select _All"
 msgstr "Выделить _всё"
 
-#: ../shell/ev-window.c:5757
+#: ../shell/ev-window.c:6045
 msgid "Rotate _Left"
 msgstr "Повернуть в_лево"
 
-#: ../shell/ev-window.c:5759
+#: ../shell/ev-window.c:6047
 msgid "Rotate _Right"
 msgstr "Повернуть в_право"
 
-#: ../shell/ev-window.c:5761
+#: ../shell/ev-window.c:6049
 msgid "Save Current Settings as _Default"
 msgstr "Установить текущие параметры по _умолчанию"
 
-#: ../shell/ev-window.c:5772
+#: ../shell/ev-window.c:6060
 msgid "_Reload"
 msgstr "_Обновить"
 
-#: ../shell/ev-window.c:5773
+#: ../shell/ev-window.c:6061
 msgid "Reload the document"
 msgstr "Обновить документ"
 
-#: ../shell/ev-window.c:5776
+#: ../shell/ev-window.c:6064
 msgid "Auto_scroll"
 msgstr "Про_кручивать автоматически"
 
-#: ../shell/ev-window.c:5786
+#: ../shell/ev-window.c:6074
 msgid "_First Page"
 msgstr "_Начало"
 
-#: ../shell/ev-window.c:5787
+#: ../shell/ev-window.c:6075
 msgid "Go to the first page"
 msgstr "Перейти к первой странице"
 
-#: ../shell/ev-window.c:5789
+#: ../shell/ev-window.c:6077
 msgid "_Last Page"
 msgstr "_Конец"
 
-#: ../shell/ev-window.c:5790
+#: ../shell/ev-window.c:6078
 msgid "Go to the last page"
 msgstr "Перейти к последней странице"
 
-#: ../shell/ev-window.c:5792
+#: ../shell/ev-window.c:6080
 msgid "Go to Pa_ge"
 msgstr "Перейти к с_транице"
 
-#: ../shell/ev-window.c:5793
+#: ../shell/ev-window.c:6081
 msgid "Go to Page"
 msgstr "Перейти к странице"
 
 #. Bookmarks menu
-#: ../shell/ev-window.c:5797
+#: ../shell/ev-window.c:6085
 msgid "_Add Bookmark"
 msgstr "_Добавить закладку"
 
-#: ../shell/ev-window.c:5798
+#: ../shell/ev-window.c:6086
 msgid "Add a bookmark for the current page"
 msgstr "Добавить закладку на текущей странице"
 
-#: ../shell/ev-window.c:5801
+#: ../shell/ev-window.c:6089
 msgid "_About"
 msgstr "_О программе"
 
 #. Toolbar-only
-#: ../shell/ev-window.c:5805
+#: ../shell/ev-window.c:6093
 msgid "Leave Fullscreen"
 msgstr "Выйти из полноэкранного режима"
 
-#: ../shell/ev-window.c:5806
+#: ../shell/ev-window.c:6094
 msgid "Leave fullscreen mode"
 msgstr "Выйти из полноэкранного режима"
 
-#: ../shell/ev-window.c:5808
+#: ../shell/ev-window.c:6096
 msgid "Start Presentation"
 msgstr "Начать презентацию"
 
-#: ../shell/ev-window.c:5809
+#: ../shell/ev-window.c:6097
 msgid "Start a presentation"
 msgstr "Перейти в режим презентации"
 
 #. View Menu
-#: ../shell/ev-window.c:5880
+#: ../shell/ev-window.c:6158
 msgid "Side _Pane"
 msgstr "_Боковая панель"
 
-#: ../shell/ev-window.c:5881
+#: ../shell/ev-window.c:6159
 msgid "Show or hide the side pane"
 msgstr "Показать или спрятать боковую панель"
 
-#: ../shell/ev-window.c:5883
+#: ../shell/ev-window.c:6161
 msgid "_Continuous"
 msgstr "_Непрерывно"
 
-#: ../shell/ev-window.c:5884
+#: ../shell/ev-window.c:6162
 msgid "Show the entire document"
 msgstr "Показывать документ целиком"
 
-#: ../shell/ev-window.c:5886
+#: ../shell/ev-window.c:6164
 msgid "_Dual"
 msgstr "_Две страницы"
 
-#: ../shell/ev-window.c:5887
-#| msgid "Show two pages at once with odd pages on the left"
+#: ../shell/ev-window.c:6165
 msgid "Show two pages at once"
 msgstr "Показывать по две страницы"
 
-#: ../shell/ev-window.c:5889
-#| msgid "Dual (_Odd pages left)"
-msgid "_Odd pages left"
-msgstr "_Нечётные слева"
+#: ../shell/ev-window.c:6167
+msgid "_Odd Pages Left"
+msgstr "_Нечётные страницы слева"
 
-#: ../shell/ev-window.c:5890
+#: ../shell/ev-window.c:6168
 msgid "Show odd pages on the left in dual mode"
 msgstr "Показывать нечётные страницы слева"
 
-#: ../shell/ev-window.c:5892
+#: ../shell/ev-window.c:6170
 msgid "_Fullscreen"
 msgstr "Полноэкранный _режим"
 
-#: ../shell/ev-window.c:5893
+#: ../shell/ev-window.c:6171
 msgid "Expand the window to fill the screen"
 msgstr "Показывать окно на весь экран"
 
-#: ../shell/ev-window.c:5895
+#: ../shell/ev-window.c:6173
 msgid "Pre_sentation"
 msgstr "_Презентация"
 
-#: ../shell/ev-window.c:5896
+#: ../shell/ev-window.c:6174
 msgid "Run document as a presentation"
 msgstr "Отображать документ как презентацию"
 
-#: ../shell/ev-window.c:5904
+#: ../shell/ev-window.c:6176
 msgid "_Inverted Colors"
 msgstr "_Инвертировать цвета"
 
-#: ../shell/ev-window.c:5905
+#: ../shell/ev-window.c:6177
 msgid "Show page contents with the colors inverted"
 msgstr "Показать содержимое страницы в инвертированном цвете"
 
-#: ../shell/ev-window.c:5908
+#: ../shell/ev-window.c:6180
 msgid "_Find…"
 msgstr "_Найти…"
 
-#: ../shell/ev-window.c:5909
+#: ../shell/ev-window.c:6181
 msgid "Find a word or phrase in the document"
 msgstr "Найти слово или фразу в документе"
 
 #. Links
-#: ../shell/ev-window.c:5917
+#: ../shell/ev-window.c:6188
 msgid "_Open Link"
 msgstr "_Открыть ссылку"
 
-#: ../shell/ev-window.c:5919
+#: ../shell/ev-window.c:6190
 msgid "_Go To"
 msgstr "_Перейти"
 
-#: ../shell/ev-window.c:5921
+#: ../shell/ev-window.c:6192
 msgid "Open in New _Window"
 msgstr "Открыть в _новом окне"
 
-#: ../shell/ev-window.c:5923
+#: ../shell/ev-window.c:6194
 msgid "_Copy Link Address"
 msgstr "_Скопировать адрес ссылки"
 
-#: ../shell/ev-window.c:5925
+#: ../shell/ev-window.c:6196
 msgid "_Save Image As…"
 msgstr "Сохранить изображение _как…"
 
-#: ../shell/ev-window.c:5927
+#: ../shell/ev-window.c:6198
 msgid "Copy _Image"
 msgstr "Скопировать _изображение"
 
-#: ../shell/ev-window.c:5929
+#: ../shell/ev-window.c:6200
 msgid "Annotation Properties…"
 msgstr "Свойства примечания…"
 
-#: ../shell/ev-window.c:5934
+#: ../shell/ev-window.c:6205
 msgid "_Open Attachment"
 msgstr "_Открыть вложение"
 
-#: ../shell/ev-window.c:5936
+#: ../shell/ev-window.c:6207
 msgid "_Save Attachment As…"
 msgstr "_Сохранить вложение как…"
 
-#: ../shell/ev-window.c:6027
+#: ../shell/ev-window.c:6218
+msgid "_Automatic"
+msgstr "_Автоматически"
+
+#: ../shell/ev-window.c:6339
 msgid "Zoom"
 msgstr "Масштаб"
 
-#: ../shell/ev-window.c:6029
+#: ../shell/ev-window.c:6341
 msgid "Adjust the zoom level"
 msgstr "Изменить масштаб"
 
-#: ../shell/ev-window.c:6040
+#: ../shell/ev-window.c:6354
 msgid "History"
 msgstr "Журнал"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:6069
+#: ../shell/ev-window.c:6383
 msgid "Open Folder"
 msgstr "Открыть папку"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:6073
+#: ../shell/ev-window.c:6387
 msgid "Send To"
 msgstr "Отправить"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:6079
+#: ../shell/ev-window.c:6393
 msgid "Previous"
 msgstr "Предыдущая"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:6084
+#: ../shell/ev-window.c:6398
 msgid "Next"
 msgstr "Следующая"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:6088
+#: ../shell/ev-window.c:6402
 msgid "Zoom In"
 msgstr "Увеличить"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:6092
+#: ../shell/ev-window.c:6406
 msgid "Zoom Out"
 msgstr "Уменьшить"
 
-#. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:6096 ../shell/ev-zoom-action-widget.c:42
-#| msgid "_First Page"
-msgid "Fit Page"
-msgstr "По размеру страницы"
-
-#. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:6100 ../shell/ev-zoom-action-widget.c:43
-msgid "Fit Width"
-msgstr "По ширине страницы"
-
-#: ../shell/ev-window.c:6246 ../shell/ev-window.c:6262
+#: ../shell/ev-window.c:6538
+#: ../shell/ev-window.c:6554
 msgid "Unable to launch external application."
 msgstr "Не удалось запустить внешнее приложение."
 
-#: ../shell/ev-window.c:6319
+#: ../shell/ev-window.c:6611
 msgid "Unable to open external link"
 msgstr "Не удалось открыть внешнюю ссылку"
 
-#: ../shell/ev-window.c:6512
+#: ../shell/ev-window.c:6804
 msgid "Couldn't find appropriate format to save image"
 msgstr "Не удалось найти подходящий формат для сохранения изображения"
 
-#: ../shell/ev-window.c:6544
+#: ../shell/ev-window.c:6836
 msgid "The image could not be saved."
 msgstr "Не удалось сохранить изображение."
 
-#: ../shell/ev-window.c:6576
+#: ../shell/ev-window.c:6868
 msgid "Save Image"
 msgstr "Сохранить изображение"
 
-#: ../shell/ev-window.c:6707
+#: ../shell/ev-window.c:6999
 msgid "Unable to open attachment"
 msgstr "Не удалось открыть вложение"
 
-#: ../shell/ev-window.c:6763
+#: ../shell/ev-window.c:7055
 msgid "The attachment could not be saved."
 msgstr "Не удалось сохранить вложение."
 
-#: ../shell/ev-window.c:6808
+#: ../shell/ev-window.c:7100
 msgid "Save Attachment"
 msgstr "Сохранить вложение"
 
@@ -1624,63 +1597,8 @@ msgstr "Сохранить вложение"
 msgid "%s — Password Required"
 msgstr "%s ― требуется пароль"
 
-#: ../shell/ev-zoom-action-widget.c:45
-msgid "50%"
-msgstr "50%"
-
-#: ../shell/ev-zoom-action-widget.c:46
-msgid "70%"
-msgstr "70%"
-
-#: ../shell/ev-zoom-action-widget.c:47
-msgid "85%"
-msgstr "85%"
-
-#: ../shell/ev-zoom-action-widget.c:48
-msgid "100%"
-msgstr "100%"
-
-#: ../shell/ev-zoom-action-widget.c:49
-msgid "125%"
-msgstr "125%"
-
-#: ../shell/ev-zoom-action-widget.c:50
-msgid "150%"
-msgstr "150%"
-
-#: ../shell/ev-zoom-action-widget.c:51
-msgid "175%"
-msgstr "175%"
-
-#: ../shell/ev-zoom-action-widget.c:52
-msgid "200%"
-msgstr "200%"
-
-#: ../shell/ev-zoom-action-widget.c:53
-msgid "300%"
-msgstr "300%"
-
-#: ../shell/ev-zoom-action-widget.c:54
-msgid "400%"
-msgstr "400%"
-
-#: ../shell/ev-zoom-action-widget.c:55
-msgid "800%"
-msgstr "800%"
-
-#: ../shell/ev-zoom-action-widget.c:56
-msgid "1600%"
-msgstr "1600%"
-
-#: ../shell/ev-zoom-action-widget.c:57
-msgid "3200%"
-msgstr "3200%"
-
-#: ../shell/ev-zoom-action-widget.c:58
-msgid "6400%"
-msgstr "6400%"
-
-#: ../shell/main.c:70 ../shell/main.c:276
+#: ../shell/main.c:70
+#: ../shell/main.c:276
 msgid "GNOME Document Viewer"
 msgstr "Просмотр документов"
 
@@ -1735,96 +1653,3 @@ msgstr "[ФАЙЛ…]"
 #: ../shell/evince-appmenu.ui.h:1
 msgid "_Help"
 msgstr "_Справка"
-
-#~ msgid "Show “_%s”"
-#~ msgstr "Показать «_%s»"
-
-#~ msgid "_Move on Toolbar"
-#~ msgstr "_Переместить на панель инструментов"
-
-#~ msgid "Move the selected item on the toolbar"
-#~ msgstr "Переместить выбранный элемент на панель инструментов"
-
-#~ msgid "_Remove from Toolbar"
-#~ msgstr "_Удалить из панели инструментов"
-
-#~ msgid "Remove the selected item from the toolbar"
-#~ msgstr "Удалить выбранный элемент из панели инструментов"
-
-#~ msgid "_Delete Toolbar"
-#~ msgstr "_Удалить панель инструментов"
-
-#~ msgid "Remove the selected toolbar"
-#~ msgstr "Удалить выбранную панель инструментов"
-
-#~ msgid "Separator"
-#~ msgstr "Разделитель"
-
-#~ msgid "Best Fit"
-#~ msgstr "Уместить в окне"
-
-#~ msgid "Fit Page Width"
-#~ msgstr "По ширине страницы"
-
-#~ msgid "_Best Fit"
-#~ msgstr "_Уместить в окне"
-
-#~ msgid "Fit Page _Width"
-#~ msgstr "По _ширине страницы"
-
-#~ msgid "Find:"
-#~ msgstr "Найти:"
-
-#~ msgid "Find Pre_vious"
-#~ msgstr "Найти пр_едыдущее"
-
-#~ msgid "Find Ne_xt"
-#~ msgstr "Найти _следующее"
-
-#~ msgid "Page %s — %s"
-#~ msgstr "Страница %s — %s"
-
-#~ msgid "Toolbar Editor"
-#~ msgstr "Правка панели инструментов"
-
-#~ msgid "_File"
-#~ msgstr "_Файл"
-
-#~ msgid "_Edit"
-#~ msgstr "_Правка"
-
-#~ msgid "_View"
-#~ msgstr "_Вид"
-
-#~ msgid "_Go"
-#~ msgstr "П_ереход"
-
-#~ msgid "T_oolbar"
-#~ msgstr "Панель _инструментов"
-
-#~ msgid "_Contents"
-#~ msgstr "_Содержание"
-
-#~ msgid "_Toolbar"
-#~ msgstr "Панель _инструментов"
-
-#~ msgid "Show or hide the toolbar"
-#~ msgstr "Показать или спрятать панель инструментов"
-
-#~ msgid "_Dual (Even pages left)"
-#~ msgstr "Две страницы (_нечётные слева)"
-
-#~ msgid "Show two pages at once with even pages on the left"
-#~ msgstr "Показывать две страницы с чётными страницами слева"
-
-#~ msgid "Navigation"
-#~ msgstr "Перемещение"
-
-#~ msgid "Back"
-#~ msgstr "Назад"
-
-#~ msgid "Move across visited pages"
-#~ msgstr "Перемещаться по предыдущим страницам"
-
-#~ msgid "There was an error displaying help"
-#~ msgstr "Произошла ошибка при отображении справки"
