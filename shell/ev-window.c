@@ -5697,7 +5697,7 @@ ev_window_cmd_view_toggle_caret_navigation (GtkAction *action,
 	message_area = ev_message_area_new (GTK_MESSAGE_QUESTION,
 					    _("Enable caret navigation?"),
 					    GTK_STOCK_NO,  GTK_RESPONSE_NO,
-					    "_Enable", GTK_RESPONSE_YES,
+					    _("_Enable"), GTK_RESPONSE_YES,
 					    NULL);
 	ev_message_area_set_secondary_text (EV_MESSAGE_AREA (message_area),
 					    _("Pressing F7 turns the caret navigation on or off. "
