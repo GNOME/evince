@@ -100,6 +100,35 @@ ev_mapping_list_nth (EvMappingList *mapping_list,
 }
 
 /**
+ * ev_mapping_list_get:
+ * @mapping_list: an #EvMappingList
+ * @x: X coordinate
+ * @y: Y coordinate
+ *
+ * Returns: (transfer none): the #EvMapping in the list at coordinates (x, y)
+ */
+EvMapping *
+ev_mapping_list_get (EvMappingList *mapping_list,
+		     gdouble        x,
+		     gdouble        y)
+{
+	GList *list;
+
+	for (list = mapping_list->list; list; list = list->next) {
+		EvMapping *mapping = list->data;
+
+		if ((x >= mapping->area.x1) &&
+		    (y >= mapping->area.y1) &&
+		    (x <= mapping->area.x2) &&
+		    (y <= mapping->area.y2)) {
+			return mapping;
+		}
+	}
+
+	return NULL;
+}
+
+/**
  * ev_mapping_list_get_data:
  * @mapping_list: an #EvMappingList
  * @x: X coordinate
@@ -112,18 +141,11 @@ ev_mapping_list_get_data (EvMappingList *mapping_list,
 			  gdouble        x,
 			  gdouble        y)
 {
-	GList *list;
+	EvMapping *mapping;
 
-	for (list = mapping_list->list; list; list = list->next) {
-		EvMapping *mapping = list->data;
-
-		if ((x >= mapping->area.x1) &&
-		    (y >= mapping->area.y1) &&
-		    (x <= mapping->area.x2) &&
-		    (y <= mapping->area.y2)) {
-			return mapping->data;
-		}
-	}
+	mapping = ev_mapping_list_get (mapping_list, x, y);
+	if (mapping)
+		return mapping->data;
 
 	return NULL;
 }
