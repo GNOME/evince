@@ -13,6 +13,7 @@
 # Tino Meinen <a.t.meinen@chello.nl>, 2005, 2006.
 # Reinout van Schouwen <reinout@cs.vu.nl>, 2005, 2009.
 # Wouter Bolsterlee <wbolster@gnome.org>, 2006–2013.
+# Erwin Poeze <donnut@outlook.com>, 2013.
 # Hannie Dumoleyn <hannie@ubuntu-nl.org>, 2012, 2013.
 msgid ""
 msgstr ""
@@ -20,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evince&keywords=I18N+L10N&component=general\n"
 "POT-Creation-Date: 2013-09-17 16:11+0000\n"
-"PO-Revision-Date: 2013-09-18 10:27+0200\n"
+"PO-Revision-Date: 2013-09-22 10:48+0200\n"
 "Last-Translator: Hannie Dumoleyn <hannie@ubuntu-nl.org>\n"
 "Language-Team: Dutch <vertaling@vrijschrift.org>\n"
 "Language: nl\n"
@@ -87,7 +88,7 @@ msgstr "Stripboeken"
 # ongeldig/onjuist/foutief
 #: ../backend/djvu/djvu-document.c:175
 msgid "DjVu document has incorrect format"
-msgstr "DjVu-document heeft onjuist formaat"
+msgstr "DjVu-document heeft onjuiste indeling"
 
 #: ../backend/djvu/djvu-document.c:263
 msgid ""
@@ -104,7 +105,7 @@ msgstr "DjVu-documenten"
 # ongeldig/onjuist/foutief
 #: ../backend/dvi/dvi-document.c:110
 msgid "DVI document has incorrect format"
-msgstr "DVI-document heeft onjuist formaat"
+msgstr "DVI-document heeft onjuiste indeling"
 
 #: ../backend/dvi/dvidocument.evince-backend.in.h:1
 msgid "DVI Documents"
@@ -239,13 +240,13 @@ msgstr "PDF-documenten"
 #: ../backend/ps/ev-spectre.c:98
 #, c-format
 msgid "Failed to load document “%s”"
-msgstr "Open van document ‘%s’ mislukt"
+msgstr "Openen van document ‘%s’ is mislukt"
 
 # niet in staat/kon
 #: ../backend/ps/ev-spectre.c:131
 #, c-format
 msgid "Failed to save document “%s”"
-msgstr "Opslaan van document ‘%s’ mislukt"
+msgstr "Opslaan van document ‘%s’ is mislukt"
 
 #: ../backend/ps/psdocument.evince-backend.in.h:1
 msgid "PostScript Documents"
@@ -348,7 +349,7 @@ msgstr "Documenten weergeven"
 
 #: ../data/evince.desktop.in.in.h:3
 msgid "pdf;ps;postscript;dvi;xps;djvu;tiff;document;presentation;"
-msgstr "pdf;ps;postscript;dvi;xps;djvu;tiff;document;presentatie;"
+msgstr "pdf;ps;postscript;dvi;xps;djvu;tiff;document;presentation;presentatie;"
 
 #: ../data/evince-previewer.desktop.in.in.h:1
 msgid "Print Preview"
@@ -378,7 +379,7 @@ msgstr "Het document wordt automatisch herladen na een bestandswijziging."
 #: ../data/org.gnome.Evince.gschema.xml.in.h:5
 msgid "The URI of the directory last used to open or save a document"
 msgstr ""
-"De URI van de laatst gebruikte map voor het openen of opslaan van een een "
+"De URI van de laatst gebruikte map voor het openen of opslaan van een "
 "document"
 
 #: ../data/org.gnome.Evince.gschema.xml.in.h:6
@@ -394,9 +395,8 @@ msgid ""
 "The maximum size that will be used to cache rendered pages, limits maximum "
 "zoom level."
 msgstr ""
-"De maximale grootte die gebruikt wordt om gerenderde pagina' s in de cache op "
-"te slaan "
-"beperkt het maximale zoomniveau."
+"De maximale grootte die gebruikt wordt om gerenderde pagina's in de cache op "
+"te slaan beperkt het maximale zoomniveau."
 
 #: ../data/org.gnome.Evince.gschema.xml.in.h:9
 msgid ""
@@ -443,12 +443,12 @@ msgstr "Alle bestanden"
 #: ../libdocument/ev-file-helpers.c:147
 #, c-format
 msgid "Failed to create a temporary file: %s"
-msgstr "Aanmaken van een tijdelijk bestand mislukt: %s"
+msgstr "Aanmaken van een tijdelijk bestand is mislukt: %s"
 
 #: ../libdocument/ev-file-helpers.c:309
 #, c-format
 msgid "Failed to create a temporary directory: %s"
-msgstr "Aanmaken van een tijdelijke map mislukt: %s."
+msgstr "Aanmaken van een tijdelijke map is mislukt: %s"
 
 # misschien beter: uit (ipv van): pagina 1 uit 5
 #: ../libmisc/ev-page-action-widget.c:85
@@ -665,7 +665,7 @@ msgstr "Het instellingenbestand afdrukken"
 # viewer is ook nederlands
 #: ../previewer/ev-previewer.c:175 ../previewer/ev-previewer.c:207
 msgid "GNOME Document Previewer"
-msgstr "GNOME documentenpreviewer"
+msgstr "Gnome documentenvoorbeeldviewer"
 
 # niet in staat/kon
 #: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3393
@@ -894,7 +894,7 @@ msgstr "Kruis"
 
 #: ../shell/ev-annotation-properties-dialog.c:108
 msgid "Circle"
-msgstr "Circle"
+msgstr "Cirkel"
 
 #: ../shell/ev-annotation-properties-dialog.c:109
 msgid "Unknown"
@@ -910,7 +910,7 @@ msgstr "Kleur:"
 
 #: ../shell/ev-annotation-properties-dialog.c:175
 msgid "Style:"
-msgstr "Style:"
+msgstr "Stijl:"
 
 #: ../shell/ev-annotation-properties-dialog.c:190
 msgid "Transparent"
@@ -1109,7 +1109,7 @@ msgstr "Ondersteunde afbeeldingsbestanden"
 
 #: ../shell/ev-window.c:1533
 msgid "The document contains no pages"
-msgstr "Het document heeft geen bladzijden"
+msgstr "Het document bevat geen pagina's"
 
 #: ../shell/ev-window.c:1536
 msgid "The document contains only empty pages"
@@ -1134,7 +1134,7 @@ msgstr "Document downloaden (%d%%)"
 # niet in staat/kon
 #: ../shell/ev-window.c:2061
 msgid "Failed to load remote file."
-msgstr "Kon document op afstand niet laden."
+msgstr "Kon document op afstand niet laden"
 
 #: ../shell/ev-window.c:2262
 #, c-format
@@ -1144,7 +1144,7 @@ msgstr "Document van %s herladen"
 # niet in staat/kon
 #: ../shell/ev-window.c:2294
 msgid "Failed to reload document."
-msgstr "Kon document niet herladen"
+msgstr "Herladen van document is mislukt"
 
 #: ../shell/ev-window.c:2507
 msgid "Open Document"
@@ -1375,7 +1375,7 @@ msgid ""
 "with your keyboard. Do you want to enable the caret navigation on?"
 msgstr ""
 "F7 schakelt de cursornavigatie in of uit. Deze functie plaatst een "
-"verplaatsbare cursor in tekstpagina' s, waardoor u kunt navigeren en tekst "
+"verplaatsbare cursor in tekstpagina's, waardoor u kunt navigeren en tekst "
 "selecteren via het toetsenbord. Wilt u de cursornavigatie inschakelen?"
 
 #: ../shell/ev-window.c:5708
@@ -1689,7 +1689,7 @@ msgstr "Uitzoomen"
 # niet in staat/kon
 #: ../shell/ev-window.c:6538 ../shell/ev-window.c:6554
 msgid "Unable to launch external application."
-msgstr "De externe verwijzing kon niet geopend worden"
+msgstr "De externe toepassing kon niet geopend worden"
 
 # niet in staat/kon
 #: ../shell/ev-window.c:6611
@@ -1698,7 +1698,7 @@ msgstr "De externe verwijzing kon niet geopend worden"
 
 #: ../shell/ev-window.c:6804
 msgid "Couldn't find appropriate format to save image"
-msgstr "Kon geen geschikt formaat voor opslaan van afbeelding vinden"
+msgstr "Kon geen geschikt bestandstype voor opslaan van afbeelding vinden"
 
 #: ../shell/ev-window.c:6836
 msgid "The image could not be saved."
@@ -1724,13 +1724,13 @@ msgstr "Bijlage opslaan"
 #: ../shell/ev-window-title.c:169
 #, c-format
 msgid "%s — Password Required"
-msgstr "%s — Wachtwoord vereist"
+msgstr "%s — wachtwoord vereist"
 
 # Misschien Evince documentenviewer
 # viewer is ook nederlands
 #: ../shell/main.c:70 ../shell/main.c:276
 msgid "GNOME Document Viewer"
-msgstr "GNOME documentenviewer"
+msgstr "Gnome documentenviewer"
 
 #: ../shell/main.c:78
 msgid "The page label of the document to display."
