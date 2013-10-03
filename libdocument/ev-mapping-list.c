@@ -106,6 +106,8 @@ ev_mapping_list_nth (EvMappingList *mapping_list,
  * @y: Y coordinate
  *
  * Returns: (transfer none): the #EvMapping in the list at coordinates (x, y)
+ *
+ * Since: 3.12
  */
 EvMapping *
 ev_mapping_list_get (EvMappingList *mapping_list,
@@ -113,6 +115,8 @@ ev_mapping_list_get (EvMappingList *mapping_list,
 		     gdouble        y)
 {
 	GList *list;
+
+        g_return_val_if_fail (mapping_list != NULL, NULL);
 
 	for (list = mapping_list->list; list; list = list->next) {
 		EvMapping *mapping = list->data;
