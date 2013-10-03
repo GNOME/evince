@@ -1113,6 +1113,11 @@ document_changed_cb (EvDocumentModel  *model,
 		     GParamSpec       *pspec,
 		     EvViewAccessible *accessible)
 {
+	EvDocument *document = ev_document_model_get_document (model);
+
+	if (document == NULL)
+		return;
+
 	clear_cache (accessible);
 }
 
@@ -1132,6 +1137,7 @@ ev_view_accessible_set_model (EvViewAccessible *accessible,
 
 	priv->model = g_object_ref (model);
 
+	document_changed_cb (model, NULL, accessible);
 	g_signal_connect (priv->model, "page-changed",
 			  G_CALLBACK (page_changed_cb),
 			  accessible);
