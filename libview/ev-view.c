@@ -56,6 +56,7 @@ enum {
 	SIGNAL_LAYERS_CHANGED,
 	SIGNAL_MOVE_CURSOR,
 	SIGNAL_CURSOR_MOVED,
+	SIGNAL_ACTIVATE,
 	N_SIGNALS
 };
 
@@ -5692,6 +5693,81 @@ ev_view_key_press_event (GtkWidget   *widget,
 	return retval;
 }
 
+static gboolean
+ev_view_activate_form_field (EvView      *view,
+			     EvFormField *field)
+{
+	gboolean handled = FALSE;
+
+	if (field->is_read_only)
+		return handled;
+
+	if (field->activation_link) {
+		ev_view_handle_link (view, field->activation_link);
+		handled = TRUE;
+	}
+
+	if (EV_IS_FORM_FIELD_BUTTON (field)) {
+		ev_view_form_field_button_toggle (view, field);
+		handled = TRUE;
+	}
+
+	return handled;
+}
+
+static gboolean
+current_event_is_space_key_press (void)
+{
+	GdkEvent *current_event;
+	guint     keyval;
+	gboolean  is_space_key_press;
+
+	current_event = gtk_get_current_event ();
+	if (!current_event)
+		return FALSE;
+
+	is_space_key_press = current_event->type == GDK_KEY_PRESS &&
+		gdk_event_get_keyval (current_event, &keyval) &&
+		(keyval == GDK_KEY_space || keyval == GDK_KEY_KP_Space);
+	gdk_event_free (current_event);
+
+	return is_space_key_press;
+}
+
+static gboolean
+ev_view_activate_link (EvView *view,
+		       EvLink *link)
+{
+	/* Most of the GtkWidgets emit activate on both Space and Return key press,
+	 * but we don't want to activate links on Space for consistency with the Web.
+	 */
+	if (current_event_is_space_key_press ())
+		return FALSE;
+
+	ev_view_handle_link (view, link);
+
+	return TRUE;
+}
+
+static void
+ev_view_activate (EvView *view)
+{
+	if (!view->focused_element)
+		return;
+
+	if (EV_IS_DOCUMENT_FORMS (view->document) &&
+	    EV_IS_FORM_FIELD (view->focused_element->data)) {
+		view->key_binding_handled = ev_view_activate_form_field (view, EV_FORM_FIELD (view->focused_element->data));
+		return;
+	}
+
+	if (EV_IS_DOCUMENT_LINKS (view->document) &&
+	    EV_IS_LINK (view->focused_element->data)) {
+		view->key_binding_handled = ev_view_activate_link (view, EV_LINK (view->focused_element->data));
+		return;
+	}
+}
+
 static gint
 ev_view_focus_in (GtkWidget     *widget,
 		  GdkEventFocus *event)
@@ -6342,6 +6418,7 @@ ev_view_class_init (EvViewClass *class)
 
 	class->scroll = ev_view_scroll_internal;
 	class->move_cursor = ev_view_move_cursor;
+	class->activate = ev_view_activate;
 
 	g_object_class_install_property (object_class,
 					 PROP_IS_LOADING,
@@ -6468,6 +6545,15 @@ ev_view_class_init (EvViewClass *class)
 		         G_TYPE_NONE, 2,
 		         G_TYPE_INT,
 			 G_TYPE_INT);
+	signals[SIGNAL_ACTIVATE] = g_signal_new ("activate",
+			 G_OBJECT_CLASS_TYPE (object_class),
+			 G_SIGNAL_RUN_FIRST | G_SIGNAL_ACTION,
+			 G_STRUCT_OFFSET (EvViewClass, activate),
+			 NULL, NULL,
+			 g_cclosure_marshal_VOID__VOID,
+			 G_TYPE_NONE, 0,
+			 G_TYPE_NONE);
+	widget_class->activate_signal = signals[SIGNAL_ACTIVATE];
 
 	binding_set = gtk_binding_set_by_class (class);
 
@@ -6490,6 +6576,21 @@ ev_view_class_init (EvViewClass *class)
         add_scroll_binding_keypad (binding_set, GDK_KEY_Down,  GDK_MOD1_MASK, GTK_SCROLL_STEP_UP, GTK_ORIENTATION_VERTICAL);
 	add_scroll_binding_keypad (binding_set, GDK_KEY_Page_Up, 0, GTK_SCROLL_PAGE_BACKWARD, GTK_ORIENTATION_VERTICAL);
 	add_scroll_binding_keypad (binding_set, GDK_KEY_Page_Down, 0, GTK_SCROLL_PAGE_FORWARD, GTK_ORIENTATION_VERTICAL);
+
+	/* We can't use the bindings defined in GtkWindow for Space and Return,
+	 * because we also have those bindings for scrolling.
+	 */
+	gtk_binding_entry_add_signal (binding_set, GDK_KEY_space, 0,
+				      "activate", 0);
+	gtk_binding_entry_add_signal (binding_set, GDK_KEY_KP_Space, 0,
+				      "activate", 0);
+	gtk_binding_entry_add_signal (binding_set, GDK_KEY_Return, 0,
+				      "activate", 0);
+	gtk_binding_entry_add_signal (binding_set, GDK_KEY_ISO_Enter, 0,
+				      "activate", 0);
+	gtk_binding_entry_add_signal (binding_set, GDK_KEY_KP_Enter, 0,
+				      "activate", 0);
+
 	gtk_binding_entry_add_signal (binding_set, GDK_KEY_Return, 0, "scroll", 2,
 				      GTK_TYPE_SCROLL_TYPE, GTK_SCROLL_PAGE_FORWARD,
 				      GTK_TYPE_ORIENTATION, GTK_ORIENTATION_VERTICAL);

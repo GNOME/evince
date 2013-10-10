@@ -244,6 +244,7 @@ struct _EvViewClass {
 				       GtkMovementStep step,
 				       gint            count,
 				       gboolean        extend_selection);
+	void     (*activate)          (EvView         *view);
 };
 
 void _get_page_size_for_scale_and_rotation (EvDocument *document,
