@@ -4016,6 +4016,9 @@ draw_focus (EvView       *view,
 	if (view->focused_element_page != page)
 		return;
 
+	if (!gtk_widget_has_focus (GTK_WIDGET (view)))
+		return;
+
 	if (!ev_view_get_focused_area (view, &rect))
 		return;
 
