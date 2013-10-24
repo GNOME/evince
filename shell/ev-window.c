@@ -1224,6 +1224,9 @@ setup_document_from_metadata (EvWindow *window)
 	    ev_metadata_get_int (window->priv->metadata, "window_height", &height))
 		return; /* size was already set in setup_size_from_metadata */
 
+	if (n_pages == 1)
+		ev_document_model_set_dual_page (window->priv->model, FALSE);
+
 	g_settings_get (window->priv->default_settings, "window-ratio", "(dd)", &width_ratio, &height_ratio);
 	if (width_ratio > 0. && height_ratio > 0.) {
 		gdouble    document_width;
