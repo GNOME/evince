@@ -5866,7 +5866,8 @@ highlight_find_results (EvView *view,
                         cairo_t *cr,
                         int page)
 {
-	gint       i, n_results = 0;
+	gint i, n_results = 0;
+
 	n_results = ev_view_find_get_n_results (view, page);
 
 	for (i = 0; i < n_results; i++) {
@@ -5874,7 +5875,7 @@ highlight_find_results (EvView *view,
 		GdkRectangle view_rectangle;
 		gdouble      alpha;
 
-		if (i == view->find_result && page == view->current_page) {
+		if (i == view->find_result && page == view->find_page) {
 			alpha = 0.6;
 		} else {
 			alpha = 0.3;
@@ -6669,6 +6670,7 @@ ev_view_init (EvView *view)
 	view->sizing_mode = EV_SIZING_FIT_WIDTH;
 	view->page_layout = EV_PAGE_LAYOUT_SINGLE;
 	view->pending_scroll = SCROLL_TO_KEEP_POSITION;
+	view->find_page = -1;
 	view->jump_to_find_result = TRUE;
 	view->highlight_find_results = FALSE;
 	view->pixbuf_cache_size = DEFAULT_PIXBUF_CACHE_SIZE;
@@ -6721,8 +6723,6 @@ ev_view_page_changed_cb (EvDocumentModel *model,
 	} else {
 		gtk_widget_queue_draw (GTK_WIDGET (view));
 	}
-
-	view->find_result = 0;
 }
 
 static void
@@ -6981,6 +6981,7 @@ ev_view_document_changed_cb (EvDocumentModel *model,
                 }
 
 		view->document = document ? g_object_ref (document) : NULL;
+		view->find_page = -1;
 		view->find_result = 0;
 
 		if (view->document) {
@@ -7570,7 +7571,7 @@ static void
 jump_to_find_result (EvView *view)
 {
 	gint n_results;
-	gint page = view->current_page;
+	gint page = view->find_page;
 
 	n_results = ev_view_find_get_n_results (view, page);
 
@@ -7604,20 +7605,20 @@ jump_to_find_page (EvView *view, EvViewFindDirection direction, gint shift)
 
 	for (i = 0; i < n_pages; i++) {
 		int page;
-		
+
 		if (direction == EV_VIEW_FIND_NEXT)
-			page = view->current_page + i;
+			page = view->find_page + i;
 		else
-			page = view->current_page - i;		
+			page = view->find_page - i;
 		page += shift;
-		
-		if (page >= n_pages) {
+
+		if (page >= n_pages)
 			page = page - n_pages;
-		} else if (page < 0) 
+		else if (page < 0)
 			page = page + n_pages;
 
-		if (ev_view_find_get_n_results (view, page) > 0) {
-			ev_document_model_set_page (view->model, page);
+		if (view->find_pages && view->find_pages[page]) {
+			view->find_page = page;
 			break;
 		}
 	}
@@ -7644,6 +7645,8 @@ ev_view_find_started (EvView *view, EvJobFind *job)
 
 	ev_view_find_cancel (view);
 	view->find_job = g_object_ref (job);
+	view->find_page = view->current_page;
+	view->find_result = 0;
 
 	g_signal_connect (job, "updated", G_CALLBACK (find_job_updated_cb), view);
 }
@@ -7662,14 +7665,39 @@ ev_view_find_changed (EvView *view, GList **results, gint page)
 	g_return_if_fail (view->current_page >= 0);
 
 	view->find_pages = results;
-	
+	if (view->find_page == -1)
+		view->find_page = view->current_page;
+
 	if (view->jump_to_find_result == TRUE) {
 		jump_to_find_page (view, EV_VIEW_FIND_NEXT, 0);
 		jump_to_find_result (view);
 	}
 
-	if (view->current_page == page)
+	if (view->find_page == page)
 		gtk_widget_queue_draw (GTK_WIDGET (view));
+}
+
+/**
+ * ev_view_find_restart:
+ * @view: an #EvView
+ * @page: a page index
+ *
+ * Restart the current search operation from the given @page.
+ *
+ * Since: 3.12
+ */
+void
+ev_view_find_restart (EvView *view,
+		      gint    page)
+{
+	if (!view->find_job)
+		return;
+
+	view->find_page = page;
+	view->find_result = 0;
+	jump_to_find_page (view, EV_VIEW_FIND_NEXT, 0);
+	jump_to_find_result (view);
+	gtk_widget_queue_draw (GTK_WIDGET (view));
 }
 
 void
@@ -7677,17 +7705,16 @@ ev_view_find_next (EvView *view)
 {
 	gint n_results;
 
-	n_results = ev_view_find_get_n_results (view, view->current_page);
+	n_results = ev_view_find_get_n_results (view, view->find_page);
 	view->find_result++;
 
 	if (view->find_result >= n_results) {
 		view->find_result = 0;
 		jump_to_find_page (view, EV_VIEW_FIND_NEXT, 1);
-		jump_to_find_result (view);
-	} else {
-		jump_to_find_result (view);
-		gtk_widget_queue_draw (GTK_WIDGET (view));
 	}
+
+	jump_to_find_result (view);
+	gtk_widget_queue_draw (GTK_WIDGET (view));
 }
 
 void
@@ -7697,12 +7724,11 @@ ev_view_find_previous (EvView *view)
 
 	if (view->find_result < 0) {
 		jump_to_find_page (view, EV_VIEW_FIND_PREV, -1);
-		view->find_result = MAX (0, ev_view_find_get_n_results (view, view->current_page) - 1);
-		jump_to_find_result (view);
-	} else {
-		jump_to_find_result (view);
-		gtk_widget_queue_draw (GTK_WIDGET (view));
+		view->find_result = MAX (0, ev_view_find_get_n_results (view, view->find_page) - 1);
 	}
+
+	jump_to_find_result (view);
+	gtk_widget_queue_draw (GTK_WIDGET (view));
 }
 
 /**
@@ -7718,9 +7744,13 @@ ev_view_find_previous (EvView *view)
 void
 ev_view_find_set_result (EvView *view, gint page, gint result)
 {
-	ev_document_model_set_page (view->model, page);
+	if (view->find_page == page && view->find_result == result)
+		return;
+
+	view->find_page = page;
 	view->find_result = result;
 	jump_to_find_result (view);
+	gtk_widget_queue_draw (GTK_WIDGET (view));
 }
 
 void
@@ -7742,6 +7772,8 @@ void
 ev_view_find_cancel (EvView *view)
 {
 	view->find_pages = NULL;
+	view->find_page = -1;
+	view->find_result = 0;
 
 	if (!view->find_job)
 		return;

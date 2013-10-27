@@ -72,6 +72,8 @@ void		ev_view_zoom_out	  (EvView         *view);
 /* Find */
 void            ev_view_find_started              (EvView         *view,
 						   EvJobFind      *job);
+void            ev_view_find_restart              (EvView         *view,
+                                                   gint            page);
 void            ev_view_find_next                 (EvView         *view);
 void            ev_view_find_previous             (EvView         *view);
 void            ev_view_find_set_result           (EvView         *view,

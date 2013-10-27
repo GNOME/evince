@@ -54,6 +54,8 @@ GtkWidget *ev_find_sidebar_new      (void);
 
 void       ev_find_sidebar_start    (EvFindSidebar *find_sidebar,
                                      EvJobFind     *job);
+void       ev_find_sidebar_restart  (EvFindSidebar *find_sidebar,
+                                     gint           page);
 void       ev_find_sidebar_update   (EvFindSidebar *find_sidebar);
 void       ev_find_sidebar_clear    (EvFindSidebar *find_sidebar);
 void       ev_find_sidebar_previous (EvFindSidebar *find_sidebar);

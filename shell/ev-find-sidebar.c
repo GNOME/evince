@@ -205,6 +205,26 @@ ev_find_sidebar_select_highlighted_result (EvFindSidebar *sidebar)
         g_signal_handler_unblock (selection, priv->selection_id);
 }
 
+static void
+ev_find_sidebar_highlight_first_match_of_page (EvFindSidebar *sidebar,
+                                               gint           page)
+{
+        EvFindSidebarPrivate *priv = sidebar->priv;
+        gint                  index = 0;
+        gint                  i;
+
+        if (!priv->job)
+                return;
+
+        for (i = 0; i < page; i++)
+                index += ev_job_find_get_n_results (priv->job, i);
+
+        if (priv->highlighted_result)
+                gtk_tree_path_free (priv->highlighted_result);
+        priv->highlighted_result = gtk_tree_path_new_from_indices (index, -1);
+        ev_find_sidebar_select_highlighted_result (sidebar);
+}
+
 static gchar *
 sanitized_substring (const gchar  *text,
                      gint          start,
@@ -453,18 +473,8 @@ process_matches_idle (EvFindSidebar *sidebar)
                 g_free (areas);
         } while (current_page != priv->job_current_page);
 
-        if (ev_job_is_finished (EV_JOB (priv->job)) && priv->current_page == priv->job->start_page) {
-                gint index = 0;
-                gint i;
-
-                for (i = 0; i < priv->first_match_page; i++)
-                        index += ev_job_find_get_n_results (priv->job, i);
-
-                priv->highlighted_result = gtk_tree_path_new_from_indices (index, -1);
-                ev_find_sidebar_select_highlighted_result (sidebar);
-
-                g_clear_object (&priv->job);
-        }
+        if (ev_job_is_finished (EV_JOB (priv->job)) && priv->current_page == priv->job->start_page)
+                ev_find_sidebar_highlight_first_match_of_page (sidebar, priv->first_match_page);
 
         return FALSE;
 }
@@ -511,6 +521,35 @@ ev_find_sidebar_start (EvFindSidebar *sidebar,
         priv->current_page = job->start_page;
         priv->insert_position = 0;
         g_clear_pointer (&priv->highlighted_result, (GDestroyNotify)gtk_tree_path_free);
+}
+
+void
+ev_find_sidebar_restart (EvFindSidebar *sidebar,
+                         gint           page)
+{
+        EvFindSidebarPrivate *priv = sidebar->priv;
+        gint                  first_match_page = -1;
+        gint                  i;
+
+        if (!priv->job)
+                return;
+
+        for (i = 0; i < priv->job->n_pages; i++) {
+                int index;
+
+                index = page + i;
+
+                if (index >= priv->job->n_pages)
+                        index -= priv->job->n_pages;
+
+                if (priv->job->pages[index]) {
+                        first_match_page = index;
+                        break;
+                }
+        }
+
+        if (first_match_page != -1)
+                ev_find_sidebar_highlight_first_match_of_page (sidebar, first_match_page);
 }
 
 void

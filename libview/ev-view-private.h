@@ -118,6 +118,7 @@ struct _EvView {
 	/* Find */
 	EvJobFind *find_job;
 	GList **find_pages; /* Backwards compatibility */
+	gint find_page;
 	gint find_result;
 	gboolean jump_to_find_result;
 	gboolean highlight_find_results;
