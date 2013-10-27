@@ -48,63 +48,26 @@ static EvDebugBorders ev_debug_borders = EV_DEBUG_BORDER_NONE;
 
 static GHashTable *timers = NULL;
 
-static gboolean
-ev_debug_parse_show_borders (const gchar *show_debug_borders)
-{
-        gchar **items;
-        guint   i;
-
-        if (!show_debug_borders)
-                return FALSE;
-
-        items = g_strsplit (show_debug_borders, ",", -1);
-        if (!items)
-                return FALSE;
-
-        for (i = 0; items[i]; i++) {
-                if (g_strcmp0 (items[i], "all") == 0) {
-                        ev_debug_borders = EV_DEBUG_BORDER_ALL;
-                        break;
-                }
-
-                if (g_strcmp0 (items[i], "none") == 0) {
-                        ev_debug_borders = EV_DEBUG_BORDER_NONE;
-                        break;
-                }
-
-                if (strcmp (items[i], "chars") == 0)
-                        ev_debug_borders |= EV_DEBUG_BORDER_CHARS;
-                if (strcmp (items[i], "links") == 0)
-                        ev_debug_borders |= EV_DEBUG_BORDER_LINKS;
-                if (strcmp (items[i], "forms") == 0)
-                        ev_debug_borders |= EV_DEBUG_BORDER_FORMS;
-                if (strcmp (items[i], "annots") == 0)
-                        ev_debug_borders |= EV_DEBUG_BORDER_ANNOTS;
-                if (strcmp (items[i], "images") == 0)
-                        ev_debug_borders |= EV_DEBUG_BORDER_IMAGES;
-                if (strcmp (items[i], "selections") == 0)
-                        ev_debug_borders |= EV_DEBUG_BORDER_SELECTIONS;
-        }
-
-        g_strfreev (items);
-
-        return ev_debug_borders != EV_DEBUG_BORDER_NONE;
-}
-
 static void
 debug_init (void)
 {
-	if (g_getenv ("EV_DEBUG") != NULL) {
-		/* enable all debugging */
-		ev_debug = ~EV_NO_DEBUG;
-		return;
-	}
+        const GDebugKey keys[] = {
+                { "jobs",    EV_DEBUG_JOBS         },
+                { "borders", EV_DEBUG_SHOW_BORDERS }
+        };
+        const GDebugKey border_keys[] = {
+                { "chars",      EV_DEBUG_BORDER_CHARS      },
+                { "links",      EV_DEBUG_BORDER_LINKS      },
+                { "forms",      EV_DEBUG_BORDER_FORMS      },
+                { "annots",     EV_DEBUG_BORDER_ANNOTS     },
+                { "images",     EV_DEBUG_BORDER_IMAGES     },
+                { "selections", EV_DEBUG_BORDER_SELECTIONS }
+        };
 
-	if (g_getenv ("EV_DEBUG_JOBS") != NULL)
-		ev_debug |= EV_DEBUG_JOBS;
-
-        if (ev_debug_parse_show_borders (g_getenv ("EV_DEBUG_SHOW_BORDERS")))
-                ev_debug |= EV_DEBUG_SHOW_BORDERS;
+        ev_debug = g_parse_debug_string (g_getenv ("EV_DEBUG"), keys, G_N_ELEMENTS (keys));
+        if (ev_debug & EV_DEBUG_SHOW_BORDERS)
+                ev_debug_borders = g_parse_debug_string (g_getenv ("EV_DEBUG_SHOW_BORDERS"),
+                                                         border_keys, G_N_ELEMENTS (border_keys));
 }
 
 static void
