@@ -248,7 +248,6 @@ djvu_document_load (EvDocument  *document,
 			file = g_build_filename (base, fileinfo.id, NULL);
 			if (!g_file_test (file, G_FILE_TEST_EXISTS)) {
 				missing_files = TRUE;
-				g_free (file);
 			}
 			g_free (file);
 		}
