@@ -1,4 +1,42 @@
 ================
+Evince    3.11.1
+================
+
+New features and improvements:
+
+    * Do not open single page pdfs in dual mode by default (#547098,
+      raama)
+    * Activate current focused element on space/return key press
+      (#706244, Antia Puentes, Carlos Garcia Campos)
+    * Draw focus of links and form fields on mouse press (#706244,
+      Antia Puentes)
+
+Bug fixes:
+
+    * Fix a crash in djvu backend due to a double free (#710977, José
+      Aliste)
+    * Fix annotation window focus change after creation (#668446,
+      Nelson Benitez Leon)
+    * Fix loop when iterating search results (#710778, Carlos Garcia
+      Campos)
+    * Fix content exposed to assistive technologies when document
+      changes in EvView (#709375, Joanmarie Diggs)
+    * Simplify debug code to parse env variables using
+      g_parse_debug_string() (Christian Persch)
+
+Translation updates:
+
+    * Gil Forcada (ca)
+    * Gil Forcada (ca@valencia)
+    * Dimitris Spingos (Δημήτρης Σπίγγος) (el)
+    * Arash Mousavi (fa)
+    * Rūdolfs Mazurs (lv)
+    * Kjartan Maraas (nb)
+    * Hannie Dumoleyn (nl)
+    * Theppitak Karoonboonyanan (th)
+    * Gökhan Gurbetoğlu (tr)
+
+================
 Evince    3.10.0
 ================
 
