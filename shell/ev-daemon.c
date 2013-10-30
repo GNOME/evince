@@ -203,7 +203,10 @@ document_loaded_cb (GDBusConnection *connection,
 
 	g_variant_get (parameters, "(&s)", &uri);
         doc = ev_daemon_application_find_doc (application, uri);
-        if (doc != NULL && strcmp (uri, doc->uri) == 0) {
+
+	if (doc == NULL)
+		return;
+        if (strcmp (uri, doc->uri) == 0) {
 		process_pending_invocations (application, uri, sender_name);
         }
 
