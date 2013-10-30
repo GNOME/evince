@@ -171,15 +171,17 @@ xps_document_get_info (EvDocument *document)
 		EV_DOCUMENT_INFO_PAPER_SIZE;
 
 
-	if (gxps_document_get_n_pages (xps->doc) > 0) {
-		ev_document_get_page_size (document, 0,
-					   &(info->paper_width),
-					   &(info->paper_height));
+        info->n_pages = gxps_document_get_n_pages (xps->doc);
+	if (info->n_pages > 0) {
+                GXPSPage *gxps_page;
+
+                gxps_page = gxps_document_get_page (xps->doc, 0, NULL);
+		gxps_page_get_size (gxps_page, &(info->paper_width), &(info->paper_height));
+                g_object_unref (gxps_page);
+
 		info->paper_width  = info->paper_width / 96.0f * 25.4f;
 		info->paper_height = info->paper_height / 96.0f * 25.4f;
 	}
-
-	info->n_pages = gxps_document_get_n_pages (xps->doc);
 
 	return info;
 }
