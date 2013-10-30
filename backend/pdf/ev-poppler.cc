@@ -795,12 +795,15 @@ pdf_document_get_info (EvDocument *document)
 		g_free (metadata);
 	}
 
-	info->n_pages = ev_document_get_n_pages (document);
+	info->n_pages = poppler_document_get_n_pages (PDF_DOCUMENT (document)->document);
 
 	if (info->n_pages > 0) {
-		ev_document_get_page_size (document, 0,
-					   &(info->paper_width),
-					   &(info->paper_height));
+		PopplerPage *poppler_page;
+
+		poppler_page = poppler_document_get_page (PDF_DOCUMENT (document)->document, 0);
+		poppler_page_get_size (poppler_page, &(info->paper_width), &(info->paper_height));
+		g_object_unref (poppler_page);
+
 		// Convert to mm.
 		info->paper_width = info->paper_width / 72.0f * 25.4f;
 		info->paper_height = info->paper_height / 72.0f * 25.4f;
