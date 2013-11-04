@@ -1,17 +1,18 @@
 <page xmlns="http://projectmallard.org/1.0/"
+      xmlns:its="http://www.w3.org/2005/11/its"
       type="topic" style="task"
       id="toolbar">
 
   <info>
     <link type="guide" xref="index#tips"/>
-    <desc><link xref="toolbar#view">Show, hide</link> or 
+    <desc><link xref="toolbar#view">Show, hide</link> or
 <link
 xref="toolbar#edit">edit</link> the toolbar.</desc>
 
-    <revision pkgversion="3.2" version="0.1" date="2011-09-05" status="final"/>
+    <revision pkgversion="3.10" version="0.1" date="2013-11-04" status="final"/>
     <credit type="author">
       <name>Tiffany Antopolski</name>
-      <email>tiffany@antopolski.com</email>
+      <email its:translate="no">tiffany@antopolski.com</email>
     </credit>
     <license>
       <p>Creative Commons Share Alike 3.0</p>
@@ -21,46 +22,22 @@ xref="toolbar#edit">edit</link> the toolbar.</desc>
 
 <title>Toolbar</title>
 
-<section id="view">
-<title>Show or hide the toolbar</title>
-  <p>Click <guiseq><gui>View</gui><gui>Toolbar</gui></guiseq>.</p>
-<p>
-The default toolbar contains only a basic set
-of tools: </p>
-<media type="image" src="figures/evince-toolbar-default.png" width="475"/>
-<list>
-<item><p><gui>Previous</gui> and <gui>Next</gui> for <link
-xref="movingaround#between-pages">moving</link> from page to page.</p></item>
-<item><p>A tool to adjust the <link xref="movingaround#zoom">zoom</link> level.</p></item>
-<item><p>The 'page select' <link
-xref="movingaround#between-pages">tool.</link></p></item>
-</list>
-<p>
-You can <link xref="toolbar#modify">modify</link> the toolbar if you prefer a different
-set.</p>
-</section>
-
-<section id="modify">
-<title>Add, remove and rearrange the tools in the toolbar.</title>
-<steps>
-<item><p><link xref="toolbar#view">Show</link> the toolbar.</p></item>
-<item><p>Click <guiseq><gui>Edit</gui><gui>Toolbar</gui></guiseq>.</p></item>
-</steps>
-<p>The <gui>toolbar editor</gui> contains the items that are not in the toolbar and the separator item.</p>
-<media type="image" src="figures/evince-toolbar-editor.png"
-width="475"/>
-
-<terms>
-  <item><title>To add new items to the toolbar:</title>
-        <p>drag them from the toolbar editor to the toolbar.</p></item>
-
-  <item><title>To remove items from the toolbar:</title>
-        <p>drag them from the toolbar to the toolbar editor.</p></item>
-
-   <item><title>To rearrange items on the toolbar:</title>
-         <p>drag them to their new position on the toolbar.</p></item>
-</terms>
-<p>When you have finish editing the toolbar, click <gui>Close</gui> in the toolbar editor window.</p>
-</section>
+<p>The toolbar contains:</p>
+  <list>
+    <item>
+      <p><gui>∧</gui> and <gui>∨</gui> for 
+      <link xref="movingaround#between-pages">moving</link> 
+      from page to page.</p>
+    </item>
+    <item>
+      <p>The 'page select' <link
+      xref="movingaround#between-pages">tool.</link></p>
+    </item>
+    <item>
+      <p><gui>&lt;</gui> and <gui>&gt;</gui> for moving between history items.</p>
+    </item>
+    <item>
+      <p>A tool to adjust the <link xref="movingaround#zoom">zoom</link> level.</p>
+    </item>
+  </list>
 </page>
-

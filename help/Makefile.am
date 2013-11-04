@@ -9,8 +9,6 @@ HELP_MEDIA = \
 	figures/annotations-navigate.png	\
 	figures/annotations-nav-to-page.png	\
 	figures/evincelogo.png			\
-	figures/evince-toolbar-default.png	\
-	figures/evince-toolbar-editor.png	\
 	figures/evince-trail.png		\
 	figures/gconf-editor.png		\
 	figures/list-add-tabs.png		\
