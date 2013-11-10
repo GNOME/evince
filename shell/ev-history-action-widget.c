@@ -189,18 +189,6 @@ button_pressed (GtkWidget             *button,
         return GDK_EVENT_PROPAGATE;
 }
 
-static gint
-get_icon_margin (EvHistoryActionWidget *history_widget)
-{
-        gint toolbar_size_px, menu_size_px;
-        GtkSettings *settings = gtk_widget_get_settings (GTK_WIDGET (history_widget));
-
-        gtk_icon_size_lookup_for_settings (settings, GTK_ICON_SIZE_MENU, &menu_size_px, NULL);
-        gtk_icon_size_lookup_for_settings (settings, GTK_ICON_SIZE_LARGE_TOOLBAR, &toolbar_size_px, NULL);
-
-        return (gint)floor ((toolbar_size_px - menu_size_px) / 2.0);
-}
-
 static GtkWidget *
 ev_history_action_widget_create_button (EvHistoryActionWidget *history_widget,
                                         EvHistoryActionButton  action_button)
@@ -214,6 +202,7 @@ ev_history_action_widget_create_button (EvHistoryActionWidget *history_widget,
         rtl = (gtk_widget_get_direction (GTK_WIDGET (history_widget)) == GTK_TEXT_DIR_RTL);
 
         button = gtk_button_new ();
+        gtk_widget_set_valign (button, GTK_ALIGN_CENTER);
         g_signal_connect (button, "clicked",
                           G_CALLBACK (button_clicked),
                           history_widget);
@@ -233,7 +222,6 @@ ev_history_action_widget_create_button (EvHistoryActionWidget *history_widget,
         }
 
         image = gtk_image_new ();
-        g_object_set (image, "margin", get_icon_margin (history_widget), NULL);
         gtk_button_set_image (GTK_BUTTON (button), image);
         gtk_image_set_from_icon_name (GTK_IMAGE (image), icon_name, GTK_ICON_SIZE_MENU);
         gtk_widget_set_tooltip_text (button, tooltip_text);
