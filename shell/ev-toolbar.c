@@ -61,32 +61,6 @@ ev_toolbar_set_property (GObject      *object,
         }
 }
 
-static gint
-get_icon_margin (EvToolbar *ev_toolbar)
-{
-        GtkIconSize toolbar_size;
-        gint toolbar_size_px, menu_size_px;
-        GtkSettings *settings = gtk_widget_get_settings (GTK_WIDGET (ev_toolbar));
-
-        toolbar_size = gtk_toolbar_get_icon_size (GTK_TOOLBAR (ev_toolbar));
-
-        gtk_icon_size_lookup_for_settings (settings, GTK_ICON_SIZE_MENU, &menu_size_px, NULL);
-        gtk_icon_size_lookup_for_settings (settings, toolbar_size, &toolbar_size_px, NULL);
-
-        return (gint)floor ((toolbar_size_px - menu_size_px) / 2.0);
-}
-
-static void
-ev_toolbar_set_button_image (EvToolbar *ev_toolbar,
-                             GtkButton *button)
-{
-        GtkWidget *image;
-
-        image = gtk_image_new ();
-        g_object_set (image, "margin", get_icon_margin (ev_toolbar), NULL);
-        gtk_button_set_image (button, image);
-}
-
 static void
 ev_toolbar_set_button_action (EvToolbar *ev_toolbar,
                               GtkButton *button,
@@ -104,7 +78,8 @@ ev_toolbar_create_button (EvToolbar *ev_toolbar,
 {
         GtkWidget *button = gtk_button_new ();
 
-        ev_toolbar_set_button_image (ev_toolbar, GTK_BUTTON (button));
+        gtk_widget_set_valign (button, GTK_ALIGN_CENTER);
+        gtk_button_set_image (GTK_BUTTON (button), gtk_image_new ());
         ev_toolbar_set_button_action (ev_toolbar, GTK_BUTTON (button), action);
 
         return button;
@@ -116,7 +91,8 @@ ev_toolbar_create_toggle_button (EvToolbar *ev_toolbar,
 {
         GtkWidget *button = gtk_toggle_button_new ();
 
-        ev_toolbar_set_button_image (ev_toolbar, GTK_BUTTON (button));
+        gtk_widget_set_valign (button, GTK_ALIGN_CENTER);
+        gtk_button_set_image (GTK_BUTTON (button), gtk_image_new ());
         ev_toolbar_set_button_action (ev_toolbar, GTK_BUTTON (button), action);
 
         return button;
@@ -130,7 +106,8 @@ ev_toolbar_create_menu_button (EvToolbar   *ev_toolbar,
 {
         GtkWidget *button = gtk_menu_button_new ();
 
-        ev_toolbar_set_button_image (ev_toolbar, GTK_BUTTON (button));
+        gtk_widget_set_valign (button, GTK_ALIGN_CENTER);
+        gtk_button_set_image (GTK_BUTTON (button), gtk_image_new ());
         gtk_image_set_from_icon_name (GTK_IMAGE (gtk_button_get_image (GTK_BUTTON (button))),
                                       icon_name, GTK_ICON_SIZE_MENU);
         gtk_widget_set_halign (menu, menu_align);
