@@ -21,9 +21,9 @@ msgstr ""
 "Project-Id-Version: evince\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evince&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2013-09-17 16:31+0000\n"
-"PO-Revision-Date: 2013-09-17 13:57-0300\n"
-"Last-Translator: Enrico Nicoletto <liverig@gmail.com>\n"
+"POT-Creation-Date: 2013-11-10 11:34+0000\n"
+"PO-Revision-Date: 2013-11-10 13:47-0300\n"
+"Last-Translator: Rafael Ferreira <rafael.f.f1@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <gnome-pt_br-list@gnome.org>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
@@ -91,7 +91,7 @@ msgstr "Revistas em quadrinho"
 msgid "DjVu document has incorrect format"
 msgstr "O documento DjVu tem um formato incorreto"
 
-#: ../backend/djvu/djvu-document.c:263
+#: ../backend/djvu/djvu-document.c:262
 msgid ""
 "The document is composed of several files. One or more of these files cannot "
 "be accessed."
@@ -116,63 +116,63 @@ msgid "This work is in the Public Domain"
 msgstr "Este trabalho está em Domínio Público"
 
 #. translators: this is the document security state
-#: ../backend/pdf/ev-poppler.cc:889 ../backend/pdf/ev-poppler.cc:895
+#: ../backend/pdf/ev-poppler.cc:892 ../backend/pdf/ev-poppler.cc:898
 msgid "Yes"
 msgstr "Sim"
 
 #. translators: this is the document security state
-#: ../backend/pdf/ev-poppler.cc:892 ../backend/pdf/ev-poppler.cc:895
+#: ../backend/pdf/ev-poppler.cc:895 ../backend/pdf/ev-poppler.cc:898
 msgid "No"
 msgstr "Não"
 
-#: ../backend/pdf/ev-poppler.cc:1025
+#: ../backend/pdf/ev-poppler.cc:1028
 msgid "Type 1"
 msgstr "Tipo 1"
 
-#: ../backend/pdf/ev-poppler.cc:1027
+#: ../backend/pdf/ev-poppler.cc:1030
 msgid "Type 1C"
 msgstr "Tipo 1C"
 
-#: ../backend/pdf/ev-poppler.cc:1029
+#: ../backend/pdf/ev-poppler.cc:1032
 msgid "Type 3"
 msgstr "Tipo 3"
 
-#: ../backend/pdf/ev-poppler.cc:1031
+#: ../backend/pdf/ev-poppler.cc:1034
 msgid "TrueType"
 msgstr "TrueType"
 
-#: ../backend/pdf/ev-poppler.cc:1033
+#: ../backend/pdf/ev-poppler.cc:1036
 msgid "Type 1 (CID)"
 msgstr "Tipo 1 (CID)"
 
-#: ../backend/pdf/ev-poppler.cc:1035
+#: ../backend/pdf/ev-poppler.cc:1038
 msgid "Type 1C (CID)"
 msgstr "Tipo 1C (CID)"
 
-#: ../backend/pdf/ev-poppler.cc:1037
+#: ../backend/pdf/ev-poppler.cc:1040
 msgid "TrueType (CID)"
 msgstr "TrueType (CID)"
 
-#: ../backend/pdf/ev-poppler.cc:1039
+#: ../backend/pdf/ev-poppler.cc:1042
 msgid "Unknown font type"
 msgstr "Tipo de fonte desconhecido"
 
 # Standard 14 fonts: vide PDF no en.wikipedia.org
-#: ../backend/pdf/ev-poppler.cc:1083
+#: ../backend/pdf/ev-poppler.cc:1086
 msgid ""
 "This document contains non-embedded fonts that are not from the PDF Standard "
 "14 fonts. If the substitute fonts selected by fontconfig are not the same as "
 "the fonts used to create the PDF, the rendering may not be correct."
 msgstr ""
-"Este documento contém fontes não embutidas que não são das 14 fontes padrões "
+"Este documento contém fontes não embutidas que não são das 14 fontes padrão "
 "do PDF. Se as fontes substitutas selecionadas pelo fontconfig não forem as "
 "mesmas que as usadas para criar o PDF, a renderização pode não ficar correta."
 
-#: ../backend/pdf/ev-poppler.cc:1088
+#: ../backend/pdf/ev-poppler.cc:1091
 msgid "All fonts are either standard or embedded."
-msgstr "Todas as fontes são padrões ou embutidas."
+msgstr "Todas as fontes são padrão ou embutidas."
 
-#: ../backend/pdf/ev-poppler.cc:1120
+#: ../backend/pdf/ev-poppler.cc:1123
 msgid "No name"
 msgstr "Sem nome"
 
@@ -186,20 +186,20 @@ msgstr "Sem nome"
 #. Author: None
 #. Keywords: None
 #.
-#: ../backend/pdf/ev-poppler.cc:1129 ../libview/ev-print-operation.c:1907
+#: ../backend/pdf/ev-poppler.cc:1132 ../libview/ev-print-operation.c:1907
 #: ../properties/ev-properties-view.c:192
 msgid "None"
 msgstr "Nenhum"
 
-#: ../backend/pdf/ev-poppler.cc:1137
+#: ../backend/pdf/ev-poppler.cc:1140
 msgid "Embedded subset"
 msgstr "Subconjunto embutido"
 
-#: ../backend/pdf/ev-poppler.cc:1139
+#: ../backend/pdf/ev-poppler.cc:1142
 msgid "Embedded"
 msgstr "Embutido"
 
-#: ../backend/pdf/ev-poppler.cc:1141
+#: ../backend/pdf/ev-poppler.cc:1144
 msgid "Not embedded"
 msgstr "Não embutido"
 
@@ -208,24 +208,24 @@ msgstr "Não embutido"
 #. * type. Example:
 #. * "Type 1 (One of the Standard 14 Fonts)"
 #.
-#: ../backend/pdf/ev-poppler.cc:1148
+#: ../backend/pdf/ev-poppler.cc:1151
 msgid " (One of the Standard 14 Fonts)"
-msgstr " (Uma das 14 fontes padrões)"
+msgstr " (Uma das 14 fontes padrão)"
 
 #. Translators: string starting with a space
 #. * because it is directly appended to the font
 #. * type. Example:
 #. * "TrueType (Not one of the Standard 14 Fonts)"
 #.
-#: ../backend/pdf/ev-poppler.cc:1155
+#: ../backend/pdf/ev-poppler.cc:1158
 msgid " (Not one of the Standard 14 Fonts)"
-msgstr " (Não é uma das 14 fontes padrões)"
+msgstr " (Não é uma das 14 fontes padrão)"
 
-#: ../backend/pdf/ev-poppler.cc:1162
+#: ../backend/pdf/ev-poppler.cc:1165
 msgid "Encoding"
 msgstr "Codificação"
 
-#: ../backend/pdf/ev-poppler.cc:1163
+#: ../backend/pdf/ev-poppler.cc:1166
 msgid "Substituting with"
 msgstr "Substituindo por"
 
@@ -905,11 +905,11 @@ msgstr "Abrir"
 msgid "Close"
 msgstr "Fechar"
 
-#: ../shell/ev-history-action-widget.c:227
+#: ../shell/ev-history-action-widget.c:216
 msgid "Go to previous history item"
 msgstr "Ir para o item de histórico anterior"
 
-#: ../shell/ev-history-action-widget.c:231
+#: ../shell/ev-history-action-widget.c:220
 msgid "Go to next history item"
 msgstr "Ir para o próximo item de histórico"
 
