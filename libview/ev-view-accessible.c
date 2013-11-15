@@ -67,6 +67,8 @@ struct _EvViewAccessiblePrivate {
 
 	/* AtkHypertext */
 	GHashTable    *links;
+
+	gint previous_cursor_page;
 };
 
 G_DEFINE_TYPE_WITH_CODE (EvViewAccessible, ev_view_accessible, GTK_TYPE_CONTAINER_ACCESSIBLE,
@@ -74,6 +76,12 @@ G_DEFINE_TYPE_WITH_CODE (EvViewAccessible, ev_view_accessible, GTK_TYPE_CONTAINE
 			 G_IMPLEMENT_INTERFACE (ATK_TYPE_ACTION, ev_view_accessible_action_iface_init)
 			 G_IMPLEMENT_INTERFACE (ATK_TYPE_HYPERTEXT, ev_view_accessible_hypertext_iface_init)
 	)
+
+static gint
+get_relevant_page (EvView *view)
+{
+	return ev_view_is_caret_navigation_enabled (view) ? view->cursor_page : view->current_page;
+}
 
 static void
 clear_cache (EvViewAccessible *accessible)
@@ -152,7 +160,7 @@ ev_view_accessible_get_text_buffer (EvViewAccessible *accessible, EvView *view)
 	}
 
 	priv->buffer = gtk_text_buffer_new (NULL);
-	retval = ev_page_cache_get_text (page_cache, view->current_page);
+	retval = ev_page_cache_get_text (page_cache, get_relevant_page (view));
 	if (retval)
 		gtk_text_buffer_set_text (priv->buffer, retval, -1);
 
@@ -325,12 +333,8 @@ ev_view_accessible_get_caret_offset (AtkText *text)
 
 	view = EV_VIEW (widget);
 
-	if (view->caret_enabled) {
-		if (view->cursor_page == view->current_page)
-			return view->cursor_offset;
-		else
-			return -1;
-	}
+	if (view->caret_enabled)
+		return view->cursor_offset;
 
 	buffer = ev_view_accessible_get_text_buffer (EV_VIEW_ACCESSIBLE (text), EV_VIEW (widget));
 	if (!buffer)
@@ -477,11 +481,11 @@ ev_view_accessible_get_run_attributes (AtkText *text,
 	if (!view->page_cache)
 		return NULL;
 
-	page_text = ev_page_cache_get_text (view->page_cache, view->current_page);
+	page_text = ev_page_cache_get_text (view->page_cache, get_relevant_page (view));
 	if (!page_text)
 		return NULL;
 
-	attrs = ev_page_cache_get_text_attrs (view->page_cache, view->current_page);
+	attrs = ev_page_cache_get_text_attrs (view->page_cache, get_relevant_page (view));
 	if (!attrs)
 		return NULL;
 
@@ -526,12 +530,12 @@ ev_view_accessible_get_character_extents (AtkText      *text,
 	if (!view->page_cache)
 		return;
 
-	ev_page_cache_get_text_layout (view->page_cache, view->current_page, &areas, &n_areas);
+	ev_page_cache_get_text_layout (view->page_cache, get_relevant_page (view), &areas, &n_areas);
 	if (!areas || offset >= n_areas)
 		return;
 
 	doc_rect = areas + offset;
-	_ev_view_transform_doc_rect_to_view_rect (view, view->current_page, doc_rect, &view_rect);
+	_ev_view_transform_doc_rect_to_view_rect (view, get_relevant_page (view), doc_rect, &view_rect);
 	view_rect.x -= view->scroll_x;
 	view_rect.y -= view->scroll_y;
 
@@ -582,7 +586,7 @@ ev_view_accessible_get_offset_at_point (AtkText      *text,
 	if (!view->page_cache)
 		return -1;
 
-	ev_page_cache_get_text_layout (view->page_cache, view->current_page, &areas, &n_areas);
+	ev_page_cache_get_text_layout (view->page_cache, get_relevant_page (view), &areas, &n_areas);
 	if (!areas)
 		return -1;
 
@@ -601,7 +605,7 @@ ev_view_accessible_get_offset_at_point (AtkText      *text,
 		view_point.y -= y_window;
 	}
 
-	ev_view_get_page_extents (view, view->current_page, &page_area, &border);
+	ev_view_get_page_extents (view, get_relevant_page (view), &page_area, &border);
 	_ev_view_transform_view_point_to_doc_point (view, &view_point, &page_area, &doc_x, &doc_y);
 
 	for (i = 0; i < n_areas; i++) {
@@ -700,7 +704,7 @@ ev_view_accessible_get_selection (AtkText *text,
 		EvViewSelection *selection = (EvViewSelection *)l->data;
 		gint start, end;
 
-		if (selection->page != view->current_page)
+		if (selection->page != get_relevant_page (view))
 			continue;
 
 		if (get_selection_bounds (view, selection, &start, &end) && start != end) {
@@ -1016,7 +1020,7 @@ ev_view_accessible_get_link (AtkHypertext *hypertext,
 	if (atk_link)
 		return atk_hyperlink_impl_get_hyperlink (ATK_HYPERLINK_IMPL (atk_link));
 
-	link_mapping = ev_page_cache_get_link_mapping (view->page_cache, view->current_page);
+	link_mapping = ev_page_cache_get_link_mapping (view->page_cache, get_relevant_page (view));
 	if (!link_mapping)
 		return NULL;
 
@@ -1049,7 +1053,7 @@ ev_view_accessible_get_n_links (AtkHypertext *hypertext)
 	if (!EV_IS_DOCUMENT_LINKS (view->document))
 		return 0;
 
-	link_mapping = ev_page_cache_get_link_mapping (view->page_cache, view->current_page);
+	link_mapping = ev_page_cache_get_link_mapping (view->page_cache, get_relevant_page (view));
 
 	return link_mapping ? ev_mapping_list_length (link_mapping) : 0;
 }
@@ -1089,6 +1093,13 @@ ev_view_accessible_cursor_moved (EvView *view,
 				 gint offset,
 				 EvViewAccessible *accessible)
 {
+	EvViewAccessiblePrivate* priv = accessible->priv;
+
+	if (priv->previous_cursor_page != page) {
+		priv->previous_cursor_page = page;
+		clear_cache (accessible);
+	}
+
 	g_signal_emit_by_name (accessible, "text-caret-moved", offset);
 }
 
