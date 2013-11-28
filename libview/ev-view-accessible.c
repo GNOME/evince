@@ -33,6 +33,7 @@
 static void ev_view_accessible_text_iface_init      (AtkTextIface      *iface);
 static void ev_view_accessible_action_iface_init    (AtkActionIface    *iface);
 static void ev_view_accessible_hypertext_iface_init (AtkHypertextIface *iface);
+static void ev_view_accessible_document_iface_init  (AtkDocumentIface  *iface);
 
 enum {
 	ACTION_SCROLL_UP,
@@ -75,6 +76,7 @@ G_DEFINE_TYPE_WITH_CODE (EvViewAccessible, ev_view_accessible, GTK_TYPE_CONTAINE
 			 G_IMPLEMENT_INTERFACE (ATK_TYPE_TEXT, ev_view_accessible_text_iface_init)
 			 G_IMPLEMENT_INTERFACE (ATK_TYPE_ACTION, ev_view_accessible_action_iface_init)
 			 G_IMPLEMENT_INTERFACE (ATK_TYPE_HYPERTEXT, ev_view_accessible_hypertext_iface_init)
+			 G_IMPLEMENT_INTERFACE (ATK_TYPE_DOCUMENT, ev_view_accessible_document_iface_init)
 	)
 
 static gint
@@ -854,6 +856,46 @@ ev_view_accessible_set_selection (AtkText *text,
 	return retval;
 }
 
+#if ATK_CHECK_VERSION (2, 11, 3)
+static gint
+ev_view_accessible_get_page_count (AtkDocument *atk_document)
+{
+	EvDocument *ev_document;
+	EvViewAccessiblePrivate* priv;
+
+	g_return_val_if_fail (EV_IS_VIEW_ACCESSIBLE (atk_document), -1);
+
+	priv = EV_VIEW_ACCESSIBLE (atk_document)->priv;
+	ev_document = ev_document_model_get_document (priv->model);
+
+	return ev_document == NULL ? -1 : ev_document_get_n_pages (ev_document);
+}
+
+static gint
+ev_view_accessible_get_current_page_number (AtkDocument *atk_document)
+{
+	GtkWidget *widget;
+
+	g_return_val_if_fail (EV_IS_VIEW_ACCESSIBLE (atk_document), -1);
+
+	widget = gtk_accessible_get_widget (GTK_ACCESSIBLE (atk_document));
+	if (widget == NULL)
+		return -1;
+
+	/* +1 as user starts to count on 1, but evince starts on 0 */
+	return get_relevant_page (EV_VIEW (widget)) + 1;
+}
+#endif
+
+static void
+ev_view_accessible_document_iface_init (AtkDocumentIface *iface)
+{
+#if ATK_CHECK_VERSION (2, 11, 3)
+	iface->get_current_page_number = ev_view_accessible_get_current_page_number;
+	iface->get_page_count = ev_view_accessible_get_page_count;
+#endif
+}
+
 static void
 ev_view_accessible_text_iface_init (AtkTextIface * iface)
 {
@@ -1098,6 +1140,10 @@ ev_view_accessible_cursor_moved (EvView *view,
 	if (priv->previous_cursor_page != page) {
 		priv->previous_cursor_page = page;
 		clear_cache (accessible);
+#if ATK_CHECK_VERSION (2, 11, 2)
+		/* +1 as user start to count on 1, but evince starts on 0 */
+		g_signal_emit_by_name (accessible, "page-changed", page + 1);
+#endif
 	}
 
 	g_signal_emit_by_name (accessible, "text-caret-moved", offset);
@@ -1117,6 +1163,14 @@ page_changed_cb (EvDocumentModel  *model,
 		 EvViewAccessible *accessible)
 {
 	clear_cache (accessible);
+
+#if ATK_CHECK_VERSION (2, 11, 2)
+	EvView *view;
+
+	view = EV_VIEW (gtk_accessible_get_widget (GTK_ACCESSIBLE (accessible)));
+	if (!ev_view_is_caret_navigation_enabled (view))
+		g_signal_emit_by_name (accessible, "page-changed", new_page + 1);
+#endif
 }
 
 static void
@@ -1130,6 +1184,15 @@ document_changed_cb (EvDocumentModel  *model,
 		return;
 
 	clear_cache (accessible);
+
+	/* Inside this callback the document is already loaded. We
+	 * don't have here an "just before" and "just after"
+	 * signal. We emit both in a row, as usual ATs uses reload to
+	 * know that current content has changed, and load-complete to
+	 * know that the content is already available.
+	 */
+	g_signal_emit_by_name (accessible, "reload");
+	g_signal_emit_by_name (accessible, "load-complete");
 }
 
 void
