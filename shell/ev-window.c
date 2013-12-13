@@ -234,6 +234,9 @@ struct _EvWindowPrivate {
 
 	/* Caret navigation */
 	GtkWidget *ask_caret_navigation_check;
+
+	/* Send to */
+	gboolean has_mailto_handler;
 };
 
 #define EV_WINDOW_GET_PRIVATE(object) \
@@ -466,7 +469,8 @@ ev_window_setup_action_sensitivity (EvWindow *ev_window)
 	ev_window_set_action_sensitive (ev_window, "FilePrint", has_pages && ok_to_print);
 	ev_window_set_action_sensitive (ev_window, "FileProperties", has_document && has_properties);
 	ev_window_set_action_sensitive (ev_window, "FileOpenContainingFolder", has_document);
-	ev_window_set_action_sensitive (ev_window, "FileSendTo", has_document);
+	ev_window_set_action_sensitive (ev_window, "FileSendTo",
+					has_document && ev_window->priv->has_mailto_handler);
 	ev_window_set_action_sensitive (ev_window, "ViewPresentation", has_document);
 
         /* Edit menu */
@@ -7306,6 +7310,7 @@ ev_window_init (EvWindow *ev_window)
 	GDBusConnection *connection;
 	static gint window_id = 0;
 #endif
+	GAppInfo *app_info;
 
 	g_signal_connect (ev_window, "configure_event",
 			  G_CALLBACK (window_configure_event_cb), NULL);
@@ -7355,6 +7360,10 @@ ev_window_init (EvWindow *ev_window)
 	g_signal_connect (ev_window->priv->history, "activate-link",
 			  G_CALLBACK (activate_link_cb),
 			  ev_window);
+
+	app_info = g_app_info_get_default_for_uri_scheme ("mailto");
+	ev_window->priv->has_mailto_handler = app_info != NULL;
+	g_clear_object (&app_info);
 
 	ev_window->priv->main_box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 	gtk_container_add (GTK_CONTAINER (ev_window), ev_window->priv->main_box);
