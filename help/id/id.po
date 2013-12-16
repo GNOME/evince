@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: evince master\n"
-"POT-Creation-Date: 2013-11-04 10:29+0000\n"
-"PO-Revision-Date: 2013-11-05 16:14+0700\n"
+"POT-Creation-Date: 2013-11-29 14:28+0000\n"
+"PO-Revision-Date: 2013-12-16 19:12+0700\n"
 "Last-Translator: Andika Triwidada <andika@gmail.com>\n"
 "Language-Team: Indonesian <gnome@i15n.org>\n"
 "Language: id\n"
@@ -87,7 +87,7 @@ msgstr "Phil Bull"
 #: C/singlesided-5-8pages.page:12 C/singlesided-9-12pages.page:12
 #: C/singlesided-npages.page:12 C/synctex-beamer.page:11
 #: C/synctex-compile.page:11 C/synctex-editors.page:11 C/synctex.page:11
-#: C/synctex-search.page:11 C/synctex-support.page:11 C/toolbar.page:13
+#: C/synctex-search.page:11 C/synctex-support.page:11 C/toolbar.page:14
 #: C/translate.page:10
 msgid "Tiffany Antopolski"
 msgstr "Tiffany Antopolski"
@@ -116,7 +116,7 @@ msgstr "Tiffany Antopolski"
 #: C/singlesided-9-12pages.page:16 C/singlesided-npages.page:16
 #: C/synctex-beamer.page:15 C/synctex-compile.page:15
 #: C/synctex-editors.page:15 C/synctex.page:15 C/synctex-search.page:15
-#: C/synctex-support.page:15 C/textselection.page:15 C/toolbar.page:17
+#: C/synctex-support.page:15 C/textselection.page:15 C/toolbar.page:18
 #: C/translate.page:19
 msgid "Creative Commons Share Alike 3.0"
 msgstr "Creative Commons Share Alike 3.0"
@@ -4550,32 +4550,8 @@ msgstr ""
 "mengklik <guiseq><gui>Aktivitas</gui><gui>Aplikasi</gui><gui>Aksesori</"
 "gui><gui>gedit</gui></guiseq>."
 
-#. (itstool) path: media
-#. This is a reference to an external file such as an image or video. When
-#. the file changes, the md5 hash will change to let you know you need to
-#. update your localized copy. The msgstr is not used at all. Set it to
-#. whatever you like once you have updated your copy of the file.
-#: C/toolbar.page:30
-msgctxt "_"
-msgid ""
-"external ref='figures/evince-toolbar-default.png' "
-"md5='2a826732c770c08b11684e28e259bb31'"
-msgstr "-"
-
-#. (itstool) path: media
-#. This is a reference to an external file such as an image or video. When
-#. the file changes, the md5 hash will change to let you know you need to
-#. update your localized copy. The msgstr is not used at all. Set it to
-#. whatever you like once you have updated your copy of the file.
-#: C/toolbar.page:51
-msgctxt "_"
-msgid ""
-"external ref='figures/evince-toolbar-editor.png' "
-"md5='e6c66f764c39ab5ba01441d970425cd9'"
-msgstr "-"
-
 #. (itstool) path: info/desc
-#: C/toolbar.page:7
+#: C/toolbar.page:8
 msgid ""
 "<link xref=\"toolbar#view\">Show, hide</link> or <link xref=\"toolbar#edit"
 "\">edit</link> the toolbar."
@@ -4584,119 +4560,43 @@ msgstr ""
 "\"toolbar#edit\">sunting</link> bilah alat."
 
 #. (itstool) path: page/title
-#: C/toolbar.page:22
+#: C/toolbar.page:23
 msgid "Toolbar"
 msgstr "Bilah alat"
 
-#. (itstool) path: section/title
+#. (itstool) path: page/p
 #: C/toolbar.page:25
-msgid "Show or hide the toolbar"
-msgstr "Menampilkan atau menyembunyikan bilah alat"
-
-#. (itstool) path: section/p
-#: C/toolbar.page:26
-msgid "Click <guiseq><gui>View</gui><gui>Toolbar</gui></guiseq>."
-msgstr "Klik <guiseq><gui>Tilik</gui><gui>Bilah alat</gui></guiseq>."
-
-#. (itstool) path: section/p
-#: C/toolbar.page:27
-msgid "The default toolbar contains only a basic set of tools:"
-msgstr "Bilah alat baku memuat hanya set alat dasar:"
+msgid "The toolbar contains:"
+msgstr "Bilah alat memuat:"
 
 #. (itstool) path: item/p
-#: C/toolbar.page:32
+#: C/toolbar.page:28
 msgid ""
-"<gui>Previous</gui> and <gui>Next</gui> for <link xref="
-"\"movingaround#between-pages\">moving</link> from page to page."
+"<gui>∧</gui> and <gui>∨</gui> for <link xref=\"movingaround#between-pages"
+"\">moving</link> from page to page."
 msgstr ""
-"<gui>Sebelumnya</gui> dan <gui>Selanjutnya</gui> untuk <link xref="
-"\"movingaround#between-pages\">pindah</link> dari halaman ke halaman."
+"<gui>^</gui> dan <gui>v</gui> untuk <link xref=\"movingaround#between-pages"
+"\">pindah</link> dari halaman ke halaman."
 
 #. (itstool) path: item/p
-#: C/toolbar.page:34
+#: C/toolbar.page:33
+msgid ""
+"The 'page select' <link xref=\"movingaround#between-pages\">tool.</link>"
+msgstr "<link xref=\"movingaround#between-pages\">Alat</link> 'pilih halaman'."
+
+#. (itstool) path: item/p
+#: C/toolbar.page:37
+msgid "<gui>&lt;</gui> and <gui>&gt;</gui> for moving between history items."
+msgstr ""
+"<gui>&lt;</gui> dan <gui>&gt;</gui> untuk berpindah antar butir riwayat."
+
+#. (itstool) path: item/p
+#: C/toolbar.page:40
 msgid ""
 "A tool to adjust the <link xref=\"movingaround#zoom\">zoom</link> level."
 msgstr ""
 "Alat untuk mengatur tingkat <link xref=\"movingaround#zoom\">zum/pembesaran</"
 "link>."
-
-#. (itstool) path: item/p
-#: C/toolbar.page:35
-msgid ""
-"The 'page select' <link xref=\"movingaround#between-pages\">tool.</link>"
-msgstr "<link xref=\"movingaround#between-pages\">Alat</link> 'pilih halaman'."
-
-#. (itstool) path: section/p
-#: C/toolbar.page:38
-msgid ""
-"You can <link xref=\"toolbar#modify\">modify</link> the toolbar if you "
-"prefer a different set."
-msgstr ""
-"Anda dapat <link xref=\"toolbar#modify\">mengubah</link> bilah alat bila "
-"Anda lebih suka set yang berbeda."
-
-#. (itstool) path: section/title
-#: C/toolbar.page:44
-msgid "Add, remove and rearrange the tools in the toolbar."
-msgstr "Tambah, hapus, dan atur ulang alat dalam bilah alat."
-
-#. (itstool) path: item/p
-#: C/toolbar.page:46
-msgid "<link xref=\"toolbar#view\">Show</link> the toolbar."
-msgstr "<link xref=\"toolbar#view\">Tampilkan</link> bilah alat."
-
-#. (itstool) path: item/p
-#: C/toolbar.page:47
-msgid "Click <guiseq><gui>Edit</gui><gui>Toolbar</gui></guiseq>."
-msgstr "Klik <guiseq><gui>Sunting</gui><gui>Bilah alat</gui></guiseq>."
-
-#. (itstool) path: section/p
-#: C/toolbar.page:49
-msgid ""
-"The <gui>toolbar editor</gui> contains the items that are not in the toolbar "
-"and the separator item."
-msgstr ""
-"<gui>Penyunting bilah alat</gui> memuat butir-butir yang tak berada dalam "
-"bilah alat dan butir pemisah."
-
-#. (itstool) path: item/title
-#: C/toolbar.page:54
-msgid "To add new items to the toolbar:"
-msgstr "Untuk menambah butir baru ke bilah alat:"
-
-#. (itstool) path: item/p
-#: C/toolbar.page:55
-msgid "drag them from the toolbar editor to the toolbar."
-msgstr "seret mereka dari penyunting bilah alat ke bilah alat."
-
-#. (itstool) path: item/title
-#: C/toolbar.page:57
-msgid "To remove items from the toolbar:"
-msgstr "Untuk menghapus butir dari bilah alat:"
-
-#. (itstool) path: item/p
-#: C/toolbar.page:58
-msgid "drag them from the toolbar to the toolbar editor."
-msgstr "seret mereka dari bilah alat ke penyunting bilah alat."
-
-#. (itstool) path: item/title
-#: C/toolbar.page:60
-msgid "To rearrange items on the toolbar:"
-msgstr "Untuk mengatur ulang butir pada bilah alat:"
-
-#. (itstool) path: item/p
-#: C/toolbar.page:61
-msgid "drag them to their new position on the toolbar."
-msgstr "seret mereka ke posisi barunya pada bilah alat."
-
-#. (itstool) path: section/p
-#: C/toolbar.page:63
-msgid ""
-"When you have finish editing the toolbar, click <gui>Close</gui> in the "
-"toolbar editor window."
-msgstr ""
-"Ketika Anda telah selesai menyunting bilah alat, klik <gui>Tutup</gui> dalam "
-"jendela penyunting bilah alat."
 
 #. (itstool) path: info/desc
 #: C/translate.page:7
@@ -4770,4 +4670,3 @@ msgstr ""
 "Sebagai alternatif, Anda dapat mengubungi Tim Internasionalisasi memakai "
 "<link href=\"http://mail.gnome.org/mailman/listinfo/gnome-i18n\">milis</"
 "link> mereka."
-
