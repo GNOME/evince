@@ -1013,9 +1013,49 @@ ev_application_startup (GApplication *gapplication)
                 { "about", app_about_cb, NULL, NULL, NULL }
         };
 
+        const gchar *action_accels[] = {
+          "win.open",                   "<Ctrl>O", NULL,
+          "win.open-copy",              "<Ctrl>N", NULL,
+          "win.save-copy",              "<Ctrl>S", NULL,
+          "win.print",                  "<Ctrl>P", NULL,
+          "win.copy",                   "<Ctrl>C", "<Ctrl>Insert", NULL,
+          "win.select-all",             "<Ctrl>A", NULL,
+          "win.save-settings",          "<Ctrl>T", NULL,
+          "win.go-first-page",          "<Ctrl>Home", NULL,
+          "win.go-last-page",           "<Ctrl>End", NULL,
+          "win.add-bookmark",           "<Ctrl>D", NULL,
+          "win.close",                  "<Ctrl>W", NULL,
+          "win.escape",                 "Escape", NULL,
+          "win.find",                   "<Ctrl>F", "slash", NULL,
+          "win.find-next",              "<Ctrl>G", NULL,
+          "win.find-previous",          "<Ctrl><Shift>G", NULL,
+          "win.select-page",            "<Ctrl>L", NULL,
+          "win.go-backward",            "<Shift>Page_Up", NULL,
+          "win.go-forward",             "<Shift>Page_Down", NULL,
+          "win.go-next-page",           "n", NULL,
+          "win.go-previous-page",       "p", NULL,
+          "win.go-back-history",        "<alt>P", NULL,
+          "win.go-forward-history",     "<alt>N", NULL,
+          "win.sizing-mode::fit-page",  "f", NULL,
+          "win.sizing-mode::fit-width", "w", NULL,
+          "win.open-menu",              "F10", NULL,
+          "win.caret-navigation",       "F7", NULL,
+          "win.zoom-in",                "plus", "<Ctrl>plus", "KP_Add", "<Ctrl>KP_Add", NULL,
+          "win.zoom-out",               "minus", "<Ctrl>minus", "KP_Subtract", "<Ctrl>KP_Subtract", NULL,
+          "win.show-side-pane",         "F9", NULL,
+          "win.fullscreen",             "F11", NULL,
+          "win.presentation",           "F5", NULL,
+          "win.rotate-left",            "<Ctrl>Left", NULL,
+          "win.rotate-right",           "<Ctrl>Right", NULL,
+          "win.inverted-colors",        "<Ctrl>I", NULL,
+          "win.reload",                 "<Ctrl>R", NULL,
+          NULL
+        };
+
         EvApplication *application = EV_APPLICATION (gapplication);
         GtkBuilder *builder;
         GError *error = NULL;
+        const gchar **it;
 
         G_APPLICATION_CLASS (ev_application_parent_class)->startup (gapplication);
 
@@ -1024,12 +1064,15 @@ ev_application_startup (GApplication *gapplication)
                                          application);
 
         builder = gtk_builder_new ();
-        gtk_builder_add_from_resource (builder, "/org/gnome/evince/shell/ui/appmenu.ui", &error);
+        gtk_builder_add_from_resource (builder, "/org/gnome/evince/shell/ui/menus.ui", &error);
         g_assert_no_error (error);
 
         gtk_application_set_app_menu (GTK_APPLICATION (application),
                                       G_MENU_MODEL (gtk_builder_get_object (builder, "appmenu")));
         g_object_unref (builder);
+
+        for (it = action_accels; it[0]; it += g_strv_length ((gchar **)it) + 1)
+                gtk_application_set_accels_for_action (GTK_APPLICATION (application), it[0], &it[1]);
 }
 
 static void

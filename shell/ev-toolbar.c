@@ -29,6 +29,8 @@
 #include "ev-stock-icons.h"
 #include "ev-zoom-action.h"
 #include "ev-history-action.h"
+#include "ev-application.h"
+#include "ev-recent-menu-model.h"
 #include <math.h>
 
 enum
@@ -42,6 +44,7 @@ struct _EvToolbarPrivate {
 
         GtkWidget *view_menu_button;
         GtkWidget *action_menu_button;
+        GMenu *bookmarks_section;
 };
 
 G_DEFINE_TYPE (EvToolbar, ev_toolbar, GTK_TYPE_TOOLBAR)
@@ -64,38 +67,49 @@ ev_toolbar_set_property (GObject      *object,
 }
 
 static void
-ev_toolbar_set_button_action (EvToolbar *ev_toolbar,
-                              GtkButton *button,
-                              GtkAction *action)
+ev_toolbar_set_button_action (EvToolbar   *ev_toolbar,
+                              GtkButton   *button,
+                              const gchar *action_name,
+                              const gchar *tooltip)
 {
-        gtk_activatable_set_related_action (GTK_ACTIVATABLE (button), action);
+        gtk_actionable_set_action_name (GTK_ACTIONABLE (button), action_name);
         gtk_button_set_label (button, NULL);
         gtk_button_set_focus_on_click (button, FALSE);
-        gtk_widget_set_tooltip_text (GTK_WIDGET (button), gtk_action_get_tooltip (action));
+        gtk_widget_set_tooltip_text (GTK_WIDGET (button), tooltip);
 }
 
 static GtkWidget *
-ev_toolbar_create_button (EvToolbar *ev_toolbar,
-                          GtkAction *action)
+ev_toolbar_create_button (EvToolbar   *ev_toolbar,
+                          const gchar *action_name,
+                          const gchar *icon_name,
+                          const gchar *tooltip)
 {
         GtkWidget *button = gtk_button_new ();
+        GtkWidget *image;
+
+        image = gtk_image_new_from_icon_name (icon_name, GTK_ICON_SIZE_MENU);
 
         gtk_widget_set_valign (button, GTK_ALIGN_CENTER);
-        gtk_button_set_image (GTK_BUTTON (button), gtk_image_new ());
-        ev_toolbar_set_button_action (ev_toolbar, GTK_BUTTON (button), action);
+        gtk_button_set_image (GTK_BUTTON (button), image);
+        ev_toolbar_set_button_action (ev_toolbar, GTK_BUTTON (button), action_name, tooltip);
 
         return button;
 }
 
 static GtkWidget *
 ev_toolbar_create_toggle_button (EvToolbar *ev_toolbar,
-                                 GtkAction *action)
+                                 const gchar *action_name,
+                                 const gchar *icon_name,
+                                 const gchar *tooltip)
 {
         GtkWidget *button = gtk_toggle_button_new ();
+        GtkWidget *image;
+
+        image = gtk_image_new_from_icon_name (icon_name, GTK_ICON_SIZE_MENU);
 
         gtk_widget_set_valign (button, GTK_ALIGN_CENTER);
-        gtk_button_set_image (GTK_BUTTON (button), gtk_image_new ());
-        ev_toolbar_set_button_action (ev_toolbar, GTK_BUTTON (button), action);
+        gtk_button_set_image (GTK_BUTTON (button), image);
+        ev_toolbar_set_button_action (ev_toolbar, GTK_BUTTON (button), action_name, tooltip);
 
         return button;
 }
@@ -103,17 +117,21 @@ ev_toolbar_create_toggle_button (EvToolbar *ev_toolbar,
 static GtkWidget *
 ev_toolbar_create_menu_button (EvToolbar   *ev_toolbar,
                                const gchar *icon_name,
-                               GtkWidget   *menu,
+                               GMenuModel  *menu,
                                GtkAlign     menu_align)
 {
-        GtkWidget *button = gtk_menu_button_new ();
+        GtkWidget *button;
+        GtkMenu *popup;
 
+        button = gtk_menu_button_new ();
+        gtk_menu_button_set_use_popover (GTK_MENU_BUTTON (button), FALSE);
         gtk_widget_set_valign (button, GTK_ALIGN_CENTER);
         gtk_button_set_image (GTK_BUTTON (button), gtk_image_new ());
         gtk_image_set_from_icon_name (GTK_IMAGE (gtk_button_get_image (GTK_BUTTON (button))),
                                       icon_name, GTK_ICON_SIZE_MENU);
-        gtk_widget_set_halign (menu, menu_align);
-        gtk_menu_button_set_popup (GTK_MENU_BUTTON (button), menu);
+        gtk_menu_button_set_menu_model (GTK_MENU_BUTTON (button), menu);
+        popup = gtk_menu_button_get_popup (GTK_MENU_BUTTON (button));
+        gtk_widget_set_halign (GTK_WIDGET (popup), menu_align);
 
         return button;
 }
@@ -134,17 +152,49 @@ ev_toolbar_create_button_group (EvToolbar *ev_toolbar)
 }
 
 static void
+ev_toolbar_setup_bookmarks_menu (EvToolbar  *toolbar,
+                                 GMenuModel *bookmarks_submenu_model)
+{
+        GMenu *bookmarks_section = toolbar->priv->bookmarks_section;
+
+        /* The bookmarks section has one or two items: "Add Bookmark"
+         * and the "Bookmarks" submenu item. Hide the latter when there
+         * are no bookmarks.
+         */
+        if (g_menu_model_get_n_items (bookmarks_submenu_model) > 0) {
+                if (g_menu_model_get_n_items (G_MENU_MODEL (bookmarks_section)) == 1)
+                        g_menu_append_submenu (bookmarks_section, _("Bookmarks"), bookmarks_submenu_model);
+        } else {
+                if (g_menu_model_get_n_items (G_MENU_MODEL (bookmarks_section)) == 2)
+                        g_menu_remove (bookmarks_section, 1);
+        }
+}
+
+static void
+ev_toolbar_bookmarks_menu_model_changed (GMenuModel *model,
+                                         gint        position,
+                                         gint        removed,
+                                         gint        added,
+                                         EvToolbar  *toolbar)
+{
+        ev_toolbar_setup_bookmarks_menu (toolbar, model);
+}
+
+static void
 ev_toolbar_constructed (GObject *object)
 {
         EvToolbar      *ev_toolbar = EV_TOOLBAR (object);
-        GtkUIManager   *ui_manager;
+        GtkBuilder     *builder;
         GtkActionGroup *action_group;
         GtkWidget      *tool_item;
         GtkWidget      *hbox;
         GtkAction      *action;
         GtkWidget      *button;
-        GtkWidget      *menu;
         gboolean        rtl;
+        GMenuModel     *menu;
+        GMenu          *recent_submenu;
+        GMenuModel     *recent_menu_model;
+        GMenuModel     *bookmarks_submenu_model;
 
         G_OBJECT_CLASS (ev_toolbar_parent_class)->constructed (object);
 
@@ -156,18 +206,18 @@ ev_toolbar_constructed (GObject *object)
                                      GTK_STYLE_CLASS_MENUBAR);
 
         action_group = ev_window_get_main_action_group (ev_toolbar->priv->window);
-        ui_manager = ev_window_get_ui_manager (ev_toolbar->priv->window);
+        builder = gtk_builder_new_from_resource ("/org/gnome/evince/shell/ui/menus.ui");
 
         /* Navigation */
         hbox = ev_toolbar_create_button_group (ev_toolbar);
 
-        action = gtk_action_group_get_action (action_group, "GoPreviousPage");
-        button = ev_toolbar_create_button (ev_toolbar, action);
+        button = ev_toolbar_create_button (ev_toolbar, "win.go-previous-page",
+                                           "go-up-symbolic", _("Previous Page"));
         gtk_container_add (GTK_CONTAINER (hbox), button);
         gtk_widget_show (button);
 
-        action = gtk_action_group_get_action (action_group, "GoNextPage");
-        button = ev_toolbar_create_button (ev_toolbar, action);
+        button = ev_toolbar_create_button (ev_toolbar, "win.go-next-page",
+                                           "go-down-symbolic", _("Next Page"));
         gtk_container_add (GTK_CONTAINER (hbox), button);
         gtk_widget_show (button);
 
@@ -203,8 +253,8 @@ ev_toolbar_constructed (GObject *object)
         gtk_widget_show (tool_item);
 
         /* Find */
-        action = gtk_action_group_get_action (action_group, "EditFind");
-        button = ev_toolbar_create_toggle_button (ev_toolbar, action);
+        button = ev_toolbar_create_toggle_button (ev_toolbar, "win.toggle-find", "edit-find-symbolic",
+                                                  _("Find a word or phrase in the document"));
         tool_item = GTK_WIDGET (gtk_tool_item_new ());
         gtk_container_add (GTK_CONTAINER (tool_item), button);
         gtk_widget_show (button);
@@ -232,7 +282,7 @@ ev_toolbar_constructed (GObject *object)
         gtk_widget_show (tool_item);
 
         /* View Menu */
-        menu = gtk_ui_manager_get_widget (ui_manager, "/ViewMenuPopup");
+        menu = G_MENU_MODEL (gtk_builder_get_object (builder, "view-menu"));
         button = ev_toolbar_create_menu_button (ev_toolbar, "document-properties-symbolic",
                                                 menu, GTK_ALIGN_END);
         gtk_widget_set_tooltip_text (button, _("View options"));
@@ -249,7 +299,7 @@ ev_toolbar_constructed (GObject *object)
         gtk_widget_show (tool_item);
 
         /* Action Menu */
-        menu = gtk_ui_manager_get_widget (ui_manager, "/ActionMenu");
+        menu = G_MENU_MODEL (gtk_builder_get_object (builder, "action-menu"));
         button = ev_toolbar_create_menu_button (ev_toolbar, "emblem-system-symbolic",
                                                 menu, GTK_ALIGN_END);
         gtk_widget_set_tooltip_text (button, _("File options"));
@@ -260,6 +310,23 @@ ev_toolbar_constructed (GObject *object)
 
         gtk_container_add (GTK_CONTAINER (ev_toolbar), tool_item);
         gtk_widget_show (tool_item);
+
+        recent_menu_model = ev_recent_menu_model_new (gtk_recent_manager_get_default (),
+                                                      "win.open-recent",
+                                                      g_get_application_name ());
+
+        recent_submenu = G_MENU (gtk_builder_get_object (builder, "recent"));
+        g_menu_append_section (recent_submenu, NULL, recent_menu_model);
+        g_object_unref (recent_menu_model);
+
+        ev_toolbar->priv->bookmarks_section = G_MENU (gtk_builder_get_object (builder, "bookmarks"));
+        bookmarks_submenu_model = ev_window_get_bookmarks_menu (ev_toolbar->priv->window);
+        g_signal_connect (bookmarks_submenu_model, "items-changed",
+                          G_CALLBACK (ev_toolbar_bookmarks_menu_model_changed),
+                          ev_toolbar);
+        ev_toolbar_setup_bookmarks_menu (ev_toolbar, bookmarks_submenu_model);
+
+        g_object_unref (builder);
 }
 
 static void

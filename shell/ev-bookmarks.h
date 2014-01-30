@@ -43,6 +43,7 @@ typedef struct _EvBookmark {
 GType        ev_bookmarks_get_type      (void) G_GNUC_CONST;
 EvBookmarks *ev_bookmarks_new           (EvMetadata *metadata);
 GList       *ev_bookmarks_get_bookmarks (EvBookmarks *bookmarks);
+gboolean     ev_bookmarks_has_bookmarks (EvBookmarks *bookmarks);
 void         ev_bookmarks_add           (EvBookmarks *bookmarks,
                                          EvBookmark  *bookmark);
 void         ev_bookmarks_delete        (EvBookmarks *bookmarks,

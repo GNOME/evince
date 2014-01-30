@@ -40,11 +40,6 @@ enum {
         N_COLUMNS
 };
 
-enum {
-        ADD_BOOKMARK,
-        N_SIGNALS
-};
-
 struct _EvSidebarBookmarksPrivate {
         EvDocumentModel *model;
         EvBookmarks     *bookmarks;
@@ -67,8 +62,6 @@ G_DEFINE_TYPE_EXTENDED (EvSidebarBookmarks,
                         0,
                         G_IMPLEMENT_INTERFACE (EV_TYPE_SIDEBAR_PAGE,
                                                ev_sidebar_bookmarks_page_iface_init))
-
-static guint signals[N_SIGNALS];
 
 static const gchar popup_menu_ui[] =
         "<popup name=\"BookmarksPopup\" action=\"BookmarksPopupAction\">\n"
@@ -221,16 +214,6 @@ ev_sidebar_bookmarks_selection_changed (GtkTreeSelection   *selection,
         } else {
                 gtk_widget_set_sensitive (priv->del_button, FALSE);
         }
-}
-
-static void
-ev_sidebar_bookmarks_add_clicked (GtkWidget          *button,
-                                  EvSidebarBookmarks *sidebar_bookmarks)
-{
-        /* Let the window add the bookmark since
-         * since we don't know the page title
-         */
-        g_signal_emit (sidebar_bookmarks, signals[ADD_BOOKMARK], 0);
 }
 
 static void
@@ -469,9 +452,8 @@ ev_sidebar_bookmarks_init (EvSidebarBookmarks *sidebar_bookmarks)
         hbox = gtk_button_box_new (GTK_ORIENTATION_HORIZONTAL);
 
         priv->add_button = gtk_button_new_from_stock (GTK_STOCK_ADD);
-        g_signal_connect (priv->add_button, "clicked",
-                          G_CALLBACK (ev_sidebar_bookmarks_add_clicked),
-                          sidebar_bookmarks);
+        gtk_actionable_set_action_name (GTK_ACTIONABLE (priv->add_button),
+                                        "win.add-bookmark");
         gtk_widget_set_sensitive (priv->add_button, FALSE);
         gtk_box_pack_start (GTK_BOX (hbox), priv->add_button, TRUE, TRUE, 6);
         gtk_widget_show (priv->add_button);
@@ -534,16 +516,6 @@ ev_sidebar_bookmarks_class_init (EvSidebarBookmarksClass *klass)
         g_type_class_add_private (g_object_class, sizeof (EvSidebarBookmarksPrivate));
 
         g_object_class_override_property (g_object_class, PROP_WIDGET, "main-widget");
-
-        signals[ADD_BOOKMARK] =
-                g_signal_new ("add-bookmark",
-                              G_TYPE_FROM_CLASS (g_object_class),
-                              G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
-                              G_STRUCT_OFFSET (EvSidebarBookmarksClass, add_bookmark),
-                              NULL, NULL,
-                              g_cclosure_marshal_VOID__VOID,
-                              G_TYPE_NONE, 0,
-                              G_TYPE_NONE);
 }
 
 GtkWidget *

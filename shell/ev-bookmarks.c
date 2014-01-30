@@ -224,6 +224,14 @@ ev_bookmarks_get_bookmarks (EvBookmarks *bookmarks)
         return g_list_copy (bookmarks->items);
 }
 
+gboolean
+ev_bookmarks_has_bookmarks (EvBookmarks *bookmarks)
+{
+        g_return_val_if_fail (EV_IS_BOOKMARKS (bookmarks), NULL);
+
+        return bookmarks->items != NULL;
+}
+
 void
 ev_bookmarks_add (EvBookmarks *bookmarks,
                   EvBookmark  *bookmark)
