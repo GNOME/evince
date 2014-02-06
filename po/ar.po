@@ -2,7 +2,7 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # Yousef Raffah <yousef@raffah.com>, 2006.
-# Khaled Hosny <khaledhosny@eglug.org>, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013.
+# Khaled Hosny <khaledhosny@eglug.org>, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014.
 # Usama Akkad <uak@aya.sy>, 2008.
 # Abdalrahim G. Fakhouri <abdilra7eem@yahoo.com>, 2011.
 # Ibrahim Saed <ibraheem5000@gmail.com>, 2012.
@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince.HEAD\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-09-22 10:01+0200\n"
-"PO-Revision-Date: 2013-09-22 10:04+0200\n"
+"POT-Creation-Date: 2014-02-06 15:45+0200\n"
+"PO-Revision-Date: 2014-02-06 15:45+0200\n"
 "Last-Translator: Khaled Hosny <khaledhosny@eglug.org>\n"
 "Language-Team: Arabic <doc@arabeyes.org>\n"
 "Language: ar\n"
@@ -79,7 +79,7 @@ msgstr "كتب فكاهية"
 msgid "DjVu document has incorrect format"
 msgstr "هيئة مستند DjVu غير صحيحة"
 
-#: ../backend/djvu/djvu-document.c:263
+#: ../backend/djvu/djvu-document.c:262
 msgid ""
 "The document is composed of several files. One or more of these files cannot "
 "be accessed."
@@ -103,48 +103,48 @@ msgid "This work is in the Public Domain"
 msgstr "هذا العمل ملكية عامة"
 
 #. translators: this is the document security state
-#: ../backend/pdf/ev-poppler.cc:889 ../backend/pdf/ev-poppler.cc:895
+#: ../backend/pdf/ev-poppler.cc:892 ../backend/pdf/ev-poppler.cc:898
 msgid "Yes"
 msgstr "نعم"
 
 #. translators: this is the document security state
-#: ../backend/pdf/ev-poppler.cc:892 ../backend/pdf/ev-poppler.cc:895
+#: ../backend/pdf/ev-poppler.cc:895 ../backend/pdf/ev-poppler.cc:898
 msgid "No"
 msgstr "لا"
 
-#: ../backend/pdf/ev-poppler.cc:1025
+#: ../backend/pdf/ev-poppler.cc:1028
 msgid "Type 1"
 msgstr "Type 1"
 
-#: ../backend/pdf/ev-poppler.cc:1027
+#: ../backend/pdf/ev-poppler.cc:1030
 msgid "Type 1C"
 msgstr "Type 1C"
 
-#: ../backend/pdf/ev-poppler.cc:1029
+#: ../backend/pdf/ev-poppler.cc:1032
 msgid "Type 3"
 msgstr "Type 3"
 
-#: ../backend/pdf/ev-poppler.cc:1031
+#: ../backend/pdf/ev-poppler.cc:1034
 msgid "TrueType"
 msgstr "TrueType"
 
-#: ../backend/pdf/ev-poppler.cc:1033
+#: ../backend/pdf/ev-poppler.cc:1036
 msgid "Type 1 (CID)"
 msgstr "Type 1 ‏(CID)"
 
-#: ../backend/pdf/ev-poppler.cc:1035
+#: ../backend/pdf/ev-poppler.cc:1038
 msgid "Type 1C (CID)"
 msgstr "Type 1C ‏(CID)"
 
-#: ../backend/pdf/ev-poppler.cc:1037
+#: ../backend/pdf/ev-poppler.cc:1040
 msgid "TrueType (CID)"
 msgstr "TrueType ‏(CID)"
 
-#: ../backend/pdf/ev-poppler.cc:1039
+#: ../backend/pdf/ev-poppler.cc:1042
 msgid "Unknown font type"
 msgstr "نوع الخط غير معروف"
 
-#: ../backend/pdf/ev-poppler.cc:1083
+#: ../backend/pdf/ev-poppler.cc:1086
 msgid ""
 "This document contains non-embedded fonts that are not from the PDF Standard "
 "14 fonts. If the substitute fonts selected by fontconfig are not the same as "
@@ -154,11 +154,11 @@ msgstr ""
 "المعيارية. إذا كان الخط البديل الموجود على نظامك لا يطابق الخط المستخدم عند "
 "إنشاء المستند فقد لا تظهر النصوص بشكل صحيح."
 
-#: ../backend/pdf/ev-poppler.cc:1088
+#: ../backend/pdf/ev-poppler.cc:1091
 msgid "All fonts are either standard or embedded."
 msgstr "كل الخطوط إما معيارية أو مدمجة."
 
-#: ../backend/pdf/ev-poppler.cc:1120
+#: ../backend/pdf/ev-poppler.cc:1123
 msgid "No name"
 msgstr "بلا اسم"
 
@@ -172,20 +172,20 @@ msgstr "بلا اسم"
 #. Author: None
 #. Keywords: None
 #.
-#: ../backend/pdf/ev-poppler.cc:1129 ../libview/ev-print-operation.c:1907
+#: ../backend/pdf/ev-poppler.cc:1132 ../libview/ev-print-operation.c:1907
 #: ../properties/ev-properties-view.c:192
 msgid "None"
 msgstr "لا شيء"
 
-#: ../backend/pdf/ev-poppler.cc:1137
+#: ../backend/pdf/ev-poppler.cc:1140
 msgid "Embedded subset"
 msgstr "مدمج جزئيا"
 
-#: ../backend/pdf/ev-poppler.cc:1139
+#: ../backend/pdf/ev-poppler.cc:1142
 msgid "Embedded"
 msgstr "مدمج"
 
-#: ../backend/pdf/ev-poppler.cc:1141
+#: ../backend/pdf/ev-poppler.cc:1144
 msgid "Not embedded"
 msgstr "غير مدمج"
 
@@ -194,7 +194,7 @@ msgstr "غير مدمج"
 #. * type. Example:
 #. * "Type 1 (One of the Standard 14 Fonts)"
 #.
-#: ../backend/pdf/ev-poppler.cc:1148
+#: ../backend/pdf/ev-poppler.cc:1151
 msgid " (One of the Standard 14 Fonts)"
 msgstr " (أحد الخطوط المعيارية الأربعة عشر)"
 
@@ -203,15 +203,15 @@ msgstr " (أحد الخطوط المعيارية الأربعة عشر)"
 #. * type. Example:
 #. * "TrueType (Not one of the Standard 14 Fonts)"
 #.
-#: ../backend/pdf/ev-poppler.cc:1155
+#: ../backend/pdf/ev-poppler.cc:1158
 msgid " (Not one of the Standard 14 Fonts)"
 msgstr " (ليس ضمن الخطوط المعيارية الأربعة عشر)"
 
-#: ../backend/pdf/ev-poppler.cc:1162
+#: ../backend/pdf/ev-poppler.cc:1165
 msgid "Encoding"
 msgstr "الترميز"
 
-#: ../backend/pdf/ev-poppler.cc:1163
+#: ../backend/pdf/ev-poppler.cc:1166
 msgid "Substituting with"
 msgstr "يستبدل ب‍"
 
@@ -314,7 +314,7 @@ msgid "Show session management options"
 msgstr "اعرض خيارات إدارة الجلسة"
 
 #. Manually set name and icon
-#: ../data/evince.desktop.in.in.h:1 ../shell/ev-window.c:5022
+#: ../data/evince.desktop.in.in.h:1 ../shell/ev-window.c:5040
 #: ../shell/ev-window-title.c:156 ../shell/main.c:312
 #, c-format
 msgid "Document Viewer"
@@ -435,8 +435,8 @@ msgid "of %d"
 msgstr "من %d"
 
 #: ../libmisc/ev-page-action-widget.c:182 ../shell/ev-history.c:426
-#: ../shell/ev-sidebar-bookmarks.c:312 ../shell/ev-window.c:875
-#: ../shell/ev-window.c:4762
+#: ../shell/ev-sidebar-bookmarks.c:312 ../shell/ev-window.c:880
+#: ../shell/ev-window.c:4780
 #, c-format
 msgid "Page %s"
 msgstr "صفحة %s"
@@ -543,66 +543,66 @@ msgstr "عند تفعيله ستطبع كل صفحة على ورق من نفس �
 msgid "Page Handling"
 msgstr "معالجة الصفحات"
 
-#: ../libview/ev-view-accessible.c:45
+#: ../libview/ev-view-accessible.c:46
 msgid "Scroll Up"
 msgstr "لُف لأعلى"
 
-#: ../libview/ev-view-accessible.c:46
+#: ../libview/ev-view-accessible.c:47
 msgid "Scroll Down"
 msgstr "لُف لأسفل"
 
-#: ../libview/ev-view-accessible.c:52
+#: ../libview/ev-view-accessible.c:53
 msgid "Scroll View Up"
 msgstr "لُف المشهد لأعلى"
 
-#: ../libview/ev-view-accessible.c:53
+#: ../libview/ev-view-accessible.c:54
 msgid "Scroll View Down"
 msgstr "لُف المشهد لأسفل"
 
-#: ../libview/ev-view-accessible.c:116
+#: ../libview/ev-view-accessible.c:126
 msgid "Document View"
 msgstr "مشهد المستند"
 
-#: ../libview/ev-view.c:1923
+#: ../libview/ev-view.c:1932
 msgid "Go to first page"
 msgstr "اذهب إلى الصفحة الأولى"
 
-#: ../libview/ev-view.c:1925
+#: ../libview/ev-view.c:1934
 msgid "Go to previous page"
 msgstr "اذهب إلى الصفحة السابقة"
 
-#: ../libview/ev-view.c:1927
+#: ../libview/ev-view.c:1936
 msgid "Go to next page"
 msgstr "اذهب إلى الصفحة التالية"
 
-#: ../libview/ev-view.c:1929
+#: ../libview/ev-view.c:1938
 msgid "Go to last page"
 msgstr "اذهب إلى الصفحة الأخيرة"
 
-#: ../libview/ev-view.c:1931
+#: ../libview/ev-view.c:1940
 msgid "Go to page"
 msgstr "اذهب إلى الصفحة"
 
-#: ../libview/ev-view.c:1933
+#: ../libview/ev-view.c:1942
 msgid "Find"
 msgstr "ابحث"
 
-#: ../libview/ev-view.c:1961
+#: ../libview/ev-view.c:1970
 #, c-format
 msgid "Go to page %s"
 msgstr "اذهب إلى الصفحة %s"
 
-#: ../libview/ev-view.c:1967
+#: ../libview/ev-view.c:1976
 #, c-format
 msgid "Go to %s on file “%s”"
 msgstr "اذهب إلى %s في الملف “%s”"
 
-#: ../libview/ev-view.c:1970
+#: ../libview/ev-view.c:1979
 #, c-format
 msgid "Go to file “%s”"
 msgstr "اذهب إلى الملف “%s”"
 
-#: ../libview/ev-view.c:1978
+#: ../libview/ev-view.c:1987
 #, c-format
 msgid "Launch %s"
 msgstr "أطلِق %s"
@@ -627,7 +627,7 @@ msgstr "اطبع ملف الإعدادات"
 msgid "GNOME Document Previewer"
 msgstr "مُعاين مستندات جنوم"
 
-#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3393
+#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3401
 msgid "Failed to print document"
 msgstr "تعذر طبع المستند"
 
@@ -637,55 +637,55 @@ msgid "The selected printer '%s' could not be found"
 msgstr "تعذّر العثور على الطابعة '%s' المختارة"
 
 #. Go menu
-#: ../previewer/ev-previewer-window.c:270 ../shell/ev-window.c:6068
+#: ../previewer/ev-previewer-window.c:270 ../shell/ev-window.c:6090
 msgid "_Previous Page"
 msgstr "الصفحة ال_سابقة"
 
-#: ../previewer/ev-previewer-window.c:271 ../shell/ev-window.c:6069
+#: ../previewer/ev-previewer-window.c:271 ../shell/ev-window.c:6091
 msgid "Go to the previous page"
 msgstr "اذهب إلى الصفحة السابقة"
 
-#: ../previewer/ev-previewer-window.c:273 ../shell/ev-window.c:6071
+#: ../previewer/ev-previewer-window.c:273 ../shell/ev-window.c:6093
 msgid "_Next Page"
 msgstr "الصفحة ال_تالية"
 
-#: ../previewer/ev-previewer-window.c:274 ../shell/ev-window.c:6072
+#: ../previewer/ev-previewer-window.c:274 ../shell/ev-window.c:6094
 msgid "Go to the next page"
 msgstr "اذهب إلى الصفحة التالية"
 
-#: ../previewer/ev-previewer-window.c:277 ../shell/ev-window.c:6055
+#: ../previewer/ev-previewer-window.c:277 ../shell/ev-window.c:6077
 msgid "Enlarge the document"
 msgstr "كبّر المستند"
 
-#: ../previewer/ev-previewer-window.c:280 ../shell/ev-window.c:6058
+#: ../previewer/ev-previewer-window.c:280 ../shell/ev-window.c:6080
 msgid "Shrink the document"
 msgstr "صغّر المستند"
 
-#: ../previewer/ev-previewer-window.c:285 ../shell/ev-window.c:6033
+#: ../previewer/ev-previewer-window.c:285 ../shell/ev-window.c:6055
 msgid "Print this document"
 msgstr "اطبع هذا المستند"
 
-#: ../previewer/ev-previewer-window.c:317 ../shell/ev-window.c:6212
+#: ../previewer/ev-previewer-window.c:317 ../shell/ev-window.c:6234
 msgid "Fit Pa_ge"
 msgstr "لا_ئم الصفحة"
 
-#: ../previewer/ev-previewer-window.c:318 ../shell/ev-window.c:6213
+#: ../previewer/ev-previewer-window.c:318 ../shell/ev-window.c:6235
 msgid "Make the current document fill the window"
 msgstr "اجعل المستند الحالي يملأ النافذة"
 
-#: ../previewer/ev-previewer-window.c:320 ../shell/ev-window.c:6215
+#: ../previewer/ev-previewer-window.c:320 ../shell/ev-window.c:6237
 msgid "Fit _Width"
 msgstr "لائم ال_عرض"
 
-#: ../previewer/ev-previewer-window.c:321 ../shell/ev-window.c:6216
+#: ../previewer/ev-previewer-window.c:321 ../shell/ev-window.c:6238
 msgid "Make the current document fill the window width"
 msgstr "اجعل المستند الحالي يملأ النافذة بالعرض"
 
-#: ../previewer/ev-previewer-window.c:514 ../shell/ev-window.c:6325
+#: ../previewer/ev-previewer-window.c:514 ../shell/ev-window.c:6347
 msgid "Page"
 msgstr "صفحة"
 
-#: ../previewer/ev-previewer-window.c:515 ../shell/ev-window.c:6326
+#: ../previewer/ev-previewer-window.c:515 ../shell/ev-window.c:6348
 msgid "Select Page"
 msgstr "اختر صفحة"
 
@@ -880,11 +880,11 @@ msgstr "مفتوحة"
 msgid "Close"
 msgstr "مغلقة"
 
-#: ../shell/ev-history-action-widget.c:227
+#: ../shell/ev-history-action-widget.c:216
 msgid "Go to previous history item"
 msgstr "اذهب إلى عنصر التأريخ السابق"
 
-#: ../shell/ev-history-action-widget.c:231
+#: ../shell/ev-history-action-widget.c:220
 msgid "Go to next history item"
 msgstr "اذهب إلى عنصر التأريخ التالي"
 
@@ -1045,98 +1045,106 @@ msgstr "فهرس"
 msgid "Thumbnails"
 msgstr "مُصغّرات"
 
+#: ../shell/ev-toolbar.c:238
+msgid "View options"
+msgstr "اعرض الخيارات"
+
+#: ../shell/ev-toolbar.c:255
+msgid "File options"
+msgstr "خيارات الملف"
+
 #: ../shell/ev-utils.c:332
 msgid "Supported Image Files"
 msgstr "ملفات الصور المدعومة"
 
-#: ../shell/ev-window.c:1533
+#: ../shell/ev-window.c:1541
 msgid "The document contains no pages"
 msgstr "لا يحوي المستند أية صفحات"
 
-#: ../shell/ev-window.c:1536
+#: ../shell/ev-window.c:1544
 msgid "The document contains only empty pages"
 msgstr "لا يحتوي المستند إلا صفحات فارغة"
 
-#: ../shell/ev-window.c:1742 ../shell/ev-window.c:1913
+#: ../shell/ev-window.c:1750 ../shell/ev-window.c:1921
 #, c-format
 msgid "Unable to open document “%s”."
 msgstr "تعذر فتح المستند ”%s“."
 
-#: ../shell/ev-window.c:1877
+#: ../shell/ev-window.c:1885
 #, c-format
 msgid "Loading document from “%s”"
 msgstr "يحمّل المستند من “%s”"
 
-#: ../shell/ev-window.c:2028 ../shell/ev-window.c:2318
+#: ../shell/ev-window.c:2036 ../shell/ev-window.c:2326
 #, c-format
 msgid "Downloading document (%d%%)"
 msgstr "ينزّل المستند (%d%%)"
 
-#: ../shell/ev-window.c:2061
+#: ../shell/ev-window.c:2069
 msgid "Failed to load remote file."
 msgstr "تعذر فتح ملف بعيد."
 
-#: ../shell/ev-window.c:2262
+#: ../shell/ev-window.c:2270
 #, c-format
 msgid "Reloading document from %s"
 msgstr "يعيد تحميل المستند %s"
 
-#: ../shell/ev-window.c:2294
+#: ../shell/ev-window.c:2302
 msgid "Failed to reload document."
 msgstr "تعذر إعادة تحميل المستند."
 
-#: ../shell/ev-window.c:2507
+#: ../shell/ev-window.c:2515
 msgid "Open Document"
 msgstr "افتح مستند"
 
-#: ../shell/ev-window.c:2780
+#: ../shell/ev-window.c:2788
 #, c-format
 msgid "Saving document to %s"
 msgstr "يحفظ المستند في %s"
 
-#: ../shell/ev-window.c:2783
+#: ../shell/ev-window.c:2791
 #, c-format
 msgid "Saving attachment to %s"
 msgstr "يحفظ المرفق في %s"
 
-#: ../shell/ev-window.c:2786
+#: ../shell/ev-window.c:2794
 #, c-format
 msgid "Saving image to %s"
 msgstr "يحفظ الصورة في %s"
 
-#: ../shell/ev-window.c:2830 ../shell/ev-window.c:2930
+#: ../shell/ev-window.c:2838 ../shell/ev-window.c:2938
 #, c-format
 msgid "The file could not be saved as “%s”."
 msgstr "تعذر حفظ الملف باسم “%s”."
 
-#: ../shell/ev-window.c:2861
+#: ../shell/ev-window.c:2869
 #, c-format
 msgid "Uploading document (%d%%)"
 msgstr "يرفع المستند (%d%%)"
 
-#: ../shell/ev-window.c:2865
+#: ../shell/ev-window.c:2873
 #, c-format
 msgid "Uploading attachment (%d%%)"
 msgstr "يرفع المرفق (%d%%)"
 
-#: ../shell/ev-window.c:2869
+#: ../shell/ev-window.c:2877
 #, c-format
 msgid "Uploading image (%d%%)"
 msgstr "يرفع الصورة (%d%%)"
 
-#: ../shell/ev-window.c:2981
+#: ../shell/ev-window.c:2989
 msgid "Save a Copy"
 msgstr "احفظ نسخة"
 
-#: ../shell/ev-window.c:3045
+#: ../shell/ev-window.c:3053
 msgid "Could not send current document"
 msgstr "تعذّر إرسال المستند الحالي"
 
-#: ../shell/ev-window.c:3076
+#: ../shell/ev-window.c:3084
 msgid "Could not open the containing folder"
 msgstr "تعذّر فتح المجلد الذي يحتوي الملف"
 
-#: ../shell/ev-window.c:3337
+#: ../shell/ev-window.c:3345
 #, c-format
 msgid "%d pending job in queue"
 msgid_plural "%d pending jobs in queue"
@@ -1147,18 +1155,18 @@ msgstr[3] "%d مهام منتظرة في الطابور"
 msgstr[4] "%d مهمة منتظرة في الطابور"
 msgstr[5] "%d مهمة منتظرة في الطابور"
 
-#: ../shell/ev-window.c:3450
+#: ../shell/ev-window.c:3458
 #, c-format
 msgid "Printing job “%s”"
 msgstr "مهمة الطبع “%s”"
 
-#: ../shell/ev-window.c:3645
+#: ../shell/ev-window.c:3653
 msgid ""
 "Document contains form fields that have been filled out. If you don't save a "
 "copy, changes will be permanently lost."
 msgstr "يحتوي المستند على استمارة مُلئت. إذا لم تحفظ نسخة فستضيع هذه التعديلات."
 
-#: ../shell/ev-window.c:3649
+#: ../shell/ev-window.c:3657
 msgid ""
 "Document contains new or modified annotations. If you don't save a copy, "
 "changes will be permanently lost."
@@ -1166,20 +1174,20 @@ msgstr ""
 "يحتوي المستند على تعليقات جديدة أو معدلة. إذا لم تحفظ نسخة فستضيع هذه "
 "التعديلات."
 
-#: ../shell/ev-window.c:3656
+#: ../shell/ev-window.c:3664
 #, c-format
 msgid "Save a copy of document “%s” before closing?"
 msgstr "أأحفظ نسخة من المستند ”%s“ قبل غلقه؟"
 
-#: ../shell/ev-window.c:3675
+#: ../shell/ev-window.c:3683
 msgid "Close _without Saving"
 msgstr "أغلق _دون حفظ"
 
-#: ../shell/ev-window.c:3679
+#: ../shell/ev-window.c:3687
 msgid "Save a _Copy"
 msgstr "احفظ _نسخة"
 
-#: ../shell/ev-window.c:3753
+#: ../shell/ev-window.c:3761
 #, c-format
 msgid "Wait until print job “%s” finishes before closing?"
 msgstr "أأنتظر حتى تنتهي المهمة ”%s“ قبل الغلق؟"
@@ -1187,7 +1195,7 @@ msgstr "أأنتظر حتى تنتهي المهمة ”%s“ قبل الغلق؟
 #. TRANS: the singular form is not really used as n_print_jobs > 1
 #. but some languages distinguish between different plurals forms,
 #. so the ngettext is needed.
-#: ../shell/ev-window.c:3759
+#: ../shell/ev-window.c:3767
 #, c-format
 msgid "There is %d print job active. Wait until print finishes before closing?"
 msgid_plural ""
@@ -1199,23 +1207,23 @@ msgstr[3] "توجد %d مهام طباعة نشطة. أأنتظر حتى تنت�
 msgstr[4] "توجد %d مهمّة طباعة نشطة. أأنتظر حتى تنتهي الطباعة قبل الغلق؟"
 msgstr[5] "توجد %d مهمّة طباعة نشطة. أأنتظر حتى تنتهي الطباعة قبل الغلق؟"
 
-#: ../shell/ev-window.c:3774
+#: ../shell/ev-window.c:3782
 msgid "If you close the window, pending print jobs will not be printed."
 msgstr "إذا أغلقت النافذة لن تُطبع المهام المنتظرة."
 
-#: ../shell/ev-window.c:3778
+#: ../shell/ev-window.c:3786
 msgid "Cancel _print and Close"
 msgstr "ألغِ ال_طباعة وأغلق"
 
-#: ../shell/ev-window.c:3782
+#: ../shell/ev-window.c:3790
 msgid "Close _after Printing"
 msgstr "أغلق ب_عد الطباعة"
 
-#: ../shell/ev-window.c:4315
+#: ../shell/ev-window.c:4333
 msgid "Running in presentation mode"
 msgstr "يعمل في نمط العرض التقديمي"
 
-#: ../shell/ev-window.c:5018
+#: ../shell/ev-window.c:5036
 #, c-format
 msgid ""
 "Document Viewer\n"
@@ -1224,7 +1232,7 @@ msgstr ""
 "عارض المستندات\n"
 "باستخدام %s ‏(%s)"
 
-#: ../shell/ev-window.c:5051
+#: ../shell/ev-window.c:5069
 msgid ""
 "Evince is free software; you can redistribute it and/or modify it under the "
 "terms of the GNU General Public License as published by the Free Software "
@@ -1235,7 +1243,7 @@ msgstr ""
 "والتي نشرتها منظمة البرمجيات الحرة؛ سواء كانت الإصدارة 2 للرخصة أو أي إصدارة "
 "بعدها (حسب الرغبة).\n"
 
-#: ../shell/ev-window.c:5055
+#: ../shell/ev-window.c:5073
 msgid ""
 "Evince is distributed in the hope that it will be useful, but WITHOUT ANY "
 "WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS "
@@ -1246,7 +1254,7 @@ msgstr ""
 "صلاحية العرض في السوق أو توافقه مع أي استخدام محدد.  يمكنكم مراجعة الرخصة "
 "العامة لجنو لمزيد من التفاصيل.\n"
 
-#: ../shell/ev-window.c:5059
+#: ../shell/ev-window.c:5077
 msgid ""
 "You should have received a copy of the GNU General Public License along with "
 "Evince; if not, write to the Free Software Foundation, Inc., 51 Franklin "
@@ -1257,15 +1265,15 @@ msgstr ""
 "Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA "
 "02110-1301  USA\n"
 
-#: ../shell/ev-window.c:5084
+#: ../shell/ev-window.c:5102
 msgid "Evince"
 msgstr "جلاء"
 
-#: ../shell/ev-window.c:5087
+#: ../shell/ev-window.c:5105
 msgid "© 1996–2012 The Evince authors"
 msgstr "© 1996-2012 لمؤلفي برنامج جلاء"
 
-#: ../shell/ev-window.c:5093
+#: ../shell/ev-window.c:5111
 msgid "translator-credits"
 msgstr ""
 "فريق عربآيز للترجمة http://www.arabeyes.org:\n"
@@ -1277,7 +1285,7 @@ msgstr ""
 #. TRANS: Sometimes this could be better translated as
 #. "%d hit(s) on this page".  Therefore this string
 #. contains plural cases.
-#: ../shell/ev-window.c:5364
+#: ../shell/ev-window.c:5382
 #, c-format
 msgid "%d found on this page"
 msgid_plural "%d found on this page"
@@ -1288,24 +1296,24 @@ msgstr[3] "%d موجودة في هذه الصفحة"
 msgstr[4] "%d موجودة في هذه الصفحة"
 msgstr[5] "%d موجودة في هذه الصفحة"
 
-#: ../shell/ev-window.c:5369
+#: ../shell/ev-window.c:5387
 msgid "Not found"
 msgstr "غير موجود"
 
-#: ../shell/ev-window.c:5375
+#: ../shell/ev-window.c:5393
 #, c-format
 msgid "%3d%% remaining to search"
 msgstr "%3d%% متبقية للبحث"
 
-#: ../shell/ev-window.c:5698
+#: ../shell/ev-window.c:5720
 msgid "Enable caret navigation?"
 msgstr "أأفعّل التصفح بالمؤشّر؟"
 
-#: ../shell/ev-window.c:5700
+#: ../shell/ev-window.c:5722
 msgid "_Enable"
 msgstr "_فعّل"
 
-#: ../shell/ev-window.c:5703
+#: ../shell/ev-window.c:5725
 msgid ""
 "Pressing F7 turns the caret navigation on or off. This feature places a "
 "moveable cursor in text pages, allowing you to move around and select text "
@@ -1314,326 +1322,326 @@ msgstr ""
 "ضغط F7 يفعل أو يعطل وضع التصفح بالمؤشر. تضع هذه الخاصية مؤشرا متحركا في "
 "صفحات النصوص يتيح لك التحرك بلوحة المفاتيح. أتريد تفعيل التصفح بالمؤشر؟"
 
-#: ../shell/ev-window.c:5708
+#: ../shell/ev-window.c:5730
 msgid "Don't show this message again"
 msgstr "لا تظهر هذه الرسالة مرة أخرى"
 
-#: ../shell/ev-window.c:6013
+#: ../shell/ev-window.c:6035
 msgid "_Bookmarks"
 msgstr "ال_علامات"
 
-#: ../shell/ev-window.c:6014
+#: ../shell/ev-window.c:6036
 msgid "_Recent"
 msgstr "الم_ستخدم مؤخرا"
 
 #. File menu
-#: ../shell/ev-window.c:6017 ../shell/ev-window.c:6363
+#: ../shell/ev-window.c:6039 ../shell/ev-window.c:6385
 msgid "_Open…"
 msgstr "ا_فتح…"
 
-#: ../shell/ev-window.c:6018 ../shell/ev-window.c:6364
+#: ../shell/ev-window.c:6040 ../shell/ev-window.c:6386
 msgid "Open an existing document"
 msgstr "افتح مستند موجود"
 
-#: ../shell/ev-window.c:6020
+#: ../shell/ev-window.c:6042
 msgid "Op_en a Copy"
 msgstr "ا_فتح نسخة"
 
-#: ../shell/ev-window.c:6021
+#: ../shell/ev-window.c:6043
 msgid "Open a copy of the current document in a new window"
 msgstr "افتح نسخة من المستند الحالي في نافذة جديدة"
 
-#: ../shell/ev-window.c:6023
+#: ../shell/ev-window.c:6045
 msgid "_Save a Copy…"
 msgstr "احفظ _نسخة…"
 
-#: ../shell/ev-window.c:6024
+#: ../shell/ev-window.c:6046
 msgid "Save a copy of the current document"
 msgstr "احفظ نسخة من المستند الحالي"
 
-#: ../shell/ev-window.c:6026
+#: ../shell/ev-window.c:6048
 msgid "Send _To…"
 msgstr "أ_رسل إلى…"
 
-#: ../shell/ev-window.c:6027
+#: ../shell/ev-window.c:6049
 msgid "Send current document by mail, instant message…"
 msgstr "أرسل المُستند الحالي بالبريد أو الرسائل الفورية…"
 
-#: ../shell/ev-window.c:6029
+#: ../shell/ev-window.c:6051
 msgid "Open Containing _Folder"
 msgstr "افتح ال_مجلد الحاوي"
 
-#: ../shell/ev-window.c:6030
+#: ../shell/ev-window.c:6052
 msgid "Show the folder which contains this file in the file manager"
 msgstr "اعرض المجلد الذي يحتوي الملف في مدير الملفات"
 
-#: ../shell/ev-window.c:6032
+#: ../shell/ev-window.c:6054
 msgid "_Print…"
 msgstr "ا_طبع…"
 
-#: ../shell/ev-window.c:6035
+#: ../shell/ev-window.c:6057
 msgid "P_roperties"
 msgstr "_خصائص"
 
-#: ../shell/ev-window.c:6043
+#: ../shell/ev-window.c:6065
 msgid "Select _All"
 msgstr "اختر _الكل"
 
-#: ../shell/ev-window.c:6045
+#: ../shell/ev-window.c:6067
 msgid "Rotate _Left"
 msgstr "استدر ي_سارًا"
 
-#: ../shell/ev-window.c:6047
+#: ../shell/ev-window.c:6069
 msgid "Rotate _Right"
 msgstr "استدر ي_مينًا"
 
-#: ../shell/ev-window.c:6049
+#: ../shell/ev-window.c:6071
 msgid "Save Current Settings as _Default"
 msgstr "اجعل الإعدادات الحالية ال_مبدئية"
 
-#: ../shell/ev-window.c:6060
+#: ../shell/ev-window.c:6082
 msgid "_Reload"
 msgstr "أ_عد التحميل"
 
-#: ../shell/ev-window.c:6061
+#: ../shell/ev-window.c:6083
 msgid "Reload the document"
 msgstr "أعد تحميل المستند"
 
-#: ../shell/ev-window.c:6064
+#: ../shell/ev-window.c:6086
 msgid "Auto_scroll"
 msgstr "لف _تلقائي"
 
-#: ../shell/ev-window.c:6074
+#: ../shell/ev-window.c:6096
 msgid "_First Page"
 msgstr "الصفحة الأ_ولى"
 
-#: ../shell/ev-window.c:6075
+#: ../shell/ev-window.c:6097
 msgid "Go to the first page"
 msgstr "اذهب إلى الصفحة الأولى"
 
-#: ../shell/ev-window.c:6077
+#: ../shell/ev-window.c:6099
 msgid "_Last Page"
 msgstr "الصفحة الأ_خيرة"
 
-#: ../shell/ev-window.c:6078
+#: ../shell/ev-window.c:6100
 msgid "Go to the last page"
 msgstr "اذهب إلى الصفحة الأخيرة"
 
-#: ../shell/ev-window.c:6080
+#: ../shell/ev-window.c:6102
 msgid "Go to Pa_ge"
 msgstr "اذهب إلى ال_صفحة"
 
-#: ../shell/ev-window.c:6081
+#: ../shell/ev-window.c:6103
 msgid "Go to Page"
 msgstr "اذهب إلى الصفحة"
 
 #. Bookmarks menu
-#: ../shell/ev-window.c:6085
+#: ../shell/ev-window.c:6107
 msgid "_Add Bookmark"
 msgstr "أ_ضف علامة"
 
-#: ../shell/ev-window.c:6086
+#: ../shell/ev-window.c:6108
 msgid "Add a bookmark for the current page"
 msgstr "أضِف علامة للصّفحة الحاليّة"
 
-#: ../shell/ev-window.c:6089
+#: ../shell/ev-window.c:6111
 msgid "_About"
 msgstr "_عنْ"
 
 #. Toolbar-only
-#: ../shell/ev-window.c:6093
+#: ../shell/ev-window.c:6115
 msgid "Leave Fullscreen"
 msgstr "غادِر نمط ملء الشاشة"
 
-#: ../shell/ev-window.c:6094
+#: ../shell/ev-window.c:6116
 msgid "Leave fullscreen mode"
 msgstr "غادِر نمط ملء الشاشة"
 
-#: ../shell/ev-window.c:6096
+#: ../shell/ev-window.c:6118
 msgid "Start Presentation"
 msgstr "ابدأ العرض التقديمي"
 
-#: ../shell/ev-window.c:6097
+#: ../shell/ev-window.c:6119
 msgid "Start a presentation"
 msgstr "ابدأ عرض تقديمي"
 
 #. View Menu
-#: ../shell/ev-window.c:6158
+#: ../shell/ev-window.c:6180
 msgid "Side _Pane"
 msgstr "ال_لوحة الجانبية"
 
-#: ../shell/ev-window.c:6159
+#: ../shell/ev-window.c:6181
 msgid "Show or hide the side pane"
 msgstr "اظهر أو اخفِ اللوحة الجانبية"
 
-#: ../shell/ev-window.c:6161
+#: ../shell/ev-window.c:6183
 msgid "_Continuous"
 msgstr "م_ستمر"
 
-#: ../shell/ev-window.c:6162
+#: ../shell/ev-window.c:6184
 msgid "Show the entire document"
 msgstr "اعرض كامل المستند"
 
-#: ../shell/ev-window.c:6164
+#: ../shell/ev-window.c:6186
 msgid "_Dual"
 msgstr "_مزدوج"
 
-#: ../shell/ev-window.c:6165
+#: ../shell/ev-window.c:6187
 msgid "Show two pages at once"
 msgstr "اعرض صفحتين معًا"
 
-#: ../shell/ev-window.c:6167
+#: ../shell/ev-window.c:6189
 msgid "_Odd Pages Left"
 msgstr "ال_صفحات الزوجية يمينًا"
 
-#: ../shell/ev-window.c:6168
+#: ../shell/ev-window.c:6190
 msgid "Show odd pages on the left in dual mode"
 msgstr "أظهر الصفحات الزوجية على اليمين في الوضع المزدوج"
 
-#: ../shell/ev-window.c:6170
+#: ../shell/ev-window.c:6192
 msgid "_Fullscreen"
 msgstr "_ملء الشاشة"
 
-#: ../shell/ev-window.c:6171
+#: ../shell/ev-window.c:6193
 msgid "Expand the window to fill the screen"
 msgstr "مدّد النافذة لتملأ الشاشة"
 
-#: ../shell/ev-window.c:6173
+#: ../shell/ev-window.c:6195
 msgid "Pre_sentation"
 msgstr "_عرض تقديمي"
 
-#: ../shell/ev-window.c:6174
+#: ../shell/ev-window.c:6196
 msgid "Run document as a presentation"
 msgstr "شغّل المستند كعرض تقديمي"
 
-#: ../shell/ev-window.c:6176
+#: ../shell/ev-window.c:6198
 msgid "_Inverted Colors"
 msgstr "ألوان _معكوسة"
 
-#: ../shell/ev-window.c:6177
+#: ../shell/ev-window.c:6199
 msgid "Show page contents with the colors inverted"
 msgstr "اعرض محتويات الصفحة بألوان معكوسة"
 
-#: ../shell/ev-window.c:6180
+#: ../shell/ev-window.c:6202
 msgid "_Find…"
 msgstr "ا_بحث…"
 
-#: ../shell/ev-window.c:6181
+#: ../shell/ev-window.c:6203
 msgid "Find a word or phrase in the document"
 msgstr "ابحث عن كلمة أو عبارة في المستند"
 
 #. Links
-#: ../shell/ev-window.c:6188
+#: ../shell/ev-window.c:6210
 msgid "_Open Link"
 msgstr "ا_فتح الرابط"
 
-#: ../shell/ev-window.c:6190
+#: ../shell/ev-window.c:6212
 msgid "_Go To"
 msgstr "ا_ذهب إلى"
 
-#: ../shell/ev-window.c:6192
+#: ../shell/ev-window.c:6214
 msgid "Open in New _Window"
 msgstr "افتح فى نافذة _جديدة"
 
-#: ../shell/ev-window.c:6194
+#: ../shell/ev-window.c:6216
 msgid "_Copy Link Address"
 msgstr "ا_نسخ عنوان الرابط"
 
-#: ../shell/ev-window.c:6196
+#: ../shell/ev-window.c:6218
 msgid "_Save Image As…"
 msgstr "ا_حفظ الصورة ك‍…"
 
-#: ../shell/ev-window.c:6198
+#: ../shell/ev-window.c:6220
 msgid "Copy _Image"
 msgstr "انسخ ال_صورة"
 
-#: ../shell/ev-window.c:6200
+#: ../shell/ev-window.c:6222
 msgid "Annotation Properties…"
 msgstr "خصائص التعليقات…"
 
-#: ../shell/ev-window.c:6205
+#: ../shell/ev-window.c:6227
 msgid "_Open Attachment"
 msgstr "ا_فتح المرفق"
 
-#: ../shell/ev-window.c:6207
+#: ../shell/ev-window.c:6229
 msgid "_Save Attachment As…"
 msgstr "ا_حفظ المرفق باسم…"
 
-#: ../shell/ev-window.c:6218
+#: ../shell/ev-window.c:6240
 msgid "_Automatic"
 msgstr "_تلقائي"
 
-#: ../shell/ev-window.c:6339
+#: ../shell/ev-window.c:6361
 msgid "Zoom"
 msgstr "قرّب"
 
-#: ../shell/ev-window.c:6341
+#: ../shell/ev-window.c:6363
 msgid "Adjust the zoom level"
 msgstr "اضبط مستوى التقريب"
 
-#: ../shell/ev-window.c:6354
+#: ../shell/ev-window.c:6376
 msgid "History"
 msgstr "التأريخ"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:6383
+#: ../shell/ev-window.c:6405
 msgid "Open Folder"
 msgstr "افتح المجلّد"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:6387
+#: ../shell/ev-window.c:6409
 msgid "Send To"
 msgstr "أرسل إلى"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:6393
+#: ../shell/ev-window.c:6415
 msgid "Previous"
 msgstr "السابق"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:6398
+#: ../shell/ev-window.c:6420
 msgid "Next"
 msgstr "التالي"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:6402
+#: ../shell/ev-window.c:6424
 msgid "Zoom In"
 msgstr "قرّب"
 
 #. translators: this is the label for toolbar button
-#: ../shell/ev-window.c:6406
+#: ../shell/ev-window.c:6428
 msgid "Zoom Out"
 msgstr "بعّد"
 
-#: ../shell/ev-window.c:6538 ../shell/ev-window.c:6554
+#: ../shell/ev-window.c:6560 ../shell/ev-window.c:6576
 msgid "Unable to launch external application."
 msgstr "تعذر تشغيل برنامج خارجي."
 
-#: ../shell/ev-window.c:6611
+#: ../shell/ev-window.c:6633
 msgid "Unable to open external link"
 msgstr "تعذر فتح وصلة خارجية"
 
-#: ../shell/ev-window.c:6804
+#: ../shell/ev-window.c:6826
 msgid "Couldn't find appropriate format to save image"
 msgstr "تعذّر تحديد تنسيق مناسب لحفظ الصورة"
 
-#: ../shell/ev-window.c:6836
+#: ../shell/ev-window.c:6858
 msgid "The image could not be saved."
 msgstr "تعذر حفظ الصورة."
 
-#: ../shell/ev-window.c:6868
+#: ../shell/ev-window.c:6890
 msgid "Save Image"
 msgstr "احفظ الصورة"
 
-#: ../shell/ev-window.c:6999
+#: ../shell/ev-window.c:7021
 msgid "Unable to open attachment"
 msgstr "تعذر فتح المرفق"
 
-#: ../shell/ev-window.c:7055
+#: ../shell/ev-window.c:7077
 msgid "The attachment could not be saved."
 msgstr "تعذر حفظ المرفق."
 
-#: ../shell/ev-window.c:7100
+#: ../shell/ev-window.c:7122
 msgid "Save Attachment"
 msgstr "احفظ الملف المرفق"
 
