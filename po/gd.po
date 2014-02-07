@@ -8,7 +8,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=evince"
 "&keywords=I18N+L10N&component=general\n"
 "POT-Creation-Date: 2014-02-06 04:53+0000\n"
-"PO-Revision-Date: 2014-02-06 16:15+0100\n"
+"PO-Revision-Date: 2014-02-07 13:07+0100\n"
 "Last-Translator: GunChleoc <fios@foramnagaidhlig.net>\n"
 "Language-Team: Fòram na Gàidhlig http://www.foramnagaidhlig.net\n"
 "Language: gd\n"
@@ -25,11 +25,13 @@ msgstr ""
 msgid ""
 "Error launching the command “%s” in order to decompress the comic book: %s"
 msgstr ""
+"Mearachd le tòiseachadh na h-àithne \"%s\" gus a' comic book: %s a "
+"dhì-dhùmhlachadh"
 
 #: ../backend/comics/comics-document.c:224
 #, c-format
 msgid "The command “%s” failed at decompressing the comic book."
-msgstr ""
+msgstr "Cha deach leis an àithne \"%s! a' comic book a dhì-dhùmhlachadh."
 
 #: ../backend/comics/comics-document.c:233
 #, c-format
@@ -39,11 +41,13 @@ msgstr "Cha deach an àithne \"%s\" a thoirt gu crìch mar bu chòir."
 #: ../backend/comics/comics-document.c:426
 #, c-format
 msgid "Not a comic book MIME type: %s"
-msgstr ""
+msgstr "Chan e seòrsa MIME comic book a th' ann: %s"
 
 #: ../backend/comics/comics-document.c:433
 msgid "Can't find an appropriate command to decompress this type of comic book"
 msgstr ""
+"Cha deach àithne iomchaidh a lorg gus an t-seòrsa seo de comic book a "
+"dhì-dhùmhlachadh"
 
 #: ../backend/comics/comics-document.c:488
 msgid "File corrupted"
@@ -70,7 +74,7 @@ msgstr "Mearachd %s"
 
 #: ../backend/comics/comicsdocument.evince-backend.in.h:1
 msgid "Comic Books"
-msgstr ""
+msgstr "Comic Books"
 
 #: ../backend/djvu/djvu-document.c:175
 msgid "DjVu document has incorrect format"
@@ -1184,30 +1188,38 @@ msgid ""
 "Document contains form fields that have been filled out. If you don't save a "
 "copy, changes will be permanently lost."
 msgstr ""
+"Tha raointean ann am foirm na sgrìobhainn nach deach a lìonadh. Mur sàbhail "
+"thu lethbhreac dheth, thèid na h-atharraichean air chall gu buan."
 
 #: ../shell/ev-window.c:3657
 msgid ""
 "Document contains new or modified annotations. If you don't save a copy, "
 "changes will be permanently lost."
 msgstr ""
+"Tha nòtachaidhean ùra no air an atharrachadh san sgrìobhainn. Mur sàbhail "
+"thu lethbhreac dheth, thèid na h-atharraichean air chall gu buan."
 
 #: ../shell/ev-window.c:3664
 #, c-format
 msgid "Save a copy of document “%s” before closing?"
 msgstr ""
+"A bheil thu airson lethbhreac dhen sgrìobhainn \"%s\" a shàbhaladh mus dùin "
+"thu i?"
 
 #: ../shell/ev-window.c:3683
 msgid "Close _without Saving"
-msgstr ""
+msgstr "Dùin _gun a sàbhaladh"
 
 #: ../shell/ev-window.c:3687
 msgid "Save a _Copy"
-msgstr ""
+msgstr "Sàbhail lethbhrea_c dheth"
 
 #: ../shell/ev-window.c:3761
 #, c-format
 msgid "Wait until print job “%s” finishes before closing?"
 msgstr ""
+"A bheil thu airson feitheamh gus am bi an obair clò-bhualaidh \"%s\" deiseil "
+"mus dùin thu seo?"
 
 #. TRANS: the singular form is not really used as n_print_jobs > 1
 #. but some languages distinguish between different plurals forms,
@@ -1218,23 +1230,35 @@ msgid "There is %d print job active. Wait until print finishes before closing?"
 msgid_plural ""
 "There are %d print jobs active. Wait until print finishes before closing?"
 msgstr[0] ""
+"Tha %d obair clò-bhualaidh gnìomhach. A bheil thu airson feitheamh gus am bi "
+"e coileanta mus dùin thu seo?"
 msgstr[1] ""
+"Tha %d obair clò-bhualaidh gnìomhach. A bheil thu airson feitheamh gus am bi "
+"iad coileanta mus dùin thu seo?"
+msgstr[2] ""
+"Tha %d obaraichean clò-bhualaidh gnìomhach. A bheil thu airson feitheamh gus "
+"am bi iad coileanta mus dùin thu seo?"
+msgstr[3] ""
+"Tha %d obair clò-bhualaidh gnìomhach. A bheil thu airson feitheamh gus am bi "
+"iad coileanta mus dùin thu seo?"
 
 #: ../shell/ev-window.c:3782
 msgid "If you close the window, pending print jobs will not be printed."
 msgstr ""
+"Ma dhùineas tu an uinneag seo, cha tèid na h-obraichean clò-bhualaidh ri an "
+"dèiligeadh a chlò-bhualadh tuilleadh."
 
 #: ../shell/ev-window.c:3786
 msgid "Cancel _print and Close"
-msgstr ""
+msgstr "Sguir dhen clò-_bhualadh 's dùin e"
 
 #: ../shell/ev-window.c:3790
 msgid "Close _after Printing"
-msgstr ""
+msgstr "Dùin e às dèidh a' chlò-bhu_alaidh"
 
 #: ../shell/ev-window.c:4333
 msgid "Running in presentation mode"
-msgstr ""
+msgstr "A' ruith sa mhodh taisbeanaidh"
 
 #: ../shell/ev-window.c:5036
 #, c-format
@@ -1242,6 +1266,8 @@ msgid ""
 "Document Viewer\n"
 "Using %s (%s)"
 msgstr ""
+"Sealladair sgrìobhainnean\n"
+"A' cleachdadh %s (%s)"
 
 #: ../shell/ev-window.c:5069
 msgid ""
@@ -1249,7 +1275,10 @@ msgid ""
 "terms of the GNU General Public License as published by the Free Software "
 "Foundation; either version 2 of the License, or (at your option) any later "
 "version.\n"
-msgstr ""
+msgstr "Tha Evince 'na bhathar-bog saor; 's urrainn dhut ath-sgaoileadh agus/no "
+"atharrachadh fo theirmichean a' GNU General Public License mar a chaidh "
+"fhoillseachadh leis a' Free Software Foundation; co-dhiù tionndadh 2 dhen "
+"cheadachas no (ma lùigeas tu) tionndadh nas ùire sam bith dheth.\n"
 
 #: ../shell/ev-window.c:5073
 msgid ""
@@ -1257,26 +1286,31 @@ msgid ""
 "WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS "
 "FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more "
 "details.\n"
-msgstr ""
+msgstr "Tha Evince 'ga sgaoileadh is sinne an dòchas gum bi e gu feum ach 's ann as "
+"aonais barantais sam bith; fiù às aonais barantas fillte a thaobh SO-"
+"MHARSANTACHD no ION-FHREAGARRACHD A CHUM FEUM SAM BITH. Faic a' GNU General "
+"Public License airson barrachd fiosrachaidh.\n"
 
 #: ../shell/ev-window.c:5077
 msgid ""
 "You should have received a copy of the GNU General Public License along with "
 "Evince; if not, write to the Free Software Foundation, Inc., 51 Franklin "
 "Street, Fifth Floor, Boston, MA 02110-1301  USA\n"
-msgstr ""
+msgstr "Bu chòir do lethbhreac dhe GNU General Public License a bhith an cois "
+"Evince; mur eil, sgrìobh gun Free Software Foundation, Inc., 51 Franklin "
+"Street, Fifth Floor, Boston, MA 02110-1301, USA\n"
 
 #: ../shell/ev-window.c:5102
 msgid "Evince"
-msgstr ""
+msgstr "Evince"
 
 #: ../shell/ev-window.c:5105
 msgid "© 1996–2012 The Evince authors"
-msgstr ""
+msgstr "© 1996–2012 Na h-ùghdaran aig Evince"
 
 #: ../shell/ev-window.c:5111
 msgid "translator-credits"
-msgstr ""
+msgstr "GunChleoc http://www.foramnagaidhlig.net"
 
 #. TRANS: Sometimes this could be better translated as
 #. "%d hit(s) on this page".  Therefore this string
@@ -1285,25 +1319,27 @@ msgstr ""
 #, c-format
 msgid "%d found on this page"
 msgid_plural "%d found on this page"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%d toradh air an duilleag seo"
+msgstr[1] "%d thoradh air an duilleag seo"
+msgstr[2] "%d toraidhean air an duilleag seo"
+msgstr[3] "%d toradh air an duilleag seo"
 
 #: ../shell/ev-window.c:5387
 msgid "Not found"
-msgstr ""
+msgstr "Cha deach a lorg"
 
 #: ../shell/ev-window.c:5393
 #, c-format
 msgid "%3d%% remaining to search"
-msgstr ""
+msgstr "%3d%% ri an lorg fhathast"
 
 #: ../shell/ev-window.c:5720
 msgid "Enable caret navigation?"
-msgstr ""
+msgstr "A bheil thu airson seòladaireachd carait a chur an comas?"
 
 #: ../shell/ev-window.c:5722
 msgid "_Enable"
-msgstr ""
+msgstr "_Cuir an comas"
 
 #: ../shell/ev-window.c:5725
 msgid ""
@@ -1311,239 +1347,243 @@ msgid ""
 "moveable cursor in text pages, allowing you to move around and select text "
 "with your keyboard. Do you want to enable the caret navigation on?"
 msgstr ""
+"Cuiridh tu seòladaireachd carait air is dheth le F7. Cuiridh am feart seo "
+"cùrsair gluasadach ann an duilleagan teacsa agus 's urrainn dhut teacsa a "
+"thaghadh 's a ghluasad leis a' mheur-chlàr leis. A bheil thu airson "
+"seòladaireachd carait a chur air a-nis?"
 
 #: ../shell/ev-window.c:5730
 msgid "Don't show this message again"
-msgstr ""
+msgstr "Na seall an teachdaireachd seo a-rithist"
 
 #: ../shell/ev-window.c:6035
 msgid "_Bookmarks"
-msgstr ""
+msgstr "_Comharran-leabhair"
 
 #: ../shell/ev-window.c:6036
 msgid "_Recent"
-msgstr ""
+msgstr "O chionn ghoi_rid"
 
 #. File menu
 #: ../shell/ev-window.c:6039 ../shell/ev-window.c:6385
 msgid "_Open…"
-msgstr ""
+msgstr "F_osgail…"
 
 #: ../shell/ev-window.c:6040 ../shell/ev-window.c:6386
 msgid "Open an existing document"
-msgstr ""
+msgstr "Fosgail sgrìobhainn a tha ann"
 
 #: ../shell/ev-window.c:6042
 msgid "Op_en a Copy"
-msgstr ""
+msgstr "Fosgail l_ethbhreac dheth"
 
 #: ../shell/ev-window.c:6043
 msgid "Open a copy of the current document in a new window"
-msgstr ""
+msgstr "Fosgail lethbhreac dhen sgrìobhainn làithreach ann an uinneag ùr"
 
 #: ../shell/ev-window.c:6045
 msgid "_Save a Copy…"
-msgstr ""
+msgstr "_Sàbhail lethbhreac dheth…"
 
 #: ../shell/ev-window.c:6046
 msgid "Save a copy of the current document"
-msgstr ""
+msgstr "Sàbhail lethbhreac dhen sgrìobhainn làithreach"
 
 #: ../shell/ev-window.c:6048
 msgid "Send _To…"
-msgstr ""
+msgstr "Cuir _gu…"
 
 #: ../shell/ev-window.c:6049
 msgid "Send current document by mail, instant message…"
-msgstr ""
+msgstr "Cuir an sgrìobhainn làithreach le post-d, grad-theachdaireachd…"
 
 #: ../shell/ev-window.c:6051
 msgid "Open Containing _Folder"
-msgstr ""
+msgstr "_Fosgail am pasgan far a bheil e"
 
 #: ../shell/ev-window.c:6052
 msgid "Show the folder which contains this file in the file manager"
-msgstr ""
+msgstr "Seall am pasgan sa bheil am faidhle seo ann am manaidsear nam faidhle"
 
 #: ../shell/ev-window.c:6054
 msgid "_Print…"
-msgstr ""
+msgstr "Clò-_bhuail…"
 
 #: ../shell/ev-window.c:6057
 msgid "P_roperties"
-msgstr ""
+msgstr "_Roghainnean"
 
 #: ../shell/ev-window.c:6065
 msgid "Select _All"
-msgstr ""
+msgstr "Tagh n_a h-uile"
 
 #: ../shell/ev-window.c:6067
 msgid "Rotate _Left"
-msgstr ""
+msgstr "Cuairtich tuathai_l"
 
 #: ../shell/ev-window.c:6069
 msgid "Rotate _Right"
-msgstr ""
+msgstr "Cuai_rtich deiseil"
 
 #: ../shell/ev-window.c:6071
 msgid "Save Current Settings as _Default"
-msgstr ""
+msgstr "Sàbhail na roghainnean làithreach mar na _bun-roghainnean"
 
 #: ../shell/ev-window.c:6082
 msgid "_Reload"
-msgstr ""
+msgstr "_Ath-luchdaich"
 
 #: ../shell/ev-window.c:6083
 msgid "Reload the document"
-msgstr ""
+msgstr "Ath-luchdaich an sgrìobhainn"
 
 #: ../shell/ev-window.c:6086
 msgid "Auto_scroll"
-msgstr ""
+msgstr "_Sgroladh fèin-obrachail"
 
 #: ../shell/ev-window.c:6096
 msgid "_First Page"
-msgstr ""
+msgstr "A' _chiad duilleag"
 
 #: ../shell/ev-window.c:6097
 msgid "Go to the first page"
-msgstr ""
+msgstr "Rach gun chiad duilleag"
 
 #: ../shell/ev-window.c:6099
 msgid "_Last Page"
-msgstr ""
+msgstr "An duilleag mu _dheireadh"
 
 #: ../shell/ev-window.c:6100
 msgid "Go to the last page"
-msgstr ""
+msgstr "Rach gun duilleag mu dheireadh"
 
 #: ../shell/ev-window.c:6102
 msgid "Go to Pa_ge"
-msgstr ""
+msgstr "Rach gu duillea_g"
 
 #: ../shell/ev-window.c:6103
 msgid "Go to Page"
-msgstr ""
+msgstr "Rach gu duilleag"
 
 #. Bookmarks menu
 #: ../shell/ev-window.c:6107
 msgid "_Add Bookmark"
-msgstr ""
+msgstr "_Cuir comharra-leabhair ris"
 
 #: ../shell/ev-window.c:6108
 msgid "Add a bookmark for the current page"
-msgstr ""
+msgstr "Cuir ris comharra-leabhair airson na duilleige làithrich"
 
 #: ../shell/ev-window.c:6111
 msgid "_About"
-msgstr ""
+msgstr "_Mu dhèidhinn"
 
 #. Toolbar-only
 #: ../shell/ev-window.c:6115
 msgid "Leave Fullscreen"
-msgstr ""
+msgstr "Fàg an làn-sgrìn"
 
 #: ../shell/ev-window.c:6116
 msgid "Leave fullscreen mode"
-msgstr ""
+msgstr "Fàg am modh làn-sgrìn"
 
 #: ../shell/ev-window.c:6118
 msgid "Start Presentation"
-msgstr ""
+msgstr "Tòisich air taisbeanadh"
 
 #: ../shell/ev-window.c:6119
 msgid "Start a presentation"
-msgstr ""
+msgstr "Tòisich air taisbeanadh"
 
 #. View Menu
 #: ../shell/ev-window.c:6180
 msgid "Side _Pane"
-msgstr ""
+msgstr "_Leòsan-taoibh"
 
 #: ../shell/ev-window.c:6181
 msgid "Show or hide the side pane"
-msgstr ""
+msgstr "Seall no falaich an leòsan-taoibh"
 
 #: ../shell/ev-window.c:6183
 msgid "_Continuous"
-msgstr ""
+msgstr "_Leantainneach"
 
 #: ../shell/ev-window.c:6184
 msgid "Show the entire document"
-msgstr ""
+msgstr "Seall an sgrìobhainn gu lèir"
 
 #: ../shell/ev-window.c:6186
 msgid "_Dual"
-msgstr ""
+msgstr "_Dùbailte"
 
 #: ../shell/ev-window.c:6187
 msgid "Show two pages at once"
-msgstr ""
+msgstr "Seall dà dhuilleag aig an aon àm"
 
 #: ../shell/ev-window.c:6189
 msgid "_Odd Pages Left"
-msgstr ""
+msgstr "Duilleagan c_orra air an taobh chlì"
 
 #: ../shell/ev-window.c:6190
 msgid "Show odd pages on the left in dual mode"
-msgstr ""
+msgstr "Seall na duilleagan corra air an taobh chlì sa mhodh dhùbailte"
 
 #: ../shell/ev-window.c:6192
 msgid "_Fullscreen"
-msgstr ""
+msgstr "_Làn-sgrìn"
 
 #: ../shell/ev-window.c:6193
 msgid "Expand the window to fill the screen"
-msgstr ""
+msgstr "Leudaich an uinneag ach an lìon i an sgrìn"
 
 #: ../shell/ev-window.c:6195
 msgid "Pre_sentation"
-msgstr ""
+msgstr "Tai_sbeanadh"
 
 #: ../shell/ev-window.c:6196
 msgid "Run document as a presentation"
-msgstr ""
+msgstr "Ruith an sgrìobhainn mar thaisbeanadh"
 
 #: ../shell/ev-window.c:6198
 msgid "_Inverted Colors"
-msgstr ""
+msgstr "_Dathan contrarra"
 
 #: ../shell/ev-window.c:6199
 msgid "Show page contents with the colors inverted"
-msgstr ""
+msgstr "Seall susbaint duilleige le dathan contrarra"
 
 #: ../shell/ev-window.c:6202
 msgid "_Find…"
-msgstr ""
+msgstr "_Lorg…"
 
 #: ../shell/ev-window.c:6203
 msgid "Find a word or phrase in the document"
-msgstr ""
+msgstr "Lorg facal no abairt san sgrìobhainn"
 
 #. Links
 #: ../shell/ev-window.c:6210
 msgid "_Open Link"
-msgstr ""
+msgstr "F_osgail an ceangal"
 
 #: ../shell/ev-window.c:6212
 msgid "_Go To"
-msgstr ""
+msgstr "Rach _gu"
 
 #: ../shell/ev-window.c:6214
 msgid "Open in New _Window"
-msgstr ""
+msgstr "Fosgail ann an _uinneag ùr"
 
 #: ../shell/ev-window.c:6216
 msgid "_Copy Link Address"
-msgstr ""
+msgstr "Dèan lethbhreac de sheòladh a' _cheangail"
 
 #: ../shell/ev-window.c:6218
 msgid "_Save Image As…"
-msgstr ""
+msgstr "_Sàbhail an dealbh mar…"
 
 #: ../shell/ev-window.c:6220
 msgid "Copy _Image"
-msgstr ""
+msgstr "_Dèan lethbhreac dhen dealbh"
 
 #: ../shell/ev-window.c:6222
 msgid "Annotation Properties…"
@@ -1551,147 +1591,147 @@ msgstr "Roghainnean nan nòtaichaidhean…"
 
 #: ../shell/ev-window.c:6227
 msgid "_Open Attachment"
-msgstr ""
+msgstr "F_osgail an ceanglachan"
 
 #: ../shell/ev-window.c:6229
 msgid "_Save Attachment As…"
-msgstr ""
+msgstr "_Sàbhail an ceanglachan mar…"
 
 #: ../shell/ev-window.c:6240
 msgid "_Automatic"
-msgstr ""
+msgstr "Fèin-obr_achail"
 
 #: ../shell/ev-window.c:6361
 msgid "Zoom"
-msgstr ""
+msgstr "Sùm"
 
 #: ../shell/ev-window.c:6363
 msgid "Adjust the zoom level"
-msgstr ""
+msgstr "Gleus leibheil an t-sùmaidh"
 
 #: ../shell/ev-window.c:6376
 msgid "History"
-msgstr ""
+msgstr "Eachdraidh"
 
 #. translators: this is the label for toolbar button
 #: ../shell/ev-window.c:6405
 msgid "Open Folder"
-msgstr ""
+msgstr "Fosgail pasgan"
 
 #. translators: this is the label for toolbar button
 #: ../shell/ev-window.c:6409
 msgid "Send To"
-msgstr ""
+msgstr "Cuir gu"
 
 #. translators: this is the label for toolbar button
 #: ../shell/ev-window.c:6415
 msgid "Previous"
-msgstr ""
+msgstr "Air ais"
 
 #. translators: this is the label for toolbar button
 #: ../shell/ev-window.c:6420
 msgid "Next"
-msgstr ""
+msgstr "Air adhart"
 
 #. translators: this is the label for toolbar button
 #: ../shell/ev-window.c:6424
 msgid "Zoom In"
-msgstr ""
+msgstr "Sùm a-steach"
 
 #. translators: this is the label for toolbar button
 #: ../shell/ev-window.c:6428
 msgid "Zoom Out"
-msgstr ""
+msgstr "Sùm a-mach"
 
 #: ../shell/ev-window.c:6560 ../shell/ev-window.c:6576
 msgid "Unable to launch external application."
-msgstr ""
+msgstr "Cha deach leinn an aplacaid taobh a-muigh a thòiseachadh."
 
 #: ../shell/ev-window.c:6633
 msgid "Unable to open external link"
-msgstr ""
+msgstr "Cha deach leinn an ceangal taobh a-muigh fhosgladh"
 
 #: ../shell/ev-window.c:6826
 msgid "Couldn't find appropriate format to save image"
-msgstr ""
+msgstr "Cha deach leinn fòrmat iomchaidh a lorg gus an dealbh a shàbhaladh"
 
 #: ../shell/ev-window.c:6858
 msgid "The image could not be saved."
-msgstr ""
+msgstr "Cha b' urrainn dhuinn an dealbh a shàbhaladh."
 
 #: ../shell/ev-window.c:6890
 msgid "Save Image"
-msgstr ""
+msgstr "Sàbhail an dealbh"
 
 #: ../shell/ev-window.c:7021
 msgid "Unable to open attachment"
-msgstr ""
+msgstr "Cha deach leinn an ceanglachan fhosgladh"
 
 #: ../shell/ev-window.c:7077
 msgid "The attachment could not be saved."
-msgstr ""
+msgstr "Cha b' urrainn dhuinn an ceanglachan a shàbhaladh."
 
 #: ../shell/ev-window.c:7122
 msgid "Save Attachment"
-msgstr ""
+msgstr "Sàbhail an ceanglachan"
 
 #: ../shell/ev-window-title.c:169
 #, c-format
 msgid "%s — Password Required"
-msgstr ""
+msgstr "%s — Feum air facal-faire"
 
 #: ../shell/main.c:70 ../shell/main.c:276
 msgid "GNOME Document Viewer"
-msgstr ""
+msgstr "Sealladair sgrìobhainnean GNOME"
 
 #: ../shell/main.c:78
 msgid "The page label of the document to display."
-msgstr ""
+msgstr "Leubail duilleige na sgrìobhainne ri a shealltainn."
 
 #: ../shell/main.c:78
 msgid "PAGE"
-msgstr ""
+msgstr "DUILLEAG"
 
 #: ../shell/main.c:79
 msgid "The page number of the document to display."
-msgstr ""
+msgstr "Àireamh duilleige na sgrìobhainne ri a shealltainn."
 
 #: ../shell/main.c:79
 msgid "NUMBER"
-msgstr ""
+msgstr "ÀIREAMH"
 
 #: ../shell/main.c:80
 msgid "Named destination to display."
-msgstr ""
+msgstr "Ceann-uidhe ainmichte ri a shealltainn."
 
 #: ../shell/main.c:80
 msgid "DEST"
-msgstr ""
+msgstr "CEANN-UIDHE"
 
 #: ../shell/main.c:81
 msgid "Run evince in fullscreen mode"
-msgstr ""
+msgstr "Ruith Evince sa mhodh làn-sgrìn"
 
 #: ../shell/main.c:82
 msgid "Run evince in presentation mode"
-msgstr ""
+msgstr "Ruith Evince sa mhodh taisbeanaidh"
 
 #: ../shell/main.c:83
 msgid "Run evince as a previewer"
-msgstr ""
+msgstr "Ruith Evince 'na ro-shealladair"
 
 #: ../shell/main.c:84
 msgid "The word or phrase to find in the document"
-msgstr ""
+msgstr "Am facal no abairt ri lorg san sgrìobhainn"
 
 #: ../shell/main.c:84
 msgid "STRING"
-msgstr ""
+msgstr "SREANG"
 
 #: ../shell/main.c:88
 msgid "[FILE…]"
-msgstr ""
+msgstr "[FAIDHLE…]"
 
 #: ../shell/evince-appmenu.ui.h:1
 msgid "_Help"
-msgstr ""
+msgstr "Cob_hair"
