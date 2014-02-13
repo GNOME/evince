@@ -2432,12 +2432,13 @@ ev_window_file_chooser_restore_folder (EvWindow       *window,
                                        const gchar    *uri,
                                        GUserDirectory  directory)
 {
-        const gchar *folder_uri, *dir;
+        const gchar *dir;
+        gchar *folder_uri;
         gchar *parent_uri = NULL;
 
         g_settings_get (ev_window_ensure_settings (window),
                         get_settings_key_for_directory (directory),
-                        "m&s", &folder_uri);
+                        "ms", &folder_uri);
         if (folder_uri == NULL && uri != NULL) {
                 GFile *file, *parent;
 
@@ -2458,6 +2459,7 @@ ev_window_file_chooser_restore_folder (EvWindow       *window,
                                                      dir ? dir : g_get_home_dir ());
         }
 
+        g_free (folder_uri);
         g_free (parent_uri);
 }
 
