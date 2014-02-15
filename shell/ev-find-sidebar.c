@@ -102,30 +102,71 @@ ev_find_sidebar_class_init (EvFindSidebarClass *find_sidebar_class)
 }
 
 static void
+ev_find_sidebar_activate_result_at_iter (EvFindSidebar *sidebar,
+                                         GtkTreeModel  *model,
+                                         GtkTreeIter   *iter)
+{
+        EvFindSidebarPrivate *priv;
+        gint                  page;
+        gint                  result;
+
+        priv = sidebar->priv;
+
+        if (priv->highlighted_result)
+                gtk_tree_path_free (priv->highlighted_result);
+        priv->highlighted_result = gtk_tree_model_get_path (model, iter);
+
+        gtk_tree_model_get (model, iter,
+                            PAGE_COLUMN, &page,
+                            RESULT_COLUMN, &result,
+                            -1);
+        g_signal_emit (sidebar, signals[RESULT_ACTIVATED], 0, page - 1, result);
+}
+
+static void
 selection_changed_callback (GtkTreeSelection *selection,
                             EvFindSidebar    *sidebar)
 {
+        GtkTreeModel *model;
+        GtkTreeIter   iter;
+
+        if (gtk_tree_selection_get_selected (selection, &model, &iter))
+                ev_find_sidebar_activate_result_at_iter (sidebar, model, &iter);
+}
+
+static gboolean
+sidebar_tree_button_press_cb (GtkTreeView    *view,
+                              GdkEventButton *event,
+                              EvFindSidebar  *sidebar)
+{
         EvFindSidebarPrivate *priv;
         GtkTreeModel         *model;
+        GtkTreePath          *path;
         GtkTreeIter           iter;
 
         priv = sidebar->priv;
 
-        if (gtk_tree_selection_get_selected (selection, &model, &iter)) {
-                gint page;
-                gint result;
+        gtk_tree_view_get_path_at_pos (view, event->x, event->y, &path,
+                                       NULL, NULL, NULL);
+        if (!path)
+                return FALSE;
 
-                gtk_tree_model_get (model, &iter,
-                                    PAGE_COLUMN, &page,
-                                    RESULT_COLUMN, &result,
-                                    -1);
-
-                if (priv->highlighted_result)
-                        gtk_tree_path_free (priv->highlighted_result);
-                priv->highlighted_result = gtk_tree_model_get_path (model, &iter);
-
-                g_signal_emit (sidebar, signals[RESULT_ACTIVATED], 0, page - 1, result);
+        if (priv->highlighted_result &&
+            gtk_tree_path_compare (priv->highlighted_result, path) != 0) {
+                gtk_tree_path_free (path);
+                return FALSE;
         }
+
+        model = gtk_tree_view_get_model (view);
+        gtk_tree_model_get_iter (model, &iter, path);
+        gtk_tree_path_free (path);
+
+        ev_find_sidebar_activate_result_at_iter (sidebar, model, &iter);
+
+        /* Always return FALSE so the tree view gets the event and can update
+         * the selection etc.
+         */
+        return FALSE;
 }
 
 static void
@@ -182,6 +223,9 @@ ev_find_sidebar_init (EvFindSidebar *sidebar)
         priv->selection_id = g_signal_connect (selection, "changed",
                                                G_CALLBACK (selection_changed_callback),
                                                sidebar);
+        g_signal_connect (priv->tree_view, "button-press-event",
+                          G_CALLBACK (sidebar_tree_button_press_cb),
+                          sidebar);
 }
 
 GtkWidget *

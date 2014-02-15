@@ -7744,9 +7744,6 @@ ev_view_find_previous (EvView *view)
 void
 ev_view_find_set_result (EvView *view, gint page, gint result)
 {
-	if (view->find_page == page && view->find_result == result)
-		return;
-
 	view->find_page = page;
 	view->find_result = result;
 	jump_to_find_result (view);
