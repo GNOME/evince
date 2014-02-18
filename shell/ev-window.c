@@ -1758,8 +1758,6 @@ static void
 ev_window_reload_job_cb (EvJob    *job,
 			 EvWindow *ev_window)
 {
-	GtkWidget *widget;
-
 	if (ev_job_is_failed (job)) {
 		ev_window_clear_reload_job (ev_window);
 		ev_window->priv->in_reload = FALSE;
@@ -1779,8 +1777,7 @@ ev_window_reload_job_cb (EvJob    *job,
 	}
 
 	/* Restart the search after reloading */
-	widget = gtk_window_get_focus (GTK_WINDOW (ev_window));
-	if (widget && gtk_widget_get_ancestor (widget, EGG_TYPE_FIND_BAR)) {
+	if (gtk_widget_is_visible (ev_window->priv->find_bar)) {
 		find_bar_search_changed_cb (EGG_FIND_BAR (ev_window->priv->find_bar),
 					    NULL, ev_window);
 	}
