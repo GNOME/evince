@@ -557,9 +557,6 @@ ev_window_update_actions_sensitivity (EvWindow *ev_window)
 		ev_window_set_action_sensitive (ev_window, "GoToPage", FALSE);
 	}
 
-	ev_window_set_action_sensitive (ev_window, "History",
-					!ev_history_is_frozen (ev_window->priv->history));
-
 	ev_window_set_action_sensitive (ev_window, "F7",
 					has_pages &&
 					ev_view_supports_caret_navigation (view) &&
@@ -5601,6 +5598,8 @@ ev_window_show_find_bar (EvWindow *ev_window,
 
 	if (restart && ev_window->priv->find_job)
 		ev_window_find_restart (ev_window);
+
+	ev_window_set_action_sensitive (ev_window, "History", FALSE);
 }
 
 static void
@@ -5621,6 +5620,8 @@ ev_window_close_find_bar (EvWindow *ev_window)
 	update_toggle_find_action (ev_window, FALSE);
 
 	ev_history_thaw (ev_window->priv->history);
+
+	ev_window_set_action_sensitive (ev_window, "History", TRUE);
 }
 
 static void
