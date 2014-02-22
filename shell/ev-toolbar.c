@@ -202,12 +202,6 @@ ev_toolbar_constructed (GObject *object)
         gtk_container_add (GTK_CONTAINER (ev_toolbar), tool_item);
         gtk_widget_show (tool_item);
 
-        /* Separator */
-        tool_item = GTK_WIDGET (gtk_tool_item_new ());
-        gtk_tool_item_set_expand (GTK_TOOL_ITEM (tool_item), TRUE);
-        gtk_container_add (GTK_CONTAINER (ev_toolbar), tool_item);
-        gtk_widget_show (tool_item);
-
         /* Find */
         action = gtk_action_group_get_action (action_group, "EditFind");
         button = ev_toolbar_create_toggle_button (ev_toolbar, action);
@@ -218,6 +212,12 @@ ev_toolbar_constructed (GObject *object)
                 gtk_widget_set_margin_left (tool_item, 12);
         else
                 gtk_widget_set_margin_right (tool_item, 12);
+        gtk_container_add (GTK_CONTAINER (ev_toolbar), tool_item);
+        gtk_widget_show (tool_item);
+
+        /* Separator */
+        tool_item = GTK_WIDGET (gtk_tool_item_new ());
+        gtk_tool_item_set_expand (GTK_TOOL_ITEM (tool_item), TRUE);
         gtk_container_add (GTK_CONTAINER (ev_toolbar), tool_item);
         gtk_widget_show (tool_item);
 
