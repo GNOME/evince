@@ -148,7 +148,7 @@ ev_toolbar_constructed (GObject *object)
 
         G_OBJECT_CLASS (ev_toolbar_parent_class)->constructed (object);
 
-        rtl = gtk_widget_get_direction (GTK_WIDGET (ev_toolbar));
+        rtl = gtk_widget_get_direction (GTK_WIDGET (ev_toolbar)) == GTK_TEXT_DIR_RTL;
 
         /* Set the MENUBAR style class so it's possible to drag the app
          * using the toolbar. */
