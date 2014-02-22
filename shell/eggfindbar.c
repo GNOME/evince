@@ -239,6 +239,13 @@ previous_clicked_callback (GtkButton *button,
 }
 
 static void
+close_button_clicked_callback (GtkButton *button,
+                               EggFindBar *find_bar)
+{
+  g_signal_emit (find_bar, find_bar_signals[CLOSE], 0);
+}
+
+static void
 case_sensitive_toggled_callback (GtkCheckMenuItem *menu_item,
                                  void             *data)
 {
@@ -358,6 +365,7 @@ egg_find_bar_init (EggFindBar *find_bar)
 {
   EggFindBarPrivate *priv;
   GtkWidget *box;
+  GtkWidget *close_button;
   GtkToolItem *item;
   GtkStyleContext *style_context;
 
@@ -432,6 +440,26 @@ egg_find_bar_init (EggFindBar *find_bar)
   gtk_widget_show (priv->status_label);
   gtk_container_add (GTK_CONTAINER (find_bar), GTK_WIDGET (priv->status_item));
 
+  /* Separator */
+  item = gtk_tool_item_new ();
+  gtk_tool_item_set_expand (GTK_TOOL_ITEM (item), TRUE);
+  gtk_container_add (GTK_CONTAINER (find_bar), GTK_WIDGET (item));
+  gtk_widget_show (GTK_WIDGET (item));
+
+  /* Close button */
+  close_button = gtk_button_new ();
+  style_context = gtk_widget_get_style_context (close_button);
+  gtk_style_context_add_class (style_context, GTK_STYLE_CLASS_RAISED);
+  gtk_button_set_relief (GTK_BUTTON (close_button), GTK_RELIEF_NONE);
+  gtk_button_set_image (GTK_BUTTON (close_button),
+                        gtk_image_new_from_icon_name ("window-close-symbolic", GTK_ICON_SIZE_MENU));
+  gtk_widget_set_can_focus (close_button, FALSE);
+  item = gtk_tool_item_new ();
+  gtk_container_add (GTK_CONTAINER (item), close_button);
+  gtk_widget_show (close_button);
+  gtk_container_add (GTK_CONTAINER (find_bar), GTK_WIDGET (item));
+  gtk_widget_show (GTK_WIDGET (item));
+
   g_signal_connect (priv->find_entry, "changed",
                     G_CALLBACK (entry_changed_callback),
                     find_bar);
@@ -449,6 +477,9 @@ egg_find_bar_init (EggFindBar *find_bar)
                     find_bar);
   g_signal_connect (priv->previous_button, "clicked",
                     G_CALLBACK (previous_clicked_callback),
+                    find_bar);
+  g_signal_connect (close_button, "clicked",
+                    G_CALLBACK (close_button_clicked_callback),
                     find_bar);
 }
 
