@@ -1,4 +1,63 @@
 ================
+Evince   3.11.90
+================
+
+New features and improvements:
+
+    * Set the window title for empty windows to make sure it's exposed
+      to accessibility (#653748, Robert Roth, Carlos Garcia Campos)
+    * Make history buttons insensitive when searching (#724549, Anuj Khare)
+    * Rename Open a Copy action as View in New Window (#688762, Bogdan Petcu)
+    * Add close button to the search bar (#723789, Carlos Garcia Campos)
+    * Move the find toolbar button to the left of the toolbar,
+      together with the navigation actions (#723789, Carlos Garcia Campos)
+    * Add tooltips to toolbar menus (#700697, Ekaterina Gerasimova)
+    * Remove SMClient support (#677981, Christian Persch)
+
+Bug fixes:
+
+    * Scroll to the search result when it's clicked in the find
+      sidebar even if the selection hasn't changed (#703570, Saurav Agarwalla)
+    * Correctly restart the search operation when the document is
+      reloaded (#703595, Saurav Agarwalla)
+    * Make print shortcut work when the sidebar is focused (#705846,
+      Anuj Khare)
+    * Fix potential read-after-free in gsettings use (#723737,
+      Christian Persch)
+    * Fix the margin of toolbar elements in RTL locales (#723110,
+      Yosef Or Boczko)
+    * Use g_debug instead of g_printerr for debug warnings in EvDaemon
+      (#723972, Giovanni Campagna)
+
+Documentation:
+
+    * Remove the SyncTeX video that uses the old UI and the wrong
+      theme (#676496, Ekaterina Gerasimova)
+
+Translation updates:
+
+    * Jorge Pérez Pérez (an)
+    * Khaled Hosny (ar)
+    * Nilamdyuti Goswami (as)
+    * Marek Černocký (cs)
+    * Daniel Mustieles (es)
+    * Timo Jyrinki (fi)
+    * GunChleoc (gd)
+    * Fran Dieguez (gl)
+    * Yosef Or Boczko (he)
+    * Baurzhan Muftakhidinov (kk)
+    * Shankar (kn)
+    * Aurimas Černius (lt)
+    * Kjartan Maraas (nb)
+    * Manoj Kumar Giri (or)
+    * Rafael Ferreira (pt_BR)
+    * Victor Ibragimov (tg)
+    * Theppitak Karoonboonyanan (th)
+    * Daniel Korostil (uk)
+    * Chao-Hsiung Liao (zh_HK)
+    * Chao-Hsiung Liao (zh_TW)
+
+================
 Evince    3.11.3
 ================
 
