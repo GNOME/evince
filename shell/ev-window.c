@@ -1564,8 +1564,8 @@ ev_window_set_document (EvWindow *ev_window, EvDocument *document)
 }
 
 static void
-ev_window_document_changed (EvWindow *ev_window,
-			    gpointer  user_data)
+ev_window_file_changed (EvWindow *ev_window,
+			gpointer  user_data)
 {
 	if (ev_window->priv->settings &&
 	    g_settings_get_boolean (ev_window->priv->settings, GS_AUTO_RELOAD))
@@ -1700,7 +1700,7 @@ ev_window_load_job_cb (EvJob *job,
 		/* Create a monitor for the document */
 		ev_window->priv->monitor = ev_file_monitor_new (ev_window->priv->uri);
 		g_signal_connect_swapped (ev_window->priv->monitor, "changed",
-					  G_CALLBACK (ev_window_document_changed),
+					  G_CALLBACK (ev_window_file_changed),
 					  ev_window);
 		
 		ev_window_clear_load_job (ev_window);
@@ -2238,7 +2238,7 @@ ev_window_open_document (EvWindow       *ev_window,
 	/* Create a monitor for the document */
 	ev_window->priv->monitor = ev_file_monitor_new (ev_window->priv->uri);
 	g_signal_connect_swapped (ev_window->priv->monitor, "changed",
-				  G_CALLBACK (ev_window_document_changed),
+				  G_CALLBACK (ev_window_file_changed),
 				  ev_window);
 }
 
