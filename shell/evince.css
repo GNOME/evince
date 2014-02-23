@@ -39,3 +39,12 @@ EvSidebarThumbnails.page-thumbnail {
 EvSidebarThumbnails.page-thumbnail.inverted {
     background-color: black;
 }
+
+@binding-set MoveCursor {
+    unbind "<Control>p";
+    unbind "<Control>n";
+}
+
+GtkIconView {
+    gtk-key-bindings: MoveCursor;
+}
