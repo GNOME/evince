@@ -47,6 +47,8 @@ evince_SOURCES=				\
 	ev-properties-license.h		\
 	ev-open-recent-action.c		\
 	ev-open-recent-action.h		\
+	ev-recent-view.c                \
+	ev-recent-view.h		\
 	ev-toolbar.c			\
 	ev-toolbar.h			\
 	ev-utils.c			\
