@@ -56,18 +56,6 @@ static const BadTitleEntry bad_prefixes[] = {
 	{ EV_BACKEND_PDF, "Microsoft PowerPoint - " }
 };
 
-EvWindowTitle *
-ev_window_title_new (EvWindow *window)
-{
-	EvWindowTitle *window_title;
-
-	window_title = g_new0 (EvWindowTitle, 1);
-	window_title->window = window;
-	window_title->type = EV_WINDOW_TITLE_DOCUMENT;
-
-	return window_title;
-}
-
 static char *
 get_filename_from_uri (const char *uri)
 {
@@ -173,6 +161,20 @@ ev_window_title_update (EvWindowTitle *window_title)
 	}
 
 	g_free (title);
+}
+
+EvWindowTitle *
+ev_window_title_new (EvWindow *window)
+{
+	EvWindowTitle *window_title;
+
+	window_title = g_new0 (EvWindowTitle, 1);
+	window_title->window = window;
+	window_title->type = EV_WINDOW_TITLE_DOCUMENT;
+
+        ev_window_title_update (window_title);
+
+	return window_title;
 }
 
 void
