@@ -327,20 +327,17 @@ static gboolean
 ev_view_accessible_set_caret_offset (AtkText *text, gint offset)
 {
 	GtkWidget *widget;
-	GtkTextBuffer *buffer;
-	GtkTextIter pos_itr;
+	EvView    *view;
 
 	widget = gtk_accessible_get_widget (GTK_ACCESSIBLE (text));
 	if (widget == NULL)
 		/* State is defunct */
 		return FALSE;
 
-	buffer = ev_view_accessible_get_text_buffer (EV_VIEW_ACCESSIBLE (text), EV_VIEW (widget));
-	if (!buffer)
-		return FALSE;
-
-	gtk_text_buffer_get_iter_at_offset (buffer, &pos_itr, offset);
-	gtk_text_buffer_place_cursor (buffer, &pos_itr);
+	view = EV_VIEW (widget);
+	ev_view_set_caret_cursor_position (view,
+					   view->cursor_page,
+					   offset);
 
 	return TRUE;
 }
