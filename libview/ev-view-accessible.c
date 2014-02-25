@@ -259,19 +259,6 @@ ev_view_accessible_get_text_for_offset (EvViewAccessible *view_accessible,
 }
 
 static gchar *
-ev_view_accessible_get_text_before_offset (AtkText        *text,
-                                           gint            offset,
-                                           AtkTextBoundary boundary_type,
-                                           gint           *start_offset,
-                                           gint           *end_offset)
-{
-        return ev_view_accessible_get_text_for_offset (EV_VIEW_ACCESSIBLE (text),
-                                                       offset, GAIL_BEFORE_OFFSET,
-                                                       boundary_type,
-                                                       start_offset, end_offset);
-}
-
-static gchar *
 ev_view_accessible_get_text_at_offset (AtkText        *text,
                                        gint            offset,
                                        AtkTextBoundary boundary_type,
@@ -280,19 +267,6 @@ ev_view_accessible_get_text_at_offset (AtkText        *text,
 {
         return ev_view_accessible_get_text_for_offset (EV_VIEW_ACCESSIBLE (text),
                                                        offset, GAIL_AT_OFFSET,
-                                                       boundary_type,
-                                                       start_offset, end_offset);
-}
-
-static gchar *
-ev_view_accessible_get_text_after_offset (AtkText        *text,
-                                          gint            offset,
-                                          AtkTextBoundary boundary_type,
-                                          gint            *start_offset,
-                                          gint           *end_offset)
-{
-        return ev_view_accessible_get_text_for_offset (EV_VIEW_ACCESSIBLE (text),
-                                                       offset, GAIL_AFTER_OFFSET,
                                                        boundary_type,
                                                        start_offset, end_offset);
 }
@@ -901,9 +875,7 @@ ev_view_accessible_text_iface_init (AtkTextIface * iface)
 {
 	iface->get_text = ev_view_accessible_get_text;
 	iface->get_character_at_offset = ev_view_accessible_get_character_at_offset;
-	iface->get_text_before_offset = ev_view_accessible_get_text_before_offset;
 	iface->get_text_at_offset = ev_view_accessible_get_text_at_offset;
-	iface->get_text_after_offset = ev_view_accessible_get_text_after_offset;
 	iface->get_caret_offset = ev_view_accessible_get_caret_offset;
 	iface->set_caret_offset = ev_view_accessible_set_caret_offset;
 	iface->get_character_count = ev_view_accessible_get_character_count;
