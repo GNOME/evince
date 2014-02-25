@@ -297,30 +297,17 @@ ev_view_accessible_get_caret_offset (AtkText *text)
 {
 	GtkWidget *widget;
 	EvView *view;
-	GtkTextBuffer *buffer;
-	GtkTextMark *cursor_mark;
-	GtkTextIter cursor_itr;
-	gint retval;
 
 	widget = gtk_accessible_get_widget (GTK_ACCESSIBLE (text));
 	if (widget == NULL)
 		/* State is defunct */
-		return 0;
+		return -1;
 
 	view = EV_VIEW (widget);
-
 	if (view->caret_enabled)
 		return view->cursor_offset;
 
-	buffer = ev_view_accessible_get_text_buffer (EV_VIEW_ACCESSIBLE (text), EV_VIEW (widget));
-	if (!buffer)
-		return 0;
-
-	cursor_mark = gtk_text_buffer_get_insert (buffer);
-	gtk_text_buffer_get_iter_at_mark (buffer, &cursor_itr, cursor_mark);
-	retval = gtk_text_iter_get_offset (&cursor_itr);
-
-	return retval;
+	return -1;
 }
 
 static gboolean
