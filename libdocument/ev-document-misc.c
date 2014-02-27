@@ -126,12 +126,13 @@ ev_document_misc_get_loading_thumbnail (int      width,
 	return create_thumbnail_frame (width, height, NULL, !inverted_colors);
 }
 
-static GdkPixbuf *
-ev_document_misc_render_thumbnail_frame (GtkWidget *widget,
-                                         int        width,
-                                         int        height,
-                                         gboolean   inverted_colors,
-                                         GdkPixbuf *source_pixbuf)
+static cairo_surface_t *
+ev_document_misc_render_thumbnail_frame (GtkWidget       *widget,
+                                         int              width,
+                                         int              height,
+                                         gboolean         inverted_colors,
+                                         GdkPixbuf       *source_pixbuf,
+                                         cairo_surface_t *source_surface)
 {
         GtkStyleContext *context = gtk_widget_get_style_context (widget);
         GtkStateFlags    state = gtk_widget_get_state_flags (widget);
@@ -140,7 +141,6 @@ ev_document_misc_render_thumbnail_frame (GtkWidget *widget,
         cairo_surface_t *surface;
         cairo_t         *cr;
         GtkBorder        border = {0, };
-        GdkPixbuf       *retval;
 
         if (source_pixbuf) {
                 g_return_val_if_fail (GDK_IS_PIXBUF (source_pixbuf), NULL);
@@ -164,8 +164,12 @@ ev_document_misc_render_thumbnail_frame (GtkWidget *widget,
 
         surface = cairo_image_surface_create (CAIRO_FORMAT_ARGB32,
                                               width_f, height_f);
+
         cr = cairo_create (surface);
-        if (source_pixbuf) {
+        if (source_surface) {
+                cairo_set_source_surface (cr, source_surface, border.left, border.top);
+                cairo_paint (cr);
+        } else if (source_pixbuf) {
                 gdk_cairo_set_source_pixbuf (cr, source_pixbuf, border.left, border.top);
                 cairo_paint (cr);
         } else {
@@ -176,10 +180,7 @@ ev_document_misc_render_thumbnail_frame (GtkWidget *widget,
 
         gtk_style_context_restore (context);
 
-        retval = gdk_pixbuf_get_from_surface (surface, 0, 0, width_f, height_f);
-        cairo_surface_destroy (surface);
-
-        return retval;
+        return surface;
 }
 
 /**
@@ -199,7 +200,34 @@ ev_document_misc_render_loading_thumbnail (GtkWidget *widget,
                                            int        height,
                                            gboolean   inverted_colors)
 {
-        return ev_document_misc_render_thumbnail_frame (widget, width, height, inverted_colors, NULL);
+        GdkPixbuf *retval;
+        cairo_surface_t *surface;
+
+        surface = ev_document_misc_render_thumbnail_frame (widget, width, height, inverted_colors, NULL, NULL);
+        retval = gdk_pixbuf_get_from_surface (surface, 0, 0, width, height);
+        cairo_surface_destroy (surface);
+
+        return retval;
+}
+
+/**
+ * ev_document_misc_render_loading_thumbnail_surface:
+ * @widget: a #GtkWidget to use for style information
+ * @width: the desired width
+ * @height: the desired height
+ * @inverted_colors: whether to invert colors
+ *
+ * Returns: (transfer full): a #cairo_surface_t
+ *
+ * Since: 3.14
+ */
+cairo_surface_t *
+ev_document_misc_render_loading_thumbnail_surface (GtkWidget *widget,
+                                                   int        width,
+                                                   int        height,
+                                                   gboolean   inverted_colors)
+{
+        return ev_document_misc_render_thumbnail_frame (widget, width, height, inverted_colors, NULL, NULL);
 }
 
 /**
@@ -215,7 +243,36 @@ GdkPixbuf *
 ev_document_misc_render_thumbnail_with_frame (GtkWidget *widget,
                                               GdkPixbuf *source_pixbuf)
 {
-        return ev_document_misc_render_thumbnail_frame (widget, -1, -1, FALSE, source_pixbuf);
+        GdkPixbuf *retval;
+        cairo_surface_t *surface;
+
+        surface = ev_document_misc_render_thumbnail_frame (widget, -1, -1, FALSE, source_pixbuf, NULL);
+        retval = gdk_pixbuf_get_from_surface (surface, 0, 0,
+                                              cairo_image_surface_get_width (surface),
+                                              cairo_image_surface_get_height (surface));
+        cairo_surface_destroy (surface);
+
+        return retval;
+}
+
+/**
+ * ev_document_misc_render_thumbnail_surface_with_frame:
+ * @widget: a #GtkWidget to use for style information
+ * @source_surface: a #cairo_surface_t
+ * @width: the desired width
+ * @height: the desired height
+ *
+ * Returns: (transfer full): a #cairo_surface_t
+ *
+ * Since: 3.14
+ */
+cairo_surface_t *
+ev_document_misc_render_thumbnail_surface_with_frame (GtkWidget       *widget,
+                                                      cairo_surface_t *source_surface,
+                                                      int              width,
+                                                      int              height)
+{
+        return ev_document_misc_render_thumbnail_frame (widget, width, height, FALSE, NULL, source_surface);
 }
 
 void

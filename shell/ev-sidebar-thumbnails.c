@@ -31,6 +31,8 @@
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 
+#include <cairo-gobject.h>
+
 #include "ev-document-misc.h"
 #include "ev-job-scheduler.h"
 #include "ev-sidebar-page.h"
@@ -80,7 +82,7 @@ struct _EvSidebarThumbnailsPrivate {
 
 enum {
 	COLUMN_PAGE_STRING,
-	COLUMN_PIXBUF,
+	COLUMN_SURFACE,
 	COLUMN_THUMBNAIL_SET,
 	COLUMN_JOB,
 	NUM_COLUMNS
@@ -371,14 +373,14 @@ ev_sidebar_thumbnails_new (void)
 	return ev_sidebar_thumbnails;
 }
 
-static GdkPixbuf *
+static cairo_surface_t *
 ev_sidebar_thumbnails_get_loading_icon (EvSidebarThumbnails *sidebar_thumbnails,
 					gint                 width,
 					gint                 height)
 {
 	EvSidebarThumbnailsPrivate *priv = sidebar_thumbnails->priv;
-	GdkPixbuf *icon;
-	gchar     *key;
+        cairo_surface_t *icon;
+	gchar           *key;
 
 	key = g_strdup_printf ("%dx%d", width, height);
 	icon = g_hash_table_lookup (priv->loading_icons, key);
@@ -386,8 +388,9 @@ ev_sidebar_thumbnails_get_loading_icon (EvSidebarThumbnails *sidebar_thumbnails,
 		gboolean inverted_colors;
 
 		inverted_colors = ev_document_model_get_inverted_colors (priv->model);
-                icon = ev_document_misc_render_loading_thumbnail (GTK_WIDGET (sidebar_thumbnails),
-                                                                  width, height, inverted_colors);
+                icon = ev_document_misc_render_loading_thumbnail_surface (GTK_WIDGET (sidebar_thumbnails),
+                                                                          width, height,
+                                                                          inverted_colors);
 		g_hash_table_insert (priv->loading_icons, key, icon);
 	} else {
 		g_free (key);
@@ -415,7 +418,7 @@ clear_range (EvSidebarThumbnails *sidebar_thumbnails,
 	     result && start_page <= end_page;
 	     result = gtk_tree_model_iter_next (GTK_TREE_MODEL (priv->list_store), &iter), start_page ++) {
 		EvJobThumbnail *job;
-		GdkPixbuf *loading_icon = NULL;
+		cairo_surface_t *loading_icon = NULL;
 		gint width, height;
 
 		gtk_tree_model_get (GTK_TREE_MODEL (priv->list_store),
@@ -444,7 +447,7 @@ clear_range (EvSidebarThumbnails *sidebar_thumbnails,
 		gtk_list_store_set (priv->list_store, &iter,
 				    COLUMN_JOB, NULL,
 				    COLUMN_THUMBNAIL_SET, FALSE,
-				    COLUMN_PIXBUF, loading_icon,
+				    COLUMN_SURFACE, loading_icon,
 				    -1);
 	}
 	gtk_tree_path_free (path);
@@ -610,7 +613,7 @@ ev_sidebar_thumbnails_fill_model (EvSidebarThumbnails *sidebar_thumbnails)
 	for (i = 0; i < sidebar_thumbnails->priv->n_pages; i++) {
 		gchar     *page_label;
 		gchar     *page_string;
-		GdkPixbuf *loading_icon = NULL;
+		cairo_surface_t *loading_icon = NULL;
 		gint       width, height;
 
 		page_label = ev_document_get_page_label (priv->document, i);
@@ -630,7 +633,7 @@ ev_sidebar_thumbnails_fill_model (EvSidebarThumbnails *sidebar_thumbnails)
 		gtk_list_store_append (priv->list_store, &iter);
 		gtk_list_store_set (priv->list_store, &iter,
 				    COLUMN_PAGE_STRING, page_string,
-				    COLUMN_PIXBUF, loading_icon,
+				    COLUMN_SURFACE, loading_icon,
 				    COLUMN_THUMBNAIL_SET, FALSE,
 				    -1);
 		g_free (page_label);
@@ -703,7 +706,7 @@ ev_sidebar_init_tree_view (EvSidebarThumbnails *ev_sidebar_thumbnails)
 				 NULL);
 	gtk_tree_view_insert_column_with_attributes (GTK_TREE_VIEW (priv->tree_view), -1,
 						     NULL, renderer,
-						     "pixbuf", 1,
+						     "surface", 1,
 						     NULL);
 	gtk_tree_view_insert_column_with_attributes (GTK_TREE_VIEW (priv->tree_view), -1,
 						     NULL, gtk_cell_renderer_text_new (),
@@ -728,7 +731,7 @@ ev_sidebar_init_icon_view (EvSidebarThumbnails *ev_sidebar_thumbnails)
                                  NULL);
         gtk_cell_layout_pack_start (GTK_CELL_LAYOUT (priv->icon_view), renderer, FALSE);
         gtk_cell_layout_set_attributes (GTK_CELL_LAYOUT (priv->icon_view),
-                                        renderer, "pixbuf", 1, NULL);
+                                        renderer, "surface", 1, NULL);
 
         renderer = g_object_new (GTK_TYPE_CELL_RENDERER_TEXT,
                                  "alignment", PANGO_ALIGN_CENTER,
@@ -765,7 +768,7 @@ ev_sidebar_thumbnails_init (EvSidebarThumbnails *ev_sidebar_thumbnails)
 
 	priv->list_store = gtk_list_store_new (NUM_COLUMNS,
 					       G_TYPE_STRING,
-					       GDK_TYPE_PIXBUF,
+					       CAIRO_GOBJECT_TYPE_SURFACE,
 					       G_TYPE_BOOLEAN,
 					       EV_TYPE_JOB_THUMBNAIL);
 
@@ -886,22 +889,30 @@ static void
 thumbnail_job_completed_callback (EvJobThumbnail      *job,
 				  EvSidebarThumbnails *sidebar_thumbnails)
 {
+        GtkWidget                  *widget = GTK_WIDGET (sidebar_thumbnails);
 	EvSidebarThumbnailsPrivate *priv = sidebar_thumbnails->priv;
 	GtkTreeIter                *iter;
-        GdkPixbuf                  *pixbuf;
+        cairo_surface_t            *surface;
+        cairo_surface_t            *thumbnail;
 
-        pixbuf = ev_document_misc_render_thumbnail_with_frame (GTK_WIDGET (sidebar_thumbnails), job->thumbnail);
+        thumbnail = gdk_cairo_surface_create_from_pixbuf (job->thumbnail,
+                                                          1,
+                                                          gtk_widget_get_window (widget));
+        surface = ev_document_misc_render_thumbnail_surface_with_frame (widget, thumbnail,
+                                                                        gdk_pixbuf_get_width (job->thumbnail),
+                                                                        gdk_pixbuf_get_height (job->thumbnail));
+        cairo_surface_destroy (thumbnail);
 
 	iter = (GtkTreeIter *) g_object_get_data (G_OBJECT (job), "tree_iter");
 	if (priv->inverted_colors)
-		ev_document_misc_invert_pixbuf (pixbuf);
+		ev_document_misc_invert_surface (surface);
 	gtk_list_store_set (priv->list_store,
 			    iter,
-			    COLUMN_PIXBUF, pixbuf,
+			    COLUMN_SURFACE, surface,
 			    COLUMN_THUMBNAIL_SET, TRUE,
 			    COLUMN_JOB, NULL,
 			    -1);
-        g_object_unref (pixbuf);
+        cairo_surface_destroy (surface);
 }
 
 static void
@@ -925,7 +936,7 @@ ev_sidebar_thumbnails_document_changed_cb (EvDocumentModel     *model,
 	priv->loading_icons = g_hash_table_new_full (g_str_hash,
 						     g_str_equal,
 						     (GDestroyNotify)g_free,
-						     (GDestroyNotify)g_object_unref);
+						     (GDestroyNotify)cairo_surface_destroy);
 
 	ev_sidebar_thumbnails_clear_model (sidebar_thumbnails);
 	ev_sidebar_thumbnails_fill_model (sidebar_thumbnails);

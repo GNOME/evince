@@ -50,6 +50,15 @@ GdkPixbuf *ev_document_misc_render_loading_thumbnail    (GtkWidget *widget,
 GdkPixbuf *ev_document_misc_render_thumbnail_with_frame (GtkWidget *widget,
 							 GdkPixbuf *source_pixbuf);
 
+cairo_surface_t *ev_document_misc_render_loading_thumbnail_surface (GtkWidget *widget,
+								    int        width,
+								    int        height,
+								    gboolean   inverted_colors);
+cairo_surface_t *ev_document_misc_render_thumbnail_surface_with_frame (GtkWidget       *widget,
+								       cairo_surface_t *source_surface,
+								       int              width,
+								       int              height);
+
 EV_DEPRECATED
 void       ev_document_misc_get_page_border_size (gint          page_width,
 						  gint          page_height,
