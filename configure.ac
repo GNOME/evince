@@ -157,6 +157,23 @@ PKG_CHECK_MODULES(LIBVIEW, gtk+-3.0 >= $GTK_REQUIRED gail-3.0 >= $GTK_REQUIRED g
 PKG_CHECK_MODULES(BACKEND, cairo >= $CAIRO_REQUIRED gtk+-3.0 >= $GTK_REQUIRED)
 PKG_CHECK_MODULES(FRONTEND_CORE, gtk+-3.0 >= $GTK_REQUIRED gthread-2.0 gio-2.0 >= $GLIB_REQUIRED gmodule-no-export-2.0 >= $GLIB_REQUIRED)
 
+# Although GTK+ 3.10 includes hi-dpi functionality, it does not require a cairo with
+# cairo_surface_set_device_scale(), which we also need if we're to support hi-dpi,
+# so we need check for that explicity.
+
+evince_save_LIBS=$LIBS
+LIBS="$LIBS $LIBVIEW_LIBS"
+AC_CHECK_FUNCS(cairo_surface_set_device_scale)
+LIBS=$evince_save_LIBS
+
+AC_MSG_CHECKING([for hi-dpi support])
+if test "$ac_cv_func_cairo_surface_set_device_scale" = yes ; then
+   AC_DEFINE([HAVE_HIDPI_SUPPORT], [1], [Define if cairo and GTK+ have necessary functions for hi-dpi])
+   AC_MSG_RESULT([yes])
+else
+   AC_MSG_RESULT([no])
+fi
+
 SHELL_PLATFORM_PKGS=
 case "$with_platform" in
   gnome)
