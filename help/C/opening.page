@@ -1,46 +1,62 @@
 <page xmlns="http://projectmallard.org/1.0/"
+      xmlns:its="http://www.w3.org/2005/11/its"
       type="topic" style="task"
       id="opening">
 
   <info>
     <link type="guide" xref="index#reading"/>
-    <desc>How to open a document.</desc>
-   <link type="seealso" xref="formats"/>
-   <link type="seealso" xref="commandline"/>
+    <link type="seealso" xref="formats"/>
+    <link type="seealso" xref="commandline"/>
+    <revision pkgversion="3.2" date="2011-09-05" status="final"/>
+    <revision pkgversion="3.12" date="2014-02-28" status="candidate"/>
 
-    <revision pkgversion="3.2" version="0.1" date="2011-09-05" status="final"/>
     <credit type="author">
       <name>Tiffany Antopolski</name>
-      <email>tiffany@antopolski.com</email>
+      <email its:translate="no">tiffany@antopolski.com</email>
     </credit>
-    <license>
-      <p>Creative Commons Share Alike 3.0</p>
-    </license>
+    <credit type="editor">
+      <name>Ekaterina Gerasimova</name>
+      <email its:translate="no">kittykat3756@gmail.com</email>
+    </credit>
 
+    <include href="legal-unported.xml" xmlns="http://www.w3.org/2001/XInclude"/>
+
+    <desc>How to open a document.</desc>
   </info>
 
-<title>Opening a document</title>
+  <title>Open a document</title>
 
- <p>You can open a document using any one of the following ways:</p>
+  <p>You can open a document using any one of the following ways:</p>
 
   <list>
-   <item><p> Double-click on the file icon in the <app>File Manager</app>. </p>
-    <note style="tip"><p>
-     Double clicking opens PDF, PostScript, .djvu, .dvi and Comic Book Archive files in the <app>Document Viewer</app> by default.
-     </p></note>
-   </item>
+    <item>
+      <p>Double-click on the file icon in <app>Files</app> or your <em>file
+      manager</em>.</p>
+      <note style="tip">
+        <p>Double clicking opens PDF, PostScript, .djvu, .dvi and Comic Book
+        Archive files in the <app>Document Viewer</app> by default.</p>
+      </note>
+    </item>
+    <item>
+      <p>Right-click on a file icon in <app>Files</app> and click
+      <guiseq><gui>Open With</gui><gui>Document Viewer</gui></guiseq>.</p>
+    </item>
+  </list>
 
-   <item><p>Right-click on a file icon in the <app>File Manager</app> and click <guiseq><gui>Open With</gui><gui>Document Viewer</gui></guiseq>.</p>
-   </item>
-</list>
+  <p>If a Document View window is already open you can:</p>
 
-<p>If a Document View window is already open you can: </p>
- <list>
-   <item><p>drag a file icon into the window from the <app>File Manager</app>.  The new file will open in a new window (provided the file is of a file type supported by Document Viewer).</p></item>
-  <item><p>choose <guiseq><gui>File</gui><gui>Open</gui></guiseq> from the Menubar. In the Open Document dialog box, choose the file you wish to open, and click <gui>Open</gui>. The file will open in a new window.</p></item>
-</list>
-
-
-
+  <list>
+    <item>
+      <p>drag a file icon into the window from <app>Files</app>.  The new file
+      will open in a new window (provided the file is of a file type supported
+      by <app>Document Viewer</app>).</p>
+    </item>
+    <item>
+      <p>press the button in the top-right corner of the window, then select
+      <guiseq><!--geary--><gui>Open…</gui></guiseq>. In the <gui>Open
+      Document</gui> dialog, choose the file which you wish to open, and click
+      <gui>Open</gui>. The file will open in a new window.</p>
+    </item>
+  </list>
 
 </page>
