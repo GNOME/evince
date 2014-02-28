@@ -102,6 +102,7 @@ static void         ev_sidebar_thumbnails_set_current_page (EvSidebarThumbnails 
 							    gint     page);
 static void         thumbnail_job_completed_callback       (EvJobThumbnail          *job,
 							    EvSidebarThumbnails     *sidebar_thumbnails);
+static void         ev_sidebar_thumbnails_reload           (EvSidebarThumbnails     *sidebar_thumbnails);
 static void         adjustment_changed_cb                  (EvSidebarThumbnails     *sidebar_thumbnails);
 
 G_DEFINE_TYPE_EXTENDED (EvSidebarThumbnails, 
@@ -386,10 +387,16 @@ ev_sidebar_thumbnails_get_loading_icon (EvSidebarThumbnails *sidebar_thumbnails,
 	icon = g_hash_table_lookup (priv->loading_icons, key);
 	if (!icon) {
 		gboolean inverted_colors;
+                gint device_scale = 1;
+
+#ifdef HAVE_HIDPI_SUPPORT
+                device_scale = gtk_widget_get_scale_factor (GTK_WIDGET (sidebar_thumbnails));
+#endif
 
 		inverted_colors = ev_document_model_get_inverted_colors (priv->model);
                 icon = ev_document_misc_render_loading_thumbnail_surface (GTK_WIDGET (sidebar_thumbnails),
-                                                                          width, height,
+                                                                          width * device_scale,
+                                                                          height * device_scale,
                                                                           inverted_colors);
 		g_hash_table_insert (priv->loading_icons, key, icon);
 	} else {
@@ -462,16 +469,20 @@ get_size_for_page (EvSidebarThumbnails *sidebar_thumbnails,
 	EvSidebarThumbnailsPrivate *priv = sidebar_thumbnails->priv;
         gdouble width, height;
         gint thumbnail_height;
+        gint device_scale = 1;
 
+#ifdef HAVE_HIDPI_SUPPORT
+        device_scale = gtk_widget_get_scale_factor (GTK_WIDGET (sidebar_thumbnails));
+#endif
         ev_document_get_page_size (priv->document, page, &width, &height);
         thumbnail_height = (int)(THUMBNAIL_WIDTH * height / width + 0.5);
 
         if (priv->rotation == 90 || priv->rotation == 270) {
-                *width_return = thumbnail_height;
-                *height_return = THUMBNAIL_WIDTH;
+                *width_return = thumbnail_height * device_scale;
+                *height_return = THUMBNAIL_WIDTH * device_scale;
         } else {
-                *width_return = THUMBNAIL_WIDTH;
-                *height_return = thumbnail_height;
+                *width_return = THUMBNAIL_WIDTH * device_scale;
+                *height_return = thumbnail_height * device_scale;
         }
 }
 
@@ -774,6 +785,14 @@ ev_sidebar_thumbnails_use_icon_view (EvSidebarThumbnails *sidebar_thumbnails)
 }
 
 static void
+ev_sidebar_thumbnails_device_scale_factor_changed_cb (EvSidebarThumbnails *sidebar_thumbnails,
+                                                      GParamSpec          *pspec)
+
+{
+        ev_sidebar_thumbnails_reload (sidebar_thumbnails);
+}
+
+static void
 ev_sidebar_thumbnails_init (EvSidebarThumbnails *ev_sidebar_thumbnails)
 {
 	EvSidebarThumbnailsPrivate *priv;
@@ -801,6 +820,9 @@ ev_sidebar_thumbnails_init (EvSidebarThumbnails *ev_sidebar_thumbnails)
 				  G_CALLBACK (adjustment_changed_cb),
 				  ev_sidebar_thumbnails);
 	gtk_box_pack_start (GTK_BOX (ev_sidebar_thumbnails), priv->swindow, TRUE, TRUE, 0);
+
+	g_signal_connect (ev_sidebar_thumbnails, "notify::scale-factor",
+			  G_CALLBACK (ev_sidebar_thumbnails_device_scale_factor_changed_cb), NULL);
 
 	/* Put it all together */
 	gtk_widget_show_all (priv->swindow);
@@ -907,6 +929,12 @@ thumbnail_job_completed_callback (EvJobThumbnail      *job,
 	EvSidebarThumbnailsPrivate *priv = sidebar_thumbnails->priv;
 	GtkTreeIter                *iter;
         cairo_surface_t            *surface;
+#ifdef HAVE_HIDPI_SUPPORT
+        gint                        device_scale;
+
+        device_scale = gtk_widget_get_scale_factor (widget);
+        cairo_surface_set_device_scale (job->thumbnail_surface, device_scale, device_scale);
+#endif
 
         surface = ev_document_misc_render_thumbnail_surface_with_frame (widget,
                                                                         job->thumbnail_surface,
