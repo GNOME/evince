@@ -205,7 +205,6 @@ static void       ev_view_page_changed_cb                    (EvDocumentModel   
 							      EvView             *view);
 static void       on_adjustment_value_changed                (GtkAdjustment      *adjustment,
 							      EvView             *view);
-
 /*** GObject ***/
 static void       ev_view_finalize                           (GObject            *object);
 static void       ev_view_dispose                            (GObject            *object);
@@ -6008,10 +6007,14 @@ draw_surface (cairo_t 	      *cr,
 	      gint             target_width,
 	      gint             target_height)
 {
-	gint width, height;
+	gdouble width, height;
+	gdouble device_scale_x = 1, device_scale_y = 1;
 
-	width = cairo_image_surface_get_width (surface);
-	height = cairo_image_surface_get_height (surface);
+#ifdef HAVE_HIDPI_SUPPORT
+	cairo_surface_get_device_scale (surface, &device_scale_x, &device_scale_y);
+#endif
+	width = cairo_image_surface_get_width (surface) / device_scale_x;
+	height = cairo_image_surface_get_height (surface) / device_scale_y;
 
 	cairo_save (cr);
 	cairo_translate (cr, x, y);
@@ -6030,8 +6033,8 @@ draw_surface (cairo_t 	      *cr,
 	}
 
 	cairo_surface_set_device_offset (surface,
-					 offset_x,
-					 offset_y);
+					 offset_x * device_scale_x,
+					 offset_y * device_scale_y);
 	cairo_set_source_surface (cr, surface, 0, 0);
 	cairo_paint (cr);
 	cairo_restore (cr);
@@ -6165,9 +6168,18 @@ draw_one_page (EvView       *view,
 		if (region) {
 			double scale_x, scale_y;
 			GdkRGBA color;
+			double device_scale_x = 1, device_scale_y = 1;
 
 			scale_x = (gdouble)width / cairo_image_surface_get_width (page_surface);
 			scale_y = (gdouble)height / cairo_image_surface_get_height (page_surface);
+
+#ifdef HAVE_HIDPI_SUPPORT
+			cairo_surface_get_device_scale (page_surface, &device_scale_x, &device_scale_y);
+#endif
+
+			scale_x *= device_scale_x;
+			scale_y *= device_scale_y;
+
 			_ev_view_get_selection_colors (view, &color, NULL);
 			draw_selection_region (cr, region, &color, real_page_area.x, real_page_area.y,
 					       scale_x, scale_y);
@@ -6868,6 +6880,14 @@ ev_view_class_init (EvViewClass *class)
 }
 
 static void
+on_notify_scale_factor (EvView     *view,
+			GParamSpec *pspec)
+{
+	if (view->document)
+		view_update_range_and_current_page (view);
+}
+
+static void
 ev_view_init (EvView *view)
 {
 	GtkStyleContext *context;
@@ -6916,6 +6936,9 @@ ev_view_init (EvView *view)
 	view->pixbuf_cache_size = DEFAULT_PIXBUF_CACHE_SIZE;
 	view->caret_enabled = FALSE;
 	view->cursor_page = 0;
+
+	g_signal_connect (view, "notify::scale-factor",
+			  G_CALLBACK (on_notify_scale_factor), NULL);
 }
 
 /*** Callbacks ***/

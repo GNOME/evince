@@ -19,6 +19,9 @@ typedef struct _CacheJobInfo
 	/* Data we get from rendering */
 	cairo_surface_t *surface;
 
+	/* Device scale factor of target widget */
+	int device_scale;
+
 	/* Selection data. 
 	 * Selection_points are the coordinates encapsulated in selection.
 	 * target_points is the target selection size. */
@@ -245,6 +248,27 @@ ev_pixbuf_cache_set_max_size (EvPixbufCache *pixbuf_cache,
 	pixbuf_cache->max_size = max_size;
 }
 
+static int
+get_device_scale (EvPixbufCache *pixbuf_cache)
+{
+#ifdef HAVE_HIDPI_SUPPORT
+        return gtk_widget_get_scale_factor (pixbuf_cache->view);
+#else
+        return 1;
+#endif
+}
+
+static void
+set_device_scale_on_surface (cairo_surface_t *surface,
+                             int              device_scale)
+{
+#ifdef HAVE_HIDPI_SUPPORT
+        cairo_surface_set_device_scale (surface, device_scale, device_scale);
+#else
+        g_return_if_fail (device_scale != 1);
+#endif
+}
+
 static void
 copy_job_to_job_info (EvJobRender   *job_render,
 		      CacheJobInfo  *job_info,
@@ -254,6 +278,7 @@ copy_job_to_job_info (EvJobRender   *job_render,
 		cairo_surface_destroy (job_info->surface);
 	}
 	job_info->surface = cairo_surface_reference (job_render->surface);
+	set_device_scale_on_surface (job_info->surface, job_info->device_scale);
 	if (pixbuf_cache->inverted_colors) {
 		ev_document_misc_invert_surface (job_info->surface);
 	}
@@ -271,7 +296,8 @@ copy_job_to_job_info (EvJobRender   *job_render,
 
 		job_info->selection_points = job_render->selection_points;
 		job_info->selection = cairo_surface_reference (job_render->selection);
-		job_info->selection_scale = job_render->scale;
+		set_device_scale_on_surface (job_info->selection, job_info->device_scale);
+		job_info->selection_scale = job_render->scale * job_info->device_scale;
 		g_assert (job_info->selection_points.x1 >= 0);
 
 		job_info->selection_region_points = job_render->selection_points;
@@ -322,20 +348,24 @@ check_job_size_and_unref (EvPixbufCache *pixbuf_cache,
 			  gfloat         scale)
 {
 	gint width, height;
+	gint device_scale;
 
 	g_assert (job_info);
 
 	if (job_info->job == NULL)
 		return;
 
-	_get_page_size_for_scale_and_rotation (job_info->job->document,
-					       EV_JOB_RENDER (job_info->job)->page,
-					       scale,
-					       EV_JOB_RENDER (job_info->job)->rotation,
-					       &width, &height);
-	if (width == EV_JOB_RENDER (job_info->job)->target_width &&
-	    height == EV_JOB_RENDER (job_info->job)->target_height)
-		return;
+        device_scale = get_device_scale (pixbuf_cache);
+	if (job_info->device_scale == device_scale) {
+		_get_page_size_for_scale_and_rotation (job_info->job->document,
+						       EV_JOB_RENDER (job_info->job)->page,
+						       scale,
+						       EV_JOB_RENDER (job_info->job)->rotation,
+						       &width, &height);
+		if (width * device_scale == EV_JOB_RENDER (job_info->job)->target_width &&
+		    height * device_scale == EV_JOB_RENDER (job_info->job)->target_height)
+			return;
+	}
 
 	g_signal_handlers_disconnect_by_func (job_info->job,
 					      G_CALLBACK (job_finished_cb),
@@ -645,6 +675,7 @@ add_job (EvPixbufCache  *pixbuf_cache,
 	 gfloat          scale,
 	 EvJobPriority   priority)
 {
+	job_info->device_scale = get_device_scale (pixbuf_cache);
 	job_info->page_ready = FALSE;
 
 	if (job_info->region)
@@ -652,8 +683,10 @@ add_job (EvPixbufCache  *pixbuf_cache,
 	job_info->region = region ? cairo_region_reference (region) : NULL;
 
 	job_info->job = ev_job_render_new (pixbuf_cache->document,
-                                           page, rotation, 0.,
-					   width, height);
+					   page, rotation,
+                                           scale * job_info->device_scale,
+					   width * job_info->device_scale,
+                                           height * job_info->device_scale);
 
 	if (new_selection_surface_needed (pixbuf_cache, job_info, page, scale)) {
 		GdkColor text, base;
@@ -679,6 +712,7 @@ add_job_if_needed (EvPixbufCache *pixbuf_cache,
 		   gfloat         scale,
 		   EvJobPriority  priority)
 {
+	gint device_scale = get_device_scale (pixbuf_cache);
 	gint width, height;
 
 	if (job_info->job)
@@ -689,8 +723,9 @@ add_job_if_needed (EvPixbufCache *pixbuf_cache,
 					       &width, &height);
 
 	if (job_info->surface &&
-	    cairo_image_surface_get_width (job_info->surface) == width &&
-	    cairo_image_surface_get_height (job_info->surface) == height)
+	    job_info->device_scale == device_scale &&
+	    cairo_image_surface_get_width (job_info->surface) == width * device_scale &&
+	    cairo_image_surface_get_height (job_info->surface) == height * device_scale)
 		return;
 
 	/* Free old surfaces for non visible pages */
@@ -1046,10 +1081,11 @@ ev_pixbuf_cache_get_selection_surface (EvPixbufCache   *pixbuf_cache,
 
 		ev_page = ev_document_get_page (pixbuf_cache->document, page);
                 _get_page_size_for_scale_and_rotation (pixbuf_cache->document,
-                                                       page, scale, 0,
-                                                       &width, &height);
+                                                       page,
+						       scale * job_info->device_scale,
+						       0, &width, &height);
 
-                rc = ev_render_context_new (ev_page, 0, 0.);
+		rc = ev_render_context_new (ev_page, 0, scale * job_info->device_scale);
                 ev_render_context_set_target_size (rc, width, height);
 		g_object_unref (ev_page);
 
@@ -1060,8 +1096,9 @@ ev_pixbuf_cache_get_selection_surface (EvPixbufCache   *pixbuf_cache,
 					       old_points,
 					       job_info->selection_style,
 					       &text, &base);
+		set_device_scale_on_surface (job_info->selection, job_info->device_scale);
 		job_info->selection_points = job_info->target_points;
-		job_info->selection_scale = scale;
+		job_info->selection_scale = scale * job_info->device_scale;
 		g_object_unref (rc);
 		ev_document_doc_mutex_unlock ();
 	}
