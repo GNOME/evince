@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince.HEAD\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-02-06 15:45+0200\n"
-"PO-Revision-Date: 2014-02-06 15:45+0200\n"
+"POT-Creation-Date: 2014-02-28 22:36+0200\n"
+"PO-Revision-Date: 2014-02-28 22:37+0200\n"
 "Last-Translator: Khaled Hosny <khaledhosny@eglug.org>\n"
 "Language-Team: Arabic <doc@arabeyes.org>\n"
 "Language: ar\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
-"X-Generator: Virtaal 0.7.1-rc1\n"
+"X-Generator: Virtaal 1.0.0-beta1\n"
 "X-Project-Style: gnome\n"
 
 #: ../backend/comics/comics-document.c:210
@@ -245,77 +245,9 @@ msgstr "مستندات TIFF"
 msgid "XPS Documents"
 msgstr "مستندات XPS"
 
-#: ../cut-n-paste/smclient/eggdesktopfile.c:165
-#, c-format
-msgid "File is not a valid .desktop file"
-msgstr "الملف ليس ملف .desktop صالح"
-
-#. translators: 'Version' is from a desktop file, and
-#. * should not be translated. '%s' would probably be a
-#. * version number.
-#: ../cut-n-paste/smclient/eggdesktopfile.c:191
-#, c-format
-msgid "Unrecognized desktop file Version '%s'"
-msgstr "اصدارة غير معروفة لملف سطح المكتب '‏%s'"
-
-#: ../cut-n-paste/smclient/eggdesktopfile.c:974
-#, c-format
-msgid "Starting %s"
-msgstr "يبدأ %s"
-
-#: ../cut-n-paste/smclient/eggdesktopfile.c:1116
-#, c-format
-msgid "Application does not accept documents on command line"
-msgstr "التطبيق لا يقبل مستندات في سطر الأوامر"
-
-#: ../cut-n-paste/smclient/eggdesktopfile.c:1184
-#, c-format
-msgid "Unrecognized launch option: %d"
-msgstr "خيار إطلاق غير معروف: %d"
-
-#. translators: The 'Type=Link' string is found in a
-#. * desktop file, and should not be translated.
-#: ../cut-n-paste/smclient/eggdesktopfile.c:1391
-#, c-format
-msgid "Can't pass document URIs to a 'Type=Link' desktop entry"
-msgstr "لا يمكن تمرير عناوين المستندات إلى مُدخل 'Type=Link' في ملف desktop"
-
-#: ../cut-n-paste/smclient/eggdesktopfile.c:1412
-#, c-format
-msgid "Not a launchable item"
-msgstr "عنصر لا يُطلق"
-
-#: ../cut-n-paste/smclient/eggsmclient.c:226
-msgid "Disable connection to session manager"
-msgstr "عطل الاتصال بمدير الجلسة"
-
-#: ../cut-n-paste/smclient/eggsmclient.c:229
-msgid "Specify file containing saved configuration"
-msgstr "حدد ملفا يحوي التشكيل المحفوظ"
-
-#: ../cut-n-paste/smclient/eggsmclient.c:229 ../previewer/ev-previewer.c:46
-msgid "FILE"
-msgstr "ملف"
-
-#: ../cut-n-paste/smclient/eggsmclient.c:232
-msgid "Specify session management ID"
-msgstr "حدد معرف إدارة الجلسة"
-
-#: ../cut-n-paste/smclient/eggsmclient.c:232
-msgid "ID"
-msgstr "مُعرف"
-
-#: ../cut-n-paste/smclient/eggsmclient.c:253
-msgid "Session management options:"
-msgstr "خيارات إدارة الجلسة:"
-
-#: ../cut-n-paste/smclient/eggsmclient.c:254
-msgid "Show session management options"
-msgstr "اعرض خيارات إدارة الجلسة"
-
 #. Manually set name and icon
-#: ../data/evince.desktop.in.in.h:1 ../shell/ev-window.c:5040
-#: ../shell/ev-window-title.c:156 ../shell/main.c:312
+#: ../data/evince.desktop.in.in.h:1 ../shell/ev-window.c:5036
+#: ../shell/ev-window-title.c:144 ../shell/main.c:298
 #, c-format
 msgid "Document Viewer"
 msgstr "عارض المستندات"
@@ -435,8 +367,8 @@ msgid "of %d"
 msgstr "من %d"
 
 #: ../libmisc/ev-page-action-widget.c:182 ../shell/ev-history.c:426
-#: ../shell/ev-sidebar-bookmarks.c:312 ../shell/ev-window.c:880
-#: ../shell/ev-window.c:4780
+#: ../shell/ev-sidebar-bookmarks.c:312 ../shell/ev-window.c:877
+#: ../shell/ev-window.c:4776
 #, c-format
 msgid "Page %s"
 msgstr "صفحة %s"
@@ -623,11 +555,15 @@ msgstr "احذف الملف المؤقت"
 msgid "Print settings file"
 msgstr "اطبع ملف الإعدادات"
 
+#: ../previewer/ev-previewer.c:46
+msgid "FILE"
+msgstr "ملف"
+
 #: ../previewer/ev-previewer.c:175 ../previewer/ev-previewer.c:207
 msgid "GNOME Document Previewer"
 msgstr "مُعاين مستندات جنوم"
 
-#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3401
+#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3397
 msgid "Failed to print document"
 msgstr "تعذر طبع المستند"
 
@@ -784,23 +720,23 @@ msgstr "‏%s، طولي (%s)"
 msgid "%s, Landscape (%s)"
 msgstr "‏%s، عرضيّ (%s)"
 
-#: ../shell/eggfindbar.c:277
+#: ../shell/eggfindbar.c:284
 msgid "_Whole Words Only"
 msgstr "_كلمات كاملة فقط"
 
-#: ../shell/eggfindbar.c:289
+#: ../shell/eggfindbar.c:296
 msgid "C_ase Sensitive"
 msgstr "ح_ساس لحالة الأحرف"
 
-#: ../shell/eggfindbar.c:391
+#: ../shell/eggfindbar.c:399
 msgid "Find options"
 msgstr "خيارات البحث"
 
-#: ../shell/eggfindbar.c:400
+#: ../shell/eggfindbar.c:408
 msgid "Find previous occurrence of the search string"
 msgstr "ابحث عن التواجد السابق لنص البحث"
 
-#: ../shell/eggfindbar.c:410
+#: ../shell/eggfindbar.c:418
 msgid "Find next occurrence of the search string"
 msgstr "ابحث عن التواجد التالي لنص البحث"
 
@@ -1057,94 +993,94 @@ msgstr "خيارات الملف"
 msgid "Supported Image Files"
 msgstr "ملفات الصور المدعومة"
 
-#: ../shell/ev-window.c:1541
+#: ../shell/ev-window.c:1538
 msgid "The document contains no pages"
 msgstr "لا يحوي المستند أية صفحات"
 
-#: ../shell/ev-window.c:1544
+#: ../shell/ev-window.c:1541
 msgid "The document contains only empty pages"
 msgstr "لا يحتوي المستند إلا صفحات فارغة"
 
-#: ../shell/ev-window.c:1750 ../shell/ev-window.c:1921
+#: ../shell/ev-window.c:1747 ../shell/ev-window.c:1915
 #, c-format
 msgid "Unable to open document “%s”."
 msgstr "تعذر فتح المستند ”%s“."
 
-#: ../shell/ev-window.c:1885
+#: ../shell/ev-window.c:1879
 #, c-format
 msgid "Loading document from “%s”"
 msgstr "يحمّل المستند من “%s”"
 
-#: ../shell/ev-window.c:2036 ../shell/ev-window.c:2326
+#: ../shell/ev-window.c:2030 ../shell/ev-window.c:2320
 #, c-format
 msgid "Downloading document (%d%%)"
 msgstr "ينزّل المستند (%d%%)"
 
-#: ../shell/ev-window.c:2069
+#: ../shell/ev-window.c:2063
 msgid "Failed to load remote file."
 msgstr "تعذر فتح ملف بعيد."
 
-#: ../shell/ev-window.c:2270
+#: ../shell/ev-window.c:2264
 #, c-format
 msgid "Reloading document from %s"
 msgstr "يعيد تحميل المستند %s"
 
-#: ../shell/ev-window.c:2302
+#: ../shell/ev-window.c:2296
 msgid "Failed to reload document."
 msgstr "تعذر إعادة تحميل المستند."
 
-#: ../shell/ev-window.c:2515
+#: ../shell/ev-window.c:2511
 msgid "Open Document"
 msgstr "افتح مستند"
 
-#: ../shell/ev-window.c:2788
+#: ../shell/ev-window.c:2784
 #, c-format
 msgid "Saving document to %s"
 msgstr "يحفظ المستند في %s"
 
-#: ../shell/ev-window.c:2791
+#: ../shell/ev-window.c:2787
 #, c-format
 msgid "Saving attachment to %s"
 msgstr "يحفظ المرفق في %s"
 
-#: ../shell/ev-window.c:2794
+#: ../shell/ev-window.c:2790
 #, c-format
 msgid "Saving image to %s"
 msgstr "يحفظ الصورة في %s"
 
-#: ../shell/ev-window.c:2838 ../shell/ev-window.c:2938
+#: ../shell/ev-window.c:2834 ../shell/ev-window.c:2934
 #, c-format
 msgid "The file could not be saved as “%s”."
 msgstr "تعذر حفظ الملف باسم “%s”."
 
-#: ../shell/ev-window.c:2869
+#: ../shell/ev-window.c:2865
 #, c-format
 msgid "Uploading document (%d%%)"
 msgstr "يرفع المستند (%d%%)"
 
-#: ../shell/ev-window.c:2873
+#: ../shell/ev-window.c:2869
 #, c-format
 msgid "Uploading attachment (%d%%)"
 msgstr "يرفع المرفق (%d%%)"
 
-#: ../shell/ev-window.c:2877
+#: ../shell/ev-window.c:2873
 #, c-format
 msgid "Uploading image (%d%%)"
 msgstr "يرفع الصورة (%d%%)"
 
-#: ../shell/ev-window.c:2989
+#: ../shell/ev-window.c:2985
 msgid "Save a Copy"
 msgstr "احفظ نسخة"
 
-#: ../shell/ev-window.c:3053
+#: ../shell/ev-window.c:3049
 msgid "Could not send current document"
 msgstr "تعذّر إرسال المستند الحالي"
 
-#: ../shell/ev-window.c:3084
+#: ../shell/ev-window.c:3080
 msgid "Could not open the containing folder"
 msgstr "تعذّر فتح المجلد الذي يحتوي الملف"
 
-#: ../shell/ev-window.c:3345
+#: ../shell/ev-window.c:3341
 #, c-format
 msgid "%d pending job in queue"
 msgid_plural "%d pending jobs in queue"
@@ -1155,18 +1091,18 @@ msgstr[3] "%d مهام منتظرة في الطابور"
 msgstr[4] "%d مهمة منتظرة في الطابور"
 msgstr[5] "%d مهمة منتظرة في الطابور"
 
-#: ../shell/ev-window.c:3458
+#: ../shell/ev-window.c:3454
 #, c-format
 msgid "Printing job “%s”"
 msgstr "مهمة الطبع “%s”"
 
-#: ../shell/ev-window.c:3653
+#: ../shell/ev-window.c:3649
 msgid ""
 "Document contains form fields that have been filled out. If you don't save a "
 "copy, changes will be permanently lost."
 msgstr "يحتوي المستند على استمارة مُلئت. إذا لم تحفظ نسخة فستضيع هذه التعديلات."
 
-#: ../shell/ev-window.c:3657
+#: ../shell/ev-window.c:3653
 msgid ""
 "Document contains new or modified annotations. If you don't save a copy, "
 "changes will be permanently lost."
@@ -1174,20 +1110,20 @@ msgstr ""
 "يحتوي المستند على تعليقات جديدة أو معدلة. إذا لم تحفظ نسخة فستضيع هذه "
 "التعديلات."
 
-#: ../shell/ev-window.c:3664
+#: ../shell/ev-window.c:3660
 #, c-format
 msgid "Save a copy of document “%s” before closing?"
 msgstr "أأحفظ نسخة من المستند ”%s“ قبل غلقه؟"
 
-#: ../shell/ev-window.c:3683
+#: ../shell/ev-window.c:3679
 msgid "Close _without Saving"
 msgstr "أغلق _دون حفظ"
 
-#: ../shell/ev-window.c:3687
+#: ../shell/ev-window.c:3683
 msgid "Save a _Copy"
 msgstr "احفظ _نسخة"
 
-#: ../shell/ev-window.c:3761
+#: ../shell/ev-window.c:3757
 #, c-format
 msgid "Wait until print job “%s” finishes before closing?"
 msgstr "أأنتظر حتى تنتهي المهمة ”%s“ قبل الغلق؟"
@@ -1195,7 +1131,7 @@ msgstr "أأنتظر حتى تنتهي المهمة ”%s“ قبل الغلق؟
 #. TRANS: the singular form is not really used as n_print_jobs > 1
 #. but some languages distinguish between different plurals forms,
 #. so the ngettext is needed.
-#: ../shell/ev-window.c:3767
+#: ../shell/ev-window.c:3763
 #, c-format
 msgid "There is %d print job active. Wait until print finishes before closing?"
 msgid_plural ""
@@ -1207,23 +1143,23 @@ msgstr[3] "توجد %d مهام طباعة نشطة. أأنتظر حتى تنت�
 msgstr[4] "توجد %d مهمّة طباعة نشطة. أأنتظر حتى تنتهي الطباعة قبل الغلق؟"
 msgstr[5] "توجد %d مهمّة طباعة نشطة. أأنتظر حتى تنتهي الطباعة قبل الغلق؟"
 
-#: ../shell/ev-window.c:3782
+#: ../shell/ev-window.c:3778
 msgid "If you close the window, pending print jobs will not be printed."
 msgstr "إذا أغلقت النافذة لن تُطبع المهام المنتظرة."
 
-#: ../shell/ev-window.c:3786
+#: ../shell/ev-window.c:3782
 msgid "Cancel _print and Close"
 msgstr "ألغِ ال_طباعة وأغلق"
 
-#: ../shell/ev-window.c:3790
+#: ../shell/ev-window.c:3786
 msgid "Close _after Printing"
 msgstr "أغلق ب_عد الطباعة"
 
-#: ../shell/ev-window.c:4333
+#: ../shell/ev-window.c:4329
 msgid "Running in presentation mode"
 msgstr "يعمل في نمط العرض التقديمي"
 
-#: ../shell/ev-window.c:5036
+#: ../shell/ev-window.c:5032
 #, c-format
 msgid ""
 "Document Viewer\n"
@@ -1232,7 +1168,7 @@ msgstr ""
 "عارض المستندات\n"
 "باستخدام %s ‏(%s)"
 
-#: ../shell/ev-window.c:5069
+#: ../shell/ev-window.c:5065
 msgid ""
 "Evince is free software; you can redistribute it and/or modify it under the "
 "terms of the GNU General Public License as published by the Free Software "
@@ -1243,7 +1179,7 @@ msgstr ""
 "والتي نشرتها منظمة البرمجيات الحرة؛ سواء كانت الإصدارة 2 للرخصة أو أي إصدارة "
 "بعدها (حسب الرغبة).\n"
 
-#: ../shell/ev-window.c:5073
+#: ../shell/ev-window.c:5069
 msgid ""
 "Evince is distributed in the hope that it will be useful, but WITHOUT ANY "
 "WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS "
@@ -1254,7 +1190,7 @@ msgstr ""
 "صلاحية العرض في السوق أو توافقه مع أي استخدام محدد.  يمكنكم مراجعة الرخصة "
 "العامة لجنو لمزيد من التفاصيل.\n"
 
-#: ../shell/ev-window.c:5077
+#: ../shell/ev-window.c:5073
 msgid ""
 "You should have received a copy of the GNU General Public License along with "
 "Evince; if not, write to the Free Software Foundation, Inc., 51 Franklin "
@@ -1265,15 +1201,15 @@ msgstr ""
 "Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA "
 "02110-1301  USA\n"
 
-#: ../shell/ev-window.c:5102
+#: ../shell/ev-window.c:5098
 msgid "Evince"
 msgstr "جلاء"
 
-#: ../shell/ev-window.c:5105
+#: ../shell/ev-window.c:5101
 msgid "© 1996–2012 The Evince authors"
 msgstr "© 1996-2012 لمؤلفي برنامج جلاء"
 
-#: ../shell/ev-window.c:5111
+#: ../shell/ev-window.c:5107
 msgid "translator-credits"
 msgstr ""
 "فريق عربآيز للترجمة http://www.arabeyes.org:\n"
@@ -1285,7 +1221,7 @@ msgstr ""
 #. TRANS: Sometimes this could be better translated as
 #. "%d hit(s) on this page".  Therefore this string
 #. contains plural cases.
-#: ../shell/ev-window.c:5382
+#: ../shell/ev-window.c:5378
 #, c-format
 msgid "%d found on this page"
 msgid_plural "%d found on this page"
@@ -1296,11 +1232,11 @@ msgstr[3] "%d موجودة في هذه الصفحة"
 msgstr[4] "%d موجودة في هذه الصفحة"
 msgstr[5] "%d موجودة في هذه الصفحة"
 
-#: ../shell/ev-window.c:5387
+#: ../shell/ev-window.c:5383
 msgid "Not found"
 msgstr "غير موجود"
 
-#: ../shell/ev-window.c:5393
+#: ../shell/ev-window.c:5389
 #, c-format
 msgid "%3d%% remaining to search"
 msgstr "%3d%% متبقية للبحث"
@@ -1344,8 +1280,8 @@ msgid "Open an existing document"
 msgstr "افتح مستند موجود"
 
 #: ../shell/ev-window.c:6042
-msgid "Op_en a Copy"
-msgstr "ا_فتح نسخة"
+msgid "_View in new window"
+msgstr "ا_عرض في نافذة جديدة"
 
 #: ../shell/ev-window.c:6043
 msgid "Open a copy of the current document in a new window"
@@ -1645,66 +1581,108 @@ msgstr "تعذر حفظ المرفق."
 msgid "Save Attachment"
 msgstr "احفظ الملف المرفق"
 
-#: ../shell/ev-window-title.c:169
+#: ../shell/ev-window-title.c:157
 #, c-format
 msgid "%s — Password Required"
 msgstr "‏%s — كلمة السر مطلوبة"
 
-#: ../shell/main.c:70 ../shell/main.c:276
+#: ../shell/main.c:63 ../shell/main.c:269
 msgid "GNOME Document Viewer"
 msgstr "عارِض مستندات جنوم"
 
-#: ../shell/main.c:78
+#: ../shell/main.c:71
 msgid "The page label of the document to display."
 msgstr "عنوان صفحة المستند المطلوب عرضها."
 
-#: ../shell/main.c:78
+#: ../shell/main.c:71
 msgid "PAGE"
 msgstr "صفحة"
 
-#: ../shell/main.c:79
+#: ../shell/main.c:72
 msgid "The page number of the document to display."
 msgstr "رقم صفحة المستند المطلوب عرضها."
 
-#: ../shell/main.c:79
+#: ../shell/main.c:72
 msgid "NUMBER"
 msgstr "رقم"
 
-#: ../shell/main.c:80
+#: ../shell/main.c:73
 msgid "Named destination to display."
 msgstr "اسم الوجهة التي ستُعرض."
 
-#: ../shell/main.c:80
+#: ../shell/main.c:73
 msgid "DEST"
 msgstr "الوجهة"
 
-#: ../shell/main.c:81
+#: ../shell/main.c:74
 msgid "Run evince in fullscreen mode"
 msgstr "شغّل جلاء في نمط ملء الشاشة"
 
-#: ../shell/main.c:82
+#: ../shell/main.c:75
 msgid "Run evince in presentation mode"
 msgstr "شغّل جلاء في نمط العرض التقديمي"
 
-#: ../shell/main.c:83
+#: ../shell/main.c:76
 msgid "Run evince as a previewer"
 msgstr "شغّل جلاء كمعاين"
 
-#: ../shell/main.c:84
+#: ../shell/main.c:77
 msgid "The word or phrase to find in the document"
 msgstr "الكلمة أو العبارة التي سيتم البحث عنها في المستند"
 
-#: ../shell/main.c:84
+#: ../shell/main.c:77
 msgid "STRING"
 msgstr "نص"
 
-#: ../shell/main.c:88
+#: ../shell/main.c:81
 msgid "[FILE…]"
 msgstr "[ملف…]"
 
 #: ../shell/evince-appmenu.ui.h:1
 msgid "_Help"
 msgstr "_مساعدة"
+
+#~ msgid "File is not a valid .desktop file"
+#~ msgstr "الملف ليس ملف .desktop صالح"
+
+#~ msgid "Unrecognized desktop file Version '%s'"
+#~ msgstr "اصدارة غير معروفة لملف سطح المكتب '‏%s'"
+
+#~ msgid "Starting %s"
+#~ msgstr "يبدأ %s"
+
+#~ msgid "Application does not accept documents on command line"
+#~ msgstr "التطبيق لا يقبل مستندات في سطر الأوامر"
+
+#~ msgid "Unrecognized launch option: %d"
+#~ msgstr "خيار إطلاق غير معروف: %d"
+
+#~ msgid "Can't pass document URIs to a 'Type=Link' desktop entry"
+#~ msgstr "لا يمكن تمرير عناوين المستندات إلى مُدخل 'Type=Link' في ملف desktop"
+
+#~ msgid "Not a launchable item"
+#~ msgstr "عنصر لا يُطلق"
+
+#~ msgid "Disable connection to session manager"
+#~ msgstr "عطل الاتصال بمدير الجلسة"
+
+#~ msgid "Specify file containing saved configuration"
+#~ msgstr "حدد ملفا يحوي التشكيل المحفوظ"
+
+#~ msgid "Specify session management ID"
+#~ msgstr "حدد معرف إدارة الجلسة"
+
+#~ msgid "ID"
+#~ msgstr "مُعرف"
+
+#~ msgid "Session management options:"
+#~ msgstr "خيارات إدارة الجلسة:"
+
+#~ msgid "Show session management options"
+#~ msgstr "اعرض خيارات إدارة الجلسة"
+
+#~ msgid "Op_en a Copy"
+#~ msgstr "ا_فتح نسخة"
 
 #~ msgid "By extension"
 #~ msgstr "بالامتداد"
