@@ -274,11 +274,35 @@ ev_view_presentation_transition_animation_frame (EvViewPresentation *pview,
 	gtk_widget_queue_draw (GTK_WIDGET (pview));
 }
 
+static cairo_surface_t *
+get_surface_from_job (EvViewPresentation *pview,
+                      EvJob              *job)
+{
+        cairo_surface_t *surface;
+
+        if (!job)
+                return NULL;
+
+        surface = EV_JOB_RENDER(job)->surface;
+        if (!surface)
+                return NULL;
+
+#ifdef HAVE_HIDPI_SUPPORT
+        {
+                int scale_factor = gtk_widget_get_scale_factor (GTK_WIDGET (pview));
+                cairo_surface_set_device_scale (surface, scale_factor, scale_factor);
+        }
+#endif
+
+        return surface;
+}
+
 static void
 ev_view_presentation_animation_start (EvViewPresentation *pview,
 				      gint                new_page)
 {
 	EvTransitionEffect *effect = NULL;
+	EvJob		   *job;
 	cairo_surface_t    *surface;
 	gint                jump;
 
@@ -302,11 +326,12 @@ ev_view_presentation_animation_start (EvViewPresentation *pview,
 
 	jump = new_page - pview->current_page;
 	if (jump == -1)
-		surface = pview->prev_job ? EV_JOB_RENDER (pview->prev_job)->surface : NULL;
+		job = pview->prev_job;
 	else if (jump == 1)
-		surface = pview->next_job ? EV_JOB_RENDER (pview->next_job)->surface : NULL;
+		job = pview->next_job;
 	else
-		surface = NULL;
+		job = NULL;
+	surface = get_surface_from_job (pview, job);
 	if (surface)
 		ev_transition_animation_set_dest_surface (pview->animation, surface);
 
@@ -333,7 +358,7 @@ job_finished_cb (EvJob              *job,
 
 	if (pview->animation) {
 		ev_transition_animation_set_dest_surface (pview->animation,
-							  job_render->surface);
+							  get_surface_from_job (pview, job));
 	} else {
 		ev_view_presentation_transition_start (pview);
 		gtk_widget_queue_draw (GTK_WIDGET (pview));
@@ -352,6 +377,13 @@ ev_view_presentation_schedule_new_job (EvViewPresentation *pview,
 		return NULL;
 
         ev_view_presentation_get_view_size (pview, page, &view_width, &view_height);
+#ifdef HAVE_HIDPI_SUPPORT
+	{
+		gint device_scale = gtk_widget_get_scale_factor (GTK_WIDGET (pview));
+		view_width *= device_scale;
+		view_height *= device_scale;
+	}
+#endif
         job = ev_job_render_new (pview->document, page, pview->rotation, 0.,
                                  view_width, view_height);
 	g_signal_connect (job, "finished",
@@ -1069,7 +1101,7 @@ ev_view_presentation_draw (GtkWidget *widget,
 		return TRUE;
 	}
 
-	surface = pview->curr_job ? EV_JOB_RENDER (pview->curr_job)->surface : NULL;
+	surface = get_surface_from_job (pview, pview->curr_job);
 	if (surface) {
 		ev_view_presentation_update_current_surface (pview, surface);
 	} else if (pview->current_surface) {
@@ -1224,18 +1256,25 @@ ev_view_presentation_motion_notify_event (GtkWidget      *widget,
 	return FALSE;
 }
 
+static void
+ev_view_presentation_update_monitor_geometry (EvViewPresentation *pview)
+{
+	GdkScreen          *screen = gtk_widget_get_screen (GTK_WIDGET (pview));
+	GdkRectangle        monitor;
+	gint                monitor_num;
+
+	monitor_num = gdk_screen_get_monitor_at_window (screen, gtk_widget_get_window (GTK_WIDGET (pview)));
+	gdk_screen_get_monitor_geometry (screen, monitor_num, &monitor);
+	pview->monitor_width = monitor.width;
+	pview->monitor_height = monitor.height;
+}
+
 static gboolean
 init_presentation (GtkWidget *widget)
 {
 	EvViewPresentation *pview = EV_VIEW_PRESENTATION (widget);
-	GdkScreen          *screen = gtk_widget_get_screen (widget);
-	GdkRectangle        monitor;
-	gint                monitor_num;
 
-	monitor_num = gdk_screen_get_monitor_at_window (screen, gtk_widget_get_window (widget));
-	gdk_screen_get_monitor_geometry (screen, monitor_num, &monitor);
-	pview->monitor_width = monitor.width;
-	pview->monitor_height = monitor.height;
+	ev_view_presentation_update_monitor_geometry (pview);
 
 	ev_view_presentation_update_current_page (pview, pview->current_page);
 	ev_view_presentation_hide_cursor_timeout_start (pview);
@@ -1391,6 +1430,14 @@ ev_view_presentation_get_property (GObject    *object,
         }
 }
 
+static void
+ev_view_presentation_notify_scale_factor (EvViewPresentation *pview)
+{
+        ev_view_presentation_update_monitor_geometry (pview);
+        ev_view_presentation_reset_jobs (pview);
+        ev_view_presentation_update_current_page (pview, pview->current_page);
+}
+
 static GObject *
 ev_view_presentation_constructor (GType                  type,
 				  guint                  n_construct_properties,
@@ -1409,6 +1456,9 @@ ev_view_presentation_constructor (GType                  type,
 		pview->page_cache = ev_page_cache_new (pview->document);
 		ev_page_cache_set_flags (pview->page_cache, EV_PAGE_DATA_INCLUDE_LINKS);
 	}
+
+        g_signal_connect (object, "notify::scale-factor",
+                          G_CALLBACK (ev_view_presentation_notify_scale_factor), NULL);
 
 	return object;
 }
