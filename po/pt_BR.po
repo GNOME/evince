@@ -1,5 +1,5 @@
 # Brazilian Portuguese translation of Evince.
-# Copyright (C) 2004-2013 the Evince authors.
+# Copyright (C) 2004-2014 the Evince authors.
 # This file is distributed under the same license as the evince package.
 # Raphael Higino <In Memoriam>, 2004-2005, 2007.
 # Licio Fernando <liciofernando@gmail.com>, ?.
@@ -15,22 +15,23 @@
 # Henrique P. Machado <hpmachado@gnome.org>, 2010-2011.
 # Antonio Fernandes C. Neto <fernandesn@gnome.org>, 2012.
 # Rafael Ferreira <rafael.f.f1@gmail.com>, 2013, 2014.
+# Enrico Nicoletto <liverig@gmail.com>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: evince\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evince&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2014-01-27 15:57+0000\n"
-"PO-Revision-Date: 2014-01-28 15:51-0300\n"
-"Last-Translator: Rafael Ferreira <rafael.f.f1@gmail.com>\n"
+"POT-Creation-Date: 2014-02-28 04:45+0000\n"
+"PO-Revision-Date: 2014-02-28 09:44-0300\n"
+"Last-Translator: Enrico Nicoletto <liverig@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <gnome-pt_br-list@gnome.org>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 1.5.7\n"
+"X-Generator: Poedit 1.6.3\n"
 
 #: ../backend/comics/comics-document.c:210
 #, c-format
@@ -259,79 +260,9 @@ msgstr "Documentos TIFF"
 msgid "XPS Documents"
 msgstr "Documentos XPS"
 
-#: ../cut-n-paste/smclient/eggdesktopfile.c:165
-#, c-format
-msgid "File is not a valid .desktop file"
-msgstr "O arquivo não é um arquivo .desktop válido"
-
-#. translators: 'Version' is from a desktop file, and
-#. * should not be translated. '%s' would probably be a
-#. * version number.
-#: ../cut-n-paste/smclient/eggdesktopfile.c:191
-#, c-format
-msgid "Unrecognized desktop file Version '%s'"
-msgstr "Arquivo .desktop não reconhecido versão \"%s\""
-
-#: ../cut-n-paste/smclient/eggdesktopfile.c:974
-#, c-format
-msgid "Starting %s"
-msgstr "Iniciando %s"
-
-#: ../cut-n-paste/smclient/eggdesktopfile.c:1116
-#, c-format
-msgid "Application does not accept documents on command line"
-msgstr "O aplicativo não aceita documentos na linha de comando"
-
-#: ../cut-n-paste/smclient/eggdesktopfile.c:1184
-#, c-format
-msgid "Unrecognized launch option: %d"
-msgstr "Opção de lançamento não reconhecida: %d"
-
-#. translators: The 'Type=Link' string is found in a
-#. * desktop file, and should not be translated.
-#: ../cut-n-paste/smclient/eggdesktopfile.c:1391
-#, c-format
-msgid "Can't pass document URIs to a 'Type=Link' desktop entry"
-msgstr ""
-"Não é possível passar URIs de documentos para uma entrada \"Type=Link\" de "
-"arquivo .desktop"
-
-#: ../cut-n-paste/smclient/eggdesktopfile.c:1412
-#, c-format
-msgid "Not a launchable item"
-msgstr "Item não lançável"
-
-#: ../cut-n-paste/smclient/eggsmclient.c:226
-msgid "Disable connection to session manager"
-msgstr "Desabilita a conexão com gerenciador de sessão"
-
-#: ../cut-n-paste/smclient/eggsmclient.c:229
-msgid "Specify file containing saved configuration"
-msgstr "Especifica o arquivo contendo a configuração salva"
-
-#: ../cut-n-paste/smclient/eggsmclient.c:229 ../previewer/ev-previewer.c:46
-msgid "FILE"
-msgstr "ARQUIVO"
-
-#: ../cut-n-paste/smclient/eggsmclient.c:232
-msgid "Specify session management ID"
-msgstr "Especifica a ID de gerenciamento de sessão"
-
-#: ../cut-n-paste/smclient/eggsmclient.c:232
-msgid "ID"
-msgstr "ID"
-
-#: ../cut-n-paste/smclient/eggsmclient.c:253
-msgid "Session management options:"
-msgstr "Opções de gerenciamento de sessão:"
-
-#: ../cut-n-paste/smclient/eggsmclient.c:254
-msgid "Show session management options"
-msgstr "Mostra as opções de gerenciamento de sessão"
-
 #. Manually set name and icon
-#: ../data/evince.desktop.in.in.h:1 ../shell/ev-window.c:5040
-#: ../shell/ev-window-title.c:156 ../shell/main.c:312
+#: ../data/evince.desktop.in.in.h:1 ../shell/ev-window.c:5036
+#: ../shell/ev-window-title.c:144 ../shell/main.c:298
 #, c-format
 msgid "Document Viewer"
 msgstr "Visualizador de documentos"
@@ -454,8 +385,8 @@ msgid "of %d"
 msgstr "de %d"
 
 #: ../libmisc/ev-page-action-widget.c:182 ../shell/ev-history.c:426
-#: ../shell/ev-sidebar-bookmarks.c:312 ../shell/ev-window.c:880
-#: ../shell/ev-window.c:4780
+#: ../shell/ev-sidebar-bookmarks.c:312 ../shell/ev-window.c:877
+#: ../shell/ev-window.c:4776
 #, c-format
 msgid "Page %s"
 msgstr "Página %s"
@@ -648,11 +579,15 @@ msgstr "Excluir o arquivo temporário"
 msgid "Print settings file"
 msgstr "Imprimir arquivo de configurações"
 
+#: ../previewer/ev-previewer.c:46
+msgid "FILE"
+msgstr "ARQUIVO"
+
 #: ../previewer/ev-previewer.c:175 ../previewer/ev-previewer.c:207
 msgid "GNOME Document Previewer"
 msgstr "Visualizador de documentos do GNOME"
 
-#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3401
+#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3397
 msgid "Failed to print document"
 msgstr "Falha ao imprimir o documento"
 
@@ -809,23 +744,23 @@ msgstr "%s, Retrato (%s)"
 msgid "%s, Landscape (%s)"
 msgstr "%s, Paisagem (%s)"
 
-#: ../shell/eggfindbar.c:277
+#: ../shell/eggfindbar.c:284
 msgid "_Whole Words Only"
 msgstr "_Somente palavras inteiras"
 
-#: ../shell/eggfindbar.c:289
+#: ../shell/eggfindbar.c:296
 msgid "C_ase Sensitive"
 msgstr "_Diferenciar maiúsc./minúsc."
 
-#: ../shell/eggfindbar.c:391
+#: ../shell/eggfindbar.c:399
 msgid "Find options"
 msgstr "Opções de localizar"
 
-#: ../shell/eggfindbar.c:400
+#: ../shell/eggfindbar.c:408
 msgid "Find previous occurrence of the search string"
 msgstr "Localiza a ocorrência anterior da expressão pesquisada"
 
-#: ../shell/eggfindbar.c:410
+#: ../shell/eggfindbar.c:418
 msgid "Find next occurrence of the search string"
 msgstr "Localiza a próxima ocorrência da expressão pesquisada"
 
@@ -1071,13 +1006,11 @@ msgstr "Índice"
 msgid "Thumbnails"
 msgstr "Miniaturas"
 
-#: ../shell/ev-toolbar.c:220
-#| msgid "Find options"
+#: ../shell/ev-toolbar.c:238
 msgid "View options"
 msgstr "Opções de visualização"
 
-#: ../shell/ev-toolbar.c:234
-#| msgid "Find options"
+#: ../shell/ev-toolbar.c:255
 msgid "File options"
 msgstr "Opções do arquivo"
 
@@ -1085,106 +1018,106 @@ msgstr "Opções do arquivo"
 msgid "Supported Image Files"
 msgstr "Arquivos de imagens com suporte"
 
-#: ../shell/ev-window.c:1541
+#: ../shell/ev-window.c:1538
 msgid "The document contains no pages"
 msgstr "O documento não contém páginas"
 
-#: ../shell/ev-window.c:1544
+#: ../shell/ev-window.c:1541
 msgid "The document contains only empty pages"
 msgstr "O documento contém apenas páginas vazias"
 
-#: ../shell/ev-window.c:1750 ../shell/ev-window.c:1921
+#: ../shell/ev-window.c:1747 ../shell/ev-window.c:1915
 #, c-format
 msgid "Unable to open document “%s”."
 msgstr "Não foi possível abrir o documento \"%s\"."
 
-#: ../shell/ev-window.c:1885
+#: ../shell/ev-window.c:1879
 #, c-format
 msgid "Loading document from “%s”"
 msgstr "Carregando o documento a partir de \"%s\""
 
-#: ../shell/ev-window.c:2036 ../shell/ev-window.c:2326
+#: ../shell/ev-window.c:2030 ../shell/ev-window.c:2320
 #, c-format
 msgid "Downloading document (%d%%)"
 msgstr "Baixando o documento (%d%%)"
 
-#: ../shell/ev-window.c:2069
+#: ../shell/ev-window.c:2063
 msgid "Failed to load remote file."
 msgstr "Falha ao carregar o arquivo remoto."
 
-#: ../shell/ev-window.c:2270
+#: ../shell/ev-window.c:2264
 #, c-format
 msgid "Reloading document from %s"
 msgstr "Recarregando o documento a partir de %s"
 
-#: ../shell/ev-window.c:2302
+#: ../shell/ev-window.c:2296
 msgid "Failed to reload document."
 msgstr "Falha ao recarregar o documento."
 
-#: ../shell/ev-window.c:2515
+#: ../shell/ev-window.c:2511
 msgid "Open Document"
 msgstr "Abrir documento"
 
-#: ../shell/ev-window.c:2788
+#: ../shell/ev-window.c:2784
 #, c-format
 msgid "Saving document to %s"
 msgstr "Salvando o documento em %s"
 
-#: ../shell/ev-window.c:2791
+#: ../shell/ev-window.c:2787
 #, c-format
 msgid "Saving attachment to %s"
 msgstr "Salvando o anexo em %s"
 
-#: ../shell/ev-window.c:2794
+#: ../shell/ev-window.c:2790
 #, c-format
 msgid "Saving image to %s"
 msgstr "Salvando a imagem em %s"
 
-#: ../shell/ev-window.c:2838 ../shell/ev-window.c:2938
+#: ../shell/ev-window.c:2834 ../shell/ev-window.c:2934
 #, c-format
 msgid "The file could not be saved as “%s”."
 msgstr "Não foi possível salvar o arquivo como \"%s\"."
 
-#: ../shell/ev-window.c:2869
+#: ../shell/ev-window.c:2865
 #, c-format
 msgid "Uploading document (%d%%)"
 msgstr "Enviando o documento (%d%%)"
 
-#: ../shell/ev-window.c:2873
+#: ../shell/ev-window.c:2869
 #, c-format
 msgid "Uploading attachment (%d%%)"
 msgstr "Enviando o anexo (%d%%)"
 
-#: ../shell/ev-window.c:2877
+#: ../shell/ev-window.c:2873
 #, c-format
 msgid "Uploading image (%d%%)"
 msgstr "Enviando a imagem (%d%%)"
 
-#: ../shell/ev-window.c:2989
+#: ../shell/ev-window.c:2985
 msgid "Save a Copy"
 msgstr "Salvar uma cópia"
 
-#: ../shell/ev-window.c:3053
+#: ../shell/ev-window.c:3049
 msgid "Could not send current document"
 msgstr "Não foi possível enviar o documento atual"
 
-#: ../shell/ev-window.c:3084
+#: ../shell/ev-window.c:3080
 msgid "Could not open the containing folder"
 msgstr "Não foi possível abrir a pasta que contém o arquivo"
 
-#: ../shell/ev-window.c:3345
+#: ../shell/ev-window.c:3341
 #, c-format
 msgid "%d pending job in queue"
 msgid_plural "%d pending jobs in queue"
 msgstr[0] "%d trabalho pendente na fila"
 msgstr[1] "%d trabalhos pendentes na fila"
 
-#: ../shell/ev-window.c:3458
+#: ../shell/ev-window.c:3454
 #, c-format
 msgid "Printing job “%s”"
 msgstr "Imprimindo o trabalho \"%s\""
 
-#: ../shell/ev-window.c:3653
+#: ../shell/ev-window.c:3649
 msgid ""
 "Document contains form fields that have been filled out. If you don't save a "
 "copy, changes will be permanently lost."
@@ -1192,7 +1125,7 @@ msgstr ""
 "O documento contém campos de formulário que foram preenchidos. Se você não "
 "salvar uma cópia, as alterações serão permanentemente perdidas."
 
-#: ../shell/ev-window.c:3657
+#: ../shell/ev-window.c:3653
 msgid ""
 "Document contains new or modified annotations. If you don't save a copy, "
 "changes will be permanently lost."
@@ -1200,20 +1133,20 @@ msgstr ""
 "O documento contém anotações novas ou modificadas. Se você não salvar uma "
 "cópia, as alterações serão permanentemente perdidas."
 
-#: ../shell/ev-window.c:3664
+#: ../shell/ev-window.c:3660
 #, c-format
 msgid "Save a copy of document “%s” before closing?"
 msgstr "Salvar uma cópia do documento \"%s\" antes de fechar?"
 
-#: ../shell/ev-window.c:3683
+#: ../shell/ev-window.c:3679
 msgid "Close _without Saving"
 msgstr "F_echar sem salvar"
 
-#: ../shell/ev-window.c:3687
+#: ../shell/ev-window.c:3683
 msgid "Save a _Copy"
 msgstr "Salvar uma _cópia"
 
-#: ../shell/ev-window.c:3761
+#: ../shell/ev-window.c:3757
 #, c-format
 msgid "Wait until print job “%s” finishes before closing?"
 msgstr "Aguardar o término da impressão do trabalho \"%s\" antes de fechar?"
@@ -1221,7 +1154,7 @@ msgstr "Aguardar o término da impressão do trabalho \"%s\" antes de fechar?"
 #. TRANS: the singular form is not really used as n_print_jobs > 1
 #. but some languages distinguish between different plurals forms,
 #. so the ngettext is needed.
-#: ../shell/ev-window.c:3767
+#: ../shell/ev-window.c:3763
 #, c-format
 msgid "There is %d print job active. Wait until print finishes before closing?"
 msgid_plural ""
@@ -1233,25 +1166,25 @@ msgstr[1] ""
 "Existem %d trabalhos de impressão ativos. Aguardar o término das impressões "
 "antes de fechar?"
 
-#: ../shell/ev-window.c:3782
+#: ../shell/ev-window.c:3778
 msgid "If you close the window, pending print jobs will not be printed."
 msgstr ""
 "Se você fechar a janela, os trabalhos de impressão pendentes não serão "
 "impressos."
 
-#: ../shell/ev-window.c:3786
+#: ../shell/ev-window.c:3782
 msgid "Cancel _print and Close"
 msgstr "Cancelar im_pressão e fechar"
 
-#: ../shell/ev-window.c:3790
+#: ../shell/ev-window.c:3786
 msgid "Close _after Printing"
 msgstr "Fechar depois de im_primir"
 
-#: ../shell/ev-window.c:4333
+#: ../shell/ev-window.c:4329
 msgid "Running in presentation mode"
 msgstr "Executando em modo de apresentação"
 
-#: ../shell/ev-window.c:5036
+#: ../shell/ev-window.c:5032
 #, c-format
 msgid ""
 "Document Viewer\n"
@@ -1260,7 +1193,7 @@ msgstr ""
 "Visualizador de documentos\n"
 "Usando %s (%s)"
 
-#: ../shell/ev-window.c:5069
+#: ../shell/ev-window.c:5065
 msgid ""
 "Evince is free software; you can redistribute it and/or modify it under the "
 "terms of the GNU General Public License as published by the Free Software "
@@ -1272,7 +1205,7 @@ msgstr ""
 "Software Livre; seja a versão 2 da Licença ou (se preferir) qualquer versão "
 "mais recente.\n"
 
-#: ../shell/ev-window.c:5073
+#: ../shell/ev-window.c:5069
 msgid ""
 "Evince is distributed in the hope that it will be useful, but WITHOUT ANY "
 "WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS "
@@ -1284,7 +1217,7 @@ msgstr ""
 "ADAPTAÇÃO A UM PROPÓSITO EM PARTICULAR. Veja a Licença Pública Geral GNU "
 "(GPL) para mais detalhes.\n"
 
-#: ../shell/ev-window.c:5077
+#: ../shell/ev-window.c:5073
 msgid ""
 "You should have received a copy of the GNU General Public License along with "
 "Evince; if not, write to the Free Software Foundation, Inc., 51 Franklin "
@@ -1294,15 +1227,15 @@ msgstr ""
 "com o Evince; se não, escreva para a Free Software Foundation, Inc. 51 "
 "Franklin Street, Fifth Floor, Boston, MA  02111-1301  USA\n"
 
-#: ../shell/ev-window.c:5102
+#: ../shell/ev-window.c:5098
 msgid "Evince"
 msgstr "Evince"
 
-#: ../shell/ev-window.c:5105
+#: ../shell/ev-window.c:5101
 msgid "© 1996–2012 The Evince authors"
 msgstr "© 1996-2012 Os autores do Evince"
 
-#: ../shell/ev-window.c:5111
+#: ../shell/ev-window.c:5107
 msgid "translator-credits"
 msgstr ""
 "Raphael Higino <In memoriam>\n"
@@ -1323,18 +1256,18 @@ msgstr ""
 #. TRANS: Sometimes this could be better translated as
 #. "%d hit(s) on this page".  Therefore this string
 #. contains plural cases.
-#: ../shell/ev-window.c:5382
+#: ../shell/ev-window.c:5378
 #, c-format
 msgid "%d found on this page"
 msgid_plural "%d found on this page"
 msgstr[0] "%d resultado nesta página"
 msgstr[1] "%d resultados nesta página"
 
-#: ../shell/ev-window.c:5387
+#: ../shell/ev-window.c:5383
 msgid "Not found"
 msgstr "Não encontrado"
 
-#: ../shell/ev-window.c:5393
+#: ../shell/ev-window.c:5389
 #, c-format
 msgid "%3d%% remaining to search"
 msgstr "%3d%% restante para pesquisar"
@@ -1381,8 +1314,9 @@ msgid "Open an existing document"
 msgstr "Abrir um documento existente"
 
 #: ../shell/ev-window.c:6042
-msgid "Op_en a Copy"
-msgstr "Abrir uma _cópia"
+#| msgid "Open in New _Window"
+msgid "_View in new window"
+msgstr "_Visualizar em nova janela"
 
 #: ../shell/ev-window.c:6043
 msgid "Open a copy of the current document in a new window"
@@ -1682,66 +1616,110 @@ msgstr "Não foi possível salvar o anexo."
 msgid "Save Attachment"
 msgstr "Salvar anexo"
 
-#: ../shell/ev-window-title.c:169
+#: ../shell/ev-window-title.c:157
 #, c-format
 msgid "%s — Password Required"
 msgstr "%s — Senha requerida"
 
-#: ../shell/main.c:70 ../shell/main.c:276
+#: ../shell/main.c:63 ../shell/main.c:269
 msgid "GNOME Document Viewer"
 msgstr "Visualizador de documentos do GNOME"
 
-#: ../shell/main.c:78
+#: ../shell/main.c:71
 msgid "The page label of the document to display."
 msgstr "A etiqueta de página do documento a ser exibida."
 
-#: ../shell/main.c:78
+#: ../shell/main.c:71
 msgid "PAGE"
 msgstr "PÁGINA"
 
-#: ../shell/main.c:79
+#: ../shell/main.c:72
 msgid "The page number of the document to display."
 msgstr "O número da página do documento a ser exibida."
 
-#: ../shell/main.c:79
+#: ../shell/main.c:72
 msgid "NUMBER"
 msgstr "NÚMERO"
 
-#: ../shell/main.c:80
+#: ../shell/main.c:73
 msgid "Named destination to display."
 msgstr "Destino nomeado a ser exibido."
 
-#: ../shell/main.c:80
+#: ../shell/main.c:73
 msgid "DEST"
 msgstr "DEST"
 
-#: ../shell/main.c:81
+#: ../shell/main.c:74
 msgid "Run evince in fullscreen mode"
 msgstr "Executa o Evince em modo de tela cheia"
 
-#: ../shell/main.c:82
+#: ../shell/main.c:75
 msgid "Run evince in presentation mode"
 msgstr "Executa o Evince em modo de apresentação"
 
-#: ../shell/main.c:83
+#: ../shell/main.c:76
 msgid "Run evince as a previewer"
 msgstr "Executa o Evince como visualizador"
 
-#: ../shell/main.c:84
+#: ../shell/main.c:77
 msgid "The word or phrase to find in the document"
 msgstr "A palavra ou frase a ser localizada no documento"
 
-#: ../shell/main.c:84
+#: ../shell/main.c:77
 msgid "STRING"
 msgstr "EXPRESSÃO"
 
-#: ../shell/main.c:88
+#: ../shell/main.c:81
 msgid "[FILE…]"
 msgstr "[ARQUIVO...]"
 
 #: ../shell/evince-appmenu.ui.h:1
 msgid "_Help"
 msgstr "Aj_uda"
+
+#~ msgid "File is not a valid .desktop file"
+#~ msgstr "O arquivo não é um arquivo .desktop válido"
+
+#~ msgid "Unrecognized desktop file Version '%s'"
+#~ msgstr "Arquivo .desktop não reconhecido versão \"%s\""
+
+#~ msgid "Starting %s"
+#~ msgstr "Iniciando %s"
+
+#~ msgid "Application does not accept documents on command line"
+#~ msgstr "O aplicativo não aceita documentos na linha de comando"
+
+#~ msgid "Unrecognized launch option: %d"
+#~ msgstr "Opção de lançamento não reconhecida: %d"
+
+#~ msgid "Can't pass document URIs to a 'Type=Link' desktop entry"
+#~ msgstr ""
+#~ "Não é possível passar URIs de documentos para uma entrada \"Type=Link\" "
+#~ "de arquivo .desktop"
+
+#~ msgid "Not a launchable item"
+#~ msgstr "Item não lançável"
+
+#~ msgid "Disable connection to session manager"
+#~ msgstr "Desabilita a conexão com gerenciador de sessão"
+
+#~ msgid "Specify file containing saved configuration"
+#~ msgstr "Especifica o arquivo contendo a configuração salva"
+
+#~ msgid "Specify session management ID"
+#~ msgstr "Especifica a ID de gerenciamento de sessão"
+
+#~ msgid "ID"
+#~ msgstr "ID"
+
+#~ msgid "Session management options:"
+#~ msgstr "Opções de gerenciamento de sessão:"
+
+#~ msgid "Show session management options"
+#~ msgstr "Mostra as opções de gerenciamento de sessão"
+
+#~ msgid "Op_en a Copy"
+#~ msgstr "Abrir uma _cópia"
 
 #~ msgid "By extension"
 #~ msgstr "Por extensão"
