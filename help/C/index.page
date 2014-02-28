@@ -1,4 +1,5 @@
 <page xmlns="http://projectmallard.org/1.0/"
+      xmlns:its="http://www.w3.org/2005/11/its"
       type="guide" style="task"
       id="index">
 
@@ -6,21 +7,30 @@
     <title type='link' role="trail"><media type="image" src="figures/evince-trail.png"/></title>
     <title type='link'>Evince Document Viewer</title>
     <title type='text'>Evince Document Viewer</title>
-    <revision pkgversion="3.2" version="0.1" date="2011-09-05" status="final"/>
+    <revision pkgversion="3.2" date="2011-09-05" status="final"/>
+    <revision pkgversion="3.12" date="2014-02-28" status="final"/>
+
     <credit type="author">
       <name>Phil Bull</name>
-      <email>philbull@gmail.com</email>
-     </credit>
-     <credit type="editor"> 
-      <name>Tiffany Antopolski</name>
-      <email>tiffany@antopolski.com</email>
+      <email its:translate="no">philbull@gmail.com</email>
     </credit>
-   <license>
-    <p>Creative Commons Share Alike 3.0</p>
-   </license> 
- </info>
+    <credit type="editor">
+      <name>Tiffany Antopolski</name>
+      <email its:translate="no">tiffany@antopolski.com</email>
+    </credit>
 
-<title><media type="image" src="figures/evincelogo.png">Evince logo</media>Evince document viewer</title>
+    <include href="legal-unported.xml" xmlns="http://www.w3.org/2001/XInclude"/>
+
+    <desc><app>Document Viewer</app>, formally known as <app>Evince</app>, is
+    made for viewing PDF documents. Learn how to get started with <app>Document
+    Viewer</app> and its features.</desc>
+
+  </info>
+
+  <title>
+    <media type="image" its:translate="no" src="figures/evincelogo.png" />
+    Document Viewer Help
+  </title>
 
 <section id="reading" style="2column">
     <title>Reading documents</title>
