@@ -7169,6 +7169,19 @@ ev_view_continuous_changed_cb (EvDocumentModel *model,
 {
 	gboolean continuous = ev_document_model_get_continuous (model);
 
+	if (view->document) {
+		GdkPoint     view_point;
+		GdkRectangle page_area;
+		GtkBorder    border;
+
+		view_point.x = view->scroll_x;
+		view_point.y = view->scroll_y;
+		ev_view_get_page_extents (view, view->start_page, &page_area, &border);
+		_ev_view_transform_view_point_to_doc_point (view, &view_point,
+							    &page_area, &border,
+							    &view->pending_point.x,
+							    &view->pending_point.y);
+	}
 	view->continuous = continuous;
 	view->pending_scroll = SCROLL_TO_PAGE_POSITION;
 	gtk_widget_queue_resize (GTK_WIDGET (view));
