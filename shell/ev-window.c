@@ -4476,6 +4476,8 @@ ev_window_cmd_view_presentation (GtkAction *action, EvWindow *window)
 	presentation = gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action));
 	if (presentation) {
 		ev_window_run_presentation (window);
+	} else {
+		ev_window_stop_presentation (window, TRUE);
 	}
 }
 
