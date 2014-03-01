@@ -5774,6 +5774,69 @@ ev_view_activate (EvView *view)
 	}
 }
 
+static gboolean
+ev_view_autoscroll_cb (EvView *view)
+{
+	gdouble speed, value;
+
+	/* If the user stops autoscrolling, autoscrolling will be
+	 * set to false but the timeout will continue; stop the timeout: */
+	if (!view->scroll_info.autoscrolling) {
+		view->scroll_info.timeout_id = 0;
+		return FALSE;
+	}
+
+	if (view->scroll_info.last_y > view->scroll_info.start_y &&
+		(view->scroll_info.last_y < view->scroll_info.start_y))
+		return TRUE;
+
+	/* Replace 100 with your speed of choice: The lower the faster.
+	 * Replace 3 with another speed of choice: The higher, the faster it accelerated
+	 * 	based on the distance of the starting point from the mouse
+	 * (All also effected by the timeout interval of this callback) */
+
+	if (view->scroll_info.start_y > view->scroll_info.last_y)
+		speed = -pow ((((gdouble)view->scroll_info.start_y - view->scroll_info.last_y) / 100), 3);
+	else
+		speed = pow ((((gdouble)view->scroll_info.last_y - view->scroll_info.start_y) / 100), 3);
+
+	value = gtk_adjustment_get_value (view->vadjustment);
+	value = CLAMP (value + speed, 0,
+		       gtk_adjustment_get_upper (view->vadjustment) -
+		       gtk_adjustment_get_page_size (view->vadjustment));
+	gtk_adjustment_set_value (view->vadjustment, value);
+
+	return TRUE;
+
+}
+
+static void
+ev_view_autoscroll_resume (EvView *view)
+{
+	if (!view->scroll_info.autoscrolling)
+		return;
+
+	if (view->scroll_info.timeout_id > 0)
+		return;
+
+	view->scroll_info.timeout_id =
+		g_timeout_add (20, (GSourceFunc)ev_view_autoscroll_cb,
+			       view);
+}
+
+static void
+ev_view_autoscroll_pause (EvView *view)
+{
+	if (!view->scroll_info.autoscrolling)
+		return;
+
+	if (view->scroll_info.timeout_id == 0)
+		return;
+
+	g_source_remove (view->scroll_info.timeout_id);
+	view->scroll_info.timeout_id = 0;
+}
+
 static gint
 ev_view_focus_in (GtkWidget     *widget,
 		  GdkEventFocus *event)
@@ -5782,6 +5845,8 @@ ev_view_focus_in (GtkWidget     *widget,
 
 	if (view->pixbuf_cache)
 		ev_pixbuf_cache_style_changed (view->pixbuf_cache);
+
+	ev_view_autoscroll_resume (view);
 
 	ev_view_check_cursor_blink (view);
 	gtk_widget_queue_draw (widget);
@@ -5797,6 +5862,8 @@ ev_view_focus_out (GtkWidget     *widget,
 
 	if (view->pixbuf_cache)
 		ev_pixbuf_cache_style_changed (view->pixbuf_cache);
+
+	ev_view_autoscroll_pause (view);
 
 	ev_view_check_cursor_blink (view);
 	gtk_widget_queue_draw (widget);
@@ -6891,42 +6958,6 @@ ev_view_is_loading (EvView *view)
 	return view->loading;
 }
 
-static gboolean
-ev_view_autoscroll_cb (EvView *view)
-{
-	gdouble speed, value;
-
-	/* If the user stops autoscrolling, autoscrolling will be
-	 * set to false but the timeout will continue; stop the timeout: */
-	if (!view->scroll_info.autoscrolling) {
-		view->scroll_info.timeout_id = 0;
-		return FALSE;
-	}
-	
-	if (view->scroll_info.last_y > view->scroll_info.start_y && 
-		(view->scroll_info.last_y < view->scroll_info.start_y))
-		return TRUE; 
-
-	/* Replace 100 with your speed of choice: The lower the faster.
-	 * Replace 3 with another speed of choice: The higher, the faster it accelerated
-	 * 	based on the distance of the starting point from the mouse
-	 * (All also effected by the timeout interval of this callback) */
-
-	if (view->scroll_info.start_y > view->scroll_info.last_y)
-		speed = -pow ((((gdouble)view->scroll_info.start_y - view->scroll_info.last_y) / 100), 3);
-	else
-		speed = pow ((((gdouble)view->scroll_info.last_y - view->scroll_info.start_y) / 100), 3);
-	
-	value = gtk_adjustment_get_value (view->vadjustment);
-	value = CLAMP (value + speed, 0,
-		       gtk_adjustment_get_upper (view->vadjustment) -
-		       gtk_adjustment_get_page_size (view->vadjustment));
-	gtk_adjustment_set_value (view->vadjustment, value);
-	
-	return TRUE;
-
-}
-
 void
 ev_view_autoscroll_start (EvView *view)
 {
@@ -6938,10 +6969,8 @@ ev_view_autoscroll_start (EvView *view)
 		return;
 	
 	view->scroll_info.autoscrolling = TRUE;
-	view->scroll_info.timeout_id =
-		g_timeout_add (20, (GSourceFunc)ev_view_autoscroll_cb,
-			       view);
-	
+	ev_view_autoscroll_resume (view);
+
 	ev_document_misc_get_pointer_position (GTK_WIDGET (view), &x, &y);
 	ev_view_handle_cursor_over_xy (view, x, y);
 }
@@ -6957,10 +6986,7 @@ ev_view_autoscroll_stop (EvView *view)
 		return;
 
 	view->scroll_info.autoscrolling = FALSE;
-	if (view->scroll_info.timeout_id) {
-		g_source_remove (view->scroll_info.timeout_id);
-		view->scroll_info.timeout_id = 0;
-	}
+	ev_view_autoscroll_pause (view);
 
 	ev_document_misc_get_pointer_position (GTK_WIDGET (view), &x, &y);
 	ev_view_handle_cursor_over_xy (view, x, y);
