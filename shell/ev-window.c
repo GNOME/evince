@@ -4477,6 +4477,10 @@ ev_window_cmd_view_presentation (GtkAction *action, EvWindow *window)
 	if (presentation) {
 		ev_window_run_presentation (window);
 	}
+	/* We don't exit presentation when action is toggled because it conflicts with some
+	 * remote controls. The behaviour is also consistent with libreoffice and other
+	 * presentation tools. See https://bugzilla.gnome.org/show_bug.cgi?id=556162
+	 */
 }
 
 static gboolean
