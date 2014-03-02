@@ -1199,7 +1199,7 @@ ev_view_get_page_extents (EvView       *view,
 				x = x + (max_width - width - border->left - border->right);
 		} else {
 			x = view->spacing;
-			x = x + MAX (0, allocation.width - (width + view->spacing * 2)) / 2;
+			x = x + MAX (0, allocation.width - (width + border->left + border->right + view->spacing * 2)) / 2;
 		}
 
 		get_page_y_offset (view, page, &y);
