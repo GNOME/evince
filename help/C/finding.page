@@ -1,49 +1,52 @@
 <page xmlns="http://projectmallard.org/1.0/"
-
+      xmlns:its="http://www.w3.org/2005/11/its"
       type="topic" style="task"
       id="finding">
 
   <info>
     <link type="guide" xref="index#reading"/>
-    <desc>Find a word or phrase in a document.</desc>
+    <revision pkgversion="3.2" date="2011-09-05" status="final"/>
 
-    <revision pkgversion="3.2" version="0.1" date="2011-09-05" status="final"/>
     <credit type="author">
       <name>Phil Bull</name>
-      <email>philbull@gmail.com</email>
+      <email its:translate="no">philbull@gmail.com</email>
     </credit>
-    <license>
-      <p>Creative Commons Share Alike 3.0</p>
-    </license>
 
+    <include href="legal-unported.xml" xmlns="http://www.w3.org/2001/XInclude"/>
+
+    <desc>Search for a word or phrase in a document.</desc>
   </info>
 
-<title>Finding text in a document</title>
-<steps>
-    <item><p>Click <guiseq><gui>Edit</gui><gui>Find</gui></guiseq> or press
-    <keyseq><key>Ctrl</key><key>F</key></keyseq> or <key>/</key> to display a
-    search box. </p></item>
+  <title>Find text in a document</title>
 
-    <item><p>Type the word or phrase you want to look for and a search will start
-    automatically.</p></item>
-
-    <item><p>The <gui>Find Previous</gui> and <gui>Find Next</gui> buttons let you skip from
-    one search result to another.</p></item>
-
+  <steps>
     <item>
-     <p>To hide the search bar, click anywhere in the document.</p>
+      <p>Click <guiseq><gui>Edit</gui><gui>Find</gui></guiseq> or press
+      <keyseq><key>Ctrl</key><key>F</key></keyseq> or <key>/</key> to display a
+      search box.</p>
     </item>
-</steps>
+    <item>
+      <p>Type the word or phrase you want to look for and a search will start
+      automatically.</p>
+    </item>
+    <item>
+      <p>The <gui>Find Previous</gui> and <gui>Find Next</gui> buttons let you
+      skip from one search result to another.</p>
+    </item>
+    <item>
+      <p>To hide the search bar, click anywhere in the document.</p>
+    </item>
+  </steps>
 
-<p>
-If the word or phrase you searched is not present in the entire document, the message will say <em>Not found</em>.  However, if it appears in the document at least once, the message will inform you of how many times the word you searched occur on each page.  This is apparent if you skip from one result to another as described above or scroll through the document.
-</p>
+  <p>If the word or phrase you searched is not present in the entire document,
+  the message will say <em>Not found</em>.  However, if it appears in the
+  document at least once, the message will inform you of how many times the
+  word you searched occur on each page.  This is apparent if you skip from one
+  result to another as described above or scroll through the document.</p>
 
-<note>
-  <p>
-Only PDF documents are searchable. Some PDF documents are not searchable because their text
-is encoded in the document as an image.
-  </p>
-</note>
+  <note>
+    <p>Only PDF documents are searchable. Some PDF documents are not
+    searchable because their text is encoded in the document as an image.</p>
+  </note>
 
 </page>
