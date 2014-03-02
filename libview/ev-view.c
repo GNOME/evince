@@ -1289,8 +1289,8 @@ _ev_view_transform_view_point_to_doc_point (EvView       *view,
 					    double       *doc_point_x,
 					    double       *doc_point_y)
 {
-	*doc_point_x = (double) (view_point->x - page_area->x - border->left) / view->scale;
-	*doc_point_y = (double) (view_point->y - page_area->y - border->right) / view->scale;
+	*doc_point_x = MAX ((double) (view_point->x - page_area->x - border->left) / view->scale, 0);
+	*doc_point_y = MAX ((double) (view_point->y - page_area->y - border->right) / view->scale, 0);
 }
 
 void
@@ -1300,8 +1300,8 @@ _ev_view_transform_view_rect_to_doc_rect (EvView       *view,
 					  GtkBorder    *border,
 					  EvRectangle  *doc_rect)
 {
-	doc_rect->x1 = (double) (view_rect->x - page_area->x - border->left) / view->scale;
-	doc_rect->y1 = (double) (view_rect->y - page_area->y - border->right) / view->scale;
+	doc_rect->x1 = MAX ((double) (view_rect->x - page_area->x - border->left) / view->scale, 0);
+	doc_rect->y1 = MAX ((double) (view_rect->y - page_area->y - border->right) / view->scale, 0);
 	doc_rect->x2 = doc_rect->x1 + (double) view_rect->width / view->scale;
 	doc_rect->y2 = doc_rect->y1 + (double) view_rect->height / view->scale;
 }
@@ -7957,8 +7957,6 @@ compute_new_selection (EvView          *view,
 								    &page_area, &border,
 								    &selection->rect.x1,
 								    &selection->rect.y1);
-			selection->rect.x1 = MAX (selection->rect.x1, 0);
-			selection->rect.y1 = MAX (selection->rect.y1, 0);
 		}
 
 		/* If the selection is contained within just one page,
@@ -7972,8 +7970,6 @@ compute_new_selection (EvView          *view,
 								    &page_area, &border,
 								    &selection->rect.x2,
 								    &selection->rect.y2);
-			selection->rect.x2 = MAX (selection->rect.x2, 0);
-			selection->rect.y2 = MAX (selection->rect.y2, 0);
 		}
 
 		list = g_list_prepend (list, selection);
