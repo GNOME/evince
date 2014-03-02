@@ -257,11 +257,13 @@ void _get_page_size_for_scale_and_rotation (EvDocument *document,
 void _ev_view_transform_view_point_to_doc_point (EvView       *view,
 						 GdkPoint     *view_point,
 						 GdkRectangle *page_area,
+						 GtkBorder    *border,
 						 double       *doc_point_x,
 						 double       *doc_point_y);
 void _ev_view_transform_view_rect_to_doc_rect (EvView       *view,
 					       GdkRectangle *view_rect,
 					       GdkRectangle *page_area,
+					       GtkBorder    *border,
 					       EvRectangle  *doc_rect);
 void _ev_view_transform_doc_point_to_view_point (EvView   *view,
 						 int       page,

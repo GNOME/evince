@@ -874,7 +874,7 @@ compute_scroll_increment (EvView        *view,
 	rect.y = view->scroll_y + (scroll == GTK_SCROLL_PAGE_BACKWARD ? 5 : allocation.height - 5);
 	rect.width = page_area.width;
 	rect.height = 1;
-	_ev_view_transform_view_rect_to_doc_rect (view, &rect, &page_area, &doc_rect);
+	_ev_view_transform_view_rect_to_doc_rect (view, &rect, &page_area, &border, &doc_rect);
 
 	/* Convert the doc rectangle into a GdkRectangle */
 	rect.x = doc_rect.x1;
@@ -1285,21 +1285,23 @@ void
 _ev_view_transform_view_point_to_doc_point (EvView       *view,
 					    GdkPoint     *view_point,
 					    GdkRectangle *page_area,
+					    GtkBorder    *border,
 					    double       *doc_point_x,
 					    double       *doc_point_y)
 {
-	*doc_point_x = (double) (view_point->x - page_area->x) / view->scale;
-	*doc_point_y = (double) (view_point->y - page_area->y) / view->scale;
+	*doc_point_x = (double) (view_point->x - page_area->x - border->left) / view->scale;
+	*doc_point_y = (double) (view_point->y - page_area->y - border->right) / view->scale;
 }
 
 void
 _ev_view_transform_view_rect_to_doc_rect (EvView       *view,
 					  GdkRectangle *view_rect,
 					  GdkRectangle *page_area,
+					  GtkBorder    *border,
 					  EvRectangle  *doc_rect)
 {
-	doc_rect->x1 = (double) (view_rect->x - page_area->x) / view->scale;
-	doc_rect->y1 = (double) (view_rect->y - page_area->y) / view->scale;
+	doc_rect->x1 = (double) (view_rect->x - page_area->x - border->left) / view->scale;
+	doc_rect->y1 = (double) (view_rect->y - page_area->y - border->right) / view->scale;
 	doc_rect->x2 = doc_rect->x1 + (double) view_rect->width / view->scale;
 	doc_rect->y2 = doc_rect->y1 + (double) view_rect->height / view->scale;
 }
@@ -2862,7 +2864,7 @@ annotation_window_moved (EvAnnotationWindow *window,
 	view_rect.height = height;
 
 	ev_view_get_page_extents (view, child->page, &page_area, &border);
-	_ev_view_transform_view_rect_to_doc_rect (view, &view_rect, &page_area, &doc_rect);
+	_ev_view_transform_view_rect_to_doc_rect (view, &view_rect, &page_area, &border, &doc_rect);
 	child->orig_x = doc_rect.x1;
 	child->orig_y = doc_rect.y1;
 }
@@ -3093,7 +3095,7 @@ ev_view_create_annotation (EvView          *view,
 	point.x = x;
 	point.y = y;
 	ev_view_get_page_extents (view, view->current_page, &page_area, &border);
-	_ev_view_transform_view_point_to_doc_point (view, &point, &page_area,
+	_ev_view_transform_view_point_to_doc_point (view, &point, &page_area, &border,
 						    &doc_rect.x1, &doc_rect.y1);
 	doc_rect.x2 = doc_rect.x1 + 24;
 	doc_rect.y2 = doc_rect.y1 + 24;
@@ -7945,22 +7947,18 @@ compute_new_selection (EvView          *view,
 		selection->rect.y2 = height;
 
 		ev_view_get_page_extents (view, i, &page_area, &border);
-		page_area.x -= border.left;
-		page_area.y -= border.top;
-		page_area.width += border.left + border.right;
-		page_area.height += border.top + border.bottom;
-
 		if (gdk_rectangle_point_in (&page_area, start))
 			point = start;
 		else
 			point = stop;
 
 		if (i == first) {
-			_ev_view_transform_view_point_to_doc_point (view, point, &page_area,
+			_ev_view_transform_view_point_to_doc_point (view, point,
+								    &page_area, &border,
 								    &selection->rect.x1,
 								    &selection->rect.y1);
-			selection->rect.x1 = MAX (selection->rect.x1 - border.left, 0);
-			selection->rect.y1 = MAX (selection->rect.y1 - border.top, 0);
+			selection->rect.x1 = MAX (selection->rect.x1, 0);
+			selection->rect.y1 = MAX (selection->rect.y1, 0);
 		}
 
 		/* If the selection is contained within just one page,
@@ -7970,11 +7968,12 @@ compute_new_selection (EvView          *view,
 			point = stop;
 
 		if (i == last) {
-			_ev_view_transform_view_point_to_doc_point (view, point, &page_area,
+			_ev_view_transform_view_point_to_doc_point (view, point,
+								    &page_area, &border,
 								    &selection->rect.x2,
 								    &selection->rect.y2);
-			selection->rect.x2 = MAX (selection->rect.x2 - border.right, 0);
-			selection->rect.y2 = MAX (selection->rect.y2 - border.bottom, 0);
+			selection->rect.x2 = MAX (selection->rect.x2, 0);
+			selection->rect.y2 = MAX (selection->rect.y2, 0);
 		}
 
 		list = g_list_prepend (list, selection);

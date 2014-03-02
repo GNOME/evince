@@ -566,7 +566,7 @@ ev_view_accessible_get_offset_at_point (AtkText      *text,
 	}
 
 	ev_view_get_page_extents (view, get_relevant_page (view), &page_area, &border);
-	_ev_view_transform_view_point_to_doc_point (view, &view_point, &page_area, &doc_x, &doc_y);
+	_ev_view_transform_view_point_to_doc_point (view, &view_point, &page_area, &border, &doc_x, &doc_y);
 
 	for (i = 0; i < n_areas; i++) {
 		rect = areas + i;
