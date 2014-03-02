@@ -542,8 +542,7 @@ scroll_to_point (EvView        *view,
 
 		if (view->continuous) {
     			gtk_adjustment_clamp_page (view->vadjustment,
-						   y - view->spacing / 2,
-						   y + page_size);
+						   y, y + page_size);
 		} else {
 			gtk_adjustment_set_value (view->vadjustment,
 						  CLAMP (y, lower, upper - page_size));
