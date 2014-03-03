@@ -340,7 +340,8 @@ djvu_document_render (EvDocument      *document,
 	ddjvu_page_t *d_page;
 	ddjvu_page_rotation_t rotation;
 	gint buffer_modified;
-	double page_width, page_height, tmp;
+	double page_width, page_height;
+	gint transformed_width, transformed_height;
 
 	d_page = ddjvu_page_create_by_pageno (djvu_document->d_document, rc->page->index);
 	
@@ -350,15 +351,12 @@ djvu_document_render (EvDocument      *document,
 	document_get_page_size (djvu_document, rc->page->index, &page_width, &page_height, NULL);
 	rotation = ddjvu_page_get_initial_rotation (d_page);
 
-	page_width = page_width * rc->scale + 0.5;
-	page_height = page_height * rc->scale + 0.5;
-	
+	ev_render_context_compute_transformed_size (rc, page_width, page_height,
+						    &transformed_width, &transformed_height);
+
 	switch (rc->rotation) {
 	        case 90:
 			rotation += DDJVU_ROTATE_90;
-			tmp = page_height;
-			page_height = page_width;
-			page_width = tmp;
 			
 			break;
 	        case 180:
@@ -367,9 +365,6 @@ djvu_document_render (EvDocument      *document,
 			break;
 	        case 270:
 			rotation += DDJVU_ROTATE_270;
-			tmp = page_height;
-			page_height = page_width;
-			page_width = tmp;
 			
 			break;
 	        default:
@@ -378,15 +373,15 @@ djvu_document_render (EvDocument      *document,
 	rotation = rotation % 4;
 
 	surface = cairo_image_surface_create (CAIRO_FORMAT_RGB24,
-					      page_width, page_height);
+					      transformed_width, transformed_height);
 
 	rowstride = cairo_image_surface_get_stride (surface);
 	pixels = (gchar *)cairo_image_surface_get_data (surface);
 
 	prect.x = 0;
 	prect.y = 0;
-	prect.w = page_width;
-	prect.h = page_height;
+	prect.w = transformed_width;
+	prect.h = transformed_height;
 	rrect = prect;
 
 	ddjvu_page_set_rotation (d_page, rotation);
@@ -447,8 +442,8 @@ djvu_document_get_thumbnail (EvDocument      *document,
 	djvu_document_get_page_size (EV_DOCUMENT(djvu_document), rc->page,
 				     &page_width, &page_height);
 	
-	thumb_width = (gint) (page_width * rc->scale);
-	thumb_height = (gint) (page_height * rc->scale);
+	ev_render_context_compute_scaled_size (rc, page_width, page_height,
+					       &thumb_width, &thumb_height);
 
 	pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB, FALSE, 8,
 				 thumb_width, thumb_height);
@@ -486,8 +481,8 @@ djvu_document_get_thumbnail_surface (EvDocument      *document,
 	djvu_document_get_page_size (EV_DOCUMENT(djvu_document), rc->page,
 				     &page_width, &page_height);
 
-	thumb_width = (gint) (page_width * rc->scale + 0.5);
-	thumb_height = (gint) (page_height * rc->scale + 0.5);
+	ev_render_context_compute_scaled_size (rc, page_width, page_height,
+					       &thumb_width, &thumb_height);
 
 	surface = cairo_image_surface_create (CAIRO_FORMAT_RGB24,
 					      thumb_width, thumb_height);
@@ -632,7 +627,8 @@ djvu_selection_get_selection_rects (DjvuDocument    *djvu_document,
 static cairo_region_t *
 djvu_get_selection_region (DjvuDocument *djvu_document,
                            gint page,
-                           gdouble scale,
+                           gdouble scale_x,
+                           gdouble scale_y,
                            EvRectangle *points)
 {
 	double          height, dpi;
@@ -654,10 +650,10 @@ djvu_get_selection_region (DjvuDocument *djvu_document,
 		r->y1 = height - r->y2 * 72 / dpi;
 		r->y2 = height - tmp * 72 / dpi;
 
-		rect.x = (gint) ((r->x1 * scale) + 0.5);
-		rect.y = (gint) ((r->y1 * scale) + 0.5);
-		rect.width = (gint) (((r->x2 - r->x1) * scale) + 0.5);
-		rect.height = (gint) (((r->y2 - r->y1) * scale) + 0.5);
+		rect.x = (gint) ((r->x1 * scale_x) + 0.5);
+		rect.y = (gint) ((r->y1 * scale_y) + 0.5);
+		rect.width = (gint) ((r->x2 * scale_x) + 0.5) - rect.x;
+		rect.height = (gint) ((r->y2 * scale_y) + 0.5) - rect.y;
 		cairo_region_union_rectangle (region, &rect);
 		ev_rectangle_free (r);
 	}
@@ -673,9 +669,14 @@ djvu_selection_get_selection_region (EvSelection    *selection,
 				     EvRectangle     *points)
 {
 	DjvuDocument *djvu_document = DJVU_DOCUMENT (selection);
+	gdouble page_width, page_height;
+	gdouble scale_x, scale_y;
+
+	document_get_page_size (djvu_document, rc->page->index, &page_width, &page_height, NULL);
+	ev_render_context_compute_scales (rc, page_width, page_height, &scale_x, &scale_y);
 
 	return djvu_get_selection_region (djvu_document, rc->page->index,
-					  rc->scale, points);
+					  scale_x, scale_y, points);
 }
 
 static gchar *
@@ -720,7 +721,7 @@ djvu_document_text_get_text_mapping (EvDocumentText *document_text,
 				&points.x2, &points.y2, NULL);
 
 	return djvu_get_selection_region (djvu_document, page->index,
-					  1.0, &points);
+					  1.0, 1.0, &points);
 }
 
 static gchar *

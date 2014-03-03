@@ -34,7 +34,8 @@ void             mdvi_cairo_device_set_margins (DviDevice *device,
 						gint       xmargin,
 						gint       ymargin);
 void             mdvi_cairo_device_set_scale   (DviDevice *device,
-						gdouble    scale);
+                                                gdouble    xscale,
+                                                gdouble    yscale);
 
 G_END_DECLS
 

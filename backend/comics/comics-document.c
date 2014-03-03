@@ -677,7 +677,7 @@ comics_document_render_pixbuf (EvDocument      *document,
 		loader = gdk_pixbuf_loader_new ();
 		g_signal_connect (loader, "size-prepared",
 				  G_CALLBACK (render_pixbuf_size_prepared_cb), 
-				  &rc->scale);
+				  &rc);
 
 		while (outpipe >= 0) {
 			bytes = read (outpipe, buf, 4096);
@@ -698,17 +698,21 @@ comics_document_render_pixbuf (EvDocument      *document,
 		g_spawn_close_pid (child_pid);
 		g_object_unref (loader);
 	} else {
+		int scaled_width, scaled_height;
+
 		filename = 
 			g_build_filename (comics_document->dir,
                                           (char *) comics_document->page_names->pdata[rc->page->index],
 					  NULL);
 	   
 		gdk_pixbuf_get_file_info (filename, &width, &height);
+
+		ev_render_context_compute_scaled_size (rc, width, height,
+						       &scaled_width, &scaled_height);
 		
 		tmp_pixbuf =
 			gdk_pixbuf_new_from_file_at_size (
-				    filename, width * (rc->scale) + 0.5,
-				    height * (rc->scale) + 0.5, NULL);
+				    filename, scaled_width, scaled_height, NULL);
 		rotated_pixbuf =
 			gdk_pixbuf_rotate_simple (tmp_pixbuf,
 						  360 - rc->rotation);
@@ -738,11 +742,11 @@ render_pixbuf_size_prepared_cb (GdkPixbufLoader *loader,
 				gint             height,
 				gpointer         data)
 {
-	double *scale = data;
-	int w = (width  * (*scale) + 0.5);
-	int h = (height * (*scale) + 0.5);
+	EvRenderContext *rc = data;
+	int scaled_width, scaled_height;
 
-	gdk_pixbuf_loader_set_size (loader, w, h);
+	ev_render_context_compute_scaled_size (rc, width, height, &scaled_width, &scaled_height);
+	gdk_pixbuf_loader_set_size (loader, scaled_width, scaled_height);
 }
 
 /**

@@ -343,6 +343,8 @@ struct _EvJobThumbnail
 	gint page;
 	gint rotation;
 	gdouble scale;
+	gint target_width;
+	gint target_height;
 
 	GdkPixbuf *thumbnail;
         gboolean has_frame;
@@ -542,6 +544,11 @@ EvJob          *ev_job_thumbnail_new           (EvDocument      *document,
                                                 gint             page,
                                                 gint             rotation,
                                                 gdouble          scale);
+EvJob	       *ev_job_thumbnail_new_with_target_size (EvDocument      *document,
+						       gint		page,
+						       gint		rotation,
+						       gint		target_width,
+						       gint		target_height);
 void            ev_job_thumbnail_set_has_frame (EvJobThumbnail  *job,
                                                 gboolean         has_frame);
 void            ev_job_thumbnail_set_output_format (EvJobThumbnail      *job,

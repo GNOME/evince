@@ -1396,8 +1396,8 @@ ev_window_set_icon_from_thumbnail (EvJobThumbnail *job,
 static void
 ev_window_refresh_window_thumbnail (EvWindow *ev_window)
 {
-	gdouble page_width;
-	gdouble scale;
+	gdouble page_width, page_height;
+	gint width, height;
 	gint rotation;
 	EvDocument *document = ev_window->priv->document;
 
@@ -1408,11 +1408,13 @@ ev_window_refresh_window_thumbnail (EvWindow *ev_window)
 
 	ev_window_clear_thumbnail_job (ev_window);
 
-	ev_document_get_page_size (document, 0, &page_width, NULL);
-	scale = 128. / page_width;
+	ev_document_get_page_size (document, 0, &page_width, &page_height);
+	width = 128;
+	height = (int)(width * page_height / page_width + 0.5);
 	rotation = ev_document_model_get_rotation (ev_window->priv->model);
 
-	ev_window->priv->thumbnail_job = ev_job_thumbnail_new (document, 0, rotation, scale);
+	ev_window->priv->thumbnail_job = ev_job_thumbnail_new_with_target_size (document, 0, rotation,
+										width, height);
 	g_signal_connect (ev_window->priv->thumbnail_job, "finished",
 			  G_CALLBACK (ev_window_set_icon_from_thumbnail),
 			  ev_window);

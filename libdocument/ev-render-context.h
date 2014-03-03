@@ -50,6 +50,8 @@ struct _EvRenderContext
 	EvPage *page;
 	gint    rotation;
 	gdouble scale;
+	gint	target_width;
+	gint	target_height;
 };
 
 
@@ -63,7 +65,24 @@ void             ev_render_context_set_rotation    (EvRenderContext *rc,
 						    gint             rotation);
 void             ev_render_context_set_scale       (EvRenderContext *rc,
 						    gdouble          scale);
-
+void             ev_render_context_set_target_size (EvRenderContext *rc,
+                                                    int              target_width,
+                                                    int              target_height);
+void             ev_render_context_compute_scaled_size      (EvRenderContext *rc,
+                                                             double           width_points,
+                                                             double           height_points,
+                                                             int             *scaled_width,
+                                                             int             *scaled_height);
+void             ev_render_context_compute_transformed_size (EvRenderContext *rc,
+                                                             double	      width_points,
+                                                             double	      height_points,
+                                                             int	     *transformed_width,
+                                                             int	     *transformed_height);
+void             ev_render_context_compute_scales  (EvRenderContext *rc,
+                                                    double           width_points,
+                                                    double           height_points,
+                                                    double          *scale_x,
+                                                    double          *scale_y);
 
 G_END_DECLS
 

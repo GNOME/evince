@@ -225,6 +225,7 @@ tiff_document_render (EvDocument      *document,
 {
 	TiffDocument *tiff_document = TIFF_DOCUMENT (document);
 	int width, height;
+	int scaled_width, scaled_height;
 	float x_res, y_res;
 	gint rowstride, bytes;
 	guchar *pixels = NULL;
@@ -323,9 +324,10 @@ tiff_document_render (EvDocument      *document,
 		p += 4;
 	}
 
+	ev_render_context_compute_scaled_size (rc, width, height * (x_res / y_res),
+					       &scaled_width, &scaled_height);
 	rotated_surface = ev_document_misc_surface_rotate_and_scale (surface,
-								     (width * rc->scale) + 0.5,
-								     (height * rc->scale * (x_res / y_res)) + 0.5,
+								     scaled_width, scaled_height,
 								     rc->rotation);
 	cairo_surface_destroy (surface);
 	
@@ -338,6 +340,7 @@ tiff_document_get_thumbnail (EvDocument      *document,
 {
 	TiffDocument *tiff_document = TIFF_DOCUMENT (document);
 	int width, height;
+	int scaled_width, scaled_height;
 	float x_res, y_res;
 	gint rowstride, bytes;
 	guchar *pixels = NULL;
@@ -392,9 +395,10 @@ tiff_document_get_thumbnail (EvDocument      *document,
 				   ORIENTATION_TOPLEFT, 0);
 	pop_handlers ();
 
+	ev_render_context_compute_scaled_size (rc, width, height * (x_res / y_res),
+					       &scaled_width, &scaled_height);
 	scaled_pixbuf = gdk_pixbuf_scale_simple (pixbuf,
-						 width * rc->scale,
-						 height * rc->scale * (x_res / y_res),
+						 scaled_width, scaled_height,
 						 GDK_INTERP_BILINEAR);
 	g_object_unref (pixbuf);
 	

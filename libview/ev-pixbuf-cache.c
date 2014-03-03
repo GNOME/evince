@@ -652,7 +652,7 @@ add_job (EvPixbufCache  *pixbuf_cache,
 	job_info->region = region ? cairo_region_reference (region) : NULL;
 
 	job_info->job = ev_job_render_new (pixbuf_cache->document,
-					   page, rotation, scale,
+                                           page, rotation, 0.,
 					   width, height);
 
 	if (new_selection_surface_needed (pixbuf_cache, job_info, page, scale)) {
@@ -1033,6 +1033,7 @@ ev_pixbuf_cache_get_selection_surface (EvPixbufCache   *pixbuf_cache,
 		GdkColor text, base;
 		EvRenderContext *rc;
 		EvPage *ev_page;
+		gint width, height;
 
 		/* we need to get a new selection pixbuf */
 		ev_document_doc_mutex_lock ();
@@ -1044,7 +1045,12 @@ ev_pixbuf_cache_get_selection_surface (EvPixbufCache   *pixbuf_cache,
 		}
 
 		ev_page = ev_document_get_page (pixbuf_cache->document, page);
-		rc = ev_render_context_new (ev_page, 0, scale);
+                _get_page_size_for_scale_and_rotation (pixbuf_cache->document,
+                                                       page, scale, 0,
+                                                       &width, &height);
+
+                rc = ev_render_context_new (ev_page, 0, 0.);
+                ev_render_context_set_target_size (rc, width, height);
 		g_object_unref (ev_page);
 
 		get_selection_colors (EV_VIEW (pixbuf_cache->view), &text, &base);
@@ -1098,10 +1104,17 @@ ev_pixbuf_cache_get_selection_region (EvPixbufCache *pixbuf_cache,
 	if (ev_rect_cmp (&(job_info->target_points), &(job_info->selection_region_points))) {
 		EvRenderContext *rc;
 		EvPage *ev_page;
+		gint width, height;
 
 		ev_document_doc_mutex_lock ();
 		ev_page = ev_document_get_page (pixbuf_cache->document, page);
-		rc = ev_render_context_new (ev_page, 0, scale);
+
+		_get_page_size_for_scale_and_rotation (pixbuf_cache->document,
+						       page, scale, 0,
+						       &width, &height);
+
+		rc = ev_render_context_new (ev_page, 0, 0.);
+		ev_render_context_set_target_size (rc, width, height);
 		g_object_unref (ev_page);
 
 		if (job_info->selection_region)

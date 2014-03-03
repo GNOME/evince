@@ -32,7 +32,8 @@ typedef struct {
 	gint xmargin;
 	gint ymargin;
 
-	gdouble scale;
+	gdouble xscale;
+	gdouble yscale;
 	
 	Ulong fg;
 	Ulong bg;
@@ -104,18 +105,17 @@ dvi_cairo_draw_rule (DviContext *dvi,
 	color = cairo_device->fg;
 	
 	cairo_save (cairo_device->cr);
+	cairo_scale (cairo_device->cr, cairo_device->xscale, cairo_device->yscale);
 
-	cairo_set_line_width (cairo_device->cr,
-			      cairo_get_line_width (cairo_device->cr) * cairo_device->scale);
 	cairo_set_source_rgb (cairo_device->cr,
 			      ((color >> 16) & 0xff) / 255.,
 			      ((color >> 8) & 0xff) / 255.,
 			      ((color >> 0) & 0xff) / 255.);
 
 	cairo_rectangle (cairo_device->cr,
-			 x + cairo_device->xmargin,
-			 y + cairo_device->ymargin,
-			 width, height);
+			 (x + cairo_device->xmargin) / cairo_device->xscale,
+			 (y + cairo_device->ymargin) / cairo_device->yscale,
+			 width / cairo_device->xscale, height / cairo_device->yscale);
 	if (fill == 0) {
 		cairo_stroke (cairo_device->cr);
 	} else {
@@ -362,11 +362,13 @@ mdvi_cairo_device_set_margins (DviDevice *device,
 
 void
 mdvi_cairo_device_set_scale (DviDevice *device,
-			     gdouble    scale)
+			     gdouble    xscale,
+			     gdouble    yscale)
 {
 	DviCairoDevice *cairo_device;
 
 	cairo_device = (DviCairoDevice *) device->device_data;
 
-	cairo_device->scale = scale;
+	cairo_device->xscale = xscale;
+	cairo_device->yscale = yscale;
 }

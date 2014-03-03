@@ -164,6 +164,7 @@ dvi_document_render (EvDocument      *document,
 	cairo_surface_t *surface;
 	cairo_surface_t *rotated_surface;
 	DviDocument *dvi_document = DVI_DOCUMENT(document);
+	gdouble xscale, yscale;
 	gint required_width, required_height;
 	gint proposed_width, proposed_height;
 	gint xmargin = 0, ymargin = 0;
@@ -176,12 +177,14 @@ dvi_document_render (EvDocument      *document,
 	
 	mdvi_setpage (dvi_document->context, rc->page->index);
 	
+	ev_render_context_compute_scales (rc, dvi_document->base_width, dvi_document->base_height,
+					  &xscale, &yscale);
 	mdvi_set_shrink (dvi_document->context, 
-			 (int)((dvi_document->params->hshrink - 1) / rc->scale) + 1,
-			 (int)((dvi_document->params->vshrink - 1) / rc->scale) + 1);
+			 (int)((dvi_document->params->hshrink - 1) / xscale) + 1,
+			 (int)((dvi_document->params->vshrink - 1) / yscale) + 1);
 
-	required_width = dvi_document->base_width * rc->scale + 0.5;
-	required_height = dvi_document->base_height * rc->scale + 0.5;
+	ev_render_context_compute_scaled_size (rc, dvi_document->base_width, dvi_document->base_height,
+					       &required_width, &required_height);
 	proposed_width = dvi_document->context->dvi_page_w * dvi_document->context->params.conv;
 	proposed_height = dvi_document->context->dvi_page_h * dvi_document->context->params.vconv;
 	
@@ -191,7 +194,7 @@ dvi_document_render (EvDocument      *document,
 	    ymargin = (required_height - proposed_height) / 2;
 	    
 	mdvi_cairo_device_set_margins (&dvi_document->context->device, xmargin, ymargin);
-	mdvi_cairo_device_set_scale (&dvi_document->context->device, rc->scale);
+	mdvi_cairo_device_set_scale (&dvi_document->context->device, xscale, yscale);
 	mdvi_cairo_device_render (dvi_document->context);
 	surface = mdvi_cairo_device_get_surface (&dvi_document->context->device);
 

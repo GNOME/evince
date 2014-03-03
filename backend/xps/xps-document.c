@@ -202,7 +202,8 @@ xps_document_render (EvDocument      *document,
 {
 	GXPSPage        *xps_page;
 	gdouble          page_width, page_height;
-	guint            width, height;
+	gint             width, height;
+	double           scale_x, scale_y;
 	cairo_surface_t *surface;
 	cairo_t         *cr;
 	GError          *error = NULL;
@@ -210,13 +211,8 @@ xps_document_render (EvDocument      *document,
 	xps_page = GXPS_PAGE (rc->page->backend_page);
 
 	gxps_page_get_size (xps_page, &page_width, &page_height);
-	if (rc->rotation == 90 || rc->rotation == 270) {
-		width = (guint) ((page_height * rc->scale) + 0.5);
-		height = (guint) ((page_width * rc->scale) + 0.5);
-	} else {
-		width = (guint) ((page_width * rc->scale) + 0.5);
-		height = (guint) ((page_height * rc->scale) + 0.5);
-	}
+	ev_render_context_compute_transformed_size (rc, page_width, page_height,
+                                                    &width, &height);
 
 	surface = cairo_image_surface_create (CAIRO_FORMAT_ARGB32,
 					      width, height);
@@ -239,7 +235,10 @@ xps_document_render (EvDocument      *document,
 		cairo_translate (cr, 0, 0);
 	}
 
-	cairo_scale (cr, rc->scale, rc->scale);
+	ev_render_context_compute_scales (rc, page_width, page_height,
+					  &scale_x, &scale_y);
+	cairo_scale (cr, scale_x, scale_y);
+
 	cairo_rotate (cr, rc->rotation * G_PI / 180.0);
 	gxps_page_render (xps_page, cr, &error);
 	cairo_destroy (cr);

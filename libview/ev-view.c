@@ -890,7 +890,10 @@ compute_scroll_increment (EvView        *view,
 
 		cairo_region_get_rectangle (region, 0, &rect);
 		ev_page = ev_document_get_page (view->document, page);
-		rc = ev_render_context_new (ev_page, view->rotation, view->scale);
+		rc = ev_render_context_new (ev_page, view->rotation, 0.);
+		ev_render_context_set_target_size (rc,
+						   page_area.width - (border.left + border.right),
+						   page_area.height - (border.left + border.right));
 		g_object_unref (ev_page);
 		/* Get the selection region to know the height of the line */
 		doc_rect.x1 = doc_rect.x2 = rect.x + 0.5;
@@ -6005,7 +6008,7 @@ draw_surface (cairo_t 	      *cr,
 		scale_x = (gdouble)target_width / width;
 		scale_y = (gdouble)target_height / height;
 		cairo_pattern_set_filter (cairo_get_source (cr),
-					  CAIRO_FILTER_FAST);
+					  CAIRO_FILTER_NEAREST);
 		cairo_scale (cr, scale_x, scale_y);
 
 		offset_x /= scale_x;

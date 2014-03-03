@@ -65,7 +65,6 @@ struct _EvViewPresentation
 	guint                  rotation;
 	gboolean               inverted_colors;
 	EvPresentationState    state;
-	gdouble                scale;
 	gint                   monitor_width;
 	gint                   monitor_height;
 
@@ -168,25 +167,30 @@ ev_view_presentation_set_end (EvViewPresentation *pview)
 	gtk_widget_queue_draw (widget);
 }
 
-static gdouble
-ev_view_presentation_get_scale_for_page (EvViewPresentation *pview,
-					 guint               page)
+static void
+ev_view_presentation_get_view_size (EvViewPresentation *pview,
+				    guint               page,
+				    int                *view_width,
+				    int                *view_height)
 {
-	if (!ev_document_is_page_size_uniform (pview->document) || pview->scale == 0) {
-		gdouble width, height;
+	gdouble width, height;
 
-		ev_document_get_page_size (pview->document, page, &width, &height);
-		if (pview->rotation == 90 || pview->rotation == 270) {
-			gdouble tmp;
+	ev_document_get_page_size (pview->document, page, &width, &height);
+	if (pview->rotation == 90 || pview->rotation == 270) {
+		gdouble tmp;
 
-			tmp = width;
-			width = height;
-			height = tmp;
-		}
-		pview->scale = MIN (pview->monitor_width / width, pview->monitor_height / height);
+		tmp = width;
+		width = height;
+		height = tmp;
 	}
 
-	return pview->scale;
+	if (pview->monitor_width / width < pview->monitor_height / height) {
+		*view_width = pview->monitor_width;
+		*view_height = (int)((pview->monitor_width / width) * height + 0.5);
+	} else {
+		*view_width = (int)((pview->monitor_height / height) * width + 0.5);
+		*view_height = pview->monitor_height;
+	}
 }
 
 static void
@@ -195,22 +199,10 @@ ev_view_presentation_get_page_area (EvViewPresentation *pview,
 {
 	GtkWidget    *widget = GTK_WIDGET (pview);
 	GtkAllocation allocation;
-	gdouble       doc_width, doc_height;
 	gint          view_width, view_height;
-	gdouble       scale;
 
-	ev_document_get_page_size (pview->document,
-				   pview->current_page,
-				   &doc_width, &doc_height);
-	scale = ev_view_presentation_get_scale_for_page (pview, pview->current_page);
-
-	if (pview->rotation == 90 || pview->rotation == 270) {
-		view_width = (gint)((doc_height * scale) + 0.5);
-		view_height = (gint)((doc_width * scale) + 0.5);
-	} else {
-		view_width = (gint)((doc_width * scale) + 0.5);
-		view_height = (gint)((doc_height * scale) + 0.5);
-	}
+	ev_view_presentation_get_view_size (pview, pview->current_page,
+					    &view_width, &view_height);
 
 	gtk_widget_get_allocation (widget, &allocation);
 
@@ -353,14 +345,15 @@ ev_view_presentation_schedule_new_job (EvViewPresentation *pview,
 				       gint                page,
 				       EvJobPriority       priority)
 {
-	EvJob  *job;
-	gdouble scale;
+	EvJob *job;
+        int    view_width, view_height;
 
 	if (page < 0 || page >= ev_document_get_n_pages (pview->document))
 		return NULL;
 
-	scale = ev_view_presentation_get_scale_for_page (pview, page);
-	job = ev_job_render_new (pview->document, page, pview->rotation, scale, 0, 0);
+        ev_view_presentation_get_view_size (pview, page, &view_width, &view_height);
+        job = ev_job_render_new (pview->document, page, pview->rotation, 0.,
+                                 view_width, view_height);
 	g_signal_connect (job, "finished",
 			  G_CALLBACK (job_finished_cb),
 			  pview);
@@ -794,33 +787,31 @@ ev_view_presentation_get_link_at_location (EvViewPresentation *pview,
 	EvLink        *link;
 	gdouble        width, height;
 	gdouble        new_x, new_y;
-	gdouble        scale;
 
 	if (!pview->page_cache)
 		return NULL;
 
 	ev_document_get_page_size (pview->document, pview->current_page, &width, &height);
 	ev_view_presentation_get_page_area (pview, &page_area);
-	scale = ev_view_presentation_get_scale_for_page (pview, pview->current_page);
-	x = (x - page_area.x) / scale;
-	y = (y - page_area.y) / scale;
+	x = (x - page_area.x) / page_area.width;
+	y = (y - page_area.y) / page_area.height;
 	switch (pview->rotation) {
 	case 0:
 	case 360:
-		new_x = x;
-		new_y = y;
+		new_x = width * x;
+		new_y = height * y;
 		break;
 	case 90:
-		new_x = y;
-		new_y = height - x;
+		new_x = width * y;
+		new_y = height * (1 - x);
 		break;
 	case 180:
-		new_x = width - x;
-		new_y = height - y;
+		new_x = width * (1 - x);
+		new_y = height * (1 - y);
 		break;
 	case 270:
-		new_x = width - y;
-		new_y = x;
+		new_x = width * (1 - y);
+		new_y = height * x;
 		break;
 	default:
 		g_assert_not_reached ();
@@ -1601,7 +1592,6 @@ ev_view_presentation_set_rotation (EvViewPresentation *pview,
         if (pview->is_constructing)
                 return;
 
-        pview->scale = 0;
         ev_view_presentation_reset_jobs (pview);
         ev_view_presentation_update_current_page (pview, pview->current_page);
 }

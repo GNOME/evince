@@ -631,6 +631,8 @@ ev_job_render_run (EvJob *job)
 
 	ev_page = ev_document_get_page (job->document, job_render->page);
 	rc = ev_render_context_new (ev_page, job_render->rotation, job_render->scale);
+	ev_render_context_set_target_size (rc,
+					   job_render->target_width, job_render->target_height);
 	g_object_unref (ev_page);
 
 	job_render->surface = ev_document_render (job->document, rc);
@@ -848,6 +850,8 @@ ev_job_thumbnail_run (EvJob *job)
 
 	page = ev_document_get_page (job->document, job_thumb->page);
 	rc = ev_render_context_new (page, job_thumb->rotation, job_thumb->scale);
+	ev_render_context_set_target_size (rc,
+					   job_thumb->target_width, job_thumb->target_height);
 	g_object_unref (page);
 
         if (job_thumb->format == EV_JOB_THUMBNAIL_PIXBUF)
@@ -897,8 +901,26 @@ ev_job_thumbnail_new (EvDocument *document,
 	job->scale = scale;
         job->has_frame = TRUE;
         job->format = EV_JOB_THUMBNAIL_PIXBUF;
+        job->target_width = -1;
+        job->target_height = -1;
 
 	return EV_JOB (job);
+}
+
+EvJob *
+ev_job_thumbnail_new_with_target_size (EvDocument *document,
+                                       gint        page,
+                                       gint        rotation,
+                                       gint        target_width,
+                                       gint        target_height)
+{
+        EvJob *job = ev_job_thumbnail_new (document, page, rotation, 1.);
+        EvJobThumbnail  *job_thumb = EV_JOB_THUMBNAIL (job);
+
+        job_thumb->target_width = target_width;
+        job_thumb->target_height = target_height;
+
+        return job;
 }
 
 /**

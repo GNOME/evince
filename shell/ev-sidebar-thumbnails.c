@@ -453,16 +453,27 @@ clear_range (EvSidebarThumbnails *sidebar_thumbnails,
 	gtk_tree_path_free (path);
 }
 
-static gdouble
-get_scale_for_page (EvSidebarThumbnails *sidebar_thumbnails,
-		    gint                 page)
+static void
+get_size_for_page (EvSidebarThumbnails *sidebar_thumbnails,
+                   gint                 page,
+                   gint                *width_return,
+                   gint                *height_return)
 {
 	EvSidebarThumbnailsPrivate *priv = sidebar_thumbnails->priv;
-	gdouble width;
+        gdouble width, height;
+        gint thumbnail_height;
 
 	ev_document_get_page_size (priv->document, page, &width, NULL);
+        ev_document_get_page_size (priv->document, page, &width, &height);
+        thumbnail_height = (int)(THUMBNAIL_WIDTH * height / width + 0.5);
 
-	return (gdouble)THUMBNAIL_WIDTH / width;
+        if (priv->rotation == 90 || priv->rotation == 270) {
+                *width_return = thumbnail_height;
+                *height_return = THUMBNAIL_WIDTH;
+        } else {
+                *width_return = THUMBNAIL_WIDTH;
+                *height_return = thumbnail_height;
+        }
 }
 
 static void
@@ -491,9 +502,12 @@ add_range (EvSidebarThumbnails *sidebar_thumbnails,
 				    -1);
 
 		if (job == NULL && !thumbnail_set) {
-			job = ev_job_thumbnail_new (priv->document,
-						    page, priv->rotation,
-						    get_scale_for_page (sidebar_thumbnails, page));
+			gint thumbnail_width, thumbnail_height;
+			get_size_for_page (sidebar_thumbnails, page, &thumbnail_width, &thumbnail_height);
+
+			job = ev_job_thumbnail_new_with_target_size (priv->document,
+								     page, priv->rotation,
+								     thumbnail_width, thumbnail_height);
                         ev_job_thumbnail_set_has_frame (EV_JOB_THUMBNAIL (job), FALSE);
                         ev_job_thumbnail_set_output_format (EV_JOB_THUMBNAIL (job), EV_JOB_THUMBNAIL_SURFACE);
 			g_object_set_data_full (G_OBJECT (job), "tree_iter",

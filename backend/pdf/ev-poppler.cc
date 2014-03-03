@@ -385,6 +385,8 @@ pdf_page_render (PopplerPage     *page,
 {
 	cairo_surface_t *surface;
 	cairo_t *cr;
+	double page_width, page_height;
+	double xscale, yscale;
 
 	surface = cairo_image_surface_create (CAIRO_FORMAT_ARGB32,
 					      width, height);
@@ -403,7 +405,12 @@ pdf_page_render (PopplerPage     *page,
 	        default:
 			cairo_translate (cr, 0, 0);
 	}
-	cairo_scale (cr, rc->scale, rc->scale);
+
+	poppler_page_get_size (page,
+			       &page_width, &page_height);
+
+	ev_render_context_compute_scales (rc, page_width, page_height, &xscale, &yscale);
+	cairo_scale (cr, xscale, yscale);
 	cairo_rotate (cr, rc->rotation * G_PI / 180.0);
 	poppler_page_render (page, cr);
 
@@ -428,15 +435,9 @@ pdf_document_render (EvDocument      *document,
 
 	poppler_page_get_size (poppler_page,
 			       &width_points, &height_points);
-	
-	if (rc->rotation == 90 || rc->rotation == 270) {
-		width = (int) ((height_points * rc->scale) + 0.5);
-		height = (int) ((width_points * rc->scale) + 0.5);
-	} else {
-		width = (int) ((width_points * rc->scale) + 0.5);
-		height = (int) ((height_points * rc->scale) + 0.5);
-	}
-	
+
+	ev_render_context_compute_transformed_size (rc, width_points, height_points,
+						    &width, &height);
 	return pdf_page_render (poppler_page,
 				width, height, rc);
 }
@@ -475,16 +476,8 @@ pdf_document_get_thumbnail (EvDocument      *document,
 	poppler_page_get_size (poppler_page,
 			       &page_width, &page_height);
 
-	width = MAX ((gint)(page_width * rc->scale + 0.5), 1);
-	height = MAX ((gint)(page_height * rc->scale + 0.5), 1);
-
-	if (rc->rotation == 90 || rc->rotation == 270) {
-		gint  temp;
-
-		temp = width;
-		width = height;
-		height = temp;
-	}
+	ev_render_context_compute_transformed_size (rc, page_width, page_height,
+						    &width, &height);
 
 	surface = poppler_page_get_thumbnail (poppler_page);
 	if (surface) {
@@ -533,16 +526,8 @@ pdf_document_get_thumbnail_surface (EvDocument      *document,
 	poppler_page_get_size (poppler_page,
 			       &page_width, &page_height);
 
-	width = MAX ((gint)(page_width * rc->scale + 0.5), 1);
-	height = MAX ((gint)(page_height * rc->scale + 0.5), 1);
-
-	if (rc->rotation == 90 || rc->rotation == 270) {
-		gint  temp;
-
-		temp = width;
-		width = height;
-		height = temp;
-	}
+	ev_render_context_compute_transformed_size (rc, page_width, page_height,
+						    &width, &height);
 
 	surface = poppler_page_get_thumbnail (poppler_page);
 	if (surface) {
@@ -2073,13 +2058,13 @@ pdf_selection_render_selection (EvSelection      *selection,
 	PopplerColor text_color, base_color;
 	double width_points, height_points;
 	gint width, height;
+	double xscale, yscale;
 
 	poppler_page = POPPLER_PAGE (rc->page->backend_page);
 
 	poppler_page_get_size (poppler_page,
 			       &width_points, &height_points);
-	width = (int) ((width_points * rc->scale) + 0.5);
-	height = (int) ((height_points * rc->scale) + 0.5);
+	ev_render_context_compute_scaled_size (rc, width_points, height_points, &width, &height);
 
 	text_color.red = text->red;
 	text_color.green = text->green;
@@ -2096,7 +2081,8 @@ pdf_selection_render_selection (EvSelection      *selection,
 	}
 
 	cr = cairo_create (*surface);
-	cairo_scale (cr, rc->scale, rc->scale);
+	ev_render_context_compute_scales (rc, width_points, height_points, &xscale, &yscale);
+	cairo_scale (cr, xscale, yscale);
 	cairo_surface_set_device_offset (*surface, 0, 0);
 	memset (cairo_image_surface_get_data (*surface), 0x00,
 		cairo_image_surface_get_height (*surface) *
@@ -2125,7 +2111,7 @@ pdf_selection_get_selected_text (EvSelection     *selection,
 }
 
 static cairo_region_t *
-create_region_from_poppler_region (GList *region, gdouble scale)
+create_region_from_poppler_region (GList *region, gdouble xscale, gdouble yscale)
 {
 	GList *l;
 	cairo_region_t *retval;
@@ -2138,10 +2124,10 @@ create_region_from_poppler_region (GList *region, gdouble scale)
 
 		rectangle = (PopplerRectangle *)l->data;
 
-		rect.x = (gint) ((rectangle->x1 * scale) + 0.5);
-		rect.y = (gint) ((rectangle->y1 * scale) + 0.5);
-		rect.width  = (gint) (((rectangle->x2 - rectangle->x1) * scale) + 0.5);
-		rect.height = (gint) (((rectangle->y2 - rectangle->y1) * scale) + 0.5);
+		rect.x = (gint) ((rectangle->x1 * xscale) + 0.5);
+		rect.y = (gint) ((rectangle->y1 * yscale) + 0.5);
+		rect.width  = (gint) ((rectangle->x2 * xscale) + 0.5) - rect.x;
+		rect.height = (gint) ((rectangle->y2 * yscale) + 0.5) - rect.y;
 		cairo_region_union_rectangle (retval, &rect);
 
 		poppler_rectangle_free (rectangle);
@@ -2159,13 +2145,18 @@ pdf_selection_get_selection_region (EvSelection     *selection,
 	PopplerPage    *poppler_page;
 	cairo_region_t *retval;
 	GList          *region;
+	double page_width, page_height;
+	double xscale, yscale;
 
 	poppler_page = POPPLER_PAGE (rc->page->backend_page);
 	region = poppler_page_get_selection_region (poppler_page,
 						    1.0,
 						    (PopplerSelectionStyle)style,
 						    (PopplerRectangle *) points);
-	retval = create_region_from_poppler_region (region, rc->scale);
+	poppler_page_get_size (poppler_page,
+			       &page_width, &page_height);
+	ev_render_context_compute_scales (rc, page_width, page_height, &xscale, &yscale);
+	retval = create_region_from_poppler_region (region, xscale, yscale);
 	g_list_free (region);
 	
 	return retval;
@@ -2201,7 +2192,7 @@ pdf_document_text_get_text_mapping (EvDocumentText *document_text,
 	region = poppler_page_get_selection_region (poppler_page, 1.0,
 						    POPPLER_SELECTION_GLYPH,
 						    &points);
-	retval = create_region_from_poppler_region (region, 1.0);
+	retval = create_region_from_poppler_region (region, 1.0, 1.0);
 	g_list_free (region);
 
 	return retval;

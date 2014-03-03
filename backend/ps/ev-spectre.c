@@ -299,8 +299,9 @@ ps_document_render (EvDocument      *document,
 	
 	spectre_page_get_size (ps_page, &width_points, &height_points);
 
-	width = (gint) ((width_points * rc->scale) + 0.5);
-	height = (gint) ((height_points * rc->scale) + 0.5);
+	ev_render_context_compute_scaled_size (rc, width_points, height_points,
+					       &width, &height);
+
 	rotation = (rc->rotation + get_page_rotation (ps_page)) % 360;
 
 	src = spectre_render_context_new ();
