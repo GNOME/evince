@@ -58,7 +58,15 @@ G_BEGIN_DECLS
 #define EV_IS_ANNOTATION_TEXT_CLASS(klass)      (G_TYPE_CHECK_CLASS_TYPE((klass), EV_TYPE_ANNOTATION_TEXT))
 #define EV_ANNOTATION_TEXT_GET_CLASS(object)    (G_TYPE_INSTANCE_GET_CLASS((object), EV_TYPE_ANNOTATION_TEXT, EvAnnotationTextClass))
 
-/* EvAnnotationText */
+/* EvAnnotationTextMarkup */
+#define EV_TYPE_ANNOTATION_TEXT_MARKUP                 (ev_annotation_text_markup_get_type())
+#define EV_ANNOTATION_TEXT_MARKUP(object)              (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_ANNOTATION_TEXT_MARKUP, EvAnnotationTextMarkup))
+#define EV_ANNOTATION_TEXT_MARKUP_CLASS(klass)         (G_TYPE_CHECK_CLASS_CAST((klass), EV_TYPE_ANNOTATION_TEXT_MARKUP, EvAnnotationTextMarkupClass))
+#define EV_IS_ANNOTATION_TEXT_MARKUP(object)           (G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_ANNOTATION_TEXT_MARKUP))
+#define EV_IS_ANNOTATION_TEXT_MARKUP_CLASS(klass)      (G_TYPE_CHECK_CLASS_TYPE((klass), EV_TYPE_ANNOTATION_TEXT_MARKUP))
+#define EV_ANNOTATION_TEXT_MARKUP_GET_CLASS(object)    (G_TYPE_INSTANCE_GET_CLASS((object), EV_TYPE_ANNOTATION_TEXT_MARKUP, EvAnnotationTextMarkupClass))
+
+/* EvAnnotationAttachment */
 #define EV_TYPE_ANNOTATION_ATTACHMENT              (ev_annotation_attachment_get_type())
 #define EV_ANNOTATION_ATTACHMENT(object)           (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_ANNOTATION_ATTACHMENT, EvAnnotationAttachment))
 #define EV_ANNOTATION_ATTACHMENT_CLASS(klass)      (G_TYPE_CHECK_CLASS_CAST((klass), EV_TYPE_ANNOTATION_ATTACHMENT, EvAnnotationAttachmentClass))
@@ -75,13 +83,20 @@ typedef struct _EvAnnotationMarkupInterface EvAnnotationMarkupInterface;
 typedef struct _EvAnnotationText            EvAnnotationText;
 typedef struct _EvAnnotationTextClass       EvAnnotationTextClass;
 
+typedef struct _EvAnnotationTextMarkup            EvAnnotationTextMarkup;
+typedef struct _EvAnnotationTextMarkupClass       EvAnnotationTextMarkupClass;
+
 typedef struct _EvAnnotationAttachment      EvAnnotationAttachment;
 typedef struct _EvAnnotationAttachmentClass EvAnnotationAttachmentClass;
 
 typedef enum {
 	EV_ANNOTATION_TYPE_UNKNOWN,
 	EV_ANNOTATION_TYPE_TEXT,
-	EV_ANNOTATION_TYPE_ATTACHMENT
+	EV_ANNOTATION_TYPE_ATTACHMENT,
+	EV_ANNOTATION_TYPE_HIGHLIGHT,
+	EV_ANNOTATION_TYPE_UNDERLINE,
+	EV_ANNOTATION_TYPE_SQUIGGLY,
+	EV_ANNOTATION_TYPE_STRIKE_OUT
 } EvAnnotationType;
 
 typedef enum {
@@ -154,7 +169,9 @@ gboolean             ev_annotation_text_set_icon             (EvAnnotationText  
 gboolean             ev_annotation_text_get_is_open          (EvAnnotationText       *text);
 gboolean             ev_annotation_text_set_is_open          (EvAnnotationText       *text,
 							      gboolean                is_open);
-
+/* EvAnnotationTextMarkup */
+EvAnnotation * 		ev_annotation_text_markup_new_highlight (EvPage *page);
+GType				ev_annotation_text_markup_get_type		(void) G_GNUC_CONST;
 /* EvAnnotationAttachment */
 GType                ev_annotation_attachment_get_type       (void) G_GNUC_CONST;
 EvAnnotation        *ev_annotation_attachment_new            (EvPage                 *page,
