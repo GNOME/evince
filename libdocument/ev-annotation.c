@@ -55,6 +55,15 @@ struct _EvAnnotationText {
 struct _EvAnnotationTextClass {
 	EvAnnotationClass parent_class;
 };
+//kcm: either derieve from EvAnnotation or markup waaala..
+struct _EvAnnotationTextMarkup {
+	gboolean             is_open : 1;
+	EvAnnotation parent;
+};
+
+struct _EvAnnotationTextMarkupClass {
+	EvAnnotationClass parent_class;
+};
 
 struct _EvAnnotationAttachment {
 	EvAnnotation parent;
@@ -109,12 +118,17 @@ G_DEFINE_TYPE_WITH_CODE (EvAnnotationText, ev_annotation_text, EV_TYPE_ANNOTATIO
 		 G_IMPLEMENT_INTERFACE (EV_TYPE_ANNOTATION_MARKUP,
 					ev_annotation_text_markup_iface_init);
 	 });
+G_DEFINE_TYPE_WITH_CODE (EvAnnotationTextMarkup,ev_annotation_text_markup,EV_TYPE_ANNOTATION,
+	 {
+		 G_IMPLEMENT_INTERFACE (EV_TYPE_ANNOTATION_MARKUP,
+					ev_annotation_text_markup_iface_init);
+	 });
+//kcm: dunno?
 G_DEFINE_TYPE_WITH_CODE (EvAnnotationAttachment, ev_annotation_attachment, EV_TYPE_ANNOTATION,
 	 {
 		 G_IMPLEMENT_INTERFACE (EV_TYPE_ANNOTATION_MARKUP,
 					ev_annotation_attachment_markup_iface_init);
 	 });
-
 /* EvAnnotation */
 static void
 ev_annotation_finalize (GObject *object)
@@ -622,7 +636,6 @@ ev_annotation_set_rgba (EvAnnotation  *annot,
         g_return_val_if_fail (EV_IS_ANNOTATION (annot), FALSE);
         g_return_val_if_fail (rgba != NULL, FALSE);
 
-        if (gdk_rgba_equal (rgba, &annot->rgba))
                 return FALSE;
 
         annot->rgba = *rgba;
@@ -1094,6 +1107,28 @@ ev_annotation_text_set_is_open (EvAnnotationText *text,
 	g_object_notify (G_OBJECT (text), "is_open");
 
 	return TRUE;
+}
+/* EvAnnotationTextMarkup */
+static void
+ev_annotation_text_markup_init (EvAnnotationTextMarkup *annot)
+{
+	EV_ANNOTATION (annot)->type = EV_ANNOTATION_TYPE_HIGHLIGHT;
+}
+
+static void
+ev_annotation_text_markup_class_init (EvAnnotationTextMarkupClass *klass)
+{
+	GObjectClass *g_object_class = G_OBJECT_CLASS (klass);
+
+	ev_annotation_markup_class_install_properties (g_object_class);
+}
+
+EvAnnotation *
+ev_annotation_text_markup_new_highlight (EvPage *page)
+{
+	return EV_ANNOTATION (g_object_new (EV_TYPE_ANNOTATION_TEXT_MARKUP,
+					    "page", page,
+					    NULL));
 }
 
 /* EvAnnotationAttachment */
