@@ -53,6 +53,7 @@
 #include "ev-document-annotations.h"
 #include "ev-document-type-builtins.h"
 #include "ev-document-misc.h"
+#include "ev-dualscreen.h"
 #include "ev-file-exporter.h"
 #include "ev-file-helpers.h"
 #include "ev-file-monitor.h"
@@ -330,9 +331,6 @@ static void     ev_window_stop_fullscreen               (EvWindow         *windo
 							 gboolean          unfullscreen_window);
 static void     ev_window_cmd_view_fullscreen           (GtkAction        *action,
 							 EvWindow         *window);
-static void     ev_window_run_presentation              (EvWindow         *window);
-static void     ev_window_stop_presentation             (EvWindow         *window,
-							 gboolean          unfullscreen_window);
 static void     ev_window_cmd_view_presentation         (GtkAction        *action,
 							 EvWindow         *window);
 static void     ev_view_popup_cmd_open_link             (GtkAction        *action,
@@ -4379,7 +4377,7 @@ ev_window_view_presentation_focus_out (EvWindow *window)
 	return FALSE;
 }
 
-static void
+void
 ev_window_run_presentation (EvWindow *window)
 {
 	gboolean fullscreen_window = TRUE;
@@ -4433,9 +4431,18 @@ ev_window_run_presentation (EvWindow *window)
 
 	if (window->priv->metadata && !ev_window_is_empty (window))
 		ev_metadata_set_boolean (window->priv->metadata, "presentation", TRUE);
+
+        if ( get_num_monitors(GTK_WINDOW(window)) > 1) {
+                EvDSCWindow *control = ev_dscwindow_get_control();
+                gtk_window_present (GTK_WINDOW (control));
+                ev_dscwindow_set_presentation   (control, window,
+                                         window->priv->document,
+                                         EV_VIEW_PRESENTATION(window->priv->presentation_view),
+                                         window->priv->metadata);
+        }
 }
 
-static void
+void
 ev_window_stop_presentation (EvWindow *window,
 			     gboolean  unfullscreen_window)
 {
