@@ -35,6 +35,7 @@ enum {
 	PROP_0,
 	PROP_DOCUMENT,
 	PROP_CURRENT_PAGE,
+	PROP_PAGE,
 	PROP_ROTATION,
 	PROP_INVERTED_COLORS
 };
@@ -520,6 +521,15 @@ ev_view_presentation_set_current_page (EvViewPresentation *pview,
 	} else {
 		ev_view_presentation_update_current_page (pview, page);
 	}
+}
+
+void
+ev_view_presentation_set_page (EvViewPresentation *pview, gint new_page)
+{
+	if (new_page >= ev_document_get_n_pages (pview->document))
+		ev_view_presentation_set_end (pview);
+	else if (new_page != pview->current_page)
+		ev_view_presentation_update_current_page (pview, new_page);
 }
 
 void
@@ -1230,18 +1240,59 @@ ev_view_presentation_motion_notify_event (GtkWidget      *widget,
 	return FALSE;
 }
 
+static GdkRectangle
+ev_view_presentation_get_monitor_geometry (EvViewPresentation *pview)
+{
+	GdkScreen          *screen = gtk_widget_get_screen (GTK_WIDGET(pview));
+	GdkRectangle        monitor;
+	gint                monitor_num;
+
+	monitor_num = gdk_screen_get_monitor_at_window (screen, gtk_widget_get_window (GTK_WIDGET(pview)));
+	gdk_screen_get_monitor_geometry (screen, monitor_num, &monitor);
+
+	return monitor;
+}
+
+static void
+ev_view_presentation_update_scale (EvViewPresentation *pview)
+{
+	GdkRectangle monitor = ev_view_presentation_get_monitor_geometry (pview);
+
+	if((pview->monitor_width != monitor.width)||(pview->monitor_height != monitor.height)) {
+		pview->monitor_width = monitor.width;
+		pview->monitor_height = monitor.height;
+
+		pview->scale = 0;
+		ev_view_presentation_reset_jobs (pview);
+		ev_view_presentation_update_current_page (pview, pview->current_page);
+	}
+}
+
+static void
+ev_view_presentation_size_allocate (GtkWidget *widget,
+									GtkAllocation *allocation)
+{
+	gtk_widget_set_allocation (widget, allocation);
+    if (gtk_widget_get_realized (widget))
+		gdk_window_move_resize (gtk_widget_get_window (widget),
+                                allocation->x,
+                                allocation->y,
+                                allocation->width,
+                                allocation->height);
+	ev_view_presentation_update_scale (EV_VIEW_PRESENTATION (widget));
+}
+
 static gboolean
 init_presentation (GtkWidget *widget)
 {
 	EvViewPresentation *pview = EV_VIEW_PRESENTATION (widget);
-	GdkScreen          *screen = gtk_widget_get_screen (widget);
-	GdkRectangle        monitor;
-	gint                monitor_num;
+	GdkRectangle        monitor = ev_view_presentation_get_monitor_geometry (pview);
 
-	monitor_num = gdk_screen_get_monitor_at_window (screen, gtk_widget_get_window (widget));
-	gdk_screen_get_monitor_geometry (screen, monitor_num, &monitor);
 	pview->monitor_width = monitor.width;
 	pview->monitor_height = monitor.height;
+
+	g_signal_connect_swapped (G_OBJECT (widget), "screen-changed",
+                      G_CALLBACK (ev_view_presentation_update_scale), pview);
 
 	ev_view_presentation_update_current_page (pview, pview->current_page);
 	ev_view_presentation_hide_cursor_timeout_start (pview);
@@ -1366,6 +1417,9 @@ ev_view_presentation_set_property (GObject      *object,
 	case PROP_CURRENT_PAGE:
 		ev_view_presentation_set_current_page (pview, g_value_get_uint (value));
 		break;
+	case PROP_PAGE:
+		pview->current_page = g_value_get_uint (value);
+		break;
 	case PROP_ROTATION:
                 ev_view_presentation_set_rotation (pview, g_value_get_uint (value));
 		break;
@@ -1431,6 +1485,7 @@ ev_view_presentation_class_init (EvViewPresentationClass *klass)
 
         gobject_class->dispose = ev_view_presentation_dispose;
 
+	widget_class->size_allocate = ev_view_presentation_size_allocate;
 	widget_class->get_preferred_width = ev_view_presentation_get_preferred_width;
 	widget_class->get_preferred_height = ev_view_presentation_get_preferred_height;
 	widget_class->realize = ev_view_presentation_realize;
@@ -1454,6 +1509,13 @@ ev_view_presentation_class_init (EvViewPresentationClass *klass)
 							      G_PARAM_WRITABLE |
 							      G_PARAM_CONSTRUCT_ONLY |
                                                               G_PARAM_STATIC_STRINGS));
+	g_object_class_install_property (gobject_class,
+					 PROP_PAGE,
+					 g_param_spec_uint ("page",
+							    "Current Page",
+							    "The current page",
+							    0, G_MAXUINT, 0,
+								G_PARAM_READWRITE));
 	g_object_class_install_property (gobject_class,
 					 PROP_CURRENT_PAGE,
 					 g_param_spec_uint ("current-page",

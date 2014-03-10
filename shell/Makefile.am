@@ -17,6 +17,8 @@ evince_SOURCES=				\
 	ev-bookmark-action.c		\
 	ev-application.c		\
 	ev-application.h		\
+	ev-dualscreen.h			\
+	ev-dualscreen.c			\
 	ev-file-monitor.h		\
 	ev-file-monitor.c		\
 	ev-find-sidebar.h		\
@@ -75,6 +77,8 @@ evince_SOURCES=				\
 	ev-sidebar-page.h		\
 	ev-sidebar-thumbnails.c		\
 	ev-sidebar-thumbnails.h		\
+	ev-presentation-timer.h		\
+	ev-presentation-timer.c		\
 	main.c
 
 nodist_evince_SOURCES = \
