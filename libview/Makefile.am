@@ -3,6 +3,7 @@ lib_LTLIBRARIES = libevview3.la
 NOINST_H_SRC_FILES =			\
 	ev-annotation-window.h		\
 	ev-link-accessible.h		\
+	ev-page-accessible.h		\
 	ev-page-cache.h			\
 	ev-pixbuf-cache.h		\
 	ev-timeline.h			\
@@ -36,6 +37,7 @@ libevview3_la_SOURCES =			\
 	ev-jobs.c			\
 	ev-job-scheduler.c		\
 	ev-link-accessible.c		\
+	ev-page-accessible.c		\
 	ev-page-cache.c			\
 	ev-pixbuf-cache.c		\
 	ev-print-operation.c	        \
