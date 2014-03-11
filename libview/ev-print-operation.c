@@ -50,6 +50,8 @@ struct _EvPrintOperation {
 
 	EvDocument *document;
 
+	gboolean    print_preview;
+
 	/* Progress */
 	gchar      *status;
 	gdouble     progress;
@@ -342,14 +344,26 @@ ev_print_operation_update_status (EvPrintOperation *op,
 
 	g_free (op->status);
 
-	if (page == -1) {
-		/* Initial state */
-		op->status = g_strdup (_("Preparing to print…"));
-	} else if (page > n_pages) {
-		op->status = g_strdup (_("Finishing…"));
-	} else {
-		op->status = g_strdup_printf (_("Printing page %d of %d…"),
-					      page, n_pages);
+	if (op->print_preview) {
+		if (page == -1) {
+			/* Initial state */
+			op->status = g_strdup (_("Preparing preview…"));
+		} else if (page > n_pages) {
+			op->status = g_strdup (_("Finishing…"));
+		} else {
+			op->status = g_strdup_printf (_("Generating preview: page %d of %d"),
+						      page, n_pages);
+		}
+ 	} else {
+		if (page == -1) {
+			/* Initial state */
+			op->status = g_strdup (_("Preparing to print…"));
+		} else if (page > n_pages) {
+			op->status = g_strdup (_("Finishing…"));
+		} else {
+			op->status = g_strdup_printf (_("Printing page %d of %d…"),
+						      page, n_pages);
+		}
 	}
 
 	op->progress = MIN (1.0, progress);
@@ -381,7 +395,6 @@ struct _EvPrintOperationExport {
 	EvJob *job_export;
 	GError *error;
 
-	gboolean print_preview;
 	gint n_pages;
 	gint current_page;
 	GtkPrinter *printer;
@@ -841,7 +854,7 @@ export_print_done (EvPrintOperationExport *export)
 		gtk_print_settings_set_int (settings, "cups-"GTK_PRINT_SETTINGS_NUMBER_UP, 1);
 	}
 
-	if (export->print_preview) {
+	if (op->print_preview) {
 		GKeyFile *key_file;
 		gchar    *data = NULL;
 		gsize     data_len;
@@ -1155,7 +1168,7 @@ ev_print_operation_export_print_dialog_response_cb (GtkDialog              *dial
 		return;
 	}
 
-	export->print_preview = (response == GTK_RESPONSE_APPLY);
+	op->print_preview = (response == GTK_RESPONSE_APPLY);
 	
 	printer = gtk_print_unix_dialog_get_selected_printer (GTK_PRINT_UNIX_DIALOG (dialog));
 	ev_print_operation_export_set_printer (export, printer);
@@ -1954,6 +1967,14 @@ ev_print_operation_print_custom_widget_apply (EvPrintOperationPrint *print,
 	gtk_print_settings_set_bool (settings, EV_PRINT_SETTING_PAGE_SIZE, print->use_source_size);
 }
 
+static gboolean
+ev_print_operation_print_preview (EvPrintOperationPrint *print)
+{
+	EV_PRINT_OPERATION (print)->print_preview = TRUE;
+
+	return FALSE;
+}
+
 static void
 ev_print_operation_print_finalize (GObject *object)
 {
@@ -2016,6 +2037,9 @@ ev_print_operation_print_init (EvPrintOperationPrint *print)
 				  print);
 	g_signal_connect_swapped (print->op, "custom_widget_apply",
 				  G_CALLBACK (ev_print_operation_print_custom_widget_apply),
+				  print);
+        g_signal_connect_swapped (print->op, "preview",
+				  G_CALLBACK (ev_print_operation_print_preview),
 				  print);
 	gtk_print_operation_set_allow_async (print->op, TRUE);
 	gtk_print_operation_set_use_full_page (print->op, TRUE);
