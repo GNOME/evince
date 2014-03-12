@@ -28,6 +28,7 @@
 #include "ev-view-accessible.h"
 #include "ev-link-accessible.h"
 #include "ev-view-private.h"
+#include "ev-page-accessible.h"
 
 static void ev_view_accessible_text_iface_init      (AtkTextIface      *iface);
 static void ev_view_accessible_action_iface_init    (AtkActionIface    *iface);
@@ -66,6 +67,8 @@ struct _EvViewAccessiblePrivate {
 	GHashTable    *links;
 
 	gint previous_cursor_page;
+
+	GPtrArray *children;
 };
 
 G_DEFINE_TYPE_WITH_CODE (EvViewAccessible, ev_view_accessible, GTK_TYPE_CONTAINER_ACCESSIBLE,
@@ -90,6 +93,23 @@ clear_cache (EvViewAccessible *accessible)
 }
 
 static void
+clear_children (EvViewAccessible *self)
+{
+	gint i;
+	AtkObject *child;
+
+	if (self->priv->children == NULL)
+		return;
+
+	for (i = 0; i < self->priv->children->len; i++) {
+		child = g_ptr_array_index (self->priv->children, i);
+		atk_object_notify_state_change (child, ATK_STATE_DEFUNCT, TRUE);
+	}
+
+	g_clear_pointer (&self->priv->children, g_ptr_array_unref);
+}
+
+static void
 ev_view_accessible_finalize (GObject *object)
 {
 	EvViewAccessiblePrivate *priv = EV_VIEW_ACCESSIBLE (object)->priv;
@@ -105,6 +125,7 @@ ev_view_accessible_finalize (GObject *object)
 	for (i = 0; i < LAST_ACTION; i++)
 		g_free (priv->action_descriptions [i]);
 	clear_cache (EV_VIEW_ACCESSIBLE (object));
+	clear_children (EV_VIEW_ACCESSIBLE (object));
 
 	G_OBJECT_CLASS (ev_view_accessible_parent_class)->finalize (object);
 }
@@ -122,6 +143,31 @@ ev_view_accessible_initialize (AtkObject *obj,
 	atk_object_set_role (obj, ATK_ROLE_DOCUMENT_FRAME);
 }
 
+static gint
+ev_view_accessible_get_n_pages (EvViewAccessible *self)
+{
+	return self->priv->children == NULL ? 0 : self->priv->children->len;
+}
+
+static AtkObject *
+ev_view_accessible_ref_child (AtkObject *obj,
+			      gint       i)
+{
+	EvViewAccessible *self;
+
+	g_return_val_if_fail (EV_IS_VIEW_ACCESSIBLE (obj), NULL);
+	self = EV_VIEW_ACCESSIBLE (obj);
+	g_return_val_if_fail (i >= 0 || i < ev_view_accessible_get_n_pages (self), NULL);
+
+	return g_object_ref (g_ptr_array_index (self->priv->children, i));
+}
+
+static gint
+ev_view_accessible_get_n_children (AtkObject *obj)
+{
+	return ev_view_accessible_get_n_pages (EV_VIEW_ACCESSIBLE (obj));
+}
+
 static void
 ev_view_accessible_class_init (EvViewAccessibleClass *klass)
 {
@@ -130,6 +176,8 @@ ev_view_accessible_class_init (EvViewAccessibleClass *klass)
 
 	object_class->finalize = ev_view_accessible_finalize;
 	atk_class->initialize = ev_view_accessible_initialize;
+	atk_class->get_n_children = ev_view_accessible_get_n_children;
+	atk_class->ref_child = ev_view_accessible_ref_child;
 
 	g_type_class_add_private (klass, sizeof (EvViewAccessiblePrivate));
 }
@@ -856,15 +904,9 @@ ev_view_accessible_add_selection (AtkText *text,
 static gint
 ev_view_accessible_get_page_count (AtkDocument *atk_document)
 {
-	EvDocument *ev_document;
-	EvViewAccessiblePrivate* priv;
-
 	g_return_val_if_fail (EV_IS_VIEW_ACCESSIBLE (atk_document), -1);
 
-	priv = EV_VIEW_ACCESSIBLE (atk_document)->priv;
-	ev_document = ev_document_model_get_document (priv->model);
-
-	return ev_document == NULL ? -1 : ev_document_get_n_pages (ev_document);
+	return ev_view_accessible_get_n_pages (EV_VIEW_ACCESSIBLE (atk_document));
 }
 
 static gint
@@ -1168,16 +1210,37 @@ page_changed_cb (EvDocumentModel  *model,
 }
 
 static void
+initialize_children (EvViewAccessible *self)
+{
+	gint i;
+	EvPageAccessible *child;
+	gint n_pages;
+	EvDocument *ev_document;
+
+	ev_document = ev_document_model_get_document (self->priv->model);
+	n_pages = ev_document_get_n_pages (ev_document);
+
+	self->priv->children = g_ptr_array_new_full (n_pages, (GDestroyNotify) g_object_unref);
+	for (i = 0; i < n_pages; i++) {
+		child = ev_page_accessible_new (self, i);
+		g_ptr_array_add (self->priv->children, child);
+	}
+}
+
+static void
 document_changed_cb (EvDocumentModel  *model,
 		     GParamSpec       *pspec,
 		     EvViewAccessible *accessible)
 {
 	EvDocument *document = ev_document_model_get_document (model);
 
+	clear_children (accessible);
+
 	if (document == NULL)
 		return;
 
 	clear_cache (accessible);
+	initialize_children (accessible);
 
 	/* Inside this callback the document is already loaded. We
 	 * don't have here an "just before" and "just after"
