@@ -2648,8 +2648,11 @@ _ev_view_focus_form_field (EvView      *view,
 	}
 
 	/* Form field doesn't require a widget */
-	if (!field_widget)
+	if (!field_widget) {
+		if (!gtk_widget_has_focus (GTK_WIDGET (view)))
+			gtk_widget_grab_focus (GTK_WIDGET (view));
 		return;
+	}
 
 	g_object_set_data_full (G_OBJECT (field_widget), "form-field",
 				g_object_ref (field),
@@ -2658,6 +2661,7 @@ _ev_view_focus_form_field (EvView      *view,
 	form_field_mapping = ev_page_cache_get_form_field_mapping (view->page_cache,
 								   field->page->index);
 	mapping = ev_mapping_list_find (form_field_mapping, field);
+	_ev_view_set_focused_element (view, mapping, field->page->index);
 	ev_view_put_to_doc_rect (view, field_widget, field->page->index, &mapping->area);
 	gtk_widget_show (field_widget);
 	gtk_widget_grab_focus (field_widget);
@@ -6256,6 +6260,11 @@ ev_view_dispose (GObject *object)
 		view->cursor_blink_timeout_id = 0;
 	}
 
+	if (view->child_focus_idle_id) {
+		g_source_remove (view->child_focus_idle_id);
+		view->child_focus_idle_id = 0;
+	}
+
         gtk_scrollable_set_hadjustment (GTK_SCROLLABLE (view), NULL);
         gtk_scrollable_set_vadjustment (GTK_SCROLLABLE (view), NULL);
 
@@ -6466,6 +6475,152 @@ add_move_binding_keypad (GtkBindingSet  *binding_set,
 				      G_TYPE_BOOLEAN, TRUE);
 }
 
+static gint
+ev_view_mapping_compare (const EvMapping *a,
+			 const EvMapping *b,
+			 gpointer         user_data)
+{
+	GtkTextDirection text_direction = GPOINTER_TO_INT (user_data);
+	gint y1 = a->area.y1 + (a->area.y2 - a->area.y1) / 2;
+	gint y2 = b->area.y1 + (b->area.y2 - b->area.y1) / 2;
+
+	if (y1 == y2) {
+		gint x1 = a->area.x1 + (a->area.x2 - a->area.x1) / 2;
+		gint x2 = b->area.x1 + (b->area.x2 - b->area.x1) / 2;
+
+		if (text_direction == GTK_TEXT_DIR_RTL)
+			return (x1 < x2) ? 1 : ((x1 == x2) ? 0 : -1);
+
+		return (x1 < x2) ? -1 : ((x1 == x2) ? 0 : 1);
+	}
+
+	return (y1 < y2) ? -1 : 1;
+}
+
+static GList *
+ev_view_get_sorted_mapping_list (EvView          *view,
+				 GtkDirectionType direction,
+				 gint             page)
+{
+	GList         *mapping_list = NULL, *l;
+	EvMappingList *forms_mapping;
+
+	forms_mapping = ev_page_cache_get_form_field_mapping (view->page_cache, page);
+
+	for (l = ev_mapping_list_get_list (forms_mapping); l; l = g_list_next (l)) {
+		EvMapping   *mapping = (EvMapping *)l->data;
+		EvFormField *field = (EvFormField *)mapping->data;
+
+		if (field->is_read_only || EV_IS_FORM_FIELD_SIGNATURE (field))
+			continue;
+
+		mapping_list = g_list_prepend (mapping_list, mapping);
+	}
+
+	if (!mapping_list)
+		return NULL;
+
+	mapping_list = g_list_sort_with_data (g_list_reverse (mapping_list),
+					      (GCompareDataFunc)ev_view_mapping_compare,
+					      GINT_TO_POINTER (gtk_widget_get_direction (GTK_WIDGET (view))));
+
+	if (direction == GTK_DIR_TAB_BACKWARD)
+		mapping_list = g_list_reverse (mapping_list);
+	return mapping_list;
+}
+
+static gboolean
+child_focus_forward_idle_cb (gpointer user_data)
+{
+	EvView *view = EV_VIEW (user_data);
+
+	view->child_focus_idle_id = 0;
+	gtk_widget_child_focus (GTK_WIDGET (view), GTK_DIR_TAB_FORWARD);
+
+	return G_SOURCE_REMOVE;
+}
+
+static gboolean
+child_focus_backward_idle_cb (gpointer user_data)
+{
+	EvView *view = EV_VIEW (user_data);
+
+	view->child_focus_idle_id = 0;
+	gtk_widget_child_focus (GTK_WIDGET (view), GTK_DIR_TAB_BACKWARD);
+
+	return G_SOURCE_REMOVE;
+}
+
+static void
+schedule_child_focus_in_idle (EvView           *view,
+			      GtkDirectionType  direction)
+{
+	if (view->child_focus_idle_id)
+		g_source_remove (view->child_focus_idle_id);
+	view->child_focus_idle_id =
+		g_idle_add (direction == GTK_DIR_TAB_FORWARD ? child_focus_forward_idle_cb : child_focus_backward_idle_cb,
+			    view);
+}
+
+static gboolean
+ev_view_focus_next (EvView           *view,
+		    GtkDirectionType  direction)
+{
+	EvMapping *focus_element;
+	GList     *elements;
+
+	if (view->focused_element) {
+		GList *l;
+
+		elements = ev_view_get_sorted_mapping_list (view, direction, view->focused_element_page);
+		l = g_list_find (elements, view->focused_element);
+		l = g_list_next (l);
+		focus_element = l ? l->data : NULL;
+	} else {
+		elements = ev_view_get_sorted_mapping_list (view, direction, view->current_page);
+		focus_element = elements ? elements->data : NULL;
+	}
+
+	g_list_free (elements);
+
+	if (focus_element) {
+		ev_view_remove_all (view);
+		_ev_view_focus_form_field (view, EV_FORM_FIELD (focus_element->data));
+
+		return TRUE;
+	}
+
+	ev_view_remove_all (view);
+	_ev_view_set_focused_element (view, NULL, -1);
+
+	/* FIXME: this doesn't work if the next/previous page doesn't have form fields */
+	if (direction == GTK_DIR_TAB_FORWARD) {
+		if (ev_view_next_page (view)) {
+			schedule_child_focus_in_idle (view, direction);
+			return TRUE;
+		}
+	} else if (direction == GTK_DIR_TAB_BACKWARD) {
+		if (ev_view_previous_page (view)) {
+			schedule_child_focus_in_idle (view, direction);
+			return TRUE;
+		}
+	}
+
+	return FALSE;
+}
+
+static gboolean
+ev_view_focus (GtkWidget        *widget,
+	       GtkDirectionType  direction)
+{
+	EvView *view = EV_VIEW (widget);
+
+	if (direction == GTK_DIR_TAB_FORWARD || direction == GTK_DIR_TAB_BACKWARD)
+		return ev_view_focus_next (view, direction);
+
+	return GTK_WIDGET_CLASS (ev_view_parent_class)->focus (widget, direction);
+}
+
 static void
 ev_view_class_init (EvViewClass *class)
 {
@@ -6500,6 +6655,7 @@ ev_view_class_init (EvViewClass *class)
 	widget_class->popup_menu = ev_view_popup_menu;
 	widget_class->query_tooltip = ev_view_query_tooltip;
 	widget_class->screen_changed = ev_view_screen_changed;
+	widget_class->focus = ev_view_focus;
 
 	container_class->remove = ev_view_remove;
 	container_class->forall = ev_view_forall;

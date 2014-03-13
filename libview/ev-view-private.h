@@ -206,6 +206,7 @@ struct _EvView {
 	/* Focus */
 	EvMapping *focused_element;
 	guint focused_element_page;
+	guint child_focus_idle_id;
 
 	/* Synctex */
 	EvMapping *synctex_result;
