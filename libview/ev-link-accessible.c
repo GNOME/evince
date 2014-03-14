@@ -90,6 +90,12 @@ ev_hyperlink_get_object (AtkHyperlink *atk_hyperlink,
 }
 
 static gint
+get_relevant_page (EvView *view)
+{
+	return ev_view_is_caret_navigation_enabled (view) ? view->cursor_page : view->current_page;
+}
+
+static gint
 ev_hyperlink_get_start_index (AtkHyperlink *atk_hyperlink)
 {
         EvHyperlink             *hyperlink = EV_HYPERLINK (atk_hyperlink);
@@ -113,7 +119,7 @@ ev_hyperlink_get_start_index (AtkHyperlink *atk_hyperlink)
         if (!view->page_cache)
                 return -1;
 
-        ev_page_cache_get_text_layout (view->page_cache, view->current_page, &areas, &n_areas);
+        ev_page_cache_get_text_layout (view->page_cache, get_relevant_page (view), &areas, &n_areas);
         if (!areas)
                 return -1;
 
@@ -155,7 +161,7 @@ ev_hyperlink_get_end_index (AtkHyperlink *atk_hyperlink)
         if (!view->page_cache)
                 return -1;
 
-        ev_page_cache_get_text_layout (view->page_cache, view->current_page, &areas, &n_areas);
+        ev_page_cache_get_text_layout (view->page_cache, get_relevant_page (view), &areas, &n_areas);
         if (!areas)
                 return -1;
 
