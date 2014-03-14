@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince-master-po-gl-7620\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-03-03 21:18+0100\n"
-"PO-Revision-Date: 2014-03-03 21:18+0200\n"
+"POT-Creation-Date: 2014-03-14 19:03+0100\n"
+"PO-Revision-Date: 2014-03-14 19:04+0200\n"
 "Last-Translator: Fran Dieguez <frandieguez@gnome.org>\n"
 "Language-Team: gnome-l10n-gl@gnome.org\n"
 "Language: gl\n"
@@ -181,7 +181,7 @@ msgstr "Sen nome"
 #. Author: None
 #. Keywords: None
 #.
-#: ../backend/pdf/ev-poppler.cc:1132 ../libview/ev-print-operation.c:1907
+#: ../backend/pdf/ev-poppler.cc:1132 ../libview/ev-print-operation.c:1920
 #: ../properties/ev-properties-view.c:192
 msgid "None"
 msgstr "Ningún"
@@ -392,54 +392,64 @@ msgid "Failed to print page %d: %s"
 msgstr "Produciuse un erro ao imprimir a páxina %d: %s"
 
 #. Initial state
-#: ../libview/ev-print-operation.c:347
-msgid "Preparing to print…"
-msgstr "Preparándose para imprimir …"
+#: ../libview/ev-print-operation.c:350
+msgid "Preparing preview…"
+msgstr "Preparando a vista previa…"
 
-#: ../libview/ev-print-operation.c:349
+#: ../libview/ev-print-operation.c:352 ../libview/ev-print-operation.c:362
 msgid "Finishing…"
 msgstr "Finalizando..."
 
-#: ../libview/ev-print-operation.c:351
+#: ../libview/ev-print-operation.c:354
+#, c-format
+msgid "Generating preview: page %d of %d"
+msgstr "Xerando vista previa: páxina %d de %d"
+
+#. Initial state
+#: ../libview/ev-print-operation.c:360
+msgid "Preparing to print…"
+msgstr "Preparándose para imprimir …"
+
+#: ../libview/ev-print-operation.c:364
 #, c-format
 msgid "Printing page %d of %d…"
 msgstr "Imprimindo a páxina %d de %d..."
 
-#: ../libview/ev-print-operation.c:1175
+#: ../libview/ev-print-operation.c:1188
 msgid "PostScript is not supported by this printer."
 msgstr "Non se admite PostScript nesta impresora."
 
-#: ../libview/ev-print-operation.c:1240
+#: ../libview/ev-print-operation.c:1253
 msgid "Invalid page selection"
 msgstr "A selección de páxina non é correcta"
 
-#: ../libview/ev-print-operation.c:1241
+#: ../libview/ev-print-operation.c:1254
 msgid "Warning"
 msgstr "Advertencia"
 
-#: ../libview/ev-print-operation.c:1243
+#: ../libview/ev-print-operation.c:1256
 msgid "Your print range selection does not include any pages"
 msgstr "A súa selección de intervalo para impresión non contén ningunha páxina"
 
 #. translators: Title of the print dialog
 #. translators: Print document currently shown in the Print Preview window
-#: ../libview/ev-print-operation.c:1322 ../previewer/ev-previewer-window.c:284
+#: ../libview/ev-print-operation.c:1335 ../previewer/ev-previewer-window.c:284
 msgid "Print"
 msgstr "Imprimir"
 
-#: ../libview/ev-print-operation.c:1901
+#: ../libview/ev-print-operation.c:1914
 msgid "Page Scaling:"
 msgstr "Escalado de páxina:"
 
-#: ../libview/ev-print-operation.c:1908
+#: ../libview/ev-print-operation.c:1921
 msgid "Shrink to Printable Area"
 msgstr "Reducir á área imprimíbel"
 
-#: ../libview/ev-print-operation.c:1909
+#: ../libview/ev-print-operation.c:1922
 msgid "Fit to Printable Area"
 msgstr "Axustar á área imprimíbel"
 
-#: ../libview/ev-print-operation.c:1912
+#: ../libview/ev-print-operation.c:1925
 msgid ""
 "Scale document pages to fit the selected printer page. Select from one of "
 "the following:\n"
@@ -464,11 +474,11 @@ msgstr ""
 "• «Axustar á área imprimíbel»: As páxinas do documento son ampliadas ou "
 "reducidas para axustarse á área imprimíbel da páxina na impresora.\n"
 
-#: ../libview/ev-print-operation.c:1924
+#: ../libview/ev-print-operation.c:1937
 msgid "Auto Rotate and Center"
 msgstr "Rotar automaticamente e centrar."
 
-#: ../libview/ev-print-operation.c:1927
+#: ../libview/ev-print-operation.c:1940
 msgid ""
 "Rotate printer page orientation of each page to match orientation of each "
 "document page. Document pages will be centered within the printer page."
@@ -477,12 +487,12 @@ msgstr ""
 "orientación de cada páxina do documento. As páxinas do documento serán "
 "centradas na páxina da impresora."
 
-#: ../libview/ev-print-operation.c:1932
+#: ../libview/ev-print-operation.c:1945
 msgid "Select page size using document page size"
 msgstr ""
 "Seleccione o tamaño de páxina empregando o tamaño de páxina do documento."
 
-#: ../libview/ev-print-operation.c:1934
+#: ../libview/ev-print-operation.c:1947
 msgid ""
 "When enabled, each page will be printed on the same size paper as the "
 "document page."
@@ -490,7 +500,7 @@ msgstr ""
 "Cando está activo, cada páxina será imprimida no mesmo tamaño de papel que a "
 "páxina do documento."
 
-#: ../libview/ev-print-operation.c:2023
+#: ../libview/ev-print-operation.c:2047
 msgid "Page Handling"
 msgstr "Xestión de páxina"
 
