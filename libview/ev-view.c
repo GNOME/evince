@@ -8183,6 +8183,20 @@ ev_view_get_has_selection (EvView *view)
 	return view->selection_info.selections != NULL;
 }
 
+void
+_ev_view_clear_selection (EvView *view)
+{
+	clear_selection (view);
+}
+
+void
+_ev_view_set_selection (EvView   *view,
+			GdkPoint *start_point,
+			GdkPoint *end_point)
+{
+	compute_selections (view, EV_SELECTION_STYLE_GLYPH, start_point, end_point);
+}
+
 static char *
 get_selected_text (EvView *view)
 {

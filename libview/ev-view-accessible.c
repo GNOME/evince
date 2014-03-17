@@ -22,7 +22,6 @@
 #include <config.h>
 #include <glib/gi18n-lib.h>
 #include <gtk/gtk.h>
-#include <libgail-util/gail-util.h>
 
 #include "ev-selection.h"
 #include "ev-page-cache.h"
@@ -63,9 +62,6 @@ struct _EvViewAccessiblePrivate {
 	guint         action_idle_handler;
 	GtkScrollType idle_scroll;
 
-	/* AtkText */
-	GtkTextBuffer *buffer;
-
 	/* AtkHypertext */
 	GHashTable    *links;
 
@@ -90,7 +86,6 @@ clear_cache (EvViewAccessible *accessible)
 {
 	EvViewAccessiblePrivate* priv = accessible->priv;
 
-	g_clear_object (&priv->buffer);
 	g_clear_pointer (&priv->links, (GDestroyNotify)g_hash_table_destroy);
 }
 
@@ -145,82 +140,190 @@ ev_view_accessible_init (EvViewAccessible *accessible)
 	accessible->priv = G_TYPE_INSTANCE_GET_PRIVATE (accessible, EV_TYPE_VIEW_ACCESSIBLE, EvViewAccessiblePrivate);
 }
 
-static GtkTextBuffer *
-ev_view_accessible_get_text_buffer (EvViewAccessible *accessible, EvView *view)
+/* ATs expect to be able to identify sentence boundaries based on content. Valid,
+ * content-based boundaries may be present at the end of a newline, for instance
+ * at the end of a heading within a document. Thus being able to distinguish hard
+ * returns from soft returns is necessary. However, the text we get from Poppler
+ * for non-tagged PDFs has "\n" inserted at the end of each line resulting in a
+ * broken accessibility implementation w.r.t. sentences.
+ */
+static gboolean
+treat_as_soft_return (EvView       *view,
+		      PangoLogAttr *log_attrs,
+		      gint          offset)
 {
-	EvPageCache *page_cache;
-	const gchar *retval = NULL;
-	EvViewAccessiblePrivate* priv = accessible->priv;
+	EvRectangle *areas = NULL;
+	guint n_areas = 0;
+	gdouble line_spacing, this_line_height, next_word_width;
+	EvRectangle *this_line_start;
+	EvRectangle *this_line_end;
+	EvRectangle *next_line_start;
+	EvRectangle *next_line_end;
+	EvRectangle *next_word_end;
+	gint prev_offset, next_offset;
 
-	if (priv->buffer) {
-		return priv->buffer;
-	}
 
-	page_cache = view->page_cache;
-	if (!page_cache) {
-		return NULL;
-	}
+	if (!log_attrs[offset].is_white)
+		return FALSE;
 
-	priv->buffer = gtk_text_buffer_new (NULL);
-	retval = ev_page_cache_get_text (page_cache, get_relevant_page (view));
-	if (retval)
-		gtk_text_buffer_set_text (priv->buffer, retval, -1);
+	ev_page_cache_get_text_layout (view->page_cache, get_relevant_page (view), &areas, &n_areas);
+	if (n_areas <= offset + 1)
+		return FALSE;
 
-	return priv->buffer;
+	prev_offset = offset - 1;
+	next_offset = offset + 1;
+
+	/* In wrapped text, the character at the start of the next line starts a word.
+	 * Examples where this condition might fail include bullets and images. But it
+	 * also includes things like "(", so also check the next character.
+	 */
+	if (!log_attrs[next_offset].is_word_start &&
+	    (next_offset + 1 >= n_areas || !log_attrs[next_offset + 1].is_word_start))
+		return FALSE;
+
+	/* In wrapped text, the chars on either side of the newline have very similar heights.
+	 * Examples where this condition might fail include a newline at the end of a heading,
+	 * and a newline at the end of a paragraph that is followed by a heading.
+	 */
+	this_line_end = areas + prev_offset;
+	next_line_start = areas + next_offset;;
+
+	this_line_height = this_line_end->y2 - this_line_end->y1;
+	if (ABS (this_line_height - (next_line_start->y2 - next_line_start->y1)) > 0.25)
+		return FALSE;
+
+	/* If there is significant white space between this line and the next, odds are this
+	 * is not a soft return in wrapped text. Lines within a typical paragraph are at most
+	 * double-spaced. If the spacing is more than that, assume a hard return is present.
+	 */
+	line_spacing = next_line_start->y1 - this_line_end->y2;
+	if (line_spacing - this_line_height > 1)
+		return FALSE;
+
+	/* Lines within a typical paragraph have *reasonably* similar x1 coordinates. But
+	 * we cannot count on them being nearly identical. Examples where indentation can
+	 * be present in wrapped text include indenting the first line of the paragraph,
+	 * and hanging indents (e.g. in the works cited within an academic paper). So we'll
+	 * be somewhat tolerant here.
+	 */
+	for ( ; prev_offset > 0 && !log_attrs[prev_offset].is_mandatory_break; prev_offset--);
+	this_line_start = areas + prev_offset;
+	if (ABS (this_line_start->x1 - next_line_start->x1) > 20)
+		return FALSE;
+
+	/* Ditto for x2, but this line might be short due to a wide word on the next line. */
+	for ( ; next_offset < n_areas && !log_attrs[next_offset].is_word_end; next_offset++);
+	next_word_end = areas + next_offset;
+	next_word_width = next_word_end->x2 - next_line_start->x1;
+
+	for ( ; next_offset < n_areas && !log_attrs[next_offset + 1].is_mandatory_break; next_offset++);
+	next_line_end = areas + next_offset;
+	if (next_line_end->x2 - (this_line_end->x2 + next_word_width) > 20)
+		return FALSE;
+
+	return TRUE;
 }
 
-static gchar *
-ev_view_accessible_get_text (AtkText *text,
-			     gint     start_pos,
-			     gint     end_pos)
+static void
+ev_view_accessible_get_range_for_boundary (AtkText          *text,
+					   AtkTextBoundary   boundary_type,
+					   gint              offset,
+					   gint             *start_offset,
+					   gint             *end_offset)
 {
 	GtkWidget *widget;
-	GtkTextIter start, end;
-	GtkTextBuffer *buffer;
-	gchar *retval;
+	EvView *view;
+	gint start = 0;
+	gint end = 0;
+	PangoLogAttr *log_attrs = NULL;
+	gulong n_attrs;
 
 	widget = gtk_accessible_get_widget (GTK_ACCESSIBLE (text));
 	if (widget == NULL)
-		/* State is defunct */
+		return;
+
+	view = EV_VIEW (widget);
+	if (!view->page_cache)
+		return;
+
+	ev_page_cache_get_text_log_attrs (view->page_cache, get_relevant_page (view), &log_attrs, &n_attrs);
+	if (!log_attrs)
+		return;
+
+	switch (boundary_type) {
+	case ATK_TEXT_BOUNDARY_CHAR:
+		start = offset;
+		end = offset + 1;
+		break;
+	case ATK_TEXT_BOUNDARY_WORD_START:
+		for (start = offset; start >= 0 && !log_attrs[start].is_word_start; start--);
+		for (end = offset + 1; end <= n_attrs && !log_attrs[end].is_word_start; end++);
+		break;
+	case ATK_TEXT_BOUNDARY_SENTENCE_START:
+		for (start = offset; start >= 0; start--) {
+			if (log_attrs[start].is_mandatory_break && treat_as_soft_return (view, log_attrs, start - 1))
+				continue;
+			if (log_attrs[start].is_sentence_start)
+				break;
+		}
+		for (end = offset + 1; end <= n_attrs; end++) {
+			if (log_attrs[end].is_mandatory_break && treat_as_soft_return (view, log_attrs, end - 1))
+				continue;
+			if (log_attrs[end].is_sentence_start)
+				break;
+		}
+		break;
+	case ATK_TEXT_BOUNDARY_LINE_START:
+		for (start = offset; start >= 0 && !log_attrs[start].is_mandatory_break; start--);
+		for (end = offset + 1; end <= n_attrs && !log_attrs[end].is_mandatory_break; end++);
+		break;
+	default:
+		/* The "END" boundary types are deprecated */
+		break;
+	}
+
+	*start_offset = start;
+	*end_offset = end;
+}
+
+static gchar *
+ev_view_accessible_get_substring (AtkText *text,
+				  gint     start_offset,
+				  gint     end_offset)
+{
+	GtkWidget *widget;
+	EvView *view;
+	gchar *substring, *normalized;
+	const gchar* page_text;
+
+	widget = gtk_accessible_get_widget (GTK_ACCESSIBLE (text));
+	if (widget == NULL)
 		return NULL;
 
-	buffer = ev_view_accessible_get_text_buffer (EV_VIEW_ACCESSIBLE (text), EV_VIEW (widget));
-	if (!buffer)
+	view = EV_VIEW (widget);
+	if (!view->page_cache)
 		return NULL;
 
-	gtk_text_buffer_get_iter_at_offset (buffer, &start, start_pos);
-	gtk_text_buffer_get_iter_at_offset (buffer, &end, end_pos);
-	retval = gtk_text_buffer_get_text (buffer, &start, &end, FALSE);
+	page_text = ev_page_cache_get_text (view->page_cache, get_relevant_page (view));
+	start_offset = MAX (0, start_offset);
+	if (end_offset < 0 || end_offset > g_utf8_strlen (page_text, -1))
+		end_offset = strlen (page_text);
 
-	return retval;
+	substring = g_utf8_substring (page_text, start_offset, end_offset);
+	normalized = g_utf8_normalize (substring, -1, G_NORMALIZE_NFKC);
+	g_free (substring);
+
+	return normalized;
 }
 
 static gunichar
 ev_view_accessible_get_character_at_offset (AtkText *text,
 					    gint     offset)
 {
-	GtkWidget *widget;
-	GtkTextIter start, end;
-	GtkTextBuffer *buffer;
 	gchar *string;
 	gunichar unichar;
 
-	widget = gtk_accessible_get_widget (GTK_ACCESSIBLE (text));
-	if (widget == NULL)
-		/* State is defunct */
-		return '\0';
-
-	buffer = ev_view_accessible_get_text_buffer (EV_VIEW_ACCESSIBLE (text), EV_VIEW (widget));
-	if (!buffer)
-		return '\0';
-
-	if (offset >= gtk_text_buffer_get_char_count (buffer))
-		return '\0';
-
-	gtk_text_buffer_get_iter_at_offset (buffer, &start, offset);
-	end = start;
-	gtk_text_iter_forward_char (&end);
-	string = gtk_text_buffer_get_slice (buffer, &start, &end, FALSE);
+	string = ev_view_accessible_get_substring (text, offset, offset + 1);
 	unichar = g_utf8_get_char (string);
 	g_free(string);
 
@@ -228,34 +331,11 @@ ev_view_accessible_get_character_at_offset (AtkText *text,
 }
 
 static gchar *
-ev_view_accessible_get_text_for_offset (EvViewAccessible *view_accessible,
-                                        gint              offset,
-                                        GailOffsetType    offset_type,
-                                        AtkTextBoundary   boundary_type,
-                                        gint             *start_offset,
-                                        gint             *end_offset)
+ev_view_accessible_get_text (AtkText *text,
+			     gint     start_pos,
+			     gint     end_pos)
 {
-        GtkWidget     *widget;
-        GtkTextBuffer *buffer;
-        GailTextUtil  *gail_text;
-        gchar         *retval;
-
-        widget = gtk_accessible_get_widget (GTK_ACCESSIBLE (view_accessible));
-        if (widget == NULL)
-                /* State is defunct */
-                return NULL;
-
-        buffer = ev_view_accessible_get_text_buffer (view_accessible, EV_VIEW (widget));
-        if (!buffer)
-                return NULL;
-
-        gail_text = gail_text_util_new ();
-        gail_text_util_buffer_setup (gail_text, buffer);
-        retval = gail_text_util_get_text (gail_text, NULL, offset_type, boundary_type,
-                                          offset, start_offset, end_offset);
-        g_object_unref (gail_text);
-
-        return retval;
+	return ev_view_accessible_get_substring (text, start_pos, end_pos);
 }
 
 static gchar *
@@ -265,17 +345,28 @@ ev_view_accessible_get_text_at_offset (AtkText        *text,
                                        gint           *start_offset,
                                        gint           *end_offset)
 {
-        return ev_view_accessible_get_text_for_offset (EV_VIEW_ACCESSIBLE (text),
-                                                       offset, GAIL_AT_OFFSET,
-                                                       boundary_type,
-                                                       start_offset, end_offset);
+	gchar *retval;
+
+	ev_view_accessible_get_range_for_boundary (text, boundary_type, offset, start_offset, end_offset);
+	retval = ev_view_accessible_get_substring (text, *start_offset, *end_offset);
+
+	/* If newlines appear inside the text of a sentence (i.e. between the start and
+	 * end offsets returned by ev_view_accessible_get_substring), it interferes with
+	 * the prosody of text-to-speech based-solutions such as a screen reader because
+	 * speech synthesizers tend to pause after the newline char as if it were the end
+	 * of the sentence.
+	 */
+        if (boundary_type == ATK_TEXT_BOUNDARY_SENTENCE_START)
+		g_strdelimit (retval, "\n", ' ');
+
+	return retval;
 }
 
 static gint
 ev_view_accessible_get_character_count (AtkText *text)
 {
 	GtkWidget *widget;
-	GtkTextBuffer *buffer;
+	EvView *view;
 	gint retval;
 
 	widget = gtk_accessible_get_widget (GTK_ACCESSIBLE (text));
@@ -283,11 +374,8 @@ ev_view_accessible_get_character_count (AtkText *text)
 		/* State is defunct */
 		return 0;
 
-	buffer = ev_view_accessible_get_text_buffer (EV_VIEW_ACCESSIBLE (text), EV_VIEW (widget));
-	if (!buffer)
-		return 0;
-
-	retval = gtk_text_buffer_get_char_count (buffer);
+	view = EV_VIEW (widget);
+	retval = g_utf8_strlen (ev_page_cache_get_text (view->page_cache, get_relevant_page (view)), -1);
 
 	return retval;
 }
@@ -697,83 +785,28 @@ ev_view_accessible_get_selection (AtkText *text,
 	return normalized_text;
 }
 
-static gboolean
-ev_view_accessible_add_selection (AtkText *text,
-				  gint     start_pos,
-				  gint     end_pos)
-{
-	GtkWidget *widget;
-	GtkTextBuffer *buffer;
-	GtkTextIter pos_itr;
-	GtkTextIter start, end;
-	gint select_start, select_end;
-	gboolean retval = FALSE;
-
-	widget = gtk_accessible_get_widget (GTK_ACCESSIBLE (text));
-	if (widget == NULL)
-		/* State is defunct */
-		return FALSE;
-
-	buffer = ev_view_accessible_get_text_buffer (EV_VIEW_ACCESSIBLE (text), EV_VIEW (widget));
-	if (!buffer)
-		return FALSE;
-
-	gtk_text_buffer_get_selection_bounds (buffer, &start, &end);
-	select_start = gtk_text_iter_get_offset (&start);
-	select_end = gtk_text_iter_get_offset (&end);
-
-	/* If there is already a selection, then don't allow
-	 * another to be added
-	 */
-	if (select_start == select_end) {
-		gtk_text_buffer_get_iter_at_offset (buffer, &pos_itr, start_pos);
-		gtk_text_buffer_move_mark_by_name (buffer, "selection_bound", &pos_itr);
-		gtk_text_buffer_get_iter_at_offset (buffer, &pos_itr, end_pos);
-		gtk_text_buffer_move_mark_by_name (buffer, "insert", &pos_itr);
-
-		retval = TRUE;
-	}
-
-	return retval;
-}
-
+/* ATK allows for multiple, non-contiguous selections within a single AtkText
+ * object. Unless and until Evince supports this, selection numbers are ignored.
+ */
 static gboolean
 ev_view_accessible_remove_selection (AtkText *text,
 				     gint     selection_num)
 {
 	GtkWidget *widget;
-	GtkTextBuffer *buffer;
-	GtkTextMark *cursor_mark;
-	GtkTextIter cursor_itr;
-	GtkTextIter start, end;
-	gint select_start, select_end;
-	gboolean retval = FALSE;
+	EvView *view;
 
 	widget = gtk_accessible_get_widget (GTK_ACCESSIBLE (text));
 	if (widget == NULL)
 		/* State is defunct */
 		return FALSE;
 
-	buffer = ev_view_accessible_get_text_buffer (EV_VIEW_ACCESSIBLE (text), EV_VIEW (widget));
-	if (!buffer)
-		return FALSE;
-
-	gtk_text_buffer_get_selection_bounds(buffer, &start, &end);
-	select_start = gtk_text_iter_get_offset(&start);
-	select_end = gtk_text_iter_get_offset(&end);
-
-	if (select_start != select_end) {
-		/* Setting the start & end of the selected region
-		 * to the caret position turns off the selection.
-		 */
-		cursor_mark = gtk_text_buffer_get_insert (buffer);
-		gtk_text_buffer_get_iter_at_mark (buffer, &cursor_itr, cursor_mark);
-		gtk_text_buffer_move_mark_by_name (buffer, "selection_bound", &cursor_itr);
-
-		retval = TRUE;
+	view = EV_VIEW (widget);
+	if (ev_view_get_has_selection (view)) {
+		_ev_view_clear_selection (view);
+		return TRUE;
 	}
 
-	return retval;
+	return FALSE;
 }
 
 static gboolean
@@ -783,35 +816,40 @@ ev_view_accessible_set_selection (AtkText *text,
 				  gint     end_pos)
 {
 	GtkWidget *widget;
-	GtkTextBuffer *buffer;
-	GtkTextIter pos_itr;
-	GtkTextIter start, end;
-	gint select_start, select_end;
-	gboolean retval = FALSE;
+	EvView *view;
+	EvRectangle *areas = NULL;
+	guint n_areas = 0;
+	GdkRectangle start_rect, end_rect;
+	GdkPoint start_point, end_point;
 
 	widget = gtk_accessible_get_widget (GTK_ACCESSIBLE (text));
 	if (widget == NULL)
 		/* State is defunct */
 		return FALSE;
 
-	buffer = ev_view_accessible_get_text_buffer (EV_VIEW_ACCESSIBLE (text), EV_VIEW (widget));
-	if (!buffer)
+	view = EV_VIEW (widget);
+	ev_page_cache_get_text_layout (view->page_cache, get_relevant_page (view), &areas, &n_areas);
+	if (start_pos < 0 || end_pos >= n_areas)
 		return FALSE;
 
-	gtk_text_buffer_get_selection_bounds(buffer, &start, &end);
-	select_start = gtk_text_iter_get_offset(&start);
-	select_end = gtk_text_iter_get_offset(&end);
+	_ev_view_transform_doc_rect_to_view_rect (view, get_relevant_page (view), areas + start_pos, &start_rect);
+	_ev_view_transform_doc_rect_to_view_rect (view, get_relevant_page (view), areas + end_pos - 1, &end_rect);
+	start_point.x = start_rect.x;
+	start_point.y = start_rect.y;
+	end_point.x = end_rect.x + end_rect.width;
+	end_point.y = end_rect.y + end_rect.height;
+	_ev_view_set_selection (view, &start_point, &end_point);
 
-	if (select_start != select_end) {
-		gtk_text_buffer_get_iter_at_offset (buffer, &pos_itr, start_pos);
-		gtk_text_buffer_move_mark_by_name (buffer, "selection_bound", &pos_itr);
-		gtk_text_buffer_get_iter_at_offset (buffer, &pos_itr, end_pos);
-		gtk_text_buffer_move_mark_by_name (buffer, "insert", &pos_itr);
+	return TRUE;
+}
 
-		retval = TRUE;
-	}
+static gboolean
+ev_view_accessible_add_selection (AtkText *text,
+				  gint     start_pos,
+				  gint     end_pos)
+{
+	return ev_view_accessible_set_selection (text, 0, start_pos, end_pos);
 
-	return retval;
 }
 
 #if ATK_CHECK_VERSION (2, 11, 3)
