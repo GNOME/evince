@@ -67,6 +67,7 @@ struct _EvSidebarThumbnailsPrivate {
 	EvDocument *document;
 	EvDocumentModel *model;
 	EvThumbsSizeCache *size_cache;
+        gint width;
 
 	gint n_pages, pages_done;
 
@@ -95,6 +96,8 @@ static gboolean     ev_sidebar_thumbnails_support_document (EvSidebarPage       
 							    EvDocument              *document);
 static void         ev_sidebar_thumbnails_page_iface_init  (EvSidebarPageInterface  *iface);
 static const gchar* ev_sidebar_thumbnails_get_label        (EvSidebarPage           *sidebar_page);
+static void         ev_sidebar_thumbnails_set_current_page (EvSidebarThumbnails *sidebar,
+							    gint     page);
 static void         thumbnail_job_completed_callback       (EvJobThumbnail          *job,
 							    EvSidebarThumbnails     *sidebar_thumbnails);
 static void         adjustment_changed_cb                  (EvSidebarThumbnails     *sidebar_thumbnails);
@@ -216,6 +219,48 @@ ev_thumbnails_size_cache_get (EvDocument *document)
 	return cache;
 }
 
+static gboolean
+ev_sidebar_thumbnails_page_is_in_visible_range (EvSidebarThumbnails *sidebar,
+                                                guint                page)
+{
+        GtkTreePath *path;
+        GtkTreePath *start, *end;
+        gboolean     retval;
+
+        if (sidebar->priv->tree_view) {
+                GtkTreeSelection *selection;
+                GtkTreeIter       iter;
+
+                selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (sidebar->priv->tree_view));
+                if (!gtk_tree_selection_get_selected (selection, NULL, &iter))
+                        return FALSE;
+
+                path = gtk_tree_model_get_path (GTK_TREE_MODEL (sidebar->priv->list_store), &iter);
+                if (!gtk_tree_view_get_visible_range (GTK_TREE_VIEW (sidebar->priv->tree_view), &start, &end)) {
+                        gtk_tree_path_free (path);
+                        return FALSE;
+                }
+        } else {
+                GList *selection;
+
+                selection = gtk_icon_view_get_selected_items (GTK_ICON_VIEW (sidebar->priv->icon_view));
+                if (!selection)
+                        return FALSE;
+
+                path = (GtkTreePath *)selection->data;
+                if (!gtk_icon_view_get_visible_range (GTK_ICON_VIEW (sidebar->priv->icon_view), &start, &end)) {
+                        gtk_tree_path_free (path);
+                        return FALSE;
+                }
+        }
+
+        retval = gtk_tree_path_compare (path, start) >= 0 && gtk_tree_path_compare (path, end) <= 0;
+        gtk_tree_path_free (path);
+        gtk_tree_path_free (start);
+        gtk_tree_path_free (end);
+
+        return retval;
+}
 
 static void
 ev_sidebar_thumbnails_dispose (GObject *object)
@@ -270,6 +315,29 @@ ev_sidebar_thumbnails_map (GtkWidget *widget)
 }
 
 static void
+ev_sidebar_thumbnails_size_allocate (GtkWidget     *widget,
+                                     GtkAllocation *allocation)
+{
+        EvSidebarThumbnails *sidebar = EV_SIDEBAR_THUMBNAILS (widget);
+
+        GTK_WIDGET_CLASS (ev_sidebar_thumbnails_parent_class)->size_allocate (widget, allocation);
+
+        if (allocation->width != sidebar->priv->width) {
+                guint page;
+
+                sidebar->priv->width = allocation->width;
+
+                /* Might have a new number of columns, reset current page */
+                if (!sidebar->priv->model)
+                        return;
+
+                page = ev_document_model_get_page (sidebar->priv->model);
+                if (!ev_sidebar_thumbnails_page_is_in_visible_range (sidebar, page))
+                        ev_sidebar_thumbnails_set_current_page (sidebar, page);
+        }
+}
+
+static void
 ev_sidebar_thumbnails_class_init (EvSidebarThumbnailsClass *ev_sidebar_thumbnails_class)
 {
 	GObjectClass *g_object_class;
@@ -281,6 +349,7 @@ ev_sidebar_thumbnails_class_init (EvSidebarThumbnailsClass *ev_sidebar_thumbnail
 	g_object_class->dispose = ev_sidebar_thumbnails_dispose;
 	g_object_class->get_property = ev_sidebar_thumbnails_get_property;
 	widget_class->map = ev_sidebar_thumbnails_map;
+        widget_class->size_allocate = ev_sidebar_thumbnails_size_allocate;
 
 	g_object_class_override_property (g_object_class,
 					  PROP_WIDGET,
