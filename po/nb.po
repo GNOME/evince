@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince 3.11.x\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-03-05 06:48+0100\n"
-"PO-Revision-Date: 2014-03-05 06:48+0100\n"
+"POT-Creation-Date: 2014-03-18 18:29+0100\n"
+"PO-Revision-Date: 2014-03-18 18:29+0100\n"
 "Last-Translator: Kjartan Maraas <kmaraas@gnome.org>\n"
 "Language-Team: Norwegian bokmål <i18n-nb@lister.ping.uio.no>\n"
 "Language: \n"
@@ -172,7 +172,7 @@ msgstr "Uten navn"
 #. Author: None
 #. Keywords: None
 #.
-#: ../backend/pdf/ev-poppler.cc:1132 ../libview/ev-print-operation.c:1907
+#: ../backend/pdf/ev-poppler.cc:1132 ../libview/ev-print-operation.c:1920
 #: ../properties/ev-properties-view.c:192
 msgid "None"
 msgstr "Ingen"
@@ -382,54 +382,64 @@ msgid "Failed to print page %d: %s"
 msgstr "Klarte ikke å skrive ut side %d: %s"
 
 #. Initial state
-#: ../libview/ev-print-operation.c:347
-msgid "Preparing to print…"
-msgstr "Forbereder utskrift …"
+#: ../libview/ev-print-operation.c:350
+msgid "Preparing preview…"
+msgstr "Forbereder forhåndsvisning …"
 
-#: ../libview/ev-print-operation.c:349
+#: ../libview/ev-print-operation.c:352 ../libview/ev-print-operation.c:362
 msgid "Finishing…"
 msgstr "Fullfører …"
 
-#: ../libview/ev-print-operation.c:351
+#: ../libview/ev-print-operation.c:354
+#, c-format
+msgid "Generating preview: page %d of %d"
+msgstr "Lager forhåndsvisning: %d av %d"
+
+#. Initial state
+#: ../libview/ev-print-operation.c:360
+msgid "Preparing to print…"
+msgstr "Forbereder utskrift …"
+
+#: ../libview/ev-print-operation.c:364
 #, c-format
 msgid "Printing page %d of %d…"
 msgstr "Skriver ut side %d av %d …"
 
-#: ../libview/ev-print-operation.c:1175
+#: ../libview/ev-print-operation.c:1188
 msgid "PostScript is not supported by this printer."
 msgstr "PostScript støttes ikke av denne skriveren."
 
-#: ../libview/ev-print-operation.c:1240
+#: ../libview/ev-print-operation.c:1253
 msgid "Invalid page selection"
 msgstr "Ugyldig sideutvalg"
 
-#: ../libview/ev-print-operation.c:1241
+#: ../libview/ev-print-operation.c:1254
 msgid "Warning"
 msgstr "Advarsel"
 
-#: ../libview/ev-print-operation.c:1243
+#: ../libview/ev-print-operation.c:1256
 msgid "Your print range selection does not include any pages"
 msgstr "Ingen sider i området som er valgt for utskrift"
 
 #. translators: Title of the print dialog
 #. translators: Print document currently shown in the Print Preview window
-#: ../libview/ev-print-operation.c:1322 ../previewer/ev-previewer-window.c:284
+#: ../libview/ev-print-operation.c:1335 ../previewer/ev-previewer-window.c:284
 msgid "Print"
 msgstr "Skriv ut"
 
-#: ../libview/ev-print-operation.c:1901
+#: ../libview/ev-print-operation.c:1914
 msgid "Page Scaling:"
 msgstr "Skalering av side:"
 
-#: ../libview/ev-print-operation.c:1908
+#: ../libview/ev-print-operation.c:1921
 msgid "Shrink to Printable Area"
 msgstr "Krymp til utskriftsområde"
 
-#: ../libview/ev-print-operation.c:1909
+#: ../libview/ev-print-operation.c:1922
 msgid "Fit to Printable Area"
 msgstr "Tilpass utskriftsområde"
 
-#: ../libview/ev-print-operation.c:1912
+#: ../libview/ev-print-operation.c:1925
 msgid ""
 "Scale document pages to fit the selected printer page. Select from one of "
 "the following:\n"
@@ -453,11 +463,11 @@ msgstr ""
 "• «Fit to Printable Area»: Dokumentets sider forstørres eller forminskes til "
 "å passe utskriftsområdet for skriveren etter behov.\n"
 
-#: ../libview/ev-print-operation.c:1924
+#: ../libview/ev-print-operation.c:1937
 msgid "Auto Rotate and Center"
 msgstr "Roter og sentrer automatisk"
 
-#: ../libview/ev-print-operation.c:1927
+#: ../libview/ev-print-operation.c:1940
 msgid ""
 "Rotate printer page orientation of each page to match orientation of each "
 "document page. Document pages will be centered within the printer page."
@@ -465,11 +475,11 @@ msgstr ""
 "Roter skriverens sideorientering for hver side til å passe orientering i "
 "dokumentet. Dokumentets sider vil bli sentrert innenfor utskriftsområdet."
 
-#: ../libview/ev-print-operation.c:1932
+#: ../libview/ev-print-operation.c:1945
 msgid "Select page size using document page size"
 msgstr "Velg sidestørrelse ved bruk av dokumentets sidestørrelse"
 
-#: ../libview/ev-print-operation.c:1934
+#: ../libview/ev-print-operation.c:1947
 msgid ""
 "When enabled, each page will be printed on the same size paper as the "
 "document page."
@@ -477,27 +487,27 @@ msgstr ""
 "Hver side vil bli skrevet ut på samme papirstørrelse som dokumentets "
 "sidestørrelse hvis dette slås på."
 
-#: ../libview/ev-print-operation.c:2023
+#: ../libview/ev-print-operation.c:2047
 msgid "Page Handling"
 msgstr "Sidehåndtering"
 
-#: ../libview/ev-view-accessible.c:46
+#: ../libview/ev-view-accessible.c:45
 msgid "Scroll Up"
 msgstr "Rull opp"
 
-#: ../libview/ev-view-accessible.c:47
+#: ../libview/ev-view-accessible.c:46
 msgid "Scroll Down"
 msgstr "Rull ned"
 
-#: ../libview/ev-view-accessible.c:53
+#: ../libview/ev-view-accessible.c:52
 msgid "Scroll View Up"
 msgstr "Rull visning opp"
 
-#: ../libview/ev-view-accessible.c:54
+#: ../libview/ev-view-accessible.c:53
 msgid "Scroll View Down"
 msgstr "Rull visning ned"
 
-#: ../libview/ev-view-accessible.c:126
+#: ../libview/ev-view-accessible.c:121
 msgid "Document View"
 msgstr "Dokumentvisning"
 
@@ -984,7 +994,7 @@ msgstr "Skriv ut …"
 msgid "Index"
 msgstr "Indeks"
 
-#: ../shell/ev-sidebar-thumbnails.c:960
+#: ../shell/ev-sidebar-thumbnails.c:1029
 msgid "Thumbnails"
 msgstr "Miniatyrer"
 
