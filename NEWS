@@ -1,4 +1,66 @@
 ================
+Evince   3.11.92
+================
+
+Bug fixes:
+
+    * Keep current page thumbnail in visible area when the sidebar is
+      resized (#631050, Carlos Garcia Campos)
+    * Close the window when CTRL+w shortcut is used in presentation
+      mode, instead of turning the screen white (#604834, Carlos
+      Garcia Campos)
+    * Fix some broken aspects EvViewAccessible text support (#725003,
+      Joanmarie Diggs)
+    * Take caret navigation into account when getting AtkHyperlink
+      indices (#726310, Joanmarie Diggs)
+    * Keep the scroll position when switching between continuous and
+      non continuous mode (#554843, Carlos Garcia Campos)
+    * Stop autoscrolling when view looses focus (#541699, Robert Roth,
+      Anuj Khare, Carlos Garcia Campos)
+    * Fix implementation of atk_text_set_caret_offset in
+      EvViewAccessible (#701746, Alejandro Piñeiro)
+    * Emit EvView::cursor-moved signal when caret cursor position is
+      set by accessibility (#701746, Alejandro Piñeiro)
+    * Remove support for deprecated atk_text_get_text_{before,after}_offset
+      (#725162, Joanmarie Diggs)
+
+Translation updates:
+
+    * Khaled Hosny (ar)
+    * Pau Iranzo (ca)
+    * Marek Černocký (cs)
+    * Wolfgang Stoeggl (de)
+    * Dimitris Spingos (Δημήτρης Σπίγγος) (el)
+    * Daniel Mustieles (es)
+    * Jiri Grönroos (fi)
+    * Claude Paroz (fr)
+    * Michael Scherer (fr)
+    * GunChleoc (gd)
+    * Fran Dieguez (gl)
+    * Yaron Shahrabani (he)
+    * Attila Hammer (hu)
+    * Andika Triwidada (id)
+    * Baurzhan Muftakhidinov (kk)
+    * Changwoo Ryu (ko)
+    * Aurimas Černius (lt)
+    * Rūdolfs Mazurs (lv)
+    * Kjartan Maraas (nb)
+    * A S Alam (pa)
+    * Paweł Żołnowski (pl)
+    * Antonio Fernandes C. Neto (pt_BR)
+    * Tiago S. (pt)
+    * Yuri Myasoedov (ru)
+    * Matej Urbančič (sl)
+    * Miroslav Nikolić (sr@latin)
+    * Мирослав Николић (sr)
+    * Victor Ibragimov (tg)
+    * Theppitak Karoonboonyanan (th)
+    * Daniel Korostil (uk)
+    * YunQiang Su (zh_CN)
+    * Chao-Hsiung Liao (zh_HK)
+    * Chao-Hsiung Liao (zh_TW)
+
+================
 Evince   3.11.90
 ================
 
