@@ -6,10 +6,15 @@
   <info>
     <link type="guide" xref="index#reading"/>
     <revision pkgversion="3.2" date="2011-09-05" status="final"/>
+    <revision pkgversion="3.10.3" date="2014-03-22" status="review"/>
 
     <credit type="author">
       <name>Phil Bull</name>
       <email its:translate="no">philbull@gmail.com</email>
+    </credit>
+    <credit type="editor">
+      <name>Anna Philips</name>
+      <email its:translate="no">anna.cs.au@gmail.com</email>
     </credit>
 
     <include href="legal-unported.xml" xmlns="http://www.w3.org/2001/XInclude"/>
@@ -70,19 +75,8 @@
 
   <list>
     <item>
-      <p>Click the <gui>Previous</gui> or <gui>Next</gui> buttons on the
+      <p>Click the <gui>&lt;</gui> or <gui>&gt;</gui> buttons on the
       <link xref="toolbar">toolbar</link>.</p>
-    </item>
-    <item>
-      <p> Use the Go Menu:</p>
-      <list>
-        <item>
-          <p><guiseq><gui>Go</gui><gui>Next Page</gui></guiseq></p>
-        </item>
-        <item>
-          <p><guiseq><gui>Go</gui><gui>Previous Page</gui></guiseq></p>
-        </item>
-      </list>
     </item>
     <item>
       <p>Press the <keyseq><key>Ctrl</key><key>Page Up</key></keyseq> or
@@ -93,20 +87,27 @@
       <p>To go to a specific page:</p>
       <list>
         <item>
-          <p>Type a page number in the 'page select' tool on the
+          <p>Type a page number in <gui style="input">Select Page</gui> on the
           <link xref="toolbar">toolbar</link> and press <key>Enter</key>.</p>
+        </item>
+        <item>
+          <p>If you want to see the previously visited pages press
+          <gui style="button">&lt;</gui> or <gui style="button">&gt;</gui> on
+          the toolbar.</p>
         </item>
         <item>
           <p>If you want to go to the beginning or the end of the document:</p>
           <list>
             <item>
-              <p>Click <guiseq><gui>Go</gui><gui>First Page</gui></guiseq>. You
-              can also press <keyseq><key>Ctrl</key><key>Home</key></keyseq> on
-              your keyboard.</p>
+              <p>Click the <gui>File options</gui> menu in the top right corner
+              and select <gui>First Page</gui>. You can also press
+              <keyseq><key>Ctrl</key><key>Home</key></keyseq> on your
+              keyboard.</p>
             </item>
             <item>
-              <p>Click <guiseq><gui>Go</gui><gui>Last Page</gui></guiseq> or
-              press <keyseq><key>Ctrl</key><key>End</key></keyseq> on your
+              <p>Click the <gui>File options</gui> menu in the top right corner
+              and select <gui>Last Page</gui> or press
+              <keyseq><key>Ctrl</key><key>End</key></keyseq> on your
               keyboard.</p>
             </item>
           </list>
@@ -119,8 +120,9 @@
       Down</key></keyseq>.</p>
       <note style="tip">
         <p>You can only move around one page at a time, by default. If you want
-        to move between pages just by scrolling or dragging, click
-        <guiseq><gui>View</gui><gui>Continuous</gui></guiseq>.</p>
+        to move between pages just by scrolling or dragging, click the
+        <gui>View options</gui> button in the top-right corner and select
+        <gui>Continuous</gui>.</p>
       </note>
     </item>
   </list>
@@ -130,9 +132,10 @@
 <section id="navigating">
   <title>Navigating with a page list or table of contents</title>
 
-  <p>To make the side pane visible click <guiseq><gui>View</gui><gui>Side
-  Pane</gui></guiseq> on the toolbar, or press <key>F9</key> on the keyboard.
-  You should see a preview of all of the pages in the document.</p>
+  <p>To make the side pane visible <gui>View options</gui> button in the
+  top-right corner and select<gui>Side Pane</gui>, or press <key>F9</key> on
+  the keyboard. You should see a preview of all of the pages in the
+  document.</p>
 
   <p>You can move between pages by clicking on them in the side pane.</p>
 
@@ -150,16 +153,17 @@
 
 <section id="zoom">
   <title>Zooming in and out</title>
+
   <list>
     <item>
-      <p>Click <guiseq><gui>View</gui><gui>Zoom In</gui></guiseq> or use the
-      keyboard shortcuts <keyseq><key>Ctrl</key><key>+</key></keyseq> to zoom
-      in.</p>
+      <p>Click the <gui>View options</gui> button in the top-right corner and
+      select <gui>Zoom In</gui> or use the keyboard shortcuts
+      <keyseq><key>Ctrl</key><key>+</key></keyseq> to zoom in.</p>
     </item>
     <item>
-      <p>Click <guiseq><gui>View</gui><gui>Zoom Out</gui></guiseq> or use the
-      keyboard shortcuts <keyseq><key>Ctrl</key><key>-</key></keyseq> to zoom
-      out.</p>
+      <p>Click the <gui>View options</gui> button in the top-right corner and
+      select <gui>Zoom Out</gui> or use the keyboard shortcuts
+      <keyseq><key>Ctrl</key><key>-</key></keyseq> to zoom out.</p>
     </item>
   </list>
 
@@ -177,35 +181,36 @@
   </list>
 
   <note>
-    <p>The <gui>Best Fit</gui> option will make a document page fit the whole
+    <p>The <gui>Fit Page</gui> option will make a document page fit the whole
     <em>height</em> of the window.</p>
-    <p>The <gui>Fit Page Width</gui> option will make a document page fill the
-    whole <em>width</em> of the window.</p>
+    <p>The <gui>Fit Width</gui> option will make a document page fill the whole
+    <em>width</em> of the window.</p>
     <p>If you want to see two pages at once, side by side, like in a book,
-    click <guiseq><gui>View</gui><gui>Dual</gui></guiseq>.</p>
+    click the <gui>View options</gui> button in the top-right corner and select
+    <gui>Dual</gui>.</p>
   </note>
 
   <p>You can use the whole of your screen to view the document:</p>
 
   <list>
     <item>
-      <p>Click <guiseq><gui>View</gui><gui>Fullscreen</gui></guiseq> or press
-      <key>F11</key>.</p>
+      <p>Click the <gui>View options</gui> button in the top-right corner and
+      select <gui>Fullscreen</gui> or press <key>F11</key>.</p>
     </item>
     <item>
-      <p>To exit from the full screen mode:</p>
+      <p>To exit the full screen mode:</p>
       <list>
         <item>
           <p>Press <key>F11</key> or <key>Escape</key></p>
         </item>
         <item>
-          <p>or click the <gui>Leave Fullscreen</gui> button at the top of the
-          screen.</p>
+          <p>Or disable <gui>Fullscreen</gui> by clicking the <gui>View
+          options</gui> button in the top-right corner and select
+          <gui>Fullscreen</gui>.</p>
         </item>
       </list>
     </item>
   </list>
-
 </section>
 
 </page>
