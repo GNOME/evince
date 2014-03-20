@@ -7,8 +7,8 @@ msgstr ""
 "Project-Id-Version: evince master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=evince"
 "&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2014-03-03 04:44+0000\n"
-"PO-Revision-Date: 2014-03-03 10:59+0100\n"
+"POT-Creation-Date: 2014-03-20 04:44+0000\n"
+"PO-Revision-Date: 2014-03-20 09:15+0200\n"
 "Last-Translator: GunChleoc <fios@foramnagaidhlig.net>\n"
 "Language-Team: Fòram na Gàidhlig http://www.foramnagaidhlig.net\n"
 "Language: gd\n"
@@ -176,7 +176,7 @@ msgstr "Gun ainm"
 #. Author: None
 #. Keywords: None
 #.
-#: ../backend/pdf/ev-poppler.cc:1132 ../libview/ev-print-operation.c:1907
+#: ../backend/pdf/ev-poppler.cc:1132 ../libview/ev-print-operation.c:1920
 #: ../properties/ev-properties-view.c:192
 msgid "None"
 msgstr "Chan eil gin"
@@ -394,54 +394,66 @@ msgid "Failed to print page %d: %s"
 msgstr "Dh'fhàillig le clò-bhualadh na duilleige %d: %s"
 
 #. Initial state
-#: ../libview/ev-print-operation.c:347
-msgid "Preparing to print…"
-msgstr "Ag ullachadh a' chlò-bhualaidh…"
+#: ../libview/ev-print-operation.c:350
+#| msgid "Preparing to print…"
+msgid "Preparing preview…"
+msgstr "Ag ullachadh an ro-sheallaidh…"
 
-#: ../libview/ev-print-operation.c:349
+#: ../libview/ev-print-operation.c:352 ../libview/ev-print-operation.c:362
 msgid "Finishing…"
 msgstr "'Ga chrìochnachadh…"
 
-#: ../libview/ev-print-operation.c:351
+#: ../libview/ev-print-operation.c:354
+#, c-format
+#| msgid "Printing page %d of %d…"
+msgid "Generating preview: page %d of %d"
+msgstr "A' cruthachadh an ro-sheallaidh: duilleag %d à %d"
+
+#. Initial state
+#: ../libview/ev-print-operation.c:360
+msgid "Preparing to print…"
+msgstr "Ag ullachadh a' chlò-bhualaidh…"
+
+#: ../libview/ev-print-operation.c:364
 #, c-format
 msgid "Printing page %d of %d…"
 msgstr "A' clò-bhualadh duilleag %d à %d…"
 
-#: ../libview/ev-print-operation.c:1175
+#: ../libview/ev-print-operation.c:1188
 msgid "PostScript is not supported by this printer."
 msgstr "Cha chuir an clò-bhualadair seo taic ri PostScript."
 
-#: ../libview/ev-print-operation.c:1240
+#: ../libview/ev-print-operation.c:1253
 msgid "Invalid page selection"
 msgstr "Taghadh dhuilleagan mì-dhligheach"
 
-#: ../libview/ev-print-operation.c:1241
+#: ../libview/ev-print-operation.c:1254
 msgid "Warning"
 msgstr "Rabhadh"
 
-#: ../libview/ev-print-operation.c:1243
+#: ../libview/ev-print-operation.c:1256
 msgid "Your print range selection does not include any pages"
 msgstr "Chan eil duilleag san rainse clò-bhualaidh a thagh thu"
 
 #. translators: Title of the print dialog
 #. translators: Print document currently shown in the Print Preview window
-#: ../libview/ev-print-operation.c:1322 ../previewer/ev-previewer-window.c:284
+#: ../libview/ev-print-operation.c:1335 ../previewer/ev-previewer-window.c:284
 msgid "Print"
 msgstr "Clò-bhualadh"
 
-#: ../libview/ev-print-operation.c:1901
+#: ../libview/ev-print-operation.c:1914
 msgid "Page Scaling:"
 msgstr "Sgèileadh nan duilleagan:"
 
-#: ../libview/ev-print-operation.c:1908
+#: ../libview/ev-print-operation.c:1921
 msgid "Shrink to Printable Area"
 msgstr "Lùghdaich gun raon a ghabhas clò-bhualadh"
 
-#: ../libview/ev-print-operation.c:1909
+#: ../libview/ev-print-operation.c:1922
 msgid "Fit to Printable Area"
 msgstr "Co-fhreagair ris an raon a ghabhas clò-bhualadh"
 
-#: ../libview/ev-print-operation.c:1912
+#: ../libview/ev-print-operation.c:1925
 msgid ""
 "Scale document pages to fit the selected printer page. Select from one of "
 "the following:\n"
@@ -468,11 +480,11 @@ msgstr ""
 "sgrìobhainn a mheudachadh no a lùghdachadh ach an co-fhreagair iad ris an "
 "raon a ghabhas clò-bhualadh air duilleag a' chlò-bhualadair.\n"
 
-#: ../libview/ev-print-operation.c:1924
+#: ../libview/ev-print-operation.c:1937
 msgid "Auto Rotate and Center"
 msgstr "Cuairtich 's meadhanaich gu fèin-obrachail"
 
-#: ../libview/ev-print-operation.c:1927
+#: ../libview/ev-print-operation.c:1940
 msgid ""
 "Rotate printer page orientation of each page to match orientation of each "
 "document page. Document pages will be centered within the printer page."
@@ -481,11 +493,11 @@ msgstr ""
 "sgrìobhainn. Thèid duilleagan na sgrìobhainn a chur sa mheadhan air duilleag "
 "a' chlò-bhualadair."
 
-#: ../libview/ev-print-operation.c:1932
+#: ../libview/ev-print-operation.c:1945
 msgid "Select page size using document page size"
 msgstr "Tagh meud na duilleige a-rèir meud nan duilleagan san sgrìobhainn"
 
-#: ../libview/ev-print-operation.c:1934
+#: ../libview/ev-print-operation.c:1947
 msgid ""
 "When enabled, each page will be printed on the same size paper as the "
 "document page."
@@ -493,27 +505,27 @@ msgstr ""
 "Nuair a bhios seo an comas, thèid gach duilleag a chlò-bhualadh air pàipear "
 "aig a bheil an aon mheud 's a tha aig duilleag na sgrìobhainn."
 
-#: ../libview/ev-print-operation.c:2023
+#: ../libview/ev-print-operation.c:2047
 msgid "Page Handling"
 msgstr "Làimhseachadh nan duilleagan"
 
-#: ../libview/ev-view-accessible.c:46
+#: ../libview/ev-view-accessible.c:45
 msgid "Scroll Up"
 msgstr "Sgrolaich suas"
 
-#: ../libview/ev-view-accessible.c:47
+#: ../libview/ev-view-accessible.c:46
 msgid "Scroll Down"
 msgstr "Sgrolaich sìos"
 
-#: ../libview/ev-view-accessible.c:53
+#: ../libview/ev-view-accessible.c:52
 msgid "Scroll View Up"
 msgstr "Sgrolaich an sealladh suas"
 
-#: ../libview/ev-view-accessible.c:54
+#: ../libview/ev-view-accessible.c:53
 msgid "Scroll View Down"
 msgstr "Sgrolaich an sealladh sìos"
 
-#: ../libview/ev-view-accessible.c:126
+#: ../libview/ev-view-accessible.c:121
 msgid "Document View"
 msgstr "Sealladh na sgrìobhainn"
 
@@ -1003,7 +1015,7 @@ msgstr "Clò-bhuail…"
 msgid "Index"
 msgstr "Clàr-amais"
 
-#: ../shell/ev-sidebar-thumbnails.c:960
+#: ../shell/ev-sidebar-thumbnails.c:1029
 msgid "Thumbnails"
 msgstr "Dealbhagan"
 
@@ -1314,7 +1326,6 @@ msgid "Open an existing document"
 msgstr "Fosgail sgrìobhainn a tha ann"
 
 #: ../shell/ev-window.c:6046
-#| msgid "Open in New _Window"
 msgid "_View in new window"
 msgstr "Seall ann an _uinneag ùr"
 
