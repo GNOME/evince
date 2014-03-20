@@ -4610,6 +4610,22 @@ ev_window_cmd_view_zoom_out (GtkAction *action, EvWindow *ev_window)
 }
 
 static void
+ev_window_cmd_go_back_history (GtkAction* action, EvWindow *ev_window)
+{
+	g_return_if_fail (EV_IS_WINDOW (ev_window));
+
+	ev_history_go_back(ev_window->priv->history);
+}
+
+static void
+ev_window_cmd_go_forward_history (GtkAction* action, EvWindow* ev_window)
+{
+	g_return_if_fail (EV_IS_WINDOW (ev_window));
+
+	ev_history_go_forward(ev_window->priv->history);
+}
+
+static void
 ev_window_cmd_go_previous_page (GtkAction *action, EvWindow *ev_window)
 {
         g_return_if_fail (EV_IS_WINDOW (ev_window));
@@ -6063,6 +6079,10 @@ static const GtkActionEntry entries[] = {
 	  G_CALLBACK (ev_window_cmd_view_autoscroll) },
 
         /* Go menu */
+        { "GoBackHistory", NULL, "", "<alt>P", NULL,
+          G_CALLBACK (ev_window_cmd_go_back_history) },
+        { "GoForwardHistory", NULL, "", "<alt>N", NULL,
+          G_CALLBACK (ev_window_cmd_go_forward_history) },
         { "GoPreviousPage", "go-up-symbolic", N_("_Previous Page"), "<control>Page_Up",
           N_("Go to the previous page"),
           G_CALLBACK (ev_window_cmd_go_previous_page) },
@@ -6228,6 +6248,14 @@ activate_link_cb (GObject *object, EvLink *link, EvWindow *window)
 {
 	ev_view_handle_link (EV_VIEW (window->priv->view), link);
 	gtk_widget_grab_focus (window->priv->view);
+}
+
+static void
+history_changed_cb (EvHistory	*history,
+                    EvWindow	*window)
+{
+	ev_window_set_action_sensitive (window, "GoBackHistory", ev_history_can_go_back (window->priv->history));
+	ev_window_set_action_sensitive (window, "GoForwardHistory", ev_history_can_go_forward (window->priv->history));
 }
 
 static void
@@ -7336,6 +7364,9 @@ ev_window_init (EvWindow *ev_window)
 	g_signal_connect (ev_window->priv->history, "activate-link",
 			  G_CALLBACK (activate_link_cb),
 			  ev_window);
+        g_signal_connect (ev_window->priv->history, "changed",
+                          G_CALLBACK (history_changed_cb),
+                          ev_window);
 
 	app_info = g_app_info_get_default_for_uri_scheme ("mailto");
 	ev_window->priv->has_mailto_handler = app_info != NULL;
