@@ -838,7 +838,7 @@ ev_job_thumbnail_run (EvJob *job)
 {
 	EvJobThumbnail  *job_thumb = EV_JOB_THUMBNAIL (job);
 	EvRenderContext *rc;
-	GdkPixbuf       *pixbuf;
+	GdkPixbuf       *pixbuf = NULL;
 	EvPage          *page;
 
 	ev_debug_message (DEBUG_JOBS, "%d (%p)", job_thumb->page, job);
@@ -850,11 +850,15 @@ ev_job_thumbnail_run (EvJob *job)
 	rc = ev_render_context_new (page, job_thumb->rotation, job_thumb->scale);
 	g_object_unref (page);
 
-	pixbuf = ev_document_get_thumbnail (job->document, rc);
+        if (job_thumb->format == EV_JOB_THUMBNAIL_PIXBUF)
+                pixbuf = ev_document_get_thumbnail (job->document, rc);
+        else
+                job_thumb->thumbnail_surface = ev_document_get_thumbnail_surface (job->document, rc);
 	g_object_unref (rc);
 	ev_document_doc_mutex_unlock ();
 
-        if (pixbuf) {
+        /* EV_JOB_THUMBNAIL_SURFACE is not compatible with has_frame = TRUE */
+        if (job_thumb->format == EV_JOB_THUMBNAIL_PIXBUF && pixbuf) {
                 job_thumb->thumbnail = job_thumb->has_frame ?
                         ev_document_misc_get_thumbnail_frame (-1, -1, pixbuf) : g_object_ref (pixbuf);
                 g_object_unref (pixbuf);
@@ -892,6 +896,7 @@ ev_job_thumbnail_new (EvDocument *document,
 	job->rotation = rotation;
 	job->scale = scale;
         job->has_frame = TRUE;
+        job->format = EV_JOB_THUMBNAIL_PIXBUF;
 
 	return EV_JOB (job);
 }
@@ -908,6 +913,22 @@ ev_job_thumbnail_set_has_frame (EvJobThumbnail  *job,
                                 gboolean         has_frame)
 {
         job->has_frame = has_frame;
+}
+
+/**
+ * ev_job_thumbnail_set_output_format:
+ * @job: a #EvJobThumbnail
+ * @format: a #EvJobThumbnailFormat
+ *
+ * Set the desired output format for the generated thumbnail
+ *
+ * Since: 3.14
+ */
+void
+ev_job_thumbnail_set_output_format (EvJobThumbnail      *job,
+                                    EvJobThumbnailFormat format)
+{
+        job->format = format;
 }
 
 /* EvJobFonts */

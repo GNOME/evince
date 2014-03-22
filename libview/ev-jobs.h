@@ -331,6 +331,11 @@ struct _EvJobPageDataClass
 	EvJobClass parent_class;
 };
 
+typedef enum {
+        EV_JOB_THUMBNAIL_PIXBUF,
+        EV_JOB_THUMBNAIL_SURFACE
+} EvJobThumbnailFormat;
+
 struct _EvJobThumbnail
 {
 	EvJob parent;
@@ -341,6 +346,9 @@ struct _EvJobThumbnail
 
 	GdkPixbuf *thumbnail;
         gboolean has_frame;
+
+        EvJobThumbnailFormat format;
+        cairo_surface_t *thumbnail_surface;
 };
 
 struct _EvJobThumbnailClass
@@ -536,6 +544,8 @@ EvJob          *ev_job_thumbnail_new           (EvDocument      *document,
                                                 gdouble          scale);
 void            ev_job_thumbnail_set_has_frame (EvJobThumbnail  *job,
                                                 gboolean         has_frame);
+void            ev_job_thumbnail_set_output_format (EvJobThumbnail      *job,
+                                                    EvJobThumbnailFormat format);
 /* EvJobFonts */
 GType 		ev_job_fonts_get_type 	  (void) G_GNUC_CONST;
 EvJob 	       *ev_job_fonts_new 	  (EvDocument      *document);
