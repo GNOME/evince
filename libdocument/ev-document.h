@@ -93,41 +93,43 @@ struct _EvDocumentClass
         GObjectClass base_class;
 
         /* Virtual Methods  */
-        gboolean          (* load)            (EvDocument      *document,
-                                               const char      *uri,
-                                               GError         **error);
-        gboolean          (* save)            (EvDocument      *document,
-                                               const char      *uri,
-                                               GError         **error);
-        gint              (* get_n_pages)     (EvDocument      *document);
-	EvPage          * (* get_page)        (EvDocument      *document,
-					       gint             index);
-        void              (* get_page_size)   (EvDocument      *document,
-                                               EvPage          *page,
-                                               double          *width,
-                                               double          *height);
-        gchar           * (* get_page_label)  (EvDocument      *document,
-                                               EvPage          *page);
-        cairo_surface_t * (* render)          (EvDocument      *document,
-                                               EvRenderContext *rc);
-	GdkPixbuf       * (* get_thumbnail)   (EvDocument      *document,
-					       EvRenderContext *rc);
-        EvDocumentInfo  * (* get_info)        (EvDocument      *document);
-        gboolean          (* get_backend_info)(EvDocument      *document,
-                                               EvDocumentBackendInfo *info);
-        gboolean	  (* support_synctex) (EvDocument      *document);
+        gboolean          (* load)                  (EvDocument          *document,
+						     const char          *uri,
+						     GError             **error);
+        gboolean          (* save)                  (EvDocument          *document,
+						     const char          *uri,
+						     GError             **error);
+        gint              (* get_n_pages)           (EvDocument          *document);
+	EvPage          * (* get_page)              (EvDocument          *document,
+						     gint                 index);
+        void              (* get_page_size)         (EvDocument          *document,
+						     EvPage              *page,
+						     double              *width,
+						     double              *height);
+        gchar           * (* get_page_label)        (EvDocument          *document,
+						     EvPage              *page);
+        cairo_surface_t * (* render)                (EvDocument          *document,
+						     EvRenderContext     *rc);
+	GdkPixbuf       * (* get_thumbnail)         (EvDocument          *document,
+						     EvRenderContext     *rc);
+        EvDocumentInfo  * (* get_info)              (EvDocument          *document);
+        gboolean          (* get_backend_info)      (EvDocument          *document,
+						     EvDocumentBackendInfo *info);
+        gboolean	  (* support_synctex)       (EvDocument          *document);
 
         /* GIO streams */
-        gboolean          (* load_stream)     (EvDocument          *document,
-                                               GInputStream        *stream,
-                                               EvDocumentLoadFlags  flags,
-                                               GCancellable        *cancellable,
-                                               GError             **error);
-        gboolean          (* load_gfile)      (EvDocument          *document,
-                                               GFile               *file,
-                                               EvDocumentLoadFlags  flags,
-                                               GCancellable        *cancellable,
-                                               GError             **error);
+        gboolean          (* load_stream)           (EvDocument          *document,
+						     GInputStream        *stream,
+						     EvDocumentLoadFlags  flags,
+						     GCancellable        *cancellable,
+						     GError             **error);
+        gboolean          (* load_gfile)            (EvDocument          *document,
+						     GFile               *file,
+						     EvDocumentLoadFlags  flags,
+						     GCancellable        *cancellable,
+						     GError             **error);
+	cairo_surface_t * (* get_thumbnail_surface) (EvDocument          *document,
+						     EvRenderContext     *rc);
 };
 
 GType            ev_document_get_type             (void) G_GNUC_CONST;
@@ -177,6 +179,8 @@ cairo_surface_t *ev_document_render               (EvDocument      *document,
 						   EvRenderContext *rc);
 GdkPixbuf       *ev_document_get_thumbnail        (EvDocument      *document,
 						   EvRenderContext *rc);
+cairo_surface_t *ev_document_get_thumbnail_surface (EvDocument      *document,
+						    EvRenderContext *rc);
 const gchar     *ev_document_get_uri              (EvDocument      *document);
 const gchar     *ev_document_get_title            (EvDocument      *document);
 gboolean         ev_document_is_page_size_uniform (EvDocument      *document);

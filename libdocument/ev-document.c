@@ -721,6 +721,28 @@ ev_document_get_thumbnail (EvDocument      *document,
 	return _ev_document_get_thumbnail (document, rc);
 }
 
+/**
+ * ev_document_get_thumbnail_surface:
+ * @document: an #EvDocument
+ * @rc: an #EvRenderContext
+ *
+ * Returns: (transfer full): a #cairo_surface_t
+ *
+ * Since: 3.14
+ */
+cairo_surface_t *
+ev_document_get_thumbnail_surface (EvDocument      *document,
+				   EvRenderContext *rc)
+{
+	EvDocumentClass *klass = EV_DOCUMENT_GET_CLASS (document);
+
+	if (klass->get_thumbnail_surface)
+		return klass->get_thumbnail_surface (document, rc);
+
+	return ev_document_render (document, rc);
+}
+
+
 const gchar *
 ev_document_get_uri (EvDocument *document)
 {
