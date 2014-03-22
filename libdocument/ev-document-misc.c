@@ -142,7 +142,10 @@ ev_document_misc_render_thumbnail_frame (GtkWidget       *widget,
         cairo_t         *cr;
         GtkBorder        border = {0, };
 
-        if (source_pixbuf) {
+        if (source_surface) {
+                width_r = cairo_image_surface_get_width (source_surface);
+                height_r = cairo_image_surface_get_height (source_surface);
+        } else if (source_pixbuf) {
                 g_return_val_if_fail (GDK_IS_PIXBUF (source_pixbuf), NULL);
 
                 width_r = gdk_pixbuf_get_width (source_pixbuf);
