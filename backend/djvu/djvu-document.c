@@ -470,6 +470,55 @@ djvu_document_get_thumbnail (EvDocument      *document,
 	return rotated_pixbuf;
 }
 
+static cairo_surface_t *
+djvu_document_get_thumbnail_surface (EvDocument      *document,
+				     EvRenderContext *rc)
+{
+	DjvuDocument *djvu_document = DJVU_DOCUMENT (document);
+	cairo_surface_t *surface, *rotated_surface;
+	gdouble page_width, page_height;
+	gint thumb_width, thumb_height;
+	gchar *pixels;
+	gint thumbnail_rendered;
+
+	g_return_val_if_fail (djvu_document->d_document, NULL);
+
+	djvu_document_get_page_size (EV_DOCUMENT(djvu_document), rc->page,
+				     &page_width, &page_height);
+
+	thumb_width = (gint) (page_width * rc->scale + 0.5);
+	thumb_height = (gint) (page_height * rc->scale + 0.5);
+
+	surface = cairo_image_surface_create (CAIRO_FORMAT_RGB24,
+					      thumb_width, thumb_height);
+	pixels = (gchar *)cairo_image_surface_get_data (surface);
+
+	while (ddjvu_thumbnail_status (djvu_document->d_document, rc->page->index, 1) < DDJVU_JOB_OK)
+		djvu_handle_events(djvu_document, TRUE, NULL);
+
+	thumbnail_rendered = ddjvu_thumbnail_render (djvu_document->d_document,
+						     rc->page->index,
+						     &thumb_width, &thumb_height,
+						     djvu_document->d_format,
+						     cairo_image_surface_get_stride (surface),
+						     pixels);
+
+	if (!thumbnail_rendered) {
+		cairo_surface_destroy (surface);
+		surface = djvu_document_render (document, rc);
+	} else {
+		cairo_surface_mark_dirty (surface);
+		rotated_surface = ev_document_misc_surface_rotate_and_scale (surface,
+									     thumb_width,
+									     thumb_height,
+									     rc->rotation);
+		cairo_surface_destroy (surface);
+		surface = rotated_surface;
+	}
+
+	return surface;
+}
+
 static void
 djvu_document_finalize (GObject *object)
 {
@@ -513,6 +562,7 @@ djvu_document_class_init (DjvuDocumentClass *klass)
 	ev_document_class->get_page_size = djvu_document_get_page_size;
 	ev_document_class->render = djvu_document_render;
 	ev_document_class->get_thumbnail = djvu_document_get_thumbnail;
+	ev_document_class->get_thumbnail_surface = djvu_document_get_thumbnail_surface;
 }
 
 static gchar *
