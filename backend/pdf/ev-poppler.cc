@@ -517,6 +517,58 @@ pdf_document_get_thumbnail (EvDocument      *document,
 	return pixbuf;
 }
 
+static cairo_surface_t *
+pdf_document_get_thumbnail_surface (EvDocument      *document,
+				    EvRenderContext *rc)
+{
+
+	PopplerPage *poppler_page;
+	cairo_surface_t *surface;
+	GdkPixbuf *pixbuf = NULL;
+	double page_width, page_height;
+	gint width, height;
+
+	poppler_page = POPPLER_PAGE (rc->page->backend_page);
+
+	poppler_page_get_size (poppler_page,
+			       &page_width, &page_height);
+
+	width = MAX ((gint)(page_width * rc->scale + 0.5), 1);
+	height = MAX ((gint)(page_height * rc->scale + 0.5), 1);
+
+	if (rc->rotation == 90 || rc->rotation == 270) {
+		gint  temp;
+
+		temp = width;
+		width = height;
+		height = temp;
+	}
+
+	surface = poppler_page_get_thumbnail (poppler_page);
+	if (surface) {
+		int surface_width = (rc->rotation == 90 || rc->rotation == 270) ?
+			cairo_image_surface_get_height (surface) :
+			cairo_image_surface_get_width (surface);
+
+		if (surface_width == width) {
+			cairo_surface_t *rotated_surface;
+
+			rotated_surface = ev_document_misc_surface_rotate_and_scale (surface, width, height, rc->rotation);
+			cairo_surface_destroy (surface);
+			return rotated_surface;
+		} else {
+			/* The provided thumbnail has a different size */
+			cairo_surface_destroy (surface);
+		}
+	}
+
+	ev_document_fc_mutex_lock ();
+	surface = pdf_page_render (poppler_page, width, height, rc);
+	ev_document_fc_mutex_unlock ();
+
+	return surface;
+}
+
 /* reference:
 http://www.pdfa.org/lib/exe/fetch.php?id=pdfa%3Aen%3Atechdoc&cache=cache&media=pdfa:techdoc:tn0001_pdfa-1_and_namespaces_2008-03-18.pdf */
 static char *
@@ -947,6 +999,7 @@ pdf_document_class_init (PdfDocumentClass *klass)
 	ev_document_class->get_page_label = pdf_document_get_page_label;
 	ev_document_class->render = pdf_document_render;
 	ev_document_class->get_thumbnail = pdf_document_get_thumbnail;
+	ev_document_class->get_thumbnail_surface = pdf_document_get_thumbnail_surface;
 	ev_document_class->get_info = pdf_document_get_info;
 	ev_document_class->get_backend_info = pdf_document_get_backend_info;
 	ev_document_class->support_synctex = pdf_document_support_synctex;
