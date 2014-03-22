@@ -495,6 +495,7 @@ add_range (EvSidebarThumbnails *sidebar_thumbnails,
 						    page, priv->rotation,
 						    get_scale_for_page (sidebar_thumbnails, page));
                         ev_job_thumbnail_set_has_frame (EV_JOB_THUMBNAIL (job), FALSE);
+                        ev_job_thumbnail_set_output_format (EV_JOB_THUMBNAIL (job), EV_JOB_THUMBNAIL_SURFACE);
 			g_object_set_data_full (G_OBJECT (job), "tree_iter",
 						gtk_tree_iter_copy (&iter),
 						(GDestroyNotify) gtk_tree_iter_free);
@@ -893,15 +894,10 @@ thumbnail_job_completed_callback (EvJobThumbnail      *job,
 	EvSidebarThumbnailsPrivate *priv = sidebar_thumbnails->priv;
 	GtkTreeIter                *iter;
         cairo_surface_t            *surface;
-        cairo_surface_t            *thumbnail;
 
-        thumbnail = gdk_cairo_surface_create_from_pixbuf (job->thumbnail,
-                                                          1,
-                                                          gtk_widget_get_window (widget));
-        surface = ev_document_misc_render_thumbnail_surface_with_frame (widget, thumbnail,
-                                                                        gdk_pixbuf_get_width (job->thumbnail),
-                                                                        gdk_pixbuf_get_height (job->thumbnail));
-        cairo_surface_destroy (thumbnail);
+        surface = ev_document_misc_render_thumbnail_surface_with_frame (widget,
+                                                                        job->thumbnail_surface,
+                                                                        -1, -1);
 
 	iter = (GtkTreeIter *) g_object_get_data (G_OBJECT (job), "tree_iter");
 	if (priv->inverted_colors)
