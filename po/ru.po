@@ -12,9 +12,9 @@ msgstr ""
 "Project-Id-Version: evince trunk\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evince&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2014-03-10 04:47+0000\n"
-"PO-Revision-Date: 2014-03-10 12:29+0300\n"
-"Last-Translator: Yuri Myasoedov <omerta13@yandex.ru>\n"
+"POT-Creation-Date: 2014-03-23 08:59+0000\n"
+"PO-Revision-Date: 2014-03-23 15:12+0400\n"
+"Last-Translator: Yuri Myasoedov <ymyasoedov@yandex.ru>\n"
 "Language-Team: русский <gnome-cyr@gnome.org>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Poedit 1.5.4\n"
+"X-Generator: Poedit 1.6.4\n"
 
 #: ../backend/comics/comics-document.c:210
 #, c-format
@@ -176,7 +176,7 @@ msgstr "Без названия"
 #. Author: None
 #. Keywords: None
 #.
-#: ../backend/pdf/ev-poppler.cc:1132 ../libview/ev-print-operation.c:1907
+#: ../backend/pdf/ev-poppler.cc:1132 ../libview/ev-print-operation.c:1920
 #: ../properties/ev-properties-view.c:192
 msgid "None"
 msgstr "Отсутствует"
@@ -389,54 +389,66 @@ msgid "Failed to print page %d: %s"
 msgstr "Не удалось напечатать страницу %d: %s"
 
 #. Initial state
-#: ../libview/ev-print-operation.c:347
-msgid "Preparing to print…"
-msgstr "Подготовка к печати…"
+#: ../libview/ev-print-operation.c:350
+#| msgid "Preparing to print…"
+msgid "Preparing preview…"
+msgstr "Подготовка предварительного просмотра…"
 
-#: ../libview/ev-print-operation.c:349
+#: ../libview/ev-print-operation.c:352 ../libview/ev-print-operation.c:362
 msgid "Finishing…"
 msgstr "Завершение…"
 
-#: ../libview/ev-print-operation.c:351
+#: ../libview/ev-print-operation.c:354
+#, c-format
+#| msgid "Printing page %d of %d…"
+msgid "Generating preview: page %d of %d"
+msgstr "Создание предварительного просмотра: страница %d из %d…"
+
+#. Initial state
+#: ../libview/ev-print-operation.c:360
+msgid "Preparing to print…"
+msgstr "Подготовка к печати…"
+
+#: ../libview/ev-print-operation.c:364
 #, c-format
 msgid "Printing page %d of %d…"
 msgstr "Печать страницы %d из %d…"
 
-#: ../libview/ev-print-operation.c:1175
+#: ../libview/ev-print-operation.c:1188
 msgid "PostScript is not supported by this printer."
 msgstr "Этот принтер не поддерживает Postscript."
 
-#: ../libview/ev-print-operation.c:1240
+#: ../libview/ev-print-operation.c:1253
 msgid "Invalid page selection"
 msgstr "Выбрана неправильная страница"
 
-#: ../libview/ev-print-operation.c:1241
+#: ../libview/ev-print-operation.c:1254
 msgid "Warning"
 msgstr "Предупреждение"
 
-#: ../libview/ev-print-operation.c:1243
+#: ../libview/ev-print-operation.c:1256
 msgid "Your print range selection does not include any pages"
 msgstr "Выбранный вами диапазон страниц не содержит страниц"
 
 #. translators: Title of the print dialog
 #. translators: Print document currently shown in the Print Preview window
-#: ../libview/ev-print-operation.c:1322 ../previewer/ev-previewer-window.c:284
+#: ../libview/ev-print-operation.c:1335 ../previewer/ev-previewer-window.c:284
 msgid "Print"
 msgstr "Напечатать"
 
-#: ../libview/ev-print-operation.c:1901
+#: ../libview/ev-print-operation.c:1914
 msgid "Page Scaling:"
 msgstr "Масштабирование страницы:"
 
-#: ../libview/ev-print-operation.c:1908
+#: ../libview/ev-print-operation.c:1921
 msgid "Shrink to Printable Area"
 msgstr "Урезать до области печати"
 
-#: ../libview/ev-print-operation.c:1909
+#: ../libview/ev-print-operation.c:1922
 msgid "Fit to Printable Area"
 msgstr "Уместить в область печати"
 
-#: ../libview/ev-print-operation.c:1912
+#: ../libview/ev-print-operation.c:1925
 msgid ""
 "Scale document pages to fit the selected printer page. Select from one of "
 "the following:\n"
@@ -459,11 +471,11 @@ msgstr ""
 "• \"Уместить в область печати\": Страницы документа будут увеличены или "
 "уменьшены в соответствии с областью печати страницы принтера.\n"
 
-#: ../libview/ev-print-operation.c:1924
+#: ../libview/ev-print-operation.c:1937
 msgid "Auto Rotate and Center"
 msgstr "Автоматическое вращение и центрирование"
 
-#: ../libview/ev-print-operation.c:1927
+#: ../libview/ev-print-operation.c:1940
 msgid ""
 "Rotate printer page orientation of each page to match orientation of each "
 "document page. Document pages will be centered within the printer page."
@@ -471,11 +483,11 @@ msgstr ""
 "Изменять ориентацию страницы принтера в соответствии с каждой страницей "
 "документа. Страницы документа будут центрированы на странице принтера."
 
-#: ../libview/ev-print-operation.c:1932
+#: ../libview/ev-print-operation.c:1945
 msgid "Select page size using document page size"
 msgstr "Выбор размера страницы на основе размера страницы документа"
 
-#: ../libview/ev-print-operation.c:1934
+#: ../libview/ev-print-operation.c:1947
 msgid ""
 "When enabled, each page will be printed on the same size paper as the "
 "document page."
@@ -483,27 +495,27 @@ msgstr ""
 "Если включено, то каждая страница будет напечатана с одним размером бумаги, "
 "как у страницы документа."
 
-#: ../libview/ev-print-operation.c:2023
+#: ../libview/ev-print-operation.c:2047
 msgid "Page Handling"
 msgstr "Обработка страницы"
 
-#: ../libview/ev-view-accessible.c:46
+#: ../libview/ev-view-accessible.c:45
 msgid "Scroll Up"
 msgstr "Прокрутка вверх"
 
-#: ../libview/ev-view-accessible.c:47
+#: ../libview/ev-view-accessible.c:46
 msgid "Scroll Down"
 msgstr "Прокрутка вниз"
 
-#: ../libview/ev-view-accessible.c:53
+#: ../libview/ev-view-accessible.c:52
 msgid "Scroll View Up"
 msgstr "Прокрутка документа вверх"
 
-#: ../libview/ev-view-accessible.c:54
+#: ../libview/ev-view-accessible.c:53
 msgid "Scroll View Down"
 msgstr "Прокрутка документа вниз"
 
-#: ../libview/ev-view-accessible.c:126
+#: ../libview/ev-view-accessible.c:121
 msgid "Document View"
 msgstr "Отображение документа"
 
@@ -990,17 +1002,15 @@ msgstr "Печать…"
 msgid "Index"
 msgstr "Содержание"
 
-#: ../shell/ev-sidebar-thumbnails.c:960
+#: ../shell/ev-sidebar-thumbnails.c:1029
 msgid "Thumbnails"
 msgstr "Образцы страниц"
 
 #: ../shell/ev-toolbar.c:238
-#| msgid "Find options"
 msgid "View options"
 msgstr "Параметры просмотра"
 
 #: ../shell/ev-toolbar.c:255
-#| msgid "Find options"
 msgid "File options"
 msgstr "Параметры файла"
 
@@ -1293,7 +1303,6 @@ msgid "Open an existing document"
 msgstr "Открыть документ"
 
 #: ../shell/ev-window.c:6046
-#| msgid "Open in New _Window"
 msgid "_View in new window"
 msgstr "Открыть в _новом окне"
 
