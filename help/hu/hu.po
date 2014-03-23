@@ -7,8 +7,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: evince master\n"
-"POT-Creation-Date: 2014-03-23 11:27+0000\n"
-"PO-Revision-Date: 2014-03-23 14:42+0100\n"
+"POT-Creation-Date: 2014-03-23 20:11+0000\n"
+"PO-Revision-Date: 2014-03-23 21:19+0100\n"
 "Last-Translator: Gabor Kelemen <kelemeng at gnome dot hu>\n"
 "Language-Team: Hungarian <gnome-hu-list at gnome dot org>\n"
 "Language: hu\n"
@@ -413,7 +413,7 @@ msgstr ""
 "nem támogatja ezeket. Az Adobe Reader azonban igen."
 
 #. (itstool) path: credit/name
-#: C/bookmarks.page:17 C/opening.page:18
+#: C/bookmarks.page:17 C/finding.page:21 C/opening.page:18 C/password.page:16
 msgid "Ekaterina Gerasimova"
 msgstr "Ekaterina Gerasimova"
 
@@ -638,9 +638,9 @@ msgstr ""
 
 #. (itstool) path: credit/name
 #: C/commandline.page:11 C/convertpdf.page:13 C/convertPostScript.page:13
-#: C/convertSVG.page:12 C/editing.page:11 C/finding.page:11 C/formats.page:14
+#: C/convertSVG.page:12 C/editing.page:11 C/finding.page:13 C/formats.page:14
 #: C/index.page:14 C/invert-colors.page:15 C/movingaround.page:12
-#: C/noprint.page:10 C/password.page:11 C/presentations.page:12
+#: C/noprint.page:10 C/password.page:12 C/presentations.page:12
 #: C/print-2sided.page:12 C/print-differentsize.page:11 C/printing.page:14
 #: C/print-order.page:12 C/print-select.page:11 C/reload.page:14
 #: C/shortcuts.page:11 C/textselection.page:11
@@ -771,7 +771,7 @@ msgstr ""
 
 #. (itstool) path: credit/name
 #: C/convertpdf.page:17 C/convertPostScript.page:17 C/convertSVG.page:16
-#: C/finding.page:15 C/forms-saving.page:19 C/invert-colors.page:19
+#: C/finding.page:17 C/forms-saving.page:19 C/invert-colors.page:19
 #: C/movingaround.page:16 C/presentations.page:16 C/printing.page:18
 msgid "Anna Philips"
 msgstr "Anna Philips"
@@ -2012,17 +2012,17 @@ msgstr ""
 "href=\"http://pdfedit.petricek.net/en/index.html\">pdfedit</link> nevűt."
 
 #. (itstool) path: info/desc
-#: C/finding.page:21
+#: C/finding.page:27
 msgid "Search for a word or phrase in a document."
 msgstr "Szó vagy kifejezés keresése a dokumentumban."
 
 #. (itstool) path: page/title
-#: C/finding.page:24
+#: C/finding.page:30
 msgid "Find text in a document"
 msgstr "Szöveg keresése dokumentumokban"
 
 #. (itstool) path: item/p
-#: C/finding.page:28
+#: C/finding.page:34
 msgid ""
 "Click the <gui>Magnifying glass button</gui> or press <keyseq><key>Ctrl</"
 "key><key>F</key></keyseq> or <key>/</key> to display a search box."
@@ -2032,46 +2032,60 @@ msgstr ""
 "billentyűt a keresőmező megjelenítéséhez."
 
 #. (itstool) path: item/p
-#: C/finding.page:33
+#: C/finding.page:39
+#| msgid ""
+#| "Type the word or phrase you want to look for and a search will start "
+#| "automatically."
 msgid ""
-"Type the word or phrase you want to look for and a search will start "
-"automatically."
+"Start typing into the search box and the search will start automatically."
 msgstr ""
-"Írja be a keresendő szót vagy kifejezést, és a keresés automatikusan "
-"megkezdődik."
+"Kezdjen gépelni a keresőmezőbe, és a keresés automatikusan megkezdődik."
 
 #. (itstool) path: item/p
-#: C/finding.page:37
+#: C/finding.page:43
+#| msgid ""
+#| "The <gui>∧</gui> and <gui>∨</gui> buttons let you skip from one search "
+#| "result to another."
 msgid ""
-"The <gui>∧</gui> and <gui>∨</gui> buttons let you skip from one search "
-"result to another."
+"Use the <gui>∧</gui> and <gui>∨</gui> buttons to move to the previous or "
+"next search result."
 msgstr ""
-"A <gui>∧</gui> és <gui>∨</gui> gombok lehetővé teszik a találatok közti "
-"lépkedést."
+"A <gui>∧</gui> és <gui>∨</gui> gombok használatával lépkedhet az előző és "
+"következő találatok között."
 
 #. (itstool) path: item/p
-#: C/finding.page:41
+#: C/finding.page:47
+#| msgid ""
+#| "To hide the search bar, click the <gui>Magnifying glass button</gui> "
+#| "again."
 msgid ""
-"To hide the search bar, click the <gui>Magnifying glass button</gui> again."
-msgstr "A keresősáv elrejtéséhez kattintson újra a <gui>Nagyító gombra</gui>."
+"To hide the search bar, click the <gui>Magnifying glass button</gui> again "
+"or press <key>Esc</key>."
+msgstr ""
+"A keresősáv elrejtéséhez kattintson újra a <gui>Nagyító gombra</gui>, vagy "
+"nyomja meg az <key>Esc</key> billentyűt."
 
 #. (itstool) path: page/p
-#: C/finding.page:46
+#: C/finding.page:52
+#| msgid ""
+#| "If the word or phrase you searched is not present in the entire document, "
+#| "the message will say <em>Not found</em>. However, if it appears in the "
+#| "document at least once, the message will inform you of how many times the "
+#| "word you searched occur on each page. This is apparent if you skip from "
+#| "one result to another as described above or scroll through the document."
 msgid ""
-"If the word or phrase you searched is not present in the entire document, "
-"the message will say <em>Not found</em>. However, if it appears in the "
-"document at least once, the message will inform you of how many times the "
-"word you searched occur on each page. This is apparent if you skip from one "
-"result to another as described above or scroll through the document."
+"If the word or phrase that you searched for is not found in the document, "
+"you will see <em>Not found</em> next to the search box. However, if it "
+"appears in the document at least once, you will be shown how many times the "
+"search result appears on the current page."
 msgstr ""
 "Ha a keresett szó vagy kifejezés nem fordul elő sehol a dokumentumban, akkor "
-"a <em>Nem található</em> üzenet jelenik meg. Ha azonban legalább egyszer "
-"előfordul, az üzenet megadja, hogy a keresett szó hányszor fordul elő az "
-"adott oldalon. Ez a találatok közti fent leírt lépkedésnél, vagy a "
-"dokumentum görgetésekor hasznos."
+"a <em>Nem található</em> üzenet jelenik meg a keresőmező mellett. Ha azonban "
+"legalább egyszer előfordul, akkor egy üzenet megadja, hogy a keresett szó "
+"hányszor fordul elő az adott oldalon."
 
 #. (itstool) path: note/p
-#: C/finding.page:53
+#: C/finding.page:58
 msgid ""
 "Only PDF documents are searchable. Some PDF documents are not searchable "
 "because their text is encoded in the document as an image."
@@ -2507,7 +2521,6 @@ msgstr ""
 
 #. (itstool) path: p/link
 #: C/legal-unported.xml:5
-#| msgid "Creative Commons Attribution-Share Alike 3.0 United States License"
 msgid "Creative Commons Attribution-ShareAlike 3.0 Unported License"
 msgstr "Creative Commons Attribution-ShareAlike 3.0 Unported License"
 
@@ -2516,7 +2529,7 @@ msgstr "Creative Commons Attribution-ShareAlike 3.0 Unported License"
 #. the file changes, the md5 hash will change to let you know you need to
 #. update your localized copy. The msgstr is not used at all. Set it to
 #. whatever you like once you have updated your copy of the file.
-#: C/movingaround.page:179
+#: C/movingaround.page:180
 msgctxt "_"
 msgid "external ref='figures/zoom.png' md5='561963b44d8e90a2a8ac409b8e35aee7'"
 msgstr "external ref='figures/zoom.png' md5='561963b44d8e90a2a8ac409b8e35aee7'"
@@ -2532,7 +2545,7 @@ msgid "Moving around a document"
 msgstr "Mozgás a dokumentumban"
 
 #. (itstool) path: page/p
-#: C/movingaround.page:27
+#: C/movingaround.page:28
 msgid ""
 "You can move around each page of a document by any of the following methods:"
 msgstr ""
@@ -2540,7 +2553,7 @@ msgstr ""
 "mozoghat:"
 
 #. (itstool) path: item/p
-#: C/movingaround.page:32
+#: C/movingaround.page:33
 msgid ""
 "Scrolling up and down using the mouse wheel. To move around a page just by "
 "moving the mouse:"
@@ -2549,14 +2562,14 @@ msgstr ""
 "mozgáshoz csak az egér használatával:"
 
 #. (itstool) path: item/p
-#: C/movingaround.page:36
+#: C/movingaround.page:37
 msgid "Right-click the page and select <gui>Autoscroll</gui>."
 msgstr ""
 "Kattintson a jobb egérgombbal az oldalon, és válassza az <gui>Automatikus "
 "görgetés</gui> menüpontot."
 
 #. (itstool) path: item/p
-#: C/movingaround.page:39
+#: C/movingaround.page:40
 msgid ""
 "Move the mouse pointer towards the bottom of the window to scroll down; it "
 "will scroll faster depending on how far down the window you go."
@@ -2565,30 +2578,30 @@ msgstr ""
 "lejjebb viszi a mutatót az ablakban, annál gyorsabb lesz a görgetés."
 
 #. (itstool) path: item/p
-#: C/movingaround.page:44
+#: C/movingaround.page:45
 msgid "To stop autoscrolling, click anywhere in the document."
 msgstr ""
 "Az automatikus görgetés leállításához kattintson bárhová a dokumentumban."
 
 #. (itstool) path: item/p
-#: C/movingaround.page:49
+#: C/movingaround.page:50
 msgid "Using the scroll bar on the document window."
 msgstr "A dokumentumablak görgetősávjának használatával."
 
 #. (itstool) path: item/p
-#: C/movingaround.page:52
+#: C/movingaround.page:53
 msgid "Using the up and down arrow keys of your keyboard."
 msgstr "A fel és le nyílbillentyűk használatával."
 
 #. (itstool) path: item/p
-#: C/movingaround.page:55
+#: C/movingaround.page:56
 msgid ""
 "Dragging the page around with your mouse, as if you are grabbing it. To do "
 "this:"
 msgstr "Az oldal egérrel való húzásával, mintha megragadná. Ehhez:"
 
 #. (itstool) path: item/p
-#: C/movingaround.page:59
+#: C/movingaround.page:60
 msgid ""
 "Move the mouse pointer over the page and hold down the middle mouse button "
 "to drag it around."
@@ -2597,7 +2610,7 @@ msgstr ""
 "egérgombot a dokumentum húzásához."
 
 #. (itstool) path: item/p
-#: C/movingaround.page:63
+#: C/movingaround.page:64
 msgid ""
 "If you don't have a middle mouse button, hold down the left and right mouse "
 "buttons at the same time, then drag."
@@ -2606,18 +2619,18 @@ msgstr ""
 "egérgombokat, és így húzza a dokumentumot."
 
 #. (itstool) path: section/title
-#: C/movingaround.page:71
+#: C/movingaround.page:72
 msgid "Flipping between pages"
 msgstr "Váltás oldalak közt"
 
 #. (itstool) path: section/p
-#: C/movingaround.page:73
+#: C/movingaround.page:74
 msgid ""
 "You can move between pages of a document using one of the following methods:"
 msgstr "A dokumentum oldalai közt a következő módszerekkel mozoghat:"
 
 #. (itstool) path: item/p
-#: C/movingaround.page:78
+#: C/movingaround.page:79
 msgid ""
 "Click the <gui>&lt;</gui> or <gui>&gt;</gui> buttons on the <link xref="
 "\"toolbar\">toolbar</link>."
@@ -2626,7 +2639,7 @@ msgstr ""
 "<gui>&gt;</gui> gombját."
 
 #. (itstool) path: item/p
-#: C/movingaround.page:82
+#: C/movingaround.page:83
 msgid ""
 "Press the <keyseq><key>Ctrl</key><key>Page Up</key></keyseq> or "
 "<keyseq><key>Ctrl</key><key>Page Down</key></keyseq> buttons on the keyboard."
@@ -2635,12 +2648,12 @@ msgstr ""
 "<keyseq><key>Ctrl</key><key>Page Down</key></keyseq> billentyűt."
 
 #. (itstool) path: item/p
-#: C/movingaround.page:87
+#: C/movingaround.page:88
 msgid "To go to a specific page:"
 msgstr "Adott oldalra ugráshoz:"
 
 #. (itstool) path: item/p
-#: C/movingaround.page:90
+#: C/movingaround.page:91
 msgid ""
 "Type a page number in <gui style=\"input\">Select Page</gui> on the <link "
 "xref=\"toolbar\">toolbar</link> and press <key>Enter</key>."
@@ -2650,7 +2663,7 @@ msgstr ""
 "<key>Enter</key> billentyűt."
 
 #. (itstool) path: item/p
-#: C/movingaround.page:94
+#: C/movingaround.page:95
 msgid ""
 "If you want to see the previously visited pages press <gui style=\"button"
 "\">&lt;</gui> or <gui style=\"button\">&gt;</gui> on the toolbar."
@@ -2660,12 +2673,12 @@ msgstr ""
 "gui> gombját."
 
 #. (itstool) path: item/p
-#: C/movingaround.page:99
+#: C/movingaround.page:100
 msgid "If you want to go to the beginning or the end of the document:"
 msgstr "Ha a dokumentum elejére vagy végére szeretne ugrani:"
 
 #. (itstool) path: item/p
-#: C/movingaround.page:102
+#: C/movingaround.page:103
 msgid ""
 "Click the <gui>File options</gui> menu in the top right corner and select "
 "<gui>First Page</gui>. You can also press <keyseq><key>Ctrl</key><key>Home</"
@@ -2676,7 +2689,7 @@ msgstr ""
 "key><key>Home</key></keyseq> billentyűkombinációt is."
 
 #. (itstool) path: item/p
-#: C/movingaround.page:108
+#: C/movingaround.page:109
 msgid ""
 "Click the <gui>File options</gui> menu in the top right corner and select "
 "<gui>Last Page</gui> or press <keyseq><key>Ctrl</key><key>End</key></keyseq> "
@@ -2687,7 +2700,7 @@ msgstr ""
 "key><key>End</key></keyseq> billentyűkombinációt is."
 
 #. (itstool) path: item/p
-#: C/movingaround.page:118
+#: C/movingaround.page:119
 msgid ""
 "To move ten pages at a time, press <keyseq><key>Shift</key><key>Page Up</"
 "key></keyseq> or <keyseq><key>Shift</key><key>Page Down</key></keyseq>."
@@ -2697,7 +2710,7 @@ msgstr ""
 "key></keyseq> billentyűkombinációt."
 
 #. (itstool) path: note/p
-#: C/movingaround.page:122
+#: C/movingaround.page:123
 msgid ""
 "You can only move around one page at a time, by default. If you want to move "
 "between pages just by scrolling or dragging, click the <gui>View options</"
@@ -2709,12 +2722,12 @@ msgstr ""
 "<gui>Folytonos</gui> menüpontot."
 
 #. (itstool) path: section/title
-#: C/movingaround.page:133
+#: C/movingaround.page:134
 msgid "Navigating with a page list or table of contents"
 msgstr "Navigálás oldallistával vagy tartalomjegyzékkel"
 
 #. (itstool) path: section/p
-#: C/movingaround.page:135
+#: C/movingaround.page:136
 msgid ""
 "To make the side pane visible <gui>View options</gui> button in the top-"
 "right corner and select<gui>Side Pane</gui>, or press <key>F9</key> on the "
@@ -2726,12 +2739,12 @@ msgstr ""
 "dokumentum összes oldalának előnézete."
 
 #. (itstool) path: section/p
-#: C/movingaround.page:140
+#: C/movingaround.page:141
 msgid "You can move between pages by clicking on them in the side pane."
 msgstr "Az oldalak közt az oldalsávban azokra kattintva mozoghat."
 
 #. (itstool) path: note/p
-#: C/movingaround.page:143
+#: C/movingaround.page:144
 msgid ""
 "Some documents have an index or table of contents, which you can display in "
 "the side pane. Click the drop-down list at the top of the side pane and "
@@ -2742,7 +2755,7 @@ msgstr ""
 "listára, és válassza az <gui>Index</gui> elemet a megjelenítéséhez."
 
 #. (itstool) path: note/p
-#: C/movingaround.page:147
+#: C/movingaround.page:148
 msgid ""
 "Most documents don't use this feature, so you won't be able to view their "
 "index in the side pane."
@@ -2751,12 +2764,12 @@ msgstr ""
 "megjeleníteni indexüket az oldalsávon."
 
 #. (itstool) path: section/title
-#: C/movingaround.page:155
+#: C/movingaround.page:156
 msgid "Zooming in and out"
 msgstr "Nagyítás és kicsinyítés"
 
 #. (itstool) path: item/p
-#: C/movingaround.page:159
+#: C/movingaround.page:160
 msgid ""
 "Click the <gui>View options</gui> button in the top-right corner and select "
 "<gui>Zoom In</gui> or use the keyboard shortcuts <keyseq><key>Ctrl</key><key>"
@@ -2767,7 +2780,7 @@ msgstr ""
 "<keyseq><key>Ctrl</key><key>+</key></keyseq> billentyűkombinációt."
 
 #. (itstool) path: item/p
-#: C/movingaround.page:164
+#: C/movingaround.page:165
 msgid ""
 "Click the <gui>View options</gui> button in the top-right corner and select "
 "<gui>Zoom Out</gui> or use the keyboard shortcuts <keyseq><key>Ctrl</"
@@ -2779,26 +2792,26 @@ msgstr ""
 "billentyűkombinációt."
 
 #. (itstool) path: section/p
-#: C/movingaround.page:170
+#: C/movingaround.page:171
 msgid "Alternatively, you can do one of the following:"
 msgstr "Ennek alternatívájaként a következőket is teheti:"
 
 #. (itstool) path: item/p
-#: C/movingaround.page:174
+#: C/movingaround.page:175
 msgid "hold down <key>Ctrl</key> and use your mouse scroll wheel to zoom."
 msgstr ""
 "Tartsa lenyomva a <key>Ctrl</key> billentyűt, és egérgörgőjével módosítsa a "
 "nagyítást."
 
 #. (itstool) path: item/p
-#: C/movingaround.page:177
+#: C/movingaround.page:178
 msgid ""
 "select desired zoom percentage from the drop down menu above the window."
 msgstr ""
 "Válassza ki a kívánt nagyítási arányt az eszköztáron lévő legördülő menüből."
 
 #. (itstool) path: note/p
-#: C/movingaround.page:184
+#: C/movingaround.page:185
 msgid ""
 "The <gui>Fit Page</gui> option will make a document page fit the whole "
 "<em>height</em> of the window."
@@ -2807,7 +2820,7 @@ msgstr ""
 "elfoglalja az ablak teljes <em>magasságát</em>."
 
 #. (itstool) path: note/p
-#: C/movingaround.page:186
+#: C/movingaround.page:187
 msgid ""
 "The <gui>Fit Width</gui> option will make a document page fill the whole "
 "<em>width</em> of the window."
@@ -2816,7 +2829,7 @@ msgstr ""
 "elfoglalja az ablak teljes <em>szélességét</em>."
 
 #. (itstool) path: note/p
-#: C/movingaround.page:188
+#: C/movingaround.page:189
 msgid ""
 "If you want to see two pages at once, side by side, like in a book, click "
 "the <gui>View options</gui> button in the top-right corner and select "
@@ -2827,12 +2840,12 @@ msgstr ""
 "a <gui>Két oszlop</gui> menüpontot."
 
 #. (itstool) path: section/p
-#: C/movingaround.page:193
+#: C/movingaround.page:194
 msgid "You can use the whole of your screen to view the document:"
 msgstr "A teljes képernyőt is használhatja a dokumentum megjelenítésére:"
 
 #. (itstool) path: item/p
-#: C/movingaround.page:197
+#: C/movingaround.page:198
 msgid ""
 "Click the <gui>View options</gui> button in the top-right corner and select "
 "<gui>Fullscreen</gui> or press <key>F11</key>."
@@ -2842,17 +2855,17 @@ msgstr ""
 "<key>F11</key> billentyűt."
 
 #. (itstool) path: item/p
-#: C/movingaround.page:201
+#: C/movingaround.page:202
 msgid "To exit the full screen mode:"
 msgstr "A teljes képernyős módból való kilépéshez:"
 
 #. (itstool) path: item/p
-#: C/movingaround.page:204
+#: C/movingaround.page:205
 msgid "Press <key>F11</key> or <key>Escape</key>"
 msgstr "Nyomja meg az <key>F11</key> vagy <key>Escape</key> billentyűt."
 
 #. (itstool) path: item/p
-#: C/movingaround.page:207
+#: C/movingaround.page:208
 msgid ""
 "Or disable <gui>Fullscreen</gui> by clicking the <gui>View options</gui> "
 "button in the top-right corner and select <gui>Fullscreen</gui>."
@@ -3038,18 +3051,23 @@ msgstr "Egy dokumentum a következő módszerekkel nyitható meg:"
 
 #. (itstool) path: item/p
 #: C/opening.page:33
+#| msgid ""
+#| "Double-click on the file icon in <app>Files</app> or your <em>file "
+#| "manager</em>."
 msgid ""
-"Double-click on the file icon in <app>Files</app> or your <em>file manager</"
-"em>."
+"Double-click on the file in <app>Files</app> or your <em>file manager</em>."
 msgstr ""
 "A <app>Fájlok</app> alkalmazásban vagy az Ön által használt "
-"<em>fájlkezelőben</em> kattintson duplán a fájl ikonjára."
+"<em>fájlkezelőben</em> kattintson duplán a fájlra."
 
 #. (itstool) path: note/p
 #: C/opening.page:36
+#| msgid ""
+#| "Double clicking opens PDF, PostScript, .djvu, .dvi and Comic Book Archive "
+#| "files in the <app>Document Viewer</app> by default."
 msgid ""
-"Double clicking opens PDF, PostScript, .djvu, .dvi and Comic Book Archive "
-"files in the <app>Document Viewer</app> by default."
+"Double clicking PDF, PostScript, .djvu, .dvi and Comic Book Archive files "
+"opens them in <app>Document Viewer</app> by default."
 msgstr ""
 "A dupla kattintásra alapesetben a PDF, PostScript, .djvu, .dvi és Comic Book "
 "Archive fájlok nyílnak meg a <app>Dokumentummegjelenítőben</app>."
@@ -3066,80 +3084,73 @@ msgstr ""
 
 #. (itstool) path: page/p
 #: C/opening.page:46
-msgid "If a Document View window is already open you can:"
-msgstr "Ha már nyitva van egy Dokumentummegjelenítő ablak:"
+#| msgid "If a Document View window is already open you can:"
+msgid "If a <app>Document Viewer</app> window is already open you can:"
+msgstr "Ha már nyitva van egy <app>Dokumentummegjelenítő</app> ablak:"
 
 #. (itstool) path: item/p
 #: C/opening.page:50
+#| msgid ""
+#| "drag a file icon into the window from <app>Files</app>. The new file will "
+#| "open in a new window (provided the file is of a file type supported by "
+#| "<app>Document Viewer</app>)."
 msgid ""
-"drag a file icon into the window from <app>Files</app>. The new file will "
-"open in a new window (provided the file is of a file type supported by "
-"<app>Document Viewer</app>)."
+"Drag a file into the window from <app>Files</app>. The new file will open in "
+"a new window."
 msgstr ""
-"Húzza egy fájl ikonját az ablakba a <app>Fájlok</app> alkalmazásból. Az új "
-"fájl új ablakban nyílik meg (amennyiben a Dokumentummegjelenítő által "
-"támogatott formátumú)."
+"Húzzon egy fájlt az ablakba a <app>Fájlok</app> alkalmazásból. Az új "
+"fájl új ablakban nyílik meg."
 
-# megjegyzés: az első mondatban helyes a <guiseq><gui>Megnyitás...</gui></guiseq> tag?
-# Az eredeti szövegben is így jelölik, de hiányzik a menü első része. Nem inkább <gui>Megnyitás...</gui> lenne a helyes?
 #. (itstool) path: item/p
-#: C/opening.page:55
+#: C/opening.page:54
+#| msgid ""
+#| "press the button in the top-right corner of the window, then select "
+#| "<guiseq><gui>Open…</gui></guiseq>. In the <gui>Open Document</gui> "
+#| "dialog, choose the file which you wish to open, and click <gui>Open</"
+#| "gui>. The file will open in a new window."
 msgid ""
-"press the button in the top-right corner of the window, then select "
-"<guiseq><gui>Open…</gui></guiseq>. In the <gui>Open Document</gui> dialog, "
-"choose the file which you wish to open, and click <gui>Open</gui>. The file "
-"will open in a new window."
+"Press the <gui>File options</gui> button in the top-right corner of the "
+"window, then select <gui>Open…</gui>. In the <gui>Open Document</gui> "
+"dialog, choose the file which you wish to open, and click <gui>Open</gui>. "
+"The file will open in a new window."
 msgstr ""
-"Nyomja meg az ablak jobb felső sarkában található gombot, majd válassza a "
-"<guiseq><gui>Megnyitás…</gui></guiseq> menüpontot. A Dokumentum megnyitása "
+"Nyomja meg az ablak jobb felső sarkában található <gui>Fájlbeállítások</gui> "
+"gombot, majd válassza a "
+"<gui>Megnyitás…</gui> menüpontot. A <gui>Dokumentum megnyitása</gui> "
 "ablakban válassza ki a megnyitni kívánt fájlt, és kattintson a "
 "<gui>Megnyitás</gui> gombra. A fájl új ablakban nyílik meg."
 
 #. (itstool) path: info/desc
-#: C/password.page:17
+#: C/password.page:22
 msgid "Handling password protected PDFs."
 msgstr "Jelszóval védett PDF-ek kezelése."
 
 #. (itstool) path: page/title
-#: C/password.page:20
+#: C/password.page:25
 msgid "Password-protected documents"
 msgstr "Jelszóvédett dokumentumok"
 
 #. (itstool) path: page/p
-#: C/password.page:22
+#: C/password.page:27
+#| msgid ""
+#| "If you try to open a PDF document that is protected with a password, a "
+#| "window will appear asking you to enter the document password. Enter the "
+#| "password and click <gui>Open Document</gui>."
 msgid ""
 "If you try to open a PDF document that is protected with a password, a "
 "window will appear asking you to enter the document password. Enter the "
-"password and click <gui>Open Document</gui>."
+"password and click <gui>Unlock Document</gui>."
 msgstr ""
 "Ha egy jelszóval védett PDF-dokumentumot próbál megnyitni, akkor megjelenik "
 "egy ablak és bekéri a jelszót. Adja meg a jelszót, és nyomja meg a "
-"<gui>Dokumentum megnyitása</gui> gombot."
-
-#. (itstool) path: page/p
-#: C/password.page:26
-msgid "There are two types of passwords:"
-msgstr "Két fajta jelszó van:"
-
-#. (itstool) path: item/p
-#: C/password.page:30
-msgid "The <em>user password</em> is needed to view the document."
-msgstr ""
-"A <em>felhasználói jelszó</em> a dokumentum megjelenítéséhez szükséges."
-
-#. (itstool) path: item/p
-#: C/password.page:33
-msgid ""
-"The <em>master password</em> is required to print the document as well as "
-"view it."
-msgstr ""
-"A <em>mesterjelszó</em> a dokumentum megjelenítése mellett a nyomtatásához "
-"is szükséges."
+"<gui>Dokumentum feloldása</gui> gombot."
 
 #. (itstool) path: note/p
-#: C/password.page:39
-msgid "These passwords are set by the person who created the document."
-msgstr "Ezeket a jelszavakat a dokumentumot létrehozó személy állítja be."
+#: C/password.page:50
+#| msgid "These passwords are set by the person who created the document."
+msgid "Passwords can be set by the person who created or edited the document."
+msgstr ""
+"A jelszavakat a dokumentumot létrehozó vagy szerkesztő személy állíthatja be."
 
 #. (itstool) path: info/desc
 #: C/presentations.page:7
@@ -4740,6 +4751,20 @@ msgstr ""
 "is. A magyar csapat <link href=\"http://l10n.gnome.org/languages/hu/"
 "\">kezdőoldalán</link> megtalálja a magyar levelezőlista címét és a "
 "fordítások megkezdéséhez szükséges információkat."
+
+#~ msgid "There are two types of passwords:"
+#~ msgstr "Két fajta jelszó van:"
+
+#~ msgid "The <em>user password</em> is needed to view the document."
+#~ msgstr ""
+#~ "A <em>felhasználói jelszó</em> a dokumentum megjelenítéséhez szükséges."
+
+#~ msgid ""
+#~ "The <em>master password</em> is required to print the document as well as "
+#~ "view it."
+#~ msgstr ""
+#~ "A <em>mesterjelszó</em> a dokumentum megjelenítése mellett a "
+#~ "nyomtatásához is szükséges."
 
 #~ msgid ""
 #~ "Click <guiseq><gui>File</gui><gui>Print</gui></guiseq> and go to the "
