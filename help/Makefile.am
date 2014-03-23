@@ -58,6 +58,7 @@ HELP_FILES = \
 	invert-colors.page		\
 	license.page			\
 	legal.xml			\
+	legal-unported.xml \
 	movingaround.page		\
 	noprint.page			\
 	openerror.page			\
