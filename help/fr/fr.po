@@ -11,7 +11,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: evince-doc\n"
-"POT-Creation-Date: 2014-03-16 16:44+0000\n"
+"POT-Creation-Date: 2014-03-23 11:27+0000\n"
 "PO-Revision-Date: 2014-03-16 20:53+0100\n"
 "Last-Translator: Michael Scherer <misc@zarb.org>\n"
 "Language-Team: français <gnomefr@traduc.org>\n"
@@ -49,7 +49,7 @@ msgstr ""
 #: C/duplex-15pages.page:12 C/duplex-16pages.page:12 C/duplex-3pages.page:12
 #: C/duplex-4pages.page:12 C/duplex-5pages.page:12 C/duplex-6pages.page:12
 #: C/duplex-7pages.page:12 C/duplex-8pages.page:12 C/duplex-9pages.page:12
-#: C/duplex-npages.page:12 C/forms.page:11 C/forms-saving.page:13
+#: C/duplex-npages.page:12 C/forms.page:11 C/forms-saving.page:15
 #: C/index.page:18 C/introduction.page:12 C/openerror.page:13
 #: C/opening.page:14 C/print-booklet.page:12 C/shortcuts.page:15
 #: C/singlesided-13-16pages.page:12 C/singlesided-17-20pages.page:12
@@ -65,18 +65,18 @@ msgstr "Tiffany Antopolski"
 #: C/annotation-properties.page:15 C/annotations-delete.page:15
 #: C/annotations-disabled.page:15 C/annotations-navigate.page:15
 #: C/annotations.page:15 C/annotations-save.page:14 C/bookmarks.page:22
-#: C/bug-filing.page:15 C/commandline.page:19 C/convertpdf.page:15
-#: C/convertPostScript.page:15 C/convertSVG.page:15 C/default-settings.page:15
+#: C/bug-filing.page:15 C/commandline.page:19 C/convertpdf.page:21
+#: C/convertPostScript.page:21 C/convertSVG.page:20 C/default-settings.page:15
 #: C/develop.page:15 C/documentation.page:14 C/duplex-10pages.page:16
 #: C/duplex-11pages.page:16 C/duplex-12pages.page:16 C/duplex-13pages.page:16
 #: C/duplex-14pages.page:16 C/duplex-15pages.page:16 C/duplex-16pages.page:16
 #: C/duplex-3pages.page:16 C/duplex-4pages.page:16 C/duplex-5pages.page:16
 #: C/duplex-6pages.page:16 C/duplex-7pages.page:16 C/duplex-8pages.page:16
 #: C/duplex-9pages.page:16 C/duplex-npages.page:16 C/editing.page:15
-#: C/formats.page:18 C/forms.page:15 C/forms-saving.page:17
-#: C/invert-colors.page:18 C/noprint.page:14 C/openerror.page:17
-#: C/presentations.page:15 C/print-2sided.page:16 C/print-booklet.page:16
-#: C/print-differentsize.page:15 C/printing.page:17 C/print-order.page:16
+#: C/formats.page:18 C/forms.page:15 C/forms-saving.page:23
+#: C/invert-colors.page:23 C/noprint.page:14 C/openerror.page:17
+#: C/presentations.page:20 C/print-2sided.page:16 C/print-booklet.page:16
+#: C/print-differentsize.page:15 C/printing.page:22 C/print-order.page:16
 #: C/print-select.page:15 C/reload.page:18 C/shortcuts.page:19
 #: C/singlesided-13-16pages.page:16 C/singlesided-17-20pages.page:16
 #: C/singlesided-3-4pages.page:16 C/singlesided-5-8pages.page:16
@@ -404,7 +404,7 @@ msgstr ""
 "visionneur de PDF <em>qui prennent en charge les annotations</em> :"
 
 #. (itstool) path: item/p
-#: C/annotations-save.page:23 C/forms-saving.page:33
+#: C/annotations-save.page:23
 msgid "<guiseq><gui>File</gui><gui>Save a copy</gui></guiseq>"
 msgstr "<guiseq><gui>Fichier</gui><gui>Enregistrer une copie</gui></guiseq>"
 
@@ -658,11 +658,11 @@ msgstr ""
 "à la page désirée et dans divers modes."
 
 #. (itstool) path: credit/name
-#: C/commandline.page:11 C/convertpdf.page:11 C/convertPostScript.page:11
-#: C/convertSVG.page:11 C/editing.page:11 C/finding.page:11 C/formats.page:14
-#: C/index.page:14 C/invert-colors.page:14 C/movingaround.page:11
-#: C/noprint.page:10 C/password.page:11 C/presentations.page:11
-#: C/print-2sided.page:12 C/print-differentsize.page:11 C/printing.page:13
+#: C/commandline.page:11 C/convertpdf.page:13 C/convertPostScript.page:13
+#: C/convertSVG.page:12 C/editing.page:11 C/finding.page:11 C/formats.page:14
+#: C/index.page:14 C/invert-colors.page:15 C/movingaround.page:12
+#: C/noprint.page:10 C/password.page:11 C/presentations.page:12
+#: C/print-2sided.page:12 C/print-differentsize.page:11 C/printing.page:14
 #: C/print-order.page:12 C/print-select.page:11 C/reload.page:14
 #: C/shortcuts.page:11 C/textselection.page:11
 msgid "Phil Bull"
@@ -792,32 +792,39 @@ msgid "You can convert a document to PDF by \"printing\" it to a file."
 msgstr ""
 "Vous pouvez convertir un document en PDF en « l'imprimant » dans un fichier."
 
+#. (itstool) path: credit/name
+#: C/convertpdf.page:17 C/convertPostScript.page:17 C/convertSVG.page:16
+#: C/finding.page:15 C/forms-saving.page:19 C/invert-colors.page:19
+#: C/movingaround.page:16 C/presentations.page:16 C/printing.page:18
+msgid "Anna Philips"
+msgstr "Anna Philips"
+
 #. (itstool) path: page/title
-#: C/convertpdf.page:20
+#: C/convertpdf.page:26
 msgid "Converting a document to PDF"
 msgstr "Conversion d'un document en PDF"
 
 #. (itstool) path: page/p
-#: C/convertpdf.page:22
+#: C/convertpdf.page:28
 msgid ""
 "You can convert documents of the following format types into PDF format:"
 msgstr ""
 "Vous pouvez convertir des documents des types de format suivants en PDF :"
 
 #. (itstool) path: item/p
-#: C/convertpdf.page:26 C/formats.page:30 C/presentations.page:63
-#: C/printing.page:38
+#: C/convertpdf.page:32 C/formats.page:30 C/presentations.page:69
+#: C/printing.page:49
 msgid "Device Independent file format (.dvi)"
 msgstr "Format de fichier Device Independent (.dvi)"
 
 #. (itstool) path: item/p
-#: C/convertpdf.page:27 C/formats.page:34 C/presentations.page:67
-#: C/printing.page:41
+#: C/convertpdf.page:33 C/formats.page:34 C/presentations.page:73
+#: C/printing.page:52
 msgid "PostScript (.ps)"
 msgstr "PostScript (.ps)"
 
 #. (itstool) path: page/p
-#: C/convertpdf.page:29
+#: C/convertpdf.page:35
 msgid ""
 "This works by opening the file in <app>Document Viewer</app> and \"printing"
 "\" the document as a PDF file."
@@ -826,17 +833,18 @@ msgstr ""
 "« d'imprimer » le document en tant que fichier PDF."
 
 #. (itstool) path: item/p
-#: C/convertpdf.page:34 C/convertPostScript.page:35 C/convertSVG.page:32
-#: C/forms-saving.page:50
+#: C/convertpdf.page:40 C/forms-saving.page:56
 msgid ""
-"Click <guiseq><gui>File</gui><gui>Print</gui></guiseq> and go to the "
-"<gui>General</gui> tab."
+"Click the <gui>File options</gui> menu in the top right corner and select "
+"<gui>Print</gui> or press <keyseq><key>Ctrl</key><key>P</key></keyseq> on "
+"your keyboard."
 msgstr ""
-"Cliquez sur <guiseq><gui>Fichier</gui><gui>Imprimer</gui></guiseq> et allez "
-"dans l'onglet <gui>Général</gui>."
+"Ouvrez le menu <gui>Options du fichier</gui> en haut à droite et "
+"cliquez sur <gui>Imprimer</gui>, ou faites le raccourci <keyseq><key>Ctrl</"
+"key><key>P</key></keyseq> sur votre clavier."
 
 #. (itstool) path: item/p
-#: C/convertpdf.page:40 C/forms-saving.page:56
+#: C/convertpdf.page:45 C/forms-saving.page:61
 msgid ""
 "Select <gui>Print to File</gui> and choose PDF as the <gui>Output format</"
 "gui>."
@@ -845,7 +853,7 @@ msgstr ""
 "<gui>Format de sortie</gui>."
 
 #. (itstool) path: item/p
-#: C/convertpdf.page:46
+#: C/convertpdf.page:51
 msgid ""
 "Choose a name and folder in which to save the file, then click <gui>Print</"
 "gui>. The PDF will be saved in the folder you chose."
@@ -855,7 +863,7 @@ msgstr ""
 "sélectionné."
 
 #. (itstool) path: note/p
-#: C/convertpdf.page:53
+#: C/convertpdf.page:58
 msgid ""
 "You can't select text in PostScript or .dvi files, but you usually can do "
 "this in PDF files. Converting .dvi or PostScript files to PDF will not make "
@@ -881,12 +889,12 @@ msgid "You can convert a document to PostScript."
 msgstr "Vous pouvez convertir un document en PostScript."
 
 #. (itstool) path: page/title
-#: C/convertPostScript.page:20
+#: C/convertPostScript.page:26
 msgid "Converting a document to PostScript"
 msgstr "Conversion d'un document en PostScript"
 
 #. (itstool) path: page/p
-#: C/convertPostScript.page:22
+#: C/convertPostScript.page:28
 msgid ""
 "You can convert documents of the following format types to PostScript files:"
 msgstr ""
@@ -894,24 +902,24 @@ msgstr ""
 "PostScript :"
 
 #. (itstool) path: item/p
-#: C/convertPostScript.page:26 C/formats.page:31 C/presentations.page:64
-#: C/printing.page:39
+#: C/convertPostScript.page:32 C/formats.page:31 C/presentations.page:70
+#: C/printing.page:50
 msgid "DjVu (.djvu, .djv)"
 msgstr "DjVu (.djvu, .djv)"
 
 #. (itstool) path: item/p
-#: C/convertPostScript.page:27 C/convertSVG.page:25 C/formats.page:33
-#: C/presentations.page:66 C/printing.page:40
+#: C/convertPostScript.page:33 C/convertSVG.page:30 C/formats.page:33
+#: C/presentations.page:72 C/printing.page:51
 msgid "Portable Document Format (.pdf)"
 msgstr "Portable Document Format (.pdf)"
 
 #. (itstool) path: item/p
-#: C/convertPostScript.page:28 C/formats.page:36 C/printing.page:42
+#: C/convertPostScript.page:34 C/formats.page:36 C/printing.page:53
 msgid "Tagged Image File Format (.tiff, .tif)"
 msgstr "Tagged Image File Format (.tiff, .tif)"
 
 #. (itstool) path: page/p
-#: C/convertPostScript.page:30
+#: C/convertPostScript.page:36
 msgid ""
 "This works by opening the file in <app>Document Viewer</app> and \"printing"
 "\" the document as a PostScript file."
@@ -922,6 +930,18 @@ msgstr ""
 #. (itstool) path: item/p
 #: C/convertPostScript.page:41
 msgid ""
+"Click the <gui>File options</gui> menu in the top right corner and select "
+"<gui>Print</gui> or press <keyseq><key>Ctrl</key><key>P</key></keyseq> and "
+"go to the <gui>General</gui> tab."
+msgstr ""
+"Ouvrez le menu <gui>Options du fichier</gui> en haut à droite et "
+"cliquez sur <gui>Imprimer</gui>, ou faites le raccourci <keyseq><key>Ctrl</"
+"key><key>P</key></keyseq> sur votre clavier et allez à l'onglet "
+"<gui>Général</gui>."
+
+#. (itstool) path: item/p
+#: C/convertPostScript.page:47
+msgid ""
 "Select <gui>Print to File</gui> and choose PostScript as the <gui>Output "
 "format</gui>."
 msgstr ""
@@ -929,7 +949,7 @@ msgstr ""
 "comme <gui>Format de sortie</gui>."
 
 #. (itstool) path: item/p
-#: C/convertPostScript.page:47
+#: C/convertPostScript.page:53
 msgid ""
 "Choose a name and folder in which to save the file, then click <gui>Print</"
 "gui>. The PostScript file will be saved in the folder you chose."
@@ -945,19 +965,19 @@ msgstr ""
 "Vous pouvez convertir un document en SVG en « l'imprimant » dans un fichier."
 
 #. (itstool) path: page/title
-#: C/convertSVG.page:20
+#: C/convertSVG.page:25
 msgid "Converting a document to SVG"
 msgstr "Conversion d'un document en SVG"
 
 #. (itstool) path: page/p
-#: C/convertSVG.page:21
+#: C/convertSVG.page:26
 msgid "You can convert documents of the following format types to SVG files:"
 msgstr ""
 "Vous pouvez convertir des documents des types de format suivants en fichiers "
 "SVG :"
 
 #. (itstool) path: page/p
-#: C/convertSVG.page:27
+#: C/convertSVG.page:32
 msgid ""
 "This works by opening the file in <app>Document Viewer</app> and \"printing"
 "\" the document as an SVG file."
@@ -966,7 +986,17 @@ msgstr ""
 "« d'imprimer » le document en tant que fichier SVG."
 
 #. (itstool) path: item/p
-#: C/convertSVG.page:38
+#: C/convertSVG.page:37 C/printing.page:33
+msgid ""
+"Click the <gui>File options</gui> menu in the top right corner and select "
+"<gui>Print</gui> or press <keyseq><key>Ctrl</key><key>P</key></keyseq>."
+msgstr ""
+"Ouvrez <gui>Options du fichier</gui> dans le menu en haut à droite et "
+"cliquez sur <gui>Imprimer</gui>, ou faites le raccourci <keyseq><key>Ctrl</"
+"key><key>P</key></keyseq>."
+
+#. (itstool) path: item/p
+#: C/convertSVG.page:42
 msgid ""
 "Select <gui>Print to File</gui> and choose SVG as the <gui>Output format</"
 "gui>."
@@ -975,7 +1005,7 @@ msgstr ""
 "<gui>Format de sortie</gui>."
 
 #. (itstool) path: item/p
-#: C/convertSVG.page:44
+#: C/convertSVG.page:48
 msgid ""
 "Choose a name and folder in which to save the file, then click <gui>Print</"
 "gui>. The SVG file will be saved in the folder you chose."
@@ -1231,7 +1261,7 @@ msgstr ""
 #: C/duplex-7pages.page:56 C/duplex-7pages.page:83 C/duplex-8pages.page:54
 #: C/duplex-9pages.page:52 C/duplex-9pages.page:75 C/duplex-9pages.page:94
 #: C/duplex-9pages.page:114 C/duplex-9pages.page:126 C/duplex-npages.page:82
-#: C/printing.page:29 C/singlesided-13-16pages.page:82
+#: C/printing.page:40 C/singlesided-13-16pages.page:82
 #: C/singlesided-13-16pages.page:105 C/singlesided-17-20pages.page:80
 #: C/singlesided-17-20pages.page:103 C/singlesided-3-4pages.page:79
 #: C/singlesided-3-4pages.page:102 C/singlesided-5-8pages.page:79
@@ -2019,28 +2049,27 @@ msgstr ""
 "exemple."
 
 #. (itstool) path: info/desc
-#: C/finding.page:17
+#: C/finding.page:21
 msgid "Search for a word or phrase in a document."
 msgstr "Rechercher un mot ou une phrase dans un document."
 
 #. (itstool) path: page/title
-#: C/finding.page:20
+#: C/finding.page:24
 msgid "Find text in a document"
 msgstr "Rechercher du texte dans un document"
 
 #. (itstool) path: item/p
-#: C/finding.page:24
+#: C/finding.page:28
 msgid ""
-"Click <guiseq><gui>Edit</gui><gui>Find</gui></guiseq> or press "
-"<keyseq><key>Ctrl</key><key>F</key></keyseq> or <key>/</key> to display a "
-"search box."
+"Click the <gui>Magnifying glass button</gui> or press <keyseq><key>Ctrl</"
+"key><key>F</key></keyseq> or <key>/</key> to display a search box."
 msgstr ""
-"Cliquez sur <guiseq><gui>Édition</gui><gui>Rechercher</gui></guiseq> ou "
-"appuyez sur <keyseq><key>Ctrl</key><key>F</key></keyseq> ou sur la touche "
-"<key>/</key> pour afficher une boîte de recherche."
+"Cliquez sur la <gui>Loupe</gui> ou appuyez sur <keyseq><key>Ctrl</"
+"key><key>F</key></keyseq> ou sur la touche <key>/</key> pour afficher une "
+"boîte de recherche."
 
 #. (itstool) path: item/p
-#: C/finding.page:29
+#: C/finding.page:33
 msgid ""
 "Type the word or phrase you want to look for and a search will start "
 "automatically."
@@ -2049,23 +2078,24 @@ msgstr ""
 "automatiquement."
 
 #. (itstool) path: item/p
-#: C/finding.page:33
+#: C/finding.page:37
 msgid ""
-"The <gui>Find Previous</gui> and <gui>Find Next</gui> buttons let you skip "
-"from one search result to another."
+"The <gui>∧</gui> and <gui>∨</gui> buttons let you skip from one search "
+"result to another."
 msgstr ""
-"Les boutons <gui>Rechercher le précédent</gui> et <gui>Rechercher le "
-"suivant</gui> vous permettent de vous déplacer d'un résultat de recherche à "
-"un autre."
+"Les boutons <gui>∧</gui> et <gui>∨</gui> vous permettent de vous déplacer "
+"d'un résultat de recherche à un autre."
 
 #. (itstool) path: item/p
-#: C/finding.page:37
-msgid "To hide the search bar, click anywhere in the document."
+#: C/finding.page:41
+msgid ""
+"To hide the search bar, click the <gui>Magnifying glass button</gui> again."
 msgstr ""
-"Pour masquer la barre de recherche, cliquez n'importe où dans le document."
+"Pour masquer la barre de recherche, cliquez à nouveau sur la <gui>Loupe</"
+"gui>."
 
 #. (itstool) path: page/p
-#: C/finding.page:41
+#: C/finding.page:46
 msgid ""
 "If the word or phrase you searched is not present in the entire document, "
 "the message will say <em>Not found</em>. However, if it appears in the "
@@ -2081,7 +2111,7 @@ msgstr ""
 "document."
 
 #. (itstool) path: note/p
-#: C/finding.page:48
+#: C/finding.page:53
 msgid ""
 "Only PDF documents are searchable. Some PDF documents are not searchable "
 "because their text is encoded in the document as an image."
@@ -2107,12 +2137,12 @@ msgstr ""
 "Le <app>Visionneur de documents</app> prend en charge les formats suivants :"
 
 #. (itstool) path: item/p
-#: C/formats.page:29 C/presentations.page:62
+#: C/formats.page:29 C/presentations.page:68
 msgid "Comic Book Archive (.cbr and .cbz)"
 msgstr "Archive Comic Book (.cbr et .cbz)"
 
 #. (itstool) path: item/p
-#: C/formats.page:32 C/presentations.page:65
+#: C/formats.page:32 C/presentations.page:71
 msgid "OpenOffice Presentation (.odp)"
 msgstr "Présentation OpenOffice (.odp)"
 
@@ -2206,12 +2236,12 @@ msgstr ""
 "informations que vous avez saisies seront perdues."
 
 #. (itstool) path: page/title
-#: C/forms-saving.page:21
+#: C/forms-saving.page:27
 msgid "Saving a form"
 msgstr "Enregistrement d'un formulaire"
 
 #. (itstool) path: page/p
-#: C/forms-saving.page:23
+#: C/forms-saving.page:29
 msgid ""
 "After you have filled it out, you may wish to save your form in one of two "
 "ways:"
@@ -2220,7 +2250,7 @@ msgstr ""
 "des deux façons suivantes :"
 
 #. (itstool) path: item/p
-#: C/forms-saving.page:28
+#: C/forms-saving.page:34
 msgid ""
 "To save a copy that can be edited in the future (form remains interactive):"
 msgstr ""
@@ -2228,7 +2258,18 @@ msgstr ""
 "formulaire restant interactif) :"
 
 #. (itstool) path: item/p
-#: C/forms-saving.page:38
+#: C/forms-saving.page:39
+msgid ""
+"Click the <gui>File options</gui> menu in the top right corner and select "
+"<gui>Save a copy</gui> or press <keyseq><key>Ctrl</key><key>S</key></keyseq> "
+"on your keyboard."
+msgstr ""
+"Ouvrez le menu <gui>Options du fichier</gui> en haut à droite et "
+"cliquez sur <gui>Enregistrer une copie</gui>, ou faites le raccourci "
+"<keyseq><key>Ctrl</key><key>S</key></keyseq> sur votre clavier."
+
+#. (itstool) path: item/p
+#: C/forms-saving.page:44
 msgid ""
 "Choose a name and folder to save the file in, then click <gui>Save</gui>. "
 "The PDF will be saved in the folder you chose."
@@ -2238,7 +2279,7 @@ msgstr ""
 "choisi."
 
 #. (itstool) path: item/p
-#: C/forms-saving.page:45
+#: C/forms-saving.page:51
 msgid ""
 "To save a copy that can no longer be edited (for example, to e-mail the form "
 "or submit it on-line):"
@@ -2247,7 +2288,7 @@ msgstr ""
 "envoyer le formulaire par courriel ou le soumettre en ligne) :"
 
 #. (itstool) path: item/p
-#: C/forms-saving.page:62
+#: C/forms-saving.page:67
 msgid ""
 "Choose a name and folder to save the file in, then click <gui>Print</gui>. "
 "The PDF will be saved in the folder you chose."
@@ -2257,7 +2298,7 @@ msgstr ""
 "choisi."
 
 #. (itstool) path: note/p
-#: C/forms-saving.page:72
+#: C/forms-saving.page:77
 msgid "Copies of encrypted files can't be saved or printed."
 msgstr ""
 "Il n'est pas possible d'enregistrer ou d'imprimer des fichiers chiffrés."
@@ -2381,21 +2422,23 @@ msgid "Inverting the colors can make it easier to read some text."
 msgstr "Inverser les couleurs peut faciliter la lecture de certain texte."
 
 #. (itstool) path: page/title
-#: C/invert-colors.page:23
+#: C/invert-colors.page:28
 msgid "Invert colors on a page"
 msgstr "Inversion des couleurs de la page"
 
 #. (itstool) path: page/p
-#: C/invert-colors.page:26
+#: C/invert-colors.page:31
 msgid ""
-"To swap black for white, white for black, and so on, click "
-"<guiseq><gui>View</gui><gui>Inverted Colors</gui></guiseq>."
+"To swap black for white, white for black, and so on, click the <gui>View "
+"options</gui> button in the top-right corner and select <gui>Inverted "
+"Colors</gui>."
 msgstr ""
-"Pour échanger les couleurs blanc et noir, etc., cliquez sur "
-"<guiseq><gui>Affichage</gui><gui>Couleurs inversées</gui></guiseq>."
+"Pour changer le blanc en noir et vice-versa, ouvrez <gui>Options "
+"d'affichage</gui> dans le menu en haut à droite et cliquez sur <gui>Couleurs "
+"inversées</gui>."
 
 #. (itstool) path: note/p
-#: C/invert-colors.page:32
+#: C/invert-colors.page:37
 msgid ""
 "Doing this can make it easier to read text, especially in the case of "
 "certain kinds of visual impairment."
@@ -2505,7 +2548,7 @@ msgstr ""
 "des Conditions Initiales à l'Identique 3.0 Unported."
 
 #. (itstool) path: license/p
-#: C/legal.xml:3
+#: C/legal.xml:3 C/legal-unported.xml:4
 msgid "This work is licensed under a <_:link-1/>."
 msgstr "Cette œuvre est distribuée sous <_:link-1/>."
 
@@ -2520,28 +2563,37 @@ msgstr ""
 "modifier et distribuer les exemples de code contenus dans ce document selon "
 "vos propres termes, sans restriction."
 
+#. (itstool) path: p/link
+#: C/legal-unported.xml:5
+#, fuzzy
+#| msgid "Creative Commons Attribution-Share Alike 3.0 United States License"
+msgid "Creative Commons Attribution-ShareAlike 3.0 Unported License"
+msgstr ""
+"Cette œuvre est distribuée sous licence Creative Commons Paternité-Partage "
+"des Conditions Initiales à l'Identique 3.0 Unported."
+
 #. (itstool) path: media
 #. This is a reference to an external file such as an image or video. When
 #. the file changes, the md5 hash will change to let you know you need to
 #. update your localized copy. The msgstr is not used at all. Set it to
 #. whatever you like once you have updated your copy of the file.
-#: C/movingaround.page:147
+#: C/movingaround.page:179
 msgctxt "_"
 msgid "external ref='figures/zoom.png' md5='561963b44d8e90a2a8ac409b8e35aee7'"
 msgstr "external ref='figures/zoom.png' md5='561963b44d8e90a2a8ac409b8e35aee7'"
 
 #. (itstool) path: info/desc
-#: C/movingaround.page:17
+#: C/movingaround.page:22
 msgid "Navigating, scrolling and zooming."
 msgstr "Parcourir, faire défiler et zoomer."
 
 #. (itstool) path: page/title
-#: C/movingaround.page:20
+#: C/movingaround.page:25
 msgid "Moving around a document"
 msgstr "Déplacement dans un document"
 
 #. (itstool) path: page/p
-#: C/movingaround.page:22
+#: C/movingaround.page:27
 msgid ""
 "You can move around each page of a document by any of the following methods:"
 msgstr ""
@@ -2549,7 +2601,7 @@ msgstr ""
 "des méthodes suivantes :"
 
 #. (itstool) path: item/p
-#: C/movingaround.page:27
+#: C/movingaround.page:32
 msgid ""
 "Scrolling up and down using the mouse wheel. To move around a page just by "
 "moving the mouse:"
@@ -2558,14 +2610,14 @@ msgstr ""
 "souris. Pour se déplacer sur une page en utilisant seulement la souris :"
 
 #. (itstool) path: item/p
-#: C/movingaround.page:32
+#: C/movingaround.page:36
 msgid "Right-click the page and select <gui>Autoscroll</gui>."
 msgstr ""
 "Faites un clic droit sur la page et sélectionnez <gui>Défilement "
 "automatique</gui>."
 
 #. (itstool) path: item/p
-#: C/movingaround.page:35
+#: C/movingaround.page:39
 msgid ""
 "Move the mouse pointer towards the bottom of the window to scroll down; it "
 "will scroll faster depending on how far down the window you go."
@@ -2575,19 +2627,19 @@ msgstr ""
 "distance parcourue par le pointeur dans la fenêtre."
 
 #. (itstool) path: item/p
-#: C/movingaround.page:39
+#: C/movingaround.page:44
 msgid "To stop autoscrolling, click anywhere in the document."
 msgstr ""
 "Pour arrêter le défilement automatique, cliquez n'importe où dans le "
 "document."
 
 #. (itstool) path: item/p
-#: C/movingaround.page:45
+#: C/movingaround.page:49
 msgid "Using the scroll bar on the document window."
 msgstr "En utilisant la barre de défilement de la fenêtre du document."
 
 #. (itstool) path: item/p
-#: C/movingaround.page:50
+#: C/movingaround.page:52
 msgid "Using the up and down arrow keys of your keyboard."
 msgstr "En utilisant les touches fléchées haut et bas du clavier."
 
@@ -2601,7 +2653,7 @@ msgstr ""
 "Pour faire cela :"
 
 #. (itstool) path: item/p
-#: C/movingaround.page:61
+#: C/movingaround.page:59
 msgid ""
 "Move the mouse pointer over the page and hold down the middle mouse button "
 "to drag it around."
@@ -2610,7 +2662,7 @@ msgstr ""
 "bouton central de la souris pour la déplacer."
 
 #. (itstool) path: item/p
-#: C/movingaround.page:66
+#: C/movingaround.page:63
 msgid ""
 "If you don't have a middle mouse button, hold down the left and right mouse "
 "buttons at the same time, then drag."
@@ -2619,12 +2671,12 @@ msgstr ""
 "et droite en même temps puis faites glisser."
 
 #. (itstool) path: section/title
-#: C/movingaround.page:75
+#: C/movingaround.page:71
 msgid "Flipping between pages"
 msgstr "Changement de pages"
 
 #. (itstool) path: section/p
-#: C/movingaround.page:77
+#: C/movingaround.page:73
 msgid ""
 "You can move between pages of a document using one of the following methods:"
 msgstr ""
@@ -2632,31 +2684,16 @@ msgstr ""
 "méthodes suivantes :"
 
 #. (itstool) path: item/p
-#: C/movingaround.page:80
+#: C/movingaround.page:78
 msgid ""
-"Click the <gui>Previous</gui> or <gui>Next</gui> buttons on the <link xref="
+"Click the <gui>&lt;</gui> or <gui>&gt;</gui> buttons on the <link xref="
 "\"toolbar\">toolbar</link>."
 msgstr ""
-"Cliquez sur les boutons <gui>Précédente</gui> ou <gui>Suivante</gui> de la "
-"<link xref=\"toolbar\">barre d'outils</link>."
+"Cliquez sur les boutons <gui>&lt;</gui> ou <gui>&gt;</gui> de la <link xref="
+"\"toolbar\">barre d'outils</link>."
 
 #. (itstool) path: item/p
 #: C/movingaround.page:82
-msgid "Use the Go Menu:"
-msgstr "Utilisez le menu Aller à :"
-
-#. (itstool) path: item/p
-#: C/movingaround.page:84
-msgid "<guiseq><gui>Go</gui><gui>Next Page</gui></guiseq>"
-msgstr "<guiseq><gui>Aller à</gui><gui>Page suivante</gui></guiseq>"
-
-#. (itstool) path: item/p
-#: C/movingaround.page:85
-msgid "<guiseq><gui>Go</gui><gui>Previous Page</gui></guiseq>"
-msgstr "<guiseq><gui>Aller à</gui><gui>Page précédente</gui></guiseq>"
-
-#. (itstool) path: item/p
-#: C/movingaround.page:88
 msgid ""
 "Press the <keyseq><key>Ctrl</key><key>Page Up</key></keyseq> or "
 "<keyseq><key>Ctrl</key><key>Page Down</key></keyseq> buttons on the keyboard."
@@ -2665,46 +2702,59 @@ msgstr ""
 "ou <keyseq><key>Ctrl</key><key>Page bas</key></keyseq> du clavier."
 
 #. (itstool) path: item/p
-#: C/movingaround.page:90
+#: C/movingaround.page:87
 msgid "To go to a specific page:"
 msgstr "Pour aller à une page précise :"
 
 #. (itstool) path: item/p
-#: C/movingaround.page:92
+#: C/movingaround.page:90
 msgid ""
-"Type a page number in the 'page select' tool on the <link xref=\"toolbar"
-"\">toolbar</link> and press <key>Enter</key>."
+"Type a page number in <gui style=\"input\">Select Page</gui> on the <link "
+"xref=\"toolbar\">toolbar</link> and press <key>Enter</key>."
 msgstr ""
-"Saisissez un numéro de page dans l'outil « Sélectionne la page » de la <link "
-"xref=\"toolbar\">barre d'outils</link> et appuyez sur <key>Entrée</key>."
+"Saisissez un numéro de page dans <gui style=\"input\">Sélectionne la page</gui> "
+"dans la <link xref=\"toolbar\">barre d'outils</link> et appuyez sur "
+"<key>Entrée</key>."
 
 #. (itstool) path: item/p
 #: C/movingaround.page:94
+msgid ""
+"If you want to see the previously visited pages press <gui style=\"button"
+"\">&lt;</gui> or <gui style=\"button\">&gt;</gui> on the toolbar."
+msgstr ""
+"Si vous souhaitez voir les pages précédemment visitées, appuyez sur <gui "
+"style=\"button\">&lt;</gui> ou <gui style=\"button\">&gt;</gui> dans la "
+"barre d'outils."
+
+#. (itstool) path: item/p
+#: C/movingaround.page:99
 msgid "If you want to go to the beginning or the end of the document:"
 msgstr "Si vous voulez aller au début ou à la fin du document :"
 
 #. (itstool) path: item/p
-#: C/movingaround.page:96
+#: C/movingaround.page:102
 msgid ""
-"Click <guiseq><gui>Go</gui><gui>First Page</gui></guiseq>. You can also "
-"press <keyseq><key>Ctrl</key><key>Home</key></keyseq> on your keyboard."
+"Click the <gui>File options</gui> menu in the top right corner and select "
+"<gui>First Page</gui>. You can also press <keyseq><key>Ctrl</key><key>Home</"
+"key></keyseq> on your keyboard."
 msgstr ""
-"Cliquez sur <guiseq><gui>Aller à</gui><gui>Première page</gui></guiseq> ou "
-"appuyez sur les touches <keyseq><key>Ctrl</key><key>Origine</key></keyseq> "
-"de votre clavier."
+"Ouvrez le menu <gui>Options du fichier</gui> en haut à droite et "
+"cliquez sur <gui>Première page</gui>, ou appuyez sur les touches "
+"<keyseq><key>Ctrl</key><key>Origine</key></keyseq> de votre clavier."
 
 #. (itstool) path: item/p
-#: C/movingaround.page:97
+#: C/movingaround.page:108
 msgid ""
-"Click <guiseq><gui>Go</gui><gui>Last Page</gui></guiseq> or press "
-"<keyseq><key>Ctrl</key><key>End</key></keyseq> on your keyboard."
+"Click the <gui>File options</gui> menu in the top right corner and select "
+"<gui>Last Page</gui> or press <keyseq><key>Ctrl</key><key>End</key></keyseq> "
+"on your keyboard."
 msgstr ""
-"Cliquez sur <guiseq><gui>Aller à</gui><gui>Dernière page</gui></guiseq> ou "
-"appuyez sur les touches <keyseq><key>Ctrl</key><key>Fin</key></keyseq> de "
-"votre clavier."
+"Ouvrez le menu <gui>Options du fichier</gui> en haut à droite et "
+"cliquez sur <gui>Dernière page</gui>, ou appuyez sur les touches "
+"<keyseq><key>Ctrl</key><key>Fin</key></keyseq> de votre clavier."
 
 #. (itstool) path: item/p
-#: C/movingaround.page:100
+#: C/movingaround.page:118
 msgid ""
 "To move ten pages at a time, press <keyseq><key>Shift</key><key>Page Up</"
 "key></keyseq> or <keyseq><key>Shift</key><key>Page Down</key></keyseq>."
@@ -2714,42 +2764,43 @@ msgstr ""
 "key></keyseq>."
 
 #. (itstool) path: note/p
-#: C/movingaround.page:106
+#: C/movingaround.page:122
 msgid ""
 "You can only move around one page at a time, by default. If you want to move "
-"between pages just by scrolling or dragging, click <guiseq><gui>View</"
-"gui><gui>Continuous</gui></guiseq>."
+"between pages just by scrolling or dragging, click the <gui>View options</"
+"gui> button in the top-right corner and select <gui>Continuous</gui>."
 msgstr ""
 "Par défaut, vous ne pouvez vous déplacer que sur une page à la fois. Si vous "
-"voulez vous déplacer parmi les pages juste par défilement ou en les faisant "
-"glisser, cliquez sur <guiseq><gui>Affichage</gui><gui>Continu</gui></guiseq>."
+"voulez vous déplacer parmi les pages juste par défilement ou par glissement, "
+"cliquez sur le bouton <gui>Options d'affichage</gui> en haut à droite, puis sur "
+"<gui>Continu</gui></guiseq>."
 
 #. (itstool) path: section/title
-#: C/movingaround.page:117
+#: C/movingaround.page:133
 msgid "Navigating with a page list or table of contents"
 msgstr "Navigation avec une liste de pages ou une table des matières"
 
 #. (itstool) path: section/p
-#: C/movingaround.page:119
+#: C/movingaround.page:135
 msgid ""
-"To make the side pane visible click <guiseq><gui>View</gui><gui>Side Pane</"
-"gui></guiseq> on the toolbar, or press <key>F9</key> on the keyboard. You "
-"should see a preview of all of the pages in the document."
+"To make the side pane visible <gui>View options</gui> button in the top-"
+"right corner and select<gui>Side Pane</gui>, or press <key>F9</key> on the "
+"keyboard. You should see a preview of all of the pages in the document."
 msgstr ""
-"Pour rendre le panneau latéral visible, cliquez sur <guiseq><gui>Affichage</"
-"gui><gui>Panneau latéral</gui></guiseq> dans la barre de menus ou appuyez "
-"sur la touche <key>F9</key> du clavier. Vous devriez voir un aperçu de "
-"toutes les pages du document."
+"Pour ouvrir le panneau latéral, cliquez sur le bouton <gui>Options d'affichage</gui> "
+"en haut à droite, puis sur <gui>Panneau latéral</gui></guiseq> ou appuyez "
+"sur la touche <key>F9</key> du clavier. Un aperçu de toutes les pages du "
+"document s'affiche."
 
 #. (itstool) path: section/p
-#: C/movingaround.page:123
+#: C/movingaround.page:140
 msgid "You can move between pages by clicking on them in the side pane."
 msgstr ""
 "Vous pouvez vous déplacer parmi les pages en cliquant dessus dans le panneau "
 "latéral."
 
 #. (itstool) path: note/p
-#: C/movingaround.page:126
+#: C/movingaround.page:143
 msgid ""
 "Some documents have an index or table of contents, which you can display in "
 "the side pane. Click the drop-down list at the top of the side pane and "
@@ -2760,7 +2811,7 @@ msgstr ""
 "haut du panneau latéral et sélectionnez <gui>Sommaire</gui> pour l'afficher."
 
 #. (itstool) path: note/p
-#: C/movingaround.page:130
+#: C/movingaround.page:147
 msgid ""
 "Most documents don't use this feature, so you won't be able to view their "
 "index in the side pane."
@@ -2769,44 +2820,46 @@ msgstr ""
 "serez pas capable d'afficher leur sommaire dans le panneau latéral."
 
 #. (itstool) path: section/title
-#: C/movingaround.page:137
+#: C/movingaround.page:155
 msgid "Zooming in and out"
 msgstr "Zoom avant ou arrière"
 
 #. (itstool) path: item/p
-#: C/movingaround.page:139
+#: C/movingaround.page:159
 msgid ""
-"Click <guiseq><gui>View</gui><gui>Zoom In</gui></guiseq> or use the keyboard "
-"shortcuts <keyseq><key>Ctrl</key><key>+</key></keyseq> to zoom in."
+"Click the <gui>View options</gui> button in the top-right corner and select "
+"<gui>Zoom In</gui> or use the keyboard shortcuts <keyseq><key>Ctrl</key><key>"
+"+</key></keyseq> to zoom in."
 msgstr ""
-"Cliquez sur <guiseq><gui>Affichage</gui><gui>Zoom avant</gui></guiseq> ou "
-"utilisez le raccourci clavier <keyseq><key>Ctrl</key><key>+</key></keyseq> "
-"pour zoomer en avant."
+"Cliquez sur le bouton <gui>Options d'affichage</gui> en haut à droite et "
+"cliquez sur <gui>Zoom avant</gui>, ou utilisez le raccourci clavier "
+"<keyseq><key>Ctrl</key><key>+</key></keyseq> pour agrandir."
 
 #. (itstool) path: item/p
-#: C/movingaround.page:140
+#: C/movingaround.page:164
 msgid ""
-"Click <guiseq><gui>View</gui><gui>Zoom Out</gui></guiseq> or use the "
-"keyboard shortcuts <keyseq><key>Ctrl</key><key>-</key></keyseq> to zoom out."
+"Click the <gui>View options</gui> button in the top-right corner and select "
+"<gui>Zoom Out</gui> or use the keyboard shortcuts <keyseq><key>Ctrl</"
+"key><key>-</key></keyseq> to zoom out."
 msgstr ""
-"Cliquez sur <guiseq><gui>Affichage</gui><gui>Zoom arrière</gui></guiseq> ou "
-"utilisez le raccourci clavier <keyseq><key>Ctrl</key><key>-</key></keyseq> "
-"pour zoomer en arrière."
+"Cliquez sur le bouton <gui>Options d'affichage</gui> en haut à droite et "
+"cliquez sur <gui>Zoom arrière</gui></guiseq> ou utilisez le raccourci "
+"clavier <keyseq><key>Ctrl</key><key>-</key></keyseq> pour diminuer."
 
 #. (itstool) path: section/p
-#: C/movingaround.page:143
+#: C/movingaround.page:170
 msgid "Alternatively, you can do one of the following:"
 msgstr "Vous pouvez aussi faire l'une de ces choses :"
 
 #. (itstool) path: item/p
-#: C/movingaround.page:145
+#: C/movingaround.page:174
 msgid "hold down <key>Ctrl</key> and use your mouse scroll wheel to zoom."
 msgstr ""
-"maintenez enfoncé la touche <key>Ctrl</key> et utilisez la molette de la "
+"maintenez enfoncée la touche <key>Ctrl</key> et utilisez la molette de la "
 "souris pour zoomer,"
 
 #. (itstool) path: item/p
-#: C/movingaround.page:146
+#: C/movingaround.page:177
 msgid ""
 "select desired zoom percentage from the drop down menu above the window."
 msgstr ""
@@ -2814,63 +2867,66 @@ msgstr ""
 "de la fenêtre."
 
 #. (itstool) path: note/p
-#: C/movingaround.page:151
+#: C/movingaround.page:184
 msgid ""
-"The <gui>Best Fit</gui> option will make a document page fit the whole "
+"The <gui>Fit Page</gui> option will make a document page fit the whole "
 "<em>height</em> of the window."
 msgstr ""
-"L'option <gui>Taille idéale</gui> impose à la page du document d'être de la "
-"<em>hauteur</em> de la fenêtre."
+"L'option <gui>Adapter à la page</gui> impose à la page du document d'être de "
+"la <em>hauteur</em> de la fenêtre."
 
 #. (itstool) path: note/p
-#: C/movingaround.page:153
+#: C/movingaround.page:186
 msgid ""
-"The <gui>Fit Page Width</gui> option will make a document page fill the "
-"whole <em>width</em> of the window."
+"The <gui>Fit Width</gui> option will make a document page fill the whole "
+"<em>width</em> of the window."
 msgstr ""
-"L'option <gui>Ajuster à la largeur de la page</gui> impose à la page du "
-"document d'être de la <em>largeur</em> de la fenêtre."
+"L'option <gui>Adapter à la largeur</gui> impose à la page du document d'être "
+"de la <em>largeur</em> de la fenêtre."
 
 #. (itstool) path: note/p
-#: C/movingaround.page:156
+#: C/movingaround.page:188
 msgid ""
 "If you want to see two pages at once, side by side, like in a book, click "
-"<guiseq><gui>View</gui><gui>Dual</gui></guiseq>."
+"the <gui>View options</gui> button in the top-right corner and select "
+"<gui>Dual</gui>."
 msgstr ""
 "Si vous voulez voir deux pages à la fois, côte à côte comme dans un livre, "
-"cliquez sur <guiseq><gui>Affichage</gui><gui>Pages doubles</gui></guiseq>."
+"cliquez sur le bouton <gui>Options d'affichage</gui> en haut à droite et "
+"cliquez sur <gui>Pages doubles</gui>."
 
 #. (itstool) path: section/p
-#: C/movingaround.page:161
+#: C/movingaround.page:193
 msgid "You can use the whole of your screen to view the document:"
 msgstr "Vous pouvez utiliser l'écran complet pour afficher le document :"
 
 #. (itstool) path: item/p
-#: C/movingaround.page:164
+#: C/movingaround.page:197
 msgid ""
-"Click <guiseq><gui>View</gui><gui>Fullscreen</gui></guiseq> or press "
-"<key>F11</key>."
+"Click the <gui>View options</gui> button in the top-right corner and select "
+"<gui>Fullscreen</gui> or press <key>F11</key>."
 msgstr ""
-"Cliquez sur <guiseq><gui>Affichage</gui><gui>Plein écran</gui></guiseq> ou "
-"appuyez sur <key>F11</key>."
+"Cliquez sur le bouton <gui>Options d'affichage</gui> en haut à droite et "
+"cliquez sur <gui>Plein écran</gui></guiseq>, ou appuyez sur <key>F11</key>."
 
 #. (itstool) path: item/p
-#: C/movingaround.page:165
-msgid "To exit from the full screen mode:"
+#: C/movingaround.page:201
+msgid "To exit the full screen mode:"
 msgstr "Pour quitter le mode plein écran :"
 
 #. (itstool) path: item/p
-#: C/movingaround.page:167
+#: C/movingaround.page:204
 msgid "Press <key>F11</key> or <key>Escape</key>"
 msgstr "Appuyez sur <key>F11</key> ou sur <key>Échap</key>"
 
 #. (itstool) path: item/p
-#: C/movingaround.page:168
+#: C/movingaround.page:207
 msgid ""
-"or click the <gui>Leave Fullscreen</gui> button at the top of the screen."
+"Or disable <gui>Fullscreen</gui> by clicking the <gui>View options</gui> "
+"button in the top-right corner and select <gui>Fullscreen</gui>."
 msgstr ""
-"ou cliquez sur le bouton <gui>Quitter le mode plein écran</gui> en haut de "
-"l'écran."
+"ou désactivez <gui>Plein écran</gui> en cliquant sur le bouton <gui>Options d'affichage</"
+"gui> en haut à droite et en cliquant sur <gui>Plein écran</gui>."
 
 #. (itstool) path: info/desc
 #: C/noprint.page:7
@@ -3167,46 +3223,46 @@ msgid "How to play presentations."
 msgstr "Comment faire des présentations."
 
 #. (itstool) path: page/title
-#: C/presentations.page:20
+#: C/presentations.page:25
 msgid "Presentations"
 msgstr "Présentations"
 
 #. (itstool) path: section/title
-#: C/presentations.page:22
+#: C/presentations.page:27
 msgid "Starting a presentation"
 msgstr "Démarrage d'une présentation"
 
 #. (itstool) path: section/p
-#: C/presentations.page:23
+#: C/presentations.page:28
 msgid "To start a presentation:"
 msgstr "Pour démarrer une présentation :"
 
 #. (itstool) path: item/p
-#: C/presentations.page:26
+#: C/presentations.page:31
 msgid "<link xref=\"opening\">Open a file</link>"
 msgstr "<link xref=\"opening\">Ouvrir un fichier</link>"
 
 #. (itstool) path: item/p
-#: C/presentations.page:29
+#: C/presentations.page:34
 msgid ""
-"Click <guiseq><gui>View</gui><gui>Presentation</gui></guiseq> (or press "
-"<key>F5</key>)."
+"Click the <gui>View options</gui> button in the top-right corner and select "
+"<gui>Presentation</gui> (or press <key>F5</key>)."
 msgstr ""
-"Cliquez sur <guiseq><gui>Affichage</gui><gui>Présentation</gui></guiseq> (ou "
-"appuyez sur <key>F5</key>)."
+"Cliquez sur le bouton <gui>Options d'affichage</gui> en haut à droite et "
+"cliquez sur <gui>Présentation</gui>, ou appuyez sur <key>F5</key>."
 
 #. (itstool) path: item/p
-#: C/presentations.page:30
+#: C/presentations.page:36
 msgid "The presentation will be displayed full screen."
 msgstr "La présentation sera affichée en mode plein écran."
 
 #. (itstool) path: section/title
-#: C/presentations.page:37
+#: C/presentations.page:43
 msgid "Moving through a presentation"
 msgstr "Navigation au sein de la présentation"
 
 #. (itstool) path: section/p
-#: C/presentations.page:40
+#: C/presentations.page:46
 msgid ""
 "Use the <key>spacebar</key>, <key>→</key>, <key>↓</key>, or left mouse click "
 "to go to the next slide."
@@ -3215,7 +3271,7 @@ msgstr ""
 "sur le bouton gauche de la souris pour aller à la diapositive suivante."
 
 #. (itstool) path: section/p
-#: C/presentations.page:43
+#: C/presentations.page:49
 msgid ""
 "Use the <key>←</key>, <key>↑</key> or right mouse click to go to the "
 "previous slide."
@@ -3224,7 +3280,7 @@ msgstr ""
 "souris pour aller à la diapositive précédente."
 
 #. (itstool) path: note/p
-#: C/presentations.page:47
+#: C/presentations.page:53
 msgid ""
 "You can also use the scroll wheel to move back and forth through the "
 "presentation."
@@ -3233,17 +3289,17 @@ msgstr ""
 "dans la présentation."
 
 #. (itstool) path: section/p
-#: C/presentations.page:51
+#: C/presentations.page:57
 msgid "Use <key>Esc</key> to exit the presentation."
 msgstr "Utilisez la touche <key>Échap</key> pour quitter la présentation."
 
 #. (itstool) path: section/title
-#: C/presentations.page:57
+#: C/presentations.page:63
 msgid "Supported presentation file formats"
 msgstr "Formats de fichier de présentation pris en charge"
 
 #. (itstool) path: section/p
-#: C/presentations.page:58
+#: C/presentations.page:64
 msgid "The following file formats can be used for presentations:"
 msgstr ""
 "Les formats de fichiers suivants peuvent être utilisés pour faire des "
@@ -3339,8 +3395,7 @@ msgstr ""
 "pouvez modifier le format d'impression pour le document."
 
 #. (itstool) path: item/p
-#: C/print-differentsize.page:26 C/printing.page:27 C/print-order.page:51
-#: C/print-select.page:26
+#: C/print-differentsize.page:26 C/print-order.page:51 C/print-select.page:26
 msgid "Click <guiseq><gui>File</gui><gui>Print</gui></guiseq>"
 msgstr "Cliquez sur <guiseq><gui>Fichier</gui><gui>Imprimer</gui></guiseq>"
 
@@ -3400,22 +3455,22 @@ msgstr ""
 "l'impression."
 
 #. (itstool) path: page/title
-#: C/printing.page:22
+#: C/printing.page:27
 msgid "Printing a document"
 msgstr "Impression d'un document"
 
 #. (itstool) path: item/p
-#: C/printing.page:25
+#: C/printing.page:30
 msgid "To print a document:"
 msgstr "Pour imprimer un document :"
 
 #. (itstool) path: item/p
-#: C/printing.page:28
-msgid "Choose your printer from the list"
+#: C/printing.page:38
+msgid "Choose your printer from the list."
 msgstr "Sélectionnez votre imprimante dans la liste."
 
 #. (itstool) path: item/p
-#: C/printing.page:36
+#: C/printing.page:47
 msgid "Printing is enabled for the following file formats:"
 msgstr "L'impression des formats de fichiers suivants est possible :"
 
@@ -4793,6 +4848,28 @@ msgstr ""
 "Vous pouvez aussi joindre par courriel l'équipe d'internationalisation en "
 "utilisant leur <link href=\"http://mail.gnome.org/mailman/listinfo/gnome-i18n"
 "\">liste de diffusion</link>."
+
+#~ msgid ""
+#~ "Click <guiseq><gui>File</gui><gui>Print</gui></guiseq> and go to the "
+#~ "<gui>General</gui> tab."
+#~ msgstr ""
+#~ "Cliquez sur <guiseq><gui>Fichier</gui><gui>Imprimer</gui></guiseq> et "
+#~ "allez dans l'onglet <gui>Général</gui>."
+
+#~ msgid "Use the Go Menu:"
+#~ msgstr "Utilisez le menu Aller à :"
+
+#~ msgid "<guiseq><gui>Go</gui><gui>Next Page</gui></guiseq>"
+#~ msgstr "<guiseq><gui>Aller à</gui><gui>Page suivante</gui></guiseq>"
+
+#~ msgid "<guiseq><gui>Go</gui><gui>Previous Page</gui></guiseq>"
+#~ msgstr "<guiseq><gui>Aller à</gui><gui>Page précédente</gui></guiseq>"
+
+#~ msgid ""
+#~ "or click the <gui>Leave Fullscreen</gui> button at the top of the screen."
+#~ msgstr ""
+#~ "ou cliquez sur le bouton <gui>Quitter le mode plein écran</gui> en haut "
+#~ "de l'écran."
 
 #~ msgctxt "_"
 #~ msgid ""
