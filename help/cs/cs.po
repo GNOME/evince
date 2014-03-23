@@ -9,8 +9,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: evince\n"
-"POT-Creation-Date: 2014-03-23 11:27+0000\n"
-"PO-Revision-Date: 2014-03-23 20:49+0100\n"
+"POT-Creation-Date: 2014-03-23 20:22+0000\n"
+"PO-Revision-Date: 2014-03-23 21:50+0100\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: Czech <gnome-cs-list@gnome.org>\n"
 "Language: cs\n"
@@ -412,7 +412,7 @@ msgstr ""
 "Adobe Reader s nimi samozřejmě pracovat umí."
 
 #. (itstool) path: credit/name
-#: C/bookmarks.page:17 C/opening.page:18
+#: C/bookmarks.page:17 C/finding.page:21 C/opening.page:18 C/password.page:16
 msgid "Ekaterina Gerasimova"
 msgstr "Ekaterina Gerasimova"
 
@@ -634,9 +634,9 @@ msgstr ""
 
 #. (itstool) path: credit/name
 #: C/commandline.page:11 C/convertpdf.page:13 C/convertPostScript.page:13
-#: C/convertSVG.page:12 C/editing.page:11 C/finding.page:11 C/formats.page:14
+#: C/convertSVG.page:12 C/editing.page:11 C/finding.page:13 C/formats.page:14
 #: C/index.page:14 C/invert-colors.page:15 C/movingaround.page:12
-#: C/noprint.page:10 C/password.page:11 C/presentations.page:12
+#: C/noprint.page:10 C/password.page:12 C/presentations.page:12
 #: C/print-2sided.page:12 C/print-differentsize.page:11 C/printing.page:14
 #: C/print-order.page:12 C/print-select.page:11 C/reload.page:14
 #: C/shortcuts.page:11 C/textselection.page:11
@@ -765,7 +765,7 @@ msgstr "Dokument můžete převést do PDF jeho „vytisknutím“ do souboru."
 
 #. (itstool) path: credit/name
 #: C/convertpdf.page:17 C/convertPostScript.page:17 C/convertSVG.page:16
-#: C/finding.page:15 C/forms-saving.page:19 C/invert-colors.page:19
+#: C/finding.page:17 C/forms-saving.page:19 C/invert-colors.page:19
 #: C/movingaround.page:16 C/presentations.page:16 C/printing.page:18
 msgid "Anna Philips"
 msgstr "Anna Philips"
@@ -1981,17 +1981,17 @@ msgstr ""
 "html\">pdfedit</link>."
 
 #. (itstool) path: info/desc
-#: C/finding.page:21
+#: C/finding.page:27
 msgid "Search for a word or phrase in a document."
 msgstr "Jak najít v dokumentu slovo či frázi"
 
 #. (itstool) path: page/title
-#: C/finding.page:24
+#: C/finding.page:30
 msgid "Find text in a document"
 msgstr "Hledání textu v dokumentu"
 
 #. (itstool) path: item/p
-#: C/finding.page:28
+#: C/finding.page:34
 msgid ""
 "Click the <gui>Magnifying glass button</gui> or press <keyseq><key>Ctrl</"
 "key><key>F</key></keyseq> or <key>/</key> to display a search box."
@@ -2001,47 +2001,45 @@ msgstr ""
 "pole."
 
 #. (itstool) path: item/p
-#: C/finding.page:33
+#: C/finding.page:39
 msgid ""
-"Type the word or phrase you want to look for and a search will start "
-"automatically."
+"Start typing into the search box and the search will start automatically."
 msgstr ""
-"Napište slovo nebo frázi, kterou chcete vyhledat a hledání samo započne."
+"Začněte psát do vyhledávacího pole a hledání samo započne."
 
 #. (itstool) path: item/p
-#: C/finding.page:37
+#: C/finding.page:43
 msgid ""
-"The <gui>∧</gui> and <gui>∨</gui> buttons let you skip from one search "
-"result to another."
+"Use the <gui>∧</gui> and <gui>∨</gui> buttons to move to the previous or "
+"next search result."
 msgstr ""
 "Pomocí tlačítek <gui>∧</gui> a <gui>∨</gui> můžete přecházet mezi "
 "jednotlivými výsledky hledání."
 
 #. (itstool) path: item/p
-#: C/finding.page:41
+#: C/finding.page:47
 msgid ""
-"To hide the search bar, click the <gui>Magnifying glass button</gui> again."
+"To hide the search bar, click the <gui>Magnifying glass button</gui> again "
+"or press <key>Esc</key>."
 msgstr ""
 "Lištu vyhledávání skryjete opětovným kliknutím na <gui>tlačítko s lupou</"
-"gui>."
+"gui> nebo zmáčknutím <key>Esc</key>."
 
 #. (itstool) path: page/p
-#: C/finding.page:46
+#: C/finding.page:52
 msgid ""
-"If the word or phrase you searched is not present in the entire document, "
-"the message will say <em>Not found</em>. However, if it appears in the "
-"document at least once, the message will inform you of how many times the "
-"word you searched occur on each page. This is apparent if you skip from one "
-"result to another as described above or scroll through the document."
+"If the word or phrase that you searched for is not found in the document, "
+"you will see <em>Not found</em> next to the search box. However, if it "
+"appears in the document at least once, you will be shown how many times the "
+"search result appears on the current page."
 msgstr ""
-"Pokud se hledané slovo nebo fráze nikde v dokumentu nenachází, zobrazí se "
-"zpráva <em>Nenalezeno</em>. V případě, že se v něm nachází alespoň jednou, "
-"bude vás zpráva informovat, kolikrát se hledané slovo vyskytuje na "
-"jednotlivé stránce. Projeví se to, když přeskakujete mezi jednotlivými "
-"výsledky, jak je popsáno výše, nebo se pohybujete po dokumentu."
+"Pokud se hledané slovo nebo fráze nikde v dokumentu nenajde, zobrazí se "
+"vedle vyhledávacího pole zpráva <em>Nenalezeno</em>. V případě, že se v něm "
+"nachází alespoň jednou, zobrazí se vám, kolikrát se hledané slovo vyskytuje "
+"na aktuální stránce."
 
 #. (itstool) path: note/p
-#: C/finding.page:53
+#: C/finding.page:58
 msgid ""
 "Only PDF documents are searchable. Some PDF documents are not searchable "
 "because their text is encoded in the document as an image."
@@ -2487,7 +2485,7 @@ msgstr "Creative Commons Attribution-ShareAlike 3.0 Unported License"
 #. the file changes, the md5 hash will change to let you know you need to
 #. update your localized copy. The msgstr is not used at all. Set it to
 #. whatever you like once you have updated your copy of the file.
-#: C/movingaround.page:179
+#: C/movingaround.page:180
 msgctxt "_"
 msgid "external ref='figures/zoom.png' md5='561963b44d8e90a2a8ac409b8e35aee7'"
 msgstr "external ref='figures/zoom.png' md5='561963b44d8e90a2a8ac409b8e35aee7'"
@@ -2503,7 +2501,7 @@ msgid "Moving around a document"
 msgstr "Pohyb po dokumentu"
 
 #. (itstool) path: page/p
-#: C/movingaround.page:27
+#: C/movingaround.page:28
 msgid ""
 "You can move around each page of a document by any of the following methods:"
 msgstr ""
@@ -2511,7 +2509,7 @@ msgstr ""
 "následujících způsobů:"
 
 #. (itstool) path: item/p
-#: C/movingaround.page:32
+#: C/movingaround.page:33
 msgid ""
 "Scrolling up and down using the mouse wheel. To move around a page just by "
 "moving the mouse:"
@@ -2520,14 +2518,14 @@ msgstr ""
 "pouhým pohybem myši:"
 
 #. (itstool) path: item/p
-#: C/movingaround.page:36
+#: C/movingaround.page:37
 msgid "Right-click the page and select <gui>Autoscroll</gui>."
 msgstr ""
 "Klikněte na stránku pravým tlačítkem myši a vyberte <gui>Automaticky "
 "posouvat</gui>."
 
 #. (itstool) path: item/p
-#: C/movingaround.page:39
+#: C/movingaround.page:40
 msgid ""
 "Move the mouse pointer towards the bottom of the window to scroll down; it "
 "will scroll faster depending on how far down the window you go."
@@ -2536,22 +2534,22 @@ msgstr ""
 "posouvání se mění v závislosti na tom, jak moc dolů zajedete."
 
 #. (itstool) path: item/p
-#: C/movingaround.page:44
+#: C/movingaround.page:45
 msgid "To stop autoscrolling, click anywhere in the document."
 msgstr "Pro zastavení automatického posuvu klikněte kdekoliv v dokumentu."
 
 #. (itstool) path: item/p
-#: C/movingaround.page:49
+#: C/movingaround.page:50
 msgid "Using the scroll bar on the document window."
 msgstr "Použijte posuvník okna s dokumentem."
 
 #. (itstool) path: item/p
-#: C/movingaround.page:52
+#: C/movingaround.page:53
 msgid "Using the up and down arrow keys of your keyboard."
 msgstr "Použijte šipky nahoru a dolů na své klávesnici."
 
 #. (itstool) path: item/p
-#: C/movingaround.page:55
+#: C/movingaround.page:56
 msgid ""
 "Dragging the page around with your mouse, as if you are grabbing it. To do "
 "this:"
@@ -2559,7 +2557,7 @@ msgstr ""
 "Táhněte stránku pomocí své myši, jako byste ji drželi. Dělá se to takto:"
 
 #. (itstool) path: item/p
-#: C/movingaround.page:59
+#: C/movingaround.page:60
 msgid ""
 "Move the mouse pointer over the page and hold down the middle mouse button "
 "to drag it around."
@@ -2568,7 +2566,7 @@ msgstr ""
 "tlačítko myši."
 
 #. (itstool) path: item/p
-#: C/movingaround.page:63
+#: C/movingaround.page:64
 msgid ""
 "If you don't have a middle mouse button, hold down the left and right mouse "
 "buttons at the same time, then drag."
@@ -2577,18 +2575,18 @@ msgstr ""
 "levé i pravé tlačítko myši."
 
 #. (itstool) path: section/title
-#: C/movingaround.page:71
+#: C/movingaround.page:72
 msgid "Flipping between pages"
 msgstr "Přepínání mezi stránkami"
 
 #. (itstool) path: section/p
-#: C/movingaround.page:73
+#: C/movingaround.page:74
 msgid ""
 "You can move between pages of a document using one of the following methods:"
 msgstr "Mezi stránkami dokumentu se můžete pohybovat následujícími způsoby:"
 
 #. (itstool) path: item/p
-#: C/movingaround.page:78
+#: C/movingaround.page:79
 msgid ""
 "Click the <gui>&lt;</gui> or <gui>&gt;</gui> buttons on the <link xref="
 "\"toolbar\">toolbar</link>."
@@ -2597,7 +2595,7 @@ msgstr ""
 "\"toolbar\">nástrojové liště</link>."
 
 #. (itstool) path: item/p
-#: C/movingaround.page:82
+#: C/movingaround.page:83
 msgid ""
 "Press the <keyseq><key>Ctrl</key><key>Page Up</key></keyseq> or "
 "<keyseq><key>Ctrl</key><key>Page Down</key></keyseq> buttons on the keyboard."
@@ -2606,12 +2604,12 @@ msgstr ""
 "<keyseq><key>Ctrl</key><key>Page Down</key></keyseq> na klávesnici."
 
 #. (itstool) path: item/p
-#: C/movingaround.page:87
+#: C/movingaround.page:88
 msgid "To go to a specific page:"
 msgstr "Pro přejití na konkrétní stránku:"
 
 #. (itstool) path: item/p
-#: C/movingaround.page:90
+#: C/movingaround.page:91
 msgid ""
 "Type a page number in <gui style=\"input\">Select Page</gui> on the <link "
 "xref=\"toolbar\">toolbar</link> and press <key>Enter</key>."
@@ -2621,7 +2619,7 @@ msgstr ""
 "key>."
 
 #. (itstool) path: item/p
-#: C/movingaround.page:94
+#: C/movingaround.page:95
 msgid ""
 "If you want to see the previously visited pages press <gui style=\"button"
 "\">&lt;</gui> or <gui style=\"button\">&gt;</gui> on the toolbar."
@@ -2631,12 +2629,12 @@ msgstr ""
 "liště."
 
 #. (itstool) path: item/p
-#: C/movingaround.page:99
+#: C/movingaround.page:100
 msgid "If you want to go to the beginning or the end of the document:"
 msgstr "Když chcete přejít na začátek nebo konec dokumentu:"
 
 #. (itstool) path: item/p
-#: C/movingaround.page:102
+#: C/movingaround.page:103
 msgid ""
 "Click the <gui>File options</gui> menu in the top right corner and select "
 "<gui>First Page</gui>. You can also press <keyseq><key>Ctrl</key><key>Home</"
@@ -2647,7 +2645,7 @@ msgstr ""
 "key><key>Home</key></keyseq>."
 
 #. (itstool) path: item/p
-#: C/movingaround.page:108
+#: C/movingaround.page:109
 msgid ""
 "Click the <gui>File options</gui> menu in the top right corner and select "
 "<gui>Last Page</gui> or press <keyseq><key>Ctrl</key><key>End</key></keyseq> "
@@ -2658,7 +2656,7 @@ msgstr ""
 "key><key>End</key></keyseq>."
 
 #. (itstool) path: item/p
-#: C/movingaround.page:118
+#: C/movingaround.page:119
 msgid ""
 "To move ten pages at a time, press <keyseq><key>Shift</key><key>Page Up</"
 "key></keyseq> or <keyseq><key>Shift</key><key>Page Down</key></keyseq>."
@@ -2667,7 +2665,7 @@ msgstr ""
 "Up</key></keyseq> nebo <keyseq><key>Shift</key><key>Page Down</key></keyseq>."
 
 #. (itstool) path: note/p
-#: C/movingaround.page:122
+#: C/movingaround.page:123
 msgid ""
 "You can only move around one page at a time, by default. If you want to move "
 "between pages just by scrolling or dragging, click the <gui>View options</"
@@ -2679,12 +2677,12 @@ msgstr ""
 "gui>."
 
 #. (itstool) path: section/title
-#: C/movingaround.page:133
+#: C/movingaround.page:134
 msgid "Navigating with a page list or table of contents"
 msgstr "Pohybujte se pomocí seznamu stránek nebo obsahu"
 
 #. (itstool) path: section/p
-#: C/movingaround.page:135
+#: C/movingaround.page:136
 msgid ""
 "To make the side pane visible <gui>View options</gui> button in the top-"
 "right corner and select<gui>Side Pane</gui>, or press <key>F9</key> on the "
@@ -2696,13 +2694,13 @@ msgstr ""
 "stránek dokumentu."
 
 #. (itstool) path: section/p
-#: C/movingaround.page:140
+#: C/movingaround.page:141
 msgid "You can move between pages by clicking on them in the side pane."
 msgstr ""
 "Mezi stránkami se můžete přesouvat kliknutím na ně v postranním panelu."
 
 #. (itstool) path: note/p
-#: C/movingaround.page:143
+#: C/movingaround.page:144
 msgid ""
 "Some documents have an index or table of contents, which you can display in "
 "the side pane. Click the drop-down list at the top of the side pane and "
@@ -2713,7 +2711,7 @@ msgstr ""
 "panelu a vyberte <gui>Rejstřík</gui>. Tím jej zobrazíte."
 
 #. (itstool) path: note/p
-#: C/movingaround.page:147
+#: C/movingaround.page:148
 msgid ""
 "Most documents don't use this feature, so you won't be able to view their "
 "index in the side pane."
@@ -2722,12 +2720,12 @@ msgstr ""
 "rejstřík neuvidíte."
 
 #. (itstool) path: section/title
-#: C/movingaround.page:155
+#: C/movingaround.page:156
 msgid "Zooming in and out"
 msgstr "Přibližování a oddalování"
 
 #. (itstool) path: item/p
-#: C/movingaround.page:159
+#: C/movingaround.page:160
 msgid ""
 "Click the <gui>View options</gui> button in the top-right corner and select "
 "<gui>Zoom In</gui> or use the keyboard shortcuts <keyseq><key>Ctrl</key><key>"
@@ -2738,7 +2736,7 @@ msgstr ""
 "key></keyseq> na klávesnici a zvětší se přiblížení dokumentu."
 
 #. (itstool) path: item/p
-#: C/movingaround.page:164
+#: C/movingaround.page:165
 msgid ""
 "Click the <gui>View options</gui> button in the top-right corner and select "
 "<gui>Zoom Out</gui> or use the keyboard shortcuts <keyseq><key>Ctrl</"
@@ -2749,19 +2747,19 @@ msgstr ""
 "key></keyseq> na klávesnici a zmenší se přiblížení dokumentu."
 
 #. (itstool) path: section/p
-#: C/movingaround.page:170
+#: C/movingaround.page:171
 msgid "Alternatively, you can do one of the following:"
 msgstr "Případně můžete použít následující postupy:"
 
 #. (itstool) path: item/p
-#: C/movingaround.page:174
+#: C/movingaround.page:175
 msgid "hold down <key>Ctrl</key> and use your mouse scroll wheel to zoom."
 msgstr ""
 "držte zmáčknutou klávesu <key>Ctrl</key> a pro přiblížení/oddálení použijte "
 "kolečko myši"
 
 #. (itstool) path: item/p
-#: C/movingaround.page:177
+#: C/movingaround.page:178
 msgid ""
 "select desired zoom percentage from the drop down menu above the window."
 msgstr ""
@@ -2769,7 +2767,7 @@ msgstr ""
 "okna"
 
 #. (itstool) path: note/p
-#: C/movingaround.page:184
+#: C/movingaround.page:185
 msgid ""
 "The <gui>Fit Page</gui> option will make a document page fit the whole "
 "<em>height</em> of the window."
@@ -2778,7 +2776,7 @@ msgstr ""
 "dokumentu vyplnila celou <em>výšku</em> okna."
 
 #. (itstool) path: note/p
-#: C/movingaround.page:186
+#: C/movingaround.page:187
 msgid ""
 "The <gui>Fit Width</gui> option will make a document page fill the whole "
 "<em>width</em> of the window."
@@ -2787,7 +2785,7 @@ msgstr ""
 "dokumentu vyplnila celou <em>šířku</em> okna."
 
 #. (itstool) path: note/p
-#: C/movingaround.page:188
+#: C/movingaround.page:189
 msgid ""
 "If you want to see two pages at once, side by side, like in a book, click "
 "the <gui>View options</gui> button in the top-right corner and select "
@@ -2798,12 +2796,12 @@ msgstr ""
 "vyberte <gui>Dvojstrana</gui>."
 
 #. (itstool) path: section/p
-#: C/movingaround.page:193
+#: C/movingaround.page:194
 msgid "You can use the whole of your screen to view the document:"
 msgstr "K zobrazení dokumentu můžete využít celou obrazovku:"
 
 #. (itstool) path: item/p
-#: C/movingaround.page:197
+#: C/movingaround.page:198
 msgid ""
 "Click the <gui>View options</gui> button in the top-right corner and select "
 "<gui>Fullscreen</gui> or press <key>F11</key>."
@@ -2812,17 +2810,17 @@ msgstr ""
 "vyberte <gui>Celá obrazovka</gui> nebo zmáčkněte <key>F11</key>."
 
 #. (itstool) path: item/p
-#: C/movingaround.page:201
+#: C/movingaround.page:202
 msgid "To exit the full screen mode:"
 msgstr "Když chcete režim celé obrazovky opustit:"
 
 #. (itstool) path: item/p
-#: C/movingaround.page:204
+#: C/movingaround.page:205
 msgid "Press <key>F11</key> or <key>Escape</key>"
 msgstr "Zmáčkněte <key>F1</key> nebo <key>Esc</key>"
 
 #. (itstool) path: item/p
-#: C/movingaround.page:207
+#: C/movingaround.page:208
 msgid ""
 "Or disable <gui>Fullscreen</gui> by clicking the <gui>View options</gui> "
 "button in the top-right corner and select <gui>Fullscreen</gui>."
@@ -3006,20 +3004,19 @@ msgstr "Dokument můžete otevřít jedním z následujících způsobů:"
 #. (itstool) path: item/p
 #: C/opening.page:33
 msgid ""
-"Double-click on the file icon in <app>Files</app> or your <em>file manager</"
-"em>."
+"Double-click on the file in <app>Files</app> or your <em>file manager</em>."
 msgstr ""
-"Dvojitě klikněte na ikonu souboru v aplikaci <app>Soubory</app> nebo jiném "
+"Dvojitě klikněte na soubor v aplikaci <app>Soubory</app> nebo jiném "
 "svém <em>správci souborů</em>."
 
 #. (itstool) path: note/p
 #: C/opening.page:36
 msgid ""
-"Double clicking opens PDF, PostScript, .djvu, .dvi and Comic Book Archive "
-"files in the <app>Document Viewer</app> by default."
+"Double clicking PDF, PostScript, .djvu, .dvi and Comic Book Archive files "
+"opens them in <app>Document Viewer</app> by default."
 msgstr ""
-"Ve výchozím nasavení se v <app>prohlížeči dokumentů</app> otevírají soubory "
-"PDF, PostScript, .djvu, .dvi a Comic Book Archive."
+"Standardně se dvojitým kliknutím v <app>prohlížeči dokumentů</app> otevírají "
+"soubory PDF, PostScript, .djvu, .dvi a Comic Book Archive."
 
 #. (itstool) path: item/p
 #: C/opening.page:41
@@ -3033,77 +3030,56 @@ msgstr ""
 
 #. (itstool) path: page/p
 #: C/opening.page:46
-msgid "If a Document View window is already open you can:"
-msgstr "Pokud je okno prohlížeče dokumentů již otevřeno, můžete:"
+msgid "If a <app>Document Viewer</app> window is already open you can:"
+msgstr "Pokud je okno <app>Prohlížeče dokumentů</app> již otevřeno, můžete:"
 
 #. (itstool) path: item/p
 #: C/opening.page:50
 msgid ""
-"drag a file icon into the window from <app>Files</app>. The new file will "
-"open in a new window (provided the file is of a file type supported by "
-"<app>Document Viewer</app>)."
+"Drag a file into the window from <app>Files</app>. The new file will open in "
+"a new window."
 msgstr ""
-"Přetáhněte ikonu souboru z aplikace <app>Soubory</app> do okna. Nový soubor "
-"se otevře v novém okně (poskytnutý soubor je některého z typů podporovaných "
-"<app>prohlížečem dokumentů</app>)."
-
-#. (itstool) path: item/p
-#: C/opening.page:55
-msgid ""
-"press the button in the top-right corner of the window, then select "
-"<guiseq><gui>Open…</gui></guiseq>. In the <gui>Open Document</gui> dialog, "
-"choose the file which you wish to open, and click <gui>Open</gui>. The file "
-"will open in a new window."
-msgstr ""
-"Zmáčkněte tlačítko v pravém horním rohu okna a vyberte <guiseq><gui>Otevřít…"
-"</gui></guiseq>. V dialogovém okně <gui>Otevření dokumentu</gui> zvolte "
-"soubor, který chcete otevřít, a klikněte na <gui>Otevřít</gui>. Soubor se "
+"Přetáhněte soubor z aplikace <app>Soubory</app> do okna. Nový soubor se "
 "otevře v novém okně."
 
+#. (itstool) path: item/p
+#: C/opening.page:54
+msgid ""
+"Press the <gui>File options</gui> button in the top-right corner of the "
+"window, then select <gui>Open…</gui>. In the <gui>Open Document</gui> "
+"dialog, choose the file which you wish to open, and click <gui>Open</gui>. "
+"The file will open in a new window."
+msgstr ""
+"Zmáčkněte tlačítko <gui>Volby souborů</gui> v pravém horním rohu okna a "
+"vyberte <gui>Otevřít…</gui> V dialogovém okně <gui>Otevření dokumentu</gui> "
+"zvolte soubor, který chcete otevřít, a klikněte na <gui>Otevřít</gui>. Soubor "
+"se otevře v novém okně."
+
 #. (itstool) path: info/desc
-#: C/password.page:17
+#: C/password.page:22
 msgid "Handling password protected PDFs."
 msgstr "Jak pracovat s PDF chráněnými heslem."
 
 #. (itstool) path: page/title
-#: C/password.page:20
+#: C/password.page:25
 msgid "Password-protected documents"
 msgstr "Dokumenty chráněné heslem"
 
 #. (itstool) path: page/p
-#: C/password.page:22
+#: C/password.page:27
 msgid ""
 "If you try to open a PDF document that is protected with a password, a "
 "window will appear asking you to enter the document password. Enter the "
-"password and click <gui>Open Document</gui>."
+"password and click <gui>Unlock Document</gui>."
 msgstr ""
 "Když zkusíte otevřít dokument PDF chráněný heslem, objeví se okno s žádostí "
-"o zadání hesla dokumentu. Zadejte heslo a klikněte na <gui>Otevřít dokument</"
+"o zadání hesla dokumentu. Zadejte heslo a klikněte na <gui>Odemknout dokument</"
 "gui>."
 
-#. (itstool) path: page/p
-#: C/password.page:26
-msgid "There are two types of passwords:"
-msgstr "Existují dva typy hesel:"
-
-#. (itstool) path: item/p
-#: C/password.page:30
-msgid "The <em>user password</em> is needed to view the document."
-msgstr "<em>Uživatelské heslo</em> je zapotřebí k zobrazení dokumentu."
-
-#. (itstool) path: item/p
-#: C/password.page:33
-msgid ""
-"The <em>master password</em> is required to print the document as well as "
-"view it."
-msgstr ""
-"<em>Hlavní heslo</em> je zapotřebí k tisku dokumentu a platí i pro zobrazení "
-"dokumentu."
-
 #. (itstool) path: note/p
-#: C/password.page:39
-msgid "These passwords are set by the person who created the document."
-msgstr "Tato hesla nastavila osoba, která dokument vytvořila."
+#: C/password.page:50
+msgid "Passwords can be set by the person who created or edited the document."
+msgstr "Hesla nastavila osoba, která dokument vytvořila nebo upravovala."
 
 #. (itstool) path: info/desc
 #: C/presentations.page:7
@@ -4654,12 +4630,12 @@ msgstr ""
 #. (itstool) path: page/p
 #: C/translate.page:30
 msgid ""
-"To start translating you will need to <link href=\"http:l10n.gnome.org"
+"To start translating you will need to <link href=\"http://l10n.gnome.org"
 "\">create an account</link> and join the <link href=\"http://l10n.gnome.org/"
 "teams/\">translation team</link> for your language. This will give you the "
 "ability to upload new translations."
 msgstr ""
-"Jestli chcete překládat, musíte si <link href=\"http:l10n.gnome.org"
+"Jestli chcete překládat, musíte si <link href=\"http://l10n.gnome.org"
 "\">vytvořit účet</link> a přidat se k <link href=\"http://l10n.gnome.org/"
 "teams/\">překladatelskému týmu</link> svého jazyka. Pak budete moci odesílat "
 "své nové překlady."
