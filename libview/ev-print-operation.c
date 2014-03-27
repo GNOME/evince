@@ -1141,24 +1141,46 @@ ev_print_operation_export_begin (EvPrintOperationExport *export)
 					   (GDestroyNotify)export_print_page_idle_finished);	
 }
 
+static EvFileExporterFormat
+get_file_exporter_format (EvFileExporter   *exporter,
+                          GtkPrintSettings *print_settings)
+{
+	const gchar *file_format;
+	EvFileExporterFormat format = EV_FILE_FORMAT_PS;
+
+	file_format = gtk_print_settings_get (print_settings, GTK_PRINT_SETTINGS_OUTPUT_FILE_FORMAT);
+	if (file_format != NULL) {
+		format = g_ascii_strcasecmp (file_format, "pdf") == 0 ?
+			 EV_FILE_FORMAT_PDF : EV_FILE_FORMAT_PS;
+	} else {
+		if (ev_file_exporter_get_capabilities (exporter) &
+		    EV_FILE_EXPORTER_CAN_GENERATE_PDF)
+			format = EV_FILE_FORMAT_PDF;
+		else
+			format = EV_FILE_FORMAT_PS;
+	}
+
+	return format;
+}
+
 static void
 ev_print_operation_export_print_dialog_response_cb (GtkDialog              *dialog,
 						    gint                    response,
 						    EvPrintOperationExport *export)
 {
-	GtkPrintPages     print_pages;
-	GtkPrintSettings *print_settings;
-	GtkPageSetup     *page_setup;
-	GtkPrinter       *printer;
-	gdouble           scale;
-	gdouble           width;
-	gdouble           height;
-	gint              first_page;
-	gint              last_page;
-	const gchar      *file_format;
-	gchar            *filename;
-	GError           *error = NULL;
-	EvPrintOperation *op = EV_PRINT_OPERATION (export);
+	GtkPrintPages         print_pages;
+	GtkPrintSettings     *print_settings;
+	GtkPageSetup         *page_setup;
+	GtkPrinter           *printer;
+	gdouble               scale;
+	gdouble               width;
+	gdouble               height;
+	gint                  first_page;
+	gint                  last_page;
+	gchar                *filename;
+	GError               *error = NULL;
+	EvPrintOperation     *op = EV_PRINT_OPERATION (export);
+	EvFileExporterFormat  format;
 	
 	if (response != GTK_RESPONSE_OK &&
 	    response != GTK_RESPONSE_APPLY) {
@@ -1179,7 +1201,11 @@ ev_print_operation_export_print_dialog_response_cb (GtkDialog              *dial
 	page_setup = gtk_print_unix_dialog_get_page_setup (GTK_PRINT_UNIX_DIALOG (dialog));
 	ev_print_operation_export_set_default_page_setup (op, page_setup);
 
-	if (!gtk_printer_accepts_ps (export->printer)) {
+	format = get_file_exporter_format (EV_FILE_EXPORTER (op->document),
+					   print_settings);
+
+	if ((format == EV_FILE_FORMAT_PS && !gtk_printer_accepts_ps (export->printer)) ||
+	    (format == EV_FILE_FORMAT_PDF && !gtk_printer_accepts_pdf (export->printer))) {
 		gtk_widget_destroy (GTK_WIDGET (dialog));
 		
 		g_set_error_literal (&export->error,
@@ -1191,9 +1217,7 @@ ev_print_operation_export_print_dialog_response_cb (GtkDialog              *dial
 		return;
 	}
 
-	file_format = gtk_print_settings_get (print_settings, GTK_PRINT_SETTINGS_OUTPUT_FILE_FORMAT);
-	
-	filename = g_strdup_printf ("evince_print.%s.XXXXXX", file_format != NULL ? file_format : "");
+	filename = g_strdup_printf ("evince_print.%s.XXXXXX", format == EV_FILE_FORMAT_PDF ? "pdf" : "ps");
 	export->fd = g_file_open_tmp (filename, &export->temp_file, &error);
 	g_free (filename);
 	if (export->fd <= -1) {
@@ -1298,8 +1322,7 @@ ev_print_operation_export_print_dialog_response_cb (GtkDialog              *dial
 
 	get_first_and_last_page (export, &first_page, &last_page);
 
-	export->fc.format = file_format && g_ascii_strcasecmp (file_format, "pdf") == 0 ?
-		EV_FILE_FORMAT_PDF : EV_FILE_FORMAT_PS;
+	export->fc.format = format;
 	export->fc.filename = export->temp_file;
 	export->fc.first_page = MIN (first_page, last_page);
 	export->fc.last_page = MAX (first_page, last_page);
