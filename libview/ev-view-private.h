@@ -222,6 +222,10 @@ struct _EvView {
 	gboolean cursor_visible;
 	guint    cursor_blink_timeout_id;
 	guint    cursor_blink_time;
+
+	/* Gestures */
+	GtkGesture *zoom_gesture;
+	gdouble prev_zoom_gesture_scale;
 };
 
 struct _EvViewClass {
