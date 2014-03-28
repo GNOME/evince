@@ -1419,7 +1419,6 @@ ev_view_presentation_class_init (EvViewPresentationClass *klass)
 	GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
 	GObjectClass   *gobject_class = G_OBJECT_CLASS (klass);
 	GtkBindingSet  *binding_set;
-        GtkCssProvider *provider;
 
 	klass->change_page = ev_view_presentation_change_page;
 
@@ -1533,23 +1532,30 @@ ev_view_presentation_class_init (EvViewPresentationClass *klass)
 	gtk_binding_entry_add_signal (binding_set, GDK_KEY_K, 0,
 				      "change_page", 1,
 				      GTK_TYPE_SCROLL_TYPE, GTK_SCROLL_PAGE_BACKWARD);
-
-        provider = gtk_css_provider_new ();
-        gtk_css_provider_load_from_data (provider,
-                                         "EvViewPresentation {\n"
-                                         " background-color: black; }",
-                                         -1, NULL);
-        gtk_style_context_add_provider_for_screen (gdk_screen_get_default (),
-                                                   GTK_STYLE_PROVIDER (provider),
-                                                   GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
-        g_object_unref (provider);
 }
 
 static void
 ev_view_presentation_init (EvViewPresentation *pview)
 {
+        static gsize initialization_value = 0;
+
 	gtk_widget_set_can_focus (GTK_WIDGET (pview), TRUE);
         pview->is_constructing = TRUE;
+
+	if (g_once_init_enter (&initialization_value)) {
+		GtkCssProvider *provider;
+
+		provider = gtk_css_provider_new ();
+		gtk_css_provider_load_from_data (provider,
+						 "EvViewPresentation {\n"
+						 " background-color: black; }",
+						 -1, NULL);
+		gtk_style_context_add_provider_for_screen (gdk_screen_get_default (),
+							   GTK_STYLE_PROVIDER (provider),
+							   GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+		g_object_unref (provider);
+		g_once_init_leave (&initialization_value, 1);
+	}
 }
 
 GtkWidget *
