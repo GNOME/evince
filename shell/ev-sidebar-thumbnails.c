@@ -463,7 +463,6 @@ get_size_for_page (EvSidebarThumbnails *sidebar_thumbnails,
         gdouble width, height;
         gint thumbnail_height;
 
-	ev_document_get_page_size (priv->document, page, &width, NULL);
         ev_document_get_page_size (priv->document, page, &width, &height);
         thumbnail_height = (int)(THUMBNAIL_WIDTH * height / width + 0.5);
 
