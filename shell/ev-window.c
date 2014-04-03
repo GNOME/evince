@@ -2430,7 +2430,6 @@ ev_window_file_chooser_restore_folder (EvWindow       *window,
 {
         const gchar *dir;
         gchar *folder_uri;
-        gchar *parent_uri = NULL;
 
         g_settings_get (ev_window_ensure_settings (window),
                         get_settings_key_for_directory (directory),
@@ -2442,7 +2441,7 @@ ev_window_file_chooser_restore_folder (EvWindow       *window,
                 parent = g_file_get_parent (file);
                 g_object_unref (file);
                 if (parent) {
-                        folder_uri = parent_uri = g_file_get_uri (parent);
+                        folder_uri = g_file_get_uri (parent);
                         g_object_unref (parent);
                 }
         }
@@ -2456,7 +2455,6 @@ ev_window_file_chooser_restore_folder (EvWindow       *window,
         }
 
         g_free (folder_uri);
-        g_free (parent_uri);
 }
 
 static void
