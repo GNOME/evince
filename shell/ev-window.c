@@ -5091,6 +5091,7 @@ ev_window_cmd_help_about (GtkAction *action, EvWindow *ev_window)
 static void
 ev_window_cmd_action_menu (GtkAction *action, EvWindow *ev_window)
 {
+	ev_window_fullscreen_show_toolbar (ev_window);
 	ev_toolbar_action_menu_popup (EV_TOOLBAR (ev_window->priv->toolbar));
 }
 
