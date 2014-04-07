@@ -24,12 +24,15 @@
 
 #include <glib/gi18n-lib.h>
 #include "ev-page-accessible.h"
+#include "ev-link-accessible.h"
 #include "ev-view-private.h"
 
 struct _EvPageAccessiblePrivate {
         EvViewAccessible *view_accessible;
 	gint              page;
+	GHashTable       *links;
 };
+
 
 enum {
 	PROP_0,
@@ -37,9 +40,11 @@ enum {
 	PROP_PAGE,
 };
 
+static void ev_page_accessible_hypertext_iface_init (AtkHypertextIface *iface);
 static void ev_page_accessible_text_iface_init (AtkTextIface *iface);
 
 G_DEFINE_TYPE_WITH_CODE (EvPageAccessible, ev_page_accessible, ATK_TYPE_OBJECT,
+			 G_IMPLEMENT_INTERFACE (ATK_TYPE_HYPERTEXT, ev_page_accessible_hypertext_iface_init)
 			 G_IMPLEMENT_INTERFACE (ATK_TYPE_TEXT, ev_page_accessible_text_iface_init))
 
 gint
@@ -68,6 +73,16 @@ ev_page_accessible_get_parent (AtkObject *obj)
 	self = EV_PAGE_ACCESSIBLE (obj);
 
 	return ATK_OBJECT (self->priv->view_accessible);
+}
+
+static void
+ev_page_accessible_finalize (GObject *object)
+{
+	EvPageAccessiblePrivate *priv = EV_PAGE_ACCESSIBLE (object)->priv;
+
+	g_clear_pointer (&priv->links, (GDestroyNotify)g_hash_table_destroy);
+
+	G_OBJECT_CLASS (ev_page_accessible_parent_class)->finalize (object);
 }
 
 static void
@@ -122,6 +137,7 @@ ev_page_accessible_class_init (EvPageAccessibleClass *klass)
 
 	g_object_class->get_property = ev_page_accessible_get_property;
 	g_object_class->set_property = ev_page_accessible_set_property;
+        g_object_class->finalize = ev_page_accessible_finalize;
 
 	g_object_class_install_property (g_object_class,
 					 PROP_VIEW_ACCESSIBLE,
@@ -829,6 +845,108 @@ ev_page_accessible_text_iface_init (AtkTextIface *iface)
 	iface->get_default_attributes = ev_page_accessible_get_default_attributes;
 	iface->get_character_extents = ev_page_accessible_get_character_extents;
 	iface->get_offset_at_point = ev_page_accessible_get_offset_at_point;
+}
+
+static GHashTable *
+ev_page_accessible_get_links (EvPageAccessible *accessible)
+{
+	EvPageAccessiblePrivate* priv = accessible->priv;
+
+	if (priv->links)
+		return priv->links;
+
+	priv->links = g_hash_table_new_full (g_direct_hash,
+					     g_direct_equal,
+					     NULL,
+					     (GDestroyNotify)g_object_unref);
+	return priv->links;
+}
+
+static AtkHyperlink *
+ev_page_accessible_get_link (AtkHypertext *hypertext,
+			     gint          link_index)
+{
+	GHashTable       *links;
+	EvMappingList    *link_mapping;
+	gint              n_links;
+	EvMapping        *mapping;
+	EvLinkAccessible *atk_link;
+	EvPageAccessible *self = EV_PAGE_ACCESSIBLE (hypertext);
+	EvView *view = ev_page_accessible_get_view (self);
+
+	if (link_index < 0)
+		return NULL;
+
+	if (!EV_IS_DOCUMENT_LINKS (view->document))
+		return NULL;
+
+	links = ev_page_accessible_get_links (EV_PAGE_ACCESSIBLE (hypertext));
+
+	atk_link = g_hash_table_lookup (links, GINT_TO_POINTER (link_index));
+	if (atk_link)
+		return atk_hyperlink_impl_get_hyperlink (ATK_HYPERLINK_IMPL (atk_link));
+
+	link_mapping = ev_page_cache_get_link_mapping (view->page_cache, self->priv->page);
+	if (!link_mapping)
+		return NULL;
+
+	n_links = ev_mapping_list_length (link_mapping);
+	if (link_index > n_links - 1)
+		return NULL;
+
+	mapping = ev_mapping_list_nth (link_mapping, n_links - link_index - 1);
+	atk_link = ev_link_accessible_new (EV_PAGE_ACCESSIBLE (hypertext),
+					   EV_LINK (mapping->data),
+					   &mapping->area);
+	g_hash_table_insert (links, GINT_TO_POINTER (link_index), atk_link);
+
+	return atk_hyperlink_impl_get_hyperlink (ATK_HYPERLINK_IMPL (atk_link));
+}
+
+static gint
+ev_page_accessible_get_n_links (AtkHypertext *hypertext)
+{
+	EvMappingList *link_mapping;
+	EvPageAccessible *self = EV_PAGE_ACCESSIBLE (hypertext);
+	EvView *view = ev_page_accessible_get_view (self);
+
+	if (!EV_IS_DOCUMENT_LINKS (view->document))
+		return 0;
+
+	link_mapping = ev_page_cache_get_link_mapping (view->page_cache,
+						       self->priv->page);
+
+	return link_mapping ? ev_mapping_list_length (link_mapping) : 0;
+}
+
+static gint
+ev_page_accessible_get_link_index (AtkHypertext *hypertext,
+				   gint          offset)
+{
+	guint i;
+	gint n_links = ev_page_accessible_get_n_links (hypertext);
+
+	for (i = 0; i < n_links; i++) {
+		AtkHyperlink *hyperlink;
+		gint          start_index, end_index;
+
+		hyperlink = ev_page_accessible_get_link (hypertext, i);
+		start_index = atk_hyperlink_get_start_index (hyperlink);
+		end_index = atk_hyperlink_get_end_index (hyperlink);
+
+		if (start_index <= offset && end_index >= offset)
+			return i;
+	}
+
+	return -1;
+}
+
+static void
+ev_page_accessible_hypertext_iface_init (AtkHypertextIface *iface)
+{
+	iface->get_link = ev_page_accessible_get_link;
+	iface->get_n_links = ev_page_accessible_get_n_links;
+	iface->get_link_index = ev_page_accessible_get_link_index;
 }
 
 EvPageAccessible *

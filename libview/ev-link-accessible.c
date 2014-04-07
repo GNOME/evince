@@ -27,7 +27,7 @@ typedef struct _EvHyperlink      EvHyperlink;
 typedef struct _EvHyperlinkClass EvHyperlinkClass;
 
 struct _EvLinkAccessiblePrivate {
-        EvViewAccessible *view;
+        EvPageAccessible *page;
         EvLink           *link;
         EvRectangle       area;
 
@@ -90,17 +90,10 @@ ev_hyperlink_get_object (AtkHyperlink *atk_hyperlink,
 }
 
 static gint
-get_relevant_page (EvView *view)
-{
-	return ev_view_is_caret_navigation_enabled (view) ? view->cursor_page : view->current_page;
-}
-
-static gint
 ev_hyperlink_get_start_index (AtkHyperlink *atk_hyperlink)
 {
         EvHyperlink             *hyperlink = EV_HYPERLINK (atk_hyperlink);
         EvLinkAccessiblePrivate *impl_priv;
-        GtkWidget               *widget;
         EvView                  *view;
         EvRectangle             *areas = NULL;
         guint                    n_areas = 0;
@@ -110,16 +103,14 @@ ev_hyperlink_get_start_index (AtkHyperlink *atk_hyperlink)
                 return -1;
 
         impl_priv = hyperlink->link_impl->priv;
-        widget = gtk_accessible_get_widget (GTK_ACCESSIBLE (impl_priv->view));
-        if (widget == NULL)
-                /* State is defunct */
-                return -1;
 
-        view = EV_VIEW (widget);
+	view = ev_page_accessible_get_view (impl_priv->page);
         if (!view->page_cache)
                 return -1;
 
-        ev_page_cache_get_text_layout (view->page_cache, get_relevant_page (view), &areas, &n_areas);
+        ev_page_cache_get_text_layout (view->page_cache,
+				       ev_page_accessible_get_page (impl_priv->page),
+				       &areas, &n_areas);
         if (!areas)
                 return -1;
 
@@ -142,7 +133,6 @@ ev_hyperlink_get_end_index (AtkHyperlink *atk_hyperlink)
 {
         EvHyperlink             *hyperlink = EV_HYPERLINK (atk_hyperlink);
         EvLinkAccessiblePrivate *impl_priv;
-        GtkWidget               *widget;
         EvView                  *view;
         EvRectangle             *areas = NULL;
         guint                    n_areas = 0;
@@ -152,16 +142,14 @@ ev_hyperlink_get_end_index (AtkHyperlink *atk_hyperlink)
                 return -1;
 
         impl_priv = hyperlink->link_impl->priv;
-        widget = gtk_accessible_get_widget (GTK_ACCESSIBLE (impl_priv->view));
-        if (widget == NULL)
-                /* State is defunct */
-                return -1;
 
-        view = EV_VIEW (widget);
+	view = ev_page_accessible_get_view (impl_priv->page);
         if (!view->page_cache)
                 return -1;
 
-        ev_page_cache_get_text_layout (view->page_cache, get_relevant_page (view), &areas, &n_areas);
+        ev_page_cache_get_text_layout (view->page_cache,
+				       ev_page_accessible_get_page (impl_priv->page),
+				       &areas, &n_areas);
         if (!areas)
                 return -1;
 
@@ -257,17 +245,13 @@ ev_link_accessible_action_do_action (AtkAction *atk_action,
 				     gint      i)
 {
 	EvLinkAccessiblePrivate *priv = EV_LINK_ACCESSIBLE (atk_action)->priv;
-	GtkWidget               *widget;
+	EvView *view;
 
-	widget = gtk_accessible_get_widget (GTK_ACCESSIBLE (priv->view));
-	if (widget == NULL)
-		/* State is defunct */
-		return FALSE;
-
+	view = ev_page_accessible_get_view (priv->page);
 	if (!ev_link_get_action (priv->link))
 		return FALSE;
 
-	ev_view_handle_link (EV_VIEW (widget), priv->link);
+	ev_view_handle_link (view, priv->link);
 
 	return TRUE;
 }
@@ -303,14 +287,14 @@ ev_link_accessible_action_interface_init (AtkActionIface *iface)
 }
 
 EvLinkAccessible *
-ev_link_accessible_new (EvViewAccessible *view,
+ev_link_accessible_new (EvPageAccessible *page,
                         EvLink           *link,
                         EvRectangle      *area)
 {
         EvLinkAccessible *atk_link;
 
         atk_link = g_object_new (EV_TYPE_LINK_ACCESSIBLE, NULL);
-        atk_link->priv->view = view;
+        atk_link->priv->page = page;
         atk_link->priv->link = g_object_ref (link);
         atk_link->priv->area = *area;
 

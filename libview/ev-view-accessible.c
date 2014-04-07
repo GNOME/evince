@@ -26,12 +26,10 @@
 #include "ev-selection.h"
 #include "ev-page-cache.h"
 #include "ev-view-accessible.h"
-#include "ev-link-accessible.h"
 #include "ev-view-private.h"
 #include "ev-page-accessible.h"
 
 static void ev_view_accessible_action_iface_init    (AtkActionIface    *iface);
-static void ev_view_accessible_hypertext_iface_init (AtkHypertextIface *iface);
 static void ev_view_accessible_document_iface_init  (AtkDocumentIface  *iface);
 
 enum {
@@ -62,9 +60,6 @@ struct _EvViewAccessiblePrivate {
 	guint         action_idle_handler;
 	GtkScrollType idle_scroll;
 
-	/* AtkHypertext */
-	GHashTable    *links;
-
 	gint previous_cursor_page;
 
 	GPtrArray *children;
@@ -72,7 +67,6 @@ struct _EvViewAccessiblePrivate {
 
 G_DEFINE_TYPE_WITH_CODE (EvViewAccessible, ev_view_accessible, GTK_TYPE_CONTAINER_ACCESSIBLE,
 			 G_IMPLEMENT_INTERFACE (ATK_TYPE_ACTION, ev_view_accessible_action_iface_init)
-			 G_IMPLEMENT_INTERFACE (ATK_TYPE_HYPERTEXT, ev_view_accessible_hypertext_iface_init)
 			 G_IMPLEMENT_INTERFACE (ATK_TYPE_DOCUMENT, ev_view_accessible_document_iface_init)
 	)
 
@@ -80,14 +74,6 @@ static gint
 get_relevant_page (EvView *view)
 {
 	return ev_view_is_caret_navigation_enabled (view) ? view->cursor_page : view->current_page;
-}
-
-static void
-clear_cache (EvViewAccessible *accessible)
-{
-	EvViewAccessiblePrivate* priv = accessible->priv;
-
-	g_clear_pointer (&priv->links, (GDestroyNotify)g_hash_table_destroy);
 }
 
 static void
@@ -122,7 +108,7 @@ ev_view_accessible_finalize (GObject *object)
 		g_source_remove (priv->action_idle_handler);
 	for (i = 0; i < LAST_ACTION; i++)
 		g_free (priv->action_descriptions [i]);
-	clear_cache (EV_VIEW_ACCESSIBLE (object));
+
 	clear_children (EV_VIEW_ACCESSIBLE (object));
 
 	G_OBJECT_CLASS (ev_view_accessible_parent_class)->finalize (object);
@@ -318,119 +304,6 @@ ev_view_accessible_action_iface_init (AtkActionIface * iface)
 	iface->set_description = ev_view_accessible_action_set_description;
 }
 
-static GHashTable *
-ev_view_accessible_get_links (EvViewAccessible *accessible,
-			      EvView           *view)
-{
-	EvViewAccessiblePrivate* priv = accessible->priv;
-
-	if (priv->links)
-		return priv->links;
-
-	priv->links = g_hash_table_new_full (g_direct_hash,
-					     g_direct_equal,
-					     NULL,
-					     (GDestroyNotify)g_object_unref);
-	return priv->links;
-}
-
-static AtkHyperlink *
-ev_view_accessible_get_link (AtkHypertext *hypertext,
-			     gint          link_index)
-{
-	GtkWidget        *widget;
-	EvView           *view;
-	GHashTable       *links;
-	EvMappingList    *link_mapping;
-	gint              n_links;
-	EvMapping        *mapping;
-	EvLinkAccessible *atk_link;
-
-	if (link_index < 0)
-		return NULL;
-
-	widget = gtk_accessible_get_widget (GTK_ACCESSIBLE (hypertext));
-	if (widget == NULL)
-		/* State is defunct */
-		return NULL;
-
-	view = EV_VIEW (widget);
-	if (!EV_IS_DOCUMENT_LINKS (view->document))
-		return NULL;
-
-	links = ev_view_accessible_get_links (EV_VIEW_ACCESSIBLE (hypertext), view);
-
-	atk_link = g_hash_table_lookup (links, GINT_TO_POINTER (link_index));
-	if (atk_link)
-		return atk_hyperlink_impl_get_hyperlink (ATK_HYPERLINK_IMPL (atk_link));
-
-	link_mapping = ev_page_cache_get_link_mapping (view->page_cache, get_relevant_page (view));
-	if (!link_mapping)
-		return NULL;
-
-	n_links = ev_mapping_list_length (link_mapping);
-	if (link_index > n_links - 1)
-		return NULL;
-
-	mapping = ev_mapping_list_nth (link_mapping, n_links - link_index - 1);
-	atk_link = ev_link_accessible_new (EV_VIEW_ACCESSIBLE (hypertext),
-					   EV_LINK (mapping->data),
-					   &mapping->area);
-	g_hash_table_insert (links, GINT_TO_POINTER (link_index), atk_link);
-
-	return atk_hyperlink_impl_get_hyperlink (ATK_HYPERLINK_IMPL (atk_link));
-}
-
-static gint
-ev_view_accessible_get_n_links (AtkHypertext *hypertext)
-{
-	GtkWidget     *widget;
-	EvView        *view;
-	EvMappingList *link_mapping;
-
-	widget = gtk_accessible_get_widget (GTK_ACCESSIBLE (hypertext));
-	if (widget == NULL)
-		/* State is defunct */
-		return 0;
-
-	view = EV_VIEW (widget);
-	if (!EV_IS_DOCUMENT_LINKS (view->document))
-		return 0;
-
-	link_mapping = ev_page_cache_get_link_mapping (view->page_cache, get_relevant_page (view));
-
-	return link_mapping ? ev_mapping_list_length (link_mapping) : 0;
-}
-
-static gint
-ev_view_accessible_get_link_index (AtkHypertext *hypertext,
-				   gint          offset)
-{
-	guint i;
-
-	for (i = 0; i < ev_view_accessible_get_n_links (hypertext); i++) {
-		AtkHyperlink *hyperlink;
-		gint          start_index, end_index;
-
-		hyperlink = ev_view_accessible_get_link (hypertext, i);
-		start_index = atk_hyperlink_get_start_index (hyperlink);
-		end_index = atk_hyperlink_get_end_index (hyperlink);
-
-		if (start_index <= offset && end_index >= offset)
-			return i;
-	}
-
-	return -1;
-}
-
-static void
-ev_view_accessible_hypertext_iface_init (AtkHypertextIface *iface)
-{
-	iface->get_link = ev_view_accessible_get_link;
-	iface->get_n_links = ev_view_accessible_get_n_links;
-	iface->get_link_index = ev_view_accessible_get_link_index;
-}
-
 static void
 ev_view_accessible_cursor_moved (EvView *view,
 				 gint page,
@@ -442,7 +315,6 @@ ev_view_accessible_cursor_moved (EvView *view,
 
 	if (priv->previous_cursor_page != page) {
 		priv->previous_cursor_page = page;
-		clear_cache (accessible);
 #if ATK_CHECK_VERSION (2, 11, 2)
 		/* +1 as user start to count on 1, but evince starts on 0 */
 		g_signal_emit_by_name (accessible, "page-changed", page + 1);
@@ -470,8 +342,6 @@ page_changed_cb (EvDocumentModel  *model,
 		 gint              new_page,
 		 EvViewAccessible *accessible)
 {
-	clear_cache (accessible);
-
 #if ATK_CHECK_VERSION (2, 11, 2)
 	EvView *view;
 
@@ -511,7 +381,6 @@ document_changed_cb (EvDocumentModel  *model,
 	if (document == NULL)
 		return;
 
-	clear_cache (accessible);
 	initialize_children (accessible);
 
 	/* Inside this callback the document is already loaded. We
