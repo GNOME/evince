@@ -25,6 +25,7 @@
 
 #include <gtk/gtk-a11y.h>
 #include "ev-view-accessible.h"
+#include "ev-view.h"
 
 #define EV_TYPE_PAGE_ACCESSIBLE      (ev_page_accessible_get_type ())
 #define EV_PAGE_ACCESSIBLE(obj)      (G_TYPE_CHECK_INSTANCE_CAST ((obj), EV_TYPE_PAGE_ACCESSIBLE, EvPageAccessible))
@@ -49,6 +50,7 @@ EvPageAccessible *ev_page_accessible_new                 (EvViewAccessible *view
 							  gint              page);
 gint              ev_page_accessible_get_page            (EvPageAccessible *page_accessible);
 EvViewAccessible *ev_page_accessible_get_view_accessible (EvPageAccessible *page_accessible);
+EvView           *ev_page_accessible_get_view            (EvPageAccessible *page_accessible);
 
 #endif  /* __EV_PAGE_ACCESSIBLE_H__ */
 
