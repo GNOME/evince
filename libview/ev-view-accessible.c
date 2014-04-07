@@ -314,7 +314,16 @@ ev_view_accessible_cursor_moved (EvView *view,
 	EvPageAccessible *page_accessible = NULL;
 
 	if (priv->previous_cursor_page != page) {
+		AtkObject *previous_page = NULL;
+		AtkObject *current_page = NULL;
+
+		previous_page = g_ptr_array_index (priv->children,
+						   priv->previous_cursor_page);
+		atk_object_notify_state_change (previous_page, ATK_STATE_FOCUSED, FALSE);
 		priv->previous_cursor_page = page;
+		current_page = g_ptr_array_index (priv->children, page);
+		atk_object_notify_state_change (current_page, ATK_STATE_FOCUSED, TRUE);
+
 #if ATK_CHECK_VERSION (2, 11, 2)
 		/* +1 as user start to count on 1, but evince starts on 0 */
 		g_signal_emit_by_name (accessible, "page-changed", page + 1);
@@ -418,6 +427,27 @@ ev_view_accessible_set_model (EvViewAccessible *accessible,
 			  accessible);
 }
 
+static gboolean
+ev_view_accessible_focus_changed (GtkWidget        *widget,
+				  GdkEventFocus    *event,
+				  EvViewAccessible *self)
+{
+	AtkObject *page_accessible;
+
+	g_return_val_if_fail (EV_IS_VIEW (widget), FALSE);
+	g_return_val_if_fail (EV_IS_VIEW_ACCESSIBLE (self), FALSE);
+
+	if (self->priv->children == NULL)
+		return FALSE;
+
+	page_accessible = g_ptr_array_index (self->priv->children,
+					     get_relevant_page (EV_VIEW (widget)));
+	atk_object_notify_state_change (page_accessible,
+					ATK_STATE_FOCUSED, event->in);
+
+	return FALSE;
+}
+
 AtkObject *
 ev_view_accessible_new (GtkWidget *widget)
 {
@@ -435,6 +465,12 @@ ev_view_accessible_new (GtkWidget *widget)
 	g_signal_connect (widget, "selection-changed",
 			  G_CALLBACK (ev_view_accessible_selection_changed),
 			  accessible);
+	g_signal_connect (widget, "focus-in-event",
+			  G_CALLBACK (ev_view_accessible_focus_changed),
+			  accessible);
+	g_signal_connect (widget, "focus-out-event",
+			  G_CALLBACK (ev_view_accessible_focus_changed),
+			  accessible);
 
 	view = EV_VIEW (widget);
 	if (view->model)
@@ -444,3 +480,14 @@ ev_view_accessible_new (GtkWidget *widget)
 	return accessible;
 }
 
+gint
+ev_view_accessible_get_relevant_page (EvViewAccessible *accessible)
+{
+	EvView *view;
+
+	g_return_val_if_fail (EV_IS_VIEW_ACCESSIBLE (accessible), -1);
+
+	view = EV_VIEW (gtk_accessible_get_widget (GTK_ACCESSIBLE (accessible)));
+
+	return get_relevant_page (view);
+}

@@ -180,6 +180,54 @@ ev_page_accessible_ref_relation_set (AtkObject *accessible)
 	return relation_set;
 }
 
+/* page accessible's state set is a copy ev-view accessible's state
+ * set but removing ATK_STATE_SHOWING if the page is not on screen and
+ * ATK_STATE_FOCUSED if it is not the relevant page. */
+static AtkStateSet *
+ev_page_accessible_ref_state_set (AtkObject *accessible)
+{
+	AtkStateSet *state_set;
+	AtkStateSet *copy_set;
+	AtkStateSet *view_accessible_state_set;
+	EvPageAccessible *self;
+	EvView *view;
+	gint relevant_page;
+
+	g_return_val_if_fail (EV_IS_PAGE_ACCESSIBLE (accessible), NULL);
+	self = EV_PAGE_ACCESSIBLE (accessible);
+	view = ev_page_accessible_get_view (self);
+
+	state_set = ATK_OBJECT_CLASS (ev_page_accessible_parent_class)->ref_state_set (accessible);
+	atk_state_set_clear_states (state_set);
+
+	view_accessible_state_set = atk_object_ref_state_set (ATK_OBJECT (self->priv->view_accessible));
+	copy_set = atk_state_set_or_sets (state_set, view_accessible_state_set);
+
+	if (self->priv->page >= view->start_page && self->priv->page <= view->end_page)
+		atk_state_set_add_state (copy_set, ATK_STATE_SHOWING);
+	else
+		atk_state_set_remove_state (copy_set, ATK_STATE_SHOWING);
+
+	relevant_page = ev_view_accessible_get_relevant_page (self->priv->view_accessible);
+	if (atk_state_set_contains_state (view_accessible_state_set, ATK_STATE_FOCUSED) &&
+	    self->priv->page == relevant_page)
+		atk_state_set_add_state (copy_set, ATK_STATE_FOCUSED);
+	else
+		atk_state_set_remove_state (copy_set, ATK_STATE_FOCUSED);
+
+	relevant_page = ev_view_accessible_get_relevant_page (self->priv->view_accessible);
+	if (atk_state_set_contains_state (view_accessible_state_set, ATK_STATE_FOCUSED) &&
+	    self->priv->page == relevant_page)
+		atk_state_set_add_state (copy_set, ATK_STATE_FOCUSED);
+	else
+		atk_state_set_remove_state (copy_set, ATK_STATE_FOCUSED);
+
+	g_object_unref (state_set);
+	g_object_unref (view_accessible_state_set);
+
+	return copy_set;
+}
+
 static void
 ev_page_accessible_class_init (EvPageAccessibleClass *klass)
 {
@@ -190,6 +238,7 @@ ev_page_accessible_class_init (EvPageAccessibleClass *klass)
 
 	atk_class->get_parent  = ev_page_accessible_get_parent;
 	atk_class->ref_relation_set = ev_page_accessible_ref_relation_set;
+	atk_class->ref_state_set = ev_page_accessible_ref_state_set;
 
 	g_object_class->get_property = ev_page_accessible_get_property;
 	g_object_class->set_property = ev_page_accessible_set_property;
