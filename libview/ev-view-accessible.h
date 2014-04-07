@@ -53,6 +53,7 @@ AtkObject *ev_view_accessible_new       (GtkWidget *widget);
 void       ev_view_accessible_set_model (EvViewAccessible *accessible,
 					 EvDocumentModel  *model);
 gint       ev_view_accessible_get_n_pages (EvViewAccessible *accessible);
+gint       ev_view_accessible_get_relevant_page (EvViewAccessible *accessible);
 
 #endif  /* __EV_VIEW_ACCESSIBLE_H__ */
 
