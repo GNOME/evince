@@ -26,7 +26,7 @@
 #define __EV_LINK_ACCESSIBLE_H__
 
 #include <gtk/gtk-a11y.h>
-#include "ev-view-accessible.h"
+#include "ev-page-accessible.h"
 #include "ev-link.h"
 
 #define EV_TYPE_LINK_ACCESSIBLE      (ev_link_accessible_get_type ())
@@ -48,7 +48,7 @@ struct _EvLinkAccessibleClass {
 };
 
 GType             ev_link_accessible_get_type (void);
-EvLinkAccessible *ev_link_accessible_new      (EvViewAccessible *view,
+EvLinkAccessible *ev_link_accessible_new      (EvPageAccessible *page,
                                                EvLink           *link,
                                                EvRectangle      *area);
 
