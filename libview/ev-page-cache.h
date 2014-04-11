@@ -74,6 +74,8 @@ gboolean           ev_page_cache_get_text_log_attrs     (EvPageCache       *cach
                                                          gint               page,
                                                          PangoLogAttr     **log_attrs,
                                                          gulong            *n_attrs);
+void               ev_page_cache_ensure_page            (EvPageCache       *cache,
+                                                         gint               page);
 G_END_DECLS
 
 #endif /* EV_PAGE_CACHE_H */

@@ -654,3 +654,13 @@ ev_page_cache_get_text_log_attrs (EvPageCache   *cache,
 
         return FALSE;
 }
+
+void
+ev_page_cache_ensure_page (EvPageCache *cache,
+                           gint         page)
+{
+        g_return_if_fail (EV_IS_PAGE_CACHE (cache));
+        g_return_if_fail (page >= 0 && page < cache->n_pages);
+
+        ev_page_cache_schedule_job_if_needed (cache, page);
+}
