@@ -138,10 +138,20 @@ ev_view_accessible_ref_child (AtkObject *obj,
 			      gint       i)
 {
 	EvViewAccessible *self;
+	EvView *view;
 
 	g_return_val_if_fail (EV_IS_VIEW_ACCESSIBLE (obj), NULL);
 	self = EV_VIEW_ACCESSIBLE (obj);
 	g_return_val_if_fail (i >= 0 || i < ev_view_accessible_get_n_pages (self), NULL);
+
+	view = EV_VIEW (gtk_accessible_get_widget (GTK_ACCESSIBLE (obj)));
+	if (view == NULL)
+		return NULL;
+
+	/* If a given page is requested, we assume that the text would
+	 * be requested soon, so we need to be sure that is cached.*/
+	if (view->page_cache)
+		ev_page_cache_ensure_page (view->page_cache, i);
 
 	return g_object_ref (g_ptr_array_index (self->priv->children, i));
 }
