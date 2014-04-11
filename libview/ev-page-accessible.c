@@ -125,6 +125,61 @@ ev_page_accessible_get_property (GObject    *object,
 	}
 }
 
+/*
+ * We redefine atk_class->ref_relation_set instead of just calling
+ * atk_object_add_relationship on ev_page_accessible_new because at
+ * that moment not all the pages could be created, being easier add
+ * the relation on demand.
+ */
+static AtkRelationSet *
+ev_page_accessible_ref_relation_set (AtkObject *accessible)
+{
+	gint n_pages;
+	EvPageAccessible *self;
+	AtkRelationSet *relation_set;
+	AtkObject *accessible_array[1];
+	AtkRelation *relation;
+
+	g_return_val_if_fail (EV_IS_PAGE_ACCESSIBLE (accessible), NULL);
+	self = EV_PAGE_ACCESSIBLE (accessible);
+
+	relation_set = ATK_OBJECT_CLASS (ev_page_accessible_parent_class)->ref_relation_set (accessible);
+	if (relation_set == NULL)
+		return NULL;
+
+	n_pages = ev_view_accessible_get_n_pages (self->priv->view_accessible);
+	if (n_pages == 0)
+		return relation_set;
+
+	if ((self->priv->page + 1) < n_pages && !atk_relation_set_contains (relation_set, ATK_RELATION_FLOWS_TO)) {
+		AtkObject *next_page;
+
+		next_page = atk_object_ref_accessible_child (ATK_OBJECT (self->priv->view_accessible),
+							     self->priv->page + 1);
+		accessible_array [0] = next_page;
+		relation = atk_relation_new (accessible_array, 1, ATK_RELATION_FLOWS_TO);
+		atk_relation_set_add (relation_set, relation);
+
+		g_object_unref (relation);
+		g_object_unref (next_page);
+	}
+
+	if (self->priv->page > 0 && !atk_relation_set_contains (relation_set, ATK_RELATION_FLOWS_FROM)) {
+		AtkObject *prev_page;
+
+		prev_page = atk_object_ref_accessible_child (ATK_OBJECT (self->priv->view_accessible),
+							     self->priv->page - 1);
+		accessible_array [0] = prev_page;
+		relation = atk_relation_new (accessible_array, 1, ATK_RELATION_FLOWS_FROM);
+		atk_relation_set_add (relation_set, relation);
+
+		g_object_unref (relation);
+		g_object_unref (prev_page);
+	}
+
+	return relation_set;
+}
+
 static void
 ev_page_accessible_class_init (EvPageAccessibleClass *klass)
 {
@@ -134,6 +189,7 @@ ev_page_accessible_class_init (EvPageAccessibleClass *klass)
         g_type_class_add_private (klass, sizeof (EvPageAccessiblePrivate));
 
 	atk_class->get_parent  = ev_page_accessible_get_parent;
+	atk_class->ref_relation_set = ev_page_accessible_ref_relation_set;
 
 	g_object_class->get_property = ev_page_accessible_get_property;
 	g_object_class->set_property = ev_page_accessible_set_property;

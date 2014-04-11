@@ -127,7 +127,7 @@ ev_view_accessible_initialize (AtkObject *obj,
 	atk_object_set_role (obj, ATK_ROLE_DOCUMENT_FRAME);
 }
 
-static gint
+gint
 ev_view_accessible_get_n_pages (EvViewAccessible *self)
 {
 	return self->priv->children == NULL ? 0 : self->priv->children->len;
