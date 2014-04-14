@@ -269,6 +269,9 @@ static void       compute_selections                         (EvView            
 							      EvSelectionStyle    style,
 							      GdkPoint           *start,
 							      GdkPoint           *stop);
+static void       extend_selection                           (EvView             *view,
+							      GdkPoint           *start,
+							      GdkPoint           *stop);
 static void       clear_selection                            (EvView             *view);
 static void       clear_link_selected                        (EvView             *view);
 static void       selection_free                             (EvViewSelection    *selection);
@@ -4659,6 +4662,12 @@ ev_view_button_press_event (GtkWidget      *widget,
 			if (EV_IS_SELECTION (view->document) && view->selection_info.selections) {
 				if (event->type == GDK_3BUTTON_PRESS) {
 					start_selection_for_event (view, event);
+				} else if (event->state & GDK_SHIFT_MASK) {
+					GdkPoint end_point;
+
+					end_point.x = event->x + view->scroll_x;
+					end_point.y = event->y + view->scroll_y;
+					extend_selection (view, &view->selection_info.start, &end_point);
 				} else if (location_in_selected_text (view,
 							       event->x + view->scroll_x,
 							       event->y + view->scroll_y)) {
@@ -5500,9 +5509,9 @@ cursor_forward_line (EvView *view)
 }
 
 static void
-extend_selection_from_cursor (EvView *view,
-			      GdkPoint *start_point,
-			      GdkPoint *end_point)
+extend_selection (EvView *view,
+		  GdkPoint *start_point,
+		  GdkPoint *end_point)
 {
 	if (!view->selection_info.selections) {
 		view->selection_info.start.x = start_point->x;
@@ -5552,7 +5561,7 @@ static gboolean
 ev_view_move_cursor (EvView         *view,
 		     GtkMovementStep step,
 		     gint            count,
-		     gboolean        extend_selection)
+		     gboolean        extend_selections)
 {
 	GdkRectangle    rect;
 	GdkRectangle    prev_rect;
@@ -5570,7 +5579,7 @@ ev_view_move_cursor (EvView         *view,
 	prev_offset = view->cursor_offset;
 	prev_page = view->cursor_page;
 
-	clear_selections = !extend_selection && view->selection_info.selections != NULL;
+	clear_selections = !extend_selections && view->selection_info.selections != NULL;
 
 	switch (step) {
 	case GTK_MOVEMENT_VISUAL_POSITIONS:
@@ -5661,7 +5670,7 @@ ev_view_move_cursor (EvView         *view,
 	cairo_region_destroy (damage_region);
 
 	/* Select text */
-	if (extend_selection && EV_IS_SELECTION (view->document)) {
+	if (extend_selections && EV_IS_SELECTION (view->document)) {
 		GdkPoint start_point, end_point;
 
 		start_point.x = prev_rect.x + view->scroll_x;
@@ -5670,7 +5679,7 @@ ev_view_move_cursor (EvView         *view,
 		end_point.x = rect.x;
 		end_point.y = rect.y + rect.height / 2;
 
-		extend_selection_from_cursor (view, &start_point, &end_point);
+		extend_selection (view, &start_point, &end_point);
 	} else if (clear_selections)
 		clear_selection (view);
 
