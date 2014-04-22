@@ -501,3 +501,39 @@ ev_view_accessible_get_relevant_page (EvViewAccessible *accessible)
 
 	return get_relevant_page (view);
 }
+
+void
+_transform_doc_rect_to_atk_rect (EvViewAccessible *accessible,
+				 gint              page,
+				 EvRectangle      *doc_rect,
+				 EvRectangle      *atk_rect,
+				 AtkCoordType      coord_type)
+{
+	EvView *view;
+	GdkRectangle view_rect;
+	GtkWidget *widget, *toplevel;
+	gint x_widget, y_widget;
+
+	view = EV_VIEW (gtk_accessible_get_widget (GTK_ACCESSIBLE (accessible)));
+	_ev_view_transform_doc_rect_to_view_rect (view, page, doc_rect, &view_rect);
+	view_rect.x -= view->scroll_x;
+	view_rect.y -= view->scroll_y;
+
+	widget = GTK_WIDGET (view);
+	toplevel = gtk_widget_get_toplevel (widget);
+	gtk_widget_translate_coordinates (widget, toplevel, 0, 0, &x_widget, &y_widget);
+	view_rect.x += x_widget;
+	view_rect.y += y_widget;
+
+	if (coord_type == ATK_XY_SCREEN) {
+		gint x_window, y_window;
+		gdk_window_get_origin (gtk_widget_get_window (toplevel), &x_window, &y_window);
+		view_rect.x += x_window;
+		view_rect.y += y_window;
+	}
+
+	atk_rect->x1 = view_rect.x;
+	atk_rect->y1 = view_rect.y;
+	atk_rect->x2 = view_rect.x + view_rect.width;
+	atk_rect->y2 = view_rect.y + view_rect.height;
+}

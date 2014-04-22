@@ -40,10 +40,12 @@ enum {
 	PROP_PAGE,
 };
 
+static void ev_page_accessible_component_iface_init (AtkComponentIface *iface);
 static void ev_page_accessible_hypertext_iface_init (AtkHypertextIface *iface);
 static void ev_page_accessible_text_iface_init (AtkTextIface *iface);
 
 G_DEFINE_TYPE_WITH_CODE (EvPageAccessible, ev_page_accessible, ATK_TYPE_OBJECT,
+			 G_IMPLEMENT_INTERFACE (ATK_TYPE_COMPONENT, ev_page_accessible_component_iface_init)
 			 G_IMPLEMENT_INTERFACE (ATK_TYPE_HYPERTEXT, ev_page_accessible_hypertext_iface_init)
 			 G_IMPLEMENT_INTERFACE (ATK_TYPE_TEXT, ev_page_accessible_text_iface_init))
 
@@ -1052,6 +1054,42 @@ ev_page_accessible_hypertext_iface_init (AtkHypertextIface *iface)
 	iface->get_link = ev_page_accessible_get_link;
 	iface->get_n_links = ev_page_accessible_get_n_links;
 	iface->get_link_index = ev_page_accessible_get_link_index;
+}
+
+static void
+ev_page_accessible_get_extents (AtkComponent *atk_component,
+				gint         *x,
+				gint         *y,
+				gint         *width,
+				gint         *height,
+				AtkCoordType coord_type)
+{
+	EvPageAccessible *self;
+	EvView *view;
+	GdkRectangle page_area;
+	GtkBorder border;
+	EvRectangle doc_rect, atk_rect;
+
+	self = EV_PAGE_ACCESSIBLE (atk_component);
+	view = ev_page_accessible_get_view (self);
+	ev_view_get_page_extents (view, self->priv->page, &page_area, &border);
+
+	doc_rect.x1 = page_area.x;
+	doc_rect.y1 = page_area.y;
+	doc_rect.x2 = page_area.x + page_area.width;
+	doc_rect.y2 = page_area.y + page_area.height;
+	_transform_doc_rect_to_atk_rect (self->priv->view_accessible, self->priv->page, &doc_rect, &atk_rect, coord_type);
+
+	*x = atk_rect.x1;
+	*y = atk_rect.y1;
+	*width = atk_rect.x2 - atk_rect.x1;
+	*height = atk_rect.y2 - atk_rect.y1;
+}
+
+static void
+ev_page_accessible_component_iface_init (AtkComponentIface *iface)
+{
+        iface->get_extents = ev_page_accessible_get_extents;
 }
 
 EvPageAccessible *
