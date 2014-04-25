@@ -126,7 +126,7 @@ AC_SUBST([GTK_REQUIRED])
 
 AC_DEFINE([GDK_VERSION_MIN_REQUIRED], [GDK_VERSION_3_8], [Minimum GTK/GDK version required])
 
-GNOME_ICON_THEME_REQUIRED=2.17.1
+ADWAITA_ICON_THEME_REQUIRED=2.17.1
 LIBXML_REQUIRED=2.5.0
 
 dnl Check dependencies
@@ -166,7 +166,7 @@ case "$with_platform" in
         # would like to require the icon theme at compile-time. But, because
         # the hicolor-icon-theme does not have a pkgconfig file, on gnome we
         # require the gnome icon theme instead.
-        SHELL_PLATFORM_PKGS="gnome-icon-theme >= $GNOME_ICON_THEME_REQUIRED"
+        SHELL_PLATFORM_PKGS="adwaita-icon-theme >= $ADWAITA_ICON_THEME_REQUIRED"
         ;;
   *)
         # On all other platforms we issue a warning about the runtime
