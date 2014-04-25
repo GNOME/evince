@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Tajik Gnome\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evince&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2014-03-17 04:45+0000\n"
-"PO-Revision-Date: 2014-03-17 12:27+0500\n"
+"POT-Creation-Date: 2014-04-25 03:39+0000\n"
+"PO-Revision-Date: 2014-04-25 16:53+0500\n"
 "Last-Translator: Victor Ibragimov <victor.ibragimov@gmail.com>\n"
 "Language-Team: \n"
 "Language: tg\n"
@@ -62,12 +62,12 @@ msgstr "Ягон файл дар бойгонӣ нест"
 msgid "No images found in archive %s"
 msgstr "Ягон тасвир дар бойгонӣ нест %s"
 
-#: ../backend/comics/comics-document.c:787
+#: ../backend/comics/comics-document.c:791
 #, c-format
 msgid "There was an error deleting “%s”."
 msgstr "Хатои нест кардани “%s” рух дод."
 
-#: ../backend/comics/comics-document.c:880
+#: ../backend/comics/comics-document.c:884
 #, c-format
 msgid "Error %s"
 msgstr "Хатогии %s"
@@ -99,53 +99,53 @@ msgstr "Ҳуҷҷати DVI формати нодуруст дорад"
 msgid "DVI Documents"
 msgstr "Ҳуҷҷатҳои DVI"
 
-#: ../backend/pdf/ev-poppler.cc:636
+#: ../backend/pdf/ev-poppler.cc:673
 msgid "This work is in the Public Domain"
 msgstr "Ин кор дар Домени ҷамъиятӣ аст"
 
 #. translators: this is the document security state
-#: ../backend/pdf/ev-poppler.cc:892 ../backend/pdf/ev-poppler.cc:898
+#: ../backend/pdf/ev-poppler.cc:929 ../backend/pdf/ev-poppler.cc:935
 msgid "Yes"
 msgstr "Ҳа"
 
 #. translators: this is the document security state
-#: ../backend/pdf/ev-poppler.cc:895 ../backend/pdf/ev-poppler.cc:898
+#: ../backend/pdf/ev-poppler.cc:932 ../backend/pdf/ev-poppler.cc:935
 msgid "No"
 msgstr "Не"
 
-#: ../backend/pdf/ev-poppler.cc:1028
+#: ../backend/pdf/ev-poppler.cc:1066
 msgid "Type 1"
 msgstr "Навъи 1"
 
-#: ../backend/pdf/ev-poppler.cc:1030
+#: ../backend/pdf/ev-poppler.cc:1068
 msgid "Type 1C"
 msgstr "Навъи 1С"
 
-#: ../backend/pdf/ev-poppler.cc:1032
+#: ../backend/pdf/ev-poppler.cc:1070
 msgid "Type 3"
 msgstr "Навъи 3"
 
-#: ../backend/pdf/ev-poppler.cc:1034
+#: ../backend/pdf/ev-poppler.cc:1072
 msgid "TrueType"
 msgstr "Навъи дуруст"
 
-#: ../backend/pdf/ev-poppler.cc:1036
+#: ../backend/pdf/ev-poppler.cc:1074
 msgid "Type 1 (CID)"
 msgstr "Навъи 1 (CID)"
 
-#: ../backend/pdf/ev-poppler.cc:1038
+#: ../backend/pdf/ev-poppler.cc:1076
 msgid "Type 1C (CID)"
 msgstr "Навъи 1С (CID)"
 
-#: ../backend/pdf/ev-poppler.cc:1040
+#: ../backend/pdf/ev-poppler.cc:1078
 msgid "TrueType (CID)"
 msgstr "Навъи дуруст (CID)"
 
-#: ../backend/pdf/ev-poppler.cc:1042
+#: ../backend/pdf/ev-poppler.cc:1080
 msgid "Unknown font type"
 msgstr "Навъи шрифти номаълум "
 
-#: ../backend/pdf/ev-poppler.cc:1086
+#: ../backend/pdf/ev-poppler.cc:1124
 msgid ""
 "This document contains non-embedded fonts that are not from the PDF Standard "
 "14 fonts. If the substitute fonts selected by fontconfig are not the same as "
@@ -156,11 +156,11 @@ msgstr ""
 "ба шрифтҳои истифодашуда барои эҷоди PDF монанд набошанд, пешниҳод дуруст "
 "буда наметавонад."
 
-#: ../backend/pdf/ev-poppler.cc:1091
+#: ../backend/pdf/ev-poppler.cc:1129
 msgid "All fonts are either standard or embedded."
 msgstr "Ҳамаи шрифтҳо ё стандарт ва ё дарунсохт ҳастанд."
 
-#: ../backend/pdf/ev-poppler.cc:1123
+#: ../backend/pdf/ev-poppler.cc:1161
 msgid "No name"
 msgstr "Бе ном"
 
@@ -174,20 +174,20 @@ msgstr "Бе ном"
 #. Author: None
 #. Keywords: None
 #.
-#: ../backend/pdf/ev-poppler.cc:1132 ../libview/ev-print-operation.c:1920
+#: ../backend/pdf/ev-poppler.cc:1170 ../libview/ev-print-operation.c:1943
 #: ../properties/ev-properties-view.c:192
 msgid "None"
 msgstr "Ҳеҷ"
 
-#: ../backend/pdf/ev-poppler.cc:1140
+#: ../backend/pdf/ev-poppler.cc:1178
 msgid "Embedded subset"
 msgstr "Зермаҷмӯи дарунсохт"
 
-#: ../backend/pdf/ev-poppler.cc:1142
+#: ../backend/pdf/ev-poppler.cc:1180
 msgid "Embedded"
 msgstr "Дарунсохт"
 
-#: ../backend/pdf/ev-poppler.cc:1144
+#: ../backend/pdf/ev-poppler.cc:1182
 msgid "Not embedded"
 msgstr "Дарунсохт нест"
 
@@ -196,7 +196,7 @@ msgstr "Дарунсохт нест"
 #. * type. Example:
 #. * "Type 1 (One of the Standard 14 Fonts)"
 #.
-#: ../backend/pdf/ev-poppler.cc:1151
+#: ../backend/pdf/ev-poppler.cc:1189
 msgid " (One of the Standard 14 Fonts)"
 msgstr "(Яке аз Шрифтҳои стандарт 14)"
 
@@ -205,15 +205,15 @@ msgstr "(Яке аз Шрифтҳои стандарт 14)"
 #. * type. Example:
 #. * "TrueType (Not one of the Standard 14 Fonts)"
 #.
-#: ../backend/pdf/ev-poppler.cc:1158
+#: ../backend/pdf/ev-poppler.cc:1196
 msgid " (Not one of the Standard 14 Fonts)"
 msgstr "(Яке аз Шрифтҳои стандарт 14 нест)"
 
-#: ../backend/pdf/ev-poppler.cc:1165
+#: ../backend/pdf/ev-poppler.cc:1203
 msgid "Encoding"
 msgstr "Рамзгузорӣ"
 
-#: ../backend/pdf/ev-poppler.cc:1166
+#: ../backend/pdf/ev-poppler.cc:1204
 msgid "Substituting with"
 msgstr "Иваз карда мешавад бо"
 
@@ -248,7 +248,7 @@ msgid "XPS Documents"
 msgstr "Ҳуҷҷатҳои XPS "
 
 #. Manually set name and icon
-#: ../data/evince.desktop.in.in.h:1 ../shell/ev-window.c:5040
+#: ../data/evince.desktop.in.in.h:1 ../shell/ev-window.c:5027
 #: ../shell/ev-window-title.c:144 ../shell/main.c:298
 #, c-format
 msgid "Document Viewer"
@@ -375,20 +375,19 @@ msgid "of %d"
 msgstr "аз %d"
 
 #: ../libmisc/ev-page-action-widget.c:182 ../shell/ev-history.c:426
-#: ../shell/ev-sidebar-bookmarks.c:312 ../shell/ev-window.c:877
-#: ../shell/ev-window.c:4780
+#: ../shell/ev-sidebar-bookmarks.c:312 ../shell/ev-window.c:876
+#: ../shell/ev-window.c:4767
 #, c-format
 msgid "Page %s"
 msgstr "Саҳифаи %s"
 
-#: ../libview/ev-jobs.c:1954
+#: ../libview/ev-jobs.c:1997
 #, c-format
 msgid "Failed to print page %d: %s"
 msgstr "Чопи саҳифаи %d: %s қатъ гардид"
 
 #. Initial state
 #: ../libview/ev-print-operation.c:350
-#| msgid "Preparing to print…"
 msgid "Preparing preview…"
 msgstr "Омодасозии пешнамоиш…"
 
@@ -398,7 +397,6 @@ msgstr "Ба поён мерасад..."
 
 #: ../libview/ev-print-operation.c:354
 #, c-format
-#| msgid "Printing page %d of %d…"
 msgid "Generating preview: page %d of %d"
 msgstr "Эҷодкунии пешнамоиш: саҳифаи %d аз %d"
 
@@ -412,41 +410,42 @@ msgstr "Омодагӣ барои чоп"
 msgid "Printing page %d of %d…"
 msgstr "Чопи саҳифаи %d аз %d…"
 
-#: ../libview/ev-print-operation.c:1188
-msgid "PostScript is not supported by this printer."
-msgstr "PostScrip бо ин принтер дастгирӣ намешавад."
+#: ../libview/ev-print-operation.c:1214
+#| msgid "PostScript is not supported by this printer."
+msgid "Requested format is not supported by this printer."
+msgstr "Формати дархостшуда бо ин принтер дастгирӣ намешавад."
 
-#: ../libview/ev-print-operation.c:1253
+#: ../libview/ev-print-operation.c:1277
 msgid "Invalid page selection"
 msgstr "Интихоби нодурусти саҳифа"
 
-#: ../libview/ev-print-operation.c:1254
+#: ../libview/ev-print-operation.c:1278
 msgid "Warning"
 msgstr "Огоҳӣ"
 
-#: ../libview/ev-print-operation.c:1256
+#: ../libview/ev-print-operation.c:1280
 msgid "Your print range selection does not include any pages"
 msgstr "Интихоби маҳдудаи чопи шумо ягон саҳифаро дар бар намегирад"
 
 #. translators: Title of the print dialog
 #. translators: Print document currently shown in the Print Preview window
-#: ../libview/ev-print-operation.c:1335 ../previewer/ev-previewer-window.c:284
+#: ../libview/ev-print-operation.c:1358 ../previewer/ev-previewer-window.c:284
 msgid "Print"
 msgstr "Чоп кардан"
 
-#: ../libview/ev-print-operation.c:1914
+#: ../libview/ev-print-operation.c:1937
 msgid "Page Scaling:"
 msgstr "Миқёсбандии саҳифа:"
 
-#: ../libview/ev-print-operation.c:1921
+#: ../libview/ev-print-operation.c:1944
 msgid "Shrink to Printable Area"
 msgstr "Хурдшавӣ ба минтақаи чопшаванда"
 
-#: ../libview/ev-print-operation.c:1922
+#: ../libview/ev-print-operation.c:1945
 msgid "Fit to Printable Area"
 msgstr "Мувофиқшавӣ ба минтақаи чопшаванда"
 
-#: ../libview/ev-print-operation.c:1925
+#: ../libview/ev-print-operation.c:1948
 msgid ""
 "Scale document pages to fit the selected printer page. Select from one of "
 "the following:\n"
@@ -472,11 +471,11 @@ msgstr ""
 "талаботи мувофиқшавӣ ба минтақаи чопшавандаи саҳифаи принтер калон ё хурд "
 "мешаванд.\n"
 
-#: ../libview/ev-print-operation.c:1937
+#: ../libview/ev-print-operation.c:1960
 msgid "Auto Rotate and Center"
 msgstr "Чархиши худкор ва марказ"
 
-#: ../libview/ev-print-operation.c:1940
+#: ../libview/ev-print-operation.c:1963
 msgid ""
 "Rotate printer page orientation of each page to match orientation of each "
 "document page. Document pages will be centered within the printer page."
@@ -484,11 +483,11 @@ msgstr ""
 "Давр занонидани самти ҳар саҳифаи принтер  барои муқоисаи самти ҳар саҳифаи "
 "ҳуҷҷат. Саҳифаҳои ҳуҷҷат дар дохили саҳифаи принтер марказонида мешаванд."
 
-#: ../libview/ev-print-operation.c:1945
+#: ../libview/ev-print-operation.c:1968
 msgid "Select page size using document page size"
 msgstr "Интихоби андозаи саҳифа бо истифода аз андозаи саҳифаи ҳуҷҷат"
 
-#: ../libview/ev-print-operation.c:1947
+#: ../libview/ev-print-operation.c:1970
 msgid ""
 "When enabled, each page will be printed on the same size paper as the "
 "document page."
@@ -496,23 +495,23 @@ msgstr ""
 "Ҳангоми фаъол шудан, ҳар саҳифа дар коғазҳои андозаашон якхела ба монанди "
 "саҳифаи ҳуҷҷат чоп мешавад."
 
-#: ../libview/ev-print-operation.c:2047
+#: ../libview/ev-print-operation.c:2070
 msgid "Page Handling"
 msgstr "Коркарди саҳифа"
 
-#: ../libview/ev-view-accessible.c:46
+#: ../libview/ev-view-accessible.c:43
 msgid "Scroll Up"
 msgstr "Ҳаракат кардан ба боло"
 
-#: ../libview/ev-view-accessible.c:47
+#: ../libview/ev-view-accessible.c:44
 msgid "Scroll Down"
 msgstr "Ҳаракат кардан ба поён"
 
-#: ../libview/ev-view-accessible.c:53
+#: ../libview/ev-view-accessible.c:50
 msgid "Scroll View Up"
 msgstr "Бастаи намоиши боло"
 
-#: ../libview/ev-view-accessible.c:54
+#: ../libview/ev-view-accessible.c:51
 msgid "Scroll View Down"
 msgstr "Бастаи намоиши поён"
 
@@ -520,55 +519,55 @@ msgstr "Бастаи намоиши поён"
 msgid "Document View"
 msgstr "Намоиши ҳуҷҷат"
 
-#: ../libview/ev-view.c:1933
+#: ../libview/ev-view.c:1939
 msgid "Go to first page"
 msgstr "Гузариш ба саҳифаи аввал"
 
-#: ../libview/ev-view.c:1935
+#: ../libview/ev-view.c:1941
 msgid "Go to previous page"
 msgstr "Гузариш ба саҳифаи қаблӣ"
 
-#: ../libview/ev-view.c:1937
+#: ../libview/ev-view.c:1943
 msgid "Go to next page"
 msgstr "Гузариш ба саҳифаи навбатӣ"
 
-#: ../libview/ev-view.c:1939
+#: ../libview/ev-view.c:1945
 msgid "Go to last page"
 msgstr "Гузариш ба саҳифаи охирин"
 
-#: ../libview/ev-view.c:1941
+#: ../libview/ev-view.c:1947
 msgid "Go to page"
 msgstr "Гузариш ба саҳифа"
 
-#: ../libview/ev-view.c:1943
+#: ../libview/ev-view.c:1949
 msgid "Find"
 msgstr "Ёфтан"
 
-#: ../libview/ev-view.c:1971
+#: ../libview/ev-view.c:1977
 #, c-format
 msgid "Go to page %s"
 msgstr "Гузариш ба саҳифаи %s"
 
-#: ../libview/ev-view.c:1977
+#: ../libview/ev-view.c:1983
 #, c-format
 msgid "Go to %s on file “%s”"
 msgstr "Гузариш ба  %s дар файли “%s”"
 
-#: ../libview/ev-view.c:1980
+#: ../libview/ev-view.c:1986
 #, c-format
 msgid "Go to file “%s”"
 msgstr "Гузариш ба файли “%s”"
 
-#: ../libview/ev-view.c:1988
+#: ../libview/ev-view.c:1994
 #, c-format
 msgid "Launch %s"
 msgstr "Иҷро кардани %s"
 
-#: ../libview/ev-view-presentation.c:710
+#: ../libview/ev-view-presentation.c:703
 msgid "Jump to page:"
 msgstr "Ҷаҳиш ба саҳифаи:"
 
-#: ../libview/ev-view-presentation.c:1015
+#: ../libview/ev-view-presentation.c:1006
 msgid "End of presentation. Click to exit."
 msgstr "Хотимаи тақдим. Барои хориҷ шудан зер кунед."
 
@@ -588,7 +587,7 @@ msgstr "ФАЙЛ"
 msgid "GNOME Document Previewer"
 msgstr "Василаи пешнамоиши ҳуҷҷати GNOME"
 
-#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3397
+#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3396
 msgid "Failed to print document"
 msgstr "Чопи ҳуҷҷат қатъ гардид"
 
@@ -597,48 +596,47 @@ msgstr "Чопи ҳуҷҷат қатъ гардид"
 msgid "The selected printer '%s' could not be found"
 msgstr "Принтери интихобшудаи '%s' ёфт нашуд"
 
-#. Go menu
-#: ../previewer/ev-previewer-window.c:270 ../shell/ev-window.c:6094
+#: ../previewer/ev-previewer-window.c:270 ../shell/ev-window.c:6086
 msgid "_Previous Page"
 msgstr "_Саҳифаи қаблӣ"
 
-#: ../previewer/ev-previewer-window.c:271 ../shell/ev-window.c:6095
+#: ../previewer/ev-previewer-window.c:271 ../shell/ev-window.c:6087
 msgid "Go to the previous page"
 msgstr "Гузариш ба саҳифаи қаблӣ"
 
-#: ../previewer/ev-previewer-window.c:273 ../shell/ev-window.c:6097
+#: ../previewer/ev-previewer-window.c:273 ../shell/ev-window.c:6089
 msgid "_Next Page"
 msgstr "_Саҳифаи навбатӣ"
 
-#: ../previewer/ev-previewer-window.c:274 ../shell/ev-window.c:6098
+#: ../previewer/ev-previewer-window.c:274 ../shell/ev-window.c:6090
 msgid "Go to the next page"
 msgstr "Гузариш ба саҳийаи навбатӣ"
 
-#: ../previewer/ev-previewer-window.c:277 ../shell/ev-window.c:6081
+#: ../previewer/ev-previewer-window.c:277 ../shell/ev-window.c:6069
 msgid "Enlarge the document"
 msgstr "Калон кардани ҳуҷҷат"
 
-#: ../previewer/ev-previewer-window.c:280 ../shell/ev-window.c:6084
+#: ../previewer/ev-previewer-window.c:280 ../shell/ev-window.c:6072
 msgid "Shrink the document"
 msgstr "Хурд кардани ҳуҷҷат"
 
-#: ../previewer/ev-previewer-window.c:285 ../shell/ev-window.c:6059
+#: ../previewer/ev-previewer-window.c:285 ../shell/ev-window.c:6047
 msgid "Print this document"
 msgstr "Чопи ин ҳуҷҷат"
 
-#: ../previewer/ev-previewer-window.c:317 ../shell/ev-window.c:6238
+#: ../previewer/ev-previewer-window.c:317 ../shell/ev-window.c:6230
 msgid "Fit Pa_ge"
 msgstr "Мувофиқ кардани Са_ҳифа"
 
-#: ../previewer/ev-previewer-window.c:318 ../shell/ev-window.c:6239
+#: ../previewer/ev-previewer-window.c:318 ../shell/ev-window.c:6231
 msgid "Make the current document fill the window"
 msgstr "Пур кардани равзана бо ҳуҷҷати ҷорӣ"
 
-#: ../previewer/ev-previewer-window.c:320 ../shell/ev-window.c:6241
+#: ../previewer/ev-previewer-window.c:320 ../shell/ev-window.c:6233
 msgid "Fit _Width"
 msgstr "Мувофиқ кардани _Бар"
 
-#: ../previewer/ev-previewer-window.c:321 ../shell/ev-window.c:6242
+#: ../previewer/ev-previewer-window.c:321 ../shell/ev-window.c:6234
 msgid "Make the current document fill the window width"
 msgstr "Пур кардани бари равзана бо ҳуҷҷати мазкур"
 
@@ -1003,7 +1001,7 @@ msgstr "Чоп..."
 msgid "Index"
 msgstr "Индекс"
 
-#: ../shell/ev-sidebar-thumbnails.c:960
+#: ../shell/ev-sidebar-thumbnails.c:1049
 msgid "Thumbnails"
 msgstr "Пешнамоишҳои кучак"
 
@@ -1019,106 +1017,106 @@ msgstr "Имконоти файл"
 msgid "Supported Image Files"
 msgstr "Файлҳои тасвирии дастгиришаванда"
 
-#: ../shell/ev-window.c:1538
+#: ../shell/ev-window.c:1539
 msgid "The document contains no pages"
 msgstr "Ҳуҷҷат ягон саҳифа надорад"
 
-#: ../shell/ev-window.c:1541
+#: ../shell/ev-window.c:1542
 msgid "The document contains only empty pages"
 msgstr "Ҳуҷҷат танҳо саҳифаҳои ходӣ дорад"
 
-#: ../shell/ev-window.c:1747 ../shell/ev-window.c:1915
+#: ../shell/ev-window.c:1748 ../shell/ev-window.c:1916
 #, c-format
 msgid "Unable to open document “%s”."
 msgstr "Ҳуҷҷати “%s” кушода намешавад."
 
-#: ../shell/ev-window.c:1879
+#: ../shell/ev-window.c:1880
 #, c-format
 msgid "Loading document from “%s”"
 msgstr "Боргирии ҳуҷҷат аз “%s”"
 
-#: ../shell/ev-window.c:2030 ../shell/ev-window.c:2320
+#: ../shell/ev-window.c:2031 ../shell/ev-window.c:2321
 #, c-format
 msgid "Downloading document (%d%%)"
 msgstr "Ҳуҷҷат боргирӣ мешавад (%d%%)"
 
-#: ../shell/ev-window.c:2063
+#: ../shell/ev-window.c:2064
 msgid "Failed to load remote file."
 msgstr "Бор кардани файли дурдаст қатъ гардид."
 
-#: ../shell/ev-window.c:2264
+#: ../shell/ev-window.c:2265
 #, c-format
 msgid "Reloading document from %s"
 msgstr "Боргирии дубораи ҳуҷҷат аз %s"
 
-#: ../shell/ev-window.c:2296
+#: ../shell/ev-window.c:2297
 msgid "Failed to reload document."
 msgstr "Боргирии дубораи ҳуҷҷат қатъ гардид."
 
-#: ../shell/ev-window.c:2511
+#: ../shell/ev-window.c:2510
 msgid "Open Document"
 msgstr "Кушодани ҳуҷҷат"
 
-#: ../shell/ev-window.c:2784
+#: ../shell/ev-window.c:2783
 #, c-format
 msgid "Saving document to %s"
 msgstr "Захираи ҳуҷҷат дар %s"
 
-#: ../shell/ev-window.c:2787
+#: ../shell/ev-window.c:2786
 #, c-format
 msgid "Saving attachment to %s"
 msgstr "Захираи замима дар %s"
 
-#: ../shell/ev-window.c:2790
+#: ../shell/ev-window.c:2789
 #, c-format
 msgid "Saving image to %s"
 msgstr "Захираи тасвир дар %s"
 
-#: ../shell/ev-window.c:2834 ../shell/ev-window.c:2934
+#: ../shell/ev-window.c:2833 ../shell/ev-window.c:2933
 #, c-format
 msgid "The file could not be saved as “%s”."
 msgstr "Файл ҳамчун “%s” захира намешавад."
 
-#: ../shell/ev-window.c:2865
+#: ../shell/ev-window.c:2864
 #, c-format
 msgid "Uploading document (%d%%)"
 msgstr "Ҳуҷҷат бор мешавад (%d%%)"
 
-#: ../shell/ev-window.c:2869
+#: ../shell/ev-window.c:2868
 #, c-format
 msgid "Uploading attachment (%d%%)"
 msgstr "Замима бор мешавад (%d%%)"
 
-#: ../shell/ev-window.c:2873
+#: ../shell/ev-window.c:2872
 #, c-format
 msgid "Uploading image (%d%%)"
 msgstr "Тасвир бор мешавад (%d%%)"
 
-#: ../shell/ev-window.c:2985
+#: ../shell/ev-window.c:2984
 msgid "Save a Copy"
 msgstr "Захира кардани нусха"
 
-#: ../shell/ev-window.c:3049
+#: ../shell/ev-window.c:3048
 msgid "Could not send current document"
 msgstr "Ҳуҷҷати мазкурро фиристода натавонист"
 
-#: ../shell/ev-window.c:3080
+#: ../shell/ev-window.c:3079
 msgid "Could not open the containing folder"
 msgstr "Ҷузвдони дар дохилаш бударо кушода натавонист"
 
-#: ../shell/ev-window.c:3341
+#: ../shell/ev-window.c:3340
 #, c-format
 msgid "%d pending job in queue"
 msgid_plural "%d pending jobs in queue"
 msgstr[0] "%d кори номаълум дар навбат"
 msgstr[1] "%d корҳои номаълум дар навбат"
 
-#: ../shell/ev-window.c:3454
+#: ../shell/ev-window.c:3453
 #, c-format
 msgid "Printing job “%s”"
 msgstr "Кори чоп “%s”"
 
-#: ../shell/ev-window.c:3649
+#: ../shell/ev-window.c:3648
 msgid ""
 "Document contains form fields that have been filled out. If you don't save a "
 "copy, changes will be permanently lost."
@@ -1126,7 +1124,7 @@ msgstr ""
 "Ҳуҷҷат майдонҳои шакл дорад, ки пур карда шудаанд. Агар шумо нусхаро захира "
 "накунед, тағйирот пурра гум мешаванд."
 
-#: ../shell/ev-window.c:3653
+#: ../shell/ev-window.c:3652
 msgid ""
 "Document contains new or modified annotations. If you don't save a copy, "
 "changes will be permanently lost."
@@ -1134,20 +1132,20 @@ msgstr ""
 "Ҳуҷҷат шарҳҳои нав ё тағйирёфта дорад. Агар шумо нусхаеро захира накунед, "
 "тағйирот пурра нест мешаванд."
 
-#: ../shell/ev-window.c:3660
+#: ../shell/ev-window.c:3659
 #, c-format
 msgid "Save a copy of document “%s” before closing?"
 msgstr "Нусхаи ҳуҷҷати “%s” пеш аз пӯшидан захира шавад?"
 
-#: ../shell/ev-window.c:3679
+#: ../shell/ev-window.c:3678
 msgid "Close _without Saving"
 msgstr "Пӯшидан _бе захирасозӣ"
 
-#: ../shell/ev-window.c:3683
+#: ../shell/ev-window.c:3682
 msgid "Save a _Copy"
 msgstr "Захира кардани _нусха"
 
-#: ../shell/ev-window.c:3757
+#: ../shell/ev-window.c:3756
 #, c-format
 msgid "Wait until print job “%s” finishes before closing?"
 msgstr "Пеш аз пӯшидан то анҷоми кори чопи “%s” интизор мешавед?"
@@ -1155,7 +1153,7 @@ msgstr "Пеш аз пӯшидан то анҷоми кори чопи “%s” 
 #. TRANS: the singular form is not really used as n_print_jobs > 1
 #. but some languages distinguish between different plurals forms,
 #. so the ngettext is needed.
-#: ../shell/ev-window.c:3763
+#: ../shell/ev-window.c:3762
 #, c-format
 msgid "There is %d print job active. Wait until print finishes before closing?"
 msgid_plural ""
@@ -1165,23 +1163,23 @@ msgstr[0] ""
 msgstr[1] ""
 "Корҳои чопи %d фаъоланд. Пеш аз пӯшидан то тамом шудани чоп интизор мешавед?"
 
-#: ../shell/ev-window.c:3778
+#: ../shell/ev-window.c:3777
 msgid "If you close the window, pending print jobs will not be printed."
 msgstr "Агар шумо равзанаро пӯшонед, корҳои чопи тамомнашуда чоп намешаванд."
 
-#: ../shell/ev-window.c:3782
+#: ../shell/ev-window.c:3781
 msgid "Cancel _print and Close"
 msgstr "Бекор кардани _чоп ва пӯшидан"
 
-#: ../shell/ev-window.c:3786
+#: ../shell/ev-window.c:3785
 msgid "Close _after Printing"
 msgstr "Пӯшидан _баъд аз чоп"
 
-#: ../shell/ev-window.c:4329
+#: ../shell/ev-window.c:4300
 msgid "Running in presentation mode"
 msgstr "Иҷро дар ҳолати тақдим"
 
-#: ../shell/ev-window.c:5036
+#: ../shell/ev-window.c:5023
 #, c-format
 msgid ""
 "Document Viewer\n"
@@ -1190,7 +1188,7 @@ msgstr ""
 "Тамошобини ҳуҷҷат\n"
 "%s (%s)-ро истифода мебарад"
 
-#: ../shell/ev-window.c:5069
+#: ../shell/ev-window.c:5056
 msgid ""
 "Evince is free software; you can redistribute it and/or modify it under the "
 "terms of the GNU General Public License as published by the Free Software "
@@ -1202,7 +1200,7 @@ msgstr ""
 "Ройгон нашр шудааст, тағйир диҳед; ҳатто версияи 2-юми Иҷозатнома, ё (бо "
 "имоноти худатон) ҳар версияи охирин.\n"
 
-#: ../shell/ev-window.c:5073
+#: ../shell/ev-window.c:5060
 msgid ""
 "Evince is distributed in the hope that it will be useful, but WITHOUT ANY "
 "WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS "
@@ -1213,7 +1211,7 @@ msgstr ""
 "ҳатто бе кафолати эҳтимолии ХАРИДУ ФУРӮШ ё МУТОБИҚАТ БА МАҚСАДҲОИ МУАЙЯН. "
 "Барои маълумоти бештар ба Иҷозатномаи умумии ҷамъиятӣ  GNU нигаред. \n"
 
-#: ../shell/ev-window.c:5077
+#: ../shell/ev-window.c:5064
 msgid ""
 "You should have received a copy of the GNU General Public License along with "
 "Evince; if not, write to the Free Software Foundation, Inc., 51 Franklin "
@@ -1223,302 +1221,306 @@ msgstr ""
 "гиред; дар ғайри ин ҳолат ба Фонди Нармафзорҳои Ройгон, Inc., 51 хиёбони "
 "Франклинt, Ошёнаи 5-ум, Бостон, MA 02110-1301  ИМА нависед\n"
 
-#: ../shell/ev-window.c:5102
+#: ../shell/ev-window.c:5089
 msgid "Evince"
 msgstr "Evince"
 
-#: ../shell/ev-window.c:5105
+#: ../shell/ev-window.c:5092
 msgid "© 1996–2012 The Evince authors"
 msgstr "© 1996–2012 Муаллифони Evince"
 
-#: ../shell/ev-window.c:5111
+#: ../shell/ev-window.c:5098
 msgid "translator-credits"
 msgstr "Victor Ibragimov"
 
 #. TRANS: Sometimes this could be better translated as
 #. "%d hit(s) on this page".  Therefore this string
 #. contains plural cases.
-#: ../shell/ev-window.c:5382
+#: ../shell/ev-window.c:5370
 #, c-format
 msgid "%d found on this page"
 msgid_plural "%d found on this page"
 msgstr[0] "дар ин саҳифа %d ёфт шуд"
 msgstr[1] "дар ин саҳифа %d ёфт шуданд"
 
-#: ../shell/ev-window.c:5387
+#: ../shell/ev-window.c:5375
 msgid "Not found"
 msgstr "Вуҷуд надорад"
 
-#: ../shell/ev-window.c:5393
+#: ../shell/ev-window.c:5381
 #, c-format
 msgid "%3d%% remaining to search"
 msgstr "%3d%% барои ҷустуҷӯ боқӣ монд"
 
-#: ../shell/ev-window.c:5724
+#: ../shell/ev-window.c:5712
 msgid "Enable caret navigation?"
 msgstr "Паймоишро аз рӯи курсор фаъол мекунед?"
 
-#: ../shell/ev-window.c:5726
+#: ../shell/ev-window.c:5714
 msgid "_Enable"
 msgstr "_Фаъол кардан"
 
-#: ../shell/ev-window.c:5729
+#: ../shell/ev-window.c:5717
+#| msgid ""
+#| "Pressing F7 turns the caret navigation on or off. This feature places a "
+#| "moveable cursor in text pages, allowing you to move around and select "
+#| "text with your keyboard. Do you want to enable the caret navigation on?"
 msgid ""
 "Pressing F7 turns the caret navigation on or off. This feature places a "
 "moveable cursor in text pages, allowing you to move around and select text "
-"with your keyboard. Do you want to enable the caret navigation on?"
+"with your keyboard. Do you want to enable the caret navigation?"
 msgstr ""
 "Тугмаи F7 паймоишро аз рӯи курсор фаъол ё хомӯш мекунад. Ин хусусият "
 "курсореро дар саҳифаҳои матнӣ намоиш медиҳад, то ки шумо тавонед онро ба "
 "воситаи клавиатура идора кунед ва бо он матнро интихоб намоед. Шумо мехоҳед, "
 "ки паймоишро аз рӯи курсор фаъол кунед?"
 
-#: ../shell/ev-window.c:5734
+#: ../shell/ev-window.c:5722
 msgid "Don't show this message again"
 msgstr "Ин паёмеро дигар намоиш надиҳед"
 
-#: ../shell/ev-window.c:6039
+#: ../shell/ev-window.c:6027
 msgid "_Bookmarks"
 msgstr "_Хатбаракҳо"
 
-#: ../shell/ev-window.c:6040
+#: ../shell/ev-window.c:6028
 msgid "_Recent"
 msgstr "_Охирин"
 
 #. File menu
-#: ../shell/ev-window.c:6043 ../shell/ev-window.c:6389
+#: ../shell/ev-window.c:6031 ../shell/ev-window.c:6389
 msgid "_Open…"
 msgstr "_Кушодан…"
 
-#: ../shell/ev-window.c:6044 ../shell/ev-window.c:6390
+#: ../shell/ev-window.c:6032 ../shell/ev-window.c:6390
 msgid "Open an existing document"
 msgstr "Кушодани ҳуҷҷати мавҷудбуда"
 
-#: ../shell/ev-window.c:6046
+#: ../shell/ev-window.c:6034
 msgid "_View in new window"
 msgstr "_Намоиш додан дар равзанаи нав"
 
-#: ../shell/ev-window.c:6047
+#: ../shell/ev-window.c:6035
 msgid "Open a copy of the current document in a new window"
 msgstr "Кушодани як нусхаи ҳуҷҷати ҷорӣ дар равзанаи нав"
 
-#: ../shell/ev-window.c:6049
+#: ../shell/ev-window.c:6037
 msgid "_Save a Copy…"
 msgstr "Захира кардани Нусха..."
 
-#: ../shell/ev-window.c:6050
+#: ../shell/ev-window.c:6038
 msgid "Save a copy of the current document"
 msgstr "Захира кардани нусхаи ҳуҷҷати ҷорӣ"
 
-#: ../shell/ev-window.c:6052
+#: ../shell/ev-window.c:6040
 msgid "Send _To…"
 msgstr "Фиристодан _ба..."
 
-#: ../shell/ev-window.c:6053
+#: ../shell/ev-window.c:6041
 msgid "Send current document by mail, instant message…"
 msgstr "Фиристодани ҳуҷҷати ҷорӣ бо почта, паёми фаврӣ..."
 
-#: ../shell/ev-window.c:6055
+#: ../shell/ev-window.c:6043
 msgid "Open Containing _Folder"
 msgstr "Кушодани Ҷузвдони _дарбаргиранда"
 
-#: ../shell/ev-window.c:6056
+#: ../shell/ev-window.c:6044
 msgid "Show the folder which contains this file in the file manager"
 msgstr "Намоиш додани ҷузвдоне, ки ин файлро дар мудири файл дар бар мегирад"
 
-#: ../shell/ev-window.c:6058
+#: ../shell/ev-window.c:6046
 msgid "_Print…"
 msgstr "_Чоп…"
 
-#: ../shell/ev-window.c:6061
+#: ../shell/ev-window.c:6049
 msgid "P_roperties"
 msgstr "Х_усусиятҳо"
 
-#: ../shell/ev-window.c:6069
+#: ../shell/ev-window.c:6057
 msgid "Select _All"
 msgstr "Интихоб кардани _ҳама"
 
-#: ../shell/ev-window.c:6071
+#: ../shell/ev-window.c:6059
 msgid "Rotate _Left"
 msgstr "Даврзанӣ ба _Чап"
 
-#: ../shell/ev-window.c:6073
+#: ../shell/ev-window.c:6061
 msgid "Rotate _Right"
 msgstr "Даврзанӣ ба _Рост"
 
-#: ../shell/ev-window.c:6075
+#: ../shell/ev-window.c:6063
 msgid "Save Current Settings as _Default"
 msgstr "Захираи танзимоти ҷорӣ ҳамчун _пешфарз"
 
-#: ../shell/ev-window.c:6086
+#: ../shell/ev-window.c:6074
 msgid "_Reload"
 msgstr "_Аз нав бор кардан"
 
-#: ../shell/ev-window.c:6087
+#: ../shell/ev-window.c:6075
 msgid "Reload the document"
 msgstr "Боргузории дубораи ҳуҷҷат"
 
-#: ../shell/ev-window.c:6090
+#: ../shell/ev-window.c:6078
 msgid "Auto_scroll"
 msgstr "Ҳаракати _худкор"
 
-#: ../shell/ev-window.c:6100
+#: ../shell/ev-window.c:6092
 msgid "_First Page"
 msgstr "_Саҳифаи якум"
 
-#: ../shell/ev-window.c:6101
+#: ../shell/ev-window.c:6093
 msgid "Go to the first page"
 msgstr "Гузариш ба саҳифаи якум"
 
-#: ../shell/ev-window.c:6103
+#: ../shell/ev-window.c:6095
 msgid "_Last Page"
 msgstr "_Саҳифаи охирин"
 
-#: ../shell/ev-window.c:6104
+#: ../shell/ev-window.c:6096
 msgid "Go to the last page"
 msgstr "Гузариш ба саҳифаи охирин"
 
-#: ../shell/ev-window.c:6106
+#: ../shell/ev-window.c:6098
 msgid "Go to Pa_ge"
 msgstr "Гузариш ба саҳ_ифаи"
 
-#: ../shell/ev-window.c:6107
+#: ../shell/ev-window.c:6099
 msgid "Go to Page"
 msgstr "Гузариш ба саҳифа"
 
 #. Bookmarks menu
-#: ../shell/ev-window.c:6111
+#: ../shell/ev-window.c:6103
 msgid "_Add Bookmark"
 msgstr "_Илова кардани хатбарак"
 
-#: ../shell/ev-window.c:6112
+#: ../shell/ev-window.c:6104
 msgid "Add a bookmark for the current page"
 msgstr "Илова кардани хатчӯб барои саҳифаи ҷорӣ"
 
-#: ../shell/ev-window.c:6115
+#: ../shell/ev-window.c:6107
 msgid "_About"
 msgstr "_Дар бораи барнома"
 
 #. Toolbar-only
-#: ../shell/ev-window.c:6119
+#: ../shell/ev-window.c:6111
 msgid "Leave Fullscreen"
 msgstr "Баромадан аз экрани пурра"
 
-#: ../shell/ev-window.c:6120
+#: ../shell/ev-window.c:6112
 msgid "Leave fullscreen mode"
 msgstr "Баромадан аз ҳолати экрани пурра"
 
-#: ../shell/ev-window.c:6122
+#: ../shell/ev-window.c:6114
 msgid "Start Presentation"
 msgstr "Оғози тақдим"
 
-#: ../shell/ev-window.c:6123
+#: ../shell/ev-window.c:6115
 msgid "Start a presentation"
 msgstr "Оғоз кардани тақдим"
 
 #. View Menu
-#: ../shell/ev-window.c:6184
+#: ../shell/ev-window.c:6176
 msgid "Side _Pane"
 msgstr "Панҷараки _канорӣ"
 
-#: ../shell/ev-window.c:6185
+#: ../shell/ev-window.c:6177
 msgid "Show or hide the side pane"
 msgstr "Намоиш додан ё пинҳон кардани панҷараки канорӣ"
 
-#: ../shell/ev-window.c:6187
+#: ../shell/ev-window.c:6179
 msgid "_Continuous"
 msgstr "_Бефосила"
 
-#: ../shell/ev-window.c:6188
+#: ../shell/ev-window.c:6180
 msgid "Show the entire document"
 msgstr "Намоиш ҳуҷҷати пурра"
 
-#: ../shell/ev-window.c:6190
+#: ../shell/ev-window.c:6182
 msgid "_Dual"
 msgstr "_Дугона"
 
-#: ../shell/ev-window.c:6191
+#: ../shell/ev-window.c:6183
 msgid "Show two pages at once"
 msgstr "Намоиши ҳамзамони ду саҳифа"
 
-#: ../shell/ev-window.c:6193
+#: ../shell/ev-window.c:6185
 msgid "_Odd Pages Left"
 msgstr "_Саҳифаҳои тоқи боқӣмонда"
 
-#: ../shell/ev-window.c:6194
+#: ../shell/ev-window.c:6186
 msgid "Show odd pages on the left in dual mode"
 msgstr "Намоиши саҳифаҳои тоқ  аз чап дар ҳолати дугона"
 
-#: ../shell/ev-window.c:6196
+#: ../shell/ev-window.c:6188
 msgid "_Fullscreen"
 msgstr "_Экрани пурра"
 
-#: ../shell/ev-window.c:6197
+#: ../shell/ev-window.c:6189
 msgid "Expand the window to fill the screen"
 msgstr "Густариши равзана барои пур кардани экран"
 
-#: ../shell/ev-window.c:6199
+#: ../shell/ev-window.c:6191
 msgid "Pre_sentation"
 msgstr "Тақ_дим"
 
-#: ../shell/ev-window.c:6200
+#: ../shell/ev-window.c:6192
 msgid "Run document as a presentation"
 msgstr "Иҷрои ҳуҷҷат ҳамчун тақдим"
 
-#: ../shell/ev-window.c:6202
+#: ../shell/ev-window.c:6194
 msgid "_Inverted Colors"
 msgstr "_Рангҳои воруна"
 
-#: ../shell/ev-window.c:6203
+#: ../shell/ev-window.c:6195
 msgid "Show page contents with the colors inverted"
 msgstr "Намоиши мӯҳтавои саҳифа бо рангҳои воруна"
 
-#: ../shell/ev-window.c:6206
+#: ../shell/ev-window.c:6198
 msgid "_Find…"
 msgstr "Ёфтан..."
 
-#: ../shell/ev-window.c:6207
+#: ../shell/ev-window.c:6199
 msgid "Find a word or phrase in the document"
 msgstr "Ёфтани калима ё ибора дар ҳуҷҷат"
 
 #. Links
-#: ../shell/ev-window.c:6214
+#: ../shell/ev-window.c:6206
 msgid "_Open Link"
 msgstr "_Кушодани пайванд"
 
-#: ../shell/ev-window.c:6216
+#: ../shell/ev-window.c:6208
 msgid "_Go To"
 msgstr "_Гузариш ба"
 
-#: ../shell/ev-window.c:6218
+#: ../shell/ev-window.c:6210
 msgid "Open in New _Window"
 msgstr "Кушодани Равзанаи _нав"
 
-#: ../shell/ev-window.c:6220
+#: ../shell/ev-window.c:6212
 msgid "_Copy Link Address"
 msgstr "_Нусхабардории суроғаи пайванд"
 
-#: ../shell/ev-window.c:6222
+#: ../shell/ev-window.c:6214
 msgid "_Save Image As…"
 msgstr "_Захираи тасвир ҳамчун…"
 
-#: ../shell/ev-window.c:6224
+#: ../shell/ev-window.c:6216
 msgid "Copy _Image"
 msgstr "Нусхабардории _тасвир"
 
-#: ../shell/ev-window.c:6226
+#: ../shell/ev-window.c:6218
 msgid "Annotation Properties…"
 msgstr "Хусусиятҳои тафсир..."
 
-#: ../shell/ev-window.c:6231
+#: ../shell/ev-window.c:6223
 msgid "_Open Attachment"
 msgstr "_Кушодани замима"
 
-#: ../shell/ev-window.c:6233
+#: ../shell/ev-window.c:6225
 msgid "_Save Attachment As…"
 msgstr "_Захира кардани замима ҳамчун…"
 
-#: ../shell/ev-window.c:6244
+#: ../shell/ev-window.c:6236
 msgid "_Automatic"
 msgstr "_Худкор"
 
