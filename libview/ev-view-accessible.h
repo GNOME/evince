@@ -54,6 +54,9 @@ void       ev_view_accessible_set_model (EvViewAccessible *accessible,
 					 EvDocumentModel  *model);
 gint       ev_view_accessible_get_n_pages (EvViewAccessible *accessible);
 gint       ev_view_accessible_get_relevant_page (EvViewAccessible *accessible);
+void       ev_view_accessible_set_page_range (EvViewAccessible *accessible,
+					      gint start,
+					      gint end);
 void       _transform_doc_rect_to_atk_rect (EvViewAccessible *accessible,
 					    gint              page,
 					    EvRectangle      *doc_rect,

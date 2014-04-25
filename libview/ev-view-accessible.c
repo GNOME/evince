@@ -61,6 +61,8 @@ struct _EvViewAccessiblePrivate {
 	GtkScrollType idle_scroll;
 
 	gint previous_cursor_page;
+	gint start_page;
+	gint end_page;
 
 	GPtrArray *children;
 };
@@ -536,4 +538,32 @@ _transform_doc_rect_to_atk_rect (EvViewAccessible *accessible,
 	atk_rect->y1 = view_rect.y;
 	atk_rect->x2 = view_rect.x + view_rect.width;
 	atk_rect->y2 = view_rect.y + view_rect.height;
+}
+
+void
+ev_view_accessible_set_page_range (EvViewAccessible *accessible,
+				   gint start,
+				   gint end)
+{
+	gint i;
+	AtkObject *page;
+
+	g_return_if_fail (EV_IS_VIEW_ACCESSIBLE (accessible));
+
+	for (i = accessible->priv->start_page; i <= accessible->priv->end_page; i++) {
+		if (i < start || i > end) {
+			page = g_ptr_array_index (accessible->priv->children, i);
+			atk_object_notify_state_change (page, ATK_STATE_SHOWING, FALSE);
+		}
+	}
+
+	for (i = start; i <= end; i++) {
+		if (i < accessible->priv->start_page || i > accessible->priv->end_page) {
+			page = g_ptr_array_index (accessible->priv->children, i);
+			atk_object_notify_state_change (page, ATK_STATE_SHOWING, TRUE);
+		}
+	}
+
+	accessible->priv->start_page = start;
+	accessible->priv->end_page = end;
 }
