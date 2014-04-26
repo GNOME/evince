@@ -7637,6 +7637,9 @@ jump_to_find_result (EvView *view)
 		rect = ev_view_find_get_result (view, page, view->find_result);
 		_ev_view_transform_doc_rect_to_view_rect (view, page, rect, &view_rect);
 		ensure_rectangle_is_visible (view, &view_rect);
+		if (view->caret_enabled && view->rotation == 0)
+			position_caret_cursor_at_doc_point (view, page, rect->x1, rect->y1);
+
 		view->jump_to_find_result = FALSE;
 	}
 }
