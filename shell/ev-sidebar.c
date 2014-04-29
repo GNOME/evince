@@ -484,6 +484,16 @@ ev_sidebar_add_page (EvSidebar   *ev_sidebar,
 	g_free (label_title);
 }
 
+static gboolean
+ev_sidebar_current_page_support_document (EvSidebar  *sidebar,
+                                          EvDocument *document)
+{
+	GtkWidget *current_page = ev_sidebar_get_current_page (sidebar);
+
+	return ev_sidebar_page_support_document (EV_SIDEBAR_PAGE (current_page), document);
+}
+
+
 static void
 ev_sidebar_document_changed_cb (EvDocumentModel *model,
 				GParamSpec      *pspec,
@@ -493,7 +503,7 @@ ev_sidebar_document_changed_cb (EvDocumentModel *model,
 	EvDocument *document = ev_document_model_get_document (model);
 	GtkTreeIter iter;
 	gboolean valid;
-	gboolean has_pages = FALSE;
+	GtkWidget *first_supported_page = NULL;
 
 	for (valid = gtk_tree_model_get_iter_first (priv->page_model, &iter);
 	     valid;
@@ -507,8 +517,9 @@ ev_sidebar_document_changed_cb (EvDocumentModel *model,
 				    -1);
 
 		if (ev_sidebar_page_support_document (EV_SIDEBAR_PAGE (widget),	document)) {
-			has_pages = TRUE;
 			gtk_widget_set_sensitive (menu_widget, TRUE);
+			if (!first_supported_page)
+                                first_supported_page = widget;
 		} else {
 			gtk_widget_set_sensitive (menu_widget, FALSE);
 		}
@@ -516,11 +527,14 @@ ev_sidebar_document_changed_cb (EvDocumentModel *model,
 		g_object_unref (menu_widget);
 	}
 
-	if (!has_pages) {
-		gtk_widget_hide (GTK_WIDGET (sidebar));
-	} else {
+	if (first_supported_page != NULL) {
+		if (!ev_sidebar_current_page_support_document (sidebar, document)) {
+			ev_sidebar_set_page (sidebar, first_supported_page);
+		}
 		gtk_widget_set_sensitive (GTK_WIDGET (sidebar->priv->notebook), TRUE);
 		gtk_widget_set_sensitive (GTK_WIDGET (sidebar->priv->select_button), TRUE);
+	} else {
+		gtk_widget_hide (GTK_WIDGET (sidebar));
 	}
 }
 
