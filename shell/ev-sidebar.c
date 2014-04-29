@@ -508,6 +508,7 @@ ev_sidebar_document_changed_cb (EvDocumentModel *model,
 
 		if (ev_sidebar_page_support_document (EV_SIDEBAR_PAGE (widget),	document)) {
 			has_pages = TRUE;
+			gtk_widget_set_sensitive (menu_widget, TRUE);
 		} else {
 			gtk_widget_set_sensitive (menu_widget, FALSE);
 		}
