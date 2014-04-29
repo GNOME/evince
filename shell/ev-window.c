@@ -1008,6 +1008,9 @@ ev_window_sidebar_set_current_page (EvWindow    *window,
 	} else if (strcmp (page_id, BOOKMARKS_SIDEBAR_ID) == 0 &&
 		   ev_sidebar_page_support_document (EV_SIDEBAR_PAGE (bookmarks), document)) {
 		ev_sidebar_set_page (sidebar, bookmarks);
+	} else {
+		/* setup thumbnails by default */
+		ev_sidebar_set_page (sidebar, thumbs);
 	}
 }
 
