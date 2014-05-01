@@ -194,5 +194,6 @@ gd_toggle_pixbuf_renderer_init (GdTogglePixbufRenderer *self)
 GtkCellRenderer *
 gd_toggle_pixbuf_renderer_new (void)
 {
-  return g_object_new (GD_TYPE_TOGGLE_PIXBUF_RENDERER, NULL);
+   return g_object_new (GD_TYPE_TOGGLE_PIXBUF_RENDERER,
+		        "follow-state", TRUE, NULL);
 }
