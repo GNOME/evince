@@ -3097,6 +3097,36 @@ pdf_document_annotations_document_is_modified (EvDocumentAnnotations *document_a
 }
 
 static void
+pdf_document_annotations_remove_annotation (EvDocumentAnnotations *document_annotations,
+                                            EvAnnotation          *annot)
+{
+        PopplerPage   *poppler_page;
+        PdfDocument   *pdf_document;
+        EvPage        *page;
+        PopplerAnnot  *poppler_annot;
+        EvMappingList *mapping_list;
+        EvMapping     *annot_mapping;
+        GList         *list;
+
+        poppler_annot = POPPLER_ANNOT (g_object_get_data (G_OBJECT (annot), "poppler-annot"));
+        pdf_document = PDF_DOCUMENT (document_annotations);
+        page = ev_annotation_get_page (annot);
+        poppler_page = POPPLER_PAGE (page->backend_page);
+
+	poppler_page_remove_annot (poppler_page, poppler_annot);
+
+        /* We don't check for pdf_document->annots, if it were NULL then something is really wrong */
+        mapping_list = (EvMappingList *)g_hash_table_lookup (pdf_document->annots,
+                                                             GINT_TO_POINTER (page->index));
+        if (mapping_list) {
+                annot_mapping = ev_mapping_list_find (mapping_list, annot);
+                ev_mapping_list_remove (mapping_list, annot_mapping);
+        }
+
+        pdf_document->annots_modified = TRUE;
+}
+
+static void
 pdf_document_annotations_add_annotation (EvDocumentAnnotations *document_annotations,
 					 EvAnnotation          *annot,
 					 EvRectangle           *rect)
@@ -3268,6 +3298,7 @@ pdf_document_document_annotations_iface_init (EvDocumentAnnotationsInterface *if
 	iface->document_is_modified = pdf_document_annotations_document_is_modified;
 	iface->add_annotation = pdf_document_annotations_add_annotation;
 	iface->save_annotation = pdf_document_annotations_save_annotation;
+	iface->remove_annotation = pdf_document_annotations_remove_annotation;
 }
 
 /* Attachments */
