@@ -3257,6 +3257,40 @@ ev_view_cancel_add_annotation (EvView *view)
 	ev_view_handle_cursor_over_xy (view, x, y);
 }
 
+void
+ev_view_remove_annotation (EvView       *view,
+                           EvAnnotation *annot)
+{
+        guint page;
+
+        g_return_if_fail (EV_IS_VIEW (view));
+        g_return_if_fail (EV_IS_ANNOTATION (annot));
+
+        page = ev_annotation_get_page_index (annot);
+
+        if (EV_IS_ANNOTATION_MARKUP (annot)) {
+		EvViewWindowChild *child;
+
+		child = ev_view_find_window_child_for_annot (view, page, annot);
+		if (child) {
+			view->window_children = g_list_remove (view->window_children, child);
+			gtk_widget_destroy (child->window);
+			g_free (child);
+		}
+        }
+        _ev_view_set_focused_element (view, NULL, -1);
+
+        ev_document_doc_mutex_lock ();
+        ev_document_annotations_remove_annotation (EV_DOCUMENT_ANNOTATIONS (view->document),
+                                                   annot);
+        ev_document_doc_mutex_unlock ();
+
+        ev_page_cache_mark_dirty (view->page_cache, page);
+
+	/* FIXME: only redraw the annot area */
+        ev_view_reload_page (view, page, NULL);
+}
+
 static gboolean
 ev_view_synctex_backward_search (EvView *view,
 				 gdouble x,
