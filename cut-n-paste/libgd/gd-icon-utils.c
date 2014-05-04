@@ -109,8 +109,8 @@ gd_create_symbolic_icon (const gchar *name,
  *
  * Returns: (transfer full):
  */
-GdkPixbuf *
-gd_embed_image_in_frame (GdkPixbuf *source_image,
+cairo_surface_t *
+gd_embed_image_in_frame (cairo_surface_t *source_image,
                          const gchar *frame_image_url,
                          GtkBorder *slice_width,
                          GtkBorder *border_width)
@@ -126,8 +126,8 @@ gd_embed_image_in_frame (GdkPixbuf *source_image,
   GdkPixbuf *retval;
   GtkWidgetPath *path;
 
-  source_width = gdk_pixbuf_get_width (source_image);
-  source_height = gdk_pixbuf_get_height (source_image);
+  source_width = cairo_image_surface_get_width (source_image);
+  source_height = cairo_image_surface_get_height (source_image);
 
   dest_width = source_width +  border_width->left + border_width->right;
   dest_height = source_height + border_width->top + border_width->bottom;
@@ -145,7 +145,7 @@ gd_embed_image_in_frame (GdkPixbuf *source_image,
       g_error_free (error);
       g_free (css_str);
 
-      return g_object_ref (source_image);
+      return cairo_surface_reference (source_image);
     }
 
   surface = cairo_image_surface_create (CAIRO_FORMAT_ARGB32, dest_width, dest_height);
@@ -158,9 +158,9 @@ gd_embed_image_in_frame (GdkPixbuf *source_image,
   gtk_style_context_set_path (context, path);
   gtk_style_context_add_provider (context, GTK_STYLE_PROVIDER (provider), 600);
 
-  gtk_render_icon (context, cr,
-                   source_image,
-                   border_width->left, border_width->top);
+  gtk_render_icon_surface (context, cr,
+                           source_image,
+                           border_width->left, border_width->top);
 
   gtk_style_context_save (context);
   gtk_style_context_add_class (context, "embedded-image");
@@ -170,11 +170,6 @@ gd_embed_image_in_frame (GdkPixbuf *source_image,
                     dest_width, dest_height);
 
   gtk_style_context_restore (context);
-
-  retval = gdk_pixbuf_get_from_surface (surface,
-                                        0, 0, dest_width, dest_height);
-
-  cairo_surface_destroy (surface);
   cairo_destroy (cr);
 
   gtk_widget_path_unref (path);
@@ -182,5 +177,5 @@ gd_embed_image_in_frame (GdkPixbuf *source_image,
   g_object_unref (context);
   g_free (css_str);
 
-  return retval;
+  return surface;
 }
