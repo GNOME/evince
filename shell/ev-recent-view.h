@@ -48,8 +48,8 @@ struct _EvRecentViewClass
         GtkScrolledWindowClass parent_class;
 };
 
-GType         ev_recent_view_get_type          (void) G_GNUC_CONST;
-EvRecentView *ev_recent_view_new               (void);
+GType      ev_recent_view_get_type (void) G_GNUC_CONST;
+GtkWidget *ev_recent_view_new      (void);
 
 G_END_DECLS
 

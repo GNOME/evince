@@ -463,8 +463,8 @@ ev_recent_view_class_init (EvRecentViewClass *klass)
         g_type_class_add_private (klass, sizeof (EvRecentViewPrivate));
 }
 
-EvRecentView *
+GtkWidget *
 ev_recent_view_new (void)
 {
-        return EV_RECENT_VIEW (g_object_new (EV_TYPE_RECENT_VIEW, NULL));
+        return GTK_WIDGET (g_object_new (EV_TYPE_RECENT_VIEW, NULL));
 }
