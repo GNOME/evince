@@ -199,7 +199,7 @@ on_button_press_event (GtkWidget      *view,
         g_clear_pointer (&priv->pressed_item_tree_path, gtk_tree_path_free);
         priv->pressed_item_tree_path = gd_main_view_generic_get_path_at_pos (generic, event->x, event->y);
 
-        return FALSE;
+	return TRUE;
 }
 
 static void
