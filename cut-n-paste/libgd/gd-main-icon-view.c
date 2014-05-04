@@ -105,7 +105,7 @@ gd_main_icon_view_constructed (GObject *obj)
   gtk_cell_layout_add_attribute (GTK_CELL_LAYOUT (self), cell,
                                  "active", GD_MAIN_COLUMN_SELECTED);
   gtk_cell_layout_add_attribute (GTK_CELL_LAYOUT (self), cell,
-                                 "pixbuf", GD_MAIN_COLUMN_ICON);
+                                 "surface", GD_MAIN_COLUMN_ICON);
 
   cell = gd_two_lines_renderer_new ();
   g_object_set (cell,
