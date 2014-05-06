@@ -6560,6 +6560,76 @@ ev_view_screen_changed (GtkWidget *widget,
 }
 
 static void
+pan_gesture_pan_cb (GtkGesturePan   *gesture,
+		    GtkPanDirection  direction,
+		    gdouble          offset,
+		    EvView          *view)
+{
+	GtkAllocation allocation;
+
+	gtk_widget_get_allocation (GTK_WIDGET (view), &allocation);
+
+	if (view->continuous ||
+	    allocation.width < view->requisition.width) {
+		gtk_gesture_set_state (GTK_GESTURE (gesture),
+				       GTK_EVENT_SEQUENCE_DENIED);
+		return;
+	}
+
+#define PAN_ACTION_DISTANCE 200
+
+	view->pan_action = EV_PAN_ACTION_NONE;
+	gtk_gesture_set_state (GTK_GESTURE (gesture), GTK_EVENT_SEQUENCE_CLAIMED);
+
+	if (offset > PAN_ACTION_DISTANCE) {
+		if (direction == GTK_PAN_DIRECTION_LEFT ||
+		    gtk_widget_get_direction (GTK_WIDGET (view)) == GTK_TEXT_DIR_RTL)
+			view->pan_action = EV_PAN_ACTION_NEXT;
+		else
+			view->pan_action = EV_PAN_ACTION_PREV;
+	}
+#undef PAN_ACTION_DISTANCE
+}
+
+static void
+pan_gesture_end_cb (GtkGesture       *gesture,
+		    GdkEventSequence *sequence,
+		    EvView           *view)
+{
+	if (!gtk_gesture_handles_sequence (gesture, sequence))
+		return;
+
+	if (view->pan_action == EV_PAN_ACTION_PREV)
+		ev_view_previous_page (view);
+	else if (view->pan_action == EV_PAN_ACTION_NEXT)
+		ev_view_next_page (view);
+
+	view->pan_action = EV_PAN_ACTION_NONE;
+}
+
+static void
+ev_view_hierarchy_changed (GtkWidget *widget,
+			   GtkWidget *previous_toplevel)
+{
+	GtkWidget *parent = gtk_widget_get_parent (widget);
+	EvView *view = EV_VIEW (widget);
+
+	if (parent && !view->pan_gesture) {
+		view->pan_gesture =
+			gtk_gesture_pan_new (parent, GTK_ORIENTATION_HORIZONTAL);
+		g_signal_connect (view->pan_gesture, "pan",
+				  G_CALLBACK (pan_gesture_pan_cb), widget);
+		g_signal_connect (view->pan_gesture, "end",
+				  G_CALLBACK (pan_gesture_end_cb), widget);
+
+		gtk_event_controller_set_propagation_phase (GTK_EVENT_CONTROLLER (view->pan_gesture),
+							    GTK_PHASE_CAPTURE);
+	} else if (!parent && view->pan_gesture) {
+		g_clear_object (&view->pan_gesture);
+	}
+}
+
+static void
 add_move_binding_keypad (GtkBindingSet  *binding_set,
 			 guint           keyval,
 			 GdkModifierType modifiers,
@@ -6784,6 +6854,7 @@ ev_view_class_init (EvViewClass *class)
 	widget_class->screen_changed = ev_view_screen_changed;
 	widget_class->focus = ev_view_focus;
 	widget_class->parent_set = ev_view_parent_set;
+	widget_class->hierarchy_changed = ev_view_hierarchy_changed;
 
 	container_class->remove = ev_view_remove;
 	container_class->forall = ev_view_forall;
