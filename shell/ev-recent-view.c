@@ -224,13 +224,17 @@ thumbnail_job_completed_callback (EvJobThumbnail *job,
 
         row = (GtkTreeRowReference *) g_object_get_data (G_OBJECT (job), "row-reference");
         path = gtk_tree_row_reference_get_path (row);
-        gtk_tree_model_get_iter (GTK_TREE_MODEL (priv->model), &iter, path);
-        gtk_tree_path_free (path);
 
-        gtk_list_store_set (priv->model, &iter,
-                            GD_MAIN_COLUMN_ICON, surface,
-                            EV_RECENT_VIEW_JOB_COLUMN, NULL,
-                            -1);
+        if (path != NULL) {
+                gtk_tree_model_get_iter (GTK_TREE_MODEL (priv->model), &iter, path);
+                gtk_tree_path_free (path);
+
+                gtk_list_store_set (priv->model, &iter,
+                                    GD_MAIN_COLUMN_ICON, surface,
+                                    EV_RECENT_VIEW_JOB_COLUMN, NULL,
+                                    -1);
+        }
+
         cairo_surface_destroy (surface);
 }
 
