@@ -160,23 +160,9 @@ on_button_release_event (GtkWidget      *view,
                 return FALSE;
 
         if (gtk_tree_path_compare (path, priv->pressed_item_tree_path) == 0) {
-                GtkTreeIter iter;
-                gchar      *uri;
-
                 g_clear_pointer (&priv->pressed_item_tree_path, gtk_tree_path_free);
-
-                if (!gtk_tree_model_get_iter (GTK_TREE_MODEL (priv->model), &iter, path)) {
-                        gtk_tree_path_free (path);
-
-                        return TRUE;
-                }
+                gtk_icon_view_item_activated (GTK_ICON_VIEW (priv->view), path);
                 gtk_tree_path_free (path);
-
-                gtk_tree_model_get (GTK_TREE_MODEL (priv->model), &iter,
-                                    EV_RECENT_VIEW_COLUMN_URI, &uri,
-                                    -1);
-                g_signal_emit (ev_recent_view, signals[ITEM_ACTIVATED], 0, uri);
-                g_free (uri);
 
                 return TRUE;
         }
@@ -199,6 +185,25 @@ on_button_press_event (GtkWidget      *view,
                 gtk_icon_view_get_path_at_pos (GTK_ICON_VIEW (priv->view), event->x, event->y);
 
 	return TRUE;
+}
+
+static void
+on_icon_view_item_activated (GtkIconView  *iconview,
+                             GtkTreePath  *path,
+                             EvRecentView *ev_recent_view)
+{
+        EvRecentViewPrivate *priv = ev_recent_view->priv;
+        GtkTreeIter          iter;
+        gchar               *uri;
+
+        if (!gtk_tree_model_get_iter (GTK_TREE_MODEL (priv->model), &iter, path))
+                return;
+
+        gtk_tree_model_get (GTK_TREE_MODEL (priv->model), &iter,
+                            EV_RECENT_VIEW_COLUMN_URI, &uri,
+                            -1);
+        g_signal_emit (ev_recent_view, signals[ITEM_ACTIVATED], 0, uri);
+        g_free (uri);
 }
 
 static void
@@ -425,6 +430,9 @@ ev_recent_view_constructed (GObject *object)
                           ev_recent_view);
         g_signal_connect (priv->view, "button-release-event",
                           G_CALLBACK (on_button_release_event),
+                          ev_recent_view);
+        g_signal_connect (priv->view, "item-activated",
+                          G_CALLBACK (on_icon_view_item_activated),
                           ev_recent_view);
 
         gtk_style_context_add_class (gtk_widget_get_style_context (priv->view), "content-view");
