@@ -51,7 +51,7 @@ struct _EvToolbarPrivate {
         GMenu *bookmarks_section;
 };
 
-G_DEFINE_TYPE (EvToolbar, ev_toolbar, GTK_TYPE_TOOLBAR)
+G_DEFINE_TYPE (EvToolbar, ev_toolbar, GTK_TYPE_HEADER_BAR)
 
 static void
 ev_toolbar_set_property (GObject      *object,
@@ -146,7 +146,7 @@ ev_toolbar_create_button_group (EvToolbar *ev_toolbar)
         GtkStyleContext *style_context;
         GtkWidget *box;
 
-        box = gtk_box_new (gtk_orientable_get_orientation (GTK_ORIENTABLE (ev_toolbar)), 0);
+        box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
 
         style_context = gtk_widget_get_style_context (box);
         gtk_style_context_add_class (style_context, GTK_STYLE_CLASS_RAISED);
@@ -209,11 +209,6 @@ ev_toolbar_constructed (GObject *object)
 
         rtl = gtk_widget_get_direction (GTK_WIDGET (ev_toolbar)) == GTK_TEXT_DIR_RTL;
 
-        /* Set the MENUBAR style class so it's possible to drag the app
-         * using the toolbar. */
-        gtk_style_context_add_class (gtk_widget_get_style_context (GTK_WIDGET (ev_toolbar)),
-                                     GTK_STYLE_CLASS_MENUBAR);
-
         builder = gtk_builder_new_from_resource ("/org/gnome/evince/shell/ui/menus.ui");
 
         /* Navigation */
@@ -231,13 +226,13 @@ ev_toolbar_constructed (GObject *object)
 
         tool_item = GTK_WIDGET (gtk_tool_item_new ());
         if (rtl)
-                gtk_widget_set_margin_left (tool_item, 12);
+                gtk_widget_set_margin_left (tool_item, 6);
         else
-                gtk_widget_set_margin_right (tool_item, 12);
+                gtk_widget_set_margin_right (tool_item, 6);
         gtk_container_add (GTK_CONTAINER (tool_item), hbox);
         gtk_widget_show (hbox);
 
-        gtk_container_add (GTK_CONTAINER (ev_toolbar), tool_item);
+        gtk_header_bar_pack_start (GTK_HEADER_BAR (ev_toolbar), tool_item);
         gtk_widget_show (tool_item);
 
         /* Page selector */
@@ -247,10 +242,10 @@ ev_toolbar_constructed (GObject *object)
         ev_page_action_widget_set_model (EV_PAGE_ACTION_WIDGET (tool_item),
                                          ev_window_get_document_model (ev_toolbar->priv->window));
         if (rtl)
-                gtk_widget_set_margin_left (tool_item, 12);
+                gtk_widget_set_margin_left (tool_item, 6);
         else
-                gtk_widget_set_margin_right (tool_item, 12);
-        gtk_container_add (GTK_CONTAINER (ev_toolbar), tool_item);
+                gtk_widget_set_margin_right (tool_item, 6);
+        gtk_header_bar_pack_start (GTK_HEADER_BAR (ev_toolbar), tool_item);
         gtk_widget_show (tool_item);
 
         /* History */
@@ -258,13 +253,13 @@ ev_toolbar_constructed (GObject *object)
         ev_toolbar->priv->history_action = hbox;
         tool_item = GTK_WIDGET (gtk_tool_item_new ());
         if (rtl)
-                gtk_widget_set_margin_left (tool_item, 12);
+                gtk_widget_set_margin_left (tool_item, 6);
         else
-                gtk_widget_set_margin_right (tool_item, 12);
+                gtk_widget_set_margin_right (tool_item, 6);
         gtk_container_add (GTK_CONTAINER (tool_item), hbox);
         gtk_widget_show (hbox);
 
-        gtk_container_add (GTK_CONTAINER (ev_toolbar), tool_item);
+        gtk_header_bar_pack_start (GTK_HEADER_BAR (ev_toolbar), tool_item);
         gtk_widget_show (tool_item);
 
         /* Find */
@@ -274,51 +269,10 @@ ev_toolbar_constructed (GObject *object)
         gtk_container_add (GTK_CONTAINER (tool_item), button);
         gtk_widget_show (button);
         if (rtl)
-                gtk_widget_set_margin_left (tool_item, 12);
-        else
-                gtk_widget_set_margin_right (tool_item, 12);
-        gtk_container_add (GTK_CONTAINER (ev_toolbar), tool_item);
-        gtk_widget_show (tool_item);
-
-        /* Separator */
-        tool_item = GTK_WIDGET (gtk_tool_item_new ());
-        gtk_tool_item_set_expand (GTK_TOOL_ITEM (tool_item), TRUE);
-        gtk_container_add (GTK_CONTAINER (ev_toolbar), tool_item);
-        gtk_widget_show (tool_item);
-
-        /* Zoom selector */
-        vbox = ev_zoom_action_new (ev_window_get_document_model (ev_toolbar->priv->window),
-                                   G_MENU (gtk_builder_get_object (builder, "zoom-menu")));
-        ev_toolbar->priv->zoom_action = vbox;
-        g_signal_connect (vbox, "activated",
-                          G_CALLBACK (zoom_selector_activated),
-                          ev_toolbar);
-        tool_item = GTK_WIDGET (gtk_tool_item_new ());
-        if (rtl)
-                gtk_widget_set_margin_left (tool_item, 12);
-        else
-                gtk_widget_set_margin_right (tool_item, 12);
-        gtk_container_add (GTK_CONTAINER (tool_item), vbox);
-        gtk_widget_show (vbox);
-
-        gtk_container_add (GTK_CONTAINER (ev_toolbar), tool_item);
-        gtk_widget_show (tool_item);
-
-        /* View Menu */
-        menu = G_MENU_MODEL (gtk_builder_get_object (builder, "view-menu"));
-        button = ev_toolbar_create_menu_button (ev_toolbar, "document-properties-symbolic",
-                                                menu, GTK_ALIGN_END);
-        gtk_widget_set_tooltip_text (button, _("View options"));
-        ev_toolbar->priv->view_menu_button = button;
-        tool_item = GTK_WIDGET (gtk_tool_item_new ());
-        gtk_container_add (GTK_CONTAINER (tool_item), button);
-        gtk_widget_show (button);
-        if (rtl)
                 gtk_widget_set_margin_left (tool_item, 6);
         else
                 gtk_widget_set_margin_right (tool_item, 6);
-
-        gtk_container_add (GTK_CONTAINER (ev_toolbar), tool_item);
+        gtk_header_bar_pack_start (GTK_HEADER_BAR (ev_toolbar), tool_item);
         gtk_widget_show (tool_item);
 
         /* Action Menu */
@@ -331,7 +285,38 @@ ev_toolbar_constructed (GObject *object)
         gtk_container_add (GTK_CONTAINER (tool_item), button);
         gtk_widget_show (button);
 
-        gtk_container_add (GTK_CONTAINER (ev_toolbar), tool_item);
+        gtk_header_bar_pack_end (GTK_HEADER_BAR (ev_toolbar), tool_item);
+        gtk_widget_show (tool_item);
+
+        /* View Menu */
+        menu = G_MENU_MODEL (gtk_builder_get_object (builder, "view-menu"));
+        button = ev_toolbar_create_menu_button (ev_toolbar, "document-properties-symbolic",
+                                                menu, GTK_ALIGN_END);
+        gtk_widget_set_tooltip_text (button, _("View options"));
+        ev_toolbar->priv->view_menu_button = button;
+        tool_item = GTK_WIDGET (gtk_tool_item_new ());
+        gtk_container_add (GTK_CONTAINER (tool_item), button);
+        gtk_widget_show (button);
+
+        gtk_header_bar_pack_end (GTK_HEADER_BAR (ev_toolbar), tool_item);
+        gtk_widget_show (tool_item);
+
+        /* Zoom selector */
+        vbox = ev_zoom_action_new (ev_window_get_document_model (ev_toolbar->priv->window),
+                                   G_MENU (gtk_builder_get_object (builder, "zoom-menu")));
+        ev_toolbar->priv->zoom_action = vbox;
+        g_signal_connect (vbox, "activated",
+                          G_CALLBACK (zoom_selector_activated),
+                          ev_toolbar);
+        tool_item = GTK_WIDGET (gtk_tool_item_new ());
+        if (rtl)
+                gtk_widget_set_margin_left (tool_item, 6);
+        else
+                gtk_widget_set_margin_right (tool_item, 6);
+        gtk_container_add (GTK_CONTAINER (tool_item), vbox);
+        gtk_widget_show (vbox);
+
+        gtk_header_bar_pack_end (GTK_HEADER_BAR (ev_toolbar), tool_item);
         gtk_widget_show (tool_item);
 
         recent_menu_model = ev_recent_menu_model_new (gtk_recent_manager_get_default (),

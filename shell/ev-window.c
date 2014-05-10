@@ -157,6 +157,7 @@ struct _EvWindowPrivate {
 	GtkWidget *fs_overlay;
 	GtkWidget *fs_eventbox;
 	GtkWidget *fs_revealer;
+	GtkWidget *fs_toolbar;
 	gboolean   fs_pointer_on_toolbar;
 	guint      fs_timeout_id;
 
@@ -339,6 +340,9 @@ static void	ev_attachment_popup_cmd_save_attachment_as (GtkAction     *action,
 							 EvWindow         *window);
 static void	view_handle_link_cb 			(EvView           *view, 
 							 EvLink           *link, 
+							 EvWindow         *window);
+static void     activate_link_cb                        (GObject          *object,
+							 EvLink           *link,
 							 EvWindow         *window);
 static void     ev_window_update_find_status_message    (EvWindow         *ev_window);
 static void     find_bar_search_changed_cb              (EggFindBar       *find_bar,
@@ -3637,11 +3641,13 @@ ev_window_cmd_focus_page_selector (GSimpleAction *action,
 {
 	EvWindow *window = user_data;
 	GtkWidget *page_selector;
+	EvToolbar *toolbar;
 
 	update_chrome_flag (window, EV_CHROME_RAISE_TOOLBAR, TRUE);
 	update_chrome_visibility (window);
 
-	page_selector = ev_toolbar_get_page_selector (EV_TOOLBAR (window->priv->toolbar));
+	toolbar = window->priv->fs_toolbar ? EV_TOOLBAR (window->priv->fs_toolbar) : EV_TOOLBAR (window->priv->toolbar);
+	page_selector = ev_toolbar_get_page_selector (toolbar);
 	ev_page_action_widget_grab_focus (EV_PAGE_ACTION_WIDGET (page_selector));
 }
 
@@ -3874,6 +3880,25 @@ ev_window_sidebar_position_change_cb (GObject    *object,
 }
 
 static void
+ev_window_update_links_model (EvWindow *window)
+{
+	GtkTreeModel *model;
+	GtkWidget *page_selector;
+
+	g_object_get (window->priv->sidebar_links,
+		      "model", &model,
+		      NULL);
+
+	page_selector = ev_toolbar_get_page_selector (EV_TOOLBAR (window->priv->toolbar));
+	ev_page_action_widget_update_links_model (EV_PAGE_ACTION_WIDGET (page_selector), model);
+	if (window->priv->fs_toolbar) {
+		page_selector = ev_toolbar_get_page_selector (EV_TOOLBAR (window->priv->fs_toolbar));
+		ev_page_action_widget_update_links_model (EV_PAGE_ACTION_WIDGET (page_selector), model);
+	}
+	g_object_unref (model);
+}
+
+static void
 ev_window_update_fullscreen_action (EvWindow *window)
 {
 	GAction *action;
@@ -3887,7 +3912,7 @@ ev_window_update_fullscreen_action (EvWindow *window)
 static void
 ev_window_fullscreen_hide_toolbar (EvWindow *window)
 {
-	if (!ev_toolbar_has_visible_popups (EV_TOOLBAR (window->priv->toolbar)))
+	if (!ev_toolbar_has_visible_popups (EV_TOOLBAR (window->priv->fs_toolbar)))
 		gtk_revealer_set_reveal_child (GTK_REVEALER (window->priv->fs_revealer), FALSE);
 }
 
@@ -3988,13 +4013,15 @@ ev_window_run_fullscreen (EvWindow *window)
 			   window->priv->main_box);
 	g_object_unref (window->priv->main_box);
 
-
-	g_object_ref (window->priv->toolbar);
-	gtk_container_remove (GTK_CONTAINER (window->priv->main_box),
-			      window->priv->toolbar);
+	window->priv->fs_toolbar = ev_toolbar_new (window);
+	ev_window_update_links_model (window);
+	g_signal_connect (ev_toolbar_get_page_selector (EV_TOOLBAR (window->priv->fs_toolbar)),
+			  "activate-link",
+			  G_CALLBACK (activate_link_cb),
+			  window);
 	gtk_container_add (GTK_CONTAINER (window->priv->fs_revealer),
-			   window->priv->toolbar);
-	g_object_unref (window->priv->toolbar);
+			   window->priv->fs_toolbar);
+	gtk_widget_show (window->priv->fs_toolbar);
 
 	gtk_container_add (GTK_CONTAINER (window->priv->fs_eventbox),
 			   window->priv->fs_revealer);
@@ -4030,19 +4057,13 @@ ev_window_stop_fullscreen (EvWindow *window,
 	if (!ev_document_model_get_fullscreen (window->priv->model))
 		return;
 
-	g_object_ref (window->priv->toolbar);
 	gtk_container_remove (GTK_CONTAINER (window->priv->fs_revealer),
-			      window->priv->toolbar);
+			      window->priv->fs_toolbar);
+	window->priv->fs_toolbar = NULL;
 	gtk_container_remove (GTK_CONTAINER (window->priv->fs_eventbox),
 			      window->priv->fs_revealer);
 	gtk_container_remove (GTK_CONTAINER (window->priv->fs_overlay),
 			      window->priv->fs_eventbox);
-	gtk_box_pack_start (GTK_BOX (window->priv->main_box),
-			    window->priv->toolbar,
-			    FALSE, TRUE, 0);
-	gtk_box_reorder_child (GTK_BOX (window->priv->main_box),
-			       window->priv->toolbar, 0);
-	g_object_unref (window->priv->toolbar);
 
 	g_object_ref (window->priv->main_box);
 	gtk_container_remove (GTK_CONTAINER (window->priv->fs_overlay),
@@ -4053,7 +4074,6 @@ ev_window_stop_fullscreen (EvWindow *window,
 	g_object_unref (window->priv->main_box);
 
 	ev_window_remove_fullscreen_timeout (window);
-	gtk_widget_show (window->priv->toolbar);
 
 	g_object_set (G_OBJECT (window->priv->scrolled_window),
 		      "shadow-type", GTK_SHADOW_IN,
@@ -4752,9 +4772,11 @@ ev_window_cmd_action_menu (GSimpleAction *action,
 			   GVariant      *parameter,
 			   gpointer       user_data)
 {
-	EvWindow *ev_window = user_data;
+	EvWindow  *ev_window = user_data;
+	EvToolbar *toolbar;
 
-	ev_toolbar_action_menu_popup (EV_TOOLBAR (ev_window->priv->toolbar));
+	toolbar = ev_window->priv->fs_toolbar ? EV_TOOLBAR (ev_window->priv->fs_toolbar) : EV_TOOLBAR (ev_window->priv->toolbar);
+	ev_toolbar_action_menu_popup (toolbar);
 }
 
 static void
@@ -5782,16 +5804,7 @@ sidebar_widget_model_set (EvSidebarLinks *ev_sidebar_links,
 			  GParamSpec     *pspec,
 			  EvWindow       *ev_window)
 {
-	GtkTreeModel *model;
-	GtkWidget *page_selector;
-
-	g_object_get (G_OBJECT (ev_sidebar_links),
-		      "model", &model,
-		      NULL);
-
-	page_selector = ev_toolbar_get_page_selector (EV_TOOLBAR (ev_window->priv->toolbar));
-	ev_page_action_widget_update_links_model (EV_PAGE_ACTION_WIDGET (page_selector), model);
-	g_object_unref (model);
+	ev_window_update_links_model (ev_window);
 }
 
 static gboolean
@@ -6766,11 +6779,8 @@ ev_window_init (EvWindow *ev_window)
 
 	ev_window->priv->toolbar = ev_toolbar_new (ev_window);
 	gtk_widget_set_no_show_all (ev_window->priv->toolbar, TRUE);
-	gtk_widget_set_halign (ev_window->priv->toolbar, GTK_ALIGN_FILL);
-	gtk_widget_set_valign (ev_window->priv->toolbar, GTK_ALIGN_START);
-	gtk_box_pack_start (GTK_BOX (ev_window->priv->main_box),
-			    ev_window->priv->toolbar,
-			    FALSE, TRUE, 0);
+	gtk_header_bar_set_show_close_button (GTK_HEADER_BAR (ev_window->priv->toolbar), TRUE);
+	gtk_window_set_titlebar (GTK_WINDOW (ev_window), ev_window->priv->toolbar);
 	gtk_widget_show (ev_window->priv->toolbar);
 
 	g_signal_connect (ev_toolbar_get_page_selector (EV_TOOLBAR (ev_window->priv->toolbar)),

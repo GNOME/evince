@@ -329,11 +329,30 @@ ev_page_action_widget_finalize (GObject *object)
 }
 
 static void
-ev_page_action_widget_class_init (EvPageActionWidgetClass *class)
+ev_page_action_widget_get_preferred_width (GtkWidget *widget,
+                                           gint      *minimum_width,
+                                           gint      *natural_width)
 {
-	GObjectClass *object_class = G_OBJECT_CLASS (class);
+        GtkWidget *child;
+
+        *minimum_width = *natural_width = 0;
+
+        child = gtk_bin_get_child (GTK_BIN (widget));
+        if (!child || !gtk_widget_get_visible (child))
+                return;
+
+        gtk_widget_get_preferred_width (child, minimum_width, natural_width);
+        *natural_width = *minimum_width;
+}
+
+static void
+ev_page_action_widget_class_init (EvPageActionWidgetClass *klass)
+{
+	GObjectClass *object_class = G_OBJECT_CLASS (klass);
+        GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
 
 	object_class->finalize = ev_page_action_widget_finalize;
+        widget_class->get_preferred_width = ev_page_action_widget_get_preferred_width;
 
 	widget_signals[WIDGET_ACTIVATE_LINK] =
 		g_signal_new ("activate_link",
@@ -521,7 +540,7 @@ ev_page_action_widget_update_links_model (EvPageActionWidget *proxy, GtkTreeMode
 	GtkEntryCompletion *completion;
 	GtkCellRenderer *renderer;
 
-	if (!model)
+	if (!model || model == proxy->model)
 		return;
 
 	/* Magik */
