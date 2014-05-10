@@ -26,15 +26,19 @@
 #include "ev-recent-view.h"
 #include "ev-file-helpers.h"
 #include "gd-icon-utils.h"
-#include "gd-main-view-generic.h"
-#include "gd-main-icon-view.h"
+#include "gd-two-lines-renderer.h"
 #include "ev-document-misc.h"
 #include "ev-document-model.h"
 #include "ev-jobs.h"
 #include "ev-job-scheduler.h"
 
 typedef enum {
-        EV_RECENT_VIEW_JOB_COLUMN = GD_MAIN_COLUMN_LAST,
+        EV_RECENT_VIEW_COLUMN_URI,
+        EV_RECENT_VIEW_COLUMN_PRIMARY_TEXT,
+        EV_RECENT_VIEW_COLUMN_SECONDARY_TEXT,
+        EV_RECENT_VIEW_COLUMN_ICON,
+        EV_RECENT_VIEW_COLUMN_MTIME,
+        EV_RECENT_VIEW_COLUMN_JOB,
         NUM_COLUMNS
 } EvRecentViewColumns;
 
@@ -66,7 +70,7 @@ ev_recent_view_clear_job (GtkTreeModel *model,
 {
         EvJob *job;
 
-        gtk_tree_model_get (model, iter, EV_RECENT_VIEW_JOB_COLUMN, &job, -1);
+        gtk_tree_model_get (model, iter, EV_RECENT_VIEW_COLUMN_JOB, &job, -1);
 
         if (job != NULL) {
                 ev_job_cancel (job);
@@ -142,7 +146,6 @@ on_button_release_event (GtkWidget      *view,
                          EvRecentView   *ev_recent_view)
 {
         EvRecentViewPrivate *priv = ev_recent_view->priv;
-        GdMainViewGeneric   *generic = GD_MAIN_VIEW_GENERIC (priv->view);
         GtkTreePath         *path;
 
         /* eat double/triple click events */
@@ -152,7 +155,7 @@ on_button_release_event (GtkWidget      *view,
         if (priv->pressed_item_tree_path == NULL)
                 return FALSE;
 
-        path = gd_main_view_generic_get_path_at_pos (generic, event->x, event->y);
+        path = gtk_icon_view_get_path_at_pos (GTK_ICON_VIEW (priv->view), event->x, event->y);
         if (path == NULL)
                 return FALSE;
 
@@ -170,11 +173,7 @@ on_button_release_event (GtkWidget      *view,
                 gtk_tree_path_free (path);
 
                 gtk_tree_model_get (GTK_TREE_MODEL (priv->model), &iter,
-                                    GD_MAIN_COLUMN_URI, &uri,
-                                    -1);
-                gtk_list_store_set (priv->model,
-                                    &iter,
-                                    GD_MAIN_COLUMN_SELECTED, TRUE,
+                                    EV_RECENT_VIEW_COLUMN_URI, &uri,
                                     -1);
                 g_signal_emit (ev_recent_view, signals[ITEM_ACTIVATED], 0, uri);
                 g_free (uri);
@@ -194,10 +193,10 @@ on_button_press_event (GtkWidget      *view,
                        EvRecentView   *ev_recent_view)
 {
         EvRecentViewPrivate *priv = ev_recent_view->priv;
-        GdMainViewGeneric   *generic = GD_MAIN_VIEW_GENERIC (priv->view);
 
         g_clear_pointer (&priv->pressed_item_tree_path, gtk_tree_path_free);
-        priv->pressed_item_tree_path = gd_main_view_generic_get_path_at_pos (generic, event->x, event->y);
+        priv->pressed_item_tree_path =
+                gtk_icon_view_get_path_at_pos (GTK_ICON_VIEW (priv->view), event->x, event->y);
 
 	return TRUE;
 }
@@ -230,8 +229,8 @@ thumbnail_job_completed_callback (EvJobThumbnail *job,
                 gtk_tree_path_free (path);
 
                 gtk_list_store_set (priv->model, &iter,
-                                    GD_MAIN_COLUMN_ICON, surface,
-                                    EV_RECENT_VIEW_JOB_COLUMN, NULL,
+                                    EV_RECENT_VIEW_COLUMN_ICON, surface,
+                                    EV_RECENT_VIEW_COLUMN_JOB, NULL,
                                     -1);
         }
 
@@ -287,22 +286,22 @@ document_load_job_completed_callback (EvJobLoad    *job_load,
                 info = ev_document_get_info (document);
                 if (info->fields_mask & EV_DOCUMENT_INFO_TITLE && info->title && info->title[0] != '\0')
                         gtk_list_store_set (priv->model, &iter,
-                                            GD_MAIN_COLUMN_PRIMARY_TEXT, info->title,
+                                            EV_RECENT_VIEW_COLUMN_PRIMARY_TEXT, info->title,
                                             -1);
                 if (info->fields_mask & EV_DOCUMENT_INFO_AUTHOR && info->author && info->author[0] != '\0')
                         gtk_list_store_set (priv->model, &iter,
-                                            GD_MAIN_COLUMN_SECONDARY_TEXT, info->author,
+                                            EV_RECENT_VIEW_COLUMN_SECONDARY_TEXT, info->author,
                                             -1);
 
                 gtk_list_store_set (priv->model, &iter,
-                                    EV_RECENT_VIEW_JOB_COLUMN, job_thumbnail,
+                                    EV_RECENT_VIEW_COLUMN_JOB, job_thumbnail,
                                     -1);
 
                 ev_job_scheduler_push_job (EV_JOB (job_thumbnail), EV_JOB_PRIORITY_HIGH);
                 g_object_unref (job_thumbnail);
         } else {
                 gtk_list_store_set (priv->model, &iter,
-                                    EV_RECENT_VIEW_JOB_COLUMN, NULL,
+                                    EV_RECENT_VIEW_COLUMN_JOB, NULL,
                                     -1);
         }
 }
@@ -314,7 +313,6 @@ ev_recent_view_refresh (EvRecentView *ev_recent_view)
         guint                n_items = 0;
         const gchar         *evince = g_get_application_name ();
         EvRecentViewPrivate *priv = ev_recent_view->priv;
-        GdMainViewGeneric   *generic = GD_MAIN_VIEW_GENERIC (priv->view);
 
         items = gtk_recent_manager_get_items (priv->recent_manager);
         items = g_list_sort (items, (GCompareFunc) compare_recent_items);
@@ -351,13 +349,12 @@ ev_recent_view_refresh (EvRecentView *ev_recent_view)
                 gtk_list_store_append (priv->model, &iter);
 
                 gtk_list_store_set (priv->model, &iter,
-                                    GD_MAIN_COLUMN_URI, uri,
-                                    GD_MAIN_COLUMN_PRIMARY_TEXT, gtk_recent_info_get_display_name (info),
-                                    GD_MAIN_COLUMN_SECONDARY_TEXT, NULL,
-                                    GD_MAIN_COLUMN_ICON, thumbnail,
-                                    GD_MAIN_COLUMN_MTIME, gtk_recent_info_get_modified (info),
-                                    GD_MAIN_COLUMN_SELECTED, FALSE,
-                                    EV_RECENT_VIEW_JOB_COLUMN, job_load,
+                                    EV_RECENT_VIEW_COLUMN_URI, uri,
+                                    EV_RECENT_VIEW_COLUMN_PRIMARY_TEXT, gtk_recent_info_get_display_name (info),
+                                    EV_RECENT_VIEW_COLUMN_SECONDARY_TEXT, NULL,
+                                    EV_RECENT_VIEW_COLUMN_ICON, thumbnail,
+                                    EV_RECENT_VIEW_COLUMN_MTIME, gtk_recent_info_get_modified (info),
+                                    EV_RECENT_VIEW_COLUMN_JOB, job_load,
                                     -1);
 
                 if (job_load) {
@@ -383,8 +380,6 @@ ev_recent_view_refresh (EvRecentView *ev_recent_view)
         }
 
         g_list_free_full (items, (GDestroyNotify)gtk_recent_info_unref);
-
-        gd_main_view_generic_set_model (generic, GTK_TREE_MODEL (priv->model));
 }
 
 static void
@@ -392,10 +387,39 @@ ev_recent_view_constructed (GObject *object)
 {
         EvRecentView        *ev_recent_view = EV_RECENT_VIEW (object);
         EvRecentViewPrivate *priv = ev_recent_view->priv;
+        GtkCellRenderer     *renderer;
 
         G_OBJECT_CLASS (ev_recent_view_parent_class)->constructed (object);
 
-        priv->view = gd_main_icon_view_new ();
+        priv->view = gtk_icon_view_new_with_model (GTK_TREE_MODEL (priv->model));
+
+        gtk_icon_view_set_column_spacing (GTK_ICON_VIEW (priv->view), 20);
+        gtk_icon_view_set_margin (GTK_ICON_VIEW (priv->view), 16);
+        gtk_icon_view_set_selection_mode (GTK_ICON_VIEW (priv->view), GTK_SELECTION_NONE);
+        gtk_widget_set_hexpand (priv->view, TRUE);
+        gtk_widget_set_vexpand (priv->view, TRUE);
+
+        renderer = gtk_cell_renderer_pixbuf_new ();
+        g_object_set (renderer, "xalign", 0.5, "yalign", 0.5, NULL);
+
+        gtk_cell_layout_pack_start (GTK_CELL_LAYOUT (priv->view), renderer, FALSE);
+        gtk_cell_layout_add_attribute (GTK_CELL_LAYOUT (priv->view), renderer,
+                                       "surface", EV_RECENT_VIEW_COLUMN_ICON);
+
+        renderer = gd_two_lines_renderer_new ();
+        g_object_set (renderer,
+                      "xalign", 0.5,
+                      "alignment", PANGO_ALIGN_CENTER,
+                      "wrap-mode", PANGO_WRAP_WORD_CHAR,
+                      "wrap-width", 128,
+                      "text-lines", 3,
+                      NULL);
+        gtk_cell_layout_pack_start (GTK_CELL_LAYOUT (priv->view), renderer, FALSE);
+        gtk_cell_layout_add_attribute (GTK_CELL_LAYOUT (priv->view), renderer,
+                                       "text", EV_RECENT_VIEW_COLUMN_PRIMARY_TEXT);
+        gtk_cell_layout_add_attribute (GTK_CELL_LAYOUT (priv->view), renderer,
+                                       "line-two", EV_RECENT_VIEW_COLUMN_SECONDARY_TEXT);
+
         g_signal_connect (priv->view, "button-press-event",
                           G_CALLBACK (on_button_press_event),
                           ev_recent_view);
@@ -423,15 +447,12 @@ ev_recent_view_init (EvRecentView *ev_recent_view)
                                           G_TYPE_STRING,
                                           G_TYPE_STRING,
                                           G_TYPE_STRING,
-                                          G_TYPE_STRING,
                                           CAIRO_GOBJECT_TYPE_SURFACE,
                                           G_TYPE_LONG,
-                                          G_TYPE_BOOLEAN,
-                                          EV_TYPE_JOB,
-                                          G_TYPE_BOOLEAN);
+                                          EV_TYPE_JOB);
 
         gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (priv->model),
-                                              GD_MAIN_COLUMN_MTIME,
+                                              EV_RECENT_VIEW_COLUMN_MTIME,
                                               GTK_SORT_DESCENDING);
 
         gtk_widget_set_hexpand (GTK_WIDGET (ev_recent_view), TRUE);
