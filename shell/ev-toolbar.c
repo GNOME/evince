@@ -44,7 +44,7 @@ struct _EvToolbarPrivate {
         GtkWidget *action_menu_button;
 };
 
-G_DEFINE_TYPE (EvToolbar, ev_toolbar, GTK_TYPE_HEADER_BAR)
+G_DEFINE_TYPE (EvToolbar, ev_toolbar, GTK_TYPE_TOOLBAR)
 
 static void
 ev_toolbar_set_property (GObject      *object,
@@ -124,7 +124,7 @@ ev_toolbar_create_button_group (EvToolbar *ev_toolbar)
         GtkStyleContext *style_context;
         GtkWidget *box;
 
-        box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
+        box = gtk_box_new (gtk_orientable_get_orientation (GTK_ORIENTABLE (ev_toolbar)), 0);
 
         style_context = gtk_widget_get_style_context (box);
         gtk_style_context_add_class (style_context, GTK_STYLE_CLASS_RAISED);
@@ -150,6 +150,11 @@ ev_toolbar_constructed (GObject *object)
 
         rtl = gtk_widget_get_direction (GTK_WIDGET (ev_toolbar)) == GTK_TEXT_DIR_RTL;
 
+        /* Set the MENUBAR style class so it's possible to drag the app
+         * using the toolbar. */
+        gtk_style_context_add_class (gtk_widget_get_style_context (GTK_WIDGET (ev_toolbar)),
+                                     GTK_STYLE_CLASS_MENUBAR);
+
         action_group = ev_window_get_main_action_group (ev_toolbar->priv->window);
         ui_manager = ev_window_get_ui_manager (ev_toolbar->priv->window);
 
@@ -168,33 +173,33 @@ ev_toolbar_constructed (GObject *object)
 
         tool_item = GTK_WIDGET (gtk_tool_item_new ());
         if (rtl)
-                gtk_widget_set_margin_left (tool_item, 6);
+                gtk_widget_set_margin_left (tool_item, 12);
         else
-                gtk_widget_set_margin_right (tool_item, 6);
+                gtk_widget_set_margin_right (tool_item, 12);
         gtk_container_add (GTK_CONTAINER (tool_item), hbox);
         gtk_widget_show (hbox);
 
-        gtk_header_bar_pack_start (GTK_HEADER_BAR (ev_toolbar), tool_item);
+        gtk_container_add (GTK_CONTAINER (ev_toolbar), tool_item);
         gtk_widget_show (tool_item);
 
         /* Page selector */
         action = gtk_action_group_get_action (action_group, "PageSelector");
         tool_item = gtk_action_create_tool_item (action);
         if (rtl)
-                gtk_widget_set_margin_left (tool_item, 6);
+                gtk_widget_set_margin_left (tool_item, 12);
         else
-                gtk_widget_set_margin_right (tool_item, 6);
-        gtk_header_bar_pack_start (GTK_HEADER_BAR (ev_toolbar), tool_item);
+                gtk_widget_set_margin_right (tool_item, 12);
+        gtk_container_add (GTK_CONTAINER (ev_toolbar), tool_item);
         gtk_widget_show (tool_item);
 
         /* History */
         action = gtk_action_group_get_action (action_group, "History");
         tool_item = gtk_action_create_tool_item (action);
         if (rtl)
-                gtk_widget_set_margin_left (tool_item, 6);
+                gtk_widget_set_margin_left (tool_item, 12);
         else
-                gtk_widget_set_margin_right (tool_item, 6);
-        gtk_header_bar_pack_start (GTK_HEADER_BAR (ev_toolbar), tool_item);
+                gtk_widget_set_margin_right (tool_item, 12);
+        gtk_container_add (GTK_CONTAINER (ev_toolbar), tool_item);
         gtk_widget_show (tool_item);
 
         /* Find */
@@ -204,10 +209,43 @@ ev_toolbar_constructed (GObject *object)
         gtk_container_add (GTK_CONTAINER (tool_item), button);
         gtk_widget_show (button);
         if (rtl)
+                gtk_widget_set_margin_left (tool_item, 12);
+        else
+                gtk_widget_set_margin_right (tool_item, 12);
+        gtk_container_add (GTK_CONTAINER (ev_toolbar), tool_item);
+        gtk_widget_show (tool_item);
+
+        /* Separator */
+        tool_item = GTK_WIDGET (gtk_tool_item_new ());
+        gtk_tool_item_set_expand (GTK_TOOL_ITEM (tool_item), TRUE);
+        gtk_container_add (GTK_CONTAINER (ev_toolbar), tool_item);
+        gtk_widget_show (tool_item);
+
+        /* Zoom selector */
+        action = gtk_action_group_get_action (action_group, "ViewZoom");
+        tool_item = gtk_action_create_tool_item (action);
+        if (rtl)
+                gtk_widget_set_margin_left (tool_item, 12);
+        else
+                gtk_widget_set_margin_right (tool_item, 12);
+        gtk_container_add (GTK_CONTAINER (ev_toolbar), tool_item);
+        gtk_widget_show (tool_item);
+
+        /* View Menu */
+        menu = gtk_ui_manager_get_widget (ui_manager, "/ViewMenuPopup");
+        button = ev_toolbar_create_menu_button (ev_toolbar, "document-properties-symbolic",
+                                                menu, GTK_ALIGN_END);
+        gtk_widget_set_tooltip_text (button, _("View options"));
+        ev_toolbar->priv->view_menu_button = button;
+        tool_item = GTK_WIDGET (gtk_tool_item_new ());
+        gtk_container_add (GTK_CONTAINER (tool_item), button);
+        gtk_widget_show (button);
+        if (rtl)
                 gtk_widget_set_margin_left (tool_item, 6);
         else
                 gtk_widget_set_margin_right (tool_item, 6);
-        gtk_header_bar_pack_start (GTK_HEADER_BAR (ev_toolbar), tool_item);
+
+        gtk_container_add (GTK_CONTAINER (ev_toolbar), tool_item);
         gtk_widget_show (tool_item);
 
         /* Action Menu */
@@ -220,30 +258,7 @@ ev_toolbar_constructed (GObject *object)
         gtk_container_add (GTK_CONTAINER (tool_item), button);
         gtk_widget_show (button);
 
-        gtk_header_bar_pack_end (GTK_HEADER_BAR (ev_toolbar), tool_item);
-        gtk_widget_show (tool_item);
-
-        /* View Menu */
-        menu = gtk_ui_manager_get_widget (ui_manager, "/ViewMenuPopup");
-        button = ev_toolbar_create_menu_button (ev_toolbar, "document-properties-symbolic",
-                                                menu, GTK_ALIGN_END);
-        gtk_widget_set_tooltip_text (button, _("View options"));
-        ev_toolbar->priv->view_menu_button = button;
-        tool_item = GTK_WIDGET (gtk_tool_item_new ());
-        gtk_container_add (GTK_CONTAINER (tool_item), button);
-        gtk_widget_show (button);
-
-        gtk_header_bar_pack_end (GTK_HEADER_BAR (ev_toolbar), tool_item);
-        gtk_widget_show (tool_item);
-
-        /* Zoom selector */
-        action = gtk_action_group_get_action (action_group, "ViewZoom");
-        tool_item = gtk_action_create_tool_item (action);
-        if (rtl)
-                gtk_widget_set_margin_left (tool_item, 6);
-        else
-                gtk_widget_set_margin_right (tool_item, 6);
-        gtk_header_bar_pack_end (GTK_HEADER_BAR (ev_toolbar), tool_item);
+        gtk_container_add (GTK_CONTAINER (ev_toolbar), tool_item);
         gtk_widget_show (tool_item);
 }
 

@@ -38,13 +38,13 @@ typedef struct _EvToolbarClass   EvToolbarClass;
 typedef struct _EvToolbarPrivate EvToolbarPrivate;
 
 struct _EvToolbar {
-        GtkHeaderBar base_instance;
+        GtkToolbar base_instance;
 
         EvToolbarPrivate *priv;
 };
 
 struct _EvToolbarClass {
-        GtkHeaderBarClass base_class;
+        GtkToolbarClass base_class;
 };
 
 GType      ev_toolbar_get_type           (void);
