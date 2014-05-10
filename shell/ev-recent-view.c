@@ -37,7 +37,6 @@ typedef enum {
         EV_RECENT_VIEW_COLUMN_PRIMARY_TEXT,
         EV_RECENT_VIEW_COLUMN_SECONDARY_TEXT,
         EV_RECENT_VIEW_COLUMN_ICON,
-        EV_RECENT_VIEW_COLUMN_MTIME,
         EV_RECENT_VIEW_COLUMN_JOB,
         NUM_COLUMNS
 } EvRecentViewColumns;
@@ -358,7 +357,6 @@ ev_recent_view_refresh (EvRecentView *ev_recent_view)
                                     EV_RECENT_VIEW_COLUMN_PRIMARY_TEXT, gtk_recent_info_get_display_name (info),
                                     EV_RECENT_VIEW_COLUMN_SECONDARY_TEXT, NULL,
                                     EV_RECENT_VIEW_COLUMN_ICON, thumbnail,
-                                    EV_RECENT_VIEW_COLUMN_MTIME, gtk_recent_info_get_modified (info),
                                     EV_RECENT_VIEW_COLUMN_JOB, job_load,
                                     -1);
 
@@ -456,12 +454,7 @@ ev_recent_view_init (EvRecentView *ev_recent_view)
                                           G_TYPE_STRING,
                                           G_TYPE_STRING,
                                           CAIRO_GOBJECT_TYPE_SURFACE,
-                                          G_TYPE_LONG,
                                           EV_TYPE_JOB);
-
-        gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (priv->model),
-                                              EV_RECENT_VIEW_COLUMN_MTIME,
-                                              GTK_SORT_DESCENDING);
 
         gtk_widget_set_hexpand (GTK_WIDGET (ev_recent_view), TRUE);
         gtk_widget_set_vexpand (GTK_WIDGET (ev_recent_view), TRUE);
