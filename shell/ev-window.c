@@ -5087,21 +5087,19 @@ ev_window_cmd_help_about (GtkAction *action, EvWindow *ev_window)
 
 	comments = build_comments_string (ev_window->priv->document);
 
-	gtk_show_about_dialog (
-		GTK_WINDOW (ev_window),
-		"name", _("Evince"),
-		"version", VERSION,
-		"copyright",
-		_("© 1996–2012 The Evince authors"),
-		"license", license_trans,
-		"website", "http://www.gnome.org/projects/evince",
-		"comments", comments,
-		"authors", authors,
-		"documenters", documenters,
-		"translator-credits", _("translator-credits"),
-		"logo-icon-name", "evince",
-		"wrap-license", TRUE,
-		NULL);
+	gtk_show_about_dialog (NULL,
+			       "name", _("Evince"),
+			       "version", VERSION,
+			       "copyright", _("© 1996–2012 The Evince authors"),
+			       "license", license_trans,
+			       "website", "http://www.gnome.org/projects/evince",
+			       "comments", comments,
+			       "authors", authors,
+			       "documenters", documenters,
+			       "translator-credits", _("translator-credits"),
+			       "logo-icon-name", "evince",
+			       "wrap-license", TRUE,
+			       NULL);
 
 	g_free (comments);
 	g_free (license_trans);
