@@ -5015,96 +5015,6 @@ ev_window_dual_mode_odd_pages_left_changed_cb (EvDocumentModel *model,
 					 ev_document_model_get_dual_page_odd_pages_left (model));
 }
 
-static char *
-build_comments_string (EvDocument *document)
-{
-	gchar *comments = NULL;
-	EvDocumentBackendInfo info;
-
-	if (document && ev_document_get_backend_info (document, &info)) {
-		comments = g_strdup_printf (
-			_("Document Viewer\nUsing %s (%s)"),
-			info.name, info.version);
-	} else {
-		comments = g_strdup_printf (
-			_("Document Viewer"));
-	}
-
-	return comments;
-}
-
-static void
-ev_window_cmd_help_about (GtkAction *action, EvWindow *ev_window)
-{
-	const char *authors[] = {
-		"Martin Kretzschmar <m_kretzschmar@gmx.net>",
-		"Jonathan Blandford <jrb@gnome.org>",
-		"Marco Pesenti Gritti <marco@gnome.org>",
-		"Nickolay V. Shmyrev <nshmyrev@yandex.ru>",
-		"Bryan Clark <clarkbw@gnome.org>",
-		"Carlos Garcia Campos <carlosgc@gnome.org>",
-		"Wouter Bolsterlee <wbolster@gnome.org>",
-                "Christian Persch <chpe" "\100" "gnome.org>",
-		NULL
-	};
-
-	const char *documenters[] = {
-		"Nickolay V. Shmyrev <nshmyrev@yandex.ru>",
-		"Phil Bull <philbull@gmail.com>",
-		"Tiffany Antpolski <tiffany.antopolski@gmail.com>",
-		NULL
-	};
-
-	const char *license[] = {
-		N_("Evince is free software; you can redistribute it and/or modify "
-		   "it under the terms of the GNU General Public License as published by "
-		   "the Free Software Foundation; either version 2 of the License, or "
-		   "(at your option) any later version.\n"),
-		N_("Evince is distributed in the hope that it will be useful, "
-		   "but WITHOUT ANY WARRANTY; without even the implied warranty of "
-		   "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the "
-		   "GNU General Public License for more details.\n"),
-		N_("You should have received a copy of the GNU General Public License "
-		   "along with Evince; if not, write to the Free Software Foundation, Inc., "
-		   "51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA\n")
-	};
-
-	char *license_trans;
-	char *comments;
-
-#ifdef ENABLE_NLS
-	const char **p;
-
-	for (p = authors; *p; ++p)
-		*p = _(*p);
-
-	for (p = documenters; *p; ++p)
-		*p = _(*p);
-#endif
-
-	license_trans = g_strconcat (_(license[0]), "\n", _(license[1]), "\n",
-				     _(license[2]), "\n", NULL);
-
-	comments = build_comments_string (ev_window->priv->document);
-
-	gtk_show_about_dialog (NULL,
-			       "name", _("Evince"),
-			       "version", VERSION,
-			       "copyright", _("© 1996–2014 The Evince authors"),
-			       "license", license_trans,
-			       "website", "https://wiki.gnome.org/Apps/Evince",
-			       "comments", comments,
-			       "authors", authors,
-			       "documenters", documenters,
-			       "translator-credits", _("translator-credits"),
-			       "logo-icon-name", "evince",
-			       "wrap-license", TRUE,
-			       NULL);
-
-	g_free (comments);
-	g_free (license_trans);
-}
-
 static void
 ev_window_cmd_action_menu (GtkAction *action, EvWindow *ev_window)
 {
@@ -6104,9 +6014,6 @@ static const GtkActionEntry entries[] = {
 	{ "BookmarksAdd", GTK_STOCK_ADD, N_("_Add Bookmark"), "<control>D",
 	  N_("Add a bookmark for the current page"),
 	  G_CALLBACK (ev_window_cmd_bookmarks_add) },
-
-	{ "HelpAbout", GTK_STOCK_ABOUT, N_("_About"), NULL, NULL,
-	  G_CALLBACK (ev_window_cmd_help_about) },
 
 	/* Toolbar-only */
 	{ "LeaveFullscreen", GTK_STOCK_LEAVE_FULLSCREEN, N_("Leave Fullscreen"), NULL,

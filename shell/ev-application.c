@@ -938,10 +938,79 @@ app_help_cb (GSimpleAction *action,
 }
 
 static void
+app_about_cb (GSimpleAction *action,
+              GVariant      *parameter,
+              gpointer       user_data)
+{
+        const char *authors[] = {
+                "Martin Kretzschmar <m_kretzschmar@gmx.net>",
+                "Jonathan Blandford <jrb@gnome.org>",
+                "Marco Pesenti Gritti <marco@gnome.org>",
+                "Nickolay V. Shmyrev <nshmyrev@yandex.ru>",
+                "Bryan Clark <clarkbw@gnome.org>",
+                "Carlos Garcia Campos <carlosgc@gnome.org>",
+                "Wouter Bolsterlee <wbolster@gnome.org>",
+                "Christian Persch <chpe" "\100" "gnome.org>",
+                NULL
+        };
+        const char *documenters[] = {
+                "Nickolay V. Shmyrev <nshmyrev@yandex.ru>",
+                "Phil Bull <philbull@gmail.com>",
+                "Tiffany Antpolski <tiffany.antopolski@gmail.com>",
+                NULL
+        };
+        const char *license[] = {
+                N_("Evince is free software; you can redistribute it and/or modify "
+                   "it under the terms of the GNU General Public License as published by "
+                   "the Free Software Foundation; either version 2 of the License, or "
+                   "(at your option) any later version.\n"),
+                N_("Evince is distributed in the hope that it will be useful, "
+                   "but WITHOUT ANY WARRANTY; without even the implied warranty of "
+                   "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the "
+                   "GNU General Public License for more details.\n"),
+                N_("You should have received a copy of the GNU General Public License "
+                   "along with Evince; if not, write to the Free Software Foundation, Inc., "
+                   "51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA\n")
+        };
+        char *license_trans;
+#ifdef ENABLE_NLS
+        const char **p;
+
+        for (p = authors; *p; ++p)
+                *p = _(*p);
+
+        for (p = documenters; *p; ++p)
+                *p = _(*p);
+#endif
+
+        license_trans = g_strconcat (_(license[0]), "\n",
+                                     _(license[1]), "\n",
+                                     _(license[2]), "\n",
+                                     NULL);
+
+        gtk_show_about_dialog (NULL,
+                               "name", _("Evince"),
+                               "version", VERSION,
+                               "copyright", _("© 1996–2014 The Evince authors"),
+                               "license", license_trans,
+                               "website", "https://wiki.gnome.org/Apps/Evince",
+                               "comments", _("Document Viewer"),
+                               "authors", authors,
+                               "documenters", documenters,
+                               "translator-credits", _("translator-credits"),
+                               "logo-icon-name", "evince",
+                               "wrap-license", TRUE,
+                               NULL);
+
+        g_free (license_trans);
+}
+
+static void
 ev_application_startup (GApplication *gapplication)
 {
         const GActionEntry app_menu_actions[] = {
                 { "help", app_help_cb, NULL, NULL, NULL },
+                { "about", app_about_cb, NULL, NULL, NULL }
         };
 
         EvApplication *application = EV_APPLICATION (gapplication);
