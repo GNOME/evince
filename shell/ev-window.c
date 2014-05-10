@@ -7357,11 +7357,8 @@ ev_window_init (EvWindow *ev_window)
 
 	ev_window->priv->toolbar = ev_toolbar_new (ev_window);
 	gtk_widget_set_no_show_all (ev_window->priv->toolbar, TRUE);
-	gtk_widget_set_halign (ev_window->priv->toolbar, GTK_ALIGN_FILL);
-	gtk_widget_set_valign (ev_window->priv->toolbar, GTK_ALIGN_START);
-	gtk_box_pack_start (GTK_BOX (ev_window->priv->main_box),
-			    ev_window->priv->toolbar,
-			    FALSE, TRUE, 0);
+	gtk_header_bar_set_show_close_button (GTK_HEADER_BAR (ev_window->priv->toolbar), TRUE);
+	gtk_window_set_titlebar (GTK_WINDOW (ev_window), ev_window->priv->toolbar);
 	gtk_widget_show (ev_window->priv->toolbar);
 
 	/* Find Bar */
