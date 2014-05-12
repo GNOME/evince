@@ -1868,11 +1868,11 @@ ev_print_operation_print_draw_page (EvPrintOperationPrint *print,
 
 		x_scale = (cr_width - left - right) / width;
 		y_scale = (cr_height - top - bottom) / height;
+                scale = MIN (x_scale, y_scale);
 
-		if (x_scale < y_scale)
-			scale = x_scale;
-		else
-			scale = y_scale;
+                /* Ignore scale > 1 when shrinking to printable area */
+                if (scale > 1.0 && print->page_scale == EV_SCALE_SHRINK_TO_PRINTABLE_AREA)
+                        scale = 1.0;
 
 		if (print->autorotate) {
 			double left_right_sides, top_bottom_sides;
