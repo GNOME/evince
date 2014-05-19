@@ -1,0 +1,59 @@
+<html>
+<head>
+  <title>Evince Browser Plugin Test: Scripting</title>
+  <script>
+    function updateProperties() {
+        document.getElementById('currentPage').textContent = document._pdf.currentPage;
+        document.getElementById('pageCount').textContent = document._pdf.pageCount;
+        document.getElementById('zoom').textContent = document._pdf.zoom;
+        document.getElementById('continuous').textContent = document._pdf.continuous;
+        document.getElementById('dual').textContent = document._pdf.dual;
+        document.getElementById('zoomMode').textContent = document._pdf.zoomMode;
+        document.getElementById('toolbar').textContent = document._pdf.toolbar;
+    }
+
+    function init() {
+        document._pdf = document.getElementById('pdf');
+        setInterval(updateProperties, 500);
+    }
+    document.addEventListener("DOMContentLoaded", init, false);
+  </script>
+</head>
+
+<body>
+  <h1>PDF document controlled by JavaScript</h1>
+  <object id="pdf" data="test.pdf" type="application/pdf" width="600" height="300">
+    The pdf could not be rendered.
+  </object>
+  <br>
+  <button onclick="document._pdf.currentPage--;">currentPage--</button>
+  <button onclick="document._pdf.currentPage++;">currentPage++</button>
+  <button onclick="document._pdf.zoomIn();">Zoom In</button>
+  <button onclick="document._pdf.zoomOut();">Zoom In</button>
+  <button onclick="document._pdf.zoom+=0.1;">zoom+=0.1</button>
+  <button onclick="document._pdf.zoom-=0.1;">zoom-=0.1</button>
+  <button onclick="document._pdf.zoom=1;">zoom=1</button>
+  <button onclick="document._pdf.toggleContinuous();">Toggle Continuous</button>
+  <button onclick="document._pdf.continuous=true;">continuous=true</button>
+  <button onclick="document._pdf.continuous=false;">continuous=false</button>
+  <button onclick="document._pdf.toggleDual();">Toggle Dual</button>
+  <button onclick="document._pdf.dual=true;">dual=true</button>
+  <button onclick="document._pdf.dual=false;">dual=false</button>
+  <button onclick="document._pdf.zoomMode='fit-page';">zoomMode='fit-page'</button>
+  <button onclick="document._pdf.zoomMode='fit-width';">zoomMode='fit-width'</button>
+  <button onclick="document._pdf.zoomMode='auto';">zoomMode='auto'</button>
+  <button onclick="document._pdf.print();">Print</button>
+  <button onclick="document._pdf.download();">Download</button>
+  <button onclick="document._pdf.toolbar=true;">toolbar=true</button>
+  <button onclick="document._pdf.toolbar=false;">toolbar=false</button>
+  <table>
+    <tr><th>currentPage:</th><td id="currentPage"></td></tr>
+    <tr><th>pageCount:</th><td id="pageCount"></td></tr>
+    <tr><th>zoom:</th><td id="zoom"></td></tr>
+    <tr><th>continuous:</th><td id="continuous"></td></tr>
+    <tr><th>dual:</th><td id="dual"></td></tr>
+    <tr><th>zoomMode:</th><td id="zoomMode"></td></tr>
+    <tr><th>toolbar:</th><td id="toolbar"></td></tr>
+  </table>
+</body>
+</html>
