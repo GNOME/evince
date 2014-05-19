@@ -8158,6 +8158,9 @@ jump_to_find_page (EvView *view, EvViewFindDirection direction, gint shift)
 			break;
 		}
 	}
+
+	if (!view->continuous)
+		ev_document_model_set_page (view->model, view->find_page);
 }
 
 static void
@@ -8282,6 +8285,7 @@ ev_view_find_set_result (EvView *view, gint page, gint result)
 {
 	view->find_page = page;
 	view->find_result = result;
+	jump_to_find_page (view, EV_VIEW_FIND_NEXT, 0);
 	jump_to_find_result (view);
 	gtk_widget_queue_draw (GTK_WIDGET (view));
 }
