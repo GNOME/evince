@@ -25,7 +25,6 @@
 #include <gtk/gtk.h>
 
 #include <evince-document.h>
-#include "ev-page-action.h"
 #include "ev-page-action-widget.h"
 
 /* Widget we pass back */
