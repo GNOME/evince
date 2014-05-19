@@ -18,9 +18,14 @@
  *
  */
 
+#ifndef __EV_PAGE_ACTION_WIDET_H__
+#define __EV_PAGE_ACTION_WIDET_H__
+
 #include <evince-view.h>
  
 #include <gtk/gtk.h>
+
+G_BEGIN_DECLS
 
 #define EV_TYPE_PAGE_ACTION_WIDGET (ev_page_action_widget_get_type ())
 #define EV_PAGE_ACTION_WIDGET(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), EV_TYPE_PAGE_ACTION_WIDGET, EvPageActionWidget))
@@ -44,3 +49,7 @@ void ev_page_action_widget_update_links_model (EvPageActionWidget *proxy,
 void ev_page_action_widget_set_model          (EvPageActionWidget *action_widget,
 					       EvDocumentModel    *doc_model);
 void ev_page_action_widget_grab_focus         (EvPageActionWidget *proxy);
+
+G_END_DECLS
+
+#endif /* __EV_PAGE_ACTION_WIDET_H__ */
