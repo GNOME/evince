@@ -5804,10 +5804,6 @@ ev_view_autoscroll_cb (EvView *view)
 		return FALSE;
 	}
 
-	if (view->scroll_info.last_y > view->scroll_info.start_y &&
-		(view->scroll_info.last_y < view->scroll_info.start_y))
-		return TRUE;
-
 	/* Replace 100 with your speed of choice: The lower the faster.
 	 * Replace 3 with another speed of choice: The higher, the faster it accelerated
 	 * 	based on the distance of the starting point from the mouse
