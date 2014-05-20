@@ -4964,7 +4964,8 @@ ev_view_motion_notify_event (GtkWidget      *widget,
 	}
 
 	if (view->scroll_info.autoscrolling) {
-		view->scroll_info.last_y = y;
+		if (y >= 0)
+			view->scroll_info.last_y = y;
 		return TRUE;
 	}
 
