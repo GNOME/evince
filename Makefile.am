@@ -43,6 +43,14 @@ header_DATA = \
 	evince-view.h \
 	$(NULL)
 
+# Appdata files
+
+appdatadir = $(datadir)/appdata
+appdata_in_files = evince.appdata.xml.in
+nodist_appdata_DATA = $(appdata_in_files:.xml.in=.xml)
+
+@INTLTOOL_XML_RULE@
+
 # Applications 
 
 intltool_extra = intltool-extract.in intltool-merge.in intltool-update.in
@@ -50,8 +58,13 @@ intltool_extra = intltool-extract.in intltool-merge.in intltool-update.in
 EXTRA_DIST = \
 	$(intltool_extra) \
 	$(header_DATA) \
+	$(appdata_in_files) \
 	autogen.sh \
 	MAINTAINERS
+
+CLEANFILES = \
+	$(nodist_appdata_DATA) \
+	$(NULL)
 
 DISTCLEANFILES = 		\
 	intltool-extract 	\
