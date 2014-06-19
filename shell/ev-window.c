@@ -63,7 +63,6 @@
 #include "ev-loading-message.h"
 #include "ev-message-area.h"
 #include "ev-metadata.h"
-#include "ev-open-recent-action.h"
 #include "ev-page-action.h"
 #include "ev-history-action.h"
 #include "ev-password-view.h"
@@ -5990,18 +5989,6 @@ register_custom_actions (EvWindow *window, GtkActionGroup *group)
 			       NULL);
 	ev_history_action_set_history (EV_HISTORY_ACTION (action),
 				       window->priv->history);
-	gtk_action_group_add_action (group, action);
-	g_object_unref (action);
-
-	action = g_object_new (EV_TYPE_OPEN_RECENT_ACTION,
-			       "name", "FileOpenRecent",
-			       "label", _("_Open…"),
-			       "tooltip", _("Open an existing document"),
-			       "stock_id", GTK_STOCK_OPEN,
-			       NULL);
-	g_signal_connect (action, "activate",
-			  G_CALLBACK (ev_window_cmd_file_open), window);
-
 	gtk_action_group_add_action (group, action);
 	g_object_unref (action);
 }
