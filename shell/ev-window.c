@@ -175,7 +175,6 @@ struct _EvWindowPrivate {
 	GtkActionGroup   *attachment_popup_action_group;
 	GtkActionGroup   *zoom_selector_popup_action_group;
 	GtkRecentManager *recent_manager;
-	GtkActionGroup   *bookmarks_action_group;
 	guint             bookmarks_ui_id;
 	GtkUIManager     *ui_manager;
 
@@ -5571,10 +5570,6 @@ ev_window_dispose (GObject *object)
 
 	g_clear_object (&priv->zoom_selector_popup_action_group);
 
-	if (priv->bookmarks_action_group) {
-		g_object_unref (priv->bookmarks_action_group);
-		priv->bookmarks_action_group = NULL;
-	}
 	g_clear_object (&priv->bookmarks_menu);
 
 	if (priv->recent_manager) {
