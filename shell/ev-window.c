@@ -5575,6 +5575,7 @@ ev_window_dispose (GObject *object)
 		g_object_unref (priv->bookmarks_action_group);
 		priv->bookmarks_action_group = NULL;
 	}
+	g_clear_object (&priv->bookmarks_menu);
 
 	if (priv->recent_manager) {
 		priv->recent_manager = NULL;
