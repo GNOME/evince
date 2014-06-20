@@ -161,6 +161,14 @@ ev_annotation_window_set_color (EvAnnotationWindow *window,
 }
 
 static void
+ev_annotation_window_set_opacity (EvAnnotationWindow *window,
+		                  gdouble             opacity)
+{
+	gtk_widget_set_opacity (GTK_WIDGET (window), opacity);
+	gtk_widget_set_opacity (GTK_WIDGET (window->text_view), opacity);
+}
+
+static void
 ev_annotation_window_label_changed (EvAnnotationMarkup *annot,
 				    GParamSpec         *pspec,
 				    EvAnnotationWindow *window)
@@ -180,6 +188,17 @@ ev_annotation_window_color_changed (EvAnnotation       *annot,
 
 	ev_annotation_get_color (annot, &color);
 	ev_annotation_window_set_color (window, &color);
+}
+
+static void
+ev_annotation_window_opacity_changed (EvAnnotation       *annot,
+		                      GParamSpec         *pspec,
+				      EvAnnotationWindow *window)
+{
+	gdouble opacity;
+
+	opacity = ev_annotation_markup_get_opacity (EV_ANNOTATION_MARKUP (annot));
+	ev_annotation_window_set_opacity (window, opacity);
 }
 
 static void
@@ -394,6 +413,7 @@ ev_annotation_window_constructor (GType                  type,
 	GdkColor            color;
 	EvRectangle        *rect;
 	gdouble             scale;
+	gdouble             opacity;
 
 	object = G_OBJECT_CLASS (ev_annotation_window_parent_class)->constructor (type,
 										  n_construct_properties,
@@ -419,6 +439,10 @@ ev_annotation_window_constructor (GType                  type,
 
 	ev_annotation_get_color (annot, &color);
 	ev_annotation_window_set_color (window, &color);
+
+	opacity = ev_annotation_markup_get_opacity (markup);
+	ev_annotation_window_set_opacity (window, opacity);
+
 	gtk_widget_set_name (GTK_WIDGET (window), ev_annotation_get_name (annot));
 	gtk_window_set_title (GTK_WINDOW (window), label);
 	gtk_label_set_text (GTK_LABEL (window->title), label);
@@ -436,6 +460,9 @@ ev_annotation_window_constructor (GType                  type,
 			  window);
 	g_signal_connect (annot, "notify::color",
 			  G_CALLBACK (ev_annotation_window_color_changed),
+			  window);
+	g_signal_connect (annot, "notify::opacity",
+			  G_CALLBACK (ev_annotation_window_opacity_changed),
 			  window);
 
 	return object;
