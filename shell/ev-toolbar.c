@@ -44,6 +44,7 @@ struct _EvToolbarPrivate {
 
         GtkWidget *view_menu_button;
         GtkWidget *action_menu_button;
+        GtkWidget *history_action;
         GMenu *bookmarks_section;
 };
 
@@ -243,12 +244,16 @@ ev_toolbar_constructed (GObject *object)
         gtk_widget_show (tool_item);
 
         /* History */
-        action = gtk_action_group_get_action (action_group, "History");
-        tool_item = gtk_action_create_tool_item (action);
+        hbox = ev_history_action_new (ev_window_get_history (ev_toolbar->priv->window));
+        ev_toolbar->priv->history_action = hbox;
+        tool_item = GTK_WIDGET (gtk_tool_item_new ());
         if (rtl)
                 gtk_widget_set_margin_left (tool_item, 12);
         else
                 gtk_widget_set_margin_right (tool_item, 12);
+        gtk_container_add (GTK_CONTAINER (tool_item), hbox);
+        gtk_widget_show (hbox);
+
         gtk_container_add (GTK_CONTAINER (ev_toolbar), tool_item);
         gtk_widget_show (tool_item);
 
@@ -391,8 +396,7 @@ ev_toolbar_has_visible_popups (EvToolbar *ev_toolbar)
         if (ev_zoom_action_get_popup_shown (EV_ZOOM_ACTION (action)))
                 return TRUE;
 
-        action = gtk_action_group_get_action (action_group, "History");
-        if (ev_history_action_get_popup_shown (EV_HISTORY_ACTION (action)))
+        if (ev_history_action_get_popup_shown (EV_HISTORY_ACTION (ev_toolbar->priv->history_action)))
                 return TRUE;
 
         return FALSE;

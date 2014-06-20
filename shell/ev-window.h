@@ -27,6 +27,7 @@
 #include <gtk/gtk.h>
 
 #include "ev-link.h"
+#include "ev-history.h"
 
 G_BEGIN_DECLS
 
@@ -90,6 +91,7 @@ GtkUIManager   *ev_window_get_ui_manager                 (EvWindow       *ev_win
 GtkActionGroup *ev_window_get_main_action_group          (EvWindow       *ev_window);
 GtkActionGroup *ev_window_get_zoom_selector_action_group (EvWindow       *ev_window);
 GMenuModel     *ev_window_get_bookmarks_menu             (EvWindow       *ev_window);
+EvHistory      *ev_window_get_history                    (EvWindow       *ev_window);
 
 G_END_DECLS
 

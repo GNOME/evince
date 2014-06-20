@@ -25,8 +25,6 @@ evince_SOURCES=				\
 	ev-history.h			\
 	ev-history-action.c		\
 	ev-history-action.h		\
-	ev-history-action-widget.c	\
-	ev-history-action-widget.h	\
 	ev-keyring.h			\
 	ev-keyring.c			\
 	ev-loading-message.c		\

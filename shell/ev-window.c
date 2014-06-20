@@ -64,7 +64,6 @@
 #include "ev-message-area.h"
 #include "ev-metadata.h"
 #include "ev-page-action.h"
-#include "ev-history-action.h"
 #include "ev-password-view.h"
 #include "ev-properties-dialog.h"
 #include "ev-sidebar-annotations.h"
@@ -243,7 +242,6 @@ struct _EvWindowPrivate {
 
 #define PAGE_SELECTOR_ACTION	"PageSelector"
 #define ZOOM_CONTROL_ACTION	"ViewZoom"
-#define HISTORY_ACTION          "History"
 
 #define GS_LOCKDOWN_SCHEMA_NAME  "org.gnome.desktop.lockdown"
 #define GS_LOCKDOWN_SAVE         "disable-save-to-disk"
@@ -554,8 +552,12 @@ ev_window_update_actions_sensitivity (EvWindow *ev_window)
 		ev_window_set_action_enabled (ev_window, "select-page", FALSE);
 	}
 
-	ev_window_set_action_sensitive (ev_window, "History",
-					!ev_history_is_frozen (ev_window->priv->history));
+	ev_window_set_action_enabled (ev_window, "go-back-history",
+				      !ev_history_is_frozen (ev_window->priv->history) &&
+				      ev_history_can_go_back (ev_window->priv->history));
+	ev_window_set_action_enabled (ev_window, "go-forward-history",
+				      !ev_history_is_frozen (ev_window->priv->history) &&
+				      ev_history_can_go_forward (ev_window->priv->history));
 
 	ev_window_set_action_enabled (ev_window, "caret-navigation",
 				      has_pages &&
@@ -5337,8 +5339,6 @@ ev_window_show_find_bar (EvWindow *ev_window,
 
 	if (restart && ev_window->priv->find_job)
 		ev_window_find_restart (ev_window);
-
-	ev_window_set_action_sensitive (ev_window, "History", FALSE);
 }
 
 static void
@@ -5359,8 +5359,6 @@ ev_window_close_find_bar (EvWindow *ev_window)
 	g_action_group_change_action_state (G_ACTION_GROUP (ev_window), "toggle-find", g_variant_new_boolean (FALSE));
 
 	ev_history_thaw (ev_window->priv->history);
-
-	ev_window_set_action_sensitive (ev_window, "History", TRUE);
 }
 
 static void
@@ -5869,8 +5867,6 @@ history_changed_cb (EvHistory *history,
 				      ev_history_can_go_back (window->priv->history));
 	ev_window_set_action_enabled (window, "go-forward-history",
 				      ev_history_can_go_forward (window->priv->history));
-	ev_window_set_action_sensitive (window, "History",
-					!ev_history_is_frozen (window->priv->history));
 }
 
 static void
@@ -5980,15 +5976,6 @@ register_custom_actions (EvWindow *window, GtkActionGroup *group)
 				   window);
 	g_signal_connect (action, "activated",
 			  G_CALLBACK (zoom_action_activated_cb), window);
-	gtk_action_group_add_action (group, action);
-	g_object_unref (action);
-
-	action = g_object_new (EV_TYPE_HISTORY_ACTION,
-			       "name", HISTORY_ACTION,
-			       "label", _("History"),
-			       NULL);
-	ev_history_action_set_history (EV_HISTORY_ACTION (action),
-				       window->priv->history);
 	gtk_action_group_add_action (group, action);
 	g_object_unref (action);
 }
@@ -7375,4 +7362,12 @@ ev_window_get_bookmarks_menu (EvWindow *ev_window)
 	g_return_val_if_fail (EV_WINDOW (ev_window), NULL);
 
 	return G_MENU_MODEL (ev_window->priv->bookmarks_menu);
+}
+
+EvHistory *
+ev_window_get_history (EvWindow *ev_window)
+{
+	g_return_val_if_fail (EV_WINDOW (ev_window), NULL);
+
+	return ev_window->priv->history;
 }

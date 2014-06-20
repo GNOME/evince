@@ -39,20 +39,19 @@ typedef struct _EvHistoryActionClass   EvHistoryActionClass;
 typedef struct _EvHistoryActionPrivate EvHistoryActionPrivate;
 
 struct _EvHistoryAction {
-        GtkAction parent;
+        GtkBox parent;
 
         EvHistoryActionPrivate *priv;
 };
 
 struct _EvHistoryActionClass {
-        GtkActionClass parent_class;
+        GtkBoxClass parent_class;
 };
 
-GType    ev_history_action_get_type        (void);
+GType      ev_history_action_get_type        (void);
 
-void     ev_history_action_set_history     (EvHistoryAction *action,
-                                            EvHistory       *history);
-gboolean ev_history_action_get_popup_shown (EvHistoryAction *action);
+GtkWidget *ev_history_action_new             (EvHistory       *history);
+gboolean   ev_history_action_get_popup_shown (EvHistoryAction *action);
 
 G_END_DECLS
 
