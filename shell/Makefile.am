@@ -55,8 +55,6 @@ evince_SOURCES=				\
 	ev-window-title.h		\
 	ev-zoom-action.c		\
 	ev-zoom-action.h		\
-	ev-zoom-action-widget.c		\
-	ev-zoom-action-widget.h		\
 	ev-sidebar.c			\
 	ev-sidebar.h			\
 	ev-sidebar-annotations.c	\

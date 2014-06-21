@@ -45,6 +45,7 @@ struct _EvToolbarPrivate {
         GtkWidget *view_menu_button;
         GtkWidget *action_menu_button;
         GtkWidget *history_action;
+        GtkWidget *zoom_action;
         GMenu *bookmarks_section;
 };
 
@@ -182,13 +183,20 @@ ev_toolbar_bookmarks_menu_model_changed (GMenuModel *model,
 }
 
 static void
+zoom_selector_activated (GtkWidget *zoom_action,
+                         EvToolbar *toolbar)
+{
+        ev_window_focus_view (toolbar->priv->window);
+}
+
+static void
 ev_toolbar_constructed (GObject *object)
 {
         EvToolbar      *ev_toolbar = EV_TOOLBAR (object);
         GtkBuilder     *builder;
         GtkActionGroup *action_group;
         GtkWidget      *tool_item;
-        GtkWidget      *hbox;
+        GtkWidget      *hbox, *vbox;
         GtkAction      *action;
         GtkWidget      *button;
         gboolean        rtl;
@@ -277,12 +285,20 @@ ev_toolbar_constructed (GObject *object)
         gtk_widget_show (tool_item);
 
         /* Zoom selector */
-        action = gtk_action_group_get_action (action_group, "ViewZoom");
-        tool_item = gtk_action_create_tool_item (action);
+        vbox = ev_zoom_action_new (ev_window_get_document_model (ev_toolbar->priv->window),
+                                   G_MENU (gtk_builder_get_object (builder, "zoom-menu")));
+        ev_toolbar->priv->zoom_action = vbox;
+        g_signal_connect (vbox, "activated",
+                          G_CALLBACK (zoom_selector_activated),
+                          ev_toolbar);
+        tool_item = GTK_WIDGET (gtk_tool_item_new ());
         if (rtl)
                 gtk_widget_set_margin_left (tool_item, 12);
         else
                 gtk_widget_set_margin_right (tool_item, 12);
+        gtk_container_add (GTK_CONTAINER (tool_item), vbox);
+        gtk_widget_show (vbox);
+
         gtk_container_add (GTK_CONTAINER (ev_toolbar), tool_item);
         gtk_widget_show (tool_item);
 
@@ -374,8 +390,6 @@ ev_toolbar_new (EvWindow *window)
 gboolean
 ev_toolbar_has_visible_popups (EvToolbar *ev_toolbar)
 {
-        GtkAction        *action;
-        GtkActionGroup   *action_group;
         GtkMenu          *popup_menu;
         EvToolbarPrivate *priv;
 
@@ -391,9 +405,7 @@ ev_toolbar_has_visible_popups (EvToolbar *ev_toolbar)
         if (gtk_widget_get_visible (GTK_WIDGET (popup_menu)))
                 return TRUE;
 
-        action_group = ev_window_get_main_action_group (ev_toolbar->priv->window);
-        action = gtk_action_group_get_action (action_group, "ViewZoom");
-        if (ev_zoom_action_get_popup_shown (EV_ZOOM_ACTION (action)))
+        if (ev_zoom_action_get_popup_shown (EV_ZOOM_ACTION (ev_toolbar->priv->zoom_action)))
                 return TRUE;
 
         if (ev_history_action_get_popup_shown (EV_HISTORY_ACTION (ev_toolbar->priv->history_action)))
