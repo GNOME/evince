@@ -63,7 +63,7 @@
 #include "ev-loading-message.h"
 #include "ev-message-area.h"
 #include "ev-metadata.h"
-#include "ev-page-action.h"
+#include "ev-page-action-widget.h"
 #include "ev-password-view.h"
 #include "ev-properties-dialog.h"
 #include "ev-sidebar-annotations.h"
@@ -239,8 +239,6 @@ struct _EvWindowPrivate {
 
 #define EV_WINDOW_IS_PRESENTATION(w) (w->priv->presentation_view != NULL)
 
-#define PAGE_SELECTOR_ACTION	"PageSelector"
-
 #define GS_LOCKDOWN_SCHEMA_NAME  "org.gnome.desktop.lockdown"
 #define GS_LOCKDOWN_SAVE         "disable-save-to-disk"
 #define GS_LOCKDOWN_PRINT        "disable-printing"
@@ -388,17 +386,6 @@ ev_window_set_action_enabled (EvWindow   *ev_window,
 }
 
 static void
-ev_window_set_action_sensitive (EvWindow   *ev_window,
-		    	        const char *name,
-		  	        gboolean    sensitive)
-{
-	GtkAction *action = gtk_action_group_get_action (ev_window->priv->action_group,
-							 name);
-	gtk_action_set_sensitive (action, sensitive);
-}
-
-
-static void
 ev_window_setup_action_sensitivity (EvWindow *ev_window)
 {
 	EvDocument *document = ev_window->priv->document;
@@ -481,9 +468,6 @@ ev_window_setup_action_sensitivity (EvWindow *ev_window)
 	/* Bookmarks menu */
 	ev_window_set_action_enabled (ev_window, "add-bookmark",
 					has_pages && ev_window->priv->bookmarks);
-
-	/* Toolbar-specific actions: */
-	ev_window_set_action_sensitive (ev_window, PAGE_SELECTOR_ACTION, has_pages);
 
         ev_window_update_actions_sensitivity (ev_window);
 }
@@ -3652,14 +3636,13 @@ ev_window_cmd_focus_page_selector (GSimpleAction *action,
 				   gpointer       user_data)
 {
 	EvWindow *window = user_data;
-	GtkAction *page_action;
+	GtkWidget *page_selector;
 
 	update_chrome_flag (window, EV_CHROME_RAISE_TOOLBAR, TRUE);
 	update_chrome_visibility (window);
 
-	page_action = gtk_action_group_get_action (window->priv->action_group,
-						   PAGE_SELECTOR_ACTION);
-	ev_page_action_grab_focus (EV_PAGE_ACTION (page_action));
+	page_selector = ev_toolbar_get_page_selector (EV_TOOLBAR (window->priv->toolbar));
+	ev_page_action_widget_grab_focus (EV_PAGE_ACTION_WIDGET (page_selector));
 }
 
 static void
@@ -5453,11 +5436,6 @@ ev_window_dispose (GObject *object)
 		priv->ui_manager = NULL;
 	}
 
-	if (priv->action_group) {
-		g_object_unref (priv->action_group);
-		priv->action_group = NULL;
-	}
-
 	if (priv->view_popup_action_group) {
 		g_object_unref (priv->view_popup_action_group);
 		priv->view_popup_action_group = NULL;
@@ -5800,39 +5778,19 @@ sidebar_annots_annot_add_cancelled (EvSidebarAnnotations *sidebar_annots,
 }
 
 static void
-register_custom_actions (EvWindow *window, GtkActionGroup *group)
-{
-	GtkAction *action;
-
-	action = g_object_new (EV_TYPE_PAGE_ACTION,
-			       "name", PAGE_SELECTOR_ACTION,
-			       "label", _("Page"),
-			       "tooltip", _("Select Page"),
-			       "icon_name", "text-x-generic",
-			       "visible_overflown", FALSE,
-			       NULL);
-	ev_page_action_set_model (EV_PAGE_ACTION (action),
-				  window->priv->model);
-	g_signal_connect (action, "activate_link",
-			  G_CALLBACK (activate_link_cb), window);
-	gtk_action_group_add_action (group, action);
-	g_object_unref (action);
-}
-
-static void
 sidebar_widget_model_set (EvSidebarLinks *ev_sidebar_links,
 			  GParamSpec     *pspec,
 			  EvWindow       *ev_window)
 {
 	GtkTreeModel *model;
-	GtkAction *action;
+	GtkWidget *page_selector;
 
 	g_object_get (G_OBJECT (ev_sidebar_links),
 		      "model", &model,
 		      NULL);
 
-	action = gtk_action_group_get_action (ev_window->priv->action_group, PAGE_SELECTOR_ACTION);
-	ev_page_action_set_links_model (EV_PAGE_ACTION (action), model);
+	page_selector = ev_toolbar_get_page_selector (EV_TOOLBAR (ev_window->priv->toolbar));
+	ev_page_action_widget_update_links_model (EV_PAGE_ACTION_WIDGET (page_selector), model);
 	g_object_unref (model);
 }
 
@@ -6766,15 +6724,7 @@ ev_window_init (EvWindow *ev_window)
 					 actions, G_N_ELEMENTS (actions),
 					 ev_window);
 
-	action_group = gtk_action_group_new ("MenuActions");
-	ev_window->priv->action_group = action_group;
-	gtk_action_group_set_translation_domain (action_group, NULL);
-	register_custom_actions (ev_window, action_group);
-
 	ev_window->priv->ui_manager = gtk_ui_manager_new ();
-	gtk_ui_manager_insert_action_group (ev_window->priv->ui_manager,
-					    action_group, 0);
-
 	accel_group =
 		gtk_ui_manager_get_accel_group (ev_window->priv->ui_manager);
 	gtk_window_add_accel_group (GTK_WINDOW (ev_window), accel_group);
@@ -6822,6 +6772,11 @@ ev_window_init (EvWindow *ev_window)
 			    ev_window->priv->toolbar,
 			    FALSE, TRUE, 0);
 	gtk_widget_show (ev_window->priv->toolbar);
+
+	g_signal_connect (ev_toolbar_get_page_selector (EV_TOOLBAR (ev_window->priv->toolbar)),
+			  "activate-link",
+			  G_CALLBACK (activate_link_cb),
+			  ev_window);
 
 	/* Find Bar */
 	ev_window->priv->find_bar = egg_find_bar_new ();
@@ -7162,14 +7117,6 @@ ev_window_get_ui_manager (EvWindow *ev_window)
 	g_return_val_if_fail (EV_WINDOW (ev_window), NULL);
 
 	return ev_window->priv->ui_manager;
-}
-
-GtkActionGroup *
-ev_window_get_main_action_group (EvWindow *ev_window)
-{
-	g_return_val_if_fail (EV_WINDOW (ev_window), NULL);
-
-	return ev_window->priv->action_group;
 }
 
 GMenuModel *

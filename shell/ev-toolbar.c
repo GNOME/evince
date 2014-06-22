@@ -31,6 +31,7 @@
 #include "ev-history-action.h"
 #include "ev-application.h"
 #include "ev-recent-menu-model.h"
+#include "ev-page-action-widget.h"
 #include <math.h>
 
 enum
@@ -46,6 +47,7 @@ struct _EvToolbarPrivate {
         GtkWidget *action_menu_button;
         GtkWidget *history_action;
         GtkWidget *zoom_action;
+        GtkWidget *page_selector;
         GMenu *bookmarks_section;
 };
 
@@ -194,10 +196,8 @@ ev_toolbar_constructed (GObject *object)
 {
         EvToolbar      *ev_toolbar = EV_TOOLBAR (object);
         GtkBuilder     *builder;
-        GtkActionGroup *action_group;
         GtkWidget      *tool_item;
         GtkWidget      *hbox, *vbox;
-        GtkAction      *action;
         GtkWidget      *button;
         gboolean        rtl;
         GMenuModel     *menu;
@@ -214,7 +214,6 @@ ev_toolbar_constructed (GObject *object)
         gtk_style_context_add_class (gtk_widget_get_style_context (GTK_WIDGET (ev_toolbar)),
                                      GTK_STYLE_CLASS_MENUBAR);
 
-        action_group = ev_window_get_main_action_group (ev_toolbar->priv->window);
         builder = gtk_builder_new_from_resource ("/org/gnome/evince/shell/ui/menus.ui");
 
         /* Navigation */
@@ -242,8 +241,11 @@ ev_toolbar_constructed (GObject *object)
         gtk_widget_show (tool_item);
 
         /* Page selector */
-        action = gtk_action_group_get_action (action_group, "PageSelector");
-        tool_item = gtk_action_create_tool_item (action);
+        /* Use EvPageActionWidget for now, since the page selector action is also used by the previewer */
+        tool_item = GTK_WIDGET (g_object_new (EV_TYPE_PAGE_ACTION_WIDGET, NULL));
+        ev_toolbar->priv->page_selector = tool_item;
+        ev_page_action_widget_set_model (EV_PAGE_ACTION_WIDGET (tool_item),
+                                         ev_window_get_document_model (ev_toolbar->priv->window));
         if (rtl)
                 gtk_widget_set_margin_left (tool_item, 12);
         else
@@ -421,4 +423,12 @@ ev_toolbar_action_menu_popup (EvToolbar *ev_toolbar)
 
         gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (ev_toolbar->priv->action_menu_button),
                                       TRUE);
+}
+
+GtkWidget *
+ev_toolbar_get_page_selector (EvToolbar *ev_toolbar)
+{
+        g_return_val_if_fail (EV_IS_TOOLBAR (ev_toolbar), NULL);
+
+        return ev_toolbar->priv->page_selector;
 }

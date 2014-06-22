@@ -245,6 +245,7 @@ ev_page_action_widget_init (EvPageActionWidget *action_widget)
 	gtk_container_add (GTK_CONTAINER (action_widget), hbox);
 	gtk_widget_show (hbox);
 
+        gtk_widget_set_sensitive (GTK_WIDGET (action_widget), FALSE);
 	gtk_widget_show (GTK_WIDGET (action_widget));
 }
 
@@ -259,6 +260,8 @@ ev_page_action_widget_document_changed_cb (EvDocumentModel    *model,
 	if (action_widget->document)
 		g_object_unref (action_widget->document);
 	action_widget->document = document;
+
+        gtk_widget_set_sensitive (GTK_WIDGET (action_widget), ev_document_get_n_pages (document) > 0);
 
 	if (action_widget->signal_id > 0) {
 		g_signal_handler_disconnect (action_widget->doc_model,
