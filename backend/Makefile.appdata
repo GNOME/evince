@@ -1,0 +1,21 @@
+# -*- Mode: make -*-
+# Copyright 2014  Carlos Garcia Campos <carlosgc@gnome.org>
+
+%.metainfo.xml.in:
+	$(AM_V_GEN)echo -e "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" > $@; \
+	echo -e "<component type=\"addon\">" >> $@; \
+	echo -e "  <id>$(*)</id>" >> $@; \
+	echo -e "  <extends>evince.desktop</extends>" >> $@; \
+	echo -e "  <_name>$(APPDATA_NAME)</_name>" >> $@; \
+	echo -e "  <_summary>$(APPDATA_SUMMARY)</_summary>" >> $@; \
+	echo -e "  <mimetypes>" >> $@; \
+	for m in $(APPDATA_MIME_TYPES); do \
+	  echo -e "    <mimetype>$$m</mimetype>" >> $@; \
+	done; \
+	echo -e "  </mimetypes>" >> $@; \
+	echo -e "  $(APPDATA_MIME_TYPES)" >> $@; \
+	echo -e "  <url type=\"homepage\">https://wiki.gnome.org/Apps/Evince/SupportedDocumentFormats</url>" >> $@; \
+	echo -e "  <metadata_license>GPL-2.0+</metadata_license>" >> $@; \
+	echo -e "  <project_license>GPL-2.0+</project_license>" >> $@; \
+	echo -e "  <updatecontact>carlosgc@gnome.org</updatecontact>" >> $@; \
+	echo -e "</component>" >> $@;

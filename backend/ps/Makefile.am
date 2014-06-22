@@ -1,3 +1,5 @@
+-include $(top_srcdir)/backend/Makefile.appdata
+
 backend_LTLIBRARIES = libpsdocument.la
 
 libpsdocument_la_SOURCES = 	\
@@ -24,11 +26,18 @@ libpsdocument_la_LIBADD = 				\
 
 backend_in_files = psdocument.evince-backend.in.in
 backend_DATA = $(backend_in_files:.evince-backend.in.in=.evince-backend)
-
-EXTRA_DIST = $(backend_in_files)
-
-CLEANFILES = $(backend_DATA)
-
 @EV_INTLTOOL_EVINCE_BACKEND_RULE@
+
+APPDATA_NAME=PostScript Documents
+APPDATA_SUMMARY=Adds support for reading PostScript documents
+APPDATA_MIME_TYPES=$(shell echo "$(PS_MIME_TYPES)" | sed -e 's/;/ /g')
+appstreamdir = $(datadir)/appdata
+appstream_in_files = evince-psdocument.metainfo.xml.in
+appstream_DATA = $(appstream_in_files:.xml.in=.xml)
+@INTLTOOL_XML_RULE@
+
+EXTRA_DIST = $(backend_in_files) $(appstream_in_files)
+
+CLEANFILES = $(backend_DATA) $(appstream_DATA)
 
 -include $(top_srcdir)/git.mk
