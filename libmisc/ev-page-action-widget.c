@@ -250,33 +250,43 @@ ev_page_action_widget_init (EvPageActionWidget *action_widget)
 }
 
 static void
-ev_page_action_widget_document_changed_cb (EvDocumentModel    *model,
-					   GParamSpec         *pspec,
-					   EvPageActionWidget *action_widget)
+ev_page_action_widget_set_document (EvPageActionWidget *action_widget,
+                                    EvDocument         *document)
 {
-	EvDocument *document = ev_document_model_get_document (model);
+        if (document) {
+                g_object_ref (document);
+                gtk_widget_set_sensitive (GTK_WIDGET (action_widget), ev_document_get_n_pages (document) > 0);
+        }
 
-	g_object_ref (document);
-	if (action_widget->document)
-		g_object_unref (action_widget->document);
-	action_widget->document = document;
+        if (action_widget->signal_id > 0) {
+                g_signal_handler_disconnect (action_widget->doc_model,
+                                             action_widget->signal_id);
+                action_widget->signal_id = 0;
+        }
 
-        gtk_widget_set_sensitive (GTK_WIDGET (action_widget), ev_document_get_n_pages (document) > 0);
+        if (action_widget->document)
+                g_object_unref (action_widget->document);
+        action_widget->document = document;
+        if (!action_widget->document)
+                return;
 
-	if (action_widget->signal_id > 0) {
-		g_signal_handler_disconnect (action_widget->doc_model,
-					     action_widget->signal_id);
-		action_widget->signal_id = 0;
-	}
-	action_widget->signal_id =
-		g_signal_connect (action_widget->doc_model,
+        action_widget->signal_id =
+                g_signal_connect (action_widget->doc_model,
                                   "page-changed",
                                   G_CALLBACK (page_changed_cb),
                                   action_widget);
 
-	ev_page_action_widget_set_current_page (action_widget,
-						ev_document_model_get_page (model));
+        ev_page_action_widget_set_current_page (action_widget,
+                                                ev_document_model_get_page (action_widget->doc_model));
         ev_page_action_widget_update_max_width (action_widget);
+}
+
+static void
+ev_page_action_widget_document_changed_cb (EvDocumentModel    *model,
+					   GParamSpec         *pspec,
+					   EvPageActionWidget *action_widget)
+{
+        ev_page_action_widget_set_document (action_widget, ev_document_model_get_document (model));
 }
 
 void
@@ -291,6 +301,7 @@ ev_page_action_widget_set_model (EvPageActionWidget *action_widget,
 	g_object_add_weak_pointer (G_OBJECT (model),
 				   (gpointer)&action_widget->doc_model);
 
+        ev_page_action_widget_set_document (action_widget, ev_document_model_get_document (model));
 	g_signal_connect (model, "notify::document",
 			  G_CALLBACK (ev_page_action_widget_document_changed_cb),
 			  action_widget);
@@ -312,10 +323,7 @@ ev_page_action_widget_finalize (GObject *object)
 		action_widget->doc_model = NULL;
 	}
 
-	if (action_widget->document) {
-		g_object_unref (action_widget->document);
-		action_widget->document = NULL;
-	}
+        ev_page_action_widget_set_document (action_widget, NULL);
 
 	G_OBJECT_CLASS (ev_page_action_widget_parent_class)->finalize (object);
 }
