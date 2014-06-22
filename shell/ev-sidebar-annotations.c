@@ -325,6 +325,12 @@ ev_sidebar_annotations_annot_added (EvSidebarAnnotations *sidebar_annots,
 	ev_sidebar_annotations_load (sidebar_annots);
 }
 
+void
+ev_sidebar_annotations_annot_removed (EvSidebarAnnotations *sidebar_annots)
+{
+	ev_sidebar_annotations_load (sidebar_annots);
+}
+
 static void
 selection_changed_cb (GtkTreeSelection     *selection,
 		      EvSidebarAnnotations *sidebar_annots)

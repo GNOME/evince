@@ -5887,6 +5887,14 @@ view_annot_added (EvView       *view,
 }
 
 static void
+view_annot_removed (EvView       *view,
+		    EvAnnotation *annot,
+		    EvWindow     *window)
+{
+	ev_sidebar_annotations_annot_removed (EV_SIDEBAR_ANNOTATIONS (window->priv->sidebar_annots));
+}
+
+static void
 sidebar_annots_annot_add_cancelled (EvSidebarAnnotations *sidebar_annots,
 				    EvWindow             *window)
 {
@@ -7042,6 +7050,9 @@ ev_window_init (EvWindow *ev_window)
 				 ev_window, 0);
 	g_signal_connect_object (ev_window->priv->view, "annot-added",
 				 G_CALLBACK (view_annot_added),
+				 ev_window, 0);
+	g_signal_connect_object (ev_window->priv->view, "annot-removed",
+				 G_CALLBACK (view_annot_removed),
 				 ev_window, 0);
 	g_signal_connect_object (ev_window->priv->view, "layers-changed",
 				 G_CALLBACK (view_layers_changed_cb),

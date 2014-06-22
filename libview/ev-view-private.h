@@ -253,6 +253,8 @@ struct _EvViewClass {
 				       EvSourceLink   *link);
         void     (*annot_added)       (EvView         *view,
 				       EvAnnotation   *annot);
+        void     (*annot_removed)     (EvView         *view,
+				       EvAnnotation   *annot);
         void     (*layers_changed)    (EvView         *view);
         gboolean (*move_cursor)       (EvView         *view,
 				       GtkMovementStep step,
