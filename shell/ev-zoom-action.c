@@ -430,15 +430,15 @@ ev_zoom_action_constructed (GObject *object)
                 gtk_widget_set_sensitive (GTK_WIDGET (zoom_action), FALSE);
         }
 
-        g_signal_connect (zoom_action->priv->model, "notify::document",
-                          G_CALLBACK (document_changed_cb),
-                          zoom_action);
-        g_signal_connect (zoom_action->priv->model, "notify::scale",
-                          G_CALLBACK (zoom_changed_cb),
-                          zoom_action);
-        g_signal_connect (zoom_action->priv->model, "notify::max-scale",
-                          G_CALLBACK (max_zoom_changed_cb),
-                          zoom_action);
+        g_signal_connect_object (zoom_action->priv->model, "notify::document",
+                                 G_CALLBACK (document_changed_cb),
+                                 zoom_action, 0);
+        g_signal_connect_object (zoom_action->priv->model, "notify::scale",
+                                 G_CALLBACK (zoom_changed_cb),
+                                 zoom_action, 0);
+        g_signal_connect_object (zoom_action->priv->model, "notify::max-scale",
+                                 G_CALLBACK (max_zoom_changed_cb),
+                                 zoom_action, 0);
 
         setup_initial_entry_size (zoom_action);
 }
