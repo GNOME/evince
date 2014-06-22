@@ -21,8 +21,8 @@ libxpsdocument_la_LIBADD = 				\
 	$(BACKEND_LIBS)					\
 	$(GXPS_LIBS)
 
-backend_in_files = xpsdocument.evince-backend.in
-backend_DATA = $(backend_in_files:.evince-backend.in=.evince-backend)
+backend_in_files = xpsdocument.evince-backend.in.in
+backend_DATA = $(backend_in_files:.evince-backend.in.in=.evince-backend)
 
 EXTRA_DIST = $(backend_in_files)
 

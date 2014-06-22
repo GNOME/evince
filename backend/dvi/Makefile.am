@@ -37,8 +37,8 @@ if WITH_TYPE1_FONTS
 libdvidocument_la_LIBADD += -lt1
 endif
 
-backend_in_files = dvidocument.evince-backend.in
-backend_DATA = $(backend_in_files:.evince-backend.in=.evince-backend)
+backend_in_files = dvidocument.evince-backend.in.in
+backend_DATA = $(backend_in_files:.evince-backend.in.in=.evince-backend)
 
 EXTRA_DIST = $(backend_in_files)
 
