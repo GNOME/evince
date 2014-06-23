@@ -664,3 +664,17 @@ ev_page_cache_ensure_page (EvPageCache *cache,
 
         ev_page_cache_schedule_job_if_needed (cache, page);
 }
+
+gboolean
+ev_page_cache_is_page_cached (EvPageCache   *cache,
+			      gint           page)
+{
+	EvPageCacheData *data;
+
+	g_return_val_if_fail (EV_IS_PAGE_CACHE (cache), FALSE);
+	g_return_val_if_fail (page >= 0 && page < cache->n_pages, FALSE);
+
+	data = &cache->page_list[page];
+
+	return data->done;
+}
