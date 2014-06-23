@@ -540,6 +540,32 @@ _transform_doc_rect_to_atk_rect (EvViewAccessible *accessible,
 	atk_rect->y2 = view_rect.y + view_rect.height;
 }
 
+gboolean
+ev_view_accessible_is_doc_rect_showing (EvViewAccessible *accessible,
+					gint              page,
+					EvRectangle      *doc_rect)
+{
+	EvView *view;
+	GdkRectangle view_rect;
+	GtkAllocation allocation;
+	gint x, y;
+	gboolean hidden;
+
+	view = EV_VIEW (gtk_accessible_get_widget (GTK_ACCESSIBLE (accessible)));
+	if (page < view->start_page || page > view->end_page)
+		return FALSE;
+
+	gtk_widget_get_allocation (GTK_WIDGET (view), &allocation);
+	x = gtk_adjustment_get_value (view->hadjustment);
+	y = gtk_adjustment_get_value (view->vadjustment);
+
+	_ev_view_transform_doc_rect_to_view_rect (view, page, doc_rect, &view_rect);
+	hidden = view_rect.x + view_rect.width < x || view_rect.x > x + allocation.width ||
+		view_rect.y + view_rect.height < y || view_rect.y > y + allocation.height;
+
+	return !hidden;
+}
+
 void
 ev_view_accessible_set_page_range (EvViewAccessible *accessible,
 				   gint start,

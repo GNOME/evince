@@ -62,6 +62,9 @@ void       _transform_doc_rect_to_atk_rect (EvViewAccessible *accessible,
 					    EvRectangle      *doc_rect,
 					    EvRectangle      *atk_rect,
 					    AtkCoordType      coord_type);
+gboolean  ev_view_accessible_is_doc_rect_showing (EvViewAccessible *accessible,
+						  gint              page,
+						  EvRectangle      *doc_rect);
 
 #endif  /* __EV_VIEW_ACCESSIBLE_H__ */
 
