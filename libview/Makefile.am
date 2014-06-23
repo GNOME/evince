@@ -2,6 +2,7 @@ lib_LTLIBRARIES = libevview3.la
 
 NOINST_H_SRC_FILES =			\
 	ev-annotation-window.h		\
+	ev-image-accessible.h		\
 	ev-link-accessible.h		\
 	ev-page-accessible.h		\
 	ev-page-cache.h			\
@@ -34,6 +35,7 @@ nodist_header_DATA = $(INST_H_BUILT_FILES)
 libevview3_la_SOURCES =			\
 	ev-annotation-window.c		\
 	ev-document-model.c		\
+	ev-image-accessible.c		\
 	ev-jobs.c			\
 	ev-job-scheduler.c		\
 	ev-link-accessible.c		\
