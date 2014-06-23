@@ -132,20 +132,14 @@ ev_annotation_window_sync_contents (EvAnnotationWindow *window)
 
 static void
 ev_annotation_window_set_color (EvAnnotationWindow *window,
-				GdkColor           *color)
+				GdkRGBA            *color)
 {
         GtkStyleProperties *properties;
         GtkStyleProvider   *provider;
-	GdkRGBA             rgba;
-
-        rgba.red = color->red / 65535.;
-        rgba.green = color->green / 65535.;
-        rgba.blue = color->blue / 65535.;
-        rgba.alpha = 1;
 
         properties = gtk_style_properties_new ();
         gtk_style_properties_set (properties, 0,
-                                  "background-color", &rgba,
+                                  "background-color", color,
                                   NULL);
 
         provider = GTK_STYLE_PROVIDER (properties);
@@ -184,10 +178,10 @@ ev_annotation_window_color_changed (EvAnnotation       *annot,
 				    GParamSpec         *pspec,
 				    EvAnnotationWindow *window)
 {
-	GdkColor color;
+	GdkRGBA rgba;
 
-	ev_annotation_get_color (annot, &color);
-	ev_annotation_window_set_color (window, &color);
+	ev_annotation_get_rgba (annot, &rgba);
+	ev_annotation_window_set_color (window, &rgba);
 }
 
 static void
@@ -410,7 +404,7 @@ ev_annotation_window_constructor (GType                  type,
 	EvAnnotationMarkup *markup;
 	const gchar        *contents;
 	const gchar        *label;
-	GdkColor            color;
+	GdkRGBA             color;
 	EvRectangle        *rect;
 	gdouble             scale;
 	gdouble             opacity;
@@ -437,7 +431,7 @@ ev_annotation_window_constructor (GType                  type,
 			   (gint)((rect->x2 - rect->x1) * scale),
 			   (gint)((rect->y2 - rect->y1) * scale));
 
-	ev_annotation_get_color (annot, &color);
+	ev_annotation_get_rgba (annot, &color);
 	ev_annotation_window_set_color (window, &color);
 
 	opacity = ev_annotation_markup_get_opacity (markup);
@@ -458,7 +452,7 @@ ev_annotation_window_constructor (GType                  type,
 	g_signal_connect (annot, "notify::label",
 			  G_CALLBACK (ev_annotation_window_label_changed),
 			  window);
-	g_signal_connect (annot, "notify::color",
+	g_signal_connect (annot, "notify::rgba",
 			  G_CALLBACK (ev_annotation_window_color_changed),
 			  window);
 	g_signal_connect (annot, "notify::opacity",
