@@ -31,6 +31,8 @@ struct _EvPageAccessiblePrivate {
         EvViewAccessible *view_accessible;
 	gint              page;
 	GHashTable       *links;
+	GPtrArray        *children;
+	gboolean          children_initialized;
 };
 
 
@@ -77,12 +79,87 @@ ev_page_accessible_get_parent (AtkObject *obj)
 	return ATK_OBJECT (self->priv->view_accessible);
 }
 
+static gint
+compare_mappings (EvMapping *a, EvMapping *b)
+{
+	gdouble dx, dy;
+
+	/* Very rough heuristic for simple, non-tagged PDFs. */
+
+	dy = a->area.y1 - b->area.y1;
+	dx = a->area.x1 - b->area.x1;
+
+	return ABS (dy) > 10 ? dy : dx;
+}
+
+static void
+ev_page_accessible_initialize_children (EvPageAccessible *self)
+{
+	EvView *view;
+	EvMappingList *links;
+	GList *children = NULL;
+	GList *list;
+
+	if (self->priv->children_initialized)
+		return;
+
+	view = ev_page_accessible_get_view (self);
+	if (!ev_page_cache_is_page_cached (view->page_cache, self->priv->page))
+		return;
+
+	self->priv->children_initialized = TRUE;
+
+	links = ev_page_cache_get_link_mapping (view->page_cache, self->priv->page);
+	if (!links)
+		return;
+
+	children = g_list_copy (ev_mapping_list_get_list (links));
+
+	children = g_list_sort (children, (GCompareFunc) compare_mappings);
+	self->priv->children = g_ptr_array_new_full (g_list_length (children), (GDestroyNotify) g_object_unref);
+
+	for (list = children; list && list->data; list = list->next) {
+		EvMapping *mapping = list->data;
+		AtkObject *child = NULL;
+
+		if (links && ev_mapping_list_find (links, mapping->data)) {
+			EvLinkAccessible *link = ev_link_accessible_new (self, EV_LINK (mapping->data), &mapping->area);
+			AtkHyperlink *atk_link = atk_hyperlink_impl_get_hyperlink (ATK_HYPERLINK_IMPL (link));
+
+			child = atk_hyperlink_get_object (atk_link, 0);
+		}
+
+		if (child)
+			g_ptr_array_add (self->priv->children, child);
+	}
+
+	g_list_free (children);
+}
+
+static void
+clear_children (EvPageAccessible *self)
+{
+	gint i;
+	AtkObject *child;
+
+	if (!self->priv->children)
+		return;
+
+	for (i = 0; i < self->priv->children->len; i++) {
+		child = g_ptr_array_index (self->priv->children, i);
+		atk_object_notify_state_change (child, ATK_STATE_DEFUNCT, TRUE);
+	}
+
+	g_clear_pointer (&self->priv->children, g_ptr_array_unref);
+}
+
 static void
 ev_page_accessible_finalize (GObject *object)
 {
 	EvPageAccessiblePrivate *priv = EV_PAGE_ACCESSIBLE (object)->priv;
 
 	g_clear_pointer (&priv->links, (GDestroyNotify)g_hash_table_destroy);
+	clear_children (EV_PAGE_ACCESSIBLE (object));
 
 	G_OBJECT_CLASS (ev_page_accessible_parent_class)->finalize (object);
 }
@@ -230,6 +307,31 @@ ev_page_accessible_ref_state_set (AtkObject *accessible)
 	return copy_set;
 }
 
+static gint
+ev_page_accessible_get_n_children (AtkObject *accessible)
+{
+       EvPageAccessible *self;
+
+       self = EV_PAGE_ACCESSIBLE (accessible);
+       ev_page_accessible_initialize_children (self);
+
+       return self->priv->children == NULL ? 0 : self->priv->children->len;
+}
+
+static AtkObject *
+ev_page_accessible_ref_child (AtkObject *accessible,
+			      gint       i)
+{
+       EvPageAccessible *self;
+
+       self = EV_PAGE_ACCESSIBLE (accessible);
+       ev_page_accessible_initialize_children (self);
+
+       g_return_val_if_fail (i >= 0 || i < self->priv->children->len, NULL);
+
+       return g_object_ref (g_ptr_array_index (self->priv->children, i));
+}
+
 static void
 ev_page_accessible_class_init (EvPageAccessibleClass *klass)
 {
@@ -241,6 +343,8 @@ ev_page_accessible_class_init (EvPageAccessibleClass *klass)
 	atk_class->get_parent  = ev_page_accessible_get_parent;
 	atk_class->ref_relation_set = ev_page_accessible_ref_relation_set;
 	atk_class->ref_state_set = ev_page_accessible_ref_state_set;
+	atk_class->get_n_children = ev_page_accessible_get_n_children;
+	atk_class->ref_child = ev_page_accessible_ref_child;
 
 	g_object_class->get_property = ev_page_accessible_get_property;
 	g_object_class->set_property = ev_page_accessible_set_property;

@@ -32,6 +32,8 @@ struct _EvLinkAccessiblePrivate {
         EvRectangle       area;
 
         EvHyperlink      *hyperlink;
+
+        gchar      *name;
 };
 
 struct _EvHyperlink {
@@ -187,10 +189,71 @@ ev_hyperlink_init (EvHyperlink *link)
 
 static void ev_link_accessible_hyperlink_impl_iface_init (AtkHyperlinkImplIface *iface);
 static void ev_link_accessible_action_interface_init     (AtkActionIface        *iface);
+static void ev_link_accessible_component_iface_init      (AtkComponentIface     *iface);
 
 G_DEFINE_TYPE_WITH_CODE (EvLinkAccessible, ev_link_accessible, ATK_TYPE_OBJECT,
 			 G_IMPLEMENT_INTERFACE (ATK_TYPE_HYPERLINK_IMPL, ev_link_accessible_hyperlink_impl_iface_init)
-			 G_IMPLEMENT_INTERFACE (ATK_TYPE_ACTION, ev_link_accessible_action_interface_init))
+			 G_IMPLEMENT_INTERFACE (ATK_TYPE_ACTION, ev_link_accessible_action_interface_init)
+			 G_IMPLEMENT_INTERFACE (ATK_TYPE_COMPONENT, ev_link_accessible_component_iface_init))
+
+static const gchar *
+ev_link_accessible_get_name (AtkObject *atk_object)
+{
+	EvLinkAccessiblePrivate *priv;
+	gint start_index;
+	gint end_index;
+
+	priv = EV_LINK_ACCESSIBLE (atk_object)->priv;
+	if (priv->name)
+		return priv->name;
+
+	start_index = ev_hyperlink_get_start_index (ATK_HYPERLINK (priv->hyperlink));
+	end_index = ev_hyperlink_get_end_index (ATK_HYPERLINK (priv->hyperlink));
+	priv->name = atk_text_get_text (ATK_TEXT (atk_object_get_parent (atk_object)), start_index, end_index);
+
+	return priv->name;
+}
+
+static AtkObject *
+ev_link_accessible_get_parent (AtkObject *atk_object)
+{
+	EvLinkAccessiblePrivate *priv = EV_LINK_ACCESSIBLE (atk_object)->priv;
+
+	return ATK_OBJECT (priv->page);
+}
+
+static AtkStateSet *
+ev_link_accessible_ref_state_set (AtkObject *atk_object)
+{
+	AtkStateSet *state_set;
+	AtkStateSet *copy_set;
+	AtkStateSet *page_accessible_state_set;
+	EvLinkAccessible *self;
+	EvViewAccessible *view_accessible;
+	EvView *view;
+	gint page;
+
+	self = EV_LINK_ACCESSIBLE (atk_object);
+	state_set = ATK_OBJECT_CLASS (ev_link_accessible_parent_class)->ref_state_set (atk_object);
+	atk_state_set_clear_states (state_set);
+
+	page_accessible_state_set = atk_object_ref_state_set (ATK_OBJECT (self->priv->page));
+	copy_set = atk_state_set_or_sets (state_set, page_accessible_state_set);
+
+	view_accessible = ev_page_accessible_get_view_accessible (self->priv->page);
+	page = ev_page_accessible_get_page (self->priv->page);
+	if (!ev_view_accessible_is_doc_rect_showing (view_accessible, page, &self->priv->area))
+		atk_state_set_remove_state (copy_set, ATK_STATE_SHOWING);
+
+	view = ev_page_accessible_get_view (self->priv->page);
+	if (!view->focused_element || view->focused_element->data != self->priv->link)
+		atk_state_set_remove_state (copy_set, ATK_STATE_FOCUSED);
+
+	g_object_unref (state_set);
+	g_object_unref (page_accessible_state_set);
+
+	return copy_set;
+}
 
 static void
 ev_link_accessible_finalize (GObject *object)
@@ -198,6 +261,7 @@ ev_link_accessible_finalize (GObject *object)
         EvLinkAccessible *link = EV_LINK_ACCESSIBLE (object);
 
         g_clear_object (&link->priv->hyperlink);
+        g_free (link->priv->name);
 
         G_OBJECT_CLASS (ev_link_accessible_parent_class)->finalize (object);
 }
@@ -206,15 +270,21 @@ static void
 ev_link_accessible_class_init (EvLinkAccessibleClass *klass)
 {
         GObjectClass *object_class = G_OBJECT_CLASS (klass);
+        AtkObjectClass *atk_class = ATK_OBJECT_CLASS (klass);
 
         object_class->finalize = ev_link_accessible_finalize;
 
         g_type_class_add_private (klass, sizeof (EvLinkAccessiblePrivate));
+
+        atk_class->get_parent = ev_link_accessible_get_parent;
+        atk_class->get_name = ev_link_accessible_get_name;
+        atk_class->ref_state_set = ev_link_accessible_ref_state_set;
 }
 
 static void
 ev_link_accessible_init (EvLinkAccessible *link)
 {
+        atk_object_set_role (ATK_OBJECT (link), ATK_ROLE_LINK);
         link->priv = G_TYPE_INSTANCE_GET_PRIVATE (link, EV_TYPE_LINK_ACCESSIBLE, EvLinkAccessiblePrivate);
 }
 
@@ -284,6 +354,55 @@ ev_link_accessible_action_interface_init (AtkActionIface *iface)
 	iface->get_n_actions = ev_link_accessible_action_get_n_actions;
 	iface->get_description = ev_link_accessible_action_get_description;
 	iface->get_name = ev_link_accessible_action_get_name;
+}
+
+static void
+ev_link_accessible_get_extents (AtkComponent *atk_component,
+				gint         *x,
+				gint         *y,
+				gint         *width,
+				gint         *height,
+				AtkCoordType coord_type)
+{
+	EvLinkAccessible *self;
+	EvViewAccessible *view_accessible;
+	gint page;
+	EvRectangle atk_rect;
+
+	self = EV_LINK_ACCESSIBLE (atk_component);
+	view_accessible = ev_page_accessible_get_view_accessible (self->priv->page);
+	page = ev_page_accessible_get_page (self->priv->page);
+	_transform_doc_rect_to_atk_rect (view_accessible, page, &self->priv->area, &atk_rect, coord_type);
+	*x = atk_rect.x1;
+	*y = atk_rect.y1;
+	*width = atk_rect.x2 - atk_rect.x1;
+	*height = atk_rect.y2 - atk_rect.y1;
+}
+
+static gboolean
+ev_link_accessible_grab_focus (AtkComponent *atk_component)
+{
+	EvLinkAccessible *self;
+	EvView *view;
+	EvMappingList *link_mapping;
+	EvMapping *mapping;
+	gint page;
+
+	self = EV_LINK_ACCESSIBLE (atk_component);
+	view = ev_page_accessible_get_view (self->priv->page);
+	page = ev_page_accessible_get_page (self->priv->page);
+	link_mapping = ev_page_cache_get_link_mapping (view->page_cache, page);
+	mapping = ev_mapping_list_find (link_mapping, self->priv->link);
+	_ev_view_set_focused_element (view, mapping, page);
+
+	return TRUE;
+}
+
+static void
+ev_link_accessible_component_iface_init (AtkComponentIface *iface)
+{
+	iface->get_extents = ev_link_accessible_get_extents;
+	iface->grab_focus = ev_link_accessible_grab_focus;
 }
 
 EvLinkAccessible *
