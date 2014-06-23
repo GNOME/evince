@@ -289,6 +289,8 @@ void _ev_view_set_selection   (EvView   *view,
 void _ev_view_set_focused_element (EvView *view,
 				   EvMapping *element_mapping,
 				   gint page);
+void _ev_view_focus_form_field    (EvView      *view,
+				   EvFormField *field);
 
 #endif  /* __EV_VIEW_PRIVATE_H__ */
 

@@ -2624,8 +2624,8 @@ ev_view_form_field_choice_create_widget (EvView      *view,
 	return choice;
 }
 
-static void
-ev_view_focus_form_field (EvView      *view,
+void
+_ev_view_focus_form_field (EvView      *view,
 			  EvFormField *field)
 {
 	GtkWidget     *field_widget = NULL;
@@ -2670,7 +2670,7 @@ ev_view_handle_form_field (EvView      *view,
 	if (field->is_read_only)
 		return;
 
-	ev_view_focus_form_field (view, field);
+	_ev_view_focus_form_field (view, field);
 
 	if (field->activation_link)
 		ev_view_handle_link (view, field->activation_link);
@@ -4304,7 +4304,7 @@ ev_view_set_focused_element_at_location (EvView *view,
 
 	if ((field = ev_view_get_form_field_at_location (view, x, y))) {
 		ev_view_remove_all (view);
-		ev_view_focus_form_field (view, field);
+		_ev_view_focus_form_field (view, field);
 		return;
 	}
 

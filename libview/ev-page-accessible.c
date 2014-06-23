@@ -24,6 +24,7 @@
 
 #include <glib/gi18n-lib.h>
 #include "ev-page-accessible.h"
+#include "ev-form-field-accessible.h"
 #include "ev-image-accessible.h"
 #include "ev-link-accessible.h"
 #include "ev-view-private.h"
@@ -99,6 +100,7 @@ ev_page_accessible_initialize_children (EvPageAccessible *self)
 	EvView *view;
 	EvMappingList *images;
 	EvMappingList *links;
+	EvMappingList *fields;
 	GList *children = NULL;
 	GList *list;
 
@@ -113,11 +115,13 @@ ev_page_accessible_initialize_children (EvPageAccessible *self)
 
 	links = ev_page_cache_get_link_mapping (view->page_cache, self->priv->page);
 	images = ev_page_cache_get_image_mapping (view->page_cache, self->priv->page);
-	if (!links && !images)
+	fields = ev_page_cache_get_form_field_mapping (view->page_cache, self->priv->page);
+	if (!links && !images && !fields)
 		return;
 
 	children = g_list_copy (ev_mapping_list_get_list (links));
 	children = g_list_concat (children, g_list_copy (ev_mapping_list_get_list (images)));
+	children = g_list_concat (children, g_list_copy (ev_mapping_list_get_list (fields)));
 
 	children = g_list_sort (children, (GCompareFunc) compare_mappings);
 	self->priv->children = g_ptr_array_new_full (g_list_length (children), (GDestroyNotify) g_object_unref);
@@ -133,6 +137,8 @@ ev_page_accessible_initialize_children (EvPageAccessible *self)
 			child = atk_hyperlink_get_object (atk_link, 0);
 		} else if (images && ev_mapping_list_find (images, mapping->data))
 			child = ATK_OBJECT (ev_image_accessible_new (self, EV_IMAGE (mapping->data), &mapping->area));
+		else if (fields && ev_mapping_list_find (fields, mapping->data))
+			child = ATK_OBJECT (ev_form_field_accessible_new (self, EV_FORM_FIELD (mapping->data), &mapping->area));
 
 		if (child)
 			g_ptr_array_add (self->priv->children, child);
