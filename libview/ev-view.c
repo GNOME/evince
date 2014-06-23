@@ -2113,8 +2113,8 @@ ev_view_get_focused_area (EvView       *view,
 	return TRUE;
 }
 
-static void
-ev_view_set_focused_element (EvView *view,
+void
+_ev_view_set_focused_element (EvView *view,
 			     EvMapping *element_mapping,
 			     gint page)
 {
@@ -2283,7 +2283,7 @@ ev_view_form_field_button_create_widget (EvView      *view,
 	form_mapping = ev_page_cache_get_form_field_mapping (view->page_cache,
 							     field->page->index);
 	mapping = ev_mapping_list_find (form_mapping, field);
-	ev_view_set_focused_element (view, mapping, field->page->index);
+	_ev_view_set_focused_element (view, mapping, field->page->index);
 
 	return NULL;
 }
@@ -2632,7 +2632,7 @@ ev_view_focus_form_field (EvView      *view,
 	EvMappingList *form_field_mapping;
 	EvMapping     *mapping;
 
-	ev_view_set_focused_element (view, NULL, -1);
+	_ev_view_set_focused_element (view, NULL, -1);
 
 	if (field->is_read_only)
 		return;
@@ -3177,7 +3177,7 @@ ev_view_focus_annotation (EvView    *view,
 	if (!EV_IS_DOCUMENT_ANNOTATIONS (view->document))
 		return;
 
-	ev_view_set_focused_element (view, annot_mapping,
+	_ev_view_set_focused_element (view, annot_mapping,
 				     ev_annotation_get_page_index (EV_ANNOTATION (annot_mapping->data)));
 }
 
@@ -4292,13 +4292,13 @@ ev_view_set_focused_element_at_location (EvView *view,
 
 	mapping = get_annotation_mapping_at_location (view, x, y, &page);
 	if (mapping) {
-		ev_view_set_focused_element (view, mapping, page);
+		_ev_view_set_focused_element (view, mapping, page);
 		return;
 	}
 
 	mapping = get_link_mapping_at_location (view, x, y, &page);
 	if (mapping) {
-		ev_view_set_focused_element (view, mapping, page);
+		_ev_view_set_focused_element (view, mapping, page);
 		return;
 	}
 
@@ -4308,7 +4308,7 @@ ev_view_set_focused_element_at_location (EvView *view,
 		return;
 	}
 
-        ev_view_set_focused_element (view, NULL, -1);
+        _ev_view_set_focused_element (view, NULL, -1);
 }
 
 static gboolean
@@ -4692,7 +4692,7 @@ ev_view_button_press_event (GtkWidget      *widget,
 				ev_view_remove_all (view);
 				ev_view_handle_form_field (view, field);
 			} else if ((link = get_link_mapping_at_location (view, event->x, event->y, &page))){
-				ev_view_set_focused_element (view, link, page);
+				_ev_view_set_focused_element (view, link, page);
 			} else if (!location_in_text (view, event->x + view->scroll_x, event->y + view->scroll_y) &&
 				   (image = ev_view_get_image_at_location (view, event->x, event->y))) {
 				if (view->image_dnd_info.image)
@@ -4704,7 +4704,7 @@ ev_view_button_press_event (GtkWidget      *widget,
 				view->image_dnd_info.start.y = event->y + view->scroll_y;
 			} else {
 				ev_view_remove_all (view);
-				ev_view_set_focused_element (view, NULL, -1);
+				_ev_view_set_focused_element (view, NULL, -1);
 
 				if (view->synctex_result) {
 					g_free (view->synctex_result);

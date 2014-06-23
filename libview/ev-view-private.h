@@ -286,5 +286,9 @@ void _ev_view_set_selection   (EvView   *view,
 			       GdkPoint *start_point,
 			       GdkPoint *end_point);
 
+void _ev_view_set_focused_element (EvView *view,
+				   EvMapping *element_mapping,
+				   gint page);
+
 #endif  /* __EV_VIEW_PRIVATE_H__ */
 
