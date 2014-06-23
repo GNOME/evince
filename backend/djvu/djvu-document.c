@@ -354,9 +354,13 @@ djvu_document_render (EvDocument      *document,
 	ev_render_context_compute_transformed_size (rc, page_width, page_height,
 						    &transformed_width, &transformed_height);
 
+	/*
+	 * Evince rotates documents in clockwise direction
+	 * and djvulibre rotates documents in counter-clockwise direction.
+	 */
 	switch (rc->rotation) {
 	        case 90:
-			rotation += DDJVU_ROTATE_90;
+			rotation += DDJVU_ROTATE_270;
 			
 			break;
 	        case 180:
@@ -364,7 +368,7 @@ djvu_document_render (EvDocument      *document,
 			
 			break;
 	        case 270:
-			rotation += DDJVU_ROTATE_270;
+			rotation += DDJVU_ROTATE_90;
 			
 			break;
 	        default:
