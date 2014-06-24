@@ -168,21 +168,17 @@ struct _EvWindowPrivate {
 	GtkWidget *properties;
 	GtkWidget *print_dialog;
 
-	/* UI Builders */
-	GtkActionGroup   *action_group;
-	GtkActionGroup   *view_popup_action_group;
-	GtkActionGroup   *attachment_popup_action_group;
 	GtkRecentManager *recent_manager;
-	guint             bookmarks_ui_id;
-	GtkUIManager     *ui_manager;
 
 	/* Popup view */
+	GMenuModel   *view_popup_menu;
 	GtkWidget    *view_popup;
 	EvLink       *link;
 	EvImage      *image;
 	EvAnnotation *annot;
 
 	/* Popup attachment */
+	GMenuModel   *attachment_popup_menu;
 	GtkWidget    *attachment_popup;
 	GList        *attach_list;
 
@@ -322,22 +318,30 @@ static void     ev_window_stop_fullscreen               (EvWindow         *windo
 static void     ev_window_run_presentation              (EvWindow         *window);
 static void     ev_window_stop_presentation             (EvWindow         *window,
 							 gboolean          unfullscreen_window);
-static void     ev_view_popup_cmd_open_link             (GtkAction        *action,
-							 EvWindow         *window);
-static void     ev_view_popup_cmd_open_link_new_window  (GtkAction        *action,
-							 EvWindow         *window);
-static void     ev_view_popup_cmd_copy_link_address     (GtkAction        *action,
-							 EvWindow         *window);
-static void     ev_view_popup_cmd_save_image_as         (GtkAction        *action,
-							 EvWindow         *window);
-static void     ev_view_popup_cmd_copy_image            (GtkAction        *action,
-							 EvWindow         *window);
-static void     ev_view_popup_cmd_annot_properties      (GtkAction        *action,
-							 EvWindow         *window);
-static void	ev_attachment_popup_cmd_open_attachment (GtkAction        *action,
-							 EvWindow         *window);
-static void	ev_attachment_popup_cmd_save_attachment_as (GtkAction     *action, 
-							 EvWindow         *window);
+static void     ev_window_popup_cmd_open_link           (GSimpleAction    *action,
+							 GVariant         *parameter,
+							 gpointer          user_data);
+static void     ev_window_popup_cmd_open_link_new_window(GSimpleAction    *action,
+							 GVariant         *parameter,
+							 gpointer          user_data);
+static void     ev_window_popup_cmd_copy_link_address   (GSimpleAction    *action,
+							 GVariant         *parameter,
+							 gpointer          user_data);
+static void     ev_window_popup_cmd_save_image_as       (GSimpleAction    *action,
+							 GVariant         *parameter,
+							 gpointer          user_data);
+static void     ev_window_popup_cmd_copy_image          (GSimpleAction    *action,
+							 GVariant         *parameter,
+							 gpointer          user_data);
+static void     ev_window_popup_cmd_annot_properties    (GSimpleAction    *action,
+							 GVariant         *parameter,
+							 gpointer          user_data);
+static void	ev_window_popup_cmd_open_attachment     (GSimpleAction    *action,
+							 GVariant         *parameter,
+							 gpointer          user_data);
+static void	ev_window_popup_cmd_save_attachment_as  (GSimpleAction    *action,
+							 GVariant         *parameter,
+							 gpointer          user_data);
 static void	view_handle_link_cb 			(EvView           *view, 
 							 EvLink           *link, 
 							 EvWindow         *window);
@@ -4832,20 +4836,15 @@ static void
 view_menu_link_popup (EvWindow *ev_window,
 		      EvLink   *link)
 {
-	gboolean   show_external = FALSE;
-	gboolean   show_internal = FALSE;
-	GtkAction *action;
-	
-	if (ev_window->priv->link)
-		g_object_unref (ev_window->priv->link);
-	
-	if (link)
-		ev_window->priv->link = g_object_ref (link);
-	else	
-		ev_window->priv->link = NULL;
+	gboolean  show_external = FALSE;
+	gboolean  show_internal = FALSE;
+	GAction  *action;
 
-	if (ev_window->priv->link) {
+	g_clear_object (&ev_window->priv->link);
+	if (link) {
 		EvLinkAction *ev_action;
+
+		ev_window->priv->link = g_object_ref (link);
 
 		ev_action = ev_link_get_action (link);
 		if (ev_action) {
@@ -4863,90 +4862,78 @@ view_menu_link_popup (EvWindow *ev_window,
 			}
 		}
 	}
-	
-	action = gtk_action_group_get_action (ev_window->priv->view_popup_action_group,
-					      "OpenLink");
-	gtk_action_set_visible (action, show_external);
 
-	action = gtk_action_group_get_action (ev_window->priv->view_popup_action_group,
-					      "CopyLinkAddress");
-	gtk_action_set_visible (action, show_external);
+	action = g_action_map_lookup_action (G_ACTION_MAP (ev_window), "open-link");
+	g_simple_action_set_enabled (G_SIMPLE_ACTION (action), show_external);
 
-	action = gtk_action_group_get_action (ev_window->priv->view_popup_action_group,
-					      "GoLink");
-	gtk_action_set_visible (action, show_internal);
+	action = g_action_map_lookup_action (G_ACTION_MAP (ev_window), "copy-link-address");
+	g_simple_action_set_enabled (G_SIMPLE_ACTION (action), show_external);
 
-	action = gtk_action_group_get_action (ev_window->priv->view_popup_action_group,
-					      "OpenLinkNewWindow");
-	gtk_action_set_visible (action, show_internal);
+	action = g_action_map_lookup_action (G_ACTION_MAP (ev_window), "go-to-link");
+	g_simple_action_set_enabled (G_SIMPLE_ACTION (action), show_internal);
+
+	action = g_action_map_lookup_action (G_ACTION_MAP (ev_window), "open-link-new-window");
+	g_simple_action_set_enabled (G_SIMPLE_ACTION (action), show_internal);
 }
 
 static void
 view_menu_image_popup (EvWindow  *ev_window,
 		       EvImage   *image)
 {
-	GtkAction *action;
-	gboolean   show_image = FALSE;
-	
-	if (ev_window->priv->image)
-		g_object_unref (ev_window->priv->image);
-	
-	if (image)
+	GAction *action;
+	gboolean show_image = FALSE;
+
+	g_clear_object (&ev_window->priv->image);
+	if (image) {
 		ev_window->priv->image = g_object_ref (image);
-	else	
-		ev_window->priv->image = NULL;
+		show_image = TRUE;
+	}
 
-	show_image = (ev_window->priv->image != NULL);
-	
-	action = gtk_action_group_get_action (ev_window->priv->view_popup_action_group,
-					      "SaveImageAs");
-	gtk_action_set_visible (action, show_image);
+	action = g_action_map_lookup_action (G_ACTION_MAP (ev_window), "save-image");
+	g_simple_action_set_enabled (G_SIMPLE_ACTION (action), show_image);
 
-	action = gtk_action_group_get_action (ev_window->priv->view_popup_action_group,
-					      "CopyImage");
-	gtk_action_set_visible (action, show_image);
+	action = g_action_map_lookup_action (G_ACTION_MAP (ev_window), "copy-image");
+	g_simple_action_set_enabled (G_SIMPLE_ACTION (action), show_image);
 }
 
 static void
 view_menu_annot_popup (EvWindow     *ev_window,
 		       EvAnnotation *annot)
 {
-	GtkAction *action;
-	gboolean   show_annot = FALSE;
+	GAction *action;
+	gboolean show_annot_props = FALSE;
+	gboolean show_attachment = FALSE;
 
-	if (ev_window->priv->annot)
-		g_object_unref (ev_window->priv->annot);
-	ev_window->priv->annot = (annot) ? g_object_ref (annot) : NULL;
+	g_clear_object (&ev_window->priv->annot);
+	if (annot) {
+		ev_window->priv->annot = g_object_ref (annot);
 
-	action = gtk_action_group_get_action (ev_window->priv->view_popup_action_group,
-					      "AnnotProperties");
-	gtk_action_set_visible (action, (annot != NULL && EV_IS_ANNOTATION_MARKUP (annot)));
+		show_annot_props = EV_IS_ANNOTATION_MARKUP (annot);
 
-	if (annot && EV_IS_ANNOTATION_ATTACHMENT (annot)) {
-		EvAttachment *attachment;
+		if (EV_IS_ANNOTATION_ATTACHMENT (annot)) {
+			EvAttachment *attachment;
 
-		attachment = ev_annotation_attachment_get_attachment (EV_ANNOTATION_ATTACHMENT (annot));
-		if (attachment) {
-			show_annot = TRUE;
-			if (ev_window->priv->attach_list) {
-				g_list_foreach (ev_window->priv->attach_list,
-						(GFunc) g_object_unref, NULL);
-				g_list_free (ev_window->priv->attach_list);
-				ev_window->priv->attach_list = NULL;
+			attachment = ev_annotation_attachment_get_attachment (EV_ANNOTATION_ATTACHMENT (annot));
+			if (attachment) {
+				show_attachment = TRUE;
+
+				g_list_free_full (ev_window->priv->attach_list,
+						  g_object_unref);
+				ev_window->priv->attach_list =
+					g_list_prepend (ev_window->priv->attach_list,
+							g_object_ref (attachment));
 			}
-			ev_window->priv->attach_list =
-				g_list_prepend (ev_window->priv->attach_list,
-						g_object_ref (attachment));
 		}
 	}
 
-	action = gtk_action_group_get_action (ev_window->priv->attachment_popup_action_group,
-					      "OpenAttachment");
-	gtk_action_set_visible (action, show_annot);
+	action = g_action_map_lookup_action (G_ACTION_MAP (ev_window), "annot-properties");
+	g_simple_action_set_enabled (G_SIMPLE_ACTION (action), show_annot_props);
 
-	action = gtk_action_group_get_action (ev_window->priv->attachment_popup_action_group,
-					      "SaveAttachmentAs");
-	gtk_action_set_visible (action, show_annot);
+	action = g_action_map_lookup_action (G_ACTION_MAP (ev_window), "open-attachment");
+	g_simple_action_set_enabled (G_SIMPLE_ACTION (action), show_attachment);
+
+	action = g_action_map_lookup_action (G_ACTION_MAP (ev_window), "save-attachment");
+	g_simple_action_set_enabled (G_SIMPLE_ACTION (action), show_attachment);
 }
 
 static gboolean
@@ -4979,6 +4966,12 @@ view_menu_popup_cb (EvView   *view,
 	if (!has_annot)
 		view_menu_annot_popup (ev_window, NULL);
 
+	if (!ev_window->priv->view_popup) {
+		ev_window->priv->view_popup = gtk_menu_new_from_model (ev_window->priv->view_popup_menu);
+		gtk_menu_attach_to_widget (GTK_MENU (ev_window->priv->view_popup),
+					   GTK_WIDGET (ev_window), NULL);
+	}
+
 	gtk_menu_popup (GTK_MENU (ev_window->priv->view_popup),
 			NULL, NULL, NULL, NULL,
 			3, gtk_get_current_event_time ());
@@ -4987,25 +4980,30 @@ view_menu_popup_cb (EvView   *view,
 
 static gboolean
 attachment_bar_menu_popup_cb (EvSidebarAttachments *attachbar,
-			      GList           *attach_list,
-			      EvWindow        *ev_window)
+			      GList                *attach_list,
+			      EvWindow             *ev_window)
 {
-	GtkWidget *popup;
+	GAction *action;
 
 	g_assert (attach_list != NULL);
 
-	if (ev_window->priv->attach_list) {
-		g_list_foreach (ev_window->priv->attach_list,
-				(GFunc) g_object_unref, NULL);
-		g_list_free (ev_window->priv->attach_list);
-	}
-	
-	ev_window->priv->attach_list = attach_list;
-	
-	popup = ev_window->priv->attachment_popup;
+	action = g_action_map_lookup_action (G_ACTION_MAP (ev_window), "open-attachment");
+	g_simple_action_set_enabled (G_SIMPLE_ACTION (action), TRUE);
 
-	gtk_menu_popup (GTK_MENU (popup), NULL, NULL,
-			NULL, NULL,
+	action = g_action_map_lookup_action (G_ACTION_MAP (ev_window), "save-attachment");
+	g_simple_action_set_enabled (G_SIMPLE_ACTION (action), TRUE);
+
+	g_list_free_full (ev_window->priv->attach_list, g_object_unref);
+	ev_window->priv->attach_list = attach_list;
+
+	if (!ev_window->priv->attachment_popup) {
+		ev_window->priv->attachment_popup = gtk_menu_new_from_model (ev_window->priv->attachment_popup_menu);
+		gtk_menu_attach_to_widget (GTK_MENU (ev_window->priv->attachment_popup),
+					   GTK_WIDGET (ev_window), NULL);
+	}
+
+	gtk_menu_popup (GTK_MENU (ev_window->priv->attachment_popup),
+			NULL, NULL, NULL, NULL,
 			3, gtk_get_current_event_time ());
 
 	return TRUE;
@@ -5453,22 +5451,9 @@ ev_window_dispose (GObject *object)
 		priv->title = NULL;
 	}
 
-	if (priv->ui_manager) {
-		g_object_unref (priv->ui_manager);
-		priv->ui_manager = NULL;
-	}
-
-	if (priv->view_popup_action_group) {
-		g_object_unref (priv->view_popup_action_group);
-		priv->view_popup_action_group = NULL;
-	}
-
-	if (priv->attachment_popup_action_group) {
-		g_object_unref (priv->attachment_popup_action_group);
-		priv->attachment_popup_action_group = NULL;
-	}
-
 	g_clear_object (&priv->bookmarks_menu);
+	g_clear_object (&priv->view_popup_menu);
+	g_clear_object (&priv->attachment_popup_menu);
 
 	if (priv->recent_manager) {
 		priv->recent_manager = NULL;
@@ -5709,32 +5694,17 @@ static const GActionEntry actions[] = {
 	{ "escape", ev_window_cmd_escape },
 	{ "open-menu", ev_window_cmd_action_menu },
 	{ "caret-navigation", NULL, NULL, "false", ev_window_cmd_view_toggle_caret_navigation },
-};
 
-/* Popups specific items */
-static const GtkActionEntry view_popup_entries [] = {
-	/* Links */
-	{ "OpenLink", NULL, N_("_Open Link"), NULL,
-	  NULL, G_CALLBACK (ev_view_popup_cmd_open_link) },
-	{ "GoLink", GTK_STOCK_GO_FORWARD, N_("_Go To"), NULL,
-	  NULL, G_CALLBACK (ev_view_popup_cmd_open_link) },
-	{ "OpenLinkNewWindow", NULL, N_("Open in New _Window"), NULL,
-	  NULL, G_CALLBACK (ev_view_popup_cmd_open_link_new_window) },
-	{ "CopyLinkAddress", NULL, N_("_Copy Link Address"), NULL,
-	  NULL, G_CALLBACK (ev_view_popup_cmd_copy_link_address) },
-	{ "SaveImageAs", NULL, N_("_Save Image As…"), NULL,
-	  NULL, G_CALLBACK (ev_view_popup_cmd_save_image_as) },
-	{ "CopyImage", NULL, N_("Copy _Image"), NULL,
-	  NULL, G_CALLBACK (ev_view_popup_cmd_copy_image) },
-	{ "AnnotProperties", NULL, N_("Annotation Properties…"), NULL,
-	  NULL, G_CALLBACK (ev_view_popup_cmd_annot_properties) }
-};
-
-static const GtkActionEntry attachment_popup_entries [] = {
-	{ "OpenAttachment", NULL, N_("_Open Attachment"), NULL,
-	  NULL, G_CALLBACK (ev_attachment_popup_cmd_open_attachment) },
-	{ "SaveAttachmentAs", GTK_STOCK_SAVE_AS, N_("_Save Attachment As…"), NULL,
-	  NULL, G_CALLBACK (ev_attachment_popup_cmd_save_attachment_as) },
+	/* Popups specific items */
+	{ "open-link", ev_window_popup_cmd_open_link },
+	{ "open-link-new-window", ev_window_popup_cmd_open_link_new_window },
+	{ "go-to-link", ev_window_popup_cmd_open_link },
+	{ "copy-link-address", ev_window_popup_cmd_copy_link_address },
+	{ "save-image", ev_window_popup_cmd_save_image_as },
+	{ "copy-image", ev_window_popup_cmd_copy_image },
+	{ "open-attachment", ev_window_popup_cmd_open_attachment },
+	{ "save-attachment", ev_window_popup_cmd_save_attachment_as },
+	{ "annot-properties", ev_window_popup_cmd_annot_properties }
 };
 
 static void
@@ -6079,16 +6049,23 @@ view_external_link_cb (EvWindow *window, EvLinkAction *action)
 }
 
 static void
-ev_view_popup_cmd_open_link (GtkAction *action, EvWindow *window)
+ev_window_popup_cmd_open_link (GSimpleAction *action,
+			       GVariant      *parameter,
+			       gpointer       user_data)
 {
+	EvWindow *window = user_data;
+
 	ev_view_handle_link (EV_VIEW (window->priv->view), window->priv->link);
 }
 
 static void
-ev_view_popup_cmd_open_link_new_window (GtkAction *action, EvWindow *window)
+ev_window_popup_cmd_open_link_new_window (GSimpleAction *action,
+					  GVariant      *parameter,
+					  gpointer       user_data)
 {
 	EvLinkAction *ev_action = NULL;
 	EvLinkDest   *dest;
+	EvWindow     *window = user_data;
 
 	ev_action = ev_link_get_action (window->priv->link);
 	if (!ev_action)
@@ -6102,9 +6079,12 @@ ev_view_popup_cmd_open_link_new_window (GtkAction *action, EvWindow *window)
 }
 
 static void
-ev_view_popup_cmd_copy_link_address (GtkAction *action, EvWindow *window)
+ev_window_popup_cmd_copy_link_address (GSimpleAction *action,
+				       GVariant      *parameter,
+				       gpointer       user_data)
 {
 	EvLinkAction *ev_action;
+	EvWindow     *window = user_data;
 
 	ev_action = ev_link_get_action (window->priv->link);
 	if (!ev_action)
@@ -6239,9 +6219,12 @@ image_save_dialog_response_cb (GtkWidget *fc,
 }
 
 static void
-ev_view_popup_cmd_save_image_as (GtkAction *action, EvWindow *window)
+ev_window_popup_cmd_save_image_as (GSimpleAction *action,
+				   GVariant      *parameter,
+				   gpointer       user_data)
 {
 	GtkWidget *fc;
+	EvWindow  *window = user_data;
 
 	if (!window->priv->image)
 		return;
@@ -6276,10 +6259,13 @@ ev_view_popup_cmd_save_image_as (GtkAction *action, EvWindow *window)
 }
 
 static void
-ev_view_popup_cmd_copy_image (GtkAction *action, EvWindow *window)
+ev_window_popup_cmd_copy_image (GSimpleAction *action,
+				GVariant      *parameter,
+				gpointer       user_data)
 {
 	GtkClipboard *clipboard;
 	GdkPixbuf    *pixbuf;
+	EvWindow     *window = user_data;
 
 	if (!window->priv->image)
 		return;
@@ -6296,9 +6282,11 @@ ev_view_popup_cmd_copy_image (GtkAction *action, EvWindow *window)
 }
 
 static void
-ev_view_popup_cmd_annot_properties (GtkAction *action,
-				    EvWindow  *window)
+ev_window_popup_cmd_annot_properties (GSimpleAction *action,
+				      GVariant      *parameter,
+				      gpointer       user_data)
 {
+	EvWindow                     *window = user_data;
 	const gchar                  *author;
 	GdkRGBA                       rgba;
 	gdouble                       opacity;
@@ -6357,11 +6345,14 @@ ev_view_popup_cmd_annot_properties (GtkAction *action,
 }
 
 static void
-ev_attachment_popup_cmd_open_attachment (GtkAction *action, EvWindow *window)
+ev_window_popup_cmd_open_attachment (GSimpleAction *action,
+				     GVariant      *parameter,
+				     gpointer       user_data)
 {
 	GList     *l;
 	GdkScreen *screen;
-	
+	EvWindow  *window = user_data;
+
 	if (!window->priv->attach_list)
 		return;
 
@@ -6466,10 +6457,13 @@ attachment_save_dialog_response_cb (GtkWidget *fc,
 }
 
 static void
-ev_attachment_popup_cmd_save_attachment_as (GtkAction *action, EvWindow *window)
+ev_window_popup_cmd_save_attachment_as (GSimpleAction *action,
+					GVariant      *parameter,
+					gpointer       user_data)
 {
 	GtkWidget    *fc;
 	EvAttachment *attachment = NULL;
+	EvWindow     *window = user_data;
 
 	if (!window->priv->attach_list)
 		return;
@@ -6657,8 +6651,7 @@ _gtk_css_provider_load_from_resource (GtkCssProvider *provider,
 static void
 ev_window_init (EvWindow *ev_window)
 {
-	GtkActionGroup *action_group;
-	GtkAccelGroup *accel_group;
+	GtkBuilder *builder;
 	GtkCssProvider *css_provider;
 	GError *error = NULL;
 	GtkWidget *sidebar_widget;
@@ -6736,34 +6729,6 @@ ev_window_init (EvWindow *ev_window)
 	g_action_map_add_action_entries (G_ACTION_MAP (ev_window),
 					 actions, G_N_ELEMENTS (actions),
 					 ev_window);
-
-	ev_window->priv->ui_manager = gtk_ui_manager_new ();
-	accel_group =
-		gtk_ui_manager_get_accel_group (ev_window->priv->ui_manager);
-	gtk_window_add_accel_group (GTK_WINDOW (ev_window), accel_group);
-
-	action_group = gtk_action_group_new ("ViewPopupActions");
-	ev_window->priv->view_popup_action_group = action_group;
-	gtk_action_group_set_translation_domain (action_group, NULL);
-	gtk_action_group_add_actions (action_group, view_popup_entries,
-				      G_N_ELEMENTS (view_popup_entries),
-				      ev_window);
-	gtk_ui_manager_insert_action_group (ev_window->priv->ui_manager,
-					    action_group, 0);
-
-	action_group = gtk_action_group_new ("AttachmentPopupActions");
-	ev_window->priv->attachment_popup_action_group = action_group;
-	gtk_action_group_set_translation_domain (action_group, NULL);
-	gtk_action_group_add_actions (action_group, attachment_popup_entries,
-				      G_N_ELEMENTS (attachment_popup_entries),
-				      ev_window);
-	gtk_ui_manager_insert_action_group (ev_window->priv->ui_manager,
-					    action_group, 0);
-
-        gtk_ui_manager_add_ui_from_resource (ev_window->priv->ui_manager,
-                                             "/org/gnome/evince/shell/ui/evince.xml",
-                                             &error);
-        g_assert_no_error (error);
 
 	css_provider = gtk_css_provider_new ();
 	_gtk_css_provider_load_from_resource (css_provider,
@@ -7053,13 +7018,10 @@ ev_window_init (EvWindow *ev_window)
 			  ev_window);
 
 	/* Popups */
-	ev_window->priv->view_popup = gtk_ui_manager_get_widget (ev_window->priv->ui_manager,
-								 "/DocumentPopup");
-	ev_window->priv->link = NULL;
-
-	ev_window->priv->attachment_popup = gtk_ui_manager_get_widget (ev_window->priv->ui_manager,
-								       "/AttachmentPopup");
-	ev_window->priv->attach_list = NULL;
+	builder = gtk_builder_new_from_resource ("/org/gnome/evince/shell/ui/menus.ui");
+	ev_window->priv->view_popup_menu = g_object_ref (G_MENU_MODEL (gtk_builder_get_object (builder, "view-popup-menu")));
+	ev_window->priv->attachment_popup_menu = g_object_ref (G_MENU_MODEL (gtk_builder_get_object (builder, "attachments-popup")));
+	g_object_unref (builder);
 
 	/* Media player keys */
 	mpkeys = ev_application_get_media_keys (EV_APP);
@@ -7119,14 +7081,6 @@ ev_window_get_dbus_object_path (EvWindow *ev_window)
 #else
 	return NULL;
 #endif
-}
-
-GtkUIManager *
-ev_window_get_ui_manager (EvWindow *ev_window)
-{
-	g_return_val_if_fail (EV_WINDOW (ev_window), NULL);
-
-	return ev_window->priv->ui_manager;
 }
 
 GMenuModel *

@@ -88,7 +88,6 @@ void		ev_window_print_range                    (EvWindow       *ev_window,
                                                           int             first_page,
                                                           int		 last_page);
 const gchar    *ev_window_get_dbus_object_path           (EvWindow       *ev_window);
-GtkUIManager   *ev_window_get_ui_manager                 (EvWindow       *ev_window);
 GMenuModel     *ev_window_get_bookmarks_menu             (EvWindow       *ev_window);
 EvHistory      *ev_window_get_history                    (EvWindow       *ev_window);
 EvDocumentModel *ev_window_get_document_model            (EvWindow       *ev_window);
