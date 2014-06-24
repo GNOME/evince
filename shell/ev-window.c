@@ -6299,6 +6299,7 @@ ev_window_popup_cmd_annot_properties (GSimpleAction *action,
 		return;
 
 	dialog = EV_ANNOTATION_PROPERTIES_DIALOG (ev_annotation_properties_dialog_new_with_annotation (window->priv->annot));
+	gtk_window_set_transient_for (GTK_WINDOW (dialog), GTK_WINDOW (window));
 	if (gtk_dialog_run (GTK_DIALOG (dialog)) != GTK_RESPONSE_APPLY) {
 		gtk_widget_destroy (GTK_WIDGET (dialog));
 
