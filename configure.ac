@@ -650,33 +650,54 @@ dnl =================== End of compile warnings=================================
 dnl =================== Mime types list ====================================================
 
 if test "x$enable_pdf" = "xyes" ; then
-        PDF_MIME_TYPES="application/pdf;application/x-bzpdf;application/x-gzpdf;application/x-xzpdf;application/x-ext-pdf;"
+        PDF_MIME_TYPES="application/pdf;application/x-bzpdf;application/x-gzpdf;application/x-xzpdf;application/x-ext-pdf"
+        APPDATA_PDF_MIME_TYPES=$(echo "<mimetype>$PDF_MIME_TYPES</mimetype>" | sed -e 's/;/<\/mimetype>\n    <mimetype>/g')
 fi
 AC_SUBST(PDF_MIME_TYPES)
+AC_SUBST(APPDATA_PDF_MIME_TYPES)
+AM_SUBST_NOTMAKE(APPDATA_PDF_MIME_TYPES)
 if test "x$enable_ps" = "xyes" ; then
-        PS_MIME_TYPES="application/postscript;application/x-bzpostscript;application/x-gzpostscript;image/x-eps;image/x-bzeps;image/x-gzeps;application/x-ext-ps;application/x-ext-eps;"
+        PS_MIME_TYPES="application/postscript;application/x-bzpostscript;application/x-gzpostscript;image/x-eps;image/x-bzeps;image/x-gzeps;application/x-ext-ps;application/x-ext-eps"
+        APPDATA_PS_MIME_TYPES=$(echo "<mimetype>$PS_MIME_TYPES</mimetype>" | sed -e 's/;/<\/mimetype>\n    <mimetype>/g')
 fi
 AC_SUBST(PS_MIME_TYPES)
+AC_SUBST(APPDATA_PS_MIME_TYPES)
+AM_SUBST_NOTMAKE(APPDATA_PS_MIME_TYPES)
 if test "x$enable_dvi" = "xyes"; then
-        DVI_MIME_TYPES="application/x-dvi;application/x-bzdvi;application/x-gzdvi;application/x-ext-dvi;"
+        DVI_MIME_TYPES="application/x-dvi;application/x-bzdvi;application/x-gzdvi;application/x-ext-dvi"
+        APPDATA_DVI_MIME_TYPES=$(echo "<mimetype>$DVI_MIME_TYPES</mimetype>" | sed -e 's/;/<\/mimetype>\n    <mimetype>/g')
 fi
 AC_SUBST(DVI_MIME_TYPES)
+AC_SUBST(APPDATA_DVI_MIME_TYPES)
+AM_SUBST_NOTMAKE(APPDATA_DVI_MIME_TYPES)
 if test "x$enable_djvu" = "xyes"; then
-        DJVU_MIME_TYPES="image/vnd.djvu;application/x-ext-djv;application/x-ext-djvu;"
+        DJVU_MIME_TYPES="image/vnd.djvu;application/x-ext-djv;application/x-ext-djvu"
+        APPDATA_DJVU_MIME_TYPES=$(echo "<mimetype>$DJVU_MIME_TYPES</mimetype>" | sed -e 's/;/<\/mimetype>\n    <mimetype>/g')
 fi
 AC_SUBST(DJVU_MIME_TYPES)
+AC_SUBST(APPDATA_DJVU_MIME_TYPES)
+AM_SUBST_NOTMAKE(APPDATA_DJVU_MIME_TYPES)
 if test "x$enable_tiff" = "xyes"; then
-        TIFF_MIME_TYPES="image/tiff;"
+        TIFF_MIME_TYPES="image/tiff"
+        APPDATA_TIFF_MIME_TYPES=$(echo "<mimetype>$TIFF_MIME_TYPES</mimetype>" | sed -e 's/;/<\/mimetype>\n    <mimetype>/g')
 fi
 AC_SUBST(TIFF_MIME_TYPES)
+AC_SUBST(APPDATA_TIFF_MIME_TYPES)
+AM_SUBST_NOTMAKE(APPDATA_TIFF_MIME_TYPES)
 if test "x$enable_comics" = "xyes"; then
-        COMICS_MIME_TYPES="application/x-cbr;application/x-cbz;application/x-cb7;application/x-cbt;application/x-ext-cbr;application/x-ext-cbz;application/x-ext-cb7;application/x-ext-cbt;"
+        COMICS_MIME_TYPES="application/x-cbr;application/x-cbz;application/x-cb7;application/x-cbt;application/x-ext-cbr;application/x-ext-cbz;application/x-ext-cb7;application/x-ext-cbt"
+        APPDATA_COMICS_MIME_TYPES=$(echo "<mimetype>$COMICS_MIME_TYPES</mimetype>" | sed -e 's/;/<\/mimetype>\n    <mimetype>/g')
 fi
 AC_SUBST(COMICS_MIME_TYPES)
+AC_SUBST(APPDATA_COMICS_MIME_TYPES)
+AM_SUBST_NOTMAKE(APPDATA_COMICS_MIME_TYPES)
 if test "x$enable_xps" = "xyes"; then
-        XPS_MIME_TYPES="application/oxps;application/vnd.ms-xpsdocument;"
+        XPS_MIME_TYPES="application/oxps;application/vnd.ms-xpsdocument"
+        APPDATA_XPS_MIME_TYPES=$(echo "<mimetype>$XPS_MIME_TYPES</mimetype>" | sed -e 's/;/<\/mimetype>\n    <mimetype>/g')
 fi
 AC_SUBST(XPS_MIME_TYPES)
+AC_SUBST(APPDATA_XPS_MIME_TYPES)
+AM_SUBST_NOTMAKE(APPDATA_XPS_MIME_TYPES)
 
 EVINCE_MIME_TYPES="${PDF_MIME_TYPES}${PS_MIME_TYPES}${DVI_MIME_TYPES}${DJVU_MIME_TYPES}${TIFF_MIME_TYPES}${COMICS_MIME_TYPES}${XPS_MIME_TYPES}"
 AC_SUBST(EVINCE_MIME_TYPES)
@@ -733,18 +754,25 @@ AC_SUBST([AM_LDFLAGS])
 AC_CONFIG_FILES([
 backend/Makefile
 backend/comics/comicsdocument.evince-backend.in
+backend/comics/evince-comicsdocument.metainfo.xml.in
 backend/comics/Makefile
 backend/djvu/djvudocument.evince-backend.in
+backend/djvu/evince-djvudocument.metainfo.xml.in
 backend/djvu/Makefile
 backend/dvi/dvidocument.evince-backend.in
+backend/dvi/evince-dvidocument.metainfo.xml.in
 backend/dvi/Makefile
 backend/dvi/mdvi-lib/Makefile
+backend/pdf/evince-pdfdocument.metainfo.xml.in
 backend/pdf/pdfdocument.evince-backend.in
 backend/pdf/Makefile
+backend/ps/evince-psdocument.metainfo.xml.in
 backend/ps/psdocument.evince-backend.in
 backend/ps/Makefile
+backend/tiff/evince-tiffdocument.metainfo.xml.in
 backend/tiff/tiffdocument.evince-backend.in
 backend/tiff/Makefile
+backend/xps/evince-xpsdocument.metainfo.xml.in
 backend/xps/xpsdocument.evince-backend.in
 backend/xps/Makefile
 cut-n-paste/Makefile
