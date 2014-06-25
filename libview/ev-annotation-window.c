@@ -377,13 +377,11 @@ ev_annotation_window_init (EvAnnotationWindow *window)
 	gtk_widget_show (hbox);
 
 	gtk_container_add (GTK_CONTAINER (window), vbox);
-	gtk_container_set_border_width (GTK_CONTAINER (window), 0);
 	gtk_widget_show (vbox);
 
 	gtk_widget_add_events (GTK_WIDGET (window),
 			       GDK_BUTTON_PRESS_MASK |
 			       GDK_KEY_PRESS_MASK);
-	gtk_widget_set_app_paintable (GTK_WIDGET (window), TRUE);
 
 	gtk_container_set_border_width (GTK_CONTAINER (window), 2);
 
