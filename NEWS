@@ -1,4 +1,107 @@
 ================
+Evince    3.13.3
+================
+
+New features and improvements:
+
+    * Cycle through form fields with tab button (#503706, Andrey
+      Pustovalov, Carlos Garcia Campos)
+    * Port to GMenu (Lars Uebernickel, Carlos Garcia Campos)
+    * Use a GtkHeaderBar instead of a GtkToolbar (#711078, Yosef Or
+      Boczko, Carlos Garcia Campos)
+    * Add appdata files for Evince backends (#731708, Carlos Garcia
+      Campos, Igor Gnatenko)
+    * Add an appdata file for Evince (#708760, Christian Persch)
+    * Make the about dialog non modal and move it to the app menu
+      (Carlos Garcia Campos)
+    * Add keybindings to go back/forward in history (#509029, Anuj Khare)
+    * Expose links, images and form fields as AtkObject children of
+      the page (#728475, Joanmarie Diggs)
+    * Update ATK_STATE_SHOWING when the visible page range changes
+      (#728664, Joanmarie Diggs)
+    * Implement AtkComponent interface for pages (#728673, Joanmarie Diggs)
+    * Expose every page individually to accessibility (#724965,
+      Alejandro Piñeiro)
+    * Show fullscreen toolbar only when moving the mouse to the top of
+      the screen (#696643, Giselle Machado)
+    * Add API to libview to specify rendered output in pixels instead
+      of as a scale (#723431, Owen W. Taylor)
+    * Use cairo surfaces instead of GdkPibufs to render thumbnails
+      (#723431, Owen W. Taylor, Carlos Garcia Campos)
+
+Bug fixes:
+
+    * Set the main window was transient parent of the annotation
+      properties dialog (#732114, Giselle Machado)
+    * Use annotation RGBA API instead of the deprecated color API
+      (#732095, Giselle Machado)
+    * Fix rotation direction in DJVU backend (#731786, Marek Kasik)
+    * Update the annotation poup window color and opacity when the annotation is
+      updated (#725571, Giselle Machado)
+    * Prevent jumps to last page when autoscrolling (#725389, Marek Kasik)
+    * Fix centering when shrinking to printable area but not scaling
+      (Carlos Garcia Campos)
+    * Fallback to thumbnails page in sidebar when the current page is
+      no longer supported by the document after a reload, and enable
+      the pages that become supported (#628617, Giselle Machado)
+    * Ensure text is available in page cache when requested by
+      accessibility (#724965, Alejandro Piñeiro)
+    * Update the caret cursor when jumping to a find result (#728996,
+      Joanmarie Diggs)
+    * Fix shift+click text selection (#728189, Joanmarie Diggs)
+    * Fix a crash when saving a copy (#727536, Debarshi Ray)
+    * Fix enable caret navigation question message (#727062, Carlos
+      Garcia Campos)
+    * Fix a crash during the build with introspection enabled
+      (#726812, Gustau Perez)
+    * Fix warning message shown when the requested format is not
+      supported by printer (#724044, Marek Kasik)
+    * Allow printing to all formats supported by backend (#724044,
+      Marek Kasik)
+    * Fix gtk-doc build (#731061, Ting-Wei Lan)
+
+Documentation:
+
+    * Fix documented file formats (#731679, Ekaterina Gerasimova)
+    * Update help for UI changes in 3.12 (#700442, Anna Philips)
+    * Update reading documents help for 3.12 (Ekaterina Gerasimova)
+
+Translation updates:
+
+    * Daniel Martinez (an)
+    * Ibrahim Saed (ar)
+    * Ihar Hrachyshka (be)
+    * Pau Iranzo (ca@valencia)
+    * Marek Černocký (cs)
+    * Kenneth Nielsen (da)
+    * Benjamin Steinwender (de)
+    * Christian Kirbach (de)
+    * Tom Tryfonidis (el)
+    * Kristjan SCHMIDT (eo)
+    * Daniel Mustieles (es)
+    * Iñaki Larrañaga Murgoitio (eu)
+    * Sami Jaktholm (fi)
+    * Michael Scherer (fr)
+    * GunChleoc (gd)
+    * Yosef Or Boczko (he)
+    * Attila Hammer (hu)
+    * Andika Triwidada (id)
+    * Claudio Arseni (it)
+    * Ikuya Awashiro (ja)
+    * Aurimas Černius (lt)
+    * Rūdolfs Mazurs (lv)
+    * Kjartan Maraas (nb)
+    * Wouter Bolsterlee (nl)
+    * Enrico Nicoletto (pt_BR)
+    * Yuri Myasoedov (ru)
+    * Peter Mráz (sk)
+    * Matej Urbančič (sl)
+    * Victor Ibragimov (tg)
+    * Muhammet Kara (tr)
+    * Chao-Hsiung Liao (zh_HK)
+    * Chao-Hsiung Liao (zh_TW)
+
+================
 Evince   3.11.92
 ================
 
