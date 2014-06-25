@@ -31,7 +31,6 @@
 #include "ev-zoom-action.h"
 #include "ev-history-action.h"
 #include "ev-application.h"
-#include "ev-recent-menu-model.h"
 #include "ev-page-action-widget.h"
 #include <math.h>
 
@@ -193,8 +192,6 @@ ev_toolbar_constructed (GObject *object)
         GtkWidget      *button;
         gboolean        rtl;
         GMenuModel     *menu;
-        GMenu          *recent_submenu;
-        GMenuModel     *recent_menu_model;
         GMenuModel     *bookmarks_submenu_model;
 
         G_OBJECT_CLASS (ev_toolbar_parent_class)->constructed (object);
@@ -283,14 +280,6 @@ ev_toolbar_constructed (GObject *object)
         else
                 gtk_widget_set_margin_right (vbox, 6);
         gtk_header_bar_pack_end (GTK_HEADER_BAR (ev_toolbar), vbox);
-
-        recent_menu_model = ev_recent_menu_model_new (gtk_recent_manager_get_default (),
-                                                      "win.open-recent",
-                                                      g_get_application_name ());
-
-        recent_submenu = G_MENU (gtk_builder_get_object (builder, "recent"));
-        g_menu_append_section (recent_submenu, NULL, recent_menu_model);
-        g_object_unref (recent_menu_model);
 
         ev_toolbar->priv->bookmarks_section = G_MENU (gtk_builder_get_object (builder, "bookmarks"));
         bookmarks_submenu_model = ev_window_get_bookmarks_menu (ev_toolbar->priv->window);

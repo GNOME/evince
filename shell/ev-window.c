@@ -270,8 +270,6 @@ struct _EvWindowPrivate {
 
 #define EV_TOOLBARS_FILENAME "evince-toolbar.xml"
 
-#define MAX_RECENT_ITEM_LEN (40)
-
 #define TOOLBAR_RESOURCE_PATH "/org/gnome/evince/shell/ui/toolbar.xml"
 
 #define FULLSCREEN_POPUP_TIMEOUT 2
@@ -2618,18 +2616,6 @@ ev_window_cmd_file_open_copy (GSimpleAction *action,
 	EvWindow *window = user_data;
 
 	ev_window_open_copy_at_dest (window, NULL);
-}
-
-static void
-ev_window_cmd_file_open_recent (GSimpleAction *action,
-				GVariant      *parameter,
-				gpointer       user_data)
-{
-	EvWindow *window = user_data;
-
-	ev_application_open_uri_at_dest (EV_APP, g_variant_get_string (parameter, NULL),
-					 gtk_window_get_screen (GTK_WINDOW (window)),
-					 NULL, 0, NULL, gtk_get_current_event_time ());
 }
 
 static void
@@ -5774,7 +5760,6 @@ ev_window_class_init (EvWindowClass *ev_window_class)
 static const GActionEntry actions[] = {
 	{ "open", ev_window_cmd_file_open },
 	{ "open-copy", ev_window_cmd_file_open_copy },
-	{ "open-recent", ev_window_cmd_file_open_recent, "s" },
 	{ "save-copy", ev_window_cmd_save_as },
 	{ "send-to", ev_window_cmd_send_to },
 	{ "open-containing-folder", ev_window_cmd_open_containing_folder },

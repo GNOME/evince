@@ -71,8 +71,6 @@ evince_SOURCES=				\
 	ev-sidebar-page.h		\
 	ev-sidebar-thumbnails.c		\
 	ev-sidebar-thumbnails.h		\
-	ev-recent-menu-model.c		\
-	ev-recent-menu-model.h		\
 	main.c
 
 nodist_evince_SOURCES = \
