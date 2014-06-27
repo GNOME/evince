@@ -34,6 +34,8 @@ struct _EvLinkAccessiblePrivate {
         EvHyperlink      *hyperlink;
 
         gchar      *name;
+        gint        start_index;
+        gint        end_index;
 };
 
 struct _EvHyperlink {
@@ -105,6 +107,8 @@ ev_hyperlink_get_start_index (AtkHyperlink *atk_hyperlink)
                 return -1;
 
         impl_priv = hyperlink->link_impl->priv;
+        if (impl_priv->start_index != -1)
+		return impl_priv->start_index;
 
 	view = ev_page_accessible_get_view (impl_priv->page);
         if (!view->page_cache)
@@ -123,8 +127,10 @@ ev_hyperlink_get_start_index (AtkHyperlink *atk_hyperlink)
                 c_x = rect->x1 + (rect->x2 - rect->x1) / 2.;
                 c_y = rect->y1 + (rect->y2 - rect->y1) / 2.;
                 if (c_x >= impl_priv->area.x1 && c_x <= impl_priv->area.x2 &&
-                    c_y >= impl_priv->area.y1 && c_y <= impl_priv->area.y2)
+                    c_y >= impl_priv->area.y1 && c_y <= impl_priv->area.y2) {
+                        impl_priv->start_index = i;
                         return i;
+		}
         }
 
         return -1;
@@ -139,11 +145,18 @@ ev_hyperlink_get_end_index (AtkHyperlink *atk_hyperlink)
         EvRectangle             *areas = NULL;
         guint                    n_areas = 0;
         guint                    i;
+        gint                     start_index;
 
         if (!hyperlink->link_impl)
                 return -1;
 
         impl_priv = hyperlink->link_impl->priv;
+        if (impl_priv->end_index != -1)
+		return impl_priv->end_index;
+
+        start_index = ev_hyperlink_get_start_index (atk_hyperlink);
+        if (start_index == -1)
+		return -1;
 
 	view = ev_page_accessible_get_view (impl_priv->page);
         if (!view->page_cache)
@@ -155,15 +168,17 @@ ev_hyperlink_get_end_index (AtkHyperlink *atk_hyperlink)
         if (!areas)
                 return -1;
 
-        for (i = n_areas - 1; i >= 0; i--) {
+        for (i = start_index + 1; i < n_areas; i++) {
                 EvRectangle *rect = areas + i;
                 gdouble      c_x, c_y;
 
                 c_x = rect->x1 + (rect->x2 - rect->x1) / 2.;
                 c_y = rect->y1 + (rect->y2 - rect->y1) / 2.;
-                if (c_x >= impl_priv->area.x1 && c_x <= impl_priv->area.x2 &&
-                    c_y >= impl_priv->area.y1 && c_y <= impl_priv->area.y2)
-                        return i + 1;
+                if (c_x < impl_priv->area.x1 || c_x > impl_priv->area.x2 ||
+                    c_y < impl_priv->area.y1 || c_y > impl_priv->area.y2) {
+                        impl_priv->end_index = i;
+                        return i;
+		}
         }
 
         return -1;
@@ -286,6 +301,8 @@ ev_link_accessible_init (EvLinkAccessible *link)
 {
         atk_object_set_role (ATK_OBJECT (link), ATK_ROLE_LINK);
         link->priv = G_TYPE_INSTANCE_GET_PRIVATE (link, EV_TYPE_LINK_ACCESSIBLE, EvLinkAccessiblePrivate);
+        link->priv->start_index = -1;
+        link->priv->end_index = -1;
 }
 
 static AtkHyperlink *
