@@ -3002,6 +3002,16 @@ ev_annot_from_poppler_annot (PopplerAnnot *poppler_annot,
 	return ev_annot;
 }
 
+static void
+annot_set_unique_name (EvAnnotation *annot)
+{
+	gchar *name;
+
+	name = g_strdup_printf ("annot-%"G_GUINT64_FORMAT, g_get_real_time ());
+	ev_annotation_set_name (annot, name);
+	g_free (name);
+}
+
 static EvMappingList *
 pdf_document_annotations_get_annotations (EvDocumentAnnotations *document_annotations,
 					  EvPage                *page)
@@ -3042,12 +3052,8 @@ pdf_document_annotations_get_annotations (EvDocumentAnnotations *document_annota
 		i++;
 
 		/* Make sure annot has a unique name */
-		if (!ev_annotation_get_name (ev_annot)) {
-			gchar *name = g_strdup_printf ("annot-%d-%d", page->index, i);
-
-			ev_annotation_set_name (ev_annot, name);
-			g_free (name);
-		}
+		if (!ev_annotation_get_name (ev_annot))
+			annot_set_unique_name (ev_annot);
 
 		annot_mapping = g_new (EvMapping, 1);
 		annot_mapping->area.x1 = mapping->area.x1;
@@ -3106,7 +3112,6 @@ pdf_document_annotations_add_annotation (EvDocumentAnnotations *document_annotat
 	gdouble          height;
 	PopplerColor     poppler_color;
 	GdkColor         color;
-	gchar           *name;
 
 	pdf_document = PDF_DOCUMENT (document_annotations);
 	page = ev_annotation_get_page (annot);
@@ -3183,16 +3188,12 @@ pdf_document_annotations_add_annotation (EvDocumentAnnotations *document_annotat
 		mapping_list = NULL;
 	}
 
+	annot_set_unique_name (annot);
+
 	if (mapping_list) {
 		list = ev_mapping_list_get_list (mapping_list);
-		name = g_strdup_printf ("annot-%d-%d", page->index, g_list_length (list) + 1);
-		ev_annotation_set_name (annot, name);
-		g_free (name);
 		list = g_list_append (list, annot_mapping);
 	} else {
-		name = g_strdup_printf ("annot-%d-0", page->index);
-		ev_annotation_set_name (annot, name);
-		g_free (name);
 		list = g_list_append (list, annot_mapping);
 		mapping_list = ev_mapping_list_new (page->index, list, (GDestroyNotify)g_object_unref);
 		g_hash_table_insert (pdf_document->annots,
