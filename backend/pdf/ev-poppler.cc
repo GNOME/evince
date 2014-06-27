@@ -3121,6 +3121,8 @@ pdf_document_annotations_remove_annotation (EvDocumentAnnotations *document_anno
         if (mapping_list) {
                 annot_mapping = ev_mapping_list_find (mapping_list, annot);
                 ev_mapping_list_remove (mapping_list, annot_mapping);
+		if (ev_mapping_list_length (mapping_list) == 0)
+			g_hash_table_remove (pdf_document->annots, GINT_TO_POINTER (page->index));
         }
 
         pdf_document->annots_modified = TRUE;
