@@ -4037,10 +4037,6 @@ ev_window_run_fullscreen (EvWindow *window)
 	gtk_container_add (GTK_CONTAINER (window), window->priv->fs_overlay);
 	gtk_widget_show (window->priv->fs_overlay);
 
-	g_object_set (G_OBJECT (window->priv->scrolled_window),
-		      "shadow-type", GTK_SHADOW_NONE,
-		      NULL);
-
 	ev_document_model_set_fullscreen (window->priv->model, TRUE);
 	ev_window_update_fullscreen_action (window);
 
@@ -4078,10 +4074,6 @@ ev_window_stop_fullscreen (EvWindow *window,
 	g_object_unref (window->priv->main_box);
 
 	ev_window_remove_fullscreen_timeout (window);
-
-	g_object_set (G_OBJECT (window->priv->scrolled_window),
-		      "shadow-type", GTK_SHADOW_IN,
-		      NULL);
 
 	ev_document_model_set_fullscreen (window->priv->model, FALSE);
 	ev_window_update_fullscreen_action (window);
@@ -6856,10 +6848,7 @@ ev_window_init (EvWindow *ev_window)
 	ev_window->priv->view_box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 
 	overlay = gtk_overlay_new ();
-	ev_window->priv->scrolled_window =
-		GTK_WIDGET (g_object_new (GTK_TYPE_SCROLLED_WINDOW,
-					  "shadow-type", GTK_SHADOW_IN,
-					  NULL));
+	ev_window->priv->scrolled_window = gtk_scrolled_window_new (NULL, NULL);
 	gtk_container_add (GTK_CONTAINER (overlay), ev_window->priv->scrolled_window);
 	gtk_widget_show (ev_window->priv->scrolled_window);
 
