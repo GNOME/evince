@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince.HEAD.he\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-06-21 23:00+0300\n"
-"PO-Revision-Date: 2014-06-21 23:08+0300\n"
+"POT-Creation-Date: 2014-06-28 22:24+0300\n"
+"PO-Revision-Date: 2014-06-28 22:26+0300\n"
 "Last-Translator: Yosef Or Boczko <yoseforb@gnome.org>\n"
 "Language-Team: עברית <>\n"
 "Language: he\n"
@@ -74,9 +74,14 @@ msgstr "There was an error deleting “%s”."
 msgid "Error %s"
 msgstr "Error %s"
 
-#: ../backend/comics/comicsdocument.evince-backend.in.h:1
+#: ../backend/comics/comicsdocument.evince-backend.in.in.h:1
+#: ../backend/comics/evince-comicsdocument.metainfo.xml.in.in.h:1
 msgid "Comic Books"
 msgstr "ספרי קומיקס"
+
+#: ../backend/comics/evince-comicsdocument.metainfo.xml.in.in.h:2
+msgid "Adds support for reading comic books"
+msgstr "הוספת תמיכה לקריאת ספרי קומיקס"
 
 #: ../backend/djvu/djvu-document.c:175
 msgid "DjVu document has incorrect format"
@@ -88,17 +93,27 @@ msgid ""
 "be accessed."
 msgstr "המסמך מורכב ממספר קבצים. לא ניתן לגשת לאחד או יותר מהם."
 
-#: ../backend/djvu/djvudocument.evince-backend.in.h:1
+#: ../backend/djvu/djvudocument.evince-backend.in.in.h:1
+#: ../backend/djvu/evince-djvudocument.metainfo.xml.in.in.h:1
 msgid "DjVu Documents"
 msgstr "מסמכי DjVu"
+
+#: ../backend/djvu/evince-djvudocument.metainfo.xml.in.in.h:2
+msgid "Adds support for reading DjVu documents"
+msgstr "הוספת תמיכה לקריאת מסמכי DjVu"
 
 #: ../backend/dvi/dvi-document.c:110
 msgid "DVI document has incorrect format"
 msgstr "DVI document has incorrect format"
 
-#: ../backend/dvi/dvidocument.evince-backend.in.h:1
+#: ../backend/dvi/dvidocument.evince-backend.in.in.h:1
+#: ../backend/dvi/evince-dvidocument.metainfo.xml.in.in.h:1
 msgid "DVI Documents"
 msgstr "מסמכי DVI"
+
+#: ../backend/dvi/evince-dvidocument.metainfo.xml.in.in.h:2
+msgid "Adds support for reading DVI documents"
+msgstr "הוספת תמיכה לקריאת מסמכי DVI"
 
 #: ../backend/pdf/ev-poppler.cc:673
 msgid "This work is in the Public Domain"
@@ -217,9 +232,14 @@ msgstr "קידוד"
 msgid "Substituting with"
 msgstr "מוחלף ב־"
 
-#: ../backend/pdf/pdfdocument.evince-backend.in.h:1
+#: ../backend/pdf/evince-pdfdocument.metainfo.xml.in.in.h:1
+#: ../backend/pdf/pdfdocument.evince-backend.in.in.h:1
 msgid "PDF Documents"
 msgstr "מסמכי PDF"
+
+#: ../backend/pdf/evince-pdfdocument.metainfo.xml.in.in.h:2
+msgid "Adds support for reading PDF Documents"
+msgstr "הוספת תמיכה לקריאת מסמכי PDF"
 
 #: ../backend/ps/ev-spectre.c:98
 #, c-format
@@ -231,21 +251,36 @@ msgstr "לא ניתן לטעון את המסמך „%s“"
 msgid "Failed to save document “%s”"
 msgstr "שמירת המסמך „%s“ נכשלה"
 
-#: ../backend/ps/psdocument.evince-backend.in.h:1
+#: ../backend/ps/evince-psdocument.metainfo.xml.in.in.h:1
+#: ../backend/ps/psdocument.evince-backend.in.in.h:1
 msgid "PostScript Documents"
 msgstr "מסמכי PostScript"
+
+#: ../backend/ps/evince-psdocument.metainfo.xml.in.in.h:2
+msgid "Adds support for reading PostScript documents"
+msgstr "הוספת תמיכה לקריאת מסמכי PostScript"
 
 #: ../backend/tiff/tiff-document.c:123
 msgid "Invalid document"
 msgstr "מסמך לא תקין"
 
-#: ../backend/tiff/tiffdocument.evince-backend.in.h:1
+#: ../backend/tiff/evince-tiffdocument.metainfo.xml.in.in.h:1
+#: ../backend/tiff/tiffdocument.evince-backend.in.in.h:1
 msgid "TIFF Documents"
 msgstr "מסמכי TIFF"
 
-#: ../backend/xps/xpsdocument.evince-backend.in.h:1
+#: ../backend/tiff/evince-tiffdocument.metainfo.xml.in.in.h:2
+msgid "Adds support for reading TIFF documents"
+msgstr "הוספת תמיכה לקריאת מסמכי TIFF"
+
+#: ../backend/xps/evince-xpsdocument.metainfo.xml.in.in.h:1
+#: ../backend/xps/xpsdocument.evince-backend.in.in.h:1
 msgid "XPS Documents"
 msgstr "מסמכי XPS"
+
+#: ../backend/xps/evince-xpsdocument.metainfo.xml.in.in.h:2
+msgid "Adds support for reading XPS documents"
+msgstr "הוספת תמיכה לקריאת מסמכי XPS"
 
 #. Manually set name and icon
 #: ../data/evince.desktop.in.in.h:1 ../shell/ev-application.c:997
@@ -368,8 +403,8 @@ msgid "of %d"
 msgstr "מתוך %d"
 
 #: ../libmisc/ev-page-action-widget.c:181 ../shell/ev-history.c:426
-#: ../shell/ev-sidebar-bookmarks.c:295 ../shell/ev-window.c:851
-#: ../shell/ev-window.c:4576
+#: ../shell/ev-sidebar-bookmarks.c:295 ../shell/ev-window.c:843
+#: ../shell/ev-window.c:4575
 #, c-format
 msgid "Page %s"
 msgstr "עמוד %s"
@@ -574,7 +609,7 @@ msgstr "FILE"
 msgid "GNOME Document Previewer"
 msgstr "כלי להצגה מקדימה של מסמכים מבית GNOME"
 
-#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3202
+#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3194
 msgid "Failed to print document"
 msgstr "הדפסת המסמך נכשלה"
 
@@ -583,7 +618,7 @@ msgstr "הדפסת המסמך נכשלה"
 msgid "The selected printer '%s' could not be found"
 msgstr "המדפסת הנבחרת '%s' לא נמצאה"
 
-#: ../previewer/ev-previewer-window.c:270
+#: ../previewer/ev-previewer-window.c:270 ../shell/evince-menus.ui.h:37
 msgid "_Previous Page"
 msgstr "העמוד ה_קודם"
 
@@ -591,7 +626,7 @@ msgstr "העמוד ה_קודם"
 msgid "Go to the previous page"
 msgstr "מעבר לעמוד הקודם"
 
-#: ../previewer/ev-previewer-window.c:273
+#: ../previewer/ev-previewer-window.c:273 ../shell/evince-menus.ui.h:38
 msgid "_Next Page"
 msgstr "העמוד ה_בא"
 
@@ -627,11 +662,11 @@ msgstr "התאמה ל_רוחב"
 msgid "Make the current document fill the window width"
 msgstr "הצגת המסמך הנוכחי כך שימלא את רוחב העמוד"
 
-#: ../previewer/ev-previewer-window.c:514 ../shell/ev-window.c:5809
+#: ../previewer/ev-previewer-window.c:514
 msgid "Page"
 msgstr "עמוד"
 
-#: ../previewer/ev-previewer-window.c:515 ../shell/ev-window.c:5810
+#: ../previewer/ev-previewer-window.c:515
 msgid "Select Page"
 msgstr "בחירת עמוד"
 
@@ -1020,7 +1055,7 @@ msgstr "_שינוי שם הסימנייה"
 msgid "_Remove Bookmark"
 msgstr "ה_סרת הסימנייה"
 
-#: ../shell/ev-sidebar-bookmarks.c:577 ../shell/ev-toolbar.c:168
+#: ../shell/ev-sidebar-bookmarks.c:577 ../shell/ev-toolbar.c:170
 msgid "Bookmarks"
 msgstr "סימניות"
 
@@ -1040,156 +1075,156 @@ msgstr "מפתח"
 msgid "Thumbnails"
 msgstr "תמונות ממוזערות"
 
-#: ../shell/ev-toolbar.c:224
+#: ../shell/ev-toolbar.c:218
 msgid "Previous Page"
 msgstr "העמוד הקודם"
 
-#: ../shell/ev-toolbar.c:229
+#: ../shell/ev-toolbar.c:223
 msgid "Next Page"
 msgstr "העמוד הבא"
 
-#: ../shell/ev-toolbar.c:270
+#: ../shell/ev-toolbar.c:267
 msgid "Find a word or phrase in the document"
 msgstr "חיפוש מילה או משפט במסמך"
 
-#: ../shell/ev-toolbar.c:309
-msgid "View options"
-msgstr "אפשרויות תצוגה"
-
-#: ../shell/ev-toolbar.c:326
+#: ../shell/ev-toolbar.c:282
 msgid "File options"
 msgstr "אפשרויות קובץ"
+
+#: ../shell/ev-toolbar.c:295
+msgid "View options"
+msgstr "אפשרויות תצוגה"
 
 #: ../shell/ev-utils.c:332
 msgid "Supported Image Files"
 msgstr "קובצי תמונות נתמכים"
 
-#: ../shell/ev-window.c:1517
+#: ../shell/ev-window.c:1509
 msgid "The document contains no pages"
 msgstr "המסמך אינו מכיל עמודים"
 
-#: ../shell/ev-window.c:1520
+#: ../shell/ev-window.c:1512
 msgid "The document contains only empty pages"
 msgstr "המסמך מכיל עמודים ריקים בלבד"
 
-#: ../shell/ev-window.c:1726 ../shell/ev-window.c:1894
+#: ../shell/ev-window.c:1718 ../shell/ev-window.c:1886
 #, c-format
 msgid "Unable to open document “%s”."
 msgstr "לא ניתן לפתוח את המסמך „%s“."
 
-#: ../shell/ev-window.c:1858
+#: ../shell/ev-window.c:1850
 #, c-format
 msgid "Loading document from “%s”"
 msgstr "המסמך מ־„%s“ נטען"
 
-#: ../shell/ev-window.c:2009 ../shell/ev-window.c:2299
+#: ../shell/ev-window.c:2001 ../shell/ev-window.c:2291
 #, c-format
 msgid "Downloading document (%d%%)"
 msgstr "מוריד מסמך (%d%%)"
 
-#: ../shell/ev-window.c:2042
+#: ../shell/ev-window.c:2034
 msgid "Failed to load remote file."
 msgstr "טעינת הקובץ המרוחק נכשלה."
 
-#: ../shell/ev-window.c:2243
+#: ../shell/ev-window.c:2235
 #, c-format
 msgid "Reloading document from %s"
 msgstr "המסמך מ־%s נטען מחדש"
 
-#: ../shell/ev-window.c:2275
+#: ../shell/ev-window.c:2267
 msgid "Failed to reload document."
 msgstr "טעינת המסמך מחדש נכשלה."
 
-#: ../shell/ev-window.c:2491
+#: ../shell/ev-window.c:2483
 msgid "Open Document"
 msgstr "פתיחת מסמך"
 
-#: ../shell/ev-window.c:2574
+#: ../shell/ev-window.c:2566
 #, c-format
 msgid "Saving document to %s"
 msgstr "המסמך נשמר ל־%s"
 
-#: ../shell/ev-window.c:2577
+#: ../shell/ev-window.c:2569
 #, c-format
 msgid "Saving attachment to %s"
 msgstr "הצרופה נשמרת ל־%s"
 
-#: ../shell/ev-window.c:2580
+#: ../shell/ev-window.c:2572
 #, c-format
 msgid "Saving image to %s"
 msgstr "התמונה נשמרת ל־%s"
 
-#: ../shell/ev-window.c:2624 ../shell/ev-window.c:2724
+#: ../shell/ev-window.c:2616 ../shell/ev-window.c:2716
 #, c-format
 msgid "The file could not be saved as “%s”."
 msgstr "לא ניתן לשמור את הקובץ בשם „%s“."
 
-#: ../shell/ev-window.c:2655
+#: ../shell/ev-window.c:2647
 #, c-format
 msgid "Uploading document (%d%%)"
 msgstr "המסמך נשלח (%d%%)"
 
-#: ../shell/ev-window.c:2659
+#: ../shell/ev-window.c:2651
 #, c-format
 msgid "Uploading attachment (%d%%)"
 msgstr "הצרופה נשלחת (%d%%)"
 
-#: ../shell/ev-window.c:2663
+#: ../shell/ev-window.c:2655
 #, c-format
 msgid "Uploading image (%d%%)"
 msgstr "התמונה נשלחת (%d%%)"
 
-#: ../shell/ev-window.c:2775
+#: ../shell/ev-window.c:2767
 msgid "Save a Copy"
 msgstr "שמירת העתק"
 
-#: ../shell/ev-window.c:2851
+#: ../shell/ev-window.c:2843
 msgid "Could not send current document"
 msgstr "לא ניתן לשלוח את המסמך הנוכחי"
 
-#: ../shell/ev-window.c:2885
+#: ../shell/ev-window.c:2877
 msgid "Could not open the containing folder"
 msgstr "לא ניתן לפתוח את התיקייה המכילה"
 
-#: ../shell/ev-window.c:3146
+#: ../shell/ev-window.c:3138
 #, c-format
 msgid "%d pending job in queue"
 msgid_plural "%d pending jobs in queue"
 msgstr[0] "משימה אחת ממתינה בתור"
 msgstr[1] "%d משימות ממתינות בתור"
 
-#: ../shell/ev-window.c:3259
+#: ../shell/ev-window.c:3251
 #, c-format
 msgid "Printing job “%s”"
 msgstr "המשימה „%s“ מודפסת"
 
-#: ../shell/ev-window.c:3462
+#: ../shell/ev-window.c:3454
 msgid ""
 "Document contains form fields that have been filled out. If you don't save a "
 "copy, changes will be permanently lost."
 msgstr "המסמך מכיל שדות טופס שיש למלא. אם לא יישמר עותק, השינויים יאבדו לעד."
 
-#: ../shell/ev-window.c:3466
+#: ../shell/ev-window.c:3458
 msgid ""
 "Document contains new or modified annotations. If you don't save a copy, "
 "changes will be permanently lost."
 msgstr ""
 "המסמך מכיל הערות חדשות או ערוכות. אם לא יישמר עותק, השינויים יאבדו לעד."
 
-#: ../shell/ev-window.c:3473
+#: ../shell/ev-window.c:3465
 #, c-format
 msgid "Save a copy of document “%s” before closing?"
 msgstr "האם לשמור עותק של המסמך „%s“ לפני הסגירה?"
 
-#: ../shell/ev-window.c:3492
+#: ../shell/ev-window.c:3484
 msgid "Close _without Saving"
 msgstr "_סגירה ללא שמירה"
 
-#: ../shell/ev-window.c:3496
+#: ../shell/ev-window.c:3488
 msgid "Save a _Copy"
 msgstr "שמירת _עותק"
 
-#: ../shell/ev-window.c:3570
+#: ../shell/ev-window.c:3562
 #, c-format
 msgid "Wait until print job “%s” finishes before closing?"
 msgstr "האם להמתין לסיום משימת ההדפסה „%s“ לפני הסגירה?"
@@ -1197,7 +1232,7 @@ msgstr "האם להמתין לסיום משימת ההדפסה „%s“ לפני
 #. TRANS: the singular form is not really used as n_print_jobs > 1
 #. but some languages distinguish between different plurals forms,
 #. so the ngettext is needed.
-#: ../shell/ev-window.c:3576
+#: ../shell/ev-window.c:3568
 #, c-format
 msgid "There is %d print job active. Wait until print finishes before closing?"
 msgid_plural ""
@@ -1205,50 +1240,50 @@ msgid_plural ""
 msgstr[0] "יש משימת הדפסה אחת פעילה. האם להמתין לסיום ההדפסה לפני הסגירה?"
 msgstr[1] "יש %d משימות הדפסה פעילות. האם להמתין לסיום ההדפסות לפני הסגירה?"
 
-#: ../shell/ev-window.c:3591
+#: ../shell/ev-window.c:3583
 msgid "If you close the window, pending print jobs will not be printed."
 msgstr "אם החלון ייסגר, משימות הדפסה הממתינות לא יודפסו."
 
-#: ../shell/ev-window.c:3595
+#: ../shell/ev-window.c:3587
 msgid "Cancel _print and Close"
 msgstr "ביטול הה_דפסה וסגירה"
 
-#: ../shell/ev-window.c:3599
+#: ../shell/ev-window.c:3591
 msgid "Close _after Printing"
 msgstr "_סגירה לאחר ההדפסה"
 
-#: ../shell/ev-window.c:4117
+#: ../shell/ev-window.c:4116
 msgid "Running in presentation mode"
 msgstr "מופעל מצב מצגת"
 
 #. TRANS: Sometimes this could be better translated as
 #. "%d hit(s) on this page".  Therefore this string
 #. contains plural cases.
-#: ../shell/ev-window.c:5037
+#: ../shell/ev-window.c:5032
 #, c-format
 msgid "%d found on this page"
 msgid_plural "%d found on this page"
 msgstr[0] "‏אחד נמצא בעמוד זה"
 msgstr[1] "‏%d נמצאו בעמוד זה"
 
-#: ../shell/ev-window.c:5042
+#: ../shell/ev-window.c:5037
 msgid "Not found"
 msgstr "אין התאמה"
 
-#: ../shell/ev-window.c:5048
+#: ../shell/ev-window.c:5043
 #, c-format
 msgid "%3d%% remaining to search"
 msgstr "‏%3d%% נשארו לחיפוש"
 
-#: ../shell/ev-window.c:5367
+#: ../shell/ev-window.c:5362
 msgid "Enable caret navigation?"
 msgstr "האם לאפשר ניווט בעזרת הסמן?"
 
-#: ../shell/ev-window.c:5369
+#: ../shell/ev-window.c:5364
 msgid "_Enable"
 msgstr "_אפשור"
 
-#: ../shell/ev-window.c:5372
+#: ../shell/ev-window.c:5367
 msgid ""
 "Pressing F7 turns the caret navigation on or off. This feature places a "
 "moveable cursor in text pages, allowing you to move around and select text "
@@ -1258,76 +1293,39 @@ msgstr ""
 "הניתן להזזה בדפי טקסט המאפשר לך לנוע מסביב ולבחור טקסט בעזרת המקלדת שלך. האם "
 "ברצונך לאפשר ניווט באמצעות סמן?"
 
-#: ../shell/ev-window.c:5377
+#: ../shell/ev-window.c:5372
 msgid "Don't show this message again"
 msgstr "לא לה_ציג הודעה זו שוב"
 
-#. Links
-#: ../shell/ev-window.c:5717
-msgid "_Open Link"
-msgstr "פתיחת _קישור"
-
-#: ../shell/ev-window.c:5719
-msgid "_Go To"
-msgstr "מ_עבר"
-
-#: ../shell/ev-window.c:5721
-msgid "Open in New _Window"
-msgstr "פתיחה ב_חלון חדש"
-
-#: ../shell/ev-window.c:5723
-msgid "_Copy Link Address"
-msgstr "העתקת מיקום ה_קישור"
-
-#: ../shell/ev-window.c:5725
-msgid "_Save Image As…"
-msgstr "שמירת תמונה _בשם…"
-
-#: ../shell/ev-window.c:5727
-msgid "Copy _Image"
-msgstr "העתקת ת_מונה"
-
-#: ../shell/ev-window.c:5729
-msgid "Annotation Properties…"
-msgstr "מאפייני הפרשנות…"
-
-#: ../shell/ev-window.c:5734
-msgid "_Open Attachment"
-msgstr "_פתיחת צרופה"
-
-#: ../shell/ev-window.c:5736
-msgid "_Save Attachment As…"
-msgstr "_שמירת הקובץ המצורף בשם…"
-
-#: ../shell/ev-window.c:5948 ../shell/ev-window.c:5964
+#: ../shell/ev-window.c:5881 ../shell/ev-window.c:5897
 msgid "Unable to launch external application."
 msgstr "לא ניתן לשגר יישום חיצוני"
 
-#: ../shell/ev-window.c:6021
+#: ../shell/ev-window.c:5954
 msgid "Unable to open external link"
 msgstr "לא ניתן לפתוח קישור חיצוני"
 
-#: ../shell/ev-window.c:6214
+#: ../shell/ev-window.c:6157
 msgid "Couldn't find appropriate format to save image"
 msgstr "לא נמצאה התצורה המתאימה לשמירת התמונה"
 
-#: ../shell/ev-window.c:6246
+#: ../shell/ev-window.c:6189
 msgid "The image could not be saved."
 msgstr "לא ניתן לשמור את התמונה."
 
-#: ../shell/ev-window.c:6278
+#: ../shell/ev-window.c:6224
 msgid "Save Image"
 msgstr "שמירת התמונה"
 
-#: ../shell/ev-window.c:6409
+#: ../shell/ev-window.c:6364
 msgid "Unable to open attachment"
 msgstr "לא ניתן לפתוח את הצרופה"
 
-#: ../shell/ev-window.c:6465
+#: ../shell/ev-window.c:6420
 msgid "The attachment could not be saved."
 msgstr "לא ניתן לשמור את הצרופה."
 
-#: ../shell/ev-window.c:6510
+#: ../shell/ev-window.c:6468
 msgid "Save Attachment"
 msgstr "שמירת צרופה"
 
@@ -1564,6 +1562,46 @@ msgstr "_סגירה"
 msgid "_Automatic"
 msgstr "_אוטומטית"
 
+#: ../shell/evince-menus.ui.h:33
+msgid "_Open Link"
+msgstr "פתיחת _קישור"
+
+#: ../shell/evince-menus.ui.h:34
+msgid "_Copy Link Address"
+msgstr "העתקת מיקום ה_קישור"
+
+#: ../shell/evince-menus.ui.h:35
+msgid "_Go To"
+msgstr "מ_עבר"
+
+#: ../shell/evince-menus.ui.h:36
+msgid "Open in New _Window"
+msgstr "פתיחה ב_חלון חדש"
+
+#: ../shell/evince-menus.ui.h:39
+msgid "Auto_scroll"
+msgstr "_גלילה אוטומטית"
+
+#: ../shell/evince-menus.ui.h:40
+msgid "_Save Image As…"
+msgstr "שמירת תמונה _בשם…"
+
+#: ../shell/evince-menus.ui.h:41
+msgid "Copy _Image"
+msgstr "העתקת ת_מונה"
+
+#: ../shell/evince-menus.ui.h:42
+msgid "_Open Attachment"
+msgstr "_פתיחת צרופה"
+
+#: ../shell/evince-menus.ui.h:43
+msgid "_Save Attachment As…"
+msgstr "_שמירת הקובץ המצורף בשם…"
+
+#: ../shell/evince-menus.ui.h:44
+msgid "Annotation Properties…"
+msgstr "מאפייני הפרשנות…"
+
 #: ../evince.appdata.xml.in.h:2
 msgid "Document viewer for popular document formats"
 msgstr "מציג מסמכים עבור תבניות מסמכים נפוצים"
@@ -1613,9 +1651,6 @@ msgstr ""
 
 #~ msgid "Reload the document"
 #~ msgstr "טעינה מחדש של המסמך"
-
-#~ msgid "Auto_scroll"
-#~ msgstr "_גלילה אוטומטית"
 
 #~ msgid "Go to the first page"
 #~ msgstr "מעבר לעמוד הראשון"
