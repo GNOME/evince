@@ -406,8 +406,18 @@ setup_initial_entry_size (EvZoomAction *zoom_action)
         }
         g_object_unref (menu);
 
-        /* Count the toggle size as one character more */
-        gtk_entry_set_width_chars (GTK_ENTRY (zoom_action->priv->entry), width + 1);
+        gtk_entry_set_width_chars (GTK_ENTRY (zoom_action->priv->entry), width);
+}
+
+static void
+ev_zoom_action_get_preferred_width (GtkWidget *widget,
+                                    gint      *minimum_width,
+                                    gint      *natural_width)
+{
+        *minimum_width = *natural_width = 0;
+
+        GTK_WIDGET_CLASS (ev_zoom_action_parent_class)->get_preferred_width (widget, minimum_width, natural_width);
+        *natural_width = *minimum_width;
 }
 
 static void
@@ -445,13 +455,16 @@ ev_zoom_action_constructed (GObject *object)
 }
 
 static void
-ev_zoom_action_class_init (EvZoomActionClass *class)
+ev_zoom_action_class_init (EvZoomActionClass *klass)
 {
-        GObjectClass *object_class = G_OBJECT_CLASS (class);
+        GObjectClass *object_class = G_OBJECT_CLASS (klass);
+        GtkWidgetClass *widget_class = GTK_WIDGET_CLASS(klass);
 
         object_class->finalize = ev_zoom_action_finalize;
         object_class->constructed = ev_zoom_action_constructed;
         object_class->set_property = ev_zoom_action_set_property;
+
+        widget_class->get_preferred_width = ev_zoom_action_get_preferred_width;
 
         g_object_class_install_property (object_class,
                                          PROP_DOCUMENT_MODEL,
