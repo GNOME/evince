@@ -356,6 +356,7 @@ ev_zoom_action_finalize (GObject *object)
                                               (gpointer)&zoom_action->priv->model);
         }
 
+        g_clear_object (&zoom_action->priv->menu);
         g_clear_object (&zoom_action->priv->zoom_free_section);
 
         G_OBJECT_CLASS (ev_zoom_action_parent_class)->finalize (object);
@@ -374,7 +375,7 @@ ev_zoom_action_set_property (GObject      *object,
                 zoom_action->priv->model = g_value_get_object (value);
                 break;
         case PROP_MENU:
-                zoom_action->priv->menu = g_value_get_object (value);
+                zoom_action->priv->menu = g_value_dup_object (value);
                 break;
         default:
                 G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
