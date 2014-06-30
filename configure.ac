@@ -299,6 +299,31 @@ fi
 
 AM_CONDITIONAL([ENABLE_DBUS], [test "$enable_dbus" = "yes"])
 
+# *******************************
+# GNOME Desktop (Thumbnail cache)
+# *******************************
+
+AC_ARG_ENABLE([libgnome-desktop],
+        [AS_HELP_STRING([--disable-libgnome-desktop], [Disable GNOME Desktop (Thumbnail cache)])],
+        [enable_gnome_desktop=$enableval],
+        [enable_gnome_desktop=auto])
+
+if test "$enable_gnome_desktop" != "no"; then
+   if test "$enable_gnome_desktop" = "auto"; then
+      PKG_CHECK_MODULES([LIBGNOME_DESKTOP], [gnome-desktop-3.0], has_libgnome_desktop=yes, has_libgnome_desktop=no)
+   else
+      PKG_CHECK_MODULES([LIBGNOME_DESKTOP], [gnome-desktop-3.0])
+      has_libgnome_desktop = yes
+   fi
+
+   if test x$has_libgnome_desktop = xyes; then
+      AC_DEFINE([HAVE_LIBGNOME_DESKTOP], [1], [Whether GNOME Desktop (Thumbnail cache) is available])
+      enable_gnome_desktop=yes
+   else
+      enable_gnome_desktop=no
+   fi
+fi
+
 dnl ========= Check for Desktop Schemas
 PKG_CHECK_MODULES([DESKTOP_SCHEMAS], [gsettings-desktop-schemas],
                   has_desktop_schemas=yes, has_desktop_schemas=no)
@@ -340,8 +365,8 @@ BACKEND_LIBS="$BACKEND_LIBS -lm"
 AC_SUBST(BACKEND_CFLAGS)
 AC_SUBST(BACKEND_LIBS)
 
-SHELL_CFLAGS="$SHELL_CORE_CFLAGS $LIBSECRET_CFLAGS -DGDK_MULTIHEAD_SAFE -DGTK_MULTIHEAD_SAFE $DEBUG_FLAGS"
-SHELL_LIBS="$SHELL_CORE_LIBS $LIBSECRET_LIBS -lz -lm"
+SHELL_CFLAGS="$SHELL_CORE_CFLAGS $LIBSECRET_CFLAGS -DGDK_MULTIHEAD_SAFE -DGTK_MULTIHEAD_SAFE $DEBUG_FLAGS $LIBGNOME_DESKTOP_CFLAGS"
+SHELL_LIBS="$SHELL_CORE_LIBS $LIBSECRET_LIBS $LIBGNOME_DESKTOP_LIBS -lz -lm"
 AC_SUBST(SHELL_CFLAGS)
 AC_SUBST(SHELL_LIBS)
 
@@ -902,5 +927,6 @@ GObject Introspection ....:  $enable_introspection
 DBUS communication .......:  $enable_dbus
 Keyring integration ......:  $with_keyring
 GTK+ Unix Print ..........:  $with_gtk_unix_print
+Thumbnail cache ..........:  $enable_gnome_desktop
 
 ])

@@ -1493,6 +1493,26 @@ ev_window_setup_document (EvWindow *ev_window)
 }
 
 static void
+ev_window_set_document_metadata (EvWindow *window)
+{
+	const EvDocumentInfo *info;
+
+	if (!window->priv->metadata)
+		return;
+
+	info = ev_document_get_info (window->priv->document);
+	if (info->fields_mask & EV_DOCUMENT_INFO_TITLE && info->title && info->title[0] != '\0')
+		ev_metadata_set_string (window->priv->metadata, "title", info->title);
+	else
+		ev_metadata_set_string (window->priv->metadata, "title", "");
+
+	if (info->fields_mask & EV_DOCUMENT_INFO_AUTHOR && info->author && info->author[0] != '\0')
+		ev_metadata_set_string (window->priv->metadata, "author", info->author);
+	else
+		ev_metadata_set_string (window->priv->metadata, "author", "");
+}
+
+static void
 ev_window_set_document (EvWindow *ev_window, EvDocument *document)
 {
 	if (ev_window->priv->document == document)
@@ -1503,6 +1523,8 @@ ev_window_set_document (EvWindow *ev_window, EvDocument *document)
 	ev_window->priv->document = g_object_ref (document);
 
 	ev_window_set_message_area (ev_window, NULL);
+
+	ev_window_set_document_metadata (ev_window);
 
 	if (ev_document_get_n_pages (document) <= 0) {
 		ev_window_warning_message (ev_window, "%s",
