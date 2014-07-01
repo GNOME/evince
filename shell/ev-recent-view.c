@@ -33,8 +33,10 @@
 #include "ev-jobs.h"
 #include "ev-job-scheduler.h"
 
+#ifdef HAVE_LIBGNOME_DESKTOP
 #define GNOME_DESKTOP_USE_UNSTABLE_API
 #include <libgnome-desktop/gnome-desktop-thumbnail.h>
+#endif
 
 typedef enum {
         EV_RECENT_VIEW_COLUMN_URI,
