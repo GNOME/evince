@@ -8,16 +8,16 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: evince.help.master\n"
-"POT-Creation-Date: 2014-04-15 12:17+0000\n"
-"PO-Revision-Date: 2014-04-15 14:36+0200\n"
+"POT-Creation-Date: 2014-07-03 03:41+0000\n"
+"PO-Revision-Date: 2014-07-03 12:49+0200\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
-"Language-Team: Español <gnome-es-list@gnome.org>\n"
+"Language-Team: Español; Castellano <gnome-es-list@gnome.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n!=1);\n"
-"X-Generator: Gtranslator 2.91.5\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Gtranslator 2.91.6\n"
 
 #. Put one translator per line, in the form NAME <EMAIL>, YEAR1, YEAR2
 msgctxt "_"
@@ -66,7 +66,7 @@ msgstr "Tiffany Antopolski"
 #: C/duplex-3pages.page:16 C/duplex-4pages.page:16 C/duplex-5pages.page:16
 #: C/duplex-6pages.page:16 C/duplex-7pages.page:16 C/duplex-8pages.page:16
 #: C/duplex-9pages.page:16 C/duplex-npages.page:16 C/editing.page:15
-#: C/formats.page:18 C/forms.page:15 C/forms-saving.page:23
+#: C/formats.page:22 C/forms.page:15 C/forms-saving.page:23
 #: C/invert-colors.page:23 C/noprint.page:14 C/openerror.page:17
 #: C/presentations.page:20 C/print-2sided.page:16 C/print-booklet.page:16
 #: C/print-differentsize.page:15 C/printing.page:22 C/print-order.page:16
@@ -420,7 +420,8 @@ msgstr ""
 "documentos Okular no las soporta. Adobe Reader sí las soporta."
 
 #. (itstool) path: credit/name
-#: C/bookmarks.page:17 C/finding.page:21 C/opening.page:18 C/password.page:16
+#: C/bookmarks.page:17 C/finding.page:21 C/formats.page:18 C/opening.page:18
+#: C/password.page:16
 msgid "Ekaterina Gerasimova"
 msgstr "Ekaterina Gerasimova"
 
@@ -797,13 +798,13 @@ msgid ""
 msgstr "Puede convertir documentos de los siguientes tipos de formato a PDF:"
 
 #. (itstool) path: item/p
-#: C/convertpdf.page:32 C/formats.page:30 C/presentations.page:69
+#: C/convertpdf.page:32 C/formats.page:34 C/presentations.page:69
 #: C/printing.page:49
 msgid "Device Independent file format (.dvi)"
 msgstr "Formato de archivo independiente del dispositivo (.dvi)"
 
 #. (itstool) path: item/p
-#: C/convertpdf.page:33 C/formats.page:34 C/presentations.page:73
+#: C/convertpdf.page:33 C/formats.page:38 C/presentations.page:73
 #: C/printing.page:52
 msgid "PostScript (.ps)"
 msgstr "PostScript (.ps)"
@@ -885,19 +886,19 @@ msgstr ""
 "formato:"
 
 #. (itstool) path: item/p
-#: C/convertPostScript.page:32 C/formats.page:31 C/presentations.page:70
+#: C/convertPostScript.page:32 C/formats.page:35 C/presentations.page:70
 #: C/printing.page:50
 msgid "DjVu (.djvu, .djv)"
 msgstr "DjVu (.djvu, .djv)"
 
 #. (itstool) path: item/p
-#: C/convertPostScript.page:33 C/convertSVG.page:30 C/formats.page:33
+#: C/convertPostScript.page:33 C/convertSVG.page:30 C/formats.page:37
 #: C/presentations.page:72 C/printing.page:51
 msgid "Portable Document Format (.pdf)"
 msgstr "Formato de documento portable (.pdf)"
 
 #. (itstool) path: item/p
-#: C/convertPostScript.page:34 C/formats.page:36 C/printing.page:53
+#: C/convertPostScript.page:34 C/printing.page:53
 msgid "Tagged Image File Format (.tiff, .tif)"
 msgstr "Formato de archivo de imagen con etiquetas (.tiff, .tif)"
 
@@ -2098,37 +2099,27 @@ msgid "PDF, PostScript and many others are."
 msgstr "PDF, PostScript y muchos otros."
 
 #. (itstool) path: page/title
-#: C/formats.page:23
+#: C/formats.page:27
 msgid "Supported formats"
 msgstr "Formatos soportados"
 
 #. (itstool) path: page/p
-#: C/formats.page:25
+#: C/formats.page:29
 msgid "The <app>document viewer</app> supports the following formats:"
 msgstr "El <app>Visor de documentos</app> soporta los siguientes formatos:"
 
 #. (itstool) path: item/p
-#: C/formats.page:29 C/presentations.page:68
+#: C/formats.page:33 C/presentations.page:68
 msgid "Comic Book Archive (.cbr and .cbz)"
 msgstr "Archivo de cómic (.cbr y .cbz)"
 
 #. (itstool) path: item/p
-#: C/formats.page:32 C/presentations.page:71
-msgid "OpenOffice Presentation (.odp)"
-msgstr "Presentación de OpenOffice (.odp)"
-
-#. (itstool) path: item/p
-#: C/formats.page:35
-msgid "Scalable Vector Graphics (.svg)"
-msgstr "Gráfico vectorial escalable (.svg)"
-
-#. (itstool) path: item/p
-#: C/formats.page:37
-msgid "Other Image Files (.gif, .jpeg, .png)"
-msgstr "Otros formatos de imagen (.gif, .jpeg, .png)"
+#: C/formats.page:36
+msgid "Open XML Paper Specification (.oxps, .xps)"
+msgstr "OpenXPS (.oxps, .xps)"
 
 #. (itstool) path: note/p
-#: C/formats.page:40
+#: C/formats.page:41
 msgid ""
 "In some Linux distributions, not all formats are supported by default, so "
 "you might not be able to view all the formats listed above."
@@ -2138,7 +2129,7 @@ msgstr ""
 "formatos listados anteriormente."
 
 #. (itstool) path: note/p
-#: C/formats.page:43
+#: C/formats.page:44
 msgid ""
 "Support for a format is called a <em>backend</em>. If you get the error "
 "\"Unable to Open Document\", you may wish to check whether the backend "
@@ -2724,11 +2715,6 @@ msgstr "Navegar con una lista de páginas o una tabla de contenidos"
 
 #. (itstool) path: section/p
 #: C/movingaround.page:136
-#| msgid ""
-#| "To make the side pane visible click the <gui>View options</gui> button in "
-#| "the top-right corner and select<gui>Side Pane</gui>, or press <key>F9</"
-#| "key> on the keyboard. You should see a preview of all of the pages in the "
-#| "document."
 msgid ""
 "To make the side pane visible, click the <gui>View options</gui> button in "
 "the top-right corner and select<gui>Side Pane</gui>, or press <key>F9</key> "
@@ -3221,6 +3207,11 @@ msgstr "Formatos de archivos de presentaciones soportados"
 msgid "The following file formats can be used for presentations:"
 msgstr ""
 "Se pueden usar los siguientes formatos de archivos para presentaciones:"
+
+#. (itstool) path: item/p
+#: C/presentations.page:71
+msgid "OpenOffice Presentation (.odp)"
+msgstr "Presentación de OpenOffice (.odp)"
 
 #. (itstool) path: info/desc
 #: C/print-2sided.page:8
@@ -4732,6 +4723,12 @@ msgstr ""
 "Alternativamente, puede contactar con el equipo de internacionalización "
 "usando su <link href=\"http://mail.gnome.org/mailman/listinfo/gnome-i18n"
 "\">lista de correo</link>."
+
+#~ msgid "Scalable Vector Graphics (.svg)"
+#~ msgstr "Gráfico vectorial escalable (.svg)"
+
+#~ msgid "Other Image Files (.gif, .jpeg, .png)"
+#~ msgstr "Otros formatos de imagen (.gif, .jpeg, .png)"
 
 #~ msgid ""
 #~ "Click <guiseq><gui>File</gui><gui>Print</gui></guiseq> and go to the "
