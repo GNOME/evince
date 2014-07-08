@@ -4,18 +4,19 @@
 #
 # Attila Hammer <hammera at pickup dot hu>, 2014.
 # Gabor Kelemen <kelemeng at gnome dot hu>, 2011, 2012, 2013, 2014.
+# Balázs Úr <urbalazs@gmail.com>, 2014.
 msgid ""
 msgstr ""
 "Project-Id-Version: evince master\n"
-"POT-Creation-Date: 2014-03-26 04:49+0000\n"
-"PO-Revision-Date: 2014-03-26 06:46+0100\n"
-"Last-Translator: Attila Hammer <hammera at pickup dot hu>\n"
+"POT-Creation-Date: 2014-07-08 03:41+0000\n"
+"PO-Revision-Date: 2014-07-08 16:13+0200\n"
+"Last-Translator: Balázs Úr <urbalazs@gmail.com>\n"
 "Language-Team: Hungarian <gnome-hu-list at gnome dot org>\n"
 "Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.5.4\n"
+"X-Generator: Lokalize 1.2\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. Put one translator per line, in the form NAME <EMAIL>, YEAR1, YEAR2
@@ -65,7 +66,7 @@ msgstr "Tiffany Antopolski"
 #: C/duplex-3pages.page:16 C/duplex-4pages.page:16 C/duplex-5pages.page:16
 #: C/duplex-6pages.page:16 C/duplex-7pages.page:16 C/duplex-8pages.page:16
 #: C/duplex-9pages.page:16 C/duplex-npages.page:16 C/editing.page:15
-#: C/formats.page:18 C/forms.page:15 C/forms-saving.page:23
+#: C/formats.page:22 C/forms.page:15 C/forms-saving.page:23
 #: C/invert-colors.page:23 C/noprint.page:14 C/openerror.page:17
 #: C/presentations.page:20 C/print-2sided.page:16 C/print-booklet.page:16
 #: C/print-differentsize.page:15 C/printing.page:22 C/print-order.page:16
@@ -413,7 +414,8 @@ msgstr ""
 "nem támogatja ezeket. Az Adobe Reader azonban igen."
 
 #. (itstool) path: credit/name
-#: C/bookmarks.page:17 C/finding.page:21 C/opening.page:18 C/password.page:16
+#: C/bookmarks.page:17 C/finding.page:21 C/formats.page:18 C/opening.page:18
+#: C/password.page:16
 msgid "Ekaterina Gerasimova"
 msgstr "Ekaterina Gerasimova"
 
@@ -788,13 +790,13 @@ msgid ""
 msgstr "A következő formátumú dokumentumokat konvertálhatja PDF-fájlokká:"
 
 #. (itstool) path: item/p
-#: C/convertpdf.page:32 C/formats.page:30 C/presentations.page:69
+#: C/convertpdf.page:32 C/formats.page:34 C/presentations.page:69
 #: C/printing.page:49
 msgid "Device Independent file format (.dvi)"
 msgstr "Device Independent file format (.dvi)"
 
 #. (itstool) path: item/p
-#: C/convertpdf.page:33 C/formats.page:34 C/presentations.page:73
+#: C/convertpdf.page:33 C/formats.page:38 C/presentations.page:73
 #: C/printing.page:52
 msgid "PostScript (.ps)"
 msgstr "PostScript (.ps)"
@@ -876,19 +878,19 @@ msgstr ""
 "A következő formátumú dokumentumokat konvertálhatja PostScript-fájlokká:"
 
 #. (itstool) path: item/p
-#: C/convertPostScript.page:32 C/formats.page:31 C/presentations.page:70
+#: C/convertPostScript.page:32 C/formats.page:35 C/presentations.page:70
 #: C/printing.page:50
 msgid "DjVu (.djvu, .djv)"
 msgstr "DjVu (.djvu, .djv)"
 
 #. (itstool) path: item/p
-#: C/convertPostScript.page:33 C/convertSVG.page:30 C/formats.page:33
+#: C/convertPostScript.page:33 C/convertSVG.page:30 C/formats.page:37
 #: C/presentations.page:72 C/printing.page:51
 msgid "Portable Document Format (.pdf)"
 msgstr "Portable Document Format (.pdf)"
 
 #. (itstool) path: item/p
-#: C/convertPostScript.page:34 C/formats.page:36 C/printing.page:53
+#: C/convertPostScript.page:34 C/printing.page:53
 msgid "Tagged Image File Format (.tiff, .tif)"
 msgstr "Tagged Image File Format (.tiff, .tif)"
 
@@ -1063,13 +1065,6 @@ msgstr ""
 
 #. (itstool) path: page/p
 #: C/develop.page:23
-#| msgid ""
-#| "If you would like to <link href=\"https://live.gnome.org/Evince\">help "
-#| "develop</link> the <app>Document Viewer</app>, you can get in touch with "
-#| "the developers using <link href=\"https://cbe005.chat.mibbit.com/?url=irc"
-#| "%3A%2F%2Firc.gnome.org%2Fevince\">irc</link>, or via our <link href="
-#| "\"https://mail.gnome.org/mailman/listinfo/evince-list\">mailing list</"
-#| "link>."
 msgid ""
 "If you would like to <link href=\"https://wiki.gnome.org/Apps/Evince\">help "
 "develop</link> the <app>Document Viewer</app>, you can get in touch with the "
@@ -2091,37 +2086,27 @@ msgid "PDF, PostScript and many others are."
 msgstr "A PDF, PostScript és sok más."
 
 #. (itstool) path: page/title
-#: C/formats.page:23
+#: C/formats.page:27
 msgid "Supported formats"
 msgstr "Támogatott formátumok"
 
 #. (itstool) path: page/p
-#: C/formats.page:25
+#: C/formats.page:29
 msgid "The <app>document viewer</app> supports the following formats:"
 msgstr "A <app>dokumentummegjelenítő</app> a következő formátumokat támogatja:"
 
 #. (itstool) path: item/p
-#: C/formats.page:29 C/presentations.page:68
+#: C/formats.page:33 C/presentations.page:68
 msgid "Comic Book Archive (.cbr and .cbz)"
-msgstr "Comic Book Archive (.cbr and .cbz)"
+msgstr "Comic Book Archive (.cbr és .cbz)"
 
 #. (itstool) path: item/p
-#: C/formats.page:32 C/presentations.page:71
-msgid "OpenOffice Presentation (.odp)"
-msgstr "OpenOffice Presentation (.odp)"
-
-#. (itstool) path: item/p
-#: C/formats.page:35
-msgid "Scalable Vector Graphics (.svg)"
-msgstr "Scalable Vector Graphics (.svg)"
-
-#. (itstool) path: item/p
-#: C/formats.page:37
-msgid "Other Image Files (.gif, .jpeg, .png)"
-msgstr "Egyéb képfájlok (.gif, .jpeg, .png)"
+#: C/formats.page:36
+msgid "Open XML Paper Specification (.oxps, .xps)"
+msgstr "Open XML Paper Specification (.oxps, .xps)"
 
 #. (itstool) path: note/p
-#: C/formats.page:40
+#: C/formats.page:41
 msgid ""
 "In some Linux distributions, not all formats are supported by default, so "
 "you might not be able to view all the formats listed above."
@@ -2130,7 +2115,7 @@ msgstr ""
 "így lehet, hogy nem lesz képes az összes fenti formátumot megjeleníteni."
 
 #. (itstool) path: note/p
-#: C/formats.page:43
+#: C/formats.page:44
 msgid ""
 "Support for a format is called a <em>backend</em>. If you get the error "
 "\"Unable to Open Document\", you may wish to check whether the backend "
@@ -2256,20 +2241,6 @@ msgstr ""
 #: C/forms-saving.page:77
 msgid "Copies of encrypted files can't be saved or printed."
 msgstr "A titkosított fájlok másolatai nem menthetők vagy nyomtathatók."
-
-#. (itstool) path: media
-#. This is a reference to an external file such as an image or video. When
-#. the file changes, the md5 hash will change to let you know you need to
-#. update your localized copy. The msgstr is not used at all. Set it to
-#. whatever you like once you have updated your copy of the file.
-#: C/index.page:7
-msgctxt "_"
-msgid ""
-"external ref='figures/evince-trail.png' "
-"md5='a1a70d04c37f05937d0b3e7a0705d2d4'"
-msgstr ""
-"external ref='figures/evince-trail.png' "
-"md5='a1a70d04c37f05937d0b3e7a0705d2d4'"
 
 #. (itstool) path: info/title
 #: C/index.page:8
@@ -2720,10 +2691,16 @@ msgstr "Navigálás oldallistával vagy tartalomjegyzékkel"
 
 #. (itstool) path: section/p
 #: C/movingaround.page:136
+#| msgid ""
+#| "To make the side pane visible <gui>View options</gui> button in the top-"
+#| "right corner and select<gui>Side Pane</gui>, or press <key>F9</key> on "
+#| "the keyboard. You should see a preview of all of the pages in the "
+#| "document."
 msgid ""
-"To make the side pane visible <gui>View options</gui> button in the top-"
-"right corner and select<gui>Side Pane</gui>, or press <key>F9</key> on the "
-"keyboard. You should see a preview of all of the pages in the document."
+"To make the side pane visible, click the <gui>View options</gui> button in "
+"the top-right corner and select<gui>Side Pane</gui>, or press <key>F9</key> "
+"on the keyboard. You should see a preview of all of the pages in the "
+"document."
 msgstr ""
 "Az oldalsáv megjelenítéséhez kattintson a jobb felső sarokban a "
 "<gui>Nézetbeállítások</gui> gombra, majd válassza az <gui>Oldalsáv</gui> "
@@ -3206,6 +3183,11 @@ msgstr "Támogatott bemutatófájl-formátumok"
 #: C/presentations.page:64
 msgid "The following file formats can be used for presentations:"
 msgstr "A következő fájlformátumok használhatók a bemutatókhoz:"
+
+#. (itstool) path: item/p
+#: C/presentations.page:71
+msgid "OpenOffice Presentation (.odp)"
+msgstr "OpenOffice Presentation (.odp)"
 
 #. (itstool) path: info/desc
 #: C/print-2sided.page:8
@@ -4096,7 +4078,7 @@ msgstr ""
 #: C/singlesided-9-12pages.page:7
 msgctxt "sort"
 msgid "09-Page or 12-Page Booklet"
-msgstr "09 vagy 12 oldalas füzet"
+msgstr "9 vagy 12 oldalas füzet"
 
 #. (itstool) path: info/desc
 #: C/singlesided-9-12pages.page:8
@@ -4337,12 +4319,14 @@ msgid ""
 "\n"
 "let g:Tex_ViewRule_pdf = 'evince_dbus.py'\n"
 "let g:Tex_DefaultTargetFormat = 'pdf'\n"
-"let g:Tex_CompileRule_pdf = 'pdflatex --synctex=1 -interaction=nonstopmode $*'\n"
+"let g:Tex_CompileRule_pdf = 'pdflatex --synctex=1 -interaction=nonstopmode "
+"$*'\n"
 msgstr ""
 "\n"
 "let g:Tex_ViewRule_pdf = 'evince_dbus.py'\n"
 "let g:Tex_DefaultTargetFormat = 'pdf'\n"
-"let g:Tex_CompileRule_pdf = 'pdflatex --synctex=1 -interaction=nonstopmode $*'\n"
+"let g:Tex_CompileRule_pdf = 'pdflatex --synctex=1 -interaction=nonstopmode "
+"$*'\n"
 
 #. (itstool) path: item/p
 #: C/synctex-editors.page:52
@@ -4683,11 +4667,6 @@ msgstr ""
 
 #. (itstool) path: page/p
 #: C/translate.page:30
-#| msgid ""
-#| "To start translating you will need to <link href=\"http:l10n.gnome.org"
-#| "\">create an account</link> and join the <link href=\"http://l10n.gnome."
-#| "org/teams/\">translation team</link> for your language. This will give "
-#| "you the ability to upload new translations."
 msgid ""
 "To start translating you will need to <link href=\"http://l10n.gnome.org"
 "\">create an account</link> and join the <link href=\"http://l10n.gnome.org/"
@@ -4724,6 +4703,20 @@ msgstr ""
 "is. A magyar csapat <link href=\"http://l10n.gnome.org/languages/hu/"
 "\">kezdőoldalán</link> megtalálja a magyar levelezőlista címét és a "
 "fordítások megkezdéséhez szükséges információkat."
+
+#~ msgid "Scalable Vector Graphics (.svg)"
+#~ msgstr "Scalable Vector Graphics (.svg)"
+
+#~ msgid "Other Image Files (.gif, .jpeg, .png)"
+#~ msgstr "Egyéb képfájlok (.gif, .jpeg, .png)"
+
+#~ msgctxt "_"
+#~ msgid ""
+#~ "external ref='figures/evince-trail.png' "
+#~ "md5='a1a70d04c37f05937d0b3e7a0705d2d4'"
+#~ msgstr ""
+#~ "external ref='figures/evince-trail.png' "
+#~ "md5='a1a70d04c37f05937d0b3e7a0705d2d4'"
 
 #~ msgid "There are two types of passwords:"
 #~ msgstr "Két fajta jelszó van:"
