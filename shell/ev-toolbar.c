@@ -265,7 +265,7 @@ ev_toolbar_constructed (GObject *object)
 
         /* Action Menu */
         menu = G_MENU_MODEL (gtk_builder_get_object (builder, "action-menu"));
-        button = ev_toolbar_create_menu_button (ev_toolbar, "emblem-system-symbolic",
+        button = ev_toolbar_create_menu_button (ev_toolbar, "open-menu-symbolic",
                                                 menu, GTK_ALIGN_END);
         gtk_widget_set_tooltip_text (button, _("File options"));
         ev_toolbar->priv->action_menu_button = button;
