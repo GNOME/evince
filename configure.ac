@@ -875,7 +875,6 @@ po/Makefile.in
 previewer/Makefile
 properties/Makefile
 shell/Makefile
-test/Makefile
 thumbnailer/Makefile
 ])
 
