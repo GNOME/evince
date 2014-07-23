@@ -3498,6 +3498,29 @@ ev_view_pend_cursor_blink (EvView *view)
 								 (GSourceFunc)blink_cb, view);
 }
 
+static void
+preload_pages_for_caret_navigation (EvView *view)
+{
+	gint n_pages;
+
+	if (!view->document)
+		return;
+
+	/* Upload to the cache the first and last pages,
+	 * this information is needed to position the cursor
+	 * in the beginning/end of the document, for example
+	 * when pressing <Ctr>Home/End
+	 */
+	n_pages = ev_document_get_n_pages (view->document);
+
+	/* For documents with at least 3 pages, those are already cached anyway */
+	if (n_pages > 0 && n_pages <= 3)
+		return;
+
+	ev_page_cache_ensure_page (view->page_cache, 0);
+	ev_page_cache_ensure_page (view->page_cache, n_pages - 1);
+}
+
 /**
  * ev_view_supports_caret_navigation:
  * @view: a #EvView
@@ -3538,6 +3561,9 @@ ev_view_set_caret_navigation_enabled (EvView   *view,
 
 	if (view->caret_enabled != enabled) {
 		view->caret_enabled = enabled;
+		if (view->caret_enabled)
+			preload_pages_for_caret_navigation (view);
+
 		ev_view_check_cursor_blink (view);
 
 		if (cursor_is_in_visible_page (view))
@@ -5366,6 +5392,23 @@ cursor_go_to_previous_page (EvView *view)
 }
 
 static gboolean
+cursor_go_to_document_start (EvView *view)
+{
+	view->cursor_page = 0;
+	return cursor_go_to_page_start (view);
+}
+
+static gboolean
+cursor_go_to_document_end (EvView *view)
+{
+	if (!view->document)
+		return FALSE;
+
+	view->cursor_page = ev_document_get_n_pages (view->document) - 1;
+	return cursor_go_to_page_end (view);
+}
+
+static gboolean
 cursor_backward_char (EvView *view)
 {
 	PangoLogAttr *log_attrs = NULL;
@@ -5670,6 +5713,12 @@ ev_view_move_cursor (EvView         *view,
 			cursor_go_to_line_end (view);
 		else if (count < 0)
 			cursor_go_to_line_start (view);
+		break;
+	case GTK_MOVEMENT_BUFFER_ENDS:
+		if (count > 0)
+			cursor_go_to_document_end (view);
+		else if (count < 0)
+			cursor_go_to_document_start (view);
 		break;
 	default:
 		g_assert_not_reached ();
@@ -6861,6 +6910,8 @@ ev_view_class_init (EvViewClass *class)
 	add_move_binding_keypad (binding_set, GDK_KEY_Down,  0, GTK_MOVEMENT_DISPLAY_LINES, 1);
 	add_move_binding_keypad (binding_set, GDK_KEY_Home,  0, GTK_MOVEMENT_DISPLAY_LINE_ENDS, -1);
 	add_move_binding_keypad (binding_set, GDK_KEY_End,   0, GTK_MOVEMENT_DISPLAY_LINE_ENDS, 1);
+	add_move_binding_keypad (binding_set, GDK_KEY_Home,  GDK_CONTROL_MASK, GTK_MOVEMENT_BUFFER_ENDS, -1);
+	add_move_binding_keypad (binding_set, GDK_KEY_End,   GDK_CONTROL_MASK, GTK_MOVEMENT_BUFFER_ENDS, 1);
 
         add_scroll_binding_keypad (binding_set, GDK_KEY_Left,  0, GTK_SCROLL_STEP_BACKWARD, GTK_ORIENTATION_HORIZONTAL);
         add_scroll_binding_keypad (binding_set, GDK_KEY_Right, 0, GTK_SCROLL_STEP_FORWARD, GTK_ORIENTATION_HORIZONTAL);
@@ -7255,7 +7306,10 @@ ev_view_document_changed_cb (EvDocumentModel *model,
 
 			ev_view_set_loading (view, FALSE);
 			setup_caches (view);
-                }
+
+			if (view->caret_enabled)
+				preload_pages_for_caret_navigation (view);
+		}
 
 		current_page = ev_document_model_get_page (model);
 		if (view->current_page != current_page) {
@@ -7264,7 +7318,6 @@ ev_view_document_changed_cb (EvDocumentModel *model,
 			view->pending_scroll = SCROLL_TO_KEEP_POSITION;
 			gtk_widget_queue_resize (GTK_WIDGET (view));
 		}
-
 		view_update_scale_limits (view);
 	}
 }
