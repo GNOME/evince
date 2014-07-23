@@ -17,10 +17,6 @@ SUBDIRS += \
 	po \
 	help
 
-if ENABLE_TESTS
-SUBDIRS += test
-endif
-
 if ENABLE_THUMBNAILER
 SUBDIRS += thumbnailer
 endif

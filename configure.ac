@@ -343,13 +343,6 @@ if test "x$enable_debug" = "xyes"; then
    DEBUG_FLAGS="-DEV_ENABLE_DEBUG"
 fi
 
-AC_ARG_ENABLE([tests],
-	AS_HELP_STRING([--enable-tests], [Enable the tests]),
-	[enable_tests=$enableval],
-	[enable_tests=yes])
-
-AM_CONDITIONAL(ENABLE_TESTS, test x$enable_tests = xyes)
-
 LIBDOCUMENT_CFLAGS="$LIBDOCUMENT_CFLAGS $DEBUG_FLAGS"
 LIBDOCUMENT_LIBS="$LIBDOCUMENT_LIBS"
 AC_SUBST(LIBDOCUMENT_CFLAGS)
@@ -898,7 +891,6 @@ Evince configure summary
 
 Platform .................:  $with_platform
 Debug mode ...............:  $enable_debug
-Tests ....................:  $enable_tests
 
 
 FRONTENDS
