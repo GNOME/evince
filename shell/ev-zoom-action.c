@@ -209,120 +209,34 @@ focus_out_cb (EvZoomAction *zoom_action)
 }
 
 static void
-popup_menu_show_cb (GtkWidget    *widget,
-                    EvZoomAction *zoom_action)
+popup_menu_closed (GtkWidget    *popup,
+                   EvZoomAction *zoom_action)
 {
-        zoom_action->priv->popup_shown = TRUE;
-}
-
-static void
-popup_menu_hide_cb (GtkWidget    *widget,
-                    EvZoomAction *zoom_action)
-{
-        zoom_action->priv->popup_shown = FALSE;
-}
-
-static void
-popup_menu_detached (EvZoomAction *zoom_action,
-                     GtkWidget    *popup)
-{
-        GtkWidget *toplevel;
-
         if (zoom_action->priv->popup != popup)
                 return;
 
-        toplevel = gtk_widget_get_toplevel (zoom_action->priv->popup);
-        g_signal_handlers_disconnect_by_func (toplevel,
-                                              popup_menu_show_cb,
-                                              zoom_action);
-        g_signal_handlers_disconnect_by_func (toplevel,
-                                              popup_menu_hide_cb,
-                                              zoom_action);
-
+        zoom_action->priv->popup_shown = FALSE;
         zoom_action->priv->popup = NULL;
 }
 
 static GtkWidget *
 get_popup (EvZoomAction *zoom_action)
 {
-        GtkWidget *toplevel;
+        GdkRectangle rect;
 
         if (zoom_action->priv->popup)
                 return zoom_action->priv->popup;
 
-        zoom_action->priv->popup = gtk_menu_new_from_model (G_MENU_MODEL (zoom_action->priv->menu));
-        gtk_menu_attach_to_widget (GTK_MENU (zoom_action->priv->popup),
-                                   GTK_WIDGET (zoom_action),
-                                   (GtkMenuDetachFunc)popup_menu_detached);
-        toplevel = gtk_widget_get_toplevel (zoom_action->priv->popup);
-        g_signal_connect (toplevel, "show",
-                          G_CALLBACK (popup_menu_show_cb),
+        zoom_action->priv->popup = gtk_popover_new_from_model (GTK_WIDGET (zoom_action),
+                                                               G_MENU_MODEL (zoom_action->priv->menu));
+        g_signal_connect (zoom_action->priv->popup, "closed",
+                          G_CALLBACK (popup_menu_closed),
                           zoom_action);
-        g_signal_connect (toplevel, "hide",
-                          G_CALLBACK (popup_menu_hide_cb),
-                          zoom_action);
+        gtk_entry_get_icon_area (GTK_ENTRY (zoom_action->priv->entry),
+                                 GTK_ENTRY_ICON_SECONDARY, &rect);
+        gtk_popover_set_pointing_to (GTK_POPOVER (zoom_action->priv->popup), &rect);
 
         return zoom_action->priv->popup;
-}
-
-
-static void
-menu_position_below (GtkMenu  *menu,
-                     gint     *x,
-                     gint     *y,
-                     gint     *push_in,
-                     gpointer  user_data)
-{
-        EvZoomAction  *zoom_action;
-        GtkWidget     *widget;
-        GtkAllocation  child_allocation;
-        GtkRequisition req;
-        GdkScreen     *screen;
-        gint           monitor_num;
-        GdkRectangle   monitor;
-        gint           sx = 0, sy = 0;
-
-        zoom_action = EV_ZOOM_ACTION (user_data);
-        widget = GTK_WIDGET (zoom_action);
-
-        gtk_widget_get_allocation (zoom_action->priv->entry, &child_allocation);
-
-        if (!gtk_widget_get_has_window (zoom_action->priv->entry)) {
-                sx += child_allocation.x;
-                sy += child_allocation.y;
-        }
-
-        gdk_window_get_root_coords (gtk_widget_get_window (zoom_action->priv->entry),
-                                    sx, sy, &sx, &sy);
-
-        gtk_widget_get_preferred_size (GTK_WIDGET (menu), &req, NULL);
-
-        if (gtk_widget_get_direction (widget) == GTK_TEXT_DIR_LTR)
-                *x = sx;
-        else
-                *x = sx + child_allocation.width - req.width;
-        *y = sy;
-
-        screen = gtk_widget_get_screen (widget);
-        monitor_num = gdk_screen_get_monitor_at_window (screen,
-                                                        gtk_widget_get_window (widget));
-        gdk_screen_get_monitor_workarea (screen, monitor_num, &monitor);
-
-        if (*x < monitor.x)
-                *x = monitor.x;
-        else if (*x + req.width > monitor.x + monitor.width)
-                *x = monitor.x + monitor.width - req.width;
-
-        if (monitor.y + monitor.height - *y - child_allocation.height >= req.height)
-                *y += child_allocation.height;
-        else if (*y - monitor.y >= req.height)
-                *y -= req.height;
-        else if (monitor.y + monitor.height - *y - child_allocation.height > *y - monitor.y)
-                *y += child_allocation.height;
-        else
-                *y -= req.height;
-
-        *push_in = FALSE;
 }
 
 static void
@@ -331,19 +245,11 @@ entry_icon_press_callback (GtkEntry            *entry,
                            GdkEventButton      *event,
                            EvZoomAction        *zoom_action)
 {
-        GtkWidget *menu;
-
         if (event->button != GDK_BUTTON_PRIMARY)
                 return;
 
-        menu = get_popup (zoom_action);
-        gtk_widget_set_size_request (menu,
-                                     gtk_widget_get_allocated_width (GTK_WIDGET (zoom_action)),
-                                     -1);
-
-        gtk_menu_popup (GTK_MENU (menu), NULL, NULL,
-                        menu_position_below, zoom_action,
-                        event->button, event->time);
+        gtk_widget_show (get_popup (zoom_action));
+        zoom_action->priv->popup_shown = TRUE;
 }
 
 static void
