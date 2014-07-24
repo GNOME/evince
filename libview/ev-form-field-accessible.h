@@ -51,5 +51,6 @@ GType ev_form_field_accessible_get_type (void);
 EvFormFieldAccessible *ev_form_field_accessible_new (EvPageAccessible *page,
 						     EvFormField      *form_field,
 						     EvRectangle      *area);
+EvFormField           *ev_form_field_accessible_get_field (EvFormFieldAccessible *accessible);
 
 #endif  /* __EV_FORM_FIELD_ACCESSIBLE_H__ */

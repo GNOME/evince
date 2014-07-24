@@ -239,3 +239,9 @@ ev_form_field_accessible_new (EvPageAccessible *page,
 
 	return EV_FORM_FIELD_ACCESSIBLE (atk_form_field);
 }
+
+EvFormField *
+ev_form_field_accessible_get_field (EvFormFieldAccessible *accessible)
+{
+	return accessible->priv->form_field;
+}

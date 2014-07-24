@@ -2156,6 +2156,9 @@ _ev_view_set_focused_element (EvView *view,
 	if (view->focused_element == element_mapping)
 		return;
 
+	if (view->accessible)
+		ev_view_accessible_set_focused_element (EV_VIEW_ACCESSIBLE (view->accessible), element_mapping, page);
+
 	if (ev_view_get_focused_area (view, &view_rect))
 		region = cairo_region_create_rectangle (&view_rect);
 
@@ -2311,6 +2314,10 @@ ev_view_form_field_button_create_widget (EvView      *view,
 {
 	EvMappingList *form_mapping;
 	EvMapping     *mapping;
+
+	/* We need to do this focus grab prior to setting the focused element for accessibility */
+	if (!gtk_widget_has_focus (GTK_WIDGET (view)))
+		gtk_widget_grab_focus (GTK_WIDGET (view));
 
 	form_mapping = ev_page_cache_get_form_field_mapping (view->page_cache,
 							     field->page->index);

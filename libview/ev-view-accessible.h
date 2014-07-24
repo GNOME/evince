@@ -65,6 +65,9 @@ void       _transform_doc_rect_to_atk_rect (EvViewAccessible *accessible,
 gboolean  ev_view_accessible_is_doc_rect_showing (EvViewAccessible *accessible,
 						  gint              page,
 						  EvRectangle      *doc_rect);
+void       ev_view_accessible_set_focused_element (EvViewAccessible *accessible,
+						   EvMapping        *new_focus,
+						   gint              new_focus_page);
 
 #endif  /* __EV_VIEW_ACCESSIBLE_H__ */
 
