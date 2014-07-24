@@ -86,7 +86,7 @@ ev_zoom_action_set_zoom_level (EvZoomAction *zoom_action,
         float  zoom_perc;
         guint  i;
 
-        for (i = 3; i < G_N_ELEMENTS (zoom_levels); i++) {
+        for (i = 0; i < G_N_ELEMENTS (zoom_levels); i++) {
                 if (ABS (zoom - zoom_levels[i].level) < EPSILON) {
                         gtk_entry_set_text (GTK_ENTRY (zoom_action->priv->entry),
                                             zoom_levels[i].name);
