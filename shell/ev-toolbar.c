@@ -211,25 +211,6 @@ ev_toolbar_constructed (GObject *object)
 
         builder = gtk_builder_new_from_resource ("/org/gnome/evince/shell/ui/menus.ui");
 
-        /* Navigation */
-        hbox = ev_toolbar_create_button_group (ev_toolbar);
-
-        button = ev_toolbar_create_button (ev_toolbar, "win.go-previous-page",
-                                           "go-up-symbolic", _("Previous Page"));
-        gtk_container_add (GTK_CONTAINER (hbox), button);
-        gtk_widget_show (button);
-
-        button = ev_toolbar_create_button (ev_toolbar, "win.go-next-page",
-                                           "go-down-symbolic", _("Next Page"));
-        gtk_container_add (GTK_CONTAINER (hbox), button);
-        gtk_widget_show (button);
-        if (rtl)
-                gtk_widget_set_margin_left (hbox, 6);
-        else
-                gtk_widget_set_margin_right (hbox, 6);
-        gtk_header_bar_pack_start (GTK_HEADER_BAR (ev_toolbar), hbox);
-        gtk_widget_show (hbox);
-
         /* Page selector */
         /* Use EvPageActionWidget for now, since the page selector action is also used by the previewer */
         tool_item = GTK_WIDGET (g_object_new (EV_TYPE_PAGE_ACTION_WIDGET, NULL));
