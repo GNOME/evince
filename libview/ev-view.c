@@ -925,6 +925,27 @@ compute_scroll_increment (EvView        *view,
 
 }
 
+static void
+ev_view_first_page (EvView *view)
+{
+	ev_document_model_set_page (view->model, 0);
+}
+
+static void
+ev_view_last_page (EvView *view)
+{
+	gint n_pages;
+
+	if (!view->document)
+		return;
+
+	n_pages = ev_document_get_n_pages (view->document);
+	if (n_pages <= 1)
+		return;
+
+	ev_document_model_set_page (view->model, n_pages - 1);
+}
+
 /**
  * ev_view_scroll:
  * @view: a #EvView
@@ -1021,6 +1042,18 @@ ev_view_scroll (EvView        *view,
 			break;
         	case GTK_SCROLL_STEP_UP:
 			value += step_increment / 10;
+			break;
+	        case GTK_SCROLL_START:
+			value = lower;
+			if (!first_page)
+				ev_view_first_page (view);
+			break;
+	        case GTK_SCROLL_END:
+			value = upper - page_size;
+			if (!last_page)
+				ev_view_last_page (view);
+			/* Changing pages causes the top to be shown. Here we want the bottom shown. */
+			view->pending_point.y = value;
 			break;
         	default:
 			break;
@@ -6832,6 +6865,8 @@ ev_view_class_init (EvViewClass *class)
         add_scroll_binding_keypad (binding_set, GDK_KEY_Down,  GDK_MOD1_MASK, GTK_SCROLL_STEP_UP, GTK_ORIENTATION_VERTICAL);
 	add_scroll_binding_keypad (binding_set, GDK_KEY_Page_Up, 0, GTK_SCROLL_PAGE_BACKWARD, GTK_ORIENTATION_VERTICAL);
 	add_scroll_binding_keypad (binding_set, GDK_KEY_Page_Down, 0, GTK_SCROLL_PAGE_FORWARD, GTK_ORIENTATION_VERTICAL);
+	add_scroll_binding_keypad (binding_set, GDK_KEY_Home, GDK_CONTROL_MASK, GTK_SCROLL_START, GTK_ORIENTATION_VERTICAL);
+	add_scroll_binding_keypad (binding_set, GDK_KEY_End, GDK_CONTROL_MASK, GTK_SCROLL_END, GTK_ORIENTATION_VERTICAL);
 
 	/* We can't use the bindings defined in GtkWindow for Space and Return,
 	 * because we also have those bindings for scrolling.

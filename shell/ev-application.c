@@ -1021,8 +1021,6 @@ ev_application_startup (GApplication *gapplication)
           "win.copy",                   "<Ctrl>C", "<Ctrl>Insert", NULL,
           "win.select-all",             "<Ctrl>A", NULL,
           "win.save-settings",          "<Ctrl>T", NULL,
-          "win.go-first-page",          "<Ctrl>Home", NULL,
-          "win.go-last-page",           "<Ctrl>End", NULL,
           "win.add-bookmark",           "<Ctrl>D", NULL,
           "win.close",                  "<Ctrl>W", NULL,
           "win.escape",                 "Escape", NULL,
