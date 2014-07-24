@@ -265,7 +265,7 @@ set_device_scale_on_surface (cairo_surface_t *surface,
 #ifdef HAVE_HIDPI_SUPPORT
         cairo_surface_set_device_scale (surface, device_scale, device_scale);
 #else
-        g_return_if_fail (device_scale != 1);
+        g_return_if_fail (device_scale == 1);
 #endif
 }
 
