@@ -83,24 +83,6 @@ ev_toolbar_set_button_action (EvToolbar   *ev_toolbar,
 }
 
 static GtkWidget *
-ev_toolbar_create_button (EvToolbar   *ev_toolbar,
-                          const gchar *action_name,
-                          const gchar *icon_name,
-                          const gchar *tooltip)
-{
-        GtkWidget *button = gtk_button_new ();
-        GtkWidget *image;
-
-        image = gtk_image_new_from_icon_name (icon_name, GTK_ICON_SIZE_MENU);
-
-        gtk_widget_set_valign (button, GTK_ALIGN_CENTER);
-        gtk_button_set_image (GTK_BUTTON (button), image);
-        ev_toolbar_set_button_action (ev_toolbar, GTK_BUTTON (button), action_name, tooltip);
-
-        return button;
-}
-
-static GtkWidget *
 ev_toolbar_create_toggle_button (EvToolbar *ev_toolbar,
                                  const gchar *action_name,
                                  const gchar *icon_name,
@@ -138,21 +120,6 @@ ev_toolbar_create_menu_button (EvToolbar   *ev_toolbar,
         gtk_widget_set_halign (GTK_WIDGET (popup), menu_align);
 
         return button;
-}
-
-static GtkWidget *
-ev_toolbar_create_button_group (EvToolbar *ev_toolbar)
-{
-        GtkStyleContext *style_context;
-        GtkWidget *box;
-
-        box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
-
-        style_context = gtk_widget_get_style_context (box);
-        gtk_style_context_add_class (style_context, GTK_STYLE_CLASS_RAISED);
-        gtk_style_context_add_class (style_context, GTK_STYLE_CLASS_LINKED);
-
-        return box;
 }
 
 static void
