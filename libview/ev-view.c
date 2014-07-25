@@ -4632,9 +4632,11 @@ position_caret_cursor_at_doc_point (EvView *view,
 	if (view->cursor_offset != offset || view->cursor_page != page) {
 		view->cursor_offset = offset;
 		view->cursor_page = page;
+
+		return TRUE;
 	}
 
-	return TRUE;
+	return FALSE;
 }
 
 static gboolean
@@ -5623,9 +5625,7 @@ cursor_clear_selection (EvView  *view,
 	GList                *l;
 	EvViewSelection      *selection;
 	cairo_rectangle_int_t rect;
-	cairo_region_t        *region, *tmp_region = NULL;
 	gint                  doc_x, doc_y;
-	GdkRectangle          area;
 
 	/* When clearing the selection, move the cursor to
 	 * the limits of the selection region.
@@ -5635,57 +5635,19 @@ cursor_clear_selection (EvView  *view,
 
 	l = forward ? g_list_last (view->selection_info.selections) : view->selection_info.selections;
 	selection = (EvViewSelection *)l->data;
+	if (!selection->covered_region || cairo_region_is_empty (selection->covered_region))
+		return FALSE;
 
-	region = selection->covered_region;
-
-	/* When the selection boundary is not in the current page,
-	   get the cairo region */
-	if (!region || cairo_region_is_empty (region)) {
-		EvRenderContext *rc;
-		EvPage          *page;
-
-		ev_document_doc_mutex_lock ();
-
-		page = ev_document_get_page (view->document, selection->page);
-		rc = ev_render_context_new (page, view->rotation, view->scale);
-		g_object_unref (page);
-
-		tmp_region = ev_selection_get_selection_region (EV_SELECTION (view->document),
-								rc,
-								EV_SELECTION_STYLE_GLYPH,
-								&(selection->rect));
-		g_object_unref (rc);
-
-		ev_document_doc_mutex_unlock();
-
-		if (!tmp_region || cairo_region_is_empty (tmp_region)) {
-			cairo_region_destroy (tmp_region);
-			return FALSE;
-		}
-
-		region = tmp_region;
-	}
-
-	cairo_region_get_rectangle (region,
-				    forward ? cairo_region_num_rectangles (region) - 1 : 0,
+	cairo_region_get_rectangle (selection->covered_region,
+				    forward ? cairo_region_num_rectangles (selection->covered_region) - 1 : 0,
 				    &rect);
-
-	if (tmp_region) {
-		cairo_region_destroy (tmp_region);
-		region = NULL;
-	}
 
 	if (!get_doc_point_from_offset (view, selection->page,
 					forward ? rect.x + rect.width : rect.x,
 					rect.y + (rect.height / 2), &doc_x, &doc_y))
 		return FALSE;
 
-	if (!position_caret_cursor_at_doc_point (view, selection->page, doc_x, doc_y))
-		return FALSE;
-
-	if (get_caret_cursor_area (view, view->cursor_page, view->cursor_offset, &area))
-		view->cursor_line_offset = area.x;
-
+	position_caret_cursor_at_doc_point (view, selection->page, doc_x, doc_y);
 	return TRUE;
 }
 
@@ -5699,9 +5661,6 @@ ev_view_move_cursor (EvView         *view,
 	GdkRectangle    prev_rect;
 	gint            prev_offset;
 	gint            prev_page;
-	GdkRectangle    select_start_rect;
-	gint            select_start_offset;
-	gint            select_start_page;
 	cairo_region_t *damage_region;
 	gboolean        clear_selections = FALSE;
 
@@ -5714,20 +5673,11 @@ ev_view_move_cursor (EvView         *view,
 	prev_offset = view->cursor_offset;
 	prev_page = view->cursor_page;
 
-	if (extend_selections) {
-		select_start_offset = view->cursor_offset;
-		select_start_page = view->cursor_page;
-	}
-
 	clear_selections = !extend_selections && view->selection_info.selections != NULL;
 
 	switch (step) {
 	case GTK_MOVEMENT_VISUAL_POSITIONS:
-		/* If we have a selection, we want the cursor to be moved to the limits
-		   of the selection. */
-		if (clear_selections) {
-			cursor_clear_selection (view, count > 0);
-		} else {
+		if (!clear_selections || !cursor_clear_selection (view, count > 0)) {
 			while (count > 0) {
 				cursor_forward_char (view);
 				count--;
@@ -5739,55 +5689,36 @@ ev_view_move_cursor (EvView         *view,
 		}
 		break;
 	case GTK_MOVEMENT_WORDS:
-		/* For this and the next movements, if we have a selection we want the movement
-		   to be relative to the selection limits. We only do the movement if the selection
-		   was sucessfully cleared */
-		if (!clear_selections || cursor_clear_selection (view, count > 0)) {
-			while (count > 0) {
-				cursor_forward_word_end (view);
-				count--;
-			}
-			while (count < 0) {
-				cursor_backward_word_start (view);
-				count++;
-			}
+		while (count > 0) {
+			cursor_forward_word_end (view);
+			count--;
+		}
+		while (count < 0) {
+			cursor_backward_word_start (view);
+			count++;
 		}
 		break;
 	case GTK_MOVEMENT_DISPLAY_LINES:
-		if (!clear_selections || cursor_clear_selection (view, count > 0)) {
-			while(count > 0) {
-				cursor_forward_line (view);
-				count--;
-			}
-			while (count < 0) {
-				cursor_backward_line (view);
-				count++;
-			}
+		while (count > 0) {
+			cursor_forward_line (view);
+			count--;
+		}
+		while (count < 0) {
+			cursor_backward_line (view);
+			count++;
 		}
 		break;
 	case GTK_MOVEMENT_DISPLAY_LINE_ENDS:
-		if (!clear_selections  || cursor_clear_selection (view, count > 0)) {
-			if (count > 0)
-				cursor_go_to_line_end (view);
-			else if (count < 0)
-				cursor_go_to_line_start (view);
-		}
+		if (count > 0)
+			cursor_go_to_line_end (view);
+		else if (count < 0)
+			cursor_go_to_line_start (view);
 		break;
 	case GTK_MOVEMENT_BUFFER_ENDS:
-		/* If there is a previous selection, move the cursor to the beginning of the
-		   selection (it will be used as the new selection starting point, when
-		   selecting from the current point to the beginning or to the end of the doc */
-		if (!clear_selections || cursor_clear_selection (view, FALSE)) {
-			if (extend_selections && (select_start_offset != view->cursor_offset ||
-						  select_start_page != view->cursor_page)) {
-				select_start_offset = view->cursor_offset;
-				select_start_page = view->cursor_page;
-			}
-			if (count > 0)
-				cursor_go_to_document_end (view);
-			else if (count < 0)
-				cursor_go_to_document_start (view);
-		}
+		if (count > 0)
+			cursor_go_to_document_end (view);
+		else if (count < 0)
+			cursor_go_to_document_start (view);
 		break;
 	default:
 		g_assert_not_reached ();
@@ -5842,11 +5773,8 @@ ev_view_move_cursor (EvView         *view,
 	if (extend_selections && EV_IS_SELECTION (view->document)) {
 		GdkPoint start_point, end_point;
 
-		if (!get_caret_cursor_area (view, select_start_page, select_start_offset, &select_start_rect))
-			return TRUE;
-
-		start_point.x = select_start_rect.x + view->scroll_x;
-		start_point.y = select_start_rect.y + (select_start_rect.height / 2) + view->scroll_y;
+		start_point.x = prev_rect.x + view->scroll_x;
+		start_point.y = prev_rect.y + (prev_rect.height / 2) + view->scroll_y;
 
 		end_point.x = rect.x;
 		end_point.y = rect.y + rect.height / 2;
