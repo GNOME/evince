@@ -7035,13 +7035,15 @@ ev_view_move_cursor (EvView         *view,
 		}
 		break;
 	case GTK_MOVEMENT_WORDS:
-		while (count > 0) {
-			cursor_forward_word_end (view);
-			count--;
-		}
-		while (count < 0) {
-			cursor_backward_word_start (view);
-			count++;
+		if (!clear_selections || cursor_clear_selection (view, count > 0)) {
+			while (count > 0) {
+				cursor_forward_word_end (view);
+				count--;
+			}
+			while (count < 0) {
+				cursor_backward_word_start (view);
+				count++;
+			}
 		}
 		break;
 	case GTK_MOVEMENT_DISPLAY_LINES:
