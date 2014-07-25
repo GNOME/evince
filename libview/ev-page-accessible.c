@@ -324,7 +324,6 @@ ev_page_accessible_get_n_children (AtkObject *accessible)
        EvPageAccessible *self;
 
        self = EV_PAGE_ACCESSIBLE (accessible);
-       ev_page_accessible_initialize_children (self);
 
        return self->priv->children == NULL ? 0 : self->priv->children->len;
 }
@@ -336,7 +335,6 @@ ev_page_accessible_ref_child (AtkObject *accessible,
        EvPageAccessible *self;
 
        self = EV_PAGE_ACCESSIBLE (accessible);
-       ev_page_accessible_initialize_children (self);
 
        g_return_val_if_fail (i >= 0 || i < self->priv->children->len, NULL);
 
@@ -1207,11 +1205,21 @@ ev_page_accessible_component_iface_init (AtkComponentIface *iface)
         iface->get_extents = ev_page_accessible_get_extents;
 }
 
+static void
+page_cached_cb (EvPageCache *cache,
+		gint page,
+		EvPageAccessible *self)
+{
+	if (page == self->priv->page)
+		ev_page_accessible_initialize_children (self);
+}
+
 EvPageAccessible *
 ev_page_accessible_new (EvViewAccessible *view_accessible,
                         gint              page)
 {
         EvPageAccessible *atk_page;
+	EvView *view;
 
 	g_return_val_if_fail (EV_IS_VIEW_ACCESSIBLE (view_accessible), NULL);
 	g_return_val_if_fail (page >= 0, NULL);
@@ -1220,6 +1228,14 @@ ev_page_accessible_new (EvViewAccessible *view_accessible,
 				 "view-accessible", view_accessible,
 				 "page", page,
 				 NULL);
+
+	view = ev_page_accessible_get_view (EV_PAGE_ACCESSIBLE (atk_page));
+	if (ev_page_cache_is_page_cached (view->page_cache, page))
+		ev_page_accessible_initialize_children (EV_PAGE_ACCESSIBLE (atk_page));
+	else
+		g_signal_connect (view->page_cache, "page-cached",
+				  G_CALLBACK (page_cached_cb),
+				  atk_page);
 
         return EV_PAGE_ACCESSIBLE (atk_page);
 }
