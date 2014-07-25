@@ -821,7 +821,6 @@ ev_recent_view_init (EvRecentView *ev_recent_view)
 
         gtk_widget_set_hexpand (GTK_WIDGET (ev_recent_view), TRUE);
         gtk_widget_set_vexpand (GTK_WIDGET (ev_recent_view), TRUE);
-        gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (ev_recent_view), GTK_SHADOW_IN);
         gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (ev_recent_view),
                                         GTK_POLICY_NEVER,
                                         GTK_POLICY_AUTOMATIC);
