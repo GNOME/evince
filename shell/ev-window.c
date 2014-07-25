@@ -7255,6 +7255,14 @@ ev_window_get_document_model (EvWindow *ev_window)
 	return ev_window->priv->model;
 }
 
+GtkWidget *
+ev_window_get_toolbar (EvWindow *ev_window)
+{
+	g_return_val_if_fail (EV_WINDOW (ev_window), NULL);
+
+	return ev_window->priv->toolbar;
+}
+
 void
 ev_window_focus_view (EvWindow *ev_window)
 {
