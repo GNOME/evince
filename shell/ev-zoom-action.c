@@ -138,18 +138,32 @@ document_changed_cb (EvDocumentModel *model,
 }
 
 static void
+ev_zoom_action_set_width_chars (EvZoomAction *zoom_action,
+                                gint          width)
+{
+        /* width + 3 (two decimals and the comma) + 3 (for the icon) */
+        gtk_entry_set_width_chars (GTK_ENTRY (zoom_action->priv->entry), width + 3 + 3);
+}
+
+static void
 ev_zoom_action_populate_free_zoom_section (EvZoomAction *zoom_action)
 {
         gdouble max_scale;
         guint   i;
+        gint    width = 0;
 
         max_scale = ev_document_model_get_max_scale (zoom_action->priv->model);
 
         for (i = 0; i < G_N_ELEMENTS (zoom_levels); i++) {
                 GMenuItem *item;
+                gint       length;
 
                 if (zoom_levels[i].level > max_scale)
                         break;
+
+                length = g_utf8_strlen (zoom_levels[i].name, -1);
+                if (length > width)
+                        width = length;
 
                 item = g_menu_item_new (zoom_levels[i].name, NULL);
                 g_menu_item_set_action_and_target (item, "win.zoom",
@@ -157,6 +171,8 @@ ev_zoom_action_populate_free_zoom_section (EvZoomAction *zoom_action)
                 g_menu_append_item (G_MENU (zoom_action->priv->zoom_free_section), item);
                 g_object_unref (item);
         }
+
+        ev_zoom_action_set_width_chars (zoom_action, width);
 }
 
 static void
@@ -291,28 +307,10 @@ ev_zoom_action_set_property (GObject      *object,
 static void
 setup_initial_entry_size (EvZoomAction *zoom_action)
 {
-        GMenuModel *menu;
-        guint       i;
-        gint        n_items;
-        gint        width = 0;
+        gint width;
 
-        menu = g_menu_model_get_item_link (G_MENU_MODEL (zoom_action->priv->menu),
-                                           ZOOM_MODES_SECTION, G_MENU_LINK_SECTION);
-
-        n_items = g_menu_model_get_n_items (menu);
-        for (i = 0; i < n_items; i++) {
-                GVariant *value;
-                gint      length;
-
-                value = g_menu_model_get_item_attribute_value (menu, i, G_MENU_ATTRIBUTE_LABEL, NULL);
-                length = g_utf8_strlen (g_variant_get_string (value, NULL), -1);
-                if (length > width)
-                        width = length;
-                g_variant_unref (value);
-        }
-        g_object_unref (menu);
-
-        gtk_entry_set_width_chars (GTK_ENTRY (zoom_action->priv->entry), width);
+        width = g_utf8_strlen (zoom_levels[G_N_ELEMENTS (zoom_levels) - 1].name, -1);
+        ev_zoom_action_set_width_chars (zoom_action, width);
 }
 
 static void
