@@ -213,7 +213,7 @@ ev_toolbar_constructed (GObject *object)
 
         button = ev_toolbar_create_button (ev_toolbar, "win.open",
                                            "document-open-symbolic",
-                                           _("Open an existenting document"));
+                                           _("Open an existing document"));
         ev_toolbar->priv->open_button = button;
         gtk_container_add (GTK_CONTAINER (ev_toolbar), button);
         if (rtl)
