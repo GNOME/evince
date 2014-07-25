@@ -6931,7 +6931,9 @@ cursor_clear_selection (EvView  *view,
 	GList                *l;
 	EvViewSelection      *selection;
 	cairo_rectangle_int_t rect;
+	cairo_region_t        *region, *tmp_region = NULL;
 	gint                  doc_x, doc_y;
+	GdkRectangle          area;
 
 	/* When clearing the selection, move the cursor to
 	 * the limits of the selection region.
@@ -6941,12 +6943,44 @@ cursor_clear_selection (EvView  *view,
 
 	l = forward ? g_list_last (view->selection_info.selections) : view->selection_info.selections;
 	selection = (EvViewSelection *)l->data;
-	if (!selection->covered_region || cairo_region_is_empty (selection->covered_region))
-		return FALSE;
 
-	cairo_region_get_rectangle (selection->covered_region,
-				    forward ? cairo_region_num_rectangles (selection->covered_region) - 1 : 0,
+	region = selection->covered_region;
+
+	/* The selection boundary is not in the current page */
+	if (!region || cairo_region_is_empty (region)) {
+		EvRenderContext *rc;
+		EvPage          *page;
+
+		ev_document_doc_mutex_lock ();
+
+		page = ev_document_get_page (view->document, selection->page);
+		rc = ev_render_context_new (page, view->rotation, view->scale);
+		g_object_unref (page);
+
+		tmp_region = ev_selection_get_selection_region (EV_SELECTION (view->document),
+								rc,
+								EV_SELECTION_STYLE_GLYPH,
+								&(selection->rect));
+		g_object_unref (rc);
+
+		ev_document_doc_mutex_unlock();
+
+		if (!tmp_region || cairo_region_is_empty (tmp_region)) {
+			cairo_region_destroy (tmp_region);
+			return FALSE;
+		}
+
+		region = tmp_region;
+	}
+
+	cairo_region_get_rectangle (region,
+				    forward ? cairo_region_num_rectangles (region) - 1 : 0,
 				    &rect);
+
+	if (tmp_region) {
+		cairo_region_destroy (tmp_region);
+		region = NULL;
+	}
 
 	if (!get_doc_point_from_offset (view, selection->page,
 					forward ? rect.x + rect.width : rect.x,
@@ -6954,6 +6988,10 @@ cursor_clear_selection (EvView  *view,
 		return FALSE;
 
 	position_caret_cursor_at_doc_point (view, selection->page, doc_x, doc_y);
+
+	if (get_caret_cursor_area (view, view->cursor_page, view->cursor_offset, &area))
+		view->cursor_line_offset = area.x;
+
 	return TRUE;
 }
 
