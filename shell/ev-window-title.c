@@ -108,7 +108,9 @@ static void
 ev_window_title_update (EvWindowTitle *window_title)
 {
 	GtkWindow *window = GTK_WINDOW (window_title->window);
+	GtkHeaderBar *bar = GTK_HEADER_BAR (ev_window_get_toolbar (EV_WINDOW (window)));
 	char *title = NULL, *password_title, *p;
+	char *subtitle = NULL, *title_header = NULL;
 
 	if (window_title->document != NULL) {
 		gchar *doc_title;
@@ -130,13 +132,12 @@ ev_window_title_update (EvWindowTitle *window_title)
 
 	if (title && window_title->uri) {
 		char *tmp_title;
-		char *filename = get_filename_from_uri (window_title->uri);
+		subtitle = get_filename_from_uri (window_title->uri);
 
 		ev_window_title_sanitize_title (window_title, &title);
-		tmp_title = g_strdup_printf ("%s — %s", filename, title);
-                g_free (title);
-                g_free (filename);
+		tmp_title = g_strdup_printf ("%s — %s", subtitle, title);
 
+		title_header = title;
                 title = tmp_title;
 	} else if (window_title->uri) {
 		title = get_filename_from_uri (window_title->uri);
@@ -152,6 +153,10 @@ ev_window_title_update (EvWindowTitle *window_title)
 	switch (window_title->type) {
 	case EV_WINDOW_TITLE_DOCUMENT:
 		gtk_window_set_title (window, title);
+		if (bar && title_header && subtitle) {
+			gtk_header_bar_set_title (bar, title_header);
+			gtk_header_bar_set_subtitle (bar, subtitle);
+		}
 		break;
 	case EV_WINDOW_TITLE_PASSWORD:
 		password_title = g_strdup_printf (_("%s — Password Required"), title);
@@ -161,6 +166,8 @@ ev_window_title_update (EvWindowTitle *window_title)
 	}
 
 	g_free (title);
+	g_free (subtitle);
+	g_free (title_header);
 }
 
 EvWindowTitle *
