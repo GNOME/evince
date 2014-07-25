@@ -128,7 +128,7 @@ static void       get_page_size_area_prepared_cb (GdkPixbufLoader *loader,
 static void       render_pixbuf_size_prepared_cb (GdkPixbufLoader *loader,
 						  gint width,
 						  gint height,
-						  gpointer data);
+						  EvRenderContext *rc);
 static char**     extract_argv                   (EvDocument *document,
 						  gint page);
 
@@ -677,7 +677,7 @@ comics_document_render_pixbuf (EvDocument      *document,
 		loader = gdk_pixbuf_loader_new ();
 		g_signal_connect (loader, "size-prepared",
 				  G_CALLBACK (render_pixbuf_size_prepared_cb), 
-				  &rc);
+				  rc);
 
 		while (outpipe >= 0) {
 			bytes = read (outpipe, buf, 4096);
@@ -740,9 +740,8 @@ static void
 render_pixbuf_size_prepared_cb (GdkPixbufLoader *loader,
 				gint             width,
 				gint             height,
-				gpointer         data)
+				EvRenderContext *rc)
 {
-	EvRenderContext *rc = data;
 	int scaled_width, scaled_height;
 
 	ev_render_context_compute_scaled_size (rc, width, height, &scaled_width, &scaled_height);
