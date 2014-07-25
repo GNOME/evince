@@ -131,14 +131,13 @@ ev_window_title_update (EvWindowTitle *window_title)
 	}
 
 	if (title && window_title->uri) {
-		char *tmp_title;
 		subtitle = get_filename_from_uri (window_title->uri);
 
 		ev_window_title_sanitize_title (window_title, &title);
-		tmp_title = g_strdup_printf ("%s — %s", subtitle, title);
 
 		title_header = title;
-                title = tmp_title;
+		title = g_strdup_printf ("%s — %s", subtitle, title);
+
 	} else if (window_title->uri) {
 		title = get_filename_from_uri (window_title->uri);
 	} else if (!title) {
