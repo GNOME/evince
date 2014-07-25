@@ -251,6 +251,11 @@ ev_sidebar_thumbnails_page_is_in_visible_range (EvSidebarThumbnails *sidebar,
                         return FALSE;
 
                 path = (GtkTreePath *)selection->data;
+
+                /* We don't handle or expect multiple selection. */
+                g_assert (selection->next == NULL);
+                g_list_free (selection);
+
                 if (!gtk_icon_view_get_visible_range (GTK_ICON_VIEW (sidebar->priv->icon_view), &start, &end)) {
                         gtk_tree_path_free (path);
                         return FALSE;
