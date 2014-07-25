@@ -31,6 +31,13 @@
 #include "ev-document-text.h"
 #include "ev-page-cache.h"
 
+enum {
+  PAGE_CACHED,
+  LAST_SIGNAL
+};
+
+static guint ev_page_cache_signals[LAST_SIGNAL] = {0};
+
 typedef struct _EvPageCacheData {
 	EvJob             *job;
 	gboolean           done : 1;
@@ -187,6 +194,15 @@ ev_page_cache_class_init (EvPageCacheClass *klass)
 	GObjectClass *g_object_class = G_OBJECT_CLASS (klass);
 
 	g_object_class->finalize = ev_page_cache_finalize;
+
+        ev_page_cache_signals [PAGE_CACHED] =
+                  g_signal_new ("page-cached",
+                                EV_TYPE_PAGE_CACHE,
+                                G_SIGNAL_RUN_LAST,
+                                0,
+                                NULL, NULL,
+                                g_cclosure_marshal_VOID__INT,
+                                G_TYPE_NONE, 1, G_TYPE_INT);
 }
 
 static EvJobPageDataFlags
@@ -309,6 +325,8 @@ job_page_data_finished_cb (EvJob       *job,
 
 	g_object_unref (data->job);
 	data->job = NULL;
+
+        g_signal_emit (cache, ev_page_cache_signals[PAGE_CACHED], job_data->page);
 }
 
 static void
