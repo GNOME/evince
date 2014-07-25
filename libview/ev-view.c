@@ -7047,13 +7047,15 @@ ev_view_move_cursor (EvView         *view,
 		}
 		break;
 	case GTK_MOVEMENT_DISPLAY_LINES:
-		while (count > 0) {
-			cursor_forward_line (view);
-			count--;
-		}
-		while (count < 0) {
-			cursor_backward_line (view);
-			count++;
+		if (!clear_selections || cursor_clear_selection (view, count > 0)) {
+			while(count > 0) {
+				cursor_forward_line (view);
+				count--;
+			}
+			while (count < 0) {
+				cursor_backward_line (view);
+				count++;
+			}
 		}
 		break;
 	case GTK_MOVEMENT_DISPLAY_LINE_ENDS:
