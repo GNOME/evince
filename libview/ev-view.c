@@ -7005,6 +7005,9 @@ ev_view_move_cursor (EvView         *view,
 	GdkRectangle    prev_rect;
 	gint            prev_offset;
 	gint            prev_page;
+	GdkRectangle    select_start_rect;
+	gint            select_start_offset;
+	gint            select_start_page;
 	cairo_region_t *damage_region;
 	gboolean        changed_page;
 	gboolean        clear_selections = FALSE;
@@ -7018,6 +7021,11 @@ ev_view_move_cursor (EvView         *view,
 
 	prev_offset = view->cursor_offset;
 	prev_page = view->cursor_page;
+
+	if (extend_selections) {
+		select_start_offset = view->cursor_offset;
+		select_start_page = view->cursor_page;
+	}
 
 	clear_selections = !extend_selections && view->selection_info.selections != NULL;
 
@@ -7067,6 +7075,16 @@ ev_view_move_cursor (EvView         *view,
 		}
 		break;
 	case GTK_MOVEMENT_BUFFER_ENDS:
+		/* If we are selecting and there is a previous selection,
+		   set the new selection's start point to the start point
+		   of the previous selection */
+		if (extend_selections && view->selection_info.selections != NULL) {
+			if (cursor_clear_selection (view, FALSE)) {
+				select_start_offset = view->cursor_offset;
+				select_start_page = view->cursor_page;
+			}
+		}
+
 		if (count > 0)
 			cursor_go_to_document_end (view);
 		else if (count < 0)
@@ -7157,8 +7175,11 @@ ev_view_move_cursor (EvView         *view,
 	if (extend_selections && EV_IS_SELECTION (view->document)) {
 		GdkPoint start_point, end_point;
 
-		start_point.x = prev_rect.x + view->scroll_x;
-		start_point.y = prev_rect.y + (prev_rect.height / 2) + view->scroll_y;
+		if (!get_caret_cursor_area (view, select_start_page, select_start_offset, &select_start_rect))
+			return TRUE;
+
+		start_point.x = select_start_rect.x + view->scroll_x;
+		start_point.y = select_start_rect.y + (select_start_rect.height / 2) + view->scroll_y;
 
 		end_point.x = rect.x;
 		end_point.y = rect.y + rect.height / 2;
