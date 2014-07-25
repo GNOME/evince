@@ -119,13 +119,17 @@ ev_page_action_widget_update_max_width (EvPageActionWidget *action_widget)
 
         max_page_label = ev_document_get_page_label (action_widget->document, n_pages - 1);
         max_page_numeric_label = g_strdup_printf ("%d", n_pages);
-        if (strcmp (max_page_label, max_page_numeric_label) != 0)
+        if (strcmp (max_page_label, max_page_numeric_label) != 0) {
                 max_label = g_strdup_printf (_("(%d of %d)"), n_pages, n_pages);
-        else
+                /* Do not take into account the parentheses for the size computation */
+                max_label_len = g_utf8_strlen (max_label, -1) - 2;
+        } else {
                 max_label = g_strdup_printf (_("of %d"), n_pages);
+                max_label_len = g_utf8_strlen (max_label, -1);
+        }
         g_free (max_page_label);
 
-        gtk_entry_set_width_chars (GTK_ENTRY (action_widget->label), strlen (max_label));
+        gtk_entry_set_width_chars (GTK_ENTRY (action_widget->label), max_label_len);
         g_free (max_label);
 
         max_label_len = ev_document_get_max_label_len (action_widget->document);
