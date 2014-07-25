@@ -62,8 +62,11 @@ typedef enum {
         /* Text Markup Annotations */
         EV_ANNOTATIONS_SAVE_TEXT_MARKUP_TYPE = 1 << 10,
 
+        /* Square/Circle Annotations */
+        EV_ANNOTATIONS_SAVE_INTERIOR_COLOR   = 1 << 11,
+
 	/* Save all */
-	EV_ANNOTATIONS_SAVE_ALL              = (1 << 11) - 1
+	EV_ANNOTATIONS_SAVE_ALL              = (1 << 12) - 1
 } EvAnnotationsSaveMask;
 
 typedef enum {

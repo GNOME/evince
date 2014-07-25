@@ -73,6 +73,22 @@ G_BEGIN_DECLS
 #define EV_IS_ANNOTATION_TEXT_MARKUP_CLASS(klass)   (G_TYPE_CHECK_CLASS_TYPE ((klass), EV_TYPE_ANNOTATION_TEXT_MARKUP))
 #define EV_ANNOTATION_TEXT_MARKUP_GET_CLASS(object) (G_TYPE_INSTANCE_GET_CLASS ((object), EV_TYPE_ANNOTATION_TEXT_MARKUP, EvAnnotationTextMarkupClass))
 
+/* EvAnnotationCircle */
+#define EV_TYPE_ANNOTATION_CIRCLE                 (ev_annotation_circle_get_type())
+#define EV_ANNOTATION_CIRCLE(object)              (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_ANNOTATION_CIRCLE, EvAnnotationCircle))
+#define EV_ANNOTATION_CIRCLE_CLASS(klass)         (G_TYPE_CHECK_CLASS_CAST((klass), EV_TYPE_ANNOTATION_CIRCLE, EvAnnotationCircleClass))
+#define EV_IS_ANNOTATION_CIRCLE(object)           (G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_ANNOTATION_CIRCLE))
+#define EV_IS_ANNOTATION_CIRCLE_CLASS(klass)      (G_TYPE_CHECK_CLASS_TYPE((klass), EV_TYPE_ANNOTATION_CIRCLE))
+#define EV_ANNOTATION_CIRCLE_GET_CLASS(object)    (G_TYPE_INSTANCE_GET_CLASS((object), EV_TYPE_ANNOTATION_CIRCLE, EvAnnotationCircleClass))
+
+/* EvAnnotationSquare */
+#define EV_TYPE_ANNOTATION_SQUARE                 (ev_annotation_square_get_type())
+#define EV_ANNOTATION_SQUARE(object)              (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_ANNOTATION_SQUARE, EvAnnotationSquare))
+#define EV_ANNOTATION_SQUARE_CLASS(klass)         (G_TYPE_CHECK_CLASS_CAST((klass), EV_TYPE_ANNOTATION_SQUARE, EvAnnotationSquareClass))
+#define EV_IS_ANNOTATION_SQUARE(object)           (G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_ANNOTATION_SQUARE))
+#define EV_IS_ANNOTATION_SQUARE_CLASS(klass)      (G_TYPE_CHECK_CLASS_TYPE((klass), EV_TYPE_ANNOTATION_SQUARE))
+#define EV_ANNOTATION_SQUARE_GET_CLASS(object)    (G_TYPE_INSTANCE_GET_CLASS((object), EV_TYPE_ANNOTATION_SQUARE, EvAnnotationSquareClass))
+
 typedef struct _EvAnnotation                EvAnnotation;
 typedef struct _EvAnnotationClass           EvAnnotationClass;
 
@@ -81,6 +97,12 @@ typedef struct _EvAnnotationMarkupInterface EvAnnotationMarkupInterface;
 
 typedef struct _EvAnnotationText            EvAnnotationText;
 typedef struct _EvAnnotationTextClass       EvAnnotationTextClass;
+
+typedef struct _EvAnnotationCircle          EvAnnotationCircle;
+typedef struct _EvAnnotationCircleClass     EvAnnotationCircleClass;
+
+typedef struct _EvAnnotationSquare          EvAnnotationSquare;
+typedef struct _EvAnnotationSquareClass     EvAnnotationSquareClass;
 
 typedef struct _EvAnnotationAttachment      EvAnnotationAttachment;
 typedef struct _EvAnnotationAttachmentClass EvAnnotationAttachmentClass;
@@ -91,6 +113,8 @@ typedef struct _EvAnnotationTextMarkupClass EvAnnotationTextMarkupClass;
 typedef enum {
 	EV_ANNOTATION_TYPE_UNKNOWN,
 	EV_ANNOTATION_TYPE_TEXT,
+	EV_ANNOTATION_TYPE_CIRCLE,
+	EV_ANNOTATION_TYPE_SQUARE,
 	EV_ANNOTATION_TYPE_ATTACHMENT,
 	EV_ANNOTATION_TYPE_TEXT_MARKUP
 } EvAnnotationType;
@@ -222,6 +246,27 @@ gboolean             ev_annotation_text_get_is_open          (EvAnnotationText  
 EV_PUBLIC
 gboolean             ev_annotation_text_set_is_open          (EvAnnotationText       *text,
 							      gboolean                is_open);
+
+/* EvAnnotationCircle */
+GType                ev_annotation_circle_get_type               (void) G_GNUC_CONST;
+EvAnnotation        *ev_annotation_circle_new                    (EvPage                 *page);
+void                 ev_annotation_circle_get_interior_rgba      (EvAnnotationCircle     *annot,
+                                                                  GdkRGBA                *rgba);
+gboolean             ev_annotation_circle_set_interior_rgba      (EvAnnotationCircle     *annot,
+                                                                  const GdkRGBA          *rgba);
+gboolean             ev_annotation_circle_get_has_interior_color (EvAnnotationCircle     *annot);
+gboolean             ev_annotation_circle_set_has_interior_color (EvAnnotationCircle     *annot,
+                                                                  const gboolean          has_interior_color);
+/* EvAnnotationSquare */
+GType                ev_annotation_square_get_type               (void) G_GNUC_CONST;
+EvAnnotation        *ev_annotation_square_new                    (EvPage                 *page);
+void                 ev_annotation_square_get_interior_rgba      (EvAnnotationSquare     *annot,
+                                                                  GdkRGBA                *rgba);
+gboolean             ev_annotation_square_set_interior_rgba      (EvAnnotationSquare     *annot,
+                                                                  const GdkRGBA          *rgba);
+gboolean             ev_annotation_square_get_has_interior_color (EvAnnotationSquare     *annot);
+gboolean             ev_annotation_square_set_has_interior_color (EvAnnotationSquare     *annot,
+                                                                  const gboolean          has_interior_color);
 
 /* EvAnnotationAttachment */
 EV_PUBLIC

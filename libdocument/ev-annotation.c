@@ -57,6 +57,28 @@ struct _EvAnnotationTextClass {
 	EvAnnotationClass parent_class;
 };
 
+struct _EvAnnotationCircle {
+	EvAnnotation parent;
+
+	GdkRGBA      interior_rgba;
+	gboolean     has_interior_color;
+};
+
+struct _EvAnnotationCircleClass {
+	EvAnnotationClass parent_class;
+};
+
+struct _EvAnnotationSquare {
+	EvAnnotation parent;
+
+	GdkRGBA      interior_rgba;
+	gboolean     has_interior_color;
+};
+
+struct _EvAnnotationSquareClass {
+	EvAnnotationClass parent_class;
+};
+
 struct _EvAnnotationAttachment {
 	EvAnnotation parent;
 
@@ -79,6 +101,8 @@ struct _EvAnnotationTextMarkupClass {
 
 static void ev_annotation_markup_default_init           (EvAnnotationMarkupInterface *iface);
 static void ev_annotation_text_markup_iface_init        (EvAnnotationMarkupInterface *iface);
+static void ev_annotation_circle_markup_iface_init     (EvAnnotationMarkupInterface *iface);
+static void ev_annotation_square_markup_iface_init     (EvAnnotationMarkupInterface *iface);
 static void ev_annotation_attachment_markup_iface_init  (EvAnnotationMarkupInterface *iface);
 static void ev_annotation_text_markup_markup_iface_init (EvAnnotationMarkupInterface *iface);
 
@@ -111,6 +135,18 @@ enum {
 	PROP_TEXT_IS_OPEN
 };
 
+/* EvAnnotationCircle */
+enum {
+	PROP_CIRCLE_INTERIOR_RGBA = PROP_MARKUP_POPUP_IS_OPEN + 1,
+	PROP_CIRCLE_HAS_INTERIOR_COLOR
+};
+
+/* EvAnnotationSquare */
+enum {
+	PROP_SQUARE_INTERIOR_RGBA = PROP_MARKUP_POPUP_IS_OPEN + 1,
+	PROP_SQUARE_HAS_INTERIOR_COLOR
+};
+
 /* EvAnnotationAttachment */
 enum {
 	PROP_ATTACHMENT_ATTACHMENT = PROP_MARKUP_POPUP_IS_OPEN + 1
@@ -127,6 +163,16 @@ G_DEFINE_TYPE_WITH_CODE (EvAnnotationText, ev_annotation_text, EV_TYPE_ANNOTATIO
 	 {
 		 G_IMPLEMENT_INTERFACE (EV_TYPE_ANNOTATION_MARKUP,
 					ev_annotation_text_markup_iface_init);
+	 });
+G_DEFINE_TYPE_WITH_CODE (EvAnnotationCircle, ev_annotation_circle, EV_TYPE_ANNOTATION,
+	 {
+		 G_IMPLEMENT_INTERFACE (EV_TYPE_ANNOTATION_MARKUP,
+					ev_annotation_circle_markup_iface_init);
+	 });
+G_DEFINE_TYPE_WITH_CODE (EvAnnotationSquare, ev_annotation_square, EV_TYPE_ANNOTATION,
+	 {
+		 G_IMPLEMENT_INTERFACE (EV_TYPE_ANNOTATION_MARKUP,
+					ev_annotation_square_markup_iface_init);
 	 });
 G_DEFINE_TYPE_WITH_CODE (EvAnnotationAttachment, ev_annotation_attachment, EV_TYPE_ANNOTATION,
 	 {
@@ -1256,6 +1302,362 @@ ev_annotation_text_set_is_open (EvAnnotationText *text,
 	g_object_notify (G_OBJECT (text), "is_open");
 
 	return TRUE;
+}
+
+/* EvAnnotationCircle */
+static void
+ev_annotation_circle_init (EvAnnotationCircle *annot)
+{
+	EV_ANNOTATION (annot)->type = EV_ANNOTATION_TYPE_CIRCLE;
+}
+
+static void
+ev_annotation_circle_set_property (GObject      *object,
+                                   guint         prop_id,
+                                   const GValue *value,
+                                   GParamSpec   *pspec)
+{
+	EvAnnotationCircle *annot = EV_ANNOTATION_CIRCLE (object);
+
+	if (prop_id < PROP_CIRCLE_INTERIOR_RGBA) {
+		ev_annotation_markup_set_property (object, prop_id, value, pspec);
+		return;
+	}
+
+	switch (prop_id) {
+        case PROP_CIRCLE_INTERIOR_RGBA:
+                ev_annotation_circle_set_interior_rgba (annot, g_value_get_boxed (value));
+                break;
+        case PROP_CIRCLE_HAS_INTERIOR_COLOR:
+                ev_annotation_circle_set_has_interior_color (annot, g_value_get_boolean (value));
+                break;
+        default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+	}
+}
+
+static void
+ev_annotation_circle_get_property (GObject    *object,
+				   guint       prop_id,
+				   GValue     *value,
+				   GParamSpec *pspec)
+{
+	EvAnnotationCircle *annot = EV_ANNOTATION_CIRCLE (object);
+
+	if (prop_id < PROP_CIRCLE_INTERIOR_RGBA) {
+		ev_annotation_markup_get_property (object, prop_id, value, pspec);
+		return;
+	}
+
+	switch (prop_id) {
+        case PROP_CIRCLE_INTERIOR_RGBA:
+                g_value_set_boxed (value, &annot->interior_rgba);
+                break;
+        case PROP_CIRCLE_HAS_INTERIOR_COLOR:
+                g_value_set_boolean (value, ev_annotation_circle_get_has_interior_color (annot));
+                break;
+        default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+	}
+}
+
+static void
+ev_annotation_circle_class_init (EvAnnotationCircleClass *klass)
+{
+	GObjectClass *g_object_class = G_OBJECT_CLASS (klass);
+
+	ev_annotation_markup_class_install_properties (g_object_class);
+
+	g_object_class->set_property = ev_annotation_circle_set_property;
+	g_object_class->get_property = ev_annotation_circle_get_property;
+
+	g_object_class_install_property (g_object_class,
+	                                 PROP_CIRCLE_INTERIOR_RGBA,
+	                                 g_param_spec_boxed ("interior-rgba", NULL, NULL,
+	                                                     GDK_TYPE_RGBA,
+	                                                     G_PARAM_READWRITE |
+	                                                     G_PARAM_STATIC_STRINGS));
+
+        g_object_class_install_property (g_object_class,
+                                         PROP_CIRCLE_HAS_INTERIOR_COLOR,
+                                         g_param_spec_boolean ("has-interior-color",
+			                                       "Has interior color",
+			                                        "Whether the geometry annotation has "
+			                                        "interior color set",
+			                                        FALSE,
+			                                        G_PARAM_READWRITE |
+                                                                G_PARAM_STATIC_STRINGS));
+}
+
+static void
+ev_annotation_circle_markup_iface_init (EvAnnotationMarkupInterface *iface)
+{
+}
+
+EvAnnotation *
+ev_annotation_circle_new (EvPage *page)
+{
+	return EV_ANNOTATION (g_object_new (EV_TYPE_ANNOTATION_CIRCLE,
+					    "page", page,
+					    NULL));
+}
+
+/**
+ * ev_annotation_circle_get_interior_rgba:
+ * @annot: an #EvAnnotationCircle
+ * @rgba: (out): a #GdkRGBA to be filled with the annotation color
+ *
+ * Gets the interior color of @annot.
+ */
+void
+ev_annotation_circle_get_interior_rgba (EvAnnotationCircle *annot,
+                                        GdkRGBA            *rgba)
+{
+        g_return_if_fail (EV_IS_ANNOTATION_CIRCLE (annot));
+        g_return_if_fail (rgba != NULL);
+
+        *rgba = annot->interior_rgba;
+}
+
+/**
+ * ev_annotation_circle_set_interior_rgba:
+ * @annot: an #EvAnnotationCircle
+ * @rgba: a #GdkRGBA
+ *
+ * Set the interior color of the annotation to @rgba.
+ *
+ * Returns: %TRUE if the color has been changed, %FALSE otherwise
+ */
+gboolean
+ev_annotation_circle_set_interior_rgba (EvAnnotationCircle *annot,
+                                        const GdkRGBA      *rgba)
+{
+        g_return_val_if_fail (EV_IS_ANNOTATION_CIRCLE (annot), FALSE);
+        g_return_val_if_fail (rgba != NULL, FALSE);
+
+        if (gdk_rgba_equal (rgba, &annot->interior_rgba))
+                return FALSE;
+
+        annot->interior_rgba = *rgba;
+        g_object_notify (G_OBJECT (annot), "interior-rgba");
+
+        return TRUE;
+}
+
+/**
+ * ev_annotation_circle_get_has_interior_rgba:
+ * @annot: an #EvAnnotationCircle
+ *
+ * Gets whether @annot has interior color.
+ * Returns: %TRUE if the annotation has interior color, %FALSE otherwise
+ */
+gboolean
+ev_annotation_circle_get_has_interior_color (EvAnnotationCircle *annot)
+{
+        g_return_val_if_fail (EV_IS_ANNOTATION_CIRCLE (annot), FALSE);
+
+        return annot->has_interior_color;
+}
+
+/**
+ * ev_annotation_circle_set_has_interior_rgba:
+ * @annot: an #EvAnnotationCircle
+ *
+ * Sets whether @annot has interior color.
+ * Returns: %TRUE if the has interior color property has changed,
+ * %FALSE otherwise
+ */
+gboolean
+ev_annotation_circle_set_has_interior_color (EvAnnotationCircle *annot,
+                                             const gboolean      has_interior_color)
+{
+        g_return_val_if_fail (EV_IS_ANNOTATION_CIRCLE (annot), FALSE);
+
+        if (has_interior_color ==  annot->has_interior_color)
+                return FALSE;
+
+        annot->has_interior_color = has_interior_color ;
+        g_object_notify (G_OBJECT (annot), "has-interior-color");
+
+        return TRUE;
+}
+
+/* EvAnnotationSquare */
+static void
+ev_annotation_square_init (EvAnnotationSquare *annot)
+{
+	EV_ANNOTATION (annot)->type = EV_ANNOTATION_TYPE_SQUARE;
+}
+
+static void
+ev_annotation_square_set_property (GObject      *object,
+                                   guint         prop_id,
+                                   const GValue *value,
+                                   GParamSpec   *pspec)
+{
+	EvAnnotationSquare *annot = EV_ANNOTATION_SQUARE (object);
+
+	if (prop_id < PROP_SQUARE_INTERIOR_RGBA) {
+		ev_annotation_markup_set_property (object, prop_id, value, pspec);
+		return;
+	}
+
+	switch (prop_id) {
+        case PROP_SQUARE_INTERIOR_RGBA:
+                ev_annotation_square_set_interior_rgba (annot, g_value_get_boxed (value));
+                break;
+        case PROP_SQUARE_HAS_INTERIOR_COLOR:
+                ev_annotation_square_set_has_interior_color (annot, g_value_get_boolean (value));
+                break;
+        default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+	}
+}
+
+static void
+ev_annotation_square_get_property (GObject    *object,
+				   guint       prop_id,
+				   GValue     *value,
+				   GParamSpec *pspec)
+{
+	EvAnnotationSquare *annot = EV_ANNOTATION_SQUARE (object);
+
+	if (prop_id < PROP_SQUARE_INTERIOR_RGBA) {
+		ev_annotation_markup_get_property (object, prop_id, value, pspec);
+		return;
+	}
+
+	switch (prop_id) {
+        case PROP_SQUARE_INTERIOR_RGBA:
+                g_value_set_boxed (value, &annot->interior_rgba);
+                break;
+        case PROP_SQUARE_HAS_INTERIOR_COLOR:
+                g_value_set_boolean (value, annot->has_interior_color);
+                break;
+        default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+	}
+}
+
+static void
+ev_annotation_square_class_init (EvAnnotationSquareClass *klass)
+{
+	GObjectClass *g_object_class = G_OBJECT_CLASS (klass);
+
+	ev_annotation_markup_class_install_properties (g_object_class);
+
+	g_object_class->set_property = ev_annotation_square_set_property;
+	g_object_class->get_property = ev_annotation_square_get_property;
+
+	g_object_class_install_property (g_object_class,
+	                                 PROP_SQUARE_INTERIOR_RGBA,
+	                                 g_param_spec_boxed ("interior-rgba", NULL, NULL,
+	                                                     GDK_TYPE_RGBA,
+	                                                     G_PARAM_READWRITE |
+	                                                     G_PARAM_STATIC_STRINGS));
+
+	g_object_class_install_property (g_object_class,
+	                                 PROP_SQUARE_HAS_INTERIOR_COLOR,
+	                                 g_param_spec_boolean ("has-interior-color",
+			                                       "Has interior color",
+			                                        "Whether the geometry annotation has "
+			                                        "interior color set",
+			                                        FALSE,
+			                                        G_PARAM_READWRITE |
+	                                                        G_PARAM_STATIC_STRINGS));
+}
+
+static void
+ev_annotation_square_markup_iface_init (EvAnnotationMarkupInterface *iface)
+{
+}
+
+EvAnnotation *
+ev_annotation_square_new (EvPage *page)
+{
+	return EV_ANNOTATION (g_object_new (EV_TYPE_ANNOTATION_SQUARE,
+					    "page", page,
+					    NULL));
+}
+
+/**
+ * ev_annotation_square_get_interior_rgba:
+ * @annot: an #EvAnnotationSquare
+ * @rgba: (out): a #GdkRGBA to be filled with the annotation color
+ *
+ * Gets the interior color of @annot.
+ */
+void
+ev_annotation_square_get_interior_rgba (EvAnnotationSquare *annot,
+                                        GdkRGBA            *rgba)
+{
+        g_return_if_fail (EV_IS_ANNOTATION_SQUARE (annot));
+        g_return_if_fail (rgba != NULL);
+
+        *rgba = annot->interior_rgba;
+}
+
+/**
+ * ev_annotation_square_set_interior_rgba:
+ * @annot: an #EvAnnotationSquare
+ * @rgba: a #GdkRGBA
+ *
+ * Set the interior color of the annotation to @rgba.
+ *
+ * Returns: %TRUE if the color has been changed, %FALSE otherwise
+ */
+gboolean
+ev_annotation_square_set_interior_rgba (EvAnnotationSquare *annot,
+                                        const GdkRGBA      *rgba)
+{
+        g_return_val_if_fail (EV_IS_ANNOTATION_SQUARE (annot), FALSE);
+        g_return_val_if_fail (rgba != NULL, FALSE);
+
+        if (gdk_rgba_equal (rgba, &annot->interior_rgba))
+                return FALSE;
+
+        annot->interior_rgba = *rgba;
+        g_object_notify (G_OBJECT (annot), "interior-rgba");
+
+        return TRUE;
+}
+
+/**
+ * ev_annotation_square_get_has_interior_rgba:
+ * @annot: an #EvAnnotationSquare
+ *
+ * Gets whether @annot has interior color.
+ * Returns: %TRUE if the annotation has interior color, %FALSE otherwise
+ */
+gboolean
+ev_annotation_square_get_has_interior_color (EvAnnotationSquare *annot)
+{
+        g_return_val_if_fail (EV_IS_ANNOTATION_SQUARE (annot), FALSE);
+
+        return annot->has_interior_color;
+}
+
+/**
+ * ev_annotation_square_set_has_interior_rgba:
+ * @annot: an #EvAnnotationSquare
+ *
+ * Sets whether @annot has interior color.
+ * Returns: %TRUE if the has interior color property has changed,
+ * %FALSE otherwise
+ */
+gboolean
+ev_annotation_square_set_has_interior_color (EvAnnotationSquare *annot,
+                                             const gboolean      has_interior_color)
+{
+        g_return_val_if_fail (EV_IS_ANNOTATION_SQUARE (annot), FALSE);
+
+        if (has_interior_color ==  annot->has_interior_color)
+                return FALSE;
+
+        annot->has_interior_color = has_interior_color ;
+        g_object_notify (G_OBJECT (annot), "has-interior-color");
+
+        return TRUE;
 }
 
 /* EvAnnotationAttachment */
