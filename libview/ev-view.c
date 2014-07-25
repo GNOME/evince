@@ -115,6 +115,7 @@ typedef struct {
 
 #define ANNOT_POPUP_WINDOW_DEFAULT_WIDTH  200
 #define ANNOT_POPUP_WINDOW_DEFAULT_HEIGHT 150
+#define ANNOTATION_ICON_SIZE 24
 
 /*** Scrolling ***/
 static void       view_update_range_and_current_page         (EvView             *view);
@@ -2094,7 +2095,7 @@ ev_view_handle_cursor_over_xy (EvView *view, gint x, gint y)
 	if (view->cursor == EV_VIEW_CURSOR_HIDDEN)
 		return;
 
-	if (view->adding_annot) {
+	if (view->adding_annot_info.adding_annot && !view->adding_annot_info.annot) {
 		if (view->cursor != EV_VIEW_CURSOR_ADD)
 			ev_view_set_cursor (view, EV_VIEW_CURSOR_ADD);
 		return;
@@ -3294,13 +3295,11 @@ ev_view_handle_annotation (EvView       *view,
 }
 
 static void
-ev_view_create_annotation (EvView          *view,
-			   EvAnnotationType annot_type,
-			   gint             x,
-			   gint             y)
+ev_view_create_annotation (EvView *view)
 {
 	EvAnnotation   *annot;
-	GdkPoint        point;
+	EvPoint         start;
+	EvPoint         end;
 	GdkRectangle    page_area;
 	GtkBorder       border;
 	EvRectangle     doc_rect, popup_rect;
@@ -3309,20 +3308,22 @@ ev_view_create_annotation (EvView          *view,
 	GdkRectangle    view_rect;
 	cairo_region_t *region;
 
-	point.x = x;
-	point.y = y;
 	ev_view_get_page_extents (view, view->current_page, &page_area, &border);
-	_ev_view_transform_view_point_to_doc_point (view, &point, &page_area, &border,
-						    &doc_rect.x1, &doc_rect.y1);
-	doc_rect.x2 = doc_rect.x1 + 24;
-	doc_rect.y2 = doc_rect.y1 + 24;
+	_ev_view_transform_view_point_to_doc_point (view, &view->adding_annot_info.start, &page_area, &border,
+						    &start.x, &start.y);
+	_ev_view_transform_view_point_to_doc_point (view, &view->adding_annot_info.stop, &page_area, &border,
+						    &end.x, &end.y);
 
 	ev_document_doc_mutex_lock ();
 	page = ev_document_get_page (view->document, view->current_page);
-	switch (annot_type) {
-	case EV_ANNOTATION_TYPE_TEXT:
-		annot = ev_annotation_text_new (page);
-		break;
+        switch (view->adding_annot_info.type) {
+        case EV_ANNOTATION_TYPE_TEXT:
+                doc_rect.x1 = end.x;
+                doc_rect.y1 = end.y;
+                doc_rect.x2 = doc_rect.x1 + ANNOTATION_ICON_SIZE;
+                doc_rect.y2 = doc_rect.y1 + ANNOTATION_ICON_SIZE;
+                annot = ev_annotation_text_new (page);
+                break;
 	case EV_ANNOTATION_TYPE_ATTACHMENT:
 		/* TODO */
 		g_object_unref (page);
@@ -3374,7 +3375,8 @@ ev_view_create_annotation (EvView          *view,
 	ev_view_reload_page (view, view->current_page, region);
 	cairo_region_destroy (region);
 
-	g_signal_emit (view, signals[SIGNAL_ANNOT_ADDED], 0, annot);
+	view->adding_annot_info.annot = annot;
+	ev_view_set_cursor (view, EV_VIEW_CURSOR_NORMAL);
 }
 
 void
@@ -3396,11 +3398,11 @@ ev_view_begin_add_annotation (EvView          *view,
 	if (annot_type == EV_ANNOTATION_TYPE_UNKNOWN)
 		return;
 
-	if (view->adding_annot)
+	if (view->adding_annot_info.adding_annot)
 		return;
 
-	view->adding_annot = TRUE;
-	view->adding_annot_type = annot_type;
+	view->adding_annot_info.adding_annot = TRUE;
+	view->adding_annot_info.type = annot_type;
 	ev_view_set_cursor (view, EV_VIEW_CURSOR_ADD);
 }
 
@@ -3409,10 +3411,11 @@ ev_view_cancel_add_annotation (EvView *view)
 {
 	gint x, y;
 
-	if (!view->adding_annot)
+	if (!view->adding_annot_info.adding_annot)
 		return;
 
-	view->adding_annot = FALSE;
+	view->adding_annot_info.adding_annot = FALSE;
+	g_assert(!view->adding_annot_info.annot);
 	ev_document_misc_get_pointer_position (GTK_WIDGET (view), &x, &y);
 	ev_view_handle_cursor_over_xy (view, x, y);
 }
@@ -4942,11 +4945,20 @@ ev_view_button_press_event (GtkWidget      *widget,
 	view->pressed_button = event->button;
 	view->selection_info.in_drag = FALSE;
 
-	if (view->adding_annot)
-		return FALSE;
-
 	if (view->scroll_info.autoscrolling)
 		return TRUE;
+
+	if (view->adding_annot_info.adding_annot && !view->adding_annot_info.annot) {
+		if (event->button != 1)
+			return TRUE;
+
+		view->adding_annot_info.start.x = event->x + view->scroll_x;
+		view->adding_annot_info.start.y = event->y + view->scroll_y;
+		view->adding_annot_info.stop = view->adding_annot_info.start;
+		ev_view_create_annotation (view);
+
+		return TRUE;
+	}
 
 	switch (event->button) {
 	        case 1: {
@@ -5330,25 +5342,27 @@ ev_view_motion_notify_event (GtkWidget      *widget,
 		if (view->rotation != 0)
 			return FALSE;
 
-		/* Schedule timeout to scroll during selection and additionally 
-		 * scroll once to allow arbitrary speed. */
-		if (!view->selection_scroll_id)
-		    view->selection_scroll_id = g_timeout_add (SCROLL_TIME,
-							       (GSourceFunc)selection_scroll_timeout_cb,
-							       view);
-		else 
-		    selection_scroll_timeout_cb (view);
+		if (!view->adding_annot_info.adding_annot) {
+			/* Schedule timeout to scroll during selection and additionally
+			 * scroll once to allow arbitrary speed. */
+			if (!view->selection_scroll_id)
+				view->selection_scroll_id = g_timeout_add (SCROLL_TIME,
+									   (GSourceFunc)selection_scroll_timeout_cb,
+									   view);
+			else
+				selection_scroll_timeout_cb (view);
 
-		view->motion.x = x + view->scroll_x;
-		view->motion.y = y + view->scroll_y;
+			view->motion.x = x + view->scroll_x;
+			view->motion.y = y + view->scroll_y;
 
-		/* Queue an idle to handle the motion.  We do this because	
-		 * handling any selection events in the motion could be slower	
-		 * than new motion events reach us.  We always put it in the	
-		 * idle to make sure we catch up and don't visibly lag the	
-		 * mouse. */
-		if (!view->selection_update_id)
-			view->selection_update_id = g_idle_add ((GSourceFunc)selection_update_idle_cb, view);
+			/* Queue an idle to handle the motion.  We do this because
+			 * handling any selection events in the motion could be slower
+			 * than new motion events reach us.  We always put it in the
+			 * idle to make sure we catch up and don't visibly lag the
+			 * mouse. */
+			if (!view->selection_update_id)
+				view->selection_update_id = g_idle_add ((GSourceFunc)selection_update_idle_cb, view);
+		}
 
 		return TRUE;
 	case 2:
@@ -5449,15 +5463,18 @@ ev_view_button_release_event (GtkWidget      *widget,
 
 	view->drag_info.in_drag = FALSE;
 
-	if (view->adding_annot && view->pressed_button == 1) {
-		view->adding_annot = FALSE;
+	if (view->adding_annot_info.adding_annot) {
+		g_assert (view->pressed_button == 1);
+		g_assert (view->adding_annot_info.annot);
+
+		view->adding_annot_info.stop.x = event->x + view->scroll_x;
+		view->adding_annot_info.stop.y = event->y + view->scroll_y;
+		g_signal_emit (view, signals[SIGNAL_ANNOT_ADDED], 0, view->adding_annot_info.annot);
+
+		view->adding_annot_info.adding_annot = FALSE;
+		view->adding_annot_info.annot = NULL;
 		ev_view_handle_cursor_over_xy (view, event->x, event->y);
 		view->pressed_button = -1;
-
-		ev_view_create_annotation (view,
-					   view->adding_annot_type,
-					   event->x + view->scroll_x,
-					   event->y + view->scroll_y);
 
 		return FALSE;
 	}
