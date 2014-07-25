@@ -7059,10 +7059,12 @@ ev_view_move_cursor (EvView         *view,
 		}
 		break;
 	case GTK_MOVEMENT_DISPLAY_LINE_ENDS:
-		if (count > 0)
-			cursor_go_to_line_end (view);
-		else if (count < 0)
-			cursor_go_to_line_start (view);
+		if (!clear_selections  || cursor_clear_selection (view, count > 0)) {
+			if (count > 0)
+				cursor_go_to_line_end (view);
+			else if (count < 0)
+				cursor_go_to_line_start (view);
+		}
 		break;
 	case GTK_MOVEMENT_BUFFER_ENDS:
 		if (count > 0)
