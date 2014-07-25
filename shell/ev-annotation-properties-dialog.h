@@ -48,5 +48,8 @@ gdouble                    ev_annotation_properties_dialog_get_opacity          
 gboolean                   ev_annotation_properties_dialog_get_popup_is_open    (EvAnnotationPropertiesDialog *dialog);
 EvAnnotationTextIcon       ev_annotation_properties_dialog_get_text_icon        (EvAnnotationPropertiesDialog *dialog);
 EvAnnotationTextMarkupType ev_annotation_properties_dialog_get_text_markup_type (EvAnnotationPropertiesDialog *dialog);
+void                       ev_annotation_properties_dialog_get_interior_rgba    (EvAnnotationPropertiesDialog *dialog,
+                                                                                 GdkRGBA                      *rgba);
+gboolean                   ev_annotation_properties_dialog_get_has_interior_color (EvAnnotationPropertiesDialog *dialog);
 
 G_END_DECLS

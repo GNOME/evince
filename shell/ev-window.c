@@ -7081,6 +7081,38 @@ ev_window_popup_cmd_annot_properties (GSimpleAction *action,
 			mask |= EV_ANNOTATIONS_SAVE_TEXT_MARKUP_TYPE;
 	}
 
+        if (EV_IS_ANNOTATION_SQUARE (annot)) {
+                EvAnnotationSquare *annot_square;
+                GdkRGBA             interior_rgba;
+                gboolean            has_interior_color;
+
+                ev_annotation_properties_dialog_get_interior_rgba (dialog, &interior_rgba);
+                has_interior_color = ev_annotation_properties_dialog_get_has_interior_color (dialog);
+
+                annot_square = EV_ANNOTATION_SQUARE (annot);
+                if (ev_annotation_square_set_has_interior_color (annot_square, has_interior_color)) {
+                        mask |= EV_ANNOTATIONS_SAVE_INTERIOR_COLOR;
+        }
+                if (ev_annotation_square_set_interior_rgba (annot_square, &interior_rgba))
+                        mask |= EV_ANNOTATIONS_SAVE_INTERIOR_COLOR;
+        }
+
+        if (EV_IS_ANNOTATION_CIRCLE (annot)) {
+                EvAnnotationCircle *annot_circle;
+                GdkRGBA             interior_rgba;
+                gboolean            has_interior_color;
+
+                ev_annotation_properties_dialog_get_interior_rgba (dialog, &interior_rgba);
+                has_interior_color = ev_annotation_properties_dialog_get_has_interior_color (dialog);
+
+                annot_circle = EV_ANNOTATION_CIRCLE (annot);
+                if (ev_annotation_circle_set_has_interior_color (annot_circle, has_interior_color)) {
+                        mask |= EV_ANNOTATIONS_SAVE_INTERIOR_COLOR;
+        }
+                if (ev_annotation_circle_set_interior_rgba (annot_circle, &interior_rgba))
+                        mask |= EV_ANNOTATIONS_SAVE_INTERIOR_COLOR;
+        }
+
 	if (mask != EV_ANNOTATIONS_SAVE_NONE) {
 		ev_document_doc_mutex_lock ();
 		ev_document_annotations_save_annotation (EV_DOCUMENT_ANNOTATIONS (priv->document),
