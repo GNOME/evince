@@ -250,7 +250,6 @@ ev_page_action_widget_init (EvPageActionWidget *action_widget)
 	gtk_widget_show (hbox);
 
         gtk_widget_set_sensitive (GTK_WIDGET (action_widget), FALSE);
-	gtk_widget_show (GTK_WIDGET (action_widget));
 }
 
 static void
