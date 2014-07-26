@@ -108,8 +108,8 @@ static void
 ev_window_title_update (EvWindowTitle *window_title)
 {
 	GtkWindow *window = GTK_WINDOW (window_title->window);
-	GtkHeaderBar *bar = GTK_HEADER_BAR (ev_window_get_toolbar (EV_WINDOW (window)));
-	char *title = NULL, *password_title, *p;
+	GtkHeaderBar *toolbar = GTK_HEADER_BAR (ev_window_get_toolbar (EV_WINDOW (window)));
+	char *title = NULL, *p;
 	char *subtitle = NULL, *title_header = NULL;
 
 	if (window_title->document != NULL) {
@@ -152,15 +152,21 @@ ev_window_title_update (EvWindowTitle *window_title)
 	switch (window_title->type) {
 	case EV_WINDOW_TITLE_DOCUMENT:
 		gtk_window_set_title (window, title);
-		if (bar && title_header && subtitle) {
-			gtk_header_bar_set_title (bar, title_header);
-			gtk_header_bar_set_subtitle (bar, subtitle);
+		if (title_header && subtitle) {
+			gtk_header_bar_set_title (toolbar, title_header);
+			gtk_header_bar_set_subtitle (toolbar, subtitle);
 		}
 		break;
-	case EV_WINDOW_TITLE_PASSWORD:
-		password_title = g_strdup_printf (_("%s — Password Required"), title);
+	case EV_WINDOW_TITLE_PASSWORD: {
+                gchar *password_title;
+
+		password_title = g_strdup_printf ("%s — %s", title, _("Password Required"));
 		gtk_window_set_title (window, password_title);
 		g_free (password_title);
+
+                gtk_header_bar_set_title (toolbar, _("Password Required"));
+                gtk_header_bar_set_subtitle (toolbar, title);
+        }
 		break;
 	}
 
