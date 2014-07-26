@@ -6818,7 +6818,6 @@ ev_window_init (EvWindow *ev_window)
 	ev_window->priv->page_mode = PAGE_MODE_DOCUMENT;
 	ev_window->priv->chrome = EV_CHROME_NORMAL;
         ev_window->priv->presentation_mode_inhibit_id = 0;
-	ev_window->priv->title = ev_window_title_new (ev_window);
 
 	ev_window->priv->history = ev_history_new (ev_window->priv->model);
 	g_signal_connect (ev_window->priv->history, "activate-link",
@@ -6859,6 +6858,9 @@ ev_window_init (EvWindow *ev_window)
 	gtk_header_bar_set_show_close_button (GTK_HEADER_BAR (ev_window->priv->toolbar), TRUE);
 	gtk_window_set_titlebar (GTK_WINDOW (ev_window), ev_window->priv->toolbar);
 	gtk_widget_show (ev_window->priv->toolbar);
+
+	/* Window title */
+	ev_window->priv->title = ev_window_title_new (ev_window);
 
 	g_signal_connect (ev_toolbar_get_page_selector (EV_TOOLBAR (ev_window->priv->toolbar)),
 			  "activate-link",
