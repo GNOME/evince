@@ -30,7 +30,8 @@ typedef struct _EvWindowTitle EvWindowTitle;
 typedef enum
 {
 	EV_WINDOW_TITLE_DOCUMENT,
-	EV_WINDOW_TITLE_PASSWORD
+	EV_WINDOW_TITLE_PASSWORD,
+        EV_WINDOW_TITLE_RECENT
 } EvWindowTitleType;
 
 EvWindowTitle *ev_window_title_new	    (EvWindow *window);

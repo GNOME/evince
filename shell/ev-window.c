@@ -7205,6 +7205,7 @@ ev_window_show_recent_view (EvWindow *ev_window)
 
 	gtk_widget_show (GTK_WIDGET (ev_window->priv->recent_view));
 	ev_toolbar_set_mode (toolbar, EV_TOOLBAR_MODE_RECENT_VIEW);
+	ev_window_title_set_type (ev_window->priv->title, EV_WINDOW_TITLE_RECENT);
 
 	ev_window_update_actions_sensitivity (ev_window);
 }
@@ -7219,6 +7220,7 @@ ev_window_hide_recent_view (EvWindow *ev_window)
 
 	gtk_widget_show (ev_window->priv->hpaned);
 	ev_toolbar_set_mode (toolbar, EV_TOOLBAR_MODE_NORMAL);
+	ev_window_title_set_type (ev_window->priv->title, EV_WINDOW_TITLE_DOCUMENT);
 
 	ev_window_update_actions_sensitivity (ev_window);
 }

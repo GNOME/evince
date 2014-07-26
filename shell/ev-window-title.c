@@ -113,6 +113,12 @@ ev_window_title_update (EvWindowTitle *window_title)
 	char *title = NULL, *p;
 	char *subtitle = NULL, *title_header = NULL;
 
+        if (window_title->type == EV_WINDOW_TITLE_RECENT) {
+                gtk_header_bar_set_subtitle (toolbar, NULL);
+                gtk_window_set_title (window, _("Recent Documents"));
+                return;
+        }
+
 	if (window_title->doc_title && window_title->uri) {
                 title = g_strdup (window_title->doc_title);
                 ev_window_title_sanitize_title (window_title, &title);
@@ -152,6 +158,9 @@ ev_window_title_update (EvWindowTitle *window_title)
                 gtk_header_bar_set_subtitle (toolbar, title);
         }
 		break;
+        case EV_WINDOW_TITLE_RECENT:
+                g_assert_not_reached ();
+                break;
 	}
 
 	g_free (title);
