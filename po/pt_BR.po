@@ -22,9 +22,9 @@ msgstr ""
 "Project-Id-Version: evince\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evince&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2014-07-25 18:08+0000\n"
-"PO-Revision-Date: 2014-07-25 16:33-0300\n"
-"Last-Translator: Enrico Nicoletto <liverig@gmail.com>\n"
+"POT-Creation-Date: 2014-07-28 03:40+0000\n"
+"PO-Revision-Date: 2014-07-28 03:23-0300\n"
+"Last-Translator: Rafael Ferreira <rafael.f.f1@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <gnome-pt_br-list@gnome.org>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
@@ -297,7 +297,7 @@ msgstr "Adiciona suporte para leitura de documentos XPS"
 
 #. Manually set name and icon
 #: ../data/evince.desktop.in.in.h:1 ../shell/ev-application.c:1000
-#: ../shell/ev-window-title.c:144 ../shell/main.c:298
+#: ../shell/ev-window-title.c:139 ../shell/main.c:298
 msgid "Document Viewer"
 msgstr "Visualizador de documentos"
 
@@ -1370,10 +1370,13 @@ msgstr "Não foi possível salvar o anexo."
 msgid "Save Attachment"
 msgstr "Salvar anexo"
 
-#: ../shell/ev-window-title.c:157
-#, c-format
-msgid "%s — Password Required"
-msgstr "%s — Senha requerida"
+#: ../shell/ev-window-title.c:118
+msgid "Recent Documents"
+msgstr "Documentos recentes"
+
+#: ../shell/ev-window-title.c:153 ../shell/ev-window-title.c:157
+msgid "Password Required"
+msgstr "Senha requerida"
 
 #: ../shell/ev-zoom-action.c:48
 msgid "50%"
@@ -1520,7 +1523,6 @@ msgid "Rotate _Right"
 msgstr "Girar à _direita"
 
 #: ../shell/evince-menus.ui.h:10
-#| msgid "_First Page"
 msgid "First Page"
 msgstr "Primeira página"
 
@@ -1533,7 +1535,6 @@ msgid "Next Page"
 msgstr "Próxima página"
 
 #: ../shell/evince-menus.ui.h:13
-#| msgid "_Last Page"
 msgid "Last Page"
 msgstr "Última página"
 
@@ -1665,3 +1666,6 @@ msgstr ""
 "Há suporte aos seguintes formatos de documentos: PDF, PS, EPS, XPS, DjVu, "
 "TIFF, DVI (com SyncTeX) e arquivos de revistas em quadrinhos (CBR, CBT, CBZ, "
 "CB7)."
+
+#~ msgid "%s — Password Required"
+#~ msgstr "%s — Senha requerida"
