@@ -2304,6 +2304,11 @@ ev_view_form_field_button_toggle (EvView      *view,
 						       !state);
 	field_button->state = !state;
 
+	if (view->accessible)
+		ev_view_accessible_update_element_state (EV_VIEW_ACCESSIBLE (view->accessible),
+							 ev_mapping_list_find (forms_mapping, field),
+							 field->page->index);
+
 	ev_view_reload_page (view, field->page->index, region);
 	cairo_region_destroy (region);
 }

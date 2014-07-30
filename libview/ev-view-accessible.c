@@ -615,3 +615,14 @@ ev_view_accessible_set_focused_element (EvViewAccessible *accessible,
 	if (accessible->priv->focused_element)
 		atk_object_notify_state_change (accessible->priv->focused_element, ATK_STATE_FOCUSED, TRUE);
 }
+
+void
+ev_view_accessible_update_element_state (EvViewAccessible *accessible,
+					 EvMapping        *element,
+					 gint              element_page)
+{
+	EvPageAccessible *page;
+
+	page = g_ptr_array_index (accessible->priv->children, element_page);
+	ev_page_accessible_update_element_state (page, element);
+}

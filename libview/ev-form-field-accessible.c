@@ -32,6 +32,8 @@ struct _EvFormFieldAccessiblePrivate {
 	gchar            *name;
 	gint              start_index;
 	gint              end_index;
+
+	AtkStateSet      *saved_states;
 };
 
 static void ev_form_field_accessible_component_iface_init (AtkComponentIface *iface);
@@ -308,6 +310,33 @@ ev_form_field_accessible_ref_state_set (AtkObject *atk_object)
 	return copy_set;
 }
 
+void
+ev_form_field_accessible_update_state (EvFormFieldAccessible *accessible)
+{
+	AtkObject *atk_object;
+	AtkStateSet *states;
+	AtkStateSet *changed_states;
+	gint i;
+
+	atk_object = ATK_OBJECT (accessible);
+	states = ev_form_field_accessible_ref_state_set (atk_object);
+	changed_states = atk_state_set_xor_sets (accessible->priv->saved_states, states);
+	if (changed_states && !atk_state_set_is_empty (accessible->priv->saved_states)) {
+		for (i = 0; i < ATK_STATE_LAST_DEFINED; i++) {
+			if (atk_state_set_contains_state (changed_states, i))
+				atk_object_notify_state_change (atk_object, i, atk_state_set_contains_state (states, i));
+		}
+	}
+
+	g_object_unref (accessible->priv->saved_states);
+
+	atk_state_set_clear_states (changed_states);
+	accessible->priv->saved_states = atk_state_set_or_sets (changed_states, states);
+
+	g_object_unref (changed_states);
+	g_object_unref (states);
+}
+
 static void
 ev_form_field_accessible_finalize (GObject *object)
 {
@@ -315,6 +344,7 @@ ev_form_field_accessible_finalize (GObject *object)
 
 	g_object_unref (priv->form_field);
 	g_free (priv->name);
+	g_object_unref (priv->saved_states);
 
 	G_OBJECT_CLASS (ev_form_field_accessible_parent_class)->finalize (object);
 }
@@ -353,6 +383,8 @@ ev_form_field_accessible_new (EvPageAccessible *page,
 	atk_form_field->priv->page = page;
 	atk_form_field->priv->form_field = g_object_ref (form_field);
 	atk_form_field->priv->area = *area;
+	atk_form_field->priv->saved_states = atk_state_set_new ();
+	ev_form_field_accessible_update_state (atk_form_field);
 
 	return EV_FORM_FIELD_ACCESSIBLE (atk_form_field);
 }

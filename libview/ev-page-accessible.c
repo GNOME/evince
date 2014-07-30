@@ -1245,3 +1245,17 @@ ev_page_accessible_get_accessible_for_mapping (EvPageAccessible *page_accessible
 
 	return NULL;
 }
+
+void
+ev_page_accessible_update_element_state (EvPageAccessible *page_accessible,
+					 EvMapping        *mapping)
+{
+	AtkObject *child;
+
+	child = ev_page_accessible_get_accessible_for_mapping (page_accessible, mapping);
+	if (!child)
+		return;
+
+	if (EV_IS_FORM_FIELD_ACCESSIBLE (child))
+		ev_form_field_accessible_update_state (EV_FORM_FIELD_ACCESSIBLE (child));
+}
