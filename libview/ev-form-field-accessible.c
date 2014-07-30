@@ -28,6 +28,10 @@ struct _EvFormFieldAccessiblePrivate {
 	EvPageAccessible *page;
 	EvFormField      *form_field;
 	EvRectangle       area;
+
+	gchar            *name;
+	gint              start_index;
+	gint              end_index;
 };
 
 static void ev_form_field_accessible_component_iface_init (AtkComponentIface *iface);
@@ -76,6 +80,115 @@ ev_form_field_accessible_component_iface_init (AtkComponentIface *iface)
 {
 	iface->get_extents = ev_form_field_accessible_get_extents;
 	iface->grab_focus = ev_form_field_accessible_grab_focus;
+}
+
+static gboolean
+get_indices_in_parent (AtkObject *atk_object,
+		       gint *start,
+		       gint *end)
+{
+	EvFormFieldAccessiblePrivate *priv;
+	EvView *view;
+	EvRectangle *areas = NULL;
+	guint n_areas = 0;
+	gint last_zero_sized_index = -1;
+	gint i;
+
+	priv = EV_FORM_FIELD_ACCESSIBLE (atk_object)->priv;
+	if (priv->start_index != -1 && priv->end_index != -1) {
+		*start = priv->start_index;
+		*end = priv->end_index;
+		return TRUE;
+	}
+
+	view = ev_page_accessible_get_view (priv->page);
+	if (!view->page_cache)
+		return FALSE;
+
+	ev_page_cache_get_text_layout (view->page_cache,
+				       ev_page_accessible_get_page (priv->page),
+				       &areas, &n_areas);
+	if (!areas)
+		return FALSE;
+
+	for (i = 0; i < n_areas; i++) {
+		EvRectangle *rect = areas + i;
+		gdouble      c_x, c_y;
+
+		c_x = rect->x1 + (rect->x2 - rect->x1) / 2.;
+		c_y = rect->y1 + (rect->y2 - rect->y1) / 2.;
+
+		if (c_x >= priv->area.x1 && c_x <= priv->area.x2 &&
+		    c_y >= priv->area.y1 && c_y <= priv->area.y2) {
+			priv->start_index = i;
+			break;
+		}
+	}
+
+	if (priv->start_index == -1)
+		return FALSE;
+
+	for (i = priv->start_index + 1; i < n_areas; i++) {
+		EvRectangle *rect = areas + i;
+		gdouble      c_x, c_y;
+
+		/* A zero-sized text rect suggests a line break. If it is within the text of the
+		 * field, we want to preserve it; if it is the character immediately after, we
+		 * do not. We won't know which it is until we find the first text rect that is
+		 * outside of the area occupied by the field.
+		 */
+		if (rect->y1 == rect->y2) {
+			last_zero_sized_index = i;
+			continue;
+		}
+
+		c_x = rect->x1 + (rect->x2 - rect->x1) / 2.;
+		c_y = rect->y1 + (rect->y2 - rect->y1) / 2.;
+
+		if (c_x < priv->area.x1 || c_x > priv->area.x2 ||
+		    c_y < priv->area.y1 || c_y > priv->area.y2) {
+			priv->end_index = last_zero_sized_index + 1 == i ? i - 1 : i;
+			break;
+		}
+	}
+
+	if (priv->end_index == -1)
+		return FALSE;
+
+	*start = priv->start_index;
+	*end = priv->end_index;
+	return TRUE;
+}
+
+static gchar *
+get_text_under_element (AtkObject *atk_object)
+{
+	gint start = -1;
+	gint end = -1;
+
+	if (get_indices_in_parent (atk_object, &start, &end) && start != end)
+		return atk_text_get_text (ATK_TEXT (atk_object_get_parent (atk_object)), start, end);
+
+	return NULL;
+}
+
+static const gchar *
+ev_form_field_accessible_get_name (AtkObject *atk_object)
+{
+	EvFormFieldAccessiblePrivate *priv;
+
+	priv = EV_FORM_FIELD_ACCESSIBLE (atk_object)->priv;
+	if (priv->name)
+		return priv->name;
+
+	if (EV_IS_FORM_FIELD_BUTTON (priv->form_field)) {
+		EvFormFieldButton *button = EV_FORM_FIELD_BUTTON (priv->form_field);
+
+		if (button->type == EV_FORM_FIELD_BUTTON_PUSH)
+			priv->name = get_text_under_element (atk_object);
+	}
+
+	return priv->name;
 }
 
 static AtkObject *
@@ -201,6 +314,7 @@ ev_form_field_accessible_finalize (GObject *object)
 	EvFormFieldAccessiblePrivate *priv = EV_FORM_FIELD_ACCESSIBLE (object)->priv;
 
 	g_object_unref (priv->form_field);
+	g_free (priv->name);
 
 	G_OBJECT_CLASS (ev_form_field_accessible_parent_class)->finalize (object);
 }
@@ -212,6 +326,7 @@ ev_form_field_accessible_class_init (EvFormFieldAccessibleClass *klass)
 	AtkObjectClass *atk_class = ATK_OBJECT_CLASS (klass);
 
 	object_class->finalize = ev_form_field_accessible_finalize;
+	atk_class->get_name = ev_form_field_accessible_get_name;
 	atk_class->get_parent = ev_form_field_accessible_get_parent;
 	atk_class->get_role = ev_form_field_accessible_get_role;
 	atk_class->ref_state_set = ev_form_field_accessible_ref_state_set;
@@ -223,6 +338,8 @@ static void
 ev_form_field_accessible_init (EvFormFieldAccessible *accessible)
 {
 	accessible->priv = G_TYPE_INSTANCE_GET_PRIVATE (accessible, EV_TYPE_FORM_FIELD_ACCESSIBLE, EvFormFieldAccessiblePrivate);
+	accessible->priv->start_index = -1;
+	accessible->priv->end_index = -1;
 }
 
 EvFormFieldAccessible*
