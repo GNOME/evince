@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince.HEAD.he\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-07-25 13:27+0300\n"
-"PO-Revision-Date: 2014-07-25 13:29+0300\n"
+"POT-Creation-Date: 2014-07-31 17:26+0300\n"
+"PO-Revision-Date: 2014-07-31 17:26+0300\n"
 "Last-Translator: Yosef Or Boczko <yoseforb@gmail.com>\n"
 "Language-Team: עברית <>\n"
 "Language: he\n"
@@ -284,7 +284,7 @@ msgstr "הוספת תמיכה לקריאת מסמכי XPS"
 
 #. Manually set name and icon
 #: ../data/evince.desktop.in.in.h:1 ../shell/ev-application.c:1000
-#: ../shell/ev-window-title.c:144 ../shell/main.c:298
+#: ../shell/ev-window-title.c:139 ../shell/main.c:298
 msgid "Document Viewer"
 msgstr "מציג מסמכים"
 
@@ -397,12 +397,12 @@ msgid "(%d of %d)"
 msgstr "‏(%d מתוך %d)"
 
 #: ../libmisc/ev-page-action-widget.c:86
-#: ../libmisc/ev-page-action-widget.c:125
+#: ../libmisc/ev-page-action-widget.c:127
 #, c-format
 msgid "of %d"
 msgstr "מתוך %d"
 
-#: ../libmisc/ev-page-action-widget.c:181 ../shell/ev-history.c:426
+#: ../libmisc/ev-page-action-widget.c:185 ../shell/ev-history.c:426
 #: ../shell/ev-sidebar-bookmarks.c:295 ../shell/ev-window.c:905
 #: ../shell/ev-window.c:4673
 #, c-format
@@ -1071,7 +1071,7 @@ msgstr "הדפסה…"
 msgid "Index"
 msgstr "מפתח"
 
-#: ../shell/ev-sidebar-thumbnails.c:1077
+#: ../shell/ev-sidebar-thumbnails.c:1082
 msgid "Thumbnails"
 msgstr "תמונות ממוזערות"
 
@@ -1080,8 +1080,8 @@ msgid "Toggle between view of recent items and open document"
 msgstr "מעבר בין תצוגת מסמכים אחרונים והמסמך הפתוח"
 
 #: ../shell/ev-toolbar.c:216
-msgid "Open an existenting document"
-msgstr "פתיחת מסמכים קיימים"
+msgid "Open an existing document"
+msgstr "פתיחת מסמך קיים"
 
 #: ../shell/ev-toolbar.c:247
 msgid "Find a word or phrase in the document"
@@ -1329,10 +1329,13 @@ msgstr "לא ניתן לשמור את הצרופה."
 msgid "Save Attachment"
 msgstr "שמירת צרופה"
 
-#: ../shell/ev-window-title.c:157
-#, c-format
-msgid "%s — Password Required"
-msgstr "%s — נדרשת ססמה"
+#: ../shell/ev-window-title.c:118
+msgid "Recent Documents"
+msgstr "מסמכים אחרונים"
+
+#: ../shell/ev-window-title.c:153 ../shell/ev-window-title.c:157
+msgid "Password Required"
+msgstr "נדרשת ססמה"
 
 #: ../shell/ev-zoom-action.c:48
 msgid "50%"
@@ -1621,6 +1624,9 @@ msgid ""
 msgstr ""
 "הוא תומך בתבניות המסמכים הבאות: PDF, PS, EPS, XPS, DjVu, TIFF, DVI (עם "
 "SyncTeX) וארכיבי ספרי  קומקיס (CBR, CBT, CBZ, CB7)."
+
+#~ msgid "%s — Password Required"
+#~ msgstr "%s — נדרשת ססמה"
 
 #~ msgid "_Recent"
 #~ msgstr "_אחרונים"
