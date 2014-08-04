@@ -279,33 +279,6 @@ ev_gui_menu_position_tree_selection (GtkMenu   *menu,
 	ev_gui_sanitise_popup_position (menu, widget, x, y);
 }
 
-/**
- * get_num_monitors: Get the number of user monitors.
- * @window: optional GtkWindow to look at.
- *
- * Returns: Number of monitors, -1 if uncertain situation (like multiple screens)
- */
-gint 
-get_num_monitors (GtkWindow *window)
-{
-	GdkDisplay *display; 
-	GdkScreen *screen;
-	gint num_screen;
-	
-	display = gdk_display_get_default ();
-	num_screen = gdk_display_get_n_screens (display);
-	
-	if (num_screen != 1)
-		return -1;
-	
-	if (window)
-		screen = gtk_window_get_screen (window);
-	else
-		screen = gdk_display_get_screen (display, 0);
-
-	return gdk_screen_get_n_monitors (screen);
-}
-
 static void
 file_filter_add_mime_types (GdkPixbufFormat *format, GtkFileFilter *filter,
 			    GtkFileFilter   *supported_filter)

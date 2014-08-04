@@ -37,8 +37,6 @@ void 			ev_gui_menu_position_tree_selection (GtkMenu   *menu,
 							     gboolean  *push_in,
 							     gpointer   user_data);
 
-gint 			get_num_monitors (GtkWindow * window);
-
 void           		file_chooser_dialog_add_writable_pixbuf_formats (GtkFileChooser *chooser);
 GdkPixbufFormat* 	get_gdk_pixbuf_format_by_extension (const gchar *uri);
 
