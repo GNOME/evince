@@ -385,9 +385,6 @@ on_register_uri_cb (GObject      *source_object,
         g_variant_builder_add (&builder, "{sv}",
                                "display",
                                g_variant_new_string (gdk_display_get_name (gdk_screen_get_display (data->screen))));
-        g_variant_builder_add (&builder, "{sv}",
-                               "screen",
-                               g_variant_new_int32 (gdk_screen_get_number (data->screen)));
 	if (data->dest) {
                 switch (ev_link_dest_get_dest_type (data->dest)) {
                 case EV_LINK_DEST_TYPE_PAGE_LABEL:
@@ -740,7 +737,6 @@ handle_reload_cb (EvEvinceApplication   *object,
         const gchar     *key;
         GVariant        *value;
         GdkDisplay      *display = NULL;
-        int              screen_number = 0;
         EvLinkDest      *dest = NULL;
         EvWindowRunMode  mode = EV_WINDOW_MODE_NORMAL;
         const gchar     *search_string = NULL;
@@ -751,8 +747,6 @@ handle_reload_cb (EvEvinceApplication   *object,
         while (g_variant_iter_loop (&iter, "{&sv}", &key, &value)) {
                 if (strcmp (key, "display") == 0 && g_variant_classify (value) == G_VARIANT_CLASS_STRING) {
                         display = ev_display_open_if_needed (g_variant_get_string (value, NULL));
-                } else if (strcmp (key, "screen") == 0 && g_variant_classify (value) == G_VARIANT_CLASS_INT32) {
-                        screen_number = g_variant_get_int32 (value);
                 } else if (strcmp (key, "mode") == 0 && g_variant_classify (value) == G_VARIANT_CLASS_UINT32) {
                         mode = g_variant_get_uint32 (value);
                 } else if (strcmp (key, "page-label") == 0 && g_variant_classify (value) == G_VARIANT_CLASS_STRING) {
@@ -766,10 +760,8 @@ handle_reload_cb (EvEvinceApplication   *object,
                 }
         }
 
-        if (display != NULL &&
-                        screen_number >= 0 &&
-            screen_number < gdk_display_get_n_screens (display))
-                screen = gdk_display_get_screen (display, screen_number);
+        if (display != NULL)
+                screen = gdk_display_get_default_screen (display);
         else
                 screen = gdk_screen_get_default ();
 
