@@ -473,6 +473,27 @@ ev_previewer_window_set_property (GObject      *object,
 	}
 }
 
+static gboolean
+_gtk_css_provider_load_from_resource (GtkCssProvider *provider,
+                                      const char     *resource_path,
+                                      GError        **error)
+{
+        GBytes  *data;
+        gboolean retval;
+
+        data = g_resources_lookup_data (resource_path, 0, error);
+        if (!data)
+                return FALSE;
+
+        retval = gtk_css_provider_load_from_data (provider,
+                                                  g_bytes_get_data (data, NULL),
+                                                  g_bytes_get_size (data),
+                                                  error);
+        g_bytes_unref (data);
+
+        return retval;
+}
+
 static GObject *
 ev_previewer_window_constructor (GType                  type,
 				 guint                  n_construct_properties,
@@ -485,6 +506,7 @@ ev_previewer_window_constructor (GType                  type,
 	GtkAction         *action;
 	GError            *error = NULL;
 	gdouble            dpi;
+        GtkCssProvider    *css_provider;
 
 	object = G_OBJECT_CLASS (ev_previewer_window_parent_class)->constructor (type,
 										 n_construct_properties,
@@ -528,6 +550,16 @@ ev_previewer_window_constructor (GType                  type,
 				      G_N_ELEMENTS (accel_entries),
 				      window);
 	gtk_action_group_set_sensitive (window->accels_group, FALSE);
+
+        css_provider = gtk_css_provider_new ();
+        _gtk_css_provider_load_from_resource (css_provider,
+                                              "/org/gnome/evince/previewer/ui/evince-previewer.css",
+                                              &error);
+        g_assert_no_error (error);
+        gtk_style_context_add_provider_for_screen (gtk_widget_get_screen (GTK_WIDGET (window)),
+                                                   GTK_STYLE_PROVIDER (css_provider),
+                                                   GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+        g_object_unref (css_provider);
 
 	window->ui_manager = gtk_ui_manager_new ();
 	gtk_ui_manager_insert_action_group (window->ui_manager,

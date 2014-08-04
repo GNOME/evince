@@ -1,0 +1,19 @@
+.content-view.document-page {
+    border-style: solid;
+    border-width: 3px 3px 6px 4px;
+    border-image: url("resource:///org/gnome/evince/previewer/ui/thumbnail-frame.png") 3 3 6 4;
+    background-color: @theme_bg_color;
+}
+
+EvView {
+    background-color: @theme_bg_color;
+}
+
+EvView:selected {
+    background-color: @theme_selected_bg_color;
+}
+
+EvView.document-page {
+    background-color: white;
+    padding: 0;
+}
