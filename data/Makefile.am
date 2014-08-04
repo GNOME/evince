@@ -89,6 +89,7 @@ EXTRA_DIST =					\
 	$(man_MANS)				\
 	evince.ico				\
 	evince.convert				\
+	thumbnail-frame.png			\
 	$(NULL)
 
 #
