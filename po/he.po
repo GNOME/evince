@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince.HEAD.he\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-07-31 17:26+0300\n"
-"PO-Revision-Date: 2014-07-31 17:26+0300\n"
+"POT-Creation-Date: 2014-08-06 14:52+0300\n"
+"PO-Revision-Date: 2014-08-06 14:52+0300\n"
 "Last-Translator: Yosef Or Boczko <yoseforb@gmail.com>\n"
 "Language-Team: עברית <>\n"
 "Language: he\n"
@@ -282,6 +282,58 @@ msgstr "מסמכי XPS"
 msgid "Adds support for reading XPS documents"
 msgstr "הוספת תמיכה לקריאת מסמכי XPS"
 
+#: ../browser-plugin/EvBrowserPluginToolbar.cpp:230
+#: ../previewer/ev-previewer-window.c:317 ../shell/evince-menus.ui.h:31
+msgid "Fit Pa_ge"
+msgstr "התאמה ל_עמוד"
+
+#: ../browser-plugin/EvBrowserPluginToolbar.cpp:239
+#: ../previewer/ev-previewer-window.c:320 ../shell/evince-menus.ui.h:32
+msgid "Fit _Width"
+msgstr "התאמה ל_רוחב"
+
+#: ../browser-plugin/EvBrowserPluginToolbar.cpp:248
+#: ../shell/evince-menus.ui.h:33
+msgid "_Automatic"
+msgstr "_אוטומטית"
+
+#. Navigation buttons
+#: ../browser-plugin/EvBrowserPluginToolbar.cpp:273
+#: ../previewer/ev-previewer-window.c:271
+msgid "Go to the previous page"
+msgstr "מעבר לעמוד הקודם"
+
+#: ../browser-plugin/EvBrowserPluginToolbar.cpp:277
+#: ../previewer/ev-previewer-window.c:274
+msgid "Go to the next page"
+msgstr "מעבר לעמוד הבא"
+
+#: ../browser-plugin/EvBrowserPluginToolbar.cpp:312
+msgid "Show the entire document"
+msgstr "הצגת כל המסמך"
+
+#: ../browser-plugin/EvBrowserPluginToolbar.cpp:320
+msgid "Show two pages at once"
+msgstr "הצגת שני עמודים יחד"
+
+#: ../browser-plugin/EvBrowserPluginToolbar.cpp:342
+#: ../previewer/ev-previewer-window.c:277
+msgid "Enlarge the document"
+msgstr "הגדלת המסמך"
+
+#: ../browser-plugin/EvBrowserPluginToolbar.cpp:346
+#: ../previewer/ev-previewer-window.c:280
+msgid "Shrink the document"
+msgstr "הקטנת המסמך"
+
+#: ../browser-plugin/EvBrowserPluginToolbar.cpp:368
+msgid "Download document"
+msgstr "הורדת מסמך"
+
+#: ../browser-plugin/EvBrowserPluginToolbar.cpp:381
+msgid "Print document"
+msgstr "הדפסת מסמך"
+
 #. Manually set name and icon
 #: ../data/evince.desktop.in.in.h:1 ../shell/ev-application.c:1000
 #: ../shell/ev-window-title.c:139 ../shell/main.c:298
@@ -376,7 +428,7 @@ msgstr "סוג MIME לא ידוע"
 msgid "All Documents"
 msgstr "כל המסמכים"
 
-#: ../libdocument/ev-document-factory.c:579 ../shell/ev-utils.c:336
+#: ../libdocument/ev-document-factory.c:579 ../shell/ev-utils.c:309
 msgid "All Files"
 msgstr "כל הקבצים"
 
@@ -622,51 +674,27 @@ msgstr "המדפסת הנבחרת '%s' לא נמצאה"
 msgid "_Previous Page"
 msgstr "העמוד ה_קודם"
 
-#: ../previewer/ev-previewer-window.c:271
-msgid "Go to the previous page"
-msgstr "מעבר לעמוד הקודם"
-
 #: ../previewer/ev-previewer-window.c:273 ../shell/evince-menus.ui.h:39
 msgid "_Next Page"
 msgstr "העמוד ה_בא"
-
-#: ../previewer/ev-previewer-window.c:274
-msgid "Go to the next page"
-msgstr "מעבר לעמוד הבא"
-
-#: ../previewer/ev-previewer-window.c:277
-msgid "Enlarge the document"
-msgstr "הגדלת המסמך"
-
-#: ../previewer/ev-previewer-window.c:280
-msgid "Shrink the document"
-msgstr "הקטנת המסמך"
 
 #: ../previewer/ev-previewer-window.c:285
 msgid "Print this document"
 msgstr "הדפסת מסמך זה"
 
-#: ../previewer/ev-previewer-window.c:317 ../shell/evince-menus.ui.h:31
-msgid "Fit Pa_ge"
-msgstr "התאמה ל_עמוד"
-
 #: ../previewer/ev-previewer-window.c:318
 msgid "Make the current document fill the window"
 msgstr "הצגת המסמך הנוכחי כך שימלא את החלון"
-
-#: ../previewer/ev-previewer-window.c:320 ../shell/evince-menus.ui.h:32
-msgid "Fit _Width"
-msgstr "התאמה ל_רוחב"
 
 #: ../previewer/ev-previewer-window.c:321
 msgid "Make the current document fill the window width"
 msgstr "הצגת המסמך הנוכחי כך שימלא את רוחב העמוד"
 
-#: ../previewer/ev-previewer-window.c:514
+#: ../previewer/ev-previewer-window.c:536
 msgid "Page"
 msgstr "עמוד"
 
-#: ../previewer/ev-previewer-window.c:515
+#: ../previewer/ev-previewer-window.c:537
 msgid "Select Page"
 msgstr "בחירת עמוד"
 
@@ -1095,7 +1123,7 @@ msgstr "אפשרויות קובץ"
 msgid "View options"
 msgstr "אפשרויות תצוגה"
 
-#: ../shell/ev-utils.c:332
+#: ../shell/ev-utils.c:305
 msgid "Supported Image Files"
 msgstr "קובצי תמונות נתמכים"
 
@@ -1565,10 +1593,6 @@ msgstr "הוס_פת סימניה"
 msgid "_Close"
 msgstr "_סגירה"
 
-#: ../shell/evince-menus.ui.h:33
-msgid "_Automatic"
-msgstr "_אוטומטית"
-
 #: ../shell/evince-menus.ui.h:34
 msgid "_Open Link"
 msgstr "פתיחת _קישור"
@@ -1691,12 +1715,6 @@ msgstr ""
 
 #~ msgid "Show or hide the side pane"
 #~ msgstr "הצגה או הסתרה של סרגל הצד"
-
-#~ msgid "Show the entire document"
-#~ msgstr "הצגת כל המסמך"
-
-#~ msgid "Show two pages at once"
-#~ msgstr "הצגת שני עמודים יחד"
 
 #~ msgid "Show odd pages on the left in dual mode"
 #~ msgstr "הצגת עמודים אי־זוגיים משמאל במצב זוגי"
