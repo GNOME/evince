@@ -1263,3 +1263,14 @@ static void
 ev_annotation_text_markup_markup_iface_init (EvAnnotationMarkupInterface *iface)
 {
 }
+
+EvAnnotation *
+ev_annotation_text_markup_highlight_new (EvPage *page)
+{
+        EvAnnotation *annot = EV_ANNOTATION (g_object_new (EV_TYPE_ANNOTATION_TEXT_MARKUP,
+                                                           "page", page,
+                                                           NULL));
+        annot->type = EV_ANNOTATION_TYPE_HIGHLIGHT;
+
+        return annot;
+}
