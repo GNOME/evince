@@ -3194,6 +3194,73 @@ pdf_document_annotations_remove_annotation (EvDocumentAnnotations *document_anno
         pdf_document->annots_modified = TRUE;
 }
 
+/* FIXME: this could be moved to poppler */
+static GArray *
+get_quads_for_area (PopplerPage      *page,
+		    EvRectangle      *area,
+		    PopplerRectangle *bbox)
+{
+	GList  *rects, *l;
+	guint   n_rects;
+	guint   i;
+	GArray *quads;
+	gdouble height;
+	gdouble max_x, max_y, min_x, min_y;
+
+	if (bbox) {
+		bbox->x1 = G_MAXDOUBLE;
+		bbox->y1 = G_MAXDOUBLE;
+		bbox->x2 = G_MINDOUBLE;
+		bbox->y2 = G_MINDOUBLE;
+	}
+
+	poppler_page_get_size (page, NULL, &height);
+
+	rects = poppler_page_get_selection_region (page, 1.0, POPPLER_SELECTION_GLYPH,
+						   (PopplerRectangle *)area);
+	n_rects = g_list_length (rects);
+
+	quads = g_array_sized_new (TRUE, TRUE,
+				   sizeof (PopplerQuadrilateral),
+				   n_rects);
+	g_array_set_size (quads, n_rects);
+
+	for (l = rects, i = 0; i < n_rects; i++, l = l->next) {
+		PopplerRectangle     *r = (PopplerRectangle *) l->data;
+		PopplerQuadrilateral *quad = &g_array_index (quads, PopplerQuadrilateral, i);
+
+		quad->p1.x = r->x1;
+		quad->p1.y = height - r->y2;
+		quad->p2.x = r->x2;
+		quad->p2.y = height - r->y2;
+		quad->p3.x = r->x1;
+		quad->p3.y = height - r->y1;
+		quad->p4.x = r->x2;
+		quad->p4.y = height - r->y1;
+		poppler_rectangle_free (r);
+
+		if (!bbox)
+			continue;
+
+		max_x = MAX (quad->p1.x, MAX (quad->p2.x, MAX (quad->p3.x, quad->p4.x)));
+		max_y = MAX (quad->p1.y, MAX (quad->p2.y, MAX (quad->p3.y, quad->p4.y)));
+		min_x = MIN (quad->p1.x, MIN (quad->p2.x, MIN (quad->p3.x, quad->p4.x)));
+		min_y = MIN (quad->p1.y, MIN (quad->p2.y, MIN (quad->p3.y, quad->p4.y)));
+
+		if (min_x < bbox->x1)
+			bbox->x1 = min_x;
+		if (min_y < bbox->y1)
+			bbox->y1 = min_y;
+		if (max_x > bbox->x2)
+			bbox->x2 = max_x;
+		if (max_y > bbox->y2)
+			bbox->y2 = max_y;
+	}
+	g_list_free (rects);
+
+	return quads;
+}
+
 static void
 pdf_document_annotations_add_annotation (EvDocumentAnnotations *document_annotations,
 					 EvAnnotation          *annot,
@@ -3235,6 +3302,21 @@ pdf_document_annotations_add_annotation (EvDocumentAnnotations *document_annotat
 			poppler_annot_text_set_icon (POPPLER_ANNOT_TEXT (poppler_annot),
 						     get_poppler_annot_text_icon (icon));
 			}
+			break;
+		case EV_ANNOTATION_TYPE_TEXT_MARKUP: {
+			GArray *quads;
+
+			quads = get_quads_for_area (poppler_page, &rect, NULL);
+
+			switch (ev_annotation_text_markup_get_markup_type (EV_ANNOTATION_TEXT_MARKUP (annot))) {
+				case EV_ANNOTATION_TEXT_MARKUP_HIGHLIGHT:
+					poppler_annot = poppler_annot_text_markup_new_highlight (pdf_document->document, &poppler_rect, quads);
+					break;
+				default:
+					g_assert_not_reached ();
+			}
+			g_array_unref (quads);
+		}
 			break;
 		default:
 			g_assert_not_reached ();
@@ -3375,7 +3457,7 @@ pdf_document_annotations_save_annotation (EvDocumentAnnotations *document_annota
 		poppler_annot_set_color (poppler_annot, &color);
 	}
 
-	if (mask & EV_ANNOTATIONS_SAVE_AREA) {
+	if (mask & EV_ANNOTATIONS_SAVE_AREA && !EV_IS_ANNOTATION_TEXT_MARKUP (annot)) {
 		EvRectangle      area;
 		PopplerRectangle poppler_rect;
 		EvPage          *page;
@@ -3488,6 +3570,34 @@ pdf_document_annotations_save_annotation (EvDocumentAnnotations *document_annota
 						"poppler-annot",
 						new_annot,
 						(GDestroyNotify) g_object_unref);
+		}
+
+		if (mask & EV_ANNOTATIONS_SAVE_AREA) {
+			EvRectangle       area;
+			GArray           *quads;
+			PopplerRectangle  bbox;
+			EvPage           *page;
+			PopplerPage      *poppler_page;
+
+			page = ev_annotation_get_page (annot);
+			poppler_page = POPPLER_PAGE (page->backend_page);
+
+			ev_annotation_get_area (annot, &area);
+			quads = get_quads_for_area (poppler_page, &area, &bbox);
+			if (quads->len > 0) {
+				gdouble height;
+
+				poppler_annot_text_markup_set_quadrilaterals (text_markup, quads);
+				poppler_annot_set_rectangle (poppler_annot, &bbox);
+
+				poppler_page_get_size (poppler_page, NULL, &height);
+				area.x1 = bbox.x1;
+				area.x2 = bbox.x2;
+				area.y1 = height - bbox.y2;
+				area.y2 = height - bbox.y1;
+				ev_annotation_set_area (annot, &area);
+			}
+			g_array_unref (quads);
 		}
 	}
 
