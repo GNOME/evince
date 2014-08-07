@@ -3324,6 +3324,13 @@ ev_view_create_annotation (EvView *view)
                 doc_rect.y2 = doc_rect.y1 + ANNOTATION_ICON_SIZE;
                 annot = ev_annotation_text_new (page);
                 break;
+	case EV_ANNOTATION_TYPE_TEXT_MARKUP:
+		doc_rect.x1 = start.x;
+		doc_rect.y1 = start.y;
+		doc_rect.x2 = end.x;
+		doc_rect.y2 = end.y;
+		annot = ev_annotation_text_markup_highlight_new (page);
+		break;
 	case EV_ANNOTATION_TYPE_ATTACHMENT:
 		/* TODO */
 		g_object_unref (page);
@@ -5359,6 +5366,12 @@ ev_view_motion_notify_event (GtkWidget      *widget,
 				rect.y1 = end.y;
 				rect.x2 = rect.x1 + current_area.x2 - current_area.x1;
 				rect.y2 = rect.y1 + current_area.y2 - current_area.y1;
+				break;
+			case EV_ANNOTATION_TYPE_TEXT_MARKUP:
+				rect.x1 = start.x;
+				rect.y1 = start.y;
+				rect.x2 = end.x;
+				rect.y2 = end.y;
 				break;
 			default:
 				g_assert_not_reached ();
