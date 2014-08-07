@@ -15,8 +15,8 @@ msgstr ""
 "Project-Id-Version: evince.master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evince&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2014-07-28 03:40+0000\n"
-"PO-Revision-Date: 2014-07-28 17:33+0200\n"
+"POT-Creation-Date: 2014-08-07 03:40+0000\n"
+"PO-Revision-Date: 2014-08-07 12:29+0200\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español; Castellano <gnome-es-list@gnome.org>\n"
 "Language: \n"
@@ -287,6 +287,60 @@ msgstr "Documentos XPS"
 msgid "Adds support for reading XPS documents"
 msgstr "Añade soporte para leer documentos XPS"
 
+#: ../browser-plugin/EvBrowserPluginToolbar.cpp:230
+#: ../previewer/ev-previewer-window.c:317 ../shell/evince-menus.ui.h:31
+msgid "Fit Pa_ge"
+msgstr "Ajusta_r página"
+
+#: ../browser-plugin/EvBrowserPluginToolbar.cpp:239
+#: ../previewer/ev-previewer-window.c:320 ../shell/evince-menus.ui.h:32
+msgid "Fit _Width"
+msgstr "Ajustar _anchura"
+
+#: ../browser-plugin/EvBrowserPluginToolbar.cpp:248
+#: ../shell/evince-menus.ui.h:33
+msgid "_Automatic"
+msgstr "_Automático"
+
+#. Navigation buttons
+#: ../browser-plugin/EvBrowserPluginToolbar.cpp:273
+#: ../previewer/ev-previewer-window.c:271
+msgid "Go to the previous page"
+msgstr "Ir a la página anterior"
+
+#: ../browser-plugin/EvBrowserPluginToolbar.cpp:277
+#: ../previewer/ev-previewer-window.c:274
+msgid "Go to the next page"
+msgstr "Ir a la página siguiente"
+
+#: ../browser-plugin/EvBrowserPluginToolbar.cpp:312
+msgid "Show the entire document"
+msgstr "Mostrar el documento completo"
+
+#: ../browser-plugin/EvBrowserPluginToolbar.cpp:320
+msgid "Show two pages at once"
+msgstr "Mostrar dos páginas a la vez"
+
+#: ../browser-plugin/EvBrowserPluginToolbar.cpp:342
+#: ../previewer/ev-previewer-window.c:277
+msgid "Enlarge the document"
+msgstr "Amplía el documento"
+
+#: ../browser-plugin/EvBrowserPluginToolbar.cpp:346
+#: ../previewer/ev-previewer-window.c:280
+msgid "Shrink the document"
+msgstr "Reduce el documento"
+
+#: ../browser-plugin/EvBrowserPluginToolbar.cpp:368
+#| msgid "Downloading document (%d%%)"
+msgid "Download document"
+msgstr "Descargar documento"
+
+#: ../browser-plugin/EvBrowserPluginToolbar.cpp:381
+#| msgid "Print this document"
+msgid "Print document"
+msgstr "Imprimir documento"
+
 #. Manually set name and icon
 #: ../data/evince.desktop.in.in.h:1 ../shell/ev-application.c:1000
 #: ../shell/ev-window-title.c:139 ../shell/main.c:298
@@ -385,7 +439,7 @@ msgstr "Tipo MIME desconocido"
 msgid "All Documents"
 msgstr "Todos los documentos"
 
-#: ../libdocument/ev-document-factory.c:579 ../shell/ev-utils.c:336
+#: ../libdocument/ev-document-factory.c:579 ../shell/ev-utils.c:309
 msgid "All Files"
 msgstr "Todos los archivos"
 
@@ -638,51 +692,27 @@ msgstr "No se pudo encontrar la impresora actual «%s»"
 msgid "_Previous Page"
 msgstr "Página _anterior"
 
-#: ../previewer/ev-previewer-window.c:271
-msgid "Go to the previous page"
-msgstr "Ir a la página anterior"
-
 #: ../previewer/ev-previewer-window.c:273 ../shell/evince-menus.ui.h:39
 msgid "_Next Page"
 msgstr "_Siguiente página"
-
-#: ../previewer/ev-previewer-window.c:274
-msgid "Go to the next page"
-msgstr "Ir a la página siguiente"
-
-#: ../previewer/ev-previewer-window.c:277
-msgid "Enlarge the document"
-msgstr "Amplía el documento"
-
-#: ../previewer/ev-previewer-window.c:280
-msgid "Shrink the document"
-msgstr "Reduce el documento"
 
 #: ../previewer/ev-previewer-window.c:285
 msgid "Print this document"
 msgstr "Imprime este documento"
 
-#: ../previewer/ev-previewer-window.c:317 ../shell/evince-menus.ui.h:31
-msgid "Fit Pa_ge"
-msgstr "Ajusta_r página"
-
 #: ../previewer/ev-previewer-window.c:318
 msgid "Make the current document fill the window"
 msgstr "Hace que el documento actual llene la ventana"
-
-#: ../previewer/ev-previewer-window.c:320 ../shell/evince-menus.ui.h:32
-msgid "Fit _Width"
-msgstr "Ajustar _anchura"
 
 #: ../previewer/ev-previewer-window.c:321
 msgid "Make the current document fill the window width"
 msgstr "Hace que el documento actual llene la anchura de la ventana"
 
-#: ../previewer/ev-previewer-window.c:514
+#: ../previewer/ev-previewer-window.c:536
 msgid "Page"
 msgstr "Página"
 
-#: ../previewer/ev-previewer-window.c:515
+#: ../previewer/ev-previewer-window.c:537
 msgid "Select Page"
 msgstr "Seleccione la página"
 
@@ -1112,7 +1142,7 @@ msgstr "Opciones del archivo"
 msgid "View options"
 msgstr "Opciones de la vista"
 
-#: ../shell/ev-utils.c:332
+#: ../shell/ev-utils.c:305
 msgid "Supported Image Files"
 msgstr "Archivos de imagen soportados"
 
@@ -1357,12 +1387,10 @@ msgid "Save Attachment"
 msgstr "Guardar adjuntos"
 
 #: ../shell/ev-window-title.c:118
-#| msgid "Open Document"
 msgid "Recent Documents"
 msgstr "Documentos recientes"
 
 #: ../shell/ev-window-title.c:153 ../shell/ev-window-title.c:157
-#| msgid "Password required"
 msgid "Password Required"
 msgstr "Se necesita una contraseña"
 
@@ -1511,7 +1539,6 @@ msgid "Rotate _Right"
 msgstr "Rotar a la _derecha"
 
 #: ../shell/evince-menus.ui.h:10
-#| msgid "_First Page"
 msgid "First Page"
 msgstr "Primera página"
 
@@ -1524,7 +1551,6 @@ msgid "Next Page"
 msgstr "Siguiente página"
 
 #: ../shell/evince-menus.ui.h:13
-#| msgid "_Last Page"
 msgid "Last Page"
 msgstr "Última página"
 
@@ -1595,10 +1621,6 @@ msgstr "_Añadir marcador"
 #: ../shell/evince-menus.ui.h:30
 msgid "_Close"
 msgstr "_Cerrar"
-
-#: ../shell/evince-menus.ui.h:33
-msgid "_Automatic"
-msgstr "_Automático"
 
 #: ../shell/evince-menus.ui.h:34
 msgid "_Open Link"
@@ -1722,12 +1744,6 @@ msgstr ""
 
 #~ msgid "Show or hide the side pane"
 #~ msgstr "Muestra o oculta el panel lateral"
-
-#~ msgid "Show the entire document"
-#~ msgstr "Mostrar el documento completo"
-
-#~ msgid "Show two pages at once"
-#~ msgstr "Mostrar dos páginas a la vez"
 
 #~ msgid "Show odd pages on the left in dual mode"
 #~ msgstr ""
