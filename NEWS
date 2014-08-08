@@ -1,4 +1,30 @@
 ================
+Evince    3.12.2
+================
+
+Bug fixes:
+
+    * Prevent jumps to last page when autoscrolling (#725389, Marek Kasik)
+    * Fix centering when shrinking to printable area but not scaling
+      (Carlos Garcia Campos)
+    * Fallback to thumbnails page in sidebar when the current page is
+      no longer supported by the document after a reload, and enable
+      the pages that become supported (#628617, Giselle Machado)
+    * Update the caret cursor when jumping to a find result (#728996,
+      Joanmarie Diggs)
+    * Update ATK_STATE_SHOWING when the visible page range changes
+      (#728664, Joanmarie Diggs)
+    * Fix a memory leak in sidebar thumbnails.
+
+Translation updates:
+
+    * Ihar Hrachyshka (be)
+    * Pau Iranzo (ca@valencia)
+    * Benjamin Steinwender (de)
+    * Tom Tryfonidis (el)
+    * Antonio Fernandes C. Neto (pt_BR)
+
+================
 Evince    3.12.1
 ================
 
