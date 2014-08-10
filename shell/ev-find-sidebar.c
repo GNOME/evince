@@ -170,13 +170,23 @@ sidebar_tree_button_press_cb (GtkTreeView    *view,
 }
 
 static void
+ev_find_sidebar_reset_model (EvFindSidebar *sidebar)
+{
+        GtkListStore *model;
+
+        model = gtk_list_store_new (N_COLUMNS, G_TYPE_STRING, G_TYPE_INT, G_TYPE_INT);
+        gtk_tree_view_set_model (GTK_TREE_VIEW (sidebar->priv->tree_view),
+                                 GTK_TREE_MODEL (model));
+        g_object_unref (model);
+}
+
+static void
 ev_find_sidebar_init (EvFindSidebar *sidebar)
 {
         EvFindSidebarPrivate *priv;
         GtkWidget            *swindow;
         GtkTreeViewColumn    *column;
         GtkCellRenderer      *renderer;
-        GtkTreeModel         *model;
         GtkTreeSelection     *selection;
 
         sidebar->priv = G_TYPE_INSTANCE_GET_PRIVATE (sidebar, EV_TYPE_FIND_SIDEBAR, EvFindSidebarPrivate);
@@ -188,9 +198,9 @@ ev_find_sidebar_init (EvFindSidebar *sidebar)
         gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (swindow),
                                              GTK_SHADOW_IN);
 
-        model = GTK_TREE_MODEL (gtk_list_store_new (N_COLUMNS, G_TYPE_STRING, G_TYPE_INT, G_TYPE_INT));
-        priv->tree_view = gtk_tree_view_new_with_model (model);
-        g_object_unref (model);
+        priv->tree_view = gtk_tree_view_new ();
+        ev_find_sidebar_reset_model (sidebar);
+
         gtk_tree_view_set_search_column (GTK_TREE_VIEW (priv->tree_view), -1);
         gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (priv->tree_view), FALSE);
         gtk_container_add (GTK_CONTAINER (swindow), priv->tree_view);
@@ -548,12 +558,7 @@ ev_find_sidebar_start (EvFindSidebar *sidebar,
         if (priv->job == job)
                 return;
 
-        if (priv->process_matches_idle_id)
-                g_source_remove (priv->process_matches_idle_id);
-        priv->process_matches_idle_id = 0;
-        gtk_list_store_clear (GTK_LIST_STORE (gtk_tree_view_get_model (GTK_TREE_VIEW (priv->tree_view))));
-
-        g_clear_object (&priv->job);
+        ev_find_sidebar_clear (sidebar);
         priv->job = g_object_ref (job);
         g_signal_connect_object (job, "updated",
                                  G_CALLBACK (find_job_updated_cb),
@@ -565,7 +570,6 @@ ev_find_sidebar_start (EvFindSidebar *sidebar,
         priv->first_match_page = -1;
         priv->current_page = job->start_page;
         priv->insert_position = 0;
-        g_clear_pointer (&priv->highlighted_result, (GDestroyNotify)gtk_tree_path_free);
 }
 
 void
@@ -614,7 +618,12 @@ ev_find_sidebar_clear (EvFindSidebar *sidebar)
 {
         EvFindSidebarPrivate *priv = sidebar->priv;
 
-        gtk_list_store_clear (GTK_LIST_STORE (gtk_tree_view_get_model (GTK_TREE_VIEW (priv->tree_view))));
+        ev_find_sidebar_cancel (sidebar);
+
+        /* It seems it's more efficient to set a new model in the tree view instead of
+         * clearing the model that would emit row-deleted signal for every row in the model
+         */
+        ev_find_sidebar_reset_model (sidebar);
         g_clear_pointer (&priv->highlighted_result, (GDestroyNotify)gtk_tree_path_free);
 }
 
