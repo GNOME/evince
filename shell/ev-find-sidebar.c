@@ -466,6 +466,7 @@ process_matches_idle (EvFindSidebar *sidebar)
 
                 page = ev_document_get_page (document, current_page);
                 page_text = get_page_text (document, page, &areas, &n_areas);
+                g_object_unref (page);
                 if (!page_text)
                         continue;
 
