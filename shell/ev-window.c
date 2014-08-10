@@ -369,6 +369,7 @@ static void     ev_window_setup_bookmarks               (EvWindow         *windo
 static void     ev_window_show_find_bar                 (EvWindow         *ev_window,
 							 gboolean          restart);
 static void     ev_window_close_find_bar                (EvWindow         *ev_window);
+static void     ev_window_clear_find_job                (EvWindow         *ev_window);
 static void     ev_window_show_recent_view              (EvWindow         *ev_window);
 static void     ev_window_hide_recent_view              (EvWindow         *ev_window);
 static void     recent_view_item_activated_cb           (EvRecentView     *recent_view,
@@ -5172,6 +5173,7 @@ ev_window_find_job_finished_cb (EvJobFind *job,
 				EvWindow  *ev_window)
 {
 	ev_window_update_find_status_message (ev_window);
+	ev_window_clear_find_job (ev_window);
 }
 
 /**
