@@ -15,16 +15,16 @@ msgstr ""
 "Project-Id-Version: evince.HEAD\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evince&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2014-08-03 03:40+0000\n"
-"PO-Revision-Date: 2014-08-03 15:15+0200\n"
-"Last-Translator: Maria Mavridou <mavridou@gmail.com>\n"
+"POT-Creation-Date: 2014-08-08 15:41+0000\n"
+"PO-Revision-Date: 2014-08-09 00:06+0200\n"
+"Last-Translator: Efstathios Iosifidis <iosifidis@opensuse.org>\n"
 "Language-Team: team@lists.gnome.gr\n"
 "Language: el\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 1.6.4\n"
+"X-Generator: Poedit 1.5.7\n"
 "X-Project-Style: gnome\n"
 
 #: ../backend/comics/comics-document.c:210
@@ -291,6 +291,60 @@ msgstr "Έγγραφα XPS"
 msgid "Adds support for reading XPS documents"
 msgstr "Προσθέτει υποστήριξη για την ανάγνωση εγγράφων XPS"
 
+#: ../browser-plugin/EvBrowserPluginToolbar.cpp:230
+#: ../previewer/ev-previewer-window.c:317 ../shell/evince-menus.ui.h:31
+msgid "Fit Pa_ge"
+msgstr "Προσαρμογή στη _σελίδα"
+
+#: ../browser-plugin/EvBrowserPluginToolbar.cpp:239
+#: ../previewer/ev-previewer-window.c:320 ../shell/evince-menus.ui.h:32
+msgid "Fit _Width"
+msgstr "Προσαρμογή στο _πλάτος"
+
+#: ../browser-plugin/EvBrowserPluginToolbar.cpp:248
+#: ../shell/evince-menus.ui.h:33
+msgid "_Automatic"
+msgstr "_Αυτόματα"
+
+#. Navigation buttons
+#: ../browser-plugin/EvBrowserPluginToolbar.cpp:273
+#: ../previewer/ev-previewer-window.c:271
+msgid "Go to the previous page"
+msgstr "Μετάβαση στην προηγούμενη σελίδα"
+
+#: ../browser-plugin/EvBrowserPluginToolbar.cpp:277
+#: ../previewer/ev-previewer-window.c:274
+msgid "Go to the next page"
+msgstr "Μετάβαση στην επόμενη σελίδα"
+
+#: ../browser-plugin/EvBrowserPluginToolbar.cpp:312
+msgid "Show the entire document"
+msgstr "Εμφάνιση ολόκληρου του εγγράφου"
+
+#: ../browser-plugin/EvBrowserPluginToolbar.cpp:320
+msgid "Show two pages at once"
+msgstr "Εμφάνιση δύο σελίδων ταυτόχρονα"
+
+#: ../browser-plugin/EvBrowserPluginToolbar.cpp:342
+#: ../previewer/ev-previewer-window.c:277
+msgid "Enlarge the document"
+msgstr "Μεγέθυνση εγγράφου"
+
+#: ../browser-plugin/EvBrowserPluginToolbar.cpp:346
+#: ../previewer/ev-previewer-window.c:280
+msgid "Shrink the document"
+msgstr "Σμίκρυνση εγγράφου"
+
+#: ../browser-plugin/EvBrowserPluginToolbar.cpp:368
+#| msgid "Downloading document (%d%%)"
+msgid "Download document"
+msgstr "Λήψη εγγράφου"
+
+#: ../browser-plugin/EvBrowserPluginToolbar.cpp:381
+#| msgid "Print this document"
+msgid "Print document"
+msgstr "Εκτύπωση εγγράφου"
+
 #. Manually set name and icon
 #: ../data/evince.desktop.in.in.h:1 ../shell/ev-application.c:1000
 #: ../shell/ev-window-title.c:139 ../shell/main.c:298
@@ -393,7 +447,7 @@ msgstr "Άγνωστος τύπος ΜΙΜΕ"
 msgid "All Documents"
 msgstr "Όλα τα έγγραφα"
 
-#: ../libdocument/ev-document-factory.c:579 ../shell/ev-utils.c:336
+#: ../libdocument/ev-document-factory.c:579 ../shell/ev-utils.c:309
 msgid "All Files"
 msgstr "Όλα τα αρχεία"
 
@@ -645,52 +699,28 @@ msgstr "Ο επιλεγμένος εκτυπωτής '%s' δεν μπορεί ν
 msgid "_Previous Page"
 msgstr "_Προηγούμενη σελίδα"
 
-#: ../previewer/ev-previewer-window.c:271
-msgid "Go to the previous page"
-msgstr "Μετάβαση στην προηγούμενη σελίδα"
-
 #: ../previewer/ev-previewer-window.c:273 ../shell/evince-menus.ui.h:39
 msgid "_Next Page"
 msgstr "Επόμε_νη σελίδα"
-
-#: ../previewer/ev-previewer-window.c:274
-msgid "Go to the next page"
-msgstr "Μετάβαση στην επόμενη σελίδα"
-
-#: ../previewer/ev-previewer-window.c:277
-msgid "Enlarge the document"
-msgstr "Μεγέθυνση εγγράφου"
-
-#: ../previewer/ev-previewer-window.c:280
-msgid "Shrink the document"
-msgstr "Σμίκρυνση εγγράφου"
 
 #: ../previewer/ev-previewer-window.c:285
 msgid "Print this document"
 msgstr "Εκτύπωση αυτού του εγγράφου"
 
-#: ../previewer/ev-previewer-window.c:317 ../shell/evince-menus.ui.h:31
-msgid "Fit Pa_ge"
-msgstr "Προσαρμογή στη _σελίδα"
-
 #: ../previewer/ev-previewer-window.c:318
 msgid "Make the current document fill the window"
 msgstr "Μετατροπή του τρέχοντος εγγράφου ώστε να γεμίσει το παράθυρο"
-
-#: ../previewer/ev-previewer-window.c:320 ../shell/evince-menus.ui.h:32
-msgid "Fit _Width"
-msgstr "Προσαρμογή στο _πλάτος"
 
 #: ../previewer/ev-previewer-window.c:321
 msgid "Make the current document fill the window width"
 msgstr ""
 "Μετατροπή του τρέχοντος εγγράφου ώστε να γεμίσει το πλάτος του παραθύρου"
 
-#: ../previewer/ev-previewer-window.c:514
+#: ../previewer/ev-previewer-window.c:536
 msgid "Page"
 msgstr "Σελίδα"
 
-#: ../previewer/ev-previewer-window.c:515
+#: ../previewer/ev-previewer-window.c:537
 msgid "Select Page"
 msgstr "Επιλογή σελίδας"
 
@@ -1129,7 +1159,7 @@ msgstr "Επιλογές αρχείου"
 msgid "View options"
 msgstr "Εμφάνιση επιλογών"
 
-#: ../shell/ev-utils.c:332
+#: ../shell/ev-utils.c:305
 msgid "Supported Image Files"
 msgstr "Υποστηριζόμενα αρχεία εικόνας"
 
@@ -1609,10 +1639,6 @@ msgstr "Π_ροσθήκη σελιδοδείκτη"
 msgid "_Close"
 msgstr "_Κλείσιμο"
 
-#: ../shell/evince-menus.ui.h:33
-msgid "_Automatic"
-msgstr "_Αυτόματα"
-
 #: ../shell/evince-menus.ui.h:34
 msgid "_Open Link"
 msgstr "Ά_νοιγμα συνδεσμού"
@@ -1737,12 +1763,6 @@ msgstr ""
 
 #~ msgid "Show or hide the side pane"
 #~ msgstr "Προβολή ή απόκρυψη πλευρικής στήλης"
-
-#~ msgid "Show the entire document"
-#~ msgstr "Εμφάνιση ολόκληρου του εγγράφου"
-
-#~ msgid "Show two pages at once"
-#~ msgstr "Εμφάνιση δύο σελίδων ταυτόχρονα"
 
 #~ msgid "Show odd pages on the left in dual mode"
 #~ msgstr "Εμφάνιση μονών σελίδων στα αριστερά σε διπλή κατάσταση"
