@@ -6739,6 +6739,16 @@ ev_view_focus (GtkWidget        *widget,
 }
 
 static void
+ev_view_parent_set (GtkWidget *widget,
+		    GtkWidget *previous_parent)
+{
+	GtkWidget *parent;
+
+	parent = gtk_widget_get_parent (widget);
+	g_assert (!parent || GTK_IS_SCROLLED_WINDOW (parent));
+}
+
+static void
 ev_view_class_init (EvViewClass *class)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (class);
@@ -6773,6 +6783,7 @@ ev_view_class_init (EvViewClass *class)
 	widget_class->query_tooltip = ev_view_query_tooltip;
 	widget_class->screen_changed = ev_view_screen_changed;
 	widget_class->focus = ev_view_focus;
+	widget_class->parent_set = ev_view_parent_set;
 
 	container_class->remove = ev_view_remove;
 	container_class->forall = ev_view_forall;
