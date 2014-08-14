@@ -1825,6 +1825,27 @@ _print_context_get_hard_margins (GtkPrintContext *context,
 }
 
 static void
+ev_print_operation_print_get_scaled_page_size (EvPrintOperationPrint *print,
+                                               gint                   page,
+                                               gdouble               *width,
+                                               gdouble               *height)
+{
+        GtkPrintSettings *settings;
+        gdouble           manual_scale;
+
+        ev_document_get_page_size (EV_PRINT_OPERATION (print)->document,
+                                   page, width, height);
+
+        settings = gtk_print_operation_get_print_settings (print->op);
+        manual_scale = gtk_print_settings_get_scale (settings) / 100.0;
+        if (manual_scale == 1.0)
+                return;
+
+        *width *= manual_scale;
+        *height *= manual_scale;
+}
+
+static void
 ev_print_operation_print_draw_page (EvPrintOperationPrint *print,
 				    GtkPrintContext       *context,
 				    gint                   page)
@@ -1834,6 +1855,7 @@ ev_print_operation_print_draw_page (EvPrintOperationPrint *print,
 	gdouble           cr_width, cr_height;
 	gdouble           width, height, scale;
 	gdouble           x_scale, y_scale;
+        gdouble           x_offset, y_offset;
 	gdouble           top, bottom, left, right;
 
 	gtk_print_operation_set_defer_drawing (print->op);
@@ -1857,12 +1879,16 @@ ev_print_operation_print_draw_page (EvPrintOperationPrint *print,
 	cr = gtk_print_context_get_cairo_context (context);
 	cr_width = gtk_print_context_get_width (context);
 	cr_height = gtk_print_context_get_height (context);
-	ev_document_get_page_size (op->document, page, &width, &height);
+        ev_print_operation_print_get_scaled_page_size (print, page, &width, &height);
 
 	if (print->page_scale == EV_SCALE_NONE) {
 		/* Center document page on the printed page */
-		if (print->autorotate)
-			cairo_translate (cr, (cr_width - width) / 2, (cr_height - height) / 2);
+		if (print->autorotate) {
+                        x_offset = (cr_width - width) / 2;
+                        y_offset = (cr_height - height) / 2;
+                        cairo_device_to_user (cr, &x_offset, &y_offset);
+                        cairo_translate (cr, x_offset, y_offset);
+                }
 	} else {
 		_print_context_get_hard_margins (context, &top, &bottom, &left, &right);
 
@@ -1875,29 +1901,27 @@ ev_print_operation_print_draw_page (EvPrintOperationPrint *print,
                         scale = 1.0;
 
 		if (print->autorotate) {
-			double left_right_sides, top_bottom_sides;
-
-			cairo_translate (cr, (cr_width - scale * width) / 2,
-					 (cr_height - scale * height) / 2);
+                        x_offset = (cr_width - scale * width) / 2;
+                        y_offset = (cr_height - scale * height) / 2;
+                        cairo_device_to_user (cr, &x_offset, &y_offset);
+                        cairo_translate (cr, x_offset, y_offset);
 
 			/* Ensure document page is within the margins. The
 			 * scale guarantees the document will fit in the
 			 * margins so we just need to check each side and
 			 * if it overhangs the margin, translate it to the
-			 * margin. */
-			left_right_sides = (cr_width - width*scale)/2;
-			top_bottom_sides = (cr_height - height*scale)/2;
-			if (left_right_sides < left)
-				cairo_translate (cr, left - left_right_sides, 0);
+                         * margin. */
+			if (x_offset < left)
+				cairo_translate (cr, left - x_offset, 0);
 
-			if (left_right_sides < right)
-				cairo_translate (cr, -(right - left_right_sides), 0);
+			if (x_offset < right)
+				cairo_translate (cr, -(right - x_offset), 0);
 
-			if (top_bottom_sides < top)
-				cairo_translate (cr, 0, top - top_bottom_sides);
+			if (y_offset < top)
+				cairo_translate (cr, 0, top - y_offset);
 
-			if (top_bottom_sides < bottom)
-				cairo_translate (cr, 0, -(bottom - top_bottom_sides));
+			if (y_offset < bottom)
+				cairo_translate (cr, 0, -(bottom - y_offset));
 		} else {
 			cairo_translate (cr, left, top);
 		}
