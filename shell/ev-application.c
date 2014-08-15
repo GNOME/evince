@@ -642,6 +642,15 @@ ev_application_open_uri_at_dest (EvApplication  *application,
 #endif /* ENABLE_DBUS */
 }
 
+static void
+ev_application_new_window (EvApplication *application,
+			   GdkScreen     *screen,
+			   guint32        timestamp)
+{
+        /* spawn an empty window */
+	ev_spawn (NULL, screen, NULL, EV_WINDOW_MODE_NORMAL, NULL, timestamp);
+}
+
 /**
  * ev_application_open_recent_view:
  * @application: The instance of the application.
@@ -931,6 +940,28 @@ ev_application_migrate_config_dir (EvApplication *application)
 }
 
 static void
+app_new_cb (GSimpleAction *action,
+            GVariant      *parameter,
+            gpointer       user_data)
+{
+	EvApplication *application = user_data;
+        GList         *windows, *l;
+        GtkWindow     *window = NULL;
+
+        windows = gtk_application_get_windows (GTK_APPLICATION (application));
+        for (l = windows; l != NULL; l = l->next) {
+                if (EV_IS_WINDOW (l->data)) {
+                        window = GTK_WINDOW (l->data);
+                        break;
+                }
+        }
+
+	ev_application_new_window (application,
+                                   window ? gtk_window_get_screen (window) : gdk_screen_get_default (),
+                                   gtk_get_current_event_time ());
+}
+
+static void
 app_help_cb (GSimpleAction *action,
              GVariant      *parameter,
              gpointer       user_data)
@@ -1012,6 +1043,7 @@ static void
 ev_application_startup (GApplication *gapplication)
 {
         const GActionEntry app_menu_actions[] = {
+		{ "new",  app_new_cb, NULL, NULL, NULL },
                 { "help", app_help_cb, NULL, NULL, NULL },
                 { "about", app_about_cb, NULL, NULL, NULL }
         };

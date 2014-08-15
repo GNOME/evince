@@ -424,7 +424,6 @@ ev_window_update_actions_sensitivity (EvWindow *ev_window)
 	gboolean can_find = FALSE;
 	gboolean can_find_in_page = FALSE;
 	gboolean presentation_mode;
-	gboolean fullscreen_mode;
 	gboolean recent_view_mode;
 	gboolean dual_mode = FALSE;
 	gboolean has_pages = FALSE;
@@ -477,7 +476,6 @@ ev_window_update_actions_sensitivity (EvWindow *ev_window)
 
 	/* Get modes */
 	presentation_mode = EV_WINDOW_IS_PRESENTATION (ev_window);
-	fullscreen_mode = ev_document_model_get_fullscreen (ev_window->priv->model);
 	recent_view_mode = ev_window_is_recent_view (ev_window);
 
 	/* File menu */
@@ -527,10 +525,6 @@ ev_window_update_actions_sensitivity (EvWindow *ev_window)
 	ev_window_set_action_enabled (ev_window, "add-bookmark",
 				      has_pages && ev_window->priv->bookmarks &&
 				      !recent_view_mode);
-
-	/* Recent View */
-	ev_window_set_action_enabled (ev_window, "recent-view", has_document &&
-			              !fullscreen_mode);
 
 	/* Other actions that must be disabled in recent view, in
 	 * case they have a shortcut or gesture associated
@@ -4618,21 +4612,6 @@ ev_window_cmd_go_backwards (GSimpleAction *action,
 	}
 }
 
-static void
-ev_window_cmd_toggle_recent_view (GSimpleAction *action,
-                                  GVariant      *state,
-                                  gpointer      user_data)
-{
-	EvWindow *ev_window = user_data;
-
-	if (g_variant_get_boolean (state))
-		ev_window_show_recent_view (ev_window);
-	else
-		ev_window_hide_recent_view (ev_window);
-
-	g_simple_action_set_state (action, state);
-}
-
 static gint
 compare_bookmarks (EvBookmark *a,
 		   EvBookmark *b)
@@ -5124,17 +5103,6 @@ recent_view_item_activated_cb (EvRecentView *recent_view,
                                const char   *uri,
                                EvWindow     *ev_window)
 {
-	GAction *action;
-
-	if (g_strcmp0 (ev_window->priv->uri, uri) == 0) {
-		ev_window_hide_recent_view (ev_window);
-		action = g_action_map_lookup_action (G_ACTION_MAP (ev_window),
-			                             "recent-view");
-		g_simple_action_set_state (G_SIMPLE_ACTION (action),
-			                   g_variant_new_boolean (FALSE));
-		return;
-	}
-
 	ev_application_open_uri_at_dest (EV_APP, uri,
 					 gtk_window_get_screen (GTK_WINDOW (ev_window)),
 					 NULL, 0, NULL, gtk_get_current_event_time ());
@@ -5816,8 +5784,6 @@ static const GActionEntry actions[] = {
 	{ "escape", ev_window_cmd_escape },
 	{ "open-menu", ev_window_cmd_action_menu },
 	{ "caret-navigation", NULL, NULL, "false", ev_window_cmd_view_toggle_caret_navigation },
-	{ "recent-view", NULL, NULL, "false", ev_window_cmd_toggle_recent_view },
-
 	/* Popups specific items */
 	{ "open-link", ev_window_popup_cmd_open_link },
 	{ "open-link-new-window", ev_window_popup_cmd_open_link_new_window },

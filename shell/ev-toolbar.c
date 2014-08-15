@@ -50,7 +50,6 @@ struct _EvToolbarPrivate {
         GtkWidget *page_selector;
         GtkWidget *navigation_action;
         GtkWidget *find_button;
-        GtkWidget *recent_view_button;
         GtkWidget *open_button;
         GMenu *bookmarks_section;
 
@@ -199,17 +198,6 @@ ev_toolbar_constructed (GObject *object)
         rtl = gtk_widget_get_direction (GTK_WIDGET (ev_toolbar)) == GTK_TEXT_DIR_RTL;
 
         builder = gtk_builder_new_from_resource ("/org/gnome/evince/shell/ui/menus.ui");
-
-        /* View of recent items */
-        button = ev_toolbar_create_toggle_button (ev_toolbar, "win.recent-view",
-                                                  "view-grid-symbolic",
-                                                  _("Toggle between view of recent items and open document"));
-        ev_toolbar->priv->recent_view_button = button;
-        if (rtl)
-                gtk_widget_set_margin_left (button, 6);
-        else
-                gtk_widget_set_margin_right (button, 6);
-        gtk_container_add (GTK_CONTAINER (ev_toolbar), button);
 
         button = ev_toolbar_create_button (ev_toolbar, "win.open",
                                            "document-open-symbolic",
@@ -392,7 +380,6 @@ ev_toolbar_set_mode (EvToolbar     *ev_toolbar,
                 gtk_widget_show (priv->zoom_action);
                 gtk_widget_show (priv->page_selector);
                 gtk_widget_show (priv->find_button);
-                gtk_widget_show (priv->recent_view_button);
                 gtk_widget_hide (priv->open_button);
                 break;
         case EV_TOOLBAR_MODE_FULLSCREEN:
@@ -402,7 +389,6 @@ ev_toolbar_set_mode (EvToolbar     *ev_toolbar,
                 gtk_widget_show (priv->zoom_action);
                 gtk_widget_show (priv->page_selector);
                 gtk_widget_show (priv->find_button);
-                gtk_widget_hide (priv->recent_view_button);
                 gtk_widget_hide (priv->open_button);
                 break;
 	case EV_TOOLBAR_MODE_RECENT_VIEW:
@@ -412,7 +398,6 @@ ev_toolbar_set_mode (EvToolbar     *ev_toolbar,
                 gtk_widget_hide (priv->zoom_action);
                 gtk_widget_hide (priv->page_selector);
                 gtk_widget_hide (priv->find_button);
-                gtk_widget_show (priv->recent_view_button);
                 gtk_widget_show (priv->open_button);
                 break;
         }
