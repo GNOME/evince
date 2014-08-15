@@ -42,7 +42,7 @@ void           ev_mapping_list_unref       (EvMappingList *mapping_list);
 
 guint          ev_mapping_list_get_page    (EvMappingList *mapping_list);
 GList         *ev_mapping_list_get_list    (EvMappingList *mapping_list);
-EvMappingList *ev_mapping_list_remove      (EvMappingList *mapping_list,
+void           ev_mapping_list_remove      (EvMappingList *mapping_list,
 					    EvMapping     *mapping);
 EvMapping     *ev_mapping_list_find        (EvMappingList *mapping_list,
 					    gconstpointer  data);

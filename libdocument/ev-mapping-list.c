@@ -171,18 +171,15 @@ ev_mapping_list_get_list (EvMappingList *mapping_list)
  * @mapping_list: an #EvMappingList
  * @mapping: #EvMapping to remove
  *
- * Returns: an #EvMappingList
- *
  * Since: 3.14
  */
-EvMappingList *
+void
 ev_mapping_list_remove (EvMappingList *mapping_list,
 			EvMapping     *mapping)
 {
 	mapping_list->list = g_list_remove (mapping_list->list, mapping);
         mapping_list->data_destroy_func (mapping->data);
         g_free (mapping);
-	return mapping_list;
 }
 
 guint
