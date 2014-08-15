@@ -4,9 +4,9 @@
 
 m4_define([ev_major_version],[3])
 m4_define([ev_minor_version],[13])
-m4_define([ev_micro_version],[3])
-m4_define([ev_extra_version],[1])
-m4_define([ev_version],[ev_major_version.ev_minor_version.ev_micro_version.ev_extra_version])
+m4_define([ev_micro_version],[90])
+m4_define([ev_extra_version],[])
+m4_define([ev_version],[ev_major_version.ev_minor_version.ev_micro_version()ev_extra_version])
 
 # The evince API version
 m4_define([ev_api_version], [3.0])

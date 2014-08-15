@@ -1,4 +1,69 @@
 ================
+Evince   3.13.90
+================
+
+New features and improvements:
+
+    * Add support for removing annotations (#649044, José Aliste,
+      Germán Poo-Caamaño, Giselle Machado, Carlos Garcia Campos)
+    * Add pan gesture to switch pages in non-continuous mode (Carlos
+      Garnacho)
+    * Add pinch/zoom gesture to handle document zooming (Carlos
+      Garnacho)
+    * Add initial implementation of a browser plugin (Carlos Garcia
+      Campos)
+    * Show the filename as a subtitle of the headerbar (José Aliste)
+    * Add recent view shown when evince is opened without a document
+      to replace the recetn menu list (#633501, Germán Poo-Caamaño,
+      Carlos Garcia Campos)
+    * Use a GtkPopover for the zoom selector menu (Carlos Garcia Campos)
+    * Move Next-Page and Previous-Page buttons from the heqader bar to
+      the view menu (#732289, José Aliste)
+    * HiDPI support (#723431, Owen W. Taylor, Germán Poo-Caamaño,
+      Carlos Garcia Campos)
+    * Use open-menu-symbolic for the gear menu (Daniel Mustieles)
+    * Improve efficiency of methods to get start and end indices of a
+      EvLinkAccessible (#732340, Joanmarie Diggs)
+    * Make <Ctrl>Home/End scroll to the start/end of the document
+      (#724273, Antia Puentes)
+    * Expose an accessible name for form field push buttons (#733919,
+      Joanmarie Diggs)
+
+Bug fixes:
+
+    * Fix centering of documents when printing with a manual scale
+      (#734788, Carlos Garcia Campos)
+    * Bring back page borders with recent GTK+ (Carlos Garcia Campos)
+    * Emit accessible focused-changed signals for form fields
+      (#733662, Joanmarie Diggs)
+    * Emit accessible state-changed signals for form fields (#733748,
+      Joanmarie Diggs)
+    * Make annotation internal names unique (#649044, Giselle Machado)
+    * Fix several memory leaks (Carlos Garcia Campos)
+
+Translation updates:
+
+    * Khaled Hosny (ar)
+    * Nilamdyuti Goswami (as)
+    * Benjamin Steinwender (de)
+    * Efstathios Iosifidis (el)
+    * Tom Tryfonidis (el)
+    * Daniel Mustieles (es)
+    * Iñaki Larrañaga Murgoitio (eu)
+    * Sami Jaktholm (fi)
+    * Michael Scherer (fr)
+    * GunChleoc (gd)
+    * Yosef Or Boczko (he)
+    * Balázs Úr (hu)
+    * Andika Triwidada (id)
+    * Jiro Matsuzawa (ja)
+    * Aurimas Černius (lt)
+    * Åka Sikrom (nb)
+    * Enrico Nicoletto (pt_BR)
+    * Yuri Myasoedov (ru)
+    * Muhammet Kara (tr)
+
+================
 Evince  3.13.3.1
 ================
 
