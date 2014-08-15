@@ -129,7 +129,10 @@ ev_display_open_if_needed (const gchar *name)
 	for (l = displays; l != NULL; l = l->next) {
 		const gchar *display_name = gdk_display_get_name ((GdkDisplay *) l->data);
 
-		if (g_ascii_strcasecmp (display_name, name) == 0) {
+                /* The given name might come with the screen number, because GdkAppLaunchContext
+                 * uses gdk_screen_make_display_name().
+                 */
+                if (g_str_has_prefix (name, display_name)) {
 			display = l->data;
 			break;
 		}
