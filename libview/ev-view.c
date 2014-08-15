@@ -6662,6 +6662,7 @@ ev_view_hierarchy_changed (GtkWidget *widget,
 		g_signal_connect (view->pan_gesture, "end",
 				  G_CALLBACK (pan_gesture_end_cb), widget);
 
+		gtk_gesture_single_set_touch_only (GTK_GESTURE_SINGLE (view->pan_gesture), TRUE);
 		gtk_event_controller_set_propagation_phase (GTK_EVENT_CONTROLLER (view->pan_gesture),
 							    GTK_PHASE_CAPTURE);
 	} else if (!parent && view->pan_gesture) {
