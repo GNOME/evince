@@ -337,6 +337,9 @@ static void     ev_window_popup_cmd_copy_image          (GSimpleAction    *actio
 static void     ev_window_popup_cmd_annot_properties    (GSimpleAction    *action,
 							 GVariant         *parameter,
 							 gpointer          user_data);
+static void     ev_window_popup_cmd_remove_annotation   (GSimpleAction    *action,
+							 GVariant         *parameter,
+							 gpointer          user_data);
 static void	ev_window_popup_cmd_open_attachment     (GSimpleAction    *action,
 							 GVariant         *parameter,
 							 gpointer          user_data);
@@ -552,6 +555,7 @@ ev_window_update_actions_sensitivity (EvWindow *ev_window)
 	ev_window_set_action_enabled (ev_window, "open-attachment", !recent_view_mode);
 	ev_window_set_action_enabled (ev_window, "save-attachment", !recent_view_mode);
 	ev_window_set_action_enabled (ev_window, "annot-properties", !recent_view_mode);
+	ev_window_set_action_enabled (ev_window, "remove-annot", !recent_view_mode);
 
 	can_find_in_page = (ev_window->priv->find_job &&
 			    ev_job_find_has_results (EV_JOB_FIND (ev_window->priv->find_job)));
@@ -4994,6 +4998,7 @@ view_menu_annot_popup (EvWindow     *ev_window,
 	GAction *action;
 	gboolean show_annot_props = FALSE;
 	gboolean show_attachment = FALSE;
+	gboolean can_remove_annots;
 
 	g_clear_object (&ev_window->priv->annot);
 	if (annot) {
@@ -5017,8 +5022,13 @@ view_menu_annot_popup (EvWindow     *ev_window,
 		}
 	}
 
+	can_remove_annots = ev_document_annotations_can_remove_annotation (EV_DOCUMENT_ANNOTATIONS (ev_window->priv->document));
+
 	action = g_action_map_lookup_action (G_ACTION_MAP (ev_window), "annot-properties");
 	g_simple_action_set_enabled (G_SIMPLE_ACTION (action), show_annot_props);
+
+	action = g_action_map_lookup_action (G_ACTION_MAP (ev_window), "remove-annot");
+	g_simple_action_set_enabled (G_SIMPLE_ACTION (action), annot != NULL && can_remove_annots);
 
 	action = g_action_map_lookup_action (G_ACTION_MAP (ev_window), "open-attachment");
 	g_simple_action_set_enabled (G_SIMPLE_ACTION (action), show_attachment);
@@ -5817,7 +5827,8 @@ static const GActionEntry actions[] = {
 	{ "copy-image", ev_window_popup_cmd_copy_image },
 	{ "open-attachment", ev_window_popup_cmd_open_attachment },
 	{ "save-attachment", ev_window_popup_cmd_save_attachment_as },
-	{ "annot-properties", ev_window_popup_cmd_annot_properties }
+	{ "annot-properties", ev_window_popup_cmd_annot_properties },
+	{ "remove-annot", ev_window_popup_cmd_remove_annotation }
 };
 
 static void
@@ -6456,6 +6467,17 @@ ev_window_popup_cmd_annot_properties (GSimpleAction *action,
 	}
 
 	gtk_widget_destroy (GTK_WIDGET (dialog));
+}
+
+static void
+ev_window_popup_cmd_remove_annotation (GSimpleAction *action,
+				       GVariant      *parameter,
+				       gpointer       user_data)
+{
+	EvWindow *window = user_data;
+
+	ev_view_remove_annotation (EV_VIEW (window->priv->view),
+				   window->priv->annot);
 }
 
 static void
