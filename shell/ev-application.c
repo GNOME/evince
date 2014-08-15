@@ -217,6 +217,7 @@ ev_spawn (const char     *uri,
 
 	if (app != NULL) {
                 GList uri_list;
+                GList *uris = NULL;
 		GdkAppLaunchContext *ctx;
 
 		ctx = gdk_display_get_app_launch_context (gdk_screen_get_display (screen));
@@ -229,10 +230,12 @@ ev_spawn (const char     *uri,
                  * consider using g_app_info_launch_uris() instead.
                  * See https://bugzilla.gnome.org/show_bug.cgi?id=644604
                  */
-                uri_list.data = (gchar *)uri;
-                uri_list.prev = uri_list.next = NULL;
-		g_app_info_launch_uris (app, &uri_list,
-                                        G_APP_LAUNCH_CONTEXT (ctx), &error);
+                if (uri) {
+                        uri_list.data = (gchar *)uri;
+                        uri_list.prev = uri_list.next = NULL;
+                        uris = &uri_list;
+                }
+		g_app_info_launch_uris (app, uris, G_APP_LAUNCH_CONTEXT (ctx), &error);
 
 		g_object_unref (app);
 		g_object_unref (ctx);
