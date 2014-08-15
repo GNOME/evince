@@ -373,8 +373,7 @@ static void     ev_window_show_find_bar                 (EvWindow         *ev_wi
 							 gboolean          restart);
 static void     ev_window_close_find_bar                (EvWindow         *ev_window);
 static void     ev_window_clear_find_job                (EvWindow         *ev_window);
-static void     ev_window_show_recent_view              (EvWindow         *ev_window);
-static void     ev_window_hide_recent_view              (EvWindow         *ev_window);
+static void     ev_window_destroy_recent_view           (EvWindow         *ev_window);
 static void     recent_view_item_activated_cb           (EvRecentView     *recent_view,
                                                          const char       *uri,
                                                          EvWindow         *ev_window);
@@ -1595,7 +1594,7 @@ ev_window_set_document (EvWindow *ev_window, EvDocument *document)
 					   _("The document contains only empty pages"));
 	}
 
-	ev_window_hide_recent_view (ev_window);
+	ev_window_destroy_recent_view (ev_window);
 
 	if (EV_WINDOW_IS_PRESENTATION (ev_window)) {
 		gint current_page;
@@ -2298,7 +2297,42 @@ ev_window_open_document (EvWindow       *ev_window,
 void
 ev_window_open_recent_view (EvWindow *ev_window)
 {
-	ev_window_show_recent_view (EV_WINDOW (ev_window));
+	if (ev_window->priv->recent_view)
+		return;
+
+	gtk_widget_hide (ev_window->priv->hpaned);
+	gtk_widget_hide (ev_window->priv->find_bar);
+
+	ev_window->priv->recent_view = EV_RECENT_VIEW (ev_recent_view_new ());
+	g_signal_connect_object (ev_window->priv->recent_view,
+				 "item-activated",
+				 G_CALLBACK (recent_view_item_activated_cb),
+				 ev_window, 0);
+	gtk_box_pack_start (GTK_BOX (ev_window->priv->main_box),
+			    GTK_WIDGET (ev_window->priv->recent_view),
+			    TRUE, TRUE, 0);
+
+	gtk_widget_show (GTK_WIDGET (ev_window->priv->recent_view));
+	ev_toolbar_set_mode (EV_TOOLBAR (ev_window->priv->toolbar),
+			     EV_TOOLBAR_MODE_RECENT_VIEW);
+	ev_window_title_set_type (ev_window->priv->title, EV_WINDOW_TITLE_RECENT);
+
+	ev_window_update_actions_sensitivity (ev_window);
+}
+
+static void
+ev_window_destroy_recent_view (EvWindow *ev_window)
+{
+	if (!ev_window->priv->recent_view)
+		return;
+
+	gtk_widget_destroy (GTK_WIDGET (ev_window->priv->recent_view));
+	ev_window->priv->recent_view = NULL;
+	gtk_widget_show (ev_window->priv->hpaned);
+	ev_toolbar_set_mode (EV_TOOLBAR (ev_window->priv->toolbar),
+			     EV_TOOLBAR_MODE_NORMAL);
+	ev_window_title_set_type (ev_window->priv->title, EV_WINDOW_TITLE_DOCUMENT);
+	ev_window_update_actions_sensitivity (ev_window);
 }
 
 static void
@@ -7183,47 +7217,6 @@ ev_window_new (void)
 					      NULL));
 
 	return ev_window;
-}
-
-static void
-ev_window_show_recent_view (EvWindow *ev_window)
-{
-	EvToolbar *toolbar = EV_TOOLBAR (ev_window->priv->toolbar);
-
-	gtk_widget_hide (ev_window->priv->hpaned);
-	gtk_widget_hide (ev_window->priv->find_bar);
-
-	if (!ev_window->priv->recent_view) {
-		ev_window->priv->recent_view = EV_RECENT_VIEW (ev_recent_view_new ());
-		g_signal_connect_object (ev_window->priv->recent_view,
-		                         "item-activated",
-		                         G_CALLBACK (recent_view_item_activated_cb),
-		                         ev_window, 0);
-		gtk_box_pack_start (GTK_BOX (ev_window->priv->main_box),
-		                    GTK_WIDGET (ev_window->priv->recent_view),
-		                    TRUE, TRUE, 0);
-	}
-
-	gtk_widget_show (GTK_WIDGET (ev_window->priv->recent_view));
-	ev_toolbar_set_mode (toolbar, EV_TOOLBAR_MODE_RECENT_VIEW);
-	ev_window_title_set_type (ev_window->priv->title, EV_WINDOW_TITLE_RECENT);
-
-	ev_window_update_actions_sensitivity (ev_window);
-}
-
-static void
-ev_window_hide_recent_view (EvWindow *ev_window)
-{
-	EvToolbar *toolbar = EV_TOOLBAR (ev_window->priv->toolbar);
-
-	if (ev_window->priv->recent_view)
-		gtk_widget_hide (GTK_WIDGET (ev_window->priv->recent_view));
-
-	gtk_widget_show (ev_window->priv->hpaned);
-	ev_toolbar_set_mode (toolbar, EV_TOOLBAR_MODE_NORMAL);
-	ev_window_title_set_type (ev_window->priv->title, EV_WINDOW_TITLE_DOCUMENT);
-
-	ev_window_update_actions_sensitivity (ev_window);
 }
 
 const gchar *
