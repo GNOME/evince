@@ -51,7 +51,8 @@ EvJobPageDataFlags ev_page_cache_get_flags              (EvPageCache       *cach
 void               ev_page_cache_set_flags              (EvPageCache       *cache,
 							 EvJobPageDataFlags flags);
 void               ev_page_cache_mark_dirty             (EvPageCache       *cache,
-							 gint               page);
+							 gint               page,
+                                                         EvJobPageDataFlags flags);
 EvMappingList     *ev_page_cache_get_link_mapping       (EvPageCache       *cache,
 							 gint               page);
 EvMappingList     *ev_page_cache_get_image_mapping      (EvPageCache       *cache,

@@ -401,8 +401,9 @@ ev_page_cache_set_flags (EvPageCache       *cache,
 }
 
 void
-ev_page_cache_mark_dirty (EvPageCache *cache,
-			  gint         page)
+ev_page_cache_mark_dirty (EvPageCache       *cache,
+			  gint               page,
+                          EvJobPageDataFlags flags)
 {
 	EvPageCacheData *data;
 
@@ -410,6 +411,37 @@ ev_page_cache_mark_dirty (EvPageCache *cache,
 
 	data = &cache->page_list[page];
 	data->dirty = TRUE;
+
+        if (flags & EV_PAGE_DATA_INCLUDE_LINKS)
+                g_clear_pointer (&data->link_mapping, ev_mapping_list_unref);
+
+	if (flags & EV_PAGE_DATA_INCLUDE_IMAGES)
+                g_clear_pointer (&data->image_mapping, ev_mapping_list_unref);
+
+	if (flags & EV_PAGE_DATA_INCLUDE_FORMS)
+                g_clear_pointer (&data->form_field_mapping, ev_mapping_list_unref);
+
+	if (flags & EV_PAGE_DATA_INCLUDE_ANNOTS)
+                g_clear_pointer (&data->annot_mapping, ev_mapping_list_unref);
+
+	if (flags & EV_PAGE_DATA_INCLUDE_TEXT_MAPPING)
+                g_clear_pointer (&data->text_mapping, cairo_region_destroy);
+
+	if (flags & EV_PAGE_DATA_INCLUDE_TEXT)
+                g_clear_pointer (&data->text, g_free);
+
+	if (flags & EV_PAGE_DATA_INCLUDE_TEXT_LAYOUT) {
+                g_clear_pointer (&data->text_layout, g_free);
+                data->text_layout_length = 0;
+        }
+
+        if (flags & EV_PAGE_DATA_INCLUDE_TEXT_ATTRS)
+                g_clear_pointer (&data->text_attrs, pango_attr_list_unref);
+
+        if (flags & EV_PAGE_DATA_INCLUDE_TEXT_LOG_ATTRS) {
+                g_clear_pointer (&data->text_log_attrs, g_free);
+                data->text_log_attrs_length = 0;
+        }
 
 	/* Update the current range */
 	ev_page_cache_set_page_range (cache, cache->start_page, cache->end_page);

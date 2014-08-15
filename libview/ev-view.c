@@ -3194,7 +3194,7 @@ ev_view_create_annotation (EvView          *view,
 
 	/* If the page didn't have annots, mark the cache as dirty */
 	if (!ev_page_cache_get_annot_mapping (view->page_cache, view->current_page))
-		ev_page_cache_mark_dirty (view->page_cache, view->current_page);
+		ev_page_cache_mark_dirty (view->page_cache, view->current_page, EV_PAGE_DATA_INCLUDE_ANNOTS);
 
 	if (EV_IS_ANNOTATION_MARKUP (annot)) {
 		GtkWindow *parent;
@@ -3285,7 +3285,7 @@ ev_view_remove_annotation (EvView       *view,
                                                    annot);
         ev_document_doc_mutex_unlock ();
 
-        ev_page_cache_mark_dirty (view->page_cache, page);
+        ev_page_cache_mark_dirty (view->page_cache, page, EV_PAGE_DATA_INCLUDE_ANNOTS);
 
 	/* FIXME: only redraw the annot area */
         ev_view_reload_page (view, page, NULL);
