@@ -41,6 +41,7 @@ ev-previewer-resources.c: previewer.gresource.xml Makefile $(shell $(GLIB_COMPIL
 
 EXTRA_DIST = \
 	previewer.gresource.xml \
+	evince-previewer.css \
 	previewer-ui.xml \
 	$(NULL)
 

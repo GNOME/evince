@@ -13,7 +13,8 @@ libevbrowserplugin_la_SOURCES = \
 	EvBrowserPlugin.h \
 	EvBrowserPlugin.cpp \
 	EvBrowserPluginToolbar.h \
-	EvBrowserPluginToolbar.cpp
+	EvBrowserPluginToolbar.cpp \
+	EvMemoryUtils.h
 
 nodist_libevbrowserplugin_la_SOURCES = \
 	EvBrowserPluginResources.c
@@ -56,6 +57,11 @@ EvBrowserPluginResources.c: EvBrowserPlugin.gresource.xml Makefile $(shell $(GLI
 	$(AM_V_GEN) XMLLINT=$(XMLLINT) $(GLIB_COMPILE_RESOURCES) --target=$@ --sourcedir=$(srcdir) --sourcedir=$(top_srcdir)/data --generate-source $<
 
 EXTRA_DIST = \
+	EvBrowserPlugin.gresource.xml \
+	evince-browser.css \
 	plugin.symbols
+
+CLEANFILES = \
+	EvBrowserPluginResources.c
 
 -include $(top_srcdir)/git.mk
