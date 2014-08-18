@@ -52,6 +52,9 @@ EvMapping     *ev_mapping_list_find_custom (EvMappingList *mapping_list,
 EvMapping     *ev_mapping_list_get         (EvMappingList *mapping_list,
 					    gdouble        x,
 					    gdouble        y);
+GArray        *ev_mapping_list_get_all     (EvMappingList *mapping_list,
+					    gdouble        x,
+					    gdouble        y);
 gpointer       ev_mapping_list_get_data    (EvMappingList *mapping_list,
 					    gdouble        x,
 					    gdouble        y);

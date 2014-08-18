@@ -163,6 +163,47 @@ ev_mapping_list_get (EvMappingList *mapping_list,
 }
 
 /**
+ * ev_mapping_list_get_all:
+ * @mapping_list: an #EvMappingList
+ * @x: X coordinate
+ * @y: Y coordinate
+ *
+ * Returns: (transfer none): a #GArray of all the #EvMapping in the list at coordinates (x, y)
+ *
+ * Since: 3.36
+ */
+GArray *
+ev_mapping_list_get_all (EvMappingList *mapping_list,
+		         gdouble        x,
+		         gdouble        y)
+{
+        g_return_val_if_fail (mapping_list != NULL, NULL);
+
+	GList  *list;
+	GArray *mapping_array;
+
+	mapping_array = g_array_new (FALSE, FALSE, sizeof (EvMapping));
+
+	for (list = mapping_list->list; list; list = list->next) {
+		EvMapping *mapping = list->data;
+
+		if ((x >= mapping->area.x1) &&
+		    (y >= mapping->area.y1) &&
+		    (x <= mapping->area.x2) &&
+		    (y <= mapping->area.y2)) {
+			g_array_append_val (mapping_array, *mapping);
+		}
+	}
+	g_list_free (list);
+
+	if (mapping_array->len > 0) return mapping_array;
+	else {
+		g_array_unref (mapping_array);
+		return NULL;
+	}
+}
+
+/**
  * ev_mapping_list_get_data:
  * @mapping_list: an #EvMappingList
  * @x: X coordinate
