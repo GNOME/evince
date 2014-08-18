@@ -3926,6 +3926,91 @@ pdf_document_annotations_save_annotation (EvDocumentAnnotations *document_annota
 	ev_document_set_modified (EV_DOCUMENT (document_annotations), TRUE);
 }
 
+static gboolean
+pdf_document_annotations_is_xy_in_annotation (EvDocumentAnnotations *document_annots,
+		                              EvAnnotation          *annot,
+					      gdouble                x,
+					      gdouble                y)
+{
+	PopplerAnnot *poppler_annot;
+	EvPage       *page;
+	PopplerPage  *poppler_page;
+	gdouble       height;
+	gdouble       poppler_y;
+
+	page = ev_annotation_get_page (annot);
+	poppler_page = POPPLER_PAGE (page->backend_page);
+	poppler_page_get_size (poppler_page, NULL, &height);
+	poppler_y = height - y;
+	poppler_annot = POPPLER_ANNOT (g_object_get_data (G_OBJECT (annot), "poppler-annot"));
+
+	if (EV_IS_ANNOTATION_TEXT_MARKUP (annot)) {
+		GArray *quads;
+		guint   i;
+
+		quads = poppler_annot_text_markup_get_quadrilaterals (POPPLER_ANNOT_TEXT_MARKUP (poppler_annot));
+
+		for (i = 0; i < quads->len; i++) {
+			PopplerQuadrilateral *q;
+			gdouble               area_triangles;
+			gdouble               area_quad;
+			gdouble               x1, y1, x2, y2, x3, y3, x4, y4;
+
+			x1 = x;
+			y1 = poppler_y;
+			area_triangles = 0;
+			q = &g_array_index (quads, PopplerQuadrilateral, i);
+
+			x2 = q->p1.x;
+			y2 = q->p1.y;
+			x3 = q->p2.x;
+			y3 = q->p2.y;
+			area_triangles += ABS (x1*(y2 - y3) + x2*(y3 - y1) + x3*(y1 - y2)) / 2;
+
+			x2 = q->p2.x;
+			y2 = q->p2.y;
+			x3 = q->p4.x;
+			y3 = q->p4.y;
+			area_triangles += ABS (x1*(y2 - y3) + x2*(y3 - y1) + x3*(y1 - y2)) / 2;
+
+			x2 = q->p4.x;
+			y2 = q->p4.y;
+			x3 = q->p3.x;
+			y3 = q->p3.y;
+			area_triangles += ABS (x1*(y2 - y3) + x2*(y3 - y1) + x3*(y1 - y2)) / 2;
+
+			x2 = q->p3.x;
+			y2 = q->p3.y;
+			x3 = q->p1.x;
+			y3 = q->p1.y;
+			area_triangles += ABS (x1*(y2 - y3) + x2*(y3 - y1) + x3*(y1 - y2)) / 2;
+
+			x1 = q->p1.x;
+			y1 = q->p1.y;
+			x2 = q->p2.x;
+			y2 = q->p2.y;
+			x3 = q->p4.x;
+			y3 = q->p4.y;
+			x4 = q->p3.x;
+			y4 = q->p3.y;
+			area_quad = ABS ((x1*y2 - y1*x2) + (x2*y3 - y2*x3) + (x3*y4 - y3*x4) + (x4*y1 - y4*x1)) / 2;
+
+			if (ABS (area_triangles - area_quad) < 0.0001)
+				return TRUE;
+		}
+		g_array_unref (quads);
+
+		return FALSE;
+	} else {
+		/* Check only the rectangle, which should be true */
+		PopplerRectangle rect;
+
+		poppler_annot_get_rectangle (poppler_annot, &rect);
+
+		return rect.x1 <= x && rect.x2 >= x && rect.y1 <= poppler_y && rect.y2 >= poppler_y;
+	}
+}
+
 static void
 pdf_document_document_annotations_iface_init (EvDocumentAnnotationsInterface *iface)
 {
@@ -3934,6 +4019,7 @@ pdf_document_document_annotations_iface_init (EvDocumentAnnotationsInterface *if
 	iface->add_annotation = pdf_document_annotations_add_annotation;
 	iface->save_annotation = pdf_document_annotations_save_annotation;
 	iface->remove_annotation = pdf_document_annotations_remove_annotation;
+	iface->is_xy_in_annotation = pdf_document_annotations_is_xy_in_annotation;
 }
 
 /* Media */

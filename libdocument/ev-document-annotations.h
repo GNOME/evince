@@ -85,6 +85,10 @@ struct _EvDocumentAnnotationsInterface
 						 EvAnnotationsSaveMask  mask);
 	void	       (* remove_annotation)    (EvDocumentAnnotations *document_annots,
 						 EvAnnotation          *annot);
+	gboolean       (* is_xy_in_annotation)  (EvDocumentAnnotations *document_annots,
+			                         EvAnnotation          *annot,
+						 gdouble                x,
+						 gdouble                y);
 };
 
 GType          ev_document_annotations_get_type             (void) G_GNUC_CONST;
@@ -102,6 +106,10 @@ void           ev_document_annotations_save_annotation      (EvDocumentAnnotatio
 							     EvAnnotationsSaveMask  mask);
 gboolean       ev_document_annotations_can_add_annotation    (EvDocumentAnnotations *document_annots);
 gboolean       ev_document_annotations_can_remove_annotation (EvDocumentAnnotations *document_annots);
+gboolean       ev_document_annotations_is_xy_in_annotation   (EvDocumentAnnotations *document_annots,
+		                                              EvAnnotation          *annot,
+							      gdouble                x,
+							      gdouble                y);
 
 G_END_DECLS
 

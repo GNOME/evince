@@ -91,3 +91,14 @@ ev_document_annotations_can_remove_annotation (EvDocumentAnnotations *document_a
 
 	return iface->remove_annotation != NULL;
 }
+
+gboolean
+ev_document_annotations_is_xy_in_annotation (EvDocumentAnnotations *document_annots,
+		                             EvAnnotation          *annot,
+					     gdouble                x,
+					     gdouble                y)
+{
+	EvDocumentAnnotationsInterface *iface = EV_DOCUMENT_ANNOTATIONS_GET_IFACE (document_annots);
+
+	return iface->is_xy_in_annotation (document_annots, annot, x, y);
+}
