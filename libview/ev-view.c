@@ -3326,6 +3326,8 @@ get_annotation_mapping_at_location (EvView *view,
 {
 	gint x_new = 0, y_new = 0;
 	EvMappingList *annotations_mapping;
+	GArray        *annotation_mapping_array;
+	guint          i;
 
 	if (!EV_IS_DOCUMENT_ANNOTATIONS (view->document))
 		return NULL;
@@ -3335,8 +3337,23 @@ get_annotation_mapping_at_location (EvView *view,
 
 	annotations_mapping = ev_page_cache_get_annot_mapping (view->page_cache, *page);
 
-	if (annotations_mapping)
-		return ev_mapping_list_get (annotations_mapping, x_new, y_new);
+	if (annotations_mapping) {
+		annotation_mapping_array = ev_mapping_list_get_all (annotations_mapping, x_new, y_new);
+
+		if (annotation_mapping_array) {
+			for (i = 0; i < annotation_mapping_array->len; i++) {
+				EvMapping    *mapping;
+				EvAnnotation *annot;
+
+				mapping = &g_array_index (annotation_mapping_array, EvMapping, i);
+				annot = EV_ANNOTATION (mapping->data);
+
+				if (ev_document_annotations_is_xy_in_annotation (EV_DOCUMENT_ANNOTATIONS (view->document), annot, x_new, y_new))
+					return mapping;
+			}
+			g_array_unref (annotation_mapping_array);
+		}
+	}
 
 	return NULL;
 }
