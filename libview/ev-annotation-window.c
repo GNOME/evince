@@ -75,8 +75,6 @@ static guint signals[N_SIGNALS];
 
 G_DEFINE_TYPE (EvAnnotationWindow, ev_annotation_window, GTK_TYPE_WINDOW)
 
-#define EV_ICON_SIZE_ANNOT_WINDOW (ev_annotation_window_get_icon_size())
-
 /* Cut and paste from gtkwindow.c */
 static void
 send_focus_change (GtkWidget *widget,
@@ -102,17 +100,6 @@ get_screen_dpi (EvAnnotationWindow *window)
 
 	screen = gtk_window_get_screen (GTK_WINDOW (window));
 	return ev_document_misc_get_screen_dpi (screen);
-}
-
-static GtkIconSize
-ev_annotation_window_get_icon_size (void)
-{
-	static GtkIconSize icon_size = 0;
-
-	if (G_UNLIKELY (icon_size == 0))
-		icon_size = gtk_icon_size_register ("ev-icon-size-annot-window", 8, 8);
-
-	return icon_size;
 }
 
 static void
