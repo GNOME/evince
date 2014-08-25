@@ -9,8 +9,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: evince\n"
-"POT-Creation-Date: 2014-04-23 03:38+0000\n"
-"PO-Revision-Date: 2014-04-23 09:47+0100\n"
+"POT-Creation-Date: 2014-08-25 15:41+0000\n"
+"PO-Revision-Date: 2014-08-25 22:49+0200\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: Czech <gnome-cs-list@gnome.org>\n"
 "Language: cs\n"
@@ -67,7 +67,7 @@ msgstr "Tiffany Antopolski"
 #: C/duplex-3pages.page:16 C/duplex-4pages.page:16 C/duplex-5pages.page:16
 #: C/duplex-6pages.page:16 C/duplex-7pages.page:16 C/duplex-8pages.page:16
 #: C/duplex-9pages.page:16 C/duplex-npages.page:16 C/editing.page:15
-#: C/formats.page:18 C/forms.page:15 C/forms-saving.page:23
+#: C/formats.page:22 C/forms.page:15 C/forms-saving.page:23
 #: C/invert-colors.page:23 C/noprint.page:14 C/openerror.page:17
 #: C/presentations.page:20 C/print-2sided.page:16 C/print-booklet.page:16
 #: C/print-differentsize.page:15 C/printing.page:22 C/print-order.page:16
@@ -412,7 +412,8 @@ msgstr ""
 "Adobe Reader s nimi samozřejmě pracovat umí."
 
 #. (itstool) path: credit/name
-#: C/bookmarks.page:17 C/finding.page:21 C/opening.page:18 C/password.page:16
+#: C/bookmarks.page:17 C/finding.page:21 C/formats.page:18 C/opening.page:18
+#: C/password.page:16
 msgid "Ekaterina Gerasimova"
 msgstr "Ekaterina Gerasimova"
 
@@ -782,13 +783,13 @@ msgid ""
 msgstr "Do formátu PDF můžete převést následující typy formátů dokumentů:"
 
 #. (itstool) path: item/p
-#: C/convertpdf.page:32 C/formats.page:30 C/presentations.page:69
+#: C/convertpdf.page:32 C/formats.page:34 C/presentations.page:69
 #: C/printing.page:49
 msgid "Device Independent file format (.dvi)"
 msgstr "Device Independent (.dvi)"
 
 #. (itstool) path: item/p
-#: C/convertpdf.page:33 C/formats.page:34 C/presentations.page:73
+#: C/convertpdf.page:33 C/formats.page:38 C/presentations.page:73
 #: C/printing.page:52
 msgid "PostScript (.ps)"
 msgstr "PostScript (.ps)"
@@ -867,19 +868,19 @@ msgstr ""
 "Na PostScriptové soubory můžete převést následující typy formátů dokumentů:"
 
 #. (itstool) path: item/p
-#: C/convertPostScript.page:32 C/formats.page:31 C/presentations.page:70
+#: C/convertPostScript.page:32 C/formats.page:35 C/presentations.page:70
 #: C/printing.page:50
 msgid "DjVu (.djvu, .djv)"
 msgstr "DjVu (.djvu, .djv)"
 
 #. (itstool) path: item/p
-#: C/convertPostScript.page:33 C/convertSVG.page:30 C/formats.page:33
+#: C/convertPostScript.page:33 C/convertSVG.page:30 C/formats.page:37
 #: C/presentations.page:72 C/printing.page:51
 msgid "Portable Document Format (.pdf)"
 msgstr "Portable Document Format (.pdf)"
 
 #. (itstool) path: item/p
-#: C/convertPostScript.page:34 C/formats.page:36 C/printing.page:53
+#: C/convertPostScript.page:34 C/printing.page:53
 msgid "Tagged Image File Format (.tiff, .tif)"
 msgstr "Tagged Image File Format (.tiff, .tif)"
 
@@ -2053,37 +2054,27 @@ msgid "PDF, PostScript and many others are."
 msgstr "Podporovány jsou PDF, PostScript a řada dalších."
 
 #. (itstool) path: page/title
-#: C/formats.page:23
+#: C/formats.page:27
 msgid "Supported formats"
 msgstr "Podporované formáty"
 
 #. (itstool) path: page/p
-#: C/formats.page:25
+#: C/formats.page:29
 msgid "The <app>document viewer</app> supports the following formats:"
 msgstr "<app>Prohlížeč dokumentů</app> podporuje následující formáty:"
 
 #. (itstool) path: item/p
-#: C/formats.page:29 C/presentations.page:68
+#: C/formats.page:33 C/presentations.page:68
 msgid "Comic Book Archive (.cbr and .cbz)"
-msgstr "Comic Book Archive (.cbr a .cbz)"
+msgstr "Archiv s komiksem (.cbr a .cbz)"
 
 #. (itstool) path: item/p
-#: C/formats.page:32 C/presentations.page:71
-msgid "OpenOffice Presentation (.odp)"
-msgstr "OpenOffice Presentation (.odp)"
-
-#. (itstool) path: item/p
-#: C/formats.page:35
-msgid "Scalable Vector Graphics (.svg)"
-msgstr "Scalable Vector Graphics (.svg)"
-
-#. (itstool) path: item/p
-#: C/formats.page:37
-msgid "Other Image Files (.gif, .jpeg, .png)"
-msgstr "Další soubory s obrázky (.gif, .jpeg, .png)"
+#: C/formats.page:36
+msgid "Open XML Paper Specification (.oxps, .xps)"
+msgstr "Open XML Paper Specification (.oxps, .xps)"
 
 #. (itstool) path: note/p
-#: C/formats.page:40
+#: C/formats.page:41
 msgid ""
 "In some Linux distributions, not all formats are supported by default, so "
 "you might not be able to view all the formats listed above."
@@ -2093,7 +2084,7 @@ msgstr ""
 "uvedené výše."
 
 #. (itstool) path: note/p
-#: C/formats.page:43
+#: C/formats.page:44
 msgid ""
 "Support for a format is called a <em>backend</em>. If you get the error "
 "\"Unable to Open Document\", you may wish to check whether the backend "
@@ -3150,6 +3141,11 @@ msgstr "Podporované formáty souborů s prezentacemi"
 #: C/presentations.page:64
 msgid "The following file formats can be used for presentations:"
 msgstr "Pro prezentace lze použít následující formáty:"
+
+#. (itstool) path: item/p
+#: C/presentations.page:71
+msgid "OpenOffice Presentation (.odp)"
+msgstr "OpenOffice Presentation (.odp)"
 
 #. (itstool) path: info/desc
 #: C/print-2sided.page:8
@@ -4649,3 +4645,9 @@ msgstr ""
 "Případně můžete kontaktovat Internacionalizační tým přes jeho <link href="
 "\"http://mail.gnome.org/mailman/listinfo/gnome-i18n\">poštovní konferenci</"
 "link>."
+
+#~ msgid "Scalable Vector Graphics (.svg)"
+#~ msgstr "Scalable Vector Graphics (.svg)"
+
+#~ msgid "Other Image Files (.gif, .jpeg, .png)"
+#~ msgstr "Další soubory s obrázky (.gif, .jpeg, .png)"
