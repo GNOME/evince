@@ -1596,6 +1596,11 @@ ev_window_set_document (EvWindow *ev_window, EvDocument *document)
 
 	ev_window_destroy_recent_view (ev_window);
 
+	ev_toolbar_set_mode (EV_TOOLBAR (ev_window->priv->toolbar),
+			     EV_TOOLBAR_MODE_NORMAL);
+	ev_window_title_set_type (ev_window->priv->title, EV_WINDOW_TITLE_DOCUMENT);
+	ev_window_update_actions_sensitivity (ev_window);
+
 	if (EV_WINDOW_IS_PRESENTATION (ev_window)) {
 		gint current_page;
 
@@ -2329,10 +2334,6 @@ ev_window_destroy_recent_view (EvWindow *ev_window)
 	gtk_widget_destroy (GTK_WIDGET (ev_window->priv->recent_view));
 	ev_window->priv->recent_view = NULL;
 	gtk_widget_show (ev_window->priv->hpaned);
-	ev_toolbar_set_mode (EV_TOOLBAR (ev_window->priv->toolbar),
-			     EV_TOOLBAR_MODE_NORMAL);
-	ev_window_title_set_type (ev_window->priv->title, EV_WINDOW_TITLE_DOCUMENT);
-	ev_window_update_actions_sensitivity (ev_window);
 }
 
 static void
