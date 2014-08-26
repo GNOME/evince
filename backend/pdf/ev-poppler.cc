@@ -3007,7 +3007,7 @@ annot_set_unique_name (EvAnnotation *annot)
 {
 	gchar *name;
 
-	name = g_strdup_printf ("annot-%"G_GUINT64_FORMAT, g_get_real_time ());
+	name = g_strdup_printf ("annot-%" G_GUINT64_FORMAT, g_get_real_time ());
 	ev_annotation_set_name (annot, name);
 	g_free (name);
 }
