@@ -2205,6 +2205,7 @@ ev_window_open_uri (EvWindow       *ev_window,
 		g_signal_connect_swapped (ev_window->priv->bookmarks, "changed",
 					  G_CALLBACK (ev_window_setup_bookmarks),
 					  ev_window);
+		ev_window_setup_bookmarks (ev_window);
 	} else {
 		ev_window->priv->bookmarks = NULL;
 	}
@@ -2215,7 +2216,6 @@ ev_window_open_uri (EvWindow       *ev_window,
 
 	setup_size_from_metadata (ev_window);
 	setup_model_from_metadata (ev_window);
-	ev_window_setup_bookmarks (ev_window);
 
 	ev_window->priv->load_job = ev_job_load_new (uri);
 	g_signal_connect (ev_window->priv->load_job,
