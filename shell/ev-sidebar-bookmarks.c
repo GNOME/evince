@@ -451,14 +451,14 @@ ev_sidebar_bookmarks_init (EvSidebarBookmarks *sidebar_bookmarks)
 
         hbox = gtk_button_box_new (GTK_ORIENTATION_HORIZONTAL);
 
-        priv->add_button = gtk_button_new_from_stock (GTK_STOCK_ADD);
+        priv->add_button = gtk_button_new_with_label (_("Add"));
         gtk_actionable_set_action_name (GTK_ACTIONABLE (priv->add_button),
                                         "win.add-bookmark");
         gtk_widget_set_sensitive (priv->add_button, FALSE);
         gtk_box_pack_start (GTK_BOX (hbox), priv->add_button, TRUE, TRUE, 6);
         gtk_widget_show (priv->add_button);
 
-        priv->del_button = gtk_button_new_from_stock (GTK_STOCK_REMOVE);
+        priv->del_button = gtk_button_new_with_label (_("Remove"));
         g_signal_connect (priv->del_button, "clicked",
                           G_CALLBACK (ev_sidebar_bookmarks_del_clicked),
                           sidebar_bookmarks);
