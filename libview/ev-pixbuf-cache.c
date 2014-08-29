@@ -164,20 +164,27 @@ ev_pixbuf_cache_finalize (GObject *object)
 }
 
 static void
+end_job (CacheJobInfo *job_info,
+	 gpointer      data)
+{
+	g_signal_handlers_disconnect_by_func (job_info->job,
+					      G_CALLBACK (job_finished_cb),
+					      data);
+	ev_job_cancel (job_info->job);
+	g_object_unref (job_info->job);
+	job_info->job = NULL;
+}
+
+static void
 dispose_cache_job_info (CacheJobInfo *job_info,
 			gpointer      data)
 {
 	if (job_info == NULL)
 		return;
 
-	if (job_info->job) {
-		g_signal_handlers_disconnect_by_func (job_info->job,
-						      G_CALLBACK (job_finished_cb),
-						      data);
-		ev_job_cancel (job_info->job);
-		g_object_unref (job_info->job);
-		job_info->job = NULL;
-	}
+	if (job_info->job)
+		end_job (job_info, data);
+
 	if (job_info->surface) {
 		cairo_surface_destroy (job_info->surface);
 		job_info->surface = NULL;
@@ -308,14 +315,8 @@ copy_job_to_job_info (EvJobRender   *job_render,
 		job_info->points_set = TRUE;
 	}
 
-	if (job_info->job) {
-		g_signal_handlers_disconnect_by_func (job_info->job,
-						      G_CALLBACK (job_finished_cb),
-						      pixbuf_cache);
-		ev_job_cancel (job_info->job);
-		g_object_unref (job_info->job);
-		job_info->job = NULL;
-	}
+	if (job_info->job)
+		end_job (job_info, pixbuf_cache);
 
 	job_info->page_ready = TRUE;
 }
@@ -368,12 +369,7 @@ check_job_size_and_unref (EvPixbufCache *pixbuf_cache,
 			return;
 	}
 
-	g_signal_handlers_disconnect_by_func (job_info->job,
-					      G_CALLBACK (job_finished_cb),
-					      pixbuf_cache);
-	ev_job_cancel (job_info->job);
-	g_object_unref (job_info->job);
-	job_info->job = NULL;
+	end_job (job_info, pixbuf_cache);
 }
 
 /* Do all function that copies a job from an older cache to it's position in the
@@ -682,6 +678,9 @@ add_job (EvPixbufCache  *pixbuf_cache,
 	if (job_info->region)
 		cairo_region_destroy (job_info->region);
 	job_info->region = region ? cairo_region_reference (region) : NULL;
+
+	if (job_info->job)
+		end_job (job_info, pixbuf_cache);
 
 	job_info->job = ev_job_render_new (pixbuf_cache->document,
 					   page, rotation,
