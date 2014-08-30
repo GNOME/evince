@@ -255,6 +255,7 @@ struct _EvWindowPrivate {
 #define GS_AUTO_RELOAD           "auto-reload"
 #define GS_LAST_DOCUMENT_DIRECTORY "document-directory"
 #define GS_LAST_PICTURES_DIRECTORY "pictures-directory"
+#define GS_ALLOW_LINKS_CHANGE_ZOOM "allow-links-change-zoom"
 
 #define SIDEBAR_DEFAULT_SIZE    132
 #define LINKS_SIDEBAR_ID "links"
@@ -1369,6 +1370,16 @@ page_cache_size_changed (GSettings *settings,
 }
 
 static void
+allow_links_change_zoom_changed (GSettings *settings,
+			 gchar     *key,
+			 EvWindow  *ev_window)
+{
+	gboolean allow_links_change_zoom = g_settings_get_boolean (settings, GS_ALLOW_LINKS_CHANGE_ZOOM);
+
+	ev_view_set_allow_links_change_zoom (EV_VIEW (ev_window->priv->view), allow_links_change_zoom);
+}
+
+static void
 ev_window_setup_default (EvWindow *ev_window)
 {
 	EvDocumentModel *model = ev_window->priv->model;
@@ -1484,6 +1495,10 @@ ev_window_ensure_settings (EvWindow *ev_window)
         g_signal_connect (priv->settings,
 			  "changed::"GS_PAGE_CACHE_SIZE,
 			  G_CALLBACK (page_cache_size_changed),
+			  ev_window);
+        g_signal_connect (priv->settings,
+			  "changed::"GS_ALLOW_LINKS_CHANGE_ZOOM,
+			  G_CALLBACK (allow_links_change_zoom_changed),
 			  ev_window);
 
         return priv->settings;
@@ -4505,6 +4520,7 @@ ev_window_cmd_edit_save_settings (GSimpleAction *action,
 	EvDocumentModel *model = priv->model;
 	GSettings       *settings = priv->default_settings;
 	EvSizingMode     sizing_mode;
+	EvView          *view = EV_VIEW (ev_window->priv->view);
 
 	g_settings_set_boolean (settings, "continuous",
 				ev_document_model_get_continuous (model));
@@ -6803,6 +6819,7 @@ ev_window_init (EvWindow *ev_window)
 	GtkWidget *overlay;
 	GObject *mpkeys;
 	guint page_cache_mb;
+	gboolean allow_links_change_zoom;
 #ifdef ENABLE_DBUS
 	GDBusConnection *connection;
 	static gint window_id = 0;
@@ -7027,6 +7044,10 @@ ev_window_init (EvWindow *ev_window)
 					     GS_PAGE_CACHE_SIZE);
 	ev_view_set_page_cache_size (EV_VIEW (ev_window->priv->view),
 				     page_cache_mb * 1024 * 1024);
+	allow_links_change_zoom = g_settings_get_boolean (ev_window_ensure_settings (ev_window),
+				     GS_ALLOW_LINKS_CHANGE_ZOOM);
+	ev_view_set_allow_links_change_zoom (EV_VIEW (ev_window->priv->view),
+				     allow_links_change_zoom);
 	ev_view_set_model (EV_VIEW (ev_window->priv->view), ev_window->priv->model);
 
 	ev_window->priv->password_view = ev_password_view_new (GTK_WINDOW (ev_window));

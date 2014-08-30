@@ -177,6 +177,7 @@ struct _EvView {
 	EvPageLayout page_layout;
 	GtkWidget *loading_window;
 	guint loading_timeout;
+	gboolean allow_links_change_zoom;
 
 	/* Common for button press handling */
 	int pressed_button;

@@ -1834,6 +1834,24 @@ goto_xyz_dest (EvView *view, EvLinkDest *dest)
 }
 
 static void
+goto_y_dest (EvView *view, EvLinkDest *dest)
+{
+	gboolean change_top;
+	EvPoint doc_point;
+	gdouble top;
+	int page;
+
+	page = ev_link_dest_get_page (dest);
+	top = ev_link_dest_get_top (dest, &change_top);
+
+	doc_point.x = 0;
+	doc_point.y = change_top ? top : 0;
+	view->pending_point = doc_point;
+
+	ev_view_change_page (view, page);
+}
+
+static void
 goto_dest (EvView *view, EvLinkDest *dest)
 {
 	EvLinkDestType type;
@@ -1849,31 +1867,39 @@ goto_dest (EvView *view, EvLinkDest *dest)
 	
 	type = ev_link_dest_get_dest_type (dest);
 
-	switch (type) {
-	        case EV_LINK_DEST_TYPE_PAGE:
+	if (view->allow_links_change_zoom == FALSE &&
+		view->sizing_mode == EV_SIZING_FIT_PAGE &&
+		view->continuous == FALSE) {
+		ev_document_model_set_page (view->model, page);
+	} else if (view->allow_links_change_zoom == FALSE) {
+		goto_y_dest (view, dest);
+	} else {
+		switch (type) {
+		case EV_LINK_DEST_TYPE_PAGE:
 			ev_document_model_set_page (view->model, page);
 			break;
-	        case EV_LINK_DEST_TYPE_FIT:
+		case EV_LINK_DEST_TYPE_FIT:
 			goto_fit_dest (view, dest);
 			break;
-	        case EV_LINK_DEST_TYPE_FITH:
+		case EV_LINK_DEST_TYPE_FITH:
 			goto_fith_dest (view, dest);
 			break;
-	        case EV_LINK_DEST_TYPE_FITV:
+		case EV_LINK_DEST_TYPE_FITV:
 			goto_fitv_dest (view, dest);
 			break;
-	        case EV_LINK_DEST_TYPE_FITR:
+		case EV_LINK_DEST_TYPE_FITR:
 			goto_fitr_dest (view, dest);
 			break;
-	        case EV_LINK_DEST_TYPE_XYZ:
+		case EV_LINK_DEST_TYPE_XYZ:
 			goto_xyz_dest (view, dest);
 			break;
-	        case EV_LINK_DEST_TYPE_PAGE_LABEL:
+		case EV_LINK_DEST_TYPE_PAGE_LABEL:
 			ev_document_model_set_page_by_label (view->model, ev_link_dest_get_page_label (dest));
 			break;
-	        default:
+		default:
 			g_assert_not_reached ();
-	}
+		}
+ 	}
 
 	if (current_page != view->current_page)
 		ev_document_model_set_page (view->model, view->current_page);
@@ -7204,6 +7230,7 @@ ev_view_init (EvView *view)
 	view->pixbuf_cache_size = DEFAULT_PIXBUF_CACHE_SIZE;
 	view->caret_enabled = FALSE;
 	view->cursor_page = 0;
+	view->allow_links_change_zoom = TRUE;
 
 	g_signal_connect (view, "notify::scale-factor",
 			  G_CALLBACK (on_notify_scale_factor), NULL);
@@ -8879,4 +8906,20 @@ ev_view_previous_page (EvView *view)
 	ev_document_model_set_page (view->model, prev_page);
 
 	return TRUE;
+}
+
+void
+ev_view_set_allow_links_change_zoom (EvView *view, gboolean allowed)
+{
+	g_return_if_fail (EV_IS_VIEW (view));
+
+	view->allow_links_change_zoom = allowed;
+}
+
+gboolean
+ev_view_get_allow_links_change_zoom (EvView *view)
+{
+	g_return_val_if_fail (EV_IS_VIEW (view), FALSE);
+
+	return view->allow_links_change_zoom;
 }

@@ -56,6 +56,10 @@ void            ev_view_reload              (EvView          *view);
 void            ev_view_set_page_cache_size (EvView          *view,
 					     gsize            cache_size);
 
+void            ev_view_set_allow_links_change_zoom (EvView  *view,
+                                                     gboolean allowed);
+gboolean        ev_view_get_allow_links_change_zoom (EvView  *view);
+
 /* Clipboard */
 void		ev_view_copy		  (EvView         *view);
 void            ev_view_copy_link_address (EvView         *view,
