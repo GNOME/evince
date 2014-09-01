@@ -245,6 +245,8 @@ ev_toolbar_constructed (GObject *object)
         button = ev_toolbar_create_menu_button (ev_toolbar, "open-menu-symbolic",
                                                 menu, GTK_ALIGN_END);
         gtk_widget_set_tooltip_text (button, _("File options"));
+        atk_object_set_name (gtk_widget_get_accessible (button), _("File options"));
+
         ev_toolbar->priv->action_menu_button = button;
         gtk_header_bar_pack_end (GTK_HEADER_BAR (ev_toolbar), button);
 
@@ -253,6 +255,7 @@ ev_toolbar_constructed (GObject *object)
         button = ev_toolbar_create_menu_button (ev_toolbar, "document-properties-symbolic",
                                                 menu, GTK_ALIGN_END);
         gtk_widget_set_tooltip_text (button, _("View options"));
+        atk_object_set_name (gtk_widget_get_accessible (button), _("View options"));
         ev_toolbar->priv->view_menu_button = button;
         gtk_header_bar_pack_end (GTK_HEADER_BAR (ev_toolbar), button);
 
