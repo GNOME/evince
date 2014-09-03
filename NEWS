@@ -1,4 +1,52 @@
 ================
+Evince   3.13.91
+================
+
+New features and improvements:
+
+    * Added a allow-links-change-zoom GSetting to be able to not allow
+      links to change the zoom mode or level (#729249, Eduard Beutel)
+    * Set accessible name for File and View toolbar buttons (#734912,
+      Alejandro Piñeiro)
+    * Add a separator after New Window entry in app menu (Michael
+      Catanzaro)
+    * Remove multi-screen support, since it's currently unsupported by
+      GDK/GTK+ (#701883, Giselle Machado)
+
+Bug fixes:
+
+    * Fix a memory leak in the pixbuf cache when reloading a page while
+      the render job is running (#735758, Giselle Reis)
+    * Initialize EvPageAccessible children once the page has been
+      cached (#733747, Alejandro Piñeiro)
+    * Fix the size of the annotation window icons (#735110, Giselle
+      Reis)
+    * Don't use deprecated gtk_button_new_from_stock (#735562, José
+      Aliste)
+    * Fix runtime critical warning (#735561, José Aliste)
+    * Build fix in C++11 mode (#735466, Ting-Wei Lan)
+
+Translation updates:
+
+    * Nilamdyuti Goswami (as)
+    * Marek Černocký (cs)
+    * Tom Tryfonidis (el)
+    * Daniel Mustieles (es)
+    * Lasse Liehu (fi)
+    * Claude Paroz (fr)
+    * Fran Dieguez (gl)
+    * "Last-Translator: \n"(gu)
+    * Yosef Or Boczko (he)
+    * Andika Triwidada (id)
+    * Jiro Matsuzawa (ja)
+    * Aurimas Černius (lt)
+    * Kjartan Maraas (nb)
+    * Enrico Nicoletto (pt_BR)
+    * Daniel Korostil (uk)
+    * Chao-Hsiung Liao (zh_HK)
+    * Chao-Hsiung Liao (zh_TW)
+
+================
 Evince   3.13.90
 ================
 
