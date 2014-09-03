@@ -1690,29 +1690,34 @@ static void
 goto_fitr_dest (EvView *view, EvLinkDest *dest)
 {
 	EvPoint doc_point;
-	gdouble zoom, left, top, doc_width, doc_height;
+	gdouble left, top;
 	gboolean change_left, change_top;
-	GtkAllocation allocation;
-
-	gtk_widget_get_allocation (GTK_WIDGET (view), &allocation);
 
 	left = ev_link_dest_get_left (dest, &change_left);
 	top = ev_link_dest_get_top (dest, &change_top);
 
-	doc_width = ev_link_dest_get_right (dest) - left;
-	doc_height = ev_link_dest_get_bottom (dest) - top;
+	if (view->allow_links_change_zoom) {
+		gdouble doc_width, doc_height;
+		gdouble zoom;
+		GtkAllocation allocation;
 
-	zoom = zoom_for_size_fit_page (doc_width,
-				       doc_height,
-				       allocation.width,
-				       allocation.height);
+		gtk_widget_get_allocation (GTK_WIDGET (view), &allocation);
 
-	ev_document_model_set_sizing_mode (view->model, EV_SIZING_FREE);
-	ev_document_model_set_scale (view->model, zoom);
+		doc_width = ev_link_dest_get_right (dest) - left;
+		doc_height = ev_link_dest_get_bottom (dest) - top;
 
-	/* center the target box within the view */
-	left -= (allocation.width / zoom - doc_width) / 2;
-	top -= (allocation.height / zoom - doc_height) / 2;
+		zoom = zoom_for_size_fit_page (doc_width,
+					       doc_height,
+					       allocation.width,
+					       allocation.height);
+
+		ev_document_model_set_sizing_mode (view->model, EV_SIZING_FREE);
+		ev_document_model_set_scale (view->model, zoom);
+
+		/* center the target box within the view */
+		left -= (allocation.width / zoom - doc_width) / 2;
+		top -= (allocation.height / zoom - doc_height) / 2;
+	}
 
 	doc_point.x = change_left ? left : 0;
 	doc_point.y = change_top ? top : 0;
@@ -1725,27 +1730,32 @@ static void
 goto_fitv_dest (EvView *view, EvLinkDest *dest)
 {
 	EvPoint doc_point;
-	gdouble doc_width, doc_height;
 	gint page;
-	double zoom, left;
+	double left;
 	gboolean change_left;
-	GtkAllocation allocation;
-
-	gtk_widget_get_allocation (GTK_WIDGET (view), &allocation);
 
 	page = ev_link_dest_get_page (dest);
-	ev_document_get_page_size (view->document, page, &doc_width, &doc_height);
 
 	left = ev_link_dest_get_left (dest, &change_left);
 	doc_point.x = change_left ? left : 0;
 	doc_point.y = 0;
 
-	zoom = zoom_for_size_fit_height (doc_width - doc_point.x , doc_height,
-					 allocation.width,
-				         allocation.height);
+	if (view->allow_links_change_zoom) {
+		GtkAllocation allocation;
+		gdouble doc_width, doc_height;
+		double zoom;
 
-	ev_document_model_set_sizing_mode (view->model, EV_SIZING_FREE);
-	ev_document_model_set_scale (view->model, zoom);
+		gtk_widget_get_allocation (GTK_WIDGET (view), &allocation);
+
+		ev_document_get_page_size (view->document, page, &doc_width, &doc_height);
+
+		zoom = zoom_for_size_fit_height (doc_width - doc_point.x, doc_height,
+						 allocation.width,
+						 allocation.height);
+
+		ev_document_model_set_sizing_mode (view->model, EV_SIZING_FREE);
+		ev_document_model_set_scale (view->model, zoom);
+	}
 
 	view->pending_point = doc_point;
 
@@ -1756,28 +1766,32 @@ static void
 goto_fith_dest (EvView *view, EvLinkDest *dest)
 {
 	EvPoint doc_point;
-	gdouble doc_width, doc_height;
 	gint page;
-	gdouble zoom, top;
+	gdouble top;
 	gboolean change_top;
-	GtkAllocation allocation;
-
-	gtk_widget_get_allocation (GTK_WIDGET (view), &allocation);
 
 	page = ev_link_dest_get_page (dest);
-	ev_document_get_page_size (view->document, page, &doc_width, &doc_height);
 
 	top = ev_link_dest_get_top (dest, &change_top);
-
 	doc_point.x = 0;
 	doc_point.y = change_top ? top : 0;
 
-	zoom = zoom_for_size_fit_width (doc_width, top,
-					allocation.width,
-				        allocation.height);
+	if (view->allow_links_change_zoom) {
+		GtkAllocation allocation;
+		gdouble doc_width;
+		gdouble zoom;
 
-	ev_document_model_set_sizing_mode (view->model, EV_SIZING_FIT_WIDTH);
-	ev_document_model_set_scale (view->model, zoom);
+		gtk_widget_get_allocation (GTK_WIDGET (view), &allocation);
+
+		ev_document_get_page_size (view->document, page, &doc_width, NULL);
+
+		zoom = zoom_for_size_fit_width (doc_width, top,
+						allocation.width,
+						allocation.height);
+
+		ev_document_model_set_sizing_mode (view->model, EV_SIZING_FIT_WIDTH);
+		ev_document_model_set_scale (view->model, zoom);
+	}
 
 	view->pending_point = doc_point;
 
@@ -1787,22 +1801,26 @@ goto_fith_dest (EvView *view, EvLinkDest *dest)
 static void
 goto_fit_dest (EvView *view, EvLinkDest *dest)
 {
-	double zoom;
-	gdouble doc_width, doc_height;
 	int page;
-	GtkAllocation allocation;
-
-	gtk_widget_get_allocation (GTK_WIDGET (view), &allocation);
 
 	page = ev_link_dest_get_page (dest);
-	ev_document_get_page_size (view->document, page, &doc_width, &doc_height);
 
-	zoom = zoom_for_size_fit_page (doc_width, doc_height,
-				       allocation.width,
-				       allocation.height);
+	if (view->allow_links_change_zoom) {
+		double zoom;
+		gdouble doc_width, doc_height;
+		GtkAllocation allocation;
 
-	ev_document_model_set_sizing_mode (view->model, EV_SIZING_FIT_PAGE);
-	ev_document_model_set_scale (view->model, zoom);
+		gtk_widget_get_allocation (GTK_WIDGET (view), &allocation);
+
+		ev_document_get_page_size (view->document, page, &doc_width, &doc_height);
+
+		zoom = zoom_for_size_fit_page (doc_width, doc_height,
+					       allocation.width,
+					       allocation.height);
+
+		ev_document_model_set_sizing_mode (view->model, EV_SIZING_FIT_PAGE);
+		ev_document_model_set_scale (view->model, zoom);
+	}
 
 	ev_view_change_page (view, page);
 }
@@ -1818,7 +1836,7 @@ goto_xyz_dest (EvView *view, EvLinkDest *dest)
 	zoom = ev_link_dest_get_zoom (dest, &change_zoom);
 	page = ev_link_dest_get_page (dest);
 
-	if (change_zoom && zoom > 1) {
+	if (view->allow_links_change_zoom && change_zoom && zoom > 1) {
 		ev_document_model_set_sizing_mode (view->model, EV_SIZING_FREE);
 		ev_document_model_set_scale (view->model, zoom);
 	}
@@ -1827,24 +1845,6 @@ goto_xyz_dest (EvView *view, EvLinkDest *dest)
 	top = ev_link_dest_get_top (dest, &change_top);
 
 	doc_point.x = change_left ? left : 0;
-	doc_point.y = change_top ? top : 0;
-	view->pending_point = doc_point;
-
-	ev_view_change_page (view, page);
-}
-
-static void
-goto_y_dest (EvView *view, EvLinkDest *dest)
-{
-	gboolean change_top;
-	EvPoint doc_point;
-	gdouble top;
-	int page;
-
-	page = ev_link_dest_get_page (dest);
-	top = ev_link_dest_get_top (dest, &change_top);
-
-	doc_point.x = 0;
 	doc_point.y = change_top ? top : 0;
 	view->pending_point = doc_point;
 
@@ -1867,14 +1867,7 @@ goto_dest (EvView *view, EvLinkDest *dest)
 	
 	type = ev_link_dest_get_dest_type (dest);
 
-	if (view->allow_links_change_zoom == FALSE &&
-		view->sizing_mode == EV_SIZING_FIT_PAGE &&
-		view->continuous == FALSE) {
-		ev_document_model_set_page (view->model, page);
-	} else if (view->allow_links_change_zoom == FALSE) {
-		goto_y_dest (view, dest);
-	} else {
-		switch (type) {
+	switch (type) {
 		case EV_LINK_DEST_TYPE_PAGE:
 			ev_document_model_set_page (view->model, page);
 			break;
@@ -1898,7 +1891,6 @@ goto_dest (EvView *view, EvLinkDest *dest)
 			break;
 		default:
 			g_assert_not_reached ();
-		}
  	}
 
 	if (current_page != view->current_page)
