@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: evince master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evince&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2014-09-02 03:41+0000\n"
-"PO-Revision-Date: 2014-09-03 16:25+0700\n"
+"POT-Creation-Date: 2014-09-04 03:41+0000\n"
+"PO-Revision-Date: 2014-09-04 10:46+0700\n"
 "Last-Translator: Andika Triwidada <andika@gmail.com>\n"
 "Language-Team: GNOME Indonesian Translation Team <gnome@i15n.org>\n"
 "Language: id\n"
@@ -402,6 +402,10 @@ msgstr ""
 "Tampilkan dialog untuk mengkonfirmasi bahwa pengguna ingin mengaktifkan "
 "navigasi karet."
 
+#: ../data/org.gnome.Evince.gschema.xml.in.h:10
+msgid "Allow links to change the zoom level."
+msgstr "Ijinkan taut mengubah aras zum."
+
 #: ../libdocument/ev-attachment.c:310 ../libdocument/ev-attachment.c:331
 #, c-format
 msgid "Couldn't save attachment “%s”: %s"
@@ -459,8 +463,8 @@ msgid "of %d"
 msgstr "dari %d"
 
 #: ../libmisc/ev-page-action-widget.c:185 ../shell/ev-history.c:426
-#: ../shell/ev-sidebar-bookmarks.c:295 ../shell/ev-window.c:903
-#: ../shell/ev-window.c:4692
+#: ../shell/ev-sidebar-bookmarks.c:295 ../shell/ev-window.c:904
+#: ../shell/ev-window.c:4708
 #, c-format
 msgid "Page %s"
 msgstr "Halaman %s"
@@ -604,46 +608,46 @@ msgstr "Gulung Tampilan Turun"
 msgid "Document View"
 msgstr "Tampilan Dokumen"
 
-#: ../libview/ev-view.c:1976
+#: ../libview/ev-view.c:1994
 msgid "Go to first page"
 msgstr "Menuju halaman pertama"
 
-#: ../libview/ev-view.c:1978
+#: ../libview/ev-view.c:1996
 msgid "Go to previous page"
 msgstr "Menuju halaman sebelumnya"
 
-#: ../libview/ev-view.c:1980
+#: ../libview/ev-view.c:1998
 msgid "Go to next page"
 msgstr "Menuju halaman selanjutnya"
 
-#: ../libview/ev-view.c:1982
+#: ../libview/ev-view.c:2000
 msgid "Go to last page"
 msgstr "Menuju halaman terakhir"
 
-#: ../libview/ev-view.c:1984
+#: ../libview/ev-view.c:2002
 msgid "Go to page"
 msgstr "Menuju halaman"
 
-#: ../libview/ev-view.c:1986
+#: ../libview/ev-view.c:2004
 msgid "Find"
 msgstr "Cari"
 
-#: ../libview/ev-view.c:2014
+#: ../libview/ev-view.c:2032
 #, c-format
 msgid "Go to page %s"
 msgstr "Menuju halaman %s"
 
-#: ../libview/ev-view.c:2020
+#: ../libview/ev-view.c:2038
 #, c-format
 msgid "Go to %s on file “%s”"
 msgstr "Menuju %s pada berkas “%s”"
 
-#: ../libview/ev-view.c:2023
+#: ../libview/ev-view.c:2041
 #, c-format
 msgid "Go to file “%s”"
 msgstr "Menuju berkas “%s”"
 
-#: ../libview/ev-view.c:2031
+#: ../libview/ev-view.c:2049
 #, c-format
 msgid "Launch %s"
 msgstr "Luncurkan %s"
@@ -672,7 +676,7 @@ msgstr "BERKAS"
 msgid "GNOME Document Previewer"
 msgstr "Penampil Dokumen GNOME"
 
-#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3308
+#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3323
 msgid "Failed to print document"
 msgstr "Gagal mencetak dokumen"
 
@@ -1122,11 +1126,11 @@ msgstr "Buka dokumen yang ada"
 msgid "Find a word or phrase in the document"
 msgstr "Mencari kata atau frasa dalam dokumen"
 
-#: ../shell/ev-toolbar.c:247
+#: ../shell/ev-toolbar.c:247 ../shell/ev-toolbar.c:248
 msgid "File options"
 msgstr "Opsi berkas"
 
-#: ../shell/ev-toolbar.c:255
+#: ../shell/ev-toolbar.c:257 ../shell/ev-toolbar.c:258
 msgid "View options"
 msgstr "Opsi tilik"
 
@@ -1134,105 +1138,105 @@ msgstr "Opsi tilik"
 msgid "Supported Image Files"
 msgstr "Berkas Gambar Yang Didukung"
 
-#: ../shell/ev-window.c:1591
+#: ../shell/ev-window.c:1606
 msgid "The document contains no pages"
 msgstr "Dokumen tak memuat halaman"
 
-#: ../shell/ev-window.c:1594
+#: ../shell/ev-window.c:1609
 msgid "The document contains only empty pages"
 msgstr "Dokumen hanya memuat halaman kosong"
 
-#: ../shell/ev-window.c:1807 ../shell/ev-window.c:1975
+#: ../shell/ev-window.c:1822 ../shell/ev-window.c:1990
 #, c-format
 msgid "Unable to open document “%s”."
 msgstr "Tidak dapat membuka dokumen \"%s\"."
 
-#: ../shell/ev-window.c:1939
+#: ../shell/ev-window.c:1954
 #, c-format
 msgid "Loading document from “%s”"
 msgstr "Memuat dokumen dari “%s”"
 
-#: ../shell/ev-window.c:2090 ../shell/ev-window.c:2417
+#: ../shell/ev-window.c:2105 ../shell/ev-window.c:2432
 #, c-format
 msgid "Downloading document (%d%%)"
 msgstr "Mengunduh dokumen (%d%%)"
 
-#: ../shell/ev-window.c:2123
+#: ../shell/ev-window.c:2138
 msgid "Failed to load remote file."
 msgstr "Gagal memuat berkas jauh."
 
-#: ../shell/ev-window.c:2361
+#: ../shell/ev-window.c:2376
 #, c-format
 msgid "Reloading document from %s"
 msgstr "Memuat ulang dokumen dari %s"
 
-#: ../shell/ev-window.c:2393
+#: ../shell/ev-window.c:2408
 msgid "Failed to reload document."
 msgstr "Gagal memuat ulang dokumen."
 
-#: ../shell/ev-window.c:2609
+#: ../shell/ev-window.c:2624
 msgid "Open Document"
 msgstr "Buka Dokumen"
 
-#: ../shell/ev-window.c:2680
+#: ../shell/ev-window.c:2695
 #, c-format
 msgid "Saving document to %s"
 msgstr "Menyimpan dokumen ke %s"
 
-#: ../shell/ev-window.c:2683
+#: ../shell/ev-window.c:2698
 #, c-format
 msgid "Saving attachment to %s"
 msgstr "Menyimpan lampiran ke %s"
 
-#: ../shell/ev-window.c:2686
+#: ../shell/ev-window.c:2701
 #, c-format
 msgid "Saving image to %s"
 msgstr "Menyimpan gambar ke %s"
 
-#: ../shell/ev-window.c:2730 ../shell/ev-window.c:2830
+#: ../shell/ev-window.c:2745 ../shell/ev-window.c:2845
 #, c-format
 msgid "The file could not be saved as “%s”."
 msgstr "Berkas tidak dapat disimpan sebagai “%s”."
 
-#: ../shell/ev-window.c:2761
+#: ../shell/ev-window.c:2776
 #, c-format
 msgid "Uploading document (%d%%)"
 msgstr "Mengunggah dokumen (%d%%)"
 
-#: ../shell/ev-window.c:2765
+#: ../shell/ev-window.c:2780
 #, c-format
 msgid "Uploading attachment (%d%%)"
 msgstr "Mengunggah lampiran (%d%%)"
 
-#: ../shell/ev-window.c:2769
+#: ../shell/ev-window.c:2784
 #, c-format
 msgid "Uploading image (%d%%)"
 msgstr "Mengunggah gambar (%d%%)"
 
-#: ../shell/ev-window.c:2881
+#: ../shell/ev-window.c:2896
 msgid "Save a Copy"
 msgstr "Simpan Salinan"
 
-#: ../shell/ev-window.c:2957
+#: ../shell/ev-window.c:2972
 msgid "Could not send current document"
 msgstr "Tak bisa mengirim dokumen kini"
 
-#: ../shell/ev-window.c:2991
+#: ../shell/ev-window.c:3006
 msgid "Could not open the containing folder"
 msgstr "Tak bisa membuka folder yang memuatnya"
 
-#: ../shell/ev-window.c:3252
+#: ../shell/ev-window.c:3267
 #, c-format
 msgid "%d pending job in queue"
 msgid_plural "%d pending jobs in queue"
 msgstr[0] "%d tugas tertunda di antrian"
 
-#: ../shell/ev-window.c:3365
+#: ../shell/ev-window.c:3380
 #, c-format
 msgid "Printing job “%s”"
 msgstr "Tugas mencetak “%s”"
 
-#: ../shell/ev-window.c:3568
+#: ../shell/ev-window.c:3583
 msgid ""
 "Document contains form fields that have been filled out. If you don't save a "
 "copy, changes will be permanently lost."
@@ -1240,7 +1244,7 @@ msgstr ""
 "Dokumen mengandung kolom isian formulir yang telah diisi. Apabila Anda tidak "
 "menyimpan salinannya, perubahan tersebut akan hilang."
 
-#: ../shell/ev-window.c:3572
+#: ../shell/ev-window.c:3587
 msgid ""
 "Document contains new or modified annotations. If you don't save a copy, "
 "changes will be permanently lost."
@@ -1248,20 +1252,20 @@ msgstr ""
 "Dokumen mengandung anotasi baru atau telah diubah. Jika Anda tidak menyimpan "
 "salinannya, perubahan tersebut akan hilang."
 
-#: ../shell/ev-window.c:3579
+#: ../shell/ev-window.c:3594
 #, c-format
 msgid "Save a copy of document “%s” before closing?"
 msgstr "Simpan salinan dokumen “%s” sebelum ditutup?"
 
-#: ../shell/ev-window.c:3598
+#: ../shell/ev-window.c:3613
 msgid "Close _without Saving"
 msgstr "_Tutup tanpa menyimpan"
 
-#: ../shell/ev-window.c:3602
+#: ../shell/ev-window.c:3617
 msgid "Save a _Copy"
 msgstr "_Simpan Salinan"
 
-#: ../shell/ev-window.c:3676
+#: ../shell/ev-window.c:3691
 #, c-format
 msgid "Wait until print job “%s” finishes before closing?"
 msgstr "Tunggu sampai tugas pencetakan \"%s\" selesai sebelum"
@@ -1269,7 +1273,7 @@ msgstr "Tunggu sampai tugas pencetakan \"%s\" selesai sebelum"
 #. TRANS: the singular form is not really used as n_print_jobs > 1
 #. but some languages distinguish between different plurals forms,
 #. so the ngettext is needed.
-#: ../shell/ev-window.c:3682
+#: ../shell/ev-window.c:3697
 #, c-format
 msgid "There is %d print job active. Wait until print finishes before closing?"
 msgid_plural ""
@@ -1278,49 +1282,49 @@ msgstr[0] ""
 "Ada %d tugas pencetakan aktif. Tunggu sampai pencetakan selesai sebelum "
 "menutup?"
 
-#: ../shell/ev-window.c:3697
+#: ../shell/ev-window.c:3712
 msgid "If you close the window, pending print jobs will not be printed."
 msgstr "Bila Anda menutup jendela, tugas cetak yang ditunda tak akan dicetak."
 
-#: ../shell/ev-window.c:3701
+#: ../shell/ev-window.c:3716
 msgid "Cancel _print and Close"
 msgstr "Batal _Mencetak dan Keluar"
 
-#: ../shell/ev-window.c:3705
+#: ../shell/ev-window.c:3720
 msgid "Close _after Printing"
 msgstr "Tutup setel_ah Mencetak"
 
-#: ../shell/ev-window.c:4233
+#: ../shell/ev-window.c:4248
 msgid "Running in presentation mode"
 msgstr "Berjalan dalam mode presentasi"
 
 #. TRANS: Sometimes this could be better translated as
 #. "%d hit(s) on this page".  Therefore this string
 #. contains plural cases.
-#: ../shell/ev-window.c:5165
+#: ../shell/ev-window.c:5181
 #, c-format
 msgid "%d found on this page"
 msgid_plural "%d found on this page"
 msgstr[0] "%d ditemukan pada halaman ini"
 
-#: ../shell/ev-window.c:5170
+#: ../shell/ev-window.c:5186
 msgid "Not found"
 msgstr "Tidak ditemukan"
 
-#: ../shell/ev-window.c:5176
+#: ../shell/ev-window.c:5192
 #, c-format
 msgid "%3d%% remaining to search"
 msgstr "%3d%% lagi dalam pencarian"
 
-#: ../shell/ev-window.c:5496
+#: ../shell/ev-window.c:5512
 msgid "Enable caret navigation?"
 msgstr "Fungsikan navigasi karet?"
 
-#: ../shell/ev-window.c:5498
+#: ../shell/ev-window.c:5514
 msgid "_Enable"
 msgstr "_Fungsikan"
 
-#: ../shell/ev-window.c:5501
+#: ../shell/ev-window.c:5517
 msgid ""
 "Pressing F7 turns the caret navigation on or off. This feature places a "
 "moveable cursor in text pages, allowing you to move around and select text "
@@ -1331,39 +1335,39 @@ msgstr ""
 "berpindah dan memilih teks dengan papan tik Anda. Apakah Anda ingin "
 "menyalakan navigasi karet?"
 
-#: ../shell/ev-window.c:5506
+#: ../shell/ev-window.c:5522
 msgid "Don't show this message again"
 msgstr "Jangan tampilkan pesan ini lagi"
 
-#: ../shell/ev-window.c:6022 ../shell/ev-window.c:6038
+#: ../shell/ev-window.c:6038 ../shell/ev-window.c:6054
 msgid "Unable to launch external application."
 msgstr "Tidak dapat meluncurkan aplikasi luar"
 
-#: ../shell/ev-window.c:6095
+#: ../shell/ev-window.c:6111
 msgid "Unable to open external link"
 msgstr "Tidak dapat membuka taut luar"
 
-#: ../shell/ev-window.c:6298
+#: ../shell/ev-window.c:6314
 msgid "Couldn't find appropriate format to save image"
 msgstr "Tidak menemukan format yang cocok untuk menyimpan gambar"
 
-#: ../shell/ev-window.c:6330
+#: ../shell/ev-window.c:6346
 msgid "The image could not be saved."
 msgstr "Gambar tidak dapat disimpan."
 
-#: ../shell/ev-window.c:6365
+#: ../shell/ev-window.c:6381
 msgid "Save Image"
 msgstr "Simpan Gambar"
 
-#: ../shell/ev-window.c:6516
+#: ../shell/ev-window.c:6532
 msgid "Unable to open attachment"
 msgstr "Tidak dapat membuka lampiran"
 
-#: ../shell/ev-window.c:6572
+#: ../shell/ev-window.c:6588
 msgid "The attachment could not be saved."
 msgstr "Lampiran tidak dapat disimpan."
 
-#: ../shell/ev-window.c:6620
+#: ../shell/ev-window.c:6636
 msgid "Save Attachment"
 msgstr "Simpan Lampiran"
 
