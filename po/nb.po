@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince 3.13.x\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-08-16 11:44+0200\n"
-"PO-Revision-Date: 2014-08-16 11:46+0200\n"
+"POT-Creation-Date: 2014-09-06 12:13+0200\n"
+"PO-Revision-Date: 2014-09-06 12:13+0200\n"
 "Last-Translator: Kjartan Maraas <kmaraas@gnome.org>\n"
 "Language-Team: Norwegian bokmål <i18n-nb@lister.ping.uio.no>\n"
 "Language: \n"
@@ -332,7 +332,7 @@ msgid "Print document"
 msgstr "Skriv ut dokument"
 
 #. Manually set name and icon
-#: ../data/evince.desktop.in.in.h:1 ../shell/ev-application.c:1037
+#: ../data/evince.desktop.in.in.h:1 ../shell/ev-application.c:1029
 #: ../shell/ev-window-title.c:139 ../shell/main.c:298
 msgid "Document Viewer"
 msgstr "Dokumentvisning"
@@ -398,6 +398,10 @@ msgid ""
 msgstr ""
 "Vis en dialog for å bekrefte at bruker ønsker å aktivere markørnavigasjon."
 
+#: ../data/org.gnome.Evince.gschema.xml.in.h:10
+msgid "Allow links to change the zoom level."
+msgstr "La lenker endre zoom-nivå."
+
 #: ../libdocument/ev-attachment.c:310 ../libdocument/ev-attachment.c:331
 #, c-format
 msgid "Couldn't save attachment “%s”: %s"
@@ -455,8 +459,8 @@ msgid "of %d"
 msgstr "av %d"
 
 #: ../libmisc/ev-page-action-widget.c:185 ../shell/ev-history.c:426
-#: ../shell/ev-sidebar-bookmarks.c:295 ../shell/ev-window.c:903
-#: ../shell/ev-window.c:4691
+#: ../shell/ev-sidebar-bookmarks.c:295 ../shell/ev-window.c:904
+#: ../shell/ev-window.c:4708
 #, c-format
 msgid "Page %s"
 msgstr "Side %s"
@@ -596,46 +600,46 @@ msgstr "Rull visning ned"
 msgid "Document View"
 msgstr "Dokumentvisning"
 
-#: ../libview/ev-view.c:1976
+#: ../libview/ev-view.c:1994
 msgid "Go to first page"
 msgstr "Gå til første side"
 
-#: ../libview/ev-view.c:1978
+#: ../libview/ev-view.c:1996
 msgid "Go to previous page"
 msgstr "Gå til forrige side"
 
-#: ../libview/ev-view.c:1980
+#: ../libview/ev-view.c:1998
 msgid "Go to next page"
 msgstr "Gå til neste side"
 
-#: ../libview/ev-view.c:1982
+#: ../libview/ev-view.c:2000
 msgid "Go to last page"
 msgstr "Gå til siste side"
 
-#: ../libview/ev-view.c:1984
+#: ../libview/ev-view.c:2002
 msgid "Go to page"
 msgstr "Gå til side"
 
-#: ../libview/ev-view.c:1986
+#: ../libview/ev-view.c:2004
 msgid "Find"
 msgstr "Søk"
 
-#: ../libview/ev-view.c:2014
+#: ../libview/ev-view.c:2032
 #, c-format
 msgid "Go to page %s"
 msgstr "Gå til side %s"
 
-#: ../libview/ev-view.c:2020
+#: ../libview/ev-view.c:2038
 #, c-format
 msgid "Go to %s on file “%s”"
 msgstr "Gå til %s i fil «%s»"
 
-#: ../libview/ev-view.c:2023
+#: ../libview/ev-view.c:2041
 #, c-format
 msgid "Go to file “%s”"
 msgstr "Gå til fil «%s»"
 
-#: ../libview/ev-view.c:2031
+#: ../libview/ev-view.c:2049
 #, c-format
 msgid "Launch %s"
 msgstr "Start %s"
@@ -664,7 +668,7 @@ msgstr "FIL"
 msgid "GNOME Document Previewer"
 msgstr "GNOME dokumentvisning"
 
-#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3307
+#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3323
 msgid "Failed to print document"
 msgstr "Klarte ikke å skrive ut dokumentet"
 
@@ -892,7 +896,7 @@ msgstr "Åpne"
 msgid "Close"
 msgstr "Lukk"
 
-#: ../shell/ev-application.c:1003
+#: ../shell/ev-application.c:995
 msgid ""
 "Evince is free software; you can redistribute it and/or modify it under the "
 "terms of the GNU General Public License as published by the Free Software "
@@ -904,7 +908,7 @@ msgstr ""
 "publisert av Free Software Foundation; enten versjon 2 av lisensen, eller "
 "(hvis du ønsker) enhver senere versjon.\n"
 
-#: ../shell/ev-application.c:1007
+#: ../shell/ev-application.c:999
 msgid ""
 "Evince is distributed in the hope that it will be useful, but WITHOUT ANY "
 "WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS "
@@ -915,7 +919,7 @@ msgstr ""
 "GARANTI; selv ikke en implisitt garanti for at det er SALGBART eller PASSER "
 "ET SPESIELT FORMÅL. Se Gnu General Public License for flere detaljer.\n"
 
-#: ../shell/ev-application.c:1011
+#: ../shell/ev-application.c:1003
 msgid ""
 "You should have received a copy of the GNU General Public License along with "
 "Evince; if not, write to the Free Software Foundation, Inc., 51 Franklin "
@@ -925,15 +929,15 @@ msgstr ""
 "hvis ikke kan du skrive til Free Software Foundation, Inc.,51 Franklin "
 "Street, Fifth Floor, Boston, MA 02110-1301 USA\n"
 
-#: ../shell/ev-application.c:1032 ../evince.appdata.xml.in.h:1
+#: ../shell/ev-application.c:1024 ../evince.appdata.xml.in.h:1
 msgid "Evince"
 msgstr "Evince"
 
-#: ../shell/ev-application.c:1034
+#: ../shell/ev-application.c:1026
 msgid "© 1996–2014 The Evince authors"
 msgstr "© 1996-2014 Evince-utviklerene"
 
-#: ../shell/ev-application.c:1040
+#: ../shell/ev-application.c:1032
 msgid "translator-credits"
 msgstr ""
 "Kjartan Maraas <kmaraas@gnome.org>\n"
@@ -1052,7 +1056,7 @@ msgstr "Tekst"
 msgid "Add text annotation"
 msgstr "Legg til tekstanmerkning"
 
-#: ../shell/ev-sidebar-annotations.c:217
+#: ../shell/ev-sidebar-annotations.c:217 ../shell/ev-sidebar-bookmarks.c:454
 msgid "Add"
 msgstr "Legg til"
 
@@ -1080,6 +1084,10 @@ msgstr "End_re navn på bokmerke"
 #: ../shell/ev-sidebar-bookmarks.c:150
 msgid "_Remove Bookmark"
 msgstr "Fje_rn bokmerke"
+
+#: ../shell/ev-sidebar-bookmarks.c:461
+msgid "Remove"
+msgstr "Fjern"
 
 #: ../shell/ev-sidebar-bookmarks.c:577 ../shell/ev-toolbar.c:160
 msgid "Bookmarks"
@@ -1109,11 +1117,11 @@ msgstr "Åpne et eksisterende dokument"
 msgid "Find a word or phrase in the document"
 msgstr "Finn et ord eller en frase i dokumentet"
 
-#: ../shell/ev-toolbar.c:247
+#: ../shell/ev-toolbar.c:247 ../shell/ev-toolbar.c:248
 msgid "File options"
 msgstr "Alternativer for fil"
 
-#: ../shell/ev-toolbar.c:255
+#: ../shell/ev-toolbar.c:257 ../shell/ev-toolbar.c:258
 msgid "View options"
 msgstr "Alternativer for visning"
 
@@ -1121,106 +1129,106 @@ msgstr "Alternativer for visning"
 msgid "Supported Image Files"
 msgstr "Støttede bildefiler"
 
-#: ../shell/ev-window.c:1591
+#: ../shell/ev-window.c:1606
 msgid "The document contains no pages"
 msgstr "Dokumentet inneholder ingen sider"
 
-#: ../shell/ev-window.c:1594
+#: ../shell/ev-window.c:1609
 msgid "The document contains only empty pages"
 msgstr "Dokumentet inneholder kun tomme sider"
 
-#: ../shell/ev-window.c:1802 ../shell/ev-window.c:1970
+#: ../shell/ev-window.c:1822 ../shell/ev-window.c:1990
 #, c-format
 msgid "Unable to open document “%s”."
 msgstr "Klarte ikke å åpne dokumentet «%s»."
 
-#: ../shell/ev-window.c:1934
+#: ../shell/ev-window.c:1954
 #, c-format
 msgid "Loading document from “%s”"
 msgstr "Laster dokument fra «%s»"
 
-#: ../shell/ev-window.c:2085 ../shell/ev-window.c:2416
+#: ../shell/ev-window.c:2105 ../shell/ev-window.c:2432
 #, c-format
 msgid "Downloading document (%d%%)"
 msgstr "Laster ned dokument (%d%%)"
 
-#: ../shell/ev-window.c:2118
+#: ../shell/ev-window.c:2138
 msgid "Failed to load remote file."
 msgstr "Klarte ikke å laste ekstern fil."
 
-#: ../shell/ev-window.c:2360
+#: ../shell/ev-window.c:2376
 #, c-format
 msgid "Reloading document from %s"
 msgstr "Leser dokument fra %s på nytt"
 
-#: ../shell/ev-window.c:2392
+#: ../shell/ev-window.c:2408
 msgid "Failed to reload document."
 msgstr "Klarte ikke å lese dokumentet på nytt."
 
-#: ../shell/ev-window.c:2608
+#: ../shell/ev-window.c:2624
 msgid "Open Document"
 msgstr "Åpne dokument"
 
-#: ../shell/ev-window.c:2679
+#: ../shell/ev-window.c:2695
 #, c-format
 msgid "Saving document to %s"
 msgstr "Lagrer dokumentet til %s"
 
-#: ../shell/ev-window.c:2682
+#: ../shell/ev-window.c:2698
 #, c-format
 msgid "Saving attachment to %s"
 msgstr "Lagrer vedlegg til %s"
 
-#: ../shell/ev-window.c:2685
+#: ../shell/ev-window.c:2701
 #, c-format
 msgid "Saving image to %s"
 msgstr "Lagrer bilde til %s"
 
-#: ../shell/ev-window.c:2729 ../shell/ev-window.c:2829
+#: ../shell/ev-window.c:2745 ../shell/ev-window.c:2845
 #, c-format
 msgid "The file could not be saved as “%s”."
 msgstr "Klarte ikke å lagre filen som «%s»."
 
-#: ../shell/ev-window.c:2760
+#: ../shell/ev-window.c:2776
 #, c-format
 msgid "Uploading document (%d%%)"
 msgstr "Laster opp dokument (%d%%)"
 
-#: ../shell/ev-window.c:2764
+#: ../shell/ev-window.c:2780
 #, c-format
 msgid "Uploading attachment (%d%%)"
 msgstr "Laster opp vedlegg (%d%%)"
 
-#: ../shell/ev-window.c:2768
+#: ../shell/ev-window.c:2784
 #, c-format
 msgid "Uploading image (%d%%)"
 msgstr "Laster opp bilde (%d%%)"
 
-#: ../shell/ev-window.c:2880
+#: ../shell/ev-window.c:2896
 msgid "Save a Copy"
 msgstr "Lagre en kopi"
 
-#: ../shell/ev-window.c:2956
+#: ../shell/ev-window.c:2972
 msgid "Could not send current document"
 msgstr "Klarte ikke å sende gjeldende dokument"
 
-#: ../shell/ev-window.c:2990
+#: ../shell/ev-window.c:3006
 msgid "Could not open the containing folder"
 msgstr "Klarte ikke å åpne mappen som aktuell fil ligger i"
 
-#: ../shell/ev-window.c:3251
+#: ../shell/ev-window.c:3267
 #, c-format
 msgid "%d pending job in queue"
 msgid_plural "%d pending jobs in queue"
 msgstr[0] "%d utestående jobb i køen"
 msgstr[1] "%d utestående jobber i køen"
 
-#: ../shell/ev-window.c:3364
+#: ../shell/ev-window.c:3380
 #, c-format
 msgid "Printing job “%s”"
 msgstr "Skriver ut jobb %s"
 
-#: ../shell/ev-window.c:3567
+#: ../shell/ev-window.c:3583
 msgid ""
 "Document contains form fields that have been filled out. If you don't save a "
 "copy, changes will be permanently lost."
@@ -1228,7 +1236,7 @@ msgstr ""
 "Dokumentet inneholder skjemafelter som ikke er fylt ut. Hvis du ikke lagrer "
 "en kopi vil disse endringene gå tapt."
 
-#: ../shell/ev-window.c:3571
+#: ../shell/ev-window.c:3587
 msgid ""
 "Document contains new or modified annotations. If you don't save a copy, "
 "changes will be permanently lost."
@@ -1236,20 +1244,20 @@ msgstr ""
 "Dokumentet inneholder nye eller endrede anmerkninger. Hvis du ikke lagrer en "
 "kopi vil disse endringene gå tapt."
 
-#: ../shell/ev-window.c:3578
+#: ../shell/ev-window.c:3594
 #, c-format
 msgid "Save a copy of document “%s” before closing?"
 msgstr "Lagre en kopi av dokument «%s» før programmet lukkes?"
 
-#: ../shell/ev-window.c:3597
+#: ../shell/ev-window.c:3613
 msgid "Close _without Saving"
 msgstr "Fortsett _uten å lagre"
 
-#: ../shell/ev-window.c:3601
+#: ../shell/ev-window.c:3617
 msgid "Save a _Copy"
 msgstr "Lagre en _kopi"
 
-#: ../shell/ev-window.c:3675
+#: ../shell/ev-window.c:3691
 #, c-format
 msgid "Wait until print job “%s” finishes before closing?"
 msgstr "Vent med å lukke programmet til utskriftsjobb %s er fullført?"
@@ -1257,7 +1265,7 @@ msgstr "Vent med å lukke programmet til utskriftsjobb %s er fullført?"
 #. TRANS: the singular form is not really used as n_print_jobs > 1
 #. but some languages distinguish between different plurals forms,
 #. so the ngettext is needed.
-#: ../shell/ev-window.c:3681
+#: ../shell/ev-window.c:3697
 #, c-format
 msgid "There is %d print job active. Wait until print finishes before closing?"
 msgid_plural ""
@@ -1269,51 +1277,51 @@ msgstr[1] ""
 "Det er %d aktive utskriftsjobber. Vent med å lukke programmet til disse er "
 "fullført?"
 
-#: ../shell/ev-window.c:3696
+#: ../shell/ev-window.c:3712
 msgid "If you close the window, pending print jobs will not be printed."
 msgstr ""
 "Hvis du lukker vinduet vil utestående utskriftsjobber ikke bli fullført."
 
-#: ../shell/ev-window.c:3700
+#: ../shell/ev-window.c:3716
 msgid "Cancel _print and Close"
 msgstr "Avbryt _utskrift og lukk"
 
-#: ../shell/ev-window.c:3704
+#: ../shell/ev-window.c:3720
 msgid "Close _after Printing"
 msgstr "Lukk etter ut_skrift"
 
-#: ../shell/ev-window.c:4232
+#: ../shell/ev-window.c:4248
 msgid "Running in presentation mode"
 msgstr "Kjører i presentasjonsmodus"
 
 #. TRANS: Sometimes this could be better translated as
 #. "%d hit(s) on this page".  Therefore this string
 #. contains plural cases.
-#: ../shell/ev-window.c:5164
+#: ../shell/ev-window.c:5181
 #, c-format
 msgid "%d found on this page"
 msgid_plural "%d found on this page"
 msgstr[0] "%d funnet på denne siden"
 msgstr[1] "%d funnet på denne siden"
 
-#: ../shell/ev-window.c:5169
+#: ../shell/ev-window.c:5186
 msgid "Not found"
 msgstr "Ikke funnet"
 
-#: ../shell/ev-window.c:5175
+#: ../shell/ev-window.c:5192
 #, c-format
 msgid "%3d%% remaining to search"
 msgstr "%3d%% igjen å søke i"
 
-#: ../shell/ev-window.c:5495
+#: ../shell/ev-window.c:5512
 msgid "Enable caret navigation?"
 msgstr "Slå på navigering med markør?"
 
-#: ../shell/ev-window.c:5497
+#: ../shell/ev-window.c:5514
 msgid "_Enable"
 msgstr "_Slå på"
 
-#: ../shell/ev-window.c:5500
+#: ../shell/ev-window.c:5517
 msgid ""
 "Pressing F7 turns the caret navigation on or off. This feature places a "
 "moveable cursor in text pages, allowing you to move around and select text "
@@ -1323,39 +1331,39 @@ msgstr ""
 "en flyttbar markør på tekstsider, og lar deg flytte rundt og markere tekst "
 "med tastaturet. Vil du slå på markørnavigering?"
 
-#: ../shell/ev-window.c:5505
+#: ../shell/ev-window.c:5522
 msgid "Don't show this message again"
 msgstr "Ikke vis denne meldingen igjen"
 
-#: ../shell/ev-window.c:6021 ../shell/ev-window.c:6037
+#: ../shell/ev-window.c:6038 ../shell/ev-window.c:6054
 msgid "Unable to launch external application."
 msgstr "Klarte ikke å starte eksternt program."
 
-#: ../shell/ev-window.c:6094
+#: ../shell/ev-window.c:6111
 msgid "Unable to open external link"
 msgstr "Klarte ikke å åpne ekstern lenke."
 
-#: ../shell/ev-window.c:6297
+#: ../shell/ev-window.c:6314
 msgid "Couldn't find appropriate format to save image"
 msgstr "Fant intet passende format å lagre filen i"
 
-#: ../shell/ev-window.c:6329
+#: ../shell/ev-window.c:6346
 msgid "The image could not be saved."
 msgstr "Klarte ikke å lagre bildet."
 
-#: ../shell/ev-window.c:6364
+#: ../shell/ev-window.c:6381
 msgid "Save Image"
 msgstr "Lagre bilde"
 
-#: ../shell/ev-window.c:6515
+#: ../shell/ev-window.c:6532
 msgid "Unable to open attachment"
 msgstr "Klarte ikke å åpne vedlegg"
 
-#: ../shell/ev-window.c:6571
+#: ../shell/ev-window.c:6588
 msgid "The attachment could not be saved."
 msgstr "Klarte ikke å lagre vedlegget."
 
-#: ../shell/ev-window.c:6619
+#: ../shell/ev-window.c:6636
 msgid "Save Attachment"
 msgstr "Lagre vedlegg"
 
