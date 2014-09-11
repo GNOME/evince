@@ -448,6 +448,7 @@ void EvBrowserPlugin::print() const
         if (const char *title = ev_document_get_title(document))
                 ev_print_operation_set_job_name(printOperation, title);
         ev_print_operation_set_current_page(printOperation, ev_document_model_get_page(m_model));
+        ev_print_operation_set_embed_page_setup (printOperation, TRUE);
         ev_print_operation_set_print_settings(printOperation, printSettings);
         g_object_unref(printSettings);
 
