@@ -326,7 +326,7 @@ job_page_data_finished_cb (EvJob       *job,
 	g_object_unref (data->job);
 	data->job = NULL;
 
-        g_signal_emit (cache, ev_page_cache_signals[PAGE_CACHED], job_data->page);
+        g_signal_emit (cache, ev_page_cache_signals[PAGE_CACHED], 0, job_data->page);
 }
 
 static void
