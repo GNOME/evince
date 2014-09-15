@@ -2404,6 +2404,16 @@ create_region_from_poppler_region (GList *region, gdouble xscale, gdouble yscale
 		cairo_rectangle_int_t rect;
 
 		rectangle = (PopplerRectangle *)l->data;
+		if (rectangle->x2 < rectangle->x1) {
+			double tmp = rectangle->x2;
+			rectangle->x2 = rectangle->x1;
+			rectangle->x1 = tmp;
+		}
+		if (rectangle->y2 < rectangle->y1) {
+			double tmp = rectangle->y2;
+			rectangle->y2 = rectangle->y1;
+			rectangle->y1 = tmp;
+		}
 
 		rect.x = (gint) ((rectangle->x1 * xscale) + 0.5);
 		rect.y = (gint) ((rectangle->y1 * yscale) + 0.5);
