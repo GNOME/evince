@@ -11,8 +11,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: evince-doc\n"
-"POT-Creation-Date: 2014-03-23 22:10+0000\n"
-"PO-Revision-Date: 2014-03-24 00:18+0100\n"
+"POT-Creation-Date: 2014-09-18 15:41+0000\n"
+"PO-Revision-Date: 2014-09-18 18:43+0200\n"
 "Last-Translator: Michael Scherer <misc@zarb.org>\n"
 "Language-Team: français <gnomefr@traduc.org>\n"
 "Language: FR\n"
@@ -73,7 +73,7 @@ msgstr "Tiffany Antopolski"
 #: C/duplex-3pages.page:16 C/duplex-4pages.page:16 C/duplex-5pages.page:16
 #: C/duplex-6pages.page:16 C/duplex-7pages.page:16 C/duplex-8pages.page:16
 #: C/duplex-9pages.page:16 C/duplex-npages.page:16 C/editing.page:15
-#: C/formats.page:18 C/forms.page:15 C/forms-saving.page:23
+#: C/formats.page:22 C/forms.page:15 C/forms-saving.page:23
 #: C/invert-colors.page:23 C/noprint.page:14 C/openerror.page:17
 #: C/presentations.page:20 C/print-2sided.page:16 C/print-booklet.page:16
 #: C/print-differentsize.page:15 C/printing.page:22 C/print-order.page:16
@@ -431,7 +431,8 @@ msgstr ""
 "Reader le fait."
 
 #. (itstool) path: credit/name
-#: C/bookmarks.page:17 C/finding.page:21 C/opening.page:18 C/password.page:16
+#: C/bookmarks.page:17 C/finding.page:21 C/formats.page:18 C/opening.page:18
+#: C/password.page:16
 msgid "Ekaterina Gerasimova"
 msgstr "Ekaterina Gerasimova"
 
@@ -812,13 +813,13 @@ msgstr ""
 "Vous pouvez convertir des documents des types de format suivants en PDF :"
 
 #. (itstool) path: item/p
-#: C/convertpdf.page:32 C/formats.page:30 C/presentations.page:69
+#: C/convertpdf.page:32 C/formats.page:34 C/presentations.page:69
 #: C/printing.page:49
 msgid "Device Independent file format (.dvi)"
 msgstr "Format de fichier Device Independent (.dvi)"
 
 #. (itstool) path: item/p
-#: C/convertpdf.page:33 C/formats.page:34 C/presentations.page:73
+#: C/convertpdf.page:33 C/formats.page:38 C/presentations.page:73
 #: C/printing.page:52
 msgid "PostScript (.ps)"
 msgstr "PostScript (.ps)"
@@ -902,19 +903,19 @@ msgstr ""
 "PostScript :"
 
 #. (itstool) path: item/p
-#: C/convertPostScript.page:32 C/formats.page:31 C/presentations.page:70
+#: C/convertPostScript.page:32 C/formats.page:35 C/presentations.page:70
 #: C/printing.page:50
 msgid "DjVu (.djvu, .djv)"
 msgstr "DjVu (.djvu, .djv)"
 
 #. (itstool) path: item/p
-#: C/convertPostScript.page:33 C/convertSVG.page:30 C/formats.page:33
+#: C/convertPostScript.page:33 C/convertSVG.page:30 C/formats.page:37
 #: C/presentations.page:72 C/printing.page:51
 msgid "Portable Document Format (.pdf)"
 msgstr "Portable Document Format (.pdf)"
 
 #. (itstool) path: item/p
-#: C/convertPostScript.page:34 C/formats.page:36 C/printing.page:53
+#: C/convertPostScript.page:34 C/printing.page:53
 msgid "Tagged Image File Format (.tiff, .tif)"
 msgstr "Tagged Image File Format (.tiff, .tif)"
 
@@ -2122,38 +2123,28 @@ msgid "PDF, PostScript and many others are."
 msgstr "PDF, PostScript et beaucoup d'autres le sont."
 
 #. (itstool) path: page/title
-#: C/formats.page:23
+#: C/formats.page:27
 msgid "Supported formats"
 msgstr "Formats pris en charge"
 
 #. (itstool) path: page/p
-#: C/formats.page:25
+#: C/formats.page:29
 msgid "The <app>document viewer</app> supports the following formats:"
 msgstr ""
 "Le <app>Visionneur de documents</app> prend en charge les formats suivants :"
 
 #. (itstool) path: item/p
-#: C/formats.page:29 C/presentations.page:68
+#: C/formats.page:33 C/presentations.page:68
 msgid "Comic Book Archive (.cbr and .cbz)"
 msgstr "Archive Comic Book (.cbr et .cbz)"
 
 #. (itstool) path: item/p
-#: C/formats.page:32 C/presentations.page:71
-msgid "OpenOffice Presentation (.odp)"
-msgstr "Présentation OpenOffice (.odp)"
-
-#. (itstool) path: item/p
-#: C/formats.page:35
-msgid "Scalable Vector Graphics (.svg)"
-msgstr "Scalable Vector Graphics (.svg)"
-
-#. (itstool) path: item/p
-#: C/formats.page:37
-msgid "Other Image Files (.gif, .jpeg, .png)"
-msgstr "Autres fichiers image (.gif, .jpeg, .png)"
+#: C/formats.page:36
+msgid "Open XML Paper Specification (.oxps, .xps)"
+msgstr "Spécification Open XML pour les papiers (.oxps, .xps)"
 
 #. (itstool) path: note/p
-#: C/formats.page:40
+#: C/formats.page:41
 msgid ""
 "In some Linux distributions, not all formats are supported by default, so "
 "you might not be able to view all the formats listed above."
@@ -2163,7 +2154,7 @@ msgstr ""
 "d'afficher tous les formats énumérés ci-dessus."
 
 #. (itstool) path: note/p
-#: C/formats.page:43
+#: C/formats.page:44
 msgid ""
 "Support for a format is called a <em>backend</em>. If you get the error "
 "\"Unable to Open Document\", you may wish to check whether the backend "
@@ -2298,20 +2289,6 @@ msgstr ""
 msgid "Copies of encrypted files can't be saved or printed."
 msgstr ""
 "Il n'est pas possible d'enregistrer ou d'imprimer des fichiers chiffrés."
-
-#. (itstool) path: media
-#. This is a reference to an external file such as an image or video. When
-#. the file changes, the md5 hash will change to let you know you need to
-#. update your localized copy. The msgstr is not used at all. Set it to
-#. whatever you like once you have updated your copy of the file.
-#: C/index.page:7
-msgctxt "_"
-msgid ""
-"external ref='figures/evince-trail.png' "
-"md5='a1a70d04c37f05937d0b3e7a0705d2d4'"
-msgstr ""
-"external ref='figures/evince-trail.png' "
-"md5='a1a70d04c37f05937d0b3e7a0705d2d4'"
 
 #. (itstool) path: info/title
 #: C/index.page:8
@@ -2777,9 +2754,10 @@ msgstr "Navigation avec une liste de pages ou une table des matières"
 #. (itstool) path: section/p
 #: C/movingaround.page:136
 msgid ""
-"To make the side pane visible <gui>View options</gui> button in the top-"
-"right corner and select<gui>Side Pane</gui>, or press <key>F9</key> on the "
-"keyboard. You should see a preview of all of the pages in the document."
+"To make the side pane visible, click the <gui>View options</gui> button in "
+"the top-right corner and select <gui>Side Pane</gui>, or press <key>F9</key> "
+"on the keyboard. You should see a preview of all of the pages in the "
+"document."
 msgstr ""
 "Pour ouvrir le panneau latéral, cliquez sur le bouton <gui>Options "
 "d'affichage</gui> en haut à droite, puis sur <gui>Panneau latéral</gui></"
@@ -2837,8 +2815,8 @@ msgid ""
 "key><key>-</key></keyseq> to zoom out."
 msgstr ""
 "Cliquez sur le bouton <gui>Options d'affichage</gui> en haut à droite et "
-"cliquez sur <gui>Zoom arrière</gui> ou utilisez le raccourci "
-"clavier <keyseq><key>Ctrl</key><key>-</key></keyseq> pour diminuer."
+"cliquez sur <gui>Zoom arrière</gui> ou utilisez le raccourci clavier "
+"<keyseq><key>Ctrl</key><key>-</key></keyseq> pour diminuer."
 
 #. (itstool) path: section/p
 #: C/movingaround.page:171
@@ -2889,13 +2867,21 @@ msgstr ""
 "cliquez sur le bouton <gui>Options d'affichage</gui> en haut à droite et "
 "cliquez sur <gui>Pages doubles</gui>."
 
+#. (itstool) path: note/p
+#: C/movingaround.page:192
+msgid ""
+"If the allow-links-change-zoom gsetting is set to false, links are blocked "
+"from changing your zoom level."
+msgstr ""
+"Si le gsetting allow-links-change-zoom est paramétré à faux, les liens ne peuvent pas changer le niveau de zoom."
+
 #. (itstool) path: section/p
-#: C/movingaround.page:194
+#: C/movingaround.page:196
 msgid "You can use the whole of your screen to view the document:"
 msgstr "Vous pouvez utiliser l'écran complet pour afficher le document :"
 
 #. (itstool) path: item/p
-#: C/movingaround.page:198
+#: C/movingaround.page:200
 msgid ""
 "Click the <gui>View options</gui> button in the top-right corner and select "
 "<gui>Fullscreen</gui> or press <key>F11</key>."
@@ -2904,17 +2890,17 @@ msgstr ""
 "cliquez sur <gui>Plein écran</gui>, ou appuyez sur <key>F11</key>."
 
 #. (itstool) path: item/p
-#: C/movingaround.page:202
+#: C/movingaround.page:204
 msgid "To exit the full screen mode:"
 msgstr "Pour quitter le mode plein écran :"
 
 #. (itstool) path: item/p
-#: C/movingaround.page:205
+#: C/movingaround.page:207
 msgid "Press <key>F11</key> or <key>Escape</key>"
 msgstr "Appuyez sur <key>F11</key> ou sur <key>Échap</key>"
 
 #. (itstool) path: item/p
-#: C/movingaround.page:208
+#: C/movingaround.page:210
 msgid ""
 "Or disable <gui>Fullscreen</gui> by clicking the <gui>View options</gui> "
 "button in the top-right corner and select <gui>Fullscreen</gui>."
@@ -3276,6 +3262,11 @@ msgid "The following file formats can be used for presentations:"
 msgstr ""
 "Les formats de fichiers suivants peuvent être utilisés pour faire des "
 "présentations :"
+
+#. (itstool) path: item/p
+#: C/presentations.page:71
+msgid "OpenOffice Presentation (.odp)"
+msgstr "Présentation OpenOffice (.odp)"
 
 #. (itstool) path: info/desc
 #: C/print-2sided.page:8
@@ -4820,6 +4811,20 @@ msgstr ""
 "Vous pouvez aussi joindre par courriel l'équipe d'internationalisation en "
 "utilisant leur <link href=\"http://mail.gnome.org/mailman/listinfo/gnome-i18n"
 "\">liste de diffusion</link>."
+
+#~ msgid "Scalable Vector Graphics (.svg)"
+#~ msgstr "Scalable Vector Graphics (.svg)"
+
+#~ msgid "Other Image Files (.gif, .jpeg, .png)"
+#~ msgstr "Autres fichiers image (.gif, .jpeg, .png)"
+
+#~ msgctxt "_"
+#~ msgid ""
+#~ "external ref='figures/evince-trail.png' "
+#~ "md5='a1a70d04c37f05937d0b3e7a0705d2d4'"
+#~ msgstr ""
+#~ "external ref='figures/evince-trail.png' "
+#~ "md5='a1a70d04c37f05937d0b3e7a0705d2d4'"
 
 #~ msgid ""
 #~ "The <em>master password</em> is required to print the document as well as "
