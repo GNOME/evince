@@ -189,13 +189,10 @@ ev_toolbar_constructed (GObject *object)
         GtkWidget      *tool_item;
         GtkWidget      *hbox, *vbox;
         GtkWidget      *button;
-        gboolean        rtl;
         GMenuModel     *menu;
         GMenuModel     *bookmarks_submenu_model;
 
         G_OBJECT_CLASS (ev_toolbar_parent_class)->constructed (object);
-
-        rtl = gtk_widget_get_direction (GTK_WIDGET (ev_toolbar)) == GTK_TEXT_DIR_RTL;
 
         builder = gtk_builder_new_from_resource ("/org/gnome/evince/shell/ui/menus.ui");
 
@@ -204,10 +201,7 @@ ev_toolbar_constructed (GObject *object)
                                            _("Open an existing document"));
         ev_toolbar->priv->open_button = button;
         gtk_container_add (GTK_CONTAINER (ev_toolbar), button);
-        if (rtl)
-                gtk_widget_set_margin_left (button, 6);
-        else
-                gtk_widget_set_margin_right (button, 6);
+        gtk_widget_set_margin_end (button, 6);
 
         /* Page selector */
         /* Use EvPageActionWidget for now, since the page selector action is also used by the previewer */
@@ -215,29 +209,20 @@ ev_toolbar_constructed (GObject *object)
         ev_toolbar->priv->page_selector = tool_item;
         ev_page_action_widget_set_model (EV_PAGE_ACTION_WIDGET (tool_item),
                                          ev_window_get_document_model (ev_toolbar->priv->window));
-        if (rtl)
-                gtk_widget_set_margin_left (tool_item, 6);
-        else
-                gtk_widget_set_margin_right (tool_item, 6);
+        gtk_widget_set_margin_end (tool_item, 6);
         gtk_header_bar_pack_start (GTK_HEADER_BAR (ev_toolbar), tool_item);
 
         /* History */
         hbox = ev_history_action_new (ev_window_get_history (ev_toolbar->priv->window));
         ev_toolbar->priv->history_action = hbox;
-        if (rtl)
-                gtk_widget_set_margin_left (hbox, 6);
-        else
-                gtk_widget_set_margin_right (hbox, 6);
+        gtk_widget_set_margin_end (hbox, 6);
         gtk_header_bar_pack_start (GTK_HEADER_BAR (ev_toolbar), hbox);
 
         /* Find */
         button = ev_toolbar_create_toggle_button (ev_toolbar, "win.toggle-find", "edit-find-symbolic",
                                                   _("Find a word or phrase in the document"));
         ev_toolbar->priv->find_button = button;
-        if (rtl)
-                gtk_widget_set_margin_left (button, 6);
-        else
-                gtk_widget_set_margin_right (button, 6);
+        gtk_widget_set_margin_end (button, 6);
         gtk_header_bar_pack_start (GTK_HEADER_BAR (ev_toolbar), button);
 
         /* Action Menu */
@@ -266,10 +251,7 @@ ev_toolbar_constructed (GObject *object)
         g_signal_connect (vbox, "activated",
                           G_CALLBACK (zoom_selector_activated),
                           ev_toolbar);
-        if (rtl)
-                gtk_widget_set_margin_left (vbox, 6);
-        else
-                gtk_widget_set_margin_right (vbox, 6);
+        gtk_widget_set_margin_end (vbox, 6);
         gtk_header_bar_pack_end (GTK_HEADER_BAR (ev_toolbar), vbox);
 
         ev_toolbar->priv->bookmarks_section = G_MENU (gtk_builder_get_object (builder, "bookmarks"));
