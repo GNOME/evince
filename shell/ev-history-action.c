@@ -208,9 +208,6 @@ ev_history_action_create_button (EvHistoryAction       *history_action,
         const gchar *icon_name = NULL;
         const gchar *tooltip_text = NULL;
         const gchar *action_name = NULL;
-        gboolean     rtl;
-
-        rtl = (gtk_widget_get_direction (GTK_WIDGET (history_action)) == GTK_TEXT_DIR_RTL);
 
         button = gtk_button_new ();
         gtk_widget_set_valign (button, GTK_ALIGN_CENTER);
@@ -220,12 +217,12 @@ ev_history_action_create_button (EvHistoryAction       *history_action,
 
         switch (action_button) {
         case EV_HISTORY_ACTION_BUTTON_BACK:
-                icon_name = rtl ? "go-previous-rtl-symbolic" : "go-previous-symbolic";
+                icon_name = "go-previous-symbolic";
                 tooltip_text = _("Go to previous history item");
                 action_name = "win.go-back-history";
                 break;
         case EV_HISTORY_ACTION_BUTTON_FORWARD:
-                icon_name = rtl ? "go-next-rtl-symbolic" : "go-next-symbolic";
+                icon_name = "go-next-symbolic";
                 tooltip_text = _("Go to next history item");
                 action_name = "win.go-forward-history";
                 break;
