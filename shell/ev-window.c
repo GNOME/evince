@@ -5028,7 +5028,7 @@ view_menu_annot_popup (EvWindow     *ev_window,
 	GAction *action;
 	gboolean show_annot_props = FALSE;
 	gboolean show_attachment = FALSE;
-	gboolean can_remove_annots;
+	gboolean can_remove_annots = FALSE;
 
 	g_clear_object (&ev_window->priv->annot);
 	if (annot) {
@@ -5052,7 +5052,8 @@ view_menu_annot_popup (EvWindow     *ev_window,
 		}
 	}
 
-	can_remove_annots = ev_document_annotations_can_remove_annotation (EV_DOCUMENT_ANNOTATIONS (ev_window->priv->document));
+	if (EV_IS_DOCUMENT_ANNOTATIONS (ev_window->priv->document))
+		can_remove_annots = ev_document_annotations_can_remove_annotation (EV_DOCUMENT_ANNOTATIONS (ev_window->priv->document));
 
 	action = g_action_map_lookup_action (G_ACTION_MAP (ev_window), "annot-properties");
 	g_simple_action_set_enabled (G_SIMPLE_ACTION (action), show_annot_props);
