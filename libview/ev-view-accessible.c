@@ -450,7 +450,7 @@ ev_view_accessible_focus_changed (GtkWidget        *widget,
 	g_return_val_if_fail (EV_IS_VIEW (widget), FALSE);
 	g_return_val_if_fail (EV_IS_VIEW_ACCESSIBLE (self), FALSE);
 
-	if (self->priv->children == NULL)
+	if (self->priv->children == NULL || self->priv->children->len == 0)
 		return FALSE;
 
 	page_accessible = g_ptr_array_index (self->priv->children,
