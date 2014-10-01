@@ -7,8 +7,8 @@ msgstr ""
 "Project-Id-Version: gu\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug."
 "cgi?product=evince&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2014-09-03 03:41+0000\n"
-"PO-Revision-Date: 2014-09-03 15:49+0530\n"
+"POT-Creation-Date: 2014-10-01 03:44+0000\n"
+"PO-Revision-Date: 2014-10-01 15:24+0530\n"
 "Last-Translator: \n"
 "Language-Team: American English <kde-i18n-doc@kde.org>\n"
 "Language: \n"
@@ -96,7 +96,7 @@ msgstr "વાર્તાની પુસ્તકો"
 
 #: ../backend/comics/evince-comicsdocument.metainfo.xml.in.in.h:2
 msgid "Adds support for reading comic books"
-msgstr ""
+msgstr "કોમિક પુસ્તકો વાંચવા માટે આધારને ઉમેરે છે"
 
 #: ../backend/djvu/djvu-document.c:175
 msgid "DjVu document has incorrect format"
@@ -117,7 +117,7 @@ msgstr "DjVu દસ્તાવેજો"
 
 #: ../backend/djvu/evince-djvudocument.metainfo.xml.in.in.h:2
 msgid "Adds support for reading DjVu documents"
-msgstr ""
+msgstr "DjVu દસ્તાવેજોને વાંચવા માટે આધારને ઉમેરે છે"
 
 #: ../backend/dvi/dvi-document.c:110
 msgid "DVI document has incorrect format"
@@ -130,7 +130,7 @@ msgstr "DVI દસ્તાવેજો"
 
 #: ../backend/dvi/evince-dvidocument.metainfo.xml.in.in.h:2
 msgid "Adds support for reading DVI documents"
-msgstr ""
+msgstr "DVI દસ્તાવેજોને વાંચવા માટે આધારને ઉમેરે છે"
 
 #: ../backend/pdf/ev-poppler.cc:673
 msgid "This work is in the Public Domain"
@@ -256,7 +256,7 @@ msgstr "PDF દસ્તાવેજો"
 
 #: ../backend/pdf/evince-pdfdocument.metainfo.xml.in.in.h:2
 msgid "Adds support for reading PDF Documents"
-msgstr ""
+msgstr "PDF દસ્તાવેજોને વાંચવા માટે આધારને ઉમેરે છે"
 
 #: ../backend/ps/ev-spectre.c:98
 #, c-format
@@ -275,7 +275,7 @@ msgstr "પોસ્ટસ્ક્રિપ્ટ દસ્તાવેજો"
 
 #: ../backend/ps/evince-psdocument.metainfo.xml.in.in.h:2
 msgid "Adds support for reading PostScript documents"
-msgstr ""
+msgstr "PostScript દસ્તાવેજોને વાંચવા માટે આધારને ઉમેરે છે"
 
 #: ../backend/tiff/tiff-document.c:123
 msgid "Invalid document"
@@ -288,7 +288,7 @@ msgstr "TIFF દસ્તાવેજો"
 
 #: ../backend/tiff/evince-tiffdocument.metainfo.xml.in.in.h:2
 msgid "Adds support for reading TIFF documents"
-msgstr ""
+msgstr "TIFF દસ્તાવેજોને વાંચવા માટે આધારને ઉમેરે છે"
 
 #: ../backend/xps/evince-xpsdocument.metainfo.xml.in.in.h:1
 #: ../backend/xps/xpsdocument.evince-backend.in.in.h:1
@@ -297,7 +297,7 @@ msgstr "XPS દસ્તાવેજો"
 
 #: ../backend/xps/evince-xpsdocument.metainfo.xml.in.in.h:2
 msgid "Adds support for reading XPS documents"
-msgstr ""
+msgstr "XPS દસ્તાવેજોને વાંચવા માટે આધારને ઉમેરે છે"
 
 #: ../browser-plugin/EvBrowserPluginToolbar.cpp:230
 #: ../previewer/ev-previewer-window.c:317 ../shell/evince-menus.ui.h:32
@@ -344,12 +344,10 @@ msgid "Shrink the document"
 msgstr "દસ્તાવેજ સંકોચો"
 
 #: ../browser-plugin/EvBrowserPluginToolbar.cpp:368
-#| msgid "Downloading document (%d%%)"
 msgid "Download document"
 msgstr "દસ્તાવેજને ડાઉનલોડ કરો"
 
 #: ../browser-plugin/EvBrowserPluginToolbar.cpp:381
-#| msgid "Print this document"
 msgid "Print document"
 msgstr "દસ્તાવેજને છાપો"
 
@@ -401,19 +399,25 @@ msgstr "ચિત્રને સંગ્રહવા માટે વાપર
 
 #: ../data/org.gnome.Evince.gschema.xml.in.h:7
 msgid "Page cache size in MiB"
-msgstr ""
+msgstr "MiB માં પાનાં કેશ માપ"
 
 #: ../data/org.gnome.Evince.gschema.xml.in.h:8
 msgid ""
 "The maximum size that will be used to cache rendered pages, limits maximum "
 "zoom level."
-msgstr ""
+msgstr "મહત્તમ માપ કે જે રેન્ડર થયેલ પાનાં કેશમાં વાપરેલ હશે, મહત્તમ મોટુ કરવાની મર્યાદા છે."
 
 #: ../data/org.gnome.Evince.gschema.xml.in.h:9
 msgid ""
 "Show a dialog to confirm that the user wants to activate the caret "
 "navigation."
 msgstr ""
+"ખાતરી કરવા માટે સંવાદને બતાવો કે જે કેરેટ સંશોધકને સક્રિય કરવા માટે વપરાશકર્તા માંગે છે."
+
+#: ../data/org.gnome.Evince.gschema.xml.in.h:10
+#| msgid "Adjust the zoom level"
+msgid "Allow links to change the zoom level."
+msgstr "નાનામોટાપણાનું સ્તરને બદલવા માટે કડીઓને પરવાનગી આપે છે."
 
 #: ../libdocument/ev-attachment.c:310 ../libdocument/ev-attachment.c:331
 #, c-format
@@ -472,8 +476,8 @@ msgid "of %d"
 msgstr "%d ના"
 
 #: ../libmisc/ev-page-action-widget.c:185 ../shell/ev-history.c:426
-#: ../shell/ev-sidebar-bookmarks.c:295 ../shell/ev-window.c:903
-#: ../shell/ev-window.c:4692
+#: ../shell/ev-sidebar-bookmarks.c:295 ../shell/ev-window.c:904
+#: ../shell/ev-window.c:4708
 #, c-format
 msgid "Page %s"
 msgstr "પાનું %s"
@@ -485,7 +489,6 @@ msgstr "પાનું %d ને છાપવામાં નિષ્ફળ: %
 
 #. Initial state
 #: ../libview/ev-print-operation.c:350
-#| msgid "Preparing to print…"
 msgid "Preparing preview…"
 msgstr "પૂર્વદર્શન તૈયાર કરી રહ્યા છીએ…"
 
@@ -495,7 +498,6 @@ msgstr "સમાપ્ત કરી રહ્યા છે..."
 
 #: ../libview/ev-print-operation.c:354
 #, c-format
-#| msgid "Printing page %d of %d…"
 msgid "Generating preview: page %d of %d"
 msgstr "પૂર્વદર્શનને ઉત્પન્ન કરી રહ્યા છે: %d નું પાનું %d"
 
@@ -510,7 +512,6 @@ msgid "Printing page %d of %d…"
 msgstr "%d નું પાનું %d ને છાપી રહ્યા છે..."
 
 #: ../libview/ev-print-operation.c:1214
-#| msgid "Postscript is not supported by this printer."
 msgid "Requested format is not supported by this printer."
 msgstr "સૂચિત બંધારણ આ પ્રિન્ટર દ્દારા આધારભૂત નથી."
 
@@ -614,46 +615,46 @@ msgstr "દેખાવ નીચે સરકાવો"
 msgid "Document View"
 msgstr "દસ્તાવેજ દૃશ્ય"
 
-#: ../libview/ev-view.c:1976
+#: ../libview/ev-view.c:1994
 msgid "Go to first page"
 msgstr "પ્રથમ પાનાં પર જાઓ"
 
-#: ../libview/ev-view.c:1978
+#: ../libview/ev-view.c:1996
 msgid "Go to previous page"
 msgstr "પહેલાના પાનાં પર જાઓ"
 
-#: ../libview/ev-view.c:1980
+#: ../libview/ev-view.c:1998
 msgid "Go to next page"
 msgstr "આગળના પાનાં પર જાઓ"
 
-#: ../libview/ev-view.c:1982
+#: ../libview/ev-view.c:2000
 msgid "Go to last page"
 msgstr "છેલ્લા પાના પર જાઓ"
 
-#: ../libview/ev-view.c:1984
+#: ../libview/ev-view.c:2002
 msgid "Go to page"
 msgstr "પાનાં પર જાવ"
 
-#: ../libview/ev-view.c:1986
+#: ../libview/ev-view.c:2004
 msgid "Find"
 msgstr "શોધો"
 
-#: ../libview/ev-view.c:2014
+#: ../libview/ev-view.c:2032
 #, c-format
 msgid "Go to page %s"
 msgstr "પાનાં %s પર જાવ"
 
-#: ../libview/ev-view.c:2020
+#: ../libview/ev-view.c:2038
 #, c-format
 msgid "Go to %s on file “%s”"
 msgstr "%s પર ફાઈલ “%s” માં જાવ"
 
-#: ../libview/ev-view.c:2023
+#: ../libview/ev-view.c:2041
 #, c-format
 msgid "Go to file “%s”"
 msgstr "ફાઈલ “%s” માં જાવ"
 
-#: ../libview/ev-view.c:2031
+#: ../libview/ev-view.c:2049
 #, c-format
 msgid "Launch %s"
 msgstr "%s લોન્ચ કરો"
@@ -682,7 +683,7 @@ msgstr "FILE"
 msgid "GNOME Document Previewer"
 msgstr "GNOME દસ્તાવેજ દર્શક"
 
-#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3308
+#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3323
 msgid "Failed to print document"
 msgstr "દસ્તાવેજ છાપવામાં નિષ્ફળ"
 
@@ -949,7 +950,6 @@ msgid "Evince"
 msgstr "Evince"
 
 #: ../shell/ev-application.c:1026
-#| msgid "© 1996–2012 The Evince authors"
 msgid "© 1996–2014 The Evince authors"
 msgstr "© 1996–2014 The Evince authors"
 
@@ -1130,12 +1130,10 @@ msgid "Find a word or phrase in the document"
 msgstr "દસ્તાવેજમાં શબ્દ અથવા મહાવરો શોધો"
 
 #: ../shell/ev-toolbar.c:247 ../shell/ev-toolbar.c:248
-#| msgid "Find options"
 msgid "File options"
 msgstr "ફાઇલ વિકલ્પો"
 
 #: ../shell/ev-toolbar.c:257 ../shell/ev-toolbar.c:258
-#| msgid "Find options"
 msgid "View options"
 msgstr "વિકલ્પો જુઓ"
 
@@ -1143,107 +1141,106 @@ msgstr "વિકલ્પો જુઓ"
 msgid "Supported Image Files"
 msgstr "આધારભૂત ચિત્ર ફાઇલો"
 
-#: ../shell/ev-window.c:1591
+#: ../shell/ev-window.c:1606
 msgid "The document contains no pages"
 msgstr "દસ્તાવેજ પાનાંઓ ધરાવતુ નથી"
 
-#: ../shell/ev-window.c:1594
+#: ../shell/ev-window.c:1609
 msgid "The document contains only empty pages"
 msgstr "દસ્તાવેજ ફક્ત ખાલી પાનાંઓ સમાવે છે"
 
-#: ../shell/ev-window.c:1807 ../shell/ev-window.c:1975
+#: ../shell/ev-window.c:1822 ../shell/ev-window.c:1990
 #, c-format
-#| msgid "Unable to open document"
 msgid "Unable to open document “%s”."
 msgstr "દસ્તાવેજ “%s” ખોલવામાં અસમર્થ"
 
-#: ../shell/ev-window.c:1939
+#: ../shell/ev-window.c:1954
 #, c-format
 msgid "Loading document from “%s”"
 msgstr "“%s” માંથી દસ્તાવેજને લોડ કરી રહ્યા છે"
 
-#: ../shell/ev-window.c:2090 ../shell/ev-window.c:2417
+#: ../shell/ev-window.c:2105 ../shell/ev-window.c:2432
 #, c-format
 msgid "Downloading document (%d%%)"
 msgstr "દસ્તાવેજ (%d%%) ને ડાઉનલોડ કરી રહ્યા છે"
 
-#: ../shell/ev-window.c:2123
+#: ../shell/ev-window.c:2138
 msgid "Failed to load remote file."
 msgstr "દૂરસ્થ ફાઇલને લાવવાનું નિષ્ફળ."
 
-#: ../shell/ev-window.c:2361
+#: ../shell/ev-window.c:2376
 #, c-format
 msgid "Reloading document from %s"
 msgstr "%s માંથી દસ્તાવેજ ને પુન:લોડ કરી રહ્યા છે"
 
-#: ../shell/ev-window.c:2393
+#: ../shell/ev-window.c:2408
 msgid "Failed to reload document."
 msgstr "દસ્તાવેજ ને પુન:લોડ કરવામાં નિષ્ફળ."
 
-#: ../shell/ev-window.c:2609
+#: ../shell/ev-window.c:2624
 msgid "Open Document"
 msgstr "દસ્તાવેજ ખોલો"
 
-#: ../shell/ev-window.c:2680
+#: ../shell/ev-window.c:2695
 #, c-format
 msgid "Saving document to %s"
 msgstr "%s માં દસ્તાવેજને સંગ્રહ કરી રહ્યા છે"
 
-#: ../shell/ev-window.c:2683
+#: ../shell/ev-window.c:2698
 #, c-format
 msgid "Saving attachment to %s"
 msgstr "%s માં જોડાણ કરવા સંગ્રહ કરી રહ્યા છે"
 
-#: ../shell/ev-window.c:2686
+#: ../shell/ev-window.c:2701
 #, c-format
 msgid "Saving image to %s"
 msgstr "%s માં ઇમેજ ને સંગ્રહ કરી રહ્યા છે"
 
-#: ../shell/ev-window.c:2730 ../shell/ev-window.c:2830
+#: ../shell/ev-window.c:2745 ../shell/ev-window.c:2845
 #, c-format
 msgid "The file could not be saved as “%s”."
 msgstr "ફાઈલ “%s” રીતે સંગ્રહી શક્યા નહિં."
 
-#: ../shell/ev-window.c:2761
+#: ../shell/ev-window.c:2776
 #, c-format
 msgid "Uploading document (%d%%)"
 msgstr "દસ્તાવેજ (%d%%) ને અપલોડ કરી રહ્યા છે"
 
-#: ../shell/ev-window.c:2765
+#: ../shell/ev-window.c:2780
 #, c-format
 msgid "Uploading attachment (%d%%)"
 msgstr "જોડાણ (%d%%) ને અપલોડ કરી રહ્યા છે"
 
-#: ../shell/ev-window.c:2769
+#: ../shell/ev-window.c:2784
 #, c-format
 msgid "Uploading image (%d%%)"
 msgstr "ઇમેજ (%d%%) ને અપલોડ કરી રહ્યા છે"
 
-#: ../shell/ev-window.c:2881
+#: ../shell/ev-window.c:2896
 msgid "Save a Copy"
 msgstr "નકલ સંગ્રહો"
 
-#: ../shell/ev-window.c:2957
+#: ../shell/ev-window.c:2972
 msgid "Could not send current document"
 msgstr "વર્તમાન દસ્તાવેજને મોકલી શક્યા નહિં"
 
-#: ../shell/ev-window.c:2991
+#: ../shell/ev-window.c:3006
 msgid "Could not open the containing folder"
 msgstr "સમાસિત ફોલ્ડરને ખોલી શક્યા નહિં"
 
-#: ../shell/ev-window.c:3252
+#: ../shell/ev-window.c:3267
 #, c-format
 msgid "%d pending job in queue"
 msgid_plural "%d pending jobs in queue"
 msgstr[0] "કતાર માં %d અટકેલ જોબ"
 msgstr[1] "કતાર માં %d અટકેલ જોબો"
 
-#: ../shell/ev-window.c:3365
+#: ../shell/ev-window.c:3380
 #, c-format
 msgid "Printing job “%s”"
 msgstr "જોબ “%s” ને છાપી રહ્યા છે"
 
-#: ../shell/ev-window.c:3568
+#: ../shell/ev-window.c:3583
 msgid ""
 "Document contains form fields that have been filled out. If you don't save a "
 "copy, changes will be permanently lost."
@@ -1251,7 +1248,7 @@ msgstr ""
 "દસ્તાવેજ ક્ષેત્રોને સમાવે થે કે ભરી દેવામાં આવ્યા છે. જો તમારી પાસે તેની નકલનો સંગ્રહ ન કર્યો "
 "હોય તો, ફેરફારો કાયમ માટે ગુમ થઇ જશે."
 
-#: ../shell/ev-window.c:3572
+#: ../shell/ev-window.c:3587
 msgid ""
 "Document contains new or modified annotations. If you don't save a copy, "
 "changes will be permanently lost."
@@ -1259,20 +1256,20 @@ msgstr ""
 "દસ્તાવેજ નવા અથવા બદલાયેલ ટિકાટિપ્પણીઓ સમાવે છે. જો તમારી પાસે તેની નકલનો સંગ્રહ ન "
 "કર્યો હોય તો, ફેરફારો કાયમ માટે ગુમ થઇ જશે."
 
-#: ../shell/ev-window.c:3579
+#: ../shell/ev-window.c:3594
 #, c-format
 msgid "Save a copy of document “%s” before closing?"
 msgstr "બંધ કરતા પેહલાં દસ્તાવેજ “%s”ની નકલને સંગ્રહવા માંગો છો?"
 
-#: ../shell/ev-window.c:3598
+#: ../shell/ev-window.c:3613
 msgid "Close _without Saving"
 msgstr "સંગ્રહ કર્યા વગર બંધ કરો (_w)"
 
-#: ../shell/ev-window.c:3602
+#: ../shell/ev-window.c:3617
 msgid "Save a _Copy"
 msgstr "નકલ સંગ્રહો (_C)"
 
-#: ../shell/ev-window.c:3676
+#: ../shell/ev-window.c:3691
 #, c-format
 msgid "Wait until print job “%s” finishes before closing?"
 msgstr "બંધ કરતા પેહલાં જોબ “%s”ને છાપવાનું સમાપ્ત થાય ત્યાં સુધી થોભો?"
@@ -1280,106 +1277,107 @@ msgstr "બંધ કરતા પેહલાં જોબ “%s”ને છ�
 #. TRANS: the singular form is not really used as n_print_jobs > 1
 #. but some languages distinguish between different plurals forms,
 #. so the ngettext is needed.
-#: ../shell/ev-window.c:3682
+#: ../shell/ev-window.c:3697
 #, c-format
 msgid "There is %d print job active. Wait until print finishes before closing?"
 msgid_plural "There are %d print jobs active. Wait until print finishes before closing?"
 msgstr[0] "ત્યાં %d છાપવાની જોબ સક્રિય છે. બંધ કરતા પહેલા છાપવાનું સમાપ્ત થાય ત્યાં સુધી થોભો?"
 msgstr[1] "ત્યાં %d છાપવાની જોબો સક્રિય છે. બંધ કરતા પહેલા છાપવાનું સમાપ્ત થાય ત્યાં સુધી થોભો?"
 
-#: ../shell/ev-window.c:3697
+#: ../shell/ev-window.c:3712
 msgid "If you close the window, pending print jobs will not be printed."
 msgstr "જો તમે વિન્ડો ને બંધ કરો તો, અટકેલ છાપવાની જોબો એ છાપેલ હશે."
 
-#: ../shell/ev-window.c:3701
+#: ../shell/ev-window.c:3716
 msgid "Cancel _print and Close"
 msgstr "છાપો અને બંધ કરો ને રદ કરો (_p)"
 
-#: ../shell/ev-window.c:3705
+#: ../shell/ev-window.c:3720
 msgid "Close _after Printing"
 msgstr "છાપવા પછી બંધ કરો (_a)"
 
-#: ../shell/ev-window.c:4233
+#: ../shell/ev-window.c:4248
 msgid "Running in presentation mode"
 msgstr "રજૂઆત સ્થિતિમાં ચલાવી રહ્યા છીએ"
 
 #. TRANS: Sometimes this could be better translated as
 #. "%d hit(s) on this page".  Therefore this string
 #. contains plural cases.
-#: ../shell/ev-window.c:5165
+#: ../shell/ev-window.c:5182
 #, c-format
 msgid "%d found on this page"
 msgid_plural "%d found on this page"
 msgstr[0] "%d આ પાનાં પર મળી આવ્યું"
 msgstr[1] "%d આ પાનાં પર મળી આવ્યા"
 
-#: ../shell/ev-window.c:5170
+#: ../shell/ev-window.c:5187
 msgid "Not found"
 msgstr "મળ્યુ નથી"
 
-#: ../shell/ev-window.c:5176
+#: ../shell/ev-window.c:5193
 #, c-format
 msgid "%3d%% remaining to search"
 msgstr "%3d%% શોધવામાં બાકી"
 
-#: ../shell/ev-window.c:5496
+#: ../shell/ev-window.c:5513
 msgid "Enable caret navigation?"
-msgstr ""
+msgstr "શું કૅરેટ સંશોધકને સક્રિય કરવુ છે?"
 
-#: ../shell/ev-window.c:5498
+#: ../shell/ev-window.c:5515
 msgid "_Enable"
 msgstr "સક્રિય કરો (_E)"
 
-#: ../shell/ev-window.c:5501
+#: ../shell/ev-window.c:5518
 msgid ""
 "Pressing F7 turns the caret navigation on or off. This feature places a "
 "moveable cursor in text pages, allowing you to move around and select text "
 "with your keyboard. Do you want to enable the caret navigation?"
 msgstr ""
+"F7 ને દબાવીને કૅરેટ સંશોધકને ચાલુ અથવા બંધ કરાય છે. આ લક્ષણ લખાણ પાનાંમાં ખસી શકાય તેવાં "
+"કર્સરને સ્થિત કરે છે, તેને ખસેડવા માટે પરવાનગી આપી રહ્યુ છે અને તમારાં કિબોર્ડ સાથે લખાણને "
+"પસંદ કરે છે. શું તમે કૅરેટ સંશોધકને સક્રિય કરવા માંગો છો?"
 
-#: ../shell/ev-window.c:5506
+#: ../shell/ev-window.c:5523
 msgid "Don't show this message again"
 msgstr "ફરીથા આ સંદેશને બતાવો નહિં"
 
-#: ../shell/ev-window.c:6022 ../shell/ev-window.c:6038
+#: ../shell/ev-window.c:6039 ../shell/ev-window.c:6055
 msgid "Unable to launch external application."
 msgstr "બહારનાં કાર્યક્રમને પ્રકાશિત કરવામાં અસમર્થ."
 
-#: ../shell/ev-window.c:6095
+#: ../shell/ev-window.c:6112
 msgid "Unable to open external link"
 msgstr "બાહ્ય કડી ખોલવામાં અસમર્થ"
 
-#: ../shell/ev-window.c:6298
+#: ../shell/ev-window.c:6315
 msgid "Couldn't find appropriate format to save image"
 msgstr "ચિત્ર સંગ્રહવા માટે યોગ્ય બંધારણ શોધી શક્યા નહિં"
 
-#: ../shell/ev-window.c:6330
+#: ../shell/ev-window.c:6347
 msgid "The image could not be saved."
 msgstr "ચિત્ર સંગ્રહી શક્યા નહિં."
 
-#: ../shell/ev-window.c:6365
+#: ../shell/ev-window.c:6382
 msgid "Save Image"
 msgstr "ચિત્ર સંગ્રહો"
 
-#: ../shell/ev-window.c:6516
+#: ../shell/ev-window.c:6533
 msgid "Unable to open attachment"
 msgstr "જોડાણ ખોલવામાં અસમર્થ"
 
-#: ../shell/ev-window.c:6572
+#: ../shell/ev-window.c:6589
 msgid "The attachment could not be saved."
 msgstr "જોડાણ સંગ્રહી શક્યા નહિં."
 
-#: ../shell/ev-window.c:6620
+#: ../shell/ev-window.c:6637
 msgid "Save Attachment"
 msgstr "જોડાણ સંગ્રહો"
 
 #: ../shell/ev-window-title.c:118
-#| msgid "Open Document"
 msgid "Recent Documents"
 msgstr "તાજેતરનાં દસ્તાવેજો"
 
 #: ../shell/ev-window-title.c:153 ../shell/ev-window-title.c:157
-#| msgid "Password required"
 msgid "Password Required"
 msgstr "પાસવર્ડ જરૂરી"
 
@@ -1492,7 +1490,6 @@ msgid "[FILE…]"
 msgstr "[FILE…]"
 
 #: ../shell/evince-menus.ui.h:1
-#| msgid "Open in New _Window"
 msgid "_New Window"
 msgstr "નવી વિન્ડો (_N)"
 
@@ -1533,37 +1530,30 @@ msgid "Rotate _Right"
 msgstr "જમણે ફેરવો (_R)"
 
 #: ../shell/evince-menus.ui.h:11
-#| msgid "_First Page"
 msgid "First Page"
 msgstr "પ્રથમ પાનું"
 
 #: ../shell/evince-menus.ui.h:12
-#| msgid "_Previous Page"
 msgid "Previous Page"
 msgstr "પહેલાનું પાનું"
 
 #: ../shell/evince-menus.ui.h:13
-#| msgid "_Next Page"
 msgid "Next Page"
 msgstr "આગળનું પાનું"
 
 #: ../shell/evince-menus.ui.h:14
-#| msgid "_Last Page"
 msgid "Last Page"
 msgstr "છેલ્લુ પાનું"
 
 #: ../shell/evince-menus.ui.h:15
-#| msgid "Zoom In"
 msgid "Zoom _In"
 msgstr "મોટુ કરો (_I)"
 
 #: ../shell/evince-menus.ui.h:16
-#| msgid "Zoom Out"
 msgid "Zoom _Out"
 msgstr "નાનું કરો (_O)"
 
 #: ../shell/evince-menus.ui.h:17
-#| msgid "_Odd pages left"
 msgid "_Odd Pages Left"
 msgstr "એકી પાનાં ડાબે (_O)"
 
@@ -1588,7 +1578,6 @@ msgid "_Save a Copy…"
 msgstr "નકલ સંગ્રહો (_S)..."
 
 #: ../shell/evince-menus.ui.h:23
-#| msgid "Send To"
 msgid "Send _To…"
 msgstr "તેમાં મોકલો (_T)…"
 
@@ -1601,7 +1590,6 @@ msgid "_Print…"
 msgstr "છાપો (_P)..."
 
 #: ../shell/evince-menus.ui.h:26
-#| msgid "P_roperties"
 msgid "P_roperties…"
 msgstr "ગુણધર્મો (_r)…"
 
@@ -1622,7 +1610,6 @@ msgid "_Add Bookmark"
 msgstr "બુકમાર્કને ઉમેરો (_A)"
 
 #: ../shell/evince-menus.ui.h:31
-#| msgid "Close"
 msgid "_Close"
 msgstr "બંધ કરો (_C)"
 
@@ -1667,23 +1654,24 @@ msgid "Annotation Properties…"
 msgstr "વિવરણ ગુણધર્મો..."
 
 #: ../shell/evince-menus.ui.h:47
-#| msgid "Annotations"
 msgid "Remove Annotation"
 msgstr "ટિકાટિપ્પણી દૂર કરો"
 
 #: ../evince.appdata.xml.in.h:2
 msgid "Document viewer for popular document formats"
-msgstr ""
+msgstr "જાણીતા દસ્તાવેજ બંધારણો માટે દસ્તાવેજ દર્શક"
 
 #: ../evince.appdata.xml.in.h:3
 msgid "This is a document viewer for the GNOME desktop."
-msgstr ""
+msgstr "આ GNOME ડૅસ્કટોપ માટે દસ્તાવેજ દર્શક છે."
 
 #: ../evince.appdata.xml.in.h:4
 msgid ""
 "It supports the following document formats: PDF, PS, EPS, XPS, DjVu, TIFF, "
 "DVI (with SyncTeX), and Comic Books archives (CBR, CBT, CBZ, CB7)."
 msgstr ""
+"તે નીચેનાં બંધારણોને આધાર આપે છે: PDF, PS, EPS, XPS, DjVu, TIFF, "
+"DVI (SyncTeX સાથે), અને કોમિક ચોપડીઓની પેટી (CBR, CBT, CBZ, CB7)."
 
 #~ msgid "File is not a valid .desktop file"
 #~ msgstr "ફાઇલ એ યોગ્ય .desktop ફાઇલ નથી"
@@ -1808,9 +1796,6 @@ msgstr ""
 
 #~ msgid "Zoom"
 #~ msgstr "નાનુમોટુ કરવું"
-
-#~ msgid "Adjust the zoom level"
-#~ msgstr "નાનામોટાપણાનું સ્તર સંતુલિત કરો"
 
 #~ msgid "History"
 #~ msgstr "ઇતિહાસ"
