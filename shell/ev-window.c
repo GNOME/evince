@@ -502,6 +502,8 @@ ev_window_update_actions_sensitivity (EvWindow *ev_window)
 				      can_get_text && !recent_view_mode);
 	ev_window_set_action_enabled (ev_window, "find", can_find &&
 				      !recent_view_mode);
+	ev_window_set_action_enabled (ev_window, "toggle-find", can_find &&
+				      !recent_view_mode);
 	ev_window_set_action_enabled (ev_window, "rotate-left", has_pages &&
 				      !recent_view_mode);
 	ev_window_set_action_enabled (ev_window, "rotate-right", has_pages &&
