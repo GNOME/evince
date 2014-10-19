@@ -4024,6 +4024,9 @@ ev_window_update_links_model (EvWindow *window)
 		      "model", &model,
 		      NULL);
 
+	if (!model)
+		return;
+
 	page_selector = ev_toolbar_get_page_selector (EV_TOOLBAR (window->priv->toolbar));
 	ev_page_action_widget_update_links_model (EV_PAGE_ACTION_WIDGET (page_selector), model);
 	if (window->priv->fs_toolbar) {
