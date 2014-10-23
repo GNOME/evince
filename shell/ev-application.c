@@ -1077,6 +1077,8 @@ ev_application_startup (GApplication *gapplication)
           "win.show-side-pane",         "F9", NULL,
           "win.fullscreen",             "F11", NULL,
           "win.presentation",           "F5", NULL,
+          "win.continuous",             "c", NULL,
+          "win.dual-page",              "d", NULL,
           "win.rotate-left",            "<Ctrl>Left", NULL,
           "win.rotate-right",           "<Ctrl>Right", NULL,
           "win.inverted-colors",        "<Ctrl>I", NULL,
