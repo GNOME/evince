@@ -455,7 +455,9 @@ AC_ARG_ENABLE([browser-plugin],
 if test x$enable_browser_plugin = "xyes" ; then
   PKG_CHECK_MODULES([BROWSER_PLUGIN],[gtk+-3.0 >= $GTK_REQUIRED gthread-2.0 gio-2.0 >= $GLIB_REQUIRED])
 
-  BROWSER_PLUGIN_DIR="${BROWSER_PLUGIN_DIR:-"\${libdir}/mozilla/plugins"}"
+  if test -z "${BROWSER_PLUGIN_DIR}"; then
+    BROWSER_PLUGIN_DIR="\${libdir}/mozilla/plugins"
+  fi
   AC_ARG_VAR([BROWSER_PLUGIN_DIR],[Where to install the plugin to])
 fi
 
