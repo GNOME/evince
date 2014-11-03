@@ -603,12 +603,18 @@ ev_view_scroll_to_page_position (EvView *view, GtkOrientation orientation)
 
 	if ((orientation == GTK_ORIENTATION_VERTICAL && view->pending_point.y == 0) ||
 	    (orientation == GTK_ORIENTATION_HORIZONTAL && view->pending_point.x == 0)) {
-		GdkRectangle page_area;
-		GtkBorder    border;
+		if (view->continuous) {
+			GdkRectangle page_area;
+			GtkBorder    border;
 
-		ev_view_get_page_extents (view, view->current_page, &page_area, &border);
-		x = page_area.x;
-		y = page_area.y;
+			ev_view_get_page_extents (view, view->current_page, &page_area, &border);
+			x = page_area.x;
+			y = page_area.y;
+		}
+		else{
+			x = view->scroll_x;
+			y = view->scroll_y;
+		}
 	} else {
 		GdkPoint view_point;
 
@@ -8368,6 +8374,12 @@ ev_view_continuous_changed_cb (EvDocumentModel *model,
 	view->continuous = continuous;
 	view->pending_scroll = SCROLL_TO_PAGE_POSITION;
 	gtk_widget_queue_resize (GTK_WIDGET (view));
+
+	if(!continuous){
+		view->scroll_x=0;
+		view->scroll_y=0;
+	}
+
 }
 
 static void
