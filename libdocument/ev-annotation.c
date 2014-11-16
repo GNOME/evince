@@ -68,6 +68,8 @@ struct _EvAnnotationAttachmentClass {
 
 struct _EvAnnotationTextMarkup {
 	EvAnnotation parent;
+
+        EvAnnotationTextMarkupType type;
 };
 
 struct _EvAnnotationTextMarkupClass {
@@ -109,6 +111,11 @@ enum {
 /* EvAnnotationAttachment */
 enum {
 	PROP_ATTACHMENT_ATTACHMENT = PROP_MARKUP_POPUP_IS_OPEN + 1
+};
+
+/* EvAnnotationTextMarkup */
+enum {
+        PROP_TEXT_MARKUP_TYPE = PROP_MARKUP_POPUP_IS_OPEN + 1
 };
 
 G_DEFINE_ABSTRACT_TYPE (EvAnnotation, ev_annotation, G_TYPE_OBJECT)
@@ -1247,8 +1254,53 @@ ev_annotation_attachment_set_attachment (EvAnnotationAttachment *annot,
 
 /* EvAnnotationTextMarkup */
 static void
+ev_annotation_text_markup_get_property (GObject    *object,
+                                        guint       prop_id,
+                                        GValue     *value,
+                                        GParamSpec *pspec)
+{
+	EvAnnotationTextMarkup *annot = EV_ANNOTATION_TEXT_MARKUP (object);
+
+	if (prop_id < PROP_TEXT_MARKUP_TYPE) {
+		ev_annotation_markup_get_property (object, prop_id, value, pspec);
+		return;
+	}
+
+	switch (prop_id) {
+	case PROP_TEXT_MARKUP_TYPE:
+		g_value_set_enum (value, annot->type);
+		break;
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+	}
+}
+
+static void
+ev_annotation_text_markup_set_property (GObject      *object,
+                                        guint         prop_id,
+                                        const GValue *value,
+                                        GParamSpec   *pspec)
+{
+	EvAnnotationTextMarkup *annot = EV_ANNOTATION_TEXT_MARKUP (object);
+
+	if (prop_id < PROP_TEXT_MARKUP_TYPE) {
+		ev_annotation_markup_set_property (object, prop_id, value, pspec);
+		return;
+	}
+
+	switch (prop_id) {
+	case PROP_TEXT_MARKUP_TYPE:
+                annot->type = g_value_get_enum (value);
+		break;
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+	}
+}
+
+static void
 ev_annotation_text_markup_init (EvAnnotationTextMarkup *annot)
 {
+        EV_ANNOTATION (annot)->type = EV_ANNOTATION_TYPE_TEXT_MARKUP;
 }
 
 static void
@@ -1257,6 +1309,20 @@ ev_annotation_text_markup_class_init (EvAnnotationTextMarkupClass *class)
 	GObjectClass *g_object_class = G_OBJECT_CLASS (class);
 
 	ev_annotation_markup_class_install_properties (g_object_class);
+
+        g_object_class->get_property = ev_annotation_text_markup_get_property;
+        g_object_class->set_property = ev_annotation_text_markup_set_property;
+
+        g_object_class_install_property (g_object_class,
+					 PROP_TEXT_MARKUP_TYPE,
+					 g_param_spec_enum ("type",
+							    "Type",
+							    "The text markup annotation type",
+							    EV_TYPE_ANNOTATION_TEXT_MARKUP_TYPE,
+							    EV_ANNOTATION_TEXT_MARKUP_HIGHLIGHT,
+							    G_PARAM_READWRITE |
+                                                            G_PARAM_CONSTRUCT |
+                                                            G_PARAM_STATIC_STRINGS));
 }
 
 static void
@@ -1269,8 +1335,7 @@ ev_annotation_text_markup_highlight_new (EvPage *page)
 {
         EvAnnotation *annot = EV_ANNOTATION (g_object_new (EV_TYPE_ANNOTATION_TEXT_MARKUP,
                                                            "page", page,
+                                                           "type", EV_ANNOTATION_TEXT_MARKUP_HIGHLIGHT,
                                                            NULL));
-        annot->type = EV_ANNOTATION_TYPE_HIGHLIGHT;
-
         return annot;
 }
