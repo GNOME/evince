@@ -3206,7 +3206,7 @@ pdf_document_annotations_add_annotation (EvDocumentAnnotations *document_annotat
 	annot_mapping->data = annot;
 	g_object_set_data_full (G_OBJECT (annot),
 				"poppler-annot",
-				g_object_ref (poppler_annot),
+				poppler_annot,
 				(GDestroyNotify) g_object_unref);
 
 	if (pdf_document->annots) {
