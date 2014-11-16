@@ -361,6 +361,7 @@ job_finished_callback (EvJobAnnots          *job,
 	GdkPixbuf *attachment_icon = NULL;
         GdkPixbuf *highlight_icon = NULL;
         GdkPixbuf *strike_out_icon = NULL;
+        GdkPixbuf *underline_icon = NULL;
 
 	priv = sidebar_annots->priv;
 
@@ -463,6 +464,14 @@ job_finished_callback (EvJobAnnots          *job,
                                         }
                                         pixbuf = strike_out_icon;
                                         break;
+                                case EV_ANNOTATION_TEXT_MARKUP_UNDERLINE:
+                                        if (!underline_icon) {
+                                                underline_icon = gtk_widget_render_icon_pixbuf (priv->tree_view,
+                                                                                                GTK_STOCK_UNDERLINE,
+                                                                                                GTK_ICON_SIZE_BUTTON);
+                                        }
+                                        pixbuf = underline_icon;
+                                        break;
                                 }
                         }
 
@@ -492,6 +501,8 @@ job_finished_callback (EvJobAnnots          *job,
                 g_object_unref (highlight_icon);
         if (strike_out_icon)
                 g_object_unref (strike_out_icon);
+        if (underline_icon)
+                g_object_unref (underline_icon);
 
 	g_object_unref (job);
 	priv->job = NULL;

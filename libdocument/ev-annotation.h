@@ -111,7 +111,8 @@ typedef enum {
 
 typedef enum {
         EV_ANNOTATION_TEXT_MARKUP_HIGHLIGHT,
-        EV_ANNOTATION_TEXT_MARKUP_STRIKE_OUT
+        EV_ANNOTATION_TEXT_MARKUP_STRIKE_OUT,
+        EV_ANNOTATION_TEXT_MARKUP_UNDERLINE
 } EvAnnotationTextMarkupType;
 
 /* EvAnnotation */
@@ -182,9 +183,10 @@ gboolean             ev_annotation_attachment_set_attachment (EvAnnotationAttach
 
 /* EvAnnotationTextMarkup */
 GType                      ev_annotation_text_markup_get_type        (void) G_GNUC_CONST;
-EvAnnotation              *ev_annotation_text_markup_highlight_new   (EvPage *page);
-EvAnnotation              *ev_annotation_text_markup_strike_out_new  (EvPage *page);
-EvAnnotationTextMarkupType ev_annotation_text_markup_get_markup_type (EvAnnotationTextMarkup *annot);
+EvAnnotation              *ev_annotation_text_markup_highlight_new   (EvPage                    *page);
+EvAnnotation              *ev_annotation_text_markup_strike_out_new  (EvPage                    *page);
+EvAnnotation              *ev_annotation_text_markup_underline_new   (EvPage                    *page);
+EvAnnotationTextMarkupType ev_annotation_text_markup_get_markup_type (EvAnnotationTextMarkup    *annot);
 
 G_END_DECLS
 
