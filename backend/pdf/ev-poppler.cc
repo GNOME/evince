@@ -2875,6 +2875,9 @@ ev_annot_from_poppler_annot (PopplerAnnot *poppler_annot,
 		case POPPLER_ANNOT_HIGHLIGHT:
 			ev_annot = ev_annotation_text_markup_highlight_new (page);
 			break;
+	        case POPPLER_ANNOT_STRIKE_OUT:
+			ev_annot = ev_annotation_text_markup_strike_out_new (page);
+			break;
 	        case POPPLER_ANNOT_LINK:
 	        case POPPLER_ANNOT_WIDGET:
 			/* Ignore link and widgets annots since they are already handled */
@@ -2888,7 +2891,6 @@ ev_annot_from_poppler_annot (PopplerAnnot *poppler_annot,
 		case POPPLER_ANNOT_SQUARE:
 		case POPPLER_ANNOT_SQUIGGLY:
 		case POPPLER_ANNOT_STAMP:
-		case POPPLER_ANNOT_STRIKE_OUT:
 		case POPPLER_ANNOT_UNDERLINE: {
 			/* FIXME: These annotations are unimplemented, but they were already
 			 * reported in Evince Bugzilla with test case.  We add a special
