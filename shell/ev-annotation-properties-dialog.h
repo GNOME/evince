@@ -38,16 +38,17 @@ G_BEGIN_DECLS
 typedef struct _EvAnnotationPropertiesDialog      EvAnnotationPropertiesDialog;
 typedef struct _EvAnnotationPropertiesDialogClass EvAnnotationPropertiesDialogClass;
 
-GType                ev_annotation_properties_dialog_get_type            (void) G_GNUC_CONST;
-GtkWidget           *ev_annotation_properties_dialog_new                 (EvAnnotationType              annot_type);
-GtkWidget           *ev_annotation_properties_dialog_new_with_annotation (EvAnnotation                 *annot);
+GType                      ev_annotation_properties_dialog_get_type             (void) G_GNUC_CONST;
+GtkWidget                 *ev_annotation_properties_dialog_new                  (EvAnnotationType              annot_type);
+GtkWidget                 *ev_annotation_properties_dialog_new_with_annotation  (EvAnnotation                 *annot);
 
-const gchar         *ev_annotation_properties_dialog_get_author          (EvAnnotationPropertiesDialog *dialog);
-void                 ev_annotation_properties_dialog_get_rgba            (EvAnnotationPropertiesDialog *dialog,
-									  GdkRGBA                      *rgba);
-gdouble              ev_annotation_properties_dialog_get_opacity         (EvAnnotationPropertiesDialog *dialog);
-gboolean             ev_annotation_properties_dialog_get_popup_is_open   (EvAnnotationPropertiesDialog *dialog);
-EvAnnotationTextIcon ev_annotation_properties_dialog_get_text_icon       (EvAnnotationPropertiesDialog *dialog);
+const gchar               *ev_annotation_properties_dialog_get_author           (EvAnnotationPropertiesDialog *dialog);
+void                       ev_annotation_properties_dialog_get_rgba             (EvAnnotationPropertiesDialog *dialog,
+                                                                                 GdkRGBA                      *rgba);
+gdouble                    ev_annotation_properties_dialog_get_opacity          (EvAnnotationPropertiesDialog *dialog);
+gboolean                   ev_annotation_properties_dialog_get_popup_is_open    (EvAnnotationPropertiesDialog *dialog);
+EvAnnotationTextIcon       ev_annotation_properties_dialog_get_text_icon        (EvAnnotationPropertiesDialog *dialog);
+EvAnnotationTextMarkupType ev_annotation_properties_dialog_get_text_markup_type (EvAnnotationPropertiesDialog *dialog);
 
 G_END_DECLS
 

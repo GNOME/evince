@@ -1367,3 +1367,18 @@ ev_annotation_text_markup_get_markup_type (EvAnnotationTextMarkup *annot)
 
         return annot->type;
 }
+
+gboolean
+ev_annotation_text_markup_set_markup_type (EvAnnotationTextMarkup    *annot,
+                                           EvAnnotationTextMarkupType markup_type)
+{
+        g_return_val_if_fail (EV_IS_ANNOTATION_TEXT_MARKUP (annot), FALSE);
+
+        if (annot->type == markup_type)
+                return FALSE;
+
+        annot->type = markup_type;
+        g_object_notify (G_OBJECT (annot), "type");
+
+        return TRUE;
+}

@@ -3242,6 +3242,47 @@ pdf_document_annotations_add_annotation (EvDocumentAnnotations *document_annotat
 	pdf_document->annots_modified = TRUE;
 }
 
+/* FIXME: We could probably add this to poppler */
+static void
+copy_poppler_annot (PopplerAnnot* src_annot,
+		    PopplerAnnot* dst_annot)
+{
+	char         *contents;
+	PopplerColor *color;
+
+	contents = poppler_annot_get_contents (src_annot);
+	poppler_annot_set_contents (dst_annot, contents);
+	g_free (contents);
+
+	poppler_annot_set_flags (dst_annot, poppler_annot_get_flags (src_annot));
+
+	color = poppler_annot_get_color (src_annot);
+	poppler_annot_set_color (dst_annot, color);
+	g_free (color);
+
+	if (EV_IS_ANNOTATION_MARKUP (src_annot)) {
+		PopplerAnnotMarkup *src_markup = POPPLER_ANNOT_MARKUP (src_annot);
+		PopplerAnnotMarkup *dst_markup = POPPLER_ANNOT_MARKUP (dst_annot);
+		char               *label;
+
+		label = poppler_annot_markup_get_label (src_markup);
+		poppler_annot_markup_set_label (dst_markup, label);
+		g_free (label);
+
+		poppler_annot_markup_set_opacity (dst_markup, poppler_annot_markup_get_opacity (src_markup));
+
+		if (poppler_annot_markup_has_popup (src_markup)) {
+			PopplerRectangle popup_rect;
+
+			if (poppler_annot_markup_get_popup_rectangle (src_markup, &popup_rect)) {
+				poppler_annot_markup_set_popup (dst_markup, &popup_rect);
+				poppler_annot_markup_set_popup_is_open (dst_markup, poppler_annot_markup_get_popup_is_open (src_markup));
+			}
+
+		}
+	}
+}
+
 static void
 pdf_document_annotations_save_annotation (EvDocumentAnnotations *document_annotations,
 					  EvAnnotation          *annot,
@@ -3293,6 +3334,52 @@ pdf_document_annotations_save_annotation (EvDocumentAnnotations *document_annota
 
 			icon = ev_annotation_text_get_icon (ev_text);
 			poppler_annot_text_set_icon (text, get_poppler_annot_text_icon (icon));
+		}
+	}
+
+	if (EV_IS_ANNOTATION_TEXT_MARKUP (annot)) {
+		EvAnnotationTextMarkup *ev_text_markup = EV_ANNOTATION_TEXT_MARKUP (annot);
+		PopplerAnnotTextMarkup *text_markup = POPPLER_ANNOT_TEXT_MARKUP (poppler_annot);
+
+		if (mask & EV_ANNOTATIONS_SAVE_TEXT_MARKUP_TYPE) {
+			/* In poppler every text markup annotation type is a different class */
+			GArray           *quads;
+			PopplerRectangle  rect;
+			PopplerAnnot     *new_annot = NULL;
+			PdfDocument      *pdf_document;
+			EvPage           *page;
+			PopplerPage      *poppler_page;
+
+			pdf_document = PDF_DOCUMENT (document_annotations);
+
+			quads = poppler_annot_text_markup_get_quadrilaterals (text_markup);
+			poppler_annot_get_rectangle (POPPLER_ANNOT (text_markup), &rect);
+
+			switch (ev_annotation_text_markup_get_markup_type (ev_text_markup)) {
+			case EV_ANNOTATION_TEXT_MARKUP_HIGHLIGHT:
+				new_annot = poppler_annot_text_markup_new_highlight (pdf_document->document, &rect, quads);
+				break;
+			case EV_ANNOTATION_TEXT_MARKUP_STRIKE_OUT:
+				new_annot = poppler_annot_text_markup_new_strikeout (pdf_document->document, &rect, quads);
+				break;
+			case EV_ANNOTATION_TEXT_MARKUP_UNDERLINE:
+				new_annot = poppler_annot_text_markup_new_underline (pdf_document->document, &rect, quads);
+				break;
+			}
+
+			g_array_unref (quads);
+
+			copy_poppler_annot (poppler_annot, new_annot);
+
+			page = ev_annotation_get_page (annot);
+			poppler_page = POPPLER_PAGE (page->backend_page);
+
+			poppler_page_remove_annot (poppler_page, poppler_annot);
+			poppler_page_add_annot (poppler_page, new_annot);
+			g_object_set_data_full (G_OBJECT (annot),
+						"poppler-annot",
+						new_annot,
+						(GDestroyNotify) g_object_unref);
 		}
 	}
 

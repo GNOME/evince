@@ -187,6 +187,8 @@ EvAnnotation              *ev_annotation_text_markup_highlight_new   (EvPage    
 EvAnnotation              *ev_annotation_text_markup_strike_out_new  (EvPage                    *page);
 EvAnnotation              *ev_annotation_text_markup_underline_new   (EvPage                    *page);
 EvAnnotationTextMarkupType ev_annotation_text_markup_get_markup_type (EvAnnotationTextMarkup    *annot);
+gboolean                   ev_annotation_text_markup_set_markup_type (EvAnnotationTextMarkup    *annot,
+                                                                      EvAnnotationTextMarkupType markup_type);
 
 G_END_DECLS
 

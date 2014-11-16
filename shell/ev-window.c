@@ -6486,6 +6486,14 @@ ev_window_popup_cmd_annot_properties (GSimpleAction *action,
 			mask |= EV_ANNOTATIONS_SAVE_TEXT_ICON;
 	}
 
+	if (EV_IS_ANNOTATION_TEXT_MARKUP (annot)) {
+		EvAnnotationTextMarkupType markup_type;
+
+		markup_type = ev_annotation_properties_dialog_get_text_markup_type (dialog);
+		if (ev_annotation_text_markup_set_markup_type (EV_ANNOTATION_TEXT_MARKUP (annot), markup_type))
+			mask |= EV_ANNOTATIONS_SAVE_TEXT_MARKUP_TYPE;
+	}
+
 	if (mask != EV_ANNOTATIONS_SAVE_NONE) {
 		ev_document_doc_mutex_lock ();
 		ev_document_annotations_save_annotation (EV_DOCUMENT_ANNOTATIONS (window->priv->document),

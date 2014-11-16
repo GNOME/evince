@@ -44,6 +44,9 @@ struct _EvAnnotationPropertiesDialog {
 
 	/* Text Annotations */
 	GtkWidget       *icon;
+
+        /* Text Markup Annotations */
+        GtkWidget       *text_markup_type;
 };
 
 struct _EvAnnotationPropertiesDialogClass {
@@ -115,6 +118,22 @@ ev_annotation_properties_dialog_constructed (GObject *object)
 		break;
 	case EV_ANNOTATION_TYPE_ATTACHMENT:
 		/* TODO */
+                break;
+        case EV_ANNOTATION_TYPE_TEXT_MARKUP:
+                label = gtk_label_new (_("Markup type:"));
+                gtk_misc_set_alignment (GTK_MISC (label), 0., 0.5);
+                gtk_grid_attach (GTK_GRID (grid), label, 0, 5, 1, 1);
+                gtk_widget_show (label);
+
+                dialog->text_markup_type = gtk_combo_box_text_new ();
+                gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (dialog->text_markup_type), _("Highlight"));
+                gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (dialog->text_markup_type), _("Strike out"));
+                gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (dialog->text_markup_type), _("Underline"));
+                gtk_combo_box_set_active (GTK_COMBO_BOX (dialog->text_markup_type), 0);
+                gtk_grid_attach (GTK_GRID (grid), dialog->text_markup_type, 1, 5, 1, 1);
+                gtk_widget_set_hexpand (dialog->text_markup_type, TRUE);
+                gtk_widget_show (dialog->text_markup_type);
+                break;
 	default:
 		break;
 	}
@@ -277,7 +296,12 @@ ev_annotation_properties_dialog_new_with_annotation (EvAnnotation *annot)
 
 		gtk_combo_box_set_active (GTK_COMBO_BOX (dialog->icon),
 					  ev_annotation_text_get_icon (annot_text));
-	}
+	} else if (EV_IS_ANNOTATION_TEXT_MARKUP (annot)) {
+                EvAnnotationTextMarkup *annot_markup = EV_ANNOTATION_TEXT_MARKUP (annot);
+
+                gtk_combo_box_set_active (GTK_COMBO_BOX (dialog->text_markup_type),
+                                          ev_annotation_text_markup_get_markup_type (annot_markup));
+        }
 
 	return GTK_WIDGET (dialog);
 }
@@ -311,4 +335,10 @@ EvAnnotationTextIcon
 ev_annotation_properties_dialog_get_text_icon (EvAnnotationPropertiesDialog *dialog)
 {
 	return gtk_combo_box_get_active (GTK_COMBO_BOX (dialog->icon));
+}
+
+EvAnnotationTextMarkupType
+ev_annotation_properties_dialog_get_text_markup_type (EvAnnotationPropertiesDialog *dialog)
+{
+        return gtk_combo_box_get_active (GTK_COMBO_BOX (dialog->text_markup_type));
 }

@@ -41,25 +41,28 @@ G_BEGIN_DECLS
 #define EV_DOCUMENT_ANNOTATIONS_GET_IFACE(inst) (G_TYPE_INSTANCE_GET_INTERFACE ((inst), EV_TYPE_DOCUMENT_ANNOTATIONS, EvDocumentAnnotationsInterface))
 
 typedef enum {
-	EV_ANNOTATIONS_SAVE_NONE          = 0,
-	EV_ANNOTATIONS_SAVE_CONTENTS      = 1 << 0,
-	EV_ANNOTATIONS_SAVE_COLOR         = 1 << 1,
+	EV_ANNOTATIONS_SAVE_NONE             = 0,
+	EV_ANNOTATIONS_SAVE_CONTENTS         = 1 << 0,
+	EV_ANNOTATIONS_SAVE_COLOR            = 1 << 1,
 
 	/* Markup Annotations */
-	EV_ANNOTATIONS_SAVE_LABEL         = 1 << 2,
-	EV_ANNOTATIONS_SAVE_OPACITY       = 1 << 3,
-	EV_ANNOTATIONS_SAVE_POPUP_RECT    = 1 << 4,
-	EV_ANNOTATIONS_SAVE_POPUP_IS_OPEN = 1 << 5,
+	EV_ANNOTATIONS_SAVE_LABEL            = 1 << 2,
+	EV_ANNOTATIONS_SAVE_OPACITY          = 1 << 3,
+	EV_ANNOTATIONS_SAVE_POPUP_RECT       = 1 << 4,
+	EV_ANNOTATIONS_SAVE_POPUP_IS_OPEN    = 1 << 5,
 
 	/* Text Annotations */
-	EV_ANNOTATIONS_SAVE_TEXT_IS_OPEN  = 1 << 6,
-	EV_ANNOTATIONS_SAVE_TEXT_ICON     = 1 << 7,
+	EV_ANNOTATIONS_SAVE_TEXT_IS_OPEN     = 1 << 6,
+	EV_ANNOTATIONS_SAVE_TEXT_ICON        = 1 << 7,
 
 	/* Attachment Annotations */
-	EV_ANNOTATIONS_SAVE_ATTACHMENT    = 1 << 8,
+	EV_ANNOTATIONS_SAVE_ATTACHMENT       = 1 << 8,
+
+        /* Text Markup Annotations */
+        EV_ANNOTATIONS_SAVE_TEXT_MARKUP_TYPE = 1 << 9,
 
 	/* Save all */
-	EV_ANNOTATIONS_SAVE_ALL           = (1 << 9) - 1
+	EV_ANNOTATIONS_SAVE_ALL              = (1 << 10) - 1
 } EvAnnotationsSaveMask;
 
 typedef struct _EvDocumentAnnotations          EvDocumentAnnotations;
