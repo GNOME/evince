@@ -7,10 +7,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: evince 3.13.x\n"
+"Project-Id-Version: evince 3.15.x\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-09-06 12:13+0200\n"
-"PO-Revision-Date: 2014-09-06 12:13+0200\n"
+"POT-Creation-Date: 2014-11-17 08:02+0100\n"
+"PO-Revision-Date: 2014-11-17 08:03+0100\n"
 "Last-Translator: Kjartan Maraas <kmaraas@gnome.org>\n"
 "Language-Team: Norwegian bokmål <i18n-nb@lister.ping.uio.no>\n"
 "Language: \n"
@@ -459,8 +459,8 @@ msgid "of %d"
 msgstr "av %d"
 
 #: ../libmisc/ev-page-action-widget.c:185 ../shell/ev-history.c:426
-#: ../shell/ev-sidebar-bookmarks.c:295 ../shell/ev-window.c:904
-#: ../shell/ev-window.c:4708
+#: ../shell/ev-sidebar-bookmarks.c:295 ../shell/ev-window.c:906
+#: ../shell/ev-window.c:4713
 #, c-format
 msgid "Page %s"
 msgstr "Side %s"
@@ -668,7 +668,7 @@ msgstr "FIL"
 msgid "GNOME Document Previewer"
 msgstr "GNOME dokumentvisning"
 
-#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3323
+#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3325
 msgid "Failed to print document"
 msgstr "Klarte ikke å skrive ut dokumentet"
 
@@ -722,7 +722,7 @@ msgid "Subject:"
 msgstr "Emne:"
 
 #: ../properties/ev-properties-view.c:63
-#: ../shell/ev-annotation-properties-dialog.c:154
+#: ../shell/ev-annotation-properties-dialog.c:173
 msgid "Author:"
 msgstr "Forfatter:"
 
@@ -820,79 +820,95 @@ msgstr "Søk etter forrige oppføring av søkestrengen"
 msgid "Find next occurrence of the search string"
 msgstr "Søk etter neste oppøring av søkestrengen"
 
-#: ../shell/ev-annotation-properties-dialog.c:94
+#: ../shell/ev-annotation-properties-dialog.c:97
 msgid "Icon:"
 msgstr "Ikon:"
 
-#: ../shell/ev-annotation-properties-dialog.c:100
+#: ../shell/ev-annotation-properties-dialog.c:103
 msgid "Note"
 msgstr "Notat"
 
-#: ../shell/ev-annotation-properties-dialog.c:101
+#: ../shell/ev-annotation-properties-dialog.c:104
 msgid "Comment"
 msgstr "Kommentar"
 
-#: ../shell/ev-annotation-properties-dialog.c:102
+#: ../shell/ev-annotation-properties-dialog.c:105
 msgid "Key"
 msgstr "Nøkkel"
 
-#: ../shell/ev-annotation-properties-dialog.c:103
+#: ../shell/ev-annotation-properties-dialog.c:106
 msgid "Help"
 msgstr "Hjelp"
 
-#: ../shell/ev-annotation-properties-dialog.c:104
+#: ../shell/ev-annotation-properties-dialog.c:107
 msgid "New Paragraph"
 msgstr "Nytt avsnitt"
 
-#: ../shell/ev-annotation-properties-dialog.c:105
+#: ../shell/ev-annotation-properties-dialog.c:108
 msgid "Paragraph"
 msgstr "Avsnitt"
 
-#: ../shell/ev-annotation-properties-dialog.c:106
+#: ../shell/ev-annotation-properties-dialog.c:109
 msgid "Insert"
 msgstr "Sett inn"
 
-#: ../shell/ev-annotation-properties-dialog.c:107
+#: ../shell/ev-annotation-properties-dialog.c:110
 msgid "Cross"
 msgstr "Kryss"
 
-#: ../shell/ev-annotation-properties-dialog.c:108
+#: ../shell/ev-annotation-properties-dialog.c:111
 msgid "Circle"
 msgstr "Sirkel"
 
-#: ../shell/ev-annotation-properties-dialog.c:109
+#: ../shell/ev-annotation-properties-dialog.c:112
 msgid "Unknown"
 msgstr "Ukjent"
 
-#: ../shell/ev-annotation-properties-dialog.c:134
+#: ../shell/ev-annotation-properties-dialog.c:123
+msgid "Markup type:"
+msgstr "Type merking:"
+
+#: ../shell/ev-annotation-properties-dialog.c:129
+msgid "Highlight"
+msgstr "Uthev"
+
+#: ../shell/ev-annotation-properties-dialog.c:130
+msgid "Strike out"
+msgstr "Gjennomstrek"
+
+#: ../shell/ev-annotation-properties-dialog.c:131
+msgid "Underline"
+msgstr "Understrek"
+
+#: ../shell/ev-annotation-properties-dialog.c:153
 msgid "Annotation Properties"
 msgstr "Egenskaper for anmerkninger"
 
-#: ../shell/ev-annotation-properties-dialog.c:165
+#: ../shell/ev-annotation-properties-dialog.c:184
 msgid "Color:"
 msgstr "Farge:"
 
-#: ../shell/ev-annotation-properties-dialog.c:175
+#: ../shell/ev-annotation-properties-dialog.c:194
 msgid "Style:"
 msgstr "Stil:"
 
-#: ../shell/ev-annotation-properties-dialog.c:190
+#: ../shell/ev-annotation-properties-dialog.c:209
 msgid "Transparent"
 msgstr "Gjennomsiktig"
 
-#: ../shell/ev-annotation-properties-dialog.c:197
+#: ../shell/ev-annotation-properties-dialog.c:216
 msgid "Opaque"
 msgstr "Ugjennomsiktig"
 
-#: ../shell/ev-annotation-properties-dialog.c:207
+#: ../shell/ev-annotation-properties-dialog.c:226
 msgid "Initial window state:"
 msgstr "Opprinnelig  tilstand for vindu:"
 
-#: ../shell/ev-annotation-properties-dialog.c:213
+#: ../shell/ev-annotation-properties-dialog.c:232
 msgid "Open"
 msgstr "Åpne"
 
-#: ../shell/ev-annotation-properties-dialog.c:214
+#: ../shell/ev-annotation-properties-dialog.c:233
 msgid "Close"
 msgstr "Lukk"
 
@@ -943,11 +959,11 @@ msgstr ""
 "Kjartan Maraas <kmaraas@gnome.org>\n"
 "Torstein Adolf Winterseth <kvikende@fsfe.org>"
 
-#: ../shell/ev-history-action.c:224
+#: ../shell/ev-history-action.c:221
 msgid "Go to previous history item"
 msgstr "Gå til forrige historikkoppføring"
 
-#: ../shell/ev-history-action.c:229
+#: ../shell/ev-history-action.c:226
 msgid "Go to next history item"
 msgstr "Gå til neste historikkoppføring"
 
@@ -1003,19 +1019,19 @@ msgstr "Husk passordet til du _logger ut"
 msgid "Remember _forever"
 msgstr "Husk _for alltid"
 
-#: ../shell/ev-properties-dialog.c:62
+#: ../shell/ev-properties-dialog.c:63
 msgid "Properties"
 msgstr "Egenskaper"
 
-#: ../shell/ev-properties-dialog.c:94
+#: ../shell/ev-properties-dialog.c:85
 msgid "General"
 msgstr "Generelt"
 
-#: ../shell/ev-properties-dialog.c:104
+#: ../shell/ev-properties-dialog.c:95
 msgid "Fonts"
 msgstr "Skrifter"
 
-#: ../shell/ev-properties-dialog.c:117
+#: ../shell/ev-properties-dialog.c:108
 msgid "Document License"
 msgstr "Dokumentlisens"
 
@@ -1044,7 +1060,7 @@ msgstr "Videre informasjon"
 msgid "List"
 msgstr "Liste"
 
-#: ../shell/ev-sidebar-annotations.c:199 ../shell/ev-sidebar-annotations.c:535
+#: ../shell/ev-sidebar-annotations.c:199 ../shell/ev-sidebar-annotations.c:573
 msgid "Annotations"
 msgstr "Notater"
 
@@ -1060,11 +1076,11 @@ msgstr "Legg til tekstanmerkning"
 msgid "Add"
 msgstr "Legg til"
 
-#: ../shell/ev-sidebar-annotations.c:368
+#: ../shell/ev-sidebar-annotations.c:371
 msgid "Document contains no annotations"
 msgstr "Dokumentet inneholder ingen notater"
 
-#: ../shell/ev-sidebar-annotations.c:400
+#: ../shell/ev-sidebar-annotations.c:403
 #, c-format
 msgid "Page %d"
 msgstr "Side %d"
@@ -1109,19 +1125,19 @@ msgstr "Indeks"
 msgid "Thumbnails"
 msgstr "Miniatyrer"
 
-#: ../shell/ev-toolbar.c:204
+#: ../shell/ev-toolbar.c:201
 msgid "Open an existing document"
 msgstr "Åpne et eksisterende dokument"
 
-#: ../shell/ev-toolbar.c:235
+#: ../shell/ev-toolbar.c:223
 msgid "Find a word or phrase in the document"
 msgstr "Finn et ord eller en frase i dokumentet"
 
-#: ../shell/ev-toolbar.c:247 ../shell/ev-toolbar.c:248
+#: ../shell/ev-toolbar.c:232 ../shell/ev-toolbar.c:233
 msgid "File options"
 msgstr "Alternativer for fil"
 
-#: ../shell/ev-toolbar.c:257 ../shell/ev-toolbar.c:258
+#: ../shell/ev-toolbar.c:242 ../shell/ev-toolbar.c:243
 msgid "View options"
 msgstr "Alternativer for visning"
 
@@ -1129,106 +1145,106 @@ msgstr "Alternativer for visning"
 msgid "Supported Image Files"
 msgstr "Støttede bildefiler"
 
-#: ../shell/ev-window.c:1606
+#: ../shell/ev-window.c:1608
 msgid "The document contains no pages"
 msgstr "Dokumentet inneholder ingen sider"
 
-#: ../shell/ev-window.c:1609
+#: ../shell/ev-window.c:1611
 msgid "The document contains only empty pages"
 msgstr "Dokumentet inneholder kun tomme sider"
 
-#: ../shell/ev-window.c:1822 ../shell/ev-window.c:1990
+#: ../shell/ev-window.c:1824 ../shell/ev-window.c:1992
 #, c-format
 msgid "Unable to open document “%s”."
 msgstr "Klarte ikke å åpne dokumentet «%s»."
 
-#: ../shell/ev-window.c:1954
+#: ../shell/ev-window.c:1956
 #, c-format
 msgid "Loading document from “%s”"
 msgstr "Laster dokument fra «%s»"
 
-#: ../shell/ev-window.c:2105 ../shell/ev-window.c:2432
+#: ../shell/ev-window.c:2107 ../shell/ev-window.c:2434
 #, c-format
 msgid "Downloading document (%d%%)"
 msgstr "Laster ned dokument (%d%%)"
 
-#: ../shell/ev-window.c:2138
+#: ../shell/ev-window.c:2140
 msgid "Failed to load remote file."
 msgstr "Klarte ikke å laste ekstern fil."
 
-#: ../shell/ev-window.c:2376
+#: ../shell/ev-window.c:2378
 #, c-format
 msgid "Reloading document from %s"
 msgstr "Leser dokument fra %s på nytt"
 
-#: ../shell/ev-window.c:2408
+#: ../shell/ev-window.c:2410
 msgid "Failed to reload document."
 msgstr "Klarte ikke å lese dokumentet på nytt."
 
-#: ../shell/ev-window.c:2624
+#: ../shell/ev-window.c:2626
 msgid "Open Document"
 msgstr "Åpne dokument"
 
-#: ../shell/ev-window.c:2695
+#: ../shell/ev-window.c:2697
 #, c-format
 msgid "Saving document to %s"
 msgstr "Lagrer dokumentet til %s"
 
-#: ../shell/ev-window.c:2698
+#: ../shell/ev-window.c:2700
 #, c-format
 msgid "Saving attachment to %s"
 msgstr "Lagrer vedlegg til %s"
 
-#: ../shell/ev-window.c:2701
+#: ../shell/ev-window.c:2703
 #, c-format
 msgid "Saving image to %s"
 msgstr "Lagrer bilde til %s"
 
-#: ../shell/ev-window.c:2745 ../shell/ev-window.c:2845
+#: ../shell/ev-window.c:2747 ../shell/ev-window.c:2847
 #, c-format
 msgid "The file could not be saved as “%s”."
 msgstr "Klarte ikke å lagre filen som «%s»."
 
-#: ../shell/ev-window.c:2776
+#: ../shell/ev-window.c:2778
 #, c-format
 msgid "Uploading document (%d%%)"
 msgstr "Laster opp dokument (%d%%)"
 
-#: ../shell/ev-window.c:2780
+#: ../shell/ev-window.c:2782
 #, c-format
 msgid "Uploading attachment (%d%%)"
 msgstr "Laster opp vedlegg (%d%%)"
 
-#: ../shell/ev-window.c:2784
+#: ../shell/ev-window.c:2786
 #, c-format
 msgid "Uploading image (%d%%)"
 msgstr "Laster opp bilde (%d%%)"
 
-#: ../shell/ev-window.c:2896
+#: ../shell/ev-window.c:2898
 msgid "Save a Copy"
 msgstr "Lagre en kopi"
 
-#: ../shell/ev-window.c:2972
+#: ../shell/ev-window.c:2974
 msgid "Could not send current document"
 msgstr "Klarte ikke å sende gjeldende dokument"
 
-#: ../shell/ev-window.c:3006
+#: ../shell/ev-window.c:3008
 msgid "Could not open the containing folder"
 msgstr "Klarte ikke å åpne mappen som aktuell fil ligger i"
 
-#: ../shell/ev-window.c:3267
+#: ../shell/ev-window.c:3269
 #, c-format
 msgid "%d pending job in queue"
 msgid_plural "%d pending jobs in queue"
 msgstr[0] "%d utestående jobb i køen"
 msgstr[1] "%d utestående jobber i køen"
 
-#: ../shell/ev-window.c:3380
+#: ../shell/ev-window.c:3382
 #, c-format
 msgid "Printing job “%s”"
 msgstr "Skriver ut jobb %s"
 
-#: ../shell/ev-window.c:3583
+#: ../shell/ev-window.c:3585
 msgid ""
 "Document contains form fields that have been filled out. If you don't save a "
 "copy, changes will be permanently lost."
@@ -1236,7 +1252,7 @@ msgstr ""
 "Dokumentet inneholder skjemafelter som ikke er fylt ut. Hvis du ikke lagrer "
 "en kopi vil disse endringene gå tapt."
 
-#: ../shell/ev-window.c:3587
+#: ../shell/ev-window.c:3589
 msgid ""
 "Document contains new or modified annotations. If you don't save a copy, "
 "changes will be permanently lost."
@@ -1244,20 +1260,20 @@ msgstr ""
 "Dokumentet inneholder nye eller endrede anmerkninger. Hvis du ikke lagrer en "
 "kopi vil disse endringene gå tapt."
 
-#: ../shell/ev-window.c:3594
+#: ../shell/ev-window.c:3596
 #, c-format
 msgid "Save a copy of document “%s” before closing?"
 msgstr "Lagre en kopi av dokument «%s» før programmet lukkes?"
 
-#: ../shell/ev-window.c:3613
+#: ../shell/ev-window.c:3615
 msgid "Close _without Saving"
 msgstr "Fortsett _uten å lagre"
 
-#: ../shell/ev-window.c:3617
+#: ../shell/ev-window.c:3619
 msgid "Save a _Copy"
 msgstr "Lagre en _kopi"
 
-#: ../shell/ev-window.c:3691
+#: ../shell/ev-window.c:3693
 #, c-format
 msgid "Wait until print job “%s” finishes before closing?"
 msgstr "Vent med å lukke programmet til utskriftsjobb %s er fullført?"
@@ -1265,7 +1281,7 @@ msgstr "Vent med å lukke programmet til utskriftsjobb %s er fullført?"
 #. TRANS: the singular form is not really used as n_print_jobs > 1
 #. but some languages distinguish between different plurals forms,
 #. so the ngettext is needed.
-#: ../shell/ev-window.c:3697
+#: ../shell/ev-window.c:3699
 #, c-format
 msgid "There is %d print job active. Wait until print finishes before closing?"
 msgid_plural ""
@@ -1277,51 +1293,51 @@ msgstr[1] ""
 "Det er %d aktive utskriftsjobber. Vent med å lukke programmet til disse er "
 "fullført?"
 
-#: ../shell/ev-window.c:3712
+#: ../shell/ev-window.c:3714
 msgid "If you close the window, pending print jobs will not be printed."
 msgstr ""
 "Hvis du lukker vinduet vil utestående utskriftsjobber ikke bli fullført."
 
-#: ../shell/ev-window.c:3716
+#: ../shell/ev-window.c:3718
 msgid "Cancel _print and Close"
 msgstr "Avbryt _utskrift og lukk"
 
-#: ../shell/ev-window.c:3720
+#: ../shell/ev-window.c:3722
 msgid "Close _after Printing"
 msgstr "Lukk etter ut_skrift"
 
-#: ../shell/ev-window.c:4248
+#: ../shell/ev-window.c:4253
 msgid "Running in presentation mode"
 msgstr "Kjører i presentasjonsmodus"
 
 #. TRANS: Sometimes this could be better translated as
 #. "%d hit(s) on this page".  Therefore this string
 #. contains plural cases.
-#: ../shell/ev-window.c:5181
+#: ../shell/ev-window.c:5187
 #, c-format
 msgid "%d found on this page"
 msgid_plural "%d found on this page"
 msgstr[0] "%d funnet på denne siden"
 msgstr[1] "%d funnet på denne siden"
 
-#: ../shell/ev-window.c:5186
+#: ../shell/ev-window.c:5192
 msgid "Not found"
 msgstr "Ikke funnet"
 
-#: ../shell/ev-window.c:5192
+#: ../shell/ev-window.c:5198
 #, c-format
 msgid "%3d%% remaining to search"
 msgstr "%3d%% igjen å søke i"
 
-#: ../shell/ev-window.c:5512
+#: ../shell/ev-window.c:5518
 msgid "Enable caret navigation?"
 msgstr "Slå på navigering med markør?"
 
-#: ../shell/ev-window.c:5514
+#: ../shell/ev-window.c:5520
 msgid "_Enable"
 msgstr "_Slå på"
 
-#: ../shell/ev-window.c:5517
+#: ../shell/ev-window.c:5523
 msgid ""
 "Pressing F7 turns the caret navigation on or off. This feature places a "
 "moveable cursor in text pages, allowing you to move around and select text "
@@ -1331,39 +1347,39 @@ msgstr ""
 "en flyttbar markør på tekstsider, og lar deg flytte rundt og markere tekst "
 "med tastaturet. Vil du slå på markørnavigering?"
 
-#: ../shell/ev-window.c:5522
+#: ../shell/ev-window.c:5528
 msgid "Don't show this message again"
 msgstr "Ikke vis denne meldingen igjen"
 
-#: ../shell/ev-window.c:6038 ../shell/ev-window.c:6054
+#: ../shell/ev-window.c:6044 ../shell/ev-window.c:6060
 msgid "Unable to launch external application."
 msgstr "Klarte ikke å starte eksternt program."
 
-#: ../shell/ev-window.c:6111
+#: ../shell/ev-window.c:6117
 msgid "Unable to open external link"
 msgstr "Klarte ikke å åpne ekstern lenke."
 
-#: ../shell/ev-window.c:6314
+#: ../shell/ev-window.c:6320
 msgid "Couldn't find appropriate format to save image"
 msgstr "Fant intet passende format å lagre filen i"
 
-#: ../shell/ev-window.c:6346
+#: ../shell/ev-window.c:6352
 msgid "The image could not be saved."
 msgstr "Klarte ikke å lagre bildet."
 
-#: ../shell/ev-window.c:6381
+#: ../shell/ev-window.c:6387
 msgid "Save Image"
 msgstr "Lagre bilde"
 
-#: ../shell/ev-window.c:6532
+#: ../shell/ev-window.c:6546
 msgid "Unable to open attachment"
 msgstr "Klarte ikke å åpne vedlegg"
 
-#: ../shell/ev-window.c:6588
+#: ../shell/ev-window.c:6602
 msgid "The attachment could not be saved."
 msgstr "Klarte ikke å lagre vedlegget."
 
-#: ../shell/ev-window.c:6636
+#: ../shell/ev-window.c:6650
 msgid "Save Attachment"
 msgstr "Lagre vedlegg"
 
