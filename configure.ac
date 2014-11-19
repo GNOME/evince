@@ -313,7 +313,7 @@ if test "$enable_gnome_desktop" != "no"; then
       PKG_CHECK_MODULES([LIBGNOME_DESKTOP], [gnome-desktop-3.0], has_libgnome_desktop=yes, has_libgnome_desktop=no)
    else
       PKG_CHECK_MODULES([LIBGNOME_DESKTOP], [gnome-desktop-3.0])
-      has_libgnome_desktop = yes
+      has_libgnome_desktop=yes
    fi
 
    if test x$has_libgnome_desktop = xyes; then
