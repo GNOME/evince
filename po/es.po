@@ -15,8 +15,8 @@ msgstr ""
 "Project-Id-Version: evince.master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evince&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2014-09-04 03:41+0000\n"
-"PO-Revision-Date: 2014-09-04 11:19+0200\n"
+"POT-Creation-Date: 2014-11-19 04:43+0000\n"
+"PO-Revision-Date: 2014-11-19 12:48+0100\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español; Castellano <gnome-es-list@gnome.org>\n"
 "Language: \n"
@@ -408,7 +408,6 @@ msgstr ""
 "navegación de cursor."
 
 #: ../data/org.gnome.Evince.gschema.xml.in.h:10
-#| msgid "Adjust the zoom level"
 msgid "Allow links to change the zoom level."
 msgstr "Permitir que los enlaces cambien el nivel de ampliación."
 
@@ -469,8 +468,8 @@ msgid "of %d"
 msgstr "de %d"
 
 #: ../libmisc/ev-page-action-widget.c:185 ../shell/ev-history.c:426
-#: ../shell/ev-sidebar-bookmarks.c:295 ../shell/ev-window.c:904
-#: ../shell/ev-window.c:4708
+#: ../shell/ev-sidebar-bookmarks.c:295 ../shell/ev-window.c:906
+#: ../shell/ev-window.c:4713
 #, c-format
 msgid "Page %s"
 msgstr "Página %s"
@@ -682,7 +681,7 @@ msgstr "ARCHIVO"
 msgid "GNOME Document Previewer"
 msgstr "Visor de documentos de Gnome"
 
-#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3323
+#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3325
 msgid "Failed to print document"
 msgstr "No se pudo imprimir el documento"
 
@@ -736,7 +735,7 @@ msgid "Subject:"
 msgstr "Asunto:"
 
 #: ../properties/ev-properties-view.c:63
-#: ../shell/ev-annotation-properties-dialog.c:154
+#: ../shell/ev-annotation-properties-dialog.c:173
 msgid "Author:"
 msgstr "Autor:"
 
@@ -834,79 +833,95 @@ msgstr "Buscar la aparición anterior de la cadena"
 msgid "Find next occurrence of the search string"
 msgstr "Buscar la siguiente aparición de la cadena"
 
-#: ../shell/ev-annotation-properties-dialog.c:94
+#: ../shell/ev-annotation-properties-dialog.c:97
 msgid "Icon:"
 msgstr "Icono:"
 
-#: ../shell/ev-annotation-properties-dialog.c:100
+#: ../shell/ev-annotation-properties-dialog.c:103
 msgid "Note"
 msgstr "Nota"
 
-#: ../shell/ev-annotation-properties-dialog.c:101
+#: ../shell/ev-annotation-properties-dialog.c:104
 msgid "Comment"
 msgstr "Comentario"
 
-#: ../shell/ev-annotation-properties-dialog.c:102
+#: ../shell/ev-annotation-properties-dialog.c:105
 msgid "Key"
 msgstr "Clave"
 
-#: ../shell/ev-annotation-properties-dialog.c:103
+#: ../shell/ev-annotation-properties-dialog.c:106
 msgid "Help"
 msgstr "Ayuda"
 
-#: ../shell/ev-annotation-properties-dialog.c:104
+#: ../shell/ev-annotation-properties-dialog.c:107
 msgid "New Paragraph"
 msgstr "Párrafo nuevo"
 
-#: ../shell/ev-annotation-properties-dialog.c:105
+#: ../shell/ev-annotation-properties-dialog.c:108
 msgid "Paragraph"
 msgstr "Párrafo"
 
-#: ../shell/ev-annotation-properties-dialog.c:106
+#: ../shell/ev-annotation-properties-dialog.c:109
 msgid "Insert"
 msgstr "Insertar"
 
-#: ../shell/ev-annotation-properties-dialog.c:107
+#: ../shell/ev-annotation-properties-dialog.c:110
 msgid "Cross"
 msgstr "Cruz"
 
-#: ../shell/ev-annotation-properties-dialog.c:108
+#: ../shell/ev-annotation-properties-dialog.c:111
 msgid "Circle"
 msgstr "Círculo"
 
-#: ../shell/ev-annotation-properties-dialog.c:109
+#: ../shell/ev-annotation-properties-dialog.c:112
 msgid "Unknown"
 msgstr "Desconocido"
 
-#: ../shell/ev-annotation-properties-dialog.c:134
+#: ../shell/ev-annotation-properties-dialog.c:123
+msgid "Markup type:"
+msgstr "Tipo de marcado"
+
+#: ../shell/ev-annotation-properties-dialog.c:129
+msgid "Highlight"
+msgstr "Resaltado"
+
+#: ../shell/ev-annotation-properties-dialog.c:130
+msgid "Strike out"
+msgstr "Tachado"
+
+#: ../shell/ev-annotation-properties-dialog.c:131
+msgid "Underline"
+msgstr "Subrayado"
+
+#: ../shell/ev-annotation-properties-dialog.c:153
 msgid "Annotation Properties"
 msgstr "Propiedades de las anotaciones"
 
-#: ../shell/ev-annotation-properties-dialog.c:165
+#: ../shell/ev-annotation-properties-dialog.c:184
 msgid "Color:"
 msgstr "Color:"
 
-#: ../shell/ev-annotation-properties-dialog.c:175
+#: ../shell/ev-annotation-properties-dialog.c:194
 msgid "Style:"
 msgstr "Estilo:"
 
-#: ../shell/ev-annotation-properties-dialog.c:190
+#: ../shell/ev-annotation-properties-dialog.c:209
 msgid "Transparent"
 msgstr "Transparente"
 
-#: ../shell/ev-annotation-properties-dialog.c:197
+#: ../shell/ev-annotation-properties-dialog.c:216
 msgid "Opaque"
 msgstr "Opaca"
 
-#: ../shell/ev-annotation-properties-dialog.c:207
+#: ../shell/ev-annotation-properties-dialog.c:226
 msgid "Initial window state:"
 msgstr "Estado inicial de la ventana:"
 
-#: ../shell/ev-annotation-properties-dialog.c:213
+#: ../shell/ev-annotation-properties-dialog.c:232
 msgid "Open"
 msgstr "Abierta"
 
-#: ../shell/ev-annotation-properties-dialog.c:214
+#: ../shell/ev-annotation-properties-dialog.c:233
 msgid "Close"
 msgstr "Cerrada"
 
@@ -960,11 +975,11 @@ msgstr ""
 "Daniel Fernández <dfdez@ya.com>, 2005\n"
 "Antonio Ognio <gnrfan@gnrfan.org>, 2004-2005"
 
-#: ../shell/ev-history-action.c:224
+#: ../shell/ev-history-action.c:221
 msgid "Go to previous history item"
 msgstr "Ir al elemento del histórico anterior"
 
-#: ../shell/ev-history-action.c:229
+#: ../shell/ev-history-action.c:226
 msgid "Go to next history item"
 msgstr "Ir al siguiente elemento del histórico"
 
@@ -1023,19 +1038,19 @@ msgstr "_Recordar contraseña para esta sesión"
 msgid "Remember _forever"
 msgstr "Recordar para _siempre"
 
-#: ../shell/ev-properties-dialog.c:62
+#: ../shell/ev-properties-dialog.c:63
 msgid "Properties"
 msgstr "Propiedades"
 
-#: ../shell/ev-properties-dialog.c:94
+#: ../shell/ev-properties-dialog.c:85
 msgid "General"
 msgstr "General"
 
-#: ../shell/ev-properties-dialog.c:104
+#: ../shell/ev-properties-dialog.c:95
 msgid "Fonts"
 msgstr "Tipografías"
 
-#: ../shell/ev-properties-dialog.c:117
+#: ../shell/ev-properties-dialog.c:108
 msgid "Document License"
 msgstr "Licencia del documento"
 
@@ -1064,7 +1079,7 @@ msgstr "Más información"
 msgid "List"
 msgstr "Lista"
 
-#: ../shell/ev-sidebar-annotations.c:199 ../shell/ev-sidebar-annotations.c:535
+#: ../shell/ev-sidebar-annotations.c:199 ../shell/ev-sidebar-annotations.c:573
 msgid "Annotations"
 msgstr "Anotaciones"
 
@@ -1080,11 +1095,11 @@ msgstr "Añadir anotación de texto"
 msgid "Add"
 msgstr "Añadir"
 
-#: ../shell/ev-sidebar-annotations.c:368
+#: ../shell/ev-sidebar-annotations.c:371
 msgid "Document contains no annotations"
 msgstr "El documento no contiene ninguna anotación"
 
-#: ../shell/ev-sidebar-annotations.c:400
+#: ../shell/ev-sidebar-annotations.c:403
 #, c-format
 msgid "Page %d"
 msgstr "Página %d"
@@ -1129,19 +1144,19 @@ msgstr "Índice"
 msgid "Thumbnails"
 msgstr "Miniaturas"
 
-#: ../shell/ev-toolbar.c:204
+#: ../shell/ev-toolbar.c:201
 msgid "Open an existing document"
 msgstr "Abre un documento existente"
 
-#: ../shell/ev-toolbar.c:235
+#: ../shell/ev-toolbar.c:223
 msgid "Find a word or phrase in the document"
 msgstr "Busca una palabra o frase en el documento"
 
-#: ../shell/ev-toolbar.c:247 ../shell/ev-toolbar.c:248
+#: ../shell/ev-toolbar.c:232 ../shell/ev-toolbar.c:233
 msgid "File options"
 msgstr "Opciones del archivo"
 
-#: ../shell/ev-toolbar.c:257 ../shell/ev-toolbar.c:258
+#: ../shell/ev-toolbar.c:242 ../shell/ev-toolbar.c:243
 msgid "View options"
 msgstr "Opciones de la vista"
 
@@ -1149,106 +1164,106 @@ msgstr "Opciones de la vista"
 msgid "Supported Image Files"
 msgstr "Archivos de imagen soportados"
 
-#: ../shell/ev-window.c:1606
+#: ../shell/ev-window.c:1608
 msgid "The document contains no pages"
 msgstr "El documento no contiene ninguna página"
 
-#: ../shell/ev-window.c:1609
+#: ../shell/ev-window.c:1611
 msgid "The document contains only empty pages"
 msgstr "El documento sólo contiene páginas vacías"
 
-#: ../shell/ev-window.c:1822 ../shell/ev-window.c:1990
+#: ../shell/ev-window.c:1824 ../shell/ev-window.c:1992
 #, c-format
 msgid "Unable to open document “%s”."
 msgstr "No se pudo abrir el documento «%s»."
 
-#: ../shell/ev-window.c:1954
+#: ../shell/ev-window.c:1956
 #, c-format
 msgid "Loading document from “%s”"
 msgstr "Cargando documento desde «%s»"
 
-#: ../shell/ev-window.c:2105 ../shell/ev-window.c:2432
+#: ../shell/ev-window.c:2107 ../shell/ev-window.c:2434
 #, c-format
 msgid "Downloading document (%d%%)"
 msgstr "Descargando documento (%d%%)"
 
-#: ../shell/ev-window.c:2138
+#: ../shell/ev-window.c:2140
 msgid "Failed to load remote file."
 msgstr "Falló al cargar el archivo remoto."
 
-#: ../shell/ev-window.c:2376
+#: ../shell/ev-window.c:2378
 #, c-format
 msgid "Reloading document from %s"
 msgstr "Recargando el documento desde %s"
 
-#: ../shell/ev-window.c:2408
+#: ../shell/ev-window.c:2410
 msgid "Failed to reload document."
 msgstr "Falló al recargar el documento."
 
-#: ../shell/ev-window.c:2624
+#: ../shell/ev-window.c:2626
 msgid "Open Document"
 msgstr "Abrir documento"
 
-#: ../shell/ev-window.c:2695
+#: ../shell/ev-window.c:2697
 #, c-format
 msgid "Saving document to %s"
 msgstr "Guardando el documento en %s"
 
-#: ../shell/ev-window.c:2698
+#: ../shell/ev-window.c:2700
 #, c-format
 msgid "Saving attachment to %s"
 msgstr "Guardando el adjunto en %s"
 
-#: ../shell/ev-window.c:2701
+#: ../shell/ev-window.c:2703
 #, c-format
 msgid "Saving image to %s"
 msgstr "Guardando la imagen en %s"
 
-#: ../shell/ev-window.c:2745 ../shell/ev-window.c:2845
+#: ../shell/ev-window.c:2747 ../shell/ev-window.c:2847
 #, c-format
 msgid "The file could not be saved as “%s”."
 msgstr "El archivo no se pudo guardar como «%s»."
 
-#: ../shell/ev-window.c:2776
+#: ../shell/ev-window.c:2778
 #, c-format
 msgid "Uploading document (%d%%)"
 msgstr "Subiendo el documento (%d%%)"
 
-#: ../shell/ev-window.c:2780
+#: ../shell/ev-window.c:2782
 #, c-format
 msgid "Uploading attachment (%d%%)"
 msgstr "Subiendo el adjunto (%d%%)"
 
-#: ../shell/ev-window.c:2784
+#: ../shell/ev-window.c:2786
 #, c-format
 msgid "Uploading image (%d%%)"
 msgstr "Subiendo la imagen (%d%%)"
 
-#: ../shell/ev-window.c:2896
+#: ../shell/ev-window.c:2898
 msgid "Save a Copy"
 msgstr "Guardar una copia"
 
-#: ../shell/ev-window.c:2972
+#: ../shell/ev-window.c:2974
 msgid "Could not send current document"
 msgstr "No se pudo enviar el documento actual"
 
-#: ../shell/ev-window.c:3006
+#: ../shell/ev-window.c:3008
 msgid "Could not open the containing folder"
 msgstr "No se pudo abrir la carpeta contenedora"
 
-#: ../shell/ev-window.c:3267
+#: ../shell/ev-window.c:3269
 #, c-format
 msgid "%d pending job in queue"
 msgid_plural "%d pending jobs in queue"
 msgstr[0] "%d trabajo pendiente en la cola"
 msgstr[1] "%d trabajos pendientes en la cola"
 
-#: ../shell/ev-window.c:3380
+#: ../shell/ev-window.c:3382
 #, c-format
 msgid "Printing job “%s”"
 msgstr "Imprimiendo trabajo «%s»"
 
-#: ../shell/ev-window.c:3583
+#: ../shell/ev-window.c:3585
 msgid ""
 "Document contains form fields that have been filled out. If you don't save a "
 "copy, changes will be permanently lost."
@@ -1256,7 +1271,7 @@ msgstr ""
 "El documento contiene campos de formulario que se han rellenado. Los cambios "
 "se perderán permanentemente si no guarda una copia."
 
-#: ../shell/ev-window.c:3587
+#: ../shell/ev-window.c:3589
 msgid ""
 "Document contains new or modified annotations. If you don't save a copy, "
 "changes will be permanently lost."
@@ -1264,20 +1279,20 @@ msgstr ""
 "El documento contiene anotaciones nuevas o modificadas. Los cambios se "
 "perderán automáticamente si no guarda una copia."
 
-#: ../shell/ev-window.c:3594
+#: ../shell/ev-window.c:3596
 #, c-format
 msgid "Save a copy of document “%s” before closing?"
 msgstr "¿Guardar una copia del documento «%s» antes de cerrar?"
 
-#: ../shell/ev-window.c:3613
+#: ../shell/ev-window.c:3615
 msgid "Close _without Saving"
 msgstr "Cerrar _sin guardar"
 
-#: ../shell/ev-window.c:3617
+#: ../shell/ev-window.c:3619
 msgid "Save a _Copy"
 msgstr "Guardar una _copia"
 
-#: ../shell/ev-window.c:3691
+#: ../shell/ev-window.c:3693
 #, c-format
 msgid "Wait until print job “%s” finishes before closing?"
 msgstr ""
@@ -1286,7 +1301,7 @@ msgstr ""
 #. TRANS: the singular form is not really used as n_print_jobs > 1
 #. but some languages distinguish between different plurals forms,
 #. so the ngettext is needed.
-#: ../shell/ev-window.c:3697
+#: ../shell/ev-window.c:3699
 #, c-format
 msgid "There is %d print job active. Wait until print finishes before closing?"
 msgid_plural ""
@@ -1298,51 +1313,51 @@ msgstr[1] ""
 "Hay %d trabajos de impresión activos. ¿Quiere esperar a que termine la "
 "impresora antes de cerrar?"
 
-#: ../shell/ev-window.c:3712
+#: ../shell/ev-window.c:3714
 msgid "If you close the window, pending print jobs will not be printed."
 msgstr ""
 "Si cierra la ventana, los trabajos de impresión pendientes no se imprimirán."
 
-#: ../shell/ev-window.c:3716
+#: ../shell/ev-window.c:3718
 msgid "Cancel _print and Close"
 msgstr "Cancelar la _impresión y cerrar"
 
-#: ../shell/ev-window.c:3720
+#: ../shell/ev-window.c:3722
 msgid "Close _after Printing"
 msgstr "Cerrar _después de imprimir"
 
-#: ../shell/ev-window.c:4248
+#: ../shell/ev-window.c:4253
 msgid "Running in presentation mode"
 msgstr "Ejecutándose en modo presentación"
 
 #. TRANS: Sometimes this could be better translated as
 #. "%d hit(s) on this page".  Therefore this string
 #. contains plural cases.
-#: ../shell/ev-window.c:5181
+#: ../shell/ev-window.c:5187
 #, c-format
 msgid "%d found on this page"
 msgid_plural "%d found on this page"
 msgstr[0] "%d encontrado en esta página"
 msgstr[1] "%d encontrados en esta página"
 
-#: ../shell/ev-window.c:5186
+#: ../shell/ev-window.c:5192
 msgid "Not found"
 msgstr "No encontrado"
 
-#: ../shell/ev-window.c:5192
+#: ../shell/ev-window.c:5198
 #, c-format
 msgid "%3d%% remaining to search"
 msgstr "%3d%% restante para buscar"
 
-#: ../shell/ev-window.c:5512
+#: ../shell/ev-window.c:5518
 msgid "Enable caret navigation?"
 msgstr "¿Activar la navegación de cursor?"
 
-#: ../shell/ev-window.c:5514
+#: ../shell/ev-window.c:5520
 msgid "_Enable"
 msgstr "_Activar"
 
-#: ../shell/ev-window.c:5517
+#: ../shell/ev-window.c:5523
 msgid ""
 "Pressing F7 turns the caret navigation on or off. This feature places a "
 "moveable cursor in text pages, allowing you to move around and select text "
@@ -1353,39 +1368,39 @@ msgstr ""
 "permitiéndole moverse por el texto y seleccionarlo con el teclado. ¿Quiere "
 "activar la navegación de cursor?"
 
-#: ../shell/ev-window.c:5522
+#: ../shell/ev-window.c:5528
 msgid "Don't show this message again"
 msgstr "No volver a mostrar este mensaje"
 
-#: ../shell/ev-window.c:6038 ../shell/ev-window.c:6054
+#: ../shell/ev-window.c:6044 ../shell/ev-window.c:6060
 msgid "Unable to launch external application."
 msgstr "No se pudo lanzar la aplicación externa."
 
-#: ../shell/ev-window.c:6111
+#: ../shell/ev-window.c:6117
 msgid "Unable to open external link"
 msgstr "No se pudo abrir el enlace externo"
 
-#: ../shell/ev-window.c:6314
+#: ../shell/ev-window.c:6320
 msgid "Couldn't find appropriate format to save image"
 msgstr "No se pudo encontrar el formato apropiado para guardar la imagen"
 
-#: ../shell/ev-window.c:6346
+#: ../shell/ev-window.c:6352
 msgid "The image could not be saved."
 msgstr "La imagen no se pudo guardar."
 
-#: ../shell/ev-window.c:6381
+#: ../shell/ev-window.c:6387
 msgid "Save Image"
 msgstr "Guardar imagen"
 
-#: ../shell/ev-window.c:6532
+#: ../shell/ev-window.c:6546
 msgid "Unable to open attachment"
 msgstr "No se pudo abrir el adjunto"
 
-#: ../shell/ev-window.c:6588
+#: ../shell/ev-window.c:6602
 msgid "The attachment could not be saved."
 msgstr "El adjunto no se pudo guardar."
 
-#: ../shell/ev-window.c:6636
+#: ../shell/ev-window.c:6650
 msgid "Save Attachment"
 msgstr "Guardar adjuntos"
 
