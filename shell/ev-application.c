@@ -1062,7 +1062,7 @@ ev_application_startup (GApplication *gapplication)
           "win.find-next",              "<Ctrl>G", NULL,
           "win.find-previous",          "<Ctrl><Shift>G", NULL,
           "win.select-page",            "<Ctrl>L", NULL,
-          "win.go-backward",            "<Shift>Page_Up", NULL,
+          "win.go-backwards",           "<Shift>Page_Up", NULL,
           "win.go-forward",             "<Shift>Page_Down", NULL,
           "win.go-next-page",           "n", NULL,
           "win.go-previous-page",       "p", NULL,
