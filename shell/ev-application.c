@@ -1051,6 +1051,7 @@ ev_application_startup (GApplication *gapplication)
           "win.open-copy",              "<Ctrl>N", NULL,
           "win.save-copy",              "<Ctrl>S", NULL,
           "win.print",                  "<Ctrl>P", NULL,
+          "win.show-properties",        "<alt>Return", NULL,
           "win.copy",                   "<Ctrl>C", "<Ctrl>Insert", NULL,
           "win.select-all",             "<Ctrl>A", NULL,
           "win.save-settings",          "<Ctrl>T", NULL,
