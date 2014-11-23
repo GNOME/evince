@@ -206,9 +206,8 @@ ev_sidebar_annotations_add_annots_palette (EvSidebarAnnotations *ev_annots)
 	gtk_tool_item_group_set_header_relief (GTK_TOOL_ITEM_GROUP (group), GTK_RELIEF_NONE);
 	gtk_container_add (GTK_CONTAINER (ev_annots->priv->palette), group);
 
-	/* FIXME: use a better icon than EDIT */
 	item = gtk_toggle_tool_button_new ();
-	gtk_tool_button_set_icon_name (GTK_TOOL_BUTTON (item), GTK_STOCK_EDIT);
+	gtk_tool_button_set_icon_name (GTK_TOOL_BUTTON (item), "document-new-symbolic");
 	gtk_tool_button_set_label (GTK_TOOL_BUTTON (item), _("Text"));
 	gtk_widget_set_tooltip_text (GTK_WIDGET (item), _("Add text annotation"));
 	ev_annots->priv->annot_text_item = item;
