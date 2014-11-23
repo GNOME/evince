@@ -203,6 +203,7 @@ ev_sidebar_annotations_add_annots_palette (EvSidebarAnnotations *ev_annots)
 	gtk_widget_set_margin_end (ev_annots->priv->palette, 2);
 
 	group = gtk_tool_item_group_new (_("Annotations"));
+	gtk_tool_item_group_set_header_relief (GTK_TOOL_ITEM_GROUP (group), GTK_RELIEF_NONE);
 	gtk_container_add (GTK_CONTAINER (ev_annots->priv->palette), group);
 
 	/* FIXME: use a better icon than EDIT */
