@@ -452,12 +452,14 @@ ev_sidebar_bookmarks_init (EvSidebarBookmarks *sidebar_bookmarks)
         gtk_widget_set_margin_bottom (hbox, 2);
         gtk_widget_set_margin_start (hbox, 2);
         gtk_widget_set_margin_end (hbox, 2);
+        gtk_button_box_set_layout (GTK_BUTTON_BOX (hbox), GTK_BUTTONBOX_CENTER);
+        gtk_style_context_add_class (gtk_widget_get_style_context (hbox), GTK_STYLE_CLASS_LINKED);
 
         priv->add_button = gtk_button_new_with_label (_("Add"));
         gtk_actionable_set_action_name (GTK_ACTIONABLE (priv->add_button),
                                         "win.add-bookmark");
         gtk_widget_set_sensitive (priv->add_button, FALSE);
-        gtk_box_pack_start (GTK_BOX (hbox), priv->add_button, TRUE, TRUE, 6);
+        gtk_box_pack_start (GTK_BOX (hbox), priv->add_button, FALSE, FALSE, 0);
         gtk_widget_show (priv->add_button);
 
         priv->del_button = gtk_button_new_with_label (_("Remove"));
@@ -465,7 +467,7 @@ ev_sidebar_bookmarks_init (EvSidebarBookmarks *sidebar_bookmarks)
                           G_CALLBACK (ev_sidebar_bookmarks_del_clicked),
                           sidebar_bookmarks);
         gtk_widget_set_sensitive (priv->del_button, FALSE);
-        gtk_box_pack_start (GTK_BOX (hbox), priv->del_button, TRUE, TRUE, 6);
+        gtk_box_pack_start (GTK_BOX (hbox), priv->del_button, FALSE, FALSE, 0);
         gtk_widget_show (priv->del_button);
 
         gtk_box_pack_end (GTK_BOX (sidebar_bookmarks), hbox, FALSE, TRUE, 0);
