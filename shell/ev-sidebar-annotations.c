@@ -130,6 +130,7 @@ ev_sidebar_annotations_add_annots_list (EvSidebarAnnotations *ev_annots)
 	/* Create tree view */
 	loading_model = ev_sidebar_annotations_create_simple_model (_("Loading…"));
 	ev_annots->priv->tree_view = gtk_tree_view_new_with_model (loading_model);
+	gtk_widget_set_margin_top (ev_annots->priv->tree_view, 2);
 	g_object_unref (loading_model);
 
 	gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (ev_annots->priv->tree_view),
@@ -196,6 +197,11 @@ ev_sidebar_annotations_add_annots_palette (EvSidebarAnnotations *ev_annots)
 					     GTK_SHADOW_IN);
 
 	ev_annots->priv->palette = gtk_tool_palette_new ();
+	gtk_widget_set_margin_top (ev_annots->priv->palette, 2);
+	gtk_widget_set_margin_bottom (ev_annots->priv->palette, 2);
+	gtk_widget_set_margin_start (ev_annots->priv->palette, 2);
+	gtk_widget_set_margin_end (ev_annots->priv->palette, 2);
+
 	group = gtk_tool_item_group_new (_("Annotations"));
 	gtk_container_add (GTK_CONTAINER (ev_annots->priv->palette), group);
 

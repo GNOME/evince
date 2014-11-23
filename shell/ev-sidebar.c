@@ -348,7 +348,11 @@ ev_sidebar_init (EvSidebar *ev_sidebar)
 					    G_TYPE_INT);
 
 	/* top option menu */
-	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
+	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 2);
+	gtk_widget_set_margin_top (hbox, 2);
+	gtk_widget_set_margin_bottom (hbox, 2);
+	gtk_widget_set_margin_start (hbox, 2);
+	gtk_widget_set_margin_end (hbox, 2);
 	ev_sidebar->priv->hbox = hbox;
 	gtk_box_pack_start (GTK_BOX (ev_sidebar), hbox, FALSE, FALSE, 0);
 	gtk_widget_show (hbox);

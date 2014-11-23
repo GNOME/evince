@@ -410,8 +410,6 @@ ev_sidebar_bookmarks_init (EvSidebarBookmarks *sidebar_bookmarks)
                                                                EvSidebarBookmarksPrivate);
         priv = sidebar_bookmarks->priv;
 
-        gtk_box_set_spacing (GTK_BOX (sidebar_bookmarks), 6);
-
         swindow = gtk_scrolled_window_new (NULL, NULL);
         gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (swindow),
                                              GTK_SHADOW_IN);
@@ -450,6 +448,10 @@ ev_sidebar_bookmarks_init (EvSidebarBookmarks *sidebar_bookmarks)
         gtk_widget_show (priv->tree_view);
 
         hbox = gtk_button_box_new (GTK_ORIENTATION_HORIZONTAL);
+        gtk_widget_set_margin_top (hbox, 2);
+        gtk_widget_set_margin_bottom (hbox, 2);
+        gtk_widget_set_margin_start (hbox, 2);
+        gtk_widget_set_margin_end (hbox, 2);
 
         priv->add_button = gtk_button_new_with_label (_("Add"));
         gtk_actionable_set_action_name (GTK_ACTIONABLE (priv->add_button),
