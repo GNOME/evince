@@ -13,15 +13,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince.HEAD.he\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-09-03 19:06+0300\n"
-"PO-Revision-Date: 2014-09-03 19:06+0300\n"
-"Last-Translator: Yosef Or Boczko <yoseforb@gmail.com>\n"
+"POT-Creation-Date: 2014-11-24 19:37+0200\n"
+"PO-Revision-Date: 2014-11-24 19:40+0200\n"
+"Last-Translator: Yosef Or Boczko <yoseforb@gnome.org>\n"
 "Language-Team: עברית <>\n"
 "Language: he\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural= (n!=1);\n"
 "X-Generator: Gtranslator 2.91.6\n"
 
 #: ../backend/comics/comics-document.c:210
@@ -459,8 +459,8 @@ msgid "of %d"
 msgstr "מתוך %d"
 
 #: ../libmisc/ev-page-action-widget.c:185 ../shell/ev-history.c:426
-#: ../shell/ev-sidebar-bookmarks.c:295 ../shell/ev-window.c:904
-#: ../shell/ev-window.c:4708
+#: ../shell/ev-sidebar-bookmarks.c:295 ../shell/ev-window.c:906
+#: ../shell/ev-window.c:4713
 #, c-format
 msgid "Page %s"
 msgstr "עמוד %s"
@@ -665,7 +665,7 @@ msgstr "FILE"
 msgid "GNOME Document Previewer"
 msgstr "כלי להצגה מקדימה של מסמכים מבית GNOME"
 
-#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3323
+#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3325
 msgid "Failed to print document"
 msgstr "הדפסת המסמך נכשלה"
 
@@ -719,7 +719,7 @@ msgid "Subject:"
 msgstr "‏נושא:"
 
 #: ../properties/ev-properties-view.c:63
-#: ../shell/ev-annotation-properties-dialog.c:154
+#: ../shell/ev-annotation-properties-dialog.c:173
 msgid "Author:"
 msgstr "‏מחבר:"
 
@@ -817,79 +817,95 @@ msgstr "חיפוש המופע הקודם של המחרוזת"
 msgid "Find next occurrence of the search string"
 msgstr "חיפוש המופע הבא של המחרוזת"
 
-#: ../shell/ev-annotation-properties-dialog.c:94
+#: ../shell/ev-annotation-properties-dialog.c:97
 msgid "Icon:"
 msgstr "סמל:"
 
-#: ../shell/ev-annotation-properties-dialog.c:100
+#: ../shell/ev-annotation-properties-dialog.c:103
 msgid "Note"
 msgstr "פתקית"
 
-#: ../shell/ev-annotation-properties-dialog.c:101
+#: ../shell/ev-annotation-properties-dialog.c:104
 msgid "Comment"
 msgstr "הערה"
 
-#: ../shell/ev-annotation-properties-dialog.c:102
+#: ../shell/ev-annotation-properties-dialog.c:105
 msgid "Key"
 msgstr "מפתח"
 
-#: ../shell/ev-annotation-properties-dialog.c:103
+#: ../shell/ev-annotation-properties-dialog.c:106
 msgid "Help"
 msgstr "עזרה"
 
-#: ../shell/ev-annotation-properties-dialog.c:104
+#: ../shell/ev-annotation-properties-dialog.c:107
 msgid "New Paragraph"
 msgstr "פסקה חדשה"
 
-#: ../shell/ev-annotation-properties-dialog.c:105
+#: ../shell/ev-annotation-properties-dialog.c:108
 msgid "Paragraph"
 msgstr "פסקה"
 
-#: ../shell/ev-annotation-properties-dialog.c:106
+#: ../shell/ev-annotation-properties-dialog.c:109
 msgid "Insert"
 msgstr "הוספה"
 
-#: ../shell/ev-annotation-properties-dialog.c:107
+#: ../shell/ev-annotation-properties-dialog.c:110
 msgid "Cross"
 msgstr "צלב"
 
-#: ../shell/ev-annotation-properties-dialog.c:108
+#: ../shell/ev-annotation-properties-dialog.c:111
 msgid "Circle"
 msgstr "עיגול"
 
-#: ../shell/ev-annotation-properties-dialog.c:109
+#: ../shell/ev-annotation-properties-dialog.c:112
 msgid "Unknown"
 msgstr "לא ידוע"
 
-#: ../shell/ev-annotation-properties-dialog.c:134
+#: ../shell/ev-annotation-properties-dialog.c:123
+msgid "Markup type:"
+msgstr "סוג סימון:"
+
+#: ../shell/ev-annotation-properties-dialog.c:129
+msgid "Highlight"
+msgstr "הדגשה"
+
+#: ../shell/ev-annotation-properties-dialog.c:130
+msgid "Strike out"
+msgstr "מחיקה"
+
+#: ../shell/ev-annotation-properties-dialog.c:131
+msgid "Underline"
+msgstr "קו תחתי"
+
+#: ../shell/ev-annotation-properties-dialog.c:153
 msgid "Annotation Properties"
 msgstr "מאפייני הפרשנות"
 
-#: ../shell/ev-annotation-properties-dialog.c:165
+#: ../shell/ev-annotation-properties-dialog.c:184
 msgid "Color:"
 msgstr "צבע:"
 
-#: ../shell/ev-annotation-properties-dialog.c:175
+#: ../shell/ev-annotation-properties-dialog.c:194
 msgid "Style:"
 msgstr "סגנון:"
 
-#: ../shell/ev-annotation-properties-dialog.c:190
+#: ../shell/ev-annotation-properties-dialog.c:209
 msgid "Transparent"
 msgstr "שקוף"
 
-#: ../shell/ev-annotation-properties-dialog.c:197
+#: ../shell/ev-annotation-properties-dialog.c:216
 msgid "Opaque"
 msgstr "אטום"
 
-#: ../shell/ev-annotation-properties-dialog.c:207
+#: ../shell/ev-annotation-properties-dialog.c:226
 msgid "Initial window state:"
 msgstr "מצב החלון ההתחלתי:"
 
-#: ../shell/ev-annotation-properties-dialog.c:213
+#: ../shell/ev-annotation-properties-dialog.c:232
 msgid "Open"
 msgstr "פתיחה"
 
-#: ../shell/ev-annotation-properties-dialog.c:214
+#: ../shell/ev-annotation-properties-dialog.c:233
 msgid "Close"
 msgstr "סגירה"
 
@@ -946,11 +962,11 @@ msgstr ""
 "פרויקט תרגום GNOME לעברית:\n"
 "‏http://gnome-il.berlios.de"
 
-#: ../shell/ev-history-action.c:224
+#: ../shell/ev-history-action.c:221
 msgid "Go to previous history item"
 msgstr "מעבר לפריט הקודם בהיסטוריה"
 
-#: ../shell/ev-history-action.c:229
+#: ../shell/ev-history-action.c:226
 msgid "Go to next history item"
 msgstr "מעבר לפריט הבא בהיסטוריה"
 
@@ -1005,19 +1021,19 @@ msgstr "שמירת הססמה _עד לניתוק"
 msgid "Remember _forever"
 msgstr "_שמירה לעד"
 
-#: ../shell/ev-properties-dialog.c:62
+#: ../shell/ev-properties-dialog.c:63
 msgid "Properties"
 msgstr "מאפיינים"
 
-#: ../shell/ev-properties-dialog.c:94
+#: ../shell/ev-properties-dialog.c:85
 msgid "General"
 msgstr "כללי"
 
-#: ../shell/ev-properties-dialog.c:104
+#: ../shell/ev-properties-dialog.c:95
 msgid "Fonts"
 msgstr "גופנים"
 
-#: ../shell/ev-properties-dialog.c:117
+#: ../shell/ev-properties-dialog.c:108
 msgid "Document License"
 msgstr "רישיון המסמך"
 
@@ -1046,7 +1062,7 @@ msgstr "מידע נוסף"
 msgid "List"
 msgstr "רשימה"
 
-#: ../shell/ev-sidebar-annotations.c:199 ../shell/ev-sidebar-annotations.c:535
+#: ../shell/ev-sidebar-annotations.c:199 ../shell/ev-sidebar-annotations.c:573
 msgid "Annotations"
 msgstr "הערות"
 
@@ -1062,11 +1078,11 @@ msgstr "הוספת פרשנות טקסט"
 msgid "Add"
 msgstr "הוספה"
 
-#: ../shell/ev-sidebar-annotations.c:368
+#: ../shell/ev-sidebar-annotations.c:371
 msgid "Document contains no annotations"
 msgstr "המסמך אינו מכיל הערות"
 
-#: ../shell/ev-sidebar-annotations.c:400
+#: ../shell/ev-sidebar-annotations.c:403
 #, c-format
 msgid "Page %d"
 msgstr "עמוד %d"
@@ -1111,19 +1127,19 @@ msgstr "מפתח"
 msgid "Thumbnails"
 msgstr "תמונות ממוזערות"
 
-#: ../shell/ev-toolbar.c:204
+#: ../shell/ev-toolbar.c:201
 msgid "Open an existing document"
 msgstr "פתיחת מסמך קיים"
 
-#: ../shell/ev-toolbar.c:235
+#: ../shell/ev-toolbar.c:223
 msgid "Find a word or phrase in the document"
 msgstr "חיפוש מילה או משפט במסמך"
 
-#: ../shell/ev-toolbar.c:247 ../shell/ev-toolbar.c:248
+#: ../shell/ev-toolbar.c:232 ../shell/ev-toolbar.c:233
 msgid "File options"
 msgstr "אפשרויות קובץ"
 
-#: ../shell/ev-toolbar.c:257 ../shell/ev-toolbar.c:258
+#: ../shell/ev-toolbar.c:242 ../shell/ev-toolbar.c:243
 msgid "View options"
 msgstr "אפשרויות תצוגה"
 
@@ -1131,132 +1147,132 @@ msgstr "אפשרויות תצוגה"
 msgid "Supported Image Files"
 msgstr "קובצי תמונות נתמכים"
 
-#: ../shell/ev-window.c:1606
+#: ../shell/ev-window.c:1608
 msgid "The document contains no pages"
 msgstr "המסמך אינו מכיל עמודים"
 
-#: ../shell/ev-window.c:1609
+#: ../shell/ev-window.c:1611
 msgid "The document contains only empty pages"
 msgstr "המסמך מכיל עמודים ריקים בלבד"
 
-#: ../shell/ev-window.c:1822 ../shell/ev-window.c:1990
+#: ../shell/ev-window.c:1824 ../shell/ev-window.c:1992
 #, c-format
 msgid "Unable to open document “%s”."
 msgstr "לא ניתן לפתוח את המסמך „%s“."
 
-#: ../shell/ev-window.c:1954
+#: ../shell/ev-window.c:1956
 #, c-format
 msgid "Loading document from “%s”"
 msgstr "המסמך מ־„%s“ נטען"
 
-#: ../shell/ev-window.c:2105 ../shell/ev-window.c:2432
+#: ../shell/ev-window.c:2107 ../shell/ev-window.c:2434
 #, c-format
 msgid "Downloading document (%d%%)"
 msgstr "מוריד מסמך (%d%%)"
 
-#: ../shell/ev-window.c:2138
+#: ../shell/ev-window.c:2140
 msgid "Failed to load remote file."
 msgstr "טעינת הקובץ המרוחק נכשלה."
 
-#: ../shell/ev-window.c:2376
+#: ../shell/ev-window.c:2378
 #, c-format
 msgid "Reloading document from %s"
 msgstr "המסמך מ־%s נטען מחדש"
 
-#: ../shell/ev-window.c:2408
+#: ../shell/ev-window.c:2410
 msgid "Failed to reload document."
 msgstr "טעינת המסמך מחדש נכשלה."
 
-#: ../shell/ev-window.c:2624
+#: ../shell/ev-window.c:2626
 msgid "Open Document"
 msgstr "פתיחת מסמך"
 
-#: ../shell/ev-window.c:2695
+#: ../shell/ev-window.c:2697
 #, c-format
 msgid "Saving document to %s"
 msgstr "המסמך נשמר ל־%s"
 
-#: ../shell/ev-window.c:2698
+#: ../shell/ev-window.c:2700
 #, c-format
 msgid "Saving attachment to %s"
 msgstr "הצרופה נשמרת ל־%s"
 
-#: ../shell/ev-window.c:2701
+#: ../shell/ev-window.c:2703
 #, c-format
 msgid "Saving image to %s"
 msgstr "התמונה נשמרת ל־%s"
 
-#: ../shell/ev-window.c:2745 ../shell/ev-window.c:2845
+#: ../shell/ev-window.c:2747 ../shell/ev-window.c:2847
 #, c-format
 msgid "The file could not be saved as “%s”."
 msgstr "לא ניתן לשמור את הקובץ בשם „%s“."
 
-#: ../shell/ev-window.c:2776
+#: ../shell/ev-window.c:2778
 #, c-format
 msgid "Uploading document (%d%%)"
 msgstr "המסמך נשלח (%d%%)"
 
-#: ../shell/ev-window.c:2780
+#: ../shell/ev-window.c:2782
 #, c-format
 msgid "Uploading attachment (%d%%)"
 msgstr "הצרופה נשלחת (%d%%)"
 
-#: ../shell/ev-window.c:2784
+#: ../shell/ev-window.c:2786
 #, c-format
 msgid "Uploading image (%d%%)"
 msgstr "התמונה נשלחת (%d%%)"
 
-#: ../shell/ev-window.c:2896
+#: ../shell/ev-window.c:2898
 msgid "Save a Copy"
 msgstr "שמירת העתק"
 
-#: ../shell/ev-window.c:2972
+#: ../shell/ev-window.c:2974
 msgid "Could not send current document"
 msgstr "לא ניתן לשלוח את המסמך הנוכחי"
 
-#: ../shell/ev-window.c:3006
+#: ../shell/ev-window.c:3008
 msgid "Could not open the containing folder"
 msgstr "לא ניתן לפתוח את התיקייה המכילה"
 
-#: ../shell/ev-window.c:3267
+#: ../shell/ev-window.c:3269
 #, c-format
 msgid "%d pending job in queue"
 msgid_plural "%d pending jobs in queue"
 msgstr[0] "משימה אחת ממתינה בתור"
 msgstr[1] "%d משימות ממתינות בתור"
 
-#: ../shell/ev-window.c:3380
+#: ../shell/ev-window.c:3382
 #, c-format
 msgid "Printing job “%s”"
 msgstr "המשימה „%s“ מודפסת"
 
-#: ../shell/ev-window.c:3583
+#: ../shell/ev-window.c:3585
 msgid ""
 "Document contains form fields that have been filled out. If you don't save a "
 "copy, changes will be permanently lost."
 msgstr "המסמך מכיל שדות טופס שיש למלא. אם לא יישמר עותק, השינויים יאבדו לעד."
 
-#: ../shell/ev-window.c:3587
+#: ../shell/ev-window.c:3589
 msgid ""
 "Document contains new or modified annotations. If you don't save a copy, "
 "changes will be permanently lost."
 msgstr ""
 "המסמך מכיל הערות חדשות או ערוכות. אם לא יישמר עותק, השינויים יאבדו לעד."
 
-#: ../shell/ev-window.c:3594
+#: ../shell/ev-window.c:3596
 #, c-format
 msgid "Save a copy of document “%s” before closing?"
 msgstr "האם לשמור עותק של המסמך „%s“ לפני הסגירה?"
 
-#: ../shell/ev-window.c:3613
+#: ../shell/ev-window.c:3615
 msgid "Close _without Saving"
 msgstr "_סגירה ללא שמירה"
 
-#: ../shell/ev-window.c:3617
+#: ../shell/ev-window.c:3619
 msgid "Save a _Copy"
 msgstr "שמירת _עותק"
 
-#: ../shell/ev-window.c:3691
+#: ../shell/ev-window.c:3693
 #, c-format
 msgid "Wait until print job “%s” finishes before closing?"
 msgstr "האם להמתין לסיום משימת ההדפסה „%s“ לפני הסגירה?"
@@ -1264,7 +1280,7 @@ msgstr "האם להמתין לסיום משימת ההדפסה „%s“ לפני
 #. TRANS: the singular form is not really used as n_print_jobs > 1
 #. but some languages distinguish between different plurals forms,
 #. so the ngettext is needed.
-#: ../shell/ev-window.c:3697
+#: ../shell/ev-window.c:3699
 #, c-format
 msgid "There is %d print job active. Wait until print finishes before closing?"
 msgid_plural ""
@@ -1272,50 +1288,50 @@ msgid_plural ""
 msgstr[0] "יש משימת הדפסה אחת פעילה. האם להמתין לסיום ההדפסה לפני הסגירה?"
 msgstr[1] "יש %d משימות הדפסה פעילות. האם להמתין לסיום ההדפסות לפני הסגירה?"
 
-#: ../shell/ev-window.c:3712
+#: ../shell/ev-window.c:3714
 msgid "If you close the window, pending print jobs will not be printed."
 msgstr "אם החלון ייסגר, משימות הדפסה הממתינות לא יודפסו."
 
-#: ../shell/ev-window.c:3716
+#: ../shell/ev-window.c:3718
 msgid "Cancel _print and Close"
 msgstr "ביטול הה_דפסה וסגירה"
 
-#: ../shell/ev-window.c:3720
+#: ../shell/ev-window.c:3722
 msgid "Close _after Printing"
 msgstr "_סגירה לאחר ההדפסה"
 
-#: ../shell/ev-window.c:4248
+#: ../shell/ev-window.c:4253
 msgid "Running in presentation mode"
 msgstr "מופעל מצב מצגת"
 
 #. TRANS: Sometimes this could be better translated as
 #. "%d hit(s) on this page".  Therefore this string
 #. contains plural cases.
-#: ../shell/ev-window.c:5181
+#: ../shell/ev-window.c:5187
 #, c-format
 msgid "%d found on this page"
 msgid_plural "%d found on this page"
 msgstr[0] "‏אחד נמצא בעמוד זה"
 msgstr[1] "‏%d נמצאו בעמוד זה"
 
-#: ../shell/ev-window.c:5186
+#: ../shell/ev-window.c:5192
 msgid "Not found"
 msgstr "אין התאמה"
 
-#: ../shell/ev-window.c:5192
+#: ../shell/ev-window.c:5198
 #, c-format
 msgid "%3d%% remaining to search"
 msgstr "‏%3d%% נשארו לחיפוש"
 
-#: ../shell/ev-window.c:5512
+#: ../shell/ev-window.c:5518
 msgid "Enable caret navigation?"
 msgstr "האם לאפשר ניווט בעזרת הסמן?"
 
-#: ../shell/ev-window.c:5514
+#: ../shell/ev-window.c:5520
 msgid "_Enable"
 msgstr "_אפשור"
 
-#: ../shell/ev-window.c:5517
+#: ../shell/ev-window.c:5523
 msgid ""
 "Pressing F7 turns the caret navigation on or off. This feature places a "
 "moveable cursor in text pages, allowing you to move around and select text "
@@ -1325,39 +1341,39 @@ msgstr ""
 "הניתן להזזה בדפי טקסט המאפשר לך לנוע מסביב ולבחור טקסט בעזרת המקלדת שלך. האם "
 "ברצונך לאפשר ניווט באמצעות סמן?"
 
-#: ../shell/ev-window.c:5522
+#: ../shell/ev-window.c:5528
 msgid "Don't show this message again"
 msgstr "לא לה_ציג הודעה זו שוב"
 
-#: ../shell/ev-window.c:6038 ../shell/ev-window.c:6054
+#: ../shell/ev-window.c:6044 ../shell/ev-window.c:6060
 msgid "Unable to launch external application."
 msgstr "לא ניתן לשגר יישום חיצוני"
 
-#: ../shell/ev-window.c:6111
+#: ../shell/ev-window.c:6117
 msgid "Unable to open external link"
 msgstr "לא ניתן לפתוח קישור חיצוני"
 
-#: ../shell/ev-window.c:6314
+#: ../shell/ev-window.c:6320
 msgid "Couldn't find appropriate format to save image"
 msgstr "לא נמצאה התצורה המתאימה לשמירת התמונה"
 
-#: ../shell/ev-window.c:6346
+#: ../shell/ev-window.c:6352
 msgid "The image could not be saved."
 msgstr "לא ניתן לשמור את התמונה."
 
-#: ../shell/ev-window.c:6381
+#: ../shell/ev-window.c:6387
 msgid "Save Image"
 msgstr "שמירת התמונה"
 
-#: ../shell/ev-window.c:6532
+#: ../shell/ev-window.c:6546
 msgid "Unable to open attachment"
 msgstr "לא ניתן לפתוח את הצרופה"
 
-#: ../shell/ev-window.c:6588
+#: ../shell/ev-window.c:6602
 msgid "The attachment could not be saved."
 msgstr "לא ניתן לשמור את הצרופה."
 
-#: ../shell/ev-window.c:6636
+#: ../shell/ev-window.c:6650
 msgid "Save Attachment"
 msgstr "שמירת צרופה"
 
