@@ -177,7 +177,7 @@ evince_thumbnail_pngenc_get (EvDocument *document, const char *thumbnail, int si
 	
 	ev_document_get_page_size (document, 0, &width, &height);
 
-	rc = ev_render_context_new (page, 0, size / width);
+	rc = ev_render_context_new (page, 0, size / MAX (height, width));
 	pixbuf = ev_document_get_thumbnail (document, rc);
 	g_object_unref (rc);
 	g_object_unref (page);
