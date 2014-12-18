@@ -8,8 +8,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: evince.help.master\n"
-"POT-Creation-Date: 2014-09-10 03:41+0000\n"
-"PO-Revision-Date: 2014-09-10 12:12+0200\n"
+"POT-Creation-Date: 2014-12-18 04:45+0000\n"
+"PO-Revision-Date: 2014-12-18 11:19+0100\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español; Castellano <gnome-es-list@gnome.org>\n"
 "Language: \n"
@@ -35,7 +35,7 @@ msgstr ""
 #. (itstool) path: credit/name
 #: C/annotation-properties.page:11 C/annotations-delete.page:11
 #: C/annotations-disabled.page:11 C/annotations-navigate.page:11
-#: C/annotations.page:11 C/annotations-save.page:10 C/bookmarks.page:13
+#: C/annotations.page:11 C/annotations-save.page:12 C/bookmarks.page:13
 #: C/bug-filing.page:11 C/commandline.page:15 C/develop.page:10
 #: C/documentation.page:9 C/duplex-10pages.page:12 C/duplex-11pages.page:12
 #: C/duplex-12pages.page:12 C/duplex-13pages.page:12 C/duplex-14pages.page:12
@@ -57,7 +57,7 @@ msgstr "Tiffany Antopolski"
 #. (itstool) path: license/p
 #: C/annotation-properties.page:15 C/annotations-delete.page:15
 #: C/annotations-disabled.page:15 C/annotations-navigate.page:15
-#: C/annotations.page:15 C/annotations-save.page:14 C/bookmarks.page:22
+#: C/annotations.page:15 C/annotations-save.page:20 C/bookmarks.page:22
 #: C/bug-filing.page:15 C/commandline.page:19 C/convertpdf.page:21
 #: C/convertPostScript.page:21 C/convertSVG.page:20 C/default-settings.page:15
 #: C/develop.page:15 C/documentation.page:14 C/duplex-10pages.page:16
@@ -374,17 +374,22 @@ msgstr ""
 "Cierre la nota pulsando en la <gui>x</gui> en la esquina superior de la nota."
 
 #. (itstool) path: info/desc
-#: C/annotations-save.page:6
+#: C/annotations-save.page:7
 msgid "How to save your annotations."
 msgstr "Cómo guardar sus anotaciones."
 
+#. (itstool) path: credit/name
+#: C/annotations-save.page:16
+msgid "Shobha Tyagi"
+msgstr "Shobha Tyagi"
+
 #. (itstool) path: page/title
-#: C/annotations-save.page:17
+#: C/annotations-save.page:23
 msgid "Save a copy of an annotated PDF"
 msgstr "Guardar una copia de un PDF anotado"
 
 #. (itstool) path: page/p
-#: C/annotations-save.page:18
+#: C/annotations-save.page:24
 msgid ""
 "To save a copy of your annotated PDF for future viewing using the "
 "<app>document viewer</app> or any other PDF viewer <em>that supports "
@@ -395,12 +400,14 @@ msgstr ""
 "soporte anotaciones</em>:"
 
 #. (itstool) path: item/p
-#: C/annotations-save.page:23
-msgid "<guiseq><gui>File</gui><gui>Save a copy</gui></guiseq>"
-msgstr "<guiseq><gui>Archivo</gui><gui>Guardar una copia</gui></guiseq>"
+#: C/annotations-save.page:31
+#| msgid "<guiseq><gui>File</gui><gui>Save a copy</gui></guiseq>"
+msgid "Click <guiseq><gui>Menu button</gui><gui>Save a Copy…</gui></guiseq>"
+msgstr ""
+"Pulse <guiseq><gui>Botón del menú</gui><gui>Guardar una copia…</gui></guiseq>"
 
 #. (itstool) path: item/p
-#: C/annotations-save.page:28
+#: C/annotations-save.page:36
 msgid ""
 "Choose a name and folder in which to save the file, then click <gui>Save</"
 "gui>. The PDF will be saved in the folder you chose."
@@ -409,15 +416,18 @@ msgstr ""
 "gui>. El PDF se guardará en la carpeta que elija."
 
 #. (itstool) path: page/p
-#: C/annotations-save.page:34
+#: C/annotations-save.page:42
+#| msgid ""
+#| "Annotations are added according to the PDF specification. Therefore, most "
+#| "PDF readers should be able to read them. The Okular document viewer does "
+#| "not support them. Adobe Reader is known to work."
 msgid ""
 "Annotations are added according to the PDF specification. Therefore, most "
-"PDF readers should be able to read them. The Okular document viewer does not "
-"support them. Adobe Reader is known to work."
+"PDF readers should be able to read them. Adobe Reader is known to work."
 msgstr ""
 "Las anotaciones se añaden de acuerdo con la especificación PDF. Por lo "
-"tanto, la mayoría de los lectores de PDF debería poder leerlas. El visor de "
-"documentos Okular no las soporta. Adobe Reader sí las soporta."
+"tanto, la mayoría de los lectores de PDF debería poder leerlas. Adobe Reader "
+"sí las soporta."
 
 #. (itstool) path: credit/name
 #: C/bookmarks.page:17 C/finding.page:21 C/formats.page:18 C/opening.page:18
@@ -2715,11 +2725,6 @@ msgstr "Navegar con una lista de páginas o una tabla de contenidos"
 
 #. (itstool) path: section/p
 #: C/movingaround.page:136
-#| msgid ""
-#| "To make the side pane visible, click the <gui>View options</gui> button "
-#| "in the top-right corner and select<gui>Side Pane</gui>, or press <key>F9</"
-#| "key> on the keyboard. You should see a preview of all of the pages in the "
-#| "document."
 msgid ""
 "To make the side pane visible, click the <gui>View options</gui> button in "
 "the top-right corner and select <gui>Side Pane</gui>, or press <key>F9</key> "
