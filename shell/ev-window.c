@@ -279,7 +279,6 @@ struct _EvWindowPrivate {
 #define FIND_PAGE_RATE_REFRESH	100
 
 static const gchar *document_print_settings[] = {
-	GTK_PRINT_SETTINGS_N_COPIES,
 	GTK_PRINT_SETTINGS_COLLATE,
 	GTK_PRINT_SETTINGS_REVERSE,
 	GTK_PRINT_SETTINGS_NUMBER_UP,
