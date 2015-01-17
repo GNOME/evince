@@ -48,7 +48,8 @@ typedef enum {
 	FORMAT_PROPERTY,
 	SECURITY_PROPERTY,
 	PAPER_SIZE_PROPERTY,
-	N_PROPERTIES
+	FILE_SIZE_PROPERTY,
+	N_PROPERTIES,
 } Property;
 
 typedef struct {
@@ -70,7 +71,8 @@ static const PropertyInfo properties_info[] = {
 	{ LINEARIZED_PROPERTY,    N_("Optimized:") },
 	{ FORMAT_PROPERTY,        N_("Format:") },
 	{ SECURITY_PROPERTY,      N_("Security:") },
-	{ PAPER_SIZE_PROPERTY,    N_("Paper Size:") }
+	{ PAPER_SIZE_PROPERTY,    N_("Paper Size:") },
+	{ FILE_SIZE_PROPERTY,     N_("Size:") }
 };
 
 struct _EvPropertiesView {
@@ -79,6 +81,7 @@ struct _EvPropertiesView {
 	GtkWidget *grid;
 	GtkWidget *labels[N_PROPERTIES];
 	gchar     *uri;
+	guint64    file_size;
 };
 
 struct _EvPropertiesViewClass {
@@ -370,6 +373,11 @@ ev_properties_view_set_info (EvPropertiesView *properties, const EvDocumentInfo 
 		set_property (properties, GTK_GRID (grid), PAPER_SIZE_PROPERTY, text, &row);
 		g_free (text);
 	}
+	if (properties->file_size) {
+		text = g_format_size (properties->file_size);
+		set_property (properties, GTK_GRID (grid), FILE_SIZE_PROPERTY, text, &row);
+		g_free (text);
+	}
 }
 
 static void
@@ -390,14 +398,15 @@ ev_properties_view_register_type (GTypeModule *module)
 }
 
 GtkWidget *
-ev_properties_view_new (const gchar *uri)
+ev_properties_view_new (EvDocument *document)
 {
 	EvPropertiesView *properties;
 
 	properties = g_object_new (EV_TYPE_PROPERTIES,
 				   "orientation", GTK_ORIENTATION_VERTICAL,
 				   NULL);
-	properties->uri = g_uri_unescape_string (uri, NULL);
+	properties->uri = g_uri_unescape_string (ev_document_get_uri (document), NULL);
+	properties->file_size = ev_document_get_size (document);
 
 	return GTK_WIDGET (properties);
 }

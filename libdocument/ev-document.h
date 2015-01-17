@@ -181,6 +181,7 @@ GdkPixbuf       *ev_document_get_thumbnail        (EvDocument      *document,
 						   EvRenderContext *rc);
 cairo_surface_t *ev_document_get_thumbnail_surface (EvDocument      *document,
 						    EvRenderContext *rc);
+guint64          ev_document_get_size             (EvDocument      *document);
 const gchar     *ev_document_get_uri              (EvDocument      *document);
 const gchar     *ev_document_get_title            (EvDocument      *document);
 gboolean         ev_document_is_page_size_uniform (EvDocument      *document);

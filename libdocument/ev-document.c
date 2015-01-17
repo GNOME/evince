@@ -39,6 +39,7 @@ typedef struct _EvPageSize
 struct _EvDocumentPrivate
 {
 	gchar          *uri;
+	guint64         file_size;
 
 	gint            n_pages;
 
@@ -59,6 +60,8 @@ struct _EvDocumentPrivate
 	synctex_scanner_t synctex_scanner;
 };
 
+static guint64         _ev_document_get_size_gfile  (GFile      *file);
+static guint64         _ev_document_get_size        (const char *uri);
 static gint            _ev_document_get_n_pages     (EvDocument *document);
 static void            _ev_document_get_page_size   (EvDocument *document,
 						     EvPage     *page,
@@ -329,6 +332,7 @@ ev_document_load (EvDocument  *document,
 	} else {
                 ev_document_setup_cache (document);
 		document->priv->uri = g_strdup (uri);
+		document->priv->file_size = _ev_document_get_size (uri);
 		ev_document_initialize_synctex (document, uri);
         }
 
@@ -420,6 +424,7 @@ ev_document_load_gfile (EvDocument         *document,
 
         ev_document_setup_cache (document);
 	document->priv->uri = g_file_get_uri (file);
+	document->priv->file_size = _ev_document_get_size_gfile (file);
 	ev_document_initialize_synctex (document, document->priv->uri);
 
         return TRUE;
@@ -572,6 +577,32 @@ ev_document_synctex_forward_search (EvDocument   *document,
         }
 
         return result;
+}
+
+static guint64
+_ev_document_get_size_gfile (GFile *file)
+{
+	goffset    size = 0;
+	GFileInfo *info = g_file_query_info (file, G_FILE_ATTRIBUTE_STANDARD_SIZE,
+                                             G_FILE_QUERY_INFO_NONE, NULL, NULL);
+	if (info) {
+		size = g_file_info_get_size (info);
+
+		g_object_unref (info);
+	}
+
+	return size;
+}
+
+static guint64
+_ev_document_get_size (const char  *uri)
+{
+	GFile  *file = g_file_new_for_uri (uri);
+	guint64 size = _ev_document_get_size_gfile (file);
+
+	g_object_unref (file);
+
+	return size;
 }
 
 static gint
@@ -800,6 +831,14 @@ ev_document_check_dimensions (EvDocument *document)
 	g_return_val_if_fail (EV_IS_DOCUMENT (document), FALSE);
 
 	return (document->priv->max_width > 0 && document->priv->max_height > 0);
+}
+
+guint64
+ev_document_get_size (EvDocument *document)
+{
+	g_return_val_if_fail (EV_IS_DOCUMENT (document), 0);
+
+	return document->priv->file_size;
 }
 
 gint

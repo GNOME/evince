@@ -114,7 +114,7 @@ ev_properties_get_pages (NautilusPropertyPageProvider *provider,
 	}
 	
 	label = gtk_label_new (_("Document"));
-	page = ev_properties_view_new (uri);
+	page = ev_properties_view_new (document);
 	ev_properties_view_set_info (EV_PROPERTIES_VIEW (page),
 				     ev_document_get_info (document));
 	gtk_widget_show (page);
