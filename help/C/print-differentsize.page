@@ -1,42 +1,69 @@
 <page xmlns="http://projectmallard.org/1.0/"
+      xmlns:its="http://www.w3.org/2005/11/its"
       type="guide" style="task"
       id="print-differentsize">
 
   <info>
     <link type="guide" xref="printing"/>
-    <desc>Printing a document on paper of a different size, shape or orientation.</desc>
 
-    <revision pkgversion="3.2" version="0.1" date="2011-09-05" status="final"/>
+    <revision pkgversion="3.2" date="2011-09-05" status="final"/>
+    <revision pkgversion="3.16" date="2015-01-26" status="review"/>
+
     <credit type="author">
       <name>Phil Bull</name>
-      <email>philbull@gmail.com</email>
+      <email its:translate="no">philbull@gmail.com</email>
     </credit>
-    <license>
-      <p>Creative Commons Share Alike 3.0</p>
-    </license>
+    <credit type="author">
+      <name>Ekaterina Gerasimova</name>
+      <email its:translate="no">kittykat3756@gmail.com</email>
+      <years>2015</years>
+    </credit>
+
+    <include href="legal.xml" xmlns="http://www.w3.org/2001/XInclude"/>
+
+    <desc>Printing a document on paper of a different size or
+    orientation.</desc>
   </info>
 
-<title>Changing the paper size when printing</title>
+  <title>Changing the paper size when printing</title>
 
-<p>
- If you want to change the paper size of your document (for example, print a US Letter-sized PDF on A4 paper), you can
-change the printing format for the document.
-</p>
-<steps>
- <item><p>Click <guiseq><gui>File</gui><gui>Print</gui></guiseq></p></item>
- <item><p>Select the <gui>Page Setup</gui> tab.</p></item>
- <item><p>Under the <em>Paper</em> column, choose your <em>Paper size</em> from the dropdown list.</p></item>
- <item><p>Click <gui>Print</gui> and your document should print.</p></item>
-</steps>
+  <p>If you want to change the paper size of your document (for example, print
+  a US Letter-sized PDF on A4 paper), you can change the printing format for
+  the document.</p>
 
-<p>
-You can also use the <em>Orientation</em> menu to choose a different orientation:
-</p>
+  <steps>
+    <item>
+      <p>Open the menu at the top-right of the window, then select
+      <gui style="menuitem">Print…</gui>.</p>
+    </item>
+    <item>
+      <p>Select the <gui>Page Setup</gui> tab.</p>
+    </item>
+    <item>
+      <p>Under the <em>Paper</em> column, choose your <em>Paper size</em> from
+      the dropdown list.</p>
+    </item>
+    <item>
+      <p>Click <gui>Print</gui> and your document should print.</p>
+    </item>
+  </steps>
 
-<list>
-<item><p><gui>Portrait</gui></p></item>
-<item><p><gui>Landscape</gui></p></item>
-<item><p><gui>Reverse portrait</gui></p></item>
-<item><p><gui>Reverse landscape</gui></p></item>
-</list>
+  <p>You can also use the <em>Orientation</em> menu to choose a different
+  orientation:</p>
+
+  <list>
+    <item>
+      <p><gui>Portrait</gui></p>
+    </item>
+    <item>
+      <p><gui>Landscape</gui></p>
+    </item>
+    <item>
+      <p><gui>Reverse portrait</gui></p>
+    </item>
+    <item>
+      <p><gui>Reverse landscape</gui></p>
+    </item>
+  </list>
+
 </page>
