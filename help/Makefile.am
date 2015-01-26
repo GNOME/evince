@@ -70,6 +70,7 @@ HELP_FILES = \
 	print-differentsize.page	\
 	printing.page			\
 	print-order.page		\
+	print-pagescaling.page		\
 	print-select.page		\
 	reload.page			\
 	shortcuts.page			\
