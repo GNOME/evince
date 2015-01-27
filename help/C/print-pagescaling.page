@@ -6,7 +6,7 @@
   <info>
     <link type="guide" xref="printing"/>
 
-    <revision pkgversion="3.16" date="2015-01-26" status="incomplete"/>
+    <revision pkgversion="3.16" date="2015-01-27" status="incomplete"/>
 
     <credit type="author">
       <name>Ekaterina Gerasimova</name>
@@ -16,7 +16,7 @@
 
     <include href="legal-unported.xml" xmlns="http://www.w3.org/2001/XInclude"/>
 
-    <desc>Shrink or fit the document to the paper size.</desc>
+    <desc>Shrink or expand the document to fit the paper size.</desc>
   </info>
 
   <title>Scale page for printing</title>
@@ -34,14 +34,26 @@
       <p>Select the <gui style="tab">Page Handling</gui> tab.</p>
     </item>
     <item>
-      <p>Choose your <em>Paper Scaling</em> from the dropdown list.</p>
+      <p>Choose a <em>Paper Scaling</em> from the dropdown list.</p>
+      <list>
+        <item>
+          <p><em>None</em>: do not perform page scaling.</p>
+        </item>
+        <item>
+          <p><em>Shrink to Printable Area</em>: document pages larger than the
+          printable area are reduced to fit the printable area of the printer
+          page.</p>
+        </item>
+        <item>
+          <p><em>Fit to Printable Area</em>: document pages are enlarged or
+          reduced as required to fit the printable area of the printer
+          page.</p>
+        </item>
+      </list>
     </item>
     <item>
-      <p>Click <gui>Print</gui> and your document should print.</p>
+      <p>Click <gui>Print</gui> to print your document.</p>
     </item>
   </steps>
-
-  <!-- TODO explain what fit and shrink are supposed to do. They both currently
-  do the same thing (shrink) -->
 
 </page>
