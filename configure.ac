@@ -688,9 +688,17 @@ AC_ARG_ENABLE(comics,
 	                [Compile with support for comic book archives])],
 	[enable_comics=$enableval],
 	[enable_comics=yes])
-	
+
 if test "x$enable_comics" = "xyes"; then
-	AC_DEFINE([ENABLE_COMICS], [1], [Enable support for comics.])
+   LIBARCHIVE_REQUIRED=3.1.2
+   PKG_CHECK_MODULES(LIBARCHIVE, libarchive >= $LIBARCHIVE_REQUIRED,enable_comics=yes,enable_comics=no)
+
+   if test "x$enable_comics" = "xyes"; then
+      AC_DEFINE([ENABLE_COMICS], [1], [Enable support for comics.])
+   else
+      enable_comics="no"
+      AC_MSG_WARN([Comics support is disabled since libarchive (version >= $LIBARCHIVE_REQUIRED) is needed])
+   fi
 fi
 AM_CONDITIONAL(ENABLE_COMICS, test x$enable_comics = xyes)
 

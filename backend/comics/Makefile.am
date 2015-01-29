@@ -2,7 +2,9 @@ backend_LTLIBRARIES = libcomicsdocument.la
 
 libcomicsdocument_la_SOURCES = \
 	comics-document.c      \
-	comics-document.h
+	comics-document.h      \
+	ev-archive.c           \
+	ev-archive.h
 
 libcomicsdocument_la_CPPFLAGS = \
 	-I$(top_srcdir) \
@@ -13,12 +15,14 @@ libcomicsdocument_la_CPPFLAGS = \
 
 libcomicsdocument_la_CFLAGS = \
 	$(BACKEND_CFLAGS) \
+	$(LIBARCHIVE_CFLAGS) \
 	$(LIB_CFLAGS) \
 	$(AM_CFLAGS)
 
 libcomicsdocument_la_LDFLAGS = $(BACKEND_LIBTOOL_FLAGS)
 libcomicsdocument_la_LIBADD =				\
 	$(top_builddir)/libdocument/libevdocument3.la	\
+	$(LIBARCHIVE_LIBS)				\
 	$(BACKEND_LIBS)					\
 	$(LIB_LIBS)
 
