@@ -702,7 +702,7 @@ if test "x$enable_xps" = "xyes"; then
       AC_DEFINE([ENABLE_XPS], [1], [Enable support for XPS documents.])
    else
       enable_xps="no"
-      AC_MSG_WARN(["XPS support is disabled since libgxps (version >= $GXPS_REQUIRED) is needed])
+      AC_MSG_WARN([XPS support is disabled since libgxps (version >= $GXPS_REQUIRED) is needed])
    fi
 fi
 
