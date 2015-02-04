@@ -490,6 +490,7 @@ ev_window_update_actions_sensitivity (EvWindow *ev_window)
 				      has_document && !recent_view_mode);
 	ev_window_set_action_enabled (ev_window, "send-to", has_document &&
 				      ev_window->priv->has_mailto_handler &&
+	                              nautilus_sendto &&
 				      !recent_view_mode);
 	ev_window_set_action_enabled (ev_window, "fullscreen",
 				      has_document && !recent_view_mode);
