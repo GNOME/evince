@@ -692,6 +692,9 @@ update_sizing_buttons (EvWindow *window)
 	case EV_SIZING_FIT_WIDTH:
 		mode = "fit-width";
 		break;
+	case EV_SIZING_FIT_CONTENTS:
+		mode = "fit-contents";
+		break;
 	case EV_SIZING_AUTOMATIC:
 		mode = "automatic";
 		break;
@@ -4021,6 +4024,8 @@ ev_window_change_sizing_mode_action_state (GSimpleAction *action,
 		ev_document_model_set_sizing_mode (window->priv->model, EV_SIZING_FIT_PAGE);
 	else if (g_str_equal (mode, "fit-width"))
 		ev_document_model_set_sizing_mode (window->priv->model, EV_SIZING_FIT_WIDTH);
+	else if (g_str_equal (mode, "fit-contents"))
+		ev_document_model_set_sizing_mode (window->priv->model, EV_SIZING_FIT_CONTENTS);
 	else if (g_str_equal (mode, "automatic"))
 		ev_document_model_set_sizing_mode (window->priv->model, EV_SIZING_AUTOMATIC);
 	else if (g_str_equal (mode, "free"))
