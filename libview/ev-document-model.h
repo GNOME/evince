@@ -39,13 +39,15 @@ G_DECLARE_FINAL_TYPE(EvDocumentModel, ev_document_model, EV, DOCUMENT_MODEL, GOb
  * @EV_SIZING_FIT_WIDTH:
  * @EV_SIZING_FREE:
  * @EV_SIZING_AUTOMATIC: Since: 3.8
+ * @EV_SIZING_FIT_CONTENTS: Since: 3.15
  */
 typedef enum {
         EV_SIZING_FIT_PAGE,
 	EV_SIZING_BEST_FIT = EV_SIZING_FIT_PAGE, /* Deprecated */
 	EV_SIZING_FIT_WIDTH,
 	EV_SIZING_FREE,
-        EV_SIZING_AUTOMATIC
+        EV_SIZING_AUTOMATIC,
+        EV_SIZING_FIT_CONTENTS
 } EvSizingMode;
 
 typedef enum {

@@ -35,6 +35,7 @@
 #include "ev-document-layers.h"
 #include "ev-document-media.h"
 #include "ev-document-misc.h"
+#include "ev-margin-cache.h"
 #include "ev-pixbuf-cache.h"
 #include "ev-page-cache.h"
 #include "ev-view-marshal.h"
@@ -252,6 +253,10 @@ static double   zoom_for_size_automatic                      (GdkScreen *screen,
 							      gdouble    doc_height,
 							      int        target_width,
 							      int        target_height);
+static double   zoom_for_size_fit_content 		     (gdouble doc_width,
+							      gdouble doc_height,
+							      int     target_width,
+							      int     target_height);
 static gboolean ev_view_can_zoom                             (EvView *view,
                                                               gdouble factor);
 static void     ev_view_zoom                                 (EvView *view,
@@ -1205,6 +1210,14 @@ ev_view_get_page_size (EvView *view,
 					       view->rotation,
 					       page_width,
 					       page_height);
+
+/*	if (view->sizing_mode == EV_SIZING_FIT_CONTENTS &&
+	    is_dual_page (view, NULL)) {
+		ev_margin_cache_compute_margins (view, page);
+
+		*page_width = view->margin_cache[page].width * view->scale;
+	}*/
+
 }
 
 static void
@@ -1278,6 +1291,10 @@ ev_view_get_page_extents (EvView       *view,
 		max_width = max_width + border->left + border->right;
 		/* Get the location of the bounding box */
 		if (is_dual_page (view, &odd_left)) {
+			// Not ideal, but we can't compute all margins
+			if (view->sizing_mode == EV_SIZING_FIT_CONTENTS)
+				max_width = width * 1.05f;
+
 			x = view->spacing + ((page % 2 == !odd_left) ? 0 : 1) * (max_width + view->spacing);
 			x = x + MAX (0, allocation.width - (max_width * 2 + view->spacing * 3)) / 2;
 			if (page % 2 == !odd_left)
@@ -1534,6 +1551,12 @@ find_page_at_location (EvView  *view,
 			*page = i;
 			*x_offset = x - (page_area.x + border.left);
 			*y_offset = y - (page_area.y + border.top);
+
+			if (view->sizing_mode == EV_SIZING_FIT_CONTENTS &&
+			    is_dual_page(view, NULL)) {
+				*x_offset += view->margin_cache[i].x * view->scale;
+			}
+
 			return;
 		}
 	}
@@ -3894,6 +3917,7 @@ ev_view_size_request_continuous_dual_page (EvView         *view,
 	        case EV_SIZING_FIT_WIDTH:
 	        case EV_SIZING_FIT_PAGE:
 	        case EV_SIZING_AUTOMATIC:
+	        case EV_SIZING_FIT_CONTENTS:
 			requisition->width = 1;
 
 			break;
@@ -3924,6 +3948,7 @@ ev_view_size_request_continuous (EvView         *view,
 	        case EV_SIZING_FIT_WIDTH:
 	        case EV_SIZING_FIT_PAGE:
 	        case EV_SIZING_AUTOMATIC:
+	        case EV_SIZING_FIT_CONTENTS:
 			requisition->width = 1;
 
 			break;
@@ -4020,7 +4045,8 @@ ev_view_size_request (GtkWidget      *widget,
 	if (!view->internal_size_request &&
 	    (view->sizing_mode == EV_SIZING_FIT_WIDTH ||
 	     view->sizing_mode == EV_SIZING_FIT_PAGE ||
-	     view->sizing_mode == EV_SIZING_AUTOMATIC)) {
+	     view->sizing_mode == EV_SIZING_AUTOMATIC ||
+	     view->sizing_mode == EV_SIZING_FIT_CONTENTS)) {
 		GtkAllocation allocation;
 
 		gtk_widget_get_allocation (widget, &allocation);
@@ -4088,7 +4114,8 @@ ev_view_size_allocate (GtkWidget      *widget,
 
 	if (view->sizing_mode == EV_SIZING_FIT_WIDTH ||
 	    view->sizing_mode == EV_SIZING_FIT_PAGE ||
-	    view->sizing_mode == EV_SIZING_AUTOMATIC) {
+	    view->sizing_mode == EV_SIZING_AUTOMATIC ||
+	    view->sizing_mode == EV_SIZING_FIT_CONTENTS) {
 		GtkRequisition req;
 
 		ev_view_zoom_for_size (view,
@@ -4623,6 +4650,13 @@ ev_view_draw (GtkWidget *widget,
 
 		if (!ev_view_get_page_extents (view, i, &page_area, &border))
 			continue;
+
+		if (view->sizing_mode == EV_SIZING_FIT_CONTENTS) {
+			if (is_dual_page (view, NULL))
+				view->scroll_x = 0;
+			else
+				view->scroll_x = view->margin_cache[i].x * view->scale;
+		}
 
 		page_area.x -= view->scroll_x;
 		page_area.y -= view->scroll_y;
@@ -6771,7 +6805,9 @@ draw_surface (cairo_t 	      *cr,
 	      gint             offset_x,
 	      gint             offset_y,
 	      gint             target_width,
-	      gint             target_height)
+	      gint             target_height,
+	      gint             source_width,
+	      gint             source_height)
 {
 	gdouble width, height;
 	gdouble device_scale_x = 1, device_scale_y = 1;
@@ -6779,11 +6815,17 @@ draw_surface (cairo_t 	      *cr,
 #ifdef HAVE_HIDPI_SUPPORT
 	cairo_surface_get_device_scale (surface, &device_scale_x, &device_scale_y);
 #endif
-	width = cairo_image_surface_get_width (surface) / device_scale_x;
-	height = cairo_image_surface_get_height (surface) / device_scale_y;
+	width = source_width ? source_width : cairo_image_surface_get_width (surface);
+	height = source_height ? source_height : cairo_image_surface_get_height (surface);
+
+	width /= device_scale_x;
+	height /= device_scale_y;
 
 	cairo_save (cr);
 	cairo_translate (cr, x, y);
+
+	cairo_rectangle (cr, 0, 0, target_width, target_height);
+	cairo_clip (cr);
 
 	if (width != target_width || height != target_height) {
 		gdouble scale_x, scale_y;
@@ -6899,10 +6941,13 @@ draw_one_page (EvView       *view,
 		cairo_surface_t *selection_surface = NULL;
 		gint offset_x, offset_y;
 		cairo_region_t *region = NULL;
+		int source_width = 0;
 
 		page_surface = ev_pixbuf_cache_get_surface (view->pixbuf_cache, page);
 
-		if (!page_surface) {
+		if (!page_surface ||
+		    (view->sizing_mode == EV_SIZING_FIT_CONTENTS &&
+		     !ev_margin_cache_is_page_cached (view->margin_cache, page))) {
 			if (page == current_page)
 				ev_view_set_loading (view, TRUE);
 
@@ -6918,7 +6963,14 @@ draw_one_page (EvView       *view,
 		offset_x = overlap.x - real_page_area.x;
 		offset_y = overlap.y - real_page_area.y;
 
-		draw_surface (cr, page_surface, overlap.x, overlap.y, offset_x, offset_y, width, height);
+		if (view->sizing_mode == EV_SIZING_FIT_CONTENTS &&
+		    is_dual_page (view, NULL)) {
+			offset_x = view->margin_cache[page].x * view->scale;
+			source_width = view->margin_cache[page].width * view->scale;
+		}
+
+		draw_surface (cr, page_surface, overlap.x, overlap.y,
+		              offset_x, offset_y, width, height, source_width, 0);
 
 		/* Get the selection pixbuf iff we have something to draw */
 		if (!find_selection_for_page (view, page))
@@ -6929,7 +6981,7 @@ draw_one_page (EvView       *view,
 									   view->scale);
 		if (selection_surface) {
 			draw_surface (cr, selection_surface, overlap.x, overlap.y, offset_x, offset_y,
-				      width, height);
+				      width, height, 0, 0);
 			return;
 		}
 
@@ -8032,6 +8084,17 @@ on_adjustment_value_changed (GtkAdjustment *adjustment,
 	if (!cursor_updated)
 		schedule_scroll_cursor_update (view);
 
+	if (view->continuous && view->sizing_mode == EV_SIZING_FIT_CONTENTS) {
+		// We need to update zoom per-page in this mode combination
+		GtkAllocation allocation;
+
+		gtk_widget_get_allocation (GTK_WIDGET (view), &allocation);
+		ev_view_zoom_for_size (view,
+				       allocation.width,
+				       allocation.height);
+		view->scale = ev_document_model_get_scale (view->model);
+	}
+
 	if (view->document)
 		view_update_range_and_current_page (view);
 }
@@ -8062,6 +8125,8 @@ setup_caches (EvView *view)
 				 EV_PAGE_DATA_INCLUDE_TEXT_ATTRS |
 		                 EV_PAGE_DATA_INCLUDE_TEXT_LOG_ATTRS);
 
+	view->margin_cache = ev_margin_cache_new (view);
+
 	inverted_colors = ev_document_model_get_inverted_colors (view->model);
 	ev_pixbuf_cache_set_inverted_colors (view->pixbuf_cache, inverted_colors);
 	g_signal_connect (view->pixbuf_cache, "job-finished", G_CALLBACK (job_finished_cb), view);
@@ -8078,6 +8143,10 @@ clear_caches (EvView *view)
 	if (view->page_cache) {
 		g_object_unref (view->page_cache);
 		view->page_cache = NULL;
+	}
+
+	if (view->margin_cache) {
+		ev_margin_cache_free (view);
 	}
 }
 
@@ -8588,6 +8657,37 @@ zoom_for_size_automatic (GdkScreen *screen,
 	return scale;
 }
 
+static double
+zoom_for_size_fit_content (gdouble doc_width,
+			    gdouble doc_height,
+			    int     target_width,
+			    int     target_height)
+{
+	return (double)target_width / doc_width;
+}
+
+static int
+get_largest_margin_width_around (EvView       *view,
+				 const int     page)
+{
+	int first_visible, last_visible, i, doc_width;
+	const int n_pages = ev_document_get_n_pages (view->document);
+	first_visible = page >= 1 ? page - 1 : 0;
+	last_visible = page < n_pages - 1 ?
+	               page + 1 : n_pages - 1;
+
+	doc_width = 0;
+	for (i = first_visible; i <= last_visible; i++) {
+		if (!ev_margin_cache_is_page_cached (view->margin_cache, i))
+			return 0;
+
+		if (doc_width < view->margin_cache[i].width)
+			doc_width = view->margin_cache[i].width;
+	}
+
+	return doc_width;
+}
+
 static void
 ev_view_zoom_for_size_continuous_and_dual_page (EvView *view,
 						int     width,
@@ -8599,6 +8699,13 @@ ev_view_zoom_for_size_continuous_and_dual_page (EvView *view,
 	gint sb_size;
 
 	ev_document_get_max_page_size (view->document, &doc_width, &doc_height);
+
+	if (view->sizing_mode == EV_SIZING_FIT_CONTENTS) {
+		int largest = get_largest_margin_width_around (view, view->current_page);
+		if (largest)
+			doc_width = largest;
+	}
+
 	if (view->rotation == 90 || view->rotation == 270) {
 		gdouble tmp;
 
@@ -8616,6 +8723,9 @@ ev_view_zoom_for_size_continuous_and_dual_page (EvView *view,
 	sb_size = ev_view_get_scrollbar_size (view, GTK_ORIENTATION_VERTICAL);
 
 	switch (view->sizing_mode) {
+	case EV_SIZING_FIT_CONTENTS:
+		scale = zoom_for_size_fit_content (doc_width, doc_height, width - sb_size, height);
+		break;
 	case EV_SIZING_FIT_WIDTH:
 		scale = zoom_for_size_fit_width (doc_width, doc_height, width - sb_size, height);
 		break;
@@ -8644,6 +8754,13 @@ ev_view_zoom_for_size_continuous (EvView *view,
 	gint sb_size;
 
 	ev_document_get_max_page_size (view->document, &doc_width, &doc_height);
+
+	if (view->sizing_mode == EV_SIZING_FIT_CONTENTS) {
+		int largest = get_largest_margin_width_around (view, view->current_page);
+		if (largest)
+			doc_width = largest;
+	}
+
 	if (view->rotation == 90 || view->rotation == 270) {
 		gdouble tmp;
 
@@ -8660,6 +8777,9 @@ ev_view_zoom_for_size_continuous (EvView *view,
 	sb_size = ev_view_get_scrollbar_size (view, GTK_ORIENTATION_VERTICAL);
 
 	switch (view->sizing_mode) {
+	case EV_SIZING_FIT_CONTENTS:
+		scale = zoom_for_size_fit_content (doc_width, doc_height, width - sb_size, height);
+		break;
 	case EV_SIZING_FIT_WIDTH:
 		scale = zoom_for_size_fit_width (doc_width, doc_height, width - sb_size, height);
 		break;
@@ -8703,11 +8823,26 @@ ev_view_zoom_for_size_dual_page (EvView *view,
 	}
 	compute_border (view, &border);
 
+	if (view->sizing_mode == EV_SIZING_FIT_CONTENTS) {
+		gint width_2;
+//		ev_margin_cache_compute_margins (view, view->current_page);
+//		ev_margin_cache_compute_margins (view, other_page);
+
+		width_2 = view->margin_cache[view->current_page].width;
+		doc_width = view->margin_cache[other_page].width;
+		if (width_2 > doc_width)
+			doc_width = width_2;
+	}
+
 	doc_width = doc_width * 2;
 	width -= ((border.left + border.right)* 2 + 3 * view->spacing);
 	height -= (border.top + border.bottom + 2 * view->spacing);
 
 	switch (view->sizing_mode) {
+	case EV_SIZING_FIT_CONTENTS:
+		sb_size = ev_view_get_scrollbar_size (view, GTK_ORIENTATION_VERTICAL);
+		scale = zoom_for_size_fit_content (doc_width, doc_height, width - sb_size, height);
+		break;
 	case EV_SIZING_FIT_WIDTH:
 		sb_size = ev_view_get_scrollbar_size (view, GTK_ORIENTATION_VERTICAL);
 		scale = zoom_for_size_fit_width (doc_width, doc_height, width - sb_size, height);
@@ -8746,6 +8881,13 @@ ev_view_zoom_for_size_single_page (EvView *view,
 	height -= (border.top + border.bottom + 2 * view->spacing);
 
 	switch (view->sizing_mode) {
+	case EV_SIZING_FIT_CONTENTS:
+		// If it's not cached yet, use full zoom - we will redraw when ready
+		if (ev_margin_cache_is_page_cached (view->margin_cache, view->current_page))
+			doc_width = view->margin_cache[view->current_page].width;
+		sb_size = ev_view_get_scrollbar_size (view, GTK_ORIENTATION_VERTICAL);
+		scale = zoom_for_size_fit_content (doc_width, doc_height, width - sb_size, height);
+		break;
 	case EV_SIZING_FIT_WIDTH:
 		sb_size = ev_view_get_scrollbar_size (view, GTK_ORIENTATION_VERTICAL);
 		scale = zoom_for_size_fit_width (doc_width, doc_height, width - sb_size, height);
@@ -8775,7 +8917,8 @@ ev_view_zoom_for_size (EvView *view,
 	g_return_if_fail (EV_IS_VIEW (view));
 	g_return_if_fail (view->sizing_mode == EV_SIZING_FIT_WIDTH ||
 			  view->sizing_mode == EV_SIZING_FIT_PAGE ||
-			  view->sizing_mode == EV_SIZING_AUTOMATIC);
+			  view->sizing_mode == EV_SIZING_AUTOMATIC ||
+			  view->sizing_mode == EV_SIZING_FIT_CONTENTS);
 	g_return_if_fail (width >= 0);
 	g_return_if_fail (height >= 0);
 
