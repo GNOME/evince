@@ -153,6 +153,7 @@ struct _EvView {
 	EvHeightToPageCache *height_to_page_cache;
 	EvViewCursor cursor;
 	EvJobRender *current_job;
+	GdkRectangle *margin_cache;
 
 	GtkRequisition requisition;
 	gboolean       internal_size_request;

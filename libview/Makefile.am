@@ -5,6 +5,7 @@ NOINST_H_SRC_FILES =			\
 	ev-form-field-accessible.h	\
 	ev-image-accessible.h		\
 	ev-link-accessible.h		\
+	ev-margin-cache.h		\
 	ev-page-accessible.h		\
 	ev-page-cache.h			\
 	ev-pixbuf-cache.h		\
@@ -41,6 +42,7 @@ libevview3_la_SOURCES =			\
 	ev-jobs.c			\
 	ev-job-scheduler.c		\
 	ev-link-accessible.c		\
+	ev-margin-cache.c		\
 	ev-page-accessible.c		\
 	ev-page-cache.c			\
 	ev-pixbuf-cache.c		\
