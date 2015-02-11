@@ -350,7 +350,8 @@ static void
 thumbnail_job_completed_callback (EvJobThumbnail           *job,
                                   GetDocumentInfoAsyncData *data)
 {
-        if (g_cancellable_is_cancelled (data->cancellable)) {
+        if (g_cancellable_is_cancelled (data->cancellable) ||
+            ev_job_is_failed (EV_JOB (job))) {
                 get_document_info_async_data_free (data);
                 return;
         }

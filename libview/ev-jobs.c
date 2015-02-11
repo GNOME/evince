@@ -637,6 +637,21 @@ ev_job_render_run (EvJob *job)
 	g_object_unref (ev_page);
 
 	job_render->surface = ev_document_render (job->document, rc);
+
+	if (job_render->surface == NULL) {
+		ev_document_fc_mutex_unlock ();
+		ev_document_doc_mutex_unlock ();
+		g_object_unref (rc);
+
+		ev_job_failed (job,
+		               EV_DOCUMENT_ERROR,
+		               EV_DOCUMENT_ERROR_INVALID,
+		               "Failed to render page %d",
+		               job_render->page);
+
+		return FALSE;
+	}
+
 	/* If job was cancelled during the page rendering,
 	 * we return now, so that the thread is finished ASAP
 	 */
@@ -873,7 +888,16 @@ ev_job_thumbnail_run (EvJob *job)
                 g_object_unref (pixbuf);
         }
 
-	ev_job_succeeded (job);
+	if ((job_thumb->format == EV_JOB_THUMBNAIL_PIXBUF && pixbuf == NULL) ||
+	     job_thumb->thumbnail_surface == NULL) {
+		ev_job_failed (job,
+			       EV_DOCUMENT_ERROR,
+			       EV_DOCUMENT_ERROR_INVALID,
+			       "Failed to create thumbnail for page %d",
+			       job_thumb->page);
+	} else {
+		ev_job_succeeded (job);
+	}
 	
 	return FALSE;
 }

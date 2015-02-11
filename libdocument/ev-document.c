@@ -724,11 +724,13 @@ _ev_document_get_thumbnail (EvDocument      *document,
 			    EvRenderContext *rc)
 {
 	cairo_surface_t *surface;
-	GdkPixbuf       *pixbuf;
+	GdkPixbuf       *pixbuf = NULL;
 
 	surface = ev_document_render (document, rc);
-	pixbuf = ev_document_misc_pixbuf_from_surface (surface);
-	cairo_surface_destroy (surface);
+	if (surface != NULL) {
+		pixbuf = ev_document_misc_pixbuf_from_surface (surface);
+		cairo_surface_destroy (surface);
+	}
 
 	return pixbuf;
 }
