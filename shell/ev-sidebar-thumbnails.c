@@ -934,7 +934,12 @@ thumbnail_job_completed_callback (EvJobThumbnail      *job,
         cairo_surface_t            *surface;
 #ifdef HAVE_HIDPI_SUPPORT
         gint                        device_scale;
+#endif
 
+        if (ev_job_is_failed (EV_JOB (job)))
+          return;
+
+#ifdef HAVE_HIDPI_SUPPORT
         device_scale = gtk_widget_get_scale_factor (widget);
         cairo_surface_set_device_scale (job->thumbnail_surface, device_scale, device_scale);
 #endif

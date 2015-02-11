@@ -337,6 +337,12 @@ job_finished_cb (EvJob         *job,
 
 	job_info = find_job_cache (pixbuf_cache, job_render->page);
 
+	if (ev_job_is_failed (job)) {
+		job_info->job = NULL;
+		g_object_unref (job);
+		return;
+	}
+
 	copy_job_to_job_info (job_render, job_info, pixbuf_cache);
 	g_signal_emit (pixbuf_cache, signals[JOB_FINISHED], 0, job_info->region);
 }
