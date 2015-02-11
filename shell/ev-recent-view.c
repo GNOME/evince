@@ -366,7 +366,8 @@ document_load_job_completed_callback (EvJobLoad                *job_load,
         EvRecentViewPrivate *priv = data->ev_recent_view->priv;
         EvDocument          *document = EV_JOB (job_load)->document;
 
-        if (g_cancellable_is_cancelled (data->cancellable) || !document) {
+        if (g_cancellable_is_cancelled (data->cancellable) ||
+            ev_job_is_failed (EV_JOB (job_load))) {
                 get_document_info_async_data_free (data);
                 return;
         }
