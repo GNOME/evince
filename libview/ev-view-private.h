@@ -235,6 +235,10 @@ struct _EvView {
 	GtkGesture *zoom_gesture;
 	gdouble prev_zoom_gesture_scale;
 	EvPanAction pan_action;
+
+	/* Current zoom center */
+	gdouble zoom_center_x;
+	gdouble zoom_center_y;
 };
 
 struct _EvViewClass {

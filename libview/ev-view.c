@@ -607,6 +607,7 @@ ev_view_set_adjustment_values (EvView         *view,
 	gdouble upper;
 	double factor;
 	gint new_value;
+	gdouble zoom_center;
 
 	gtk_widget_get_allocation (widget, &allocation);
 
@@ -614,10 +615,12 @@ ev_view_set_adjustment_values (EvView         *view,
 		req_size = view->requisition.width;
 		alloc_size = allocation.width;
 		adjustment = view->hadjustment;
+		zoom_center = view->zoom_center_x;
 	} else {
 		req_size = view->requisition.height;
 		alloc_size = allocation.height;
 		adjustment = view->vadjustment;
+		zoom_center = view->zoom_center_y;
 	}
 
 	if (!adjustment)
@@ -627,6 +630,8 @@ ev_view_set_adjustment_values (EvView         *view,
 	value = gtk_adjustment_get_value (adjustment);
 	upper = gtk_adjustment_get_upper (adjustment);
 	page_size = gtk_adjustment_get_page_size (adjustment);
+	if (zoom_center < 0)
+		zoom_center = page_size * 0.5;
 
 	if (upper != .0) {
 		switch (view->pending_scroll) {
@@ -636,8 +641,8 @@ ev_view_set_adjustment_values (EvView         *view,
 			break;
     	        case SCROLL_TO_PAGE_POSITION:
 			break;
-    	        case SCROLL_TO_CENTER:
-			factor = (value + page_size * 0.5) / upper;
+		case SCROLL_TO_CENTER:
+			factor = (value + zoom_center) / upper;
 			break;
 		}
 	}
@@ -663,9 +668,12 @@ ev_view_set_adjustment_values (EvView         *view,
     	        case SCROLL_TO_PAGE_POSITION:
 			ev_view_scroll_to_page_position (view, orientation);
 			break;
-    	        case SCROLL_TO_CENTER:
-			new_value = CLAMP (upper * factor - page_size * 0.5 + 0.5,
-					   0, upper - page_size);
+	        case SCROLL_TO_CENTER:
+			new_value = CLAMP (upper * factor - zoom_center + 0.5, 0, upper - page_size);
+			if (orientation == GTK_ORIENTATION_HORIZONTAL)
+				view->zoom_center_x = -1.0;
+			else
+				view->zoom_center_y = -1.0;
 			gtk_adjustment_set_value (adjustment, (int)new_value);
 			break;
 	}
@@ -3963,6 +3971,9 @@ ev_view_scroll_event (GtkWidget *widget, GdkEventScroll *event)
 
 	if (state == GDK_CONTROL_MASK) {
 		ev_document_model_set_sizing_mode (view->model, EV_SIZING_FREE);
+		view->zoom_center_x = event->x;
+		view->zoom_center_y = event->y;
+
 		switch (event->direction) {
 		case GDK_SCROLL_DOWN:
 		case GDK_SCROLL_RIGHT:
@@ -7167,6 +7178,8 @@ zoom_gesture_scale_changed_cb (GtkGestureZoom *gesture,
 	view->prev_zoom_gesture_scale = scale;
 	ev_document_model_set_sizing_mode (view->model, EV_SIZING_FREE);
 
+	gtk_gesture_get_bounding_box_center (GTK_GESTURE (gesture), &view->zoom_center_x, &view->zoom_center_y);
+
 	if ((factor < 1.0 && ev_view_can_zoom_out (view)) ||
 	    (factor >= 1.0 && ev_view_can_zoom_in (view)))
 		ev_view_zoom (view, factor);
@@ -7223,6 +7236,8 @@ ev_view_init (EvView *view)
 	view->caret_enabled = FALSE;
 	view->cursor_page = 0;
 	view->allow_links_change_zoom = TRUE;
+	view->zoom_center_x = -1;
+	view->zoom_center_y = -1;
 
 	g_signal_connect (view, "notify::scale-factor",
 			  G_CALLBACK (on_notify_scale_factor), NULL);
