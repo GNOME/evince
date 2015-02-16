@@ -7221,7 +7221,6 @@ ev_window_init (EvWindow *ev_window)
 	ev_window_setup_default (ev_window);
 
 	gtk_window_set_default_size (GTK_WINDOW (ev_window), 600, 600);
-        gtk_window_set_hide_titlebar_when_maximized (GTK_WINDOW (ev_window), TRUE);
 
         ev_window_sizing_mode_changed_cb (ev_window->priv->model, NULL, ev_window);
 	ev_window_update_actions_sensitivity (ev_window);
