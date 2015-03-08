@@ -1,4 +1,43 @@
 ================
+Evince    3.14.2
+================
+
+Bug fixes:
+
+    * Fix memory leak when adding new text annotations (Carlos Garcia
+      Campos)
+    * Add = and <Ctrl>= keybindings for zooming in (#738625, Lars
+      Uebernickel)
+    * Fix printing of landscape documents (#734788, Carlos Garcia
+      Campos)
+    * Fix a crash in recent-view when loading password protected
+      documents (#744049, Marek Kasik)
+    * Fix properties dialog shortcut (#739116, Boris Egorov)
+    * Bring back Open in new window action to the context menu
+      (#739046, Boris Egorov)
+    * Do not save n-copies when saving printing settings (#696203,
+      José Aliste)
+    * Use correct maximum size for thumbnail images in
+      evince-thumbnailer (#740877, Sebastian Keller)
+    * Fix a typo in configure.ac that made configure fail with
+      ligbnome-desktop (#733721, Marek Kasik)
+    * Correctly scroll to the search result selected by user when not
+      in continuous mode (#730252, Marek Kasik)
+    * Fix quoting issues in configure.ac (#739226, Alexander Tsoy)
+    * Fix runtime critical warning when starting in fullscreen mode
+      (#737864, Carlos Garcia Campos)
+    * Handle TIFF files reporting a 0 resolution (#646414, Gabor
+      Kelemen)
+    * Disable toggle-find action for documents not supporting find
+      (#738262, Carlos Garcia Campos)
+
+Translation updates:
+
+    * Daniel Martinez (an)
+    * Christian Kirbach (de)
+    * Jiri Grönroos (fi)
+
+================
 Evince    3.14.1
 ================
 
