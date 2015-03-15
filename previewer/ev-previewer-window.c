@@ -334,6 +334,22 @@ view_focus_changed (GtkWidget         *widget,
 }
 
 static void
+model_page_changed (EvDocumentModel* model,
+		    gint old_page,
+		    gint new_page,
+		    EvPreviewerWindow *window)
+{
+	GtkAction *action;
+	gint       n_pages = ev_document_get_n_pages (ev_document_model_get_document (window->model));
+
+	action = gtk_action_group_get_action (window->action_group, "GoPreviousPage");
+	gtk_action_set_sensitive (GTK_ACTION (action), new_page > 0 );
+
+	action = gtk_action_group_get_action (window->action_group, "GoNextPage");
+	gtk_action_set_sensitive (GTK_ACTION (action), new_page < n_pages - 1);
+}
+
+static void
 view_sizing_mode_changed (EvDocumentModel   *model,
 			  GParamSpec        *pspec,
 			  EvPreviewerWindow *window)
@@ -598,6 +614,10 @@ ev_previewer_window_constructor (GType                  type,
 				 window, 0);
 	ev_view_set_model (window->view, window->model);
 	ev_document_model_set_continuous (window->model, FALSE);
+
+	g_signal_connect_object (window->model, "page-changed",
+				 G_CALLBACK (model_page_changed),
+				 window, 0);
 
 	gtk_container_add (GTK_CONTAINER (window->swindow), GTK_WIDGET (window->view));
 	gtk_widget_show (GTK_WIDGET (window->view));
