@@ -152,6 +152,7 @@ gboolean             ev_annotation_markup_set_label          (EvAnnotationMarkup
 gdouble              ev_annotation_markup_get_opacity        (EvAnnotationMarkup     *markup);
 gboolean             ev_annotation_markup_set_opacity        (EvAnnotationMarkup     *markup,
 							      gdouble                 opacity);
+gboolean             ev_annotation_markup_can_have_popup     (EvAnnotationMarkup     *markup);
 gboolean             ev_annotation_markup_has_popup          (EvAnnotationMarkup     *markup);
 gboolean             ev_annotation_markup_set_has_popup      (EvAnnotationMarkup     *markup,
 							      gboolean                has_popup);
