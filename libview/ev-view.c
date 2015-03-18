@@ -108,6 +108,9 @@ typedef struct {
 #define EV_STYLE_CLASS_DOCUMENT_PAGE "document-page"
 #define EV_STYLE_CLASS_INVERTED      "inverted"
 
+#define ANNOT_POPUP_WINDOW_DEFAULT_WIDTH  200
+#define ANNOT_POPUP_WINDOW_DEFAULT_HEIGHT 150
+
 /*** Scrolling ***/
 static void       view_update_range_and_current_page         (EvView             *view);
 static void       ensure_rectangle_is_visible                (EvView             *view,
@@ -3137,6 +3140,29 @@ ev_view_handle_annotation (EvView       *view,
 		GtkWidget *window;
 
 		window = g_object_get_data (G_OBJECT (annot), "popup");
+		if (!window && ev_annotation_markup_can_have_popup (EV_ANNOTATION_MARKUP (annot))) {
+			EvRectangle    popup_rect;
+			GtkWindow     *parent;
+			EvMappingList *annots;
+			EvMapping     *mapping;
+
+			annots = ev_page_cache_get_annot_mapping (view->page_cache,
+								  ev_annotation_get_page_index (annot));
+			mapping = ev_mapping_list_find (annots, annot);
+
+			popup_rect.x1 = mapping->area.x2;
+			popup_rect.y1 = mapping->area.y2;
+			popup_rect.x2 = popup_rect.x1 + ANNOT_POPUP_WINDOW_DEFAULT_WIDTH;
+			popup_rect.y2 = popup_rect.y1 + ANNOT_POPUP_WINDOW_DEFAULT_HEIGHT;
+			g_object_set (annot,
+				      "rectangle", &popup_rect,
+				      "has_popup", TRUE,
+				      "popup_is_open", TRUE,
+				      NULL);
+
+			parent = GTK_WINDOW (gtk_widget_get_toplevel (GTK_WIDGET (view)));
+			window = ev_view_create_annotation_window (view, annot, parent);
+		}
 		ev_view_annotation_show_popup_window (view, window);
 	}
 
