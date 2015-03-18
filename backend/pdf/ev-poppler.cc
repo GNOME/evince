@@ -2819,6 +2819,30 @@ get_poppler_annot_text_icon (EvAnnotationTextIcon icon)
 	}
 }
 
+static gboolean
+poppler_annot_can_have_popup_window (PopplerAnnot *poppler_annot)
+{
+	switch (poppler_annot_get_annot_type (poppler_annot)) {
+	case POPPLER_ANNOT_TEXT:
+	case POPPLER_ANNOT_LINE:
+	case POPPLER_ANNOT_SQUARE:
+	case POPPLER_ANNOT_CIRCLE:
+	case POPPLER_ANNOT_POLYGON:
+	case POPPLER_ANNOT_POLY_LINE:
+	case POPPLER_ANNOT_HIGHLIGHT:
+	case POPPLER_ANNOT_UNDERLINE:
+	case POPPLER_ANNOT_SQUIGGLY:
+	case POPPLER_ANNOT_STRIKE_OUT:
+	case POPPLER_ANNOT_STAMP:
+	case POPPLER_ANNOT_CARET:
+	case POPPLER_ANNOT_INK:
+	case POPPLER_ANNOT_FILE_ATTACHMENT:
+		return TRUE;
+	default:
+		return FALSE;
+	}
+}
+
 static EvAnnotation *
 ev_annot_from_poppler_annot (PopplerAnnot *poppler_annot,
 			     EvPage       *page)
@@ -2960,7 +2984,7 @@ ev_annot_from_poppler_annot (PopplerAnnot *poppler_annot,
 		poppler_annot_color_to_gdk_color (poppler_annot, &color);
 		ev_annotation_set_color (ev_annot, &color);
 
-		if (POPPLER_IS_ANNOT_MARKUP (poppler_annot)) {
+		if (poppler_annot_can_have_popup_window (poppler_annot)) {
 			PopplerAnnotMarkup *markup;
 			gchar *label;
 			gdouble opacity;
@@ -2999,6 +3023,7 @@ ev_annot_from_poppler_annot (PopplerAnnot *poppler_annot,
 			g_object_set (ev_annot,
 				      "label", label,
 				      "opacity", opacity,
+				      "can_have_popup", TRUE,
 				      NULL);
 
 			g_free (label);
