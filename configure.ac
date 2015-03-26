@@ -888,6 +888,7 @@ data/icons/256x256/Makefile
 data/icons/256x256/apps/Makefile
 data/icons/scalable/Makefile
 data/icons/scalable/actions/Makefile
+data/icons/scalable/apps/Makefile
 data/icons/scalable/mimetypes/Makefile
 help/Makefile
 help/reference/Makefile
