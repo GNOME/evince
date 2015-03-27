@@ -14,22 +14,21 @@
 # Baptiste DARTHENAY <baptiste+ecrevisse@darthenay.fr>, 2014.
 # Daniel PUENTES <blatberk@openmailbox.org>, 2015.
 # Kristjan SCHMIDT <kristjan.schmidt@googlemail.com>, 2010, 2011, 2012, 2014, 2015.
-#
 msgid ""
 msgstr ""
 "Project-Id-Version: evince\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evince&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-02-11 16:45+0000\n"
-"PO-Revision-Date: 2015-02-12 00:04+0100\n"
-"Last-Translator: Kristjan SCHMIDT <kristjan.schmidt@googlemail.com>\n"
+"POT-Creation-Date: 2015-03-16 18:55+0000\n"
+"PO-Revision-Date: 2015-03-03 11:23-0600\n"
+"Last-Translator: Daniel Puentes <blatberk@openmailbox.org>\n"
 "Language-Team: Esperanto <gnome-l10n-eo@lists.launchpad.net>\n"
 "Language: eo\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Virtaal 0.7.1\n"
+"X-Generator: Lokalize 1.5\n"
 "X-Project-Style: gnome\n"
 
 #: ../backend/comics/comics-document.c:210
@@ -340,7 +339,6 @@ msgid "Download document"
 msgstr "Elŝuti dokumenton"
 
 #: ../browser-plugin/EvBrowserPluginToolbar.cpp:381
-#| msgid "Print this document"
 msgid "Print document"
 msgstr "Presi dokumenton"
 
@@ -411,7 +409,6 @@ msgstr ""
 "Montri dialogujon por konfermi ke la uzanto volas ebligi kursoran navigadon."
 
 #: ../data/org.gnome.Evince.gschema.xml.in.h:10
-#| msgid "Adjust the zoom level"
 msgid "Allow links to change the zoom level."
 msgstr "Permesi al ligiloj ŝanĝi la zomnivelon."
 
@@ -508,7 +505,6 @@ msgid "Printing page %d of %d…"
 msgstr "Presante la paĝon %d el %d…"
 
 #: ../libview/ev-print-operation.c:1214
-#| msgid "PostScript is not supported by this printer."
 msgid "Requested format is not supported by this printer."
 msgstr "Petita formo ne estas subtenata de ĉi tiu presilo."
 
@@ -614,46 +610,46 @@ msgstr "Rulumi vidpanelon suben"
 msgid "Document View"
 msgstr "Vido de dokumento"
 
-#: ../libview/ev-view.c:1994
+#: ../libview/ev-view.c:2002
 msgid "Go to first page"
 msgstr "Iri al la unua paĝo"
 
-#: ../libview/ev-view.c:1996
+#: ../libview/ev-view.c:2004
 msgid "Go to previous page"
 msgstr "Iri al la antaŭa paĝo"
 
-#: ../libview/ev-view.c:1998
+#: ../libview/ev-view.c:2006
 msgid "Go to next page"
 msgstr "Iri al la sekva paĝo"
 
-#: ../libview/ev-view.c:2000
+#: ../libview/ev-view.c:2008
 msgid "Go to last page"
 msgstr "Iri al la lasta paĝo"
 
-#: ../libview/ev-view.c:2002
+#: ../libview/ev-view.c:2010
 msgid "Go to page"
 msgstr "Iri al paĝo"
 
-#: ../libview/ev-view.c:2004
+#: ../libview/ev-view.c:2012
 msgid "Find"
 msgstr "Serĉi"
 
-#: ../libview/ev-view.c:2032
+#: ../libview/ev-view.c:2040
 #, c-format
 msgid "Go to page %s"
 msgstr "Iri al paĝo %s"
 
-#: ../libview/ev-view.c:2038
+#: ../libview/ev-view.c:2046
 #, c-format
 msgid "Go to %s on file “%s”"
 msgstr "Iri al %s en dosiero “%s”"
 
-#: ../libview/ev-view.c:2041
+#: ../libview/ev-view.c:2049
 #, c-format
 msgid "Go to file “%s”"
 msgstr "Iri al dosiero “%s”"
 
-#: ../libview/ev-view.c:2049
+#: ../libview/ev-view.c:2057
 #, c-format
 msgid "Launch %s"
 msgstr "Lanĉi %s"
@@ -711,11 +707,11 @@ msgstr "Plenumi la fenestron per la aktuala dokumento"
 msgid "Make the current document fill the window width"
 msgstr "Fari ke la aktuala dokumento plenumos la larĝon de la fenestro"
 
-#: ../previewer/ev-previewer-window.c:536
+#: ../previewer/ev-previewer-window.c:552
 msgid "Page"
 msgstr "Paĝo"
 
-#: ../previewer/ev-previewer-window.c:537
+#: ../previewer/ev-previewer-window.c:553
 msgid "Select Page"
 msgstr "Elekti paĝon"
 
@@ -781,7 +777,6 @@ msgid "Paper Size:"
 msgstr "Papergrando:"
 
 #: ../properties/ev-properties-view.c:75
-#| msgid "Paper Size:"
 msgid "Size:"
 msgstr "Grando:"
 
@@ -971,7 +966,6 @@ msgid "Evince"
 msgstr "Evinco"
 
 #: ../shell/ev-application.c:1026
-#| msgid "© 1996–2012 The Evince authors"
 msgid "© 1996–2014 The Evince authors"
 msgstr "© 1996-2014 La aŭtoroj de Evinco"
 
@@ -1366,19 +1360,14 @@ msgid "_Enable"
 msgstr "_Ebligi"
 
 #: ../shell/ev-window.c:5523
-#, fuzzy
-#| msgid ""
-#| "Pressing F7 turns the caret navigation on or off. This feature places a "
-#| "moveable cursor in text pages, allowing you to move around and select "
-#| "text with your keyboard. Do you want to enable the caret navigation on?"
 msgid ""
 "Pressing F7 turns the caret navigation on or off. This feature places a "
 "moveable cursor in text pages, allowing you to move around and select text "
 "with your keyboard. Do you want to enable the caret navigation?"
 msgstr ""
-"Premo de F7 en- aŭ elŝaltas kursoran navigadon. Ĉi trajto metas moveblan "
-"kursoron en teksta paĝoj, povigi vin movi ĉirkaŭe kaj elekti tekston per via "
-"klavaro. Ĉu vi volas ebligi kursoran navigadon?"
+"Premante F7 oni en- aŭ elŝaltas la tajpmontrilan navigadon. Tiu ĉi trajto metas moveblan "
+"kursoron en teksta paĝoj, permesante vin movi ĉirkaŭe kaj elekti tekston per via "
+"klavaro. Ĉu vi volas enŝalti tajpmontrilan navigadon?"
 
 #: ../shell/ev-window.c:5528
 msgid "Don't show this message again"
@@ -1417,12 +1406,10 @@ msgid "Save Attachment"
 msgstr "Konservi la kunsendaĵon"
 
 #: ../shell/ev-window-title.c:118
-#| msgid "Open Document"
 msgid "Recent Documents"
 msgstr "Lastatempaj dokumentoj"
 
 #: ../shell/ev-window-title.c:153 ../shell/ev-window-title.c:157
-#| msgid "Password required"
 msgid "Password Required"
 msgstr "Pasvorto bezonatas"
 
@@ -1535,7 +1522,6 @@ msgid "[FILE…]"
 msgstr "[DOSIERO…]"
 
 #: ../shell/evince-menus.ui.h:1
-#| msgid "Open in New _Window"
 msgid "_New Window"
 msgstr "_Nova fenestro"
 
@@ -1576,32 +1562,26 @@ msgid "Rotate _Right"
 msgstr "Turni _dekstren"
 
 #: ../shell/evince-menus.ui.h:11
-#| msgid "_First Page"
 msgid "First Page"
 msgstr "Unua paĝo"
 
 #: ../shell/evince-menus.ui.h:12
-#| msgid "_Previous Page"
 msgid "Previous Page"
 msgstr "Antaŭa paĝo"
 
 #: ../shell/evince-menus.ui.h:13
-#| msgid "_Next Page"
 msgid "Next Page"
 msgstr "Sekva paĝo"
 
 #: ../shell/evince-menus.ui.h:14
-#| msgid "_Last Page"
 msgid "Last Page"
 msgstr "Lasta paĝo"
 
 #: ../shell/evince-menus.ui.h:15
-#| msgid "Zoom In"
 msgid "Zoom _In"
 msgstr "E_nzomi"
 
 #: ../shell/evince-menus.ui.h:16
-#| msgid "Zoom Out"
 msgid "Zoom _Out"
 msgstr "E_lzomi"
 
@@ -1642,7 +1622,6 @@ msgid "_Print…"
 msgstr "_Presi…"
 
 #: ../shell/evince-menus.ui.h:26
-#| msgid "P_roperties"
 msgid "P_roperties…"
 msgstr "At_ributoj…"
 
@@ -1663,7 +1642,6 @@ msgid "_Add Bookmark"
 msgstr "_Aldoni legosignon"
 
 #: ../shell/evince-menus.ui.h:31
-#| msgid "Close"
 msgid "_Close"
 msgstr "_Fermi"
 
@@ -1708,7 +1686,6 @@ msgid "Annotation Properties…"
 msgstr "Notaj ecoj…"
 
 #: ../shell/evince-menus.ui.h:47
-#| msgid "Annotations"
 msgid "Remove Annotation"
 msgstr "Forigi prinoton"
 
