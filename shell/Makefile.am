@@ -7,8 +7,6 @@ libexec_PROGRAMS = evinced
 endif
 
 evince_SOURCES=				\
-	eggfindbar.c			\
-	eggfindbar.h			\
 	ev-annotation-properties-dialog.h \
 	ev-annotation-properties-dialog.c \
 	ev-bookmarks.h			\
