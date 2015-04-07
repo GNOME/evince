@@ -8,8 +8,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: evince master\n"
-"POT-Creation-Date: 2015-03-12 04:46+0000\n"
-"PO-Revision-Date: 2015-03-14 01:00+0100\n"
+"POT-Creation-Date: 2015-04-07 15:50+0000\n"
+"PO-Revision-Date: 2015-04-08 00:26+0200\n"
 "Last-Translator: Gabor Kelemen <kelemeng at ubuntu dot com>\n"
 "Language-Team: Hungarian <openscope at googlegroups dot com>\n"
 "Language: hu\n"
@@ -142,7 +142,6 @@ msgstr "David King"
 
 #. (itstool) path: info/desc
 #: C/annotations-delete.page:20
-#| msgid "Right click on the annotation icon in the document."
 msgid "Delete annotations from a PDF document."
 msgstr "Jegyzetek törlése PDF-dokumentumból."
 
@@ -153,9 +152,6 @@ msgstr "Jegyzetek eltávolítása"
 
 #. (itstool) path: page/p
 #: C/annotations-delete.page:25
-#| msgid ""
-#| "An annotation is a note or comment added to a PDF document. You can add "
-#| "annotations using the <app>document viewer</app>."
 msgid ""
 "An annotation is a note or comment added to a PDF document. You can remove "
 "annotations that you or other people have added."
@@ -171,12 +167,11 @@ msgid ""
 "sidebar</link>."
 msgstr ""
 "Nyisson meg egy jegyzetet tartalmazó oldalt. Ha nem biztos benne, hogy mely "
-"oldalak tartalmaznak jegyzeteket, a <link xref=\"annotations-navigate\">"
-"jegyzetek oldalsávon</link> megkeresheti ezeket."
+"oldalak tartalmaznak jegyzeteket, a <link xref=\"annotations-navigate"
+"\">jegyzetek oldalsávon</link> megkeresheti ezeket."
 
 #. (itstool) path: item/p
 #: C/annotations-delete.page:35
-#| msgid "Right click on the annotation icon in the document."
 msgid ""
 "Right-click on the annotation icon in the document, and click <gui style="
 "\"menuitem\">Remove Annotation</gui>"
@@ -378,9 +373,12 @@ msgstr "Kattintson az ikonra a szöveges jegyzet hozzáadásához."
 
 #. (itstool) path: item/p
 #: C/annotations.page:60
+#| msgid ""
+#| "Click on the spot in the document window you would like to add the "
+#| "annotion to. Your <em>annotation</em> window will open."
 msgid ""
-"Click on the spot in the document window you would like to add the annotion "
-"to. Your <em>annotation</em> window will open."
+"Click on the spot in the document window you would like to add the "
+"annotation to. Your <em>annotation</em> window will open."
 msgstr ""
 "Kattintson a dokumentumablak azon pontjára, ahová a jegyzetet fel szeretné "
 "venni. Megnyílik a <em>Jegyzet</em> ablaka."
@@ -434,12 +432,10 @@ msgstr ""
 
 #. (itstool) path: item/p
 #: C/annotations-save.page:31
-#| msgid "Click <guiseq><gui>Menu button</gui><gui>Save a Copy…</gui></guiseq>"
 msgid "Click <guiseq><gui>File options</gui><gui>Save a Copy…</gui></guiseq>"
 msgstr ""
-"Válassza a <guiseq><gui>Fájlbeállítások</gui><gui>Másolat mentése</gui><"
-"/guiseq> "
-"menüpontot."
+"Válassza a <guiseq><gui>Fájlbeállítások</gui><gui>Másolat mentése</gui></"
+"guiseq> menüpontot."
 
 #. (itstool) path: item/p
 #: C/annotations-save.page:36
@@ -3322,8 +3318,6 @@ msgstr "2015"
 
 #. (itstool) path: info/desc
 #: C/print-differentsize.page:24
-#| msgid ""
-#| "Printing a document on paper of a different size, shape or orientation."
 msgid "Printing a document on paper of a different size or orientation."
 msgstr "Dokumentum nyomtatása eltérő méretű vagy tájolású papírra."
 
@@ -3536,15 +3530,11 @@ msgstr "Oldal átméretezése nyomtatáshoz"
 
 #. (itstool) path: item/p
 #: C/print-pagescaling.page:34
-#| msgid "Select the <gui>Page Setup</gui> tab."
 msgid "Select the <gui style=\"tab\">Page Handling</gui> tab."
 msgstr "Válassza az <gui>Oldalkezelés</gui> lapot."
 
 #. (itstool) path: item/p
 #: C/print-pagescaling.page:37
-#| msgid ""
-#| "Under the <em>Paper</em> column, choose your <em>Paper size</em> from the "
-#| "dropdown list."
 msgid "Choose a <em>Paper Scaling</em> from the dropdown list."
 msgstr "Válassza ki a <em>Papír méretezését</em> a legördülő listából."
 
@@ -3559,9 +3549,9 @@ msgid ""
 "<em>Shrink to Printable Area</em>: document pages larger than the printable "
 "area are reduced to fit the printable area of the printer page."
 msgstr ""
-"<em>Zsugorítás a nyomtatható területre</em>: A nyomtatható területnél nagyobb "
-"dokumentumok mérete le lesz csökkentve, hogy elférjen a nyomtatóban lévő lap "
-"nyomtatási területén."
+"<em>Zsugorítás a nyomtatható területre</em>: A nyomtatható területnél "
+"nagyobb dokumentumok mérete le lesz csökkentve, hogy elférjen a nyomtatóban "
+"lévő lap nyomtatási területén."
 
 #. (itstool) path: item/p
 #: C/print-pagescaling.page:48
@@ -3575,7 +3565,6 @@ msgstr ""
 
 #. (itstool) path: item/p
 #: C/print-pagescaling.page:55
-#| msgid "Click <gui>Print</gui> and your document should print."
 msgid "Click <gui>Print</gui> to print your document."
 msgstr "Nyomja meg a <gui>Nyomtatás</gui> gombot a dokumentum nyomtatásához."
 
@@ -4605,10 +4594,14 @@ msgstr ""
 
 #. (itstool) path: section/p
 #: C/synctex-search.page:65
+#| msgid ""
+#| "You can perform a backward search by pressing <keyseq><key>Ctrl</key>left "
+#| "click</keyseq> in the <app>document viewer</app>. The corresponding line "
+#| "in the TeX source code will be hightlighted."
 msgid ""
 "You can perform a backward search by pressing <keyseq><key>Ctrl</key>left "
 "click</keyseq> in the <app>document viewer</app>. The corresponding line in "
-"the TeX source code will be hightlighted."
+"the TeX source code will be highlighted."
 msgstr ""
 "Hátra keresést a <app>dokumentummegjelenítőben</app> a <keyseq><key>Ctrl</"
 "key>bal kattintással</keyseq> végezhet. A megfelelő sor a TeX forráskódban "
