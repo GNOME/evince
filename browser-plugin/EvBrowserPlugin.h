@@ -75,6 +75,13 @@ public:
 
         bool canDownload() const;
 
+        void setSearchModeEnabled(bool);
+        void search(EvJobFind *);
+        enum SearchDirection { Next, Previous };
+        void search(SearchDirection);
+        void clearSearch();
+        void restartSearch();
+
 private:
         EvBrowserPlugin(NPP);
         virtual ~EvBrowserPlugin();

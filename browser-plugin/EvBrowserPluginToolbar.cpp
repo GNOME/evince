@@ -20,6 +20,7 @@
 #include "EvBrowserPluginToolbar.h"
 
 #include "ev-page-action-widget.h"
+#include "ev-search-box.h"
 #include <glib/gi18n-lib.h>
 
 enum {
@@ -35,6 +36,8 @@ struct _EvBrowserPluginToolbarPrivate {
         GtkWidget *zoomFitPageRadioButton;
         GtkWidget *zoomFitWidthRadioButton;
         GtkWidget *zoomAutomaticRadioButton;
+        GtkWidget *searchToggleButton;
+        GtkWidget *searchPopover;
 };
 
 G_DEFINE_TYPE(EvBrowserPluginToolbar, ev_browser_plugin_toolbar, GTK_TYPE_TOOLBAR)
@@ -100,6 +103,60 @@ static void printDocument(EvBrowserPluginToolbar *toolbar)
 static void downloadDocument(EvBrowserPluginToolbar *toolbar)
 {
         toolbar->priv->plugin->download();
+}
+
+static void searchPopoverClosed(EvBrowserPluginToolbar *toolbar)
+{
+        if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(toolbar->priv->searchToggleButton)))
+                gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(toolbar->priv->searchToggleButton), FALSE);
+}
+
+static void searchStarted(EvBrowserPluginToolbar *toolbar, EvJobFind *job)
+{
+        toolbar->priv->plugin->search(job);
+}
+
+static void searchCleared(EvBrowserPluginToolbar *toolbar)
+{
+        toolbar->priv->plugin->clearSearch();
+}
+
+static void searchNext(EvBrowserPluginToolbar *toolbar)
+{
+        toolbar->priv->plugin->search(EvBrowserPlugin::SearchDirection::Next);
+}
+
+static void searchPrevious(EvBrowserPluginToolbar *toolbar)
+{
+        toolbar->priv->plugin->search(EvBrowserPlugin::SearchDirection::Previous);
+}
+
+static void toggleSearch(EvBrowserPluginToolbar *toolbar)
+{
+        if (!toolbar->priv->searchPopover) {
+                toolbar->priv->searchPopover = gtk_popover_new(toolbar->priv->searchToggleButton);
+                g_signal_connect_swapped(toolbar->priv->searchPopover, "closed", G_CALLBACK(searchPopoverClosed), toolbar);
+                GtkWidget *searchBox = ev_search_box_new(toolbar->priv->plugin->model());
+                g_signal_connect_swapped(searchBox, "started", G_CALLBACK(searchStarted), toolbar);
+                g_signal_connect_swapped(searchBox, "cleared", G_CALLBACK(searchCleared), toolbar);
+                g_signal_connect_swapped(searchBox, "next", G_CALLBACK(searchNext), toolbar);
+                g_signal_connect_swapped(searchBox, "previous", G_CALLBACK(searchPrevious), toolbar);
+                gtk_container_add(GTK_CONTAINER(toolbar->priv->searchPopover), searchBox);
+                gtk_widget_show(searchBox);
+        }
+
+        if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(toolbar->priv->searchToggleButton))) {
+                gtk_widget_show(toolbar->priv->searchPopover);
+                toolbar->priv->plugin->setSearchModeEnabled(true);
+
+                GtkSearchEntry *entry = ev_search_box_get_entry(EV_SEARCH_BOX(gtk_bin_get_child(GTK_BIN(toolbar->priv->searchPopover))));
+                const char *searchString = gtk_entry_get_text(GTK_ENTRY(entry));
+                if (searchString && searchString[0])
+                        toolbar->priv->plugin->restartSearch();
+        } else {
+                gtk_widget_hide(toolbar->priv->searchPopover);
+                toolbar->priv->plugin->setSearchModeEnabled(false);
+        }
 }
 
 class SignalBlocker {
@@ -297,6 +354,17 @@ static void evBrowserPluginToolbarConstructed(GObject *object)
                 gtk_widget_set_margin_left(toolItem, 12);
         else
                 gtk_widget_set_margin_right(toolItem, 12);
+        gtk_container_add(GTK_CONTAINER(toolbar), toolItem);
+        gtk_widget_show(toolItem);
+
+        // Search.
+        button = createToggleButton(toolbar, "edit-find-symbolic", _("Find a word or phrase in the document"),
+                                    false, G_CALLBACK(toggleSearch));
+        toolbar->priv->searchToggleButton = button;
+        toolItem = GTK_WIDGET(gtk_tool_item_new());
+        gtk_container_add(GTK_CONTAINER(toolItem), button);
+        gtk_widget_show(button);
+
         gtk_container_add(GTK_CONTAINER(toolbar), toolItem);
         gtk_widget_show(toolItem);
 

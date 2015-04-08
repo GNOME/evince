@@ -479,6 +479,40 @@ void EvBrowserPlugin::setToolbarVisible(bool isVisible)
                 gtk_widget_hide(m_toolbar);
 }
 
+void EvBrowserPlugin::setSearchModeEnabled(bool enabled)
+{
+        ev_view_find_set_highlight_search(m_view, enabled);
+}
+
+void EvBrowserPlugin::search(EvJobFind *job)
+{
+        ev_view_find_search_changed(m_view);
+        ev_view_find_started(m_view, job);
+}
+
+void EvBrowserPlugin::search(SearchDirection direction)
+{
+        switch (direction) {
+        case Next:
+                ev_view_find_next(m_view);
+                break;
+        case Previous:
+                ev_view_find_previous(m_view);
+                break;
+        }
+}
+
+void EvBrowserPlugin::clearSearch()
+{
+        ev_view_find_search_changed(m_view);
+        gtk_widget_queue_draw(GTK_WIDGET(m_view));
+}
+
+void EvBrowserPlugin::restartSearch()
+{
+        ev_view_find_restart(m_view, ev_document_model_get_page(m_model));
+}
+
 // Scripting interface
 NPObject *EvBrowserPlugin::allocate(NPP instance, NPClass *)
 {
