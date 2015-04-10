@@ -814,8 +814,6 @@ ev_sidebar_thumbnails_init (EvSidebarThumbnails *ev_sidebar_thumbnails)
 
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (priv->swindow),
 					GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
-	gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (priv->swindow),
-					     GTK_SHADOW_IN);
 	priv->vadjustment = gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW (priv->swindow));
 	g_signal_connect_data (priv->vadjustment, "value-changed",
 			       G_CALLBACK (adjustment_changed_cb),

@@ -397,9 +397,6 @@ ev_sidebar_links_construct (EvSidebarLinks *ev_sidebar_links)
 
 	swindow = gtk_scrolled_window_new (NULL, NULL);
 
-	gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (swindow),
-					     GTK_SHADOW_IN);
-
 	/* Create tree view */
 	loading_model = create_loading_model ();
 	priv->tree_view = gtk_tree_view_new_with_model (loading_model);

@@ -286,8 +286,6 @@ ev_sidebar_layers_init (EvSidebarLayers *ev_layers)
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (swindow),
 					GTK_POLICY_NEVER,
 					GTK_POLICY_AUTOMATIC);
-	gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (swindow),
-					     GTK_SHADOW_IN);
 	/* Data Model */
 	model = ev_sidebar_layers_create_loading_model ();
 

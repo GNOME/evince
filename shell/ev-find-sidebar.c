@@ -195,8 +195,6 @@ ev_find_sidebar_init (EvFindSidebar *sidebar)
         swindow = gtk_scrolled_window_new (NULL, NULL);
         gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (swindow),
                                         GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
-        gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (swindow),
-                                             GTK_SHADOW_IN);
 
         priv->tree_view = gtk_tree_view_new ();
         ev_find_sidebar_reset_model (sidebar);

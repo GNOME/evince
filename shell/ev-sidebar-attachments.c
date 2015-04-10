@@ -541,8 +541,6 @@ ev_sidebar_attachments_init (EvSidebarAttachments *ev_attachbar)
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (swindow),
 					GTK_POLICY_NEVER,
 					GTK_POLICY_AUTOMATIC);
-	gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (swindow),
-					     GTK_SHADOW_IN);
 	/* Data Model */
 	ev_attachbar->priv->model = gtk_list_store_new (N_COLS,
 							GDK_TYPE_PIXBUF, 

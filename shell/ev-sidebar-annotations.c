@@ -124,8 +124,6 @@ ev_sidebar_annotations_add_annots_list (EvSidebarAnnotations *ev_annots)
 	GtkWidget         *label;
 
 	swindow = gtk_scrolled_window_new (NULL, NULL);
-	gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (swindow),
-					     GTK_SHADOW_IN);
 
 	/* Create tree view */
 	loading_model = ev_sidebar_annotations_create_simple_model (_("Loading…"));
@@ -193,8 +191,6 @@ ev_sidebar_annotations_add_annots_palette (EvSidebarAnnotations *ev_annots)
 	GtkWidget   *label;
 
 	swindow = gtk_scrolled_window_new (NULL, NULL);
-	gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (swindow),
-					     GTK_SHADOW_IN);
 
 	ev_annots->priv->palette = gtk_tool_palette_new ();
 	gtk_widget_set_margin_top (ev_annots->priv->palette, 2);
