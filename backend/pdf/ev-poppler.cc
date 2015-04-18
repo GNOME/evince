@@ -3358,7 +3358,14 @@ pdf_document_annotations_save_annotation (EvDocumentAnnotations *document_annota
 			poppler_rect.y1 = height - ev_rect.y2;
 			poppler_rect.y2 = height - ev_rect.y1;
 
-			poppler_annot_markup_set_popup (markup, &poppler_rect);
+			if (poppler_annot_markup_has_popup (markup))
+#ifdef HAVE_POPPLER_ANNOT_MARKUP_SET_POPUP_RECTANGLE
+				poppler_annot_markup_set_popup_rectangle (markup, &poppler_rect);
+#else
+			        poppler_annot_markup_set_popup (markup, &poppler_rect);
+#endif
+			else
+				poppler_annot_markup_set_popup (markup, &poppler_rect);
 		}
 		if (mask & EV_ANNOTATIONS_SAVE_POPUP_IS_OPEN)
 			poppler_annot_markup_set_popup_is_open (markup, ev_annotation_markup_get_popup_is_open (ev_markup));
