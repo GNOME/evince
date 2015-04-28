@@ -3060,6 +3060,9 @@ ev_window_save_print_settings (EvWindow         *window,
 	key_file = get_print_settings_file ();
 	gtk_print_settings_to_key_file (print_settings, key_file, EV_PRINT_SETTINGS_GROUP);
 
+	/* Always Remove n_copies from global settings */
+	g_key_file_remove_key (key_file, EV_PRINT_SETTINGS_GROUP, GTK_PRINT_SETTINGS_N_COPIES, NULL);
+
 	/* Save print settings that are specific to the document */
 	for (i = 0; i < G_N_ELEMENTS (document_print_settings); i++) {
 		/* Remove it from global settings */
