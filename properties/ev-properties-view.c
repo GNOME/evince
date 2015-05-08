@@ -158,32 +158,33 @@ set_property (EvPropertiesView *properties,
 	      const gchar      *text,
 	      gint             *row)
 {
-	GtkWidget *label;
+	GtkWidget *property_label = NULL;
+	GtkWidget *value_label = NULL;
 	gchar     *markup;
 	gchar     *valid_text;
 
 	if (!properties->labels[property]) {
-		label = gtk_label_new (NULL);
-		g_object_set (G_OBJECT (label), "xalign", 0.0, NULL);
+		property_label = gtk_label_new (NULL);
+		g_object_set (G_OBJECT (property_label), "xalign", 0.0, NULL);
 		markup = g_strdup_printf ("<b>%s</b>", _(properties_info[property].label));
-		gtk_label_set_markup (GTK_LABEL (label), markup);
+		gtk_label_set_markup (GTK_LABEL (property_label), markup);
 		g_free (markup);
 
-		gtk_grid_attach (grid, label, 0, *row, 1, 1);
-		gtk_widget_show (label);
+		gtk_grid_attach (grid, property_label, 0, *row, 1, 1);
+		gtk_widget_show (property_label);
 	}
 
 	if (!properties->labels[property]) {
-		label = gtk_label_new (NULL);
+		value_label = gtk_label_new (NULL);
 
-		g_object_set (G_OBJECT (label),
+		g_object_set (G_OBJECT (value_label),
 			      "xalign", 0.0,
 			      "width_chars", 25,
 			      "selectable", TRUE,
 			      "ellipsize", PANGO_ELLIPSIZE_END,
 			      NULL);
 	} else {
-		label = properties->labels[property];
+		value_label = properties->labels[property];
 	}
 
 	if (text == NULL || text[0] == '\000') {
@@ -193,20 +194,29 @@ set_property (EvPropertiesView *properties,
 		   Keywords: None
 		*/
 		markup = g_markup_printf_escaped ("<i>%s</i>", _("None"));
-		gtk_label_set_markup (GTK_LABEL (label), markup);
+		gtk_label_set_markup (GTK_LABEL (value_label), markup);
 		g_free (markup);
 	} else {
 		valid_text = make_valid_utf8 (text ? text : "");
-		gtk_label_set_text (GTK_LABEL (label), valid_text);
+		gtk_label_set_text (GTK_LABEL (value_label), valid_text);
 		g_free (valid_text);
 	}
 
 	if (!properties->labels[property]) {
-		gtk_grid_attach (grid, label, 1, *row, 1, 1);
-		properties->labels[property] = label;
+		gtk_grid_attach (grid, value_label, 1, *row, 1, 1);
+		properties->labels[property] = value_label;
 	}
 
-	gtk_widget_show (label);
+	if (property_label && value_label) {
+		atk_object_add_relationship (gtk_widget_get_accessible (property_label),
+					     ATK_RELATION_LABEL_FOR,
+					     gtk_widget_get_accessible (value_label));
+		atk_object_add_relationship (gtk_widget_get_accessible (value_label),
+					     ATK_RELATION_LABELLED_BY,
+					     gtk_widget_get_accessible (property_label));
+	}
+
+	gtk_widget_show (value_label);
 
 	*row += 1;
 }
