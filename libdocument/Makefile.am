@@ -21,6 +21,7 @@ INST_H_SRC_FILES = 				\
 	ev-document-info.h			\
 	ev-document-layers.h			\
 	ev-document-links.h			\
+	ev-document-media.h			\
 	ev-document-misc.h			\
 	ev-document-print.h			\
 	ev-document-security.h			\
@@ -37,6 +38,7 @@ INST_H_SRC_FILES = 				\
 	ev-link.h				\
 	ev-macros.h				\
 	ev-mapping-list.h			\
+	ev-media.h				\
 	ev-page.h				\
 	ev-render-context.h			\
 	ev-selection.h				\
@@ -68,6 +70,7 @@ libevdocument3_la_SOURCES=			\
 	ev-document-fonts.c                     \
 	ev-document-layers.c			\
 	ev-document-links.c			\
+	ev-document-media.c			\
 	ev-document-images.c			\
 	ev-document-print.c			\
 	ev-document-security.c			\
@@ -80,6 +83,7 @@ libevdocument3_la_SOURCES=			\
 	ev-file-exporter.c			\
 	ev-file-helpers.c			\
 	ev-mapping-list.c			\
+	ev-media.c				\
 	ev-module.c				\
 	ev-page.c				\
 	ev-render-context.c			\
