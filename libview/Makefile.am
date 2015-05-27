@@ -55,6 +55,14 @@ libevview3_la_SOURCES =			\
 	$(NOINST_H_SRC_FILES)		\
 	$(INST_H_SRC_FILES)
 
+if ENABLE_MULTIMEDIA
+libevview3_la_SOURCES += 	\
+	ev-media-controls.h	\
+	ev-media-controls.c	\
+	ev-media-player.h	\
+	ev-media-player.c
+endif
+
 nodist_libevview3_la_SOURCES = \
 	ev-view-marshal.c \
 	ev-view-type-builtins.c \

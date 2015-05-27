@@ -324,6 +324,33 @@ if test "$enable_gnome_desktop" != "no"; then
    fi
 fi
 
+# **********************
+# GStreamer (Multimedia)
+# **********************
+
+AC_ARG_ENABLE([multimedia],
+        [AS_HELP_STRING([--disable-multimedia], [Disable Multimedia support])],
+        [enable_multimedia=$enableval],
+        [enable_multimedia=auto])
+
+if test "$enable_multimedia" != "no"; then
+   if test "$enable_multimedia" = "auto"; then
+      PKG_CHECK_MODULES([GSTREAMER], [gstreamer-1.0 gstreamer-base-1.0 gstreamer-video-1.0], has_gstreamer=yes, has_gstreamer=no)
+   else
+      PKG_CHECK_MODULES([GSTREAMER], [gstreamer-1.0 gstreamer-base-1.0 gstreamer-video-1.0])
+      has_gstreamer=yes
+   fi
+
+   if test x$has_gstreamer = xyes; then
+      AC_DEFINE([ENABLE_MULTIMEDIA], [1], [Whether multimedia support is enabled])
+      enable_multimedia=yes
+   else
+      enable_multimedia=no
+   fi
+fi
+
+AM_CONDITIONAL([ENABLE_MULTIMEDIA], [test "$enable_multimedia" = "yes"])
+
 dnl ========= Check for Desktop Schemas
 PKG_CHECK_MODULES([DESKTOP_SCHEMAS], [gsettings-desktop-schemas],
                   has_desktop_schemas=yes, has_desktop_schemas=no)
@@ -348,8 +375,8 @@ LIBDOCUMENT_LIBS="$LIBDOCUMENT_LIBS"
 AC_SUBST(LIBDOCUMENT_CFLAGS)
 AC_SUBST(LIBDOCUMENT_LIBS)
 
-LIBVIEW_CFLAGS="$LIBVIEW_CFLAGS $GTKUNIXPRINT_CFLAGS $DEBUG_FLAGS"
-LIBVIEW_LIBS="$LIBVIEW_LIBS $GTKUNIXPRINT_LIBS -lm"
+LIBVIEW_CFLAGS="$LIBVIEW_CFLAGS $GTKUNIXPRINT_CFLAGS $GSTREAMER_CFLAGS $DEBUG_FLAGS"
+LIBVIEW_LIBS="$LIBVIEW_LIBS $GTKUNIXPRINT_LIBS $GSTREAMER_LIBS -lm"
 AC_SUBST(LIBVIEW_CFLAGS)
 AC_SUBST(LIBVIEW_LIBS)
 
@@ -952,5 +979,6 @@ DBUS communication .......:  $enable_dbus
 Keyring integration ......:  $with_keyring
 GTK+ Unix Print ..........:  $with_gtk_unix_print
 Thumbnail cache ..........:  $enable_gnome_desktop
+Multimedia ...............:  $enable_multimedia
 
 ])
