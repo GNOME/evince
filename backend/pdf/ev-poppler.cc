@@ -46,6 +46,7 @@
 #include "ev-document-transition.h"
 #include "ev-document-forms.h"
 #include "ev-document-layers.h"
+#include "ev-document-media.h"
 #include "ev-document-print.h"
 #include "ev-document-annotations.h"
 #include "ev-document-attachments.h"
@@ -54,6 +55,7 @@
 #include "ev-transition-effect.h"
 #include "ev-attachment.h"
 #include "ev-image.h"
+#include "ev-media.h"
 
 #include <libxml/tree.h>
 #include <libxml/parser.h>
@@ -122,6 +124,7 @@ static void pdf_document_document_layers_iface_init      (EvDocumentLayersInterf
 static void pdf_document_document_print_iface_init       (EvDocumentPrintInterface       *iface);
 static void pdf_document_document_annotations_iface_init (EvDocumentAnnotationsInterface *iface);
 static void pdf_document_document_attachments_iface_init (EvDocumentAttachmentsInterface *iface);
+static void pdf_document_document_media_iface_init       (EvDocumentMediaInterface       *iface);
 static void pdf_document_find_iface_init                 (EvDocumentFindInterface        *iface);
 static void pdf_document_file_exporter_iface_init        (EvFileExporterInterface        *iface);
 static void pdf_selection_iface_init                     (EvSelectionInterface           *iface);
@@ -159,6 +162,8 @@ EV_BACKEND_REGISTER_WITH_CODE (PdfDocument, pdf_document,
 								 pdf_document_document_annotations_iface_init);
 				 EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_ATTACHMENTS,
 								 pdf_document_document_attachments_iface_init);
+				 EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_MEDIA,
+								 pdf_document_document_media_iface_init);
 				 EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_FIND,
 								 pdf_document_find_iface_init);
 				 EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_FILE_EXPORTER,
@@ -2907,7 +2912,8 @@ ev_annot_from_poppler_annot (PopplerAnnot *poppler_annot,
 			break;
 	        case POPPLER_ANNOT_LINK:
 	        case POPPLER_ANNOT_WIDGET:
-			/* Ignore link and widgets annots since they are already handled */
+	        case POPPLER_ANNOT_MOVIE:
+			/* Ignore link, widgets and movie annots since they are already handled */
 			break;
 		case POPPLER_ANNOT_3D:
 		case POPPLER_ANNOT_CARET:
@@ -3444,6 +3450,123 @@ pdf_document_document_annotations_iface_init (EvDocumentAnnotationsInterface *if
 	iface->add_annotation = pdf_document_annotations_add_annotation;
 	iface->save_annotation = pdf_document_annotations_save_annotation;
 	iface->remove_annotation = pdf_document_annotations_remove_annotation;
+}
+
+/* Media */
+static GFile *
+get_media_file (const gchar *filename,
+		EvDocument  *document)
+{
+	GFile *file;
+
+	if (g_path_is_absolute (filename)) {
+		file = g_file_new_for_path (filename);
+	} else if (g_strrstr (filename, "://")) {
+		file = g_file_new_for_uri (filename);
+	} else {
+		gchar *doc_path;
+		gchar *path;
+		gchar *base_dir;
+
+		doc_path = g_filename_from_uri (ev_document_get_uri (document), NULL, NULL);
+		base_dir = g_path_get_dirname (doc_path);
+		g_free (doc_path);
+
+		path = g_build_filename (base_dir, filename, NULL);
+		g_free (base_dir);
+
+		file = g_file_new_for_path (path);
+		g_free (path);
+	}
+
+	return file;
+}
+
+static EvMedia *
+ev_media_from_poppler_movie (EvDocument   *document,
+			     EvPage       *page,
+			     PopplerMovie *movie)
+{
+	EvMedia     *media;
+	GFile       *file;
+	gchar       *uri;
+
+	file = get_media_file (poppler_movie_get_filename (movie), document);
+	uri = g_file_get_uri (file);
+	g_object_unref (file);
+
+	media = ev_media_new_for_uri (page, uri);
+	g_free (uri);
+	ev_media_set_show_controls (media, poppler_movie_show_controls (movie));
+
+	return media;
+}
+
+static EvMappingList *
+pdf_document_media_get_media_mapping (EvDocumentMedia *document_media,
+				      EvPage          *page)
+{
+	GList *retval = NULL;
+	PdfDocument *pdf_document;
+	PopplerPage *poppler_page;
+	EvMappingList *mapping_list;
+	GList *annots;
+	GList *list;
+	gdouble height;
+	gint i = 0;
+
+	pdf_document = PDF_DOCUMENT (document_media);
+	poppler_page = POPPLER_PAGE (page->backend_page);
+
+	annots = poppler_page_get_annot_mapping (poppler_page);
+	poppler_page_get_size (poppler_page, NULL, &height);
+
+	for (list = annots; list; list = list->next) {
+		PopplerAnnotMapping *mapping;
+		EvMapping           *media_mapping;
+		EvMedia             *media = NULL;
+
+		mapping = (PopplerAnnotMapping *)list->data;
+
+		switch (poppler_annot_get_annot_type (mapping->annot)) {
+		case POPPLER_ANNOT_MOVIE: {
+			PopplerAnnotMovie *poppler_annot;
+
+			poppler_annot = POPPLER_ANNOT_MOVIE (mapping->annot);
+			media = ev_media_from_poppler_movie (EV_DOCUMENT (pdf_document), page,
+							     poppler_annot_movie_get_movie (poppler_annot));
+		}
+			break;
+		default:
+			break;
+		}
+
+		if (!media)
+			continue;
+
+		media_mapping = g_new (EvMapping, 1);
+
+		media_mapping->data = media;
+		media_mapping->area.x1 = mapping->area.x1;
+		media_mapping->area.x2 = mapping->area.x2;
+		media_mapping->area.y1 = height - mapping->area.y2;
+		media_mapping->area.y2 = height - mapping->area.y1;
+
+		retval = g_list_prepend (retval, media_mapping);
+	}
+
+	poppler_page_free_annot_mapping (annots);
+
+	if (!retval)
+		return NULL;
+
+	return ev_mapping_list_new (page->index, g_list_reverse (retval), (GDestroyNotify)g_object_unref);
+}
+
+static void
+pdf_document_document_media_iface_init (EvDocumentMediaInterface *iface)
+{
+	iface->get_media_mapping = pdf_document_media_get_media_mapping;
 }
 
 /* Attachments */
