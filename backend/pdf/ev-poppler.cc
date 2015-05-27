@@ -56,6 +56,7 @@
 #include "ev-attachment.h"
 #include "ev-image.h"
 #include "ev-media.h"
+#include "ev-file-helpers.h"
 
 #include <libxml/tree.h>
 #include <libxml/parser.h>
@@ -2915,11 +2916,19 @@ ev_annot_from_poppler_annot (PopplerAnnot *poppler_annot,
 	        case POPPLER_ANNOT_MOVIE:
 			/* Ignore link, widgets and movie annots since they are already handled */
 			break;
+	        case POPPLER_ANNOT_SCREEN: {
+			PopplerAction *action;
+
+			/* Ignore screen annots containing a rendition action */
+			action = poppler_annot_screen_get_action (POPPLER_ANNOT_SCREEN (poppler_annot));
+			if (action->type == POPPLER_ACTION_RENDITION)
+				break;
+		}
+			/* Fall through */
 		case POPPLER_ANNOT_3D:
 		case POPPLER_ANNOT_CARET:
 		case POPPLER_ANNOT_FREE_TEXT:
 		case POPPLER_ANNOT_LINE:
-		case POPPLER_ANNOT_SCREEN:
 		case POPPLER_ANNOT_SOUND:
 		case POPPLER_ANNOT_SQUARE:
 		case POPPLER_ANNOT_SQUIGGLY:
@@ -3502,6 +3511,73 @@ ev_media_from_poppler_movie (EvDocument   *document,
 	return media;
 }
 
+static void
+delete_temp_file (GFile *file)
+{
+	g_file_delete (file, NULL, NULL);
+	g_object_unref (file);
+}
+
+static gboolean
+media_save_to_file_callback (const gchar *buffer,
+			     gsize        count,
+			     gpointer     data,
+			     GError     **error)
+{
+	gint fd = GPOINTER_TO_INT (data);
+
+	return write (fd, buffer, count) == (gssize)count;
+}
+
+static EvMedia *
+ev_media_from_poppler_rendition (EvDocument   *document,
+				 EvPage       *page,
+				 PopplerMedia *poppler_media)
+{
+	EvMedia *media;
+	GFile   *file = NULL;
+	gchar   *uri;
+	gboolean is_temp_file = FALSE;
+
+	if (!poppler_media)
+		return NULL;
+
+	if (poppler_media_is_embedded (poppler_media)) {
+		gint   fd;
+		gchar *filename;
+
+		fd = ev_mkstemp ("evmedia.XXXXXX", &filename, NULL);
+		if (fd == -1)
+			return NULL;
+
+		if (poppler_media_save_to_callback (poppler_media,
+						    media_save_to_file_callback,
+						    GINT_TO_POINTER (fd), NULL)) {
+			file = g_file_new_for_path (filename);
+			is_temp_file = TRUE;
+		}
+		close (fd);
+		g_free (filename);
+	} else {
+		file = get_media_file (poppler_media_get_filename (poppler_media), document);
+	}
+
+	if (!file)
+		return NULL;
+
+	uri = g_file_get_uri (file);
+	media = ev_media_new_for_uri (page, uri);
+	ev_media_set_show_controls (media, TRUE);
+	g_free (uri);
+
+	if (is_temp_file)
+		g_object_set_data_full (G_OBJECT (media), "poppler-media-temp-file", file, (GDestroyNotify)delete_temp_file);
+	else
+		g_object_unref (file);
+
+	return media;
+}
+
 static EvMappingList *
 pdf_document_media_get_media_mapping (EvDocumentMedia *document_media,
 				      EvPage          *page)
@@ -3535,6 +3611,16 @@ pdf_document_media_get_media_mapping (EvDocumentMedia *document_media,
 			poppler_annot = POPPLER_ANNOT_MOVIE (mapping->annot);
 			media = ev_media_from_poppler_movie (EV_DOCUMENT (pdf_document), page,
 							     poppler_annot_movie_get_movie (poppler_annot));
+		}
+			break;
+		case POPPLER_ANNOT_SCREEN: {
+			PopplerAction *action;
+
+			action = poppler_annot_screen_get_action (POPPLER_ANNOT_SCREEN (mapping->annot));
+			if (action->type == POPPLER_ACTION_RENDITION) {
+				media = ev_media_from_poppler_rendition (EV_DOCUMENT (pdf_document), page,
+									 action->rendition.media);
+			}
 		}
 			break;
 		default:
