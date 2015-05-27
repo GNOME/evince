@@ -83,8 +83,9 @@ typedef enum {
         EV_DEBUG_BORDER_FORMS      = 1 << 2,
         EV_DEBUG_BORDER_ANNOTS     = 1 << 3,
         EV_DEBUG_BORDER_IMAGES     = 1 << 4,
-        EV_DEBUG_BORDER_SELECTIONS = 1 << 5,
-        EV_DEBUG_BORDER_ALL        = (1 << 6) - 1
+        EV_DEBUG_BORDER_MEDIA      = 1 << 5,
+        EV_DEBUG_BORDER_SELECTIONS = 1 << 6,
+        EV_DEBUG_BORDER_ALL        = (1 << 7) - 1
 } EvDebugBorders;
 
 #define DEBUG_JOBS      EV_DEBUG_JOBS,    __FILE__, __LINE__, G_STRFUNC

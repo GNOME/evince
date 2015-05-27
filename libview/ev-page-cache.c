@@ -28,6 +28,7 @@
 #include "ev-document-forms.h"
 #include "ev-document-images.h"
 #include "ev-document-annotations.h"
+#include "ev-document-media.h"
 #include "ev-document-text.h"
 #include "ev-page-cache.h"
 
@@ -48,6 +49,7 @@ typedef struct _EvPageCacheData {
 	EvMappingList     *image_mapping;
 	EvMappingList     *form_field_mapping;
 	EvMappingList     *annot_mapping;
+        EvMappingList     *media_mapping;
 	cairo_region_t    *text_mapping;
 	EvRectangle       *text_layout;
 	guint              text_layout_length;
@@ -80,7 +82,8 @@ struct _EvPageCacheClass {
 	EV_PAGE_DATA_INCLUDE_TEXT_MAPPING | \
 	EV_PAGE_DATA_INCLUDE_IMAGES       | \
 	EV_PAGE_DATA_INCLUDE_FORMS        | \
-	EV_PAGE_DATA_INCLUDE_ANNOTS)
+	EV_PAGE_DATA_INCLUDE_ANNOTS       | \
+        EV_PAGE_DATA_INCLUDE_MEDIA)
 
 #define PRE_CACHE_SIZE 1
 
@@ -118,6 +121,11 @@ ev_page_cache_data_free (EvPageCacheData *data)
 		ev_mapping_list_unref (data->annot_mapping);
 		data->annot_mapping = NULL;
 	}
+
+        if (data->media_mapping) {
+                ev_mapping_list_unref (data->media_mapping);
+                data->media_mapping = NULL;
+        }
 
 	if (data->text_mapping) {
 		cairo_region_destroy (data->text_mapping);
@@ -239,6 +247,12 @@ ev_page_cache_get_flags_for_data (EvPageCache     *cache,
 			flags | EV_PAGE_DATA_INCLUDE_ANNOTS;
 	}
 
+	if (cache->flags & EV_PAGE_DATA_INCLUDE_MEDIA) {
+		flags = (data->media_mapping) ?
+			flags & ~EV_PAGE_DATA_INCLUDE_MEDIA :
+			flags | EV_PAGE_DATA_INCLUDE_MEDIA;
+	}
+
 	if (cache->flags & EV_PAGE_DATA_INCLUDE_TEXT_MAPPING) {
 		flags = (data->text_mapping) ?
 			flags & ~EV_PAGE_DATA_INCLUDE_TEXT_MAPPING :
@@ -305,6 +319,8 @@ job_page_data_finished_cb (EvJob       *job,
 		data->form_field_mapping = job_data->form_field_mapping;
 	if (job_data->flags & EV_PAGE_DATA_INCLUDE_ANNOTS)
 		data->annot_mapping = job_data->annot_mapping;
+        if (job_data->flags & EV_PAGE_DATA_INCLUDE_MEDIA)
+                data->media_mapping = job_data->media_mapping;
 	if (job_data->flags & EV_PAGE_DATA_INCLUDE_TEXT_MAPPING)
 		data->text_mapping = job_data->text_mapping;
 	if (job_data->flags & EV_PAGE_DATA_INCLUDE_TEXT_LAYOUT) {
@@ -442,6 +458,9 @@ ev_page_cache_mark_dirty (EvPageCache       *cache,
 	if (flags & EV_PAGE_DATA_INCLUDE_ANNOTS)
                 g_clear_pointer (&data->annot_mapping, ev_mapping_list_unref);
 
+        if (flags & EV_PAGE_DATA_INCLUDE_MEDIA)
+                g_clear_pointer (&data->media_mapping, ev_mapping_list_unref);
+
 	if (flags & EV_PAGE_DATA_INCLUDE_TEXT_MAPPING)
                 g_clear_pointer (&data->text_mapping, cairo_region_destroy);
 
@@ -551,6 +570,28 @@ ev_page_cache_get_annot_mapping (EvPageCache *cache,
 		return EV_JOB_PAGE_DATA (data->job)->annot_mapping;
 
 	return data->annot_mapping;
+}
+
+EvMappingList *
+ev_page_cache_get_media_mapping (EvPageCache *cache,
+				 gint         page)
+{
+	EvPageCacheData *data;
+
+	g_return_val_if_fail (EV_IS_PAGE_CACHE (cache), NULL);
+	g_return_val_if_fail (page >= 0 && page < cache->n_pages, NULL);
+
+	if (!(cache->flags & EV_PAGE_DATA_INCLUDE_MEDIA))
+		return NULL;
+
+	data = &cache->page_list[page];
+	if (data->done)
+		return data->media_mapping;
+
+	if (data->job)
+		return EV_JOB_PAGE_DATA (data->job)->media_mapping;
+
+	return data->media_mapping;
 }
 
 cairo_region_t *

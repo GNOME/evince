@@ -303,7 +303,8 @@ typedef enum {
         EV_PAGE_DATA_INCLUDE_IMAGES         = 1 << 6,
         EV_PAGE_DATA_INCLUDE_FORMS          = 1 << 7,
         EV_PAGE_DATA_INCLUDE_ANNOTS         = 1 << 8,
-        EV_PAGE_DATA_INCLUDE_ALL            = (1 << 9) - 1
+        EV_PAGE_DATA_INCLUDE_MEDIA          = 1 << 9,
+        EV_PAGE_DATA_INCLUDE_ALL            = (1 << 10) - 1
 } EvJobPageDataFlags;
 
 struct _EvJobPageData
@@ -317,6 +318,7 @@ struct _EvJobPageData
 	EvMappingList  *image_mapping;
 	EvMappingList  *form_field_mapping;
 	EvMappingList  *annot_mapping;
+        EvMappingList  *media_mapping;
 	cairo_region_t *text_mapping;
 	gchar *text;
 	EvRectangle *text_layout;

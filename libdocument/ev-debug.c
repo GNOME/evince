@@ -61,6 +61,7 @@ debug_init (void)
                 { "forms",      EV_DEBUG_BORDER_FORMS      },
                 { "annots",     EV_DEBUG_BORDER_ANNOTS     },
                 { "images",     EV_DEBUG_BORDER_IMAGES     },
+                { "media",      EV_DEBUG_BORDER_MEDIA      },
                 { "selections", EV_DEBUG_BORDER_SELECTIONS }
         };
 

@@ -33,6 +33,7 @@
 #include "ev-document-images.h"
 #include "ev-document-links.h"
 #include "ev-document-layers.h"
+#include "ev-document-media.h"
 #include "ev-document-misc.h"
 #include "ev-pixbuf-cache.h"
 #include "ev-page-cache.h"
@@ -4331,6 +4332,18 @@ show_images_border (EvView       *view,
 }
 
 static void
+show_media_border (EvView       *view,
+		   cairo_t      *cr,
+		   gint          page,
+		   GdkRectangle *clip)
+{
+	cairo_set_source_rgb (cr, 1., 1., 0.);
+	show_mapping_list_border (view, cr, page, clip,
+				  ev_page_cache_get_media_mapping (view->page_cache, page));
+}
+
+
+static void
 show_selections_border (EvView       *view,
 			cairo_t      *cr,
 			gint          page,
@@ -4389,6 +4402,8 @@ draw_debug_borders (EvView       *view,
 		show_annots_border (view, cr, page, clip);
 	if (borders & EV_DEBUG_BORDER_IMAGES)
 		show_images_border (view, cr, page, clip);
+	if (borders & EV_DEBUG_BORDER_MEDIA)
+		show_media_border (view, cr, page, clip);
 	if (borders & EV_DEBUG_BORDER_SELECTIONS)
 		show_selections_border (view, cr, page, clip);
 

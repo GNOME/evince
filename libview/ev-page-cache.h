@@ -61,6 +61,8 @@ EvMappingList     *ev_page_cache_get_form_field_mapping (EvPageCache       *cach
 							 gint               page);
 EvMappingList     *ev_page_cache_get_annot_mapping      (EvPageCache       *cache,
 							 gint               page);
+EvMappingList     *ev_page_cache_get_media_mapping      (EvPageCache       *cache,
+                                                         gint               page);
 cairo_region_t    *ev_page_cache_get_text_mapping       (EvPageCache       *cache,
 							 gint               page);
 const gchar       *ev_page_cache_get_text               (EvPageCache       *cache,

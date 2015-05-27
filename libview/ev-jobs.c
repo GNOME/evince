@@ -35,6 +35,7 @@
 #include "ev-document-print.h"
 #include "ev-document-annotations.h"
 #include "ev-document-attachments.h"
+#include "ev-document-media.h"
 #include "ev-document-text.h"
 #include "ev-debug.h"
 
@@ -777,6 +778,10 @@ ev_job_page_data_run (EvJob *job)
 		job_pd->annot_mapping =
 			ev_document_annotations_get_annotations (EV_DOCUMENT_ANNOTATIONS (job->document),
 								 ev_page);
+        if ((job_pd->flags & EV_PAGE_DATA_INCLUDE_MEDIA) && EV_IS_DOCUMENT_MEDIA (job->document))
+                job_pd->media_mapping =
+                        ev_document_media_get_media_mapping (EV_DOCUMENT_MEDIA (job->document),
+                                                             ev_page);
 	g_object_unref (ev_page);
 	ev_document_doc_mutex_unlock ();
 
