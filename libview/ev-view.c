@@ -177,6 +177,7 @@ static gboolean   ev_view_leave_notify_event                 (GtkWidget         
 							      GdkEventCrossing   *event);
 static void       ev_view_style_updated                      (GtkWidget          *widget);
 static void       ev_view_remove_all                         (EvView             *view);
+static void       ev_view_remove_all_form_fields             (EvView             *view);
 
 static AtkObject *ev_view_get_accessible                     (GtkWidget *widget);
 
@@ -2270,7 +2271,7 @@ ev_view_form_field_get_region (EvView      *view,
 static gboolean
 ev_view_forms_remove_widgets (EvView *view)
 {
-	ev_view_remove_all (view);
+	ev_view_remove_all_form_fields (view);
 
 	return FALSE;
 }
@@ -4472,7 +4473,7 @@ ev_view_set_focused_element_at_location (EvView *view,
 	}
 
 	if ((field = ev_view_get_form_field_at_location (view, x, y))) {
-		ev_view_remove_all (view);
+		ev_view_remove_all_form_fields (view);
 		_ev_view_focus_form_field (view, field);
 		return;
 	}
@@ -4861,7 +4862,7 @@ ev_view_button_press_event (GtkWidget      *widget,
 			} else if ((annot = ev_view_get_annotation_at_location (view, event->x, event->y))) {
 				ev_view_handle_annotation (view, annot, event->x, event->y, event->time);
 			} else if ((field = ev_view_get_form_field_at_location (view, event->x, event->y))) {
-				ev_view_remove_all (view);
+				ev_view_remove_all_form_fields (view);
 				ev_view_handle_form_field (view, field);
 			} else if ((link = get_link_mapping_at_location (view, event->x, event->y, &page))){
 				_ev_view_set_focused_element (view, link, page);
@@ -4875,7 +4876,7 @@ ev_view_button_press_event (GtkWidget      *widget,
 				view->image_dnd_info.start.x = event->x + view->scroll_x;
 				view->image_dnd_info.start.y = event->y + view->scroll_y;
 			} else {
-				ev_view_remove_all (view);
+				ev_view_remove_all_form_fields (view);
 				_ev_view_set_focused_element (view, NULL, -1);
 
 				if (view->synctex_result) {
@@ -4918,6 +4919,19 @@ static void
 ev_view_remove_all (EvView *view)
 {
 	gtk_container_foreach (GTK_CONTAINER (view), (GtkCallback) gtk_widget_destroy, NULL);
+}
+
+static void
+destroy_child_if_form_widget (GtkWidget *widget)
+{
+	if (g_object_get_data (G_OBJECT (widget), "form-field"))
+		gtk_widget_destroy (widget);
+}
+
+static void
+ev_view_remove_all_form_fields (EvView *view)
+{
+	gtk_container_foreach (GTK_CONTAINER (view), (GtkCallback)destroy_child_if_form_widget, NULL);
 }
 
 /*** Drag and Drop ***/
@@ -6867,13 +6881,13 @@ ev_view_focus_next (EvView           *view,
 	g_list_free (elements);
 
 	if (focus_element) {
-		ev_view_remove_all (view);
+		ev_view_remove_all_form_fields (view);
 		_ev_view_focus_form_field (view, EV_FORM_FIELD (focus_element->data));
 
 		return TRUE;
 	}
 
-	ev_view_remove_all (view);
+	ev_view_remove_all_form_fields (view);
 	_ev_view_set_focused_element (view, NULL, -1);
 
 	/* FIXME: this doesn't work if the next/previous page doesn't have form fields */
