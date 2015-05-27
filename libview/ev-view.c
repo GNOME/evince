@@ -46,6 +46,17 @@
 #include "ev-view-type-builtins.h"
 #include "ev-debug.h"
 
+#ifdef ENABLE_MULTIMEDIA
+#if defined (GDK_WINDOWING_X11)
+#include <gdk/gdkx.h>
+#elif defined (GDK_WINDOWING_WIN32)
+#include <gdk/gdkwin32.h>
+#endif
+
+#include "ev-media-player.h"
+#include "ev-media-controls.h"
+#endif
+
 enum {
 	SIGNAL_SCROLL,
 	SIGNAL_HANDLE_LINK,
@@ -139,7 +150,10 @@ static char*      tip_from_link                              (EvView            
 static EvFormField *ev_view_get_form_field_at_location       (EvView             *view,
 							       gdouble            x,
 							       gdouble            y);
-
+/*** Media ***/
+static EvMedia     *ev_view_get_media_at_location            (EvView             *view,
+							      gdouble             x,
+							      gdouble             y);
 /*** Annotations ***/
 static EvAnnotation *ev_view_get_annotation_at_location      (EvView             *view,
 							      gdouble             x,
@@ -2080,6 +2094,7 @@ ev_view_handle_cursor_over_xy (EvView *view, gint x, gint y)
 	EvLink       *link;
 	EvFormField  *field;
 	EvAnnotation *annot = NULL;
+	EvMedia      *media;
 
 	if (view->cursor == EV_VIEW_CURSOR_HIDDEN)
 		return;
@@ -2116,6 +2131,11 @@ ev_view_handle_cursor_over_xy (EvView *view, gint x, gint y)
 		} else {
 			ev_view_set_cursor (view, EV_VIEW_CURSOR_LINK);
 		}
+	} else if ((media = ev_view_get_media_at_location (view, x, y))) {
+		if (!g_object_get_data (G_OBJECT (media), "view-player"))
+			ev_view_set_cursor (view, EV_VIEW_CURSOR_LINK);
+		else
+			ev_view_set_cursor (view, EV_VIEW_CURSOR_NORMAL);
 	} else if ((annot = ev_view_get_annotation_at_location (view, x, y))) {
 		ev_view_set_cursor (view, EV_VIEW_CURSOR_LINK);
 	} else if (location_in_text (view, x + view->scroll_x, y + view->scroll_y)) {
@@ -2759,6 +2779,193 @@ ev_view_handle_form_field (EvView      *view,
 		ev_view_form_field_button_toggle (view, field);
 
 }
+
+/* Media */
+static EvMapping *
+get_media_mapping_at_location (EvView *view,
+			       gdouble x,
+			       gdouble y,
+			       gint *page)
+{
+#ifdef ENABLE_MULTIMEDIA
+	gint x_new = 0, y_new = 0;
+	EvMappingList *media_mapping;
+
+	if (!EV_IS_DOCUMENT_MEDIA (view->document))
+		return NULL;
+
+	if (!get_doc_point_from_location (view, x, y, page, &x_new, &y_new))
+		return NULL;
+
+	media_mapping = ev_page_cache_get_media_mapping (view->page_cache, *page);
+
+	return media_mapping ? ev_mapping_list_get (media_mapping, x_new, y_new) : NULL;
+#else
+	return NULL;
+#endif
+}
+
+static EvMedia *
+ev_view_get_media_at_location (EvView  *view,
+			       gdouble  x,
+			       gdouble  y)
+{
+	EvMapping *media_mapping;
+	gint       page;
+
+	media_mapping = get_media_mapping_at_location (view, x, y, &page);
+
+	return media_mapping ? media_mapping->data : NULL;
+}
+
+#ifdef ENABLE_MULTIMEDIA
+static void
+media_player_state_changed (EvMediaPlayer *player,
+			    guint          state,
+			    EvMedia       *media)
+{
+	/* A media without controls can't be played again */
+	if (state == EV_MEDIA_PLAYER_STATE_PAUSE)
+		g_object_set_data (G_OBJECT (media), "view-player", NULL);
+}
+#endif
+
+static void
+ev_view_handle_media (EvView  *view,
+		      EvMedia *media)
+{
+#ifdef ENABLE_MULTIMEDIA
+	EvMediaPlayer *player;
+	EvMappingList *media_mapping;
+	GdkRectangle   render_area;
+	guint          page;
+	guint64        window_handle;
+
+	page = ev_media_get_page_index (media);
+	media_mapping = ev_page_cache_get_media_mapping (view->page_cache, page);
+
+	/* TODO: focus? */
+
+	player = g_object_get_data (G_OBJECT (media), "view-player");
+	if (player)
+		return;
+
+#if defined (GDK_WINDOWING_X11)
+	window_handle = (guint64)GDK_WINDOW_XID (gtk_widget_get_window (GTK_WIDGET (view)));
+#elif defined (GDK_WINDOWING_WIN32)
+	window_handle = (guint64)GDK_WINDOW_HWND (gtk_widget_get_window (GTK_WIDGET (view)));
+#else
+	g_assert_not_reached ();
+#endif
+
+	ev_view_get_area_from_mapping (view, page, media_mapping, media, &render_area);
+	player = ev_media_player_new (media, window_handle, &render_area);
+	g_object_set_data_full (G_OBJECT (media), "view-player", player, g_object_unref);
+
+	if (ev_media_get_show_controls (media))	{
+		GtkWidget   *controls;
+		EvMapping   *mapping;
+		EvRectangle  doc_rect;
+
+		mapping = ev_mapping_list_find (media_mapping, media);
+		doc_rect.x1 = mapping->area.x1;
+		doc_rect.x2 = mapping->area.x2;
+		doc_rect.y1 = mapping->area.y2;
+		doc_rect.y2 = doc_rect.y1 + 16;
+
+		controls = ev_media_controls_new (player);
+		ev_view_put (view, controls,
+			     render_area.x,
+			     render_area.y + render_area.height,
+			     page, &doc_rect);
+		gtk_widget_show (controls);
+	} else {
+		/* A media without controls will be paused when reaching EOS */
+		g_signal_connect (player, "state-changed",
+				  G_CALLBACK (media_player_state_changed),
+				  media);
+	}
+#endif /* ENABLE_MULTIMEDIA */
+}
+
+static void
+ev_view_update_media_render_area (EvView *view)
+{
+#ifdef ENABLE_MULTIMEDIA
+	guint i;
+
+	for (i = view->start_page; i >= 0 && i <= view->end_page; i++) {
+		EvMappingList *media_mapping;
+		GList         *l;
+
+		media_mapping = ev_page_cache_get_media_mapping (view->page_cache, i);
+		if (!media_mapping)
+			continue;
+
+		for (l = ev_mapping_list_get_list (media_mapping); l; l = g_list_next (l)) {
+			EvMapping     *mapping = (EvMapping *)l->data;
+			EvMedia       *media = (EvMedia *)mapping->data;
+			EvMediaPlayer *player;
+			GdkRectangle   render_area;
+
+			player = g_object_get_data (G_OBJECT (media), "view-player");
+			if (!player)
+				continue;
+
+			_ev_view_transform_doc_rect_to_view_rect (view, i,
+								  &mapping->area,
+								  &render_area);
+			render_area.x -= view->scroll_x;
+			render_area.y -= view->scroll_y;
+			ev_media_player_set_render_area (player, &render_area);
+		}
+	}
+#endif
+}
+
+#ifdef ENABLE_MULTIMEDIA
+static void
+draw_media (EvView       *view,
+	    cairo_t      *cr,
+	    gint          page,
+	    GdkRectangle *clip)
+{
+	EvMappingList *media_mapping;
+	GList         *l;
+
+	media_mapping = ev_page_cache_get_media_mapping (view->page_cache, page);
+
+	for (l = ev_mapping_list_get_list (media_mapping); l; l = g_list_next (l)) {
+		EvMapping     *mapping = (EvMapping *)l->data;
+		EvMediaPlayer *player;
+		GdkRectangle   media_rect;
+		GdkRectangle   intersect;
+
+		player = g_object_get_data (G_OBJECT (mapping->data), "view-player");
+		if (!player)
+			continue;
+
+		_ev_view_transform_doc_rect_to_view_rect (view, page,
+							  &mapping->area,
+							  &media_rect);
+		media_rect.x -= view->scroll_x;
+		media_rect.y -= view->scroll_y;
+
+		/* Draw a black background to avoid showing the builtin poster */
+		if (gdk_rectangle_intersect (&media_rect, clip, &intersect)) {
+			cairo_save (cr);
+			cairo_set_source_rgb (cr, 0.0, 0.0, 0.0);
+			cairo_rectangle (cr,
+					 intersect.x, intersect.y,
+					 intersect.width, intersect.height);
+			cairo_fill (cr);
+			cairo_restore (cr);
+
+			ev_media_player_expose (player);
+		}
+	}
+}
+#endif
 
 /* Annotations */
 static EvViewWindowChild *
@@ -3987,6 +4194,8 @@ ev_view_size_allocate (GtkWidget      *widget,
 			ev_view_window_child_move (view, child, view_rect.x + root_x, view_rect.y + root_y);
 		}
 	}
+
+	ev_view_update_media_render_area (view);
 }
 
 static gboolean
@@ -4454,6 +4663,10 @@ ev_view_draw (GtkWidget *widget,
 			draw_focus (view, cr, i, &clip_rect);
 		if (page_ready && view->synctex_result)
 			highlight_forward_search_results (view, cr, i);
+#ifdef ENABLE_MULTIMEDIA
+		if (page_ready && EV_IS_DOCUMENT_MEDIA (view->document))
+			draw_media (view, cr, i, &clip_rect);
+#endif
 #ifdef EV_ENABLE_DEBUG
 		if (page_ready)
 			draw_debug_borders (view, cr, i, &clip_rect);
@@ -4849,6 +5062,7 @@ ev_view_button_press_event (GtkWidget      *widget,
 			EvAnnotation *annot;
 			EvFormField *field;
 			EvMapping *link;
+			EvMedia *media;
 			gint page;
 
 			if (event->state & GDK_CONTROL_MASK)
@@ -4874,6 +5088,8 @@ ev_view_button_press_event (GtkWidget      *widget,
 						ev_view_pend_cursor_blink (view);
 					}
 				}
+			} else if ((media = ev_view_get_media_at_location (view, event->x, event->y))) {
+				ev_view_handle_media (view, media);
 			} else if ((annot = ev_view_get_annotation_at_location (view, event->x, event->y))) {
 				ev_view_handle_annotation (view, annot, event->x, event->y, event->time);
 			} else if ((field = ev_view_get_form_field_at_location (view, event->x, event->y))) {
@@ -7244,6 +7460,9 @@ static void
 ev_view_init (EvView *view)
 {
 	GtkStyleContext *context;
+#if defined (ENABLE_MULTIMEDIA) && defined (GDK_WINDOWING_X11)
+	GdkVisual       *visual;
+#endif
 
 	gtk_widget_set_has_window (GTK_WIDGET (view), TRUE);
 	gtk_widget_set_can_focus (GTK_WIDGET (view), TRUE);
@@ -7253,6 +7472,15 @@ ev_view_init (EvView *view)
 	context = gtk_widget_get_style_context (GTK_WIDGET (view));
 	gtk_style_context_add_class (context, "content-view");
 	gtk_style_context_add_class (context, "view");
+
+#if defined (ENABLE_MULTIMEDIA) && defined (GDK_WINDOWING_X11)
+	/* Use always the system visual, instead of the one inherited from the
+	 * window, because gst xvimagesink doesn't work with RGBA visuals.
+	 * See https://bugzilla.gnome.org/show_bug.cgi?id=721148
+	 */
+	visual = gdk_screen_get_system_visual (gdk_screen_get_default ());
+	gtk_widget_set_visual (GTK_WIDGET (view), visual);
+#endif
 
 	gtk_widget_set_events (GTK_WIDGET (view),
 			       GDK_TOUCH_MASK |
@@ -7411,6 +7639,8 @@ on_adjustment_value_changed (GtkAdjustment *adjustment,
 
 	if (view->document)
 		view_update_range_and_current_page (view);
+
+	ev_view_update_media_render_area (view);
 }
 
 GtkWidget*
