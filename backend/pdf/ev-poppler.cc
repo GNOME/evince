@@ -3102,10 +3102,18 @@ pdf_document_annotations_get_annotations (EvDocumentAnnotations *document_annota
 			annot_set_unique_name (ev_annot);
 
 		annot_mapping = g_new (EvMapping, 1);
-		annot_mapping->area.x1 = mapping->area.x1;
-		annot_mapping->area.x2 = mapping->area.x2;
-		annot_mapping->area.y1 = height - mapping->area.y2;
-		annot_mapping->area.y2 = height - mapping->area.y1;
+		if (EV_IS_ANNOTATION_TEXT (ev_annot)) {
+			/* Force 24x24 rectangle */
+			annot_mapping->area.x1 = mapping->area.x1;
+			annot_mapping->area.x2 = annot_mapping->area.x1 + 24;
+			annot_mapping->area.y1 = height - mapping->area.y2;
+			annot_mapping->area.y2 = MIN(height, annot_mapping->area.y1 + 24);
+		} else {
+			annot_mapping->area.x1 = mapping->area.x1;
+			annot_mapping->area.x2 = mapping->area.x2;
+			annot_mapping->area.y1 = height - mapping->area.y2;
+			annot_mapping->area.y2 = height - mapping->area.y1;
+		}
 		annot_mapping->data = ev_annot;
 
 		g_object_set_data_full (G_OBJECT (ev_annot),
