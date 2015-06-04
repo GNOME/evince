@@ -7096,6 +7096,7 @@ ev_view_focus_next (EvView           *view,
 {
 	EvMapping *focus_element;
 	GList     *elements;
+	gboolean   had_focused_element;
 
 	if (view->focused_element) {
 		GList *l;
@@ -7104,9 +7105,11 @@ ev_view_focus_next (EvView           *view,
 		l = g_list_find (elements, view->focused_element);
 		l = g_list_next (l);
 		focus_element = l ? l->data : NULL;
+		had_focused_element = TRUE;
 	} else {
 		elements = ev_view_get_sorted_mapping_list (view, direction, view->current_page);
 		focus_element = elements ? elements->data : NULL;
+		had_focused_element = FALSE;
 	}
 
 	g_list_free (elements);
@@ -7120,6 +7123,13 @@ ev_view_focus_next (EvView           *view,
 
 	ev_view_remove_all_form_fields (view);
 	_ev_view_set_focused_element (view, NULL, -1);
+
+	/* Only try to move the focus to next/previous pages when the current page had
+	 * a focused element. This prevents the view from jumping to the first/last page
+	 * when there are not focusable elements.
+	 */
+	if (!had_focused_element)
+		return FALSE;
 
 	/* FIXME: this doesn't work if the next/previous page doesn't have form fields */
 	if (direction == GTK_DIR_TAB_FORWARD) {
