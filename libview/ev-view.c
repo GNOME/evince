@@ -3334,6 +3334,7 @@ ev_view_create_annotation (EvView *view)
 	}
 	g_object_unref (page);
 
+	ev_annotation_set_area (annot, &doc_rect);
 	ev_annotation_set_color (annot, &color);
 
 	if (EV_IS_ANNOTATION_MARKUP (annot)) {
