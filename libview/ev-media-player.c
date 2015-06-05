@@ -24,30 +24,30 @@
 
 #include <gst/video/videooverlay.h>
 
+#if defined (GDK_WINDOWING_X11)
+#include <gdk/gdkx.h>
+#elif defined (GDK_WINDOWING_WIN32)
+#include <gdk/gdkwin32.h>
+#endif
+
 enum {
         PROP_0,
         PROP_MEDIA,
-        PROP_WINDOW_ID,
-        PROP_RENDER_AREA,
-        PROP_DURATION,
-        PROP_POSITION
-};
-
-enum {
-        STATE_CHANGED,
-        N_SIGNALS
 };
 
 struct _EvMediaPlayer {
-        GObject          parent;
+        GtkBox           parent;
 
         EvMedia         *media;
-        guint64          window_id;
-        GdkRectangle     render_area;
+        GtkWidget       *drawing_area;
+        GtkWidget       *controls;
+        GtkWidget       *play_button;
+        GtkWidget       *slider;
 
         GstElement      *pipeline;
         GstBus          *bus;
         GstVideoOverlay *overlay;
+        guint64          window_handle;
         gboolean         is_playing;
         gboolean         is_seeking;
         gdouble          duration;
@@ -57,38 +57,48 @@ struct _EvMediaPlayer {
 };
 
 struct _EvMediaPlayerClass {
-        GObjectClass parent_class;
+        GtkBoxClass parent_class;
 };
 
-static guint signals[N_SIGNALS];
+G_DEFINE_TYPE (EvMediaPlayer, ev_media_player, GTK_TYPE_BOX)
 
-G_DEFINE_TYPE (EvMediaPlayer, ev_media_player, G_TYPE_OBJECT)
+static void
+ev_media_player_update_position (EvMediaPlayer *player)
+{
+        if (!ev_media_get_show_controls (player->media))
+                return;
+
+        gtk_range_set_value (GTK_RANGE (player->slider), player->position);
+}
 
 static gboolean
-update_position_cb (EvMediaPlayer *player)
+query_position_cb (EvMediaPlayer *player)
 {
         gint64 position;
 
         gst_element_query_position (player->pipeline, GST_FORMAT_TIME, &position);
         player->position = (gdouble)position / GST_SECOND;
-        g_object_notify (G_OBJECT (player), "position");
+        ev_media_player_update_position (player);
 
         return G_SOURCE_CONTINUE;
 }
 
 static void
-ev_media_player_update_position_start (EvMediaPlayer *player)
+ev_media_player_query_position_start (EvMediaPlayer *player)
 {
         if (player->position_timeout_id > 0)
                 return;
 
+        if (!ev_media_get_show_controls (player->media))
+                return;
+
         player->position_timeout_id = g_timeout_add (1000 / 15,
-                                                     (GSourceFunc)update_position_cb,
+                                                     (GSourceFunc)query_position_cb,
                                                      player);
 }
 
 static void
-ev_media_player_update_position_stop (EvMediaPlayer *player)
+ev_media_player_query_position_stop (EvMediaPlayer *player)
 {
         if (player->position_timeout_id > 0) {
                 g_source_remove (player->position_timeout_id);
@@ -97,16 +107,30 @@ ev_media_player_update_position_stop (EvMediaPlayer *player)
 }
 
 static void
-ev_media_player_update_position (EvMediaPlayer *player)
+ev_media_player_query_position (EvMediaPlayer *player)
 {
+        if (!ev_media_get_show_controls (player->media))
+                return;
+
         if (player->duration <= 0)
                 return;
 
         if (player->is_playing)
-                ev_media_player_update_position_start (player);
+                ev_media_player_query_position_start (player);
         else
-                ev_media_player_update_position_stop (player);
-        update_position_cb (player);
+                ev_media_player_query_position_stop (player);
+        query_position_cb (player);
+}
+
+static void
+ev_media_player_update_play_button (EvMediaPlayer *player)
+{
+        if (!ev_media_get_show_controls (player->media))
+                return;
+
+        gtk_image_set_from_icon_name (GTK_IMAGE (gtk_button_get_image (GTK_BUTTON (player->play_button))),
+                                      player->is_playing ? "media-playback-pause-symbolic" : "media-playback-start-symbolic",
+                                      GTK_ICON_SIZE_MENU);
 }
 
 static void
@@ -121,8 +145,8 @@ ev_media_player_update_state (EvMediaPlayer *player,
         is_playing = state == GST_STATE_PLAYING;
         if (is_playing != player->is_playing) {
                 player->is_playing = is_playing;
-                g_signal_emit (player, signals[STATE_CHANGED], 0, player->is_playing ? EV_MEDIA_PLAYER_STATE_PLAY : EV_MEDIA_PLAYER_STATE_PAUSE);
-                ev_media_player_update_position (player);
+                ev_media_player_update_play_button (player);
+                ev_media_player_query_position (player);
         }
 
         if (new_state)
@@ -130,12 +154,53 @@ ev_media_player_update_state (EvMediaPlayer *player,
 }
 
 static void
+ev_media_player_toggle_state (EvMediaPlayer *player)
+{
+        GstState current, pending, new_state;
+
+        if (!player->pipeline)
+                return;
+
+        gst_element_get_state (player->pipeline, &current, &pending, 0);
+        new_state = current == GST_STATE_PLAYING ? GST_STATE_PAUSED : GST_STATE_PLAYING;
+        if (pending != new_state)
+                gst_element_set_state (player->pipeline, new_state);
+}
+
+static void
+ev_media_player_seek (EvMediaPlayer *player,
+                      GtkScrollType  scroll,
+                      gdouble        position)
+{
+        if (!player->pipeline)
+                return;
+
+        position = CLAMP (position, 0, player->duration);
+        if (gst_element_seek_simple (player->pipeline,
+                                     GST_FORMAT_TIME,
+                                     GST_SEEK_FLAG_FLUSH,
+                                     (gint64)(position * GST_SECOND))) {
+                player->is_seeking = TRUE;
+                ev_media_player_query_position_stop (player);
+                player->position = position;
+                ev_media_player_update_position (player);
+        }
+}
+
+
+static void
 ev_media_player_notify_eos (EvMediaPlayer *player)
 {
-        g_signal_emit (player, signals[STATE_CHANGED], 0, EV_MEDIA_PLAYER_STATE_PAUSE);
-        ev_media_player_update_position_stop (player);
+        if (!ev_media_get_show_controls (player->media)) {
+                /* A media without controls can't be played again */
+                gtk_widget_destroy (GTK_WIDGET (player));
+                return;
+        }
+
+        ev_media_player_update_play_button (player);
+        ev_media_player_query_position_stop (player);
         player->position = 0;
-        g_object_notify (G_OBJECT (player), "position");
+        ev_media_player_update_position (player);
         gst_element_set_state (player->pipeline, GST_STATE_READY);
 }
 
@@ -150,12 +215,7 @@ bus_sync_handle (GstBus        *bus,
                 return GST_BUS_PASS;
 
         overlay = GST_VIDEO_OVERLAY (GST_MESSAGE_SRC (message));
-        gst_video_overlay_set_window_handle (overlay, (guintptr)player->window_id);
-        gst_video_overlay_set_render_rectangle (overlay,
-                                                player->render_area.x,
-                                                player->render_area.y,
-                                                player->render_area.width,
-                                                player->render_area.height);
+        gst_video_overlay_set_window_handle (overlay, (guintptr)player->window_handle);
         gst_video_overlay_expose (overlay);
 
         player->overlay = overlay;
@@ -195,10 +255,13 @@ bus_message_handle (GstBus        *bus,
                 if (GST_MESSAGE_SRC (message) != (GstObject *)player->pipeline)
                         return;
 
+                if (!ev_media_get_show_controls (player->media))
+                        return;
+
                 if (player->is_seeking) {
                         player->is_seeking = FALSE;
                         if (player->is_playing)
-                                ev_media_player_update_position_start (player);
+                                ev_media_player_query_position_start (player);
                 } else {
                         ev_media_player_update_state (player, &state);
 
@@ -207,7 +270,7 @@ bus_message_handle (GstBus        *bus,
 
                                 gst_element_query_duration (player->pipeline, GST_FORMAT_TIME, &duration);
                                 player->duration = (gdouble)duration / GST_SECOND;
-                                g_object_notify (G_OBJECT (player), "duration");
+                                gtk_range_set_range (GTK_RANGE (player->slider), 0, player->duration);
                         }
                 }
 
@@ -224,11 +287,51 @@ bus_message_handle (GstBus        *bus,
 }
 
 static void
+drawing_area_realize_cb (GtkWidget     *widget,
+                         EvMediaPlayer *player)
+{
+#if defined (GDK_WINDOWING_X11)
+        player->window_handle = (guint64)GDK_WINDOW_XID (gtk_widget_get_window (widget));
+#elif defined (GDK_WINDOWING_WIN32)
+        player->window_handle = (guint64)GDK_WINDOW_HWND (gtk_widget_get_window (widget));
+#else
+        g_assert_not_reached ();
+#endif
+}
+
+static void
+ev_media_player_size_allocate (GtkWidget     *widget,
+                               GtkAllocation *allocation)
+{
+        EvMediaPlayer *player = EV_MEDIA_PLAYER (widget);
+        GdkRectangle   controls_allocation;
+
+        GTK_WIDGET_CLASS (ev_media_player_parent_class)->size_allocate (widget, allocation);
+
+        if (!ev_media_get_show_controls (player->media))
+                return;
+
+        /* Give all the allocated size to the drawing area */
+        gtk_widget_size_allocate (player->drawing_area, allocation);
+
+        /* And give space for the controls below */
+        controls_allocation.x = allocation->x;
+        controls_allocation.y = allocation->y + allocation->height;
+        controls_allocation.width = allocation->width;
+        controls_allocation.height = gtk_widget_get_allocated_height (player->controls);
+        gtk_widget_size_allocate (player->controls, &controls_allocation);
+
+        allocation->height += controls_allocation.height;
+
+        gtk_widget_set_allocation (widget, allocation);
+}
+
+static void
 ev_media_player_dispose (GObject *object)
 {
         EvMediaPlayer *player = EV_MEDIA_PLAYER (object);
 
-        ev_media_player_update_position_stop (player);
+        ev_media_player_query_position_stop (player);
 
         if (player->bus) {
                 gst_bus_remove_signal_watch (player->bus);
@@ -248,26 +351,6 @@ ev_media_player_dispose (GObject *object)
 }
 
 static void
-ev_media_player_get_property (GObject    *object,
-                              guint       prop_id,
-                              GValue     *value,
-                              GParamSpec *pspec)
-{
-        EvMediaPlayer *player = EV_MEDIA_PLAYER (object);
-
-        switch (prop_id) {
-        case PROP_DURATION:
-                g_value_set_double (value, player->duration);
-                break;
-        case PROP_POSITION:
-                g_value_set_double (value, player->position);
-                break;
-        default:
-                G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
-        }
-}
-
-static void
 ev_media_player_set_property (GObject      *object,
                               guint         prop_id,
                               const GValue *value,
@@ -279,12 +362,6 @@ ev_media_player_set_property (GObject      *object,
         case PROP_MEDIA:
                 player->media = EV_MEDIA (g_value_dup_object (value));
                 break;
-        case PROP_WINDOW_ID:
-                player->window_id = g_value_get_uint64 (value);
-                break;
-        case PROP_RENDER_AREA:
-                ev_media_player_set_render_area (player, (GdkRectangle *)g_value_get_boxed (value));
-                break;
         default:
                 G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
         }
@@ -293,11 +370,20 @@ ev_media_player_set_property (GObject      *object,
 static void
 ev_media_player_init (EvMediaPlayer *player)
 {
+        gtk_orientable_set_orientation (GTK_ORIENTABLE (player), GTK_ORIENTATION_VERTICAL);
+
         player->pipeline = gst_element_factory_make ("playbin", NULL);
         if (!player->pipeline) {
                 g_warning ("Failed to create playbin\n");
                 return;
         }
+
+        player->drawing_area = gtk_drawing_area_new ();
+        g_signal_connect (player->drawing_area, "realize",
+                          G_CALLBACK (drawing_area_realize_cb),
+                          player);
+        gtk_box_pack_start (GTK_BOX (player), player->drawing_area, TRUE, TRUE, 0);
+        gtk_widget_show (player->drawing_area);
 
         player->bus = gst_pipeline_get_bus (GST_PIPELINE (player->pipeline));
         gst_bus_set_sync_handler (player->bus, (GstBusSyncHandler)bus_sync_handle, player, NULL);
@@ -308,11 +394,61 @@ ev_media_player_init (EvMediaPlayer *player)
 }
 
 static void
+ev_media_player_setup_media_controls (EvMediaPlayer *player)
+{
+        GtkAdjustment  *adjustment;
+        GtkCssProvider *provider;
+
+        player->controls = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
+
+        gtk_style_context_add_class (gtk_widget_get_style_context (player->controls), GTK_STYLE_CLASS_OSD);
+
+        player->play_button = gtk_button_new ();
+        g_signal_connect_swapped (player->play_button, "clicked",
+                                  G_CALLBACK (ev_media_player_toggle_state),
+                                  player);
+        gtk_widget_set_name (player->play_button, "ev-media-player-play-button");
+        gtk_widget_set_valign (player->play_button, GTK_ALIGN_CENTER);
+        gtk_button_set_relief (GTK_BUTTON (player->play_button), GTK_RELIEF_NONE);
+        gtk_button_set_image (GTK_BUTTON (player->play_button),
+                              gtk_image_new_from_icon_name ("media-playback-start-symbolic",
+                                                            GTK_ICON_SIZE_MENU));
+        gtk_button_set_label(GTK_BUTTON (player->play_button), NULL);
+        gtk_button_set_focus_on_click (GTK_BUTTON (player->play_button), FALSE);
+
+        provider = gtk_css_provider_new ();
+        gtk_css_provider_load_from_data (provider, "#ev-media-player-play-button { padding: 0px 8px 0px 8px; }", -1, NULL);
+        gtk_style_context_add_provider (gtk_widget_get_style_context (player->play_button),
+                                        GTK_STYLE_PROVIDER (provider),
+                                        GTK_STYLE_PROVIDER_PRIORITY_USER);
+        g_object_unref (provider);
+
+        gtk_box_pack_start (GTK_BOX (player->controls), player->play_button, FALSE, TRUE, 0);
+        gtk_widget_show (player->play_button);
+
+        adjustment = gtk_adjustment_new (0, 0, 1, 0.1, 0.10, 0);
+        player->slider = gtk_scale_new (GTK_ORIENTATION_HORIZONTAL, adjustment);
+        g_signal_connect_swapped (player->slider, "change-value",
+                                  G_CALLBACK (ev_media_player_seek),
+                                  player);
+        gtk_widget_set_hexpand (player->slider, TRUE);
+        gtk_scale_set_draw_value (GTK_SCALE (player->slider), FALSE);
+        gtk_box_pack_start (GTK_BOX (player->controls), player->slider, FALSE, TRUE, 0);
+        gtk_widget_show (player->slider);
+
+        gtk_box_pack_start (GTK_BOX (player), player->controls, FALSE, FALSE, 0);
+        gtk_widget_show (player->controls);
+}
+
+static void
 ev_media_player_constructed (GObject *object)
 {
         EvMediaPlayer *player = EV_MEDIA_PLAYER (object);
 
         G_OBJECT_CLASS (ev_media_player_parent_class)->constructed (object);
+
+        if (ev_media_get_show_controls (player->media))
+                ev_media_player_setup_media_controls (player);
 
         if (!player->pipeline)
                 return;
@@ -324,7 +460,8 @@ ev_media_player_constructed (GObject *object)
 static void
 ev_media_player_class_init (EvMediaPlayerClass *klass)
 {
-        GObjectClass *g_object_class = G_OBJECT_CLASS (klass);
+        GObjectClass   *g_object_class = G_OBJECT_CLASS (klass);
+        GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
 
         if (!gst_is_initialized ()) {
                 GError  *error = NULL;
@@ -337,8 +474,8 @@ ev_media_player_class_init (EvMediaPlayerClass *klass)
 
         g_object_class->constructed = ev_media_player_constructed;
         g_object_class->dispose = ev_media_player_dispose;
-        g_object_class->get_property = ev_media_player_get_property;
         g_object_class->set_property = ev_media_player_set_property;
+        widget_class->size_allocate = ev_media_player_size_allocate;
 
         g_object_class_install_property (g_object_class,
                                          PROP_MEDIA,
@@ -349,147 +486,20 @@ ev_media_player_class_init (EvMediaPlayerClass *klass)
                                                               G_PARAM_WRITABLE |
                                                               G_PARAM_CONSTRUCT_ONLY |
                                                               G_PARAM_STATIC_STRINGS));
-        g_object_class_install_property (g_object_class,
-                                         PROP_WINDOW_ID,
-                                         g_param_spec_uint64 ("window-id",
-                                                              "Window ID",
-                                                              "The identifier of the window where the media will be rendered",
-                                                              0, G_MAXUINT64, 0,
-                                                              G_PARAM_WRITABLE |
-                                                              G_PARAM_CONSTRUCT_ONLY |
-                                                              G_PARAM_STATIC_STRINGS));
-        g_object_class_install_property (g_object_class,
-                                         PROP_RENDER_AREA,
-                                         g_param_spec_boxed ("render-area",
-                                                             "Render area",
-                                                             "The area of the window where the media will be rendered",
-                                                             GDK_TYPE_RECTANGLE,
-                                                             G_PARAM_WRITABLE |
-                                                             G_PARAM_CONSTRUCT |
-                                                             G_PARAM_STATIC_STRINGS));
-        g_object_class_install_property (g_object_class,
-                                         PROP_DURATION,
-                                         g_param_spec_double ("duration",
-                                                              "Duration",
-                                                              "Duration of the media",
-                                                              0, G_MAXDOUBLE, 0,
-                                                              G_PARAM_READABLE |
-                                                              G_PARAM_STATIC_STRINGS));
-        g_object_class_install_property (g_object_class,
-                                         PROP_POSITION,
-                                         g_param_spec_double ("position",
-                                                              "Position",
-                                                              "Current position of the media",
-                                                              0, G_MAXDOUBLE, 0,
-                                                              G_PARAM_READABLE |
-                                                              G_PARAM_STATIC_STRINGS));
-
-        signals[STATE_CHANGED] =
-                g_signal_new ("state-changed",
-                              G_TYPE_FROM_CLASS (g_object_class),
-                              G_SIGNAL_RUN_LAST,
-                              0, NULL, NULL,
-                              g_cclosure_marshal_VOID__UINT,
-                              G_TYPE_NONE, 1, G_TYPE_UINT);
 }
 
-EvMediaPlayer *
-ev_media_player_new (EvMedia      *media,
-                     guint64       window_id,
-                     GdkRectangle *area)
+GtkWidget *
+ev_media_player_new (EvMedia *media)
 {
         g_return_val_if_fail (EV_IS_MEDIA (media), NULL);
-        g_return_val_if_fail (window_id > 0, NULL);
-        g_return_val_if_fail (area != NULL, NULL);
 
-        return EV_MEDIA_PLAYER (g_object_new (EV_TYPE_MEDIA_PLAYER,
-                                              "media", media,
-                                              "window-id", window_id,
-                                              "render-area", area,
-                                              NULL));
+        return GTK_WIDGET (g_object_new (EV_TYPE_MEDIA_PLAYER, "media", media, NULL));
 }
 
-void
-ev_media_player_set_render_area (EvMediaPlayer *player,
-                                 GdkRectangle  *area)
+EvMedia *
+ev_media_player_get_media (EvMediaPlayer *player)
 {
-        g_return_if_fail (EV_IS_MEDIA_PLAYER (player));
-        g_return_if_fail (area != NULL);
+        g_return_val_if_fail (EV_IS_MEDIA_PLAYER (player), NULL);
 
-        if (player->render_area.x == area->x &&
-            player->render_area.y == area->y &&
-            player->render_area.width == area->width &&
-            player->render_area.height == area->height)
-                return;
-
-        player->render_area = *area;
-        if (!player->overlay)
-                return;
-
-        gst_video_overlay_set_render_rectangle (player->overlay, area->x, area->y, area->width, area->height);
-        gst_video_overlay_expose (player->overlay);
-}
-
-void
-ev_media_player_expose (EvMediaPlayer *player)
-{
-        g_return_if_fail (EV_IS_MEDIA_PLAYER (player));
-
-        if (!player->overlay)
-                return;
-
-        gst_video_overlay_expose (player->overlay);
-}
-
-gdouble
-ev_media_player_get_duration (EvMediaPlayer *player)
-{
-        g_return_val_if_fail (EV_IS_MEDIA_PLAYER (player), 0);
-
-        return player->duration;
-}
-
-gdouble
-ev_media_player_get_position (EvMediaPlayer *player)
-{
-        g_return_val_if_fail (EV_IS_MEDIA_PLAYER (player), 0);
-
-        return player->position;
-}
-
-void
-ev_media_player_toggle_state (EvMediaPlayer *player)
-{
-        GstState current, pending, new_state;
-
-        g_return_if_fail (EV_IS_MEDIA_PLAYER (player));
-
-        if (!player->pipeline)
-                return;
-
-        gst_element_get_state (player->pipeline, &current, &pending, 0);
-        new_state = current == GST_STATE_PLAYING ? GST_STATE_PAUSED : GST_STATE_PLAYING;
-        if (pending != new_state)
-                gst_element_set_state (player->pipeline, new_state);
-}
-
-void
-ev_media_player_seek (EvMediaPlayer *player,
-                      gdouble        position)
-{
-        g_return_if_fail (EV_IS_MEDIA_PLAYER (player));
-
-        if (!player->pipeline)
-                return;
-
-        position = CLAMP (position, 0, player->duration);
-        if (gst_element_seek_simple (player->pipeline,
-                                     GST_FORMAT_TIME,
-                                     GST_SEEK_FLAG_FLUSH,
-                                     (gint64)(position * GST_SECOND))) {
-                player->is_seeking = TRUE;
-                ev_media_player_update_position_stop (player);
-                player->position = position;
-                g_object_notify (G_OBJECT (player), "position");
-        }
+        return player->media;
 }

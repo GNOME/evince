@@ -57,8 +57,6 @@ libevview3_la_SOURCES =			\
 
 if ENABLE_MULTIMEDIA
 libevview3_la_SOURCES += 	\
-	ev-media-controls.h	\
-	ev-media-controls.c	\
 	ev-media-player.h	\
 	ev-media-player.c
 endif

@@ -22,7 +22,7 @@
 #define EV_MEDIA_PLAYER_H
 
 #include <glib-object.h>
-#include <gdk/gdk.h>
+#include <gtk/gtk.h>
 #include "ev-media.h"
 
 G_BEGIN_DECLS
@@ -42,18 +42,9 @@ typedef enum {
 typedef struct _EvMediaPlayer      EvMediaPlayer;
 typedef struct _EvMediaPlayerClass EvMediaPlayerClass;
 
-GType          ev_media_player_get_type        (void) G_GNUC_CONST;
-EvMediaPlayer *ev_media_player_new             (EvMedia       *media,
-                                                guint64        window_id,
-                                                GdkRectangle  *area);
-void           ev_media_player_set_render_area (EvMediaPlayer *player,
-                                                GdkRectangle  *area);
-void           ev_media_player_expose          (EvMediaPlayer *player);
-gdouble        ev_media_player_get_duration    (EvMediaPlayer *player);
-gdouble        ev_media_player_get_position    (EvMediaPlayer *player);
-void           ev_media_player_toggle_state    (EvMediaPlayer *player);
-void           ev_media_player_seek            (EvMediaPlayer *player,
-                                                gdouble        position);
+GType      ev_media_player_get_type  (void) G_GNUC_CONST;
+GtkWidget *ev_media_player_new       (EvMedia       *media);
+EvMedia   *ev_media_player_get_media (EvMediaPlayer *player);
 
 G_END_DECLS
 
