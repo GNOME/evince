@@ -3058,6 +3058,14 @@ annot_set_unique_name (EvAnnotation *annot)
 	g_free (name);
 }
 
+static void
+annot_area_changed_cb (EvAnnotation *annot,
+		       GParamSpec   *spec,
+		       EvMapping    *mapping)
+{
+	ev_annotation_get_area (annot, &mapping->area);
+}
+
 static EvMappingList *
 pdf_document_annotations_get_annotations (EvDocumentAnnotations *document_annotations,
 					  EvPage                *page)
@@ -3115,6 +3123,10 @@ pdf_document_annotations_get_annotations (EvDocumentAnnotations *document_annota
 			annot_mapping->area.y2 = height - mapping->area.y1;
 		}
 		annot_mapping->data = ev_annot;
+		ev_annotation_set_area (ev_annot, &annot_mapping->area);
+		g_signal_connect (ev_annot, "notify::area",
+				  G_CALLBACK (annot_area_changed_cb),
+				  annot_mapping);
 
 		g_object_set_data_full (G_OBJECT (ev_annot),
 					"poppler-annot",
@@ -3185,7 +3197,7 @@ pdf_document_annotations_remove_annotation (EvDocumentAnnotations *document_anno
 static void
 pdf_document_annotations_add_annotation (EvDocumentAnnotations *document_annotations,
 					 EvAnnotation          *annot,
-					 EvRectangle           *rect)
+					 EvRectangle           *rect_deprecated)
 {
 	PopplerAnnot    *poppler_annot;
 	PdfDocument     *pdf_document;
@@ -3198,16 +3210,19 @@ pdf_document_annotations_add_annotation (EvDocumentAnnotations *document_annotat
 	gdouble          height;
 	PopplerColor     poppler_color;
 	GdkColor         color;
+	EvRectangle      rect;
 
 	pdf_document = PDF_DOCUMENT (document_annotations);
 	page = ev_annotation_get_page (annot);
 	poppler_page = POPPLER_PAGE (page->backend_page);
 
+	ev_annotation_get_area (annot, &rect);
+
 	poppler_page_get_size (poppler_page, NULL, &height);
-	poppler_rect.x1 = rect->x1;
-	poppler_rect.x2 = rect->x2;
-	poppler_rect.y1 = height - rect->y2;
-	poppler_rect.y2 = height - rect->y1;
+	poppler_rect.x1 = rect.x1;
+	poppler_rect.x2 = rect.x2;
+	poppler_rect.y1 = height - rect.y2;
+	poppler_rect.y2 = height - rect.y1;
 
 	switch (ev_annotation_get_annotation_type (annot)) {
 		case EV_ANNOTATION_TYPE_TEXT: {
@@ -3256,8 +3271,11 @@ pdf_document_annotations_add_annotation (EvDocumentAnnotations *document_annotat
 	poppler_page_add_annot (poppler_page, poppler_annot);
 
 	annot_mapping = g_new (EvMapping, 1);
-	annot_mapping->area = *rect;
+	annot_mapping->area = rect;
 	annot_mapping->data = annot;
+	g_signal_connect (annot, "notify::area",
+			  G_CALLBACK (annot_area_changed_cb),
+			  annot_mapping);
 	g_object_set_data_full (G_OBJECT (annot),
 				"poppler-annot",
 				poppler_annot,
