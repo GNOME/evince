@@ -143,6 +143,10 @@ void                 ev_annotation_get_rgba                  (EvAnnotation      
                                                               GdkRGBA                *rgba);
 gboolean             ev_annotation_set_rgba                  (EvAnnotation           *annot,
                                                               const GdkRGBA          *rgba);
+void                 ev_annotation_get_area                  (EvAnnotation           *annot,
+                                                              EvRectangle            *area);
+gboolean             ev_annotation_set_area                  (EvAnnotation           *annot,
+                                                              const EvRectangle      *area);
 
 /* EvAnnotationMarkup */
 GType                ev_annotation_markup_get_type           (void) G_GNUC_CONST;

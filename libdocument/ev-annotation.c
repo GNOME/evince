@@ -35,6 +35,7 @@ struct _EvAnnotation {
 	gchar           *name;
 	gchar           *modified;
 	GdkRGBA          rgba;
+        EvRectangle      area;
 };
 
 struct _EvAnnotationClass {
@@ -89,7 +90,8 @@ enum {
 	PROP_ANNOT_NAME,
 	PROP_ANNOT_MODIFIED,
 	PROP_ANNOT_COLOR,
-        PROP_ANNOT_RGBA
+        PROP_ANNOT_RGBA,
+        PROP_ANNOT_AREA
 };
 
 /* EvAnnotationMarkup */
@@ -170,6 +172,10 @@ static void
 ev_annotation_init (EvAnnotation *annot)
 {
 	annot->type = EV_ANNOTATION_TYPE_UNKNOWN;
+        annot->area.x1 = -1;
+        annot->area.y1 = -1;
+        annot->area.x2 = -1;
+        annot->area.y2 = -1;
 }
 
 static void
@@ -198,6 +204,9 @@ ev_annotation_set_property (GObject      *object,
 		break;
         case PROP_ANNOT_RGBA:
                 ev_annotation_set_rgba (annot, g_value_get_boxed (value));
+                break;
+        case PROP_ANNOT_AREA:
+                ev_annotation_set_area (annot, g_value_get_boxed (value));
                 break;
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -231,6 +240,9 @@ ev_annotation_get_property (GObject    *object,
         }
         case PROP_ANNOT_RGBA:
                 g_value_set_boxed (value, &annot->rgba);
+                break;
+        case PROP_ANNOT_AREA:
+                g_value_set_boxed (value, &annot->area);
                 break;
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -304,6 +316,22 @@ ev_annotation_class_init (EvAnnotationClass *klass)
                                          PROP_ANNOT_COLOR,
                                          g_param_spec_boxed ("rgba", NULL, NULL,
                                                              GDK_TYPE_RGBA,
+                                                             G_PARAM_READWRITE |
+                                                             G_PARAM_STATIC_STRINGS));
+
+        /**
+         * EvAnnotation:area:
+         *
+         * The area of the page where the annotation is placed.
+         *
+         * Since 3.18
+         */
+        g_object_class_install_property (g_object_class,
+                                         PROP_ANNOT_AREA,
+                                         g_param_spec_boxed ("area",
+                                                             "Area",
+                                                             "The area of the page where the annotation is placed",
+                                                             EV_TYPE_RECTANGLE,
                                                              G_PARAM_READWRITE |
                                                              G_PARAM_STATIC_STRINGS));
 }
@@ -649,6 +677,57 @@ ev_annotation_set_rgba (EvAnnotation  *annot,
         annot->rgba = *rgba;
         g_object_notify (G_OBJECT (annot), "rgba");
 	g_object_notify (G_OBJECT (annot), "color");
+
+        return TRUE;
+}
+
+/**
+ * ev_annotation_set_area:
+ * @annot: an #EvAnnotation
+ * @area: (out): a #EvRectangle to be filled with the annotation area
+ *
+ * Gets the area of @annot.
+ *
+ * Since: 3.18
+ */
+void
+ev_annotation_get_area (EvAnnotation *annot,
+                        EvRectangle  *area)
+{
+        g_return_if_fail (EV_IS_ANNOTATION (annot));
+        g_return_if_fail (area != NULL);
+
+        *area = annot->area;
+}
+
+/**
+ * ev_annotation_set_area:
+ * @annot: an #Evannotation
+ * @area: a #EvRectangle
+ *
+ * Set the area of the annotation to @area.
+ *
+ * Returns: %TRUE if the area has been changed, %FALSE otherwise
+ *
+ * Since: 3.18
+ */
+gboolean
+ev_annotation_set_area (EvAnnotation      *annot,
+                        const EvRectangle *area)
+{
+        gboolean was_initial;
+
+        g_return_val_if_fail (EV_IS_ANNOTATION (annot), FALSE);
+        g_return_val_if_fail (area != NULL, FALSE);
+
+        if (ev_rect_cmp ((EvRectangle *)area, &annot->area) == 0)
+                return FALSE;
+
+        was_initial = annot->area.x1 == -1 && annot->area.x2 == -1
+                && annot->area.y1 == -1 && annot->area.y2 == -1;
+        annot->area = *area;
+        if (!was_initial)
+                g_object_notify (G_OBJECT (annot), "area");
 
         return TRUE;
 }
