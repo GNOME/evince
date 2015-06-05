@@ -3339,9 +3339,9 @@ ev_view_create_annotation (EvView *view)
 
 	if (EV_IS_ANNOTATION_MARKUP (annot)) {
 		popup_rect.x1 = doc_rect.x2;
-		popup_rect.x2 = popup_rect.x1 + 200;
+		popup_rect.x2 = popup_rect.x1 + ANNOT_POPUP_WINDOW_DEFAULT_WIDTH;
 		popup_rect.y1 = doc_rect.y2;
-		popup_rect.y2 = popup_rect.y1 + 150;
+		popup_rect.y2 = popup_rect.y1 + ANNOT_POPUP_WINDOW_DEFAULT_HEIGHT;
 		g_object_set (annot,
 			      "rectangle", &popup_rect,
 			      "has_popup", TRUE,
@@ -3357,17 +3357,6 @@ ev_view_create_annotation (EvView *view)
 	/* If the page didn't have annots, mark the cache as dirty */
 	if (!ev_page_cache_get_annot_mapping (view->page_cache, view->current_page))
 		ev_page_cache_mark_dirty (view->page_cache, view->current_page, EV_PAGE_DATA_INCLUDE_ANNOTS);
-
-	if (EV_IS_ANNOTATION_MARKUP (annot)) {
-		GtkWindow *parent;
-		GtkWidget *window;
-
-		parent = GTK_WINDOW (gtk_widget_get_toplevel (GTK_WIDGET (view)));
-		window = ev_view_create_annotation_window (view, annot, parent);
-
-		/* Show the annot window the first time */
-		ev_view_annotation_show_popup_window (view, window);
-	}
 
 	_ev_view_transform_doc_rect_to_view_rect (view, view->current_page, &doc_rect, &view_rect);
 	view_rect.x -= view->scroll_x;
@@ -5343,7 +5332,52 @@ ev_view_motion_notify_event (GtkWidget      *widget,
 		if (view->rotation != 0)
 			return FALSE;
 
-		if (!view->adding_annot_info.adding_annot) {
+		if (view->adding_annot_info.adding_annot) {
+			EvRectangle  rect;
+			EvRectangle  current_area;
+			EvPoint      start;
+			EvPoint      end;
+			GdkRectangle page_area;
+			GtkBorder    border;
+
+			if (!view->adding_annot_info.annot)
+				return TRUE;
+
+			ev_annotation_get_area (view->adding_annot_info.annot, &current_area);
+
+			view->adding_annot_info.stop.x = event->x + view->scroll_x;
+			view->adding_annot_info.stop.y = event->y + view->scroll_y;
+			ev_view_get_page_extents (view, view->current_page, &page_area, &border);
+			_ev_view_transform_view_point_to_doc_point (view, &view->adding_annot_info.start, &page_area, &border,
+								    &start.x, &start.y);
+			_ev_view_transform_view_point_to_doc_point (view, &view->adding_annot_info.stop, &page_area, &border,
+								    &end.x, &end.y);
+
+			switch (view->adding_annot_info.type) {
+			case EV_ANNOTATION_TYPE_TEXT:
+				rect.x1 = end.x;
+				rect.y1 = end.y;
+				rect.x2 = rect.x1 + current_area.x2 - current_area.x1;
+				rect.y2 = rect.y1 + current_area.y2 - current_area.y1;
+				break;
+			default:
+				g_assert_not_reached ();
+			}
+
+			/* Take the mutex before set_area, because the notify signal
+			 * updates the mappings in the backend */
+			ev_document_doc_mutex_lock ();
+			if (ev_annotation_set_area (view->adding_annot_info.annot, &rect)) {
+				ev_document_annotations_save_annotation (EV_DOCUMENT_ANNOTATIONS (view->document),
+									 view->adding_annot_info.annot,
+									 EV_ANNOTATIONS_SAVE_AREA);
+			}
+			ev_document_doc_mutex_unlock ();
+
+
+			/* FIXME: reload only annotation area */
+			ev_view_reload_page (view, view->current_page, NULL);
+		} else {
 			/* Schedule timeout to scroll during selection and additionally
 			 * scroll once to allow arbitrary speed. */
 			if (!view->selection_scroll_id)
@@ -5467,6 +5501,34 @@ ev_view_button_release_event (GtkWidget      *widget,
 	if (view->adding_annot_info.adding_annot) {
 		g_assert (view->pressed_button == 1);
 		g_assert (view->adding_annot_info.annot);
+
+		if (EV_IS_ANNOTATION_MARKUP (view->adding_annot_info.annot)) {
+			GtkWindow  *parent;
+			GtkWidget  *window;
+			EvRectangle area;
+			EvRectangle popup_rect;
+
+			ev_annotation_get_area (view->adding_annot_info.annot, &area);
+			popup_rect.x1 = area.x2;
+			popup_rect.x2 = popup_rect.x1 + ANNOT_POPUP_WINDOW_DEFAULT_WIDTH;
+			popup_rect.y1 = area.y2;
+			popup_rect.y2 = popup_rect.y1 + ANNOT_POPUP_WINDOW_DEFAULT_HEIGHT;
+
+			if (ev_annotation_markup_set_rectangle (EV_ANNOTATION_MARKUP (view->adding_annot_info.annot),
+								&popup_rect)) {
+				ev_document_doc_mutex_lock ();
+				ev_document_annotations_save_annotation (EV_DOCUMENT_ANNOTATIONS (view->document),
+									 view->adding_annot_info.annot,
+									 EV_ANNOTATIONS_SAVE_POPUP_RECT);
+				ev_document_doc_mutex_unlock ();
+			}
+
+			parent = GTK_WINDOW (gtk_widget_get_toplevel (GTK_WIDGET (view)));
+			window = ev_view_create_annotation_window (view, view->adding_annot_info.annot, parent);
+			/* Show the annot window the first time for text annotations */
+			if (view->adding_annot_info.type == EV_ANNOTATION_TYPE_TEXT)
+				ev_view_annotation_show_popup_window (view, window);
+		}
 
 		view->adding_annot_info.stop.x = event->x + view->scroll_x;
 		view->adding_annot_info.stop.y = event->y + view->scroll_y;
