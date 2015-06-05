@@ -3375,6 +3375,23 @@ pdf_document_annotations_save_annotation (EvDocumentAnnotations *document_annota
 		poppler_annot_set_color (poppler_annot, &color);
 	}
 
+	if (mask & EV_ANNOTATIONS_SAVE_AREA) {
+		EvRectangle      area;
+		PopplerRectangle poppler_rect;
+		EvPage          *page;
+		gdouble          height;
+
+		page = ev_annotation_get_page (annot);
+		poppler_page_get_size (POPPLER_PAGE (page->backend_page), NULL, &height);
+
+		ev_annotation_get_area (annot, &area);
+		poppler_rect.x1 = area.x1;
+		poppler_rect.x2 = area.x2;
+		poppler_rect.y1 = height - area.y2;
+		poppler_rect.y2 = height - area.y1;
+		poppler_annot_set_rectangle (poppler_annot, &poppler_rect);
+	}
+
 	if (EV_IS_ANNOTATION_MARKUP (annot)) {
 		EvAnnotationMarkup *ev_markup = EV_ANNOTATION_MARKUP (annot);
 		PopplerAnnotMarkup *markup = POPPLER_ANNOT_MARKUP (poppler_annot);
