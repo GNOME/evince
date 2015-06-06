@@ -5512,6 +5512,8 @@ ev_view_button_release_event (GtkWidget      *widget,
 	view->drag_info.in_drag = FALSE;
 
 	if (view->adding_annot_info.adding_annot) {
+		gboolean annot_added = TRUE;
+
 		g_assert (view->pressed_button == 1);
 		g_assert (view->adding_annot_info.annot);
 
@@ -5522,30 +5524,43 @@ ev_view_button_release_event (GtkWidget      *widget,
 			EvRectangle popup_rect;
 
 			ev_annotation_get_area (view->adding_annot_info.annot, &area);
-			popup_rect.x1 = area.x2;
-			popup_rect.x2 = popup_rect.x1 + ANNOT_POPUP_WINDOW_DEFAULT_WIDTH;
-			popup_rect.y1 = area.y2;
-			popup_rect.y2 = popup_rect.y1 + ANNOT_POPUP_WINDOW_DEFAULT_HEIGHT;
 
-			if (ev_annotation_markup_set_rectangle (EV_ANNOTATION_MARKUP (view->adding_annot_info.annot),
-								&popup_rect)) {
+			if (area.x1 == 0 && area.y1 == 0 && area.x2 == 0 && area.y2 == 0) {
+				/* Do not create empty annots */
+				annot_added = FALSE;
+
 				ev_document_doc_mutex_lock ();
-				ev_document_annotations_save_annotation (EV_DOCUMENT_ANNOTATIONS (view->document),
-									 view->adding_annot_info.annot,
-									 EV_ANNOTATIONS_SAVE_POPUP_RECT);
+				ev_document_annotations_remove_annotation (EV_DOCUMENT_ANNOTATIONS (view->document),
+									   view->adding_annot_info.annot);
 				ev_document_doc_mutex_unlock ();
-			}
+				ev_page_cache_mark_dirty (view->page_cache, view->current_page, EV_PAGE_DATA_INCLUDE_ANNOTS);
+			} else {
+				popup_rect.x1 = area.x2;
+				popup_rect.x2 = popup_rect.x1 + ANNOT_POPUP_WINDOW_DEFAULT_WIDTH;
+				popup_rect.y1 = area.y2;
+				popup_rect.y2 = popup_rect.y1 + ANNOT_POPUP_WINDOW_DEFAULT_HEIGHT;
 
-			parent = GTK_WINDOW (gtk_widget_get_toplevel (GTK_WIDGET (view)));
-			window = ev_view_create_annotation_window (view, view->adding_annot_info.annot, parent);
-			/* Show the annot window the first time for text annotations */
-			if (view->adding_annot_info.type == EV_ANNOTATION_TYPE_TEXT)
-				ev_view_annotation_show_popup_window (view, window);
+				if (ev_annotation_markup_set_rectangle (EV_ANNOTATION_MARKUP (view->adding_annot_info.annot),
+									&popup_rect)) {
+					ev_document_doc_mutex_lock ();
+					ev_document_annotations_save_annotation (EV_DOCUMENT_ANNOTATIONS (view->document),
+										 view->adding_annot_info.annot,
+										 EV_ANNOTATIONS_SAVE_POPUP_RECT);
+					ev_document_doc_mutex_unlock ();
+				}
+
+				parent = GTK_WINDOW (gtk_widget_get_toplevel (GTK_WIDGET (view)));
+				window = ev_view_create_annotation_window (view, view->adding_annot_info.annot, parent);
+				/* Show the annot window the first time for text annotations */
+				if (view->adding_annot_info.type == EV_ANNOTATION_TYPE_TEXT)
+					ev_view_annotation_show_popup_window (view, window);
+			}
 		}
 
 		view->adding_annot_info.stop.x = event->x + view->scroll_x;
 		view->adding_annot_info.stop.y = event->y + view->scroll_y;
-		g_signal_emit (view, signals[SIGNAL_ANNOT_ADDED], 0, view->adding_annot_info.annot);
+		if (annot_added)
+			g_signal_emit (view, signals[SIGNAL_ANNOT_ADDED], 0, view->adding_annot_info.annot);
 
 		view->adding_annot_info.adding_annot = FALSE;
 		view->adding_annot_info.annot = NULL;
