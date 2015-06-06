@@ -3300,6 +3300,8 @@ ev_view_create_annotation (EvView *view)
 	EvAnnotation   *annot;
 	EvPoint         start;
 	EvPoint         end;
+	gint            annot_page;
+	gint            offset;
 	GdkRectangle    page_area;
 	GtkBorder       border;
 	EvRectangle     doc_rect, popup_rect;
@@ -3308,14 +3310,20 @@ ev_view_create_annotation (EvView *view)
 	GdkRectangle    view_rect;
 	cairo_region_t *region;
 
-	ev_view_get_page_extents (view, view->current_page, &page_area, &border);
+	find_page_at_location (view, view->adding_annot_info.start.x, view->adding_annot_info.start.y, &annot_page, &offset, &offset);
+	if (annot_page == -1) {
+		ev_view_cancel_add_annotation (view);
+		return;
+	}
+
+	ev_view_get_page_extents (view, annot_page, &page_area, &border);
 	_ev_view_transform_view_point_to_doc_point (view, &view->adding_annot_info.start, &page_area, &border,
 						    &start.x, &start.y);
 	_ev_view_transform_view_point_to_doc_point (view, &view->adding_annot_info.stop, &page_area, &border,
 						    &end.x, &end.y);
 
 	ev_document_doc_mutex_lock ();
-	page = ev_document_get_page (view->document, view->current_page);
+	page = ev_document_get_page (view->document, annot_page);
         switch (view->adding_annot_info.type) {
         case EV_ANNOTATION_TYPE_TEXT:
                 doc_rect.x1 = end.x;
@@ -3362,14 +3370,14 @@ ev_view_create_annotation (EvView *view)
 	ev_document_doc_mutex_unlock ();
 
 	/* If the page didn't have annots, mark the cache as dirty */
-	if (!ev_page_cache_get_annot_mapping (view->page_cache, view->current_page))
-		ev_page_cache_mark_dirty (view->page_cache, view->current_page, EV_PAGE_DATA_INCLUDE_ANNOTS);
+	if (!ev_page_cache_get_annot_mapping (view->page_cache, annot_page))
+		ev_page_cache_mark_dirty (view->page_cache, annot_page, EV_PAGE_DATA_INCLUDE_ANNOTS);
 
-	_ev_view_transform_doc_rect_to_view_rect (view, view->current_page, &doc_rect, &view_rect);
+	_ev_view_transform_doc_rect_to_view_rect (view, annot_page, &doc_rect, &view_rect);
 	view_rect.x -= view->scroll_x;
 	view_rect.y -= view->scroll_y;
 	region = cairo_region_create_rectangle (&view_rect);
-	ev_view_reload_page (view, view->current_page, region);
+	ev_view_reload_page (view, annot_page, region);
 	cairo_region_destroy (region);
 
 	view->adding_annot_info.annot = annot;
@@ -5346,6 +5354,7 @@ ev_view_motion_notify_event (GtkWidget      *widget,
 			EvPoint      end;
 			GdkRectangle page_area;
 			GtkBorder    border;
+			guint        annot_page;
 
 			if (!view->adding_annot_info.annot)
 				return TRUE;
@@ -5354,7 +5363,8 @@ ev_view_motion_notify_event (GtkWidget      *widget,
 
 			view->adding_annot_info.stop.x = event->x + view->scroll_x;
 			view->adding_annot_info.stop.y = event->y + view->scroll_y;
-			ev_view_get_page_extents (view, view->current_page, &page_area, &border);
+			annot_page = ev_annotation_get_page_index (view->adding_annot_info.annot);
+			ev_view_get_page_extents (view, annot_page, &page_area, &border);
 			_ev_view_transform_view_point_to_doc_point (view, &view->adding_annot_info.start, &page_area, &border,
 								    &start.x, &start.y);
 			_ev_view_transform_view_point_to_doc_point (view, &view->adding_annot_info.stop, &page_area, &border,
@@ -5389,7 +5399,7 @@ ev_view_motion_notify_event (GtkWidget      *widget,
 
 
 			/* FIXME: reload only annotation area */
-			ev_view_reload_page (view, view->current_page, NULL);
+			ev_view_reload_page (view, annot_page, NULL);
 		} else {
 			/* Schedule timeout to scroll during selection and additionally
 			 * scroll once to allow arbitrary speed. */
@@ -5533,7 +5543,10 @@ ev_view_button_release_event (GtkWidget      *widget,
 				ev_document_annotations_remove_annotation (EV_DOCUMENT_ANNOTATIONS (view->document),
 									   view->adding_annot_info.annot);
 				ev_document_doc_mutex_unlock ();
-				ev_page_cache_mark_dirty (view->page_cache, view->current_page, EV_PAGE_DATA_INCLUDE_ANNOTS);
+
+				ev_page_cache_mark_dirty (view->page_cache,
+							  ev_annotation_get_page_index (view->adding_annot_info.annot),
+							  EV_PAGE_DATA_INCLUDE_ANNOTS);
 			} else {
 				popup_rect.x1 = area.x2;
 				popup_rect.x2 = popup_rect.x1 + ANNOT_POPUP_WINDOW_DEFAULT_WIDTH;
