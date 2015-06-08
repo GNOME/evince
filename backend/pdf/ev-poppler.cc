@@ -3230,13 +3230,13 @@ get_quads_for_area (PopplerPage      *page,
 		PopplerQuadrilateral *quad = &g_array_index (quads, PopplerQuadrilateral, i);
 
 		quad->p1.x = r->x1;
-		quad->p1.y = height - r->y2;
+		quad->p1.y = height - r->y1;
 		quad->p2.x = r->x2;
-		quad->p2.y = height - r->y2;
+		quad->p2.y = height - r->y1;
 		quad->p3.x = r->x1;
-		quad->p3.y = height - r->y1;
+		quad->p3.y = height - r->y2;
 		quad->p4.x = r->x2;
-		quad->p4.y = height - r->y1;
+		quad->p4.y = height - r->y2;
 		poppler_rectangle_free (r);
 
 		if (!bbox)
