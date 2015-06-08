@@ -3415,7 +3415,7 @@ copy_poppler_annot (PopplerAnnot* src_annot,
 	poppler_annot_set_color (dst_annot, color);
 	g_free (color);
 
-	if (EV_IS_ANNOTATION_MARKUP (src_annot)) {
+	if (POPPLER_IS_ANNOT_MARKUP (src_annot) && POPPLER_IS_ANNOT_MARKUP (dst_annot)) {
 		PopplerAnnotMarkup *src_markup = POPPLER_ANNOT_MARKUP (src_annot);
 		PopplerAnnotMarkup *dst_markup = POPPLER_ANNOT_MARKUP (dst_annot);
 		char               *label;
