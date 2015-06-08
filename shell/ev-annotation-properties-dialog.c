@@ -129,6 +129,7 @@ ev_annotation_properties_dialog_constructed (GObject *object)
                 gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (dialog->text_markup_type), _("Highlight"));
                 gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (dialog->text_markup_type), _("Strike out"));
                 gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (dialog->text_markup_type), _("Underline"));
+                gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (dialog->text_markup_type), _("Squiggly"));
                 gtk_combo_box_set_active (GTK_COMBO_BOX (dialog->text_markup_type), 0);
                 gtk_grid_attach (GTK_GRID (grid), dialog->text_markup_type, 1, 5, 1, 1);
                 gtk_widget_set_hexpand (dialog->text_markup_type, TRUE);
