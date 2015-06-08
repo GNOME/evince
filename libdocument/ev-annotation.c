@@ -1471,6 +1471,16 @@ ev_annotation_text_markup_underline_new (EvPage *page)
         return annot;
 }
 
+EvAnnotation *
+ev_annotation_text_markup_squiggly_new (EvPage *page)
+{
+        EvAnnotation *annot = EV_ANNOTATION (g_object_new (EV_TYPE_ANNOTATION_TEXT_MARKUP,
+                                                           "page", page,
+                                                           "type", EV_ANNOTATION_TEXT_MARKUP_SQUIGGLY,
+                                                           NULL));
+        return annot;
+}
+
 EvAnnotationTextMarkupType
 ev_annotation_text_markup_get_markup_type (EvAnnotationTextMarkup *annot)
 {
