@@ -5006,7 +5006,42 @@ ev_view_button_press_event (GtkWidget      *widget,
 			} else if ((media = ev_view_get_media_at_location (view, event->x, event->y))) {
 				ev_view_handle_media (view, media);
 			} else if ((annot = ev_view_get_annotation_at_location (view, event->x, event->y))) {
-				ev_view_handle_annotation (view, annot, event->x, event->y, event->time);
+				if (EV_IS_ANNOTATION_TEXT (annot)) {
+					EvRectangle  current_area;
+					GdkPoint     view_point;
+					EvPoint      doc_point;
+					GdkRectangle page_area;
+					GtkBorder    border;
+					guint        annot_page;
+
+					/* annot_clicked remembers that we clicked
+					 * on an annotation. We need moving_annot
+					 * to distinguish moving an annotation from
+					 * showing its popup upon button release. */
+					view->moving_annot_info.annot_clicked = TRUE;
+					view->moving_annot_info.moving_annot = FALSE;
+					view->moving_annot_info.annot = annot;
+					ev_annotation_get_area (annot, &current_area);
+
+					view_point.x = event->x + view->scroll_x;
+					view_point.y = event->y + view->scroll_y;
+
+					/* Remember the coordinates of the button press event
+					 * in order to implement a minimum threshold for moving
+					 * annotations. */
+					view->moving_annot_info.start = view_point;
+					annot_page = ev_annotation_get_page_index (annot);
+					ev_view_get_page_extents (view, annot_page, &page_area, &border);
+					_ev_view_transform_view_point_to_doc_point (view, &view_point,
+										    &page_area, &border,
+										    &doc_point.x, &doc_point.y);
+
+					/* Remember the offset of the cursor with respect to
+					 * the annotation area in order to prevent the annotation from
+					 * jumping under the cursor while moving it. */
+					view->moving_annot_info.cursor_offset.x = doc_point.x - current_area.x1;
+					view->moving_annot_info.cursor_offset.y = doc_point.y - current_area.y1;
+				}
 			} else if ((field = ev_view_get_form_field_at_location (view, event->x, event->y))) {
 				ev_view_remove_all_form_fields (view);
 				ev_view_handle_form_field (view, field);
@@ -5406,6 +5441,69 @@ ev_view_motion_notify_event (GtkWidget      *widget,
 
 			/* FIXME: reload only annotation area */
 			ev_view_reload_page (view, annot_page, NULL);
+		} else if (view->moving_annot_info.annot_clicked) {
+			EvRectangle  rect;
+			EvRectangle  current_area;
+			GdkPoint     view_point;
+			EvPoint      doc_point;
+			GdkRectangle page_area;
+			GtkBorder    border;
+			guint        annot_page;
+			double       page_width;
+			double       page_height;
+
+			if (!view->moving_annot_info.annot)
+				return TRUE;
+
+			view_point.x = event->x + view->scroll_x;
+			view_point.y = event->y + view->scroll_y;
+
+			if (!view->moving_annot_info.moving_annot) {
+				/* Only move the annotation if the threshold is exceeded */
+				if (!gtk_drag_check_threshold (widget,
+							       view->moving_annot_info.start.x,
+							       view->moving_annot_info.start.y,
+							       view_point.x,
+							       view_point.y))
+					return TRUE;
+				view->moving_annot_info.moving_annot = TRUE;
+			}
+
+			ev_annotation_get_area (view->moving_annot_info.annot, &current_area);
+			annot_page = ev_annotation_get_page_index (view->moving_annot_info.annot);
+			ev_view_get_page_extents (view, annot_page, &page_area, &border);
+			_ev_view_transform_view_point_to_doc_point (view, &view_point, &page_area, &border,
+								    &doc_point.x, &doc_point.y);
+
+			ev_document_get_page_size (view->document, annot_page, &page_width, &page_height);
+
+			rect.x1 = MAX (0, doc_point.x - view->moving_annot_info.cursor_offset.x);
+			rect.y1 = MAX (0, doc_point.y - view->moving_annot_info.cursor_offset.y);
+			rect.x2 = rect.x1 + current_area.x2 - current_area.x1;
+			rect.y2 = rect.y1 + current_area.y2 - current_area.y1;
+
+			/* Prevent the annotation from being moved off the page */
+			if (rect.x2 > page_width) {
+				rect.x2 = page_width;
+				rect.x1 = page_width - current_area.x2 + current_area.x1;
+			}
+			if (rect.y2 > page_height) {
+				rect.y2 = page_height;
+				rect.y1 = page_height - current_area.y2 + current_area.y1;
+			}
+
+			/* Take the mutex before set_area, because the notify signal
+			 * updates the mappings in the backend */
+			ev_document_doc_mutex_lock ();
+			if (ev_annotation_set_area (view->moving_annot_info.annot, &rect)) {
+				ev_document_annotations_save_annotation (EV_DOCUMENT_ANNOTATIONS (view->document),
+									 view->moving_annot_info.annot,
+									 EV_ANNOTATIONS_SAVE_AREA);
+			}
+			ev_document_doc_mutex_unlock ();
+
+			/* FIXME: reload only annotation area */
+			ev_view_reload_page (view, annot_page, NULL);
 		} else {
 			/* Schedule timeout to scroll during selection and additionally
 			 * scroll once to allow arbitrary speed. */
@@ -5587,6 +5685,27 @@ ev_view_button_release_event (GtkWidget      *widget,
 		view->pressed_button = -1;
 
 		return FALSE;
+	}
+
+	if (view->moving_annot_info.annot_clicked) {
+		if (view->moving_annot_info.moving_annot)
+			ev_view_handle_cursor_over_xy (view, event->x, event->y);
+		else
+			ev_view_handle_annotation (view, view->moving_annot_info.annot, event->x, event->y, event->time);
+
+		view->moving_annot_info.annot_clicked = FALSE;
+		view->moving_annot_info.moving_annot = FALSE;
+		view->moving_annot_info.annot = NULL;
+		view->pressed_button = -1;
+
+		return FALSE;
+	}
+
+	if (view->pressed_button == 1) {
+		EvAnnotation *annot = ev_view_get_annotation_at_location (view, event->x, event->y);
+
+		if (annot)
+			ev_view_handle_annotation (view, annot, event->x, event->y, event->time);
 	}
 
 	if (view->pressed_button == 2) {

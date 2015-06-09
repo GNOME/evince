@@ -122,6 +122,14 @@ typedef struct {
 	EvAnnotation    *annot;
 } AddingAnnotInfo;
 
+typedef struct {
+	GdkPoint      start;
+	EvPoint       cursor_offset;
+	gboolean      annot_clicked;
+	gboolean      moving_annot;
+	EvAnnotation *annot;
+} MovingAnnotInfo;
+
 struct _EvView {
 	GtkContainer layout;
 
@@ -217,6 +225,7 @@ struct _EvView {
 	GList             *window_children;
 	EvViewWindowChild *window_child_focus;
 	AddingAnnotInfo    adding_annot_info;
+	MovingAnnotInfo    moving_annot_info;
 
 	/* Focus */
 	EvMapping *focused_element;
