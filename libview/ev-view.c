@@ -991,6 +991,12 @@ ev_view_scroll (EvView        *view,
 			case GTK_SCROLL_STEP_FORWARD:
 				ev_view_next_page (view);
 				break;
+		        case GTK_SCROLL_START:
+				ev_view_first_page (view);
+				break;
+		        case GTK_SCROLL_END:
+				ev_view_last_page (view);
+				break;
 			default:
 				break;
 		}
