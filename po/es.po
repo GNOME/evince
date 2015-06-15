@@ -15,8 +15,8 @@ msgstr ""
 "Project-Id-Version: evince.master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evince&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-06-08 03:51+0000\n"
-"PO-Revision-Date: 2015-06-08 \n"
+"POT-Creation-Date: 2015-06-15 03:51+0000\n"
+"PO-Revision-Date: 2015-06-15 \n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español; Castellano <gnome-es-list@gnome.org>\n"
 "Language: \n"
@@ -642,46 +642,46 @@ msgstr "Desplazar la vista hacia abajo"
 msgid "Document View"
 msgstr "Vista de documento"
 
-#: ../libview/ev-view.c:2017
+#: ../libview/ev-view.c:2023
 msgid "Go to first page"
 msgstr "Ir a la primera página"
 
-#: ../libview/ev-view.c:2019
+#: ../libview/ev-view.c:2025
 msgid "Go to previous page"
 msgstr "Ir a la página anterior"
 
-#: ../libview/ev-view.c:2021
+#: ../libview/ev-view.c:2027
 msgid "Go to next page"
 msgstr "Ir a la página siguiente"
 
-#: ../libview/ev-view.c:2023
+#: ../libview/ev-view.c:2029
 msgid "Go to last page"
 msgstr "Ir a la última página"
 
-#: ../libview/ev-view.c:2025
+#: ../libview/ev-view.c:2031
 msgid "Go to page"
 msgstr "Ir a la página"
 
-#: ../libview/ev-view.c:2027
+#: ../libview/ev-view.c:2033
 msgid "Find"
 msgstr "Buscar"
 
-#: ../libview/ev-view.c:2055
+#: ../libview/ev-view.c:2061
 #, c-format
 msgid "Go to page %s"
 msgstr "Ir a la página %s"
 
-#: ../libview/ev-view.c:2061
+#: ../libview/ev-view.c:2067
 #, c-format
 msgid "Go to %s on file “%s”"
 msgstr "Ir a %s en el archivo «%s»"
 
-#: ../libview/ev-view.c:2064
+#: ../libview/ev-view.c:2070
 #, c-format
 msgid "Go to file “%s”"
 msgstr "Ir al archivo «%s»"
 
-#: ../libview/ev-view.c:2072
+#: ../libview/ev-view.c:2078
 #, c-format
 msgid "Launch %s"
 msgstr "Lanzar %s"
@@ -764,7 +764,7 @@ msgid "Subject:"
 msgstr "Asunto:"
 
 #: ../properties/ev-properties-view.c:64
-#: ../shell/ev-annotation-properties-dialog.c:173
+#: ../shell/ev-annotation-properties-dialog.c:174
 msgid "Author:"
 msgstr "Autor:"
 
@@ -907,35 +907,39 @@ msgstr "Tachado"
 msgid "Underline"
 msgstr "Subrayado"
 
-#: ../shell/ev-annotation-properties-dialog.c:153
+#: ../shell/ev-annotation-properties-dialog.c:132
+msgid "Squiggly"
+msgstr "Garabato"
+
+#: ../shell/ev-annotation-properties-dialog.c:154
 msgid "Annotation Properties"
 msgstr "Propiedades de las anotaciones"
 
-#: ../shell/ev-annotation-properties-dialog.c:184
+#: ../shell/ev-annotation-properties-dialog.c:185
 msgid "Color:"
 msgstr "Color:"
 
-#: ../shell/ev-annotation-properties-dialog.c:194
+#: ../shell/ev-annotation-properties-dialog.c:195
 msgid "Style:"
 msgstr "Estilo:"
 
-#: ../shell/ev-annotation-properties-dialog.c:209
+#: ../shell/ev-annotation-properties-dialog.c:210
 msgid "Transparent"
 msgstr "Transparente"
 
-#: ../shell/ev-annotation-properties-dialog.c:216
+#: ../shell/ev-annotation-properties-dialog.c:217
 msgid "Opaque"
 msgstr "Opaca"
 
-#: ../shell/ev-annotation-properties-dialog.c:226
+#: ../shell/ev-annotation-properties-dialog.c:227
 msgid "Initial window state:"
 msgstr "Estado inicial de la ventana:"
 
-#: ../shell/ev-annotation-properties-dialog.c:232
+#: ../shell/ev-annotation-properties-dialog.c:233
 msgid "Open"
 msgstr "Abierta"
 
-#: ../shell/ev-annotation-properties-dialog.c:233
+#: ../shell/ev-annotation-properties-dialog.c:234
 msgid "Close"
 msgstr "Cerrada"
 
@@ -1093,7 +1097,7 @@ msgstr "Más información"
 msgid "List"
 msgstr "Lista"
 
-#: ../shell/ev-sidebar-annotations.c:206 ../shell/ev-sidebar-annotations.c:609
+#: ../shell/ev-sidebar-annotations.c:206 ../shell/ev-sidebar-annotations.c:620
 msgid "Annotations"
 msgstr "Anotaciones"
 
@@ -1106,7 +1110,6 @@ msgid "Add text annotation"
 msgstr "Añadir anotación de texto"
 
 #: ../shell/ev-sidebar-annotations.c:225
-#| msgid "Add text annotation"
 msgid "Add highlight annotation"
 msgstr "Añadir anotación resaltada"
 
@@ -1114,11 +1117,11 @@ msgstr "Añadir anotación resaltada"
 msgid "Add"
 msgstr "Añadir"
 
-#: ../shell/ev-sidebar-annotations.c:407
+#: ../shell/ev-sidebar-annotations.c:408
 msgid "Document contains no annotations"
 msgstr "El documento no contiene ninguna anotación"
 
-#: ../shell/ev-sidebar-annotations.c:439
+#: ../shell/ev-sidebar-annotations.c:440
 #, c-format
 msgid "Page %d"
 msgstr "Página %d"
