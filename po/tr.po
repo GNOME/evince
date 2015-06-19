@@ -13,8 +13,8 @@ msgstr ""
 "Project-Id-Version: evince\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evince&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-06-10 15:52+0000\n"
-"PO-Revision-Date: 2015-06-10 23:12+0300\n"
+"POT-Creation-Date: 2015-06-19 03:51+0000\n"
+"PO-Revision-Date: 2015-06-19 10:20+0300\n"
 "Last-Translator: Muhammet Kara <muhammetk@gmail.com>\n"
 "Language-Team: Türkçe <gnome-turk@gnome.org>\n"
 "Language: tr\n"
@@ -480,7 +480,6 @@ msgid "Not found, click to change search options"
 msgstr "Bulunamadı, arama seçeneklerini değiştirmek için tıklayın"
 
 #: ../libmisc/ev-search-box.c:180 ../libmisc/ev-search-box.c:236
-#| msgid "File options"
 msgid "Search options"
 msgstr "Arama seçenekleri"
 
@@ -637,46 +636,46 @@ msgstr "Görünümü Aşağı Kaydır"
 msgid "Document View"
 msgstr "Belge Görünümü"
 
-#: ../libview/ev-view.c:2017
+#: ../libview/ev-view.c:2023
 msgid "Go to first page"
 msgstr "İlk sayfaya git"
 
-#: ../libview/ev-view.c:2019
+#: ../libview/ev-view.c:2025
 msgid "Go to previous page"
 msgstr "Önceki sayfaya git"
 
-#: ../libview/ev-view.c:2021
+#: ../libview/ev-view.c:2027
 msgid "Go to next page"
 msgstr "Sonraki sayfaya git"
 
-#: ../libview/ev-view.c:2023
+#: ../libview/ev-view.c:2029
 msgid "Go to last page"
 msgstr "Son sayfaya git"
 
-#: ../libview/ev-view.c:2025
+#: ../libview/ev-view.c:2031
 msgid "Go to page"
 msgstr "Sayfaya git"
 
-#: ../libview/ev-view.c:2027
+#: ../libview/ev-view.c:2033
 msgid "Find"
 msgstr "Bul"
 
-#: ../libview/ev-view.c:2055
+#: ../libview/ev-view.c:2061
 #, c-format
 msgid "Go to page %s"
 msgstr "%s sayfasına git"
 
-#: ../libview/ev-view.c:2061
+#: ../libview/ev-view.c:2067
 #, c-format
 msgid "Go to %s on file “%s”"
 msgstr "\"%2$s\" dosyasındaki %1$s konumuna git"
 
-#: ../libview/ev-view.c:2064
+#: ../libview/ev-view.c:2070
 #, c-format
 msgid "Go to file “%s”"
 msgstr "\"%s\" dosyasına git"
 
-#: ../libview/ev-view.c:2072
+#: ../libview/ev-view.c:2078
 #, c-format
 msgid "Launch %s"
 msgstr "%s başlat"
@@ -759,7 +758,7 @@ msgid "Subject:"
 msgstr "Konu:"
 
 #: ../properties/ev-properties-view.c:64
-#: ../shell/ev-annotation-properties-dialog.c:173
+#: ../shell/ev-annotation-properties-dialog.c:174
 msgid "Author:"
 msgstr "Yazan:"
 
@@ -902,35 +901,39 @@ msgstr "Üstünü çiz"
 msgid "Underline"
 msgstr "Altını çiz"
 
-#: ../shell/ev-annotation-properties-dialog.c:153
+#: ../shell/ev-annotation-properties-dialog.c:132
+msgid "Squiggly"
+msgstr "Dalgalı"
+
+#: ../shell/ev-annotation-properties-dialog.c:154
 msgid "Annotation Properties"
 msgstr "Açıklama Özellikleri"
 
-#: ../shell/ev-annotation-properties-dialog.c:184
+#: ../shell/ev-annotation-properties-dialog.c:185
 msgid "Color:"
 msgstr "Renk:"
 
-#: ../shell/ev-annotation-properties-dialog.c:194
+#: ../shell/ev-annotation-properties-dialog.c:195
 msgid "Style:"
 msgstr "Stil:"
 
-#: ../shell/ev-annotation-properties-dialog.c:209
+#: ../shell/ev-annotation-properties-dialog.c:210
 msgid "Transparent"
 msgstr "Şeffaf"
 
-#: ../shell/ev-annotation-properties-dialog.c:216
+#: ../shell/ev-annotation-properties-dialog.c:217
 msgid "Opaque"
 msgstr "Işıkgeçirmez"
 
-#: ../shell/ev-annotation-properties-dialog.c:226
+#: ../shell/ev-annotation-properties-dialog.c:227
 msgid "Initial window state:"
 msgstr "Pencere başlangıç durumu:"
 
-#: ../shell/ev-annotation-properties-dialog.c:232
+#: ../shell/ev-annotation-properties-dialog.c:233
 msgid "Open"
 msgstr "Aç"
 
-#: ../shell/ev-annotation-properties-dialog.c:233
+#: ../shell/ev-annotation-properties-dialog.c:234
 msgid "Close"
 msgstr "Kapat"
 
@@ -1081,7 +1084,7 @@ msgstr "Daha Fazla Bilgi"
 msgid "List"
 msgstr "Liste"
 
-#: ../shell/ev-sidebar-annotations.c:206 ../shell/ev-sidebar-annotations.c:609
+#: ../shell/ev-sidebar-annotations.c:206 ../shell/ev-sidebar-annotations.c:620
 msgid "Annotations"
 msgstr "Açıklamalar"
 
@@ -1094,7 +1097,6 @@ msgid "Add text annotation"
 msgstr "Açıklama metni ekle"
 
 #: ../shell/ev-sidebar-annotations.c:225
-#| msgid "Add text annotation"
 msgid "Add highlight annotation"
 msgstr "Vurgu açıklaması ekle"
 
@@ -1102,11 +1104,11 @@ msgstr "Vurgu açıklaması ekle"
 msgid "Add"
 msgstr "Ekle"
 
-#: ../shell/ev-sidebar-annotations.c:407
+#: ../shell/ev-sidebar-annotations.c:408
 msgid "Document contains no annotations"
 msgstr "Belge hiçbir açıklama içermiyor"
 
-#: ../shell/ev-sidebar-annotations.c:439
+#: ../shell/ev-sidebar-annotations.c:440
 #, c-format
 msgid "Page %d"
 msgstr "Sayfa %d"
