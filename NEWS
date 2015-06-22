@@ -1,4 +1,39 @@
 ================
+Evince    3.17.3
+================
+
+New features and improvements:
+
+    * Add initial support for adding highlight annotations (#583377,
+      Giselle Machado, Carlos Garcia Campos)
+    * Add support for squiggly hightlight annotations too (#750612,
+      Philipp Reinkemeier)
+    * Add support for moving text annotations (#649043, Philipp
+      Reinkemeier)
+    * Force text annotations to have a fixed size 24x24 (#685334,
+      Philipp Reinkemeier)
+    * Handle GTK_SCROLL_START/GTK_SCROLL_END also in fit-to-page mode
+      (#737996, Carlos Garcia Campos)
+
+Bug fixes:
+
+    * Do not loose annotations properties when changing the subtype of
+      a highlight annotation (#750548, Philipp Reinkemeier)
+    * Only try to move the focus to different page when the current
+      page has a focused element to prevent the view from jumping to
+      the first/last page when TAB is pressed and there aren't
+      focusable elements in the document (#741979, Carlos Garcia
+      Campos)
+
+Translation updates:
+
+    * Benjamin Steinwender (de)
+    * Daniel Mustieles (es)
+    * Daniel Șerbănescu (ro)
+    * Muhammet Kara (tr)
+    * Chao-Hsiung Liao (zh_TW)
+
+================
 Evince    3.17.2
 ================
 
