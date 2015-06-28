@@ -51,6 +51,7 @@ struct _EvToolbarPrivate {
         GtkWidget *navigation_action;
         GtkWidget *find_button;
         GtkWidget *open_button;
+        GtkWidget *annots_button;
         GMenu *bookmarks_section;
 
         EvToolbarMode toolbar_mode;
@@ -225,6 +226,14 @@ ev_toolbar_constructed (GObject *object)
         gtk_widget_set_margin_end (button, 6);
         gtk_header_bar_pack_start (GTK_HEADER_BAR (ev_toolbar), button);
 
+        /* Edit Annots */
+        /* FIXME: Use a better icon for edit than text editor */
+        button = ev_toolbar_create_toggle_button (ev_toolbar, "win.toggle-edit-annots", "accessories-text-editor-symbolic",
+                                                  _("Annotate the document"));
+        ev_toolbar->priv->annots_button = button;
+        gtk_widget_set_margin_end (button, 6);
+        gtk_header_bar_pack_start (GTK_HEADER_BAR (ev_toolbar), button);
+
         /* Action Menu */
         menu = G_MENU_MODEL (gtk_builder_get_object (builder, "action-menu"));
         button = ev_toolbar_create_menu_button (ev_toolbar, "open-menu-symbolic",
@@ -365,6 +374,7 @@ ev_toolbar_set_mode (EvToolbar     *ev_toolbar,
                 gtk_widget_show (priv->zoom_action);
                 gtk_widget_show (priv->page_selector);
                 gtk_widget_show (priv->find_button);
+                gtk_widget_show (priv->annots_button);
                 gtk_widget_hide (priv->open_button);
                 break;
         case EV_TOOLBAR_MODE_FULLSCREEN:
@@ -374,6 +384,7 @@ ev_toolbar_set_mode (EvToolbar     *ev_toolbar,
                 gtk_widget_show (priv->zoom_action);
                 gtk_widget_show (priv->page_selector);
                 gtk_widget_show (priv->find_button);
+                gtk_widget_show (priv->annots_button);
                 gtk_widget_hide (priv->open_button);
                 break;
 	case EV_TOOLBAR_MODE_RECENT_VIEW:
@@ -383,6 +394,7 @@ ev_toolbar_set_mode (EvToolbar     *ev_toolbar,
                 gtk_widget_hide (priv->zoom_action);
                 gtk_widget_hide (priv->page_selector);
                 gtk_widget_hide (priv->find_button);
+                gtk_widget_hide (priv->annots_button);
                 gtk_widget_show (priv->open_button);
                 break;
         }

@@ -42,7 +42,7 @@
 #include <gtk/gtk.h>
 
 #include "ev-find-sidebar.h"
-
+#include "ev-annotations-toolbar.h"
 #include "ev-application.h"
 #include "ev-document-factory.h"
 #include "ev-document-find.h"
@@ -144,6 +144,7 @@ struct _EvWindowPrivate {
 	GtkWidget *sidebar_layers;
 	GtkWidget *sidebar_annots;
 	GtkWidget *sidebar_bookmarks;
+	GtkWidget *annots_toolbar;
 
 	/* Settings */
 	GSettings *settings;
@@ -415,6 +416,7 @@ ev_window_update_actions_sensitivity (EvWindow *ev_window)
 	gboolean can_get_text = FALSE;
 	gboolean can_find = FALSE;
 	gboolean can_find_in_page;
+	gboolean can_annotate = FALSE;
 	gboolean presentation_mode;
 	gboolean recent_view_mode;
 	gboolean dual_mode = FALSE;
@@ -440,6 +442,10 @@ ev_window_update_actions_sensitivity (EvWindow *ev_window)
 
 	if (has_pages && EV_IS_DOCUMENT_FIND (document)) {
 		can_find = TRUE;
+	}
+
+	if (has_document && EV_IS_DOCUMENT_ANNOTATIONS (document)) {
+		can_annotate = ev_document_annotations_can_add_annotation (EV_DOCUMENT_ANNOTATIONS (document));
 	}
 
 	if (has_document && ev_window->priv->settings) {
@@ -496,6 +502,8 @@ ev_window_update_actions_sensitivity (EvWindow *ev_window)
 	ev_window_set_action_enabled (ev_window, "find", can_find &&
 				      !recent_view_mode);
 	ev_window_set_action_enabled (ev_window, "toggle-find", can_find &&
+				      !recent_view_mode);
+	ev_window_set_action_enabled (ev_window, "toggle-edit-annots", can_annotate &&
 				      !recent_view_mode);
 	ev_window_set_action_enabled (ev_window, "rotate-left", has_pages &&
 				      !recent_view_mode);
@@ -5405,6 +5413,21 @@ ev_window_cmd_view_toggle_caret_navigation (GSimpleAction *action,
 }
 
 static void
+ev_window_cmd_toggle_edit_annots (GSimpleAction *action,
+				  GVariant      *state,
+				  gpointer       user_data)
+{
+	EvWindow *ev_window = user_data;
+
+	if (g_variant_get_boolean (state))
+		gtk_widget_show (ev_window->priv->annots_toolbar);
+	else
+		gtk_widget_hide (ev_window->priv->annots_toolbar);
+
+	g_simple_action_set_state (action, state);
+}
+
+static void
 ev_window_dispose (GObject *object)
 {
 	EvWindow *window = EV_WINDOW (object);
@@ -5691,6 +5714,7 @@ static const GActionEntry actions[] = {
 	{ "escape", ev_window_cmd_escape },
 	{ "open-menu", ev_window_cmd_action_menu },
 	{ "caret-navigation", NULL, NULL, "false", ev_window_cmd_view_toggle_caret_navigation },
+	{ "toggle-edit-annots", NULL, NULL, "false", ev_window_cmd_toggle_edit_annots },
 	/* Popups specific items */
 	{ "open-link", ev_window_popup_cmd_open_link },
 	{ "open-link-new-window", ev_window_popup_cmd_open_link_new_window },
@@ -5743,9 +5767,8 @@ sidebar_annots_annot_activated_cb (EvSidebarAnnotations *sidebar_annots,
 }
 
 static void
-sidebar_annots_begin_annot_add (EvSidebarAnnotations *sidebar_annots,
-				EvAnnotationType      annot_type,
-				EvWindow             *window)
+ev_window_begin_add_annot (EvWindow        *window,
+			   EvAnnotationType annot_type)
 {
 	ev_view_begin_add_annotation (EV_VIEW (window->priv->view), annot_type);
 }
@@ -5757,6 +5780,7 @@ view_annot_added (EvView       *view,
 {
 	ev_sidebar_annotations_annot_added (EV_SIDEBAR_ANNOTATIONS (window->priv->sidebar_annots),
 					    annot);
+	ev_annotations_toolbar_add_annot_finished (EV_ANNOTATIONS_TOOLBAR (window->priv->annots_toolbar));
 }
 
 static void
@@ -5768,8 +5792,7 @@ view_annot_removed (EvView       *view,
 }
 
 static void
-sidebar_annots_annot_add_cancelled (EvSidebarAnnotations *sidebar_annots,
-				    EvWindow             *window)
+ev_window_cancel_add_annot(EvWindow *window)
 {
 	ev_view_cancel_add_annotation (EV_VIEW (window->priv->view));
 }
@@ -6782,6 +6805,19 @@ ev_window_init (EvWindow *ev_window)
 			  G_CALLBACK (activate_link_cb),
 			  ev_window);
 
+        /* Annotations toolbar */
+	ev_window->priv->annots_toolbar = ev_annotations_toolbar_new ();
+	g_signal_connect_swapped (ev_window->priv->annots_toolbar,
+				  "begin-add-annot",
+				  G_CALLBACK (ev_window_begin_add_annot),
+				  ev_window);
+	g_signal_connect_swapped (ev_window->priv->annots_toolbar,
+				  "cancel-add-annot",
+				  G_CALLBACK (ev_window_cancel_add_annot),
+				  ev_window);
+	gtk_box_pack_start (GTK_BOX (ev_window->priv->main_box),
+			    ev_window->priv->annots_toolbar, FALSE, TRUE, 0);
+
 	/* Search Bar */
 	ev_window->priv->search_bar = gtk_search_bar_new ();
 	gtk_search_bar_set_show_close_button (GTK_SEARCH_BAR (ev_window->priv->search_bar), TRUE);
@@ -6873,14 +6909,6 @@ ev_window_init (EvWindow *ev_window)
 	g_signal_connect (sidebar_widget,
 			  "annot_activated",
 			  G_CALLBACK (sidebar_annots_annot_activated_cb),
-			  ev_window);
-	g_signal_connect (sidebar_widget,
-			  "begin_annot_add",
-			  G_CALLBACK (sidebar_annots_begin_annot_add),
-			  ev_window);
-	g_signal_connect (sidebar_widget,
-			  "annot_add_cancelled",
-			  G_CALLBACK (sidebar_annots_annot_add_cancelled),
 			  ev_window);
 	gtk_widget_show (sidebar_widget);
 	ev_sidebar_add_page (EV_SIDEBAR (ev_window->priv->sidebar),

@@ -43,19 +43,14 @@ enum {
 
 enum {
 	ANNOT_ACTIVATED,
-	BEGIN_ANNOT_ADD,
-	ANNOT_ADD_CANCELLED,
 	N_SIGNALS
 };
 
 struct _EvSidebarAnnotationsPrivate {
 	EvDocument  *document;
 
-	GtkWidget   *notebook;
+        GtkWidget   *swindow;
 	GtkWidget   *tree_view;
-	GtkWidget   *palette;
-	GtkToolItem *annot_text_item;
-	GtkToolItem *annot_highlight_item;
 
 	EvJob       *job;
 	guint        selection_changed_id;
@@ -115,16 +110,16 @@ ev_sidebar_annotations_create_simple_model (const gchar *message)
 }
 
 static void
-ev_sidebar_annotations_add_annots_list (EvSidebarAnnotations *ev_annots)
+ev_sidebar_annotations_init (EvSidebarAnnotations *ev_annots)
 {
-	GtkWidget         *swindow;
 	GtkTreeModel      *loading_model;
 	GtkCellRenderer   *renderer;
 	GtkTreeViewColumn *column;
 	GtkTreeSelection  *selection;
-	GtkWidget         *label;
 
-	swindow = gtk_scrolled_window_new (NULL, NULL);
+        ev_annots->priv = EV_SIDEBAR_ANNOTATIONS_GET_PRIVATE (ev_annots);
+
+	ev_annots->priv->swindow = gtk_scrolled_window_new (NULL, NULL);
 
 	/* Create tree view */
 	loading_model = ev_sidebar_annotations_create_simple_model (_("Loading…"));
@@ -153,106 +148,11 @@ ev_sidebar_annotations_add_annots_list (EvSidebarAnnotations *ev_annots)
 	gtk_tree_view_append_column (GTK_TREE_VIEW (ev_annots->priv->tree_view),
 				     column);
 
-	gtk_container_add (GTK_CONTAINER (swindow), ev_annots->priv->tree_view);
+	gtk_container_add (GTK_CONTAINER (ev_annots->priv->swindow), ev_annots->priv->tree_view);
 	gtk_widget_show (ev_annots->priv->tree_view);
 
-	label = gtk_label_new (_("List"));
-	gtk_notebook_append_page (GTK_NOTEBOOK (ev_annots->priv->notebook),
-				  swindow, label);
-	gtk_widget_show (label);
-
-	gtk_widget_show (swindow);
-}
-
-static void
-ev_sidebar_annotations_annot_button_toggled (GtkToggleToolButton  *toolbutton,
-					     EvSidebarAnnotations *sidebar_annots)
-{
-	EvAnnotationType annot_type;
-
-	if (!gtk_toggle_tool_button_get_active (toolbutton)) {
-		g_signal_emit (sidebar_annots, signals[ANNOT_ADD_CANCELLED], 0, NULL);
-		return;
-	}
-
-	if (GTK_TOOL_ITEM (toolbutton) == sidebar_annots->priv->annot_text_item) {
-		gtk_toggle_tool_button_set_active (GTK_TOGGLE_TOOL_BUTTON (sidebar_annots->priv->annot_highlight_item), FALSE);
-		annot_type = EV_ANNOTATION_TYPE_TEXT;
-	} else if (GTK_TOOL_ITEM (toolbutton) == sidebar_annots->priv->annot_highlight_item) {
-		gtk_toggle_tool_button_set_active (GTK_TOGGLE_TOOL_BUTTON (sidebar_annots->priv->annot_text_item), FALSE);
-		annot_type = EV_ANNOTATION_TYPE_TEXT_MARKUP;
-	} else
-                g_assert_not_reached ();
-
-	g_signal_emit (sidebar_annots, signals[BEGIN_ANNOT_ADD], 0, annot_type);
-}
-
-static void
-ev_sidebar_annotations_add_annots_palette (EvSidebarAnnotations *ev_annots)
-{
-	GtkWidget   *swindow;
-	GtkWidget   *group;
-	GtkToolItem *item;
-	GtkWidget   *label;
-
-	swindow = gtk_scrolled_window_new (NULL, NULL);
-
-	ev_annots->priv->palette = gtk_tool_palette_new ();
-	gtk_widget_set_margin_top (ev_annots->priv->palette, 2);
-	gtk_widget_set_margin_bottom (ev_annots->priv->palette, 2);
-	gtk_widget_set_margin_start (ev_annots->priv->palette, 2);
-	gtk_widget_set_margin_end (ev_annots->priv->palette, 2);
-
-	group = gtk_tool_item_group_new (_("Annotations"));
-	gtk_tool_item_group_set_header_relief (GTK_TOOL_ITEM_GROUP (group), GTK_RELIEF_NONE);
-	gtk_container_add (GTK_CONTAINER (ev_annots->priv->palette), group);
-
-	item = gtk_toggle_tool_button_new ();
-	gtk_tool_button_set_icon_name (GTK_TOOL_BUTTON (item), "document-new-symbolic");
-	gtk_tool_button_set_label (GTK_TOOL_BUTTON (item), _("Text"));
-	gtk_widget_set_tooltip_text (GTK_WIDGET (item), _("Add text annotation"));
-	ev_annots->priv->annot_text_item = item;
-	g_signal_connect (item, "toggled",
-			  G_CALLBACK (ev_sidebar_annotations_annot_button_toggled),
-			  ev_annots);
-	gtk_tool_item_group_insert (GTK_TOOL_ITEM_GROUP (group), item, -1);
-	gtk_widget_show (GTK_WIDGET (item));
-
-	/* FIXME: use a better icon than INDEX */
-	item = gtk_toggle_tool_button_new ();
-	gtk_tool_button_set_icon_name (GTK_TOOL_BUTTON (item), GTK_STOCK_INDEX);
-	gtk_tool_button_set_label (GTK_TOOL_BUTTON (item), _("Highlight"));
-	gtk_widget_set_tooltip_text (GTK_WIDGET (item), _("Add highlight annotation"));
-	ev_annots->priv->annot_highlight_item = item;
-	g_signal_connect (item, "toggled",
-			  G_CALLBACK (ev_sidebar_annotations_annot_button_toggled),
-			  ev_annots);
-	gtk_tool_item_group_insert (GTK_TOOL_ITEM_GROUP (group), item, -1);
-	gtk_widget_show (GTK_WIDGET (item));
-
-	gtk_container_add (GTK_CONTAINER (swindow), ev_annots->priv->palette);
-	gtk_widget_show (ev_annots->priv->palette);
-
-	label = gtk_label_new (_("Add"));
-	gtk_notebook_append_page (GTK_NOTEBOOK (ev_annots->priv->notebook),
-				  swindow, label);
-	gtk_widget_show (label);
-
-	gtk_widget_show (swindow);
-}
-
-static void
-ev_sidebar_annotations_init (EvSidebarAnnotations *ev_annots)
-{
-	ev_annots->priv = EV_SIDEBAR_ANNOTATIONS_GET_PRIVATE (ev_annots);
-
-	ev_annots->priv->notebook = gtk_notebook_new ();
-	gtk_notebook_set_show_tabs (GTK_NOTEBOOK (ev_annots->priv->notebook), FALSE);
-	gtk_notebook_set_show_border (GTK_NOTEBOOK (ev_annots->priv->notebook), FALSE);
-	ev_sidebar_annotations_add_annots_list (ev_annots);
-	ev_sidebar_annotations_add_annots_palette (ev_annots);
-        gtk_box_pack_start (GTK_BOX (ev_annots), ev_annots->priv->notebook, TRUE, TRUE, 0);
-	gtk_widget_show (ev_annots->priv->notebook);
+        gtk_box_pack_start (GTK_BOX (ev_annots), ev_annots->priv->swindow, TRUE, TRUE, 0);
+	gtk_widget_show (ev_annots->priv->swindow);
 }
 
 static void
@@ -267,7 +167,7 @@ ev_sidebar_annotations_get_property (GObject    *object,
 
 	switch (prop_id) {
 	        case PROP_WIDGET:
-			g_value_set_object (value, ev_sidebar_annots->priv->notebook);
+			g_value_set_object (value, ev_sidebar_annots->priv->swindow);
 			break;
 	        default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -296,24 +196,6 @@ ev_sidebar_annotations_class_init (EvSidebarAnnotationsClass *klass)
 			      g_cclosure_marshal_VOID__POINTER,
 			      G_TYPE_NONE, 1,
 			      G_TYPE_POINTER);
-	signals[BEGIN_ANNOT_ADD] =
-		g_signal_new ("begin-annot-add",
-			      G_TYPE_FROM_CLASS (g_object_class),
-			      G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
-			      G_STRUCT_OFFSET (EvSidebarAnnotationsClass, begin_annot_add),
-			      NULL, NULL,
-                              g_cclosure_marshal_VOID__ENUM,
-                              G_TYPE_NONE, 1,
-                              EV_TYPE_ANNOTATION_TYPE);
-	signals[ANNOT_ADD_CANCELLED] =
-		g_signal_new ("annot-add-cancelled",
-			      G_TYPE_FROM_CLASS (g_object_class),
-			      G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
-			      G_STRUCT_OFFSET (EvSidebarAnnotationsClass, annot_add_cancelled),
-			      NULL, NULL,
-			      g_cclosure_marshal_VOID__VOID,
-			      G_TYPE_NONE, 0,
-			      G_TYPE_NONE);
 }
 
 GtkWidget *
@@ -328,36 +210,6 @@ void
 ev_sidebar_annotations_annot_added (EvSidebarAnnotations *sidebar_annots,
 				    EvAnnotation         *annot)
 {
-	GtkToggleToolButton *toolbutton;
-
-	if (EV_IS_ANNOTATION (annot)) {
-		switch (ev_annotation_get_annotation_type (annot)) {
-			case EV_ANNOTATION_TYPE_TEXT:
-				toolbutton = GTK_TOGGLE_TOOL_BUTTON (sidebar_annots->priv->annot_text_item);
-				break;
-			case EV_ANNOTATION_TYPE_TEXT_MARKUP:
-				switch (ev_annotation_text_markup_get_markup_type (EV_ANNOTATION_TEXT_MARKUP (annot))) {
-					case EV_ANNOTATION_TEXT_MARKUP_HIGHLIGHT: {
-						toolbutton = GTK_TOGGLE_TOOL_BUTTON (sidebar_annots->priv->annot_highlight_item);
-						break;
-					}
-					default:
-						g_assert_not_reached ();
-				}
-				break;
-			default:
-				g_assert_not_reached ();
-		}
-
-		g_signal_handlers_block_by_func (toolbutton,
-						 ev_sidebar_annotations_annot_button_toggled,
-						 sidebar_annots);
-		gtk_toggle_tool_button_set_active (toolbutton, FALSE);
-		g_signal_handlers_unblock_by_func (toolbutton,
-						   ev_sidebar_annotations_annot_button_toggled,
-						   sidebar_annots);
-	}
-
 	ev_sidebar_annotations_load (sidebar_annots);
 }
 
@@ -582,7 +434,6 @@ ev_sidebar_annotations_document_changed_cb (EvDocumentModel      *model,
 {
 	EvDocument *document = ev_document_model_get_document (model);
 	EvSidebarAnnotationsPrivate *priv = sidebar_annots->priv;
-	gboolean show_tabs;
 
 	if (!EV_IS_DOCUMENT_ANNOTATIONS (document))
 		return;
@@ -590,9 +441,6 @@ ev_sidebar_annotations_document_changed_cb (EvDocumentModel      *model,
 	if (priv->document)
 		g_object_unref (priv->document);
 	priv->document = g_object_ref (document);
-
-	show_tabs = ev_document_annotations_can_add_annotation (EV_DOCUMENT_ANNOTATIONS (document));
-	gtk_notebook_set_show_tabs (GTK_NOTEBOOK (priv->notebook), show_tabs);
 
 	ev_sidebar_annotations_load (sidebar_annots);
 }
