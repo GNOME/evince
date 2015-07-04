@@ -4,17 +4,17 @@
 # Duarte Loreto <happyguy_pt@hotmail.com>, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014.
 # António Lima <amrlima@gmail.com>, 2013.
 # Tiago S. <almosthumane@portugalmail.pt>, 2014.
-# Pedro Albuquerque <palbuquerque73@gmail.com>, 2015.
+# Pedro Albuquerque <palbuquerque73@openmailbox.com>, 2015.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: 3.8\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evince&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-06-08 03:51+0000\n"
-"PO-Revision-Date: 2015-06-09 08:02+0100\n"
-"Last-Translator: Pedro Albuquerque <palbuquerque73@gmail.com>\n"
-"Language-Team: Portuguese <gnome_pt@yahoogroups.com>\n"
+"POT-Creation-Date: 2015-07-04 03:52+0000\n"
+"PO-Revision-Date: 2015-07-04 06:46+0100\n"
+"Last-Translator: Pedro Albuquerque <palbuquerque73@openmailbox.com>\n"
+"Language-Team: Português <palbuquerque73@openmailbox.com>\n"
 "Language: pt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -312,7 +312,7 @@ msgid "Go to the next page"
 msgstr "Ir para a página seguinte"
 
 #. Search.
-#: ../browser-plugin/EvBrowserPluginToolbar.cpp:361 ../shell/ev-toolbar.c:223
+#: ../browser-plugin/EvBrowserPluginToolbar.cpp:361 ../shell/ev-toolbar.c:224
 msgid "Find a word or phrase in the document"
 msgstr "Procurar uma palavra ou frase no documento"
 
@@ -473,8 +473,8 @@ msgid "of %d"
 msgstr "de %d"
 
 #: ../libmisc/ev-page-action-widget.c:185 ../shell/ev-history.c:426
-#: ../shell/ev-sidebar-bookmarks.c:295 ../shell/ev-window.c:896
-#: ../shell/ev-window.c:4695
+#: ../shell/ev-sidebar-bookmarks.c:295 ../shell/ev-window.c:904
+#: ../shell/ev-window.c:4703
 #, c-format
 msgid "Page %s"
 msgstr "Página %s"
@@ -484,7 +484,6 @@ msgid "Not found, click to change search options"
 msgstr "Não encontrado, clique para alterar as opções de procura"
 
 #: ../libmisc/ev-search-box.c:180 ../libmisc/ev-search-box.c:236
-#| msgid "File options"
 msgid "Search options"
 msgstr "Opções de procura"
 
@@ -641,46 +640,46 @@ msgstr "Rolar a vista abaixo"
 msgid "Document View"
 msgstr "Vista Documento"
 
-#: ../libview/ev-view.c:2017
+#: ../libview/ev-view.c:2023
 msgid "Go to first page"
 msgstr "Ir para a primeira página"
 
-#: ../libview/ev-view.c:2019
+#: ../libview/ev-view.c:2025
 msgid "Go to previous page"
 msgstr "Ir para a página anterior"
 
-#: ../libview/ev-view.c:2021
+#: ../libview/ev-view.c:2027
 msgid "Go to next page"
 msgstr "Ir para a página seguinte"
 
-#: ../libview/ev-view.c:2023
+#: ../libview/ev-view.c:2029
 msgid "Go to last page"
 msgstr "Ir para a última página"
 
-#: ../libview/ev-view.c:2025
+#: ../libview/ev-view.c:2031
 msgid "Go to page"
 msgstr "Ir para a página"
 
-#: ../libview/ev-view.c:2027
+#: ../libview/ev-view.c:2033
 msgid "Find"
 msgstr "Localizar"
 
-#: ../libview/ev-view.c:2055
+#: ../libview/ev-view.c:2061
 #, c-format
 msgid "Go to page %s"
 msgstr "Ir para a página %s"
 
-#: ../libview/ev-view.c:2061
+#: ../libview/ev-view.c:2067
 #, c-format
 msgid "Go to %s on file “%s”"
 msgstr "Ir para %s no ficheiro “%s”"
 
-#: ../libview/ev-view.c:2064
+#: ../libview/ev-view.c:2070
 #, c-format
 msgid "Go to file “%s”"
 msgstr "Ir para o ficheiro “%s”"
 
-#: ../libview/ev-view.c:2072
+#: ../libview/ev-view.c:2078
 #, c-format
 msgid "Launch %s"
 msgstr "Iniciar %s"
@@ -709,7 +708,7 @@ msgstr "FICHEIRO"
 msgid "GNOME Document Previewer"
 msgstr "Antevisão de documentos do GNOME"
 
-#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3308
+#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3316
 msgid "Failed to print document"
 msgstr "Falha ao imprimir o documento"
 
@@ -763,7 +762,7 @@ msgid "Subject:"
 msgstr "Assunto:"
 
 #: ../properties/ev-properties-view.c:64
-#: ../shell/ev-annotation-properties-dialog.c:173
+#: ../shell/ev-annotation-properties-dialog.c:174
 msgid "Author:"
 msgstr "Autor:"
 
@@ -808,7 +807,6 @@ msgid "Paper Size:"
 msgstr "Tamanho do papel:"
 
 #: ../properties/ev-properties-view.c:75
-#| msgid "Paper Size:"
 msgid "Size:"
 msgstr "Tamanho do papel:"
 
@@ -895,7 +893,6 @@ msgid "Markup type:"
 msgstr "Tipo de marcação:"
 
 #: ../shell/ev-annotation-properties-dialog.c:129
-#: ../shell/ev-sidebar-annotations.c:224
 msgid "Highlight"
 msgstr "Realce"
 
@@ -907,37 +904,49 @@ msgstr "Rasurado"
 msgid "Underline"
 msgstr "Sublinhado"
 
-#: ../shell/ev-annotation-properties-dialog.c:153
+#: ../shell/ev-annotation-properties-dialog.c:132
+msgid "Squiggly"
+msgstr "Rabiscado"
+
+#: ../shell/ev-annotation-properties-dialog.c:154
 msgid "Annotation Properties"
 msgstr "Propriedades da anotação"
 
-#: ../shell/ev-annotation-properties-dialog.c:184
+#: ../shell/ev-annotation-properties-dialog.c:185
 msgid "Color:"
 msgstr "Cor:"
 
-#: ../shell/ev-annotation-properties-dialog.c:194
+#: ../shell/ev-annotation-properties-dialog.c:195
 msgid "Style:"
 msgstr "Estilo:"
 
-#: ../shell/ev-annotation-properties-dialog.c:209
+#: ../shell/ev-annotation-properties-dialog.c:210
 msgid "Transparent"
 msgstr "Transparente"
 
-#: ../shell/ev-annotation-properties-dialog.c:216
+#: ../shell/ev-annotation-properties-dialog.c:217
 msgid "Opaque"
 msgstr "Opaco"
 
-#: ../shell/ev-annotation-properties-dialog.c:226
+#: ../shell/ev-annotation-properties-dialog.c:227
 msgid "Initial window state:"
 msgstr "Estado inicial da janela:"
 
-#: ../shell/ev-annotation-properties-dialog.c:232
+#: ../shell/ev-annotation-properties-dialog.c:233
 msgid "Open"
 msgstr "Abrir"
 
-#: ../shell/ev-annotation-properties-dialog.c:233
+#: ../shell/ev-annotation-properties-dialog.c:234
 msgid "Close"
 msgstr "Fechar"
+
+#: ../shell/ev-annotations-toolbar.c:120
+msgid "Add text annotation"
+msgstr "Adicionar anotação de texto"
+
+#: ../shell/ev-annotations-toolbar.c:127
+msgid "Add highlight annotation"
+msgstr "Adicionar anotação de realce"
 
 #: ../shell/ev-application.c:995
 msgid ""
@@ -1001,7 +1010,7 @@ msgid "Password for document %s"
 msgstr "Senha para o documento %s"
 
 #. Create tree view
-#: ../shell/ev-loading-message.c:50 ../shell/ev-sidebar-annotations.c:130
+#: ../shell/ev-loading-message.c:50 ../shell/ev-sidebar-annotations.c:125
 #: ../shell/ev-sidebar-layers.c:125 ../shell/ev-sidebar-links.c:261
 msgid "Loading…"
 msgstr "A ler…"
@@ -1086,39 +1095,18 @@ msgstr "Texto da licença"
 msgid "Further Information"
 msgstr "Informações adicionais"
 
-#: ../shell/ev-sidebar-annotations.c:159
-msgid "List"
-msgstr "Lista"
-
-#: ../shell/ev-sidebar-annotations.c:206 ../shell/ev-sidebar-annotations.c:609
-msgid "Annotations"
-msgstr "Anotações"
-
-#: ../shell/ev-sidebar-annotations.c:212
-msgid "Text"
-msgstr "Texto"
-
-#: ../shell/ev-sidebar-annotations.c:213
-msgid "Add text annotation"
-msgstr "Adicionar anotação de texto"
-
-#: ../shell/ev-sidebar-annotations.c:225
-#| msgid "Add text annotation"
-msgid "Add highlight annotation"
-msgstr "Adicionar anotação de realce"
-
-#: ../shell/ev-sidebar-annotations.c:236 ../shell/ev-sidebar-bookmarks.c:456
-msgid "Add"
-msgstr "Adicionar"
-
-#: ../shell/ev-sidebar-annotations.c:407
+#: ../shell/ev-sidebar-annotations.c:260
 msgid "Document contains no annotations"
 msgstr "O documento não contém quaisquer anotações"
 
-#: ../shell/ev-sidebar-annotations.c:439
+#: ../shell/ev-sidebar-annotations.c:292
 #, c-format
 msgid "Page %d"
 msgstr "Página %d"
+
+#: ../shell/ev-sidebar-annotations.c:468
+msgid "Annotations"
+msgstr "Anotações"
 
 #: ../shell/ev-sidebar-attachments.c:695
 msgid "Attachments"
@@ -1136,11 +1124,15 @@ msgstr "_Renomear marcador"
 msgid "_Remove Bookmark"
 msgstr "_Remover marcador"
 
+#: ../shell/ev-sidebar-bookmarks.c:456
+msgid "Add"
+msgstr "Adicionar"
+
 #: ../shell/ev-sidebar-bookmarks.c:463
 msgid "Remove"
 msgstr "Remover"
 
-#: ../shell/ev-sidebar-bookmarks.c:579 ../shell/ev-toolbar.c:160
+#: ../shell/ev-sidebar-bookmarks.c:579 ../shell/ev-toolbar.c:161
 msgid "Bookmarks"
 msgstr "Marcadores"
 
@@ -1160,15 +1152,20 @@ msgstr "Índice"
 msgid "Thumbnails"
 msgstr "Miniaturas"
 
-#: ../shell/ev-toolbar.c:201
+#: ../shell/ev-toolbar.c:202
 msgid "Open an existing document"
 msgstr "Abrir um documento existente"
 
-#: ../shell/ev-toolbar.c:232 ../shell/ev-toolbar.c:233
+#: ../shell/ev-toolbar.c:232
+#| msgid "Enlarge the document"
+msgid "Annotate the document"
+msgstr "Anotar o documento"
+
+#: ../shell/ev-toolbar.c:241 ../shell/ev-toolbar.c:242
 msgid "File options"
 msgstr "Opções de ficheiro"
 
-#: ../shell/ev-toolbar.c:242 ../shell/ev-toolbar.c:243
+#: ../shell/ev-toolbar.c:251 ../shell/ev-toolbar.c:252
 msgid "View options"
 msgstr "Ver opções"
 
@@ -1176,106 +1173,106 @@ msgstr "Ver opções"
 msgid "Supported Image Files"
 msgstr "Ficheiros de imagem suportados"
 
-#: ../shell/ev-window.c:1589
+#: ../shell/ev-window.c:1597
 msgid "The document contains no pages"
 msgstr "O documento não contém quaisquer páginas"
 
-#: ../shell/ev-window.c:1592
+#: ../shell/ev-window.c:1600
 msgid "The document contains only empty pages"
 msgstr "O documento só contém páginas vazias"
 
-#: ../shell/ev-window.c:1805 ../shell/ev-window.c:1971
+#: ../shell/ev-window.c:1813 ../shell/ev-window.c:1979
 #, c-format
 msgid "Unable to open document “%s”."
 msgstr "Impossível abrir o documento “%s”."
 
-#: ../shell/ev-window.c:1935
+#: ../shell/ev-window.c:1943
 #, c-format
 msgid "Loading document from “%s”"
 msgstr "A ler documento de “%s”"
 
-#: ../shell/ev-window.c:2086 ../shell/ev-window.c:2414
+#: ../shell/ev-window.c:2094 ../shell/ev-window.c:2422
 #, c-format
 msgid "Downloading document (%d%%)"
 msgstr "A transferir o documento (%d%%)"
 
-#: ../shell/ev-window.c:2119
+#: ../shell/ev-window.c:2127
 msgid "Failed to load remote file."
 msgstr "Falha ao ler o ficheiro remoto."
 
-#: ../shell/ev-window.c:2358
+#: ../shell/ev-window.c:2366
 #, c-format
 msgid "Reloading document from %s"
 msgstr "A reler o documento de %s"
 
-#: ../shell/ev-window.c:2390
+#: ../shell/ev-window.c:2398
 msgid "Failed to reload document."
 msgstr "Falha ao reler o documento."
 
-#: ../shell/ev-window.c:2606
+#: ../shell/ev-window.c:2614
 msgid "Open Document"
 msgstr "Abrir documento"
 
-#: ../shell/ev-window.c:2677
+#: ../shell/ev-window.c:2685
 #, c-format
 msgid "Saving document to %s"
 msgstr "A gravar o documento em %s"
 
-#: ../shell/ev-window.c:2680
+#: ../shell/ev-window.c:2688
 #, c-format
 msgid "Saving attachment to %s"
 msgstr "A gravar o anexo em %s"
 
-#: ../shell/ev-window.c:2683
+#: ../shell/ev-window.c:2691
 #, c-format
 msgid "Saving image to %s"
 msgstr "A gravar a imagem em %s"
 
-#: ../shell/ev-window.c:2727 ../shell/ev-window.c:2827
+#: ../shell/ev-window.c:2735 ../shell/ev-window.c:2835
 #, c-format
 msgid "The file could not be saved as “%s”."
 msgstr "Impossível gravar o ficheiro como “%s”."
 
-#: ../shell/ev-window.c:2758
+#: ../shell/ev-window.c:2766
 #, c-format
 msgid "Uploading document (%d%%)"
 msgstr "A enviar o documento (%d%%)"
 
-#: ../shell/ev-window.c:2762
+#: ../shell/ev-window.c:2770
 #, c-format
 msgid "Uploading attachment (%d%%)"
 msgstr "A enviar o anexo (%d%%)"
 
-#: ../shell/ev-window.c:2766
+#: ../shell/ev-window.c:2774
 #, c-format
 msgid "Uploading image (%d%%)"
 msgstr "A enviar a imagem (%d%%)"
 
-#: ../shell/ev-window.c:2878
+#: ../shell/ev-window.c:2886
 msgid "Save a Copy"
 msgstr "Gravar uma cópia"
 
-#: ../shell/ev-window.c:2954
+#: ../shell/ev-window.c:2962
 msgid "Could not send current document"
 msgstr "Impossível enviar o documento atual"
 
-#: ../shell/ev-window.c:2988
+#: ../shell/ev-window.c:2996
 msgid "Could not open the containing folder"
 msgstr "Impossível abrir a pasta que contém"
 
-#: ../shell/ev-window.c:3252
+#: ../shell/ev-window.c:3260
 #, c-format
 msgid "%d pending job in queue"
 msgid_plural "%d pending jobs in queue"
 msgstr[0] "%d trabalho pendente na fila"
 msgstr[1] "%d trabalhos pendentes na fila"
 
-#: ../shell/ev-window.c:3365
+#: ../shell/ev-window.c:3373
 #, c-format
 msgid "Printing job “%s”"
 msgstr "A imprimir o trabalho “%s”"
 
-#: ../shell/ev-window.c:3568
+#: ../shell/ev-window.c:3576
 msgid ""
 "Document contains form fields that have been filled out. If you don't save a "
 "copy, changes will be permanently lost."
@@ -1283,7 +1280,7 @@ msgstr ""
 "O documento contém campos de formulário que foram preenchidos. Se não gravar "
 "uma cópia, as alterações serão definitivamente perdidas."
 
-#: ../shell/ev-window.c:3572
+#: ../shell/ev-window.c:3580
 msgid ""
 "Document contains new or modified annotations. If you don't save a copy, "
 "changes will be permanently lost."
@@ -1291,20 +1288,20 @@ msgstr ""
 "O documento contém anotações novas ou alteradas. Se não gravar uma cópia, as "
 "alterações serão definitivamente perdidas."
 
-#: ../shell/ev-window.c:3579
+#: ../shell/ev-window.c:3587
 #, c-format
 msgid "Save a copy of document “%s” before closing?"
 msgstr "Gravar uma cópia do documento “%s” antes de fechar?"
 
-#: ../shell/ev-window.c:3598
+#: ../shell/ev-window.c:3606
 msgid "Close _without Saving"
 msgstr "Fechar sem gra_Var"
 
-#: ../shell/ev-window.c:3602
+#: ../shell/ev-window.c:3610
 msgid "Save a _Copy"
 msgstr "Gravar uma _Cópia"
 
-#: ../shell/ev-window.c:3676
+#: ../shell/ev-window.c:3684
 #, c-format
 msgid "Wait until print job “%s” finishes before closing?"
 msgstr "Aguardar até que o trabalho de impressão “%s” termine antes de fechar?"
@@ -1312,7 +1309,7 @@ msgstr "Aguardar até que o trabalho de impressão “%s” termine antes de fec
 #. TRANS: the singular form is not really used as n_print_jobs > 1
 #. but some languages distinguish between different plurals forms,
 #. so the ngettext is needed.
-#: ../shell/ev-window.c:3682
+#: ../shell/ev-window.c:3690
 #, c-format
 msgid "There is %d print job active. Wait until print finishes before closing?"
 msgid_plural ""
@@ -1324,32 +1321,32 @@ msgstr[1] ""
 "Existem %d trabalhos de impressão ativos. Aguardar até que a impressão "
 "termine antes de fechar?"
 
-#: ../shell/ev-window.c:3697
+#: ../shell/ev-window.c:3705
 msgid "If you close the window, pending print jobs will not be printed."
 msgstr ""
 "Se fechar a janela, os trabalhos de impressão pendentes não serão impressos."
 
-#: ../shell/ev-window.c:3701
+#: ../shell/ev-window.c:3709
 msgid "Cancel _print and Close"
 msgstr "Cancelar a im_Pressão e fechar"
 
-#: ../shell/ev-window.c:3705
+#: ../shell/ev-window.c:3713
 msgid "Close _after Printing"
 msgstr "Fechar _Após imprimir"
 
-#: ../shell/ev-window.c:4236
+#: ../shell/ev-window.c:4244
 msgid "Running in presentation mode"
 msgstr "Execução em modo de apresentação"
 
-#: ../shell/ev-window.c:5380
+#: ../shell/ev-window.c:5388
 msgid "Enable caret navigation?"
 msgstr "Permitir navegação com cursor?"
 
-#: ../shell/ev-window.c:5382
+#: ../shell/ev-window.c:5390
 msgid "_Enable"
 msgstr "_Ativar"
 
-#: ../shell/ev-window.c:5385
+#: ../shell/ev-window.c:5393
 msgid ""
 "Pressing F7 turns the caret navigation on or off. This feature places a "
 "moveable cursor in text pages, allowing you to move around and select text "
@@ -1359,39 +1356,39 @@ msgstr ""
 "coloca um cursor móvel nas páginas de texto, permitindo que o mova e "
 "selecione texto com o seu teclado. Quer ativar a navegação com cursor?"
 
-#: ../shell/ev-window.c:5390
+#: ../shell/ev-window.c:5398
 msgid "Don't show this message again"
 msgstr "Não mostrar esta mensagem novamente"
 
-#: ../shell/ev-window.c:5894 ../shell/ev-window.c:5910
+#: ../shell/ev-window.c:5917 ../shell/ev-window.c:5933
 msgid "Unable to launch external application."
 msgstr "Impossível iniciar uma aplicação externa."
 
-#: ../shell/ev-window.c:5967
+#: ../shell/ev-window.c:5990
 msgid "Unable to open external link"
 msgstr "Impossível abrir uma ligação externa"
 
-#: ../shell/ev-window.c:6170
+#: ../shell/ev-window.c:6193
 msgid "Couldn't find appropriate format to save image"
 msgstr "Impossível encontrar o formato apropriado para gravar a imagem"
 
-#: ../shell/ev-window.c:6202
+#: ../shell/ev-window.c:6225
 msgid "The image could not be saved."
 msgstr "Impossível gravar a imagem."
 
-#: ../shell/ev-window.c:6237
+#: ../shell/ev-window.c:6260
 msgid "Save Image"
 msgstr "Gravar a imagem"
 
-#: ../shell/ev-window.c:6396
+#: ../shell/ev-window.c:6419
 msgid "Unable to open attachment"
 msgstr "Impossível abrir o anexo"
 
-#: ../shell/ev-window.c:6452
+#: ../shell/ev-window.c:6475
 msgid "The attachment could not be saved."
 msgstr "Impossível gravar o anexo."
 
-#: ../shell/ev-window.c:6500
+#: ../shell/ev-window.c:6523
 msgid "Save Attachment"
 msgstr "Gravar o anexo"
 
@@ -1698,6 +1695,12 @@ msgstr ""
 "Suporta os seguintes formatos de documentos: PDF, PS, EPS, XPS, DjVu, TIFF, "
 "DVI (com SyncTeX) e arquivos de banda desenhada (CBR, CBT, CBZ, CB7)."
 
+#~ msgid "List"
+#~ msgstr "Lista"
+
+#~ msgid "Text"
+#~ msgstr "Texto"
+
 #~ msgid "Find options"
 #~ msgstr "Procurar opções"
 
@@ -1729,7 +1732,7 @@ msgstr ""
 #~ msgstr "_Recente"
 
 #~ msgid "_View in new window"
-#~ msgstr "_Visualizar numa nova janela"
+#~ msgstr "_Ver numa nova janela"
 
 #~ msgid "Open a copy of the current document in a new window"
 #~ msgstr "Abrir uma cópia do documento atual numa nova janela"
