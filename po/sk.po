@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=evince&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-06-25 03:51+0000\n"
-"PO-Revision-Date: 2015-06-25 10:58+0100\n"
+"POT-Creation-Date: 2015-07-27 03:52+0000\n"
+"PO-Revision-Date: 2015-07-27 11:31+0200\n"
 "Last-Translator: Dušan Kazik <prescott66@gmail.com>\n"
 "Language-Team: Slovak <gnome-sk-list@gnome.org>\n"
 "Language: sk\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 1 : (n>=2 && n<=4) ? 2 : 0;\n"
 "X-DamnedLies-Scope: partial\n"
-"X-Generator: Poedit 1.8.1\n"
+"X-Generator: Poedit 1.8.2\n"
 
 #: ../backend/comics/comics-document.c:210
 #, c-format
@@ -317,7 +317,7 @@ msgstr "Prejde na nasledujúcu stranu"
 
 # action entry tooltip
 #. Search.
-#: ../browser-plugin/EvBrowserPluginToolbar.cpp:361 ../shell/ev-toolbar.c:223
+#: ../browser-plugin/EvBrowserPluginToolbar.cpp:361 ../shell/ev-toolbar.c:224
 msgid "Find a word or phrase in the document"
 msgstr "Nájde v dokumente slovo alebo frázu"
 
@@ -478,7 +478,7 @@ msgstr "(%d. z %d)"
 msgid "of %d"
 msgstr "z %d"
 
-#: ../libmisc/ev-page-action-widget.c:185 ../shell/ev-history.c:426 ../shell/ev-sidebar-bookmarks.c:295 ../shell/ev-window.c:896 ../shell/ev-window.c:4695
+#: ../libmisc/ev-page-action-widget.c:185 ../shell/ev-history.c:426 ../shell/ev-sidebar-bookmarks.c:295 ../shell/ev-window.c:904 ../shell/ev-window.c:4703
 #, c-format
 msgid "Page %s"
 msgstr "Strana %s"
@@ -737,7 +737,7 @@ msgstr "SÚBOR"
 msgid "GNOME Document Previewer"
 msgstr "Prehliadač dokumentov GNOME"
 
-#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3308
+#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3316
 msgid "Failed to print document"
 msgstr "Zlyhala tlač dokumentu"
 
@@ -940,7 +940,7 @@ msgstr "Neznáma"
 msgid "Markup type:"
 msgstr "Typ označenia:"
 
-#: ../shell/ev-annotation-properties-dialog.c:129 ../shell/ev-sidebar-annotations.c:224
+#: ../shell/ev-annotation-properties-dialog.c:129
 msgid "Highlight"
 msgstr "Zvýraznenie"
 
@@ -995,6 +995,16 @@ msgstr "Otvorené"
 #: ../shell/ev-annotation-properties-dialog.c:234
 msgid "Close"
 msgstr "Zatvorené"
+
+# tooltip
+#: ../shell/ev-annotations-toolbar.c:120
+msgid "Add text annotation"
+msgstr "Pridá poznámku do textu"
+
+# tooltip
+#: ../shell/ev-annotations-toolbar.c:127
+msgid "Add highlight annotation"
+msgstr "Pridá zvýraznenú poznámku"
 
 #: ../shell/ev-application.c:995
 msgid ""
@@ -1053,7 +1063,7 @@ msgid "Password for document %s"
 msgstr "Heslo pre dokument %s"
 
 #. Create tree view
-#: ../shell/ev-loading-message.c:50 ../shell/ev-sidebar-annotations.c:130 ../shell/ev-sidebar-layers.c:125 ../shell/ev-sidebar-links.c:261
+#: ../shell/ev-loading-message.c:50 ../shell/ev-sidebar-annotations.c:125 ../shell/ev-sidebar-layers.c:125 ../shell/ev-sidebar-links.c:261
 msgid "Loading…"
 msgstr "Načítava sa…"
 
@@ -1143,45 +1153,20 @@ msgstr "Text licencie"
 msgid "Further Information"
 msgstr "Ďalšie informácie"
 
-# page label
-#: ../shell/ev-sidebar-annotations.c:159
-msgid "List"
-msgstr "Zoznam"
-
-# toolbutton group; sidebar page label
-#: ../shell/ev-sidebar-annotations.c:206 ../shell/ev-sidebar-annotations.c:620
-msgid "Annotations"
-msgstr "Poznámky"
-
-# toolbutton
-#: ../shell/ev-sidebar-annotations.c:212
-msgid "Text"
-msgstr "Text"
-
-# tooltip
-#: ../shell/ev-sidebar-annotations.c:213
-msgid "Add text annotation"
-msgstr "Pridá poznámku do textu"
-
-# tooltip
-#: ../shell/ev-sidebar-annotations.c:225
-msgid "Add highlight annotation"
-msgstr "Pridá zvýraznenú poznámku"
-
-# page label
-#: ../shell/ev-sidebar-annotations.c:236 ../shell/ev-sidebar-bookmarks.c:456
-msgid "Add"
-msgstr "Pridať"
-
-#: ../shell/ev-sidebar-annotations.c:408
+#: ../shell/ev-sidebar-annotations.c:260
 msgid "Document contains no annotations"
 msgstr "Dokument neobsahuje poznámky"
 
 # page label
-#: ../shell/ev-sidebar-annotations.c:440
+#: ../shell/ev-sidebar-annotations.c:292
 #, c-format
 msgid "Page %d"
 msgstr "%d. strana"
+
+# toolbutton group; sidebar page label
+#: ../shell/ev-sidebar-annotations.c:468
+msgid "Annotations"
+msgstr "Poznámky"
 
 # sidebar page label
 #: ../shell/ev-sidebar-attachments.c:695
@@ -1203,13 +1188,18 @@ msgstr "P_remenovať záložku"
 msgid "_Remove Bookmark"
 msgstr "O_dstrániť záložku"
 
+# page label
+#: ../shell/ev-sidebar-bookmarks.c:456
+msgid "Add"
+msgstr "Pridať"
+
 # gtk button label
 #: ../shell/ev-sidebar-bookmarks.c:463
 msgid "Remove"
 msgstr "Odstrániť"
 
 # sidebar page label
-#: ../shell/ev-sidebar-bookmarks.c:579 ../shell/ev-toolbar.c:160
+#: ../shell/ev-sidebar-bookmarks.c:579 ../shell/ev-toolbar.c:161
 msgid "Bookmarks"
 msgstr "Záložky"
 
@@ -1233,17 +1223,22 @@ msgid "Thumbnails"
 msgstr "Miniatúry"
 
 # action entry tooltip
-#: ../shell/ev-toolbar.c:201
+#: ../shell/ev-toolbar.c:202
 msgid "Open an existing document"
 msgstr "Otvorí existujúci dokument"
 
 # tooltip
-#: ../shell/ev-toolbar.c:232 ../shell/ev-toolbar.c:233
+#: ../shell/ev-toolbar.c:232
+msgid "Annotate the document"
+msgstr "Pridá poznámku k dokumentu"
+
+# tooltip
+#: ../shell/ev-toolbar.c:241 ../shell/ev-toolbar.c:242
 msgid "File options"
 msgstr "Voľby súboru"
 
 # tooltip
-#: ../shell/ev-toolbar.c:242 ../shell/ev-toolbar.c:243
+#: ../shell/ev-toolbar.c:251 ../shell/ev-toolbar.c:252
 msgid "View options"
 msgstr "Voľby zobrazenia"
 
@@ -1252,96 +1247,96 @@ msgstr "Voľby zobrazenia"
 msgid "Supported Image Files"
 msgstr "Podporované súbory obrázkov"
 
-#: ../shell/ev-window.c:1589
+#: ../shell/ev-window.c:1597
 msgid "The document contains no pages"
 msgstr "Dokument neobsahuje žiadne strany"
 
-#: ../shell/ev-window.c:1592
+#: ../shell/ev-window.c:1600
 msgid "The document contains only empty pages"
 msgstr "Dokument obsahuje len prázdne strany"
 
-#: ../shell/ev-window.c:1805 ../shell/ev-window.c:1971
+#: ../shell/ev-window.c:1813 ../shell/ev-window.c:1979
 #, c-format
 msgid "Unable to open document “%s”."
 msgstr "Nepodarilo sa otvoriť dokument „%s“."
 
-#: ../shell/ev-window.c:1935
+#: ../shell/ev-window.c:1943
 #, c-format
 msgid "Loading document from “%s”"
 msgstr "Načítava sa dokument z „%s“"
 
-#: ../shell/ev-window.c:2086 ../shell/ev-window.c:2414
+#: ../shell/ev-window.c:2094 ../shell/ev-window.c:2422
 #, c-format
 msgid "Downloading document (%d%%)"
 msgstr "Preberá sa dokument (%d %%)"
 
-#: ../shell/ev-window.c:2119
+#: ../shell/ev-window.c:2127
 msgid "Failed to load remote file."
 msgstr "Zlyhalo načítanie vzdialeného súboru."
 
-#: ../shell/ev-window.c:2358
+#: ../shell/ev-window.c:2366
 #, c-format
 msgid "Reloading document from %s"
 msgstr "Znovu sa načítava dokument z %s"
 
-#: ../shell/ev-window.c:2390
+#: ../shell/ev-window.c:2398
 msgid "Failed to reload document."
 msgstr "Zlyhalo znovunačítanie dokumentu."
 
 # filechooser dialog title
-#: ../shell/ev-window.c:2606
+#: ../shell/ev-window.c:2614
 msgid "Open Document"
 msgstr "Otvorenie dokumentu"
 
-#: ../shell/ev-window.c:2677
+#: ../shell/ev-window.c:2685
 #, c-format
 msgid "Saving document to %s"
 msgstr "Ukladá sa dokument do %s"
 
-#: ../shell/ev-window.c:2680
+#: ../shell/ev-window.c:2688
 #, c-format
 msgid "Saving attachment to %s"
 msgstr "Ukladá sa príloha do %s"
 
-#: ../shell/ev-window.c:2683
+#: ../shell/ev-window.c:2691
 #, c-format
 msgid "Saving image to %s"
 msgstr "Ukladá sa obrázok do %s"
 
-#: ../shell/ev-window.c:2727 ../shell/ev-window.c:2827
+#: ../shell/ev-window.c:2735 ../shell/ev-window.c:2835
 #, c-format
 msgid "The file could not be saved as “%s”."
 msgstr "Súbor sa nepodarilo uložiť ako „%s“."
 
-#: ../shell/ev-window.c:2758
+#: ../shell/ev-window.c:2766
 #, c-format
 msgid "Uploading document (%d%%)"
 msgstr "Nahráva sa dokument (%d %%)"
 
-#: ../shell/ev-window.c:2762
+#: ../shell/ev-window.c:2770
 #, c-format
 msgid "Uploading attachment (%d%%)"
 msgstr "Nahráva sa príloha (%d %%)"
 
-#: ../shell/ev-window.c:2766
+#: ../shell/ev-window.c:2774
 #, c-format
 msgid "Uploading image (%d%%)"
 msgstr "Nahráva sa obrázok (%d %%)"
 
 # filechooser dialog title
-#: ../shell/ev-window.c:2878
+#: ../shell/ev-window.c:2886
 msgid "Save a Copy"
 msgstr "Uloženie kópie"
 
-#: ../shell/ev-window.c:2954
+#: ../shell/ev-window.c:2962
 msgid "Could not send current document"
 msgstr "Nepodarilo sa poslať aktuálny dokument"
 
-#: ../shell/ev-window.c:2988
+#: ../shell/ev-window.c:2996
 msgid "Could not open the containing folder"
 msgstr "Nepodarilo sa otvoriť priečinok so súborom"
 
-#: ../shell/ev-window.c:3252
+#: ../shell/ev-window.c:3260
 #, c-format
 msgid "%d pending job in queue"
 msgid_plural "%d pending jobs in queue"
@@ -1349,35 +1344,35 @@ msgstr[0] "%d zostávajúcich úloh na spracovanie"
 msgstr[1] "%d zostávajúca úloha na spracovanie"
 msgstr[2] "%d zostávajúce úlohy na spracovanie"
 
-#: ../shell/ev-window.c:3365
+#: ../shell/ev-window.c:3373
 #, c-format
 msgid "Printing job “%s”"
 msgstr "Tlačová úloha „%s“"
 
-#: ../shell/ev-window.c:3568
+#: ../shell/ev-window.c:3576
 msgid "Document contains form fields that have been filled out. If you don't save a copy, changes will be permanently lost."
 msgstr "Dokument obsahuje vyplnené formulárové polia. Ak neuložíte jeho kópiu, tak sa zmeny natrvalo stratia."
 
-#: ../shell/ev-window.c:3572
+#: ../shell/ev-window.c:3580
 msgid "Document contains new or modified annotations. If you don't save a copy, changes will be permanently lost."
 msgstr "Dokument obsahuje nové alebo zmenené poznámky. Ak neuložíte jeho kópiu, tak sa zmeny natrvalo stratia."
 
-#: ../shell/ev-window.c:3579
+#: ../shell/ev-window.c:3587
 #, c-format
 msgid "Save a copy of document “%s” before closing?"
 msgstr "Uložiť kópiu dokumentu „%s“ pred zatvorením?"
 
 # button
-#: ../shell/ev-window.c:3598
+#: ../shell/ev-window.c:3606
 msgid "Close _without Saving"
 msgstr "Zavrieť _bez uloženia"
 
 # button
-#: ../shell/ev-window.c:3602
+#: ../shell/ev-window.c:3610
 msgid "Save a _Copy"
 msgstr "Uložiť _kópiu"
 
-#: ../shell/ev-window.c:3676
+#: ../shell/ev-window.c:3684
 #, c-format
 msgid "Wait until print job “%s” finishes before closing?"
 msgstr "Počkať pred zatvorením na dokončenie tlačovej úlohy „%s“?"
@@ -1385,7 +1380,7 @@ msgstr "Počkať pred zatvorením na dokončenie tlačovej úlohy „%s“?"
 #. TRANS: the singular form is not really used as n_print_jobs > 1
 #. but some languages distinguish between different plurals forms,
 #. so the ngettext is needed.
-#: ../shell/ev-window.c:3682
+#: ../shell/ev-window.c:3690
 #, c-format
 msgid "There is %d print job active. Wait until print finishes before closing?"
 msgid_plural "There are %d print jobs active. Wait until print finishes before closing?"
@@ -1393,33 +1388,33 @@ msgstr[0] "%d tlačových úloh je aktívnych. Počkať pred zatvorením kým sa
 msgstr[1] "%d tlačová úloha je aktívna. Počkať pred zatvorením kým sa tlač dokončí?"
 msgstr[2] "%d tlačové úlohy sú aktívne. Počkať pred zatvorením kým sa tlač dokončí?"
 
-#: ../shell/ev-window.c:3697
+#: ../shell/ev-window.c:3705
 msgid "If you close the window, pending print jobs will not be printed."
 msgstr "Ak zatvoríte okno, tak sa zostávajúce tlačové úlohy nevytlačia."
 
 # button
-#: ../shell/ev-window.c:3701
+#: ../shell/ev-window.c:3709
 msgid "Cancel _print and Close"
 msgstr "Zrušiť _tlač a zavrieť"
 
 # button
-#: ../shell/ev-window.c:3705
+#: ../shell/ev-window.c:3713
 msgid "Close _after Printing"
 msgstr "Zavrieť _po vytlačení"
 
-#: ../shell/ev-window.c:4236
+#: ../shell/ev-window.c:4244
 msgid "Running in presentation mode"
 msgstr "Beží v režime prezentácie"
 
-#: ../shell/ev-window.c:5380
+#: ../shell/ev-window.c:5388
 msgid "Enable caret navigation?"
 msgstr "Povoliť navigáciu kurzorom?"
 
-#: ../shell/ev-window.c:5382
+#: ../shell/ev-window.c:5390
 msgid "_Enable"
 msgstr "_Povoliť"
 
-#: ../shell/ev-window.c:5385
+#: ../shell/ev-window.c:5393
 msgid ""
 "Pressing F7 turns the caret navigation on or off. This feature places a moveable cursor in text pages, allowing you to move around and select text with your "
 "keyboard. Do you want to enable the caret navigation?"
@@ -1427,42 +1422,42 @@ msgstr ""
 "Stlačenie klávesu F7 zapne alebo vypne navigáciu kurzorom. Táto funkcia umiestni pohyblivý kurzor do textu a umožní vám pohyb a výber textu pomocou vašej "
 "klávesnice. Chcete povoliť navigáciu kurzorom?"
 
-#: ../shell/ev-window.c:5390
+#: ../shell/ev-window.c:5398
 msgid "Don't show this message again"
 msgstr "Túto správu viac nezobrazovať"
 
-#: ../shell/ev-window.c:5894 ../shell/ev-window.c:5910
+#: ../shell/ev-window.c:5917 ../shell/ev-window.c:5933
 msgid "Unable to launch external application."
 msgstr "Nepodarilo sa spustiť externú aplikáciu."
 
 # m: nepodarilo sa
-#: ../shell/ev-window.c:5967
+#: ../shell/ev-window.c:5990
 msgid "Unable to open external link"
 msgstr "Nepodarilo sa otvoriť externý odkaz"
 
-#: ../shell/ev-window.c:6170
+#: ../shell/ev-window.c:6193
 msgid "Couldn't find appropriate format to save image"
 msgstr "Nepodarilo sa nájsť vhodný formát na uloženie obrázku"
 
-#: ../shell/ev-window.c:6202
+#: ../shell/ev-window.c:6225
 msgid "The image could not be saved."
 msgstr "Obrázok sa nepodarilo uložiť."
 
 # filechooser dialog title
-#: ../shell/ev-window.c:6237
+#: ../shell/ev-window.c:6260
 msgid "Save Image"
 msgstr "Uloženie obrázka"
 
-#: ../shell/ev-window.c:6396
+#: ../shell/ev-window.c:6419
 msgid "Unable to open attachment"
 msgstr "Nepodarilo sa otvoriť prílohu"
 
-#: ../shell/ev-window.c:6452
+#: ../shell/ev-window.c:6475
 msgid "The attachment could not be saved."
 msgstr "Prílohu sa nepodarilo uložiť."
 
 # filechooser dialog title
-#: ../shell/ev-window.c:6500
+#: ../shell/ev-window.c:6523
 msgid "Save Attachment"
 msgstr "Uloženie prílohy"
 
@@ -1803,6 +1798,14 @@ msgstr "Toto je prehliadač dokumentov pre prostredie GNOME."
 #: ../evince.appdata.xml.in.h:4
 msgid "It supports the following document formats: PDF, PS, EPS, XPS, DjVu, TIFF, DVI (with SyncTeX), and Comic Books archives (CBR, CBT, CBZ, CB7)."
 msgstr "Podporuje nasledovné formáty dokumentov: PDF, PS, EPS, XPS, DjVu, TIFF, DVI (s funkciou SyncTeX) a archívy komiksov (CBR, CBT, CBZ, CB7)."
+
+# page label
+#~ msgid "List"
+#~ msgstr "Zoznam"
+
+# toolbutton
+#~ msgid "Text"
+#~ msgstr "Text"
 
 # tooltip
 #~ msgid "Find options"
