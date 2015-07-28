@@ -889,7 +889,7 @@ extract_argv (EvDocument *document, gint page)
                 return NULL;
 
 	if (comics_document->regex_arg) {
-		quoted_archive = comics_regex_quote (comics_document->archive);
+		quoted_archive = g_shell_quote (comics_document->archive);
 		quoted_filename =
 			comics_regex_quote (comics_document->page_names->pdata[page]);
 	} else {
