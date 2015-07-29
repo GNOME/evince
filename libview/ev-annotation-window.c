@@ -275,12 +275,34 @@ ev_annotation_window_close (EvAnnotationWindow *window)
 	g_signal_emit (window, signals[CLOSED], 0);
 }
 
+static gboolean
+ev_annotation_window_button_press_event (GtkWidget      *widget,
+					 GdkEventButton *event)
+{
+	EvAnnotationWindow *window = EV_ANNOTATION_WINDOW (widget);
+
+	if (event->type == GDK_BUTTON_PRESS && event->button == 1) {
+		window->in_move = TRUE;
+		window->x = event->x_root - event->x;
+		window->y = event->y_root - event->y;
+		gtk_window_begin_move_drag (GTK_WINDOW (widget),
+					    event->button,
+					    event->x_root,
+					    event->y_root,
+					    event->time);
+		return TRUE;
+	}
+
+	return FALSE;
+}
+
 static void
 ev_annotation_window_init (EvAnnotationWindow *window)
 {
 	GtkWidget    *vbox, *hbox;
 	GtkWidget    *icon;
 	GtkWidget    *swindow;
+	GtkWidget    *header;
 	GtkIconTheme *icon_theme;
 	GdkPixbuf    *pixbuf;
 
@@ -297,9 +319,18 @@ ev_annotation_window_init (EvAnnotationWindow *window)
 	gtk_box_pack_start (GTK_BOX (hbox), icon, FALSE, FALSE, 0);
 	gtk_widget_show (icon);
 
+	header = gtk_event_box_new ();
+	gtk_widget_add_events (header, GDK_BUTTON_PRESS_MASK);
+	g_signal_connect_swapped (header, "button-press-event",
+				  G_CALLBACK (ev_annotation_window_button_press_event),
+			          window);
+
 	window->title = gtk_label_new (NULL);
-	gtk_box_pack_start (GTK_BOX (hbox), window->title, TRUE, TRUE, 0);
+	gtk_container_add (GTK_CONTAINER (header), window->title);
 	gtk_widget_show (window->title);
+
+	gtk_box_pack_start (GTK_BOX (hbox), header, TRUE, TRUE, 0);
+	gtk_widget_show (header);
 
 	window->close_button = gtk_button_new ();
 	gtk_button_set_relief (GTK_BUTTON (window->close_button), GTK_RELIEF_NONE);
@@ -461,27 +492,6 @@ ev_annotation_window_constructor (GType                  type,
 }
 
 static gboolean
-ev_annotation_window_button_press_event (GtkWidget      *widget,
-					 GdkEventButton *event)
-{
-	EvAnnotationWindow *window = EV_ANNOTATION_WINDOW (widget);
-
-	if (event->type == GDK_BUTTON_PRESS && event->button == 1) {
-		window->in_move = TRUE;
-		window->x = event->x_root - event->x;
-		window->y = event->y_root - event->y;
-		gtk_window_begin_move_drag (GTK_WINDOW (widget),
-					    event->button,
-					    event->x_root,
-					    event->y_root,
-					    event->time);
-		return TRUE;
-	}
-
-	return FALSE;
-}
-
-static gboolean
 ev_annotation_window_configure_event (GtkWidget         *widget,
 				      GdkEventConfigure *event)
 {
@@ -539,7 +549,6 @@ ev_annotation_window_class_init (EvAnnotationWindowClass *klass)
 	g_object_class->set_property = ev_annotation_window_set_property;
 	g_object_class->dispose = ev_annotation_window_dispose;
 
-	gtk_widget_class->button_press_event = ev_annotation_window_button_press_event;
 	gtk_widget_class->configure_event = ev_annotation_window_configure_event;
 	gtk_widget_class->focus_in_event = ev_annotation_window_focus_in_event;
 	gtk_widget_class->focus_out_event = ev_annotation_window_focus_out_event;
