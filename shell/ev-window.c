@@ -2580,27 +2580,37 @@ ev_window_file_chooser_save_folder (EvWindow       *window,
 }
 
 static void
-file_open_dialog_response_cb (GtkWidget *chooser,
-			      gint       response_id,
-			      EvWindow  *ev_window)
+got_content_id (GObject      *source,
+                GAsyncResult *res,
+                gpointer      user_data)
 {
-	if (response_id == GTK_RESPONSE_OK) {
-		GSList *uris;
+        GDBusConnection *connection = G_DBUS_CONNECTION (source);
+	EvWindow  *window = user_data;
+        GError *error = NULL;
+        GVariant *ret;
+        gchar *id;
+        GSList *uris;
 
-                ev_window_file_chooser_save_folder (ev_window, GTK_FILE_CHOOSER (chooser),
-                                                    G_USER_DIRECTORY_DOCUMENTS);
+        ret = g_dbus_connection_call_finish (connection, res, &error);
+        if (!ret) {
+                g_warning ("Got error from content portal: %s\n", error->message);
+                g_error_free (error);
+                return;
+        }
 
-		uris = gtk_file_chooser_get_uris (GTK_FILE_CHOOSER (chooser));
+        g_variant_get (ret, "(s)", &id);
 
-		ev_application_open_uri_list (EV_APP, uris,
-					      gtk_window_get_screen (GTK_WINDOW (ev_window)),
-					      gtk_get_current_event_time ());
+        uris = g_slist_append (NULL, g_strconcat ("document:///", id, NULL));
 
-		g_slist_foreach (uris, (GFunc)g_free, NULL);
-		g_slist_free (uris);
-	}
+        g_variant_unref (ret);
+        g_free (id);
 
-	gtk_widget_destroy (chooser);
+        g_print ("Got document uri: %s\n", (gchar*)uris->data);
+
+        ev_application_open_uri_list (EV_APP, uris,
+                                      gtk_window_get_screen (GTK_WINDOW (window)),
+                                      gtk_get_current_event_time ());
+        g_slist_free_full (uris, g_free);
 }
 
 static void
@@ -2609,28 +2619,23 @@ ev_window_cmd_file_open (GSimpleAction *action,
 			 gpointer       user_data)
 {
 	EvWindow  *window = user_data;
-	GtkWidget *chooser;
+        GDBusConnection *bus;
+        const char *types[] = { "application/pdf", NULL };
 
-	chooser = gtk_file_chooser_dialog_new (_("Open Document"),
-					       GTK_WINDOW (window),
-					       GTK_FILE_CHOOSER_ACTION_OPEN,
-					       GTK_STOCK_CANCEL,
-					       GTK_RESPONSE_CANCEL,
-					       GTK_STOCK_OPEN, GTK_RESPONSE_OK,
-					       NULL);
+        bus = g_bus_get_sync (G_BUS_TYPE_SESSION, NULL, NULL);
 
-	ev_document_factory_add_filters (chooser, NULL);
-	gtk_file_chooser_set_select_multiple (GTK_FILE_CHOOSER (chooser), TRUE);
-	gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (chooser), FALSE);
-
-        ev_window_file_chooser_restore_folder (window, GTK_FILE_CHOOSER (chooser),
-                                               NULL, G_USER_DIRECTORY_DOCUMENTS);
-
-	g_signal_connect (chooser, "response",
-			  G_CALLBACK (file_open_dialog_response_cb),
-			  window);
-
-	gtk_widget_show (chooser);
+        g_dbus_connection_call (bus,
+                                "org.freedesktop.portal.ContentPortal",
+                                "/org/freedesktop/portal/content",
+                                "org.freedesktop.portal.ContentPortal",
+                                "Open",
+                                g_variant_new ("(^as)", types),
+                                G_VARIANT_TYPE ("(s)"),
+                                G_DBUS_CALL_FLAGS_NONE,
+                                G_MAXINT,
+                                NULL,
+                                got_content_id,
+                                window);
 }
 
 static void
