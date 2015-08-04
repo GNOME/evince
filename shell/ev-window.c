@@ -2588,7 +2588,7 @@ got_content_id (GObject      *source,
 	EvWindow  *window = user_data;
         GError *error = NULL;
         GVariant *ret;
-        gchar *id;
+        gchar *path;
         GSList *uris;
 
         ret = g_dbus_connection_call_finish (connection, res, &error);
@@ -2598,12 +2598,12 @@ got_content_id (GObject      *source,
                 return;
         }
 
-        g_variant_get (ret, "(s)", &id);
+        g_variant_get (ret, "(^ay)", &path);
 
-        uris = g_slist_append (NULL, g_strconcat ("document:///", id, NULL));
+        uris = g_slist_append (NULL, g_filename_to_uri (path, NULL, NULL));
 
         g_variant_unref (ret);
-        g_free (id);
+        g_free (path);
 
         g_print ("Got document uri: %s\n", (gchar*)uris->data);
 
@@ -2630,7 +2630,7 @@ ev_window_cmd_file_open (GSimpleAction *action,
                                 "org.freedesktop.portal.ContentPortal",
                                 "Open",
                                 g_variant_new ("(^as)", types),
-                                G_VARIANT_TYPE ("(s)"),
+                                G_VARIANT_TYPE ("(ay)"),
                                 G_DBUS_CALL_FLAGS_NONE,
                                 G_MAXINT,
                                 NULL,
