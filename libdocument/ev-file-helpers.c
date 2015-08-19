@@ -456,7 +456,8 @@ ev_file_copy_metadata (const char *from,
         target_file = g_file_new_for_uri (to);
 
         result = g_file_copy_attributes (source_file, target_file,
-                                         G_FILE_COPY_ALL_METADATA,
+                                         G_FILE_COPY_ALL_METADATA |
+                                         G_FILE_COPY_TARGET_DEFAULT_PERMS,
                                          NULL, error);
 
         g_object_unref (target_file);
