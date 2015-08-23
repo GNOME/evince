@@ -13,8 +13,8 @@ msgstr ""
 "Project-Id-Version: evince\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evince&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-06-19 03:51+0000\n"
-"PO-Revision-Date: 2015-06-19 10:20+0300\n"
+"POT-Creation-Date: 2015-08-22 15:53+0000\n"
+"PO-Revision-Date: 2015-08-23 04:11+0300\n"
 "Last-Translator: Muhammet Kara <muhammetk@gmail.com>\n"
 "Language-Team: Türkçe <gnome-turk@gnome.org>\n"
 "Language: tr\n"
@@ -312,7 +312,7 @@ msgid "Go to the next page"
 msgstr "Sonraki sayfaya git"
 
 #. Search.
-#: ../browser-plugin/EvBrowserPluginToolbar.cpp:361 ../shell/ev-toolbar.c:223
+#: ../browser-plugin/EvBrowserPluginToolbar.cpp:361 ../shell/ev-toolbar.c:224
 msgid "Find a word or phrase in the document"
 msgstr "Bir sözcüğü ya da tamlamayı belgede ara"
 
@@ -469,8 +469,8 @@ msgid "of %d"
 msgstr "/ %d"
 
 #: ../libmisc/ev-page-action-widget.c:185 ../shell/ev-history.c:426
-#: ../shell/ev-sidebar-bookmarks.c:295 ../shell/ev-window.c:896
-#: ../shell/ev-window.c:4695
+#: ../shell/ev-sidebar-bookmarks.c:295 ../shell/ev-window.c:904
+#: ../shell/ev-window.c:4703
 #, c-format
 msgid "Page %s"
 msgstr "Sayfa %s"
@@ -704,7 +704,7 @@ msgstr "DOSYA"
 msgid "GNOME Document Previewer"
 msgstr "GNOME Belge Önizleyici"
 
-#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3308
+#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3316
 msgid "Failed to print document"
 msgstr "Belge yazdırılırken başarısız olundu."
 
@@ -889,7 +889,6 @@ msgid "Markup type:"
 msgstr "İşaretleme türü:"
 
 #: ../shell/ev-annotation-properties-dialog.c:129
-#: ../shell/ev-sidebar-annotations.c:224
 msgid "Highlight"
 msgstr "Vurgula"
 
@@ -936,6 +935,14 @@ msgstr "Aç"
 #: ../shell/ev-annotation-properties-dialog.c:234
 msgid "Close"
 msgstr "Kapat"
+
+#: ../shell/ev-annotations-toolbar.c:120
+msgid "Add text annotation"
+msgstr "Açıklama metni ekle"
+
+#: ../shell/ev-annotations-toolbar.c:127
+msgid "Add highlight annotation"
+msgstr "Vurgu açıklaması ekle"
 
 #: ../shell/ev-application.c:995
 msgid ""
@@ -998,7 +1005,7 @@ msgid "Password for document %s"
 msgstr "%s belgesi için parola"
 
 #. Create tree view
-#: ../shell/ev-loading-message.c:50 ../shell/ev-sidebar-annotations.c:130
+#: ../shell/ev-loading-message.c:50 ../shell/ev-sidebar-annotations.c:125
 #: ../shell/ev-sidebar-layers.c:125 ../shell/ev-sidebar-links.c:261
 msgid "Loading…"
 msgstr "Yükleniyor..."
@@ -1080,38 +1087,18 @@ msgstr "Metin Lisansı"
 msgid "Further Information"
 msgstr "Daha Fazla Bilgi"
 
-#: ../shell/ev-sidebar-annotations.c:159
-msgid "List"
-msgstr "Liste"
-
-#: ../shell/ev-sidebar-annotations.c:206 ../shell/ev-sidebar-annotations.c:620
-msgid "Annotations"
-msgstr "Açıklamalar"
-
-#: ../shell/ev-sidebar-annotations.c:212
-msgid "Text"
-msgstr "Metin"
-
-#: ../shell/ev-sidebar-annotations.c:213
-msgid "Add text annotation"
-msgstr "Açıklama metni ekle"
-
-#: ../shell/ev-sidebar-annotations.c:225
-msgid "Add highlight annotation"
-msgstr "Vurgu açıklaması ekle"
-
-#: ../shell/ev-sidebar-annotations.c:236 ../shell/ev-sidebar-bookmarks.c:456
-msgid "Add"
-msgstr "Ekle"
-
-#: ../shell/ev-sidebar-annotations.c:408
+#: ../shell/ev-sidebar-annotations.c:260
 msgid "Document contains no annotations"
 msgstr "Belge hiçbir açıklama içermiyor"
 
-#: ../shell/ev-sidebar-annotations.c:440
+#: ../shell/ev-sidebar-annotations.c:292
 #, c-format
 msgid "Page %d"
 msgstr "Sayfa %d"
+
+#: ../shell/ev-sidebar-annotations.c:468
+msgid "Annotations"
+msgstr "Açıklamalar"
 
 #: ../shell/ev-sidebar-attachments.c:695
 msgid "Attachments"
@@ -1129,11 +1116,15 @@ msgstr "Ye_r İmini Yeniden Adlandır"
 msgid "_Remove Bookmark"
 msgstr "Ye_r İmini Sil"
 
+#: ../shell/ev-sidebar-bookmarks.c:456
+msgid "Add"
+msgstr "Ekle"
+
 #: ../shell/ev-sidebar-bookmarks.c:463
 msgid "Remove"
 msgstr "Kaldır"
 
-#: ../shell/ev-sidebar-bookmarks.c:579 ../shell/ev-toolbar.c:160
+#: ../shell/ev-sidebar-bookmarks.c:579 ../shell/ev-toolbar.c:161
 msgid "Bookmarks"
 msgstr "Yer İmleri"
 
@@ -1153,15 +1144,20 @@ msgstr "İçindekiler"
 msgid "Thumbnails"
 msgstr "Küçük Resimler"
 
-#: ../shell/ev-toolbar.c:201
+#: ../shell/ev-toolbar.c:202
 msgid "Open an existing document"
 msgstr "Varolan bir belgeyi aç"
 
-#: ../shell/ev-toolbar.c:232 ../shell/ev-toolbar.c:233
+#: ../shell/ev-toolbar.c:232
+#| msgid "Enlarge the document"
+msgid "Annotate the document"
+msgstr "Belgeye açıklama ekle"
+
+#: ../shell/ev-toolbar.c:241 ../shell/ev-toolbar.c:242
 msgid "File options"
 msgstr "Dosya seçenekleri"
 
-#: ../shell/ev-toolbar.c:242 ../shell/ev-toolbar.c:243
+#: ../shell/ev-toolbar.c:251 ../shell/ev-toolbar.c:252
 msgid "View options"
 msgstr "Görünüm seçenekleri"
 
@@ -1169,105 +1165,105 @@ msgstr "Görünüm seçenekleri"
 msgid "Supported Image Files"
 msgstr "Desteklenen Resim Dosyaları"
 
-#: ../shell/ev-window.c:1589
+#: ../shell/ev-window.c:1597
 msgid "The document contains no pages"
 msgstr "Belge hiçbir sayfa içermiyor"
 
-#: ../shell/ev-window.c:1592
+#: ../shell/ev-window.c:1600
 msgid "The document contains only empty pages"
 msgstr "Belge sadece boş sayfaları içeriyor"
 
-#: ../shell/ev-window.c:1805 ../shell/ev-window.c:1971
+#: ../shell/ev-window.c:1813 ../shell/ev-window.c:1979
 #, c-format
 msgid "Unable to open document “%s”."
 msgstr "“%s” belgesi açılamıyor."
 
-#: ../shell/ev-window.c:1935
+#: ../shell/ev-window.c:1943
 #, c-format
 msgid "Loading document from “%s”"
 msgstr "“%s” konumundan belge yükleniyor"
 
-#: ../shell/ev-window.c:2086 ../shell/ev-window.c:2414
+#: ../shell/ev-window.c:2094 ../shell/ev-window.c:2422
 #, c-format
 msgid "Downloading document (%d%%)"
 msgstr "Belge indiriliyor (%%%d)"
 
-#: ../shell/ev-window.c:2119
+#: ../shell/ev-window.c:2127
 msgid "Failed to load remote file."
 msgstr "Uzaktaki dosya yüklenemedi."
 
-#: ../shell/ev-window.c:2358
+#: ../shell/ev-window.c:2366
 #, c-format
 msgid "Reloading document from %s"
 msgstr "Belge %s konumundan yeniden yükleniyor"
 
-#: ../shell/ev-window.c:2390
+#: ../shell/ev-window.c:2398
 msgid "Failed to reload document."
 msgstr "Belge yeniden yüklenirken başarısız oldu."
 
-#: ../shell/ev-window.c:2606
+#: ../shell/ev-window.c:2614
 msgid "Open Document"
 msgstr "Belge Aç"
 
-#: ../shell/ev-window.c:2677
+#: ../shell/ev-window.c:2685
 #, c-format
 msgid "Saving document to %s"
 msgstr "Belge %s konumuna kaydediliyor"
 
-#: ../shell/ev-window.c:2680
+#: ../shell/ev-window.c:2688
 #, c-format
 msgid "Saving attachment to %s"
 msgstr "Ek %s konumuna kaydediliyor"
 
-#: ../shell/ev-window.c:2683
+#: ../shell/ev-window.c:2691
 #, c-format
 msgid "Saving image to %s"
 msgstr "Resim %s konumuna kaydediliyor"
 
-#: ../shell/ev-window.c:2727 ../shell/ev-window.c:2827
+#: ../shell/ev-window.c:2735 ../shell/ev-window.c:2835
 #, c-format
 msgid "The file could not be saved as “%s”."
 msgstr "Dosya “%s” olarak kaydedilemedi."
 
-#: ../shell/ev-window.c:2758
+#: ../shell/ev-window.c:2766
 #, c-format
 msgid "Uploading document (%d%%)"
 msgstr "Belge gönderiliyor (%%%d)"
 
-#: ../shell/ev-window.c:2762
+#: ../shell/ev-window.c:2770
 #, c-format
 msgid "Uploading attachment (%d%%)"
 msgstr "Ek gönderiliyor (%%%d)"
 
-#: ../shell/ev-window.c:2766
+#: ../shell/ev-window.c:2774
 #, c-format
 msgid "Uploading image (%d%%)"
 msgstr "Resim gönderiliyor (%%%d)"
 
-#: ../shell/ev-window.c:2878
+#: ../shell/ev-window.c:2886
 msgid "Save a Copy"
 msgstr "Bir Kopya Kaydet"
 
-#: ../shell/ev-window.c:2954
+#: ../shell/ev-window.c:2962
 msgid "Could not send current document"
 msgstr "Geçerli belge gönderilemedi"
 
-#: ../shell/ev-window.c:2988
+#: ../shell/ev-window.c:2996
 msgid "Could not open the containing folder"
 msgstr "Bulunduğu klasör açılamadı"
 
-#: ../shell/ev-window.c:3252
+#: ../shell/ev-window.c:3260
 #, c-format
 msgid "%d pending job in queue"
 msgid_plural "%d pending jobs in queue"
 msgstr[0] "%d sırada bekleyen görev"
 
-#: ../shell/ev-window.c:3365
+#: ../shell/ev-window.c:3373
 #, c-format
 msgid "Printing job “%s”"
 msgstr "“%s” işi yazdırılıyor"
 
-#: ../shell/ev-window.c:3568
+#: ../shell/ev-window.c:3576
 msgid ""
 "Document contains form fields that have been filled out. If you don't save a "
 "copy, changes will be permanently lost."
@@ -1275,7 +1271,7 @@ msgstr ""
 "Belge, doldurulmuş form alanları içeriyor. Eğer bir kopyasını "
 "kaydetmezseniz, yapılan değişiklikler kalıcı olarak kaybolacak."
 
-#: ../shell/ev-window.c:3572
+#: ../shell/ev-window.c:3580
 msgid ""
 "Document contains new or modified annotations. If you don't save a copy, "
 "changes will be permanently lost."
@@ -1283,20 +1279,20 @@ msgstr ""
 "Belge yeni veya değiştirilmiş açıklamalar içeriyor. Eğer bir kopyasını "
 "kaydetmezseniz, yapılan değişiklikler kalıcı olarak kaybolacak."
 
-#: ../shell/ev-window.c:3579
+#: ../shell/ev-window.c:3587
 #, c-format
 msgid "Save a copy of document “%s” before closing?"
 msgstr "Kapatmadan önce “%s” dosyasının bir kopyası kaydedilsin mi?"
 
-#: ../shell/ev-window.c:3598
+#: ../shell/ev-window.c:3606
 msgid "Close _without Saving"
 msgstr "Ka_ydetmeden Kapat"
 
-#: ../shell/ev-window.c:3602
+#: ../shell/ev-window.c:3610
 msgid "Save a _Copy"
 msgstr "Bir Kopya _Kaydet"
 
-#: ../shell/ev-window.c:3676
+#: ../shell/ev-window.c:3684
 #, c-format
 msgid "Wait until print job “%s” finishes before closing?"
 msgstr "Kapatmadan önce yazdırma görevi “%s” tamamlanması beklensin mi?"
@@ -1304,7 +1300,7 @@ msgstr "Kapatmadan önce yazdırma görevi “%s” tamamlanması beklensin mi?"
 #. TRANS: the singular form is not really used as n_print_jobs > 1
 #. but some languages distinguish between different plurals forms,
 #. so the ngettext is needed.
-#: ../shell/ev-window.c:3682
+#: ../shell/ev-window.c:3690
 #, c-format
 msgid "There is %d print job active. Wait until print finishes before closing?"
 msgid_plural ""
@@ -1313,32 +1309,32 @@ msgstr[0] ""
 "Etkin %d yazdırma görevi var. Kapatmadan önce yazdırma işleminin bitmesi "
 "beklensin mi?"
 
-#: ../shell/ev-window.c:3697
+#: ../shell/ev-window.c:3705
 msgid "If you close the window, pending print jobs will not be printed."
 msgstr ""
 "Eğer pencereyi kapatırsanız bekleyen yazdırma görevleri yazdırılmayacak."
 
-#: ../shell/ev-window.c:3701
+#: ../shell/ev-window.c:3709
 msgid "Cancel _print and Close"
 msgstr "_Yazdırmayı İptal Et ve Kapat"
 
-#: ../shell/ev-window.c:3705
+#: ../shell/ev-window.c:3713
 msgid "Close _after Printing"
 msgstr "Yazdırdıktan _sonra Kapat"
 
-#: ../shell/ev-window.c:4236
+#: ../shell/ev-window.c:4244
 msgid "Running in presentation mode"
 msgstr "Sunum kipinde çalışıyor"
 
-#: ../shell/ev-window.c:5380
+#: ../shell/ev-window.c:5388
 msgid "Enable caret navigation?"
 msgstr "İmleç taraması etkinleştirilsin mi?"
 
-#: ../shell/ev-window.c:5382
+#: ../shell/ev-window.c:5390
 msgid "_Enable"
 msgstr "_Etkinleştir"
 
-#: ../shell/ev-window.c:5385
+#: ../shell/ev-window.c:5393
 msgid ""
 "Pressing F7 turns the caret navigation on or off. This feature places a "
 "moveable cursor in text pages, allowing you to move around and select text "
@@ -1349,39 +1345,39 @@ msgstr ""
 "klavyenizi kullanarak sayfada dolaşabilir ve metin seçebilirsiniz. İmleç "
 "taramasını etkinleştirmek istiyor musunuz?"
 
-#: ../shell/ev-window.c:5390
+#: ../shell/ev-window.c:5398
 msgid "Don't show this message again"
 msgstr "Bu iletiyi tekrar gösterme"
 
-#: ../shell/ev-window.c:5894 ../shell/ev-window.c:5910
+#: ../shell/ev-window.c:5917 ../shell/ev-window.c:5933
 msgid "Unable to launch external application."
 msgstr "Harici uygulama başlatılamadı."
 
-#: ../shell/ev-window.c:5967
+#: ../shell/ev-window.c:5990
 msgid "Unable to open external link"
 msgstr "Harici bağ açılamadı"
 
-#: ../shell/ev-window.c:6170
+#: ../shell/ev-window.c:6193
 msgid "Couldn't find appropriate format to save image"
 msgstr "Resmi kaydetmek için uygun biçim bulunamadı"
 
-#: ../shell/ev-window.c:6202
+#: ../shell/ev-window.c:6225
 msgid "The image could not be saved."
 msgstr "Görüntü kaydedilemedi."
 
-#: ../shell/ev-window.c:6237
+#: ../shell/ev-window.c:6260
 msgid "Save Image"
 msgstr "Görüntüyü Kaydet"
 
-#: ../shell/ev-window.c:6396
+#: ../shell/ev-window.c:6419
 msgid "Unable to open attachment"
 msgstr "Ek açılamadı"
 
-#: ../shell/ev-window.c:6452
+#: ../shell/ev-window.c:6475
 msgid "The attachment could not be saved."
 msgstr "Ek kaydedilemedi."
 
-#: ../shell/ev-window.c:6500
+#: ../shell/ev-window.c:6523
 msgid "Save Attachment"
 msgstr "Ekleri Kaydet"
 
@@ -1684,6 +1680,12 @@ msgid ""
 msgstr ""
 "Şu belge biçimlerini destekler: PDF, PS, EPS, XPS, DjVu, TIFF, DVI (SyncTeX "
 "ile), ve Çizgi Roman (Comic Books) arşivleri (CBR, CBT, CBZ, CB7)."
+
+#~ msgid "List"
+#~ msgstr "Liste"
+
+#~ msgid "Text"
+#~ msgstr "Metin"
 
 #~ msgid "Find options"
 #~ msgstr "Bulma seçenekleri"
