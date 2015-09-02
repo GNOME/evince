@@ -6,10 +6,10 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: evince.master\n"
-"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=evince&"
-"keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-03-25 04:48+0000\n"
-"PO-Revision-Date: 2015-04-09 17:09+0000\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
+"product=evince&keywords=I18N+L10N&component=general\n"
+"POT-Creation-Date: 2015-09-02 03:52+0000\n"
+"PO-Revision-Date: 2015-09-02 14:58+0000\n"
 "Last-Translator: Sveinn í Felli <sv1@fellsnet.is>\n"
 "Language-Team: Icelandic <translation-team-is@lists.sourceforge.net>\n"
 "Language: is\n"
@@ -112,53 +112,53 @@ msgstr "DVI skjöl"
 msgid "Adds support for reading DVI documents"
 msgstr "Bætir við stuðningi til lestrar á DVI skjölum"
 
-#: ../backend/pdf/ev-poppler.cc:673
+#: ../backend/pdf/ev-poppler.cc:679
 msgid "This work is in the Public Domain"
 msgstr "Þetta verk tilheyrir almenningi"
 
 #. translators: this is the document security state
-#: ../backend/pdf/ev-poppler.cc:929 ../backend/pdf/ev-poppler.cc:935
+#: ../backend/pdf/ev-poppler.cc:935 ../backend/pdf/ev-poppler.cc:941
 msgid "Yes"
 msgstr "Já"
 
 #. translators: this is the document security state
-#: ../backend/pdf/ev-poppler.cc:932 ../backend/pdf/ev-poppler.cc:935
+#: ../backend/pdf/ev-poppler.cc:938 ../backend/pdf/ev-poppler.cc:941
 msgid "No"
 msgstr "Nei"
 
-#: ../backend/pdf/ev-poppler.cc:1066
+#: ../backend/pdf/ev-poppler.cc:1072
 msgid "Type 1"
 msgstr "Gerð 1"
 
-#: ../backend/pdf/ev-poppler.cc:1068
+#: ../backend/pdf/ev-poppler.cc:1074
 msgid "Type 1C"
 msgstr "Gerð 1C"
 
-#: ../backend/pdf/ev-poppler.cc:1070
+#: ../backend/pdf/ev-poppler.cc:1076
 msgid "Type 3"
 msgstr "Gerð 3"
 
-#: ../backend/pdf/ev-poppler.cc:1072
+#: ../backend/pdf/ev-poppler.cc:1078
 msgid "TrueType"
 msgstr "TrueType"
 
-#: ../backend/pdf/ev-poppler.cc:1074
+#: ../backend/pdf/ev-poppler.cc:1080
 msgid "Type 1 (CID)"
 msgstr "Gerð 1 (CID)"
 
-#: ../backend/pdf/ev-poppler.cc:1076
+#: ../backend/pdf/ev-poppler.cc:1082
 msgid "Type 1C (CID)"
 msgstr "Gerð 1C (CID)"
 
-#: ../backend/pdf/ev-poppler.cc:1078
+#: ../backend/pdf/ev-poppler.cc:1084
 msgid "TrueType (CID)"
 msgstr "TrueType (CID)"
 
-#: ../backend/pdf/ev-poppler.cc:1080
+#: ../backend/pdf/ev-poppler.cc:1086
 msgid "Unknown font type"
 msgstr "Óþekkt stafagerð"
 
-#: ../backend/pdf/ev-poppler.cc:1124
+#: ../backend/pdf/ev-poppler.cc:1130
 msgid ""
 "This document contains non-embedded fonts that are not from the PDF Standard "
 "14 fonts. If the substitute fonts selected by fontconfig are not the same as "
@@ -166,15 +166,15 @@ msgid ""
 msgstr ""
 "Þetta skjal notar letur sem er hvorki ívafið inn í skjalið né hluti af hinum "
 "14 stöðluðu PDF leturgerðum. Ef leturgerðirnar sem fontconfig valdi til "
-"útskiptingar eru ekki þær sömu og voru notaðar þegar PDF skjalið var búið til "
-"má vera að það birtist ekki rétt."
+"útskiptingar eru ekki þær sömu og voru notaðar þegar PDF skjalið var búið "
+"til má vera að það birtist ekki rétt."
 
-#: ../backend/pdf/ev-poppler.cc:1129
+#: ../backend/pdf/ev-poppler.cc:1135
 msgid "All fonts are either standard or embedded."
 msgstr ""
 "Allar leturgerðir eru annað hvort staðlaðar eða ívafinn hluti af skjalinu"
 
-#: ../backend/pdf/ev-poppler.cc:1161
+#: ../backend/pdf/ev-poppler.cc:1167
 msgid "No name"
 msgstr "Ekkert heiti"
 
@@ -188,20 +188,20 @@ msgstr "Ekkert heiti"
 #. Author: None
 #. Keywords: None
 #.
-#: ../backend/pdf/ev-poppler.cc:1170 ../libview/ev-print-operation.c:1965
-#: ../properties/ev-properties-view.c:195
+#: ../backend/pdf/ev-poppler.cc:1176 ../libview/ev-print-operation.c:1965
+#: ../properties/ev-properties-view.c:196
 msgid "None"
 msgstr "Ekkert"
 
-#: ../backend/pdf/ev-poppler.cc:1178
+#: ../backend/pdf/ev-poppler.cc:1184
 msgid "Embedded subset"
 msgstr "Ívafið hlutmengi"
 
-#: ../backend/pdf/ev-poppler.cc:1180
+#: ../backend/pdf/ev-poppler.cc:1186
 msgid "Embedded"
 msgstr "Ívafið"
 
-#: ../backend/pdf/ev-poppler.cc:1182
+#: ../backend/pdf/ev-poppler.cc:1188
 msgid "Not embedded"
 msgstr "Ekki ívafið"
 
@@ -210,7 +210,7 @@ msgstr "Ekki ívafið"
 #. * type. Example:
 #. * "Type 1 (One of the Standard 14 Fonts)"
 #.
-#: ../backend/pdf/ev-poppler.cc:1189
+#: ../backend/pdf/ev-poppler.cc:1195
 msgid " (One of the Standard 14 Fonts)"
 msgstr " (Ein af hinum 14 stöðluðu leturgerðum)"
 
@@ -219,15 +219,15 @@ msgstr " (Ein af hinum 14 stöðluðu leturgerðum)"
 #. * type. Example:
 #. * "TrueType (Not one of the Standard 14 Fonts)"
 #.
-#: ../backend/pdf/ev-poppler.cc:1196
+#: ../backend/pdf/ev-poppler.cc:1202
 msgid " (Not one of the Standard 14 Fonts)"
 msgstr " (Ekki ein af hinum 14 stöðluðu leturgerðum)"
 
-#: ../backend/pdf/ev-poppler.cc:1203
+#: ../backend/pdf/ev-poppler.cc:1209
 msgid "Encoding"
 msgstr "Kóðun"
 
-#: ../backend/pdf/ev-poppler.cc:1204
+#: ../backend/pdf/ev-poppler.cc:1210
 msgid "Substituting with"
 msgstr "Skipt út fyrir"
 
@@ -281,55 +281,60 @@ msgstr "XPS skjöl"
 msgid "Adds support for reading XPS documents"
 msgstr "Bætir við stuðningi til lestrar á XPS skjölum"
 
-#: ../browser-plugin/EvBrowserPluginToolbar.cpp:230
+#: ../browser-plugin/EvBrowserPluginToolbar.cpp:287
 #: ../previewer/ev-previewer-window.c:317 ../shell/evince-menus.ui.h:32
 msgid "Fit Pa_ge"
 msgstr "_Passa á síðu"
 
-#: ../browser-plugin/EvBrowserPluginToolbar.cpp:239
+#: ../browser-plugin/EvBrowserPluginToolbar.cpp:296
 #: ../previewer/ev-previewer-window.c:320 ../shell/evince-menus.ui.h:33
 msgid "Fit _Width"
 msgstr "Passa á _breidd"
 
-#: ../browser-plugin/EvBrowserPluginToolbar.cpp:248
+#: ../browser-plugin/EvBrowserPluginToolbar.cpp:305
 #: ../shell/evince-menus.ui.h:34
 msgid "_Automatic"
 msgstr "Sjálfvir_kt"
 
 #. Navigation buttons
-#: ../browser-plugin/EvBrowserPluginToolbar.cpp:273
+#: ../browser-plugin/EvBrowserPluginToolbar.cpp:330
 #: ../previewer/ev-previewer-window.c:271
 msgid "Go to the previous page"
 msgstr "Fara á fyrri síðu"
 
-#: ../browser-plugin/EvBrowserPluginToolbar.cpp:277
+#: ../browser-plugin/EvBrowserPluginToolbar.cpp:334
 #: ../previewer/ev-previewer-window.c:274
 msgid "Go to the next page"
 msgstr "Fara á næstu síðu"
 
-#: ../browser-plugin/EvBrowserPluginToolbar.cpp:312
+#. Search.
+#: ../browser-plugin/EvBrowserPluginToolbar.cpp:361 ../shell/ev-toolbar.c:224
+msgid "Find a word or phrase in the document"
+msgstr "Leita að orði eða setningu í þessu skjali"
+
+#: ../browser-plugin/EvBrowserPluginToolbar.cpp:380
 msgid "Show the entire document"
 msgstr "Birta allt skjalið"
 
-#: ../browser-plugin/EvBrowserPluginToolbar.cpp:320
+#: ../browser-plugin/EvBrowserPluginToolbar.cpp:388
 msgid "Show two pages at once"
 msgstr "Birta tvær síður í einu"
 
-#: ../browser-plugin/EvBrowserPluginToolbar.cpp:342
+#: ../browser-plugin/EvBrowserPluginToolbar.cpp:410
 #: ../previewer/ev-previewer-window.c:277
 msgid "Enlarge the document"
 msgstr "Stækka skjalið"
 
-#: ../browser-plugin/EvBrowserPluginToolbar.cpp:346
+#: ../browser-plugin/EvBrowserPluginToolbar.cpp:414
 #: ../previewer/ev-previewer-window.c:280
 msgid "Shrink the document"
 msgstr "Minnka skjalið"
 
-#: ../browser-plugin/EvBrowserPluginToolbar.cpp:368
+#: ../browser-plugin/EvBrowserPluginToolbar.cpp:436
 msgid "Download document"
 msgstr "Ná í skjal"
 
-#: ../browser-plugin/EvBrowserPluginToolbar.cpp:381
+#: ../browser-plugin/EvBrowserPluginToolbar.cpp:449
 msgid "Print document"
 msgstr "Prenta skjal"
 
@@ -369,15 +374,15 @@ msgstr "Endurhlaða skjalið sjálfkrafa"
 
 #: ../data/org.gnome.Evince.gschema.xml.in.h:4
 msgid "The document is automatically reloaded on file change."
-msgstr "Skjalinu verður endurhlaðið sjálfkrafa þegar því er breytt."
+msgstr "Skjalið endurhleðst sjálfkrafa þegar því er breytt."
 
 #: ../data/org.gnome.Evince.gschema.xml.in.h:5
 msgid "The URI of the directory last used to open or save a document"
-msgstr ""
+msgstr "Slóðin á möppuna sem síðast var notuð til að opna eða vista skjal"
 
 #: ../data/org.gnome.Evince.gschema.xml.in.h:6
 msgid "The URI of the directory last used to save a picture"
-msgstr ""
+msgstr "Slóðin á möppuna sem síðast var notuð til að vista mynd"
 
 #: ../data/org.gnome.Evince.gschema.xml.in.h:7
 msgid "Page cache size in MiB"
@@ -388,6 +393,8 @@ msgid ""
 "The maximum size that will be used to cache rendered pages, limits maximum "
 "zoom level."
 msgstr ""
+"Hámarksstærð skyndiminnis sem notað verður til að geyma myndgerðar síður, "
+"þetta takmarkar aðdráttarstig."
 
 #: ../data/org.gnome.Evince.gschema.xml.in.h:9
 msgid ""
@@ -458,13 +465,38 @@ msgid "of %d"
 msgstr "af %d"
 
 #: ../libmisc/ev-page-action-widget.c:185 ../shell/ev-history.c:426
-#: ../shell/ev-sidebar-bookmarks.c:295 ../shell/ev-window.c:906
-#: ../shell/ev-window.c:4713
+#: ../shell/ev-sidebar-bookmarks.c:295 ../shell/ev-window.c:904
+#: ../shell/ev-window.c:4703
 #, c-format
 msgid "Page %s"
 msgstr "Síða %s"
 
-#: ../libview/ev-jobs.c:1997
+#: ../libmisc/ev-search-box.c:110
+msgid "Not found, click to change search options"
+msgstr "Fannst ekki, smelltu til að breyta leitarskilyrðum"
+
+#: ../libmisc/ev-search-box.c:180 ../libmisc/ev-search-box.c:236
+#| msgid "File options"
+msgid "Search options"
+msgstr "Leitarvalkostir"
+
+#: ../libmisc/ev-search-box.c:310
+msgid "_Whole Words Only"
+msgstr "Aðeins _heil orð"
+
+#: ../libmisc/ev-search-box.c:323
+msgid "C_ase Sensitive"
+msgstr "_Næmt fyrir há og lágstöfum"
+
+#: ../libmisc/ev-search-box.c:590
+msgid "Find previous occurrence of the search string"
+msgstr "Leita afturábak að næsta tilviki leitarstrengs"
+
+#: ../libmisc/ev-search-box.c:597
+msgid "Find next occurrence of the search string"
+msgstr "Leita áfram að næsta tilviki leitarstrengs"
+
+#: ../libview/ev-jobs.c:2002
 #, c-format
 msgid "Failed to print page %d: %s"
 msgstr "Það tókst ekki að prenta síðu %d: %s"
@@ -540,6 +572,17 @@ msgid ""
 "• \"Fit to Printable Area\": Document pages are enlarged or reduced as "
 "required to fit the printable area of the printer page.\n"
 msgstr ""
+"Kvarða síður í skjalinu svo þær passi á útprentaðar síður. Veldu einn af "
+"eftirfarandi möguleikum:\n"
+"\n"
+"• \"Ekkert\": engin kvörðun fer fram.\n"
+"\n"
+"• \"Minnka að prentanlegu svæði\": síður í skjalinu sem eru stærri en "
+"prentanlegt svæði eru minnkaðar þannig að þær komist fyrir á útprentuðum "
+"síðum.\n"
+"\n"
+"• \"Laga að prentanlegu svæði\": síður í skjalinu eru minnkaðar eða stækkaðar "
+"þannig að þær passi á útprentuðar síður.\n"
 
 #: ../libview/ev-print-operation.c:1982
 msgid "Auto Rotate and Center"
@@ -550,6 +593,8 @@ msgid ""
 "Rotate printer page orientation of each page to match orientation of each "
 "document page. Document pages will be centered within the printer page."
 msgstr ""
+"Snúa stefnu prentaðra síðna til samræmis við stefnu síðna í skjalinu. "
+"Síðurnar í skjalinu verða miðjaðar á útprentuðum síðum."
 
 #: ../libview/ev-print-operation.c:1990
 msgid "Select page size using document page size"
@@ -560,6 +605,8 @@ msgid ""
 "When enabled, each page will be printed on the same size paper as the "
 "document page."
 msgstr ""
+"Þegar þetta er virkjað, þá mun hver síða verða prentuð á sömu stærð af pappír "
+"eins og síða skjalsins segir til um."
 
 #: ../libview/ev-print-operation.c:2092
 msgid "Page Handling"
@@ -585,46 +632,46 @@ msgstr "Skruna sýn niður"
 msgid "Document View"
 msgstr "Birta skjal"
 
-#: ../libview/ev-view.c:2002
+#: ../libview/ev-view.c:2023
 msgid "Go to first page"
 msgstr "Fara á fyrstu síðu"
 
-#: ../libview/ev-view.c:2004
+#: ../libview/ev-view.c:2025
 msgid "Go to previous page"
 msgstr "Fara á fyrri síðu"
 
-#: ../libview/ev-view.c:2006
+#: ../libview/ev-view.c:2027
 msgid "Go to next page"
 msgstr "Fara á næstu síðu"
 
-#: ../libview/ev-view.c:2008
+#: ../libview/ev-view.c:2029
 msgid "Go to last page"
 msgstr "Fara á öftustu síðu"
 
-#: ../libview/ev-view.c:2010
+#: ../libview/ev-view.c:2031
 msgid "Go to page"
 msgstr "Fara á síðu"
 
-#: ../libview/ev-view.c:2012
+#: ../libview/ev-view.c:2033
 msgid "Find"
 msgstr "Finna"
 
-#: ../libview/ev-view.c:2040
+#: ../libview/ev-view.c:2061
 #, c-format
 msgid "Go to page %s"
 msgstr "Fara á síðu %s"
 
-#: ../libview/ev-view.c:2046
+#: ../libview/ev-view.c:2067
 #, c-format
 msgid "Go to %s on file “%s”"
 msgstr "Fara á %s í skrá \"%s\""
 
-#: ../libview/ev-view.c:2049
+#: ../libview/ev-view.c:2070
 #, c-format
 msgid "Go to file “%s”"
 msgstr "Fara í skrá \"%s\""
 
-#: ../libview/ev-view.c:2057
+#: ../libview/ev-view.c:2078
 #, c-format
 msgid "Launch %s"
 msgstr "Ræsa %s"
@@ -653,7 +700,7 @@ msgstr "SKRÁ"
 msgid "GNOME Document Previewer"
 msgstr "GNOME forskoðun skjala"
 
-#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3325
+#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3316
 msgid "Failed to print document"
 msgstr "Gat ekki prentað skjalið"
 
@@ -707,7 +754,7 @@ msgid "Subject:"
 msgstr "Viðfangsefni:"
 
 #: ../properties/ev-properties-view.c:64
-#: ../shell/ev-annotation-properties-dialog.c:173
+#: ../shell/ev-annotation-properties-dialog.c:174
 msgid "Author:"
 msgstr "Höfundur:"
 
@@ -761,53 +808,33 @@ msgstr "Stærð:"
 #. * Do *not* translate it to "predefinito:mm", if it
 #. * it isn't default:mm or default:inch it will not work
 #.
-#: ../properties/ev-properties-view.c:223
+#: ../properties/ev-properties-view.c:233
 msgid "default:mm"
 msgstr "default:mm"
 
-#: ../properties/ev-properties-view.c:267
+#: ../properties/ev-properties-view.c:277
 #, c-format
 msgid "%.0f × %.0f mm"
 msgstr "%.0f × %.0f mm"
 
-#: ../properties/ev-properties-view.c:271
+#: ../properties/ev-properties-view.c:281
 #, c-format
 msgid "%.2f × %.2f inch"
 msgstr "%.2f × %.2f tommur"
 
 #. Note to translators: first placeholder is the paper name (eg.
 #. * A4), second placeholder is the paper size (eg. 297x210 mm)
-#: ../properties/ev-properties-view.c:295
+#: ../properties/ev-properties-view.c:305
 #, c-format
 msgid "%s, Portrait (%s)"
 msgstr "%s, lóðrétt (%s)"
 
 #. Note to translators: first placeholder is the paper name (eg.
 #. * A4), second placeholder is the paper size (eg. 297x210 mm)
-#: ../properties/ev-properties-view.c:302
+#: ../properties/ev-properties-view.c:312
 #, c-format
 msgid "%s, Landscape (%s)"
 msgstr "%s, lárétt (%s)"
-
-#: ../shell/eggfindbar.c:284
-msgid "_Whole Words Only"
-msgstr "Aðeins _heil orð"
-
-#: ../shell/eggfindbar.c:296
-msgid "C_ase Sensitive"
-msgstr "_Næmt fyrir há og lágstöfum"
-
-#: ../shell/eggfindbar.c:399
-msgid "Find options"
-msgstr "Valkostir leitar"
-
-#: ../shell/eggfindbar.c:408
-msgid "Find previous occurrence of the search string"
-msgstr "Leita afturábak að næsta tilviki leitarstrengs"
-
-#: ../shell/eggfindbar.c:418
-msgid "Find next occurrence of the search string"
-msgstr "Leita áfram að næsta tilviki leitarstrengs"
 
 #: ../shell/ev-annotation-properties-dialog.c:97
 msgid "Icon:"
@@ -869,37 +896,50 @@ msgstr "Yfirstrikað"
 msgid "Underline"
 msgstr "Undirstrikað"
 
-#: ../shell/ev-annotation-properties-dialog.c:153
+#: ../shell/ev-annotation-properties-dialog.c:132
+msgid "Squiggly"
+msgstr "Beyglað"
+
+#: ../shell/ev-annotation-properties-dialog.c:154
 msgid "Annotation Properties"
 msgstr "Eiginleikar glósu"
 
-#: ../shell/ev-annotation-properties-dialog.c:184
+#: ../shell/ev-annotation-properties-dialog.c:185
 msgid "Color:"
 msgstr "Litur:"
 
-#: ../shell/ev-annotation-properties-dialog.c:194
+#: ../shell/ev-annotation-properties-dialog.c:195
 msgid "Style:"
 msgstr "Stíll:"
 
-#: ../shell/ev-annotation-properties-dialog.c:209
+#: ../shell/ev-annotation-properties-dialog.c:210
 msgid "Transparent"
 msgstr "Gegnsætt"
 
-#: ../shell/ev-annotation-properties-dialog.c:216
+#: ../shell/ev-annotation-properties-dialog.c:217
 msgid "Opaque"
 msgstr "Ógegnsætt"
 
-#: ../shell/ev-annotation-properties-dialog.c:226
+#: ../shell/ev-annotation-properties-dialog.c:227
 msgid "Initial window state:"
 msgstr "Upphafleg staða glugga:"
 
-#: ../shell/ev-annotation-properties-dialog.c:232
+#: ../shell/ev-annotation-properties-dialog.c:233
 msgid "Open"
 msgstr "Opna"
 
-#: ../shell/ev-annotation-properties-dialog.c:233
+#: ../shell/ev-annotation-properties-dialog.c:234
 msgid "Close"
 msgstr "Loka"
+
+#: ../shell/ev-annotations-toolbar.c:120
+msgid "Add text annotation"
+msgstr "Bæta við glósu"
+
+#: ../shell/ev-annotations-toolbar.c:127
+#| msgid "Add text annotation"
+msgid "Add highlight annotation"
+msgstr "Bæta við áherslulitaðri glósu"
 
 #: ../shell/ev-application.c:995
 msgid ""
@@ -961,7 +1001,7 @@ msgid "Password for document %s"
 msgstr "Lykilorð fyrir skjalið %s"
 
 #. Create tree view
-#: ../shell/ev-loading-message.c:50 ../shell/ev-sidebar-annotations.c:131
+#: ../shell/ev-loading-message.c:50 ../shell/ev-sidebar-annotations.c:125
 #: ../shell/ev-sidebar-layers.c:125 ../shell/ev-sidebar-links.c:261
 msgid "Loading…"
 msgstr "Hleð inn..."
@@ -1044,36 +1084,20 @@ msgstr "Notkunarleyfi texta"
 msgid "Further Information"
 msgstr "Meiri upplýsingar"
 
-#: ../shell/ev-sidebar-annotations.c:160
-msgid "List"
-msgstr "Listi"
-
-#: ../shell/ev-sidebar-annotations.c:205 ../shell/ev-sidebar-annotations.c:579
-msgid "Annotations"
-msgstr "Glósur"
-
-#: ../shell/ev-sidebar-annotations.c:211
-msgid "Text"
-msgstr "Texti"
-
-#: ../shell/ev-sidebar-annotations.c:212
-msgid "Add text annotation"
-msgstr "Bæta við glósu"
-
-#: ../shell/ev-sidebar-annotations.c:223 ../shell/ev-sidebar-bookmarks.c:458
-msgid "Add"
-msgstr "Bæta við"
-
-#: ../shell/ev-sidebar-annotations.c:377
+#: ../shell/ev-sidebar-annotations.c:260
 msgid "Document contains no annotations"
 msgstr "Skjalið inniheldur engar glósur"
 
-#: ../shell/ev-sidebar-annotations.c:409
+#: ../shell/ev-sidebar-annotations.c:292
 #, c-format
 msgid "Page %d"
 msgstr "Síða %d"
 
-#: ../shell/ev-sidebar-attachments.c:697
+#: ../shell/ev-sidebar-annotations.c:468
+msgid "Annotations"
+msgstr "Glósur"
+
+#: ../shell/ev-sidebar-attachments.c:695
 msgid "Attachments"
 msgstr "Viðhengi"
 
@@ -1089,15 +1113,19 @@ msgstr "_Endurnefna bókamerki"
 msgid "_Remove Bookmark"
 msgstr "_Fjarlægja bókamerki"
 
-#: ../shell/ev-sidebar-bookmarks.c:465
+#: ../shell/ev-sidebar-bookmarks.c:456
+msgid "Add"
+msgstr "Bæta við"
+
+#: ../shell/ev-sidebar-bookmarks.c:463
 msgid "Remove"
 msgstr "Fjarlægja"
 
-#: ../shell/ev-sidebar-bookmarks.c:581 ../shell/ev-toolbar.c:160
+#: ../shell/ev-sidebar-bookmarks.c:579 ../shell/ev-toolbar.c:161
 msgid "Bookmarks"
 msgstr "Bókamerki"
 
-#: ../shell/ev-sidebar-layers.c:446
+#: ../shell/ev-sidebar-layers.c:444
 msgid "Layers"
 msgstr "Lög"
 
@@ -1105,27 +1133,28 @@ msgstr "Lög"
 msgid "Print…"
 msgstr "Prenta…"
 
-#: ../shell/ev-sidebar-links.c:725
+#: ../shell/ev-sidebar-links.c:722
 msgid "Index"
 msgstr "Atriðaskrá"
 
-#: ../shell/ev-sidebar-thumbnails.c:1082
+#: ../shell/ev-sidebar-thumbnails.c:1080
 msgid "Thumbnails"
 msgstr "Smámyndir"
 
-#: ../shell/ev-toolbar.c:201
+#: ../shell/ev-toolbar.c:202
 msgid "Open an existing document"
 msgstr "Opna tilbúið skjal"
 
-#: ../shell/ev-toolbar.c:223
-msgid "Find a word or phrase in the document"
-msgstr "Leita að orði eða setningu í þessu skjali"
+#: ../shell/ev-toolbar.c:232
+#| msgid "Enlarge the document"
+msgid "Annotate the document"
+msgstr "Glósa í skjalið"
 
-#: ../shell/ev-toolbar.c:232 ../shell/ev-toolbar.c:233
+#: ../shell/ev-toolbar.c:241 ../shell/ev-toolbar.c:242
 msgid "File options"
 msgstr "Valkostir skráa"
 
-#: ../shell/ev-toolbar.c:242 ../shell/ev-toolbar.c:243
+#: ../shell/ev-toolbar.c:251 ../shell/ev-toolbar.c:252
 msgid "View options"
 msgstr "Valkostir skoðunar"
 
@@ -1133,106 +1162,106 @@ msgstr "Valkostir skoðunar"
 msgid "Supported Image Files"
 msgstr "Studdar myndaskrár"
 
-#: ../shell/ev-window.c:1608
+#: ../shell/ev-window.c:1597
 msgid "The document contains no pages"
 msgstr "Þetta skjal inniheldur engar blaðsíður"
 
-#: ../shell/ev-window.c:1611
+#: ../shell/ev-window.c:1600
 msgid "The document contains only empty pages"
 msgstr "Þetta skjal inniheldur eingöngu tómar blaðsíður"
 
-#: ../shell/ev-window.c:1824 ../shell/ev-window.c:1992
+#: ../shell/ev-window.c:1813 ../shell/ev-window.c:1979
 #, c-format
 msgid "Unable to open document “%s”."
 msgstr "Gat ekki opnað skjalið \"%s\"."
 
-#: ../shell/ev-window.c:1956
+#: ../shell/ev-window.c:1943
 #, c-format
 msgid "Loading document from “%s”"
 msgstr "Hleð inn skjali frá \"%s\""
 
-#: ../shell/ev-window.c:2107 ../shell/ev-window.c:2434
+#: ../shell/ev-window.c:2094 ../shell/ev-window.c:2422
 #, c-format
 msgid "Downloading document (%d%%)"
 msgstr "Sæki skjalið (%d%%)"
 
-#: ../shell/ev-window.c:2140
+#: ../shell/ev-window.c:2127
 msgid "Failed to load remote file."
 msgstr "Gat hlaðið inn fjartengdri skrá."
 
-#: ../shell/ev-window.c:2378
+#: ../shell/ev-window.c:2366
 #, c-format
 msgid "Reloading document from %s"
 msgstr "Endurlesa skjalið aftur frá %s"
 
-#: ../shell/ev-window.c:2410
+#: ../shell/ev-window.c:2398
 msgid "Failed to reload document."
 msgstr "Það tókst ekki að endurhlaða skjalinu inn."
 
-#: ../shell/ev-window.c:2626
+#: ../shell/ev-window.c:2614
 msgid "Open Document"
 msgstr "Opna skjal"
 
-#: ../shell/ev-window.c:2697
+#: ../shell/ev-window.c:2685
 #, c-format
 msgid "Saving document to %s"
 msgstr "Vista skjalinu í %s"
 
-#: ../shell/ev-window.c:2700
+#: ../shell/ev-window.c:2688
 #, c-format
 msgid "Saving attachment to %s"
 msgstr "Vista viðhengi í %s"
 
-#: ../shell/ev-window.c:2703
+#: ../shell/ev-window.c:2691
 #, c-format
 msgid "Saving image to %s"
 msgstr "Vista mynd í %s"
 
-#: ../shell/ev-window.c:2747 ../shell/ev-window.c:2847
+#: ../shell/ev-window.c:2735 ../shell/ev-window.c:2835
 #, c-format
 msgid "The file could not be saved as “%s”."
 msgstr "Gat ekki vistað skrána sem \"%s\"."
 
-#: ../shell/ev-window.c:2778
+#: ../shell/ev-window.c:2766
 #, c-format
 msgid "Uploading document (%d%%)"
 msgstr "Hleð skjalinu upp (%d%%)"
 
-#: ../shell/ev-window.c:2782
+#: ../shell/ev-window.c:2770
 #, c-format
 msgid "Uploading attachment (%d%%)"
 msgstr "Hleð viðhengi upp (%d%%)"
 
-#: ../shell/ev-window.c:2786
+#: ../shell/ev-window.c:2774
 #, c-format
 msgid "Uploading image (%d%%)"
 msgstr "Hleð mynd upp (%d%%)"
 
-#: ../shell/ev-window.c:2898
+#: ../shell/ev-window.c:2886
 msgid "Save a Copy"
 msgstr "Vista afrit"
 
-#: ../shell/ev-window.c:2974
+#: ../shell/ev-window.c:2962
 msgid "Could not send current document"
 msgstr "Gat ekki sent þetta skjal"
 
-#: ../shell/ev-window.c:3008
+#: ../shell/ev-window.c:2996
 msgid "Could not open the containing folder"
 msgstr "Gat ekki opnað umlykjandi möppu"
 
-#: ../shell/ev-window.c:3269
+#: ../shell/ev-window.c:3260
 #, c-format
 msgid "%d pending job in queue"
 msgid_plural "%d pending jobs in queue"
 msgstr[0] "%d verk sem bíður"
 msgstr[1] "%d verk sem bíða"
 
-#: ../shell/ev-window.c:3382
+#: ../shell/ev-window.c:3373
 #, c-format
 msgid "Printing job “%s”"
 msgstr "Prenta verk „%s“"
 
-#: ../shell/ev-window.c:3585
+#: ../shell/ev-window.c:3576
 msgid ""
 "Document contains form fields that have been filled out. If you don't save a "
 "copy, changes will be permanently lost."
@@ -1240,7 +1269,7 @@ msgstr ""
 "Skjalið inniheldur reiti sem þú hefur fyllt út. Ef þú vistar ekki afrit af "
 "skjalinu munu breytingarnar tapast."
 
-#: ../shell/ev-window.c:3589
+#: ../shell/ev-window.c:3580
 msgid ""
 "Document contains new or modified annotations. If you don't save a copy, "
 "changes will be permanently lost."
@@ -1248,20 +1277,20 @@ msgstr ""
 "Skjalið inniheldu nýjar eða breyttar glósur. Ef þú vistar ekki afrit af "
 "skjalinu munu breytingarnar tapast."
 
-#: ../shell/ev-window.c:3596
+#: ../shell/ev-window.c:3587
 #, c-format
 msgid "Save a copy of document “%s” before closing?"
 msgstr "Viltu vista breytingar á skjalinu „%s“ áður en þú lokar því?"
 
-#: ../shell/ev-window.c:3615
+#: ../shell/ev-window.c:3606
 msgid "Close _without Saving"
 msgstr "_Loka án þess að vista"
 
-#: ../shell/ev-window.c:3619
+#: ../shell/ev-window.c:3610
 msgid "Save a _Copy"
 msgstr "_Vista afrit"
 
-#: ../shell/ev-window.c:3693
+#: ../shell/ev-window.c:3684
 #, c-format
 msgid "Wait until print job “%s” finishes before closing?"
 msgstr "Viltu bíða með að loka þangað til búið er að prenta „%s“?"
@@ -1269,7 +1298,7 @@ msgstr "Viltu bíða með að loka þangað til búið er að prenta „%s“?"
 #. TRANS: the singular form is not really used as n_print_jobs > 1
 #. but some languages distinguish between different plurals forms,
 #. so the ngettext is needed.
-#: ../shell/ev-window.c:3699
+#: ../shell/ev-window.c:3690
 #, c-format
 msgid "There is %d print job active. Wait until print finishes before closing?"
 msgid_plural ""
@@ -1278,92 +1307,76 @@ msgstr[0] ""
 "Það er %d verk sem á eftir að prenta. Viltu bíða með að loka þangað til búið "
 "er að prenta það út?"
 msgstr[1] ""
-"Það eru %d verk sem á eftir að prenta. Viltu bíða með að loka þangað til búið "
-"er að prenta þau út?"
+"Það eru %d verk sem á eftir að prenta. Viltu bíða með að loka þangað til "
+"búið er að prenta þau út?"
 
-#: ../shell/ev-window.c:3714
+#: ../shell/ev-window.c:3705
 msgid "If you close the window, pending print jobs will not be printed."
 msgstr "Það sem er á biðlistanum verður ekki prentað ef þú lokar glugganum."
 
-#: ../shell/ev-window.c:3718
+#: ../shell/ev-window.c:3709
 msgid "Cancel _print and Close"
 msgstr "Hætta við _prentun og loka"
 
-#: ../shell/ev-window.c:3722
+#: ../shell/ev-window.c:3713
 msgid "Close _after Printing"
 msgstr "Loka _eftir prentun"
 
-#: ../shell/ev-window.c:4253
+#: ../shell/ev-window.c:4244
 msgid "Running in presentation mode"
 msgstr "Keyri í kynningarham"
 
-#. TRANS: Sometimes this could be better translated as
-#. "%d hit(s) on this page".  Therefore this string
-#. contains plural cases.
-#: ../shell/ev-window.c:5187
-#, c-format
-msgid "%d found on this page"
-msgid_plural "%d found on this page"
-msgstr[0] "%d fannst á þessari síðu"
-msgstr[1] "%d fundust á þessari síðu"
-
-#: ../shell/ev-window.c:5192
-msgid "Not found"
-msgstr "Fannst ekki"
-
-#: ../shell/ev-window.c:5198
-#, c-format
-msgid "%3d%% remaining to search"
-msgstr "Á eftir að leita í %3d%%"
-
-#: ../shell/ev-window.c:5518
+#: ../shell/ev-window.c:5388
 msgid "Enable caret navigation?"
 msgstr "Virkja vafur með innsláttarmerki?"
 
-#: ../shell/ev-window.c:5520
+#: ../shell/ev-window.c:5390
 msgid "_Enable"
 msgstr "_Virkja"
 
-#: ../shell/ev-window.c:5523
+#: ../shell/ev-window.c:5393
 msgid ""
 "Pressing F7 turns the caret navigation on or off. This feature places a "
 "moveable cursor in text pages, allowing you to move around and select text "
 "with your keyboard. Do you want to enable the caret navigation?"
 msgstr ""
+"Með F7 má kveikja og slökkva á vafri með innsláttarmerki. Þessi eiginleiki "
+"birtir færanlegt innsláttarmerki á síðum með texta og leyfir þér að vafra um "
+"og velja texta með lyklaborðinu. Viltu virka vafur með innsláttarmerki?"
 
-#: ../shell/ev-window.c:5528
+#: ../shell/ev-window.c:5398
 msgid "Don't show this message again"
 msgstr "Ekki sýna þessi skilaboð aftur"
 
-#: ../shell/ev-window.c:6044 ../shell/ev-window.c:6060
+#: ../shell/ev-window.c:5917 ../shell/ev-window.c:5933
 msgid "Unable to launch external application."
 msgstr "Það tókst ekki að ræsa ytra forrit."
 
-#: ../shell/ev-window.c:6117
+#: ../shell/ev-window.c:5990
 msgid "Unable to open external link"
 msgstr "Gat ekki opnað ytri tengil"
 
-#: ../shell/ev-window.c:6320
+#: ../shell/ev-window.c:6193
 msgid "Couldn't find appropriate format to save image"
 msgstr "Fann ekki viðeigandi snið til að vista myndinni á"
 
-#: ../shell/ev-window.c:6352
+#: ../shell/ev-window.c:6225
 msgid "The image could not be saved."
 msgstr "Ekki var hægt að vista myndina"
 
-#: ../shell/ev-window.c:6387
+#: ../shell/ev-window.c:6260
 msgid "Save Image"
 msgstr "Vista mynd"
 
-#: ../shell/ev-window.c:6546
+#: ../shell/ev-window.c:6419
 msgid "Unable to open attachment"
 msgstr "Gat ekki opnað viðhengi"
 
-#: ../shell/ev-window.c:6602
+#: ../shell/ev-window.c:6475
 msgid "The attachment could not be saved."
 msgstr "Ekki var hægt að vista viðhengið"
 
-#: ../shell/ev-window.c:6650
+#: ../shell/ev-window.c:6523
 msgid "Save Attachment"
 msgstr "Vista viðhengi"
 
@@ -1437,7 +1450,7 @@ msgstr "GNOME skjalaskoðari"
 
 #: ../shell/main.c:71
 msgid "The page label of the document to display."
-msgstr ""
+msgstr "Síðuheiti skjalsins sem á að birta"
 
 #: ../shell/main.c:71
 msgid "PAGE"
@@ -1445,7 +1458,7 @@ msgstr "SÍÐA"
 
 #: ../shell/main.c:72
 msgid "The page number of the document to display."
-msgstr ""
+msgstr "Síðunúmer skjalsins sem á að birta"
 
 #: ../shell/main.c:72
 msgid "NUMBER"
@@ -1453,7 +1466,7 @@ msgstr "NÚMER"
 
 #: ../shell/main.c:73
 msgid "Named destination to display."
-msgstr ""
+msgstr "Áfangastaður sem á að birta."
 
 #: ../shell/main.c:73
 msgid "DEST"
@@ -1667,4 +1680,22 @@ msgstr ""
 "Það styður eftirfarandi skjalasnið: PDF, PS, EPS, XPS, DjVu, TIFF, DVI (með "
 "SyncTeX), og myndasögusafnskrár (Comicbook) eins og (CBR, CBT, CBZ, CB7)."
 
+#~ msgid "Find options"
+#~ msgstr "Valkostir leitar"
 
+#~ msgid "List"
+#~ msgstr "Listi"
+
+#~ msgid "Text"
+#~ msgstr "Texti"
+
+#~ msgid "%d found on this page"
+#~ msgid_plural "%d found on this page"
+#~ msgstr[0] "%d fannst á þessari síðu"
+#~ msgstr[1] "%d fundust á þessari síðu"
+
+#~ msgid "Not found"
+#~ msgstr "Fannst ekki"
+
+#~ msgid "%3d%% remaining to search"
+#~ msgstr "Á eftir að leita í %3d%%"
