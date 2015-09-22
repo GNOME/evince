@@ -4272,7 +4272,9 @@ get_cursor_color (GtkStyleContext *context,
 
 		gdk_color_free (style_color);
 	} else {
+		gtk_style_context_save (context);
 		gtk_style_context_get_color (context, GTK_STATE_FLAG_NORMAL, color);
+		gtk_style_context_restore (context);
 	}
 }
 
@@ -6511,7 +6513,9 @@ draw_rubberband (EvView             *view,
 	GdkRGBA          color;
 
 	context = gtk_widget_get_style_context (GTK_WIDGET (view));
+	gtk_style_context_save (context);
 	gtk_style_context_get_background_color (context, GTK_STATE_FLAG_SELECTED, &color);
+	gtk_style_context_restore (context);
         cairo_save (cr);
 
 	cairo_set_source_rgba (cr, color.red, color.green, color.blue, alpha);
@@ -6632,12 +6636,15 @@ _ev_view_get_selection_colors (EvView  *view,
 
 	state = gtk_widget_has_focus (widget) ? GTK_STATE_FLAG_SELECTED : GTK_STATE_FLAG_ACTIVE;
 	context = gtk_widget_get_style_context (widget);
+	gtk_style_context_save (context);
 
 	if (bg_color)
 		gtk_style_context_get_background_color (context, state, bg_color);
 
 	if (fg_color)
 		gtk_style_context_get_color (context, state, fg_color);
+
+	gtk_style_context_restore (context);
 }
 
 static void
