@@ -5630,7 +5630,9 @@ ev_view_button_release_event (GtkWidget      *widget,
 	if (view->adding_annot_info.adding_annot) {
 		gboolean annot_added = TRUE;
 
-		g_assert (view->pressed_button == 1);
+		/* We ignore right-click buttons while in annotation add mode */
+		if (view->pressed_button != 1)
+			return FALSE;
 		g_assert (view->adding_annot_info.annot);
 
 		if (EV_IS_ANNOTATION_MARKUP (view->adding_annot_info.annot)) {
