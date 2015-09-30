@@ -1,0 +1,8 @@
+[Unit]
+Description=Evince document viewer
+Documentation=man:evince(1)
+
+[Service]
+Type=dbus
+BusName=org.gnome.evince.Daemon
+ExecStart=@libexecdir@/evinced

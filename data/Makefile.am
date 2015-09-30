@@ -39,6 +39,13 @@ service_DATA = $(service_in_files:.service.in=.service)
 
 $(service_DATA): $(service_in_files) Makefile
 	$(AM_V_GEN) $(SED) -e "s|\@libexecdir\@|$(libexecdir)|" $< > $@
+
+systemd_userdir = $(prefix)/lib/systemd/user
+systemd_user_in_files = evince.service.in
+systemd_user_DATA = $(systemd_user_in_files:.service.in=.service)
+
+$(systemd_user_DATA): $(systemd_user_in_files) Makefile
+	$(AM_V_GEN) $(SED) -e "s|\@libexecdir\@|$(libexecdir)|" $< > $@
 endif
 
 #
@@ -85,8 +92,9 @@ EXTRA_DIST =					\
 	$(ui_DATA)				\
 	$(DESKTOP_IN_FILES)			\
 	$(gsettingsschema_in_files)		\
-	org.gnome.evince.Daemon.service.in	\
 	$(man_MANS)				\
+	$(service_in_files)			\
+	$(systemd_user_in_files)		\
 	evince.ico				\
 	evince.convert				\
 	thumbnail-frame.png			\
@@ -99,6 +107,8 @@ EXTRA_DIST =					\
 DISTCLEANFILES = \
 	$(DESKTOP_FILES)	\
 	$(gsettings_SCHEMAS)	\
-	$(service_DATA)
+	$(service_DATA)		\
+	$(systemd_user_DATA)	\
+	$(NULL)
 
 -include $(top_srcdir)/git.mk
