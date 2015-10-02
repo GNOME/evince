@@ -213,7 +213,7 @@ ev_spawn (const char     *uri,
 	}
 
 	cmdline = g_string_free (cmd, FALSE);
-	app = g_app_info_create_from_commandline (cmdline, NULL, 0, &error);
+	app = g_app_info_create_from_commandline (cmdline, NULL, G_APP_INFO_CREATE_SUPPORTS_URIS, &error);
 
 	if (app != NULL) {
                 GList uri_list;
