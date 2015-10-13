@@ -259,7 +259,7 @@ ev_sidebar_bookmarks_bookmark_renamed (GtkCellRendererText *renderer,
         gtk_tree_path_free (path);
 
         bm.page = page;
-        bm.title = g_strdup (new_text);
+        bm.title = g_markup_escape_text (new_text, -1);
         ev_bookmarks_update (priv->bookmarks, &bm);
 }
 
