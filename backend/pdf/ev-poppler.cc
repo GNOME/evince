@@ -2924,7 +2924,7 @@ ev_annot_from_poppler_annot (PopplerAnnot *poppler_annot,
 
 			/* Ignore screen annots containing a rendition action */
 			action = poppler_annot_screen_get_action (POPPLER_ANNOT_SCREEN (poppler_annot));
-			if (action->type == POPPLER_ACTION_RENDITION)
+			if (action && action->type == POPPLER_ACTION_RENDITION)
 				break;
 		}
 			/* Fall through */
@@ -3787,7 +3787,7 @@ pdf_document_media_get_media_mapping (EvDocumentMedia *document_media,
 			PopplerAction *action;
 
 			action = poppler_annot_screen_get_action (POPPLER_ANNOT_SCREEN (mapping->annot));
-			if (action->type == POPPLER_ACTION_RENDITION) {
+			if (action && action->type == POPPLER_ACTION_RENDITION) {
 				media = ev_media_from_poppler_rendition (EV_DOCUMENT (pdf_document), page,
 									 action->rendition.media);
 			}
