@@ -43,6 +43,7 @@ struct _EvFindSidebarPrivate {
 
 enum {
         TEXT_COLUMN,
+	PAGE_LABEL_COLUMN,
         PAGE_COLUMN,
         RESULT_COLUMN,
 
@@ -174,7 +175,7 @@ ev_find_sidebar_reset_model (EvFindSidebar *sidebar)
 {
         GtkListStore *model;
 
-        model = gtk_list_store_new (N_COLUMNS, G_TYPE_STRING, G_TYPE_INT, G_TYPE_INT);
+        model = gtk_list_store_new (N_COLUMNS, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_INT, G_TYPE_INT);
         gtk_tree_view_set_model (GTK_TREE_VIEW (sidebar->priv->tree_view),
                                  GTK_TREE_MODEL (model));
         g_object_unref (model);
@@ -223,7 +224,7 @@ ev_find_sidebar_init (EvFindSidebar *sidebar)
         renderer = gtk_cell_renderer_text_new ();
         gtk_tree_view_column_pack_end (GTK_TREE_VIEW_COLUMN (column), renderer, FALSE);
         gtk_tree_view_column_set_attributes (GTK_TREE_VIEW_COLUMN (column), renderer,
-                                             "text", PAGE_COLUMN,
+                                             "text", PAGE_LABEL_COLUMN,
                                              NULL);
         g_object_set (G_OBJECT (renderer), "style", PANGO_STYLE_ITALIC, NULL);
 
@@ -458,6 +459,7 @@ process_matches_idle (EvFindSidebar *sidebar)
                 GList        *matches, *l;
                 EvPage       *page;
                 gint          result;
+                gchar        *page_label;
                 gchar        *page_text;
                 EvRectangle  *areas = NULL;
                 guint         n_areas;
@@ -473,6 +475,7 @@ process_matches_idle (EvFindSidebar *sidebar)
                         continue;
 
                 page = ev_document_get_page (document, current_page);
+		page_label = ev_document_get_page_label (document, current_page);
                 page_text = get_page_text (document, page, &areas, &n_areas);
                 g_object_unref (page);
                 if (!page_text)
@@ -513,14 +516,17 @@ process_matches_idle (EvFindSidebar *sidebar)
                                                               text_log_attrs,
                                                               text_log_attrs_length,
                                                               offset);
+
                         gtk_list_store_set (GTK_LIST_STORE (model), &iter,
                                             TEXT_COLUMN, markup,
+					    PAGE_LABEL_COLUMN, page_label,
                                             PAGE_COLUMN, current_page + 1,
                                             RESULT_COLUMN, result,
                                             -1);
                         g_free (markup);
                 }
 
+                g_free (page_label);
                 g_free (page_text);
                 g_free (text_log_attrs);
                 g_free (areas);
