@@ -14,24 +14,24 @@
 # Og Maciel <ogmaciel@gnome.org>, 2009.
 # Henrique P. Machado <hpmachado@gnome.org>, 2010-2011.
 # Antonio Fernandes C. Neto <fernandesn@gnome.org>, 2012, 2015.
-# Rafael Ferreira <rafael.f.f1@gmail.com>, 2013, 2014.
 # Enrico Nicoletto <liverig@gmail.com>, 2014, 2015.
+# Rafael Fontenelle <rffontenelle@gmail.com>, 2013, 2014, 2015.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: evince\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evince&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-08-10 15:51+0000\n"
-"PO-Revision-Date: 2015-08-10 23:21-0300\n"
-"Last-Translator: Enrico Nicoletto <liverig@gmail.com>\n"
+"POT-Creation-Date: 2015-10-16 15:55+0000\n"
+"PO-Revision-Date: 2015-10-16 15:44-0300\n"
+"Last-Translator: Rafael Fontenelle <rffontenelle@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <gnome-pt_br-list@gnome.org>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 1.6.4\n"
+"X-Generator: Poedit 1.8.5\n"
 
 #: ../backend/comics/comics-document.c:210
 #, c-format
@@ -444,8 +444,8 @@ msgid "File type %s (%s) is not supported"
 msgstr "Não há suporte ao tipo de arquivo %s (%s)"
 
 #: ../libdocument/ev-document-factory.c:364
-#: ../libdocument/ev-file-helpers.c:491 ../libdocument/ev-file-helpers.c:537
-#: ../libdocument/ev-file-helpers.c:556
+#: ../libdocument/ev-file-helpers.c:492 ../libdocument/ev-file-helpers.c:538
+#: ../libdocument/ev-file-helpers.c:557
 msgid "Unknown MIME Type"
 msgstr "Tipo MIME desconhecido"
 
@@ -467,14 +467,12 @@ msgstr "Falha ao criar um arquivo temporário: %s"
 msgid "Failed to create a temporary directory: %s"
 msgstr "Falha ao criar um diretório temporário: %s"
 
-#: ../libmisc/ev-page-action-widget.c:84
-#: ../libmisc/ev-page-action-widget.c:123
+#: ../libmisc/ev-page-action-widget.c:84 ../libmisc/ev-page-action-widget.c:123
 #, c-format
 msgid "(%d of %d)"
 msgstr "(%d de %d)"
 
-#: ../libmisc/ev-page-action-widget.c:86
-#: ../libmisc/ev-page-action-widget.c:127
+#: ../libmisc/ev-page-action-widget.c:86 ../libmisc/ev-page-action-widget.c:127
 #, c-format
 msgid "of %d"
 msgstr "de %d"
@@ -510,7 +508,17 @@ msgstr "Localiza a ocorrência anterior da expressão pesquisada"
 msgid "Find next occurrence of the search string"
 msgstr "Localiza a próxima ocorrência da expressão pesquisada"
 
-#: ../libview/ev-jobs.c:2002
+#: ../libview/ev-jobs.c:649
+#, c-format
+msgid "Failed to render page %d"
+msgstr "Falha ao renderizar a página %d"
+
+#: ../libview/ev-jobs.c:896
+#, c-format
+msgid "Failed to create thumbnail for page %d"
+msgstr "Falha ao criar uma miniatura para a página %d"
+
+#: ../libview/ev-jobs.c:2026
 #, c-format
 msgid "Failed to print page %d: %s"
 msgstr "Falha ao imprimir a página %d: %s"
@@ -953,7 +961,6 @@ msgid "Add text annotation"
 msgstr "Adicionar anotação de texto"
 
 #: ../shell/ev-annotations-toolbar.c:127
-#| msgid "Add text annotation"
 msgid "Add highlight annotation"
 msgstr "Adicionar anotação com destaque"
 
@@ -1168,7 +1175,7 @@ msgstr "Imprimir…"
 msgid "Index"
 msgstr "Índice"
 
-#: ../shell/ev-sidebar-thumbnails.c:1080
+#: ../shell/ev-sidebar-thumbnails.c:1085
 msgid "Thumbnails"
 msgstr "Miniaturas"
 
@@ -1177,7 +1184,6 @@ msgid "Open an existing document"
 msgstr "Abrir um documento existente"
 
 #: ../shell/ev-toolbar.c:232
-#| msgid "Enlarge the document"
 msgid "Annotate the document"
 msgstr "Anotar o documento"
 
