@@ -4,16 +4,16 @@
 # Duarte Loreto <happyguy_pt@hotmail.com>, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014.
 # António Lima <amrlima@gmail.com>, 2013.
 # Tiago S. <almosthumane@portugalmail.pt>, 2014.
-# Pedro Albuquerque <palbuquerque73@openmailbox.com>, 2015.
+# Pedro Albuquerque <palbuquerque73o@gmail.com>, 2015.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: 3.8\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evince&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-07-04 03:52+0000\n"
-"PO-Revision-Date: 2015-07-04 06:46+0100\n"
-"Last-Translator: Pedro Albuquerque <palbuquerque73@openmailbox.com>\n"
+"POT-Creation-Date: 2015-10-17 03:55+0000\n"
+"PO-Revision-Date: 2015-10-17 07:46+0100\n"
+"Last-Translator: Pedro Albuquerque <palbuquerque73o@gmail.com>\n"
 "Language-Team: Português <palbuquerque73@openmailbox.com>\n"
 "Language: pt\n"
 "MIME-Version: 1.0\n"
@@ -435,8 +435,8 @@ msgid "File type %s (%s) is not supported"
 msgstr "Tipo de ficheiro %s (%s) não é suportado"
 
 #: ../libdocument/ev-document-factory.c:364
-#: ../libdocument/ev-file-helpers.c:491 ../libdocument/ev-file-helpers.c:537
-#: ../libdocument/ev-file-helpers.c:556
+#: ../libdocument/ev-file-helpers.c:492 ../libdocument/ev-file-helpers.c:538
+#: ../libdocument/ev-file-helpers.c:557
 msgid "Unknown MIME Type"
 msgstr "Tipo MIME desconhecido"
 
@@ -503,7 +503,19 @@ msgstr "Localizar a ocorrência anterior da cadeia"
 msgid "Find next occurrence of the search string"
 msgstr "Localizar a ocorrência seguinte da cadeia"
 
-#: ../libview/ev-jobs.c:2002
+#: ../libview/ev-jobs.c:649
+#, c-format
+#| msgid "Failed to print page %d: %s"
+msgid "Failed to render page %d"
+msgstr "Falha ao desenhar a página %d"
+
+#: ../libview/ev-jobs.c:896
+#, c-format
+#| msgid "Failed to create a temporary file: %s"
+msgid "Failed to create thumbnail for page %d"
+msgstr "Falha ao criar miniatura da página: %d"
+
+#: ../libview/ev-jobs.c:2026
 #, c-format
 msgid "Failed to print page %d: %s"
 msgstr "Falha ao imprimir a página %d: %s"
@@ -1148,7 +1160,7 @@ msgstr "Imprimir…"
 msgid "Index"
 msgstr "Índice"
 
-#: ../shell/ev-sidebar-thumbnails.c:1080
+#: ../shell/ev-sidebar-thumbnails.c:1085
 msgid "Thumbnails"
 msgstr "Miniaturas"
 
@@ -1157,7 +1169,6 @@ msgid "Open an existing document"
 msgstr "Abrir um documento existente"
 
 #: ../shell/ev-toolbar.c:232
-#| msgid "Enlarge the document"
 msgid "Annotate the document"
 msgstr "Anotar o documento"
 
