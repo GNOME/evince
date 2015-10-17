@@ -20,8 +20,8 @@ msgstr ""
 "Project-Id-Version: evince master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evince&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-07-16 15:51+0000\n"
-"PO-Revision-Date: 2015-07-17 01:14+0200\n"
+"POT-Creation-Date: 2015-10-17 03:55+0000\n"
+"PO-Revision-Date: 2015-10-17 12:02+0200\n"
 "Last-Translator: František Zatloukal <Zatloukal.Frantisek@gmail.com>\n"
 "Language-Team: Czech <gnome-cs-list@gnome.org>\n"
 "Language: cs\n"
@@ -441,8 +441,8 @@ msgid "File type %s (%s) is not supported"
 msgstr "Typ souboru %s (%s) není podporován"
 
 #: ../libdocument/ev-document-factory.c:364
-#: ../libdocument/ev-file-helpers.c:491 ../libdocument/ev-file-helpers.c:537
-#: ../libdocument/ev-file-helpers.c:556
+#: ../libdocument/ev-file-helpers.c:492 ../libdocument/ev-file-helpers.c:538
+#: ../libdocument/ev-file-helpers.c:557
 msgid "Unknown MIME Type"
 msgstr "Neznámý typ MIME"
 
@@ -464,14 +464,12 @@ msgstr "Nepodařilo se vytvořit dočasný soubor: %s"
 msgid "Failed to create a temporary directory: %s"
 msgstr "Nepodařilo se vytvořit dočasný adresář: %s"
 
-#: ../libmisc/ev-page-action-widget.c:84
-#: ../libmisc/ev-page-action-widget.c:123
+#: ../libmisc/ev-page-action-widget.c:84 ../libmisc/ev-page-action-widget.c:123
 #, c-format
 msgid "(%d of %d)"
 msgstr "(%d z %d)"
 
-#: ../libmisc/ev-page-action-widget.c:86
-#: ../libmisc/ev-page-action-widget.c:127
+#: ../libmisc/ev-page-action-widget.c:86 ../libmisc/ev-page-action-widget.c:127
 #, c-format
 msgid "of %d"
 msgstr "z %d"
@@ -507,10 +505,20 @@ msgstr "Najít předchozí výskyt hledaného řetězce"
 msgid "Find next occurrence of the search string"
 msgstr "Najít následující výskyt hledaného řetězce"
 
-#: ../libview/ev-jobs.c:2002
+#: ../libview/ev-jobs.c:649
+#, c-format
+msgid "Failed to render page %d"
+msgstr "Selhalo vykreslení stránky %d"
+
+#: ../libview/ev-jobs.c:896
+#, c-format
+msgid "Failed to create thumbnail for page %d"
+msgstr "Selhalo vytvoření náhledu pro stránku %d"
+
+#: ../libview/ev-jobs.c:2026
 #, c-format
 msgid "Failed to print page %d: %s"
-msgstr "Nepodařilo se vytisknout stránku %d z dokumentu %s"
+msgstr "Selhal tisk stránky %d: %s"
 
 #. Initial state
 #: ../libview/ev-print-operation.c:350
@@ -519,7 +527,7 @@ msgstr "Připravuje se náhled…"
 
 #: ../libview/ev-print-operation.c:352 ../libview/ev-print-operation.c:362
 msgid "Finishing…"
-msgstr "Probíhá dokončování…"
+msgstr "Dokončuje se…"
 
 #: ../libview/ev-print-operation.c:354
 #, c-format
@@ -1156,7 +1164,7 @@ msgstr "Tisk…"
 msgid "Index"
 msgstr "Rejstřík"
 
-#: ../shell/ev-sidebar-thumbnails.c:1080
+#: ../shell/ev-sidebar-thumbnails.c:1085
 msgid "Thumbnails"
 msgstr "Náhledy"
 
