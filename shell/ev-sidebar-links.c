@@ -719,7 +719,7 @@ ev_sidebar_links_support_document (EvSidebarPage  *sidebar_page,
 static const gchar*
 ev_sidebar_links_get_label (EvSidebarPage *sidebar_page)
 {
-    return _("Index");
+    return _("Outline");
 }
 
 static void
