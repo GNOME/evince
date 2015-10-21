@@ -1,4 +1,58 @@
 ================
+Evince    3.18.1
+================
+
+Bug fixes:
+
+    * Fix performance regression with recent versions of GTK+ when
+      getting colors from GtkStyleContext for a different state
+      (#755442, Sebastian Keller)
+    * Fix a crash in PDF backend when opening documents containing screen
+      annotations with no actions (#756572, Germán Poo-Caamaño)
+    * Ignore right clicks while adding new annotations (#755619, José Aliste)
+    * Escape bookmark titles to be correctly rendered when they
+      contain characters like & (#66301, José Aliste)
+    * Fix handling of multiple files provided as command line
+      arguments (#755796, Felipe Borges)
+    * Show error messages also in recent view mode (#755064, Felipe Borges)
+    * Do not crash when the rendering or thumbnail jobs fail (#744049,
+      Marek Kasik)
+
+Translation updates:
+
+    * Khaled Hosny (ar)
+    * Sadia Afroz (bn)
+    * Samir Ribić (bs)
+    * František Zatloukal (cs)
+    * Dawa pemo (dz)
+    * Inaki Larranaga Murgoitio (eu)
+    * Jiri Grönroos (fi)
+    * Claudio Arseni (it)
+    * Jiro Matsuzawa (ja)
+    * Khoem Sokhem (km)
+    * Rakesh Pandit (ks)
+    * Erdal Ronahî (ku)
+    * Badral (mn)
+    * Sandeep Shedmake (mr)
+    * Umarzuki Bin Mochlis Moktar (ms)
+    * KYAW MYAT THU (my)
+    * Nils-Christoph Fiedler (nds)
+    * Narayan Kumar Magar (ne)
+    * Manoj Kumar Giri (or)
+    * Rafael Fontenelle (pt_BR)
+    * Pedro Albuquerque (pt)
+    * Danishka Navin (si)
+    * Dušan Kazik (sk)
+    * Miloš Popović (sr@latin)
+    * Милош Поповић (sr)
+    * Shantha kumar (ta)
+    * Krishnababu Krothapalli (te)
+    * Victor Ibragimov (tg)
+    * Gheyret Kenji (ug)
+    * Trần Ngọc Quân (vi)
+    * YunQiang Su (zh_CN)
+
+================
 Evince    3.18.0
 ================
 
