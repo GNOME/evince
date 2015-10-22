@@ -135,6 +135,7 @@ static void toggleSearch(EvBrowserPluginToolbar *toolbar)
 {
         if (!toolbar->priv->searchPopover) {
                 toolbar->priv->searchPopover = gtk_popover_new(toolbar->priv->searchToggleButton);
+		gtk_popover_set_position (GTK_POPOVER (toolbar->priv->searchPopover), GTK_POS_BOTTOM);
                 g_signal_connect_swapped(toolbar->priv->searchPopover, "closed", G_CALLBACK(searchPopoverClosed), toolbar);
                 GtkWidget *searchBox = ev_search_box_new(toolbar->priv->plugin->model());
                 g_signal_connect_swapped(searchBox, "started", G_CALLBACK(searchStarted), toolbar);

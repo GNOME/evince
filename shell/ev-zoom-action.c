@@ -251,6 +251,7 @@ get_popup (EvZoomAction *zoom_action)
         gtk_entry_get_icon_area (GTK_ENTRY (zoom_action->priv->entry),
                                  GTK_ENTRY_ICON_SECONDARY, &rect);
         gtk_popover_set_pointing_to (GTK_POPOVER (zoom_action->priv->popup), &rect);
+        gtk_popover_set_position (GTK_POPOVER (zoom_action->priv->popup), GTK_POS_BOTTOM);
 
         return zoom_action->priv->popup;
 }
