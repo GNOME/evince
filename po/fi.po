@@ -16,8 +16,8 @@ msgstr ""
 "Project-Id-Version: evince\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evince&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-10-17 03:55+0000\n"
-"PO-Revision-Date: 2015-10-17 15:02+0300\n"
+"POT-Creation-Date: 2015-11-07 05:01+0000\n"
+"PO-Revision-Date: 2015-11-07 16:25+0200\n"
 "Last-Translator: Jiri Grönroos <jiri.gronroos+l10n@iki.fi>\n"
 "Language-Team: suomi <gnome-fi-laatu@lists.sourceforge.net>\n"
 "Language: fi\n"
@@ -289,60 +289,60 @@ msgstr "XPS-asiakirjat"
 msgid "Adds support for reading XPS documents"
 msgstr "Lisää tuen XPS-asiakirjojen lukemiselle"
 
-#: ../browser-plugin/EvBrowserPluginToolbar.cpp:287
+#: ../browser-plugin/EvBrowserPluginToolbar.cpp:288
 #: ../previewer/ev-previewer-window.c:317 ../shell/evince-menus.ui.h:32
 msgid "Fit Pa_ge"
 msgstr "So_vita sivu"
 
-#: ../browser-plugin/EvBrowserPluginToolbar.cpp:296
+#: ../browser-plugin/EvBrowserPluginToolbar.cpp:297
 #: ../previewer/ev-previewer-window.c:320 ../shell/evince-menus.ui.h:33
 msgid "Fit _Width"
 msgstr "Sovita leve_yteen"
 
-#: ../browser-plugin/EvBrowserPluginToolbar.cpp:305
+#: ../browser-plugin/EvBrowserPluginToolbar.cpp:306
 #: ../shell/evince-menus.ui.h:34
 msgid "_Automatic"
 msgstr "_Automaattinen"
 
 #. Navigation buttons
-#: ../browser-plugin/EvBrowserPluginToolbar.cpp:330
+#: ../browser-plugin/EvBrowserPluginToolbar.cpp:331
 #: ../previewer/ev-previewer-window.c:271
 msgid "Go to the previous page"
 msgstr "Siirry edelliselle sivulle"
 
-#: ../browser-plugin/EvBrowserPluginToolbar.cpp:334
+#: ../browser-plugin/EvBrowserPluginToolbar.cpp:335
 #: ../previewer/ev-previewer-window.c:274
 msgid "Go to the next page"
 msgstr "Siirry seuraavalle sivulle"
 
 #. Search.
-#: ../browser-plugin/EvBrowserPluginToolbar.cpp:361 ../shell/ev-toolbar.c:224
+#: ../browser-plugin/EvBrowserPluginToolbar.cpp:362 ../shell/ev-toolbar.c:226
 msgid "Find a word or phrase in the document"
 msgstr "Etsi sanaa tai lausetta asiakirjasta"
 
-#: ../browser-plugin/EvBrowserPluginToolbar.cpp:380
+#: ../browser-plugin/EvBrowserPluginToolbar.cpp:381
 msgid "Show the entire document"
 msgstr "Näytä koko asiakirja"
 
-#: ../browser-plugin/EvBrowserPluginToolbar.cpp:388
+#: ../browser-plugin/EvBrowserPluginToolbar.cpp:389
 msgid "Show two pages at once"
 msgstr "Näytä kaksi sivua samanaikaisesti"
 
-#: ../browser-plugin/EvBrowserPluginToolbar.cpp:410
+#: ../browser-plugin/EvBrowserPluginToolbar.cpp:411
 #: ../previewer/ev-previewer-window.c:277
 msgid "Enlarge the document"
 msgstr "Suurenna asiakirjaa"
 
-#: ../browser-plugin/EvBrowserPluginToolbar.cpp:414
+#: ../browser-plugin/EvBrowserPluginToolbar.cpp:415
 #: ../previewer/ev-previewer-window.c:280
 msgid "Shrink the document"
 msgstr "Kutista asiakirjaa"
 
-#: ../browser-plugin/EvBrowserPluginToolbar.cpp:436
+#: ../browser-plugin/EvBrowserPluginToolbar.cpp:437
 msgid "Download document"
 msgstr "Lataa asiakirja"
 
-#: ../browser-plugin/EvBrowserPluginToolbar.cpp:449
+#: ../browser-plugin/EvBrowserPluginToolbar.cpp:450
 msgid "Print document"
 msgstr "Tulosta asiakirja"
 
@@ -472,8 +472,8 @@ msgid "of %d"
 msgstr "/ %d"
 
 #: ../libmisc/ev-page-action-widget.c:185 ../shell/ev-history.c:426
-#: ../shell/ev-sidebar-bookmarks.c:295 ../shell/ev-window.c:904
-#: ../shell/ev-window.c:4703
+#: ../shell/ev-sidebar-bookmarks.c:295 ../shell/ev-window.c:905
+#: ../shell/ev-window.c:4704
 #, c-format
 msgid "Page %s"
 msgstr "Sivu %s"
@@ -504,13 +504,11 @@ msgstr "Etsi haettavan merkkijonon seuraava osuma"
 
 #: ../libview/ev-jobs.c:649
 #, c-format
-#| msgid "Failed to print page %d: %s"
 msgid "Failed to render page %d"
 msgstr "Sivun %d renderöinti epäonnistui"
 
 #: ../libview/ev-jobs.c:896
 #, c-format
-#| msgid "Failed to create a temporary file: %s"
 msgid "Failed to create thumbnail for page %d"
 msgstr "Pikkukuvan luominen sivusta %d epäonnistui"
 
@@ -719,7 +717,7 @@ msgstr "TIEDOSTO"
 msgid "GNOME Document Previewer"
 msgstr "Gnomen asiakirjojen esikatselu"
 
-#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3316
+#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3317
 msgid "Failed to print document"
 msgstr "Asiakirjaa ei voitu tulostaa"
 
@@ -1164,8 +1162,8 @@ msgid "Print…"
 msgstr "Tulosta…"
 
 #: ../shell/ev-sidebar-links.c:722
-msgid "Index"
-msgstr "Hakemisto"
+msgid "Outline"
+msgstr ""
 
 #: ../shell/ev-sidebar-thumbnails.c:1085
 msgid "Thumbnails"
@@ -1175,122 +1173,140 @@ msgstr "Pienoiskuvat"
 msgid "Open an existing document"
 msgstr "Avaa olemassa oleva asiakirja"
 
-#: ../shell/ev-toolbar.c:232
+#: ../shell/ev-toolbar.c:210
+#| msgid "Select page size using document page size"
+msgid "Select page or search in the index"
+msgstr "Valitse sivu tai etsi sisällysluettelosta"
+
+#: ../shell/ev-toolbar.c:211
+#| msgid "Select Page"
+msgid "Select page"
+msgstr "Valitse sivu"
+
+#: ../shell/ev-toolbar.c:234
 msgid "Annotate the document"
 msgstr "Lisää huomautuksia asiakirjaan"
 
-#: ../shell/ev-toolbar.c:241 ../shell/ev-toolbar.c:242
+#: ../shell/ev-toolbar.c:243 ../shell/ev-toolbar.c:244
 msgid "File options"
 msgstr "Tiedoston valinnat"
 
-#: ../shell/ev-toolbar.c:251 ../shell/ev-toolbar.c:252
+#: ../shell/ev-toolbar.c:253 ../shell/ev-toolbar.c:254
 msgid "View options"
 msgstr "Näkymän valinnat"
+
+#: ../shell/ev-toolbar.c:262
+msgid "Select or set the zoom level of the document"
+msgstr "Valitse tai aseta asiakirjan lähennystaso"
+
+#: ../shell/ev-toolbar.c:263
+msgid "Set zoom level"
+msgstr "Aseta lähennystaso"
 
 #: ../shell/ev-utils.c:305
 msgid "Supported Image Files"
 msgstr "Tuetut kuvatiedostot"
 
-#: ../shell/ev-window.c:1597
+#: ../shell/ev-window.c:1598
 msgid "The document contains no pages"
 msgstr "Asiakirja ei sisällä yhtään sivua"
 
-#: ../shell/ev-window.c:1600
+#: ../shell/ev-window.c:1601
 msgid "The document contains only empty pages"
 msgstr "Asiakirja sisältää vain tyhjiä sivuja"
 
-#: ../shell/ev-window.c:1813 ../shell/ev-window.c:1979
+#: ../shell/ev-window.c:1814 ../shell/ev-window.c:1980
 #, c-format
 msgid "Unable to open document “%s”."
 msgstr "Asiakirjan \"%s\" avaaminen ei onnistunut."
 
-#: ../shell/ev-window.c:1943
+#: ../shell/ev-window.c:1944
 #, c-format
 msgid "Loading document from “%s”"
 msgstr "Ladataan asiakirjaa lähteestä ”%s”"
 
-#: ../shell/ev-window.c:2094 ../shell/ev-window.c:2422
+#: ../shell/ev-window.c:2095 ../shell/ev-window.c:2423
 #, c-format
 msgid "Downloading document (%d%%)"
 msgstr "Noudetaan asiakirjaa (%d %%)"
 
-#: ../shell/ev-window.c:2127
+#: ../shell/ev-window.c:2128
 msgid "Failed to load remote file."
 msgstr "Etätiedostoa ei voitu ladata."
 
-#: ../shell/ev-window.c:2366
+#: ../shell/ev-window.c:2367
 #, c-format
 msgid "Reloading document from %s"
 msgstr "Ladataan asiakirja uudestaan lähteestä %s"
 
-#: ../shell/ev-window.c:2398
+#: ../shell/ev-window.c:2399
 msgid "Failed to reload document."
 msgstr "Asiakirjaa ei voitu ladata uudestaan."
 
-#: ../shell/ev-window.c:2614
+#: ../shell/ev-window.c:2615
 msgid "Open Document"
 msgstr "Avaa asiakirja"
 
-#: ../shell/ev-window.c:2685
+#: ../shell/ev-window.c:2686
 #, c-format
 msgid "Saving document to %s"
 msgstr "Tallennetaan asiakirjaa kohteeseen %s"
 
-#: ../shell/ev-window.c:2688
+#: ../shell/ev-window.c:2689
 #, c-format
 msgid "Saving attachment to %s"
 msgstr "Tallennetaan liitettä kohteeseen %s"
 
-#: ../shell/ev-window.c:2691
+#: ../shell/ev-window.c:2692
 #, c-format
 msgid "Saving image to %s"
 msgstr "Tallennetaan kuvaa kohteeseen %s"
 
-#: ../shell/ev-window.c:2735 ../shell/ev-window.c:2835
+#: ../shell/ev-window.c:2736 ../shell/ev-window.c:2836
 #, c-format
 msgid "The file could not be saved as “%s”."
 msgstr "Tiedostoa ei voitu tallentaa nimellä ”%s”."
 
-#: ../shell/ev-window.c:2766
+#: ../shell/ev-window.c:2767
 #, c-format
 msgid "Uploading document (%d%%)"
 msgstr "Viedään asiakirjaa (%d %%)"
 
-#: ../shell/ev-window.c:2770
+#: ../shell/ev-window.c:2771
 #, c-format
 msgid "Uploading attachment (%d%%)"
 msgstr "Viedään liitettä (%d %%)"
 
-#: ../shell/ev-window.c:2774
+#: ../shell/ev-window.c:2775
 #, c-format
 msgid "Uploading image (%d%%)"
 msgstr "Viedään kuvaa (%d %%)"
 
-#: ../shell/ev-window.c:2886
+#: ../shell/ev-window.c:2887
 msgid "Save a Copy"
 msgstr "Tallenna kopio"
 
-#: ../shell/ev-window.c:2962
+#: ../shell/ev-window.c:2963
 msgid "Could not send current document"
 msgstr "Asiakirjan lähettäminen epäonnistui"
 
-#: ../shell/ev-window.c:2996
+#: ../shell/ev-window.c:2997
 msgid "Could not open the containing folder"
 msgstr "Sisältävää kansiota ei voitu avata"
 
-#: ../shell/ev-window.c:3260
+#: ../shell/ev-window.c:3261
 #, c-format
 msgid "%d pending job in queue"
 msgid_plural "%d pending jobs in queue"
 msgstr[0] "%d odottava työ jonossa"
 msgstr[1] "%d odottavaa työtä jonossa"
 
-#: ../shell/ev-window.c:3373
+#: ../shell/ev-window.c:3374
 #, c-format
 msgid "Printing job “%s”"
 msgstr "Tulostetaan työtä ”%s”"
 
-#: ../shell/ev-window.c:3576
+#: ../shell/ev-window.c:3577
 msgid ""
 "Document contains form fields that have been filled out. If you don't save a "
 "copy, changes will be permanently lost."
@@ -1298,7 +1314,7 @@ msgstr ""
 "Asiakirja sisältää täytettyjä lomakekenttiä. Jos et tallenna kopiota "
 "asiakirjasta, muutokset häviävät pysyvästi."
 
-#: ../shell/ev-window.c:3580
+#: ../shell/ev-window.c:3581
 msgid ""
 "Document contains new or modified annotations. If you don't save a copy, "
 "changes will be permanently lost."
@@ -1306,20 +1322,20 @@ msgstr ""
 "Asiakirja sisältää uusia tai muokattuja huomautuksia. Jos et tallenna "
 "kopiota, muutokset häviävät pysyvästi."
 
-#: ../shell/ev-window.c:3587
+#: ../shell/ev-window.c:3588
 #, c-format
 msgid "Save a copy of document “%s” before closing?"
 msgstr "Tallennetaanko asiakirjasta ”%s” kopio ennen sulkemista?"
 
-#: ../shell/ev-window.c:3606
+#: ../shell/ev-window.c:3607
 msgid "Close _without Saving"
 msgstr "Sulje _tallentamatta"
 
-#: ../shell/ev-window.c:3610
+#: ../shell/ev-window.c:3611
 msgid "Save a _Copy"
 msgstr "Tallenna _kopio"
 
-#: ../shell/ev-window.c:3684
+#: ../shell/ev-window.c:3685
 #, c-format
 msgid "Wait until print job “%s” finishes before closing?"
 msgstr "Odotetaanko ennen sulkemista kunnes tulostustyö ”%s” on valmis?"
@@ -1327,7 +1343,7 @@ msgstr "Odotetaanko ennen sulkemista kunnes tulostustyö ”%s” on valmis?"
 #. TRANS: the singular form is not really used as n_print_jobs > 1
 #. but some languages distinguish between different plurals forms,
 #. so the ngettext is needed.
-#: ../shell/ev-window.c:3690
+#: ../shell/ev-window.c:3691
 #, c-format
 msgid "There is %d print job active. Wait until print finishes before closing?"
 msgid_plural ""
@@ -1339,31 +1355,31 @@ msgstr[1] ""
 "Meneillään on %d tulostustyötä. Odotetaanko tulostuksen valmistumista ennen "
 "sulkemista?"
 
-#: ../shell/ev-window.c:3705
+#: ../shell/ev-window.c:3706
 msgid "If you close the window, pending print jobs will not be printed."
 msgstr "Jos suljet ikkunat, odottavia tulostustöitä ei tulosteta."
 
-#: ../shell/ev-window.c:3709
+#: ../shell/ev-window.c:3710
 msgid "Cancel _print and Close"
 msgstr "Peru _tulostus ja sulje"
 
-#: ../shell/ev-window.c:3713
+#: ../shell/ev-window.c:3714
 msgid "Close _after Printing"
 msgstr "Sulje tulostuksen _jälkeen"
 
-#: ../shell/ev-window.c:4244
+#: ../shell/ev-window.c:4245
 msgid "Running in presentation mode"
 msgstr "Suoritus esitystilassa"
 
-#: ../shell/ev-window.c:5388
+#: ../shell/ev-window.c:5389
 msgid "Enable caret navigation?"
 msgstr "Käytetäänkö nuolinäppäimillä liikkumista?"
 
-#: ../shell/ev-window.c:5390
+#: ../shell/ev-window.c:5391
 msgid "_Enable"
 msgstr "_Käytä"
 
-#: ../shell/ev-window.c:5393
+#: ../shell/ev-window.c:5394
 msgid ""
 "Pressing F7 turns the caret navigation on or off. This feature places a "
 "moveable cursor in text pages, allowing you to move around and select text "
@@ -1374,39 +1390,39 @@ msgstr ""
 "sivulla on mahdollista liikkua ja valita tekstiä näppäimistöllä. Haluatko "
 "käyttää nuolilla liikkumista?"
 
-#: ../shell/ev-window.c:5398
+#: ../shell/ev-window.c:5399
 msgid "Don't show this message again"
 msgstr "Älä näytä tätä viestiä uudestaan"
 
-#: ../shell/ev-window.c:5917 ../shell/ev-window.c:5933
+#: ../shell/ev-window.c:5918 ../shell/ev-window.c:5934
 msgid "Unable to launch external application."
 msgstr "Ulkoista ohjelmaa ei voitu käynnistää."
 
-#: ../shell/ev-window.c:5990
+#: ../shell/ev-window.c:5991
 msgid "Unable to open external link"
 msgstr "Ulkoista linkkiä ei voi avata"
 
-#: ../shell/ev-window.c:6193
+#: ../shell/ev-window.c:6194
 msgid "Couldn't find appropriate format to save image"
 msgstr "Sopivaa tallennusmuotoa kuvalle ei löytynyt"
 
-#: ../shell/ev-window.c:6225
+#: ../shell/ev-window.c:6226
 msgid "The image could not be saved."
 msgstr "Kuvaa ei voi tallentaa."
 
-#: ../shell/ev-window.c:6260
+#: ../shell/ev-window.c:6261
 msgid "Save Image"
 msgstr "Tallenna kuva"
 
-#: ../shell/ev-window.c:6419
+#: ../shell/ev-window.c:6420
 msgid "Unable to open attachment"
 msgstr "Liitettä ei voi avata"
 
-#: ../shell/ev-window.c:6475
+#: ../shell/ev-window.c:6476
 msgid "The attachment could not be saved."
 msgstr "Liitettä ei voi tallentaa."
 
-#: ../shell/ev-window.c:6523
+#: ../shell/ev-window.c:6524
 msgid "Save Attachment"
 msgstr "Tallenna liite"
 
@@ -1709,6 +1725,9 @@ msgid ""
 msgstr ""
 "Sovellus tukee seuraavia asiakirjamuotoja: PDF, PS, EPS, XPS, DjVu, TIFF, "
 "DVI (SyncTeX:illa) ja sarjakuva-arkistoja (CBR, CBT, CBZ, CB7)."
+
+#~ msgid "Index"
+#~ msgstr "Hakemisto"
 
 #~ msgid "Find options"
 #~ msgstr "Hakuvalinnat"
