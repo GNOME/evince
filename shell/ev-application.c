@@ -1091,6 +1091,8 @@ ev_application_startup (GApplication *gapplication)
         GError *error = NULL;
         const gchar **it;
 
+	g_application_set_resource_base_path (gapplication, "/org/gnome/evince");
+
         G_APPLICATION_CLASS (ev_application_parent_class)->startup (gapplication);
 
         g_action_map_add_action_entries (G_ACTION_MAP (application),
@@ -1098,7 +1100,7 @@ ev_application_startup (GApplication *gapplication)
                                          application);
 
         builder = gtk_builder_new ();
-        gtk_builder_add_from_resource (builder, "/org/gnome/evince/shell/ui/menus.ui", &error);
+        gtk_builder_add_from_resource (builder, "/org/gnome/evince/ui/menus.ui", &error);
         g_assert_no_error (error);
 
         gtk_application_set_app_menu (GTK_APPLICATION (application),

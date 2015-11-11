@@ -169,6 +169,7 @@ endif
 EXTRA_DIST = \
 	evince.css \
 	evince-menus.ui \
+        help-overlay.ui \
 	evince-icon.rc \
 	evince.gresource.xml \
 	ev-gdbus.xml \

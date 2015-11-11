@@ -195,7 +195,7 @@ ev_toolbar_constructed (GObject *object)
 
         G_OBJECT_CLASS (ev_toolbar_parent_class)->constructed (object);
 
-        builder = gtk_builder_new_from_resource ("/org/gnome/evince/shell/ui/menus.ui");
+        builder = gtk_builder_new_from_resource ("/org/gnome/evince/ui/menus.ui");
 
         button = ev_toolbar_create_button (ev_toolbar, "win.open",
                                            "document-open-symbolic",
