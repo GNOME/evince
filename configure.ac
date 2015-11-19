@@ -915,8 +915,9 @@ data/icons/256x256/Makefile
 data/icons/256x256/apps/Makefile
 data/icons/scalable/Makefile
 data/icons/scalable/actions/Makefile
-data/icons/scalable/apps/Makefile
 data/icons/scalable/mimetypes/Makefile
+data/icons/symbolic/Makefile
+data/icons/symbolic/apps/Makefile
 help/Makefile
 help/reference/Makefile
 help/reference/libdocument/Makefile
