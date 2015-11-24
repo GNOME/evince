@@ -7300,8 +7300,10 @@ ev_view_focus (GtkWidget        *widget,
 {
 	EvView *view = EV_VIEW (widget);
 
-	if (direction == GTK_DIR_TAB_FORWARD || direction == GTK_DIR_TAB_BACKWARD)
-		return ev_view_focus_next (view, direction);
+	if (view->document) {
+		if (direction == GTK_DIR_TAB_FORWARD || direction == GTK_DIR_TAB_BACKWARD)
+			return ev_view_focus_next (view, direction);
+	}
 
 	return GTK_WIDGET_CLASS (ev_view_parent_class)->focus (widget, direction);
 }
