@@ -124,7 +124,6 @@ ev_sidebar_annotations_init (EvSidebarAnnotations *ev_annots)
 	/* Create tree view */
 	loading_model = ev_sidebar_annotations_create_simple_model (_("Loading…"));
 	ev_annots->priv->tree_view = gtk_tree_view_new_with_model (loading_model);
-	gtk_widget_set_margin_top (ev_annots->priv->tree_view, 2);
 	g_object_unref (loading_model);
 
 	gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (ev_annots->priv->tree_view),
