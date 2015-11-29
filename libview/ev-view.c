@@ -6663,9 +6663,11 @@ _ev_view_get_selection_colors (EvView  *view,
 	GtkStateFlags    state;
 	GtkStyleContext *context;
 
-	state = gtk_widget_has_focus (widget) ? GTK_STATE_FLAG_SELECTED : GTK_STATE_FLAG_ACTIVE;
 	context = gtk_widget_get_style_context (widget);
 	gtk_style_context_save (context);
+	state = gtk_style_context_get_state (context) |
+		(gtk_widget_has_focus (widget) ? GTK_STATE_FLAG_SELECTED : GTK_STATE_FLAG_ACTIVE);
+	gtk_style_context_set_state (context, state);
 
 	if (bg_color)
 		gtk_style_context_get_background_color (context, state, bg_color);
