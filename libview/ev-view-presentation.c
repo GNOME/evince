@@ -1561,6 +1561,9 @@ ev_view_presentation_class_init (EvViewPresentationClass *klass)
 	gtk_binding_entry_add_signal (binding_set, GDK_KEY_space, 0,
 				      "change_page", 1,
 				      GTK_TYPE_SCROLL_TYPE, GTK_SCROLL_PAGE_FORWARD);
+	gtk_binding_entry_add_signal (binding_set, GDK_KEY_space, GDK_SHIFT_MASK,
+				      "change_page", 1,
+				      GTK_TYPE_SCROLL_TYPE, GTK_SCROLL_PAGE_BACKWARD);
 	gtk_binding_entry_add_signal (binding_set, GDK_KEY_BackSpace, 0,
 				      "change_page", 1,
 				      GTK_TYPE_SCROLL_TYPE, GTK_SCROLL_PAGE_BACKWARD);
