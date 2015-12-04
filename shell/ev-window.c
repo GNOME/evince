@@ -7091,7 +7091,7 @@ ev_window_init (EvWindow *ev_window)
 			  ev_window);
 
 	/* Popups */
-	builder = gtk_builder_new_from_resource ("/org/gnome/evince/ui/menus.ui");
+	builder = gtk_builder_new_from_resource ("/org/gnome/evince/gtk/menus.ui");
 	ev_window->priv->view_popup_menu = g_object_ref (G_MENU_MODEL (gtk_builder_get_object (builder, "view-popup-menu")));
 	ev_window->priv->attachment_popup_menu = g_object_ref (G_MENU_MODEL (gtk_builder_get_object (builder, "attachments-popup")));
 	g_object_unref (builder);
