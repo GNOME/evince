@@ -16,8 +16,8 @@ msgstr ""
 "Project-Id-Version: evince\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evince&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-11-07 05:01+0000\n"
-"PO-Revision-Date: 2015-11-07 16:25+0200\n"
+"POT-Creation-Date: 2015-12-07 17:00+0000\n"
+"PO-Revision-Date: 2015-12-07 21:27+0200\n"
 "Last-Translator: Jiri Grönroos <jiri.gronroos+l10n@iki.fi>\n"
 "Language-Team: suomi <gnome-fi-laatu@lists.sourceforge.net>\n"
 "Language: fi\n"
@@ -653,11 +653,11 @@ msgstr "Asiakirjan näyttö"
 msgid "Go to first page"
 msgstr "Siirry ensimmäiselle sivulle"
 
-#: ../libview/ev-view.c:2025
+#: ../libview/ev-view.c:2025 ../shell/help-overlay.ui.h:29
 msgid "Go to previous page"
 msgstr "Siirry edelliselle sivulle"
 
-#: ../libview/ev-view.c:2027
+#: ../libview/ev-view.c:2027 ../shell/help-overlay.ui.h:28
 msgid "Go to next page"
 msgstr "Siirry seuraavalle sivulle"
 
@@ -1174,12 +1174,10 @@ msgid "Open an existing document"
 msgstr "Avaa olemassa oleva asiakirja"
 
 #: ../shell/ev-toolbar.c:210
-#| msgid "Select page size using document page size"
 msgid "Select page or search in the index"
 msgstr "Valitse sivu tai etsi sisällysluettelosta"
 
 #: ../shell/ev-toolbar.c:211
-#| msgid "Select Page"
 msgid "Select page"
 msgstr "Valitse sivu"
 
@@ -1709,6 +1707,135 @@ msgstr "Huomautuksen ominaisuudet…"
 #: ../shell/evince-menus.ui.h:47
 msgid "Remove Annotation"
 msgstr "Poista huomautus"
+
+#: ../shell/help-overlay.ui.h:1
+msgid "Opening, closing, saving and printing"
+msgstr ""
+
+#: ../shell/help-overlay.ui.h:2
+#| msgid "Open Document"
+msgid "Open a document"
+msgstr "Avaa asiakirja"
+
+#: ../shell/help-overlay.ui.h:3
+#, fuzzy
+#| msgid "Could not send current document"
+msgid "Open a copy of the current document"
+msgstr "Asiakirjan lähettäminen epäonnistui"
+
+#: ../shell/help-overlay.ui.h:4
+#, fuzzy
+#| msgid "Could not send current document"
+msgid "Save a copy of the current document"
+msgstr "Asiakirjan lähettäminen epäonnistui"
+
+#: ../shell/help-overlay.ui.h:5
+#| msgid "Print this document"
+msgid "Print the current document"
+msgstr "Tulosta nykyinen asiakirja"
+
+#: ../shell/help-overlay.ui.h:6
+#| msgid "Make the current document fill the window"
+msgid "Close the current document window"
+msgstr "Sulje nykyisen asiakirjan ikkuna"
+
+#: ../shell/help-overlay.ui.h:7
+#| msgid "Enlarge the document"
+msgid "Reload the document"
+msgstr "Lataa asiakirja uudelleen"
+
+#: ../shell/help-overlay.ui.h:8
+msgid "Selecting and copying text"
+msgstr ""
+
+#: ../shell/help-overlay.ui.h:9
+msgid "Copy highlighted text"
+msgstr ""
+
+#: ../shell/help-overlay.ui.h:10
+#, fuzzy
+#| msgid "Show the entire document"
+msgid "Select all the text in a document"
+msgstr "Näytä koko asiakirja"
+
+#: ../shell/help-overlay.ui.h:11
+#, fuzzy
+#| msgid "Enlarge the document"
+msgid "Moving around the document"
+msgstr "Suurenna asiakirjaa"
+
+#: ../shell/help-overlay.ui.h:12
+msgid "Move up/down a page"
+msgstr ""
+
+#: ../shell/help-overlay.ui.h:13
+msgid "Move up/down a page several lines at a time"
+msgstr ""
+
+#: ../shell/help-overlay.ui.h:14
+#| msgid "Go to page"
+msgid "Go to page number"
+msgstr "Siirry sivulle numero"
+
+#: ../shell/help-overlay.ui.h:15
+#, fuzzy
+#| msgid "Go to the next page"
+msgid "Go to the beginning/end of a page"
+msgstr "Siirry seuraavalle sivulle"
+
+#: ../shell/help-overlay.ui.h:16
+#| msgid "Show the entire document"
+msgid "Go to the beginning of the document"
+msgstr "Siirry asiakirjan alkuun"
+
+#: ../shell/help-overlay.ui.h:17
+#| msgid "Show the entire document"
+msgid "Go to the end of the document"
+msgstr "Siirry asiakirjan loppuun"
+
+#: ../shell/help-overlay.ui.h:18
+msgid "Finding text"
+msgstr ""
+
+#: ../shell/help-overlay.ui.h:19
+msgid "Show the search bar"
+msgstr "Näytä hakupalkki"
+
+#: ../shell/help-overlay.ui.h:20
+#| msgid "Go to the next page"
+msgid "Go to the next search result"
+msgstr "Siirry seuraavaan hakutulokseen"
+
+#: ../shell/help-overlay.ui.h:21
+#| msgid "Go to the previous page"
+msgid "Go to the previous search result"
+msgstr "Siirry edelliseen hakutulokseen"
+
+#: ../shell/help-overlay.ui.h:22
+msgid "Rotating and zooming"
+msgstr ""
+
+#: ../shell/help-overlay.ui.h:23
+msgid "Rotate the page 90 degrees counter-clockwise"
+msgstr "Kierrä sivua 90 astetta vastapäivään"
+
+#: ../shell/help-overlay.ui.h:24
+msgid "Rotate the page 90 degrees clockwise"
+msgstr "Kierrä sivua 90 astetta myötäpäivään"
+
+#: ../shell/help-overlay.ui.h:25
+#| msgid "Zoom _In"
+msgid "Zoom in"
+msgstr "Lähennä"
+
+#: ../shell/help-overlay.ui.h:26
+#| msgid "Zoom _Out"
+msgid "Zoom out"
+msgstr "Loitonna"
+
+#: ../shell/help-overlay.ui.h:27
+msgid "Touchpad gestures"
+msgstr "Kosketuslevyn eleet"
 
 #: ../evince.appdata.xml.in.h:2
 msgid "Document viewer for popular document formats"
