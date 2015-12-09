@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evince&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-11-16 16:57+0000\n"
-"PO-Revision-Date: 2015-11-16 22:30+0500\n"
+"POT-Creation-Date: 2015-12-09 05:00+0000\n"
+"PO-Revision-Date: 2015-12-09 17:02+0500\n"
 "Last-Translator: Baurzhan Muftakhidinov <baurthefirst@gmail.com>\n"
 "Language-Team: Kazakh <kk_KZ@googlegroups.com>\n"
 "Language: kk\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 1.8.5\n"
+"X-Generator: Poedit 1.8.6\n"
 
 #: ../backend/comics/comics-document.c:210
 #, c-format
@@ -305,7 +305,7 @@ msgid "Go to the next page"
 msgstr "Келесі параққа өту"
 
 #. Search.
-#: ../browser-plugin/EvBrowserPluginToolbar.cpp:362 ../shell/ev-toolbar.c:224
+#: ../browser-plugin/EvBrowserPluginToolbar.cpp:362 ../shell/ev-toolbar.c:226
 msgid "Find a word or phrase in the document"
 msgstr "Құжаттан сөзді не мәтінді табу"
 
@@ -491,6 +491,16 @@ msgstr "Ізделетін мәтіннің алдыңғы кездесуін т
 msgid "Find next occurrence of the search string"
 msgstr "Ізделетін мәтіннің келесі кездесуін табу"
 
+#: ../libview/ev-jobs.c:649
+#, c-format
+msgid "Failed to render page %d"
+msgstr "%d парағын көрсету сәтсіз аяқталды"
+
+#: ../libview/ev-jobs.c:896
+#, c-format
+msgid "Failed to create thumbnail for page %d"
+msgstr "%d парағының кіші көрінісін жасау сәтсіз аяқталды"
+
 #: ../libview/ev-jobs.c:2026
 #, c-format
 msgid "Failed to print page %d: %s"
@@ -630,11 +640,11 @@ msgstr "Құжат көрінісі"
 msgid "Go to first page"
 msgstr "Бірінші параққа өту"
 
-#: ../libview/ev-view.c:2025
+#: ../libview/ev-view.c:2025 ../shell/help-overlay.ui.h:29
 msgid "Go to previous page"
 msgstr "Алдыңғы параққа өту"
 
-#: ../libview/ev-view.c:2027
+#: ../libview/ev-view.c:2027 ../shell/help-overlay.ui.h:28
 msgid "Go to next page"
 msgstr "Келесі параққа өту"
 
@@ -1124,8 +1134,8 @@ msgid "Print…"
 msgstr "Баспаға шығару..."
 
 #: ../shell/ev-sidebar-links.c:722
-msgid "Index"
-msgstr "Мазмұны"
+msgid "Outline"
+msgstr "Құрылымы"
 
 #: ../shell/ev-sidebar-thumbnails.c:1085
 msgid "Thumbnails"
@@ -1135,17 +1145,33 @@ msgstr "Үлгілер"
 msgid "Open an existing document"
 msgstr "Бар болып тұрған құжатты ашу"
 
-#: ../shell/ev-toolbar.c:232
+#: ../shell/ev-toolbar.c:210
+msgid "Select page or search in the index"
+msgstr "Парақты таңдау немесе құжат мазмұнынан іздеу"
+
+#: ../shell/ev-toolbar.c:211
+msgid "Select page"
+msgstr "Парақты таңдау"
+
+#: ../shell/ev-toolbar.c:234
 msgid "Annotate the document"
 msgstr "Құжатқа аңдатпаны қосу"
 
-#: ../shell/ev-toolbar.c:241 ../shell/ev-toolbar.c:242
+#: ../shell/ev-toolbar.c:243 ../shell/ev-toolbar.c:244
 msgid "File options"
 msgstr "Файл опциялары"
 
-#: ../shell/ev-toolbar.c:251 ../shell/ev-toolbar.c:252
+#: ../shell/ev-toolbar.c:253 ../shell/ev-toolbar.c:254
 msgid "View options"
 msgstr "Көрініс опциялары"
+
+#: ../shell/ev-toolbar.c:262
+msgid "Select or set the zoom level of the document"
+msgstr "Құжаттың масштабын таңдаңыз немесе орнатыңыз"
+
+#: ../shell/ev-toolbar.c:263
+msgid "Set zoom level"
+msgstr "Масштабты орнату"
 
 #: ../shell/ev-utils.c:305
 msgid "Supported Image Files"
@@ -1650,6 +1676,114 @@ msgstr "Аңдатпа қасиеттері..."
 msgid "Remove Annotation"
 msgstr "Аңдатпаны өшіру"
 
+#: ../shell/help-overlay.ui.h:1
+msgid "Opening, closing, saving and printing"
+msgstr "Ашу, жабу, сақтау және баспаға шығару"
+
+#: ../shell/help-overlay.ui.h:2
+msgid "Open a document"
+msgstr "Құжатты ашу"
+
+#: ../shell/help-overlay.ui.h:3
+msgid "Open a copy of the current document"
+msgstr "Ағымдағы құжаттың көшірмесін ашу"
+
+#: ../shell/help-overlay.ui.h:4
+msgid "Save a copy of the current document"
+msgstr "Ағымдағы құжаттың көшірмесін сақтау"
+
+#: ../shell/help-overlay.ui.h:5
+msgid "Print the current document"
+msgstr "Ағымдағы құжатты баспаға шығару"
+
+#: ../shell/help-overlay.ui.h:6
+msgid "Close the current document window"
+msgstr "Ағымдағы құжат терезесін жабу"
+
+#: ../shell/help-overlay.ui.h:7
+msgid "Reload the document"
+msgstr "Құжатты қайта жүктеу"
+
+#: ../shell/help-overlay.ui.h:8
+msgid "Selecting and copying text"
+msgstr "Мәтінді таңдау және көшіріп алу"
+
+#: ../shell/help-overlay.ui.h:9
+msgid "Copy highlighted text"
+msgstr "Ерекшеленген мәтінді көшіріп алу"
+
+#: ../shell/help-overlay.ui.h:10
+msgid "Select all the text in a document"
+msgstr "Түгел құжат мәтінін таңдау"
+
+#: ../shell/help-overlay.ui.h:11
+msgid "Moving around the document"
+msgstr "Құжат ішіне ауысу"
+
+#: ../shell/help-overlay.ui.h:12
+msgid "Move up/down a page"
+msgstr "Парақты жоғары/төмен жылжыту"
+
+#: ../shell/help-overlay.ui.h:13
+msgid "Move up/down a page several lines at a time"
+msgstr "Парақты жоғары/төмен бірнеше жолға жылжыту"
+
+#: ../shell/help-overlay.ui.h:14
+msgid "Go to page number"
+msgstr "Нөмірі көрсетілген параққа өту"
+
+#: ../shell/help-overlay.ui.h:15
+msgid "Go to the beginning/end of a page"
+msgstr "Парақтың басына/соңына өту"
+
+#: ../shell/help-overlay.ui.h:16
+msgid "Go to the beginning of the document"
+msgstr "Құжат басына өту"
+
+#: ../shell/help-overlay.ui.h:17
+msgid "Go to the end of the document"
+msgstr "Құжат соңына өту"
+
+#: ../shell/help-overlay.ui.h:18
+msgid "Finding text"
+msgstr "Мәтінді табу"
+
+#: ../shell/help-overlay.ui.h:19
+msgid "Show the search bar"
+msgstr "Іздеу панелін көрсету"
+
+#: ../shell/help-overlay.ui.h:20
+msgid "Go to the next search result"
+msgstr "Келесі іздеу нәтижесіне өту"
+
+#: ../shell/help-overlay.ui.h:21
+msgid "Go to the previous search result"
+msgstr "Алдыңғы іздеу нәтижесіне өту"
+
+#: ../shell/help-overlay.ui.h:22
+msgid "Rotating and zooming"
+msgstr "Бұру және масштабтау"
+
+#: ../shell/help-overlay.ui.h:23
+msgid "Rotate the page 90 degrees counter-clockwise"
+msgstr "Сағат тілшесі бойына қарсы 90 градусқа бұру"
+
+#: ../shell/help-overlay.ui.h:24
+msgid "Rotate the page 90 degrees clockwise"
+msgstr "Сағат тілшесі бойымен 90 градусқа бұру"
+
+#: ../shell/help-overlay.ui.h:25
+msgid "Zoom in"
+msgstr "Үлкейту"
+
+#: ../shell/help-overlay.ui.h:26
+msgid "Zoom out"
+msgstr "Кішірейту"
+
+#: ../shell/help-overlay.ui.h:27
+msgid "Touchpad gestures"
+msgstr "Тачпад ым қимылдары"
+
 #: ../evince.appdata.xml.in.h:2
 msgid "Document viewer for popular document formats"
 msgstr "Кеңінен қолданылатын құжаттар пішімдерін қарау қолданбасы"
@@ -1665,6 +1799,9 @@ msgid ""
 msgstr ""
 "Ол келесі құжаттар пішімдерін қолдайды: PDF, PS, EPS, XPS, DjVu, TIFF, DVI "
 "(SyncTeX), және Comic Books архивтері (CBR, CBT, CBZ, CB7)."
+
+#~ msgid "Index"
+#~ msgstr "Мазмұны"
 
 #~ msgid "Find options"
 #~ msgstr "Табу опциялары"
@@ -1707,17 +1844,11 @@ msgstr ""
 #~ msgid "Open a copy of the current document in a new window"
 #~ msgstr "Ағымдағы құжаттың көшірмесін жаңа терезеде ашу"
 
-#~ msgid "Save a copy of the current document"
-#~ msgstr "Ағымдағы құжаттың көшірмесін сақтау"
-
 #~ msgid "Send current document by mail, instant message…"
 #~ msgstr "Ағымдағы құжатты эл. пошта, жылдам хабарлама арқылы жіберу..."
 
 #~ msgid "Show the folder which contains this file in the file manager"
 #~ msgstr "Бұл файл орналасқан буманы файлдар басқарушысымен ашу"
-
-#~ msgid "Reload the document"
-#~ msgstr "Құжатты қайта жүктеу"
 
 #~ msgid "Go to the first page"
 #~ msgstr "Бірінші параққа өту"
@@ -1890,9 +2021,6 @@ msgstr ""
 #~ msgid "Find Pre_vious"
 #~ msgstr "Ал_дыңғысын табу"
 
-#~ msgid "Find Ne_xt"
-#~ msgstr "Ке_лесіні табу"
-
 #~ msgid "Toolbar Editor"
 #~ msgstr "Панельдер түзетушісі"
 
@@ -1916,9 +2044,6 @@ msgstr ""
 
 #~ msgid "_Toolbar"
 #~ msgstr "_Панель"
-
-#~ msgid "Show or hide the toolbar"
-#~ msgstr "Саймандар панелін көрсету не жасыру"
 
 #~ msgid "_Dual (Even pages left)"
 #~ msgstr "Қо_с (Жұп парақтар сол жақта)"
