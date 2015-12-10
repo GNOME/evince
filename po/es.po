@@ -16,8 +16,8 @@ msgstr ""
 "Project-Id-Version: evince.master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evince&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-11-16 05:01+0000\n"
-"PO-Revision-Date: 2015-11-17 08:58+0100\n"
+"POT-Creation-Date: 2015-12-07 05:01+0000\n"
+"PO-Revision-Date: 2015-12-07 11:34+0100\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español; Castellano <gnome-es-list@gnome.org>\n"
 "Language: \n"
@@ -506,13 +506,11 @@ msgstr "Buscar la siguiente aparición de la cadena"
 
 #: ../libview/ev-jobs.c:649
 #, c-format
-#| msgid "Failed to print page %d: %s"
 msgid "Failed to render page %d"
 msgstr "Falló al renderizar la página %d"
 
 #: ../libview/ev-jobs.c:896
 #, c-format
-#| msgid "Failed to create a temporary file: %s"
 msgid "Failed to create thumbnail for page %d"
 msgstr "Falló al crear la miniatura para la página %d"
 
@@ -659,11 +657,11 @@ msgstr "Vista de documento"
 msgid "Go to first page"
 msgstr "Ir a la primera página"
 
-#: ../libview/ev-view.c:2025
+#: ../libview/ev-view.c:2025 ../shell/help-overlay.ui.h:29
 msgid "Go to previous page"
 msgstr "Ir a la página anterior"
 
-#: ../libview/ev-view.c:2027
+#: ../libview/ev-view.c:2027 ../shell/help-overlay.ui.h:28
 msgid "Go to next page"
 msgstr "Ir a la página siguiente"
 
@@ -1175,12 +1173,10 @@ msgid "Open an existing document"
 msgstr "Abre un documento existente"
 
 #: ../shell/ev-toolbar.c:210
-#| msgid "Select page size using document page size"
 msgid "Select page or search in the index"
 msgstr "Seleccionar página o buscar en el índice"
 
 #: ../shell/ev-toolbar.c:211
-#| msgid "Select Page"
 msgid "Select page"
 msgstr "Seleccionar página"
 
@@ -1713,6 +1709,130 @@ msgstr "Propiedades de la anotación…"
 msgid "Remove Annotation"
 msgstr "Quitar anotación"
 
+#: ../shell/help-overlay.ui.h:1
+msgid "Opening, closing, saving and printing"
+msgstr "Abrir, cerrar, guardar e imprimir"
+
+#: ../shell/help-overlay.ui.h:2
+#| msgid "Open Document"
+msgid "Open a document"
+msgstr "Abrir un documento"
+
+#: ../shell/help-overlay.ui.h:3
+#| msgid "Save a copy of the current document"
+msgid "Open a copy of the current document"
+msgstr "Abrir una copia del documento actual"
+
+#: ../shell/help-overlay.ui.h:4
+msgid "Save a copy of the current document"
+msgstr "Guarda una copia del documento actual"
+
+#: ../shell/help-overlay.ui.h:5
+#| msgid "Print this document"
+msgid "Print the current document"
+msgstr "Abrir una copia del documento actual"
+
+#: ../shell/help-overlay.ui.h:6
+#| msgid "Make the current document fill the window"
+msgid "Close the current document window"
+msgstr "Cerrar la ventana del documento actual"
+
+#: ../shell/help-overlay.ui.h:7
+msgid "Reload the document"
+msgstr "Recarga el documento"
+
+#: ../shell/help-overlay.ui.h:8
+msgid "Selecting and copying text"
+msgstr "Seleccionar y copiar texto"
+
+#: ../shell/help-overlay.ui.h:9
+msgid "Copy highlighted text"
+msgstr "Copiar el texto resaltado"
+
+#: ../shell/help-overlay.ui.h:10
+#| msgid "Show the entire document"
+msgid "Select all the text in a document"
+msgstr "Seleccionar todo el texto de un documento"
+
+#: ../shell/help-overlay.ui.h:11
+#| msgid "Reload the document"
+msgid "Moving around the document"
+msgstr "Moverse por el documento"
+
+#: ../shell/help-overlay.ui.h:12
+msgid "Move up/down a page"
+msgstr "Subir/bajar una página"
+
+#: ../shell/help-overlay.ui.h:13
+msgid "Move up/down a page several lines at a time"
+msgstr "Subir/bajar varias líneas a la vez"
+
+#: ../shell/help-overlay.ui.h:14
+#| msgid "Go to page"
+msgid "Go to page number"
+msgstr "Ir a la página número"
+
+#: ../shell/help-overlay.ui.h:15
+#| msgid "Go to the next page"
+msgid "Go to the beginning/end of a page"
+msgstr "Ir al principio/final de una página"
+
+#: ../shell/help-overlay.ui.h:16
+#| msgid "Show the entire document"
+msgid "Go to the beginning of the document"
+msgstr "Ir al principio del documento"
+
+#: ../shell/help-overlay.ui.h:17
+#| msgid "Show the entire document"
+msgid "Go to the end of the document"
+msgstr "Ir al final del documento"
+
+#: ../shell/help-overlay.ui.h:18
+#| msgid "Find Ne_xt"
+msgid "Finding text"
+msgstr "Buscando texto"
+
+#: ../shell/help-overlay.ui.h:19
+#| msgid "Show or hide the toolbar"
+msgid "Show the search bar"
+msgstr "Muestra la barra de búsqueda"
+
+#: ../shell/help-overlay.ui.h:20
+#| msgid "Go to the next page"
+msgid "Go to the next search result"
+msgstr "Ir al siguiente resultado de búsqueda"
+
+#: ../shell/help-overlay.ui.h:21
+#| msgid "Go to the previous page"
+msgid "Go to the previous search result"
+msgstr "Ir al resultado de búsqueda anterior"
+
+#: ../shell/help-overlay.ui.h:22
+msgid "Rotating and zooming"
+msgstr "Rotar y ampliar"
+
+#: ../shell/help-overlay.ui.h:23
+msgid "Rotate the page 90 degrees counter-clockwise"
+msgstr "Rotar la página 90º en sentido antihorario"
+
+#: ../shell/help-overlay.ui.h:24
+msgid "Rotate the page 90 degrees clockwise"
+msgstr "Rotar la página 90º en sentido horario"
+
+#: ../shell/help-overlay.ui.h:25
+#| msgid "Zoom _In"
+msgid "Zoom in"
+msgstr "Ampliar"
+
+#: ../shell/help-overlay.ui.h:26
+#| msgid "Zoom _Out"
+msgid "Zoom out"
+msgstr "Reducir"
+
+#: ../shell/help-overlay.ui.h:27
+msgid "Touchpad gestures"
+msgstr "Gestos del «touchpad»"
+
 #: ../evince.appdata.xml.in.h:2
 msgid "Document viewer for popular document formats"
 msgstr "Visor de documentos para formatos de documentos populares"
@@ -1776,18 +1896,12 @@ msgstr ""
 #~ msgid "Open a copy of the current document in a new window"
 #~ msgstr "Abre una copia del documento actual en una ventana nueva"
 
-#~ msgid "Save a copy of the current document"
-#~ msgstr "Guarda una copia del documento actual"
-
 #~ msgid "Send current document by mail, instant message…"
 #~ msgstr "Enviar el documento actual por correo-e, mensajería instantánea…"
 
 #~ msgid "Show the folder which contains this file in the file manager"
 #~ msgstr ""
 #~ "Mostrar en el gestor de archivos la carpeta que contiene este archivo"
-
-#~ msgid "Reload the document"
-#~ msgstr "Recarga el documento"
 
 #~ msgid "Go to the first page"
 #~ msgstr "Ir a la primera página"
@@ -1963,9 +2077,6 @@ msgstr ""
 #~ msgid "Find Pre_vious"
 #~ msgstr "Buscar _anterior"
 
-#~ msgid "Find Ne_xt"
-#~ msgstr "Buscar _siguiente"
-
 #~ msgid "Toolbar Editor"
 #~ msgstr "Editor de la barra de herramientas"
 
@@ -1989,9 +2100,6 @@ msgstr ""
 
 #~ msgid "_Toolbar"
 #~ msgstr "Barra de _herramientas"
-
-#~ msgid "Show or hide the toolbar"
-#~ msgstr "Muestra u oculta la barra de herramientas"
 
 #~ msgid "_Dual (Even pages left)"
 #~ msgstr "_Dual (páginas pares a la izquierda)"
