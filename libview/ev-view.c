@@ -9262,13 +9262,12 @@ ev_view_update_primary_selection (EvView *ev_view)
                 gtk_target_list_add_text_targets (target_list, 0);
                 targets = gtk_target_table_new_from_list (target_list, &n_targets);
                 gtk_target_list_unref (target_list);
-                
-		if (!gtk_clipboard_set_with_owner (clipboard,
-						   targets, n_targets,
-						   ev_view_primary_get_cb,
-						   ev_view_primary_clear_cb,
-						   G_OBJECT (ev_view)))
-			ev_view_primary_clear_cb (clipboard, ev_view);
+
+		gtk_clipboard_set_with_owner (clipboard,
+					      targets, n_targets,
+					      ev_view_primary_get_cb,
+					      ev_view_primary_clear_cb,
+					      G_OBJECT (ev_view));
 
                 gtk_target_table_free (targets, n_targets);
 	} else {
