@@ -20,8 +20,8 @@ msgstr ""
 "Project-Id-Version: evince master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evince&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-10-24 16:01+0000\n"
-"PO-Revision-Date: 2015-10-24 22:58+0200\n"
+"POT-Creation-Date: 2015-12-24 05:01+0000\n"
+"PO-Revision-Date: 2015-12-24 15:20+0100\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: Czech <gnome-cs-list@gnome.org>\n"
 "Language: cs\n"
@@ -464,14 +464,12 @@ msgstr "Nepodařilo se vytvořit dočasný soubor: %s"
 msgid "Failed to create a temporary directory: %s"
 msgstr "Nepodařilo se vytvořit dočasný adresář: %s"
 
-#: ../libmisc/ev-page-action-widget.c:84
-#: ../libmisc/ev-page-action-widget.c:123
+#: ../libmisc/ev-page-action-widget.c:84 ../libmisc/ev-page-action-widget.c:123
 #, c-format
 msgid "(%d of %d)"
 msgstr "(%d z %d)"
 
-#: ../libmisc/ev-page-action-widget.c:86
-#: ../libmisc/ev-page-action-widget.c:127
+#: ../libmisc/ev-page-action-widget.c:86 ../libmisc/ev-page-action-widget.c:127
 #, c-format
 msgid "of %d"
 msgstr "z %d"
@@ -657,11 +655,11 @@ msgstr "Pohled na dokument"
 msgid "Go to first page"
 msgstr "Přejít na první stránku"
 
-#: ../libview/ev-view.c:2025
+#: ../libview/ev-view.c:2025 ../shell/help-overlay.ui.h:29
 msgid "Go to previous page"
 msgstr "Přejít na předchozí stránku"
 
-#: ../libview/ev-view.c:2027
+#: ../libview/ev-view.c:2027 ../shell/help-overlay.ui.h:28
 msgid "Go to next page"
 msgstr "Přejít na následující stránku"
 
@@ -1115,7 +1113,7 @@ msgstr "Další informace"
 
 #: ../shell/ev-sidebar-annotations.c:260
 msgid "Document contains no annotations"
-msgstr "Dokument neobsahuje žádné poznánky"
+msgstr "Dokument neobsahuje žádné poznámky"
 
 #: ../shell/ev-sidebar-annotations.c:292
 #, c-format
@@ -1163,8 +1161,9 @@ msgid "Print…"
 msgstr "Tisk…"
 
 #: ../shell/ev-sidebar-links.c:722
+# https://bugzilla.gnome.org/show_bug.cgi?id=732547
 msgid "Outline"
-msgstr ""
+msgstr "Obsah"
 
 #: ../shell/ev-sidebar-thumbnails.c:1085
 msgid "Thumbnails"
@@ -1708,6 +1707,130 @@ msgstr "Vlastnosti poznámky…"
 #: ../shell/evince-menus.ui.h:47
 msgid "Remove Annotation"
 msgstr "Odstranit poznámku"
+
+#: ../shell/help-overlay.ui.h:1
+msgid "Opening, closing, saving and printing"
+msgstr "Otevírání, zavírání, ukládání a tisk"
+
+#: ../shell/help-overlay.ui.h:2
+#| msgid "Open Document"
+msgid "Open a document"
+msgstr "Otevřít dokument"
+
+#: ../shell/help-overlay.ui.h:3
+#| msgid "Could not send current document"
+msgid "Open a copy of the current document"
+msgstr "Otevřít kopii aktuálního dokumentu"
+
+#: ../shell/help-overlay.ui.h:4
+#| msgid "Could not send current document"
+msgid "Save a copy of the current document"
+msgstr "Uložit kopii aktuálního dokumentu"
+
+#: ../shell/help-overlay.ui.h:5
+#| msgid "Print this document"
+msgid "Print the current document"
+msgstr "Vytisknout aktuální dokument"
+
+#: ../shell/help-overlay.ui.h:6
+#| msgid "Make the current document fill the window"
+msgid "Close the current document window"
+msgstr "Zavřít okno s aktuálním dokumentem"
+
+#: ../shell/help-overlay.ui.h:7
+#| msgid "Enlarge the document"
+msgid "Reload the document"
+msgstr "Znovu načíst dokument"
+
+#: ../shell/help-overlay.ui.h:8
+msgid "Selecting and copying text"
+msgstr "Výběr a kopírování textu"
+
+#: ../shell/help-overlay.ui.h:9
+msgid "Copy highlighted text"
+msgstr "Kopírovat zvýrazněný text"
+
+#: ../shell/help-overlay.ui.h:10
+#| msgid "Show the entire document"
+msgid "Select all the text in a document"
+msgstr "Vybrat veškerý text v dokumentu"
+
+#: ../shell/help-overlay.ui.h:11
+#| msgid "Enlarge the document"
+msgid "Moving around the document"
+msgstr "Pohyb v dokumentu"
+
+#: ../shell/help-overlay.ui.h:12
+msgid "Move up/down a page"
+msgstr "Posunout stránku nahoru/dolů"
+
+#: ../shell/help-overlay.ui.h:13
+msgid "Move up/down a page several lines at a time"
+msgstr "Posunout stránku nahoru/dolů o několik řádků naráz"
+
+#: ../shell/help-overlay.ui.h:14
+#| msgid "Go to page"
+msgid "Go to page number"
+msgstr "Přejít na stránku s určeným číslem"
+
+#: ../shell/help-overlay.ui.h:15
+#| msgid "Go to the next page"
+msgid "Go to the beginning/end of a page"
+msgstr "Přejít na začátek/konec stránky"
+
+#: ../shell/help-overlay.ui.h:16
+#| msgid "Show the entire document"
+msgid "Go to the beginning of the document"
+msgstr "Přejít na začátek dokumentu"
+
+#: ../shell/help-overlay.ui.h:17
+#| msgid "Show the entire document"
+msgid "Go to the end of the document"
+msgstr "Přejít na konec dokumentu"
+
+#: ../shell/help-overlay.ui.h:18
+msgid "Finding text"
+msgstr "Hledání textu"
+
+#: ../shell/help-overlay.ui.h:19
+msgid "Show the search bar"
+msgstr "Zobrazit vyhledávací lištu"
+
+#: ../shell/help-overlay.ui.h:20
+#| msgid "Go to the next page"
+msgid "Go to the next search result"
+msgstr "Přejít na následující výsledek hledání"
+
+#: ../shell/help-overlay.ui.h:21
+#| msgid "Go to the previous page"
+msgid "Go to the previous search result"
+msgstr "Přejít na předchozí výsledek hledání"
+
+#: ../shell/help-overlay.ui.h:22
+msgid "Rotating and zooming"
+msgstr "Otáčení a přibližování"
+
+#: ../shell/help-overlay.ui.h:23
+msgid "Rotate the page 90 degrees counter-clockwise"
+msgstr "Otočit stránku o 90 stupňů po směru hodinových ručiček"
+
+#: ../shell/help-overlay.ui.h:24
+msgid "Rotate the page 90 degrees clockwise"
+msgstr "Otočit stránku o 90 stupňů proti směru hodinových ručiček"
+
+#: ../shell/help-overlay.ui.h:25
+#| msgid "Zoom _In"
+msgid "Zoom in"
+msgstr "Přiblížit"
+
+#: ../shell/help-overlay.ui.h:26
+#| msgid "Zoom _Out"
+msgid "Zoom out"
+msgstr "Oddálit"
+
+#: ../shell/help-overlay.ui.h:27
+msgid "Touchpad gestures"
+msgstr "Dotyková gesta"
 
 #: ../evince.appdata.xml.in.h:2
 msgid "Document viewer for popular document formats"
