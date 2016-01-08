@@ -719,7 +719,13 @@ ev_sidebar_links_support_document (EvSidebarPage  *sidebar_page,
 static const gchar*
 ev_sidebar_links_get_label (EvSidebarPage *sidebar_page)
 {
-    return _("Outline");
+	/* Translators: This is the title for the sidebar pane that
+	 * shows the Outline or Table of Contents of the document.
+	 * Use a short text, otherwise it can make Evince unusable in
+	 * your language.  The sidebar cannot be shrinked smaller than
+	 * the longest title in there.
+	 */
+	return _("Outline");
 }
 
 static void
