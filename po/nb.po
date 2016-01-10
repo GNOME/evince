@@ -1,7 +1,7 @@
 # Norwegian bokmål translation of evince.
 # Copyright (C) 2000-2003, 2005 Free Software Foundation, Inc.
 # Åka Sikrom <a4NOSPAMPLEASETHANKYOU@hush.com>, 2014.
-# Kjartan Maraas <kmaraas@gnome.org>, 2000-2015.
+# Kjartan Maraas <kmaraas@gnome.org>, 2000-2016.
 # Terance Edward Sola <terance@lyse.net>, 2005.
 # Torstein Adolf Winterseth <kvikende@fsfe.org>, 2010.
 #
@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince 3.19.x\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-11-16 07:10+0100\n"
-"PO-Revision-Date: 2015-11-16 07:11+0100\n"
+"POT-Creation-Date: 2016-01-10 12:53+0100\n"
+"PO-Revision-Date: 2016-01-10 12:57+0100\n"
 "Last-Translator: Åka Sikrom <a4NOSPAMPLEASETHANKYOU@hush.com>\n"
 "Language-Team: Norwegian bokmål <i18n-nb@lister.ping.uio.no>\n"
 "Language: \n"
@@ -641,11 +641,11 @@ msgstr "Dokumentvisning"
 msgid "Go to first page"
 msgstr "Gå til første side"
 
-#: ../libview/ev-view.c:2025
+#: ../libview/ev-view.c:2025 ../shell/help-overlay.ui.h:29
 msgid "Go to previous page"
 msgstr "Gå til forrige side"
 
-#: ../libview/ev-view.c:2027
+#: ../libview/ev-view.c:2027 ../shell/help-overlay.ui.h:28
 msgid "Go to next page"
 msgstr "Gå til neste side"
 
@@ -1138,7 +1138,13 @@ msgstr "Lag"
 msgid "Print…"
 msgstr "Skriv ut …"
 
-#: ../shell/ev-sidebar-links.c:722
+#. Translators: This is the title for the sidebar pane that
+#. * shows the Outline or Table of Contents of the document.
+#. * Use a short text, otherwise it can make Evince unusable in
+#. * your language.  The sidebar cannot be shrinked smaller than
+#. * the longest title in there.
+#.
+#: ../shell/ev-sidebar-links.c:728
 msgid "Outline"
 msgstr "Omriss"
 
@@ -1684,6 +1690,114 @@ msgstr "Egenskaper for anmerkninger …"
 #: ../shell/evince-menus.ui.h:47
 msgid "Remove Annotation"
 msgstr "Fjern anmerking"
+
+#: ../shell/help-overlay.ui.h:1
+msgid "Opening, closing, saving and printing"
+msgstr "Åpne, lukke, lagre og skriv ut"
+
+#: ../shell/help-overlay.ui.h:2
+msgid "Open a document"
+msgstr "Åpne et dokument"
+
+#: ../shell/help-overlay.ui.h:3
+msgid "Open a copy of the current document"
+msgstr "Åpne en kopi av dette dokumentet"
+
+#: ../shell/help-overlay.ui.h:4
+msgid "Save a copy of the current document"
+msgstr "Lagre en kopi av dette dokumentet"
+
+#: ../shell/help-overlay.ui.h:5
+msgid "Print the current document"
+msgstr "Skriv ut dette dokumentet"
+
+#: ../shell/help-overlay.ui.h:6
+msgid "Close the current document window"
+msgstr "Lukk dette dokumentvinduet"
+
+#: ../shell/help-overlay.ui.h:7
+msgid "Reload the document"
+msgstr "Last dokumentet på nytt"
+
+#: ../shell/help-overlay.ui.h:8
+msgid "Selecting and copying text"
+msgstr "Velg og kopier tekst"
+
+#: ../shell/help-overlay.ui.h:9
+msgid "Copy highlighted text"
+msgstr "Kopier markert tekst"
+
+#: ../shell/help-overlay.ui.h:10
+msgid "Select all the text in a document"
+msgstr "Velg all teksten i et dokument"
+
+#: ../shell/help-overlay.ui.h:11
+msgid "Moving around the document"
+msgstr "Navigasjon i dokumentet"
+
+#: ../shell/help-overlay.ui.h:12
+msgid "Move up/down a page"
+msgstr "Gå opp/ned en side"
+
+#: ../shell/help-overlay.ui.h:13
+msgid "Move up/down a page several lines at a time"
+msgstr "Gå opp/ned på en side flere linjer om gangen"
+
+#: ../shell/help-overlay.ui.h:14
+msgid "Go to page number"
+msgstr "Gå til sidenummer"
+
+#: ../shell/help-overlay.ui.h:15
+msgid "Go to the beginning/end of a page"
+msgstr "Gå til begynnelsen av en side"
+
+#: ../shell/help-overlay.ui.h:16
+msgid "Go to the beginning of the document"
+msgstr "Gå til begynnelsen av dokumentet"
+
+#: ../shell/help-overlay.ui.h:17
+msgid "Go to the end of the document"
+msgstr "Gå til slutten av dokumentet"
+
+#: ../shell/help-overlay.ui.h:18
+msgid "Finding text"
+msgstr "Søk etter tekst"
+
+#: ../shell/help-overlay.ui.h:19
+msgid "Show the search bar"
+msgstr "Vis søkelinjen"
+
+#: ../shell/help-overlay.ui.h:20
+msgid "Go to the next search result"
+msgstr "Gå til neste søkeresultat"
+
+#: ../shell/help-overlay.ui.h:21
+msgid "Go to the previous search result"
+msgstr "Gå til forrige søkeresultat"
+
+#: ../shell/help-overlay.ui.h:22
+msgid "Rotating and zooming"
+msgstr "Rotering og zoom"
+
+#: ../shell/help-overlay.ui.h:23
+msgid "Rotate the page 90 degrees counter-clockwise"
+msgstr "Roter siden 90 grader mot klokken"
+
+#: ../shell/help-overlay.ui.h:24
+msgid "Rotate the page 90 degrees clockwise"
+msgstr "Roter siden 90 grader med klokken"
+
+#: ../shell/help-overlay.ui.h:25
+msgid "Zoom in"
+msgstr "Zoom inn"
+
+#: ../shell/help-overlay.ui.h:26
+msgid "Zoom out"
+msgstr "Zoom ut"
+
+#: ../shell/help-overlay.ui.h:27
+msgid "Touchpad gestures"
+msgstr "Bevegelser for pekeplate"
 
 #: ../evince.appdata.xml.in.h:2
 msgid "Document viewer for popular document formats"
