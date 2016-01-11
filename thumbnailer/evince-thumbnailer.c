@@ -22,6 +22,7 @@
 
 #include <gio/gio.h>
 
+#include <locale.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -227,6 +228,8 @@ main (int argc, char *argv[])
 	const char     *output;
 	GFile          *file;
 	GError         *error = NULL;
+
+	setlocale (LC_ALL, "");
 
 	context = g_option_context_new ("- GNOME Document Thumbnailer");
 	g_option_context_add_main_entries (context, goption_options, NULL);
