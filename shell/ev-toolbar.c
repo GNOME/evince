@@ -130,17 +130,17 @@ ev_toolbar_create_menu_button (EvToolbar   *ev_toolbar,
                                GMenuModel  *menu,
                                GtkAlign     menu_align)
 {
-        GtkWidget *button;
-        GtkMenu *popup;
+        GtkWidget  *button;
+        GtkPopover *popup;
 
         button = gtk_menu_button_new ();
-        gtk_menu_button_set_use_popover (GTK_MENU_BUTTON (button), FALSE);
         gtk_widget_set_valign (button, GTK_ALIGN_CENTER);
         gtk_button_set_image (GTK_BUTTON (button), gtk_image_new ());
         gtk_image_set_from_icon_name (GTK_IMAGE (gtk_button_get_image (GTK_BUTTON (button))),
                                       icon_name, GTK_ICON_SIZE_MENU);
         gtk_menu_button_set_menu_model (GTK_MENU_BUTTON (button), menu);
-        popup = gtk_menu_button_get_popup (GTK_MENU_BUTTON (button));
+        popup = gtk_menu_button_get_popover (GTK_MENU_BUTTON (button));
+        gtk_popover_set_position (popup, GTK_POS_BOTTOM);
         gtk_widget_set_halign (GTK_WIDGET (popup), menu_align);
 
         return button;
