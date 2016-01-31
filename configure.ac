@@ -600,7 +600,7 @@ AC_ARG_ENABLE(djvu,
 	    [enable_djvu=yes])
 
 if test "x$enable_djvu" = "xyes"; then
-    DJVULIBRE_REQUIRED=3.5.17
+    DJVULIBRE_REQUIRED=3.5.22
     PKG_CHECK_MODULES(DJVU, ddjvuapi >= $DJVULIBRE_REQUIRED, enable_djvu=yes, enable_djvu=no)
 
     if test "x$enable_djvu" = "xyes"; then
@@ -608,7 +608,7 @@ if test "x$enable_djvu" = "xyes"; then
     else
 	AC_MSG_WARN([	
 ** Djvu support is disabled since a recent version of the djvulibre 
-** library was not found. You need at least djvulibre-3.5.17 which 
+** library was not found. You need at least djvulibre-3.5.22 which
 ** can be found on http://djvulibre.djvuzone.org 
 ])
     fi 

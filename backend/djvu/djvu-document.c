@@ -164,8 +164,12 @@ djvu_document_load (EvDocument  *document,
 	filename = g_filename_from_uri (uri, NULL, error);
 	if (!filename)
 		return FALSE;
-	
+
+#ifdef __APPLE__
+	doc = ddjvu_document_create_by_filename_utf8 (djvu_document->d_context, filename, TRUE);
+#else
 	doc = ddjvu_document_create_by_filename (djvu_document->d_context, filename, TRUE);
+#endif
 
 	if (!doc) {
 		g_free (filename);
