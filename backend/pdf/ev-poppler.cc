@@ -3508,11 +3508,7 @@ pdf_document_annotations_save_annotation (EvDocumentAnnotations *document_annota
 			poppler_rect.y2 = height - ev_rect.y1;
 
 			if (poppler_annot_markup_has_popup (markup))
-#ifdef HAVE_POPPLER_ANNOT_MARKUP_SET_POPUP_RECTANGLE
 				poppler_annot_markup_set_popup_rectangle (markup, &poppler_rect);
-#else
-			        poppler_annot_markup_set_popup (markup, &poppler_rect);
-#endif
 			else
 				poppler_annot_markup_set_popup (markup, &poppler_rect);
 		}
