@@ -14,9 +14,9 @@
 # Hendrik Richter <hendrikr@gnome.org>, 2005, 2006.
 # Hendrik Brandt <heb@gnome-de.org>, 2005.
 # Christian Kintner <ckintner@gnome-de.org>, 2007.
-# Mario Blättermann <mario.blaettermann@gmail.com>, 2008-2013.
+# Mario Blättermann <mario.blaettermann@gmail.com>, 2008-2013, 2016.
 # Paul Seyfert <pseyfert@mathphys.fsk.uni-heidelberg.de>, 2010-2012, 2015.
-# Wolfgang Stöggl <c72578@yahoo.de>, 2010.
+# Wolfgang Stöggl <c72578@yahoo.de>, 2010, 2015.
 # Christian Kirbach <Christian.Kirbach@gmail.com>, 2009, 2010.
 # Benjamin Steinwender <b@stbe.at>, 2013.
 #
@@ -25,9 +25,9 @@ msgstr ""
 "Project-Id-Version: Evince master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evince&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-12-27 16:59+0000\n"
-"PO-Revision-Date: 2015-12-29 18:00+0100\n"
-"Last-Translator: Wolfgang Stoeggl <c72578@yahoo.de>\n"
+"POT-Creation-Date: 2016-02-02 17:03+0000\n"
+"PO-Revision-Date: 2016-02-02 19:54+0100\n"
+"Last-Translator: Mario Blättermann <mario.blaettermann@gmail.com>\n"
 "Language-Team: Deutsch <gnome-de@gnome.org>\n"
 "Language: de_DE\n"
 "MIME-Version: 1.0\n"
@@ -668,11 +668,11 @@ msgstr "Dokumentenansicht"
 msgid "Go to first page"
 msgstr "Zur ersten Seite gehen"
 
-#: ../libview/ev-view.c:2025 ../shell/help-overlay.ui.h:29
+#: ../libview/ev-view.c:2025
 msgid "Go to previous page"
 msgstr "Zur vorherigen Seite gehen"
 
-#: ../libview/ev-view.c:2027 ../shell/help-overlay.ui.h:28
+#: ../libview/ev-view.c:2027
 msgid "Go to next page"
 msgstr "Zur nächsten Seite gehen"
 
@@ -1180,7 +1180,13 @@ msgstr "Ebenen"
 msgid "Print…"
 msgstr "Drucken …"
 
-#: ../shell/ev-sidebar-links.c:722
+#. Translators: This is the title for the sidebar pane that
+#. * shows the Outline or Table of Contents of the document.
+#. * Use a short text, otherwise it can make Evince unusable in
+#. * your language.  The sidebar cannot be shrinked smaller than
+#. * the longest title in there.
+#.
+#: ../shell/ev-sidebar-links.c:728
 msgid "Outline"
 msgstr "Umriss"
 
@@ -1732,112 +1738,149 @@ msgid "Remove Annotation"
 msgstr "Anmerkung entfernen"
 
 #: ../shell/help-overlay.ui.h:1
+msgctxt "shortcut window"
 msgid "Opening, closing, saving and printing"
 msgstr "Öffnen, schließen, speichern und drucken"
 
 #: ../shell/help-overlay.ui.h:2
+msgctxt "shortcut window"
 msgid "Open a document"
 msgstr "Ein Dokument öffnen"
 
 #: ../shell/help-overlay.ui.h:3
+msgctxt "shortcut window"
 msgid "Open a copy of the current document"
 msgstr "Eine Kopie des momentan angezeigten Dokuments öffnen"
 
 #: ../shell/help-overlay.ui.h:4
+msgctxt "shortcut window"
 msgid "Save a copy of the current document"
 msgstr "Eine Kopie des momentan angezeigten Dokuments speichern"
 
 #: ../shell/help-overlay.ui.h:5
+msgctxt "shortcut window"
 msgid "Print the current document"
 msgstr "Das aktuelle Dokument drucken"
 
 #: ../shell/help-overlay.ui.h:6
+msgctxt "shortcut window"
 msgid "Close the current document window"
 msgstr "Das aktuelle Dokumentenfenster schließen"
 
 #: ../shell/help-overlay.ui.h:7
+msgctxt "shortcut window"
 msgid "Reload the document"
 msgstr "Das Dokument aktualisieren"
 
 #: ../shell/help-overlay.ui.h:8
+msgctxt "shortcut window"
 msgid "Selecting and copying text"
 msgstr "Text markieren und kopieren"
 
 #: ../shell/help-overlay.ui.h:9
+msgctxt "shortcut window"
 msgid "Copy highlighted text"
 msgstr "Hervorgehobenen Text kopieren"
 
 #: ../shell/help-overlay.ui.h:10
+msgctxt "shortcut window"
 msgid "Select all the text in a document"
 msgstr "Den gesamten Text im Dokument markieren"
 
 #: ../shell/help-overlay.ui.h:11
+msgctxt "shortcut window"
 msgid "Moving around the document"
 msgstr "Im Dokument bewegen"
 
 #: ../shell/help-overlay.ui.h:12
+msgctxt "shortcut window"
 msgid "Move up/down a page"
 msgstr "Auf einer Seite nach oben/unten bewegen"
 
 #: ../shell/help-overlay.ui.h:13
+msgctxt "shortcut window"
 msgid "Move up/down a page several lines at a time"
 msgstr "Auf einer Seite nach oben/unten bewegen (mehrere Zeilen auf einmal)"
 
 #: ../shell/help-overlay.ui.h:14
+msgctxt "shortcut window"
 msgid "Go to page number"
 msgstr "Zu Seite gehen"
 
 #: ../shell/help-overlay.ui.h:15
+msgctxt "shortcut window"
 msgid "Go to the beginning/end of a page"
 msgstr "An den Seitenanfang / das Seitenende gehen"
 
 #: ../shell/help-overlay.ui.h:16
+msgctxt "shortcut window"
 msgid "Go to the beginning of the document"
 msgstr "An den Dokumentanfang gehen"
 
 #: ../shell/help-overlay.ui.h:17
+msgctxt "shortcut window"
 msgid "Go to the end of the document"
 msgstr "An das Dokumentende gehen"
 
 #: ../shell/help-overlay.ui.h:18
+msgctxt "shortcut window"
 msgid "Finding text"
 msgstr "Nach Text suchen"
 
 #: ../shell/help-overlay.ui.h:19
+msgctxt "shortcut window"
 msgid "Show the search bar"
 msgstr "Die Suchleiste anzeigen"
 
 #: ../shell/help-overlay.ui.h:20
+msgctxt "shortcut window"
 msgid "Go to the next search result"
 msgstr "Zum nächsten Suchergebnis gehen"
 
 #: ../shell/help-overlay.ui.h:21
+msgctxt "shortcut window"
 msgid "Go to the previous search result"
 msgstr "Zum vorherigen Suchergebnis gehen"
 
 #: ../shell/help-overlay.ui.h:22
+msgctxt "shortcut window"
 msgid "Rotating and zooming"
 msgstr "Drehen und Vergrößern"
 
 #: ../shell/help-overlay.ui.h:23
+msgctxt "shortcut window"
 msgid "Rotate the page 90 degrees counter-clockwise"
 msgstr "Die Seite um 90° entgegen dem Uhrzeigersinn drehen"
 
 #: ../shell/help-overlay.ui.h:24
+msgctxt "shortcut window"
 msgid "Rotate the page 90 degrees clockwise"
 msgstr "Die Seite um 90° im Uhrzeigersinn drehen"
 
 #: ../shell/help-overlay.ui.h:25
+msgctxt "shortcut window"
 msgid "Zoom in"
 msgstr "Vergrößern"
 
 #: ../shell/help-overlay.ui.h:26
+msgctxt "shortcut window"
 msgid "Zoom out"
 msgstr "Verkleinern"
 
 #: ../shell/help-overlay.ui.h:27
+msgctxt "shortcut window"
 msgid "Touchpad gestures"
-msgstr "Tastfeld-Gesten"
+msgstr "Tastfeldgesten"
+
+#: ../shell/help-overlay.ui.h:28
+msgctxt "shortcut window"
+msgid "Go to next page"
+msgstr "Zur nächsten Seite gehen"
+
+#: ../shell/help-overlay.ui.h:29
+msgctxt "shortcut window"
+msgid "Go to previous page"
+msgstr "Zur vorherigen Seite gehen"
 
 #: ../evince.appdata.xml.in.h:2
 msgid "Document viewer for popular document formats"
