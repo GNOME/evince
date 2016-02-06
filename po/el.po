@@ -10,23 +10,23 @@
 # Μάριος Ζηντίλης <m.zindilis@dmajor.org>, 2010.
 # Michael Kotsarinis <mk73628@gmail.com>, 2011.
 # Dimitris Spingos (Δημήτρης Σπίγγος) <dmtrs32@gmail.com>, 2012, 2013, 2014.
-# Efstathios Iosifidis <iosifidis@opensuse.org>, 2015.
+# Efstathios Iosifidis <iosifidis@opensuse.org>, 2015, 2016.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: evince.HEAD\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evince&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-12-15 14:22+0200\n"
-"PO-Revision-Date: 2015-12-15 14:26+0200\n"
-"Last-Translator: Tom Tryfonidis <tomtryf@gmail.com>\n"
-"Language-Team: Greek, Modern (1453-) <opensuse-translation-el@opensuse.org>\n"
+"POT-Creation-Date: 2016-02-03 05:02+0000\n"
+"PO-Revision-Date: 2016-02-04 01:08+0200\n"
+"Last-Translator: Efstathios Iosifidis <iosifidis@opensuse.org>\n"
+"Language-Team: Ελληνικά <>\n"
 "Language: el\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 1.8.6\n"
+"X-Generator: Gtranslator 2.91.7\n"
 "X-Project-Style: gnome\n"
 
 #: ../backend/comics/comics-document.c:210
@@ -255,12 +255,12 @@ msgstr "Προσθέτει υποστήριξη για την ανάγνωση �
 #: ../backend/ps/ev-spectre.c:98
 #, c-format
 msgid "Failed to load document “%s”"
-msgstr "Αδυναμία φόρτωσης εγγράφου “%s”"
+msgstr "Αποτυχία φόρτωσης εγγράφου “%s”"
 
 #: ../backend/ps/ev-spectre.c:131
 #, c-format
 msgid "Failed to save document “%s”"
-msgstr "Αδυναμία αποθήκευσης εγγράφου “%s”"
+msgstr "Αποτυχία αποθήκευσης εγγράφου “%s”"
 
 #: ../backend/ps/evince-psdocument.metainfo.xml.in.in.h:1
 #: ../backend/ps/psdocument.evince-backend.in.in.h:1
@@ -664,11 +664,11 @@ msgstr "Προβολή εγγράφου"
 msgid "Go to first page"
 msgstr "Μετάβαση στην πρώτη σελίδα"
 
-#: ../libview/ev-view.c:2025 ../shell/help-overlay.ui.h:29
+#: ../libview/ev-view.c:2025
 msgid "Go to previous page"
 msgstr "Μετάβαση στην προηγούμενη σελίδα"
 
-#: ../libview/ev-view.c:2027 ../shell/help-overlay.ui.h:28
+#: ../libview/ev-view.c:2027
 msgid "Go to next page"
 msgstr "Μετάβαση στην επόμενη σελίδα"
 
@@ -730,7 +730,7 @@ msgstr "Προεπισκόπηση εγγράφων του GNOME"
 
 #: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3317
 msgid "Failed to print document"
-msgstr "Αδυναμία εκτύπωσης εγγράφου"
+msgstr "Αποτυχία εκτύπωσης εγγράφου"
 
 #: ../previewer/ev-previewer-window.c:223
 #, c-format
@@ -1176,7 +1176,13 @@ msgstr "Στρώματα"
 msgid "Print…"
 msgstr "Εκτύπωση…"
 
-#: ../shell/ev-sidebar-links.c:722
+#. Translators: This is the title for the sidebar pane that
+#. * shows the Outline or Table of Contents of the document.
+#. * Use a short text, otherwise it can make Evince unusable in
+#. * your language.  The sidebar cannot be shrinked smaller than
+#. * the longest title in there.
+#.
+#: ../shell/ev-sidebar-links.c:728
 msgid "Outline"
 msgstr "Περίγραμμα"
 
@@ -1245,7 +1251,7 @@ msgstr "Λήψη εγγράφου (%d%%)"
 
 #: ../shell/ev-window.c:2128
 msgid "Failed to load remote file."
-msgstr "Αδυναμία φόρτωσης του απομακρυσμένου εγγράφου."
+msgstr "Αποτυχία φόρτωσης του απομακρυσμένου εγγράφου."
 
 #: ../shell/ev-window.c:2367
 #, c-format
@@ -1254,7 +1260,7 @@ msgstr "Επαναφόρτωση του εγγράφου από %s"
 
 #: ../shell/ev-window.c:2399
 msgid "Failed to reload document."
-msgstr "Αδυναμία επαναφόρτωσης του εγγράφου."
+msgstr "Αποτυχία επαναφόρτωσης του εγγράφου."
 
 #: ../shell/ev-window.c:2615
 msgid "Open Document"
@@ -1723,115 +1729,152 @@ msgstr "Ιδιότητες σχολίων…"
 
 #: ../shell/evince-menus.ui.h:47
 msgid "Remove Annotation"
-msgstr "Αφαίρεση σχόλιου"
+msgstr "Αφαίρεση σχολίου"
 
 #: ../shell/help-overlay.ui.h:1
+msgctxt "shortcut window"
 msgid "Opening, closing, saving and printing"
 msgstr "Άνοιγμα, κλείσιμο, αποθήκευση και εκτύπωση"
 
 #: ../shell/help-overlay.ui.h:2
+msgctxt "shortcut window"
 msgid "Open a document"
 msgstr "Άνοιγμα εγγράφου"
 
 #: ../shell/help-overlay.ui.h:3
+msgctxt "shortcut window"
 msgid "Open a copy of the current document"
-msgstr "Άνοιγμα αντιγράφου του τρέχοντος εγγράφου."
+msgstr "Άνοιγμα αντιγράφου του τρέχοντος εγγράφου"
 
 #: ../shell/help-overlay.ui.h:4
+msgctxt "shortcut window"
 msgid "Save a copy of the current document"
 msgstr "Αποθήκευση ενός αντιγράφου του τρέχοντος εγγράφου"
 
 #: ../shell/help-overlay.ui.h:5
+msgctxt "shortcut window"
 msgid "Print the current document"
 msgstr "Εκτύπωση του τρέχοντος εγγράφου"
 
 #: ../shell/help-overlay.ui.h:6
+msgctxt "shortcut window"
 msgid "Close the current document window"
 msgstr "Κλείσιμο του παραθύρου του τρέχοντος εγγράφου"
 
 #: ../shell/help-overlay.ui.h:7
+msgctxt "shortcut window"
 msgid "Reload the document"
 msgstr "Επαναφόρτωση του εγγράφου"
 
 #: ../shell/help-overlay.ui.h:8
+msgctxt "shortcut window"
 msgid "Selecting and copying text"
 msgstr "Επιλογή και αντιγραφή κειμένου"
 
 #: ../shell/help-overlay.ui.h:9
+msgctxt "shortcut window"
 msgid "Copy highlighted text"
 msgstr "Αντιγραφή επισημασμένου κειμένου"
 
 #: ../shell/help-overlay.ui.h:10
+msgctxt "shortcut window"
 msgid "Select all the text in a document"
 msgstr "Επιλογή όλου του κειμένου ενός εγγράφου"
 
 #: ../shell/help-overlay.ui.h:11
+msgctxt "shortcut window"
 msgid "Moving around the document"
 msgstr "Μετακίνηση μέσα σε έγγραφο"
 
 #: ../shell/help-overlay.ui.h:12
+msgctxt "shortcut window"
 msgid "Move up/down a page"
 msgstr "Μετακίνηση πάνω/κάτω μια σελίδα"
 
 #: ../shell/help-overlay.ui.h:13
+msgctxt "shortcut window"
 msgid "Move up/down a page several lines at a time"
 msgstr "Μετακίνηση πάνω/κάτω μιας σελίδας πολλές γραμμές τη φορά"
 
 #: ../shell/help-overlay.ui.h:14
+msgctxt "shortcut window"
 msgid "Go to page number"
 msgstr "Μετάβαση σε σελίδα"
 
 #: ../shell/help-overlay.ui.h:15
+msgctxt "shortcut window"
 msgid "Go to the beginning/end of a page"
 msgstr "Μετάβαση στην αρχή/τέλος της σελίδας"
 
 #: ../shell/help-overlay.ui.h:16
+msgctxt "shortcut window"
 msgid "Go to the beginning of the document"
 msgstr "Μετάβαση στην αρχή του εγγράφου"
 
 #: ../shell/help-overlay.ui.h:17
+msgctxt "shortcut window"
 msgid "Go to the end of the document"
 msgstr "Μετάβαση στο τέλος του εγγράφου"
 
 #: ../shell/help-overlay.ui.h:18
+msgctxt "shortcut window"
 msgid "Finding text"
 msgstr "Εύρεση κειμένου"
 
 #: ../shell/help-overlay.ui.h:19
+msgctxt "shortcut window"
 msgid "Show the search bar"
 msgstr "Εμφάνιση της γραμμής αναζήτησης"
 
 #: ../shell/help-overlay.ui.h:20
+msgctxt "shortcut window"
 msgid "Go to the next search result"
 msgstr "Μετάβαση στο επόμενο αποτέλεσμα της αναζήτησης"
 
 #: ../shell/help-overlay.ui.h:21
+msgctxt "shortcut window"
 msgid "Go to the previous search result"
 msgstr "Μετάβαση στο προηγούμενο αποτέλεσμα της αναζήτησης"
 
 #: ../shell/help-overlay.ui.h:22
+msgctxt "shortcut window"
 msgid "Rotating and zooming"
 msgstr "Περιστροφή και εστίαση"
 
 #: ../shell/help-overlay.ui.h:23
+msgctxt "shortcut window"
 msgid "Rotate the page 90 degrees counter-clockwise"
 msgstr "Περιστροφή σελίδας 90 μοίρες αριστερόστροφα"
 
 #: ../shell/help-overlay.ui.h:24
+msgctxt "shortcut window"
 msgid "Rotate the page 90 degrees clockwise"
 msgstr "Περιστροφή σελίδας 90 μοίρες δεξιόστροφα"
 
 #: ../shell/help-overlay.ui.h:25
+msgctxt "shortcut window"
 msgid "Zoom in"
 msgstr "Μεγέθυνση"
 
 #: ../shell/help-overlay.ui.h:26
+msgctxt "shortcut window"
 msgid "Zoom out"
 msgstr "Σμίκρυνση"
 
 #: ../shell/help-overlay.ui.h:27
+msgctxt "shortcut window"
 msgid "Touchpad gestures"
 msgstr "Xειρονομίες πινακίδας αφής"
+
+#: ../shell/help-overlay.ui.h:28
+msgctxt "shortcut window"
+msgid "Go to next page"
+msgstr "Μετάβαση στην επόμενη σελίδα"
+
+#: ../shell/help-overlay.ui.h:29
+msgctxt "shortcut window"
+msgid "Go to previous page"
+msgstr "Μετάβαση στην προηγούμενη σελίδα"
 
 #: ../evince.appdata.xml.in.h:2
 msgid "Document viewer for popular document formats"
@@ -1849,6 +1892,87 @@ msgid ""
 msgstr ""
 "Υποστηρίζει τις παρακάτω μορφές εγγράφων: PDF, PS, EPS, XPS, DjVu, TIFF, DVI "
 "(με SyncTeX), και αρχεία βιβλίων κόμικ (CBR, CBT, CBZ, CB7)."
+
+#~ msgid "Opening, closing, saving and printing"
+#~ msgstr "Άνοιγμα, κλείσιμο, αποθήκευση και εκτύπωση"
+
+#~ msgid "Open a document"
+#~ msgstr "Άνοιγμα εγγράφου"
+
+#~ msgid "Open a copy of the current document"
+#~ msgstr "Άνοιγμα αντιγράφου του τρέχοντος εγγράφου."
+
+#~ msgid "Save a copy of the current document"
+#~ msgstr "Αποθήκευση ενός αντιγράφου του τρέχοντος εγγράφου"
+
+#~ msgid "Print the current document"
+#~ msgstr "Εκτύπωση του τρέχοντος εγγράφου"
+
+#~ msgid "Close the current document window"
+#~ msgstr "Κλείσιμο του παραθύρου του τρέχοντος εγγράφου"
+
+#~ msgid "Reload the document"
+#~ msgstr "Επαναφόρτωση του εγγράφου"
+
+#~ msgid "Selecting and copying text"
+#~ msgstr "Επιλογή και αντιγραφή κειμένου"
+
+#~ msgid "Copy highlighted text"
+#~ msgstr "Αντιγραφή επισημασμένου κειμένου"
+
+#~ msgid "Select all the text in a document"
+#~ msgstr "Επιλογή όλου του κειμένου ενός εγγράφου"
+
+#~ msgid "Moving around the document"
+#~ msgstr "Μετακίνηση μέσα σε έγγραφο"
+
+#~ msgid "Move up/down a page"
+#~ msgstr "Μετακίνηση πάνω/κάτω μια σελίδα"
+
+#~ msgid "Move up/down a page several lines at a time"
+#~ msgstr "Μετακίνηση πάνω/κάτω μιας σελίδας πολλές γραμμές τη φορά"
+
+#~ msgid "Go to page number"
+#~ msgstr "Μετάβαση σε σελίδα"
+
+#~ msgid "Go to the beginning/end of a page"
+#~ msgstr "Μετάβαση στην αρχή/τέλος της σελίδας"
+
+#~ msgid "Go to the beginning of the document"
+#~ msgstr "Μετάβαση στην αρχή του εγγράφου"
+
+#~ msgid "Go to the end of the document"
+#~ msgstr "Μετάβαση στο τέλος του εγγράφου"
+
+#~ msgid "Finding text"
+#~ msgstr "Εύρεση κειμένου"
+
+#~ msgid "Show the search bar"
+#~ msgstr "Εμφάνιση της γραμμής αναζήτησης"
+
+#~ msgid "Go to the next search result"
+#~ msgstr "Μετάβαση στο επόμενο αποτέλεσμα της αναζήτησης"
+
+#~ msgid "Go to the previous search result"
+#~ msgstr "Μετάβαση στο προηγούμενο αποτέλεσμα της αναζήτησης"
+
+#~ msgid "Rotating and zooming"
+#~ msgstr "Περιστροφή και εστίαση"
+
+#~ msgid "Rotate the page 90 degrees counter-clockwise"
+#~ msgstr "Περιστροφή σελίδας 90 μοίρες αριστερόστροφα"
+
+#~ msgid "Rotate the page 90 degrees clockwise"
+#~ msgstr "Περιστροφή σελίδας 90 μοίρες δεξιόστροφα"
+
+#~ msgid "Zoom in"
+#~ msgstr "Μεγέθυνση"
+
+#~ msgid "Zoom out"
+#~ msgstr "Σμίκρυνση"
+
+#~ msgid "Touchpad gestures"
+#~ msgstr "Xειρονομίες πινακίδας αφής"
 
 #~ msgid "Index"
 #~ msgstr "Ευρετήριο"
