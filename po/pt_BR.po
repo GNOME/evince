@@ -17,22 +17,23 @@
 # Rafael Fontenelle <rffontenelle@gmail.com>, 2013, 2014, 2015.
 # Gustavo Marques <gutodisse@gmail.com>, 2015.
 # Fabrício Godoy <skarllot@gmail.com>, 2009, 2016.
+# Fábio Nogueira <fnogueira@gnome.org>, 2016.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: evince\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evince&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-12-28 05:02+0000\n"
-"PO-Revision-Date: 2016-01-05 00:44-0200\n"
-"Last-Translator: Fabrício Godoy <skarllot@gmail.com>\n"
+"POT-Creation-Date: 2016-02-11 17:03+0000\n"
+"PO-Revision-Date: 2016-02-11 18:17-0300\n"
+"Last-Translator: Fábio Nogueira <fnogueira@gnome.org>\n"
 "Language-Team: Brazilian Portuguese <gnome-pt_br-list@gnome.org>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 1.8.6\n"
+"X-Generator: Poedit 1.8.7\n"
 
 #: ../backend/comics/comics-document.c:210
 #, c-format
@@ -665,11 +666,11 @@ msgstr "Visualização do documento"
 msgid "Go to first page"
 msgstr "Vai para a primeira página"
 
-#: ../libview/ev-view.c:2025 ../shell/help-overlay.ui.h:29
+#: ../libview/ev-view.c:2025
 msgid "Go to previous page"
 msgstr "Vai para a página anterior"
 
-#: ../libview/ev-view.c:2027 ../shell/help-overlay.ui.h:28
+#: ../libview/ev-view.c:2027
 msgid "Go to next page"
 msgstr "Vai para a próxima página"
 
@@ -1020,7 +1021,7 @@ msgstr "© 1996–2014 Os autores do Evince"
 #: ../shell/ev-application.c:1032
 msgid "translator-credits"
 msgstr ""
-"Raphael Higino <In memoriam>\n"
+"Raphael Higino (In memoriam) <In memoriam>\n"
 "Licio Fernando <liciofernando@gmail.com>\n"
 "Leonardo Ferreira Fontenelle <leonardof@gnome.org>\n"
 "Washington Lins <washington-lins@uol.com.br>\n"
@@ -1029,12 +1030,13 @@ msgstr ""
 "Vladimir Melo <vmelo@gnome.org>\n"
 "Taylon Silmer <taylonsilva@gmail.com>\n"
 "Fabrício Godoy <skarllot@gmail.com>\n"
-"André Gondim <In Memoriam>\n"
+"André Gondim (In memoriam) <In Memoriam>\n"
 "Og Maciel <ogmaciel@gnome.org>\n"
 "Henrique P. Machado <hpmachado@gnome.org>\n"
 "Antonio Fernandes C. Neto <fernandesn@gnome.org>\n"
 "Rafael Ferreira <rafael.f.f1@gmail.com>\n"
-"Enrico Nicoletto <liverig@gmail.com>"
+"Enrico Nicoletto <liverig@gmail.com>\n"
+"Fábio Nogueira <fnogueira@gnome.org>"
 
 #: ../shell/ev-history-action.c:221
 msgid "Go to previous history item"
@@ -1194,7 +1196,13 @@ msgid "Print…"
 msgstr "Imprimir…"
 
 #  https://mail.gnome.org/archives/evince-list/2016-January/msg00003.html
-#: ../shell/ev-sidebar-links.c:722
+#. Translators: This is the title for the sidebar pane that
+#. * shows the Outline or Table of Contents of the document.
+#. * Use a short text, otherwise it can make Evince unusable in
+#. * your language.  The sidebar cannot be shrinked smaller than
+#. * the longest title in there.
+#.
+#: ../shell/ev-sidebar-links.c:728
 msgid "Outline"
 msgstr "Tópicos"
 
@@ -1752,112 +1760,149 @@ msgid "Remove Annotation"
 msgstr "Remover anotação"
 
 #: ../shell/help-overlay.ui.h:1
+msgctxt "shortcut window"
 msgid "Opening, closing, saving and printing"
 msgstr "Abrir, fechar, salvar e imprimir"
 
 #: ../shell/help-overlay.ui.h:2
+msgctxt "shortcut window"
 msgid "Open a document"
-msgstr "Abre um documento"
+msgstr "Abrir um documento"
 
 #: ../shell/help-overlay.ui.h:3
+msgctxt "shortcut window"
 msgid "Open a copy of the current document"
-msgstr "Abre uma cópia do documento atual"
+msgstr "Abrir uma cópia do documento atual"
 
 #: ../shell/help-overlay.ui.h:4
+msgctxt "shortcut window"
 msgid "Save a copy of the current document"
-msgstr "Salva uma cópia do documento atual"
+msgstr "Salvar uma cópia do documento atual"
 
 #: ../shell/help-overlay.ui.h:5
+msgctxt "shortcut window"
 msgid "Print the current document"
-msgstr "Imprime o documento atual"
+msgstr "Imprimir o documento atual"
 
 #: ../shell/help-overlay.ui.h:6
+msgctxt "shortcut window"
 msgid "Close the current document window"
-msgstr "Fecha a janela do documento atual"
+msgstr "Fechar a janela do documento atual"
 
 #: ../shell/help-overlay.ui.h:7
+msgctxt "shortcut window"
 msgid "Reload the document"
-msgstr "Recarrega o documento"
+msgstr "Recarregar o documento"
 
 #: ../shell/help-overlay.ui.h:8
+msgctxt "shortcut window"
 msgid "Selecting and copying text"
 msgstr "Seleção e cópia de texto"
 
 #: ../shell/help-overlay.ui.h:9
+msgctxt "shortcut window"
 msgid "Copy highlighted text"
-msgstr "Copia o texto selecionado"
+msgstr "Copiar o texto selecionado"
 
 #: ../shell/help-overlay.ui.h:10
+msgctxt "shortcut window"
 msgid "Select all the text in a document"
-msgstr "Seleciona todo o texto em um documento"
+msgstr "Selecionar todo o texto em um documento"
 
 #: ../shell/help-overlay.ui.h:11
+msgctxt "shortcut window"
 msgid "Moving around the document"
 msgstr "Movimentação no documento"
 
 #: ../shell/help-overlay.ui.h:12
+msgctxt "shortcut window"
 msgid "Move up/down a page"
-msgstr "Move a página para cima/baixo"
+msgstr "Mover a página para cima/baixo"
 
 #: ../shell/help-overlay.ui.h:13
+msgctxt "shortcut window"
 msgid "Move up/down a page several lines at a time"
-msgstr "Move a página para cima/baixo, várias linhas de uma vez"
+msgstr "Mover a página para cima/baixo, várias linhas de uma vez"
 
 #: ../shell/help-overlay.ui.h:14
+msgctxt "shortcut window"
 msgid "Go to page number"
-msgstr "Vai para um número de página"
+msgstr "Ir para um número de página"
 
 #: ../shell/help-overlay.ui.h:15
+msgctxt "shortcut window"
 msgid "Go to the beginning/end of a page"
-msgstr "Vai para o início/fim da página"
+msgstr "Ir para o início/fim da página"
 
 #: ../shell/help-overlay.ui.h:16
+msgctxt "shortcut window"
 msgid "Go to the beginning of the document"
-msgstr "Vai para o início do documento"
+msgstr "Ir para o início do documento"
 
 #: ../shell/help-overlay.ui.h:17
+msgctxt "shortcut window"
 msgid "Go to the end of the document"
-msgstr "Vai para o fim do documento"
+msgstr "Ir para o fim do documento"
 
 #: ../shell/help-overlay.ui.h:18
+msgctxt "shortcut window"
 msgid "Finding text"
 msgstr "Busca de texto"
 
 #: ../shell/help-overlay.ui.h:19
+msgctxt "shortcut window"
 msgid "Show the search bar"
-msgstr "Mostra a barra de pesquisa"
+msgstr "Mostrar a barra de pesquisa"
 
 #: ../shell/help-overlay.ui.h:20
+msgctxt "shortcut window"
 msgid "Go to the next search result"
-msgstr "Vai para o próximo resultado da pesquisa"
+msgstr "Ir para o próximo resultado da pesquisa"
 
 #: ../shell/help-overlay.ui.h:21
+msgctxt "shortcut window"
 msgid "Go to the previous search result"
-msgstr "Vai para o resultado anterior da pesquisa"
+msgstr "Ir para o resultado anterior da pesquisa"
 
 #: ../shell/help-overlay.ui.h:22
+msgctxt "shortcut window"
 msgid "Rotating and zooming"
 msgstr "Rotação e ampliação"
 
 #: ../shell/help-overlay.ui.h:23
+msgctxt "shortcut window"
 msgid "Rotate the page 90 degrees counter-clockwise"
-msgstr "Gira a página em 90 graus no sentido anti-horário"
+msgstr "Girar a página em 90 graus no sentido anti-horário"
 
 #: ../shell/help-overlay.ui.h:24
+msgctxt "shortcut window"
 msgid "Rotate the page 90 degrees clockwise"
-msgstr "Gira a página em 90 graus no sentido horário"
+msgstr "Girar a página em 90 graus no sentido horário"
 
 #: ../shell/help-overlay.ui.h:25
+msgctxt "shortcut window"
 msgid "Zoom in"
-msgstr "Amplia"
+msgstr "Ampliar"
 
 #: ../shell/help-overlay.ui.h:26
+msgctxt "shortcut window"
 msgid "Zoom out"
-msgstr "Reduz"
+msgstr "Reduzir"
 
 #: ../shell/help-overlay.ui.h:27
+msgctxt "shortcut window"
 msgid "Touchpad gestures"
 msgstr "Gestos do touchpad"
+
+#: ../shell/help-overlay.ui.h:28
+msgctxt "shortcut window"
+msgid "Go to next page"
+msgstr "Ir para a próxima página"
+
+#: ../shell/help-overlay.ui.h:29
+msgctxt "shortcut window"
+msgid "Go to previous page"
+msgstr "Ir para a página anterior"
 
 #: ../evince.appdata.xml.in.h:2
 msgid "Document viewer for popular document formats"
