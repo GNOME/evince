@@ -756,7 +756,7 @@ AC_SUBST(DVI_MIME_TYPES)
 AC_SUBST(APPDATA_DVI_MIME_TYPES)
 AM_SUBST_NOTMAKE(APPDATA_DVI_MIME_TYPES)
 if test "x$enable_djvu" = "xyes"; then
-        DJVU_MIME_TYPES="image/vnd.djvu;application/x-ext-djv;application/x-ext-djvu"
+        DJVU_MIME_TYPES="image/vnd.djvu;image/vnd.djvu+multipage;application/x-ext-djv;application/x-ext-djvu"
         APPDATA_DJVU_MIME_TYPES=$(echo "<mimetype>$DJVU_MIME_TYPES</mimetype>" | sed -e 's/;/<\/mimetype>\n    <mimetype>/g')
         if test -z "$EVINCE_MIME_TYPES"; then
            EVINCE_MIME_TYPES="${DJVU_MIME_TYPES}"

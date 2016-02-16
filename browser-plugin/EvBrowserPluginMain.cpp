@@ -252,6 +252,7 @@ static const struct {
         { "application/x-cbt", "cbt" },
         { "application/x-ext-cbt", "cbt" },
         { "image/vnd.djvu", "djvu,djv" },
+        { "image/vnd.djvu+multipage", "djvu,djv" },
         { "application/x-ext-djv", "djv" },
         { "application/x-ext-djvu", "djvu" },
         { "application/oxps", "xps,oxps" },
