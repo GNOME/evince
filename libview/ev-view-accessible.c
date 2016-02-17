@@ -577,8 +577,16 @@ ev_view_accessible_set_page_range (EvViewAccessible *accessible,
 
 	g_return_if_fail (EV_IS_VIEW_ACCESSIBLE (accessible));
 
+        /* When a document is reloaded, the accessible->priv->children is
+         * cleaned up and updated with the new document information.
+         * In specific cases, where the document is smaller, priv->end_page
+         * will be higher than the current number of pages. Therefore, we
+         * check the number of pages to avoid access to non-existent pages
+         * in priv->children).
+         * See https://bugzilla.gnome.org/show_bug.cgi?id=735744
+         */
 	for (i = accessible->priv->start_page; i <= accessible->priv->end_page; i++) {
-		if (i < start || i > end) {
+		if ((i < start || i > end) && i < ev_view_accessible_get_n_pages (accessible)) {
 			page = g_ptr_array_index (accessible->priv->children, i);
 			atk_object_notify_state_change (page, ATK_STATE_SHOWING, FALSE);
 		}
