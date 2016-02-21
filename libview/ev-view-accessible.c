@@ -395,8 +395,8 @@ initialize_children (EvViewAccessible *self)
          * invalid access to self->priv->children
          * See https://bugzilla.gnome.org/show_bug.cgi?id=735744
          */
-	if (self->priv->end_page > n_pages)
-		self->priv->end_page = n_pages;
+	if (self->priv->end_page >= n_pages)
+		self->priv->end_page = n_pages - 1;
 }
 
 static void
