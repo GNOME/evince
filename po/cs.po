@@ -13,15 +13,15 @@
 # Jan Drábek <repli2dev@gmail.com>, 2009.
 # Lucas Lommer <llommer@svn.gnome.org>, 2010, 2011, 2012, 2013.
 # Adam Matoušek <adydas95@gmail.com>, 2012
-# Marek Černocký <marek@manet.cz>, 2009, 2010, 2012, 2013, 2014, 2015.
+# Marek Černocký <marek@manet.cz>, 2009, 2010, 2012, 2013, 2014, 2015, 2016.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: evince master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evince&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-12-24 05:01+0000\n"
-"PO-Revision-Date: 2015-12-24 15:20+0100\n"
+"POT-Creation-Date: 2016-02-25 05:02+0000\n"
+"PO-Revision-Date: 2016-02-25 11:08+0100\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: Czech <gnome-cs-list@gnome.org>\n"
 "Language: cs\n"
@@ -655,11 +655,11 @@ msgstr "Pohled na dokument"
 msgid "Go to first page"
 msgstr "Přejít na první stránku"
 
-#: ../libview/ev-view.c:2025 ../shell/help-overlay.ui.h:29
+#: ../libview/ev-view.c:2025
 msgid "Go to previous page"
 msgstr "Přejít na předchozí stránku"
 
-#: ../libview/ev-view.c:2027 ../shell/help-overlay.ui.h:28
+#: ../libview/ev-view.c:2027
 msgid "Go to next page"
 msgstr "Přejít na následující stránku"
 
@@ -1160,8 +1160,14 @@ msgstr "Vrstvy"
 msgid "Print…"
 msgstr "Tisk…"
 
-#: ../shell/ev-sidebar-links.c:722
 # https://bugzilla.gnome.org/show_bug.cgi?id=732547
+#. Translators: This is the title for the sidebar pane that
+#. * shows the Outline or Table of Contents of the document.
+#. * Use a short text, otherwise it can make Evince unusable in
+#. * your language.  The sidebar cannot be shrinked smaller than
+#. * the longest title in there.
+#.
+#: ../shell/ev-sidebar-links.c:728
 msgid "Outline"
 msgstr "Obsah"
 
@@ -1709,128 +1715,149 @@ msgid "Remove Annotation"
 msgstr "Odstranit poznámku"
 
 #: ../shell/help-overlay.ui.h:1
+msgctxt "shortcut window"
 msgid "Opening, closing, saving and printing"
 msgstr "Otevírání, zavírání, ukládání a tisk"
 
 #: ../shell/help-overlay.ui.h:2
-#| msgid "Open Document"
+msgctxt "shortcut window"
 msgid "Open a document"
 msgstr "Otevřít dokument"
 
 #: ../shell/help-overlay.ui.h:3
-#| msgid "Could not send current document"
+msgctxt "shortcut window"
 msgid "Open a copy of the current document"
 msgstr "Otevřít kopii aktuálního dokumentu"
 
 #: ../shell/help-overlay.ui.h:4
-#| msgid "Could not send current document"
+msgctxt "shortcut window"
 msgid "Save a copy of the current document"
 msgstr "Uložit kopii aktuálního dokumentu"
 
 #: ../shell/help-overlay.ui.h:5
-#| msgid "Print this document"
+msgctxt "shortcut window"
 msgid "Print the current document"
 msgstr "Vytisknout aktuální dokument"
 
 #: ../shell/help-overlay.ui.h:6
-#| msgid "Make the current document fill the window"
+msgctxt "shortcut window"
 msgid "Close the current document window"
 msgstr "Zavřít okno s aktuálním dokumentem"
 
 #: ../shell/help-overlay.ui.h:7
-#| msgid "Enlarge the document"
+msgctxt "shortcut window"
 msgid "Reload the document"
 msgstr "Znovu načíst dokument"
 
 #: ../shell/help-overlay.ui.h:8
+msgctxt "shortcut window"
 msgid "Selecting and copying text"
 msgstr "Výběr a kopírování textu"
 
 #: ../shell/help-overlay.ui.h:9
+msgctxt "shortcut window"
 msgid "Copy highlighted text"
-msgstr "Kopírovat zvýrazněný text"
+msgstr "Zkopírovat zvýrazněný text"
 
 #: ../shell/help-overlay.ui.h:10
-#| msgid "Show the entire document"
+msgctxt "shortcut window"
 msgid "Select all the text in a document"
 msgstr "Vybrat veškerý text v dokumentu"
 
 #: ../shell/help-overlay.ui.h:11
-#| msgid "Enlarge the document"
+msgctxt "shortcut window"
 msgid "Moving around the document"
 msgstr "Pohyb v dokumentu"
 
 #: ../shell/help-overlay.ui.h:12
+msgctxt "shortcut window"
 msgid "Move up/down a page"
 msgstr "Posunout stránku nahoru/dolů"
 
 #: ../shell/help-overlay.ui.h:13
+msgctxt "shortcut window"
 msgid "Move up/down a page several lines at a time"
 msgstr "Posunout stránku nahoru/dolů o několik řádků naráz"
 
 #: ../shell/help-overlay.ui.h:14
-#| msgid "Go to page"
+msgctxt "shortcut window"
 msgid "Go to page number"
 msgstr "Přejít na stránku s určeným číslem"
 
 #: ../shell/help-overlay.ui.h:15
-#| msgid "Go to the next page"
+msgctxt "shortcut window"
 msgid "Go to the beginning/end of a page"
 msgstr "Přejít na začátek/konec stránky"
 
 #: ../shell/help-overlay.ui.h:16
-#| msgid "Show the entire document"
+msgctxt "shortcut window"
 msgid "Go to the beginning of the document"
 msgstr "Přejít na začátek dokumentu"
 
 #: ../shell/help-overlay.ui.h:17
-#| msgid "Show the entire document"
+msgctxt "shortcut window"
 msgid "Go to the end of the document"
 msgstr "Přejít na konec dokumentu"
 
 #: ../shell/help-overlay.ui.h:18
+msgctxt "shortcut window"
 msgid "Finding text"
 msgstr "Hledání textu"
 
 #: ../shell/help-overlay.ui.h:19
+msgctxt "shortcut window"
 msgid "Show the search bar"
 msgstr "Zobrazit vyhledávací lištu"
 
 #: ../shell/help-overlay.ui.h:20
-#| msgid "Go to the next page"
+msgctxt "shortcut window"
 msgid "Go to the next search result"
 msgstr "Přejít na následující výsledek hledání"
 
 #: ../shell/help-overlay.ui.h:21
-#| msgid "Go to the previous page"
+msgctxt "shortcut window"
 msgid "Go to the previous search result"
 msgstr "Přejít na předchozí výsledek hledání"
 
 #: ../shell/help-overlay.ui.h:22
+msgctxt "shortcut window"
 msgid "Rotating and zooming"
 msgstr "Otáčení a přibližování"
 
 #: ../shell/help-overlay.ui.h:23
+msgctxt "shortcut window"
 msgid "Rotate the page 90 degrees counter-clockwise"
 msgstr "Otočit stránku o 90 stupňů po směru hodinových ručiček"
 
 #: ../shell/help-overlay.ui.h:24
+msgctxt "shortcut window"
 msgid "Rotate the page 90 degrees clockwise"
 msgstr "Otočit stránku o 90 stupňů proti směru hodinových ručiček"
 
 #: ../shell/help-overlay.ui.h:25
-#| msgid "Zoom _In"
+msgctxt "shortcut window"
 msgid "Zoom in"
 msgstr "Přiblížit"
 
 #: ../shell/help-overlay.ui.h:26
-#| msgid "Zoom _Out"
+msgctxt "shortcut window"
 msgid "Zoom out"
 msgstr "Oddálit"
 
 #: ../shell/help-overlay.ui.h:27
+msgctxt "shortcut window"
 msgid "Touchpad gestures"
 msgstr "Dotyková gesta"
+
+#: ../shell/help-overlay.ui.h:28
+msgctxt "shortcut window"
+msgid "Go to next page"
+msgstr "Přejít na následující stránku"
+
+#: ../shell/help-overlay.ui.h:29
+msgctxt "shortcut window"
+msgid "Go to previous page"
+msgstr "Přejít na předchozí stránku"
 
 #: ../evince.appdata.xml.in.h:2
 msgid "Document viewer for popular document formats"
