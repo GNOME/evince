@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: lt\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evince&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2016-01-08 20:07+0000\n"
-"PO-Revision-Date: 2016-01-17 22:07+0200\n"
+"POT-Creation-Date: 2016-02-27 08:35+0000\n"
+"PO-Revision-Date: 2016-02-10 01:47+0200\n"
 "Last-Translator: Aurimas Černius <aurisc4@gmail.com>\n"
 "Language-Team: Lietuvių <gnome-lt@lists.akl.lt>\n"
 "Language: lt\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n"
 "%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Gtranslator 2.91.7\n"
+"X-Generator: Poedit 1.8.6\n"
 "X-Project-Style: gnome\n"
 
 #: ../backend/comics/comics-document.c:210
@@ -82,11 +82,11 @@ msgstr "Komiksų knygos"
 msgid "Adds support for reading comic books"
 msgstr "Prideda komiksų knygelių palaikymą"
 
-#: ../backend/djvu/djvu-document.c:175
+#: ../backend/djvu/djvu-document.c:179
 msgid "DjVu document has incorrect format"
 msgstr "DjVu dokumentas yra neteisingo formato"
 
-#: ../backend/djvu/djvu-document.c:262
+#: ../backend/djvu/djvu-document.c:266
 msgid ""
 "The document is composed of several files. One or more of these files cannot "
 "be accessed."
@@ -499,13 +499,11 @@ msgstr "Ieškoti kito ieškomo užrašo pasikartojimo"
 
 #: ../libview/ev-jobs.c:649
 #, c-format
-#| msgid "Failed to print page %d: %s"
 msgid "Failed to render page %d"
 msgstr "Nepavyko pavaizduoti puslapio %d"
 
 #: ../libview/ev-jobs.c:896
 #, c-format
-#| msgid "Failed to create a temporary file: %s"
 msgid "Failed to create thumbnail for page %d"
 msgstr "Nepavyko sukurti miniatiūros puslapiui %d"
 
@@ -651,11 +649,11 @@ msgstr "Dokumentų rodinys"
 msgid "Go to first page"
 msgstr "Eiti į pirmą puslapį"
 
-#: ../libview/ev-view.c:2025 ../shell/help-overlay.ui.h:29
+#: ../libview/ev-view.c:2025
 msgid "Go to previous page"
 msgstr "Eiti į ankstesnį puslapį"
 
-#: ../libview/ev-view.c:2027 ../shell/help-overlay.ui.h:28
+#: ../libview/ev-view.c:2027
 msgid "Go to next page"
 msgstr "Eiti į kitą puslapį"
 
@@ -1171,7 +1169,6 @@ msgid "Open an existing document"
 msgstr "Atverti esamą dokumentą"
 
 #: ../shell/ev-toolbar.c:210
-#| msgid "Select page size using document page size"
 msgid "Select page or search in the index"
 msgstr "Pasirinkti puslapį arba ieškokite rodyklėje"
 
@@ -1710,120 +1707,149 @@ msgid "Remove Annotation"
 msgstr "Pašalinti anotaciją"
 
 #: ../shell/help-overlay.ui.h:1
+msgctxt "shortcut window"
 msgid "Opening, closing, saving and printing"
 msgstr "Atvėrimas, užvėrimas, įrašymas bei spausdinimas"
 
 #: ../shell/help-overlay.ui.h:2
+msgctxt "shortcut window"
 msgid "Open a document"
 msgstr "Atverti dokumentą"
 
 #: ../shell/help-overlay.ui.h:3
+msgctxt "shortcut window"
 msgid "Open a copy of the current document"
 msgstr "Atverti esamo dokumento kopiją"
 
 #: ../shell/help-overlay.ui.h:4
+msgctxt "shortcut window"
 msgid "Save a copy of the current document"
 msgstr "Įrašyti esamo dokumento kopiją"
 
 #: ../shell/help-overlay.ui.h:5
+msgctxt "shortcut window"
 msgid "Print the current document"
 msgstr "Spausdinti esamą dokumentą"
 
 #: ../shell/help-overlay.ui.h:6
+msgctxt "shortcut window"
 msgid "Close the current document window"
 msgstr "Užverti esamo dokumento langą"
 
 #: ../shell/help-overlay.ui.h:7
+msgctxt "shortcut window"
 msgid "Reload the document"
-msgstr "iš naujo įkelti dokumentą"
+msgstr "Iš naujo įkelti dokumentą"
 
 #: ../shell/help-overlay.ui.h:8
+msgctxt "shortcut window"
 msgid "Selecting and copying text"
 msgstr "Teksto žymėjimas ir kopijavimas"
 
 #: ../shell/help-overlay.ui.h:9
+msgctxt "shortcut window"
 msgid "Copy highlighted text"
 msgstr "Kopijuoti paryškintą tekstą"
 
 #: ../shell/help-overlay.ui.h:10
-#| msgid "Show the entire document"
+msgctxt "shortcut window"
 msgid "Select all the text in a document"
 msgstr "Žymėti visą tekstą dokumente"
 
 #: ../shell/help-overlay.ui.h:11
-#| msgid "Enlarge the document"
+msgctxt "shortcut window"
 msgid "Moving around the document"
 msgstr "Judėjimas dokumente"
 
 #: ../shell/help-overlay.ui.h:12
+msgctxt "shortcut window"
 msgid "Move up/down a page"
 msgstr "Judėti puslapiais"
 
 #: ../shell/help-overlay.ui.h:13
+msgctxt "shortcut window"
 msgid "Move up/down a page several lines at a time"
 msgstr "Judėti per kelias eilutes"
 
 #: ../shell/help-overlay.ui.h:14
-#| msgid "Go to page"
+msgctxt "shortcut window"
 msgid "Go to page number"
 msgstr "Eiti į puslapį"
 
 #: ../shell/help-overlay.ui.h:15
-#| msgid "Go to the next page"
+msgctxt "shortcut window"
 msgid "Go to the beginning/end of a page"
 msgstr "Eiti į puslapio pradžią/pabaigą"
 
 #: ../shell/help-overlay.ui.h:16
-#| msgid "Show the entire document"
+msgctxt "shortcut window"
 msgid "Go to the beginning of the document"
 msgstr "Eiti į dokumento pradžią"
 
 #: ../shell/help-overlay.ui.h:17
-#| msgid "Show the entire document"
+msgctxt "shortcut window"
 msgid "Go to the end of the document"
 msgstr "Eiti į dokumento pabaigą"
 
 #: ../shell/help-overlay.ui.h:18
+msgctxt "shortcut window"
 msgid "Finding text"
 msgstr "Teksto paieška"
 
 #: ../shell/help-overlay.ui.h:19
+msgctxt "shortcut window"
 msgid "Show the search bar"
 msgstr "Rodyti paieškos juostą"
 
 #: ../shell/help-overlay.ui.h:20
-#| msgid "Go to the next page"
+msgctxt "shortcut window"
 msgid "Go to the next search result"
 msgstr "Eiti į kitą paieškos rezultatą"
 
 #: ../shell/help-overlay.ui.h:21
-#| msgid "Go to the previous page"
+msgctxt "shortcut window"
 msgid "Go to the previous search result"
 msgstr "Eiti į ankstesnįjį paieškos rezultatą"
 
 #: ../shell/help-overlay.ui.h:22
+msgctxt "shortcut window"
 msgid "Rotating and zooming"
 msgstr "Posūkis ir mastelis"
 
 #: ../shell/help-overlay.ui.h:23
+msgctxt "shortcut window"
 msgid "Rotate the page 90 degrees counter-clockwise"
 msgstr "Pasukti puslapį 90 laipsnių prieš laikrodžio rodyklę"
 
 #: ../shell/help-overlay.ui.h:24
+msgctxt "shortcut window"
 msgid "Rotate the page 90 degrees clockwise"
 msgstr "Pasukti puslapį 90 laipsnių pagal laikrodžio rodyklę"
 
 #: ../shell/help-overlay.ui.h:25
+msgctxt "shortcut window"
 msgid "Zoom in"
 msgstr "Didinti"
 
 #: ../shell/help-overlay.ui.h:26
+msgctxt "shortcut window"
 msgid "Zoom out"
 msgstr "Mažinti"
 
 #: ../shell/help-overlay.ui.h:27
+msgctxt "shortcut window"
 msgid "Touchpad gestures"
 msgstr "Jutiklinio kilimėlio gestai"
+
+#: ../shell/help-overlay.ui.h:28
+msgctxt "shortcut window"
+msgid "Go to next page"
+msgstr "Eiti į kitą puslapį"
+
+#: ../shell/help-overlay.ui.h:29
+msgctxt "shortcut window"
+msgid "Go to previous page"
+msgstr "Eiti į ankstesnį puslapį"
 
 #: ../evince.appdata.xml.in.h:2
 msgid "Document viewer for popular document formats"
