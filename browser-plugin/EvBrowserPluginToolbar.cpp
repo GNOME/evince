@@ -456,11 +456,23 @@ static void evBrowserPluginToolbarConstructed(GObject *object)
         gtk_widget_show(toolItem);
 }
 
+static void evBrowserPluginToolbarDispose(GObject *object)
+{
+        EvBrowserPluginToolbar *toolbar = EV_BROWSER_PLUGIN_TOOLBAR(object);
+        if (toolbar->priv->searchPopover) {
+                gtk_widget_destroy(toolbar->priv->searchPopover);
+                toolbar->priv->searchPopover = nullptr;
+        }
+
+        G_OBJECT_CLASS(ev_browser_plugin_toolbar_parent_class)->dispose(object);
+}
+
 static void ev_browser_plugin_toolbar_class_init(EvBrowserPluginToolbarClass *klass)
 {
         GObjectClass *gObjectClass = G_OBJECT_CLASS(klass);
         gObjectClass->set_property = evBrowserPluginToolbarSetProperty;
         gObjectClass->constructed = evBrowserPluginToolbarConstructed;
+        gObjectClass->dispose = evBrowserPluginToolbarDispose;
 
         g_object_class_install_property(gObjectClass,
                                          PROP_PLUGIN,
