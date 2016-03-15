@@ -8,16 +8,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-02-07 23:04+0100\n"
-"PO-Revision-Date: 2016-01-28 17:31+0100\n"
-"Last-Translator: Carles Ferrando Garcia <carles.ferrando@gmail.com>\n"
+"POT-Creation-Date: 2016-03-15 07:58+0100\n"
+"PO-Revision-Date: 2016-03-14 17:19+0100\n"
+"Last-Translator: David Medina <rbndavid@gmail.com>\n"
 "Language-Team: Catalan <tradgnome@softcatala.org>\n"
 "Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Poedit 1.6.10\n"
+"X-Generator: Poedit 1.6.11\n"
 
 #: ../backend/comics/comics-document.c:210
 #, c-format
@@ -79,11 +79,11 @@ msgstr "Còmics"
 msgid "Adds support for reading comic books"
 msgstr "Permet la lectura de llibres de còmic"
 
-#: ../backend/djvu/djvu-document.c:175
+#: ../backend/djvu/djvu-document.c:179
 msgid "DjVu document has incorrect format"
 msgstr "El document DjVu té un format incorrecte"
 
-#: ../backend/djvu/djvu-document.c:262
+#: ../backend/djvu/djvu-document.c:266
 msgid ""
 "The document is composed of several files. One or more of these files cannot "
 "be accessed."
@@ -165,14 +165,14 @@ msgid ""
 "14 fonts. If the substitute fonts selected by fontconfig are not the same as "
 "the fonts used to create the PDF, the rendering may not be correct."
 msgstr ""
-"Aquest document conté tipus de lletra no incrustades que no formen part dels "
-"14 tipus de lletra estàndard de PDF. La renderització pot ser incorrecte si "
+"Aquest document conté tipus de lletra no encastades que no formen part dels "
+"14 tipus de lletra estàndard de PDF. La renderització pot ser incorrecta si "
 "els tipus de lletra que seleccioni la fontconfig no són iguals que els tipus "
-"de lletra amb els que es va crear el PDF."
+"de lletra amb què es va crear el PDF."
 
 #: ../backend/pdf/ev-poppler.cc:1135
 msgid "All fonts are either standard or embedded."
-msgstr "Tots els tipus de lletra són, o bé estàndards, o bé incrustats."
+msgstr "Tots els tipus de lletra són o bé estàndards o bé encastats."
 
 #: ../backend/pdf/ev-poppler.cc:1167
 msgid "No name"
@@ -195,15 +195,15 @@ msgstr "Cap"
 
 #: ../backend/pdf/ev-poppler.cc:1184
 msgid "Embedded subset"
-msgstr "Subconjunt incrustat"
+msgstr "Subconjunt encastat"
 
 #: ../backend/pdf/ev-poppler.cc:1186
 msgid "Embedded"
-msgstr "Incrustat"
+msgstr "Encastat"
 
 #: ../backend/pdf/ev-poppler.cc:1188
 msgid "Not embedded"
-msgstr "No incrustat"
+msgstr "No encastat"
 
 #. Translators: string starting with a space
 #. * because it is directly appended to the font
@@ -230,7 +230,7 @@ msgstr "Codificació"
 
 #: ../backend/pdf/ev-poppler.cc:1210
 msgid "Substituting with"
-msgstr "Substituït amb"
+msgstr "Se substitueix per"
 
 #: ../backend/pdf/evince-pdfdocument.metainfo.xml.in.in.h:1
 #: ../backend/pdf/pdfdocument.evince-backend.in.in.h:1
@@ -377,7 +377,7 @@ msgstr "Torna a carregar automàticament el document"
 
 #: ../data/org.gnome.Evince.gschema.xml.in.h:4
 msgid "The document is automatically reloaded on file change."
-msgstr "Es torna a carregar el document si es detecten canvis en el fitxer."
+msgstr "Es torna a carregar el document si es detecten canvis al fitxer."
 
 #: ../data/org.gnome.Evince.gschema.xml.in.h:5
 msgid "The URI of the directory last used to open or save a document"
@@ -476,7 +476,7 @@ msgstr "Pàgina %s"
 
 #: ../libmisc/ev-search-box.c:110
 msgid "Not found, click to change search options"
-msgstr "No trobades, prem per canviar les opcions de cerca."
+msgstr "No trobades, cliqueu per canviar les opcions de cerca."
 
 #: ../libmisc/ev-search-box.c:180 ../libmisc/ev-search-box.c:236
 msgid "Search options"
@@ -551,7 +551,7 @@ msgstr "Avís"
 
 #: ../libview/ev-print-operation.c:1280
 msgid "Your print range selection does not include any pages"
-msgstr "No hi ha cap pàgina en el rang d'impressió"
+msgstr "No hi ha cap pàgina a l'interval d'impressió"
 
 #. translators: Title of the print dialog
 #. translators: Print document currently shown in the Print Preview window
@@ -605,7 +605,7 @@ msgid ""
 "document page. Document pages will be centered within the printer page."
 msgstr ""
 "Gira l'orientació de la pàgina d'impressió de cada pàgina perquè coincideixi "
-"amb cada pàgina del document. Es centraran les pàgines respecte la pàgina "
+"amb cada pàgina del document. Es centraran les pàgines respecte de la pàgina "
 "d'impressió."
 
 #: ../libview/ev-print-operation.c:1990
@@ -1513,12 +1513,12 @@ msgstr "DESTINACIÓ"
 
 #: ../shell/main.c:74
 msgid "Run evince in fullscreen mode"
-msgstr "Executa l'Evince en mode pantalla completa"
+msgstr "Executa l'Evince en mode de pantalla completa"
 
 # FIXME
 #: ../shell/main.c:75
 msgid "Run evince in presentation mode"
-msgstr "Executa l'Evince en mode presentació"
+msgstr "Executa l'Evince en mode de presentació"
 
 #: ../shell/main.c:76
 msgid "Run evince as a previewer"
@@ -1526,7 +1526,7 @@ msgstr "Executa l'Evince com a previsualitzador"
 
 #: ../shell/main.c:77
 msgid "The word or phrase to find in the document"
-msgstr "La paraula o frase que es vol cercar en el document"
+msgstr "La paraula o frase que es vol cercar al document"
 
 #: ../shell/main.c:77
 msgid "STRING"
@@ -1705,175 +1705,146 @@ msgid "Remove Annotation"
 msgstr "Suprimeix l'anotació"
 
 #: ../shell/help-overlay.ui.h:1
-#, fuzzy
 msgctxt "shortcut window"
 msgid "Opening, closing, saving and printing"
 msgstr "S'està obrint, tancant, desant i imprimint"
 
 #: ../shell/help-overlay.ui.h:2
-#, fuzzy
 msgctxt "shortcut window"
 msgid "Open a document"
 msgstr "Obre un document"
 
 #: ../shell/help-overlay.ui.h:3
-#, fuzzy
 msgctxt "shortcut window"
 msgid "Open a copy of the current document"
-msgstr "Obre una copia del document actual"
+msgstr "Obre una còpia del document actual"
 
 #: ../shell/help-overlay.ui.h:4
-#, fuzzy
 msgctxt "shortcut window"
 msgid "Save a copy of the current document"
-msgstr "Desa una copia del document actual"
+msgstr "Desa una còpia del document actual"
 
 #: ../shell/help-overlay.ui.h:5
-#, fuzzy
 msgctxt "shortcut window"
 msgid "Print the current document"
 msgstr "Imprimeix el document actual"
 
 #: ../shell/help-overlay.ui.h:6
-#, fuzzy
 msgctxt "shortcut window"
 msgid "Close the current document window"
-msgstr "Tanca la finestra actual del document"
+msgstr "Tanca la finestra del document actual"
 
 #: ../shell/help-overlay.ui.h:7
-#, fuzzy
 msgctxt "shortcut window"
 msgid "Reload the document"
 msgstr "Torna a carregar el document"
 
 #: ../shell/help-overlay.ui.h:8
-#, fuzzy
 msgctxt "shortcut window"
 msgid "Selecting and copying text"
 msgstr "S'està seleccionant i copiant text"
 
 #: ../shell/help-overlay.ui.h:9
-#, fuzzy
 msgctxt "shortcut window"
 msgid "Copy highlighted text"
-msgstr "Copia el text ressaltat"
+msgstr "Copia el text realçat"
 
 #: ../shell/help-overlay.ui.h:10
-#, fuzzy
 msgctxt "shortcut window"
 msgid "Select all the text in a document"
-msgstr "Selecciona tot el text al document"
+msgstr "Selecciona tot el text d'un document"
 
 #: ../shell/help-overlay.ui.h:11
-#, fuzzy
 msgctxt "shortcut window"
 msgid "Moving around the document"
 msgstr "Moure's pel document"
 
 #: ../shell/help-overlay.ui.h:12
-#, fuzzy
 msgctxt "shortcut window"
 msgid "Move up/down a page"
-msgstr "Mou amunt/avall la pàgina"
+msgstr "Mou una pàgina amunt/avall"
 
 #: ../shell/help-overlay.ui.h:13
-#, fuzzy
 msgctxt "shortcut window"
 msgid "Move up/down a page several lines at a time"
-msgstr "Mou amunt/avall la pàgina diverses línies de cop"
+msgstr "Mou la pàgina amunt/avall diverses línies de cop"
 
 #: ../shell/help-overlay.ui.h:14
-#, fuzzy
 msgctxt "shortcut window"
 msgid "Go to page number"
-msgstr "Vés a la pàgina nombre"
+msgstr "Vés a la pàgina número..."
 
 #: ../shell/help-overlay.ui.h:15
-#, fuzzy
 msgctxt "shortcut window"
 msgid "Go to the beginning/end of a page"
-msgstr "Vés al començament/final de pàgina "
+msgstr "Vés al començament/final d'una pàgina "
 
 #: ../shell/help-overlay.ui.h:16
-#, fuzzy
 msgctxt "shortcut window"
 msgid "Go to the beginning of the document"
 msgstr "Vés al començament del document"
 
 #: ../shell/help-overlay.ui.h:17
-#, fuzzy
 msgctxt "shortcut window"
 msgid "Go to the end of the document"
 msgstr "Vés al final del document "
 
 #: ../shell/help-overlay.ui.h:18
-#, fuzzy
 msgctxt "shortcut window"
 msgid "Finding text"
 msgstr "Cerca de text"
 
 #: ../shell/help-overlay.ui.h:19
-#, fuzzy
 msgctxt "shortcut window"
 msgid "Show the search bar"
 msgstr "Mostra la barra de cerca"
 
 #: ../shell/help-overlay.ui.h:20
-#, fuzzy
 msgctxt "shortcut window"
 msgid "Go to the next search result"
 msgstr "Vés al resultat de cerca següent"
 
 #: ../shell/help-overlay.ui.h:21
-#, fuzzy
 msgctxt "shortcut window"
 msgid "Go to the previous search result"
 msgstr "Vés al resultat de cerca anterior"
 
 #: ../shell/help-overlay.ui.h:22
-#, fuzzy
 msgctxt "shortcut window"
 msgid "Rotating and zooming"
-msgstr "Rotació i ampliació "
+msgstr "Rotació i ampliació"
 
 #: ../shell/help-overlay.ui.h:23
-#, fuzzy
 msgctxt "shortcut window"
 msgid "Rotate the page 90 degrees counter-clockwise"
-msgstr "Rota la pàgina 90 graus en sentit antihorari"
+msgstr "Gira la pàgina 90 graus a l'esquerra"
 
 #: ../shell/help-overlay.ui.h:24
-#, fuzzy
 msgctxt "shortcut window"
 msgid "Rotate the page 90 degrees clockwise"
-msgstr "Rota la pàgina 90 graus en sentit horari"
+msgstr "Gira la pàgina 90 graus a la dreta"
 
 #: ../shell/help-overlay.ui.h:25
-#, fuzzy
 msgctxt "shortcut window"
 msgid "Zoom in"
 msgstr "Apropa"
 
 #: ../shell/help-overlay.ui.h:26
-#, fuzzy
 msgctxt "shortcut window"
 msgid "Zoom out"
 msgstr "Allunya"
 
 #: ../shell/help-overlay.ui.h:27
-#, fuzzy
 msgctxt "shortcut window"
 msgid "Touchpad gestures"
 msgstr "Gestos del ratolí tàctil"
 
 #: ../shell/help-overlay.ui.h:28
-#, fuzzy
 msgctxt "shortcut window"
 msgid "Go to next page"
 msgstr "Vés a la pàgina següent"
 
 #: ../shell/help-overlay.ui.h:29
-#, fuzzy
 msgctxt "shortcut window"
 msgid "Go to previous page"
 msgstr "Vés a la pàgina anterior"
