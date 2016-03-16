@@ -1,4 +1,116 @@
 ================
+Evince   3.19.92
+================
+
+New features and improvements:
+
+    * Use a popover for view and action menus (#760527, Felipe Borges)
+    * Add shortcuts help window (#757828, Felipe Borges)
+    * Add Shift+Space keybinding to go back in presentation mode
+      (#758162, Jaakko Hannikainen)
+    * Rename links sidebar title from Index to Outline (#732547,
+      Germán Poo-Caamaño)
+    * Add missing tooltips to the headerbar (#595467, Germán
+      Poo-Caamaño)
+    * Show the page label instead of page number in find sidebar
+      (#756683, Germán Poo-Caamaño)
+    * Add a systemd user unit corresponding to the D-Bus session
+      service (#755897, Simon McVittie)
+    * Recognize multipage DjVu MIME type (#754467, Marek Kasik)
+    * Add support for utf8 filenames on Mac OS X to comics backend
+      (#761161, Tom Schoonjans)
+
+Bug fixes:
+
+    * Fix text selection on Wayland (#759506, Marek Kasik)
+    * Manually destroy the search popover on toolbar dispose in
+      browser plugin to try to fix a crashes on plugin destruction
+      (#762838, Carlos Garcia Campos)
+    * Check boundaries of accessible pages to avoid crashes when the
+      document is reloaded due to changes in the document file
+      (#735744, Germán Poo-Caamaño)
+    * Fix translations in thumbnailer help message (#760418, Ting-Wei Lan)
+    * Fix text selections in annotation popups (#749727, Giselle Reis)
+    * Fix special characters in path to cbz (#643843, Jürn Brodersen)
+    * Fix css style of loading message (#758356, Germán Poo-Caamaño)
+    * Fix warning with no document loaded (#758596, Bastien Nocera)
+    * Fix unbalanced quote in configure script (Bastien Nocera)
+    * Fix installation of symbolic app icon (Michael Catanzaro)
+    * Fix the position of the zoom action GtkPopover in Wayland
+      (#756976, Germán Poo-Caamaño)
+    * Make the message area work in recent view mode too (#755064,
+      Felipe Borges)
+    * Fix performance regression with recent versions of GTK+ when
+      getting colors from GtkStyleContext for a different state
+      (#755442, Sebastian Keller)
+    * Fix a crash in PDF backend when opening documents containing screen
+      annotations with no actions (#756572, Germán Poo-Caamaño)
+    * Ignore right clicks while adding new annotations (#755619, José Aliste)
+    * Escape bookmark titles to be correctly rendered when they
+      contain characters like & (#66301, José Aliste)
+    * Fix handling of multiple files provided as command line
+      arguments (#755796, Felipe Borges)
+    * Do not crash when the rendering or thumbnail jobs fail (#744049,
+      Marek Kasik)
+
+Translation updates:
+
+    * Khaled Hosny (ar)
+    * Alexander Shopov (bg)
+    * Sadia Afroz (bn)
+    * Samir Ribić (bs)
+    * David Medina (ca)
+    * Marek Černocký (cs)
+    * Mario Blättermann (de)
+    * Dawa pemo (dz)
+    * Efstathios Iosifidis (el)
+    * Daniel Mustieles (es)
+    * Inaki Larranaga Murgoitio (eu)
+    * Jiri Grönroos (fi)
+    * Claude Paroz (fr)
+    * GunChleoc (gd)
+    * Fran Dieguez (gl)
+    * Yosef Or Boczko (he)
+    * Meskó Balázs (hu)
+    * Claudio Arseni (it)
+    * Jiro Matsuzawa (ja)
+    * Baurzhan Muftakhidinov (kk)
+    * Khoem Sokhem (km)
+    * Rakesh Pandit (ks)
+    * Erdal Ronahî (ku)
+    * Aurimas Černius (lt)
+    * Rūdolfs Mazurs (lv)
+    * Badral (mn)
+    * Sandeep Shedmake (mr)
+    * Umarzuki Bin Mochlis Moktar (ms)
+    * KYAW MYAT THU (my)
+    * Åka Sikrom (nb)
+    * Nils-Christoph Fiedler (nds)
+    * Narayan Kumar Magar (ne)
+    * Cédric Valmary (totenoc.eu) (oc)
+    * Manoj Kumar Giri (or)
+    * A S Alam (pa)
+    * Piotr Drąg (pl)
+    * Fábio Nogueira (pt_BR)
+    * Pedro Albuquerque (pt)
+    * Daniel Șerbănescu (ro)
+    * Stas Solovey (ru)
+    * Danishka Navin (si)
+    * Dušan Kazik (sk)
+    * Miroslav Nikolić (sr@latin)
+    * Мирослав Николић (sr)
+    * Sebastian Rasmussen (sv)
+    * Shantha kumar (ta)
+    * Krishnababu Krothapalli (te)
+    * Victor Ibragimov (tg)
+    * Theppitak Karoonboonyanan (th)
+    * Gheyret Kenji (ug)
+    * Daniel Korostil (uk)
+    * Trần Ngọc Quân (vi)
+    * YunQiang Su (zh_CN)
+    * Chao-Hsiung Liao (zh_TW)
+
+================
 Evince    3.18.0
 ================
 
