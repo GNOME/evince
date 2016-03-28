@@ -2532,12 +2532,14 @@ ev_window_file_chooser_restore_folder (EvWindow       *window,
         const gchar *dir;
         gchar *folder_uri;
 
+
+        if(uri == NULL){
         g_settings_get (ev_window_ensure_settings (window),
                         get_settings_key_for_directory (directory),
                         "ms", &folder_uri);
-        if (folder_uri == NULL && uri != NULL) {
+        }
+        else{
                 GFile *file, *parent;
-
                 file = g_file_new_for_uri (uri);
                 parent = g_file_get_parent (file);
                 g_object_unref (file);
@@ -2546,15 +2548,14 @@ ev_window_file_chooser_restore_folder (EvWindow       *window,
                         g_object_unref (parent);
                 }
         }
-
         if (folder_uri) {
                 gtk_file_chooser_set_current_folder_uri (file_chooser, folder_uri);
+
         } else {
                 dir = g_get_user_special_dir (directory);
                 gtk_file_chooser_set_current_folder (file_chooser,
                                                      dir ? dir : g_get_home_dir ());
         }
-
         g_free (folder_uri);
 }
 
@@ -2881,6 +2882,7 @@ ev_window_save_a_copy (EvWindow *ev_window)
 {
 	GtkWidget *fc;
 	gchar *base_name;
+    gchar *base_uri;
 	GFile *file;
 
 	fc = gtk_file_chooser_dialog_new (
@@ -2898,16 +2900,17 @@ ev_window_save_a_copy (EvWindow *ev_window)
                                                 -1);
 
 	gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (fc), FALSE);
-	gtk_file_chooser_set_do_overwrite_confirmation (GTK_FILE_CHOOSER (fc), TRUE);
+	gtk_file_chooser_set_do_overwrite_confirmation (GTK_FILE_CHOOSER (fc), FALSE);
 	file = g_file_new_for_uri (ev_window->priv->uri);
 	base_name = g_file_get_basename (file);
-	gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER (fc), base_name);
+    gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER (fc), base_name);
 	g_object_unref (file);
 	g_free (base_name);
 
-        ev_window_file_chooser_restore_folder (ev_window, GTK_FILE_CHOOSER (fc),
-                                               ev_window->priv->uri,
-                                               G_USER_DIRECTORY_DOCUMENTS);
+    base_uri = g_file_get_uri (file);
+    ev_window_file_chooser_restore_folder (ev_window, GTK_FILE_CHOOSER (fc),
+                                           base_uri,
+                                           G_USER_DIRECTORY_DOCUMENTS);
 
 	g_signal_connect (fc, "response",
 			  G_CALLBACK (file_save_dialog_response_cb),
