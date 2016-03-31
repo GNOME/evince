@@ -191,6 +191,40 @@ compare_recent_items (GtkRecentInfo *a,
 }
 
 static gboolean
+on_query_tooltip_event (GtkWidget     *widget,
+                        gint           x,
+                        gint           y,
+                        gboolean       keyboard_tip,
+                        GtkTooltip    *tooltip,
+                        EvRecentView  *ev_recent_view)
+{
+        EvRecentViewPrivate *priv = ev_recent_view->priv;
+        GtkTreeModel        *model;
+        GtkTreeIter          iter;
+        GtkTreePath         *path = NULL;
+        gchar               *uri;
+
+        model = gtk_icon_view_get_model (GTK_ICON_VIEW (priv->view));
+        if (!gtk_icon_view_get_tooltip_context (GTK_ICON_VIEW (priv->view),
+                                                &x, &y, keyboard_tip,
+                                                &model, &path, &iter))
+                return FALSE;
+
+        gtk_tree_model_get (GTK_TREE_MODEL (priv->model), &iter,
+                            EV_RECENT_VIEW_COLUMN_URI, &uri,
+                            -1);
+
+        gtk_tooltip_set_text (tooltip, uri);
+        g_free (uri);
+
+        gtk_icon_view_set_tooltip_item (GTK_ICON_VIEW (priv->view),
+                                        tooltip, path);
+        gtk_tree_path_free (path);
+
+        return TRUE;
+}
+
+static gboolean
 on_button_release_event (GtkWidget      *view,
                          GdkEventButton *event,
                          EvRecentView   *ev_recent_view)
@@ -766,6 +800,7 @@ ev_recent_view_constructed (GObject *object)
         gtk_icon_view_set_selection_mode (GTK_ICON_VIEW (priv->view), GTK_SELECTION_NONE);
         gtk_widget_set_hexpand (priv->view, TRUE);
         gtk_widget_set_vexpand (priv->view, TRUE);
+        gtk_widget_set_has_tooltip (priv->view, TRUE);
 
         renderer = gtk_cell_renderer_pixbuf_new ();
         g_object_set (renderer, "xalign", 0.5, "yalign", 0.5, NULL);
@@ -796,6 +831,9 @@ ev_recent_view_constructed (GObject *object)
                           ev_recent_view);
         g_signal_connect (priv->view, "item-activated",
                           G_CALLBACK (on_icon_view_item_activated),
+                          ev_recent_view);
+        g_signal_connect (priv->view, "query-tooltip",
+                          G_CALLBACK (on_query_tooltip_event),
                           ev_recent_view);
 
         gtk_style_context_add_class (gtk_widget_get_style_context (priv->view), "content-view");
