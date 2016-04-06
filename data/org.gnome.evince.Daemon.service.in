@@ -1,4 +1,4 @@
 [D-BUS Service]
 Name=org.gnome.evince.Daemon
 Exec=@libexecdir@/evinced
-SystemdService=evince.service
+@if_systemd_service@SystemdService=evince.service

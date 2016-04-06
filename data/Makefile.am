@@ -37,15 +37,27 @@ servicedir = $(datadir)/dbus-1/services
 service_in_files = org.gnome.evince.Daemon.service.in
 service_DATA = $(service_in_files:.service.in=.service)
 
-$(service_DATA): $(service_in_files) Makefile
-	$(AM_V_GEN) $(SED) -e "s|\@libexecdir\@|$(libexecdir)|" $< > $@
-
-systemd_userdir = $(prefix)/lib/systemd/user
 systemd_user_in_files = evince.service.in
+
+if WITH_SYSTEMD_USER_UNITS
 systemd_user_DATA = $(systemd_user_in_files:.service.in=.service)
 
 $(systemd_user_DATA): $(systemd_user_in_files) Makefile
 	$(AM_V_GEN) $(SED) -e "s|\@libexecdir\@|$(libexecdir)|" $< > $@
+
+$(service_DATA): $(service_in_files) Makefile
+	$(AM_V_GEN) $(SED) \
+		-e "s|\@libexecdir\@|$(libexecdir)|" \
+		-e "s|@if_systemd_service@||" \
+		$< > $@
+else
+$(service_DATA): $(service_in_files) Makefile
+	$(AM_V_GEN) $(SED) \
+		-e "s|\@libexecdir\@|$(libexecdir)|" \
+		-e "s|@if_systemd_service@|#|" \
+		$< > $@
+endif
+
 endif
 
 #
