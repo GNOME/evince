@@ -119,7 +119,7 @@ ev_page_action_widget_update_max_width (EvPageActionWidget *action_widget)
 
         max_page_label = ev_document_get_page_label (action_widget->document, n_pages - 1);
         max_page_numeric_label = g_strdup_printf ("%d", n_pages);
-        if (strcmp (max_page_label, max_page_numeric_label) != 0) {
+        if (ev_document_has_text_page_labels (action_widget->document) != 0) {
                 max_label = g_strdup_printf (_("(%d of %d)"), n_pages, n_pages);
                 /* Do not take into account the parentheses for the size computation */
                 max_label_len = g_utf8_strlen (max_label, -1) - 2;

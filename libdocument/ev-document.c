@@ -115,15 +115,7 @@ ev_document_finalize (GObject *object)
 		document->priv->page_sizes = NULL;
 	}
 
-	if (document->priv->page_labels) {
-		gint i;
-
-		for (i = 0; i < document->priv->n_pages; i++) {
-			g_free (document->priv->page_labels[i]);
-		}
-		g_free (document->priv->page_labels);
-		document->priv->page_labels = NULL;
-	}
+	g_clear_pointer (&document->priv->page_labels, g_strfreev);
 
 	if (document->priv->info) {
 		ev_document_info_free (document->priv->info);
@@ -201,6 +193,7 @@ static void
 ev_document_setup_cache (EvDocument *document)
 {
         EvDocumentPrivate *priv = document->priv;
+        gboolean custom_page_labels = FALSE;
         gint i;
 
         /* Cache some info about the document to avoid
@@ -260,7 +253,15 @@ ev_document_setup_cache (EvDocument *document)
                 page_label = _ev_document_get_page_label (document, page);
                 if (page_label) {
                         if (!priv->page_labels)
-                                priv->page_labels = g_new0 (gchar *, priv->n_pages);
+                                priv->page_labels = g_new0 (gchar *, priv->n_pages + 1);
+
+                        if (!custom_page_labels) {
+                                gchar *real_page_label;
+
+                                real_page_label = g_strdup_printf ("%d", i + 1);
+                                custom_page_labels = g_strcmp0 (real_page_label, page_label) != 0;
+                                g_free (real_page_label);
+                        }
 
                         priv->page_labels[i] = page_label;
                         priv->max_label = MAX (priv->max_label,
@@ -269,6 +270,9 @@ ev_document_setup_cache (EvDocument *document)
 
                 g_object_unref (page);
         }
+
+	if (!custom_page_labels)
+		g_clear_pointer (&priv->page_labels, g_strfreev);
 }
 
 static void
