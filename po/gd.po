@@ -1,15 +1,15 @@
 # Scottish Gaelic translation for evince.
 # Copyright (C) 2014 evince's COPYRIGHT HOLDER
 # This file is distributed under the same license as the evince package.
-# GunChleoc <fios@foramnagaidhlig.net>, 2014, 2015.
+# GunChleoc <fios@foramnagaidhlig.net>, 2014, 2015, 2016.
 msgid ""
 msgstr ""
 "Project-Id-Version: evince master\n"
-"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
-"product=evince&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-11-16 05:01+0000\n"
-"PO-Revision-Date: 2015-11-16 15:45-0000\n"
-"Last-Translator: GunChleoc <fios@foranagaidhlig.net>\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=evince"
+"&keywords=I18N+L10N&component=general\n"
+"POT-Creation-Date: 2016-04-29 04:07+0000\n"
+"PO-Revision-Date: 2016-04-29 11:23+0100\n"
+"Last-Translator: GunChleoc <fios@foramnagaidhlig.net>\n"
 "Language-Team: Fòram na Gàidhlig\n"
 "Language: gd\n"
 "MIME-Version: 1.0\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n==1 || n==11) ? 0 : (n==2 || n==12) ? 1 : "
 "(n > 2 && n < 20) ? 2 : 3;\n"
-"X-Generator: Poedit 1.7.6\n"
+"X-Generator: Virtaal 0.7.1\n"
 "X-Project-Style: gnome\n"
 
 #: ../backend/comics/comics-document.c:210
@@ -25,8 +25,8 @@ msgstr ""
 msgid ""
 "Error launching the command “%s” in order to decompress the comic book: %s"
 msgstr ""
-"Mearachd le tòiseachadh na h-àithne \"%s\" gus a' comic book: %s a dhì-"
-"dhùmhlachadh"
+"Mearachd le tòiseachadh na h-àithne \"%s\" gus a' comic book: %s a "
+"dhì-dhùmhlachadh"
 
 #: ../backend/comics/comics-document.c:224
 #, c-format
@@ -81,11 +81,11 @@ msgstr "Comic Books"
 msgid "Adds support for reading comic books"
 msgstr "Cuiridh seo taic gus sgrìobhainnean Comic Books a leughadh ris"
 
-#: ../backend/djvu/djvu-document.c:175
+#: ../backend/djvu/djvu-document.c:179
 msgid "DjVu document has incorrect format"
 msgstr "Chan eil am fòrmat mar bu chòir aig an sgrìobhainn DjVu"
 
-#: ../backend/djvu/djvu-document.c:262
+#: ../backend/djvu/djvu-document.c:266
 msgid ""
 "The document is composed of several files. One or more of these files cannot "
 "be accessed."
@@ -285,17 +285,17 @@ msgid "Adds support for reading XPS documents"
 msgstr "Cuiridh seo taic gus sgrìobhainnean XPS a leughadh ris"
 
 #: ../browser-plugin/EvBrowserPluginToolbar.cpp:288
-#: ../previewer/ev-previewer-window.c:317 ../shell/evince-menus.ui.h:32
+#: ../previewer/ev-previewer-window.c:317 ../shell/evince-menus.ui.h:33
 msgid "Fit Pa_ge"
 msgstr "Co-fhreagair ris an duillea_g"
 
 #: ../browser-plugin/EvBrowserPluginToolbar.cpp:297
-#: ../previewer/ev-previewer-window.c:320 ../shell/evince-menus.ui.h:33
+#: ../previewer/ev-previewer-window.c:320 ../shell/evince-menus.ui.h:34
 msgid "Fit _Width"
 msgstr "Co-fhreagair ris an _leud"
 
 #: ../browser-plugin/EvBrowserPluginToolbar.cpp:306
-#: ../shell/evince-menus.ui.h:34
+#: ../shell/evince-menus.ui.h:35
 msgid "_Automatic"
 msgstr "Fèin-obr_achail"
 
@@ -464,14 +464,12 @@ msgstr "Dh'fhàillig le cruthachadh faidhle shealaich: %s"
 msgid "Failed to create a temporary directory: %s"
 msgstr "Dh'fhàillig le cruthachadh pasgain shealaich: %s"
 
-#: ../libmisc/ev-page-action-widget.c:84
-#: ../libmisc/ev-page-action-widget.c:123
+#: ../libmisc/ev-page-action-widget.c:84 ../libmisc/ev-page-action-widget.c:123
 #, c-format
 msgid "(%d of %d)"
 msgstr "(%d à %d)"
 
-#: ../libmisc/ev-page-action-widget.c:86
-#: ../libmisc/ev-page-action-widget.c:127
+#: ../libmisc/ev-page-action-widget.c:86 ../libmisc/ev-page-action-widget.c:127
 #, c-format
 msgid "of %d"
 msgstr "à %d"
@@ -488,7 +486,6 @@ msgid "Not found, click to change search options"
 msgstr "Cha deach a lorg, briog gus roghainnean an luirg atharrachadh"
 
 #: ../libmisc/ev-search-box.c:180 ../libmisc/ev-search-box.c:236
-#| msgid "File options"
 msgid "Search options"
 msgstr "Roghainnean luirg"
 
@@ -510,13 +507,11 @@ msgstr "Lorg ath-làthair na h-abairt luirg"
 
 #: ../libview/ev-jobs.c:649
 #, c-format
-#| msgid "Failed to print page %d: %s"
 msgid "Failed to render page %d"
 msgstr "Dh'fhàillig le reandaradh na duilleige %d"
 
 #: ../libview/ev-jobs.c:896
 #, c-format
-#| msgid "Failed to create a temporary file: %s"
 msgid "Failed to create thumbnail for page %d"
 msgstr "Dh'fhàillig le cruthachadh na dealbhaige airson duilleag %d"
 
@@ -736,11 +731,11 @@ msgstr "Dh'fhàillig le clò-bhualadh na sgrìobhainn"
 msgid "The selected printer '%s' could not be found"
 msgstr "Cha b' urrainn dhuinn an clò-bhualadair \"%s\" a thagh thu a lorg"
 
-#: ../previewer/ev-previewer-window.c:270 ../shell/evince-menus.ui.h:39
+#: ../previewer/ev-previewer-window.c:270 ../shell/evince-menus.ui.h:40
 msgid "_Previous Page"
 msgstr "An duilleag _roimhpe"
 
-#: ../previewer/ev-previewer-window.c:273 ../shell/evince-menus.ui.h:40
+#: ../previewer/ev-previewer-window.c:273 ../shell/evince-menus.ui.h:41
 msgid "_Next Page"
 msgstr "A_n ath dhuilleag"
 
@@ -826,7 +821,6 @@ msgid "Paper Size:"
 msgstr "Meud a' phàipeir:"
 
 #: ../properties/ev-properties-view.c:75
-#| msgid "Paper Size:"
 msgid "Size:"
 msgstr "Meud:"
 
@@ -965,7 +959,6 @@ msgid "Add text annotation"
 msgstr "Cuir nòtachadh teacsa ris"
 
 #: ../shell/ev-annotations-toolbar.c:127
-#| msgid "Add text annotation"
 msgid "Add highlight annotation"
 msgstr "Cuir nòtachadh soillseachaidh ris"
 
@@ -1164,7 +1157,13 @@ msgstr "Breathan"
 msgid "Print…"
 msgstr "Clò-bhuail…"
 
-#: ../shell/ev-sidebar-links.c:722
+#. Translators: This is the title for the sidebar pane that
+#. * shows the Outline or Table of Contents of the document.
+#. * Use a short text, otherwise it can make Evince unusable in
+#. * your language.  The sidebar cannot be shrinked smaller than
+#. * the longest title in there.
+#.
+#: ../shell/ev-sidebar-links.c:728
 msgid "Outline"
 msgstr "Oir-loidhne"
 
@@ -1177,17 +1176,14 @@ msgid "Open an existing document"
 msgstr "Fosgail sgrìobhainn a tha ann"
 
 #: ../shell/ev-toolbar.c:210
-#| msgid "Select page size using document page size"
 msgid "Select page or search in the index"
 msgstr "Tagh duilleag no lorg sa clàr-innse"
 
 #: ../shell/ev-toolbar.c:211
-#| msgid "Select Page"
 msgid "Select page"
 msgstr "Tagh duilleag"
 
 #: ../shell/ev-toolbar.c:234
-#| msgid "Enlarge the document"
 msgid "Annotate the document"
 msgstr "Cuir nòtachadh ris an sgrìobhainn"
 
@@ -1565,168 +1561,336 @@ msgid "_New Window"
 msgstr "_Uinneag ùr"
 
 #: ../shell/evince-menus.ui.h:2
+msgid "_Keyboard Shortcuts"
+msgstr "Ath-ghoiridean a' _mheur-chlàir"
+
+#: ../shell/evince-menus.ui.h:3
 msgid "_Help"
 msgstr "Cob_hair"
 
-#: ../shell/evince-menus.ui.h:3
+#: ../shell/evince-menus.ui.h:4
 msgid "_About"
 msgstr "_Mu dhèidhinn"
 
-#: ../shell/evince-menus.ui.h:4
+#: ../shell/evince-menus.ui.h:5
 msgid "_Continuous"
 msgstr "_Leantainneach"
 
-#: ../shell/evince-menus.ui.h:5
+#: ../shell/evince-menus.ui.h:6
 msgid "_Dual"
 msgstr "_Dùbailte"
 
-#: ../shell/evince-menus.ui.h:6
+#: ../shell/evince-menus.ui.h:7
 msgid "Side _Pane"
 msgstr "_Leòsan-taoibh"
 
-#: ../shell/evince-menus.ui.h:7
+#: ../shell/evince-menus.ui.h:8
 msgid "_Fullscreen"
 msgstr "_Làn-sgrìn"
 
-#: ../shell/evince-menus.ui.h:8
+#: ../shell/evince-menus.ui.h:9
 msgid "Pre_sentation"
 msgstr "Tai_sbeanadh"
 
-#: ../shell/evince-menus.ui.h:9
+#: ../shell/evince-menus.ui.h:10
 msgid "Rotate _Left"
 msgstr "Cuairtich tuathai_l"
 
-#: ../shell/evince-menus.ui.h:10
+#: ../shell/evince-menus.ui.h:11
 msgid "Rotate _Right"
 msgstr "Cuai_rtich deiseil"
 
-#: ../shell/evince-menus.ui.h:11
+#: ../shell/evince-menus.ui.h:12
 msgid "First Page"
 msgstr "A' chiad duilleag"
 
-#: ../shell/evince-menus.ui.h:12
+#: ../shell/evince-menus.ui.h:13
 msgid "Previous Page"
 msgstr "An duilleag roimhpe"
 
-#: ../shell/evince-menus.ui.h:13
+#: ../shell/evince-menus.ui.h:14
 msgid "Next Page"
 msgstr "An ath dhuilleag"
 
-#: ../shell/evince-menus.ui.h:14
+#: ../shell/evince-menus.ui.h:15
 msgid "Last Page"
 msgstr "An duilleag mu dheireadh"
 
-#: ../shell/evince-menus.ui.h:15
+#: ../shell/evince-menus.ui.h:16
 msgid "Zoom _In"
 msgstr "Sùm a-_steach"
 
-#: ../shell/evince-menus.ui.h:16
+#: ../shell/evince-menus.ui.h:17
 msgid "Zoom _Out"
 msgstr "Sùm a-_mach"
 
-#: ../shell/evince-menus.ui.h:17
+#: ../shell/evince-menus.ui.h:18
 msgid "_Odd Pages Left"
 msgstr "Duilleagan c_orra air an taobh chlì"
 
-#: ../shell/evince-menus.ui.h:18
+#: ../shell/evince-menus.ui.h:19
 msgid "_Inverted Colors"
 msgstr "_Dathan contrarra"
 
-#: ../shell/evince-menus.ui.h:19
+#: ../shell/evince-menus.ui.h:20
 msgid "_Reload"
 msgstr "_Ath-luchdaich"
 
-#: ../shell/evince-menus.ui.h:20
+#: ../shell/evince-menus.ui.h:21
 msgid "_Open…"
 msgstr "F_osgail…"
 
-#: ../shell/evince-menus.ui.h:21
+#: ../shell/evince-menus.ui.h:22
 msgid "Op_en a Copy"
 msgstr "Fosgail l_ethbhreac dheth"
 
-#: ../shell/evince-menus.ui.h:22
+#: ../shell/evince-menus.ui.h:23
 msgid "_Save a Copy…"
 msgstr "_Sàbhail lethbhreac dheth…"
 
-#: ../shell/evince-menus.ui.h:23
+#: ../shell/evince-menus.ui.h:24
 msgid "Send _To…"
 msgstr "Cuir _gu…"
 
-#: ../shell/evince-menus.ui.h:24
+#: ../shell/evince-menus.ui.h:25
 msgid "Open Containing _Folder"
 msgstr "_Fosgail am pasgan far a bheil e"
 
-#: ../shell/evince-menus.ui.h:25
+#: ../shell/evince-menus.ui.h:26
 msgid "_Print…"
 msgstr "Clò-_bhuail…"
 
-#: ../shell/evince-menus.ui.h:26
+#: ../shell/evince-menus.ui.h:27
 msgid "P_roperties…"
 msgstr "_Roghainnean…"
 
-#: ../shell/evince-menus.ui.h:27
+#: ../shell/evince-menus.ui.h:28
 msgid "_Copy"
 msgstr "Dèan lethbhrea_c"
 
-#: ../shell/evince-menus.ui.h:28
+#: ../shell/evince-menus.ui.h:29
 msgid "Select _All"
 msgstr "Tagh n_a h-uile"
 
-#: ../shell/evince-menus.ui.h:29
+#: ../shell/evince-menus.ui.h:30
 msgid "Save Current Settings as _Default"
 msgstr "Sàbhail na roghainnean làithreach mar na _bun-roghainnean"
 
-#: ../shell/evince-menus.ui.h:30
+#: ../shell/evince-menus.ui.h:31
 msgid "_Add Bookmark"
 msgstr "_Cuir comharra-leabhair ris"
 
-#: ../shell/evince-menus.ui.h:31
+#: ../shell/evince-menus.ui.h:32
 msgid "_Close"
 msgstr "_Dùin"
 
-#: ../shell/evince-menus.ui.h:35
+#: ../shell/evince-menus.ui.h:36
 msgid "_Open Link"
 msgstr "F_osgail an ceangal"
 
-#: ../shell/evince-menus.ui.h:36
+#: ../shell/evince-menus.ui.h:37
 msgid "_Copy Link Address"
 msgstr "Dèan lethbhreac de sheòladh a' _cheangail"
 
-#: ../shell/evince-menus.ui.h:37
+#: ../shell/evince-menus.ui.h:38
 msgid "_Go To"
 msgstr "Rach _gu"
 
-#: ../shell/evince-menus.ui.h:38
+#: ../shell/evince-menus.ui.h:39
 msgid "Open in New _Window"
 msgstr "Fosgail ann an _uinneag ùr"
 
-#: ../shell/evince-menus.ui.h:41
+#: ../shell/evince-menus.ui.h:42
 msgid "Auto_scroll"
 msgstr "_Sgroladh fèin-obrachail"
 
-#: ../shell/evince-menus.ui.h:42
+#: ../shell/evince-menus.ui.h:43
 msgid "_Save Image As…"
 msgstr "_Sàbhail an dealbh mar…"
 
-#: ../shell/evince-menus.ui.h:43
+#: ../shell/evince-menus.ui.h:44
 msgid "Copy _Image"
 msgstr "_Dèan lethbhreac dhen dealbh"
 
-#: ../shell/evince-menus.ui.h:44
+#: ../shell/evince-menus.ui.h:45
 msgid "_Open Attachment"
 msgstr "F_osgail an ceanglachan"
 
-#: ../shell/evince-menus.ui.h:45
+#: ../shell/evince-menus.ui.h:46
 msgid "_Save Attachment As…"
 msgstr "_Sàbhail an ceanglachan mar…"
 
-#: ../shell/evince-menus.ui.h:46
+#: ../shell/evince-menus.ui.h:47
 msgid "Annotation Properties…"
 msgstr "Roghainnean nan nòtaichaidhean…"
 
-#: ../shell/evince-menus.ui.h:47
+#: ../shell/evince-menus.ui.h:48
 msgid "Remove Annotation"
 msgstr "Thoir nòtachadh air falbh"
+
+#: ../shell/help-overlay.ui.h:1
+msgctxt "shortcut window"
+msgid "Opening, closing, saving and printing"
+msgstr "Fosgladh, dùnadh, sàbhaladh is clò-bhualadh"
+
+#: ../shell/help-overlay.ui.h:2
+#| msgid "Open Document"
+msgctxt "shortcut window"
+msgid "Open a document"
+msgstr "Fosgail sgrìobhainn"
+
+#: ../shell/help-overlay.ui.h:3
+#| msgid "Save a copy of the current document"
+msgctxt "shortcut window"
+msgid "Open a copy of the current document"
+msgstr "Fosgail lethbhreac dhen sgrìobhainn làithreach"
+
+#: ../shell/help-overlay.ui.h:4
+#| msgid "Save a copy of the current document"
+msgctxt "shortcut window"
+msgid "Save a copy of the current document"
+msgstr "Sàbhail lethbhreac dhen sgrìobhainn làithreach"
+
+#: ../shell/help-overlay.ui.h:5
+#| msgid "Print this document"
+msgctxt "shortcut window"
+msgid "Print the current document"
+msgstr "Clò-bhuail an sgrìobhainn làithreach"
+
+#: ../shell/help-overlay.ui.h:6
+#| msgid "Make the current document fill the window"
+msgctxt "shortcut window"
+msgid "Close the current document window"
+msgstr "Dùin uinneag na sgrìobhainn làithrich"
+
+#: ../shell/help-overlay.ui.h:7
+#| msgid "Reload the document"
+msgctxt "shortcut window"
+msgid "Reload the document"
+msgstr "Ath-luchdaich an sgrìobhainn"
+
+#: ../shell/help-overlay.ui.h:8
+msgctxt "shortcut window"
+msgid "Selecting and copying text"
+msgstr "Taghadh is dèanamh lethbhreac de theacsa"
+
+#: ../shell/help-overlay.ui.h:9
+msgctxt "shortcut window"
+msgid "Copy highlighted text"
+msgstr "Dèan lethbhreac dhen teacsa air a shoillseachadh"
+
+#: ../shell/help-overlay.ui.h:10
+#| msgid "Show the entire document"
+msgctxt "shortcut window"
+msgid "Select all the text in a document"
+msgstr "Tagh an teacsa air fad ann an sgrìobhainn"
+
+#: ../shell/help-overlay.ui.h:11
+#| msgid "Reload the document"
+msgctxt "shortcut window"
+msgid "Moving around the document"
+msgstr "Gluasad mu thimcheall na sgrìobhainn"
+
+#: ../shell/help-overlay.ui.h:12
+#| msgid "Go to last page"
+msgctxt "shortcut window"
+msgid "Move around a page"
+msgstr "Gluasad mu thimcheall duilleige"
+
+#: ../shell/help-overlay.ui.h:13
+msgctxt "shortcut window"
+msgid "Move up/down a page several lines at a time"
+msgstr "Gluais suas/sìos duilleag iomadh turas aig an aon àm"
+
+#: ../shell/help-overlay.ui.h:14
+#| msgid "Go to page"
+msgctxt "shortcut window"
+msgid "Go to page number"
+msgstr "Rach gu àireamh duilleige"
+
+#: ../shell/help-overlay.ui.h:15
+#| msgid "Go to the next page"
+msgctxt "shortcut window"
+msgid "Go to the beginning/end of a page"
+msgstr "Rach gu toiseach/deireadh duilleige"
+
+#: ../shell/help-overlay.ui.h:16
+#| msgid "Show the entire document"
+msgctxt "shortcut window"
+msgid "Go to the beginning of the document"
+msgstr "Rach gu toiseach na sgrìobhainn"
+
+#: ../shell/help-overlay.ui.h:17
+#| msgid "Show the entire document"
+msgctxt "shortcut window"
+msgid "Go to the end of the document"
+msgstr "Rach gu deireadh na sgrìobhainn"
+
+#: ../shell/help-overlay.ui.h:18
+msgctxt "shortcut window"
+msgid "Finding text"
+msgstr "Lorg teacsa"
+
+#: ../shell/help-overlay.ui.h:19
+msgctxt "shortcut window"
+msgid "Show the search bar"
+msgstr "Seall am bàr-luirg"
+
+#: ../shell/help-overlay.ui.h:20
+#| msgid "Go to the next page"
+msgctxt "shortcut window"
+msgid "Go to the next search result"
+msgstr "Rach gun ath-thoradh"
+
+#: ../shell/help-overlay.ui.h:21
+#| msgid "Go to the previous page"
+msgctxt "shortcut window"
+msgid "Go to the previous search result"
+msgstr "Rach gun toradh roimhe"
+
+#: ../shell/help-overlay.ui.h:22
+msgctxt "shortcut window"
+msgid "Rotating and zooming"
+msgstr "Cuairteachadh is sùmadh"
+
+#: ../shell/help-overlay.ui.h:23
+msgctxt "shortcut window"
+msgid "Rotate the page 90 degrees counter-clockwise"
+msgstr "Cuairtich an duilleag le 90 ceum gu tuathail"
+
+#: ../shell/help-overlay.ui.h:24
+msgctxt "shortcut window"
+msgid "Rotate the page 90 degrees clockwise"
+msgstr "Cuairtich an duilleag le 90 ceum gu deiseil"
+
+#: ../shell/help-overlay.ui.h:25
+#| msgid "Zoom _In"
+msgctxt "shortcut window"
+msgid "Zoom in"
+msgstr "Sùm a-steach"
+
+#: ../shell/help-overlay.ui.h:26
+#| msgid "Zoom _Out"
+msgctxt "shortcut window"
+msgid "Zoom out"
+msgstr "Sùm a-mach"
+
+#: ../shell/help-overlay.ui.h:27
+msgctxt "shortcut window"
+msgid "Touchpad gestures"
+msgstr "Gluasadan a' phada-shuathaidh"
+
+#: ../shell/help-overlay.ui.h:28
+#| msgid "Go to next page"
+msgctxt "shortcut window"
+msgid "Go to next page"
+msgstr "Rach gun ath-dhuilleag"
+
+#: ../shell/help-overlay.ui.h:29
+#| msgid "Go to previous page"
+msgctxt "shortcut window"
+msgid "Go to previous page"
+msgstr "Rach gun duilleag roimhpe"
 
 #: ../evince.appdata.xml.in.h:2
 msgid "Document viewer for popular document formats"
@@ -1794,18 +1958,12 @@ msgstr ""
 #~ msgid "Open a copy of the current document in a new window"
 #~ msgstr "Fosgail lethbhreac dhen sgrìobhainn làithreach ann an uinneag ùr"
 
-#~ msgid "Save a copy of the current document"
-#~ msgstr "Sàbhail lethbhreac dhen sgrìobhainn làithreach"
-
 #~ msgid "Send current document by mail, instant message…"
 #~ msgstr "Cuir an sgrìobhainn làithreach le post-d, grad-theachdaireachd…"
 
 #~ msgid "Show the folder which contains this file in the file manager"
 #~ msgstr ""
 #~ "Seall am pasgan sa bheil am faidhle seo ann am manaidsear nam faidhle"
-
-#~ msgid "Reload the document"
-#~ msgstr "Ath-luchdaich an sgrìobhainn"
 
 #~ msgid "Go to the first page"
 #~ msgstr "Rach gun chiad duilleag"
