@@ -6,10 +6,10 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Evince HEAD\n"
-"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
-"product=evince&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2016-02-18 17:02+0000\n"
-"PO-Revision-Date: 2016-02-29 21:09+0100\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=evince&"
+"keywords=I18N+L10N&component=general\n"
+"POT-Creation-Date: 2016-04-29 16:07+0000\n"
+"PO-Revision-Date: 2016-05-08 17:38+0200\n"
 "Last-Translator: Cédric Valmary (totenoc.eu) <cvalmary@yahoo.fr>\n"
 "Language-Team: Tot En Òc\n"
 "Language: oc\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 1.8.4\n"
+"X-Generator: Virtaal 0.7.1\n"
 "X-Project-Style: gnome\n"
 
 #: ../backend/comics/comics-document.c:210
@@ -67,7 +67,7 @@ msgstr "Cap d'imatge pas trobat dins l'archiu %s"
 #: ../backend/comics/comics-document.c:814
 #, c-format
 msgid "There was an error deleting “%s”."
-msgstr "Una error s'es producha al moment de la supression de « %s »."
+msgstr "Una error s'es produita al moment de la supression de « %s »."
 
 #: ../backend/comics/comics-document.c:907
 #, c-format
@@ -83,11 +83,11 @@ msgstr "Bendas dessenhadas"
 msgid "Adds support for reading comic books"
 msgstr "Apond la presa en carga de la lectura de bendas dessenhadas"
 
-#: ../backend/djvu/djvu-document.c:175
+#: ../backend/djvu/djvu-document.c:179
 msgid "DjVu document has incorrect format"
 msgstr "Lo document DjVu a un format incorrècte"
 
-#: ../backend/djvu/djvu-document.c:262
+#: ../backend/djvu/djvu-document.c:266
 msgid ""
 "The document is composed of several files. One or more of these files cannot "
 "be accessed."
@@ -176,7 +176,7 @@ msgstr ""
 
 #: ../backend/pdf/ev-poppler.cc:1135
 msgid "All fonts are either standard or embedded."
-msgstr "Totas las poliças son soit standards o integradas."
+msgstr "Totas las poliças son siá estandards o integradas."
 
 #: ../backend/pdf/ev-poppler.cc:1167
 msgid "No name"
@@ -286,17 +286,17 @@ msgid "Adds support for reading XPS documents"
 msgstr "Apond la presa en carga de la lectura dels documents XPS"
 
 #: ../browser-plugin/EvBrowserPluginToolbar.cpp:288
-#: ../previewer/ev-previewer-window.c:317 ../shell/evince-menus.ui.h:32
+#: ../previewer/ev-previewer-window.c:317 ../shell/evince-menus.ui.h:33
 msgid "Fit Pa_ge"
 msgstr "_Ajustar a la pagina"
 
 #: ../browser-plugin/EvBrowserPluginToolbar.cpp:297
-#: ../previewer/ev-previewer-window.c:320 ../shell/evince-menus.ui.h:33
+#: ../previewer/ev-previewer-window.c:320 ../shell/evince-menus.ui.h:34
 msgid "Fit _Width"
 msgstr "Ajustar a la _largor"
 
 #: ../browser-plugin/EvBrowserPluginToolbar.cpp:306
-#: ../shell/evince-menus.ui.h:34
+#: ../shell/evince-menus.ui.h:35
 msgid "_Automatic"
 msgstr "_Automatic"
 
@@ -348,8 +348,8 @@ msgstr "Imprimir lo document"
 msgid "Document Viewer"
 msgstr "Visionador de documents"
 
-# Utilizacion de l'infinitif dins les infobulles del Burèu
-# Utilisation de l'infinitif dans les infobulles del Bureau
+# Utilizacion de l'infinitiu dins las infobullas del Burèu
+# Utilizacion de l'infinitiu dins las infobullas del Burèu
 #: ../data/evince.desktop.in.in.h:2
 msgid "View multi-page documents"
 msgstr "Afichar de documents multipaginas"
@@ -396,7 +396,7 @@ msgstr "L'URI del darrièr repertòri utilizat per enregistrar un imatge"
 
 #: ../data/org.gnome.Evince.gschema.xml.in.h:7
 msgid "Page cache size in MiB"
-msgstr "Taille del cache des pages en MiB"
+msgstr "Talha del cache de las paginas en Mio"
 
 #: ../data/org.gnome.Evince.gschema.xml.in.h:8
 msgid ""
@@ -462,14 +462,12 @@ msgstr "Impossible de crear un fichièr temporari : %s"
 msgid "Failed to create a temporary directory: %s"
 msgstr "Impossible de crear un repertòri temporari : %s"
 
-#: ../libmisc/ev-page-action-widget.c:84
-#: ../libmisc/ev-page-action-widget.c:123
+#: ../libmisc/ev-page-action-widget.c:84 ../libmisc/ev-page-action-widget.c:123
 #, c-format
 msgid "(%d of %d)"
 msgstr "(%d sus %d)"
 
-#: ../libmisc/ev-page-action-widget.c:86
-#: ../libmisc/ev-page-action-widget.c:127
+#: ../libmisc/ev-page-action-widget.c:86 ../libmisc/ev-page-action-widget.c:127
 #, c-format
 msgid "of %d"
 msgstr "sus %d"
@@ -486,7 +484,6 @@ msgid "Not found, click to change search options"
 msgstr ""
 
 #: ../libmisc/ev-search-box.c:180 ../libmisc/ev-search-box.c:236
-#| msgid "File options"
 msgid "Search options"
 msgstr "Opcions de recèrca"
 
@@ -508,13 +505,11 @@ msgstr "Recèrca l'ocurréncia seguenta de la cadena"
 
 #: ../libview/ev-jobs.c:649
 #, c-format
-#| msgid "Failed to print page %d: %s"
 msgid "Failed to render page %d"
 msgstr ""
 
 #: ../libview/ev-jobs.c:896
 #, c-format
-#| msgid "Failed to create a temporary file: %s"
 msgid "Failed to create thumbnail for page %d"
 msgstr "Impossible de crear una miniatura per la pagina %d"
 
@@ -571,7 +566,7 @@ msgstr "Imprimir"
 
 #: ../libview/ev-print-operation.c:1959
 msgid "Page Scaling:"
-msgstr "Ajustement des pages :"
+msgstr "Ajustement de las paginas :"
 
 #: ../libview/ev-print-operation.c:1966
 msgid "Shrink to Printable Area"
@@ -634,7 +629,7 @@ msgstr ""
 
 #: ../libview/ev-print-operation.c:2092
 msgid "Page Handling"
-msgstr "Gestion des pages"
+msgstr "Gestion de las paginas"
 
 #: ../libview/ev-view-accessible.c:43
 msgid "Scroll Up"
@@ -733,11 +728,11 @@ msgstr "L'impression del document a fracassat"
 msgid "The selected printer '%s' could not be found"
 msgstr "L'imprimenta seleccionada « %s » pòt pas èsser trobada"
 
-#: ../previewer/ev-previewer-window.c:270 ../shell/evince-menus.ui.h:39
+#: ../previewer/ev-previewer-window.c:270 ../shell/evince-menus.ui.h:40
 msgid "_Previous Page"
 msgstr "Pagina _precedenta"
 
-#: ../previewer/ev-previewer-window.c:273 ../shell/evince-menus.ui.h:40
+#: ../previewer/ev-previewer-window.c:273 ../shell/evince-menus.ui.h:41
 msgid "_Next Page"
 msgstr "Pagina _seguenta"
 
@@ -851,7 +846,7 @@ msgstr "%.2f × %.2f poces"
 #: ../properties/ev-properties-view.c:305
 #, c-format
 msgid "%s, Portrait (%s)"
-msgstr "%s, retrach (%s)"
+msgstr "%s, retrait (%s)"
 
 #. Note to translators: first placeholder is the paper name (eg.
 #. * A4), second placeholder is the paper size (eg. 297x210 mm)
@@ -918,7 +913,7 @@ msgstr "Raiar"
 
 #: ../shell/ev-annotation-properties-dialog.c:131
 msgid "Underline"
-msgstr "Solinhar"
+msgstr "Soslinhar"
 
 #: ../shell/ev-annotation-properties-dialog.c:132
 msgid "Squiggly"
@@ -961,10 +956,9 @@ msgid "Add text annotation"
 msgstr "Apondre una anotacion tèxte"
 
 #: ../shell/ev-annotations-toolbar.c:127
-#, fuzzy
 #| msgid "Add text annotation"
 msgid "Add highlight annotation"
-msgstr "Apondre una anotacion tèxte"
+msgstr "Apondre una anotacion en susbrilhança"
 
 #: ../shell/ev-application.c:995
 msgid ""
@@ -1180,17 +1174,14 @@ msgid "Open an existing document"
 msgstr "Dobrís un document existent"
 
 #: ../shell/ev-toolbar.c:210
-#| msgid "Select page size using document page size"
 msgid "Select page or search in the index"
 msgstr ""
 
 #: ../shell/ev-toolbar.c:211
-#| msgid "Select Page"
 msgid "Select page"
 msgstr "Seleccionar la pagina"
 
 #: ../shell/ev-toolbar.c:234
-#| msgid "Enlarge the document"
 msgid "Annotate the document"
 msgstr "Anotar lo document"
 
@@ -1305,13 +1296,13 @@ msgstr "Impossible de dobrir lo dorsièr parent"
 #, c-format
 msgid "%d pending job in queue"
 msgid_plural "%d pending jobs in queue"
-msgstr[0] "%d prètzfach en espèra dins la fila"
-msgstr[1] "%d prètzfaches en espèra dins la fila"
+msgstr[0] "%d prètzfait en espèra dins la fila"
+msgstr[1] "%d prètzfaits en espèra dins la fila"
 
 #: ../shell/ev-window.c:3374
 #, c-format
 msgid "Printing job “%s”"
-msgstr "Impression de lo prètzfach « %s »"
+msgstr "Impression de lo prètzfait « %s »"
 
 #: ../shell/ev-window.c:3577
 msgid ""
@@ -1356,16 +1347,16 @@ msgid "There is %d print job active. Wait until print finishes before closing?"
 msgid_plural ""
 "There are %d print jobs active. Wait until print finishes before closing?"
 msgstr[0] ""
-"%d prètzfach d'impression es en cors. Cal esperar la fin de l'impression "
+"%d prètzfait d'impression es en cors. Cal esperar la fin de l'impression "
 "abans de tampar ?"
 msgstr[1] ""
-"%d prètzfaches d'impression son en cors. Cal esperar la fin de l'impression "
+"%d prètzfaits d'impression son en cors. Cal esperar la fin de l'impression "
 "abans de tampar ?"
 
 #: ../shell/ev-window.c:3706
 msgid "If you close the window, pending print jobs will not be printed."
 msgstr ""
-"Se tampatz la fenèstra, los prètzfaches en espèra d'impression seràn pas "
+"Se tampatz la fenèstra, los prètzfaits en espèra d'impression seràn pas "
 "imprimidas."
 
 #: ../shell/ev-window.c:3710
@@ -1521,7 +1512,7 @@ msgstr "NUMÈRO"
 
 #: ../shell/main.c:73
 msgid "Named destination to display."
-msgstr "Destination nomenada d'afichar."
+msgstr "Destinacion nomenada d'afichar."
 
 #: ../shell/main.c:73
 msgid "DEST"
@@ -1556,166 +1547,170 @@ msgid "_New Window"
 msgstr "_Novèla fenèstra"
 
 #: ../shell/evince-menus.ui.h:2
+msgid "_Keyboard Shortcuts"
+msgstr ""
+
+#: ../shell/evince-menus.ui.h:3
 msgid "_Help"
 msgstr "Ajud_a"
 
-#: ../shell/evince-menus.ui.h:3
+#: ../shell/evince-menus.ui.h:4
 msgid "_About"
 msgstr "A _prepaus"
 
-#: ../shell/evince-menus.ui.h:4
+#: ../shell/evince-menus.ui.h:5
 msgid "_Continuous"
 msgstr "_Continú"
 
-#: ../shell/evince-menus.ui.h:5
+#: ../shell/evince-menus.ui.h:6
 msgid "_Dual"
 msgstr "_Doble"
 
-#: ../shell/evince-menus.ui.h:6
+#: ../shell/evince-menus.ui.h:7
 msgid "Side _Pane"
 msgstr "Panèl _lateral"
 
-#: ../shell/evince-menus.ui.h:7
+#: ../shell/evince-menus.ui.h:8
 msgid "_Fullscreen"
 msgstr "_Ecran complet"
 
-#: ../shell/evince-menus.ui.h:8
+#: ../shell/evince-menus.ui.h:9
 msgid "Pre_sentation"
 msgstr "Pre_sentacion"
 
-#: ../shell/evince-menus.ui.h:9
+#: ../shell/evince-menus.ui.h:10
 msgid "Rotate _Left"
 msgstr "Pivotar cap a es_quèrra"
 
-#: ../shell/evince-menus.ui.h:10
-msgid "Rotate _Right"
-msgstr "Pivotar cap a _drecha"
-
 #: ../shell/evince-menus.ui.h:11
+msgid "Rotate _Right"
+msgstr "Pivotar cap a _dreita"
+
+#: ../shell/evince-menus.ui.h:12
 msgid "First Page"
 msgstr "Primièra pagina"
 
-#: ../shell/evince-menus.ui.h:12
+#: ../shell/evince-menus.ui.h:13
 msgid "Previous Page"
 msgstr "Pagina precedenta"
 
-#: ../shell/evince-menus.ui.h:13
+#: ../shell/evince-menus.ui.h:14
 msgid "Next Page"
 msgstr "Pagina seguenta"
 
-#: ../shell/evince-menus.ui.h:14
+#: ../shell/evince-menus.ui.h:15
 msgid "Last Page"
 msgstr "Darrièra pagina"
 
-#: ../shell/evince-menus.ui.h:15
+#: ../shell/evince-menus.ui.h:16
 msgid "Zoom _In"
 msgstr "_Zoom avant"
 
-#: ../shell/evince-menus.ui.h:16
+#: ../shell/evince-menus.ui.h:17
 msgid "Zoom _Out"
 msgstr "Zoom a_rrièr"
 
-#: ../shell/evince-menus.ui.h:17
+#: ../shell/evince-menus.ui.h:18
 msgid "_Odd Pages Left"
 msgstr "_Paginas imparas a esquèrra"
 
-#: ../shell/evince-menus.ui.h:18
+#: ../shell/evince-menus.ui.h:19
 msgid "_Inverted Colors"
 msgstr "Colors _inversadas"
 
-#: ../shell/evince-menus.ui.h:19
+#: ../shell/evince-menus.ui.h:20
 msgid "_Reload"
 msgstr "_Recargar"
 
-#: ../shell/evince-menus.ui.h:20
+#: ../shell/evince-menus.ui.h:21
 msgid "_Open…"
 msgstr "_Dobrir…"
 
-#: ../shell/evince-menus.ui.h:21
+#: ../shell/evince-menus.ui.h:22
 msgid "Op_en a Copy"
 msgstr "_Dobrir una còpia"
 
-#: ../shell/evince-menus.ui.h:22
+#: ../shell/evince-menus.ui.h:23
 msgid "_Save a Copy…"
 msgstr "Enregi_strar una còpia…"
 
-#: ../shell/evince-menus.ui.h:23
+#: ../shell/evince-menus.ui.h:24
 msgid "Send _To…"
 msgstr "Man_dar a…"
 
-#: ../shell/evince-menus.ui.h:24
+#: ../shell/evince-menus.ui.h:25
 msgid "Open Containing _Folder"
 msgstr "Dobrir lo dorsièr _parent"
 
-#: ../shell/evince-menus.ui.h:25
+#: ../shell/evince-menus.ui.h:26
 msgid "_Print…"
 msgstr "_Imprimir…"
 
-#: ../shell/evince-menus.ui.h:26
+#: ../shell/evince-menus.ui.h:27
 msgid "P_roperties…"
 msgstr "_Proprietats"
 
-#: ../shell/evince-menus.ui.h:27
+#: ../shell/evince-menus.ui.h:28
 msgid "_Copy"
 msgstr "_Copiar"
 
-#: ../shell/evince-menus.ui.h:28
+#: ../shell/evince-menus.ui.h:29
 msgid "Select _All"
 msgstr "Seleccionar _tot"
 
-#: ../shell/evince-menus.ui.h:29
+#: ../shell/evince-menus.ui.h:30
 msgid "Save Current Settings as _Default"
 msgstr "Se remembrar dels reglatges _actuals"
 
-#: ../shell/evince-menus.ui.h:30
+#: ../shell/evince-menus.ui.h:31
 msgid "_Add Bookmark"
 msgstr "_Apondre un signet"
 
-#: ../shell/evince-menus.ui.h:31
+#: ../shell/evince-menus.ui.h:32
 msgid "_Close"
 msgstr "_Tampar"
 
-#: ../shell/evince-menus.ui.h:35
+#: ../shell/evince-menus.ui.h:36
 msgid "_Open Link"
 msgstr "_Dobrir lo ligam"
 
-#: ../shell/evince-menus.ui.h:36
+#: ../shell/evince-menus.ui.h:37
 msgid "_Copy Link Address"
 msgstr "_Copiar l'adreça del ligam"
 
-#: ../shell/evince-menus.ui.h:37
+#: ../shell/evince-menus.ui.h:38
 msgid "_Go To"
 msgstr "A_nar a"
 
-#: ../shell/evince-menus.ui.h:38
+#: ../shell/evince-menus.ui.h:39
 msgid "Open in New _Window"
 msgstr "Dobrir dins una _novèla fenèstra"
 
-#: ../shell/evince-menus.ui.h:41
+#: ../shell/evince-menus.ui.h:42
 msgid "Auto_scroll"
 msgstr "Des_filament automatic"
 
-#: ../shell/evince-menus.ui.h:42
-msgid "_Save Image As…"
-msgstr "_Enregistrar l'imatge sous…"
-
 #: ../shell/evince-menus.ui.h:43
+msgid "_Save Image As…"
+msgstr "_Enregistrar l'imatge jos…"
+
+#: ../shell/evince-menus.ui.h:44
 msgid "Copy _Image"
 msgstr "Copiar l'_imatge"
 
-#: ../shell/evince-menus.ui.h:44
+#: ../shell/evince-menus.ui.h:45
 msgid "_Open Attachment"
 msgstr "_Dobrir la pèça junta"
 
-#: ../shell/evince-menus.ui.h:45
+#: ../shell/evince-menus.ui.h:46
 msgid "_Save Attachment As…"
 msgstr "_Enregistrar la pèça junta jos…"
 
-#: ../shell/evince-menus.ui.h:46
+#: ../shell/evince-menus.ui.h:47
 msgid "Annotation Properties…"
 msgstr "Proprietats de l'anotacion…"
 
-#: ../shell/evince-menus.ui.h:47
+#: ../shell/evince-menus.ui.h:48
 msgid "Remove Annotation"
 msgstr "Levar las anotacions"
 
@@ -1725,37 +1720,31 @@ msgid "Opening, closing, saving and printing"
 msgstr ""
 
 #: ../shell/help-overlay.ui.h:2
-#| msgid "Open Document"
 msgctxt "shortcut window"
 msgid "Open a document"
 msgstr "Dobrir un document"
 
 #: ../shell/help-overlay.ui.h:3
-#| msgid "Could not send current document"
 msgctxt "shortcut window"
 msgid "Open a copy of the current document"
 msgstr "Dobrir una còpia del document actual"
 
 #: ../shell/help-overlay.ui.h:4
-#| msgid "Could not send current document"
 msgctxt "shortcut window"
 msgid "Save a copy of the current document"
 msgstr "Enregistrar una còpia del document actual"
 
 #: ../shell/help-overlay.ui.h:5
-#| msgid "Print this document"
 msgctxt "shortcut window"
 msgid "Print the current document"
 msgstr "Imprimir lo document actual"
 
 #: ../shell/help-overlay.ui.h:6
-#| msgid "Make the current document fill the window"
 msgctxt "shortcut window"
 msgid "Close the current document window"
 msgstr "Tampar lo document actual de la fenèstra"
 
 #: ../shell/help-overlay.ui.h:7
-#| msgid "Enlarge the document"
 msgctxt "shortcut window"
 msgid "Reload the document"
 msgstr "Recargar lo document"
@@ -1771,20 +1760,19 @@ msgid "Copy highlighted text"
 msgstr "Copiar lo tèxte en susbrilhança"
 
 #: ../shell/help-overlay.ui.h:10
-#| msgid "Show the entire document"
 msgctxt "shortcut window"
 msgid "Select all the text in a document"
 msgstr "Seleccionar tot lo tèxte dins lo document"
 
 #: ../shell/help-overlay.ui.h:11
-#| msgid "Enlarge the document"
 msgctxt "shortcut window"
 msgid "Moving around the document"
 msgstr ""
 
 #: ../shell/help-overlay.ui.h:12
+#| msgid "Go to last page"
 msgctxt "shortcut window"
-msgid "Move up/down a page"
+msgid "Move around a page"
 msgstr ""
 
 #: ../shell/help-overlay.ui.h:13
@@ -1793,25 +1781,21 @@ msgid "Move up/down a page several lines at a time"
 msgstr ""
 
 #: ../shell/help-overlay.ui.h:14
-#| msgid "Go to page"
 msgctxt "shortcut window"
 msgid "Go to page number"
 msgstr "Anar a la pagina numèro"
 
 #: ../shell/help-overlay.ui.h:15
-#| msgid "Go to the next page"
 msgctxt "shortcut window"
 msgid "Go to the beginning/end of a page"
 msgstr "Anar al començament/a la fin de la pagina"
 
 #: ../shell/help-overlay.ui.h:16
-#| msgid "Show the entire document"
 msgctxt "shortcut window"
 msgid "Go to the beginning of the document"
 msgstr "Anar al començament de la pagina"
 
 #: ../shell/help-overlay.ui.h:17
-#| msgid "Show the entire document"
 msgctxt "shortcut window"
 msgid "Go to the end of the document"
 msgstr "Anar a la fin de la pagina"
@@ -1827,13 +1811,11 @@ msgid "Show the search bar"
 msgstr "Afichar la barra de recèrca"
 
 #: ../shell/help-overlay.ui.h:20
-#| msgid "Go to the next page"
 msgctxt "shortcut window"
 msgid "Go to the next search result"
 msgstr "Anar al resultat de la recèrca seguent"
 
 #: ../shell/help-overlay.ui.h:21
-#| msgid "Go to the previous page"
 msgctxt "shortcut window"
 msgid "Go to the previous search result"
 msgstr "Anar al resultat de la recèrca precedent"
@@ -1854,13 +1836,11 @@ msgid "Rotate the page 90 degrees clockwise"
 msgstr ""
 
 #: ../shell/help-overlay.ui.h:25
-#| msgid "Zoom _In"
 msgctxt "shortcut window"
 msgid "Zoom in"
 msgstr "Zoom avant"
 
 #: ../shell/help-overlay.ui.h:26
-#| msgid "Zoom _Out"
 msgctxt "shortcut window"
 msgid "Zoom out"
 msgstr "Zoom arrièr"
@@ -1871,13 +1851,11 @@ msgid "Touchpad gestures"
 msgstr ""
 
 #: ../shell/help-overlay.ui.h:28
-#| msgid "Go to next page"
 msgctxt "shortcut window"
 msgid "Go to next page"
 msgstr "Anar a la pagina seguenta"
 
 #: ../shell/help-overlay.ui.h:29
-#| msgid "Go to previous page"
 msgctxt "shortcut window"
 msgid "Go to previous page"
 msgstr "Anar a la pagina precedenta"
@@ -1928,11 +1906,11 @@ msgstr ""
 
 #~ msgid "%d found on this page"
 #~ msgid_plural "%d found on this page"
-#~ msgstr[0] "Trobat %d fois sus aquesta pagina"
-#~ msgstr[1] "Trobats %d fois sus aquesta pagina"
+#~ msgstr[0] "Trobat %d còp sus aquesta pagina"
+#~ msgstr[1] "Trobat %d còps sus aquesta pagina"
 
 #~ msgid "Not found"
-#~ msgstr "Non trobat"
+#~ msgstr "Pas trobat"
 
 #~ msgid "%3d%% remaining to search"
-#~ msgstr "%3d %% restant a recercar"
+#~ msgstr "%3d %% que demòran a recercar"
