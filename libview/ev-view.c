@@ -998,8 +998,8 @@ ev_view_scroll (EvView        *view,
 
 	view->jump_to_find_result = FALSE;
 
-	if ((!horizontal && ev_view_page_fits (view, GTK_ORIENTATION_HORIZONTAL)) ||
-	    (horizontal && ev_view_page_fits (view, GTK_ORIENTATION_VERTICAL))) {
+	if ((!horizontal && ev_view_page_fits (view, GTK_ORIENTATION_VERTICAL)) ||
+	    (horizontal && ev_view_page_fits (view, GTK_ORIENTATION_HORIZONTAL))) {
 		switch (scroll) {
 			case GTK_SCROLL_PAGE_BACKWARD:
 			case GTK_SCROLL_STEP_BACKWARD:
