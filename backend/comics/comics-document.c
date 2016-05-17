@@ -238,9 +238,11 @@ comics_decompress_temp_dir (const gchar *command_decompress_tmp,
 	return FALSE;
 }
 
-/* This function shows how to use the choosen command for decompressing a
+/* This function shows how to use the chosen command for decompressing a
  * comic book file. It modifies fields of the ComicsDocument struct with 
  * this information */
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wformat-nonliteral"
 static gboolean 
 comics_generate_command_lines (ComicsDocument *comics_document, 
 			       GError         **error)
@@ -296,6 +298,7 @@ comics_generate_command_lines (ComicsDocument *comics_document,
 	}
 
 }
+#pragma GCC diagnostic pop
 
 /* This function chooses an external command for decompressing a comic 
  * book based on its mime tipe. */

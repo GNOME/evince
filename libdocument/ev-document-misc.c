@@ -528,6 +528,8 @@ ev_document_misc_format_date (GTime utime)
 	char s[256];
 	const char fmt_hack[] = "%c";
 	size_t len;
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wformat-y2k"
 #ifdef HAVE_LOCALTIME_R
 	struct tm t;
 	if (time == 0 || !localtime_r (&time, &t)) return NULL;
@@ -537,6 +539,7 @@ ev_document_misc_format_date (GTime utime)
 	if (time == 0 || !(t = localtime (&time)) ) return NULL;
 	len = strftime (s, sizeof (s), fmt_hack, t);
 #endif
+#pragma GCC diagnostic pop
 
 	if (len == 0 || s[0] == '\0') return NULL;
 
