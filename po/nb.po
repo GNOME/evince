@@ -7,10 +7,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: evince 3.19.x\n"
+"Project-Id-Version: evince 3.20.x\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-10 12:53+0100\n"
-"PO-Revision-Date: 2016-01-10 12:57+0100\n"
+"POT-Creation-Date: 2016-05-23 19:12+0200\n"
+"PO-Revision-Date: 2016-05-23 19:13+0200\n"
 "Last-Translator: Åka Sikrom <a4NOSPAMPLEASETHANKYOU@hush.com>\n"
 "Language-Team: Norwegian bokmål <i18n-nb@lister.ping.uio.no>\n"
 "Language: \n"
@@ -77,11 +77,11 @@ msgstr "Tegneserier"
 msgid "Adds support for reading comic books"
 msgstr "Legger til støtte for tegneserier"
 
-#: ../backend/djvu/djvu-document.c:175
+#: ../backend/djvu/djvu-document.c:179
 msgid "DjVu document has incorrect format"
 msgstr "DjVu-dokumentet har feil format"
 
-#: ../backend/djvu/djvu-document.c:262
+#: ../backend/djvu/djvu-document.c:266
 msgid ""
 "The document is composed of several files. One or more of these files cannot "
 "be accessed."
@@ -641,11 +641,11 @@ msgstr "Dokumentvisning"
 msgid "Go to first page"
 msgstr "Gå til første side"
 
-#: ../libview/ev-view.c:2025 ../shell/help-overlay.ui.h:29
+#: ../libview/ev-view.c:2025
 msgid "Go to previous page"
 msgstr "Gå til forrige side"
 
-#: ../libview/ev-view.c:2027 ../shell/help-overlay.ui.h:28
+#: ../libview/ev-view.c:2027
 msgid "Go to next page"
 msgstr "Gå til neste side"
 
@@ -1692,112 +1692,149 @@ msgid "Remove Annotation"
 msgstr "Fjern anmerking"
 
 #: ../shell/help-overlay.ui.h:1
+msgctxt "shortcut window"
 msgid "Opening, closing, saving and printing"
 msgstr "Åpne, lukke, lagre og skriv ut"
 
 #: ../shell/help-overlay.ui.h:2
+msgctxt "shortcut window"
 msgid "Open a document"
 msgstr "Åpne et dokument"
 
 #: ../shell/help-overlay.ui.h:3
+msgctxt "shortcut window"
 msgid "Open a copy of the current document"
 msgstr "Åpne en kopi av dette dokumentet"
 
 #: ../shell/help-overlay.ui.h:4
+msgctxt "shortcut window"
 msgid "Save a copy of the current document"
 msgstr "Lagre en kopi av dette dokumentet"
 
 #: ../shell/help-overlay.ui.h:5
+msgctxt "shortcut window"
 msgid "Print the current document"
 msgstr "Skriv ut dette dokumentet"
 
 #: ../shell/help-overlay.ui.h:6
+msgctxt "shortcut window"
 msgid "Close the current document window"
 msgstr "Lukk dette dokumentvinduet"
 
 #: ../shell/help-overlay.ui.h:7
+msgctxt "shortcut window"
 msgid "Reload the document"
 msgstr "Last dokumentet på nytt"
 
 #: ../shell/help-overlay.ui.h:8
+msgctxt "shortcut window"
 msgid "Selecting and copying text"
 msgstr "Velg og kopier tekst"
 
 #: ../shell/help-overlay.ui.h:9
+msgctxt "shortcut window"
 msgid "Copy highlighted text"
 msgstr "Kopier markert tekst"
 
 #: ../shell/help-overlay.ui.h:10
+msgctxt "shortcut window"
 msgid "Select all the text in a document"
 msgstr "Velg all teksten i et dokument"
 
 #: ../shell/help-overlay.ui.h:11
+msgctxt "shortcut window"
 msgid "Moving around the document"
 msgstr "Navigasjon i dokumentet"
 
 #: ../shell/help-overlay.ui.h:12
+msgctxt "shortcut window"
 msgid "Move up/down a page"
 msgstr "Gå opp/ned en side"
 
 #: ../shell/help-overlay.ui.h:13
+msgctxt "shortcut window"
 msgid "Move up/down a page several lines at a time"
 msgstr "Gå opp/ned på en side flere linjer om gangen"
 
 #: ../shell/help-overlay.ui.h:14
+msgctxt "shortcut window"
 msgid "Go to page number"
 msgstr "Gå til sidenummer"
 
 #: ../shell/help-overlay.ui.h:15
+msgctxt "shortcut window"
 msgid "Go to the beginning/end of a page"
 msgstr "Gå til begynnelsen av en side"
 
 #: ../shell/help-overlay.ui.h:16
+msgctxt "shortcut window"
 msgid "Go to the beginning of the document"
 msgstr "Gå til begynnelsen av dokumentet"
 
 #: ../shell/help-overlay.ui.h:17
+msgctxt "shortcut window"
 msgid "Go to the end of the document"
 msgstr "Gå til slutten av dokumentet"
 
 #: ../shell/help-overlay.ui.h:18
+msgctxt "shortcut window"
 msgid "Finding text"
 msgstr "Søk etter tekst"
 
 #: ../shell/help-overlay.ui.h:19
+msgctxt "shortcut window"
 msgid "Show the search bar"
 msgstr "Vis søkelinjen"
 
 #: ../shell/help-overlay.ui.h:20
+msgctxt "shortcut window"
 msgid "Go to the next search result"
 msgstr "Gå til neste søkeresultat"
 
 #: ../shell/help-overlay.ui.h:21
+msgctxt "shortcut window"
 msgid "Go to the previous search result"
 msgstr "Gå til forrige søkeresultat"
 
 #: ../shell/help-overlay.ui.h:22
+msgctxt "shortcut window"
 msgid "Rotating and zooming"
 msgstr "Rotering og zoom"
 
 #: ../shell/help-overlay.ui.h:23
+msgctxt "shortcut window"
 msgid "Rotate the page 90 degrees counter-clockwise"
 msgstr "Roter siden 90 grader mot klokken"
 
 #: ../shell/help-overlay.ui.h:24
+msgctxt "shortcut window"
 msgid "Rotate the page 90 degrees clockwise"
 msgstr "Roter siden 90 grader med klokken"
 
 #: ../shell/help-overlay.ui.h:25
+msgctxt "shortcut window"
 msgid "Zoom in"
 msgstr "Zoom inn"
 
 #: ../shell/help-overlay.ui.h:26
+msgctxt "shortcut window"
 msgid "Zoom out"
 msgstr "Zoom ut"
 
 #: ../shell/help-overlay.ui.h:27
+msgctxt "shortcut window"
 msgid "Touchpad gestures"
 msgstr "Bevegelser for pekeplate"
+
+#: ../shell/help-overlay.ui.h:28
+msgctxt "shortcut window"
+msgid "Go to next page"
+msgstr "Gå til neste side"
+
+#: ../shell/help-overlay.ui.h:29
+msgctxt "shortcut window"
+msgid "Go to previous page"
+msgstr "Gå til forrige side"
 
 #: ../evince.appdata.xml.in.h:2
 msgid "Document viewer for popular document formats"
