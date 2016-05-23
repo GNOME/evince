@@ -139,6 +139,7 @@ main (gint argc, gchar **argv)
         GtkApplication  *application;
 	GOptionContext  *context;
 	GError          *error = NULL;
+	gchar           *path;
         int              status = 1;
 
 #ifdef G_OS_WIN32
@@ -194,10 +195,12 @@ main (gint argc, gchar **argv)
                 return 1;
         }
 
-	if (!g_file_test (argv[1], G_FILE_TEST_IS_REGULAR)) {
+	path = g_filename_from_uri (argv[1], NULL, NULL);
+	if (!g_file_test (argv[1], G_FILE_TEST_IS_REGULAR) && !g_file_test (path, G_FILE_TEST_IS_REGULAR)) {
 		g_printerr ("Filename \"%s\" does not exist or is not a regular file\n", argv[1]);
                 return 1;
 	}
+        g_free (path);
 
 	if (!ev_init ())
                 return 1;
