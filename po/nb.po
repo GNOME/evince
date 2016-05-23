@@ -7,10 +7,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: evince 3.19.x\n"
+"Project-Id-Version: evince 3.21.x\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-10 12:53+0100\n"
-"PO-Revision-Date: 2016-01-10 12:57+0100\n"
+"POT-Creation-Date: 2016-05-23 19:13+0200\n"
+"PO-Revision-Date: 2016-05-23 19:14+0200\n"
 "Last-Translator: Åka Sikrom <a4NOSPAMPLEASETHANKYOU@hush.com>\n"
 "Language-Team: Norwegian bokmål <i18n-nb@lister.ping.uio.no>\n"
 "Language: \n"
@@ -36,34 +36,34 @@ msgstr "Kommando «%s» mislyktes ved dekomprimering av tegneserien."
 msgid "The command “%s” did not end normally."
 msgstr "Kommandoen «%s» avsluttet ikke på normal måte."
 
-#: ../backend/comics/comics-document.c:450
+#: ../backend/comics/comics-document.c:453
 #, c-format
 msgid "Not a comic book MIME type: %s"
 msgstr "«%s» er ikke en tegneserie-MIME-type"
 
-#: ../backend/comics/comics-document.c:457
+#: ../backend/comics/comics-document.c:460
 msgid "Can't find an appropriate command to decompress this type of comic book"
 msgstr "Fant ingen passende kommando å dekomprimere denne typen tegneserie med"
 
-#: ../backend/comics/comics-document.c:512
+#: ../backend/comics/comics-document.c:515
 msgid "File corrupted"
 msgstr "Filen er korrupt"
 
-#: ../backend/comics/comics-document.c:525
+#: ../backend/comics/comics-document.c:528
 msgid "No files in archive"
 msgstr "Ingen filer i arkivet"
 
-#: ../backend/comics/comics-document.c:564
+#: ../backend/comics/comics-document.c:567
 #, c-format
 msgid "No images found in archive %s"
 msgstr "Fant ingen bilder i arkiv %s"
 
-#: ../backend/comics/comics-document.c:814
+#: ../backend/comics/comics-document.c:817
 #, c-format
 msgid "There was an error deleting “%s”."
 msgstr "Det oppsto en feil ved sletting av «%s»."
 
-#: ../backend/comics/comics-document.c:907
+#: ../backend/comics/comics-document.c:910
 #, c-format
 msgid "Error %s"
 msgstr "Feil %s"
@@ -77,11 +77,11 @@ msgstr "Tegneserier"
 msgid "Adds support for reading comic books"
 msgstr "Legger til støtte for tegneserier"
 
-#: ../backend/djvu/djvu-document.c:175
+#: ../backend/djvu/djvu-document.c:179
 msgid "DjVu document has incorrect format"
 msgstr "DjVu-dokumentet har feil format"
 
-#: ../backend/djvu/djvu-document.c:262
+#: ../backend/djvu/djvu-document.c:266
 msgid ""
 "The document is composed of several files. One or more of these files cannot "
 "be accessed."
@@ -280,17 +280,17 @@ msgid "Adds support for reading XPS documents"
 msgstr "Legger til støtte for å lese XPS-dokumenter"
 
 #: ../browser-plugin/EvBrowserPluginToolbar.cpp:288
-#: ../previewer/ev-previewer-window.c:317 ../shell/evince-menus.ui.h:32
+#: ../previewer/ev-previewer-window.c:317 ../shell/evince-menus.ui.h:33
 msgid "Fit Pa_ge"
 msgstr "Til_pass siden"
 
 #: ../browser-plugin/EvBrowserPluginToolbar.cpp:297
-#: ../previewer/ev-previewer-window.c:320 ../shell/evince-menus.ui.h:33
+#: ../previewer/ev-previewer-window.c:320 ../shell/evince-menus.ui.h:34
 msgid "Fit _Width"
 msgstr "Tilpass _bredde"
 
 #: ../browser-plugin/EvBrowserPluginToolbar.cpp:306
-#: ../shell/evince-menus.ui.h:34
+#: ../shell/evince-menus.ui.h:35
 msgid "_Automatic"
 msgstr "_Automatisk"
 
@@ -637,46 +637,46 @@ msgstr "Rull visning ned"
 msgid "Document View"
 msgstr "Dokumentvisning"
 
-#: ../libview/ev-view.c:2023
+#: ../libview/ev-view.c:2026
 msgid "Go to first page"
 msgstr "Gå til første side"
 
-#: ../libview/ev-view.c:2025 ../shell/help-overlay.ui.h:29
+#: ../libview/ev-view.c:2028
 msgid "Go to previous page"
 msgstr "Gå til forrige side"
 
-#: ../libview/ev-view.c:2027 ../shell/help-overlay.ui.h:28
+#: ../libview/ev-view.c:2030
 msgid "Go to next page"
 msgstr "Gå til neste side"
 
-#: ../libview/ev-view.c:2029
+#: ../libview/ev-view.c:2032
 msgid "Go to last page"
 msgstr "Gå til siste side"
 
-#: ../libview/ev-view.c:2031
+#: ../libview/ev-view.c:2034
 msgid "Go to page"
 msgstr "Gå til side"
 
-#: ../libview/ev-view.c:2033
+#: ../libview/ev-view.c:2036
 msgid "Find"
 msgstr "Søk"
 
-#: ../libview/ev-view.c:2061
+#: ../libview/ev-view.c:2064
 #, c-format
 msgid "Go to page %s"
 msgstr "Gå til side %s"
 
-#: ../libview/ev-view.c:2067
+#: ../libview/ev-view.c:2070
 #, c-format
 msgid "Go to %s on file “%s”"
 msgstr "Gå til %s i fil «%s»"
 
-#: ../libview/ev-view.c:2070
+#: ../libview/ev-view.c:2073
 #, c-format
 msgid "Go to file “%s”"
 msgstr "Gå til fil «%s»"
 
-#: ../libview/ev-view.c:2078
+#: ../libview/ev-view.c:2081
 #, c-format
 msgid "Launch %s"
 msgstr "Start %s"
@@ -714,11 +714,11 @@ msgstr "Klarte ikke å skrive ut dokumentet"
 msgid "The selected printer '%s' could not be found"
 msgstr "Valgt skriver, «%s», ble ikke funnet"
 
-#: ../previewer/ev-previewer-window.c:270 ../shell/evince-menus.ui.h:39
+#: ../previewer/ev-previewer-window.c:270 ../shell/evince-menus.ui.h:40
 msgid "_Previous Page"
 msgstr "_Forrige side"
 
-#: ../previewer/ev-previewer-window.c:273 ../shell/evince-menus.ui.h:40
+#: ../previewer/ev-previewer-window.c:273 ../shell/evince-menus.ui.h:41
 msgid "_Next Page"
 msgstr "_Neste side"
 
@@ -1528,276 +1528,317 @@ msgid "_New Window"
 msgstr "_Nytt vindu"
 
 #: ../shell/evince-menus.ui.h:2
+msgid "_Keyboard Shortcuts"
+msgstr "_Tastatursnarveier"
+
+#: ../shell/evince-menus.ui.h:3
 msgid "_Help"
 msgstr "_Hjelp"
 
-#: ../shell/evince-menus.ui.h:3
+#: ../shell/evince-menus.ui.h:4
 msgid "_About"
 msgstr "_Om"
 
-#: ../shell/evince-menus.ui.h:4
+#: ../shell/evince-menus.ui.h:5
 msgid "_Continuous"
 msgstr "_Sammenhengende"
 
-#: ../shell/evince-menus.ui.h:5
+#: ../shell/evince-menus.ui.h:6
 msgid "_Dual"
 msgstr "_Dobbel"
 
-#: ../shell/evince-menus.ui.h:6
+#: ../shell/evince-menus.ui.h:7
 msgid "Side _Pane"
 msgstr "Si_defelt"
 
-#: ../shell/evince-menus.ui.h:7
+#: ../shell/evince-menus.ui.h:8
 msgid "_Fullscreen"
 msgstr "_Fullskjerm"
 
-#: ../shell/evince-menus.ui.h:8
+#: ../shell/evince-menus.ui.h:9
 msgid "Pre_sentation"
 msgstr "Pre_sentasjon"
 
-#: ../shell/evince-menus.ui.h:9
+#: ../shell/evince-menus.ui.h:10
 msgid "Rotate _Left"
 msgstr "Roter til _venstre"
 
-#: ../shell/evince-menus.ui.h:10
+#: ../shell/evince-menus.ui.h:11
 msgid "Rotate _Right"
 msgstr "_Roter til høyre"
 
-#: ../shell/evince-menus.ui.h:11
+#: ../shell/evince-menus.ui.h:12
 msgid "First Page"
 msgstr "Første side"
 
-#: ../shell/evince-menus.ui.h:12
+#: ../shell/evince-menus.ui.h:13
 msgid "Previous Page"
 msgstr "Forrige side"
 
-#: ../shell/evince-menus.ui.h:13
+#: ../shell/evince-menus.ui.h:14
 msgid "Next Page"
 msgstr "Neste side"
 
-#: ../shell/evince-menus.ui.h:14
+#: ../shell/evince-menus.ui.h:15
 msgid "Last Page"
 msgstr "Siste side"
 
-#: ../shell/evince-menus.ui.h:15
+#: ../shell/evince-menus.ui.h:16
 msgid "Zoom _In"
 msgstr "Zoom _inn"
 
-#: ../shell/evince-menus.ui.h:16
+#: ../shell/evince-menus.ui.h:17
 msgid "Zoom _Out"
 msgstr "Zoom _ut"
 
-#: ../shell/evince-menus.ui.h:17
+#: ../shell/evince-menus.ui.h:18
 msgid "_Odd Pages Left"
 msgstr "_Oddetallssider til venstre"
 
-#: ../shell/evince-menus.ui.h:18
+#: ../shell/evince-menus.ui.h:19
 msgid "_Inverted Colors"
 msgstr "_Inverterte farger"
 
-#: ../shell/evince-menus.ui.h:19
+#: ../shell/evince-menus.ui.h:20
 msgid "_Reload"
 msgstr "L_es på nytt"
 
-#: ../shell/evince-menus.ui.h:20
+#: ../shell/evince-menus.ui.h:21
 msgid "_Open…"
 msgstr "_Åpne …"
 
-#: ../shell/evince-menus.ui.h:21
+#: ../shell/evince-menus.ui.h:22
 msgid "Op_en a Copy"
 msgstr "Åpn_e en kopi"
 
-#: ../shell/evince-menus.ui.h:22
+#: ../shell/evince-menus.ui.h:23
 msgid "_Save a Copy…"
 msgstr "_Lagre en kopi …"
 
-#: ../shell/evince-menus.ui.h:23
+#: ../shell/evince-menus.ui.h:24
 msgid "Send _To…"
 msgstr "Send _til …"
 
-#: ../shell/evince-menus.ui.h:24
+#: ../shell/evince-menus.ui.h:25
 msgid "Open Containing _Folder"
 msgstr "Åpner opphavs_mappe"
 
-#: ../shell/evince-menus.ui.h:25
+#: ../shell/evince-menus.ui.h:26
 msgid "_Print…"
 msgstr "_Skriv ut …"
 
-#: ../shell/evince-menus.ui.h:26
+#: ../shell/evince-menus.ui.h:27
 msgid "P_roperties…"
 msgstr "E_genskaper"
 
-#: ../shell/evince-menus.ui.h:27
+#: ../shell/evince-menus.ui.h:28
 msgid "_Copy"
 msgstr "_Kopier"
 
-#: ../shell/evince-menus.ui.h:28
+#: ../shell/evince-menus.ui.h:29
 msgid "Select _All"
 msgstr "Velg _alt"
 
-#: ../shell/evince-menus.ui.h:29
+#: ../shell/evince-menus.ui.h:30
 msgid "Save Current Settings as _Default"
 msgstr "Lagre gjeldende innstillinger som _standardvalg"
 
-#: ../shell/evince-menus.ui.h:30
+#: ../shell/evince-menus.ui.h:31
 msgid "_Add Bookmark"
 msgstr "_Legg til bokmerke"
 
-#: ../shell/evince-menus.ui.h:31
+#: ../shell/evince-menus.ui.h:32
 msgid "_Close"
 msgstr "_Lukk"
 
-#: ../shell/evince-menus.ui.h:35
+#: ../shell/evince-menus.ui.h:36
 msgid "_Open Link"
 msgstr "_Åpne lenke"
 
-#: ../shell/evince-menus.ui.h:36
+#: ../shell/evince-menus.ui.h:37
 msgid "_Copy Link Address"
 msgstr "_Kopier lenkeadressen"
 
-#: ../shell/evince-menus.ui.h:37
+#: ../shell/evince-menus.ui.h:38
 msgid "_Go To"
 msgstr "_Gå til"
 
-#: ../shell/evince-menus.ui.h:38
+#: ../shell/evince-menus.ui.h:39
 msgid "Open in New _Window"
 msgstr "Åpne i nytt _vindu"
 
-#: ../shell/evince-menus.ui.h:41
+#: ../shell/evince-menus.ui.h:42
 msgid "Auto_scroll"
 msgstr "Automati_sk rulling"
 
-#: ../shell/evince-menus.ui.h:42
+#: ../shell/evince-menus.ui.h:43
 msgid "_Save Image As…"
 msgstr "Lagre bilde _som …"
 
-#: ../shell/evince-menus.ui.h:43
+#: ../shell/evince-menus.ui.h:44
 msgid "Copy _Image"
 msgstr "Kopier b_ilde"
 
-#: ../shell/evince-menus.ui.h:44
+#: ../shell/evince-menus.ui.h:45
 msgid "_Open Attachment"
 msgstr "_Åpne vedlegg"
 
-#: ../shell/evince-menus.ui.h:45
+#: ../shell/evince-menus.ui.h:46
 msgid "_Save Attachment As…"
 msgstr "Lagre vedlegg _som …"
 
-#: ../shell/evince-menus.ui.h:46
+#: ../shell/evince-menus.ui.h:47
 msgid "Annotation Properties…"
 msgstr "Egenskaper for anmerkninger …"
 
-#: ../shell/evince-menus.ui.h:47
+#: ../shell/evince-menus.ui.h:48
 msgid "Remove Annotation"
 msgstr "Fjern anmerking"
 
 #: ../shell/help-overlay.ui.h:1
+msgctxt "shortcut window"
 msgid "Opening, closing, saving and printing"
 msgstr "Åpne, lukke, lagre og skriv ut"
 
 #: ../shell/help-overlay.ui.h:2
+msgctxt "shortcut window"
 msgid "Open a document"
 msgstr "Åpne et dokument"
 
 #: ../shell/help-overlay.ui.h:3
+msgctxt "shortcut window"
 msgid "Open a copy of the current document"
 msgstr "Åpne en kopi av dette dokumentet"
 
 #: ../shell/help-overlay.ui.h:4
+msgctxt "shortcut window"
 msgid "Save a copy of the current document"
 msgstr "Lagre en kopi av dette dokumentet"
 
 #: ../shell/help-overlay.ui.h:5
+msgctxt "shortcut window"
 msgid "Print the current document"
 msgstr "Skriv ut dette dokumentet"
 
 #: ../shell/help-overlay.ui.h:6
+msgctxt "shortcut window"
 msgid "Close the current document window"
 msgstr "Lukk dette dokumentvinduet"
 
 #: ../shell/help-overlay.ui.h:7
+msgctxt "shortcut window"
 msgid "Reload the document"
 msgstr "Last dokumentet på nytt"
 
 #: ../shell/help-overlay.ui.h:8
+msgctxt "shortcut window"
 msgid "Selecting and copying text"
 msgstr "Velg og kopier tekst"
 
 #: ../shell/help-overlay.ui.h:9
+msgctxt "shortcut window"
 msgid "Copy highlighted text"
 msgstr "Kopier markert tekst"
 
 #: ../shell/help-overlay.ui.h:10
+msgctxt "shortcut window"
 msgid "Select all the text in a document"
 msgstr "Velg all teksten i et dokument"
 
 #: ../shell/help-overlay.ui.h:11
+msgctxt "shortcut window"
 msgid "Moving around the document"
 msgstr "Navigasjon i dokumentet"
 
 #: ../shell/help-overlay.ui.h:12
-msgid "Move up/down a page"
+msgctxt "shortcut window"
+msgid "Move around a page"
 msgstr "Gå opp/ned en side"
 
 #: ../shell/help-overlay.ui.h:13
+msgctxt "shortcut window"
 msgid "Move up/down a page several lines at a time"
 msgstr "Gå opp/ned på en side flere linjer om gangen"
 
 #: ../shell/help-overlay.ui.h:14
+msgctxt "shortcut window"
 msgid "Go to page number"
 msgstr "Gå til sidenummer"
 
 #: ../shell/help-overlay.ui.h:15
+msgctxt "shortcut window"
 msgid "Go to the beginning/end of a page"
 msgstr "Gå til begynnelsen av en side"
 
 #: ../shell/help-overlay.ui.h:16
+msgctxt "shortcut window"
 msgid "Go to the beginning of the document"
 msgstr "Gå til begynnelsen av dokumentet"
 
 #: ../shell/help-overlay.ui.h:17
+msgctxt "shortcut window"
 msgid "Go to the end of the document"
 msgstr "Gå til slutten av dokumentet"
 
 #: ../shell/help-overlay.ui.h:18
+msgctxt "shortcut window"
 msgid "Finding text"
 msgstr "Søk etter tekst"
 
 #: ../shell/help-overlay.ui.h:19
+msgctxt "shortcut window"
 msgid "Show the search bar"
 msgstr "Vis søkelinjen"
 
 #: ../shell/help-overlay.ui.h:20
+msgctxt "shortcut window"
 msgid "Go to the next search result"
 msgstr "Gå til neste søkeresultat"
 
 #: ../shell/help-overlay.ui.h:21
+msgctxt "shortcut window"
 msgid "Go to the previous search result"
 msgstr "Gå til forrige søkeresultat"
 
 #: ../shell/help-overlay.ui.h:22
+msgctxt "shortcut window"
 msgid "Rotating and zooming"
 msgstr "Rotering og zoom"
 
 #: ../shell/help-overlay.ui.h:23
+msgctxt "shortcut window"
 msgid "Rotate the page 90 degrees counter-clockwise"
 msgstr "Roter siden 90 grader mot klokken"
 
 #: ../shell/help-overlay.ui.h:24
+msgctxt "shortcut window"
 msgid "Rotate the page 90 degrees clockwise"
 msgstr "Roter siden 90 grader med klokken"
 
 #: ../shell/help-overlay.ui.h:25
+msgctxt "shortcut window"
 msgid "Zoom in"
 msgstr "Zoom inn"
 
 #: ../shell/help-overlay.ui.h:26
+msgctxt "shortcut window"
 msgid "Zoom out"
 msgstr "Zoom ut"
 
 #: ../shell/help-overlay.ui.h:27
+msgctxt "shortcut window"
 msgid "Touchpad gestures"
 msgstr "Bevegelser for pekeplate"
+
+#: ../shell/help-overlay.ui.h:28
+msgctxt "shortcut window"
+msgid "Go to next page"
+msgstr "Gå til neste side"
+
+#: ../shell/help-overlay.ui.h:29
+msgctxt "shortcut window"
+msgid "Go to previous page"
+msgstr "Gå til forrige side"
 
 #: ../evince.appdata.xml.in.h:2
 msgid "Document viewer for popular document formats"
