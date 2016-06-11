@@ -2583,6 +2583,8 @@ ev_window_open_copy_at_dest (EvWindow   *window,
 	ev_window_open_document (new_window,
 				 window->priv->document,
 				 dest, 0, NULL);
+	new_window->priv->chrome = window->priv->chrome;
+
 	gtk_window_present (GTK_WINDOW (new_window));
 }
 
