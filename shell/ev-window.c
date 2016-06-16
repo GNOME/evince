@@ -211,7 +211,6 @@ struct _EvWindowPrivate {
 
 	EvJob            *load_job;
 	EvJob            *reload_job;
-	EvJob            *thumbnail_job;
 	EvJob            *save_job;
 
 	/* Printing */
@@ -300,8 +299,6 @@ static void     ev_window_reload_document               (EvWindow         *windo
 							 EvLinkDest *dest);
 static void     ev_window_reload_job_cb                 (EvJob            *job,
 							 EvWindow         *window);
-static void     ev_window_set_icon_from_thumbnail       (EvJobThumbnail   *job,
-							 EvWindow         *ev_window);
 static void     ev_window_save_job_cb                   (EvJob            *save,
 							 EvWindow         *window);
 static void     ev_window_sizing_mode_changed_cb        (EvDocumentModel  *model,
@@ -1404,63 +1401,6 @@ ev_window_setup_default (EvWindow *ev_window)
 }
 
 static void
-ev_window_clear_thumbnail_job (EvWindow *ev_window)
-{
-	if (ev_window->priv->thumbnail_job != NULL) {
-		if (!ev_job_is_finished (ev_window->priv->thumbnail_job))
-			ev_job_cancel (ev_window->priv->thumbnail_job);
-		
-		g_signal_handlers_disconnect_by_func (ev_window->priv->thumbnail_job,
-						      ev_window_set_icon_from_thumbnail,
-						      ev_window);
-		g_object_unref (ev_window->priv->thumbnail_job);
-		ev_window->priv->thumbnail_job = NULL;
-	}
-}
-
-static void
-ev_window_set_icon_from_thumbnail (EvJobThumbnail *job,
-				   EvWindow       *ev_window)
-{
-	if (job->thumbnail) {
-		if (ev_document_model_get_inverted_colors (ev_window->priv->model))
-			ev_document_misc_invert_pixbuf (job->thumbnail);
-		gtk_window_set_icon (GTK_WINDOW (ev_window),
-				     job->thumbnail);
-	}
-
-	ev_window_clear_thumbnail_job (ev_window);
-}
-
-static void
-ev_window_refresh_window_thumbnail (EvWindow *ev_window)
-{
-	gdouble page_width, page_height;
-	gint width, height;
-	gint rotation;
-	EvDocument *document = ev_window->priv->document;
-
-	if (!document || ev_document_get_n_pages (document) <= 0 ||
-	    !ev_document_check_dimensions (document)) {
-		return;
-	}
-
-	ev_window_clear_thumbnail_job (ev_window);
-
-	ev_document_get_page_size (document, 0, &page_width, &page_height);
-	width = 128;
-	height = (int)(width * page_height / page_width + 0.5);
-	rotation = ev_document_model_get_rotation (ev_window->priv->model);
-
-	ev_window->priv->thumbnail_job = ev_job_thumbnail_new_with_target_size (document, 0, rotation,
-										width, height);
-	g_signal_connect (ev_window->priv->thumbnail_job, "finished",
-			  G_CALLBACK (ev_window_set_icon_from_thumbnail),
-			  ev_window);
-	ev_job_scheduler_push_job (ev_window->priv->thumbnail_job, EV_JOB_PRIORITY_NONE);
-}
-
-static void
 override_restrictions_changed (GSettings *settings,
 			       gchar     *key,
 			       EvWindow  *ev_window)
@@ -1510,8 +1450,6 @@ ev_window_setup_document (EvWindow *ev_window)
 	EvDocument *document = ev_window->priv->document;
 
 	ev_window->priv->setup_document_idle = 0;
-
-	ev_window_refresh_window_thumbnail (ev_window);
 
 	ev_window_set_page_mode (ev_window, PAGE_MODE_DOCUMENT);
 	ev_window_title_set_document (ev_window->priv->title, document);
@@ -4842,8 +4780,6 @@ ev_window_rotation_changed_cb (EvDocumentModel *model,
 	if (window->priv->metadata && !ev_window_is_empty (window))
 		ev_metadata_set_int (window->priv->metadata, "rotation",
 				     rotation);
-
-	ev_window_refresh_window_thumbnail (window);
 }
 
 static void
@@ -4861,8 +4797,6 @@ ev_window_inverted_colors_changed_cb (EvDocumentModel *model,
 	if (window->priv->metadata && !ev_window_is_empty (window))
 		ev_metadata_set_boolean (window->priv->metadata, "inverted-colors",
 					 inverted_colors);
-
-	ev_window_refresh_window_thumbnail (window);
 }
 
 static void
@@ -5542,10 +5476,6 @@ ev_window_dispose (GObject *object)
 
 	if (priv->save_job) {
 		ev_window_clear_save_job (window);
-	}
-
-	if (priv->thumbnail_job) {
-		ev_window_clear_thumbnail_job (window);
 	}
 
 	if (priv->local_uri) {
