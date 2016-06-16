@@ -974,6 +974,8 @@ app_about_cb (GSimpleAction *action,
               GVariant      *parameter,
               gpointer       user_data)
 {
+        EvApplication *application = user_data;
+
         const char *authors[] = {
                 "Martin Kretzschmar <m_kretzschmar@gmx.net>",
                 "Jonathan Blandford <jrb@gnome.org>",
@@ -1020,7 +1022,7 @@ app_about_cb (GSimpleAction *action,
                                      _(license[2]), "\n",
                                      NULL);
 
-        gtk_show_about_dialog (NULL,
+        gtk_show_about_dialog (gtk_application_get_active_window (GTK_APPLICATION (application)),
                                "name", _("Evince"),
                                "version", VERSION,
                                "copyright", _("© 1996–2014 The Evince authors"),
