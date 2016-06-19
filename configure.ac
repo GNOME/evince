@@ -174,6 +174,10 @@ else
    AC_MSG_RESULT([no])
 fi
 
+
+# Check if GTK+ version is older than 3.20 to use different CSS.
+AM_CONDITIONAL([HAVE_GTK_320],[$($PKG_CONFIG --atleast-version=3.20.0 gtk+-3.0)])
+
 SHELL_PLATFORM_PKGS=
 case "$with_platform" in
   gnome)

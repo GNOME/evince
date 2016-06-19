@@ -168,14 +168,27 @@ endif
 
 EXTRA_DIST = \
 	evince.css \
+	evince-3-18.css \
 	evince-menus.ui \
         help-overlay.ui \
 	evince-icon.rc \
-	evince.gresource.xml \
+	evince.gresource.xml.in \
 	ev-gdbus.xml \
 	ev-daemon-gdbus.xml
 
-ev-resources.c: evince.gresource.xml Makefile $(shell $(GLIB_COMPILE_RESOURCES) --generate-dependencies --sourcedir=$(srcdir) --sourcedir=$(top_srcdir)/data $(srcdir)/evince.gresource.xml)
+GRESOURCE_XML_IN_FILES = evince.gresource.xml.in
+GRESOURCE_XML_FILE = $(GRESOURCE_XML_IN_FILES:.xml.in=.xml)
+
+if HAVE_GTK_320
+EVINCE_CSS=evince.css
+else
+EVINCE_CSS=evince-3-18.css
+endif
+
+$(GRESOURCE_XML_FILE): $(GRESOURCE_XML_IN_FILES) Makefile
+	$(AM_V_GEN) $(SED) -e "s|\@EVINCE_CSS\@|$(EVINCE_CSS)|" $< > $@
+
+ev-resources.c: $(GRESOURCE_XML_FILE) Makefile $(shell $(GLIB_COMPILE_RESOURCES) --generate-dependencies --sourcedir=$(srcdir) --sourcedir=$(top_srcdir)/data $(srcdir)/evince.gresource.xml)
 	$(AM_V_GEN) XMLLINT=$(XMLLINT) $(GLIB_COMPILE_RESOURCES) --target $@ --sourcedir=$(srcdir) --sourcedir=$(top_srcdir)/data --generate-source --c-name ev $<
 
 ev-gdbus-generated.c ev-gdbus-generated.h: ev-gdbus.xml Makefile
@@ -194,6 +207,6 @@ ev-daemon-gdbus-generated.c ev-daemon-gdbus-generated.h: ev-daemon-gdbus.xml Mak
 			--generate-c-code ev-daemon-gdbus-generated \
 			$<
 
-DISTCLEANFILES = $(BUILT_SOURCES)
+DISTCLEANFILES = $(BUILT_SOURCES) $(GRESOURCE_XML_FILE)
 
 -include $(top_srcdir)/git.mk

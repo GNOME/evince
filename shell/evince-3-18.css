@@ -1,0 +1,57 @@
+#ev-fullscreen-toolbar {
+    -GtkToolbar-shadow-type: none;
+}
+
+#ev-loading-message {
+    background-color: @theme_bg_color;
+    color: @theme_fg_color;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.content-view.document-page {
+    border-style: solid;
+    border-width: 3px 3px 6px 4px;
+    border-image: url("resource:///org/gnome/evince/ui/thumbnail-frame.png") 3 3 6 4;
+    background-color: @theme_bg_color;
+}
+
+EvView {
+    background-color: @theme_bg_color;
+}
+
+EvView:selected {
+    background-color: @theme_selected_bg_color;
+}
+
+EvView.document-page {
+    background-color: white;
+    padding: 0;
+}
+
+EvView.document-page.inverted {
+    background-color: black;
+}
+
+EvSidebarThumbnails.page-thumbnail {
+    background-color: white;
+    border-color: black;
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 0;
+    border-image: none;
+    padding: 0;
+}
+
+EvSidebarThumbnails.page-thumbnail.inverted {
+    background-color: black;
+}
+
+@binding-set MoveCursor {
+    unbind "<Control>p";
+    unbind "<Control>n";
+}
+
+GtkIconView {
+    gtk-key-bindings: MoveCursor;
+}
