@@ -96,7 +96,7 @@ ev_annotation_properties_dialog_constructed (GObject *object)
 	case EV_ANNOTATION_TYPE_TEXT:
 		label = gtk_label_new (_("Icon:"));
 		gtk_misc_set_alignment (GTK_MISC (label), 0., 0.5);
-		gtk_grid_attach (GTK_GRID (grid), label, 0, 5, 1, 1);
+		gtk_grid_attach (GTK_GRID (grid), label, 0, 4, 1, 1);
 		gtk_widget_show (label);
 
 		dialog->icon = gtk_combo_box_text_new ();
@@ -111,7 +111,7 @@ ev_annotation_properties_dialog_constructed (GObject *object)
 		gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (dialog->icon), _("Circle"));
 		gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (dialog->icon), _("Unknown"));
 		gtk_combo_box_set_active (GTK_COMBO_BOX (dialog->icon), 0);
-		gtk_grid_attach (GTK_GRID (grid), dialog->icon, 1, 5, 1, 1);
+		gtk_grid_attach (GTK_GRID (grid), dialog->icon, 1, 4, 1, 1);
                 gtk_widget_set_hexpand (dialog->icon, TRUE);
 		gtk_widget_show (dialog->icon);
 
@@ -147,8 +147,6 @@ ev_annotation_properties_dialog_init (EvAnnotationPropertiesDialog *annot_dialog
 	GtkWidget *content_area;
 	GtkWidget *label;
 	GtkWidget *grid;
-	GtkWidget *hbox;
-	gchar     *markup;
         const GdkRGBA yellow = { 1., 1., 0., 1. };
 
 	gtk_window_set_title (GTK_WINDOW (annot_dialog), _("Annotation Properties"));
@@ -161,13 +159,12 @@ ev_annotation_properties_dialog_init (EvAnnotationPropertiesDialog *annot_dialog
 	gtk_dialog_set_default_response (dialog, GTK_RESPONSE_APPLY);
 
 	content_area = gtk_dialog_get_content_area (dialog);
-	gtk_box_set_spacing (GTK_BOX (content_area), 2);
+	gtk_box_set_spacing (GTK_BOX (content_area), 12);
 
 	grid = gtk_grid_new ();
 	annot_dialog->grid = grid;
 	gtk_grid_set_column_spacing (GTK_GRID (grid), 12);
 	gtk_grid_set_row_spacing (GTK_GRID (grid), 6);
-	gtk_container_set_border_width (GTK_CONTAINER (grid), 12);
 	gtk_box_pack_start (GTK_BOX (content_area), grid, FALSE, FALSE, 0);
 	gtk_widget_show (grid);
 
@@ -192,7 +189,7 @@ ev_annotation_properties_dialog_init (EvAnnotationPropertiesDialog *annot_dialog
         gtk_widget_set_hexpand (annot_dialog->color, TRUE);
 	gtk_widget_show (annot_dialog->color);
 
-	label = gtk_label_new (_("Style:"));
+	label = gtk_label_new (_("Opacity:"));
 	gtk_misc_set_alignment (GTK_MISC (label), 0., 0.5);
 	gtk_grid_attach (GTK_GRID (grid), label, 0, 2, 1, 1);
 	gtk_widget_show (label);
@@ -204,36 +201,16 @@ ev_annotation_properties_dialog_init (EvAnnotationPropertiesDialog *annot_dialog
         gtk_widget_set_hexpand (annot_dialog->opacity, TRUE);
 	gtk_widget_show (annot_dialog->opacity);
 
-	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
-
-	label = gtk_label_new (NULL);
-	markup = g_strdup_printf ("<small>%s</small>", _("Transparent"));
-	gtk_label_set_markup (GTK_LABEL (label), markup);
-	g_free (markup);
-	gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
-	gtk_widget_show (label);
-
-	label = gtk_label_new (NULL);
-	markup = g_strdup_printf ("<small>%s</small>", _("Opaque"));
-	gtk_label_set_markup (GTK_LABEL (label), markup);
-	g_free (markup);
-	gtk_box_pack_end (GTK_BOX (hbox), label, FALSE, FALSE, 0);
-	gtk_widget_show (label);
-
-	gtk_grid_attach (GTK_GRID (grid), hbox, 1, 3, 1, 1);
-        gtk_widget_set_hexpand (hbox, TRUE);
-	gtk_widget_show (hbox);
-
 	label = gtk_label_new (_("Initial window state:"));
 	gtk_misc_set_alignment (GTK_MISC (label), 0., 0.5);
-	gtk_grid_attach (GTK_GRID (grid), label, 0, 4, 1, 1);
+	gtk_grid_attach (GTK_GRID (grid), label, 0, 3, 1, 1);
 	gtk_widget_show (label);
 
 	annot_dialog->popup_state = gtk_combo_box_text_new ();
 	gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (annot_dialog->popup_state), _("Open"));
 	gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (annot_dialog->popup_state), _("Close"));
 	gtk_combo_box_set_active (GTK_COMBO_BOX (annot_dialog->popup_state), 1);
-	gtk_grid_attach (GTK_GRID (grid), annot_dialog->popup_state, 1, 4, 1, 1);
+	gtk_grid_attach (GTK_GRID (grid), annot_dialog->popup_state, 1, 3, 1, 1);
         gtk_widget_set_hexpand (annot_dialog->popup_state, TRUE);
 	gtk_widget_show (annot_dialog->popup_state);
 }
