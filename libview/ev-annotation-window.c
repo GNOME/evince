@@ -539,6 +539,18 @@ ev_annotation_window_focus_out_event (GtkWidget     *widget,
 	return FALSE;
 }
 
+static gboolean
+ev_annotation_window_key_press_event (GtkWidget   *widget,
+                                      GdkEventKey *event)
+{
+        if (event->keyval == GDK_KEY_Escape) {
+                ev_annotation_window_close (EV_ANNOTATION_WINDOW (widget));
+                return TRUE;
+        }
+
+        return GTK_WIDGET_CLASS (ev_annotation_window_parent_class)->key_press_event (widget, event);
+}
+
 static void
 ev_annotation_window_class_init (EvAnnotationWindowClass *klass)
 {
@@ -552,6 +564,7 @@ ev_annotation_window_class_init (EvAnnotationWindowClass *klass)
 	gtk_widget_class->configure_event = ev_annotation_window_configure_event;
 	gtk_widget_class->focus_in_event = ev_annotation_window_focus_in_event;
 	gtk_widget_class->focus_out_event = ev_annotation_window_focus_out_event;
+        gtk_widget_class->key_press_event = ev_annotation_window_key_press_event;
 
 	g_object_class_install_property (g_object_class,
 					 PROP_ANNOTATION,
