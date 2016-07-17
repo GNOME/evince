@@ -318,19 +318,19 @@ ev_toolbar_new (EvWindow *window)
 gboolean
 ev_toolbar_has_visible_popups (EvToolbar *ev_toolbar)
 {
-        GtkMenu          *popup_menu;
+        GtkPopover       *popover;
         EvToolbarPrivate *priv;
 
         g_return_val_if_fail (EV_IS_TOOLBAR (ev_toolbar), FALSE);
 
         priv = ev_toolbar->priv;
 
-        popup_menu = gtk_menu_button_get_popup (GTK_MENU_BUTTON (priv->view_menu_button));
-        if (gtk_widget_get_visible (GTK_WIDGET (popup_menu)))
+        popover = gtk_menu_button_get_popover (GTK_MENU_BUTTON (priv->view_menu_button));
+        if (gtk_widget_get_visible (GTK_WIDGET (popover)))
                 return TRUE;
 
-        popup_menu = gtk_menu_button_get_popup (GTK_MENU_BUTTON (priv->action_menu_button));
-        if (gtk_widget_get_visible (GTK_WIDGET (popup_menu)))
+        popover = gtk_menu_button_get_popover (GTK_MENU_BUTTON (priv->action_menu_button));
+        if (gtk_widget_get_visible (GTK_WIDGET (popover)))
                 return TRUE;
 
         if (ev_zoom_action_get_popup_shown (EV_ZOOM_ACTION (ev_toolbar->priv->zoom_action)))
