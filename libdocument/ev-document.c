@@ -2,6 +2,7 @@
 /*
  *  Copyright (C) 2009 Carlos Garcia Campos
  *  Copyright (C) 2004 Marco Pesenti Gritti
+ *  Copyright (C) 2016 Jakub Alba <jakubalba@gmail.com>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -107,6 +108,12 @@ ev_document_impl_get_info (EvDocument *document)
 	return g_new0 (EvDocumentInfo, 1);
 }
 
+static guint
+ev_document_impl_get_edit_info_mask (EvDocument *document)
+{
+	return 0;
+}
+
 static void
 ev_document_finalize (GObject *object)
 {
@@ -190,6 +197,8 @@ ev_document_class_init (EvDocumentClass *klass)
 
 	klass->get_page = ev_document_impl_get_page;
 	klass->get_info = ev_document_impl_get_info;
+	klass->get_edit_info_mask = ev_document_impl_get_edit_info_mask;
+	klass->set_info = NULL;
 	klass->get_backend_info = NULL;
 
 	g_object_class->get_property = ev_document_get_property;
@@ -863,6 +872,43 @@ ev_document_get_info (EvDocument *document)
 	g_return_val_if_fail (EV_IS_DOCUMENT (document), NULL);
 
 	return document->priv->info;
+}
+
+guint
+ev_document_get_edit_info_mask (EvDocument *document)
+{
+	EvDocumentClass *klass;
+
+	g_return_val_if_fail (EV_IS_DOCUMENT (document), FALSE);
+
+	klass = EV_DOCUMENT_GET_CLASS (document);
+
+	return klass->get_edit_info_mask (document);
+}
+
+gboolean
+ev_document_can_set_info (EvDocument *document)
+{
+	EvDocumentClass *klass;
+
+	g_return_val_if_fail (EV_IS_DOCUMENT (document), FALSE);
+
+	klass = EV_DOCUMENT_GET_CLASS (document);
+
+	return klass->get_edit_info_mask (document) != 0;
+}
+
+void
+ev_document_set_info (EvDocument *document, EvDocumentInfo *info)
+{
+	EvDocumentClass *klass;
+
+	g_return_if_fail (EV_IS_DOCUMENT (document));
+	g_return_if_fail (ev_document_can_set_info (document));
+
+	klass = EV_DOCUMENT_GET_CLASS (document);
+
+	klass->set_info (document, info);
 }
 
 gboolean
