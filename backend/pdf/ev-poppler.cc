@@ -4,6 +4,7 @@
  * Copyright (C) 2018, Evangelos Rigas <erigas@rnd2.org>
  * Copyright (C) 2009, Juanjo Marín <juanj.marin@juntadeandalucia.es>
  * Copyright (C) 2004, Red Hat, Inc.
+ * Copyright (C) 2016, Jakub Alba <jakubalba@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -1197,6 +1198,35 @@ pdf_document_get_info (EvDocument *document)
 	return info;
 }
 
+static guint
+pdf_document_get_edit_info_mask (EvDocument *document)
+{
+	/* check if the used poppler version supports metatag editing; if not, return 0 as edit mask */
+	GParamSpec *pspec = g_object_class_find_property (G_OBJECT_GET_CLASS (PDF_DOCUMENT (document)->document), "title");
+	if ((pspec->flags & G_PARAM_WRITABLE) == 0) {
+		return 0;
+	}
+
+	return EV_DOCUMENT_INFO_TITLE | EV_DOCUMENT_INFO_AUTHOR | EV_DOCUMENT_INFO_SUBJECT | EV_DOCUMENT_INFO_KEYWORDS
+		| EV_DOCUMENT_INFO_CREATOR | EV_DOCUMENT_INFO_PRODUCER | EV_DOCUMENT_INFO_CREATION_DATE
+		| EV_DOCUMENT_INFO_MOD_DATE;
+}
+
+static void
+pdf_document_set_info (EvDocument *document, EvDocumentInfo *info)
+{
+	g_object_set (PDF_DOCUMENT (document)->document,
+			"title", info->title,
+			"author", info->author,
+			"subject", info->subject,
+			"keywords", info->keywords,
+			"creator", info->creator,
+			"producer", info->producer,
+			"creation-date", info->creation_date,
+			"mod-date", info->modified_date,
+			NULL);
+}
+
 static gboolean
 pdf_document_get_backend_info (EvDocument *document, EvDocumentBackendInfo *info)
 {
@@ -1246,6 +1276,8 @@ pdf_document_class_init (PdfDocumentClass *klass)
 	ev_document_class->get_thumbnail = pdf_document_get_thumbnail;
 	ev_document_class->get_thumbnail_surface = pdf_document_get_thumbnail_surface;
 	ev_document_class->get_info = pdf_document_get_info;
+	ev_document_class->get_edit_info_mask = pdf_document_get_edit_info_mask;
+	ev_document_class->set_info = pdf_document_set_info;
 	ev_document_class->get_backend_info = pdf_document_get_backend_info;
 	ev_document_class->support_synctex = pdf_document_support_synctex;
 }
