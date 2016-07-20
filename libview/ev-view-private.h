@@ -226,6 +226,7 @@ struct _EvView {
 	EvViewWindowChild *window_child_focus;
 	AddingAnnotInfo    adding_annot_info;
 	MovingAnnotInfo    moving_annot_info;
+	GHashTable        *annot_window_map;
 
 	/* Focus */
 	EvMapping *focused_element;
