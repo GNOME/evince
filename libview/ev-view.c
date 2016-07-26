@@ -5725,9 +5725,13 @@ ev_view_button_release_event (GtkWidget      *widget,
 										 EV_ANNOTATIONS_SAVE_POPUP_RECT);
 					ev_document_doc_mutex_unlock ();
 				}
+				/* the annotation window might already exist */
+				window = get_window_for_annot (view, view->adding_annot_info.annot);
 
-				parent = GTK_WINDOW (gtk_widget_get_toplevel (GTK_WIDGET (view)));
-				window = ev_view_create_annotation_window (view, view->adding_annot_info.annot, parent);
+				if (window == NULL) {
+					parent = GTK_WINDOW (gtk_widget_get_toplevel (GTK_WIDGET (view)));
+					window = ev_view_create_annotation_window (view, view->adding_annot_info.annot, parent);
+				}
 				/* Show the annot window the first time for text annotations */
 				if (view->adding_annot_info.type == EV_ANNOTATION_TYPE_TEXT)
 					ev_view_annotation_show_popup_window (view, window);
