@@ -120,6 +120,11 @@ typedef enum {
 	EV_SAVE_IMAGE
 } EvSaveType;
 
+typedef enum {
+	EV_WINDOW_ACTION_RELOAD,
+	EV_WINDOW_ACTION_CLOSE
+} EvWindowAction;
+
 struct _EvWindowPrivate {
 	/* UI */
 	EvChrome chrome;
@@ -3482,6 +3487,17 @@ ev_window_cmd_file_properties (GSimpleAction *action,
 }
 
 static void
+document_modified_reload_dialog_response (GtkDialog *dialog,
+					  gint	     response,
+					  EvWindow  *ev_window)
+{
+	gtk_widget_destroy (GTK_WIDGET (dialog));
+
+	if (response == GTK_RESPONSE_YES)
+	        ev_window_reload_document (ev_window, NULL);
+}
+
+static void
 document_modified_confirmation_dialog_response (GtkDialog *dialog,
 						gint       response,
 						EvWindow  *ev_window)
@@ -3502,31 +3518,26 @@ document_modified_confirmation_dialog_response (GtkDialog *dialog,
 }
 
 static gboolean
-ev_window_check_document_modified (EvWindow *ev_window)
+ev_window_check_document_modified (EvWindow      *ev_window,
+				   EvWindowAction command)
 {
 	EvDocument  *document = ev_window->priv->document;
 	GtkWidget   *dialog;
 	gchar       *text, *markup;
-	const gchar *secondary_text;
+	const gchar *secondary_text, *secondary_text_command;
 
 	if (!document)
 		return FALSE;
 
 	if (EV_IS_DOCUMENT_FORMS (document) &&
 	    ev_document_forms_document_is_modified (EV_DOCUMENT_FORMS (document))) {
-		secondary_text = _("Document contains form fields that have been filled out. "
-				   "If you don't save a copy, changes will be permanently lost.");
+		secondary_text = _("Document contains form fields that have been filled out. ");
 	} else if (EV_IS_DOCUMENT_ANNOTATIONS (document) &&
 		   ev_document_annotations_document_is_modified (EV_DOCUMENT_ANNOTATIONS (document))) {
-		secondary_text = _("Document contains new or modified annotations. "
-				   "If you don't save a copy, changes will be permanently lost.");
+		secondary_text = _("Document contains new or modified annotations. ");
 	} else {
 		return FALSE;
 	}
-
-
-	text = g_markup_printf_escaped (_("Save a copy of document “%s” before closing?"),
-					gtk_window_get_title (GTK_WINDOW (ev_window)));
 
 	dialog = gtk_message_dialog_new (GTK_WINDOW (ev_window),
 					 GTK_DIALOG_MODAL,
@@ -3534,16 +3545,24 @@ ev_window_check_document_modified (EvWindow *ev_window)
 					 GTK_BUTTONS_NONE,
 					 NULL);
 
-	markup = g_strdup_printf ("<b>%s</b>", text);
-	g_free (text);
-
-	gtk_message_dialog_set_markup (GTK_MESSAGE_DIALOG (dialog), markup);
-	g_free (markup);
-
-	gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog),
-						  "%s", secondary_text);
-
-	gtk_dialog_add_buttons (GTK_DIALOG (dialog),
+	if (command == EV_WINDOW_ACTION_RELOAD) {
+		text = g_markup_printf_escaped (_("Reload document “%s”?"),
+						gtk_window_get_title (GTK_WINDOW (ev_window)));
+		secondary_text_command = _("If you reload the document, changes will be permantly lost.");
+		gtk_dialog_add_buttons (GTK_DIALOG (dialog),
+					GTK_STOCK_NO,
+					GTK_RESPONSE_NO,
+					_("Reload"),
+					GTK_RESPONSE_YES,
+					NULL);
+		g_signal_connect (dialog, "response",
+				  G_CALLBACK (document_modified_reload_dialog_response),
+				  ev_window);
+	} else {
+		text = g_markup_printf_escaped (_("Save a copy of document “%s” before closing?"),
+                                                gtk_window_get_title (GTK_WINDOW (ev_window)));
+		secondary_text_command = _("If you don't save a copy, changes will be permanently lost.");
+		gtk_dialog_add_buttons (GTK_DIALOG (dialog),
 				_("Close _without Saving"),
 				GTK_RESPONSE_NO,
 				GTK_STOCK_CANCEL,
@@ -3551,6 +3570,19 @@ ev_window_check_document_modified (EvWindow *ev_window)
 				_("Save a _Copy"),
 				GTK_RESPONSE_YES,
 				NULL);
+		g_signal_connect (dialog, "response",
+			  G_CALLBACK (document_modified_confirmation_dialog_response),
+			  ev_window);
+
+	}
+	markup = g_strdup_printf ("<b>%s</b>", text);
+	g_free (text);
+
+	gtk_message_dialog_set_markup (GTK_MESSAGE_DIALOG (dialog), markup);
+	g_free (markup);
+
+	gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog),
+						  "%s %s", secondary_text, secondary_text_command);
 	gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_YES);
         gtk_dialog_set_alternative_button_order (GTK_DIALOG (dialog),
                                                  GTK_RESPONSE_YES,
@@ -3558,9 +3590,6 @@ ev_window_check_document_modified (EvWindow *ev_window)
                                                  GTK_RESPONSE_CANCEL,
                                                  -1);
 
-	g_signal_connect (dialog, "response",
-			  G_CALLBACK (document_modified_confirmation_dialog_response),
-			  ev_window);
 	gtk_widget_show (dialog);
 
 	return TRUE;
@@ -3681,7 +3710,7 @@ ev_window_close (EvWindow *ev_window)
 		ev_document_model_set_page (ev_window->priv->model, current_page);
 	}
 
-	if (ev_window_check_document_modified (ev_window))
+	if (ev_window_check_document_modified (ev_window, EV_WINDOW_ACTION_CLOSE))
 		return FALSE;
 
 	if (ev_window_check_print_queue (ev_window))
@@ -4664,6 +4693,9 @@ ev_window_cmd_view_reload (GSimpleAction *action,
 			   gpointer       user_data)
 {
 	EvWindow *ev_window = user_data;
+
+	if (ev_window_check_document_modified (ev_window, EV_WINDOW_ACTION_RELOAD))
+		return;
 
 	ev_window_reload_document (ev_window, NULL);
 }
