@@ -299,15 +299,23 @@ ps_document_render (EvDocument      *document,
 	
 	spectre_page_get_size (ps_page, &width_points, &height_points);
 
-	ev_render_context_compute_scaled_size (rc, width_points, height_points,
-					       &width, &height);
+	ev_render_context_compute_transformed_size (rc, width_points, height_points,
+					            &width, &height);
 
 	rotation = (rc->rotation + get_page_rotation (ps_page)) % 360;
 
+	if (rotation == 90 || rotation == 270) {
+		swidth = height;
+		sheight = width;
+	} else {
+		swidth = width;
+		sheight = height;
+	}
+
 	src = spectre_render_context_new ();
 	spectre_render_context_set_scale (src,
-					  (gdouble)width / width_points,
-					  (gdouble)height / height_points);
+					  (gdouble)swidth / width_points,
+					  (gdouble)sheight / height_points);
 	spectre_render_context_set_rotation (src, rotation);
 	spectre_page_render (ps_page, src, &data, &stride);
 	spectre_render_context_free (src);
@@ -323,17 +331,9 @@ ps_document_render (EvDocument      *document,
 		return NULL;
 	}
 
-	if (rotation == 90 || rotation == 270) {
-		swidth = height;
-		sheight = width;
-	} else {
-		swidth = width;
-		sheight = height;
-	}
-	
 	surface = cairo_image_surface_create_for_data (data,
 						       CAIRO_FORMAT_RGB24,
-						       swidth, sheight,
+						       width, height,
 						       stride);
 	cairo_surface_set_user_data (surface, &key,
 				     data, (cairo_destroy_func_t)g_free);
