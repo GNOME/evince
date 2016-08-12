@@ -16,10 +16,10 @@ msgstr ""
 "Project-Id-Version: evince\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evince&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2016-03-13 05:02+0000\n"
-"PO-Revision-Date: 2016-03-13 13:38+0200\n"
+"POT-Creation-Date: 2016-07-16 10:31+0000\n"
+"PO-Revision-Date: 2016-08-12 16:40+0300\n"
 "Last-Translator: Jiri Grönroos <jiri.gronroos+l10n@iki.fi>\n"
-"Language-Team: suomi <gnome-fi-laatu@lists.sourceforge.net>\n"
+"Language-Team: suomi <lokalisointi-lista@googlegroups.com>\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -45,35 +45,35 @@ msgstr "Komento ”%s” epäonnistui avaamaan sarjakuvakirjan."
 msgid "The command “%s” did not end normally."
 msgstr "Komento ”%s” ei päättynyt normaalisti."
 
-#: ../backend/comics/comics-document.c:450
+#: ../backend/comics/comics-document.c:453
 #, c-format
 msgid "Not a comic book MIME type: %s"
 msgstr "Ei ole sarjakuvakirjan MIME-tyyppi: %s"
 
-#: ../backend/comics/comics-document.c:457
+#: ../backend/comics/comics-document.c:460
 msgid "Can't find an appropriate command to decompress this type of comic book"
 msgstr ""
 "Ei löytynyt sopivaa komentoa, jolla avata tämän tyyppiset sarjakuvakirjat"
 
-#: ../backend/comics/comics-document.c:512
+#: ../backend/comics/comics-document.c:515
 msgid "File corrupted"
 msgstr "Tiedosto on viallinen"
 
-#: ../backend/comics/comics-document.c:525
+#: ../backend/comics/comics-document.c:528
 msgid "No files in archive"
 msgstr "Arkistossa ei ole tiedostoja"
 
-#: ../backend/comics/comics-document.c:564
+#: ../backend/comics/comics-document.c:567
 #, c-format
 msgid "No images found in archive %s"
 msgstr "Arkistosta ”%s” ei löytynyt kuvia"
 
-#: ../backend/comics/comics-document.c:814
+#: ../backend/comics/comics-document.c:817
 #, c-format
 msgid "There was an error deleting “%s”."
 msgstr "Tapahtui virhe poistaessa ”%s”."
 
-#: ../backend/comics/comics-document.c:907
+#: ../backend/comics/comics-document.c:910
 #, c-format
 msgid "Error %s"
 msgstr "Virhe %s"
@@ -290,17 +290,17 @@ msgid "Adds support for reading XPS documents"
 msgstr "Lisää tuen XPS-asiakirjojen lukemiselle"
 
 #: ../browser-plugin/EvBrowserPluginToolbar.cpp:288
-#: ../previewer/ev-previewer-window.c:317 ../shell/evince-menus.ui.h:32
+#: ../previewer/ev-previewer-window.c:317 ../shell/evince-menus.ui.h:33
 msgid "Fit Pa_ge"
 msgstr "So_vita sivu"
 
 #: ../browser-plugin/EvBrowserPluginToolbar.cpp:297
-#: ../previewer/ev-previewer-window.c:320 ../shell/evince-menus.ui.h:33
+#: ../previewer/ev-previewer-window.c:320 ../shell/evince-menus.ui.h:34
 msgid "Fit _Width"
 msgstr "Sovita leve_yteen"
 
 #: ../browser-plugin/EvBrowserPluginToolbar.cpp:306
-#: ../shell/evince-menus.ui.h:34
+#: ../shell/evince-menus.ui.h:35
 msgid "_Automatic"
 msgstr "_Automaattinen"
 
@@ -347,7 +347,7 @@ msgid "Print document"
 msgstr "Tulosta asiakirja"
 
 #. Manually set name and icon
-#: ../data/evince.desktop.in.in.h:1 ../shell/ev-application.c:1029
+#: ../data/evince.desktop.in.in.h:1 ../shell/ev-application.c:1031
 #: ../shell/ev-window-title.c:139 ../shell/main.c:298
 msgid "Document Viewer"
 msgstr "Asiakirjakatselin"
@@ -470,8 +470,8 @@ msgid "of %d"
 msgstr "/ %d"
 
 #: ../libmisc/ev-page-action-widget.c:185 ../shell/ev-history.c:426
-#: ../shell/ev-sidebar-bookmarks.c:295 ../shell/ev-window.c:905
-#: ../shell/ev-window.c:4704
+#: ../shell/ev-sidebar-bookmarks.c:295 ../shell/ev-window.c:902
+#: ../shell/ev-window.c:4644
 #, c-format
 msgid "Page %s"
 msgstr "Sivu %s"
@@ -647,55 +647,55 @@ msgstr "Vieritä näkymää alas"
 msgid "Document View"
 msgstr "Asiakirjan näyttö"
 
-#: ../libview/ev-view.c:2023
+#: ../libview/ev-view.c:2026
 msgid "Go to first page"
 msgstr "Siirry ensimmäiselle sivulle"
 
-#: ../libview/ev-view.c:2025
+#: ../libview/ev-view.c:2028
 msgid "Go to previous page"
 msgstr "Siirry edelliselle sivulle"
 
-#: ../libview/ev-view.c:2027
+#: ../libview/ev-view.c:2030
 msgid "Go to next page"
 msgstr "Siirry seuraavalle sivulle"
 
-#: ../libview/ev-view.c:2029
+#: ../libview/ev-view.c:2032
 msgid "Go to last page"
 msgstr "Siirry viimeiselle sivulle"
 
-#: ../libview/ev-view.c:2031
+#: ../libview/ev-view.c:2034
 msgid "Go to page"
 msgstr "Siirry sivulle"
 
-#: ../libview/ev-view.c:2033
+#: ../libview/ev-view.c:2036
 msgid "Find"
 msgstr "Etsi"
 
-#: ../libview/ev-view.c:2061
+#: ../libview/ev-view.c:2064
 #, c-format
 msgid "Go to page %s"
 msgstr "Siirry sivulle %s"
 
-#: ../libview/ev-view.c:2067
+#: ../libview/ev-view.c:2070
 #, c-format
 msgid "Go to %s on file “%s”"
 msgstr "Siirry kohtaan %s tiedostossa ”%s”"
 
-#: ../libview/ev-view.c:2070
+#: ../libview/ev-view.c:2073
 #, c-format
 msgid "Go to file “%s”"
 msgstr "Siirry tiedostoon ”%s”"
 
-#: ../libview/ev-view.c:2078
+#: ../libview/ev-view.c:2081
 #, c-format
 msgid "Launch %s"
 msgstr "Käynnistä %s"
 
-#: ../libview/ev-view-presentation.c:735
+#: ../libview/ev-view-presentation.c:752
 msgid "Jump to page:"
 msgstr "Siirry sivulle:"
 
-#: ../libview/ev-view-presentation.c:1038
+#: ../libview/ev-view-presentation.c:1055
 msgid "End of presentation. Click to exit."
 msgstr "Esitys päättyi. Sulje napsauttamalla."
 
@@ -711,11 +711,11 @@ msgstr "Tulosta asetustiedosto"
 msgid "FILE"
 msgstr "TIEDOSTO"
 
-#: ../previewer/ev-previewer.c:175 ../previewer/ev-previewer.c:207
+#: ../previewer/ev-previewer.c:176 ../previewer/ev-previewer.c:210
 msgid "GNOME Document Previewer"
 msgstr "Gnomen asiakirjojen esikatselu"
 
-#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3317
+#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3257
 msgid "Failed to print document"
 msgstr "Asiakirjaa ei voitu tulostaa"
 
@@ -724,11 +724,11 @@ msgstr "Asiakirjaa ei voitu tulostaa"
 msgid "The selected printer '%s' could not be found"
 msgstr "Valittua tulostinta ”%s” ei löytynyt"
 
-#: ../previewer/ev-previewer-window.c:270 ../shell/evince-menus.ui.h:39
+#: ../previewer/ev-previewer-window.c:270 ../shell/evince-menus.ui.h:40
 msgid "_Previous Page"
 msgstr "E_dellinen sivu"
 
-#: ../previewer/ev-previewer-window.c:273 ../shell/evince-menus.ui.h:40
+#: ../previewer/ev-previewer-window.c:273 ../shell/evince-menus.ui.h:41
 msgid "_Next Page"
 msgstr "_Seuraava sivu"
 
@@ -769,7 +769,7 @@ msgid "Subject:"
 msgstr "Aihe:"
 
 #: ../properties/ev-properties-view.c:64
-#: ../shell/ev-annotation-properties-dialog.c:174
+#: ../shell/ev-annotation-properties-dialog.c:171
 msgid "Author:"
 msgstr "Tekijä:"
 
@@ -915,35 +915,27 @@ msgstr "Alleviivaa"
 msgid "Squiggly"
 msgstr "Kiemurtelevasti"
 
-#: ../shell/ev-annotation-properties-dialog.c:154
+#: ../shell/ev-annotation-properties-dialog.c:152
 msgid "Annotation Properties"
 msgstr "Huomautuksen ominaisuudet"
 
-#: ../shell/ev-annotation-properties-dialog.c:185
+#: ../shell/ev-annotation-properties-dialog.c:182
 msgid "Color:"
 msgstr "Väri:"
 
-#: ../shell/ev-annotation-properties-dialog.c:195
-msgid "Style:"
-msgstr "Tyyli:"
+#: ../shell/ev-annotation-properties-dialog.c:192
+msgid "Opacity:"
+msgstr "Peittokyky:"
 
-#: ../shell/ev-annotation-properties-dialog.c:210
-msgid "Transparent"
-msgstr "Läpinäkyvä"
-
-#: ../shell/ev-annotation-properties-dialog.c:217
-msgid "Opaque"
-msgstr "Peittävä"
-
-#: ../shell/ev-annotation-properties-dialog.c:227
+#: ../shell/ev-annotation-properties-dialog.c:204
 msgid "Initial window state:"
 msgstr "Ikkunan alkutila:"
 
-#: ../shell/ev-annotation-properties-dialog.c:233
+#: ../shell/ev-annotation-properties-dialog.c:210
 msgid "Open"
 msgstr "Avoin"
 
-#: ../shell/ev-annotation-properties-dialog.c:234
+#: ../shell/ev-annotation-properties-dialog.c:211
 msgid "Close"
 msgstr "Suljettu"
 
@@ -955,7 +947,7 @@ msgstr "Lisää tekstihuomautus"
 msgid "Add highlight annotation"
 msgstr "Lisää korostettu huomautus"
 
-#: ../shell/ev-application.c:995
+#: ../shell/ev-application.c:997
 msgid ""
 "Evince is free software; you can redistribute it and/or modify it under the "
 "terms of the GNU General Public License as published by the Free Software "
@@ -967,7 +959,7 @@ msgstr ""
 "sen määritellyt; voit halutessasi käyttää lisenssin versiota 2 taikka mitä "
 "tahansa tämän jälkeen ilmestynyttä versiota.\n"
 
-#: ../shell/ev-application.c:999
+#: ../shell/ev-application.c:1001
 msgid ""
 "Evince is distributed in the hope that it will be useful, but WITHOUT ANY "
 "WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS "
@@ -979,7 +971,7 @@ msgstr ""
 "SOVELTUMISESTA TIETTYYN ERITYISEEN TARKOITUKSEEN. Yksityiskohtien osalta "
 "katso GNU:n GPL-lisenssiä.\n"
 
-#: ../shell/ev-application.c:1003
+#: ../shell/ev-application.c:1005
 msgid ""
 "You should have received a copy of the GNU General Public License along with "
 "Evince; if not, write to the Free Software Foundation, Inc., 51 Franklin "
@@ -989,15 +981,15 @@ msgstr ""
 "sitä saanut, niin lähetä kirje Free Software Foundation, Inc. :lle, 51 "
 "Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA\n"
 
-#: ../shell/ev-application.c:1024 ../evince.appdata.xml.in.h:1
+#: ../shell/ev-application.c:1026 ../evince.appdata.xml.in.h:1
 msgid "Evince"
 msgstr "Evince"
 
-#: ../shell/ev-application.c:1026
+#: ../shell/ev-application.c:1028
 msgid "© 1996–2014 The Evince authors"
 msgstr "© 1996–2014 Evincen tekijät"
 
-#: ../shell/ev-application.c:1032
+#: ../shell/ev-application.c:1034
 msgid "translator-credits"
 msgstr ""
 "Jiri Grönroos, 2012-2016\n"
@@ -1110,16 +1102,16 @@ msgstr "Lisenssiteksti"
 msgid "Further Information"
 msgstr "Lisätietoa"
 
-#: ../shell/ev-sidebar-annotations.c:260
+#: ../shell/ev-sidebar-annotations.c:259
 msgid "Document contains no annotations"
 msgstr "Asiakirja ei sisällä yhtään huomautusta"
 
-#: ../shell/ev-sidebar-annotations.c:292
+#: ../shell/ev-sidebar-annotations.c:291
 #, c-format
 msgid "Page %d"
 msgstr "Sivu %d"
 
-#: ../shell/ev-sidebar-annotations.c:468
+#: ../shell/ev-sidebar-annotations.c:467
 msgid "Annotations"
 msgstr "Huomautukset"
 
@@ -1169,7 +1161,7 @@ msgstr "Tulosta…"
 msgid "Outline"
 msgstr "Yhteenveto"
 
-#: ../shell/ev-sidebar-thumbnails.c:1085
+#: ../shell/ev-sidebar-thumbnails.c:1089
 msgid "Thumbnails"
 msgstr "Pienoiskuvat"
 
@@ -1209,106 +1201,106 @@ msgstr "Aseta lähennystaso"
 msgid "Supported Image Files"
 msgstr "Tuetut kuvatiedostot"
 
-#: ../shell/ev-window.c:1598
+#: ../shell/ev-window.c:1536
 msgid "The document contains no pages"
 msgstr "Asiakirja ei sisällä yhtään sivua"
 
-#: ../shell/ev-window.c:1601
+#: ../shell/ev-window.c:1539
 msgid "The document contains only empty pages"
 msgstr "Asiakirja sisältää vain tyhjiä sivuja"
 
-#: ../shell/ev-window.c:1814 ../shell/ev-window.c:1980
+#: ../shell/ev-window.c:1752 ../shell/ev-window.c:1918
 #, c-format
 msgid "Unable to open document “%s”."
 msgstr "Asiakirjan \"%s\" avaaminen ei onnistunut."
 
-#: ../shell/ev-window.c:1944
+#: ../shell/ev-window.c:1882
 #, c-format
 msgid "Loading document from “%s”"
 msgstr "Ladataan asiakirjaa lähteestä ”%s”"
 
-#: ../shell/ev-window.c:2095 ../shell/ev-window.c:2423
+#: ../shell/ev-window.c:2033 ../shell/ev-window.c:2361
 #, c-format
 msgid "Downloading document (%d%%)"
 msgstr "Noudetaan asiakirjaa (%d %%)"
 
-#: ../shell/ev-window.c:2128
+#: ../shell/ev-window.c:2066
 msgid "Failed to load remote file."
 msgstr "Etätiedostoa ei voitu ladata."
 
-#: ../shell/ev-window.c:2367
+#: ../shell/ev-window.c:2305
 #, c-format
 msgid "Reloading document from %s"
 msgstr "Ladataan asiakirja uudestaan lähteestä %s"
 
-#: ../shell/ev-window.c:2399
+#: ../shell/ev-window.c:2337
 msgid "Failed to reload document."
 msgstr "Asiakirjaa ei voitu ladata uudestaan."
 
-#: ../shell/ev-window.c:2615
+#: ../shell/ev-window.c:2553
 msgid "Open Document"
 msgstr "Avaa asiakirja"
 
-#: ../shell/ev-window.c:2686
+#: ../shell/ev-window.c:2626
 #, c-format
 msgid "Saving document to %s"
 msgstr "Tallennetaan asiakirjaa kohteeseen %s"
 
-#: ../shell/ev-window.c:2689
+#: ../shell/ev-window.c:2629
 #, c-format
 msgid "Saving attachment to %s"
 msgstr "Tallennetaan liitettä kohteeseen %s"
 
-#: ../shell/ev-window.c:2692
+#: ../shell/ev-window.c:2632
 #, c-format
 msgid "Saving image to %s"
 msgstr "Tallennetaan kuvaa kohteeseen %s"
 
-#: ../shell/ev-window.c:2736 ../shell/ev-window.c:2836
+#: ../shell/ev-window.c:2676 ../shell/ev-window.c:2776
 #, c-format
 msgid "The file could not be saved as “%s”."
 msgstr "Tiedostoa ei voitu tallentaa nimellä ”%s”."
 
-#: ../shell/ev-window.c:2767
+#: ../shell/ev-window.c:2707
 #, c-format
 msgid "Uploading document (%d%%)"
 msgstr "Viedään asiakirjaa (%d %%)"
 
-#: ../shell/ev-window.c:2771
+#: ../shell/ev-window.c:2711
 #, c-format
 msgid "Uploading attachment (%d%%)"
 msgstr "Viedään liitettä (%d %%)"
 
-#: ../shell/ev-window.c:2775
+#: ../shell/ev-window.c:2715
 #, c-format
 msgid "Uploading image (%d%%)"
 msgstr "Viedään kuvaa (%d %%)"
 
-#: ../shell/ev-window.c:2887
+#: ../shell/ev-window.c:2827
 msgid "Save a Copy"
 msgstr "Tallenna kopio"
 
-#: ../shell/ev-window.c:2963
+#: ../shell/ev-window.c:2903
 msgid "Could not send current document"
 msgstr "Asiakirjan lähettäminen epäonnistui"
 
-#: ../shell/ev-window.c:2997
+#: ../shell/ev-window.c:2937
 msgid "Could not open the containing folder"
 msgstr "Sisältävää kansiota ei voitu avata"
 
-#: ../shell/ev-window.c:3261
+#: ../shell/ev-window.c:3201
 #, c-format
 msgid "%d pending job in queue"
 msgid_plural "%d pending jobs in queue"
 msgstr[0] "%d odottava työ jonossa"
 msgstr[1] "%d odottavaa työtä jonossa"
 
-#: ../shell/ev-window.c:3374
+#: ../shell/ev-window.c:3314
 #, c-format
 msgid "Printing job “%s”"
 msgstr "Tulostetaan työtä ”%s”"
 
-#: ../shell/ev-window.c:3577
+#: ../shell/ev-window.c:3517
 msgid ""
 "Document contains form fields that have been filled out. If you don't save a "
 "copy, changes will be permanently lost."
@@ -1316,7 +1308,7 @@ msgstr ""
 "Asiakirja sisältää täytettyjä lomakekenttiä. Jos et tallenna kopiota "
 "asiakirjasta, muutokset häviävät pysyvästi."
 
-#: ../shell/ev-window.c:3581
+#: ../shell/ev-window.c:3521
 msgid ""
 "Document contains new or modified annotations. If you don't save a copy, "
 "changes will be permanently lost."
@@ -1324,20 +1316,20 @@ msgstr ""
 "Asiakirja sisältää uusia tai muokattuja huomautuksia. Jos et tallenna "
 "kopiota, muutokset häviävät pysyvästi."
 
-#: ../shell/ev-window.c:3588
+#: ../shell/ev-window.c:3528
 #, c-format
 msgid "Save a copy of document “%s” before closing?"
 msgstr "Tallennetaanko asiakirjasta ”%s” kopio ennen sulkemista?"
 
-#: ../shell/ev-window.c:3607
+#: ../shell/ev-window.c:3547
 msgid "Close _without Saving"
 msgstr "Sulje _tallentamatta"
 
-#: ../shell/ev-window.c:3611
+#: ../shell/ev-window.c:3551
 msgid "Save a _Copy"
 msgstr "Tallenna _kopio"
 
-#: ../shell/ev-window.c:3685
+#: ../shell/ev-window.c:3625
 #, c-format
 msgid "Wait until print job “%s” finishes before closing?"
 msgstr "Odotetaanko ennen sulkemista kunnes tulostustyö ”%s” on valmis?"
@@ -1345,7 +1337,7 @@ msgstr "Odotetaanko ennen sulkemista kunnes tulostustyö ”%s” on valmis?"
 #. TRANS: the singular form is not really used as n_print_jobs > 1
 #. but some languages distinguish between different plurals forms,
 #. so the ngettext is needed.
-#: ../shell/ev-window.c:3691
+#: ../shell/ev-window.c:3631
 #, c-format
 msgid "There is %d print job active. Wait until print finishes before closing?"
 msgid_plural ""
@@ -1357,31 +1349,31 @@ msgstr[1] ""
 "Meneillään on %d tulostustyötä. Odotetaanko tulostuksen valmistumista ennen "
 "sulkemista?"
 
-#: ../shell/ev-window.c:3706
+#: ../shell/ev-window.c:3646
 msgid "If you close the window, pending print jobs will not be printed."
 msgstr "Jos suljet ikkunat, odottavia tulostustöitä ei tulosteta."
 
-#: ../shell/ev-window.c:3710
+#: ../shell/ev-window.c:3650
 msgid "Cancel _print and Close"
 msgstr "Peru _tulostus ja sulje"
 
-#: ../shell/ev-window.c:3714
+#: ../shell/ev-window.c:3654
 msgid "Close _after Printing"
 msgstr "Sulje tulostuksen _jälkeen"
 
-#: ../shell/ev-window.c:4245
+#: ../shell/ev-window.c:4185
 msgid "Running in presentation mode"
 msgstr "Suoritus esitystilassa"
 
-#: ../shell/ev-window.c:5389
+#: ../shell/ev-window.c:5325
 msgid "Enable caret navigation?"
 msgstr "Käytetäänkö nuolinäppäimillä liikkumista?"
 
-#: ../shell/ev-window.c:5391
+#: ../shell/ev-window.c:5327
 msgid "_Enable"
 msgstr "_Käytä"
 
-#: ../shell/ev-window.c:5394
+#: ../shell/ev-window.c:5330
 msgid ""
 "Pressing F7 turns the caret navigation on or off. This feature places a "
 "moveable cursor in text pages, allowing you to move around and select text "
@@ -1392,39 +1384,39 @@ msgstr ""
 "sivulla on mahdollista liikkua ja valita tekstiä näppäimistöllä. Haluatko "
 "käyttää nuolilla liikkumista?"
 
-#: ../shell/ev-window.c:5399
+#: ../shell/ev-window.c:5335
 msgid "Don't show this message again"
 msgstr "Älä näytä tätä viestiä uudestaan"
 
-#: ../shell/ev-window.c:5918 ../shell/ev-window.c:5934
+#: ../shell/ev-window.c:5850 ../shell/ev-window.c:5866
 msgid "Unable to launch external application."
 msgstr "Ulkoista ohjelmaa ei voitu käynnistää."
 
-#: ../shell/ev-window.c:5991
+#: ../shell/ev-window.c:5923
 msgid "Unable to open external link"
 msgstr "Ulkoista linkkiä ei voi avata"
 
-#: ../shell/ev-window.c:6194
+#: ../shell/ev-window.c:6126
 msgid "Couldn't find appropriate format to save image"
 msgstr "Sopivaa tallennusmuotoa kuvalle ei löytynyt"
 
-#: ../shell/ev-window.c:6226
+#: ../shell/ev-window.c:6158
 msgid "The image could not be saved."
 msgstr "Kuvaa ei voi tallentaa."
 
-#: ../shell/ev-window.c:6261
+#: ../shell/ev-window.c:6193
 msgid "Save Image"
 msgstr "Tallenna kuva"
 
-#: ../shell/ev-window.c:6420
+#: ../shell/ev-window.c:6352
 msgid "Unable to open attachment"
 msgstr "Liitettä ei voi avata"
 
-#: ../shell/ev-window.c:6476
+#: ../shell/ev-window.c:6408
 msgid "The attachment could not be saved."
 msgstr "Liitettä ei voi tallentaa."
 
-#: ../shell/ev-window.c:6524
+#: ../shell/ev-window.c:6456
 msgid "Save Attachment"
 msgstr "Tallenna liite"
 
@@ -1549,239 +1541,234 @@ msgid "_New Window"
 msgstr "_Uusi ikkuna"
 
 #: ../shell/evince-menus.ui.h:2
+msgid "_Keyboard Shortcuts"
+msgstr "_Pikanäppäimet"
+
+#: ../shell/evince-menus.ui.h:3
 msgid "_Help"
 msgstr "O_hje"
 
-#: ../shell/evince-menus.ui.h:3
+#: ../shell/evince-menus.ui.h:4
 msgid "_About"
 msgstr "_Tietoja"
 
-#: ../shell/evince-menus.ui.h:4
+#: ../shell/evince-menus.ui.h:5
 msgid "_Continuous"
 msgstr "_Jatkuva"
 
-#: ../shell/evince-menus.ui.h:5
+#: ../shell/evince-menus.ui.h:6
 msgid "_Dual"
 msgstr "_Aukeama"
 
-#: ../shell/evince-menus.ui.h:6
+#: ../shell/evince-menus.ui.h:7
 msgid "Side _Pane"
 msgstr "_Sivupaneeli"
 
-#: ../shell/evince-menus.ui.h:7
+#: ../shell/evince-menus.ui.h:8
 msgid "_Fullscreen"
 msgstr "_Koko näyttö"
 
-#: ../shell/evince-menus.ui.h:8
+#: ../shell/evince-menus.ui.h:9
 msgid "Pre_sentation"
 msgstr "E_sitys"
 
-#: ../shell/evince-menus.ui.h:9
+#: ../shell/evince-menus.ui.h:10
 msgid "Rotate _Left"
 msgstr "Kierrä _vasemmalle"
 
-#: ../shell/evince-menus.ui.h:10
+#: ../shell/evince-menus.ui.h:11
 msgid "Rotate _Right"
 msgstr "Kierrä _oikealle"
 
-#: ../shell/evince-menus.ui.h:11
+#: ../shell/evince-menus.ui.h:12
 msgid "First Page"
 msgstr "Ensimmäinen sivu"
 
-#: ../shell/evince-menus.ui.h:12
+#: ../shell/evince-menus.ui.h:13
 msgid "Previous Page"
 msgstr "Edellinen sivu"
 
-#: ../shell/evince-menus.ui.h:13
+#: ../shell/evince-menus.ui.h:14
 msgid "Next Page"
 msgstr "Seuraava sivu"
 
-#: ../shell/evince-menus.ui.h:14
+#: ../shell/evince-menus.ui.h:15
 msgid "Last Page"
 msgstr "Viimeinen sivu"
 
-#: ../shell/evince-menus.ui.h:15
+#: ../shell/evince-menus.ui.h:16
 msgid "Zoom _In"
 msgstr "Lähenn_ä"
 
-#: ../shell/evince-menus.ui.h:16
+#: ../shell/evince-menus.ui.h:17
 msgid "Zoom _Out"
 msgstr "_Loitonna"
 
-#: ../shell/evince-menus.ui.h:17
+#: ../shell/evince-menus.ui.h:18
 msgid "_Odd Pages Left"
 msgstr "_Parittomat sivut vasemmalla"
 
-#: ../shell/evince-menus.ui.h:18
+#: ../shell/evince-menus.ui.h:19
 msgid "_Inverted Colors"
 msgstr "_Käänteiset värit"
 
-#: ../shell/evince-menus.ui.h:19
+#: ../shell/evince-menus.ui.h:20
 msgid "_Reload"
 msgstr "_Lataa uudestaan"
 
-#: ../shell/evince-menus.ui.h:20
+#: ../shell/evince-menus.ui.h:21
 msgid "_Open…"
 msgstr "_Avaa…"
 
-#: ../shell/evince-menus.ui.h:21
+#: ../shell/evince-menus.ui.h:22
 msgid "Op_en a Copy"
 msgstr "Avaa _kopio"
 
-#: ../shell/evince-menus.ui.h:22
+#: ../shell/evince-menus.ui.h:23
 msgid "_Save a Copy…"
 msgstr "_Tallenna kopio…"
 
-#: ../shell/evince-menus.ui.h:23
+#: ../shell/evince-menus.ui.h:24
 msgid "Send _To…"
 msgstr "L_ähetä…"
 
-#: ../shell/evince-menus.ui.h:24
+#: ../shell/evince-menus.ui.h:25
 msgid "Open Containing _Folder"
 msgstr "Avaa sisältävä _kansio"
 
-#: ../shell/evince-menus.ui.h:25
+#: ../shell/evince-menus.ui.h:26
 msgid "_Print…"
 msgstr "_Tulosta…"
 
-#: ../shell/evince-menus.ui.h:26
+#: ../shell/evince-menus.ui.h:27
 msgid "P_roperties…"
 msgstr "O_minaisuudet…"
 
-#: ../shell/evince-menus.ui.h:27
+#: ../shell/evince-menus.ui.h:28
 msgid "_Copy"
 msgstr "_Kopioi"
 
-#: ../shell/evince-menus.ui.h:28
+#: ../shell/evince-menus.ui.h:29
 msgid "Select _All"
 msgstr "Valitse k_aikki"
 
-#: ../shell/evince-menus.ui.h:29
+#: ../shell/evince-menus.ui.h:30
 msgid "Save Current Settings as _Default"
 msgstr "Tallenna nykyiset asetukset _oletukseksi"
 
-#: ../shell/evince-menus.ui.h:30
+#: ../shell/evince-menus.ui.h:31
 msgid "_Add Bookmark"
 msgstr "_Lisää kirjanmerkki"
 
-#: ../shell/evince-menus.ui.h:31
+#: ../shell/evince-menus.ui.h:32
 msgid "_Close"
 msgstr "_Sulje"
 
-#: ../shell/evince-menus.ui.h:35
+#: ../shell/evince-menus.ui.h:36
 msgid "_Open Link"
 msgstr "_Avaa linkki"
 
-#: ../shell/evince-menus.ui.h:36
+#: ../shell/evince-menus.ui.h:37
 msgid "_Copy Link Address"
 msgstr "_Kopioi linkin osoite"
 
-#: ../shell/evince-menus.ui.h:37
+#: ../shell/evince-menus.ui.h:38
 msgid "_Go To"
 msgstr "_Siirry"
 
-#: ../shell/evince-menus.ui.h:38
+#: ../shell/evince-menus.ui.h:39
 msgid "Open in New _Window"
 msgstr "Avaa uudessa _ikkunassa"
 
-#: ../shell/evince-menus.ui.h:41
+#: ../shell/evince-menus.ui.h:42
 msgid "Auto_scroll"
 msgstr "Vieritä _automaattisesti"
 
-#: ../shell/evince-menus.ui.h:42
+#: ../shell/evince-menus.ui.h:43
 msgid "_Save Image As…"
 msgstr "_Tallenna kuva nimellä…"
 
-#: ../shell/evince-menus.ui.h:43
+#: ../shell/evince-menus.ui.h:44
 msgid "Copy _Image"
 msgstr "Kopioi _kuva"
 
-#: ../shell/evince-menus.ui.h:44
+#: ../shell/evince-menus.ui.h:45
 msgid "_Open Attachment"
 msgstr "_Avaa liite"
 
-#: ../shell/evince-menus.ui.h:45
+#: ../shell/evince-menus.ui.h:46
 msgid "_Save Attachment As…"
 msgstr "_Tallenna liite nimellä…"
 
-#: ../shell/evince-menus.ui.h:46
+#: ../shell/evince-menus.ui.h:47
 msgid "Annotation Properties…"
 msgstr "Huomautuksen ominaisuudet…"
 
-#: ../shell/evince-menus.ui.h:47
+#: ../shell/evince-menus.ui.h:48
 msgid "Remove Annotation"
 msgstr "Poista huomautus"
 
 #: ../shell/help-overlay.ui.h:1
-#| msgid "Opening, closing, saving and printing"
 msgctxt "shortcut window"
 msgid "Opening, closing, saving and printing"
 msgstr "Avaaminen, sulkeminen, tallentaminen ja tulostaminen"
 
 #: ../shell/help-overlay.ui.h:2
-#| msgid "Open a document"
 msgctxt "shortcut window"
 msgid "Open a document"
 msgstr "Avaa asiakirja"
 
 #: ../shell/help-overlay.ui.h:3
-#| msgid "Open a copy of the current document"
 msgctxt "shortcut window"
 msgid "Open a copy of the current document"
 msgstr "Avaa kopio nykyisestä asiakirjasta"
 
 #: ../shell/help-overlay.ui.h:4
-#| msgid "Save a copy of the current document"
 msgctxt "shortcut window"
 msgid "Save a copy of the current document"
 msgstr "Tallenna kopio nykyisestä asiakirjasta"
 
 #: ../shell/help-overlay.ui.h:5
-#| msgid "Print the current document"
 msgctxt "shortcut window"
 msgid "Print the current document"
 msgstr "Tulosta nykyinen asiakirja"
 
 #: ../shell/help-overlay.ui.h:6
-#| msgid "Close the current document window"
 msgctxt "shortcut window"
 msgid "Close the current document window"
 msgstr "Sulje nykyisen asiakirjan ikkuna"
 
 #: ../shell/help-overlay.ui.h:7
-#| msgid "Reload the document"
 msgctxt "shortcut window"
 msgid "Reload the document"
 msgstr "Lataa asiakirja uudelleen"
 
 #: ../shell/help-overlay.ui.h:8
-#| msgid "Selecting and copying text"
 msgctxt "shortcut window"
 msgid "Selecting and copying text"
 msgstr "Tekstin valitseminen ja kopioiminen"
 
 #: ../shell/help-overlay.ui.h:9
-#| msgid "Copy highlighted text"
 msgctxt "shortcut window"
 msgid "Copy highlighted text"
 msgstr "Kopioi korostettu teksti"
 
 #: ../shell/help-overlay.ui.h:10
-#| msgid "Select all the text in a document"
 msgctxt "shortcut window"
 msgid "Select all the text in a document"
 msgstr "Valitse kaikki teksti asiakirjasta"
 
 #: ../shell/help-overlay.ui.h:11
-#| msgid "Moving around the document"
 msgctxt "shortcut window"
 msgid "Moving around the document"
 msgstr "Asiakirjan sisällä liikkuminen"
 
 #: ../shell/help-overlay.ui.h:12
+#| msgctxt "shortcut window"
+#| msgid "Move up/down a page"
 msgctxt "shortcut window"
-msgid "Move up/down a page"
-msgstr "Siirry ylös/alas sivulla"
+msgid "Move around a page"
+msgstr "Siirry sivulla"
 
 #: ../shell/help-overlay.ui.h:13
 msgctxt "shortcut window"
@@ -1789,25 +1776,21 @@ msgid "Move up/down a page several lines at a time"
 msgstr "Siirry ylös/alas useita rivejä samanaikaisesti sivulla"
 
 #: ../shell/help-overlay.ui.h:14
-#| msgid "Go to page number"
 msgctxt "shortcut window"
 msgid "Go to page number"
 msgstr "Siirry sivulle numero"
 
 #: ../shell/help-overlay.ui.h:15
-#| msgid "Go to the beginning/end of a page"
 msgctxt "shortcut window"
 msgid "Go to the beginning/end of a page"
 msgstr "Siirry sivun alkuun/loppuun"
 
 #: ../shell/help-overlay.ui.h:16
-#| msgid "Go to the beginning of the document"
 msgctxt "shortcut window"
 msgid "Go to the beginning of the document"
 msgstr "Siirry asiakirjan alkuun"
 
 #: ../shell/help-overlay.ui.h:17
-#| msgid "Go to the end of the document"
 msgctxt "shortcut window"
 msgid "Go to the end of the document"
 msgstr "Siirry asiakirjan loppuun"
@@ -1818,19 +1801,16 @@ msgid "Finding text"
 msgstr "Tekstin etsiminen"
 
 #: ../shell/help-overlay.ui.h:19
-#| msgid "Show the search bar"
 msgctxt "shortcut window"
 msgid "Show the search bar"
 msgstr "Näytä hakupalkki"
 
 #: ../shell/help-overlay.ui.h:20
-#| msgid "Go to the next search result"
 msgctxt "shortcut window"
 msgid "Go to the next search result"
 msgstr "Siirry seuraavaan hakutulokseen"
 
 #: ../shell/help-overlay.ui.h:21
-#| msgid "Go to the previous search result"
 msgctxt "shortcut window"
 msgid "Go to the previous search result"
 msgstr "Siirry edelliseen hakutulokseen"
@@ -1841,43 +1821,36 @@ msgid "Rotating and zooming"
 msgstr "Kiertäminen ja koon muuttaminen"
 
 #: ../shell/help-overlay.ui.h:23
-#| msgid "Rotate the page 90 degrees counter-clockwise"
 msgctxt "shortcut window"
 msgid "Rotate the page 90 degrees counter-clockwise"
 msgstr "Kierrä sivua 90 astetta vastapäivään"
 
 #: ../shell/help-overlay.ui.h:24
-#| msgid "Rotate the page 90 degrees clockwise"
 msgctxt "shortcut window"
 msgid "Rotate the page 90 degrees clockwise"
 msgstr "Kierrä sivua 90 astetta myötäpäivään"
 
 #: ../shell/help-overlay.ui.h:25
-#| msgid "Zoom in"
 msgctxt "shortcut window"
 msgid "Zoom in"
 msgstr "Lähennä"
 
 #: ../shell/help-overlay.ui.h:26
-#| msgid "Zoom out"
 msgctxt "shortcut window"
 msgid "Zoom out"
 msgstr "Loitonna"
 
 #: ../shell/help-overlay.ui.h:27
-#| msgid "Touchpad gestures"
 msgctxt "shortcut window"
 msgid "Touchpad gestures"
 msgstr "Kosketuslevyn eleet"
 
 #: ../shell/help-overlay.ui.h:28
-#| msgid "Go to next page"
 msgctxt "shortcut window"
 msgid "Go to next page"
 msgstr "Siirry seuraavalle sivulle"
 
 #: ../shell/help-overlay.ui.h:29
-#| msgid "Go to previous page"
 msgctxt "shortcut window"
 msgid "Go to previous page"
 msgstr "Siirry edelliselle sivulle"
@@ -1897,6 +1870,15 @@ msgid ""
 msgstr ""
 "Sovellus tukee seuraavia asiakirjamuotoja: PDF, PS, EPS, XPS, DjVu, TIFF, "
 "DVI (SyncTeX:illa) ja sarjakuva-arkistoja (CBR, CBT, CBZ, CB7)."
+
+#~ msgid "Style:"
+#~ msgstr "Tyyli:"
+
+#~ msgid "Transparent"
+#~ msgstr "Läpinäkyvä"
+
+#~ msgid "Opaque"
+#~ msgstr "Peittävä"
 
 #~ msgid "Index"
 #~ msgstr "Hakemisto"
