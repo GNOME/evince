@@ -852,6 +852,11 @@ ev_job_thumbnail_dispose (GObject *object)
 		job->thumbnail = NULL;
 	}
 
+	if (job->thumbnail_surface) {
+		cairo_surface_destroy (job->thumbnail_surface);
+		job->thumbnail_surface = NULL;
+	}
+
 	(* G_OBJECT_CLASS (ev_job_thumbnail_parent_class)->dispose) (object);
 }
 
