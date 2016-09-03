@@ -982,10 +982,14 @@ ev_sidebar_thumbnails_document_changed_cb (EvDocumentModel     *model,
 	priv->n_pages = ev_document_get_n_pages (document);
 	priv->rotation = ev_document_model_get_rotation (model);
 	priv->inverted_colors = ev_document_model_get_inverted_colors (model);
-	priv->loading_icons = g_hash_table_new_full (g_str_hash,
-						     g_str_equal,
-						     (GDestroyNotify)g_free,
-						     (GDestroyNotify)cairo_surface_destroy);
+	if (priv->loading_icons) {
+                g_hash_table_remove_all (priv->loading_icons);
+	} else {
+                priv->loading_icons = g_hash_table_new_full (g_str_hash,
+                                                             g_str_equal,
+                                                             (GDestroyNotify)g_free,
+                                                             (GDestroyNotify)cairo_surface_destroy);
+	}
 
 	ev_sidebar_thumbnails_clear_model (sidebar_thumbnails);
 	ev_sidebar_thumbnails_fill_model (sidebar_thumbnails);
