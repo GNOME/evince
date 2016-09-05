@@ -22,6 +22,7 @@
 #include "EvMemoryUtils.h"
 #include "npfunctions.h"
 #include "npruntime.h"
+#include <gdk/gdkwayland.h>
 
 static NPNetscapeFuncs *browser;
 static unique_gptr<char> mimeDescription;
@@ -198,6 +199,11 @@ NPError NP_Initialize(NPNetscapeFuncs *browserFuncs, NPPluginFuncs *pluginFuncs)
 
         gtk_init(nullptr, nullptr);
 
+#ifdef GDK_WINDOWING_WAYLAND
+        if (GDK_IS_WAYLAND_DISPLAY(gdk_display_get_default()))
+                return NPERR_GENERIC_ERROR;
+#endif
+
         browser = browserFuncs;
         initializePluginFuncs(pluginFuncs);
 
@@ -266,6 +272,11 @@ const char *NP_GetMIMEDescription()
 
         if (!ev_init())
                 return nullptr;
+
+#ifdef GDK_WINDOWING_WAYLAND
+        if (GDK_IS_WAYLAND_DISPLAY(gdk_display_get_default()))
+                return nullptr;
+#endif
 
         GString *mimeDescriptionStr = g_string_new(nullptr);
 
