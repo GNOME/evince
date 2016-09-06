@@ -22,7 +22,10 @@
 #include "EvMemoryUtils.h"
 #include "npfunctions.h"
 #include "npruntime.h"
+#include <gdk/gdk.h>
+#ifdef GDK_WINDOWING_WAYLAND
 #include <gdk/gdkwayland.h>
+#endif
 
 static NPNetscapeFuncs *browser;
 static unique_gptr<char> mimeDescription;
