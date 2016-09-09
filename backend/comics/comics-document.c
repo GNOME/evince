@@ -20,6 +20,7 @@
 
 #include <config.h>
 
+#define _GNU_SOURCE
 #include <unistd.h>
 #include <string.h>
 #include <stdlib.h>
@@ -466,7 +467,7 @@ static int
 sort_page_names (gconstpointer a,
                  gconstpointer b)
 {
-  return strcmp (* (const char **) a, * (const char **) b);
+  return strverscmp (* (const char **) a, * (const char **) b);
 }
 
 static gboolean
