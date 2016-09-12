@@ -315,8 +315,8 @@ comics_check_decompress_command	(gchar          *mime_type,
 	/* FIXME, use proper cbr/cbz mime types once they're
 	 * included in shared-mime-info */
 	
-	if (!strcmp (mime_type, "application/x-cbr") ||
-	    !strcmp (mime_type, "application/x-rar")) {
+	if (g_content_type_is_a (mime_type, "application/x-cbr") ||
+	    g_content_type_is_a (mime_type, "application/x-rar")) {
 	        /* The RARLAB provides a no-charge proprietary (freeware) 
 	        * decompress-only client for Linux called unrar. Another 
 		* option is a GPLv2-licensed command-line tool developed by 
@@ -371,8 +371,8 @@ comics_check_decompress_command	(gchar          *mime_type,
 			return TRUE;
 		}
 
-	} else if (!strcmp (mime_type, "application/x-cbz") ||
-		   !strcmp (mime_type, "application/zip")) {
+	} else if (g_content_type_is_a (mime_type, "application/x-cbz") ||
+		   g_content_type_is_a (mime_type, "application/zip")) {
 		/* InfoZIP's unzip program */
 		comics_document->selected_command = 
 				g_find_program_in_path ("unzip");
@@ -403,8 +403,8 @@ comics_check_decompress_command	(gchar          *mime_type,
 			return TRUE;
 		}
 
-	} else if (!strcmp (mime_type, "application/x-cb7") ||
-		   !strcmp (mime_type, "application/x-7z-compressed")) {
+	} else if (g_content_type_is_a (mime_type, "application/x-cb7") ||
+		   g_content_type_is_a (mime_type, "application/x-7z-compressed")) {
 		/* 7zr, 7za and 7z are the commands from the p7zip project able 
 		 * to decompress .7z files */ 
 		comics_document->selected_command =
@@ -431,8 +431,8 @@ comics_check_decompress_command	(gchar          *mime_type,
 			comics_document->command_usage = TAR;
 			return TRUE;
 		}
-	} else if (!strcmp (mime_type, "application/x-cbt") ||
-		   !strcmp (mime_type, "application/x-tar")) {
+	} else if (g_content_type_is_a (mime_type, "application/x-cbt") ||
+		   g_content_type_is_a (mime_type, "application/x-tar")) {
 		/* tar utility (Tape ARchive) */
 		comics_document->selected_command =
 				g_find_program_in_path ("tar");
