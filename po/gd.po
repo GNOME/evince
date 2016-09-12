@@ -7,8 +7,8 @@ msgstr ""
 "Project-Id-Version: evince master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=evince"
 "&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2016-06-09 18:30+0000\n"
-"PO-Revision-Date: 2016-06-11 08:02+0100\n"
+"POT-Creation-Date: 2016-09-12 08:13+0000\n"
+"PO-Revision-Date: 2016-09-12 12:13+0100\n"
 "Last-Translator: GunChleoc <fios@foramnagaidhlig.net>\n"
 "Language-Team: Fòram na Gàidhlig\n"
 "Language: gd\n"
@@ -342,7 +342,7 @@ msgid "Print document"
 msgstr "Clò-bhuail an sgrìobhainn"
 
 #. Manually set name and icon
-#: ../data/evince.desktop.in.in.h:1 ../shell/ev-application.c:1029
+#: ../data/evince.desktop.in.in.h:1 ../shell/ev-application.c:1031
 #: ../shell/ev-window-title.c:139 ../shell/main.c:298
 msgid "Document Viewer"
 msgstr "Sealladair sgrìobhainnean"
@@ -475,8 +475,8 @@ msgid "of %d"
 msgstr "à %d"
 
 #: ../libmisc/ev-page-action-widget.c:185 ../shell/ev-history.c:426
-#: ../shell/ev-sidebar-bookmarks.c:295 ../shell/ev-window.c:905
-#: ../shell/ev-window.c:4704
+#: ../shell/ev-sidebar-bookmarks.c:295 ../shell/ev-window.c:902
+#: ../shell/ev-window.c:4644
 #, c-format
 msgid "Page %s"
 msgstr "Duilleag %s"
@@ -510,12 +510,12 @@ msgstr "Lorg ath-làthair na h-abairt luirg"
 msgid "Failed to render page %d"
 msgstr "Dh'fhàillig le reandaradh na duilleige %d"
 
-#: ../libview/ev-jobs.c:896
+#: ../libview/ev-jobs.c:901
 #, c-format
 msgid "Failed to create thumbnail for page %d"
 msgstr "Dh'fhàillig le cruthachadh na dealbhaige airson duilleag %d"
 
-#: ../libview/ev-jobs.c:2026
+#: ../libview/ev-jobs.c:2031
 #, c-format
 msgid "Failed to print page %d: %s"
 msgstr "Dh'fhàillig le clò-bhualadh na duilleige %d: %s"
@@ -654,55 +654,55 @@ msgstr "Sgrolaich an sealladh sìos"
 msgid "Document View"
 msgstr "Sealladh na sgrìobhainn"
 
-#: ../libview/ev-view.c:2026
+#: ../libview/ev-view.c:2031
 msgid "Go to first page"
 msgstr "Rach gun chiad duilleag"
 
-#: ../libview/ev-view.c:2028
+#: ../libview/ev-view.c:2033
 msgid "Go to previous page"
 msgstr "Rach gun duilleag roimhpe"
 
-#: ../libview/ev-view.c:2030
+#: ../libview/ev-view.c:2035
 msgid "Go to next page"
 msgstr "Rach gun ath-dhuilleag"
 
-#: ../libview/ev-view.c:2032
+#: ../libview/ev-view.c:2037
 msgid "Go to last page"
 msgstr "Rach gun duilleag mu dheireadh"
 
-#: ../libview/ev-view.c:2034
+#: ../libview/ev-view.c:2039
 msgid "Go to page"
 msgstr "Rach gu duilleag"
 
-#: ../libview/ev-view.c:2036
+#: ../libview/ev-view.c:2041
 msgid "Find"
 msgstr "Lorg"
 
-#: ../libview/ev-view.c:2064
+#: ../libview/ev-view.c:2069
 #, c-format
 msgid "Go to page %s"
 msgstr "Rach gu duilleag %s"
 
-#: ../libview/ev-view.c:2070
+#: ../libview/ev-view.c:2075
 #, c-format
 msgid "Go to %s on file “%s”"
 msgstr "Rach gu %s san fhaidhle \"%s\""
 
-#: ../libview/ev-view.c:2073
+#: ../libview/ev-view.c:2078
 #, c-format
 msgid "Go to file “%s”"
 msgstr "Rach gun fhaidhle \"%s\""
 
-#: ../libview/ev-view.c:2081
+#: ../libview/ev-view.c:2086
 #, c-format
 msgid "Launch %s"
 msgstr "Tòisich %s"
 
-#: ../libview/ev-view-presentation.c:735
+#: ../libview/ev-view-presentation.c:752
 msgid "Jump to page:"
 msgstr "Gearr leum gu duilleag:"
 
-#: ../libview/ev-view-presentation.c:1038
+#: ../libview/ev-view-presentation.c:1055
 msgid "End of presentation. Click to exit."
 msgstr "Deireadh an taisbeanaidh. Briog gus fhàgail."
 
@@ -722,7 +722,7 @@ msgstr "FAIDHLE"
 msgid "GNOME Document Previewer"
 msgstr "Ro-shealladair sgrìobhainnean GNOME"
 
-#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3317
+#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3257
 msgid "Failed to print document"
 msgstr "Dh'fhàillig le clò-bhualadh na sgrìobhainn"
 
@@ -776,7 +776,7 @@ msgid "Subject:"
 msgstr "Cuspair:"
 
 #: ../properties/ev-properties-view.c:64
-#: ../shell/ev-annotation-properties-dialog.c:174
+#: ../shell/ev-annotation-properties-dialog.c:171
 msgid "Author:"
 msgstr "Ùghdar:"
 
@@ -922,35 +922,27 @@ msgstr "Loidhne fodha"
 msgid "Squiggly"
 msgstr "Sgrochladh"
 
-#: ../shell/ev-annotation-properties-dialog.c:154
+#: ../shell/ev-annotation-properties-dialog.c:152
 msgid "Annotation Properties"
 msgstr "Roghainnean nan nòtachaidhean"
 
-#: ../shell/ev-annotation-properties-dialog.c:185
+#: ../shell/ev-annotation-properties-dialog.c:182
 msgid "Color:"
 msgstr "Dath:"
 
-#: ../shell/ev-annotation-properties-dialog.c:195
-msgid "Style:"
-msgstr "Stoidhle:"
+#: ../shell/ev-annotation-properties-dialog.c:192
+msgid "Opacity:"
+msgstr "Trìd-dhoilleireachd:"
 
-#: ../shell/ev-annotation-properties-dialog.c:210
-msgid "Transparent"
-msgstr "Trìd-shoilleir"
-
-#: ../shell/ev-annotation-properties-dialog.c:217
-msgid "Opaque"
-msgstr "Trìd-dhoilleir"
-
-#: ../shell/ev-annotation-properties-dialog.c:227
+#: ../shell/ev-annotation-properties-dialog.c:204
 msgid "Initial window state:"
 msgstr "Staid tòiseachaidh na h-uinneige:"
 
-#: ../shell/ev-annotation-properties-dialog.c:233
+#: ../shell/ev-annotation-properties-dialog.c:210
 msgid "Open"
 msgstr "Fosgail"
 
-#: ../shell/ev-annotation-properties-dialog.c:234
+#: ../shell/ev-annotation-properties-dialog.c:211
 msgid "Close"
 msgstr "Dùin"
 
@@ -962,7 +954,7 @@ msgstr "Cuir nòtachadh teacsa ris"
 msgid "Add highlight annotation"
 msgstr "Cuir nòtachadh soillseachaidh ris"
 
-#: ../shell/ev-application.c:995
+#: ../shell/ev-application.c:997
 msgid ""
 "Evince is free software; you can redistribute it and/or modify it under the "
 "terms of the GNU General Public License as published by the Free Software "
@@ -974,7 +966,7 @@ msgstr ""
 "fhoillseachadh leis a' Free Software Foundation; co-dhiù tionndadh 2 dhen "
 "cheadachas no (ma lùigeas tu) tionndadh nas ùire sam bith dheth.\n"
 
-#: ../shell/ev-application.c:999
+#: ../shell/ev-application.c:1001
 msgid ""
 "Evince is distributed in the hope that it will be useful, but WITHOUT ANY "
 "WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS "
@@ -986,7 +978,7 @@ msgstr ""
 "MHARSANTACHD no ION-FHREAGARRACHD A CHUM FEUM SAM BITH. Faic a' GNU General "
 "Public License airson barrachd fiosrachaidh.\n"
 
-#: ../shell/ev-application.c:1003
+#: ../shell/ev-application.c:1005
 msgid ""
 "You should have received a copy of the GNU General Public License along with "
 "Evince; if not, write to the Free Software Foundation, Inc., 51 Franklin "
@@ -996,15 +988,15 @@ msgstr ""
 "Evince; mur eil, sgrìobh gun Free Software Foundation, Inc., 51 Franklin "
 "Street, Fifth Floor, Boston, MA 02110-1301, USA\n"
 
-#: ../shell/ev-application.c:1024 ../evince.appdata.xml.in.h:1
+#: ../shell/ev-application.c:1026 ../evince.appdata.xml.in.h:1
 msgid "Evince"
 msgstr "Evince"
 
-#: ../shell/ev-application.c:1026
+#: ../shell/ev-application.c:1028
 msgid "© 1996–2014 The Evince authors"
 msgstr "© 1996–2014 Na h-ùghdaran aig Evince"
 
-#: ../shell/ev-application.c:1032
+#: ../shell/ev-application.c:1034
 msgid "translator-credits"
 msgstr "GunChleoc http://www.foramnagaidhlig.net"
 
@@ -1108,16 +1100,16 @@ msgstr "Ceadachas an teacsa"
 msgid "Further Information"
 msgstr "Barrachd fiosrachaidh"
 
-#: ../shell/ev-sidebar-annotations.c:260
+#: ../shell/ev-sidebar-annotations.c:259
 msgid "Document contains no annotations"
 msgstr "Chan eil nòtachadh san sgrìobhainn"
 
-#: ../shell/ev-sidebar-annotations.c:292
+#: ../shell/ev-sidebar-annotations.c:291
 #, c-format
 msgid "Page %d"
 msgstr "Duilleag %d"
 
-#: ../shell/ev-sidebar-annotations.c:468
+#: ../shell/ev-sidebar-annotations.c:467
 msgid "Annotations"
 msgstr "Nòtachaidhean"
 
@@ -1167,7 +1159,7 @@ msgstr "Clò-bhuail…"
 msgid "Outline"
 msgstr "Oir-loidhne"
 
-#: ../shell/ev-sidebar-thumbnails.c:1085
+#: ../shell/ev-sidebar-thumbnails.c:1093
 msgid "Thumbnails"
 msgstr "Dealbhagan"
 
@@ -1207,94 +1199,94 @@ msgstr "Suidhich leibheil an t-sùim"
 msgid "Supported Image Files"
 msgstr "Faidhlichean deilbh ris an cuirear taic"
 
-#: ../shell/ev-window.c:1598
+#: ../shell/ev-window.c:1536
 msgid "The document contains no pages"
 msgstr "Chan eil duilleag sa sgrìobhainn seo"
 
-#: ../shell/ev-window.c:1601
+#: ../shell/ev-window.c:1539
 msgid "The document contains only empty pages"
 msgstr "Chan eil ach duilleagan bàna sa sgrìobhainn seo"
 
-#: ../shell/ev-window.c:1814 ../shell/ev-window.c:1980
+#: ../shell/ev-window.c:1752 ../shell/ev-window.c:1918
 #, c-format
 msgid "Unable to open document “%s”."
 msgstr "Cha ghabh an sgrìobhainn \"%s\" fhosgladh"
 
-#: ../shell/ev-window.c:1944
+#: ../shell/ev-window.c:1882
 #, c-format
 msgid "Loading document from “%s”"
 msgstr "A' luchdadh sgrìobhainn o \"%s\""
 
-#: ../shell/ev-window.c:2095 ../shell/ev-window.c:2423
+#: ../shell/ev-window.c:2033 ../shell/ev-window.c:2361
 #, c-format
 msgid "Downloading document (%d%%)"
 msgstr "A' luchdadh a-nuas sgrìobhainn (%d%%)"
 
-#: ../shell/ev-window.c:2128
+#: ../shell/ev-window.c:2066
 msgid "Failed to load remote file."
 msgstr "Dh'fhàillig le luchdadh an fhaidhle chèin."
 
-#: ../shell/ev-window.c:2367
+#: ../shell/ev-window.c:2305
 #, c-format
 msgid "Reloading document from %s"
 msgstr "A' luchdadh sgrìobhainn às ùr o \"%s\""
 
-#: ../shell/ev-window.c:2399
+#: ../shell/ev-window.c:2337
 msgid "Failed to reload document."
 msgstr "Dh'fhàillig le luchdadh na sgrìobhainn às ùr."
 
-#: ../shell/ev-window.c:2615
+#: ../shell/ev-window.c:2553
 msgid "Open Document"
 msgstr "Fosgail sgrìobhainn"
 
-#: ../shell/ev-window.c:2686
+#: ../shell/ev-window.c:2626
 #, c-format
 msgid "Saving document to %s"
 msgstr "A' sàbhaladh na sgrìobhainn gu %s"
 
-#: ../shell/ev-window.c:2689
+#: ../shell/ev-window.c:2629
 #, c-format
 msgid "Saving attachment to %s"
 msgstr "A' sàbhaladh a' cheanglachain gu %s"
 
-#: ../shell/ev-window.c:2692
+#: ../shell/ev-window.c:2632
 #, c-format
 msgid "Saving image to %s"
 msgstr "A' sàbhaladh an deilbh gu %s"
 
-#: ../shell/ev-window.c:2736 ../shell/ev-window.c:2836
+#: ../shell/ev-window.c:2676 ../shell/ev-window.c:2776
 #, c-format
 msgid "The file could not be saved as “%s”."
 msgstr "Cha b' urrainn dhuinn am faidhle a shàbhaladh mar \"%s\""
 
-#: ../shell/ev-window.c:2767
+#: ../shell/ev-window.c:2707
 #, c-format
 msgid "Uploading document (%d%%)"
 msgstr "A' luchdadh suas sgrìobhainn (%d%%)"
 
-#: ../shell/ev-window.c:2771
+#: ../shell/ev-window.c:2711
 #, c-format
 msgid "Uploading attachment (%d%%)"
 msgstr "A' luchdadh suas ceanglachan (%d%%)"
 
-#: ../shell/ev-window.c:2775
+#: ../shell/ev-window.c:2715
 #, c-format
 msgid "Uploading image (%d%%)"
 msgstr "A' luchdadh suas dealbh (%d%%)"
 
-#: ../shell/ev-window.c:2887
+#: ../shell/ev-window.c:2827
 msgid "Save a Copy"
 msgstr "Sàbhail lethbhreac dheth"
 
-#: ../shell/ev-window.c:2963
+#: ../shell/ev-window.c:2903
 msgid "Could not send current document"
 msgstr "Cha deach leinn an sgrìobhainn làithreach a chur"
 
-#: ../shell/ev-window.c:2997
+#: ../shell/ev-window.c:2937
 msgid "Could not open the containing folder"
 msgstr "Cha deach leinn am pasgan sa bheil e fhosgladh"
 
-#: ../shell/ev-window.c:3261
+#: ../shell/ev-window.c:3201
 #, c-format
 msgid "%d pending job in queue"
 msgid_plural "%d pending jobs in queue"
@@ -1303,12 +1295,12 @@ msgstr[1] "%d obair ri an dèiligeadh sa chiutha"
 msgstr[2] "%d obraichean ri a dèiligeadh sa chiutha"
 msgstr[3] "%d obair ri an dèiligeadh sa chiutha"
 
-#: ../shell/ev-window.c:3374
+#: ../shell/ev-window.c:3314
 #, c-format
 msgid "Printing job “%s”"
 msgstr "A' clò-bhualadh na h-obrach \"%s\""
 
-#: ../shell/ev-window.c:3577
+#: ../shell/ev-window.c:3517
 msgid ""
 "Document contains form fields that have been filled out. If you don't save a "
 "copy, changes will be permanently lost."
@@ -1316,7 +1308,7 @@ msgstr ""
 "Tha raointean ann am foirm na sgrìobhainn nach deach a lìonadh. Mur sàbhail "
 "thu lethbhreac dheth, thèid na h-atharraichean air chall gu buan."
 
-#: ../shell/ev-window.c:3581
+#: ../shell/ev-window.c:3521
 msgid ""
 "Document contains new or modified annotations. If you don't save a copy, "
 "changes will be permanently lost."
@@ -1324,22 +1316,22 @@ msgstr ""
 "Tha nòtachaidhean ùra no air an atharrachadh san sgrìobhainn. Mur sàbhail "
 "thu lethbhreac dheth, thèid na h-atharraichean air chall gu buan."
 
-#: ../shell/ev-window.c:3588
+#: ../shell/ev-window.c:3528
 #, c-format
 msgid "Save a copy of document “%s” before closing?"
 msgstr ""
 "A bheil thu airson lethbhreac dhen sgrìobhainn \"%s\" a shàbhaladh mus dùin "
 "thu i?"
 
-#: ../shell/ev-window.c:3607
+#: ../shell/ev-window.c:3547
 msgid "Close _without Saving"
 msgstr "Dùin _gun a sàbhaladh"
 
-#: ../shell/ev-window.c:3611
+#: ../shell/ev-window.c:3551
 msgid "Save a _Copy"
 msgstr "Sàbhail lethbhrea_c dheth"
 
-#: ../shell/ev-window.c:3685
+#: ../shell/ev-window.c:3625
 #, c-format
 msgid "Wait until print job “%s” finishes before closing?"
 msgstr ""
@@ -1349,7 +1341,7 @@ msgstr ""
 #. TRANS: the singular form is not really used as n_print_jobs > 1
 #. but some languages distinguish between different plurals forms,
 #. so the ngettext is needed.
-#: ../shell/ev-window.c:3691
+#: ../shell/ev-window.c:3631
 #, c-format
 msgid "There is %d print job active. Wait until print finishes before closing?"
 msgid_plural ""
@@ -1367,76 +1359,76 @@ msgstr[3] ""
 "Tha %d obair clò-bhualaidh gnìomhach. A bheil thu airson feitheamh gus am bi "
 "iad coileanta mus dùin thu seo?"
 
-#: ../shell/ev-window.c:3706
+#: ../shell/ev-window.c:3646
 msgid "If you close the window, pending print jobs will not be printed."
 msgstr ""
 "Ma dhùineas tu an uinneag seo, cha tèid na h-obraichean clò-bhualaidh ri an "
 "dèiligeadh a chlò-bhualadh tuilleadh."
 
-#: ../shell/ev-window.c:3710
+#: ../shell/ev-window.c:3650
 msgid "Cancel _print and Close"
 msgstr "Sguir dhen clò-_bhualadh 's dùin e"
 
-#: ../shell/ev-window.c:3714
+#: ../shell/ev-window.c:3654
 msgid "Close _after Printing"
 msgstr "Dùin e às dèidh a' chlò-bhu_alaidh"
 
-#: ../shell/ev-window.c:4245
+#: ../shell/ev-window.c:4185
 msgid "Running in presentation mode"
 msgstr "A' ruith sa mhodh taisbeanaidh"
 
-#: ../shell/ev-window.c:5389
+#: ../shell/ev-window.c:5325
 msgid "Enable caret navigation?"
 msgstr "A bheil thu airson seòladaireachd carait a chur an comas?"
 
-#: ../shell/ev-window.c:5391
+#: ../shell/ev-window.c:5327
 msgid "_Enable"
 msgstr "_Cuir an comas"
 
-#: ../shell/ev-window.c:5394
+#: ../shell/ev-window.c:5330
 msgid ""
 "Pressing F7 turns the caret navigation on or off. This feature places a "
 "moveable cursor in text pages, allowing you to move around and select text "
 "with your keyboard. Do you want to enable the caret navigation?"
 msgstr ""
-"Cuiridh tu seòladaireachd carait air is dheth le F7. Cuiridh an gleus seo "
+"Cuiridh tu seòladaireachd carait air is dheth le F7. Cuiridh am feart seo "
 "cùrsair gluasadach ann an duilleagan teacsa agus 's urrainn dhut teacsa a "
 "thaghadh 's a ghluasad leis a' mheur-chlàr leis. A bheil thu airson "
 "seòladaireachd carait a chur an comas a-nis?"
 
-#: ../shell/ev-window.c:5399
+#: ../shell/ev-window.c:5335
 msgid "Don't show this message again"
 msgstr "Na seall an teachdaireachd seo a-rithist"
 
-#: ../shell/ev-window.c:5918 ../shell/ev-window.c:5934
+#: ../shell/ev-window.c:5850 ../shell/ev-window.c:5866
 msgid "Unable to launch external application."
 msgstr "Cha deach leinn an aplacaid taobh a-muigh a thòiseachadh."
 
-#: ../shell/ev-window.c:5991
+#: ../shell/ev-window.c:5923
 msgid "Unable to open external link"
 msgstr "Cha deach leinn an ceangal taobh a-muigh fhosgladh"
 
-#: ../shell/ev-window.c:6194
+#: ../shell/ev-window.c:6126
 msgid "Couldn't find appropriate format to save image"
 msgstr "Cha deach leinn fòrmat iomchaidh a lorg gus an dealbh a shàbhaladh"
 
-#: ../shell/ev-window.c:6226
+#: ../shell/ev-window.c:6158
 msgid "The image could not be saved."
 msgstr "Cha b' urrainn dhuinn an dealbh a shàbhaladh."
 
-#: ../shell/ev-window.c:6261
+#: ../shell/ev-window.c:6193
 msgid "Save Image"
 msgstr "Sàbhail an dealbh"
 
-#: ../shell/ev-window.c:6420
+#: ../shell/ev-window.c:6352
 msgid "Unable to open attachment"
 msgstr "Cha deach leinn an ceanglachan fhosgladh"
 
-#: ../shell/ev-window.c:6476
+#: ../shell/ev-window.c:6408
 msgid "The attachment could not be saved."
 msgstr "Cha b' urrainn dhuinn an ceanglachan a shàbhaladh."
 
-#: ../shell/ev-window.c:6524
+#: ../shell/ev-window.c:6456
 msgid "Save Attachment"
 msgstr "Sàbhail an ceanglachan"
 
@@ -1741,22 +1733,22 @@ msgstr "Fosgail sgrìobhainn"
 #: ../shell/help-overlay.ui.h:3
 msgctxt "shortcut window"
 msgid "Open a copy of the current document"
-msgstr "Fosgail lethbhreac dhen sgrìobhainn làithreach"
+msgstr "Fosgail lethbhreac dhen sgrìobhainn seo"
 
 #: ../shell/help-overlay.ui.h:4
 msgctxt "shortcut window"
 msgid "Save a copy of the current document"
-msgstr "Sàbhail lethbhreac dhen sgrìobhainn làithreach"
+msgstr "Sàbhail lethbhreac dhen sgrìobhainn seo"
 
 #: ../shell/help-overlay.ui.h:5
 msgctxt "shortcut window"
 msgid "Print the current document"
-msgstr "Clò-bhuail an sgrìobhainn làithreach"
+msgstr "Clò-bhuail an sgrìobhainn seo"
 
 #: ../shell/help-overlay.ui.h:6
 msgctxt "shortcut window"
 msgid "Close the current document window"
-msgstr "Dùin uinneag na sgrìobhainn làithrich"
+msgstr "Dùin uinneag na sgrìobhainn seo"
 
 #: ../shell/help-overlay.ui.h:7
 msgctxt "shortcut window"
@@ -1771,7 +1763,7 @@ msgstr "Taghadh is dèanamh lethbhreac de theacsa"
 #: ../shell/help-overlay.ui.h:9
 msgctxt "shortcut window"
 msgid "Copy highlighted text"
-msgstr "Dèan lethbhreac dhen teacsa air a shoillseachadh"
+msgstr "Dèan lethbhreac dhen teacsa shoillsichte"
 
 #: ../shell/help-overlay.ui.h:10
 msgctxt "shortcut window"
@@ -1781,22 +1773,24 @@ msgstr "Tagh an teacsa air fad ann an sgrìobhainn"
 #: ../shell/help-overlay.ui.h:11
 msgctxt "shortcut window"
 msgid "Moving around the document"
-msgstr "Gluasad mu thimcheall na sgrìobhainn"
+msgstr "Gluasad san sgrìobhainn"
 
 #: ../shell/help-overlay.ui.h:12
+#| msgctxt "shortcut window"
+#| msgid "Move up/down a page"
 msgctxt "shortcut window"
 msgid "Move around a page"
-msgstr "Gluasad mu thimcheall duilleige"
+msgstr "Gluais suas/sìos ann an duilleag"
 
 #: ../shell/help-overlay.ui.h:13
 msgctxt "shortcut window"
 msgid "Move up/down a page several lines at a time"
-msgstr "Gluais suas/sìos duilleag iomadh turas aig an aon àm"
+msgstr "Gluais suas/sìos ann an duilleag iomadh loidhne aig an aon àm"
 
 #: ../shell/help-overlay.ui.h:14
 msgctxt "shortcut window"
 msgid "Go to page number"
-msgstr "Rach gu àireamh duilleige"
+msgstr "Rach gu duilleag le àireamh"
 
 #: ../shell/help-overlay.ui.h:15
 msgctxt "shortcut window"
@@ -1826,12 +1820,12 @@ msgstr "Seall am bàr-luirg"
 #: ../shell/help-overlay.ui.h:20
 msgctxt "shortcut window"
 msgid "Go to the next search result"
-msgstr "Rach gun ath-thoradh"
+msgstr "Rach gu ath-thoradh an luirg"
 
 #: ../shell/help-overlay.ui.h:21
 msgctxt "shortcut window"
 msgid "Go to the previous search result"
-msgstr "Rach gun toradh roimhe"
+msgstr "Rach gu toradh roimhe an luirg"
 
 #: ../shell/help-overlay.ui.h:22
 msgctxt "shortcut window"
@@ -1888,6 +1882,15 @@ msgid ""
 msgstr ""
 "Cuiridh e taic dha na fòrmatan seo: PDF, PS, EPS, XPS, DjVu, TIFF, DVI (le "
 "SyncTeX) agus tasglannan Comic Books (CBR, CBT, CBZ, CB7)."
+
+#~ msgid "Style:"
+#~ msgstr "Stoidhle:"
+
+#~ msgid "Transparent"
+#~ msgstr "Trìd-shoilleir"
+
+#~ msgid "Opaque"
+#~ msgstr "Trìd-dhoilleir"
 
 #~ msgid "Find options"
 #~ msgstr "Roghainnean an luirg"
