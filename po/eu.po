@@ -8,9 +8,10 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: evince master\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-03-20 18:50+0100\n"
-"PO-Revision-Date: 2016-03-20 19:03+0100\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=evince"
+"&keywords=I18N+L10N&component=general\n"
+"POT-Creation-Date: 2016-08-14 15:47+0000\n"
+"PO-Revision-Date: 2016-09-20 12:33+0100\n"
 "Last-Translator: dooteo <dooteo@zundan.com>\n"
 "Language-Team: Basque <librezale@librezale.org>\n"
 "Language: eu\n"
@@ -37,34 +38,34 @@ msgstr "Huts egin du '%s' komandoak komikia deskonprimitzean."
 msgid "The command “%s” did not end normally."
 msgstr "'%s' komandoa ez da behar bezala amaitu."
 
-#: ../backend/comics/comics-document.c:450
+#: ../backend/comics/comics-document.c:453
 #, c-format
 msgid "Not a comic book MIME type: %s"
 msgstr "Ez da komikien MIME mota: %s"
 
-#: ../backend/comics/comics-document.c:457
+#: ../backend/comics/comics-document.c:460
 msgid "Can't find an appropriate command to decompress this type of comic book"
 msgstr "Ezin da komando egokirik aurkitu komiki mota hau deskonprimitzeko"
 
-#: ../backend/comics/comics-document.c:512
+#: ../backend/comics/comics-document.c:515
 msgid "File corrupted"
 msgstr "Fitxategia hondatuta"
 
-#: ../backend/comics/comics-document.c:525
+#: ../backend/comics/comics-document.c:528
 msgid "No files in archive"
 msgstr "Ez dago fitxategirik artxiboan"
 
-#: ../backend/comics/comics-document.c:564
+#: ../backend/comics/comics-document.c:567
 #, c-format
 msgid "No images found in archive %s"
 msgstr "Ez da irudirik aurkitu %s artxiboan"
 
-#: ../backend/comics/comics-document.c:814
+#: ../backend/comics/comics-document.c:817
 #, c-format
 msgid "There was an error deleting “%s”."
 msgstr "Errorea gertatu da '%s' ezabatzean."
 
-#: ../backend/comics/comics-document.c:907
+#: ../backend/comics/comics-document.c:910
 #, c-format
 msgid "Error %s"
 msgstr "Errorea: %s"
@@ -281,17 +282,17 @@ msgid "Adds support for reading XPS documents"
 msgstr "XPS dokumentuak irakurtzeko euskarria gehitzen du"
 
 #: ../browser-plugin/EvBrowserPluginToolbar.cpp:288
-#: ../previewer/ev-previewer-window.c:317 ../shell/evince-menus.ui.h:32
+#: ../previewer/ev-previewer-window.c:317 ../shell/evince-menus.ui.h:33
 msgid "Fit Pa_ge"
 msgstr "Doitu _orrialdea"
 
 #: ../browser-plugin/EvBrowserPluginToolbar.cpp:297
-#: ../previewer/ev-previewer-window.c:320 ../shell/evince-menus.ui.h:33
+#: ../previewer/ev-previewer-window.c:320 ../shell/evince-menus.ui.h:34
 msgid "Fit _Width"
 msgstr "Doitu _zabalera"
 
 #: ../browser-plugin/EvBrowserPluginToolbar.cpp:306
-#: ../shell/evince-menus.ui.h:34
+#: ../shell/evince-menus.ui.h:35
 msgid "_Automatic"
 msgstr "_Automatikoa"
 
@@ -338,7 +339,7 @@ msgid "Print document"
 msgstr "Inprimatu dokumentua"
 
 #. Manually set name and icon
-#: ../data/evince.desktop.in.in.h:1 ../shell/ev-application.c:1029
+#: ../data/evince.desktop.in.in.h:1 ../shell/ev-application.c:1031
 #: ../shell/ev-window-title.c:139 ../shell/main.c:298
 msgid "Document Viewer"
 msgstr "Dokumentu-ikustailea"
@@ -465,8 +466,8 @@ msgid "of %d"
 msgstr "/ %d"
 
 #: ../libmisc/ev-page-action-widget.c:185 ../shell/ev-history.c:426
-#: ../shell/ev-sidebar-bookmarks.c:295 ../shell/ev-window.c:905
-#: ../shell/ev-window.c:4704
+#: ../shell/ev-sidebar-bookmarks.c:295 ../shell/ev-window.c:902
+#: ../shell/ev-window.c:4644
 #, c-format
 msgid "Page %s"
 msgstr "%s orrialdea"
@@ -642,55 +643,55 @@ msgstr "Korritu ikuspegia behera"
 msgid "Document View"
 msgstr "Dokumentuaren ikuspegia"
 
-#: ../libview/ev-view.c:2023
+#: ../libview/ev-view.c:2031
 msgid "Go to first page"
 msgstr "Joan lehen orrialdera"
 
-#: ../libview/ev-view.c:2025
+#: ../libview/ev-view.c:2033
 msgid "Go to previous page"
 msgstr "Joan aurreko orrialdera"
 
-#: ../libview/ev-view.c:2027
+#: ../libview/ev-view.c:2035
 msgid "Go to next page"
 msgstr "Joan hurrengo orrialdera"
 
-#: ../libview/ev-view.c:2029
+#: ../libview/ev-view.c:2037
 msgid "Go to last page"
 msgstr "Joan azken orrialdera"
 
-#: ../libview/ev-view.c:2031
+#: ../libview/ev-view.c:2039
 msgid "Go to page"
 msgstr "Joan orrira:"
 
-#: ../libview/ev-view.c:2033
+#: ../libview/ev-view.c:2041
 msgid "Find"
 msgstr "Bilatu"
 
-#: ../libview/ev-view.c:2061
+#: ../libview/ev-view.c:2069
 #, c-format
 msgid "Go to page %s"
 msgstr "Joan %s orrira"
 
-#: ../libview/ev-view.c:2067
+#: ../libview/ev-view.c:2075
 #, c-format
 msgid "Go to %s on file “%s”"
 msgstr "Joan hona: %s ('%s' fitxategian)"
 
-#: ../libview/ev-view.c:2070
+#: ../libview/ev-view.c:2078
 #, c-format
 msgid "Go to file “%s”"
 msgstr "Joan '%s' fitxategira"
 
-#: ../libview/ev-view.c:2078
+#: ../libview/ev-view.c:2086
 #, c-format
 msgid "Launch %s"
 msgstr "Abiarazi %s"
 
-#: ../libview/ev-view-presentation.c:735
+#: ../libview/ev-view-presentation.c:752
 msgid "Jump to page:"
 msgstr "Joan orrira:"
 
-#: ../libview/ev-view-presentation.c:1038
+#: ../libview/ev-view-presentation.c:1055
 msgid "End of presentation. Click to exit."
 msgstr "Aurkezpenaren amaiera. Sakatu 'Ihes' tekla irteteko."
 
@@ -706,11 +707,11 @@ msgstr "Inprimatu ezarpenen fitxategia"
 msgid "FILE"
 msgstr "FITXATEGIA"
 
-#: ../previewer/ev-previewer.c:175 ../previewer/ev-previewer.c:207
+#: ../previewer/ev-previewer.c:176 ../previewer/ev-previewer.c:210
 msgid "GNOME Document Previewer"
 msgstr "GNOMEko dokumentu aurre-ikustailea"
 
-#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3317
+#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3257
 msgid "Failed to print document"
 msgstr "Huts egin du dokumentua inprimatzean"
 
@@ -719,11 +720,11 @@ msgstr "Huts egin du dokumentua inprimatzean"
 msgid "The selected printer '%s' could not be found"
 msgstr "Ezin izan da hautatutako '%s' inprimagailua aurkitu"
 
-#: ../previewer/ev-previewer-window.c:270 ../shell/evince-menus.ui.h:39
+#: ../previewer/ev-previewer-window.c:270 ../shell/evince-menus.ui.h:40
 msgid "_Previous Page"
 msgstr "_Aurreko orrialdea"
 
-#: ../previewer/ev-previewer-window.c:273 ../shell/evince-menus.ui.h:40
+#: ../previewer/ev-previewer-window.c:273 ../shell/evince-menus.ui.h:41
 msgid "_Next Page"
 msgstr "_Hurrengo orrialdea"
 
@@ -764,7 +765,7 @@ msgid "Subject:"
 msgstr "Gaia:"
 
 #: ../properties/ev-properties-view.c:64
-#: ../shell/ev-annotation-properties-dialog.c:174
+#: ../shell/ev-annotation-properties-dialog.c:171
 msgid "Author:"
 msgstr "Egilea:"
 
@@ -910,35 +911,27 @@ msgstr "Azpimarratu"
 msgid "Squiggly"
 msgstr "Zirriborroa"
 
-#: ../shell/ev-annotation-properties-dialog.c:154
+#: ../shell/ev-annotation-properties-dialog.c:152
 msgid "Annotation Properties"
 msgstr "Oharpenaren propietateak"
 
-#: ../shell/ev-annotation-properties-dialog.c:185
+#: ../shell/ev-annotation-properties-dialog.c:182
 msgid "Color:"
 msgstr "Kolorea:"
 
-#: ../shell/ev-annotation-properties-dialog.c:195
-msgid "Style:"
-msgstr "Estiloa:"
+#: ../shell/ev-annotation-properties-dialog.c:192
+msgid "Opacity:"
+msgstr "Opakutasuna:"
 
-#: ../shell/ev-annotation-properties-dialog.c:210
-msgid "Transparent"
-msgstr "Gardena"
-
-#: ../shell/ev-annotation-properties-dialog.c:217
-msgid "Opaque"
-msgstr "Opakoa"
-
-#: ../shell/ev-annotation-properties-dialog.c:227
+#: ../shell/ev-annotation-properties-dialog.c:204
 msgid "Initial window state:"
 msgstr "Hasierako leihoaren egoera:"
 
-#: ../shell/ev-annotation-properties-dialog.c:233
+#: ../shell/ev-annotation-properties-dialog.c:210
 msgid "Open"
 msgstr "Ireki"
 
-#: ../shell/ev-annotation-properties-dialog.c:234
+#: ../shell/ev-annotation-properties-dialog.c:211
 msgid "Close"
 msgstr "Itxi"
 
@@ -950,7 +943,7 @@ msgstr "Gehitu testuaren oharpena"
 msgid "Add highlight annotation"
 msgstr "Gehitu ohar nabarmendua"
 
-#: ../shell/ev-application.c:995
+#: ../shell/ev-application.c:997
 msgid ""
 "Evince is free software; you can redistribute it and/or modify it under the "
 "terms of the GNU General Public License as published by the Free Software "
@@ -962,7 +955,7 @@ msgstr ""
 "edo (nahiago baduzu) bertsio berriago batean, jasotako baldintzak betez "
 "gero.\n"
 
-#: ../shell/ev-application.c:999
+#: ../shell/ev-application.c:1001
 msgid ""
 "Evince is distributed in the hope that it will be useful, but WITHOUT ANY "
 "WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS "
@@ -974,7 +967,7 @@ msgstr ""
 "HELBURU PARTIKULARRETARAKO ERABILTZEKO. Argibide gehiago nahi izanez gero, "
 "ikus GNU Lizentzia Publiko Orokorra.\n"
 
-#: ../shell/ev-application.c:1003
+#: ../shell/ev-application.c:1005
 msgid ""
 "You should have received a copy of the GNU General Public License along with "
 "Evince; if not, write to the Free Software Foundation, Inc., 51 Franklin "
@@ -985,15 +978,15 @@ msgstr ""
 "Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  "
 "USA\n"
 
-#: ../shell/ev-application.c:1024 ../evince.appdata.xml.in.h:1
+#: ../shell/ev-application.c:1026 ../evince.appdata.xml.in.h:1
 msgid "Evince"
 msgstr "Evince"
 
-#: ../shell/ev-application.c:1026
+#: ../shell/ev-application.c:1028
 msgid "© 1996–2014 The Evince authors"
 msgstr "© 1996-2014 Evince-ren egileak"
 
-#: ../shell/ev-application.c:1032
+#: ../shell/ev-application.c:1034
 msgid "translator-credits"
 msgstr ""
 "Mikel Olasagasti <hey_neken@mundurat.net>\n"
@@ -1096,16 +1089,16 @@ msgstr "Testuaren lizentzia"
 msgid "Further Information"
 msgstr "Informazio gehiago"
 
-#: ../shell/ev-sidebar-annotations.c:260
+#: ../shell/ev-sidebar-annotations.c:259
 msgid "Document contains no annotations"
 msgstr "Dokumentuak ez du oharpenik"
 
-#: ../shell/ev-sidebar-annotations.c:292
+#: ../shell/ev-sidebar-annotations.c:291
 #, c-format
 msgid "Page %d"
 msgstr "%d. orrialdea"
 
-#: ../shell/ev-sidebar-annotations.c:468
+#: ../shell/ev-sidebar-annotations.c:467
 msgid "Annotations"
 msgstr "Oharpenak"
 
@@ -1155,7 +1148,7 @@ msgstr "Inprimatu..."
 msgid "Outline"
 msgstr "Eskema"
 
-#: ../shell/ev-sidebar-thumbnails.c:1085
+#: ../shell/ev-sidebar-thumbnails.c:1089
 msgid "Thumbnails"
 msgstr "Koadro txikiak"
 
@@ -1195,106 +1188,106 @@ msgstr "Ezarri zoomaren maila"
 msgid "Supported Image Files"
 msgstr "Onartutako irudi-fitxategiak"
 
-#: ../shell/ev-window.c:1598
+#: ../shell/ev-window.c:1536
 msgid "The document contains no pages"
 msgstr "Dokumentuak ez du orrialderik"
 
-#: ../shell/ev-window.c:1601
+#: ../shell/ev-window.c:1539
 msgid "The document contains only empty pages"
 msgstr "Dokumentuak orrialde hutsak soilik ditu"
 
-#: ../shell/ev-window.c:1814 ../shell/ev-window.c:1980
+#: ../shell/ev-window.c:1752 ../shell/ev-window.c:1918
 #, c-format
 msgid "Unable to open document “%s”."
 msgstr "Ezin da '%s' dokumentua ireki."
 
-#: ../shell/ev-window.c:1944
+#: ../shell/ev-window.c:1882
 #, c-format
 msgid "Loading document from “%s”"
 msgstr "%s(e)tik dokumentua kargatzen"
 
-#: ../shell/ev-window.c:2095 ../shell/ev-window.c:2423
+#: ../shell/ev-window.c:2033 ../shell/ev-window.c:2361
 #, c-format
 msgid "Downloading document (%d%%)"
 msgstr "Dokumentua deskargatzen (%% %d)"
 
-#: ../shell/ev-window.c:2128
+#: ../shell/ev-window.c:2066
 msgid "Failed to load remote file."
 msgstr "Huts egin du urruneko fitxategia kargatzean."
 
-#: ../shell/ev-window.c:2367
+#: ../shell/ev-window.c:2305
 #, c-format
 msgid "Reloading document from %s"
 msgstr "%s(e)ndik dokumentua birkargatzen"
 
-#: ../shell/ev-window.c:2399
+#: ../shell/ev-window.c:2337
 msgid "Failed to reload document."
 msgstr "Huts egin du dokumentua birkargatzean."
 
-#: ../shell/ev-window.c:2615
+#: ../shell/ev-window.c:2553
 msgid "Open Document"
 msgstr "Ireki dokumentua"
 
-#: ../shell/ev-window.c:2686
+#: ../shell/ev-window.c:2626
 #, c-format
 msgid "Saving document to %s"
 msgstr "Dokumentua %s(e)n gordetzen"
 
-#: ../shell/ev-window.c:2689
+#: ../shell/ev-window.c:2629
 #, c-format
 msgid "Saving attachment to %s"
 msgstr "Eranskina %s(e)n gordetzen"
 
-#: ../shell/ev-window.c:2692
+#: ../shell/ev-window.c:2632
 #, c-format
 msgid "Saving image to %s"
 msgstr "Irudia %s(e)n gordetzen"
 
-#: ../shell/ev-window.c:2736 ../shell/ev-window.c:2836
+#: ../shell/ev-window.c:2676 ../shell/ev-window.c:2776
 #, c-format
 msgid "The file could not be saved as “%s”."
 msgstr "Fitxategia ezin izan da '%s' bezala gorde."
 
-#: ../shell/ev-window.c:2767
+#: ../shell/ev-window.c:2707
 #, c-format
 msgid "Uploading document (%d%%)"
 msgstr "Dokumentua igotzen (%% %d)"
 
-#: ../shell/ev-window.c:2771
+#: ../shell/ev-window.c:2711
 #, c-format
 msgid "Uploading attachment (%d%%)"
 msgstr "Eranskina igotzen (%% %d)"
 
-#: ../shell/ev-window.c:2775
+#: ../shell/ev-window.c:2715
 #, c-format
 msgid "Uploading image (%d%%)"
 msgstr "Irudia igotzen (%% %d)"
 
-#: ../shell/ev-window.c:2887
+#: ../shell/ev-window.c:2827
 msgid "Save a Copy"
 msgstr "Gorde kopia bat"
 
-#: ../shell/ev-window.c:2963
+#: ../shell/ev-window.c:2903
 msgid "Could not send current document"
 msgstr "Ezin izan da uneko dokumentua bidali"
 
-#: ../shell/ev-window.c:2997
+#: ../shell/ev-window.c:2937
 msgid "Could not open the containing folder"
 msgstr "Ezin izan da karpeta edukitzailea ireki"
 
-#: ../shell/ev-window.c:3261
+#: ../shell/ev-window.c:3201
 #, c-format
 msgid "%d pending job in queue"
 msgid_plural "%d pending jobs in queue"
 msgstr[0] "Lan %d ilaran zain"
 msgstr[1] "%d lan ilaran zain"
 
-#: ../shell/ev-window.c:3374
+#: ../shell/ev-window.c:3314
 #, c-format
 msgid "Printing job “%s”"
 msgstr "'%s' lana inprimatzen"
 
-#: ../shell/ev-window.c:3577
+#: ../shell/ev-window.c:3517
 msgid ""
 "Document contains form fields that have been filled out. If you don't save a "
 "copy, changes will be permanently lost."
@@ -1302,7 +1295,7 @@ msgstr ""
 "Dokumentuak bete beharreko inprimaki-eremuak ditu. Ez baduzu kopia bat "
 "gordetzen, aldaketak betirako galduko dira."
 
-#: ../shell/ev-window.c:3581
+#: ../shell/ev-window.c:3521
 msgid ""
 "Document contains new or modified annotations. If you don't save a copy, "
 "changes will be permanently lost."
@@ -1310,20 +1303,20 @@ msgstr ""
 "Dokumentuak oharpen berriak edo aldatutakoak ditu. Ez baduzu kopia bat "
 "gordetzen, aldaketak betirako galduko dira."
 
-#: ../shell/ev-window.c:3588
+#: ../shell/ev-window.c:3528
 #, c-format
 msgid "Save a copy of document “%s” before closing?"
 msgstr "Gorde '%s' dokumentuaren kopia itxi aurretik?"
 
-#: ../shell/ev-window.c:3607
+#: ../shell/ev-window.c:3547
 msgid "Close _without Saving"
 msgstr "Itxi gorde _gabe"
 
-#: ../shell/ev-window.c:3611
+#: ../shell/ev-window.c:3551
 msgid "Save a _Copy"
 msgstr "Gorde _kopia bat"
 
-#: ../shell/ev-window.c:3685
+#: ../shell/ev-window.c:3625
 #, c-format
 msgid "Wait until print job “%s” finishes before closing?"
 msgstr "Itxi aurretik '%s' lana inprimatu arte zai egon?"
@@ -1331,7 +1324,7 @@ msgstr "Itxi aurretik '%s' lana inprimatu arte zai egon?"
 #. TRANS: the singular form is not really used as n_print_jobs > 1
 #. but some languages distinguish between different plurals forms,
 #. so the ngettext is needed.
-#: ../shell/ev-window.c:3691
+#: ../shell/ev-window.c:3631
 #, c-format
 msgid "There is %d print job active. Wait until print finishes before closing?"
 msgid_plural ""
@@ -1341,31 +1334,31 @@ msgstr[0] ""
 msgstr[1] ""
 "%d lan daude aktibo. Itxi aurretik inprimatzea amaitu arte zain egon?"
 
-#: ../shell/ev-window.c:3706
+#: ../shell/ev-window.c:3646
 msgid "If you close the window, pending print jobs will not be printed."
 msgstr "Leihoa ixten baduzu, falta diren inprimatze-lanak ez dira inprimatuko."
 
-#: ../shell/ev-window.c:3710
+#: ../shell/ev-window.c:3650
 msgid "Cancel _print and Close"
 msgstr "_Utzi inprimatzea eta irten"
 
-#: ../shell/ev-window.c:3714
+#: ../shell/ev-window.c:3654
 msgid "Close _after Printing"
 msgstr "Itxi inprimatu _ondoren"
 
-#: ../shell/ev-window.c:4245
+#: ../shell/ev-window.c:4185
 msgid "Running in presentation mode"
 msgstr "Exekutatu aurkezpen moduan"
 
-#: ../shell/ev-window.c:5389
+#: ../shell/ev-window.c:5325
 msgid "Enable caret navigation?"
 msgstr "Gaitu kurtsorearen bidezko nabigazioa?"
 
-#: ../shell/ev-window.c:5391
+#: ../shell/ev-window.c:5327
 msgid "_Enable"
 msgstr "_Gaitu"
 
-#: ../shell/ev-window.c:5394
+#: ../shell/ev-window.c:5330
 msgid ""
 "Pressing F7 turns the caret navigation on or off. This feature places a "
 "moveable cursor in text pages, allowing you to move around and select text "
@@ -1376,39 +1369,39 @@ msgstr ""
 "haren inguruan mugitu eta teklatuarekin testu hautatzeko aukera eskainiz. "
 "Nahi duzu kurtsorearen bidezko nabigazioa aktibatzea?"
 
-#: ../shell/ev-window.c:5399
+#: ../shell/ev-window.c:5335
 msgid "Don't show this message again"
 msgstr "Ez erakutsi mezu hau berriro"
 
-#: ../shell/ev-window.c:5918 ../shell/ev-window.c:5934
+#: ../shell/ev-window.c:5850 ../shell/ev-window.c:5866
 msgid "Unable to launch external application."
 msgstr "Ezin da kanpoko aplikazioa abiarazi."
 
-#: ../shell/ev-window.c:5991
+#: ../shell/ev-window.c:5923
 msgid "Unable to open external link"
 msgstr "Ezin da kanpoko esteka ireki"
 
-#: ../shell/ev-window.c:6194
+#: ../shell/ev-window.c:6126
 msgid "Couldn't find appropriate format to save image"
 msgstr "Ezin izan da formatu egokirik aurkitu irudia gordetzeko"
 
-#: ../shell/ev-window.c:6226
+#: ../shell/ev-window.c:6158
 msgid "The image could not be saved."
 msgstr "Irudia ezin izan da gorde."
 
-#: ../shell/ev-window.c:6261
+#: ../shell/ev-window.c:6193
 msgid "Save Image"
 msgstr "Gorde irudia"
 
-#: ../shell/ev-window.c:6420
+#: ../shell/ev-window.c:6352
 msgid "Unable to open attachment"
 msgstr "Ezin da eranskina ireki"
 
-#: ../shell/ev-window.c:6476
+#: ../shell/ev-window.c:6408
 msgid "The attachment could not be saved."
 msgstr "Eranskina ezin izan da gorde."
 
-#: ../shell/ev-window.c:6524
+#: ../shell/ev-window.c:6456
 msgid "Save Attachment"
 msgstr "Gorde eranskina"
 
@@ -1533,166 +1526,170 @@ msgid "_New Window"
 msgstr "_Leiho berria"
 
 #: ../shell/evince-menus.ui.h:2
+msgid "_Keyboard Shortcuts"
+msgstr "_Laster-teklak"
+
+#: ../shell/evince-menus.ui.h:3
 msgid "_Help"
 msgstr "_Laguntza"
 
-#: ../shell/evince-menus.ui.h:3
+#: ../shell/evince-menus.ui.h:4
 msgid "_About"
 msgstr "_Honi buruz"
 
-#: ../shell/evince-menus.ui.h:4
+#: ../shell/evince-menus.ui.h:5
 msgid "_Continuous"
 msgstr "_Etengabea"
 
-#: ../shell/evince-menus.ui.h:5
+#: ../shell/evince-menus.ui.h:6
 msgid "_Dual"
 msgstr "_Duala"
 
-#: ../shell/evince-menus.ui.h:6
+#: ../shell/evince-menus.ui.h:7
 msgid "Side _Pane"
 msgstr "Alboko p_anela"
 
-#: ../shell/evince-menus.ui.h:7
+#: ../shell/evince-menus.ui.h:8
 msgid "_Fullscreen"
 msgstr "_Pantaila osoa"
 
-#: ../shell/evince-menus.ui.h:8
+#: ../shell/evince-menus.ui.h:9
 msgid "Pre_sentation"
 msgstr "_Aurkezpena"
 
-#: ../shell/evince-menus.ui.h:9
+#: ../shell/evince-menus.ui.h:10
 msgid "Rotate _Left"
 msgstr "Biratu _ezkerrera"
 
-#: ../shell/evince-menus.ui.h:10
+#: ../shell/evince-menus.ui.h:11
 msgid "Rotate _Right"
 msgstr "Biratu _eskuinera"
 
-#: ../shell/evince-menus.ui.h:11
+#: ../shell/evince-menus.ui.h:12
 msgid "First Page"
 msgstr "Aurreneko orrialdea"
 
-#: ../shell/evince-menus.ui.h:12
+#: ../shell/evince-menus.ui.h:13
 msgid "Previous Page"
 msgstr "Aurreko orrialdea"
 
-#: ../shell/evince-menus.ui.h:13
+#: ../shell/evince-menus.ui.h:14
 msgid "Next Page"
 msgstr "Hurrengo orrialdea"
 
-#: ../shell/evince-menus.ui.h:14
+#: ../shell/evince-menus.ui.h:15
 msgid "Last Page"
 msgstr "Azken orrialdea"
 
-#: ../shell/evince-menus.ui.h:15
+#: ../shell/evince-menus.ui.h:16
 msgid "Zoom _In"
 msgstr "Zooma _handiagotu"
 
-#: ../shell/evince-menus.ui.h:16
+#: ../shell/evince-menus.ui.h:17
 msgid "Zoom _Out"
 msgstr "Zooma _txikiagotu"
 
-#: ../shell/evince-menus.ui.h:17
+#: ../shell/evince-menus.ui.h:18
 msgid "_Odd Pages Left"
 msgstr "Orrialde b_akoitiak ezkerrean"
 
-#: ../shell/evince-menus.ui.h:18
+#: ../shell/evince-menus.ui.h:19
 msgid "_Inverted Colors"
 msgstr "Kolore _alderantzikatuak"
 
-#: ../shell/evince-menus.ui.h:19
+#: ../shell/evince-menus.ui.h:20
 msgid "_Reload"
 msgstr "_Birkargatu"
 
-#: ../shell/evince-menus.ui.h:20
+#: ../shell/evince-menus.ui.h:21
 msgid "_Open…"
 msgstr "_Ireki..."
 
-#: ../shell/evince-menus.ui.h:21
+#: ../shell/evince-menus.ui.h:22
 msgid "Op_en a Copy"
 msgstr "Ireki _kopia bat"
 
-#: ../shell/evince-menus.ui.h:22
+#: ../shell/evince-menus.ui.h:23
 msgid "_Save a Copy…"
 msgstr "_Gorde kopia bat..."
 
-#: ../shell/evince-menus.ui.h:23
+#: ../shell/evince-menus.ui.h:24
 msgid "Send _To…"
 msgstr "Bidali _honi…"
 
-#: ../shell/evince-menus.ui.h:24
+#: ../shell/evince-menus.ui.h:25
 msgid "Open Containing _Folder"
 msgstr "Ireki karpeta _edukitzailea"
 
-#: ../shell/evince-menus.ui.h:25
+#: ../shell/evince-menus.ui.h:26
 msgid "_Print…"
 msgstr "_Inprimatu..."
 
-#: ../shell/evince-menus.ui.h:26
+#: ../shell/evince-menus.ui.h:27
 msgid "P_roperties…"
 msgstr "_Propietateak…"
 
-#: ../shell/evince-menus.ui.h:27
+#: ../shell/evince-menus.ui.h:28
 msgid "_Copy"
 msgstr "_Kopiatu"
 
-#: ../shell/evince-menus.ui.h:28
+#: ../shell/evince-menus.ui.h:29
 msgid "Select _All"
 msgstr "Hautatu _dena"
 
-#: ../shell/evince-menus.ui.h:29
+#: ../shell/evince-menus.ui.h:30
 msgid "Save Current Settings as _Default"
 msgstr "Gorde uneko ezarpenak _lehenetsi gisa"
 
-#: ../shell/evince-menus.ui.h:30
+#: ../shell/evince-menus.ui.h:31
 msgid "_Add Bookmark"
 msgstr "_Gehitu laster-marka"
 
-#: ../shell/evince-menus.ui.h:31
+#: ../shell/evince-menus.ui.h:32
 msgid "_Close"
 msgstr "It_xi"
 
-#: ../shell/evince-menus.ui.h:35
+#: ../shell/evince-menus.ui.h:36
 msgid "_Open Link"
 msgstr "_Ireki esteka"
 
-#: ../shell/evince-menus.ui.h:36
+#: ../shell/evince-menus.ui.h:37
 msgid "_Copy Link Address"
 msgstr "_Kopiatu estekaren helbidea"
 
-#: ../shell/evince-menus.ui.h:37
+#: ../shell/evince-menus.ui.h:38
 msgid "_Go To"
 msgstr "J_oan"
 
-#: ../shell/evince-menus.ui.h:38
+#: ../shell/evince-menus.ui.h:39
 msgid "Open in New _Window"
 msgstr "Ireki leiho _berrian"
 
-#: ../shell/evince-menus.ui.h:41
+#: ../shell/evince-menus.ui.h:42
 msgid "Auto_scroll"
 msgstr "Korritze automatikoa"
 
-#: ../shell/evince-menus.ui.h:42
+#: ../shell/evince-menus.ui.h:43
 msgid "_Save Image As…"
 msgstr "_Gorde irudia honela..."
 
-#: ../shell/evince-menus.ui.h:43
+#: ../shell/evince-menus.ui.h:44
 msgid "Copy _Image"
 msgstr "Kopiatu _irudia"
 
-#: ../shell/evince-menus.ui.h:44
+#: ../shell/evince-menus.ui.h:45
 msgid "_Open Attachment"
 msgstr "_Ireki eranskina"
 
-#: ../shell/evince-menus.ui.h:45
+#: ../shell/evince-menus.ui.h:46
 msgid "_Save Attachment As…"
 msgstr "_Gorde eranskina honela..."
 
-#: ../shell/evince-menus.ui.h:46
+#: ../shell/evince-menus.ui.h:47
 msgid "Annotation Properties…"
 msgstr "Oharpenaren propietateak..."
 
-#: ../shell/evince-menus.ui.h:47
+#: ../shell/evince-menus.ui.h:48
 msgid "Remove Annotation"
 msgstr "Kendu oharpena"
 
@@ -1752,9 +1749,11 @@ msgid "Moving around the document"
 msgstr "Dokumentuan zehar kokatzea"
 
 #: ../shell/help-overlay.ui.h:12
+#| msgctxt "shortcut window"
+#| msgid "Move up/down a page"
 msgctxt "shortcut window"
-msgid "Move up/down a page"
-msgstr "Joan orrialde bat gora/behera"
+msgid "Move around a page"
+msgstr "Orri batean kokatzea"
 
 #: ../shell/help-overlay.ui.h:13
 msgctxt "shortcut window"
@@ -1856,6 +1855,15 @@ msgid ""
 msgstr ""
 "Dokumentuen formatu hauek onartzen ditu: PDF, PS, EPS, XPS, DjVu, TIFF, DVI "
 "(SyncTeX-ekin), eta komikien artxiboak (CBR, CBT, CBZ, CB7)."
+
+#~ msgid "Style:"
+#~ msgstr "Estiloa:"
+
+#~ msgid "Transparent"
+#~ msgstr "Gardena"
+
+#~ msgid "Opaque"
+#~ msgstr "Opakoa"
 
 #~ msgid "Index"
 #~ msgstr "Indizea"
