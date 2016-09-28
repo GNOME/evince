@@ -14,8 +14,8 @@ msgstr ""
 "Project-Id-Version: evince\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evince&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2016-08-14 15:47+0000\n"
-"PO-Revision-Date: 2016-08-25 22:52+0200\n"
+"POT-Creation-Date: 2016-09-28 16:11+0000\n"
+"PO-Revision-Date: 2016-09-28 18:26+0200\n"
 "Last-Translator: Anders Jonsson <anders.jonsson@norsjovallen.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
 "Language: sv\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 1.8.8\n"
+"X-Generator: Poedit 1.8.9\n"
 
 #: ../backend/comics/comics-document.c:210
 #, c-format
@@ -475,8 +475,8 @@ msgid "of %d"
 msgstr "av %d"
 
 #: ../libmisc/ev-page-action-widget.c:185 ../shell/ev-history.c:426
-#: ../shell/ev-sidebar-bookmarks.c:295 ../shell/ev-window.c:902
-#: ../shell/ev-window.c:4644
+#: ../shell/ev-sidebar-bookmarks.c:295 ../shell/ev-window.c:907
+#: ../shell/ev-window.c:4673
 #, c-format
 msgid "Page %s"
 msgstr "Sida %s"
@@ -510,12 +510,12 @@ msgstr "Sök nästa förekomst av söksträngen"
 msgid "Failed to render page %d"
 msgstr "Misslyckades med att rendera sida %d"
 
-#: ../libview/ev-jobs.c:896
+#: ../libview/ev-jobs.c:901
 #, c-format
 msgid "Failed to create thumbnail for page %d"
 msgstr "Misslyckades med att skapa en miniatyrbild för sida %d"
 
-#: ../libview/ev-jobs.c:2026
+#: ../libview/ev-jobs.c:2031
 #, c-format
 msgid "Failed to print page %d: %s"
 msgstr "Misslyckades med att skriva ut sida %d: %s"
@@ -720,7 +720,7 @@ msgstr "FIL"
 msgid "GNOME Document Previewer"
 msgstr "Dokumentförhandsgranskare för GNOME"
 
-#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3257
+#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3262
 msgid "Failed to print document"
 msgstr "Misslyckades med att skriva ut dokument"
 
@@ -1160,7 +1160,7 @@ msgstr "Skriv ut…"
 msgid "Outline"
 msgstr "Översikt"
 
-#: ../shell/ev-sidebar-thumbnails.c:1089
+#: ../shell/ev-sidebar-thumbnails.c:1093
 msgid "Thumbnails"
 msgstr "Miniatyrbilder"
 
@@ -1200,135 +1200,145 @@ msgstr "Ställ in zoomnivå"
 msgid "Supported Image Files"
 msgstr "Bildfiler som stöds"
 
-#: ../shell/ev-window.c:1536
+#: ../shell/ev-window.c:1541
 msgid "The document contains no pages"
 msgstr "Dokumentet innehåller inga sidor"
 
-#: ../shell/ev-window.c:1539
+#: ../shell/ev-window.c:1544
 msgid "The document contains only empty pages"
 msgstr "Dokumentet innehåller endast tomma sidor"
 
-#: ../shell/ev-window.c:1752 ../shell/ev-window.c:1918
+#: ../shell/ev-window.c:1757 ../shell/ev-window.c:1923
 #, c-format
 msgid "Unable to open document “%s”."
 msgstr "Kan inte öppna dokument ”%s”."
 
-#: ../shell/ev-window.c:1882
+#: ../shell/ev-window.c:1887
 #, c-format
 msgid "Loading document from “%s”"
 msgstr "Läser in dokument från ”%s”"
 
-#: ../shell/ev-window.c:2033 ../shell/ev-window.c:2361
+#: ../shell/ev-window.c:2038 ../shell/ev-window.c:2366
 #, c-format
 msgid "Downloading document (%d%%)"
 msgstr "Hämtar dokument (%d %%)"
 
-#: ../shell/ev-window.c:2066
+#: ../shell/ev-window.c:2071
 msgid "Failed to load remote file."
 msgstr "Misslyckades med att läsa in fjärrfil."
 
-#: ../shell/ev-window.c:2305
+#: ../shell/ev-window.c:2310
 #, c-format
 msgid "Reloading document from %s"
 msgstr "Läser om dokumentet från %s"
 
-#: ../shell/ev-window.c:2337
+#: ../shell/ev-window.c:2342
 msgid "Failed to reload document."
 msgstr "Misslyckades med att läsa om dokumentet."
 
-#: ../shell/ev-window.c:2553
+#: ../shell/ev-window.c:2558
 msgid "Open Document"
 msgstr "Öppna dokument"
 
-#: ../shell/ev-window.c:2626
+#: ../shell/ev-window.c:2631
 #, c-format
 msgid "Saving document to %s"
 msgstr "Sparar dokument till %s"
 
-#: ../shell/ev-window.c:2629
+#: ../shell/ev-window.c:2634
 #, c-format
 msgid "Saving attachment to %s"
 msgstr "Sparar bilaga till %s"
 
-#: ../shell/ev-window.c:2632
+#: ../shell/ev-window.c:2637
 #, c-format
 msgid "Saving image to %s"
 msgstr "Sparar bild till %s"
 
-#: ../shell/ev-window.c:2676 ../shell/ev-window.c:2776
+#: ../shell/ev-window.c:2681 ../shell/ev-window.c:2781
 #, c-format
 msgid "The file could not be saved as “%s”."
 msgstr "Filen kunde inte sparas som ”%s”."
 
-#: ../shell/ev-window.c:2707
+#: ../shell/ev-window.c:2712
 #, c-format
 msgid "Uploading document (%d%%)"
 msgstr "Skickar upp dokument (%d %%)"
 
-#: ../shell/ev-window.c:2711
+#: ../shell/ev-window.c:2716
 #, c-format
 msgid "Uploading attachment (%d%%)"
 msgstr "Skickar upp bilaga (%d %%)"
 
-#: ../shell/ev-window.c:2715
+#: ../shell/ev-window.c:2720
 #, c-format
 msgid "Uploading image (%d%%)"
 msgstr "Skickar upp bild (%d %%)"
 
-#: ../shell/ev-window.c:2827
+#: ../shell/ev-window.c:2832
 msgid "Save a Copy"
 msgstr "Spara en kopia"
 
-#: ../shell/ev-window.c:2903
+#: ../shell/ev-window.c:2908
 msgid "Could not send current document"
 msgstr "Kunde inte skicka det aktuella dokumentet"
 
-#: ../shell/ev-window.c:2937
+#: ../shell/ev-window.c:2942
 msgid "Could not open the containing folder"
 msgstr "Kunde inte öppna den innehållande mappen"
 
-#: ../shell/ev-window.c:3201
+#: ../shell/ev-window.c:3206
 #, c-format
 msgid "%d pending job in queue"
 msgid_plural "%d pending jobs in queue"
 msgstr[0] "%d väntande jobb i kö"
 msgstr[1] "%d väntande jobb i kö"
 
-#: ../shell/ev-window.c:3314
+#: ../shell/ev-window.c:3319
 #, c-format
 msgid "Printing job “%s”"
 msgstr "Skriver ut jobbet ”%s”"
 
-#: ../shell/ev-window.c:3517
-msgid ""
-"Document contains form fields that have been filled out. If you don't save a "
-"copy, changes will be permanently lost."
-msgstr ""
-"Dokumentet innehåller formulärfält som har fyllts i. Om du inte sparar en "
-"kopia så kommer ändringarna att förloras permanent."
+#: ../shell/ev-window.c:3534
+msgid "Document contains form fields that have been filled out. "
+msgstr "Dokumentet innehåller formulärfält som har fyllts i. "
 
-#: ../shell/ev-window.c:3521
-msgid ""
-"Document contains new or modified annotations. If you don't save a copy, "
-"changes will be permanently lost."
-msgstr ""
-"Dokumentet innehåller nya eller ändrade kommentarer. Om du inte sparar en "
-"kopia så kommer ändringarna att förloras permanent."
+#: ../shell/ev-window.c:3537
+msgid "Document contains new or modified annotations. "
+msgstr "Dokumentet innehåller nya eller ändrade kommentarer. "
 
-#: ../shell/ev-window.c:3528
+#: ../shell/ev-window.c:3549
+#, c-format
+msgid "Reload document “%s”?"
+msgstr "Läs om dokumentet ”%s”?"
+
+#: ../shell/ev-window.c:3551
+msgid "If you reload the document, changes will be permanently lost."
+msgstr "Om du läser om dokumentet kommer ändringarna att förloras permanent."
+
+#: ../shell/ev-window.c:3555
+msgid "Reload"
+msgstr "Läs om"
+
+#: ../shell/ev-window.c:3562
 #, c-format
 msgid "Save a copy of document “%s” before closing?"
 msgstr "Spara en kopia av dokumentet ”%s” före stängning?"
 
-#: ../shell/ev-window.c:3547
+#: ../shell/ev-window.c:3564
+msgid "If you don't save a copy, changes will be permanently lost."
+msgstr ""
+"Om du inte sparar en kopia så kommer ändringarna att förloras permanent."
+
+#: ../shell/ev-window.c:3566
 msgid "Close _without Saving"
 msgstr "Stäng _utan att spara"
 
-#: ../shell/ev-window.c:3551
+#: ../shell/ev-window.c:3570
 msgid "Save a _Copy"
 msgstr "Spara en k_opia"
 
-#: ../shell/ev-window.c:3625
+#: ../shell/ev-window.c:3654
 #, c-format
 msgid "Wait until print job “%s” finishes before closing?"
 msgstr "Vänta med att stänga tills utskriftsjobbet ”%s” är färdigt?"
@@ -1336,7 +1346,7 @@ msgstr "Vänta med att stänga tills utskriftsjobbet ”%s” är färdigt?"
 #. TRANS: the singular form is not really used as n_print_jobs > 1
 #. but some languages distinguish between different plurals forms,
 #. so the ngettext is needed.
-#: ../shell/ev-window.c:3631
+#: ../shell/ev-window.c:3660
 #, c-format
 msgid "There is %d print job active. Wait until print finishes before closing?"
 msgid_plural ""
@@ -1348,32 +1358,32 @@ msgstr[1] ""
 "Det finns %d aktiva utskriftsjobb. Vänta med att stänga tills utskriften är "
 "färdig?"
 
-#: ../shell/ev-window.c:3646
+#: ../shell/ev-window.c:3675
 msgid "If you close the window, pending print jobs will not be printed."
 msgstr ""
 "Om du stänger fönstret så kommer väntande utskriftsjobb inte att skrivas ut."
 
-#: ../shell/ev-window.c:3650
+#: ../shell/ev-window.c:3679
 msgid "Cancel _print and Close"
 msgstr "Avbryt _utskrift och stäng"
 
-#: ../shell/ev-window.c:3654
+#: ../shell/ev-window.c:3683
 msgid "Close _after Printing"
 msgstr "Stäng _efter utskrift"
 
-#: ../shell/ev-window.c:4185
+#: ../shell/ev-window.c:4214
 msgid "Running in presentation mode"
 msgstr "Kör i presentationsläge"
 
-#: ../shell/ev-window.c:5325
+#: ../shell/ev-window.c:5357
 msgid "Enable caret navigation?"
 msgstr "Aktivera markörnavigering?"
 
-#: ../shell/ev-window.c:5327
+#: ../shell/ev-window.c:5359
 msgid "_Enable"
 msgstr "_Aktivera"
 
-#: ../shell/ev-window.c:5330
+#: ../shell/ev-window.c:5362
 msgid ""
 "Pressing F7 turns the caret navigation on or off. This feature places a "
 "moveable cursor in text pages, allowing you to move around and select text "
@@ -1383,39 +1393,39 @@ msgstr ""
 "placerar en pekare på textsidor som låter dig flytta runt i dokument och "
 "markera text med ditt tangentbord. Vill du aktivera markörnavigeringen?"
 
-#: ../shell/ev-window.c:5335
+#: ../shell/ev-window.c:5367
 msgid "Don't show this message again"
 msgstr "Visa inte detta meddelande igen"
 
-#: ../shell/ev-window.c:5850 ../shell/ev-window.c:5866
+#: ../shell/ev-window.c:5882 ../shell/ev-window.c:5898
 msgid "Unable to launch external application."
 msgstr "Kunde inte starta externt program."
 
-#: ../shell/ev-window.c:5923
+#: ../shell/ev-window.c:5955
 msgid "Unable to open external link"
 msgstr "Kunde inte öppna extern länk"
 
-#: ../shell/ev-window.c:6126
+#: ../shell/ev-window.c:6158
 msgid "Couldn't find appropriate format to save image"
 msgstr "Kunde inte hitta lämpligt format att spara bilden i"
 
-#: ../shell/ev-window.c:6158
+#: ../shell/ev-window.c:6190
 msgid "The image could not be saved."
 msgstr "Bilden kunde inte sparas."
 
-#: ../shell/ev-window.c:6193
+#: ../shell/ev-window.c:6225
 msgid "Save Image"
 msgstr "Spara bild"
 
-#: ../shell/ev-window.c:6352
+#: ../shell/ev-window.c:6384
 msgid "Unable to open attachment"
 msgstr "Kunde inte öppna bilagan"
 
-#: ../shell/ev-window.c:6408
+#: ../shell/ev-window.c:6440
 msgid "The attachment could not be saved."
 msgstr "Bilagan kunde inte sparas."
 
-#: ../shell/ev-window.c:6456
+#: ../shell/ev-window.c:6488
 msgid "Save Attachment"
 msgstr "Spara bilaga"
 
