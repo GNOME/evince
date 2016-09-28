@@ -3548,7 +3548,7 @@ ev_window_check_document_modified (EvWindow      *ev_window,
 	if (command == EV_WINDOW_ACTION_RELOAD) {
 		text = g_markup_printf_escaped (_("Reload document “%s”?"),
 						gtk_window_get_title (GTK_WINDOW (ev_window)));
-		secondary_text_command = _("If you reload the document, changes will be permantly lost.");
+		secondary_text_command = _("If you reload the document, changes will be permanently lost.");
 		gtk_dialog_add_buttons (GTK_DIALOG (dialog),
 					GTK_STOCK_NO,
 					GTK_RESPONSE_NO,
