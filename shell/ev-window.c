@@ -4603,7 +4603,11 @@ static gint
 compare_bookmarks (EvBookmark *a,
 		   EvBookmark *b)
 {
-	return strcmp (a->title, b->title);
+	if (a->page < b->page)
+		return -1;
+	if (a->page > b->page)
+		return 1;
+	return 0;
 }
 
 static void
