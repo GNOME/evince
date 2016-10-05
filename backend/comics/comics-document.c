@@ -466,7 +466,18 @@ static int
 sort_page_names (gconstpointer a,
                  gconstpointer b)
 {
-  return strcmp (* (const char **) a, * (const char **) b);
+  gchar *temp1, *temp2;
+  gint ret;
+
+  temp1 = g_utf8_collate_key_for_filename (* (const char **) a, -1);
+  temp2 = g_utf8_collate_key_for_filename (* (const char **) b, -1);
+
+  ret = strcmp (temp1, temp2);
+
+  g_free (temp1);
+  g_free (temp2);
+
+  return ret;
 }
 
 static gboolean
