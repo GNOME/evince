@@ -180,6 +180,6 @@ typelibs_DATA = EvinceDocument-$(EV_API_VERSION).typelib
 
 CLEANFILES += $(gir_DATA) $(typelibs_DATA)
 
-endif # ENABLE_INTROSPECTION
+endif # HAVE_INTROSPECTION
 
 -include $(top_srcdir)/git.mk
