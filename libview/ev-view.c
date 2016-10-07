@@ -460,14 +460,16 @@ ev_view_get_height_to_page (EvView *view,
 	    cache->dual_even_left != view->dual_even_left) {
 		ev_view_build_height_to_page_cache (view, cache);
 	}
-	h = cache->height_to_page[page];
-	dh = cache->dual_height_to_page[page];
 
-	if (height)
+	if (height) {
+		h = cache->height_to_page[page];
 		*height = (gint)(h * view->scale + 0.5);
+    }
 
-	if (dual_height)
+	if (dual_height) {
+		dh = cache->dual_height_to_page[page];
 		*dual_height = (gint)(dh * view->scale + 0.5);
+	}
 }
 
 static gint
