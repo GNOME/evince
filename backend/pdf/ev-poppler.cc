@@ -18,7 +18,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
-
 #include "config.h"
 
 #include <math.h>
@@ -383,6 +382,143 @@ pdf_document_get_page_label (EvDocument *document,
 	return label;
 }
 
+static const char *
+font_type_to_string (PopplerFontType type)
+{
+	switch (type) {
+	        case POPPLER_FONT_TYPE_TYPE1:
+			return _("Type 1");
+	        case POPPLER_FONT_TYPE_TYPE1C:
+			return _("Type 1C");
+	        case POPPLER_FONT_TYPE_TYPE3:
+			return _("Type 3");
+	        case POPPLER_FONT_TYPE_TRUETYPE:
+			return _("TrueType");
+	        case POPPLER_FONT_TYPE_CID_TYPE0:
+			return _("Type 1 (CID)");
+	        case POPPLER_FONT_TYPE_CID_TYPE0C:
+			return _("Type 1C (CID)");
+	        case POPPLER_FONT_TYPE_CID_TYPE2:
+			return _("TrueType (CID)");
+	        default:
+			return _("Unknown font type");
+	}
+}
+
+std::string my_get_type(EvDocumentText *document_text, std::string font_name) {
+
+	EvDocumentFonts *document_fonts = EV_DOCUMENT_FONTS(document_text);
+	PdfDocument *pdf_document = PDF_DOCUMENT (document_fonts);
+
+
+	PopplerFontInfo* font_info = poppler_font_info_new (pdf_document->document);
+	PopplerFontsIter* it;
+
+	std::string return_type = "None";
+
+	while(poppler_font_info_scan (font_info, 100,
+						         &it)){
+
+		do {
+			const char *name;
+			PopplerFontType type;
+			const char *type_str;
+			name = poppler_fonts_iter_get_name (it);
+			if (name == NULL) {
+				name = _("No name");
+			}
+			type = poppler_fonts_iter_get_font_type (it);
+			type_str = font_type_to_string (type);
+
+			if(strcmp(name,font_name.c_str())==0) {
+				return_type = type_str;
+			}
+
+		} while(poppler_fonts_iter_next (it));
+
+		poppler_fonts_iter_free (it);
+	}
+
+	return return_type;
+
+}
+
+#define MAX_AREA_NUM 300
+
+void my_getRectangles(EvDocumentText *document_text, int page_num, PopplerRectangle *table, int * size){
+
+	/*
+	 * Page is split into precision^2 areas. If a bad type is found in that area, than it will be coloured
+	 * in pdf_document_render.
+	 */
+
+	GList         *backend_attrs_list,  *l;
+	PangoAttrList *attrs_list;
+	EvDocument *ev_document = EV_DOCUMENT(document_text);
+	PdfDocument *pdf_document = PDF_DOCUMENT (document_text);
+	int n_pages = pdf_document_get_n_pages(ev_document);
+	PopplerRectangle area;
+	double height;
+	double width;
+	double precision = 20;
+	double x_precision = width / precision;
+	double y_precision = height/ precision;
+
+	EvPage *page = pdf_document_get_page (ev_document,page_num);
+	if(!POPPLER_IS_PAGE(page->backend_page)){
+		printf("Line: %d. Not a Poppler Page.\n", __LINE__);
+	}
+	else{
+		pdf_document_get_page_size (ev_document,page,&width,&height);
+
+		area.x1 = 0;
+		area.y1 = 0;
+		area.x2 = width/precision;
+		area.y2 = height/precision;
+		*size = 0;
+		//printf("get_Rectangles: Area: x1=%f x2=%f y1=%f y2=%f\n", area.x1, area.x2, area.y1, area.y2);
+		for(int i=0;i<precision;i++){
+			area.x1 = 0;
+			area.x2 = width/precision;
+		    for(int i=0;i<precision;i++){
+		    	//Divisor represents the fraction taken from the width or height of the page.
+                PopplerRectangle divisor;
+                divisor.x1 = area.x1/width;
+                divisor.x2 = area.x2/width;
+                divisor.y1 = area.y1/height;
+                divisor.y2 = area.y2/height;
+		        backend_attrs_list = poppler_page_get_text_attributes_for_area (POPPLER_PAGE (page->backend_page), &area);
+		        if(backend_attrs_list != NULL){
+	                for (l = backend_attrs_list; l; l = g_list_next (l)){
+	                    PopplerTextAttributes *backend_attrs = (PopplerTextAttributes *)l->data;
+	    		        if (backend_attrs->font_name) {
+	    			        std::string font_type = my_get_type(document_text,backend_attrs->font_name);
+
+	    			        if(strcmp("Type 1",font_type.c_str())!=0){
+	    				        //printf("get_Rectangles: Area: x1=%f x2=%f y1=%f y2=%f\n", area.x1, area.x2, area.y1, area.y2);
+	    				        table[*size]= divisor;
+	    				        (*size)++;
+	    				        l = g_list_last(backend_attrs_list);
+	    				}
+	    			}
+
+	    			    if (*size > MAX_AREA_NUM) {
+	    				    return;
+	    			}
+	    		}
+
+	    	}
+
+		        area.x1 = area.x1 + width/precision;
+		        area.x2 = area.x2 + width/precision;
+		}
+		    area.y1 = area.y1 + height/precision;
+		    area.y2 = area.y2 + height/precision;
+		}
+	}
+}
+
+
 static cairo_surface_t *
 pdf_page_render (PopplerPage     *page,
 		 gint             width,
@@ -417,7 +553,7 @@ pdf_page_render (PopplerPage     *page,
 
 	ev_render_context_compute_scales (rc, page_width, page_height, &xscale, &yscale);
 	cairo_scale (cr, xscale, yscale);
-	cairo_rotate (cr, rc->rotation * G_PI / 180.0);
+    cairo_rotate (cr, rc->rotation * G_PI / 180.0);
 	poppler_page_render (page, cr);
 
 	cairo_set_operator (cr, CAIRO_OPERATOR_DEST_OVER);
@@ -429,6 +565,7 @@ pdf_page_render (PopplerPage     *page,
 	return surface;
 }
 
+
 static cairo_surface_t *
 pdf_document_render (EvDocument      *document,
 		     EvRenderContext *rc)
@@ -437,15 +574,63 @@ pdf_document_render (EvDocument      *document,
 	double width_points, height_points;
 	gint width, height;
 
+	EvDocumentText *document_text = EV_DOCUMENT_TEXT(document);
+	cairo_surface_t *surface;
+	cairo_t *cr;
+	PopplerPage *page;
+	int n_pages = pdf_document_get_n_pages(document);
+	PdfDocument *pdf_document = PDF_DOCUMENT (document_text);
+	PopplerRectangle *table = (PopplerRectangle*) malloc (MAX_AREA_NUM * sizeof(PopplerRectangle));
+	int table_size = 0;
+
+	double w;
+	double h;
+	for(int i=0; i<n_pages;i++){
+		page = poppler_document_get_page(pdf_document->document,i);
+		poppler_page_get_size (page, &w, &h);
+		surface = cairo_image_surface_create (CAIRO_FORMAT_ARGB32, 595, 842);
+		cr = cairo_create (surface);
+		cairo_set_source_rgb(cr, 0, 0.5, 0);
+        cairo_destroy (cr);
+
+
+	}
+
 	poppler_page = POPPLER_PAGE (rc->page->backend_page);
 
 	poppler_page_get_size (poppler_page,
 			       &width_points, &height_points);
 
+
 	ev_render_context_compute_transformed_size (rc, width_points, height_points,
 						    &width, &height);
-	return pdf_page_render (poppler_page,
+	cairo_surface_t * res = pdf_page_render (poppler_page,
 				width, height, rc);
+	for (unsigned int page_num = 0 ; page_num < n_pages;  page_num++) {
+			my_getRectangles(document_text,  page_num,  table,&table_size);
+			if(table_size!=0){
+				if(poppler_page_get_index(poppler_page)==page_num){
+				//the program would colour both pages(my test, with 2 pages) without 2nd if
+				    for(int i=0; i<table_size; i++){
+				    PopplerRectangle area = table[i];
+				    cairo_t *my_cr;
+				    my_cr = cairo_create (res);
+				    /*
+				     * In order for the coloured rectangles to depend on the size of the page
+				     *  and change accordingly, the coordinates of the rectangle should be given in terms
+				     *  of the width and height. For this reason, 'area' represents fractions that should
+				     *  be taken from the width and height of the page.
+				     */
+        		    cairo_rectangle(my_cr, width*area.x1 ,height*area.y1, (width*area.x2-width*area.x1), (height*area.y2-height*area.y1));
+        		    cairo_set_source_rgb(my_cr, 0.3, 0.5, 0.45); //may change the colour.
+        		    cairo_fill(my_cr);
+        		    cairo_destroy(my_cr);
+				    }
+				}
+			}
+		}
+
+	 return res;
 }
 
 static GdkPixbuf *
@@ -1058,33 +1243,10 @@ pdf_document_fonts_scan (EvDocumentFonts *document_fonts,
 	if (!result) {
 		pdf_document->fonts_scanned_pages = 0;
 		poppler_font_info_free (pdf_document->font_info);
-		pdf_document->font_info = NULL;	
+		pdf_document->font_info = NULL;
 	}
 
 	return result;
-}
-
-static const char *
-font_type_to_string (PopplerFontType type)
-{
-	switch (type) {
-	        case POPPLER_FONT_TYPE_TYPE1:
-			return _("Type 1");
-	        case POPPLER_FONT_TYPE_TYPE1C:
-			return _("Type 1C");
-	        case POPPLER_FONT_TYPE_TYPE3:
-			return _("Type 3");
-	        case POPPLER_FONT_TYPE_TRUETYPE:
-			return _("TrueType");
-	        case POPPLER_FONT_TYPE_CID_TYPE0:
-			return _("Type 1 (CID)");
-	        case POPPLER_FONT_TYPE_CID_TYPE0C:
-			return _("Type 1C (CID)");
-	        case POPPLER_FONT_TYPE_CID_TYPE2:
-			return _("TrueType (CID)");
-	        default:
-			return _("Unknown font type");
-	}
 }
 
 static gboolean
@@ -1160,7 +1322,8 @@ pdf_document_fonts_fill_model (EvDocumentFonts *document_fonts,
 		const gchar *encoding;
 		const gchar *encoding_text;
 		char *details;
-		
+
+
 		name = poppler_fonts_iter_get_name (iter);
 
 		if (name == NULL) {
@@ -1178,7 +1341,6 @@ pdf_document_fonts_fill_model (EvDocumentFonts *document_fonts,
 
 		type = poppler_fonts_iter_get_font_type (iter);
 		type_str = font_type_to_string (type);
-
 		if (poppler_fonts_iter_is_embedded (iter)) {
 			if (poppler_fonts_iter_is_subset (iter))
 				embedded = _("Embedded subset");
@@ -1218,7 +1380,6 @@ pdf_document_fonts_fill_model (EvDocumentFonts *document_fonts,
 			details = g_markup_printf_escaped ("%s%s\n%s: %s\n%s",
 							   type_str, standard_str,
 							   encoding_text, encoding, embedded);
-
 		gtk_list_store_append (GTK_LIST_STORE (model), &list_iter);
 		gtk_list_store_set (GTK_LIST_STORE (model), &list_iter,
 				    EV_DOCUMENT_FONTS_COLUMN_NAME, name,
@@ -1700,7 +1861,7 @@ pdf_document_find_find_text_with_options (EvDocumentFind *document_find,
 	matches = poppler_page_find_text_with_options (poppler_page, text, (PopplerFindFlags)find_flags);
 	if (!matches)
 		return NULL;
-
+printf("Line: %d. Find_text\n", __LINE__);
 	poppler_page_get_size (poppler_page, NULL, &height);
 	for (l = matches; l && l->data; l = g_list_next (l)) {
 		PopplerRectangle *rect = (PopplerRectangle *)l->data;
@@ -2068,6 +2229,8 @@ pdf_selection_render_selection (EvSelection      *selection,
 
 	poppler_page = POPPLER_PAGE (rc->page->backend_page);
 
+	printf("Render\n");
+
 	poppler_page_get_size (poppler_page,
 			       &width_points, &height_points);
 	ev_render_context_compute_scaled_size (rc, width_points, height_points, &width, &height);
@@ -2080,11 +2243,14 @@ pdf_selection_render_selection (EvSelection      *selection,
 	base_color.green = base->green;
 	base_color.blue = base->blue;
 
+	printf("Render1\n");
+
 	if (*surface == NULL) {
 		*surface = cairo_image_surface_create (CAIRO_FORMAT_ARGB32,
 						       width, height);
-		
 	}
+
+	printf("Rnder2\n");
 
 	cr = cairo_create (*surface);
 	ev_render_context_compute_scales (rc, width_points, height_points, &xscale, &yscale);
@@ -2100,6 +2266,7 @@ pdf_selection_render_selection (EvSelection      *selection,
 				       (PopplerSelectionStyle)style,
 				       &text_color,
 				       &base_color);
+	printf("Render3\n");
 	cairo_destroy (cr);
 }
 
@@ -2228,10 +2395,11 @@ pdf_document_text_get_text_layout (EvDocumentText  *selection,
 static PangoAttrList *
 pdf_document_text_get_text_attrs (EvDocumentText *document_text,
 				  EvPage         *page)
-{
+{ //If my modification works, don't forget to erase the attempts in pdf_document_fonts_fill_model
 	GList         *backend_attrs_list,  *l;
 	PangoAttrList *attrs_list;
-
+	//printf("pdf_document_text_get_text_attrs : document_text:%p page:%p page_index: %d\n" , document_text , page, page->index);
+	printf(" Page index: %d\n" , page->index);
 	g_return_val_if_fail (POPPLER_IS_PAGE (page->backend_page), NULL);
 
 	backend_attrs_list = poppler_page_get_text_attributes (POPPLER_PAGE (page->backend_page));
@@ -2258,6 +2426,8 @@ pdf_document_text_get_text_attrs (EvDocumentText *document_text,
 		pango_attr_list_insert (attrs_list, attr);
 
 		if (backend_attrs->font_name) {
+			printf("Font name:%s Type:%s Start index:%d End index:%d\n",backend_attrs->font_name,my_get_type(document_text,backend_attrs->font_name).c_str(),
+					                                           backend_attrs->start_index, backend_attrs->end_index);
 			attr = pango_attr_family_new (backend_attrs->font_name);
 			attr->start_index = backend_attrs->start_index;
 			attr->end_index = backend_attrs->end_index;
@@ -3155,6 +3325,8 @@ pdf_document_annotations_get_annotations (EvDocumentAnnotations *document_annota
 			     GINT_TO_POINTER (page->index),
 			     ev_mapping_list_ref (mapping_list));
 
+    printf("Line: %d Annot.",  __LINE__);//Erase
+
 	return mapping_list;
 }
 
@@ -3294,6 +3466,8 @@ pdf_document_annotations_add_annotation (EvDocumentAnnotations *document_annotat
 
 	ev_annotation_get_area (annot, &rect);
 
+    printf("Line: %d Annot.",  __LINE__);//Erase
+
 	poppler_page_get_size (poppler_page, NULL, &height);
 	poppler_rect.x1 = rect.x1;
 	poppler_rect.x2 = rect.x2;
@@ -3330,6 +3504,7 @@ pdf_document_annotations_add_annotation (EvDocumentAnnotations *document_annotat
 		default:
 			g_assert_not_reached ();
 	}
+
 
 	ev_annotation_get_color (annot, &color);
 	poppler_color.red = color.red;
@@ -3508,7 +3683,11 @@ pdf_document_annotations_save_annotation (EvDocumentAnnotations *document_annota
 			poppler_rect.y2 = height - ev_rect.y1;
 
 			if (poppler_annot_markup_has_popup (markup))
+#ifdef HAVE_POPPLER_ANNOT_MARKUP_SET_POPUP_RECTANGLE
 				poppler_annot_markup_set_popup_rectangle (markup, &poppler_rect);
+#else
+			        poppler_annot_markup_set_popup (markup, &poppler_rect);
+#endif
 			else
 				poppler_annot_markup_set_popup (markup, &poppler_rect);
 		}
@@ -3561,6 +3740,7 @@ pdf_document_annotations_save_annotation (EvDocumentAnnotations *document_annota
 				new_annot = poppler_annot_text_markup_new_underline (pdf_document->document, &rect, quads);
 				break;
 			case EV_ANNOTATION_TEXT_MARKUP_SQUIGGLY:
+		        printf("Line: %d Annot.\n",  __LINE__);//Erase
 				new_annot = poppler_annot_text_markup_new_squiggly (pdf_document->document, &rect, quads);
 				break;
 			}
@@ -4071,3 +4251,5 @@ pdf_document_document_layers_iface_init (EvDocumentLayersInterface *iface)
 	iface->hide_layer = pdf_document_layers_hide_layer;
 	iface->layer_is_visible = pdf_document_layers_layer_is_visible;
 }
+
+
