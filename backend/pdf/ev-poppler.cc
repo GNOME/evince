@@ -1861,7 +1861,6 @@ pdf_document_find_find_text_with_options (EvDocumentFind *document_find,
 	matches = poppler_page_find_text_with_options (poppler_page, text, (PopplerFindFlags)find_flags);
 	if (!matches)
 		return NULL;
-printf("Line: %d. Find_text\n", __LINE__);
 	poppler_page_get_size (poppler_page, NULL, &height);
 	for (l = matches; l && l->data; l = g_list_next (l)) {
 		PopplerRectangle *rect = (PopplerRectangle *)l->data;
@@ -2229,7 +2228,6 @@ pdf_selection_render_selection (EvSelection      *selection,
 
 	poppler_page = POPPLER_PAGE (rc->page->backend_page);
 
-	printf("Render\n");
 
 	poppler_page_get_size (poppler_page,
 			       &width_points, &height_points);
@@ -2243,14 +2241,12 @@ pdf_selection_render_selection (EvSelection      *selection,
 	base_color.green = base->green;
 	base_color.blue = base->blue;
 
-	printf("Render1\n");
 
 	if (*surface == NULL) {
 		*surface = cairo_image_surface_create (CAIRO_FORMAT_ARGB32,
 						       width, height);
 	}
 
-	printf("Rnder2\n");
 
 	cr = cairo_create (*surface);
 	ev_render_context_compute_scales (rc, width_points, height_points, &xscale, &yscale);
@@ -2266,7 +2262,6 @@ pdf_selection_render_selection (EvSelection      *selection,
 				       (PopplerSelectionStyle)style,
 				       &text_color,
 				       &base_color);
-	printf("Render3\n");
 	cairo_destroy (cr);
 }
 
@@ -2395,7 +2390,7 @@ pdf_document_text_get_text_layout (EvDocumentText  *selection,
 static PangoAttrList *
 pdf_document_text_get_text_attrs (EvDocumentText *document_text,
 				  EvPage         *page)
-{ //If my modification works, don't forget to erase the attempts in pdf_document_fonts_fill_model
+{
 	GList         *backend_attrs_list,  *l;
 	PangoAttrList *attrs_list;
 	//printf("pdf_document_text_get_text_attrs : document_text:%p page:%p page_index: %d\n" , document_text , page, page->index);
@@ -3325,8 +3320,6 @@ pdf_document_annotations_get_annotations (EvDocumentAnnotations *document_annota
 			     GINT_TO_POINTER (page->index),
 			     ev_mapping_list_ref (mapping_list));
 
-    printf("Line: %d Annot.",  __LINE__);//Erase
-
 	return mapping_list;
 }
 
@@ -3466,8 +3459,6 @@ pdf_document_annotations_add_annotation (EvDocumentAnnotations *document_annotat
 
 	ev_annotation_get_area (annot, &rect);
 
-    printf("Line: %d Annot.",  __LINE__);//Erase
-
 	poppler_page_get_size (poppler_page, NULL, &height);
 	poppler_rect.x1 = rect.x1;
 	poppler_rect.x2 = rect.x2;
@@ -3504,7 +3495,6 @@ pdf_document_annotations_add_annotation (EvDocumentAnnotations *document_annotat
 		default:
 			g_assert_not_reached ();
 	}
-
 
 	ev_annotation_get_color (annot, &color);
 	poppler_color.red = color.red;
@@ -3740,7 +3730,6 @@ pdf_document_annotations_save_annotation (EvDocumentAnnotations *document_annota
 				new_annot = poppler_annot_text_markup_new_underline (pdf_document->document, &rect, quads);
 				break;
 			case EV_ANNOTATION_TEXT_MARKUP_SQUIGGLY:
-		        printf("Line: %d Annot.\n",  __LINE__);//Erase
 				new_annot = poppler_annot_text_markup_new_squiggly (pdf_document->document, &rect, quads);
 				break;
 			}
@@ -4251,5 +4240,3 @@ pdf_document_document_layers_iface_init (EvDocumentLayersInterface *iface)
 	iface->hide_layer = pdf_document_layers_hide_layer;
 	iface->layer_is_visible = pdf_document_layers_layer_is_visible;
 }
-
-
