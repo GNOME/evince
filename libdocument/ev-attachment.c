@@ -422,14 +422,21 @@ ev_attachment_open (EvAttachment *attachment,
 						   timestamp, error);
 	} else {
                 char *basename;
-                char *template;
+                char *temp_dir;
+                char *file_path;
 		GFile *file;
 
-                /* FIXMEchpe: convert to filename encoding first! */
+                /* FIXMEchpe: convert to filename encoding first!
+                 * Store the file inside a temporary XXXXXX subdirectory to
+                 * keep the filename "as is".
+                 */
                 basename = g_path_get_basename (ev_attachment_get_name (attachment));
-                template = g_strdup_printf ("%s.XXXXXX", basename);
-                file = ev_mkstemp_file (template, error);
-                g_free (template);
+                temp_dir = g_dir_make_tmp ("evince.XXXXXX", error);
+                file_path = g_build_filename (temp_dir, basename, NULL);
+                file = g_file_new_for_path (file_path);
+
+                g_free (temp_dir);
+                g_free (file_path);
                 g_free (basename);
 
 		if (file != NULL && ev_attachment_save (attachment, file, error)) {
