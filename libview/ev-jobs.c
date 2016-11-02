@@ -894,7 +894,7 @@ ev_job_thumbnail_run (EvJob *job)
         }
 
 	if ((job_thumb->format == EV_JOB_THUMBNAIL_PIXBUF && pixbuf == NULL) ||
-	     job_thumb->thumbnail_surface == NULL) {
+	    (job_thumb->format != EV_JOB_THUMBNAIL_PIXBUF && job_thumb->thumbnail_surface == NULL)) {
 		ev_job_failed (job,
 			       EV_DOCUMENT_ERROR,
 			       EV_DOCUMENT_ERROR_INVALID,
