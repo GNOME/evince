@@ -457,7 +457,7 @@ comics_check_decompress_command	(gchar          *mime_type,
 	g_set_error_literal (error,
 			     EV_DOCUMENT_ERROR,
 			     EV_DOCUMENT_ERROR_INVALID,
-			     _("Can't find an appropriate command to "
+			     _("Can’t find an appropriate command to "
 			     "decompress this type of comic book"));
 	return FALSE;
 }

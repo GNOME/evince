@@ -220,7 +220,7 @@ ev_previewer_window_enumerate_finished (EvPreviewerWindow *window)
 		g_set_error (&error,
 			     GTK_PRINT_ERROR,
 			     GTK_PRINT_ERROR_GENERAL,
-			     _("The selected printer '%s' could not be found"),
+			     _("The selected printer “%s” could not be found"),
 			     gtk_print_settings_get_printer (window->print_settings));
 				     
 		ev_previewer_window_error_dialog_run (window, error);

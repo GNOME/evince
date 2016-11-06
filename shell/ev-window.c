@@ -3561,7 +3561,7 @@ ev_window_check_document_modified (EvWindow      *ev_window,
 	} else {
 		text = g_markup_printf_escaped (_("Save a copy of document “%s” before closing?"),
                                                 gtk_window_get_title (GTK_WINDOW (ev_window)));
-		secondary_text_command = _("If you don't save a copy, changes will be permanently lost.");
+		secondary_text_command = _("If you don’t save a copy, changes will be permanently lost.");
 		gtk_dialog_add_buttons (GTK_DIALOG (dialog),
 				_("Close _without Saving"),
 				GTK_RESPONSE_NO,
@@ -5368,7 +5368,7 @@ ev_window_cmd_view_toggle_caret_navigation (GSimpleAction *action,
 					      "allowing you to move around and select text with your keyboard. "
 					      "Do you want to enable the caret navigation?"));
 
-	window->priv->ask_caret_navigation_check = gtk_check_button_new_with_label (_("Don't show this message again"));
+	window->priv->ask_caret_navigation_check = gtk_check_button_new_with_label (_("Don’t show this message again"));
 	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 12);
 	gtk_box_pack_start (GTK_BOX (hbox), window->priv->ask_caret_navigation_check,
 			    TRUE, TRUE, 0);
@@ -6159,7 +6159,7 @@ image_save_dialog_response_cb (GtkWidget *fc,
 	if (format == NULL) {
 		ev_window_error_message (ev_window, NULL, 
 					 "%s",
-					 _("Couldn't find appropriate format to save image"));
+					 _("Couldn’t find appropriate format to save image"));
 		g_free (uri);
 		gtk_widget_destroy (fc);
 
