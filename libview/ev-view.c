@@ -2111,9 +2111,12 @@ ev_view_handle_cursor_over_xy (EvView *view, gint x, gint y)
 	if (view->cursor == EV_VIEW_CURSOR_HIDDEN)
 		return;
 
-	if (view->adding_annot_info.adding_annot && !view->adding_annot_info.annot) {
-		if (view->cursor != EV_VIEW_CURSOR_ADD)
+	if (view->adding_annot_info.adding_annot) {
+		if (view->adding_annot_info.type == EV_ANNOTATION_TYPE_TEXT_MARKUP) {
+			ev_view_set_cursor (view, EV_VIEW_CURSOR_IBEAM);
+		} else if (!view->adding_annot_info.annot) {
 			ev_view_set_cursor (view, EV_VIEW_CURSOR_ADD);
+		}
 		return;
 	}
 
@@ -3408,7 +3411,6 @@ ev_view_create_annotation (EvView *view)
 	cairo_region_destroy (region);
 
 	view->adding_annot_info.annot = annot;
-	ev_view_set_cursor (view, EV_VIEW_CURSOR_NORMAL);
 }
 
 void
