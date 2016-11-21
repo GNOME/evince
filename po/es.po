@@ -2,22 +2,23 @@
 # Traducción de Evince al español.
 # Copyright (C) Spanish translation for Evince
 # This file is distributed under the same license as the Evince package.
-# 
+#
 # Antonio Ognio <gnrfan@gnrfan.org, 2004, 2005.
 # Daniel Fernandez <dfdez@ya.com>, 2005.
 # Francisco Javier F. Serrador <serrador@cvs.gnome.org>, 2005, 2006.
 # Juanje Ojeda Croissier <jojeda@emergya.es>, 2008, 2009.
 # Jorge González <jorgegonz@svn.gnome.org>, 2007, 2008, 2010.
-# 
+#
 # Daniel Mustieles <daniel.mustieles@gmail.com>, 2010, 2011, 2012, 2013, 2014, 2015, 2016.
+# Alberto Caso <alberto@acaso.net>, 2016.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: evince.master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evince&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2016-07-27 20:22+0000\n"
-"PO-Revision-Date: 2016-07-18 10:07+0200\n"
+"POT-Creation-Date: 2016-10-29 19:00+0000\n"
+"PO-Revision-Date: 2016-11-20 19:01+0100\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español; Castellano <gnome-es-list@gnome.org>\n"
 "Language: es\n"
@@ -25,7 +26,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Gtranslator 2.91.6\n"
+"X-Generator: Gtranslator 2.91.7\n"
 
 #: ../backend/comics/comics-document.c:210
 #, c-format
@@ -54,25 +55,25 @@ msgstr ""
 "No se puede encontrar un comando apropiado para descomprimir este tipo de "
 "cómic"
 
-#: ../backend/comics/comics-document.c:515
+#: ../backend/comics/comics-document.c:526
 msgid "File corrupted"
 msgstr "Archivo corrupto"
 
-#: ../backend/comics/comics-document.c:528
+#: ../backend/comics/comics-document.c:539
 msgid "No files in archive"
 msgstr "No hay archivos en el archivador"
 
-#: ../backend/comics/comics-document.c:567
+#: ../backend/comics/comics-document.c:578
 #, c-format
 msgid "No images found in archive %s"
 msgstr "No se encontraron imágenes en el archivador %s"
 
-#: ../backend/comics/comics-document.c:817
+#: ../backend/comics/comics-document.c:828
 #, c-format
 msgid "There was an error deleting “%s”."
 msgstr "Hubo un error al eliminar «%s»."
 
-#: ../backend/comics/comics-document.c:910
+#: ../backend/comics/comics-document.c:921
 #, c-format
 msgid "Error %s"
 msgstr "Error %s"
@@ -473,7 +474,7 @@ msgstr "de %d"
 
 #: ../libmisc/ev-page-action-widget.c:185 ../shell/ev-history.c:426
 #: ../shell/ev-sidebar-bookmarks.c:295 ../shell/ev-window.c:902
-#: ../shell/ev-window.c:4644
+#: ../shell/ev-window.c:4648
 #, c-format
 msgid "Page %s"
 msgstr "Página %s"
@@ -507,12 +508,12 @@ msgstr "Buscar la siguiente aparición de la cadena"
 msgid "Failed to render page %d"
 msgstr "Falló al renderizar la página %d"
 
-#: ../libview/ev-jobs.c:896
+#: ../libview/ev-jobs.c:901
 #, c-format
 msgid "Failed to create thumbnail for page %d"
 msgstr "Falló al crear la miniatura para la página %d"
 
-#: ../libview/ev-jobs.c:2026
+#: ../libview/ev-jobs.c:2031
 #, c-format
 msgid "Failed to print page %d: %s"
 msgstr "Falló al imprimir la página %d: %s"
@@ -651,46 +652,46 @@ msgstr "Desplazar la vista hacia abajo"
 msgid "Document View"
 msgstr "Vista de documento"
 
-#: ../libview/ev-view.c:2031
+#: ../libview/ev-view.c:2033
 msgid "Go to first page"
 msgstr "Ir a la primera página"
 
-#: ../libview/ev-view.c:2033
+#: ../libview/ev-view.c:2035
 msgid "Go to previous page"
 msgstr "Ir a la página anterior"
 
-#: ../libview/ev-view.c:2035
+#: ../libview/ev-view.c:2037
 msgid "Go to next page"
 msgstr "Ir a la página siguiente"
 
-#: ../libview/ev-view.c:2037
+#: ../libview/ev-view.c:2039
 msgid "Go to last page"
 msgstr "Ir a la última página"
 
-#: ../libview/ev-view.c:2039
+#: ../libview/ev-view.c:2041
 msgid "Go to page"
 msgstr "Ir a la página"
 
-#: ../libview/ev-view.c:2041
+#: ../libview/ev-view.c:2043
 msgid "Find"
 msgstr "Buscar"
 
-#: ../libview/ev-view.c:2069
+#: ../libview/ev-view.c:2071
 #, c-format
 msgid "Go to page %s"
 msgstr "Ir a la página %s"
 
-#: ../libview/ev-view.c:2075
+#: ../libview/ev-view.c:2077
 #, c-format
 msgid "Go to %s on file “%s”"
 msgstr "Ir a %s en el archivo «%s»"
 
-#: ../libview/ev-view.c:2078
+#: ../libview/ev-view.c:2080
 #, c-format
 msgid "Go to file “%s”"
 msgstr "Ir al archivo «%s»"
 
-#: ../libview/ev-view.c:2086
+#: ../libview/ev-view.c:2088
 #, c-format
 msgid "Launch %s"
 msgstr "Lanzar %s"
@@ -1158,9 +1159,9 @@ msgstr "Imprimir…"
 #.
 #: ../shell/ev-sidebar-links.c:728
 msgid "Outline"
-msgstr "Contorno"
+msgstr "Índice"
 
-#: ../shell/ev-sidebar-thumbnails.c:1089
+#: ../shell/ev-sidebar-thumbnails.c:1093
 msgid "Thumbnails"
 msgstr "Miniaturas"
 
@@ -1366,15 +1367,15 @@ msgstr "Cerrar _después de imprimir"
 msgid "Running in presentation mode"
 msgstr "Ejecutándose en modo presentación"
 
-#: ../shell/ev-window.c:5325
+#: ../shell/ev-window.c:5329
 msgid "Enable caret navigation?"
 msgstr "¿Activar la navegación de cursor?"
 
-#: ../shell/ev-window.c:5327
+#: ../shell/ev-window.c:5331
 msgid "_Enable"
 msgstr "_Activar"
 
-#: ../shell/ev-window.c:5330
+#: ../shell/ev-window.c:5334
 msgid ""
 "Pressing F7 turns the caret navigation on or off. This feature places a "
 "moveable cursor in text pages, allowing you to move around and select text "
@@ -1385,39 +1386,39 @@ msgstr ""
 "permitiéndole moverse por el texto y seleccionarlo con el teclado. ¿Quiere "
 "activar la navegación de cursor?"
 
-#: ../shell/ev-window.c:5335
+#: ../shell/ev-window.c:5339
 msgid "Don't show this message again"
 msgstr "No volver a mostrar este mensaje"
 
-#: ../shell/ev-window.c:5850 ../shell/ev-window.c:5866
+#: ../shell/ev-window.c:5854 ../shell/ev-window.c:5870
 msgid "Unable to launch external application."
 msgstr "No se pudo lanzar la aplicación externa."
 
-#: ../shell/ev-window.c:5923
+#: ../shell/ev-window.c:5927
 msgid "Unable to open external link"
 msgstr "No se pudo abrir el enlace externo"
 
-#: ../shell/ev-window.c:6126
+#: ../shell/ev-window.c:6130
 msgid "Couldn't find appropriate format to save image"
 msgstr "No se pudo encontrar el formato apropiado para guardar la imagen"
 
-#: ../shell/ev-window.c:6158
+#: ../shell/ev-window.c:6162
 msgid "The image could not be saved."
 msgstr "La imagen no se pudo guardar."
 
-#: ../shell/ev-window.c:6193
+#: ../shell/ev-window.c:6197
 msgid "Save Image"
 msgstr "Guardar imagen"
 
-#: ../shell/ev-window.c:6352
+#: ../shell/ev-window.c:6356
 msgid "Unable to open attachment"
 msgstr "No se pudo abrir el adjunto"
 
-#: ../shell/ev-window.c:6408
+#: ../shell/ev-window.c:6412
 msgid "The attachment could not be saved."
 msgstr "El adjunto no se pudo guardar."
 
-#: ../shell/ev-window.c:6456
+#: ../shell/ev-window.c:6460
 msgid "Save Attachment"
 msgstr "Guardar adjuntos"
 
