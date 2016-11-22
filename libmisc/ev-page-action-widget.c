@@ -262,8 +262,10 @@ ev_page_action_widget_set_document (EvPageActionWidget *action_widget,
         }
 
         if (action_widget->signal_id > 0) {
-                g_signal_handler_disconnect (action_widget->doc_model,
-                                             action_widget->signal_id);
+                if (action_widget->doc_model != NULL) {
+                        g_signal_handler_disconnect (action_widget->doc_model,
+                                                     action_widget->signal_id);
+                }
                 action_widget->signal_id = 0;
         }
 
