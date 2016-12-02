@@ -4271,6 +4271,8 @@ ev_window_run_presentation (EvWindow *window)
 	if (EV_WINDOW_IS_PRESENTATION (window))
 		return;
 
+	ev_window_close_find_bar (window);
+
 	if (ev_document_model_get_fullscreen (window->priv->model)) {
 		ev_window_stop_fullscreen (window, FALSE);
 		fullscreen_window = FALSE;
