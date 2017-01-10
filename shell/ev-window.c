@@ -6668,10 +6668,32 @@ _gtk_css_provider_load_from_resource (GtkCssProvider *provider,
 }
 
 static void
+ev_window_init_css (void)
+{
+	static gsize initialization_value = 0;
+
+	if (g_once_init_enter (&initialization_value)) {
+		GtkCssProvider *css_provider;
+		GError *error = NULL;
+
+		css_provider = gtk_css_provider_new ();
+		_gtk_css_provider_load_from_resource (css_provider,
+						      "/org/gnome/evince/ui/evince.css",
+						      &error);
+		g_assert_no_error (error);
+		gtk_style_context_add_provider_for_screen (gdk_screen_get_default (),
+						GTK_STYLE_PROVIDER (css_provider),
+						GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+		g_object_unref (css_provider);
+
+		g_once_init_leave (&initialization_value, 1);
+	}
+}
+
+static void
 ev_window_init (EvWindow *ev_window)
 {
 	GtkBuilder *builder;
-	GtkCssProvider *css_provider;
 	GError *error = NULL;
 	GtkWidget *sidebar_widget;
 	GtkWidget *overlay;
@@ -6751,15 +6773,7 @@ ev_window_init (EvWindow *ev_window)
 					 actions, G_N_ELEMENTS (actions),
 					 ev_window);
 
-	css_provider = gtk_css_provider_new ();
-	_gtk_css_provider_load_from_resource (css_provider,
-					      "/org/gnome/evince/ui/evince.css",
-					      &error);
-	g_assert_no_error (error);
-	gtk_style_context_add_provider_for_screen (gtk_widget_get_screen (GTK_WIDGET (ev_window)),
-					GTK_STYLE_PROVIDER (css_provider),
-					GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
-	g_object_unref (css_provider);
+	ev_window_init_css ();
 
 	ev_window->priv->recent_manager = gtk_recent_manager_get_default ();
 
