@@ -62,10 +62,13 @@ install_data(
 )
 
 # man file
-install_data(
-  'evince.1',
-  install_dir: join_paths(ev_mandir, 'man1'),
-)
+man_pages = ['evince.1', 'evince-previewer.1', 'evince-thumbnailer.1']
+foreach man_page: man_pages
+  install_data(
+    man_page,
+    install_dir: join_paths(ev_mandir, 'man1'),
+  )
+endforeach
 
 # UI descriptions
 install_data(
