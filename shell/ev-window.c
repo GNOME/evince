@@ -6673,6 +6673,7 @@ ev_window_init (EvWindow *ev_window)
 	GError *error = NULL;
 	GtkWidget *sidebar_widget;
 	GtkWidget *overlay;
+	GtkWidget *searchbar_revealer;
 	GObject *mpkeys;
 	guint page_cache_mb;
 	gboolean allow_links_change_zoom;
@@ -6799,11 +6800,21 @@ ev_window_init (EvWindow *ev_window)
 			   ev_window->priv->search_box);
 	gtk_widget_show (ev_window->priv->search_box);
 
+	/* Wrap search bar in a revealer.
+	 * Workaround for the gtk+ bug: https://bugzilla.gnome.org/show_bug.cgi?id=724096
+	 */
+	searchbar_revealer = gtk_revealer_new ();
+	g_object_bind_property (G_OBJECT (searchbar_revealer), "reveal-child",
+				G_OBJECT (ev_window->priv->search_bar), "search-mode-enabled",
+				G_BINDING_BIDIRECTIONAL);
+	gtk_container_add (GTK_CONTAINER (searchbar_revealer), ev_window->priv->search_bar);
+	gtk_widget_show (GTK_WIDGET (searchbar_revealer));
+
 	/* We don't use gtk_search_bar_connect_entry, because it clears the entry when the
 	 * search is closed, but we want to keep the current search.
 	 */
 	gtk_box_pack_start (GTK_BOX (ev_window->priv->main_box),
-			    ev_window->priv->search_bar, FALSE, TRUE, 0);
+			    searchbar_revealer, FALSE, TRUE, 0);
 	gtk_widget_show (ev_window->priv->search_bar);
 
 	/* Add the main area */
