@@ -22,6 +22,7 @@
 
 #include <archive.h>
 #include <archive_entry.h>
+#include <unarr/unarr.h>
 #include <gio/gio.h>
 
 #define BUFFER_SIZE (64 * 1024)
@@ -33,6 +34,10 @@ struct _EvArchive {
 	/* libarchive */
 	struct archive *libar;
 	struct archive_entry *libar_entry;
+
+	/* unarr */
+	ar_stream *unarr_s;
+	ar_archive *unarr;
 };
 
 G_DEFINE_TYPE(EvArchive, ev_archive, G_TYPE_OBJECT);
@@ -44,6 +49,8 @@ ev_archive_finalize (GObject *object)
 
 	switch (archive->type) {
 	case EV_ARCHIVE_TYPE_RAR:
+		g_clear_pointer (&archive->unarr, ar_close_archive);
+		g_clear_pointer (&archive->unarr_s, ar_close);
 		break;
 	case EV_ARCHIVE_TYPE_ZIP:
 	case EV_ARCHIVE_TYPE_7Z:
@@ -103,9 +110,8 @@ ev_archive_set_archive_type (EvArchive *archive,
 
 	switch (archive_type) {
 	case EV_ARCHIVE_TYPE_RAR:
-		/* Disabled until this is fixed:
-		 * https://github.com/libarchive/libarchive/issues/373 */
-		return FALSE;
+		archive->type = archive_type;
+		break;
 	case EV_ARCHIVE_TYPE_ZIP:
 	case EV_ARCHIVE_TYPE_7Z:
 	case EV_ARCHIVE_TYPE_TAR:
@@ -133,9 +139,19 @@ ev_archive_open_filename (EvArchive   *archive,
 	case EV_ARCHIVE_TYPE_NONE:
 		g_assert_not_reached ();
 	case EV_ARCHIVE_TYPE_RAR:
-		g_set_error_literal (error, G_IO_ERROR, G_IO_ERROR_FAILED,
-				     "Archive type 'RAR' not supported");
-		return FALSE;
+		archive->unarr_s = ar_open_file (path);
+		if (archive->unarr_s == NULL) {
+			g_set_error_literal (error, G_IO_ERROR, G_IO_ERROR_FAILED,
+					     "Error opening archive");
+			return FALSE;
+		}
+		archive->unarr = ar_open_rar_archive (archive->unarr_s);
+		if (archive->unarr == NULL) {
+			g_set_error_literal (error, G_IO_ERROR, G_IO_ERROR_FAILED,
+					     "Error opening RAR archive");
+			return FALSE;
+		}
+		return TRUE;
 	case EV_ARCHIVE_TYPE_ZIP:
 	case EV_ARCHIVE_TYPE_7Z:
 	case EV_ARCHIVE_TYPE_TAR:
@@ -190,7 +206,7 @@ ev_archive_read_next_header (EvArchive *archive,
 	switch (archive->type) {
 	case EV_ARCHIVE_TYPE_NONE:
 	case EV_ARCHIVE_TYPE_RAR:
-		g_assert_not_reached ();
+		return ar_parse_entry (archive->unarr);
 	case EV_ARCHIVE_TYPE_ZIP:
 	case EV_ARCHIVE_TYPE_7Z:
 	case EV_ARCHIVE_TYPE_TAR:
@@ -205,16 +221,17 @@ ev_archive_get_entry_pathname (EvArchive *archive)
 {
 	g_return_val_if_fail (EV_IS_ARCHIVE (archive), NULL);
 	g_return_val_if_fail (archive->type != EV_ARCHIVE_TYPE_NONE, NULL);
-	g_return_val_if_fail (archive->libar_entry != NULL, NULL);
 
 	switch (archive->type) {
 	case EV_ARCHIVE_TYPE_NONE:
 		g_assert_not_reached ();
 	case EV_ARCHIVE_TYPE_RAR:
-		return NULL;
+		g_return_val_if_fail (archive->unarr != NULL, NULL);
+		return ar_entry_get_name (archive->unarr);
 	case EV_ARCHIVE_TYPE_ZIP:
 	case EV_ARCHIVE_TYPE_7Z:
 	case EV_ARCHIVE_TYPE_TAR:
+		g_return_val_if_fail (archive->libar_entry != NULL, NULL);
 		return archive_entry_pathname (archive->libar_entry);
 	}
 
@@ -226,15 +243,17 @@ ev_archive_get_entry_size (EvArchive *archive)
 {
 	g_return_val_if_fail (EV_IS_ARCHIVE (archive), -1);
 	g_return_val_if_fail (archive->type != EV_ARCHIVE_TYPE_NONE, -1);
-	g_return_val_if_fail (archive->libar_entry != NULL, -1);
 
 	switch (archive->type) {
 	case EV_ARCHIVE_TYPE_RAR:
+		g_return_val_if_fail (archive->unarr != NULL, -1);
+		return ar_entry_get_size (archive->unarr);
 	case EV_ARCHIVE_TYPE_NONE:
 		g_assert_not_reached ();
 	case EV_ARCHIVE_TYPE_ZIP:
 	case EV_ARCHIVE_TYPE_7Z:
 	case EV_ARCHIVE_TYPE_TAR:
+		g_return_val_if_fail (archive->libar_entry != NULL, -1);
 		return archive_entry_size (archive->libar_entry);
 	}
 
@@ -251,15 +270,22 @@ ev_archive_read_data (EvArchive *archive,
 
 	g_return_val_if_fail (EV_IS_ARCHIVE (archive), -1);
 	g_return_val_if_fail (archive->type != EV_ARCHIVE_TYPE_NONE, -1);
-	g_return_val_if_fail (archive->libar_entry != NULL, -1);
 
 	switch (archive->type) {
 	case EV_ARCHIVE_TYPE_RAR:
 	case EV_ARCHIVE_TYPE_NONE:
-		g_assert_not_reached ();
+		g_return_val_if_fail (archive->unarr != NULL, -1);
+		if (!ar_entry_uncompress (archive->unarr, buf, count)) {
+			g_set_error_literal (error, G_IO_ERROR, G_IO_ERROR_FAILED,
+					     "Failed to decompress RAR data");
+			return -1;
+		}
+		r = count;
+		break;
 	case EV_ARCHIVE_TYPE_ZIP:
 	case EV_ARCHIVE_TYPE_7Z:
 	case EV_ARCHIVE_TYPE_TAR:
+		g_return_val_if_fail (archive->libar_entry != NULL, -1);
 		r = archive_read_data (archive->libar, buf, count);
 		if (r < 0) {
 			g_set_error (error, G_IO_ERROR, G_IO_ERROR_FAILED,

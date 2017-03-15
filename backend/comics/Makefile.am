@@ -9,6 +9,7 @@ libcomicsdocument_la_SOURCES = \
 libcomicsdocument_la_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_srcdir)/libdocument \
+	-I$(top_srcdir)/cut-n-paste \
 	-DGNOMELOCALEDIR=\"$(datadir)/locale\" \
 	-DEVINCE_COMPILATION \
 	$(AM_CPPFLAGS)
@@ -22,6 +23,7 @@ libcomicsdocument_la_CFLAGS = \
 libcomicsdocument_la_LDFLAGS = $(BACKEND_LIBTOOL_FLAGS)
 libcomicsdocument_la_LIBADD =				\
 	$(top_builddir)/libdocument/libevdocument3.la	\
+	$(top_builddir)/cut-n-paste/unarr/libunarr.la	\
 	$(LIBARCHIVE_LIBS)				\
 	$(BACKEND_LIBS)					\
 	$(LIB_LIBS)
