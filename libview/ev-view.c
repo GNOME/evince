@@ -2012,7 +2012,7 @@ ev_view_handle_link (EvView *view, EvLink *link)
 			}
 
 			g_signal_emit (view, signals[SIGNAL_LAYERS_CHANGED], 0);
-			ev_view_reload_page (view, view->current_page, NULL);
+			ev_view_reload (view);
 		}
 			break;
 	        case EV_LINK_ACTION_TYPE_GOTO_REMOTE:
