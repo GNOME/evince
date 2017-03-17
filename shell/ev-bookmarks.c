@@ -227,7 +227,7 @@ ev_bookmarks_get_bookmarks (EvBookmarks *bookmarks)
 gboolean
 ev_bookmarks_has_bookmarks (EvBookmarks *bookmarks)
 {
-        g_return_val_if_fail (EV_IS_BOOKMARKS (bookmarks), NULL);
+        g_return_val_if_fail (EV_IS_BOOKMARKS (bookmarks), FALSE);
 
         return bookmarks->items != NULL;
 }
