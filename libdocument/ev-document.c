@@ -382,7 +382,8 @@ ev_document_load_stream (EvDocument         *document,
         if (!klass->load_stream (document, stream, flags, cancellable, error))
                 return FALSE;
 
-        ev_document_setup_cache (document);
+        if (!(flags & EV_DOCUMENT_LOAD_FLAG_NO_CACHE))
+                ev_document_setup_cache (document);
 
         return TRUE;
 }
@@ -426,7 +427,9 @@ ev_document_load_gfile (EvDocument         *document,
         if (!klass->load_gfile (document, file, flags, cancellable, error))
                 return FALSE;
 
-        ev_document_setup_cache (document);
+        if (!(flags & EV_DOCUMENT_LOAD_FLAG_NO_CACHE))
+                ev_document_setup_cache (document);
+
 	document->priv->uri = g_file_get_uri (file);
 	document->priv->file_size = _ev_document_get_size_gfile (file);
 	ev_document_initialize_synctex (document, document->priv->uri);

@@ -55,7 +55,8 @@ typedef struct _EvDocumentPrivate EvDocumentPrivate;
 #define EV_DOC_MUTEX_UNLOCK (ev_document_doc_mutex_unlock ())
 
 typedef enum /*< flags >*/ {
-        EV_DOCUMENT_LOAD_FLAG_NONE = 0
+        EV_DOCUMENT_LOAD_FLAG_NONE = 0,
+        EV_DOCUMENT_LOAD_FLAG_NO_CACHE
 } EvDocumentLoadFlags;
 
 typedef enum
