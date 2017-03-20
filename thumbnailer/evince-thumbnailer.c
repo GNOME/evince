@@ -139,7 +139,7 @@ evince_thumbnailer_get_document (GFile *file)
 		uri = g_file_get_uri (file);
 	}
 
-	document = ev_document_factory_get_document (uri, &error);
+	document = ev_document_factory_get_document_full (uri, EV_DOCUMENT_LOAD_FLAG_NO_CACHE, &error);
 	if (tmp_file) {
 		if (document) {
 			g_object_weak_ref (G_OBJECT (document),
