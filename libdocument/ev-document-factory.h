@@ -35,6 +35,9 @@ gboolean   _ev_document_factory_init         (void);
 void       _ev_document_factory_shutdown     (void);
 
 EvDocument* ev_document_factory_get_document (const char *uri, GError **error);
+EvDocument *ev_document_factory_get_document_full (const char           *uri,
+						   EvDocumentLoadFlags   flags,
+						   GError              **error);
 EvDocument* ev_document_factory_get_document_for_gfile (GFile *file,
                                                         EvDocumentLoadFlags flags,
                                                         GCancellable *cancellable,

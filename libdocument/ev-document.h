@@ -154,6 +154,10 @@ gboolean         ev_document_get_backend_info     (EvDocument      *document,
 gboolean         ev_document_load                 (EvDocument      *document,
 						   const char      *uri,
 						   GError         **error);
+gboolean         ev_document_load_full            (EvDocument           *document,
+						   const char           *uri,
+						   EvDocumentLoadFlags   flags,
+						   GError              **error);
 gboolean         ev_document_load_stream          (EvDocument         *document,
                                                    GInputStream       *stream,
                                                    EvDocumentLoadFlags flags,

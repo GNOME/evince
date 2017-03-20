@@ -270,8 +270,9 @@ _ev_document_factory_shutdown (void)
 }
 
 /**
- * ev_document_factory_get_document:
+ * ev_document_factory_get_document_full:
  * @uri: an URI
+ * @flags: flags from #EvDocumentLoadFlags
  * @error: a #GError location to store an error, or %NULL
  *
  * Creates a #EvDocument for the document at @uri; or, if no backend handling
@@ -283,7 +284,9 @@ _ev_document_factory_shutdown (void)
  * Returns: (transfer full): a new #EvDocument, or %NULL
  */
 EvDocument *
-ev_document_factory_get_document (const char *uri, GError **error)
+ev_document_factory_get_document_full (const char           *uri,
+				       EvDocumentLoadFlags   flags,
+				       GError              **error)
 {
 	EvDocument *document;
 	int result;
@@ -310,7 +313,7 @@ ev_document_factory_get_document (const char *uri, GError **error)
 			return NULL;
 		}
 
-		result = ev_document_load (document, uri_unc ? uri_unc : uri, &err);
+		result = ev_document_load_full (document, uri_unc ? uri_unc : uri, flags, &err);
 
 		if (result == FALSE || err) {
 			if (err &&
@@ -352,7 +355,8 @@ ev_document_factory_get_document (const char *uri, GError **error)
 		return NULL;
 	}
 
-	result = ev_document_load (document, uri_unc ? uri_unc : uri, &err);
+	result = ev_document_load_full (document, uri_unc ? uri_unc : uri,
+					EV_DOCUMENT_LOAD_FLAG_NONE, &err);
 	if (result == FALSE) {
 		if (err == NULL) {
 			/* FIXME: this really should not happen; the backend should
@@ -374,6 +378,27 @@ ev_document_factory_get_document (const char *uri, GError **error)
 	}
 
 	return document;
+}
+
+/**
+ * ev_document_factory_get_document:
+ * @uri: an URI
+ * @error: a #GError location to store an error, or %NULL
+ *
+ * Creates a #EvDocument for the document at @uri; or, if no backend handling
+ * the document's type is found, or an error occurred on opening the document,
+ * returns %NULL and fills in @error.
+ * If the document is encrypted, it is returned but also @error is set to
+ * %EV_DOCUMENT_ERROR_ENCRYPTED.
+ *
+ * Returns: (transfer full): a new #EvDocument, or %NULL
+ */
+EvDocument *
+ev_document_factory_get_document (const char *uri, GError **error)
+{
+	return ev_document_factory_get_document_full (uri,
+						      EV_DOCUMENT_LOAD_FLAG_NONE,
+						      error);
 }
 
 /**

@@ -294,9 +294,10 @@ ev_document_initialize_synctex (EvDocument  *document,
 }
 
 /**
- * ev_document_load:
+ * ev_document_load_full:
  * @document: a #EvDocument
  * @uri: the document's URI
+ * @flags: flags from #EvDocumentLoadFlags
  * @error: a #GError location to store an error, or %NULL
  *
  * Loads @document from @uri.
@@ -311,9 +312,10 @@ ev_document_initialize_synctex (EvDocument  *document,
  * Returns: %TRUE on success, or %FALSE on failure.
  */
 gboolean
-ev_document_load (EvDocument  *document,
-		  const char  *uri,
-		  GError     **error)
+ev_document_load_full (EvDocument           *document,
+		       const char           *uri,
+		       EvDocumentLoadFlags   flags,
+		       GError              **error)
 {
 	EvDocumentClass *klass = EV_DOCUMENT_GET_CLASS (document);
 	gboolean retval;
@@ -336,13 +338,40 @@ ev_document_load (EvDocument  *document,
 	} else {
 		document->priv->info = _ev_document_get_info (document);
 		document->priv->n_pages = _ev_document_get_n_pages (document);
-		ev_document_setup_cache (document);
+		if (!(flags & EV_DOCUMENT_LOAD_FLAG_NO_CACHE))
+			ev_document_setup_cache (document);
 		document->priv->uri = g_strdup (uri);
 		document->priv->file_size = _ev_document_get_size (uri);
 		ev_document_initialize_synctex (document, uri);
         }
 
 	return retval;
+}
+
+/**
+ * ev_document_load:
+ * @document: a #EvDocument
+ * @uri: the document's URI
+ * @error: a #GError location to store an error, or %NULL
+ *
+ * Loads @document from @uri.
+ *
+ * On failure, %FALSE is returned and @error is filled in.
+ * If the document is encrypted, EV_DEFINE_ERROR_ENCRYPTED is returned.
+ * If the backend cannot load the specific document, EV_DOCUMENT_ERROR_INVALID
+ * is returned. Other errors are possible too, depending on the backend
+ * used to load the document and the URI, e.g. #GIOError, #GFileError, and
+ * #GConvertError.
+ *
+ * Returns: %TRUE on success, or %FALSE on failure.
+ */
+gboolean
+ev_document_load (EvDocument  *document,
+		  const char  *uri,
+		  GError     **error)
+{
+	return ev_document_load_full (document, uri,
+				      EV_DOCUMENT_LOAD_FLAG_NONE, error);
 }
 
 /**
