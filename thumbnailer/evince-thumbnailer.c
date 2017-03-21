@@ -101,6 +101,31 @@ delete_temp_file (GFile *file)
 	g_object_unref (file);
 }
 
+static char *
+get_target_uri (GFile *file)
+{
+	GFileInfo *info;
+	char *target;
+
+	info = g_file_query_info (file, G_FILE_ATTRIBUTE_STANDARD_TARGET_URI, G_FILE_QUERY_INFO_NONE, NULL, NULL);
+	if (info == NULL)
+		return NULL;
+	target = g_strdup (g_file_info_get_attribute_string (info, G_FILE_ATTRIBUTE_STANDARD_TARGET_URI));
+	g_object_unref (info);
+
+	return target;
+}
+
+static char *
+get_local_path (GFile *file)
+{
+	if (g_file_has_uri_scheme (file, "trash") != FALSE ||
+	    g_file_has_uri_scheme (file, "recent") != FALSE) {
+		return get_target_uri (file);
+	}
+	return g_file_get_path (file);
+}
+
 static EvDocument *
 evince_thumbnailer_get_document (GFile *file)
 {
@@ -109,7 +134,7 @@ evince_thumbnailer_get_document (GFile *file)
 	GFile      *tmp_file = NULL;
 	GError     *error = NULL;
 
-	path = g_file_get_path (file);
+	path = get_local_path (file);
 
 	if (!path) {
 		gchar *base_name, *template;
