@@ -105,11 +105,13 @@ static EvDocument *
 evince_thumbnailer_get_document (GFile *file)
 {
 	EvDocument *document = NULL;
-	gchar      *uri;
+	gchar      *uri, *path;
 	GFile      *tmp_file = NULL;
 	GError     *error = NULL;
 
-	if (!g_file_is_native (file)) {
+	path = g_file_get_path (file);
+
+	if (!path) {
 		gchar *base_name, *template;
 
 		base_name = g_file_get_basename (file);
@@ -136,7 +138,8 @@ evince_thumbnailer_get_document (GFile *file)
 		}
 		uri = g_file_get_uri (tmp_file);
 	} else {
-		uri = g_file_get_uri (file);
+		uri = g_filename_to_uri (path, NULL, NULL);
+		g_free (path);
 	}
 
 	document = ev_document_factory_get_document (uri, &error);
