@@ -487,9 +487,9 @@ ev_page_accessible_get_substring (AtkText *text,
 		return NULL;
 
 	page_text = ev_page_cache_get_text (view->page_cache, self->priv->page);
-	start_offset = MAX (0, start_offset);
 	if (end_offset < 0 || end_offset > g_utf8_strlen (page_text, -1))
 		end_offset = strlen (page_text);
+	start_offset = CLAMP (start_offset, 0, end_offset);
 
 	substring = g_utf8_substring (page_text, start_offset, end_offset);
 	normalized = g_utf8_normalize (substring, -1, G_NORMALIZE_NFKC);
