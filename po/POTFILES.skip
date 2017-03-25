@@ -1,6 +1,8 @@
-data/evince.desktop.in
-data/evince-previewer.desktop.in
-data/org.gnome.evince.Daemon.service.in
+# List of source files that should *not* be translated.
+# Please keep this file sorted alphabetically.
+backend/comics/evince-comicsdocument.metainfo.xml.in
+backend/djvu/evince-djvudocument.metainfo.xml.in
+backend/dvi/evince-dvidocument.metainfo.xml.in
 backend/dvi/mdvi-lib/dviread.c
 backend/dvi/mdvi-lib/font.c
 backend/dvi/mdvi-lib/fontmap.c
@@ -8,21 +10,22 @@ backend/dvi/mdvi-lib/gf.c
 backend/dvi/mdvi-lib/pagesel.c
 backend/dvi/mdvi-lib/paper.c
 backend/dvi/mdvi-lib/pk.c
-backend/dvi/mdvi-lib/sp-epsf.c
 backend/dvi/mdvi-lib/special.c
+backend/dvi/mdvi-lib/sp-epsf.c
 backend/dvi/mdvi-lib/t1.c
 backend/dvi/mdvi-lib/tfm.c
 backend/dvi/mdvi-lib/tfmfile.c
 backend/dvi/mdvi-lib/tt.c
 backend/dvi/mdvi-lib/util.c
 backend/dvi/mdvi-lib/vf.c
-backend/comics/evince-comicsdocument.metainfo.xml.in
-backend/djvu/evince-djvudocument.metainfo.xml.in
-backend/dvi/evince-dvidocument.metainfo.xml.in
 backend/pdf/evince-pdfdocument.metainfo.xml.in
 backend/ps/evince-psdocument.metainfo.xml.in
 backend/tiff/evince-tiffdocument.metainfo.xml.in
 backend/xps/evince-xpsdocument.metainfo.xml.in
+cut-n-paste/unarr/common/conv.c
+data/evince.desktop.in
+data/evince-previewer.desktop.in
+data/org.gnome.evince.Daemon.service.in
 
 sub/backend/comics/evince-comicsdocument.metainfo.xml.in
 sub/backend/djvu/evince-djvudocument.metainfo.xml.in
@@ -31,6 +34,6 @@ sub/backend/pdf/evince-pdfdocument.metainfo.xml.in
 sub/backend/ps/evince-psdocument.metainfo.xml.in
 sub/backend/tiff/evince-tiffdocument.metainfo.xml.in
 sub/backend/xps/evince-xpsdocument.metainfo.xml.in
-sub/data/evince-previewer.desktop.in
 sub/data/evince.desktop.in
+sub/data/evince-previewer.desktop.in
 sub/data/org.gnome.evince.Daemon.service.in
