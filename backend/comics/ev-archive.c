@@ -205,6 +205,7 @@ ev_archive_read_next_header (EvArchive *archive,
 
 	switch (archive->type) {
 	case EV_ARCHIVE_TYPE_NONE:
+		g_assert_not_reached ();
 	case EV_ARCHIVE_TYPE_RAR:
 		return ar_parse_entry (archive->unarr);
 	case EV_ARCHIVE_TYPE_ZIP:
@@ -273,7 +274,6 @@ ev_archive_read_data (EvArchive *archive,
 
 	switch (archive->type) {
 	case EV_ARCHIVE_TYPE_RAR:
-	case EV_ARCHIVE_TYPE_NONE:
 		g_return_val_if_fail (archive->unarr != NULL, -1);
 		if (!ar_entry_uncompress (archive->unarr, buf, count)) {
 			g_set_error_literal (error, G_IO_ERROR, G_IO_ERROR_FAILED,
@@ -282,6 +282,8 @@ ev_archive_read_data (EvArchive *archive,
 		}
 		r = count;
 		break;
+	case EV_ARCHIVE_TYPE_NONE:
+		g_assert_not_reached ();
 	case EV_ARCHIVE_TYPE_ZIP:
 	case EV_ARCHIVE_TYPE_7Z:
 	case EV_ARCHIVE_TYPE_TAR:
