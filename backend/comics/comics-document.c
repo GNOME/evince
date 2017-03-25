@@ -49,7 +49,6 @@ struct _ComicsDocument
 {
 	EvDocument     parent_instance;
 	EvArchive     *archive;
-	EvArchiveType  archive_type;
 	gchar         *archive_path;
 	gchar         *archive_uri;
 	GPtrArray     *page_names;
@@ -58,14 +57,6 @@ struct _ComicsDocument
 static GSList* get_supported_image_extensions (void);
 
 EV_BACKEND_REGISTER (ComicsDocument, comics_document)
-
-static void
-comics_document_reset_archive (ComicsDocument *comics_document)
-{
-	g_clear_object (&comics_document->archive);
-	comics_document->archive = ev_archive_new ();
-	ev_archive_set_archive_type (comics_document->archive, comics_document->archive_type);
-}
 
 static char **
 comics_document_list (ComicsDocument *comics_document)
@@ -104,7 +95,7 @@ comics_document_list (ComicsDocument *comics_document)
 	}
 
 out:
-	comics_document_reset_archive (comics_document);
+	ev_archive_reset (comics_document->archive);
 	return ret;
 }
 
@@ -201,8 +192,6 @@ comics_document_load (EvDocument *document,
 		return FALSE;
 	}
 	g_free (mime_type);
-
-	comics_document->archive_type = ev_archive_get_archive_type (comics_document->archive);
 
 	/* Get list of files in archive */
 	cb_files = comics_document_list (comics_document);
@@ -354,7 +343,7 @@ comics_document_get_page_size (EvDocument *document,
 	}
 
 out:
-	comics_document_reset_archive (comics_document);
+	ev_archive_reset (comics_document->archive);
 }
 
 static void
@@ -439,7 +428,7 @@ comics_document_render_pixbuf (EvDocument      *document,
 	g_object_unref (loader);
 
 out:
-	comics_document_reset_archive (comics_document);
+	ev_archive_reset (comics_document->archive);
 	return rotated_pixbuf;
 }
 

@@ -36,7 +36,7 @@ struct _EvArchive {
 	struct archive_entry *libar_entry;
 
 	/* unarr */
-	ar_stream *unarr_s;
+	ar_stream *unarr_stream;
 	ar_archive *unarr;
 };
 
@@ -50,7 +50,7 @@ ev_archive_finalize (GObject *object)
 	switch (archive->type) {
 	case EV_ARCHIVE_TYPE_RAR:
 		g_clear_pointer (&archive->unarr, ar_close_archive);
-		g_clear_pointer (&archive->unarr_s, ar_close);
+		g_clear_pointer (&archive->unarr_stream, ar_close);
 		break;
 	case EV_ARCHIVE_TYPE_ZIP:
 	case EV_ARCHIVE_TYPE_7Z:
@@ -139,13 +139,13 @@ ev_archive_open_filename (EvArchive   *archive,
 	case EV_ARCHIVE_TYPE_NONE:
 		g_assert_not_reached ();
 	case EV_ARCHIVE_TYPE_RAR:
-		archive->unarr_s = ar_open_file (path);
-		if (archive->unarr_s == NULL) {
+		archive->unarr_stream = ar_open_file (path);
+		if (archive->unarr_stream == NULL) {
 			g_set_error_literal (error, G_IO_ERROR, G_IO_ERROR_FAILED,
 					     "Error opening archive");
 			return FALSE;
 		}
-		archive->unarr = ar_open_rar_archive (archive->unarr_s);
+		archive->unarr = ar_open_rar_archive (archive->unarr_stream);
 		if (archive->unarr == NULL) {
 			g_set_error_literal (error, G_IO_ERROR, G_IO_ERROR_FAILED,
 					     "Error opening RAR archive");
@@ -295,6 +295,28 @@ ev_archive_read_data (EvArchive *archive,
 	}
 
 	return r;
+}
+
+void
+ev_archive_reset (EvArchive *archive)
+{
+	g_return_if_fail (EV_IS_ARCHIVE (archive));
+	g_return_if_fail (archive->type != EV_ARCHIVE_TYPE_NONE);
+
+	switch (archive->type) {
+	case EV_ARCHIVE_TYPE_RAR:
+		g_clear_pointer (&archive->unarr, ar_close_archive);
+		g_clear_pointer (&archive->unarr_stream, ar_close);
+		break;
+	case EV_ARCHIVE_TYPE_ZIP:
+	case EV_ARCHIVE_TYPE_7Z:
+	case EV_ARCHIVE_TYPE_TAR:
+		g_clear_pointer (&archive->libar, archive_free);
+		libarchive_set_archive_type (archive, archive->type);
+		break;
+	default:
+		g_assert_not_reached ();
+	}
 }
 
 static void

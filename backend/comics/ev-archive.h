@@ -50,6 +50,7 @@ gssize         ev_archive_read_data          (EvArchive     *archive,
 					      void          *buf,
 					      gsize          count,
 					      GError       **error);
+void           ev_archive_reset              (EvArchive     *archive);
 
 G_END_DECLS
 
