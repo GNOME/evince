@@ -17,7 +17,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
+#ifndef __EV_ARCHIVE_H__
+#define __EV_ARCHIVE_H__
+
 #include <glib-object.h>
+
+G_BEGIN_DECLS
 
 #define EV_TYPE_ARCHIVE ev_archive_get_type ()
 G_DECLARE_FINAL_TYPE (EvArchive, ev_archive, EV, ARCHIVE, GObject)
@@ -33,15 +38,19 @@ typedef enum {
 EvArchive     *ev_archive_new                (void);
 gboolean       ev_archive_set_archive_type   (EvArchive     *archive,
 					      EvArchiveType  archive_type);
-EvArchiveType  ev_archive_get_archive_type   (EvArchive *archive);
-gboolean       ev_archive_open_filename      (EvArchive   *archive,
-					      const char  *path,
-					      GError     **error);
-gboolean       ev_archive_read_next_header   (EvArchive   *archive,
-					      GError     **error);
-const char    *ev_archive_get_entry_pathname (EvArchive *archive);
-gint64         ev_archive_get_entry_size     (EvArchive *archive);
-gssize         ev_archive_read_data          (EvArchive  *archive,
-					      void       *buf,
-					      gsize       count,
-					      GError    **error);
+EvArchiveType  ev_archive_get_archive_type   (EvArchive     *archive);
+gboolean       ev_archive_open_filename      (EvArchive     *archive,
+					      const char    *path,
+					      GError       **error);
+gboolean       ev_archive_read_next_header   (EvArchive     *archive,
+					      GError       **error);
+const char    *ev_archive_get_entry_pathname (EvArchive     *archive);
+gint64         ev_archive_get_entry_size     (EvArchive     *archive);
+gssize         ev_archive_read_data          (EvArchive     *archive,
+					      void          *buf,
+					      gsize          count,
+					      GError       **error);
+
+G_END_DECLS
+
+#endif /* __EV_ARCHIVE_H__ */

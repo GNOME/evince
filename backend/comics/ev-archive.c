@@ -17,6 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
+#include "config.h"
 #include "ev-archive.h"
 
 #include <archive.h>
@@ -57,9 +58,10 @@ ev_archive_finalize (GObject *object)
 }
 
 static void
-ev_archive_class_init (EvArchiveClass *class)
+ev_archive_class_init (EvArchiveClass *klass)
 {
-        GObjectClass *object_class = (GObjectClass *) class;
+        GObjectClass *object_class = (GObjectClass *) klass;
+
         object_class->finalize = ev_archive_finalize;
 }
 
@@ -88,6 +90,7 @@ EvArchiveType
 ev_archive_get_archive_type (EvArchive *archive)
 {
 	g_return_val_if_fail (EV_IS_ARCHIVE (archive), EV_ARCHIVE_TYPE_NONE);
+
 	return archive->type;
 }
 
@@ -149,8 +152,8 @@ ev_archive_open_filename (EvArchive   *archive,
 }
 
 static gboolean
-libarchive_read_next_header (EvArchive   *archive,
-			     GError     **error)
+libarchive_read_next_header (EvArchive *archive,
+			     GError   **error)
 {
 	while (1) {
 		int r;
@@ -178,8 +181,8 @@ libarchive_read_next_header (EvArchive   *archive,
 }
 
 gboolean
-ev_archive_read_next_header (EvArchive   *archive,
-			     GError     **error)
+ev_archive_read_next_header (EvArchive *archive,
+			     GError   **error)
 {
 	g_return_val_if_fail (EV_IS_ARCHIVE (archive), FALSE);
 	g_return_val_if_fail (archive->type != EV_ARCHIVE_TYPE_NONE, FALSE);
@@ -221,8 +224,6 @@ ev_archive_get_entry_pathname (EvArchive *archive)
 gint64
 ev_archive_get_entry_size (EvArchive *archive)
 {
-	gint64 r;
-
 	g_return_val_if_fail (EV_IS_ARCHIVE (archive), -1);
 	g_return_val_if_fail (archive->type != EV_ARCHIVE_TYPE_NONE, -1);
 	g_return_val_if_fail (archive->libar_entry != NULL, -1);
@@ -234,18 +235,17 @@ ev_archive_get_entry_size (EvArchive *archive)
 	case EV_ARCHIVE_TYPE_ZIP:
 	case EV_ARCHIVE_TYPE_7Z:
 	case EV_ARCHIVE_TYPE_TAR:
-		r = archive_entry_size (archive->libar_entry);
-		break;
+		return archive_entry_size (archive->libar_entry);
 	}
 
-	return r;
+	return -1;
 }
 
 gssize
-ev_archive_read_data (EvArchive  *archive,
-		      void       *buf,
-		      gsize       count,
-		      GError    **error)
+ev_archive_read_data (EvArchive *archive,
+		      void      *buf,
+		      gsize      count,
+		      GError   **error)
 {
 	gssize r = -1;
 

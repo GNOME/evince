@@ -48,31 +48,23 @@ struct _ComicsDocumentClass
 struct _ComicsDocument
 {
 	EvDocument     parent_instance;
-	EvArchive     *a;
-	EvArchiveType  a_type;
+	EvArchive     *archive;
+	EvArchiveType  archive_type;
 	gchar         *archive_path;
 	gchar         *archive_uri;
 	GPtrArray     *page_names;
 };
 
-static GSList*    get_supported_image_extensions (void);
-static void       get_page_size_prepared_cb (GdkPixbufLoader *loader,
-					     int width,
-					     int height,
-					     gpointer data);
-static void       render_pixbuf_size_prepared_cb (GdkPixbufLoader *loader,
-						  gint width,
-						  gint height,
-						  EvRenderContext *rc);
+static GSList* get_supported_image_extensions (void);
 
 EV_BACKEND_REGISTER (ComicsDocument, comics_document)
 
 static void
 comics_document_reset_archive (ComicsDocument *comics_document)
 {
-	g_clear_object (&comics_document->a);
-	comics_document->a = ev_archive_new ();
-	ev_archive_set_archive_type (comics_document->a, comics_document->a_type);
+	g_clear_object (&comics_document->archive);
+	comics_document->archive = ev_archive_new ();
+	ev_archive_set_archive_type (comics_document->archive, comics_document->archive_type);
 }
 
 static char **
@@ -81,7 +73,7 @@ comics_document_list (ComicsDocument *comics_document)
 	char **ret = NULL;
 	GPtrArray *array;
 
-	if (!ev_archive_open_filename (comics_document->a, comics_document->archive_path, NULL))
+	if (!ev_archive_open_filename (comics_document->archive, comics_document->archive_path, NULL))
 		goto out;
 
 	array = g_ptr_array_new ();
@@ -90,7 +82,7 @@ comics_document_list (ComicsDocument *comics_document)
 		const char *name;
 		GError *error = NULL;
 
-		if (!ev_archive_read_next_header (comics_document->a, &error)) {
+		if (!ev_archive_read_next_header (comics_document->archive, &error)) {
 			if (error != NULL) {
 				g_warning ("Fatal error handling archive: %s", error->message);
 				g_error_free (error);
@@ -98,7 +90,7 @@ comics_document_list (ComicsDocument *comics_document)
 			break;
 		}
 
-		name = ev_archive_get_entry_pathname (comics_document->a);
+		name = ev_archive_get_entry_pathname (comics_document->archive);
 
 		g_debug ("Adding '%s' to the list of files in the comics", name);
 		g_ptr_array_add (array, g_strdup (name));
@@ -125,19 +117,19 @@ comics_check_decompress_support	(gchar          *mime_type,
 {
 	if (g_content_type_is_a (mime_type, "application/x-cbr") ||
 	    g_content_type_is_a (mime_type, "application/x-rar")) {
-		if (ev_archive_set_archive_type (comics_document->a, EV_ARCHIVE_TYPE_RAR))
+		if (ev_archive_set_archive_type (comics_document->archive, EV_ARCHIVE_TYPE_RAR))
 			return TRUE;
 	} else if (g_content_type_is_a (mime_type, "application/x-cbz") ||
 		   g_content_type_is_a (mime_type, "application/zip")) {
-		if (ev_archive_set_archive_type (comics_document->a, EV_ARCHIVE_TYPE_ZIP))
+		if (ev_archive_set_archive_type (comics_document->archive, EV_ARCHIVE_TYPE_ZIP))
 			return TRUE;
 	} else if (g_content_type_is_a (mime_type, "application/x-cb7") ||
 		   g_content_type_is_a (mime_type, "application/x-7z-compressed")) {
-		if (ev_archive_set_archive_type (comics_document->a, EV_ARCHIVE_TYPE_7Z))
+		if (ev_archive_set_archive_type (comics_document->archive, EV_ARCHIVE_TYPE_7Z))
 			return TRUE;
 	} else if (g_content_type_is_a (mime_type, "application/x-cbt") ||
 		   g_content_type_is_a (mime_type, "application/x-tar")) {
-		if (ev_archive_set_archive_type (comics_document->a, EV_ARCHIVE_TYPE_TAR))
+		if (ev_archive_set_archive_type (comics_document->archive, EV_ARCHIVE_TYPE_TAR))
 			return TRUE;
 	} else {
 		g_set_error (error,
@@ -208,9 +200,9 @@ comics_document_load (EvDocument *document,
 		g_free (mime_type);
 		return FALSE;
 	}
-	comics_document->a_type = ev_archive_get_archive_type (comics_document->a);
-
 	g_free (mime_type);
+
+	comics_document->archive_type = ev_archive_get_archive_type (comics_document->archive);
 
 	/* Get list of files in archive */
 	cb_files = comics_document_list (comics_document);
@@ -282,7 +274,18 @@ typedef struct {
 	gboolean got_info;
 	int height;
 	int width;
-} pixbuf_info;
+} PixbufInfo;
+
+static void
+get_page_size_prepared_cb (GdkPixbufLoader *loader,
+			   int              width,
+			   int              height,
+			   PixbufInfo      *info)
+{
+	info->got_info = TRUE;
+	info->height = height;
+	info->width = width;
+}
 
 static void
 comics_document_get_page_size (EvDocument *document,
@@ -293,10 +296,10 @@ comics_document_get_page_size (EvDocument *document,
 	GdkPixbufLoader *loader;
 	ComicsDocument *comics_document = COMICS_DOCUMENT (document);
 	const char *page_path;
-	pixbuf_info info;
+	PixbufInfo info;
 	GError *error = NULL;
 
-	if (!ev_archive_open_filename (comics_document->a, comics_document->archive_path, &error)) {
+	if (!ev_archive_open_filename (comics_document->archive, comics_document->archive_path, &error)) {
 		g_warning ("Fatal error opening archive: %s", error->message);
 		g_error_free (error);
 		goto out;
@@ -314,7 +317,7 @@ comics_document_get_page_size (EvDocument *document,
 		const char *name;
 		GError *error = NULL;
 
-		if (!ev_archive_read_next_header (comics_document->a, &error)) {
+		if (!ev_archive_read_next_header (comics_document->archive, &error)) {
 			if (error != NULL) {
 				g_warning ("Fatal error handling archive: %s", error->message);
 				g_error_free (error);
@@ -322,15 +325,15 @@ comics_document_get_page_size (EvDocument *document,
 			break;
 		}
 
-		name = ev_archive_get_entry_pathname (comics_document->a);
+		name = ev_archive_get_entry_pathname (comics_document->archive);
 		if (g_strcmp0 (name, page_path) == 0) {
 			char buf[BLOCK_SIZE];
 			gssize read;
 
-			read = ev_archive_read_data (comics_document->a, buf, sizeof(buf), &error);
+			read = ev_archive_read_data (comics_document->archive, buf, sizeof(buf), &error);
 			while (read > 0 && !info.got_info) {
 				gdk_pixbuf_loader_write (loader, (guchar *) buf, read, NULL);
-				read = ev_archive_read_data (comics_document->a, buf, BLOCK_SIZE, &error);
+				read = ev_archive_read_data (comics_document->archive, buf, BLOCK_SIZE, &error);
 			}
 			if (read < 0) {
 				g_warning ("Fatal error reading '%s' in archive: %s", name, error->message);
@@ -355,15 +358,15 @@ out:
 }
 
 static void
-get_page_size_prepared_cb (GdkPixbufLoader *loader,
-			   int              width,
-			   int              height,
-			   gpointer         data)
+render_pixbuf_size_prepared_cb (GdkPixbufLoader *loader,
+				gint             width,
+				gint             height,
+				EvRenderContext *rc)
 {
-	pixbuf_info *info = data;
-	info->got_info = TRUE;
-	info->height = height;
-	info->width = width;
+	int scaled_width, scaled_height;
+
+	ev_render_context_compute_scaled_size (rc, width, height, &scaled_width, &scaled_height);
+	gdk_pixbuf_loader_set_size (loader, scaled_width, scaled_height);
 }
 
 static GdkPixbuf *
@@ -372,12 +375,12 @@ comics_document_render_pixbuf (EvDocument      *document,
 {
 	GdkPixbufLoader *loader;
 	GdkPixbuf *tmp_pixbuf;
-	GdkPixbuf *rotated_pixbuf;
+	GdkPixbuf *rotated_pixbuf = NULL;
 	ComicsDocument *comics_document = COMICS_DOCUMENT (document);
 	const char *page_path;
 	GError *error = NULL;
 
-	if (!ev_archive_open_filename (comics_document->a, comics_document->archive_path, &error)) {
+	if (!ev_archive_open_filename (comics_document->archive, comics_document->archive_path, &error)) {
 		g_warning ("Fatal error opening archive: %s", error->message);
 		g_error_free (error);
 		goto out;
@@ -393,7 +396,7 @@ comics_document_render_pixbuf (EvDocument      *document,
 	while (1) {
 		const char *name;
 
-		if (!ev_archive_read_next_header (comics_document->a, &error)) {
+		if (!ev_archive_read_next_header (comics_document->archive, &error)) {
 			if (error != NULL) {
 				g_warning ("Fatal error handling archive: %s", error->message);
 				g_error_free (error);
@@ -401,14 +404,14 @@ comics_document_render_pixbuf (EvDocument      *document,
 			break;
 		}
 
-		name = ev_archive_get_entry_pathname (comics_document->a);
+		name = ev_archive_get_entry_pathname (comics_document->archive);
 		if (g_strcmp0 (name, page_path) == 0) {
-			size_t size = ev_archive_get_entry_size (comics_document->a);
+			size_t size = ev_archive_get_entry_size (comics_document->archive);
 			char *buf;
 			ssize_t read;
 
 			buf = g_malloc (size);
-			read = ev_archive_read_data (comics_document->a, buf, size, &error);
+			read = ev_archive_read_data (comics_document->archive, buf, size, &error);
 			if (read <= 0) {
 				if (read < 0) {
 					g_warning ("Fatal error reading '%s' in archive: %s", name, error->message);
@@ -426,7 +429,6 @@ comics_document_render_pixbuf (EvDocument      *document,
 	}
 
 	tmp_pixbuf = gdk_pixbuf_loader_get_pixbuf (loader);
-	rotated_pixbuf = NULL;
 	if (tmp_pixbuf) {
 		if ((rc->rotation % 360) == 0)
 			rotated_pixbuf = g_object_ref (tmp_pixbuf);
@@ -456,18 +458,6 @@ comics_document_render (EvDocument      *document,
 }
 
 static void
-render_pixbuf_size_prepared_cb (GdkPixbufLoader *loader,
-				gint             width,
-				gint             height,
-				EvRenderContext *rc)
-{
-	int scaled_width, scaled_height;
-
-	ev_render_context_compute_scaled_size (rc, width, height, &scaled_width, &scaled_height);
-	gdk_pixbuf_loader_set_size (loader, scaled_width, scaled_height);
-}
-
-static void
 comics_document_finalize (GObject *object)
 {
 	ComicsDocument *comics_document = COMICS_DOCUMENT (object);
@@ -477,7 +467,7 @@ comics_document_finalize (GObject *object)
                 g_ptr_array_free (comics_document->page_names, TRUE);
 	}
 
-	g_clear_object (&comics_document->a);
+	g_clear_object (&comics_document->archive);
 	g_free (comics_document->archive_path);
 	g_free (comics_document->archive_uri);
 
@@ -502,8 +492,7 @@ comics_document_class_init (ComicsDocumentClass *klass)
 static void
 comics_document_init (ComicsDocument *comics_document)
 {
-	comics_document->a = ev_archive_new ();
-	comics_document->page_names = NULL;
+	comics_document->archive = ev_archive_new ();
 }
 
 /* Returns a list of file extensions supported by gdk-pixbuf */
