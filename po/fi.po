@@ -14,10 +14,10 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: evince\n"
-"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
+"Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evince&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2016-12-25 14:03+0000\n"
-"PO-Revision-Date: 2017-02-15 20:40+0200\n"
+"POT-Creation-Date: 2017-03-25 11:39+0000\n"
+"PO-Revision-Date: 2017-03-25 14:14+0200\n"
 "Last-Translator: Jiri Grönroos <jiri.gronroos+l10n@iki.fi>\n"
 "Language-Team: suomi <lokalisointi-lista@googlegroups.com>\n"
 "Language: fi\n"
@@ -29,54 +29,32 @@ msgstr ""
 "X-Generator: Gtranslator 2.91.7\n"
 "X-POT-Import-Date: 2012-03-05 15:05:53+0000\n"
 
-#: ../backend/comics/comics-document.c:210
-#, c-format
-msgid ""
-"Error launching the command “%s” in order to decompress the comic book: %s"
-msgstr "Virhe käynnistettäessä komentoa ”%s” sarjakuvakirjan avaamiseksi: %s"
-
-#: ../backend/comics/comics-document.c:224
-#, c-format
-msgid "The command “%s” failed at decompressing the comic book."
-msgstr "Komento ”%s” epäonnistui avaamaan sarjakuvakirjan."
-
-#: ../backend/comics/comics-document.c:233
-#, c-format
-msgid "The command “%s” did not end normally."
-msgstr "Komento ”%s” ei päättynyt normaalisti."
-
-#: ../backend/comics/comics-document.c:453
+#: ../backend/comics/comics-document.c:129
 #, c-format
 msgid "Not a comic book MIME type: %s"
 msgstr "Ei ole sarjakuvakirjan MIME-tyyppi: %s"
 
-#: ../backend/comics/comics-document.c:460
-msgid "Can’t find an appropriate command to decompress this type of comic book"
+#: ../backend/comics/comics-document.c:136
+msgid ""
+"libarchive lacks support for this comic book’s compression, please contact "
+"your distributor"
 msgstr ""
-"Ei löytynyt sopivaa komentoa, jolla purkaa tämän tyyppiset sarjakuvakirjat"
+"libarchive ei sisällä tukea tämän sarjakuvan pakkaukselle, ole yhteydessä "
+"jakeluusi"
 
-#: ../backend/comics/comics-document.c:526
-msgid "File corrupted"
-msgstr "Tiedosto on viallinen"
+#: ../backend/comics/comics-document.c:180
+msgid "Can not get local path for archive"
+msgstr "Ei saatu arkiston paikallista polkua"
 
-#: ../backend/comics/comics-document.c:539
-msgid "No files in archive"
-msgstr "Arkistossa ei ole tiedostoja"
+#: ../backend/comics/comics-document.c:202
+#| msgid "No files in archive"
+msgid "File corrupted or no files in archive"
+msgstr "Tiedosto on korruptoitunut tai arkistossa ei ole tiedostoja"
 
-#: ../backend/comics/comics-document.c:578
+#: ../backend/comics/comics-document.c:230
 #, c-format
 msgid "No images found in archive %s"
 msgstr "Arkistosta ”%s” ei löytynyt kuvia"
-
-#: ../backend/comics/comics-document.c:828
-#, c-format
-msgid "There was an error deleting “%s”."
-msgstr "Tapahtui virhe poistaessa ”%s”."
-
-#: ../backend/comics/comics-document.c:921
-#, c-format
-msgid "Error %s"
-msgstr "Virhe %s"
 
 #: ../backend/comics/comicsdocument.evince-backend.in.in.h:1
 #: ../backend/comics/evince-comicsdocument.metainfo.xml.in.in.h:1
@@ -473,7 +451,7 @@ msgstr "/ %d"
 
 #: ../libmisc/ev-page-action-widget.c:185 ../shell/ev-history.c:426
 #: ../shell/ev-sidebar-bookmarks.c:295 ../shell/ev-window.c:907
-#: ../shell/ev-window.c:4677
+#: ../shell/ev-window.c:4679
 #, c-format
 msgid "Page %s"
 msgstr "Sivu %s"
@@ -1376,15 +1354,15 @@ msgstr "Sulje tulostuksen _jälkeen"
 msgid "Running in presentation mode"
 msgstr "Suoritus esitystilassa"
 
-#: ../shell/ev-window.c:5361
+#: ../shell/ev-window.c:5363
 msgid "Enable caret navigation?"
 msgstr "Käytetäänkö nuolinäppäimillä liikkumista?"
 
-#: ../shell/ev-window.c:5363
+#: ../shell/ev-window.c:5365
 msgid "_Enable"
 msgstr "_Käytä"
 
-#: ../shell/ev-window.c:5366
+#: ../shell/ev-window.c:5368
 msgid ""
 "Pressing F7 turns the caret navigation on or off. This feature places a "
 "moveable cursor in text pages, allowing you to move around and select text "
@@ -1395,39 +1373,39 @@ msgstr ""
 "sivulla on mahdollista liikkua ja valita tekstiä näppäimistöllä. Haluatko "
 "käyttää nuolilla liikkumista?"
 
-#: ../shell/ev-window.c:5371
+#: ../shell/ev-window.c:5373
 msgid "Don’t show this message again"
 msgstr "Älä näytä tätä viestiä uudestaan"
 
-#: ../shell/ev-window.c:5886 ../shell/ev-window.c:5902
+#: ../shell/ev-window.c:5888 ../shell/ev-window.c:5904
 msgid "Unable to launch external application."
 msgstr "Ulkoista ohjelmaa ei voitu käynnistää."
 
-#: ../shell/ev-window.c:5959
+#: ../shell/ev-window.c:5961
 msgid "Unable to open external link"
 msgstr "Ulkoista linkkiä ei voi avata"
 
-#: ../shell/ev-window.c:6162
+#: ../shell/ev-window.c:6164
 msgid "Couldn’t find appropriate format to save image"
 msgstr "Sopivaa tallennusmuotoa kuvalle ei löytynyt"
 
-#: ../shell/ev-window.c:6194
+#: ../shell/ev-window.c:6196
 msgid "The image could not be saved."
 msgstr "Kuvaa ei voi tallentaa."
 
-#: ../shell/ev-window.c:6229
+#: ../shell/ev-window.c:6231
 msgid "Save Image"
 msgstr "Tallenna kuva"
 
-#: ../shell/ev-window.c:6388
+#: ../shell/ev-window.c:6390
 msgid "Unable to open attachment"
 msgstr "Liitettä ei voi avata"
 
-#: ../shell/ev-window.c:6444
+#: ../shell/ev-window.c:6446
 msgid "The attachment could not be saved."
 msgstr "Liitettä ei voi tallentaa."
 
-#: ../shell/ev-window.c:6492
+#: ../shell/ev-window.c:6494
 msgid "Save Attachment"
 msgstr "Tallenna liite"
 
@@ -1879,6 +1857,31 @@ msgid ""
 msgstr ""
 "Sovellus tukee seuraavia asiakirjamuotoja: PDF, PS, EPS, XPS, DjVu, TIFF, "
 "DVI (SyncTeX:illa) ja sarjakuva-arkistoja (CBR, CBT, CBZ, CB7)."
+
+#~ msgid ""
+#~ "Error launching the command “%s” in order to decompress the comic book: %s"
+#~ msgstr ""
+#~ "Virhe käynnistettäessä komentoa ”%s” sarjakuvakirjan avaamiseksi: %s"
+
+#~ msgid "The command “%s” failed at decompressing the comic book."
+#~ msgstr "Komento ”%s” epäonnistui avaamaan sarjakuvakirjan."
+
+#~ msgid "The command “%s” did not end normally."
+#~ msgstr "Komento ”%s” ei päättynyt normaalisti."
+
+#~ msgid ""
+#~ "Can’t find an appropriate command to decompress this type of comic book"
+#~ msgstr ""
+#~ "Ei löytynyt sopivaa komentoa, jolla purkaa tämän tyyppiset sarjakuvakirjat"
+
+#~ msgid "File corrupted"
+#~ msgstr "Tiedosto on viallinen"
+
+#~ msgid "There was an error deleting “%s”."
+#~ msgstr "Tapahtui virhe poistaessa ”%s”."
+
+#~ msgid "Error %s"
+#~ msgstr "Virhe %s"
 
 #~ msgid "Style:"
 #~ msgstr "Tyyli:"
