@@ -13,17 +13,17 @@
 # Jan Drábek <repli2dev@gmail.com>, 2009.
 # Lucas Lommer <llommer@svn.gnome.org>, 2010, 2011, 2012, 2013.
 # Adam Matoušek <adydas95@gmail.com>, 2012
-# Marek Černocký <marek@manet.cz>, 2009, 2010, 2012, 2013, 2014, 2015, 2016.
+# Marek Černocký <marek@manet.cz>, 2009, 2010, 2012, 2013, 2014, 2015, 2016, 2017.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: evince master\n"
-"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
+"Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evince&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2016-11-06 18:59+0000\n"
-"PO-Revision-Date: 2016-10-28 10:44+0200\n"
+"POT-Creation-Date: 2017-03-25 11:39+0000\n"
+"PO-Revision-Date: 2017-03-25 14:55+0100\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
-"Language-Team: čeština <gnome-cs-list@gnome.org>>\n"
+"Language-Team: čeština <gnome-cs-list@gnome.org>\n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,53 +32,31 @@ msgstr ""
 "X-Generator: Gtranslator 2.91.7\n"
 "X-Poedit-SourceCharset: utf-8\n"
 
-#: ../backend/comics/comics-document.c:210
-#, c-format
-msgid ""
-"Error launching the command “%s” in order to decompress the comic book: %s"
-msgstr "Při rozbalování (pomocí %s) knihy komiksů %s nastala chyba"
-
-#: ../backend/comics/comics-document.c:224
-#, c-format
-msgid "The command “%s” failed at decompressing the comic book."
-msgstr "Příkaz „%s“ pro rozbalení knihy komiksů selhal."
-
-#: ../backend/comics/comics-document.c:233
-#, c-format
-msgid "The command “%s” did not end normally."
-msgstr "Příkaz „%s“ neskončil normálně."
-
-#: ../backend/comics/comics-document.c:453
+#: ../backend/comics/comics-document.c:129
 #, c-format
 msgid "Not a comic book MIME type: %s"
 msgstr "Nejedná se o typ MIME pro komiks: %s"
 
-#: ../backend/comics/comics-document.c:460
-msgid "Can’t find an appropriate command to decompress this type of comic book"
-msgstr "Nelze najít příslušný příkaz pro rozbalení tohoto typu komiksu."
+#: ../backend/comics/comics-document.c:136
+msgid ""
+"libarchive lacks support for this comic book’s compression, please contact "
+"your distributor"
+msgstr ""
+"libarchive postrádá podporu pro tento typ komprimace komiksových knih, "
+"kontaktujte prosím svého distributora"
 
-#: ../backend/comics/comics-document.c:526
-msgid "File corrupted"
-msgstr "Soubor je poškozen."
+#: ../backend/comics/comics-document.c:180
+msgid "Can not get local path for archive"
+msgstr "Nelze získat místní cestu k archivu"
 
-#: ../backend/comics/comics-document.c:539
-msgid "No files in archive"
-msgstr "V archivu nebyly nalezeny žádné soubory."
+#: ../backend/comics/comics-document.c:202
+msgid "File corrupted or no files in archive"
+msgstr "Soubor je poškozený, nebo v archivu nejsou žádné soubory."
 
-#: ../backend/comics/comics-document.c:578
+#: ../backend/comics/comics-document.c:230
 #, c-format
 msgid "No images found in archive %s"
 msgstr "V archivu %s nebyly nalezeny žádné obrázky"
-
-#: ../backend/comics/comics-document.c:828
-#, c-format
-msgid "There was an error deleting “%s”."
-msgstr "Při mazání „%s“ se vyskytla chyba."
-
-#: ../backend/comics/comics-document.c:921
-#, c-format
-msgid "Error %s"
-msgstr "Chyba %s"
 
 #: ../backend/comics/comicsdocument.evince-backend.in.in.h:1
 #: ../backend/comics/evince-comicsdocument.metainfo.xml.in.in.h:1
@@ -476,7 +454,7 @@ msgstr "z %d"
 
 #: ../libmisc/ev-page-action-widget.c:185 ../shell/ev-history.c:426
 #: ../shell/ev-sidebar-bookmarks.c:295 ../shell/ev-window.c:907
-#: ../shell/ev-window.c:4677
+#: ../shell/ev-window.c:4679
 #, c-format
 msgid "Page %s"
 msgstr "Stránka %s"
@@ -515,7 +493,7 @@ msgstr "Selhalo vykreslení stránky %d"
 msgid "Failed to create thumbnail for page %d"
 msgstr "Selhalo vytvoření náhledu pro stránku %d"
 
-#: ../libview/ev-jobs.c:2031
+#: ../libview/ev-jobs.c:2033
 #, c-format
 msgid "Failed to print page %d: %s"
 msgstr "Selhal tisk stránky %d: %s"
@@ -1377,15 +1355,15 @@ msgstr "Zavřít _po vytištění"
 msgid "Running in presentation mode"
 msgstr "Běží v režimu prezentace"
 
-#: ../shell/ev-window.c:5361
+#: ../shell/ev-window.c:5363
 msgid "Enable caret navigation?"
 msgstr "Zapnout kurzorovou navigaci?"
 
-#: ../shell/ev-window.c:5363
+#: ../shell/ev-window.c:5365
 msgid "_Enable"
 msgstr "Z_apnout"
 
-#: ../shell/ev-window.c:5366
+#: ../shell/ev-window.c:5368
 msgid ""
 "Pressing F7 turns the caret navigation on or off. This feature places a "
 "moveable cursor in text pages, allowing you to move around and select text "
@@ -1395,39 +1373,39 @@ msgstr ""
 "stránek textový kurzor, kterým se mužete pomocí klávesnice po dokumentu "
 "pohybovat a vybírat text. Chcete kurzorovou navigaci zapnout?"
 
-#: ../shell/ev-window.c:5371
+#: ../shell/ev-window.c:5373
 msgid "Don’t show this message again"
 msgstr "Tuto zprávu znovu nezobrazovat"
 
-#: ../shell/ev-window.c:5886 ../shell/ev-window.c:5902
+#: ../shell/ev-window.c:5888 ../shell/ev-window.c:5904
 msgid "Unable to launch external application."
 msgstr "Nepodařilo se spustit externí aplikaci."
 
-#: ../shell/ev-window.c:5959
+#: ../shell/ev-window.c:5961
 msgid "Unable to open external link"
 msgstr "Nepodařilo se otevřít externí odkaz"
 
-#: ../shell/ev-window.c:6162
+#: ../shell/ev-window.c:6164
 msgid "Couldn’t find appropriate format to save image"
 msgstr "Nepodařilo se najít vhodný formát pro uložení obrázku"
 
-#: ../shell/ev-window.c:6194
+#: ../shell/ev-window.c:6196
 msgid "The image could not be saved."
 msgstr "Nepodařilo se uložit obrázek."
 
-#: ../shell/ev-window.c:6229
+#: ../shell/ev-window.c:6231
 msgid "Save Image"
 msgstr "Uložit obrázek"
 
-#: ../shell/ev-window.c:6388
+#: ../shell/ev-window.c:6390
 msgid "Unable to open attachment"
 msgstr "Nepodařilo se otevřít přílohu"
 
-#: ../shell/ev-window.c:6444
+#: ../shell/ev-window.c:6446
 msgid "The attachment could not be saved."
 msgstr "Nepodařilo se uložit přílohu."
 
-#: ../shell/ev-window.c:6492
+#: ../shell/ev-window.c:6494
 msgid "Save Attachment"
 msgstr "Uložit přílohu"
 
@@ -1879,4 +1857,3 @@ msgid ""
 msgstr ""
 "Podporuje následující formáty dokumentů: PDF, PS, EPS, XPS, DjVu, TIFF, DVI "
 "(pomocí SyncTeX) a archivy s komiksy (CBR, CBT, CBZ, CB7)."
-
