@@ -541,23 +541,26 @@ ev_page_accessible_get_range_for_boundary (AtkText          *text,
 	if (!log_attrs)
 		return;
 
+	if (offset < 0 || offset >= n_attrs)
+		return;
+
 	switch (boundary_type) {
 	case ATK_TEXT_BOUNDARY_CHAR:
 		start = offset;
 		end = offset + 1;
 		break;
 	case ATK_TEXT_BOUNDARY_WORD_START:
-		for (start = offset; start >= 0 && !log_attrs[start].is_word_start; start--);
-		for (end = offset + 1; end <= n_attrs && !log_attrs[end].is_word_start; end++);
+		for (start = offset; start > 0 && !log_attrs[start].is_word_start; start--);
+		for (end = offset + 1; end < n_attrs && !log_attrs[end].is_word_start; end++);
 		break;
 	case ATK_TEXT_BOUNDARY_SENTENCE_START:
-		for (start = offset; start >= 0; start--) {
+		for (start = offset; start > 0; start--) {
 			if (log_attrs[start].is_mandatory_break && treat_as_soft_return (view, self->priv->page, log_attrs, start - 1))
 				continue;
 			if (log_attrs[start].is_sentence_start)
 				break;
 		}
-		for (end = offset + 1; end <= n_attrs; end++) {
+		for (end = offset + 1; end < n_attrs; end++) {
 			if (log_attrs[end].is_mandatory_break && treat_as_soft_return (view, self->priv->page, log_attrs, end - 1))
 				continue;
 			if (log_attrs[end].is_sentence_start)
@@ -565,8 +568,8 @@ ev_page_accessible_get_range_for_boundary (AtkText          *text,
 		}
 		break;
 	case ATK_TEXT_BOUNDARY_LINE_START:
-		for (start = offset; start >= 0 && !log_attrs[start].is_mandatory_break; start--);
-		for (end = offset + 1; end <= n_attrs && !log_attrs[end].is_mandatory_break; end++);
+		for (start = offset; start > 0 && !log_attrs[start].is_mandatory_break; start--);
+		for (end = offset + 1; end < n_attrs && !log_attrs[end].is_mandatory_break; end++);
 		break;
 	default:
 		/* The "END" boundary types are deprecated */
