@@ -9,7 +9,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evince&keywords=I18N+L10N&component=general\n"
 "POT-Creation-Date: 2017-03-25 16:03+0000\n"
-"PO-Revision-Date: 2017-04-08 21:44+0200\n"
+"PO-Revision-Date: 2017-04-08 21:51+0200\n"
 "Last-Translator: gogo <trebelnik2@gmail.com>\n"
 "Language-Team: Croatian <hr@li.org>\n"
 "Language: hr\n"
@@ -43,9 +43,6 @@ msgid "Not a comic book MIME type: %s"
 msgstr "Nije MIME vrsta stripa: %s"
 
 #: ../backend/comics/comics-document.c:460
-#, fuzzy
-#| msgid ""
-#| "Can't find an appropriate command to decompress this type of comic book"
 msgid "Can’t find an appropriate command to decompress this type of comic book"
 msgstr ""
 "Odgovarajuća naredba za raspakiravanje ove vrste stripa nije pronađena."
@@ -412,22 +409,19 @@ msgid "Allow links to change the zoom level."
 msgstr "Dopusti poveznicama promjenu razine zumiranja."
 
 #: ../libdocument/ev-attachment.c:310 ../libdocument/ev-attachment.c:331
-#, fuzzy, c-format
-#| msgid "Couldn't save attachment “%s”: %s"
+#, c-format
 msgid "Couldn’t save attachment “%s”: %s"
-msgstr "Ne mogu spremiti privitak \"%s\": %s"
+msgstr "Nemoguće spremanje privitka \"%s\": %s"
 
 #: ../libdocument/ev-attachment.c:379
-#, fuzzy, c-format
-#| msgid "Couldn't open attachment “%s”: %s"
+#, c-format
 msgid "Couldn’t open attachment “%s”: %s"
-msgstr "Nemoguće otvoriti privitak \"%s\": %s"
+msgstr "Nemoguće otvaranje privitka \"%s\": %s"
 
 #: ../libdocument/ev-attachment.c:414
-#, fuzzy, c-format
-#| msgid "Couldn't open attachment “%s”"
+#, c-format
 msgid "Couldn’t open attachment “%s”"
-msgstr "Nemoguće otvoriti privitak \"%s\""
+msgstr "Nemoguće otvaranje privitka \"%s\""
 
 #: ../libdocument/ev-document-factory.c:101
 #, c-format
@@ -573,18 +567,6 @@ msgid "Fit to Printable Area"
 msgstr "Prilagodi veličinu prema području za ispis"
 
 #: ../libview/ev-print-operation.c:1970
-#, fuzzy
-#| msgid ""
-#| "Scale document pages to fit the selected printer page. Select from one of "
-#| "the following:\n"
-#| "\n"
-#| "• \"None\": No page scaling is performed.\n"
-#| "\n"
-#| "• \"Shrink to Printable Area\": Document pages larger than the printable "
-#| "area are reduced to fit the printable area of the printer page.\n"
-#| "\n"
-#| "• \"Fit to Printable Area\": Document pages are enlarged or reduced as "
-#| "required to fit the printable area of the printer page.\n"
 msgid ""
 "Scale document pages to fit the selected printer page. Select from one of "
 "the following:\n"
@@ -730,8 +712,7 @@ msgid "Failed to print document"
 msgstr "Neuspješno ispisivanje dokumenta"
 
 #: ../previewer/ev-previewer-window.c:223
-#, fuzzy, c-format
-#| msgid "The selected printer '%s' could not be found"
+#, c-format
 msgid "The selected printer “%s” could not be found"
 msgstr "Odabrani pisač '%s' nije pronađen"
 
@@ -1314,36 +1295,25 @@ msgid "Printing job “%s”"
 msgstr "Ispis zadatka “%s”"
 
 #: ../shell/ev-window.c:3534
-#, fuzzy
-#| msgid ""
-#| "Document contains form fields that have been filled out. If you don't "
-#| "save a copy, changes will be permanently lost."
 msgid "Document contains form fields that have been filled out. "
-msgstr ""
-"Dokument sadrži polja obrasca koja nisu ispunjena. Ako ne spremite kopiju, "
-"promjene će biti trajno izgubljene."
+msgstr "Dokument sadrži polja obrasca koja nisu ispunjena. "
 
 #: ../shell/ev-window.c:3537
-#, fuzzy
-#| msgid "Document contains no annotations"
 msgid "Document contains new or modified annotations. "
-msgstr "Dokument ne sadrži napomene"
+msgstr "Dokument sadrži nove ili promijenjene napomene. "
 
 #: ../shell/ev-window.c:3549
-#, fuzzy, c-format
-#| msgid "Failed to load document “%s”"
+#, c-format
 msgid "Reload document “%s”?"
-msgstr "Neuspješno učitavanje dokumenta \"%s\""
+msgstr "Ponovno učitaj dokument \"%s\"?"
 
 #: ../shell/ev-window.c:3551
 msgid "If you reload the document, changes will be permanently lost."
-msgstr ""
+msgstr "Ako ponovno učitate dokument, promjene će biti trajno izgubljene."
 
 #: ../shell/ev-window.c:3555
-#, fuzzy
-#| msgid "_Reload"
 msgid "Reload"
-msgstr "_Učitaj ponovno"
+msgstr "Učitaj ponovno"
 
 #: ../shell/ev-window.c:3562
 #, c-format
@@ -1351,14 +1321,8 @@ msgid "Save a copy of document “%s” before closing?"
 msgstr "Želite li spremiti kopiju dokumenta “%s” prije zatvaranja?"
 
 #: ../shell/ev-window.c:3564
-#, fuzzy
-#| msgid ""
-#| "Document contains new or modified annotations. If you don't save a copy, "
-#| "changes will be permanently lost."
 msgid "If you don’t save a copy, changes will be permanently lost."
-msgstr ""
-"Dokument sadrži nove ili izmijenjene napomene. Ako ne spremite kopiju, "
-"promjene će biti trajno izgubljene."
+msgstr "Ako ne spremite kopiju, promjene će biti trajno izgubljene."
 
 #: ../shell/ev-window.c:3566
 msgid "Close _without Saving"
@@ -1428,8 +1392,6 @@ msgstr ""
 "pokazivačem teksta?"
 
 #: ../shell/ev-window.c:5373
-#, fuzzy
-#| msgid "Don't show this message again"
 msgid "Don’t show this message again"
 msgstr "Ne prikazuj više ovu poruku"
 
@@ -1442,8 +1404,6 @@ msgid "Unable to open external link"
 msgstr "Nemoguće otvaranje vanjske poveznice"
 
 #: ../shell/ev-window.c:6164
-#, fuzzy
-#| msgid "Couldn't find appropriate format to save image"
 msgid "Couldn’t find appropriate format to save image"
 msgstr "Nemoguć pronalazak odgovarajućeg formata za spremanje slike"
 
