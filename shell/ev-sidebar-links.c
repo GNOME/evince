@@ -47,6 +47,8 @@ struct _EvSidebarLinksPrivate {
 	GtkTreeModel *model;
 	EvDocument *document;
 	EvDocumentModel *doc_model;
+
+	GTree *page_link_tree;
 };
 
 enum {
@@ -150,6 +152,11 @@ ev_sidebar_links_dispose (GObject *object)
 	if (sidebar->priv->model) {
 		g_object_unref (sidebar->priv->model);
 		sidebar->priv->model = NULL;
+	}
+
+	if (sidebar->priv->page_link_tree) {
+		g_tree_unref (sidebar->priv->page_link_tree);
+		sidebar->priv->page_link_tree = NULL;
 	}
 
 	if (sidebar->priv->document) {
@@ -470,40 +477,20 @@ ev_sidebar_links_new (void)
 	return ev_sidebar_links;
 }
 
-static gboolean
-update_page_callback_foreach (GtkTreeModel *model,
-			      GtkTreePath  *path,
-			      GtkTreeIter  *iter,
-			      gpointer      data)
+typedef struct EvSidebarLinkPageSearch {
+	gint page;
+	gint best_existing;
+} EvSidebarLinkPageSearch;
+
+static gint
+page_link_tree_search_best_page (gpointer page_ptr, EvSidebarLinkPageSearch* data)
 {
-	EvSidebarLinks *sidebar_links = (data);
-	EvLink *link;
+	gint page = GPOINTER_TO_INT (page_ptr);
 
-	gtk_tree_model_get (model, iter,
-			    EV_DOCUMENT_LINKS_COLUMN_LINK, &link,
-			    -1);
+	if (page <= data->page && page > data->best_existing)
+		data->best_existing = page;
 
-	if (link) {
-		int current_page;
-		int dest_page;
-		EvDocumentLinks *document_links = EV_DOCUMENT_LINKS (sidebar_links->priv->document);
-
-		dest_page = ev_document_links_get_link_page (document_links, link);
-		g_object_unref (link);
-		
-		current_page = ev_document_model_get_page (sidebar_links->priv->doc_model);
-			 
-		if (dest_page == current_page) {
-			gtk_tree_view_expand_to_path (GTK_TREE_VIEW (sidebar_links->priv->tree_view),
-						      path);
-			gtk_tree_view_set_cursor (GTK_TREE_VIEW (sidebar_links->priv->tree_view),
-						  path, NULL, FALSE);
-			
-			return TRUE;
-		}
-	}
-
-	return FALSE;
+	return data->page - page;
 }
 
 static void
@@ -511,45 +498,35 @@ ev_sidebar_links_set_current_page (EvSidebarLinks *sidebar_links,
 				   gint            current_page)
 {
 	GtkTreeSelection *selection;
-	GtkTreeModel *model;
-	GtkTreeIter iter;
+	GtkTreePath *path;
+	EvSidebarLinkPageSearch search_data;
 
 	/* Widget is not currently visible */
-	if (!gtk_widget_get_mapped (GTK_WIDGET (sidebar_links)))
+	if (!gtk_widget_is_visible (GTK_WIDGET (sidebar_links)))
 		return;
-	
+
+	search_data.page = current_page;
+	search_data.best_existing = G_MININT;
+
+	path = g_tree_search (sidebar_links->priv->page_link_tree, (GCompareFunc) page_link_tree_search_best_page, &search_data);
+	/* No direct hit, try a lookup on the best match. */
+	if (!path)
+		path = g_tree_lookup (sidebar_links->priv->page_link_tree, GINT_TO_POINTER (search_data.best_existing));
+
+	/* Still no hit, give up. */
+	if (!path)
+		return;
+
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (sidebar_links->priv->tree_view));
 
-	if (gtk_tree_selection_get_selected (selection, &model, &iter)) {
-		EvLink *link;
-
-		gtk_tree_model_get (model, &iter,
-				    EV_DOCUMENT_LINKS_COLUMN_LINK, &link,
-				    -1);
-		if (link) {
-			gint dest_page;
-			EvDocumentLinks *document_links = EV_DOCUMENT_LINKS (sidebar_links->priv->document);
-
-			dest_page = ev_document_links_get_link_page (document_links, link);
-			g_object_unref (link);
-			
-			if (dest_page == current_page)
-				return;
-		}
-	}		
-
-	/* We go through the tree linearly looking for the first page that
-	 * matches.  This is pretty inefficient.  We can do something neat with
-	 * a GtkTreeModelSort here to make it faster, if it turns out to be
-	 * slow.
-	 */
 	g_signal_handler_block (selection, sidebar_links->priv->selection_id);
 	g_signal_handler_block (sidebar_links->priv->tree_view, sidebar_links->priv->row_activated_id);
 
-	gtk_tree_model_foreach (model,
-				update_page_callback_foreach,
-				sidebar_links);
-	
+	gtk_tree_view_expand_to_path (GTK_TREE_VIEW (sidebar_links->priv->tree_view),
+				      path);
+	gtk_tree_view_set_cursor (GTK_TREE_VIEW (sidebar_links->priv->tree_view),
+				  path, NULL, FALSE);
+
 	g_signal_handler_unblock (selection, sidebar_links->priv->selection_id);
 	g_signal_handler_unblock (sidebar_links->priv->tree_view, sidebar_links->priv->row_activated_id);
 }
@@ -599,6 +576,42 @@ expand_open_links (GtkTreeView *tree_view, GtkTreeModel *model, GtkTreeIter *par
 	}
 }
 
+
+static gint
+page_link_tree_sort (gconstpointer a, gconstpointer b, void *data)
+{
+	return GPOINTER_TO_INT (a) - GPOINTER_TO_INT (b);
+}
+
+static gboolean
+update_page_link_tree_foreach (GtkTreeModel *model,
+			       GtkTreePath  *path,
+			       GtkTreeIter  *iter,
+			       gpointer      data)
+{
+	EvSidebarLinks *sidebar_links = data;
+	EvSidebarLinksPrivate *priv = sidebar_links->priv;
+	EvDocumentLinks *document_links = EV_DOCUMENT_LINKS (priv->document);
+	EvLink *link;
+	int page;
+
+	gtk_tree_model_get (model, iter,
+			    EV_DOCUMENT_LINKS_COLUMN_LINK, &link,
+			    -1);
+
+	if (!link)
+		return FALSE;
+
+	page = ev_document_links_get_link_page (document_links, link);
+	g_object_unref (link);
+
+	/* Only save the first link we find per page. */
+	if (!g_tree_lookup (priv->page_link_tree, GINT_TO_POINTER (page)))
+		g_tree_insert (priv->page_link_tree, GINT_TO_POINTER (page), gtk_tree_path_copy (path));
+
+	return FALSE;
+}
+
 static void
 ev_sidebar_links_set_links_model (EvSidebarLinks *sidebar_links,
 				  GtkTreeModel   *model)
@@ -611,6 +624,15 @@ ev_sidebar_links_set_links_model (EvSidebarLinks *sidebar_links,
 	if (priv->model)
 		g_object_unref (priv->model);
 	priv->model = g_object_ref (model);
+
+	/* Rebuild the binary search tree for finding links on pages. */
+	if (priv->page_link_tree)
+		g_tree_unref (priv->page_link_tree);
+	priv->page_link_tree = g_tree_new_full (page_link_tree_sort, NULL, NULL, (GDestroyNotify) gtk_tree_path_free);
+
+	gtk_tree_model_foreach (model,
+				update_page_link_tree_foreach,
+				sidebar_links);
 
 	g_object_notify (G_OBJECT (sidebar_links), "model");
 }
