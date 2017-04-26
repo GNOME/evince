@@ -10,10 +10,10 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: evince master\n"
-"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
+"Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evince&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2017-02-13 06:44+0000\n"
-"PO-Revision-Date: 2017-02-17 16:50+0700\n"
+"POT-Creation-Date: 2017-03-25 11:39+0000\n"
+"PO-Revision-Date: 2017-04-23 14:12+0700\n"
 "Last-Translator: Kukuh Syafaat <syafaatkukuh@gmail.com>\n"
 "Language-Team: GNOME Indonesian Translation Team <gnome@i15n.org>\n"
 "Language: id\n"
@@ -23,56 +23,31 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Poedit 1.8.11\n"
 
-#: ../backend/comics/comics-document.c:210
-#, c-format
-msgid ""
-"Error launching the command “%s” in order to decompress the comic book: %s"
-msgstr ""
-"Galat ketika menjalankan perintah “%s” untuk mengekstrak buku komik: %s"
-
-#: ../backend/comics/comics-document.c:224
-#, c-format
-msgid "The command “%s” failed at decompressing the comic book."
-msgstr "Perintah “%s” gagal saat mengekstrak buku komik."
-
-#: ../backend/comics/comics-document.c:233
-#, c-format
-msgid "The command “%s” did not end normally."
-msgstr "Perintah “%s” tidak berakhir secara normal."
-
-#: ../backend/comics/comics-document.c:453
+#: ../backend/comics/comics-document.c:129
 #, c-format
 msgid "Not a comic book MIME type: %s"
 msgstr "Bukan jenis MIME buku komik: %s"
 
-#: ../backend/comics/comics-document.c:460
-msgid "Can’t find an appropriate command to decompress this type of comic book"
+#: ../backend/comics/comics-document.c:136
+msgid ""
+"libarchive lacks support for this comic book’s compression, please contact "
+"your distributor"
 msgstr ""
-"Tidak dapat menemukan perintah yang sesuai untuk dekompresi jenis buku komik "
-"ini"
+"libarchive tidak mendukung kompresi buku komik ini, silakan hubungi "
+"distributor Anda"
 
-#: ../backend/comics/comics-document.c:526
-msgid "File corrupted"
-msgstr "Berkas telah rusak"
+#: ../backend/comics/comics-document.c:180
+msgid "Can not get local path for archive"
+msgstr "Tidak dapat mendapatkan path lokal untuk arsip"
 
-#: ../backend/comics/comics-document.c:539
-msgid "No files in archive"
-msgstr "Tidak ada berkas dalam arsip"
+#: ../backend/comics/comics-document.c:202
+msgid "File corrupted or no files in archive"
+msgstr "Berkas rusak atau tidak ada berkas di arsip"
 
-#: ../backend/comics/comics-document.c:578
+#: ../backend/comics/comics-document.c:230
 #, c-format
 msgid "No images found in archive %s"
 msgstr "Tidak menemukan gambar dalam arsip %s"
-
-#: ../backend/comics/comics-document.c:828
-#, c-format
-msgid "There was an error deleting “%s”."
-msgstr "Galat sewaktu menghapus “%s”."
-
-#: ../backend/comics/comics-document.c:921
-#, c-format
-msgid "Error %s"
-msgstr "Galat %s"
 
 #: ../backend/comics/comicsdocument.evince-backend.in.in.h:1
 #: ../backend/comics/evince-comicsdocument.metainfo.xml.in.in.h:1
@@ -1866,3 +1841,29 @@ msgid ""
 msgstr ""
 "Ini mendukung format dokumen berikut: PDF, PS, EPS, XPS, DjVu, TIFF, DVI "
 "(dengan SyncTeX), dan arsip-arsip Comic Books (CBR, CBT, CBZ, CB7)."
+
+#~ msgid ""
+#~ "Error launching the command “%s” in order to decompress the comic book: %s"
+#~ msgstr ""
+#~ "Galat ketika menjalankan perintah “%s” untuk mengekstrak buku komik: %s"
+
+#~ msgid "The command “%s” failed at decompressing the comic book."
+#~ msgstr "Perintah “%s” gagal saat mengekstrak buku komik."
+
+#~ msgid "The command “%s” did not end normally."
+#~ msgstr "Perintah “%s” tidak berakhir secara normal."
+
+#~ msgid ""
+#~ "Can’t find an appropriate command to decompress this type of comic book"
+#~ msgstr ""
+#~ "Tidak dapat menemukan perintah yang sesuai untuk dekompresi jenis buku "
+#~ "komik ini"
+
+#~ msgid "File corrupted"
+#~ msgstr "Berkas telah rusak"
+
+#~ msgid "There was an error deleting “%s”."
+#~ msgstr "Galat sewaktu menghapus “%s”."
+
+#~ msgid "Error %s"
+#~ msgstr "Galat %s"
