@@ -2915,44 +2915,51 @@ ev_window_cmd_open_containing_folder (GSimpleAction *action,
 				      GVariant      *parameter,
 				      gpointer       user_data)
 {
-	EvWindow *ev_window = user_data;
-	GtkWidget *ev_window_widget;
+	EvWindow *window = user_data;
+
+	guint32 timestamp;
+	GAppInfo *app = NULL;
+	GdkAppLaunchContext *context;
+	GdkDisplay *display;
+	GdkScreen *screen;
 	GFile *file;
-	GFile *parent;
+	GList list;
+	GError *error = NULL;
 
-	ev_window_widget = GTK_WIDGET (ev_window);
+	app =  g_app_info_get_default_for_type ("inode/directory", FALSE);
 
-	file = g_file_new_for_uri (ev_window->priv->uri);
-	parent = g_file_get_parent (file);
-
-	if (parent) {
-		char *parent_uri;
-
-		parent_uri = g_file_get_uri (parent);
-		if (parent_uri) {
-			GdkScreen *screen;
-			guint32 timestamp;
-			GError *error;
-
-			screen = gtk_widget_get_screen (ev_window_widget);
-			timestamp = gtk_get_current_event_time ();
-
-			error = NULL;
-			if (!gtk_show_uri (screen, parent_uri, timestamp, &error)) {
-				ev_window_error_message (ev_window, error, _("Could not open the containing folder"));
-				g_error_free (error);
-			}
-
-			g_free (parent_uri);
-		}
+	if (app == NULL) {
+		return;
 	}
 
-	if (file)
-		g_object_unref (file);
+	file = g_file_new_for_uri (window->priv->uri);
+	list.next = list.prev = NULL;
+	list.data = file;
 
-	if (parent)
-		g_object_unref (parent);
-	
+	display = gtk_widget_get_display (GTK_WIDGET (window));
+	screen = gtk_widget_get_screen (GTK_WIDGET (window));
+	timestamp = gtk_get_current_event_time ();
+
+	context = gdk_display_get_app_launch_context (display);
+	gdk_app_launch_context_set_screen (context, screen);
+	gdk_app_launch_context_set_timestamp (context, timestamp);
+
+	g_app_info_launch (app, &list,
+                           G_APP_LAUNCH_CONTEXT (context), &error);
+
+	if (error != NULL) {
+		gchar *uri;
+
+		uri = g_file_get_uri (file);
+		g_warning ("Could not show containing folder for \"%s\": %s",
+			   uri, error->message);
+
+		g_error_free (error);
+		g_free (uri);
+	}
+
+	g_object_unref (context);
+	g_object_unref (app);
 }
 
 static GKeyFile *
