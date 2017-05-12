@@ -1051,7 +1051,7 @@ ev_application_startup (GApplication *gapplication)
         const gchar *action_accels[] = {
           "win.open",                   "<Ctrl>O", NULL,
           "win.open-copy",              "<Ctrl>N", NULL,
-          "win.save-copy",              "<Ctrl>S", NULL,
+          "win.save-as",                "<Ctrl>S", NULL,
           "win.print",                  "<Ctrl>P", NULL,
           "win.show-properties",        "<alt>Return", NULL,
           "win.copy",                   "<Ctrl>C", "<Ctrl>Insert", NULL,
