@@ -151,6 +151,9 @@ gboolean         ev_document_fc_mutex_trylock     (void);
 EvDocumentInfo  *ev_document_get_info             (EvDocument      *document);
 gboolean         ev_document_get_backend_info     (EvDocument      *document,
 						   EvDocumentBackendInfo *info);
+gboolean         ev_document_get_modified         (EvDocument      *document);
+void             ev_document_set_modified         (EvDocument      *document,
+						   gboolean         modified);
 gboolean         ev_document_load                 (EvDocument      *document,
 						   const char      *uri,
 						   GError         **error);

@@ -30,6 +30,11 @@
 
 #define EV_DOCUMENT_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), EV_TYPE_DOCUMENT, EvDocumentPrivate))
 
+enum {
+	PROP_0,
+	PROP_MODIFIED
+};
+
 typedef struct _EvPageSize
 {
 	gdouble width;
@@ -43,6 +48,7 @@ struct _EvDocumentPrivate
 
 	gboolean        cache_loaded;
 	gint            n_pages;
+	gboolean        modified;
 
 	gboolean        uniform;
 	gdouble         uniform_width;
@@ -132,6 +138,41 @@ ev_document_finalize (GObject *object)
 }
 
 static void
+ev_document_set_property (GObject      *object,
+			  guint         prop_id,
+			  const GValue *value,
+			  GParamSpec   *pspec)
+{
+	switch (prop_id) {
+	case PROP_MODIFIED:
+		ev_document_set_modified (EV_DOCUMENT (object),
+					  g_value_get_boolean (value));
+		break;
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+		break;
+	}
+}
+
+static void
+ev_document_get_property (GObject     *object,
+			  guint        prop_id,
+			  GValue      *value,
+			  GParamSpec  *pspec)
+{
+	EvDocument *document = EV_DOCUMENT (object);
+
+	switch (prop_id) {
+	case PROP_MODIFIED:
+		g_value_set_boolean (value, document->priv->modified);
+		break;
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+		break;
+	}
+}
+
+static void
 ev_document_init (EvDocument *document)
 {
 	document->priv = EV_DOCUMENT_GET_PRIVATE (document);
@@ -151,7 +192,58 @@ ev_document_class_init (EvDocumentClass *klass)
 	klass->get_info = ev_document_impl_get_info;
 	klass->get_backend_info = NULL;
 
+	g_object_class->get_property = ev_document_get_property;
+	g_object_class->set_property = ev_document_set_property;
 	g_object_class->finalize = ev_document_finalize;
+
+	g_object_class_install_property (g_object_class,
+					 PROP_MODIFIED,
+					 g_param_spec_boolean ("modified",
+							       "Is modified",
+							       "Whether the document has been modified",
+							       FALSE,
+							       G_PARAM_READWRITE |
+							       G_PARAM_STATIC_STRINGS));
+}
+
+/**
+ * ev_document_get_modified:
+ * @document: an #EvDocument
+ *
+ * Returns: %TRUE iff the document has been modified.
+ *
+ * You can monitor changes to the modification state by connecting to the
+ * notify::modified signal on @document.
+ *
+ * Since: 3.28
+ */
+gboolean
+ev_document_get_modified (EvDocument *document)
+{
+	g_return_val_if_fail (EV_IS_DOCUMENT (document), FALSE);
+
+	return document->priv->modified;
+}
+
+/**
+ * ev_document_set_modified:
+ * @document: an #EvDocument
+ * @modified: a boolean value to set the document as modified or not.
+ *
+ * Set the @document modification state as @modified.
+ *
+ * Since: 3.28
+ */
+void
+ev_document_set_modified (EvDocument *document,
+			  gboolean    modified)
+{
+	g_return_if_fail (EV_IS_DOCUMENT (document));
+
+	if (document->priv->modified != modified) {
+		document->priv->modified = modified;
+		g_object_notify (G_OBJECT (document), "modified");
+	}
 }
 
 void
