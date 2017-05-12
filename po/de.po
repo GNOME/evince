@@ -14,7 +14,7 @@
 # Hendrik Richter <hendrikr@gnome.org>, 2005, 2006.
 # Hendrik Brandt <heb@gnome-de.org>, 2005.
 # Christian Kintner <ckintner@gnome-de.org>, 2007.
-# Mario Blättermann <mario.blaettermann@gmail.com>, 2008-2013, 2016.
+# Mario Blättermann <mario.blaettermann@gmail.com>, 2008-2013, 2016-2017.
 # Paul Seyfert <pseyfert@mathphys.fsk.uni-heidelberg.de>, 2010-2012, 2015, 2016.
 # Wolfgang Stöggl <c72578@yahoo.de>, 2010, 2015.
 # Christian Kirbach <Christian.Kirbach@gmail.com>, 2009, 2010.
@@ -25,10 +25,10 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Evince master\n"
-"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
+"Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evince&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2016-11-06 18:59+0000\n"
-"PO-Revision-Date: 2016-11-06 21:19+0100\n"
+"POT-Creation-Date: 2017-05-12 13:58+0000\n"
+"PO-Revision-Date: 2017-05-12 17:25+0200\n"
 "Last-Translator: Mario Blättermann <mario.blaettermann@gmail.com>\n"
 "Language-Team: Deutsch <gnome-de@gnome.org>\n"
 "Language: de\n"
@@ -36,57 +36,33 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 1.8.11\n"
+"X-Generator: Poedit 2.0.1\n"
 
-#: ../backend/comics/comics-document.c:210
-#, c-format
-msgid ""
-"Error launching the command “%s” in order to decompress the comic book: %s"
-msgstr "Fehler beim Aufruf des Befehls »%s« zum Entpacken des Comicbuchs: %s"
-
-#: ../backend/comics/comics-document.c:224
-#, c-format
-msgid "The command “%s” failed at decompressing the comic book."
-msgstr "Der Befehl »%s« konnte das Comicbuch nicht entpackt."
-
-#: ../backend/comics/comics-document.c:233
-#, c-format
-msgid "The command “%s” did not end normally."
-msgstr "Der Befehl »%s« wurde nicht normal beendet."
-
-#: ../backend/comics/comics-document.c:453
+#: ../backend/comics/comics-document.c:129
 #, c-format
 msgid "Not a comic book MIME type: %s"
 msgstr "Kein MIME-Typ eines Comicbuchs: %s"
 
-#: ../backend/comics/comics-document.c:460
-msgid "Can’t find an appropriate command to decompress this type of comic book"
+#: ../backend/comics/comics-document.c:136
+msgid ""
+"libarchive lacks support for this comic book’s compression, please contact "
+"your distributor"
 msgstr ""
-"Der entsprechende Befehl zum Entpacken eines Comicbuchs dieses Typs konnte "
-"nicht gefunden werden"
+"libarchive fehlt die Unterstützung für die Komprimierung dieses Comicbuchs, "
+"bitte kontaktieren Sie Ihren Distributor"
 
-#: ../backend/comics/comics-document.c:526
-msgid "File corrupted"
-msgstr "Datei ist beschädigt"
+#: ../backend/comics/comics-document.c:180
+msgid "Can not get local path for archive"
+msgstr "Lokaler Pfad des Archivs kann nicht ermittelt werden"
 
-#: ../backend/comics/comics-document.c:539
-msgid "No files in archive"
-msgstr "Keine Dateien im Archiv"
+#: ../backend/comics/comics-document.c:202
+msgid "File corrupted or no files in archive"
+msgstr "Datei beschädigt oder keine Dateien im Archiv"
 
-#: ../backend/comics/comics-document.c:578
+#: ../backend/comics/comics-document.c:230
 #, c-format
 msgid "No images found in archive %s"
 msgstr "Im Archiv »%s« konnten keine Bilder gefunden werden"
-
-#: ../backend/comics/comics-document.c:828
-#, c-format
-msgid "There was an error deleting “%s”."
-msgstr "Beim Löschen von »%s« ist ein Fehler aufgetreten."
-
-#: ../backend/comics/comics-document.c:921
-#, c-format
-msgid "Error %s"
-msgstr "Fehler %s"
 
 #: ../backend/comics/comicsdocument.evince-backend.in.in.h:1
 #: ../backend/comics/evince-comicsdocument.metainfo.xml.in.in.h:1
@@ -456,17 +432,17 @@ msgstr "Anlage »%s« konnte nicht geöffnet werden"
 msgid "File type %s (%s) is not supported"
 msgstr "Der Dateityp %s (%s) wird nicht unterstützt."
 
-#: ../libdocument/ev-document-factory.c:364
+#: ../libdocument/ev-document-factory.c:368
 #: ../libdocument/ev-file-helpers.c:492 ../libdocument/ev-file-helpers.c:538
 #: ../libdocument/ev-file-helpers.c:557
 msgid "Unknown MIME Type"
 msgstr "Unbekannter MIME-Typ"
 
-#: ../libdocument/ev-document-factory.c:552
+#: ../libdocument/ev-document-factory.c:577
 msgid "All Documents"
 msgstr "Alle Dokumente"
 
-#: ../libdocument/ev-document-factory.c:579 ../shell/ev-utils.c:309
+#: ../libdocument/ev-document-factory.c:604 ../shell/ev-utils.c:309
 msgid "All Files"
 msgstr "Alle Dateien"
 
@@ -492,7 +468,7 @@ msgstr "von %d"
 
 #: ../libmisc/ev-page-action-widget.c:185 ../shell/ev-history.c:426
 #: ../shell/ev-sidebar-bookmarks.c:295 ../shell/ev-window.c:907
-#: ../shell/ev-window.c:4677
+#: ../shell/ev-window.c:4686
 #, c-format
 msgid "Page %s"
 msgstr "Seite %s"
@@ -531,7 +507,7 @@ msgstr "Fehler beim Darstellen der Seite %d"
 msgid "Failed to create thumbnail for page %d"
 msgstr "Fehler beim Erstellen eines Vorschaubildes von Seite %d"
 
-#: ../libview/ev-jobs.c:2031
+#: ../libview/ev-jobs.c:2033
 #, c-format
 msgid "Failed to print page %d: %s"
 msgstr "Fehler beim Drucken der Seite %d: %s"
@@ -734,7 +710,7 @@ msgstr "DATEI"
 msgid "GNOME Document Previewer"
 msgstr "GNOME-Dokumentenvorschau"
 
-#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3262
+#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3269
 msgid "Failed to print document"
 msgstr "Dokument konnte nicht gedruckt werden"
 
@@ -1041,7 +1017,7 @@ msgstr "Passwort für Dokument »%s«"
 
 #. Create tree view
 #: ../shell/ev-loading-message.c:50 ../shell/ev-sidebar-annotations.c:125
-#: ../shell/ev-sidebar-layers.c:125 ../shell/ev-sidebar-links.c:261
+#: ../shell/ev-sidebar-layers.c:125 ../shell/ev-sidebar-links.c:268
 msgid "Loading…"
 msgstr "Wird geladen …"
 
@@ -1171,7 +1147,7 @@ msgstr "Lesezeichen"
 msgid "Layers"
 msgstr "Ebenen"
 
-#: ../shell/ev-sidebar-links.c:337
+#: ../shell/ev-sidebar-links.c:344
 msgid "Print…"
 msgstr "Drucken …"
 
@@ -1181,7 +1157,7 @@ msgstr "Drucken …"
 #. * your language.  The sidebar cannot be shrinked smaller than
 #. * the longest title in there.
 #.
-#: ../shell/ev-sidebar-links.c:728
+#: ../shell/ev-sidebar-links.c:750
 msgid "Outline"
 msgstr "Gliederung"
 
@@ -1308,62 +1284,58 @@ msgstr "Eine Kopie speichern"
 msgid "Could not send current document"
 msgstr "Das momentan angezeigte Dokument konnte nicht gesendet werden"
 
-#: ../shell/ev-window.c:2942
-msgid "Could not open the containing folder"
-msgstr "Der beinhaltende Ordner konnte nicht geöffnet werden."
-
-#: ../shell/ev-window.c:3206
+#: ../shell/ev-window.c:3213
 #, c-format
 msgid "%d pending job in queue"
 msgid_plural "%d pending jobs in queue"
 msgstr[0] "%d ausstehender Auftrag in Warteschlange"
 msgstr[1] "%d ausstehende Aufträge in Warteschlange"
 
-#: ../shell/ev-window.c:3319
+#: ../shell/ev-window.c:3326
 #, c-format
 msgid "Printing job “%s”"
 msgstr "Druckauftrag »%s« wird ausgeführt"
 
-#: ../shell/ev-window.c:3534
+#: ../shell/ev-window.c:3541
 msgid "Document contains form fields that have been filled out. "
 msgstr "Das Dokument enthält Formularfelder, die ausgefüllt wurden."
 
-#: ../shell/ev-window.c:3537
+#: ../shell/ev-window.c:3544
 msgid "Document contains new or modified annotations. "
 msgstr "Das Dokument enthält neue oder veränderte Anmerkungen."
 
-#: ../shell/ev-window.c:3549
+#: ../shell/ev-window.c:3556
 #, c-format
 msgid "Reload document “%s”?"
 msgstr "Dokument »%s« neu laden?"
 
-#: ../shell/ev-window.c:3551
+#: ../shell/ev-window.c:3558
 msgid "If you reload the document, changes will be permanently lost."
 msgstr "Wenn Sie das Dokument neu laden, gehen Einträge dauerhaft verloren."
 
-#: ../shell/ev-window.c:3555
+#: ../shell/ev-window.c:3562
 msgid "Reload"
 msgstr "Aktualisieren"
 
-#: ../shell/ev-window.c:3562
+#: ../shell/ev-window.c:3569
 #, c-format
 msgid "Save a copy of document “%s” before closing?"
 msgstr "Soll vor dem Schließen eine Kopie von »%s« gespeichert werden?"
 
-#: ../shell/ev-window.c:3564
+#: ../shell/ev-window.c:3571
 msgid "If you don’t save a copy, changes will be permanently lost."
 msgstr ""
 "Wenn keine Kopie gespeichert wird, gehen die Einträge dauerhaft verloren."
 
-#: ../shell/ev-window.c:3566
+#: ../shell/ev-window.c:3573
 msgid "Close _without Saving"
 msgstr "Schließen _ohne zu speichern"
 
-#: ../shell/ev-window.c:3570
+#: ../shell/ev-window.c:3577
 msgid "Save a _Copy"
 msgstr "Eine Kopie _speichern"
 
-#: ../shell/ev-window.c:3654
+#: ../shell/ev-window.c:3661
 #, c-format
 msgid "Wait until print job “%s” finishes before closing?"
 msgstr ""
@@ -1373,7 +1345,7 @@ msgstr ""
 #. TRANS: the singular form is not really used as n_print_jobs > 1
 #. but some languages distinguish between different plurals forms,
 #. so the ngettext is needed.
-#: ../shell/ev-window.c:3660
+#: ../shell/ev-window.c:3667
 #, c-format
 msgid "There is %d print job active. Wait until print finishes before closing?"
 msgid_plural ""
@@ -1385,33 +1357,33 @@ msgstr[1] ""
 "%d Druckaufträge sind aktiv. Soll vor dem Schließen auf das Beenden des "
 "Druckens gewartet werden?"
 
-#: ../shell/ev-window.c:3675
+#: ../shell/ev-window.c:3682
 msgid "If you close the window, pending print jobs will not be printed."
 msgstr ""
 "Wenn Sie das Fenster schließen, werden ausstehende Druckaufträge nicht "
 "ausgeführt."
 
-#: ../shell/ev-window.c:3679
+#: ../shell/ev-window.c:3686
 msgid "Cancel _print and Close"
 msgstr "Drucken a_bbrechen und schließen"
 
-#: ../shell/ev-window.c:3683
+#: ../shell/ev-window.c:3690
 msgid "Close _after Printing"
 msgstr "Nach dem Drucken _schließen"
 
-#: ../shell/ev-window.c:4214
+#: ../shell/ev-window.c:4221
 msgid "Running in presentation mode"
 msgstr "Derzeit im Präsentationsmodus"
 
-#: ../shell/ev-window.c:5361
+#: ../shell/ev-window.c:5370
 msgid "Enable caret navigation?"
 msgstr "Eingabemarke-Navigation aktivieren?"
 
-#: ../shell/ev-window.c:5363
+#: ../shell/ev-window.c:5372
 msgid "_Enable"
 msgstr "_Aktivieren"
 
-#: ../shell/ev-window.c:5366
+#: ../shell/ev-window.c:5375
 msgid ""
 "Pressing F7 turns the caret navigation on or off. This feature places a "
 "moveable cursor in text pages, allowing you to move around and select text "
@@ -1422,39 +1394,39 @@ msgstr ""
 "erlaubt es Ihnen mit der Tastatur die Seite zu bewegen sowie Text zu "
 "markieren. Möchten Sie die Eingabemarke-Navigation einschalten?"
 
-#: ../shell/ev-window.c:5371
+#: ../shell/ev-window.c:5380
 msgid "Don’t show this message again"
 msgstr "Diese Nachricht nicht mehr anzeigen"
 
-#: ../shell/ev-window.c:5886 ../shell/ev-window.c:5902
+#: ../shell/ev-window.c:5895 ../shell/ev-window.c:5911
 msgid "Unable to launch external application."
 msgstr "Externe Anwendung konnte nicht geöffnet werden."
 
-#: ../shell/ev-window.c:5959
+#: ../shell/ev-window.c:5968
 msgid "Unable to open external link"
 msgstr "Externer Link konnte nicht geöffnet werden"
 
-#: ../shell/ev-window.c:6162
+#: ../shell/ev-window.c:6171
 msgid "Couldn’t find appropriate format to save image"
 msgstr "Es wurde kein geeignetes Format zum Speichern des Bildes gefunden"
 
-#: ../shell/ev-window.c:6194
+#: ../shell/ev-window.c:6203
 msgid "The image could not be saved."
 msgstr "Das Bild konnte nicht gespeichert werden."
 
-#: ../shell/ev-window.c:6229
+#: ../shell/ev-window.c:6238
 msgid "Save Image"
 msgstr "Bild speichern"
 
-#: ../shell/ev-window.c:6388
+#: ../shell/ev-window.c:6397
 msgid "Unable to open attachment"
 msgstr "Anlage konnte nicht geöffnet werden"
 
-#: ../shell/ev-window.c:6444
+#: ../shell/ev-window.c:6453
 msgid "The attachment could not be saved."
 msgstr "Die Anlage konnte nicht gespeichert werden."
 
-#: ../shell/ev-window.c:6492
+#: ../shell/ev-window.c:6501
 msgid "Save Attachment"
 msgstr "Anlage speichern"
 
@@ -1906,199 +1878,3 @@ msgid ""
 msgstr ""
 "Die folgenden Dokumentformate werden unterstützt: PDF, PS, EPS, XPS, DjVu, "
 "TIFF, DVI (inkl. SyncTeX) und Comicbuch-Archive (CBR, CBT, CBZ, CB7)."
-
-#~ msgid "Style:"
-#~ msgstr "Stil:"
-
-#~ msgid "Transparent"
-#~ msgstr "Transparent"
-
-#~ msgid "Opaque"
-#~ msgstr "Deckend"
-
-#~ msgid "Index"
-#~ msgstr "Inhalt"
-
-#~ msgid "List"
-#~ msgstr "Liste"
-
-#~ msgid "Text"
-#~ msgstr "Text"
-
-#~ msgid "Find options"
-#~ msgstr "Suchoptionen"
-
-#~ msgid "%d found on this page"
-#~ msgid_plural "%d found on this page"
-#~ msgstr[0] "%d Mal auf dieser Seite gefunden"
-#~ msgstr[1] "%d Mal auf dieser Seite gefunden"
-
-#~ msgid "Not found"
-#~ msgstr "Nicht gefunden"
-
-#~ msgid "%3d%% remaining to search"
-#~ msgstr "Noch %3d%% zu durchsuchen"
-
-#~ msgid "Toggle between view of recent items and open document"
-#~ msgstr ""
-#~ "Ansicht zwischen zuletzt geöffneten Dokumenten und dem offenen Dokument "
-#~ "umschalten"
-
-#~ msgid "%s — Password Required"
-#~ msgstr "%s — Passwort erforderlich"
-
-#~ msgid "_Recent"
-#~ msgstr "_Zuletzt"
-
-#~ msgid "Open a recently used document"
-#~ msgstr "Eines der zuletzt geöffneten Dokumente öffnen"
-
-#~ msgid ""
-#~ "Document Viewer\n"
-#~ "Using %s (%s)"
-#~ msgstr ""
-#~ "Dokumentenbetrachter\n"
-#~ "Verwendet %s (%s)"
-
-#~ msgid "_Bookmarks"
-#~ msgstr "_Lesezeichen"
-
-#~ msgid "_View in new window"
-#~ msgstr "In neuem Fenster an_zeigen"
-
-#~ msgid "Open a copy of the current document in a new window"
-#~ msgstr ""
-#~ "Eine Kopie des momentan angezeigten Dokuments in einem neuen Fenster "
-#~ "öffnen"
-
-#~ msgid "Send current document by mail, instant message…"
-#~ msgstr ""
-#~ "Das momentan angezeigte Dokument per E-Mail, Sofortnachricht, … versenden"
-
-#~ msgid "Show the folder which contains this file in the file manager"
-#~ msgstr "Den Ordner im Dateimanager anzeigen, der diese Datei beinhaltet."
-
-#~ msgid "Go to the first page"
-#~ msgstr "Zur ersten Seite gehen"
-
-#~ msgid "Go to the last page"
-#~ msgstr "Zur letzten Seite gehen"
-
-#~ msgid "Go to Pa_ge"
-#~ msgstr "Zu Seite _gehen"
-
-#~ msgid "Go to Page"
-#~ msgstr "Zu Seite gehen"
-
-#~ msgid "Add a bookmark for the current page"
-#~ msgstr "Ein Lesezeichen für die momentan geöffnete Seite hinzufügen"
-
-#~ msgid "Leave Fullscreen"
-#~ msgstr "Vollbild verlassen"
-
-#~ msgid "Leave fullscreen mode"
-#~ msgstr "Vollbildmodus verlassen"
-
-#~ msgid "Start Presentation"
-#~ msgstr "Präsentation starten"
-
-#~ msgid "Start a presentation"
-#~ msgstr "Eine Präsentation starten"
-
-#~ msgid "Show or hide the side pane"
-#~ msgstr "Die Seitenleiste anzeigen/verbergen"
-
-#~ msgid "Show odd pages on the left in dual mode"
-#~ msgstr "Zwei Seiten gleichzeitig anzeigen (ungerade Seiten links)"
-
-#~ msgid "Expand the window to fill the screen"
-#~ msgstr "Das Fenster bildschirmfüllend vergrößern"
-
-#~ msgid "Run document as a presentation"
-#~ msgstr "Das Dokument als Präsentation anzeigen"
-
-#~ msgid "Show page contents with the colors inverted"
-#~ msgstr "Seiteninhalt mit invertierten Farben darstellen"
-
-#~ msgid "_Find…"
-#~ msgstr "_Suchen …"
-
-#~ msgid "Zoom"
-#~ msgstr "Vergrößern"
-
-#~ msgid "History"
-#~ msgstr "Chronik"
-
-#~ msgid "Open Folder"
-#~ msgstr "Ordner öffnen"
-
-#~ msgid "Send To"
-#~ msgstr "Senden an"
-
-#~ msgid "Previous"
-#~ msgstr "Vorherige"
-
-#~ msgid "Next"
-#~ msgstr "Nächste"
-
-#~ msgid "File is not a valid .desktop file"
-#~ msgstr "Datei ist keine gültige .desktop-Datei"
-
-#~ msgid "Unrecognized desktop file Version '%s'"
-#~ msgstr "Version der Desktop-Datei »%s« wurde nicht erkannt"
-
-#~ msgid "Starting %s"
-#~ msgstr "%s wird gestartet"
-
-#~ msgid "Application does not accept documents on command line"
-#~ msgstr "Anwendung akzeptiert keine Dokumente als Befehlszeilenargumente"
-
-#~ msgid "Unrecognized launch option: %d"
-#~ msgstr "Nicht erkannte Startoption: %d"
-
-#~ msgid "Can't pass document URIs to a 'Type=Link' desktop entry"
-#~ msgstr ""
-#~ "Adressen (URIs) können nicht an »Type=Link«-Desktop-Dateien weitergegeben "
-#~ "werden"
-
-#~ msgid "Not a launchable item"
-#~ msgstr "Kein ausführbarer Eintrag"
-
-#~ msgid "Disable connection to session manager"
-#~ msgstr "Verbindung zur Sitzungsverwaltung deaktivieren"
-
-#~ msgid "Specify file containing saved configuration"
-#~ msgstr "Datei auswählen, die eine gespeicherte Konfiguration enthält"
-
-#~ msgid "Specify session management ID"
-#~ msgstr "ID der Sitzungsverwaltung angeben"
-
-#~ msgid "ID"
-#~ msgstr "Kennung"
-
-#~ msgid "Session management options:"
-#~ msgstr "Optionen der Sitzungsverwaltung:"
-
-#~ msgid "Show session management options"
-#~ msgstr "Optionen der Sitzungsverwaltung anzeigen"
-
-#~ msgid "Fit Page"
-#~ msgstr "Seite anpassen"
-
-#~ msgid "Fit Width"
-#~ msgstr "Breite einpassen"
-
-#~ msgid "By extension"
-#~ msgstr "Nach Endung"
-
-#~ msgid "Send _To..."
-#~ msgstr "Senden _an …"
-
-#~ msgid "Page %s — %s"
-#~ msgstr "Seite %s — %s"
-
-#~ msgid "Navigation"
-#~ msgstr "Navigation"
-
-#~ msgid "Back"
-#~ msgstr "Zurück"
