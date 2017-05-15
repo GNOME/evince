@@ -22,6 +22,7 @@
 #include "config.h"
 #endif
 
+#include <stdlib.h>
 #include <string.h>
 
 #include <gio/gio.h>
@@ -240,7 +241,9 @@ _ev_document_factory_init (void)
         g_free (dir);
 }
 #else
-        ev_backends_dir = g_strdup (EV_BACKENDSDIR);
+	char * ev_backends_path = getenv ("EVINCE_BACKENDS_DIR");
+	if (ev_backends_path != NULL) ev_backends_dir = g_strdup (ev_backends_path);
+	else ev_backends_dir = g_strdup (EV_BACKENDSDIR);
 #endif
 
         ev_backends_list = _ev_backend_info_load_from_dir (ev_backends_dir);
