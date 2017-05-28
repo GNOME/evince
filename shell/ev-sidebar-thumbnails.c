@@ -802,9 +802,26 @@ ev_sidebar_thumbnails_device_scale_factor_changed_cb (EvSidebarThumbnails *sideb
 }
 
 static void
+ev_sidebar_thumbnails_row_changed (GtkTreeModel *model,
+                                   GtkTreePath  *path,
+                                   GtkTreeIter  *iter,
+                                   gpointer      data)
+{
+	guint signal_id;
+
+	signal_id = GPOINTER_TO_UINT (data);
+
+	/* PREVENT GtkIconView "row-changed" handler to be reached, as it will
+	 * perform a full invalidate and relayout of all items, See bug:
+	 * https://bugzilla.gnome.org/show_bug.cgi?id=691448#c9 */
+	g_signal_stop_emission (model, signal_id, 0);
+}
+
+static void
 ev_sidebar_thumbnails_init (EvSidebarThumbnails *ev_sidebar_thumbnails)
 {
 	EvSidebarThumbnailsPrivate *priv;
+	guint signal_id;
 
 	priv = ev_sidebar_thumbnails->priv = EV_SIDEBAR_THUMBNAILS_GET_PRIVATE (ev_sidebar_thumbnails);
 
@@ -813,6 +830,11 @@ ev_sidebar_thumbnails_init (EvSidebarThumbnails *ev_sidebar_thumbnails)
 					       CAIRO_GOBJECT_TYPE_SURFACE,
 					       G_TYPE_BOOLEAN,
 					       EV_TYPE_JOB_THUMBNAIL);
+
+	signal_id = g_signal_lookup ("row-changed", GTK_TYPE_TREE_MODEL);
+	g_signal_connect (GTK_TREE_MODEL (priv->list_store), "row-changed",
+			  G_CALLBACK (ev_sidebar_thumbnails_row_changed),
+			  GUINT_TO_POINTER (signal_id));
 
 	priv->swindow = gtk_scrolled_window_new (NULL, NULL);
 
@@ -962,6 +984,8 @@ thumbnail_job_completed_callback (EvJobThumbnail      *job,
 			    COLUMN_JOB, NULL,
 			    -1);
         cairo_surface_destroy (surface);
+
+        gtk_widget_queue_draw (priv->icon_view);
 }
 
 static void
