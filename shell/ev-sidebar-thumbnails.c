@@ -547,6 +547,14 @@ update_visible_range (EvSidebarThumbnails *sidebar_thumbnails,
 {
 	EvSidebarThumbnailsPrivate *priv = sidebar_thumbnails->priv;
 	int old_start_page, old_end_page;
+	int n_pages_in_visible_range;
+
+	/* Preload before and after current visible scrolling range, the same amount of
+	 * thumbs in it, to help prevent thumbnail creation happening in the user's sight.
+	 * https://bugzilla.gnome.org/show_bug.cgi?id=342110#c15 */
+	n_pages_in_visible_range = (end_page - start_page) + 1;
+	start_page = MAX (0, start_page - n_pages_in_visible_range);
+	end_page = MIN (priv->n_pages - 1, end_page + n_pages_in_visible_range);
 
 	old_start_page = priv->start_page;
 	old_end_page = priv->end_page;
