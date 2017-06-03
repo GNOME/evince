@@ -416,16 +416,14 @@ ev_sidebar_thumbnails_get_loading_icon (EvSidebarThumbnails *sidebar_thumbnails,
 }
 
 static void
-clear_range (EvSidebarThumbnails *sidebar_thumbnails,
-	     gint                 start_page,
-	     gint                 end_page)
+cancel_running_jobs (EvSidebarThumbnails *sidebar_thumbnails,
+		     gint                 start_page,
+		     gint                 end_page)
 {
 	EvSidebarThumbnailsPrivate *priv = sidebar_thumbnails->priv;
 	GtkTreePath *path;
 	GtkTreeIter iter;
 	gboolean result;
-	gint prev_width = -1;
-	gint prev_height = -1;
 
 	g_assert (start_page <= end_page);
 
@@ -434,13 +432,18 @@ clear_range (EvSidebarThumbnails *sidebar_thumbnails,
 	     result && start_page <= end_page;
 	     result = gtk_tree_model_iter_next (GTK_TREE_MODEL (priv->list_store), &iter), start_page ++) {
 		EvJobThumbnail *job;
-		cairo_surface_t *loading_icon = NULL;
-		gint width, height;
+		gboolean thumbnail_set;
 
 		gtk_tree_model_get (GTK_TREE_MODEL (priv->list_store),
 				    &iter,
 				    COLUMN_JOB, &job,
+				    COLUMN_THUMBNAIL_SET, &thumbnail_set,
 				    -1);
+
+		if (thumbnail_set) {
+			g_assert (job == NULL);
+			continue;
+		}
 
 		if (job) {
 			g_signal_handlers_disconnect_by_func (job, thumbnail_job_completed_callback, sidebar_thumbnails);
@@ -448,22 +451,9 @@ clear_range (EvSidebarThumbnails *sidebar_thumbnails,
 			g_object_unref (job);
 		}
 
-		ev_thumbnails_size_cache_get_size (priv->size_cache, start_page,
-						  priv->rotation,
-						  &width, &height);
-		if (!loading_icon || (width != prev_width && height != prev_height)) {
-			loading_icon =
-				ev_sidebar_thumbnails_get_loading_icon (sidebar_thumbnails,
-									width, height);
-		}
-
-		prev_width = width;
-		prev_height = height;
-
 		gtk_list_store_set (priv->list_store, &iter,
 				    COLUMN_JOB, NULL,
 				    COLUMN_THUMBNAIL_SET, FALSE,
-				    COLUMN_SURFACE, loading_icon,
 				    -1);
 	}
 	gtk_tree_path_free (path);
@@ -567,10 +557,10 @@ update_visible_range (EvSidebarThumbnails *sidebar_thumbnails,
 
 	/* Clear the areas we no longer display */
 	if (old_start_page >= 0 && old_start_page < start_page)
-		clear_range (sidebar_thumbnails, old_start_page, MIN (start_page - 1, old_end_page));
+		cancel_running_jobs (sidebar_thumbnails, old_start_page, MIN (start_page - 1, old_end_page));
 	
 	if (old_end_page > 0 && old_end_page > end_page)
-		clear_range (sidebar_thumbnails, MAX (end_page + 1, old_start_page), old_end_page);
+		cancel_running_jobs (sidebar_thumbnails, MAX (end_page + 1, old_start_page), old_end_page);
 
 	add_range (sidebar_thumbnails, start_page, end_page);
 	
