@@ -8,16 +8,16 @@
 # Francisco Javier F. Serrador <serrador@cvs.gnome.org>, 2005, 2006.
 # Juanje Ojeda Croissier <jojeda@emergya.es>, 2008, 2009.
 # Jorge González <jorgegonz@svn.gnome.org>, 2007, 2008, 2010.
-# Daniel Mustieles <daniel.mustieles@gmail.com>, 2010, 2011, 2012, 2013, 2014, 2015, 2016.
 # Alberto Caso <alberto@acaso.net>, 2016.
+# Daniel Mustieles <daniel.mustieles@gmail.com>, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: evince.master\n"
-"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
+"Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evince&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2016-11-07 15:57+0000\n"
-"PO-Revision-Date: 2016-11-20 19:08+0100\n"
+"POT-Creation-Date: 2017-05-12 13:58+0000\n"
+"PO-Revision-Date: 2017-06-05 16:08+0200\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: es <gnome-es-list@gnome.org>\n"
 "Language: es\n"
@@ -25,57 +25,34 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Gtranslator 2.91.7\n"
+"X-Generator: Gtranslator 2.91.6\n"
 
-#: ../backend/comics/comics-document.c:210
-#, c-format
-msgid ""
-"Error launching the command “%s” in order to decompress the comic book: %s"
-msgstr "Error al lanzar el comando «%s» para descomprimir el cómic: %s"
-
-#: ../backend/comics/comics-document.c:224
-#, c-format
-msgid "The command “%s” failed at decompressing the comic book."
-msgstr "El comando «%s» falló al descomprimir el cómic."
-
-#: ../backend/comics/comics-document.c:233
-#, c-format
-msgid "The command “%s” did not end normally."
-msgstr "El comando «%s» no finalizó de forma normal."
-
-#: ../backend/comics/comics-document.c:453
+#: ../backend/comics/comics-document.c:129
 #, c-format
 msgid "Not a comic book MIME type: %s"
 msgstr "No es un tipo MIME de cómic: %s"
 
-#: ../backend/comics/comics-document.c:460
-msgid "Can’t find an appropriate command to decompress this type of comic book"
+#: ../backend/comics/comics-document.c:136
+msgid ""
+"libarchive lacks support for this comic book’s compression, please contact "
+"your distributor"
 msgstr ""
-"No se puede encontrar un comando apropiado para descomprimir este tipo de "
-"cómic"
+"libarchive carece de soporte para esta compresión de cómic, contacte con su "
+"distribuidor"
 
-#: ../backend/comics/comics-document.c:526
-msgid "File corrupted"
-msgstr "Archivo corrupto"
+#: ../backend/comics/comics-document.c:180
+msgid "Can not get local path for archive"
+msgstr "No se puede obtener la ruta local para el archivador"
 
-#: ../backend/comics/comics-document.c:539
-msgid "No files in archive"
-msgstr "No hay archivos en el archivador"
+#: ../backend/comics/comics-document.c:202
+#| msgid "No files in archive"
+msgid "File corrupted or no files in archive"
+msgstr "Archivo corrupto o no hay archivos en el archivador"
 
-#: ../backend/comics/comics-document.c:578
+#: ../backend/comics/comics-document.c:230
 #, c-format
 msgid "No images found in archive %s"
 msgstr "No se encontraron imágenes en el archivador %s"
-
-#: ../backend/comics/comics-document.c:828
-#, c-format
-msgid "There was an error deleting “%s”."
-msgstr "Hubo un error al eliminar «%s»."
-
-#: ../backend/comics/comics-document.c:921
-#, c-format
-msgid "Error %s"
-msgstr "Error %s"
 
 #: ../backend/comics/comicsdocument.evince-backend.in.in.h:1
 #: ../backend/comics/evince-comicsdocument.metainfo.xml.in.in.h:1
@@ -437,17 +414,17 @@ msgstr "No se pudo abrir el adjunto «%s»"
 msgid "File type %s (%s) is not supported"
 msgstr "El tipo de archivo %s (%s) no está soportado"
 
-#: ../libdocument/ev-document-factory.c:364
+#: ../libdocument/ev-document-factory.c:368
 #: ../libdocument/ev-file-helpers.c:492 ../libdocument/ev-file-helpers.c:538
 #: ../libdocument/ev-file-helpers.c:557
 msgid "Unknown MIME Type"
 msgstr "Tipo MIME desconocido"
 
-#: ../libdocument/ev-document-factory.c:552
+#: ../libdocument/ev-document-factory.c:577
 msgid "All Documents"
 msgstr "Todos los documentos"
 
-#: ../libdocument/ev-document-factory.c:579 ../shell/ev-utils.c:309
+#: ../libdocument/ev-document-factory.c:604 ../shell/ev-utils.c:309
 msgid "All Files"
 msgstr "Todos los archivos"
 
@@ -461,19 +438,21 @@ msgstr "Falló al crear un archivo temporal: %s"
 msgid "Failed to create a temporary directory: %s"
 msgstr "Falló al crear una carpeta temporal: %s"
 
-#: ../libmisc/ev-page-action-widget.c:84 ../libmisc/ev-page-action-widget.c:123
+#: ../libmisc/ev-page-action-widget.c:84
+#: ../libmisc/ev-page-action-widget.c:123
 #, c-format
 msgid "(%d of %d)"
 msgstr "(%d de %d)"
 
-#: ../libmisc/ev-page-action-widget.c:86 ../libmisc/ev-page-action-widget.c:127
+#: ../libmisc/ev-page-action-widget.c:86
+#: ../libmisc/ev-page-action-widget.c:127
 #, c-format
 msgid "of %d"
 msgstr "de %d"
 
 #: ../libmisc/ev-page-action-widget.c:185 ../shell/ev-history.c:426
 #: ../shell/ev-sidebar-bookmarks.c:295 ../shell/ev-window.c:907
-#: ../shell/ev-window.c:4677
+#: ../shell/ev-window.c:4686
 #, c-format
 msgid "Page %s"
 msgstr "Página %s"
@@ -512,7 +491,7 @@ msgstr "Falló al renderizar la página %d"
 msgid "Failed to create thumbnail for page %d"
 msgstr "Falló al crear la miniatura para la página %d"
 
-#: ../libview/ev-jobs.c:2031
+#: ../libview/ev-jobs.c:2033
 #, c-format
 msgid "Failed to print page %d: %s"
 msgstr "Falló al imprimir la página %d: %s"
@@ -719,7 +698,7 @@ msgstr "ARCHIVO"
 msgid "GNOME Document Previewer"
 msgstr "Visor de documentos de Gnome"
 
-#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3262
+#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3269
 msgid "Failed to print document"
 msgstr "No se pudo imprimir el documento"
 
@@ -1016,7 +995,7 @@ msgstr "Contraseña para el documentos %s"
 
 #. Create tree view
 #: ../shell/ev-loading-message.c:50 ../shell/ev-sidebar-annotations.c:125
-#: ../shell/ev-sidebar-layers.c:125 ../shell/ev-sidebar-links.c:261
+#: ../shell/ev-sidebar-layers.c:125 ../shell/ev-sidebar-links.c:268
 msgid "Loading…"
 msgstr "Cargando…"
 
@@ -1146,7 +1125,7 @@ msgstr "Marcadores"
 msgid "Layers"
 msgstr "Capas"
 
-#: ../shell/ev-sidebar-links.c:337
+#: ../shell/ev-sidebar-links.c:344
 msgid "Print…"
 msgstr "Imprimir…"
 
@@ -1156,7 +1135,7 @@ msgstr "Imprimir…"
 #. * your language.  The sidebar cannot be shrinked smaller than
 #. * the longest title in there.
 #.
-#: ../shell/ev-sidebar-links.c:728
+#: ../shell/ev-sidebar-links.c:750
 msgid "Outline"
 msgstr "Índice"
 
@@ -1283,62 +1262,58 @@ msgstr "Guardar una copia"
 msgid "Could not send current document"
 msgstr "No se pudo enviar el documento actual"
 
-#: ../shell/ev-window.c:2942
-msgid "Could not open the containing folder"
-msgstr "No se pudo abrir la carpeta contenedora"
-
-#: ../shell/ev-window.c:3206
+#: ../shell/ev-window.c:3213
 #, c-format
 msgid "%d pending job in queue"
 msgid_plural "%d pending jobs in queue"
 msgstr[0] "%d trabajo pendiente en la cola"
 msgstr[1] "%d trabajos pendientes en la cola"
 
-#: ../shell/ev-window.c:3319
+#: ../shell/ev-window.c:3326
 #, c-format
 msgid "Printing job “%s”"
 msgstr "Imprimiendo trabajo «%s»"
 
-#: ../shell/ev-window.c:3534
+#: ../shell/ev-window.c:3541
 msgid "Document contains form fields that have been filled out. "
 msgstr "El documento contiene campos de formulario que se han rellenado. "
 
-#: ../shell/ev-window.c:3537
+#: ../shell/ev-window.c:3544
 msgid "Document contains new or modified annotations. "
 msgstr "El documento contiene anotaciones nuevas o modificadas. "
 
-#: ../shell/ev-window.c:3549
+#: ../shell/ev-window.c:3556
 #, c-format
 msgid "Reload document “%s”?"
 msgstr "¿Quiere recargar el documento «%s»?"
 
-#: ../shell/ev-window.c:3551
+#: ../shell/ev-window.c:3558
 msgid "If you reload the document, changes will be permanently lost."
 msgstr ""
 "Si recargar el documento, los cambios se perderán de manera permanente."
 
-#: ../shell/ev-window.c:3555
+#: ../shell/ev-window.c:3562
 msgid "Reload"
 msgstr "Recargar"
 
-#: ../shell/ev-window.c:3562
+#: ../shell/ev-window.c:3569
 #, c-format
 msgid "Save a copy of document “%s” before closing?"
 msgstr "¿Guardar una copia del documento «%s» antes de cerrar?"
 
-#: ../shell/ev-window.c:3564
+#: ../shell/ev-window.c:3571
 msgid "If you don’t save a copy, changes will be permanently lost."
 msgstr "Los cambios se perderán permanentemente si no guarda una copia."
 
-#: ../shell/ev-window.c:3566
+#: ../shell/ev-window.c:3573
 msgid "Close _without Saving"
 msgstr "Cerrar _sin guardar"
 
-#: ../shell/ev-window.c:3570
+#: ../shell/ev-window.c:3577
 msgid "Save a _Copy"
 msgstr "Guardar una _copia"
 
-#: ../shell/ev-window.c:3654
+#: ../shell/ev-window.c:3661
 #, c-format
 msgid "Wait until print job “%s” finishes before closing?"
 msgstr ""
@@ -1347,7 +1322,7 @@ msgstr ""
 #. TRANS: the singular form is not really used as n_print_jobs > 1
 #. but some languages distinguish between different plurals forms,
 #. so the ngettext is needed.
-#: ../shell/ev-window.c:3660
+#: ../shell/ev-window.c:3667
 #, c-format
 msgid "There is %d print job active. Wait until print finishes before closing?"
 msgid_plural ""
@@ -1359,32 +1334,32 @@ msgstr[1] ""
 "Hay %d trabajos de impresión activos. ¿Quiere esperar a que termine la "
 "impresora antes de cerrar?"
 
-#: ../shell/ev-window.c:3675
+#: ../shell/ev-window.c:3682
 msgid "If you close the window, pending print jobs will not be printed."
 msgstr ""
 "Si cierra la ventana, los trabajos de impresión pendientes no se imprimirán."
 
-#: ../shell/ev-window.c:3679
+#: ../shell/ev-window.c:3686
 msgid "Cancel _print and Close"
 msgstr "Cancelar la _impresión y cerrar"
 
-#: ../shell/ev-window.c:3683
+#: ../shell/ev-window.c:3690
 msgid "Close _after Printing"
 msgstr "Cerrar _después de imprimir"
 
-#: ../shell/ev-window.c:4214
+#: ../shell/ev-window.c:4221
 msgid "Running in presentation mode"
 msgstr "Ejecutándose en modo presentación"
 
-#: ../shell/ev-window.c:5361
+#: ../shell/ev-window.c:5370
 msgid "Enable caret navigation?"
 msgstr "¿Activar la navegación de cursor?"
 
-#: ../shell/ev-window.c:5363
+#: ../shell/ev-window.c:5372
 msgid "_Enable"
 msgstr "_Activar"
 
-#: ../shell/ev-window.c:5366
+#: ../shell/ev-window.c:5375
 msgid ""
 "Pressing F7 turns the caret navigation on or off. This feature places a "
 "moveable cursor in text pages, allowing you to move around and select text "
@@ -1395,39 +1370,39 @@ msgstr ""
 "permitiéndole moverse por el texto y seleccionarlo con el teclado. ¿Quiere "
 "activar la navegación de cursor?"
 
-#: ../shell/ev-window.c:5371
+#: ../shell/ev-window.c:5380
 msgid "Don’t show this message again"
 msgstr "No volver a mostrar este mensaje"
 
-#: ../shell/ev-window.c:5886 ../shell/ev-window.c:5902
+#: ../shell/ev-window.c:5895 ../shell/ev-window.c:5911
 msgid "Unable to launch external application."
 msgstr "No se pudo lanzar la aplicación externa."
 
-#: ../shell/ev-window.c:5959
+#: ../shell/ev-window.c:5968
 msgid "Unable to open external link"
 msgstr "No se pudo abrir el enlace externo"
 
-#: ../shell/ev-window.c:6162
+#: ../shell/ev-window.c:6171
 msgid "Couldn’t find appropriate format to save image"
 msgstr "No se pudo encontrar un formato apropiado para guardar la imagen"
 
-#: ../shell/ev-window.c:6194
+#: ../shell/ev-window.c:6203
 msgid "The image could not be saved."
 msgstr "La imagen no se pudo guardar."
 
-#: ../shell/ev-window.c:6229
+#: ../shell/ev-window.c:6238
 msgid "Save Image"
 msgstr "Guardar imagen"
 
-#: ../shell/ev-window.c:6388
+#: ../shell/ev-window.c:6397
 msgid "Unable to open attachment"
 msgstr "No se pudo abrir el adjunto"
 
-#: ../shell/ev-window.c:6444
+#: ../shell/ev-window.c:6453
 msgid "The attachment could not be saved."
 msgstr "El adjunto no se pudo guardar."
 
-#: ../shell/ev-window.c:6492
+#: ../shell/ev-window.c:6501
 msgid "Save Attachment"
 msgstr "Guardar adjuntos"
 
@@ -1879,6 +1854,34 @@ msgid ""
 msgstr ""
 "Soporta los siguientes formatos de documentos: PDF, PS, EPS, XPS, DjVu, "
 "TIFF, DVI (con SyncTeX), y archivos de libros de cómics (CBR, CBT, CBZ, CB7)."
+
+#~ msgid ""
+#~ "Error launching the command “%s” in order to decompress the comic book: %s"
+#~ msgstr "Error al lanzar el comando «%s» para descomprimir el cómic: %s"
+
+#~ msgid "The command “%s” failed at decompressing the comic book."
+#~ msgstr "El comando «%s» falló al descomprimir el cómic."
+
+#~ msgid "The command “%s” did not end normally."
+#~ msgstr "El comando «%s» no finalizó de forma normal."
+
+#~ msgid ""
+#~ "Can’t find an appropriate command to decompress this type of comic book"
+#~ msgstr ""
+#~ "No se puede encontrar un comando apropiado para descomprimir este tipo de "
+#~ "cómic"
+
+#~ msgid "File corrupted"
+#~ msgstr "Archivo corrupto"
+
+#~ msgid "There was an error deleting “%s”."
+#~ msgstr "Hubo un error al eliminar «%s»."
+
+#~ msgid "Error %s"
+#~ msgstr "Error %s"
+
+#~ msgid "Could not open the containing folder"
+#~ msgstr "No se pudo abrir la carpeta contenedora"
 
 #~ msgid "Style:"
 #~ msgstr "Estilo:"
