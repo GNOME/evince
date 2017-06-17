@@ -6,10 +6,10 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: master\n"
-"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
+"Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evince&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2016-11-27 15:32+0000\n"
-"PO-Revision-Date: 2017-02-19 21:30+0500\n"
+"POT-Creation-Date: 2017-05-12 13:58+0000\n"
+"PO-Revision-Date: 2017-06-17 16:04+0500\n"
 "Last-Translator: Baurzhan Muftakhidinov <baurthefirst@gmail.com>\n"
 "Language-Team: Kazakh <kk_KZ@googlegroups.com>\n"
 "Language: kk\n"
@@ -17,55 +17,32 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 1.8.11\n"
+"X-Generator: Poedit 2.0.2\n"
 
-#: ../backend/comics/comics-document.c:210
-#, c-format
-msgid ""
-"Error launching the command “%s” in order to decompress the comic book: %s"
-msgstr "Comic book тарқату үшін “%s” командасын жөнелту қатесі: %s"
-
-#: ../backend/comics/comics-document.c:224
-#, c-format
-msgid "The command “%s” failed at decompressing the comic book."
-msgstr "Comic book тарқату үшін “%s” командасы қатемен аяқталды."
-
-#: ../backend/comics/comics-document.c:233
-#, c-format
-msgid "The command “%s” did not end normally."
-msgstr "\"%s\" командасы дұрыс аяқталмады."
-
-#: ../backend/comics/comics-document.c:453
+#: ../backend/comics/comics-document.c:129
 #, c-format
 msgid "Not a comic book MIME type: %s"
 msgstr "Comic book MIME түрі емес: %s"
 
-#: ../backend/comics/comics-document.c:460
-msgid "Can’t find an appropriate command to decompress this type of comic book"
-msgstr "Comic book осы түрін тарқату үшін керек команда табылмады"
+#: ../backend/comics/comics-document.c:136
+msgid ""
+"libarchive lacks support for this comic book’s compression, please contact "
+"your distributor"
+msgstr ""
+"libarchive ішінде бұл comic book сығуына қолдау жоқ, таратушыға хабарласыңыз"
 
-#: ../backend/comics/comics-document.c:526
-msgid "File corrupted"
-msgstr "Файл зақымдалған"
+#: ../backend/comics/comics-document.c:180
+msgid "Can not get local path for archive"
+msgstr "Архив үшін жергілікті орналасуды алу мүмкін емес"
 
-#: ../backend/comics/comics-document.c:539
-msgid "No files in archive"
-msgstr "Архивте файлдар жоқ"
+#: ../backend/comics/comics-document.c:202
+msgid "File corrupted or no files in archive"
+msgstr "Архив зақымдалған, немесе архивте файлдар жоқ"
 
-#: ../backend/comics/comics-document.c:578
+#: ../backend/comics/comics-document.c:230
 #, c-format
 msgid "No images found in archive %s"
 msgstr "%s архивінде суреттер табылмады"
-
-#: ../backend/comics/comics-document.c:828
-#, c-format
-msgid "There was an error deleting “%s”."
-msgstr "\"%s\" өшіру кезінде қате орын алды."
-
-#: ../backend/comics/comics-document.c:921
-#, c-format
-msgid "Error %s"
-msgstr "%s қатесі"
 
 #: ../backend/comics/comicsdocument.evince-backend.in.in.h:1
 #: ../backend/comics/evince-comicsdocument.metainfo.xml.in.in.h:1
@@ -426,17 +403,17 @@ msgstr "\"%s\" салынымын ашу сәтсіз"
 msgid "File type %s (%s) is not supported"
 msgstr "%s (%s) файл пішіміне қолдау жоқ"
 
-#: ../libdocument/ev-document-factory.c:364
+#: ../libdocument/ev-document-factory.c:368
 #: ../libdocument/ev-file-helpers.c:492 ../libdocument/ev-file-helpers.c:538
 #: ../libdocument/ev-file-helpers.c:557
 msgid "Unknown MIME Type"
 msgstr "Белгісіз MIME түрі"
 
-#: ../libdocument/ev-document-factory.c:552
+#: ../libdocument/ev-document-factory.c:577
 msgid "All Documents"
 msgstr "Барлық құжаттар"
 
-#: ../libdocument/ev-document-factory.c:579 ../shell/ev-utils.c:309
+#: ../libdocument/ev-document-factory.c:604 ../shell/ev-utils.c:309
 msgid "All Files"
 msgstr "Барлық файлдар"
 
@@ -462,7 +439,7 @@ msgstr "%d ішінен"
 
 #: ../libmisc/ev-page-action-widget.c:185 ../shell/ev-history.c:426
 #: ../shell/ev-sidebar-bookmarks.c:295 ../shell/ev-window.c:907
-#: ../shell/ev-window.c:4677
+#: ../shell/ev-window.c:4686
 #, c-format
 msgid "Page %s"
 msgstr "Парақ %s"
@@ -501,7 +478,7 @@ msgstr "%d парағын көрсету сәтсіз аяқталды"
 msgid "Failed to create thumbnail for page %d"
 msgstr "%d парағының кіші көрінісін жасау сәтсіз аяқталды"
 
-#: ../libview/ev-jobs.c:2031
+#: ../libview/ev-jobs.c:2033
 #, c-format
 msgid "Failed to print page %d: %s"
 msgstr "%d парағын баспаға шығару қатесі: %s"
@@ -704,7 +681,7 @@ msgstr "ФАЙЛ"
 msgid "GNOME Document Previewer"
 msgstr "GNOME құжаттарды алдын-ала көрсету қолданбасы"
 
-#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3262
+#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3269
 msgid "Failed to print document"
 msgstr "Құжатты баспаға шығару сәтсіз"
 
@@ -995,7 +972,7 @@ msgstr "%s құжаты үшін пароль"
 
 #. Create tree view
 #: ../shell/ev-loading-message.c:50 ../shell/ev-sidebar-annotations.c:125
-#: ../shell/ev-sidebar-layers.c:125 ../shell/ev-sidebar-links.c:261
+#: ../shell/ev-sidebar-layers.c:125 ../shell/ev-sidebar-links.c:268
 msgid "Loading…"
 msgstr "Жүктеу..."
 
@@ -1121,7 +1098,7 @@ msgstr "Бетбелгілер"
 msgid "Layers"
 msgstr "Қабаттар"
 
-#: ../shell/ev-sidebar-links.c:337
+#: ../shell/ev-sidebar-links.c:344
 msgid "Print…"
 msgstr "Баспаға шығару..."
 
@@ -1131,7 +1108,7 @@ msgstr "Баспаға шығару..."
 #. * your language.  The sidebar cannot be shrinked smaller than
 #. * the longest title in there.
 #.
-#: ../shell/ev-sidebar-links.c:728
+#: ../shell/ev-sidebar-links.c:750
 msgid "Outline"
 msgstr "Құрылымы"
 
@@ -1258,60 +1235,56 @@ msgstr "Көшірмесін сақтау"
 msgid "Could not send current document"
 msgstr "Ағымдағы құжатты жіберу мүмкін емес"
 
-#: ../shell/ev-window.c:2942
-msgid "Could not open the containing folder"
-msgstr "Орналасқан бумасын ашу мүмкін емес"
-
-#: ../shell/ev-window.c:3206
+#: ../shell/ev-window.c:3213
 #, c-format
 msgid "%d pending job in queue"
 msgid_plural "%d pending jobs in queue"
 msgstr[0] "Кезекте %d тапсырма бар"
 
-#: ../shell/ev-window.c:3319
+#: ../shell/ev-window.c:3326
 #, c-format
 msgid "Printing job “%s”"
 msgstr "\"%s\" тапсырмасын басып шығару"
 
-#: ../shell/ev-window.c:3534
+#: ../shell/ev-window.c:3541
 msgid "Document contains form fields that have been filled out. "
 msgstr "Құжатта толтырылған форма өрістері бар. "
 
-#: ../shell/ev-window.c:3537
+#: ../shell/ev-window.c:3544
 msgid "Document contains new or modified annotations. "
 msgstr "Құжатта жаңа немесе өзгертілген аңдатпалар бар. "
 
-#: ../shell/ev-window.c:3549
+#: ../shell/ev-window.c:3556
 #, c-format
 msgid "Reload document “%s”?"
 msgstr "\"%s\" құжатын қайта жүктеу керек пе?"
 
-#: ../shell/ev-window.c:3551
+#: ../shell/ev-window.c:3558
 msgid "If you reload the document, changes will be permanently lost."
 msgstr "Құжатты қайта жүктесеңіз, өзгерістер қайтарылмастай жоғалады."
 
-#: ../shell/ev-window.c:3555
+#: ../shell/ev-window.c:3562
 msgid "Reload"
 msgstr "Қайта жүктеу"
 
-#: ../shell/ev-window.c:3562
+#: ../shell/ev-window.c:3569
 #, c-format
 msgid "Save a copy of document “%s” before closing?"
 msgstr "Жабу алдында “%s” құжаттың көшірмесін сақтау керек пе?"
 
-#: ../shell/ev-window.c:3564
+#: ../shell/ev-window.c:3571
 msgid "If you don’t save a copy, changes will be permanently lost."
 msgstr "Көшірмесін сақтамасаңыз, өзгерістер жоғалады."
 
-#: ../shell/ev-window.c:3566
+#: ../shell/ev-window.c:3573
 msgid "Close _without Saving"
 msgstr "Сақта_май-ақ жабу"
 
-#: ../shell/ev-window.c:3570
+#: ../shell/ev-window.c:3577
 msgid "Save a _Copy"
 msgstr "Кө_шірмесін сақтау"
 
-#: ../shell/ev-window.c:3654
+#: ../shell/ev-window.c:3661
 #, c-format
 msgid "Wait until print job “%s” finishes before closing?"
 msgstr "Жабу алдында “%s” тапсырмасын басып шығарудың аяқталуын күту керек пе?"
@@ -1319,7 +1292,7 @@ msgstr "Жабу алдында “%s” тапсырмасын басып шы�
 #. TRANS: the singular form is not really used as n_print_jobs > 1
 #. but some languages distinguish between different plurals forms,
 #. so the ngettext is needed.
-#: ../shell/ev-window.c:3660
+#: ../shell/ev-window.c:3667
 #, c-format
 msgid "There is %d print job active. Wait until print finishes before closing?"
 msgid_plural ""
@@ -1328,31 +1301,31 @@ msgstr[0] ""
 "Қазір %d басып шығару тапсырмасы белсенді. Жабу алдында олардың аяқталуын "
 "күту керек пе?"
 
-#: ../shell/ev-window.c:3675
+#: ../shell/ev-window.c:3682
 msgid "If you close the window, pending print jobs will not be printed."
 msgstr "Терезені жапсаңыз, кезектегі тапсырмалар баспаға шығарылмай қалады."
 
-#: ../shell/ev-window.c:3679
+#: ../shell/ev-window.c:3686
 msgid "Cancel _print and Close"
 msgstr "_Баспадан бас тарту мен жабу"
 
-#: ../shell/ev-window.c:3683
+#: ../shell/ev-window.c:3690
 msgid "Close _after Printing"
 msgstr "Баспаны а_яқтаудан кейін жабу"
 
-#: ../shell/ev-window.c:4214
+#: ../shell/ev-window.c:4221
 msgid "Running in presentation mode"
 msgstr "Презентация режимінде орындалу"
 
-#: ../shell/ev-window.c:5361
+#: ../shell/ev-window.c:5370
 msgid "Enable caret navigation?"
 msgstr "Мәтіндік курсор навигациясын іске қосу керек пе?"
 
-#: ../shell/ev-window.c:5363
+#: ../shell/ev-window.c:5372
 msgid "_Enable"
 msgstr "Іск_е қосу"
 
-#: ../shell/ev-window.c:5366
+#: ../shell/ev-window.c:5375
 msgid ""
 "Pressing F7 turns the caret navigation on or off. This feature places a "
 "moveable cursor in text pages, allowing you to move around and select text "
@@ -1363,39 +1336,39 @@ msgstr ""
 "пернетақта көмегімен жылжытып, мәтінді ерекшелеуге болады. Мәтіндік курсор "
 "навигациясын іске қосуды қалайсыз ба?"
 
-#: ../shell/ev-window.c:5371
+#: ../shell/ev-window.c:5380
 msgid "Don’t show this message again"
 msgstr "Бұл хабарламаны келесіде көрсетпеу"
 
-#: ../shell/ev-window.c:5886 ../shell/ev-window.c:5902
+#: ../shell/ev-window.c:5895 ../shell/ev-window.c:5911
 msgid "Unable to launch external application."
 msgstr "Сыртқы қолданданы жөнелту мүмкін емес."
 
-#: ../shell/ev-window.c:5959
+#: ../shell/ev-window.c:5968
 msgid "Unable to open external link"
 msgstr "Сыртқы сілтемені ашу мүмкін емес"
 
-#: ../shell/ev-window.c:6162
+#: ../shell/ev-window.c:6171
 msgid "Couldn’t find appropriate format to save image"
 msgstr "Суретті сақтау үшін сәйкес пішімді табу мүмкін емес"
 
-#: ../shell/ev-window.c:6194
+#: ../shell/ev-window.c:6203
 msgid "The image could not be saved."
 msgstr "Суретті сақтау мүмкін емес."
 
-#: ../shell/ev-window.c:6229
+#: ../shell/ev-window.c:6238
 msgid "Save Image"
 msgstr "Суретті сақтау"
 
-#: ../shell/ev-window.c:6388
+#: ../shell/ev-window.c:6397
 msgid "Unable to open attachment"
 msgstr "Салынымды ашу мүмкін емес"
 
-#: ../shell/ev-window.c:6444
+#: ../shell/ev-window.c:6453
 msgid "The attachment could not be saved."
 msgstr "Салынымды сақтау мүмкін емес."
 
-#: ../shell/ev-window.c:6492
+#: ../shell/ev-window.c:6501
 msgid "Save Attachment"
 msgstr "Салынымды сақтау"
 
@@ -1848,6 +1821,32 @@ msgstr ""
 "Ол келесі құжаттар пішімдерін қолдайды: PDF, PS, EPS, XPS, DjVu, TIFF, DVI "
 "(SyncTeX), және Comic Books архивтері (CBR, CBT, CBZ, CB7)."
 
+#~ msgid ""
+#~ "Error launching the command “%s” in order to decompress the comic book: %s"
+#~ msgstr "Comic book тарқату үшін “%s” командасын жөнелту қатесі: %s"
+
+#~ msgid "The command “%s” failed at decompressing the comic book."
+#~ msgstr "Comic book тарқату үшін “%s” командасы қатемен аяқталды."
+
+#~ msgid "The command “%s” did not end normally."
+#~ msgstr "\"%s\" командасы дұрыс аяқталмады."
+
+#~ msgid ""
+#~ "Can’t find an appropriate command to decompress this type of comic book"
+#~ msgstr "Comic book осы түрін тарқату үшін керек команда табылмады"
+
+#~ msgid "File corrupted"
+#~ msgstr "Файл зақымдалған"
+
+#~ msgid "There was an error deleting “%s”."
+#~ msgstr "\"%s\" өшіру кезінде қате орын алды."
+
+#~ msgid "Error %s"
+#~ msgstr "%s қатесі"
+
+#~ msgid "Could not open the containing folder"
+#~ msgstr "Орналасқан бумасын ашу мүмкін емес"
+
 #~ msgid "Style:"
 #~ msgstr "Стилі:"
 
@@ -2172,9 +2171,6 @@ msgstr ""
 
 #~ msgid "Cannot read data from file"
 #~ msgstr "Файлдан ақпаратты оқу мүмкін емес"
-
-#~ msgid "Cannot find file in the ZIP archive"
-#~ msgstr "ZIP архивінде файл табылмады"
 
 #~ msgid "Unknown error"
 #~ msgstr "Белгісіз қате"
