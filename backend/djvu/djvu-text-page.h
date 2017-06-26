@@ -30,7 +30,7 @@ typedef struct _DjvuTextPage DjvuTextPage;
 typedef struct _DjvuTextLink DjvuTextLink;
 
 struct _DjvuTextPage {
-	char *text;
+	GString *text;
 	GArray *links;
 	GList *results;
 	miniexp_t char_symbol;
@@ -39,6 +39,8 @@ struct _DjvuTextPage {
 	miniexp_t text_structure;
 	miniexp_t start;
 	miniexp_t end;
+	GArray *utf8_map;
+	int utf8_count;
 };
 
 struct _DjvuTextLink {

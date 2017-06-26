@@ -8882,7 +8882,15 @@ ev_view_find_get_n_results (EvView *view, gint page)
 static EvRectangle *
 ev_view_find_get_result (EvView *view, gint page, gint result)
 {
-	return view->find_pages ? (EvRectangle *) g_list_nth_data (view->find_pages[page], result) : NULL;
+	EvDocumentFindMatch *match;
+
+	if (view->find_pages) {
+		match = (EvDocumentFindMatch *) g_list_nth_data (view->find_pages[page],
+		                                                 result);
+		return &match->area;
+	}
+
+	return NULL;
 }
 
 static void

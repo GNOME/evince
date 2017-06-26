@@ -22,6 +22,7 @@
 #include <glib.h>
 #include <libdjvu/miniexp.h>
 #include "djvu-text-page.h"
+#include "ev-document-find.h"
 
 
 /**
@@ -107,15 +108,13 @@ djvu_text_page_selection_process_text (DjvuTextPage *page,
 	if (page->text || p == page->start) {
 		char *token_text = (char *) miniexp_to_str (miniexp_nth (5, p));
 		if (page->text) {
-			char *new_text =
-			    g_strjoin (delimit & 2 ? "\n" : 
-			    	       delimit & 1 ? " " : NULL,
-				       page->text, token_text,
-				       NULL);
-			g_free (page->text);
-			page->text = new_text;
+			if (delimit & 2)
+				g_string_append_c (page->text, '\n');
+			else if (delimit & 1)
+				g_string_append_c (page->text, ' ');
+			g_string_append (page->text, token_text);
 		} else
-			page->text = g_strdup (token_text);
+			page->text = g_string_new (token_text);
 		if (p == page->end) 
 			return FALSE;
 	}
@@ -241,7 +240,7 @@ char *
 djvu_text_page_copy (DjvuTextPage *page, 
 		     EvRectangle  *rectangle)
 {
-	char* text;
+	char* text = NULL;
 	
 	page->start = miniexp_nil;
 	page->end = miniexp_nil;
@@ -250,8 +249,10 @@ djvu_text_page_copy (DjvuTextPage *page,
 	                          page->text_structure, 0);
 	
 	/* Do not free the string */	  
-	text = page->text;
-	page->text = NULL;
+	if (page->text) {
+		text = g_string_free (page->text, FALSE);
+		page->text = NULL;
+	}
 	
 	return text;
 }
@@ -402,7 +403,7 @@ djvu_text_page_append_text (DjvuTextPage *page,
 			    gboolean      case_sensitive, 
 			    gboolean      delimit)
 {
-	char *token_text;
+	const char *token_text;
 	miniexp_t deeper;
 	
 	g_return_if_fail (miniexp_consp (p) && 
@@ -416,25 +417,55 @@ djvu_text_page_append_text (DjvuTextPage *page,
 		if (miniexp_stringp (data)) {
 			DjvuTextLink link;
 			link.position = page->text == NULL ? 0 :
-			    strlen (page->text);
+			    page->text->len;
 			link.pair = p;
 			g_array_append_val (page->links, link);
 
-			token_text = (char *) miniexp_to_str (data);
-			if (!case_sensitive)
-				token_text = g_utf8_casefold (token_text, -1);
-			if (page->text == NULL)
-				page->text = g_strdup (token_text);
-			else {
-				char *new_text =
-				    g_strjoin (delimit ? " " : NULL,
-					       page->text, token_text,
-					       NULL);
-				g_free (page->text);
-				page->text = new_text;
+			if (page->text == NULL) {
+				page->text = g_string_new (NULL);
+				if (page->utf8_map)
+					g_array_set_size (page->utf8_map, 0);
+				else
+					page->utf8_map = g_array_new (FALSE,
+								      FALSE,
+								      sizeof (gint));
+				page->utf8_count = 0;
+			} else if (delimit) {
+				g_string_append_c (page->text, ' ');
+				g_array_append_val (page->utf8_map, page->utf8_count);
+				page->utf8_count++;
 			}
-			if (!case_sensitive)
-				g_free (token_text);
+
+			/* Append token to page text and build map of bytes to
+			 * utf8 offsets. The map is needed because casefold can
+			 * convert a character to multiple characters and we'll
+			 * need to convert back to offsets in original text. */
+			token_text = miniexp_to_str (data);
+			while (*token_text != '\0') {
+				char *casefold_text;
+				const gchar *next;
+				int i;
+
+				next = g_utf8_next_char (token_text);
+				if (!case_sensitive) {
+					casefold_text = g_utf8_casefold (token_text,
+						                         next - token_text);
+					g_string_append (page->text, casefold_text);
+					for (i = 0; i < strlen (casefold_text); i++)
+						g_array_append_val (page->utf8_map,
+							            page->utf8_count);
+					g_free (casefold_text);
+				} else {
+					g_string_append_len (page->text,
+						             token_text,
+							     next - token_text);
+					for (i = 0; i < next - token_text; i++)
+						g_array_append_val (page->utf8_map,
+							            page->utf8_count);
+				}
+				page->utf8_count++;
+				token_text = next;
+			}
 		} else
 			djvu_text_page_append_text (page, data, 
 						    case_sensitive, delimit);
@@ -455,22 +486,28 @@ void
 djvu_text_page_search (DjvuTextPage *page, 
 		       const char   *text)
 {
-	char *haystack = page->text;
+	char *haystack = page->text->str;
 	int search_len;
-	EvRectangle *result;
+	EvRectangle *area;
+	EvDocumentFindMatch *result;
 	if (page->links->len == 0)
 		return;
 
 	search_len = strlen (text);
 	while ((haystack = strstr (haystack, text)) != NULL) {
-		int start_p = haystack - page->text;
+		int start_p = haystack - page->text->str;
 		miniexp_t start = djvu_text_page_position (page, start_p);
 		int end_p = start_p + search_len - 1;
 		miniexp_t end = djvu_text_page_position (page, end_p);
-		result = djvu_text_page_box (page, start, end);
-		g_assert (result);
+		area = djvu_text_page_box (page, start, end);
+		g_assert (area);
+		result = ev_document_find_match_new ();
+		result->area = *area;
+		result->start_offset = g_array_index (page->utf8_map, gint, start_p);
+		result->end_offset = g_array_index (page->utf8_map, gint, end_p) + 1;
 		page->results = g_list_prepend (page->results, result);
 		haystack = haystack + search_len;
+		ev_rectangle_free (area);
 	}
 	page->results = g_list_reverse (page->results);
 }
@@ -521,7 +558,10 @@ djvu_text_page_new (miniexp_t text)
 void 
 djvu_text_page_free (DjvuTextPage *page)
 {
-	g_free (page->text);
+	if (page->text)
+		g_string_free (page->text, TRUE);
+	if (page->utf8_map)
+		g_array_free (page->utf8_map, TRUE);
 	g_array_free (page->links, TRUE);
 	g_free (page);
 }

@@ -1639,10 +1639,9 @@ ev_job_find_dispose (GObject *object)
 	if (job->pages) {
 		gint i;
 
-		for (i = 0; i < job->n_pages; i++) {
-			g_list_foreach (job->pages[i], (GFunc)ev_rectangle_free, NULL);
-			g_list_free (job->pages[i]);
-		}
+		for (i = 0; i < job->n_pages; i++)
+			g_list_free_full (job->pages[i],
+				          (GDestroyNotify)ev_document_find_match_free);
 
 		g_free (job->pages);
 		job->pages = NULL;
@@ -1657,7 +1656,7 @@ ev_job_find_run (EvJob *job)
 	EvJobFind      *job_find = EV_JOB_FIND (job);
 	EvDocumentFind *find = EV_DOCUMENT_FIND (job->document);
 	EvPage         *ev_page;
-	GList          *matches;
+	GList          *matches = NULL;
 
 	ev_debug_message (DEBUG_JOBS, NULL);
 	
@@ -1672,8 +1671,8 @@ ev_job_find_run (EvJob *job)
 #endif
 
 	ev_page = ev_document_get_page (job->document, job_find->current_page);
-	matches = ev_document_find_find_text_with_options (find, ev_page, job_find->text,
-                                                           job_find->options);
+	matches = ev_document_find_find_text_offset (find, ev_page, job_find->text,
+						     job_find->options);
 	g_object_unref (ev_page);
 	
 	ev_document_doc_mutex_unlock ();
