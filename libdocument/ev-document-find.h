@@ -42,6 +42,14 @@ G_BEGIN_DECLS
 
 typedef struct _EvDocumentFind	        EvDocumentFind;
 typedef struct _EvDocumentFindInterface EvDocumentFindInterface;
+typedef struct _EvDocumentFindMatch     EvDocumentFindMatch;
+
+struct _EvDocumentFindMatch
+{
+    EvRectangle area;
+    gint        start_offset;
+    gint        end_offset;
+};
 
 typedef enum {
 	EV_FIND_DEFAULT          = 0,
@@ -62,6 +70,10 @@ struct _EvDocumentFindInterface
 						  EvPage         *page,
 						  const gchar    *text,
 						  EvFindOptions   options);
+	GList        *(* find_text_offset)       (EvDocumentFind *document_find,
+						  EvPage         *page,
+						  const gchar    *text,
+						  EvFindOptions   options);
 	EvFindOptions (*get_supported_options)   (EvDocumentFind *document_find);
 };
 
@@ -74,7 +86,13 @@ GList        *ev_document_find_find_text_with_options (EvDocumentFind *document_
 						       EvPage         *page,
 						       const gchar    *text,
 						       EvFindOptions   options);
+GList        *ev_document_find_find_text_offset       (EvDocumentFind *document_find,
+			                               EvPage         *page,
+			                               const gchar    *text,
+			                               EvFindOptions   options);
 EvFindOptions ev_document_find_get_supported_options  (EvDocumentFind *document_find);
+EvDocumentFindMatch *ev_document_find_match_new       (void);
+void                 ev_document_find_match_free      (EvDocumentFindMatch *match);
 
 G_END_DECLS
 

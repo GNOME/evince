@@ -749,7 +749,8 @@ djvu_document_text_get_text (EvDocumentText  *selection,
 		DjvuTextPage *tpage = djvu_text_page_new (page_text);
 
 		djvu_text_page_index_text (tpage, TRUE);
-		text = tpage->text;
+		if (tpage->text)
+			text = g_string_free (tpage->text, FALSE);
 		tpage->text = NULL;
 		djvu_text_page_free (tpage);
 		ddjvu_miniexp_release (djvu_document->d_document, page_text);
@@ -850,15 +851,16 @@ djvu_document_init (DjvuDocument *djvu_document)
 }
 
 static GList *
-djvu_document_find_find_text (EvDocumentFind   *document,
-			      EvPage           *page,
-			      const char       *text,
-			      gboolean          case_sensitive)
+djvu_document_find_find_text_offset (EvDocumentFind   *document,
+			             EvPage           *page,
+			             const char       *text,
+			             EvFindOptions     options)
 {
         DjvuDocument *djvu_document = DJVU_DOCUMENT (document);
 	miniexp_t page_text;
 	gdouble width, height, dpi;
 	GList *matches = NULL, *l;
+	gboolean case_sensitive = options & EV_FIND_CASE_SENSITIVE;
 
 	g_return_val_if_fail (text != NULL, NULL);
 
@@ -883,16 +885,15 @@ djvu_document_find_find_text (EvDocumentFind   *document,
 
 	document_get_page_size (djvu_document, page->index, &width, &height, &dpi);
 	for (l = matches; l && l->data; l = g_list_next (l)) {
-		EvRectangle *r = (EvRectangle *)l->data;
-		gdouble tmp = r->y1;
+		EvDocumentFindMatch *r = (EvDocumentFindMatch *)l->data;
+		gdouble tmp = r->area.y1;
 
-		r->x1 *= 72.0 / dpi;
-		r->x2 *= 72.0 / dpi;
+		r->area.x1 *= 72.0 / dpi;
+		r->area.x2 *= 72.0 / dpi;
 
-		r->y1 = height - r->y2 * 72.0 / dpi;
-		r->y2 = height - tmp * 72.0 / dpi;
+		r->area.y1 = height - r->area.y2 * 72.0 / dpi;
+		r->area.y2 = height - tmp * 72.0 / dpi;
 	}
-	
 
 	return matches;
 }
@@ -906,7 +907,7 @@ djvu_document_find_get_supported_options (EvDocumentFind *document)
 static void
 djvu_document_find_iface_init (EvDocumentFindInterface *iface)
 {
-        iface->find_text = djvu_document_find_find_text;
+	iface->find_text_offset = djvu_document_find_find_text_offset;
 	iface->get_supported_options = djvu_document_find_get_supported_options;
 }
 
