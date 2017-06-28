@@ -6,8 +6,8 @@
 
 #include "rar.h"
 
-static void *gSzAlloc_Alloc(void *self, size_t size) { (void)self; return malloc(size); }
-static void gSzAlloc_Free(void *self, void *ptr) { (void)self; free(ptr); }
+static void *gSzAlloc_Alloc(ISzAllocPtr p, size_t size) { return malloc(size); }
+static void gSzAlloc_Free(ISzAllocPtr p, void *ptr) { free(ptr); }
 static ISzAlloc gSzAlloc = { gSzAlloc_Alloc, gSzAlloc_Free };
 
 static bool br_fill(ar_archive_rar *rar, int bits)
@@ -44,9 +44,9 @@ static inline uint64_t br_bits(ar_archive_rar *rar, int bits)
     return (rar->uncomp.br.bits >> (rar->uncomp.br.available -= bits)) & (((uint64_t)1 << bits) - 1);
 }
 
-static Byte ByteIn_Read(void *p)
+static Byte ByteIn_Read(const IByteIn *p)
 {
-    struct ByteReader *self = p;
+    struct ByteReader *self = (struct ByteReader *) p;
     return br_check(self->rar, 8) ? (Byte)br_bits(self->rar, 8) : 0xFF;
 }
 
@@ -68,15 +68,15 @@ static void PpmdRAR_RangeDec_Init(struct CPpmdRAR_RangeDec *p)
     }
 }
 
-static UInt32 Range_GetThreshold(void *p, UInt32 total)
+static UInt32 Range_GetThreshold(const IPpmd7_RangeDec *p, UInt32 total)
 {
-    struct CPpmdRAR_RangeDec *self = p;
+    struct CPpmdRAR_RangeDec *self = (struct CPpmdRAR_RangeDec *) p;
     return self->Code / (self->Range /= total);
 }
 
-static void Range_Decode_RAR(void *p, UInt32 start, UInt32 size)
+static void Range_Decode_RAR(const IPpmd7_RangeDec *p, UInt32 start, UInt32 size)
 {
-    struct CPpmdRAR_RangeDec *self = p;
+    struct CPpmdRAR_RangeDec *self = (struct CPpmdRAR_RangeDec *) p;
     self->Low += start * self->Range;
     self->Code -= start * self->Range;
     self->Range *= size;
@@ -92,7 +92,7 @@ static void Range_Decode_RAR(void *p, UInt32 start, UInt32 size)
     }
 }
 
-static UInt32 Range_DecodeBit_RAR(void *p, UInt32 size0)
+static UInt32 Range_DecodeBit_RAR(const IPpmd7_RangeDec *p, UInt32 size0)
 {
     UInt32 value = Range_GetThreshold(p, PPMD_BIN_SCALE);
     UInt32 bit = value < size0 ? 0 : 1;
