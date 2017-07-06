@@ -795,7 +795,7 @@ AC_SUBST(TIFF_MIME_TYPES)
 AC_SUBST(APPDATA_TIFF_MIME_TYPES)
 AM_SUBST_NOTMAKE(APPDATA_TIFF_MIME_TYPES)
 if test "x$enable_comics" = "xyes"; then
-        COMICS_MIME_TYPES="application/x-cbr;application/x-cbz;application/x-cb7;application/x-cbt;application/x-ext-cbr;application/x-ext-cbz;application/vnd.comicbook+zip;application/x-ext-cb7;application/x-ext-cbt"
+        COMICS_MIME_TYPES="application/x-cbr;application/x-cbz;application/x-cb7;application/x-ext-cbr;application/x-ext-cbz;application/vnd.comicbook+zip;application/x-ext-cb7;"
         APPDATA_COMICS_MIME_TYPES=$(echo "<mimetype>$COMICS_MIME_TYPES</mimetype>" | sed -e 's/;/<\/mimetype>\n    <mimetype>/g')
         if test -z "$EVINCE_MIME_TYPES"; then
            EVINCE_MIME_TYPES="${COMICS_MIME_TYPES}"
