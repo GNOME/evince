@@ -120,6 +120,7 @@ GLIB_REQUIRED=2.36.0
 LIBSECRET_REQUIRED=0.5
 GTK_REQUIRED=3.16.0
 NAUTILUS_REQUIRED=2.91.4
+GDK_PIXBUF_REQUIRED=2.36.5
 
 AC_SUBST([GLIB_REQUIRED])
 AC_SUBST([GTK_REQUIRED])
@@ -325,9 +326,9 @@ AC_ARG_ENABLE([libgnome-desktop],
 
 if test "$enable_gnome_desktop" != "no"; then
    if test "$enable_gnome_desktop" = "auto"; then
-      PKG_CHECK_MODULES([LIBGNOME_DESKTOP], [gnome-desktop-3.0], has_libgnome_desktop=yes, has_libgnome_desktop=no)
+      PKG_CHECK_MODULES([LIBGNOME_DESKTOP], [gnome-desktop-3.0 gdk-pixbuf-2.0 >= $GDK_PIXBUF_REQUIRED], has_libgnome_desktop=yes, has_libgnome_desktop=no)
    else
-      PKG_CHECK_MODULES([LIBGNOME_DESKTOP], [gnome-desktop-3.0])
+      PKG_CHECK_MODULES([LIBGNOME_DESKTOP], [gnome-desktop-3.0 gdk-pixbuf-2.0 >= $GDK_PIXBUF_REQUIRED])
       has_libgnome_desktop=yes
    fi
 

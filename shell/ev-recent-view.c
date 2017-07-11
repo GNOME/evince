@@ -551,9 +551,10 @@ get_thumbnail_from_cache_thread (GTask                    *task,
                 } else if (width != target_width || height != target_height) {
                         GdkPixbuf *scaled;
 
-                        scaled = gnome_desktop_thumbnail_scale_down_pixbuf (thumbnail,
-                                                                            target_width,
-                                                                            target_height);
+                        scaled = gdk_pixbuf_scale_simple (thumbnail,
+                                                          target_width,
+                                                          target_height,
+                                                          GDK_INTERP_HYPER);
                         g_object_unref (thumbnail);
                         thumbnail = scaled;
                 }
