@@ -321,7 +321,10 @@ comics_document_get_page_size (EvDocument *document,
 
 			read = ev_archive_read_data (comics_document->archive, buf, sizeof(buf), &error);
 			while (read > 0 && !info.got_info) {
-				gdk_pixbuf_loader_write (loader, (guchar *) buf, read, NULL);
+				if (!gdk_pixbuf_loader_write (loader, (guchar *) buf, read, &error)) {
+					read = -1;
+					break;
+				}
 				read = ev_archive_read_data (comics_document->archive, buf, BLOCK_SIZE, &error);
 			}
 			if (read < 0) {
