@@ -18,16 +18,13 @@ libunarr_la_SOURCES =		\
 	common/conv.c		\
 	common/crc32.c		\
 	lzmasdk/LzmaDec.c	\
-	lzmasdk/Ppmd8.c		\
 	lzmasdk/Precomp.h	\
 	lzmasdk/7zTypes.h	\
 	lzmasdk/Ppmd7.h		\
 	lzmasdk/Ppmd7Dec.c	\
-	lzmasdk/Ppmd8Dec.c	\
 	lzmasdk/CpuArch.h	\
 	lzmasdk/LzmaDec.h	\
 	lzmasdk/CpuArch.c	\
-	lzmasdk/Ppmd8.h		\
 	lzmasdk/Ppmd7.c		\
 	lzmasdk/Ppmd.h
 
