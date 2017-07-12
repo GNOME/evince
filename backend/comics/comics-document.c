@@ -318,14 +318,19 @@ comics_document_get_page_size (EvDocument *document,
 		if (g_strcmp0 (name, page_path) == 0) {
 			char buf[BLOCK_SIZE];
 			gssize read;
+			gint64 left;
 
-			read = ev_archive_read_data (comics_document->archive, buf, sizeof(buf), &error);
+			left = ev_archive_get_entry_size (comics_document->archive);
+			read = ev_archive_read_data (comics_document->archive, buf,
+						     MIN(BLOCK_SIZE, left), &error);
 			while (read > 0 && !info.got_info) {
 				if (!gdk_pixbuf_loader_write (loader, (guchar *) buf, read, &error)) {
 					read = -1;
 					break;
 				}
-				read = ev_archive_read_data (comics_document->archive, buf, BLOCK_SIZE, &error);
+				left -= read;
+				read = ev_archive_read_data (comics_document->archive, buf,
+							     MIN(BLOCK_SIZE, left), &error);
 			}
 			if (read < 0) {
 				g_warning ("Fatal error reading '%s' in archive: %s", name, error->message);
