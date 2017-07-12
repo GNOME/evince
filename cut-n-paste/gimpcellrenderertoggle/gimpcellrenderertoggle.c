@@ -22,7 +22,6 @@
 
 #include <config.h>
 
-#include "gimpwidgetsmarshal.h"
 #include "gimpcellrenderertoggle.h"
 
 
@@ -96,7 +95,7 @@ gimp_cell_renderer_toggle_class_init (GimpCellRendererToggleClass *klass)
                   G_SIGNAL_RUN_LAST,
                   G_STRUCT_OFFSET (GimpCellRendererToggleClass, clicked),
                   NULL, NULL,
-                  _gimp_widgets_marshal_VOID__STRING_FLAGS,
+                  g_cclosure_marshal_generic,
                   G_TYPE_NONE, 2,
                   G_TYPE_STRING,
                   GDK_TYPE_MODIFIER_TYPE);
