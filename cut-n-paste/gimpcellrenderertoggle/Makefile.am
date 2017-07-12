@@ -8,12 +8,7 @@ libgimpcellrenderertoggle_la_CFLAGS =	\
 	$(SHELL_CORE_CFLAGS)		\
 	$(AM_CFLAGS)
 
-libgimpcellrenderertoggle_la_built_sources =	\
-	gimpwidgetsmarshal.h			\
-	gimpwidgetsmarshal.c
-
-libgimpcellrenderertoggle_la_SOURCES = 			\
-	$(libgimpcellrenderertoggle_la_built_sources)	\
+libgimpcellrenderertoggle_la_SOURCES =	\
 	$(libgimpcellrenderertoggle_la_sources)
 
 -include $(top_srcdir)/git.mk
