@@ -29,12 +29,8 @@
 
 G_BEGIN_DECLS
 
-#define EV_TYPE_DOCUMENT_MODEL            (ev_document_model_get_type ())
-#define EV_DOCUMENT_MODEL(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), EV_TYPE_DOCUMENT_MODEL, EvDocumentModel))
-#define EV_IS_DOCUMENT_MODEL(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), EV_TYPE_DOCUMENT_MODEL))
-#define EV_DOCUMENT_MODEL_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), EV_TYPE_DOCUMENT_MODEL, EvDocumentModelClass))
-#define EV_IS_DOCUMENT_MODEL_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), EV_TYPE_DOCUMENT_MODEL))
-#define EV_DOCUMENT_MODEL_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), EV_TYPE_DOCUMENT_MODEL, EvDocumentModelClass))
+#define EV_TYPE_DOCUMENT_MODEL (ev_document_model_get_type ())
+G_DECLARE_FINAL_TYPE(EvDocumentModel, ev_document_model, EV, DOCUMENT_MODEL, GObject)
 
 /**
  * EvSizingMode:
@@ -57,9 +53,6 @@ typedef enum {
 	EV_PAGE_LAYOUT_DUAL,
 	EV_PAGE_LAYOUT_AUTOMATIC
 } EvPageLayout;
-
-typedef struct _EvDocumentModel        EvDocumentModel;
-typedef struct _EvDocumentModelClass   EvDocumentModelClass;
 
 GType            ev_document_model_get_type          (void) G_GNUC_CONST;
 EvDocumentModel *ev_document_model_new               (void);

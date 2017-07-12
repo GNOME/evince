@@ -46,16 +46,6 @@ struct _EvDocumentModel
 	gdouble min_scale;
 };
 
-struct _EvDocumentModelClass
-{
-	GObjectClass base_class;
-
-	/* Signals  */
-	void (* page_changed) (EvDocumentModel *model,
-			       gint             old_page,
-			       gint             new_page);
-};
-
 enum {
 	PROP_0,
 	PROP_DOCUMENT,
@@ -327,7 +317,7 @@ ev_document_model_class_init (EvDocumentModelClass *klass)
 		g_signal_new ("page-changed",
 			      EV_TYPE_DOCUMENT_MODEL,
 			      G_SIGNAL_RUN_LAST,
-			      G_STRUCT_OFFSET (EvDocumentModelClass, page_changed),
+			      0,
 			      NULL, NULL,
 			      ev_view_marshal_VOID__INT_INT,
 			      G_TYPE_NONE, 2,
