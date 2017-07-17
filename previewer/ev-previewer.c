@@ -43,7 +43,7 @@ static EvPreviewerWindow *window = NULL;
 
 static const GOptionEntry goption_options[] = {
 	{ "unlink-tempfile", 'u', 0, G_OPTION_ARG_NONE, &unlink_temp_file, N_("Delete the temporary file"), NULL },
-	{ "print-settings", 'p', 0, G_OPTION_ARG_FILENAME, &print_settings, N_("Print settings file"), N_("FILE") },
+	{ "print-settings", 'p', 0, G_OPTION_ARG_FILENAME, &print_settings, N_("File specifying print settings"), N_("FILE") },
 	{ NULL }
 };
 
