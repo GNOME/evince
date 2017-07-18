@@ -83,9 +83,9 @@ static GPtrArray *
 comics_document_list (ComicsDocument  *comics_document,
 		      GError         **error)
 {
-	char **ret = NULL;
 	GPtrArray *array;
 	gboolean has_encrypted_files;
+	GSList *supported_extensions;
 
 	if (!ev_archive_open_filename (comics_document->archive, comics_document->archive_path, error)) {
 		if (*error != NULL) {
@@ -100,8 +100,10 @@ comics_document_list (ComicsDocument  *comics_document,
 		goto out;
 	}
 
+	supported_extensions = get_supported_image_extensions ();
+
 	has_encrypted_files = FALSE;
-	array = g_ptr_array_new ();
+	array = g_ptr_array_sized_new (64);
 
 	while (1) {
 		const char *name;
@@ -123,6 +125,11 @@ comics_document_list (ComicsDocument  *comics_document,
 		}
 
 		name = ev_archive_get_entry_pathname (comics_document->archive);
+		if (!has_supported_extension (name, supported_extensions)) {
+			g_debug ("Not adding unsupported file '%s' to the list of files in the comics", name);
+			continue;
+		}
+
 		if (ev_archive_get_entry_is_encrypted (comics_document->archive)) {
 			g_debug ("Not adding encrypted file '%s' to the list of files in the comics", name);
 			has_encrypted_files = TRUE;
@@ -135,6 +142,8 @@ comics_document_list (ComicsDocument  *comics_document,
 
 	if (array->len == 0) {
 		g_ptr_array_free (array, TRUE);
+		array = NULL;
+
 		if (has_encrypted_files) {
 			g_set_error_literal (error,
 					     EV_DOCUMENT_ERROR,
@@ -146,14 +155,11 @@ comics_document_list (ComicsDocument  *comics_document,
 					     EV_DOCUMENT_ERROR_INVALID,
 					     _("No files in archive"));
 		}
-	} else {
-		g_ptr_array_add (array, NULL);
-		ret = (char **) g_ptr_array_free (array, FALSE);
 	}
 
 out:
 	ev_archive_reset (comics_document->archive);
-	return ret;
+	return array;
 }
 
 /* This function chooses the archive decompression support
@@ -219,10 +225,7 @@ comics_document_load (EvDocument *document,
 		      GError    **error)
 {
 	ComicsDocument *comics_document = COMICS_DOCUMENT (document);
-	GSList *supported_extensions;
 	gchar *mime_type;
-	gchar **cb_files, *cb_file;
-	int i;
 	GError *err = NULL;
 	GFile *file;
 
@@ -251,32 +254,9 @@ comics_document_load (EvDocument *document,
 	g_free (mime_type);
 
 	/* Get list of files in archive */
-	cb_files = comics_document_list (comics_document, error);
-	if (!cb_files)
+	comics_document->page_names = comics_document_list (comics_document, error);
+	if (!comics_document->page_names)
 		return FALSE;
-
-        comics_document->page_names = g_ptr_array_sized_new (64);
-
-	supported_extensions = get_supported_image_extensions ();
-	for (i = 0; cb_files[i] != NULL; i++) {
-		cb_file = cb_files[i];
-		if (has_supported_extension (cb_file, supported_extensions)) {
-                        g_ptr_array_add (comics_document->page_names,
-                                         g_strdup (cb_file));
-		}
-	}
-	g_strfreev (cb_files);
-	g_slist_foreach (supported_extensions, (GFunc) g_free, NULL);
-	g_slist_free (supported_extensions);
-
-	if (comics_document->page_names->len == 0) {
-		g_set_error (error,
-			     EV_DOCUMENT_ERROR,
-			     EV_DOCUMENT_ERROR_INVALID,
-			     _("No images found in archive %s"),
-			     uri);
-		return FALSE;
-	}
 
         /* Now sort the pages */
         g_ptr_array_sort (comics_document->page_names, sort_page_names);
