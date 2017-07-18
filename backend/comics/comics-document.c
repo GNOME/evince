@@ -64,6 +64,7 @@ comics_document_list (ComicsDocument  *comics_document,
 {
 	char **ret = NULL;
 	GPtrArray *array;
+	gboolean has_encrypted_files;
 
 	if (!ev_archive_open_filename (comics_document->archive, comics_document->archive_path, error)) {
 		if (*error != NULL) {
@@ -78,6 +79,7 @@ comics_document_list (ComicsDocument  *comics_document,
 		goto out;
 	}
 
+	has_encrypted_files = FALSE;
 	array = g_ptr_array_new ();
 
 	while (1) {
@@ -100,6 +102,11 @@ comics_document_list (ComicsDocument  *comics_document,
 		}
 
 		name = ev_archive_get_entry_pathname (comics_document->archive);
+		if (ev_archive_get_entry_is_encrypted (comics_document->archive)) {
+			g_debug ("Not adding encrypted file '%s' to the list of files in the comics", name);
+			has_encrypted_files = TRUE;
+			continue;
+		}
 
 		g_debug ("Adding '%s' to the list of files in the comics", name);
 		g_ptr_array_add (array, g_strdup (name));
@@ -107,10 +114,17 @@ comics_document_list (ComicsDocument  *comics_document,
 
 	if (array->len == 0) {
 		g_ptr_array_free (array, TRUE);
-		g_set_error_literal (error,
-				     EV_DOCUMENT_ERROR,
-				     EV_DOCUMENT_ERROR_INVALID,
-				     _("No files in archive"));
+		if (has_encrypted_files) {
+			g_set_error_literal (error,
+					     EV_DOCUMENT_ERROR,
+					     EV_DOCUMENT_ERROR_ENCRYPTED,
+					     _("Archive is encrypted"));
+		} else {
+			g_set_error_literal (error,
+					     EV_DOCUMENT_ERROR,
+					     EV_DOCUMENT_ERROR_INVALID,
+					     _("No files in archive"));
+		}
 	} else {
 		g_ptr_array_add (array, NULL);
 		ret = (char **) g_ptr_array_free (array, FALSE);
