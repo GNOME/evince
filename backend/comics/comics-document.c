@@ -219,7 +219,7 @@ comics_document_load (EvDocument *document,
 
 	comics_document->archive_uri = g_strdup (uri);
 
-	mime_type = ev_file_get_mime_type (uri, FALSE, &err);
+	mime_type = ev_file_get_mime_type (uri, FALSE, error);
 	if (mime_type == NULL)
 		return FALSE;
 
