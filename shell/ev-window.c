@@ -1723,7 +1723,7 @@ ev_window_load_job_cb (EvJob *job,
 		password = ev_keyring_lookup_password (ev_window->priv->uri);
 		if (password) {
 			if (job_load->password && strcmp (password, job_load->password) == 0) {
-				/* Password in kering is wrong */
+				/* Password in keyring is wrong */
 				ev_job_load_set_password (job_load, NULL);
 				/* FIXME: delete password from keyring? */
 			} else {
