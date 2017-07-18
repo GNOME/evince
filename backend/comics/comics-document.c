@@ -59,24 +59,42 @@ static GSList* get_supported_image_extensions (void);
 EV_BACKEND_REGISTER (ComicsDocument, comics_document)
 
 static char **
-comics_document_list (ComicsDocument *comics_document)
+comics_document_list (ComicsDocument  *comics_document,
+		      GError         **error)
 {
 	char **ret = NULL;
 	GPtrArray *array;
 
-	if (!ev_archive_open_filename (comics_document->archive, comics_document->archive_path, NULL))
+	if (!ev_archive_open_filename (comics_document->archive, comics_document->archive_path, error)) {
+		if (*error != NULL) {
+			g_debug ("Fatal error handling archive: %s", (*error)->message);
+			g_clear_error (error);
+		}
+
+		g_set_error_literal (error,
+				     EV_DOCUMENT_ERROR,
+				     EV_DOCUMENT_ERROR_INVALID,
+				     _("File is corrupted"));
 		goto out;
+	}
 
 	array = g_ptr_array_new ();
 
 	while (1) {
 		const char *name;
-		GError *error = NULL;
 
-		if (!ev_archive_read_next_header (comics_document->archive, &error)) {
-			if (error != NULL) {
-				g_warning ("Fatal error handling archive: %s", error->message);
-				g_error_free (error);
+		if (!ev_archive_read_next_header (comics_document->archive, error)) {
+			if (*error != NULL) {
+				g_debug ("Fatal error handling archive: %s", (*error)->message);
+				g_clear_error (error);
+
+				g_ptr_array_free (array, TRUE);
+
+				g_set_error_literal (error,
+						     EV_DOCUMENT_ERROR,
+						     EV_DOCUMENT_ERROR_INVALID,
+						     _("File is corrupted"));
+				goto out;
 			}
 			break;
 		}
@@ -89,6 +107,10 @@ comics_document_list (ComicsDocument *comics_document)
 
 	if (array->len == 0) {
 		g_ptr_array_free (array, TRUE);
+		g_set_error_literal (error,
+				     EV_DOCUMENT_ERROR,
+				     EV_DOCUMENT_ERROR_INVALID,
+				     _("No files in archive"));
 	} else {
 		g_ptr_array_add (array, NULL);
 		ret = (char **) g_ptr_array_free (array, FALSE);
@@ -194,14 +216,9 @@ comics_document_load (EvDocument *document,
 	g_free (mime_type);
 
 	/* Get list of files in archive */
-	cb_files = comics_document_list (comics_document);
-	if (!cb_files) {
-		g_set_error_literal (error,
-                                     EV_DOCUMENT_ERROR,
-                                     EV_DOCUMENT_ERROR_INVALID,
-                                     _("File corrupted or no files in archive"));
+	cb_files = comics_document_list (comics_document, error);
+	if (!cb_files)
 		return FALSE;
-	}
 
         comics_document->page_names = g_ptr_array_sized_new (64);
 
