@@ -37,6 +37,17 @@ appstream_in_files = evince-comicsdocument.metainfo.xml.in.in
 appstream_DATA = $(appstream_in_files:.xml.in.in=.xml)
 @INTLTOOL_XML_RULE@
 
+noinst_PROGRAMS = test-ev-archive
+
+test_ev_archive_SOURCES = ev-archive.c ev-archive.h test-ev-archive.c
+test_ev_archive_CPPFLAGS = $(libcomicsdocument_la_CPPFLAGS)
+test_ev_archive_CFLAGS = $(libcomicsdocument_la_CFLAGS)
+test_ev_archive_LDADD =					\
+	$(top_builddir)/cut-n-paste/unarr/libunarr.la	\
+	$(LIBARCHIVE_LIBS)				\
+	$(BACKEND_LIBS)					\
+	$(LIB_LIBS)
+
 EXTRA_DIST = $(backend_in_files) $(appstream_in_files)
 
 CLEANFILES = $(backend_DATA) $(appstream_DATA)
