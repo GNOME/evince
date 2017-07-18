@@ -58,7 +58,28 @@ static GSList* get_supported_image_extensions (void);
 
 EV_BACKEND_REGISTER (ComicsDocument, comics_document)
 
-static char **
+static gboolean
+has_supported_extension (const char *name,
+			 GSList     *supported_extensions)
+{
+	gboolean ret = FALSE;
+	gchar *suffix;
+
+	suffix = g_strrstr (name, ".");
+	if (!suffix)
+		return ret;
+
+	suffix = g_ascii_strdown (suffix + 1, -1);
+	if (g_slist_find_custom (supported_extensions, suffix,
+				 (GCompareFunc) strcmp) != NULL) {
+		ret = TRUE;
+	}
+	g_free (suffix);
+
+	return ret;
+}
+
+static GPtrArray *
 comics_document_list (ComicsDocument  *comics_document,
 		      GError         **error)
 {
@@ -239,16 +260,10 @@ comics_document_load (EvDocument *document,
 	supported_extensions = get_supported_image_extensions ();
 	for (i = 0; cb_files[i] != NULL; i++) {
 		cb_file = cb_files[i];
-		gchar *suffix = g_strrstr (cb_file, ".");
-		if (!suffix)
-			continue;
-		suffix = g_ascii_strdown (suffix + 1, -1);
-		if (g_slist_find_custom (supported_extensions, suffix,
-					 (GCompareFunc) strcmp) != NULL) {
+		if (has_supported_extension (cb_file, supported_extensions)) {
                         g_ptr_array_add (comics_document->page_names,
                                          g_strdup (cb_file));
 		}
-		g_free (suffix);
 	}
 	g_strfreev (cb_files);
 	g_slist_foreach (supported_extensions, (GFunc) g_free, NULL);
