@@ -261,6 +261,29 @@ ev_archive_get_entry_size (EvArchive *archive)
 	return -1;
 }
 
+gboolean
+ev_archive_get_entry_is_encrypted (EvArchive *archive)
+{
+	g_return_val_if_fail (EV_IS_ARCHIVE (archive), FALSE);
+	g_return_val_if_fail (archive->type != EV_ARCHIVE_TYPE_NONE, FALSE);
+
+	switch (archive->type) {
+	case EV_ARCHIVE_TYPE_RAR:
+		g_return_val_if_fail (archive->unarr != NULL, FALSE);
+		/* password-protected RAR is not even detected right now */
+		return FALSE;
+	case EV_ARCHIVE_TYPE_NONE:
+		g_assert_not_reached ();
+	case EV_ARCHIVE_TYPE_ZIP:
+	case EV_ARCHIVE_TYPE_7Z:
+	case EV_ARCHIVE_TYPE_TAR:
+		g_return_val_if_fail (archive->libar_entry != NULL, -1);
+		return archive_entry_is_encrypted (archive->libar_entry);
+	}
+
+	return FALSE;
+}
+
 gssize
 ev_archive_read_data (EvArchive *archive,
 		      void      *buf,
