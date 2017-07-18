@@ -1714,7 +1714,8 @@ ev_window_load_job_cb (EvJob *job,
 		return;
 	}
 
-	if (g_error_matches (job->error, EV_DOCUMENT_ERROR, EV_DOCUMENT_ERROR_ENCRYPTED)) {
+	if (g_error_matches (job->error, EV_DOCUMENT_ERROR, EV_DOCUMENT_ERROR_ENCRYPTED) &&
+	    EV_IS_DOCUMENT_SECURITY (document)) {
 		gchar *password;
 		
 		setup_view_from_metadata (ev_window);
