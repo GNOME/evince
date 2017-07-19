@@ -28,6 +28,9 @@ libunarr_la_SOURCES =		\
 	lzmasdk/Ppmd7.c		\
 	lzmasdk/Ppmd.h
 
+libunarr_la_CPPFLAGS = -DHAVE_ZLIB
+libunarr_la_LIBADD = $(ZLIB_LIBS)
+
 EXTRA_DIST = COPYING AUTHORS
 
 -include $(top_srcdir)/git.mk
