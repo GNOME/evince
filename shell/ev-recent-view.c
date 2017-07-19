@@ -307,9 +307,9 @@ add_thumbnail_to_model (GetDocumentInfoAsyncData *data,
         border.top = 3;
         border.bottom = 6;
 
-        surface = gd_embed_image_in_frame (thumbnail,
-                                           "resource:///org/gnome/evince/shell/ui/thumbnail-frame.png",
-                                           &border, &border);
+        surface = gd_embed_surface_in_frame (thumbnail,
+                                             "resource:///org/gnome/evince/shell/ui/thumbnail-frame.png",
+                                             &border, &border);
 
         path = gtk_tree_row_reference_get_path (data->row);
         if (path != NULL) {

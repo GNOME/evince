@@ -22,6 +22,9 @@
 #include "gd-two-lines-renderer.h"
 #include <string.h>
 
+#define SUBTITLE_DIM_PERCENTAGE 0.55
+#define SUBTITLE_SIZE_PERCENTAGE 0.82
+
 G_DEFINE_TYPE (GdTwoLinesRenderer, gd_two_lines_renderer, GTK_TYPE_CELL_RENDERER_TEXT)
 
 struct _GdTwoLinesRendererPrivate {
@@ -79,6 +82,36 @@ create_layout_with_attrs (GtkWidget *widget,
 }
 
 static void
+apply_subtitle_style_to_layout (GtkStyleContext *context,
+                                PangoLayout     *layout,
+                                GtkStateFlags    flags)
+{
+  PangoFontDescription *desc;
+  PangoAttrList *layout_attr;
+  PangoAttribute *attr_alpha;
+
+  gtk_style_context_save (context);
+  gtk_style_context_set_state (context, flags);
+  gtk_style_context_get (context, gtk_style_context_get_state (context),
+                         "font", &desc,
+                         NULL);
+  gtk_style_context_restore (context);
+
+  /* Set the font size */
+  pango_font_description_set_size (desc, pango_font_description_get_size (desc) * SUBTITLE_SIZE_PERCENTAGE);
+  pango_layout_set_font_description (layout, desc);
+  pango_font_description_free (desc);
+
+  /* Set the font alpha */
+  layout_attr = pango_attr_list_new ();
+  attr_alpha = pango_attr_foreground_alpha_new (SUBTITLE_DIM_PERCENTAGE * 65535);
+  pango_attr_list_insert (layout_attr, attr_alpha);
+
+  pango_layout_set_attributes (layout, layout_attr);
+  pango_attr_list_unref (layout_attr);
+}
+
+static void
 gd_two_lines_renderer_prepare_layouts (GdTwoLinesRenderer *self,
                                        const GdkRectangle *cell_area,
                                        GtkWidget *widget,
@@ -106,8 +139,15 @@ gd_two_lines_renderer_prepare_layouts (GdTwoLinesRenderer *self,
     }
   else
     {
+      GtkStyleContext *context;
+
       line_two = create_layout_with_attrs (widget, cell_area,
                                            self, PANGO_ELLIPSIZE_END);
+
+      context = gtk_widget_get_style_context (widget);
+      gtk_style_context_save (context);
+      apply_subtitle_style_to_layout (context, line_two, GTK_STATE_FLAG_NORMAL);
+      gtk_style_context_restore (context);
 
       pango_layout_set_height (line_one, - (self->priv->text_lines - 1));
       pango_layout_set_height (line_two, -1);
@@ -278,7 +318,8 @@ gd_two_lines_renderer_render (GtkCellRenderer      *cell,
                                    NULL, &line_one_height);
 
       gtk_style_context_save (context);
-      gtk_style_context_add_class (context, "dim-label");
+
+      apply_subtitle_style_to_layout (context, layout_two, flags);
 
       state = gtk_cell_renderer_get_state (cell, widget, flags);
       gtk_style_context_set_state (context, state);
@@ -329,11 +370,12 @@ gd_two_lines_renderer_get_preferred_width (GtkCellRenderer *cell,
                                   NULL, 
                                   NULL, NULL, NULL);
 
-  /* Fetch the average size of a charachter */
+  /* Fetch the average size of a character */
   context = gtk_widget_get_pango_context (widget);
   gtk_style_context_save (style_context);
   gtk_style_context_set_state (style_context, 0);
-  gtk_style_context_get (style_context, 0, "font", &font_desc, NULL);
+  gtk_style_context_get (style_context, gtk_style_context_get_state (style_context),
+                         "font", &font_desc, NULL);
   gtk_style_context_restore (style_context);
   metrics = pango_context_get_metrics (context, font_desc,
                                        pango_context_get_language (context));
