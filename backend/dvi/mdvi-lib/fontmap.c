@@ -706,7 +706,7 @@ static int	mdvi_init_fontmaps(void)
 	FILE	*in;
 	Dstring	input;
 	int	count = 0;
-	char	*config;
+	const char	*config;
 
 	if(fontmaps_loaded)
 		return 0;
