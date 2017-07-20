@@ -645,7 +645,7 @@ void	mdvi_install_fontmap(DviFontMapEnt *head)
 	}
 }
 
-static void init_static_encoding()
+static void init_static_encoding(void)
 {
 	DviEncoding	*encoding;
 	int	i;
