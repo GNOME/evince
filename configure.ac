@@ -752,9 +752,6 @@ if test "x$enable_pdf" = "xyes" ; then
            EVINCE_MIME_TYPES="${EVINCE_MIME_TYPES};${PDF_MIME_TYPES}"
         fi
 fi
-AC_SUBST(PDF_MIME_TYPES)
-AC_SUBST(APPDATA_PDF_MIME_TYPES)
-AM_SUBST_NOTMAKE(APPDATA_PDF_MIME_TYPES)
 if test "x$enable_ps" = "xyes" ; then
         PS_MIME_TYPES="application/postscript;application/x-bzpostscript;application/x-gzpostscript;image/x-eps;image/x-bzeps;image/x-gzeps;application/x-ext-ps;application/x-ext-eps"
         APPDATA_PS_MIME_TYPES=$(echo "<mimetype>$PS_MIME_TYPES</mimetype>" | sed -e 's/;/<\/mimetype>\n    <mimetype>/g')
@@ -764,9 +761,24 @@ if test "x$enable_ps" = "xyes" ; then
            EVINCE_MIME_TYPES="${EVINCE_MIME_TYPES};${PS_MIME_TYPES}"
         fi
 fi
+
+dnl Add Adobe Illustrator support if both PDF and EPS are supported
+if test "x$enable_pdf" = "xyes" -a "x$enable_ps" = "xyes" ; then
+        PDF_MIME_TYPES="${PDF_MIME_TYPES};application/illustrator"
+        APPDATA_PDF_MIME_TYPES="${APPDATA_PDF_MIME_TYPES}"$(echo -e -n "\n    <mimetype>application/illustrator</mimetype>")
+        PS_MIME_TYPES="${PS_MIME_TYPES};application/illustrator"
+
+        EVINCE_MIME_TYPES="${EVINCE_MIME_TYPES};application/illustrator"
+fi
+
+AC_SUBST(PDF_MIME_TYPES)
+AC_SUBST(APPDATA_PDF_MIME_TYPES)
+AM_SUBST_NOTMAKE(APPDATA_PDF_MIME_TYPES)
+
 AC_SUBST(PS_MIME_TYPES)
 AC_SUBST(APPDATA_PS_MIME_TYPES)
 AM_SUBST_NOTMAKE(APPDATA_PS_MIME_TYPES)
+
 if test "x$enable_dvi" = "xyes"; then
         DVI_MIME_TYPES="application/x-dvi;application/x-bzdvi;application/x-gzdvi;application/x-ext-dvi"
         APPDATA_DVI_MIME_TYPES=$(echo "<mimetype>$DVI_MIME_TYPES</mimetype>" | sed -e 's/;/<\/mimetype>\n    <mimetype>/g')
