@@ -5,15 +5,15 @@
 # Matic Žgur <mr.zgur@gmail.com>, 2006.
 # Matjaž Horvat <m@owca.info>, 2006.
 # Andrej Žnidaršič <andrej.znidarsic@gmail.com>, 2010.
-# Matej Urbančič <mateju@svn.gnome.org>, 2006-2016.
+# Matej Urbančič <mateju@svn.gnome.org>, 2006-2017.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: evince master\n"
-"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
+"Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evince&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2016-08-26 23:01+0200\n"
-"PO-Revision-Date: 2016-08-26 23:01+0200\n"
+"POT-Creation-Date: 2017-07-21 16:34+0200\n"
+"PO-Revision-Date: 2017-07-21 16:47+0200\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenščina <gnome-si@googlegroups.com>\n"
 "Language: sl_SI\n"
@@ -23,52 +23,52 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n"
 "%100==4 ? 3 : 0);\n"
 "X-Poedit-SourceCharset: utf-8\n"
-"X-Generator: Poedit 1.8.7.1\n"
+"X-Generator: Poedit 2.0.1\n"
 
-#: ../backend/comics/comics-document.c:210
+#: ../backend/comics/comics-document.c:206
 #, c-format
 msgid ""
 "Error launching the command “%s” in order to decompress the comic book: %s"
 msgstr "Napaka med zaganjanjem ukaza “%s” za razširjanje stripa: %s"
 
-#: ../backend/comics/comics-document.c:224
+#: ../backend/comics/comics-document.c:220
 #, c-format
 msgid "The command “%s” failed at decompressing the comic book."
 msgstr "Ukaz “%s” je spodletel pri razširjanju stripa."
 
-#: ../backend/comics/comics-document.c:233
+#: ../backend/comics/comics-document.c:229
 #, c-format
 msgid "The command “%s” did not end normally."
 msgstr "Ukaz “%s” se ni uspešno zaključil."
 
-#: ../backend/comics/comics-document.c:453
+#: ../backend/comics/comics-document.c:415
 #, c-format
 msgid "Not a comic book MIME type: %s"
 msgstr "Vrsta ni ustrezna vrsta MIME stripa: %s"
 
-#: ../backend/comics/comics-document.c:460
+#: ../backend/comics/comics-document.c:422
 msgid "Can't find an appropriate command to decompress this type of comic book"
 msgstr "Ni mogoče najti ustreznega ukaza za razširjanje te vrste stripa."
 
-#: ../backend/comics/comics-document.c:515
+#: ../backend/comics/comics-document.c:477
 msgid "File corrupted"
 msgstr "Pokvarjena datoteka"
 
-#: ../backend/comics/comics-document.c:528
+#: ../backend/comics/comics-document.c:490
 msgid "No files in archive"
 msgstr "V arhivu ni datotek."
 
-#: ../backend/comics/comics-document.c:567
+#: ../backend/comics/comics-document.c:529
 #, c-format
 msgid "No images found in archive %s"
 msgstr "V arhivu %s ni slik"
 
-#: ../backend/comics/comics-document.c:817
+#: ../backend/comics/comics-document.c:779
 #, c-format
 msgid "There was an error deleting “%s”."
 msgstr "Prišlo je do napake med brisanjem “%s”."
 
-#: ../backend/comics/comics-document.c:910
+#: ../backend/comics/comics-document.c:872
 #, c-format
 msgid "Error %s"
 msgstr "Napaka %s"
@@ -352,7 +352,8 @@ msgstr "Poglejte večstranske dokumente"
 
 #: ../data/evince.desktop.in.in.h:3
 msgid "pdf;ps;postscript;dvi;xps;djvu;tiff;document;presentation;"
-msgstr "pdf;ps;postscript;dvi;xps;djvu;tiff;dokument;predstavitev;"
+msgstr ""
+"pdf;ps;postscript;dvi;xps;djvu;tiff;dokument;predstavitev;pregledovalnik;"
 
 #: ../data/evince-previewer.desktop.in.in.h:1
 msgid "Print Preview"
@@ -497,14 +498,14 @@ msgid "Find next occurrence of the search string"
 msgstr "Najdi naslednjo ponovitev iskanega niza"
 
 #: ../libview/ev-jobs.c:649
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to render page %d"
-msgstr "Napaka med tiskanjem strani %d: %s"
+msgstr "Izrisovanje strani %d je spodletelo"
 
 #: ../libview/ev-jobs.c:896
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to create thumbnail for page %d"
-msgstr "Napaka med tiskanjem strani %d: %s"
+msgstr "Ustvarjanje sličice za stran %d je spodletelo"
 
 #: ../libview/ev-jobs.c:2026
 #, c-format
@@ -773,11 +774,11 @@ msgstr "Ključne besede:"
 
 #: ../properties/ev-properties-view.c:66
 msgid "Producer:"
-msgstr "Producent:"
+msgstr "Programnik:"
 
 #: ../properties/ev-properties-view.c:67
 msgid "Creator:"
-msgstr "Ustvarjalec:"
+msgstr "Uporabljen program:"
 
 #: ../properties/ev-properties-view.c:68
 msgid "Created:"
@@ -797,7 +798,7 @@ msgstr "Prilagojeno:"
 
 #: ../properties/ev-properties-view.c:72
 msgid "Format:"
-msgstr "Oblika:"
+msgstr "Zapis:"
 
 #: ../properties/ev-properties-view.c:73
 msgid "Security:"
@@ -809,7 +810,7 @@ msgstr "Velikost papirja:"
 
 #: ../properties/ev-properties-view.c:75
 msgid "Size:"
-msgstr "Velikost:"
+msgstr "Velikost datoteke:"
 
 #. Translate to the default units to use for presenting
 #. * lengths to the user. Translate to default:inch if you
@@ -956,10 +957,10 @@ msgid ""
 "Foundation; either version 2 of the License, or (at your option) any later "
 "version.\n"
 msgstr ""
-"Evince je prosti program. Lahko ga razširjate in/ali spreminjate pod pogoji "
-"licence GNU General Public License kot jo je objavila organizacija Free "
-"Software Foundation; bodisi pod različico 2 ali (po vašem mnenju) katerokoli "
-"kasnejšo različico.\n"
+"Evince je prosta programska oprema. Dovoljeno ga je razširjati in/ali "
+"spreminjati pod pogoji Splošnega Javnega dovoljenja GNU GPL, kot je "
+"objavljeno s strani organizacije Free Software Foundation; bodisi različice "
+"2 ali (po izbiri) katerokoli kasnejše različice.\n"
 
 #: ../shell/ev-application.c:999
 msgid ""
@@ -970,8 +971,8 @@ msgid ""
 msgstr ""
 "Evince se razširja v upanju, da bo koristen, vendar BREZ ZAGOTOVILA "
 "KAKRŠNEGAKOLI JAMSTVA; tudi brez posrednega jamstva CENOVNE VREDNOSTI ali "
-"PRIMERNOSTI ZA DOLOČENO UPORABO. Za več podrobnosti si oglejte GNU General "
-"Public License.\n"
+"PRIMERNOSTI ZA DOLOČENO UPORABO. Za več podrobnosti si oglejte dovoljenje "
+"GNU General Public License.\n"
 
 #: ../shell/ev-application.c:1003
 msgid ""
@@ -1164,9 +1165,8 @@ msgid "Open an existing document"
 msgstr "Odpri obstoječi dokument"
 
 #: ../shell/ev-toolbar.c:210
-#, fuzzy
 msgid "Select page or search in the index"
-msgstr "Širina indeksa in iskalnega pladnja."
+msgstr "Izberi stran oziroma poišči po kazalu"
 
 #: ../shell/ev-toolbar.c:211
 msgid "Select page"
@@ -1186,12 +1186,11 @@ msgstr "Možnosti pogleda"
 
 #: ../shell/ev-toolbar.c:262
 msgid "Select or set the zoom level of the document"
-msgstr ""
+msgstr "Izbor in nastavitev ravni približanja dokumenta"
 
 #: ../shell/ev-toolbar.c:263
-#, fuzzy
 msgid "Set zoom level"
-msgstr "Dovoli povezave za spreminjanje ravni približanja"
+msgstr "Nastavi raven približanja"
 
 #: ../shell/ev-utils.c:305
 msgid "Supported Image Files"
@@ -1517,15 +1516,15 @@ msgstr "CILJ"
 
 #: ../shell/main.c:74
 msgid "Run evince in fullscreen mode"
-msgstr "Zaženi evince v celozaslonskem načinu"
+msgstr "Zaženi program v celozaslonskem načinu"
 
 #: ../shell/main.c:75
 msgid "Run evince in presentation mode"
-msgstr "Zaženi evince v predstavitvenem načinu"
+msgstr "Zaženi program v predstavitvenem načinu"
 
 #: ../shell/main.c:76
 msgid "Run evince as a previewer"
-msgstr "Zaženi evince v predoglednem načinu"
+msgstr "Zaženi program v predoglednem načinu"
 
 #: ../shell/main.c:77
 msgid "The word or phrase to find in the document"
@@ -1625,7 +1624,7 @@ msgstr "Odpri _kopijo"
 
 #: ../shell/evince-menus.ui.h:22
 msgid "_Save a Copy…"
-msgstr "_Shrani kopijo"
+msgstr "_Shrani kopijo ..."
 
 #: ../shell/evince-menus.ui.h:23
 msgid "Send _To…"
@@ -1673,7 +1672,7 @@ msgstr "_Kopiraj naslov povezave"
 
 #: ../shell/evince-menus.ui.h:37
 msgid "_Go To"
-msgstr "Po_jdi na"
+msgstr "Sk_oči na"
 
 #: ../shell/evince-menus.ui.h:38
 msgid "Open in New _Window"
@@ -1710,7 +1709,7 @@ msgstr "Odstrani pripombe"
 #: ../shell/help-overlay.ui.h:1
 msgctxt "shortcut window"
 msgid "Opening, closing, saving and printing"
-msgstr ""
+msgstr "Odpiranje, zapiranje, shranjevanje in tiskanje"
 
 #: ../shell/help-overlay.ui.h:2
 msgctxt "shortcut window"
@@ -1718,16 +1717,14 @@ msgid "Open a document"
 msgstr "Odpri dokument"
 
 #: ../shell/help-overlay.ui.h:3
-#, fuzzy
 msgctxt "shortcut window"
 msgid "Open a copy of the current document"
-msgstr "Odpri dokument"
+msgstr "Odpri kopijo trenutnega dokumenta"
 
 #: ../shell/help-overlay.ui.h:4
-#, fuzzy
 msgctxt "shortcut window"
 msgid "Save a copy of the current document"
-msgstr "Samodejno shrani trenutni dokument na določen časovni razmik"
+msgstr "Shrani kopijo trenutnega dokumenta"
 
 #: ../shell/help-overlay.ui.h:5
 msgctxt "shortcut window"
@@ -1735,115 +1732,99 @@ msgid "Print the current document"
 msgstr "Natisni trenutni dokument"
 
 #: ../shell/help-overlay.ui.h:6
-#, fuzzy
 msgctxt "shortcut window"
 msgid "Close the current document window"
-msgstr "Zapri trenutno okno"
+msgstr "Zapri trenutno okno dokumenta"
 
 #: ../shell/help-overlay.ui.h:7
-#, fuzzy
 msgctxt "shortcut window"
 msgid "Reload the document"
-msgstr "Samodejno ponovno naloži dokument"
+msgstr "Ponovno naloži dokument"
 
 #: ../shell/help-overlay.ui.h:8
-#, fuzzy
 msgctxt "shortcut window"
 msgid "Selecting and copying text"
-msgstr "Izbor prsta"
+msgstr "Izbira in kopiranje besedila"
 
 #: ../shell/help-overlay.ui.h:9
-#, fuzzy
 msgctxt "shortcut window"
 msgid "Copy highlighted text"
-msgstr "Počisti poudarjeno besedilo"
+msgstr "Kopiraj poudarjeno besedilo"
 
 #: ../shell/help-overlay.ui.h:10
-#, fuzzy
 msgctxt "shortcut window"
 msgid "Select all the text in a document"
-msgstr "Izbere vse zaznamke ali besedilo"
+msgstr "Izberi celotno besedilo dokumenta"
 
 #: ../shell/help-overlay.ui.h:11
-#, fuzzy
 msgctxt "shortcut window"
 msgid "Moving around the document"
-msgstr "Poskusite premakniti kupčke kart"
+msgstr "Premikanje po dokumentu"
 
 #: ../shell/help-overlay.ui.h:12
-#, fuzzy
 msgctxt "shortcut window"
 msgid "Move up/down a page"
-msgstr "Premakni nad zgornjo-spodnjo"
+msgstr "Premakni se stran gor/dol"
 
 #: ../shell/help-overlay.ui.h:13
 msgctxt "shortcut window"
 msgid "Move up/down a page several lines at a time"
-msgstr ""
+msgstr "Premakni se stran gor/dol po več vrstic hkrati"
 
 #: ../shell/help-overlay.ui.h:14
-#, fuzzy
 msgctxt "shortcut window"
 msgid "Go to page number"
-msgstr "Skoči na stran »Napredno«"
+msgstr "Skoči na stran"
 
 #: ../shell/help-overlay.ui.h:15
-#, fuzzy
 msgctxt "shortcut window"
 msgid "Go to the beginning/end of a page"
-msgstr "Skoči na začetek del sporočila"
+msgstr "Skoči na začetek/konec strani"
 
 #: ../shell/help-overlay.ui.h:16
-#, fuzzy
 msgctxt "shortcut window"
 msgid "Go to the beginning of the document"
-msgstr "Skoči na začetek del sporočila"
+msgstr "Skoči na začetek dokumenta"
 
 #: ../shell/help-overlay.ui.h:17
-#, fuzzy
 msgctxt "shortcut window"
 msgid "Go to the end of the document"
-msgstr "Skoči na konec trenutnega bloka"
+msgstr "Skoči na konec dokumenta"
 
 #: ../shell/help-overlay.ui.h:18
-#, fuzzy
 msgctxt "shortcut window"
 msgid "Finding text"
-msgstr "Besedilo ..."
+msgstr "Iskanje besedila"
 
 #: ../shell/help-overlay.ui.h:19
-#, fuzzy
 msgctxt "shortcut window"
 msgid "Show the search bar"
-msgstr "Izbrana možnost določa prikaz iskalne vrstice."
+msgstr "Pokaži iskalno vrstico"
 
 #: ../shell/help-overlay.ui.h:20
-#, fuzzy
 msgctxt "shortcut window"
 msgid "Go to the next search result"
-msgstr "Ni zadetkov"
+msgstr "Skoči na naslednji rezultat iskanja"
 
 #: ../shell/help-overlay.ui.h:21
-#, fuzzy
 msgctxt "shortcut window"
 msgid "Go to the previous search result"
-msgstr "Ni zadetkov"
+msgstr "Skoči na predhodni rezultat iskanja"
 
 #: ../shell/help-overlay.ui.h:22
 msgctxt "shortcut window"
 msgid "Rotating and zooming"
-msgstr ""
+msgstr "Vrtenje in približanje"
 
 #: ../shell/help-overlay.ui.h:23
 msgctxt "shortcut window"
 msgid "Rotate the page 90 degrees counter-clockwise"
-msgstr ""
+msgstr "Zavrti stran za 90 stopinj v nasprotni smeri urinega kazalca"
 
 #: ../shell/help-overlay.ui.h:24
-#, fuzzy
 msgctxt "shortcut window"
 msgid "Rotate the page 90 degrees clockwise"
-msgstr "Zavrti za 90 stopinj v desno"
+msgstr "Zavrti stran za 90 stopinj v smeri urinega kazalca"
 
 #: ../shell/help-overlay.ui.h:25
 msgctxt "shortcut window"
@@ -1863,12 +1844,12 @@ msgstr "Poteze na sledilni ploščici"
 #: ../shell/help-overlay.ui.h:28
 msgctxt "shortcut window"
 msgid "Go to next page"
-msgstr "Pojdi na naslednjo stran"
+msgstr "Skoči na naslednjo stran"
 
 #: ../shell/help-overlay.ui.h:29
 msgctxt "shortcut window"
 msgid "Go to previous page"
-msgstr "Pojdi na prejšnjo stran"
+msgstr "Skoči na prejšnjo stran"
 
 #: ../evince.appdata.xml.in.h:2
 msgid "Document viewer for popular document formats"
