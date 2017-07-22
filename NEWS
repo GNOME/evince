@@ -1,4 +1,62 @@
 ================
+Evince    3.25.4
+================
+
+New features and improvements:
+
+    * The comics backend now uses libarchive and unarr instead of
+      spawning commands (#720742, Bastien Nocera)
+    * Add flag EV_DOCUMENT_LOAD_FLAG_NO_CACHE to not setup the
+      document cache during the load. It will be setup later only if
+      needed (#780210, Bastien Nocera, Carlos Garcia Campos)
+    * Speed up thumbnailing by using EV_DOCUMENT_LOAD_FLAG_NO_CACHE
+      flag (#780210, Bastien Nocera)
+    * Improve performance of the links sidebar (#779614, Benjamin
+      Berg)
+    * Select the active file when open containing folder (#741377,
+      Germán Poo-Caamaño)
+    * Improve performance of scrolling in thumbnails sidebar (#691448,
+      #342110, Nelson Benítez León)
+
+Bug fixes:
+
+    * Fix crash with Orca screen reader (#777992, Jason Crain)
+    * Fix ev_page_accessible_get_range_for_boundary() to ensure the
+      start and end offsets it returns are within the allowed range
+      (#777992, Jason Crain)
+    * Fix toggling layers that are not in the current visible range of
+      pages (#780139, Georges Dupéron)
+    * Don't copy remote files before thumbnailing (#780351, Bastien
+      Nocera)
+    * Fix a crash when opening a second window (#777082, Caolán
+      McNamara)
+    * Do not jump to first thumbnail in sidebar after fullscreen
+      (#783404, Nelson Benítez León)
+    * Remove use of obsolete gnome_desktop_thumbnail_scale_down_pixbuf
+      (#784789, Bastien Nocera)
+
+Translation updates:
+
+    * Yuras Shumovich (be)
+    * Marek Černocký (cs)
+    * Mario Blättermann (de)
+    * Tom Tryfonidis (el)
+    * Daniel Mustieles (es)
+    * Jiri Grönroos (fi)
+    * Fabio Tomat (fur)
+    * Fran Dieguez (gl)
+    * gogo (hr)
+    * Balázs Úr (hu)
+    * Kukuh Syafaat (id)
+    * Baurzhan Muftakhidinov (kk)
+    * Aurimas Černius (lt)
+    * Enrico Nicoletto (pt_BR)
+    * Dušan Kazik (sk)
+    * Matej Urbančič (sl)
+    * Emin Tufan Çetin (tr)
+    * Trần Ngọc Quân (vi)
+
+================
 Evince    3.24.0
 ================
 
