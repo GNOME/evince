@@ -1,4 +1,32 @@
 ================
+Evince    3.24.1
+================
+
+Bug fixes:
+
+    * Remove support for tar and tar-like commands in commics backend
+      (CVE-2017-1000083, #784630, Bastien Nocera)
+    * Improve performance of the links sidebar (#779614, Benjamin
+      Berg)
+    * Improve performance of scrolling in thumbnails sidebar (#691448,
+      Nelson Benítez León)
+    * Don't copy remote files before thumbnailing (#780351, Bastien
+      Nocera)
+    * Fix toggling layers that are not in the current visible range of
+      pages (#780139, Georges Dupéron)
+    * Fix ev_page_accessible_get_range_for_boundary() to ensure the
+      start and end offsets it returns are within the allowed range
+      (#777992, Jason Crain)
+    * Fix crash with Orca screen reader (#777992, Jason Crain)
+
+Translation updates:
+
+    * Yuras Shumovich (be)
+    * Tom Tryfonidis (el)
+    * gogo (hr)
+    * Matej Urbančič (sl)
+
+================
 Evince    3.24.0
 ================
 
