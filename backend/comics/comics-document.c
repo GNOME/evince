@@ -215,7 +215,7 @@ comics_document_load (EvDocument *document,
 		if (g_slist_find_custom (supported_extensions, suffix,
 					 (GCompareFunc) strcmp) != NULL) {
                         g_ptr_array_add (comics_document->page_names,
-                                         g_strstrip (g_strdup (cb_file)));
+                                         g_strdup (cb_file));
 		}
 		g_free (suffix);
 	}
