@@ -27,8 +27,8 @@ msgstr ""
 "Project-Id-Version: Evince master\n"
 "Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evince&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2017-05-12 13:58+0000\n"
-"PO-Revision-Date: 2017-05-12 17:25+0200\n"
+"POT-Creation-Date: 2017-07-22 13:03+0000\n"
+"PO-Revision-Date: 2017-07-28 21:50+0200\n"
 "Last-Translator: Mario Blättermann <mario.blaettermann@gmail.com>\n"
 "Language-Team: Deutsch <gnome-de@gnome.org>\n"
 "Language: de\n"
@@ -36,14 +36,27 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.0.1\n"
+"X-Generator: Poedit 2.0.3\n"
 
-#: ../backend/comics/comics-document.c:129
+#: ../backend/comics/comics-document.c:99
+#: ../backend/comics/comics-document.c:121
+msgid "File is corrupted"
+msgstr "Datei ist beschädigt"
+
+#: ../backend/comics/comics-document.c:151
+msgid "Archive is encrypted"
+msgstr "Archiv ist verschlüsselt"
+
+#: ../backend/comics/comics-document.c:156
+msgid "No files in archive"
+msgstr "Keine Dateien im Archiv"
+
+#: ../backend/comics/comics-document.c:192
 #, c-format
 msgid "Not a comic book MIME type: %s"
 msgstr "Kein MIME-Typ eines Comicbuchs: %s"
 
-#: ../backend/comics/comics-document.c:136
+#: ../backend/comics/comics-document.c:199
 msgid ""
 "libarchive lacks support for this comic book’s compression, please contact "
 "your distributor"
@@ -51,18 +64,9 @@ msgstr ""
 "libarchive fehlt die Unterstützung für die Komprimierung dieses Comicbuchs, "
 "bitte kontaktieren Sie Ihren Distributor"
 
-#: ../backend/comics/comics-document.c:180
+#: ../backend/comics/comics-document.c:240
 msgid "Can not get local path for archive"
 msgstr "Lokaler Pfad des Archivs kann nicht ermittelt werden"
-
-#: ../backend/comics/comics-document.c:202
-msgid "File corrupted or no files in archive"
-msgstr "Datei beschädigt oder keine Dateien im Archiv"
-
-#: ../backend/comics/comics-document.c:230
-#, c-format
-msgid "No images found in archive %s"
-msgstr "Im Archiv »%s« konnten keine Bilder gefunden werden"
 
 #: ../backend/comics/comicsdocument.evince-backend.in.in.h:1
 #: ../backend/comics/evince-comicsdocument.metainfo.xml.in.in.h:1
@@ -468,7 +472,7 @@ msgstr "von %d"
 
 #: ../libmisc/ev-page-action-widget.c:185 ../shell/ev-history.c:426
 #: ../shell/ev-sidebar-bookmarks.c:295 ../shell/ev-window.c:907
-#: ../shell/ev-window.c:4686
+#: ../shell/ev-window.c:4687
 #, c-format
 msgid "Page %s"
 msgstr "Seite %s"
@@ -699,8 +703,8 @@ msgid "Delete the temporary file"
 msgstr "Temporäre Datei löschen"
 
 #: ../previewer/ev-previewer.c:46
-msgid "Print settings file"
-msgstr "Einstellungsdatei drucken"
+msgid "File specifying print settings"
+msgstr "Datei mit Druckeinstellungen"
 
 #: ../previewer/ev-previewer.c:46
 msgid "FILE"
@@ -710,7 +714,7 @@ msgstr "DATEI"
 msgid "GNOME Document Previewer"
 msgstr "GNOME-Dokumentenvorschau"
 
-#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3269
+#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3270
 msgid "Failed to print document"
 msgstr "Dokument konnte nicht gedruckt werden"
 
@@ -1161,7 +1165,7 @@ msgstr "Drucken …"
 msgid "Outline"
 msgstr "Gliederung"
 
-#: ../shell/ev-sidebar-thumbnails.c:1093
+#: ../shell/ev-sidebar-thumbnails.c:1135
 msgid "Thumbnails"
 msgstr "Vorschaubilder"
 
@@ -1209,133 +1213,133 @@ msgstr "Das Dokument enthält keine Seiten"
 msgid "The document contains only empty pages"
 msgstr "Das Dokument enthält nur leere Seiten"
 
-#: ../shell/ev-window.c:1757 ../shell/ev-window.c:1923
+#: ../shell/ev-window.c:1758 ../shell/ev-window.c:1924
 #, c-format
 msgid "Unable to open document “%s”."
 msgstr "Dokument »%s« konnte nicht geöffnet werden."
 
-#: ../shell/ev-window.c:1887
+#: ../shell/ev-window.c:1888
 #, c-format
 msgid "Loading document from “%s”"
 msgstr "Dokument wird von »%s« geladen"
 
-#: ../shell/ev-window.c:2038 ../shell/ev-window.c:2366
+#: ../shell/ev-window.c:2039 ../shell/ev-window.c:2367
 #, c-format
 msgid "Downloading document (%d%%)"
 msgstr "Dokument wird heruntergeladen (%d%%)"
 
-#: ../shell/ev-window.c:2071
+#: ../shell/ev-window.c:2072
 msgid "Failed to load remote file."
 msgstr "Laden der entfernten Datei ist fehlgeschlagen."
 
-#: ../shell/ev-window.c:2310
+#: ../shell/ev-window.c:2311
 #, c-format
 msgid "Reloading document from %s"
 msgstr "Dokument wird erneut von %s geladen"
 
-#: ../shell/ev-window.c:2342
+#: ../shell/ev-window.c:2343
 msgid "Failed to reload document."
 msgstr "Dokument konnte nicht erneut geladen werden."
 
-#: ../shell/ev-window.c:2558
+#: ../shell/ev-window.c:2559
 msgid "Open Document"
 msgstr "Dokument öffnen"
 
-#: ../shell/ev-window.c:2631
+#: ../shell/ev-window.c:2632
 #, c-format
 msgid "Saving document to %s"
 msgstr "Dokument wird in %s gespeichert"
 
-#: ../shell/ev-window.c:2634
+#: ../shell/ev-window.c:2635
 #, c-format
 msgid "Saving attachment to %s"
 msgstr "Anlage wird in %s gespeichert"
 
-#: ../shell/ev-window.c:2637
+#: ../shell/ev-window.c:2638
 #, c-format
 msgid "Saving image to %s"
 msgstr "Bild wird in %s gespeichert"
 
-#: ../shell/ev-window.c:2681 ../shell/ev-window.c:2781
+#: ../shell/ev-window.c:2682 ../shell/ev-window.c:2782
 #, c-format
 msgid "The file could not be saved as “%s”."
 msgstr "Die Datei konnte nicht als »%s« gespeichert werden."
 
-#: ../shell/ev-window.c:2712
+#: ../shell/ev-window.c:2713
 #, c-format
 msgid "Uploading document (%d%%)"
 msgstr "Dokument wird hochgeladen (%d%%)"
 
-#: ../shell/ev-window.c:2716
+#: ../shell/ev-window.c:2717
 #, c-format
 msgid "Uploading attachment (%d%%)"
 msgstr "Anlage wird hochgeladen (%d%%)"
 
-#: ../shell/ev-window.c:2720
+#: ../shell/ev-window.c:2721
 #, c-format
 msgid "Uploading image (%d%%)"
 msgstr "Bild wird hochgeladen (%d%%)"
 
-#: ../shell/ev-window.c:2832
+#: ../shell/ev-window.c:2833
 msgid "Save a Copy"
 msgstr "Eine Kopie speichern"
 
-#: ../shell/ev-window.c:2908
+#: ../shell/ev-window.c:2909
 msgid "Could not send current document"
 msgstr "Das momentan angezeigte Dokument konnte nicht gesendet werden"
 
-#: ../shell/ev-window.c:3213
+#: ../shell/ev-window.c:3214
 #, c-format
 msgid "%d pending job in queue"
 msgid_plural "%d pending jobs in queue"
 msgstr[0] "%d ausstehender Auftrag in Warteschlange"
 msgstr[1] "%d ausstehende Aufträge in Warteschlange"
 
-#: ../shell/ev-window.c:3326
+#: ../shell/ev-window.c:3327
 #, c-format
 msgid "Printing job “%s”"
 msgstr "Druckauftrag »%s« wird ausgeführt"
 
-#: ../shell/ev-window.c:3541
+#: ../shell/ev-window.c:3542
 msgid "Document contains form fields that have been filled out. "
 msgstr "Das Dokument enthält Formularfelder, die ausgefüllt wurden."
 
-#: ../shell/ev-window.c:3544
+#: ../shell/ev-window.c:3545
 msgid "Document contains new or modified annotations. "
 msgstr "Das Dokument enthält neue oder veränderte Anmerkungen."
 
-#: ../shell/ev-window.c:3556
+#: ../shell/ev-window.c:3557
 #, c-format
 msgid "Reload document “%s”?"
 msgstr "Dokument »%s« neu laden?"
 
-#: ../shell/ev-window.c:3558
+#: ../shell/ev-window.c:3559
 msgid "If you reload the document, changes will be permanently lost."
 msgstr "Wenn Sie das Dokument neu laden, gehen Einträge dauerhaft verloren."
 
-#: ../shell/ev-window.c:3562
+#: ../shell/ev-window.c:3563
 msgid "Reload"
 msgstr "Aktualisieren"
 
-#: ../shell/ev-window.c:3569
+#: ../shell/ev-window.c:3570
 #, c-format
 msgid "Save a copy of document “%s” before closing?"
 msgstr "Soll vor dem Schließen eine Kopie von »%s« gespeichert werden?"
 
-#: ../shell/ev-window.c:3571
+#: ../shell/ev-window.c:3572
 msgid "If you don’t save a copy, changes will be permanently lost."
 msgstr ""
 "Wenn keine Kopie gespeichert wird, gehen die Einträge dauerhaft verloren."
 
-#: ../shell/ev-window.c:3573
+#: ../shell/ev-window.c:3574
 msgid "Close _without Saving"
 msgstr "Schließen _ohne zu speichern"
 
-#: ../shell/ev-window.c:3577
+#: ../shell/ev-window.c:3578
 msgid "Save a _Copy"
 msgstr "Eine Kopie _speichern"
 
-#: ../shell/ev-window.c:3661
+#: ../shell/ev-window.c:3662
 #, c-format
 msgid "Wait until print job “%s” finishes before closing?"
 msgstr ""
@@ -1345,7 +1349,7 @@ msgstr ""
 #. TRANS: the singular form is not really used as n_print_jobs > 1
 #. but some languages distinguish between different plurals forms,
 #. so the ngettext is needed.
-#: ../shell/ev-window.c:3667
+#: ../shell/ev-window.c:3668
 #, c-format
 msgid "There is %d print job active. Wait until print finishes before closing?"
 msgid_plural ""
@@ -1357,33 +1361,33 @@ msgstr[1] ""
 "%d Druckaufträge sind aktiv. Soll vor dem Schließen auf das Beenden des "
 "Druckens gewartet werden?"
 
-#: ../shell/ev-window.c:3682
+#: ../shell/ev-window.c:3683
 msgid "If you close the window, pending print jobs will not be printed."
 msgstr ""
 "Wenn Sie das Fenster schließen, werden ausstehende Druckaufträge nicht "
 "ausgeführt."
 
-#: ../shell/ev-window.c:3686
+#: ../shell/ev-window.c:3687
 msgid "Cancel _print and Close"
 msgstr "Drucken a_bbrechen und schließen"
 
-#: ../shell/ev-window.c:3690
+#: ../shell/ev-window.c:3691
 msgid "Close _after Printing"
 msgstr "Nach dem Drucken _schließen"
 
-#: ../shell/ev-window.c:4221
+#: ../shell/ev-window.c:4222
 msgid "Running in presentation mode"
 msgstr "Derzeit im Präsentationsmodus"
 
-#: ../shell/ev-window.c:5370
+#: ../shell/ev-window.c:5371
 msgid "Enable caret navigation?"
 msgstr "Eingabemarke-Navigation aktivieren?"
 
-#: ../shell/ev-window.c:5372
+#: ../shell/ev-window.c:5373
 msgid "_Enable"
 msgstr "_Aktivieren"
 
-#: ../shell/ev-window.c:5375
+#: ../shell/ev-window.c:5376
 msgid ""
 "Pressing F7 turns the caret navigation on or off. This feature places a "
 "moveable cursor in text pages, allowing you to move around and select text "
@@ -1394,39 +1398,39 @@ msgstr ""
 "erlaubt es Ihnen mit der Tastatur die Seite zu bewegen sowie Text zu "
 "markieren. Möchten Sie die Eingabemarke-Navigation einschalten?"
 
-#: ../shell/ev-window.c:5380
+#: ../shell/ev-window.c:5381
 msgid "Don’t show this message again"
 msgstr "Diese Nachricht nicht mehr anzeigen"
 
-#: ../shell/ev-window.c:5895 ../shell/ev-window.c:5911
+#: ../shell/ev-window.c:5896 ../shell/ev-window.c:5912
 msgid "Unable to launch external application."
 msgstr "Externe Anwendung konnte nicht geöffnet werden."
 
-#: ../shell/ev-window.c:5968
+#: ../shell/ev-window.c:5969
 msgid "Unable to open external link"
 msgstr "Externer Link konnte nicht geöffnet werden"
 
-#: ../shell/ev-window.c:6171
+#: ../shell/ev-window.c:6172
 msgid "Couldn’t find appropriate format to save image"
 msgstr "Es wurde kein geeignetes Format zum Speichern des Bildes gefunden"
 
-#: ../shell/ev-window.c:6203
+#: ../shell/ev-window.c:6204
 msgid "The image could not be saved."
 msgstr "Das Bild konnte nicht gespeichert werden."
 
-#: ../shell/ev-window.c:6238
+#: ../shell/ev-window.c:6239
 msgid "Save Image"
 msgstr "Bild speichern"
 
-#: ../shell/ev-window.c:6397
+#: ../shell/ev-window.c:6398
 msgid "Unable to open attachment"
 msgstr "Anlage konnte nicht geöffnet werden"
 
-#: ../shell/ev-window.c:6453
+#: ../shell/ev-window.c:6454
 msgid "The attachment could not be saved."
 msgstr "Die Anlage konnte nicht gespeichert werden."
 
-#: ../shell/ev-window.c:6501
+#: ../shell/ev-window.c:6502
 msgid "Save Attachment"
 msgstr "Anlage speichern"
 
