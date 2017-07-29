@@ -4514,8 +4514,6 @@ show_selections_border (EvView       *view,
 {
 	cairo_region_t *region;
 	guint           i, n_rects;
-	GdkRectangle    page_area;
-	GtkBorder       border;
 
 	region = ev_page_cache_get_text_mapping (view->page_cache, page);
 	if (!region)
@@ -4523,23 +4521,21 @@ show_selections_border (EvView       *view,
 
 	cairo_set_source_rgb (cr, 0.75, 0.50, 0.25);
 
-	ev_view_get_page_extents (view, page, &page_area, &border);
-
 	region = cairo_region_copy (region);
-	cairo_region_intersect_rectangle (region, clip);
 	n_rects = cairo_region_num_rectangles (region);
 	for (i = 0; i < n_rects; i++) {
-		GdkRectangle view_rect;
+		GdkRectangle doc_rect_int;
+		EvRectangle doc_rect_float;
 
-		cairo_region_get_rectangle (region, i, &view_rect);
-		view_rect.x = (gint)(view_rect.x * view->scale + 0.5);
-		view_rect.y = (gint)(view_rect.y * view->scale + 0.5);
-		view_rect.width = (gint)(view_rect.width * view->scale + 0.5);
-		view_rect.height = (gint)(view_rect.height * view->scale + 0.5);
+		cairo_region_get_rectangle (region, i, &doc_rect_int);
 
-		view_rect.x += page_area.x + border.left - view->scroll_x;
-		view_rect.y += page_area.y + border.right - view->scroll_y;
-		stroke_view_rect (cr, clip, &view_rect);
+		/* Convert the doc rect to a EvRectangle */
+		doc_rect_float.x1 = doc_rect_int.x;
+		doc_rect_float.y1 = doc_rect_int.y;
+		doc_rect_float.x2 = doc_rect_int.x + doc_rect_int.width;
+		doc_rect_float.y2 = doc_rect_int.y + doc_rect_int.height;
+
+		stroke_doc_rect (view, cr, page, clip, &doc_rect_float);
 	}
 	cairo_region_destroy (region);
 }
