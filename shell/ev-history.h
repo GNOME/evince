@@ -54,6 +54,8 @@ GType           ev_history_get_type         (void);
 EvHistory      *ev_history_new              (EvDocumentModel *model);
 void            ev_history_add_link         (EvHistory       *history,
                                              EvLink          *link);
+void            ev_history_add_page         (EvHistory       *history,
+                                             gint            page);
 gboolean        ev_history_can_go_back      (EvHistory       *history);
 void            ev_history_go_back          (EvHistory       *history);
 gboolean        ev_history_can_go_forward   (EvHistory       *history);

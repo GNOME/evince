@@ -270,6 +270,7 @@ struct _EvViewClass {
 				       GtkScrollType   scroll,
 				       GtkOrientation  orientation);
         void     (*handle_link)       (EvView         *view,
+				       gint            old_page,
 				       EvLink         *link);
         void     (*external_link)     (EvView         *view,
 				       EvLinkAction   *action);
