@@ -41,7 +41,6 @@ typedef struct {
         GList           *current;
 
         EvDocumentModel *model;
-        gulong           page_changed_handler_id;
 
         guint            frozen;
 } EvHistoryPrivate;
@@ -418,9 +417,9 @@ ev_history_get_current_page (EvHistory *history)
         return -1;
 }
 
-static void
-ev_history_add_link_for_page (EvHistory *history,
-                              gint       page)
+void
+ev_history_add_page (EvHistory *history,
+                     gint       page)
 {
         EvHistoryPrivate *priv = GET_PRIVATE (history);
         EvDocument   *document;
@@ -460,22 +459,12 @@ ev_history_add_link_for_page (EvHistory *history,
 }
 
 static void
-page_changed_cb (EvDocumentModel *model,
-                 gint             old_page,
-                 gint             new_page,
-                 EvHistory       *history)
-{
-        if (ABS (new_page - old_page) > 1)
-                ev_history_add_link_for_page (history, new_page);
-}
-
-static void
 document_changed_cb (EvDocumentModel *model,
                      GParamSpec      *pspec,
                      EvHistory       *history)
 {
         ev_history_clear (history);
-        ev_history_add_link_for_page (history, ev_document_model_get_page (model));
+        ev_history_add_page (history, ev_document_model_get_page (model));
 }
 
 static void
