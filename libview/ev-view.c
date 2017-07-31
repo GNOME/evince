@@ -1980,8 +1980,8 @@ ev_view_handle_link (EvView *view, EvLink *link)
 	switch (type) {
 	        case EV_LINK_ACTION_TYPE_GOTO_DEST: {
 			EvLinkDest *dest;
-			
-			g_signal_emit (view, signals[SIGNAL_HANDLE_LINK], 0, link);
+			gint old_page = ev_document_model_get_page (view->model);
+			g_signal_emit (view, signals[SIGNAL_HANDLE_LINK], 0, old_page, link);
 		
 			dest = ev_link_action_get_dest (action);
 			ev_view_goto_dest (view, dest);
@@ -7619,9 +7619,9 @@ ev_view_class_init (EvViewClass *class)
 		         G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
 		         G_STRUCT_OFFSET (EvViewClass, handle_link),
 		         NULL, NULL,
-		         g_cclosure_marshal_VOID__OBJECT,
-		         G_TYPE_NONE, 1,
-			 G_TYPE_OBJECT);
+		         NULL,
+		         G_TYPE_NONE, 2,
+		         G_TYPE_INT, G_TYPE_OBJECT);
 	signals[SIGNAL_EXTERNAL_LINK] = g_signal_new ("external-link",
 	  	         G_TYPE_FROM_CLASS (object_class),
 		         G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
@@ -7629,7 +7629,7 @@ ev_view_class_init (EvViewClass *class)
 		         NULL, NULL,
 		         g_cclosure_marshal_VOID__OBJECT,
 		         G_TYPE_NONE, 1,
-			 G_TYPE_OBJECT);
+		         G_TYPE_OBJECT);
 	signals[SIGNAL_POPUP_MENU] = g_signal_new ("popup",
 	  	         G_TYPE_FROM_CLASS (object_class),
 		         G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
