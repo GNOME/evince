@@ -361,7 +361,8 @@ static void	ev_window_popup_cmd_open_attachment     (GSimpleAction    *action,
 static void	ev_window_popup_cmd_save_attachment_as  (GSimpleAction    *action,
 							 GVariant         *parameter,
 							 gpointer          user_data);
-static void	view_handle_link_cb 			(EvView           *view, 
+static void	view_handle_link_cb 			(EvView           *view,
+							 gint              old_page,
 							 EvLink           *link, 
 							 EvWindow         *window);
 static void     activate_link_cb                        (GObject          *object,
@@ -922,7 +923,7 @@ ev_window_find_title_for_link (EvWindow *window,
 }
 
 static void
-view_handle_link_cb (EvView *view, EvLink *link, EvWindow *window)
+view_handle_link_cb (EvView *view, gint old_page, EvLink *link, EvWindow *window)
 {
 	EvWindowPrivate *priv = GET_PRIVATE (window);
 	EvLink *new_link = NULL;
@@ -952,6 +953,7 @@ view_handle_link_cb (EvView *view, EvLink *link, EvWindow *window)
 			g_free (title);
 		}
 	}
+	ev_history_add_page (priv->history, old_page);
 	ev_history_add_link (priv->history, new_link ? new_link : link);
 	if (new_link)
 		g_object_unref (new_link);
