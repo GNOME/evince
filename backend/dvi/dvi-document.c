@@ -363,6 +363,7 @@ hsb2rgb (float h, float s, float v, guchar *red, guchar *green, guchar *blue)
         p = v * (1 - s);
         q = v * (1 - (s * f));
         t = v * (1 - (s * (1 - f)));
+        r = g = b = 0;
 
 	if (i == 0) {
 		r = v;
