@@ -83,7 +83,7 @@ static GPtrArray *
 comics_document_list (ComicsDocument  *comics_document,
 		      GError         **error)
 {
-	GPtrArray *array;
+	GPtrArray *array = NULL;
 	gboolean has_encrypted_files;
 	GSList *supported_extensions;
 
