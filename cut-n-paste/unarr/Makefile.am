@@ -1,3 +1,9 @@
+# This Makefile refers to sources in subdirectories.  Option "subdir-objects"
+# tells Automake to put the compiled objects in the same directory as the
+# source file.  Without this option Automake prints warnings related to
+# forward compatibility.
+AUTOMAKE_OPTIONS = subdir-objects
+
 noinst_LTLIBRARIES = libunarr.la
 
 libunarr_la_SOURCES =		\
