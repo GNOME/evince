@@ -226,7 +226,6 @@ comics_document_load (EvDocument *document,
 {
 	ComicsDocument *comics_document = COMICS_DOCUMENT (document);
 	gchar *mime_type;
-	GError *err = NULL;
 	GFile *file;
 
 	file = g_file_new_for_uri (uri);
