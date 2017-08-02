@@ -59,6 +59,14 @@ AC_PROG_CXX
 
 AC_PROG_SED
 
+# Commonly distributed binutils (e.g., Debian) comes built with
+# --enable-deterministic-archives which makes ar default to option "D".
+# Option "D" overrides "u" and if "u" is given a cautionary message will be
+# printed.  Autoconf seems to set options "cru" by default.  Avoid the
+# annoying message by removing "u", and, for completeness, explicitly put "D"
+# as well.
+AR_FLAGS=crD
+
 # Initialize libtool
 LT_PREREQ([2.2])
 LT_INIT
