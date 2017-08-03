@@ -7,6 +7,7 @@
     <desc>See a list of all shortcuts, and learn how to create your own custom shortcuts.</desc>
 
     <revision pkgversion="3.2" version="0.1" date="2011-09-05" status="final"/>
+    <revision pkgversion="3.24" version="0.2" date="2017-08-03" status="final"/>
     <credit type="author">
       <name>Phil Bull</name>
       <email>philbull@gmail.com</email>
@@ -26,6 +27,10 @@
    <credit type="editor">
        <name>Ibnu Amansyah</name>
        <email>javalander9@gmail.com</email>
+    </credit>
+   <credit type="editor">
+       <name>Andre Klapper</name>
+       <email>ak-47@gmx.net</email>
     </credit>
 
     <license>
@@ -175,29 +180,34 @@ arrow</key></keyseq></p></td>
 <section id="custom-shortcuts">
  <title>Create your own custom shortcuts</title>
 
-
-<p>
-Enable the /desktop/gnome/interface/can_change_accels flag in gconf:
-</p>
+    <note style="important">
+      <p>You need to have the <app>dconf Editor</app> installed on your computer to
+      change this setting.</p>
+      <if:if test="action:install" xmlns:if="http://projectmallard.org/if/1.0/">
+        <p><link style="button" action="install:dconf-editor">Install
+        <app>dconf Editor</app></link></p>
+      </if:if>
+    </note>
 <steps>
  <item>
   <p>
-   Press <keyseq><key>Alt</key><key>F2</key></keyseq>. The Run Application dialogue opens.
+    Open the <gui xref="help:gnome-help/shell-introduction#activities">Activities</gui> overview
+    and start typing <gui>dconf Editor</gui>.
   </p>
  </item>
  <item>
   <p>
-    In the textbox, type 'gconf-editor'.
+    Click <gui>dconf Editor</gui> to open the application.
   </p>
  </item>
  <item>
   <p>
-    In the Configuration Editor select <guiseq><gui>desktop</gui><gui>gnome</gui><gui>interface</gui></guiseq>.
+    Select <guiseq><gui>org</gui><gui>gnome</gui><gui>desktop</gui><gui>interface</gui></guiseq>.
   </p>
  </item>
  <item>
   <p>
-    Check the value box for <gui>can_change_accels</gui> in the right side of the window.
+    Change the value for <gui>can-change-accels</gui> to true.
   </p>
  </item>
  <item>
@@ -234,7 +244,7 @@ Enable the /desktop/gnome/interface/can_change_accels flag in gconf:
      </item>
       <item>
       <p>
-            Uncheck the value box for <gui>can_change_accels</gui> in the right side of the window.
+        Change the value for <gui>can-change-accels</gui> to false.
       </p>
        <note>
         <p>
