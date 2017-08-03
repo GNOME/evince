@@ -6,7 +6,6 @@ HELP_ID = evince
 
 HELP_MEDIA = \
 	figures/add-text-annotation.png		\
-	figures/annotations-navigate.png	\
 	figures/annotations-nav-to-page.png	\
 	figures/evincelogo.png			\
 	figures/evince-trail.png		\
