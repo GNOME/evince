@@ -31,7 +31,7 @@
 #include "ev-properties-fonts.h"
 
 struct _EvPropertiesFonts {
-	GtkVBox base_instance;
+	GtkBox base_instance;
 
 	GtkWidget *fonts_treeview;
 	GtkWidget *fonts_progress_label;
@@ -42,7 +42,7 @@ struct _EvPropertiesFonts {
 };
 
 struct _EvPropertiesFontsClass {
-	GtkVBoxClass base_class;
+	GtkBoxClass base_class;
 };
 
 static void

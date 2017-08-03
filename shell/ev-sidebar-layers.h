@@ -38,13 +38,13 @@ typedef struct _EvSidebarLayersPrivate EvSidebarLayersPrivate;
 #define EV_SIDEBAR_LAYERS_GET_CLASS(object) (G_TYPE_INSTANCE_GET_CLASS((object), EV_TYPE_SIDEBAR_LAYERS, EvSidebarLayersClass))
 
 struct _EvSidebarLayers {
-	GtkVBox base_instance;
+	GtkBox base_instance;
 
 	EvSidebarLayersPrivate *priv;
 };
 
 struct _EvSidebarLayersClass {
-	GtkVBoxClass base_class;
+	GtkBoxClass base_class;
 
 	/* Signals */
 	void (* layers_visibility_changed) (EvSidebarLayers *ev_layers);

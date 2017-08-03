@@ -29,11 +29,11 @@
 #include "ev-properties-license.h"
 
 struct _EvPropertiesLicense {
-	GtkVBox base_instance;
+	GtkBox base_instance;
 };
 
 struct _EvPropertiesLicenseClass {
-	GtkVBoxClass base_class;
+	GtkBoxClass base_class;
 };
 
 G_DEFINE_TYPE (EvPropertiesLicense, ev_properties_license, GTK_TYPE_BOX)

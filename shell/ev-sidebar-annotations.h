@@ -38,13 +38,13 @@ typedef struct _EvSidebarAnnotationsPrivate EvSidebarAnnotationsPrivate;
 #define EV_SIDEBAR_ANNOTATIONS_GET_CLASS(object) (G_TYPE_INSTANCE_GET_CLASS((object), EV_TYPE_SIDEBAR_ANNOTATIONS, EvSidebarAnnotationsClass))
 
 struct _EvSidebarAnnotations {
-	GtkVBox base_instance;
+	GtkBox base_instance;
 
 	EvSidebarAnnotationsPrivate *priv;
 };
 
 struct _EvSidebarAnnotationsClass {
-	GtkVBoxClass base_class;
+	GtkBoxClass base_class;
 
 	void    (* annot_activated)     (EvSidebarAnnotations *sidebar_annots,
 					 EvMapping            *mapping);

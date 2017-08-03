@@ -40,13 +40,13 @@ typedef struct _EvSidebarBookmarksPrivate EvSidebarBookmarksPrivate;
 #define EV_SIDEBAR_BOOKMARKS_GET_CLASS(object) (G_TYPE_INSTANCE_GET_CLASS((object), EV_TYPE_SIDEBAR_BOOKMARKS, EvSidebarBookmarksClass))
 
 struct _EvSidebarBookmarks {
-	GtkVBox base_instance;
+	GtkBox base_instance;
 
 	EvSidebarBookmarksPrivate *priv;
 };
 
 struct _EvSidebarBookmarksClass {
-	GtkVBoxClass base_class;
+	GtkBoxClass base_class;
 
         void (*add_bookmark) (EvSidebarBookmarks *sidebar_bookmarks);
 };

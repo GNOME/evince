@@ -42,13 +42,13 @@ typedef struct _EvSidebarPrivate EvSidebarPrivate;
 #define EV_SIDEBAR_GET_CLASS(object) (G_TYPE_INSTANCE_GET_CLASS((object), EV_TYPE_SIDEBAR, EvSidebarClass))
 
 struct _EvSidebar {
-	GtkVBox base_instance;
+	GtkBox base_instance;
 
 	EvSidebarPrivate *priv;
 };
 
 struct _EvSidebarClass {
-	GtkVBoxClass base_class;
+	GtkBoxClass base_class;
 };
 
 GType      ev_sidebar_get_type  (void) G_GNUC_CONST;

@@ -76,7 +76,7 @@ static const PropertyInfo properties_info[] = {
 };
 
 struct _EvPropertiesView {
-	GtkVBox base_instance;
+	GtkBox base_instance;
 
 	GtkWidget *grid;
 	GtkWidget *labels[N_PROPERTIES];
@@ -85,7 +85,7 @@ struct _EvPropertiesView {
 };
 
 struct _EvPropertiesViewClass {
-	GtkVBoxClass base_class;
+	GtkBoxClass base_class;
 };
 
 G_DEFINE_TYPE (EvPropertiesView, ev_properties_view, GTK_TYPE_BOX)
