@@ -10,7 +10,6 @@ HELP_MEDIA = \
 	figures/annotations-nav-to-page.png	\
 	figures/evincelogo.png			\
 	figures/evince-trail.png		\
-	figures/gconf-editor.png		\
 	figures/list-add-tabs.png		\
 	figures/print-2sided.png		\
 	figures/print-select.png		\
