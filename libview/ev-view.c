@@ -3017,9 +3017,10 @@ ev_view_remove_window_child_for_annot (EvView       *view,
 
 		child = (EvViewWindowChild *)children->data;
 
-		if (child->page != page)
+		if (child->page != page) {
+			children = children->next;
 			continue;
-
+		}
 		wannot = ev_annotation_window_get_annotation (EV_ANNOTATION_WINDOW (child->window));
 		if (ev_annotation_equal (wannot, annot)) {
 			gtk_widget_destroy (child->window);
