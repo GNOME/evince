@@ -9,8 +9,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: evince\n"
-"POT-Creation-Date: 2017-08-05 13:29+0000\n"
-"PO-Revision-Date: 2017-08-08 08:15+0200\n"
+"POT-Creation-Date: 2017-08-10 13:48+0000\n"
+"PO-Revision-Date: 2017-08-10 16:21+0200\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: čeština <gnome-cs-list@gnome.org>>\n"
 "Language: cs\n"
@@ -2470,7 +2470,8 @@ msgid "Navigating, scrolling and zooming."
 msgstr "Jak se po dokumentu pohybovat, jak jej posouvat a přibližovat."
 
 #. (itstool) path: page/title
-#: C/movingaround.page:25
+#. (itstool) path: section/title
+#: C/movingaround.page:25 C/shortcuts.page:79
 msgid "Moving around a document"
 msgstr "Pohyb po dokumentu"
 
@@ -3671,11 +3672,6 @@ msgstr "Znovu načíst dokument (ve skutečnosti dokument zavře a znovu otevře
 msgid "<keyseq><key>Ctrl</key><key>R</key></keyseq>"
 msgstr "<keyseq><key>Ctrl</key><key>R</key></keyseq>"
 
-#. (itstool) path: section/title
-#: C/shortcuts.page:79
-msgid "Moving around the document"
-msgstr "Pohyb po dokumentu"
-
 #. (itstool) path: td/p
 #: C/shortcuts.page:82
 msgid "Move up/down a page."
@@ -3772,38 +3768,48 @@ msgstr "Přejít na konec dokumentu"
 msgid "<keyseq><key>Ctrl</key><key>End</key></keyseq>"
 msgstr "<keyseq><key>Ctrl</key><key>End</key></keyseq>"
 
+#. (itstool) path: td/p
+#: C/shortcuts.page:118
+msgid "Display the side bar with a table of contents."
+msgstr "Zobrazit postranní panel s obsahem"
+
+#. (itstool) path: td/p
+#: C/shortcuts.page:119
+msgid "<key>F9</key>"
+msgstr "<key>F9</key>"
+
 #. (itstool) path: section/title
-#: C/shortcuts.page:121
+#: C/shortcuts.page:124
 msgid "Selecting and copying text"
 msgstr "Výběr a kopírování textu"
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:124
+#: C/shortcuts.page:127
 msgid "Copy highlighted text."
 msgstr "Kopírovat zvýrazněný text"
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:125
+#: C/shortcuts.page:128
 msgid "<keyseq><key>Ctrl</key><key>C</key></keyseq>"
 msgstr "<keyseq><key>Ctrl</key><key>C</key></keyseq>"
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:128
+#: C/shortcuts.page:131
 msgid "Select all the text in a document."
 msgstr "Vybrat všechen text v dokumentu"
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:129
+#: C/shortcuts.page:132
 msgid "<keyseq><key>Ctrl</key><key>A</key></keyseq>"
 msgstr "<keyseq><key>Ctrl</key><key>A</key></keyseq>"
 
 #. (itstool) path: section/title
-#: C/shortcuts.page:135
+#: C/shortcuts.page:138
 msgid "Finding text"
 msgstr "Hledání textu"
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:138
+#: C/shortcuts.page:141
 msgid ""
 "Show the toolbar that lets you search for words in the document. The search "
 "box is automatically highlighted when you press this, and the search will "
@@ -3814,184 +3820,74 @@ msgstr ""
 "začnete psát text, hned se vyhledává."
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:143
+#: C/shortcuts.page:146
 msgid "<keyseq><key>Ctrl</key><key>F</key></keyseq>"
 msgstr "<keyseq><key>Ctrl</key><key>F</key></keyseq>"
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:146
+#: C/shortcuts.page:149
 msgid "Go to the next search result."
 msgstr "Přejít na následující výsledek hledání"
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:147
+#: C/shortcuts.page:150
 msgid "<keyseq><key>Ctrl</key><key>G</key></keyseq>"
 msgstr "<keyseq><key>Ctrl</key><key>G</key></keyseq>"
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:150
+#: C/shortcuts.page:153
 msgid "Go to the previous search result."
 msgstr "Přejít na předchozí výsledek hledání"
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:151
+#: C/shortcuts.page:154
 msgid "<keyseq><key>Ctrl</key><key>Shift</key><key>G</key></keyseq>"
 msgstr "<keyseq><key>Ctrl</key><key>Shift</key><key>G</key></keyseq>"
 
 #. (itstool) path: section/title
-#: C/shortcuts.page:157
+#: C/shortcuts.page:160
 msgid "Rotating and zooming"
 msgstr "Otáčení a přibližování"
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:160
+#: C/shortcuts.page:163
 msgid "Rotate the pages 90 degrees counter-clockwise."
 msgstr "Otočit stránku o 90 stupňů proti směru hodinových ručiček"
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:161
+#: C/shortcuts.page:164
 msgid "<keyseq><key>Ctrl</key><key>Left arrow</key></keyseq>"
 msgstr "<keyseq><key>Ctrl</key><key>šipka vlevo</key></keyseq>"
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:164
+#: C/shortcuts.page:167
 msgid "Rotate the pages 90 degrees clockwise."
 msgstr "Otočit stránku o 90 stupňů po směru hodinových ručiček"
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:165
+#: C/shortcuts.page:168
 msgid "<keyseq><key>Ctrl</key><key>Right arrow</key></keyseq>"
 msgstr "<keyseq><key>Ctrl</key><key>šipka vpravo</key></keyseq>"
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:169
+#: C/shortcuts.page:172
 msgid "Zoom in."
 msgstr "Přiblížit"
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:170
+#: C/shortcuts.page:173
 msgid "<keyseq><key>Ctrl</key><key>+</key></keyseq>"
 msgstr "<keyseq><key>Ctrl</key><key>+</key></keyseq>"
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:173
+#: C/shortcuts.page:176
 msgid "Zoom out."
 msgstr "Oddálit"
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:174
+#: C/shortcuts.page:177
 msgid "<keyseq><key>Ctrl</key><key>-</key></keyseq>"
 msgstr "<keyseq><key>Ctrl</key><key>-</key></keyseq>"
-
-#. (itstool) path: section/title
-#: C/shortcuts.page:181
-msgid "Create your own custom shortcuts"
-msgstr "Vytváření svých vlastních klávesových zkratek"
-
-#. (itstool) path: note/p
-#: C/shortcuts.page:184
-msgid ""
-"You need to have the <app>dconf Editor</app> installed on your computer to "
-"change this setting."
-msgstr ""
-"Abyste mohli změnit toto nastavení, potřebujete mít ve svém počítači "
-"nainstalován <app>Editor dconf</app>."
-
-#. (itstool) path: if/p
-#: C/shortcuts.page:187
-msgid ""
-"<link style=\"button\" action=\"install:dconf-editor\">Install <app>dconf "
-"Editor</app></link>"
-msgstr ""
-"<link style=\"button\" action=\"install:dconf-editor\">Nainstalovat "
-"<app>Editor dconf</app></link>"
-
-#. (itstool) path: item/p
-#: C/shortcuts.page:193
-msgid ""
-"Open the <gui xref=\"help:gnome-help/shell-introduction#activities"
-"\">Activities</gui> overview and start typing <gui>dconf Editor</gui>."
-msgstr ""
-"Otevřete přehled <gui xref=\"help:gnome-help/shell-introduction#activities"
-"\">Činností</gui> a začněte psát <gui>Editor dconf</gui>."
-
-#. (itstool) path: item/p
-#: C/shortcuts.page:199
-msgid "Click <gui>dconf Editor</gui> to open the application."
-msgstr "Kliknutím na <gui>Editor dconf</gui> otevřete aplikaci."
-
-#. (itstool) path: item/p
-#: C/shortcuts.page:204
-msgid ""
-"Select <guiseq><gui>org</gui><gui>gnome</gui><gui>desktop</"
-"gui><gui>interface</gui></guiseq>."
-msgstr ""
-"Vyberte <guiseq><gui>org</gui><gui>gnome</gui><gui>desktop</"
-"gui><gui>interface</gui></guiseq>."
-
-#. (itstool) path: item/p
-#: C/shortcuts.page:209
-msgid "Change the value for <gui>can-change-accels</gui> to true."
-msgstr "Změňte hodnotu <gui>can-change-accels</gui> na zapnuto."
-
-#. (itstool) path: item/p
-#: C/shortcuts.page:214
-msgid "You can add/change the shortcut as follows:"
-msgstr "Přidat/změnit klávesovou zkratku můžete následovně:"
-
-#. (itstool) path: item/p
-#: C/shortcuts.page:219
-msgid "Open the <app>document viewer</app>."
-msgstr "Otevřete <app>prohlížeč dokumentů</app>"
-
-#. (itstool) path: item/p
-#: C/shortcuts.page:224
-msgid ""
-"Hover the pointer over the menu item you want to change/create the shortcut "
-"for."
-msgstr ""
-"Najeďte ukazatelem nad položku nabídky, pro kterou chcete změnit/vytvořit "
-"klávesovou zkratku."
-
-#. (itstool) path: item/p
-#: C/shortcuts.page:229
-msgid ""
-"Enter the shortcut you want on the keyboard, e.g. <keyseq><key>Ctrl</"
-"key><key>Shift</key><key>T</key></keyseq>."
-msgstr ""
-"Vložte z klávesnice zkratku, kterou chcete používat, např. "
-"<keyseq><key>Ctrl</key><key>Shift</key><key>T</key></keyseq>."
-
-#. (itstool) path: item/p
-#: C/shortcuts.page:234
-msgid "Close the <app>document viewer</app>."
-msgstr "Zavřete <app>prohlížeč dokumentů</app>."
-
-#. (itstool) path: item/p
-#: C/shortcuts.page:241
-msgid "Repeat steps 1-3."
-msgstr "Zopakujte kroky 1 až 3."
-
-#. (itstool) path: item/p
-#: C/shortcuts.page:246
-msgid "Change the value for <gui>can-change-accels</gui> to false."
-msgstr "Změňte hodnotu <gui>can-change-accels</gui> na vypnuto."
-
-#. (itstool) path: note/p
-#: C/shortcuts.page:250
-msgid ""
-"The next time the <app>document viewer</app> launches, your custom shortcut "
-"key will be preserved."
-msgstr ""
-"Až příště spustíte <app>prohlížeč dokumentů</app>, budou vaše klávesové "
-"zkratky funkční."
-
-#. (itstool) path: note/p
-#: C/shortcuts.page:259
-msgid "Note that this also works for many other GNOME applications as well."
-msgstr ""
-"Poznamenejme, že tento postup funguje stejně pro spoustu dalších aplikací z "
-"GNOME."
 
 #. (itstool) path: info/desc
 #: C/singlesided-13-16pages.page:8
@@ -4635,15 +4531,12 @@ msgstr ""
 #: C/textselection.page:35
 msgid ""
 "Unfortunately, there is no real way of fixing this problem. Copying less "
-"text at a time, or copying the text into a text editor may minimise the "
-"problem. You can locate a text editor by clicking <guiseq><gui>Activities</"
-"gui><gui>Applications</gui><gui>Accessories</gui><gui>gedit</gui></guiseq>."
+"text at a time, or copying the text into a text editor (like <app>gedit</"
+"app> may minimize the problem."
 msgstr ""
 "Bohužel, neexistuje rozumný způsob, jak problém vyřešit. Částečně mu můžete "
-"předejít kopírováním menších částí textu nebo zkopírováním prostého textu do "
-"textového editoru. Vhodný textový editor najdete například v "
-"<guiseq><gui>Činnosti</gui> <gui>Aplikace</gui> <gui>Příslušenství</gui> "
-"<gui>gedit</gui></guiseq>."
+"předejít kopírováním menších částí textu nebo zkopírováním textu do textového "
+"editoru (jako je <app>gedit</app>), který pracuje jen s prostým textem."
 
 #. (itstool) path: info/desc
 #: C/toolbar.page:8
@@ -4762,51 +4655,3 @@ msgstr ""
 "Případně můžete kontaktovat Internacionalizační tým přes jeho <link href="
 "\"http://mail.gnome.org/mailman/listinfo/gnome-i18n\">poštovní konferenci</"
 "link>."
-
-#~ msgctxt "_"
-#~ msgid ""
-#~ "external ref='figures/annotations-navigate.png' "
-#~ "md5='6655cfb976ffea53c622b41cbf439747'"
-#~ msgstr ""
-#~ "external ref='figures/annotations-navigate.png' "
-#~ "md5='6655cfb976ffea53c622b41cbf439747'"
-
-#~ msgctxt "_"
-#~ msgid ""
-#~ "external ref='figures/list-add-tabs.png' "
-#~ "md5='1bbd81be2223f1b8434dcf746670f5d7'"
-#~ msgstr ""
-#~ "external ref='figures/list-add-tabs.png' "
-#~ "md5='1bbd81be2223f1b8434dcf746670f5d7'"
-
-#~ msgid "Select the <gui>Add</gui> tab."
-#~ msgstr "Vyberte kartu <gui>Přidat</gui>."
-
-#~ msgid ""
-#~ "Once page 3 has printed, place the paper back in the printer (taking care "
-#~ "to orient it correctly (pages 4 and 9 will be printed on the other side)."
-#~ msgstr ""
-#~ "Po vytisknutí strany 3 vraťte papír zpět do podavače tiskárny a dávejte "
-#~ "přitom pozor, aby byl správně otočený (stránky 4 a 9 se musí vytisknout "
-#~ "na protilehlých stranách papíru)."
-
-#~ msgid "Enable the /desktop/gnome/interface/can_change_accels flag in gconf:"
-#~ msgstr ""
-#~ "Povolte příznak /desktop/gnome/interface/can_change_accels v editoru "
-#~ "nastavení gconf:"
-
-#~ msgid ""
-#~ "Press <keyseq><key>Alt</key><key>F2</key></keyseq>. The Run Application "
-#~ "dialogue opens."
-#~ msgstr ""
-#~ "Zmáčkněte <keyseq><key>Alt</key><key>F2</key></keyseq>. Otevře se "
-#~ "dialogové okno pro spuštění aplikace."
-
-#~ msgid "In the textbox, type 'gconf-editor'."
-#~ msgstr "Do textového pole napište „gconf-editor“."
-
-#~ msgid ""
-#~ "Uncheck the value box for <gui>can_change_accels</gui> in the right side "
-#~ "of the window."
-#~ msgstr ""
-#~ "Zrušte zaškrtnutí políčka <gui>can_change_accels</gui> v pravé části okna."
