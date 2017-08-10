@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-20 23:53+0100\n"
-"PO-Revision-Date: 2017-01-20 23:54+0100\n"
+"POT-Creation-Date: 2017-08-11 01:49+0200\n"
+"PO-Revision-Date: 2017-08-11 01:50+0200\n"
 "Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
 "Language-Team: Polish <community-poland@mozilla.org>\n"
 "Language: pl\n"
@@ -25,55 +25,35 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
 
-#: ../backend/comics/comics-document.c:210
-#, c-format
-msgid ""
-"Error launching the command “%s” in order to decompress the comic book: %s"
-msgstr "Błąd podczas uruchamiania polecenia „%s”, aby dekompresować komiks: %s"
+#: ../backend/comics/comics-document.c:99
+#: ../backend/comics/comics-document.c:121
+msgid "File is corrupted"
+msgstr "Plik jest uszkodzony"
 
-#: ../backend/comics/comics-document.c:224
-#, c-format
-msgid "The command “%s” failed at decompressing the comic book."
-msgstr ""
-"Wykonanie polecenia „%s” podczas dekompresowania komiksu się nie powiodło."
+#: ../backend/comics/comics-document.c:151
+msgid "Archive is encrypted"
+msgstr "Archiwum jest zaszyfrowane"
 
-#: ../backend/comics/comics-document.c:233
-#, c-format
-msgid "The command “%s” did not end normally."
-msgstr "Polecenie „%s” nie zakończyło poprawnie działania."
+#: ../backend/comics/comics-document.c:156
+msgid "No files in archive"
+msgstr "Nie odnaleziono plików w archiwum"
 
-#: ../backend/comics/comics-document.c:453
+#: ../backend/comics/comics-document.c:192
 #, c-format
 msgid "Not a comic book MIME type: %s"
 msgstr "To nie jest typ MIME komiksu: %s"
 
-#: ../backend/comics/comics-document.c:460
-msgid "Can’t find an appropriate command to decompress this type of comic book"
+#: ../backend/comics/comics-document.c:199
+msgid ""
+"libarchive lacks support for this comic book’s compression, please contact "
+"your distributor"
 msgstr ""
-"Nie można znaleźć odpowiedniego polecenia do dekompresji tego typu komiksu"
+"Biblioteka libarchive nie obsługuje kompresji tego komiksu. Proszę "
+"skontaktować się z dostawcą oprogramowania"
 
-#: ../backend/comics/comics-document.c:526
-msgid "File corrupted"
-msgstr "Uszkodzony plik"
-
-#: ../backend/comics/comics-document.c:539
-msgid "No files in archive"
-msgstr "Nie odnaleziono plików w archiwum"
-
-#: ../backend/comics/comics-document.c:578
-#, c-format
-msgid "No images found in archive %s"
-msgstr "Nie odnaleziono obrazów w archiwum %s"
-
-#: ../backend/comics/comics-document.c:828
-#, c-format
-msgid "There was an error deleting “%s”."
-msgstr "Wystąpił błąd podczas usuwania „%s”."
-
-#: ../backend/comics/comics-document.c:921
-#, c-format
-msgid "Error %s"
-msgstr "Błąd %s"
+#: ../backend/comics/comics-document.c:239
+msgid "Can not get local path for archive"
+msgstr "Nie można uzyskać lokalnej ścieżki dla archiwum"
 
 #: ../backend/comics/comicsdocument.evince-backend.in.in.h:1
 #: ../backend/comics/evince-comicsdocument.metainfo.xml.in.in.h:1
@@ -171,7 +151,7 @@ msgid ""
 "the fonts used to create the PDF, the rendering may not be correct."
 msgstr ""
 "Ten dokument zawiera nieosadzone czcionki, które nie pochodzą ze "
-"standardowych czcionek 14 formatu PDF. Jeśli czcionki zastępcze wybrane "
+"standardowych 14 czcionek formatu PDF. Jeśli czcionki zastępcze wybrane "
 "przez bibliotekę fontconfig nie są takie same, jak te użyte do utworzenia "
 "pliku PDF, to wyświetlanie może być niepoprawne."
 
@@ -208,7 +188,7 @@ msgstr "Osadzone"
 
 #: ../backend/pdf/ev-poppler.cc:1188
 msgid "Not embedded"
-msgstr "Niesadzone"
+msgstr "Nieosadzone"
 
 #. Translators: string starting with a space
 #. * because it is directly appended to the font
@@ -217,7 +197,7 @@ msgstr "Niesadzone"
 #.
 #: ../backend/pdf/ev-poppler.cc:1195
 msgid " (One of the Standard 14 Fonts)"
-msgstr " (jedna ze standardowych czcionek 14)"
+msgstr " (jedna ze standardowych 14 czcionek)"
 
 #. Translators: string starting with a space
 #. * because it is directly appended to the font
@@ -226,7 +206,7 @@ msgstr " (jedna ze standardowych czcionek 14)"
 #.
 #: ../backend/pdf/ev-poppler.cc:1202
 msgid " (Not one of the Standard 14 Fonts)"
-msgstr " (nie jest jedną ze standardowych czcionek 14)"
+msgstr " (nie jest jedną ze standardowych 14 czcionek)"
 
 #: ../backend/pdf/ev-poppler.cc:1209
 msgid "Encoding"
@@ -436,17 +416,17 @@ msgstr "Nie można otworzyć załącznika „%s”"
 msgid "File type %s (%s) is not supported"
 msgstr "Plik typu %s (%s) nie jest obsługiwany"
 
-#: ../libdocument/ev-document-factory.c:364
+#: ../libdocument/ev-document-factory.c:368
 #: ../libdocument/ev-file-helpers.c:492 ../libdocument/ev-file-helpers.c:538
 #: ../libdocument/ev-file-helpers.c:557
 msgid "Unknown MIME Type"
 msgstr "Nieznany typ MIME"
 
-#: ../libdocument/ev-document-factory.c:552
+#: ../libdocument/ev-document-factory.c:577
 msgid "All Documents"
 msgstr "Wszystkie dokumenty"
 
-#: ../libdocument/ev-document-factory.c:579 ../shell/ev-utils.c:309
+#: ../libdocument/ev-document-factory.c:604 ../shell/ev-utils.c:309
 msgid "All Files"
 msgstr "Wszystkie pliki"
 
@@ -472,10 +452,10 @@ msgstr "z %d"
 
 #: ../libmisc/ev-page-action-widget.c:185 ../shell/ev-history.c:426
 #: ../shell/ev-sidebar-bookmarks.c:295 ../shell/ev-window.c:907
-#: ../shell/ev-window.c:4679
+#: ../shell/ev-window.c:4687
 #, c-format
 msgid "Page %s"
-msgstr "Strona %s"
+msgstr "%s. strona"
 
 #: ../libmisc/ev-search-box.c:110
 msgid "Not found, click to change search options"
@@ -495,26 +475,26 @@ msgstr "_Rozróżnianie wielkości liter"
 
 #: ../libmisc/ev-search-box.c:590
 msgid "Find previous occurrence of the search string"
-msgstr "Wyszukuje poprzednie wystąpienie szukanego napisu"
+msgstr "Wyszukuje poprzednie wystąpienie szukanego tekstu"
 
 #: ../libmisc/ev-search-box.c:597
 msgid "Find next occurrence of the search string"
-msgstr "Wyszukuje następne wystąpienie szukanego napisu"
+msgstr "Wyszukuje następne wystąpienie szukanego tekstu"
 
 #: ../libview/ev-jobs.c:649
 #, c-format
 msgid "Failed to render page %d"
-msgstr "Wyświetlenie strony %d się nie powiodło"
+msgstr "Wyświetlenie %d. strony się nie powiodło"
 
 #: ../libview/ev-jobs.c:901
 #, c-format
 msgid "Failed to create thumbnail for page %d"
-msgstr "Utworzenie miniatury dla strony %d się nie powiodło"
+msgstr "Utworzenie miniatury dla %d. strony się nie powiodło"
 
 #: ../libview/ev-jobs.c:2033
 #, c-format
 msgid "Failed to print page %d: %s"
-msgstr "Wydrukowanie strony %d się nie powiodło: %s"
+msgstr "Wydrukowanie %d. strony się nie powiodło: %s"
 
 #. Initial state
 #: ../libview/ev-print-operation.c:350
@@ -528,7 +508,7 @@ msgstr "Kończenie…"
 #: ../libview/ev-print-operation.c:354
 #, c-format
 msgid "Generating preview: page %d of %d"
-msgstr "Tworzenie podglądu: strona %d z %d"
+msgstr "Tworzenie podglądu: %d. strona z %d"
 
 #. Initial state
 #: ../libview/ev-print-operation.c:360
@@ -538,7 +518,7 @@ msgstr "Przygotowywanie do wydruku…"
 #: ../libview/ev-print-operation.c:364
 #, c-format
 msgid "Printing page %d of %d…"
-msgstr "Drukowanie strony %d z %d…"
+msgstr "Drukowanie %d. strony z %d…"
 
 #: ../libview/ev-print-operation.c:1214
 msgid "Requested format is not supported by this printer."
@@ -674,7 +654,7 @@ msgstr "Znajdź"
 #: ../libview/ev-view.c:2071
 #, c-format
 msgid "Go to page %s"
-msgstr "Przejdź do strony %s"
+msgstr "Przejdź do %s. strony"
 
 #: ../libview/ev-view.c:2077
 #, c-format
@@ -704,8 +684,8 @@ msgid "Delete the temporary file"
 msgstr "Usuwa plik tymczasowy"
 
 #: ../previewer/ev-previewer.c:46
-msgid "Print settings file"
-msgstr "Drukuje plik ustawień"
+msgid "File specifying print settings"
+msgstr "Plik określający ustawienia wydruku"
 
 #: ../previewer/ev-previewer.c:46
 msgid "FILE"
@@ -715,7 +695,7 @@ msgstr "PLIK"
 msgid "GNOME Document Previewer"
 msgstr "Przeglądarka podglądu dokumentów środowiska GNOME"
 
-#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3262
+#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3270
 msgid "Failed to print document"
 msgstr "Wydrukowanie dokumentu się nie powiodło"
 
@@ -830,7 +810,7 @@ msgstr "default:mm"
 #: ../properties/ev-properties-view.c:277
 #, c-format
 msgid "%.0f × %.0f mm"
-msgstr "%.0f×%.0f mm"
+msgstr "%.0f×%.0f mm"
 
 #: ../properties/ev-properties-view.c:281
 #, c-format
@@ -1018,7 +998,7 @@ msgstr "Hasło dla dokumentu %s"
 
 #. Create tree view
 #: ../shell/ev-loading-message.c:50 ../shell/ev-sidebar-annotations.c:125
-#: ../shell/ev-sidebar-layers.c:125 ../shell/ev-sidebar-links.c:261
+#: ../shell/ev-sidebar-layers.c:125 ../shell/ev-sidebar-links.c:268
 msgid "Loading…"
 msgstr "Wczytywanie…"
 
@@ -1047,7 +1027,7 @@ msgstr ""
 
 #: ../shell/ev-password-view.c:303
 msgid "Password required"
-msgstr "Wymagane hasło"
+msgstr "Wymagane jest hasło"
 
 #: ../shell/ev-password-view.c:333
 msgid "_Password:"
@@ -1109,7 +1089,7 @@ msgstr "Brak adnotacji"
 #: ../shell/ev-sidebar-annotations.c:291
 #, c-format
 msgid "Page %d"
-msgstr "Strona %d"
+msgstr "%d. strona"
 
 #: ../shell/ev-sidebar-annotations.c:467
 msgid "Annotations"
@@ -1147,7 +1127,7 @@ msgstr "Zakładki"
 msgid "Layers"
 msgstr "Warstwy"
 
-#: ../shell/ev-sidebar-links.c:337
+#: ../shell/ev-sidebar-links.c:344
 msgid "Print…"
 msgstr "Wydrukuj…"
 
@@ -1157,11 +1137,11 @@ msgstr "Wydrukuj…"
 #. * your language.  The sidebar cannot be shrinked smaller than
 #. * the longest title in there.
 #.
-#: ../shell/ev-sidebar-links.c:728
+#: ../shell/ev-sidebar-links.c:750
 msgid "Outline"
 msgstr "Konspekt"
 
-#: ../shell/ev-sidebar-thumbnails.c:1093
+#: ../shell/ev-sidebar-thumbnails.c:1135
 msgid "Thumbnails"
 msgstr "Miniatury"
 
@@ -1209,86 +1189,82 @@ msgstr "Dokument nie zawiera stron"
 msgid "The document contains only empty pages"
 msgstr "Dokument zawiera tylko puste strony"
 
-#: ../shell/ev-window.c:1757 ../shell/ev-window.c:1923
+#: ../shell/ev-window.c:1758 ../shell/ev-window.c:1924
 #, c-format
 msgid "Unable to open document “%s”."
 msgstr "Nie można otworzyć dokumentu „%s”."
 
-#: ../shell/ev-window.c:1887
+#: ../shell/ev-window.c:1888
 #, c-format
 msgid "Loading document from “%s”"
 msgstr "Wczytywanie dokumentu z „%s”"
 
-#: ../shell/ev-window.c:2038 ../shell/ev-window.c:2366
+#: ../shell/ev-window.c:2039 ../shell/ev-window.c:2367
 #, c-format
 msgid "Downloading document (%d%%)"
 msgstr "Pobieranie dokumentu (%d%%)"
 
-#: ../shell/ev-window.c:2071
+#: ../shell/ev-window.c:2072
 msgid "Failed to load remote file."
 msgstr "Wczytanie zdalnego pliku się nie powiodło."
 
-#: ../shell/ev-window.c:2310
+#: ../shell/ev-window.c:2311
 #, c-format
 msgid "Reloading document from %s"
 msgstr "Ponowne wczytywanie dokumentu z %s"
 
-#: ../shell/ev-window.c:2342
+#: ../shell/ev-window.c:2343
 msgid "Failed to reload document."
 msgstr "Ponowne wczytanie dokumentu się nie powiodło."
 
-#: ../shell/ev-window.c:2558
+#: ../shell/ev-window.c:2559
 msgid "Open Document"
 msgstr "Otwarcie dokumentu"
 
-#: ../shell/ev-window.c:2631
+#: ../shell/ev-window.c:2632
 #, c-format
 msgid "Saving document to %s"
 msgstr "Zapisywanie dokumentu do %s"
 
-#: ../shell/ev-window.c:2634
+#: ../shell/ev-window.c:2635
 #, c-format
 msgid "Saving attachment to %s"
 msgstr "Zapisywanie załącznika do %s"
 
-#: ../shell/ev-window.c:2637
+#: ../shell/ev-window.c:2638
 #, c-format
 msgid "Saving image to %s"
 msgstr "Zapisywanie obrazu do %s"
 
-#: ../shell/ev-window.c:2681 ../shell/ev-window.c:2781
+#: ../shell/ev-window.c:2682 ../shell/ev-window.c:2782
 #, c-format
 msgid "The file could not be saved as “%s”."
 msgstr "Nie można zapisać pliku jako „%s”."
 
-#: ../shell/ev-window.c:2712
+#: ../shell/ev-window.c:2713
 #, c-format
 msgid "Uploading document (%d%%)"
 msgstr "Wysyłanie dokumentu (%d%%)"
 
-#: ../shell/ev-window.c:2716
+#: ../shell/ev-window.c:2717
 #, c-format
 msgid "Uploading attachment (%d%%)"
 msgstr "Wysyłanie załącznika (%d%%)"
 
-#: ../shell/ev-window.c:2720
+#: ../shell/ev-window.c:2721
 #, c-format
 msgid "Uploading image (%d%%)"
 msgstr "Wysyłanie obrazu (%d%%)"
 
-#: ../shell/ev-window.c:2832
+#: ../shell/ev-window.c:2833
 msgid "Save a Copy"
 msgstr "Zapis kopii"
 
-#: ../shell/ev-window.c:2908
+#: ../shell/ev-window.c:2909
 msgid "Could not send current document"
 msgstr "Nie można wysłać bieżącego dokumentu"
 
-#: ../shell/ev-window.c:2942
-msgid "Could not open the containing folder"
-msgstr "Nie można otworzyć katalogu zawierającego"
-
-#: ../shell/ev-window.c:3206
+#: ../shell/ev-window.c:3214
 #, c-format
 msgid "%d pending job in queue"
 msgid_plural "%d pending jobs in queue"
@@ -1296,51 +1272,51 @@ msgstr[0] "%d oczekujące zadanie w kolejce"
 msgstr[1] "%d oczekujące zadania w kolejce"
 msgstr[2] "%d oczekujących zadań w kolejce"
 
-#: ../shell/ev-window.c:3319
+#: ../shell/ev-window.c:3327
 #, c-format
 msgid "Printing job “%s”"
 msgstr "Drukowanie zadania „%s”"
 
-#: ../shell/ev-window.c:3534
+#: ../shell/ev-window.c:3542
 msgid "Document contains form fields that have been filled out. "
 msgstr "Dokument zawiera wypełnione pola formularza. "
 
-#: ../shell/ev-window.c:3537
+#: ../shell/ev-window.c:3545
 msgid "Document contains new or modified annotations. "
 msgstr "Dokument zawiera nowe lub zmienione adnotacje. "
 
-#: ../shell/ev-window.c:3549
+#: ../shell/ev-window.c:3557
 #, c-format
 msgid "Reload document “%s”?"
 msgstr "Ponownie wczytać dokument „%s”?"
 
-#: ../shell/ev-window.c:3551
+#: ../shell/ev-window.c:3559
 msgid "If you reload the document, changes will be permanently lost."
 msgstr "Ponowne wczytanie dokumentu spowoduje bezpowrotną utratę zmian."
 
-#: ../shell/ev-window.c:3555
+#: ../shell/ev-window.c:3563
 msgid "Reload"
 msgstr "Wczytaj ponownie"
 
-#: ../shell/ev-window.c:3562
+#: ../shell/ev-window.c:3570
 #, c-format
 msgid "Save a copy of document “%s” before closing?"
 msgstr "Zapisać kopię dokumentu „%s” przed zamknięciem?"
 
-#: ../shell/ev-window.c:3564
+#: ../shell/ev-window.c:3572
 msgid "If you don’t save a copy, changes will be permanently lost."
 msgstr ""
 "Jeśli kopia nie zostanie zapisana, to zmiany zostaną bezpowrotnie utracone."
 
-#: ../shell/ev-window.c:3566
+#: ../shell/ev-window.c:3574
 msgid "Close _without Saving"
 msgstr "Zamknij _bez zapisywania"
 
-#: ../shell/ev-window.c:3570
+#: ../shell/ev-window.c:3578
 msgid "Save a _Copy"
 msgstr "Zapisz _kopię"
 
-#: ../shell/ev-window.c:3654
+#: ../shell/ev-window.c:3662
 #, c-format
 msgid "Wait until print job “%s” finishes before closing?"
 msgstr "Poczekać na ukończenie zadania wydruku „%s” przed zamknięciem?"
@@ -1348,7 +1324,7 @@ msgstr "Poczekać na ukończenie zadania wydruku „%s” przed zamknięciem?"
 #. TRANS: the singular form is not really used as n_print_jobs > 1
 #. but some languages distinguish between different plurals forms,
 #. so the ngettext is needed.
-#: ../shell/ev-window.c:3660
+#: ../shell/ev-window.c:3668
 #, c-format
 msgid "There is %d print job active. Wait until print finishes before closing?"
 msgid_plural ""
@@ -1360,31 +1336,31 @@ msgstr[1] ""
 msgstr[2] ""
 "%d aktywnych zadań wydruku. Poczekać na ukończenie wydruku przed zamknięciem?"
 
-#: ../shell/ev-window.c:3675
+#: ../shell/ev-window.c:3683
 msgid "If you close the window, pending print jobs will not be printed."
 msgstr "Zamknięcie okna spowoduje anulowanie wydruku oczekujących zadań."
 
-#: ../shell/ev-window.c:3679
+#: ../shell/ev-window.c:3687
 msgid "Cancel _print and Close"
 msgstr "Anuluj _drukowanie i zamknij"
 
-#: ../shell/ev-window.c:3683
+#: ../shell/ev-window.c:3691
 msgid "Close _after Printing"
 msgstr "_Zamknij po wydrukowaniu"
 
-#: ../shell/ev-window.c:4214
+#: ../shell/ev-window.c:4222
 msgid "Running in presentation mode"
 msgstr "Praca w trybie prezentacji"
 
-#: ../shell/ev-window.c:5363
+#: ../shell/ev-window.c:5371
 msgid "Enable caret navigation?"
 msgstr "Włączyć tryb przeglądania za pomocą karetki?"
 
-#: ../shell/ev-window.c:5365
+#: ../shell/ev-window.c:5373
 msgid "_Enable"
-msgstr "_Włączenie"
+msgstr "_Włącz"
 
-#: ../shell/ev-window.c:5368
+#: ../shell/ev-window.c:5376
 msgid ""
 "Pressing F7 turns the caret navigation on or off. This feature places a "
 "moveable cursor in text pages, allowing you to move around and select text "
@@ -1394,39 +1370,39 @@ msgstr ""
 "umieszcza ruchomy kursor na stronach tekstowych, umożliwiając poruszanie się "
 "i zaznaczanie tekstu za pomocą klawiatury. Włączyć tę funkcję?"
 
-#: ../shell/ev-window.c:5373
+#: ../shell/ev-window.c:5381
 msgid "Don’t show this message again"
 msgstr "Bez wyświetlania ponownie"
 
-#: ../shell/ev-window.c:5888 ../shell/ev-window.c:5904
+#: ../shell/ev-window.c:5896 ../shell/ev-window.c:5912
 msgid "Unable to launch external application."
 msgstr "Nie można uruchomić zewnętrznego programu."
 
-#: ../shell/ev-window.c:5961
+#: ../shell/ev-window.c:5969
 msgid "Unable to open external link"
 msgstr "Nie można otworzyć zewnętrznego odnośnika"
 
-#: ../shell/ev-window.c:6164
+#: ../shell/ev-window.c:6172
 msgid "Couldn’t find appropriate format to save image"
 msgstr "Nie można odnaleźć odpowiedniego formatu, aby zapisać obraz"
 
-#: ../shell/ev-window.c:6196
+#: ../shell/ev-window.c:6204
 msgid "The image could not be saved."
 msgstr "Nie można zapisać obrazu."
 
-#: ../shell/ev-window.c:6231
+#: ../shell/ev-window.c:6239
 msgid "Save Image"
 msgstr "Zapis obrazu"
 
-#: ../shell/ev-window.c:6390
+#: ../shell/ev-window.c:6398
 msgid "Unable to open attachment"
 msgstr "Nie można otworzyć załącznika"
 
-#: ../shell/ev-window.c:6446
+#: ../shell/ev-window.c:6454
 msgid "The attachment could not be saved."
 msgstr "Nie można zapisać załącznika."
 
-#: ../shell/ev-window.c:6494
+#: ../shell/ev-window.c:6502
 msgid "Save Attachment"
 msgstr "Zapis załącznika"
 
@@ -1540,7 +1516,7 @@ msgstr "Słowo lub wyrażenie do wyszukania w dokumencie"
 
 #: ../shell/main.c:77
 msgid "STRING"
-msgstr "CIĄG"
+msgstr "TEKST"
 
 #: ../shell/main.c:81
 msgid "[FILE…]"
@@ -1865,7 +1841,7 @@ msgstr "Przejście do poprzedniej strony"
 
 #: ../evince.appdata.xml.in.h:2
 msgid "Document viewer for popular document formats"
-msgstr "Przeglądarka dokumentów dla popularnych formatów"
+msgstr "Przeglądarka dokumentów w popularnych formatach"
 
 #: ../evince.appdata.xml.in.h:3
 msgid "This is a document viewer for the GNOME desktop."
@@ -1876,5 +1852,5 @@ msgid ""
 "It supports the following document formats: PDF, PS, EPS, XPS, DjVu, TIFF, "
 "DVI (with SyncTeX), and Comic Books archives (CBR, CBT, CBZ, CB7)."
 msgstr ""
-"Obsługuje następujące formaty dokumentów: PDF, PS, EPS, XPS, DjVu, TIFF, DVI "
+"Obsługiwane formaty dokumentów: PDF, PS, EPS, XPS, DjVu, TIFF, DVI "
 "(z SyncTeX) oraz archiwa z komiksami (CBR, CBT, CBZ, CB7)."
