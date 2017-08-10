@@ -7,7 +7,7 @@
     <desc>See a list of all shortcuts, and learn how to create your own custom shortcuts.</desc>
 
     <revision pkgversion="3.2" version="0.1" date="2011-09-05" status="final"/>
-    <revision pkgversion="3.24" version="0.2" date="2017-08-09" status="final"/>
+    <revision pkgversion="3.24" version="0.2" date="2017-08-10" status="final"/>
     <credit type="author">
       <name>Phil Bull</name>
       <email>philbull@gmail.com</email>
@@ -180,88 +180,4 @@ arrow</key></keyseq></p></td>
 </section>
 </section>
 
-<section id="custom-shortcuts">
- <title>Create your own custom shortcuts</title>
-
-    <note style="important">
-      <p>You need to have the <app>dconf Editor</app> installed on your computer to
-      change this setting.</p>
-      <if:if test="action:install" xmlns:if="http://projectmallard.org/if/1.0/">
-        <p><link style="button" action="install:dconf-editor">Install
-        <app>dconf Editor</app></link></p>
-      </if:if>
-    </note>
-<steps>
- <item>
-  <p>
-    Open the <gui xref="help:gnome-help/shell-introduction#activities">Activities</gui> overview
-    and start typing <gui>dconf Editor</gui>.
-  </p>
- </item>
- <item>
-  <p>
-    Click <gui>dconf Editor</gui> to open the application.
-  </p>
- </item>
- <item>
-  <p>
-    Select <guiseq><gui>org</gui><gui>gnome</gui><gui>desktop</gui><gui>interface</gui></guiseq>.
-  </p>
- </item>
- <item>
-  <p>
-    Change the value for <gui>can-change-accels</gui> to true.
-  </p>
- </item>
- <item>
-  <p>
-   You can add/change the shortcut as follows:
-  </p>
-    <list style = "auto">
-     <item>
-      <p>
-        Open the <app>document viewer</app>.
-      </p>
-     </item>
-      <item>
-      <p>
-        Hover the pointer over the menu item you want to change/create the shortcut for.
-      </p>
-     </item>
-     <item>
-      <p>
-        Enter the shortcut you want on the keyboard, e.g. <keyseq><key>Ctrl</key><key>Shift</key><key>T</key></keyseq>.
-      </p>
-     </item>
-     <item>
-      <p>
-       Close the <app>document viewer</app>.
-      </p>
-      </item>
-     </list>
-     </item>
-     <item>
-      <p>
-        Repeat steps 1-3.
-      </p>
-     </item>
-      <item>
-      <p>
-        Change the value for <gui>can-change-accels</gui> to false.
-      </p>
-       <note>
-        <p>
-          The next time the <app>document viewer</app> launches, your custom shortcut key will be preserved.
-        </p>
-       </note>
-
-     </item>
-</steps>
-
-<note style = "tip">
- <p>
-  Note that this also works for many other GNOME applications as well.
- </p>
-</note>
-</section>
 </page>
