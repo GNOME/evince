@@ -28,7 +28,7 @@
 #include <glib.h>
 #include <gio/gio.h>
 
-#define SD_NAME        "org.gnome.SettingsDaemon"
+#define SD_NAME        "org.gnome.SettingsDaemon.MediaKeys"
 #define SD_OBJECT_PATH "/org/gnome/SettingsDaemon/MediaKeys"
 #define SD_INTERFACE   "org.gnome.SettingsDaemon.MediaKeys"
 
