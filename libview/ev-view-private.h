@@ -110,6 +110,7 @@ typedef enum {
 typedef struct _EvHeightToPageCache {
 	gint rotation;
 	gboolean dual_even_left;
+	gboolean dual_rtl;
 	gdouble *height_to_page;
 	gdouble *dual_height_to_page;
 } EvHeightToPageCache;
@@ -192,6 +193,7 @@ struct _EvView {
 	gboolean can_zoom_out;
 	gboolean continuous;
 	gboolean dual_even_left;
+	gboolean dual_rtl;
 	gboolean fullscreen;
 	EvSizingMode sizing_mode;
 	EvPageLayout page_layout;

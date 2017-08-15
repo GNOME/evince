@@ -39,6 +39,7 @@ struct _EvDocumentModel
 	guint continuous : 1;
 	guint dual_page  : 1;
 	guint dual_page_odd_left : 1;
+	guint dual_page_rtl : 1;
 	guint fullscreen : 1;
 	guint inverted_colors : 1;
 
@@ -57,6 +58,7 @@ enum {
 	PROP_CONTINUOUS,
 	PROP_DUAL_PAGE,
 	PROP_DUAL_PAGE_ODD_LEFT,
+	PROP_DUAL_PAGE_RTL,
 	PROP_FULLSCREEN,
 	PROP_MIN_SCALE,
 	PROP_MAX_SCALE,
@@ -134,6 +136,9 @@ ev_document_model_set_property (GObject      *object,
 	case PROP_DUAL_PAGE_ODD_LEFT:
 		ev_document_model_set_dual_page_odd_pages_left (model, g_value_get_boolean (value));
 		break;
+	case PROP_DUAL_PAGE_RTL:
+		ev_document_model_set_dual_page_rtl (model, g_value_get_boolean (value));
+		break;
 	case PROP_FULLSCREEN:
 		ev_document_model_set_fullscreen (model, g_value_get_boolean (value));
 		break;
@@ -186,6 +191,9 @@ ev_document_model_get_property (GObject    *object,
 		break;
 	case PROP_DUAL_PAGE_ODD_LEFT:
 		g_value_set_boolean (value, ev_document_model_get_dual_page_odd_pages_left (model));
+		break;
+	case PROP_DUAL_PAGE_RTL:
+		g_value_set_boolean (value, ev_document_model_get_dual_page_rtl (model));
 		break;
 	case PROP_FULLSCREEN:
 		g_value_set_boolean (value, ev_document_model_get_fullscreen (model));
@@ -300,6 +308,14 @@ ev_document_model_class_init (EvDocumentModelClass *klass)
 					 g_param_spec_boolean ("dual-odd-left",
 							       "Odd Pages Left",
 							       "Whether odd pages are displayed on left side in dual mode",
+							       FALSE,
+							       G_PARAM_READWRITE |
+                                                               G_PARAM_STATIC_STRINGS));
+	g_object_class_install_property (g_object_class,
+					 PROP_DUAL_PAGE_RTL,
+					 g_param_spec_boolean ("dual-rtl",
+							       "Right to Left",
+							       "Whether pages are displayed from right to left in dual mode",
 							       FALSE,
 							       G_PARAM_READWRITE |
                                                                G_PARAM_STATIC_STRINGS));
@@ -718,6 +734,30 @@ ev_document_model_get_dual_page_odd_pages_left (EvDocumentModel *model)
 	g_return_val_if_fail (EV_IS_DOCUMENT_MODEL (model), FALSE);
 
 	return model->dual_page_odd_left;
+}
+
+void
+ev_document_model_set_dual_page_rtl (EvDocumentModel *model,
+				     gboolean         rtl)
+{
+	g_return_if_fail (EV_IS_DOCUMENT_MODEL (model));
+
+	rtl = rtl != FALSE;
+
+	if (rtl == model->dual_page_rtl)
+		return;
+
+	model->dual_page_rtl = rtl;
+
+	g_object_notify (G_OBJECT (model), "dual-rtl");
+}
+
+gboolean
+ev_document_model_get_dual_page_rtl (EvDocumentModel *model)
+{
+	g_return_val_if_fail (EV_IS_DOCUMENT_MODEL (model), FALSE);
+
+	return model->dual_page_rtl;
 }
 
 void

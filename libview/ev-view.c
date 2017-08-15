@@ -342,6 +342,7 @@ ev_view_build_height_to_page_cache (EvView		*view,
 
 	cache->rotation = view->rotation;
 	cache->dual_even_left = view->dual_even_left;
+	cache->dual_rtl = view->dual_rtl;
 	cache->height_to_page = g_new0 (gdouble, n_pages + 1);
 	cache->dual_height_to_page = g_new0 (gdouble, n_pages + 2);
 
@@ -367,7 +368,7 @@ ev_view_build_height_to_page_cache (EvView		*view,
 		}
 	}
 
-	if (cache->dual_even_left && !uniform) {
+	if ((cache->dual_even_left ^ cache->dual_rtl) && !uniform) {
 		gdouble w, h;
 
 		ev_document_get_page_size (document, 0, &w, &h);
@@ -376,7 +377,7 @@ ev_view_build_height_to_page_cache (EvView		*view,
 		saved_height = 0;
 	}
 
-	for (i = cache->dual_even_left; i < n_pages + 2; i += 2) {
+	for (i = cache->dual_even_left ^ cache->dual_rtl; i < n_pages + 2; i += 2) {
     		if (uniform) {
 			uniform_height = swap ? u_width : u_height;
 			cache->dual_height_to_page[i] = ((i + cache->dual_even_left) / 2) * uniform_height;
@@ -462,7 +463,8 @@ ev_view_get_height_to_page (EvView *view,
 
 	cache = view->height_to_page_cache;
 	if (cache->rotation != view->rotation ||
-	    cache->dual_even_left != view->dual_even_left) {
+	    cache->dual_even_left != view->dual_even_left ||
+	    cache->dual_rtl != view->dual_rtl) {
 		ev_view_build_height_to_page_cache (view, cache);
 	}
 
@@ -511,12 +513,15 @@ ev_view_get_scrollbar_size (EvView        *view,
 	return (orientation == GTK_ORIENTATION_VERTICAL ? req.width : req.height) + spacing;
 }
 
+/* In general, if (page % 2 ^ odd_left == 1) the page is on the left (regardless of rtl). */
 static gboolean
 is_dual_page (EvView   *view,
-	      gboolean *odd_left_out)
+	      gboolean *odd_left_out,
+	      gboolean *rtl_out)
 {
 	gboolean dual = FALSE;
 	gboolean odd_left = FALSE;
+	gboolean rtl = FALSE;
 
 	switch (view->page_layout) {
 	case EV_PAGE_LAYOUT_AUTOMATIC: {
@@ -538,12 +543,14 @@ is_dual_page (EvView   *view,
 		    allocation.width > (2 * doc_width * scale) &&
 		    allocation.height > (doc_height * scale * 0.9)) {
 			odd_left = !view->dual_even_left;
+			rtl = view->dual_rtl;
 			dual = TRUE;
 		}
 	}
 		break;
 	case EV_PAGE_LAYOUT_DUAL:
 		odd_left = !view->dual_even_left;
+		rtl = view->dual_rtl;
 		dual = TRUE;
 		break;
 	case EV_PAGE_LAYOUT_SINGLE:
@@ -554,6 +561,8 @@ is_dual_page (EvView   *view,
 
 	if (odd_left_out)
 		*odd_left_out = odd_left;
+	if (rtl_out)
+		*rtl_out = rtl;
 
 	return dual;
 }
@@ -584,7 +593,7 @@ scroll_to_point (EvView        *view,
 		upper = gtk_adjustment_get_upper (view->hadjustment);
 		lower = gtk_adjustment_get_lower (view->hadjustment);
 
-		if (is_dual_page (view, NULL)) {
+		if (is_dual_page (view, NULL, NULL)) {
 			gtk_adjustment_clamp_page (view->hadjustment, x,
 						   x + page_size);
 		} else {
@@ -715,7 +724,7 @@ view_update_range_and_current_page (EvView *view)
 {
 	gint start = view->start_page;
 	gint end = view->end_page;
-	gboolean odd_left;
+	gboolean odd_left, rtl;
 
 	if (ev_document_get_n_pages (view->document) <= 0 ||
 	    !ev_document_check_dimensions (view->document))
@@ -758,7 +767,7 @@ view_update_range_and_current_page (EvView *view)
 				view->end_page = i;
 				j = 0;
 			} else if (found && view->current_page <= view->end_page) {
-				if (is_dual_page (view, NULL) && j < 1) {
+				if (is_dual_page (view, NULL, NULL) && j < 1) {
 					/* In dual mode  we stop searching
 					 * after two consecutive non-visible pages.
 					 */
@@ -779,8 +788,8 @@ view_update_range_and_current_page (EvView *view)
 				ev_document_model_set_page (view->model, best_current_page);
 			}
 		}
-	} else if (is_dual_page (view, &odd_left)) {
-		if (view->current_page % 2 == !odd_left) {
+	} else if (is_dual_page (view, &odd_left, &rtl)) {
+		if (view->current_page % 2 ^ odd_left ^ rtl) {
 			view->start_page = view->current_page;
 			if (view->current_page + 1 < ev_document_get_n_pages (view->document))
 				view->end_page = view->start_page + 1;
@@ -1236,16 +1245,16 @@ get_page_y_offset (EvView *view, int page, int *y_offset)
 {
 	int offset = 0;
 	GtkBorder border;
-	gboolean odd_left;
+	gboolean odd_left, rtl;
 
 	g_return_if_fail (y_offset != NULL);
 
 	compute_border (view, &border);
 
-	if (is_dual_page (view, &odd_left)) {
+	if (is_dual_page (view, &odd_left, &rtl)) {
 		ev_view_get_height_to_page (view, page, NULL, &offset);
-		offset += ((page + !odd_left) / 2 + 1) * view->spacing +
-			((page + !odd_left) / 2 ) * (border.top + border.bottom);
+		offset += ((page + (!odd_left ^ rtl)) / 2 + 1) * view->spacing +
+			((page + (!odd_left ^ rtl)) / 2) * (border.top + border.bottom);
 	} else {
 		ev_view_get_height_to_page (view, page, &offset, NULL);
 		offset += (page + 1) * view->spacing + page * (border.top + border.bottom);
@@ -1277,16 +1286,18 @@ ev_view_get_page_extents (EvView       *view,
 	if (view->continuous) {
 		gint max_width;
 		gint x, y;
-		gboolean odd_left;
+		gboolean odd_left, rtl;
 
 		ev_view_get_max_page_size (view, &max_width, NULL);
 		max_width = max_width + border->left + border->right;
 		/* Get the location of the bounding box */
-		if (is_dual_page (view, &odd_left)) {
-			x = view->spacing + ((page % 2 == !odd_left) ? 0 : 1) * (max_width + view->spacing);
+		if (is_dual_page (view, &odd_left, &rtl)) {
+			x = view->spacing;
 			x = x + MAX (0, allocation.width - (max_width * 2 + view->spacing * 3)) / 2;
-			if (page % 2 == !odd_left)
+			if (page % 2 ^ odd_left)
 				x = x + (max_width - width - border->left - border->right);
+			else
+				x = x + max_width + view->spacing;
 		} else {
 			x = view->spacing;
 			x = x + MAX (0, allocation.width - (width + border->left + border->right + view->spacing * 2)) / 2;
@@ -1298,16 +1309,16 @@ ev_view_get_page_extents (EvView       *view,
 		page_area->y = y;
 	} else {
 		gint x, y;
-		gboolean odd_left;
+		gboolean odd_left, rtl;
 
-		if (is_dual_page (view, &odd_left)) {
+		if (is_dual_page (view, &odd_left, &rtl)) {
 			gint width_2, height_2;
 			gint max_width = width;
 			gint max_height = height;
 			GtkBorder overall_border;
 			gint other_page;
 
-			other_page = (page % 2 == !odd_left) ? page + 1: page - 1;
+			other_page = page + (rtl ^ page % 2 ^ odd_left) ? 1 : -1;
 
 			/* First, we get the bounding box of the two pages */
 			if (other_page < ev_document_get_n_pages (view->document)
@@ -1326,7 +1337,7 @@ ev_view_get_page_extents (EvView       *view,
 			y = view->spacing;
 
 			/* Adjust for being the left or right page */
-			if (page % 2 == !odd_left)
+			if (page % 2 ^ odd_left)
 				x = x + max_width - width;
 			else
 				x = x + (max_width + overall_border.left + overall_border.right) + view->spacing;
@@ -4087,7 +4098,7 @@ ev_view_size_request (GtkWidget      *widget,
 				       allocation.height);
 	}
 
-	dual_page = is_dual_page (view, NULL);
+	dual_page = is_dual_page (view, NULL, NULL);
 	if (view->continuous && dual_page)
 		ev_view_size_request_continuous_dual_page (view, &view->requisition);
 	else if (view->continuous)
@@ -6064,7 +6075,7 @@ go_to_next_page (EvView *view,
 
 	n_pages = ev_document_get_n_pages (view->document);
 
-	dual_page = is_dual_page (view, NULL);
+	dual_page = is_dual_page (view, NULL, NULL);
 	page += dual_page ? 2 : 1;
 
 	if (page < n_pages)
@@ -6085,7 +6096,7 @@ go_to_previous_page (EvView *view,
 	if (!view->document)
 		return -1;
 
-	dual_page = is_dual_page (view, NULL);
+	dual_page = is_dual_page (view, NULL, NULL);
 	page -= dual_page ? 2 : 1;
 
 	if (page >= 0)
@@ -7959,6 +7970,7 @@ ev_view_init (EvView *view)
 	view->selection_info.in_drag = FALSE;
 	view->continuous = TRUE;
 	view->dual_even_left = TRUE;
+	view->dual_rtl = FALSE;
 	view->fullscreen = FALSE;
 	view->sizing_mode = EV_SIZING_FIT_WIDTH;
 	view->page_layout = EV_PAGE_LAYOUT_SINGLE;
@@ -8484,6 +8496,16 @@ ev_view_dual_odd_left_changed_cb (EvDocumentModel *model,
 }
 
 static void
+ev_view_dual_rtl_changed_cb (EvDocumentModel *model,
+				  GParamSpec      *pspec,
+				  EvView          *view)
+{
+	view->dual_rtl = ev_document_model_get_dual_page_rtl (model);
+	view->pending_scroll = SCROLL_TO_PAGE_POSITION;
+	gtk_widget_queue_resize (GTK_WIDGET (view));
+}
+
+static void
 ev_view_fullscreen_changed_cb (EvDocumentModel *model,
 			       GParamSpec      *pspec,
 			       EvView          *view)
@@ -8516,6 +8538,8 @@ ev_view_set_model (EvView          *view,
 	view->scale = ev_document_model_get_scale (view->model);
 	view->continuous = ev_document_model_get_continuous (view->model);
 	view->page_layout = ev_document_model_get_page_layout (view->model);
+	view->dual_even_left = !ev_document_model_get_dual_page_odd_pages_left (view->model);
+	view->dual_rtl = ev_document_model_get_dual_page_rtl (view->model);
 	view->fullscreen = ev_document_model_get_fullscreen (view->model);
 	ev_view_document_changed_cb (view->model, NULL, view);
 
@@ -8548,6 +8572,9 @@ ev_view_set_model (EvView          *view,
 			  view);
 	g_signal_connect (view->model, "notify::dual-odd-left",
 			  G_CALLBACK (ev_view_dual_odd_left_changed_cb),
+			  view);
+	g_signal_connect (view->model, "notify::dual-rtl",
+			  G_CALLBACK (ev_view_dual_rtl_changed_cb),
 			  view);
 	g_signal_connect (view->model, "notify::fullscreen",
 			  G_CALLBACK (ev_view_fullscreen_changed_cb),
@@ -8885,7 +8912,7 @@ ev_view_zoom_for_size (EvView *view,
 	if (view->document == NULL)
 		return;
 
-	dual_page = is_dual_page (view, NULL);
+	dual_page = is_dual_page (view, NULL, NULL);
 	if (view->continuous && dual_page)
 		ev_view_zoom_for_size_continuous_and_dual_page (view, width, height);
 	else if (view->continuous)
@@ -9241,7 +9268,7 @@ get_selection_page_range (EvView          *view,
 	} else if (view->continuous) {
 		start_page = 0;
 		end_page = n_pages - 1;
-	} else if (is_dual_page (view, NULL)) {
+	} else if (is_dual_page (view, NULL, NULL)) {
 		start_page = view->start_page;
 		end_page = view->end_page;
 	} else {
