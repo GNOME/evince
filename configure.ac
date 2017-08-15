@@ -929,6 +929,9 @@ cut-n-paste/gimpcellrenderertoggle/Makefile
 cut-n-paste/synctex/Makefile
 cut-n-paste/libgd/Makefile
 cut-n-paste/unarr/Makefile
+cut-n-paste/unarr/common/Makefile
+cut-n-paste/unarr/lzmasdk/Makefile
+cut-n-paste/unarr/rar/Makefile
 data/evince.desktop.in
 data/evince-previewer.desktop.in
 data/Makefile

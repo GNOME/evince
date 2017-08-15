@@ -4,6 +4,9 @@
 # forward compatibility.
 AUTOMAKE_OPTIONS = subdir-objects
 
+# Include subdirs to generate .gitignore files.
+SUBDIRS = common lzmasdk rar
+
 noinst_LTLIBRARIES = libunarr.la
 
 libunarr_la_SOURCES =		\
