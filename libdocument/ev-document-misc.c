@@ -70,7 +70,7 @@ create_thumbnail_frame (int        width,
 	gdk_pixbuf_fill (retval, 0x000000ff);
 	if (fill_bg) {
 		for (i = 1; i < height_r + 1; i++)
-			memset (data + (rowstride * i) + 4, 0xffffffff, width_r * 4);
+			memset (data + (rowstride * i) + 4, 0xff, width_r * 4);
 	}
 
 	/* copy the source pixbuf */
