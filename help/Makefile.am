@@ -10,7 +10,6 @@ HELP_MEDIA = \
 	figures/evincelogo.png			\
 	figures/evince-trail.png		\
 	figures/list-add-tabs.png		\
-	figures/print-2sided.png		\
 	figures/print-select.png		\
 	figures/reverse-collate.png		\
 	figures/zoom.png
