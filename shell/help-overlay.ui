@@ -6,7 +6,7 @@
       <object class="GtkShortcutsSection">
         <property name="visible">True</property>
         <property name="section-name">shortcuts</property>
-        <property name="max-height">12</property>
+        <property name="max-height">13</property>
         <child>
           <object class="GtkShortcutsGroup">
             <property name="visible">True</property>
@@ -51,6 +51,26 @@
                 <property name="visible">True</property>
                 <property name="title" translatable="yes" context="shortcut window">Reload the document</property>
                 <property name="accelerator">&lt;Primary&gt;R</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkShortcutsGroup">
+            <property name="visible">True</property>
+            <property name="title" translatable="yes" context="shortcut window">Window</property>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="visible">True</property>
+                <property name="title" translatable="yes" context="shortcut window">Toggle fullscreen</property>
+                <property name="accelerator">F11</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="visible">True</property>
+                <property name="title" translatable="yes" context="shortcut window">Enter presentation mode</property>
+                <property name="accelerator">F5</property>
               </object>
             </child>
           </object>
