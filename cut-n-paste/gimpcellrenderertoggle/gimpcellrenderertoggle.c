@@ -359,16 +359,9 @@ gimp_cell_renderer_toggle_render (GtkCellRenderer      *cell,
     {
       GdkPixbuf *insensitive = NULL;
       GdkPixbuf *pixbuf = toggle->pixbuf;
-      GtkBorder  border = { 1, 1, 1, 1 };
+      GtkBorder  border;
 
-#if 0
-      /* FIXME: for some reason calling gtk_style_context_get_border
-       * makes the icon only visible on hover, so use border = 1
-       * for now as a workaround
-       */
       gtk_style_context_get_border (context, state, &border);
-#endif
-
       toggle_rect.x      += border.left;
       toggle_rect.y      += border.top;
       toggle_rect.width  -= (border.left + border.right);
@@ -397,7 +390,7 @@ gimp_cell_renderer_toggle_render (GtkCellRenderer      *cell,
 	  pixbuf = insensitive;
 	}
 
-      if (gdk_rectangle_intersect (&draw_rect, &toggle_rect, &draw_rect))
+      if (gdk_rectangle_intersect (cell_area, &toggle_rect, &draw_rect))
         {
 	  gdk_cairo_set_source_pixbuf (cr, pixbuf, toggle_rect.x, toggle_rect.y);
 	  gdk_cairo_rectangle (cr, &draw_rect);
