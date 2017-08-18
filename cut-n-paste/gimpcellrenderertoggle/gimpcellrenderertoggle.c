@@ -302,11 +302,11 @@ gimp_cell_renderer_toggle_render (GtkCellRenderer      *cell,
       return;
     }
 
-  gtk_cell_renderer_get_size (cell, widget, cell_area,
-                              &toggle_rect.x,
-                              &toggle_rect.y,
-                              &toggle_rect.width,
-                              &toggle_rect.height);
+  gimp_cell_renderer_toggle_get_size (cell, widget, cell_area,
+                                      &toggle_rect.x,
+                                      &toggle_rect.y,
+                                      &toggle_rect.width,
+                                      &toggle_rect.height);
 
   gtk_cell_renderer_get_padding (cell, &xpad, &ypad);
   toggle_rect.x      += cell_area->x + xpad;
