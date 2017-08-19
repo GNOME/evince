@@ -132,8 +132,8 @@ ev_view_presentation_set_normal (EvViewPresentation *pview)
 					"white-mode");
 #else
         gdk_window_set_background_rgba (gtk_widget_get_window (widget), &black);
-        gtk_widget_queue_draw (widget);
 #endif
+        gtk_widget_queue_draw (widget);
 }
 
 static void
@@ -150,8 +150,8 @@ ev_view_presentation_set_black (EvViewPresentation *pview)
 					"white-mode");
 #else
         gdk_window_set_background_rgba (gtk_widget_get_window (widget), &black);
-        gtk_widget_queue_draw (widget);
 #endif
+        gtk_widget_queue_draw (widget);
 }
 
 static void
