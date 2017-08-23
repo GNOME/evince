@@ -7,9 +7,10 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: evince\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-12 08:18+0100\n"
-"PO-Revision-Date: 2016-03-14 17:19+0100\n"
+"Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?"
+"product=evince&keywords=I18N+L10N&component=general\n"
+"POT-Creation-Date: 2017-07-22 13:03+0000\n"
+"PO-Revision-Date: 2017-08-23 14:31+0200\n"
 "Last-Translator: David Medina <rbndavid@gmail.com>\n"
 "Language-Team: Catalan <tradgnome@softcatala.org>\n"
 "Language: ca\n"
@@ -17,58 +18,36 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Poedit 1.6.11\n"
+"X-Generator: Poedit 2.0.1\n"
 
-#: ../backend/comics/comics-document.c:210
-#, c-format
-msgid ""
-"Error launching the command “%s” in order to decompress the comic book: %s"
-msgstr ""
-"S'ha produït un error en executar l'ordre «%s» per poder descomprimir el "
-"còmic: %s"
+#: ../backend/comics/comics-document.c:99
+#: ../backend/comics/comics-document.c:121
+msgid "File is corrupted"
+msgstr "El fitxer està malmès"
 
-#: ../backend/comics/comics-document.c:224
-#, c-format
-msgid "The command “%s” failed at decompressing the comic book."
-msgstr "No s'ha pogut descomprimir el còmic amb l'ordre «%s»."
+#: ../backend/comics/comics-document.c:151
+msgid "Archive is encrypted"
+msgstr "L'arxiu està xifrat"
 
-#: ../backend/comics/comics-document.c:233
-#, c-format
-msgid "The command “%s” did not end normally."
-msgstr "L'ordre «%s» no ha finalitzat correctament."
+#: ../backend/comics/comics-document.c:156
+msgid "No files in archive"
+msgstr "No hi ha cap fitxer a l'arxiu"
 
-#: ../backend/comics/comics-document.c:453
+#: ../backend/comics/comics-document.c:192
 #, c-format
 msgid "Not a comic book MIME type: %s"
 msgstr "El tipus MIME no és d'un còmic: %s"
 
-#: ../backend/comics/comics-document.c:460
-msgid "Can’t find an appropriate command to decompress this type of comic book"
+#: ../backend/comics/comics-document.c:199
+msgid ""
+"libarchive lacks support for this comic book’s compression, please contact "
+"your distributor"
 msgstr ""
-"No es pot trobar una ordre adequada per descomprimir aquest tipus de còmic"
+"libarchive no és compatible amb compressió comic book. Contacteu el vostre distribuïdor."
 
-#: ../backend/comics/comics-document.c:526
-msgid "File corrupted"
-msgstr "El fitxer està malmès"
-
-#: ../backend/comics/comics-document.c:539
-msgid "No files in archive"
-msgstr "No hi ha cap fitxer a l'arxiu"
-
-#: ../backend/comics/comics-document.c:578
-#, c-format
-msgid "No images found in archive %s"
-msgstr "No s'han trobat imatges a l'arxiu %s"
-
-#: ../backend/comics/comics-document.c:828
-#, c-format
-msgid "There was an error deleting “%s”."
-msgstr "S'ha produït un error en suprimir «%s»."
-
-#: ../backend/comics/comics-document.c:921
-#, c-format
-msgid "Error %s"
-msgstr "Error %s"
+#: ../backend/comics/comics-document.c:240
+msgid "Can not get local path for archive"
+msgstr "No s'ha pogut obtenir la ruta local per a un arxiu"
 
 #: ../backend/comics/comicsdocument.evince-backend.in.in.h:1
 #: ../backend/comics/evince-comicsdocument.metainfo.xml.in.in.h:1
@@ -431,17 +410,17 @@ msgstr "No s'ha pogut obrir l'adjunció «%s»"
 msgid "File type %s (%s) is not supported"
 msgstr "Encara no es pot gestionar el tipus de fitxer %s (%s)"
 
-#: ../libdocument/ev-document-factory.c:364
+#: ../libdocument/ev-document-factory.c:368
 #: ../libdocument/ev-file-helpers.c:492 ../libdocument/ev-file-helpers.c:538
 #: ../libdocument/ev-file-helpers.c:557
 msgid "Unknown MIME Type"
 msgstr "Tipus MIME desconegut"
 
-#: ../libdocument/ev-document-factory.c:552
+#: ../libdocument/ev-document-factory.c:577
 msgid "All Documents"
 msgstr "Tots els documents"
 
-#: ../libdocument/ev-document-factory.c:579 ../shell/ev-utils.c:309
+#: ../libdocument/ev-document-factory.c:604 ../shell/ev-utils.c:309
 msgid "All Files"
 msgstr "Tots els fitxers"
 
@@ -467,7 +446,7 @@ msgstr "de %d"
 
 #: ../libmisc/ev-page-action-widget.c:185 ../shell/ev-history.c:426
 #: ../shell/ev-sidebar-bookmarks.c:295 ../shell/ev-window.c:907
-#: ../shell/ev-window.c:4679
+#: ../shell/ev-window.c:4687
 #, c-format
 msgid "Page %s"
 msgstr "Pàgina %s"
@@ -699,8 +678,8 @@ msgid "Delete the temporary file"
 msgstr "Suprimeix el fitxer temporal"
 
 #: ../previewer/ev-previewer.c:46
-msgid "Print settings file"
-msgstr "Imprimeix el fitxer de configuració"
+msgid "File specifying print settings"
+msgstr "Fitxer que específica els paràmetres de la impressora"
 
 #: ../previewer/ev-previewer.c:46
 msgid "FILE"
@@ -710,7 +689,7 @@ msgstr "FITXER"
 msgid "GNOME Document Previewer"
 msgstr "Visualitzador de documents del GNOME"
 
-#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3262
+#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3270
 msgid "Failed to print document"
 msgstr "No s'ha pogut imprimir el document"
 
@@ -1006,7 +985,7 @@ msgstr "Contrasenya per al document %s"
 
 #. Create tree view
 #: ../shell/ev-loading-message.c:50 ../shell/ev-sidebar-annotations.c:125
-#: ../shell/ev-sidebar-layers.c:125 ../shell/ev-sidebar-links.c:261
+#: ../shell/ev-sidebar-layers.c:125 ../shell/ev-sidebar-links.c:268
 msgid "Loading…"
 msgstr "S'està carregant…"
 
@@ -1135,7 +1114,7 @@ msgstr "Punts d'interès"
 msgid "Layers"
 msgstr "Capes"
 
-#: ../shell/ev-sidebar-links.c:337
+#: ../shell/ev-sidebar-links.c:344
 msgid "Print…"
 msgstr "Imprimeix…"
 
@@ -1145,11 +1124,11 @@ msgstr "Imprimeix…"
 #. * your language.  The sidebar cannot be shrinked smaller than
 #. * the longest title in there.
 #.
-#: ../shell/ev-sidebar-links.c:728
+#: ../shell/ev-sidebar-links.c:750
 msgid "Outline"
 msgstr "Contorn"
 
-#: ../shell/ev-sidebar-thumbnails.c:1093
+#: ../shell/ev-sidebar-thumbnails.c:1135
 msgid "Thumbnails"
 msgstr "Miniatures"
 
@@ -1197,136 +1176,132 @@ msgstr "El document no conté cap pàgina"
 msgid "The document contains only empty pages"
 msgstr "El document només conté pàgines buides"
 
-#: ../shell/ev-window.c:1757 ../shell/ev-window.c:1923
+#: ../shell/ev-window.c:1758 ../shell/ev-window.c:1924
 #, c-format
 msgid "Unable to open document “%s”."
 msgstr "No es pot obrir el document «%s»."
 
-#: ../shell/ev-window.c:1887
+#: ../shell/ev-window.c:1888
 #, c-format
 msgid "Loading document from “%s”"
 msgstr "S'està carregant el document des de «%s»"
 
-#: ../shell/ev-window.c:2038 ../shell/ev-window.c:2366
+#: ../shell/ev-window.c:2039 ../shell/ev-window.c:2367
 #, c-format
 msgid "Downloading document (%d%%)"
 msgstr "S'està baixant el document (%d%%)"
 
-#: ../shell/ev-window.c:2071
+#: ../shell/ev-window.c:2072
 msgid "Failed to load remote file."
 msgstr "No s'ha pogut carregar el fitxer remot."
 
-#: ../shell/ev-window.c:2310
+#: ../shell/ev-window.c:2311
 #, c-format
 msgid "Reloading document from %s"
 msgstr "S'està tornant a carregar el document des de %s"
 
-#: ../shell/ev-window.c:2342
+#: ../shell/ev-window.c:2343
 msgid "Failed to reload document."
 msgstr "No s'ha pogut tornar a carregar el document."
 
-#: ../shell/ev-window.c:2558
+#: ../shell/ev-window.c:2559
 msgid "Open Document"
 msgstr "Obre un document"
 
-#: ../shell/ev-window.c:2631
+#: ../shell/ev-window.c:2632
 #, c-format
 msgid "Saving document to %s"
 msgstr "S'està desant el document a %s"
 
-#: ../shell/ev-window.c:2634
+#: ../shell/ev-window.c:2635
 #, c-format
 msgid "Saving attachment to %s"
 msgstr "S'està desant l'adjunció a %s"
 
-#: ../shell/ev-window.c:2637
+#: ../shell/ev-window.c:2638
 #, c-format
 msgid "Saving image to %s"
 msgstr "S'està desant la imatge %s"
 
-#: ../shell/ev-window.c:2681 ../shell/ev-window.c:2781
+#: ../shell/ev-window.c:2682 ../shell/ev-window.c:2782
 #, c-format
 msgid "The file could not be saved as “%s”."
 msgstr "No s'ha pogut desar el fitxer com a «%s»."
 
-#: ../shell/ev-window.c:2712
+#: ../shell/ev-window.c:2713
 #, c-format
 msgid "Uploading document (%d%%)"
 msgstr "S'està pujant el document (%d%%)"
 
-#: ../shell/ev-window.c:2716
+#: ../shell/ev-window.c:2717
 #, c-format
 msgid "Uploading attachment (%d%%)"
 msgstr "S'està pujant l'adjunció (%d%%)"
 
-#: ../shell/ev-window.c:2720
+#: ../shell/ev-window.c:2721
 #, c-format
 msgid "Uploading image (%d%%)"
 msgstr "S'està pujant la imatge (%d%%)"
 
-#: ../shell/ev-window.c:2832
+#: ../shell/ev-window.c:2833
 msgid "Save a Copy"
 msgstr "Desa'n una còpia"
 
-#: ../shell/ev-window.c:2908
+#: ../shell/ev-window.c:2909
 msgid "Could not send current document"
 msgstr "No s'ha pogut enviar el document actual"
 
-#: ../shell/ev-window.c:2942
-msgid "Could not open the containing folder"
-msgstr "No s'ha pogut obrir la carpeta que el conté"
-
-#: ../shell/ev-window.c:3206
+#: ../shell/ev-window.c:3214
 #, c-format
 msgid "%d pending job in queue"
 msgid_plural "%d pending jobs in queue"
 msgstr[0] "%d tasca pendent a la cua"
 msgstr[1] "%d tasques pendents a la cua"
 
-#: ../shell/ev-window.c:3319
+#: ../shell/ev-window.c:3327
 #, c-format
 msgid "Printing job “%s”"
 msgstr "S'està imprimint la tasca «%s»"
 
-#: ../shell/ev-window.c:3534
+#: ../shell/ev-window.c:3542
 msgid "Document contains form fields that have been filled out. "
 msgstr "El document conté camps de formulari que s'han emplenat. "
 
-#: ../shell/ev-window.c:3537
+#: ../shell/ev-window.c:3545
 msgid "Document contains new or modified annotations. "
 msgstr "El document conté anotacions modificades o noves. "
 
-#: ../shell/ev-window.c:3549
+#: ../shell/ev-window.c:3557
 #, c-format
 msgid "Reload document “%s”?"
 msgstr "Voleu tornar a carregar el document «%s»?"
 
-#: ../shell/ev-window.c:3551
+#: ../shell/ev-window.c:3559
 msgid "If you reload the document, changes will be permanently lost."
 msgstr "Si torneu a carregar el document, els canvis es perdran permanentment."
 
-#: ../shell/ev-window.c:3555
+#: ../shell/ev-window.c:3563
 msgid "Reload"
 msgstr "Torna a carregar"
 
-#: ../shell/ev-window.c:3562
+#: ../shell/ev-window.c:3570
 #, c-format
 msgid "Save a copy of document “%s” before closing?"
 msgstr "Voleu desar una còpia del document «%s» abans de tancar?"
 
-#: ../shell/ev-window.c:3564
+#: ../shell/ev-window.c:3572
 msgid "If you don’t save a copy, changes will be permanently lost."
 msgstr "Si no en deseu una còpia, els canvis es perdran permanentment."
 
-#: ../shell/ev-window.c:3566
+#: ../shell/ev-window.c:3574
 msgid "Close _without Saving"
 msgstr "Tanca _sense desar"
 
-#: ../shell/ev-window.c:3570
+#: ../shell/ev-window.c:3578
 msgid "Save a _Copy"
 msgstr "Desa'n una _còpia"
 
-#: ../shell/ev-window.c:3654
+#: ../shell/ev-window.c:3662
 #, c-format
 msgid "Wait until print job “%s” finishes before closing?"
 msgstr "Voleu esperar per tancar fins que s'acabi la tasca d'impressió «%s»?"
@@ -1334,7 +1309,7 @@ msgstr "Voleu esperar per tancar fins que s'acabi la tasca d'impressió «%s»?"
 #. TRANS: the singular form is not really used as n_print_jobs > 1
 #. but some languages distinguish between different plurals forms,
 #. so the ngettext is needed.
-#: ../shell/ev-window.c:3660
+#: ../shell/ev-window.c:3668
 #, c-format
 msgid "There is %d print job active. Wait until print finishes before closing?"
 msgid_plural ""
@@ -1346,32 +1321,32 @@ msgstr[1] ""
 "Hi ha %d tasques d'impressió actives. Voleu esperar per tancar fins que "
 "s'acabin d'imprimir?"
 
-#: ../shell/ev-window.c:3675
+#: ../shell/ev-window.c:3683
 msgid "If you close the window, pending print jobs will not be printed."
 msgstr "Si tanqueu la finestra, no s'imprimiran les tasques pendents."
 
-#: ../shell/ev-window.c:3679
+#: ../shell/ev-window.c:3687
 msgid "Cancel _print and Close"
 msgstr "Cancel·la la im_pressió i tanca"
 
-#: ../shell/ev-window.c:3683
+#: ../shell/ev-window.c:3691
 msgid "Close _after Printing"
 msgstr "Tanca després d'im_primir"
 
 # FIXME
-#: ../shell/ev-window.c:4214
+#: ../shell/ev-window.c:4222
 msgid "Running in presentation mode"
 msgstr "S'està executant en mode de presentació"
 
-#: ../shell/ev-window.c:5363
+#: ../shell/ev-window.c:5371
 msgid "Enable caret navigation?"
 msgstr "Voleu habilitar la navegació per cursor?"
 
-#: ../shell/ev-window.c:5365
+#: ../shell/ev-window.c:5373
 msgid "_Enable"
 msgstr "_Habilita"
 
-#: ../shell/ev-window.c:5368
+#: ../shell/ev-window.c:5376
 msgid ""
 "Pressing F7 turns the caret navigation on or off. This feature places a "
 "moveable cursor in text pages, allowing you to move around and select text "
@@ -1382,39 +1357,39 @@ msgstr ""
 "que us permet moure's pel document i seleccionar el text amb el teclat. "
 "Voleu habilitar la navegació per cursor?"
 
-#: ../shell/ev-window.c:5373
+#: ../shell/ev-window.c:5381
 msgid "Don’t show this message again"
 msgstr "No tornis a mostrar aquest missatge"
 
-#: ../shell/ev-window.c:5888 ../shell/ev-window.c:5904
+#: ../shell/ev-window.c:5896 ../shell/ev-window.c:5912
 msgid "Unable to launch external application."
 msgstr "No s'ha pogut executar l'aplicació externa."
 
-#: ../shell/ev-window.c:5961
+#: ../shell/ev-window.c:5969
 msgid "Unable to open external link"
 msgstr "No s'ha pogut obrir l'enllaç extern"
 
-#: ../shell/ev-window.c:6164
+#: ../shell/ev-window.c:6172
 msgid "Couldn’t find appropriate format to save image"
 msgstr "No s'ha trobat cap format adequat per desar la imatge"
 
-#: ../shell/ev-window.c:6196
+#: ../shell/ev-window.c:6204
 msgid "The image could not be saved."
 msgstr "No s'ha pogut desar la imatge."
 
-#: ../shell/ev-window.c:6231
+#: ../shell/ev-window.c:6239
 msgid "Save Image"
 msgstr "Desa la imatge"
 
-#: ../shell/ev-window.c:6390
+#: ../shell/ev-window.c:6398
 msgid "Unable to open attachment"
 msgstr "No s'ha pogut obrir l'adjunció"
 
-#: ../shell/ev-window.c:6446
+#: ../shell/ev-window.c:6454
 msgid "The attachment could not be saved."
 msgstr "No s'ha pogut desar l'adjunció."
 
-#: ../shell/ev-window.c:6494
+#: ../shell/ev-window.c:6502
 msgid "Save Attachment"
 msgstr "Desa l'adjunció"
 
@@ -1870,6 +1845,38 @@ msgstr ""
 "Permet la visualització dels documents en format: PDF, PS, EPS, XPS, DjVu, "
 "TIFF, DVI (amb SyncTeX) i els arxius de llibres de còmic (CBR, CBT, CBZ, "
 "CB7)."
+
+#~ msgid ""
+#~ "Error launching the command “%s” in order to decompress the comic book: %s"
+#~ msgstr ""
+#~ "S'ha produït un error en executar l'ordre «%s» per poder descomprimir el "
+#~ "còmic: %s"
+
+#~ msgid "The command “%s” failed at decompressing the comic book."
+#~ msgstr "No s'ha pogut descomprimir el còmic amb l'ordre «%s»."
+
+#~ msgid "The command “%s” did not end normally."
+#~ msgstr "L'ordre «%s» no ha finalitzat correctament."
+
+#~ msgid ""
+#~ "Can’t find an appropriate command to decompress this type of comic book"
+#~ msgstr ""
+#~ "No es pot trobar una ordre adequada per descomprimir aquest tipus de còmic"
+
+#~ msgid "No images found in archive %s"
+#~ msgstr "No s'han trobat imatges a l'arxiu %s"
+
+#~ msgid "There was an error deleting “%s”."
+#~ msgstr "S'ha produït un error en suprimir «%s»."
+
+#~ msgid "Error %s"
+#~ msgstr "Error %s"
+
+#~ msgid "Print settings file"
+#~ msgstr "Imprimeix el fitxer de configuració"
+
+#~ msgid "Could not open the containing folder"
+#~ msgstr "No s'ha pogut obrir la carpeta que el conté"
 
 #~ msgid "Style:"
 #~ msgstr "Estil:"
