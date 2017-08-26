@@ -55,6 +55,8 @@ struct _EvSidebarBookmarksPrivate {
 };
 
 static void ev_sidebar_bookmarks_page_iface_init (EvSidebarPageInterface *iface);
+static void ev_sidebar_bookmarks_selection_changed (GtkTreeSelection   *selection,
+						    EvSidebarBookmarks *sidebar_bookmarks);
 
 G_DEFINE_TYPE_EXTENDED (EvSidebarBookmarks,
                         ev_sidebar_bookmarks,
@@ -169,9 +171,18 @@ ev_sidebar_bookmarks_update (EvSidebarBookmarks *sidebar_bookmarks)
         GtkListStore              *model;
         GList                     *items, *l;
         GtkTreeIter                iter;
+        GtkTreeView               *tree_view = GTK_TREE_VIEW (priv->tree_view);
+        GtkTreeSelection          *selection = gtk_tree_view_get_selection (tree_view);
 
-        model = GTK_LIST_STORE (gtk_tree_view_get_model (GTK_TREE_VIEW (priv->tree_view)));
+        model = GTK_LIST_STORE (gtk_tree_view_get_model (tree_view));
+
+        g_signal_handlers_block_by_func (selection,
+                                         ev_sidebar_bookmarks_selection_changed,
+                                         sidebar_bookmarks);
         gtk_list_store_clear (model);
+        g_signal_handlers_unblock_by_func (selection,
+                                           ev_sidebar_bookmarks_selection_changed,
+                                           sidebar_bookmarks);
 
         if (!priv->bookmarks) {
                 g_object_set (priv->tree_view, "has-tooltip", FALSE, NULL);
