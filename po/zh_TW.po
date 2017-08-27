@@ -10,66 +10,46 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: evince 3.3.5\n"
-"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
+"Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evince&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2016-11-06 18:59+0000\n"
-"PO-Revision-Date: 2017-02-21 10:50+0800\n"
-"Last-Translator: Chao-Hsiung Liao <j_h_liau@yahoo.com.tw>\n"
+"POT-Creation-Date: 2017-07-22 13:03+0000\n"
+"PO-Revision-Date: 2017-08-27 21:46+0800\n"
+"Last-Translator: Cheng-Chia Tseng <pswo10680@gmail.com>\n"
 "Language-Team: Chinese (traditional)\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 1.8.12\n"
+"X-Generator: Poedit 2.0.3\n"
 
-#: ../backend/comics/comics-document.c:210
-#, c-format
-msgid ""
-"Error launching the command “%s” in order to decompress the comic book: %s"
-msgstr "執行指令「%s」以將漫畫書解開時發生錯誤：%s"
+#: ../backend/comics/comics-document.c:99
+#: ../backend/comics/comics-document.c:121
+msgid "File is corrupted"
+msgstr "檔案已損毀"
 
-#: ../backend/comics/comics-document.c:224
-#, c-format
-msgid "The command “%s” failed at decompressing the comic book."
-msgstr "將漫畫書解開時指令「%s」失敗。"
+#: ../backend/comics/comics-document.c:151
+msgid "Archive is encrypted"
+msgstr "封存檔已加密"
 
-#: ../backend/comics/comics-document.c:233
-#, c-format
-msgid "The command “%s” did not end normally."
-msgstr "指令「%s」沒有正常的結束。"
+#: ../backend/comics/comics-document.c:156
+msgid "No files in archive"
+msgstr "封存檔中沒有檔案"
 
-#: ../backend/comics/comics-document.c:453
+#: ../backend/comics/comics-document.c:192
 #, c-format
 msgid "Not a comic book MIME type: %s"
 msgstr "並非漫畫書 MIME 類型：%s"
 
-#: ../backend/comics/comics-document.c:460
-msgid "Can’t find an appropriate command to decompress this type of comic book"
-msgstr "找不到合適的指令可將這個類型的漫畫書解開"
+#: ../backend/comics/comics-document.c:199
+msgid ""
+"libarchive lacks support for this comic book’s compression, please contact "
+"your distributor"
+msgstr "libarchive 缺少此本漫畫書的壓縮支援，請聯絡您的軟體散布單位"
 
-#: ../backend/comics/comics-document.c:526
-msgid "File corrupted"
-msgstr "檔案已損毀"
-
-#: ../backend/comics/comics-document.c:539
-msgid "No files in archive"
-msgstr "壓縮檔中沒有檔案"
-
-#: ../backend/comics/comics-document.c:578
-#, c-format
-msgid "No images found in archive %s"
-msgstr "在文件 %s 中找不到影像"
-
-#: ../backend/comics/comics-document.c:828
-#, c-format
-msgid "There was an error deleting “%s”."
-msgstr "刪除「%s」時發生錯誤。"
-
-#: ../backend/comics/comics-document.c:921
-#, c-format
-msgid "Error %s"
-msgstr "錯誤 %s"
+#: ../backend/comics/comics-document.c:240
+msgid "Can not get local path for archive"
+msgstr "無法取得封存檔的本地路徑"
 
 #: ../backend/comics/comicsdocument.evince-backend.in.in.h:1
 #: ../backend/comics/evince-comicsdocument.metainfo.xml.in.in.h:1
@@ -421,17 +401,17 @@ msgstr "無法開啟「%s」附件"
 msgid "File type %s (%s) is not supported"
 msgstr "檔案類型 %s (%s) 不支援"
 
-#: ../libdocument/ev-document-factory.c:364
+#: ../libdocument/ev-document-factory.c:368
 #: ../libdocument/ev-file-helpers.c:492 ../libdocument/ev-file-helpers.c:538
 #: ../libdocument/ev-file-helpers.c:557
 msgid "Unknown MIME Type"
 msgstr "未知的 MIME 型態"
 
-#: ../libdocument/ev-document-factory.c:552
+#: ../libdocument/ev-document-factory.c:577
 msgid "All Documents"
 msgstr "所有文件"
 
-#: ../libdocument/ev-document-factory.c:579 ../shell/ev-utils.c:309
+#: ../libdocument/ev-document-factory.c:604 ../shell/ev-utils.c:309
 msgid "All Files"
 msgstr "所有檔案"
 
@@ -459,7 +439,7 @@ msgstr "/ %d"
 
 #: ../libmisc/ev-page-action-widget.c:185 ../shell/ev-history.c:426
 #: ../shell/ev-sidebar-bookmarks.c:295 ../shell/ev-window.c:907
-#: ../shell/ev-window.c:4677
+#: ../shell/ev-window.c:4687
 #, c-format
 msgid "Page %s"
 msgstr "頁 %s"
@@ -498,7 +478,7 @@ msgstr "無法繪製頁面 %d"
 msgid "Failed to create thumbnail for page %d"
 msgstr "無法建立頁面 %d 的縮圖"
 
-#: ../libview/ev-jobs.c:2031
+#: ../libview/ev-jobs.c:2033
 #, c-format
 msgid "Failed to print page %d: %s"
 msgstr "無法列印頁面 %d：%s"
@@ -675,19 +655,19 @@ msgstr "執行 %s"
 
 #: ../libview/ev-view-presentation.c:752
 msgid "Jump to page:"
-msgstr "前往頁："
+msgstr "前往頁面："
 
 #: ../libview/ev-view-presentation.c:1055
 msgid "End of presentation. Click to exit."
-msgstr "簡報已完結。請點一下離開。"
+msgstr "簡報結束。請點一下離開。"
 
 #: ../previewer/ev-previewer.c:45
 msgid "Delete the temporary file"
 msgstr "刪除暫存檔案"
 
 #: ../previewer/ev-previewer.c:46
-msgid "Print settings file"
-msgstr "列印設定值檔案"
+msgid "File specifying print settings"
+msgstr "指定列印設定值的檔案"
 
 #: ../previewer/ev-previewer.c:46
 msgid "FILE"
@@ -697,7 +677,7 @@ msgstr "檔案"
 msgid "GNOME Document Previewer"
 msgstr "GNOME 文件預覽器"
 
-#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3262
+#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3270
 msgid "Failed to print document"
 msgstr "無法列印文件"
 
@@ -812,7 +792,7 @@ msgstr "default:mm"
 #: ../properties/ev-properties-view.c:277
 #, c-format
 msgid "%.0f × %.0f mm"
-msgstr "%.0f × %.0f 毫米"
+msgstr "%.0f × %.0f 公釐"
 
 #: ../properties/ev-properties-view.c:281
 #, c-format
@@ -843,7 +823,7 @@ msgstr "備註"
 
 #: ../shell/ev-annotation-properties-dialog.c:104
 msgid "Comment"
-msgstr "評論"
+msgstr "評註"
 
 #: ../shell/ev-annotation-properties-dialog.c:105
 msgid "Key"
@@ -996,7 +976,7 @@ msgstr "用於 %s 的密碼"
 
 #. Create tree view
 #: ../shell/ev-loading-message.c:50 ../shell/ev-sidebar-annotations.c:125
-#: ../shell/ev-sidebar-layers.c:125 ../shell/ev-sidebar-links.c:261
+#: ../shell/ev-sidebar-layers.c:125 ../shell/ev-sidebar-links.c:268
 msgid "Loading…"
 msgstr "載入中…"
 
@@ -1122,7 +1102,7 @@ msgstr "書籤"
 msgid "Layers"
 msgstr "圖層"
 
-#: ../shell/ev-sidebar-links.c:337
+#: ../shell/ev-sidebar-links.c:344
 msgid "Print…"
 msgstr "列印…"
 
@@ -1132,11 +1112,11 @@ msgstr "列印…"
 #. * your language.  The sidebar cannot be shrinked smaller than
 #. * the longest title in there.
 #.
-#: ../shell/ev-sidebar-links.c:728
+#: ../shell/ev-sidebar-links.c:750
 msgid "Outline"
 msgstr "大綱"
 
-#: ../shell/ev-sidebar-thumbnails.c:1093
+#: ../shell/ev-sidebar-thumbnails.c:1135
 msgid "Thumbnails"
 msgstr "縮圖"
 
@@ -1184,135 +1164,131 @@ msgstr "此文件不包含任何頁面"
 msgid "The document contains only empty pages"
 msgstr "文件只包含空白頁面"
 
-#: ../shell/ev-window.c:1757 ../shell/ev-window.c:1923
+#: ../shell/ev-window.c:1758 ../shell/ev-window.c:1924
 #, c-format
 msgid "Unable to open document “%s”."
 msgstr "無法開啟「%s」文件"
 
-#: ../shell/ev-window.c:1887
+#: ../shell/ev-window.c:1888
 #, c-format
 msgid "Loading document from “%s”"
 msgstr "正在從「%s」載入文件"
 
-#: ../shell/ev-window.c:2038 ../shell/ev-window.c:2366
+#: ../shell/ev-window.c:2039 ../shell/ev-window.c:2367
 #, c-format
 msgid "Downloading document (%d%%)"
 msgstr "正在下載文件 (%d%%)"
 
-#: ../shell/ev-window.c:2071
+#: ../shell/ev-window.c:2072
 msgid "Failed to load remote file."
 msgstr "載入遠端的檔案失敗。"
 
-#: ../shell/ev-window.c:2310
+#: ../shell/ev-window.c:2311
 #, c-format
 msgid "Reloading document from %s"
 msgstr "從 %s 重新載入文件"
 
-#: ../shell/ev-window.c:2342
+#: ../shell/ev-window.c:2343
 msgid "Failed to reload document."
 msgstr "重新載入文件失敗。"
 
-#: ../shell/ev-window.c:2558
+#: ../shell/ev-window.c:2559
 msgid "Open Document"
 msgstr "開啟文件"
 
-#: ../shell/ev-window.c:2631
+#: ../shell/ev-window.c:2632
 #, c-format
 msgid "Saving document to %s"
 msgstr "正儲存文件到 %s"
 
-#: ../shell/ev-window.c:2634
+#: ../shell/ev-window.c:2635
 #, c-format
 msgid "Saving attachment to %s"
 msgstr "正儲存附加檔案到 %s"
 
-#: ../shell/ev-window.c:2637
+#: ../shell/ev-window.c:2638
 #, c-format
 msgid "Saving image to %s"
 msgstr "正儲存影像到 %s"
 
-#: ../shell/ev-window.c:2681 ../shell/ev-window.c:2781
+#: ../shell/ev-window.c:2682 ../shell/ev-window.c:2782
 #, c-format
 msgid "The file could not be saved as “%s”."
-msgstr "檔案無法儲存為“%s”。"
+msgstr "檔案無法儲存為「%s」。"
 
-#: ../shell/ev-window.c:2712
+#: ../shell/ev-window.c:2713
 #, c-format
 msgid "Uploading document (%d%%)"
 msgstr "正在上傳文件 (%d%%)"
 
-#: ../shell/ev-window.c:2716
+#: ../shell/ev-window.c:2717
 #, c-format
 msgid "Uploading attachment (%d%%)"
 msgstr "正在上傳附加檔案 (%d%%)"
 
-#: ../shell/ev-window.c:2720
+#: ../shell/ev-window.c:2721
 #, c-format
 msgid "Uploading image (%d%%)"
 msgstr "正在上傳影像 (%d%%)"
 
-#: ../shell/ev-window.c:2832
+#: ../shell/ev-window.c:2833
 msgid "Save a Copy"
 msgstr "儲存副本"
 
-#: ../shell/ev-window.c:2908
+#: ../shell/ev-window.c:2909
 msgid "Could not send current document"
 msgstr "無法傳送目前的文件"
 
-#: ../shell/ev-window.c:2942
-msgid "Could not open the containing folder"
-msgstr "無法開啟包含的資料夾"
-
-#: ../shell/ev-window.c:3206
+#: ../shell/ev-window.c:3214
 #, c-format
 msgid "%d pending job in queue"
 msgid_plural "%d pending jobs in queue"
 msgstr[0] "佇列中 %d 項預定的工作"
 
-#: ../shell/ev-window.c:3319
+#: ../shell/ev-window.c:3327
 #, c-format
 msgid "Printing job “%s”"
 msgstr "正在列印「%s」工作"
 
-#: ../shell/ev-window.c:3534
+#: ../shell/ev-window.c:3542
 msgid "Document contains form fields that have been filled out. "
 msgstr "文件包含已填寫的表單欄位。"
 
-#: ../shell/ev-window.c:3537
+#: ../shell/ev-window.c:3545
 msgid "Document contains new or modified annotations. "
 msgstr "文件包含新的或修改過的註解。"
 
-#: ../shell/ev-window.c:3549
+#: ../shell/ev-window.c:3557
 #, c-format
 msgid "Reload document “%s”?"
 msgstr "重新載入文件「%s」？"
 
-#: ../shell/ev-window.c:3551
+#: ../shell/ev-window.c:3559
 msgid "If you reload the document, changes will be permanently lost."
 msgstr "如果您重新載入文件，變更將永久消失。"
 
-#: ../shell/ev-window.c:3555
+#: ../shell/ev-window.c:3563
 msgid "Reload"
 msgstr "重新載入"
 
-#: ../shell/ev-window.c:3562
+#: ../shell/ev-window.c:3570
 #, c-format
 msgid "Save a copy of document “%s” before closing?"
 msgstr "關閉前要儲存文件「%s」的複本嗎？"
 
-#: ../shell/ev-window.c:3564
+#: ../shell/ev-window.c:3572
 msgid "If you don’t save a copy, changes will be permanently lost."
 msgstr "如果您不儲存複本，這些變更就會永遠消失。"
 
-#: ../shell/ev-window.c:3566
+#: ../shell/ev-window.c:3574
 msgid "Close _without Saving"
 msgstr "關閉但不儲存(_W)"
 
-#: ../shell/ev-window.c:3570
+#: ../shell/ev-window.c:3578
 msgid "Save a _Copy"
 msgstr "儲存副本(_C)"
 
-#: ../shell/ev-window.c:3654
+#: ../shell/ev-window.c:3662
 #, c-format
 msgid "Wait until print job “%s” finishes before closing?"
 msgstr "在關閉前是否要等待「%s」列印工作結束？"
@@ -1320,38 +1296,38 @@ msgstr "在關閉前是否要等待「%s」列印工作結束？"
 #. TRANS: the singular form is not really used as n_print_jobs > 1
 #. but some languages distinguish between different plurals forms,
 #. so the ngettext is needed.
-#: ../shell/ev-window.c:3660
+#: ../shell/ev-window.c:3668
 #, c-format
 msgid "There is %d print job active. Wait until print finishes before closing?"
 msgid_plural ""
 "There are %d print jobs active. Wait until print finishes before closing?"
 msgstr[0] "還有 %d 項列印工作在使用中。在關閉前是否要等待列印結束？"
 
-#: ../shell/ev-window.c:3675
+#: ../shell/ev-window.c:3683
 msgid "If you close the window, pending print jobs will not be printed."
 msgstr "如果您關閉視窗，預定的列印工作將不會列印。"
 
-#: ../shell/ev-window.c:3679
+#: ../shell/ev-window.c:3687
 msgid "Cancel _print and Close"
 msgstr "取消列印並關閉(_P)"
 
-#: ../shell/ev-window.c:3683
+#: ../shell/ev-window.c:3691
 msgid "Close _after Printing"
 msgstr "於列印完成後關閉(_A)"
 
-#: ../shell/ev-window.c:4214
+#: ../shell/ev-window.c:4222
 msgid "Running in presentation mode"
 msgstr "以簡報模式執行"
 
-#: ../shell/ev-window.c:5361
+#: ../shell/ev-window.c:5371
 msgid "Enable caret navigation?"
 msgstr "啟用鍵盤瀏覽？"
 
-#: ../shell/ev-window.c:5363
+#: ../shell/ev-window.c:5373
 msgid "_Enable"
 msgstr "啟用(_E)"
 
-#: ../shell/ev-window.c:5366
+#: ../shell/ev-window.c:5376
 msgid ""
 "Pressing F7 turns the caret navigation on or off. This feature places a "
 "moveable cursor in text pages, allowing you to move around and select text "
@@ -1360,39 +1336,39 @@ msgstr ""
 "按下 F7 可以切換鍵盤導覽的開關。這個功能會在文字頁面中放置一個可移動游標，允"
 "許您以鍵盤四處移動並選擇文字。您想要啟用鍵盤瀏覽嗎？"
 
-#: ../shell/ev-window.c:5371
+#: ../shell/ev-window.c:5381
 msgid "Don’t show this message again"
 msgstr "不要再顯示這個訊息"
 
-#: ../shell/ev-window.c:5886 ../shell/ev-window.c:5902
+#: ../shell/ev-window.c:5896 ../shell/ev-window.c:5912
 msgid "Unable to launch external application."
 msgstr "無法啟動外部應用程式。"
 
-#: ../shell/ev-window.c:5959
+#: ../shell/ev-window.c:5969
 msgid "Unable to open external link"
 msgstr "無法開啟外部連結"
 
-#: ../shell/ev-window.c:6162
+#: ../shell/ev-window.c:6172
 msgid "Couldn’t find appropriate format to save image"
 msgstr "找不到合適的格式來儲存影像"
 
-#: ../shell/ev-window.c:6194
+#: ../shell/ev-window.c:6204
 msgid "The image could not be saved."
 msgstr "影像無法儲存。"
 
-#: ../shell/ev-window.c:6229
+#: ../shell/ev-window.c:6239
 msgid "Save Image"
 msgstr "儲存影像"
 
-#: ../shell/ev-window.c:6388
+#: ../shell/ev-window.c:6398
 msgid "Unable to open attachment"
 msgstr "無法開啟附件"
 
-#: ../shell/ev-window.c:6444
+#: ../shell/ev-window.c:6454
 msgid "The attachment could not be saved."
 msgstr "附件無法儲存。"
 
-#: ../shell/ev-window.c:6492
+#: ../shell/ev-window.c:6502
 msgid "Save Attachment"
 msgstr "儲存附件"
 
@@ -1845,6 +1821,35 @@ msgstr ""
 "它支援以下文件格式：PDF、PS、EPS、XPS、DjVu、TIFF、DVI (使用 SyncTeX)  和漫畫"
 "書壓縮檔(CBR、CBT、CBZ、CB7)。"
 
+#~ msgid ""
+#~ "Error launching the command “%s” in order to decompress the comic book: %s"
+#~ msgstr "執行指令「%s」以將漫畫書解開時發生錯誤：%s"
+
+#~ msgid "The command “%s” failed at decompressing the comic book."
+#~ msgstr "將漫畫書解開時指令「%s」失敗。"
+
+#~ msgid "The command “%s” did not end normally."
+#~ msgstr "指令「%s」沒有正常的結束。"
+
+#~ msgid ""
+#~ "Can’t find an appropriate command to decompress this type of comic book"
+#~ msgstr "找不到合適的指令可將這個類型的漫畫書解開"
+
+#~ msgid "No images found in archive %s"
+#~ msgstr "在文件 %s 中找不到影像"
+
+#~ msgid "There was an error deleting “%s”."
+#~ msgstr "刪除「%s」時發生錯誤。"
+
+#~ msgid "Error %s"
+#~ msgstr "錯誤 %s"
+
+#~ msgid "Print settings file"
+#~ msgstr "列印設定值檔案"
+
+#~ msgid "Could not open the containing folder"
+#~ msgstr "無法開啟包含的資料夾"
+
 #~ msgid "Style:"
 #~ msgstr "樣式："
 
@@ -2169,9 +2174,6 @@ msgstr ""
 
 #~ msgid "Cannot read data from file"
 #~ msgstr "無法從檔案讀取資訊"
-
-#~ msgid "Cannot find file in the ZIP archive"
-#~ msgstr "無法在 ZIP 壓縮檔中找到檔案"
 
 #~ msgid "Unknown error"
 #~ msgstr "不明的錯誤"
