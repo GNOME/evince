@@ -99,6 +99,13 @@ ev_mapping_list_nth (EvMappingList *mapping_list,
         return (EvMapping *)g_list_nth_data (mapping_list->list, n);
 }
 
+static gdouble
+get_mapping_area_size (EvMapping *mapping)
+{
+	return (mapping->area.x2 - mapping->area.x1) *
+	       (mapping->area.y2 - mapping->area.y1);
+}
+
 /**
  * ev_mapping_list_get:
  * @mapping_list: an #EvMappingList
@@ -115,9 +122,10 @@ ev_mapping_list_get (EvMappingList *mapping_list,
 		     gdouble        y)
 {
 	GList *list;
+	EvMapping *found = NULL;
 
-        g_return_val_if_fail (mapping_list != NULL, NULL);
-
+	g_return_val_if_fail (mapping_list != NULL, NULL);
+	
 	for (list = mapping_list->list; list; list = list->next) {
 		EvMapping *mapping = list->data;
 
@@ -125,11 +133,18 @@ ev_mapping_list_get (EvMappingList *mapping_list,
 		    (y >= mapping->area.y1) &&
 		    (x <= mapping->area.x2) &&
 		    (y <= mapping->area.y2)) {
-			return mapping;
+
+			/* In case of only one match choose that. Otherwise
+			 * compare the area of the bounding boxes and return the
+			 * smallest element.
+			 * In this way we allow most of the elements to be selectable
+			 * by the user */
+			if(!found || (get_mapping_area_size(mapping) < get_mapping_area_size(found)))
+				found = mapping;
 		}
 	}
 
-	return NULL;
+	return found;
 }
 
 /**
