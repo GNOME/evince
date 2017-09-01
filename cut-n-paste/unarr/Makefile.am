@@ -26,13 +26,11 @@ libunarr_la_SOURCES =		\
 	common/stream.c		\
 	common/conv.c		\
 	common/crc32.c		\
-	lzmasdk/LzmaDec.c	\
 	lzmasdk/Precomp.h	\
 	lzmasdk/7zTypes.h	\
 	lzmasdk/Ppmd7.h		\
 	lzmasdk/Ppmd7Dec.c	\
 	lzmasdk/CpuArch.h	\
-	lzmasdk/LzmaDec.h	\
 	lzmasdk/CpuArch.c	\
 	lzmasdk/Ppmd7.c		\
 	lzmasdk/Ppmd.h
