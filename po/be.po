@@ -7,8 +7,8 @@ msgstr ""
 "Project-Id-Version: evince.master\n"
 "Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evince&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2017-03-25 16:03+0000\n"
-"PO-Revision-Date: 2017-04-16 18:23+0300\n"
+"POT-Creation-Date: 2017-07-22 13:03+0000\n"
+"PO-Revision-Date: 2017-09-01 19:12+0300\n"
 "Last-Translator: Yuras Shumovich <shumovichy@gmail.com>\n"
 "Language-Team: Belarusian <i18n-bel-gnome@googlegroups.com>\n"
 "Language: be\n"
@@ -19,54 +19,35 @@ msgstr ""
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Generator: Poedit 1.8.11\n"
 
-#: ../backend/comics/comics-document.c:210
-#, c-format
-msgid ""
-"Error launching the command “%s” in order to decompress the comic book: %s"
-msgstr "Памылка запуску загаду \"%s\" для вымання змесціва коміксаў: %s"
+#: ../backend/comics/comics-document.c:99
+#: ../backend/comics/comics-document.c:121
+msgid "File is corrupted"
+msgstr "Файл пашкоджаны"
 
-#: ../backend/comics/comics-document.c:224
-#, c-format
-msgid "The command “%s” failed at decompressing the comic book."
-msgstr "Няўдалае выкананне загаду \"%s\" пры выманні змесціва коміксаў."
+#: ../backend/comics/comics-document.c:151
+msgid "Archive is encrypted"
+msgstr "Архіў зашыфраваны"
 
-#: ../backend/comics/comics-document.c:233
-#, c-format
-msgid "The command “%s” did not end normally."
-msgstr "Загад \"%s\" скончыўся з памылкай."
+#: ../backend/comics/comics-document.c:156
+msgid "No files in archive"
+msgstr "У архіве няма файлаў"
 
-#: ../backend/comics/comics-document.c:453
+#: ../backend/comics/comics-document.c:192
 #, c-format
 msgid "Not a comic book MIME type: %s"
 msgstr "Гэта не MIME-тып коміксаў: %s"
 
-#: ../backend/comics/comics-document.c:460
-msgid "Can’t find an appropriate command to decompress this type of comic book"
+#: ../backend/comics/comics-document.c:199
+msgid ""
+"libarchive lacks support for this comic book’s compression, please contact "
+"your distributor"
 msgstr ""
-"Не ўдалося знайсці адпаведны загад для вымання змесціва коміксаў такога тыпу"
+"libarchive не падтрымлівае гэты фармат сціскання коміксаў, звяжыцеся з сваім "
+"пастаўшчыком"
 
-#: ../backend/comics/comics-document.c:526
-msgid "File corrupted"
-msgstr "Файл пашкоджаны"
-
-#: ../backend/comics/comics-document.c:539
-msgid "No files in archive"
-msgstr "У архіве няма файлаў"
-
-#: ../backend/comics/comics-document.c:578
-#, c-format
-msgid "No images found in archive %s"
-msgstr "У архіве %s няма выяў"
-
-#: ../backend/comics/comics-document.c:828
-#, c-format
-msgid "There was an error deleting “%s”."
-msgstr "Узнікла памылка выдалення \"%s\"."
-
-#: ../backend/comics/comics-document.c:921
-#, c-format
-msgid "Error %s"
-msgstr "Памылка %s"
+#: ../backend/comics/comics-document.c:240
+msgid "Can not get local path for archive"
+msgstr "Немагчыма атрымаць мясцовы шлях да архіва"
 
 #: ../backend/comics/comicsdocument.evince-backend.in.in.h:1
 #: ../backend/comics/evince-comicsdocument.metainfo.xml.in.in.h:1
@@ -428,17 +409,17 @@ msgstr "Не ўдалося адкрыць прычэплены файл \"%s\""
 msgid "File type %s (%s) is not supported"
 msgstr "Тып файлаў %s (%s) не падтрымліваецца"
 
-#: ../libdocument/ev-document-factory.c:364
+#: ../libdocument/ev-document-factory.c:368
 #: ../libdocument/ev-file-helpers.c:492 ../libdocument/ev-file-helpers.c:538
 #: ../libdocument/ev-file-helpers.c:557
 msgid "Unknown MIME Type"
 msgstr "Невядомы MIME-тып"
 
-#: ../libdocument/ev-document-factory.c:552
+#: ../libdocument/ev-document-factory.c:577
 msgid "All Documents"
 msgstr "Усе дакументы"
 
-#: ../libdocument/ev-document-factory.c:579 ../shell/ev-utils.c:309
+#: ../libdocument/ev-document-factory.c:604 ../shell/ev-utils.c:309
 msgid "All Files"
 msgstr "Усе файлы"
 
@@ -464,7 +445,7 @@ msgstr "з %d"
 
 #: ../libmisc/ev-page-action-widget.c:185 ../shell/ev-history.c:426
 #: ../shell/ev-sidebar-bookmarks.c:295 ../shell/ev-window.c:907
-#: ../shell/ev-window.c:4679
+#: ../shell/ev-window.c:4687
 #, c-format
 msgid "Page %s"
 msgstr "Старонка %s"
@@ -695,7 +676,7 @@ msgid "Delete the temporary file"
 msgstr "Выдаліць часовы файл"
 
 #: ../previewer/ev-previewer.c:46
-msgid "Print settings file"
+msgid "File specifying print settings"
 msgstr "Файл настроек друку"
 
 #: ../previewer/ev-previewer.c:46
@@ -706,7 +687,7 @@ msgstr "ФАЙЛ"
 msgid "GNOME Document Previewer"
 msgstr "Папярэдні праглядальнік дакументаў GNOME"
 
-#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3262
+#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3270
 msgid "Failed to print document"
 msgstr "Не ўдалося надрукаваць дакумент"
 
@@ -1001,7 +982,7 @@ msgstr "Пароль да дакумента %s"
 
 #. Create tree view
 #: ../shell/ev-loading-message.c:50 ../shell/ev-sidebar-annotations.c:125
-#: ../shell/ev-sidebar-layers.c:125 ../shell/ev-sidebar-links.c:261
+#: ../shell/ev-sidebar-layers.c:125 ../shell/ev-sidebar-links.c:268
 msgid "Loading…"
 msgstr "Загрузка..."
 
@@ -1127,7 +1108,7 @@ msgstr "Закладкі"
 msgid "Layers"
 msgstr "Слаі"
 
-#: ../shell/ev-sidebar-links.c:337
+#: ../shell/ev-sidebar-links.c:344
 msgid "Print…"
 msgstr "Надрукаваць..."
 
@@ -1137,11 +1118,11 @@ msgstr "Надрукаваць..."
 #. * your language.  The sidebar cannot be shrinked smaller than
 #. * the longest title in there.
 #.
-#: ../shell/ev-sidebar-links.c:728
+#: ../shell/ev-sidebar-links.c:750
 msgid "Outline"
 msgstr "Нарыс"
 
-#: ../shell/ev-sidebar-thumbnails.c:1093
+#: ../shell/ev-sidebar-thumbnails.c:1135
 msgid "Thumbnails"
 msgstr "Мініяцюры"
 
@@ -1189,86 +1170,82 @@ msgstr "Дакумент не мае старонак"
 msgid "The document contains only empty pages"
 msgstr "Дакумент мае толькі пустыя старонкі"
 
-#: ../shell/ev-window.c:1757 ../shell/ev-window.c:1923
+#: ../shell/ev-window.c:1758 ../shell/ev-window.c:1924
 #, c-format
 msgid "Unable to open document “%s”."
 msgstr "Не ўдалося адкрыць дакумент \"%s\"."
 
-#: ../shell/ev-window.c:1887
+#: ../shell/ev-window.c:1888
 #, c-format
 msgid "Loading document from “%s”"
 msgstr "Загрузка дакумента з \"%s\""
 
-#: ../shell/ev-window.c:2038 ../shell/ev-window.c:2366
+#: ../shell/ev-window.c:2039 ../shell/ev-window.c:2367
 #, c-format
 msgid "Downloading document (%d%%)"
 msgstr "Сцягванне дакумента (%d%%)"
 
-#: ../shell/ev-window.c:2071
+#: ../shell/ev-window.c:2072
 msgid "Failed to load remote file."
 msgstr "Не ўдалося загрузіць файл з аддаленага сервера."
 
-#: ../shell/ev-window.c:2310
+#: ../shell/ev-window.c:2311
 #, c-format
 msgid "Reloading document from %s"
 msgstr "Перазагрузка дакумента з %s"
 
-#: ../shell/ev-window.c:2342
+#: ../shell/ev-window.c:2343
 msgid "Failed to reload document."
 msgstr "Не ўдалося перазагрузіць файл."
 
-#: ../shell/ev-window.c:2558
+#: ../shell/ev-window.c:2559
 msgid "Open Document"
 msgstr "Адкрыццё дакумента"
 
-#: ../shell/ev-window.c:2631
+#: ../shell/ev-window.c:2632
 #, c-format
 msgid "Saving document to %s"
 msgstr "Захаванне дакумента ў %s"
 
-#: ../shell/ev-window.c:2634
+#: ../shell/ev-window.c:2635
 #, c-format
 msgid "Saving attachment to %s"
 msgstr "Захаванне прычэпленага файла ў %s"
 
-#: ../shell/ev-window.c:2637
+#: ../shell/ev-window.c:2638
 #, c-format
 msgid "Saving image to %s"
 msgstr "Захаванне выявы ў %s"
 
-#: ../shell/ev-window.c:2681 ../shell/ev-window.c:2781
+#: ../shell/ev-window.c:2682 ../shell/ev-window.c:2782
 #, c-format
 msgid "The file could not be saved as “%s”."
 msgstr "Не ўдалося захаваць файл як \"%s\"."
 
-#: ../shell/ev-window.c:2712
+#: ../shell/ev-window.c:2713
 #, c-format
 msgid "Uploading document (%d%%)"
 msgstr "Публікацыя дакумента на серверы (%d%%)"
 
-#: ../shell/ev-window.c:2716
+#: ../shell/ev-window.c:2717
 #, c-format
 msgid "Uploading attachment (%d%%)"
 msgstr "Публікацыя прычэпленага файла на серверы (%d%%)"
 
-#: ../shell/ev-window.c:2720
+#: ../shell/ev-window.c:2721
 #, c-format
 msgid "Uploading image (%d%%)"
 msgstr "Публікацыя выявы на серверы (%d%%)"
 
-#: ../shell/ev-window.c:2832
+#: ../shell/ev-window.c:2833
 msgid "Save a Copy"
 msgstr "Захаваць копію"
 
-#: ../shell/ev-window.c:2908
+#: ../shell/ev-window.c:2909
 msgid "Could not send current document"
 msgstr "Не ўдалося паслаць гэты дакумент"
 
-#: ../shell/ev-window.c:2942
-msgid "Could not open the containing folder"
-msgstr "Не ўдалося адкрыць папку, якая змяшчае дакумент"
-
-#: ../shell/ev-window.c:3206
+#: ../shell/ev-window.c:3214
 #, c-format
 msgid "%d pending job in queue"
 msgid_plural "%d pending jobs in queue"
@@ -1276,50 +1253,50 @@ msgstr[0] "%d заданне ў чарзе"
 msgstr[1] "%d заданні ў чарзе"
 msgstr[2] "%d заданняў у чарзе"
 
-#: ../shell/ev-window.c:3319
+#: ../shell/ev-window.c:3327
 #, c-format
 msgid "Printing job “%s”"
 msgstr "Заданне друку \"%s\""
 
-#: ../shell/ev-window.c:3534
+#: ../shell/ev-window.c:3542
 msgid "Document contains form fields that have been filled out. "
 msgstr "Дакумент змяшчае запоўненыя графы формы. "
 
-#: ../shell/ev-window.c:3537
+#: ../shell/ev-window.c:3545
 msgid "Document contains new or modified annotations. "
 msgstr "Дакумент змяшчае новыя ці змененыя анатацыі"
 
-#: ../shell/ev-window.c:3549
+#: ../shell/ev-window.c:3557
 #, c-format
 msgid "Reload document “%s”?"
 msgstr "Перагрузіць дакумент \"%s\"?"
 
-#: ../shell/ev-window.c:3551
+#: ../shell/ev-window.c:3559
 msgid "If you reload the document, changes will be permanently lost."
 msgstr "Калі перагрузіць дакумент, то ўсе змены будуць незваротна страчаны."
 
-#: ../shell/ev-window.c:3555
+#: ../shell/ev-window.c:3563
 msgid "Reload"
 msgstr "Перазагрузіць"
 
-#: ../shell/ev-window.c:3562
+#: ../shell/ev-window.c:3570
 #, c-format
 msgid "Save a copy of document “%s” before closing?"
 msgstr "Захаваць копію дакумента \"%s\" перад закрыццём?"
 
-#: ../shell/ev-window.c:3564
+#: ../shell/ev-window.c:3572
 msgid "If you don’t save a copy, changes will be permanently lost."
 msgstr "Калі не захаваць копію, то ўсе змены будуць незваротна страчаны."
 
-#: ../shell/ev-window.c:3566
+#: ../shell/ev-window.c:3574
 msgid "Close _without Saving"
 msgstr "Закрыць, _не захоўваючы"
 
-#: ../shell/ev-window.c:3570
+#: ../shell/ev-window.c:3578
 msgid "Save a _Copy"
 msgstr "Захаваць _копію"
 
-#: ../shell/ev-window.c:3654
+#: ../shell/ev-window.c:3662
 #, c-format
 msgid "Wait until print job “%s” finishes before closing?"
 msgstr "Пачакаць заканчэння задання друку \"%s\" перад закрыццём?"
@@ -1327,7 +1304,7 @@ msgstr "Пачакаць заканчэння задання друку \"%s\" �
 #. TRANS: the singular form is not really used as n_print_jobs > 1
 #. but some languages distinguish between different plurals forms,
 #. so the ngettext is needed.
-#: ../shell/ev-window.c:3660
+#: ../shell/ev-window.c:3668
 #, c-format
 msgid "There is %d print job active. Wait until print finishes before closing?"
 msgid_plural ""
@@ -1339,31 +1316,31 @@ msgstr[1] ""
 msgstr[2] ""
 "Ёсць %d актыўных заданняў друку. Пачакаць заканчэння друку перад закрыццём?"
 
-#: ../shell/ev-window.c:3675
+#: ../shell/ev-window.c:3683
 msgid "If you close the window, pending print jobs will not be printed."
 msgstr "Калі закрыць гэта акно, заданні друку з чаргі не будуць выкананы."
 
-#: ../shell/ev-window.c:3679
+#: ../shell/ev-window.c:3687
 msgid "Cancel _print and Close"
 msgstr "_Скасаваць друк і закрыць"
 
-#: ../shell/ev-window.c:3683
+#: ../shell/ev-window.c:3691
 msgid "Close _after Printing"
 msgstr "_Закрыць пасля друку"
 
-#: ../shell/ev-window.c:4214
+#: ../shell/ev-window.c:4222
 msgid "Running in presentation mode"
 msgstr "У рэжыме прэзентацыі"
 
-#: ../shell/ev-window.c:5363
+#: ../shell/ev-window.c:5371
 msgid "Enable caret navigation?"
 msgstr "Уключыць навігацыю з карэткай?"
 
-#: ../shell/ev-window.c:5365
+#: ../shell/ev-window.c:5373
 msgid "_Enable"
 msgstr "_Уключыць"
 
-#: ../shell/ev-window.c:5368
+#: ../shell/ev-window.c:5376
 msgid ""
 "Pressing F7 turns the caret navigation on or off. This feature places a "
 "moveable cursor in text pages, allowing you to move around and select text "
@@ -1373,39 +1350,39 @@ msgstr ""
 "рухомы курсор у тэксце старонкі і дазваляе перасоўваць яго і вылучаць тэкст "
 "з дапамогай клавіятуры. Хочаце ўключыць такі рэжым навігацыі?"
 
-#: ../shell/ev-window.c:5373
+#: ../shell/ev-window.c:5381
 msgid "Don’t show this message again"
 msgstr "Больш не паказваць гэта паведамленне"
 
-#: ../shell/ev-window.c:5888 ../shell/ev-window.c:5904
+#: ../shell/ev-window.c:5896 ../shell/ev-window.c:5912
 msgid "Unable to launch external application."
 msgstr "Не ўдалося запусціць вонкавую праграму."
 
-#: ../shell/ev-window.c:5961
+#: ../shell/ev-window.c:5969
 msgid "Unable to open external link"
 msgstr "Не ўдалося адкрыць вонкавую спасылку"
 
-#: ../shell/ev-window.c:6164
+#: ../shell/ev-window.c:6172
 msgid "Couldn’t find appropriate format to save image"
 msgstr "Не ўдалося адшукаць адпаведны фармат, каб захаваць выяву"
 
-#: ../shell/ev-window.c:6196
+#: ../shell/ev-window.c:6204
 msgid "The image could not be saved."
 msgstr "Не ўдалося захаваць выяву."
 
-#: ../shell/ev-window.c:6231
+#: ../shell/ev-window.c:6239
 msgid "Save Image"
 msgstr "Захаваць выяву"
 
-#: ../shell/ev-window.c:6390
+#: ../shell/ev-window.c:6398
 msgid "Unable to open attachment"
 msgstr "Не ўдалося адкрыць прычэплены файл"
 
-#: ../shell/ev-window.c:6446
+#: ../shell/ev-window.c:6454
 msgid "The attachment could not be saved."
 msgstr "Не ўдалося захаваць прычэплены файл."
 
-#: ../shell/ev-window.c:6494
+#: ../shell/ev-window.c:6502
 msgid "Save Attachment"
 msgstr "Захаваць прычэплены файл"
 
@@ -1857,6 +1834,37 @@ msgid ""
 msgstr ""
 "Ён падтрымлівае наступныя фарматы дакументаў: PDF, PS, EPS, XPS, DjVu, TIFF, "
 "DVI (з SyncTeX) і архівы коміксаў (CBR, CBT, CBZ, CB7)."
+
+#~ msgid ""
+#~ "Error launching the command “%s” in order to decompress the comic book: %s"
+#~ msgstr "Памылка запуску загаду \"%s\" для вымання змесціва коміксаў: %s"
+
+#~ msgid "The command “%s” failed at decompressing the comic book."
+#~ msgstr "Няўдалае выкананне загаду \"%s\" пры выманні змесціва коміксаў."
+
+#~ msgid "The command “%s” did not end normally."
+#~ msgstr "Загад \"%s\" скончыўся з памылкай."
+
+#~ msgid ""
+#~ "Can’t find an appropriate command to decompress this type of comic book"
+#~ msgstr ""
+#~ "Не ўдалося знайсці адпаведны загад для вымання змесціва коміксаў такога "
+#~ "тыпу"
+
+#~ msgid "No images found in archive %s"
+#~ msgstr "У архіве %s няма выяў"
+
+#~ msgid "There was an error deleting “%s”."
+#~ msgstr "Узнікла памылка выдалення \"%s\"."
+
+#~ msgid "Error %s"
+#~ msgstr "Памылка %s"
+
+#~ msgid "Print settings file"
+#~ msgstr "Файл настроек друку"
+
+#~ msgid "Could not open the containing folder"
+#~ msgstr "Не ўдалося адкрыць папку, якая змяшчае дакумент"
 
 #~ msgid "Find options"
 #~ msgstr "Опцыі пошуку"
