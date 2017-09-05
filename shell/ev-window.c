@@ -366,6 +366,14 @@ static void	bookmark_activated_cb 		        (EvSidebarBookmarks *sidebar_bookmar
 							 gint              old_page,
 							 gint              page,
 							 EvWindow         *window);
+static void     scroll_history_cb                       (EvView           *view,
+							 GtkScrollType     scroll,
+							 gboolean          horizontal,
+							 EvWindow         *window);
+static void     scroll_child_history_cb                 (GtkScrolledWindow *scrolled_window,
+							 GtkScrollType      scroll,
+							 gboolean           horizontal,
+							 EvWindow          *window);
 static void     activate_link_cb                        (GObject          *object,
 							 EvLink           *link,
 							 EvWindow         *window);
@@ -968,6 +976,67 @@ bookmark_activated_cb (EvSidebarBookmarks *sidebar_bookmarks,
 {
 	ev_history_add_page (window->priv->history, old_page);
 	ev_history_add_page (window->priv->history, page);
+}
+
+static void
+scroll_history_cb (EvView        *view,
+		   GtkScrollType  scroll,
+		   gboolean       horizontal,
+		   EvWindow      *window)
+{
+	if (!window->priv->document)
+		return;
+
+	gint old_page = -1;
+	gint new_page = -1;
+	switch (scroll) {
+		case GTK_SCROLL_START:
+			old_page = ev_document_model_get_page (window->priv->model);
+			new_page = 0;
+			break;
+		case GTK_SCROLL_END:
+			old_page = ev_document_model_get_page (window->priv->model);
+			new_page = ev_document_get_n_pages (window->priv->document) - 1;
+			break;
+		default:
+			break;
+	}
+	if (old_page >= 0 && new_page >= 0) {
+		ev_history_add_page (window->priv->history, old_page);
+		ev_history_add_page (window->priv->history, new_page);
+	}
+}
+
+static void
+scroll_child_history_cb (GtkScrolledWindow *scrolled_window,
+			 GtkScrollType      scroll,
+			 gboolean           horizontal,
+			 EvWindow          *window)
+{
+	if (!window->priv->document)
+		return;
+
+	if (ev_document_model_get_continuous (window->priv->model) && !horizontal) {
+		gint old_page = -1;
+		gint new_page = -1;
+		switch (scroll) {
+		case GTK_SCROLL_START:
+			old_page = ev_document_model_get_page (window->priv->model);
+			new_page = 0;
+			break;
+		case GTK_SCROLL_END:
+			old_page = ev_document_model_get_page (window->priv->model);
+			new_page = ev_document_get_n_pages (window->priv->document) - 1;
+			break;
+		default:
+			break;
+		}
+		if (old_page >= 0 && new_page >= 0) {
+			ev_history_add_page (window->priv->history, old_page);
+			ev_history_add_page (window->priv->history, new_page);
+
+		}
+	}
 }
 
 static void
@@ -4982,7 +5051,13 @@ ev_window_cmd_go_first_page (GSimpleAction *action,
 	EvWindow *window = user_data;
 	EvWindowPrivate *priv = ev_window_get_instance_private (window);
 
+	gint old_page = ev_document_model_get_page (priv->model);
+	gint new_page = 0;
 	ev_document_model_set_page (priv->model, 0);
+	if (old_page >= 0) {
+		ev_history_add_page (priv->history, old_page);
+		ev_history_add_page (priv->history, new_page);
+	}
 }
 
 static void
@@ -4993,8 +5068,16 @@ ev_window_cmd_go_last_page (GSimpleAction *action,
 	EvWindow *window = user_data;
 	EvWindowPrivate *priv = ev_window_get_instance_private (window);
 
+	gint old_page = ev_document_model_get_page (priv->model);
+	gint new_page = ev_document_get_n_pages (priv->document) - 1;
+
 	ev_document_model_set_page (priv->model,
 				    ev_document_get_n_pages (priv->document) - 1);
+	if (old_page >= 0 && new_page >= 0) {
+		ev_history_add_page (priv->history, old_page);
+		ev_history_add_page (priv->history, new_page);
+	}
+
 }
 
 static void
@@ -5108,9 +5191,9 @@ ev_window_activate_goto_bookmark_action (GSimpleAction *action,
 	EvWindow *window = user_data;
 	EvWindowPrivate *priv = ev_window_get_instance_private (window);
 
-	gint old_page = ev_document_model_get_page (window->priv->model);
-	ev_history_add_page (window->priv->history, old_page);
-	ev_history_add_page (window->priv->history, g_variant_get_uint32 (parameter));
+	gint old_page = ev_document_model_get_page (priv->model);
+	ev_history_add_page (priv->history, old_page);
+	ev_history_add_page (priv->history, g_variant_get_uint32 (parameter));
 
 	ev_document_model_set_page (priv->model, g_variant_get_uint32 (parameter));
 }
@@ -7595,14 +7678,18 @@ ev_window_init (EvWindow *ev_window)
 	g_signal_connect_object (priv->view, "selection-changed",
 				 G_CALLBACK (view_selection_changed_cb),
 				 ev_window, 0);
-<<<<<<< HEAD
-	g_signal_connect_object (priv->view, "annot-added",
-=======
-	g_signal_connect_object (ev_window->priv->sidebar_bookmarks, "bookmark-activated",
+	g_signal_connect_object (priv->sidebar_bookmarks, "bookmark-activated",
 				 G_CALLBACK (bookmark_activated_cb),
 				 ev_window, 0);
-	g_signal_connect_object (ev_window->priv->view, "annot-added",
->>>>>>> History rewrite part 2: bookmark functionality.
+	/* Home/End trigger "scroll-child" (from GtkScrolledWindow) while
+	   Ctrl+Home/End trigger "scroll" (from EvView). */
+	g_signal_connect_object (priv->view, "scroll",
+				 G_CALLBACK (scroll_history_cb),
+				 ev_window, 0);
+	g_signal_connect_object (priv->scrolled_window, "scroll-child",
+				 G_CALLBACK (scroll_child_history_cb),
+				 ev_window, 0);
+	g_signal_connect_object (priv->view, "annot-added",
 				 G_CALLBACK (view_annot_added),
 				 ev_window, 0);
 	g_signal_connect_object (priv->view, "annot-removed",
