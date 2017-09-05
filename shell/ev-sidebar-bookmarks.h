@@ -49,6 +49,9 @@ struct _EvSidebarBookmarksClass {
 	GtkBoxClass base_class;
 
         void (*add_bookmark) (EvSidebarBookmarks *sidebar_bookmarks);
+        void (*activated)    (EvSidebarBookmarks *sidebar_bookmarks,
+                              gint                old_page,
+                              gint                page);
 };
 
 GType      ev_sidebar_bookmarks_get_type      (void) G_GNUC_CONST;
