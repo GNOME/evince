@@ -365,6 +365,10 @@ static void	view_handle_link_cb 			(EvView           *view,
 							 gint              old_page,
 							 EvLink           *link, 
 							 EvWindow         *window);
+static void	bookmark_activated_cb 		        (EvSidebarBookmarks *sidebar_bookmarks,
+							 gint              old_page,
+							 gint              page,
+							 EvWindow         *window);
 static void     activate_link_cb                        (GObject          *object,
 							 EvLink           *link,
 							 EvWindow         *window);
@@ -936,6 +940,16 @@ view_handle_link_cb (EvView *view, gint old_page, EvLink *link, EvWindow *window
 	ev_history_add_link (window->priv->history, new_link ? new_link : link);
 	if (new_link)
 		g_object_unref (new_link);
+}
+
+static void
+bookmark_activated_cb (EvSidebarBookmarks *sidebar_bookmarks,
+		       gint                old_page,
+		       gint                page,
+		       EvWindow           *window)
+{
+	ev_history_add_page (window->priv->history, old_page);
+	ev_history_add_page (window->priv->history, page);
 }
 
 static void
@@ -4824,6 +4838,10 @@ ev_window_activate_goto_bookmark_action (GSimpleAction *action,
 {
 	EvWindow *window = user_data;
 
+	gint old_page = ev_document_model_get_page (window->priv->model);
+	ev_history_add_page (window->priv->history, old_page);
+	ev_history_add_page (window->priv->history, g_variant_get_uint32 (parameter));
+
 	ev_document_model_set_page (window->priv->model, g_variant_get_uint32 (parameter));
 }
 
@@ -7196,6 +7214,9 @@ ev_window_init (EvWindow *ev_window)
 				 ev_window, 0);
 	g_signal_connect_object (ev_window->priv->view, "selection-changed",
 				 G_CALLBACK (view_selection_changed_cb),
+				 ev_window, 0);
+	g_signal_connect_object (ev_window->priv->sidebar_bookmarks, "bookmark-activated",
+				 G_CALLBACK (bookmark_activated_cb),
 				 ev_window, 0);
 	g_signal_connect_object (ev_window->priv->view, "annot-added",
 				 G_CALLBACK (view_annot_added),

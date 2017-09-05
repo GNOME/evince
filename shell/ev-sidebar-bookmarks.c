@@ -40,6 +40,13 @@ enum {
         N_COLUMNS
 };
 
+enum {
+        ACTIVATED,
+        N_SIGNALS
+};
+
+static guint signals[N_SIGNALS] = { 0 };
+
 struct _EvSidebarBookmarksPrivate {
         EvDocumentModel *model;
         EvBookmarks     *bookmarks;
@@ -99,9 +106,11 @@ ev_bookmarks_popup_cmd_open_bookmark (GtkAction          *action,
         EvSidebarBookmarksPrivate *priv = sidebar_bookmarks->priv;
         GtkTreeSelection          *selection;
         gint                       page;
+        gint old_page = ev_document_model_get_page (priv->model);
 
         selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (priv->tree_view));
         page = ev_sidebar_bookmarks_get_selected_page (sidebar_bookmarks, selection);
+        g_signal_emit (sidebar_bookmarks, signals[ACTIVATED], 0, old_page, page);
         ev_document_model_set_page (priv->model, page);
 }
 
@@ -222,6 +231,8 @@ ev_sidebar_bookmarks_selection_changed (GtkTreeSelection   *selection,
 
         page = ev_sidebar_bookmarks_get_selected_page (sidebar_bookmarks, selection);
         if (page >= 0) {
+                gint old_page = ev_document_model_get_page (priv->model);
+                g_signal_emit (sidebar_bookmarks, signals[ACTIVATED], 0, old_page, page);
                 ev_document_model_set_page (priv->model, page);
                 gtk_widget_set_sensitive (priv->del_button, TRUE);
         } else {
@@ -537,6 +548,16 @@ ev_sidebar_bookmarks_class_init (EvSidebarBookmarksClass *klass)
         g_type_class_add_private (g_object_class, sizeof (EvSidebarBookmarksPrivate));
 
         g_object_class_override_property (g_object_class, PROP_WIDGET, "main-widget");
+	/* Signals */
+        signals[ACTIVATED] =
+                g_signal_new ("bookmark-activated",
+                              EV_TYPE_SIDEBAR_BOOKMARKS,
+                              G_SIGNAL_RUN_LAST,
+                              G_STRUCT_OFFSET (EvSidebarBookmarksClass, activated),
+                              NULL, NULL,
+                              NULL,
+                              G_TYPE_NONE, 2,
+                              G_TYPE_INT, G_TYPE_INT);
 }
 
 GtkWidget *
