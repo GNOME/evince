@@ -100,6 +100,9 @@
 #include <X11/extensions/XInput2.h>
 #endif
 
+#define MOUSE_BACK_BUTTON 8
+#define MOUSE_FORWARD_BUTTON 9
+
 typedef enum {
 	PAGE_MODE_DOCUMENT,
 	PAGE_MODE_PASSWORD
@@ -5641,6 +5644,26 @@ ev_window_key_press_event (GtkWidget   *widget,
 }
 
 static gboolean
+ev_window_button_press_event (GtkWidget      *widget,
+                              GdkEventButton *event)
+{
+        EvWindow *window = EV_WINDOW (widget);
+
+        switch (event->button) {
+        case MOUSE_BACK_BUTTON:
+                ev_history_go_back (window->priv->history);
+                return TRUE;
+        case MOUSE_FORWARD_BUTTON:
+                ev_history_go_forward (window->priv->history);
+                return TRUE;
+        default:
+                break;
+        }
+
+        return FALSE;
+}
+
+static gboolean
 ev_window_delete_event (GtkWidget   *widget,
 			GdkEventAny *event)
 {
@@ -5659,6 +5682,7 @@ ev_window_class_init (EvWindowClass *ev_window_class)
 	widget_class->key_press_event = ev_window_key_press_event;
 	widget_class->window_state_event = ev_window_state_event;
 	widget_class->drag_data_received = ev_window_drag_data_received;
+	widget_class->button_press_event = ev_window_button_press_event;
 
 	nautilus_sendto = g_find_program_in_path ("nautilus-sendto");
 
