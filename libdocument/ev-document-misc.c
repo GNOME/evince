@@ -513,9 +513,13 @@ ev_document_misc_get_screen_dpi (GdkScreen *screen)
 
 	/*diagonal in pixels*/
 	dp = hypot (gdk_screen_get_width (screen), gdk_screen_get_height (screen));
+	if (dp == 0)
+		return 96;
 
 	/*diagonal in inches*/
 	di = hypot (gdk_screen_get_width_mm(screen), gdk_screen_get_height_mm (screen)) / 25.4;
+	if (di == 0)
+		return 96;
 
 	return (dp / di);
 }
