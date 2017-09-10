@@ -4,17 +4,17 @@
 # Ole Laursen <olau@hardworking.dk>, 2005, 06.
 # Peter Bach <bach.peter@gmail.com>, 2007.
 # Kenneth Nielsen <k.nielsen81@gmail.com>, 2008-2014.
-# Ask Hjorth Larsen <asklarsen@gmail.com>, 2015-2016.
+# Ask Hjorth Larsen <asklarsen@gmail.com>, 2015-2017.
 # scootergrisen, 2015, 2016.
 # Joe Hansen <joedalton2@yahoo.dk>, 2017.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: evince\n"
-"Report-Msgid-Bugs-To: "
-"https://bugzilla.gnome.org/enter_bug.cgi?product=evince&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2017-07-22 13:03+0000\n"
-"PO-Revision-Date: 2017-02-24 03:16+0200\n"
+"Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?"
+"product=evince&keywords=I18N+L10N&component=general\n"
+"POT-Creation-Date: 2017-08-26 14:33+0000\n"
+"PO-Revision-Date: 2017-09-10 17:47+0200\n"
 "Last-Translator: Joe Hansen <joedalton2@yahoo.dk>\n"
 "Language-Team: Danish <dansk@dansk-gruppen.dk>\n"
 "Language: da\n"
@@ -30,14 +30,12 @@ msgstr ""
 
 #: ../backend/comics/comics-document.c:99
 #: ../backend/comics/comics-document.c:121
-#, fuzzy
-#| msgid "File corrupted"
 msgid "File is corrupted"
-msgstr "Fil ødelagt"
+msgstr "Filen er ødelagt"
 
 #: ../backend/comics/comics-document.c:151
 msgid "Archive is encrypted"
-msgstr ""
+msgstr "Arkivet er krypteret"
 
 #: ../backend/comics/comics-document.c:156
 msgid "No files in archive"
@@ -52,11 +50,11 @@ msgstr "Ikke en MIME-type for en tegneserie: %s"
 msgid ""
 "libarchive lacks support for this comic book’s compression, please contact "
 "your distributor"
-msgstr ""
+msgstr "libarchive mangler understøttelse af denne tegneseries komprimering – kontakt venligst din distributør"
 
-#: ../backend/comics/comics-document.c:240
+#: ../backend/comics/comics-document.c:239
 msgid "Can not get local path for archive"
-msgstr ""
+msgstr "Kan ikke hente lokal sti for arkivet"
 
 #: ../backend/comics/comicsdocument.evince-backend.in.in.h:1
 #: ../backend/comics/evince-comicsdocument.metainfo.xml.in.in.h:1
@@ -697,7 +695,7 @@ msgstr "Slet den midlertidige fil"
 
 #: ../previewer/ev-previewer.c:46
 msgid "File specifying print settings"
-msgstr ""
+msgstr "Fil som angiver udskriftsindstillinger"
 
 #: ../previewer/ev-previewer.c:46
 msgid "FILE"
@@ -1326,8 +1324,7 @@ msgstr "Genindlæs dokumentet “%s”?"
 
 #: ../shell/ev-window.c:3559
 msgid "If you reload the document, changes will be permanently lost."
-msgstr ""
-"Hvis du genindlæser dokumentet, så vil ændringer blive permanent tabt."
+msgstr "Hvis du genindlæser dokumentet, så vil ændringer blive permanent tabt."
 
 #: ../shell/ev-window.c:3563
 msgid "Reload"
@@ -1360,8 +1357,7 @@ msgstr "Vent indtil udskriftsjob “%s” færdiggøres, før der lukkes?"
 #. so the ngettext is needed.
 #: ../shell/ev-window.c:3668
 #, c-format
-msgid ""
-"There is %d print job active. Wait until print finishes before closing?"
+msgid "There is %d print job active. Wait until print finishes before closing?"
 msgid_plural ""
 "There are %d print jobs active. Wait until print finishes before closing?"
 msgstr[0] ""
@@ -1931,5 +1927,3 @@ msgstr ""
 
 #~ msgid "Opaque"
 #~ msgstr "Ugennemsigtig"
-
-
