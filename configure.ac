@@ -699,7 +699,7 @@ AC_ARG_ENABLE(comics,
 	[enable_comics=yes])
 
 if test "x$enable_comics" = "xyes"; then
-   LIBARCHIVE_REQUIRED=3.1.2
+   LIBARCHIVE_REQUIRED=3.2.0
    PKG_CHECK_MODULES(LIBARCHIVE, libarchive >= $LIBARCHIVE_REQUIRED,enable_comics=yes,enable_comics=no)
 
    if test "x$enable_comics" = "xyes"; then
