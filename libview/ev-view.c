@@ -2220,9 +2220,6 @@ _ev_view_set_focused_element (EvView *view,
 	GdkRectangle    view_rect;
 	cairo_region_t *region = NULL;
 
-	if (view->focused_element == element_mapping)
-		return;
-
 	if (view->accessible)
 		ev_view_accessible_set_focused_element (EV_VIEW_ACCESSIBLE (view->accessible), element_mapping, page);
 

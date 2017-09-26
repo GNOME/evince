@@ -219,21 +219,61 @@ ev_sidebar_annotations_annot_removed (EvSidebarAnnotations *sidebar_annots)
 }
 
 static void
+ev_sidebar_annotations_activate_result_at_iter (EvSidebarAnnotations *sidebar_annots,
+                                                GtkTreeModel  *model,
+                                                GtkTreeIter   *iter)
+{
+		EvMapping *mapping = NULL;
+
+		gtk_tree_model_get (model, iter,
+				    COLUMN_ANNOT_MAPPING, &mapping,
+				    -1);
+		if (mapping)
+			g_signal_emit (sidebar_annots, signals[ANNOT_ACTIVATED], 0, mapping);
+}
+
+static void
 selection_changed_cb (GtkTreeSelection     *selection,
 		      EvSidebarAnnotations *sidebar_annots)
 {
 	GtkTreeModel *model;
 	GtkTreeIter   iter;
 
-	if (gtk_tree_selection_get_selected (selection, &model, &iter)) {
-		EvMapping *mapping = NULL;
+	if (gtk_tree_selection_get_selected (selection, &model, &iter))
+	    ev_sidebar_annotations_activate_result_at_iter (sidebar_annots, model, &iter);
+}
 
-		gtk_tree_model_get (model, &iter,
-				    COLUMN_ANNOT_MAPPING, &mapping,
-				    -1);
-		if (mapping)
-			g_signal_emit (sidebar_annots, signals[ANNOT_ACTIVATED], 0, mapping);
-	}
+static gboolean
+sidebar_tree_button_press_cb (GtkTreeView    *view,
+                              GdkEventButton *event,
+                              EvSidebarAnnotations  *sidebar_annots)
+{
+        GtkTreeModel         *model;
+        GtkTreePath          *path;
+        GtkTreeIter           iter;
+        GtkTreeSelection     *selection;
+
+        gtk_tree_view_get_path_at_pos (view, event->x, event->y, &path,
+                                       NULL, NULL, NULL);
+        if (!path)
+                return FALSE;
+        
+        selection = gtk_tree_view_get_selection (view);
+        if (!gtk_tree_selection_path_is_selected (selection, path)) {
+                gtk_tree_path_free (path);
+                return FALSE;
+        }
+
+        model = gtk_tree_view_get_model (view);
+        gtk_tree_model_get_iter (model, &iter, path);
+        gtk_tree_path_free (path);
+
+        ev_sidebar_annotations_activate_result_at_iter (sidebar_annots, model, &iter);
+
+        /* Always return FALSE so the tree view gets the event and can update
+         * the selection etc.
+         */
+        return FALSE;
 }
 
 static void
@@ -274,6 +314,10 @@ job_finished_callback (EvJobAnnots          *job,
 					  G_CALLBACK (selection_changed_cb),
 					  sidebar_annots);
 	}
+    g_signal_connect (priv->tree_view, "button-press-event",
+                      G_CALLBACK (sidebar_tree_button_press_cb),
+                      sidebar_annots);
+
 
 	model = gtk_tree_store_new (N_COLUMNS,
 				    G_TYPE_STRING,
