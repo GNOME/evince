@@ -5202,6 +5202,83 @@ attachment_bar_menu_popup_cb (EvSidebarAttachments *attachbar,
 	return TRUE;
 }
 
+static gboolean
+save_attachment_to_target_file (EvAttachment *attachment,
+                                GFile        *target_file,
+                                gboolean      is_dir,
+                                gboolean      is_native,
+                                EvWindow     *ev_window)
+{
+	GFile  *save_to = NULL;
+	GError *error = NULL;
+
+	if (is_native) {
+		if (is_dir) {
+			save_to = g_file_get_child (target_file,
+                            /* FIXMEchpe: file name encoding! */
+						    ev_attachment_get_name (attachment));
+		} else {
+			save_to = g_object_ref (target_file);
+		}
+	} else {
+		save_to = ev_mkstemp_file ("saveattachment.XXXXXX", &error);
+	}
+
+        if (save_to)
+                ev_attachment_save (attachment, save_to, &error);
+
+	if (error) {
+		ev_window_error_message (ev_window, error, 
+					 "%s", _("The attachment could not be saved."));
+		g_error_free (error);
+		g_object_unref (save_to);
+
+		return FALSE;
+	}
+
+	if (!is_native) {
+		GFile *dest_file;
+
+		if (is_dir) {
+			dest_file = g_file_get_child (target_file,
+						      ev_attachment_get_name (attachment));
+		} else {
+			dest_file = g_object_ref (target_file);
+		}
+
+		ev_window_save_remote (ev_window, EV_SAVE_ATTACHMENT,
+				       save_to, dest_file);
+
+		g_object_unref (dest_file);
+	}
+
+	g_object_unref (save_to);
+	return TRUE;
+}
+
+static gboolean
+attachment_bar_save_attachment_cb (EvSidebarAttachments  *attachbar,
+                                   EvAttachment          *attachment,
+                                   const char            *uri,
+                                   EvWindow              *ev_window)
+{
+	GFile    *target_file;
+	gboolean  is_native;
+	gboolean  success;
+
+	target_file = g_file_new_for_uri (uri);
+	is_native = g_file_is_native (target_file);
+
+	success = save_attachment_to_target_file (attachment,
+	                                          target_file,
+	                                          FALSE,
+	                                          is_native,
+	                                          ev_window);
+
+	g_object_unref (target_file);
+	return success;
+}
+
 static void
 find_sidebar_result_activated_cb (EvFindSidebar *find_sidebar,
 				  gint           page,
@@ -6555,52 +6632,14 @@ attachment_save_dialog_response_cb (GtkWidget *fc,
 	
 	for (l = ev_window->priv->attach_list; l && l->data; l = g_list_next (l)) {
 		EvAttachment *attachment;
-		GFile        *save_to = NULL;
-		GError       *error = NULL;
 		
 		attachment = (EvAttachment *) l->data;
 
-		if (is_native) {
-			if (is_dir) {
-				save_to = g_file_get_child (target_file,
-                                    /* FIXMEchpe: file name encoding! */
-							    ev_attachment_get_name (attachment));
-			} else {
-				save_to = g_object_ref (target_file);
-			}
-		} else {
-			save_to = ev_mkstemp_file ("saveattachment.XXXXXX", &error);
-		}
-
-                if (save_to)
-                        ev_attachment_save (attachment, save_to, &error);
-		
-		if (error) {
-			ev_window_error_message (ev_window, error, 
-						 "%s", _("The attachment could not be saved."));
-			g_error_free (error);
-			g_object_unref (save_to);
-
-			continue;
-		}
-
-		if (!is_native) {
-			GFile *dest_file;
-
-			if (is_dir) {
-				dest_file = g_file_get_child (target_file,
-							      ev_attachment_get_name (attachment));
-			} else {
-				dest_file = g_object_ref (target_file);
-			}
-
-			ev_window_save_remote (ev_window, EV_SAVE_ATTACHMENT,
-					       save_to, dest_file);
-
-			g_object_unref (dest_file);
-		}
-
-		g_object_unref (save_to);
+		save_attachment_to_target_file (attachment,
+		                                target_file,
+		                                is_dir,
+		                                is_native,
+		                                ev_window);
 	}
 
 	g_free (uri);
@@ -7019,6 +7058,10 @@ ev_window_init (EvWindow *ev_window)
 	g_signal_connect_object (sidebar_widget,
 				 "popup",
 				 G_CALLBACK (attachment_bar_menu_popup_cb),
+				 ev_window, 0);
+	g_signal_connect_object (sidebar_widget,
+				 "save-attachment",
+				 G_CALLBACK (attachment_bar_save_attachment_cb),
 				 ev_window, 0);
 	gtk_widget_show (sidebar_widget);
 	ev_sidebar_add_page (EV_SIDEBAR (ev_window->priv->sidebar),

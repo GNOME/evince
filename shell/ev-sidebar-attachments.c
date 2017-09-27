@@ -54,10 +54,22 @@ enum {
 
 enum {
 	SIGNAL_POPUP_MENU,
+	SIGNAL_SAVE_ATTACHMENT,
 	N_SIGNALS
 };
 
+enum {
+	EV_DND_TARGET_XDS,
+	EV_DND_TARGET_TEXT_URI_LIST
+};
 static guint signals[N_SIGNALS];
+
+#define XDS_ATOM                gdk_atom_intern_static_string  ("XdndDirectSave0")
+#define TEXT_ATOM               gdk_atom_intern_static_string  ("text/plain")
+#define STRING_ATOM             gdk_atom_intern_static_string  ("STRING")
+#define MAX_XDS_ATOM_VAL_LEN    4096
+#define XDS_ERROR               'E'
+#define XDS_SUCCESS             'S'
 
 struct _EvSidebarAttachmentsPrivate {
 	GtkWidget      *icon_view;
@@ -387,69 +399,239 @@ ev_sidebar_attachments_screen_changed (GtkWidget *widget,
 	}
 }
 
-static void
-ev_sidebar_attachments_drag_data_get (GtkWidget        *widget,
-				      GdkDragContext   *drag_context,
-				      GtkSelectionData *data,
-				      guint             info,
-				      guint             time,
-				      gpointer          user_data)
+
+static gchar *
+read_xds_property (GdkDragContext *context)
 {
-	EvSidebarAttachments *ev_attachbar = EV_SIDEBAR_ATTACHMENTS (user_data);
-	GList                *selected = NULL, *l;
-        GPtrArray            *uris;
-        char                **uri_list;
+	guchar *prop_text;
+	gint    length;
+	gchar  *retval = NULL;
+
+	g_assert (context != NULL);
+
+	if (gdk_property_get (gdk_drag_context_get_source_window (context), XDS_ATOM, TEXT_ATOM,
+	                      0, MAX_XDS_ATOM_VAL_LEN, FALSE,
+	                      NULL, NULL, &length, &prop_text)
+	    && prop_text) {
+
+		/* g_strndup will null terminate the string */
+		retval = g_strndup ((const gchar *) prop_text, length);
+		g_free (prop_text);
+	}
+
+	return retval;
+}
+
+static void
+write_xds_property (GdkDragContext *context,
+                    const gchar *value)
+{
+	g_assert (context != NULL);
+
+	if (value)
+		gdk_property_change (gdk_drag_context_get_source_window (context), XDS_ATOM,
+		                     TEXT_ATOM, 8, GDK_PROP_MODE_REPLACE,
+		                     (const guchar *) value, strlen (value));
+	else
+		gdk_property_delete (gdk_drag_context_get_source_window (context), XDS_ATOM);
+}
+
+/*
+ * Copied from add_custom_button_to_dialog () in gtk+, from file
+ * gtkfilechooserwidget.c
+ */
+static void
+ev_add_custom_button_to_dialog (GtkDialog   *dialog,
+                                const gchar *mnemonic_label,
+                                const gchar *stock_id,
+                                gint         response_id)
+{
+	GtkWidget *button;
+
+	button = gtk_button_new_with_mnemonic (mnemonic_label);
+	gtk_widget_set_can_default (button, TRUE);
+	gtk_button_set_image (GTK_BUTTON (button),
+	gtk_image_new_from_stock (stock_id, GTK_ICON_SIZE_BUTTON));
+	gtk_widget_show (button);
+
+	gtk_dialog_add_action_widget (GTK_DIALOG (dialog), button, response_id);
+}
+
+/* Presents an overwrite confirmation dialog; returns whether the file
+ * should be overwritten.
+ * Taken from confirm_dialog_should_accept_filename () in gtk+, from file
+ * gtkfilechooserwidget.c
+ */
+static gboolean
+ev_sidebar_attachments_confirm_overwrite (EvSidebarAttachments   *attachbar,
+                                          const gchar            *uri)
+{
+	GtkWidget *toplevel, *dialog;
+	int        response;
+	gchar     *filename, *basename;
+	GFile     *file;
+
+	filename = g_filename_from_uri (uri, NULL, NULL);
+	if (!g_file_test (filename, G_FILE_TEST_EXISTS)) {
+		g_free (filename);
+		return TRUE;
+	}
+	g_free (filename);
+
+	file = g_file_new_for_uri (uri);
+	basename = g_file_get_basename (file);
+	g_object_unref (file);
+
+	toplevel = gtk_widget_get_toplevel (GTK_WIDGET (attachbar));
+	dialog = gtk_message_dialog_new (gtk_widget_is_toplevel (toplevel) ? GTK_WINDOW (toplevel) : NULL,
+	                                 GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
+	                                 GTK_MESSAGE_QUESTION,
+	                                 GTK_BUTTONS_NONE,
+	                                 _("A file named \"%s\" already exists.  Do you want to "
+	                                   "replace it?"),
+	                                 basename);
+	gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog),
+	                                          _("The file \"%s\" already exists.  Replacing"
+	                                            " it will overwrite its contents."),
+	                                          uri);
+
+	gtk_dialog_add_button (GTK_DIALOG (dialog), GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL);
+	ev_add_custom_button_to_dialog (GTK_DIALOG (dialog), _("_Replace"),
+	                                GTK_STOCK_SAVE_AS, GTK_RESPONSE_ACCEPT);
+	gtk_dialog_set_alternative_button_order (GTK_DIALOG (dialog),
+	                                         GTK_RESPONSE_ACCEPT,
+	                                         GTK_RESPONSE_CANCEL,
+	                                         -1);
+	gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_ACCEPT);
+
+	if (gtk_window_has_group (GTK_WINDOW (toplevel)))
+		gtk_window_group_add_window (gtk_window_get_group (GTK_WINDOW (toplevel)),
+		                             GTK_WINDOW (dialog));
+
+	response = gtk_dialog_run (GTK_DIALOG (dialog));
+
+	gtk_widget_destroy (dialog);
+
+	return (response == GTK_RESPONSE_ACCEPT);
+}
+
+static EvAttachment *
+ev_sidebar_attachments_get_selected_attachment (EvSidebarAttachments *ev_attachbar)
+{
+	EvAttachment *attachment;
+	GList        *selected = NULL;
+	GtkTreeIter   iter;
+	GtkTreePath  *path;
 
 	selected = gtk_icon_view_get_selected_items (GTK_ICON_VIEW (ev_attachbar->priv->icon_view));
+
 	if (!selected)
-		return;
+		return NULL;
 
-        uris = g_ptr_array_new ();
-	
-	for (l = selected; l && l->data; l = g_list_next (l)) {
-		EvAttachment *attachment;
-		GtkTreePath  *path;
-		GtkTreeIter   iter;
-		GFile        *file;
-		gchar        *template;
-		GError       *error = NULL;
-		
-		path = (GtkTreePath *) l->data;
+	if (!selected->data) {
+		g_list_free (selected);
+		return NULL;
+	}
 
-		gtk_tree_model_get_iter (GTK_TREE_MODEL (ev_attachbar->priv->model),
-					 &iter, path);
-		gtk_tree_model_get (GTK_TREE_MODEL (ev_attachbar->priv->model), &iter,
-				    COLUMN_ATTACHMENT, &attachment,
-				    -1);
+	path = (GtkTreePath *) selected->data;
+
+	gtk_tree_model_get_iter (GTK_TREE_MODEL (ev_attachbar->priv->model),
+	                         &iter, path);
+	gtk_tree_model_get (GTK_TREE_MODEL (ev_attachbar->priv->model), &iter,
+	                    COLUMN_ATTACHMENT, &attachment,
+	                    -1);
+
+	gtk_tree_path_free (path);
+	g_list_free (selected);
+
+	return attachment;
+}
+
+static void
+ev_sidebar_attachments_drag_begin (GtkWidget            *widget,
+                                   GdkDragContext       *drag_context,
+                                   EvSidebarAttachments *ev_attachbar)
+{
+	EvAttachment         *attachment;
+	gchar                *filename;
+
+	attachment = ev_sidebar_attachments_get_selected_attachment (ev_attachbar);
+
+        if (!attachment)
+                return;
+
+	filename = g_build_filename (ev_attachment_get_name (attachment), NULL);
+	write_xds_property (drag_context, filename);
+
+	g_free (filename);
+	g_object_unref (attachment);
+}
+
+static void
+ev_sidebar_attachments_drag_data_get (GtkWidget            *widget,
+				      GdkDragContext       *drag_context,
+				      GtkSelectionData     *data,
+				      guint                 info,
+				      guint                 time,
+				      EvSidebarAttachments *ev_attachbar)
+{
+	EvAttachment         *attachment;
+
+	attachment = ev_sidebar_attachments_get_selected_attachment (ev_attachbar);
+
+        if (!attachment)
+                return;
+
+	if (info == EV_DND_TARGET_XDS) {
+		guchar to_send = XDS_ERROR;
+		gchar *uri;
+
+		uri = read_xds_property (drag_context);
+		if (!uri) {
+			g_object_unref (attachment);
+			return;
+		}
+
+		if (ev_sidebar_attachments_confirm_overwrite (ev_attachbar, uri)) {
+			gboolean success;
+
+			g_signal_emit (ev_attachbar, 
+			               signals[SIGNAL_SAVE_ATTACHMENT], 
+			               0, 
+			               attachment, 
+			               uri, 
+			               &success);
+
+			if (success)
+				to_send = XDS_SUCCESS;
+		}
+		g_free (uri);
+		gtk_selection_data_set (data, STRING_ATOM, 8, &to_send, sizeof (to_send));
+	} else {
+		GError *error = NULL;
+		GFile  *file;
+		gchar  *uri_list[2];
+		gchar  *template;
 
                 /* FIXMEchpe: convert to filename encoding first! */
                 template = g_strdup_printf ("%s.XXXXXX", ev_attachment_get_name (attachment));
                 file = ev_mkstemp_file (template, &error);
                 g_free (template);
-		
-		if (file != NULL && ev_attachment_save (attachment, file, &error)) {
-			gchar *uri;
 
-			uri = g_file_get_uri (file);
-                        g_ptr_array_add (uris, uri);
+		if (file != NULL && ev_attachment_save (attachment, file, &error)) {
+			uri_list[0] = g_file_get_uri (file);
+			uri_list[1] = NULL; /* NULL-terminate */
+			g_object_unref (file);
 		}
-	
+
 		if (error) {
 			g_warning ("%s", error->message);
 			g_error_free (error);
 		}
-
-		gtk_tree_path_free (path);
-		g_object_unref (file);
-		g_object_unref (attachment);
+		gtk_selection_data_set_uris (data, uri_list);
+		g_free (uri_list[0]);
 	}
-
-        g_ptr_array_add (uris, NULL); /* NULL-terminate */
-        uri_list = (char **) g_ptr_array_free (uris, FALSE);
-        gtk_selection_data_set_uris (data, uri_list);
-        g_strfreev (uri_list);
-
-	g_list_free (selected);
+	g_object_unref (attachment);
 }
 
 static void
@@ -525,6 +707,17 @@ ev_sidebar_attachments_class_init (EvSidebarAttachmentsClass *ev_attachbar_class
 			      G_TYPE_NONE, 1,
 			      G_TYPE_POINTER);
 
+	signals[SIGNAL_SAVE_ATTACHMENT] =
+		g_signal_new ("save-attachment",
+			      G_TYPE_FROM_CLASS (g_object_class),
+			      G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
+			      G_STRUCT_OFFSET (EvSidebarAttachmentsClass, save_attachment),
+			      NULL, NULL,
+			      g_cclosure_marshal_generic,
+			      G_TYPE_BOOLEAN, 2,
+			      G_TYPE_OBJECT,
+		              G_TYPE_STRING);
+	
 	g_object_class_override_property (g_object_class,
 					  PROP_WIDGET,
 					  "main-widget");
@@ -535,6 +728,9 @@ ev_sidebar_attachments_init (EvSidebarAttachments *ev_attachbar)
 {
 	GtkWidget *swindow;
 	
+	static const GtkTargetEntry targets[] = { {"text/uri-list", 0, EV_DND_TARGET_TEXT_URI_LIST},
+	                                          {"XdndDirectSave0", 0, EV_DND_TARGET_XDS}};
+
 	ev_attachbar->priv = EV_SIDEBAR_ATTACHMENTS_GET_PRIVATE (ev_attachbar);
 
 	swindow = gtk_scrolled_window_new (NULL, NULL);
@@ -582,14 +778,18 @@ ev_sidebar_attachments_init (EvSidebarAttachments *ev_attachbar)
 	gtk_icon_view_enable_model_drag_source (
 		GTK_ICON_VIEW (ev_attachbar->priv->icon_view),
 		GDK_BUTTON1_MASK,
-		NULL, 0,
-		GDK_ACTION_COPY);
-        gtk_drag_source_add_uri_targets (ev_attachbar->priv->icon_view);
+        	targets, G_N_ELEMENTS (targets),
+		GDK_ACTION_MOVE);
 
 	g_signal_connect (ev_attachbar->priv->icon_view,
 			  "drag-data-get",
 			  G_CALLBACK (ev_sidebar_attachments_drag_data_get),
 			  (gpointer) ev_attachbar);	
+
+	g_signal_connect (ev_attachbar->priv->icon_view,
+	                  "drag-begin",
+	                  G_CALLBACK (ev_sidebar_attachments_drag_begin),
+	                  (gpointer) ev_attachbar);
 }
 
 GtkWidget *

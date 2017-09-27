@@ -50,8 +50,11 @@ struct _EvSidebarAttachmentsClass {
 	GtkBoxClass base_class;
 
 	/* Signals */
-	void (*popup_menu) (EvSidebarAttachments *ev_attachbar,
-			    EvAttachment    *attachment);
+	void (*popup_menu)      (EvSidebarAttachments *ev_attachbar,
+			         EvAttachment         *attachment);
+	void (*save_attachment) (EvSidebarAttachments *ev_attachbar,
+			         EvAttachment         *attachment,
+	                         const char          *uri);
 };
 
 GType      ev_sidebar_attachments_get_type     (void) G_GNUC_CONST;
