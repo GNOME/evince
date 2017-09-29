@@ -12,10 +12,10 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: evince HEAD\n"
-"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
+"Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evince&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2016-08-14 15:47+0000\n"
-"PO-Revision-Date: 2016-09-13 10:55+0430\n"
+"POT-Creation-Date: 2017-07-22 13:03+0000\n"
+"PO-Revision-Date: 2017-09-29 21:33+0330\n"
 "Last-Translator: Arash Mousavi <mousavi.arash@gmail.com>\n"
 "Language-Team: Persian\n"
 "Language: fa\n"
@@ -24,54 +24,36 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Poedit-SourceCharset: utf-8\n"
-"X-Generator: Poedit 1.8.9\n"
+"X-Generator: Poedit 2.0.4\n"
 
-#: ../backend/comics/comics-document.c:210
-#, c-format
-msgid "Error launching the command “%s” in order to decompress the comic book: %s"
-msgstr "خطا در راه‌اندازی فرمان «%s» جهت نافشرده‌سازی کتاب کمیک: %s"
+#: ../backend/comics/comics-document.c:99 ../backend/comics/comics-document.c:121
+msgid "File is corrupted"
+msgstr "پرونده مخدوش است"
 
-#: ../backend/comics/comics-document.c:224
-#, c-format
-msgid "The command “%s” failed at decompressing the comic book."
-msgstr "فرمان «%s» در نافشرده‌کردن کمیک شکست خورد."
+#: ../backend/comics/comics-document.c:151
+msgid "Archive is encrypted"
+msgstr "آرشیو رمزگذاری شده است"
 
-#: ../backend/comics/comics-document.c:233
-#, c-format
-msgid "The command “%s” did not end normally."
-msgstr "فرمان «%s» به حالت عادی پایان نیافت."
+#: ../backend/comics/comics-document.c:156
+msgid "No files in archive"
+msgstr "پرونده‌ای در آرشیو پیدا نشد"
 
-#: ../backend/comics/comics-document.c:453
+#: ../backend/comics/comics-document.c:192
 #, c-format
 msgid "Not a comic book MIME type: %s"
 msgstr "این یک نوع MIME برای کتاب کمیک نیست: %s"
 
-#: ../backend/comics/comics-document.c:460
-msgid "Can't find an appropriate command to decompress this type of comic book"
-msgstr "فرمان مناسب برای نافشرده کردن این نوع کتاب کمدی پیدا نشد"
+#: ../backend/comics/comics-document.c:199
+msgid ""
+"libarchive lacks support for this comic book’s compression, please contact your "
+"distributor"
+msgstr ""
+"کتابخانهٔ libarchive از سیستم فشرده‌سازی این کمیک پشتیبانی نمی‌کند، لطفا با توزیع "
+"کنندهٔ خود تماس بگیرید"
 
-#: ../backend/comics/comics-document.c:515
-msgid "File corrupted"
-msgstr "پرونده‌ها مخدوشند"
-
-#: ../backend/comics/comics-document.c:528
-msgid "No files in archive"
-msgstr "پرونده‌ای در آرشیو پیدا نشد"
-
-#: ../backend/comics/comics-document.c:567
-#, c-format
-msgid "No images found in archive %s"
-msgstr "تصویری در آرشیو %s پیدا نشد"
-
-#: ../backend/comics/comics-document.c:817
-#, c-format
-msgid "There was an error deleting “%s”."
-msgstr "خطایی در حذف «%s» پیش آمد."
-
-#: ../backend/comics/comics-document.c:910
-#, c-format
-msgid "Error %s"
-msgstr "خطا %s"
+#: ../backend/comics/comics-document.c:240
+msgid "Can not get local path for archive"
+msgstr "امکان گرفتن مکانِ محلی آرشیو نیست"
 
 #: ../backend/comics/comicsdocument.evince-backend.in.in.h:1
 #: ../backend/comics/evince-comicsdocument.metainfo.xml.in.in.h:1
@@ -213,7 +195,7 @@ msgstr "غیر توکار"
 #.
 #: ../backend/pdf/ev-poppler.cc:1195
 msgid " (One of the Standard 14 Fonts)"
-msgstr "(یکی از ۱۴ قلم اصلی)"
+msgstr " (یکی از ۱۴ قلم اصلی)"
 
 #. Translators: string starting with a space
 #. * because it is directly appended to the font
@@ -222,7 +204,7 @@ msgstr "(یکی از ۱۴ قلم اصلی)"
 #.
 #: ../backend/pdf/ev-poppler.cc:1202
 msgid " (Not one of the Standard 14 Fonts)"
-msgstr "(یکی از ۱۴ قلم اصلی نیست)"
+msgstr " (یکی از ۱۴ قلم اصلی نیست)"
 
 #: ../backend/pdf/ev-poppler.cc:1209
 msgid "Encoding"
@@ -408,17 +390,17 @@ msgstr "به پیوندها اجازه بده تا سطح زوم را تغییر
 
 #: ../libdocument/ev-attachment.c:310 ../libdocument/ev-attachment.c:331
 #, c-format
-msgid "Couldn't save attachment “%s”: %s"
+msgid "Couldn’t save attachment “%s”: %s"
 msgstr "پیوست ذخیره نشد «%s»: %s"
 
 #: ../libdocument/ev-attachment.c:379
 #, c-format
-msgid "Couldn't open attachment “%s”: %s"
+msgid "Couldn’t open attachment “%s”: %s"
 msgstr "پیوست باز نشد «%s»: %s"
 
 #: ../libdocument/ev-attachment.c:414
 #, c-format
-msgid "Couldn't open attachment “%s”"
+msgid "Couldn’t open attachment “%s”"
 msgstr "پیوست باز نشد «%s»"
 
 #: ../libdocument/ev-document-factory.c:101
@@ -426,16 +408,16 @@ msgstr "پیوست باز نشد «%s»"
 msgid "File type %s (%s) is not supported"
 msgstr "نوع پرونده‌ی %s (%s) پشتیبانی نمی‌شود"
 
-#: ../libdocument/ev-document-factory.c:364 ../libdocument/ev-file-helpers.c:492
+#: ../libdocument/ev-document-factory.c:368 ../libdocument/ev-file-helpers.c:492
 #: ../libdocument/ev-file-helpers.c:538 ../libdocument/ev-file-helpers.c:557
 msgid "Unknown MIME Type"
 msgstr "نوع MIME نامعلوم"
 
-#: ../libdocument/ev-document-factory.c:552
+#: ../libdocument/ev-document-factory.c:577
 msgid "All Documents"
 msgstr "همه‌ی سندها"
 
-#: ../libdocument/ev-document-factory.c:579 ../shell/ev-utils.c:309
+#: ../libdocument/ev-document-factory.c:604 ../shell/ev-utils.c:309
 msgid "All Files"
 msgstr "همه‌ی پرونده‌ها"
 
@@ -460,8 +442,8 @@ msgid "of %d"
 msgstr "از %Id"
 
 #: ../libmisc/ev-page-action-widget.c:185 ../shell/ev-history.c:426
-#: ../shell/ev-sidebar-bookmarks.c:295 ../shell/ev-window.c:902
-#: ../shell/ev-window.c:4644
+#: ../shell/ev-sidebar-bookmarks.c:295 ../shell/ev-window.c:907
+#: ../shell/ev-window.c:4687
 #, c-format
 msgid "Page %s"
 msgstr "صفحه %s"
@@ -495,12 +477,12 @@ msgstr "پیدا کردن رخداد بعدی رشته‌ی جستجو شده"
 msgid "Failed to render page %d"
 msgstr "بارگیری صفحه %Id شکست خورد"
 
-#: ../libview/ev-jobs.c:896
+#: ../libview/ev-jobs.c:901
 #, c-format
 msgid "Failed to create thumbnail for page %d"
 msgstr "ایجاد تصویر بندانگشتی برای صفحه %Id شکست خورد"
 
-#: ../libview/ev-jobs.c:2026
+#: ../libview/ev-jobs.c:2033
 #, c-format
 msgid "Failed to print page %d: %s"
 msgstr "چاپ صفحه شکست خورد %Id: %s"
@@ -508,11 +490,11 @@ msgstr "چاپ صفحه شکست خورد %Id: %s"
 #. Initial state
 #: ../libview/ev-print-operation.c:350
 msgid "Preparing preview…"
-msgstr "در حال آماده‌سازی پیش‌نمایش..."
+msgstr "در حال آماده‌سازی پیش‌نمایش…"
 
 #: ../libview/ev-print-operation.c:352 ../libview/ev-print-operation.c:362
 msgid "Finishing…"
-msgstr "در حال به پایان بردن..."
+msgstr "در حال به پایان بردن…"
 
 #: ../libview/ev-print-operation.c:354
 #, c-format
@@ -522,7 +504,7 @@ msgstr "در حال ساخت پیش‌نمایش: صفحه‌ی %Id از %Id"
 #. Initial state
 #: ../libview/ev-print-operation.c:360
 msgid "Preparing to print…"
-msgstr "در حال آماده‌سازی برای چاپ..."
+msgstr "در حال آماده‌سازی برای چاپ…"
 
 #: ../libview/ev-print-operation.c:364
 #, c-format
@@ -568,23 +550,23 @@ msgid ""
 "Scale document pages to fit the selected printer page. Select from one of the "
 "following:\n"
 "\n"
-"• \"None\": No page scaling is performed.\n"
+"• “None”: No page scaling is performed.\n"
 "\n"
-"• \"Shrink to Printable Area\": Document pages larger than the printable area "
-"are reduced to fit the printable area of the printer page.\n"
+"• “Shrink to Printable Area”: Document pages larger than the printable area are "
+"reduced to fit the printable area of the printer page.\n"
 "\n"
-"• \"Fit to Printable Area\": Document pages are enlarged or reduced as required "
+"• “Fit to Printable Area”: Document pages are enlarged or reduced as required "
 "to fit the printable area of the printer page.\n"
 msgstr ""
 "مقیاس‌بندی صفحه‌های سند برای جور شدن بر صفحه‌ی چاپگر گزیده شده. یکی از موارد زیر "
 "را بگزینید.\n"
 "\n"
-"• \"None\": هیچ مقیاس بندی انجام نشود \n"
+"• “None”: هیچ مقیاس بندی انجام نشود \n"
 "\n"
-"\"Shrink to Printable Area\": صفحه‌های سند بزرگتر از ناحیه‌ی چاپ برای جور شدن بر "
+"• “Shrink to Printable Area”: صفحه‌های سند بزرگتر از ناحیه‌ی چاپ برای جور شدن بر "
 "ناحیه‌ی قابل چاپ صفحه‌ی چاپگر کوچکتر می‌شوند. \n"
 "\n"
-"\"Fit to Printable Area\": صفحه‌های سند بزرگتر یا کوچکتر می‌شوند تا اندازه‌ای که "
+"• “Fit to Printable Area”: صفحه‌های سند بزرگتر یا کوچکتر می‌شوند تا اندازه‌ای که "
 "برای جور شدن بر ناحیه‌ی قابل چاپ صفحه‌ی چاپگر لازم باشد \n"
 
 #: ../libview/ev-print-operation.c:1982
@@ -632,48 +614,48 @@ msgstr "لغزشِ نما به پایین"
 
 #: ../libview/ev-view-accessible.c:129
 msgid "Document View"
-msgstr "نما سند"
+msgstr "نمای سند"
 
-#: ../libview/ev-view.c:2031
+#: ../libview/ev-view.c:2033
 msgid "Go to first page"
 msgstr "رفتن به صفحه‌ی نخست"
 
-#: ../libview/ev-view.c:2033
+#: ../libview/ev-view.c:2035
 msgid "Go to previous page"
 msgstr "رفتن به صفحه‌ی قبلی"
 
-#: ../libview/ev-view.c:2035
+#: ../libview/ev-view.c:2037
 msgid "Go to next page"
 msgstr "رفتن به صفحه‌ی بعدی"
 
-#: ../libview/ev-view.c:2037
+#: ../libview/ev-view.c:2039
 msgid "Go to last page"
 msgstr "رفتن به صفحه‌ی پایانی"
 
-#: ../libview/ev-view.c:2039
+#: ../libview/ev-view.c:2041
 msgid "Go to page"
 msgstr "رفتن به صفحه"
 
-#: ../libview/ev-view.c:2041
+#: ../libview/ev-view.c:2043
 msgid "Find"
 msgstr "پیدا کردن"
 
-#: ../libview/ev-view.c:2069
+#: ../libview/ev-view.c:2071
 #, c-format
 msgid "Go to page %s"
 msgstr "رفتن به صفحه‌ی %s"
 
-#: ../libview/ev-view.c:2075
+#: ../libview/ev-view.c:2077
 #, c-format
 msgid "Go to %s on file “%s”"
 msgstr "برو به %s در پرونده‌ی «%s»"
 
-#: ../libview/ev-view.c:2078
+#: ../libview/ev-view.c:2080
 #, c-format
 msgid "Go to file “%s”"
 msgstr "رفتن به پرونده‌ی «%s»"
 
-#: ../libview/ev-view.c:2086
+#: ../libview/ev-view.c:2088
 #, c-format
 msgid "Launch %s"
 msgstr "راه‌اندازی %s"
@@ -691,8 +673,8 @@ msgid "Delete the temporary file"
 msgstr "حذف پرونده‌ی موقت"
 
 #: ../previewer/ev-previewer.c:46
-msgid "Print settings file"
-msgstr "چاپ پرونده‌ی تنظیمات"
+msgid "File specifying print settings"
+msgstr "پرونده حاوی تنظیمات چاپ"
 
 #: ../previewer/ev-previewer.c:46
 msgid "FILE"
@@ -702,13 +684,13 @@ msgstr "FILE"
 msgid "GNOME Document Previewer"
 msgstr "پیش‌نمایش‌گر سند گنوم"
 
-#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3257
+#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3270
 msgid "Failed to print document"
 msgstr "چاپ سند شکست خورد"
 
 #: ../previewer/ev-previewer-window.c:223
 #, c-format
-msgid "The selected printer '%s' could not be found"
+msgid "The selected printer “%s” could not be found"
 msgstr "چاپگر انتخاب شده «%s» پیدا نشد"
 
 #: ../previewer/ev-previewer-window.c:270 ../shell/evince-menus.ui.h:40
@@ -998,9 +980,9 @@ msgstr "گذرواژه‌ی سند %s"
 
 #. Create tree view
 #: ../shell/ev-loading-message.c:50 ../shell/ev-sidebar-annotations.c:125
-#: ../shell/ev-sidebar-layers.c:125 ../shell/ev-sidebar-links.c:261
+#: ../shell/ev-sidebar-layers.c:125 ../shell/ev-sidebar-links.c:268
 msgid "Loading…"
-msgstr "در حال بارکردن..."
+msgstr "در حال بارکردن…"
 
 #: ../shell/ev-password-view.c:142
 msgid ""
@@ -1123,9 +1105,9 @@ msgstr "نشانک‌ها"
 msgid "Layers"
 msgstr "لایه‌ها"
 
-#: ../shell/ev-sidebar-links.c:337
+#: ../shell/ev-sidebar-links.c:344
 msgid "Print…"
-msgstr "چاپ..."
+msgstr "چاپ…"
 
 #. Translators: This is the title for the sidebar pane that
 #. * shows the Outline or Table of Contents of the document.
@@ -1133,11 +1115,11 @@ msgstr "چاپ..."
 #. * your language.  The sidebar cannot be shrinked smaller than
 #. * the longest title in there.
 #.
-#: ../shell/ev-sidebar-links.c:728
+#: ../shell/ev-sidebar-links.c:750
 msgid "Outline"
 msgstr "رئوس مطالب"
 
-#: ../shell/ev-sidebar-thumbnails.c:1089
+#: ../shell/ev-sidebar-thumbnails.c:1135
 msgid "Thumbnails"
 msgstr "تصاویر بندانگشتی"
 
@@ -1177,134 +1159,140 @@ msgstr "تنظیم سطح بزرگنمایی"
 msgid "Supported Image Files"
 msgstr "پشتیبانی از پرونده‌های تصویر"
 
-#: ../shell/ev-window.c:1536
+#: ../shell/ev-window.c:1541
 msgid "The document contains no pages"
 msgstr "سند هیچ صفحه‌ای ندارد"
 
-#: ../shell/ev-window.c:1539
+#: ../shell/ev-window.c:1544
 msgid "The document contains only empty pages"
 msgstr "سند تنها صفحه‌های خالی دارد"
 
-#: ../shell/ev-window.c:1752 ../shell/ev-window.c:1918
+#: ../shell/ev-window.c:1758 ../shell/ev-window.c:1924
 #, c-format
 msgid "Unable to open document “%s”."
-msgstr "باز کردن سند «%s» ممکن نیست"
+msgstr "باز کردن سند «%s» ممکن نیست."
 
-#: ../shell/ev-window.c:1882
+#: ../shell/ev-window.c:1888
 #, c-format
 msgid "Loading document from “%s”"
 msgstr "در حال بار کردن سند از «%s»"
 
-#: ../shell/ev-window.c:2033 ../shell/ev-window.c:2361
+#: ../shell/ev-window.c:2039 ../shell/ev-window.c:2367
 #, c-format
 msgid "Downloading document (%d%%)"
 msgstr "در حال بارگیری سند (٪%Id)"
 
-#: ../shell/ev-window.c:2066
+#: ../shell/ev-window.c:2072
 msgid "Failed to load remote file."
 msgstr "بار کردن سند شکست خورد."
 
-#: ../shell/ev-window.c:2305
+#: ../shell/ev-window.c:2311
 #, c-format
 msgid "Reloading document from %s"
 msgstr "در حال بار کردن مجدد سند از %s"
 
-#: ../shell/ev-window.c:2337
+#: ../shell/ev-window.c:2343
 msgid "Failed to reload document."
 msgstr "بار کردن مجدد سند شکست خورد."
 
-#: ../shell/ev-window.c:2553
+#: ../shell/ev-window.c:2559
 msgid "Open Document"
 msgstr "باز کردن سند"
 
-#: ../shell/ev-window.c:2626
+#: ../shell/ev-window.c:2632
 #, c-format
 msgid "Saving document to %s"
 msgstr "درحال ذخیره‌ی سند در %s"
 
-#: ../shell/ev-window.c:2629
+#: ../shell/ev-window.c:2635
 #, c-format
 msgid "Saving attachment to %s"
 msgstr "درحال ذخیره‌ی پیوست در %s"
 
-#: ../shell/ev-window.c:2632
+#: ../shell/ev-window.c:2638
 #, c-format
 msgid "Saving image to %s"
 msgstr "درحال ذخیره‌ی تصویر در %s"
 
-#: ../shell/ev-window.c:2676 ../shell/ev-window.c:2776
+#: ../shell/ev-window.c:2682 ../shell/ev-window.c:2782
 #, c-format
 msgid "The file could not be saved as “%s”."
 msgstr "پرونده با نام «%s» قابل ذخیره نیست."
 
-#: ../shell/ev-window.c:2707
+#: ../shell/ev-window.c:2713
 #, c-format
 msgid "Uploading document (%d%%)"
 msgstr "در حال بارگذاری سند (٪%Id)"
 
-#: ../shell/ev-window.c:2711
+#: ../shell/ev-window.c:2717
 #, c-format
 msgid "Uploading attachment (%d%%)"
 msgstr "در حال بارگذاری پیوست (٪%Id)"
 
-#: ../shell/ev-window.c:2715
+#: ../shell/ev-window.c:2721
 #, c-format
 msgid "Uploading image (%d%%)"
 msgstr "بارگذاری تصویری (٪%Id)"
 
-#: ../shell/ev-window.c:2827
+#: ../shell/ev-window.c:2833
 msgid "Save a Copy"
 msgstr "ذخیره‌ی یک رونوشت"
 
-#: ../shell/ev-window.c:2903
+#: ../shell/ev-window.c:2909
 msgid "Could not send current document"
 msgstr "نمی‌توان سند فعلی را ارسال کرد"
 
-#: ../shell/ev-window.c:2937
-msgid "Could not open the containing folder"
-msgstr "نمی‌توان پوشه‌ی حاوی پرونده را باز کرد"
-
-#: ../shell/ev-window.c:3201
+#: ../shell/ev-window.c:3214
 #, c-format
 msgid "%d pending job in queue"
 msgid_plural "%d pending jobs in queue"
 msgstr[0] "%Id کار منتظر در صف"
 
-#: ../shell/ev-window.c:3314
+#: ../shell/ev-window.c:3327
 #, c-format
 msgid "Printing job “%s”"
 msgstr "در حال چاپ «%s»"
 
-#: ../shell/ev-window.c:3517
-msgid ""
-"Document contains form fields that have been filled out. If you don't save a "
-"copy, changes will be permanently lost."
-msgstr ""
-"سند دارای فیلدهایی است که پُر شده‌اند. اگر یک رونوشت ذخیره نکنید، تغییرات برای "
-"همیشه پاک خواهند شد."
+#: ../shell/ev-window.c:3542
+msgid "Document contains form fields that have been filled out. "
+msgstr "سند دارای فیلدهایی است که پُر شده‌اند. "
 
-#: ../shell/ev-window.c:3521
-msgid ""
-"Document contains new or modified annotations. If you don't save a copy, "
-"changes will be permanently lost."
-msgstr ""
-"سند دارای حاشیه‌نویسی‌های جدید یا دست‌کاری شده است. اگر یک رونوشت ذخیره نکنید، "
-"تغییرات برای همیشه پاک خواهند شد."
+#: ../shell/ev-window.c:3545
+msgid "Document contains new or modified annotations. "
+msgstr "سند حاوی حاشیه‌نویسی‌های جدید یا تغییر یافته است. "
 
-#: ../shell/ev-window.c:3528
+#: ../shell/ev-window.c:3557
+#, c-format
+msgid "Reload document “%s”?"
+msgstr "بارگذاری مجدد «%s»؟"
+
+#: ../shell/ev-window.c:3559
+msgid "If you reload the document, changes will be permanently lost."
+msgstr "اگر سند را بازخوانی کنید، تغییرات برای همیشه از بین خواهند رفت."
+
+#: ../shell/ev-window.c:3563
+msgid "Reload"
+msgstr "بازخوانی"
+
+#: ../shell/ev-window.c:3570
 #, c-format
 msgid "Save a copy of document “%s” before closing?"
 msgstr "قبل از بستن، یک رونوشت از سند «%s» ذخیره شود؟"
 
-#: ../shell/ev-window.c:3547
+#: ../shell/ev-window.c:3572
+msgid "If you don’t save a copy, changes will be permanently lost."
+msgstr ""
+"اگر یک رونوشت از سند را ذخیره نکنید، تغییرات برای همیشه از بین خواهند رفت."
+
+#: ../shell/ev-window.c:3574
 msgid "Close _without Saving"
 msgstr "بستن _بدون ذخیره کردن"
 
-#: ../shell/ev-window.c:3551
+#: ../shell/ev-window.c:3578
 msgid "Save a _Copy"
 msgstr "ذخیره‌ی یک _رونوشت"
 
-#: ../shell/ev-window.c:3625
+#: ../shell/ev-window.c:3662
 #, c-format
 msgid "Wait until print job “%s” finishes before closing?"
 msgstr "قبل از بستن، تا پایان کار چاپ «%s» منتظر شوم؟"
@@ -1312,38 +1300,38 @@ msgstr "قبل از بستن، تا پایان کار چاپ «%s» منتظر �
 #. TRANS: the singular form is not really used as n_print_jobs > 1
 #. but some languages distinguish between different plurals forms,
 #. so the ngettext is needed.
-#: ../shell/ev-window.c:3631
+#: ../shell/ev-window.c:3668
 #, c-format
 msgid "There is %d print job active. Wait until print finishes before closing?"
 msgid_plural ""
 "There are %d print jobs active. Wait until print finishes before closing?"
 msgstr[0] "%Id مورد جهت چاپ فعال هستند. قبل از بستن تا پایان چاپ منتظر شوم؟"
 
-#: ../shell/ev-window.c:3646
+#: ../shell/ev-window.c:3683
 msgid "If you close the window, pending print jobs will not be printed."
 msgstr "اگر پنجره را ببندید، کارهای در انتظارچاپ، چاپ نخواهند شد."
 
-#: ../shell/ev-window.c:3650
+#: ../shell/ev-window.c:3687
 msgid "Cancel _print and Close"
 msgstr "لغو _چاپ و بستن"
 
-#: ../shell/ev-window.c:3654
+#: ../shell/ev-window.c:3691
 msgid "Close _after Printing"
 msgstr "بستن _بعد از چاپ"
 
-#: ../shell/ev-window.c:4185
+#: ../shell/ev-window.c:4222
 msgid "Running in presentation mode"
 msgstr "در حال اجرا در حالت ارائه"
 
-#: ../shell/ev-window.c:5325
+#: ../shell/ev-window.c:5371
 msgid "Enable caret navigation?"
 msgstr "فعال‌سازی حالت پیمایش مکان‌نما؟"
 
-#: ../shell/ev-window.c:5327
+#: ../shell/ev-window.c:5373
 msgid "_Enable"
 msgstr "_فعال‌سازی"
 
-#: ../shell/ev-window.c:5330
+#: ../shell/ev-window.c:5376
 msgid ""
 "Pressing F7 turns the caret navigation on or off. This feature places a "
 "moveable cursor in text pages, allowing you to move around and select text with "
@@ -1351,41 +1339,41 @@ msgid ""
 msgstr ""
 "فشردن کلید F7 حالت پیمایش مکان‌نما را روشن یا خاموش می‌کند. این امکان یک مکان‌نمای "
 "قابل حرکت را در صفحات متنی قرار می‌دهد، که به شما اجازه می‌دهد در سند حرکت کنید و "
-"با کیبورد متن‌ها را انتخاب کنید. آیا مایلید که حالت پیمایش مکان‌نما را فعال کنید."
+"با کیبورد متن‌ها را انتخاب کنید. آیا مایلید که حالت پیمایش مکان‌نما را فعال کنید؟"
 
-#: ../shell/ev-window.c:5335
-msgid "Don't show this message again"
+#: ../shell/ev-window.c:5381
+msgid "Don’t show this message again"
 msgstr "این پیام را دوباره نشان نده"
 
-#: ../shell/ev-window.c:5850 ../shell/ev-window.c:5866
+#: ../shell/ev-window.c:5896 ../shell/ev-window.c:5912
 msgid "Unable to launch external application."
 msgstr "راه‌انداختن برنامه‌ی خارجی ممکن نیست."
 
-#: ../shell/ev-window.c:5923
+#: ../shell/ev-window.c:5969
 msgid "Unable to open external link"
 msgstr "بازکردن پیوند خارجی ممکن نیست"
 
-#: ../shell/ev-window.c:6126
-msgid "Couldn't find appropriate format to save image"
-msgstr "قالب مناسب برای ذخیره‌ی عکس یافت نشد"
+#: ../shell/ev-window.c:6172
+msgid "Couldn’t find appropriate format to save image"
+msgstr "قالب مناسب برای ذخیرهٔ عکس پیدا نشد"
 
-#: ../shell/ev-window.c:6158
+#: ../shell/ev-window.c:6204
 msgid "The image could not be saved."
 msgstr "تصویر ذخیره نشد."
 
-#: ../shell/ev-window.c:6193
+#: ../shell/ev-window.c:6239
 msgid "Save Image"
 msgstr "ذخیره‌ی تصویر"
 
-#: ../shell/ev-window.c:6352
+#: ../shell/ev-window.c:6398
 msgid "Unable to open attachment"
 msgstr "بازکردن پیوست ممکن نیست"
 
-#: ../shell/ev-window.c:6408
+#: ../shell/ev-window.c:6454
 msgid "The attachment could not be saved."
 msgstr "پیوست ذخیره نشد."
 
-#: ../shell/ev-window.c:6456
+#: ../shell/ev-window.c:6502
 msgid "Save Attachment"
 msgstr "ذخیره‌ی پیوست"
 
@@ -1587,7 +1575,7 @@ msgstr "_بازخوانی"
 
 #: ../shell/evince-menus.ui.h:21
 msgid "_Open…"
-msgstr "_باز کردن..."
+msgstr "_باز کردن…"
 
 #: ../shell/evince-menus.ui.h:22
 msgid "Op_en a Copy"
@@ -1595,11 +1583,11 @@ msgstr "بازکردن یک _رونوشت"
 
 #: ../shell/evince-menus.ui.h:23
 msgid "_Save a Copy…"
-msgstr "_ذخیره‌ی یک رونوشت..."
+msgstr "_ذخیره‌ی یک رونوشت…"
 
 #: ../shell/evince-menus.ui.h:24
 msgid "Send _To…"
-msgstr "ارسال _به..."
+msgstr "ارسال _به…"
 
 #: ../shell/evince-menus.ui.h:25
 msgid "Open Containing _Folder"
@@ -1607,11 +1595,11 @@ msgstr "باز کردن _پوشه‌ی محتوی آن"
 
 #: ../shell/evince-menus.ui.h:26
 msgid "_Print…"
-msgstr "_چاپ..."
+msgstr "_چاپ…"
 
 #: ../shell/evince-menus.ui.h:27
 msgid "P_roperties…"
-msgstr "ویژ_گی‌ها..."
+msgstr "ویژ_گی‌ها…"
 
 #: ../shell/evince-menus.ui.h:28
 msgid "_Copy"
@@ -1655,7 +1643,7 @@ msgstr "لغزش _خودکار"
 
 #: ../shell/evince-menus.ui.h:43
 msgid "_Save Image As…"
-msgstr "_ذخیره‌ی تصویر به نام..."
+msgstr "_ذخیره‌ی تصویر به نام…"
 
 #: ../shell/evince-menus.ui.h:44
 msgid "Copy _Image"
@@ -1667,11 +1655,11 @@ msgstr "_باز کردن پیوست"
 
 #: ../shell/evince-menus.ui.h:46
 msgid "_Save Attachment As…"
-msgstr "_ذخیره‌ی پیوست به نام..."
+msgstr "_ذخیره‌ی پیوست به نام…"
 
 #: ../shell/evince-menus.ui.h:47
 msgid "Annotation Properties…"
-msgstr "ویژگی‌های حاشیه‌نویسی..."
+msgstr "ویژگی‌های حاشیه‌نویسی…"
 
 #: ../shell/evince-menus.ui.h:48
 msgid "Remove Annotation"
@@ -1837,6 +1825,34 @@ msgid ""
 msgstr ""
 "این نمایشگر از قالب‌های مقابل پشتیبانی می‌کند:  PDF ،PS ،EPS ،XPS ،DjVu ،TIFF ،"
 "DVI (همراه با SyncTeX) و کتاب‌های کمیک (CBR ،CBT ،CBZ ،CB7)."
+
+#~ msgid ""
+#~ "Error launching the command “%s” in order to decompress the comic book: %s"
+#~ msgstr "خطا در راه‌اندازی فرمان «%s» جهت نافشرده‌سازی کتاب کمیک: %s"
+
+#~ msgid "The command “%s” failed at decompressing the comic book."
+#~ msgstr "فرمان «%s» در نافشرده‌کردن کمیک شکست خورد."
+
+#~ msgid "The command “%s” did not end normally."
+#~ msgstr "فرمان «%s» به حالت عادی پایان نیافت."
+
+#~ msgid "Can't find an appropriate command to decompress this type of comic book"
+#~ msgstr "فرمان مناسب برای نافشرده کردن این نوع کتاب کمدی پیدا نشد"
+
+#~ msgid "No images found in archive %s"
+#~ msgstr "تصویری در آرشیو %s پیدا نشد"
+
+#~ msgid "There was an error deleting “%s”."
+#~ msgstr "خطایی در حذف «%s» پیش آمد."
+
+#~ msgid "Error %s"
+#~ msgstr "خطا %s"
+
+#~ msgid "Print settings file"
+#~ msgstr "چاپ پرونده‌ی تنظیمات"
+
+#~ msgid "Could not open the containing folder"
+#~ msgstr "نمی‌توان پوشه‌ی حاوی پرونده را باز کرد"
 
 #~ msgid "Style:"
 #~ msgstr "سبک:"
@@ -2123,6 +2139,3 @@ msgstr ""
 
 #~ msgid "Cannot read data from file"
 #~ msgstr "داده از پرونده خوانده نمی‌شود"
-
-#~ msgid "Cannot find file in the ZIP archive"
-#~ msgstr "پرونده در بایگانی فشرده یافت نمی‌شود"
