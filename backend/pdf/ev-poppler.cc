@@ -250,22 +250,16 @@ pdf_document_save (EvDocument  *document,
 	gboolean retval;
 	GError *poppler_error = NULL;
 
-	if (pdf_document->forms_modified || pdf_document->annots_modified) {
-		retval = poppler_document_save (pdf_document->document,
-						uri, &poppler_error);
-		if (retval) {
-			pdf_document->forms_modified = FALSE;
-			pdf_document->annots_modified = FALSE;
-		}
+	retval = poppler_document_save (pdf_document->document,
+					uri, &poppler_error);
+	if (retval) {
+		pdf_document->forms_modified = FALSE;
+		pdf_document->annots_modified = FALSE;
+		ev_document_set_modified (EV_DOCUMENT (document), FALSE);
 	} else {
-		retval = poppler_document_save_a_copy (pdf_document->document,
-						       uri, &poppler_error);
-	}
-						       
-	if (! retval)
 		convert_error (poppler_error, error);
+	}
 
-	ev_document_set_modified (EV_DOCUMENT (document), FALSE);
 	return retval;
 }
 
