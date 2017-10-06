@@ -7502,6 +7502,13 @@ ev_view_class_init (EvViewClass *class)
 	class->move_cursor = ev_view_move_cursor;
 	class->activate = ev_view_activate;
 
+	/**
+	 * EvView:is-loading:
+	 *
+	 * Allows to implement a custom notification system.
+	 *
+	 * Since: 3.8
+	 */
 	g_object_class_install_property (object_class,
 					 PROP_IS_LOADING,
 					 g_param_spec_boolean ("is-loading",
