@@ -4131,7 +4131,6 @@ ev_window_run_fullscreen (EvWindow *window)
 
 	gtk_widget_set_size_request (window->priv->fs_eventbox, -1, 1);
 	gtk_widget_set_valign (window->priv->fs_eventbox, GTK_ALIGN_START);
-	gtk_revealer_set_transition_type (GTK_REVEALER (window->priv->fs_revealer), GTK_REVEALER_TRANSITION_TYPE_SLIDE_UP);
 	gtk_revealer_set_transition_duration (GTK_REVEALER (window->priv->fs_revealer), FULLSCREEN_TRANSITION_DURATION);
 
 	g_object_ref (window->priv->main_box);
