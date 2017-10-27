@@ -13,8 +13,8 @@ msgstr ""
 "Project-Id-Version: evince trunk\n"
 "Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evince&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2017-07-22 13:03+0000\n"
-"PO-Revision-Date: 2017-09-18 19:32+0300\n"
+"POT-Creation-Date: 2017-10-25 16:27+0000\n"
+"PO-Revision-Date: 2017-10-27 14:44+0300\n"
 "Last-Translator: Stas Solovey <whats_up@tut.by>\n"
 "Language-Team: Русский <gnome-cyr@gnome.org>\n"
 "Language: ru\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Poedit 2.0.3\n"
+"X-Generator: Poedit 2.0.4\n"
 
 #: ../backend/comics/comics-document.c:99
 #: ../backend/comics/comics-document.c:121
@@ -51,7 +51,7 @@ msgstr ""
 "libarchive не поддерживает формат сжатия этой книги комикса, обратитесь к "
 "дистрибьютору"
 
-#: ../backend/comics/comics-document.c:240
+#: ../backend/comics/comics-document.c:239
 msgid "Can not get local path for archive"
 msgstr "Не удается получить локальный путь для архива"
 
@@ -98,53 +98,53 @@ msgstr "Документы формата DVI"
 msgid "Adds support for reading DVI documents"
 msgstr "Добавляет поддержку для чтения документов в формате DVI"
 
-#: ../backend/pdf/ev-poppler.cc:679
+#: ../backend/pdf/ev-poppler.cc:674
 msgid "This work is in the Public Domain"
 msgstr "Эта работа находится в общественном достоянии"
 
 #. translators: this is the document security state
-#: ../backend/pdf/ev-poppler.cc:935 ../backend/pdf/ev-poppler.cc:941
+#: ../backend/pdf/ev-poppler.cc:930 ../backend/pdf/ev-poppler.cc:936
 msgid "Yes"
 msgstr "Да"
 
 #. translators: this is the document security state
-#: ../backend/pdf/ev-poppler.cc:938 ../backend/pdf/ev-poppler.cc:941
+#: ../backend/pdf/ev-poppler.cc:933 ../backend/pdf/ev-poppler.cc:936
 msgid "No"
 msgstr "Нет"
 
-#: ../backend/pdf/ev-poppler.cc:1072
+#: ../backend/pdf/ev-poppler.cc:1067
 msgid "Type 1"
 msgstr "Type 1"
 
-#: ../backend/pdf/ev-poppler.cc:1074
+#: ../backend/pdf/ev-poppler.cc:1069
 msgid "Type 1C"
 msgstr "Type 1C"
 
-#: ../backend/pdf/ev-poppler.cc:1076
+#: ../backend/pdf/ev-poppler.cc:1071
 msgid "Type 3"
 msgstr "Type 3"
 
-#: ../backend/pdf/ev-poppler.cc:1078
+#: ../backend/pdf/ev-poppler.cc:1073
 msgid "TrueType"
 msgstr "TrueType"
 
-#: ../backend/pdf/ev-poppler.cc:1080
+#: ../backend/pdf/ev-poppler.cc:1075
 msgid "Type 1 (CID)"
 msgstr "Type 1 (CID)"
 
-#: ../backend/pdf/ev-poppler.cc:1082
+#: ../backend/pdf/ev-poppler.cc:1077
 msgid "Type 1C (CID)"
 msgstr "Type 1C (CID)"
 
-#: ../backend/pdf/ev-poppler.cc:1084
+#: ../backend/pdf/ev-poppler.cc:1079
 msgid "TrueType (CID)"
 msgstr "TrueType (CID)"
 
-#: ../backend/pdf/ev-poppler.cc:1086
+#: ../backend/pdf/ev-poppler.cc:1081
 msgid "Unknown font type"
 msgstr "Неизвестный тип шрифтов"
 
-#: ../backend/pdf/ev-poppler.cc:1130
+#: ../backend/pdf/ev-poppler.cc:1125
 msgid ""
 "This document contains non-embedded fonts that are not from the PDF Standard "
 "14 fonts. If the substitute fonts selected by fontconfig are not the same as "
@@ -155,11 +155,11 @@ msgstr ""
 "шрифтов, использованных при создании PDF, отрисовка документа может быть "
 "выполнена некорректно."
 
-#: ../backend/pdf/ev-poppler.cc:1135
+#: ../backend/pdf/ev-poppler.cc:1130
 msgid "All fonts are either standard or embedded."
 msgstr "Все шрифты являются стандартными или встроенными."
 
-#: ../backend/pdf/ev-poppler.cc:1167
+#: ../backend/pdf/ev-poppler.cc:1162
 msgid "No name"
 msgstr "Без названия"
 
@@ -173,20 +173,20 @@ msgstr "Без названия"
 #. Author: None
 #. Keywords: None
 #.
-#: ../backend/pdf/ev-poppler.cc:1176 ../libview/ev-print-operation.c:1965
+#: ../backend/pdf/ev-poppler.cc:1171 ../libview/ev-print-operation.c:1965
 #: ../properties/ev-properties-view.c:196
 msgid "None"
 msgstr "Отсутствует"
 
-#: ../backend/pdf/ev-poppler.cc:1184
+#: ../backend/pdf/ev-poppler.cc:1179
 msgid "Embedded subset"
 msgstr "Встроенное подмножество"
 
-#: ../backend/pdf/ev-poppler.cc:1186
+#: ../backend/pdf/ev-poppler.cc:1181
 msgid "Embedded"
 msgstr "Встроенный"
 
-#: ../backend/pdf/ev-poppler.cc:1188
+#: ../backend/pdf/ev-poppler.cc:1183
 msgid "Not embedded"
 msgstr "Внешний"
 
@@ -195,7 +195,7 @@ msgstr "Внешний"
 #. * type. Example:
 #. * "Type 1 (One of the Standard 14 Fonts)"
 #.
-#: ../backend/pdf/ev-poppler.cc:1195
+#: ../backend/pdf/ev-poppler.cc:1190
 msgid " (One of the Standard 14 Fonts)"
 msgstr " (один из шрифтов Standard 14)"
 
@@ -204,15 +204,15 @@ msgstr " (один из шрифтов Standard 14)"
 #. * type. Example:
 #. * "TrueType (Not one of the Standard 14 Fonts)"
 #.
-#: ../backend/pdf/ev-poppler.cc:1202
+#: ../backend/pdf/ev-poppler.cc:1197
 msgid " (Not one of the Standard 14 Fonts)"
 msgstr " (не из шрифтов Standard 14)"
 
-#: ../backend/pdf/ev-poppler.cc:1209
+#: ../backend/pdf/ev-poppler.cc:1204
 msgid "Encoding"
 msgstr "Кодировка"
 
-#: ../backend/pdf/ev-poppler.cc:1210
+#: ../backend/pdf/ev-poppler.cc:1205
 msgid "Substituting with"
 msgstr "Заменяется на"
 
@@ -334,8 +334,8 @@ msgid "View multi-page documents"
 msgstr "Просмотр многостраничных документов"
 
 #: ../data/evince.desktop.in.in.h:3
-msgid "pdf;ps;postscript;dvi;xps;djvu;tiff;document;presentation;"
-msgstr "pdf;ps;postscript;dvi;xps;djvu;tiff;документ;презентация;"
+msgid "pdf;ps;postscript;dvi;xps;djvu;tiff;document;presentation;viewer;"
+msgstr "pdf;ps;postscript;dvi;xps;djvu;tiff;документ;презентация;просмотр;"
 
 #: ../data/evince-previewer.desktop.in.in.h:1
 msgid "Print Preview"
@@ -452,8 +452,8 @@ msgid "of %d"
 msgstr "из %d"
 
 #: ../libmisc/ev-page-action-widget.c:185 ../shell/ev-history.c:426
-#: ../shell/ev-sidebar-bookmarks.c:295 ../shell/ev-window.c:907
-#: ../shell/ev-window.c:4687
+#: ../shell/ev-sidebar-bookmarks.c:306 ../shell/ev-window.c:907
+#: ../shell/ev-window.c:4707
 #, c-format
 msgid "Page %s"
 msgstr "Страница %s"
@@ -626,46 +626,46 @@ msgstr "Прокрутка документа вниз"
 msgid "Document View"
 msgstr "Отображение документа"
 
-#: ../libview/ev-view.c:2033
+#: ../libview/ev-view.c:2035
 msgid "Go to first page"
 msgstr "Перейти к первой странице"
 
-#: ../libview/ev-view.c:2035
+#: ../libview/ev-view.c:2037
 msgid "Go to previous page"
 msgstr "Перейти к предыдущей странице"
 
-#: ../libview/ev-view.c:2037
+#: ../libview/ev-view.c:2039
 msgid "Go to next page"
 msgstr "Перейти к следующей странице"
 
-#: ../libview/ev-view.c:2039
+#: ../libview/ev-view.c:2041
 msgid "Go to last page"
 msgstr "Перейти к последней странице"
 
-#: ../libview/ev-view.c:2041
+#: ../libview/ev-view.c:2043
 msgid "Go to page"
 msgstr "Перейти к странице"
 
-#: ../libview/ev-view.c:2043
+#: ../libview/ev-view.c:2045
 msgid "Find"
 msgstr "Найти"
 
-#: ../libview/ev-view.c:2071
+#: ../libview/ev-view.c:2073
 #, c-format
 msgid "Go to page %s"
 msgstr "Перейти к странице %s"
 
-#: ../libview/ev-view.c:2077
+#: ../libview/ev-view.c:2079
 #, c-format
 msgid "Go to %s on file “%s”"
 msgstr "Перейти к %s в файле «%s»"
 
-#: ../libview/ev-view.c:2080
+#: ../libview/ev-view.c:2082
 #, c-format
 msgid "Go to file “%s”"
 msgstr "Перейти к файлу «%s»"
 
-#: ../libview/ev-view.c:2088
+#: ../libview/ev-view.c:2090
 #, c-format
 msgid "Launch %s"
 msgstr "Запустить %s"
@@ -694,7 +694,7 @@ msgstr "ФАЙЛ"
 msgid "GNOME Document Previewer"
 msgstr "Предварительный просмотр документов"
 
-#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3270
+#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3290
 msgid "Failed to print document"
 msgstr "Не удалось напечатать документ"
 
@@ -1072,16 +1072,16 @@ msgstr "Текст лицензии"
 msgid "Further Information"
 msgstr "Дополнительная информация"
 
-#: ../shell/ev-sidebar-annotations.c:259
+#: ../shell/ev-sidebar-annotations.c:299
 msgid "Document contains no annotations"
 msgstr "Документ не содержит примечаний"
 
-#: ../shell/ev-sidebar-annotations.c:291
+#: ../shell/ev-sidebar-annotations.c:335
 #, c-format
 msgid "Page %d"
 msgstr "Страница %d"
 
-#: ../shell/ev-sidebar-annotations.c:467
+#: ../shell/ev-sidebar-annotations.c:511
 msgid "Annotations"
 msgstr "Примечания"
 
@@ -1089,27 +1089,27 @@ msgstr "Примечания"
 msgid "Attachments"
 msgstr "Вложения"
 
-#: ../shell/ev-sidebar-bookmarks.c:146
+#: ../shell/ev-sidebar-bookmarks.c:148
 msgid "_Open Bookmark"
 msgstr "_Открыть закладку"
 
-#: ../shell/ev-sidebar-bookmarks.c:148
+#: ../shell/ev-sidebar-bookmarks.c:150
 msgid "_Rename Bookmark"
 msgstr "Пе_реименовать закладку"
 
-#: ../shell/ev-sidebar-bookmarks.c:150
+#: ../shell/ev-sidebar-bookmarks.c:152
 msgid "_Remove Bookmark"
 msgstr "_Удалить закладку"
 
-#: ../shell/ev-sidebar-bookmarks.c:456
+#: ../shell/ev-sidebar-bookmarks.c:467
 msgid "Add"
 msgstr "Добавить"
 
-#: ../shell/ev-sidebar-bookmarks.c:463
+#: ../shell/ev-sidebar-bookmarks.c:474
 msgid "Remove"
 msgstr "Удалить"
 
-#: ../shell/ev-sidebar-bookmarks.c:579 ../shell/ev-toolbar.c:161
+#: ../shell/ev-sidebar-bookmarks.c:590 ../shell/ev-toolbar.c:161
 msgid "Bookmarks"
 msgstr "Закладки"
 
@@ -1127,7 +1127,7 @@ msgstr "Печать…"
 #. * your language.  The sidebar cannot be shrinked smaller than
 #. * the longest title in there.
 #.
-#: ../shell/ev-sidebar-links.c:750
+#: ../shell/ev-sidebar-links.c:751
 msgid "Outline"
 msgstr "Схема"
 
@@ -1246,15 +1246,15 @@ msgstr "Сохранение удалённого приложения (%d%%)"
 msgid "Uploading image (%d%%)"
 msgstr "Сохранение удалённого изображения (%d%%)"
 
-#: ../shell/ev-window.c:2833
-msgid "Save a Copy"
-msgstr "Сохранить копию"
+#: ../shell/ev-window.c:2834
+msgid "Save As…"
+msgstr "Сохранить как…"
 
-#: ../shell/ev-window.c:2909
+#: ../shell/ev-window.c:2929
 msgid "Could not send current document"
 msgstr "Не удалось отправить текущий документ"
 
-#: ../shell/ev-window.c:3214
+#: ../shell/ev-window.c:3234
 #, c-format
 msgid "%d pending job in queue"
 msgid_plural "%d pending jobs in queue"
@@ -1262,50 +1262,50 @@ msgstr[0] "%d задание ожидает в очереди"
 msgstr[1] "%d задания ожидают в очереди"
 msgstr[2] "%d заданий ожидает в очереди"
 
-#: ../shell/ev-window.c:3327
+#: ../shell/ev-window.c:3347
 #, c-format
 msgid "Printing job “%s”"
 msgstr "Печать задания «%s»"
 
-#: ../shell/ev-window.c:3542
+#: ../shell/ev-window.c:3562
 msgid "Document contains form fields that have been filled out. "
 msgstr "Документ содержит поля форм, которые были заполнены. "
 
-#: ../shell/ev-window.c:3545
+#: ../shell/ev-window.c:3565
 msgid "Document contains new or modified annotations. "
 msgstr "Документ содержит новые или изменённые примечания. "
 
-#: ../shell/ev-window.c:3557
+#: ../shell/ev-window.c:3577
 #, c-format
 msgid "Reload document “%s”?"
 msgstr "Перезагрузить документ «%s»?"
 
-#: ../shell/ev-window.c:3559
+#: ../shell/ev-window.c:3579
 msgid "If you reload the document, changes will be permanently lost."
 msgstr "Если вы перезагрузите документ, изменения будут потеряны."
 
-#: ../shell/ev-window.c:3563
+#: ../shell/ev-window.c:3583
 msgid "Reload"
 msgstr "Перезагрузить"
 
-#: ../shell/ev-window.c:3570
+#: ../shell/ev-window.c:3590
 #, c-format
 msgid "Save a copy of document “%s” before closing?"
 msgstr "Сохранить копию документа «%s» перед закрытием?"
 
-#: ../shell/ev-window.c:3572
+#: ../shell/ev-window.c:3592
 msgid "If you don’t save a copy, changes will be permanently lost."
 msgstr "Если вы не сохраните копию, изменения будут потеряны."
 
-#: ../shell/ev-window.c:3574
+#: ../shell/ev-window.c:3594
 msgid "Close _without Saving"
 msgstr "Закрыть _без сохранения"
 
-#: ../shell/ev-window.c:3578
+#: ../shell/ev-window.c:3598
 msgid "Save a _Copy"
 msgstr "Сохранить _копию"
 
-#: ../shell/ev-window.c:3662
+#: ../shell/ev-window.c:3682
 #, c-format
 msgid "Wait until print job “%s” finishes before closing?"
 msgstr "Ожидать завершения задания на печать «%s» перед закрытием?"
@@ -1313,7 +1313,7 @@ msgstr "Ожидать завершения задания на печать «%
 #. TRANS: the singular form is not really used as n_print_jobs > 1
 #. but some languages distinguish between different plurals forms,
 #. so the ngettext is needed.
-#: ../shell/ev-window.c:3668
+#: ../shell/ev-window.c:3688
 #, c-format
 msgid "There is %d print job active. Wait until print finishes before closing?"
 msgid_plural ""
@@ -1328,33 +1328,33 @@ msgstr[2] ""
 "Имеется %d активных заданий для печати. Подождать их завершения перед "
 "закрытием?"
 
-#: ../shell/ev-window.c:3683
+#: ../shell/ev-window.c:3703
 msgid "If you close the window, pending print jobs will not be printed."
 msgstr ""
 "Если вы закроете окно, задания на печать, поставленные в очередь, не будут "
 "выполнены."
 
-#: ../shell/ev-window.c:3687
+#: ../shell/ev-window.c:3707
 msgid "Cancel _print and Close"
 msgstr "Отменить _печать и закрыть"
 
-#: ../shell/ev-window.c:3691
+#: ../shell/ev-window.c:3711
 msgid "Close _after Printing"
 msgstr "Закрыть п_осле печати"
 
-#: ../shell/ev-window.c:4222
+#: ../shell/ev-window.c:4242
 msgid "Running in presentation mode"
 msgstr "Запущен режим презентации"
 
-#: ../shell/ev-window.c:5371
+#: ../shell/ev-window.c:5391
 msgid "Enable caret navigation?"
 msgstr "Включить курсорную навигацию?"
 
-#: ../shell/ev-window.c:5373
+#: ../shell/ev-window.c:5393
 msgid "_Enable"
 msgstr "_Включить"
 
-#: ../shell/ev-window.c:5376
+#: ../shell/ev-window.c:5396
 msgid ""
 "Pressing F7 turns the caret navigation on or off. This feature places a "
 "moveable cursor in text pages, allowing you to move around and select text "
@@ -1364,39 +1364,39 @@ msgstr ""
 "позволяет перемещать курсор на текстовых страницах и выделять текст с "
 "помощью клавиатуры. Включить курсорную навигацию?"
 
-#: ../shell/ev-window.c:5381
+#: ../shell/ev-window.c:5401
 msgid "Don’t show this message again"
 msgstr "Не показывать больше это сообщение"
 
-#: ../shell/ev-window.c:5896 ../shell/ev-window.c:5912
+#: ../shell/ev-window.c:5916 ../shell/ev-window.c:5932
 msgid "Unable to launch external application."
 msgstr "Не удалось запустить внешнее приложение."
 
-#: ../shell/ev-window.c:5969
+#: ../shell/ev-window.c:5989
 msgid "Unable to open external link"
 msgstr "Не удалось открыть внешнюю ссылку"
 
-#: ../shell/ev-window.c:6172
+#: ../shell/ev-window.c:6192
 msgid "Couldn’t find appropriate format to save image"
 msgstr "Не удалось найти подходящий формат для сохранения изображения"
 
-#: ../shell/ev-window.c:6204
+#: ../shell/ev-window.c:6224
 msgid "The image could not be saved."
 msgstr "Не удалось сохранить изображение."
 
-#: ../shell/ev-window.c:6239
+#: ../shell/ev-window.c:6259
 msgid "Save Image"
 msgstr "Сохранить изображение"
 
-#: ../shell/ev-window.c:6398
+#: ../shell/ev-window.c:6418
 msgid "Unable to open attachment"
 msgstr "Не удалось открыть вложение"
 
-#: ../shell/ev-window.c:6454
+#: ../shell/ev-window.c:6474
 msgid "The attachment could not be saved."
 msgstr "Не удалось сохранить вложение."
 
-#: ../shell/ev-window.c:6502
+#: ../shell/ev-window.c:6522
 msgid "Save Attachment"
 msgstr "Сохранить вложение"
 
@@ -1605,8 +1605,8 @@ msgid "Op_en a Copy"
 msgstr "Открыть _копию"
 
 #: ../shell/evince-menus.ui.h:23
-msgid "_Save a Copy…"
-msgstr "_Сохранить копию…"
+msgid "_Save As…"
+msgstr "Сохранить _как…"
 
 #: ../shell/evince-menus.ui.h:24
 msgid "Send _To…"
@@ -1848,6 +1848,12 @@ msgid ""
 msgstr ""
 "Он поддерживает документы в следующих форматах: PDF, PS, EPS, XPS, DjVu, "
 "TIFF, DVI (с SyncTeX) и Comic Book Archive (CBR, CBT, CBZ, CB7)."
+
+#~ msgid "Save a Copy"
+#~ msgstr "Сохранить копию"
+
+#~ msgid "_Save a Copy…"
+#~ msgstr "_Сохранить копию…"
 
 #~ msgid ""
 #~ "Error launching the command “%s” in order to decompress the comic book: %s"
