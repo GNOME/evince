@@ -1,17 +1,17 @@
 # Norwegian bokmål translation of evince.
 # Copyright (C) 2000-2003, 2005 Free Software Foundation, Inc.
 # Åka Sikrom <a4NOSPAMPLEASETHANKYOU@hush.com>, 2014.
-# Kjartan Maraas <kmaraas@gnome.org>, 2000-2016.
+# Kjartan Maraas <kmaraas@gnome.org>, 2000-2017.
 # Terance Edward Sola <terance@lyse.net>, 2005.
 # Torstein Adolf Winterseth <kvikende@fsfe.org>, 2010.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: evince 3.23.x\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-21 08:34+0100\n"
-"PO-Revision-Date: 2016-11-21 08:45+0100\n"
-"Last-Translator: Åka Sikrom <a4NOSPAMPLEASETHANKYOU@hush.com>\n"
+"Project-Id-Version: evince 3.26.x\n"
+"Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?product=evince&keywords=I18N+L10N&component=general\n"
+"POT-Creation-Date: 2017-10-27 11:42+0000\n"
+"PO-Revision-Date: 2017-11-06 15:07+0100\n"
+"Last-Translator: Kjartan Maraas <kmaraas@gnome.org>\n"
 "Language-Team: Norwegian bokmål <i18n-nb@lister.ping.uio.no>\n"
 "Language: nb\n"
 "MIME-Version: 1.0\n"
@@ -19,54 +19,33 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: ../backend/comics/comics-document.c:210
-#, c-format
-msgid ""
-"Error launching the command “%s” in order to decompress the comic book: %s"
-msgstr ""
-"Feil under oppstart av kommando «%s» for å dekomprimere tegneserien: %s"
+#: ../backend/comics/comics-document.c:99
+#: ../backend/comics/comics-document.c:121
+msgid "File is corrupted"
+msgstr "Filen er korrupt"
 
-#: ../backend/comics/comics-document.c:224
-#, c-format
-msgid "The command “%s” failed at decompressing the comic book."
-msgstr "Kommando «%s» mislyktes ved dekomprimering av tegneserien."
+#: ../backend/comics/comics-document.c:151
+msgid "Archive is encrypted"
+msgstr "Arkivet er kryptert"
 
-#: ../backend/comics/comics-document.c:233
-#, c-format
-msgid "The command “%s” did not end normally."
-msgstr "Kommandoen «%s» avsluttet ikke på normal måte."
+#: ../backend/comics/comics-document.c:156
+msgid "No files in archive"
+msgstr "Ingen filer i arkivet"
 
-#: ../backend/comics/comics-document.c:453
+#: ../backend/comics/comics-document.c:192
 #, c-format
 msgid "Not a comic book MIME type: %s"
 msgstr "«%s» er ikke en tegneserie-MIME-type"
 
-#: ../backend/comics/comics-document.c:460
-msgid "Can’t find an appropriate command to decompress this type of comic book"
-msgstr "Fant ingen passende kommando å dekomprimere denne typen tegneserie med"
+#: ../backend/comics/comics-document.c:199
+msgid ""
+"libarchive lacks support for this comic book’s compression, please contact "
+"your distributor"
+msgstr "libarchive mangler støtte for denne tegneseriens komprimering. Vennligst kontakt distributøren"
 
-#: ../backend/comics/comics-document.c:526
-msgid "File corrupted"
-msgstr "Filen er korrupt"
-
-#: ../backend/comics/comics-document.c:539
-msgid "No files in archive"
-msgstr "Ingen filer i arkivet"
-
-#: ../backend/comics/comics-document.c:578
-#, c-format
-msgid "No images found in archive %s"
-msgstr "Fant ingen bilder i arkiv %s"
-
-#: ../backend/comics/comics-document.c:828
-#, c-format
-msgid "There was an error deleting “%s”."
-msgstr "Det oppsto en feil ved sletting av «%s»."
-
-#: ../backend/comics/comics-document.c:921
-#, c-format
-msgid "Error %s"
-msgstr "Feil %s"
+#: ../backend/comics/comics-document.c:239
+msgid "Can not get local path for archive"
+msgstr "Kan ikke finne lokal sti for arkivet"
 
 #: ../backend/comics/comicsdocument.evince-backend.in.in.h:1
 #: ../backend/comics/evince-comicsdocument.metainfo.xml.in.in.h:1
@@ -427,17 +406,17 @@ msgstr "Klarte ikke å åpne vedlegget «%s»"
 msgid "File type %s (%s) is not supported"
 msgstr "Filtype %s (%s) er ikke støttet"
 
-#: ../libdocument/ev-document-factory.c:364
+#: ../libdocument/ev-document-factory.c:368
 #: ../libdocument/ev-file-helpers.c:492 ../libdocument/ev-file-helpers.c:538
 #: ../libdocument/ev-file-helpers.c:557
 msgid "Unknown MIME Type"
 msgstr "Ukjent MIME-type"
 
-#: ../libdocument/ev-document-factory.c:552
+#: ../libdocument/ev-document-factory.c:577
 msgid "All Documents"
 msgstr "Alle dokumenter"
 
-#: ../libdocument/ev-document-factory.c:579 ../shell/ev-utils.c:309
+#: ../libdocument/ev-document-factory.c:604 ../shell/ev-utils.c:309
 msgid "All Files"
 msgstr "Alle filer"
 
@@ -462,8 +441,8 @@ msgid "of %d"
 msgstr "av %d"
 
 #: ../libmisc/ev-page-action-widget.c:185 ../shell/ev-history.c:426
-#: ../shell/ev-sidebar-bookmarks.c:295 ../shell/ev-window.c:907
-#: ../shell/ev-window.c:4677
+#: ../shell/ev-sidebar-bookmarks.c:306 ../shell/ev-window.c:907
+#: ../shell/ev-window.c:4687
 #, c-format
 msgid "Page %s"
 msgstr "Side %s"
@@ -502,7 +481,7 @@ msgstr "Klarte ikke å tegne side %d"
 msgid "Failed to create thumbnail for page %d"
 msgstr "Klarte ikke å lage en miniatyr for side %d"
 
-#: ../libview/ev-jobs.c:2031
+#: ../libview/ev-jobs.c:2033
 #, c-format
 msgid "Failed to print page %d: %s"
 msgstr "Klarte ikke å skrive ut side %d: %s"
@@ -578,13 +557,16 @@ msgid ""
 "• “Fit to Printable Area”: Document pages are enlarged or reduced as "
 "required to fit the printable area of the printer page.\n"
 msgstr ""
-"Skaler dokumentets sider til å passe til skriverens sidestørrelse. Velg fra en av følgende:\n"
+"Skaler dokumentets sider til å passe til skriverens sidestørrelse. Velg fra "
+"en av følgende:\n"
 "\n"
 "• «None»: Ingen skalering av sidene utføres.\n"
 "\n"
-"• «Shrink to Printable Area»: Dokumentsider som er større enn utskriftsområdet reduseres til å passe til skriverens utskriftsområde.\n"
+"• «Shrink to Printable Area»: Dokumentsider som er større enn "
+"utskriftsområdet reduseres til å passe til skriverens utskriftsområde.\n"
 "\n"
-"• «Fit to Printable Area»: Dokumentets sider forstørres eller forminskes til å passe utskriftsområdet for skriveren etter behov.\n"
+"• «Fit to Printable Area»: Dokumentets sider forstørres eller forminskes til "
+"å passe utskriftsområdet for skriveren etter behov.\n"
 
 #: ../libview/ev-print-operation.c:1982
 msgid "Auto Rotate and Center"
@@ -691,8 +673,8 @@ msgid "Delete the temporary file"
 msgstr "Slett midlertidig fil"
 
 #: ../previewer/ev-previewer.c:46
-msgid "Print settings file"
-msgstr "Skriv ut fil med innstillinger"
+msgid "File specifying print settings"
+msgstr "Fil som spesifiserer innstillinger for utskrift"
 
 #: ../previewer/ev-previewer.c:46
 msgid "FILE"
@@ -702,7 +684,7 @@ msgstr "FIL"
 msgid "GNOME Document Previewer"
 msgstr "GNOME dokumentvisning"
 
-#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3262
+#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3270
 msgid "Failed to print document"
 msgstr "Klarte ikke å skrive ut dokumentet"
 
@@ -996,7 +978,7 @@ msgstr "Passord for dokument %s"
 
 #. Create tree view
 #: ../shell/ev-loading-message.c:50 ../shell/ev-sidebar-annotations.c:125
-#: ../shell/ev-sidebar-layers.c:125 ../shell/ev-sidebar-links.c:261
+#: ../shell/ev-sidebar-layers.c:125 ../shell/ev-sidebar-links.c:268
 msgid "Loading…"
 msgstr "Laster …"
 
@@ -1095,27 +1077,27 @@ msgstr "Notater"
 msgid "Attachments"
 msgstr "Vedlegg"
 
-#: ../shell/ev-sidebar-bookmarks.c:146
+#: ../shell/ev-sidebar-bookmarks.c:148
 msgid "_Open Bookmark"
 msgstr "Åpne bokmerke"
 
-#: ../shell/ev-sidebar-bookmarks.c:148
+#: ../shell/ev-sidebar-bookmarks.c:150
 msgid "_Rename Bookmark"
 msgstr "End_re navn på bokmerke"
 
-#: ../shell/ev-sidebar-bookmarks.c:150
+#: ../shell/ev-sidebar-bookmarks.c:152
 msgid "_Remove Bookmark"
 msgstr "Fje_rn bokmerke"
 
-#: ../shell/ev-sidebar-bookmarks.c:456
+#: ../shell/ev-sidebar-bookmarks.c:467
 msgid "Add"
 msgstr "Legg til"
 
-#: ../shell/ev-sidebar-bookmarks.c:463
+#: ../shell/ev-sidebar-bookmarks.c:474
 msgid "Remove"
 msgstr "Fjern"
 
-#: ../shell/ev-sidebar-bookmarks.c:579 ../shell/ev-toolbar.c:161
+#: ../shell/ev-sidebar-bookmarks.c:590 ../shell/ev-toolbar.c:161
 msgid "Bookmarks"
 msgstr "Bokmerker"
 
@@ -1123,7 +1105,7 @@ msgstr "Bokmerker"
 msgid "Layers"
 msgstr "Lag"
 
-#: ../shell/ev-sidebar-links.c:337
+#: ../shell/ev-sidebar-links.c:344
 msgid "Print…"
 msgstr "Skriv ut …"
 
@@ -1133,11 +1115,11 @@ msgstr "Skriv ut …"
 #. * your language.  The sidebar cannot be shrinked smaller than
 #. * the longest title in there.
 #.
-#: ../shell/ev-sidebar-links.c:728
+#: ../shell/ev-sidebar-links.c:750
 msgid "Outline"
 msgstr "Omriss"
 
-#: ../shell/ev-sidebar-thumbnails.c:1093
+#: ../shell/ev-sidebar-thumbnails.c:1135
 msgid "Thumbnails"
 msgstr "Miniatyrer"
 
@@ -1185,136 +1167,132 @@ msgstr "Dokumentet inneholder ingen sider"
 msgid "The document contains only empty pages"
 msgstr "Dokumentet inneholder kun tomme sider"
 
-#: ../shell/ev-window.c:1757 ../shell/ev-window.c:1923
+#: ../shell/ev-window.c:1758 ../shell/ev-window.c:1924
 #, c-format
 msgid "Unable to open document “%s”."
 msgstr "Klarte ikke å åpne dokumentet «%s»."
 
-#: ../shell/ev-window.c:1887
+#: ../shell/ev-window.c:1888
 #, c-format
 msgid "Loading document from “%s”"
 msgstr "Laster dokument fra «%s»"
 
-#: ../shell/ev-window.c:2038 ../shell/ev-window.c:2366
+#: ../shell/ev-window.c:2039 ../shell/ev-window.c:2367
 #, c-format
 msgid "Downloading document (%d%%)"
 msgstr "Laster ned dokument (%d%%)"
 
-#: ../shell/ev-window.c:2071
+#: ../shell/ev-window.c:2072
 msgid "Failed to load remote file."
 msgstr "Klarte ikke å laste ekstern fil."
 
-#: ../shell/ev-window.c:2310
+#: ../shell/ev-window.c:2311
 #, c-format
 msgid "Reloading document from %s"
 msgstr "Leser dokument fra %s på nytt"
 
-#: ../shell/ev-window.c:2342
+#: ../shell/ev-window.c:2343
 msgid "Failed to reload document."
 msgstr "Klarte ikke å lese dokumentet på nytt."
 
-#: ../shell/ev-window.c:2558
+#: ../shell/ev-window.c:2559
 msgid "Open Document"
 msgstr "Åpne dokument"
 
-#: ../shell/ev-window.c:2631
+#: ../shell/ev-window.c:2632
 #, c-format
 msgid "Saving document to %s"
 msgstr "Lagrer dokumentet til %s"
 
-#: ../shell/ev-window.c:2634
+#: ../shell/ev-window.c:2635
 #, c-format
 msgid "Saving attachment to %s"
 msgstr "Lagrer vedlegg til %s"
 
-#: ../shell/ev-window.c:2637
+#: ../shell/ev-window.c:2638
 #, c-format
 msgid "Saving image to %s"
 msgstr "Lagrer bilde til %s"
 
-#: ../shell/ev-window.c:2681 ../shell/ev-window.c:2781
+#: ../shell/ev-window.c:2682 ../shell/ev-window.c:2782
 #, c-format
 msgid "The file could not be saved as “%s”."
 msgstr "Klarte ikke å lagre filen som «%s»."
 
-#: ../shell/ev-window.c:2712
+#: ../shell/ev-window.c:2713
 #, c-format
 msgid "Uploading document (%d%%)"
 msgstr "Laster opp dokument (%d%%)"
 
-#: ../shell/ev-window.c:2716
+#: ../shell/ev-window.c:2717
 #, c-format
 msgid "Uploading attachment (%d%%)"
 msgstr "Laster opp vedlegg (%d%%)"
 
-#: ../shell/ev-window.c:2720
+#: ../shell/ev-window.c:2721
 #, c-format
 msgid "Uploading image (%d%%)"
 msgstr "Laster opp bilde (%d%%)"
 
-#: ../shell/ev-window.c:2832
+#: ../shell/ev-window.c:2833
 msgid "Save a Copy"
 msgstr "Lagre en kopi"
 
-#: ../shell/ev-window.c:2908
+#: ../shell/ev-window.c:2909
 msgid "Could not send current document"
 msgstr "Klarte ikke å sende gjeldende dokument"
 
-#: ../shell/ev-window.c:2942
-msgid "Could not open the containing folder"
-msgstr "Klarte ikke å åpne mappen som aktuell fil ligger i"
-
-#: ../shell/ev-window.c:3206
+#: ../shell/ev-window.c:3214
 #, c-format
 msgid "%d pending job in queue"
 msgid_plural "%d pending jobs in queue"
 msgstr[0] "%d utestående jobb i køen"
 msgstr[1] "%d utestående jobber i køen"
 
-#: ../shell/ev-window.c:3319
+#: ../shell/ev-window.c:3327
 #, c-format
 msgid "Printing job “%s”"
 msgstr "Skriver ut jobb %s"
 
-#: ../shell/ev-window.c:3534
+#: ../shell/ev-window.c:3542
 msgid "Document contains form fields that have been filled out. "
 msgstr "Dokumentet inneholder skjemafelter som er fylt ut."
 
-#: ../shell/ev-window.c:3537
+#: ../shell/ev-window.c:3545
 msgid "Document contains new or modified annotations. "
 msgstr "Dokumentet inneholder nye eller endrede notater."
 
-#: ../shell/ev-window.c:3549
+#: ../shell/ev-window.c:3557
 #, c-format
 msgid "Reload document “%s”?"
 msgstr "Last dokumentet «%s» på nytt?"
 
-#: ../shell/ev-window.c:3551
+#: ../shell/ev-window.c:3559
 msgid "If you reload the document, changes will be permanently lost."
 msgstr "Hvis du laster dokumentet på nytt vil endringene gå tapt."
 
-#: ../shell/ev-window.c:3555
+#: ../shell/ev-window.c:3563
 msgid "Reload"
 msgstr "Last på nytt"
 
-#: ../shell/ev-window.c:3562
+#: ../shell/ev-window.c:3570
 #, c-format
 msgid "Save a copy of document “%s” before closing?"
 msgstr "Lagre en kopi av dokument «%s» før programmet lukkes?"
 
-#: ../shell/ev-window.c:3564
+#: ../shell/ev-window.c:3572
 msgid "If you don’t save a copy, changes will be permanently lost."
 msgstr "Hvis du ikke lagrer en kopi vil disse endringene gå tapt."
 
-#: ../shell/ev-window.c:3566
+#: ../shell/ev-window.c:3574
 msgid "Close _without Saving"
 msgstr "Fortsett _uten å lagre"
 
-#: ../shell/ev-window.c:3570
+#: ../shell/ev-window.c:3578
 msgid "Save a _Copy"
 msgstr "Lagre en _kopi"
 
-#: ../shell/ev-window.c:3654
+#: ../shell/ev-window.c:3662
 #, c-format
 msgid "Wait until print job “%s” finishes before closing?"
 msgstr "Vent med å lukke programmet til utskriftsjobb %s er fullført?"
@@ -1322,7 +1300,7 @@ msgstr "Vent med å lukke programmet til utskriftsjobb %s er fullført?"
 #. TRANS: the singular form is not really used as n_print_jobs > 1
 #. but some languages distinguish between different plurals forms,
 #. so the ngettext is needed.
-#: ../shell/ev-window.c:3660
+#: ../shell/ev-window.c:3668
 #, c-format
 msgid "There is %d print job active. Wait until print finishes before closing?"
 msgid_plural ""
@@ -1334,32 +1312,32 @@ msgstr[1] ""
 "Det er %d aktive utskriftsjobber. Vent med å lukke programmet til disse er "
 "fullført?"
 
-#: ../shell/ev-window.c:3675
+#: ../shell/ev-window.c:3683
 msgid "If you close the window, pending print jobs will not be printed."
 msgstr ""
 "Hvis du lukker vinduet vil utestående utskriftsjobber ikke bli fullført."
 
-#: ../shell/ev-window.c:3679
+#: ../shell/ev-window.c:3687
 msgid "Cancel _print and Close"
 msgstr "Avbryt _utskrift og lukk"
 
-#: ../shell/ev-window.c:3683
+#: ../shell/ev-window.c:3691
 msgid "Close _after Printing"
 msgstr "Lukk etter ut_skrift"
 
-#: ../shell/ev-window.c:4214
+#: ../shell/ev-window.c:4222
 msgid "Running in presentation mode"
 msgstr "Kjører i presentasjonsmodus"
 
-#: ../shell/ev-window.c:5361
+#: ../shell/ev-window.c:5371
 msgid "Enable caret navigation?"
 msgstr "Slå på navigering med markør?"
 
-#: ../shell/ev-window.c:5363
+#: ../shell/ev-window.c:5373
 msgid "_Enable"
 msgstr "_Slå på"
 
-#: ../shell/ev-window.c:5366
+#: ../shell/ev-window.c:5376
 msgid ""
 "Pressing F7 turns the caret navigation on or off. This feature places a "
 "moveable cursor in text pages, allowing you to move around and select text "
@@ -1369,39 +1347,39 @@ msgstr ""
 "en flyttbar markør på tekstsider, og lar deg flytte rundt og markere tekst "
 "med tastaturet. Vil du slå på markørnavigering?"
 
-#: ../shell/ev-window.c:5371
+#: ../shell/ev-window.c:5381
 msgid "Don’t show this message again"
 msgstr "Ikke vis denne meldingen igjen"
 
-#: ../shell/ev-window.c:5886 ../shell/ev-window.c:5902
+#: ../shell/ev-window.c:5896 ../shell/ev-window.c:5912
 msgid "Unable to launch external application."
 msgstr "Klarte ikke å starte eksternt program."
 
-#: ../shell/ev-window.c:5959
+#: ../shell/ev-window.c:5969
 msgid "Unable to open external link"
 msgstr "Klarte ikke å åpne ekstern lenke."
 
-#: ../shell/ev-window.c:6162
+#: ../shell/ev-window.c:6172
 msgid "Couldn’t find appropriate format to save image"
 msgstr "Fant ingen passende format å lagre filen i"
 
-#: ../shell/ev-window.c:6194
+#: ../shell/ev-window.c:6204
 msgid "The image could not be saved."
 msgstr "Klarte ikke å lagre bildet."
 
-#: ../shell/ev-window.c:6229
+#: ../shell/ev-window.c:6239
 msgid "Save Image"
 msgstr "Lagre bilde"
 
-#: ../shell/ev-window.c:6388
+#: ../shell/ev-window.c:6398
 msgid "Unable to open attachment"
 msgstr "Klarte ikke å åpne vedlegg"
 
-#: ../shell/ev-window.c:6444
+#: ../shell/ev-window.c:6454
 msgid "The attachment could not be saved."
 msgstr "Klarte ikke å lagre vedlegget."
 
-#: ../shell/ev-window.c:6492
+#: ../shell/ev-window.c:6502
 msgid "Save Attachment"
 msgstr "Lagre vedlegg"
 
