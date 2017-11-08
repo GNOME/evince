@@ -45,7 +45,7 @@ header_DATA = \
 
 # Appdata files
 
-appdatadir = $(datadir)/appdata
+appdatadir = $(datadir)/metainfo
 appdata_in_files = evince.appdata.xml.in
 nodist_appdata_DATA = $(appdata_in_files:.xml.in=.xml)
 
