@@ -188,7 +188,7 @@ endif
 $(GRESOURCE_XML_FILE): $(GRESOURCE_XML_IN_FILES) Makefile
 	$(AM_V_GEN) $(SED) -e "s|\@EVINCE_CSS\@|$(EVINCE_CSS)|" $< > $@
 
-ev-resources.c: $(GRESOURCE_XML_FILE) Makefile $(shell $(GLIB_COMPILE_RESOURCES) --generate-dependencies --sourcedir=$(srcdir) --sourcedir=$(top_srcdir)/data $(srcdir)/evince.gresource.xml)
+ev-resources.c: $(GRESOURCE_XML_FILE) Makefile $(shell $(GLIB_COMPILE_RESOURCES) --generate-dependencies --sourcedir=$(srcdir) --sourcedir=$(top_srcdir)/data $(builddir)/evince.gresource.xml)
 	$(AM_V_GEN) XMLLINT=$(XMLLINT) $(GLIB_COMPILE_RESOURCES) --target $@ --sourcedir=$(srcdir) --sourcedir=$(top_srcdir)/data --generate-source --c-name ev $<
 
 ev-gdbus-generated.c ev-gdbus-generated.h: ev-gdbus.xml Makefile
