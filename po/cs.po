@@ -20,8 +20,8 @@ msgstr ""
 "Project-Id-Version: evince master\n"
 "Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evince&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2017-10-28 21:05+0000\n"
-"PO-Revision-Date: 2017-10-29 21:46+0100\n"
+"POT-Creation-Date: 2017-11-18 08:01+0000\n"
+"PO-Revision-Date: 2017-11-19 20:51+0100\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: čeština <gnome-cs-list@gnome.org>>\n"
 "Language: cs\n"
@@ -331,7 +331,7 @@ msgid "Print document"
 msgstr "Vytisknout dokument"
 
 #. Manually set name and icon
-#: ../data/evince.desktop.in.in.h:1 ../shell/ev-application.c:1031
+#: ../data/evince.desktop.in.in.h:1 ../shell/ev-application.c:1012
 #: ../shell/ev-window-title.c:139 ../shell/main.c:298
 msgid "Document Viewer"
 msgstr "Prohlížeč dokumentů"
@@ -934,48 +934,15 @@ msgstr "Přidat textovou poznámku"
 msgid "Add highlight annotation"
 msgstr "Přidat zvýrazněnou poznámku"
 
-#: ../shell/ev-application.c:997
-msgid ""
-"Evince is free software; you can redistribute it and/or modify it under the "
-"terms of the GNU General Public License as published by the Free Software "
-"Foundation; either version 2 of the License, or (at your option) any later "
-"version.\n"
-msgstr ""
-"Evince je svobodný software; můžete jej šířit a/nebo modifikovat podle "
-"ustanovení GNU General Public License, vydávané Free Software Foundation; a "
-"to buď verze 2 této licence anebo (podle vlastního uvážení) kterékoliv "
-"pozdější verze.\n"
-
-#: ../shell/ev-application.c:1001
-msgid ""
-"Evince is distributed in the hope that it will be useful, but WITHOUT ANY "
-"WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS "
-"FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more "
-"details.\n"
-msgstr ""
-"Evince je rozšiřován v naději, že bude užitečný, avšak BEZ JAKÉKOLIV ZÁRUKY; "
-"neposkytují se ani odvozené záruky PRODEJNOSTI anebo VHODNOSTI PRO URČITÝ "
-"ÚČEL. Další podrobnosti hledejte v GNU General Public License.\n"
-
-#: ../shell/ev-application.c:1005
-msgid ""
-"You should have received a copy of the GNU General Public License along with "
-"Evince; if not, write to the Free Software Foundation, Inc., 51 Franklin "
-"Street, Fifth Floor, Boston, MA 02110-1301  USA\n"
-msgstr ""
-"Kopii GNU General Public License byste měli obdržet spolu s programem "
-"Evince; pokud se tak nestalo, napište o ni Free Software Foundation, Inc., "
-"51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA.\n"
-
-#: ../shell/ev-application.c:1026 ../evince.appdata.xml.in.h:1
+#: ../shell/ev-application.c:1007 ../evince.appdata.xml.in.h:1
 msgid "Evince"
 msgstr "Evince"
 
-#: ../shell/ev-application.c:1028
+#: ../shell/ev-application.c:1009
 msgid "© 1996–2017 The Evince authors"
 msgstr "© 1996 — 2017 autoři Evince"
 
-#: ../shell/ev-application.c:1034
+#: ../shell/ev-application.c:1015
 msgid "translator-credits"
 msgstr ""
 "Miloslav Trmač <mitr@volny.cz>\n"
@@ -1830,15 +1797,30 @@ msgstr "Oddálit"
 
 #: ../shell/help-overlay.ui.h:27
 msgctxt "shortcut window"
+msgid "Fit page"
+msgstr "Přizpůsobit stránce"
+
+#: ../shell/help-overlay.ui.h:28
+msgctxt "shortcut window"
+msgid "Fit width"
+msgstr "Přizpůsobit šířce"
+
+#: ../shell/help-overlay.ui.h:29
+msgctxt "shortcut window"
+msgid "Automatic zoom"
+msgstr "Automaticky přiblížit"
+
+#: ../shell/help-overlay.ui.h:30
+msgctxt "shortcut window"
 msgid "Touchpad gestures"
 msgstr "Dotyková gesta"
 
-#: ../shell/help-overlay.ui.h:28
+#: ../shell/help-overlay.ui.h:31
 msgctxt "shortcut window"
 msgid "Go to next page"
 msgstr "Přejít na následující stránku"
 
-#: ../shell/help-overlay.ui.h:29
+#: ../shell/help-overlay.ui.h:32
 msgctxt "shortcut window"
 msgid "Go to previous page"
 msgstr "Přejít na předchozí stránku"
@@ -1858,4 +1840,3 @@ msgid ""
 msgstr ""
 "Podporuje následující formáty dokumentů: PDF, PS, EPS, XPS, DjVu, TIFF, DVI "
 "(pomocí SyncTeX) a archivy s komiksy (CBR, CBT, CBZ, CB7)."
-
