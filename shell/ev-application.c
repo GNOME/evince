@@ -1007,14 +1007,13 @@ app_about_cb (GSimpleAction *action,
                                "name", _("Evince"),
                                "version", VERSION,
                                "copyright", _("© 1996–2017 The Evince authors"),
-                               "license", GTK_LICENSE_GPL_2_0,
+                               "license-type", GTK_LICENSE_GPL_2_0,
                                "website", "https://wiki.gnome.org/Apps/Evince",
                                "comments", _("Document Viewer"),
                                "authors", authors,
                                "documenters", documenters,
                                "translator-credits", _("translator-credits"),
                                "logo-icon-name", "evince",
-                               "wrap-license", TRUE,
                                NULL);
 }
 
