@@ -371,6 +371,7 @@ ev_sidebar_init (EvSidebar *ev_sidebar)
 	select_hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 12);
 
 	ev_sidebar->priv->label = gtk_label_new ("");
+	gtk_label_set_ellipsize (GTK_LABEL (ev_sidebar->priv->label), PANGO_ELLIPSIZE_END);
 	gtk_box_pack_start (GTK_BOX (select_hbox),
 			    ev_sidebar->priv->label,
 			    FALSE, FALSE, 0);
