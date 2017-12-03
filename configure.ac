@@ -247,12 +247,6 @@ fi
 BACKEND_LIBTOOL_FLAGS="-module -avoid-version -no-undefined -export-symbols \$(top_srcdir)/backend/backend.symbols"
 AC_SUBST(BACKEND_LIBTOOL_FLAGS)
 
-dnl ===== Check special functions
-evince_save_LIBS=$LIBS
-LIBS="$LIBS $BACKEND_LIBS"
-AC_CHECK_FUNCS(cairo_format_stride_for_width)
-LIBS=$evince_save_LIBS
-
 # ******************
 # GKT+ Unix Printing
 # ******************

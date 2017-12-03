@@ -273,11 +273,7 @@ tiff_document_render (EvDocument      *document,
 		return NULL;
 	}
 
-#ifdef HAVE_CAIRO_FORMAT_STRIDE_FOR_WIDTH
 	rowstride = cairo_format_stride_for_width (CAIRO_FORMAT_RGB24, width);
-#else
-	rowstride = width * 4;
-#endif
 	if (rowstride / 4 != width) {
 		g_warning("Overflow while rendering document.");
 		/* overflow, or cairo was changed in an unsupported way */
