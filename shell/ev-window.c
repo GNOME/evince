@@ -5972,21 +5972,25 @@ launch_external_uri (EvWindow *window, EvLinkAction *action)
 	gboolean ret;
 	GdkAppLaunchContext *context;
 	GdkScreen *screen;
+	GFile *file;
+	gchar *uri_scheme;
 
 	screen = gtk_window_get_screen (GTK_WINDOW (window));
 	context = gdk_display_get_app_launch_context (gdk_screen_get_display (screen));
 	gdk_app_launch_context_set_screen (context, screen);
 	gdk_app_launch_context_set_timestamp (context, gtk_get_current_event_time ());
+	file = g_file_new_for_uri (uri);
+	uri_scheme = g_file_get_uri_scheme (file);
+	g_object_unref (file);
 
-	if (!g_strstr_len (uri, strlen (uri), "://") &&
-	    !g_str_has_prefix (uri, "mailto:")) {
+	if (uri_scheme == NULL) {
 		gchar *new_uri;
 
 		/* Not a valid uri, assume http if it starts with www */
 		if (g_str_has_prefix (uri, "www.")) {
 			new_uri = g_strdup_printf ("http://%s", uri);
 		} else {
-			GFile *file, *parent;
+			GFile *parent;
 
 			file = g_file_new_for_uri (window->priv->uri);
 			parent = g_file_get_parent (file);
