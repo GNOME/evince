@@ -6017,7 +6017,7 @@ launch_external_uri (EvWindow *window, EvLinkAction *action)
 		g_error_free (error);
 	}
 
-        /* FIXMEchpe: unref launch context? */
+        g_object_unref (context);
 }
 
 static void
