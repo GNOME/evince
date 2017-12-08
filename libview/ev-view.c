@@ -163,6 +163,8 @@ static void          show_annotation_windows                 (EvView            
 							      gint                page);
 static void          hide_annotation_windows                 (EvView             *view,
 							      gint                page);
+static void	     ev_view_create_annotation_from_selection (EvView          *view,
+							       EvViewSelection *selection);
 /*** GtkWidget implementation ***/
 static void       ev_view_size_request_continuous_dual_page  (EvView             *view,
 							      GtkRequisition     *requisition);
@@ -3325,32 +3327,17 @@ ev_view_handle_annotation (EvView       *view,
 }
 
 static void
-ev_view_create_annotation (EvView *view)
+ev_view_create_annotation_real (EvView *view,
+				gint    annot_page,
+				EvPoint start,
+				EvPoint end)
 {
 	EvAnnotation   *annot;
-	EvPoint         start;
-	EvPoint         end;
-	gint            annot_page;
-	gint            offset;
-	GdkRectangle    page_area;
-	GtkBorder       border;
 	EvRectangle     doc_rect, popup_rect;
 	EvPage         *page;
 	GdkColor        color = { 0, 65535, 65535, 0 };
 	GdkRectangle    view_rect;
 	cairo_region_t *region;
-
-	find_page_at_location (view, view->adding_annot_info.start.x, view->adding_annot_info.start.y, &annot_page, &offset, &offset);
-	if (annot_page == -1) {
-		ev_view_cancel_add_annotation (view);
-		return;
-	}
-
-	ev_view_get_page_extents (view, annot_page, &page_area, &border);
-	_ev_view_transform_view_point_to_doc_point (view, &view->adding_annot_info.start, &page_area, &border,
-						    &start.x, &start.y);
-	_ev_view_transform_view_point_to_doc_point (view, &view->adding_annot_info.stop, &page_area, &border,
-						    &end.x, &end.y);
 
 	ev_document_doc_mutex_lock ();
 	page = ev_document_get_page (view->document, annot_page);
@@ -3415,6 +3402,45 @@ ev_view_create_annotation (EvView *view)
 	view->adding_annot_info.annot = annot;
 }
 
+static void
+ev_view_create_annotation (EvView *view)
+{
+	EvPoint         start;
+	EvPoint         end;
+	gint            annot_page;
+	gint            offset;
+	GdkRectangle    page_area;
+	GtkBorder       border;
+
+	find_page_at_location (view, view->adding_annot_info.start.x, view->adding_annot_info.start.y, &annot_page, &offset, &offset);
+	if (annot_page == -1) {
+		ev_view_cancel_add_annotation (view);
+		return;
+	}
+
+	ev_view_get_page_extents (view, annot_page, &page_area, &border);
+	_ev_view_transform_view_point_to_doc_point (view, &view->adding_annot_info.start, &page_area, &border,
+						    &start.x, &start.y);
+	_ev_view_transform_view_point_to_doc_point (view, &view->adding_annot_info.stop, &page_area, &border,
+						    &end.x, &end.y);
+
+	ev_view_create_annotation_real (view, annot_page, start, end);
+}
+
+static void
+ev_view_create_annotation_from_selection (EvView          *view,
+					  EvViewSelection *selection)
+{
+	EvPoint doc_point_start;
+	EvPoint doc_point_end;
+
+	doc_point_start.x = selection->rect.x1;
+	doc_point_start.y = selection->rect.y1;
+	doc_point_end.x = selection->rect.x2;
+	doc_point_end.y = selection->rect.y2;
+
+	ev_view_create_annotation_real (view, selection->page, doc_point_start, doc_point_end);
+}
 void
 ev_view_focus_annotation (EvView    *view,
 			  EvMapping *annot_mapping)
@@ -5629,6 +5655,49 @@ ev_view_motion_notify_event (GtkWidget      *widget,
 	} 
 
 	return FALSE;
+}
+
+/**
+ * ev_view_add_text_markup_annotation_for_selected_text:
+ * @view: #EvView instance
+ *
+ * Adds a Text Markup annotation (defaulting to a 'highlight' one) to
+ * the currently selected text on the document.
+ *
+ * When the selected text spans more than one page, it will add a
+ * corresponding annotation for each page that contains selected text.
+ *
+ * Returns: %TRUE if annotations were added successfully, %FALSE otherwise.
+ *
+ * Since: 3.28
+ */
+gboolean
+ev_view_add_text_markup_annotation_for_selected_text (EvView  *view)
+{
+	GList *l;
+
+	if (view->adding_annot_info.annot || view->adding_annot_info.adding_annot ||
+	    view->selection_info.selections == NULL)
+		return FALSE;
+
+	for (l = view->selection_info.selections; l != NULL; l = l->next) {
+		EvViewSelection *selection = (EvViewSelection *)l->data;
+
+		view->adding_annot_info.adding_annot = TRUE;
+		view->adding_annot_info.type = EV_ANNOTATION_TYPE_TEXT_MARKUP;
+
+		ev_view_create_annotation_from_selection (view, selection);
+
+		if (view->adding_annot_info.adding_annot)
+			g_signal_emit (view, signals[SIGNAL_ANNOT_ADDED], 0, view->adding_annot_info.annot);
+	}
+
+	clear_selection (view);
+
+	view->adding_annot_info.adding_annot = FALSE;
+	view->adding_annot_info.annot = NULL;
+
+	return TRUE;
 }
 
 static gboolean
