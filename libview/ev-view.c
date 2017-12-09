@@ -3397,6 +3397,8 @@ ev_view_create_annotation (EvView *view)
 	}
 	ev_document_annotations_add_annotation (EV_DOCUMENT_ANNOTATIONS (view->document),
 						annot, &doc_rect);
+	/* Re-fetch area as eg. adding Text Markup annots updates area for its bounding box */
+	ev_annotation_get_area (annot, &doc_rect);
 	ev_document_doc_mutex_unlock ();
 
 	/* If the page didn't have annots, mark the cache as dirty */

@@ -3316,8 +3316,18 @@ pdf_document_annotations_add_annotation (EvDocumentAnnotations *document_annotat
 			break;
 		case EV_ANNOTATION_TYPE_TEXT_MARKUP: {
 			GArray *quads;
+			PopplerRectangle bbox;
 
-			quads = get_quads_for_area (poppler_page, &rect, NULL);
+			quads = get_quads_for_area (poppler_page, &rect, &bbox);
+
+			if (bbox.x1 != 0 && bbox.y1 != 0 && bbox.x2 != 0 && bbox.y2 != 0) {
+				poppler_rect.x1 = rect.x1 = bbox.x1;
+				poppler_rect.x2 = rect.x2 = bbox.x2;
+				poppler_rect.y1 = rect.y1 = height - bbox.y2;
+				poppler_rect.y2 = rect.y2 = height - bbox.y1;
+
+				ev_annotation_set_area (annot, &rect);
+			}
 
 			switch (ev_annotation_text_markup_get_markup_type (EV_ANNOTATION_TEXT_MARKUP (annot))) {
 				case EV_ANNOTATION_TEXT_MARKUP_HIGHLIGHT:
