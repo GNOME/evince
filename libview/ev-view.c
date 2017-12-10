@@ -4752,7 +4752,8 @@ ev_view_query_tooltip (GtkWidget  *widget,
 	if (annot) {
 		const gchar *contents;
 
-		if ((contents = ev_annotation_get_contents (annot))) {
+		contents = ev_annotation_get_contents (annot);
+		if (contents && *contents != '\0') {
 			GdkRectangle annot_area;
 
 			get_annot_area (view, x, y, annot, &annot_area);
