@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: evince master\n"
 "Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evince&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2017-10-28 21:05+0000\n"
-"PO-Revision-Date: 2017-11-05 18:22+0100\n"
+"POT-Creation-Date: 2017-12-02 13:24+0000\n"
+"PO-Revision-Date: 2017-12-15 09:24+0100\n"
 "Last-Translator: Fabio Tomat <f.t.public@gmail.com>\n"
 "Language-Team: Friulian <f.t.public@gmail.com>\n"
 "Language: fur\n"
@@ -319,7 +319,7 @@ msgid "Print document"
 msgstr "Stampe il document"
 
 #. Manually set name and icon
-#: ../data/evince.desktop.in.in.h:1 ../shell/ev-application.c:1031
+#: ../data/evince.desktop.in.in.h:1 ../shell/ev-application.c:1012
 #: ../shell/ev-window-title.c:139 ../shell/main.c:298
 msgid "Document Viewer"
 msgstr "Visualizadôr di Documents"
@@ -447,8 +447,8 @@ msgid "of %d"
 msgstr "di %d"
 
 #: ../libmisc/ev-page-action-widget.c:185 ../shell/ev-history.c:426
-#: ../shell/ev-sidebar-bookmarks.c:306 ../shell/ev-window.c:907
-#: ../shell/ev-window.c:4707
+#: ../shell/ev-sidebar-bookmarks.c:306 ../shell/ev-window.c:910
+#: ../shell/ev-window.c:4709
 #, c-format
 msgid "Page %s"
 msgstr "Pagjine %s"
@@ -693,7 +693,7 @@ msgstr "FILE"
 msgid "GNOME Document Previewer"
 msgstr "Anteprime documents di GNOME"
 
-#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3290
+#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3293
 msgid "Failed to print document"
 msgstr "No soi rivât a stampâ il document"
 
@@ -925,47 +925,15 @@ msgstr "Zonte une note testuâl"
 msgid "Add highlight annotation"
 msgstr "Zonte une note evidenziade"
 
-#: ../shell/ev-application.c:997
-msgid ""
-"Evince is free software; you can redistribute it and/or modify it under the "
-"terms of the GNU General Public License as published by the Free Software "
-"Foundation; either version 2 of the License, or (at your option) any later "
-"version.\n"
-msgstr ""
-"Evince al è software libar; al è pussibil tornâ a distribuîlu o modificâlu "
-"sot i tiermins de licence GNU GPL, publicade da Free Software Foundation, "
-"version 2 o (a tô sielte) sucessive.\n"
-
-#: ../shell/ev-application.c:1001
-msgid ""
-"Evince is distributed in the hope that it will be useful, but WITHOUT ANY "
-"WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS "
-"FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more "
-"details.\n"
-msgstr ""
-"Evince al è distribuît inte sperance che al sedi util, ma CENCE NISSUNE "
-"GARANZIE, cence nancje la implicite garanzie di CUMIERÇABILITÂT o IDONEITÂT "
-"A UNE FINALITÂT PARTICOLÂR. Consultâ la licence GNU GPL par vê plui detais.\n"
-
-#: ../shell/ev-application.c:1005
-msgid ""
-"You should have received a copy of the GNU General Public License along with "
-"Evince; if not, write to the Free Software Foundation, Inc., 51 Franklin "
-"Street, Fifth Floor, Boston, MA 02110-1301  USA\n"
-msgstr ""
-"Cun Evince ti varessin di vê dât ancje une copie de licence GNU GPL, in câs "
-"diviers al è pussibil domandâle scrivint a: Free Software Foundation, Inc., "
-"51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA\n"
-
-#: ../shell/ev-application.c:1026 ../evince.appdata.xml.in.h:1
+#: ../shell/ev-application.c:1007 ../evince.appdata.xml.in.h:1
 msgid "Evince"
 msgstr "Evince"
 
-#: ../shell/ev-application.c:1028
+#: ../shell/ev-application.c:1009
 msgid "© 1996–2017 The Evince authors"
 msgstr "© 1996–2017 i autôrs di Evince"
 
-#: ../shell/ev-application.c:1034
+#: ../shell/ev-application.c:1015
 msgid "translator-credits"
 msgstr "Fabio Tomat, <f.t.public@gmail.com>"
 
@@ -1098,15 +1066,15 @@ msgstr "_Cambie non al Segnelibri"
 msgid "_Remove Bookmark"
 msgstr "_Gjave Segnelibri"
 
-#: ../shell/ev-sidebar-bookmarks.c:467
-msgid "Add"
-msgstr "Zonte"
+#: ../shell/ev-sidebar-bookmarks.c:467 ../shell/ev-sidebar-bookmarks.c:468
+msgid "Add bookmark"
+msgstr "Zonte segnelibri"
 
-#: ../shell/ev-sidebar-bookmarks.c:474
-msgid "Remove"
-msgstr "Gjave"
+#: ../shell/ev-sidebar-bookmarks.c:476 ../shell/ev-sidebar-bookmarks.c:477
+msgid "Remove bookmark"
+msgstr "Gjave segnelibri"
 
-#: ../shell/ev-sidebar-bookmarks.c:590 ../shell/ev-toolbar.c:161
+#: ../shell/ev-sidebar-bookmarks.c:593 ../shell/ev-toolbar.c:161
 msgid "Bookmarks"
 msgstr "Segnelibri"
 
@@ -1168,143 +1136,143 @@ msgstr "Met nivel di ingradiment"
 msgid "Supported Image Files"
 msgstr "File imagjin supuartâts"
 
-#: ../shell/ev-window.c:1541
+#: ../shell/ev-window.c:1544
 msgid "The document contains no pages"
 msgstr "Il document nol à pagjinis"
 
-#: ../shell/ev-window.c:1544
+#: ../shell/ev-window.c:1547
 msgid "The document contains only empty pages"
 msgstr "Il document al à dome pagjinis vueidis"
 
-#: ../shell/ev-window.c:1758 ../shell/ev-window.c:1924
+#: ../shell/ev-window.c:1761 ../shell/ev-window.c:1927
 #, c-format
 msgid "Unable to open document “%s”."
 msgstr "Impussibil vierzi il document \"%s\"."
 
-#: ../shell/ev-window.c:1888
+#: ../shell/ev-window.c:1891
 #, c-format
 msgid "Loading document from “%s”"
 msgstr "Daûr a cjamâ il document di \"%s\""
 
-#: ../shell/ev-window.c:2039 ../shell/ev-window.c:2367
+#: ../shell/ev-window.c:2042 ../shell/ev-window.c:2370
 #, c-format
 msgid "Downloading document (%d%%)"
 msgstr "Daûr a scjamâ il document (%d%%)"
 
-#: ../shell/ev-window.c:2072
+#: ../shell/ev-window.c:2075
 msgid "Failed to load remote file."
 msgstr "No soi rivât a cjariâ il file rimot."
 
-#: ../shell/ev-window.c:2311
+#: ../shell/ev-window.c:2314
 #, c-format
 msgid "Reloading document from %s"
 msgstr "Daûr a tornâ a cjamâ il document di %s"
 
-#: ../shell/ev-window.c:2343
+#: ../shell/ev-window.c:2346
 msgid "Failed to reload document."
 msgstr "No soi rivât a tornâ a cjamâ il document."
 
-#: ../shell/ev-window.c:2559
+#: ../shell/ev-window.c:2562
 msgid "Open Document"
 msgstr "Vierç document"
 
-#: ../shell/ev-window.c:2632
+#: ../shell/ev-window.c:2635
 #, c-format
 msgid "Saving document to %s"
 msgstr "Daûr a salvâ document in %s"
 
-#: ../shell/ev-window.c:2635
+#: ../shell/ev-window.c:2638
 #, c-format
 msgid "Saving attachment to %s"
 msgstr "Daûr a salvâ alegât in %s"
 
-#: ../shell/ev-window.c:2638
+#: ../shell/ev-window.c:2641
 #, c-format
 msgid "Saving image to %s"
 msgstr "Daûr a salvâ imagjin in %s"
 
-#: ../shell/ev-window.c:2682 ../shell/ev-window.c:2782
+#: ../shell/ev-window.c:2685 ../shell/ev-window.c:2785
 #, c-format
 msgid "The file could not be saved as “%s”."
 msgstr "Il file nol pues jessi salvât come \"%s\"."
 
-#: ../shell/ev-window.c:2713
+#: ../shell/ev-window.c:2716
 #, c-format
 msgid "Uploading document (%d%%)"
 msgstr "Cjariament document (%d%%)"
 
-#: ../shell/ev-window.c:2717
+#: ../shell/ev-window.c:2720
 #, c-format
 msgid "Uploading attachment (%d%%)"
 msgstr "Cjariament alegât (%d%%)"
 
-#: ../shell/ev-window.c:2721
+#: ../shell/ev-window.c:2724
 #, c-format
 msgid "Uploading image (%d%%)"
 msgstr "Cjariament Imagjin (%d%%)"
 
-#: ../shell/ev-window.c:2834
+#: ../shell/ev-window.c:2837
 msgid "Save As…"
 msgstr "Salve come…"
 
-#: ../shell/ev-window.c:2929
+#: ../shell/ev-window.c:2932
 msgid "Could not send current document"
 msgstr "Impussibil inviâ il document atuâl"
 
-#: ../shell/ev-window.c:3234
+#: ../shell/ev-window.c:3237
 #, c-format
 msgid "%d pending job in queue"
 msgid_plural "%d pending jobs in queue"
 msgstr[0] "%d lavôr in spiete in liste"
 msgstr[1] "%d lavôrs in spiete in liste"
 
-#: ../shell/ev-window.c:3347
+#: ../shell/ev-window.c:3350
 #, c-format
 msgid "Printing job “%s”"
 msgstr "Lavôr di stampe \"%s\""
 
-#: ../shell/ev-window.c:3562
+#: ../shell/ev-window.c:3565
 msgid "Document contains form fields that have been filled out. "
 msgstr "Il document al ten dai cjamps che a son stâts compilâts. "
 
-#: ../shell/ev-window.c:3565
+#: ../shell/ev-window.c:3568
 msgid "Document contains new or modified annotations. "
 msgstr "Il document al ten notis gnovis o modificadis. "
 
-#: ../shell/ev-window.c:3577
+#: ../shell/ev-window.c:3580
 #, c-format
 msgid "Reload document “%s”?"
 msgstr "Tornâ a cjariâ il document “%s”?"
 
-#: ../shell/ev-window.c:3579
+#: ../shell/ev-window.c:3582
 msgid "If you reload the document, changes will be permanently lost."
 msgstr ""
 "Se tu tornis a cjariâ il document lis modifichis a laran pierdudis par "
 "simpri."
 
-#: ../shell/ev-window.c:3583
+#: ../shell/ev-window.c:3586
 msgid "Reload"
 msgstr "Torne cjarie"
 
-#: ../shell/ev-window.c:3590
+#: ../shell/ev-window.c:3593
 #, c-format
 msgid "Save a copy of document “%s” before closing?"
 msgstr "Salvâ une copie dal document \"%s\" prime di sierâ?"
 
-#: ../shell/ev-window.c:3592
+#: ../shell/ev-window.c:3595
 msgid "If you don’t save a copy, changes will be permanently lost."
 msgstr ""
 "Se no si salve une copie, lis modifichis a vignaran pierdudis par simpri."
 
-#: ../shell/ev-window.c:3594
+#: ../shell/ev-window.c:3597
 msgid "Close _without Saving"
 msgstr "Siere _cence Salvâ"
 
-#: ../shell/ev-window.c:3598
+#: ../shell/ev-window.c:3601
 msgid "Save a _Copy"
 msgstr "Salve une _Copie"
 
-#: ../shell/ev-window.c:3682
+#: ../shell/ev-window.c:3685
 #, c-format
 msgid "Wait until print job “%s” finishes before closing?"
 msgstr ""
@@ -1313,7 +1281,7 @@ msgstr ""
 #. TRANS: the singular form is not really used as n_print_jobs > 1
 #. but some languages distinguish between different plurals forms,
 #. so the ngettext is needed.
-#: ../shell/ev-window.c:3688
+#: ../shell/ev-window.c:3691
 #, c-format
 msgid "There is %d print job active. Wait until print finishes before closing?"
 msgid_plural ""
@@ -1325,31 +1293,31 @@ msgstr[1] ""
 "A son %d lavôrs di stampe atîfs. Spietâ fintremai che la stampe e finissi "
 "prime di sierâ?"
 
-#: ../shell/ev-window.c:3703
+#: ../shell/ev-window.c:3706
 msgid "If you close the window, pending print jobs will not be printed."
 msgstr "Se tu sieris il barcon lis stampis in spiete no saran stampadis."
 
-#: ../shell/ev-window.c:3707
+#: ../shell/ev-window.c:3710
 msgid "Cancel _print and Close"
 msgstr "Anule _stampe e Siere"
 
-#: ../shell/ev-window.c:3711
+#: ../shell/ev-window.c:3714
 msgid "Close _after Printing"
 msgstr "Siere _dopo vê stampât"
 
-#: ../shell/ev-window.c:4242
+#: ../shell/ev-window.c:4244
 msgid "Running in presentation mode"
 msgstr "Al zire in modalitât presentazion"
 
-#: ../shell/ev-window.c:5391
+#: ../shell/ev-window.c:5393
 msgid "Enable caret navigation?"
 msgstr "Abilitâ la navigazion cun cursôr?"
 
-#: ../shell/ev-window.c:5393
+#: ../shell/ev-window.c:5395
 msgid "_Enable"
 msgstr "_Abilite"
 
-#: ../shell/ev-window.c:5396
+#: ../shell/ev-window.c:5398
 msgid ""
 "Pressing F7 turns the caret navigation on or off. This feature places a "
 "moveable cursor in text pages, allowing you to move around and select text "
@@ -1360,39 +1328,39 @@ msgstr ""
 "movisi e selezionâ il test doprant la tastiere. Abilitâ la navigazion cun "
 "cursôr?"
 
-#: ../shell/ev-window.c:5401
+#: ../shell/ev-window.c:5403
 msgid "Don’t show this message again"
 msgstr "No stâ mostrâ plui chest messaç"
 
-#: ../shell/ev-window.c:5916 ../shell/ev-window.c:5932
+#: ../shell/ev-window.c:5939 ../shell/ev-window.c:5955
 msgid "Unable to launch external application."
 msgstr "Impussibil inviâ la aplicazion esterne."
 
-#: ../shell/ev-window.c:5989
+#: ../shell/ev-window.c:6012
 msgid "Unable to open external link"
 msgstr "Impussibil vierzi il link esterni"
 
-#: ../shell/ev-window.c:6192
+#: ../shell/ev-window.c:6215
 msgid "Couldn’t find appropriate format to save image"
 msgstr "No rivi a cjatâ un formât just par salvâ la imagjin"
 
-#: ../shell/ev-window.c:6224
+#: ../shell/ev-window.c:6247
 msgid "The image could not be saved."
 msgstr "No si pues salvâ la imagjin."
 
-#: ../shell/ev-window.c:6259
+#: ../shell/ev-window.c:6282
 msgid "Save Image"
 msgstr "Salve imagjin"
 
-#: ../shell/ev-window.c:6418
+#: ../shell/ev-window.c:6441
 msgid "Unable to open attachment"
 msgstr "Impussibil vierzi alegât"
 
-#: ../shell/ev-window.c:6474
+#: ../shell/ev-window.c:6497
 msgid "The attachment could not be saved."
 msgstr "No si pues salvâ il alegât."
 
-#: ../shell/ev-window.c:6522
+#: ../shell/ev-window.c:6545
 msgid "Save Attachment"
 msgstr "Salve alegât"
 
@@ -1816,15 +1784,30 @@ msgstr "Ridûs"
 
 #: ../shell/help-overlay.ui.h:27
 msgctxt "shortcut window"
+msgid "Fit page"
+msgstr "Adate ae pagjine"
+
+#: ../shell/help-overlay.ui.h:28
+msgctxt "shortcut window"
+msgid "Fit width"
+msgstr "Adate ae largjece"
+
+#: ../shell/help-overlay.ui.h:29
+msgctxt "shortcut window"
+msgid "Automatic zoom"
+msgstr "Ingrandiment automatic"
+
+#: ../shell/help-overlay.ui.h:30
+msgctxt "shortcut window"
 msgid "Touchpad gestures"
 msgstr "Mots Touchpad"
 
-#: ../shell/help-overlay.ui.h:28
+#: ../shell/help-overlay.ui.h:31
 msgctxt "shortcut window"
 msgid "Go to next page"
 msgstr "Va te prossime pagjine"
 
-#: ../shell/help-overlay.ui.h:29
+#: ../shell/help-overlay.ui.h:32
 msgctxt "shortcut window"
 msgid "Go to previous page"
 msgstr "Va te pagjine prime"
@@ -1844,6 +1827,42 @@ msgid ""
 msgstr ""
 "Al supuarte chescj formâts di document: PDF, PS, EPS, XPS, DjVu, TIFF, DVI "
 "(cun SyncTeX), e archivis di fumets (CBR, CBT, CBZ, CB7)."
+
+#~ msgid ""
+#~ "Evince is free software; you can redistribute it and/or modify it under "
+#~ "the terms of the GNU General Public License as published by the Free "
+#~ "Software Foundation; either version 2 of the License, or (at your option) "
+#~ "any later version.\n"
+#~ msgstr ""
+#~ "Evince al è software libar; al è pussibil tornâ a distribuîlu o "
+#~ "modificâlu sot i tiermins de licence GNU GPL, publicade da Free Software "
+#~ "Foundation, version 2 o (a tô sielte) sucessive.\n"
+
+#~ msgid ""
+#~ "Evince is distributed in the hope that it will be useful, but WITHOUT ANY "
+#~ "WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS "
+#~ "FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more "
+#~ "details.\n"
+#~ msgstr ""
+#~ "Evince al è distribuît inte sperance che al sedi util, ma CENCE NISSUNE "
+#~ "GARANZIE, cence nancje la implicite garanzie di CUMIERÇABILITÂT o "
+#~ "IDONEITÂT A UNE FINALITÂT PARTICOLÂR. Consultâ la licence GNU GPL par vê "
+#~ "plui detais.\n"
+
+#~ msgid ""
+#~ "You should have received a copy of the GNU General Public License along "
+#~ "with Evince; if not, write to the Free Software Foundation, Inc., 51 "
+#~ "Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA\n"
+#~ msgstr ""
+#~ "Cun Evince ti varessin di vê dât ancje une copie de licence GNU GPL, in "
+#~ "câs diviers al è pussibil domandâle scrivint a: Free Software Foundation, "
+#~ "Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA\n"
+
+#~ msgid "Add"
+#~ msgstr "Zonte"
+
+#~ msgid "Remove"
+#~ msgstr "Gjave"
 
 #~ msgid "Save a Copy"
 #~ msgstr "Salve une copie"
