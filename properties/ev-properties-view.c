@@ -151,6 +151,36 @@ make_valid_utf8 (const gchar *name)
   return g_string_free (string, FALSE);
 }
 
+static gchar *
+cleanup_text (const char *str)
+{
+	char *valid;
+	GString *gstr;
+	gboolean prev_isspace = TRUE;
+
+	g_assert_nonnull (str);
+	valid = make_valid_utf8 (str);
+	gstr = g_string_new (NULL);
+
+	for (str = valid; *str != '\0'; str = g_utf8_next_char (str)) {
+		gunichar c = g_utf8_get_char (str);
+
+		if (g_unichar_isspace (c)) {
+			/* replace a run of any whitespace characters with a
+			 * space single character */
+			if (!prev_isspace)
+				g_string_append_c (gstr, ' ');
+			prev_isspace = TRUE;
+		} else {
+			g_string_append_unichar (gstr, c);
+			prev_isspace = FALSE;
+		}
+	}
+
+	g_free (valid);
+	return g_string_free (gstr, FALSE);
+}
+
 static void
 set_property (EvPropertiesView *properties,
 	      GtkGrid          *grid,
@@ -182,6 +212,11 @@ set_property (EvPropertiesView *properties,
 			      "width_chars", 25,
 			      "selectable", TRUE,
 			      "ellipsize", PANGO_ELLIPSIZE_END,
+			      "hexpand", TRUE,
+			      "max-width-chars", 100,
+			      "wrap-mode", PANGO_WRAP_WORD_CHAR,
+			      "wrap", TRUE,
+			      "lines", 5,
 			      NULL);
 	} else {
 		value_label = properties->labels[property];
@@ -197,7 +232,7 @@ set_property (EvPropertiesView *properties,
 		gtk_label_set_markup (GTK_LABEL (value_label), markup);
 		g_free (markup);
 	} else {
-		valid_text = make_valid_utf8 (text ? text : "");
+		valid_text = cleanup_text (text);
 		gtk_label_set_text (GTK_LABEL (value_label), valid_text);
 		g_free (valid_text);
 	}

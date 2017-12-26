@@ -92,6 +92,7 @@ ev_properties_get_pages (NautilusPropertyPageProvider *provider,
 	gchar *uri = NULL;
 	gchar *mime_type = NULL;
 	GtkWidget *page, *label;
+	GtkWidget *scrolled;
 	NautilusPropertyPage *property_page;
 
 	/* only add properties page if a single file is selected */
@@ -118,8 +119,18 @@ ev_properties_get_pages (NautilusPropertyPageProvider *provider,
 	ev_properties_view_set_info (EV_PROPERTIES_VIEW (page),
 				     ev_document_get_info (document));
 	gtk_widget_show (page);
+
+	scrolled = gtk_scrolled_window_new (NULL, NULL);
+	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled),
+					GTK_POLICY_NEVER,
+					GTK_POLICY_AUTOMATIC);
+	gtk_scrolled_window_set_propagate_natural_width (GTK_SCROLLED_WINDOW (scrolled),
+							 TRUE);
+	gtk_container_add (GTK_CONTAINER (scrolled), page);
+	gtk_widget_show (scrolled);
+
 	property_page = nautilus_property_page_new ("document-properties",
-			label, page);
+			label, scrolled);
 
 	pages = g_list_prepend (pages, property_page);
 
