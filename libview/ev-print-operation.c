@@ -1802,7 +1802,17 @@ ev_print_operation_print_request_page_setup (EvPrintOperationPrint *print,
 	}
 
 	if (print->autorotate) {
-		if (width > height)
+		gdouble paper_width, paper_height;
+		gboolean page_is_landscape, paper_is_landscape;
+
+		GtkPaperSize *psize = gtk_page_setup_get_paper_size (setup);
+		paper_width = gtk_paper_size_get_width (psize, GTK_UNIT_POINTS);
+		paper_height = gtk_paper_size_get_height (psize, GTK_UNIT_POINTS);
+
+		paper_is_landscape = paper_width > paper_height;
+		page_is_landscape = width > height;
+
+		if (page_is_landscape != paper_is_landscape)
 			gtk_page_setup_set_orientation (setup, GTK_PAGE_ORIENTATION_LANDSCAPE);
 		else
 			gtk_page_setup_set_orientation (setup, GTK_PAGE_ORIENTATION_PORTRAIT);
