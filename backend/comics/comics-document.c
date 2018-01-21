@@ -79,6 +79,25 @@ has_supported_extension (const char *name,
 	return ret;
 }
 
+#define APPLE_DOUBLE_PREFIX "._"
+static gboolean
+is_apple_double (const char *name)
+{
+	char *basename;
+	gboolean ret = FALSE;
+
+	basename = g_path_get_basename (name);
+	if (basename == NULL) {
+		g_debug ("Filename '%s' doesn't have a basename?", name);
+		return ret;
+	}
+
+	ret = g_str_has_prefix (basename, APPLE_DOUBLE_PREFIX);
+	g_free (basename);
+
+	return ret;
+}
+
 static GPtrArray *
 comics_document_list (ComicsDocument  *comics_document,
 		      GError         **error)
@@ -125,6 +144,12 @@ comics_document_list (ComicsDocument  *comics_document,
 		}
 
 		name = ev_archive_get_entry_pathname (comics_document->archive);
+		/* Ignore https://en.wikipedia.org/wiki/AppleSingle_and_AppleDouble_formats */
+		if (is_apple_double (name)) {
+			g_debug ("Not adding AppleDouble file '%s' to the list of files in the comics", name);
+			continue;
+		}
+
 		if (!has_supported_extension (name, supported_extensions)) {
 			g_debug ("Not adding unsupported file '%s' to the list of files in the comics", name);
 			continue;
