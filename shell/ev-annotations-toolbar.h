@@ -37,7 +37,6 @@ typedef struct _EvAnnotationsToolbarClass   EvAnnotationsToolbarClass;
 
 GType      ev_annotations_toolbar_get_type           (void) G_GNUC_CONST;
 GtkWidget *ev_annotations_toolbar_new                (void);
-void       ev_annotations_toolbar_add_annot_finished (EvAnnotationsToolbar *toolbar);
 
 G_END_DECLS
 
