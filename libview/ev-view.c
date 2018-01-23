@@ -5882,7 +5882,6 @@ ev_view_button_release_event (GtkWidget      *widget,
 		if (annot_added)
 			g_signal_emit (view, signals[SIGNAL_ANNOT_ADDED], 0, view->adding_annot_info.annot);
 
-		view->adding_annot_info.adding_annot = FALSE;
 		view->adding_annot_info.annot = NULL;
 		ev_view_handle_cursor_over_xy (view, event->x, event->y);
 		view->pressed_button = -1;

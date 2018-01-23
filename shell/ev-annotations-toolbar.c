@@ -173,14 +173,3 @@ ev_annotations_toolbar_new (void)
 {
 	return GTK_WIDGET (g_object_new (EV_TYPE_ANNOTATIONS_TOOLBAR, NULL));
 }
-
-void
-ev_annotations_toolbar_add_annot_finished (EvAnnotationsToolbar *toolbar)
-{
-        g_return_if_fail (EV_IS_ANNOTATIONS_TOOLBAR (toolbar));
-
-        if (ev_annotations_toolbar_toggle_button_if_active (toolbar, GTK_TOGGLE_TOOL_BUTTON (toolbar->text_button)))
-                return;
-
-        ev_annotations_toolbar_toggle_button_if_active (toolbar, GTK_TOGGLE_TOOL_BUTTON (toolbar->highlight_button));
-}
