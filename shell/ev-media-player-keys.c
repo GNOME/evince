@@ -135,9 +135,6 @@ media_player_key_pressed_cb (GDBusProxy *proxy,
 {
         const char *application, *key;
 
-        if (g_strcmp0 (sender_name, SD_NAME) != 0)
-                return;
-
         if (g_strcmp0 (signal_name, "MediaPlayerKeyPressed") != 0)
                 return;
 
