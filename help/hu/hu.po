@@ -1,22 +1,22 @@
-# Hungarian translation of evince_help
-# Copyright (C) 2011, 2012, 2013, 2014. Free Software Foundation, Inc.
+# Hungarian translation for evince_help.
+# Copyright (C) 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018. Free Software Foundation, Inc.
 # This file is distributed under the same license as the evince help.
 #
 # Attila Hammer <hammera at pickup dot hu>, 2014.
 # Gabor Kelemen <kelemeng at gnome dot hu>, 2011, 2012, 2013, 2014, 2015, 2016, 2017.
-# Balázs Úr <urbalazs at gmail dot com>, 2014.
+# Balázs Úr <urbalazs at gmail dot com>, 2014, 2018.
 msgid ""
 msgstr ""
 "Project-Id-Version: evince master\n"
-"POT-Creation-Date: 2017-09-06 08:09+0000\n"
-"PO-Revision-Date: 2017-09-08 21:34+0200\n"
-"Last-Translator: Gabor Kelemen <kelemeng at ubuntu dot com>\n"
+"POT-Creation-Date: 2017-10-25 16:27+0000\n"
+"PO-Revision-Date: 2018-01-28 20:57+0100\n"
+"Last-Translator: Balázs Úr <urbalazs@gmail.com>\n"
 "Language-Team: Hungarian <openscope at googlegroups dot com>\n"
 "Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 1.5\n"
+"X-Generator: Lokalize 1.2\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. Put one translator per line, in the form NAME <EMAIL>, YEAR1, YEAR2
@@ -36,7 +36,7 @@ msgstr ""
 #: C/annotation-properties.page:11 C/annotations-disabled.page:11
 #: C/annotations-navigate.page:12 C/annotations.page:12
 #: C/annotations-save.page:12 C/bookmarks.page:13 C/bug-filing.page:11
-#: C/commandline.page:15 C/develop.page:10 C/documentation.page:9
+#: C/commandline.page:16 C/develop.page:10 C/documentation.page:9
 #: C/duplex-10pages.page:12 C/duplex-11pages.page:12 C/duplex-12pages.page:12
 #: C/duplex-13pages.page:12 C/duplex-14pages.page:12 C/duplex-15pages.page:12
 #: C/duplex-16pages.page:12 C/duplex-3pages.page:12 C/duplex-4pages.page:12
@@ -49,7 +49,7 @@ msgstr ""
 #: C/singlesided-5-8pages.page:12 C/singlesided-9-12pages.page:12
 #: C/singlesided-npages.page:12 C/synctex-beamer.page:11
 #: C/synctex-compile.page:11 C/synctex-editors.page:11 C/synctex.page:12
-#: C/synctex-search.page:11 C/synctex-support.page:11 C/toolbar.page:14
+#: C/synctex-search.page:11 C/synctex-support.page:11 C/titlebar.page:13
 #: C/translate.page:10
 msgid "Tiffany Antopolski"
 msgstr "Tiffany Antopolski"
@@ -58,7 +58,7 @@ msgstr "Tiffany Antopolski"
 #: C/annotation-properties.page:15 C/annotations-disabled.page:15
 #: C/annotations-navigate.page:16 C/annotations.page:20
 #: C/annotations-save.page:20 C/bookmarks.page:22 C/bug-filing.page:15
-#: C/commandline.page:19 C/convertpdf.page:21 C/convertPostScript.page:21
+#: C/commandline.page:20 C/convertpdf.page:21 C/convertPostScript.page:21
 #: C/convertSVG.page:20 C/default-settings.page:15 C/develop.page:15
 #: C/documentation.page:14 C/duplex-10pages.page:16 C/duplex-11pages.page:16
 #: C/duplex-12pages.page:16 C/duplex-13pages.page:16 C/duplex-14pages.page:16
@@ -75,7 +75,7 @@ msgstr "Tiffany Antopolski"
 #: C/singlesided-9-12pages.page:16 C/singlesided-npages.page:16
 #: C/synctex-beamer.page:15 C/synctex-compile.page:15 C/synctex-editors.page:15
 #: C/synctex.page:16 C/synctex-search.page:15 C/synctex-support.page:15
-#: C/textselection.page:15 C/toolbar.page:18 C/translate.page:19
+#: C/textselection.page:15 C/titlebar.page:17 C/translate.page:19
 msgid "Creative Commons Share Alike 3.0"
 msgstr "Creative Commons Share Alike 3.0"
 
@@ -163,7 +163,7 @@ msgstr ""
 msgid ""
 "View a page that has an annotation. If you are not sure which pages have "
 "annotations, find them in the <link xref=\"annotations-navigate\">annotation "
-"sidebar</link>."
+"side pane</link>."
 msgstr ""
 "Nyisson meg egy jegyzetet tartalmazó oldalt. Ha nem biztos benne, hogy mely "
 "oldalak tartalmaznak jegyzeteket, a <link xref=\"annotations-navigate"
@@ -173,7 +173,7 @@ msgstr ""
 #: C/annotations-delete.page:35
 msgid ""
 "Right-click on the annotation icon in the document, and click <gui style="
-"\"menuitem\">Remove Annotation</gui>"
+"\"menuitem\">Remove Annotation</gui>."
 msgstr ""
 "Kattintson a jobb egérgombbal a jegyzet ikonjára a dokumentumban, és "
 "kattintson a <gui style=\"menuitem\">Jegyzet eltávolítása</gui> pontra."
@@ -182,10 +182,10 @@ msgstr ""
 #: C/annotations-delete.page:39
 msgid ""
 "Save the changes to a new document by clicking the menu button in the top "
-"right, followed by <gui style=\"menuitem\">Save a Copy…</gui>."
+"right, followed by <gui style=\"menuitem\">Save As…</gui>."
 msgstr ""
 "Mentse a változásokat egy új dokumentumba a jobb felső sarokban lévő menü "
-"gombra kattintással, és a <gui style=\"menuitem\">Másolat mentése…</gui> "
+"gombra kattintással, és a <gui style=\"menuitem\">Mentés másként…</gui> "
 "menüpont kiválasztásával."
 
 #. (itstool) path: info/desc
@@ -221,13 +221,13 @@ msgstr "Jegyzetnavigáció"
 #. (itstool) path: page/p
 #: C/annotations-navigate.page:22
 msgid ""
-"If you have created annotations on your document, you can use the <gui>Side "
-"Pane</gui> to display the list of all the annotations in the document. The "
-"list indicates the type, page number, author and date of the annotation."
+"If you have created annotations on your document, you can use the side pane "
+"to display the list of all the annotations in the document. The list "
+"indicates the type, page number, author and date of the annotation."
 msgstr ""
-"Ha jegyzeteket hozott létre a dokumentumban, akkor az <gui>Oldalsáv</gui> "
-"segítségével megjelenítheti a dokumentum összes jegyzetének listáját. A "
-"lista jelzi a típust, az oldalszámot, a szerzőt és a dátumot."
+"Ha jegyzeteket hozott létre a dokumentumban, akkor az oldalsáv segítségével "
+"megjelenítheti a dokumentum összes jegyzetének listáját. A lista jelzi a "
+"típust, az oldalszámot, a szerzőt és a dátumot."
 
 #. (itstool) path: page/p
 #: C/annotations-navigate.page:25
@@ -286,12 +286,14 @@ msgstr ""
 #: C/annotations.page:29
 msgid ""
 "When you open a file, you should have a side pane on the left side of the "
-"window. If you do not have a visible side pane, click <guiseq><gui>View</"
-"gui><gui>Side Pane</gui></guiseq> or press <key>F9</key>."
+"window. If you do not have a visible side pane, click the <gui>View options</"
+"gui> menu in the top right corner and select <gui>Side Panel</gui> or press "
+"<key>F9</key> on the keyboard."
 msgstr ""
-"Fájl megnyitásakor az ablak bal oldalán található egy oldalsáv. Ha ez nem "
-"látható, akkor válassza a <guiseq><gui>Nézet</gui><gui>Oldalsáv</gui></"
-"guiseq> menüpontot, vagy nyomja meg az <key>F9</key> billentyűt."
+"Amikor megnyit egy fájlt, akkor az ablak bal oldalán lennie kell egy "
+"oldalsávnak. Ha ez az oldalsáv nem látható, akkor kattintson a <gui>"
+"Nézetbeállítások</gui> menüre a jobb felső sarokban, és válassza az <gui>"
+"Oldalsáv</gui> menüpontot, vagy nyomja meg az <key>F9</key> billentyűt."
 
 #. (itstool) path: page/p
 #: C/annotations.page:33
@@ -332,10 +334,10 @@ msgstr ""
 #: C/annotations.page:47
 msgid ""
 "You should now see <gui>Add text annotation</gui> and <gui>Add highlight "
-"annotation</gui> bottons below the title bar."
+"annotation</gui> buttons below the title bar."
 msgstr ""
-"Ekkor a címsor alatt megjelennek a <gui>Szöveges jegyzet hozzáadása</gui> és "
-"<gui>Kiemelés jegyzet hozzáadása</gui> gombok."
+"Most látnia kell a <gui>Szöveges jegyzet hozzáadása</gui> és a <gui>Kiemelés "
+"jegyzet hozzáadása</gui> gombokat a címsáv alatt."
 
 #. (itstool) path: item/p
 #: C/annotations.page:55
@@ -400,10 +402,10 @@ msgstr ""
 
 #. (itstool) path: item/p
 #: C/annotations-save.page:31
-msgid "Click <guiseq><gui>File options</gui><gui>Save a Copy…</gui></guiseq>"
+msgid "Click <guiseq><gui>File options</gui><gui>Save As…</gui></guiseq>"
 msgstr ""
-"Válassza a <guiseq><gui>Fájlbeállítások</gui><gui>Másolat mentése</gui></"
-"guiseq> menüpontot."
+"Kattintson a <guiseq><gui>Fájlbeállítások</gui><gui>Mentés másként…</gui><"
+"/guiseq> menüpontra."
 
 #. (itstool) path: item/p
 #: C/annotations-save.page:36
@@ -460,8 +462,8 @@ msgstr ""
 #. (itstool) path: page/p
 #: C/bookmarks.page:37
 msgid ""
-"At the top of this side pane, there is a dropdown menu. To work with "
-"bookmarks, select the <gui>Bookmarks</gui> option from this dropdown menu."
+"At the top of this side pane, there is a drop-down menu. To work with "
+"bookmarks, select the <gui>Bookmarks</gui> option from this drop-down menu."
 msgstr ""
 "Az oldalsáv tetején található egy legördülő menü. Ha a könyvjelzőkkel "
 "szeretne valamilyen műveletet végezni, a legördülő menüből válassza a "
@@ -483,7 +485,7 @@ msgstr ""
 
 #. (itstool) path: item/p
 #: C/bookmarks.page:51
-msgid "In the side pane, select <gui>Bookmarks</gui> from the dropdown menu."
+msgid "In the side pane, select <gui>Bookmarks</gui> from the drop-down menu."
 msgstr ""
 "Az oldalsávon található legördülő menüből válassza a <gui>Könyvjelzők</gui> "
 "lehetőséget."
@@ -649,7 +651,7 @@ msgstr ""
 "különböző oldalakon és módokban."
 
 #. (itstool) path: credit/name
-#: C/commandline.page:11 C/convertpdf.page:13 C/convertPostScript.page:13
+#: C/commandline.page:12 C/convertpdf.page:13 C/convertPostScript.page:13
 #: C/convertSVG.page:12 C/editing.page:11 C/finding.page:14 C/formats.page:14
 #: C/index.page:14 C/invert-colors.page:15 C/movingaround.page:12
 #: C/noprint.page:10 C/password.page:12 C/presentations.page:12
@@ -660,12 +662,12 @@ msgid "Phil Bull"
 msgstr "Phil Bull"
 
 #. (itstool) path: page/title
-#: C/commandline.page:23
+#: C/commandline.page:24
 msgid "The command line"
 msgstr "A parancssor"
 
 #. (itstool) path: page/p
-#: C/commandline.page:24
+#: C/commandline.page:25
 msgid ""
 "To start the <app>Document Viewer</app> from the command line, type "
 "<cmd>evince</cmd>. You can open a specific file by typing the filename after "
@@ -676,13 +678,13 @@ msgstr ""
 "fájlnevet az evince parancs után:"
 
 #. (itstool) path: page/screen
-#: C/commandline.page:29
+#: C/commandline.page:30
 #, no-wrap
 msgid "evince file.pdf"
 msgstr "evince fájl.pdf"
 
 #. (itstool) path: page/p
-#: C/commandline.page:30
+#: C/commandline.page:31
 msgid ""
 "You can open multiple files by typing the filenames after the evince "
 "command, separating the filenames by a space:"
@@ -691,13 +693,13 @@ msgstr ""
 "evince parancs után:"
 
 #. (itstool) path: page/screen
-#: C/commandline.page:33
+#: C/commandline.page:34
 #, no-wrap
 msgid "evince file1.pdf file2.pdf"
 msgstr "evince fájl1.pdf fájl2.pdf"
 
 #. (itstool) path: page/p
-#: C/commandline.page:34
+#: C/commandline.page:35
 msgid ""
 "The <app>document viewer</app> also supports the handling of files on the "
 "web. For example, after the evince command you can give the location of a "
@@ -707,18 +709,18 @@ msgstr ""
 "kezelését. Az evince parancs után például megadhatja egy fájl helyét a weben:"
 
 #. (itstool) path: page/screen
-#: C/commandline.page:37
+#: C/commandline.page:38
 #, no-wrap
 msgid "evince http://www.claymath.org/millennium/P_vs_NP/pvsnp.pdf"
 msgstr "evince http://www.claymath.org/millennium/P_vs_NP/pvsnp.pdf"
 
 #. (itstool) path: section/title
-#: C/commandline.page:39
+#: C/commandline.page:40
 msgid "Opening a document at a specific page"
 msgstr "Dokumentum megnyitása adott oldalon"
 
 #. (itstool) path: section/p
-#: C/commandline.page:40
+#: C/commandline.page:41
 msgid ""
 "You can use the <cmd>--page-label</cmd> switch to open a document at a "
 "specific page. For example, to open a document to page 3, you would type:"
@@ -728,49 +730,49 @@ msgstr ""
 "oldalon:"
 
 #. (itstool) path: section/screen
-#: C/commandline.page:44
+#: C/commandline.page:45
 #, no-wrap
 msgid "evince --page-label=3 file.pdf"
 msgstr "evince --page-label=3 fájl.pdf"
 
 #. (itstool) path: section/p
-#: C/commandline.page:45
+#: C/commandline.page:46
 msgid ""
 "The page label should be in the same format as the page number displayed in "
-"the <app>Document Viewer</app> toolbar."
+"the <app>Document Viewer</app> title bar."
 msgstr ""
-"Az oldalcímkének azonos formátumúnak kell lennie, mint a "
-"<app>Dokumentummegjelenítő</app> eszköztárának megjelenő oldalszámnak."
+"Az oldalcímkének azonos formátumúnak kell lennie, mint a <app>"
+"Dokumentummegjelenítő</app> címsávján megjelenő oldalszámnak."
 
 #. (itstool) path: section/title
-#: C/commandline.page:51
+#: C/commandline.page:52
 msgid "Opening a document in fullscreen mode"
 msgstr "Dokumentum megnyitása teljes képernyős módban"
 
 #. (itstool) path: section/screen
-#: C/commandline.page:52
+#: C/commandline.page:53
 #, no-wrap
 msgid "evince --fullscreen file.pdf"
 msgstr "evince --fullscreen fájl.pdf"
 
 #. (itstool) path: section/title
-#: C/commandline.page:55
+#: C/commandline.page:56
 msgid "Opening a document in presentation mode"
 msgstr "Dokumentum megnyitása bemutató módban"
 
 #. (itstool) path: section/screen
-#: C/commandline.page:56
+#: C/commandline.page:57
 #, no-wrap
 msgid "evince --presentation file.pdf"
 msgstr "evince --presentation fájl.pdf"
 
 #. (itstool) path: section/title
-#: C/commandline.page:59
+#: C/commandline.page:60
 msgid "Opening a document in preview mode"
 msgstr "Dokumentum megnyitása előnézet módban"
 
 #. (itstool) path: section/screen
-#: C/commandline.page:60
+#: C/commandline.page:61
 #, no-wrap
 msgid "evince --preview file.pdf"
 msgstr "evince --preview fájl.pdf"
@@ -2004,12 +2006,12 @@ msgstr ""
 #: C/editing.page:29
 msgid ""
 "PDF and PostScript (.ps) files are not usually intended to be edited, but "
-"PDF editing software is available. Try <link href=\"http://pdfedit.petricek."
-"net/en/index.html\">pdfedit</link>, for example."
+"PDF editing software is available. Try <link href=\"http://pdfedit.cz/en/"
+"index.html\">pdfedit</link>, for example."
 msgstr ""
 "A PDF és PostScript (.ps) fájlokat általában nem további szerkesztésre "
 "szánják, de léteznek PDF-szerkesztő szoftverek. Próbálja ki például a <link "
-"href=\"http://pdfedit.petricek.net/en/index.html\">pdfedit</link> nevűt."
+"href=\"http://pdfedit.cz/en/index.html\">pdfedit</link> nevűt."
 
 #. (itstool) path: info/desc
 #: C/finding.page:28
@@ -2211,12 +2213,12 @@ msgstr ""
 #: C/forms-saving.page:39
 msgid ""
 "Click the <gui>File options</gui> menu in the top right corner and select "
-"<gui>Save a copy</gui> or press <keyseq><key>Ctrl</key><key>S</key></keyseq> "
-"on your keyboard."
+"<gui>Save as</gui> or press <keyseq><key>Ctrl</key><key>S</key></keyseq> on "
+"your keyboard."
 msgstr ""
-"Válassza a <gui>Fájlbeállítások</gui> menüt a jobb felső sarokban, majd a "
-"<gui>Másolat mentése</gui> menüpontot, vagy megnyomhatja a "
-"<keyseq><key>Ctrl</key><key>S</key></keyseq> billentyűkombinációt is."
+"Kattintson a <gui>Fájlbeállítások</gui> menüre a jobb felső sarokban, majd "
+"válassza a <gui>Mentés másként</gui> menüpontot, vagy nyomja meg a <keyseq><"
+"key>Ctrl</key><key>S</key></keyseq> billentyűkombinációt."
 
 #. (itstool) path: item/p
 #: C/forms-saving.page:44
@@ -2594,11 +2596,12 @@ msgstr "A dokumentum oldalai közt a következő módszerekkel mozoghat:"
 #. (itstool) path: item/p
 #: C/movingaround.page:79
 msgid ""
-"Click the <gui>&lt;</gui> or <gui>&gt;</gui> buttons on the <link xref="
-"\"toolbar\">toolbar</link>."
+"Click the <gui>View options</gui> menu in the top right corner and select "
+"<gui>Previous Page</gui> or <gui>Next Page</gui>."
 msgstr ""
-"Nyomja meg az <link xref=\"toolbar\">eszköztár</link> <gui>&lt;</gui> vagy "
-"<gui>&gt;</gui> gombját."
+"A jobb felső sarokban kattintson a <gui>Nézetbeállítások</gui> gombra, és "
+"válassza az <gui>Előző oldal</gui> vagy a <gui>Következő oldal</gui> "
+"menüpontot."
 
 #. (itstool) path: item/p
 #: C/movingaround.page:83
@@ -2618,21 +2621,21 @@ msgstr "Adott oldalra ugráshoz:"
 #: C/movingaround.page:91
 msgid ""
 "Type a page number in <gui style=\"input\">Select Page</gui> on the <link "
-"xref=\"toolbar\">toolbar</link> and press <key>Enter</key>."
+"xref=\"titlebar\">title bar</link> and press <key>Enter</key>."
 msgstr ""
-"Írja be az oldalszámot az <link xref=\"toolbar\">eszköztáron</link> lévő "
-"<gui style=\"input\">Oldal kiválasztása</gui> mezőbe, és nyomja meg az "
-"<key>Enter</key> billentyűt."
+"Írjon be egy oldalszámot a <link xref=\"titlebar\">címsávon</link> lévő <gui "
+"style=\"input\">Oldal kiválasztása</gui> mezőbe, és nyomja meg az <key>Enter<"
+"/key> billentyűt."
 
 #. (itstool) path: item/p
 #: C/movingaround.page:95
 msgid ""
 "If you want to see the previously visited pages press <gui style=\"button"
-"\">&lt;</gui> or <gui style=\"button\">&gt;</gui> on the toolbar."
+"\">&lt;</gui> or <gui style=\"button\">&gt;</gui> on the title bar."
 msgstr ""
-"Ha szeretné látni a korábban már felkeresett oldalakat, akkor nyomja meg az "
-"eszköztár  <gui style=\"button\">&lt;</gui> vagy <gui style=\"button\">&gt;</"
-"gui> gombját."
+"Ha szeretné látni a korábban már felkeresett oldalakat, akkor nyomja meg a "
+"címsávon a <gui style=\"button\">&lt;</gui> vagy <gui style=\"button\">&gt;<"
+"/gui> gombot."
 
 #. (itstool) path: item/p
 #: C/movingaround.page:100
@@ -2642,24 +2645,24 @@ msgstr "Ha a dokumentum elejére vagy végére szeretne ugrani:"
 #. (itstool) path: item/p
 #: C/movingaround.page:103
 msgid ""
-"Click the <gui>File options</gui> menu in the top right corner and select "
+"Click the <gui>View options</gui> menu in the top right corner and select "
 "<gui>First Page</gui>. You can also press <keyseq><key>Ctrl</key><key>Home</"
 "key></keyseq> on your keyboard."
 msgstr ""
-"Válassza a <gui>Fájlbeállítások</gui> menüt a jobb felső sarokban, majd az "
-"<gui>Első oldal</gui> menüpontot, vagy megnyomhatja a <keyseq><key>Ctrl</"
-"key><key>Home</key></keyseq> billentyűkombinációt is."
+"Kattintson a <gui>Nézetbeállítások</gui> menüre a jobb felső sarokban, majd "
+"válassza az <gui>Első oldal</gui> menüpontot. Megnyomhatja a <keyseq><key>"
+"Ctrl</key><key>Home</key></keyseq> billentyűkombinációt is."
 
 #. (itstool) path: item/p
 #: C/movingaround.page:109
 msgid ""
-"Click the <gui>File options</gui> menu in the top right corner and select "
+"Click the <gui>View options</gui> menu in the top right corner and select "
 "<gui>Last Page</gui> or press <keyseq><key>Ctrl</key><key>End</key></keyseq> "
 "on your keyboard."
 msgstr ""
-"Válassza a <gui>Fájlbeállítások</gui> menüt a jobb felső sarokban, majd az "
-"<gui>Utolsó oldal</gui> menüpontot, vagy megnyomhatja a <keyseq><key>Ctrl</"
-"key><key>End</key></keyseq> billentyűkombinációt is."
+"Kattintson a <gui>Nézetbeállítások</gui> menüre a jobb felső sarokban, majd "
+"válassza az <gui>Utolsó oldal</gui> menüpontot, vagy nyomja meg a <keyseq><"
+"key>Ctrl</key><key>End</key></keyseq> billentyűkombinációt."
 
 #. (itstool) path: item/p
 #: C/movingaround.page:119
@@ -2692,8 +2695,8 @@ msgstr "Navigálás oldallistával vagy tartalomjegyzékkel"
 #: C/movingaround.page:136
 msgid ""
 "To make the side pane visible, click the <gui>View options</gui> button in "
-"the top-right corner and select <gui>Side Pane</gui>, or press <key>F9</key> "
-"on the keyboard. You should see a preview of all of the pages in the "
+"the top-right corner and select <gui>Side Panel</gui>, or press <key>F9</"
+"key> on the keyboard. You should see a preview of all of the pages in the "
 "document."
 msgstr ""
 "Az oldalsáv megjelenítéséhez kattintson a jobb felső sarokban a "
@@ -2769,7 +2772,7 @@ msgstr ""
 #. (itstool) path: item/p
 #: C/movingaround.page:178
 msgid ""
-"select desired zoom percentage from the drop down menu above the window."
+"select desired zoom percentage from the drop-down menu above the window."
 msgstr ""
 "Válassza ki a kívánt nagyítási arányt az eszköztáron lévő legördülő menüből."
 
@@ -3311,7 +3314,7 @@ msgstr "Válassza az <gui>Oldalbeállítás</gui> lapot."
 #: C/print-differentsize.page:43
 msgid ""
 "Under the <em>Paper</em> column, choose your <em>Paper size</em> from the "
-"dropdown list."
+"drop-down list."
 msgstr ""
 "A <em>Papír</em> oszlopban válassza ki a <em>Papírméretet</em> a legördülő "
 "listából."
@@ -3469,8 +3472,10 @@ msgstr ""
 msgctxt "_"
 msgid ""
 "external ref='figures/reverse-collate.png' "
-"md5='2e84b930fa1913123b740f8b0997255e'"
-msgstr "LEFORDÍTVA"
+"md5='5d306e1be829b42f27402e0640cb221c'"
+msgstr ""
+"external ref='figures/reverse-collate.png' "
+"md5='5d306e1be829b42f27402e0640cb221c'"
 
 #. (itstool) path: info/desc
 #: C/print-pagescaling.page:19
@@ -3489,7 +3494,7 @@ msgstr "Válassza az <gui>Oldalkezelés</gui> lapot."
 
 #. (itstool) path: item/p
 #: C/print-pagescaling.page:37
-msgid "Choose a <em>Paper Scaling</em> from the dropdown list."
+msgid "Choose a <em>Paper Scaling</em> from the drop-down list."
 msgstr "Válassza ki a <em>Papír méretezését</em> a legördülő listából."
 
 #. (itstool) path: item/p
@@ -3573,8 +3578,10 @@ msgstr ""
 msgctxt "_"
 msgid ""
 "external ref='figures/print-select.png' "
-"md5='e38a5749ed445a812346602ad58b88b4'"
-msgstr "LEFORDÍTVA"
+"md5='b5aab6e63b3b332eada00ac163129d78'"
+msgstr ""
+"external ref='figures/print-select.png' "
+"md5='b5aab6e63b3b332eada00ac163129d78'"
 
 #. (itstool) path: info/desc
 #: C/reload.page:8
@@ -4289,28 +4296,30 @@ msgstr "Vim-latex"
 #. (itstool) path: section/p
 #: C/synctex-editors.page:29
 msgid ""
-"The <app>gedit</app> plugin contains a python script (evince_dbus.py) that "
-"can be used to get SyncTeX working with Vim. In order to use vim-latex "
-"together with the <app>document viewer</app> you need to follow the next "
-"steps:"
+"The <app>gedit</app> plugin contains a python script (<file>evince_dbus.py</"
+"file>) that can be used to get SyncTeX working with Vim. In order to use vim-"
+"latex together with the <app>document viewer</app> you need to follow the "
+"next steps:"
 msgstr ""
-"A <app>gedit</app> bővítmény tartalmaz egy Python parancsfájlt (evince_dbus."
-"py), amelynek segítségével a SyncTeX használható Vimből. A vim-latex és a "
-"<app>dokumentummegjelenítő</app> együttes használatához tegye a következőket:"
+"A <app>gedit</app> bővítmény tartalmaz egy Python parancsfájlt (<file>"
+"evince_dbus.py</file>), amelynek segítségével a SyncTeX használható Vimből. A "
+"vim-latex és a <app>dokumentummegjelenítő</app> együttes használatához tegye "
+"a következőket:"
 
 #. (itstool) path: item/p
 #: C/synctex-editors.page:35
 msgid ""
-"Copy the evince_dbus.py to some directory in your path and give it +x "
-"permissions."
+"Copy the <file>evince_dbus.py</file> to some directory in your path and give "
+"it +x permissions."
 msgstr ""
-"Másolja az evince_dbus.py fájlt a keresési útvonalon lévő valamelyik "
-"könyvtárba, és adjon rá +x (futtatható) jogosultságot."
+"Másolja az <file>evince_dbus.py</file> fájlt a keresési útvonalon lévő "
+"valamelyik könyvtárba, és adjon rá +x (futtatható) jogosultságot."
 
 #. (itstool) path: item/p
 #: C/synctex-editors.page:41
-msgid "Modify your ~/.vimrc file and add the following lines."
-msgstr "Módosítsa a ~/.vimrc fájlt, és adja hozzá a következő sorokat."
+msgid "Modify your <file>~/.vimrc</file> file and add the following lines."
+msgstr ""
+"Módosítsa a <file>~/.vimrc</file> fájlt, és adja hozzá a következő sorokat."
 
 #. (itstool) path: item/code
 #: C/synctex-editors.page:44
@@ -4580,53 +4589,69 @@ msgstr ""
 "másolás csökkentheti a problémát."
 
 #. (itstool) path: info/desc
-#: C/toolbar.page:8
-msgid ""
-"<link xref=\"toolbar#view\">Show, hide</link> or <link xref=\"toolbar#edit"
-"\">edit</link> the toolbar."
-msgstr ""
-"Az eszköztár <link xref=\"toolbar#view\">megjelenítése, elrejtése</link> "
-"vagy <link xref=\"toolbar#edit\">szerkesztése</link>."
+#: C/titlebar.page:8
+msgid "Using the title bar."
+msgstr "A címsor használata."
 
 #. (itstool) path: page/title
-#: C/toolbar.page:23
-msgid "Toolbar"
-msgstr "Eszköztár"
+#: C/titlebar.page:22
+msgid "Title bar"
+msgstr "Címsor"
 
 #. (itstool) path: page/p
-#: C/toolbar.page:25
-msgid "The toolbar contains:"
-msgstr "Az eszköztár tartalmazza:"
+#: C/titlebar.page:24
+msgid "The title bar contains:"
+msgstr "Az címsor tartalmaz:"
 
 #. (itstool) path: item/p
-#: C/toolbar.page:28
+#: C/titlebar.page:27
 msgid ""
-"<gui>∧</gui> and <gui>∨</gui> for <link xref=\"movingaround#between-pages"
-"\">moving</link> from page to page."
+"A text field to <link xref=\"movingaround#between-pages\">go to a certain "
+"page</link> or to <link xref=\"finding\">search</link> in the <link xref="
+"\"movingaround#navigating\">index</link>."
 msgstr ""
-"<gui>∧</gui> és <gui>∨</gui> az <link xref=\"movingaround#between-pages"
-"\">oldalak közötti mozgáshoz</link>."
+"Egy szövegmezőt <link xref=\"movingaround#between-pages\">egy adott oldalra "
+"ugráshoz</link> vagy <link xref=\"finding\">kereséshez</link> az <link "
+"xref=\"movingaround#navigating\">indexben</link>."
 
 #. (itstool) path: item/p
-#: C/toolbar.page:33
-msgid ""
-"The 'page select' <link xref=\"movingaround#between-pages\">tool.</link>"
-msgstr ""
-"Az „oldalválasztó” <link xref=\"movingaround#between-pages\">eszköz</link>."
-
-#. (itstool) path: item/p
-#: C/toolbar.page:37
+#: C/titlebar.page:32
 msgid "<gui>&lt;</gui> and <gui>&gt;</gui> for moving between history items."
 msgstr ""
 "<gui>&lt;</gui> és <gui>&gt;</gui> az előzménylista elemei közötti mozgáshoz."
 
 #. (itstool) path: item/p
-#: C/toolbar.page:40
+#: C/titlebar.page:35
 msgid ""
-"A tool to adjust the <link xref=\"movingaround#zoom\">zoom</link> level."
+"A <gui>Magnifying glass button</gui> to <link xref=\"finding\">find a word "
+"or phrase in the document</link>."
 msgstr ""
-"Egy eszköz a <link xref=\"movingaround#zoom\">nagyítási</link> szint "
-"módosításához."
+"Egy <gui>Nagyító gombot</gui> egy <link xref=\"finding\">szó vagy kifejezés "
+"kereséséhez a dokumentumban</link>."
+
+#. (itstool) path: item/p
+#: C/titlebar.page:39
+msgid "A button to manage <link xref=\"annotations\">annotations</link>."
+msgstr "Egy gombot a <link xref=\"annotations\">jegyzetek</link> kezeléséhez."
+
+#. (itstool) path: item/p
+#: C/titlebar.page:42
+msgid ""
+"A drop-down box to adjust the <link xref=\"movingaround#zoom\">zoom</link> "
+"level."
+msgstr ""
+"Egy legördülő dobozt a <link xref=\"movingaround#zoom\">nagyítási</link> "
+"szint módosításához."
+
+#. (itstool) path: item/p
+#: C/titlebar.page:45
+msgid "A button to open the <gui>View options</gui> menu."
+msgstr "Egy gombot a <gui>Nézetbeállítások</gui> menü megnyitásához."
+
+#. (itstool) path: item/p
+#: C/titlebar.page:48
+msgid "A button to open the <gui>File options</gui> menu."
+msgstr "Egy gombot a <gui>Fájlbeállítások</gui> menü megnyitásához."
 
 #. (itstool) path: info/desc
 #: C/translate.page:7
@@ -4701,286 +4726,3 @@ msgstr ""
 "\">kezdőoldalán</link> megtalálja a magyar levelezőlista címét és a "
 "fordítások megkezdéséhez szükséges információkat."
 
-#~ msgid ""
-#~ "See a list of all shortcuts, and learn how to create your own custom "
-#~ "shortcuts."
-#~ msgstr "Gyorsbillentyűk listája, és egyéni gyorsbillentyűk létrehozása."
-
-#~ msgctxt "_"
-#~ msgid ""
-#~ "external ref='figures/annotations-navigate.png' "
-#~ "md5='6655cfb976ffea53c622b41cbf439747'"
-#~ msgstr "LEFORDÍTVA"
-
-#~ msgctxt "_"
-#~ msgid ""
-#~ "external ref='figures/list-add-tabs.png' "
-#~ "md5='1bbd81be2223f1b8434dcf746670f5d7'"
-#~ msgstr "LEFORDÍTVA"
-
-#~ msgid "Select the <gui>Add</gui> tab."
-#~ msgstr "Válassza a <gui>Hozzáadás</gui> lapot."
-
-#~ msgid ""
-#~ "Once page 3 has printed, place the paper back in the printer (taking care "
-#~ "to orient it correctly (pages 4 and 9 will be printed on the other side)."
-#~ msgstr ""
-#~ "A 3. oldal kinyomtatása után vegye ki a papírt, és helyezze vissza a "
-#~ "nyomtatóba. Ügyeljen arra, hogy megfelelően fordítsa (a 4. és 9. oldal a "
-#~ "másik oldalára kerül)."
-
-#~ msgid "Moving around the document"
-#~ msgstr "Mozgás a dokumentumban"
-
-#~ msgid "Create your own custom shortcuts"
-#~ msgstr "Saját gyorsbillentyűk létrehozása"
-
-#~ msgid "Enable the /desktop/gnome/interface/can_change_accels flag in gconf:"
-#~ msgstr ""
-#~ "Engedélyezze a /desktop/gnome/interface/can_change_accels jelzőt a "
-#~ "GConfban:"
-
-#~ msgid ""
-#~ "Press <keyseq><key>Alt</key><key>F2</key></keyseq>. The Run Application "
-#~ "dialogue opens."
-#~ msgstr ""
-#~ "Nyomja meg az <keyseq><key>Alt</key><key>F2</key></keyseq> kombinációt. "
-#~ "Megnyílik az Alkalmazás futtatása ablak."
-
-#~ msgid "In the textbox, type 'gconf-editor'."
-#~ msgstr "A szövegmezőbe írja be a „gconf-editor” parancsot."
-
-#~ msgid ""
-#~ "In the Configuration Editor select <guiseq><gui>desktop</gui><gui>gnome</"
-#~ "gui><gui>interface</gui></guiseq>."
-#~ msgstr ""
-#~ "A Konfigurációszerkesztőben válassza a <guiseq><gui>desktop</"
-#~ "gui><gui>gnome</gui><gui>interface</gui></guiseq> elemet."
-
-#~ msgid ""
-#~ "Check the value box for <gui>can_change_accels</gui> in the right side of "
-#~ "the window."
-#~ msgstr ""
-#~ "Jelölje be a <gui>can_change_accels</gui> kulcs melletti négyzetet a jobb "
-#~ "oldali ablaktáblán."
-
-#~ msgid "You can add/change the shortcut as follows:"
-#~ msgstr "A gyorsbillentyűt a következőképpen veheti fel/módosíthatja:"
-
-#~ msgid "Open the <app>document viewer</app>."
-#~ msgstr "Nyissa meg a <app>dokumentummegjelenítőt</app>."
-
-#~ msgid ""
-#~ "Hover the pointer over the menu item you want to change/create the "
-#~ "shortcut for."
-#~ msgstr ""
-#~ "Mutasson rá arra a menüelemre, amely gyorsbillentyűjét módosítani "
-#~ "szeretné, vagy létre kívánja hozni."
-
-#~ msgid ""
-#~ "Enter the shortcut you want on the keyboard, e.g. <keyseq><key>Ctrl</"
-#~ "key><key>Shift</key><key>T</key></keyseq>."
-#~ msgstr ""
-#~ "Nyomja meg a kívánt gyorsbillentyűt a billentyűzeten, például: "
-#~ "<keyseq><key>Ctrl</key><key>Shift</key><key>T</key></keyseq>."
-
-#~ msgid "Close the <app>document viewer</app>."
-#~ msgstr "Zárja be a <app>dokumentummegjelenítőt</app>."
-
-#~ msgid "Repeat steps 1-3."
-#~ msgstr "Ismételje az 1–3 lépéseket."
-
-#~ msgid ""
-#~ "Uncheck the value box for <gui>can_change_accels</gui> in the right side "
-#~ "of the window."
-#~ msgstr ""
-#~ "Törölje a <gui>can_change_accels</gui> melletti jelölőnégyzetet az ablak "
-#~ "jobb oldalán."
-
-#~ msgid ""
-#~ "The next time the <app>document viewer</app> launches, your custom "
-#~ "shortcut key will be preserved."
-#~ msgstr ""
-#~ "Az egyéni gyorsbillentyű a <app>dokumentummegjelenítő</app> következő "
-#~ "indításakor is használható lesz."
-
-#~ msgid "Note that this also works for many other Gnome applications as well."
-#~ msgstr ""
-#~ "Ne feledje, hogy ez a módszer sok más Gnome alkalmazás esetén is működik."
-
-#~ msgid "You can't remove annotations."
-#~ msgstr "A jegyzetek nem távolíthatók el."
-
-#~ msgid ""
-#~ "You can't remove an annotation in the <app>document viewer</app> at this "
-#~ "time."
-#~ msgstr ""
-#~ "Jelenleg nem távolíthatja el a jegyzeteket a <app>dokumentummegjelenítő</"
-#~ "app> használatával."
-
-#~ msgid "Scalable Vector Graphics (.svg)"
-#~ msgstr "Scalable Vector Graphics (.svg)"
-
-#~ msgid "Other Image Files (.gif, .jpeg, .png)"
-#~ msgstr "Egyéb képfájlok (.gif, .jpeg, .png)"
-
-#~ msgctxt "_"
-#~ msgid ""
-#~ "external ref='figures/evince-trail.png' "
-#~ "md5='a1a70d04c37f05937d0b3e7a0705d2d4'"
-#~ msgstr ""
-#~ "external ref='figures/evince-trail.png' "
-#~ "md5='a1a70d04c37f05937d0b3e7a0705d2d4'"
-
-#~ msgid "There are two types of passwords:"
-#~ msgstr "Két fajta jelszó van:"
-
-#~ msgid "The <em>user password</em> is needed to view the document."
-#~ msgstr ""
-#~ "A <em>felhasználói jelszó</em> a dokumentum megjelenítéséhez szükséges."
-
-#~ msgid ""
-#~ "The <em>master password</em> is required to print the document as well as "
-#~ "view it."
-#~ msgstr ""
-#~ "A <em>mesterjelszó</em> a dokumentum megjelenítése mellett a "
-#~ "nyomtatásához is szükséges."
-
-#~ msgid ""
-#~ "Click <guiseq><gui>File</gui><gui>Print</gui></guiseq> and go to the "
-#~ "<gui>General</gui> tab."
-#~ msgstr ""
-#~ "Válassza a <guiseq><gui>Fájl</gui><gui>Nyomtatás</gui></guiseq> menüt, "
-#~ "majd az <gui>Általános</gui> lapot."
-
-#~ msgid "Use the Go Menu:"
-#~ msgstr "Használja az Ugrás menüt:"
-
-#~ msgid "<guiseq><gui>Go</gui><gui>Next Page</gui></guiseq>"
-#~ msgstr "<guiseq><gui>Ugrás</gui><gui>Következő oldal</gui></guiseq>"
-
-#~ msgid "<guiseq><gui>Go</gui><gui>Previous Page</gui></guiseq>"
-#~ msgstr "<guiseq><gui>Ugrás</gui><gui>Előző oldal</gui></guiseq>"
-
-#~ msgid ""
-#~ "or click the <gui>Leave Fullscreen</gui> button at the top of the screen."
-#~ msgstr ""
-#~ "Vagy kattintson a <gui>Teljes képernyő elhagyása</gui> gombra a képernyő "
-#~ "tetején."
-
-#~ msgctxt "_"
-#~ msgid ""
-#~ "external ref='figures/evincelogo.png' "
-#~ "md5='a5856135b500d4c4b74a052eef6e09d2'"
-#~ msgstr ""
-#~ "external ref='figures/evincelogo.png' "
-#~ "md5='a5856135b500d4c4b74a052eef6e09d2'"
-
-#~ msgid ""
-#~ "<media type=\"image\" src=\"figures/evincelogo.png\">Evince logo</"
-#~ "media>Evince document viewer"
-#~ msgstr ""
-#~ "<media type=\"image\" src=\"figures/evincelogo.png\">Evince logó</"
-#~ "media>Evince dokumentummegjelenítő"
-
-#~ msgid "Opening a document"
-#~ msgstr "Dokumentum megnyitása"
-
-#~ msgid ""
-#~ "The <app>document viewer</app> does not have a bookmark system. However, "
-#~ "you can use <link xref=\"annotations\">annotations</link> like bookmarks."
-#~ msgstr ""
-#~ "A <app>dokumentummegjelenítő</app> nem rendelkezik könyvjelzőrendszerrel. "
-#~ "Azonban a <link xref=\"annotations\">jegyzeteket</link> a könyvjelzőkhöz "
-#~ "hasonlóan használhatja."
-
-#~ msgctxt "_"
-#~ msgid ""
-#~ "external ref='figures/synctex_screencast.ogv' "
-#~ "md5='358d317b4fc69fc7e5c5d4d14f07b6a5'"
-#~ msgstr ""
-#~ "external ref='figures/synctex_screencast.ogv' "
-#~ "md5='358d317b4fc69fc7e5c5d4d14f07b6a5'"
-
-#~ msgid "Video Demonstration"
-#~ msgstr "Videobemutató"
-
-#~ msgid "Press <keyseq><key>Ctrl</key>click</keyseq> to sync."
-#~ msgstr "Nyomja le a <key>Ctrl</key>-t, és kattintson a szinkronizáláshoz."
-
-#~ msgctxt "_"
-#~ msgid ""
-#~ "external ref='figures/evince-toolbar-default.png' "
-#~ "md5='2a826732c770c08b11684e28e259bb31'"
-#~ msgstr ""
-#~ "external ref='figures/evince-toolbar-default.png' "
-#~ "md5='2a826732c770c08b11684e28e259bb31'"
-
-#~ msgctxt "_"
-#~ msgid ""
-#~ "external ref='figures/evince-toolbar-editor.png' "
-#~ "md5='e6c66f764c39ab5ba01441d970425cd9'"
-#~ msgstr ""
-#~ "external ref='figures/evince-toolbar-editor.png' "
-#~ "md5='e6c66f764c39ab5ba01441d970425cd9'"
-
-#~ msgid "Show or hide the toolbar"
-#~ msgstr "Az eszköztár megjelenítése vagy elrejtése"
-
-#~ msgid "Click <guiseq><gui>View</gui><gui>Toolbar</gui></guiseq>."
-#~ msgstr ""
-#~ "Válassza a <guiseq><gui>Nézet</gui><gui>Eszköztár</gui></guiseq> "
-#~ "menüpontot."
-
-#~ msgid "The default toolbar contains only a basic set of tools:"
-#~ msgstr "Az eszköztár alapesetben csak néhány alapvető eszközt tartalmaz:"
-
-#~ msgid ""
-#~ "You can <link xref=\"toolbar#modify\">modify</link> the toolbar if you "
-#~ "prefer a different set."
-#~ msgstr ""
-#~ "Ha más eszközöket is szeretne használni, <link xref=\"toolbar#modify"
-#~ "\">módosíthatja</link> az eszköztárat."
-
-#~ msgid "Add, remove and rearrange the tools in the toolbar."
-#~ msgstr "Az eszköztár eszközeinek hozzáadása, eltávolítása és átrendezése."
-
-#~ msgid "<link xref=\"toolbar#view\">Show</link> the toolbar."
-#~ msgstr "Az eszköztár <link xref=\"toolbar#view\">megjelenítése</link>."
-
-#~ msgid "Click <guiseq><gui>Edit</gui><gui>Toolbar</gui></guiseq>."
-#~ msgstr ""
-#~ "Válassza a <guiseq><gui>Szerkesztés</gui><gui>Eszköztár</gui></guiseq> "
-#~ "menüpontot."
-
-#~ msgid ""
-#~ "The <gui>toolbar editor</gui> contains the items that are not in the "
-#~ "toolbar and the separator item."
-#~ msgstr ""
-#~ "Az <gui>Eszköztárszerkesztő</gui> tartalmazza az eszköztáron nem szereplő "
-#~ "elemeket, és az elválasztót."
-
-#~ msgid "To add new items to the toolbar:"
-#~ msgstr "Új elemek eszköztárhoz adásához:"
-
-#~ msgid "drag them from the toolbar editor to the toolbar."
-#~ msgstr "Húzza az elemet az Eszköztárszerkesztő ablakból az eszköztárra."
-
-#~ msgid "To remove items from the toolbar:"
-#~ msgstr "Elemek eltávolításához az eszköztárról:"
-
-#~ msgid "drag them from the toolbar to the toolbar editor."
-#~ msgstr "Húzza az elemeket az eszköztárról az Eszköztárszerkesztő ablakba."
-
-#~ msgid "To rearrange items on the toolbar:"
-#~ msgstr "Az eszköztár elemeinek átrendezéséhez:"
-
-#~ msgid "drag them to their new position on the toolbar."
-#~ msgstr "Húzza az elemeket az új helyükre az eszköztáron."
-
-#~ msgid ""
-#~ "When you have finish editing the toolbar, click <gui>Close</gui> in the "
-#~ "toolbar editor window."
-#~ msgstr ""
-#~ "Ha befejezte az eszköztár szerkesztését, kattintson az "
-#~ "Eszköztárszerkesztő ablak <gui>Bezárás</gui> gombjára."
