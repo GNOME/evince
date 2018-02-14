@@ -5880,6 +5880,7 @@ window_configure_event_cb (EvWindow *window, GdkEventConfigure *event, gpointer 
 {
 	GdkWindowState state;
 	gdouble document_width, document_height;
+	gint window_x, window_y, window_width, window_height;
 
 	if (!window->priv->metadata)
 		return FALSE;
@@ -5890,14 +5891,16 @@ window_configure_event_cb (EvWindow *window, GdkEventConfigure *event, gpointer 
 		if (window->priv->document) {
 			ev_document_get_max_page_size (window->priv->document,
 						       &document_width, &document_height);
+			gtk_window_get_size (GTK_WINDOW (window), &window_width, &window_height);
+			gtk_window_get_position (GTK_WINDOW (window), &window_x, &window_y);
 			g_settings_set (window->priv->default_settings, "window-ratio", "(dd)",
-					(double)event->width / document_width,
-					(double)event->height / document_height);
+					(double)window_width / document_width,
+					(double)window_height / document_height);
 
-			ev_metadata_set_int (window->priv->metadata, "window_x", event->x);
-			ev_metadata_set_int (window->priv->metadata, "window_y", event->y);
-			ev_metadata_set_int (window->priv->metadata, "window_width", event->width);
-			ev_metadata_set_int (window->priv->metadata, "window_height", event->height);
+			ev_metadata_set_int (window->priv->metadata, "window_x", window_x);
+			ev_metadata_set_int (window->priv->metadata, "window_y", window_y);
+			ev_metadata_set_int (window->priv->metadata, "window_width",window_width);
+			ev_metadata_set_int (window->priv->metadata, "window_height", window_height);
 		}
 	}
 
