@@ -1,25 +1,26 @@
 # Brazilian Portuguese translation of evince.
-# Copyright (C) 2017 Free Software Foundation, Inc.
+# Copyright (C) 2018 Free Software Foundation, Inc.
 # This file is distributed under the same license as the Evince package.
 # Hugo Dória <hugodoria@gmail.com>, 2007.
 # Pedro de Medeiros <pedrovmm+l10n@gmail.com>, 2007.
 # Daniel S. Koda <danielskoda@gmail.com>, 2008.
 # Felipe Braga <fbobraga@gmail.com>, 2015.
-# Rafael Fontenelle <rafaelff@gnome.org>, 2017.
+# Rafael Fontenelle <rafaelff@gnome.org>, 2017, 2018.
+# Isaac Ferreira Filho <isaacmob@riseup.net>, 2018.
 msgid ""
 msgstr ""
 "Project-Id-Version: evince master\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-06 07:46+0000\n"
-"PO-Revision-Date: 2017-09-08 19:28-0200\n"
-"Last-Translator: Rafael Fontenelle <rafaelff@gnome.org>\n"
+"POT-Creation-Date: 2018-01-23 16:51+0000\n"
+"PO-Revision-Date: 2018-01-27 10:16-0300\n"
+"Last-Translator: Isaac Ferreira Filho <isaacmob@riseup.net>\n"
 "Language-Team: Brazilian Portuguese <gnome-pt_br-list@gnome.org>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Virtaal 1.0.0-beta1\n"
+"X-Generator: Poedit 2.0.6\n"
 
 #. Put one translator per line, in the form NAME <EMAIL>, YEAR1, YEAR2
 msgctxt "_"
@@ -29,7 +30,8 @@ msgstr ""
 "Pedro de Medeiros <pedrovmm+l10n@gmail.com>, 2007\n"
 "Daniel S. Koda <danielskoda@gmail.com>, 2008\n"
 "Felipe Braga <fbobraga@gmail.com>, 2015\n"
-"Rafael Fontenelle <rafaelff@gnome.org>, 2017"
+"Rafael Fontenelle <rafaelff@gnome.org>, 2017, 2018\n"
+"Isaac Ferreira Filho <isaacmob@riseup.net>, 2018"
 
 #. (itstool) path: info/desc
 #: C/annotation-properties.page:7
@@ -40,7 +42,7 @@ msgstr "Como personalizar o autor, a cor, o estilo ou o ícone de uma anotação
 #: C/annotation-properties.page:11 C/annotations-disabled.page:11
 #: C/annotations-navigate.page:12 C/annotations.page:12
 #: C/annotations-save.page:12 C/bookmarks.page:13 C/bug-filing.page:11
-#: C/commandline.page:15 C/develop.page:10 C/documentation.page:9
+#: C/commandline.page:16 C/develop.page:10 C/documentation.page:9
 #: C/duplex-10pages.page:12 C/duplex-11pages.page:12 C/duplex-12pages.page:12
 #: C/duplex-13pages.page:12 C/duplex-14pages.page:12 C/duplex-15pages.page:12
 #: C/duplex-16pages.page:12 C/duplex-3pages.page:12 C/duplex-4pages.page:12
@@ -53,7 +55,7 @@ msgstr "Como personalizar o autor, a cor, o estilo ou o ícone de uma anotação
 #: C/singlesided-5-8pages.page:12 C/singlesided-9-12pages.page:12
 #: C/singlesided-npages.page:12 C/synctex-beamer.page:11
 #: C/synctex-compile.page:11 C/synctex-editors.page:11 C/synctex.page:12
-#: C/synctex-search.page:11 C/synctex-support.page:11 C/toolbar.page:14
+#: C/synctex-search.page:11 C/synctex-support.page:11 C/titlebar.page:13
 #: C/translate.page:10
 msgid "Tiffany Antopolski"
 msgstr "Tiffany Antopolski"
@@ -62,7 +64,7 @@ msgstr "Tiffany Antopolski"
 #: C/annotation-properties.page:15 C/annotations-disabled.page:15
 #: C/annotations-navigate.page:16 C/annotations.page:20
 #: C/annotations-save.page:20 C/bookmarks.page:22 C/bug-filing.page:15
-#: C/commandline.page:19 C/convertpdf.page:21 C/convertPostScript.page:21
+#: C/commandline.page:20 C/convertpdf.page:21 C/convertPostScript.page:21
 #: C/convertSVG.page:20 C/default-settings.page:15 C/develop.page:15
 #: C/documentation.page:14 C/duplex-10pages.page:16 C/duplex-11pages.page:16
 #: C/duplex-12pages.page:16 C/duplex-13pages.page:16 C/duplex-14pages.page:16
@@ -79,7 +81,7 @@ msgstr "Tiffany Antopolski"
 #: C/singlesided-9-12pages.page:16 C/singlesided-npages.page:16
 #: C/synctex-beamer.page:15 C/synctex-compile.page:15 C/synctex-editors.page:15
 #: C/synctex.page:16 C/synctex-search.page:15 C/synctex-support.page:15
-#: C/textselection.page:15 C/toolbar.page:18 C/translate.page:19
+#: C/textselection.page:15 C/titlebar.page:17 C/translate.page:19
 msgid "Creative Commons Share Alike 3.0"
 msgstr "Creative Commons Compartilhada Igual 3.0"
 
@@ -95,7 +97,6 @@ msgstr "Clique com botão direito no ícone da anotação no documento."
 
 #. (itstool) path: item/p
 #: C/annotation-properties.page:29
-#| msgid "Select <gui>Annotation Properties</gui>."
 msgid "Select <gui>Annotation Properties…</gui>."
 msgstr "Selecione <gui>Propriedades da anotação…</gui>."
 
@@ -169,30 +170,29 @@ msgstr ""
 msgid ""
 "View a page that has an annotation. If you are not sure which pages have "
 "annotations, find them in the <link xref=\"annotations-navigate\">annotation "
-"sidebar</link>."
+"side pane</link>."
 msgstr ""
 "Vá até uma página com anotações. Se você não sabe quais as páginas que "
-"contém anotações, você pode encontrá-las na <link xref=\"annotations-navigate"
-"\">barra lateral de anotações</link>."
+"contém anotações, você pode encontrá-las no <link xref=\"annotations-navigate"
+"\">painel lateral de anotações</link>."
 
 #. (itstool) path: item/p
 #: C/annotations-delete.page:35
 msgid ""
 "Right-click on the annotation icon in the document, and click <gui style="
-"\"menuitem\">Remove Annotation</gui>"
+"\"menuitem\">Remove Annotation</gui>."
 msgstr ""
 "Clique com o botão direito do mouse no ícone da anotação no documento e "
-"clique em <gui style=\"menuitem\">Remover anotação</gui>"
+"clique em <gui style=\"menuitem\">Remover anotação</gui>."
 
 #. (itstool) path: item/p
 #: C/annotations-delete.page:39
 msgid ""
 "Save the changes to a new document by clicking the menu button in the top "
-"right, followed by <gui style=\"menuitem\">Save a Copy…</gui>."
+"right, followed by <gui style=\"menuitem\">Save As…</gui>."
 msgstr ""
 "Salve as alterações em um novo documento, clicando no botão do menu no canto "
-"superior direito e selecionando <gui style=\"menuitem\">Salvar uma cópia…</"
-"gui>."
+"superior direito e selecionando <gui style=\"menuitem\">Salvar como…</gui>."
 
 #. (itstool) path: info/desc
 #: C/annotations-disabled.page:7
@@ -226,20 +226,14 @@ msgstr "Navegando entre anotações"
 
 #. (itstool) path: page/p
 #: C/annotations-navigate.page:22
-#| msgid ""
-#| "If you have created annotations on your document, you can use the "
-#| "<gui>List</gui> tab to display the list of all the annotations in the "
-#| "document. The list indicates the type, page number, author and date of "
-#| "the annotation."
 msgid ""
-"If you have created annotations on your document, you can use the <gui>Side "
-"Pane</gui> to display the list of all the annotations in the document. The "
-"list indicates the type, page number, author and date of the annotation."
+"If you have created annotations on your document, you can use the side pane "
+"to display the list of all the annotations in the document. The list "
+"indicates the type, page number, author and date of the annotation."
 msgstr ""
-"Se você tiver criado anotações em seu documento, você pode usar o <gui>"
-"Painel lateral</gui> para exibir uma lista com todas as anotações no "
-"documento. A lista indica o tipo, número da página, o autor e a data da "
-"anotação."
+"Se você tiver criado anotações em seu documento, você pode usar o painel "
+"lateral para exibir uma lista com todas as anotações no documento. A lista "
+"indica o tipo, número da página, o autor e a data da anotação."
 
 #. (itstool) path: page/p
 #: C/annotations-navigate.page:25
@@ -261,10 +255,6 @@ msgstr ""
 #. update your localized copy. The msgstr is not used at all. Set it to
 #. whatever you like once you have updated your copy of the file.
 #: C/annotations-navigate.page:28
-#| msgctxt "_"
-#| msgid ""
-#| "external ref='figures/annotations-nav-to-page.png' "
-#| "md5='fda82d763b7c81304d1c5949344a073b'"
 msgctxt "_"
 msgid ""
 "external ref='figures/annotations-nav-to-page.png' "
@@ -301,26 +291,23 @@ msgstr ""
 #: C/annotations.page:29
 msgid ""
 "When you open a file, you should have a side pane on the left side of the "
-"window. If you do not have a visible side pane, click <guiseq><gui>View</"
-"gui><gui>Side Pane</gui></guiseq> or press <key>F9</key>."
+"window. If you do not have a visible side pane, click the <gui>View options</"
+"gui> menu in the top right corner and select <gui>Side Panel</gui> or press "
+"<key>F9</key> on the keyboard."
 msgstr ""
 "Quando você abre um arquivo, deve aparecer um painel lateral na esquerda da "
-"janela. Se não aparecer esse painel lateral, marque o item <gui>Barra "
-"lateral</gui> no menu de <gui>Opções de visualização</gui> ou pressione a "
-"tecla <key>F9</key>."
+"janela. Se não aparecer esse painel lateral, clique no menu <gui>Opções de "
+"visualização</gui> no canto superior direito e selecione <gui>Painel "
+"lateral</gui> ou pressione a tecla <key>F9</key>."
 
 #. (itstool) path: page/p
 #: C/annotations.page:33
-#| msgid ""
-#| "At the top of this side pane, there is a drop-down menu with options like "
-#| "<gui>Thumbnails</gui>, <gui>Index</gui> and <gui>Annotations</gui> (some "
-#| "of which may be <em>dimmed</em> for some documents)."
 msgid ""
 "At the top of this side pane, there is a drop-down menu with options like "
 "<gui>Thumbnails</gui>, <gui>Outline</gui> and <gui>Annotations</gui> (some "
 "of which may be <em>dimmed</em> for some documents)."
 msgstr ""
-"Na parte superior do painel lateral, há uma lista com opções como "
+"Na parte superior do painel lateral, há um menu suspenso com opções como "
 "<gui>Miniaturas</gui>, <gui>Tópicos</gui> e <gui>Anotações</gui> (alguns dos "
 "itens podem estar desabilitados para o documento atual)."
 
@@ -331,9 +318,8 @@ msgstr "Para criar uma anotação:"
 
 #. (itstool) path: item/p
 #: C/annotations.page:41
-#| msgid "Select <gui>Annotations</gui> from the drop-down menu."
 msgid "Select <gui>Annotate the document</gui> from the title bar."
-msgstr "Selecione <gui>Anota o documento</gui> na lista do painel lateral."
+msgstr "Selecione <gui>Anota o documento</gui> da barra de título."
 
 #. (itstool) path: item/media
 #. This is a reference to an external file such as an image or video. When
@@ -341,10 +327,6 @@ msgstr "Selecione <gui>Anota o documento</gui> na lista do painel lateral."
 #. update your localized copy. The msgstr is not used at all. Set it to
 #. whatever you like once you have updated your copy of the file.
 #: C/annotations.page:44
-#| msgctxt "_"
-#| msgid ""
-#| "external ref='figures/add-text-annotation.png' "
-#| "md5='1add21cd2ec02d5fcc5b06d0e6546901'"
 msgctxt "_"
 msgid ""
 "external ref='figures/add-text-annotation.png' "
@@ -355,19 +337,15 @@ msgstr ""
 
 #. (itstool) path: item/p
 #: C/annotations.page:47
-#| msgid ""
-#| "You should now see <gui>List</gui> and <gui>Add</gui> tabs under the drop-"
-#| "down menu."
 msgid ""
 "You should now see <gui>Add text annotation</gui> and <gui>Add highlight "
-"annotation</gui> bottons below the title bar."
+"annotation</gui> buttons below the title bar."
 msgstr ""
-"Você deve ver agora <gui>Adiciona anotação de texto</gui> e <gui>Adiciona "
-"anotação de destaque</gui> bottons abaixo da barra de título."
+"Você deve ver agora os botõed <gui>Adiciona anotação de texto</gui> e "
+"<gui>Adiciona anotação de destaque</gui> abaixo da barra de título."
 
 #. (itstool) path: item/p
 #: C/annotations.page:55
-#| msgid "Click on the icon to add a text annotation."
 msgid "Click on the first icon to add a text annotation."
 msgstr "Clique no primeiro ícone para adicionar uma anotação de texto."
 
@@ -430,10 +408,10 @@ msgstr ""
 
 #. (itstool) path: item/p
 #: C/annotations-save.page:31
-msgid "Click <guiseq><gui>File options</gui><gui>Save a Copy…</gui></guiseq>"
+msgid "Click <guiseq><gui>File options</gui><gui>Save As…</gui></guiseq>"
 msgstr ""
-"Use o item <gui>Salvar uma cópia…</gui> no menu de Opções do arquivo, ou "
-"tecle <keyseq><key>Ctrl</key><key>S</key></keyseq>."
+"Clique em <guiseq><gui>Opções do arquivo</gui><gui>Salvar como…</gui></"
+"guiseq>"
 
 #. (itstool) path: item/p
 #: C/annotations-save.page:36
@@ -453,7 +431,7 @@ msgid ""
 msgstr ""
 "As anotações são incluídas no arquivo de acordo com a especificação PDF. "
 "Portanto, a maioria dos leitores de PDF devem ser capazes de lê-las. O "
-"\"Adobe Reader\" reconhecidamente suporta estas anotações."
+"“Adobe Reader” reconhecidamente suporta estas anotações."
 
 #. (itstool) path: credit/name
 #: C/bookmarks.page:17 C/finding.page:22 C/formats.page:18 C/opening.page:18
@@ -492,11 +470,11 @@ msgstr ""
 #. (itstool) path: page/p
 #: C/bookmarks.page:37
 msgid ""
-"At the top of this side pane, there is a dropdown menu. To work with "
-"bookmarks, select the <gui>Bookmarks</gui> option from this dropdown menu."
+"At the top of this side pane, there is a drop-down menu. To work with "
+"bookmarks, select the <gui>Bookmarks</gui> option from this drop-down menu."
 msgstr ""
-"No topo deste painel lateral, há uma lista/menu. Para trabalhar com "
-"marcadores, selecione a opção <gui>Marcadores</gui> na lista."
+"No topo deste painel lateral, há um menu suspenso. Para trabalhar com "
+"marcadores, selecione a opção <gui>Marcadores</gui> deste menu suspenso."
 
 #. (itstool) path: section/title
 #: C/bookmarks.page:43
@@ -514,10 +492,10 @@ msgstr ""
 
 #. (itstool) path: item/p
 #: C/bookmarks.page:51
-msgid "In the side pane, select <gui>Bookmarks</gui> from the dropdown menu."
+msgid "In the side pane, select <gui>Bookmarks</gui> from the drop-down menu."
 msgstr ""
 "No topo do painel lateral esquerdo, selecione a opção <gui>Marcadores</gui> "
-"na lista."
+"no menu suspenso."
 
 #. (itstool) path: item/p
 #: C/bookmarks.page:55
@@ -532,7 +510,7 @@ msgstr ""
 #. (itstool) path: item/p
 #: C/bookmarks.page:60
 msgid "The bookmark is now listed in the bookmarks list."
-msgstr "A partir de agora, o marcador aparecerá na lista de marcadores."
+msgstr "O marcador agora aparece na lista  de marcadores."
 
 #. (itstool) path: section/title
 #: C/bookmarks.page:67
@@ -610,11 +588,11 @@ msgid ""
 "receive updates by e-mail about the status of your bug. If you don't already "
 "have an account, just click on the <gui>New Account</gui> link to create one."
 msgstr ""
-"Para registrar erros e fazer comentários no <link href=\"https://bugzilla."
-"gnome.org/\"/> você precisa de uma conta. Além disso, você precisa se "
-"registrar para poder receber atualizações por e-mail sobre o status do seu "
-"erro registrado. Se você ainda não tiver uma conta, basta clicar no link "
-"<gui>New Account</gui> para criar uma."
+"Para participar, você precisa de uma conta que lhe permitirá obter acesso, "
+"preencher erros e fazer comentários. Além disso, você precisa se registrar "
+"para poder receber atualizações por e-mail sobre o status do seu erro "
+"registrado. Se você ainda não tiver uma conta, basta clicar no link <gui>New "
+"Account</gui> para criar uma."
 
 #. (itstool) path: page/p
 #: C/bug-filing.page:29
@@ -646,18 +624,14 @@ msgstr ""
 
 #. (itstool) path: page/p
 #: C/bug-filing.page:36
-#| msgid ""
-#| "If you are requesting a new feature, choose <gui>enhancement</gui> in the "
-#| "<gui>Severity</gui> menu. Fill in the Summary and Description sections "
-#| "and click <gui>Commit</gui>."
 msgid ""
 "If you are requesting a new feature, choose <gui>enhancement</gui> in the "
 "<gui>Severity</gui> menu. Fill in the Summary and Description sections and "
 "click <gui>Submit Bug</gui>."
 msgstr ""
-"Se você está solicitando uma nova funcionalidade, escolha "
-"<gui>enhancement</gui> no menu <gui>Severity</gui>. Preencha as seções "
-"Summary e Description e clique em <gui>Submit Bug</gui>."
+"Se você está solicitando uma nova funcionalidade, escolha <gui>enhancement</"
+"gui> no menu <gui>Severity</gui>. Preencha as seções Summary e Description e "
+"clique em <gui>Submit Bug</gui>."
 
 #. (itstool) path: page/p
 #: C/bug-filing.page:40
@@ -684,7 +658,7 @@ msgstr ""
 "páginas específicas e em vários modos."
 
 #. (itstool) path: credit/name
-#: C/commandline.page:11 C/convertpdf.page:13 C/convertPostScript.page:13
+#: C/commandline.page:12 C/convertpdf.page:13 C/convertPostScript.page:13
 #: C/convertSVG.page:12 C/editing.page:11 C/finding.page:14 C/formats.page:14
 #: C/index.page:14 C/invert-colors.page:15 C/movingaround.page:12
 #: C/noprint.page:10 C/password.page:12 C/presentations.page:12
@@ -695,12 +669,12 @@ msgid "Phil Bull"
 msgstr "Phil Bull"
 
 #. (itstool) path: page/title
-#: C/commandline.page:23
+#: C/commandline.page:24
 msgid "The command line"
 msgstr "A linha de comando"
 
 #. (itstool) path: page/p
-#: C/commandline.page:24
+#: C/commandline.page:25
 msgid ""
 "To start the <app>Document Viewer</app> from the command line, type "
 "<cmd>evince</cmd>. You can open a specific file by typing the filename after "
@@ -711,13 +685,13 @@ msgstr ""
 "nome do arquivo após o comando <cmd>evince</cmd>:"
 
 #. (itstool) path: page/screen
-#: C/commandline.page:29
+#: C/commandline.page:30
 #, no-wrap
 msgid "evince file.pdf"
 msgstr "evince arquivo.pdf"
 
 #. (itstool) path: page/p
-#: C/commandline.page:30
+#: C/commandline.page:31
 msgid ""
 "You can open multiple files by typing the filenames after the evince "
 "command, separating the filenames by a space:"
@@ -726,13 +700,13 @@ msgstr ""
 "comando <cmd>evince</cmd>, separando os nomes por um espaço:"
 
 #. (itstool) path: page/screen
-#: C/commandline.page:33
+#: C/commandline.page:34
 #, no-wrap
 msgid "evince file1.pdf file2.pdf"
 msgstr "evince arquivo1.pdf arquivo2.pdf"
 
 #. (itstool) path: page/p
-#: C/commandline.page:34
+#: C/commandline.page:35
 msgid ""
 "The <app>document viewer</app> also supports the handling of files on the "
 "web. For example, after the evince command you can give the location of a "
@@ -743,18 +717,18 @@ msgstr ""
 "usar a localização de um arquivo na web:"
 
 #. (itstool) path: page/screen
-#: C/commandline.page:37
+#: C/commandline.page:38
 #, no-wrap
 msgid "evince http://www.claymath.org/millennium/P_vs_NP/pvsnp.pdf"
 msgstr "evince http://www.claymath.org/millennium/P_vs_NP/pvsnp.pdf"
 
 #. (itstool) path: section/title
-#: C/commandline.page:39
+#: C/commandline.page:40
 msgid "Opening a document at a specific page"
 msgstr "Abrindo um documento numa determinada página"
 
 #. (itstool) path: section/p
-#: C/commandline.page:40
+#: C/commandline.page:41
 msgid ""
 "You can use the <cmd>--page-label</cmd> switch to open a document at a "
 "specific page. For example, to open a document to page 3, you would type:"
@@ -764,50 +738,49 @@ msgstr ""
 "3, você deverá digitar:"
 
 #. (itstool) path: section/screen
-#: C/commandline.page:44
+#: C/commandline.page:45
 #, no-wrap
 msgid "evince --page-label=3 file.pdf"
 msgstr "evince --page-label=3 arquivo.pdf"
 
 #. (itstool) path: section/p
-#: C/commandline.page:45
+#: C/commandline.page:46
 msgid ""
 "The page label should be in the same format as the page number displayed in "
-"the <app>Document Viewer</app> toolbar."
+"the <app>Document Viewer</app> title bar."
 msgstr ""
-"O valor do argumento de <cmd>--page-label</cmd> deve ter o mesmo formato que "
-"o número da página exibido na barra de ferramentas do <app>Visualizador de "
-"documentos</app>."
+"O rótulo da página deve ter o mesmo formato que o número da página exibido "
+"na barra de título do <app>Visualizador de documentos</app>."
 
 #. (itstool) path: section/title
-#: C/commandline.page:51
+#: C/commandline.page:52
 msgid "Opening a document in fullscreen mode"
 msgstr "Abrindo um documento no modo de tela cheia"
 
 #. (itstool) path: section/screen
-#: C/commandline.page:52
+#: C/commandline.page:53
 #, no-wrap
 msgid "evince --fullscreen file.pdf"
 msgstr "evince --fullscreen arquivo.pdf"
 
 #. (itstool) path: section/title
-#: C/commandline.page:55
+#: C/commandline.page:56
 msgid "Opening a document in presentation mode"
 msgstr "Abrindo um documento no modo de apresentação"
 
 #. (itstool) path: section/screen
-#: C/commandline.page:56
+#: C/commandline.page:57
 #, no-wrap
 msgid "evince --presentation file.pdf"
 msgstr "evince --presentation arquivo.pdf"
 
 #. (itstool) path: section/title
-#: C/commandline.page:59
+#: C/commandline.page:60
 msgid "Opening a document in preview mode"
 msgstr "Abrindo um documento no modo de pré-visualização"
 
 #. (itstool) path: section/screen
-#: C/commandline.page:60
+#: C/commandline.page:61
 #, no-wrap
 msgid "evince --preview file.pdf"
 msgstr "evince --preview arquivo.pdf"
@@ -816,7 +789,7 @@ msgstr "evince --preview arquivo.pdf"
 #: C/convertpdf.page:7
 msgid "You can convert a document to PDF by \"printing\" it to a file."
 msgstr ""
-"Você pode converter documentos em PDF \"imprimindo\" ele para um arquivo."
+"Você pode converter documentos em PDF “imprimindo” ele para um arquivo."
 
 #. (itstool) path: credit/name
 #: C/convertpdf.page:17 C/convertPostScript.page:17 C/convertSVG.page:16
@@ -840,7 +813,7 @@ msgstr "Você pode converter documentos dos seguintes tipos para o formato PDF:"
 #: C/convertpdf.page:32 C/formats.page:34 C/presentations.page:69
 #: C/printing.page:49
 msgid "Device Independent file format (.dvi)"
-msgstr "Arquivos no formato \"Device Independent\" (.dvi)"
+msgstr "Arquivos no formato “Device Independent” (.dvi)"
 
 #. (itstool) path: item/p
 #: C/convertpdf.page:33 C/formats.page:38 C/presentations.page:73
@@ -855,7 +828,7 @@ msgid ""
 "\" the document as a PDF file."
 msgstr ""
 "Consiste em abrir o arquivo no <app>Visualizador de documentos</app> e "
-"\"imprimir\" o documento como um arquivo PDF."
+"“imprimir” o documento como um arquivo PDF."
 
 #. (itstool) path: item/p
 #: C/convertpdf.page:40 C/forms-saving.page:56
@@ -874,7 +847,7 @@ msgid ""
 "Select <gui>Print to File</gui> and choose PDF as the <gui>Output format</"
 "gui>."
 msgstr ""
-"Selecione <gui>Imprimir para arquivo</gui> e escolha \"PDF\" como o "
+"Selecione <gui>Imprimir para arquivo</gui> e escolha “PDF” como o "
 "<gui>Formato da saída</gui>."
 
 #. (itstool) path: item/p
@@ -920,24 +893,25 @@ msgstr "Convertendo um documento em PostScript"
 msgid ""
 "You can convert documents of the following format types to PostScript files:"
 msgstr ""
-"Você pode converter documentos dos seguintes tipos para o formato PostScript:"
+"Você pode converter documentos dos seguintes tipos de formatos para arquivos "
+"PostScript:"
 
 #. (itstool) path: item/p
 #: C/convertPostScript.page:32 C/formats.page:35 C/presentations.page:70
 #: C/printing.page:50
 msgid "DjVu (.djvu, .djv)"
-msgstr "arquivos DjVu (.djvu, .djv)"
+msgstr "DjVu (.djvu, .djv)"
 
 #. (itstool) path: item/p
 #: C/convertPostScript.page:33 C/convertSVG.page:30 C/formats.page:37
 #: C/presentations.page:72 C/printing.page:51
 msgid "Portable Document Format (.pdf)"
-msgstr "arquivos \"Portable Document Format\" (.pdf)"
+msgstr "Portable Document Format (.pdf)"
 
 #. (itstool) path: item/p
 #: C/convertPostScript.page:34 C/printing.page:53
 msgid "Tagged Image File Format (.tiff, .tif)"
-msgstr "arquivos no formato \"Tagged Image File\" (.tiff, .tif)"
+msgstr "Tagged Image File Format (.tiff, .tif)"
 
 #. (itstool) path: page/p
 #: C/convertPostScript.page:36
@@ -946,7 +920,7 @@ msgid ""
 "\" the document as a PostScript file."
 msgstr ""
 "Consiste em abrir o arquivo no <app>Visualizador de documentos</app> e "
-"\"imprimir\" o documento como um arquivo PostScript."
+"“imprimir” o documento como um arquivo PostScript."
 
 #. (itstool) path: item/p
 #: C/convertPostScript.page:41
@@ -965,7 +939,7 @@ msgid ""
 "Select <gui>Print to File</gui> and choose PostScript as the <gui>Output "
 "format</gui>."
 msgstr ""
-"Selecione <gui>Imprimir para arquivo</gui> e escolha \"PostScript\" como o "
+"Selecione <gui>Imprimir para arquivo</gui> e escolha “PostScript” como o "
 "<gui>Formato da saída</gui>."
 
 #. (itstool) path: item/p
@@ -982,7 +956,7 @@ msgstr ""
 #: C/convertSVG.page:7
 msgid "You can convert a document to SVG by \"printing\" it to a file."
 msgstr ""
-"Você pode converter documentos em SVG \"imprimindo\" ele para um arquivo."
+"Você pode converter documentos em SVG “imprimindo” ele para um arquivo."
 
 #. (itstool) path: page/title
 #: C/convertSVG.page:25
@@ -1001,7 +975,7 @@ msgid ""
 "\" the document as an SVG file."
 msgstr ""
 "Consiste em abrir o arquivo no <app>Visualizador de documentos</app> e "
-"\"imprimir\" o documento como um arquivo SVG."
+"“imprimir” o documento como um arquivo SVG."
 
 #. (itstool) path: item/p
 #: C/convertSVG.page:37 C/printing.page:33
@@ -1019,7 +993,7 @@ msgid ""
 "Select <gui>Print to File</gui> and choose SVG as the <gui>Output format</"
 "gui>."
 msgstr ""
-"Selecione <gui>Imprimir para arquivo</gui> e escolha \"SVG\" como o "
+"Selecione <gui>Imprimir para arquivo</gui> e escolha “SVG” como o "
 "<gui>Formato da saída</gui>."
 
 #. (itstool) path: item/p
@@ -1752,9 +1726,6 @@ msgstr "Livreto de 5 páginas"
 
 #. (itstool) path: item/p
 #: C/duplex-5pages.page:90
-#| msgid ""
-#| "In the <gui>General</gui> tab enter the page number in the <gui>Pages</"
-#| "gui> selection ."
 msgid ""
 "In the <gui>General</gui> tab enter the page number in the <gui>Pages</gui> "
 "selection."
@@ -1927,7 +1898,7 @@ msgstr ""
 msgid ""
 "In the <gui>General</gui> tab enter 3 in the <gui>Pages</gui> selection."
 msgstr ""
-"Na aba <gui>Geral</gui>, selecione <gui>Páginas</gui> e entre com o valor 3"
+"Na aba <gui>Geral</gui>, selecione <gui>Páginas</gui> e entre com o valor 3."
 
 #. (itstool) path: item/p
 #: C/duplex-9pages.page:107
@@ -2002,12 +1973,12 @@ msgid ""
 "n-9, n-10, 11, 12, n-11..."
 msgstr ""
 "n, 1, 2, n-1, n-2, 3, 4, n-3, n-4, 5, 6, n-5, n-6, 7, 8, n-7, n-8, 9, 10, "
-"n-9, n-10, 11, 12, n-11, n-12..."
+"n-9, n-10, 11, 12, n-11, n-12…"
 
 #. (itstool) path: item/item
 #: C/duplex-npages.page:63 C/singlesided-npages.page:64
 msgid "...until you have typed n-number of pages."
-msgstr "...até digitar todos os números de página."
+msgstr "…até digitar todos os números de página."
 
 #. (itstool) path: tree/item
 #: C/duplex-npages.page:60 C/singlesided-npages.page:61
@@ -2040,13 +2011,12 @@ msgstr ""
 #: C/editing.page:29
 msgid ""
 "PDF and PostScript (.ps) files are not usually intended to be edited, but "
-"PDF editing software is available. Try <link href=\"http://pdfedit.petricek."
-"net/en/index.html\">pdfedit</link>, for example."
+"PDF editing software is available. Try <link href=\"http://pdfedit.cz/en/"
+"index.html\">pdfedit</link>, for example."
 msgstr ""
 "Arquivos PostScript (.ps) e PDF geralmente não são destinados a serem "
 "editados, mas existe software de edição de arquivos PDF. Experimente o <link "
-"href=\"http://pdfedit.petricek.net/en/index.html\">PDFedit</link>, por "
-"exemplo."
+"href=\"http://pdfedit.cz/en/index.html\">pdfedit</link>, por exemplo."
 
 #. (itstool) path: info/desc
 #: C/finding.page:28
@@ -2148,12 +2118,12 @@ msgstr ""
 #. (itstool) path: item/p
 #: C/formats.page:33 C/presentations.page:68
 msgid "Comic Book Archive (.cbr and .cbz)"
-msgstr "Arquivos \"Comic Book Archive\" (.cbr and .cbz)"
+msgstr "Comic Book Archive (.cbr and .cbz)"
 
 #. (itstool) path: item/p
 #: C/formats.page:36
 msgid "Open XML Paper Specification (.oxps, .xps)"
-msgstr "Arquivos da especificação \"Open XML Paper\" (.oxps, .xps)"
+msgstr "Open XML Paper Sepcification (.oxps, .xps)"
 
 #. (itstool) path: note/p
 #: C/formats.page:41
@@ -2171,8 +2141,8 @@ msgid ""
 "\"Unable to Open Document\", you may wish to check whether the backend "
 "package for the format is installed."
 msgstr ""
-"O suporte para um formato é chamado de <em>\"infraestrutura\"</em>. Se você "
-"receber o erro \"Não foi possível abrir o documento\", verifique se o pacote "
+"O suporte para um formato é chamado de <em>“infraestrutura”</em>. Se você "
+"receber o erro “Não foi possível abrir o documento”, verifique se o pacote "
 "de infraestrutura para o formato que você está tentando abrir está instalado."
 
 #. (itstool) path: info/desc
@@ -2215,11 +2185,12 @@ msgid ""
 "eu/2008/05/03/how-to-annotate-pdf-files-in-linux-using-xournal/\">Xournal</"
 "link>."
 msgstr ""
-"Podem haver algumas partes de um formulário que pode ser necessário para "
+"Podem haver algumas partes de um formulário que pode ser necessário "
 "preencher à mão <em>depois</em> de imprimir o formulário. Por exemplo, você "
 "pode ter que circular certas coisas, ou assinar o formulário em um ou mais "
 "lugares. Se quiser fazer isso eletronicamente, experimente o aplicativo "
-"<link href=\"http://xournal.sourceforge.net/\">Xournal</link>."
+"<link href=\"http://www.g-loaded.eu/2008/05/03/how-to-annotate-pdf-files-in-"
+"linux-using-xournal/\">Xournal</link>."
 
 #. (itstool) path: info/desc
 #: C/forms-saving.page:7
@@ -2256,12 +2227,12 @@ msgstr ""
 #: C/forms-saving.page:39
 msgid ""
 "Click the <gui>File options</gui> menu in the top right corner and select "
-"<gui>Save a copy</gui> or press <keyseq><key>Ctrl</key><key>S</key></keyseq> "
-"on your keyboard."
+"<gui>Save as</gui> or press <keyseq><key>Ctrl</key><key>S</key></keyseq> on "
+"your keyboard."
 msgstr ""
-"Clique no menu de <gui>Opções do arquivo</gui> no canto superior direito e "
-"selecione <gui>Salvar uma cópia…</gui> ou use o atalho <keyseq><key>Ctrl</"
-"key><key>S</key></keyseq> no teclado."
+"Clique no menu <gui>Opções do arquivo</gui> no canto superior direito e "
+"selecione <gui>Salvar como…</gui> ou pressione <keyseq><key>Ctrl</"
+"key><key>S</key></keyseq> em seu teclado."
 
 #. (itstool) path: item/p
 #: C/forms-saving.page:44
@@ -2647,11 +2618,11 @@ msgstr ""
 #. (itstool) path: item/p
 #: C/movingaround.page:79
 msgid ""
-"Click the <gui>&lt;</gui> or <gui>&gt;</gui> buttons on the <link xref="
-"\"toolbar\">toolbar</link>."
+"Click the <gui>View options</gui> menu in the top right corner and select "
+"<gui>Previous Page</gui> or <gui>Next Page</gui>."
 msgstr ""
-"Clique nos botões <gui>&lt;</gui> ou <gui>&gt;</gui> na <link xref=\"toolbar"
-"\">barra de ferramentas</link>."
+"Clique no menu <gui>Opções de visualização</gui> no canto superior direito e "
+"selecione <gui>Página anterior</gui> ou <gui>Próxima página</gui>."
 
 #. (itstool) path: item/p
 #: C/movingaround.page:83
@@ -2671,20 +2642,19 @@ msgstr "Para ir até uma determinada página:"
 #: C/movingaround.page:91
 msgid ""
 "Type a page number in <gui style=\"input\">Select Page</gui> on the <link "
-"xref=\"toolbar\">toolbar</link> and press <key>Enter</key>."
+"xref=\"titlebar\">title bar</link> and press <key>Enter</key>."
 msgstr ""
 "Digite um número de página na caixa do canto superior esquerdo da <link xref="
-"\"toolbar\">barra de ferramentas</link> e pressione <key>Enter</key>."
+"\"titlebar\">barra de ferramentas</link> e pressione <key>Enter</key>."
 
 #. (itstool) path: item/p
 #: C/movingaround.page:95
 msgid ""
 "If you want to see the previously visited pages press <gui style=\"button"
-"\">&lt;</gui> or <gui style=\"button\">&gt;</gui> on the toolbar."
+"\">&lt;</gui> or <gui style=\"button\">&gt;</gui> on the title bar."
 msgstr ""
 "Para ver as páginas visitadas anteriormente, use os botões <gui style="
-"\"button\">&lt;</gui> ou <gui style=\"button\">&gt;</gui> da barra de "
-"ferramentas."
+"\"button\">&lt;</gui> ou <gui style=\"button\">&gt;</gui> da barra de título."
 
 #. (itstool) path: item/p
 #: C/movingaround.page:100
@@ -2694,26 +2664,24 @@ msgstr "Para ir para o início ou para o final do documento:"
 #. (itstool) path: item/p
 #: C/movingaround.page:103
 msgid ""
-"Click the <gui>File options</gui> menu in the top right corner and select "
+"Click the <gui>View options</gui> menu in the top right corner and select "
 "<gui>First Page</gui>. You can also press <keyseq><key>Ctrl</key><key>Home</"
 "key></keyseq> on your keyboard."
 msgstr ""
-"Clique no menu de <gui>Opções de visualização</gui> no canto superior "
-"direito da janela e selecione <gui>Primeira página</gui>. Você também pode "
-"pressionar as teclas <keyseq><key>Ctrl</key><key>Home</key></keyseq> do "
-"teclado."
+"Clique no menu <gui>Opções de visualização</gui> no canto superior direito "
+"da janela e selecione <gui>Primeira página</gui>. Você também pode "
+"pressionar <keyseq><key>Ctrl</key><key>Home</key></keyseq> do teclado."
 
 #. (itstool) path: item/p
 #: C/movingaround.page:109
 msgid ""
-"Click the <gui>File options</gui> menu in the top right corner and select "
+"Click the <gui>View options</gui> menu in the top right corner and select "
 "<gui>Last Page</gui> or press <keyseq><key>Ctrl</key><key>End</key></keyseq> "
 "on your keyboard."
 msgstr ""
-"Clique no menu de <gui>Opções de visualização</gui> no canto superior "
-"direito da janela e selecione <gui>Última página</gui>. Você também pode "
-"pressionar as teclas <keyseq><key>Ctrl</key><key>End</key></keyseq> do "
-"teclado."
+"Clique no menu <gui>Opções de visualização</gui> no canto superior direito "
+"da janela e selecione <gui>Última página</gui> ou pressione "
+"<keyseq><key>Ctrl</key><key>End</key></keyseq> em seu teclado."
 
 #. (itstool) path: item/p
 #: C/movingaround.page:119
@@ -2739,19 +2707,20 @@ msgstr ""
 #. (itstool) path: section/title
 #: C/movingaround.page:134
 msgid "Navigating with a page list or table of contents"
-msgstr "Navegando com uma lista de páginas, marcadores ou um índice."
+msgstr "Navegando com uma lista de páginas, marcadores ou um índice"
 
 #. (itstool) path: section/p
 #: C/movingaround.page:136
+
 msgid ""
 "To make the side pane visible, click the <gui>View options</gui> button in "
-"the top-right corner and select <gui>Side Pane</gui>, or press <key>F9</key> "
-"on the keyboard. You should see a preview of all of the pages in the "
+"the top-right corner and select <gui>Side Panel</gui>, or press <key>F9</"
+"key> on the keyboard. You should see a preview of all of the pages in the "
 "document."
 msgstr ""
-"Para fazer com que o painel lateral apareça, marque a opção <gui>Barra "
-"lateral</gui> no menu de <gui>Opções de visualização</gui> no canto superior "
-"direito ou pressione a tecla <key>F9</key> no teclado. Você deverá ver "
+"Para tornar o visível o painel lateral, clique no botão <gui>Opções de "
+"visualização</gui> no canto superior direito e selecione o <gui>Painel "
+"lateral</gui>, ou pressione <key>F9</key> no teclado. Você deve ver "
 "miniaturas de pré-visualização de todas as páginas do documento."
 
 #. (itstool) path: section/p
@@ -2762,18 +2731,14 @@ msgstr ""
 
 #. (itstool) path: note/p
 #: C/movingaround.page:144
-#| msgid ""
-#| "Some documents have an index or table of contents, which you can display "
-#| "in the side pane. Click the drop-down list at the top of the side pane "
-#| "and select <gui>Index</gui> to view it."
 msgid ""
 "Some documents have an index or table of contents, which you can display in "
 "the side pane. Click the drop-down list at the top of the side pane and "
 "select <gui>Outline</gui> to view it."
 msgstr ""
 "Alguns documentos têm índice, que você pode exibir no painel lateral. Clique "
-"na lista no topo do painel lateral e selecione <gui>Tópicos</gui> para exibi-"
-"lo."
+"no menu suspenso no topo do painel lateral e selecione <gui>Tópicos</gui> "
+"para exibi-lo."
 
 #. (itstool) path: note/p
 #: C/movingaround.page:148
@@ -2826,8 +2791,9 @@ msgstr ""
 #. (itstool) path: item/p
 #: C/movingaround.page:178
 msgid ""
-"select desired zoom percentage from the drop down menu above the window."
-msgstr "selecionar o zoom desejado na lista no topo da janela."
+"select desired zoom percentage from the drop-down menu above the window."
+msgstr ""
+"selecionar a porcentagem de zoom desejado no menu suspenso no topo da janela."
 
 #. (itstool) path: item/media
 #. This is a reference to an external file such as an image or video. When
@@ -2835,9 +2801,6 @@ msgstr "selecionar o zoom desejado na lista no topo da janela."
 #. update your localized copy. The msgstr is not used at all. Set it to
 #. whatever you like once you have updated your copy of the file.
 #: C/movingaround.page:180
-#| msgctxt "_"
-#| msgid ""
-#| "external ref='figures/zoom.png' md5='561963b44d8e90a2a8ac409b8e35aee7'"
 msgctxt "_"
 msgid "external ref='figures/zoom.png' md5='df29dd99650f077cbf6ace95f199786e'"
 msgstr "external ref='figures/zoom.png' md5='df29dd99650f077cbf6ace95f199786e'"
@@ -3071,8 +3034,8 @@ msgid ""
 "window."
 msgstr ""
 "Se você tentar abrir um documento de um formato que o <app>Visualizador de "
-"documentos</app> não reconhece, você receberá uma mensagem de erro \"Não foi "
-"possível abrir o documento\". Clique em <gui>Fechar</gui> para retornar à "
+"documentos</app> não reconhece, você receberá uma mensagem de erro “Não foi "
+"possível abrir o documento”. Clique em <gui>Fechar</gui> para retornar à "
 "janela do <app>Visualizador de documentos</app>."
 
 #. (itstool) path: info/desc
@@ -3261,7 +3224,6 @@ msgstr ""
 
 #. (itstool) path: item/p
 #: C/presentations.page:71
-#| msgid "OpenOffice Presentation (.odp)"
 msgid "Open Document Presentation (.odp)"
 msgstr "Apresentação de documento aberto (odp)"
 
@@ -3289,7 +3251,7 @@ msgid ""
 "from the <gui>Two-sided</gui> drop-down list."
 msgstr ""
 "Na aba <gui>Configurar página</gui> da janela <gui>Imprimir</gui> selecione "
-"uma opção na lista <gui>Frente e verso</gui>."
+"uma opção do menu suspenso <gui>Frente e verso</gui>."
 
 #. (itstool) path: item/p
 #: C/print-2sided.page:39
@@ -3358,7 +3320,7 @@ msgid ""
 "document."
 msgstr ""
 "Se você quiser alterar o tamanho do papel do seu documento (por exemplo, "
-"imprimir um PDF de tamanho \"Carta\" em papel \"A4\"), é possível alterar o "
+"imprimir um PDF de tamanho “Carta” em papel “A4”), é possível alterar o "
 "formato de impressão para o documento."
 
 #. (itstool) path: item/p
@@ -3379,10 +3341,10 @@ msgstr "Escolha a aba <gui>Configurar página</gui>."
 #: C/print-differentsize.page:43
 msgid ""
 "Under the <em>Paper</em> column, choose your <em>Paper size</em> from the "
-"dropdown list."
+"drop-down list."
 msgstr ""
-"Sob a coluna <gui>Papel</gui>, selecione o <gui>Tamanho do papel</gui> na "
-"lista."
+"Sob a coluna <em>Papel</em>, selecione o <em>Tamanho do papel</em> do menu "
+"suspenso."
 
 #. (itstool) path: item/p
 #: C/print-differentsize.page:47
@@ -3395,8 +3357,8 @@ msgid ""
 "You can also use the <em>Orientation</em> menu to choose a different "
 "orientation:"
 msgstr ""
-"Você também pode usar a lista em <gui>Orientação</gui> para mudar a "
-"orientação da impressão:"
+"Você também pode usar o menu <gui>Orientação</gui> para mudar a orientação "
+"da impressão:"
 
 #. (itstool) path: item/p
 #: C/print-differentsize.page:56
@@ -3478,9 +3440,7 @@ msgstr "Para inverter a ordem:"
 #. (itstool) path: item/p
 #: C/print-order.page:33
 msgid "<guiseq><gui>File</gui><gui>Print</gui></guiseq>"
-msgstr ""
-"Clique no menu de <gui>Opções do arquivo</gui> no canto superior direito da "
-"janela e selecione <gui>Imprimir</gui>."
+msgstr "<guiseq><gui>Arquivo</gui><gui>Imprimir</gui></guiseq>"
 
 #. (itstool) path: item/p
 #: C/print-order.page:34
@@ -3519,9 +3479,7 @@ msgstr "Para agrupar:"
 #. (itstool) path: item/p
 #: C/print-order.page:51 C/print-select.page:26
 msgid "Click <guiseq><gui>File</gui><gui>Print</gui></guiseq>"
-msgstr ""
-"Clique no menu de <gui>Opções do arquivo</gui> no canto superior direito da "
-"janela e selecione <gui>Imprimir</gui>."
+msgstr "Clique em <guiseq><gui>Arquivo</gui><gui>Imprimir</gui></guiseq>"
 
 #. (itstool) path: item/p
 #: C/print-order.page:52
@@ -3541,10 +3499,10 @@ msgstr ""
 msgctxt "_"
 msgid ""
 "external ref='figures/reverse-collate.png' "
-"md5='2e84b930fa1913123b740f8b0997255e'"
+"md5='5d306e1be829b42f27402e0640cb221c'"
 msgstr ""
 "external ref='figures/reverse-collate.png' "
-"md5='a5482fed4a1e8992a517d2cccd3674fa'"
+"md5='5d306e1be829b42f27402e0640cb221c'"
 
 #. (itstool) path: info/desc
 #: C/print-pagescaling.page:19
@@ -3563,8 +3521,8 @@ msgstr "Selecione a aba <gui style=\"tab\">Manuseio de página</gui>."
 
 #. (itstool) path: item/p
 #: C/print-pagescaling.page:37
-msgid "Choose a <em>Paper Scaling</em> from the dropdown list."
-msgstr "Escolha uma <em>Escala</em> na lista"
+msgid "Choose a <em>Paper Scaling</em> from the drop-down list."
+msgstr "Escolha uma <em>Escala de Papel</em> do menu suspenso."
 
 #. (itstool) path: item/p
 #: C/print-pagescaling.page:40
@@ -3635,7 +3593,7 @@ msgid ""
 "For example, if you enter \"1,3,5-7,9\" in the <gui>Pages</gui> textbox, "
 "pages 1,3,5,6,7 and 9 will be printed."
 msgstr ""
-"Por exemplo, se você digitar \"1,3,5-7,9\" em <gui>Páginas</gui>, as páginas "
+"Por exemplo, se você digitar “1,3,5-7,9” em <gui>Páginas</gui>, as páginas "
 "1, 3, 5, 6, 7 e 9 serão impressas."
 
 #. (itstool) path: note/media
@@ -3647,10 +3605,10 @@ msgstr ""
 msgctxt "_"
 msgid ""
 "external ref='figures/print-select.png' "
-"md5='e38a5749ed445a812346602ad58b88b4'"
+"md5='b5aab6e63b3b332eada00ac163129d78'"
 msgstr ""
 "external ref='figures/print-select.png' "
-"md5='7ee83f8aedb88c28328e89d7a0ed03cc'"
+"md5='b5aab6e63b3b332eada00ac163129d78'"
 
 #. (itstool) path: info/desc
 #: C/reload.page:8
@@ -3689,7 +3647,6 @@ msgstr ""
 
 #. (itstool) path: info/desc
 #: C/shortcuts.page:7
-#| msgid "Default shortcuts"
 msgid "See a list of all shortcuts."
 msgstr "Veja uma lista de todos os atalhos."
 
@@ -3881,13 +3838,11 @@ msgstr "<keyseq><key>Ctrl</key><key>End</key></keyseq>"
 
 #. (itstool) path: td/p
 #: C/shortcuts.page:118
-#| msgid "Navigating with a page list or table of contents"
 msgid "Display the side bar with a table of contents."
 msgstr "Exibi a barra lateral com uma tabela de conteúdo."
 
 #. (itstool) path: td/p
 #: C/shortcuts.page:119
-#| msgid "<key>End</key>"
 msgid "<key>F9</key>"
 msgstr "<key>F9</key>"
 
@@ -4368,29 +4323,29 @@ msgstr "Vim-latex"
 #. (itstool) path: section/p
 #: C/synctex-editors.page:29
 msgid ""
-"The <app>gedit</app> plugin contains a python script (evince_dbus.py) that "
-"can be used to get SyncTeX working with Vim. In order to use vim-latex "
-"together with the <app>document viewer</app> you need to follow the next "
-"steps:"
+"The <app>gedit</app> plugin contains a python script (<file>evince_dbus.py</"
+"file>) that can be used to get SyncTeX working with Vim. In order to use vim-"
+"latex together with the <app>document viewer</app> you need to follow the "
+"next steps:"
 msgstr ""
-"O plug-in do <app>gedit</app> contém um script python (evince_dbus.py) que "
-"pode ser usado para fazer Vim trabalhar com SyncTeX. Para utilizar vim-latex "
-"com o <app>Visualizador de documentos</app> você precisa seguir os seguintes "
-"passos:"
+"O plug-in do <app>gedit</app> contém um script python (<file>evince_dbus.py</"
+"file>) que pode ser usado para fazer SyncTeX funcionar com o Vim. Para "
+"utilizar vim-latex com o <app>Visualizador de documentos</app> você precisa "
+"seguir os seguintes passos:"
 
 #. (itstool) path: item/p
 #: C/synctex-editors.page:35
 msgid ""
-"Copy the evince_dbus.py to some directory in your path and give it +x "
-"permissions."
+"Copy the <file>evince_dbus.py</file> to some directory in your path and give "
+"it +x permissions."
 msgstr ""
-"Copie o evince_dbus.py para algum diretório em sua pasta pessoal e lhe "
-"atribua permissões de execução."
+"Copie o <file>evince_dbus.py</file> para algum diretório em sua pasta "
+"pessoal e lhe atribua permissões de execução."
 
 #. (itstool) path: item/p
 #: C/synctex-editors.page:41
-msgid "Modify your ~/.vimrc file and add the following lines."
-msgstr "Adicione as seguintes linhas em seu arquivo ~/.vimrc:"
+msgid "Modify your <file>~/.vimrc</file> file and add the following lines."
+msgstr "Adicione as seguintes linhas em seu arquivo <file>~/.vimrc</file>."
 
 #. (itstool) path: item/code
 #: C/synctex-editors.page:44
@@ -4515,7 +4470,7 @@ msgstr ""
 #: C/synctex-search.page:50
 msgid "If you have a complex project with several TeX files you can put"
 msgstr ""
-"Se você tem um projeto complexo com vários arquivos TeX, você pode colocar:"
+"Se você tem um projeto complexo com vários arquivos TeX, você pode colocar"
 
 #. (itstool) path: section/code
 #: C/synctex-search.page:53
@@ -4651,12 +4606,6 @@ msgstr ""
 
 #. (itstool) path: page/p
 #: C/textselection.page:35
-#| msgid ""
-#| "Unfortunately, there is no real way of fixing this problem. Copying less "
-#| "text at a time, or copying the text into a text editor may minimise the "
-#| "problem. You can locate a text editor by clicking "
-#| "<guiseq><gui>Activities</gui><gui>Applications</gui><gui>Accessories</"
-#| "gui><gui>gedit</gui></guiseq>."
 msgid ""
 "Unfortunately, there is no real way of fixing this problem. Copying less "
 "text at a time, or copying the text into a text editor (like <app>gedit</"
@@ -4667,60 +4616,75 @@ msgstr ""
 "<app>gedit</app>) pode minimizar o problema."
 
 #. (itstool) path: info/desc
-#: C/toolbar.page:8
-msgid ""
-"<link xref=\"toolbar#view\">Show, hide</link> or <link xref=\"toolbar#edit"
-"\">edit</link> the toolbar."
-msgstr ""
-"<link xref=\"toolbar#view\">Mostrar, esconder</link> ou <link xref="
-"\"toolbar#edit\">alterar</link> a barra de ferramentas."
+#: C/titlebar.page:8
+msgid "Using the title bar."
+msgstr "Usando a barra de título."
 
 #. (itstool) path: page/title
-#: C/toolbar.page:23
-msgid "Toolbar"
-msgstr "A barra de ferramentas"
+#: C/titlebar.page:22
+msgid "Title bar"
+msgstr "Barra de título"
 
 #. (itstool) path: page/p
-#: C/toolbar.page:25
-msgid "The toolbar contains:"
-msgstr "A barra de ferramentas contém:"
+#: C/titlebar.page:24
+msgid "The title bar contains:"
+msgstr "A barra de título contém:"
 
 #. (itstool) path: item/p
-#: C/toolbar.page:28
+#: C/titlebar.page:27
 msgid ""
-"<gui>∧</gui> and <gui>∨</gui> for <link xref=\"movingaround#between-pages"
-"\">moving</link> from page to page."
+"A text field to <link xref=\"movingaround#between-pages\">go to a certain "
+"page</link> or to <link xref=\"finding\">search</link> in the <link xref="
+"\"movingaround#navigating\">index</link>."
 msgstr ""
-"Botões <gui>∧</gui> e <gui>∨</gui> para <link xref=\"movingaround#between-"
-"pages\">mover</link> entre páginas."
+"Um campo de texto para <link xref=\"movingaround#between-pages\">ir à uma "
+"determinada página</link> ou para <link xref=\"finding\">procurar</link> no "
+"<link xref=\"movingaround#navigating\">índice</link>."
 
 #. (itstool) path: item/p
-#: C/toolbar.page:33
-msgid ""
-"The 'page select' <link xref=\"movingaround#between-pages\">tool.</link>"
-msgstr ""
-"A <link xref=\"movingaround#between-pages\">caixa de seleção de página</"
-"link>."
-
-#. (itstool) path: item/p
-#: C/toolbar.page:37
+#: C/titlebar.page:32
 msgid "<gui>&lt;</gui> and <gui>&gt;</gui> for moving between history items."
 msgstr ""
 "Botões <gui>&lt;</gui> e <gui>&gt;</gui> para navegar entre itens do "
 "histórico."
 
 #. (itstool) path: item/p
-#: C/toolbar.page:40
+#: C/titlebar.page:35
 msgid ""
-"A tool to adjust the <link xref=\"movingaround#zoom\">zoom</link> level."
+"A <gui>Magnifying glass button</gui> to <link xref=\"finding\">find a word "
+"or phrase in the document</link>."
 msgstr ""
-"Uma ferramenta para ajustar o nível de <link xref=\"movingaround#zoom"
-"\">zoom</link>."
+"Um <gui>Botão de lupa</gui> para <link xref=\"finding\">encontrar uma "
+"palavra ou frase no documento</link>."
+
+#. (itstool) path: item/p
+#: C/titlebar.page:39
+msgid "A button to manage <link xref=\"annotations\">annotations</link>."
+msgstr "Um botão para gerenciar <link xref=\"annotations\">anotações</link>."
+
+#. (itstool) path: item/p
+#: C/titlebar.page:42
+msgid ""
+"A drop-down box to adjust the <link xref=\"movingaround#zoom\">zoom</link> "
+"level."
+msgstr ""
+"Uma caixa para ajustar o nível de <link xref=\"movingaround#zoom\">zoom</"
+"link>."
+
+#. (itstool) path: item/p
+#: C/titlebar.page:45
+msgid "A button to open the <gui>View options</gui> menu."
+msgstr "Um botão para abrir o menu de <gui>Opções de visualização</gui>."
+
+#. (itstool) path: item/p
+#: C/titlebar.page:48
+msgid "A button to open the <gui>File options</gui> menu."
+msgstr "Um botão para abrir o menu das <gui>Opções de arquivo</gui>."
 
 #. (itstool) path: info/desc
 #: C/translate.page:7
 msgid "Localize the <app>Document Viewer.</app>"
-msgstr "Regionalize o <app>Visualizador de documentos</app>."
+msgstr "Regionalize o <app>Visualizador de documentos.</app>"
 
 #. (itstool) path: credit/name
 #: C/translate.page:15
@@ -4786,8 +4750,38 @@ msgid ""
 "list</link>."
 msgstr ""
 "Alternativamente, você pode entrar em contato com a Equipe de "
-"Internacionalização usando sua <link href=\""
-"http://mail.gnome.org/mailman/listinfo/gnome-i18n\">lista de e-mails</link>."
+"Internacionalização usando sua <link href=\"http://mail.gnome.org/mailman/"
+"listinfo/gnome-i18n\">lista de e-mails</link>."
+
+#~ msgid ""
+#~ "Click the <gui>&lt;</gui> or <gui>&gt;</gui> buttons on the <link xref="
+#~ "\"toolbar\">toolbar</link>."
+#~ msgstr ""
+#~ "Clique nos botões <gui>&lt;</gui> ou <gui>&gt;</gui> na <link xref="
+#~ "\"toolbar\">barra de ferramentas</link>."
+
+#~ msgid ""
+#~ "<link xref=\"toolbar#view\">Show, hide</link> or <link xref=\"toolbar#edit"
+#~ "\">edit</link> the toolbar."
+#~ msgstr ""
+#~ "<link xref=\"toolbar#view\">Mostrar, esconder</link> ou <link xref="
+#~ "\"toolbar#edit\">alterar</link> a barra de ferramentas."
+
+#~ msgid "Toolbar"
+#~ msgstr "A barra de ferramentas"
+
+#~ msgid ""
+#~ "<gui>∧</gui> and <gui>∨</gui> for <link xref=\"movingaround#between-pages"
+#~ "\">moving</link> from page to page."
+#~ msgstr ""
+#~ "Botões <gui>∧</gui> e <gui>∨</gui> para <link xref=\"movingaround#between-"
+#~ "pages\">mover</link> entre páginas."
+
+#~ msgid ""
+#~ "The 'page select' <link xref=\"movingaround#between-pages\">tool.</link>"
+#~ msgstr ""
+#~ "A <link xref=\"movingaround#between-pages\">caixa de seleção de página</"
+#~ "link>."
 
 #~ msgctxt "_"
 #~ msgid ""
