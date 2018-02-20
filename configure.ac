@@ -3,8 +3,8 @@
 # *****************************************************************************
 
 m4_define([ev_major_version],[3])
-m4_define([ev_minor_version],[26])
-m4_define([ev_micro_version],[0])
+m4_define([ev_minor_version],[27])
+m4_define([ev_micro_version],[91])
 m4_define([ev_extra_version],[])
 m4_define([ev_version],[ev_major_version.ev_minor_version.ev_micro_version()ev_extra_version])
 
