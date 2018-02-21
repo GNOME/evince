@@ -25,7 +25,7 @@ backend_in_files = xpsdocument.evince-backend.in.in
 backend_DATA = $(backend_in_files:.evince-backend.in.in=.evince-backend)
 @EV_INTLTOOL_EVINCE_BACKEND_RULE@
 
-appstreamdir = $(datadir)/appdata
+appstreamdir = $(datadir)/metainfo
 appstream_in_files = evince-xpsdocument.metainfo.xml.in.in
 appstream_DATA = $(appstream_in_files:.xml.in.in=.xml)
 @INTLTOOL_XML_RULE@
