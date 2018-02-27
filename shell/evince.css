@@ -51,6 +51,15 @@ iconview {
     -gtk-key-bindings: MoveCursor;
 }
 
+@binding-set HorizontalScroll {
+    unbind "<Control>Right";
+    unbind "<Control>Left";
+}
+
+scrolledwindow {
+    -gtk-key-bindings: HorizontalScroll;
+}
+
 evpresentationview {
     background-color: black;
 }
