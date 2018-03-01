@@ -265,7 +265,7 @@ entry_icon_press_callback (GtkEntry            *entry,
         if (event->button != GDK_BUTTON_PRIMARY)
                 return;
 
-        gtk_widget_show (get_popup (zoom_action));
+        gtk_popover_popup (GTK_POPOVER (get_popup (zoom_action)));
         zoom_action->priv->popup_shown = TRUE;
 }
 
