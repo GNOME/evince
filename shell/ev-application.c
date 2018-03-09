@@ -1046,6 +1046,7 @@ ev_application_startup (GApplication *gapplication)
           "win.inverted-colors",        "<Ctrl>I", NULL,
           "win.reload",                 "<Ctrl>R", NULL,
           "win.add-annotation",         "s", NULL,
+          "win.highlight-annotation",   "<Ctrl>H", NULL,
           NULL
         };
 
