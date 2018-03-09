@@ -5587,6 +5587,16 @@ ev_window_cmd_view_toggle_caret_navigation (GSimpleAction *action,
 }
 
 static void
+ev_window_cmd_add_highlight_annotation (GSimpleAction *action,
+                                        GVariant      *state,
+                                        gpointer       user_data)
+{
+    EvWindow *ev_window = user_data;
+
+    ev_view_begin_add_annotation (EV_VIEW (ev_window->priv->view), EV_ANNOTATION_TYPE_TEXT_MARKUP);
+}
+
+static void
 ev_window_cmd_add_annotation (GSimpleAction *action,
                                     GVariant      *state,
                                     gpointer       user_data)
@@ -5919,6 +5929,7 @@ static const GActionEntry actions[] = {
 	{ "open-menu", ev_window_cmd_action_menu },
 	{ "caret-navigation", NULL, NULL, "false", ev_window_cmd_view_toggle_caret_navigation },
 	{ "add-annotation", NULL, NULL, "false", ev_window_cmd_add_annotation },
+	{ "hightlight-annotation", NULL, NULL, "false", ev_window_cmd_add_highlight_annotation },
 	{ "toggle-edit-annots", NULL, NULL, "false", ev_window_cmd_toggle_edit_annots },
 	/* Popups specific items */
 	{ "annotate-selected-text", ev_window_popup_cmd_annotate_selected_text },
