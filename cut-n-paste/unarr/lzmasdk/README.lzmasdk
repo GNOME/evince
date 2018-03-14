@@ -1,0 +1,15 @@
+To update to the latest version of the LZMA SDK:
+1. Grab the latest version from:
+   https://sourceforge.net/projects/sevenzip/files/LZMA%20SDK/
+   and unpack it
+2. For the files in evince's copy/paste, copy the originals from the
+   C/ sub-directory of the SDK:
+   for i in *.[ch] ; do cp /tmp/lzma1803/C/$i . ; done
+3. Convert the copied files to Unix format:
+   dos2unix *.[ch]
+4. Use "git add -p" to apply only the sections that are of interest
+   and do not regress warning fixes (see commits a2aa919 and 5e1a0ef
+   for example)
+
+Note that you might end up with an empty commit (for example 79b5fe5)
+which is fine, as long as the change is documented.
