@@ -5669,7 +5669,7 @@ ev_view_motion_notify_event (GtkWidget      *widget,
  *
  * Returns: %TRUE if annotations were added successfully, %FALSE otherwise.
  *
- * Since: 3.28
+ * Since: 3.30
  */
 gboolean
 ev_view_add_text_markup_annotation_for_selected_text (EvView  *view)
