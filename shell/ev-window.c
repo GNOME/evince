@@ -4967,7 +4967,6 @@ view_menu_link_popup (EvWindow *ev_window,
 {
 	gboolean  show_external = FALSE;
 	gboolean  show_internal = FALSE;
-	GAction  *action;
 
 	g_clear_object (&ev_window->priv->link);
 	if (link) {
@@ -4992,24 +4991,17 @@ view_menu_link_popup (EvWindow *ev_window,
 		}
 	}
 
-	action = g_action_map_lookup_action (G_ACTION_MAP (ev_window), "open-link");
-	g_simple_action_set_enabled (G_SIMPLE_ACTION (action), show_external);
+	ev_window_set_action_enabled (ev_window, "open-link", show_external);
+	ev_window_set_action_enabled (ev_window, "copy-link-address", show_external);
+	ev_window_set_action_enabled (ev_window, "go-to-link", show_internal);
 
-	action = g_action_map_lookup_action (G_ACTION_MAP (ev_window), "copy-link-address");
-	g_simple_action_set_enabled (G_SIMPLE_ACTION (action), show_external);
-
-	action = g_action_map_lookup_action (G_ACTION_MAP (ev_window), "go-to-link");
-	g_simple_action_set_enabled (G_SIMPLE_ACTION (action), show_internal);
-
-	action = g_action_map_lookup_action (G_ACTION_MAP (ev_window), "open-link-new-window");
-	g_simple_action_set_enabled (G_SIMPLE_ACTION (action), show_internal);
+	ev_window_set_action_enabled (ev_window, "open-link-new-window", show_internal);
 }
 
 static void
 view_menu_image_popup (EvWindow  *ev_window,
 		       EvImage   *image)
 {
-	GAction *action;
 	gboolean show_image = FALSE;
 
 	g_clear_object (&ev_window->priv->image);
@@ -5018,18 +5010,14 @@ view_menu_image_popup (EvWindow  *ev_window,
 		show_image = TRUE;
 	}
 
-	action = g_action_map_lookup_action (G_ACTION_MAP (ev_window), "save-image");
-	g_simple_action_set_enabled (G_SIMPLE_ACTION (action), show_image);
-
-	action = g_action_map_lookup_action (G_ACTION_MAP (ev_window), "copy-image");
-	g_simple_action_set_enabled (G_SIMPLE_ACTION (action), show_image);
+	ev_window_set_action_enabled (ev_window, "save-image", show_image);
+	ev_window_set_action_enabled (ev_window, "copy-image", show_image);
 }
 
 static void
 view_menu_annot_popup (EvWindow     *ev_window,
 		       EvAnnotation *annot)
 {
-	GAction *action;
 	gboolean show_annot_props = FALSE;
 	gboolean show_attachment = FALSE;
 	gboolean can_remove_annots = FALSE;
@@ -5059,17 +5047,10 @@ view_menu_annot_popup (EvWindow     *ev_window,
 	if (EV_IS_DOCUMENT_ANNOTATIONS (ev_window->priv->document))
 		can_remove_annots = ev_document_annotations_can_remove_annotation (EV_DOCUMENT_ANNOTATIONS (ev_window->priv->document));
 
-	action = g_action_map_lookup_action (G_ACTION_MAP (ev_window), "annot-properties");
-	g_simple_action_set_enabled (G_SIMPLE_ACTION (action), show_annot_props);
-
-	action = g_action_map_lookup_action (G_ACTION_MAP (ev_window), "remove-annot");
-	g_simple_action_set_enabled (G_SIMPLE_ACTION (action), annot != NULL && can_remove_annots);
-
-	action = g_action_map_lookup_action (G_ACTION_MAP (ev_window), "open-attachment");
-	g_simple_action_set_enabled (G_SIMPLE_ACTION (action), show_attachment);
-
-	action = g_action_map_lookup_action (G_ACTION_MAP (ev_window), "save-attachment");
-	g_simple_action_set_enabled (G_SIMPLE_ACTION (action), show_attachment);
+	ev_window_set_action_enabled (ev_window, "annot-properties", show_annot_props);
+	ev_window_set_action_enabled (ev_window, "remove-annot", annot != NULL && can_remove_annots);
+	ev_window_set_action_enabled (ev_window, "open-attachment", show_attachment);
+	ev_window_set_action_enabled (ev_window, "save-attachment", show_attachment);
 }
 
 static gboolean
@@ -5124,15 +5105,11 @@ attachment_bar_menu_popup_cb (EvSidebarAttachments *attachbar,
 			      GList                *attach_list,
 			      EvWindow             *ev_window)
 {
-	GAction *action;
-
 	g_assert (attach_list != NULL);
 
-	action = g_action_map_lookup_action (G_ACTION_MAP (ev_window), "open-attachment");
-	g_simple_action_set_enabled (G_SIMPLE_ACTION (action), TRUE);
+	ev_window_set_action_enabled (ev_window, "open-attachment", TRUE);
 
-	action = g_action_map_lookup_action (G_ACTION_MAP (ev_window), "save-attachment");
-	g_simple_action_set_enabled (G_SIMPLE_ACTION (action), TRUE);
+	ev_window_set_action_enabled (ev_window, "save-attachment", TRUE);
 
 	g_list_free_full (ev_window->priv->attach_list, g_object_unref);
 	ev_window->priv->attach_list = attach_list;
