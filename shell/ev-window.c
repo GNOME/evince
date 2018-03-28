@@ -5072,16 +5072,6 @@ view_menu_annot_popup (EvWindow     *ev_window,
 	g_simple_action_set_enabled (G_SIMPLE_ACTION (action), show_attachment);
 }
 
-static void
-view_menu_text_selection_popup (EvWindow *ev_window,
-				gboolean  enable)
-{
-	GAction *action;
-
-	action = g_action_map_lookup_action (G_ACTION_MAP (ev_window), "annotate-selected-text");
-	g_simple_action_set_enabled (G_SIMPLE_ACTION (action), enable);
-}
-
 static gboolean
 view_menu_popup_cb (EvView   *view,
 		    GList    *items,
@@ -5115,7 +5105,7 @@ view_menu_popup_cb (EvView   *view,
 
 	can_annotate = !has_annot && ev_view_get_has_selection (view);
 
-	view_menu_text_selection_popup (ev_window, can_annotate);
+	ev_window_set_action_enabled (ev_window, "annotate-selected-text", can_annotate);
 
 	if (!ev_window->priv->view_popup) {
 		ev_window->priv->view_popup = gtk_menu_new_from_model (ev_window->priv->view_popup_menu);
