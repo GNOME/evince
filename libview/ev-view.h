@@ -66,6 +66,7 @@ void            ev_view_copy_link_address (EvView         *view,
 					   EvLinkAction   *action);
 void		ev_view_select_all	  (EvView         *view);
 gboolean        ev_view_get_has_selection (EvView         *view);
+char *   ev_view_get_selected_text (EvView  *view);
 
 /* Page size */
 gboolean	ev_view_can_zoom_in       (EvView         *view);

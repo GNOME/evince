@@ -5656,6 +5656,24 @@ ev_view_motion_notify_event (GtkWidget      *widget,
 
 	return FALSE;
 }
+/**
+ * ev_view_get_selected_text:
+ * @view: #EvView instance
+ *
+ * Returns a pointer to a constant string containing the selected
+ * text in the view.
+ *
+ * The value returned may be NULL if there is no selected text.
+ *
+ * Returns: The string representing selected text.
+ *
+ * Since: 3.30
+ */
+char *
+ev_view_get_selected_text (EvView *view)
+{
+	return get_selected_text (view);
+}
 
 /**
  * ev_view_add_text_markup_annotation_for_selected_text:
