@@ -3905,7 +3905,18 @@ ev_window_cmd_find (GSimpleAction *action,
 		    GVariant      *parameter,
 		    gpointer       user_data)
 {
+	EvView *view;
+	gchar *selected_text = NULL;
 	EvWindow *ev_window = user_data;
+
+	view = EV_VIEW (ev_window->priv->view);
+        selected_text = ev_view_get_selected_text (view);
+
+        if (selected_text != NULL) {
+		GtkSearchEntry *entry = ev_search_box_get_entry (EV_SEARCH_BOX (ev_window->priv->search_box));
+		gtk_entry_set_text (GTK_ENTRY (entry), selected_text);
+		g_free (selected_text);
+	}
 
 	ev_window_show_find_bar (ev_window, TRUE);
 }
