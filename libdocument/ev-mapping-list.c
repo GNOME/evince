@@ -99,11 +99,28 @@ ev_mapping_list_nth (EvMappingList *mapping_list,
         return (EvMapping *)g_list_nth_data (mapping_list->list, n);
 }
 
-static gdouble
-get_mapping_area_size (EvMapping *mapping)
+static int
+cmp_mapping_area_size (EvMapping *a,
+		       EvMapping *b)
 {
-	return (mapping->area.x2 - mapping->area.x1) *
-	       (mapping->area.y2 - mapping->area.y1);
+	gdouble wa, ha, wb, hb;
+
+	wa = a->area.x2 - a->area.x1;
+	ha = a->area.y2 - a->area.y1;
+	wb = b->area.x2 - b->area.x1;
+	hb = b->area.y2 - b->area.y1;
+
+	if (wa == wb) {
+		if (ha == hb)
+			return 0;
+		return (ha < hb) ? -1 : 1;
+	}
+
+	if (ha == hb) {
+		return (wa < wb) ? -1 : 1;
+	}
+
+	return (wa * ha < wb * hb) ? -1 : 1;
 }
 
 /**
@@ -136,10 +153,8 @@ ev_mapping_list_get (EvMappingList *mapping_list,
 
 			/* In case of only one match choose that. Otherwise
 			 * compare the area of the bounding boxes and return the
-			 * smallest element.
-			 * In this way we allow most of the elements to be selectable
-			 * by the user */
-			if(!found || (get_mapping_area_size(mapping) < get_mapping_area_size(found)))
+			 * smallest element */
+			if(found == NULL || cmp_mapping_area_size (mapping, found) < 0)
 				found = mapping;
 		}
 	}
