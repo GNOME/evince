@@ -42,7 +42,7 @@ struct _EvPasswordViewPrivate {
 	gchar        *password;
 	GPasswordSave password_save;
 
-	GFile        *uri_file;
+	char         *filename;
 };
 
 #define EV_PASSWORD_VIEW_GET_PRIVATE(object) \
@@ -65,10 +65,7 @@ ev_password_view_finalize (GObject *object)
 
 	password_view->priv->parent_window = NULL;
 
-	if (password_view->priv->uri_file) {
-		g_object_unref (password_view->priv->uri_file);
-		password_view->priv->uri_file = NULL;
-	}
+	g_clear_pointer (&password_view->priv->filename, g_free);
 
 	G_OBJECT_CLASS (ev_password_view_parent_class)->finalize (object);
 }
@@ -158,30 +155,22 @@ ev_password_view_init (EvPasswordView *password_view)
 
 /* Public functions */
 void
-ev_password_view_set_uri (EvPasswordView *password_view,
-			  const char     *uri)
+ev_password_view_set_filename (EvPasswordView *password_view,
+			       const char     *filename)
 {
-	gchar *markup, *file_name;
-	GFile *file;
+	gchar *markup;
 
 	g_return_if_fail (EV_IS_PASSWORD_VIEW (password_view));
-	g_return_if_fail (uri != NULL);
+	g_return_if_fail (filename != NULL);
 
-	file = g_file_new_for_uri (uri);
-	if (password_view->priv->uri_file &&
-	    g_file_equal (file, password_view->priv->uri_file)) {
-		g_object_unref (file);
+	if (g_strcmp0 (password_view->priv->filename, filename) == 0)
 		return;
-	}
-	if (password_view->priv->uri_file)
-		g_object_unref (password_view->priv->uri_file);
-	password_view->priv->uri_file = file;
 
-	file_name = g_file_get_basename (password_view->priv->uri_file);
+	g_free (password_view->priv->filename);
+	password_view->priv->filename = g_strdup (filename);
+
 	markup = g_markup_printf_escaped ("<span size=\"x-large\" weight=\"bold\">%s</span>",
-					  file_name);
-	g_free (file_name);
-
+					  filename);
 	gtk_label_set_markup (GTK_LABEL (password_view->priv->label), markup);
 	g_free (markup);
 }
@@ -244,7 +233,7 @@ ev_password_view_ask_password (EvPasswordView *password_view)
 	GtkWidget *hbox, *main_vbox, *vbox, *icon;
 	GtkWidget *grid;
 	GtkWidget *label;
-	gchar     *text, *markup, *file_name;
+	gchar     *text, *markup;
 
 	gtk_widget_set_sensitive (GTK_WIDGET (password_view), FALSE);
 	
@@ -296,16 +285,14 @@ ev_password_view_ask_password (EvPasswordView *password_view)
 	label = gtk_label_new (NULL);
 	gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
 	gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
-	file_name = g_file_get_basename (password_view->priv->uri_file);
         text = g_markup_printf_escaped (_("The document “%s” is locked and requires a password before it can be opened."),
-                                        file_name);
+                                        password_view->priv->filename);
         markup = g_strdup_printf ("<span size=\"larger\" weight=\"bold\">%s</span>\n\n%s",
 				  _("Password required"),
                                   text);
 	gtk_label_set_markup (GTK_LABEL (label), markup);
 	g_free (text);
 	g_free (markup);
-	g_free (file_name);
 	gtk_box_pack_start (GTK_BOX (main_vbox), label,
 			    FALSE, FALSE, 0);
 	gtk_widget_show (label);

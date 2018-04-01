@@ -200,6 +200,8 @@ struct _EvWindowPrivate {
 	char *uri;
 	glong uri_mtime;
 	char *local_uri;
+	char *display_name;
+	char *edit_name;
 	gboolean in_reload;
 	EvFileMonitor *monitor;
 	guint setup_document_idle;
@@ -1465,7 +1467,8 @@ ev_window_setup_document (EvWindow *ev_window)
 
 	ev_window_set_page_mode (ev_window, PAGE_MODE_DOCUMENT);
 	ev_window_title_set_document (ev_window->priv->title, document);
-	ev_window_title_set_uri (ev_window->priv->title, ev_window->priv->uri);
+	ev_window_title_set_filename (ev_window->priv->title,
+				      ev_window->priv->display_name);
 
         ev_window_ensure_settings (ev_window);
 
@@ -1745,13 +1748,13 @@ ev_window_load_job_cb (EvJob *job,
 		}
 
 		/* We need to ask the user for a password */
-		ev_window_title_set_uri (ev_window->priv->title,
-					 ev_window->priv->uri);
+		ev_window_title_set_filename (ev_window->priv->title,
+					      ev_window->priv->display_name);
 		ev_window_title_set_type (ev_window->priv->title,
 					  EV_WINDOW_TITLE_PASSWORD);
 
-		ev_password_view_set_uri (EV_PASSWORD_VIEW (ev_window->priv->password_view),
-					  job_load->uri);
+		ev_password_view_set_filename (EV_PASSWORD_VIEW (ev_window->priv->password_view),
+					       ev_window->priv->display_name);
 
 		ev_window_set_page_mode (ev_window, PAGE_MODE_PASSWORD);
 
@@ -2017,6 +2020,8 @@ window_open_file_copy_ready_cb (GFile        *source,
 		ev_window_clear_local_uri (ev_window);
 		g_free (ev_window->priv->uri);
 		ev_window->priv->uri = NULL;
+		g_clear_pointer (&ev_window->priv->display_name, g_free);
+		g_clear_pointer (&ev_window->priv->edit_name, g_free);
 		g_object_unref (source);
 
 		ev_window_hide_loading_message (ev_window);
@@ -2068,9 +2073,8 @@ ev_window_load_file_remote (EvWindow *ev_window,
 		/* We'd like to keep extension of source uri since
 		 * it helps to resolve some mime types, say cbz.
                  */
-		base_name = g_file_get_basename (source_file);
+		base_name = ev_window->priv->edit_name;
                 template = g_strdup_printf ("document.XXXXXX-%s", base_name);
-                g_free (base_name);
 
                 tmp_file = ev_mkstemp_file (template, &err);
 		g_free (template);
@@ -2103,6 +2107,35 @@ ev_window_load_file_remote (EvWindow *ev_window,
 
 	ev_window_show_progress_message (ev_window, 1,
 					 (GSourceFunc)show_loading_progress);
+}
+
+static void
+set_filenames (EvWindow *ev_window, GFile *f)
+{
+	EvWindowPrivate *priv = ev_window->priv;
+	GFileInfo       *info;
+	GError          *error = NULL;
+
+	g_clear_pointer (&priv->display_name, g_free);
+	g_clear_pointer (&priv->edit_name, g_free);
+
+	info = g_file_query_info (f,
+				  G_FILE_ATTRIBUTE_STANDARD_DISPLAY_NAME ","
+				  G_FILE_ATTRIBUTE_STANDARD_EDIT_NAME,
+			          G_FILE_QUERY_INFO_NONE, NULL, &error);
+	if (info) {
+		priv->display_name = g_strdup (g_file_info_get_display_name (info));
+		priv->edit_name = g_strdup (g_file_info_get_edit_name (info));
+		g_object_unref (info);
+	} else {
+		g_warning ("%s: %s", G_STRFUNC, error->message);
+		g_error_free (error);
+	}
+
+	if (!priv->display_name)
+		priv->display_name = g_file_get_basename (f);
+	if (!priv->edit_name)
+		priv->edit_name = g_file_get_basename (f);
 }
 
 void
@@ -2170,6 +2203,7 @@ ev_window_open_uri (EvWindow       *ev_window,
 		g_object_unref (ev_window->priv->dest);
 	ev_window->priv->dest = dest ? g_object_ref (dest) : NULL;
 
+	set_filenames (ev_window, source_file);
 	setup_size_from_metadata (ev_window);
 	setup_model_from_metadata (ev_window);
 
@@ -2593,6 +2627,8 @@ ev_window_open_copy_at_dest (EvWindow   *window,
 
 	if (window->priv->metadata)
 		new_window->priv->metadata = g_object_ref (window->priv->metadata);
+	new_window->priv->display_name = g_strdup (window->priv->display_name);
+	new_window->priv->edit_name = g_strdup (window->priv->edit_name);
 	ev_window_open_document (new_window,
 				 window->priv->document,
 				 dest, 0, NULL);
@@ -2855,13 +2891,12 @@ ev_window_save_as (EvWindow *ev_window)
 	gtk_file_chooser_set_do_overwrite_confirmation (GTK_FILE_CHOOSER (fc), TRUE);
 
 	file = g_file_new_for_uri (ev_window->priv->uri);
-	base_name = g_file_get_basename (file);
+	base_name = ev_window->priv->edit_name;
 	parent = g_file_get_parent (file);
 	dir_name = g_file_get_path (parent);
 	g_object_unref (parent);
 
 	gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER (fc), base_name);
-	g_free (base_name);
 
 	documents_dir = g_get_user_special_dir (G_USER_DIRECTORY_DOCUMENTS);
 	default_dir = g_file_test (documents_dir, G_FILE_TEST_EXISTS | G_FILE_TEST_IS_DIR) ?
@@ -3400,8 +3435,6 @@ ev_window_print_range (EvWindow *ev_window,
 	gint              document_last_page;
 	gboolean          embed_page_setup;
 	gchar            *output_basename;
-	gchar            *unescaped_basename;
-	const gchar      *document_uri;
 	gchar            *dot;
 
 	g_return_if_fail (EV_IS_WINDOW (ev_window));
@@ -3450,18 +3483,15 @@ ev_window_print_range (EvWindow *ev_window,
 						    &range, 1);
 	}
 
-	document_uri = ev_document_get_uri (ev_window->priv->document);
-	output_basename = g_path_get_basename (document_uri);
+	output_basename = g_strdup (ev_window->priv->edit_name);
 	dot = g_strrstr (output_basename, ".");
 	if (dot)
 		dot[0] = '\0';
 
-	unescaped_basename = g_uri_unescape_string (output_basename, NULL);
 	/* Set output basename for printing to file */
 	gtk_print_settings_set (print_settings,
 			        GTK_PRINT_SETTINGS_OUTPUT_BASENAME,
-			        unescaped_basename);
-	g_free (unescaped_basename);
+			        output_basename);
 	g_free (output_basename);
 
 	ev_print_operation_set_job_name (op, gtk_window_get_title (GTK_WINDOW (ev_window)));
@@ -5585,6 +5615,9 @@ ev_window_dispose (GObject *object)
 		g_free (priv->uri);
 		priv->uri = NULL;
 	}
+
+	g_clear_pointer (&priv->display_name, g_free);
+	g_clear_pointer (&priv->edit_name, g_free);
 
 	if (priv->search_string) {
 		g_free (priv->search_string);

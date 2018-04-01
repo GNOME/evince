@@ -48,8 +48,8 @@ struct _EvPasswordViewClass {
 
 GType	      ev_password_view_get_type                (void) G_GNUC_CONST;
 GtkWidget    *ev_password_view_new                     (GtkWindow      *parent);
-void          ev_password_view_set_uri                 (EvPasswordView *password_view,
-							const char     *uri);
+void          ev_password_view_set_filename            (EvPasswordView *password_view,
+							const char     *filename);
 void          ev_password_view_ask_password            (EvPasswordView *password_view);
 const gchar  *ev_password_view_get_password            (EvPasswordView *password_view);
 GPasswordSave ev_password_view_get_password_save_flags (EvPasswordView *password_view);
