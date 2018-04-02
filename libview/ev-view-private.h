@@ -229,6 +229,7 @@ struct _EvView {
 	AddingAnnotInfo    adding_annot_info;
 	MovingAnnotInfo    moving_annot_info;
 	GHashTable        *annot_window_map;
+	gboolean           enable_spellchecking;
 
 	/* Focus */
 	EvMapping *focused_element;

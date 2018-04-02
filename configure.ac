@@ -129,6 +129,7 @@ LIBSECRET_REQUIRED=0.5
 GTK_REQUIRED=3.16.0
 NAUTILUS_REQUIRED=2.91.4
 GDK_PIXBUF_REQUIRED=2.36.5
+GSPELL_REQUIRED=1.6.0
 
 AC_SUBST([GLIB_REQUIRED])
 AC_SUBST([GTK_REQUIRED])
@@ -286,6 +287,19 @@ if test "$with_keyring" = "yes"; then
         PKG_CHECK_MODULES(LIBSECRET, libsecret-1 >= $LIBSECRET_REQUIRED)
         AC_DEFINE([WITH_KEYRING],[1],[Define if KEYRING support is enabled])
 fi
+# *******************
+# Gspell
+# *******************
+
+AC_ARG_WITH(gspell,
+	[AS_HELP_STRING([--without-gspell],
+			[Disable the gpell support])],
+	[],
+	[with_gspell=yes])
+if test "$with_gspell" = "yes"; then
+	PKG_CHECK_MODULES(GSPELL, gspell-1 >= $GSPELL_REQUIRED)
+	AC_DEFINE([WITH_GSPELL],[1],[Define if GSPELL support is enabled])
+fi
 
 # ****
 # DBUS
@@ -393,8 +407,8 @@ LIBDOCUMENT_LIBS="$LIBDOCUMENT_LIBS"
 AC_SUBST(LIBDOCUMENT_CFLAGS)
 AC_SUBST(LIBDOCUMENT_LIBS)
 
-LIBVIEW_CFLAGS="$LIBVIEW_CFLAGS $GTKUNIXPRINT_CFLAGS $GSTREAMER_CFLAGS $DEBUG_FLAGS"
-LIBVIEW_LIBS="$LIBVIEW_LIBS $GTKUNIXPRINT_LIBS $GSTREAMER_LIBS -lm"
+LIBVIEW_CFLAGS="$LIBVIEW_CFLAGS $GTKUNIXPRINT_CFLAGS $GSTREAMER_CFLAGS $GSPELL_CFLAGS $DEBUG_FLAGS"
+LIBVIEW_LIBS="$LIBVIEW_LIBS $GTKUNIXPRINT_LIBS $GSTREAMER_LIBS $GSPELL_LIBS -lm"
 AC_SUBST(LIBVIEW_CFLAGS)
 AC_SUBST(LIBVIEW_LIBS)
 
@@ -1018,5 +1032,5 @@ Keyring integration ......:  $with_keyring
 GTK+ Unix Print ..........:  $with_gtk_unix_print
 Thumbnail cache ..........:  $enable_gnome_desktop
 Multimedia ...............:  $enable_multimedia
-
+Spell Checker.............:  $with_gspell
 ])

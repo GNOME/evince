@@ -51,7 +51,9 @@ void          ev_annotation_window_set_rectangle  (EvAnnotationWindow *window,
 						   const EvRectangle  *rect);
 void          ev_annotation_window_grab_focus     (EvAnnotationWindow *window);
 void          ev_annotation_window_ungrab_focus   (EvAnnotationWindow *window);
-
+void          ev_annotation_window_set_enable_spellchecking (EvAnnotationWindow *window,
+                                                             gboolean spellcheck);
+gboolean      ev_annotation_window_get_enable_spellchecking (EvAnnotationWindow *window);
 G_END_DECLS
 
 #endif /* EV_ANNOTATION_WINDOW_H */

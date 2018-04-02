@@ -3155,7 +3155,7 @@ ev_view_create_annotation_window (EvView       *view,
 	ev_view_window_child_put (view, window, page,
 				  view_rect.x, view_rect.y,
 				  doc_rect.x1, doc_rect.y1);
-
+        ev_annotation_window_set_enable_spellchecking (EV_ANNOTATION_WINDOW (window), ev_view_get_enable_spellchecking (view));
 	return window;
 }
 
@@ -3879,7 +3879,6 @@ ev_view_set_caret_cursor_position (EvView *view,
 			gtk_widget_queue_draw (GTK_WIDGET (view));
 	}
 }
-
 /*** GtkWidget implementation ***/
 
 static void
@@ -5716,6 +5715,55 @@ ev_view_add_text_markup_annotation_for_selected_text (EvView  *view)
 	view->adding_annot_info.annot = NULL;
 
 	return TRUE;
+}
+
+void
+ev_view_set_enable_spellchecking (EvView *view,
+                                  gboolean enabled)
+{
+        EvMappingList *annots;
+        GList         *l;
+        gint           n_pages = 0;
+        gint           current_page;
+
+        g_return_if_fail (EV_IS_VIEW (view));
+
+        view->enable_spellchecking = enabled;
+
+        if (view->document)
+                n_pages = ev_document_get_n_pages (view->document);
+
+        for (current_page = 0; current_page < n_pages; current_page++) {
+                annots = ev_page_cache_get_annot_mapping (view->page_cache, current_page);
+
+                for (l = ev_mapping_list_get_list (annots); l && l->data; l = g_list_next (l)) {
+                        EvAnnotation      *annot;
+                        GtkWidget         *window;
+
+                        annot = ((EvMapping *)(l->data))->data;
+
+                        if (!EV_IS_ANNOTATION_MARKUP (annot))
+                                continue;
+
+                        window = get_window_for_annot (view, annot);
+
+                        if (window) {
+                                ev_annotation_window_set_enable_spellchecking (EV_ANNOTATION_WINDOW (window), view->enable_spellchecking);
+                        }
+                }
+        }
+}
+
+gboolean
+ev_view_get_enable_spellchecking (EvView *view)
+{
+        g_return_val_if_fail (EV_IS_VIEW (view), FALSE);
+
+#ifdef WITH_GSPELL
+        return view->enable_spellchecking;
+#else
+        return FALSE;
+#endif
 }
 
 static gboolean

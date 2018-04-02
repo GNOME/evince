@@ -533,6 +533,11 @@ ev_window_update_actions_sensitivity (EvWindow *ev_window)
 				      !recent_view_mode);
 	ev_window_set_action_enabled (ev_window, "inverted-colors",
 				      has_pages && !recent_view_mode);
+#if WITH_GSPELL
+	ev_window_set_action_enabled (ev_window, "enable-spellchecking", TRUE);
+#else
+	ev_window_set_action_enabled (ev_window, "enable-spellchecking", FALSE);
+#endif
 
 	/* Bookmarks menu */
 	ev_window_set_action_enabled (ev_window, "add-bookmark",
@@ -1412,6 +1417,20 @@ ev_window_setup_default (EvWindow *ev_window)
 	ev_document_model_set_sizing_mode (model, g_settings_get_enum (settings, "sizing-mode"));
 	if (ev_document_model_get_sizing_mode (model) == EV_SIZING_FREE)
 		ev_document_model_set_scale (model, g_settings_get_double (settings, "zoom"));
+
+	g_simple_action_set_state (
+		G_SIMPLE_ACTION (g_action_map_lookup_action (G_ACTION_MAP (ev_window),
+		                                             "enable-spellchecking")),
+		g_variant_new_boolean (
+#ifdef WITH_GSPELL
+		g_settings_get_boolean (settings, "enable-spellchecking")
+#else
+		FALSE
+#endif
+		)
+	);
+	ev_view_set_enable_spellchecking (EV_VIEW (ev_window->priv->view),
+		g_settings_get_boolean (settings, "enable-spellchecking"));
 }
 
 static void
@@ -4554,11 +4573,24 @@ ev_window_cmd_view_inverted_colors (GSimpleAction *action,
 }
 
 static void
+ev_window_cmd_view_enable_spellchecking (GSimpleAction *action,
+				    GVariant      *state,
+				    gpointer       user_data)
+{
+	EvWindow *ev_window = user_data;
+
+	ev_view_set_enable_spellchecking (EV_VIEW (ev_window->priv->view),
+	g_variant_get_boolean (state));
+	g_simple_action_set_state (action, state);
+}
+
+static void
 ev_window_cmd_edit_save_settings (GSimpleAction *action,
 				  GVariant      *state,
 				  gpointer       user_data)
 {
 	EvWindow        *ev_window = user_data;
+	EvView          *ev_view = EV_VIEW (ev_window->priv->view);
 	EvWindowPrivate *priv = ev_window->priv;
 	EvDocumentModel *model = priv->model;
 	GSettings       *settings = priv->default_settings;
@@ -4588,6 +4620,8 @@ ev_window_cmd_edit_save_settings (GSimpleAction *action,
 			    gtk_paned_get_position (GTK_PANED (priv->hpaned)));
 	g_settings_set_string (settings, "sidebar-page",
 			       ev_window_sidebar_get_current_page_id (ev_window));
+	g_settings_set_boolean (settings, "enable-spellchecking",
+				ev_view_get_enable_spellchecking (ev_view));
 	g_settings_apply (settings);
 }
 
@@ -5748,6 +5782,7 @@ static const GActionEntry actions[] = {
 	{ "dual-odd-left", NULL, NULL, "false", ev_window_cmd_dual_odd_pages_left },
 	{ "show-side-pane", NULL, NULL, "false", ev_window_view_cmd_toggle_sidebar },
 	{ "inverted-colors", NULL, NULL, "false", ev_window_cmd_view_inverted_colors },
+	{ "enable-spellchecking", NULL, NULL, "false", ev_window_cmd_view_enable_spellchecking },
 	{ "fullscreen", NULL, NULL, "false", ev_window_cmd_view_fullscreen },
 	{ "presentation", NULL, NULL, "false", ev_window_cmd_view_presentation },
 	{ "rotate-left", ev_window_cmd_edit_rotate_left },
