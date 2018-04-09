@@ -1,4 +1,41 @@
 =================
+Evince    3.28.1
+=================
+
+Bugfixes:
+    * Make sync-source signal introspectable (#694687, Germán Poo-Caamaño)
+    * Document is-loading property (#693864, Germán Poo-Caamaño)
+    * Use display and edit name for filenames instead of URIs (#756354, Jason Crain)
+    * Use a cmp function to compare size of area in ev_mapping list_get (José Aliste)
+    * Use selection to populate find bar if available (#794538, José Aliste, William Hawkins)
+    * Use ev_window_set_action_enabled more (#794749, William Hawkins)
+    * Remove unneeded view_menu_text_selection_popup function (#763493, José Aliste)
+    * Fix broken markup in Dutch translation (Andre Klapper)
+    * Update LZMA SDK, and add instructions (#794327, Bastien Nocera)
+    * Fix Since docstring in new libview API (José Aliste)
+    * Allow adding Highlight annotations from text selection (#763943, Nelson Benítez León)
+    * Fix add_annotation() to update area based on bounding box (#763943, Nelson Benítez León)
+    * Add shortcuts for fullscreen and presentation mode (#786431, José Aliste)
+
+Documentation:
+    * Remove unused images from localized user docs (Andre Klapper)
+
+Translation updates:
+    UI translations:
+    * Balázs Úr (hu)
+    * Daniel Șerbănescu (ro)
+    * Efstathios Iosifidis (el)
+    * Gianvito Cavasoli (it)
+    * Stas Solovey (ru)
+    * gogo (hr)
+    * Милош Поповић (sr@latin)
+
+    Doc translations:
+    * Anders Jonsson (sv)
+    * Andre Klapper (nl)
+    * Justin van Steijn (nl)
+
+=================
 Evince    3.28.0
 =================
 
