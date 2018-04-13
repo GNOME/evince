@@ -17,8 +17,8 @@ msgstr ""
 "Project-Id-Version: evince.HEAD\n"
 "Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evince&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2018-02-10 00:12+0000\n"
-"PO-Revision-Date: 2018-02-14 19:25+0200\n"
+"POT-Creation-Date: 2018-04-10 01:37+0000\n"
+"PO-Revision-Date: 2018-04-13 14:29+0200\n"
 "Last-Translator: Efstathios Iosifidis <iosifidis@opensuse.org>\n"
 "Language-Team: Ελληνικά <>\n"
 "Language: el\n"
@@ -26,7 +26,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Gtranslator 2.91.7\n"
+"X-Generator: Poedit 1.5.7\n"
 "X-Project-Style: gnome\n"
 
 #: ../backend/comics/comics-document.c:118
@@ -330,7 +330,7 @@ msgstr "Εκτύπωση εγγράφου"
 
 #. Manually set name and icon
 #: ../data/evince.desktop.in.in.h:1 ../shell/ev-application.c:1012
-#: ../shell/ev-window-title.c:139 ../shell/main.c:298
+#: ../shell/ev-window-title.c:123 ../shell/main.c:298
 msgid "Document Viewer"
 msgstr "Προβολή εγγράφων"
 
@@ -339,7 +339,6 @@ msgid "View multi-page documents"
 msgstr "Προβολή εγγράφων πολλαπλών σελίδων"
 
 #: ../data/evince.desktop.in.in.h:3
-#| msgid "pdf;ps;postscript;dvi;xps;djvu;tiff;document;presentation;"
 msgid "pdf;ps;postscript;dvi;xps;djvu;tiff;document;presentation;viewer;"
 msgstr ""
 "pdf;ps;postscript;dvi;xps;djvu;tiff;έγγραφο;παρουσίαση;εφαρμογή προβολής;"
@@ -451,19 +450,21 @@ msgstr "Αποτυχία δημιουργίας ενός προσωρινού α
 msgid "Failed to create a temporary directory: %s"
 msgstr "Αποτυχία δημιουργίας ενός προσωρινού φακέλου: %s"
 
-#: ../libmisc/ev-page-action-widget.c:84 ../libmisc/ev-page-action-widget.c:123
+#: ../libmisc/ev-page-action-widget.c:84
+#: ../libmisc/ev-page-action-widget.c:123
 #, c-format
 msgid "(%d of %d)"
 msgstr "(%d από %d)"
 
-#: ../libmisc/ev-page-action-widget.c:86 ../libmisc/ev-page-action-widget.c:127
+#: ../libmisc/ev-page-action-widget.c:86
+#: ../libmisc/ev-page-action-widget.c:127
 #, c-format
 msgid "of %d"
 msgstr "από %d"
 
 #: ../libmisc/ev-page-action-widget.c:185 ../shell/ev-history.c:426
-#: ../shell/ev-sidebar-bookmarks.c:306 ../shell/ev-window.c:910
-#: ../shell/ev-window.c:4709
+#: ../shell/ev-sidebar-bookmarks.c:306 ../shell/ev-window.c:916
+#: ../shell/ev-window.c:4754
 #, c-format
 msgid "Page %s"
 msgstr "Σελίδα %s"
@@ -640,46 +641,46 @@ msgstr "Κύλιση προβολής κάτω"
 msgid "Document View"
 msgstr "Προβολή εγγράφου"
 
-#: ../libview/ev-view.c:2035
+#: ../libview/ev-view.c:2037
 msgid "Go to first page"
 msgstr "Μετάβαση στην πρώτη σελίδα"
 
-#: ../libview/ev-view.c:2037
+#: ../libview/ev-view.c:2039
 msgid "Go to previous page"
 msgstr "Μετάβαση στην προηγούμενη σελίδα"
 
-#: ../libview/ev-view.c:2039
+#: ../libview/ev-view.c:2041
 msgid "Go to next page"
 msgstr "Μετάβαση στην επόμενη σελίδα"
 
-#: ../libview/ev-view.c:2041
+#: ../libview/ev-view.c:2043
 msgid "Go to last page"
 msgstr "Μετάβαση στην τελευταία σελίδα"
 
-#: ../libview/ev-view.c:2043
+#: ../libview/ev-view.c:2045
 msgid "Go to page"
 msgstr "Μετάβαση στη σελίδα"
 
-#: ../libview/ev-view.c:2045
+#: ../libview/ev-view.c:2047
 msgid "Find"
 msgstr "Εύρεση"
 
-#: ../libview/ev-view.c:2073
+#: ../libview/ev-view.c:2075
 #, c-format
 msgid "Go to page %s"
 msgstr "Μετάβαση στη σελίδα %s"
 
-#: ../libview/ev-view.c:2079
+#: ../libview/ev-view.c:2081
 #, c-format
 msgid "Go to %s on file “%s”"
 msgstr "Μετάβαση σε %s στο αρχείο «%s»"
 
-#: ../libview/ev-view.c:2082
+#: ../libview/ev-view.c:2084
 #, c-format
 msgid "Go to file “%s”"
 msgstr "Μετάβαση στο αρχείο «%s»"
 
-#: ../libview/ev-view.c:2090
+#: ../libview/ev-view.c:2092
 #, c-format
 msgid "Launch %s"
 msgstr "Εκκίνηση %s"
@@ -708,7 +709,7 @@ msgstr "ΑΡΧΕΙΟ"
 msgid "GNOME Document Previewer"
 msgstr "Προεπισκόπηση εγγράφων του GNOME"
 
-#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3293
+#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3332
 msgid "Failed to print document"
 msgstr "Αποτυχία εκτύπωσης εγγράφου"
 
@@ -946,7 +947,6 @@ msgid "Evince"
 msgstr "Evince"
 
 #: ../shell/ev-application.c:1009
-#| msgid "© 1996–2014 The Evince authors"
 msgid "© 1996–2017 The Evince authors"
 msgstr "© 1996–2017 Οι δημιουργοί του Evince"
 
@@ -985,7 +985,7 @@ msgstr "Κωδικός πρόσβασης για το έγγραφο %s"
 msgid "Loading…"
 msgstr "Φορτώνεται…"
 
-#: ../shell/ev-password-view.c:142
+#: ../shell/ev-password-view.c:139
 msgid ""
 "This document is locked and can only be read by entering the correct "
 "password."
@@ -993,15 +993,15 @@ msgstr ""
 "Το έγγραφο είναι κλειδωμένο και μπορεί να αναγνωσθεί εισάγοντας τον σωστό "
 "κωδικό πρόσβασης."
 
-#: ../shell/ev-password-view.c:151 ../shell/ev-password-view.c:269
+#: ../shell/ev-password-view.c:148 ../shell/ev-password-view.c:258
 msgid "_Unlock Document"
 msgstr "_Ξεκλείδωμα εγγράφου"
 
-#: ../shell/ev-password-view.c:261
+#: ../shell/ev-password-view.c:250
 msgid "Enter password"
 msgstr "Εισάγετε κωδικό πρόσβασης"
 
-#: ../shell/ev-password-view.c:300
+#: ../shell/ev-password-view.c:288
 #, c-format
 msgid ""
 "The document “%s” is locked and requires a password before it can be opened."
@@ -1009,23 +1009,23 @@ msgstr ""
 "Το έγγραφο «%s» είναι κλειδωμένο και απαιτείται κωδικός πρόσβασης πριν το "
 "άνοιγμα."
 
-#: ../shell/ev-password-view.c:303
+#: ../shell/ev-password-view.c:291
 msgid "Password required"
 msgstr "Απαιτείται κωδικός πρόσβασης"
 
-#: ../shell/ev-password-view.c:333
+#: ../shell/ev-password-view.c:320
 msgid "_Password:"
 msgstr "_Κωδικός πρόσβασης:"
 
-#: ../shell/ev-password-view.c:364
+#: ../shell/ev-password-view.c:351
 msgid "Forget password _immediately"
 msgstr "_Μη αποθήκευση του κωδικού πρόσβασης"
 
-#: ../shell/ev-password-view.c:376
+#: ../shell/ev-password-view.c:363
 msgid "Remember password until you _log out"
 msgstr "Απομνημόνευση κωδικού πρόσβασης μέχρι να α_ποσυνδεθείτε"
 
-#: ../shell/ev-password-view.c:388
+#: ../shell/ev-password-view.c:375
 msgid "Remember _forever"
 msgstr "Μόνιμη αποθήκευση _στοιχείων"
 
@@ -1096,12 +1096,10 @@ msgid "_Remove Bookmark"
 msgstr "_Αφαίρεση σελιδοδείκτη"
 
 #: ../shell/ev-sidebar-bookmarks.c:467 ../shell/ev-sidebar-bookmarks.c:468
-#| msgid "_Add Bookmark"
 msgid "Add bookmark"
 msgstr "Προσθήκη σελιδοδείκτη"
 
 #: ../shell/ev-sidebar-bookmarks.c:476 ../shell/ev-sidebar-bookmarks.c:477
-#| msgid "_Remove Bookmark"
 msgid "Remove bookmark"
 msgstr "Αφαίρεση σελιδοδείκτη"
 
@@ -1167,143 +1165,142 @@ msgstr "Επίπεδο εστίασης"
 msgid "Supported Image Files"
 msgstr "Υποστηριζόμενα αρχεία εικόνας"
 
-#: ../shell/ev-window.c:1544
+#: ../shell/ev-window.c:1551
 msgid "The document contains no pages"
 msgstr "Το αρχείο δεν περιέχει σελίδες"
 
-#: ../shell/ev-window.c:1547
+#: ../shell/ev-window.c:1554
 msgid "The document contains only empty pages"
 msgstr "Το έγγραφο περιέχει μόνο κενές σελίδες"
 
-#: ../shell/ev-window.c:1761 ../shell/ev-window.c:1927
+#: ../shell/ev-window.c:1768 ../shell/ev-window.c:1934
 #, c-format
 msgid "Unable to open document “%s”."
 msgstr "Αδύνατο το άνοιγμα του εγγράφου «%s»."
 
-#: ../shell/ev-window.c:1891
+#: ../shell/ev-window.c:1898
 #, c-format
 msgid "Loading document from “%s”"
 msgstr "Φόρτωση εγγράφου από «%s»"
 
-#: ../shell/ev-window.c:2042 ../shell/ev-window.c:2370
+#: ../shell/ev-window.c:2051 ../shell/ev-window.c:2408
 #, c-format
 msgid "Downloading document (%d%%)"
 msgstr "Λήψη εγγράφου (%d%%)"
 
-#: ../shell/ev-window.c:2075
+#: ../shell/ev-window.c:2083
 msgid "Failed to load remote file."
 msgstr "Αποτυχία φόρτωσης του απομακρυσμένου εγγράφου."
 
-#: ../shell/ev-window.c:2314
+#: ../shell/ev-window.c:2352
 #, c-format
 msgid "Reloading document from %s"
 msgstr "Επαναφόρτωση του εγγράφου από %s"
 
-#: ../shell/ev-window.c:2346
+#: ../shell/ev-window.c:2384
 msgid "Failed to reload document."
 msgstr "Αποτυχία επαναφόρτωσης του εγγράφου."
 
-#: ../shell/ev-window.c:2562
+#: ../shell/ev-window.c:2600
 msgid "Open Document"
 msgstr "Άνοιγμα εγγράφου"
 
-#: ../shell/ev-window.c:2635
+#: ../shell/ev-window.c:2675
 #, c-format
 msgid "Saving document to %s"
 msgstr "Αποθήκευση εγγράφου σε %s"
 
-#: ../shell/ev-window.c:2638
+#: ../shell/ev-window.c:2678
 #, c-format
 msgid "Saving attachment to %s"
 msgstr "Αποθήκευση συνημμένου σε %s"
 
-#: ../shell/ev-window.c:2641
+#: ../shell/ev-window.c:2681
 #, c-format
 msgid "Saving image to %s"
 msgstr "Αποθήκευση εικόνας σε %s"
 
-#: ../shell/ev-window.c:2685 ../shell/ev-window.c:2785
+#: ../shell/ev-window.c:2725 ../shell/ev-window.c:2825
 #, c-format
 msgid "The file could not be saved as “%s”."
 msgstr "Το αρχείο δεν μπορεί να αποθηκευθεί ως «%s»."
 
-#: ../shell/ev-window.c:2716
+#: ../shell/ev-window.c:2756
 #, c-format
 msgid "Uploading document (%d%%)"
 msgstr "Αποστολή εγγράφου (%d%%)"
 
-#: ../shell/ev-window.c:2720
+#: ../shell/ev-window.c:2760
 #, c-format
 msgid "Uploading attachment (%d%%)"
 msgstr "Αποστολή συνημμένου (%d%%)"
 
-#: ../shell/ev-window.c:2724
+#: ../shell/ev-window.c:2764
 #, c-format
 msgid "Uploading image (%d%%)"
 msgstr "Αποστολή εικόνας (%d%%)"
 
-#: ../shell/ev-window.c:2837
-#| msgid "_Save Image As…"
+#: ../shell/ev-window.c:2877
 msgid "Save As…"
 msgstr "Απο_θήκευση ως…"
 
-#: ../shell/ev-window.c:2932
+#: ../shell/ev-window.c:2971
 msgid "Could not send current document"
 msgstr "Αδυναμία αποστολής του τρέχοντος εγγράφου"
 
-#: ../shell/ev-window.c:3237
+#: ../shell/ev-window.c:3276
 #, c-format
 msgid "%d pending job in queue"
 msgid_plural "%d pending jobs in queue"
 msgstr[0] "Εκκρεμεί %d εργασία στην ουρά"
 msgstr[1] "Εκκρεμούν %d εργασίες στην ουρά"
 
-#: ../shell/ev-window.c:3350
+#: ../shell/ev-window.c:3389
 #, c-format
 msgid "Printing job “%s”"
 msgstr "Εργασία εκτύπωσης «%s»"
 
-#: ../shell/ev-window.c:3565
+#: ../shell/ev-window.c:3599
 msgid "Document contains form fields that have been filled out. "
 msgstr "Το έγγραφο περιέχει πεδία φόρμας που έχουν συμπληρωθεί. "
 
-#: ../shell/ev-window.c:3568
+#: ../shell/ev-window.c:3602
 msgid "Document contains new or modified annotations. "
 msgstr "Το έγγραφο περιέχει νέα η τροποποιημένα σχόλια. "
 
-#: ../shell/ev-window.c:3580
+#: ../shell/ev-window.c:3614
 #, c-format
 msgid "Reload document “%s”?"
 msgstr "Επαναφόρτωση του εγγράφου «%s»;"
 
-#: ../shell/ev-window.c:3582
+#: ../shell/ev-window.c:3616
 msgid "If you reload the document, changes will be permanently lost."
 msgstr "Αν επαναφορτώσετε το έγγραφο, οι αλλαγές θα χαθούν οριστικά."
 
-#: ../shell/ev-window.c:3586
+#: ../shell/ev-window.c:3620
 msgid "Reload"
 msgstr "Επαναφόρτωση"
 
-#: ../shell/ev-window.c:3593
+#: ../shell/ev-window.c:3627
 #, c-format
 msgid "Save a copy of document “%s” before closing?"
 msgstr "Αποθήκευση ενός αντιγράφου του εγγράφου «%s» πριν το κλείσιμο;"
 
-#: ../shell/ev-window.c:3595
+#: ../shell/ev-window.c:3629
 msgid "If you don’t save a copy, changes will be permanently lost."
 msgstr ""
 "Το έγγραφο περιέχει νέα η τροποποιημένα σχόλια. Αν δεν αποθηκεύσετε ένα "
 "αντίγραφο, οι αλλαγές θα χαθούν οριστικά."
 
-#: ../shell/ev-window.c:3597
+#: ../shell/ev-window.c:3631
 msgid "Close _without Saving"
 msgstr "Κλείσιμο _χωρίς αποθήκευση"
 
-#: ../shell/ev-window.c:3601
+#: ../shell/ev-window.c:3635
 msgid "Save a _Copy"
 msgstr "Απο_θήκευση αντιγράφου"
 
-#: ../shell/ev-window.c:3685
+#: ../shell/ev-window.c:3719
 #, c-format
 msgid "Wait until print job “%s” finishes before closing?"
 msgstr ""
@@ -1312,7 +1309,7 @@ msgstr ""
 #. TRANS: the singular form is not really used as n_print_jobs > 1
 #. but some languages distinguish between different plurals forms,
 #. so the ngettext is needed.
-#: ../shell/ev-window.c:3691
+#: ../shell/ev-window.c:3725
 #, c-format
 msgid "There is %d print job active. Wait until print finishes before closing?"
 msgid_plural ""
@@ -1324,32 +1321,32 @@ msgstr[1] ""
 "Υπάρχουν %d ενεργές εργασίες εκτύπωσης. Αναμονή μέχρι η εκτύπωση να "
 "τελειώσει πριν το κλείσιμο;"
 
-#: ../shell/ev-window.c:3706
+#: ../shell/ev-window.c:3740
 msgid "If you close the window, pending print jobs will not be printed."
 msgstr ""
 "Αν κλείσετε το παράθυρο, οι εκκρεμείς εργασίες εκτύπωσης δεν θα εκτυπωθούν."
 
-#: ../shell/ev-window.c:3710
+#: ../shell/ev-window.c:3744
 msgid "Cancel _print and Close"
 msgstr "Ακύρωση _εκτύπωσης και κλείσιμο"
 
-#: ../shell/ev-window.c:3714
+#: ../shell/ev-window.c:3748
 msgid "Close _after Printing"
 msgstr "Κλείσι_μο μετά την εκτύπωση"
 
-#: ../shell/ev-window.c:4244
+#: ../shell/ev-window.c:4289
 msgid "Running in presentation mode"
 msgstr "Εκτέλεση σε λειτουργία παρουσίασης"
 
-#: ../shell/ev-window.c:5393
+#: ../shell/ev-window.c:5420
 msgid "Enable caret navigation?"
 msgstr "Ενεργοποίηση περιήγησης δρομέα;"
 
-#: ../shell/ev-window.c:5395
+#: ../shell/ev-window.c:5422
 msgid "_Enable"
 msgstr "_Ενεργοποίηση"
 
-#: ../shell/ev-window.c:5398
+#: ../shell/ev-window.c:5425
 msgid ""
 "Pressing F7 turns the caret navigation on or off. This feature places a "
 "moveable cursor in text pages, allowing you to move around and select text "
@@ -1360,47 +1357,47 @@ msgstr ""
 "σας να μετακινήστε ολόγυρα και να επιλέγετε κείμενο με το πληκτρολόγιό σας. "
 "Θέλετε να ενεργοποιήσετε την περιήγηση δρομέα;"
 
-#: ../shell/ev-window.c:5403
+#: ../shell/ev-window.c:5430
 msgid "Don’t show this message again"
 msgstr "Να μην εμφανιστεί ξανά αυτό το μήνυμα"
 
-#: ../shell/ev-window.c:5939 ../shell/ev-window.c:5955
+#: ../shell/ev-window.c:5973 ../shell/ev-window.c:5989
 msgid "Unable to launch external application."
 msgstr "Αδυναμία εκκίνησης εξωτερικής εφαρμογής."
 
-#: ../shell/ev-window.c:6016
+#: ../shell/ev-window.c:6050
 msgid "Unable to open external link"
 msgstr "Αδυναμία ανοίγματος εξωτερικού συνδέσμου"
 
-#: ../shell/ev-window.c:6219
+#: ../shell/ev-window.c:6263
 msgid "Couldn’t find appropriate format to save image"
 msgstr "Αδυναμία εύρεσης κατάλληλης μορφής αποθήκευσης για την εικόνα"
 
-#: ../shell/ev-window.c:6251
+#: ../shell/ev-window.c:6295
 msgid "The image could not be saved."
 msgstr "Η εικόνα δεν μπορεί να αποθηκευθεί."
 
-#: ../shell/ev-window.c:6286
+#: ../shell/ev-window.c:6330
 msgid "Save Image"
 msgstr "Αποθήκευση εικόνας"
 
-#: ../shell/ev-window.c:6445
+#: ../shell/ev-window.c:6489
 msgid "Unable to open attachment"
 msgstr "Αδυναμία ανοίγματος συνημμένου"
 
-#: ../shell/ev-window.c:6501
+#: ../shell/ev-window.c:6545
 msgid "The attachment could not be saved."
 msgstr "Το συνημμένο δεν μπορεί να αποθηκευτεί."
 
-#: ../shell/ev-window.c:6549
+#: ../shell/ev-window.c:6593
 msgid "Save Attachment"
 msgstr "Αποθήκευση συνημμένων"
 
-#: ../shell/ev-window-title.c:118
+#: ../shell/ev-window-title.c:102
 msgid "Recent Documents"
 msgstr "Πρόσφατα έγγραφα"
 
-#: ../shell/ev-window-title.c:153 ../shell/ev-window-title.c:157
+#: ../shell/ev-window-title.c:137 ../shell/ev-window-title.c:141
 msgid "Password Required"
 msgstr "Απαιτείται κωδικός πρόσβασης"
 
@@ -1601,7 +1598,6 @@ msgid "Op_en a Copy"
 msgstr "Ά_νοιγμα αντίγραφου"
 
 #: ../shell/evince-menus.ui.h:23
-#| msgid "_Save Image As…"
 msgid "_Save As…"
 msgstr "Απο_θήκευση ως…"
 
@@ -1685,6 +1681,11 @@ msgstr "Ιδιότητες σχολίων…"
 msgid "Remove Annotation"
 msgstr "Αφαίρεση σχολίου"
 
+#: ../shell/evince-menus.ui.h:49
+#| msgid "Copy highlighted text"
+msgid "Highlight Selected Text"
+msgstr "Επισήμανση επιλεγμένου κειμένου"
+
 #: ../shell/help-overlay.ui.h:1
 msgctxt "shortcut window"
 msgid "Opening, closing, saving and printing"
@@ -1721,129 +1722,144 @@ msgid "Reload the document"
 msgstr "Επαναφόρτωση του εγγράφου"
 
 #: ../shell/help-overlay.ui.h:8
+#| msgid "_New Window"
+msgctxt "shortcut window"
+msgid "Window"
+msgstr "Παράθυρο"
+
+#: ../shell/help-overlay.ui.h:9
+#| msgid "Leave Fullscreen"
+msgctxt "shortcut window"
+msgid "Toggle fullscreen"
+msgstr "Εναλλαγή από πλήρη οθόνη"
+
+#: ../shell/help-overlay.ui.h:10
+#| msgid "Running in presentation mode"
+msgctxt "shortcut window"
+msgid "Enter presentation mode"
+msgstr "Είσοδος σε λειτουργία παρουσίασης"
+
+#: ../shell/help-overlay.ui.h:11
 msgctxt "shortcut window"
 msgid "Selecting and copying text"
 msgstr "Επιλογή και αντιγραφή κειμένου"
 
-#: ../shell/help-overlay.ui.h:9
+#: ../shell/help-overlay.ui.h:12
 msgctxt "shortcut window"
 msgid "Copy highlighted text"
 msgstr "Αντιγραφή επισημασμένου κειμένου"
 
-#: ../shell/help-overlay.ui.h:10
+#: ../shell/help-overlay.ui.h:13
 msgctxt "shortcut window"
 msgid "Select all the text in a document"
 msgstr "Επιλογή όλου του κειμένου ενός εγγράφου"
 
-#: ../shell/help-overlay.ui.h:11
+#: ../shell/help-overlay.ui.h:14
 msgctxt "shortcut window"
 msgid "Moving around the document"
 msgstr "Μετακίνηση μέσα σε έγγραφο"
 
-#: ../shell/help-overlay.ui.h:12
+#: ../shell/help-overlay.ui.h:15
 msgctxt "shortcut window"
 msgid "Move around a page"
 msgstr "Μετακίνηση σε μια σελίδα"
 
-#: ../shell/help-overlay.ui.h:13
+#: ../shell/help-overlay.ui.h:16
 msgctxt "shortcut window"
 msgid "Move up/down a page several lines at a time"
 msgstr "Μετακίνηση πάνω/κάτω μιας σελίδας πολλές γραμμές τη φορά"
 
-#: ../shell/help-overlay.ui.h:14
+#: ../shell/help-overlay.ui.h:17
 msgctxt "shortcut window"
 msgid "Go to page number"
 msgstr "Μετάβαση σε σελίδα"
 
-#: ../shell/help-overlay.ui.h:15
+#: ../shell/help-overlay.ui.h:18
 msgctxt "shortcut window"
 msgid "Go to the beginning/end of a page"
 msgstr "Μετάβαση στην αρχή/τέλος της σελίδας"
 
-#: ../shell/help-overlay.ui.h:16
+#: ../shell/help-overlay.ui.h:19
 msgctxt "shortcut window"
 msgid "Go to the beginning of the document"
 msgstr "Μετάβαση στην αρχή του εγγράφου"
 
-#: ../shell/help-overlay.ui.h:17
+#: ../shell/help-overlay.ui.h:20
 msgctxt "shortcut window"
 msgid "Go to the end of the document"
 msgstr "Μετάβαση στο τέλος του εγγράφου"
 
-#: ../shell/help-overlay.ui.h:18
+#: ../shell/help-overlay.ui.h:21
 msgctxt "shortcut window"
 msgid "Finding text"
 msgstr "Εύρεση κειμένου"
 
-#: ../shell/help-overlay.ui.h:19
+#: ../shell/help-overlay.ui.h:22
 msgctxt "shortcut window"
 msgid "Show the search bar"
 msgstr "Εμφάνιση της γραμμής αναζήτησης"
 
-#: ../shell/help-overlay.ui.h:20
+#: ../shell/help-overlay.ui.h:23
 msgctxt "shortcut window"
 msgid "Go to the next search result"
 msgstr "Μετάβαση στο επόμενο αποτέλεσμα της αναζήτησης"
 
-#: ../shell/help-overlay.ui.h:21
+#: ../shell/help-overlay.ui.h:24
 msgctxt "shortcut window"
 msgid "Go to the previous search result"
 msgstr "Μετάβαση στο προηγούμενο αποτέλεσμα της αναζήτησης"
 
-#: ../shell/help-overlay.ui.h:22
+#: ../shell/help-overlay.ui.h:25
 msgctxt "shortcut window"
 msgid "Rotating and zooming"
 msgstr "Περιστροφή και εστίαση"
 
-#: ../shell/help-overlay.ui.h:23
+#: ../shell/help-overlay.ui.h:26
 msgctxt "shortcut window"
 msgid "Rotate the page 90 degrees counter-clockwise"
 msgstr "Περιστροφή σελίδας 90 μοίρες αριστερόστροφα"
 
-#: ../shell/help-overlay.ui.h:24
+#: ../shell/help-overlay.ui.h:27
 msgctxt "shortcut window"
 msgid "Rotate the page 90 degrees clockwise"
 msgstr "Περιστροφή σελίδας 90 μοίρες δεξιόστροφα"
 
-#: ../shell/help-overlay.ui.h:25
+#: ../shell/help-overlay.ui.h:28
 msgctxt "shortcut window"
 msgid "Zoom in"
 msgstr "Μεγέθυνση"
 
-#: ../shell/help-overlay.ui.h:26
+#: ../shell/help-overlay.ui.h:29
 msgctxt "shortcut window"
 msgid "Zoom out"
 msgstr "Σμίκρυνση"
 
-#: ../shell/help-overlay.ui.h:27
-#| msgid "Fit Page"
+#: ../shell/help-overlay.ui.h:30
 msgctxt "shortcut window"
 msgid "Fit page"
 msgstr "Προσαρμογή στη σελίδα"
 
-#: ../shell/help-overlay.ui.h:28
-#| msgid "Fit Width"
+#: ../shell/help-overlay.ui.h:31
 msgctxt "shortcut window"
 msgid "Fit width"
 msgstr "Προσαρμογή στο πλάτος"
 
-#: ../shell/help-overlay.ui.h:29
-#| msgid "_Automatic"
+#: ../shell/help-overlay.ui.h:32
 msgctxt "shortcut window"
 msgid "Automatic zoom"
 msgstr "Αυτόματη εστίαση"
 
-#: ../shell/help-overlay.ui.h:30
+#: ../shell/help-overlay.ui.h:33
 msgctxt "shortcut window"
 msgid "Touchpad gestures"
 msgstr "Xειρονομίες πινακίδας αφής"
 
-#: ../shell/help-overlay.ui.h:31
+#: ../shell/help-overlay.ui.h:34
 msgctxt "shortcut window"
 msgid "Go to next page"
 msgstr "Μετάβαση στην επόμενη σελίδα"
 
-#: ../shell/help-overlay.ui.h:32
+#: ../shell/help-overlay.ui.h:35
 msgctxt "shortcut window"
 msgid "Go to previous page"
 msgstr "Μετάβαση στην προηγούμενη σελίδα"
@@ -1976,9 +1992,6 @@ msgstr ""
 #~ msgid "Selecting and copying text"
 #~ msgstr "Επιλογή και αντιγραφή κειμένου"
 
-#~ msgid "Copy highlighted text"
-#~ msgstr "Αντιγραφή επισημασμένου κειμένου"
-
 #~ msgid "Select all the text in a document"
 #~ msgstr "Επιλογή όλου του κειμένου ενός εγγράφου"
 
@@ -2106,9 +2119,6 @@ msgstr ""
 
 #~ msgid "Add a bookmark for the current page"
 #~ msgstr "Προσθήκη σελιδοδείκτη για την τρέχουσα σελίδα"
-
-#~ msgid "Leave Fullscreen"
-#~ msgstr "Έξοδος από πλήρη οθόνη"
 
 #~ msgid "Leave fullscreen mode"
 #~ msgstr "Έξοδος από λειτουργία πλήρους οθόνη"
