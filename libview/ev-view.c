@@ -6969,6 +6969,11 @@ ev_view_dispose (GObject *object)
 
 	ev_view_window_children_free (view);
 
+	if (view->update_cursor_idle_id) {
+		g_source_remove (view->update_cursor_idle_id);
+		view->update_cursor_idle_id = 0;
+	}
+
 	if (view->selection_scroll_id) {
 	    g_source_remove (view->selection_scroll_id);
 	    view->selection_scroll_id = 0;
@@ -7887,15 +7892,40 @@ ev_view_page_changed_cb (EvDocumentModel *model,
 	}
 }
 
+static gboolean
+cursor_scroll_update (gpointer data)
+{
+	EvView *view = data;
+	gint x, y;
+
+	view->update_cursor_idle_id = 0;
+	ev_document_misc_get_pointer_position (GTK_WIDGET (view), &x, &y);
+	ev_view_handle_cursor_over_xy (view, x, y);
+
+	return FALSE;
+}
+
+static void
+schedule_scroll_cursor_update (EvView *view)
+{
+	if (view->update_cursor_idle_id)
+		return;
+
+	view->update_cursor_idle_id =
+		g_idle_add (cursor_scroll_update, view);
+}
+
 static void
 on_adjustment_value_changed (GtkAdjustment *adjustment,
 			     EvView        *view)
 {
 	GtkWidget *widget = GTK_WIDGET (view);
 	int dx = 0, dy = 0;
-	gint x, y;
+	gdouble x, y;
 	gint value;
 	GList *l;
+	GdkEvent *event;
+	gboolean cursor_updated;
 
 	if (!gtk_widget_get_realized (widget))
 		return;
@@ -7939,8 +7969,20 @@ on_adjustment_value_changed (GtkAdjustment *adjustment,
 		gdk_window_scroll (gtk_widget_get_window (widget), dx, dy);
 	}
 
-	ev_document_misc_get_pointer_position (widget, &x, &y);
-	ev_view_handle_cursor_over_xy (view, x, y);
+	cursor_updated = FALSE;
+	event = gtk_get_current_event ();
+	if (event) {
+		if (event->type == GDK_SCROLL &&
+		    gdk_event_get_window (event) == gtk_widget_get_window (widget)) {
+			gdk_event_get_coords (event, &x, &y);
+			ev_view_handle_cursor_over_xy (view, (gint) x, (gint) y);
+			cursor_updated = TRUE;
+		}
+		gdk_event_free (event);
+	}
+
+	if (!cursor_updated)
+		schedule_scroll_cursor_update (view);
 
 	if (view->document)
 		view_update_range_and_current_page (view);

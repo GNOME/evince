@@ -168,6 +168,8 @@ struct _EvView {
 	gint scroll_x;
 	gint scroll_y;	
 
+	guint update_cursor_idle_id;
+
 	/* Delta sum for emulating normal scrolling */
 	gdouble       total_delta;
 	PendingScroll pending_scroll;
