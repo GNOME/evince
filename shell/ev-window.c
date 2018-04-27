@@ -5466,6 +5466,13 @@ search_bar_search_mode_enabled_changed (GtkSearchBar *search_bar,
 	}
 }
 
+void
+ev_window_handle_annot_popup (EvWindow     *ev_window,
+			      EvAnnotation *annot)
+{
+	view_menu_annot_popup (ev_window, annot);
+}
+
 static void
 ev_window_show_find_bar (EvWindow *ev_window,
 			 gboolean  restart)
