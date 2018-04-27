@@ -95,6 +95,8 @@ EvDocumentModel *ev_window_get_document_model            (EvWindow       *ev_win
 void            ev_window_focus_view                     (EvWindow       *ev_window);
 GtkWidget      *ev_window_get_toolbar			 (EvWindow	 *ev_window);
 void            ev_window_file_open_dialog               (EvWindow       *ev_window);
+void            ev_window_handle_annot_popup             (EvWindow       *ev_window,
+                                                          EvAnnotation   *annot);
 
 G_END_DECLS
 
