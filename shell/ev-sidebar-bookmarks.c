@@ -142,6 +142,8 @@ ev_bookmarks_popup_cmd_remove_bookmark (GtkAction          *action,
         bm.page = page;
         bm.title = NULL;
         ev_bookmarks_delete (priv->bookmarks, &bm);
+	if (gtk_widget_get_sensitive (priv->del_button))
+		gtk_widget_set_sensitive (priv->del_button, FALSE);
 }
 
 static const GtkActionEntry popup_entries[] = {
@@ -244,6 +246,8 @@ ev_sidebar_bookmarks_del_clicked (GtkWidget          *button,
         bm.page = page;
         bm.title = NULL;
         ev_bookmarks_delete (priv->bookmarks, &bm);
+	if (gtk_widget_get_sensitive (priv->del_button))
+		gtk_widget_set_sensitive (priv->del_button, FALSE);
 }
 
 static void
@@ -341,6 +345,8 @@ ev_sidebar_bookmarks_popup_menu_show (EvSidebarBookmarks *sidebar_bookmarks,
                 g_signal_handlers_unblock_by_func (selection,
                                                    ev_sidebar_bookmarks_selection_changed,
                                                    sidebar_bookmarks);
+		if (!gtk_widget_get_sensitive (priv->del_button))
+			gtk_widget_set_sensitive (priv->del_button, TRUE);
                 gtk_tree_path_free (path);
         }
 
