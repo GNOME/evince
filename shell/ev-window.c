@@ -6047,6 +6047,12 @@ static void
 ev_window_begin_add_annot (EvWindow        *window,
 			   EvAnnotationType annot_type)
 {
+	if (annot_type == EV_ANNOTATION_TYPE_TEXT_MARKUP &&
+	    ev_view_get_has_selection (EV_VIEW (window->priv->view))) {
+		ev_view_add_text_markup_annotation_for_selected_text (EV_VIEW (window->priv->view));
+		return;
+	}
+
 	ev_view_begin_add_annotation (EV_VIEW (window->priv->view), annot_type);
 }
 
