@@ -20,10 +20,10 @@ msgstr ""
 "Project-Id-Version: evince master\n"
 "Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evince&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2018-03-15 03:17+0000\n"
-"PO-Revision-Date: 2018-04-22 06:40+0200\n"
+"POT-Creation-Date: 2018-05-08 13:30+0000\n"
+"PO-Revision-Date: 2018-05-08 22:34+0200\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
-"Language-Team: čeština <gnome-cs-list@gnome.org>>\n"
+"Language-Team: čeština <gnome-cs-list@gnome.org>\n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -274,17 +274,17 @@ msgid "Adds support for reading XPS documents"
 msgstr "Přidává podporu pro čtení dokumentů XPS"
 
 #: ../browser-plugin/EvBrowserPluginToolbar.cpp:288
-#: ../previewer/ev-previewer-window.c:317 ../shell/evince-menus.ui.h:33
+#: ../previewer/ev-previewer-window.c:317 ../shell/evince-menus.ui.h:34
 msgid "Fit Pa_ge"
 msgstr "Přizpůsobit s_tránce"
 
 #: ../browser-plugin/EvBrowserPluginToolbar.cpp:297
-#: ../previewer/ev-previewer-window.c:320 ../shell/evince-menus.ui.h:34
+#: ../previewer/ev-previewer-window.c:320 ../shell/evince-menus.ui.h:35
 msgid "Fit _Width"
 msgstr "Přizpůsobit šíř_ce"
 
 #: ../browser-plugin/EvBrowserPluginToolbar.cpp:306
-#: ../shell/evince-menus.ui.h:35
+#: ../shell/evince-menus.ui.h:36
 msgid "_Automatic"
 msgstr "_Automaticky"
 
@@ -332,7 +332,7 @@ msgstr "Vytisknout dokument"
 
 #. Manually set name and icon
 #: ../data/evince.desktop.in.in.h:1 ../shell/ev-application.c:1012
-#: ../shell/ev-window-title.c:139 ../shell/main.c:298
+#: ../shell/ev-window-title.c:123 ../shell/main.c:298
 msgid "Document Viewer"
 msgstr "Prohlížeč dokumentů"
 
@@ -458,8 +458,8 @@ msgid "of %d"
 msgstr "z %d"
 
 #: ../libmisc/ev-page-action-widget.c:185 ../shell/ev-history.c:426
-#: ../shell/ev-sidebar-bookmarks.c:306 ../shell/ev-window.c:914
-#: ../shell/ev-window.c:4713
+#: ../shell/ev-sidebar-bookmarks.c:306 ../shell/ev-window.c:921
+#: ../shell/ev-window.c:4788
 #, c-format
 msgid "Page %s"
 msgstr "Stránka %s"
@@ -702,7 +702,7 @@ msgstr "SOUBOR"
 msgid "GNOME Document Previewer"
 msgstr "Prohlížeč dokumentů pro uživatelské prostředí GNOME"
 
-#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3297
+#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3351
 msgid "Failed to print document"
 msgstr "Nepodařilo se vytisknout dokument"
 
@@ -711,11 +711,11 @@ msgstr "Nepodařilo se vytisknout dokument"
 msgid "The selected printer “%s” could not be found"
 msgstr "Vybraná tiskárna „%s“ nebyla nalezena"
 
-#: ../previewer/ev-previewer-window.c:270 ../shell/evince-menus.ui.h:40
+#: ../previewer/ev-previewer-window.c:270 ../shell/evince-menus.ui.h:41
 msgid "_Previous Page"
 msgstr "_Předchozí stránka"
 
-#: ../previewer/ev-previewer-window.c:273 ../shell/evince-menus.ui.h:41
+#: ../previewer/ev-previewer-window.c:273 ../shell/evince-menus.ui.h:42
 msgid "_Next Page"
 msgstr "_Následující stránka"
 
@@ -975,44 +975,44 @@ msgstr "Heslo dokumentu %s"
 msgid "Loading…"
 msgstr "Probíhá načítání…"
 
-#: ../shell/ev-password-view.c:142
+#: ../shell/ev-password-view.c:139
 msgid ""
 "This document is locked and can only be read by entering the correct "
 "password."
 msgstr ""
 "Tento dokument je uzamčen a lze jej číst jen po zadání správného hesla."
 
-#: ../shell/ev-password-view.c:151 ../shell/ev-password-view.c:269
+#: ../shell/ev-password-view.c:148 ../shell/ev-password-view.c:258
 msgid "_Unlock Document"
 msgstr "_Odemknout dokument"
 
-#: ../shell/ev-password-view.c:261
+#: ../shell/ev-password-view.c:250
 msgid "Enter password"
 msgstr "Zadejte heslo"
 
-#: ../shell/ev-password-view.c:300
+#: ../shell/ev-password-view.c:288
 #, c-format
 msgid ""
 "The document “%s” is locked and requires a password before it can be opened."
 msgstr "Dokument „%s“ je uzamčen a před otevřením vyžaduje zadání hesla."
 
-#: ../shell/ev-password-view.c:303
+#: ../shell/ev-password-view.c:291
 msgid "Password required"
 msgstr "Je vyžadováno heslo"
 
-#: ../shell/ev-password-view.c:333
+#: ../shell/ev-password-view.c:320
 msgid "_Password:"
 msgstr "_Heslo:"
 
-#: ../shell/ev-password-view.c:364
+#: ../shell/ev-password-view.c:351
 msgid "Forget password _immediately"
 msgstr "Zapomenout heslo _okamžitě"
 
-#: ../shell/ev-password-view.c:376
+#: ../shell/ev-password-view.c:363
 msgid "Remember password until you _log out"
 msgstr "_Pamatovat si heslo, dokud se neodhlásíte"
 
-#: ../shell/ev-password-view.c:388
+#: ../shell/ev-password-view.c:375
 msgid "Remember _forever"
 msgstr "Zapamatovat si _napořád"
 
@@ -1153,90 +1153,90 @@ msgstr "Nastavit přiblížení"
 msgid "Supported Image Files"
 msgstr "Podporované soubory s obrázky"
 
-#: ../shell/ev-window.c:1548
+#: ../shell/ev-window.c:1570
 msgid "The document contains no pages"
 msgstr "Dokument neobsahuje žádné stránky"
 
-#: ../shell/ev-window.c:1551
+#: ../shell/ev-window.c:1573
 msgid "The document contains only empty pages"
 msgstr "Dokument obsahuje pouze prázdné stránky"
 
-#: ../shell/ev-window.c:1765 ../shell/ev-window.c:1931
+#: ../shell/ev-window.c:1787 ../shell/ev-window.c:1953
 #, c-format
 msgid "Unable to open document “%s”."
 msgstr "Nelze otevřít dokument „%s“"
 
-#: ../shell/ev-window.c:1895
+#: ../shell/ev-window.c:1917
 #, c-format
 msgid "Loading document from “%s”"
 msgstr "Načítá se dokument z %s"
 
-#: ../shell/ev-window.c:2046 ../shell/ev-window.c:2374
+#: ../shell/ev-window.c:2070 ../shell/ev-window.c:2427
 #, c-format
 msgid "Downloading document (%d%%)"
 msgstr "Stahuje se dokument (%d %%)"
 
-#: ../shell/ev-window.c:2079
+#: ../shell/ev-window.c:2102
 msgid "Failed to load remote file."
 msgstr "Nepodařilo se nahrát vzdálený soubor"
 
-#: ../shell/ev-window.c:2318
+#: ../shell/ev-window.c:2371
 #, c-format
 msgid "Reloading document from %s"
 msgstr "Obnovuje se dokument z %s"
 
-#: ../shell/ev-window.c:2350
+#: ../shell/ev-window.c:2403
 msgid "Failed to reload document."
 msgstr "Nepodařilo se obnovit dokument"
 
-#: ../shell/ev-window.c:2566
+#: ../shell/ev-window.c:2619
 msgid "Open Document"
 msgstr "Otevřít dokument"
 
-#: ../shell/ev-window.c:2639
+#: ../shell/ev-window.c:2694
 #, c-format
 msgid "Saving document to %s"
 msgstr "Dokument se ukládá do %s"
 
-#: ../shell/ev-window.c:2642
+#: ../shell/ev-window.c:2697
 #, c-format
 msgid "Saving attachment to %s"
 msgstr "Příloha se ukládá do %s"
 
-#: ../shell/ev-window.c:2645
+#: ../shell/ev-window.c:2700
 #, c-format
 msgid "Saving image to %s"
 msgstr "Obrázek se ukládá do %s"
 
-#: ../shell/ev-window.c:2689 ../shell/ev-window.c:2789
+#: ../shell/ev-window.c:2744 ../shell/ev-window.c:2844
 #, c-format
 msgid "The file could not be saved as “%s”."
 msgstr "Soubor nelze uložit jako „%s“."
 
-#: ../shell/ev-window.c:2720
+#: ../shell/ev-window.c:2775
 #, c-format
 msgid "Uploading document (%d%%)"
 msgstr "Nahrává se dokument (%d %%)"
 
-#: ../shell/ev-window.c:2724
+#: ../shell/ev-window.c:2779
 #, c-format
 msgid "Uploading attachment (%d%%)"
 msgstr "Nahrává se příloha (%d %%)"
 
-#: ../shell/ev-window.c:2728
+#: ../shell/ev-window.c:2783
 #, c-format
 msgid "Uploading image (%d%%)"
 msgstr "Nahrává se obrázek (%d %%)"
 
-#: ../shell/ev-window.c:2841
+#: ../shell/ev-window.c:2896
 msgid "Save As…"
 msgstr "Uložení jako…"
 
-#: ../shell/ev-window.c:2936
+#: ../shell/ev-window.c:2990
 msgid "Could not send current document"
 msgstr "Dokument se nepodařilo odeslat"
 
-#: ../shell/ev-window.c:3241
+#: ../shell/ev-window.c:3295
 #, c-format
 msgid "%d pending job in queue"
 msgid_plural "%d pending jobs in queue"
@@ -1244,50 +1244,50 @@ msgstr[0] "%d nevyřízená úloha ve frontě"
 msgstr[1] "%d nevyřízené úlohy ve frontě"
 msgstr[2] "%d nevyřízených úloh ve frontě"
 
-#: ../shell/ev-window.c:3354
+#: ../shell/ev-window.c:3408
 #, c-format
 msgid "Printing job “%s”"
 msgstr "Tiskne se úloha „%s“"
 
-#: ../shell/ev-window.c:3569
+#: ../shell/ev-window.c:3618
 msgid "Document contains form fields that have been filled out. "
 msgstr "Dokument obsahuje pole, která byla vyplněna. "
 
-#: ../shell/ev-window.c:3572
+#: ../shell/ev-window.c:3621
 msgid "Document contains new or modified annotations. "
 msgstr "Dokument obsahuje nové nebo změněné poznámky. "
 
-#: ../shell/ev-window.c:3584
+#: ../shell/ev-window.c:3633
 #, c-format
 msgid "Reload document “%s”?"
 msgstr "Načíst dokument „%s“ znovu?"
 
-#: ../shell/ev-window.c:3586
+#: ../shell/ev-window.c:3635
 msgid "If you reload the document, changes will be permanently lost."
 msgstr "Jestliže dokument znovu načtete, o změny nevratně příjdete."
 
-#: ../shell/ev-window.c:3590
+#: ../shell/ev-window.c:3639
 msgid "Reload"
 msgstr "Znovu načíst"
 
-#: ../shell/ev-window.c:3597
+#: ../shell/ev-window.c:3646
 #, c-format
 msgid "Save a copy of document “%s” before closing?"
 msgstr "Uložit před zavřením kopii dokumentu „%s“?"
 
-#: ../shell/ev-window.c:3599
+#: ../shell/ev-window.c:3648
 msgid "If you don’t save a copy, changes will be permanently lost."
 msgstr "Pokud neuložíte kopii, budou změny nenávratně ztraceny."
 
-#: ../shell/ev-window.c:3601
+#: ../shell/ev-window.c:3650
 msgid "Close _without Saving"
 msgstr "Zavřít _bez uložení"
 
-#: ../shell/ev-window.c:3605
+#: ../shell/ev-window.c:3654
 msgid "Save a _Copy"
 msgstr "Uložit _kopii"
 
-#: ../shell/ev-window.c:3689
+#: ../shell/ev-window.c:3738
 #, c-format
 msgid "Wait until print job “%s” finishes before closing?"
 msgstr "Odložit uzavření, dokud se nedokončí tisková úloha „%s“?"
@@ -1295,7 +1295,7 @@ msgstr "Odložit uzavření, dokud se nedokončí tisková úloha „%s“?"
 #. TRANS: the singular form is not really used as n_print_jobs > 1
 #. but some languages distinguish between different plurals forms,
 #. so the ngettext is needed.
-#: ../shell/ev-window.c:3695
+#: ../shell/ev-window.c:3744
 #, c-format
 msgid "There is %d print job active. Wait until print finishes before closing?"
 msgid_plural ""
@@ -1307,31 +1307,31 @@ msgstr[1] ""
 msgstr[2] ""
 "%d tiskových úloh je aktivních. Odložit uzavření, dokud se nedokončí tisk?"
 
-#: ../shell/ev-window.c:3710
+#: ../shell/ev-window.c:3759
 msgid "If you close the window, pending print jobs will not be printed."
 msgstr "Pokud zavřete okno, nebudou vytištěny nevyřízené tiskové úlohy."
 
-#: ../shell/ev-window.c:3714
+#: ../shell/ev-window.c:3763
 msgid "Cancel _print and Close"
 msgstr "Zrušit _tisk a zavřít"
 
-#: ../shell/ev-window.c:3718
+#: ../shell/ev-window.c:3767
 msgid "Close _after Printing"
 msgstr "Zavřít _po vytištění"
 
-#: ../shell/ev-window.c:4248
+#: ../shell/ev-window.c:4308
 msgid "Running in presentation mode"
 msgstr "Běží v režimu prezentace"
 
-#: ../shell/ev-window.c:5412
+#: ../shell/ev-window.c:5454
 msgid "Enable caret navigation?"
 msgstr "Zapnout kurzorovou navigaci?"
 
-#: ../shell/ev-window.c:5414
+#: ../shell/ev-window.c:5456
 msgid "_Enable"
 msgstr "Z_apnout"
 
-#: ../shell/ev-window.c:5417
+#: ../shell/ev-window.c:5459
 msgid ""
 "Pressing F7 turns the caret navigation on or off. This feature places a "
 "moveable cursor in text pages, allowing you to move around and select text "
@@ -1341,47 +1341,47 @@ msgstr ""
 "stránek textový kurzor, kterým se mužete pomocí klávesnice po dokumentu "
 "pohybovat a vybírat text. Chcete kurzorovou navigaci zapnout?"
 
-#: ../shell/ev-window.c:5422
+#: ../shell/ev-window.c:5464
 msgid "Don’t show this message again"
 msgstr "Tuto zprávu znovu nezobrazovat"
 
-#: ../shell/ev-window.c:5962 ../shell/ev-window.c:5978
+#: ../shell/ev-window.c:6008 ../shell/ev-window.c:6024
 msgid "Unable to launch external application."
 msgstr "Nepodařilo se spustit externí aplikaci."
 
-#: ../shell/ev-window.c:6039
+#: ../shell/ev-window.c:6085
 msgid "Unable to open external link"
 msgstr "Nepodařilo se otevřít externí odkaz"
 
-#: ../shell/ev-window.c:6252
+#: ../shell/ev-window.c:6298
 msgid "Couldn’t find appropriate format to save image"
 msgstr "Nepodařilo se najít vhodný formát pro uložení obrázku"
 
-#: ../shell/ev-window.c:6284
+#: ../shell/ev-window.c:6330
 msgid "The image could not be saved."
 msgstr "Nepodařilo se uložit obrázek."
 
-#: ../shell/ev-window.c:6319
+#: ../shell/ev-window.c:6365
 msgid "Save Image"
 msgstr "Uložit obrázek"
 
-#: ../shell/ev-window.c:6478
+#: ../shell/ev-window.c:6524
 msgid "Unable to open attachment"
 msgstr "Nepodařilo se otevřít přílohu"
 
-#: ../shell/ev-window.c:6534
+#: ../shell/ev-window.c:6580
 msgid "The attachment could not be saved."
 msgstr "Nepodařilo se uložit přílohu."
 
-#: ../shell/ev-window.c:6582
+#: ../shell/ev-window.c:6628
 msgid "Save Attachment"
 msgstr "Uložit přílohu"
 
-#: ../shell/ev-window-title.c:118
+#: ../shell/ev-window-title.c:102
 msgid "Recent Documents"
 msgstr "Nedávné dokumenty"
 
-#: ../shell/ev-window-title.c:153 ../shell/ev-window-title.c:157
+#: ../shell/ev-window-title.c:137 ../shell/ev-window-title.c:141
 msgid "Password Required"
 msgstr "Je vyžadováno heslo"
 
@@ -1574,98 +1574,102 @@ msgid "_Reload"
 msgstr "O_bnovit"
 
 #: ../shell/evince-menus.ui.h:21
+msgid "Enable Spellchecking"
+msgstr "Povolit kontrolu pravopisu"
+
+#: ../shell/evince-menus.ui.h:22
 msgid "_Open…"
 msgstr "_Otevřít…"
 
-#: ../shell/evince-menus.ui.h:22
+#: ../shell/evince-menus.ui.h:23
 msgid "Op_en a Copy"
 msgstr "Ot_evřít kopii"
 
-#: ../shell/evince-menus.ui.h:23
+#: ../shell/evince-menus.ui.h:24
 msgid "_Save As…"
 msgstr "_Uložit jako…"
 
-#: ../shell/evince-menus.ui.h:24
+#: ../shell/evince-menus.ui.h:25
 msgid "Send _To…"
 msgstr "Odeslat _do…"
 
-#: ../shell/evince-menus.ui.h:25
+#: ../shell/evince-menus.ui.h:26
 msgid "Open Containing _Folder"
 msgstr "Otevřít mateřskou _složku"
 
-#: ../shell/evince-menus.ui.h:26
+#: ../shell/evince-menus.ui.h:27
 msgid "_Print…"
 msgstr "_Tisk…"
 
-#: ../shell/evince-menus.ui.h:27
+#: ../shell/evince-menus.ui.h:28
 msgid "P_roperties…"
 msgstr "_Vlastnosti…"
 
-#: ../shell/evince-menus.ui.h:28
+#: ../shell/evince-menus.ui.h:29
 msgid "_Copy"
 msgstr "_Kopírovat"
 
-#: ../shell/evince-menus.ui.h:29
+#: ../shell/evince-menus.ui.h:30
 msgid "Select _All"
 msgstr "Vy_brat vše"
 
-#: ../shell/evince-menus.ui.h:30
+#: ../shell/evince-menus.ui.h:31
 msgid "Save Current Settings as _Default"
 msgstr "Uložit současné nastavení jako _výchozí"
 
-#: ../shell/evince-menus.ui.h:31
+#: ../shell/evince-menus.ui.h:32
 msgid "_Add Bookmark"
 msgstr "Přid_at záložku"
 
-#: ../shell/evince-menus.ui.h:32
+#: ../shell/evince-menus.ui.h:33
 msgid "_Close"
 msgstr "_Zavřít"
 
-#: ../shell/evince-menus.ui.h:36
+#: ../shell/evince-menus.ui.h:37
 msgid "_Open Link"
 msgstr "_Otevřít odkaz"
 
-#: ../shell/evince-menus.ui.h:37
+#: ../shell/evince-menus.ui.h:38
 msgid "_Copy Link Address"
 msgstr "_Kopírovat adresu odkazu"
 
-#: ../shell/evince-menus.ui.h:38
+#: ../shell/evince-menus.ui.h:39
 msgid "_Go To"
 msgstr "_Přejít na"
 
-#: ../shell/evince-menus.ui.h:39
+#: ../shell/evince-menus.ui.h:40
 msgid "Open in New _Window"
 msgstr "Otevřít v novém _okně"
 
-#: ../shell/evince-menus.ui.h:42
+#: ../shell/evince-menus.ui.h:43
 msgid "Auto_scroll"
 msgstr "Automaticky po_souvat"
 
-#: ../shell/evince-menus.ui.h:43
+#: ../shell/evince-menus.ui.h:44
 msgid "_Save Image As…"
 msgstr "_Uložit obrázek jako…"
 
-#: ../shell/evince-menus.ui.h:44
+#: ../shell/evince-menus.ui.h:45
 msgid "Copy _Image"
 msgstr "Kopí_rovat obrázek"
 
-#: ../shell/evince-menus.ui.h:45
+#: ../shell/evince-menus.ui.h:46
 msgid "_Open Attachment"
 msgstr "_Otevřít přílohu"
 
-#: ../shell/evince-menus.ui.h:46
+#: ../shell/evince-menus.ui.h:47
 msgid "_Save Attachment As…"
 msgstr "_Uložit přílohu jako…"
 
-#: ../shell/evince-menus.ui.h:47
+#: ../shell/evince-menus.ui.h:48
 msgid "Annotation Properties…"
 msgstr "Vlastnosti poznámky…"
 
-#: ../shell/evince-menus.ui.h:48
+#: ../shell/evince-menus.ui.h:49
 msgid "Remove Annotation"
 msgstr "Odstranit poznámku"
 
-#: ../shell/evince-menus.ui.h:49
+#: ../shell/evince-menus.ui.h:50
 msgid "Highlight Selected Text"
 msgstr "Zvýraznit vybraný text"
 
