@@ -41,8 +41,9 @@ struct _EvMediaPlayerKeys
 {
 	GObject        parent;
 
-        GDBusProxy *proxy;
-	gboolean    has_name_owner;
+        GDBusProxy   *proxy;
+	gboolean      has_name_owner;
+	GCancellable *cancellable;
 };
 
 struct _EvMediaPlayerKeysClass
@@ -163,7 +164,7 @@ mediakeys_service_appeared_cb (GObject      *source_object,
 			       GAsyncResult *res,
 			       gpointer      user_data)
 {
-        EvMediaPlayerKeys *keys = EV_MEDIA_PLAYER_KEYS (user_data);
+	EvMediaPlayerKeys *keys;
 	GDBusProxy *proxy;
 
 	proxy = g_dbus_proxy_new_for_bus_finish (res, NULL);
@@ -172,6 +173,7 @@ mediakeys_service_appeared_cb (GObject      *source_object,
 		return;
 	}
 
+	keys = EV_MEDIA_PLAYER_KEYS (user_data);
 	g_signal_connect (proxy, "g-signal",
 			  G_CALLBACK (media_player_key_pressed_cb),
 			  keys);
@@ -187,13 +189,15 @@ mediakeys_service_appeared_cb (GObject      *source_object,
 static void
 ev_media_player_keys_init (EvMediaPlayerKeys *keys)
 {
+	keys->cancellable = g_cancellable_new ();
+
 	g_dbus_proxy_new_for_bus (G_BUS_TYPE_SESSION,
 				  G_DBUS_PROXY_FLAGS_DO_NOT_LOAD_PROPERTIES,
 				  NULL,
 				  SD_NAME,
 				  SD_OBJECT_PATH,
 				  SD_INTERFACE,
-				  NULL,
+				  keys->cancellable,
 				  mediakeys_service_appeared_cb,
 				  keys);
 }
@@ -211,6 +215,9 @@ static void
 ev_media_player_keys_finalize (GObject *object)
 {
 	EvMediaPlayerKeys *keys = EV_MEDIA_PLAYER_KEYS (object);
+
+	g_cancellable_cancel (keys->cancellable);
+	g_object_unref (keys->cancellable);
 
         if (keys->proxy != NULL) {
 		ev_media_player_keys_release_keys (keys);
