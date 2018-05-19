@@ -107,7 +107,7 @@ libevdocument3_la_CPPFLAGS = \
 
 libevdocument3_la_CFLAGS = \
 	$(LIBDOCUMENT_CFLAGS)			\
-	-I$(top_srcdir)/cut-n-paste/synctex	\
+	$(SYNCTEX_FLAGS) \
 	$(AM_CFLAGS)
 
 libevdocument3_la_LDFLAGS = \
@@ -117,7 +117,7 @@ libevdocument3_la_LDFLAGS = \
 	$(AM_LDFLAGS)
 
 libevdocument3_la_LIBADD = \
-	$(top_builddir)/cut-n-paste/synctex/libsynctex.la \
+	$(SYNCTEX_LIBS) \
 	$(LIBDOCUMENT_LIBS)	\
 	$(ZLIB_LIBS)		\
 	$(LIBM)
