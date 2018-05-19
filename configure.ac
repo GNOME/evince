@@ -536,6 +536,19 @@ fi
 
 GOBJECT_INTROSPECTION_CHECK([1.0])
 
+dnl ================== libsynctex ===========================================
+
+PKG_CHECK_MODULES(SYNCTEX, [synctex], has_synctex=system, has_synctex=internal)
+
+dnl not found? use internal code copy.
+if test "x$has_synctex" = "xinternal"; then
+	SYNCTEX_LIBS="\$(top_builddir)/cut-n-paste/synctex/libsynctex.la"
+	SYNCTEX_CFLAGS="-I\$(top_srcdir)/cut-n-paste/synctex"
+fi
+AC_SUBST(SYNCTEX_LIBS)
+AC_SUBST(SYNCTEX_CFLAGS)
+AM_CONDITIONAL(USE_INTERNAL_SYNCTEX, test x$has_synctex = xinternal)
+
 dnl ================== portability checks ===========================================
 
 dnl for backtrace()
@@ -1033,4 +1046,5 @@ GTK+ Unix Print ..........:  $with_gtk_unix_print
 Thumbnail cache ..........:  $enable_gnome_desktop
 Multimedia ...............:  $enable_multimedia
 Spell Checker.............:  $with_gspell
+SyncTeX ..................:  $has_synctex
 ])
