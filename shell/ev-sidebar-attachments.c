@@ -487,11 +487,11 @@ ev_sidebar_attachments_confirm_overwrite (EvSidebarAttachments   *attachbar,
 	                                 GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
 	                                 GTK_MESSAGE_QUESTION,
 	                                 GTK_BUTTONS_NONE,
-	                                 _("A file named \"%s\" already exists.  Do you want to "
+	                                 _("A file named “%s” already exists. Do you want to "
 	                                   "replace it?"),
 	                                 basename);
 	gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog),
-	                                          _("The file \"%s\" already exists.  Replacing"
+	                                          _("The file “%s” already exists. Replacing"
 	                                            " it will overwrite its contents."),
 	                                          uri);
 
