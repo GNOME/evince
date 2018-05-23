@@ -107,7 +107,7 @@ libevdocument3_la_CPPFLAGS = \
 
 libevdocument3_la_CFLAGS = \
 	$(LIBDOCUMENT_CFLAGS)			\
-	$(SYNTEC_FLAGS) \
+	$(SYNCTEX_FLAGS) \
 	$(AM_CFLAGS)
 
 libevdocument3_la_LDFLAGS = \
