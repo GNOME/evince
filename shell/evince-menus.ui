@@ -21,6 +21,10 @@
   <menu id="app-menu">
     <section>
       <item>
+        <attribute name="label" translatable="yes">_Open…</attribute>
+        <attribute name="action">app.open</attribute>
+      </item>
+      <item>
         <attribute name="label" translatable="yes">_New Window</attribute>
         <attribute name="action">app.new</attribute>
       </item>
@@ -133,10 +137,6 @@
 
   <menu id="action-menu">
     <section>
-      <item>
-        <attribute name="label" translatable="yes">_Open…</attribute>
-        <attribute name="action">win.open</attribute>
-      </item>
       <item>
         <attribute name="label" translatable="yes">Op_en a Copy</attribute>
         <attribute name="action">win.open-copy</attribute>

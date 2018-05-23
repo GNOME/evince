@@ -2539,6 +2539,7 @@ ev_window_file_chooser_restore_folder (EvWindow       *window,
         g_settings_get (ev_window_ensure_settings (window),
                         get_settings_key_for_directory (directory),
                         "ms", &folder_uri);
+
         if (folder_uri == NULL && uri != NULL) {
                 GFile *file, *parent;
 
@@ -2608,12 +2609,23 @@ file_open_dialog_response_cb (GtkWidget *chooser,
 	gtk_widget_destroy (chooser);
 }
 
-static void
-ev_window_cmd_file_open (GSimpleAction *action,
-			 GVariant      *parameter,
-			 gpointer       user_data)
+/**
+ * ev_window_file_open_dialog:
+ * @ev_window: The instance of the #EvWindow. Likely the active window.
+ *
+ * It requests to open a document through a dialog. It uses @ev_window to
+ * set the parent window, and to determine the screen on which the document
+ * should be opened.
+ *
+ * If @ev_window is displaying the recent documents, then the document will
+ * use that window. Otherwise, the document will be opened in a new window.
+ *
+ * It does look if there is any document loaded or if there is any job to load
+ * a document.
+ */
+void
+ev_window_file_open_dialog (EvWindow *window)
 {
-	EvWindow  *window = user_data;
 	GtkWidget *chooser;
 
 	chooser = gtk_file_chooser_dialog_new (_("Open Document"),
@@ -2636,6 +2648,16 @@ ev_window_cmd_file_open (GSimpleAction *action,
 			  window);
 
 	gtk_widget_show (chooser);
+}
+
+static void
+ev_window_cmd_file_open (GSimpleAction *action,
+			 GVariant      *parameter,
+			 gpointer       user_data)
+{
+	EvWindow  *window = user_data;
+
+	ev_window_file_open_dialog (window);
 }
 
 static void
