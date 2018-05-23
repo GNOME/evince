@@ -938,6 +938,19 @@ ev_application_migrate_config_dir (EvApplication *application)
 }
 
 static void
+app_file_open_cb (GSimpleAction *action,
+                  GVariant      *parameter,
+                  gpointer       user_data)
+{
+	EvApplication *application = user_data;
+	EvWindow      *window;
+
+	window = EV_WINDOW (gtk_application_get_active_window (GTK_APPLICATION (application)));
+
+	ev_window_file_open_dialog (window);
+}
+
+static void
 app_new_cb (GSimpleAction *action,
             GVariant      *parameter,
             gpointer       user_data)
@@ -1021,6 +1034,7 @@ static void
 ev_application_startup (GApplication *gapplication)
 {
         const GActionEntry app_menu_actions[] = {
+		{ "open",  app_file_open_cb, NULL, NULL, NULL },
 		{ "new",  app_new_cb, NULL, NULL, NULL },
                 { "help", app_help_cb, NULL, NULL, NULL },
                 { "about", app_about_cb, NULL, NULL, NULL }
