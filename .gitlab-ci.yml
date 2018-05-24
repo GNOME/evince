@@ -2,13 +2,9 @@ stages:
     - build
 
 ubuntu:
-    image: amd64/ubuntu:18.04
+    image: registry.gitlab.gnome.org/gnome/evince/amd64/ubuntu:18.04
     stage: build
 
-    before_script:
-        - apt-get install -y gnome-common
-
     script:
-        - ./autogen.sh --enable-debug --enable-nautilus
-                       --enable-introspection
-        - make check
+        - ./autogen.sh --enable-debug --enable-nautilus --enable-gtk-doc
+        - make
