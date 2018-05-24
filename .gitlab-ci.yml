@@ -1,0 +1,11 @@
+stages:
+    - build
+
+ubuntu:
+    image: amd64/ubuntu:18.04
+    stage: build
+
+    script:
+        - ./autogen.sh --enable-debug --enable-nautilus
+                       --enable-introspection
+        - make check
