@@ -7,7 +7,7 @@ master:
 
     script:
         - ./autogen.sh --enable-debug --enable-nautilus
-        - make check
+        - make
 
     artifacts:
         when: on_failure
