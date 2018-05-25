@@ -8,3 +8,9 @@ master:
     script:
         - ./autogen.sh --enable-debug --enable-nautilus
         - make
+
+    artifacts:
+        when: on_failure
+        paths:
+        - config.log
+        expire_in: 2 days
