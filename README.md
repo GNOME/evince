@@ -11,15 +11,23 @@ This software is licensed under the [GPLv2][license].
 
 * [GNOME Platform libraries][gnome]
 * [Poppler for PDF viewing][poppler]
-* [GhostScript for Postscript viewing][ghostscript]
 
 ## Evince Optional Backend Libraries
 
+* [Spectre for PostScript (PS) viewing][ghostscript]
 * [DjVuLibre for DjVu viewing][djvulibre]
+* [Kpathsea for Device-independent file format (DVI) viewing][dvi]
+* [Archive library for Comic Book Resources (CBR) viewing][comics]
+* [LibTiff for Multipage TIFF viewing][tiff]
+* [LibGXPS for XML Paper Specification (XPS) viewing][xps]
 
 [gnome]: https://www.gnome.org/start/
 [poppler]: https://poppler.freedesktop.org/
-[ghostscript]: http://pages.cs.wisc.edu/~ghost/
+[ghostscript]: https://www.freedesktop.org/wiki/Software/libspectre/
 [djvulibre]: https://djvulibre.djvuzone.org/
+[dvi]: https://tug.org/texinfohtml/kpathsea.html
+[comics]: http://libarchive.org/
+[tiff]: http://libtiff.org/
+[xps]: https://wiki.gnome.org/Projects/libgxps
 [license]: COPYING
 [evince-logo]: data/icons/48x48/apps/evince.png
