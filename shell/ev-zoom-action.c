@@ -68,7 +68,7 @@ struct _EvZoomActionPrivate {
         GMenu           *menu;
 
         GMenuModel      *zoom_free_section;
-        GtkWidget       *popup;
+        GtkPopover      *popup;
         gboolean         popup_shown;
 };
 
@@ -225,7 +225,7 @@ focus_out_cb (EvZoomAction *zoom_action)
 }
 
 static void
-popup_menu_closed (GtkWidget    *popup,
+popup_menu_closed (GtkPopover   *popup,
                    EvZoomAction *zoom_action)
 {
         if (zoom_action->priv->popup != popup)
@@ -235,7 +235,7 @@ popup_menu_closed (GtkWidget    *popup,
         zoom_action->priv->popup = NULL;
 }
 
-static GtkWidget *
+static GtkPopover *
 get_popup (EvZoomAction *zoom_action)
 {
         GdkRectangle rect;
@@ -243,15 +243,15 @@ get_popup (EvZoomAction *zoom_action)
         if (zoom_action->priv->popup)
                 return zoom_action->priv->popup;
 
-        zoom_action->priv->popup = gtk_popover_new_from_model (GTK_WIDGET (zoom_action),
-                                                               G_MENU_MODEL (zoom_action->priv->menu));
+        zoom_action->priv->popup = GTK_POPOVER (gtk_popover_new_from_model (GTK_WIDGET (zoom_action),
+                                                                            G_MENU_MODEL (zoom_action->priv->menu)));
         g_signal_connect (zoom_action->priv->popup, "closed",
                           G_CALLBACK (popup_menu_closed),
                           zoom_action);
         gtk_entry_get_icon_area (GTK_ENTRY (zoom_action->priv->entry),
                                  GTK_ENTRY_ICON_SECONDARY, &rect);
-        gtk_popover_set_pointing_to (GTK_POPOVER (zoom_action->priv->popup), &rect);
-        gtk_popover_set_position (GTK_POPOVER (zoom_action->priv->popup), GTK_POS_BOTTOM);
+        gtk_popover_set_pointing_to (zoom_action->priv->popup, &rect);
+        gtk_popover_set_position (zoom_action->priv->popup, GTK_POS_BOTTOM);
 
         return zoom_action->priv->popup;
 }
@@ -265,7 +265,7 @@ entry_icon_press_callback (GtkEntry            *entry,
         if (event->button != GDK_BUTTON_PRIMARY)
                 return;
 
-        gtk_popover_popup (GTK_POPOVER (get_popup (zoom_action)));
+        gtk_popover_popup (get_popup (zoom_action));
         zoom_action->priv->popup_shown = TRUE;
 }
 
