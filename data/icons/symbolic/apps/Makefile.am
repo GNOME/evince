@@ -5,7 +5,7 @@ context = apps
 iconsdir = $(themedir)/$(size)/$(context)
 
 icons_DATA = \
-	evince-symbolic.svg
+	org.gnome.Evince-symbolic.svg
 
 noinst_DATA =
 

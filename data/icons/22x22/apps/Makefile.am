@@ -5,7 +5,7 @@ context = apps
 iconsdir = $(themedir)/$(size)/$(context)
 
 icons_DATA = \
-	evince.png
+	org.gnome.Evince.png
 
 noinst_DATA = 
 
