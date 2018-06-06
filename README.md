@@ -30,4 +30,4 @@ This software is licensed under the [GPLv2][license].
 [tiff]: http://libtiff.org/
 [xps]: https://wiki.gnome.org/Projects/libgxps
 [license]: COPYING
-[evince-logo]: data/icons/48x48/apps/evince.png
+[evince-logo]: data/icons/48x48/apps/org.gnome.Evince.png
