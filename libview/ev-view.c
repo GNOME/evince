@@ -1375,7 +1375,7 @@ _ev_view_transform_view_point_to_doc_point (EvView       *view,
 					    double       *doc_point_y)
 {
 	*doc_point_x = MAX ((double) (view_point->x - page_area->x - border->left) / view->scale, 0);
-	*doc_point_y = MAX ((double) (view_point->y - page_area->y - border->right) / view->scale, 0);
+	*doc_point_y = MAX ((double) (view_point->y - page_area->y - border->top) / view->scale, 0);
 }
 
 void
@@ -1386,7 +1386,7 @@ _ev_view_transform_view_rect_to_doc_rect (EvView       *view,
 					  EvRectangle  *doc_rect)
 {
 	doc_rect->x1 = MAX ((double) (view_rect->x - page_area->x - border->left) / view->scale, 0);
-	doc_rect->y1 = MAX ((double) (view_rect->y - page_area->y - border->right) / view->scale, 0);
+	doc_rect->y1 = MAX ((double) (view_rect->y - page_area->y - border->top) / view->scale, 0);
 	doc_rect->x2 = doc_rect->x1 + (double) view_rect->width / view->scale;
 	doc_rect->y2 = doc_rect->y1 + (double) view_rect->height / view->scale;
 }
