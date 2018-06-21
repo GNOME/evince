@@ -41,6 +41,8 @@ struct _EvDocumentModel
 	guint dual_page_odd_left : 1;
 	guint fullscreen : 1;
 	guint inverted_colors : 1;
+	guint color_overlay : 1;
+	gchar *color_overlay_value;
 
 	gdouble max_scale;
 	gdouble min_scale;
@@ -52,6 +54,8 @@ enum {
 	PROP_PAGE,
 	PROP_ROTATION,
 	PROP_INVERTED_COLORS,
+	PROP_COLOR_OVERLAY,
+	PROP_COLOR_OVERLAY_VALUE,
 	PROP_SCALE,
 	PROP_SIZING_MODE,
 	PROP_CONTINUOUS,
@@ -110,6 +114,12 @@ ev_document_model_set_property (GObject      *object,
 	case PROP_INVERTED_COLORS:
 		ev_document_model_set_inverted_colors (model, g_value_get_boolean (value));
 		break;
+	case PROP_COLOR_OVERLAY:
+		ev_document_model_set_color_overlay (model, g_value_get_boolean (value));
+		break;
+	case PROP_COLOR_OVERLAY_VALUE:
+		ev_document_model_set_color_overlay_value (model, g_value_get_string (value));
+		break;
 	case PROP_SCALE:
 		ev_document_model_set_scale (model, g_value_get_double (value));
 		break;
@@ -162,6 +172,12 @@ ev_document_model_get_property (GObject    *object,
 		break;
 	case PROP_INVERTED_COLORS:
 		g_value_set_boolean (value, model->inverted_colors);
+		break;
+	case PROP_COLOR_OVERLAY:
+		g_value_set_boolean (value, model->color_overlay);
+		break;
+	case PROP_COLOR_OVERLAY_VALUE:
+		g_value_set_string (value, model->color_overlay_value);
 		break;
 	case PROP_SCALE:
 		g_value_set_double (value, model->scale);
@@ -235,6 +251,22 @@ ev_document_model_class_init (EvDocumentModelClass *klass)
 							       "Inverted Colors",
 							       "Whether document is displayed with inverted colors",
 							       FALSE,
+							       G_PARAM_READWRITE |
+                                                               G_PARAM_STATIC_STRINGS));
+	g_object_class_install_property (g_object_class,
+					 PROP_COLOR_OVERLAY,
+					 g_param_spec_boolean ("color-overlay",
+							       "Color Overlay",
+							       "Whether document is displayed with different colors",
+							       FALSE,
+							       G_PARAM_READWRITE |
+                                                               G_PARAM_STATIC_STRINGS));
+	g_object_class_install_property (g_object_class,
+					 PROP_COLOR_OVERLAY_VALUE,
+					 g_param_spec_string ("color-overlay-value",
+							       "Color Overlay Value",
+							       "Specific custom overlay color",
+							       "#EDD1B0",
 							       G_PARAM_READWRITE |
                                                                G_PARAM_STATIC_STRINGS));
 	g_object_class_install_property (g_object_class,
@@ -332,6 +364,8 @@ ev_document_model_init (EvDocumentModel *model)
 	model->sizing_mode = EV_SIZING_FIT_WIDTH;
 	model->continuous = TRUE;
 	model->inverted_colors = FALSE;
+	model->color_overlay = FALSE;
+	model->color_overlay_value = "#EDD1B0";
 	model->min_scale = DEFAULT_MIN_SCALE;
 	model->max_scale = DEFAULT_MAX_SCALE;
 }
@@ -631,6 +665,50 @@ ev_document_model_get_inverted_colors (EvDocumentModel *model)
 	g_return_val_if_fail (EV_IS_DOCUMENT_MODEL (model), FALSE);
 
 	return model->inverted_colors;
+}
+
+void
+ev_document_model_set_color_overlay (EvDocumentModel *model,
+				       gboolean         color_overlay)
+{
+	g_return_if_fail (EV_IS_DOCUMENT_MODEL (model));
+
+	if (color_overlay == model->color_overlay)
+		return;
+
+	model->color_overlay = color_overlay;
+
+	g_object_notify (G_OBJECT (model), "color-overlay");
+}
+
+gboolean
+ev_document_model_get_color_overlay (EvDocumentModel *model)
+{
+	g_return_val_if_fail (EV_IS_DOCUMENT_MODEL (model), FALSE);
+
+	return model->color_overlay;
+}
+
+void
+ev_document_model_set_color_overlay_value (EvDocumentModel *model,
+				       gchar         *color_overlay_value)
+{
+	g_return_if_fail (EV_IS_DOCUMENT_MODEL (model));
+
+	if (color_overlay_value == model->color_overlay_value)
+		return;
+
+	model->color_overlay_value = color_overlay_value;
+
+	g_object_notify (G_OBJECT (model), "color-overlay-value");
+}
+
+gchar*
+ev_document_model_get_color_overlay_value (EvDocumentModel *model)
+{
+	g_return_val_if_fail (EV_IS_DOCUMENT_MODEL (model), "#EDD1B0");
+
+	return model->color_overlay_value;
 }
 
 void

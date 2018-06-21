@@ -50,6 +50,7 @@ struct _EvPixbufCache
 	int end_page;
         ScrollDirection scroll_direction;
 	gboolean inverted_colors;
+	gboolean color_overlay;
 
 	gsize max_size;
 
@@ -288,6 +289,10 @@ copy_job_to_job_info (EvJobRender   *job_render,
 	set_device_scale_on_surface (job_info->surface, job_info->device_scale);
 	if (pixbuf_cache->inverted_colors) {
 		ev_document_misc_invert_surface (job_info->surface);
+	}
+	if (pixbuf_cache->color_overlay) {
+		ev_document_misc_color_overlay_surface (job_info->surface,
+			ev_document_model_get_color_overlay_value (pixbuf_cache->model));
 	}
 
 	job_info->points_set = FALSE;
@@ -899,6 +904,44 @@ ev_pixbuf_cache_set_inverted_colors (EvPixbufCache *pixbuf_cache,
 		job_info = pixbuf_cache->job_list + i;
 		if (job_info && job_info->surface)
 			ev_document_misc_invert_surface (job_info->surface);
+	}
+}
+
+void
+ev_pixbuf_cache_set_color_overlay (EvPixbufCache *pixbuf_cache,
+				     gboolean       color_overlay)
+{
+	gint i;
+
+	if (pixbuf_cache->color_overlay == color_overlay)
+		return;
+
+	pixbuf_cache->color_overlay = color_overlay;
+
+	for (i = 0; i < pixbuf_cache->preload_cache_size; i++) {
+		CacheJobInfo *job_info;
+
+		job_info = pixbuf_cache->prev_job + i;
+		if (job_info && job_info->surface) {
+			ev_document_misc_color_overlay_surface (job_info->surface,
+				ev_document_model_get_color_overlay_value (pixbuf_cache->model));
+		}
+
+		job_info = pixbuf_cache->next_job + i;
+		if (job_info && job_info->surface) {
+			ev_document_misc_color_overlay_surface (job_info->surface,
+				ev_document_model_get_color_overlay_value (pixbuf_cache->model));
+		}
+	}
+
+	for (i = 0; i < PAGE_CACHE_LEN (pixbuf_cache); i++) {
+		CacheJobInfo *job_info;
+
+		job_info = pixbuf_cache->job_list + i;
+		if (job_info && job_info->surface) {
+			ev_document_misc_color_overlay_surface (job_info->surface,
+				ev_document_model_get_color_overlay_value (pixbuf_cache->model));
+		}
 	}
 }
 

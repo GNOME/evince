@@ -87,6 +87,12 @@ gint             ev_document_model_get_rotation      (EvDocumentModel *model);
 void           ev_document_model_set_inverted_colors (EvDocumentModel *model,
 						      gboolean         inverted_colors);
 gboolean       ev_document_model_get_inverted_colors (EvDocumentModel *model);
+void           ev_document_model_set_color_overlay (EvDocumentModel *model,
+						      gboolean         color_overlay);
+gboolean       ev_document_model_get_color_overlay (EvDocumentModel *model);
+void           ev_document_model_set_color_overlay_value (EvDocumentModel *model,
+						      gchar         *color_overlay_value);
+gchar*       ev_document_model_get_color_overlay_value (EvDocumentModel *model);
 void             ev_document_model_set_continuous    (EvDocumentModel *model,
 						      gboolean         continuous);
 gboolean         ev_document_model_get_continuous    (EvDocumentModel *model);

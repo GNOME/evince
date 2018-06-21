@@ -69,7 +69,8 @@ void       ev_document_misc_paint_one_page       (cairo_t      *cr,
 						  GdkRectangle *area,
 						  GtkBorder    *border,
 						  gboolean      highlight,
-						  gboolean      inverted_colors);
+						  gboolean      inverted_colors,
+						  gboolean      color_overlay);
 
 cairo_surface_t *ev_document_misc_surface_from_pixbuf (GdkPixbuf *pixbuf);
 GdkPixbuf       *ev_document_misc_pixbuf_from_surface (cairo_surface_t *surface);
@@ -77,6 +78,8 @@ cairo_surface_t *ev_document_misc_surface_rotate_and_scale (cairo_surface_t *sur
 							    gint             dest_width,
 							    gint             dest_height,
 							    gint             dest_rotation);
+void             ev_document_misc_color_overlay_surface (cairo_surface_t *surface,
+						  gchar *color_over);
 void             ev_document_misc_invert_surface (cairo_surface_t *surface);
 void		 ev_document_misc_invert_pixbuf  (GdkPixbuf       *pixbuf);
 

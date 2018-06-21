@@ -53,6 +53,7 @@ HELP_FILES = \
 	index.page			\
 	introduction.page		\
 	invert-colors.page		\
+	color-overlay.page		\
 	license.page			\
 	legal.xml			\
 	legal-unported.xml \
