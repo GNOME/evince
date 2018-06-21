@@ -1077,6 +1077,7 @@ ev_application_startup (GApplication *gapplication)
           "win.rotate-left",            "<Ctrl>Left", NULL,
           "win.rotate-right",           "<Ctrl>Right", NULL,
           "win.inverted-colors",        "<Ctrl>I", NULL,
+          "win.color-overlay",        "<Ctrl>B", NULL,
           "win.reload",                 "<Ctrl>R", NULL,
           NULL
         };

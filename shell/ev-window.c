@@ -533,6 +533,9 @@ ev_window_update_actions_sensitivity (EvWindow *ev_window)
 				      !recent_view_mode);
 	ev_window_set_action_enabled (ev_window, "inverted-colors",
 				      has_pages && !recent_view_mode);
+	ev_window_set_action_enabled (ev_window, "color-overlay",
+				      has_pages && !recent_view_mode);
+
 #if WITH_GSPELL
 	ev_window_set_action_enabled (ev_window, "enable-spellchecking", TRUE);
 #else
@@ -1108,6 +1111,15 @@ ev_window_init_metadata_with_default_values (EvWindow *window)
 		ev_metadata_set_boolean (metadata, "inverted-colors",
 					 g_settings_get_boolean (settings, "inverted-colors"));
 	}
+	if (!ev_metadata_has_key (metadata, "color-overlay")) {
+		ev_metadata_set_boolean (metadata, "color-overlay",
+					 g_settings_get_boolean (settings, "color-overlay"));
+	}
+
+	/* Adding color overlay value. */
+	ev_metadata_set_string (metadata, "color-overlay-value",
+		g_settings_get_string ((window->priv->settings), "color-overlay-value"));
+
 	if (!ev_metadata_has_key (metadata, "sizing_mode")) {
 		EvSizingMode mode = g_settings_get_enum (settings, "sizing-mode");
 		GEnumValue *enum_value = g_enum_get_value (g_type_class_peek (EV_TYPE_SIZING_MODE), mode);
@@ -1166,10 +1178,12 @@ setup_model_from_metadata (EvWindow *window)
 	gdouble  zoom;
 	gint     rotation;
 	gboolean inverted_colors = FALSE;
+	gboolean color_overlay = FALSE;
 	gboolean continuous = FALSE;
 	gboolean dual_page = FALSE;
 	gboolean dual_page_odd_left = FALSE;
 	gboolean fullscreen = FALSE;
+	gchar *color_overlay_value;
 
 	if (!window->priv->metadata)
 		return;
@@ -1219,6 +1233,17 @@ setup_model_from_metadata (EvWindow *window)
 	/* Inverted Colors */
 	if (ev_metadata_get_boolean (window->priv->metadata, "inverted-colors", &inverted_colors)) {
 		ev_document_model_set_inverted_colors (window->priv->model, inverted_colors);
+	}
+
+	/* Color Overlay */
+	if (ev_metadata_get_boolean (window->priv->metadata, "color-overlay", &color_overlay)) {
+		ev_document_model_set_color_overlay (window->priv->model, color_overlay);
+	}
+
+	/* Color Overlay Value */
+	if (ev_metadata_get_string (window->priv->metadata, "color-overlay-value", &color_overlay_value)) {
+		color_overlay_value = g_settings_get_string (window->priv->settings, "color-overlay-value");
+		ev_document_model_set_color_overlay_value (window->priv->model, color_overlay_value);
 	}
 
 	/* Continuous */
@@ -1414,6 +1439,7 @@ ev_window_setup_default (EvWindow *ev_window)
 	ev_document_model_set_dual_page (model, g_settings_get_boolean (settings, "dual-page"));
 	ev_document_model_set_dual_page_odd_pages_left (model, g_settings_get_boolean (settings, "dual-page-odd-left"));
 	ev_document_model_set_inverted_colors (model, g_settings_get_boolean (settings, "inverted-colors"));
+	ev_document_model_set_color_overlay (model, g_settings_get_boolean (settings, "color-overlay"));
 	ev_document_model_set_sizing_mode (model, g_settings_get_enum (settings, "sizing-mode"));
 	if (ev_document_model_get_sizing_mode (model) == EV_SIZING_FREE)
 		ev_document_model_set_scale (model, g_settings_get_double (settings, "zoom"));
@@ -4595,6 +4621,18 @@ ev_window_cmd_view_inverted_colors (GSimpleAction *action,
 }
 
 static void
+ev_window_cmd_view_color_overlay (GSimpleAction *action,
+				    GVariant      *state,
+				    gpointer       user_data)
+{
+	EvWindow *ev_window = user_data;
+
+	ev_document_model_set_color_overlay (ev_window->priv->model,
+					       g_variant_get_boolean (state));
+	g_simple_action_set_state (action, state);
+}
+
+static void
 ev_window_cmd_view_enable_spellchecking (GSimpleAction *action,
 				    GVariant      *state,
 				    gpointer       user_data)
@@ -4628,6 +4666,8 @@ ev_window_cmd_edit_save_settings (GSimpleAction *action,
 				ev_document_model_get_fullscreen (model));
 	g_settings_set_boolean (settings, "inverted-colors",
 				ev_document_model_get_inverted_colors (model));
+	g_settings_set_boolean (settings, "color-overlay",
+				ev_document_model_get_color_overlay (model));
 	sizing_mode = ev_document_model_get_sizing_mode (model);
 	g_settings_set_enum (settings, "sizing-mode", sizing_mode);
 	if (sizing_mode == EV_SIZING_FREE) {
@@ -4968,6 +5008,23 @@ ev_window_inverted_colors_changed_cb (EvDocumentModel *model,
 	if (window->priv->metadata && !ev_window_is_empty (window))
 		ev_metadata_set_boolean (window->priv->metadata, "inverted-colors",
 					 inverted_colors);
+}
+
+static void
+ev_window_color_overlay_changed_cb (EvDocumentModel *model,
+			              GParamSpec      *pspec,
+			              EvWindow        *window)
+{
+	gboolean color_overlay = ev_document_model_get_color_overlay (model);
+	GAction *action;
+
+	action = g_action_map_lookup_action (G_ACTION_MAP (window), "color-overlay");
+	g_simple_action_set_state (G_SIMPLE_ACTION (action),
+				   g_variant_new_boolean (color_overlay));
+
+	if (window->priv->metadata && !ev_window_is_empty (window))
+		ev_metadata_set_boolean (window->priv->metadata, "color-overlay",
+					 color_overlay);
 }
 
 static void
@@ -5881,6 +5938,7 @@ static const GActionEntry actions[] = {
 	{ "dual-odd-left", NULL, NULL, "false", ev_window_cmd_dual_odd_pages_left },
 	{ "show-side-pane", NULL, NULL, "false", ev_window_view_cmd_toggle_sidebar },
 	{ "inverted-colors", NULL, NULL, "false", ev_window_cmd_view_inverted_colors },
+	{ "color-overlay", NULL, NULL, "false", ev_window_cmd_view_color_overlay },
 	{ "enable-spellchecking", NULL, NULL, "false", ev_window_cmd_view_enable_spellchecking },
 	{ "fullscreen", NULL, NULL, "false", ev_window_cmd_view_fullscreen },
 	{ "presentation", NULL, NULL, "false", ev_window_cmd_view_presentation },
@@ -7242,6 +7300,10 @@ ev_window_init (EvWindow *ev_window)
 	g_signal_connect (ev_window->priv->model,
 			  "notify::inverted-colors",
 			  G_CALLBACK (ev_window_inverted_colors_changed_cb),
+			  ev_window);
+	g_signal_connect (ev_window->priv->model,
+			  "notify::color-overlay",
+			  G_CALLBACK (ev_window_color_overlay_changed_cb),
 			  ev_window);
 
      	/* Connect sidebar signals */

@@ -77,6 +77,8 @@ void           ev_pixbuf_cache_reload_page 	    (EvPixbufCache  *pixbuf_cache,
 						     gdouble         scale);
 void           ev_pixbuf_cache_set_inverted_colors  (EvPixbufCache *pixbuf_cache,
 						     gboolean       inverted_colors);
+void           ev_pixbuf_cache_set_color_overlay  (EvPixbufCache *pixbuf_cache,
+						     gboolean       color_overlay);
 /* Selection */
 cairo_surface_t *ev_pixbuf_cache_get_selection_surface (EvPixbufCache   *pixbuf_cache,
 							gint             page,

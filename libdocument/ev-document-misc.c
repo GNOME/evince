@@ -325,7 +325,8 @@ ev_document_misc_paint_one_page (cairo_t      *cr,
 				 GdkRectangle *area,
 				 GtkBorder    *border,
 				 gboolean      highlight,
-				 gboolean      inverted_colors)
+				 gboolean      inverted_colors,
+				 gboolean      color_overlay)
 {
 	GtkStyleContext *context = gtk_widget_get_style_context (widget);
 	GtkStateFlags state = gtk_widget_get_state_flags (widget);
@@ -339,10 +340,11 @@ ev_document_misc_paint_one_page (cairo_t      *cr,
 	gdk_cairo_rectangle (cr, area);
 	cairo_fill (cr);
 
-	if (inverted_colors)
+	if (inverted_colors || color_overlay) {
 		cairo_set_source_rgb (cr, 0, 0, 0);
-	else
+	} else {
 		cairo_set_source_rgb (cr, 1, 1, 1);
+	}
 	cairo_rectangle (cr,
 			 area->x + border->left,
 			 area->y + border->top,
@@ -472,6 +474,23 @@ ev_document_misc_invert_surface (cairo_surface_t *surface) {
 	/* white + DIFFERENCE -> invert */
 	cairo_set_operator (cr, CAIRO_OPERATOR_DIFFERENCE);
 	cairo_set_source_rgb (cr, 1., 1., 1.);
+	cairo_paint(cr);
+	cairo_destroy (cr);
+}
+
+void
+ev_document_misc_color_overlay_surface (cairo_surface_t *surface, gchar *color_over) {
+	cairo_t *cr;
+
+	cr = cairo_create (surface);
+
+	/* Custom color overlay feature main draw */
+	GdkRGBA custom_bg;
+	gdk_rgba_parse (&custom_bg, color_over);
+	custom_bg.alpha = 1.0;
+	cairo_set_operator (cr, CAIRO_OPERATOR_DARKEN);
+	gdk_cairo_set_source_rgba (cr, &custom_bg);
+
 	cairo_paint(cr);
 	cairo_destroy (cr);
 }
