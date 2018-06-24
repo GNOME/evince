@@ -7,10 +7,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: evince master\n"
-"Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?"
-"product=evince&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2018-05-25 13:35+0000\n"
-"PO-Revision-Date: 2018-05-26 11:02+0200\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
+"POT-Creation-Date: 2018-06-06 13:12+0000\n"
+"PO-Revision-Date: 2018-06-24 14:02+0200\n"
 "Last-Translator: Fabio Tomat <f.t.public@gmail.com>\n"
 "Language-Team: Friulian <f.t.public@gmail.com>\n"
 "Language: fur\n"
@@ -319,25 +318,25 @@ msgid "Print document"
 msgstr "Stampe il document"
 
 #. Manually set name and icon
-#: ../data/evince.desktop.in.in.h:1 ../shell/ev-application.c:1025
+#: ../data/org.gnome.Evince.desktop.in.in.h:1 ../shell/ev-application.c:1025
 #: ../shell/ev-window-title.c:123 ../shell/main.c:298
 msgid "Document Viewer"
 msgstr "Visualizadôr di Documents"
 
-#: ../data/evince.desktop.in.in.h:2
+#: ../data/org.gnome.Evince.desktop.in.in.h:2
 msgid "View multi-page documents"
 msgstr "Mostre documents multi-pagjine"
 
-#: ../data/evince.desktop.in.in.h:3
+#: ../data/org.gnome.Evince.desktop.in.in.h:3
 msgid "pdf;ps;postscript;dvi;xps;djvu;tiff;document;presentation;viewer;"
 msgstr ""
 "pdf;ps;postscript;dvi;xps;djvu;tiff;document;presentazion;visualizadôr;"
 
-#: ../data/evince-previewer.desktop.in.in.h:1
+#: ../data/org.gnome.Evince-previewer.desktop.in.in.h:1
 msgid "Print Preview"
 msgstr "Anteprime di Stampe"
 
-#: ../data/evince-previewer.desktop.in.in.h:2
+#: ../data/org.gnome.Evince-previewer.desktop.in.in.h:2
 msgid "Preview before printing"
 msgstr "Mostre in anteprime il document di stampâ"
 
@@ -447,7 +446,7 @@ msgid "of %d"
 msgstr "di %d"
 
 #: ../libmisc/ev-page-action-widget.c:185 ../shell/ev-history.c:426
-#: ../shell/ev-sidebar-bookmarks.c:306 ../shell/ev-window.c:921
+#: ../shell/ev-sidebar-bookmarks.c:310 ../shell/ev-window.c:921
 #: ../shell/ev-window.c:4810
 #, c-format
 msgid "Page %s"
@@ -925,7 +924,7 @@ msgstr "Zonte une note testuâl"
 msgid "Add highlight annotation"
 msgstr "Zonte une note evidenziade"
 
-#: ../shell/ev-application.c:1020 ../evince.appdata.xml.in.h:1
+#: ../shell/ev-application.c:1020 ../org.gnome.Evince.appdata.xml.in.h:1
 msgid "Evince"
 msgstr "Evince"
 
@@ -1066,31 +1065,31 @@ msgstr ""
 msgid "_Replace"
 msgstr "_Sostituìs"
 
-#: ../shell/ev-sidebar-attachments.c:895
+#: ../shell/ev-sidebar-attachments.c:901
 msgid "Attachments"
 msgstr "Alegâts"
 
-#: ../shell/ev-sidebar-bookmarks.c:148
+#: ../shell/ev-sidebar-bookmarks.c:150
 msgid "_Open Bookmark"
 msgstr "_Vierç Segnelibri"
 
-#: ../shell/ev-sidebar-bookmarks.c:150
+#: ../shell/ev-sidebar-bookmarks.c:152
 msgid "_Rename Bookmark"
 msgstr "_Cambie non al Segnelibri"
 
-#: ../shell/ev-sidebar-bookmarks.c:152
+#: ../shell/ev-sidebar-bookmarks.c:154
 msgid "_Remove Bookmark"
 msgstr "_Gjave Segnelibri"
 
-#: ../shell/ev-sidebar-bookmarks.c:467 ../shell/ev-sidebar-bookmarks.c:468
+#: ../shell/ev-sidebar-bookmarks.c:473 ../shell/ev-sidebar-bookmarks.c:474
 msgid "Add bookmark"
 msgstr "Zonte segnelibri"
 
-#: ../shell/ev-sidebar-bookmarks.c:476 ../shell/ev-sidebar-bookmarks.c:477
+#: ../shell/ev-sidebar-bookmarks.c:482 ../shell/ev-sidebar-bookmarks.c:483
 msgid "Remove bookmark"
 msgstr "Gjave segnelibri"
 
-#: ../shell/ev-sidebar-bookmarks.c:593 ../shell/ev-toolbar.c:142
+#: ../shell/ev-sidebar-bookmarks.c:599 ../shell/ev-toolbar.c:142
 msgid "Bookmarks"
 msgstr "Segnelibri"
 
@@ -1847,21 +1846,36 @@ msgctxt "shortcut window"
 msgid "Go to previous page"
 msgstr "Va te pagjine prime"
 
-#: ../evince.appdata.xml.in.h:2
+#: ../org.gnome.Evince.appdata.xml.in.h:2
 msgid "Document viewer for popular document formats"
 msgstr "Visualizadôr di documents par i formâts plui popolârs"
 
-#: ../evince.appdata.xml.in.h:3
-msgid "This is a document viewer for the GNOME desktop."
-msgstr "Chest al è un visualizadôr di documents par l'ambient GNOME."
-
-#: ../evince.appdata.xml.in.h:4
+#: ../org.gnome.Evince.appdata.xml.in.h:3
 msgid ""
-"It supports the following document formats: PDF, PS, EPS, XPS, DjVu, TIFF, "
-"DVI (with SyncTeX), and Comic Books archives (CBR, CBT, CBZ, CB7)."
+"A document viewer for the GNOME desktop. You can view, search or annotate "
+"documents in many different formats."
 msgstr ""
-"Al supuarte chescj formâts di document: PDF, PS, EPS, XPS, DjVu, TIFF, DVI "
-"(cun SyncTeX), e archivis di fumets (CBR, CBT, CBZ, CB7)."
+"Un visualizadôr di documents pal scritori GNOME. Si pues viodi, cirî o meti "
+"notis tai documents di tancj formâts diferents."
+
+#: ../org.gnome.Evince.appdata.xml.in.h:4
+msgid ""
+"Evince supports documents in: PDF, PS, EPS, XPS, DjVu, TIFF, DVI (with "
+"SyncTeX), and Comic Books archives (CBR, CBT, CBZ, CB7)."
+msgstr ""
+"Evince al supuarte document in: PDF, PS, EPS, XPS, DjVu, TIFF, DVI (cun "
+"SyncTeX) e archivis di fumets (CBR, CBT, CBZ, CB7)."
+
+#: ../org.gnome.Evince.appdata.xml.in.h:5
+msgid "A clear, simple UI"
+msgstr "Une semplice, linde IU"
+
+#: ../org.gnome.Evince.appdata.xml.in.h:6
+msgid "Advanced highlighting and annotation"
+msgstr "Evidenziazion e notazion avanzade"
+
+#~ msgid "This is a document viewer for the GNOME desktop."
+#~ msgstr "Chest al è un visualizadôr di documents par l'ambient GNOME."
 
 #~ msgid "Open an existing document"
 #~ msgstr "Vierç un document esistent"
