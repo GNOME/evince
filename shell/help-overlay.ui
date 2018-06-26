@@ -10,6 +10,34 @@
         <child>
           <object class="GtkShortcutsGroup">
             <property name="visible">True</property>
+            <property name="title" translatable="yes" context="shortcut window">General</property>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="visible">True</property>
+                <property name="title" translatable="yes" context="shortcut window">Add bookmark</property>
+                <property name="accelerator">&lt;Primary&gt;D</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="visible">True</property>
+                <property name="title" translatable="yes" context="shortcut window">Toggle inverted colors</property>
+                <property name="accelerator">&lt;Primary&gt;I</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="visible">True</property>
+                <property name="title" translatable="yes" context="shortcut window">Toggle dual page</property>
+                <property name="accelerator">d</property>
+              </object>
+            </child>
+          </object>
+        </child>
+
+        <child>
+          <object class="GtkShortcutsGroup">
+            <property name="visible">True</property>
             <property name="title" translatable="yes" context="shortcut window">Opening, closing, saving and printing</property>
             <child>
               <object class="GtkShortcutsShortcut">
@@ -55,26 +83,7 @@
             </child>
           </object>
         </child>
-        <child>
-          <object class="GtkShortcutsGroup">
-            <property name="visible">True</property>
-            <property name="title" translatable="yes" context="shortcut window">Window</property>
-            <child>
-              <object class="GtkShortcutsShortcut">
-                <property name="visible">True</property>
-                <property name="title" translatable="yes" context="shortcut window">Toggle fullscreen</property>
-                <property name="accelerator">F11</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkShortcutsShortcut">
-                <property name="visible">True</property>
-                <property name="title" translatable="yes" context="shortcut window">Enter presentation mode</property>
-                <property name="accelerator">F5</property>
-              </object>
-            </child>
-          </object>
-        </child>
+
         <child>
           <object class="GtkShortcutsGroup">
             <property name="visible">True</property>
@@ -95,6 +104,7 @@
             </child>
           </object>
         </child>
+
         <child>
           <object class="GtkShortcutsGroup">
             <property name="visible">True</property>
@@ -118,6 +128,20 @@
                 <property name="visible">True</property>
                 <property name="title" translatable="yes" context="shortcut window">Move up/down a page several lines at a time</property>
                 <property name="accelerator">Page_Up Page_Down</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="visible">True</property>
+                <property name="title" translatable="yes" context="shortcut window">Go to next page</property>
+                <property name="accelerator">n</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="visible">True</property>
+                <property name="title" translatable="yes" context="shortcut window">Go to previous page</property>
+                <property name="accelerator">p</property>
               </object>
             </child>
             <child>
@@ -150,6 +174,7 @@
             </child>
           </object>
         </child>
+
         <child>
           <object class="GtkShortcutsGroup">
             <property name="visible">True</property>
@@ -177,6 +202,7 @@
             </child>
           </object>
         </child>
+
         <child>
           <object class="GtkShortcutsGroup">
             <property name="visible">True</property>
@@ -208,8 +234,8 @@
                 <property name="title" translatable="yes" context="shortcut window">Zoom out</property>
                 <property name="accelerator">&lt;Primary&gt;minus</property>
               </object>
-	    </child>
-	    <child>
+	          </child>
+	          <child>
               <object class="GtkShortcutsShortcut">
                 <property name="visible">True</property>
                 <property name="title" translatable="yes" context="shortcut window">Fit page</property>
@@ -222,8 +248,8 @@
                 <property name="title" translatable="yes" context="shortcut window">Fit width</property>
                 <property name="accelerator">w</property>
               </object>
-	    </child>
-	    <child>
+	          </child>
+	          <child>
               <object class="GtkShortcutsShortcut">
                 <property name="visible">True</property>
                 <property name="title" translatable="yes" context="shortcut window">Automatic zoom</property>
@@ -232,6 +258,42 @@
             </child>
           </object>
         </child>
+
+        <child>
+          <object class="GtkShortcutsGroup">
+            <property name="visible">True</property>
+            <property name="title" translatable="yes" context="shortcut window">Window</property>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="visible">True</property>
+                <property name="title" translatable="yes" context="shortcut window">Toggle fullscreen</property>
+                <property name="accelerator">F11</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="visible">True</property>
+                <property name="title" translatable="yes" context="shortcut window">Toggle sidebar</property>
+                <property name="accelerator">F9</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="visible">True</property>
+                <property name="title" translatable="yes" context="shortcut window">Toggle caret navigation</property>
+                <property name="accelerator">F7</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="visible">True</property>
+                <property name="title" translatable="yes" context="shortcut window">Enter presentation mode</property>
+                <property name="accelerator">F5</property>
+              </object>
+            </child>
+          </object>
+        </child>
+
         <child>
           <object class="GtkShortcutsGroup">
             <property name="visible">True</property>
