@@ -8,6 +8,7 @@
 
     <revision pkgversion="3.2" version="0.1" date="2011-09-05" status="final"/>
     <revision pkgversion="3.24" version="0.2" date="2017-08-10" status="final"/>
+    <revision pkgversion="3.30" version="0.3" date="2018-08-30" status="final"/>
     <credit type="author">
       <name>Phil Bull</name>
       <email>philbull@gmail.com</email>
@@ -31,6 +32,10 @@
    <credit type="editor">
        <name>Andre Klapper</name>
        <email>ak-47@gmx.net</email>
+    </credit>
+   <credit type="editor">
+       <name>Germán Poo-Caamaño</name>
+       <email>gpoo@gnome.org</email>
     </credit>
 
     <license>
@@ -87,9 +92,14 @@ document).</p></td>
         <td><p><key>Page Up</key> / <key>Page Down</key></p></td>
     </tr>
     <tr>
-        <td><p>Go to the previous/next page.</p></td>
+        <td><p>Go to the previous page.</p></td>
         <td><p><keyseq><key>Ctrl</key><key>Page Up</key></keyseq> /
-<keyseq><key>Ctrl</key><key>Page Down</key></keyseq></p></td>
+<key>P</key></p></td>
+    </tr>
+    <tr>
+        <td><p>Go to the next page.</p></td>
+        <td><p><keyseq><key>Ctrl</key><key>Page Down</key></keyseq> /
+<key>N</key></p></td>
     </tr>
 <tr>
         <td><p>Go to page number.</p></td>
@@ -115,9 +125,22 @@ selected).</p></td>
          <td><p><keyseq><key>Ctrl</key><key>End</key></keyseq></p></td>
     </tr>
     <tr>
-    	<td><p>Display the side bar with a table of contents.</p></td>
+        <td><p>Add a bookmark in the current page.</p></td>
+        <td><p><keyseq><key>Ctrl</key><key>D</key></keyseq></p></td>
+    </tr>
+    <tr>
+        <td><p>Delete the bookmark in the current page if there is one.</p></td>
+        <td><p><keyseq><key>Shift</key><key>Ctrl</key><key>D</key></keyseq></p></td>
+    </tr>
+    <tr>
+    	<td><p>Display the side bar with a table of contents and bookmarks.</p></td>
          <td><p><key>F9</key></p></td>
-    </tr></table>
+    </tr>
+    <tr>
+        <td><p>Enable caret navigation placing a moveable cursor in text pages, allowing you to move around and select text with the keyboard.</p></td>
+        <td><p><key>F7</key></p></td>
+    </tr>
+  </table>
 </section>
 
 <section id="copy">
@@ -125,7 +148,7 @@ selected).</p></td>
 <table frame="all" rules="cols" shade="rows">
     <tr>
         <td><p>Copy highlighted text.</p></td>
-        <td><p><keyseq><key>Ctrl</key><key>C</key></keyseq></p></td>
+        <td><p><keyseq><key>Ctrl</key><key>C</key></keyseq> / <keyseq><key>Ctrl</key><key>Insert</key></keyseq></p></td>
     </tr>
     <tr>
         <td><p>Select all the text in a document.</p></td>
@@ -141,17 +164,19 @@ selected).</p></td>
         <td><p>
         Show the toolbar that lets you search for words in the document. The
         search box is automatically highlighted when you press this, and the
-        search will start as soon as you type some text.
+        search will start as soon as you type some text. If you select a text
+        in the document before searching, then the search will start using that
+        text as input.
         </p></td>
-        <td><p><keyseq><key>Ctrl</key><key>F</key></keyseq></p></td>
+        <td><p><keyseq><key>Ctrl</key><key>F</key></keyseq> / <key>/</key></p></td>
     </tr>
     <tr>
         <td><p>Go to the next search result.</p></td>
-        <td><p><keyseq><key>Ctrl</key><key>G</key></keyseq></p></td>
+        <td><p><keyseq><key>Ctrl</key><key>G</key></keyseq> / <key>F3</key></p></td>
     </tr>
     <tr>
         <td><p>Go to the previous search result.</p></td>
-        <td><p><keyseq><key>Ctrl</key><key>Shift</key><key>G</key></keyseq></p></td>
+        <td><p><keyseq><key>Ctrl</key><key>Shift</key><key>G</key></keyseq> / <keyseq><key>Shift</key><key>F3</key></keyseq></p></td>
     </tr>
 </table>
 </section>
@@ -169,12 +194,75 @@ selected).</p></td>
 arrow</key></keyseq></p></td>
     </tr>
     <tr>
+        <td><p>Default zoom.</p></td>
+        <td><p><keyseq><key>Ctrl</key><key>0</key></keyseq></p></td>
+    </tr>
+    <tr>
         <td><p>Zoom in.</p></td>
-        <td><p><keyseq><key>Ctrl</key><key>+</key></keyseq></p></td>
+        <td><p><keyseq><key>Ctrl</key><key>+</key></keyseq> / <key>=</key> /
+               <keyseq><key>Ctrl</key><key>=</key></keyseq></p></td>
     </tr>
     <tr>
         <td><p>Zoom out.</p></td>
         <td><p><keyseq><key>Ctrl</key><key>-</key></keyseq></p></td>
+    </tr>
+    <tr>
+        <td><p>Fit the page into the window.</p></td>
+        <td><p><key>F</key></p></td>
+    </tr>
+    <tr>
+        <td><p>Fit the content width to the space available.</p></td>
+        <td><p><key>W</key></p></td>
+    </tr>
+    <tr>
+        <td><p>Automatic zoom.</p></td>
+        <td><p><key>A</key></p></td>
+    </tr>
+</table>
+</section>
+
+<section id="window">
+    <title>Window</title>
+<table frame="all" rules="cols" shade="rows">
+    <tr>
+        <td><p>Use the full screen to view the document.</p></td>
+        <td><p><key>F11</key></p></td>
+    </tr>
+    <tr>
+        <td><p>Start a presentation.</p></td>
+        <td><p><key>F5</key> / <keyseq><key>Shift</key><key>F5</key></keyseq></p></td>
+    </tr>
+</table>
+</section>
+
+<section id="document">
+    <title>Document view</title>
+<table frame="all" rules="cols" shade="rows">
+    <tr>
+        <td><p>Invert background and text colors.</p></td>
+        <td><p><keyseq><key>Ctrl</key><key>I</key></keyseq></p></td>
+    </tr>
+    <tr>
+        <td><p>Swap between continuous and page by page view of the document.</p></td>
+        <td><p><key>C</key></p></td>
+    </tr>
+    <tr>
+        <td><p>Display two pages side by side.</p></td>
+        <td><p><key>D</key></p></td>
+    </tr>
+</table>
+</section>
+
+<section id="annotate">
+    <title>Annotate the document</title>
+<table frame="all" rules="cols" shade="rows">
+    <tr>
+        <td><p>Add a post-it like note.</p></td>
+        <td><p><key>S</key></p></td>
+    </tr>
+    <tr>
+        <td><p>Highlight text.</p></td>
+        <td><p><keyseq><key>Ctrl</key><key>H</key></keyseq></p></td>
     </tr>
 </table>
 </section>
