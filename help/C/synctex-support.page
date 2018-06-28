@@ -7,9 +7,14 @@
     <desc>How to add support for SyncTeX.</desc>
 
     <revision pkgversion="3.2" version="0.1" date="2011-09-05" status="final"/>
+    <revision pkgversion="3.28" version="0.2" date="2018-06-28" status="final"/>
     <credit type="author">
       <name>Tiffany Antopolski</name>
       <email>tiffany@antopolski.com</email>
+    </credit>
+    <credit type="editor">
+      <name>Germán Poo-Caamaño</name>
+      <email>gpoo@gnome.org</email>
     </credit>
     <license>
       <p>Creative Commons Share Alike 3.0</p>
@@ -24,12 +29,12 @@ The following packages need to be installed in order to add support for SyncTeX:
 <list>
   <item>
     <p>
-      texlive-extra-utils
+      A LaTeX engine with SyncTex support, such as <app>pdflatex</app>.
     </p>
   </item>
   <item>
     <p>
-      gedit-plugins
+      A text editor with SynxTeX support. For example, for <app>gedit</app> with gedit-plugins installed.
     </p>
   </item>
 </list>
