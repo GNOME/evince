@@ -8,6 +8,7 @@
 
     <revision pkgversion="3.2" version="0.1" date="2011-09-05" status="final"/>
     <revision pkgversion="3.24" version="0.2" date="2017-08-10" status="final"/>
+    <revision pkgversion="3.28" version="0.3" date="2018-06-28" status="final"/>
     <credit type="author">
       <name>Phil Bull</name>
       <email>philbull@gmail.com</email>
@@ -31,6 +32,10 @@
    <credit type="editor">
        <name>Andre Klapper</name>
        <email>ak-47@gmx.net</email>
+    </credit>
+   <credit type="editor">
+       <name>Germán Poo-Caamaño</name>
+       <email>gpoo@gnome.org</email>
     </credit>
 
     <license>
@@ -87,9 +92,14 @@ document).</p></td>
         <td><p><key>Page Up</key> / <key>Page Down</key></p></td>
     </tr>
     <tr>
-        <td><p>Go to the previous/next page.</p></td>
+        <td><p>Go to the previous page.</p></td>
         <td><p><keyseq><key>Ctrl</key><key>Page Up</key></keyseq> /
-<keyseq><key>Ctrl</key><key>Page Down</key></keyseq></p></td>
+<key>P</key></p></td>
+    </tr>
+    <tr>
+        <td><p>Go to the next page.</p></td>
+        <td><p><keyseq><key>Ctrl</key><key>Page Down</key></keyseq> /
+<key>N</key></p></td>
     </tr>
 <tr>
         <td><p>Go to page number.</p></td>
@@ -115,9 +125,18 @@ selected).</p></td>
          <td><p><keyseq><key>Ctrl</key><key>End</key></keyseq></p></td>
     </tr>
     <tr>
-    	<td><p>Display the side bar with a table of contents.</p></td>
+        <td><p>Add a bookmark in the current page.</p></td>
+        <td><p><keyseq><key>Ctrl</key><key>D</key></keyseq></p></td>
+    </tr>
+    <tr>
+    	<td><p>Display the side bar with a table of contents and bookmarks.</p></td>
          <td><p><key>F9</key></p></td>
-    </tr></table>
+    </tr>
+    <tr>
+        <td><p>Enable caret navigation placing a moveable cursor in text pages, allowing you to move around and select text with the keyboard.</p></td>
+        <td><p><key>F7</key></p></td>
+    </tr>
+  </table>
 </section>
 
 <section id="copy">
@@ -175,6 +194,50 @@ arrow</key></keyseq></p></td>
     <tr>
         <td><p>Zoom out.</p></td>
         <td><p><keyseq><key>Ctrl</key><key>-</key></keyseq></p></td>
+    </tr>
+    <tr>
+        <td><p>Fit the page into the window.</p></td>
+        <td><p><key>F</key></p></td>
+    </tr>
+    <tr>
+        <td><p>Fit the content width to the space available.</p></td>
+        <td><p><key>W</key></p></td>
+    </tr>
+    <tr>
+        <td><p>Automatic zoom.</p></td>
+        <td><p><key>A</key></p></td>
+    </tr>
+</table>
+</section>
+
+<section id="window">
+    <title>Window</title>
+<table frame="all" rules="cols" shade="rows">
+    <tr>
+        <td><p>Toggle fullscreen mode.</p></td>
+        <td><p><key>F11</key></p></td>
+    </tr>
+    <tr>
+        <td><p>Start a presentation.</p></td>
+        <td><p><key>F5</key></p></td>
+    </tr>
+</table>
+</section>
+
+<section id="document">
+    <title>Document view</title>
+<table frame="all" rules="cols" shade="rows">
+    <tr>
+        <td><p>Invert background and text colors.</p></td>
+        <td><p><keyseq><key>Ctrl</key><key>I</key></keyseq></p></td>
+    </tr>
+    <tr>
+        <td><p>Swap between continuous and page by page view of the document.</p></td>
+        <td><p><key>C</key></p></td>
+    </tr>
+    <tr>
+        <td><p>Display two pages side by side.</p></td>
+        <td><p><key>D</key></p></td>
     </tr>
 </table>
 </section>
