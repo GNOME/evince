@@ -203,8 +203,7 @@ ev_toolbar_constructed (GObject *object)
         gtk_header_bar_pack_start (GTK_HEADER_BAR (ev_toolbar), button);
 
         /* Edit Annots */
-        /* FIXME: Use a better icon for edit than text editor */
-        button = ev_toolbar_create_toggle_button (ev_toolbar, "win.toggle-edit-annots", "accessories-text-editor-symbolic",
+        button = ev_toolbar_create_toggle_button (ev_toolbar, "win.toggle-edit-annots", "document-edit-symbolic",
                                                   _("Annotate the document"));
         ev_toolbar->priv->annots_button = button;
         gtk_widget_set_margin_end (button, 6);
