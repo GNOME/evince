@@ -186,27 +186,23 @@ ev_toolbar_constructed (GObject *object)
         ev_toolbar->priv->page_selector = tool_item;
         ev_page_action_widget_set_model (EV_PAGE_ACTION_WIDGET (tool_item),
                                          ev_window_get_document_model (ev_toolbar->priv->window));
-        gtk_widget_set_margin_end (tool_item, 6);
         gtk_header_bar_pack_start (GTK_HEADER_BAR (ev_toolbar), tool_item);
 
         /* History */
         hbox = ev_history_action_new (ev_window_get_history (ev_toolbar->priv->window));
         ev_toolbar->priv->history_action = hbox;
-        gtk_widget_set_margin_end (hbox, 6);
         gtk_header_bar_pack_start (GTK_HEADER_BAR (ev_toolbar), hbox);
 
         /* Find */
         button = ev_toolbar_create_toggle_button (ev_toolbar, "win.toggle-find", "edit-find-symbolic",
                                                   _("Find a word or phrase in the document"));
         ev_toolbar->priv->find_button = button;
-        gtk_widget_set_margin_end (button, 6);
         gtk_header_bar_pack_start (GTK_HEADER_BAR (ev_toolbar), button);
 
         /* Edit Annots */
         button = ev_toolbar_create_toggle_button (ev_toolbar, "win.toggle-edit-annots", "document-edit-symbolic",
                                                   _("Annotate the document"));
         ev_toolbar->priv->annots_button = button;
-        gtk_widget_set_margin_end (button, 6);
         gtk_header_bar_pack_start (GTK_HEADER_BAR (ev_toolbar), button);
 
         /* Action Menu */
@@ -237,7 +233,6 @@ ev_toolbar_constructed (GObject *object)
         g_signal_connect (vbox, "activated",
                           G_CALLBACK (zoom_selector_activated),
                           ev_toolbar);
-        gtk_widget_set_margin_end (vbox, 6);
         gtk_header_bar_pack_end (GTK_HEADER_BAR (ev_toolbar), vbox);
 
         ev_toolbar->priv->bookmarks_section = G_MENU (gtk_builder_get_object (builder, "bookmarks"));
