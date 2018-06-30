@@ -92,6 +92,7 @@ static GtkWidget *
 ev_toolbar_create_button (EvToolbar   *ev_toolbar,
                           const gchar *action_name,
                           const gchar *icon_name,
+                          const gchar *label,
                           const gchar *tooltip)
 {
         GtkWidget *button = gtk_button_new ();
@@ -100,7 +101,10 @@ ev_toolbar_create_button (EvToolbar   *ev_toolbar,
         image = gtk_image_new_from_icon_name (icon_name, GTK_ICON_SIZE_MENU);
 
         gtk_widget_set_valign (button, GTK_ALIGN_CENTER);
-        gtk_button_set_image (GTK_BUTTON (button), image);
+        if (icon_name)
+                gtk_button_set_image (GTK_BUTTON (button), image);
+        if (label)
+                gtk_button_set_label (GTK_BUTTON (button), label);
         ev_toolbar_set_button_action (ev_toolbar, GTK_BUTTON (button), action_name, tooltip);
 
         return button;
@@ -198,7 +202,8 @@ ev_toolbar_constructed (GObject *object)
         builder = gtk_builder_new_from_resource ("/org/gnome/evince/gtk/menus.ui");
 
         button = ev_toolbar_create_button (ev_toolbar, "win.open",
-                                           "document-open-symbolic",
+                                           NULL,
+                                           _("Open…"),
                                            _("Open an existing document"));
         ev_toolbar->priv->open_button = button;
         gtk_container_add (GTK_CONTAINER (ev_toolbar), button);
