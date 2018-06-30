@@ -50,6 +50,7 @@ struct _EvToolbarPrivate {
         GtkWidget *page_selector;
         GtkWidget *navigation_action;
         GtkWidget *find_button;
+        GtkWidget *open_button;
         GtkWidget *annots_button;
         GMenu *bookmarks_section;
 
@@ -85,6 +86,24 @@ ev_toolbar_set_button_action (EvToolbar   *ev_toolbar,
         gtk_button_set_label (button, NULL);
         gtk_button_set_focus_on_click (button, FALSE);
         gtk_widget_set_tooltip_text (GTK_WIDGET (button), tooltip);
+}
+
+static GtkWidget *
+ev_toolbar_create_button (EvToolbar   *ev_toolbar,
+                          const gchar *action_name,
+                          const gchar *icon_name,
+                          const gchar *tooltip)
+{
+        GtkWidget *button = gtk_button_new ();
+        GtkWidget *image;
+
+        image = gtk_image_new_from_icon_name (icon_name, GTK_ICON_SIZE_MENU);
+
+        gtk_widget_set_valign (button, GTK_ALIGN_CENTER);
+        gtk_button_set_image (GTK_BUTTON (button), image);
+        ev_toolbar_set_button_action (ev_toolbar, GTK_BUTTON (button), action_name, tooltip);
+
+        return button;
 }
 
 static GtkWidget *
@@ -177,6 +196,13 @@ ev_toolbar_constructed (GObject *object)
         G_OBJECT_CLASS (ev_toolbar_parent_class)->constructed (object);
 
         builder = gtk_builder_new_from_resource ("/org/gnome/evince/gtk/menus.ui");
+
+        button = ev_toolbar_create_button (ev_toolbar, "win.open",
+                                           "document-open-symbolic",
+                                           _("Open an existing document"));
+        ev_toolbar->priv->open_button = button;
+        gtk_container_add (GTK_CONTAINER (ev_toolbar), button);
+        gtk_widget_set_margin_end (button, 6);
 
         /* Page selector */
         /* Use EvPageActionWidget for now, since the page selector action is also used by the previewer */
@@ -340,6 +366,15 @@ ev_toolbar_set_mode (EvToolbar     *ev_toolbar,
 
         switch (mode) {
         case EV_TOOLBAR_MODE_NORMAL:
+                gtk_widget_show (priv->view_menu_button);
+                gtk_widget_show (priv->action_menu_button);
+                gtk_widget_show (priv->history_action);
+                gtk_widget_show (priv->zoom_action);
+                gtk_widget_show (priv->page_selector);
+                gtk_widget_show (priv->find_button);
+                gtk_widget_show (priv->annots_button);
+                gtk_widget_hide (priv->open_button);
+                break;
         case EV_TOOLBAR_MODE_FULLSCREEN:
                 gtk_widget_show (priv->view_menu_button);
                 gtk_widget_show (priv->action_menu_button);
@@ -348,6 +383,7 @@ ev_toolbar_set_mode (EvToolbar     *ev_toolbar,
                 gtk_widget_show (priv->page_selector);
                 gtk_widget_show (priv->find_button);
                 gtk_widget_show (priv->annots_button);
+                gtk_widget_hide (priv->open_button);
                 break;
 	case EV_TOOLBAR_MODE_RECENT_VIEW:
                 gtk_widget_hide (priv->view_menu_button);
@@ -357,6 +393,7 @@ ev_toolbar_set_mode (EvToolbar     *ev_toolbar,
                 gtk_widget_hide (priv->page_selector);
                 gtk_widget_hide (priv->find_button);
                 gtk_widget_hide (priv->annots_button);
+                gtk_widget_show (priv->open_button);
                 break;
         }
 }

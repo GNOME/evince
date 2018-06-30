@@ -94,7 +94,6 @@ EvHistory      *ev_window_get_history                    (EvWindow       *ev_win
 EvDocumentModel *ev_window_get_document_model            (EvWindow       *ev_window);
 void            ev_window_focus_view                     (EvWindow       *ev_window);
 GtkWidget      *ev_window_get_toolbar			 (EvWindow	 *ev_window);
-void            ev_window_file_open_dialog               (EvWindow       *ev_window);
 
 G_END_DECLS
 
