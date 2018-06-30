@@ -371,15 +371,6 @@ ev_toolbar_set_mode (EvToolbar     *ev_toolbar,
 
         switch (mode) {
         case EV_TOOLBAR_MODE_NORMAL:
-                gtk_widget_show (priv->view_menu_button);
-                gtk_widget_show (priv->action_menu_button);
-                gtk_widget_show (priv->history_action);
-                gtk_widget_show (priv->zoom_action);
-                gtk_widget_show (priv->page_selector);
-                gtk_widget_show (priv->find_button);
-                gtk_widget_show (priv->annots_button);
-                gtk_widget_hide (priv->open_button);
-                break;
         case EV_TOOLBAR_MODE_FULLSCREEN:
                 gtk_widget_show (priv->view_menu_button);
                 gtk_widget_show (priv->action_menu_button);
