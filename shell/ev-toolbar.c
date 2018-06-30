@@ -207,7 +207,6 @@ ev_toolbar_constructed (GObject *object)
                                            _("Open an existing document"));
         ev_toolbar->priv->open_button = button;
         gtk_container_add (GTK_CONTAINER (ev_toolbar), button);
-        gtk_widget_set_margin_end (button, 6);
 
         /* Page selector */
         /* Use EvPageActionWidget for now, since the page selector action is also used by the previewer */
