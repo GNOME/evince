@@ -1150,10 +1150,8 @@ pdf_document_fonts_fill_model (EvDocumentFonts *document_fonts,
 		const char *embedded;
 		const char *standard_str = "";
 		const gchar *substitute;
-		const gchar *substitute_text;
 		const gchar *filename;
 		const gchar *encoding;
-		const gchar *encoding_text;
 		char *details;
 		
 		name = poppler_fonts_iter_get_name (iter);
@@ -1201,18 +1199,41 @@ pdf_document_fonts_fill_model (EvDocumentFonts *document_fonts,
 
 		substitute = poppler_fonts_iter_get_substitute_name (iter);
 		filename = poppler_fonts_iter_get_file_name (iter);
-		encoding_text = _("Encoding");
-		substitute_text = _("Substituting with");
 
 		if (substitute && filename)
-			details = g_markup_printf_escaped ("%s%s\n%s: %s\n%s\n%s <b>%s</b>\n(%s)",
+			/* Translators: string is a concatenation of previous
+			 * translated strings to indicate the fonts properties
+			 * in a PDF document.
+			 *
+			 * Example:
+			 * Type 1 (One of the standard 14 Fonts)
+			 * Not embedded
+			 * Substituting with TeXGyreTermes-Regular
+			 * (/usr/share/textmf/.../texgyretermes-regular.otf)
+			 */
+			details = g_markup_printf_escaped (_("%s%s\n"
+			                                     "Encoding: %s\n"
+			                                     "%s\n"
+			                                     "Substituting with <b>%s</b>\n"
+			                                     "(%s)"),
 							   type_str, standard_str,
-							   encoding_text, encoding, embedded,
-							   substitute_text, substitute, filename);
+							   encoding, embedded,
+							   substitute, filename);
 		else
-			details = g_markup_printf_escaped ("%s%s\n%s: %s\n%s",
+			/* Translators: string is a concatenation of previous
+			 * translated strings to indicate the fonts properties
+			 * in a PDF document.
+			 *
+			 * Example:
+			 * TrueType (CID)
+			 * Encoding: Custom
+			 * Embedded subset
+			 */
+			details = g_markup_printf_escaped (_("%s%s\n"
+			                                     "Encoding: %s\n"
+			                                     "%s"),
 							   type_str, standard_str,
-							   encoding_text, encoding, embedded);
+							   encoding, embedded);
 
 		gtk_list_store_append (GTK_LIST_STORE (model), &list_iter);
 		gtk_list_store_set (GTK_LIST_STORE (model), &list_iter,
