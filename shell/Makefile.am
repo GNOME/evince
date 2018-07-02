@@ -23,8 +23,6 @@ evince_SOURCES=				\
 	ev-find-sidebar.c		\
 	ev-history.c			\
 	ev-history.h			\
-	ev-history-action.c		\
-	ev-history-action.h		\
 	ev-keyring.h			\
 	ev-keyring.c			\
 	ev-loading-message.c		\
