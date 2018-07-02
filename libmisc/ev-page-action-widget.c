@@ -45,10 +45,8 @@ enum
         PROP_MENU
 };
 
-struct _EvPageActionWidget
+struct _EvPageActionWidgetPrivate
 {
-	GtkToolItem parent;
-
 	EvDocument *document;
 	EvDocumentModel *doc_model;
 	GMenu *menu;
@@ -70,14 +68,15 @@ static gboolean
 show_page_number_in_pages_label (EvPageActionWidget *action_widget,
                                  gint                page)
 {
+        EvPageActionWidgetPrivate *priv = action_widget->priv;
         gchar   *page_label;
         gboolean retval;
 
-        if (!ev_document_has_text_page_labels (action_widget->document))
+        if (!ev_document_has_text_page_labels (priv->document))
                 return FALSE;
 
         page_label = g_strdup_printf ("%d", page + 1);
-        retval = g_strcmp0 (page_label, gtk_entry_get_text (GTK_ENTRY (action_widget->entry))) != 0;
+        retval = g_strcmp0 (page_label, gtk_entry_get_text (GTK_ENTRY (priv->entry))) != 0;
         g_free (page_label);
 
         return retval;
@@ -87,15 +86,16 @@ static void
 update_pages_label (EvPageActionWidget *action_widget,
 		    gint                page)
 {
+	EvPageActionWidgetPrivate *priv = action_widget->priv;
 	char *label_text;
 	gint n_pages;
 
-	n_pages = ev_document_get_n_pages (action_widget->document);
+	n_pages = ev_document_get_n_pages (priv->document);
         if (show_page_number_in_pages_label (action_widget, page))
                 label_text = g_strdup_printf (_("(%d of %d)"), page + 1, n_pages);
         else
                 label_text = g_strdup_printf (_("of %d"), n_pages);
-	gtk_entry_set_text (GTK_ENTRY (action_widget->label), label_text);
+	gtk_entry_set_text (GTK_ENTRY (priv->label), label_text);
 	g_free (label_text);
 }
 
@@ -103,15 +103,17 @@ static void
 ev_page_action_widget_set_current_page (EvPageActionWidget *action_widget,
 					gint                page)
 {
+	EvPageActionWidgetPrivate *priv = action_widget->priv;
+
 	if (page >= 0) {
 		gchar *page_label;
 
-		page_label = ev_document_get_page_label (action_widget->document, page);
-		gtk_entry_set_text (GTK_ENTRY (action_widget->entry), page_label);
-		gtk_editable_set_position (GTK_EDITABLE (action_widget->entry), -1);
+		page_label = ev_document_get_page_label (priv->document, page);
+		gtk_entry_set_text (GTK_ENTRY (priv->entry), page_label);
+		gtk_editable_set_position (GTK_EDITABLE (priv->entry), -1);
 		g_free (page_label);
 	} else {
-		gtk_entry_set_text (GTK_ENTRY (action_widget->entry), "");
+		gtk_entry_set_text (GTK_ENTRY (priv->entry), "");
 	}
 
 	update_pages_label (action_widget, page);
@@ -120,6 +122,7 @@ ev_page_action_widget_set_current_page (EvPageActionWidget *action_widget,
 static void
 ev_page_action_widget_update_max_width (EvPageActionWidget *action_widget)
 {
+	EvPageActionWidgetPrivate *priv = action_widget->priv;
         gchar *max_label;
         gint   n_pages;
         gint   max_label_len;
@@ -127,19 +130,19 @@ ev_page_action_widget_update_max_width (EvPageActionWidget *action_widget)
         gchar *max_page_numeric_label;
         gint   padding = 0;
 
-        n_pages = ev_document_get_n_pages (action_widget->document);
+        n_pages = ev_document_get_n_pages (priv->document);
 
-        if (action_widget->menu) {
-                gtk_entry_set_icon_from_icon_name (GTK_ENTRY (action_widget->label),
+        if (priv->menu) {
+                gtk_entry_set_icon_from_icon_name (GTK_ENTRY (priv->label),
                                                    GTK_ENTRY_ICON_SECONDARY,
                                                    "go-down-symbolic");
                 /* width + 3 (for the icon). Similarly to EvZoomAction. */
                 padding = 3;
         }
 
-        max_page_label = ev_document_get_page_label (action_widget->document, n_pages - 1);
+        max_page_label = ev_document_get_page_label (priv->document, n_pages - 1);
         max_page_numeric_label = g_strdup_printf ("%d", n_pages);
-        if (ev_document_has_text_page_labels (action_widget->document) != 0) {
+        if (ev_document_has_text_page_labels (priv->document) != 0) {
                 max_label = g_strdup_printf (_("(%d of %d)"), n_pages, n_pages);
                 /* Do not take into account the parentheses for the size computation */
                 max_label_len = g_utf8_strlen (max_label, -1) - 2;
@@ -149,11 +152,11 @@ ev_page_action_widget_update_max_width (EvPageActionWidget *action_widget)
         }
         g_free (max_page_label);
 
-        gtk_entry_set_width_chars (GTK_ENTRY (action_widget->label), max_label_len + padding);
+        gtk_entry_set_width_chars (GTK_ENTRY (priv->label), max_label_len + padding);
         g_free (max_label);
 
-        max_label_len = ev_document_get_max_label_len (action_widget->document);
-        gtk_entry_set_width_chars (GTK_ENTRY (action_widget->entry),
+        max_label_len = ev_document_get_max_label_len (priv->document);
+        gtk_entry_set_width_chars (GTK_ENTRY (priv->entry),
                                    CLAMP (max_label_len, strlen (max_page_numeric_label) + 1, 12));
         g_free (max_page_numeric_label);
 }
@@ -170,12 +173,13 @@ page_changed_cb (EvDocumentModel    *model,
 static gboolean
 page_scroll_cb (EvPageActionWidget *action_widget, GdkEventScroll *event)
 {
-	EvDocumentModel *model = action_widget->doc_model;
+	EvPageActionWidgetPrivate *priv = action_widget->priv;
+	EvDocumentModel *model = priv->doc_model;
 	gint pageno;
 
 	pageno = ev_document_model_get_page (model);
 	if ((event->direction == GDK_SCROLL_DOWN) &&
-	    (pageno < ev_document_get_n_pages (action_widget->document) - 1))
+	    (pageno < ev_document_get_n_pages (priv->document) - 1))
 		pageno++;
 	if ((event->direction == GDK_SCROLL_UP) && (pageno > 0))
 		pageno--;
@@ -187,6 +191,7 @@ page_scroll_cb (EvPageActionWidget *action_widget, GdkEventScroll *event)
 static void
 activate_cb (EvPageActionWidget *action_widget)
 {
+	EvPageActionWidgetPrivate *priv = action_widget->priv;
 	EvDocumentModel *model;
 	const char *text;
 	EvLinkDest *link_dest;
@@ -195,10 +200,10 @@ activate_cb (EvPageActionWidget *action_widget)
 	gchar *link_text;
 	gint current_page;
 
-	model = action_widget->doc_model;
+	model = priv->doc_model;
 	current_page = ev_document_model_get_page (model);
 
-	text = gtk_entry_get_text (GTK_ENTRY (action_widget->entry));
+	text = gtk_entry_get_text (GTK_ENTRY (priv->entry));
 
 	link_dest = ev_link_dest_new_page_label (text);
 	link_action = ev_link_action_new_dest (link_dest);
@@ -219,8 +224,10 @@ activate_cb (EvPageActionWidget *action_widget)
 static gboolean
 focus_out_cb (EvPageActionWidget *action_widget)
 {
+	EvPageActionWidgetPrivate *priv = action_widget->priv;
+
         ev_page_action_widget_set_current_page (action_widget,
-                                                ev_document_model_get_page (action_widget->doc_model));
+                                                ev_document_model_get_page (priv->doc_model));
         return FALSE;
 }
 
@@ -228,32 +235,35 @@ static void
 popup_menu_closed (GtkPopover         *popup,
                    EvPageActionWidget *action_widget)
 {
-	if (action_widget->popup != popup)
+	EvPageActionWidgetPrivate *priv = action_widget->priv;
+
+	if (priv->popup != popup)
 		return;
 
-	action_widget->popup_shown = FALSE;
-	action_widget->popup = NULL;
+	priv->popup_shown = FALSE;
+	priv->popup = NULL;
 }
 
 static GtkPopover *
 get_popup (EvPageActionWidget *action_widget)
 {
+	EvPageActionWidgetPrivate *priv = action_widget->priv;
 	GdkRectangle rect;
 
-	if (action_widget->popup)
-		return action_widget->popup;
+	if (priv->popup)
+		return priv->popup;
 
-	action_widget->popup = GTK_POPOVER (gtk_popover_new_from_model (GTK_WIDGET (action_widget),
-	                                                                G_MENU_MODEL (action_widget->menu)));
-	g_signal_connect (action_widget->popup, "closed",
+	priv->popup = GTK_POPOVER (gtk_popover_new_from_model (GTK_WIDGET (priv->label),
+	                                                       G_MENU_MODEL (priv->menu)));
+	g_signal_connect (priv->popup, "closed",
 	                  G_CALLBACK (popup_menu_closed),
                           action_widget);
-	gtk_entry_get_icon_area (GTK_ENTRY (action_widget->label),
+	gtk_entry_get_icon_area (GTK_ENTRY (priv->label),
 	                         GTK_ENTRY_ICON_SECONDARY, &rect);
-	gtk_popover_set_pointing_to (action_widget->popup, &rect);
-	gtk_popover_set_position (action_widget->popup, GTK_POS_BOTTOM);
+	gtk_popover_set_pointing_to (priv->popup, &rect);
+	gtk_popover_set_position (priv->popup, GTK_POS_BOTTOM);
 
-	return action_widget->popup;
+	return priv->popup;
 }
 
 static void
@@ -262,11 +272,13 @@ entry_icon_press_callback (GtkEntry             *entry,
                            GdkEventButton       *event,
                            EvPageActionWidget   *action_widget)
 {
+	EvPageActionWidgetPrivate *priv = action_widget->priv;
+
 	if (event->button != GDK_BUTTON_PRIMARY)
 		return;
 
 	gtk_popover_popup (get_popup (action_widget));
-	action_widget->popup_shown = TRUE;
+	priv->popup_shown = TRUE;
 }
 
 static void
@@ -275,6 +287,10 @@ ev_page_action_widget_init (EvPageActionWidget *action_widget)
 	GtkWidget *hbox;
 	AtkObject *obj;
         GtkStyleContext *style_context;
+	EvPageActionWidgetPrivate *priv;
+
+	action_widget->priv = G_TYPE_INSTANCE_GET_PRIVATE (action_widget, EV_TYPE_PAGE_ACTION_WIDGET, EvPageActionWidgetPrivate);
+	priv = action_widget->priv;
 
 	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
 
@@ -282,42 +298,42 @@ ev_page_action_widget_init (EvPageActionWidget *action_widget)
         gtk_style_context_add_class (style_context, GTK_STYLE_CLASS_RAISED);
         gtk_style_context_add_class (style_context, GTK_STYLE_CLASS_LINKED);
 
-	action_widget->entry = gtk_entry_new ();
-	gtk_widget_add_events (action_widget->entry,
+	priv->entry = gtk_entry_new ();
+	gtk_widget_add_events (priv->entry,
 			       GDK_BUTTON_MOTION_MASK);
-	gtk_entry_set_width_chars (GTK_ENTRY (action_widget->entry), 5);
-	gtk_entry_set_text (GTK_ENTRY (action_widget->entry), "");
-	g_signal_connect_swapped (action_widget->entry, "scroll-event",
+	gtk_entry_set_width_chars (GTK_ENTRY (priv->entry), 5);
+	gtk_entry_set_text (GTK_ENTRY (priv->entry), "");
+	g_signal_connect_swapped (priv->entry, "scroll-event",
 				  G_CALLBACK (page_scroll_cb),
 				  action_widget);
-	g_signal_connect_swapped (action_widget->entry, "activate",
+	g_signal_connect_swapped (priv->entry, "activate",
 				  G_CALLBACK (activate_cb),
 				  action_widget);
-        g_signal_connect_swapped (action_widget->entry, "focus-out-event",
+        g_signal_connect_swapped (priv->entry, "focus-out-event",
                                   G_CALLBACK (focus_out_cb),
                                   action_widget);
 
-	obj = gtk_widget_get_accessible (action_widget->entry);
+	obj = gtk_widget_get_accessible (priv->entry);
 	atk_object_set_name (obj, "page-label-entry");
 
-	gtk_box_pack_start (GTK_BOX (hbox), action_widget->entry,
+	gtk_box_pack_start (GTK_BOX (hbox), priv->entry,
 			    FALSE, FALSE, 0);
-	gtk_widget_show (action_widget->entry);
+	gtk_widget_show (priv->entry);
 
-	action_widget->label = gtk_entry_new ();
-	g_object_set (action_widget->label, "editable", FALSE, NULL);
-	gtk_entry_set_width_chars (GTK_ENTRY (action_widget->label), 5);
+	priv->label = gtk_entry_new ();
+	g_object_set (priv->label, "editable", FALSE, NULL);
+	gtk_entry_set_width_chars (GTK_ENTRY (priv->label), 5);
 
-	gtk_box_pack_start (GTK_BOX (hbox), action_widget->label,
+	gtk_box_pack_start (GTK_BOX (hbox), priv->label,
 			    FALSE, FALSE, 0);
-	gtk_widget_show (action_widget->label);
+	gtk_widget_show (priv->label);
 
 	gtk_container_add (GTK_CONTAINER (action_widget), hbox);
 	gtk_widget_show (hbox);
 
 	gtk_widget_set_sensitive (GTK_WIDGET (action_widget), FALSE);
 
- 	g_signal_connect (action_widget->label, "icon-press",
+	g_signal_connect (priv->label, "icon-press",
 	                  G_CALLBACK (entry_icon_press_callback),
 	                  action_widget);
 }
@@ -334,33 +350,35 @@ static void
 ev_page_action_widget_set_document (EvPageActionWidget *action_widget,
                                     EvDocument         *document)
 {
+	EvPageActionWidgetPrivate *priv = action_widget->priv;
+
         if (document) {
                 g_object_ref (document);
-                gtk_widget_set_sensitive (GTK_WIDGET (action_widget), ev_document_get_n_pages (document) > 0);
+                gtk_widget_set_sensitive (GTK_WIDGET (action_widget),
+					  ev_document_get_n_pages (document) > 0);
         }
 
-        if (action_widget->signal_id > 0) {
-                if (action_widget->doc_model != NULL) {
-                        g_signal_handler_disconnect (action_widget->doc_model,
-                                                     action_widget->signal_id);
+        if (priv->signal_id > 0) {
+                if (priv->doc_model != NULL) {
+                        g_signal_handler_disconnect (priv->doc_model,
+                                                     priv->signal_id);
                 }
-                action_widget->signal_id = 0;
+                priv->signal_id = 0;
         }
 
-        if (action_widget->document)
-                g_object_unref (action_widget->document);
-        action_widget->document = document;
-        if (!action_widget->document)
+        if (priv->document)
+                g_object_unref (priv->document);
+        priv->document = document;
+        if (!priv->document)
                 return;
 
-        action_widget->signal_id =
-                g_signal_connect (action_widget->doc_model,
-                                  "page-changed",
-                                  G_CALLBACK (page_changed_cb),
-                                  action_widget);
+	priv->signal_id = g_signal_connect (priv->doc_model,
+	                                    "page-changed",
+	                                    G_CALLBACK (page_changed_cb),
+	                                    action_widget);
 
         ev_page_action_widget_set_current_page (action_widget,
-                                                ev_document_model_get_page (action_widget->doc_model));
+                                                ev_document_model_get_page (priv->doc_model));
         ev_page_action_widget_update_max_width (action_widget);
 }
 
@@ -376,13 +394,15 @@ void
 ev_page_action_widget_set_model (EvPageActionWidget *action_widget,
 				 EvDocumentModel    *model)
 {
-	if (action_widget->doc_model) {
-		g_object_remove_weak_pointer (G_OBJECT (action_widget->doc_model),
-					      (gpointer)&action_widget->doc_model);
+	EvPageActionWidgetPrivate *priv = action_widget->priv;
+
+	if (priv->doc_model) {
+		g_object_remove_weak_pointer (G_OBJECT (priv->doc_model),
+					      (gpointer)&priv->doc_model);
 	}
-	action_widget->doc_model = model;
+	priv->doc_model = model;
 	g_object_add_weak_pointer (G_OBJECT (model),
-				   (gpointer)&action_widget->doc_model);
+				   (gpointer)&priv->doc_model);
 
         ev_page_action_widget_set_document (action_widget, ev_document_model_get_document (model));
 	g_signal_connect (model, "notify::document",
@@ -394,16 +414,17 @@ static void
 ev_page_action_widget_finalize (GObject *object)
 {
 	EvPageActionWidget *action_widget = EV_PAGE_ACTION_WIDGET (object);
+	EvPageActionWidgetPrivate *priv = action_widget->priv;
 
-	if (action_widget->doc_model != NULL) {
-		if (action_widget->signal_id > 0) {
-			g_signal_handler_disconnect (action_widget->doc_model,
-						     action_widget->signal_id);
-			action_widget->signal_id = 0;
+	if (priv->doc_model != NULL) {
+		if (priv->signal_id > 0) {
+			g_signal_handler_disconnect (priv->doc_model,
+						     priv->signal_id);
+			priv->signal_id = 0;
 		}
-		g_object_remove_weak_pointer (G_OBJECT (action_widget->doc_model),
-					      (gpointer)&action_widget->doc_model);
-		action_widget->doc_model = NULL;
+		g_object_remove_weak_pointer (G_OBJECT (priv->doc_model),
+					      (gpointer)&priv->doc_model);
+		priv->doc_model = NULL;
 	}
 
         ev_page_action_widget_set_document (action_widget, NULL);
@@ -418,10 +439,11 @@ ev_page_action_widget_set_property (GObject      *object,
                                     GParamSpec   *pspec)
 {
 	EvPageActionWidget *action_widget = EV_PAGE_ACTION_WIDGET (object);
+	EvPageActionWidgetPrivate *priv = action_widget->priv;
 
 	switch (prop_id) {
 	case PROP_MENU:
-		action_widget->menu = g_value_dup_object (value);
+		priv->menu = g_value_dup_object (value);
 		break;
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -475,6 +497,7 @@ ev_page_action_widget_class_init (EvPageActionWidgetClass *klass)
 			      G_TYPE_NONE, 1,
 			      G_TYPE_OBJECT);
 
+	g_type_class_add_private (object_class, sizeof (EvPageActionWidgetPrivate));
 }
 
 static gboolean
@@ -489,7 +512,7 @@ match_selected_cb (GtkEntryCompletion *completion,
 	gtk_tree_model_get (filter_model, filter_iter,
 			    0, &iter,
 			    -1);
-	gtk_tree_model_get (proxy->model, iter,
+	gtk_tree_model_get (proxy->priv->model, iter,
 			    EV_DOCUMENT_LINKS_COLUMN_LINK, &link,
 			    -1);
 
@@ -517,7 +540,7 @@ display_completion_text (GtkCellLayout      *cell_layout,
 	gtk_tree_model_get (filter_model, filter_iter,
 			    0, &iter,
 			    -1);
-	gtk_tree_model_get (proxy->model, iter,
+	gtk_tree_model_get (proxy->priv->model, iter,
 			    EV_DOCUMENT_LINKS_COLUMN_LINK, &link,
 			    -1);
 
@@ -535,6 +558,7 @@ match_completion (GtkEntryCompletion *completion,
 		  GtkTreeIter        *filter_iter,
 		  EvPageActionWidget *proxy)
 {
+	EvPageActionWidgetPrivate *priv = proxy->priv;
 	EvLink *link;
 	GtkTreeIter *iter;
 	const gchar *text = NULL;
@@ -543,7 +567,7 @@ match_completion (GtkEntryCompletion *completion,
 			    filter_iter,
 			    0, &iter,
 			    -1);
-	gtk_tree_model_get (proxy->model, iter,
+	gtk_tree_model_get (priv->model, iter,
 			    EV_DOCUMENT_LINKS_COLUMN_LINK, &link,
 			    -1);
 
@@ -647,15 +671,16 @@ get_filter_model_from_model (GtkTreeModel *model)
 void
 ev_page_action_widget_update_links_model (EvPageActionWidget *proxy, GtkTreeModel *model)
 {
+	EvPageActionWidgetPrivate *priv = proxy->priv;
 	GtkTreeModel *filter_model;
 	GtkEntryCompletion *completion;
 	GtkCellRenderer *renderer;
 
-	if (!model || model == proxy->model)
+	if (!model || model == priv->model)
 		return;
 
 	/* Magik */
-	proxy->model = model;
+	priv->model = model;
 	filter_model = get_filter_model_from_model (model);
 
 	completion = gtk_entry_completion_new ();
@@ -680,7 +705,7 @@ ev_page_action_widget_update_links_model (EvPageActionWidget *proxy, GtkTreeMode
 					    renderer,
 					    (GtkCellLayoutDataFunc) display_completion_text,
 					    proxy, NULL);
-	gtk_entry_set_completion (GTK_ENTRY (proxy->entry), completion);
+	gtk_entry_set_completion (GTK_ENTRY (priv->entry), completion);
 
 	g_object_unref (completion);
 }
@@ -688,7 +713,7 @@ ev_page_action_widget_update_links_model (EvPageActionWidget *proxy, GtkTreeMode
 void
 ev_page_action_widget_grab_focus (EvPageActionWidget *proxy)
 {
-	gtk_widget_grab_focus (proxy->entry);
+	gtk_widget_grab_focus (proxy->priv->entry);
 }
 
 gboolean
@@ -696,5 +721,5 @@ ev_page_action_widget_get_popup_shown (EvPageActionWidget *action_widget)
 {
 	g_return_val_if_fail (EV_IS_PAGE_ACTION_WIDGET (action_widget), FALSE);
 
-	return action_widget->popup_shown;
+	return action_widget->priv->popup_shown;
 }

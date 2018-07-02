@@ -22,18 +22,27 @@
 #ifndef __EV_PAGE_ACTION_WIDET_H__
 #define __EV_PAGE_ACTION_WIDET_H__
 
-#include <evince-view.h>
- 
 #include <gtk/gtk.h>
+#include <evince-view.h>
 
 G_BEGIN_DECLS
 
-#define EV_TYPE_PAGE_ACTION_WIDGET    (ev_page_action_widget_get_type ())
-#define EV_PAGE_ACTION_WIDGET(obj)    (G_TYPE_CHECK_INSTANCE_CAST ((obj), EV_TYPE_PAGE_ACTION_WIDGET, EvPageActionWidget))
-#define EV_IS_PAGE_ACTION_WIDGET(obj) (G_TYPE_CHECK_INSTANCE_TYPE ((obj), EV_TYPE_PAGE_ACTION_WIDGET))
+#define EV_TYPE_PAGE_ACTION_WIDGET            (ev_page_action_widget_get_type ())
+#define EV_PAGE_ACTION_WIDGET(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), EV_TYPE_PAGE_ACTION_WIDGET, EvPageActionWidget))
+#define EV_IS_PAGE_ACTION_WIDGET(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), EV_TYPE_PAGE_ACTION_WIDGET))
+#define EV_PAGE_ACTION_WIDGET_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), EV_TYPE_PAGE_ACTION_WIDGET, EvPageActionWidgetClass))
+#define EV_IS_PAGE_ACTION_WIDGET_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((obj), EV_TYPE_PAGE_ACTION_WIDGET))
+#define EV_PAGE_ACTION_WIDGET_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS((obj), EV_TYPE_PAGE_ACTION_WIDGET, EvPageActionWidgetClass)
 
 typedef struct _EvPageActionWidget EvPageActionWidget;
 typedef struct _EvPageActionWidgetClass EvPageActionWidgetClass;
+typedef struct _EvPageActionWidgetPrivate EvPageActionWidgetPrivate;
+
+struct _EvPageActionWidget {
+	GtkToolItem parent;
+
+	EvPageActionWidgetPrivate *priv;
+};
 
 struct _EvPageActionWidgetClass
 {
