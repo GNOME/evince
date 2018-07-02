@@ -81,24 +81,6 @@
     </section>
     <section>
       <item>
-        <attribute name="label" translatable="yes">First Page</attribute>
-        <attribute name="action">win.go-first-page</attribute>
-      </item>
-      <item>
-        <attribute name="label" translatable="yes">Previous Page</attribute>
-        <attribute name="action">win.go-previous-page</attribute>
-      </item>
-      <item>
-        <attribute name="label" translatable="yes">Next Page</attribute>
-        <attribute name="action">win.go-next-page</attribute>
-      </item>
-      <item>
-        <attribute name="label" translatable="yes">Last Page</attribute>
-        <attribute name="action">win.go-last-page</attribute>
-      </item>
-    </section>
-    <section>
-      <item>
         <attribute name="label" translatable="yes">Zoom _In</attribute>
         <attribute name="action">win.zoom-in</attribute>
       </item>
@@ -306,6 +288,39 @@
       <item>
         <attribute name="label" translatable="yes">Open Containing _Folder</attribute>
         <attribute name="action">win.open-containing-folder</attribute>
+      </item>
+    </section>
+  </menu>
+
+  <menu id="navigation-menu">
+    <section>
+      <attribute name="label" translatable="yes">Navigation</attribute>
+      <item>
+        <attribute name="label" translatable="yes">First Page</attribute>
+        <attribute name="action">win.go-first-page</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Previous Page</attribute>
+        <attribute name="action">win.go-previous-page</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Next Page</attribute>
+        <attribute name="action">win.go-next-page</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Last Page</attribute>
+        <attribute name="action">win.go-last-page</attribute>
+      </item>
+    </section>
+    <section>
+      <attribute name="label" translatable="yes">History</attribute>
+      <item>
+        <attribute name="label" translatable="yes">Back</attribute>
+        <attribute name="action">win.go-back-history</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Forward</attribute>
+        <attribute name="action">win.go-forward-history</attribute>
       </item>
     </section>
   </menu>

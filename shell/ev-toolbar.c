@@ -2,7 +2,7 @@
  *  this file is part of evince, a gnome document viewer
  *
  * Copyright (C) 2012-2014 Carlos Garcia Campos <carlosgc@gnome.org>
- * Copyright (C) 2014 Germán Poo-Caamaño <gpoo@gnome.org>
+ * Copyright (C) 2014-2018 Germán Poo-Caamaño <gpoo@gnome.org>
  *
  * Evince is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by
@@ -29,7 +29,6 @@
 
 #include "ev-stock-icons.h"
 #include "ev-zoom-action.h"
-#include "ev-history-action.h"
 #include "ev-application.h"
 #include "ev-page-action-widget.h"
 #include <math.h>
@@ -45,7 +44,6 @@ struct _EvToolbarPrivate {
 
         GtkWidget *view_menu_button;
         GtkWidget *action_menu_button;
-        GtkWidget *history_action;
         GtkWidget *zoom_action;
         GtkWidget *page_selector;
         GtkWidget *navigation_action;
@@ -192,7 +190,7 @@ ev_toolbar_constructed (GObject *object)
         EvToolbar      *ev_toolbar = EV_TOOLBAR (object);
         GtkBuilder     *builder;
         GtkWidget      *tool_item;
-        GtkWidget      *hbox, *vbox;
+        GtkWidget      *vbox;
         GtkWidget      *button;
         GMenuModel     *menu;
         GMenuModel     *bookmarks_submenu_model;
@@ -210,18 +208,13 @@ ev_toolbar_constructed (GObject *object)
 
         /* Page selector */
         /* Use EvPageActionWidget for now, since the page selector action is also used by the previewer */
-        tool_item = GTK_WIDGET (g_object_new (EV_TYPE_PAGE_ACTION_WIDGET, NULL));
+        tool_item = ev_page_action_widget_new (G_MENU (gtk_builder_get_object (builder, "navigation-menu")));
         gtk_widget_set_tooltip_text (tool_item, _("Select page or search in the index"));
         atk_object_set_name (gtk_widget_get_accessible (tool_item), _("Select page"));
         ev_toolbar->priv->page_selector = tool_item;
         ev_page_action_widget_set_model (EV_PAGE_ACTION_WIDGET (tool_item),
                                          ev_window_get_document_model (ev_toolbar->priv->window));
         gtk_header_bar_pack_start (GTK_HEADER_BAR (ev_toolbar), tool_item);
-
-        /* History */
-        hbox = ev_history_action_new (ev_window_get_history (ev_toolbar->priv->window));
-        ev_toolbar->priv->history_action = hbox;
-        gtk_header_bar_pack_start (GTK_HEADER_BAR (ev_toolbar), hbox);
 
         /* Find */
         button = ev_toolbar_create_toggle_button (ev_toolbar, "win.toggle-find", "edit-find-symbolic",
@@ -351,7 +344,7 @@ ev_toolbar_has_visible_popups (EvToolbar *ev_toolbar)
         if (ev_zoom_action_get_popup_shown (EV_ZOOM_ACTION (ev_toolbar->priv->zoom_action)))
                 return TRUE;
 
-        if (ev_history_action_get_popup_shown (EV_HISTORY_ACTION (ev_toolbar->priv->history_action)))
+        if (ev_page_action_widget_get_popup_shown (EV_PAGE_ACTION_WIDGET (ev_toolbar->priv->page_selector)))
                 return TRUE;
 
         return FALSE;
@@ -390,7 +383,6 @@ ev_toolbar_set_mode (EvToolbar     *ev_toolbar,
         case EV_TOOLBAR_MODE_FULLSCREEN:
                 gtk_widget_show (priv->view_menu_button);
                 gtk_widget_show (priv->action_menu_button);
-                gtk_widget_show (priv->history_action);
                 gtk_widget_show (priv->zoom_action);
                 gtk_widget_show (priv->page_selector);
                 gtk_widget_show (priv->find_button);
@@ -400,7 +392,6 @@ ev_toolbar_set_mode (EvToolbar     *ev_toolbar,
 	case EV_TOOLBAR_MODE_RECENT_VIEW:
                 gtk_widget_hide (priv->view_menu_button);
                 gtk_widget_hide (priv->action_menu_button);
-                gtk_widget_hide (priv->history_action);
                 gtk_widget_hide (priv->zoom_action);
                 gtk_widget_hide (priv->page_selector);
                 gtk_widget_hide (priv->find_button);
