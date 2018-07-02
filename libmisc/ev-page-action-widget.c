@@ -1,6 +1,7 @@
 /*
  *  Copyright (C) 2003, 2004 Marco Pesenti Gritti
  *  Copyright (C) 2003, 2004 Christian Persch
+ *  Copyright (C) 2018       Germán Poo-Caamaño
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -37,18 +38,28 @@ enum
 	WIDGET_N_SIGNALS
 };
 
+enum
+{
+        PROP_0,
+
+        PROP_MENU
+};
+
 struct _EvPageActionWidget
 {
 	GtkToolItem parent;
 
 	EvDocument *document;
 	EvDocumentModel *doc_model;
+	GMenu *menu;
 
 	GtkWidget *entry;
 	GtkWidget *label;
 	guint signal_id;
 	GtkTreeModel *filter_model;
 	GtkTreeModel *model;
+	GtkPopover *popup;
+	gboolean popup_shown;
 };
 
 static guint widget_signals[WIDGET_N_SIGNALS] = {0, };
@@ -114,8 +125,17 @@ ev_page_action_widget_update_max_width (EvPageActionWidget *action_widget)
         gint   max_label_len;
         gchar *max_page_label;
         gchar *max_page_numeric_label;
+        gint   padding = 0;
 
         n_pages = ev_document_get_n_pages (action_widget->document);
+
+        if (action_widget->menu) {
+                gtk_entry_set_icon_from_icon_name (GTK_ENTRY (action_widget->label),
+                                                   GTK_ENTRY_ICON_SECONDARY,
+                                                   "go-down-symbolic");
+                /* width + 3 (for the icon). Similarly to EvZoomAction. */
+                padding = 3;
+        }
 
         max_page_label = ev_document_get_page_label (action_widget->document, n_pages - 1);
         max_page_numeric_label = g_strdup_printf ("%d", n_pages);
@@ -129,7 +149,7 @@ ev_page_action_widget_update_max_width (EvPageActionWidget *action_widget)
         }
         g_free (max_page_label);
 
-        gtk_entry_set_width_chars (GTK_ENTRY (action_widget->label), max_label_len);
+        gtk_entry_set_width_chars (GTK_ENTRY (action_widget->label), max_label_len + padding);
         g_free (max_label);
 
         max_label_len = ev_document_get_max_label_len (action_widget->document);
@@ -205,6 +225,51 @@ focus_out_cb (EvPageActionWidget *action_widget)
 }
 
 static void
+popup_menu_closed (GtkPopover         *popup,
+                   EvPageActionWidget *action_widget)
+{
+	if (action_widget->popup != popup)
+		return;
+
+	action_widget->popup_shown = FALSE;
+	action_widget->popup = NULL;
+}
+
+static GtkPopover *
+get_popup (EvPageActionWidget *action_widget)
+{
+	GdkRectangle rect;
+
+	if (action_widget->popup)
+		return action_widget->popup;
+
+	action_widget->popup = GTK_POPOVER (gtk_popover_new_from_model (GTK_WIDGET (action_widget),
+	                                                                G_MENU_MODEL (action_widget->menu)));
+	g_signal_connect (action_widget->popup, "closed",
+	                  G_CALLBACK (popup_menu_closed),
+                          action_widget);
+	gtk_entry_get_icon_area (GTK_ENTRY (action_widget->label),
+	                         GTK_ENTRY_ICON_SECONDARY, &rect);
+	gtk_popover_set_pointing_to (action_widget->popup, &rect);
+	gtk_popover_set_position (action_widget->popup, GTK_POS_BOTTOM);
+
+	return action_widget->popup;
+}
+
+static void
+entry_icon_press_callback (GtkEntry             *entry,
+                           GtkEntryIconPosition  icon_pos,
+                           GdkEventButton       *event,
+                           EvPageActionWidget   *action_widget)
+{
+	if (event->button != GDK_BUTTON_PRIMARY)
+		return;
+
+	gtk_popover_popup (get_popup (action_widget));
+	action_widget->popup_shown = TRUE;
+}
+
+static void
 ev_page_action_widget_init (EvPageActionWidget *action_widget)
 {
 	GtkWidget *hbox;
@@ -240,8 +305,9 @@ ev_page_action_widget_init (EvPageActionWidget *action_widget)
 	gtk_widget_show (action_widget->entry);
 
 	action_widget->label = gtk_entry_new ();
-        gtk_widget_set_sensitive (action_widget->label, FALSE);
-        gtk_entry_set_width_chars (GTK_ENTRY (action_widget->label), 5);
+	g_object_set (action_widget->label, "editable", FALSE, NULL);
+	gtk_entry_set_width_chars (GTK_ENTRY (action_widget->label), 5);
+
 	gtk_box_pack_start (GTK_BOX (hbox), action_widget->label,
 			    FALSE, FALSE, 0);
 	gtk_widget_show (action_widget->label);
@@ -249,7 +315,19 @@ ev_page_action_widget_init (EvPageActionWidget *action_widget)
 	gtk_container_add (GTK_CONTAINER (action_widget), hbox);
 	gtk_widget_show (hbox);
 
-        gtk_widget_set_sensitive (GTK_WIDGET (action_widget), FALSE);
+	gtk_widget_set_sensitive (GTK_WIDGET (action_widget), FALSE);
+
+ 	g_signal_connect (action_widget->label, "icon-press",
+	                  G_CALLBACK (entry_icon_press_callback),
+	                  action_widget);
+}
+
+GtkWidget *
+ev_page_action_widget_new (GMenu *menu)
+{
+	return GTK_WIDGET (g_object_new (EV_TYPE_PAGE_ACTION_WIDGET,
+	                                 "menu", menu,
+	                                 NULL));
 }
 
 static void
@@ -334,6 +412,23 @@ ev_page_action_widget_finalize (GObject *object)
 }
 
 static void
+ev_page_action_widget_set_property (GObject      *object,
+                                    guint         prop_id,
+                                    const GValue *value,
+                                    GParamSpec   *pspec)
+{
+	EvPageActionWidget *action_widget = EV_PAGE_ACTION_WIDGET (object);
+
+	switch (prop_id) {
+	case PROP_MENU:
+		action_widget->menu = g_value_dup_object (value);
+		break;
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+	}
+}
+
+static void
 ev_page_action_widget_get_preferred_width (GtkWidget *widget,
                                            gint      *minimum_width,
                                            gint      *natural_width)
@@ -358,6 +453,17 @@ ev_page_action_widget_class_init (EvPageActionWidgetClass *klass)
 
 	object_class->finalize = ev_page_action_widget_finalize;
         widget_class->get_preferred_width = ev_page_action_widget_get_preferred_width;
+	object_class->set_property = ev_page_action_widget_set_property;
+
+	g_object_class_install_property (object_class,
+	                                 PROP_MENU,
+	                                 g_param_spec_object ("menu",
+	                                                "Menu",
+	                                                "The navigation menu",
+	                                                G_TYPE_MENU,
+	                                                G_PARAM_WRITABLE |
+	                                                G_PARAM_CONSTRUCT_ONLY |
+	                                                G_PARAM_STATIC_STRINGS));
 
 	widget_signals[WIDGET_ACTIVATE_LINK] =
 		g_signal_new ("activate_link",
@@ -585,3 +691,10 @@ ev_page_action_widget_grab_focus (EvPageActionWidget *proxy)
 	gtk_widget_grab_focus (proxy->entry);
 }
 
+gboolean
+ev_page_action_widget_get_popup_shown (EvPageActionWidget *action_widget)
+{
+	g_return_val_if_fail (EV_IS_PAGE_ACTION_WIDGET (action_widget), FALSE);
+
+	return action_widget->popup_shown;
+}
