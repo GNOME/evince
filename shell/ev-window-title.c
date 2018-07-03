@@ -23,6 +23,7 @@
 
 #include <string.h>
 #include <gio/gio.h>
+#include <glib.h>
 #include <glib/gi18n.h>
 
 /* Known backends (for bad extensions fix) */
@@ -41,7 +42,8 @@ struct _EvWindowTitle
 	EvWindowTitleType type;
 	EvDocument *document;
 	char *filename;
-        char *doc_title;
+	char *doc_title;
+	char *uri;
 };
 
 static const BadTitleEntry bad_extensions[] = {
@@ -136,6 +138,9 @@ ev_window_title_update (EvWindowTitle *window_title)
 			gtk_header_bar_set_title (toolbar, title_header);
 			gtk_header_bar_set_subtitle (toolbar, subtitle);
 		}
+		if (window_title->uri)
+			gtk_widget_set_tooltip_text (GTK_WIDGET (toolbar),
+						     window_title->uri);
 		break;
 	case EV_WINDOW_TITLE_PASSWORD: {
                 gchar *password_title;
@@ -189,6 +194,7 @@ document_destroyed_cb (EvWindowTitle *window_title,
 {
         window_title->document = NULL;
         g_clear_pointer (&window_title->doc_title, g_free);
+        g_clear_pointer (&window_title->uri, g_free);
 }
 
 void
@@ -206,6 +212,7 @@ ev_window_title_set_document (EvWindowTitle *window_title,
 
 	if (window_title->document != NULL) {
 		gchar *doc_title;
+		gchar *uri;
 
 		doc_title = g_strdup (ev_document_get_title (window_title->document));
 
@@ -220,6 +227,11 @@ ev_window_title_set_document (EvWindowTitle *window_title,
                                 g_free (doc_title);
                         }
 		}
+
+		uri = g_filename_from_uri (ev_document_get_uri (window_title->document),
+					   NULL, NULL);
+		if (uri)
+			window_title->uri = uri;
 	}
 
 	ev_window_title_update (window_title);
@@ -245,5 +257,6 @@ ev_window_title_free (EvWindowTitle *window_title)
                 g_object_weak_unref (G_OBJECT (window_title->document), (GWeakNotify)document_destroyed_cb, window_title);
         g_free (window_title->doc_title);
 	g_free (window_title->filename);
+	g_free (window_title->uri);
 	g_free (window_title);
 }
