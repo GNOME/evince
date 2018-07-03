@@ -137,7 +137,7 @@ ev_page_action_widget_update_max_width (EvPageActionWidget *action_widget)
                                                    GTK_ENTRY_ICON_SECONDARY,
                                                    "go-down-symbolic");
                 /* width + 3 (for the icon). Similarly to EvZoomAction. */
-                padding = 3;
+                padding = 2;
         }
 
         max_page_label = ev_document_get_page_label (priv->document, n_pages - 1);
