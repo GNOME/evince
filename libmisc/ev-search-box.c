@@ -129,6 +129,10 @@ static inline gboolean
 find_check_refresh_rate (EvJobFind *job,
                          gint       page_rate)
 {
+        /* Always update if this is the last page of the search */
+        if ((job->current_page + 1) % job->n_pages == job->start_page)
+                return TRUE;
+
         return ((job->current_page % (gint)((job->n_pages / page_rate) + 1)) == 0);
 }
 
