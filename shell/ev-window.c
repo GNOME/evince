@@ -3816,6 +3816,92 @@ ev_window_cmd_file_close_window (GSimpleAction *action,
 		gtk_widget_destroy (GTK_WIDGET (ev_window));
 }
 
+/**
+ * ev_window_show_help:
+ * @application: the #EvApplication
+ * @screen: (allow-none): a #GdkScreen, or %NULL to use the default screen
+ * @topic: (allow-none): the help topic, or %NULL to show the index
+ *
+ * Launches the help viewer on @screen to show the evince help.
+ * If @topic is %NULL, shows the help index; otherwise the topic.
+ */
+static void
+ev_window_show_help (EvWindow *window,
+                     GdkScreen     *screen,
+                     const char    *topic)
+{
+        char *escaped_topic, *uri;
+
+        if (topic != NULL) {
+                escaped_topic = g_uri_escape_string (topic, NULL, TRUE);
+                uri = g_strdup_printf ("help:evince/%s", escaped_topic);
+                g_free (escaped_topic);
+        } else {
+                uri = g_strdup ("help:evince");
+        }
+
+        gtk_show_uri (screen, uri, gtk_get_current_event_time (), NULL);
+        g_free (uri);
+}
+
+static void
+ev_window_cmd_help (GSimpleAction *action,
+		    GVariant      *parameter,
+		    gpointer       user_data)
+{
+	EvWindow *ev_window = user_data;
+
+        ev_window_show_help (ev_window, NULL, NULL);
+}
+
+static void
+ev_window_cmd_about (GSimpleAction *action,
+		     GVariant      *parameter,
+		     gpointer       user_data)
+{
+	EvWindow *ev_window = user_data;
+
+        const char *authors[] = {
+                "Martin Kretzschmar <m_kretzschmar@gmx.net>",
+                "Jonathan Blandford <jrb@gnome.org>",
+                "Marco Pesenti Gritti <marco@gnome.org>",
+                "Nickolay V. Shmyrev <nshmyrev@yandex.ru>",
+                "Bryan Clark <clarkbw@gnome.org>",
+                "Carlos Garcia Campos <carlosgc@gnome.org>",
+                "Wouter Bolsterlee <wbolster@gnome.org>",
+                "Christian Persch <chpe" "\100" "gnome.org>",
+                NULL
+        };
+        const char *documenters[] = {
+                "Nickolay V. Shmyrev <nshmyrev@yandex.ru>",
+                "Phil Bull <philbull@gmail.com>",
+                "Tiffany Antpolski <tiffany.antopolski@gmail.com>",
+                NULL
+        };
+#ifdef ENABLE_NLS
+        const char **p;
+
+        for (p = authors; *p; ++p)
+                *p = _(*p);
+
+        for (p = documenters; *p; ++p)
+                *p = _(*p);
+#endif
+
+        gtk_show_about_dialog (GTK_WINDOW (ev_window),
+                               "name", _("Evince"),
+                               "version", VERSION,
+                               "copyright", _("© 1996–2017 The Evince authors"),
+                               "license-type", GTK_LICENSE_GPL_2_0,
+                               "website", "https://wiki.gnome.org/Apps/Evince",
+                               "comments", _("Document Viewer"),
+                               "authors", authors,
+                               "documenters", documenters,
+                               "translator-credits", _("translator-credits"),
+                               "logo-icon-name", "evince",
+                               NULL);
+}
+
 static void
 ev_window_cmd_focus_page_selector (GSimpleAction *action,
 				   GVariant      *parameter,
@@ -5881,6 +5967,8 @@ static const GActionEntry actions[] = {
 	{ "open-menu", ev_window_cmd_action_menu },
 	{ "caret-navigation", NULL, NULL, "false", ev_window_cmd_view_toggle_caret_navigation },
 	{ "toggle-edit-annots", NULL, NULL, "false", ev_window_cmd_toggle_edit_annots },
+	{ "about", ev_window_cmd_about },
+	{ "help", ev_window_cmd_help },
 	/* Popups specific items */
 	{ "annotate-selected-text", ev_window_popup_cmd_annotate_selected_text },
 	{ "open-link", ev_window_popup_cmd_open_link },
