@@ -96,12 +96,15 @@ ev_window_title_update (EvWindowTitle *window_title)
 	GtkHeaderBar *toolbar = GTK_HEADER_BAR (ev_window_get_toolbar (EV_WINDOW (window)));
 	char *title = NULL, *p;
 	char *subtitle = NULL, *title_header = NULL;
+	gboolean ltr;
 
         if (window_title->type == EV_WINDOW_TITLE_RECENT) {
                 gtk_header_bar_set_subtitle (toolbar, NULL);
                 gtk_window_set_title (window, _("Recent Documents"));
                 return;
         }
+
+	ltr = gtk_widget_get_direction (GTK_WIDGET (window)) == GTK_TEXT_DIR_LTR;
 
 	if (window_title->doc_title && window_title->filename) {
                 title = g_strdup (window_title->doc_title);
@@ -110,7 +113,10 @@ ev_window_title_update (EvWindowTitle *window_title)
 		subtitle = window_title->filename;
 
 		title_header = title;
-		title = g_strdup_printf ("%s — %s", subtitle, title);
+		if (ltr)
+			title = g_strdup_printf ("%s — %s", subtitle, title);
+		else
+			title = g_strdup_printf ("%s — %s", title, subtitle);
 
                 for (p = title; *p; ++p) {
                         /* an '\n' byte is always ASCII, no need for UTF-8 special casing */
@@ -134,7 +140,11 @@ ev_window_title_update (EvWindowTitle *window_title)
 	case EV_WINDOW_TITLE_PASSWORD: {
                 gchar *password_title;
 
-		password_title = g_strdup_printf ("%s — %s", title, _("Password Required"));
+		if (ltr)
+			password_title = g_strdup_printf ("%s — %s", title, _("Password Required"));
+		else
+			password_title = g_strdup_printf ("%s — %s", _("Password Required"), title);
+
 		gtk_window_set_title (window, password_title);
 		g_free (password_title);
 
