@@ -252,12 +252,6 @@ ev_toolbar_constructed (GObject *object)
         ev_toolbar->priv->action_menu_button = button;
         gtk_header_bar_pack_end (GTK_HEADER_BAR (ev_toolbar), button);
 
-        /* Find */
-        button = ev_toolbar_create_toggle_button (ev_toolbar, "win.toggle-find", "edit-find-symbolic",
-                                                  _("Find a word or phrase in the document"));
-        ev_toolbar->priv->find_button = button;
-        gtk_header_bar_pack_end (GTK_HEADER_BAR (ev_toolbar), button);
-
         /* Zoom selector */
         vbox = ev_zoom_action_new (ev_window_get_document_model (ev_toolbar->priv->window),
                                    G_MENU (gtk_builder_get_object (builder, "zoom-menu")));
@@ -268,6 +262,12 @@ ev_toolbar_constructed (GObject *object)
                           G_CALLBACK (zoom_selector_activated),
                           ev_toolbar);
         gtk_header_bar_pack_end (GTK_HEADER_BAR (ev_toolbar), vbox);
+
+        /* Find */
+        button = ev_toolbar_create_toggle_button (ev_toolbar, "win.toggle-find", "edit-find-symbolic",
+                                                  _("Find a word or phrase in the document"));
+        ev_toolbar->priv->find_button = button;
+        gtk_header_bar_pack_end (GTK_HEADER_BAR (ev_toolbar), button);
 
         ev_toolbar->priv->bookmarks_section = G_MENU (gtk_builder_get_object (builder, "bookmarks"));
         bookmarks_submenu_model = ev_window_get_bookmarks_menu (ev_toolbar->priv->window);
