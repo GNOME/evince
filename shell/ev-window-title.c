@@ -1,6 +1,7 @@
 /* this file is part of evince, a gnome document viewer
  *
  *  Copyright (C) 2005 Red Hat, Inc
+ *  Copyright (C) 2018 Germán Poo-Caamaño <gpoo@gnome.org>
  *
  * Evince is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by
@@ -23,7 +24,9 @@
 
 #include <string.h>
 #include <gio/gio.h>
+#include <glib.h>
 #include <glib/gi18n.h>
+#include <glib/gprintf.h>
 
 /* Known backends (for bad extensions fix) */
 #define EV_BACKEND_PS  "PSDocument"
@@ -41,7 +44,8 @@ struct _EvWindowTitle
 	EvWindowTitleType type;
 	EvDocument *document;
 	char *filename;
-        char *doc_title;
+	char *doc_title;
+	char *dirname;
 };
 
 static const BadTitleEntry bad_extensions[] = {
@@ -136,6 +140,9 @@ ev_window_title_update (EvWindowTitle *window_title)
 			gtk_header_bar_set_title (toolbar, title_header);
 			gtk_header_bar_set_subtitle (toolbar, subtitle);
 		}
+		if (window_title->dirname)
+			gtk_widget_set_tooltip_text (GTK_WIDGET (toolbar),
+						     window_title->dirname);
 		break;
 	case EV_WINDOW_TITLE_PASSWORD: {
                 gchar *password_title;
@@ -189,6 +196,7 @@ document_destroyed_cb (EvWindowTitle *window_title,
 {
         window_title->document = NULL;
         g_clear_pointer (&window_title->doc_title, g_free);
+        g_clear_pointer (&window_title->dirname, g_free);
 }
 
 void
@@ -203,9 +211,12 @@ ev_window_title_set_document (EvWindowTitle *window_title,
 	window_title->document = document;
         g_object_weak_ref (G_OBJECT (window_title->document), (GWeakNotify)document_destroyed_cb, window_title);
         g_clear_pointer (&window_title->doc_title, g_free);
+        g_clear_pointer (&window_title->dirname, g_free);
 
 	if (window_title->document != NULL) {
 		gchar *doc_title;
+		gchar *filepath;
+		gchar *dirname;
 
 		doc_title = g_strdup (ev_document_get_title (window_title->document));
 
@@ -220,6 +231,14 @@ ev_window_title_set_document (EvWindowTitle *window_title,
                                 g_free (doc_title);
                         }
 		}
+
+		filepath = g_filename_from_uri (ev_document_get_uri (window_title->document),
+						NULL, NULL);
+		dirname = g_path_get_dirname (filepath);
+		g_free (filepath);
+
+		if (dirname)
+			window_title->dirname = dirname;
 	}
 
 	ev_window_title_update (window_title);
@@ -245,5 +264,6 @@ ev_window_title_free (EvWindowTitle *window_title)
                 g_object_weak_unref (G_OBJECT (window_title->document), (GWeakNotify)document_destroyed_cb, window_title);
         g_free (window_title->doc_title);
 	g_free (window_title->filename);
+	g_free (window_title->dirname);
 	g_free (window_title);
 }
