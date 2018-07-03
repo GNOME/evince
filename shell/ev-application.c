@@ -961,70 +961,10 @@ app_new_cb (GSimpleAction *action,
 }
 
 static void
-app_help_cb (GSimpleAction *action,
-             GVariant      *parameter,
-             gpointer       user_data)
-{
-        EvApplication *application = user_data;
-
-        ev_application_show_help (application, NULL, NULL);
-}
-
-static void
-app_about_cb (GSimpleAction *action,
-              GVariant      *parameter,
-              gpointer       user_data)
-{
-        EvApplication *application = user_data;
-
-        const char *authors[] = {
-                "Martin Kretzschmar <m_kretzschmar@gmx.net>",
-                "Jonathan Blandford <jrb@gnome.org>",
-                "Marco Pesenti Gritti <marco@gnome.org>",
-                "Nickolay V. Shmyrev <nshmyrev@yandex.ru>",
-                "Bryan Clark <clarkbw@gnome.org>",
-                "Carlos Garcia Campos <carlosgc@gnome.org>",
-                "Wouter Bolsterlee <wbolster@gnome.org>",
-                "Christian Persch <chpe" "\100" "gnome.org>",
-                NULL
-        };
-        const char *documenters[] = {
-                "Nickolay V. Shmyrev <nshmyrev@yandex.ru>",
-                "Phil Bull <philbull@gmail.com>",
-                "Tiffany Antpolski <tiffany.antopolski@gmail.com>",
-                NULL
-        };
-#ifdef ENABLE_NLS
-        const char **p;
-
-        for (p = authors; *p; ++p)
-                *p = _(*p);
-
-        for (p = documenters; *p; ++p)
-                *p = _(*p);
-#endif
-
-        gtk_show_about_dialog (gtk_application_get_active_window (GTK_APPLICATION (application)),
-                               "name", _("Evince"),
-                               "version", VERSION,
-                               "copyright", _("© 1996–2017 The Evince authors"),
-                               "license-type", GTK_LICENSE_GPL_2_0,
-                               "website", "https://wiki.gnome.org/Apps/Evince",
-                               "comments", _("Document Viewer"),
-                               "authors", authors,
-                               "documenters", documenters,
-                               "translator-credits", _("translator-credits"),
-                               "logo-icon-name", "evince",
-                               NULL);
-}
-
-static void
 ev_application_startup (GApplication *gapplication)
 {
         const GActionEntry app_menu_actions[] = {
 		{ "new",  app_new_cb, NULL, NULL, NULL },
-                { "help", app_help_cb, NULL, NULL, NULL },
-                { "about", app_about_cb, NULL, NULL, NULL }
         };
 
         const gchar *action_accels[] = {
@@ -1065,6 +1005,8 @@ ev_application_startup (GApplication *gapplication)
           "win.rotate-right",           "<Ctrl>Right", NULL,
           "win.inverted-colors",        "<Ctrl>I", NULL,
           "win.reload",                 "<Ctrl>R", NULL,
+          "win.help",                   "F1", NULL,
+          "win.about",                  NULL, NULL,
           NULL
         };
 
@@ -1273,32 +1215,4 @@ ev_application_get_dot_dir (EvApplication *application,
                 g_mkdir_with_parents (application->dot_dir, 0700);
 
 	return application->dot_dir;
-}
-
-/**
- * ev_application_show_help:
- * @application: the #EvApplication
- * @screen: (allow-none): a #GdkScreen, or %NULL to use the default screen
- * @topic: (allow-none): the help topic, or %NULL to show the index
- *
- * Launches the help viewer on @screen to show the evince help.
- * If @topic is %NULL, shows the help index; otherwise the topic.
- */
-void
-ev_application_show_help (EvApplication *application,
-                          GdkScreen     *screen,
-                          const char    *topic)
-{
-        char *escaped_topic, *uri;
-
-        if (topic != NULL) {
-                escaped_topic = g_uri_escape_string (topic, NULL, TRUE);
-                uri = g_strdup_printf ("help:evince/%s", escaped_topic);
-                g_free (escaped_topic);
-        } else {
-                uri = g_strdup ("help:evince");
-        }
-
-        gtk_show_uri (screen, uri, gtk_get_current_event_time (), NULL);
-        g_free (uri);
 }
