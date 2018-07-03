@@ -96,10 +96,10 @@ ev_zoom_action_set_zoom_level (EvZoomAction *zoom_action,
         }
 
         zoom_perc = zoom * 100.;
-        if (ABS ((gint)zoom_perc - zoom_perc) < 0.001)
+        if (ABS ((gint)zoom_perc - zoom_perc) < 0.01)
                 zoom_str = g_strdup_printf ("%d%%", (gint)zoom_perc);
         else
-                zoom_str = g_strdup_printf ("%.2f%%", zoom_perc);
+                zoom_str = g_strdup_printf ("%.1f%%", zoom_perc);
         gtk_entry_set_text (GTK_ENTRY (zoom_action->priv->entry), zoom_str);
         g_free (zoom_str);
 }
@@ -142,8 +142,8 @@ static void
 ev_zoom_action_set_width_chars (EvZoomAction *zoom_action,
                                 gint          width)
 {
-        /* width + 3 (two decimals and the comma) + 3 (for the icon) */
-        gtk_entry_set_width_chars (GTK_ENTRY (zoom_action->priv->entry), width + 3 + 3);
+        /* width + 3 (two decimals and the comma) + 2 (for the icon) */
+        gtk_entry_set_width_chars (GTK_ENTRY (zoom_action->priv->entry), width + 3 + 2);
 }
 
 static void
