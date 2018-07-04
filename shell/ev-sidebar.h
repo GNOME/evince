@@ -53,8 +53,11 @@ struct _EvSidebarClass {
 
 GType      ev_sidebar_get_type  (void) G_GNUC_CONST;
 GtkWidget *ev_sidebar_new       (void);
-void       ev_sidebar_add_page  (EvSidebar       *ev_sidebar,
-				 GtkWidget       *main_widget);
+void       ev_sidebar_add_page  (EvSidebar   *sidebar,
+                                 GtkWidget   *widget,
+                                 const gchar *name,
+                                 const gchar *title,
+                                 const gchar *icon_name);
 void       ev_sidebar_set_page  (EvSidebar       *ev_sidebar,
 				 GtkWidget       *main_widget);
 void       ev_sidebar_set_model (EvSidebar       *sidebar,
