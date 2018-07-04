@@ -2,9 +2,11 @@
  *  this file is part of evince, a gnome document viewer
  * 
  * Copyright (C) 2004 Red Hat, Inc.
+ * Copyright (C) 2018 Germán Poo-Caamaño <gpoo@gnome.org>
  *
  * Author:
  *   Jonathan Blandford <jrb@alum.mit.edu>
+ *   Germán Poo-Caamaño <gpoo@gnome.org>
  *
  * Evince is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by
@@ -54,11 +56,14 @@ struct _EvSidebarClass {
 GType      ev_sidebar_get_type  (void) G_GNUC_CONST;
 GtkWidget *ev_sidebar_new       (void);
 void       ev_sidebar_add_page  (EvSidebar       *ev_sidebar,
-				 GtkWidget       *main_widget);
+                                 GtkWidget       *widget,
+                                 const gchar     *name,
+                                 const gchar     *title,
+                                 const gchar     *icon_name);
 void       ev_sidebar_set_page  (EvSidebar       *ev_sidebar,
-				 GtkWidget       *main_widget);
-void       ev_sidebar_set_model (EvSidebar       *sidebar,
-				 EvDocumentModel *model);
+                                 GtkWidget       *main_widget);
+void       ev_sidebar_set_model (EvSidebar       *ev_sidebar,
+                                 EvDocumentModel *model);
 
 G_END_DECLS
 
