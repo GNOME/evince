@@ -274,6 +274,12 @@ struct _EvWindowPrivate {
 #define LAYERS_SIDEBAR_ID "layers"
 #define ANNOTS_SIDEBAR_ID "annotations"
 #define BOOKMARKS_SIDEBAR_ID "bookmarks"
+#define LINKS_SIDEBAR_ICON "view-list-symbolic"
+#define THUMBNAILS_SIDEBAR_ICON "view-grid-symbolic"
+#define ATTACHMENTS_SIDEBAR_ICON "mail-attachment-symbolic"
+#define LAYERS_SIDEBAR_ICON "view-paged-symbolic"
+#define ANNOTS_SIDEBAR_ICON "accessories-text-editor-symbolic"
+#define BOOKMARKS_SIDEBAR_ICON "bookmark-new-symbolic"
 
 #define EV_PRINT_SETTINGS_FILE  "print-settings"
 #define EV_PRINT_SETTINGS_GROUP "Print Settings"
@@ -7113,7 +7119,9 @@ ev_window_init (EvWindow *ev_window)
 	sidebar_page_main_widget_update_cb (G_OBJECT (sidebar_widget), NULL, ev_window);
 	gtk_widget_show (sidebar_widget);
 	ev_sidebar_add_page (EV_SIDEBAR (ev_window->priv->sidebar),
-			     sidebar_widget);
+			      sidebar_widget,
+			      THUMBNAILS_SIDEBAR_ID, "Thumbnails",
+			      THUMBNAILS_SIDEBAR_ICON);
 
 	sidebar_widget = ev_sidebar_links_new ();
 	ev_window->priv->sidebar_links = sidebar_widget;
@@ -7128,7 +7136,29 @@ ev_window_init (EvWindow *ev_window)
 	sidebar_page_main_widget_update_cb (G_OBJECT (sidebar_widget), NULL, ev_window);
 	gtk_widget_show (sidebar_widget);
 	ev_sidebar_add_page (EV_SIDEBAR (ev_window->priv->sidebar),
-			     sidebar_widget);
+			      sidebar_widget,
+			      LINKS_SIDEBAR_ID, _("Outline"),
+			      LINKS_SIDEBAR_ICON);
+
+	sidebar_widget = ev_sidebar_annotations_new ();
+	ev_window->priv->sidebar_annots = sidebar_widget;
+	g_signal_connect (sidebar_widget,
+			  "annot_activated",
+			  G_CALLBACK (sidebar_annots_annot_activated_cb),
+			  ev_window);
+	gtk_widget_show (sidebar_widget);
+	ev_sidebar_add_page (EV_SIDEBAR (ev_window->priv->sidebar),
+			      sidebar_widget,
+			      ANNOTS_SIDEBAR_ID, _("Annotations"),
+			      ANNOTS_SIDEBAR_ICON);
+
+	sidebar_widget = ev_sidebar_bookmarks_new ();
+	ev_window->priv->sidebar_bookmarks = sidebar_widget;
+	gtk_widget_show (sidebar_widget);
+	ev_sidebar_add_page (EV_SIDEBAR (ev_window->priv->sidebar),
+			      sidebar_widget,
+			      BOOKMARKS_SIDEBAR_ID, _("Bookmarks"),
+			      BOOKMARKS_SIDEBAR_ICON);
 
 	sidebar_widget = ev_sidebar_attachments_new ();
 	ev_window->priv->sidebar_attachments = sidebar_widget;
@@ -7142,7 +7172,9 @@ ev_window_init (EvWindow *ev_window)
 				 ev_window, 0);
 	gtk_widget_show (sidebar_widget);
 	ev_sidebar_add_page (EV_SIDEBAR (ev_window->priv->sidebar),
-			     sidebar_widget);
+			      sidebar_widget,
+			      ATTACHMENTS_SIDEBAR_ID, _("Attachments"),
+			      ATTACHMENTS_SIDEBAR_ICON);
 
 	sidebar_widget = ev_sidebar_layers_new ();
 	ev_window->priv->sidebar_layers = sidebar_widget;
@@ -7152,23 +7184,9 @@ ev_window_init (EvWindow *ev_window)
 			  ev_window);
 	gtk_widget_show (sidebar_widget);
 	ev_sidebar_add_page (EV_SIDEBAR (ev_window->priv->sidebar),
-			     sidebar_widget);
-
-	sidebar_widget = ev_sidebar_annotations_new ();
-	ev_window->priv->sidebar_annots = sidebar_widget;
-	g_signal_connect (sidebar_widget,
-			  "annot_activated",
-			  G_CALLBACK (sidebar_annots_annot_activated_cb),
-			  ev_window);
-	gtk_widget_show (sidebar_widget);
-	ev_sidebar_add_page (EV_SIDEBAR (ev_window->priv->sidebar),
-			     sidebar_widget);
-
-	sidebar_widget = ev_sidebar_bookmarks_new ();
-	ev_window->priv->sidebar_bookmarks = sidebar_widget;
-	gtk_widget_show (sidebar_widget);
-	ev_sidebar_add_page (EV_SIDEBAR (ev_window->priv->sidebar),
-			     sidebar_widget);
+			      sidebar_widget,
+			      LAYERS_SIDEBAR_ID, _("Layers"),
+			      LAYERS_SIDEBAR_ICON);
 
 	ev_window->priv->view_box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 
