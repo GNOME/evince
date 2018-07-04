@@ -99,7 +99,7 @@ typedef struct {
 	gint pages_y;
 	gdouble paper_width;
 	gdouble paper_height;
-	
+
 #ifdef HAVE_CAIRO_PRINT
 	cairo_t *cr;
 #else
@@ -211,7 +211,7 @@ pdf_document_dispose (GObject *object)
 		g_object_unref (pdf_document->document);
 	}
 
-	if (pdf_document->font_info) { 
+	if (pdf_document->font_info) {
 		poppler_font_info_free (pdf_document->font_info);
 	}
 
@@ -242,7 +242,7 @@ convert_error (GError  *poppler_error,
 			code = EV_DOCUMENT_ERROR_INVALID;
 		else if (poppler_error->code == POPPLER_ERROR_ENCRYPTED)
 			code = EV_DOCUMENT_ERROR_ENCRYPTED;
-			
+
 		g_set_error_literal (error,
                                      EV_DOCUMENT_ERROR,
                                      code,
@@ -375,7 +375,7 @@ pdf_document_get_page_size (EvDocument *document,
 			    double     *height)
 {
 	g_return_if_fail (POPPLER_IS_PAGE (page->backend_page));
-	
+
 	poppler_page_get_size (POPPLER_PAGE (page->backend_page), width, height);
 }
 
@@ -470,7 +470,7 @@ make_thumbnail_for_page (PopplerPage     *poppler_page,
 	ev_document_fc_mutex_lock ();
 	surface = pdf_page_render (poppler_page, width, height, rc);
 	ev_document_fc_mutex_unlock ();
-	
+
 	pixbuf = ev_document_misc_pixbuf_from_surface (surface);
 	cairo_surface_destroy (surface);
 
@@ -570,17 +570,12 @@ pdf_document_get_thumbnail_surface (EvDocument      *document,
 	return surface;
 }
 
-/* reference:
-http://www.pdfa.org/lib/exe/fetch.php?id=pdfa%3Aen%3Atechdoc&cache=cache&media=pdfa:techdoc:tn0001_pdfa-1_and_namespaces_2008-03-18.pdf */
-static char *
-pdf_document_get_format_from_metadata (xmlXPathContextPtr xpathCtx)
+static xmlChar *
+pdf_document_get_format_from_path (xmlXPathContextPtr xpathCtx,
+                                   const char* xpath)
 {
 	xmlXPathObjectPtr xpathObj;
-	xmlChar *part = NULL;
-	xmlChar *conf = NULL;
-	xmlChar *pdfxid = NULL;
-	char *result = NULL;
-	int i;
+	xmlChar *result = NULL;
 
 	/* add pdf/a and pdf/x namespaces */
 	xmlXPathRegisterNs (xpathCtx, BAD_CAST "x", BAD_CAST "adobe:ns:meta/");
@@ -588,65 +583,53 @@ pdf_document_get_format_from_metadata (xmlXPathContextPtr xpathCtx)
 	xmlXPathRegisterNs (xpathCtx, BAD_CAST "pdfaid", BAD_CAST "http://www.aiim.org/pdfa/ns/id/");
 	xmlXPathRegisterNs (xpathCtx, BAD_CAST "pdfxid", BAD_CAST "http://www.npes.org/pdfx/ns/id/");
 	xmlXPathRegisterNs (xpathCtx, BAD_CAST "pdfx", BAD_CAST "http://ns.adobe.com/pdfx/1.3/");
+	xmlXPathRegisterNs (xpathCtx, BAD_CAST "pdf", BAD_CAST "http://ns.adobe.com/pdf/1.3/");
+	xmlXPathRegisterNs (xpathCtx, BAD_CAST "xmp", BAD_CAST "http://ns.adobe.com/xap/1.0/");
+
+	xpathObj = xmlXPathEvalExpression (BAD_CAST xpath, xpathCtx);
+	if (xpathObj == NULL)
+			return NULL;
+
+	if (xpathObj->nodesetval != NULL && xpathObj->nodesetval->nodeNr != 0)
+			result = xmlNodeGetContent (xpathObj->nodesetval->nodeTab[0]);
+
+	xmlXPathFreeObject (xpathObj);
+	return result;
+}
+
+/* reference:
+http://www.pdfa.org/lib/exe/fetch.php?id=pdfa%3Aen%3Atechdoc&cache=cache&media=pdfa:techdoc:tn0001_pdfa-1_and_namespaces_2008-03-18.pdf */
+static char *
+pdf_document_get_format_from_metadata (xmlXPathContextPtr xpathCtx)
+{
+	xmlChar *part = NULL;
+	xmlChar *conf = NULL;
+	xmlChar *pdfxid = NULL;
+	char *result = NULL;
+	int i;
 
 	/* reads pdf/a part */
 	/* first syntax: child node */
-	xpathObj = xmlXPathEvalExpression (BAD_CAST "/x:xmpmeta/rdf:RDF/rdf:Description/pdfaid:part", xpathCtx);
-	if (xpathObj != NULL) {
-		if (xpathObj->nodesetval != NULL && xpathObj->nodesetval->nodeNr != 0)
-			part = xmlNodeGetContent (xpathObj->nodesetval->nodeTab[0]);
-
-		xmlXPathFreeObject (xpathObj);
-	}
+	part = pdf_document_get_format_from_path (xpathCtx, "/x:xmpmeta/rdf:RDF/rdf:Description/pdfaid:part");
 	if (part == NULL) {
 		/* second syntax: attribute */
-		xpathObj = xmlXPathEvalExpression (BAD_CAST "/x:xmpmeta/rdf:RDF/rdf:Description/@pdfaid:part", xpathCtx);
-		if (xpathObj != NULL) {
-			if (xpathObj->nodesetval != NULL && xpathObj->nodesetval->nodeNr != 0)
-				part = xmlNodeGetContent (xpathObj->nodesetval->nodeTab[0]);
-
-			xmlXPathFreeObject (xpathObj);
-		}
+		part = pdf_document_get_format_from_path (xpathCtx, "/x:xmpmeta/rdf:RDF/rdf:Description/@pdfaid:part");
 	}
 
 	/* reads pdf/a conformance */
 	/* first syntax: child node */
-	xpathObj = xmlXPathEvalExpression (BAD_CAST "/x:xmpmeta/rdf:RDF/rdf:Description/pdfaid:conformance", xpathCtx);
-	if (xpathObj != NULL) {
-		if (xpathObj->nodesetval != NULL && xpathObj->nodesetval->nodeNr != 0)
-			conf = xmlNodeGetContent (xpathObj->nodesetval->nodeTab[0]);
-
-		xmlXPathFreeObject (xpathObj);
-	}
+	conf =  pdf_document_get_format_from_path (xpathCtx, "/x:xmpmeta/rdf:RDF/rdf:Description/pdfaid:conformance");
 	if (conf == NULL) {
 		/* second syntax: attribute */
-		xpathObj = xmlXPathEvalExpression (BAD_CAST "/x:xmpmeta/rdf:RDF/rdf:Description/@pdfaid:conformance", xpathCtx);
-		if (xpathObj != NULL) {
-			if (xpathObj->nodesetval != NULL && xpathObj->nodesetval->nodeNr != 0)
-				conf = xmlNodeGetContent (xpathObj->nodesetval->nodeTab[0]);
-
-			xmlXPathFreeObject (xpathObj);
-		}
+		conf =  pdf_document_get_format_from_path (xpathCtx, "/x:xmpmeta/rdf:RDF/rdf:Description/@pdfaid:conformance");
 	}
 
 	/* reads pdf/x id  */
 	/* first syntax: pdfxid */
-	xpathObj = xmlXPathEvalExpression (BAD_CAST "/x:xmpmeta/rdf:RDF/rdf:Description/pdfxid:GTS_PDFXVersion", xpathCtx);
-	if (xpathObj != NULL) {
-		if (xpathObj->nodesetval != NULL && xpathObj->nodesetval->nodeNr != 0)
-			pdfxid = xmlNodeGetContent (xpathObj->nodesetval->nodeTab[0]);
-
-		xmlXPathFreeObject (xpathObj);
-	}
+	pdfxid = pdf_document_get_format_from_path (xpathCtx, "/x:xmpmeta/rdf:RDF/rdf:Description/pdfxid:GTS_PDFXVersion");
 	if (pdfxid == NULL) {
 		/* second syntax: pdfx */
-		xpathObj = xmlXPathEvalExpression (BAD_CAST "/x:xmpmeta/rdf:RDF/rdf:Description/pdfx:GTS_PDFXVersion", xpathCtx);
-		if (xpathObj != NULL) {
-			if (xpathObj->nodesetval != NULL && xpathObj->nodesetval->nodeNr != 0)
-				pdfxid = xmlNodeGetContent (xpathObj->nodesetval->nodeTab[0]);
-
-			xmlXPathFreeObject (xpathObj);
-		}
+		pdfxid = pdf_document_get_format_from_path (xpathCtx, "/x:xmpmeta/rdf:RDF/rdf:Description/pdfx:GTS_PDFXVersion");
 	}
 
 	if (part != NULL && conf != NULL) {
@@ -665,14 +648,12 @@ pdf_document_get_format_from_metadata (xmlXPathContextPtr xpathCtx)
 	xmlFree (part);
 	xmlFree (conf);
 	xmlFree (pdfxid);
-
 	return result;
 }
 
-
 static char *
-pdf_document_get_lists_from_dc_tags(xmlXPathContextPtr xpathCtx,
-																						const char* xpath)
+pdf_document_get_lists_from_dc_tags (xmlXPathContextPtr xpathCtx,
+                                     const char* xpath)
 {
 	xmlXPathObjectPtr xpathObj;
 	int i;
@@ -688,24 +669,25 @@ pdf_document_get_lists_from_dc_tags(xmlXPathContextPtr xpathCtx,
 
 	/* reads pdf/a sequence*/
 	xpathObj = xmlXPathEvalExpression (BAD_CAST xpath, xpathCtx);
-	if (xpathObj != NULL) {
-		if (xpathObj->nodesetval != NULL && xpathObj->nodesetval->nodeNr != 0) {
-			for (i=0; i < xpathObj->nodesetval->nodeNr; i++) {
-				content = xmlNodeGetContent(xpathObj->nodesetval->nodeTab[i]);
-				if (i){
-					tmp_elements = g_strdup(elements);
-					g_free(elements);
-					elements = g_strdup_printf("%s, %s", tmp_elements, content);
-					g_free(tmp_elements);
-				}
-				else{
-					elements = g_strdup_printf("%s", content);
-				}
-				xmlFree(content);
+	if (xpathObj == NULL)
+            return NULL;
+
+	if (xpathObj->nodesetval != NULL && xpathObj->nodesetval->nodeNr != 0) {
+		for (i=0; i < xpathObj->nodesetval->nodeNr; i++) {
+			content = xmlNodeGetContent (xpathObj->nodesetval->nodeTab[i]);
+			if (i) {
+				tmp_elements = g_strdup (elements);
+				g_free (elements);
+				elements = g_strdup_printf ("%s, %s", tmp_elements, content);
+				g_free (tmp_elements);
+			} else {
+				elements = g_strdup_printf ("%s", content);
 			}
+			xmlFree(content);
 		}
-		xmlXPathFreeObject (xpathObj);
 	}
+	xmlXPathFreeObject (xpathObj);
+
 
 	if (elements != NULL) {
 		/* return buffer */
@@ -721,28 +703,18 @@ pdf_document_get_lists_from_dc_tags(xmlXPathContextPtr xpathCtx,
 static char *
 pdf_document_get_author_from_metadata (xmlXPathContextPtr xpathCtx)
 {
-
-	char* result = NULL;
-
-	result = pdf_document_get_lists_from_dc_tags(xpathCtx, AUTHORS);
-
-	return result;
+	return pdf_document_get_lists_from_dc_tags (xpathCtx, AUTHORS);
 }
 
 static char *
 pdf_document_get_keywords_from_metadata (xmlXPathContextPtr xpathCtx)
 {
-
-	char* result = NULL;
-
-	result = pdf_document_get_lists_from_dc_tags(xpathCtx, KEYWORDS);
-
-	return result;
+	return pdf_document_get_lists_from_dc_tags (xpathCtx, KEYWORDS);
 }
 
 static char *
 pdf_document_get_localized_object_from_metadata (xmlXPathContextPtr xpathCtx,
-														const char* xpath)
+                                                 const char* xpath)
 {
 	xmlXPathObjectPtr xpathObj;
 	xmlChar *marked = NULL;
@@ -784,7 +756,7 @@ pdf_document_get_localized_object_from_metadata (xmlXPathContextPtr xpathCtx,
 		g_free (tag);
 		g_free (aux);
 	}
-	g_strfreev(tags);
+	g_strfreev (tags);
 
 	/* 2) if not, use the default string */
 	if (!loc_object) {
@@ -798,37 +770,24 @@ pdf_document_get_localized_object_from_metadata (xmlXPathContextPtr xpathCtx,
 		}
 		g_free (aux);
 	}
-
 	return loc_object;
 }
-
 
 static char *
 pdf_document_get_title_from_metadata (xmlXPathContextPtr xpathCtx)
 {
-
-	char* result = NULL;
-
-	result = pdf_document_get_localized_object_from_metadata(xpathCtx, TITLE);
-
-	return result;
+	return pdf_document_get_localized_object_from_metadata (xpathCtx, TITLE);
 }
 
 static char *
 pdf_document_get_subject_from_metadata (xmlXPathContextPtr xpathCtx)
 {
-
-	char* result = NULL;
-
-	result = pdf_document_get_localized_object_from_metadata(xpathCtx, SUBJECT);
-
-	return result;
+	return pdf_document_get_localized_object_from_metadata (xpathCtx, SUBJECT);
 }
 
 static void
 pdf_document_get_dates_from_metadata (GTime *result, xmlXPathContextPtr xpathCtx)
 {
-	xmlXPathObjectPtr xpathObj;
 	xmlChar *modifydate = NULL;
 	xmlChar *createdate = NULL;
 	xmlChar *metadate = NULL;
@@ -836,58 +795,33 @@ pdf_document_get_dates_from_metadata (GTime *result, xmlXPathContextPtr xpathCtx
 	GTimeVal  tmp_time;
 	int i;
 
-	/* add pdf/a namespaces */
-	xmlXPathRegisterNs (xpathCtx, BAD_CAST "x", BAD_CAST "adobe:ns:meta/");
-	xmlXPathRegisterNs (xpathCtx, BAD_CAST "rdf", BAD_CAST "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
-	xmlXPathRegisterNs (xpathCtx, BAD_CAST "xmp", BAD_CAST "http://ns.adobe.com/xap/1.0/");
-
 	/* reads modify date */
-	xpathObj = xmlXPathEvalExpression (BAD_CAST MOD_DATE, xpathCtx);
-	if (xpathObj != NULL) {
-		if (xpathObj->nodesetval != NULL && xpathObj->nodesetval->nodeNr != 0)
-			modifydate = xmlNodeGetContent (xpathObj->nodesetval->nodeTab[0]);
-
-		xmlXPathFreeObject (xpathObj);
-	}
-
+	modifydate = pdf_document_get_format_from_path (xpathCtx, MOD_DATE);
 	/* reads pdf create date */
-	xpathObj = xmlXPathEvalExpression (BAD_CAST CREATE_DATE, xpathCtx);
-	if (xpathObj != NULL) {
-		if (xpathObj->nodesetval != NULL && xpathObj->nodesetval->nodeNr != 0)
-			createdate = xmlNodeGetContent (xpathObj->nodesetval->nodeTab[0]);
-
-		xmlXPathFreeObject (xpathObj);
-	}
-
+	createdate = pdf_document_get_format_from_path (xpathCtx, CREATE_DATE);
 	/* reads pdf metadata date */
-	xpathObj = xmlXPathEvalExpression (BAD_CAST CREATE_DATE, xpathCtx);
-	if (xpathObj != NULL) {
-		if (xpathObj->nodesetval != NULL && xpathObj->nodesetval->nodeNr != 0)
-			metadate = xmlNodeGetContent (xpathObj->nodesetval->nodeTab[0]);
-
-		xmlXPathFreeObject (xpathObj);
-	}
+	metadate = pdf_document_get_format_from_path (xpathCtx, META_DATE);
 
 	if (modifydate != NULL) {
 		/* return buffer */
-		datestr = g_strdup_printf("%s", modifydate);
+		datestr = g_strdup_printf ("%s", modifydate);
 		g_time_val_from_iso8601 (datestr, &tmp_time);
 		result[0] = (GTime)tmp_time.tv_sec;
-		g_free(datestr);
+		g_free (datestr);
 	}
 
 	if (createdate != NULL) {
-		datestr = g_strdup_printf("%s", createdate);
+		datestr = g_strdup_printf ("%s", createdate);
 		g_time_val_from_iso8601 (datestr, &tmp_time);
 		result[1] = (GTime)tmp_time.tv_sec;
-		g_free(datestr);
+		g_free (datestr);
 	}
 
 	if (createdate != NULL) {
-		datestr = g_strdup_printf("%s", metadate);
+		datestr = g_strdup_printf ("%s", metadate);
 		g_time_val_from_iso8601 (datestr, &tmp_time);
 		result[1] = (GTime)tmp_time.tv_sec;
-		g_free(datestr);
+		g_free (datestr);
 	}
 
 	/* Cleanup */
@@ -896,66 +830,37 @@ pdf_document_get_dates_from_metadata (GTime *result, xmlXPathContextPtr xpathCtx
 	xmlFree (metadate);
 }
 
-
 static char *
 pdf_document_get_creatortool_from_metadata (xmlXPathContextPtr xpathCtx)
 {
-	xmlXPathObjectPtr xpathObj;
 	xmlChar *creatortool = NULL;
 	char *result = NULL;
 
-	/* add pdf/a and pdf/x namespaces */
-	xmlXPathRegisterNs (xpathCtx, BAD_CAST "x", BAD_CAST "adobe:ns:meta/");
-	xmlXPathRegisterNs (xpathCtx, BAD_CAST "rdf", BAD_CAST "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
-	xmlXPathRegisterNs (xpathCtx, BAD_CAST "xmp", BAD_CAST "http://ns.adobe.com/xap/1.0/");
-
 	/* reads CreatorTool */
-	xpathObj = xmlXPathEvalExpression (BAD_CAST CREATOR, xpathCtx);
-	if (xpathObj != NULL) {
-		if (xpathObj->nodesetval != NULL && xpathObj->nodesetval->nodeNr != 0)
-			creatortool = xmlNodeGetContent (xpathObj->nodesetval->nodeTab[0]);
-
-		xmlXPathFreeObject (xpathObj);
-	}
-
+	creatortool = pdf_document_get_format_from_path (xpathCtx, CREATOR);
 	if (creatortool != NULL) {
 		result = g_strdup_printf ("%s", creatortool);
 	}
 
 	/* Cleanup */
 	xmlFree (creatortool);
-
 	return result;
 }
 
 static char *
 pdf_document_get_producer_from_metadata (xmlXPathContextPtr xpathCtx)
 {
-	xmlXPathObjectPtr xpathObj;
 	xmlChar *producer = NULL;
 	char *result = NULL;
 
-	/* add pdf namespaces */
-	xmlXPathRegisterNs (xpathCtx, BAD_CAST "x", BAD_CAST "adobe:ns:meta/");
-	xmlXPathRegisterNs (xpathCtx, BAD_CAST "rdf", BAD_CAST "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
-	xmlXPathRegisterNs (xpathCtx, BAD_CAST "pdf", BAD_CAST "http://ns.adobe.com/pdf/1.3/");
-
 	/* reads Producer  */
-	xpathObj = xmlXPathEvalExpression (BAD_CAST PRODUCER, xpathCtx);
-	if (xpathObj != NULL) {
-		if (xpathObj->nodesetval != NULL && xpathObj->nodesetval->nodeNr != 0)
-			producer = xmlNodeGetContent (xpathObj->nodesetval->nodeTab[0]);
-
-		xmlXPathFreeObject (xpathObj);
-	}
-
+	producer = pdf_document_get_format_from_path (xpathCtx, PRODUCER);
 	if (producer != NULL) {
 		result = g_strdup_printf ("%s", producer);
 	}
 
 	/* Cleanup */
 	xmlFree (producer);
-
 	return result;
 }
 
@@ -1051,10 +956,10 @@ pdf_document_parse_metadata (const gchar    *metadata,
 	xmlXPathContextPtr xpathCtx;
 	gchar             *fmt;
 	gchar             *author;
-	gchar							*keywords;
+	gchar             *keywords;
 	gchar             *title;
-	gchar							*subject;
-	gchar							*creatortool;
+	gchar             *subject;
+	gchar             *creatortool;
 	gchar             *producer;
 	GTime             dates[3] = {0};
 
@@ -1154,7 +1059,7 @@ pdf_document_get_info (EvDocument *document)
 			    EV_DOCUMENT_INFO_MOD_DATE |
 			    EV_DOCUMENT_INFO_LINEARIZED |
 			    EV_DOCUMENT_INFO_N_PAGES |
-			    EV_DOCUMENT_INFO_SECURITY | 
+			    EV_DOCUMENT_INFO_SECURITY |
 		            EV_DOCUMENT_INFO_PAPER_SIZE |
 			    EV_DOCUMENT_INFO_LICENSE;
 
