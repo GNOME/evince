@@ -4411,16 +4411,6 @@ ev_window_uninhibit_screensaver (EvWindow *window)
 }
 
 static void
-ev_window_update_presentation_action (EvWindow *window)
-{
-	GAction *action;
-
-	action = g_action_map_lookup_action (G_ACTION_MAP (window), "presentation");
-	g_simple_action_set_state (G_SIMPLE_ACTION (action),
-				   g_variant_new_boolean (EV_WINDOW_IS_PRESENTATION (window)));
-}
-
-static void
 ev_window_view_presentation_finished (EvWindow *window)
 {
 	ev_window_stop_presentation (window, TRUE);
@@ -4485,7 +4475,6 @@ ev_window_run_presentation (EvWindow *window)
 			    TRUE, TRUE, 0);
 
 	gtk_widget_hide (window->priv->hpaned);
-	ev_window_update_presentation_action (window);
 	update_chrome_visibility (window);
 
 	gtk_widget_grab_focus (window->priv->presentation_view);
@@ -4520,7 +4509,6 @@ ev_window_stop_presentation (EvWindow *window,
 	window->priv->presentation_view = NULL;
 
 	gtk_widget_show (window->priv->hpaned);
-	ev_window_update_presentation_action (window);
 	update_chrome_visibility (window);
 	if (unfullscreen_window)
 		gtk_window_unfullscreen (GTK_WINDOW (window));
@@ -4540,9 +4528,8 @@ ev_window_cmd_view_presentation (GSimpleAction *action,
 {
 	EvWindow *window = user_data;
 
-	if (g_variant_get_boolean (state)) {
+	if (!EV_WINDOW_IS_PRESENTATION (window))
 		ev_window_run_presentation (window);
-	}
 	/* We don't exit presentation when action is toggled because it conflicts with some
 	 * remote controls. The behaviour is also consistent with libreoffice and other
 	 * presentation tools. See https://bugzilla.gnome.org/show_bug.cgi?id=556162
@@ -5949,7 +5936,7 @@ static const GActionEntry actions[] = {
 	{ "inverted-colors", NULL, NULL, "false", ev_window_cmd_view_inverted_colors },
 	{ "enable-spellchecking", NULL, NULL, "false", ev_window_cmd_view_enable_spellchecking },
 	{ "fullscreen", NULL, NULL, "false", ev_window_cmd_view_fullscreen },
-	{ "presentation", NULL, NULL, "false", ev_window_cmd_view_presentation },
+	{ "presentation", ev_window_cmd_view_presentation },
 	{ "rotate-left", ev_window_cmd_edit_rotate_left },
 	{ "rotate-right", ev_window_cmd_edit_rotate_right },
 	{ "zoom-in", ev_window_cmd_view_zoom_in },
