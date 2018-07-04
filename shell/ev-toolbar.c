@@ -42,7 +42,6 @@ enum
 struct _EvToolbarPrivate {
         EvWindow  *window;
 
-        GtkWidget *view_menu_button;
         GtkWidget *action_menu_button;
         GtkWidget *page_action;
         GtkWidget *zoom_action;
@@ -215,16 +214,6 @@ ev_toolbar_constructed (GObject *object)
         ev_toolbar->priv->sidebar_button = button;
         gtk_header_bar_pack_start (GTK_HEADER_BAR (ev_toolbar), button);
 
-        /*
-        menu = G_MENU_MODEL (gtk_builder_get_object (builder, "view-menu"));
-        button = ev_toolbar_create_menu_button (ev_toolbar, "document-properties-symbolic",
-                                                menu, GTK_ALIGN_END);
-        gtk_widget_set_tooltip_text (button, _("View options"));
-        atk_object_set_name (gtk_widget_get_accessible (button), _("View options"));
-        ev_toolbar->priv->view_menu_button = button;
-        gtk_header_bar_pack_start (GTK_HEADER_BAR (ev_toolbar), button);
-         */
-
         /* Page selector */
         /* Use EvPageActionWidget for now, since the page selector action is also used by the previewer */
         tool_item = ev_page_action_widget_new (G_MENU (gtk_builder_get_object (builder, "navigation-menu")));
@@ -325,10 +314,6 @@ ev_toolbar_has_visible_popups (EvToolbar *ev_toolbar)
         g_return_val_if_fail (EV_IS_TOOLBAR (ev_toolbar), FALSE);
 
         priv = ev_toolbar->priv;
-
-        popover = gtk_menu_button_get_popover (GTK_MENU_BUTTON (priv->view_menu_button));
-        if (gtk_widget_get_visible (GTK_WIDGET (popover)))
-                return TRUE;
 
         popover = gtk_menu_button_get_popover (GTK_MENU_BUTTON (priv->action_menu_button));
         if (gtk_widget_get_visible (GTK_WIDGET (popover)))
