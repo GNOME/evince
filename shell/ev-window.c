@@ -1028,6 +1028,33 @@ ev_window_sidebar_get_current_page_id (EvWindow *ev_window)
 }
 
 static void
+ev_window_set_sidebar_icon (EvWindow    *window,
+                            const gchar *page_id)
+{
+	EvToolbar *toolbar = EV_TOOLBAR (window->priv->toolbar);
+	gchar *icon_name;
+
+	if (strcmp (page_id, LINKS_SIDEBAR_ID) == 0) {
+		icon_name = g_strdup (LINKS_SIDEBAR_ICON);
+	} else if (strcmp (page_id, THUMBNAILS_SIDEBAR_ID) == 0) {
+		icon_name = g_strdup (THUMBNAILS_SIDEBAR_ICON);
+	} else if (strcmp (page_id, ATTACHMENTS_SIDEBAR_ID) == 0) {
+		icon_name = g_strdup (ATTACHMENTS_SIDEBAR_ICON);
+	} else if (strcmp (page_id, LAYERS_SIDEBAR_ID) == 0) {
+		icon_name = g_strdup (LAYERS_SIDEBAR_ICON);
+	} else if (strcmp (page_id, ANNOTS_SIDEBAR_ID) == 0) {
+		icon_name = g_strdup (ANNOTS_SIDEBAR_ICON);
+	} else if (strcmp (page_id, BOOKMARKS_SIDEBAR_ID) == 0) {
+		icon_name = g_strdup (BOOKMARKS_SIDEBAR_ICON);
+	} else {
+		/* setup thumbnails by default */
+		icon_name = g_strdup (THUMBNAILS_SIDEBAR_ICON);
+	}
+
+	ev_toolbar_set_sidebar_icon (toolbar, icon_name);
+	g_free (icon_name);
+}
+static void
 ev_window_sidebar_set_current_page (EvWindow    *window,
 				    const gchar *page_id)
 {
@@ -5091,11 +5118,16 @@ ev_window_sidebar_current_page_changed_cb (EvSidebar  *ev_sidebar,
 					   GParamSpec *pspec,
 					   EvWindow   *ev_window)
 {
+	const gchar *page_id;
+
+	page_id = ev_window_sidebar_get_current_page_id (ev_window);
+
 	if (ev_window->priv->metadata && !ev_window_is_empty (ev_window)) {
 		ev_metadata_set_string (ev_window->priv->metadata,
 					"sidebar_page",
-					ev_window_sidebar_get_current_page_id (ev_window));
+					page_id);
 	}
+	ev_window_set_sidebar_icon (ev_window, page_id);
 }
 
 static void

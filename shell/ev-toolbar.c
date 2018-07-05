@@ -386,3 +386,19 @@ ev_toolbar_get_mode (EvToolbar *ev_toolbar)
 
         return ev_toolbar->priv->toolbar_mode;
 }
+
+void
+ev_toolbar_set_sidebar_icon (EvToolbar   *ev_toolbar,
+                             const gchar *icon_name)
+{
+	GtkWidget *button = ev_toolbar->priv->sidebar_button;
+	GtkWidget *image;
+
+	g_return_if_fail (EV_IS_TOOLBAR (ev_toolbar));
+	g_return_if_fail (icon_name != NULL);
+
+	image = gtk_image_new_from_icon_name (icon_name, GTK_ICON_SIZE_MENU);
+
+	gtk_widget_set_valign (button, GTK_ALIGN_CENTER);
+	gtk_button_set_image (GTK_BUTTON (button), image);
+}
