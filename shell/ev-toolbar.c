@@ -31,6 +31,7 @@
 #include "ev-zoom-action.h"
 #include "ev-application.h"
 #include "ev-page-action-widget.h"
+#include "ev-sidebar.h"
 #include <math.h>
 
 enum
@@ -50,6 +51,7 @@ struct _EvToolbarPrivate {
         GtkWidget *open_button;
         GtkWidget *annots_button;
         GtkWidget *sidebar_button;
+        GtkWidget *sidebar;
         GMenu *bookmarks_section;
 
         EvToolbarMode toolbar_mode;
@@ -182,6 +184,27 @@ zoom_selector_activated (GtkWidget *zoom_action,
                          EvToolbar *toolbar)
 {
         ev_window_focus_view (toolbar->priv->window);
+}
+
+static void
+ev_toolbar_sidebar_current_page_changed (EvSidebar  *ev_sidebar,
+                                         GParamSpec *pspec,
+                                         EvToolbar  *ev_toolbar)
+{
+        GtkWidget *button = ev_toolbar->priv->sidebar_button;
+        GtkWidget *image;
+        gchar     *icon_name;
+
+        g_object_get (ev_sidebar, "active-icon-name", &icon_name, NULL);
+
+        if (!icon_name)
+                return;
+
+        image = gtk_image_new_from_icon_name (icon_name, GTK_ICON_SIZE_MENU);
+
+        gtk_widget_set_valign (button, GTK_ALIGN_CENTER);
+        gtk_button_set_image (GTK_BUTTON (button), image);
+        g_free (icon_name);
 }
 
 static void
@@ -400,4 +423,19 @@ ev_toolbar_get_mode (EvToolbar *ev_toolbar)
         g_return_val_if_fail (EV_IS_TOOLBAR (ev_toolbar), EV_TOOLBAR_MODE_NORMAL);
 
         return ev_toolbar->priv->toolbar_mode;
+}
+
+void
+ev_toolbar_set_sidebar (EvToolbar *ev_toolbar,
+                        GtkWidget *sidebar)
+{
+        g_return_if_fail (EV_IS_TOOLBAR (ev_toolbar));
+        g_return_if_fail (EV_IS_SIDEBAR (sidebar));
+
+        ev_toolbar->priv->sidebar = sidebar;
+
+        g_signal_connect (sidebar,
+                          "notify::current-page",
+                          G_CALLBACK (ev_toolbar_sidebar_current_page_changed),
+                          ev_toolbar);
 }
