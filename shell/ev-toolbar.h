@@ -2,6 +2,7 @@
  *  this file is part of evince, a gnome document viewer
  *
  * Copyright (C) 2012 Carlos Garcia Campos <carlosgc@gnome.org>
+ * Copyright (C) 2018 Germán Poo-Caamaño <gpoo@gnome.org>
  *
  * Evince is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by
@@ -61,6 +62,8 @@ GtkWidget    *ev_toolbar_get_page_selector  (EvToolbar *ev_toolbar);
 void          ev_toolbar_set_mode           (EvToolbar     *ev_toolbar,
 					     EvToolbarMode  mode);
 EvToolbarMode ev_toolbar_get_mode           (EvToolbar     *ev_toolbar);
+void          ev_toolbar_set_sidebar        (EvToolbar *ev_toolbar,
+                                             GtkWidget *sidebar);
 
 G_END_DECLS
 
