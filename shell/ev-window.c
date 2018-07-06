@@ -1780,6 +1780,8 @@ ev_window_load_job_cb (EvJob *job,
 		ev_job_load_set_password (job_load, NULL);
 		ev_password_view_ask_password (EV_PASSWORD_VIEW (ev_window->priv->password_view));
 	} else {
+		ev_toolbar_set_mode (EV_TOOLBAR (ev_window->priv->toolbar),
+				     EV_TOOLBAR_MODE_RECENT_VIEW);
 		text = g_uri_unescape_string (job_load->uri, NULL);
 		display_name = g_markup_escape_text (text, -1);
 		g_free (text);
