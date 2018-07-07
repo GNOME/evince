@@ -1,0 +1,135 @@
+{
+    "app-id": "org.gnome.Evince",
+    "runtime": "org.gnome.Platform",
+    "runtime-version": "3.28",
+    "sdk": "org.gnome.Sdk",
+    "command": "evince",
+    "tags": [
+        "devel"
+    ],
+    "desktop-file-name-prefix": "(Development) ",
+    "copy-icon": true,
+    "finish-args": [
+        "--share=ipc",
+        "--socket=x11",
+        "--socket=wayland",
+        "--filesystem=host",
+        "--talk-name=org.gnome.SettingsDaemon.MediaKeys",
+        "--filesystem=xdg-run/dconf",
+        "--filesystem=~/.config/dconf:ro",
+        "--talk-name=ca.desrt.dconf",
+        "--env=DCONF_USER_CONFIG_DIR=.config/dconf",
+        "--talk-name=org.gtk.vfs",
+        "--talk-name=org.gtk.vfs.*"
+    ],
+    "build-options": {
+        "cflags": "-O2 -g",
+        "cxxflags": "-O2 -g",
+        "env": {
+            "V": "1"
+        }
+    },
+    "cleanup": [
+        "/include",
+        "/lib/pkgconfig",
+        "/share/pkgconfig",
+        "/share/aclocal",
+        "/man",
+        "/share/man",
+        "/share/gtk-doc",
+        "/share/vala",
+        "*.la",
+        "*.a"
+    ],
+    "modules": [
+        {
+            "name": "popplerdata",
+            "no-autogen": true,
+            "make-install-args": [
+                "prefix=/app"
+            ],
+            "sources": [
+                {
+                    "type": "archive",
+                    "url": "http://poppler.freedesktop.org/poppler-data-0.4.9.tar.gz",
+                    "sha256": "1f9c7e7de9ecd0db6ab287349e31bf815ca108a5a175cf906a90163bdbe32012"
+                }
+            ]
+        },
+        {
+            "name": "poppler",
+            "buildsystem": "cmake-ninja",
+            "config-opts": [
+                "-DCMAKE_INSTALL_LIBDIR=/app/lib",
+                "-DCMAKE_INSTALL_INCLUDEDIR=/app/include",
+                "-DENABLE_LIBOPENJPEG=none"
+            ],
+            "cleanup": [
+                "/bin"
+            ],
+            "sources": [
+                {
+                    "type": "archive",
+                    "url": "https://poppler.freedesktop.org/poppler-0.66.0.tar.xz",
+                    "sha256": "2c096431adfb74bc2f53be466889b7646e1b599f28fa036094f3f7235cc9eae7"
+                }
+            ]
+        },
+        {
+            "name": "djvulibre",
+            "config-opts": [
+                "--disable-desktopfiles"
+            ],
+            "cleanup": [
+                "/bin"
+            ],
+            "sources": [
+                {
+                    "type": "archive",
+                    "url": "https://downloads.sourceforge.net/project/djvu/DjVuLibre/3.5.27/djvulibre-3.5.27.tar.gz",
+                    "sha256": "e69668252565603875fb88500cde02bf93d12d48a3884e472696c896e81f505f"
+                }
+            ]
+        },
+        {
+            "name" : "gspell",
+            "cleanup" : [
+                "/bin"
+            ],
+            "sources" : [
+                {
+                    "type" : "archive",
+                    "url" : "https://download.gnome.org/sources/gspell/1.8/gspell-1.8.0.tar.xz",
+                    "sha256" : "1b7fc2c5b84ede43bc52d513f0601238af92b572a42b19363da6d067fb529345"
+                }
+            ],
+            "modules" : [
+                {
+                    "name" : "enchant2",
+                    "cleanup" : [
+                        "/bin"
+                    ],
+                    "sources" : [
+                        {
+                            "type" : "archive",
+                            "url" : "https://github.com/AbiWord/enchant/releases/download/v2.2.3/enchant-2.2.3.tar.gz",
+                            "sha256" : "abd8e915675cff54c0d4da5029d95c528362266557c61c7149d53fa069b8076d"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "evince",
+            "config-opts": [
+                "--disable-nautilus"
+            ],
+            "sources": [
+                {
+                    "type": "git",
+                    "url": "https://gitlab.gnome.org/GNOME/evince.git",
+                }
+            ]
+        }
+    ]
+}
