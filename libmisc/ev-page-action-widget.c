@@ -231,7 +231,7 @@ ev_page_action_widget_init (EvPageActionWidget *action_widget)
         g_signal_connect_swapped (action_widget->entry, "focus-out-event",
                                   G_CALLBACK (focus_out_cb),
                                   action_widget);
-	g_object_set (priv->entry, "xalign", 1.0, NULL);
+	g_object_set (action_widget->entry, "xalign", 1.0, NULL);
 
 	obj = gtk_widget_get_accessible (action_widget->entry);
 	atk_object_set_name (obj, "page-label-entry");
