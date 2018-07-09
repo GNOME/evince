@@ -2617,6 +2617,22 @@ file_open_dialog_response_cb (GtkWidget *chooser,
 }
 
 static void
+ev_window_cmd_new_window (GSimpleAction *action,
+			  GVariant      *parameter,
+			  gpointer       user_data)
+{
+
+	EvWindow  *window = user_data;
+	GdkScreen *screen;
+	guint32    timestamp;
+
+	screen = gtk_window_get_screen (GTK_WINDOW (window));
+        timestamp = gtk_get_current_event_time ();
+
+	ev_application_new_window (EV_APP, screen, timestamp);
+}
+
+static void
 ev_window_cmd_file_open (GSimpleAction *action,
 			 GVariant      *parameter,
 			 gpointer       user_data)
@@ -5912,6 +5928,7 @@ ev_window_class_init (EvWindowClass *ev_window_class)
 }
 
 static const GActionEntry actions[] = {
+	{ "new", ev_window_cmd_new_window },
 	{ "open", ev_window_cmd_file_open },
 	{ "open-copy", ev_window_cmd_file_open_copy },
 	{ "save-as", ev_window_cmd_save_as },

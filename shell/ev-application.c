@@ -646,7 +646,7 @@ ev_application_open_uri_at_dest (EvApplication  *application,
 #endif /* ENABLE_DBUS */
 }
 
-static void
+void
 ev_application_new_window (EvApplication *application,
 			   GdkScreen     *screen,
 			   guint32        timestamp)
@@ -939,36 +939,10 @@ ev_application_migrate_config_dir (EvApplication *application)
 }
 
 static void
-app_new_cb (GSimpleAction *action,
-            GVariant      *parameter,
-            gpointer       user_data)
-{
-	EvApplication *application = user_data;
-        GList         *windows, *l;
-        GtkWindow     *window = NULL;
-
-        windows = gtk_application_get_windows (GTK_APPLICATION (application));
-        for (l = windows; l != NULL; l = l->next) {
-                if (EV_IS_WINDOW (l->data)) {
-                        window = GTK_WINDOW (l->data);
-                        break;
-                }
-        }
-
-	ev_application_new_window (application,
-                                   window ? gtk_window_get_screen (window) : gdk_screen_get_default (),
-                                   gtk_get_current_event_time ());
-}
-
-static void
 ev_application_startup (GApplication *gapplication)
 {
-        const GActionEntry app_menu_actions[] = {
-		{ "new",  app_new_cb, NULL, NULL, NULL },
-        };
-
         const gchar *action_accels[] = {
-          "win.open",                   "<Ctrl>O", NULL,
+          "win.win",                    "<Ctrl>O", NULL,
           "win.open-copy",              "<Ctrl>N", NULL,
           "win.save-as",                "<Ctrl>S", NULL,
           "win.print",                  "<Ctrl>P", NULL,
@@ -1016,10 +990,6 @@ ev_application_startup (GApplication *gapplication)
 	g_application_set_resource_base_path (gapplication, "/org/gnome/evince");
 
         G_APPLICATION_CLASS (ev_application_parent_class)->startup (gapplication);
-
-        g_action_map_add_action_entries (G_ACTION_MAP (application),
-                                         app_menu_actions, G_N_ELEMENTS (app_menu_actions),
-                                         application);
 
         for (it = action_accels; it[0]; it += g_strv_length ((gchar **)it) + 1)
                 gtk_application_set_accels_for_action (GTK_APPLICATION (application), it[0], &it[1]);
