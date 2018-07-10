@@ -278,12 +278,29 @@ ev_toolbar_constructed (GObject *object)
 }
 
 static void
+ev_toolbar_dispose (GObject *object)
+{
+        EvToolbar  *ev_toolbar = EV_TOOLBAR (object);
+        GMenuModel *bookmarks_submenu_model;
+
+        bookmarks_submenu_model = ev_window_get_bookmarks_menu (ev_toolbar->priv->window);
+        if (bookmarks_submenu_model) {
+                g_signal_handlers_disconnect_by_func (bookmarks_submenu_model,
+                                                      ev_toolbar_bookmarks_menu_model_changed,
+                                                      ev_toolbar);
+        }
+
+        G_OBJECT_CLASS (ev_toolbar_parent_class)->dispose (object);
+}
+
+static void
 ev_toolbar_class_init (EvToolbarClass *klass)
 {
         GObjectClass *g_object_class = G_OBJECT_CLASS (klass);
 
         g_object_class->set_property = ev_toolbar_set_property;
         g_object_class->constructed = ev_toolbar_constructed;
+        g_object_class->dispose = ev_toolbar_dispose;
 
         g_object_class_install_property (g_object_class,
                                          PROP_WINDOW,
