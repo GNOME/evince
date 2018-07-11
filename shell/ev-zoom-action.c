@@ -37,6 +37,7 @@ enum
 };
 
 enum {
+        ZOOM_IN_OUT_SECTION,
         ZOOM_MODES_SECTION,
         ZOOM_FREE_SECTION
 };
