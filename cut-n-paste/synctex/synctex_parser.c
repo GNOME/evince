@@ -95,6 +95,7 @@
 #       endif
 #   endif
 
+#define _GNU_SOURCE
 #include <stdlib.h>
 #include <stdarg.h>
 #include <stdio.h>
@@ -261,6 +262,8 @@ typedef synctex_node_p synctex_noxy_p;
 #       pragma mark -
 #       pragma mark Abstract OBJECTS and METHODS
 #   endif
+
+void synctex_node_free(synctex_node_p node);
 
 /**
  *  \def SYNCTEX_MSG_SEND
@@ -532,6 +535,10 @@ typedef struct {
     gzFile file;
     synctex_io_mode_t io_mode;
 } synctex_open_s;
+
+void synctex_reader_free(synctex_reader_p reader);
+synctex_reader_p synctex_reader_init_with_output_file(synctex_reader_p reader, const char * output, const char * build_directory);
+synctex_node_p _synctex_node_next(synctex_node_p node);
 
 /*	This functions opens the file at the "output" given location.
  *  It manages the problem of quoted filenames that appear with pdftex and filenames containing the space character.
