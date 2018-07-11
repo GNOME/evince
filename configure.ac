@@ -130,6 +130,7 @@ GTK_REQUIRED=3.16.0
 NAUTILUS_REQUIRED=2.91.4
 GDK_PIXBUF_REQUIRED=2.36.5
 GSPELL_REQUIRED=1.6.0
+SYNCTEX_REQUIRED=1.19
 
 AC_SUBST([GLIB_REQUIRED])
 AC_SUBST([GTK_REQUIRED])
@@ -538,7 +539,7 @@ GOBJECT_INTROSPECTION_CHECK([1.0])
 
 dnl ================== libsynctex ===========================================
 
-PKG_CHECK_MODULES(SYNCTEX, [synctex], has_synctex=system, has_synctex=internal)
+PKG_CHECK_MODULES(SYNCTEX, [synctex >= $SYNCTEX_REQUIRED], has_synctex=system, has_synctex=internal)
 
 dnl not found? use internal code copy.
 if test "x$has_synctex" = "xinternal"; then
