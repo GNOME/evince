@@ -245,12 +245,14 @@ struct _EvSourceLink
         gchar *filename;
         gint   line;
         gint   col;
+        gint   page;
 };
 
 GType          ev_source_link_get_type (void) G_GNUC_CONST;
 EvSourceLink  *ev_source_link_new      (const gchar *filename,
 					gint         line,
-					gint         col);
+					gint         col,
+					gint         page);
 EvSourceLink  *ev_source_link_copy     (EvSourceLink *link);
 void           ev_source_link_free     (EvSourceLink *link);
 

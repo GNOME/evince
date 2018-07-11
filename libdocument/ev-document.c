@@ -64,7 +64,7 @@ struct _EvDocumentPrivate
 	EvPageSize     *page_sizes;
 	EvDocumentInfo *info;
 
-	synctex_scanner_t synctex_scanner;
+	synctex_scanner_p synctex_scanner;
 };
 
 static guint64         _ev_document_get_size_gfile  (GFile      *file);
@@ -640,7 +640,7 @@ ev_document_synctex_backward_search (EvDocument *document,
                                      gfloat      y)
 {
         EvSourceLink *result = NULL;
-        synctex_scanner_t scanner;
+        synctex_scanner_p scanner;
 
         g_return_val_if_fail (EV_IS_DOCUMENT (document), NULL);
 
@@ -649,10 +649,10 @@ ev_document_synctex_backward_search (EvDocument *document,
                 return NULL;
 
         if (synctex_edit_query (scanner, page_index + 1, x, y) > 0) {
-                synctex_node_t node;
+                synctex_node_p node;
 
                 /* We assume that a backward search returns either zero or one result_node */
-                node = synctex_next_result (scanner);
+                node = synctex_scanner_next_result (scanner);
                 if (node != NULL) {
 			const gchar *filename;
 
@@ -661,7 +661,8 @@ ev_document_synctex_backward_search (EvDocument *document,
 			if (filename) {
 				result = ev_source_link_new (filename,
 							     synctex_node_line (node),
-							     synctex_node_column (node));
+							     synctex_node_column (node),
+							     synctex_node_page (node));
 			}
                 }
         }
@@ -675,7 +676,8 @@ ev_document_synctex_backward_search (EvDocument *document,
  * @source_link: a #EvSourceLink
  *
  * Peforms a Synctex forward search to obtain the area in the document
- * corresponding to the position @line and @column number in the source Tex file
+ * corresponding to the position (line, column, and page number in
+ * @source_link) in the source Tex file.
  *
  * Returns: An EvMapping with the page number and area corresponfing to
  * the given line in the source file. It must be free with g_free when done
@@ -685,7 +687,7 @@ ev_document_synctex_forward_search (EvDocument   *document,
 				    EvSourceLink *link)
 {
         EvMapping        *result = NULL;
-        synctex_scanner_t scanner;
+        synctex_scanner_p scanner;
 
         g_return_val_if_fail (EV_IS_DOCUMENT (document), NULL);
 
@@ -693,11 +695,11 @@ ev_document_synctex_forward_search (EvDocument   *document,
         if (!scanner)
                 return NULL;
 
-        if (synctex_display_query (scanner, link->filename, link->line, link->col) > 0) {
-                synctex_node_t node;
+        if (synctex_display_query (scanner, link->filename, link->line, link->col, link->page) > 0) {
+                synctex_node_p node;
                 gint           page;
 
-                if ((node = synctex_next_result (scanner))) {
+                if ((node = synctex_scanner_next_result (scanner))) {
                         result = g_new (EvMapping, 1);
 
                         page = synctex_node_page (node) - 1;
@@ -1119,13 +1121,15 @@ G_DEFINE_BOXED_TYPE (EvSourceLink, ev_source_link, ev_source_link_copy, ev_sourc
 EvSourceLink *
 ev_source_link_new (const gchar *filename,
 		    gint 	 line,
-		    gint 	 col)
+		    gint 	 col,
+		    gint         page)
 {
 	EvSourceLink *link = g_slice_new (EvSourceLink);
 
 	link->filename = g_strdup (filename);
 	link->line = line;
 	link->col = col;
+	link->page = page;
 
 	return link;
 }
