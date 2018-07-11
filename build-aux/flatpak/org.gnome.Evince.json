@@ -1,15 +1,15 @@
 {
-    "app-id": "org.gnome.Evince",
-    "runtime": "org.gnome.Platform",
-    "runtime-version": "3.28",
-    "sdk": "org.gnome.Sdk",
-    "command": "evince",
-    "tags": [
+    "app-id" : "org.gnome.Evince",
+    "runtime" : "org.gnome.Platform",
+    "runtime-version" : "3.28",
+    "sdk" : "org.gnome.Sdk",
+    "command" : "evince",
+    "tags" : [
         "devel"
     ],
-    "desktop-file-name-prefix": "(Development) ",
-    "copy-icon": true,
-    "finish-args": [
+    "desktop-file-name-prefix" : "(Development) ",
+    "copy-icon" : true,
+    "finish-args" : [
         "--share=ipc",
         "--socket=x11",
         "--socket=wayland",
@@ -23,14 +23,14 @@
         "--talk-name=org.gtk.vfs.*",
         "--talk-name=org.gnome.SessionManager"
     ],
-    "build-options": {
-        "cflags": "-O2 -g",
-        "cxxflags": "-O2 -g",
-        "env": {
-            "V": "1"
+    "build-options" : {
+        "cflags" : "-O2 -g",
+        "cxxflags" : "-O2 -g",
+        "env" : {
+            "V" : "1"
         }
     },
-    "cleanup": [
+    "cleanup" : [
         "/include",
         "/lib/pkgconfig",
         "/share/pkgconfig",
@@ -42,53 +42,53 @@
         "*.la",
         "*.a"
     ],
-    "modules": [
+    "modules" : [
         {
-            "name": "popplerdata",
-            "no-autogen": true,
-            "make-install-args": [
+            "name" : "popplerdata",
+            "no-autogen" : true,
+            "make-install-args" : [
                 "prefix=/app"
             ],
-            "sources": [
+            "sources" : [
                 {
-                    "type": "archive",
-                    "url": "http://poppler.freedesktop.org/poppler-data-0.4.9.tar.gz",
-                    "sha256": "1f9c7e7de9ecd0db6ab287349e31bf815ca108a5a175cf906a90163bdbe32012"
+                    "type" : "archive",
+                    "url" : "http://poppler.freedesktop.org/poppler-data-0.4.9.tar.gz",
+                    "sha256" : "1f9c7e7de9ecd0db6ab287349e31bf815ca108a5a175cf906a90163bdbe32012"
                 }
             ]
         },
         {
-            "name": "poppler",
-            "buildsystem": "cmake-ninja",
-            "config-opts": [
+            "name" : "poppler",
+            "buildsystem" : "cmake-ninja",
+            "config-opts" : [
                 "-DCMAKE_INSTALL_LIBDIR=/app/lib",
                 "-DCMAKE_INSTALL_INCLUDEDIR=/app/include",
                 "-DENABLE_LIBOPENJPEG=none"
             ],
-            "cleanup": [
+            "cleanup" : [
                 "/bin"
             ],
-            "sources": [
+            "sources" : [
                 {
-                    "type": "archive",
-                    "url": "https://poppler.freedesktop.org/poppler-0.66.0.tar.xz",
-                    "sha256": "2c096431adfb74bc2f53be466889b7646e1b599f28fa036094f3f7235cc9eae7"
+                    "type" : "archive",
+                    "url" : "https://poppler.freedesktop.org/poppler-0.66.0.tar.xz",
+                    "sha256" : "2c096431adfb74bc2f53be466889b7646e1b599f28fa036094f3f7235cc9eae7"
                 }
             ]
         },
         {
-            "name": "djvulibre",
-            "config-opts": [
+            "name" : "djvulibre",
+            "config-opts" : [
                 "--disable-desktopfiles"
             ],
-            "cleanup": [
+            "cleanup" : [
                 "/bin"
             ],
-            "sources": [
+            "sources" : [
                 {
-                    "type": "archive",
-                    "url": "https://downloads.sourceforge.net/project/djvu/DjVuLibre/3.5.27/djvulibre-3.5.27.tar.gz",
-                    "sha256": "e69668252565603875fb88500cde02bf93d12d48a3884e472696c896e81f505f"
+                    "type" : "archive",
+                    "url" : "https://downloads.sourceforge.net/project/djvu/DjVuLibre/3.5.27/djvulibre-3.5.27.tar.gz",
+                    "sha256" : "e69668252565603875fb88500cde02bf93d12d48a3884e472696c896e81f505f"
                 }
             ]
         },
@@ -121,14 +121,14 @@
             ]
         },
         {
-            "name": "evince",
-            "config-opts": [
+            "name" : "evince",
+            "config-opts" : [
                 "--disable-nautilus"
             ],
-            "sources": [
+            "sources" : [
                 {
-                    "type": "git",
-                    "url": "https://gitlab.gnome.org/GNOME/evince.git",
+                    "type" : "git",
+                    "url" : "https://gitlab.gnome.org/GNOME/evince.git"
                 }
             ]
         }
