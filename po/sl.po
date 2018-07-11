@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: evince master\n"
 "Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?"
 "product=evince&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2018-05-08 13:30+0000\n"
-"PO-Revision-Date: 2018-05-08 22:28+0200\n"
+"POT-Creation-Date: 2018-05-28 09:47+0000\n"
+"PO-Revision-Date: 2018-05-30 20:41+0200\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenščina <gnome-si@googlegroups.com>\n"
 "Language: sl_SI\n"
@@ -292,7 +292,7 @@ msgid "Go to the next page"
 msgstr "Pojdi na naslednjo stran"
 
 #. Search.
-#: ../browser-plugin/EvBrowserPluginToolbar.cpp:362 ../shell/ev-toolbar.c:226
+#: ../browser-plugin/EvBrowserPluginToolbar.cpp:362 ../shell/ev-toolbar.c:200
 msgid "Find a word or phrase in the document"
 msgstr "Najdi besedo ali reklo v dokumentu"
 
@@ -323,7 +323,7 @@ msgid "Print document"
 msgstr "Natisni dokument"
 
 #. Manually set name and icon
-#: ../data/evince.desktop.in.in.h:1 ../shell/ev-application.c:1012
+#: ../data/evince.desktop.in.in.h:1 ../shell/ev-application.c:1025
 #: ../shell/ev-window-title.c:123 ../shell/main.c:298
 msgid "Document Viewer"
 msgstr "Pregledovalnik dokumentov"
@@ -450,7 +450,7 @@ msgstr "od %d"
 
 #: ../libmisc/ev-page-action-widget.c:185 ../shell/ev-history.c:426
 #: ../shell/ev-sidebar-bookmarks.c:306 ../shell/ev-window.c:921
-#: ../shell/ev-window.c:4788
+#: ../shell/ev-window.c:4810
 #, c-format
 msgid "Page %s"
 msgstr "Stran %s"
@@ -692,7 +692,7 @@ msgstr "DATOTEKA"
 msgid "GNOME Document Previewer"
 msgstr "Pregledovalnik dokumentov za GNOME"
 
-#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3351
+#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3373
 msgid "Failed to print document"
 msgstr "Tiskanje dokumenta ni uspelo"
 
@@ -924,15 +924,15 @@ msgstr "Dodaj pripombo k besedilu ..."
 msgid "Add highlight annotation"
 msgstr "Dodaj opombo s poudarkom"
 
-#: ../shell/ev-application.c:1007 ../evince.appdata.xml.in.h:1
+#: ../shell/ev-application.c:1020 ../evince.appdata.xml.in.h:1
 msgid "Evince"
 msgstr "Evince"
 
-#: ../shell/ev-application.c:1009
+#: ../shell/ev-application.c:1022
 msgid "© 1996–2017 The Evince authors"
 msgstr "© 1996-2017 Avtorji programa Evince"
 
-#: ../shell/ev-application.c:1015
+#: ../shell/ev-application.c:1028
 msgid "translator-credits"
 msgstr ""
 "Matej Urbančič <mateju@svn.gnome.org>\n"
@@ -1050,7 +1050,21 @@ msgstr "Stran %d"
 msgid "Annotations"
 msgstr "Pripombe"
 
-#: ../shell/ev-sidebar-attachments.c:695
+#: ../shell/ev-sidebar-attachments.c:490
+#, c-format
+msgid "A file named “%s” already exists. Do you want to replace it?"
+msgstr "Datoteka z imenom »%s« že obstaja. Ali jo želite zamenjati?"
+
+#: ../shell/ev-sidebar-attachments.c:494
+#, c-format
+msgid "The file “%s” already exists. Replacing it will overwrite its contents."
+msgstr "Datoteka »%s« že obstaja. Z zamenjavo bo njena vsebina izgubljena."
+
+#: ../shell/ev-sidebar-attachments.c:499
+msgid "_Replace"
+msgstr "_Zamenjaj"
+
+#: ../shell/ev-sidebar-attachments.c:895
 msgid "Attachments"
 msgstr "Priloge"
 
@@ -1074,7 +1088,7 @@ msgstr "Dodaj zaznamek"
 msgid "Remove bookmark"
 msgstr "Odstrani zaznamek"
 
-#: ../shell/ev-sidebar-bookmarks.c:593 ../shell/ev-toolbar.c:161
+#: ../shell/ev-sidebar-bookmarks.c:593 ../shell/ev-toolbar.c:142
 msgid "Bookmarks"
 msgstr "Zaznamki"
 
@@ -1100,35 +1114,31 @@ msgstr "Obris"
 msgid "Thumbnails"
 msgstr "Sličice"
 
-#: ../shell/ev-toolbar.c:202
-msgid "Open an existing document"
-msgstr "Odpri obstoječi dokument"
-
-#: ../shell/ev-toolbar.c:210
+#: ../shell/ev-toolbar.c:184
 msgid "Select page or search in the index"
 msgstr "Izberi stran oziroma poišči po kazalu"
 
-#: ../shell/ev-toolbar.c:211
+#: ../shell/ev-toolbar.c:185
 msgid "Select page"
 msgstr "Izberi stran"
 
-#: ../shell/ev-toolbar.c:234
+#: ../shell/ev-toolbar.c:208
 msgid "Annotate the document"
 msgstr "Opomba s poudarkom"
 
-#: ../shell/ev-toolbar.c:243 ../shell/ev-toolbar.c:244
+#: ../shell/ev-toolbar.c:217 ../shell/ev-toolbar.c:218
 msgid "File options"
 msgstr "Možnosti datotek"
 
-#: ../shell/ev-toolbar.c:253 ../shell/ev-toolbar.c:254
+#: ../shell/ev-toolbar.c:227 ../shell/ev-toolbar.c:228
 msgid "View options"
 msgstr "Možnosti pogleda"
 
-#: ../shell/ev-toolbar.c:262
+#: ../shell/ev-toolbar.c:236
 msgid "Select or set the zoom level of the document"
 msgstr "Izbor in nastavitev ravni približanja dokumenta"
 
-#: ../shell/ev-toolbar.c:263
+#: ../shell/ev-toolbar.c:237
 msgid "Set zoom level"
 msgstr "Nastavi raven približanja"
 
@@ -1172,54 +1182,54 @@ msgstr "Ponovno nalaganje dokumenta iz %s"
 msgid "Failed to reload document."
 msgstr "Ponovno nalaganje dokumenta ni uspelo."
 
-#: ../shell/ev-window.c:2619
+#: ../shell/ev-window.c:2631
 msgid "Open Document"
 msgstr "Odpri dokument"
 
-#: ../shell/ev-window.c:2694
+#: ../shell/ev-window.c:2716
 #, c-format
 msgid "Saving document to %s"
 msgstr "Shranjevanje dokumenta v %s"
 
-#: ../shell/ev-window.c:2697
+#: ../shell/ev-window.c:2719
 #, c-format
 msgid "Saving attachment to %s"
 msgstr "Shranjevanje prilog v %s"
 
-#: ../shell/ev-window.c:2700
+#: ../shell/ev-window.c:2722
 #, c-format
 msgid "Saving image to %s"
 msgstr "Shranjevanje slike v %s"
 
-#: ../shell/ev-window.c:2744 ../shell/ev-window.c:2844
+#: ../shell/ev-window.c:2766 ../shell/ev-window.c:2866
 #, c-format
 msgid "The file could not be saved as “%s”."
 msgstr "Ni mogoče shraniti datoteke kot »%s«."
 
-#: ../shell/ev-window.c:2775
+#: ../shell/ev-window.c:2797
 #, c-format
 msgid "Uploading document (%d%%)"
 msgstr "Pošiljanje dokumenta (%d %%)"
 
-#: ../shell/ev-window.c:2779
+#: ../shell/ev-window.c:2801
 #, c-format
 msgid "Uploading attachment (%d%%)"
 msgstr "Pošiljanje priloge (%d %%)"
 
-#: ../shell/ev-window.c:2783
+#: ../shell/ev-window.c:2805
 #, c-format
 msgid "Uploading image (%d%%)"
 msgstr "Pošiljanje slike (%d %%)"
 
-#: ../shell/ev-window.c:2896
+#: ../shell/ev-window.c:2918
 msgid "Save As…"
 msgstr "Shrani kot ..."
 
-#: ../shell/ev-window.c:2990
+#: ../shell/ev-window.c:3012
 msgid "Could not send current document"
 msgstr "Ni mogoče poslati trenutnega dokumenta"
 
-#: ../shell/ev-window.c:3295
+#: ../shell/ev-window.c:3317
 #, c-format
 msgid "%d pending job in queue"
 msgid_plural "%d pending jobs in queue"
@@ -1228,50 +1238,50 @@ msgstr[1] "%d posel v vrsti"
 msgstr[2] "%d posla v vrsti"
 msgstr[3] "%d posli v vrsti"
 
-#: ../shell/ev-window.c:3408
+#: ../shell/ev-window.c:3430
 #, c-format
 msgid "Printing job “%s”"
 msgstr "Tiskanje »%s«"
 
-#: ../shell/ev-window.c:3618
+#: ../shell/ev-window.c:3640
 msgid "Document contains form fields that have been filled out. "
 msgstr "Dokument vsebuje izpolnjena polja obrazca."
 
-#: ../shell/ev-window.c:3621
+#: ../shell/ev-window.c:3643
 msgid "Document contains new or modified annotations. "
 msgstr "Dokument vsebuje nove ali pa spremenjene pripombe."
 
-#: ../shell/ev-window.c:3633
+#: ../shell/ev-window.c:3655
 #, c-format
 msgid "Reload document “%s”?"
 msgstr "Ali želite ponovno naložiti dokument »%s«?"
 
-#: ../shell/ev-window.c:3635
+#: ../shell/ev-window.c:3657
 msgid "If you reload the document, changes will be permanently lost."
 msgstr "Če dokument ponovno naložite, bodo vse spremembe trajno izgubljene."
 
-#: ../shell/ev-window.c:3639
+#: ../shell/ev-window.c:3661
 msgid "Reload"
 msgstr "Ponovno naloži"
 
-#: ../shell/ev-window.c:3646
+#: ../shell/ev-window.c:3668
 #, c-format
 msgid "Save a copy of document “%s” before closing?"
 msgstr "Ali želite shraniti spremembe dokumentu »%s« pred zapiranjem?"
 
-#: ../shell/ev-window.c:3648
+#: ../shell/ev-window.c:3670
 msgid "If you don’t save a copy, changes will be permanently lost."
 msgstr "V primeru, da kopije ne shranite, bodo spremembe trajno izgubljene."
 
-#: ../shell/ev-window.c:3650
+#: ../shell/ev-window.c:3672
 msgid "Close _without Saving"
 msgstr "Zapri _brez shranjevanja"
 
-#: ../shell/ev-window.c:3654
+#: ../shell/ev-window.c:3676
 msgid "Save a _Copy"
 msgstr "Shrani _kopijo"
 
-#: ../shell/ev-window.c:3738
+#: ../shell/ev-window.c:3760
 #, c-format
 msgid "Wait until print job “%s” finishes before closing?"
 msgstr "Ali želite počakati, da se dokument »%s« natisne, preden zaključite?"
@@ -1279,7 +1289,7 @@ msgstr "Ali želite počakati, da se dokument »%s« natisne, preden zaključite
 #. TRANS: the singular form is not really used as n_print_jobs > 1
 #. but some languages distinguish between different plurals forms,
 #. so the ngettext is needed.
-#: ../shell/ev-window.c:3744
+#: ../shell/ev-window.c:3766
 #, c-format
 msgid "There is %d print job active. Wait until print finishes before closing?"
 msgid_plural ""
@@ -1297,31 +1307,35 @@ msgstr[3] ""
 "V vrsti so %d pripravljeni dokumenti za tiskanje. Ali želite počakati, da se "
 "natisnejo?"
 
-#: ../shell/ev-window.c:3759
+#: ../shell/ev-window.c:3781
 msgid "If you close the window, pending print jobs will not be printed."
 msgstr "V primeru, da zaprete okno, pripravljeni dokumenti ne bodo natisnjeni."
 
-#: ../shell/ev-window.c:3763
+#: ../shell/ev-window.c:3785
 msgid "Cancel _print and Close"
 msgstr "Prekliči _tiskanje in zapri okno"
 
-#: ../shell/ev-window.c:3767
+#: ../shell/ev-window.c:3789
 msgid "Close _after Printing"
 msgstr "Zapri _po tiskanju"
 
-#: ../shell/ev-window.c:4308
+#: ../shell/ev-window.c:4330
 msgid "Running in presentation mode"
 msgstr "Zagon v predstavitvenem načinu"
 
-#: ../shell/ev-window.c:5454
+#: ../shell/ev-window.c:5254
+msgid "The attachment could not be saved."
+msgstr "Ni mogoče shraniti priloge."
+
+#: ../shell/ev-window.c:5553
 msgid "Enable caret navigation?"
 msgstr "Ali naj bodo omogočene smerne tipke?"
 
-#: ../shell/ev-window.c:5456
+#: ../shell/ev-window.c:5555
 msgid "_Enable"
 msgstr "_Omogoči"
 
-#: ../shell/ev-window.c:5459
+#: ../shell/ev-window.c:5558
 msgid ""
 "Pressing F7 turns the caret navigation on or off. This feature places a "
 "moveable cursor in text pages, allowing you to move around and select text "
@@ -1331,39 +1345,35 @@ msgstr ""
 "na strani besedila in omogoča pomikanje med besedilom s tipkovnico. Ali "
 "želite omogočiti smerne tipke?"
 
-#: ../shell/ev-window.c:5464
+#: ../shell/ev-window.c:5563
 msgid "Don’t show this message again"
 msgstr "Sporočila ne pokaži več"
 
-#: ../shell/ev-window.c:6008 ../shell/ev-window.c:6024
+#: ../shell/ev-window.c:6107 ../shell/ev-window.c:6123
 msgid "Unable to launch external application."
 msgstr "Ni mogoče zagnati zunanjega programa."
 
-#: ../shell/ev-window.c:6085
+#: ../shell/ev-window.c:6184
 msgid "Unable to open external link"
 msgstr "Ni mogoče odpreti zunanje povezave"
 
-#: ../shell/ev-window.c:6298
+#: ../shell/ev-window.c:6397
 msgid "Couldn’t find appropriate format to save image"
 msgstr "Ni mogoče najti ustreznega zapisa za shranjevanje slike"
 
-#: ../shell/ev-window.c:6330
+#: ../shell/ev-window.c:6429
 msgid "The image could not be saved."
 msgstr "Slike ni mogoče shraniti."
 
-#: ../shell/ev-window.c:6365
+#: ../shell/ev-window.c:6464
 msgid "Save Image"
 msgstr "Shrani sliko"
 
-#: ../shell/ev-window.c:6524
+#: ../shell/ev-window.c:6623
 msgid "Unable to open attachment"
 msgstr "Ni mogoče odpreti priloge"
 
-#: ../shell/ev-window.c:6580
-msgid "The attachment could not be saved."
-msgstr "Ni mogoče shraniti priloge."
-
-#: ../shell/ev-window.c:6628
+#: ../shell/ev-window.c:6689
 msgid "Save Attachment"
 msgstr "Shrani prilogo"
 
@@ -1484,92 +1494,92 @@ msgid "[FILE…]"
 msgstr "[DATOTEKA ...]"
 
 #: ../shell/evince-menus.ui.h:1
+msgid "_Open…"
+msgstr "_Odpri …"
+
+#: ../shell/evince-menus.ui.h:2
 msgid "_New Window"
 msgstr "_Novo okno"
 
-#: ../shell/evince-menus.ui.h:2
+#: ../shell/evince-menus.ui.h:3
 msgid "_Keyboard Shortcuts"
 msgstr "_Tipkovne bližnjice‫"
 
-#: ../shell/evince-menus.ui.h:3
+#: ../shell/evince-menus.ui.h:4
 msgid "_Help"
 msgstr "Pomo_č"
 
-#: ../shell/evince-menus.ui.h:4
+#: ../shell/evince-menus.ui.h:5
 msgid "_About"
 msgstr "_O programu"
 
-#: ../shell/evince-menus.ui.h:5
+#: ../shell/evince-menus.ui.h:6
 msgid "_Continuous"
 msgstr "N_eprekinjen"
 
-#: ../shell/evince-menus.ui.h:6
+#: ../shell/evince-menus.ui.h:7
 msgid "_Dual"
 msgstr "_Dvojni"
 
-#: ../shell/evince-menus.ui.h:7
+#: ../shell/evince-menus.ui.h:8
 msgid "Side _Pane"
 msgstr "S_transki pladenj"
 
-#: ../shell/evince-menus.ui.h:8
+#: ../shell/evince-menus.ui.h:9
 msgid "_Fullscreen"
 msgstr "_Celozaslonski način"
 
-#: ../shell/evince-menus.ui.h:9
+#: ../shell/evince-menus.ui.h:10
 msgid "Pre_sentation"
 msgstr "Pre_dstavitev"
 
-#: ../shell/evince-menus.ui.h:10
+#: ../shell/evince-menus.ui.h:11
 msgid "Rotate _Left"
 msgstr "Zavrti _levo"
 
-#: ../shell/evince-menus.ui.h:11
+#: ../shell/evince-menus.ui.h:12
 msgid "Rotate _Right"
 msgstr "Zavrti _desno"
 
-#: ../shell/evince-menus.ui.h:12
+#: ../shell/evince-menus.ui.h:13
 msgid "First Page"
 msgstr "Prva stran"
 
-#: ../shell/evince-menus.ui.h:13
+#: ../shell/evince-menus.ui.h:14
 msgid "Previous Page"
 msgstr "Predhodna stran"
 
-#: ../shell/evince-menus.ui.h:14
+#: ../shell/evince-menus.ui.h:15
 msgid "Next Page"
 msgstr "Naslednja stran"
 
-#: ../shell/evince-menus.ui.h:15
+#: ../shell/evince-menus.ui.h:16
 msgid "Last Page"
 msgstr "Zadnja stran"
 
-#: ../shell/evince-menus.ui.h:16
+#: ../shell/evince-menus.ui.h:17
 msgid "Zoom _In"
 msgstr "_Približaj"
 
-#: ../shell/evince-menus.ui.h:17
+#: ../shell/evince-menus.ui.h:18
 msgid "Zoom _Out"
 msgstr "_Oddalji"
 
-#: ../shell/evince-menus.ui.h:18
+#: ../shell/evince-menus.ui.h:19
 msgid "_Odd Pages Left"
 msgstr "_Preostale lihe strani"
 
-#: ../shell/evince-menus.ui.h:19
+#: ../shell/evince-menus.ui.h:20
 msgid "_Inverted Colors"
 msgstr "Preo_brni barve"
 
-#: ../shell/evince-menus.ui.h:20
+#: ../shell/evince-menus.ui.h:21
 msgid "_Reload"
 msgstr "Pono_vno naloži"
 
-#: ../shell/evince-menus.ui.h:21
+#: ../shell/evince-menus.ui.h:22
 msgid "Enable Spellchecking"
 msgstr "Omogoči preverjanje črkovanja"
-
-#: ../shell/evince-menus.ui.h:22
-msgid "_Open…"
-msgstr "_Odpri …"
 
 #: ../shell/evince-menus.ui.h:23
 msgid "Op_en a Copy"
@@ -1853,6 +1863,9 @@ msgid ""
 msgstr ""
 "Program podpira zapise: PDF, PS, EPS, XPS, DjVu, TIFF, DVI (s podporo "
 "SyncTeX) in arhive stripov (CBR, CBT, CBZ, CB7)."
+
+#~ msgid "Open an existing document"
+#~ msgstr "Odpri obstoječi dokument"
 
 #~ msgid ""
 #~ "Evince is free software; you can redistribute it and/or modify it under "
