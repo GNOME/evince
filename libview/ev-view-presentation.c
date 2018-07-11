@@ -1163,7 +1163,7 @@ ev_view_presentation_key_press_event (GtkWidget   *widget,
 	if (pview->state == EV_PRESENTATION_END)
                 return gtk_bindings_activate_event (G_OBJECT (widget), event);
 
-        if (event->state != 0)
+        if (event->state & GDK_CONTROL_MASK)
                 return gtk_bindings_activate_event (G_OBJECT (widget), event);
 
 	switch (event->keyval) {

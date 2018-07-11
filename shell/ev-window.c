@@ -274,6 +274,12 @@ struct _EvWindowPrivate {
 #define LAYERS_SIDEBAR_ID "layers"
 #define ANNOTS_SIDEBAR_ID "annotations"
 #define BOOKMARKS_SIDEBAR_ID "bookmarks"
+#define LINKS_SIDEBAR_ICON "view-list-symbolic"
+#define THUMBNAILS_SIDEBAR_ICON "view-grid-symbolic"
+#define ATTACHMENTS_SIDEBAR_ICON "mail-attachment-symbolic"
+#define LAYERS_SIDEBAR_ICON "view-paged-symbolic"
+#define ANNOTS_SIDEBAR_ICON "accessories-text-editor-symbolic"
+#define BOOKMARKS_SIDEBAR_ICON "bookmark-new-symbolic"
 
 #define EV_PRINT_SETTINGS_FILE  "print-settings"
 #define EV_PRINT_SETTINGS_GROUP "Print Settings"
@@ -1806,6 +1812,8 @@ ev_window_load_job_cb (EvJob *job,
 		ev_job_load_set_password (job_load, NULL);
 		ev_password_view_ask_password (EV_PASSWORD_VIEW (ev_window->priv->password_view));
 	} else {
+		ev_toolbar_set_mode (EV_TOOLBAR (ev_window->priv->toolbar),
+				     EV_TOOLBAR_MODE_RECENT_VIEW);
 		text = g_uri_unescape_string (job_load->uri, NULL);
 		display_name = g_markup_escape_text (text, -1);
 		g_free (text);
@@ -2565,7 +2573,6 @@ ev_window_file_chooser_restore_folder (EvWindow       *window,
         g_settings_get (ev_window_ensure_settings (window),
                         get_settings_key_for_directory (directory),
                         "ms", &folder_uri);
-
         if (folder_uri == NULL && uri != NULL) {
                 GFile *file, *parent;
 
@@ -2635,23 +2642,28 @@ file_open_dialog_response_cb (GtkWidget *chooser,
 	gtk_widget_destroy (chooser);
 }
 
-/**
- * ev_window_file_open_dialog:
- * @ev_window: The instance of the #EvWindow. Likely the active window.
- *
- * It requests to open a document through a dialog. It uses @ev_window to
- * set the parent window, and to determine the screen on which the document
- * should be opened.
- *
- * If @ev_window is displaying the recent documents, then the document will
- * use that window. Otherwise, the document will be opened in a new window.
- *
- * It does look if there is any document loaded or if there is any job to load
- * a document.
- */
-void
-ev_window_file_open_dialog (EvWindow *window)
+static void
+ev_window_cmd_new_window (GSimpleAction *action,
+			  GVariant      *parameter,
+			  gpointer       user_data)
 {
+
+	EvWindow  *window = user_data;
+	GdkScreen *screen;
+	guint32    timestamp;
+
+	screen = gtk_window_get_screen (GTK_WINDOW (window));
+        timestamp = gtk_get_current_event_time ();
+
+	ev_application_new_window (EV_APP, screen, timestamp);
+}
+
+static void
+ev_window_cmd_file_open (GSimpleAction *action,
+			 GVariant      *parameter,
+			 gpointer       user_data)
+{
+	EvWindow  *window = user_data;
 	GtkWidget *chooser;
 
 	chooser = gtk_file_chooser_dialog_new (_("Open Document"),
@@ -2674,16 +2686,6 @@ ev_window_file_open_dialog (EvWindow *window)
 			  window);
 
 	gtk_widget_show (chooser);
-}
-
-static void
-ev_window_cmd_file_open (GSimpleAction *action,
-			 GVariant      *parameter,
-			 gpointer       user_data)
-{
-	EvWindow  *window = user_data;
-
-	ev_window_file_open_dialog (window);
 }
 
 static void
@@ -3862,6 +3864,92 @@ ev_window_cmd_file_close_window (GSimpleAction *action,
 		gtk_widget_destroy (GTK_WIDGET (ev_window));
 }
 
+/**
+ * ev_window_show_help:
+ * @window: the #EvWindow
+ * @screen: (allow-none): a #GdkScreen, or %NULL to use the default screen
+ * @topic: (allow-none): the help topic, or %NULL to show the index
+ *
+ * Launches the help viewer on @screen to show the evince help.
+ * If @topic is %NULL, shows the help index; otherwise the topic.
+ */
+static void
+ev_window_show_help (EvWindow   *window,
+                     GdkScreen  *screen,
+                     const char *topic)
+{
+        char *escaped_topic, *uri;
+
+        if (topic != NULL) {
+                escaped_topic = g_uri_escape_string (topic, NULL, TRUE);
+                uri = g_strdup_printf ("help:evince/%s", escaped_topic);
+                g_free (escaped_topic);
+        } else {
+                uri = g_strdup ("help:evince");
+        }
+
+        gtk_show_uri (screen, uri, gtk_get_current_event_time (), NULL);
+        g_free (uri);
+}
+
+static void
+ev_window_cmd_help (GSimpleAction *action,
+		    GVariant      *parameter,
+		    gpointer       user_data)
+{
+	EvWindow *ev_window = user_data;
+
+        ev_window_show_help (ev_window, NULL, NULL);
+}
+
+static void
+ev_window_cmd_about (GSimpleAction *action,
+		     GVariant      *parameter,
+		     gpointer       user_data)
+{
+	EvWindow *ev_window = user_data;
+
+        const char *authors[] = {
+                "Martin Kretzschmar <m_kretzschmar@gmx.net>",
+                "Jonathan Blandford <jrb@gnome.org>",
+                "Marco Pesenti Gritti <marco@gnome.org>",
+                "Nickolay V. Shmyrev <nshmyrev@yandex.ru>",
+                "Bryan Clark <clarkbw@gnome.org>",
+                "Carlos Garcia Campos <carlosgc@gnome.org>",
+                "Wouter Bolsterlee <wbolster@gnome.org>",
+                "Christian Persch <chpe" "\100" "gnome.org>",
+                NULL
+        };
+        const char *documenters[] = {
+                "Nickolay V. Shmyrev <nshmyrev@yandex.ru>",
+                "Phil Bull <philbull@gmail.com>",
+                "Tiffany Antpolski <tiffany.antopolski@gmail.com>",
+                NULL
+        };
+#ifdef ENABLE_NLS
+        const char **p;
+
+        for (p = authors; *p; ++p)
+                *p = _(*p);
+
+        for (p = documenters; *p; ++p)
+                *p = _(*p);
+#endif
+
+        gtk_show_about_dialog (GTK_WINDOW (ev_window),
+                               "name", _("Evince"),
+                               "version", VERSION,
+                               "copyright", _("© 1996–2017 The Evince authors"),
+                               "license-type", GTK_LICENSE_GPL_2_0,
+                               "website", "https://wiki.gnome.org/Apps/Evince",
+                               "comments", _("Document Viewer"),
+                               "authors", authors,
+                               "documenters", documenters,
+                               "translator-credits", _("translator-credits"),
+                               "logo-icon-name", "evince",
+                               NULL);
+}
+
 static void
 ev_window_cmd_focus_page_selector (GSimpleAction *action,
 				   GVariant      *parameter,
@@ -4371,16 +4459,6 @@ ev_window_uninhibit_screensaver (EvWindow *window)
 }
 
 static void
-ev_window_update_presentation_action (EvWindow *window)
-{
-	GAction *action;
-
-	action = g_action_map_lookup_action (G_ACTION_MAP (window), "presentation");
-	g_simple_action_set_state (G_SIMPLE_ACTION (action),
-				   g_variant_new_boolean (EV_WINDOW_IS_PRESENTATION (window)));
-}
-
-static void
 ev_window_view_presentation_finished (EvWindow *window)
 {
 	ev_window_stop_presentation (window, TRUE);
@@ -4445,7 +4523,6 @@ ev_window_run_presentation (EvWindow *window)
 			    TRUE, TRUE, 0);
 
 	gtk_widget_hide (window->priv->hpaned);
-	ev_window_update_presentation_action (window);
 	update_chrome_visibility (window);
 
 	gtk_widget_grab_focus (window->priv->presentation_view);
@@ -4480,7 +4557,6 @@ ev_window_stop_presentation (EvWindow *window,
 	window->priv->presentation_view = NULL;
 
 	gtk_widget_show (window->priv->hpaned);
-	ev_window_update_presentation_action (window);
 	update_chrome_visibility (window);
 	if (unfullscreen_window)
 		gtk_window_unfullscreen (GTK_WINDOW (window));
@@ -4500,9 +4576,8 @@ ev_window_cmd_view_presentation (GSimpleAction *action,
 {
 	EvWindow *window = user_data;
 
-	if (g_variant_get_boolean (state)) {
+	if (!EV_WINDOW_IS_PRESENTATION (window))
 		ev_window_run_presentation (window);
-	}
 	/* We don't exit presentation when action is toggled because it conflicts with some
 	 * remote controls. The behaviour is also consistent with libreoffice and other
 	 * presentation tools. See https://bugzilla.gnome.org/show_bug.cgi?id=556162
@@ -5941,7 +6016,7 @@ static const GActionEntry actions[] = {
 	{ "color-overlay", NULL, NULL, "false", ev_window_cmd_view_color_overlay },
 	{ "enable-spellchecking", NULL, NULL, "false", ev_window_cmd_view_enable_spellchecking },
 	{ "fullscreen", NULL, NULL, "false", ev_window_cmd_view_fullscreen },
-	{ "presentation", NULL, NULL, "false", ev_window_cmd_view_presentation },
+	{ "presentation", ev_window_cmd_view_presentation },
 	{ "rotate-left", ev_window_cmd_edit_rotate_left },
 	{ "rotate-right", ev_window_cmd_edit_rotate_right },
 	{ "zoom-in", ev_window_cmd_view_zoom_in },
@@ -5959,6 +6034,8 @@ static const GActionEntry actions[] = {
 	{ "open-menu", ev_window_cmd_action_menu },
 	{ "caret-navigation", NULL, NULL, "false", ev_window_cmd_view_toggle_caret_navigation },
 	{ "toggle-edit-annots", NULL, NULL, "false", ev_window_cmd_toggle_edit_annots },
+	{ "about", ev_window_cmd_about },
+	{ "help", ev_window_cmd_help },
 	/* Popups specific items */
 	{ "annotate-selected-text", ev_window_popup_cmd_annotate_selected_text },
 	{ "open-link", ev_window_popup_cmd_open_link },
@@ -7104,6 +7181,8 @@ ev_window_init (EvWindow *ev_window)
 	gtk_paned_pack1 (GTK_PANED (ev_window->priv->hpaned),
 			 ev_window->priv->sidebar, FALSE, FALSE);
 	gtk_widget_show (ev_window->priv->sidebar);
+	ev_toolbar_set_sidebar (EV_TOOLBAR (ev_window->priv->toolbar),
+				ev_window->priv->sidebar);
 
 	/* Stub sidebar, for now */
 
@@ -7116,7 +7195,9 @@ ev_window_init (EvWindow *ev_window)
 	sidebar_page_main_widget_update_cb (G_OBJECT (sidebar_widget), NULL, ev_window);
 	gtk_widget_show (sidebar_widget);
 	ev_sidebar_add_page (EV_SIDEBAR (ev_window->priv->sidebar),
-			     sidebar_widget);
+			      sidebar_widget,
+			      THUMBNAILS_SIDEBAR_ID, _("Thumbnails"),
+			      THUMBNAILS_SIDEBAR_ICON);
 
 	sidebar_widget = ev_sidebar_links_new ();
 	ev_window->priv->sidebar_links = sidebar_widget;
@@ -7131,7 +7212,29 @@ ev_window_init (EvWindow *ev_window)
 	sidebar_page_main_widget_update_cb (G_OBJECT (sidebar_widget), NULL, ev_window);
 	gtk_widget_show (sidebar_widget);
 	ev_sidebar_add_page (EV_SIDEBAR (ev_window->priv->sidebar),
-			     sidebar_widget);
+			      sidebar_widget,
+			      LINKS_SIDEBAR_ID, _("Outline"),
+			      LINKS_SIDEBAR_ICON);
+
+	sidebar_widget = ev_sidebar_annotations_new ();
+	ev_window->priv->sidebar_annots = sidebar_widget;
+	g_signal_connect (sidebar_widget,
+			  "annot_activated",
+			  G_CALLBACK (sidebar_annots_annot_activated_cb),
+			  ev_window);
+	gtk_widget_show (sidebar_widget);
+	ev_sidebar_add_page (EV_SIDEBAR (ev_window->priv->sidebar),
+			      sidebar_widget,
+			      ANNOTS_SIDEBAR_ID, _("Annotations"),
+			      ANNOTS_SIDEBAR_ICON);
+
+	sidebar_widget = ev_sidebar_bookmarks_new ();
+	ev_window->priv->sidebar_bookmarks = sidebar_widget;
+	gtk_widget_show (sidebar_widget);
+	ev_sidebar_add_page (EV_SIDEBAR (ev_window->priv->sidebar),
+			      sidebar_widget,
+			      BOOKMARKS_SIDEBAR_ID, _("Bookmarks"),
+			      BOOKMARKS_SIDEBAR_ICON);
 
 	sidebar_widget = ev_sidebar_attachments_new ();
 	ev_window->priv->sidebar_attachments = sidebar_widget;
@@ -7145,7 +7248,9 @@ ev_window_init (EvWindow *ev_window)
 				 ev_window, 0);
 	gtk_widget_show (sidebar_widget);
 	ev_sidebar_add_page (EV_SIDEBAR (ev_window->priv->sidebar),
-			     sidebar_widget);
+			      sidebar_widget,
+			      ATTACHMENTS_SIDEBAR_ID, _("Attachments"),
+			      ATTACHMENTS_SIDEBAR_ICON);
 
 	sidebar_widget = ev_sidebar_layers_new ();
 	ev_window->priv->sidebar_layers = sidebar_widget;
@@ -7155,23 +7260,9 @@ ev_window_init (EvWindow *ev_window)
 			  ev_window);
 	gtk_widget_show (sidebar_widget);
 	ev_sidebar_add_page (EV_SIDEBAR (ev_window->priv->sidebar),
-			     sidebar_widget);
-
-	sidebar_widget = ev_sidebar_annotations_new ();
-	ev_window->priv->sidebar_annots = sidebar_widget;
-	g_signal_connect (sidebar_widget,
-			  "annot_activated",
-			  G_CALLBACK (sidebar_annots_annot_activated_cb),
-			  ev_window);
-	gtk_widget_show (sidebar_widget);
-	ev_sidebar_add_page (EV_SIDEBAR (ev_window->priv->sidebar),
-			     sidebar_widget);
-
-	sidebar_widget = ev_sidebar_bookmarks_new ();
-	ev_window->priv->sidebar_bookmarks = sidebar_widget;
-	gtk_widget_show (sidebar_widget);
-	ev_sidebar_add_page (EV_SIDEBAR (ev_window->priv->sidebar),
-			     sidebar_widget);
+			      sidebar_widget,
+			      LAYERS_SIDEBAR_ID, _("Layers"),
+			      LAYERS_SIDEBAR_ICON);
 
 	ev_window->priv->view_box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 

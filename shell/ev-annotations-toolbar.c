@@ -90,13 +90,20 @@ ev_annotations_toolbar_toggle_button_if_active (EvAnnotationsToolbar *toolbar,
 
 static GtkWidget *
 ev_annotations_toolbar_create_toggle_button (EvAnnotationsToolbar *toolbar,
+                                             const gchar          *label,
                                              const gchar          *icon_name,
                                              const gchar          *tooltip)
 {
         GtkWidget *button = GTK_WIDGET (gtk_toggle_tool_button_new ());
 
         gtk_widget_set_tooltip_text (button, tooltip);
-        gtk_tool_button_set_icon_name (GTK_TOOL_BUTTON (button), icon_name);
+
+        if (label)
+                gtk_tool_button_set_label (GTK_TOOL_BUTTON (button), label);
+
+        if (icon_name)
+                gtk_tool_button_set_icon_name (GTK_TOOL_BUTTON (button), icon_name);
+
         /* For some reason adding text-button class to the GtkToogleButton makes the button smaller */
         gtk_style_context_add_class (gtk_widget_get_style_context (gtk_bin_get_child (GTK_BIN (button))), "text-button");
         g_signal_connect (button, "toggled",
@@ -115,15 +122,21 @@ ev_annotations_toolbar_init (EvAnnotationsToolbar *toolbar)
         gtk_style_context_add_class (gtk_widget_get_style_context (GTK_WIDGET (toolbar)),
                                      GTK_STYLE_CLASS_INLINE_TOOLBAR);
 
+        /* Use Text label until we have:
+         *   1. More buttons in the toolbar (lack of space)
+         *   2. Clear icons for an action.
+         */
         toolbar->text_button = ev_annotations_toolbar_create_toggle_button (toolbar,
-                                                                            "document-new-symbolic",
+                               /* Translators: an annotation that looks like a "sticky note" */
+                                                                            _("Note text"),
+                                                                            NULL,
                                                                             _("Add text annotation"));
         gtk_container_add (GTK_CONTAINER(toolbar), toolbar->text_button);
         gtk_widget_show (toolbar->text_button);
 
-        /* FIXME: use a better icon than select-all */
         toolbar->highlight_button = ev_annotations_toolbar_create_toggle_button (toolbar,
-                                                                                 "edit-select-all-symbolic",
+                                                                                 _("Highlight text"),
+                                                                                 NULL,
                                                                                  _("Add highlight annotation"));
         gtk_container_add (GTK_CONTAINER (toolbar), toolbar->highlight_button);
         gtk_widget_show (toolbar->highlight_button);

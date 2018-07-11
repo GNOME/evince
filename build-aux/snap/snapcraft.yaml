@@ -1,0 +1,109 @@
+name: evince
+version: git
+summary: Document viewer for popular document formats
+description: |
+  This is a document viewer for the GNOME desktop.
+  It supports the following document formats: PDF, PS, EPS, XPS, DjVu, TIFF, DVI (with SyncTeX), and Comic Books archives (CBR, CBT, CBZ, CB7).
+
+grade: devel # must be 'stable' to release into candidate/stable channels
+confinement: strict
+
+plugs:
+    gnome-3-26-1604:
+      interface: content
+      target: $SNAP/gnome-platform
+      default-provider: gnome-3-26-1604:gnome-3-26-1604
+
+slots:
+  # for GtkApplication registration
+  evince:
+    interface: dbus
+    bus: session
+    name: org.gnome.Evince
+
+apps:
+  evince:
+    command: desktop-launch evince
+    plugs:
+      - desktop
+      - desktop-legacy
+      - gsettings
+      - home
+      - network
+      - unity7
+      - wayland
+    desktop: usr/share/applications/org.gnome.Evince.desktop
+  evince-previewer:
+    command: desktop-launch evince-previewer
+    plugs:
+      - desktop
+      - desktop-legacy
+      - gsettings
+      - home
+      - network
+      - unity7
+      - wayland
+    desktop: usr/share/applications/org.gnome.Evince-previewer.desktop
+
+parts:
+  evince:
+    build-attributes: [no-system-libraries]
+    after: [desktop-gnome-platform]
+    source: .
+    source-type: git
+    plugin: autotools
+    prepare:
+      sed -i.bak -e 's|=evince$|=${SNAP}/meta/gui/evince.png|g' data/org.gnome.Evince.desktop.in.in
+    install: |
+      mkdir -p $SNAPCRAFT_PART_INSTALL/meta/gui/
+      cp ../src/data/icons/256x256/apps/org.gnome.Evince.png $SNAPCRAFT_PART_INSTALL/meta/gui/
+      cp data/evince.desktop $SNAPCRAFT_PART_INSTALL/meta/gui/
+    configflags: [--disable-maintainer-mode, --prefix=/snap/evince/current/usr]
+    organize:
+      snap/evince/current/usr: usr
+    build-packages:
+      - intltool
+      - gnome-pkg-tools
+      - yelp-tools
+      - gtk-doc-tools
+      - libx11-dev
+      - libcairo2-dev
+      - libgtk-3-dev
+      - libgail-3-dev
+      - libglib2.0-dev
+      - libgstreamer1.0-dev
+      - libgstreamer-plugins-base1.0-dev
+      - libsecret-1-dev
+      - libxml2-dev
+      - libsm-dev
+      - zlib1g-dev
+      - libnautilus-extension-dev
+      - libpoppler-glib-dev
+      - libspectre-dev
+      - libtiff-dev
+      - libdjvulibre-dev
+      - libkpathsea-dev
+      - libgxps-dev
+      - autotools-dev
+      - gobject-introspection
+      - libgirepository1.0-dev
+      - gsettings-desktop-schemas-dev
+      - gnome-common
+      - dh-apparmor
+      - libgrip-dev
+    prime:
+      - "-usr/lib/*.a"
+      - "-usr/lib/mozilla"
+      - "-usr/lib/nautilus"
+      - "-usr/lib/pkgconfig"
+      - "-usr/lib/systemd"
+      - "-usr/lib/evince/4/backends/*.a"
+      - "-usr/share/appdata"
+  libraries:
+    plugin: nil
+    stage-packages:
+      - libpoppler-glib8
+      - libpoppler58
+    prime:
+      - "usr/lib/x86_64-linux-gnu/libpoppler-glib.so.*"
+      - "usr/lib/x86_64-linux-gnu/libpoppler.so.*"

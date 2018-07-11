@@ -30,6 +30,9 @@
 #include "ev-keyring.h"
 #include "ev-password-view.h"
 
+/* Define a maximum width in case there is a file with a very long name */
+#define MAX_WIDHT_LABEL 64
+
 enum {
 	UNLOCK,
 	LAST_SIGNAL
@@ -291,6 +294,13 @@ ev_password_view_ask_password (EvPasswordView *password_view)
 				  _("Password required"),
                                   text);
 	gtk_label_set_markup (GTK_LABEL (label), markup);
+
+	/* Prevent big dialog windows when the file name is too long, and
+	 * Sometimes_the_file_might_not_have_spaces_to_wrap
+	 */
+	gtk_label_set_max_width_chars (GTK_LABEL (label), MAX_WIDHT_LABEL);
+	gtk_label_set_line_wrap_mode (GTK_LABEL (label), PANGO_WRAP_WORD_CHAR);
+
 	g_free (text);
 	g_free (markup);
 	gtk_box_pack_start (GTK_BOX (main_vbox), label,

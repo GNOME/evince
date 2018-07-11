@@ -19,34 +19,53 @@
 -->
 <interface>
   <menu id="app-menu">
-    <section>
-      <item>
-        <attribute name="label" translatable="yes">_Open…</attribute>
-        <attribute name="action">app.open</attribute>
-      </item>
-      <item>
-        <attribute name="label" translatable="yes">_New Window</attribute>
-        <attribute name="action">app.new</attribute>
-      </item>
-    </section>
-    <section>
-      <item>
-        <attribute name="label" translatable="yes">_Keyboard Shortcuts</attribute>
-        <attribute name="action">win.show-help-overlay</attribute>
-      </item>
-      <item>
-        <attribute name="label" translatable="yes">_Help</attribute>
-        <attribute name="action">app.help</attribute>
-        <attribute name="accel">F1</attribute>
-      </item>
-      <item>
-        <attribute name="label" translatable="yes">_About</attribute>
-        <attribute name="action">app.about</attribute>
-      </item>
-    </section>
   </menu>
 
-  <menu id="view-menu">
+  <menu id="action-menu">
+    <section>
+      <attribute name="display-hint">horizontal-buttons</attribute>
+      <item>
+        <attribute name="label" translatable="yes">_Print…</attribute>
+        <attribute name="action">win.print</attribute>
+        <attribute name="verb-icon">printer-symbolic</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">_Fullscreen</attribute>
+        <attribute name="action">win.fullscreen</attribute>
+        <attribute name="verb-icon">view-fullscreen-symbolic</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Send _To…</attribute>
+        <attribute name="action">win.send-to</attribute>
+        <attribute name="verb-icon">send-to-symbolic</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">_New Window</attribute>
+        <attribute name="action">win.new</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">Op_en a Copy</attribute>
+        <attribute name="action">win.open-copy</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">_Save As…</attribute>
+        <attribute name="action">win.save-as</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Open Containing _Folder</attribute>
+        <attribute name="action">win.open-containing-folder</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">Pre_sent as Slideshow</attribute>
+        <attribute name="action">win.presentation</attribute>
+      </item>
+    </section>
     <section>
       <item>
         <attribute name="label" translatable="yes">_Continuous</attribute>
@@ -56,62 +75,6 @@
         <attribute name="label" translatable="yes">_Dual</attribute>
         <attribute name="action">win.dual-page</attribute>
       </item>
-    </section>
-    <section>
-      <item>
-        <attribute name="label" translatable="yes">Side _Pane</attribute>
-        <attribute name="action">win.show-side-pane</attribute>
-      </item>
-    </section>
-    <section>
-      <item>
-        <attribute name="label" translatable="yes">_Fullscreen</attribute>
-        <attribute name="action">win.fullscreen</attribute>
-      </item>
-      <item>
-        <attribute name="label" translatable="yes">Pre_sentation</attribute>
-        <attribute name="action">win.presentation</attribute>
-      </item>
-    </section>
-    <section>
-      <item>
-        <attribute name="label" translatable="yes">Rotate _Left</attribute>
-        <attribute name="action">win.rotate-left</attribute>
-      </item>
-      <item>
-        <attribute name="label" translatable="yes">Rotate _Right</attribute>
-        <attribute name="action">win.rotate-right</attribute>
-      </item>
-    </section>
-    <section>
-      <item>
-        <attribute name="label" translatable="yes">First Page</attribute>
-        <attribute name="action">win.go-first-page</attribute>
-      </item>
-      <item>
-        <attribute name="label" translatable="yes">Previous Page</attribute>
-        <attribute name="action">win.go-previous-page</attribute>
-      </item>
-      <item>
-        <attribute name="label" translatable="yes">Next Page</attribute>
-        <attribute name="action">win.go-next-page</attribute>
-      </item>
-      <item>
-        <attribute name="label" translatable="yes">Last Page</attribute>
-        <attribute name="action">win.go-last-page</attribute>
-      </item>
-    </section>
-    <section>
-      <item>
-        <attribute name="label" translatable="yes">Zoom _In</attribute>
-        <attribute name="action">win.zoom-in</attribute>
-      </item>
-      <item>
-        <attribute name="label" translatable="yes">Zoom _Out</attribute>
-        <attribute name="action">win.zoom-out</attribute>
-      </item>
-    </section>
-    <section>
       <item>
         <attribute name="label" translatable="yes">_Odd Pages Left</attribute>
         <attribute name="action">win.dual-odd-left</attribute>
@@ -127,39 +90,14 @@
     </section>
     <section>
       <item>
-        <attribute name="label" translatable="yes">_Reload</attribute>
-        <attribute name="action">win.reload</attribute>
+        <attribute name="label" translatable="yes">_Rotate ⤵</attribute>
+        <attribute name="action">win.rotate-right</attribute>
       </item>
     </section>
     <section>
       <item>
-        <attribute name="label" translatable="yes">Enable Spellchecking</attribute>
-        <attribute name="action">win.enable-spellchecking</attribute>
-      </item>
-    </section>
-  </menu>
-
-  <menu id="action-menu">
-    <section>
-      <item>
-        <attribute name="label" translatable="yes">Op_en a Copy</attribute>
-        <attribute name="action">win.open-copy</attribute>
-      </item>
-      <item>
-        <attribute name="label" translatable="yes">_Save As…</attribute>
-        <attribute name="action">win.save-as</attribute>
-      </item>
-      <item>
-        <attribute name="label" translatable="yes">Send _To…</attribute>
-        <attribute name="action">win.send-to</attribute>
-      </item>
-      <item>
-        <attribute name="label" translatable="yes">Open Containing _Folder</attribute>
-        <attribute name="action">win.open-containing-folder</attribute>
-      </item>
-      <item>
-        <attribute name="label" translatable="yes">_Print…</attribute>
-        <attribute name="action">win.print</attribute>
+        <attribute name="label" translatable="yes">_Night Mode</attribute>
+        <attribute name="action">win.inverted-colors</attribute>
       </item>
     </section>
     <section>
@@ -170,35 +108,39 @@
     </section>
     <section>
       <item>
-        <attribute name="label" translatable="yes">_Copy</attribute>
-        <attribute name="action">win.copy</attribute>
-      </item>
-      <item>
-        <attribute name="label" translatable="yes">Select _All</attribute>
-        <attribute name="action">win.select-all</attribute>
-      </item>
-    </section>
-    <section>
-      <item>
         <attribute name="label" translatable="yes">Save Current Settings as _Default</attribute>
         <attribute name="action">win.save-settings</attribute>
       </item>
-    </section>
-    <section id="bookmarks">
       <item>
-        <attribute name="label" translatable="yes">_Add Bookmark</attribute>
-        <attribute name="action">win.add-bookmark</attribute>
+        <attribute name="label" translatable="yes">_Keyboard Shortcuts</attribute>
+        <attribute name="action">win.show-help-overlay</attribute>
       </item>
-    </section>
-    <section>
       <item>
-        <attribute name="label" translatable="yes">_Close</attribute>
-        <attribute name="action">win.close</attribute>
+        <attribute name="label" translatable="yes">_Help</attribute>
+        <attribute name="action">win.help</attribute>
+        <attribute name="accel">F1</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">_About</attribute>
+        <attribute name="action">win.about</attribute>
       </item>
     </section>
   </menu>
 
   <menu id="zoom-menu">
+    <section>
+      <attribute name="display-hint">horizontal-buttons</attribute>
+      <item>
+        <attribute name="label" translatable="yes">Zoom _In</attribute>
+        <attribute name="action">win.zoom-in</attribute>
+        <attribute name="verb-icon">zoom-in-symbolic</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Zoom _Out</attribute>
+        <attribute name="action">win.zoom-out</attribute>
+        <attribute name="verb-icon">zoom-out-symbolic</attribute>
+      </item>
+    </section>
     <section>
       <item>
         <attribute name="label" translatable="yes">Fit Pa_ge</attribute>
@@ -306,6 +248,8 @@
         <attribute name="action">win.remove-annot</attribute>
         <attribute name='hidden-when'>action-disabled</attribute>
       </item>
+    </section>
+    <section>
       <item>
         <attribute name="label" translatable="yes">Highlight Selected Text</attribute>
         <attribute name="action">win.annotate-selected-text</attribute>
@@ -314,6 +258,45 @@
       <item>
         <attribute name="label" translatable="yes">Open Containing _Folder</attribute>
         <attribute name="action">win.open-containing-folder</attribute>
+      </item>
+    </section>
+  </menu>
+
+  <menu id="navigation-menu">
+    <section>
+      <attribute name="label" translatable="yes">Navigation</attribute>
+      <item>
+        <attribute name="label" translatable="yes">First Page</attribute>
+        <attribute name="action">win.go-first-page</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Previous Page</attribute>
+        <attribute name="action">win.go-previous-page</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Next Page</attribute>
+        <attribute name="action">win.go-next-page</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Last Page</attribute>
+        <attribute name="action">win.go-last-page</attribute>
+      </item>
+    </section>
+    <section>
+      <attribute name="label" translatable="yes">History</attribute>
+      <item>
+        <attribute name="label" translatable="yes">Back</attribute>
+        <attribute name="action">win.go-back-history</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Forward</attribute>
+        <attribute name="action">win.go-forward-history</attribute>
+      </item>
+    </section>
+    <section id="bookmarks">
+      <item>
+        <attribute name="label" translatable="yes">_Add Bookmark</attribute>
+        <attribute name="action">win.add-bookmark</attribute>
       </item>
     </section>
   </menu>

@@ -65,6 +65,7 @@ struct _EvApplicationClass {
 G_DEFINE_TYPE (EvApplication, ev_application, GTK_TYPE_APPLICATION)
 
 #ifdef ENABLE_DBUS
+#define APPLICATION_DBUS_NAME        "org.gnome.evince.Application"
 #define APPLICATION_DBUS_OBJECT_PATH "/org/gnome/evince/Evince"
 #define APPLICATION_DBUS_INTERFACE   "org.gnome.evince.Application"
 
@@ -102,7 +103,7 @@ ev_application_new (void)
   const GApplicationFlags flags = G_APPLICATION_NON_UNIQUE;
 
   return g_object_new (EV_TYPE_APPLICATION,
-                       "application-id", NULL,
+                       "application-id", APPLICATION_DBUS_NAME,
                        "flags", flags,
                        NULL);
 }
@@ -645,7 +646,7 @@ ev_application_open_uri_at_dest (EvApplication  *application,
 #endif /* ENABLE_DBUS */
 }
 
-static void
+void
 ev_application_new_window (EvApplication *application,
 			   GdkScreen     *screen,
 			   guint32        timestamp)
@@ -938,110 +939,10 @@ ev_application_migrate_config_dir (EvApplication *application)
 }
 
 static void
-app_file_open_cb (GSimpleAction *action,
-                  GVariant      *parameter,
-                  gpointer       user_data)
-{
-	EvApplication *application = user_data;
-	EvWindow      *window;
-
-	window = EV_WINDOW (gtk_application_get_active_window (GTK_APPLICATION (application)));
-
-	ev_window_file_open_dialog (window);
-}
-
-static void
-app_new_cb (GSimpleAction *action,
-            GVariant      *parameter,
-            gpointer       user_data)
-{
-	EvApplication *application = user_data;
-        GList         *windows, *l;
-        GtkWindow     *window = NULL;
-
-        windows = gtk_application_get_windows (GTK_APPLICATION (application));
-        for (l = windows; l != NULL; l = l->next) {
-                if (EV_IS_WINDOW (l->data)) {
-                        window = GTK_WINDOW (l->data);
-                        break;
-                }
-        }
-
-	ev_application_new_window (application,
-                                   window ? gtk_window_get_screen (window) : gdk_screen_get_default (),
-                                   gtk_get_current_event_time ());
-}
-
-static void
-app_help_cb (GSimpleAction *action,
-             GVariant      *parameter,
-             gpointer       user_data)
-{
-        EvApplication *application = user_data;
-
-        ev_application_show_help (application, NULL, NULL);
-}
-
-static void
-app_about_cb (GSimpleAction *action,
-              GVariant      *parameter,
-              gpointer       user_data)
-{
-        EvApplication *application = user_data;
-
-        const char *authors[] = {
-                "Martin Kretzschmar <m_kretzschmar@gmx.net>",
-                "Jonathan Blandford <jrb@gnome.org>",
-                "Marco Pesenti Gritti <marco@gnome.org>",
-                "Nickolay V. Shmyrev <nshmyrev@yandex.ru>",
-                "Bryan Clark <clarkbw@gnome.org>",
-                "Carlos Garcia Campos <carlosgc@gnome.org>",
-                "Wouter Bolsterlee <wbolster@gnome.org>",
-                "Christian Persch <chpe" "\100" "gnome.org>",
-                NULL
-        };
-        const char *documenters[] = {
-                "Nickolay V. Shmyrev <nshmyrev@yandex.ru>",
-                "Phil Bull <philbull@gmail.com>",
-                "Tiffany Antpolski <tiffany.antopolski@gmail.com>",
-                NULL
-        };
-#ifdef ENABLE_NLS
-        const char **p;
-
-        for (p = authors; *p; ++p)
-                *p = _(*p);
-
-        for (p = documenters; *p; ++p)
-                *p = _(*p);
-#endif
-
-        gtk_show_about_dialog (gtk_application_get_active_window (GTK_APPLICATION (application)),
-                               "name", _("Evince"),
-                               "version", VERSION,
-                               "copyright", _("© 1996–2017 The Evince authors"),
-                               "license-type", GTK_LICENSE_GPL_2_0,
-                               "website", "https://wiki.gnome.org/Apps/Evince",
-                               "comments", _("Document Viewer"),
-                               "authors", authors,
-                               "documenters", documenters,
-                               "translator-credits", _("translator-credits"),
-                               "logo-icon-name", "evince",
-                               NULL);
-}
-
-static void
 ev_application_startup (GApplication *gapplication)
 {
-        const GActionEntry app_menu_actions[] = {
-		{ "open",  app_file_open_cb, NULL, NULL, NULL },
-		{ "new",  app_new_cb, NULL, NULL, NULL },
-                { "help", app_help_cb, NULL, NULL, NULL },
-                { "about", app_about_cb, NULL, NULL, NULL }
-        };
-
         const gchar *action_accels[] = {
-          "win.open",                   "<Ctrl>O", NULL,
+          "win.win",                    "<Ctrl>O", NULL,
           "win.open-copy",              "<Ctrl>N", NULL,
           "win.save-as",                "<Ctrl>S", NULL,
           "win.print",                  "<Ctrl>P", NULL,
@@ -1053,13 +954,13 @@ ev_application_startup (GApplication *gapplication)
           "win.close",                  "<Ctrl>W", NULL,
           "win.escape",                 "Escape", NULL,
           "win.find",                   "<Ctrl>F", "slash", NULL,
-          "win.find-next",              "<Ctrl>G", NULL,
-          "win.find-previous",          "<Ctrl><Shift>G", NULL,
+          "win.find-next",              "<Ctrl>G", "F3", NULL,
+          "win.find-previous",          "<Ctrl><Shift>G", "<Shift>F3", NULL,
           "win.select-page",            "<Ctrl>L", NULL,
           "win.go-backwards",           "<Shift>Page_Up", NULL,
           "win.go-forward",             "<Shift>Page_Down", NULL,
-          "win.go-next-page",           "n", NULL,
-          "win.go-previous-page",       "p", NULL,
+          "win.go-next-page",           "n", "<Ctrl>Page_Down", NULL,
+          "win.go-previous-page",       "p", "<Ctrl>Page_Up", NULL,
           "win.go-back-history",        "<alt>P", "Back", NULL,
           "win.go-forward-history",     "<alt>N", "Forward", NULL,
           "win.sizing-mode::fit-page",  "f", NULL,
@@ -1079,6 +980,8 @@ ev_application_startup (GApplication *gapplication)
           "win.inverted-colors",        "<Ctrl>I", NULL,
           "win.color-overlay",        "<Ctrl>B", NULL,
           "win.reload",                 "<Ctrl>R", NULL,
+          "win.help",                   "F1", NULL,
+          "win.about",                  NULL, NULL,
           NULL
         };
 
@@ -1088,10 +991,6 @@ ev_application_startup (GApplication *gapplication)
 	g_application_set_resource_base_path (gapplication, "/org/gnome/evince");
 
         G_APPLICATION_CLASS (ev_application_parent_class)->startup (gapplication);
-
-        g_action_map_add_action_entries (G_ACTION_MAP (application),
-                                         app_menu_actions, G_N_ELEMENTS (app_menu_actions),
-                                         application);
 
         for (it = action_accels; it[0]; it += g_strv_length ((gchar **)it) + 1)
                 gtk_application_set_accels_for_action (GTK_APPLICATION (application), it[0], &it[1]);
@@ -1287,32 +1186,4 @@ ev_application_get_dot_dir (EvApplication *application,
                 g_mkdir_with_parents (application->dot_dir, 0700);
 
 	return application->dot_dir;
-}
-
-/**
- * ev_application_show_help:
- * @application: the #EvApplication
- * @screen: (allow-none): a #GdkScreen, or %NULL to use the default screen
- * @topic: (allow-none): the help topic, or %NULL to show the index
- *
- * Launches the help viewer on @screen to show the evince help.
- * If @topic is %NULL, shows the help index; otherwise the topic.
- */
-void
-ev_application_show_help (EvApplication *application,
-                          GdkScreen     *screen,
-                          const char    *topic)
-{
-        char *escaped_topic, *uri;
-
-        if (topic != NULL) {
-                escaped_topic = g_uri_escape_string (topic, NULL, TRUE);
-                uri = g_strdup_printf ("help:evince/%s", escaped_topic);
-                g_free (escaped_topic);
-        } else {
-                uri = g_strdup ("help:evince");
-        }
-
-        gtk_show_uri (screen, uri, gtk_get_current_event_time (), NULL);
-        g_free (uri);
 }

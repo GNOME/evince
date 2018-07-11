@@ -7,10 +7,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: evince master\n"
-"Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?"
-"product=evince&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2018-05-25 13:35+0000\n"
-"PO-Revision-Date: 2018-05-26 11:02+0200\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
+"POT-Creation-Date: 2018-06-28 15:08+0000\n"
+"PO-Revision-Date: 2018-06-29 15:26+0200\n"
 "Last-Translator: Fabio Tomat <f.t.public@gmail.com>\n"
 "Language-Team: Friulian <f.t.public@gmail.com>\n"
 "Language: fur\n"
@@ -18,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.0.7\n"
+"X-Generator: Poedit 2.0.8\n"
 
 #: ../backend/comics/comics-document.c:118
 #: ../backend/comics/comics-document.c:140
@@ -319,25 +318,25 @@ msgid "Print document"
 msgstr "Stampe il document"
 
 #. Manually set name and icon
-#: ../data/evince.desktop.in.in.h:1 ../shell/ev-application.c:1025
+#: ../data/org.gnome.Evince.desktop.in.in.h:1 ../shell/ev-application.c:1025
 #: ../shell/ev-window-title.c:123 ../shell/main.c:298
 msgid "Document Viewer"
 msgstr "Visualizadôr di Documents"
 
-#: ../data/evince.desktop.in.in.h:2
+#: ../data/org.gnome.Evince.desktop.in.in.h:2
 msgid "View multi-page documents"
 msgstr "Mostre documents multi-pagjine"
 
-#: ../data/evince.desktop.in.in.h:3
+#: ../data/org.gnome.Evince.desktop.in.in.h:3
 msgid "pdf;ps;postscript;dvi;xps;djvu;tiff;document;presentation;viewer;"
 msgstr ""
 "pdf;ps;postscript;dvi;xps;djvu;tiff;document;presentazion;visualizadôr;"
 
-#: ../data/evince-previewer.desktop.in.in.h:1
+#: ../data/org.gnome.Evince-previewer.desktop.in.in.h:1
 msgid "Print Preview"
 msgstr "Anteprime di Stampe"
 
-#: ../data/evince-previewer.desktop.in.in.h:2
+#: ../data/org.gnome.Evince-previewer.desktop.in.in.h:2
 msgid "Preview before printing"
 msgstr "Mostre in anteprime il document di stampâ"
 
@@ -447,7 +446,7 @@ msgid "of %d"
 msgstr "di %d"
 
 #: ../libmisc/ev-page-action-widget.c:185 ../shell/ev-history.c:426
-#: ../shell/ev-sidebar-bookmarks.c:306 ../shell/ev-window.c:921
+#: ../shell/ev-sidebar-bookmarks.c:310 ../shell/ev-window.c:921
 #: ../shell/ev-window.c:4810
 #, c-format
 msgid "Page %s"
@@ -925,7 +924,7 @@ msgstr "Zonte une note testuâl"
 msgid "Add highlight annotation"
 msgstr "Zonte une note evidenziade"
 
-#: ../shell/ev-application.c:1020 ../evince.appdata.xml.in.h:1
+#: ../shell/ev-application.c:1020 ../org.gnome.Evince.appdata.xml.in.h:1
 msgid "Evince"
 msgstr "Evince"
 
@@ -1066,31 +1065,31 @@ msgstr ""
 msgid "_Replace"
 msgstr "_Sostituìs"
 
-#: ../shell/ev-sidebar-attachments.c:895
+#: ../shell/ev-sidebar-attachments.c:901
 msgid "Attachments"
 msgstr "Alegâts"
 
-#: ../shell/ev-sidebar-bookmarks.c:148
+#: ../shell/ev-sidebar-bookmarks.c:150
 msgid "_Open Bookmark"
 msgstr "_Vierç Segnelibri"
 
-#: ../shell/ev-sidebar-bookmarks.c:150
+#: ../shell/ev-sidebar-bookmarks.c:152
 msgid "_Rename Bookmark"
 msgstr "_Cambie non al Segnelibri"
 
-#: ../shell/ev-sidebar-bookmarks.c:152
+#: ../shell/ev-sidebar-bookmarks.c:154
 msgid "_Remove Bookmark"
 msgstr "_Gjave Segnelibri"
 
-#: ../shell/ev-sidebar-bookmarks.c:467 ../shell/ev-sidebar-bookmarks.c:468
+#: ../shell/ev-sidebar-bookmarks.c:473 ../shell/ev-sidebar-bookmarks.c:474
 msgid "Add bookmark"
 msgstr "Zonte segnelibri"
 
-#: ../shell/ev-sidebar-bookmarks.c:476 ../shell/ev-sidebar-bookmarks.c:477
+#: ../shell/ev-sidebar-bookmarks.c:482 ../shell/ev-sidebar-bookmarks.c:483
 msgid "Remove bookmark"
 msgstr "Gjave segnelibri"
 
-#: ../shell/ev-sidebar-bookmarks.c:593 ../shell/ev-toolbar.c:142
+#: ../shell/ev-sidebar-bookmarks.c:599 ../shell/ev-toolbar.c:142
 msgid "Bookmarks"
 msgstr "Segnelibri"
 
@@ -1724,144 +1723,199 @@ msgstr "Jentre te modalitât presentazion"
 
 #: ../shell/help-overlay.ui.h:11
 msgctxt "shortcut window"
+msgid "Toggle sidebar"
+msgstr "Comute sbare laterâl"
+
+#: ../shell/help-overlay.ui.h:12
+msgctxt "shortcut window"
+msgid "Toggle caret navigation"
+msgstr "Comute navigazion cun cursôr"
+
+#: ../shell/help-overlay.ui.h:13
+msgctxt "shortcut window"
 msgid "Selecting and copying text"
 msgstr "Selezione e copie il test"
 
-#: ../shell/help-overlay.ui.h:12
+#: ../shell/help-overlay.ui.h:14
 msgctxt "shortcut window"
 msgid "Copy highlighted text"
 msgstr "Copie test evidenziât"
 
-#: ../shell/help-overlay.ui.h:13
+#: ../shell/help-overlay.ui.h:15
 msgctxt "shortcut window"
 msgid "Select all the text in a document"
 msgstr "Selezione dut il test intal document"
 
-#: ../shell/help-overlay.ui.h:14
+#: ../shell/help-overlay.ui.h:16
 msgctxt "shortcut window"
 msgid "Moving around the document"
 msgstr "Spostâsi tal document"
 
-#: ../shell/help-overlay.ui.h:15
+#: ../shell/help-overlay.ui.h:17
 msgctxt "shortcut window"
 msgid "Move around a page"
 msgstr "Sposte tor ator une pagjine"
 
-#: ../shell/help-overlay.ui.h:16
+#: ../shell/help-overlay.ui.h:18
 msgctxt "shortcut window"
 msgid "Move up/down a page several lines at a time"
 msgstr "Sposte su/ju une pagjine plui riis ae volte"
 
-#: ../shell/help-overlay.ui.h:17
+#: ../shell/help-overlay.ui.h:19
+msgctxt "shortcut window"
+msgid "Go to previous/next page"
+msgstr "Va ae precedente/prossime pagjine"
+
+#: ../shell/help-overlay.ui.h:20
 msgctxt "shortcut window"
 msgid "Go to page number"
 msgstr "Va te pagjine numar"
 
-#: ../shell/help-overlay.ui.h:18
+#: ../shell/help-overlay.ui.h:21
 msgctxt "shortcut window"
 msgid "Go to the beginning/end of a page"
 msgstr "Va tal inizi/fin di une pagjine"
 
-#: ../shell/help-overlay.ui.h:19
+#: ../shell/help-overlay.ui.h:22
 msgctxt "shortcut window"
 msgid "Go to the beginning of the document"
 msgstr "Va tal inizi dal document"
 
-#: ../shell/help-overlay.ui.h:20
+#: ../shell/help-overlay.ui.h:23
 msgctxt "shortcut window"
 msgid "Go to the end of the document"
 msgstr "Va ae fin dal document"
 
-#: ../shell/help-overlay.ui.h:21
+#: ../shell/help-overlay.ui.h:24
 msgctxt "shortcut window"
 msgid "Finding text"
 msgstr "Ricercje test"
 
-#: ../shell/help-overlay.ui.h:22
+#: ../shell/help-overlay.ui.h:25
 msgctxt "shortcut window"
 msgid "Show the search bar"
 msgstr "Mostre la sbare di ricercje"
 
-#: ../shell/help-overlay.ui.h:23
+#: ../shell/help-overlay.ui.h:26
 msgctxt "shortcut window"
 msgid "Go to the next search result"
 msgstr "Va al prossime risultât de ricercje"
 
-#: ../shell/help-overlay.ui.h:24
+#: ../shell/help-overlay.ui.h:27
 msgctxt "shortcut window"
 msgid "Go to the previous search result"
 msgstr "Va al risultât precedent de ricercje"
 
-#: ../shell/help-overlay.ui.h:25
+#: ../shell/help-overlay.ui.h:28
 msgctxt "shortcut window"
 msgid "Rotating and zooming"
 msgstr "Rotazion e ingrandiment"
 
-#: ../shell/help-overlay.ui.h:26
+#: ../shell/help-overlay.ui.h:29
 msgctxt "shortcut window"
 msgid "Rotate the page 90 degrees counter-clockwise"
 msgstr "Zire la pagjine di 90 grâts in sens antiorari"
 
-#: ../shell/help-overlay.ui.h:27
+#: ../shell/help-overlay.ui.h:30
 msgctxt "shortcut window"
 msgid "Rotate the page 90 degrees clockwise"
 msgstr "Zire la pagjine di 90 grâts in sens orari"
 
-#: ../shell/help-overlay.ui.h:28
+#: ../shell/help-overlay.ui.h:31
 msgctxt "shortcut window"
 msgid "Zoom in"
 msgstr "Ingrandìs"
 
-#: ../shell/help-overlay.ui.h:29
+#: ../shell/help-overlay.ui.h:32
 msgctxt "shortcut window"
 msgid "Zoom out"
 msgstr "Ridûs"
 
-#: ../shell/help-overlay.ui.h:30
+#: ../shell/help-overlay.ui.h:33
 msgctxt "shortcut window"
 msgid "Fit page"
 msgstr "Adate ae pagjine"
 
-#: ../shell/help-overlay.ui.h:31
+#: ../shell/help-overlay.ui.h:34
 msgctxt "shortcut window"
 msgid "Fit width"
 msgstr "Adate ae largjece"
 
-#: ../shell/help-overlay.ui.h:32
+#: ../shell/help-overlay.ui.h:35
 msgctxt "shortcut window"
 msgid "Automatic zoom"
 msgstr "Ingrandiment automatic"
 
-#: ../shell/help-overlay.ui.h:33
+#: ../shell/help-overlay.ui.h:36
+msgctxt "shortcut window"
+msgid "Document view and handling"
+msgstr "Viodude e gjestion document"
+
+#: ../shell/help-overlay.ui.h:37
+msgctxt "shortcut window"
+msgid "Add bookmark"
+msgstr "Zonte segnelibri"
+
+#: ../shell/help-overlay.ui.h:38
+msgctxt "shortcut window"
+msgid "Toggle inverted colors"
+msgstr "Comute colôrs invertîts"
+
+#: ../shell/help-overlay.ui.h:39
+msgctxt "shortcut window"
+msgid "Toggle continuous scrolling"
+msgstr "Comute scoriment continui"
+
+#: ../shell/help-overlay.ui.h:40
+msgctxt "shortcut window"
+msgid "Toggle dual page"
+msgstr "Comute pagjine dople"
+
+#: ../shell/help-overlay.ui.h:41
 msgctxt "shortcut window"
 msgid "Touchpad gestures"
 msgstr "Mots Touchpad"
 
-#: ../shell/help-overlay.ui.h:34
+#: ../shell/help-overlay.ui.h:42
 msgctxt "shortcut window"
 msgid "Go to next page"
 msgstr "Va te prossime pagjine"
 
-#: ../shell/help-overlay.ui.h:35
+#: ../shell/help-overlay.ui.h:43
 msgctxt "shortcut window"
 msgid "Go to previous page"
 msgstr "Va te pagjine prime"
 
-#: ../evince.appdata.xml.in.h:2
+#: ../org.gnome.Evince.appdata.xml.in.h:2
 msgid "Document viewer for popular document formats"
 msgstr "Visualizadôr di documents par i formâts plui popolârs"
 
-#: ../evince.appdata.xml.in.h:3
-msgid "This is a document viewer for the GNOME desktop."
-msgstr "Chest al è un visualizadôr di documents par l'ambient GNOME."
-
-#: ../evince.appdata.xml.in.h:4
+#: ../org.gnome.Evince.appdata.xml.in.h:3
 msgid ""
-"It supports the following document formats: PDF, PS, EPS, XPS, DjVu, TIFF, "
-"DVI (with SyncTeX), and Comic Books archives (CBR, CBT, CBZ, CB7)."
+"A document viewer for the GNOME desktop. You can view, search or annotate "
+"documents in many different formats."
 msgstr ""
-"Al supuarte chescj formâts di document: PDF, PS, EPS, XPS, DjVu, TIFF, DVI "
-"(cun SyncTeX), e archivis di fumets (CBR, CBT, CBZ, CB7)."
+"Un visualizadôr di documents pal scritori GNOME. Si pues viodi, cirî o meti "
+"notis tai documents di tancj formâts diferents."
+
+#: ../org.gnome.Evince.appdata.xml.in.h:4
+msgid ""
+"Evince supports documents in: PDF, PS, EPS, XPS, DjVu, TIFF, DVI (with "
+"SyncTeX), and Comic Books archives (CBR, CBT, CBZ, CB7)."
+msgstr ""
+"Evince al supuarte document in: PDF, PS, EPS, XPS, DjVu, TIFF, DVI (cun "
+"SyncTeX) e archivis di fumets (CBR, CBT, CBZ, CB7)."
+
+#: ../org.gnome.Evince.appdata.xml.in.h:5
+msgid "A clear, simple UI"
+msgstr "Une semplice, linde IU"
+
+#: ../org.gnome.Evince.appdata.xml.in.h:6
+msgid "Advanced highlighting and annotation"
+msgstr "Evidenziazion e notazion avanzade"
+
+#~ msgid "This is a document viewer for the GNOME desktop."
+#~ msgstr "Chest al è un visualizadôr di documents par l'ambient GNOME."
 
 #~ msgid "Open an existing document"
 #~ msgstr "Vierç un document esistent"
