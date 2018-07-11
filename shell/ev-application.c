@@ -966,6 +966,7 @@ ev_application_startup (GApplication *gapplication)
           "win.sizing-mode::fit-page",  "f", NULL,
           "win.sizing-mode::fit-width", "w", NULL,
           "win.sizing-mode::automatic", "a", NULL,
+          "win.default-zoom",           "<Ctrl>0", NULL,
           "win.open-menu",              "F10", NULL,
           "win.caret-navigation",       "F7", NULL,
           "win.zoom-in",                "plus", "<Ctrl>plus", "KP_Add", "<Ctrl>KP_Add", "equal", "<Ctrl>equal", NULL,

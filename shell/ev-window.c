@@ -4036,6 +4036,18 @@ ev_window_cmd_view_zoom (GSimpleAction *action,
 }
 
 static void
+ev_window_cmd_set_default_zoom (GSimpleAction *action,
+				GVariant      *parameter,
+				gpointer       user_data)
+{
+	EvWindow *ev_window = user_data;
+
+	ev_document_model_set_sizing_mode (ev_window->priv->model, EV_SIZING_FREE);
+	ev_document_model_set_scale (ev_window->priv->model,
+				     1. * get_screen_dpi (ev_window) / 72.0);
+}
+
+static void
 ev_window_cmd_edit_select_all (GSimpleAction *action,
 			       GVariant      *parameter,
 			       gpointer       user_data)
@@ -5974,6 +5986,7 @@ static const GActionEntry actions[] = {
 	{ "scroll-backwards", ev_window_cmd_scroll_backwards },
 	{ "sizing-mode", NULL, "s", "'free'", ev_window_change_sizing_mode_action_state },
 	{ "zoom", ev_window_cmd_view_zoom, "d" },
+	{ "default-zoom", ev_window_cmd_set_default_zoom },
 	{ "escape", ev_window_cmd_escape },
 	{ "open-menu", ev_window_cmd_action_menu },
 	{ "caret-navigation", NULL, NULL, "false", ev_window_cmd_view_toggle_caret_navigation },
