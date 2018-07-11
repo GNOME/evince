@@ -87,6 +87,8 @@ void _synctex_free(void * ptr) {
 #   include <syslog.h>
 #endif
 
+int _synctex_log(int level, const char * prompt, const char * reason,va_list arg);
+
 int _synctex_log(int level, const char * prompt, const char * reason,va_list arg) {
 	int result;
 #	ifdef SYNCTEX_RECENT_WINDOWS
