@@ -3892,6 +3892,7 @@ ev_window_cmd_about (GSimpleAction *action,
                 "Carlos Garcia Campos <carlosgc@gnome.org>",
                 "Wouter Bolsterlee <wbolster@gnome.org>",
                 "Christian Persch <chpe" "\100" "gnome.org>",
+                "Germán Poo-Caamaño <gpoo" "\100" "gnome.org>",
                 NULL
         };
         const char *documenters[] = {
