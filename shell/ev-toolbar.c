@@ -52,7 +52,6 @@ struct _EvToolbarPrivate {
         GtkWidget *annots_button;
         GtkWidget *sidebar_button;
         GtkWidget *sidebar;
-        GMenu *bookmarks_section;
 
         EvToolbarMode toolbar_mode;
 };
@@ -151,35 +150,6 @@ ev_toolbar_create_menu_button (EvToolbar   *ev_toolbar,
 }
 
 static void
-ev_toolbar_setup_bookmarks_menu (EvToolbar  *toolbar,
-                                 GMenuModel *bookmarks_submenu_model)
-{
-        GMenu *bookmarks_section = toolbar->priv->bookmarks_section;
-
-        /* The bookmarks section has one or two items: "Add Bookmark"
-         * and the "Bookmarks" submenu item. Hide the latter when there
-         * are no bookmarks.
-         */
-        if (g_menu_model_get_n_items (bookmarks_submenu_model) > 0) {
-                if (g_menu_model_get_n_items (G_MENU_MODEL (bookmarks_section)) == 1)
-                        g_menu_append_submenu (bookmarks_section, _("Bookmarks"), bookmarks_submenu_model);
-        } else {
-                if (g_menu_model_get_n_items (G_MENU_MODEL (bookmarks_section)) == 2)
-                        g_menu_remove (bookmarks_section, 1);
-        }
-}
-
-static void
-ev_toolbar_bookmarks_menu_model_changed (GMenuModel *model,
-                                         gint        position,
-                                         gint        removed,
-                                         gint        added,
-                                         EvToolbar  *toolbar)
-{
-        ev_toolbar_setup_bookmarks_menu (toolbar, model);
-}
-
-static void
 zoom_selector_activated (GtkWidget *zoom_action,
                          EvToolbar *toolbar)
 {
@@ -216,7 +186,6 @@ ev_toolbar_constructed (GObject *object)
         GtkWidget      *vbox;
         GtkWidget      *button;
         GMenuModel     *menu;
-        GMenuModel     *bookmarks_submenu_model;
 
         G_OBJECT_CLASS (ev_toolbar_parent_class)->constructed (object);
 
@@ -279,29 +248,7 @@ ev_toolbar_constructed (GObject *object)
         ev_toolbar->priv->find_button = button;
         gtk_header_bar_pack_end (GTK_HEADER_BAR (ev_toolbar), button);
 
-        ev_toolbar->priv->bookmarks_section = G_MENU (gtk_builder_get_object (builder, "bookmarks"));
-        bookmarks_submenu_model = ev_window_get_bookmarks_menu (ev_toolbar->priv->window);
-        g_signal_connect (bookmarks_submenu_model, "items-changed",
-                          G_CALLBACK (ev_toolbar_bookmarks_menu_model_changed),
-                          ev_toolbar);
-        ev_toolbar_setup_bookmarks_menu (ev_toolbar, bookmarks_submenu_model);
         g_object_unref (builder);
-}
-
-static void
-ev_toolbar_dispose (GObject *object)
-{
-        EvToolbar  *ev_toolbar = EV_TOOLBAR (object);
-        GMenuModel *bookmarks_submenu_model;
-
-        bookmarks_submenu_model = ev_window_get_bookmarks_menu (ev_toolbar->priv->window);
-        if (bookmarks_submenu_model) {
-                g_signal_handlers_disconnect_by_func (bookmarks_submenu_model,
-                                                      ev_toolbar_bookmarks_menu_model_changed,
-                                                      ev_toolbar);
-        }
-
-        G_OBJECT_CLASS (ev_toolbar_parent_class)->dispose (object);
 }
 
 static void
@@ -311,7 +258,6 @@ ev_toolbar_class_init (EvToolbarClass *klass)
 
         g_object_class->set_property = ev_toolbar_set_property;
         g_object_class->constructed = ev_toolbar_constructed;
-        g_object_class->dispose = ev_toolbar_dispose;
 
         g_object_class_install_property (g_object_class,
                                          PROP_WINDOW,
