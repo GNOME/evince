@@ -115,6 +115,69 @@
         <child>
           <object class="GtkShortcutsGroup">
             <property name="visible">True</property>
+            <property name="title" translatable="yes" context="shortcut window">Rotating and zooming</property>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="visible">True</property>
+                <property name="title" translatable="yes" context="shortcut window">Rotate the page 90 degrees counter-clockwise</property>
+                <property name="accelerator">&lt;Primary&gt;Left</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="visible">True</property>
+                <property name="title" translatable="yes" context="shortcut window">Rotate the page 90 degrees clockwise</property>
+                <property name="accelerator">&lt;Primary&gt;Right</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="visible">True</property>
+                <property name="title" translatable="yes" context="shortcut window">Zoom in</property>
+                <property name="accelerator">&lt;Primary&gt;plus</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="visible">True</property>
+                <property name="title" translatable="yes" context="shortcut window">Zoom out</property>
+                <property name="accelerator">&lt;Primary&gt;minus</property>
+              </object>
+	          </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="visible">True</property>
+                <property name="title" translatable="yes" context="shortcut window">Zoom 1:1</property>
+                <property name="accelerator">&lt;Primary&gt;0</property>
+              </object>
+            </child>
+	          <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="visible">True</property>
+                <property name="title" translatable="yes" context="shortcut window">Fit page</property>
+                <property name="accelerator">f</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="visible">True</property>
+                <property name="title" translatable="yes" context="shortcut window">Fit width</property>
+                <property name="accelerator">w</property>
+              </object>
+	          </child>
+	          <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="visible">True</property>
+                <property name="title" translatable="yes" context="shortcut window">Automatic zoom</property>
+                <property name="accelerator">a</property>
+              </object>
+            </child>
+          </object>
+        </child>
+
+        <child>
+          <object class="GtkShortcutsGroup">
+            <property name="visible">True</property>
             <property name="title" translatable="yes" context="shortcut window">Moving around the document</property>
             <child>
               <object class="GtkShortcutsShortcut">
@@ -142,6 +205,13 @@
                 <property name="visible">True</property>
                 <property name="title" translatable="yes" context="shortcut window">Go to previous/next page</property>
                 <property name="accelerator">p n</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="visible">True</property>
+                <property name="title" translatable="yes" context="shortcut window">Go to previous/next page visited</property>
+                <property name="accelerator">&lt;Alt&gt;P &lt;Alt&gt;N</property>
               </object>
             </child>
             <child>
@@ -198,69 +268,6 @@
                 <property name="visible">True</property>
                 <property name="title" translatable="yes" context="shortcut window">Go to the previous search result</property>
                 <property name="accelerator">&lt;Primary&gt;&lt;shift&gt;G</property>
-              </object>
-            </child>
-          </object>
-        </child>
-
-        <child>
-          <object class="GtkShortcutsGroup">
-            <property name="visible">True</property>
-            <property name="title" translatable="yes" context="shortcut window">Rotating and zooming</property>
-            <child>
-              <object class="GtkShortcutsShortcut">
-                <property name="visible">True</property>
-                <property name="title" translatable="yes" context="shortcut window">Rotate the page 90 degrees counter-clockwise</property>
-                <property name="accelerator">&lt;Primary&gt;Left</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkShortcutsShortcut">
-                <property name="visible">True</property>
-                <property name="title" translatable="yes" context="shortcut window">Rotate the page 90 degrees clockwise</property>
-                <property name="accelerator">&lt;Primary&gt;Right</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkShortcutsShortcut">
-                <property name="visible">True</property>
-                <property name="title" translatable="yes" context="shortcut window">Zoom in</property>
-                <property name="accelerator">&lt;Primary&gt;plus</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkShortcutsShortcut">
-                <property name="visible">True</property>
-                <property name="title" translatable="yes" context="shortcut window">Zoom out</property>
-                <property name="accelerator">&lt;Primary&gt;minus</property>
-              </object>
-	          </child>
-            <child>
-              <object class="GtkShortcutsShortcut">
-                <property name="visible">True</property>
-                <property name="title" translatable="yes" context="shortcut window">Zoom 1:1</property>
-                <property name="accelerator">&lt;Primary&gt;0</property>
-              </object>
-            </child>
-	          <child>
-              <object class="GtkShortcutsShortcut">
-                <property name="visible">True</property>
-                <property name="title" translatable="yes" context="shortcut window">Fit page</property>
-                <property name="accelerator">f</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkShortcutsShortcut">
-                <property name="visible">True</property>
-                <property name="title" translatable="yes" context="shortcut window">Fit width</property>
-                <property name="accelerator">w</property>
-              </object>
-	          </child>
-	          <child>
-              <object class="GtkShortcutsShortcut">
-                <property name="visible">True</property>
-                <property name="title" translatable="yes" context="shortcut window">Automatic zoom</property>
-                <property name="accelerator">a</property>
               </object>
             </child>
           </object>
