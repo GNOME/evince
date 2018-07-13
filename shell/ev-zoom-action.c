@@ -416,7 +416,7 @@ ev_zoom_action_init (EvZoomAction *zoom_action)
         priv->entry = gtk_entry_new ();
         gtk_entry_set_icon_from_icon_name (GTK_ENTRY (priv->entry),
                                            GTK_ENTRY_ICON_SECONDARY,
-                                           "go-down-symbolic");
+                                           "pan-down-symbolic");
         gtk_box_pack_start (GTK_BOX (zoom_action), priv->entry, TRUE, FALSE, 0);
         gtk_widget_show (priv->entry);
 

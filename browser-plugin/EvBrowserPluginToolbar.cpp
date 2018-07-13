@@ -416,7 +416,7 @@ static void evBrowserPluginToolbarConstructed(GObject *object)
         gtk_container_add(GTK_CONTAINER(hbox), button);
         gtk_widget_show(button);
 
-        button = createMenuButton(toolbar, "go-down-symbolic", createSizingModeMenu(toolbar), GTK_ALIGN_END);
+        button = createMenuButton(toolbar, "pan-down-symbolic", createSizingModeMenu(toolbar), GTK_ALIGN_END);
         gtk_container_add(GTK_CONTAINER(hbox), button);
         gtk_widget_show(button);
 

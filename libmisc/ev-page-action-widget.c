@@ -132,7 +132,7 @@ ev_page_action_widget_update_max_width (EvPageActionWidget *action_widget)
         if (action_widget->menu) {
                 gtk_entry_set_icon_from_icon_name (GTK_ENTRY (action_widget->label),
                                                    GTK_ENTRY_ICON_SECONDARY,
-                                                   "go-down-symbolic");
+                                                   "pan-down-symbolic");
                 /* width + 3 (for the icon). Similarly to EvZoomAction. */
                 padding = 3;
         }
