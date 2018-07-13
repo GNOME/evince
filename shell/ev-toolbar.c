@@ -84,7 +84,8 @@ ev_toolbar_set_button_action (EvToolbar   *ev_toolbar,
         gtk_actionable_set_action_name (GTK_ACTIONABLE (button), action_name);
         gtk_button_set_label (button, NULL);
         gtk_button_set_focus_on_click (button, FALSE);
-        gtk_widget_set_tooltip_text (GTK_WIDGET (button), tooltip);
+        if (tooltip)
+                gtk_widget_set_tooltip_text (GTK_WIDGET (button), tooltip);
 }
 
 static GtkWidget *
@@ -178,6 +179,19 @@ ev_toolbar_sidebar_current_page_changed (EvSidebar  *ev_sidebar,
 }
 
 static void
+ev_toolbar_find_button_sensitive_changed (GtkWidget  *find_button,
+					  GParamSpec *pspec,
+					  EvToolbar *ev_toolbar)
+{
+        if (gtk_widget_is_sensitive (find_button))
+                gtk_widget_set_tooltip_text (find_button,
+                                             _("Find a word or phrase in the document"));
+        else
+                gtk_widget_set_tooltip_text (find_button,
+                                             _("Search not available for this document"));
+}
+
+static void
 ev_toolbar_constructed (GObject *object)
 {
         EvToolbar      *ev_toolbar = EV_TOOLBAR (object);
@@ -244,9 +258,13 @@ ev_toolbar_constructed (GObject *object)
 
         /* Find */
         button = ev_toolbar_create_toggle_button (ev_toolbar, "win.toggle-find", "edit-find-symbolic",
-                                                  _("Find a word or phrase in the document"));
+                                                  NULL);
         ev_toolbar->priv->find_button = button;
         gtk_header_bar_pack_end (GTK_HEADER_BAR (ev_toolbar), button);
+        g_signal_connect (button,
+                          "notify::sensitive",
+                          G_CALLBACK (ev_toolbar_find_button_sensitive_changed),
+                          ev_toolbar);
 
         g_object_unref (builder);
 }
