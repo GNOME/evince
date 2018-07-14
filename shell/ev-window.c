@@ -5222,6 +5222,7 @@ view_menu_annot_popup (EvWindow     *ev_window,
 
 				g_list_free_full (ev_window->priv->attach_list,
 						  g_object_unref);
+				ev_window->priv->attach_list = NULL;
 				ev_window->priv->attach_list =
 					g_list_prepend (ev_window->priv->attach_list,
 							g_object_ref (attachment));
@@ -5825,10 +5826,7 @@ ev_window_dispose (GObject *object)
 	}
 
 	if (priv->attach_list) {
-		g_list_foreach (priv->attach_list,
-				(GFunc) g_object_unref,
-				NULL);
-		g_list_free (priv->attach_list);
+		g_list_free_full (priv->attach_list, g_object_unref);
 		priv->attach_list = NULL;
 	}
 
