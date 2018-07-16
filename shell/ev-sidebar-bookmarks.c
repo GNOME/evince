@@ -463,10 +463,7 @@ ev_sidebar_bookmarks_init (EvSidebarBookmarks *sidebar_bookmarks)
         gtk_widget_show (priv->tree_view);
 
         hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
-        gtk_widget_set_margin_top (hbox, 2);
-        gtk_widget_set_margin_bottom (hbox, 2);
-        gtk_widget_set_margin_start (hbox, 2);
-        gtk_widget_set_margin_end (hbox, 2);
+        g_object_set (hbox, "margin", 6, NULL);
         gtk_widget_set_halign (hbox, GTK_ALIGN_CENTER);
 
         priv->add_button = gtk_button_new_with_label ("+");
