@@ -953,6 +953,10 @@ compute_scroll_increment (EvView        *view,
 		if (cairo_region_num_rectangles (sel_region) > 0) {
 			cairo_region_get_rectangle (sel_region, 0, &rect);
 			fraction = 1 - (rect.height / gtk_adjustment_get_page_size (adjustment));
+			/* jump the full page height if the line is too large a
+			 * fraction of the page */
+			if (fraction < 0.7)
+				fraction = 1;
 		}
 		cairo_region_destroy (sel_region);
 	}
