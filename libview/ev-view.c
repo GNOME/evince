@@ -107,6 +107,7 @@ typedef struct {
 #define ZOOM_OUT_FACTOR (1.0/ZOOM_IN_FACTOR)
 
 #define SCROLL_TIME 150
+#define SCROLL_PAGE_THRESHOLD 0.7
 
 #define DEFAULT_PIXBUF_CACHE_SIZE 52428800 /* 50MB */
 
@@ -953,6 +954,10 @@ compute_scroll_increment (EvView        *view,
 		if (cairo_region_num_rectangles (sel_region) > 0) {
 			cairo_region_get_rectangle (sel_region, 0, &rect);
 			fraction = 1 - (rect.height / gtk_adjustment_get_page_size (adjustment));
+			/* jump the full page height if the line is too large a
+			 * fraction of the page */
+			if (fraction < SCROLL_PAGE_THRESHOLD)
+				fraction = 1.0;
 		}
 		cairo_region_destroy (sel_region);
 	}
