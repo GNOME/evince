@@ -10,15 +10,15 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: evince doc\n"
-"POT-Creation-Date: 2018-03-11 15:59+0000\n"
-"PO-Revision-Date: 2018-04-03 22:00+0200\n"
+"POT-Creation-Date: 2018-07-10 05:20+0000\n"
+"PO-Revision-Date: 2018-07-17 12:29+0200\n"
 "Last-Translator: Anders Jonsson <anders.jonsson@norsjovallen.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
 "Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 2.0.8\n"
 
 #. Put one translator per line, in the form NAME <EMAIL>, YEAR1, YEAR2
 msgctxt "_"
@@ -50,7 +50,7 @@ msgstr "Hur man anpassar upphovsman, färg, stil eller ikonen för en kommentar.
 #: C/singlesided-5-8pages.page:12 C/singlesided-9-12pages.page:12
 #: C/singlesided-npages.page:12 C/synctex-beamer.page:11
 #: C/synctex-compile.page:11 C/synctex-editors.page:11 C/synctex.page:12
-#: C/synctex-search.page:11 C/synctex-support.page:11 C/titlebar.page:13
+#: C/synctex-search.page:11 C/synctex-support.page:12 C/titlebar.page:13
 #: C/translate.page:10
 msgid "Tiffany Antopolski"
 msgstr "Tiffany Antopolski"
@@ -75,7 +75,7 @@ msgstr "Tiffany Antopolski"
 #: C/singlesided-3-4pages.page:16 C/singlesided-5-8pages.page:16
 #: C/singlesided-9-12pages.page:16 C/singlesided-npages.page:16
 #: C/synctex-beamer.page:15 C/synctex-compile.page:15 C/synctex-editors.page:15
-#: C/synctex.page:16 C/synctex-search.page:15 C/synctex-support.page:15
+#: C/synctex.page:16 C/synctex-search.page:15 C/synctex-support.page:20
 #: C/textselection.page:15 C/titlebar.page:17 C/translate.page:19
 msgid "Creative Commons Share Alike 3.0"
 msgstr "Creative Commons DelaLika 3.0"
@@ -4466,13 +4466,18 @@ msgstr ""
 msgid "How to add support for SyncTeX."
 msgstr "Hur man lägger till stöd för SyncTeX."
 
+#. (itstool) path: credit/name
+#: C/synctex-support.page:16
+msgid "Germán Poo-Caamaño"
+msgstr "Germán Poo-Caamaño"
+
 #. (itstool) path: page/title
-#: C/synctex-support.page:20
+#: C/synctex-support.page:25
 msgid "Set-up SyncTeX"
 msgstr "Ställ in SyncTeX"
 
 #. (itstool) path: page/p
-#: C/synctex-support.page:21
+#: C/synctex-support.page:26
 msgid ""
 "The following packages need to be installed in order to add support for "
 "SyncTeX:"
@@ -4480,22 +4485,26 @@ msgstr ""
 "Följande paket måste vara installerade för att lägga till stöd för SyncTeX:"
 
 #. (itstool) path: item/p
-#: C/synctex-support.page:26
-msgid "texlive-extra-utils"
-msgstr "texlive-extra-utils"
+#: C/synctex-support.page:31
+msgid "A LaTeX engine with SyncTex support, such as <app>pdflatex</app>."
+msgstr "En LaTeX-motor med SyncTex-stöd, så som <app>pdflatex</app>."
 
 #. (itstool) path: item/p
-#: C/synctex-support.page:31
-msgid "gedit-plugins"
-msgstr "gedit-plugins"
+#: C/synctex-support.page:36
+msgid ""
+"A text editor with SynxTeX support, such as <app>gedit</app> with gedit-"
+"plugins installed."
+msgstr ""
+"En textredigerare med SynxTeX-stöd, så som <app>gedit</app> med gedit-"
+"plugins installerat."
 
 #. (itstool) path: page/p
-#: C/synctex-support.page:37
+#: C/synctex-support.page:42
 msgid "In <app>gedit</app>, enable the SyncTeX Plugin:"
 msgstr "I <app>gedit</app>, aktivera SyncTeX-insticksmodulen:"
 
 #. (itstool) path: item/p
-#: C/synctex-support.page:42
+#: C/synctex-support.page:47
 msgid ""
 "Click <guiseq><gui>Edit</gui><gui>Preferences</gui><gui>Plugins</gui></"
 "guiseq> tab."
@@ -4504,7 +4513,7 @@ msgstr ""
 "gui><gui>Insticksmoduler</gui></guiseq>-fliken."
 
 #. (itstool) path: item/p
-#: C/synctex-support.page:47
+#: C/synctex-support.page:52
 msgid "Check <gui>SyncTeX</gui>."
 msgstr "Kontrollera <gui>SyncTeX</gui>."
 
@@ -4694,6 +4703,12 @@ msgid ""
 msgstr ""
 "Alternativt kan du kontakta internationaliseringsgruppen via deras <link "
 "href=\"http://mail.gnome.org/mailman/listinfo/gnome-i18n\">sändlista</link>."
+
+#~ msgid "texlive-extra-utils"
+#~ msgstr "texlive-extra-utils"
+
+#~ msgid "gedit-plugins"
+#~ msgstr "gedit-plugins"
 
 #~ msgid ""
 #~ "Click the <gui>&lt;</gui> or <gui>&gt;</gui> buttons on the <link xref="
