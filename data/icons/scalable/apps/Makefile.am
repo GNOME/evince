@@ -1,13 +1,13 @@
 themedir = $(datadir)/icons/hicolor
-size = 256x256
+size = scalable
 context = apps
 
 iconsdir = $(themedir)/$(size)/$(context)
 
 icons_DATA = \
-	org.gnome.Evince.png
+	org.gnome.Evince.svg
 
-noinst_DATA = 
+noinst_DATA =
 
 EXTRA_DIST =		\
 	$(icons_DATA)	\
