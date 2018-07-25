@@ -279,7 +279,7 @@ struct _EvWindowPrivate {
 #define ATTACHMENTS_SIDEBAR_ICON "mail-attachment-symbolic"
 #define LAYERS_SIDEBAR_ICON "view-paged-symbolic"
 #define ANNOTS_SIDEBAR_ICON "accessories-text-editor-symbolic"
-#define BOOKMARKS_SIDEBAR_ICON "bookmark-new-symbolic"
+#define BOOKMARKS_SIDEBAR_ICON "user-bookmarks-symbolic"
 
 #define EV_PRINT_SETTINGS_FILE  "print-settings"
 #define EV_PRINT_SETTINGS_GROUP "Print Settings"
