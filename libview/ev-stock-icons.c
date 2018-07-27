@@ -50,6 +50,7 @@ static const EvStockIcon stock_icons [] = {
 	{ EV_STOCK_ATTACHMENT,       "mail-attachment"},
 	{ EV_STOCK_SEND_TO,          "document-send"},
 	{ EV_STOCK_VIEW_SIDEBAR,     "view-sidebar"},
+	{ EV_STOCK_OUTLINE,          "outline"},
 };
 
 static gchar *ev_icons_path;

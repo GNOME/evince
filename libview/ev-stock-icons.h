@@ -49,6 +49,7 @@ G_BEGIN_DECLS
 #define EV_STOCK_ATTACHMENT             "mail-attachment"
 #define EV_STOCK_SEND_TO                "document-send"
 #define EV_STOCK_VIEW_SIDEBAR           "view-sidebar"
+#define EV_STOCK_OUTLINE                "outline"
 
 void ev_stock_icons_init       (void);
 void ev_stock_icons_shutdown   (void);

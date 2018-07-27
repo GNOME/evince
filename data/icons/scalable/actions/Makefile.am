@@ -7,7 +7,8 @@ iconsdir = $(themedir)/$(size)/$(context)
 icons_DATA = \
 	object-rotate-left.svg	\
 	object-rotate-right.svg \
-	view-sidebar.svg
+	view-sidebar.svg \
+	outline.svg
 
 noinst_DATA =
 

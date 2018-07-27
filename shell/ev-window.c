@@ -274,7 +274,7 @@ struct _EvWindowPrivate {
 #define LAYERS_SIDEBAR_ID "layers"
 #define ANNOTS_SIDEBAR_ID "annotations"
 #define BOOKMARKS_SIDEBAR_ID "bookmarks"
-#define LINKS_SIDEBAR_ICON "view-list-symbolic"
+#define LINKS_SIDEBAR_ICON EV_STOCK_OUTLINE
 #define THUMBNAILS_SIDEBAR_ICON "view-grid-symbolic"
 #define ATTACHMENTS_SIDEBAR_ICON "mail-attachment-symbolic"
 #define LAYERS_SIDEBAR_ICON "view-paged-symbolic"
