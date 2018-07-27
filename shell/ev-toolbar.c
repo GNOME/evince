@@ -191,7 +191,7 @@ ev_toolbar_constructed (GObject *object)
 
         /* Sidebar */
         button = ev_toolbar_create_toggle_button (ev_toolbar, "win.show-side-pane",
-                                                  "view-grid-symbolic",
+                                                  EV_STOCK_VIEW_SIDEBAR,
                                                   _("Side pane"));
         ev_toolbar->priv->sidebar_button = button;
         gtk_header_bar_pack_start (GTK_HEADER_BAR (ev_toolbar), button);
