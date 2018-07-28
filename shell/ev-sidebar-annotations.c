@@ -286,43 +286,6 @@ selection_changed_cb (GtkTreeSelection     *selection,
 }
 
 static gboolean
-sidebar_tree_button_release_cb (GtkTreeView    *view,
-				GdkEventButton *event,
-				EvSidebarAnnotations  *sidebar_annots)
-{
-	GtkTreeModel         *model;
-	GtkTreePath          *path;
-	GtkTreeIter           iter;
-	GtkTreeSelection     *selection;
-	GdkRectangle          rect;
-	EvMapping            *annot_mapping;
-
-	gtk_tree_view_get_path_at_pos (view, event->x, event->y, &path,
-                                       NULL, NULL, NULL);
-        if (!path)
-                return GDK_EVENT_PROPAGATE;
-
-	model = gtk_tree_view_get_model (view);
-	gtk_tree_model_get_iter (model, &iter, path);
-	gtk_tree_path_free (path);
-	selection = gtk_tree_view_get_selection (view);
-
-	if (event->button == GDK_BUTTON_SECONDARY && event->type == GDK_BUTTON_RELEASE &&
-	    iter_has_mapping (model, &iter, &annot_mapping) &&
-	    gtk_tree_selection_iter_is_selected (selection, &iter)) {
-		rect.x = event->x;
-		rect.y = event->y;
-		rect.width = rect.height = 1;
-		ev_sidebar_annotations_popup_menu_show (sidebar_annots,
-							gtk_tree_view_get_bin_window (view),
-							&rect, annot_mapping, (GdkEvent *) event);
-		return GDK_EVENT_STOP;
-	}
-
-	return GDK_EVENT_PROPAGATE;
-}
-
-static gboolean
 sidebar_tree_button_press_cb (GtkTreeView    *view,
                               GdkEventButton *event,
                               EvSidebarAnnotations  *sidebar_annots)
@@ -332,6 +295,7 @@ sidebar_tree_button_press_cb (GtkTreeView    *view,
         GtkTreeIter           iter;
         GtkTreeSelection     *selection;
         EvMapping            *annot_mapping;
+        GdkRectangle          rect;
 
         gtk_tree_view_get_path_at_pos (view, event->x, event->y, &path,
                                        NULL, NULL, NULL);
@@ -350,6 +314,13 @@ sidebar_tree_button_press_cb (GtkTreeView    *view,
 			return GDK_EVENT_PROPAGATE;
 
 		gtk_tree_selection_select_iter (selection, &iter);
+
+		rect.x = event->x;
+		rect.y = event->y;
+		rect.width = rect.height = 1;
+		ev_sidebar_annotations_popup_menu_show (sidebar_annots,
+							gtk_tree_view_get_bin_window (view),
+							&rect, annot_mapping, (GdkEvent *) event);
 
 		return GDK_EVENT_STOP;
 	} else {
@@ -404,9 +375,6 @@ job_finished_callback (EvJobAnnots          *job,
 	}
     g_signal_connect (priv->tree_view, "button-press-event",
                       G_CALLBACK (sidebar_tree_button_press_cb),
-                      sidebar_annots);
-    g_signal_connect (priv->tree_view, "button-release-event",
-                      G_CALLBACK (sidebar_tree_button_release_cb),
                       sidebar_annots);
 
 
