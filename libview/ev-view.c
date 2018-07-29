@@ -4273,6 +4273,19 @@ ev_view_scroll_event (GtkWidget *widget, GdkEventScroll *event)
 		return FALSE;
 	}
 
+	/* Do scroll only on one axis at a time. Issue #866 */
+	if (event->direction == GDK_SCROLL_SMOOTH &&
+	    event->delta_x != 0.0 && event->delta_y != 0.0) {
+		gdouble abs_x, abs_y;
+		abs_x = fabs (event->delta_x);
+		abs_y = fabs (event->delta_y);
+
+		if (abs_y > abs_x)
+			event->delta_x = 0.0;
+		else if (abs_x > abs_y)
+			event->delta_y = 0.0;
+	}
+
 	return FALSE;
 }
 
