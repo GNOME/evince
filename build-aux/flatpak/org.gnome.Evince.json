@@ -19,6 +19,7 @@
         "--filesystem=~/.config/dconf:ro",
         "--talk-name=ca.desrt.dconf",
         "--env=DCONF_USER_CONFIG_DIR=.config/dconf",
+        "--env=GDK_PIXBUF_MODULE_FILE=/app/lib/gdk-pixbuf-2.0/2.10.0/loaders.cache",
         "--talk-name=org.gtk.vfs",
         "--talk-name=org.gtk.vfs.*",
         "--talk-name=org.gnome.SessionManager"
@@ -58,6 +59,32 @@
                     "url" : "https://github.com/uclouvain/openjpeg/archive/v2.3.0.tar.gz",
                     "sha256" : "3dc787c1bb6023ba846c2a0d9b1f6e179f1cd255172bde9eb75b01f1e6c7d71a"
                 }
+            ]
+        },
+        {
+            "name": "libwebp",
+            "config-opts": [ "--disable-static", "--enable-libwebpmux", "--enable-libwebpdemux" ],
+            "cleanup": [ "/share", "/bin" ],
+            "sources": [
+                {
+                    "type": "archive",
+                    "url": "https://github.com/webmproject/libwebp/archive/v1.0.0.tar.gz",
+                    "sha256": "84259c4388f18637af3c5a6361536d754a5394492f91be1abc2e981d4983225b"
+                }
+            ]
+        },
+        {
+            "name": "webp-pixbuf-loader",
+            "buildsystem" : "cmake-ninja",
+            "sources": [
+                {
+                    "type": "git",
+                    "url": "https://github.com/aruiz/webp-pixbuf-loader.git"
+                }
+            ],
+            "post-install": [
+                "GDK_PIXBUF_MODULEDIR=/app/lib/gdk-pixbuf-2.0/2.10.0/loaders/ gdk-pixbuf-query-loaders > loaders.cache",
+                "cat /usr/lib/*/gdk-pixbuf-2.0/2.10.0/loaders.cache loaders.cache > /app/lib/gdk-pixbuf-2.0/2.10.0/loaders.cache"
             ]
         },
         {
