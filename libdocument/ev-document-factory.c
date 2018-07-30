@@ -317,7 +317,8 @@ ev_document_factory_get_document_full (const char           *uri,
 
 		if (result == FALSE || err) {
 			if (err &&
-			    g_error_matches (err, EV_DOCUMENT_ERROR, EV_DOCUMENT_ERROR_ENCRYPTED)) {
+			    (g_error_matches (err, EV_DOCUMENT_ERROR, EV_DOCUMENT_ERROR_ENCRYPTED) ||
+			     g_error_matches (err, EV_DOCUMENT_ERROR, EV_DOCUMENT_ERROR_UNSUPPORTED_CONTENT))) {
 				g_propagate_error (error, err);
 				return document;
 			    }
