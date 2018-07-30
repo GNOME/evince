@@ -54,13 +54,61 @@ struct _ComicsDocument
 	GPtrArray     *page_names;
 };
 
-static GSList* get_supported_image_extensions (void);
-
 EV_BACKEND_REGISTER (ComicsDocument, comics_document)
 
-static gboolean
+#define FORMAT_UNKNOWN     0
+#define FORMAT_SUPPORTED   1
+#define FORMAT_UNSUPPORTED 2
+
+/* Returns a GHashTable of:
+ * <key>: file extensions
+ * <value>: degree of support in gdk-pixbuf */
+static GHashTable *
+get_image_extensions(void)
+{
+	GHashTable *extensions;
+	GSList *formats = gdk_pixbuf_get_formats ();
+	GSList *l;
+	guint i;
+	const char *known_image_formats[] = {
+		"png",
+		"jpg",
+		"jpeg",
+		"webp"
+	};
+
+	extensions = g_hash_table_new_full (g_str_hash, g_str_equal,
+					    g_free, NULL);
+	for (l = formats; l != NULL; l = l->next) {
+		int i;
+		gchar **ext = gdk_pixbuf_format_get_extensions (l->data);
+
+		for (i = 0; ext[i] != NULL; i++) {
+			g_hash_table_insert (extensions,
+					     g_strdup (ext[i]),
+					     GINT_TO_POINTER (FORMAT_SUPPORTED));
+		}
+
+		g_strfreev (ext);
+	}
+
+	g_slist_free (formats);
+
+	/* Add known image formats that aren't supported by gdk-pixbuf */
+	for (i = 0; i < G_N_ELEMENTS (known_image_formats); i++) {
+		if (!g_hash_table_lookup (extensions, known_image_formats[i])) {
+			g_hash_table_insert (extensions,
+					     g_strdup (known_image_formats[i]),
+					     GINT_TO_POINTER (FORMAT_UNSUPPORTED));
+		}
+	}
+
+	return extensions;
+}
+
+static int
 has_supported_extension (const char *name,
-			 GSList     *supported_extensions)
+			 GHashTable *supported_extensions)
 {
 	gboolean ret = FALSE;
 	gchar *suffix;
@@ -70,10 +118,7 @@ has_supported_extension (const char *name,
 		return ret;
 
 	suffix = g_ascii_strdown (suffix + 1, -1);
-	if (g_slist_find_custom (supported_extensions, suffix,
-				 (GCompareFunc) strcmp) != NULL) {
-		ret = TRUE;
-	}
+	ret = GPOINTER_TO_INT (g_hash_table_lookup (supported_extensions, suffix));
 	g_free (suffix);
 
 	return ret;
@@ -103,8 +148,8 @@ comics_document_list (ComicsDocument  *comics_document,
 		      GError         **error)
 {
 	GPtrArray *array = NULL;
-	gboolean has_encrypted_files;
-	GSList *supported_extensions;
+	gboolean has_encrypted_files, has_unsupported_images;
+	GHashTable *supported_extensions = NULL;
 
 	if (!ev_archive_open_filename (comics_document->archive, comics_document->archive_path, error)) {
 		if (*error != NULL) {
@@ -119,13 +164,15 @@ comics_document_list (ComicsDocument  *comics_document,
 		goto out;
 	}
 
-	supported_extensions = get_supported_image_extensions ();
+	supported_extensions = get_image_extensions ();
 
 	has_encrypted_files = FALSE;
+	has_unsupported_images = FALSE;
 	array = g_ptr_array_sized_new (64);
 
 	while (1) {
 		const char *name;
+		int supported;
 
 		if (!ev_archive_read_next_header (comics_document->archive, error)) {
 			if (*error != NULL) {
@@ -150,8 +197,13 @@ comics_document_list (ComicsDocument  *comics_document,
 			continue;
 		}
 
-		if (!has_supported_extension (name, supported_extensions)) {
+		supported = has_supported_extension (name, supported_extensions);
+		if (supported == FORMAT_UNKNOWN) {
 			g_debug ("Not adding unsupported file '%s' to the list of files in the comics", name);
+			continue;
+		} else if (supported == FORMAT_UNSUPPORTED) {
+			g_debug ("Not adding unsupported image '%s' to the list of files in the comics", name);
+			has_unsupported_images = TRUE;
 			continue;
 		}
 
@@ -174,6 +226,11 @@ comics_document_list (ComicsDocument  *comics_document,
 					     EV_DOCUMENT_ERROR,
 					     EV_DOCUMENT_ERROR_ENCRYPTED,
 					     _("Archive is encrypted"));
+		} else if (has_unsupported_images) {
+			g_set_error_literal (error,
+					     EV_DOCUMENT_ERROR,
+					     EV_DOCUMENT_ERROR_UNSUPPORTED_CONTENT,
+					     _("No supported images in archive"));
 		} else {
 			g_set_error_literal (error,
 					     EV_DOCUMENT_ERROR,
@@ -183,6 +240,8 @@ comics_document_list (ComicsDocument  *comics_document,
 	}
 
 out:
+	if (supported_extensions)
+		g_hash_table_destroy (supported_extensions);
 	ev_archive_reset (comics_document->archive);
 	return array;
 }
@@ -540,28 +599,4 @@ static void
 comics_document_init (ComicsDocument *comics_document)
 {
 	comics_document->archive = ev_archive_new ();
-}
-
-/* Returns a list of file extensions supported by gdk-pixbuf */
-static GSList*
-get_supported_image_extensions(void)
-{
-	GSList *extensions = NULL;
-	GSList *formats = gdk_pixbuf_get_formats ();
-	GSList *l;
-
-	for (l = formats; l != NULL; l = l->next) {
-		int i;
-		gchar **ext = gdk_pixbuf_format_get_extensions (l->data);
-
-		for (i = 0; ext[i] != NULL; i++) {
-			extensions = g_slist_append (extensions,
-						     g_strdup (ext[i]));
-		}
-
-		g_strfreev (ext);
-	}
-
-	g_slist_free (formats);
-	return extensions;
 }
