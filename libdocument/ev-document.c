@@ -451,9 +451,10 @@ ev_document_load_full (EvDocument           *document,
  * On failure, %FALSE is returned and @error is filled in.
  * If the document is encrypted, EV_DEFINE_ERROR_ENCRYPTED is returned.
  * If the backend cannot load the specific document, EV_DOCUMENT_ERROR_INVALID
- * is returned. Other errors are possible too, depending on the backend
- * used to load the document and the URI, e.g. #GIOError, #GFileError, and
- * #GConvertError.
+ * is returned. If the backend does not support the format for the document's
+ * contents, EV_DOCUMENT_ERROR_UNSUPPORTED_CONTENT is returned. Other errors
+ * are possible too, depending on the backend used to load the document and
+ * the URI, e.g. #GIOError, #GFileError, and #GConvertError.
  *
  * Returns: %TRUE on success, or %FALSE on failure.
  */
