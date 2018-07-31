@@ -19,6 +19,21 @@
 -->
 <interface>
   <menu id="app-menu">
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">_Keyboard Shortcuts</attribute>
+        <attribute name="action">win.show-help-overlay</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">_Help</attribute>
+        <attribute name="action">app.help</attribute>
+        <attribute name="accel">F1</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">_About</attribute>
+        <attribute name="action">app.about</attribute>
+      </item>
+    </section>
   </menu>
 
   <menu id="action-menu">
@@ -104,19 +119,6 @@
       <item>
         <attribute name="label" translatable="yes">Save Current Settings as Defa_ult</attribute>
         <attribute name="action">win.save-settings</attribute>
-      </item>
-      <item>
-        <attribute name="label" translatable="yes">_Keyboard Shortcuts</attribute>
-        <attribute name="action">win.show-help-overlay</attribute>
-      </item>
-      <item>
-        <attribute name="label" translatable="yes">_Help</attribute>
-        <attribute name="action">win.help</attribute>
-        <attribute name="accel">F1</attribute>
-      </item>
-      <item>
-        <attribute name="label" translatable="yes">_About</attribute>
-        <attribute name="action">win.about</attribute>
       </item>
     </section>
   </menu>
