@@ -206,16 +206,11 @@ ev_toolbar_constructed (GObject *object)
                                          ev_window_get_document_model (ev_toolbar->priv->window));
         gtk_header_bar_pack_start (GTK_HEADER_BAR (ev_toolbar), tool_item);
 
-        /* Zoom selector */
-        vbox = ev_zoom_action_new (ev_window_get_document_model (ev_toolbar->priv->window),
-                                   G_MENU (gtk_builder_get_object (builder, "zoom-menu")));
-        ev_toolbar->priv->zoom_action = vbox;
-        gtk_widget_set_tooltip_text (vbox, _("Select or set the zoom level of the document"));
-        atk_object_set_name (gtk_widget_get_accessible (vbox), _("Set zoom level"));
-        g_signal_connect (vbox, "activated",
-                          G_CALLBACK (zoom_selector_activated),
-                          ev_toolbar);
-        gtk_header_bar_pack_start (GTK_HEADER_BAR (ev_toolbar), vbox);
+        /* Edit Annots */
+        button = ev_toolbar_create_toggle_button (ev_toolbar, "win.toggle-edit-annots", "document-edit-symbolic",
+                                                  _("Annotate the document"));
+        ev_toolbar->priv->annots_button = button;
+        gtk_header_bar_pack_start (GTK_HEADER_BAR (ev_toolbar), button);
 
         /* Action Menu */
         menu = G_MENU_MODEL (gtk_builder_get_object (builder, "action-menu"));
@@ -227,12 +222,6 @@ ev_toolbar_constructed (GObject *object)
         ev_toolbar->priv->action_menu_button = button;
         gtk_header_bar_pack_end (GTK_HEADER_BAR (ev_toolbar), button);
 
-        /* Edit Annots */
-        button = ev_toolbar_create_toggle_button (ev_toolbar, "win.toggle-edit-annots", "document-edit-symbolic",
-                                                  _("Annotate the document"));
-        ev_toolbar->priv->annots_button = button;
-        gtk_header_bar_pack_end (GTK_HEADER_BAR (ev_toolbar), button);
-
         /* Find */
         button = ev_toolbar_create_toggle_button (ev_toolbar, "win.toggle-find", "edit-find-symbolic",
                                                   NULL);
@@ -242,6 +231,17 @@ ev_toolbar_constructed (GObject *object)
                           "notify::sensitive",
                           G_CALLBACK (ev_toolbar_find_button_sensitive_changed),
                           ev_toolbar);
+
+        /* Zoom selector */
+        vbox = ev_zoom_action_new (ev_window_get_document_model (ev_toolbar->priv->window),
+                                   G_MENU (gtk_builder_get_object (builder, "zoom-menu")));
+        ev_toolbar->priv->zoom_action = vbox;
+        gtk_widget_set_tooltip_text (vbox, _("Select or set the zoom level of the document"));
+        atk_object_set_name (gtk_widget_get_accessible (vbox), _("Set zoom level"));
+        g_signal_connect (vbox, "activated",
+                          G_CALLBACK (zoom_selector_activated),
+                          ev_toolbar);
+        gtk_header_bar_pack_end (GTK_HEADER_BAR (ev_toolbar), vbox);
 
         g_object_unref (builder);
 }
