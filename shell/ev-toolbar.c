@@ -198,7 +198,7 @@ ev_toolbar_constructed (GObject *object)
 
         /* Page selector */
         /* Use EvPageActionWidget for now, since the page selector action is also used by the previewer */
-        tool_item = ev_page_action_widget_new (G_MENU (gtk_builder_get_object (builder, "navigation-menu")));
+        tool_item = GTK_WIDGET (g_object_new (EV_TYPE_PAGE_ACTION_WIDGET, NULL));
         gtk_widget_set_tooltip_text (tool_item, _("Select page or search in the index"));
         atk_object_set_name (gtk_widget_get_accessible (tool_item), _("Select page"));
         ev_toolbar->priv->page_selector = tool_item;
@@ -299,9 +299,6 @@ ev_toolbar_has_visible_popups (EvToolbar *ev_toolbar)
                 return TRUE;
 
         if (ev_zoom_action_get_popup_shown (EV_ZOOM_ACTION (ev_toolbar->priv->zoom_action)))
-                return TRUE;
-
-        if (ev_page_action_widget_get_popup_shown (EV_PAGE_ACTION_WIDGET (ev_toolbar->priv->page_selector)))
                 return TRUE;
 
         return FALSE;
