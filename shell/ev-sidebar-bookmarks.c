@@ -462,11 +462,13 @@ ev_sidebar_bookmarks_init (EvSidebarBookmarks *sidebar_bookmarks)
         gtk_container_add (GTK_CONTAINER (swindow), priv->tree_view);
         gtk_widget_show (priv->tree_view);
 
-        hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
+        hbox = gtk_button_box_new (GTK_ORIENTATION_HORIZONTAL);
         g_object_set (hbox, "margin", 6, NULL);
         gtk_widget_set_halign (hbox, GTK_ALIGN_CENTER);
+        gtk_button_box_set_layout (GTK_BUTTON_BOX (hbox), GTK_BUTTONBOX_EXPAND);
+	gtk_box_set_homogeneous (GTK_BOX (hbox), FALSE);
 
-        priv->add_button = gtk_button_new_with_label ("+");
+        priv->add_button = gtk_button_new_from_icon_name ("list-add-symbolic", GTK_ICON_SIZE_MENU);
         gtk_widget_set_tooltip_text (priv->add_button, _("Add bookmark"));
         atk_object_set_name (gtk_widget_get_accessible (priv->add_button), _("Add bookmark"));
         gtk_actionable_set_action_name (GTK_ACTIONABLE (priv->add_button),
@@ -475,7 +477,7 @@ ev_sidebar_bookmarks_init (EvSidebarBookmarks *sidebar_bookmarks)
         gtk_box_pack_start (GTK_BOX (hbox), priv->add_button, FALSE, FALSE, 0);
         gtk_widget_show (priv->add_button);
 
-        priv->del_button = gtk_button_new_with_label ("-");
+        priv->del_button = gtk_button_new_from_icon_name ("list-remove-symbolic", GTK_ICON_SIZE_MENU);
         gtk_widget_set_tooltip_text (priv->del_button, _("Remove bookmark"));
         atk_object_set_name (gtk_widget_get_accessible (priv->del_button), _("Remove bookmark"));
         g_signal_connect (priv->del_button, "clicked",
