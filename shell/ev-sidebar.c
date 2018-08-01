@@ -205,7 +205,9 @@ ev_sidebar_init (EvSidebar *ev_sidebar)
 	gtk_box_pack_start (GTK_BOX (ev_sidebar), switcher, FALSE, TRUE, 0);
 	g_object_set (switcher, "icon-size", 1, NULL);
 	gtk_container_set_border_width (GTK_CONTAINER (switcher), 6);
-	gtk_widget_set_halign (switcher, GTK_ALIGN_CENTER);
+	gtk_widget_set_halign (switcher, GTK_ALIGN_FILL);
+	gtk_widget_set_hexpand (switcher, TRUE);
+	gtk_box_set_homogeneous (GTK_BOX (switcher), TRUE);
 	gtk_widget_show (ev_sidebar->priv->switcher);
 
 	stack = gtk_stack_new ();
