@@ -202,7 +202,7 @@ ev_sidebar_init (EvSidebar *ev_sidebar)
 
 	switcher = gtk_stack_switcher_new ();
 	ev_sidebar->priv->switcher = switcher;
-	gtk_box_pack_start (GTK_BOX (ev_sidebar), switcher, FALSE, TRUE, 0);
+	gtk_box_pack_end (GTK_BOX (ev_sidebar), switcher, FALSE, TRUE, 0);
 	g_object_set (switcher, "icon-size", 1, NULL);
 	gtk_container_set_border_width (GTK_CONTAINER (switcher), 6);
 	gtk_widget_set_halign (switcher, GTK_ALIGN_FILL);
@@ -215,7 +215,7 @@ ev_sidebar_init (EvSidebar *ev_sidebar)
 	gtk_stack_set_homogeneous (GTK_STACK (stack), TRUE);
 	gtk_stack_switcher_set_stack (GTK_STACK_SWITCHER (switcher),
 				      GTK_STACK (stack));
-	gtk_box_pack_start (GTK_BOX (ev_sidebar), stack, TRUE, TRUE, 0);
+	gtk_box_pack_end (GTK_BOX (ev_sidebar), stack, TRUE, TRUE, 0);
 	gtk_widget_show (ev_sidebar->priv->stack);
 
 	g_signal_connect (stack, "notify::visible-child",
