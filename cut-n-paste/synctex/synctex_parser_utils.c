@@ -87,7 +87,8 @@ void _synctex_free(void * ptr) {
 #   include <syslog.h>
 #endif
 
-int _synctex_log(int level, const char * prompt, const char * reason,va_list arg);
+int _synctex_error(const char * reason, ...) __attribute__((__format__ (__printf__, 1, 2)));
+int _synctex_log(int level, const char * prompt, const char * reason, va_list arg) __attribute__((__format__ (__printf__, 3, 0)));
 
 int _synctex_log(int level, const char * prompt, const char * reason,va_list arg) {
 	int result;
