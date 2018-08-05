@@ -5591,6 +5591,10 @@ ev_view_motion_notify_event (GtkWidget      *widget,
 
 			/* FIXME: reload only annotation area */
 			ev_view_reload_page (view, annot_page, NULL);
+		} else if (ev_document_has_synctex (view->document) && (event->state & GDK_CONTROL_MASK)) {
+			/* Ignore spurious motion event triggered by slightly moving mouse
+			 * while clicking for launching synctex. Issue #951 */
+			return TRUE;
 		} else {
 			/* Schedule timeout to scroll during selection and additionally
 			 * scroll once to allow arbitrary speed. */
