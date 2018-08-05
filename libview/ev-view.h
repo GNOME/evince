@@ -117,7 +117,8 @@ void           ev_view_autoscroll_stop    (EvView *view);
 gboolean       ev_view_get_page_extents   (EvView       *view,
                                            gint          page,
                                            GdkRectangle *page_area,
-                                           GtkBorder    *border);
+                                           GtkBorder    *border,
+                                           gboolean      border_cached);
 /* Annotations */
 void           ev_view_focus_annotation      (EvView          *view,
 					      EvMapping       *annot_mapping);

@@ -975,7 +975,7 @@ ev_page_accessible_get_offset_at_point (AtkText      *text,
 		view_point.y -= y_window;
 	}
 
-	ev_view_get_page_extents (view, self->priv->page, &page_area, &border);
+	ev_view_get_page_extents (view, self->priv->page, &page_area, &border, FALSE);
 	_ev_view_transform_view_point_to_doc_point (view, &view_point, &page_area, &border, &doc_x, &doc_y);
 
 	for (i = 0; i < n_areas; i++) {
@@ -1188,7 +1188,7 @@ ev_page_accessible_get_extents (AtkComponent *atk_component,
 
 	self = EV_PAGE_ACCESSIBLE (atk_component);
 	view = ev_page_accessible_get_view (self);
-	ev_view_get_page_extents (view, self->priv->page, &page_area, &border);
+	ev_view_get_page_extents (view, self->priv->page, &page_area, &border, FALSE);
 
 	doc_rect.x1 = page_area.x;
 	doc_rect.y1 = page_area.y;
