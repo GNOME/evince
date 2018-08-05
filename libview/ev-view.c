@@ -128,13 +128,19 @@ static void       compute_border                             (EvView            
 							      GtkBorder          *border);
 static void       get_page_y_offset                          (EvView             *view,
 							      int                 page,
-							      int                *y_offset);
+							      int                *y_offset,
+							      GtkBorder           border);
 static void       find_page_at_location                      (EvView             *view,
 							      gdouble             x,
 							      gdouble             y,
 							      gint               *page,
 							      gint               *x_offset,
 							      gint               *y_offset);
+static gboolean   real_ev_view_get_page_extents              (EvView             *view,
+							      gint                page,
+							      GdkRectangle       *page_area,
+							      GtkBorder          *border,
+							      gboolean            use_passed_border);
 /*** Hyperrefs ***/
 static EvLink *   ev_view_get_link_at_location 		     (EvView             *view,
 				  	         	      gdouble             x,
@@ -727,6 +733,7 @@ view_update_range_and_current_page (EvView *view)
 		gboolean found = FALSE;
 		gint area_max = -1, area;
 		gint best_current_page = -1;
+		gint n_pages;
 		int i, j = 0;
 
 		if (!(view->vadjustment && view->hadjustment))
@@ -737,9 +744,11 @@ view_update_range_and_current_page (EvView *view)
 		current_area.y = gtk_adjustment_get_value (view->vadjustment);
 		current_area.height = gtk_adjustment_get_page_size (view->vadjustment);
 
-		for (i = 0; i < ev_document_get_n_pages (view->document); i++) {
+		n_pages = ev_document_get_n_pages (view->document);
+		compute_border (view, &border);
+		for (i = 0; i < n_pages; i++) {
 
-			ev_view_get_page_extents (view, i, &page_area, &border);
+			ev_view_get_page_extents_for_border (view, i, &border, &page_area);
 
 			if (gdk_rectangle_intersect (&current_area, &page_area, &unused)) {
 				area = unused.width * unused.height;
@@ -1232,15 +1241,12 @@ ev_view_get_max_page_size (EvView *view,
 }
 
 static void
-get_page_y_offset (EvView *view, int page, int *y_offset)
+get_page_y_offset (EvView *view, int page, int *y_offset, GtkBorder border)
 {
 	int offset = 0;
-	GtkBorder border;
 	gboolean odd_left;
 
 	g_return_if_fail (y_offset != NULL);
-
-	compute_border (view, &border);
 
 	if (is_dual_page (view, &odd_left)) {
 		ev_view_get_height_to_page (view, page, NULL, &offset);
@@ -1256,10 +1262,29 @@ get_page_y_offset (EvView *view, int page, int *y_offset)
 }
 
 gboolean
+ev_view_get_page_extents_for_border (EvView       *view,
+				     gint          page,
+				     GtkBorder    *border,
+				     GdkRectangle *page_area)
+{
+	return real_ev_view_get_page_extents (view, page, page_area, border, TRUE);
+}
+
+gboolean
 ev_view_get_page_extents (EvView       *view,
 			  gint          page,
 			  GdkRectangle *page_area,
 			  GtkBorder    *border)
+{
+	return real_ev_view_get_page_extents (view, page, page_area, border, FALSE);
+}
+
+static gboolean
+real_ev_view_get_page_extents (EvView       *view,
+			       gint          page,
+			       GdkRectangle *page_area,
+			       GtkBorder    *border,
+			       gboolean      use_passed_border)
 {
 	GtkWidget *widget;
 	int width, height;
@@ -1270,7 +1295,8 @@ ev_view_get_page_extents (EvView       *view,
 
 	/* Get the size of the page */
 	ev_view_get_page_size (view, page, &width, &height);
-	compute_border (view, border);
+	if (!use_passed_border)
+		compute_border (view, border);
 	page_area->width = width + border->left + border->right;
 	page_area->height = height + border->top + border->bottom;
 
@@ -1292,7 +1318,7 @@ ev_view_get_page_extents (EvView       *view,
 			x = x + MAX (0, allocation.width - (width + border->left + border->right + view->spacing * 2)) / 2;
 		}
 
-		get_page_y_offset (view, page, &y);
+		get_page_y_offset (view, page, &y, *border);
 
 		page_area->x = x;
 		page_area->y = y;
@@ -1319,7 +1345,10 @@ ev_view_get_page_extents (EvView       *view,
 				if (height_2 > height)
 					max_height = height_2;
 			}
-			compute_border (view, &overall_border);
+			if (!use_passed_border)
+				compute_border (view, &overall_border);
+			else
+				overall_border = *border;
 
 			/* Find the offsets */
 			x = view->spacing;
@@ -1517,6 +1546,7 @@ find_page_at_location (EvView  *view,
 		       gint    *y_offset)
 {
 	int i;
+	GtkBorder border;
 
 	if (view->document == NULL)
 		return;
@@ -1525,11 +1555,11 @@ find_page_at_location (EvView  *view,
 	g_assert (x_offset);
 	g_assert (y_offset);
 
+	compute_border (view, &border);
 	for (i = view->start_page; i >= 0 && i <= view->end_page; i++) {
 		GdkRectangle page_area;
-		GtkBorder border;
 
-		if (! ev_view_get_page_extents (view, i, &page_area, &border))
+		if (! ev_view_get_page_extents_for_border (view, i, &border, &page_area))
 			continue;
 
 		if ((x >= page_area.x + border.left) &&
@@ -3988,9 +4018,11 @@ ev_view_size_request_continuous_dual_page (EvView         *view,
 			     	           GtkRequisition *requisition)
 {
 	gint n_pages;
+	GtkBorder border;
 
 	n_pages = ev_document_get_n_pages (view->document) + 1;
-	get_page_y_offset (view, n_pages, &requisition->height);
+	compute_border (view, &border);
+	get_page_y_offset (view, n_pages, &requisition->height, border);
 
 	switch (view->sizing_mode) {
 	        case EV_SIZING_FIT_WIDTH:
@@ -4001,10 +4033,8 @@ ev_view_size_request_continuous_dual_page (EvView         *view,
 			break;
 	        case EV_SIZING_FREE: {
 			gint max_width;
-			GtkBorder border;
 
 			ev_view_get_max_page_size (view, &max_width, NULL);
-			compute_border (view, &border);
 			requisition->width = (max_width + border.left + border.right) * 2 + (view->spacing * 3);
 		}
 			break;
@@ -4018,9 +4048,11 @@ ev_view_size_request_continuous (EvView         *view,
 				 GtkRequisition *requisition)
 {
 	gint n_pages;
+	GtkBorder border;
 
 	n_pages = ev_document_get_n_pages (view->document);
-	get_page_y_offset (view, n_pages, &requisition->height);
+	compute_border (view, &border);
+	get_page_y_offset (view, n_pages, &requisition->height, border);
 
 	switch (view->sizing_mode) {
 	        case EV_SIZING_FIT_WIDTH:
@@ -4031,10 +4063,8 @@ ev_view_size_request_continuous (EvView         *view,
 			break;
 	        case EV_SIZING_FREE: {
 			gint max_width;
-			GtkBorder border;
 
 			ev_view_get_max_page_size (view, &max_width, NULL);
-			compute_border (view, &border);
 			requisition->width = max_width + (view->spacing * 2) + border.left + border.right;
 		}
 			break;
@@ -4718,6 +4748,7 @@ ev_view_draw (GtkWidget *widget,
 	EvView      *view = EV_VIEW (widget);
 	gint         i;
 	GdkRectangle clip_rect;
+	GtkBorder border;
 
 	gtk_render_background (gtk_widget_get_style_context (widget),
 			       cr,
@@ -4731,12 +4762,12 @@ ev_view_draw (GtkWidget *widget,
         if (!gdk_cairo_get_clip_rectangle (cr, &clip_rect))
                 return FALSE;
 
+	compute_border (view, &border);
 	for (i = view->start_page; i >= 0 && i <= view->end_page; i++) {
 		GdkRectangle page_area;
-		GtkBorder border;
 		gboolean page_ready = TRUE;
 
-		if (!ev_view_get_page_extents (view, i, &page_area, &border))
+		if (!ev_view_get_page_extents_for_border (view, i, &border, &page_area))
 			continue;
 
 		page_area.x -= view->scroll_x;
@@ -9278,6 +9309,7 @@ get_selection_page_range (EvView          *view,
 	gint start_page, end_page;
 	gint first, last;
 	gint i, n_pages;
+	GtkBorder border;
 
 	n_pages = ev_document_get_n_pages (view->document);
 
@@ -9297,11 +9329,11 @@ get_selection_page_range (EvView          *view,
 
 	first = -1;
 	last = -1;
+	compute_border (view, &border);
 	for (i = start_page; i <= end_page; i++) {
 		GdkRectangle page_area;
-		GtkBorder    border;
 
-		ev_view_get_page_extents (view, i, &page_area, &border);
+		ev_view_get_page_extents_for_border (view, i, &border, &page_area);
 		page_area.x -= border.left;
 		page_area.y -= border.top;
 		page_area.width += border.left + border.right;
@@ -9331,6 +9363,7 @@ compute_new_selection (EvView          *view,
 		       GdkPoint        *stop)
 {
 	int i, first, last;
+	GtkBorder border;
 	GList *list = NULL;
 
 	/* First figure out the range of pages the selection affects. */
@@ -9340,10 +9373,10 @@ compute_new_selection (EvView          *view,
 	/* Now create a list of EvViewSelection's for the affected
 	 * pages. This could be an empty list, a list of just one
 	 * page or a number of pages.*/
+	compute_border (view, &border);
 	for (i = first; i <= last; i++) {
 		EvViewSelection *selection;
 		GdkRectangle     page_area;
-		GtkBorder        border;
 		GdkPoint        *point;
 		gdouble          width, height;
 
@@ -9356,7 +9389,7 @@ compute_new_selection (EvView          *view,
 		selection->rect.x2 = width;
 		selection->rect.y2 = height;
 
-		ev_view_get_page_extents (view, i, &page_area, &border);
+		ev_view_get_page_extents_for_border (view, i, &border, &page_area);
 		if (gdk_rectangle_point_in (&page_area, start))
 			point = start;
 		else
@@ -9397,6 +9430,7 @@ merge_selection_region (EvView *view,
 {
 	GList *old_list;
 	GList *new_list_ptr, *old_list_ptr;
+	GtkBorder border;
 
 	/* Update the selection */
 	old_list = ev_pixbuf_cache_get_selection_list (view->pixbuf_cache);
@@ -9408,6 +9442,7 @@ merge_selection_region (EvView *view,
 	new_list_ptr = new_list;
 	old_list_ptr = old_list;
 
+	compute_border (view, &border);
 	while (new_list_ptr || old_list_ptr) {
 		EvViewSelection *old_sel, *new_sel;
 		int cur_page;
@@ -9484,11 +9519,10 @@ merge_selection_region (EvView *view,
 		/* Redraw the damaged region! */
 		if (region) {
 			GdkRectangle    page_area;
-			GtkBorder       border;
 			cairo_region_t *damage_region;
 			gint            i, n_rects;
 
-			ev_view_get_page_extents (view, cur_page, &page_area, &border);
+			ev_view_get_page_extents_for_border (view, cur_page, &border, &page_area);
 
 			damage_region = cairo_region_create ();
 			/* Translate the region and grow it 2 pixels because for some zoom levels
