@@ -10,17 +10,17 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: evince master\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-23 16:51+0000\n"
-"PO-Revision-Date: 2018-01-27 10:16-0300\n"
-"Last-Translator: Isaac Ferreira Filho <isaacmob@riseup.net>\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
+"POT-Creation-Date: 2018-07-10 05:20+0000\n"
+"PO-Revision-Date: 2018-08-07 00:48-0200\n"
+"Last-Translator: Rafael Fontenelle <rafaelff@gnome.org>\n"
 "Language-Team: Brazilian Portuguese <gnome-pt_br-list@gnome.org>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Virtaal 1.0.0-beta1\n"
 
 #. Put one translator per line, in the form NAME <EMAIL>, YEAR1, YEAR2
 msgctxt "_"
@@ -55,7 +55,7 @@ msgstr "Como personalizar o autor, a cor, o estilo ou o ícone de uma anotação
 #: C/singlesided-5-8pages.page:12 C/singlesided-9-12pages.page:12
 #: C/singlesided-npages.page:12 C/synctex-beamer.page:11
 #: C/synctex-compile.page:11 C/synctex-editors.page:11 C/synctex.page:12
-#: C/synctex-search.page:11 C/synctex-support.page:11 C/titlebar.page:13
+#: C/synctex-search.page:11 C/synctex-support.page:12 C/titlebar.page:13
 #: C/translate.page:10
 msgid "Tiffany Antopolski"
 msgstr "Tiffany Antopolski"
@@ -80,7 +80,7 @@ msgstr "Tiffany Antopolski"
 #: C/singlesided-3-4pages.page:16 C/singlesided-5-8pages.page:16
 #: C/singlesided-9-12pages.page:16 C/singlesided-npages.page:16
 #: C/synctex-beamer.page:15 C/synctex-compile.page:15 C/synctex-editors.page:15
-#: C/synctex.page:16 C/synctex-search.page:15 C/synctex-support.page:15
+#: C/synctex.page:16 C/synctex-search.page:15 C/synctex-support.page:20
 #: C/textselection.page:15 C/titlebar.page:17 C/translate.page:19
 msgid "Creative Commons Share Alike 3.0"
 msgstr "Creative Commons Compartilhada Igual 3.0"
@@ -2711,7 +2711,6 @@ msgstr "Navegando com uma lista de páginas, marcadores ou um índice"
 
 #. (itstool) path: section/p
 #: C/movingaround.page:136
-
 msgid ""
 "To make the side pane visible, click the <gui>View options</gui> button in "
 "the top-right corner and select <gui>Side Panel</gui>, or press <key>F9</"
@@ -4523,13 +4522,18 @@ msgstr ""
 msgid "How to add support for SyncTeX."
 msgstr "Como adicionar suporte ao SyncTeX."
 
+#. (itstool) path: credit/name
+#: C/synctex-support.page:16
+msgid "Germán Poo-Caamaño"
+msgstr "Germán Poo-Caamaño"
+
 #. (itstool) path: page/title
-#: C/synctex-support.page:20
+#: C/synctex-support.page:25
 msgid "Set-up SyncTeX"
 msgstr "Configurando o SyncTeX"
 
 #. (itstool) path: page/p
-#: C/synctex-support.page:21
+#: C/synctex-support.page:26
 msgid ""
 "The following packages need to be installed in order to add support for "
 "SyncTeX:"
@@ -4537,22 +4541,26 @@ msgstr ""
 "Os seguintes pacotes precisam estar instalados para dar suporte ao SyncTeX:"
 
 #. (itstool) path: item/p
-#: C/synctex-support.page:26
-msgid "texlive-extra-utils"
-msgstr "texlive-extra-utils"
+#: C/synctex-support.page:31
+msgid "A LaTeX engine with SyncTex support, such as <app>pdflatex</app>."
+msgstr "Um mecanismo LaTeX com suporte a SyncTex, tal como <app>pdflatx</app>."
 
 #. (itstool) path: item/p
-#: C/synctex-support.page:31
-msgid "gedit-plugins"
-msgstr "gedit-plugins"
+#: C/synctex-support.page:36
+msgid ""
+"A text editor with SynxTeX support, such as <app>gedit</app> with gedit-"
+"plugins installed."
+msgstr ""
+"Um editor de texto com suporte a SynxTeX, tal como <app>gedit</app> com "
+"gedit-plugins instalado."
 
 #. (itstool) path: page/p
-#: C/synctex-support.page:37
+#: C/synctex-support.page:42
 msgid "In <app>gedit</app>, enable the SyncTeX Plugin:"
 msgstr "No <app>gedit</app>, habilite o plug-in SyncTeX:"
 
 #. (itstool) path: item/p
-#: C/synctex-support.page:42
+#: C/synctex-support.page:47
 msgid ""
 "Click <guiseq><gui>Edit</gui><gui>Preferences</gui><gui>Plugins</gui></"
 "guiseq> tab."
@@ -4560,7 +4568,7 @@ msgstr ""
 "Vá até a aba <guiseq><gui>Preferences</gui><gui>Plugins</gui></guiseq>."
 
 #. (itstool) path: item/p
-#: C/synctex-support.page:47
+#: C/synctex-support.page:52
 msgid "Check <gui>SyncTeX</gui>."
 msgstr "Marque a opção <gui>SyncTeX</gui>."
 
@@ -4752,6 +4760,12 @@ msgstr ""
 "Alternativamente, você pode entrar em contato com a Equipe de "
 "Internacionalização usando sua <link href=\"http://mail.gnome.org/mailman/"
 "listinfo/gnome-i18n\">lista de e-mails</link>."
+
+#~ msgid "texlive-extra-utils"
+#~ msgstr "texlive-extra-utils"
+
+#~ msgid "gedit-plugins"
+#~ msgstr "gedit-plugins"
 
 #~ msgid ""
 #~ "Click the <gui>&lt;</gui> or <gui>&gt;</gui> buttons on the <link xref="
