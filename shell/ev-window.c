@@ -387,6 +387,7 @@ static void     ev_window_destroy_recent_view           (EvWindow         *ev_wi
 static void     recent_view_item_activated_cb           (EvRecentView     *recent_view,
                                                          const char       *uri,
                                                          EvWindow         *ev_window);
+static void     ev_window_fullscreen_show_toolbar       (EvWindow         *ev_window);
 
 static gchar *nautilus_sendto = NULL;
 
@@ -3849,6 +3850,9 @@ ev_window_cmd_focus_page_selector (GSimpleAction *action,
 
 	update_chrome_flag (window, EV_CHROME_RAISE_TOOLBAR, TRUE);
 	update_chrome_visibility (window);
+
+	if (ev_document_model_get_fullscreen (window->priv->model))
+		ev_window_fullscreen_show_toolbar (window);
 
 	toolbar = window->priv->fs_toolbar ? EV_TOOLBAR (window->priv->fs_toolbar) : EV_TOOLBAR (window->priv->toolbar);
 	page_selector = ev_toolbar_get_page_selector (toolbar);
