@@ -387,6 +387,7 @@ static void     ev_window_destroy_recent_view           (EvWindow         *ev_wi
 static void     recent_view_item_activated_cb           (EvRecentView     *recent_view,
                                                          const char       *uri,
                                                          EvWindow         *ev_window);
+static void     ev_window_fullscreen_show_toolbar       (EvWindow         *ev_window);
 
 static gchar *nautilus_sendto = NULL;
 
@@ -659,6 +660,9 @@ update_chrome_visibility (EvWindow *window)
 
 	set_widget_visibility (priv->toolbar, toolbar);
 	set_widget_visibility (priv->sidebar, sidebar);
+
+	if (toolbar && ev_document_model_get_fullscreen (window->priv->model))
+		ev_window_fullscreen_show_toolbar (window);
 }
 
 static void
