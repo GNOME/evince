@@ -4820,6 +4820,20 @@ ev_window_cmd_bookmarks_add (GSimpleAction *action,
 }
 
 static void
+ev_window_cmd_bookmarks_delete (GSimpleAction *action,
+				GVariant      *parameter,
+				gpointer       user_data)
+{
+	EvWindow *window = user_data;
+	EvBookmark bm;
+
+	bm.page = ev_document_model_get_page (window->priv->model);
+	bm.title = NULL;
+
+	ev_bookmarks_delete (window->priv->bookmarks, &bm);
+}
+
+static void
 ev_window_activate_goto_bookmark_action (GSimpleAction *action,
 					 GVariant      *parameter,
 					 gpointer       user_data)
@@ -5902,6 +5916,7 @@ static const GActionEntry actions[] = {
 	{ "reload", ev_window_cmd_view_reload },
 	{ "auto-scroll", ev_window_cmd_view_autoscroll },
 	{ "add-bookmark", ev_window_cmd_bookmarks_add },
+	{ "delete-bookmark", ev_window_cmd_bookmarks_delete },
 	{ "goto-bookmark", ev_window_activate_goto_bookmark_action, "u" },
 	{ "close", ev_window_cmd_file_close_window },
 	{ "scroll-forward", ev_window_cmd_scroll_forward },

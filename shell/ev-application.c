@@ -1015,6 +1015,7 @@ ev_application_startup (GApplication *gapplication)
           "win.select-all",             "<Ctrl>A", NULL,
           "win.save-settings",          "<Ctrl>T", NULL,
           "win.add-bookmark",           "<Ctrl>D", NULL,
+          "win.delete-bookmark",        "<Ctrl><Shift>D", NULL,
           "win.close",                  "<Ctrl>W", NULL,
           "win.escape",                 "Escape", NULL,
           "win.find",                   "<Ctrl>F", "slash", NULL,
