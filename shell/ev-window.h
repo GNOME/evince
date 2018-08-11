@@ -96,6 +96,8 @@ void            ev_window_focus_view                     (EvWindow       *ev_win
 GtkWidget      *ev_window_get_toolbar			 (EvWindow	 *ev_window);
 void            ev_window_handle_annot_popup             (EvWindow       *ev_window,
                                                           EvAnnotation   *annot);
+GtkWidget      *ev_window_get_sidebar			 (EvWindow	 *ev_window);
+GtkWidget      *ev_window_get_find_sidebar		 (EvWindow	 *ev_window);
 
 G_END_DECLS
 
