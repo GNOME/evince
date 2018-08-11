@@ -7,8 +7,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: evince-help\n"
-"POT-Creation-Date: 2018-01-28 20:01+0000\n"
-"PO-Revision-Date: 2018-02-08 03:15+0100\n"
+"POT-Creation-Date: 2018-08-11 23:27+0000\n"
+"PO-Revision-Date: 2018-08-12 01:28+0200\n"
 "Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
 "Language-Team: Polish <community-poland@mozilla.org>\n"
 "Language: pl\n"
@@ -47,7 +47,7 @@ msgstr "Jak dostosowywać autora, kolor, styl i ikonę przypisu."
 #: C/singlesided-5-8pages.page:12 C/singlesided-9-12pages.page:12
 #: C/singlesided-npages.page:12 C/synctex-beamer.page:11
 #: C/synctex-compile.page:11 C/synctex-editors.page:11 C/synctex.page:12
-#: C/synctex-search.page:11 C/synctex-support.page:11 C/titlebar.page:13
+#: C/synctex-search.page:11 C/synctex-support.page:12 C/titlebar.page:13
 #: C/translate.page:10
 msgid "Tiffany Antopolski"
 msgstr "Tiffany Antopolski"
@@ -72,7 +72,7 @@ msgstr "Tiffany Antopolski"
 #: C/singlesided-3-4pages.page:16 C/singlesided-5-8pages.page:16
 #: C/singlesided-9-12pages.page:16 C/singlesided-npages.page:16
 #: C/synctex-beamer.page:15 C/synctex-compile.page:15 C/synctex-editors.page:15
-#: C/synctex.page:16 C/synctex-search.page:15 C/synctex-support.page:15
+#: C/synctex.page:16 C/synctex-search.page:15 C/synctex-support.page:20
 #: C/textselection.page:15 C/titlebar.page:17 C/translate.page:19
 msgid "Creative Commons Share Alike 3.0"
 msgstr "Creative Commons Share Alike 3.0"
@@ -4411,35 +4411,44 @@ msgstr ""
 msgid "How to add support for SyncTeX."
 msgstr "Jak dodać obsługę SyncTeX."
 
+#. (itstool) path: credit/name
+#: C/synctex-support.page:16
+msgid "Germán Poo-Caamaño"
+msgstr "Germán Poo-Caamaño"
+
 #. (itstool) path: page/title
-#: C/synctex-support.page:20
+#: C/synctex-support.page:25
 msgid "Set-up SyncTeX"
 msgstr "Ustawianie SyncTeX"
 
 #. (itstool) path: page/p
-#: C/synctex-support.page:21
+#: C/synctex-support.page:26
 msgid ""
 "The following packages need to be installed in order to add support for "
 "SyncTeX:"
 msgstr "Aby dodać obsługę SyncTeX, te pakiety muszą być zainstalowane:"
 
 #. (itstool) path: item/p
-#: C/synctex-support.page:26
-msgid "texlive-extra-utils"
-msgstr "texlive-extra-utils"
+#: C/synctex-support.page:31
+msgid "A LaTeX engine with SyncTeX support, such as <app>pdflatex</app>."
+msgstr "Mechanizm LaTeX z obsługą SyncTeX, taki jak <app>pdflatex</app>."
 
 #. (itstool) path: item/p
-#: C/synctex-support.page:31
-msgid "gedit-plugins"
-msgstr "gedit-plugins"
+#: C/synctex-support.page:36
+msgid ""
+"A text editor with SyncTeX support, such as <app>gedit</app> with gedit-"
+"plugins installed."
+msgstr ""
+"Edytor tekstu z obsługą SyncTeX, taki jak <app>gedit</app> z zainstalowanym "
+"pakietem gedit-plugins."
 
 #. (itstool) path: page/p
-#: C/synctex-support.page:37
+#: C/synctex-support.page:42
 msgid "In <app>gedit</app>, enable the SyncTeX Plugin:"
 msgstr "W programie <app>gedit</app> włącz wtyczkę SyncTeX:"
 
 #. (itstool) path: item/p
-#: C/synctex-support.page:42
+#: C/synctex-support.page:47
 msgid ""
 "Click <guiseq><gui>Edit</gui><gui>Preferences</gui><gui>Plugins</gui></"
 "guiseq> tab."
@@ -4448,7 +4457,7 @@ msgstr ""
 "gui></guiseq>."
 
 #. (itstool) path: item/p
-#: C/synctex-support.page:47
+#: C/synctex-support.page:52
 msgid "Check <gui>SyncTeX</gui>."
 msgstr "Zaznacz <gui>SyncTeX</gui>."
 
