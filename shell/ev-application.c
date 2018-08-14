@@ -993,7 +993,7 @@ app_about_cb (GSimpleAction *action,
                                "authors", authors,
                                "documenters", documenters,
                                "translator-credits", _("translator-credits"),
-                               "logo-icon-name", "evince",
+                               "logo-icon-name", "org.gnome.Evince",
                                NULL);
 }
 
