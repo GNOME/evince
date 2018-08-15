@@ -4165,6 +4165,10 @@ ev_view_scroll_event (GtkWidget *widget, GdkEventScroll *event)
 	guint state;
 	gboolean fit_width, fit_height;
 
+	/* Ignore scroll if EvView is unfocused. Issue #943 */
+	if (!gtk_widget_has_focus (widget))
+		return TRUE;
+
 	state = event->state & gtk_accelerator_get_default_mod_mask ();
 
 	if (state == GDK_CONTROL_MASK) {
@@ -5596,6 +5600,20 @@ ev_view_motion_notify_event (GtkWidget      *widget,
 			 * while clicking for launching synctex. Issue #951 */
 			return TRUE;
 		} else {
+			/* Don't keep on selecting text and updating
+			 * scrollbars if we're unfocused. Issue #943 */
+			if (!gtk_widget_has_focus (GTK_WIDGET (view))) {
+				if (view->selection_scroll_id) {
+					g_source_remove (view->selection_scroll_id);
+					view->selection_scroll_id = 0;
+				}
+				if (view->selection_update_id) {
+					g_source_remove (view->selection_update_id);
+					view->selection_update_id = 0;
+				}
+
+				return TRUE;
+			}
 			/* Schedule timeout to scroll during selection and additionally
 			 * scroll once to allow arbitrary speed. */
 			if (!view->selection_scroll_id)
