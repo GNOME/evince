@@ -7557,3 +7557,11 @@ ev_window_focus_view (EvWindow *ev_window)
 
 	gtk_widget_grab_focus (ev_window->priv->view);
 }
+
+EvMetadata *
+ev_window_get_metadata (EvWindow *ev_window)
+{
+	g_return_val_if_fail (EV_WINDOW (ev_window), NULL);
+
+	return ev_window->priv->metadata;
+}
