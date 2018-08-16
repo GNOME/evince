@@ -29,6 +29,7 @@
 #include "ev-link.h"
 #include "ev-history.h"
 #include "ev-document-model.h"
+#include "ev-metadata.h"
 
 G_BEGIN_DECLS
 
@@ -96,6 +97,7 @@ void            ev_window_focus_view                     (EvWindow       *ev_win
 GtkWidget      *ev_window_get_toolbar			 (EvWindow	 *ev_window);
 void            ev_window_handle_annot_popup             (EvWindow       *ev_window,
                                                           EvAnnotation   *annot);
+EvMetadata     *ev_window_get_metadata			 (EvWindow	 *ev_window);
 
 G_END_DECLS
 
