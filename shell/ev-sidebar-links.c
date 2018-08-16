@@ -75,6 +75,7 @@ static void job_finished_callback 			(EvJobLinks     *job,
 				    		         EvSidebarLinks *sidebar_links);
 static void ev_sidebar_links_set_current_page           (EvSidebarLinks *sidebar_links,
 							 gint            current_page);
+static void sidebar_collapse_recursive                  (EvSidebarLinks *sidebar_links);
 static void ev_sidebar_links_page_iface_init 		(EvSidebarPageInterface *iface);
 static gboolean ev_sidebar_links_support_document	(EvSidebarPage  *sidebar_page,
 						         EvDocument     *document);
@@ -389,6 +390,226 @@ button_press_cb (GtkWidget *treeview,
 	return FALSE;
 }
 
+/* Metadata keys 'index_expand' and 'index_collapse' are explained
+ * in the main comment of row_collapsed_cb() function. */
+static gboolean
+row_expanded_cb (GtkTreeView  *tree_view,
+		 GtkTreeIter  *expanded_iter,
+		 GtkTreePath  *expanded_path,
+		 gpointer      data)
+{
+	EvSidebarLinks *ev_sidebar_links;
+	EvSidebarLinksPrivate *priv;
+	GtkWidget *window;
+	EvMetadata *metadata;
+	gchar *path, *path_token, *index_collapse, *index_expand, *new_index;
+	gboolean expand;
+
+	ev_sidebar_links = EV_SIDEBAR_LINKS (data);
+	priv = ev_sidebar_links->priv;
+
+	window = gtk_widget_get_toplevel (GTK_WIDGET (ev_sidebar_links));
+	if (!EV_IS_WINDOW (window)) {
+		g_warning ("Could not find EvWindow metadata, index_{expand,collapse} metadata won't be saved");
+		return GDK_EVENT_PROPAGATE;
+	}
+	metadata = ev_window_get_metadata (EV_WINDOW (window));
+	if (metadata == NULL)
+		return GDK_EVENT_PROPAGATE;
+
+	path = gtk_tree_path_to_string (expanded_path);
+	path_token = g_strconcat ("|", path, "|", NULL);
+	g_free (path);
+	index_collapse = NULL;
+	if (ev_metadata_get_string (metadata, "index_collapse", &index_collapse)) {
+		/* If expanded row is in 'index_collapse' we remove it from there. */
+		if (g_strstr_len (index_collapse, -1, path_token)) {
+			new_index = ev_str_replace (index_collapse, path_token, "|");
+			if (!strcmp (new_index, "|")) {
+				g_free (new_index);
+				new_index = g_strdup ("");
+			}
+			ev_metadata_set_string (metadata, "index_collapse", new_index);
+			g_free (new_index);
+		}
+	}
+
+	gtk_tree_model_get (priv->model, expanded_iter,
+			    EV_DOCUMENT_LINKS_COLUMN_EXPAND, &expand,
+			    -1);
+	/* if it's already marked "expand" by the pdf producer, we'll use that
+	 * and so no need to add it to 'index_expand' */
+	if (!expand) {
+		index_expand = NULL;
+		if (ev_metadata_get_string (metadata, "index_expand", &index_expand)) {
+			/* If it's not in 'index_expand' we add it */
+			if (g_strstr_len (index_expand, -1, path_token) == NULL) {
+				if (!strcmp (index_expand, ""))
+					new_index = g_strconcat (index_expand, path_token, NULL);
+				else
+					new_index = g_strconcat (index_expand, path_token + 1, NULL);
+
+				ev_metadata_set_string (metadata, "index_expand", new_index);
+				g_free (new_index);
+			}
+		} else
+			ev_metadata_set_string (metadata, "index_expand", path_token);
+	}
+	g_free (path_token);
+
+	return GDK_EVENT_PROPAGATE;
+}
+
+/* Metadata key 'index_expand' is a string containing the GtkTreePath's that the user
+ * has explicitly expanded, except those already marked expanded by the pdf producer
+ * data. The string is like "|path1|path2|path3|" (starting and ending in pipe).
+ * A case with only one element would be "|path1|". Case with no elements would be
+ * the empty string "". This is to facilitate the search of the paths.
+ *
+ * Metadata key 'index_collapse' is a string containing the GtkTreePath's that the
+ * pdf producer data had them marked as expanded but the user has explicitly collapsed
+ * them. The string format is the same as in 'index_expand'. */
+static gboolean
+row_collapsed_cb (GtkTreeView *tree_view,
+		  GtkTreeIter *collapsed_iter,
+		  GtkTreePath *collapsed_path,
+		  gpointer     data)
+{
+	GtkWidget *window;
+	EvMetadata *metadata;
+	EvSidebarLinks *ev_sidebar_links;
+	EvSidebarLinksPrivate *priv;
+	gchar *path, *path_token, *index_expand, *index_collapse, *new_index;
+	gboolean expand;
+
+	ev_sidebar_links = EV_SIDEBAR_LINKS (data);
+	priv = ev_sidebar_links->priv;
+	window = gtk_widget_get_toplevel (GTK_WIDGET (ev_sidebar_links));
+	if (!EV_IS_WINDOW (window)) {
+		g_warning ("Could not find EvWindow metadata, index_{expand,collapse} metadata won't be saved");
+		return GDK_EVENT_PROPAGATE;
+	}
+	metadata = ev_window_get_metadata (EV_WINDOW (window));
+	if (metadata == NULL)
+		return GDK_EVENT_PROPAGATE;
+
+	path = gtk_tree_path_to_string (collapsed_path);
+	path_token = g_strconcat ("|", path, "|", NULL);
+	g_free (path);
+
+	index_expand = NULL;
+	/* If collapsed row is in 'index_expand' we remove it from there */
+	if (ev_metadata_get_string (metadata, "index_expand", &index_expand)) {
+		new_index = ev_str_replace (index_expand, path_token, "|");
+		if (!strcmp (new_index, "|")) {
+			g_free (new_index);
+			new_index = g_strdup ("");
+		}
+		ev_metadata_set_string (metadata, "index_expand", new_index);
+		g_free (new_index);
+	}
+
+	gtk_tree_model_get (priv->model, collapsed_iter,
+			    EV_DOCUMENT_LINKS_COLUMN_EXPAND, &expand,
+			    -1);
+	/* We only add the collapsed row to 'index_collapse' if the row
+	 * was marked expanded by the pdf producer data. */
+	if (expand) {
+		index_collapse = NULL;
+		if (ev_metadata_get_string (metadata, "index_collapse", &index_collapse)) {
+			/* If collapsed row is not in 'index_collapse' we add it. */
+			if (g_strstr_len (index_collapse, -1, path_token) == NULL) {
+				if (!strcmp (index_expand, ""))
+					new_index = g_strconcat (index_collapse, path_token, NULL);
+				else
+					new_index = g_strconcat (index_collapse, path_token + 1, NULL);
+
+				ev_metadata_set_string (metadata, "index_collapse", new_index);
+				g_free (new_index);
+			}
+		}
+		else
+			ev_metadata_set_string (metadata, "index_collapse", path_token);
+	}
+	g_free (path_token);
+
+	return GDK_EVENT_PROPAGATE;
+}
+
+/* This function recursively collapses all rows except those marked EXPAND
+ * by the pdf producer and those expanded explicitly by the user (which
+ * are stored in metadata "index_expand" key).
+ *
+ * The final purpose is to close all rows that were automatically expanded
+ * by ev_sidebar_links_set_current_page() function (which automatically
+ * expands rows according to current page in view).
+ *
+ * As the 'collapse' action is only meaningful in rows that have children,
+ * we only traverse those. */
+static void
+collapse_recursive (GtkTreeView  *tree_view,
+		    GtkTreeModel *model,
+		    GtkTreeIter  *parent,
+		    const gchar  *index_expand)
+{
+	GtkTreePath *path;
+	GtkTreeIter iter;
+	gboolean expand;
+
+	if (gtk_tree_model_iter_children (model, &iter, parent)) {
+		do {
+			if (!gtk_tree_model_iter_has_child (model, &iter))
+				continue;
+
+			gtk_tree_model_get (model, &iter,
+					    EV_DOCUMENT_LINKS_COLUMN_EXPAND, &expand,
+					    -1);
+			if (expand)
+				continue;
+
+			path = gtk_tree_model_get_path (model, &iter);
+			if (gtk_tree_view_row_expanded (tree_view, path)) {
+				if (index_expand == NULL)
+					gtk_tree_view_collapse_row (tree_view, path);
+				else {
+					gchar *path_str, *path_token;
+
+					path_str = gtk_tree_path_to_string (path);
+					path_token = g_strconcat ("|", path_str, "|", NULL);
+
+					if (!g_strstr_len (index_expand, -1, path_token))
+						gtk_tree_view_collapse_row (tree_view, path);
+
+					g_free (path_str);
+					g_free (path_token);
+				}
+			}
+			gtk_tree_path_free (path);
+			collapse_recursive (tree_view, model, &iter, index_expand);
+		} while (gtk_tree_model_iter_next (model, &iter));
+	}
+}
+
+static void
+sidebar_collapse_recursive (EvSidebarLinks *sidebar_links)
+{
+	EvSidebarLinksPrivate *priv;
+	GtkWidget *window;
+	EvMetadata *metadata;
+	gchar *index_expand;
+
+	priv = sidebar_links->priv;
+	window = gtk_widget_get_toplevel (GTK_WIDGET (sidebar_links));
+	index_expand = NULL;
+	if (EV_IS_WINDOW (window)) {
+		metadata = ev_window_get_metadata (EV_WINDOW (window));
+		if (metadata)
+			ev_metadata_get_string (metadata, "index_expand", &index_expand);
+	}
+	g_signal_handlers_block_by_func (priv->tree_view, row_collapsed_cb, sidebar_links);
+	collapse_recursive (GTK_TREE_VIEW (priv->tree_view), priv->model, NULL, index_expand);
+	g_signal_handlers_unblock_by_func (priv->tree_view, row_collapsed_cb, sidebar_links);
+}
 
 static void
 ev_sidebar_links_construct (EvSidebarLinks *ev_sidebar_links)
@@ -454,6 +675,14 @@ ev_sidebar_links_construct (EvSidebarLinks *ev_sidebar_links)
 			  "popup_menu",
 			  G_CALLBACK (popup_menu_cb),
 			  ev_sidebar_links);
+	g_signal_connect (priv->tree_view,
+			  "row-collapsed",
+			  G_CALLBACK (row_collapsed_cb),
+			  ev_sidebar_links);
+	g_signal_connect (priv->tree_view,
+			  "row-expanded",
+			  G_CALLBACK (row_expanded_cb),
+			  ev_sidebar_links);
 }
 
 static void
@@ -499,7 +728,10 @@ ev_sidebar_links_set_current_page (EvSidebarLinks *sidebar_links,
 				   gint            current_page)
 {
 	GtkTreeSelection *selection;
+	GtkTreeView *tree_view;
 	GtkTreePath *path;
+	GtkTreePath *start_path = NULL;
+	GtkTreePath *end_path = NULL;
 	EvSidebarLinkPageSearch search_data;
 
 	/* Widget is not currently visible */
@@ -518,18 +750,30 @@ ev_sidebar_links_set_current_page (EvSidebarLinks *sidebar_links,
 	if (!path)
 		return;
 
-	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (sidebar_links->priv->tree_view));
+	tree_view = GTK_TREE_VIEW (sidebar_links->priv->tree_view);
+	selection = gtk_tree_view_get_selection (tree_view);
 
 	g_signal_handler_block (selection, sidebar_links->priv->selection_id);
 	g_signal_handler_block (sidebar_links->priv->tree_view, sidebar_links->priv->row_activated_id);
+	g_signal_handlers_block_by_func (sidebar_links->priv->tree_view, row_expanded_cb, sidebar_links);
 
-	gtk_tree_view_expand_to_path (GTK_TREE_VIEW (sidebar_links->priv->tree_view),
-				      path);
-	gtk_tree_view_set_cursor (GTK_TREE_VIEW (sidebar_links->priv->tree_view),
-				  path, NULL, FALSE);
+	/* To mimic previous auto-expand behaviour, let's collapse at the moment when path is 'not
+	 * visible', and thus will be revealed and focused at the start of treeview visible range */
+	if (gtk_tree_view_get_visible_range (tree_view, &start_path, &end_path) &&
+	    (gtk_tree_path_compare (path, start_path) < 0 || gtk_tree_path_compare (path, end_path) > 0))
+		sidebar_collapse_recursive (sidebar_links);
+
+	/* This function also scrolls the tree_view to reveal 'path' */
+	gtk_tree_view_expand_to_path (tree_view, path);
+	/* This functions marks 'path' selected */
+	gtk_tree_view_set_cursor (tree_view, path, NULL, FALSE);
 
 	g_signal_handler_unblock (selection, sidebar_links->priv->selection_id);
 	g_signal_handler_unblock (sidebar_links->priv->tree_view, sidebar_links->priv->row_activated_id);
+	g_signal_handlers_unblock_by_func (sidebar_links->priv->tree_view, row_expanded_cb, sidebar_links);
+
+	gtk_tree_path_free (start_path);
+	gtk_tree_path_free (end_path);
 }
 
 static void
@@ -554,25 +798,49 @@ row_activated_callback (GtkTreeView       *treeview,
 }
 
 static void
-expand_open_links (GtkTreeView *tree_view, GtkTreeModel *model, GtkTreeIter *parent)
+expand_open_links (GtkTreeView  *tree_view,
+		   GtkTreeModel *model,
+		   GtkTreeIter  *parent,
+		   gchar        *index_expand,
+		   gchar        *index_collapse)
 {
 	GtkTreeIter iter;
 	gboolean expand;
 
 	if (gtk_tree_model_iter_children (model, &iter, parent)) {
 		do {
+			GtkTreePath *path;
+			gchar *path_str, *path_token;
+
 			gtk_tree_model_get (model, &iter,
 					    EV_DOCUMENT_LINKS_COLUMN_EXPAND, &expand,
 					    -1);
+			path = gtk_tree_model_get_path (model, &iter);
 			if (expand) {
-				GtkTreePath *path;
-				
-				path = gtk_tree_model_get_path (model, &iter);
-				gtk_tree_view_expand_row (tree_view, path, FALSE);
-				gtk_tree_path_free (path);
-			}
+				if (index_collapse) {
+					path_str = gtk_tree_path_to_string (path);
+					path_token = g_strconcat ("|", path_str, "|", NULL);
 
-			expand_open_links (tree_view, model, &iter);
+					if (!g_strstr_len (index_collapse, -1, path_token))
+						gtk_tree_view_expand_row (tree_view, path, FALSE);
+
+					g_free (path_str);
+					g_free (path_token);
+				}
+				else
+					gtk_tree_view_expand_row (tree_view, path, FALSE);
+			} else if (index_expand) {
+				path_str = gtk_tree_path_to_string (path);
+				path_token = g_strconcat ("|", path_str, "|", NULL);
+
+				if (g_strstr_len (index_expand, -1, path_token))
+					gtk_tree_view_expand_row (tree_view, path, FALSE);
+
+				g_free (path_str);
+				g_free (path_token);
+			}
+			gtk_tree_path_free (path);
+			expand_open_links (tree_view, model, &iter, index_expand, index_collapse);
 		} while (gtk_tree_model_iter_next (model, &iter));
 	}
 }
@@ -644,6 +912,10 @@ job_finished_callback (EvJobLinks     *job,
 {
 	EvSidebarLinksPrivate *priv = sidebar_links->priv;
 	GtkTreeSelection *selection;
+	GtkWidget *window;
+	EvMetadata *metadata;
+	gchar *index_expand = NULL;
+	gchar *index_collapse = NULL;
 
 	ev_sidebar_links_set_links_model (sidebar_links, job->model);
 
@@ -652,7 +924,18 @@ job_finished_callback (EvJobLinks     *job,
 	g_object_unref (job);
 	priv->job = NULL;
 
-	expand_open_links (GTK_TREE_VIEW (priv->tree_view), priv->model, NULL);
+	window = gtk_widget_get_toplevel (GTK_WIDGET (sidebar_links));
+	if (EV_IS_WINDOW (window)) {
+		metadata = ev_window_get_metadata (EV_WINDOW (window));
+		if (metadata) {
+			ev_metadata_get_string (metadata, "index_expand", &index_expand);
+			ev_metadata_get_string (metadata, "index_collapse", &index_collapse);
+		}
+	}
+
+	g_signal_handlers_block_by_func (priv->tree_view, row_expanded_cb, sidebar_links);
+	expand_open_links (GTK_TREE_VIEW (priv->tree_view), priv->model, NULL, index_expand, index_collapse);
+	g_signal_handlers_unblock_by_func (priv->tree_view, row_expanded_cb, sidebar_links);
 
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (priv->tree_view));
 	gtk_tree_selection_set_mode (selection, GTK_SELECTION_SINGLE);
