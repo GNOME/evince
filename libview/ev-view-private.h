@@ -260,6 +260,11 @@ struct _EvView {
 	/* Current zoom center */
 	gdouble zoom_center_x;
 	gdouble zoom_center_y;
+
+	/* Border cache */
+	GtkBorder border;
+	gint h_border;
+	gint v_border;
 };
 
 struct _EvViewClass {

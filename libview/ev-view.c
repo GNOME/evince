@@ -124,8 +124,7 @@ static void       ensure_rectangle_is_visible                (EvView            
 							      GdkRectangle       *rect);
 
 /*** Geometry computations ***/
-static void       compute_border                             (EvView             *view,
-							      GtkBorder          *border);
+static void       compute_border                             (EvView             *view);
 static void       get_page_y_offset                          (EvView             *view,
 							      int                 page,
 							      int                *y_offset);
@@ -1164,15 +1163,20 @@ ensure_rectangle_is_visible (EvView *view, GdkRectangle *rect)
 /*** Geometry computations ***/
 
 static void
-compute_border (EvView *view, GtkBorder *border)
+compute_border (EvView *view)
 {
+	GtkBorder border;
+
 	GtkWidget       *widget = GTK_WIDGET (view);
 	GtkStyleContext *context = gtk_widget_get_style_context (widget);
 	GtkStateFlags    state = gtk_widget_get_state_flags (widget);
 
 	gtk_style_context_save (context);
 	gtk_style_context_add_class (context, EV_STYLE_CLASS_DOCUMENT_PAGE);
-	gtk_style_context_get_border (context, state, border);
+	gtk_style_context_get_border (context, state,&border);
+
+	view->h_border = border.left + border.right;
+	view->v_border = border.top + border.bottom;
 	gtk_style_context_restore (context);
 }
 
@@ -1235,20 +1239,17 @@ static void
 get_page_y_offset (EvView *view, int page, int *y_offset)
 {
 	int offset = 0;
-	GtkBorder border;
 	gboolean odd_left;
 
 	g_return_if_fail (y_offset != NULL);
 
-	compute_border (view, &border);
-
 	if (is_dual_page (view, &odd_left)) {
 		ev_view_get_height_to_page (view, page, NULL, &offset);
 		offset += ((page + !odd_left) / 2 + 1) * view->spacing +
-			((page + !odd_left) / 2 ) * (border.top + border.bottom);
+			((page + !odd_left) / 2 ) * (view->v_border);
 	} else {
 		ev_view_get_height_to_page (view, page, &offset, NULL);
-		offset += (page + 1) * view->spacing + page * (border.top + border.bottom);
+		offset += (page + 1) * view->spacing + page * (view->v_border);
 	}
 
 	*y_offset = offset;
@@ -1270,9 +1271,9 @@ ev_view_get_page_extents (EvView       *view,
 
 	/* Get the size of the page */
 	ev_view_get_page_size (view, page, &width, &height);
-	compute_border (view, border);
-	page_area->width = width + border->left + border->right;
-	page_area->height = height + border->top + border->bottom;
+	border = &(view->border);
+	page_area->width = width + view->h_border;
+	page_area->height = height + view->v_border;
 
 	if (view->continuous) {
 		gint max_width;
@@ -1280,16 +1281,16 @@ ev_view_get_page_extents (EvView       *view,
 		gboolean odd_left;
 
 		ev_view_get_max_page_size (view, &max_width, NULL);
-		max_width = max_width + border->left + border->right;
+		max_width = max_width + view->h_border;
 		/* Get the location of the bounding box */
 		if (is_dual_page (view, &odd_left)) {
 			x = view->spacing + ((page % 2 == !odd_left) ? 0 : 1) * (max_width + view->spacing);
 			x = x + MAX (0, allocation.width - (max_width * 2 + view->spacing * 3)) / 2;
 			if (page % 2 == !odd_left)
-				x = x + (max_width - width - border->left - border->right);
+				x = x + (max_width - width - view->h_border);
 		} else {
 			x = view->spacing;
-			x = x + MAX (0, allocation.width - (width + border->left + border->right + view->spacing * 2)) / 2;
+			x = x + MAX (0, allocation.width - (width + view->h_border + view->spacing * 2)) / 2;
 		}
 
 		get_page_y_offset (view, page, &y);
@@ -1304,7 +1305,6 @@ ev_view_get_page_extents (EvView       *view,
 			gint width_2, height_2;
 			gint max_width = width;
 			gint max_height = height;
-			GtkBorder overall_border;
 			gint other_page;
 
 			other_page = (page % 2 == !odd_left) ? page + 1: page - 1;
@@ -1319,7 +1319,6 @@ ev_view_get_page_extents (EvView       *view,
 				if (height_2 > height)
 					max_height = height_2;
 			}
-			compute_border (view, &overall_border);
 
 			/* Find the offsets */
 			x = view->spacing;
@@ -1329,13 +1328,13 @@ ev_view_get_page_extents (EvView       *view,
 			if (page % 2 == !odd_left)
 				x = x + max_width - width;
 			else
-				x = x + (max_width + overall_border.left + overall_border.right) + view->spacing;
+				x = x + (max_width + view->h_border) + view->spacing;
 
 			y = y + (max_height - height)/2;
 
 			/* Adjust for extra allocation */
 			x = x + MAX (0, allocation.width -
-				     ((max_width + overall_border.left + overall_border.right) * 2 + view->spacing * 3))/2;
+				     ((max_width + view->h_border) * 2 + view->spacing * 3))/2;
 			y = y + MAX (0, allocation.height - (height + view->spacing * 2))/2;
 		} else {
 			x = view->spacing;
@@ -3904,11 +3903,9 @@ ev_view_size_request_continuous_dual_page (EvView         *view,
 			break;
 	        case EV_SIZING_FREE: {
 			gint max_width;
-			GtkBorder border;
 
 			ev_view_get_max_page_size (view, &max_width, NULL);
-			compute_border (view, &border);
-			requisition->width = (max_width + border.left + border.right) * 2 + (view->spacing * 3);
+			requisition->width = (max_width + view->h_border) * 2 + (view->spacing * 3);
 		}
 			break;
 	        default:
@@ -3934,11 +3931,9 @@ ev_view_size_request_continuous (EvView         *view,
 			break;
 	        case EV_SIZING_FREE: {
 			gint max_width;
-			GtkBorder border;
 
 			ev_view_get_max_page_size (view, &max_width, NULL);
-			compute_border (view, &border);
-			requisition->width = max_width + (view->spacing * 2) + border.left + border.right;
+			requisition->width = max_width + (view->spacing * 2) + view->h_border;
 		}
 			break;
 	        default:
@@ -3950,7 +3945,6 @@ static void
 ev_view_size_request_dual_page (EvView         *view,
 				GtkRequisition *requisition)
 {
-	GtkBorder border;
 	gint width, height;
 
 	if (view->sizing_mode == EV_SIZING_FIT_PAGE) {
@@ -3974,18 +3968,16 @@ ev_view_size_request_dual_page (EvView         *view,
 			height = height_2;
 		}
 	}
-	compute_border (view, &border);
 
 	requisition->width = view->sizing_mode == EV_SIZING_FIT_WIDTH ? 1 :
-		((width + border.left + border.right) * 2) + (view->spacing * 3);
-	requisition->height = (height + border.top + border.bottom) + (view->spacing * 2);
+		((width + view->h_border) * 2) + (view->spacing * 3);
+	requisition->height = (height + view->h_border) + (view->spacing * 2);
 }
 
 static void
 ev_view_size_request_single_page (EvView         *view,
 				  GtkRequisition *requisition)
 {
-	GtkBorder border;
 	gint width, height;
 
 	if (view->sizing_mode == EV_SIZING_FIT_PAGE) {
@@ -3996,11 +3988,10 @@ ev_view_size_request_single_page (EvView         *view,
 	}
 
 	ev_view_get_page_size (view, view->current_page, &width, &height);
-	compute_border (view, &border);
 
 	requisition->width = view->sizing_mode == EV_SIZING_FIT_WIDTH ? 1 :
-		width + border.left + border.right + (2 * view->spacing);
-	requisition->height = height + border.top + border.bottom + (2 * view->spacing);
+		width + view->h_border + (2 * view->spacing);
+	requisition->height = height + view->v_border + (2 * view->spacing);
 }
 
 static void
@@ -6700,9 +6691,13 @@ ev_view_enter_notify_event (GtkWidget *widget, GdkEventCrossing   *event)
 static void
 ev_view_style_updated (GtkWidget *widget)
 {
-	if (EV_VIEW (widget)->pixbuf_cache)
-		ev_pixbuf_cache_style_changed (EV_VIEW (widget)->pixbuf_cache);
+	EvView *view = EV_VIEW (widget);
 
+	if (view->pixbuf_cache)
+		ev_pixbuf_cache_style_changed (view->pixbuf_cache);
+	compute_border (view);
+
+	
 	GTK_WIDGET_CLASS (ev_view_parent_class)->style_updated (widget);
 }
 
@@ -8618,7 +8613,6 @@ ev_view_zoom_for_size_continuous_and_dual_page (EvView *view,
 						int     height)
 {
 	gdouble doc_width, doc_height;
-	GtkBorder border;
 	gdouble scale;
 	gint sb_size;
 
@@ -8631,11 +8625,10 @@ ev_view_zoom_for_size_continuous_and_dual_page (EvView *view,
 		doc_height = tmp;
 	}
 
-	compute_border (view, &border);
 
 	doc_width *= 2;
-	width -= (2 * (border.left + border.right) + 3 * view->spacing);
-	height -= (border.top + border.bottom + 2 * view->spacing);
+	width -= (2 * (view->h_border) + 3 * view->spacing);
+	height -= (view->v_border + 2 * view->spacing);
 
 	sb_size = ev_view_get_scrollbar_size (view, GTK_ORIENTATION_VERTICAL);
 
@@ -8663,7 +8656,6 @@ ev_view_zoom_for_size_continuous (EvView *view,
 				  int     height)
 {
 	gdouble doc_width, doc_height;
-	GtkBorder border;
 	gdouble scale;
 	gint sb_size;
 
@@ -8676,10 +8668,9 @@ ev_view_zoom_for_size_continuous (EvView *view,
 		doc_height = tmp;
 	}
 
-	compute_border (view, &border);
 
-	width -= (border.left + border.right + 2 * view->spacing);
-	height -= (border.top + border.bottom + 2 * view->spacing);
+	width -= (view->h_border + 2 * view->spacing);
+	height -= (view->v_border + 2 * view->spacing);
 
 	sb_size = ev_view_get_scrollbar_size (view, GTK_ORIENTATION_VERTICAL);
 
@@ -8706,7 +8697,6 @@ ev_view_zoom_for_size_dual_page (EvView *view,
 				 int     width,
 				 int     height)
 {
-	GtkBorder border;
 	gdouble doc_width, doc_height;
 	gdouble scale;
 	gint other_page;
@@ -8725,11 +8715,10 @@ ev_view_zoom_for_size_dual_page (EvView *view,
 		if (height_2 > doc_height)
 			doc_height = height_2;
 	}
-	compute_border (view, &border);
 
 	doc_width = doc_width * 2;
-	width -= ((border.left + border.right)* 2 + 3 * view->spacing);
-	height -= (border.top + border.bottom + 2 * view->spacing);
+	width -= ((view->h_border)* 2 + 3 * view->spacing);
+	height -= (view->v_border + 2 * view->spacing);
 
 	switch (view->sizing_mode) {
 	case EV_SIZING_FIT_WIDTH:
@@ -8757,17 +8746,15 @@ ev_view_zoom_for_size_single_page (EvView *view,
 				   int     height)
 {
 	gdouble doc_width, doc_height;
-	GtkBorder border;
 	gdouble scale;
 	gint sb_size;
 
 	get_doc_page_size (view, view->current_page, &doc_width, &doc_height);
 
 	/* Get an approximate border */
-	compute_border (view, &border);
 
-	width -= (border.left + border.right + 2 * view->spacing);
-	height -= (border.top + border.bottom + 2 * view->spacing);
+	width -= (view->h_border + 2 * view->spacing);
+	height -= (view->v_border + 2 * view->spacing);
 
 	switch (view->sizing_mode) {
 	case EV_SIZING_FIT_WIDTH:
