@@ -60,7 +60,8 @@ EXTRA_DIST = \
 	$(header_DATA) \
 	$(appdata_in_files) \
 	autogen.sh \
-	MAINTAINERS
+	MAINTAINERS \
+	README.md
 
 CLEANFILES = \
 	$(nodist_appdata_DATA) \
