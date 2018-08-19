@@ -982,7 +982,6 @@ data/icons/scalable/Makefile
 data/icons/scalable/actions/Makefile
 data/icons/scalable/mimetypes/Makefile
 data/icons/symbolic/Makefile
-data/icons/symbolic/actions/Makefile
 data/icons/symbolic/apps/Makefile
 help/Makefile
 help/reference/Makefile
