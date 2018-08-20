@@ -129,7 +129,7 @@ static void       compute_border                             (EvView            
 static void       get_page_y_offset                          (EvView             *view,
 							      int                 page,
 							      int                *y_offset,
-							      GtkBorder           border);
+							      GtkBorder          *border);
 static void       find_page_at_location                      (EvView             *view,
 							      gdouble             x,
 							      gdouble             y,
@@ -1241,7 +1241,7 @@ ev_view_get_max_page_size (EvView *view,
 }
 
 static void
-get_page_y_offset (EvView *view, int page, int *y_offset, GtkBorder border)
+get_page_y_offset (EvView *view, int page, int *y_offset, GtkBorder *border)
 {
 	int offset = 0;
 	gboolean odd_left;
@@ -1251,10 +1251,10 @@ get_page_y_offset (EvView *view, int page, int *y_offset, GtkBorder border)
 	if (is_dual_page (view, &odd_left)) {
 		ev_view_get_height_to_page (view, page, NULL, &offset);
 		offset += ((page + !odd_left) / 2 + 1) * view->spacing +
-			((page + !odd_left) / 2 ) * (border.top + border.bottom);
+			((page + !odd_left) / 2 ) * (border->top + border->bottom);
 	} else {
 		ev_view_get_height_to_page (view, page, &offset, NULL);
-		offset += (page + 1) * view->spacing + page * (border.top + border.bottom);
+		offset += (page + 1) * view->spacing + page * (border->top + border->bottom);
 	}
 
 	*y_offset = offset;
@@ -1318,7 +1318,7 @@ real_ev_view_get_page_extents (EvView       *view,
 			x = x + MAX (0, allocation.width - (width + border->left + border->right + view->spacing * 2)) / 2;
 		}
 
-		get_page_y_offset (view, page, &y, *border);
+		get_page_y_offset (view, page, &y, border);
 
 		page_area->x = x;
 		page_area->y = y;
@@ -3925,7 +3925,7 @@ ev_view_size_request_continuous_dual_page (EvView         *view,
 
 	n_pages = ev_document_get_n_pages (view->document) + 1;
 	compute_border (view, &border);
-	get_page_y_offset (view, n_pages, &requisition->height, border);
+	get_page_y_offset (view, n_pages, &requisition->height, &border);
 
 	switch (view->sizing_mode) {
 	        case EV_SIZING_FIT_WIDTH:
@@ -3955,7 +3955,7 @@ ev_view_size_request_continuous (EvView         *view,
 
 	n_pages = ev_document_get_n_pages (view->document);
 	compute_border (view, &border);
-	get_page_y_offset (view, n_pages, &requisition->height, border);
+	get_page_y_offset (view, n_pages, &requisition->height, &border);
 
 	switch (view->sizing_mode) {
 	        case EV_SIZING_FIT_WIDTH:
