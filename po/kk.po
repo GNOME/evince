@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
-"POT-Creation-Date: 2018-07-27 18:41+0000\n"
-"PO-Revision-Date: 2018-08-05 19:59+0500\n"
+"POT-Creation-Date: 2018-08-17 14:09+0000\n"
+"PO-Revision-Date: 2018-08-21 12:58+0500\n"
 "Last-Translator: Baurzhan Muftakhidinov <baurthefirst@gmail.com>\n"
 "Language-Team: Kazakh <kk_KZ@googlegroups.com>\n"
 "Language: kk\n"
@@ -16,34 +16,38 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 2.1\n"
+"X-Generator: Poedit 2.1.1\n"
 
-#: ../backend/comics/comics-document.c:118
-#: ../backend/comics/comics-document.c:140
+#: ../backend/comics/comics-document.c:163
+#: ../backend/comics/comics-document.c:187
 msgid "File is corrupted"
 msgstr "Файл зақымдалған"
 
-#: ../backend/comics/comics-document.c:176
+#: ../backend/comics/comics-document.c:228
 msgid "Archive is encrypted"
 msgstr "Архив шифрленген"
 
-#: ../backend/comics/comics-document.c:181
+#: ../backend/comics/comics-document.c:233
+msgid "No supported images in archive"
+msgstr "Архивте қолдауы бар суреттер жоқ"
+
+#: ../backend/comics/comics-document.c:238
 msgid "No files in archive"
 msgstr "Архивте файлдар жоқ"
 
-#: ../backend/comics/comics-document.c:217
+#: ../backend/comics/comics-document.c:276
 #, c-format
 msgid "Not a comic book MIME type: %s"
 msgstr "Comic book MIME түрі емес: %s"
 
-#: ../backend/comics/comics-document.c:224
+#: ../backend/comics/comics-document.c:283
 msgid ""
 "libarchive lacks support for this comic book’s compression, please contact "
 "your distributor"
 msgstr ""
 "libarchive ішінде бұл comic book сығуына қолдау жоқ, таратушыға хабарласыңыз"
 
-#: ../backend/comics/comics-document.c:264
+#: ../backend/comics/comics-document.c:323
 msgid "Can not get local path for archive"
 msgstr "Архив үшін жергілікті орналасуды алу мүмкін емес"
 
@@ -353,7 +357,7 @@ msgid "Print document"
 msgstr "Құжатты баспаға шығару"
 
 #. Manually set name and icon
-#: ../data/org.gnome.Evince.desktop.in.in.h:1 ../shell/ev-window.c:3920
+#: ../data/org.gnome.Evince.desktop.in.in.h:1 ../shell/ev-application.c:992
 #: ../shell/ev-window-title.c:133 ../shell/main.c:298
 msgid "Document Viewer"
 msgstr "Құжаттарды көрсету қолданбасы"
@@ -445,17 +449,17 @@ msgstr "\"%s\" салынымын ашу сәтсіз"
 msgid "File type %s (%s) is not supported"
 msgstr "%s (%s) файл пішіміне қолдау жоқ"
 
-#: ../libdocument/ev-document-factory.c:368
+#: ../libdocument/ev-document-factory.c:369
 #: ../libdocument/ev-file-helpers.c:492 ../libdocument/ev-file-helpers.c:538
 #: ../libdocument/ev-file-helpers.c:557
 msgid "Unknown MIME Type"
 msgstr "Белгісіз MIME түрі"
 
-#: ../libdocument/ev-document-factory.c:577
+#: ../libdocument/ev-document-factory.c:578
 msgid "All Documents"
 msgstr "Барлық құжаттар"
 
-#: ../libdocument/ev-document-factory.c:604 ../shell/ev-utils.c:309
+#: ../libdocument/ev-document-factory.c:605 ../shell/ev-utils.c:309
 msgid "All Files"
 msgstr "Барлық файлдар"
 
@@ -469,19 +473,19 @@ msgstr "Уақытша файлды жасау сәтсіз: %s"
 msgid "Failed to create a temporary directory: %s"
 msgstr "Уақытша буманы жасау қатесі: %s"
 
-#: ../libmisc/ev-page-action-widget.c:95 ../libmisc/ev-page-action-widget.c:143
+#: ../libmisc/ev-page-action-widget.c:85 ../libmisc/ev-page-action-widget.c:124
 #, c-format
 msgid "(%d of %d)"
 msgstr "(%d, %d ішінен)"
 
-#: ../libmisc/ev-page-action-widget.c:97 ../libmisc/ev-page-action-widget.c:147
+#: ../libmisc/ev-page-action-widget.c:87 ../libmisc/ev-page-action-widget.c:128
 #, c-format
 msgid "of %d"
 msgstr "%d ішінен"
 
-#: ../libmisc/ev-page-action-widget.c:205 ../shell/ev-history.c:426
-#: ../shell/ev-sidebar-bookmarks.c:310 ../shell/ev-window.c:927
-#: ../shell/ev-window.c:4898
+#: ../libmisc/ev-page-action-widget.c:186 ../shell/ev-history.c:426
+#: ../shell/ev-sidebar-bookmarks.c:310 ../shell/ev-window.c:933
+#: ../shell/ev-window.c:4817
 #, c-format
 msgid "Page %s"
 msgstr "Парақ %s"
@@ -723,7 +727,7 @@ msgstr "ФАЙЛ"
 msgid "GNOME Document Previewer"
 msgstr "GNOME құжаттарды алдын-ала көрсету қолданбасы"
 
-#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3375
+#: ../previewer/ev-previewer-window.c:91 ../shell/ev-window.c:3381
 msgid "Failed to print document"
 msgstr "Құжатты баспаға шығару сәтсіз"
 
@@ -964,13 +968,25 @@ msgstr "Мәтінді түспен ерекшелеу"
 msgid "Add highlight annotation"
 msgstr "Түспен ерекшелеудің аңдатпасын қосу"
 
+#: ../shell/ev-application.c:987 ../org.gnome.Evince.appdata.xml.in.h:1
+msgid "Evince"
+msgstr "Evince"
+
+#: ../shell/ev-application.c:989
+msgid "© 1996–2017 The Evince authors"
+msgstr "© 1996–2017 Evince авторлары"
+
+#: ../shell/ev-application.c:995
+msgid "translator-credits"
+msgstr "Baurzhan Muftakhidinov <baurthefirst@gmail.com>"
+
 #: ../shell/ev-keyring.c:86
 #, c-format
 msgid "Password for document %s"
 msgstr "%s құжаты үшін пароль"
 
 #. Create tree view
-#: ../shell/ev-loading-message.c:50 ../shell/ev-sidebar-annotations.c:125
+#: ../shell/ev-loading-message.c:50 ../shell/ev-sidebar-annotations.c:137
 #: ../shell/ev-sidebar-layers.c:125 ../shell/ev-sidebar-links.c:268
 msgid "Loading…"
 msgstr "Жүктеу…"
@@ -1052,16 +1068,16 @@ msgstr "Мәтіндік лицензия"
 msgid "Further Information"
 msgstr "Кейінгі ақпарат"
 
-#: ../shell/ev-sidebar-annotations.c:299
+#: ../shell/ev-sidebar-annotations.c:358
 msgid "Document contains no annotations"
 msgstr "Құжатта аңдатпалар жоқ"
 
-#: ../shell/ev-sidebar-annotations.c:335
+#: ../shell/ev-sidebar-annotations.c:394
 #, c-format
 msgid "Page %d"
 msgstr "Парақ %d"
 
-#: ../shell/ev-sidebar-annotations.c:511 ../shell/ev-window.c:7181
+#: ../shell/ev-sidebar-annotations.c:657 ../shell/ev-window.c:7148
 msgid "Annotations"
 msgstr "Аңдатпалар"
 
@@ -1081,7 +1097,7 @@ msgstr ""
 msgid "_Replace"
 msgstr "А_лмастыру"
 
-#: ../shell/ev-sidebar-attachments.c:901 ../shell/ev-window.c:7205
+#: ../shell/ev-sidebar-attachments.c:901 ../shell/ev-window.c:7172
 msgid "Attachments"
 msgstr "Салынымдар"
 
@@ -1097,23 +1113,23 @@ msgstr "Бетбелгі а_тын ауыстыру"
 msgid "_Remove Bookmark"
 msgstr "Бетбелгіні ө_шіру"
 
-#: ../shell/ev-sidebar-bookmarks.c:470 ../shell/ev-sidebar-bookmarks.c:471
+#: ../shell/ev-sidebar-bookmarks.c:472 ../shell/ev-sidebar-bookmarks.c:473
 msgid "Add bookmark"
 msgstr "Бетбелгіні қосу"
 
-#: ../shell/ev-sidebar-bookmarks.c:479 ../shell/ev-sidebar-bookmarks.c:480
+#: ../shell/ev-sidebar-bookmarks.c:481 ../shell/ev-sidebar-bookmarks.c:482
 msgid "Remove bookmark"
 msgstr "Бетбелгіні өшіру"
 
-#: ../shell/ev-sidebar-bookmarks.c:596 ../shell/ev-window.c:7189
+#: ../shell/ev-sidebar-bookmarks.c:598 ../shell/ev-window.c:7156
 msgid "Bookmarks"
 msgstr "Бетбелгілер"
 
-#: ../shell/ev-sidebar-layers.c:444 ../shell/ev-window.c:7217
+#: ../shell/ev-sidebar-layers.c:444 ../shell/ev-window.c:7184
 msgid "Layers"
 msgstr "Қабаттар"
 
-#: ../shell/ev-sidebar-links.c:344 ../shell/evince-menus.ui.h:1
+#: ../shell/ev-sidebar-links.c:344 ../shell/evince-menus.ui.h:4
 msgid "Print…"
 msgstr "Баспаға шығару…"
 
@@ -1123,17 +1139,17 @@ msgstr "Баспаға шығару…"
 #. * your language.  The sidebar cannot be shrinked smaller than
 #. * the longest title in there.
 #.
-#: ../shell/ev-sidebar-links.c:751 ../shell/ev-window.c:7169
+#: ../shell/ev-sidebar-links.c:751 ../shell/ev-window.c:7136
 msgid "Outline"
 msgstr "Құрылымы"
 
-#: ../shell/ev-sidebar-thumbnails.c:1135 ../shell/ev-window.c:7152
+#: ../shell/ev-sidebar-thumbnails.c:1135 ../shell/ev-window.c:7119
 msgid "Thumbnails"
 msgstr "Үлгілер"
 
 #: ../shell/ev-toolbar.c:168
 msgid "Search not available for this document"
-msgstr "Іздеу бұл құжат үшін қолжетерсіз."
+msgstr "Іздеу бұл құжат үшін қолжетерсіз"
 
 #: ../shell/ev-toolbar.c:187
 msgid "Open…"
@@ -1163,11 +1179,11 @@ msgstr "Құжатқа аңдатпаны қосу"
 msgid "File options"
 msgstr "Файл опциялары"
 
-#: ../shell/ev-toolbar.c:229
+#: ../shell/ev-toolbar.c:239
 msgid "Select or set the zoom level of the document"
 msgstr "Құжаттың масштабын таңдаңыз немесе орнатыңыз"
 
-#: ../shell/ev-toolbar.c:230
+#: ../shell/ev-toolbar.c:240
 msgid "Set zoom level"
 msgstr "Масштабты орнату"
 
@@ -1175,139 +1191,139 @@ msgstr "Масштабты орнату"
 msgid "Supported Image Files"
 msgstr "Қолдауы бар сурет файлдары"
 
-#: ../shell/ev-window.c:1576
+#: ../shell/ev-window.c:1582
 msgid "The document contains no pages"
 msgstr "Құжатта парақтар жоқ"
 
-#: ../shell/ev-window.c:1579
+#: ../shell/ev-window.c:1585
 msgid "The document contains only empty pages"
 msgstr "Құжатта тек бос парақтар бар"
 
-#: ../shell/ev-window.c:1795 ../shell/ev-window.c:1961
+#: ../shell/ev-window.c:1801 ../shell/ev-window.c:1967
 #, c-format
 msgid "Unable to open document “%s”."
 msgstr "\"%s\" құжатын ашу мүмкін емес."
 
-#: ../shell/ev-window.c:1925
+#: ../shell/ev-window.c:1931
 #, c-format
 msgid "Loading document from “%s”"
 msgstr "Құжатты “%s” ішінен жүктеу"
 
-#: ../shell/ev-window.c:2078 ../shell/ev-window.c:2435
+#: ../shell/ev-window.c:2084 ../shell/ev-window.c:2441
 #, c-format
 msgid "Downloading document (%d%%)"
 msgstr "Құжат жүктеліп алынуда (%d%%)"
 
-#: ../shell/ev-window.c:2110
+#: ../shell/ev-window.c:2116
 msgid "Failed to load remote file."
 msgstr "Қашықтағы файлды жүктеу сәтсіз."
 
-#: ../shell/ev-window.c:2379
+#: ../shell/ev-window.c:2385
 #, c-format
 msgid "Reloading document from %s"
 msgstr "Құжатты %s ішінен қайта жүктеу"
 
-#: ../shell/ev-window.c:2411
+#: ../shell/ev-window.c:2417
 msgid "Failed to reload document."
 msgstr "Құжатты қайта жүктеу сәтсіз."
 
-#: ../shell/ev-window.c:2643
+#: ../shell/ev-window.c:2649
 msgid "Open Document"
 msgstr "Құжатты ашу"
 
-#: ../shell/ev-window.c:2718
+#: ../shell/ev-window.c:2724
 #, c-format
 msgid "Saving document to %s"
 msgstr "Құжатты %s ішіне сақтау"
 
-#: ../shell/ev-window.c:2721
+#: ../shell/ev-window.c:2727
 #, c-format
 msgid "Saving attachment to %s"
 msgstr "Салынымды %s ішіне сақтау"
 
-#: ../shell/ev-window.c:2724
+#: ../shell/ev-window.c:2730
 #, c-format
 msgid "Saving image to %s"
 msgstr "Суретті %s ішіне сақтау"
 
-#: ../shell/ev-window.c:2768 ../shell/ev-window.c:2868
+#: ../shell/ev-window.c:2774 ../shell/ev-window.c:2874
 #, c-format
 msgid "The file could not be saved as “%s”."
 msgstr "Файлды “%s” етіп сақтау мүмкін емес."
 
-#: ../shell/ev-window.c:2799
+#: ../shell/ev-window.c:2805
 #, c-format
 msgid "Uploading document (%d%%)"
 msgstr "Құжатты жүктеу (%d%%)"
 
-#: ../shell/ev-window.c:2803
+#: ../shell/ev-window.c:2809
 #, c-format
 msgid "Uploading attachment (%d%%)"
 msgstr "Салынымды жүктеу (%d%%)"
 
-#: ../shell/ev-window.c:2807
+#: ../shell/ev-window.c:2813
 #, c-format
 msgid "Uploading image (%d%%)"
 msgstr "Суретті жүктеу (%d%%)"
 
-#: ../shell/ev-window.c:2920
+#: ../shell/ev-window.c:2926
 msgid "Save As…"
 msgstr "Қалайша сақтау…"
 
-#: ../shell/ev-window.c:3014
+#: ../shell/ev-window.c:3020
 msgid "Could not send current document"
 msgstr "Ағымдағы құжатты жіберу мүмкін емес"
 
-#: ../shell/ev-window.c:3319
+#: ../shell/ev-window.c:3325
 #, c-format
 msgid "%d pending job in queue"
 msgid_plural "%d pending jobs in queue"
 msgstr[0] "Кезекте %d тапсырма бар"
 
-#: ../shell/ev-window.c:3432
+#: ../shell/ev-window.c:3438
 #, c-format
 msgid "Printing job “%s”"
 msgstr "\"%s\" тапсырмасын басып шығару"
 
-#: ../shell/ev-window.c:3642
+#: ../shell/ev-window.c:3648
 msgid "Document contains form fields that have been filled out. "
 msgstr "Құжатта толтырылған форма өрістері бар. "
 
-#: ../shell/ev-window.c:3645
+#: ../shell/ev-window.c:3651
 msgid "Document contains new or modified annotations. "
 msgstr "Құжатта жаңа немесе өзгертілген аңдатпалар бар. "
 
-#: ../shell/ev-window.c:3657
+#: ../shell/ev-window.c:3663
 #, c-format
 msgid "Reload document “%s”?"
 msgstr "\"%s\" құжатын қайта жүктеу керек пе?"
 
-#: ../shell/ev-window.c:3659
+#: ../shell/ev-window.c:3665
 msgid "If you reload the document, changes will be permanently lost."
 msgstr "Құжатты қайта жүктесеңіз, өзгерістер қайтарылмастай жоғалады."
 
-#: ../shell/ev-window.c:3663
+#: ../shell/ev-window.c:3669
 msgid "Reload"
 msgstr "Қайта жүктеу"
 
-#: ../shell/ev-window.c:3670
+#: ../shell/ev-window.c:3676
 #, c-format
 msgid "Save a copy of document “%s” before closing?"
 msgstr "Жабу алдында “%s” құжаттың көшірмесін сақтау керек пе?"
 
-#: ../shell/ev-window.c:3672
+#: ../shell/ev-window.c:3678
 msgid "If you don’t save a copy, changes will be permanently lost."
 msgstr "Көшірмесін сақтамасаңыз, өзгерістер жоғалады."
 
-#: ../shell/ev-window.c:3674
+#: ../shell/ev-window.c:3680
 msgid "Close _without Saving"
 msgstr "Сақта_май-ақ жабу"
 
-#: ../shell/ev-window.c:3678
+#: ../shell/ev-window.c:3684
 msgid "Save a _Copy"
 msgstr "Кө_шірмесін сақтау"
 
-#: ../shell/ev-window.c:3762
+#: ../shell/ev-window.c:3768
 #, c-format
 msgid "Wait until print job “%s” finishes before closing?"
 msgstr "Жабу алдында “%s” тапсырмасын басып шығарудың аяқталуын күту керек пе?"
@@ -1315,7 +1331,7 @@ msgstr "Жабу алдында “%s” тапсырмасын басып шы�
 #. TRANS: the singular form is not really used as n_print_jobs > 1
 #. but some languages distinguish between different plurals forms,
 #. so the ngettext is needed.
-#: ../shell/ev-window.c:3768
+#: ../shell/ev-window.c:3774
 #, c-format
 msgid "There is %d print job active. Wait until print finishes before closing?"
 msgid_plural ""
@@ -1324,47 +1340,35 @@ msgstr[0] ""
 "Қазір %d басып шығару тапсырмасы белсенді. Жабу алдында олардың аяқталуын "
 "күту керек пе?"
 
-#: ../shell/ev-window.c:3783
+#: ../shell/ev-window.c:3789
 msgid "If you close the window, pending print jobs will not be printed."
 msgstr "Терезені жапсаңыз, кезектегі тапсырмалар баспаға шығарылмай қалады."
 
-#: ../shell/ev-window.c:3787
+#: ../shell/ev-window.c:3793
 msgid "Cancel _print and Close"
 msgstr "_Баспадан бас тарту мен жабу"
 
-#: ../shell/ev-window.c:3791
+#: ../shell/ev-window.c:3797
 msgid "Close _after Printing"
 msgstr "Баспаны а_яқтаудан кейін жабу"
 
-#: ../shell/ev-window.c:3915 ../org.gnome.Evince.appdata.xml.in.h:1
-msgid "Evince"
-msgstr "Evince"
-
-#: ../shell/ev-window.c:3917
-msgid "© 1996–2017 The Evince authors"
-msgstr "© 1996–2017 Evince авторлары"
-
-#: ../shell/ev-window.c:3923
-msgid "translator-credits"
-msgstr "Baurzhan Muftakhidinov <baurthefirst@gmail.com>"
-
-#: ../shell/ev-window.c:4431
+#: ../shell/ev-window.c:4350
 msgid "Running in presentation mode"
 msgstr "Презентация режимінде орындалу"
 
-#: ../shell/ev-window.c:5343
+#: ../shell/ev-window.c:5276
 msgid "The attachment could not be saved."
 msgstr "Салынымды сақтау мүмкін емес."
 
-#: ../shell/ev-window.c:5642
+#: ../shell/ev-window.c:5582
 msgid "Enable caret navigation?"
 msgstr "Мәтіндік курсор навигациясын іске қосу керек пе?"
 
-#: ../shell/ev-window.c:5644
+#: ../shell/ev-window.c:5584
 msgid "_Enable"
 msgstr "Іск_е қосу"
 
-#: ../shell/ev-window.c:5647
+#: ../shell/ev-window.c:5587
 msgid ""
 "Pressing F7 turns the caret navigation on or off. This feature places a "
 "moveable cursor in text pages, allowing you to move around and select text "
@@ -1375,35 +1379,35 @@ msgstr ""
 "пернетақта көмегімен жылжытып, мәтінді ерекшелеуге болады. Мәтіндік курсор "
 "навигациясын іске қосуды қалайсыз ба?"
 
-#: ../shell/ev-window.c:5652
+#: ../shell/ev-window.c:5592
 msgid "Don’t show this message again"
 msgstr "Бұл хабарламаны келесіде көрсетпеу"
 
-#: ../shell/ev-window.c:6197 ../shell/ev-window.c:6213
+#: ../shell/ev-window.c:6164 ../shell/ev-window.c:6180
 msgid "Unable to launch external application."
 msgstr "Сыртқы қолданданы жөнелту мүмкін емес."
 
-#: ../shell/ev-window.c:6274
+#: ../shell/ev-window.c:6241
 msgid "Unable to open external link"
 msgstr "Сыртқы сілтемені ашу мүмкін емес"
 
-#: ../shell/ev-window.c:6487
+#: ../shell/ev-window.c:6454
 msgid "Couldn’t find appropriate format to save image"
 msgstr "Суретті сақтау үшін сәйкес пішімді табу мүмкін емес"
 
-#: ../shell/ev-window.c:6519
+#: ../shell/ev-window.c:6486
 msgid "The image could not be saved."
 msgstr "Суретті сақтау мүмкін емес."
 
-#: ../shell/ev-window.c:6554
+#: ../shell/ev-window.c:6521
 msgid "Save Image"
 msgstr "Суретті сақтау"
 
-#: ../shell/ev-window.c:6713
+#: ../shell/ev-window.c:6680
 msgid "Unable to open attachment"
 msgstr "Салынымды ашу мүмкін емес"
 
-#: ../shell/ev-window.c:6779
+#: ../shell/ev-window.c:6746
 msgid "Save Attachment"
 msgstr "Салынымды сақтау"
 
@@ -1524,74 +1528,73 @@ msgstr "STRING"
 msgid "[FILE…]"
 msgstr "[ФАЙЛ…]"
 
-#: ../shell/evince-menus.ui.h:2
-msgid "Fullscreen"
-msgstr "Толық экранға"
-
-#: ../shell/evince-menus.ui.h:3
-msgid "Send To…"
-msgstr "Қайда жіберу…"
-
-#: ../shell/evince-menus.ui.h:4
-msgid "New _Window"
-msgstr "Жаңа тере_зе"
-
-#: ../shell/evince-menus.ui.h:5
-msgid "Open a C_opy"
-msgstr "Кө_шірмесін ашу"
-
-#: ../shell/evince-menus.ui.h:6
-msgid "Open Containing _Folder"
-msgstr "_Орналасқан бумасын ашу"
-
-#: ../shell/evince-menus.ui.h:7
-msgid "_Save As…"
-msgstr "Қ_алайша сақтау…"
-
-#: ../shell/evince-menus.ui.h:8
-msgid "Present as _Slideshow"
-msgstr "_Слайдшоу ретінде көрсету"
-
-#: ../shell/evince-menus.ui.h:9
-msgid "_Continuous"
-msgstr "Ү_зіліссіз"
-
-#: ../shell/evince-menus.ui.h:10
-msgid "_Dual"
-msgstr "Қ_ос"
-
-#: ../shell/evince-menus.ui.h:11
-msgid "_Odd Pages Left"
-msgstr "_Тақ парақтар сол жақта"
-
-#: ../shell/evince-menus.ui.h:12
-#| msgid "Rotate _Left"
-msgid "Ro_tate ⤵"
-msgstr "Бұ_ру ⤵"
-
-#: ../shell/evince-menus.ui.h:13
-msgid "Ni_ght Mode"
-msgstr "Тү_нгі режим"
-
-#: ../shell/evince-menus.ui.h:14
-msgid "Prop_erties…"
-msgstr "Қас_иеттері…"
-
-#: ../shell/evince-menus.ui.h:15
-msgid "Save Current Settings as Defa_ult"
-msgstr "Ағы_мдағы баптауларды негізгі ретінде сақтау"
-
-#: ../shell/evince-menus.ui.h:16
+#: ../shell/evince-menus.ui.h:1
 msgid "_Keyboard Shortcuts"
 msgstr "П_ернетақта жарлықтары"
 
-#: ../shell/evince-menus.ui.h:17
+#: ../shell/evince-menus.ui.h:2
 msgid "_Help"
 msgstr "_Көмек"
 
-#: ../shell/evince-menus.ui.h:18
+#: ../shell/evince-menus.ui.h:3
 msgid "_About"
 msgstr "О_сы туралы"
+
+#: ../shell/evince-menus.ui.h:5
+msgid "Fullscreen"
+msgstr "Толық экранға"
+
+#: ../shell/evince-menus.ui.h:6
+msgid "Send To…"
+msgstr "Қайда жіберу…"
+
+#: ../shell/evince-menus.ui.h:7
+msgid "New _Window"
+msgstr "Жаңа тере_зе"
+
+#: ../shell/evince-menus.ui.h:8
+msgid "Open a C_opy"
+msgstr "Кө_шірмесін ашу"
+
+#: ../shell/evince-menus.ui.h:9
+msgid "Open Containing _Folder"
+msgstr "_Орналасқан бумасын ашу"
+
+#: ../shell/evince-menus.ui.h:10
+msgid "_Save As…"
+msgstr "Қ_алайша сақтау…"
+
+#: ../shell/evince-menus.ui.h:11
+msgid "Present as _Slideshow"
+msgstr "_Слайдшоу ретінде көрсету"
+
+#: ../shell/evince-menus.ui.h:12
+msgid "_Continuous"
+msgstr "Ү_зіліссіз"
+
+#: ../shell/evince-menus.ui.h:13
+msgid "_Dual"
+msgstr "Қ_ос"
+
+#: ../shell/evince-menus.ui.h:14
+msgid "_Odd Pages Left"
+msgstr "_Тақ парақтар сол жақта"
+
+#: ../shell/evince-menus.ui.h:15
+msgid "Ro_tate ⤵"
+msgstr "Бұ_ру ⤵"
+
+#: ../shell/evince-menus.ui.h:16
+msgid "Ni_ght Mode"
+msgstr "Тү_нгі режим"
+
+#: ../shell/evince-menus.ui.h:17
+msgid "Prop_erties…"
+msgstr "Қас_иеттері…"
+
+#: ../shell/evince-menus.ui.h:18
+msgid "Save Current Settings as Defa_ult"
+msgstr "Ағы_мдағы баптауларды негізгі ретінде сақтау"
 
 #: ../shell/evince-menus.ui.h:22
 msgid "_Open Link"
@@ -1932,7 +1935,7 @@ msgstr ""
 
 #: ../org.gnome.Evince.appdata.xml.in.h:5
 msgid "A clear, simple UI"
-msgstr "Таза, қарапайым интерфейс."
+msgstr "Таза, қарапайым интерфейс"
 
 #: ../org.gnome.Evince.appdata.xml.in.h:6
 msgid "Advanced highlighting and annotation"
