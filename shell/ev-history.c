@@ -22,6 +22,7 @@
 
 #include <glib/gi18n.h>
 #include <string.h>
+#include <stdlib.h>
 
 #include "ev-history.h"
 
@@ -51,6 +52,8 @@ G_DEFINE_TYPE_WITH_PRIVATE (EvHistory, ev_history, G_TYPE_OBJECT)
 
 static void ev_history_set_model (EvHistory       *history,
                                   EvDocumentModel *model);
+
+static gint ev_history_get_current_page (EvHistory *history);
 
 static void
 clear_list (GList *list)
@@ -200,6 +203,8 @@ ev_history_can_go_back (EvHistory *history)
 
         if (ev_history_is_frozen (history))
                 return FALSE;
+        if (abs(ev_document_model_get_page (history->priv->model) - ev_history_get_current_page (history)) > 1)
+              return TRUE;
 
         priv = GET_PRIVATE (history);
         return priv->current && priv->current->prev;
