@@ -4767,7 +4767,10 @@ ev_window_cmd_go_back_history (GSimpleAction *action,
 			       gpointer       user_data)
 {
 	EvWindow *ev_window = user_data;
-
+	gint old_page = ev_document_model_get_page (ev_window->priv->model);
+	if (old_page >= 0) {
+		ev_history_add_page (ev_window->priv->history, old_page);
+	}
 	ev_history_go_back (ev_window->priv->history);
 }
 
@@ -5961,9 +5964,14 @@ ev_window_button_press_event (GtkWidget      *widget,
         EvWindow *window = EV_WINDOW (widget);
 
         switch (event->button) {
-        case MOUSE_BACK_BUTTON:
+        case MOUSE_BACK_BUTTON: {
+		gint old_page = ev_document_model_get_page (window->priv->model);
+		if (old_page >= 0) {
+			ev_history_add_page (window->priv->history, old_page);
+		}
                 ev_history_go_back (window->priv->history);
                 return TRUE;
+	}
         case MOUSE_FORWARD_BUTTON:
                 ev_history_go_forward (window->priv->history);
                 return TRUE;
