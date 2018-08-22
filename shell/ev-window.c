@@ -974,8 +974,9 @@ bookmark_activated_cb (EvSidebarBookmarks *sidebar_bookmarks,
 		       gint                page,
 		       EvWindow           *window)
 {
-	ev_history_add_page (window->priv->history, old_page);
-	ev_history_add_page (window->priv->history, page);
+	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	ev_history_add_page (priv->history, old_page);
+	ev_history_add_page (priv->history, page);
 }
 
 static void
@@ -984,26 +985,27 @@ scroll_history_cb (EvView        *view,
 		   gboolean       horizontal,
 		   EvWindow      *window)
 {
-	if (!window->priv->document)
+	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	if (!priv->document)
 		return;
 
 	gint old_page = -1;
 	gint new_page = -1;
 	switch (scroll) {
 		case GTK_SCROLL_START:
-			old_page = ev_document_model_get_page (window->priv->model);
+			old_page = ev_document_model_get_page (priv->model);
 			new_page = 0;
 			break;
 		case GTK_SCROLL_END:
-			old_page = ev_document_model_get_page (window->priv->model);
-			new_page = ev_document_get_n_pages (window->priv->document) - 1;
+			old_page = ev_document_model_get_page (priv->model);
+			new_page = ev_document_get_n_pages (priv->document) - 1;
 			break;
 		default:
 			break;
 	}
 	if (old_page >= 0 && new_page >= 0) {
-		ev_history_add_page (window->priv->history, old_page);
-		ev_history_add_page (window->priv->history, new_page);
+		ev_history_add_page (priv->history, old_page);
+		ev_history_add_page (priv->history, new_page);
 	}
 }
 
@@ -1013,27 +1015,28 @@ scroll_child_history_cb (GtkScrolledWindow *scrolled_window,
 			 gboolean           horizontal,
 			 EvWindow          *window)
 {
-	if (!window->priv->document)
+	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	if (!priv->document)
 		return;
 
-	if (ev_document_model_get_continuous (window->priv->model) && !horizontal) {
+	if (ev_document_model_get_continuous (priv->model) && !horizontal) {
 		gint old_page = -1;
 		gint new_page = -1;
 		switch (scroll) {
 		case GTK_SCROLL_START:
-			old_page = ev_document_model_get_page (window->priv->model);
+			old_page = ev_document_model_get_page (priv->model);
 			new_page = 0;
 			break;
 		case GTK_SCROLL_END:
-			old_page = ev_document_model_get_page (window->priv->model);
-			new_page = ev_document_get_n_pages (window->priv->document) - 1;
+			old_page = ev_document_model_get_page (priv->model);
+			new_page = ev_document_get_n_pages (priv->document) - 1;
 			break;
 		default:
 			break;
 		}
 		if (old_page >= 0 && new_page >= 0) {
-			ev_history_add_page (window->priv->history, old_page);
-			ev_history_add_page (window->priv->history, new_page);
+			ev_history_add_page (priv->history, old_page);
+			ev_history_add_page (priv->history, new_page);
 
 		}
 	}
@@ -5007,6 +5010,10 @@ ev_window_cmd_go_back_history (GSimpleAction *action,
 	EvWindow *ev_window = user_data;
 	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
 
+	gint old_page = ev_document_model_get_page (priv->model);
+	if (old_page >= 0) {
+		ev_history_add_page (priv->history, old_page);
+	}
 	ev_history_go_back (priv->history);
 }
 
@@ -6261,9 +6268,15 @@ ev_window_button_press_event (GtkWidget      *widget,
 	EvWindowPrivate *priv = ev_window_get_instance_private (window);
 
         switch (event->button) {
-        case MOUSE_BACK_BUTTON:
+
+        case MOUSE_BACK_BUTTON: {
+		gint old_page = ev_document_model_get_page (priv->model);
+		if (old_page >= 0) {
+			ev_history_add_page (priv->history, old_page);
+		}
                 ev_history_go_back (priv->history);
                 return TRUE;
+	}
         case MOUSE_FORWARD_BUTTON:
                 ev_history_go_forward (priv->history);
                 return TRUE;
