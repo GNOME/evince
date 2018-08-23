@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
-"POT-Creation-Date: 2018-08-11 03:31+0000\n"
-"PO-Revision-Date: 2018-08-17 11:46+0300\n"
+"POT-Creation-Date: 2018-08-17 14:09+0000\n"
+"PO-Revision-Date: 2018-08-23 11:23+0300\n"
 "Last-Translator: Jiri Grönroos <jiri.gronroos+l10n@iki.fi>\n"
 "Language-Team: suomi <lokalisointi-lista@googlegroups.com>\n"
 "Language: fi\n"
@@ -234,6 +234,11 @@ msgid ""
 "Substituting with <b>%s</b>\n"
 "(%s)"
 msgstr ""
+"%s%s\n"
+"Merkistökoodaus: %s\n"
+"%s\n"
+"Korvataan fontilla <b>%s</b>\n"
+"(%s)"
 
 #. Translators: string is a concatenation of previous
 #. * translated strings to indicate the fonts properties
@@ -251,6 +256,9 @@ msgid ""
 "Encoding: %s\n"
 "%s"
 msgstr ""
+"%s%s\n"
+"Merkistökoodaus: %s\n"
+"%s"
 
 #: ../backend/pdf/evince-pdfdocument.metainfo.xml.in.in.h:1
 #: ../backend/pdf/pdfdocument.evince-backend.in.in.h:1
@@ -1305,11 +1313,11 @@ msgstr "Tulostetaan työtä ”%s”"
 
 #: ../shell/ev-window.c:3648
 msgid "Document contains form fields that have been filled out. "
-msgstr "Asiakirja sisältää täytettyjä lomakekenttiä."
+msgstr "Asiakirja sisältää täytettyjä lomakekenttiä. "
 
 #: ../shell/ev-window.c:3651
 msgid "Document contains new or modified annotations. "
-msgstr "Asiakirja sisältää uusia tai muokattuja huomautuksia."
+msgstr "Asiakirja sisältää uusia tai muokattuja huomautuksia. "
 
 #: ../shell/ev-window.c:3663
 #, c-format
@@ -1602,7 +1610,6 @@ msgid "_Odd Pages Left"
 msgstr "_Parittomat sivut vasemmalla"
 
 #: ../shell/evince-menus.ui.h:15
-#| msgid "Rotate _Left"
 msgid "Ro_tate ⤵"
 msgstr "K_ierrä ⤵"
 
