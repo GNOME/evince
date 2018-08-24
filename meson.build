@@ -460,17 +460,6 @@ if enable_previewer
   subdir('previewer')
 endif
 
-# *** Browser Plugin ***
-enable_browser_plugin = get_option('browser_plugin')
-if enable_browser_plugin
-  browser_plugin_dir = get_option('browser_plugin_dir')
-  if not browser_plugin_dir.startswith('/')
-    browser_plugin_dir = join_paths(ev_libdir, browser_plugin_dir)
-  endif
-
-  subdir('browser-plugin')
-endif
-
 subdir('data')
 
 headers = files(
@@ -519,7 +508,6 @@ output += 'Viewer ...................:  ' + enable_viewer.to_string() + '\n'
 output += 'Previewer ................:  ' + enable_previewer.to_string() + '\n'
 output += 'Thumbnailer ..............:  ' + enable_thumbnailer.to_string() + '\n'
 output += 'Nautilus Extensions ......:  ' + enable_nautilus.to_string() + '\n'
-output += 'Browser Plugin ...........:  ' + enable_browser_plugin.to_string() + '\n\n\n'
 output += 'BACKENDS\n\n'
 output += 'Comics ...................:  ' + enable_comics.to_string() + '\n'
 output += 'DJVU .....................:  ' + enable_djvu.to_string() + '\n'

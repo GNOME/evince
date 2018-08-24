@@ -25,10 +25,6 @@ if ENABLE_PREVIEWER
 SUBDIRS += previewer
 endif
 
-if ENABLE_BROWSER_PLUGIN
-SUBDIRS += browser-plugin
-endif
-
 NULL =
 
 pkgconfigdir = $(libdir)/pkgconfig
