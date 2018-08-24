@@ -501,31 +501,6 @@ PREVIEWER_LIBS="$PREVIEWER_LIBS $GTKUNIXPRINT_LIBS -lz"
 AC_SUBST(PREVIEWER_CFLAGS)
 AC_SUBST(PREVIEWER_LIBS)
 
-
-# **************
-# Browser Plugin
-# **************
-
-AC_ARG_ENABLE([browser-plugin],
-  [AS_HELP_STRING([--disable-browser-plugin],
-                  [Disable the Browser Plugin])],
-  [],
-  [enable_browser_plugin=yes])
-
-if test x$enable_browser_plugin = "xyes" ; then
-  PKG_CHECK_MODULES([BROWSER_PLUGIN],[gtk+-3.0 >= $GTK_REQUIRED gthread-2.0 gio-2.0 >= $GLIB_REQUIRED])
-
-  if test -z "${BROWSER_PLUGIN_DIR}"; then
-    BROWSER_PLUGIN_DIR="\${libdir}/mozilla/plugins"
-  fi
-  AC_ARG_VAR([BROWSER_PLUGIN_DIR],[Where to install the plugin to])
-fi
-
-AM_CONDITIONAL([ENABLE_BROWSER_PLUGIN],[test "$enable_browser_plugin" = "yes"])
-BROWSER_PLUGIN_CFLAGS="$BROWSER_PLUGIN_CFLAGS $DEBUG_FLAGS"
-AC_SUBST(BROWSER_PLUGIN_CFLAGS)
-AC_SUBST(BROWSER_PLUGIN_LIBS)
-
 # ***
 # GIR
 # ***
@@ -945,7 +920,6 @@ backend/tiff/Makefile
 backend/xps/evince-xpsdocument.metainfo.xml.in
 backend/xps/xpsdocument.evince-backend.in
 backend/xps/Makefile
-browser-plugin/Makefile
 cut-n-paste/Makefile
 cut-n-paste/gimpcellrenderertoggle/Makefile
 cut-n-paste/synctex/Makefile
@@ -1023,7 +997,6 @@ Viewer ...................:  $enable_viewer
 Previewer ................:  $enable_previewer
 Thumbnailer ..............:  $enable_thumbnailer
 Nautilus Extensions.......:  $enable_nautilus
-Browser Plugin............:  $enable_browser_plugin
 
 
 BACKENDS
