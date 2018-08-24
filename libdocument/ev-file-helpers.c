@@ -24,6 +24,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <errno.h>
+#include <fcntl.h>
 
 #include <glib.h>
 #include <glib/gstdio.h>
@@ -138,7 +139,7 @@ ev_mkstemp (const char  *tmpl,
               return -1;
 
         name = g_build_filename (tmp, tmpl, NULL);
-        fd = g_mkstemp (name);
+        fd = g_mkstemp_full (name, O_CLOEXEC, 0600);
 
         if (fd == -1) {
 		int errsv = errno;
