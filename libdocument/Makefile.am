@@ -40,6 +40,7 @@ INST_H_SRC_FILES = 				\
 	ev-mapping-list.h			\
 	ev-media.h				\
 	ev-page.h				\
+	ev-portal.h				\
 	ev-render-context.h			\
 	ev-selection.h				\
 	ev-transition-effect.h
@@ -86,6 +87,7 @@ libevdocument3_la_SOURCES=			\
 	ev-media.c				\
 	ev-module.c				\
 	ev-page.c				\
+	ev-portal.c				\
 	ev-render-context.c			\
 	ev-selection.c				\
 	ev-transition-effect.c			\
