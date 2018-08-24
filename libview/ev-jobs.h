@@ -66,6 +66,9 @@ typedef struct _EvJobLoadStreamClass EvJobLoadStreamClass;
 typedef struct _EvJobLoadGFile EvJobLoadGFile;
 typedef struct _EvJobLoadGFileClass EvJobLoadGFileClass;
 
+typedef struct _EvJobLoadFd EvJobLoadFd;
+typedef struct _EvJobLoadFdClass EvJobLoadFdClass;
+
 typedef struct _EvJobSave EvJobSave;
 typedef struct _EvJobSaveClass EvJobSaveClass;
 
@@ -158,6 +161,13 @@ typedef struct _EvJobPrintClass EvJobPrintClass;
 #define EV_JOB_LOAD_GFILE_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), EV_TYPE_JOB_LOAD_GFILE, EvJobLoadGFileClass))
 #define EV_IS_JOB_LOAD_GFILE_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), EV_TYPE_JOB_LOAD_GFILE))
 #define EV_JOB_LOAD_GFILE_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), EV_TYPE_JOB_LOAD_GFILE, EvJobLoadGFileClass))
+
+#define EV_TYPE_JOB_LOAD_FD            (ev_job_load_fd_get_type())
+#define EV_JOB_LOAD_FD(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), EV_TYPE_JOB_LOAD_FD, EvJobLoadFd))
+#define EV_IS_JOB_LOAD_FD(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), EV_TYPE_JOB_LOAD_FD))
+#define EV_JOB_LOAD_FD_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), EV_TYPE_JOB_LOAD_FD, EvJobLoadFdClass))
+#define EV_IS_JOB_LOAD_FD_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), EV_TYPE_JOB_LOAD_FD))
+#define EV_JOB_LOAD_FD_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), EV_TYPE_JOB_LOAD_FD, EvJobLoadFdClass))
 
 #define EV_TYPE_JOB_SAVE            (ev_job_save_get_type())
 #define EV_JOB_SAVE(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), EV_TYPE_JOB_SAVE, EvJobSave))
@@ -392,6 +402,7 @@ struct _EvJobLoadStream
 {
         EvJob parent;
 
+        char *mime_type;
         char *password;
         GInputStream *stream;
         EvDocumentLoadFlags flags;
@@ -412,6 +423,21 @@ struct _EvJobLoadGFile
 };
 
 struct _EvJobLoadGFileClass
+{
+        EvJobClass parent_class;
+};
+
+struct _EvJobLoadFd
+{
+        EvJob parent;
+
+        char *mime_type;
+        char *password;
+        int fd;
+        EvDocumentLoadFlags flags;
+};
+
+struct _EvJobLoadFdClass
 {
         EvJobClass parent_class;
 };
@@ -573,6 +599,8 @@ EvJob          *ev_job_load_stream_new            (GInputStream       *stream,
                                                    EvDocumentLoadFlags flags);
 void            ev_job_load_stream_set_stream     (EvJobLoadStream    *job,
                                                    GInputStream       *stream);
+void            ev_job_load_stream_set_mime_type  (EvJobLoadStream    *job,
+                                                   const char         *mime_type);
 void            ev_job_load_stream_set_load_flags (EvJobLoadStream    *job,
                                                    EvDocumentLoadFlags flags);
 void            ev_job_load_stream_set_password   (EvJobLoadStream    *job,
@@ -588,6 +616,28 @@ void            ev_job_load_gfile_set_load_flags  (EvJobLoadGFile     *job,
                                                    EvDocumentLoadFlags flags);
 void            ev_job_load_gfile_set_password    (EvJobLoadGFile     *job,
                                                    const gchar        *password);
+
+
+/* EvJobLoadFd */
+GType           ev_job_load_fd_get_type       (void) G_GNUC_CONST;
+EvJob          *ev_job_load_fd_new            (int                 fd,
+                                               const char         *mime_type,
+                                               EvDocumentLoadFlags flags,
+                                               GError            **error);
+EvJob          *ev_job_load_fd_new_take       (int                 fd,
+                                               const char         *mime_type,
+                                               EvDocumentLoadFlags flags);
+gboolean        ev_job_load_fd_set_fd         (EvJobLoadFd        *job,
+                                               int                 fd,
+                                               GError            **error);
+void            ev_job_load_fd_take_fd        (EvJobLoadFd        *job,
+                                               int                 fd);
+void            ev_job_load_fd_set_mime_type  (EvJobLoadFd        *job,
+                                               const char         *mime_type);
+void            ev_job_load_fd_set_load_flags (EvJobLoadFd        *job,
+                                               EvDocumentLoadFlags flags);
+void            ev_job_load_fd_set_password   (EvJobLoadFd        *job,
+                                               const gchar        *password);
 
 /* EvJobSave */
 GType           ev_job_save_get_type      (void) G_GNUC_CONST;
