@@ -63,20 +63,24 @@ djvu_text_page_selection_process_box (DjvuTextPage *page,
 {
 	if (page->results || p == page->start) {
 		EvRectangle box;
+		const char *text;
 
 		box.x1 = miniexp_to_int (miniexp_nth (1, p));
 		box.y1 = miniexp_to_int (miniexp_nth (2, p));
 		box.x2 = miniexp_to_int (miniexp_nth (3, p));
 		box.y2 = miniexp_to_int (miniexp_nth (4, p));
+		text = miniexp_to_str (miniexp_nth (5, p));
 
-		if (!(delimit & 2) && page->results != NULL) {
-			EvRectangle *union_box = (EvRectangle *)page->results->data;
+		if (text != NULL && text[0] != '\0') {
+			if (!(delimit & 2) && page->results != NULL) {
+				EvRectangle *union_box = (EvRectangle *)page->results->data;
 
-                        /* If still on the same line, add box to union */
-			djvu_text_page_union (union_box, &box);
-		} else {
-			/* A new line, a new box */
-			page->results = g_list_prepend (page->results, ev_rectangle_copy (&box));
+                                /* If still on the same line, add box to union */
+				djvu_text_page_union (union_box, &box);
+			} else {
+				/* A new line, a new box */
+				page->results = g_list_prepend (page->results, ev_rectangle_copy (&box));
+			}
 		}
 
 		if (p == page->end)
@@ -171,13 +175,16 @@ djvu_text_page_limits_process (DjvuTextPage *page,
 			       EvRectangle  *rect)
 {
 	EvRectangle current;
+	const char *text;
 	
 	current.x1 = miniexp_to_int (miniexp_nth (1, p));
 	current.y1 = miniexp_to_int (miniexp_nth (2, p));
 	current.x2 = miniexp_to_int (miniexp_nth (3, p));
 	current.y2 = miniexp_to_int (miniexp_nth (4, p));
+	text = miniexp_to_str (miniexp_nth (5, p));
 	if (current.x2 >= rect->x1 && current.y1 <= rect->y2 &&
-	    current.x1 <= rect->x2 && current.y2 >= rect->y1) {
+	    current.x1 <= rect->x2 && current.y2 >= rect->y1 &&
+	    text != NULL && text[0] != '\0') {
 	    	if (page->start == miniexp_nil)
 	    		page->start = p;
 	    	page->end = p;
