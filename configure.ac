@@ -601,7 +601,7 @@ AC_ARG_ENABLE(ps,
   	[AS_HELP_STRING([--disable-ps],
 			[Disable the PostScript backend])],
 	[enable_ps=$enableval],
-	[enable_ps=yes])
+	[enable_ps=no])
 
 if test "x$enable_ps" = "xyes"; then
    if test "x$have_spectre" = "xyes"; then
