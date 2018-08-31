@@ -4,13 +4,13 @@
 #
 # Martin Picek <picek.martin@gnome-cesko.cz>, 2009.
 # Lucas Lommer <llommer@svn.gnome.org>, 2009. (mikroopravy)
-# Marek Černocký <marek@manet.cz>, 2013, 2014, 2015, 2017.
+# Marek Černocký <marek@manet.cz>, 2013, 2014, 2015, 2017, 2018.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: evince\n"
-"POT-Creation-Date: 2017-10-27 11:45+0000\n"
-"PO-Revision-Date: 2017-10-29 21:46+0100\n"
+"POT-Creation-Date: 2018-08-30 16:14+0000\n"
+"PO-Revision-Date: 2018-08-31 06:41+0200\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: čeština <gnome-cs-list@gnome.org>\n"
 "Language: cs\n"
@@ -50,7 +50,7 @@ msgstr "Jak si u poznámky upravit autora, barvu, styl nebo ikonu."
 #: C/singlesided-5-8pages.page:12 C/singlesided-9-12pages.page:12
 #: C/singlesided-npages.page:12 C/synctex-beamer.page:11
 #: C/synctex-compile.page:11 C/synctex-editors.page:11 C/synctex.page:12
-#: C/synctex-search.page:11 C/synctex-support.page:11 C/titlebar.page:13
+#: C/synctex-search.page:11 C/synctex-support.page:12 C/titlebar.page:13
 #: C/translate.page:10
 msgid "Tiffany Antopolski"
 msgstr "Tiffany Antopolski"
@@ -75,7 +75,7 @@ msgstr "Tiffany Antopolski"
 #: C/singlesided-3-4pages.page:16 C/singlesided-5-8pages.page:16
 #: C/singlesided-9-12pages.page:16 C/singlesided-npages.page:16
 #: C/synctex-beamer.page:15 C/synctex-compile.page:15 C/synctex-editors.page:15
-#: C/synctex.page:16 C/synctex-search.page:15 C/synctex-support.page:15
+#: C/synctex.page:16 C/synctex-search.page:15 C/synctex-support.page:20
 #: C/textselection.page:15 C/titlebar.page:17 C/translate.page:19
 msgid "Creative Commons Share Alike 3.0"
 msgstr "Creative Commons Share Alike 3.0"
@@ -251,10 +251,10 @@ msgstr ""
 msgctxt "_"
 msgid ""
 "external ref='figures/annotations-nav-to-page.png' "
-"md5='b811a812d3f19dcbbe3a94173a4f0d58'"
+"md5='a56f4fc0701541c0e68516c870bcae41'"
 msgstr ""
 "external ref='figures/annotations-nav-to-page.png' "
-"md5='b811a812d3f19dcbbe3a94173a4f0d58'"
+"md5='a56f4fc0701541c0e68516c870bcae41'"
 
 #. (itstool) path: info/desc
 #: C/annotations.page:7
@@ -323,10 +323,10 @@ msgstr "Na hlavičkové liště vyberte <gui>Přidat poznámky k dokumentu</gui>
 msgctxt "_"
 msgid ""
 "external ref='figures/add-text-annotation.png' "
-"md5='2021aeb52075e9267cd357e8c1908a7d'"
+"md5='bc446cfb5663859ed0f85a4fab3f89cb'"
 msgstr ""
 "external ref='figures/add-text-annotation.png' "
-"md5='2021aeb52075e9267cd357e8c1908a7d'"
+"md5='bc446cfb5663859ed0f85a4fab3f89cb'"
 
 #. (itstool) path: item/p
 #: C/annotations.page:47
@@ -336,6 +336,20 @@ msgid ""
 msgstr ""
 "Nyní byste pod hlavičkovou lištou měli vidět tlačítka <gui>Přidat textovou "
 "poznámku</gui> a <gui>Přidat zvýrazněnou poznámku</gui>."
+
+#. (itstool) path: item/media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/annotations.page:50
+msgctxt "_"
+msgid ""
+"external ref='figures/list-add-tabs.png' "
+"md5='3184eec20f14e035c657448c7d189de7'"
+msgstr ""
+"external ref='figures/list-add-tabs.png' "
+"md5='3184eec20f14e035c657448c7d189de7'"
 
 #. (itstool) path: item/p
 #: C/annotations.page:55
@@ -401,8 +415,7 @@ msgstr ""
 #: C/annotations-save.page:31
 msgid "Click <guiseq><gui>File options</gui><gui>Save As…</gui></guiseq>"
 msgstr ""
-"Klikněte na <guiseq><gui>Volby souboru</gui> <gui>Uložit jako…</gui></"
-"guiseq>"
+"Klikněte na <guiseq><gui>Volby souboru</gui> <gui>Uložit jako…</gui></guiseq>"
 
 #. (itstool) path: item/p
 #: C/annotations-save.page:36
@@ -551,13 +564,13 @@ msgstr "Vyplňujte chybová hlášení o <app>prohlížeči dokumentů</app>"
 msgid ""
 "The <app>document viewer</app> is maintained by a volunteer community. You "
 "are welcome to participate. If you notice a problem you can file a <em>bug "
-"report</em>. To file a bug, go to <link href=\"https://bugzilla.gnome.org/\"/"
-">."
+"report</em>. To file a bug, go to <link href=\"https://gitlab.gnome.org/"
+"GNOME/evince/issues/\"/>."
 msgstr ""
 "O <app>Prohlížeče dokumentů</app> se stará komunita dobrovolníků. Vaše "
 "případná účast bude vítána. Pokud si povšimnete nějakého problému, můžete "
-"vyplnit <em>chybové hlášení</em> na <link href=\"https://bugzilla.gnome.org/"
-"\"/>."
+"vyplnit <em>chybové hlášení</em> na <link href=\"https://gitlab.gnome.org/"
+"GNOME/evince/issues/\"/>."
 
 #. (itstool) path: page/p
 #: C/bug-filing.page:23
@@ -575,54 +588,43 @@ msgid ""
 "To participate you need an account which will give you the ability to gain "
 "access, file bugs, and make comments. Also, you need to register so you can "
 "receive updates by e-mail about the status of your bug. If you don't already "
-"have an account, just click on the <gui>New Account</gui> link to create one."
+"have an account, just click on the <gui>Sign in / Register</gui> link to "
+"create one."
 msgstr ""
 "Abyste se mohli zapojit, musíte si vytvořit účet, díky kterému získáte "
 "přistup, můžete hlásit chyby a psát komentáře. Registraci potřebujete také k "
 "tomu, aby vám přicházely na e-mail informace o stavu vaší chyby. Jestli účet "
-"zatím nemáte, stačí pro vytvoření kliknout na odkaz <gui>Nový účet</gui>."
+"zatím nemáte, stačí pro vytvoření kliknout na odkaz <gui>Sign in / Register"
+"</gui>."
 
 #. (itstool) path: page/p
 #: C/bug-filing.page:29
 msgid ""
-"Once you have an account, log in, click on <guiseq><gui>File a Bug</"
-"gui><gui>Core</gui><gui>evince</gui></guiseq>. Before reporting a bug, "
-"please read the <link href=\"https://bugzilla.gnome.org/page.cgi?id=bug-"
-"writing.html\">bug writing guidelines</link>, and please <link href="
-"\"https://bugzilla.gnome.org/browse.cgi?product=evince\">browse</link> for "
-"the bug to see if it already exists."
+"Once you have an account, log in, and click on <gui>New issue</gui>. Before "
+"reporting a bug, please read the <link href=\"https://wiki.gnome.org/"
+"Community/GettingInTouch/Bugzilla/Guidelines\">bug writing guidelines</"
+"link>, and please <link href=\"https://gitlab.gnome.org/GNOME/evince/issues"
+"\">browse</link> for the bug to see if it already exists."
 msgstr ""
-"Když už účet máte, přihlaste se, klikněte na <guiseq><gui>File a Bug</"
-"gui><gui>Core</gui><gui>evince</gui></guiseq>. Před nahlášením chyby si "
-"prosím přečtěte <link href=\"https://bugzilla.gnome.org/page.cgi?id=bug-"
-"writing.html\">přiručku k hlášení chyb</link> (odkaz je v angličtině) a "
-"<link href=\"https://bugzilla.gnome.org/browse.cgi?product=evince"
+"Když už účet máte, přihlaste se a klikněte na <gui>New issue</gui>. Před "
+"nahlášením chyby si prosím přečtěte <link href=\"https://bugzilla.gnome.org/"
+"page.cgi?id=bug-writing.html\">přiručku k hlášení chyb</link> (odkaz je v "
+"angličtině) a <link href=\"https://gitlab.gnome.org/GNOME/evince/issues"
 "\">podívejte</link> se prosím, jestli stejnou chybu nenahlásil už někdo jiný."
 
 #. (itstool) path: page/p
 #: C/bug-filing.page:33
 msgid ""
-"To file your bug, choose the component in the <gui>Component</gui> menu. If "
-"you are not sure which component your bug pertains to, choose <gui>general</"
-"gui>."
+"If you are requesting a new feature, choose <gui>1. Feature</gui> in the "
+"<gui>Labels</gui> menu. Fill in the Title and Description sections and click "
+"<gui>Submit Issue</gui>."
 msgstr ""
-"Když budete chybové hlášení vyplňovat, zvolte v nabídce <gui>Component</"
-"gui>, které části se týká. Pokud si v tom nejste jisti, zvolte <gui>general</"
-"gui>."
+"V případě, že žádáte o novou funkčnost, zvolte v nabídce <gui>Labels</gui> "
+"položku <gui>1. Feature</gui>. Vyplňte pole Summary a Description a "
+"klikněte na <gui>Submit Issue</gui>."
 
 #. (itstool) path: page/p
-#: C/bug-filing.page:36
-msgid ""
-"If you are requesting a new feature, choose <gui>enhancement</gui> in the "
-"<gui>Severity</gui> menu. Fill in the Summary and Description sections and "
-"click <gui>Submit Bug</gui>."
-msgstr ""
-"V případě, že žádáte o novou funkčnost, zvolte v nabídce <gui>Severity</gui> "
-"položku <gui>enhancement</gui>. Vyplňte pole Summary a Description a "
-"klikněte na <gui>Submit Bug</gui>."
-
-#. (itstool) path: page/p
-#: C/bug-filing.page:40
+#: C/bug-filing.page:37
 msgid ""
 "Your report will be given an ID number, and its status will be updated as it "
 "is being dealt with."
@@ -2751,8 +2753,8 @@ msgstr ""
 #. whatever you like once you have updated your copy of the file.
 #: C/movingaround.page:180
 msgctxt "_"
-msgid "external ref='figures/zoom.png' md5='df29dd99650f077cbf6ace95f199786e'"
-msgstr "external ref='figures/zoom.png' md5='df29dd99650f077cbf6ace95f199786e'"
+msgid "external ref='figures/zoom.png' md5='ce72aea79459526a5fa69a9bcecc530b'"
+msgstr "external ref='figures/zoom.png' md5='ce72aea79459526a5fa69a9bcecc530b'"
 
 #. (itstool) path: note/p
 #: C/movingaround.page:185
@@ -4444,13 +4446,18 @@ msgstr ""
 msgid "How to add support for SyncTeX."
 msgstr "Jak přidat podporu pro SyncTeX."
 
+#. (itstool) path: credit/name
+#: C/synctex-support.page:16
+msgid "Germán Poo-Caamaño"
+msgstr "Germán Poo-Caamaño"
+
 #. (itstool) path: page/title
-#: C/synctex-support.page:20
+#: C/synctex-support.page:25
 msgid "Set-up SyncTeX"
 msgstr "Nastavte si SyncTeX"
 
 #. (itstool) path: page/p
-#: C/synctex-support.page:21
+#: C/synctex-support.page:26
 msgid ""
 "The following packages need to be installed in order to add support for "
 "SyncTeX:"
@@ -4458,22 +4465,28 @@ msgstr ""
 "Kvůli podpoře SyncTeX je zapotřebí mít nainstalované následující balíčky:"
 
 #. (itstool) path: item/p
-#: C/synctex-support.page:26
-msgid "texlive-extra-utils"
-msgstr "texlive-extra-utils"
+#: C/synctex-support.page:31
+msgid "A LaTeX engine with SyncTeX support, such as <app>pdflatex</app>."
+msgstr ""
+"Program na zpracování formátu LaTeX s podporou SyncTeX, jako je třeba "
+"<app>pdflatex</app>."
 
 #. (itstool) path: item/p
-#: C/synctex-support.page:31
-msgid "gedit-plugins"
-msgstr "gedit-plugins"
+#: C/synctex-support.page:36
+msgid ""
+"A text editor with SyncTeX support, such as <app>gedit</app> with gedit-"
+"plugins installed."
+msgstr ""
+"Textový editor s podporou SyncTeX, jako je třeba <app>gedit</app> s "
+"nainstalovaným zásuvným modulem gedit-plugins."
 
 #. (itstool) path: page/p
-#: C/synctex-support.page:37
+#: C/synctex-support.page:42
 msgid "In <app>gedit</app>, enable the SyncTeX Plugin:"
 msgstr "V aplikaci <app>gedit</app> povolte zásuvný modul SyncTeX:"
 
 #. (itstool) path: item/p
-#: C/synctex-support.page:42
+#: C/synctex-support.page:47
 msgid ""
 "Click <guiseq><gui>Edit</gui><gui>Preferences</gui><gui>Plugins</gui></"
 "guiseq> tab."
@@ -4482,7 +4495,7 @@ msgstr ""
 "moduly</gui></guiseq>."
 
 #. (itstool) path: item/p
-#: C/synctex-support.page:47
+#: C/synctex-support.page:52
 msgid "Check <gui>SyncTeX</gui>."
 msgstr "Zaškrtněte <gui>Uložit</gui>."
 
@@ -4673,3 +4686,17 @@ msgstr ""
 "\"http://mail.gnome.org/mailman/listinfo/gnome-i18n\">poštovní konferenci</"
 "link>."
 
+#~ msgid ""
+#~ "To file your bug, choose the component in the <gui>Component</gui> menu. "
+#~ "If you are not sure which component your bug pertains to, choose "
+#~ "<gui>general</gui>."
+#~ msgstr ""
+#~ "Když budete chybové hlášení vyplňovat, zvolte v nabídce <gui>Component</"
+#~ "gui>, které části se týká. Pokud si v tom nejste jisti, zvolte "
+#~ "<gui>general</gui>."
+
+#~ msgid "texlive-extra-utils"
+#~ msgstr "texlive-extra-utils"
+
+#~ msgid "gedit-plugins"
+#~ msgstr "gedit-plugins"
