@@ -1,11 +1,43 @@
 =================
+Evince    3.28.3
+=================
+
+libview:
+ * fix transformation functions to document coordinates. (#914, Juan Pablo Ugarte)
+ * Reset `pressed_button` when starting Drag and Drop. (#754, Jason Crain)
+ * Set minimum for Page Forward/Backward scrolling. (#692, Jason Crain)
+
+libmisc:
+ * Emit "updated" signal at end of search. (#917, Jason Crain)
+ * Let the buttons in search bar get focus. (#216, Germán Poo-Caamaño)
+
+Backends:
+ * Fix URL to report unimplemented features (Germán Poo-Caamaño)
+
+Shell (UI)
+ * Disconnect bookmarks signal on toolbar dispose. (#920, Jason Crain)
+ * Fix crash in ev_media_player_keys_grab_keys (Marek Kasik)
+ * Fix gresource location in recent view. (#670, Germán Poo-Caamaño)
+ * Fix regression on Ctrl+PageUp/PageDown shortcuts. (#699, Germán Poo-Caamaño)
+ * Fix regression on F3 shortcut. (#595, Germán Poo-Caamaño)
+ * Only propagate key press with control on presentation. (#821, Jonas Hahnfeld)
+ * sidebar-bookmarks: fix sensitiveness of remove bookmark button. (#892, Nelson Benítez León)
+ * zoom-action: Store priv->popup as a GtkPopover* (#881, Daniel Boles)
+ * zoom-action: Use Popover.popup() to get animation. (#881, Daniel Boles)
+
+UI translations:
+ * Update Afrikaans translation (af) (Pieter Schalk Schoeman)
+ * Update Chinese (China) translation (zh_CN) (Mingcong Bai)
+ * Update Icelandic translation (is) (Sveinn í Felli)
+
+=================
 Evince    3.28.2
 =================
 
 UI translations:
  * Daniel Șerbănescu (ro)
  * Stas Solovey (ru)
-
+ 
 Doc translations:
  * Anders Jonsson (sv)
 
