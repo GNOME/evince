@@ -323,11 +323,13 @@ ev_message_area_set_text (EvMessageArea *area,
 	g_return_if_fail (EV_IS_MESSAGE_AREA (area));
 
 	if (str) {
-		gchar *msg;
+		gchar *msg, *escaped;
 
-		msg = g_strdup_printf ("<b>%s</b>", str);
+		escaped = g_markup_escape_text (str, -1);
+		msg = g_strdup_printf ("<b>%s</b>", escaped);
 		gtk_label_set_markup (GTK_LABEL (area->priv->label), msg);
 		g_free (msg);
+		g_free (escaped);
 	} else {
 		gtk_label_set_markup (GTK_LABEL (area->priv->label), NULL);
 	}
