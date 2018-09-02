@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
-"POT-Creation-Date: 2018-07-10 05:20+0000\n"
-"PO-Revision-Date: 2018-08-07 00:48-0200\n"
+"POT-Creation-Date: 2018-09-01 01:58+0000\n"
+"PO-Revision-Date: 2018-09-01 23:27-0200\n"
 "Last-Translator: Rafael Fontenelle <rafaelff@gnome.org>\n"
 "Language-Team: Brazilian Portuguese <gnome-pt_br-list@gnome.org>\n"
 "Language: pt_BR\n"
@@ -50,7 +50,7 @@ msgstr "Como personalizar o autor, a cor, o estilo ou o ícone de uma anotação
 #: C/duplex-8pages.page:12 C/duplex-9pages.page:12 C/duplex-npages.page:12
 #: C/forms.page:11 C/forms-saving.page:15 C/index.page:18
 #: C/introduction.page:12 C/openerror.page:13 C/opening.page:14
-#: C/print-booklet.page:12 C/shortcuts.page:16 C/singlesided-13-16pages.page:12
+#: C/print-booklet.page:12 C/shortcuts.page:17 C/singlesided-13-16pages.page:12
 #: C/singlesided-17-20pages.page:12 C/singlesided-3-4pages.page:12
 #: C/singlesided-5-8pages.page:12 C/singlesided-9-12pages.page:12
 #: C/singlesided-npages.page:12 C/synctex-beamer.page:11
@@ -75,7 +75,7 @@ msgstr "Tiffany Antopolski"
 #: C/forms-saving.page:23 C/invert-colors.page:23 C/noprint.page:14
 #: C/openerror.page:17 C/presentations.page:20 C/print-2sided.page:16
 #: C/print-booklet.page:16 C/printing.page:22 C/print-order.page:16
-#: C/print-select.page:15 C/reload.page:18 C/shortcuts.page:37
+#: C/print-select.page:15 C/reload.page:18 C/shortcuts.page:42
 #: C/singlesided-13-16pages.page:16 C/singlesided-17-20pages.page:16
 #: C/singlesided-3-4pages.page:16 C/singlesided-5-8pages.page:16
 #: C/singlesided-9-12pages.page:16 C/singlesided-npages.page:16
@@ -258,10 +258,10 @@ msgstr ""
 msgctxt "_"
 msgid ""
 "external ref='figures/annotations-nav-to-page.png' "
-"md5='b811a812d3f19dcbbe3a94173a4f0d58'"
+"md5='a56f4fc0701541c0e68516c870bcae41'"
 msgstr ""
 "external ref='figures/annotations-nav-to-page.png' "
-"md5='b811a812d3f19dcbbe3a94173a4f0d58'"
+"md5='a56f4fc0701541c0e68516c870bcae41'"
 
 #. (itstool) path: info/desc
 #: C/annotations.page:7
@@ -269,7 +269,7 @@ msgid "How to create and customize annotations."
 msgstr "Como criar e alterar anotações."
 
 #. (itstool) path: credit/name
-#: C/annotations.page:16 C/shortcuts.page:32
+#: C/annotations.page:16 C/shortcuts.page:33
 msgid "Andre Klapper"
 msgstr "Andre Klapper"
 
@@ -330,10 +330,10 @@ msgstr "Selecione <gui>Anota o documento</gui> da barra de título."
 msgctxt "_"
 msgid ""
 "external ref='figures/add-text-annotation.png' "
-"md5='2021aeb52075e9267cd357e8c1908a7d'"
+"md5='bc446cfb5663859ed0f85a4fab3f89cb'"
 msgstr ""
 "external ref='figures/add-text-annotation.png' "
-"md5='2021aeb52075e9267cd357e8c1908a7d'"
+"md5='bc446cfb5663859ed0f85a4fab3f89cb'"
 
 #. (itstool) path: item/p
 #: C/annotations.page:47
@@ -341,8 +341,22 @@ msgid ""
 "You should now see <gui>Add text annotation</gui> and <gui>Add highlight "
 "annotation</gui> buttons below the title bar."
 msgstr ""
-"Você deve ver agora os botõed <gui>Adiciona anotação de texto</gui> e "
+"Você deve ver agora os botões <gui>Adiciona anotação de texto</gui> e "
 "<gui>Adiciona anotação de destaque</gui> abaixo da barra de título."
+
+#. (itstool) path: item/media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/annotations.page:50
+msgctxt "_"
+msgid ""
+"external ref='figures/list-add-tabs.png' "
+"md5='3184eec20f14e035c657448c7d189de7'"
+msgstr ""
+"external ref='figures/list-add-tabs.png' "
+"md5='3184eec20f14e035c657448c7d189de7'"
 
 #. (itstool) path: item/p
 #: C/annotations.page:55
@@ -510,7 +524,7 @@ msgstr ""
 #. (itstool) path: item/p
 #: C/bookmarks.page:60
 msgid "The bookmark is now listed in the bookmarks list."
-msgstr "O marcador agora aparece na lista  de marcadores."
+msgstr "O marcador agora aparece na lista de marcadores."
 
 #. (itstool) path: section/title
 #: C/bookmarks.page:67
@@ -563,13 +577,13 @@ msgstr "Relate um problema sobre o <app>Visualizador de documentos</app>"
 msgid ""
 "The <app>document viewer</app> is maintained by a volunteer community. You "
 "are welcome to participate. If you notice a problem you can file a <em>bug "
-"report</em>. To file a bug, go to <link href=\"https://bugzilla.gnome.org/\"/"
-">."
+"report</em>. To file a bug, go to <link href=\"https://gitlab.gnome.org/"
+"GNOME/evince/issues/\"/>."
 msgstr ""
 "O <app>Visualizador de documentos</app> é mantido por uma comunidade de "
 "voluntários. Você é bem-vindo para participar. Se você notar um problema, "
 "você pode enviar um <em>relatório de erro</em>. Para registrar um erro, vá "
-"em <link href=\"https://bugzilla.gnome.org/\"/>."
+"em<link href=\"https://gitlab.gnome.org/GNOME/evince/issues/\"/>."
 
 #. (itstool) path: page/p
 #: C/bug-filing.page:23
@@ -586,55 +600,43 @@ msgid ""
 "To participate you need an account which will give you the ability to gain "
 "access, file bugs, and make comments. Also, you need to register so you can "
 "receive updates by e-mail about the status of your bug. If you don't already "
-"have an account, just click on the <gui>New Account</gui> link to create one."
+"have an account, just click on the <gui>Sign in / Register</gui> link to "
+"create one."
 msgstr ""
 "Para participar, você precisa de uma conta que lhe permitirá obter acesso, "
 "preencher erros e fazer comentários. Além disso, você precisa se registrar "
 "para poder receber atualizações por e-mail sobre o status do seu erro "
-"registrado. Se você ainda não tiver uma conta, basta clicar no link <gui>New "
-"Account</gui> para criar uma."
+"registrado. Se você ainda não tiver uma conta, basta clicar no link <gui>"
+"Sign in / Register</gui> para criar uma."
 
 #. (itstool) path: page/p
 #: C/bug-filing.page:29
 msgid ""
-"Once you have an account, log in, click on <guiseq><gui>File a Bug</"
-"gui><gui>Core</gui><gui>evince</gui></guiseq>. Before reporting a bug, "
-"please read the <link href=\"https://bugzilla.gnome.org/page.cgi?id=bug-"
-"writing.html\">bug writing guidelines</link>, and please <link href="
-"\"https://bugzilla.gnome.org/browse.cgi?product=evince\">browse</link> for "
-"the bug to see if it already exists."
+"Once you have an account, log in, and click on <gui>New issue</gui>. Before "
+"reporting a bug, please read the <link href=\"https://wiki.gnome.org/"
+"Community/GettingInTouch/Bugzilla/Guidelines\">bug writing guidelines</"
+"link>, and please <link href=\"https://gitlab.gnome.org/GNOME/evince/issues"
+"\">browse</link> for the bug to see if it already exists."
 msgstr ""
-"Assim que tiver uma conta, entre, clique em <guiseq><gui>File a Bug</"
-"gui><gui>Core</gui><gui>evince</gui></guiseq>. Antes de relatar um erro, por "
-"favor leia as orientações de <link href=\"https://bugzilla.gnome.org/page."
-"cgi?id=bug-writing.html\">como registrá-lo</link>, e por favor, <link href="
-"\"https://bugzilla.gnome.org/browse.cgi?product=evince\">procure o mesmo "
-"problema</link> para ver se ele já existe."
+"Assim que tiver uma conta, autentique-se e clique em <gui>New issue</gui>. "
+"Antes de relatar um erro, por favor leia as <link href=\"https://wiki.gnome."
+"org/Community/GettingInTouch/Bugzilla/Guidelines\">diretrizes de relatório "
+"de erro</link> e por favor, <link href=\"https://gitlab.gnome.org/GNOME/"
+"evince/issues\">procure</link> pelo erro para ver se ele já existe."
 
 #. (itstool) path: page/p
 #: C/bug-filing.page:33
 msgid ""
-"To file your bug, choose the component in the <gui>Component</gui> menu. If "
-"you are not sure which component your bug pertains to, choose <gui>general</"
-"gui>."
+"If you are requesting a new feature, choose <gui>1. Feature</gui> in the "
+"<gui>Labels</gui> menu. Fill in the Title and Description sections and click "
+"<gui>Submit Issue</gui>."
 msgstr ""
-"Para registrar o seu erro, escolha o componente no menu <gui>Component</"
-"gui>. Se você não tem certeza a qual componente o erro pertence, escolha "
-"<gui>general</gui>."
+"Se você está solicitando uma nova funcionalidade, escolha <gui>1. "
+"Feature</gui> no menu <gui>Labels</gui>. Preencha as seções Title e "
+"Description e clique em <gui>Submit Issue</gui>."
 
 #. (itstool) path: page/p
-#: C/bug-filing.page:36
-msgid ""
-"If you are requesting a new feature, choose <gui>enhancement</gui> in the "
-"<gui>Severity</gui> menu. Fill in the Summary and Description sections and "
-"click <gui>Submit Bug</gui>."
-msgstr ""
-"Se você está solicitando uma nova funcionalidade, escolha <gui>enhancement</"
-"gui> no menu <gui>Severity</gui>. Preencha as seções Summary e Description e "
-"clique em <gui>Submit Bug</gui>."
-
-#. (itstool) path: page/p
-#: C/bug-filing.page:40
+#: C/bug-filing.page:37
 msgid ""
 "Your report will be given an ID number, and its status will be updated as it "
 "is being dealt with."
@@ -664,7 +666,7 @@ msgstr ""
 #: C/noprint.page:10 C/password.page:12 C/presentations.page:12
 #: C/print-2sided.page:12 C/print-differentsize.page:13 C/printing.page:14
 #: C/print-order.page:12 C/print-select.page:11 C/reload.page:14
-#: C/shortcuts.page:12 C/textselection.page:11
+#: C/shortcuts.page:13 C/textselection.page:11
 msgid "Phil Bull"
 msgstr "Phil Bull"
 
@@ -1268,8 +1270,8 @@ msgid ""
 "on the other side)."
 msgstr ""
 "Quando terminar a impressão, pegue o papel com a página 2 e coloque-o de "
-"volta, virado, na impressora, tomando o cuidado de orientá-lo corretamente "
-"(a página 1 deverá ser impressa atrás da 2)."
+"volta, virado, na impressora, tomando o cuidado de orientá-lo corretamente ("
+"a página 1 deverá ser impressa atrás da 2)."
 
 #. (itstool) path: item/p
 #: C/duplex-10pages.page:75 C/duplex-14pages.page:74 C/duplex-6pages.page:76
@@ -1972,13 +1974,13 @@ msgid ""
 "n, 1, 2, n-1, n-2, 3, 4, n-3, n-4, 5, 6, n-5, n-6, 7, 8, n-7, n-8, 9, 10, "
 "n-9, n-10, 11, 12, n-11..."
 msgstr ""
-"n, 1, 2, n-1, n-2, 3, 4, n-3, n-4, 5, 6, n-5, n-6, 7, 8, n-7, n-8, 9, 10, "
-"n-9, n-10, 11, 12, n-11, n-12…"
+"n, 1, 2, n-1, n-2, 3, 4, n-3, n-4, 5, 6, n-5, n-6, 7, 8, n-7, n-8, 9, 10, n-"
+"9, n-10, 11, 12, n-11..."
 
 #. (itstool) path: item/item
 #: C/duplex-npages.page:63 C/singlesided-npages.page:64
 msgid "...until you have typed n-number of pages."
-msgstr "…até digitar todos os números de página."
+msgstr "...até digitar todos os números de página."
 
 #. (itstool) path: tree/item
 #: C/duplex-npages.page:60 C/singlesided-npages.page:61
@@ -2383,8 +2385,8 @@ msgid ""
 msgstr ""
 "Para trocar preto por branco, branco por preto, e assim por diante, clique "
 "no botão do menu das opções do documento no canto superior direito e marque "
-"a opção <gui>Cores invertidas</gui>, ou use o atalho <keyseq><key>Ctrl</"
-"key><key>I</key></keyseq> no teclado."
+"a opção <gui>Cores invertidas</gui>, ou use o atalho "
+"<keyseq><key>Ctrl</key><key>I</key></keyseq> no teclado."
 
 #. (itstool) path: note/p
 #: C/invert-colors.page:37
@@ -2522,7 +2524,7 @@ msgstr "Navegando, usando a rolagem e alterando o zoom."
 
 #. (itstool) path: page/title
 #. (itstool) path: section/title
-#: C/movingaround.page:25 C/shortcuts.page:79
+#: C/movingaround.page:25 C/shortcuts.page:84
 msgid "Moving around a document"
 msgstr "Navegando por um documento"
 
@@ -2801,8 +2803,8 @@ msgstr ""
 #. whatever you like once you have updated your copy of the file.
 #: C/movingaround.page:180
 msgctxt "_"
-msgid "external ref='figures/zoom.png' md5='df29dd99650f077cbf6ace95f199786e'"
-msgstr "external ref='figures/zoom.png' md5='df29dd99650f077cbf6ace95f199786e'"
+msgid "external ref='figures/zoom.png' md5='ce72aea79459526a5fa69a9bcecc530b'"
+msgstr "external ref='figures/zoom.png' md5='ce72aea79459526a5fa69a9bcecc530b'"
 
 #. (itstool) path: note/p
 #: C/movingaround.page:185
@@ -2991,8 +2993,8 @@ msgid ""
 "Type <input>dconf-editor</input> into the text box and click <gui>Run</gui>. "
 "The Configuration Editor will open."
 msgstr ""
-"Digite <input>dconf-editor</input> na caixa de texto e pressione <key>Enter</"
-"key>. Uma janela do <app>Editor do dconf</app> será aberta."
+"Digite <input>dconf-editor</input> na caixa de texto e pressione "
+"<key>Enter</key>. Uma janela do <app>Editor do dconf</app> será aberta."
 
 #. (itstool) path: item/p
 #: C/noprint.page:76
@@ -3650,136 +3652,147 @@ msgid "See a list of all shortcuts."
 msgstr "Veja uma lista de todos os atalhos."
 
 #. (itstool) path: credit/name
-#: C/shortcuts.page:20
+#: C/shortcuts.page:21
 msgid "Taufan Lubis"
 msgstr "Taufan Lubis"
 
 #. (itstool) path: credit/name
-#: C/shortcuts.page:24
+#: C/shortcuts.page:25
 msgid "Ronaldi Santosa"
 msgstr "Ronaldi Santosa"
 
 #. (itstool) path: credit/name
-#: C/shortcuts.page:28
+#: C/shortcuts.page:29
 msgid "Ibnu Amansyah"
 msgstr "Ibnu Amansyah"
 
+#. (itstool) path: credit/name
+#: C/shortcuts.page:37 C/synctex-support.page:16
+msgid "Germán Poo-Caamaño"
+msgstr "Germán Poo-Caamaño"
+
 #. (itstool) path: page/title
-#: C/shortcuts.page:43
+#: C/shortcuts.page:48
 msgid "Keyboard shortcuts"
 msgstr "Atalhos de teclado"
 
 #. (itstool) path: section/title
-#: C/shortcuts.page:45
+#: C/shortcuts.page:50
 msgid "Default shortcuts"
 msgstr "Atalhos padrão"
 
 #. (itstool) path: section/title
-#: C/shortcuts.page:47
+#: C/shortcuts.page:52
 msgid "Opening, closing, saving and printing"
 msgstr "Abrindo, fechando, salvando e imprimindo"
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:50
+#: C/shortcuts.page:55
 msgid "Open a document."
 msgstr "Abrir um documento."
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:51
+#: C/shortcuts.page:56
 msgid "<keyseq><key>Ctrl</key><key>O</key></keyseq>"
 msgstr "<keyseq><key>Ctrl</key><key>O</key></keyseq>"
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:54
+#: C/shortcuts.page:59
 msgid "Open a copy of the current document."
 msgstr "Abrir uma cópia do documento atual."
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:55
+#: C/shortcuts.page:60
 msgid "<keyseq><key>Ctrl</key><key>N</key></keyseq>"
 msgstr "<keyseq><key>Ctrl</key><key>N</key></keyseq>"
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:58
+#: C/shortcuts.page:63
 msgid "Save a copy of the current document with a new file name."
 msgstr "Salvar uma cópia do documento atual com um novo nome de arquivo."
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:60
+#: C/shortcuts.page:65
 msgid "<keyseq><key>Ctrl</key><key>S</key></keyseq>"
 msgstr "<keyseq><key>Ctrl</key><key>S</key></keyseq>"
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:63
+#: C/shortcuts.page:68
 msgid "Print the current document."
 msgstr "Imprimir o documento atual."
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:64
+#: C/shortcuts.page:69
 msgid "<keyseq><key>Ctrl</key><key>P</key></keyseq>"
 msgstr "<keyseq><key>Ctrl</key><key>P</key></keyseq>"
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:67
+#: C/shortcuts.page:72
 msgid "Close the current document window."
 msgstr "Fechar a janela do documento atual."
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:68
+#: C/shortcuts.page:73
 msgid "<keyseq><key>Ctrl</key><key>W</key></keyseq>"
 msgstr "<keyseq><key>Ctrl</key><key>W</key></keyseq>"
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:71
+#: C/shortcuts.page:76
 msgid "Reload the document (effectively closes and re-opens the document)."
 msgstr "Atualiza o documento (efetivamente fecha e reabre o documento)."
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:73
+#: C/shortcuts.page:78
 msgid "<keyseq><key>Ctrl</key><key>R</key></keyseq>"
 msgstr "<keyseq><key>Ctrl</key><key>R</key></keyseq>"
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:82
+#: C/shortcuts.page:87
 msgid "Move up/down a page."
 msgstr "Move a página acima/abaixo."
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:83
+#: C/shortcuts.page:88
 msgid "Arrow keys"
 msgstr "Setas do teclado"
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:86
+#: C/shortcuts.page:91
 msgid "Move up/down a page several lines at a time."
 msgstr "Move várias linhas da página acima/abaixo."
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:87
+#: C/shortcuts.page:92
 msgid "<key>Page Up</key> / <key>Page Down</key>"
 msgstr "<key>Page Up</key> / <key>Page Down</key>"
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:90
-msgid "Go to the previous/next page."
-msgstr "Vai para a página anterior/próxima página."
-
-#. (itstool) path: td/p
-#: C/shortcuts.page:91
-msgid ""
-"<keyseq><key>Ctrl</key><key>Page Up</key></keyseq> / <keyseq><key>Ctrl</"
-"key><key>Page Down</key></keyseq>"
-msgstr ""
-"<keyseq><key>Ctrl</key><key>Page Up</key></keyseq> / <keyseq><key>Ctrl</"
-"key><key>Page Down</key></keyseq>"
-
-#. (itstool) path: td/p
 #: C/shortcuts.page:95
+msgid "Go to the previous page."
+msgstr "Vai para a página anterior página."
+
+#. (itstool) path: td/p
+#: C/shortcuts.page:96
+msgid "<keyseq><key>Ctrl</key><key>Page Up</key></keyseq> / <key>P</key>"
+msgstr "<keyseq><key>Ctrl</key><key>Page Up</key></keyseq> / <key>P</key>"
+
+#. (itstool) path: td/p
+#: C/shortcuts.page:100
+msgid "Go to the next page."
+msgstr "Vai para a próxima página."
+
+#. (itstool) path: td/p
+#: C/shortcuts.page:101
+msgid "<keyseq><key>Ctrl</key><key>Page Down</key></keyseq> / <key>N</key>"
+msgstr "<keyseq><key>Ctrl</key><key>Page Down</key></keyseq> / <key>N</key>"
+
+#. (itstool) path: td/p
+#: C/shortcuts.page:105
 msgid "Go to page number."
 msgstr "Vai para um número de página."
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:96
+#: C/shortcuts.page:106
 msgid ""
 "<keyseq><key>Ctrl</key><key>L</key></keyseq> followed by the page number and "
 "<key>Enter</key>"
@@ -3788,7 +3801,7 @@ msgstr ""
 "<key>Enter</key>"
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:99
+#: C/shortcuts.page:109
 msgid ""
 "Go to the beginning of a page (beginning of the document if "
 "<guiseq><gui>View</gui> <gui>Continuous</gui></guiseq> is selected)."
@@ -3797,12 +3810,12 @@ msgstr ""
 "gui> do menu de <gui>Opções de visualização</gui> está marcada)."
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:102
+#: C/shortcuts.page:112
 msgid "<key>Home</key>"
 msgstr "<key>Home</key>"
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:105
+#: C/shortcuts.page:115
 msgid ""
 "Go to the end of a page (end of the document if <guiseq><gui>View</"
 "gui><gui>Continuous</gui></guiseq> is selected)."
@@ -3811,150 +3824,323 @@ msgstr ""
 "gui> do menu de <gui>Opções de visualização</gui> está marcada)."
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:107
+#: C/shortcuts.page:117
 msgid "<key>End</key>"
 msgstr "<key>End</key>"
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:110
+#: C/shortcuts.page:120
 msgid "Go to the beginning of the document."
 msgstr "Vai para o início do documento."
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:111
+#: C/shortcuts.page:121
 msgid "<keyseq><key>Ctrl</key><key>Home</key></keyseq>"
 msgstr "<keyseq><key>Ctrl</key><key>Home</key></keyseq>"
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:114
+#: C/shortcuts.page:124
 msgid "Go to the end of the document."
 msgstr "Vai para o final do documento."
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:115
+#: C/shortcuts.page:125
 msgid "<keyseq><key>Ctrl</key><key>End</key></keyseq>"
 msgstr "<keyseq><key>Ctrl</key><key>End</key></keyseq>"
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:118
-msgid "Display the side bar with a table of contents."
-msgstr "Exibi a barra lateral com uma tabela de conteúdo."
+#: C/shortcuts.page:128
+msgid "Add a bookmark in the current page."
+msgstr "Adiciona um marcador na página atual."
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:119
+#: C/shortcuts.page:129
+msgid "<keyseq><key>Ctrl</key><key>D</key></keyseq>"
+msgstr "<keyseq><key>Ctrl</key><key>D</key></keyseq>"
+
+#. (itstool) path: td/p
+#: C/shortcuts.page:132
+msgid "Delete the bookmark in the current page if there is one."
+msgstr "Exclui o marcador na página atual se houver."
+
+#. (itstool) path: td/p
+#: C/shortcuts.page:133
+msgid "<keyseq><key>Shift</key><key>Ctrl</key><key>D</key></keyseq>"
+msgstr "<keyseq><key>Shift</key><key>Ctrl</key><key>D</key></keyseq>"
+
+#. (itstool) path: td/p
+#: C/shortcuts.page:136
+msgid "Display the side bar with a table of contents and bookmarks."
+msgstr "Exibi a barra lateral com uma tabela de conteúdo e marcadores."
+
+#. (itstool) path: td/p
+#: C/shortcuts.page:137
 msgid "<key>F9</key>"
 msgstr "<key>F9</key>"
 
+#. (itstool) path: td/p
+#: C/shortcuts.page:140
+msgid ""
+"Enable caret navigation placing a moveable cursor in text pages, allowing "
+"you to move around and select text with the keyboard."
+msgstr ""
+"Habilita a navegação de cursor colocando um cursor movível nas páginas "
+"texto, permitindo que você mova e selecione um texto com o teclado."
+
+#. (itstool) path: td/p
+#: C/shortcuts.page:141
+msgid "<key>F7</key>"
+msgstr "<key>F7</key>"
+
 #. (itstool) path: section/title
-#: C/shortcuts.page:124
+#: C/shortcuts.page:147
 msgid "Selecting and copying text"
 msgstr "Selecionando e copiando texto"
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:127
+#: C/shortcuts.page:150
 msgid "Copy highlighted text."
 msgstr "Copiar o texto selecionado."
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:128
-msgid "<keyseq><key>Ctrl</key><key>C</key></keyseq>"
-msgstr "<keyseq><key>Ctrl</key><key>C</key></keyseq>"
+#: C/shortcuts.page:151
+msgid ""
+"<keyseq><key>Ctrl</key><key>C</key></keyseq> / <keyseq><key>Ctrl</"
+"key><key>Insert</key></keyseq>"
+msgstr ""
+"<keyseq><key>Ctrl</key><key>C</key></keyseq> / "
+"<keyseq><key>Ctrl</key><key>Insert</key></keyseq>"
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:131
+#: C/shortcuts.page:154
 msgid "Select all the text in a document."
 msgstr "Seleciona todo o texto do documento."
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:132
+#: C/shortcuts.page:155
 msgid "<keyseq><key>Ctrl</key><key>A</key></keyseq>"
 msgstr "<keyseq><key>Ctrl</key><key>A</key></keyseq>"
 
 #. (itstool) path: section/title
-#: C/shortcuts.page:138
+#: C/shortcuts.page:161
 msgid "Finding text"
 msgstr "Localizando texto"
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:141
+#: C/shortcuts.page:164
 msgid ""
 "Show the toolbar that lets you search for words in the document. The search "
 "box is automatically highlighted when you press this, and the search will "
-"start as soon as you type some text."
+"start as soon as you type some text. If you select a text in the document "
+"before searching, then the search will start using that text as input."
 msgstr ""
 "Mostra a barra de ferramentas de pesquisa. A caixa de pesquisa é "
 "automaticamente selecionada quando você pressiona o atalho, e a busca começa "
-"assim que você digitar algum texto."
+"assim que você digitar algum texto. Se você selecionar um texto no documento "
+"antes de pesquisar, a pesquisa vai iniciar usando aquele texto como entrada."
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:146
-msgid "<keyseq><key>Ctrl</key><key>F</key></keyseq>"
-msgstr "<keyseq><key>Ctrl</key><key>F</key></keyseq>"
+#: C/shortcuts.page:171
+msgid "<keyseq><key>Ctrl</key><key>F</key></keyseq> / <key>/</key>"
+msgstr "<keyseq><key>Ctrl</key><key>F</key></keyseq> / <key>/</key>"
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:149
+#: C/shortcuts.page:174
 msgid "Go to the next search result."
 msgstr "Vai para a próximo resultado da busca."
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:150
-msgid "<keyseq><key>Ctrl</key><key>G</key></keyseq>"
-msgstr "<keyseq><key>Ctrl</key><key>G</key></keyseq>"
+#: C/shortcuts.page:175
+msgid "<keyseq><key>Ctrl</key><key>G</key></keyseq> / <key>F3</key>"
+msgstr "<keyseq><key>Ctrl</key><key>G</key></keyseq> / <key>F3</key>"
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:153
+#: C/shortcuts.page:178
 msgid "Go to the previous search result."
 msgstr "Vai para o resultado anterior da busca."
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:154
-msgid "<keyseq><key>Ctrl</key><key>Shift</key><key>G</key></keyseq>"
-msgstr "<keyseq><key>Ctrl</key><key>Shift</key><key>G</key></keyseq>"
+#: C/shortcuts.page:179
+msgid ""
+"<keyseq><key>Ctrl</key><key>Shift</key><key>G</key></keyseq> / "
+"<keyseq><key>Shift</key><key>F3</key></keyseq>"
+msgstr ""
+"<keyseq><key>Ctrl</key><key>Shift</key><key>G</key></keyseq> / "
+"<keyseq><key>Shift</key><key>F3</key></keyseq>"
 
 #. (itstool) path: section/title
-#: C/shortcuts.page:160
+#: C/shortcuts.page:185
 msgid "Rotating and zooming"
 msgstr "Rotacionando as páginas e ajustando o zoom"
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:163
+#: C/shortcuts.page:188
 msgid "Rotate the pages 90 degrees counter-clockwise."
 msgstr "Gira as páginas 90 graus no sentido anti-horário."
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:164
+#: C/shortcuts.page:189
 msgid "<keyseq><key>Ctrl</key><key>Left arrow</key></keyseq>"
 msgstr "<keyseq><key>Ctrl</key><key>Left arrow</key></keyseq>"
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:167
+#: C/shortcuts.page:192
 msgid "Rotate the pages 90 degrees clockwise."
 msgstr "Gira as páginas 90 graus no sentido horário."
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:168
+#: C/shortcuts.page:193
 msgid "<keyseq><key>Ctrl</key><key>Right arrow</key></keyseq>"
 msgstr "<keyseq><key>Ctrl</key><key>Right arrow</key></keyseq>"
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:172
+#: C/shortcuts.page:197
+msgid "Default zoom."
+msgstr "Ampliação padrão."
+
+#. (itstool) path: td/p
+#: C/shortcuts.page:198
+msgid "<keyseq><key>Ctrl</key><key>0</key></keyseq>"
+msgstr "<keyseq><key>Ctrl</key><key>0</key></keyseq>"
+
+#. (itstool) path: td/p
+#: C/shortcuts.page:201
 msgid "Zoom in."
 msgstr "Aumenta o zoom."
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:173
-msgid "<keyseq><key>Ctrl</key><key>+</key></keyseq>"
-msgstr "<keyseq><key>Ctrl</key><key>+</key></keyseq>"
+#: C/shortcuts.page:202
+msgid ""
+"<keyseq><key>Ctrl</key><key>+</key></keyseq> / <key>=</key> / "
+"<keyseq><key>Ctrl</key><key>=</key></keyseq>"
+msgstr ""
+"<keyseq><key>Ctrl</key><key>+</key></keyseq> / <key>=</key> / "
+"<keyseq><key>Ctrl</key><key>=</key></keyseq>"
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:176
+#: C/shortcuts.page:206
 msgid "Zoom out."
 msgstr "Reduz o zoom."
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:177
+#: C/shortcuts.page:207
 msgid "<keyseq><key>Ctrl</key><key>-</key></keyseq>"
 msgstr "<keyseq><key>Ctrl</key><key>-</key></keyseq>"
+
+#. (itstool) path: td/p
+#: C/shortcuts.page:210
+msgid "Fit the page into the window."
+msgstr "Ajusta a página inteira à janela."
+
+#. (itstool) path: td/p
+#: C/shortcuts.page:211
+msgid "<key>F</key>"
+msgstr "<key>F</key>"
+
+#. (itstool) path: td/p
+#: C/shortcuts.page:214
+msgid "Fit the content width to the space available."
+msgstr "Ajusta a largura do conteúdo ao espaço disponível."
+
+#. (itstool) path: td/p
+#: C/shortcuts.page:215
+msgid "<key>W</key>"
+msgstr "<key>W</key>"
+
+#. (itstool) path: td/p
+#: C/shortcuts.page:218
+msgid "Automatic zoom."
+msgstr "Ampliação automática."
+
+#. (itstool) path: td/p
+#: C/shortcuts.page:219
+msgid "<key>A</key>"
+msgstr "<key>A</key>"
+
+#. (itstool) path: section/title
+#: C/shortcuts.page:225
+msgid "Window"
+msgstr "Janela"
+
+#. (itstool) path: td/p
+#: C/shortcuts.page:228
+msgid "Use the full screen to view the document."
+msgstr "Usa toda a tela para exibir o documento."
+
+#. (itstool) path: td/p
+#: C/shortcuts.page:229
+msgid "<key>F11</key>"
+msgstr "<key>F11</key>"
+
+#. (itstool) path: td/p
+#: C/shortcuts.page:232
+msgid "Start a presentation."
+msgstr "Inicia uma apresentação."
+
+#. (itstool) path: td/p
+#: C/shortcuts.page:233
+msgid "<key>F5</key> / <keyseq><key>Shift</key><key>F5</key></keyseq>"
+msgstr "<key>F5</key> / <keyseq><key>Shift</key><key>F5</key></keyseq>"
+
+#. (itstool) path: section/title
+#: C/shortcuts.page:239
+msgid "Document view"
+msgstr "Visualização de documento"
+
+#. (itstool) path: td/p
+#: C/shortcuts.page:242
+msgid "Invert background and text colors."
+msgstr "Inverte as cores do plano de fundo e do texto."
+
+#. (itstool) path: td/p
+#: C/shortcuts.page:243
+msgid "<keyseq><key>Ctrl</key><key>I</key></keyseq>"
+msgstr "<keyseq><key>Ctrl</key><key>I</key></keyseq>"
+
+#. (itstool) path: td/p
+#: C/shortcuts.page:246
+msgid "Swap between continuous and page by page view of the document."
+msgstr "Troca entre visão do documento contínua e página por página."
+
+#. (itstool) path: td/p
+#: C/shortcuts.page:247
+msgid "<key>C</key>"
+msgstr "<key>C</key>"
+
+#. (itstool) path: td/p
+#: C/shortcuts.page:250
+msgid "Display two pages side by side."
+msgstr "Exibe duas páginas lado a lado."
+
+#. (itstool) path: td/p
+#: C/shortcuts.page:251
+msgid "<key>D</key>"
+msgstr "<key>D</key>"
+
+#. (itstool) path: section/title
+#: C/shortcuts.page:257
+msgid "Annotate the document"
+msgstr "Anota o documento"
+
+#. (itstool) path: td/p
+#: C/shortcuts.page:260
+msgid "Add a post-it like note."
+msgstr "Adiciona um post-it como nota."
+
+#. (itstool) path: td/p
+#: C/shortcuts.page:261
+msgid "<key>S</key>"
+msgstr "<key>S</key>"
+
+#. (itstool) path: td/p
+#: C/shortcuts.page:264
+msgid "Highlight text."
+msgstr "Destaca o texto."
+
+#. (itstool) path: td/p
+#: C/shortcuts.page:265
+msgid "<keyseq><key>Ctrl</key><key>H</key></keyseq>"
+msgstr "<keyseq><key>Ctrl</key><key>H</key></keyseq>"
 
 #. (itstool) path: info/desc
 #: C/singlesided-13-16pages.page:8
@@ -4082,7 +4268,7 @@ msgstr ""
 #: C/singlesided-5-8pages.page:7
 msgctxt "sort"
 msgid "05-Page or 4-Page Booklet"
-msgstr "Livreto de 04 ou 5 páginas"
+msgstr "Livreto de 4 ou 5 páginas"
 
 #. (itstool) path: info/desc
 #: C/singlesided-5-8pages.page:8
@@ -4358,7 +4544,8 @@ msgstr ""
 "\n"
 "let g:Tex_ViewRule_pdf = 'evince_dbus.py'\n"
 "let g:Tex_DefaultTargetFormat = 'pdf'\n"
-"let g:Tex_CompileRule_pdf = 'pdflatex --synctex=1 -interaction=nonstopmode $*'\n"
+"let g:Tex_CompileRule_pdf = 'pdflatex --synctex=1 -interaction=nonstopmode "
+"$*'\n"
 
 #. (itstool) path: item/p
 #: C/synctex-editors.page:52
@@ -4522,11 +4709,6 @@ msgstr ""
 msgid "How to add support for SyncTeX."
 msgstr "Como adicionar suporte ao SyncTeX."
 
-#. (itstool) path: credit/name
-#: C/synctex-support.page:16
-msgid "Germán Poo-Caamaño"
-msgstr "Germán Poo-Caamaño"
-
 #. (itstool) path: page/title
 #: C/synctex-support.page:25
 msgid "Set-up SyncTeX"
@@ -4542,16 +4724,16 @@ msgstr ""
 
 #. (itstool) path: item/p
 #: C/synctex-support.page:31
-msgid "A LaTeX engine with SyncTex support, such as <app>pdflatex</app>."
-msgstr "Um mecanismo LaTeX com suporte a SyncTex, tal como <app>pdflatx</app>."
+msgid "A LaTeX engine with SyncTeX support, such as <app>pdflatex</app>."
+msgstr "Um mecanismo LaTeX com suporte a SyncTeX, tal como <app>pdflatx</app>."
 
 #. (itstool) path: item/p
 #: C/synctex-support.page:36
 msgid ""
-"A text editor with SynxTeX support, such as <app>gedit</app> with gedit-"
+"A text editor with SyncTeX support, such as <app>gedit</app> with gedit-"
 "plugins installed."
 msgstr ""
-"Um editor de texto com suporte a SynxTeX, tal como <app>gedit</app> com "
+"Um editor de texto com suporte a SyncTeX, tal como <app>gedit</app> com "
 "gedit-plugins instalado."
 
 #. (itstool) path: page/p
@@ -4761,6 +4943,21 @@ msgstr ""
 "Internacionalização usando sua <link href=\"http://mail.gnome.org/mailman/"
 "listinfo/gnome-i18n\">lista de e-mails</link>."
 
+#~ msgid ""
+#~ "To file your bug, choose the component in the <gui>Component</gui> menu. "
+#~ "If you are not sure which component your bug pertains to, choose "
+#~ "<gui>general</gui>."
+#~ msgstr ""
+#~ "Para registrar o seu erro, escolha o componente no menu <gui>Component</"
+#~ "gui>. Se você não tem certeza a qual componente o erro pertence, escolha "
+#~ "<gui>general</gui>."
+
+#~ msgid "<keyseq><key>Ctrl</key><key>C</key></keyseq>"
+#~ msgstr "<keyseq><key>Ctrl</key><key>C</key></keyseq>"
+
+#~ msgid "<keyseq><key>Ctrl</key><key>+</key></keyseq>"
+#~ msgstr "<keyseq><key>Ctrl</key><key>+</key></keyseq>"
+
 #~ msgid "texlive-extra-utils"
 #~ msgstr "texlive-extra-utils"
 
@@ -4804,14 +5001,6 @@ msgstr ""
 #~ msgstr ""
 #~ "external ref='figures/annotations-navigate.png' "
 #~ "md5='199ce081dd42ec9bc4d04d317f3cf380'"
-
-#~ msgctxt "_"
-#~ msgid ""
-#~ "external ref='figures/list-add-tabs.png' "
-#~ "md5='1bbd81be2223f1b8434dcf746670f5d7'"
-#~ msgstr ""
-#~ "external ref='figures/list-add-tabs.png' "
-#~ "md5='d1b0467371603a4b3a3029582cd7a4d8'"
 
 #~ msgid "Select the <gui>Add</gui> tab."
 #~ msgstr "Selecione a aba <gui>Adicionar</gui>."
@@ -5179,9 +5368,6 @@ msgstr ""
 
 #~ msgid "Action"
 #~ msgstr "Ação"
-
-#~ msgid "Window"
-#~ msgstr "Janela"
 
 #~ msgid ""
 #~ "Drag a file into the <application>Evince Document Viewer</application> "
@@ -5788,9 +5974,6 @@ msgstr ""
 
 #~ msgid "End"
 #~ msgstr "End"
-
-#~ msgid "Go to the last page"
-#~ msgstr "Vai para a última página"
 
 #~ msgid "L"
 #~ msgstr "L"
