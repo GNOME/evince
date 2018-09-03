@@ -263,10 +263,15 @@ static gint
 compare_link (EvLink *a,
               EvLink *b)
 {
+        EvLinkAction *aa, *bb;
+
         if (a == b)
                 return 0;
 
-        return ev_link_action_equal (ev_link_get_action (a), ev_link_get_action (b)) ? 0 : 1;
+        aa = ev_link_get_action (a);
+        bb = ev_link_get_action (b);
+
+        return (aa && bb && ev_link_action_equal (aa, bb)) ? 0 : 1;
 }
 
 /*
