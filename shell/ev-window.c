@@ -885,6 +885,7 @@ find_link_cb (GtkTreeModel  *tree_model,
 	      LinkTitleData *data)
 {
 	EvLink *link;
+	EvLinkAction *a, *b;
 	gboolean retval = FALSE;
 
 	gtk_tree_model_get (tree_model, iter,
@@ -893,7 +894,9 @@ find_link_cb (GtkTreeModel  *tree_model,
 	if (!link)
 		return retval;
 
-	if (ev_link_action_equal (ev_link_get_action (data->link), ev_link_get_action (link))) {
+	a = ev_link_get_action (data->link);
+	b = ev_link_get_action (link);
+	if (a && b && ev_link_action_equal (a, b)) {
 		data->link_title = ev_link_get_title (link);
 		retval = TRUE;
 	}
