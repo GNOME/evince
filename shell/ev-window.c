@@ -979,7 +979,7 @@ bookmark_activated_cb (EvSidebarBookmarks *sidebar_bookmarks,
 		       gint                page,
 		       EvWindow           *window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 	ev_history_add_page (priv->history, old_page);
 	ev_history_add_page (priv->history, page);
 }
@@ -990,7 +990,7 @@ scroll_history_cb (EvView        *view,
 		   gboolean       horizontal,
 		   EvWindow      *window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 	if (!priv->document)
 		return;
 
@@ -1020,7 +1020,7 @@ scroll_child_history_cb (GtkScrolledWindow *scrolled_window,
 			 gboolean           horizontal,
 			 EvWindow          *window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 	if (!priv->document)
 		return;
 
