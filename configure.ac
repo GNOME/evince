@@ -510,7 +510,7 @@ AC_ARG_ENABLE([browser-plugin],
   [AS_HELP_STRING([--disable-browser-plugin],
                   [Disable the Browser Plugin])],
   [],
-  [enable_browser_plugin=yes])
+  [enable_browser_plugin=no])
 
 if test x$enable_browser_plugin = "xyes" ; then
   PKG_CHECK_MODULES([BROWSER_PLUGIN],[gtk+-3.0 >= $GTK_REQUIRED gthread-2.0 gio-2.0 >= $GLIB_REQUIRED])
