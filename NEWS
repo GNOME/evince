@@ -1,3 +1,169 @@
+================
+Evince    3.30.0
+================
+
+Highlights:
+
+For this releases we focused on making the user experience simpler:
+we unified the menues, removed redundancies. made explicit actions,
+enabled shortcuts for most of the features available, and documented
+them to avoid easter eggs. In this release, we also include snap and
+flatpack packages, to make testing and contribute Evince simpler.
+There will be more user interface changes in the next release, but those
+should be minimal in comparison with this one.
+
+Bugfixes:
+
+  * Disable PostScript backend by default (#967, Germán Poo-Caamaño)
+  * Disable build of broswer-plugin by default (#968, Germán Poo-Caamaño)
+  * Use synctex system library if available (#479, Germán Poo-Caamaño)
+  * Correctly process rectangles whose points are not in the right order (#736688, José Aliste)
+  * Expand sentence to facilitate localization (#295, Germán Poo-Caamaño)
+  * Add support for PDF/X and additional xmp metadata (#93, Evangelos Rigas)
+  * Add support for xmp metadata outside x:xmpmeta element (#771, Evangelos Rigas)
+  * escape html entities in pango markup (#776, Nelson Benítez León)
+  * Add instructions on how to update LZMA SDK (#794327, Bastien Nocera)
+  * Update LZMA SDK (#794327, Bastien Nocera)
+  * Make metadata dual licensed (#775, Germán Poo-Caamaño)
+  * Do not add more license unconditionally (#780, Germán Poo-Caamaño)
+  * Annotate functions that wrap vfprintf (#562, Germán Poo-Caamaño)
+  * Update from version 1.18 to 1.21 (#878, Germán Poo-Caamaño)
+  * Reword to not depend on a TeXlive package name (#461, Germán Poo-Caamaño)
+  * document shortcuts to navigate the history (#858, Germán Poo-Caamaño)
+  * libdocument: Add missing indices (Christian Persch)
+  * libview: Add missing indices and functions (Christian Persch)
+  * Add API to get the selected text (#794538, Will Hawkins)
+  * Add inline spell check for annotations (#772622, Will Hawkins)
+  * Document is-loading property (#693864, Germán Poo-Caamaño)
+  * Make sync-source signal introspectable (#694687, Hannes Ovrén)
+  * Reset `pressed_button` when starting Drag and Drop (#754, Jason Crain)
+  * Set minimum for Page Forward/Backward scrolling (#692, Jason Crain)
+  * fix transformation functions to document coordinates. (#914, Juan Pablo Ugarte)
+  * avoid getting pointer position from vertical scroll callback (#793401, Cosimo Cecchi)
+  * do scroll only on one axis at a time. (#866, Nelson Benítez León)
+  * ignore unintended motion events while launching synctex (#951, Nelson Benítez León)
+  * Emit "updated" signal at end of search (#917, Jason Crain)
+  * Enable popover menu in EvPageActionWidget (#564, Germán Poo-Caamaño)
+  * Let the buttons in search bar get focus (#216, Germán Poo-Caamaño)
+  * Addshortcut to add text annotation (#635, #758329, Felipe Borges)
+  * Add 'toggle continuous' shortcut to help overlay (#820, Oisín)
+  * Add shortcut to add highlight annotations (#635, #758329, Felipe Borges)
+  * Add missed shortcut keys in help overlay (#786, #890, Yi-Soo An)
+  * Add separator for annotation items in menu (#752, Camille Moulin)
+  * Add shortcut for default zoom (1:1) (#19, Germán Poo-Caamaño)
+  * Add shortcut to delete bookmarks (#478, Germán Poo-Caamaño)
+  * Change icon for menus in buttons (#941, Germán Poo-Caamaño)
+  * Change to a more representative icon for annotations (#928, Germán Poo-Caamaño)
+  * Disconnect bookmarks signal on toolbar dispose (#920, Jason Crain)
+  * Do not expose spellchecking option in the UI (#922, Germán Poo-Caamaño)
+  * Fix DnD support for attachments (#683316, Germán Poo-Caamaño)
+  * Fix crash in ev_media_player_keys_grab_keys (#1359507, #795978, Marek Kasik)
+  * Fix gresource location in recent view (#670, Germán Poo-Caamaño)
+  * Fix regression on Ctrl+PageUp/PageDown shortcuts (#699, Germán Poo-Caamaño)
+  * Fix regression on F3 shortcut (#595, Germán Poo-Caamaño)
+  * Make the space between buttons consistent (#929, Germán Poo-Caamaño)
+  * Make the title RTL compliant (#486, Germán Poo-Caamaño)
+  * Menu reorganization (#475, Germán Poo-Caamaño)
+  * Move 'Open...' file from document to application (#514, #524, Germán Poo-Caamaño)
+  * Only propagate key press with control on presentation (#821, Jonas Hahnfeld)
+  * Remove duplicate and conflictive mnemonics (#770, #938, Germán Poo-Caamaño)
+  * Set application-id (#646985, #918, Marek Kasik)
+  * Set the path to filename as a tooltip in the headerbar (#214, Germán Poo-Caamaño)
+  * Show description of attachments in sidebar (#166, Fernando Herrera)
+  * Use "user-bookmarks" instead of "bookmark-new" (#947, Felipe Borges)
+  * Use display and edit name for filename (#756354, Jason Crain)
+  * Use ev_window_set_action_enabled more (#794749, José Aliste)
+  * Use selection to populate find bar if available. (#794538, José Aliste)
+  * Use text instead of icons in annotations toolbar (#928, Germán Poo-Caamaño)
+  * Use textual Open button instead of icon (#518, Germán Poo-Caamaño)
+  * Use unicode to specify rotation direction in menu (#605, Germán Poo-Caamaño)
+  * there is no need for view_menu_text_selection_popup (#763943, José Aliste)
+  * Fix width of dialog on long file names (#797, Germán Poo-Caamaño)
+  * Remove zoom-in/out icons from menu (#947, Germán Poo-Caamaño)
+  * Store priv->popup as a GtkPopover* (#881, Daniel Boles)
+  * Use Popover.popup() to get animation (#881, Daniel Boles)
+  * Set right alignment for zoom percentage (#947, Germán Poo-Caamaño)
+  * Separate Open and Save actions in their own menu groups (#947, Germán Poo-Caamaño)
+  * Use a new icon for the outline in the side bar (#947, Germán Poo-Caamaño)
+  * Show toolbar on select page activation in fullscreen (#784, Germán Poo-Caamaño)
+  * Use Recent View toolbar when cannot open a document (#936, Germán Poo-Caamaño)
+  * Provide hint when find is unavailable (#105, Germán Poo-Caamaño)
+  * update app icon (#2, Jakub Steiner)
+  * install symbolics properly (#961, Jakub Steiner)
+  * Rearrange tools and navigation/view controls (#947, Germán Poo-Caamaño)
+  * Allow adding Highlight annotations from text selection (#763943, Nelson Benítez León)
+  * add text markup annotation from selection (#663, Nelson Benítez León)
+  * Fix add_annotation() to update area based on bounding box (#763943, Nelson Benítez León)
+  * Make annotation title independent of theme (#664, Germán Poo-Caamaño)
+  * Add shortcuts for fullscreen and presentation mode (#786431, Jonas Hahnfeld)
+  * Switch the default sizing mode to automatic (#482, #733632, Juanjo Marin)
+  * Use Unicode quotation marks in new translatable strings (#774005, Piotr Drąg)
+  * Use a custom icon in the toolbar to view the sidebar (#947, Germán Poo-Caamaño)
+  * Save attachments in a temporary directory (#711, #772188, Felipe Borges)
+  * Beautify the bookmarks buttons (#947, Germán Poo-Caamaño)
+  * Expand the sidebar switcher to fill the space (#947, Germán Poo-Caamaño)
+  * Port to GtkStack (#475, Germán Poo-Caamaño)
+  * Put the sidebar switcher on the bottom (#947, Germán Poo-Caamaño)
+  * Add context menu for sidebar annotations (#795631, #891, Nelson Benítez León)
+  * fix sensitiveness of remove bookmark button (#892, Nelson Benítez León)
+  * Update addons for renamed .desktop (#962, Jeremy Bicha)
+  * Use dual license for addons too (#775, #962, Jeremy Bicha)
+  * Use provides to link to previous ID (#962, Jeremy Bicha)
+  * Add dependency on OpenJPEG (#939, Jason Crain)
+  * Add snap packaging (#790393, #856, Ken VanDine)
+
+Contributors:
+
+  Allan Day, Andre Klapper, Bastien Nocera, Camille Moulin,
+  Christian Persch, Cosimo Cecchi, Daniel Boles, Evangelos Rigas,
+  Felipe Borges, Fernando Herrera, Germán Poo-Caamaño, Hannes Ovrén,
+  Hans Ulrich Niedermann, Jakub Steiner, Jason Crain, Jeremy Bicha,
+  Jonas Hahnfeld, José Aliste, Juan Pablo Ugarte, Juanjo Marin,
+  Ken VanDine, Marek Kasik, Mirek Kratochvil, Nelson Benítez León,
+  Nick Richards, Oisín, Piotr Drąg, Will Hawkins, Yi-Soo An.
+
+Translations:
+
+  * Rafael Fontenelle (Brazilian Portuguese)
+  * Ricardo Silva Veloso (Brazilian Portuguese)
+  * Bruce Cowan (British English)
+  * Jordi Mas (Catalan)
+  * Mingcong Bai (Chinese (China))
+  * Yi-Jyun Pan (Chinese (Taiwan))
+  * gogo (Croatian)
+  * Marek Cernocky (Czech)
+  * Marek Černocký (Czech)
+  * Ask Hjorth Larsen (Danish)
+  * Justin van Steijn (Dutch)
+  * Jiri Grönroos (Finnish)
+  * Charles Monzat (French)
+  * Guillaume Bernard (French)
+  * Fabio Tomat (Friulian)
+  * Fran Dieguez (Galician)
+  * Marcos Lans (Galician)
+  * Christian Kirbach (German)
+  * Mario Blättermann (German)
+  * Tim Sabsch (German)
+  * Efstathios Iosifidis (Greek)
+  * Balázs Meskó (Hungarian)
+  * Balázs Úr (Hungarian)
+  * Sveinn í Felli (Icelandic)
+  * Kukuh Syafaat (Indonesian)
+  * Gianvito Cavasoli (Italian)
+  * Baurzhan Muftakhidinov (Kazakh)
+  * Seong-ho Cho (Korean)
+  * Rūdolfs Mazurs (Latvian)
+  * Aurimas Černius (Lithuanian)
+  * Piotr Drąg (Polish)
+  * Daniel Șerbănescu (Romanian)
+  * Stas Solovey (Russian)
+  * Милош Поповић (Serbian Latin)
+  * Matej Urbančič (Slovenian)
+  * Daniel Mustieles (Spanish)
+  * Anders Jonsson (Swedish)
+  * Emin Tufan Çetin (Turkish)
+  * Trần Ngọc Quân (Vietnamese)
+
 =================
 Evince    3.29.92
 =================
