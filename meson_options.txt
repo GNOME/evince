@@ -1,0 +1,29 @@
+option('platform', type: 'combo', choices: ['gnome', 'win32'], value: 'gnome', description: 'for which platform to build')
+
+option('viewer', type: 'boolean', value: true, description: 'whether Viewer support is requested')
+option('previewer', type: 'boolean', value: true, description: 'whether Previewer support is requested')
+option('thumbnailer', type: 'boolean', value: true, description: 'whether Thumbnailer support is requested')
+option('browser_plugin', type: 'boolean', value: false, description: 'whether Browser Plugin support is requested')
+option('nautilus', type: 'boolean', value: true, description: 'whether Nautilus support is requested')
+
+option('comics', type: 'feature', value: 'auto', description: 'whether Comics support is requested')
+option('djvu', type: 'feature', value: 'auto', description: 'whether DJVU support is requested')
+option('dvi', type: 'feature', value: 'auto', description: 'whether DVI support is requested')
+option('pdf', type: 'feature', value: 'auto', description: 'whether PDF support is requested')
+option('ps', type: 'feature', value: 'disabled', description: 'whether PS support is requested')
+option('tiff', type: 'feature', value: 'auto', description: 'whether TIFF support is requested')
+option('xps', type: 'feature', value: 'auto', description: 'whether XPS support is requested')
+
+option('gtk_doc', type: 'boolean', value: true, description: 'whether GTK Doc reference is requested')
+option('introspection', type: 'boolean', value: true, description: 'whether introspection support is requested')
+option('dbus', type: 'boolean', value: true, description: 'whether DBUS support is requested')
+option('keyring', type: 'feature', value: 'auto', description: 'whether keyring support is requested')
+option('gtk_unix_print', type: 'feature', value: 'auto', description: 'whether gtk+-unix-print support is requested')
+option('thumbnail_cache', type: 'feature', value: 'auto', description: 'whether GNOME Desktop (Thumbnail cache) is requested')
+option('multimedia', type: 'feature', value: 'auto', description: 'whether multimedia support is requested')
+option('gspell', type: 'feature', value: 'auto', description: 'whether gpsell support is requested')
+
+option('t1lib', type: 'feature', value: 'auto', description: 'whether support of t1lib for type1 fonts in dvi is requested')
+
+option('browser_plugin_dir', type: 'string', value: 'mozilla/plugins', description: 'custom directory for browser plugin')
+option('systemduserunitdir', type: 'string', value: '', description: 'custom directory for systemd user units, or \'no\' to disable')
