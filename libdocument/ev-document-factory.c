@@ -58,7 +58,7 @@ get_backend_info_for_mime_type (const gchar *mime_type)
                 guint i;
 
                 for (i = 0; mime_types[i] != NULL; ++i) {
-                        if (g_ascii_strcasecmp (mime_type, mime_types[i]) == 0)
+                        if (g_content_type_is_mime_type (mime_type, mime_types[i]))
                                 return info;
                 }
         }
