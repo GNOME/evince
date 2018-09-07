@@ -54,7 +54,6 @@ typedef enum {
 	EV_PAGE_LAYOUT_AUTOMATIC
 } EvPageLayout;
 
-GType            ev_document_model_get_type          (void) G_GNUC_CONST;
 EvDocumentModel *ev_document_model_new               (void);
 EvDocumentModel *ev_document_model_new_with_document (EvDocument      *document);
 
