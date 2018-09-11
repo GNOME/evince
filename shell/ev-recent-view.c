@@ -485,6 +485,44 @@ load_document_and_get_document_info (GetDocumentInfoAsyncData *data)
         ev_job_scheduler_push_job (data->job, EV_JOB_PRIORITY_HIGH);
 }
 
+static GdkPixbuf *
+scale_pixbuf_for_size (GdkPixbuf *pixbuf,
+                       gint       target_size)
+{
+        GdkPixbuf *scaled;
+        gint width, height;
+        gint target_width, target_height;
+
+        width = gdk_pixbuf_get_width (pixbuf);
+        height = gdk_pixbuf_get_height (pixbuf);
+
+        if (height < width) {
+                target_width = target_size;
+                target_height = (int)(target_size * height / width + 0.5);
+        } else {
+                target_width = (int)(target_size * width / height + 0.5);
+                target_height = target_size;
+        }
+
+        if (width < target_width || height < target_height) {
+                scaled = gdk_pixbuf_scale_simple (pixbuf,
+                                                  target_width,
+                                                  target_height,
+                                                  GDK_INTERP_TILES);
+                g_object_unref (pixbuf);
+                pixbuf = scaled;
+        } else if (width != target_width || height != target_height) {
+                scaled = gdk_pixbuf_scale_simple (pixbuf,
+                                                  target_width,
+                                                  target_height,
+                                                  GDK_INTERP_HYPER);
+                g_object_unref (pixbuf);
+                pixbuf = scaled;
+        }
+
+        return pixbuf;
+}
+
 #ifdef HAVE_LIBGNOME_DESKTOP
 static void
 get_thumbnail_from_cache_thread (GTask                    *task,
@@ -525,40 +563,7 @@ get_thumbnail_from_cache_thread (GTask                    *task,
         g_free (path);
 
         if (thumbnail) {
-                gint width, height;
-                gint target_width, target_height;
-
-                width = gdk_pixbuf_get_width (thumbnail);
-                height = gdk_pixbuf_get_height (thumbnail);
-
-                if (height < width) {
-                        target_width = ICON_VIEW_SIZE;
-                        target_height = (int)(ICON_VIEW_SIZE * height / width + 0.5);
-                } else {
-                        target_width = (int)(ICON_VIEW_SIZE * width / height + 0.5);
-                        target_height = ICON_VIEW_SIZE;
-                }
-
-                if (width < target_width || height < target_height) {
-                        GdkPixbuf *scaled;
-
-                        scaled = gdk_pixbuf_scale_simple (thumbnail,
-                                                          target_width,
-                                                          target_height,
-                                                          GDK_INTERP_TILES);
-                        g_object_unref (thumbnail);
-                        thumbnail = scaled;
-                } else if (width != target_width || height != target_height) {
-                        GdkPixbuf *scaled;
-
-                        scaled = gdk_pixbuf_scale_simple (thumbnail,
-                                                          target_width,
-                                                          target_height,
-                                                          GDK_INTERP_HYPER);
-                        g_object_unref (thumbnail);
-                        thumbnail = scaled;
-                }
-
+                thumbnail = scale_pixbuf_for_size (thumbnail, ICON_VIEW_SIZE);
                 surface = ev_document_misc_surface_from_pixbuf (thumbnail);
                 g_object_unref (thumbnail);
         }
@@ -758,6 +763,7 @@ ev_recent_view_refresh (EvRecentView *ev_recent_view)
                 uri = gtk_recent_info_get_uri (info);
                 pixbuf = gtk_recent_info_get_icon (info, ICON_VIEW_SIZE);
                 if (pixbuf) {
+                        pixbuf = scale_pixbuf_for_size (pixbuf, ICON_VIEW_SIZE);
                         thumbnail = ev_document_misc_surface_from_pixbuf (pixbuf);
                         g_object_unref (pixbuf);
                 }
