@@ -1960,6 +1960,11 @@ pdf_document_find_find_text_with_options (EvDocumentFind *document_find,
 
 	if (options & EV_FIND_CASE_SENSITIVE)
 		find_flags |= POPPLER_FIND_CASE_SENSITIVE;
+#if POPPLER_CHECK_VERSION(0, 73, 0)
+	else    /* When search is not case sensitive, do also ignore diacritics
+	        to broaden our search in order to match on more expected results */
+		find_flags |= POPPLER_FIND_IGNORE_DIACRITICS;
+#endif
 	if (options & EV_FIND_WHOLE_WORDS_ONLY)
 		find_flags |= POPPLER_FIND_WHOLE_WORDS_ONLY;
 	matches = poppler_page_find_text_with_options (poppler_page, text, (PopplerFindFlags)find_flags);
