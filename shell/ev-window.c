@@ -534,8 +534,6 @@ ev_window_update_actions_sensitivity (EvWindow *ev_window)
 				      !recent_view_mode);
 	ev_window_set_action_enabled (ev_window, "dual-page", has_pages &&
 				      !recent_view_mode);
-	ev_window_set_action_enabled (ev_window, "dual-odd-left", has_pages &&
-				      !recent_view_mode);
 	ev_window_set_action_enabled (ev_window, "reload", has_pages &&
 				      !recent_view_mode);
 	ev_window_set_action_enabled (ev_window, "auto-scroll", has_pages &&
@@ -592,7 +590,7 @@ ev_window_update_actions_sensitivity (EvWindow *ev_window)
 				      has_pages && can_find_in_page &&
 				      !recent_view_mode);
 	ev_window_set_action_enabled (ev_window, "dual-odd-left", dual_mode &&
-				      !recent_view_mode);
+				      has_pages && !recent_view_mode);
 
 	ev_window_set_action_enabled (ev_window, "zoom-in",
 				      has_pages &&
@@ -5013,9 +5011,17 @@ ev_window_dual_mode_odd_pages_left_changed_cb (EvDocumentModel *model,
 					       GParamSpec      *pspec,
 					       EvWindow        *ev_window)
 {
+	gboolean odd_left;
+	GAction *action;
+
+	odd_left = ev_document_model_get_dual_page_odd_pages_left (model);
+
+	action = g_action_map_lookup_action (G_ACTION_MAP (ev_window), "dual-odd-left");
+	g_simple_action_set_state (G_SIMPLE_ACTION (action), g_variant_new_boolean (odd_left));
+
 	if (ev_window->priv->metadata && !ev_window_is_empty (ev_window))
 		ev_metadata_set_boolean (ev_window->priv->metadata, "dual-page-odd-left",
-					 ev_document_model_get_dual_page_odd_pages_left (model));
+					 odd_left);
 }
 
 static void
