@@ -8198,7 +8198,10 @@ ev_view_dual_odd_left_changed_cb (EvDocumentModel *model,
 {
 	view->dual_even_left = !ev_document_model_get_dual_page_odd_pages_left (model);
 	view->pending_scroll = SCROLL_TO_PAGE_POSITION;
-	gtk_widget_queue_resize (GTK_WIDGET (view));
+	if (ev_document_model_get_dual_page (model))
+		/* odd_left may be set when not in dual mode,
+		   queue_resize is not needed in that case */
+		gtk_widget_queue_resize (GTK_WIDGET (view));
 }
 
 static void
