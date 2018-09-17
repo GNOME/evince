@@ -1282,8 +1282,13 @@ setup_document_from_metadata (EvWindow *window)
 	    ev_metadata_get_int (window->priv->metadata, "window_height", &height))
 		return; /* size was already set in setup_size_from_metadata */
 
+	/* Following code is intended to be executed first time a document is opened
+	 * in Evince, that's why is located *after* the previous return that exits
+	 * when evince metadata for window_width{height} already exists. */
 	if (n_pages == 1)
 		ev_document_model_set_dual_page (window->priv->model, FALSE);
+	else if (n_pages == 2)
+		ev_document_model_set_dual_page_odd_pages_left (window->priv->model, TRUE);
 
 	g_settings_get (window->priv->default_settings, "window-ratio", "(dd)", &width_ratio, &height_ratio);
 	if (width_ratio > 0. && height_ratio > 0.) {
