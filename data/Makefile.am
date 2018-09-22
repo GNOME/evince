@@ -34,7 +34,7 @@ desktop_DATA = $(DESKTOP_FILES)
 #
 if ENABLE_DBUS
 servicedir = $(datadir)/dbus-1/services
-service_in_files = org.gnome.evince.Daemon.service.in
+service_in_files = org.gnome.Evince.Daemon.service.in
 service_DATA = $(service_in_files:.service.in=.service)
 
 systemd_user_in_files = org.gnome.Evince.service.in
