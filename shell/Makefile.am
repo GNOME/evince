@@ -191,7 +191,7 @@ ev-resources.c: $(GRESOURCE_XML_FILE) Makefile $(shell $(GLIB_COMPILE_RESOURCES)
 
 ev-gdbus-generated.c ev-gdbus-generated.h: ev-gdbus.xml Makefile
 	$(AM_V_GEN) $(GDBUS_CODEGEN) \
-			--interface-prefix=org.gnome.evince \
+			--interface-prefix=org.gnome.Evince \
 			--c-namespace=Ev \
 			--c-generate-object-manager \
 			--generate-c-code ev-gdbus-generated \

@@ -256,7 +256,7 @@ struct _EvWindowPrivate {
 
 #ifdef ENABLE_DBUS
 #define EV_WINDOW_DBUS_OBJECT_PATH "/org/gnome/evince/Window/%d"
-#define EV_WINDOW_DBUS_INTERFACE   "org.gnome.evince.Window"
+#define EV_WINDOW_DBUS_INTERFACE   "org.gnome.Evince.Window"
 #endif
 
 #define GS_SCHEMA_NAME           "org.gnome.Evince"
