@@ -48,20 +48,12 @@ systemd_user_DATA = $(systemd_user_in_files:.service.in=.service)
 
 $(systemd_user_DATA): $(systemd_user_in_files) Makefile
 	$(AM_V_GEN) $(SED) -e "s|\@libexecdir\@|$(libexecdir)|" $< > $@
-
-$(service_DATA): $(service_in_files) Makefile
-	$(AM_V_GEN) $(SED) \
-		-e "s|\@libexecdir\@|$(libexecdir)|" \
-		-e "s|@if_systemd_service@||" \
-		$< > $@
-else
-$(service_DATA): $(service_in_files) Makefile
-	$(AM_V_GEN) $(SED) \
-		-e "s|\@libexecdir\@|$(libexecdir)|" \
-		-e "s|@if_systemd_service@|#|" \
-		$< > $@
 endif
 
+$(service_DATA): $(service_in_files) Makefile
+	$(AM_V_GEN) $(SED) \
+		-e "s|\@libexecdir\@|$(libexecdir)|" \
+		$< > $@
 endif
 
 #
