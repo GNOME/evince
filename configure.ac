@@ -1041,6 +1041,7 @@ FEATURES
 GTK Doc reference ........:  $enable_gtk_doc
 GObject Introspection ....:  $enable_introspection
 DBUS communication .......:  $enable_dbus
+systemd units installation:  $systemd_userdir
 Keyring integration ......:  $with_keyring
 GTK+ Unix Print ..........:  $with_gtk_unix_print
 Thumbnail cache ..........:  $enable_gnome_desktop
