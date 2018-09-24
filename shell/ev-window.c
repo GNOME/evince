@@ -7852,3 +7852,19 @@ ev_window_get_metadata (EvWindow *ev_window)
 
 	return priv->metadata;
 }
+
+gint
+ev_window_get_metadata_sidebar_size (EvWindow *ev_window)
+{
+	EvWindowPrivate *priv;
+	gint sidebar_size;
+
+	g_return_val_if_fail (EV_WINDOW (ev_window), 0);
+
+	priv = GET_PRIVATE (ev_window);
+
+	if (ev_metadata_get_int (priv->metadata, "sidebar_size", &sidebar_size))
+		return sidebar_size;
+
+	return 0;
+}

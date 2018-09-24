@@ -96,6 +96,7 @@ GtkWidget      *ev_window_get_toolbar			 (EvWindow	 *ev_window);
 void            ev_window_handle_annot_popup             (EvWindow       *ev_window,
                                                           EvAnnotation   *annot);
 EvMetadata     *ev_window_get_metadata			 (EvWindow	 *ev_window);
+gint            ev_window_get_metadata_sidebar_size      (EvWindow       *ev_window);
 
 G_END_DECLS
 
