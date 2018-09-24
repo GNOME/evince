@@ -75,7 +75,8 @@ struct _EvSidebarThumbnailsPrivate {
 
 	int rotation;
 	gboolean inverted_colors;
-
+	gboolean blank_first_dual_mode; /* flag for when we're using a blank first thumbnail
+					 * for dual mode with !odd_left preference. Issue #30 */
 	/* Visible pages */
 	gint start_page, end_page;
 };
@@ -104,6 +105,7 @@ static void         thumbnail_job_completed_callback       (EvJobThumbnail      
 							    EvSidebarThumbnails     *sidebar_thumbnails);
 static void         ev_sidebar_thumbnails_reload           (EvSidebarThumbnails     *sidebar_thumbnails);
 static void         adjustment_changed_cb                  (EvSidebarThumbnails     *sidebar_thumbnails);
+static void         check_toggle_blank_first_dual_mode     (EvSidebarThumbnails     *sidebar_thumbnails);
 
 G_DEFINE_TYPE_EXTENDED (EvSidebarThumbnails, 
                         ev_sidebar_thumbnails, 
@@ -515,6 +517,9 @@ add_range (EvSidebarThumbnails *sidebar_thumbnails,
 
 	g_assert (start_page <= end_page);
 
+	if (priv->blank_first_dual_mode)
+		page--;
+
 	path = gtk_tree_path_new_from_indices (start_page, -1);
 	for (result = gtk_tree_model_get_iter (GTK_TREE_MODEL (priv->list_store), &iter, path);
 	     result && page <= end_page;
@@ -729,6 +734,17 @@ ev_sidebar_icon_selection_changed (GtkIconView         *icon_view,
 	path = selected->data;
 	page = gtk_tree_path_get_indices (path)[0];
 
+	if (priv->blank_first_dual_mode) {
+		if (page == 0) {
+			gtk_icon_view_unselect_path (icon_view, path);
+			gtk_tree_path_free (path);
+			g_list_free (selected);
+			return;
+		}
+		page--;
+
+	}
+
 	gtk_tree_path_free (path);
 	g_list_free (selected);
 
@@ -796,6 +812,18 @@ ev_sidebar_init_icon_view (EvSidebarThumbnails *ev_sidebar_thumbnails)
 	g_signal_connect (priv->icon_view, "selection-changed",
 			  G_CALLBACK (ev_sidebar_icon_selection_changed), ev_sidebar_thumbnails);
 
+	g_signal_connect_swapped (priv->icon_view, "size-allocate",
+				  G_CALLBACK (check_toggle_blank_first_dual_mode), ev_sidebar_thumbnails);
+
+	g_signal_connect_data (priv->model, "notify::dual-page",
+			       G_CALLBACK (check_toggle_blank_first_dual_mode), ev_sidebar_thumbnails,
+			       NULL, G_CONNECT_SWAPPED | G_CONNECT_AFTER);
+
+	g_signal_connect_data (priv->model, "notify::dual-odd-left",
+			       G_CALLBACK (check_toggle_blank_first_dual_mode), ev_sidebar_thumbnails,
+			       NULL, G_CONNECT_SWAPPED | G_CONNECT_AFTER);
+
+	check_toggle_blank_first_dual_mode (ev_sidebar_thumbnails);
 	gtk_container_add (GTK_CONTAINER (priv->swindow), priv->icon_view);
 	gtk_widget_show (priv->icon_view);
 }
@@ -839,6 +867,7 @@ ev_sidebar_thumbnails_init (EvSidebarThumbnails *ev_sidebar_thumbnails)
 	guint signal_id;
 
 	priv = ev_sidebar_thumbnails->priv = EV_SIDEBAR_THUMBNAILS_GET_PRIVATE (ev_sidebar_thumbnails);
+	priv->blank_first_dual_mode = FALSE;
 
 	priv->list_store = gtk_list_store_new (NUM_COLUMNS,
 					       G_TYPE_STRING,
@@ -878,6 +907,9 @@ ev_sidebar_thumbnails_set_current_page (EvSidebarThumbnails *sidebar,
 {
 	GtkTreeView *tree_view;
 	GtkTreePath *path;
+
+	if (sidebar->priv->blank_first_dual_mode)
+		page++;
 
 	path = gtk_tree_path_new_from_indices (page, -1);
 
@@ -1144,4 +1176,147 @@ ev_sidebar_thumbnails_page_iface_init (EvSidebarPageInterface *iface)
 	iface->support_document = ev_sidebar_thumbnails_support_document;
 	iface->set_model = ev_sidebar_thumbnails_set_model;
 	iface->get_label = ev_sidebar_thumbnails_get_label;
+}
+
+static gboolean
+iter_is_blank_thumbnail (GtkTreeModel *tree_model,
+			 GtkTreeIter  *iter)
+{
+	cairo_surface_t *surface = NULL;
+	EvJob *job = NULL;
+	gboolean thumbnail_set = FALSE;
+
+	gtk_tree_model_get (tree_model, iter,
+			    COLUMN_SURFACE, &surface,
+			    COLUMN_THUMBNAIL_SET, &thumbnail_set,
+			    COLUMN_JOB, &job, -1);
+
+	/* The blank thumbnail item can be distinguished among all
+	 * other items in the GtkIconView as it's the only one which
+	 * has the COLUMN_SURFACE as NULL while COLUMN_THUMBNAIL_SET
+	 * is set to TRUE. */
+	return surface == NULL && job == NULL && thumbnail_set;
+}
+
+/* Returns the total horizontal(left+right) width of thumbnail frames.
+ * As it was added in ev_document_misc_render_thumbnail_frame() */
+static gint
+ev_sidebar_thumbnails_frame_horizontal_width (EvSidebarThumbnails *sidebar)
+{
+        GtkWidget *widget;
+        GtkStyleContext *context;
+        GtkStateFlags state;
+        GtkBorder border = {0, };
+        gint offset;
+
+        widget = GTK_WIDGET (sidebar);
+        context = gtk_widget_get_style_context (widget);
+        state = gtk_widget_get_state_flags (widget);
+
+        gtk_style_context_save (context);
+
+        gtk_style_context_add_class (context, "page-thumbnail");
+        gtk_style_context_get_border (context, state, &border);
+        offset = border.left + border.right;
+
+        gtk_style_context_restore (context);
+
+        return offset;
+}
+
+/* Returns whether the thumbnail sidebar is currently showing
+ * items in a two columns layout */
+static gboolean
+ev_sidebar_thumbnails_is_two_columns (EvSidebarThumbnails *sidebar)
+{
+        EvSidebarThumbnailsPrivate *priv;
+        GtkWidget *window;
+        GtkIconView *icon_view;
+        gint sidebar_width, two_columns_width, three_columns_width;
+        gint margin, column_spacing, item_padding, thumbnail_width;
+        static gint frame_horizontal_width;
+
+        if (!ev_sidebar_thumbnails_use_icon_view (sidebar))
+                return FALSE;
+
+        priv = sidebar->priv;
+        icon_view = GTK_ICON_VIEW (priv->icon_view);
+
+        ev_thumbnails_size_cache_get_size (priv->size_cache, 0,
+                                           priv->rotation,
+                                           &thumbnail_width, NULL);
+
+        margin = gtk_icon_view_get_margin (icon_view);
+        column_spacing = gtk_icon_view_get_column_spacing (icon_view);
+        item_padding = gtk_icon_view_get_item_padding (icon_view);
+        frame_horizontal_width = ev_sidebar_thumbnails_frame_horizontal_width (sidebar);
+
+        two_columns_width = 2 * margin +
+                            4 * item_padding +
+                            2 * frame_horizontal_width +
+                            2 * thumbnail_width +
+                            column_spacing;
+
+        three_columns_width = 2 * margin +
+                              6 * item_padding +
+                              3 * frame_horizontal_width +
+                              3 * thumbnail_width +
+                              2 * column_spacing;
+
+        if (priv->width == 0) {
+                window = gtk_widget_get_toplevel (GTK_WIDGET (sidebar));
+                sidebar_width = ev_window_get_metadata_sidebar_size (EV_WINDOW (window));
+        } else {
+                sidebar_width = priv->width;
+        }
+
+        return sidebar_width >= two_columns_width &&
+               sidebar_width < three_columns_width;
+}
+
+/* Checks whether the conditions for 'blank first dual mode' are met,
+ * and activates/deactivates the mode accordingly. */
+static void
+check_toggle_blank_first_dual_mode (EvSidebarThumbnails *sidebar_thumbnails)
+{
+	EvSidebarThumbnailsPrivate *priv;
+	GtkTreeModel *tree_model;
+	GtkTreeIter first;
+        gboolean should_be_enabled;
+
+        priv = sidebar_thumbnails->priv;
+
+	should_be_enabled = ev_document_model_get_dual_page (priv->model) &&
+	    !ev_document_model_get_dual_page_odd_pages_left (priv->model) &&
+	     ev_sidebar_thumbnails_is_two_columns (sidebar_thumbnails);
+
+	if (should_be_enabled && !priv->blank_first_dual_mode) {
+		/* Do enable it */
+		tree_model = GTK_TREE_MODEL (priv->list_store);
+
+		if (!gtk_tree_model_get_iter_first (tree_model, &first))
+			return;
+
+		priv->blank_first_dual_mode = TRUE;
+		if (iter_is_blank_thumbnail (tree_model, &first))
+			return; /* extra check */
+
+		gtk_list_store_insert_with_values (priv->list_store, &first, 0,
+						   COLUMN_SURFACE, NULL,
+						   COLUMN_THUMBNAIL_SET, TRUE,
+						   COLUMN_JOB, NULL,
+						   -1);
+	} else if (!should_be_enabled && priv->blank_first_dual_mode) {
+		/* Do disable it */
+		tree_model = GTK_TREE_MODEL (priv->list_store);
+
+		if (!gtk_tree_model_get_iter_first (tree_model, &first))
+			return;
+
+		priv->blank_first_dual_mode = FALSE;
+		if (!iter_is_blank_thumbnail (tree_model, &first))
+			return; /* extra check */
+
+		gtk_list_store_remove (priv->list_store, &first);
+	}
 }
