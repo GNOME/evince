@@ -10,13 +10,13 @@ master:
     stage: build
 
     script:
-        - ./autogen.sh --enable-debug --enable-nautilus
-        - make
+        - meson _build
+        - ninja -C _build all
 
     artifacts:
         when: on_failure
         paths:
-        - config.log
+        - _build/meson-logs/meson-log.txt
         expire_in: 2 days
 
 meson:
@@ -55,13 +55,13 @@ gtk-doc:
     when: manual
 
     script:
-        - ./autogen.sh --enable-nautilus --enable-gtk-doc
-        - make
+        - meson -Dgtk_doc=true _build
+        - ninja -C _build all libevdocument-doc libevview-doc evince-doc
 
     artifacts:
         when: on_failure
         paths:
-        - config.log
+        - _build/meson-logs/meson-log.txt
         expire_in: 2 days
 
 flatpak:
