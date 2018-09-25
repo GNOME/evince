@@ -20,6 +20,7 @@
 #include <config.h>
 
 #include <stdlib.h>
+#include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
 #include <string.h>
@@ -33,6 +34,10 @@
 #include "ev-file-helpers.h"
 
 static gchar *tmp_dir = NULL;
+
+#ifndef O_BINARY
+#define O_BINARY 0
+#endif
 
 /*
  * ev_dir_ensure_exists:
@@ -139,7 +144,7 @@ ev_mkstemp (const char  *tmpl,
               return -1;
 
         name = g_build_filename (tmp, tmpl, NULL);
-        fd = g_mkstemp_full (name, O_CLOEXEC, 0600);
+        fd = g_mkstemp_full (name, O_RDWR | O_BINARY | O_CLOEXEC, 0600);
 
         if (fd == -1) {
 		int errsv = errno;
