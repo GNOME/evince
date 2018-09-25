@@ -21,6 +21,7 @@
 
 #include <stdlib.h>
 #include <sys/types.h>
+#include <sys/stat.h>
 #include <unistd.h>
 #include <string.h>
 #include <errno.h>
@@ -115,21 +116,12 @@ _ev_file_helpers_shutdown (void)
 	tmp_dir = NULL;
 }
 
-/**
- * ev_mkstemp:
- * @tmpl: a template string; must contain 'XXXXXX', but not necessarily as a suffix
- * @file_name: a location to store the filename of the temp file
- * @error: a location to store a #GError
- *
- * Creates a temp file in the evince temp directory.
- *
- * Returns: a file descriptor to the newly created temp file name, or %-1
- *   on error with @error filled in
- */
-int
-ev_mkstemp (const char  *tmpl,
-            char       **file_name,
-            GError     **error)
+static int
+ev_mkstemp_full (const char  *tmpl,
+                 int          flags,
+                 int          mode,
+                 char       **file_name,
+                 GError     **error)
 {
         const char *tmp;
         char *name;
@@ -139,7 +131,7 @@ ev_mkstemp (const char  *tmpl,
               return -1;
 
         name = g_build_filename (tmp, tmpl, NULL);
-        fd = g_mkstemp_full (name, O_CLOEXEC, 0600);
+        fd = g_mkstemp_full (name, flags, mode);
 
         if (fd == -1) {
 		int errsv = errno;
@@ -156,6 +148,25 @@ ev_mkstemp (const char  *tmpl,
                 *file_name = name;
 
         return fd;
+}
+
+/**
+ * ev_mkstemp:
+ * @tmpl: a template string; must contain 'XXXXXX', but not necessarily as a suffix
+ * @file_name: a location to store the filename of the temp file
+ * @error: a location to store a #GError
+ *
+ * Creates a temp file in the evince temp directory.
+ *
+ * Returns: a file descriptor to the newly created temp file name, or %-1
+ *   on error with @error filled in
+ */
+int
+ev_mkstemp (const char  *tmpl,
+            char       **file_name,
+            GError     **error)
+{
+        return ev_mkstemp_full (tmpl, O_RDWR | O_CLOEXEC, 0600, file_name, error);
 }
 
 static void
@@ -622,7 +633,7 @@ compression_run (const gchar       *uri,
 		return NULL;
 	}
 
-        fd = ev_mkstemp ("comp.XXXXXX", &filename_dst, error);
+        fd = ev_mkstemp_full ("comp.XXXXXX", O_RDWR /* not CLOEXEC */, 0600, &filename_dst, error);
 	if (fd == -1) {
 		g_free (cmd);
 		g_free (filename);
