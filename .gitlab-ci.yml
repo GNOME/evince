@@ -13,13 +13,13 @@ master:
     when: manual
 
     script:
-        - ./autogen.sh --enable-debug --enable-nautilus
-        - make
+        - meson _build
+        - ninja -C _build all
 
     artifacts:
         when: on_failure
         paths:
-        - config.log
+        - _build/meson-logs/meson-log.txt
         expire_in: 2 days
 
 meson:
@@ -49,21 +49,6 @@ meson-gtk-doc:
         when: on_failure
         paths:
         - _build/meson-logs/meson-log.txt
-        expire_in: 2 days
-
-gtk-doc:
-    image: registry.gitlab.gnome.org/gnome/evince/master-amd64:latest
-    stage: build
-    when: manual
-
-    script:
-        - ./autogen.sh --enable-nautilus --enable-gtk-doc
-        - make
-
-    artifacts:
-        when: on_failure
-        paths:
-        - config.log
         expire_in: 2 days
 
 flatpak:
