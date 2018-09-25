@@ -315,6 +315,8 @@ if not get_option('ps').disabled() or not get_option('dvi').disabled()
   libspectre_req_version = '>= 0.2.0'
   libspectre_dep = dependency('libspectre', version: libspectre_req_version, required: false)
   config_h.set('HAVE_SPECTRE', libspectre_dep.found())
+else
+  libspectre_dep = disabler()
 endif
 
 # *** Comic Book ***
