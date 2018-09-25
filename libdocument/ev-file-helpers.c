@@ -595,6 +595,19 @@ static const char *compressor_cmds[] = {
 #define N_ARGS      4
 #define BUFFER_SIZE 1024
 
+static void
+compression_child_setup_cb (gpointer fd_ptr)
+{
+        int fd = GPOINTER_TO_INT (fd_ptr);
+        int flags;
+
+        flags = fcntl (fd, F_GETFD);
+        if (flags >= 0 && (flags & FD_CLOEXEC)) {
+                flags &= ~FD_CLOEXEC;
+                fcntl (fd, F_SETFD, flags);
+        }
+}
+
 static gchar *
 compression_run (const gchar       *uri,
 		 EvCompressionType  type,
@@ -642,7 +655,8 @@ compression_run (const gchar       *uri,
 
 	if (g_spawn_async_with_pipes (NULL, argv, NULL,
 				      G_SPAWN_STDERR_TO_DEV_NULL,
-				      NULL, NULL, NULL,
+                                      compression_child_setup_cb, GINT_TO_POINTER (fd),
+                                      NULL,
 				      NULL, &pout, NULL, &err)) {
 		GIOChannel *in, *out;
 		gchar buf[BUFFER_SIZE];
