@@ -28,14 +28,18 @@ libdjvudocument_la_LIBADD =				\
 	$(BACKEND_LIBS)					\
 	$(DJVU_LIBS)
 
-backend_in_files = djvudocument.evince-backend.in.in
-backend_DATA = $(backend_in_files:.evince-backend.in.in=.evince-backend)
-@EV_INTLTOOL_EVINCE_BACKEND_RULE@
+backend_in_files = djvudocument.evince-backend.desktop.in.in
+backend_DATA = $(backend_in_files:.evince-backend.desktop.in.in=.evince-backend)
+
+djvudocument.evince-backend: djvudocument.evince-backend.desktop.in
+	$(AM_V_GEN)$(MSGFMT) --desktop --keyword=TypeDescription --template $< -d $(top_srcdir)/po -o $@
 
 appstreamdir = $(datadir)/metainfo
 appstream_in_files = evince-djvudocument.metainfo.xml.in.in
 appstream_DATA = $(appstream_in_files:.xml.in.in=.xml)
-@INTLTOOL_XML_RULE@
+
+evince-djvudocument.metainfo.xml: evince-djvudocument.metainfo.xml.in
+	$(AM_V_GEN)$(MSGFMT) --xml --template $< -d $(top_srcdir)/po -o $@
 
 EXTRA_DIST = $(backend_in_files) $(appstream_in_files)
 

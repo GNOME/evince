@@ -14,11 +14,12 @@ foreach desktop: desktops
     configuration: mime_types_conf,
   )
 
-  custom_target(
+  i18n.merge_file(
     desktop,
+    type: 'desktop',
     input: desktop_in,
     output: desktop,
-    command: intltool_desktop_cmd,
+    po_dir: po_dir,
     install: true,
     install_dir: join_paths(ev_datadir, 'applications'),
   )
@@ -48,14 +49,8 @@ if enable_dbus
 endif
 
 # GSettings schema
-gschema = ev_namespace + '.gschema.xml'
-
-custom_target(
-  gschema,
-  input: gschema + '.in',
-  output: gschema,
-  command: [intltool_merge, '-x', '-u', '--no-translations', '@INPUT@', '@OUTPUT@'],
-  install: true,
+install_data(
+  ev_namespace + '.gschema.xml',
   install_dir: join_paths(ev_datadir, 'glib-2.0', 'schemas'),
 )
 
