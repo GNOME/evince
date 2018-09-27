@@ -1,3 +1,5 @@
+msgfmt = find_program('msgfmt')
+
 backends_incs = [top_inc]
 
 backends_deps = [libevdocument_dep]
@@ -28,8 +30,8 @@ foreach backend, backend_mime_types: backends
   backend_desc = backend_name + '.evince-backend'
 
   backend_desc_in = configure_file(
-    input: '@0@/@1@.in.in'.format(backend, backend_desc),
-    output: backend_desc + '.in',
+    input: '@0@/@1@.desktop.in.in'.format(backend, backend_desc),
+    output: backend_desc + 'desktop.in',
     configuration: backend_mime_types_conf,
   )
 
@@ -37,7 +39,7 @@ foreach backend, backend_mime_types: backends
     backend_desc,
     input: backend_desc_in,
     output: backend_desc,
-    command: intltool_desktop_cmd,
+    command: [msgfmt, '--desktop', '--keyword=TypeDescription', '--template', '@INPUT@', '-d', po_dir, '-o', '@OUTPUT@'],
     install: true,
     install_dir: ev_backendsdir,
   )
@@ -50,11 +52,11 @@ foreach backend, backend_mime_types: backends
     configuration: backend_mime_types_conf,
   )
 
-  custom_target(
+  i18n.merge_file(
     appstream,
     input: appstream_in,
     output: appstream,
-    command: intltool_xml_cmd,
+    po_dir: po_dir,
     install: true,
     install_dir: ev_appstreamdir,
   )
