@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <schemalist>
 
   <enum id="org.gnome.Evince.SizingMode">
@@ -10,34 +11,34 @@
   <schema id="org.gnome.Evince" path="/org/gnome/evince/" gettext-domain="evince">
     <key name="override-restrictions" type="b">
       <default>true</default>
-      <_summary>Override document restrictions</_summary>
-      <_description>Override document restrictions, like restriction to copy or to print.</_description>
+      <summary>Override document restrictions</summary>
+      <description>Override document restrictions, like restriction to copy or to print.</description>
     </key>
     <key name="auto-reload" type="b">
       <default>true</default>
-      <_summary>Automatically reload the document</_summary>
-      <_description>The document is automatically reloaded on file change.</_description>
+      <summary>Automatically reload the document</summary>
+      <description>The document is automatically reloaded on file change.</description>
     </key>
     <key name="document-directory" type="ms">
       <default>nothing</default>
-      <_summary>The URI of the directory last used to open or save a document</_summary>
+      <summary>The URI of the directory last used to open or save a document</summary>
     </key>
     <key name="pictures-directory" type="ms">
       <default>nothing</default>
-      <_summary>The URI of the directory last used to save a picture</_summary>
+      <summary>The URI of the directory last used to save a picture</summary>
     </key>
     <key name="page-cache-size" type="u">
       <default>50</default>
-      <_summary>Page cache size in MiB</_summary>
-      <_description>The maximum size that will be used to cache rendered pages, limits maximum zoom level.</_description>
+      <summary>Page cache size in MiB</summary>
+      <description>The maximum size that will be used to cache rendered pages, limits maximum zoom level.</description>
     </key>
     <key name="show-caret-navigation-message" type="b">
       <default>true</default>
-      <_summary>Show a dialog to confirm that the user wants to activate the caret navigation.</_summary>
+      <summary>Show a dialog to confirm that the user wants to activate the caret navigation.</summary>
     </key>
     <key type="b" name="allow-links-change-zoom">
       <default>true</default>
-      <_summary>Allow links to change the zoom level.</_summary>
+      <summary>Allow links to change the zoom level.</summary>
     </key>
     <child name="default" schema="org.gnome.Evince.Default"/>
   </schema>

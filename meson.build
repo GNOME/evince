@@ -135,11 +135,6 @@ source_root = meson.current_source_dir()
 data_dir = join_paths(source_root, 'data')
 po_dir = join_paths(source_root, 'po')
 
-intltool_merge = find_program('intltool-merge')
-intltool_cache = join_paths(po_dir, '.intltool-merge-cache')
-intltool_desktop_cmd = [intltool_merge, '-d', '-u', '-c', intltool_cache, po_dir, '@INPUT@', '@OUTPUT@']
-intltool_xml_cmd = [intltool_merge, '-x', '-u', '-c', intltool_cache, po_dir, '@INPUT@', '@OUTPUT@']
-
 top_inc = include_directories('.')
 
 glib_req_version = '>= 2.36.0'
@@ -491,11 +486,11 @@ install_headers(
 # Appdata files
 appdata = ev_namespace + '.appdata.xml'
 
-custom_target(
+i18n.merge_file(
   appdata,
   input: appdata + '.in',
   output: appdata,
-  command: intltool_xml_cmd,
+  po_dir: po_dir,
   install: true,
   install_dir: ev_appstreamdir,
 )

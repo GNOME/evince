@@ -21,13 +21,17 @@ ui_DATA =				\
 # Desktop file
 #
 
-@INTLTOOL_DESKTOP_RULE@
-
 DESKTOP_IN_FILES= org.gnome.Evince.desktop.in.in org.gnome.Evince-previewer.desktop.in.in
 DESKTOP_FILES= $(DESKTOP_IN_FILES:.desktop.in.in=.desktop)
 
 desktopdir = $(datadir)/applications
 desktop_DATA = $(DESKTOP_FILES)
+
+org.gnome.Evince-previewer.desktop: org.gnome.Evince-previewer.desktop.in
+	$(AM_V_GEN)$(MSGFMT) --desktop --template $< -d $(top_srcdir)/po -o $@
+
+org.gnome.Evince.desktop: org.gnome.Evince.desktop.in
+	$(AM_V_GEN)$(MSGFMT) --desktop --template $< -d $(top_srcdir)/po -o $@
 
 #
 # DBus servide file
@@ -63,13 +67,10 @@ endif
 #
 # GSettings schema
 #
-gsettingsschema_in_files = org.gnome.Evince.gschema.xml.in
 # gsettings_SCHEMAS is a list of all the schemas you want to install
-gsettings_SCHEMAS = $(gsettingsschema_in_files:.xml.in=.xml)
+gsettings_SCHEMAS = org.gnome.Evince.gschema.xml
 
 .PRECIOUS: $(gsettings_SCHEMAS)
-
-@INTLTOOL_XML_NOMERGE_RULE@
 
 # include the appropriate makefile rules for schema handling
 @GSETTINGS_RULES@
@@ -103,7 +104,7 @@ update-icon-cache:
 EXTRA_DIST =					\
 	$(ui_DATA)				\
 	$(DESKTOP_IN_FILES)			\
-	$(gsettingsschema_in_files)		\
+	$(gsettings_SCHEMAS)			\
 	$(man_MANS)				\
 	$(service_in_files)			\
 	$(systemd_user_in_files)		\
@@ -118,7 +119,6 @@ EXTRA_DIST =					\
 
 DISTCLEANFILES = \
 	$(DESKTOP_FILES)	\
-	$(gsettings_SCHEMAS)	\
 	$(service_DATA)		\
 	$(systemd_user_DATA)	\
 	$(NULL)

@@ -74,16 +74,15 @@ LT_LIB_M
 
 GNOME_CXX_WARNINGS
 
-IT_PROG_INTLTOOL([0.35.0])
+AX_REQUIRE_DEFINED([AM_GNU_GETTEXT_VERSION])
+AM_GNU_GETTEXT_VERSION([0.19.8])
+
+AX_REQUIRE_DEFINED([AM_GNU_GETTEXT])
+AM_GNU_GETTEXT([external])
 
 GETTEXT_PACKAGE=evince
 AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED([GETTEXT_PACKAGE],["$GETTEXT_PACKAGE"],[Gettext package])
-AM_GLIB_GNU_GETTEXT
-
-m4_pattern_allow([AM_V_GEN])dnl Make autoconf not complain about the rule below
-EV_INTLTOOL_EVINCE_BACKEND_RULE='%.evince-backend:   %.evince-backend.in   $(INTLTOOL_MERGE) $(wildcard $(top_srcdir)/po/*.po) ; $(AM_V_GEN) LC_ALL=C $(INTLTOOL_MERGE) -d -u -c $(top_builddir)/po/.intltool-merge-cache $(top_srcdir)/po $< [$]@'
-AC_SUBST([EV_INTLTOOL_EVINCE_BACKEND_RULE])
 
 GLIB_GSETTINGS
 
@@ -923,27 +922,27 @@ AC_SUBST([AM_LDFLAGS])
 
 AC_CONFIG_FILES([
 backend/Makefile
-backend/comics/comicsdocument.evince-backend.in
+backend/comics/comicsdocument.evince-backend.desktop.in
 backend/comics/evince-comicsdocument.metainfo.xml.in
 backend/comics/Makefile
-backend/djvu/djvudocument.evince-backend.in
+backend/djvu/djvudocument.evince-backend.desktop.in
 backend/djvu/evince-djvudocument.metainfo.xml.in
 backend/djvu/Makefile
-backend/dvi/dvidocument.evince-backend.in
+backend/dvi/dvidocument.evince-backend.desktop.in
 backend/dvi/evince-dvidocument.metainfo.xml.in
 backend/dvi/Makefile
 backend/dvi/mdvi-lib/Makefile
 backend/pdf/evince-pdfdocument.metainfo.xml.in
-backend/pdf/pdfdocument.evince-backend.in
+backend/pdf/pdfdocument.evince-backend.desktop.in
 backend/pdf/Makefile
 backend/ps/evince-psdocument.metainfo.xml.in
-backend/ps/psdocument.evince-backend.in
+backend/ps/psdocument.evince-backend.desktop.in
 backend/ps/Makefile
 backend/tiff/evince-tiffdocument.metainfo.xml.in
-backend/tiff/tiffdocument.evince-backend.in
+backend/tiff/tiffdocument.evince-backend.desktop.in
 backend/tiff/Makefile
 backend/xps/evince-xpsdocument.metainfo.xml.in
-backend/xps/xpsdocument.evince-backend.in
+backend/xps/xpsdocument.evince-backend.desktop.in
 backend/xps/Makefile
 browser-plugin/Makefile
 cut-n-paste/Makefile
