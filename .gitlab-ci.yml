@@ -6,6 +6,21 @@ master:
     stage: build
 
     script:
+        - ./autogen.sh --enable-debug --enable-nautilus
+        - make
+
+    artifacts:
+        when: on_failure
+        paths:
+        - config.log
+        expire_in: 2 days
+
+meson:
+    image: registry.gitlab.gnome.org/gnome/evince/master-amd64:latest
+    stage: build
+    when: manual
+
+    script:
         - meson _build
         - ninja -C _build all
 
