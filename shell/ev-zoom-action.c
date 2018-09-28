@@ -259,10 +259,13 @@ get_popup (EvZoomAction *zoom_action)
 static void
 entry_icon_press_callback (GtkEntry            *entry,
                            GtkEntryIconPosition icon_pos,
-                           GdkEventButton      *event,
+                           GdkEvent            *event,
                            EvZoomAction        *zoom_action)
 {
-        if (event->button != GDK_BUTTON_PRIMARY)
+        guint button = 0;
+
+        if (gdk_event_get_button (event, &button) &&
+            button != GDK_BUTTON_PRIMARY)
                 return;
 
         gtk_popover_popup (get_popup (zoom_action));
