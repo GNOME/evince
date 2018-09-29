@@ -32,6 +32,7 @@ version = configure_file(
 gnome.gtkdoc(
   doc_module,
   main_xml: doc_module + '-docs.xml',
+  module_version: ev_api_version,
   src_dir: libview_inc,
   ignore_headers: private_headers,
   include_directories: top_inc,

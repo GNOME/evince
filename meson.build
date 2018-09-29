@@ -3,7 +3,7 @@ project(
   version: '3.31.4',
   license: 'GPL2',
   default_options: 'buildtype=debugoptimized',
-  meson_version: '>= 0.48.0',
+  meson_version: '>= 0.49.0',
 )
 
 ev_name = meson.project_name().to_lower()
