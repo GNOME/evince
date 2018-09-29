@@ -30,6 +30,21 @@ meson:
         - _build/meson-logs/meson-log.txt
         expire_in: 2 days
 
+meson-gtk-doc:
+    image: registry.gitlab.gnome.org/gnome/evince/master-amd64:latest
+    stage: build
+    when: manual
+
+    script:
+        - meson -Dgtk_doc=true _build
+        - ninja -C _build all libevdocument-doc libevview-doc evince-doc
+
+    artifacts:
+        when: on_failure
+        paths:
+        - _build/meson-logs/meson-log.txt
+        expire_in: 2 days
+
 gtk-doc:
     image: registry.gitlab.gnome.org/gnome/evince/master-amd64:latest
     stage: build
