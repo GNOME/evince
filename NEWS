@@ -1,4 +1,24 @@
 =================
+Evince    3.28.4
+=================
+
+Printing:
+ * Fix messages to show printed file name when it contains '&' in the name (#776, Nelson Benítez León)
+
+libdocument:
+ * Fix handling of mime-type aiases (#972, Bastien Nocera)
+
+Backends:
+ * comics: Use official IANA type for .cbr (#972, Frank Dana)
+ * djvu: Ignore text regions that are missing text (Jason Crain)
+
+UI:
+ * Fix Dual odd-left state (#603, Nelson Benítez León)
+ * Fix regression, set to odd-left in dual mode when document has only 2 pages (#669, Nelson Benítez León)
+ * Fix cursor movement when logical and visual line differs (#889, Colomban Wendling)
+ * Fix zoom-action to respond touch events (#976, Jason Crain)
+
+=================
 Evince    3.28.3
 =================
 
@@ -40,7 +60,7 @@ UI translations:
  
 Doc translations:
  * Anders Jonsson (sv)
-
+Ba
 =================
 Evince    3.28.0
 =================
