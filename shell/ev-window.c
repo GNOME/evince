@@ -324,7 +324,7 @@ static void     ev_window_zoom_changed_cb 	        (EvDocumentModel  *model,
 							 GParamSpec       *pspec,
 							 EvWindow         *ev_window);
 static void     ev_window_add_recent                    (EvWindow         *window,
-							 const char       *filename);
+							 const char       *uri);
 static void     ev_window_run_fullscreen                (EvWindow         *window);
 static void     ev_window_stop_fullscreen               (EvWindow         *window,
 							 gboolean          unfullscreen_window);
@@ -2700,9 +2700,9 @@ ev_window_cmd_file_open_copy (GSimpleAction *action,
 }
 
 static void
-ev_window_add_recent (EvWindow *window, const char *filename)
+ev_window_add_recent (EvWindow *window, const char *uri)
 {
-	gtk_recent_manager_add_item (window->priv->recent_manager, filename);
+	gtk_recent_manager_add_item (window->priv->recent_manager, uri);
 }
 
 static gboolean 
