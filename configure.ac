@@ -954,8 +954,8 @@ cut-n-paste/unarr/Makefile
 cut-n-paste/unarr/common/Makefile
 cut-n-paste/unarr/lzmasdk/Makefile
 cut-n-paste/unarr/rar/Makefile
-data/org.gnome.Evince.desktop.in
-data/org.gnome.Evince-previewer.desktop.in
+data/org.gnome.evince.desktop.in
+data/org.gnome.evince-previewer.desktop.in
 data/Makefile
 data/icons/Makefile
 data/icons/16x16/Makefile
