@@ -28,7 +28,7 @@ endforeach
 # DBus service file
 if enable_dbus
   service_conf = configuration_data()
-  service_conf.set('libexecdir', join_paths(ev_prefix, ev_libexecdir))
+  service_conf.set('libexecdir', ev_libexecdir)
   service_conf.set('if_systemd_service', '')
 
   services = [[ev_namespace + '.Daemon.service', dbus_service_dir]]

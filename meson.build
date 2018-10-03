@@ -15,13 +15,13 @@ ev_minor_version = version_array[1].to_int()
 ev_micro_version = version_array[2].to_int()
 
 ev_prefix = get_option('prefix')
-ev_bindir = get_option('bindir')
-ev_datadir = get_option('datadir')
-ev_includedir = get_option('includedir')
-ev_libdir = get_option('libdir')
-ev_libexecdir = get_option('libexecdir')
-ev_localedir = get_option('localedir')
-ev_mandir = get_option('mandir')
+ev_bindir = join_paths(ev_prefix, get_option('bindir'))
+ev_datadir = join_paths(ev_prefix, get_option('datadir'))
+ev_includedir = join_paths(ev_prefix, get_option('includedir'))
+ev_libdir = join_paths(ev_prefix, get_option('libdir'))
+ev_libexecdir = join_paths(ev_prefix, get_option('libexecdir'))
+ev_localedir = join_paths(ev_prefix, get_option('localedir'))
+ev_mandir = join_paths(ev_prefix, get_option('mandir'))
 
 ev_pkgdatadir = join_paths(ev_datadir, ev_name)
 
@@ -507,7 +507,7 @@ configure_file(
 
 meson.add_install_script(
   'meson_post_install.py',
-  join_paths(ev_prefix, ev_datadir),
+  ev_datadir,
 )
 
 output = '\n' + meson.project_name() + ' configure summary\n'
