@@ -74,8 +74,8 @@ deps = [
 ]
 
 cflags = [
-  '-DBINDIR="@0@"'.format(join_paths(ev_prefix, ev_bindir)),
-  '-DGNOMEDATADIR="@0@"'.format(join_paths(ev_prefix, ev_datadir)),
+  '-DBINDIR="@0@"'.format(ev_bindir),
+  '-DGNOMEDATADIR="@0@"'.format(ev_datadir),
   '-DEVINCE_COMPILATION',
   '-DGDK_MULTIHEAD_SAFE',
   '-DGTK_MULTIHEAD_SAFE',
@@ -160,7 +160,7 @@ if enable_dbus
   ]
 
   cflags = [
-    '-DBINDIR="@0@"'.format(join_paths(ev_prefix, ev_bindir)),
+    '-DBINDIR="@0@"'.format(ev_bindir),
     '-DEVINCE_COMPILATION',
   ]
 
