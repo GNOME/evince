@@ -138,6 +138,7 @@ executable(
   objects: libshell.extract_all_objects(),
   link_args: ldflags,
   install: true,
+  install_rpath: join_paths(ev_prefix, ev_libdir),
 )
 
 if enable_dbus
