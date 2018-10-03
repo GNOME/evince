@@ -28,7 +28,7 @@
 #include <libsecret/secret.h>
 
 static const SecretSchema doc_password_schema = {
-	"org.gnome.Evince.Document",
+	"org.gnome.evince.Document",
 	SECRET_SCHEMA_DONT_MATCH_NAME,
 	{
 		{ "type", SECRET_SCHEMA_ATTRIBUTE_STRING },

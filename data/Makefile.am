@@ -21,16 +21,16 @@ ui_DATA =				\
 # Desktop file
 #
 
-DESKTOP_IN_FILES= org.gnome.Evince.desktop.in.in org.gnome.Evince-previewer.desktop.in.in
+DESKTOP_IN_FILES= org.gnome.evince.desktop.in.in org.gnome.evince-previewer.desktop.in.in
 DESKTOP_FILES= $(DESKTOP_IN_FILES:.desktop.in.in=.desktop)
 
 desktopdir = $(datadir)/applications
 desktop_DATA = $(DESKTOP_FILES)
 
-org.gnome.Evince-previewer.desktop: org.gnome.Evince-previewer.desktop.in
+org.gnome.evince-previewer.desktop: org.gnome.evince-previewer.desktop.in
 	$(AM_V_GEN)$(MSGFMT) --desktop --template $< -d $(top_srcdir)/po -o $@
 
-org.gnome.Evince.desktop: org.gnome.Evince.desktop.in
+org.gnome.evince.desktop: org.gnome.evince.desktop.in
 	$(AM_V_GEN)$(MSGFMT) --desktop --template $< -d $(top_srcdir)/po -o $@
 
 #
@@ -38,10 +38,10 @@ org.gnome.Evince.desktop: org.gnome.Evince.desktop.in
 #
 if ENABLE_DBUS
 servicedir = $(datadir)/dbus-1/services
-service_in_files = org.gnome.Evince.Daemon.service.in
+service_in_files = org.gnome.evince.Daemon.service.in
 service_DATA = $(service_in_files:.service.in=.service)
 
-systemd_user_in_files = org.gnome.Evince.service.in
+systemd_user_in_files = org.gnome.evince.service.in
 
 if WITH_SYSTEMD_USER_UNITS
 systemd_user_DATA = $(systemd_user_in_files:.service.in=.service)
