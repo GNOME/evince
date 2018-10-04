@@ -33,6 +33,9 @@ gtk-doc:
 flatpak:
     image: registry.gitlab.gnome.org/gnome/gnome-runtime-images/gnome:master
     stage: build
+    only:
+        refs:
+            - master
 
     before_script:
         - dnf install -y flatpak-builder flatpak
