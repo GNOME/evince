@@ -199,7 +199,7 @@ ev-gdbus-generated.c ev-gdbus-generated.h: ev-gdbus.xml Makefile
 
 ev-daemon-gdbus-generated.c ev-daemon-gdbus-generated.h: ev-daemon-gdbus.xml Makefile
 	$(AM_V_GEN) $(GDBUS_CODEGEN) \
-			--interface-prefix=org.gnome.Evince \
+			--interface-prefix=org.gnome.evince \
 			--c-namespace=Ev \
 			--c-generate-object-manager \
 			--generate-c-code ev-daemon-gdbus-generated \
