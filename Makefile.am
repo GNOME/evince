@@ -46,10 +46,10 @@ header_DATA = \
 # Appdata files
 
 appdatadir = $(datadir)/metainfo
-appdata_in_files = org.gnome.evince.appdata.xml.in
+appdata_in_files = org.gnome.Evince.appdata.xml.in
 nodist_appdata_DATA = $(appdata_in_files:.xml.in=.xml)
 
-org.gnome.evince.appdata.xml: org.gnome.evince.appdata.xml.in
+org.gnome.Evince.appdata.xml: org.gnome.Evince.appdata.xml.in
 	$(AM_V_GEN)$(MSGFMT) --xml --template $< -d $(top_srcdir)/po -o $@
 
 # Applications 

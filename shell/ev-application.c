@@ -65,13 +65,13 @@ struct _EvApplicationClass {
 G_DEFINE_TYPE (EvApplication, ev_application, GTK_TYPE_APPLICATION)
 
 #ifdef ENABLE_DBUS
-#define APPLICATION_NAME             "org.gnome.evince"
+#define APPLICATION_NAME             "org.gnome.Evince"
 #define APPLICATION_DBUS_OBJECT_PATH "/org/gnome/evince/Evince"
-#define APPLICATION_DBUS_INTERFACE   "org.gnome.evince.Application"
+#define APPLICATION_DBUS_INTERFACE   "org.gnome.Evince.Application"
 
-#define EVINCE_DAEMON_SERVICE        "org.gnome.evince.Daemon"
+#define EVINCE_DAEMON_SERVICE        "org.gnome.Evince.Daemon"
 #define EVINCE_DAEMON_OBJECT_PATH    "/org/gnome/evince/Daemon"
-#define EVINCE_DAEMON_INTERFACE      "org.gnome.evince.Daemon"
+#define EVINCE_DAEMON_INTERFACE      "org.gnome.Evince.Daemon"
 #endif
 
 static void _ev_application_open_uri_at_dest (EvApplication  *application,
@@ -993,7 +993,7 @@ app_about_cb (GSimpleAction *action,
                                "authors", authors,
                                "documenters", documenters,
                                "translator-credits", _("translator-credits"),
-                               "logo-icon-name", "org.gnome.evince",
+                               "logo-icon-name", "org.gnome.Evince",
                                NULL);
 }
 

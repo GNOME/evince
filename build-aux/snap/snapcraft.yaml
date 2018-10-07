@@ -19,7 +19,7 @@ slots:
   evince:
     interface: dbus
     bus: session
-    name: org.gnome.evince
+    name: org.gnome.Evince
 
 apps:
   evince:
@@ -32,7 +32,7 @@ apps:
       - network
       - unity7
       - wayland
-    desktop: usr/share/applications/org.gnome.evince.desktop
+    desktop: usr/share/applications/org.gnome.Evince.desktop
   evince-previewer:
     command: desktop-launch evince-previewer
     plugs:
@@ -43,7 +43,7 @@ apps:
       - network
       - unity7
       - wayland
-    desktop: usr/share/applications/org.gnome.evince-previewer.desktop
+    desktop: usr/share/applications/org.gnome.Evince-previewer.desktop
 
 parts:
   evince:
@@ -53,10 +53,10 @@ parts:
     source-type: git
     plugin: autotools
     prepare:
-      sed -i.bak -e 's|=evince$|=${SNAP}/meta/gui/evince.png|g' data/org.gnome.evince.desktop.in.in
+      sed -i.bak -e 's|=evince$|=${SNAP}/meta/gui/evince.png|g' data/org.gnome.Evince.desktop.in.in
     install: |
       mkdir -p $SNAPCRAFT_PART_INSTALL/meta/gui/
-      cp ../src/data/icons/256x256/apps/org.gnome.evince.png $SNAPCRAFT_PART_INSTALL/meta/gui/
+      cp ../src/data/icons/256x256/apps/org.gnome.Evince.png $SNAPCRAFT_PART_INSTALL/meta/gui/
       cp data/evince.desktop $SNAPCRAFT_PART_INSTALL/meta/gui/
     configflags: [--disable-maintainer-mode, --prefix=/snap/evince/current/usr]
     organize:
