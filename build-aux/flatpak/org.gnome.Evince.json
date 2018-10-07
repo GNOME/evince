@@ -22,7 +22,9 @@
         "--env=GDK_PIXBUF_MODULE_FILE=/app/lib/gdk-pixbuf-2.0/2.10.0/loaders.cache",
         "--talk-name=org.gtk.vfs",
         "--talk-name=org.gtk.vfs.*",
-        "--talk-name=org.gnome.SessionManager"
+        "--talk-name=org.gnome.SessionManager",
+		"--own-name=org.gnome.evince",
+		"--own-name=org.gnome.evince.Daemon"
     ],
     "build-options" : {
         "cflags" : "-O2 -g",
