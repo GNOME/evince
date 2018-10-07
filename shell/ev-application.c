@@ -67,7 +67,7 @@ G_DEFINE_TYPE (EvApplication, ev_application, GTK_TYPE_APPLICATION)
 #ifdef ENABLE_DBUS
 #define APPLICATION_NAME             "org.gnome.Evince"
 #define APPLICATION_DBUS_OBJECT_PATH "/org/gnome/evince/Evince"
-#define APPLICATION_DBUS_INTERFACE   "org.gnome.Evince.Application"
+#define APPLICATION_DBUS_INTERFACE   "org.gnome.evince.Application"
 
 #define EVINCE_DAEMON_SERVICE        "org.gnome.Evince.Daemon"
 #define EVINCE_DAEMON_OBJECT_PATH    "/org/gnome/evince/Daemon"
