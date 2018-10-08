@@ -30,7 +30,10 @@ if enable_dbus
   service_conf = configuration_data()
   service_conf.set('libexecdir', ev_libexecdir)
 
-  services = [[ev_namespace + '.Daemon.service', dbus_service_dir]]
+  # The D-Bus interface names are in lowercase, which does not match
+  # the application name nor the namespace. However, we keep it in
+  # lowercase for backward compatibility.
+  services = [[ev_namespace.to_lower() + '.Daemon.service', dbus_service_dir]]
 
   if install_systemd_user_unit_dir
     services += [[ev_namespace + '.service', systemd_user_unit_dir]]
