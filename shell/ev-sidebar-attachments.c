@@ -495,9 +495,9 @@ ev_sidebar_attachments_confirm_overwrite (EvSidebarAttachments   *attachbar,
 	                                            " it will overwrite its contents."),
 	                                          uri);
 
-	gtk_dialog_add_button (GTK_DIALOG (dialog), GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL);
+	gtk_dialog_add_button (GTK_DIALOG (dialog), _("_Cancel"), GTK_RESPONSE_CANCEL);
 	ev_add_custom_button_to_dialog (GTK_DIALOG (dialog), _("_Replace"),
-	                                GTK_STOCK_SAVE_AS, GTK_RESPONSE_ACCEPT);
+	                                _("_Save As…"), GTK_RESPONSE_ACCEPT);
 	gtk_dialog_set_alternative_button_order (GTK_DIALOG (dialog),
 	                                         GTK_RESPONSE_ACCEPT,
 	                                         GTK_RESPONSE_CANCEL,
