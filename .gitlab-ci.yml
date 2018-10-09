@@ -1,5 +1,9 @@
 stages:
     - build
+    - review
+
+variables:
+    BUNDLE: "org.gnome.Evince.flatpak"
 
 master:
     image: registry.gitlab.gnome.org/gnome/evince/master-amd64:latest
@@ -78,3 +82,78 @@ flatpak:
         paths:
         - build-aux/flatpak/org.gnome.Evince.flatpak
         expire_in: 2 days
+
+flatpak-meson:
+    image: registry.gitlab.gnome.org/gnome/gnome-runtime-images/gnome:master
+    stage: build
+
+    variables:
+        MANIFEST_PATH: "build-aux/flatpak/org.gnome.Evince.json"
+        RUNTIME_REPO: "https://sdk.gnome.org/gnome-nightly.flatpakrepo"
+        FLATPAK_MODULE: "evince"
+        MESON_ARGS: "-Dnautilus=false"
+        APP_ID: "org.gnome.Evince"
+
+    before_script:
+        - dnf install -y flatpak
+
+    script:
+        - flatpak-builder --stop-at=evince app ${MANIFEST_PATH}
+        - flatpak build app meson --prefix=/app ${MESON_ARGS} _build
+        - flatpak build app ninja -C _build install
+        - flatpak-builder --finish-only --repo=_repo app ${MANIFEST_PATH}
+        # Run automatic tests inside the Flatpak env
+        - xvfb-run -a -s "-screen 0 1024x768x24" flatpak build app ninja -C _build test
+        - flatpak build-bundle _repo ${BUNDLE} --runtime-repo=${RUNTIME_REPO} ${APP_ID}
+
+    artifacts:
+        paths:
+            - ${BUNDLE}
+            - _build/meson-logs/meson-log.txt
+        expire_in: 2 days
+
+    cache:
+        paths:
+            - .flatpak-builder/downloads
+            - .flatpak-builder/git
+
+review:
+    stage: review
+
+    dependencies:
+        - flatpak-meson
+
+    script:
+        - "Generating flatpak deployment"
+
+    artifacts:
+        paths:
+            - ${BUNDLE}
+        expire_in: 2 days
+
+    environment:
+        name: review/$CI_COMMIT_REF_NAME
+        url: https://gitlab.gnome.org/$CI_PROJECT_PATH/-/jobs/$CI_JOB_ID/artifacts/raw/${BUNDLE}
+        on_stop: stop_review
+
+    except:
+        - tags
+        # don't run on stable branches
+        - /^gnome-\d-\d\d$/
+        # No need to run on the upstream master branch either
+        - master@GNOME/evince
+
+stop_review:
+    stage: review
+    script:
+        - echo "Stopping flatpak deployment"
+    when: manual
+    environment:
+        name: review/$CI_COMMIT_REF_NAME
+        action: stop
+    except:
+        - tags
+        # don't run on stable branches
+        - /^gnome-\d-\d\d$/
+        # No need to run on the upstream master branch either
+        - master@GNOME/project-url
