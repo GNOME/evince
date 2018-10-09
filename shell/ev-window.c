@@ -773,7 +773,7 @@ ev_window_error_message (EvWindow    *window,
 	
 	area = ev_message_area_new (GTK_MESSAGE_ERROR,
 				    msg,
-				    GTK_STOCK_CLOSE,
+				    _("_Close"),
 				    GTK_RESPONSE_CLOSE,
 				    NULL);
 	g_free (msg);
@@ -805,7 +805,7 @@ ev_window_warning_message (EvWindow    *window,
 
 	area = ev_message_area_new (GTK_MESSAGE_WARNING,
 				    msg,
-				    GTK_STOCK_CLOSE,
+				    _("_Close"),
 				    GTK_RESPONSE_CLOSE,
 				    NULL);
 	g_free (msg);
@@ -1934,11 +1934,11 @@ show_loading_progress (EvWindow *ev_window)
 	text = g_strdup_printf (_("Loading document from “%s”"),
 				display_name);
 
-	area = ev_progress_message_area_new (GTK_STOCK_OPEN,
+	area = ev_progress_message_area_new (_("_Open"),
 					     text,
-					     GTK_STOCK_CLOSE,
+					     _("_Close"),
 					     GTK_RESPONSE_CLOSE,
-					     GTK_STOCK_CANCEL,
+					     _("C_ancel"),
 					     GTK_RESPONSE_CANCEL,
 					     NULL);
 	g_signal_connect (area, "response",
@@ -2387,11 +2387,11 @@ show_reloading_progress (EvWindow *ev_window)
 	
 	text = g_strdup_printf (_("Reloading document from %s"),
 				ev_window->priv->uri);
-	area = ev_progress_message_area_new (GTK_STOCK_REFRESH,
+	area = ev_progress_message_area_new (_("_Refresh"),
 					     text,
-					     GTK_STOCK_CLOSE,
+					     _("_Close"),
 					     GTK_RESPONSE_CLOSE,
-					     GTK_STOCK_CANCEL,
+					     _("C_ancel"),
 					     GTK_RESPONSE_CANCEL,
 					     NULL);
 	g_signal_connect (area, "response",
@@ -2652,9 +2652,9 @@ ev_window_cmd_file_open (GSimpleAction *action,
 	chooser = gtk_file_chooser_dialog_new (_("Open Document"),
 					       GTK_WINDOW (window),
 					       GTK_FILE_CHOOSER_ACTION_OPEN,
-					       GTK_STOCK_CANCEL,
+					       _("_Cancel"),
 					       GTK_RESPONSE_CANCEL,
-					       GTK_STOCK_OPEN, GTK_RESPONSE_OK,
+					       _("_Open"), GTK_RESPONSE_OK,
 					       NULL);
 
 	ev_document_factory_add_filters (chooser, NULL);
@@ -2736,11 +2736,11 @@ show_saving_progress (GFile *dst)
 		g_assert_not_reached ();
 	}
 	g_free (uri);
-	area = ev_progress_message_area_new (GTK_STOCK_SAVE,
+	area = ev_progress_message_area_new (_("_Save"),
 					     text,
-					     GTK_STOCK_CLOSE,
+					     _("_Close"),
 					     GTK_RESPONSE_CLOSE,
-					     GTK_STOCK_CANCEL,
+					     _("C_ancel"),
 					     GTK_RESPONSE_CANCEL,
 					     NULL);
 	g_signal_connect (area, "response",
@@ -2928,8 +2928,8 @@ ev_window_save_as (EvWindow *ev_window)
 	fc = gtk_file_chooser_dialog_new (
 		_("Save As…"),
 		GTK_WINDOW (ev_window), GTK_FILE_CHOOSER_ACTION_SAVE,
-		GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-		GTK_STOCK_SAVE, GTK_RESPONSE_OK,
+		_("_Cancel"), GTK_RESPONSE_CANCEL,
+		_("_Save"), GTK_RESPONSE_OK,
 		NULL);
 
 	ev_document_factory_add_filters (fc, ev_window->priv->document);
@@ -3440,11 +3440,11 @@ ev_window_print_operation_status_changed (EvPrintOperation *op,
 		job_name = ev_print_operation_get_job_name (op);
 		text = g_strdup_printf (_("Printing job “%s”"), job_name);
 
-		area = ev_progress_message_area_new (GTK_STOCK_PRINT,
+		area = ev_progress_message_area_new (_("_Print"),
 						     text,
-						     GTK_STOCK_CLOSE,
+						     _("_Close"),
 						     GTK_RESPONSE_CLOSE,
-						     GTK_STOCK_CANCEL,
+						     _("C_ancel"),
 						     GTK_RESPONSE_CANCEL,
 						     NULL);
 		ev_window_print_update_pending_jobs_message (ev_window, 1);
@@ -3667,9 +3667,9 @@ ev_window_check_document_modified (EvWindow      *ev_window,
 						gtk_window_get_title (GTK_WINDOW (ev_window)));
 		secondary_text_command = _("If you reload the document, changes will be permanently lost.");
 		gtk_dialog_add_buttons (GTK_DIALOG (dialog),
-					GTK_STOCK_NO,
+					_("_No"),
 					GTK_RESPONSE_NO,
-					_("Reload"),
+					_("_Reload"),
 					GTK_RESPONSE_YES,
 					NULL);
 		g_signal_connect (dialog, "response",
@@ -3682,7 +3682,7 @@ ev_window_check_document_modified (EvWindow      *ev_window,
 		gtk_dialog_add_buttons (GTK_DIALOG (dialog),
 				_("Close _without Saving"),
 				GTK_RESPONSE_NO,
-				GTK_STOCK_CANCEL,
+				_("C_ancel"),
 				GTK_RESPONSE_CANCEL,
 				_("Save a _Copy"),
 				GTK_RESPONSE_YES,
@@ -3795,7 +3795,7 @@ ev_window_check_print_queue (EvWindow *ev_window)
 	gtk_dialog_add_buttons (GTK_DIALOG (dialog),
 				_("Cancel _print and Close"),
 				GTK_RESPONSE_NO,
-				GTK_STOCK_CANCEL,
+				_("_Cancel"),
 				GTK_RESPONSE_CANCEL,
 				_("Close _after Printing"),
 				GTK_RESPONSE_YES,
@@ -5678,7 +5678,7 @@ ev_window_cmd_view_toggle_caret_navigation (GSimpleAction *action,
 
 	message_area = ev_message_area_new (GTK_MESSAGE_QUESTION,
 					    _("Enable caret navigation?"),
-					    GTK_STOCK_NO,  GTK_RESPONSE_NO,
+					    _("_No"),  GTK_RESPONSE_NO,
 					    _("_Enable"), GTK_RESPONSE_YES,
 					    NULL);
 	ev_message_area_set_secondary_text (EV_MESSAGE_AREA (message_area),
@@ -6621,9 +6621,9 @@ ev_window_popup_cmd_save_image_as (GSimpleAction *action,
 	fc = gtk_file_chooser_dialog_new (_("Save Image"),
 					  GTK_WINDOW (window),
 					  GTK_FILE_CHOOSER_ACTION_SAVE,
-					  GTK_STOCK_CANCEL,
+					  _("_Cancel"),
 					  GTK_RESPONSE_CANCEL,
-					  GTK_STOCK_SAVE, GTK_RESPONSE_OK,
+					  _("_Save"), GTK_RESPONSE_OK,
 					  NULL);
 
 	gtk_dialog_set_default_response (GTK_DIALOG (fc), GTK_RESPONSE_OK);
@@ -6846,9 +6846,9 @@ ev_window_popup_cmd_save_attachment_as (GSimpleAction *action,
 		_("Save Attachment"),
 		GTK_WINDOW (window),
 		attachment ? GTK_FILE_CHOOSER_ACTION_SAVE : GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
-		GTK_STOCK_CANCEL,
+		_("_Cancel"),
 		GTK_RESPONSE_CANCEL,
-		GTK_STOCK_SAVE, GTK_RESPONSE_OK,
+		_("_Save"), GTK_RESPONSE_OK,
 		NULL);
 
 	gtk_dialog_set_default_response (GTK_DIALOG (fc), GTK_RESPONSE_OK);

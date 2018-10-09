@@ -257,7 +257,7 @@ ev_password_view_ask_password (EvPasswordView *password_view)
 	gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
 
 	gtk_dialog_add_buttons (dialog,
-				GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+				_("_Cancel"), GTK_RESPONSE_CANCEL,
 				_("_Unlock Document"), GTK_RESPONSE_OK,
 				NULL);
 	gtk_dialog_set_default_response (dialog, GTK_RESPONSE_OK);
