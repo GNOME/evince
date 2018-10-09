@@ -3836,7 +3836,6 @@ ev_window_cmd_file_close_window (GSimpleAction *action,
 /**
  * ev_window_show_help:
  * @window: the #EvWindow
- * @screen: (allow-none): a #GdkScreen, or %NULL to use the default screen
  * @topic: (allow-none): the help topic, or %NULL to show the index
  *
  * Launches the help viewer on @screen to show the evince help.
@@ -3844,7 +3843,6 @@ ev_window_cmd_file_close_window (GSimpleAction *action,
  */
 static void
 ev_window_show_help (EvWindow   *window,
-                     GdkScreen  *screen,
                      const char *topic)
 {
         char *escaped_topic, *uri;
@@ -3857,7 +3855,8 @@ ev_window_show_help (EvWindow   *window,
                 uri = g_strdup ("help:evince");
         }
 
-        gtk_show_uri (screen, uri, gtk_get_current_event_time (), NULL);
+        gtk_show_uri_on_window (GTK_WINDOW (window), uri,
+				gtk_get_current_event_time (), NULL);
         g_free (uri);
 }
 
@@ -3868,7 +3867,7 @@ ev_window_cmd_help (GSimpleAction *action,
 {
 	EvWindow *ev_window = user_data;
 
-        ev_window_show_help (ev_window, NULL, NULL);
+        ev_window_show_help (ev_window, NULL);
 }
 
 static void
