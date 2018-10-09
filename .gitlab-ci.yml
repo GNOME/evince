@@ -78,3 +78,42 @@ flatpak:
         paths:
         - build-aux/flatpak/org.gnome.Evince.flatpak
         expire_in: 2 days
+
+flatpak-meson:
+    image: registry.gitlab.gnome.org/gnome/gnome-runtime-images/gnome:master
+    stage: build
+    when: manual
+
+    variables:
+        MANIFEST_PATH: "build-aux/flatpak/org.gnome.Evince.json"
+        RUNTIME_REPO: "https://sdk.gnome.org/gnome-nightly.flatpakrepo"
+        FLATPAK_MODULE: "evince"
+        CONFIGURE_ARGS: "-Dnautilus=false"
+        BUNDLE: "org.gnome.Evince.flatpak"
+
+    before_script:
+        - dnf install -y systemd
+
+    script:
+        - flatpak-builder --stop-at=evince app ${MANIFEST_PATH}
+        - flatpak build app meson --prefix=/app ${CONFIGURE_ARGS} _build
+        - flatpak build app ninja -C _build install
+        - flatpak-builder --finish-only --repo=_repo app ${MANIFEST_PATH}
+        - flatpak build-bundle repo ${BUNDLE} --runtime-repo=${RUNTIME_REPO} org.gnome.Evince
+
+    artifacts:
+        when: on_success
+        paths:
+            - ${BUNDLE}
+        expire_in: 2 days
+
+        when: on_failure
+        paths:
+            - _build/meson-logs/meson-log.txt
+        expire_in: 2 days
+
+    cache:
+        paths:
+            - .flatpak-builder/downloads
+            - .flatpak-builder/git
+
