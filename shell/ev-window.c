@@ -2934,10 +2934,6 @@ ev_window_save_as (EvWindow *ev_window)
 
 	ev_document_factory_add_filters (fc, ev_window->priv->document);
 	gtk_dialog_set_default_response (GTK_DIALOG (fc), GTK_RESPONSE_OK);
-        gtk_dialog_set_alternative_button_order (GTK_DIALOG (fc),
-                                                GTK_RESPONSE_OK,
-                                                GTK_RESPONSE_CANCEL,
-                                                -1);
 
 	gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (fc), FALSE);
 	gtk_file_chooser_set_do_overwrite_confirmation (GTK_FILE_CHOOSER (fc), TRUE);
@@ -3701,11 +3697,6 @@ ev_window_check_document_modified (EvWindow      *ev_window,
 	gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog),
 						  "%s %s", secondary_text, secondary_text_command);
 	gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_YES);
-        gtk_dialog_set_alternative_button_order (GTK_DIALOG (dialog),
-                                                 GTK_RESPONSE_YES,
-                                                 GTK_RESPONSE_NO,
-                                                 GTK_RESPONSE_CANCEL,
-                                                 -1);
 
 	gtk_widget_show (dialog);
 
@@ -3801,11 +3792,6 @@ ev_window_check_print_queue (EvWindow *ev_window)
 				GTK_RESPONSE_YES,
 				NULL);
 	gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_YES);
-        gtk_dialog_set_alternative_button_order (GTK_DIALOG (dialog),
-                                                 GTK_RESPONSE_YES,
-                                                 GTK_RESPONSE_NO,
-                                                 GTK_RESPONSE_CANCEL,
-                                                 -1);
 
 	g_signal_connect (dialog, "response",
 			  G_CALLBACK (print_jobs_confirmation_dialog_response),
@@ -6627,10 +6613,6 @@ ev_window_popup_cmd_save_image_as (GSimpleAction *action,
 					  NULL);
 
 	gtk_dialog_set_default_response (GTK_DIALOG (fc), GTK_RESPONSE_OK);
-        gtk_dialog_set_alternative_button_order (GTK_DIALOG (fc),
-                                                 GTK_RESPONSE_OK,
-                                                 GTK_RESPONSE_CANCEL,
-                                                 -1);
 
 	gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (fc), FALSE);
 	gtk_file_chooser_set_do_overwrite_confirmation (GTK_FILE_CHOOSER (fc), TRUE);
@@ -6852,10 +6834,6 @@ ev_window_popup_cmd_save_attachment_as (GSimpleAction *action,
 		NULL);
 
 	gtk_dialog_set_default_response (GTK_DIALOG (fc), GTK_RESPONSE_OK);
-        gtk_dialog_set_alternative_button_order (GTK_DIALOG (fc),
-                                                 GTK_RESPONSE_OK,
-                                                 GTK_RESPONSE_CANCEL,
-                                                 -1);
 
 	gtk_file_chooser_set_do_overwrite_confirmation (GTK_FILE_CHOOSER (fc), TRUE);
 	gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (fc), FALSE);

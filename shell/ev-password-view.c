@@ -263,11 +263,7 @@ ev_password_view_ask_password (EvPasswordView *password_view)
 	gtk_dialog_set_default_response (dialog, GTK_RESPONSE_OK);
 	gtk_dialog_set_response_sensitive (GTK_DIALOG (dialog),
 					   GTK_RESPONSE_OK, FALSE);
-	gtk_dialog_set_alternative_button_order (dialog,
-						 GTK_RESPONSE_OK,
-						 GTK_RESPONSE_CANCEL,
-						 -1);
-	
+
 	/* Build contents */
 	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 12);
 	gtk_container_set_border_width (GTK_CONTAINER (hbox), 5);
