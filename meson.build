@@ -233,10 +233,7 @@ systemd_user_unit_dir = get_option('systemduserunitdir')
 install_systemd_user_unit_dir = (systemd_user_unit_dir != 'no')
 
 if install_systemd_user_unit_dir and systemd_user_unit_dir == ''
-  systemd_dep = dependency('systemd', required: false)
-
-  assert(systemd_dep.found(), 'systemd required but not found, please provide a valid systemd user unit dir or disable it')
-  systemd_user_unit_dir = systemd_dep.get_pkgconfig_variable('systemduserunitdir')
+  systemd_user_unit_dir = join_paths(ev_prefix, 'lib', 'systemd', 'user')
 endif
 
 # *** Check for Desktop Schemas ***
