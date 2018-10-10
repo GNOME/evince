@@ -132,8 +132,8 @@ ev_password_view_init (EvPasswordView *password_view)
 					    NULL);
 	gtk_box_pack_start (GTK_BOX (vbox), password_view->priv->label, FALSE, FALSE, 0);
 
-	image = gtk_image_new_from_stock (GTK_STOCK_DIALOG_AUTHENTICATION,
-					  GTK_ICON_SIZE_DIALOG);
+	image = gtk_image_new_from_icon_name ("dialog-password",
+					      GTK_ICON_SIZE_DIALOG);
 	gtk_box_pack_start (GTK_BOX (vbox), image, FALSE, FALSE, 0);
 
 	label = gtk_label_new (NULL);
@@ -252,7 +252,7 @@ ev_password_view_ask_password (EvPasswordView *password_view)
 
 	gtk_window_set_title (GTK_WINDOW (dialog), _("Enter password"));
 	gtk_window_set_resizable (GTK_WINDOW (dialog), FALSE);
-	gtk_window_set_icon_name (GTK_WINDOW (dialog), GTK_STOCK_DIALOG_AUTHENTICATION);
+	gtk_window_set_icon_name (GTK_WINDOW (dialog), "dialog-password");
 	gtk_window_set_transient_for (GTK_WINDOW (dialog), password_view->priv->parent_window);
 	gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
 
@@ -274,8 +274,8 @@ ev_password_view_ask_password (EvPasswordView *password_view)
 	gtk_box_pack_start (GTK_BOX (content_area), hbox, TRUE, TRUE, 0);
 	gtk_widget_show (hbox);
 
-	icon = gtk_image_new_from_stock (GTK_STOCK_DIALOG_AUTHENTICATION,
-					 GTK_ICON_SIZE_DIALOG);
+	icon = gtk_image_new_from_icon_name ("dialog-password",
+					     GTK_ICON_SIZE_DIALOG);
 
 	gtk_misc_set_alignment (GTK_MISC (icon), 0.5, 0.0);
 	gtk_box_pack_start (GTK_BOX (hbox), icon, FALSE, FALSE, 0);
