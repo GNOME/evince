@@ -167,8 +167,9 @@
         },
         {
             "name" : "evince",
+            "buildsystem" : "meson",
             "config-opts" : [
-                "--disable-nautilus"
+                "-Dnautilus=false"
             ],
             "sources" : [
                 {
