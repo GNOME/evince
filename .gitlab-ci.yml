@@ -67,25 +67,6 @@ gtk-doc:
 flatpak:
     image: registry.gitlab.gnome.org/gnome/gnome-runtime-images/gnome:master
     stage: build
-    only:
-        refs:
-            - master
-
-    before_script:
-        - dnf install -y flatpak-builder flatpak
-
-    script:
-        - ./build-aux/flatpak/local-build.sh
-
-    artifacts:
-        when: on_success
-        paths:
-        - build-aux/flatpak/org.gnome.Evince.flatpak
-        expire_in: 2 days
-
-flatpak-meson:
-    image: registry.gitlab.gnome.org/gnome/gnome-runtime-images/gnome:master
-    stage: build
 
     variables:
         MANIFEST_PATH: "build-aux/flatpak/org.gnome.Evince.json"
@@ -118,7 +99,7 @@ deploy:
     stage: deploy
 
     dependencies:
-        - flatpak-meson
+        - flatpak
 
     script:
         - echo "Generating flatpak deployment"
