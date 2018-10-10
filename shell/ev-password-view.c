@@ -282,7 +282,7 @@ ev_password_view_ask_password (EvPasswordView *password_view)
 	gtk_widget_show (main_vbox);
 
 	label = gtk_label_new (NULL);
-	gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
+	g_object_set (G_OBJECT (label), "xalign", 0., "yalign", 0.5, NULL);
 	gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
         text = g_markup_printf_escaped (_("The document “%s” is locked and requires a password before it can be opened."),
                                         password_view->priv->filename);
@@ -324,7 +324,7 @@ ev_password_view_ask_password (EvPasswordView *password_view)
 	gtk_widget_show (grid);
 
 	label = gtk_label_new_with_mnemonic (_("_Password:"));
-	gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
+	g_object_set (G_OBJECT (label), "xalign", 0., "yalign", 0.5, NULL);
 
 	password_view->priv->password_entry = gtk_entry_new ();
 	gtk_entry_set_visibility (GTK_ENTRY (password_view->priv->password_entry), FALSE);
