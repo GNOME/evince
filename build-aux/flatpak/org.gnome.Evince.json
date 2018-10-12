@@ -64,25 +64,6 @@
             ]
         },
         {
-            "name": "libwebp",
-            "config-opts": [
-                "--disable-static",
-                "--enable-libwebpmux",
-                "--enable-libwebpdemux"
-            ],
-            "cleanup": [
-                "/share",
-                "/bin"
-            ],
-            "sources": [
-                {
-                    "type": "archive",
-                    "url": "https://github.com/webmproject/libwebp/archive/v1.0.0.tar.gz",
-                    "sha256": "c5c5ebf979543ac1f3348df8f6245262abd787a147b9632c880d92bfc38dbbeb"
-                }
-            ]
-        },
-        {
             "name": "webp-pixbuf-loader",
             "buildsystem": "cmake-ninja",
             "sources": [
