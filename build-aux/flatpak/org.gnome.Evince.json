@@ -47,6 +47,20 @@
     ],
     "modules": [
         {
+            "name" : "meson",
+            "buildsystem" : "simple",
+            "build-commands" : [
+                "python3 setup.py install --prefix=/app"
+            ],
+            "sources" : [
+                {
+                    "type" : "git",
+                    "url" : "https://github.com/mesonbuild/meson.git",
+                    "tag" : "0.48.0"
+                }
+            ]
+        },
+        {
             "name": "openjpeg",
             "buildsystem": "cmake-ninja",
             "config-opts": [
