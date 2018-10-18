@@ -6593,6 +6593,9 @@ ev_view_move_cursor (EvView         *view,
 		}
 
 		if (changed_page) {
+                       rect.x += view->scroll_x;
+                       rect.y += view->scroll_y;
+                       _ev_view_ensure_rectangle_is_visible (view, &rect);
 			g_signal_emit (view, signals[SIGNAL_CURSOR_MOVED], 0, view->cursor_page, view->cursor_offset);
 			clear_selection (view);
 			return TRUE;
