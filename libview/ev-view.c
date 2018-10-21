@@ -5615,6 +5615,11 @@ ev_view_motion_notify_event (GtkWidget      *widget,
 			dvadj_value = gtk_adjustment_get_page_size (view->vadjustment) *
 				      (gdouble)dy / allocation.height;
 
+			/* We will update the drag event's start position if
+			 * the adjustment value is changed, but only if the
+			 * change was not caused by this function. */
+			view->drag_info.in_notify = TRUE;
+
 			/* clamp scrolling to visible area */
 			gtk_adjustment_set_value (view->hadjustment,
 						  MIN (view->drag_info.hadj - dhadj_value,
@@ -5624,6 +5629,8 @@ ev_view_motion_notify_event (GtkWidget      *widget,
 						  MIN (view->drag_info.vadj - dvadj_value,
 						       gtk_adjustment_get_upper (view->vadjustment) -
 						       gtk_adjustment_get_page_size (view->vadjustment)));
+
+			view->drag_info.in_notify = FALSE;
 
 			return TRUE;
 		}
@@ -7820,6 +7827,13 @@ on_adjustment_value_changed (GtkAdjustment *adjustment,
 
 	if (!gtk_widget_get_realized (widget))
 		return;
+
+	/* If the adjustment value is set during a drag event, update the drag
+	 * start position so it can continue from the new location. */
+	if (view->drag_info.in_drag && !view->drag_info.in_notify) {
+		view->drag_info.hadj += gtk_adjustment_get_value (view->hadjustment) - view->scroll_x;
+		view->drag_info.vadj += gtk_adjustment_get_value (view->vadjustment) - view->scroll_y;
+	}
 
 	if (view->hadjustment) {
 		value = (gint) gtk_adjustment_get_value (view->hadjustment);
