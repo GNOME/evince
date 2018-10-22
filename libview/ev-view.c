@@ -2692,14 +2692,19 @@ ev_view_form_field_choice_create_widget (EvView      *view,
 					G_CALLBACK (ev_view_form_field_destroy),
 					view);
 	} else if (field_choice->is_editable) { /* ComboBoxEntry */
+		GtkEntry *combo_entry;
 		gchar *text;
 
 		choice = gtk_combo_box_new_with_model_and_entry (model);
+		combo_entry = GTK_ENTRY (gtk_bin_get_child (GTK_BIN (choice)));
+		/* This sets GtkEntry's minimum-width to be 1 char long, short enough
+		 * to workaround gtk issue gtk#1422 . Evince issue #1002 */
+		gtk_entry_set_width_chars (combo_entry, 1);
 		gtk_combo_box_set_entry_text_column (GTK_COMBO_BOX (choice), 0);
 
 		text = ev_document_forms_form_field_choice_get_text (EV_DOCUMENT_FORMS (view->document), field);
 		if (text) {
-			gtk_entry_set_text (GTK_ENTRY (gtk_bin_get_child (GTK_BIN (choice))), text);
+			gtk_entry_set_text (combo_entry, text);
 			g_free (text);
 		}
 
