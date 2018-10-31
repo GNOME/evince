@@ -142,6 +142,18 @@ main (gint argc, gchar **argv)
 	gchar           *path;
         int              status = 1;
 
+	const gchar *action_accels[] = {
+		"win.select-page",      "<Ctrl>L", NULL,
+		"win.go-previous-page", "p", "<Ctrl>Page_Up", NULL,
+		"win.go-next-page",     "n", "<Ctrl>Page_Down", NULL,
+		"win.print",            "<Ctrl>P", NULL,
+		"win.zoom-in",          "plus", "<Ctrl>plus", "KP_Add", "<Ctrl>KP_Add", "equal", "<Ctrl>equal", NULL,
+		"win.zoom-out",         "minus", "<Ctrl>minus", "KP_Subtract", "<Ctrl>KP_Subtract", NULL,
+		"win.zoom-default",     "a", NULL,
+		NULL,
+	};
+        const char **it;
+
 #ifdef G_OS_WIN32
     if (fileno (stdout) != -1 &&
  	  _get_osfhandle (fileno (stdout)) != -1)
@@ -208,13 +220,16 @@ main (gint argc, gchar **argv)
 	ev_stock_icons_init ();
 
 	g_set_application_name (_("GNOME Document Previewer"));
-	gtk_window_set_default_icon_name ("evince");
+	gtk_window_set_default_icon_name ("org.gnome.Evince");
 
         application = gtk_application_new (NULL,
                                            G_APPLICATION_NON_UNIQUE |
                                            G_APPLICATION_HANDLES_OPEN);
         g_signal_connect (application, "activate", G_CALLBACK (activate_cb), NULL);
         g_signal_connect (application, "open", G_CALLBACK (open_cb), NULL);
+
+        for (it = action_accels; it[0]; it += g_strv_length ((gchar **)it) + 1)
+                gtk_application_set_accels_for_action (GTK_APPLICATION (application), it[0], &it[1]);
 
         status = g_application_run (G_APPLICATION (application), argc, argv);
 

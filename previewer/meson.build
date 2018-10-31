@@ -1,12 +1,13 @@
 sources = files(
   'ev-previewer.c',
+  'ev-previewer-toolbar.c',
   'ev-previewer-window.c',
 )
 
 resource_data = files(
   '../data/thumbnail-frame.png',
   'evince-previewer.css',
-  'previewer-ui.xml',
+  'previewer.ui',
 )
 
 sources += gnome.compile_resources(
