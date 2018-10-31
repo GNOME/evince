@@ -4,6 +4,8 @@ bin_PROGRAMS = evince-previewer
 
 evince_previewer_SOURCES = \
 	ev-previewer.c \
+	ev-previewer-toolbar.h \
+	ev-previewer-toolbar.c \
 	ev-previewer-window.h \
 	ev-previewer-window.c \
 	$(NULL)
@@ -42,7 +44,6 @@ ev-previewer-resources.c: previewer.gresource.xml Makefile $(shell $(GLIB_COMPIL
 EXTRA_DIST = \
 	previewer.gresource.xml \
 	evince-previewer.css \
-	previewer-ui.xml \
 	$(NULL)
 
 CLEANFILES = \
