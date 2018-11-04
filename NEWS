@@ -1,4 +1,54 @@
 ================
+Evince    3.31.1
+================
+
+Printing:
+ * Fix messages to show printed file name when it contains '&' in the name (#776, Nelson Benítez León)
+
+libdocument:
+ * Fix handling of mime-type aiases (#972, Bastien Nocera)
+ * Fix regression, open gzipped documents (#988, Christian Persch)
+
+Backends:
+ * comics: Use official IANA type for .cbr (#972, Frank Dana)
+ * djvu: Ignore text regions that are missing text (Jason Crain)
+
+UI:
+ * Fix Dual odd-left state (#603, Nelson Benítez León)
+ * Fix regression, set to odd-left in dual mode when document has only 2 pages (#669, Nelson Benítez León)
+ * Fix cursor movement when logical and visual line differs (#889, Colomban Wendling)
+ * Fix zoom-action to respond touch events (#976, Jason Crain)
+ * shell: Don't reference systemd service (Bastien Nocera)
+
+Browser plugin:
+ * browser-plugin: Remove browser-plugin support (#968, Germán Poo-Caamaño)
+
+Build:
+ * Migrate from Intltool to Gettext (Iñigo Martínez)
+ * Port to Meson build system (Iñigo Martínez)
+ * Print systemd unit installation status (Bastien Nocera)
+ * Fix meson build when ps and dvi are disabled (Jason Crain)
+ * Add manual pipeline to build gtk-doc using meson (Germán Poo-Caamaño)
+ * Run flatpak CI only for master (Germán Poo-Caamaño)
+ * Add a new manual meson target for CI (Germán Poo-Caamaño)
+ * Fix D-Bus Daemon call on flatpak (#990, Bastien Nocera, Germán Poo-Caamaño)
+
+UI translations:
+ * Daniel Mustieles (es)
+ * Dušan Kazik (sk)
+ * Jordi Mas (ca)
+ * Matej Urbančič (sl)
+ * Piotr Drąg (pl)
+ * Stas Solovey (ru)
+ * Tom Tryfonidis (el)
+ * Yuras Shumovich (be)
+ * Марко Костић (sr)
+ * خالد حسني (ar)
+
+Doc translations:
+ * Marek Cernocky (cs)
+
+================
 Evince    3.30.0
 ================
 

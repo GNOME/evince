@@ -25,10 +25,6 @@ if ENABLE_PREVIEWER
 SUBDIRS += previewer
 endif
 
-if ENABLE_BROWSER_PLUGIN
-SUBDIRS += browser-plugin
-endif
-
 NULL =
 
 pkgconfigdir = $(libdir)/pkgconfig
@@ -49,14 +45,12 @@ appdatadir = $(datadir)/metainfo
 appdata_in_files = org.gnome.Evince.appdata.xml.in
 nodist_appdata_DATA = $(appdata_in_files:.xml.in=.xml)
 
-@INTLTOOL_XML_RULE@
+org.gnome.Evince.appdata.xml: org.gnome.Evince.appdata.xml.in
+	$(AM_V_GEN)$(MSGFMT) --xml --template $< -d $(top_srcdir)/po -o $@
 
 # Applications 
 
-intltool_extra = intltool-extract.in intltool-merge.in intltool-update.in
-
 EXTRA_DIST = \
-	$(intltool_extra) \
 	$(header_DATA) \
 	$(appdata_in_files) \
 	autogen.sh \
@@ -67,10 +61,7 @@ CLEANFILES = \
 	$(nodist_appdata_DATA) \
 	$(NULL)
 
-DISTCLEANFILES = 		\
-	intltool-extract 	\
-	intltool-merge 		\
-	intltool-update
+DISTCLEANFILES = 
 
 MAINTAINERCLEANFILES = \
 	ChangeLog \

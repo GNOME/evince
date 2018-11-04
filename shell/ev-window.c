@@ -324,7 +324,7 @@ static void     ev_window_zoom_changed_cb 	        (EvDocumentModel  *model,
 							 GParamSpec       *pspec,
 							 EvWindow         *ev_window);
 static void     ev_window_add_recent                    (EvWindow         *window,
-							 const char       *filename);
+							 const char       *uri);
 static void     ev_window_run_fullscreen                (EvWindow         *window);
 static void     ev_window_stop_fullscreen               (EvWindow         *window,
 							 gboolean          unfullscreen_window);
@@ -547,8 +547,6 @@ ev_window_update_actions_sensitivity (EvWindow *ev_window)
 				      !recent_view_mode);
 	ev_window_set_action_enabled (ev_window, "dual-page", has_pages &&
 				      !recent_view_mode);
-	ev_window_set_action_enabled (ev_window, "dual-odd-left", has_pages &&
-				      !recent_view_mode);
 	ev_window_set_action_enabled (ev_window, "reload", has_pages &&
 				      !recent_view_mode);
 	ev_window_set_action_enabled (ev_window, "auto-scroll", has_pages &&
@@ -605,7 +603,7 @@ ev_window_update_actions_sensitivity (EvWindow *ev_window)
 				      has_pages && can_find_in_page &&
 				      !recent_view_mode);
 	ev_window_set_action_enabled (ev_window, "dual-odd-left", dual_mode &&
-				      !recent_view_mode);
+				      has_pages && !recent_view_mode);
 
 	ev_window_set_action_enabled (ev_window, "zoom-in",
 				      has_pages &&
@@ -1370,8 +1368,13 @@ setup_document_from_metadata (EvWindow *window)
 	    ev_metadata_get_int (window->priv->metadata, "window_height", &height))
 		return; /* size was already set in setup_size_from_metadata */
 
+	/* Following code is intended to be executed first time a document is opened
+	 * in Evince, that's why is located *after* the previous return that exits
+	 * when evince metadata for window_width{height} already exists. */
 	if (n_pages == 1)
 		ev_document_model_set_dual_page (window->priv->model, FALSE);
+	else if (n_pages == 2)
+		ev_document_model_set_dual_page_odd_pages_left (window->priv->model, TRUE);
 
 	g_settings_get (window->priv->default_settings, "window-ratio", "(dd)", &width_ratio, &height_ratio);
 	if (width_ratio > 0. && height_ratio > 0.) {
@@ -2785,9 +2788,9 @@ ev_window_cmd_file_open_copy (GSimpleAction *action,
 }
 
 static void
-ev_window_add_recent (EvWindow *window, const char *filename)
+ev_window_add_recent (EvWindow *window, const char *uri)
 {
-	gtk_recent_manager_add_item (window->priv->recent_manager, filename);
+	gtk_recent_manager_add_item (window->priv->recent_manager, uri);
 }
 
 static gboolean 
@@ -3930,6 +3933,93 @@ ev_window_cmd_file_close_window (GSimpleAction *action,
 
 	if (ev_window_close (ev_window))
 		gtk_widget_destroy (GTK_WIDGET (ev_window));
+}
+
+/**
+ * ev_window_show_help:
+ * @window: the #EvWindow
+ * @screen: (allow-none): a #GdkScreen, or %NULL to use the default screen
+ * @topic: (allow-none): the help topic, or %NULL to show the index
+ *
+ * Launches the help viewer on @screen to show the evince help.
+ * If @topic is %NULL, shows the help index; otherwise the topic.
+ */
+static void
+ev_window_show_help (EvWindow   *window,
+                     GdkScreen  *screen,
+                     const char *topic)
+{
+        char *escaped_topic, *uri;
+
+        if (topic != NULL) {
+                escaped_topic = g_uri_escape_string (topic, NULL, TRUE);
+                uri = g_strdup_printf ("help:evince/%s", escaped_topic);
+                g_free (escaped_topic);
+        } else {
+                uri = g_strdup ("help:evince");
+        }
+
+        gtk_show_uri (screen, uri, gtk_get_current_event_time (), NULL);
+        g_free (uri);
+}
+
+static void
+ev_window_cmd_help (GSimpleAction *action,
+		    GVariant      *parameter,
+		    gpointer       user_data)
+{
+	EvWindow *ev_window = user_data;
+
+        ev_window_show_help (ev_window, NULL, NULL);
+}
+
+static void
+ev_window_cmd_about (GSimpleAction *action,
+		     GVariant      *parameter,
+		     gpointer       user_data)
+{
+	EvWindow *ev_window = user_data;
+
+        const char *authors[] = {
+                "Martin Kretzschmar <m_kretzschmar@gmx.net>",
+                "Jonathan Blandford <jrb@gnome.org>",
+                "Marco Pesenti Gritti <marco@gnome.org>",
+                "Nickolay V. Shmyrev <nshmyrev@yandex.ru>",
+                "Bryan Clark <clarkbw@gnome.org>",
+                "Carlos Garcia Campos <carlosgc@gnome.org>",
+                "Wouter Bolsterlee <wbolster@gnome.org>",
+                "Christian Persch <chpe" "\100" "gnome.org>",
+                "Germán Poo-Caamaño <gpoo" "\100" "gnome.org>",
+                NULL
+        };
+        const char *documenters[] = {
+                "Nickolay V. Shmyrev <nshmyrev@yandex.ru>",
+                "Phil Bull <philbull@gmail.com>",
+                "Tiffany Antpolski <tiffany.antopolski@gmail.com>",
+                NULL
+        };
+#ifdef ENABLE_NLS
+        const char **p;
+
+        for (p = authors; *p; ++p)
+                *p = _(*p);
+
+        for (p = documenters; *p; ++p)
+                *p = _(*p);
+#endif
+
+        gtk_show_about_dialog (GTK_WINDOW (ev_window),
+                               "name", _("Evince"),
+                               "version", VERSION,
+                               "copyright", _("© 1996–2017 The Evince authors"),
+                               "license-type", GTK_LICENSE_GPL_2_0,
+                               "website", "https://wiki.gnome.org/Apps/Evince",
+                               "comments", _("Document Viewer"),
+                               "authors", authors,
+                               "documenters", documenters,
+                               "translator-credits", _("translator-credits"),
+                               "logo-icon-name", "org.gnome.Evince",
+                               NULL);
 }
 
 static void
@@ -5121,9 +5211,17 @@ ev_window_dual_mode_odd_pages_left_changed_cb (EvDocumentModel *model,
 					       GParamSpec      *pspec,
 					       EvWindow        *ev_window)
 {
+	gboolean odd_left;
+	GAction *action;
+
+	odd_left = ev_document_model_get_dual_page_odd_pages_left (model);
+
+	action = g_action_map_lookup_action (G_ACTION_MAP (ev_window), "dual-odd-left");
+	g_simple_action_set_state (G_SIMPLE_ACTION (action), g_variant_new_boolean (odd_left));
+
 	if (ev_window->priv->metadata && !ev_window_is_empty (ev_window))
 		ev_metadata_set_boolean (ev_window->priv->metadata, "dual-page-odd-left",
-					 ev_document_model_get_dual_page_odd_pages_left (model));
+					 odd_left);
 }
 
 static void
@@ -6065,6 +6163,8 @@ static const GActionEntry actions[] = {
 	{ "add-annotation", NULL, NULL, "false", ev_window_cmd_add_annotation },
 	{ "highlight-annotation", NULL, NULL, "false", ev_window_cmd_add_highlight_annotation },
 	{ "toggle-edit-annots", NULL, NULL, "false", ev_window_cmd_toggle_edit_annots },
+	{ "about", ev_window_cmd_about },
+	{ "help", ev_window_cmd_help },
 	/* Popups specific items */
 	{ "annotate-selected-text", ev_window_popup_cmd_annotate_selected_text },
 	{ "open-link", ev_window_popup_cmd_open_link },
@@ -7580,4 +7680,12 @@ ev_window_focus_view (EvWindow *ev_window)
 	g_return_if_fail (EV_WINDOW (ev_window));
 
 	gtk_widget_grab_focus (ev_window->priv->view);
+}
+
+EvMetadata *
+ev_window_get_metadata (EvWindow *ev_window)
+{
+	g_return_val_if_fail (EV_WINDOW (ev_window), NULL);
+
+	return ev_window->priv->metadata;
 }

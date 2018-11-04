@@ -3,8 +3,8 @@
 # *****************************************************************************
 
 m4_define([ev_major_version],[3])
-m4_define([ev_minor_version],[30])
-m4_define([ev_micro_version],[0])
+m4_define([ev_minor_version],[31])
+m4_define([ev_micro_version],[1])
 m4_define([ev_extra_version],[])
 m4_define([ev_version],[ev_major_version.ev_minor_version.ev_micro_version()ev_extra_version])
 
@@ -74,16 +74,15 @@ LT_LIB_M
 
 GNOME_CXX_WARNINGS
 
-IT_PROG_INTLTOOL([0.35.0])
+AX_REQUIRE_DEFINED([AM_GNU_GETTEXT_VERSION])
+AM_GNU_GETTEXT_VERSION([0.19.8])
+
+AX_REQUIRE_DEFINED([AM_GNU_GETTEXT])
+AM_GNU_GETTEXT([external])
 
 GETTEXT_PACKAGE=evince
 AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED([GETTEXT_PACKAGE],["$GETTEXT_PACKAGE"],[Gettext package])
-AM_GLIB_GNU_GETTEXT
-
-m4_pattern_allow([AM_V_GEN])dnl Make autoconf not complain about the rule below
-EV_INTLTOOL_EVINCE_BACKEND_RULE='%.evince-backend:   %.evince-backend.in   $(INTLTOOL_MERGE) $(wildcard $(top_srcdir)/po/*.po) ; $(AM_V_GEN) LC_ALL=C $(INTLTOOL_MERGE) -d -u -c $(top_builddir)/po/.intltool-merge-cache $(top_srcdir)/po $< [$]@'
-AC_SUBST([EV_INTLTOOL_EVINCE_BACKEND_RULE])
 
 GLIB_GSETTINGS
 
@@ -501,31 +500,6 @@ PREVIEWER_LIBS="$PREVIEWER_LIBS $GTKUNIXPRINT_LIBS -lz"
 AC_SUBST(PREVIEWER_CFLAGS)
 AC_SUBST(PREVIEWER_LIBS)
 
-
-# **************
-# Browser Plugin
-# **************
-
-AC_ARG_ENABLE([browser-plugin],
-  [AS_HELP_STRING([--disable-browser-plugin],
-                  [Disable the Browser Plugin])],
-  [],
-  [enable_browser_plugin=no])
-
-if test x$enable_browser_plugin = "xyes" ; then
-  PKG_CHECK_MODULES([BROWSER_PLUGIN],[gtk+-3.0 >= $GTK_REQUIRED gthread-2.0 gio-2.0 >= $GLIB_REQUIRED])
-
-  if test -z "${BROWSER_PLUGIN_DIR}"; then
-    BROWSER_PLUGIN_DIR="\${libdir}/mozilla/plugins"
-  fi
-  AC_ARG_VAR([BROWSER_PLUGIN_DIR],[Where to install the plugin to])
-fi
-
-AM_CONDITIONAL([ENABLE_BROWSER_PLUGIN],[test "$enable_browser_plugin" = "yes"])
-BROWSER_PLUGIN_CFLAGS="$BROWSER_PLUGIN_CFLAGS $DEBUG_FLAGS"
-AC_SUBST(BROWSER_PLUGIN_CFLAGS)
-AC_SUBST(BROWSER_PLUGIN_LIBS)
-
 # ***
 # GIR
 # ***
@@ -923,29 +897,28 @@ AC_SUBST([AM_LDFLAGS])
 
 AC_CONFIG_FILES([
 backend/Makefile
-backend/comics/comicsdocument.evince-backend.in
+backend/comics/comicsdocument.evince-backend.desktop.in
 backend/comics/evince-comicsdocument.metainfo.xml.in
 backend/comics/Makefile
-backend/djvu/djvudocument.evince-backend.in
+backend/djvu/djvudocument.evince-backend.desktop.in
 backend/djvu/evince-djvudocument.metainfo.xml.in
 backend/djvu/Makefile
-backend/dvi/dvidocument.evince-backend.in
+backend/dvi/dvidocument.evince-backend.desktop.in
 backend/dvi/evince-dvidocument.metainfo.xml.in
 backend/dvi/Makefile
 backend/dvi/mdvi-lib/Makefile
 backend/pdf/evince-pdfdocument.metainfo.xml.in
-backend/pdf/pdfdocument.evince-backend.in
+backend/pdf/pdfdocument.evince-backend.desktop.in
 backend/pdf/Makefile
 backend/ps/evince-psdocument.metainfo.xml.in
-backend/ps/psdocument.evince-backend.in
+backend/ps/psdocument.evince-backend.desktop.in
 backend/ps/Makefile
 backend/tiff/evince-tiffdocument.metainfo.xml.in
-backend/tiff/tiffdocument.evince-backend.in
+backend/tiff/tiffdocument.evince-backend.desktop.in
 backend/tiff/Makefile
 backend/xps/evince-xpsdocument.metainfo.xml.in
-backend/xps/xpsdocument.evince-backend.in
+backend/xps/xpsdocument.evince-backend.desktop.in
 backend/xps/Makefile
-browser-plugin/Makefile
 cut-n-paste/Makefile
 cut-n-paste/gimpcellrenderertoggle/Makefile
 cut-n-paste/synctex/Makefile
@@ -1023,7 +996,6 @@ Viewer ...................:  $enable_viewer
 Previewer ................:  $enable_previewer
 Thumbnailer ..............:  $enable_thumbnailer
 Nautilus Extensions.......:  $enable_nautilus
-Browser Plugin............:  $enable_browser_plugin
 
 
 BACKENDS
@@ -1042,6 +1014,7 @@ FEATURES
 GTK Doc reference ........:  $enable_gtk_doc
 GObject Introspection ....:  $enable_introspection
 DBUS communication .......:  $enable_dbus
+systemd units installation:  $systemd_userdir
 Keyring integration ......:  $with_keyring
 GTK+ Unix Print ..........:  $with_gtk_unix_print
 Thumbnail cache ..........:  $enable_gnome_desktop

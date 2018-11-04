@@ -1,15 +1,15 @@
 {
-    "app-id" : "org.gnome.Evince",
-    "runtime" : "org.gnome.Platform",
-    "runtime-version" : "master",
-    "sdk" : "org.gnome.Sdk",
-    "command" : "evince",
-    "tags" : [
+    "app-id": "org.gnome.Evince",
+    "runtime": "org.gnome.Platform",
+    "runtime-version": "master",
+    "sdk": "org.gnome.Sdk",
+    "command": "evince",
+    "tags": [
         "devel"
     ],
-    "desktop-file-name-prefix" : "(Development) ",
-    "copy-icon" : true,
-    "finish-args" : [
+    "desktop-file-name-prefix": "(Development) ",
+    "copy-icon": true,
+    "finish-args": [
         "--share=ipc",
         "--socket=x11",
         "--socket=wayland",
@@ -22,16 +22,18 @@
         "--env=GDK_PIXBUF_MODULE_FILE=/app/lib/gdk-pixbuf-2.0/2.10.0/loaders.cache",
         "--talk-name=org.gtk.vfs",
         "--talk-name=org.gtk.vfs.*",
-        "--talk-name=org.gnome.SessionManager"
+        "--talk-name=org.gnome.SessionManager",
+        "--own-name=org.gnome.evince",
+        "--own-name=org.gnome.evince.Daemon"
     ],
-    "build-options" : {
-        "cflags" : "-O2 -g",
-        "cxxflags" : "-O2 -g",
-        "env" : {
-            "V" : "1"
+    "build-options": {
+        "cflags": "-O2 -g",
+        "cxxflags": "-O2 -g",
+        "env": {
+            "V": "1"
         }
     },
-    "cleanup" : [
+    "cleanup": [
         "/include",
         "/lib/pkgconfig",
         "/share/pkgconfig",
@@ -43,43 +45,32 @@
         "*.la",
         "*.a"
     ],
-    "modules" : [
+    "modules": [
         {
-            "name" : "openjpeg",
-            "buildsystem" : "cmake-ninja",
-            "config-opts" : [
+            "name": "openjpeg",
+            "buildsystem": "cmake-ninja",
+            "config-opts": [
                 "-DBUILD_CODEC=OFF"
             ],
-            "cleanup" : [
+            "cleanup": [
                 "/lib/openjpeg-2.3"
             ],
-            "sources" : [
-                {
-                    "type" : "archive",
-                    "url" : "https://github.com/uclouvain/openjpeg/archive/v2.3.0.tar.gz",
-                    "sha256" : "3dc787c1bb6023ba846c2a0d9b1f6e179f1cd255172bde9eb75b01f1e6c7d71a"
-                }
-            ]
-        },
-        {
-            "name": "libwebp",
-            "config-opts": [ "--disable-static", "--enable-libwebpmux", "--enable-libwebpdemux" ],
-            "cleanup": [ "/share", "/bin" ],
             "sources": [
                 {
                     "type": "archive",
-                    "url": "https://github.com/webmproject/libwebp/archive/v1.0.0.tar.gz",
-                    "sha256": "c5c5ebf979543ac1f3348df8f6245262abd787a147b9632c880d92bfc38dbbeb"
+                    "url": "https://github.com/uclouvain/openjpeg/archive/v2.3.0.tar.gz",
+                    "sha256": "3dc787c1bb6023ba846c2a0d9b1f6e179f1cd255172bde9eb75b01f1e6c7d71a"
                 }
             ]
         },
         {
             "name": "webp-pixbuf-loader",
-            "buildsystem" : "cmake-ninja",
+            "buildsystem": "cmake-ninja",
             "sources": [
                 {
                     "type": "git",
-                    "url": "https://github.com/aruiz/webp-pixbuf-loader.git"
+                    "url": "https://github.com/aruiz/webp-pixbuf-loader.git",
+                    "commit": "9b92950d49d7939f90ba7413deb7ec6b392b2054"
                 }
             ],
             "post-install": [
@@ -88,90 +79,102 @@
             ]
         },
         {
-            "name" : "popplerdata",
-            "no-autogen" : true,
-            "make-install-args" : [
+            "name": "popplerdata",
+            "no-autogen": true,
+            "make-install-args": [
                 "prefix=/app"
             ],
-            "sources" : [
+            "sources": [
                 {
-                    "type" : "archive",
-                    "url" : "http://poppler.freedesktop.org/poppler-data-0.4.9.tar.gz",
-                    "sha256" : "1f9c7e7de9ecd0db6ab287349e31bf815ca108a5a175cf906a90163bdbe32012"
+                    "type": "archive",
+                    "url": "http://poppler.freedesktop.org/poppler-data-0.4.9.tar.gz",
+                    "sha256": "1f9c7e7de9ecd0db6ab287349e31bf815ca108a5a175cf906a90163bdbe32012"
                 }
             ]
         },
         {
-            "name" : "poppler",
-            "buildsystem" : "cmake-ninja",
-            "config-opts" : [
+            "name": "poppler",
+            "buildsystem": "cmake-ninja",
+            "config-opts": [
                 "-DCMAKE_INSTALL_LIBDIR=/app/lib",
                 "-DCMAKE_INSTALL_INCLUDEDIR=/app/include"
             ],
-            "cleanup" : [
+            "cleanup": [
                 "/bin"
             ],
-            "sources" : [
+            "sources": [
                 {
-                    "type" : "archive",
-                    "url" : "https://poppler.freedesktop.org/poppler-0.66.0.tar.xz",
-                    "sha256" : "2c096431adfb74bc2f53be466889b7646e1b599f28fa036094f3f7235cc9eae7"
+                    "type": "archive",
+                    "url": "https://poppler.freedesktop.org/poppler-0.69.0.tar.xz",
+                    "sha256": "637ff943f805f304ff1da77ba2e7f1cbd675f474941fd8ae1e0fc01a5b45a3f9"
                 }
             ]
         },
         {
-            "name" : "djvulibre",
-            "config-opts" : [
+            "name": "djvulibre",
+            "config-opts": [
                 "--disable-desktopfiles"
             ],
-            "cleanup" : [
+            "cleanup": [
                 "/bin"
             ],
-            "sources" : [
+            "sources": [
                 {
-                    "type" : "archive",
-                    "url" : "https://downloads.sourceforge.net/project/djvu/DjVuLibre/3.5.27/djvulibre-3.5.27.tar.gz",
-                    "sha256" : "e69668252565603875fb88500cde02bf93d12d48a3884e472696c896e81f505f"
+                    "type": "archive",
+                    "url": "https://downloads.sourceforge.net/project/djvu/DjVuLibre/3.5.27/djvulibre-3.5.27.tar.gz",
+                    "sha256": "e69668252565603875fb88500cde02bf93d12d48a3884e472696c896e81f505f"
                 }
             ]
         },
         {
-            "name" : "gspell",
-            "cleanup" : [
+            "name": "libgxps",
+            "buildsystem": "meson",
+            "sources": [
+                {
+                    "type": "archive",
+                    "url": "http://ftp.gnome.org/pub/gnome/sources/libgxps/0.3/libgxps-0.3.0.tar.xz",
+                    "sha256": "412b1343bd31fee41f7204c47514d34c563ae34dafa4cc710897366bd6cd0fae"
+                }
+            ]
+        },
+        {
+            "name": "gspell",
+            "cleanup": [
                 "/bin"
             ],
-            "sources" : [
+            "sources": [
                 {
-                    "type" : "archive",
-                    "url" : "https://download.gnome.org/sources/gspell/1.8/gspell-1.8.0.tar.xz",
-                    "sha256" : "1b7fc2c5b84ede43bc52d513f0601238af92b572a42b19363da6d067fb529345"
+                    "type": "archive",
+                    "url": "https://download.gnome.org/sources/gspell/1.8/gspell-1.8.1.tar.xz",
+                    "sha256": "819a1d23c7603000e73f5e738bdd284342e0cd345fb0c7650999c31ec741bbe5"
                 }
             ],
-            "modules" : [
+            "modules": [
                 {
-                    "name" : "enchant2",
-                    "cleanup" : [
+                    "name": "enchant2",
+                    "cleanup": [
                         "/bin"
                     ],
-                    "sources" : [
+                    "sources": [
                         {
-                            "type" : "archive",
-                            "url" : "https://github.com/AbiWord/enchant/releases/download/v2.2.3/enchant-2.2.3.tar.gz",
-                            "sha256" : "abd8e915675cff54c0d4da5029d95c528362266557c61c7149d53fa069b8076d"
+                            "type": "archive",
+                            "url": "https://github.com/AbiWord/enchant/releases/download/v2.2.3/enchant-2.2.3.tar.gz",
+                            "sha256": "abd8e915675cff54c0d4da5029d95c528362266557c61c7149d53fa069b8076d"
                         }
                     ]
                 }
             ]
         },
         {
-            "name" : "evince",
-            "config-opts" : [
-                "--disable-nautilus"
+            "name": "evince",
+            "buildsystem": "meson",
+            "config-opts": [
+                "-Dnautilus=false"
             ],
-            "sources" : [
+            "sources": [
                 {
-                    "type" : "git",
-                    "url" : "https://gitlab.gnome.org/GNOME/evince.git"
+                    "type": "git",
+                    "url": "https://gitlab.gnome.org/GNOME/evince.git"
                 }
             ]
         }

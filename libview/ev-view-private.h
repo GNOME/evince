@@ -47,6 +47,7 @@ typedef struct {
 	guint release_timeout_id;
 	GdkPoint buffer[DRAG_HISTORY];
 	GdkPoint momentum;
+	gboolean in_notify;
 } DragInfo;
 
 /* Autoscrolling */
