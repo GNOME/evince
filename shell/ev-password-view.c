@@ -32,6 +32,8 @@
 
 /* Define a maximum width in case there is a file with a very long name */
 #define MAX_WIDHT_LABEL 64
+/* Define a maximum width for password entry */
+#define MAX_WIDHT_PASSWORD_ENTRY 32
 
 enum {
 	UNLOCK,
@@ -104,7 +106,6 @@ ev_password_view_clicked_cb (GtkWidget      *button,
 static void
 ev_password_view_init (EvPasswordView *password_view)
 {
-	GtkWidget *align;
 	GtkWidget *vbox;
 	GtkWidget *hbox;
 	GtkWidget *image;
@@ -115,34 +116,41 @@ ev_password_view_init (EvPasswordView *password_view)
 	password_view->priv = EV_PASSWORD_VIEW_GET_PRIVATE (password_view);
 
 	password_view->priv->password_save = G_PASSWORD_SAVE_NEVER;
-	
+
 	gtk_widget_push_composite_child ();
 
 	/* set ourselves up */
-	align = gtk_alignment_new (0.5, 0.5, 0.0, 0.0);
 	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 24);
-	gtk_container_set_border_width (GTK_CONTAINER (vbox), 24);
-	gtk_container_add (GTK_CONTAINER (password_view), align);
-	gtk_container_add (GTK_CONTAINER (align), vbox);
+	gtk_container_set_border_width (GTK_CONTAINER (vbox), 64);
+	gtk_container_add (GTK_CONTAINER (password_view), vbox);
+	gtk_widget_set_halign (vbox, GTK_ALIGN_CENTER);
+	gtk_widget_set_valign (vbox, GTK_ALIGN_CENTER);
 
-	password_view->priv->label =
-		(GtkWidget *) g_object_new (GTK_TYPE_LABEL,
-					    "wrap", TRUE,
-					    "selectable", TRUE,
-					    NULL);
-	gtk_box_pack_start (GTK_BOX (vbox), password_view->priv->label, FALSE, FALSE, 0);
+	label = gtk_label_new (NULL);
+	gtk_box_pack_start (GTK_BOX (vbox), label,
+			    FALSE, FALSE, 0);
+	gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
+	/* Prevent big dialog windows when the file name is too long, and
+	 * Sometimes_the_file_might_not_have_spaces_to_wrap
+	 */
+	gtk_label_set_max_width_chars (GTK_LABEL (label), MAX_WIDHT_LABEL);
+	gtk_label_set_line_wrap_mode (GTK_LABEL (label), PANGO_WRAP_WORD_CHAR);
+	password_view->priv->label = label;
 
-	image = gtk_image_new_from_stock (GTK_STOCK_DIALOG_AUTHENTICATION,
-					  GTK_ICON_SIZE_DIALOG);
+	image = gtk_image_new_from_icon_name ("dialog-password-symbolic",
+					      GTK_ICON_SIZE_DIALOG);
 	gtk_box_pack_start (GTK_BOX (vbox), image, FALSE, FALSE, 0);
 
 	label = gtk_label_new (NULL);
-	gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
 	markup = g_strdup_printf ("<span size=\"x-large\">%s</span>",
 				  _("This document is locked and can only be read by entering the correct password."));
 	gtk_label_set_markup (GTK_LABEL (label), markup);
 	g_free (markup);
-			      
+
+	gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
+	gtk_label_set_max_width_chars (GTK_LABEL (label), MAX_WIDHT_LABEL);
+	gtk_label_set_line_wrap_mode (GTK_LABEL (label), PANGO_WRAP_WORD_CHAR);
+
 	gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
 
 	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
@@ -152,7 +160,7 @@ ev_password_view_init (EvPasswordView *password_view)
 	g_signal_connect (button, "clicked", G_CALLBACK (ev_password_view_clicked_cb), password_view);
 	gtk_box_pack_end (GTK_BOX (hbox), button, FALSE, FALSE, 0);
 
-	gtk_widget_show_all (align);
+	gtk_widget_show_all (vbox);
 	gtk_widget_pop_composite_child ();
 }
 
@@ -230,123 +238,62 @@ ev_password_dialog_entry_activated_cb (GtkEntry  *entry,
 void
 ev_password_view_ask_password (EvPasswordView *password_view)
 {
-	GtkDialog *dialog;
-	GtkWidget *content_area, *action_area;
-	GtkWidget *entry_container;
-	GtkWidget *hbox, *main_vbox, *vbox, *icon;
-	GtkWidget *grid;
-	GtkWidget *label;
-	gchar     *text, *markup;
+	GtkMessageDialog *dialog;
+	GtkWidget *message_area;
+	GtkWidget *grid, *label;
+	GtkWidget *password_entry;
+	gchar     *text;
 
-	gtk_widget_set_sensitive (GTK_WIDGET (password_view), FALSE);
-	
-	dialog = GTK_DIALOG (gtk_dialog_new ());
-	content_area = gtk_dialog_get_content_area (dialog);
-	action_area = gtk_dialog_get_action_area (dialog);
-
-	/* Set the dialog up with HIG properties */
-	gtk_container_set_border_width (GTK_CONTAINER (dialog), 5);
-	gtk_box_set_spacing (GTK_BOX (content_area), 2); /* 2 * 5 + 2 = 12 */
-	gtk_container_set_border_width (GTK_CONTAINER (action_area), 5);
-	gtk_box_set_spacing (GTK_BOX (action_area), 6);
-
-	gtk_window_set_title (GTK_WINDOW (dialog), _("Enter password"));
-	gtk_window_set_resizable (GTK_WINDOW (dialog), FALSE);
-	gtk_window_set_icon_name (GTK_WINDOW (dialog), GTK_STOCK_DIALOG_AUTHENTICATION);
-	gtk_window_set_transient_for (GTK_WINDOW (dialog), password_view->priv->parent_window);
-	gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
-
-	gtk_dialog_add_buttons (dialog,
-				GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-				_("_Unlock Document"), GTK_RESPONSE_OK,
-				NULL);
-	gtk_dialog_set_default_response (dialog, GTK_RESPONSE_OK);
-	gtk_dialog_set_response_sensitive (GTK_DIALOG (dialog),
-					   GTK_RESPONSE_OK, FALSE);
-	gtk_dialog_set_alternative_button_order (dialog,
-						 GTK_RESPONSE_OK,
-						 GTK_RESPONSE_CANCEL,
-						 -1);
-	
-	/* Build contents */
-	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 12);
-	gtk_container_set_border_width (GTK_CONTAINER (hbox), 5);
-	gtk_box_pack_start (GTK_BOX (content_area), hbox, TRUE, TRUE, 0);
-	gtk_widget_show (hbox);
-
-	icon = gtk_image_new_from_stock (GTK_STOCK_DIALOG_AUTHENTICATION,
-					 GTK_ICON_SIZE_DIALOG);
-
-	gtk_misc_set_alignment (GTK_MISC (icon), 0.5, 0.0);
-	gtk_box_pack_start (GTK_BOX (hbox), icon, FALSE, FALSE, 0);
-	gtk_widget_show (icon);
-
-	main_vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 18);
-	gtk_box_pack_start (GTK_BOX (hbox), main_vbox, TRUE, TRUE, 0);
-	gtk_widget_show (main_vbox);
-
-	label = gtk_label_new (NULL);
-	gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-	gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
         text = g_markup_printf_escaped (_("The document “%s” is locked and requires a password before it can be opened."),
                                         password_view->priv->filename);
-        markup = g_strdup_printf ("<span size=\"larger\" weight=\"bold\">%s</span>\n\n%s",
-				  _("Password required"),
-                                  text);
-	gtk_label_set_markup (GTK_LABEL (label), markup);
 
-	/* Prevent big dialog windows when the file name is too long, and
-	 * Sometimes_the_file_might_not_have_spaces_to_wrap
-	 */
-	gtk_label_set_max_width_chars (GTK_LABEL (label), MAX_WIDHT_LABEL);
-	gtk_label_set_line_wrap_mode (GTK_LABEL (label), PANGO_WRAP_WORD_CHAR);
-
+	dialog = GTK_MESSAGE_DIALOG (gtk_message_dialog_new (password_view->priv->parent_window,
+		                         GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
+		                         GTK_MESSAGE_QUESTION,
+		                         GTK_BUTTONS_NONE,
+					 _("Password required")));
+	gtk_message_dialog_format_secondary_markup (dialog, "%s", text);
 	g_free (text);
-	g_free (markup);
-	gtk_box_pack_start (GTK_BOX (main_vbox), label,
-			    FALSE, FALSE, 0);
-	gtk_widget_show (label);
 
-	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
-	gtk_box_pack_start (GTK_BOX (main_vbox), vbox, FALSE, FALSE, 0);
-	gtk_widget_show (vbox);
+	message_area = gtk_message_dialog_get_message_area (dialog);
 
-	/* The table that holds the entries */
-	entry_container = gtk_alignment_new (0.0, 0.0, 1.0, 1.0);
-
-	gtk_alignment_set_padding (GTK_ALIGNMENT (entry_container),
-				   0, 0, 0, 0);
-	
-	gtk_box_pack_start (GTK_BOX (vbox), entry_container,
-			    FALSE, FALSE, 0);
-	gtk_widget_show (entry_container);
+	gtk_dialog_add_buttons (GTK_DIALOG (dialog),
+				_("_Cancel"), GTK_RESPONSE_CANCEL,
+				_("_Unlock"), GTK_RESPONSE_OK,
+				NULL);
+	gtk_dialog_set_response_sensitive (GTK_DIALOG (dialog),
+					   GTK_RESPONSE_OK, FALSE);
 
 	grid = gtk_grid_new ();
 	gtk_grid_set_column_spacing (GTK_GRID (grid), 12);
-	gtk_grid_set_row_spacing (GTK_GRID (grid), 6);
-	gtk_container_add (GTK_CONTAINER (entry_container), grid);
+	gtk_box_pack_start (GTK_BOX (message_area), grid,
+			    FALSE, FALSE, 6);
+	gtk_widget_set_halign (grid, GTK_ALIGN_CENTER);
 	gtk_widget_show (grid);
 
 	label = gtk_label_new_with_mnemonic (_("_Password:"));
-	gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
+	g_object_set (G_OBJECT (label), "xalign", 0., "yalign", 0.5, NULL);
 
-	password_view->priv->password_entry = gtk_entry_new ();
-	gtk_entry_set_visibility (GTK_ENTRY (password_view->priv->password_entry), FALSE);
-	g_signal_connect (password_view->priv->password_entry, "changed",
+	password_entry = gtk_entry_new ();
+	gtk_entry_set_visibility (GTK_ENTRY (password_entry), FALSE);
+	g_object_set (G_OBJECT (password_entry), "width-chars", 32, NULL);
+	g_signal_connect (password_entry, "changed",
 			  G_CALLBACK (ev_password_dialog_entry_changed_cb),
 			  dialog);
-	g_signal_connect (password_view->priv->password_entry, "activate",
+	g_signal_connect (password_entry, "activate",
 			  G_CALLBACK (ev_password_dialog_entry_activated_cb),
 			  dialog);
 	gtk_grid_attach (GTK_GRID (grid), label, 0, 0, 1, 1);
 	gtk_widget_show (label);
 
-	gtk_grid_attach (GTK_GRID (grid), password_view->priv->password_entry, 1, 0, 1, 1);
-        gtk_widget_set_hexpand (password_view->priv->password_entry, TRUE);
-	gtk_widget_show (password_view->priv->password_entry);
-	
+	gtk_grid_attach (GTK_GRID (grid), password_entry, 1, 0, 1, 1);
+        gtk_widget_set_hexpand (password_entry, TRUE);
+	gtk_widget_show (password_entry);
+
 	gtk_label_set_mnemonic_widget (GTK_LABEL (label),
-				       password_view->priv->password_entry);
+				       password_entry);
+
+	password_view->priv->password_entry = password_entry;
 
 	if (ev_keyring_is_available ()) {
 		GtkWidget  *choice;
@@ -354,8 +301,9 @@ ev_password_view_ask_password (EvPasswordView *password_view)
 		GSList     *group;
 
 		remember_box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
-		gtk_box_pack_start (GTK_BOX (vbox), remember_box,
+		gtk_box_pack_start (GTK_BOX (message_area), remember_box,
 				    FALSE, FALSE, 0);
+		gtk_widget_set_halign (remember_box, GTK_ALIGN_CENTER);
 		gtk_widget_show (remember_box);
 
 		choice = gtk_radio_button_new_with_mnemonic (NULL, _("Forget password _immediately"));
@@ -397,7 +345,7 @@ ev_password_view_ask_password (EvPasswordView *password_view)
 	g_signal_connect (dialog, "response",
 			  G_CALLBACK (ev_password_dialog_got_response),
 			  password_view);
-	
+
 	gtk_widget_show (GTK_WIDGET (dialog));
 }
 
