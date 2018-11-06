@@ -443,15 +443,12 @@ write_xds_property (GdkDragContext *context,
 static void
 ev_add_custom_button_to_dialog (GtkDialog   *dialog,
                                 const gchar *mnemonic_label,
-                                const gchar *stock_id,
                                 gint         response_id)
 {
 	GtkWidget *button;
 
 	button = gtk_button_new_with_mnemonic (mnemonic_label);
 	gtk_widget_set_can_default (button, TRUE);
-	gtk_button_set_image (GTK_BUTTON (button),
-	gtk_image_new_from_stock (stock_id, GTK_ICON_SIZE_BUTTON));
 	gtk_widget_show (button);
 
 	gtk_dialog_add_action_widget (GTK_DIALOG (dialog), button, response_id);
@@ -495,13 +492,18 @@ ev_sidebar_attachments_confirm_overwrite (EvSidebarAttachments   *attachbar,
 	                                            " it will overwrite its contents."),
 	                                          uri);
 
-	gtk_dialog_add_button (GTK_DIALOG (dialog), GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL);
+	gtk_dialog_add_button (GTK_DIALOG (dialog), _("_Cancel"), GTK_RESPONSE_CANCEL);
 	ev_add_custom_button_to_dialog (GTK_DIALOG (dialog), _("_Replace"),
-	                                GTK_STOCK_SAVE_AS, GTK_RESPONSE_ACCEPT);
-	gtk_dialog_set_alternative_button_order (GTK_DIALOG (dialog),
-	                                         GTK_RESPONSE_ACCEPT,
-	                                         GTK_RESPONSE_CANCEL,
-	                                         -1);
+	                                GTK_RESPONSE_ACCEPT);
+        /* We are mimicking GtkFileChooserWidget behaviour, hence we keep the
+         * code synced and act like that.
+         */
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
+        gtk_dialog_set_alternative_button_order (GTK_DIALOG (dialog),
+                                                 GTK_RESPONSE_ACCEPT,
+                                                 GTK_RESPONSE_CANCEL,
+                                                 -1);
+G_GNUC_END_IGNORE_DEPRECATIONS
 	gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_ACCEPT);
 
 	if (gtk_window_has_group (GTK_WINDOW (toplevel)))
