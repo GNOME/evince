@@ -2644,9 +2644,9 @@ ev_window_cmd_file_open (GSimpleAction *action,
 	chooser = gtk_file_chooser_dialog_new (_("Open Document"),
 					       GTK_WINDOW (window),
 					       GTK_FILE_CHOOSER_ACTION_OPEN,
-					       GTK_STOCK_CANCEL,
+					       _("_Cancel"),
 					       GTK_RESPONSE_CANCEL,
-					       GTK_STOCK_OPEN, GTK_RESPONSE_OK,
+					       _("_Open"), GTK_RESPONSE_OK,
 					       NULL);
 
 	ev_document_factory_add_filters (chooser, NULL);
@@ -2918,8 +2918,8 @@ ev_window_save_as (EvWindow *ev_window)
 	fc = gtk_file_chooser_dialog_new (
 		_("Save As…"),
 		GTK_WINDOW (ev_window), GTK_FILE_CHOOSER_ACTION_SAVE,
-		GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-		GTK_STOCK_SAVE, GTK_RESPONSE_OK,
+		_("_Cancel"), GTK_RESPONSE_CANCEL,
+		_("_Save"), GTK_RESPONSE_OK,
 		NULL);
 
 	ev_document_factory_add_filters (fc, ev_window->priv->document);
@@ -3651,9 +3651,9 @@ ev_window_check_document_modified (EvWindow      *ev_window,
 						gtk_window_get_title (GTK_WINDOW (ev_window)));
 		secondary_text_command = _("If you reload the document, changes will be permanently lost.");
 		gtk_dialog_add_buttons (GTK_DIALOG (dialog),
-					GTK_STOCK_NO,
+					_("_No"),
 					GTK_RESPONSE_NO,
-					_("Reload"),
+					_("_Reload"),
 					GTK_RESPONSE_YES,
 					NULL);
 		g_signal_connect (dialog, "response",
@@ -3666,7 +3666,7 @@ ev_window_check_document_modified (EvWindow      *ev_window,
 		gtk_dialog_add_buttons (GTK_DIALOG (dialog),
 				_("Close _without Saving"),
 				GTK_RESPONSE_NO,
-				GTK_STOCK_CANCEL,
+				_("C_ancel"),
 				GTK_RESPONSE_CANCEL,
 				_("Save a _Copy"),
 				GTK_RESPONSE_YES,
@@ -3774,7 +3774,7 @@ ev_window_check_print_queue (EvWindow *ev_window)
 	gtk_dialog_add_buttons (GTK_DIALOG (dialog),
 				_("Cancel _print and Close"),
 				GTK_RESPONSE_NO,
-				GTK_STOCK_CANCEL,
+				_("_Cancel"),
 				GTK_RESPONSE_CANCEL,
 				_("Close _after Printing"),
 				GTK_RESPONSE_YES,
@@ -6593,9 +6593,9 @@ ev_window_popup_cmd_save_image_as (GSimpleAction *action,
 	fc = gtk_file_chooser_dialog_new (_("Save Image"),
 					  GTK_WINDOW (window),
 					  GTK_FILE_CHOOSER_ACTION_SAVE,
-					  GTK_STOCK_CANCEL,
+					  _("_Cancel"),
 					  GTK_RESPONSE_CANCEL,
-					  GTK_STOCK_SAVE, GTK_RESPONSE_OK,
+					  _("_Save"), GTK_RESPONSE_OK,
 					  NULL);
 
 	gtk_dialog_set_default_response (GTK_DIALOG (fc), GTK_RESPONSE_OK);
@@ -6814,9 +6814,9 @@ ev_window_popup_cmd_save_attachment_as (GSimpleAction *action,
 		_("Save Attachment"),
 		GTK_WINDOW (window),
 		attachment ? GTK_FILE_CHOOSER_ACTION_SAVE : GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
-		GTK_STOCK_CANCEL,
+		_("_Cancel"),
 		GTK_RESPONSE_CANCEL,
-		GTK_STOCK_SAVE, GTK_RESPONSE_OK,
+		_("_Save"), GTK_RESPONSE_OK,
 		NULL);
 
 	gtk_dialog_set_default_response (GTK_DIALOG (fc), GTK_RESPONSE_OK);

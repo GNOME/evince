@@ -81,6 +81,8 @@ G_DEFINE_TYPE_EXTENDED (EvSidebarAnnotations,
 #define EV_SIDEBAR_ANNOTATIONS_GET_PRIVATE(object) \
 	(G_TYPE_INSTANCE_GET_PRIVATE ((object), EV_TYPE_SIDEBAR_ANNOTATIONS, EvSidebarAnnotationsPrivate))
 
+#define ANNOT_ICON_SIZE 16
+
 static void
 ev_sidebar_annotations_dispose (GObject *object)
 {
@@ -343,6 +345,8 @@ job_finished_callback (EvJobAnnots          *job,
 	GtkTreeStore *model;
 	GtkTreeSelection *selection;
 	GList *l;
+	GtkIconTheme *icon_theme;
+	GdkScreen *screen;
 	GdkPixbuf *text_icon = NULL;
 	GdkPixbuf *attachment_icon = NULL;
         GdkPixbuf *highlight_icon = NULL;
@@ -382,6 +386,9 @@ job_finished_callback (EvJobAnnots          *job,
 				    G_TYPE_STRING,
 				    GDK_TYPE_PIXBUF,
 				    G_TYPE_POINTER);
+
+	screen = gtk_widget_get_screen (GTK_WIDGET (sidebar_annots));
+	icon_theme = gtk_icon_theme_get_for_screen (screen);
 
 	for (l = job->annots; l; l = g_list_next (l)) {
 		EvMappingList *mapping_list;
@@ -423,16 +430,18 @@ job_finished_callback (EvJobAnnots          *job,
 			if (EV_IS_ANNOTATION_TEXT (annot)) {
 				if (!text_icon) {
 					/* FIXME: use a better icon than EDIT */
-					text_icon = gtk_widget_render_icon_pixbuf (priv->tree_view,
-                                                                                   GTK_STOCK_EDIT,
-                                                                                   GTK_ICON_SIZE_BUTTON);
+					text_icon = gtk_icon_theme_load_icon (icon_theme,
+									      "accessories-text-editor-symbolic",
+									      ANNOT_ICON_SIZE,
+									      0, NULL);
 				}
 				pixbuf = text_icon;
 			} else if (EV_IS_ANNOTATION_ATTACHMENT (annot)) {
 				if (!attachment_icon) {
-					attachment_icon = gtk_widget_render_icon_pixbuf (priv->tree_view,
-                                                                                         EV_STOCK_ATTACHMENT,
-                                                                                         GTK_ICON_SIZE_BUTTON);
+					attachment_icon = gtk_icon_theme_load_icon (icon_theme,
+										    "mail-attachment-symbolic",
+										    ANNOT_ICON_SIZE,
+										    0, NULL);
 				}
 				pixbuf = attachment_icon;
 			} else if (EV_IS_ANNOTATION_TEXT_MARKUP (annot)) {
@@ -440,34 +449,38 @@ job_finished_callback (EvJobAnnots          *job,
                                 case EV_ANNOTATION_TEXT_MARKUP_HIGHLIGHT:
                                         if (!highlight_icon) {
                                                 /* FIXME: use better icon than select all */
-                                                highlight_icon = gtk_widget_render_icon_pixbuf (priv->tree_view,
-                                                                                                GTK_STOCK_SELECT_ALL,
-                                                                                                GTK_ICON_SIZE_BUTTON);
+						highlight_icon = gtk_icon_theme_load_icon (icon_theme,
+											   "format-justify-left-symbolic",
+											   ANNOT_ICON_SIZE,
+											   0, NULL);
                                         }
                                         pixbuf = highlight_icon;
 
                                         break;
                                 case EV_ANNOTATION_TEXT_MARKUP_STRIKE_OUT:
                                         if (!strike_out_icon) {
-                                                strike_out_icon = gtk_widget_render_icon_pixbuf (priv->tree_view,
-                                                                                                 GTK_STOCK_STRIKETHROUGH,
-                                                                                                 GTK_ICON_SIZE_BUTTON);
+						strike_out_icon = gtk_icon_theme_load_icon (icon_theme,
+											    "format-text-strikethrough-symbolic",
+											    ANNOT_ICON_SIZE,
+											    0, NULL);
                                         }
                                         pixbuf = strike_out_icon;
                                         break;
                                 case EV_ANNOTATION_TEXT_MARKUP_UNDERLINE:
                                         if (!underline_icon) {
-                                                underline_icon = gtk_widget_render_icon_pixbuf (priv->tree_view,
-                                                                                                GTK_STOCK_UNDERLINE,
-                                                                                                GTK_ICON_SIZE_BUTTON);
+						underline_icon = gtk_icon_theme_load_icon (icon_theme,
+											    "format-text-underline-symbolic",
+											    ANNOT_ICON_SIZE,
+											    0, NULL);
                                         }
                                         pixbuf = underline_icon;
                                         break;
                                 case EV_ANNOTATION_TEXT_MARKUP_SQUIGGLY:
                                         if (!squiggly_icon) {
-                                                squiggly_icon = gtk_widget_render_icon_pixbuf (priv->tree_view,
-                                                                                               GTK_STOCK_UNDERLINE,
-                                                                                               GTK_ICON_SIZE_BUTTON);
+						squiggly_icon = gtk_icon_theme_load_icon (icon_theme,
+											    "tools-check-spelling-symbolic",
+											    ANNOT_ICON_SIZE,
+											    0, NULL);
                                         }
                                         pixbuf = squiggly_icon;
                                         break;
