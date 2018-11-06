@@ -147,7 +147,7 @@ ev_bookmarks_popup_cmd_remove_bookmark (GtkAction          *action,
 }
 
 static const GtkActionEntry popup_entries[] = {
-        { "OpenBookmark", GTK_STOCK_OPEN, N_("_Open Bookmark"), NULL,
+        { "OpenBookmark", NULL, N_("_Open Bookmark"), NULL,
           NULL, G_CALLBACK (ev_bookmarks_popup_cmd_open_bookmark) },
         { "RenameBookmark", NULL, N_("_Rename Bookmark"), NULL,
           NULL, G_CALLBACK (ev_bookmarks_popup_cmd_rename_bookmark) },
