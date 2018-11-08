@@ -494,7 +494,7 @@ ev_previewer_window_constructor (GType                  type,
 
 	window->view = EV_VIEW (ev_view_new ());
 	ev_view_set_model (window->view, window->model);
-	ev_document_model_set_continuous (window->model, FALSE);
+	ev_document_model_set_continuous (window->model, TRUE);
 
 	g_signal_connect_object (window->model, "page-changed",
 				 G_CALLBACK (model_page_changed),
