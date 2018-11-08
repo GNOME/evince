@@ -41,7 +41,7 @@ enum
         PROP_WINDOW
 };
 
-struct _EvPreviewerToolbarPrivate {
+typedef struct {
         EvPreviewerWindow  *window;
 
         GtkWidget *page_selector;
@@ -51,9 +51,10 @@ struct _EvPreviewerToolbarPrivate {
         GtkWidget *zoom_in_button;
         GtkWidget *zoom_out_button;
         GtkWidget *zoom_default_button;
-};
+} EvPreviewerToolbarPrivate;
 
-G_DEFINE_TYPE (EvPreviewerToolbar, ev_previewer_toolbar, GTK_TYPE_HEADER_BAR)
+G_DEFINE_TYPE_WITH_PRIVATE (EvPreviewerToolbar, ev_previewer_toolbar,
+                            GTK_TYPE_HEADER_BAR)
 
 static void
 ev_previewer_toolbar_set_property (GObject      *object,
@@ -62,10 +63,13 @@ ev_previewer_toolbar_set_property (GObject      *object,
                          GParamSpec   *pspec)
 {
         EvPreviewerToolbar *ev_previewer_toolbar = EV_PREVIEWER_TOOLBAR (object);
+        EvPreviewerToolbarPrivate *priv;
+
+        priv = ev_previewer_toolbar_get_instance_private (ev_previewer_toolbar);
 
         switch (prop_id) {
         case PROP_WINDOW:
-                ev_previewer_toolbar->priv->window = g_value_get_object (value);
+                priv->window = g_value_get_object (value);
                 break;
         default:
                 G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -76,12 +80,13 @@ static void
 ev_previewer_toolbar_constructed (GObject *object)
 {
         EvPreviewerToolbar *ev_previewer_toolbar = EV_PREVIEWER_TOOLBAR (object);
-        GtkWidget     *tool_item;
-        GtkWidget     *button;
+        EvPreviewerToolbarPrivate *priv;
         GtkWidget     *hbox;
         GtkBuilder    *builder;
 
         G_OBJECT_CLASS (ev_previewer_toolbar_parent_class)->constructed (object);
+
+        priv = ev_previewer_toolbar_get_instance_private (ev_previewer_toolbar);
 
         builder = gtk_builder_new_from_resource ("/org/gnome/evince/previewer/ui/previewer.ui");
 
@@ -102,20 +107,22 @@ ev_previewer_toolbar_constructed (GObject *object)
         gtk_widget_show (hbox);
 
         /* Page selector */
-        tool_item = GTK_WIDGET (g_object_new (EV_TYPE_PAGE_ACTION_WIDGET, NULL));
-        gtk_widget_set_tooltip_text (tool_item, _("Select page or search in the index"));
-        atk_object_set_name (gtk_widget_get_accessible (tool_item), _("Select page"));
-        ev_page_action_widget_set_model (EV_PAGE_ACTION_WIDGET (tool_item),
-                                         ev_previewer_window_get_document_model (ev_previewer_toolbar->priv->window));
-        ev_previewer_toolbar->priv->page_selector = tool_item;
-        gtk_header_bar_pack_start (GTK_HEADER_BAR (ev_previewer_toolbar), tool_item);
-        gtk_widget_show (tool_item);
+        priv->page_selector = GTK_WIDGET (g_object_new (EV_TYPE_PAGE_ACTION_WIDGET, NULL));
+        gtk_widget_set_tooltip_text (priv->page_selector,
+                                     _("Select page or search in the index"));
+        atk_object_set_name (gtk_widget_get_accessible (priv->page_selector),
+                             _("Select page"));
+        ev_page_action_widget_set_model (EV_PAGE_ACTION_WIDGET (priv->page_selector),
+                                         ev_previewer_window_get_document_model (priv->window));
+        gtk_header_bar_pack_start (GTK_HEADER_BAR (ev_previewer_toolbar),
+                                   priv->page_selector);
+        gtk_widget_show (priv->page_selector);
 
         /* Print */
-        button = GTK_WIDGET (gtk_builder_get_object (builder, "print"));
-        ev_previewer_toolbar->priv->print_button = button;
-        gtk_header_bar_pack_end (GTK_HEADER_BAR (ev_previewer_toolbar), button);
-        gtk_widget_show (button);
+        priv->print_button = GTK_WIDGET (gtk_builder_get_object (builder, "print"));
+        gtk_header_bar_pack_end (GTK_HEADER_BAR (ev_previewer_toolbar),
+                                 priv->print_button);
+        gtk_widget_show (priv->print_button);
 
         /* Zoom */
         hbox = gtk_button_box_new (GTK_ORIENTATION_HORIZONTAL);
@@ -123,20 +130,19 @@ ev_previewer_toolbar_constructed (GObject *object)
         gtk_button_box_set_layout (GTK_BUTTON_BOX (hbox), GTK_BUTTONBOX_EXPAND);
 	gtk_box_set_homogeneous (GTK_BOX (hbox), FALSE);
 
-        button = GTK_WIDGET (gtk_builder_get_object (builder, "zoom-in"));
-        ev_previewer_toolbar->priv->zoom_in_button = button;
-        gtk_box_pack_start (GTK_BOX (hbox), button, FALSE, FALSE, 0);
-        gtk_widget_show (button);
+        priv->zoom_in_button = GTK_WIDGET (gtk_builder_get_object (builder, "zoom-in"));
+        gtk_box_pack_start (GTK_BOX (hbox), priv->zoom_in_button,
+                            FALSE, FALSE, 0);
+        gtk_widget_show (priv->zoom_in_button);
 
-        button = GTK_WIDGET (gtk_builder_get_object (builder, "zoom-default"));
-        ev_previewer_toolbar->priv->zoom_default_button = button;
-        gtk_box_pack_start (GTK_BOX (hbox), button, FALSE, FALSE, 0);
-        gtk_widget_show (button);
+        priv->zoom_default_button = GTK_WIDGET (gtk_builder_get_object (builder, "zoom-default"));
+        gtk_box_pack_start (GTK_BOX (hbox), priv->zoom_default_button,
+                            FALSE, FALSE, 0);
+        gtk_widget_show (priv->zoom_default_button);
 
-        button = GTK_WIDGET (gtk_builder_get_object (builder, "zoom-out"));
-        ev_previewer_toolbar->priv->zoom_out_button = button;
-        gtk_box_pack_start (GTK_BOX (hbox), button, FALSE, FALSE, 0);
-        gtk_widget_show (button);
+        priv->zoom_out_button = GTK_WIDGET (gtk_builder_get_object (builder, "zoom-out"));
+        gtk_box_pack_start (GTK_BOX (hbox), priv->zoom_out_button, FALSE, FALSE, 0);
+        gtk_widget_show (priv->zoom_out_button);
 
         gtk_header_bar_pack_end (GTK_HEADER_BAR (ev_previewer_toolbar), hbox);
 
@@ -162,14 +168,11 @@ ev_previewer_toolbar_class_init (EvPreviewerToolbarClass *klass)
                                                               G_PARAM_WRITABLE |
                                                               G_PARAM_CONSTRUCT_ONLY |
                                                               G_PARAM_STATIC_STRINGS));
-
-        g_type_class_add_private (g_object_class, sizeof (EvPreviewerToolbarPrivate));
 }
 
 static void
 ev_previewer_toolbar_init (EvPreviewerToolbar *ev_previewer_toolbar)
 {
-        ev_previewer_toolbar->priv = G_TYPE_INSTANCE_GET_PRIVATE (ev_previewer_toolbar, EV_TYPE_PREVIEWER_TOOLBAR, EvPreviewerToolbarPrivate);
 }
 
 GtkWidget *
@@ -185,7 +188,11 @@ ev_previewer_toolbar_new (EvPreviewerWindow *window)
 GtkWidget *
 ev_previewer_toolbar_get_page_selector (EvPreviewerToolbar *ev_previewer_toolbar)
 {
+        EvPreviewerToolbarPrivate *priv;
+
         g_return_val_if_fail (EV_IS_PREVIEWER_TOOLBAR (ev_previewer_toolbar), NULL);
 
-        return ev_previewer_toolbar->priv->page_selector;
+        priv = ev_previewer_toolbar_get_instance_private (ev_previewer_toolbar);
+
+        return priv->page_selector;
 }

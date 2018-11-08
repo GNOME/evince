@@ -36,12 +36,9 @@ G_BEGIN_DECLS
 
 typedef struct _EvPreviewerToolbar        EvPreviewerToolbar;
 typedef struct _EvPreviewerToolbarClass   EvPreviewerToolbarClass;
-typedef struct _EvPreviewerToolbarPrivate EvPreviewerToolbarPrivate;
 
 struct _EvPreviewerToolbar {
         GtkHeaderBar base_instance;
-
-        EvPreviewerToolbarPrivate *priv;
 };
 
 struct _EvPreviewerToolbarClass {
