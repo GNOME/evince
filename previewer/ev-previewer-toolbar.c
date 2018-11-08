@@ -46,8 +46,6 @@ struct _EvPreviewerToolbarPrivate {
 
         GtkWidget *page_selector;
         GtkWidget *print_button;
-        GtkWidget *previous_button;
-        GtkWidget *next_button;
         GtkWidget *zoom_in_button;
         GtkWidget *zoom_out_button;
         GtkWidget *zoom_default_button;
@@ -84,24 +82,6 @@ ev_previewer_toolbar_constructed (GObject *object)
         G_OBJECT_CLASS (ev_previewer_toolbar_parent_class)->constructed (object);
 
         builder = gtk_builder_new_from_resource ("/org/gnome/evince/previewer/ui/previewer.ui");
-
-        hbox = gtk_button_box_new (GTK_ORIENTATION_HORIZONTAL);
-        gtk_widget_set_halign (hbox, GTK_ALIGN_CENTER);
-        gtk_button_box_set_layout (GTK_BUTTON_BOX (hbox), GTK_BUTTONBOX_EXPAND);
-	gtk_box_set_homogeneous (GTK_BOX (hbox), FALSE);
-
-        button = GTK_WIDGET (gtk_builder_get_object (builder, "go-previous-page"));
-        ev_previewer_toolbar->priv->previous_button = button;
-        gtk_box_pack_start (GTK_BOX (hbox), button, FALSE, FALSE, 0);
-        gtk_widget_show (button);
-
-        button = GTK_WIDGET (gtk_builder_get_object (builder, "go-next-page"));
-        ev_previewer_toolbar->priv->next_button = button;
-        gtk_box_pack_start (GTK_BOX (hbox), button, FALSE, FALSE, 0);
-        gtk_widget_show (button);
-
-        gtk_header_bar_pack_start (GTK_HEADER_BAR (ev_previewer_toolbar), hbox);
-        gtk_widget_show (hbox);
 
         /* Page selector */
         tool_item = GTK_WIDGET (g_object_new (EV_TYPE_PAGE_ACTION_WIDGET, NULL));

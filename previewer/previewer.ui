@@ -14,20 +14,6 @@
       <class name="suggested-action"/>
     </style>
   </object>
-  <object class="GtkButton" id="go-previous-page">
-    <property name="can_focus">True</property>
-    <property name="receives_default">False</property>
-    <property name="tooltip_text" translatable="yes">Previous Page</property>
-    <property name="action_name">win.go-previous-page</property>
-    <property name="image">go-previous-symbolic</property>
-  </object>
-  <object class="GtkButton" id="go-next-page">
-    <property name="can_focus">True</property>
-    <property name="receives_default">False</property>
-    <property name="tooltip_text" translatable="yes">Next Page</property>
-    <property name="action_name">win.go-next-page</property>
-    <property name="image">go-next-symbolic</property>
-  </object>
   <object class="GtkButton" id="zoom-in">
     <property name="can_focus">True</property>
     <property name="receives_default">False</property>
@@ -49,16 +35,6 @@
     <property name="tooltip_text" translatable="yes">Reset zoom and make the page fit in the window</property>
     <property name="action_name">win.zoom-default</property>
     <property name="image">zoom-default-symbolic</property>
-  </object>
-  <object class="GtkImage" id="go-previous-symbolic">
-    <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <property name="icon_name">go-previous-symbolic</property>
-  </object>
-  <object class="GtkImage" id="go-next-symbolic">
-    <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <property name="icon_name">go-next-symbolic</property>
   </object>
   <object class="GtkImage" id="zoom-in-symbolic">
     <property name="visible">True</property>
