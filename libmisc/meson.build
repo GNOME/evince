@@ -1,5 +1,4 @@
 sources = files(
-  'ev-page-action.c',
   'ev-page-action-widget.c',
   'ev-search-box.c',
 )
