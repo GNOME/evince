@@ -91,7 +91,7 @@ ev_progress_message_area_init (EvProgressMessageArea *area)
 	gtk_label_set_use_markup (GTK_LABEL (priv->label), TRUE);
 	gtk_label_set_ellipsize (GTK_LABEL (priv->label),
 				 PANGO_ELLIPSIZE_END);
-	gtk_misc_set_alignment (GTK_MISC (priv->label), 0.0, 0.5);
+	g_object_set (G_OBJECT (priv->label), "xalign", 0., "yalign", 0.5, NULL);
 	gtk_box_pack_start (GTK_BOX (vbox), priv->label, TRUE, TRUE, 0);
 	gtk_widget_show (priv->label);
 
