@@ -37,13 +37,9 @@ G_BEGIN_DECLS
 
 typedef struct _EvProgressMessageArea        EvProgressMessageArea;
 typedef struct _EvProgressMessageAreaClass   EvProgressMessageAreaClass;
-typedef struct _EvProgressMessageAreaPrivate EvProgressMessageAreaPrivate;
 
 struct _EvProgressMessageArea {
 	EvMessageArea parent_instance;
-
-	/*< private >*/
-	EvProgressMessageAreaPrivate *priv;
 };
 
 struct _EvProgressMessageAreaClass {

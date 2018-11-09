@@ -25,13 +25,10 @@
 
 #include "ev-progress-message-area.h"
 
-#define EV_PROGRESS_MESSAGE_AREA_GET_PRIVATE(obj) \
-	(G_TYPE_INSTANCE_GET_PRIVATE ((obj), EV_TYPE_PROGRESS_MESSAGE_AREA, EvProgressMessageAreaPrivate))
-
-struct _EvProgressMessageAreaPrivate {
+typedef struct {
 	GtkWidget *label;
 	GtkWidget *progress_bar;
-};
+} EvProgressMessageAreaPrivate;
 
 enum {
 	PROP_0,
@@ -48,7 +45,8 @@ static void ev_progress_message_area_get_property (GObject      *object,
 						   GValue       *value,
 						   GParamSpec   *pspec);
 
-G_DEFINE_TYPE (EvProgressMessageArea, ev_progress_message_area, EV_TYPE_MESSAGE_AREA)
+G_DEFINE_TYPE_WITH_PRIVATE (EvProgressMessageArea, ev_progress_message_area,
+			    EV_TYPE_MESSAGE_AREA)
 
 static void
 ev_progress_message_area_class_init (EvProgressMessageAreaClass *class)
@@ -74,8 +72,6 @@ ev_progress_message_area_class_init (EvProgressMessageAreaClass *class)
 							      0.0, 1.0, 0.0,
 							      G_PARAM_READWRITE |
                                                               G_PARAM_STATIC_STRINGS));
-
-	g_type_class_add_private (gobject_class, sizeof (EvProgressMessageAreaPrivate));
 }
 
 static void
@@ -83,25 +79,26 @@ ev_progress_message_area_init (EvProgressMessageArea *area)
 {
 	GtkWidget *contents;
 	GtkWidget *vbox;
-	
-	area->priv = EV_PROGRESS_MESSAGE_AREA_GET_PRIVATE (area);
+	EvProgressMessageAreaPrivate *priv;
+
+	priv = ev_progress_message_area_get_instance_private (area);
 
 	contents = _ev_message_area_get_main_box (EV_MESSAGE_AREA (area));
 	
 	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
 	
-	area->priv->label = gtk_label_new (NULL);
-	gtk_label_set_use_markup (GTK_LABEL (area->priv->label), TRUE);
-	gtk_label_set_ellipsize (GTK_LABEL (area->priv->label),
+	priv->label = gtk_label_new (NULL);
+	gtk_label_set_use_markup (GTK_LABEL (priv->label), TRUE);
+	gtk_label_set_ellipsize (GTK_LABEL (priv->label),
 				 PANGO_ELLIPSIZE_END);
-	gtk_misc_set_alignment (GTK_MISC (area->priv->label), 0.0, 0.5);
-	gtk_box_pack_start (GTK_BOX (vbox), area->priv->label, TRUE, TRUE, 0);
-	gtk_widget_show (area->priv->label);
+	gtk_misc_set_alignment (GTK_MISC (priv->label), 0.0, 0.5);
+	gtk_box_pack_start (GTK_BOX (vbox), priv->label, TRUE, TRUE, 0);
+	gtk_widget_show (priv->label);
 
-	area->priv->progress_bar = gtk_progress_bar_new ();
-	gtk_widget_set_size_request (area->priv->progress_bar, -1, 15);
-	gtk_box_pack_start (GTK_BOX (vbox), area->priv->progress_bar, TRUE, FALSE, 0);
-	gtk_widget_show (area->priv->progress_bar);
+	priv->progress_bar = gtk_progress_bar_new ();
+	gtk_widget_set_size_request (priv->progress_bar, -1, 15);
+	gtk_box_pack_start (GTK_BOX (vbox), priv->progress_bar, TRUE, FALSE, 0);
+	gtk_widget_show (priv->progress_bar);
 
 	gtk_box_pack_start (GTK_BOX (contents), vbox, TRUE, TRUE, 0);
 	gtk_widget_show (vbox);
@@ -134,15 +131,18 @@ ev_progress_message_area_get_property (GObject    *object,
 				       GParamSpec *pspec)
 {
 	EvProgressMessageArea *area = EV_PROGRESS_MESSAGE_AREA (object);
+	EvProgressMessageAreaPrivate *priv;
+
+	priv = ev_progress_message_area_get_instance_private (area);
 
 	switch (prop_id) {
 	case PROP_STATUS:
-		g_value_set_string (value, gtk_label_get_label (GTK_LABEL (area->priv->label)));
+		g_value_set_string (value, gtk_label_get_label (GTK_LABEL (priv->label)));
 		break;
 	case PROP_FRACTION: {
 		gdouble fraction;
 
-		fraction = gtk_progress_bar_get_fraction (GTK_PROGRESS_BAR (area->priv->progress_bar));
+		fraction = gtk_progress_bar_get_fraction (GTK_PROGRESS_BAR (priv->progress_bar));
 		g_value_set_double (value, fraction);
 	}
 		break;
@@ -183,9 +183,13 @@ void
 ev_progress_message_area_set_status (EvProgressMessageArea *area,
 				     const gchar           *str)
 {
+	EvProgressMessageAreaPrivate *priv;
+
 	g_return_if_fail (EV_IS_PROGRESS_MESSAGE_AREA (area));
 
-	gtk_label_set_text (GTK_LABEL (area->priv->label), str);
+	priv = ev_progress_message_area_get_instance_private (area);
+
+	gtk_label_set_text (GTK_LABEL (priv->label), str);
 
 	g_object_notify (G_OBJECT (area), "status");
 }
@@ -194,9 +198,13 @@ void
 ev_progress_message_area_set_fraction (EvProgressMessageArea *area,
 				       gdouble                fraction)
 {
+	EvProgressMessageAreaPrivate *priv;
+
 	g_return_if_fail (EV_IS_PROGRESS_MESSAGE_AREA (area));
-	
-	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (area->priv->progress_bar),
+
+	priv = ev_progress_message_area_get_instance_private (area);
+
+	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (priv->progress_bar),
 				       fraction);
 	g_object_notify (G_OBJECT (area), "fraction");
 }
