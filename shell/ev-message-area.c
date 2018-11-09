@@ -283,6 +283,8 @@ ev_message_area_new (GtkMessageType type,
 		va_end (args);
 	}
 
+	gtk_info_bar_set_show_close_button (GTK_INFO_BAR (widget), TRUE);
+
 	return widget;
 }
 

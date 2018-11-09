@@ -773,8 +773,6 @@ ev_window_error_message (EvWindow    *window,
 	
 	area = ev_message_area_new (GTK_MESSAGE_ERROR,
 				    msg,
-				    _("_Close"),
-				    GTK_RESPONSE_CLOSE,
 				    NULL);
 	g_free (msg);
 	
@@ -805,8 +803,6 @@ ev_window_warning_message (EvWindow    *window,
 
 	area = ev_message_area_new (GTK_MESSAGE_WARNING,
 				    msg,
-				    _("_Close"),
-				    GTK_RESPONSE_CLOSE,
 				    NULL);
 	g_free (msg);
 	
@@ -1936,8 +1932,6 @@ show_loading_progress (EvWindow *ev_window)
 
 	area = ev_progress_message_area_new ("document-open-symbolic",
 					     text,
-					     _("_Close"),
-					     GTK_RESPONSE_CLOSE,
 					     _("C_ancel"),
 					     GTK_RESPONSE_CANCEL,
 					     NULL);
@@ -2389,8 +2383,6 @@ show_reloading_progress (EvWindow *ev_window)
 				ev_window->priv->uri);
 	area = ev_progress_message_area_new ("view-refresh-symbolic",
 					     text,
-					     _("_Close"),
-					     GTK_RESPONSE_CLOSE,
 					     _("C_ancel"),
 					     GTK_RESPONSE_CANCEL,
 					     NULL);
@@ -2738,8 +2730,6 @@ show_saving_progress (GFile *dst)
 	g_free (uri);
 	area = ev_progress_message_area_new ("document-save-symbolic",
 					     text,
-					     _("_Close"),
-					     GTK_RESPONSE_CLOSE,
 					     _("C_ancel"),
 					     GTK_RESPONSE_CANCEL,
 					     NULL);
@@ -3442,8 +3432,6 @@ ev_window_print_operation_status_changed (EvPrintOperation *op,
 
 		area = ev_progress_message_area_new ("document-print-symbolic",
 						     text,
-						     _("_Close"),
-						     GTK_RESPONSE_CLOSE,
 						     _("C_ancel"),
 						     GTK_RESPONSE_CANCEL,
 						     NULL);
@@ -5678,7 +5666,6 @@ ev_window_cmd_view_toggle_caret_navigation (GSimpleAction *action,
 
 	message_area = ev_message_area_new (GTK_MESSAGE_QUESTION,
 					    _("Enable caret navigation?"),
-					    _("_No"),  GTK_RESPONSE_NO,
 					    _("_Enable"), GTK_RESPONSE_YES,
 					    NULL);
 	ev_message_area_set_secondary_text (EV_MESSAGE_AREA (message_area),
