@@ -31,12 +31,9 @@ G_BEGIN_DECLS
 
 typedef struct _EvPasswordView        EvPasswordView;
 typedef struct _EvPasswordViewClass   EvPasswordViewClass;
-typedef struct _EvPasswordViewPrivate EvPasswordViewPrivate;
 
 struct _EvPasswordView {
 	GtkViewport parent_instance;
-	
-	EvPasswordViewPrivate *priv;
 };
 
 struct _EvPasswordViewClass {

@@ -40,7 +40,7 @@ enum {
 	UNLOCK,
 	LAST_SIGNAL
 };
-struct _EvPasswordViewPrivate {
+typedef struct {
 	GtkWindow    *parent_window;
 	GtkWidget    *password_entry;
 
@@ -48,29 +48,29 @@ struct _EvPasswordViewPrivate {
 	GPasswordSave password_save;
 
 	char         *filename;
-};
-
-#define EV_PASSWORD_VIEW_GET_PRIVATE(object) \
-	(G_TYPE_INSTANCE_GET_PRIVATE ((object), EV_TYPE_PASSWORD_VIEW, EvPasswordViewPrivate));
+} EvPasswordViewPrivate;
 
 static guint password_view_signals [LAST_SIGNAL] = { 0 };
 
 
-G_DEFINE_TYPE (EvPasswordView, ev_password_view, GTK_TYPE_VIEWPORT)
+G_DEFINE_TYPE_WITH_PRIVATE (EvPasswordView, ev_password_view, GTK_TYPE_VIEWPORT)
 
 static void
 ev_password_view_finalize (GObject *object)
 {
 	EvPasswordView *password_view = EV_PASSWORD_VIEW (object);
+	EvPasswordViewPrivate *priv;
 
-	if (password_view->priv->password) {
-		g_free (password_view->priv->password);
-		password_view->priv->password = NULL;
+	priv = ev_password_view_get_instance_private (password_view);
+
+	if (priv->password) {
+		g_free (priv->password);
+		priv->password = NULL;
 	}
 
-	password_view->priv->parent_window = NULL;
+	priv->parent_window = NULL;
 
-	g_clear_pointer (&password_view->priv->filename, g_free);
+	g_clear_pointer (&priv->filename, g_free);
 
 	G_OBJECT_CLASS (ev_password_view_parent_class)->finalize (object);
 }
@@ -91,8 +91,6 @@ ev_password_view_class_init (EvPasswordViewClass *class)
 			      g_cclosure_marshal_VOID__VOID,
 			      G_TYPE_NONE, 0);
 
-	g_type_class_add_private (g_object_class, sizeof (EvPasswordViewPrivate));
-
 	g_object_class->finalize = ev_password_view_finalize;
 }
 
@@ -111,10 +109,11 @@ ev_password_view_init (EvPasswordView *password_view)
 	GtkWidget *image;
 	GtkWidget *button;
 	GtkWidget *label;
+	EvPasswordViewPrivate *priv;
 
-	password_view->priv = EV_PASSWORD_VIEW_GET_PRIVATE (password_view);
+	priv = ev_password_view_get_instance_private (password_view);
 
-	password_view->priv->password_save = G_PASSWORD_SAVE_NEVER;
+	priv->password_save = G_PASSWORD_SAVE_NEVER;
 
 	gtk_widget_push_composite_child ();
 
@@ -153,14 +152,18 @@ void
 ev_password_view_set_filename (EvPasswordView *password_view,
 			       const char     *filename)
 {
+	EvPasswordViewPrivate *priv;
+
 	g_return_if_fail (EV_IS_PASSWORD_VIEW (password_view));
 	g_return_if_fail (filename != NULL);
 
-	if (g_strcmp0 (password_view->priv->filename, filename) == 0)
+	priv = ev_password_view_get_instance_private (password_view);
+
+	if (g_strcmp0 (priv->filename, filename) == 0)
 		return;
 
-	g_free (password_view->priv->filename);
-	password_view->priv->filename = g_strdup (filename);
+	g_free (priv->filename);
+	priv->filename = g_strdup (filename);
 }
 
 static void
@@ -168,13 +171,17 @@ ev_password_dialog_got_response (GtkDialog      *dialog,
 				 gint            response_id,
 				 EvPasswordView *password_view)
 {
+	EvPasswordViewPrivate *priv;
+
+	priv = ev_password_view_get_instance_private (password_view);
+
 	gtk_widget_set_sensitive (GTK_WIDGET (password_view), TRUE);
 	
 	if (response_id == GTK_RESPONSE_OK) {
-		g_free (password_view->priv->password);
-		password_view->priv->password =
-			g_strdup (gtk_entry_get_text (GTK_ENTRY (password_view->priv->password_entry)));
-		
+		g_free (priv->password);
+		priv->password =
+			g_strdup (gtk_entry_get_text (GTK_ENTRY (priv->password_entry)));
+
 		g_signal_emit (password_view, password_view_signals[UNLOCK], 0);
 	}
 	
@@ -185,11 +192,15 @@ static void
 ev_password_dialog_remember_button_toggled (GtkToggleButton *button,
 					    EvPasswordView  *password_view)
 {
+	EvPasswordViewPrivate *priv;
+
+	priv = ev_password_view_get_instance_private (password_view);
+
 	if (gtk_toggle_button_get_active (button)) {
 		gpointer data;
-		
+
 		data = g_object_get_data (G_OBJECT (button), "password-save");
-		password_view->priv->password_save = GPOINTER_TO_INT (data);
+		priv->password_save = GPOINTER_TO_INT (data);
 	}
 }
 
@@ -220,11 +231,14 @@ ev_password_view_ask_password (EvPasswordView *password_view)
 	GtkWidget *grid, *label;
 	GtkWidget *password_entry;
 	gchar     *text;
+	EvPasswordViewPrivate *priv;
+
+	priv = ev_password_view_get_instance_private (password_view);
 
         text = g_markup_printf_escaped (_("The document “%s” is locked and requires a password before it can be opened."),
-                                        password_view->priv->filename);
+                                        priv->filename);
 
-	dialog = GTK_MESSAGE_DIALOG (gtk_message_dialog_new (password_view->priv->parent_window,
+	dialog = GTK_MESSAGE_DIALOG (gtk_message_dialog_new (priv->parent_window,
 		                         GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
 		                         GTK_MESSAGE_QUESTION,
 		                         GTK_BUTTONS_NONE,
@@ -270,7 +284,7 @@ ev_password_view_ask_password (EvPasswordView *password_view)
 	gtk_label_set_mnemonic_widget (GTK_LABEL (label),
 				       password_entry);
 
-	password_view->priv->password_entry = password_entry;
+	priv->password_entry = password_entry;
 
 	if (ev_keyring_is_available ()) {
 		GtkWidget  *choice;
@@ -285,7 +299,7 @@ ev_password_view_ask_password (EvPasswordView *password_view)
 
 		choice = gtk_radio_button_new_with_mnemonic (NULL, _("Forget password _immediately"));
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (choice),
-					      password_view->priv->password_save == G_PASSWORD_SAVE_NEVER);
+					      priv->password_save == G_PASSWORD_SAVE_NEVER);
 		g_object_set_data (G_OBJECT (choice), "password-save",
 				   GINT_TO_POINTER (G_PASSWORD_SAVE_NEVER));
 		g_signal_connect (choice, "toggled",
@@ -297,7 +311,7 @@ ev_password_view_ask_password (EvPasswordView *password_view)
 		group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (choice));
 		choice = gtk_radio_button_new_with_mnemonic (group, _("Remember password until you _log out"));
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (choice),
-					      password_view->priv->password_save == G_PASSWORD_SAVE_FOR_SESSION);
+					      priv->password_save == G_PASSWORD_SAVE_FOR_SESSION);
 		g_object_set_data (G_OBJECT (choice), "password-save",
 				   GINT_TO_POINTER (G_PASSWORD_SAVE_FOR_SESSION));
 		g_signal_connect (choice, "toggled",
@@ -309,7 +323,7 @@ ev_password_view_ask_password (EvPasswordView *password_view)
 		group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (choice));
 		choice = gtk_radio_button_new_with_mnemonic (group, _("Remember _forever"));
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (choice),
-					      password_view->priv->password_save == G_PASSWORD_SAVE_PERMANENTLY);
+					      priv->password_save == G_PASSWORD_SAVE_PERMANENTLY);
 		g_object_set_data (G_OBJECT (choice), "password-save",
 				   GINT_TO_POINTER (G_PASSWORD_SAVE_PERMANENTLY));
 		g_signal_connect (choice, "toggled",
@@ -329,23 +343,33 @@ ev_password_view_ask_password (EvPasswordView *password_view)
 const gchar *
 ev_password_view_get_password (EvPasswordView *password_view)
 {
-	return password_view->priv->password;
+	EvPasswordViewPrivate *priv;
+
+	priv = ev_password_view_get_instance_private (password_view);
+
+	return priv->password;
 }
 
 GPasswordSave
 ev_password_view_get_password_save_flags (EvPasswordView *password_view)
 {
-	return password_view->priv->password_save;
+	EvPasswordViewPrivate *priv;
+
+	priv = ev_password_view_get_instance_private (password_view);
+
+	return priv->password_save;
 }
 
 GtkWidget *
 ev_password_view_new (GtkWindow *parent)
 {
 	EvPasswordView *retval;
+	EvPasswordViewPrivate *priv;
 
 	retval = EV_PASSWORD_VIEW (g_object_new (EV_TYPE_PASSWORD_VIEW, NULL));
+	priv = ev_password_view_get_instance_private (retval);
 
-	retval->priv->parent_window = parent;
+	priv->parent_window = parent;
 
 	return GTK_WIDGET (retval);
 }
