@@ -533,7 +533,6 @@ pdf_document_get_thumbnail_surface (EvDocument      *document,
 
 	PopplerPage *poppler_page;
 	cairo_surface_t *surface;
-	GdkPixbuf *pixbuf = NULL;
 	double page_width, page_height;
 	gint width, height;
 
@@ -761,8 +760,6 @@ static char *
 pdf_document_get_localized_object_from_metadata (xmlXPathContextPtr xpathCtx,
                                                  const char* xpath)
 {
-	xmlXPathObjectPtr xpathObj;
-	xmlChar *marked = NULL;
 	const char *language_string;
 	char  *aux;
 	gchar **tags;
@@ -826,7 +823,6 @@ pdf_document_get_dates_from_metadata (GTime *result, xmlXPathContextPtr xpathCtx
 	xmlChar *metadate = NULL;
 	char    *datestr;
 	GTimeVal  tmp_time;
-	int i;
 
 	/* reads modify date */
 	modifydate = pdf_document_get_xmptag_from_path (xpathCtx, MOD_DATE);
@@ -900,13 +896,7 @@ pdf_document_get_producer_from_metadata (xmlXPathContextPtr xpathCtx)
 static EvDocumentLicense *
 pdf_document_get_license_from_metadata (xmlXPathContextPtr xpathCtx)
 {
-	xmlXPathObjectPtr xpathObj;
 	xmlChar *marked = NULL;
-	const char *language_string;
-	char  *aux;
-	gchar **tags;
-	gchar *tag, *tag_aux;
-	int i, j;
 	EvDocumentLicense *license;
 
 	/* checking if the document has been marked as defined on the XMP Rights
@@ -2261,12 +2251,11 @@ static void
 pdf_document_file_exporter_end_page (EvFileExporter *exporter)
 {
 	PdfDocument *pdf_document = PDF_DOCUMENT (exporter);
-	PdfPrintContext *ctx = pdf_document->print_ctx;
 
 	g_return_if_fail (pdf_document->print_ctx != NULL);
 
 #ifdef HAVE_CAIRO_PRINT
-	cairo_show_page (ctx->cr);
+	cairo_show_page (pdf_document->print_ctx->cr);
 #endif
 }
 
@@ -3465,7 +3454,6 @@ pdf_document_annotations_remove_annotation (EvDocumentAnnotations *document_anno
         PopplerAnnot  *poppler_annot;
         EvMappingList *mapping_list;
         EvMapping     *annot_mapping;
-        GList         *list;
 
         poppler_annot = POPPLER_ANNOT (g_object_get_data (G_OBJECT (annot), "poppler-annot"));
         pdf_document = PDF_DOCUMENT (document_annotations);
@@ -4055,11 +4043,9 @@ pdf_document_media_get_media_mapping (EvDocumentMedia *document_media,
 	GList *retval = NULL;
 	PdfDocument *pdf_document;
 	PopplerPage *poppler_page;
-	EvMappingList *mapping_list;
 	GList *annots;
 	GList *list;
 	gdouble height;
-	gint i = 0;
 
 	pdf_document = PDF_DOCUMENT (document_media);
 	poppler_page = POPPLER_PAGE (page->backend_page);
