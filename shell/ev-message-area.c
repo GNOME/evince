@@ -94,6 +94,7 @@ ev_message_area_init (EvMessageArea *area)
 	priv = ev_message_area_get_instance_private (area);
 
 	priv->main_box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 12);
+	gtk_container_set_border_width (GTK_CONTAINER (priv->main_box), 6);
 
 	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 12);
 	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 12);
