@@ -1,5 +1,6 @@
 /* this file is part of evince, a gnome document viewer
  *
+ *  Copyright (C) 2018 Germán Poo-Caamaño <gpoo@gnome.org>
  *  Copyright (C) 2008 Carlos Garcia Campos <carlosgc@gnome.org>
  *  Copyright (C) 2005 Red Hat, Inc
  *
@@ -41,7 +42,6 @@ enum {
 };
 struct _EvPasswordViewPrivate {
 	GtkWindow    *parent_window;
-	GtkWidget    *label;
 	GtkWidget    *password_entry;
 
 	gchar        *password;
@@ -111,7 +111,6 @@ ev_password_view_init (EvPasswordView *password_view)
 	GtkWidget *image;
 	GtkWidget *button;
 	GtkWidget *label;
-	gchar     *markup;
 
 	password_view->priv = EV_PASSWORD_VIEW_GET_PRIVATE (password_view);
 
@@ -126,27 +125,11 @@ ev_password_view_init (EvPasswordView *password_view)
 	gtk_widget_set_halign (vbox, GTK_ALIGN_CENTER);
 	gtk_widget_set_valign (vbox, GTK_ALIGN_CENTER);
 
-	label = gtk_label_new (NULL);
-	gtk_box_pack_start (GTK_BOX (vbox), label,
-			    FALSE, FALSE, 0);
-	gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
-	/* Prevent big dialog windows when the file name is too long, and
-	 * Sometimes_the_file_might_not_have_spaces_to_wrap
-	 */
-	gtk_label_set_max_width_chars (GTK_LABEL (label), MAX_WIDHT_LABEL);
-	gtk_label_set_line_wrap_mode (GTK_LABEL (label), PANGO_WRAP_WORD_CHAR);
-	password_view->priv->label = label;
-
 	image = gtk_image_new_from_icon_name ("dialog-password-symbolic",
 					      GTK_ICON_SIZE_DIALOG);
 	gtk_box_pack_start (GTK_BOX (vbox), image, FALSE, FALSE, 0);
 
-	label = gtk_label_new (NULL);
-	markup = g_strdup_printf ("<span size=\"x-large\">%s</span>",
-				  _("This document is locked and can only be read by entering the correct password."));
-	gtk_label_set_markup (GTK_LABEL (label), markup);
-	g_free (markup);
-
+	label = gtk_label_new (_("This document is locked and can only be read by entering the correct password."));
 	gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
 	gtk_label_set_max_width_chars (GTK_LABEL (label), MAX_WIDHT_LABEL);
 	gtk_label_set_line_wrap_mode (GTK_LABEL (label), PANGO_WRAP_WORD_CHAR);
@@ -154,6 +137,7 @@ ev_password_view_init (EvPasswordView *password_view)
 	gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
 
 	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
+	gtk_widget_set_halign (hbox, GTK_ALIGN_CENTER);
 	gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
 
 	button = gtk_button_new_with_mnemonic (_("_Unlock Document"));
@@ -169,8 +153,6 @@ void
 ev_password_view_set_filename (EvPasswordView *password_view,
 			       const char     *filename)
 {
-	gchar *markup;
-
 	g_return_if_fail (EV_IS_PASSWORD_VIEW (password_view));
 	g_return_if_fail (filename != NULL);
 
@@ -179,11 +161,6 @@ ev_password_view_set_filename (EvPasswordView *password_view,
 
 	g_free (password_view->priv->filename);
 	password_view->priv->filename = g_strdup (filename);
-
-	markup = g_markup_printf_escaped ("<span size=\"x-large\" weight=\"bold\">%s</span>",
-					  filename);
-	gtk_label_set_markup (GTK_LABEL (password_view->priv->label), markup);
-	g_free (markup);
 }
 
 static void
