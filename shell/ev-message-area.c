@@ -23,17 +23,14 @@
 
 #include "ev-message-area.h"
 
-#define EV_MESSAGE_AREA_GET_PRIVATE(obj) \
-	(G_TYPE_INSTANCE_GET_PRIVATE ((obj), EV_TYPE_MESSAGE_AREA, EvMessageAreaPrivate))
-
-struct _EvMessageAreaPrivate {
+typedef struct {
 	GtkWidget *main_box;
 	GtkWidget *image;
 	GtkWidget *label;
 	GtkWidget *secondary_label;
-	
+
 	guint      message_type : 3;
-};
+} EvMessageAreaPrivate;
 
 enum {
 	PROP_0,
@@ -51,7 +48,7 @@ static void ev_message_area_get_property (GObject      *object,
 					  GValue       *value,
 					  GParamSpec   *pspec);
 
-G_DEFINE_TYPE (EvMessageArea, ev_message_area, GTK_TYPE_INFO_BAR)
+G_DEFINE_TYPE_WITH_PRIVATE (EvMessageArea, ev_message_area, GTK_TYPE_INFO_BAR)
 
 static void
 ev_message_area_class_init (EvMessageAreaClass *class)
@@ -85,8 +82,6 @@ ev_message_area_class_init (EvMessageAreaClass *class)
 							      GTK_TYPE_WIDGET,
 							      G_PARAM_READWRITE |
                                                               G_PARAM_STATIC_STRINGS));
-
-	g_type_class_add_private (gobject_class, sizeof (EvMessageAreaPrivate));
 }
 
 static void
@@ -94,45 +89,46 @@ ev_message_area_init (EvMessageArea *area)
 {
 	GtkWidget *hbox, *vbox;
 	GtkWidget *content_area;
+	EvMessageAreaPrivate *priv;
 
-	area->priv = EV_MESSAGE_AREA_GET_PRIVATE (area);
+	priv = ev_message_area_get_instance_private (area);
 
-	area->priv->main_box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 12);
+	priv->main_box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 12);
 
 	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 12);
 	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 12);
 
-	area->priv->label = gtk_label_new (NULL);
-	gtk_label_set_use_markup (GTK_LABEL (area->priv->label), TRUE);
-	gtk_label_set_line_wrap (GTK_LABEL (area->priv->label), TRUE);
-	gtk_label_set_selectable (GTK_LABEL (area->priv->label), TRUE);
-	gtk_misc_set_alignment (GTK_MISC (area->priv->label), 0.0, 0.5);
-	gtk_widget_set_can_focus (area->priv->label, TRUE);
-	gtk_box_pack_start (GTK_BOX (vbox), area->priv->label, TRUE, TRUE, 0);
-	gtk_widget_show (area->priv->label);
+	priv->label = gtk_label_new (NULL);
+	gtk_label_set_use_markup (GTK_LABEL (priv->label), TRUE);
+	gtk_label_set_line_wrap (GTK_LABEL (priv->label), TRUE);
+	gtk_label_set_selectable (GTK_LABEL (priv->label), TRUE);
+	gtk_misc_set_alignment (GTK_MISC (priv->label), 0.0, 0.5);
+	gtk_widget_set_can_focus (priv->label, TRUE);
+	gtk_box_pack_start (GTK_BOX (vbox), priv->label, TRUE, TRUE, 0);
+	gtk_widget_show (priv->label);
 
-	area->priv->secondary_label = gtk_label_new (NULL);
-	gtk_label_set_use_markup (GTK_LABEL (area->priv->secondary_label), TRUE);
-	gtk_label_set_line_wrap (GTK_LABEL (area->priv->secondary_label), TRUE);
-	gtk_label_set_selectable (GTK_LABEL (area->priv->secondary_label), TRUE);
-	gtk_misc_set_alignment (GTK_MISC (area->priv->secondary_label), 0.0, 0.5);
-	gtk_widget_set_can_focus (area->priv->secondary_label, TRUE);
-	gtk_box_pack_start (GTK_BOX (vbox), area->priv->secondary_label, TRUE, TRUE, 0);
+	priv->secondary_label = gtk_label_new (NULL);
+	gtk_label_set_use_markup (GTK_LABEL (priv->secondary_label), TRUE);
+	gtk_label_set_line_wrap (GTK_LABEL (priv->secondary_label), TRUE);
+	gtk_label_set_selectable (GTK_LABEL (priv->secondary_label), TRUE);
+	gtk_misc_set_alignment (GTK_MISC (priv->secondary_label), 0.0, 0.5);
+	gtk_widget_set_can_focus (priv->secondary_label, TRUE);
+	gtk_box_pack_start (GTK_BOX (vbox), priv->secondary_label, TRUE, TRUE, 0);
 
-	area->priv->image = gtk_image_new_from_icon_name (NULL, GTK_ICON_SIZE_DIALOG);
-	gtk_misc_set_alignment (GTK_MISC (area->priv->image), 0.5, 0.0);
-	gtk_box_pack_start (GTK_BOX (hbox), area->priv->image, FALSE, FALSE, 0);
-	gtk_widget_show (area->priv->image);
+	priv->image = gtk_image_new_from_icon_name (NULL, GTK_ICON_SIZE_DIALOG);
+	gtk_misc_set_alignment (GTK_MISC (priv->image), 0.5, 0.0);
+	gtk_box_pack_start (GTK_BOX (hbox), priv->image, FALSE, FALSE, 0);
+	gtk_widget_show (priv->image);
 
 	gtk_box_pack_start (GTK_BOX (hbox), vbox, TRUE, TRUE, 0);
 	gtk_widget_show (vbox);
 
-	gtk_box_pack_start (GTK_BOX (area->priv->main_box), hbox, TRUE, TRUE, 0);
+	gtk_box_pack_start (GTK_BOX (priv->main_box), hbox, TRUE, TRUE, 0);
 	gtk_widget_show (hbox);
 
 	content_area = gtk_info_bar_get_content_area (GTK_INFO_BAR (area));
-	gtk_container_add (GTK_CONTAINER (content_area), area->priv->main_box);
-	gtk_widget_show (area->priv->main_box);
+	gtk_container_add (GTK_CONTAINER (content_area), priv->main_box);
+	gtk_widget_show (priv->main_box);
 }
 
 static void
@@ -141,6 +137,9 @@ ev_message_area_set_image_for_type (EvMessageArea *area,
 {
 	const gchar *icon_name = NULL;
 	AtkObject   *atk_obj;
+	EvMessageAreaPrivate *priv;
+
+	priv = ev_message_area_get_instance_private (area);
 
 	switch (type) {
 	case GTK_MESSAGE_INFO:
@@ -163,7 +162,7 @@ ev_message_area_set_image_for_type (EvMessageArea *area,
 	}
 
 	if (icon_name)
-		gtk_image_set_from_icon_name (GTK_IMAGE (area->priv->image),
+		gtk_image_set_from_icon_name (GTK_IMAGE (priv->image),
 					      icon_name,
 					      GTK_ICON_SIZE_DIALOG);
 
@@ -207,16 +206,19 @@ ev_message_area_get_property (GObject     *object,
 			      GParamSpec  *pspec)
 {
 	EvMessageArea *area = EV_MESSAGE_AREA (object);
+	EvMessageAreaPrivate *priv;
+
+	priv = ev_message_area_get_instance_private (area);
 
 	switch (prop_id) {
 	case PROP_TEXT:
-		g_value_set_string (value, gtk_label_get_label (GTK_LABEL (area->priv->label)));
+		g_value_set_string (value, gtk_label_get_label (GTK_LABEL (priv->label)));
 		break;
 	case PROP_SECONDARY_TEXT:
-		g_value_set_string (value, gtk_label_get_label (GTK_LABEL (area->priv->secondary_label)));
+		g_value_set_string (value, gtk_label_get_label (GTK_LABEL (priv->secondary_label)));
 		break;
 	case PROP_IMAGE:
-		g_value_set_object (value, area->priv->image);
+		g_value_set_object (value, priv->image);
 		break;
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -252,7 +254,10 @@ _ev_message_area_add_buttons_valist (EvMessageArea *area,
 GtkWidget *
 _ev_message_area_get_main_box (EvMessageArea *area)
 {
-	return area->priv->main_box;
+	EvMessageAreaPrivate *priv;
+
+	priv = ev_message_area_get_instance_private (area);
+	return priv->main_box;
 }
 
 GtkWidget *
@@ -285,17 +290,20 @@ ev_message_area_set_image (EvMessageArea *area,
 			   GtkWidget     *image)
 {
 	GtkWidget *parent;
+	EvMessageAreaPrivate *priv;
+
+	priv = ev_message_area_get_instance_private (area);
 
 	g_return_if_fail (EV_IS_MESSAGE_AREA (area));
 
-	area->priv->message_type = GTK_MESSAGE_OTHER;
+	priv->message_type = GTK_MESSAGE_OTHER;
 
-	parent = gtk_widget_get_parent (area->priv->image);
+	parent = gtk_widget_get_parent (priv->image);
 	gtk_container_add (GTK_CONTAINER (parent), image);
-	gtk_container_remove (GTK_CONTAINER (parent), area->priv->image);
+	gtk_container_remove (GTK_CONTAINER (parent), priv->image);
 	gtk_box_reorder_child (GTK_BOX (parent), image, 0);
 
-	area->priv->image = image;
+	priv->image = image;
 
 	g_object_notify (G_OBJECT (area), "image");
 }
@@ -304,10 +312,14 @@ void
 ev_message_area_set_image_from_icon_name (EvMessageArea *area,
 					  const gchar   *icon_name)
 {
+	EvMessageAreaPrivate *priv;
+
 	g_return_if_fail (EV_IS_MESSAGE_AREA (area));
 	g_return_if_fail (icon_name != NULL);
 
-	gtk_image_set_from_icon_name (GTK_IMAGE (area->priv->image),
+	priv = ev_message_area_get_instance_private (area);
+
+	gtk_image_set_from_icon_name (GTK_IMAGE (priv->image),
 				      icon_name,
 				      GTK_ICON_SIZE_DIALOG);
 }
@@ -316,18 +328,22 @@ void
 ev_message_area_set_text (EvMessageArea *area,
 			  const gchar   *str)
 {
+	EvMessageAreaPrivate *priv;
+
 	g_return_if_fail (EV_IS_MESSAGE_AREA (area));
+
+	priv = ev_message_area_get_instance_private (area);
 
 	if (str) {
 		gchar *msg, *escaped;
 
 		escaped = g_markup_escape_text (str, -1);
 		msg = g_strdup_printf ("<b>%s</b>", escaped);
-		gtk_label_set_markup (GTK_LABEL (area->priv->label), msg);
+		gtk_label_set_markup (GTK_LABEL (priv->label), msg);
 		g_free (msg);
 		g_free (escaped);
 	} else {
-		gtk_label_set_markup (GTK_LABEL (area->priv->label), NULL);
+		gtk_label_set_markup (GTK_LABEL (priv->label), NULL);
 	}
 
 	g_object_notify (G_OBJECT (area), "text");
@@ -337,18 +353,22 @@ void
 ev_message_area_set_secondary_text (EvMessageArea *area,
 				    const gchar   *str)
 {
+	EvMessageAreaPrivate *priv;
+
 	g_return_if_fail (EV_IS_MESSAGE_AREA (area));
+
+	priv = ev_message_area_get_instance_private (area);
 
 	if (str) {
 		gchar *msg;
 
 		msg = g_strdup_printf ("<small>%s</small>", str);
-		gtk_label_set_markup (GTK_LABEL (area->priv->secondary_label), msg);
+		gtk_label_set_markup (GTK_LABEL (priv->secondary_label), msg);
 		g_free (msg);
-		gtk_widget_show (area->priv->secondary_label);
+		gtk_widget_show (priv->secondary_label);
 	} else {
-		gtk_label_set_markup (GTK_LABEL (area->priv->secondary_label), NULL);
-		gtk_widget_hide (area->priv->secondary_label);
+		gtk_label_set_markup (GTK_LABEL (priv->secondary_label), NULL);
+		gtk_widget_hide (priv->secondary_label);
 	}
 
 	g_object_notify (G_OBJECT (area), "secondary-text");

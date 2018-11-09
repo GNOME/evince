@@ -35,13 +35,9 @@ G_BEGIN_DECLS
 
 typedef struct _EvMessageArea        EvMessageArea;
 typedef struct _EvMessageAreaClass   EvMessageAreaClass;
-typedef struct _EvMessageAreaPrivate EvMessageAreaPrivate;
 
 struct _EvMessageArea {
 	GtkInfoBar parent_instance;
-
-	/*< private >*/
-	EvMessageAreaPrivate *priv;
 };
 
 struct _EvMessageAreaClass {
