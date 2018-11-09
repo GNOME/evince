@@ -2,6 +2,7 @@
  *  this file is part of evince, a gnome document viewer
  *
  * Copyright (C) 2008 Carlos Garcia Campos <carlosgc@gnome.org>
+ * Copyright (C) 2018 Germán Poo-Caamaño <gpoo@gnome.org>
  *
  * Evince is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by
@@ -151,7 +152,7 @@ ev_progress_message_area_get_property (GObject    *object,
 }
 
 GtkWidget *
-ev_progress_message_area_new (const gchar *stock_id,
+ev_progress_message_area_new (const gchar *icon_name,
 			      const gchar *text,
 			      const gchar *first_button_text,
 			      ...)
@@ -172,7 +173,8 @@ ev_progress_message_area_new (const gchar *stock_id,
 		va_end (args);
 	}
 
-	ev_message_area_set_image_from_stock (EV_MESSAGE_AREA (widget), stock_id);
+	ev_message_area_set_image_from_icon_name (EV_MESSAGE_AREA (widget),
+						  icon_name);
 
 	return widget;
 }

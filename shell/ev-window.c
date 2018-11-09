@@ -773,7 +773,7 @@ ev_window_error_message (EvWindow    *window,
 	
 	area = ev_message_area_new (GTK_MESSAGE_ERROR,
 				    msg,
-				    GTK_STOCK_CLOSE,
+				    _("_Close"),
 				    GTK_RESPONSE_CLOSE,
 				    NULL);
 	g_free (msg);
@@ -805,7 +805,7 @@ ev_window_warning_message (EvWindow    *window,
 
 	area = ev_message_area_new (GTK_MESSAGE_WARNING,
 				    msg,
-				    GTK_STOCK_CLOSE,
+				    _("_Close"),
 				    GTK_RESPONSE_CLOSE,
 				    NULL);
 	g_free (msg);
@@ -1934,11 +1934,11 @@ show_loading_progress (EvWindow *ev_window)
 	text = g_strdup_printf (_("Loading document from “%s”"),
 				display_name);
 
-	area = ev_progress_message_area_new (GTK_STOCK_OPEN,
+	area = ev_progress_message_area_new ("document-open-symbolic",
 					     text,
-					     GTK_STOCK_CLOSE,
+					     _("_Close"),
 					     GTK_RESPONSE_CLOSE,
-					     GTK_STOCK_CANCEL,
+					     _("C_ancel"),
 					     GTK_RESPONSE_CANCEL,
 					     NULL);
 	g_signal_connect (area, "response",
@@ -2387,11 +2387,11 @@ show_reloading_progress (EvWindow *ev_window)
 	
 	text = g_strdup_printf (_("Reloading document from %s"),
 				ev_window->priv->uri);
-	area = ev_progress_message_area_new (GTK_STOCK_REFRESH,
+	area = ev_progress_message_area_new ("view-refresh-symbolic",
 					     text,
-					     GTK_STOCK_CLOSE,
+					     _("_Close"),
 					     GTK_RESPONSE_CLOSE,
-					     GTK_STOCK_CANCEL,
+					     _("C_ancel"),
 					     GTK_RESPONSE_CANCEL,
 					     NULL);
 	g_signal_connect (area, "response",
@@ -2736,11 +2736,11 @@ show_saving_progress (GFile *dst)
 		g_assert_not_reached ();
 	}
 	g_free (uri);
-	area = ev_progress_message_area_new (GTK_STOCK_SAVE,
+	area = ev_progress_message_area_new ("document-save-symbolic",
 					     text,
-					     GTK_STOCK_CLOSE,
+					     _("_Close"),
 					     GTK_RESPONSE_CLOSE,
-					     GTK_STOCK_CANCEL,
+					     _("C_ancel"),
 					     GTK_RESPONSE_CANCEL,
 					     NULL);
 	g_signal_connect (area, "response",
@@ -3440,11 +3440,11 @@ ev_window_print_operation_status_changed (EvPrintOperation *op,
 		job_name = ev_print_operation_get_job_name (op);
 		text = g_strdup_printf (_("Printing job “%s”"), job_name);
 
-		area = ev_progress_message_area_new (GTK_STOCK_PRINT,
+		area = ev_progress_message_area_new ("document-print-symbolic",
 						     text,
-						     GTK_STOCK_CLOSE,
+						     _("_Close"),
 						     GTK_RESPONSE_CLOSE,
-						     GTK_STOCK_CANCEL,
+						     _("C_ancel"),
 						     GTK_RESPONSE_CANCEL,
 						     NULL);
 		ev_window_print_update_pending_jobs_message (ev_window, 1);
@@ -5678,7 +5678,7 @@ ev_window_cmd_view_toggle_caret_navigation (GSimpleAction *action,
 
 	message_area = ev_message_area_new (GTK_MESSAGE_QUESTION,
 					    _("Enable caret navigation?"),
-					    GTK_STOCK_NO,  GTK_RESPONSE_NO,
+					    _("_No"),  GTK_RESPONSE_NO,
 					    _("_Enable"), GTK_RESPONSE_YES,
 					    NULL);
 	ev_message_area_set_secondary_text (EV_MESSAGE_AREA (message_area),

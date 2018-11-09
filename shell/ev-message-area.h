@@ -1,10 +1,8 @@
 /* ev-message-area.h
  *  this file is part of evince, a gnome document viewer
  *
- * Copyright (C) 2007 Carlos Garcia Campos
- *
- * Author:
- *   Carlos Garcia Campos <carlosgc@gnome.org>
+ * Copyright (C) 2007 Carlos Garcia Campos <carlosgc@gnome.org>
+ * Copyright (C) 2018 Germán Poo-Caamaño <gpoo@gnome.org>
  *
  * Evince is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by
@@ -50,24 +48,24 @@ struct _EvMessageAreaClass {
 	GtkInfoBarClass parent_class;
 };
 
-GType      ev_message_area_get_type             (void) G_GNUC_CONST;
-GtkWidget *ev_message_area_new                  (GtkMessageType type,
-						 const gchar   *text,
-						 const gchar   *first_button_text,
-						 ...);
-void       ev_message_area_set_image            (EvMessageArea *area,
-						 GtkWidget     *image);
-void       ev_message_area_set_image_from_stock (EvMessageArea *area,
-						 const gchar   *stock_id);
-void       ev_message_area_set_text             (EvMessageArea *area,
-						 const gchar   *str);
-void       ev_message_area_set_secondary_text   (EvMessageArea *area,
-						 const gchar   *str);
+GType      ev_message_area_get_type                 (void) G_GNUC_CONST;
+GtkWidget *ev_message_area_new                      (GtkMessageType type,
+						     const gchar   *text,
+						     const gchar   *first_button_text,
+						     ...);
+void       ev_message_area_set_image                (EvMessageArea *area,
+						     GtkWidget     *image);
+void       ev_message_area_set_image_from_icon_name (EvMessageArea *area,
+						     const gchar   *icon_name);
+void       ev_message_area_set_text                 (EvMessageArea *area,
+						     const gchar   *str);
+void       ev_message_area_set_secondary_text       (EvMessageArea *area,
+						     const gchar   *str);
 
-void      _ev_message_area_add_buttons_valist   (EvMessageArea *area,
-						 const gchar   *first_button_text,
-						 va_list        args);
-GtkWidget *_ev_message_area_get_main_box        (EvMessageArea *area);
+void      _ev_message_area_add_buttons_valist       (EvMessageArea *area,
+						     const gchar   *first_button_text,
+						     va_list        args);
+GtkWidget *_ev_message_area_get_main_box            (EvMessageArea *area);
 
 G_END_DECLS
 

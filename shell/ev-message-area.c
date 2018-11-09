@@ -1,10 +1,8 @@
 /* ev-message-area.c
  *  this file is part of evince, a gnome document viewer
  *
- * Copyright (C) 2007 Carlos Garcia Campos
- *
- * Author:
- *   Carlos Garcia Campos <carlosgc@gnome.org>
+ * Copyright (C) 2007 Carlos Garcia Campos <carlosgc@gnome.org>
+ * Copyright (C) 2018 Germán Poo-Caamaño <gpoo@gnome.org>
  *
  * Evince is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by
@@ -121,7 +119,7 @@ ev_message_area_init (EvMessageArea *area)
 	gtk_widget_set_can_focus (area->priv->secondary_label, TRUE);
 	gtk_box_pack_start (GTK_BOX (vbox), area->priv->secondary_label, TRUE, TRUE, 0);
 
-	area->priv->image = gtk_image_new_from_stock (NULL, GTK_ICON_SIZE_DIALOG);
+	area->priv->image = gtk_image_new_from_icon_name (NULL, GTK_ICON_SIZE_DIALOG);
 	gtk_misc_set_alignment (GTK_MISC (area->priv->image), 0.5, 0.0);
 	gtk_box_pack_start (GTK_BOX (hbox), area->priv->image, FALSE, FALSE, 0);
 	gtk_widget_show (area->priv->image);
@@ -141,21 +139,21 @@ static void
 ev_message_area_set_image_for_type (EvMessageArea *area,
 				    GtkMessageType type)
 {
-	const gchar *stock_id = NULL;
+	const gchar *icon_name = NULL;
 	AtkObject   *atk_obj;
 
 	switch (type) {
 	case GTK_MESSAGE_INFO:
-		stock_id = GTK_STOCK_DIALOG_INFO;
+		icon_name = "dialog-information-symbolic";
 		break;
 	case GTK_MESSAGE_QUESTION:
-		stock_id = GTK_STOCK_DIALOG_QUESTION;
+		icon_name = "dialog-question-symbolic";
 		break;
 	case GTK_MESSAGE_WARNING:
-		stock_id = GTK_STOCK_DIALOG_WARNING;
+		icon_name = "dialog-warning-symbolic";
 		break;
 	case GTK_MESSAGE_ERROR:
-		stock_id = GTK_STOCK_DIALOG_ERROR;
+		icon_name = "dialog-error-symbolic";
 		break;
 	case GTK_MESSAGE_OTHER:
 		break;
@@ -164,18 +162,16 @@ ev_message_area_set_image_for_type (EvMessageArea *area,
 		break;
 	}
 
-	if (stock_id)
-		gtk_image_set_from_stock (GTK_IMAGE (area->priv->image), stock_id,
-					  GTK_ICON_SIZE_DIALOG);
+	if (icon_name)
+		gtk_image_set_from_icon_name (GTK_IMAGE (area->priv->image),
+					      icon_name,
+					      GTK_ICON_SIZE_DIALOG);
 
 	atk_obj = gtk_widget_get_accessible (GTK_WIDGET (area));
 	if (GTK_IS_ACCESSIBLE (atk_obj)) {
 		atk_object_set_role (atk_obj, ATK_ROLE_ALERT);
-		if (stock_id) {
-			GtkStockItem item;
-
-			gtk_stock_lookup (stock_id, &item);
-			atk_object_set_name (atk_obj, item.label);
+		if (icon_name) {
+			atk_object_set_name (atk_obj, icon_name);
 		}
 	}
 }
@@ -305,15 +301,15 @@ ev_message_area_set_image (EvMessageArea *area,
 }
 
 void
-ev_message_area_set_image_from_stock (EvMessageArea *area,
-				      const gchar   *stock_id)
+ev_message_area_set_image_from_icon_name (EvMessageArea *area,
+					  const gchar   *icon_name)
 {
 	g_return_if_fail (EV_IS_MESSAGE_AREA (area));
-	g_return_if_fail (stock_id != NULL);
-	
-	gtk_image_set_from_stock (GTK_IMAGE (area->priv->image),
-				  stock_id,
-				  GTK_ICON_SIZE_DIALOG);
+	g_return_if_fail (icon_name != NULL);
+
+	gtk_image_set_from_icon_name (GTK_IMAGE (area->priv->image),
+				      icon_name,
+				      GTK_ICON_SIZE_DIALOG);
 }
 
 void
