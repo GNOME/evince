@@ -5,6 +5,7 @@ context = actions
 iconsdir = $(themedir)/$(size)/$(context)
 
 icons_DATA = \
+	find-unsupported-symbolic.svg	\
 	object-rotate-left.svg	\
 	object-rotate-right.svg \
 	outline-symbolic.svg \

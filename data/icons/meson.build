@@ -60,6 +60,7 @@ icons += [['48x48', actions, [], [ev_namespace + '.png']]]
 icons += [['256x256', [], [], [ev_namespace + '.png']]]
 
 actions = [
+  'find-unsupported-symbolic.svg',
   'object-rotate-left.svg',
   'object-rotate-right.svg',
   'outline-symbolic.svg',
