@@ -611,6 +611,7 @@ ev_annotation_get_color (EvAnnotation *annot,
  *
  * Deprecated: 3.6: Use ev_annotation_set_rgba() instead.
  */
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 gboolean
 ev_annotation_set_color (EvAnnotation   *annot,
 			 const GdkColor *color)
@@ -633,6 +634,7 @@ ev_annotation_set_color (EvAnnotation   *annot,
 
 	return TRUE;
 }
+G_GNUC_END_IGNORE_DEPRECATIONS
 
 /**
  * ev_annotation_get_rgba:
