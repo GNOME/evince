@@ -28,6 +28,7 @@
 
 G_BEGIN_DECLS
 
+
 #define GIMP_TYPE_CELL_RENDERER_TOGGLE            (gimp_cell_renderer_toggle_get_type ())
 #define GIMP_CELL_RENDERER_TOGGLE(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), GIMP_TYPE_CELL_RENDERER_TOGGLE, GimpCellRendererToggle))
 #define GIMP_CELL_RENDERER_TOGGLE_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), GIMP_TYPE_CELL_RENDERER_TOGGLE, GimpCellRendererToggleClass))
@@ -35,17 +36,18 @@ G_BEGIN_DECLS
 #define GIMP_IS_CELL_RENDERER_TOGGLE_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GIMP_TYPE_CELL_RENDERER_TOGGLE))
 #define GIMP_CELL_RENDERER_TOGGLE_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), GIMP_TYPE_CELL_RENDERER_TOGGLE, GimpCellRendererToggleClass))
 
-typedef struct _GimpCellRendererToggle      GimpCellRendererToggle;
-typedef struct _GimpCellRendererToggleClass GimpCellRendererToggleClass;
+
+typedef struct _GimpCellRendererTogglePrivate GimpCellRendererTogglePrivate;
+typedef struct _GimpCellRendererToggleClass   GimpCellRendererToggleClass;
 
 struct _GimpCellRendererToggle
 {
-  GtkCellRendererToggle       parent_instance;
+  GtkCellRendererToggle          parent_instance;
 
-  gchar                      *stock_id;
-  GtkIconSize                 stock_size;
-  GdkPixbuf                  *pixbuf;
+  GimpCellRendererTogglePrivate *priv;
 };
+
+typedef struct _GimpCellRendererToggle        GimpCellRendererToggle;
 
 struct _GimpCellRendererToggleClass
 {
@@ -60,12 +62,16 @@ struct _GimpCellRendererToggleClass
   void (* _gimp_reserved2) (void);
   void (* _gimp_reserved3) (void);
   void (* _gimp_reserved4) (void);
+  void (* _gimp_reserved5) (void);
+  void (* _gimp_reserved6) (void);
+  void (* _gimp_reserved7) (void);
+  void (* _gimp_reserved8) (void);
 };
 
 
 GType             gimp_cell_renderer_toggle_get_type (void) G_GNUC_CONST;
 
-GtkCellRenderer * gimp_cell_renderer_toggle_new      (const gchar *stock_id);
+GtkCellRenderer * gimp_cell_renderer_toggle_new      (const gchar *icon_name);
 
 void    gimp_cell_renderer_toggle_clicked (GimpCellRendererToggle *cell,
                                            const gchar            *path,

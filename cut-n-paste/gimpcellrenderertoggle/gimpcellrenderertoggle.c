@@ -25,7 +25,17 @@
 #include "gimpcellrenderertoggle.h"
 
 
-#define DEFAULT_ICON_SIZE  GTK_ICON_SIZE_BUTTON
+/**
+ * SECTION: gimpcellrenderertoggle
+ * @title: GimpCellRendererToggle
+ * @short_description: A #GtkCellRendererToggle that displays icons instead
+ *                     of a checkbox.
+ *
+ * A #GtkCellRendererToggle that displays icons instead of a checkbox.
+ **/
+
+
+#define DEFAULT_ICON_SIZE 16
 
 
 enum
@@ -37,46 +47,60 @@ enum
 enum
 {
   PROP_0,
-  PROP_STOCK_ID,
-  PROP_STOCK_SIZE
+  PROP_ICON_NAME,
+  PROP_ICON_SIZE,
+  PROP_OVERRIDE_BACKGROUND
 };
 
 
-static void gimp_cell_renderer_toggle_finalize     (GObject         *object);
-static void gimp_cell_renderer_toggle_get_property (GObject         *object,
-                                                    guint            param_id,
-                                                    GValue          *value,
-                                                    GParamSpec      *pspec);
-static void gimp_cell_renderer_toggle_set_property (GObject         *object,
-                                                    guint            param_id,
-                                                    const GValue    *value,
-                                                    GParamSpec      *pspec);
-static void gimp_cell_renderer_toggle_get_size     (GtkCellRenderer *cell,
-                                                    GtkWidget       *widget,
-                                                    const GdkRectangle *rectangle,
-                                                    gint            *x_offset,
-                                                    gint            *y_offset,
-                                                    gint            *width,
-                                                    gint            *height);
-static void gimp_cell_renderer_toggle_render       (GtkCellRenderer *cell,
-                                                    cairo_t         *cr,
-                                                    GtkWidget       *widget,
-                                                    const GdkRectangle  *background_area,
-                                                    const GdkRectangle  *cell_area,
-                                                    GtkCellRendererState flags);
-static gboolean gimp_cell_renderer_toggle_activate (GtkCellRenderer *cell,
-                                                    GdkEvent        *event,
-                                                    GtkWidget       *widget,
-                                                    const gchar     *path,
-                                                    const GdkRectangle *background_area,
-                                                    const GdkRectangle *cell_area,
+struct _GimpCellRendererTogglePrivate
+{
+  gchar       *icon_name;
+  gint         icon_size;
+  gboolean     override_background;
+
+  GdkPixbuf   *pixbuf;
+};
+
+
+#define GET_PRIVATE(obj) (((GimpCellRendererToggle *) (obj))->priv)
+
+
+static void gimp_cell_renderer_toggle_finalize     (GObject              *object);
+static void gimp_cell_renderer_toggle_get_property (GObject              *object,
+                                                    guint                 param_id,
+                                                    GValue               *value,
+                                                    GParamSpec           *pspec);
+static void gimp_cell_renderer_toggle_set_property (GObject              *object,
+                                                    guint                 param_id,
+                                                    const GValue         *value,
+                                                    GParamSpec           *pspec);
+static void gimp_cell_renderer_toggle_get_size     (GtkCellRenderer      *cell,
+                                                    GtkWidget            *widget,
+                                                    const GdkRectangle   *rectangle,
+                                                    gint                 *x_offset,
+                                                    gint                 *y_offset,
+                                                    gint                 *width,
+                                                    gint                 *height);
+static void gimp_cell_renderer_toggle_render       (GtkCellRenderer      *cell,
+                                                    cairo_t              *cr,
+                                                    GtkWidget            *widget,
+                                                    const GdkRectangle   *background_area,
+                                                    const GdkRectangle   *cell_area,
+                                                    GtkCellRendererState  flags);
+static gboolean gimp_cell_renderer_toggle_activate (GtkCellRenderer      *cell,
+                                                    GdkEvent             *event,
+                                                    GtkWidget            *widget,
+                                                    const gchar          *path,
+                                                    const GdkRectangle   *background_area,
+                                                    const GdkRectangle   *cell_area,
                                                     GtkCellRendererState  flags);
 static void gimp_cell_renderer_toggle_create_pixbuf (GimpCellRendererToggle *toggle,
                                                      GtkWidget              *widget);
 
 
-G_DEFINE_TYPE (GimpCellRendererToggle, gimp_cell_renderer_toggle,
-               GTK_TYPE_CELL_RENDERER_TOGGLE)
+G_DEFINE_TYPE_WITH_PRIVATE (GimpCellRendererToggle, gimp_cell_renderer_toggle,
+                            GTK_TYPE_CELL_RENDERER_TOGGLE)
 
 #define parent_class gimp_cell_renderer_toggle_parent_class
 
@@ -108,44 +132,45 @@ gimp_cell_renderer_toggle_class_init (GimpCellRendererToggleClass *klass)
   cell_class->render         = gimp_cell_renderer_toggle_render;
   cell_class->activate       = gimp_cell_renderer_toggle_activate;
 
-  g_object_class_install_property (object_class,
-                                   PROP_STOCK_ID,
-                                   g_param_spec_string ("stock-id",
-                                                        NULL, NULL,
+  g_object_class_install_property (object_class, PROP_ICON_NAME,
+                                   g_param_spec_string ("icon-name",
+                                                        "Icon Name",
+                                                        "The icon to display",
                                                         NULL,
                                                         G_PARAM_READWRITE |
                                                         G_PARAM_CONSTRUCT));
-  g_object_class_install_property (object_class,
-                                   PROP_STOCK_SIZE,
-                                   g_param_spec_int ("stock-size",
-                                                     NULL, NULL,
+
+  g_object_class_install_property (object_class, PROP_ICON_SIZE,
+                                   g_param_spec_int ("icon-size",
+                                                     "Icon Size",
+                                                     "The desired icon size to use in pixel (before applying scaling factor)",
                                                      0, G_MAXINT,
                                                      DEFAULT_ICON_SIZE,
                                                      G_PARAM_READWRITE |
                                                      G_PARAM_CONSTRUCT));
+
+  g_object_class_install_property (object_class, PROP_OVERRIDE_BACKGROUND,
+                                   g_param_spec_boolean ("override-background",
+                                                         "Override Background",
+                                                         "Draw the background if the row is selected",
+                                                         FALSE,
+                                                         G_PARAM_READWRITE |
+                                                         G_PARAM_CONSTRUCT));
 }
 
 static void
 gimp_cell_renderer_toggle_init (GimpCellRendererToggle *toggle)
 {
+  toggle->priv = gimp_cell_renderer_toggle_get_instance_private (toggle);
 }
 
 static void
 gimp_cell_renderer_toggle_finalize (GObject *object)
 {
-  GimpCellRendererToggle *toggle = GIMP_CELL_RENDERER_TOGGLE (object);
+  GimpCellRendererTogglePrivate *priv = GET_PRIVATE (object);
 
-  if (toggle->stock_id)
-    {
-      g_free (toggle->stock_id);
-      toggle->stock_id = NULL;
-    }
-
-  if (toggle->pixbuf)
-    {
-      g_object_unref (toggle->pixbuf);
-      toggle->pixbuf = NULL;
-    }
+  g_clear_pointer (&priv->icon_name, g_free);
+  g_clear_object (&priv->pixbuf);
 
   G_OBJECT_CLASS (parent_class)->finalize (object);
 }
@@ -156,15 +181,20 @@ gimp_cell_renderer_toggle_get_property (GObject    *object,
                                         GValue     *value,
                                         GParamSpec *pspec)
 {
-  GimpCellRendererToggle *toggle = GIMP_CELL_RENDERER_TOGGLE (object);
+  GimpCellRendererTogglePrivate *priv = GET_PRIVATE (object);
 
   switch (param_id)
     {
-    case PROP_STOCK_ID:
-      g_value_set_string (value, toggle->stock_id);
+    case PROP_ICON_NAME:
+      g_value_set_string (value, priv->icon_name);
       break;
-    case PROP_STOCK_SIZE:
-      g_value_set_int (value, toggle->stock_size);
+
+    case PROP_ICON_SIZE:
+      g_value_set_int (value, priv->icon_size);
+      break;
+
+    case PROP_OVERRIDE_BACKGROUND:
+      g_value_set_boolean (value, priv->override_background);
       break;
 
     default:
@@ -179,17 +209,22 @@ gimp_cell_renderer_toggle_set_property (GObject      *object,
                                         const GValue *value,
                                         GParamSpec   *pspec)
 {
-  GimpCellRendererToggle *toggle = GIMP_CELL_RENDERER_TOGGLE (object);
+  GimpCellRendererTogglePrivate *priv = GET_PRIVATE (object);
 
   switch (param_id)
     {
-    case PROP_STOCK_ID:
-      if (toggle->stock_id)
-        g_free (toggle->stock_id);
-      toggle->stock_id = g_value_dup_string (value);
+    case PROP_ICON_NAME:
+      if (priv->icon_name)
+        g_free (priv->icon_name);
+      priv->icon_name = g_value_dup_string (value);
       break;
-    case PROP_STOCK_SIZE:
-      toggle->stock_size = g_value_get_int (value);
+
+    case PROP_ICON_SIZE:
+      priv->icon_size = g_value_get_int (value);
+      break;
+
+    case PROP_OVERRIDE_BACKGROUND:
+      priv->override_background = g_value_get_boolean (value);
       break;
 
     default:
@@ -197,11 +232,7 @@ gimp_cell_renderer_toggle_set_property (GObject      *object,
       break;
     }
 
-  if (toggle->pixbuf)
-    {
-      g_object_unref (toggle->pixbuf);
-      toggle->pixbuf = NULL;
-    }
+  g_clear_object (&priv->pixbuf);
 }
 
 static void
@@ -213,19 +244,23 @@ gimp_cell_renderer_toggle_get_size (GtkCellRenderer    *cell,
                                     gint               *width,
                                     gint               *height)
 {
-  GimpCellRendererToggle *toggle = GIMP_CELL_RENDERER_TOGGLE (cell);
-  GtkStyleContext        *context  = gtk_widget_get_style_context (widget);
-  GtkBorder               border;
-  gint                    calc_width;
-  gint                    calc_height;
-  gint                    pixbuf_width;
-  gint                    pixbuf_height;
-  gfloat                  xalign;
-  gfloat                  yalign;
-  gint                    xpad;
-  gint                    ypad;
+  GimpCellRendererToggle        *toggle  = GIMP_CELL_RENDERER_TOGGLE (cell);
+  GimpCellRendererTogglePrivate *priv    = GET_PRIVATE (cell);
+  GtkStyleContext               *context = gtk_widget_get_style_context (widget);
+  GtkBorder                      border;
+  gint                           scale_factor;
+  gint                           calc_width;
+  gint                           calc_height;
+  gint                           pixbuf_width;
+  gint                           pixbuf_height;
+  gfloat                         xalign;
+  gfloat                         yalign;
+  gint                           xpad;
+  gint                           ypad;
 
-  if (! toggle->stock_id)
+  scale_factor = gtk_widget_get_scale_factor (widget);
+
+  if (! priv->icon_name)
     {
       GTK_CELL_RENDERER_CLASS (parent_class)->get_size (cell,
                                                         widget,
@@ -235,19 +270,26 @@ gimp_cell_renderer_toggle_get_size (GtkCellRenderer    *cell,
       return;
     }
 
+  gtk_style_context_save (context);
+
   gtk_cell_renderer_get_alignment (cell, &xalign, &yalign);
   gtk_cell_renderer_get_padding (cell, &xpad, &ypad);
 
-  gtk_style_context_get_border (context, 0, &border);
-
-  if (! toggle->pixbuf)
+  if (! priv->pixbuf)
     gimp_cell_renderer_toggle_create_pixbuf (toggle, widget);
 
-  pixbuf_width  = gdk_pixbuf_get_width  (toggle->pixbuf);
-  pixbuf_height = gdk_pixbuf_get_height (toggle->pixbuf);
+  pixbuf_width  = gdk_pixbuf_get_width  (priv->pixbuf);
+  pixbuf_height = gdk_pixbuf_get_height (priv->pixbuf);
 
-  calc_width  = (pixbuf_width + (gint) xpad * 2 + (border.left + border.right));
-  calc_height = (pixbuf_height + (gint) ypad * 2 + (border.top + border.bottom));
+  /* The pixbuf size may be bigger than the logical size. */
+  calc_width  = pixbuf_width / scale_factor + (gint) xpad * 2;
+  calc_height = pixbuf_height / scale_factor + (gint) ypad * 2;
+
+  gtk_style_context_add_class (context, GTK_STYLE_CLASS_BUTTON);
+
+  gtk_style_context_get_border (context, 0, &border);
+  calc_width  += border.left + border.right;
+  calc_height += border.top + border.bottom;
 
   if (width)
     *width  = calc_width;
@@ -271,6 +313,8 @@ gimp_cell_renderer_toggle_get_size (GtkCellRenderer    *cell,
           *y_offset = MAX (*y_offset, 0);
         }
     }
+
+  gtk_style_context_restore (context);
 }
 
 static void
@@ -281,24 +325,49 @@ gimp_cell_renderer_toggle_render (GtkCellRenderer      *cell,
                                   const GdkRectangle   *cell_area,
                                   GtkCellRendererState  flags)
 {
-  GimpCellRendererToggle *toggle = GIMP_CELL_RENDERER_TOGGLE (cell);
-  GtkStyleContext        *context = gtk_widget_get_style_context (widget);
-  GdkRectangle            toggle_rect;
-  GdkRectangle            draw_rect;
-  GtkStateFlags           state;
-  gboolean                active;
-  gint                    xpad;
-  gint                    ypad;
+  GimpCellRendererTogglePrivate *priv    = GET_PRIVATE (cell);
+  GtkStyleContext               *context = gtk_widget_get_style_context (widget);
+  GdkRectangle                   toggle_rect;
+  GtkStateFlags                  state;
+  gboolean                       active;
+  gint                           scale_factor;
+  gint                           xpad;
+  gint                           ypad;
 
-  if (! toggle->stock_id)
+  scale_factor = gtk_widget_get_scale_factor (widget);
+
+  if (! priv->icon_name)
     {
-      GTK_CELL_RENDERER_CLASS (parent_class)->render (cell,
-                                                      cr,
-                                                      widget,
+      GTK_CELL_RENDERER_CLASS (parent_class)->render (cell, cr, widget,
                                                       background_area,
                                                       cell_area,
                                                       flags);
       return;
+    }
+
+  if ((flags & GTK_CELL_RENDERER_SELECTED) &&
+      priv->override_background)
+    {
+      gboolean background_set;
+
+      g_object_get (cell,
+                    "cell-background-set", &background_set,
+                    NULL);
+
+      if (background_set)
+        {
+          GdkRGBA *color;
+
+          g_object_get (cell,
+                        "cell-background-rgba", &color,
+                        NULL);
+
+          gdk_cairo_rectangle (cr, background_area);
+          gdk_cairo_set_source_rgba (cr, color);
+          cairo_fill (cr);
+
+          gdk_rgba_free (color);
+        }
     }
 
   gimp_cell_renderer_toggle_get_size (cell, widget, cell_area,
@@ -306,8 +375,12 @@ gimp_cell_renderer_toggle_render (GtkCellRenderer      *cell,
                                       &toggle_rect.y,
                                       &toggle_rect.width,
                                       &toggle_rect.height);
+  gtk_style_context_save (context);
+
+  gtk_style_context_add_class (context, GTK_STYLE_CLASS_BUTTON);
 
   gtk_cell_renderer_get_padding (cell, &xpad, &ypad);
+
   toggle_rect.x      += cell_area->x + xpad;
   toggle_rect.y      += cell_area->y + ypad;
   toggle_rect.width  -= xpad * 2;
@@ -316,73 +389,65 @@ gimp_cell_renderer_toggle_render (GtkCellRenderer      *cell,
   if (toggle_rect.width <= 0 || toggle_rect.height <= 0)
     return;
 
+  state = gtk_cell_renderer_get_state (cell, widget, flags);
+
   active =
     gtk_cell_renderer_toggle_get_active (GTK_CELL_RENDERER_TOGGLE (cell));
 
-  if (!gtk_cell_renderer_get_sensitive (cell))
-    {
-      state = GTK_STATE_FLAG_INSENSITIVE;
-    }
-  else if ((flags & GTK_CELL_RENDERER_SELECTED) == GTK_CELL_RENDERER_SELECTED)
-    {
-      if (gtk_widget_has_focus (widget))
-        state = GTK_STATE_FLAG_SELECTED;
-      else
-        state = GTK_STATE_FLAG_ACTIVE;
-    }
-  else
-    {
-      if (gtk_cell_renderer_toggle_get_activatable (GTK_CELL_RENDERER_TOGGLE (cell)))
-        state = 0;
-      else
-        state = GTK_STATE_FLAG_INSENSITIVE;
-    }
+  if (active)
+    state |= GTK_STATE_FLAG_ACTIVE;
+
+  if (! gtk_cell_renderer_toggle_get_activatable (GTK_CELL_RENDERER_TOGGLE (cell)))
+    state |= GTK_STATE_FLAG_INSENSITIVE;
+
+  gtk_style_context_set_state (context, state);
+
+  if (state & GTK_STATE_FLAG_PRELIGHT)
+    gtk_render_frame (context, cr,
+                      toggle_rect.x,     toggle_rect.y,
+                      toggle_rect.width, toggle_rect.height);
 
   if (active)
     {
-      GdkPixbuf *insensitive = NULL;
-      GdkPixbuf *pixbuf = toggle->pixbuf;
-      GtkBorder  border;
+      GtkBorder border;
+      gboolean  inconsistent;
 
-      gtk_style_context_get_border (context, state, &border);
+      gtk_style_context_get_border (context, 0, &border);
       toggle_rect.x      += border.left;
+      toggle_rect.x      *= scale_factor;
       toggle_rect.y      += border.top;
-      toggle_rect.width  -= (border.left + border.right);
-      toggle_rect.height -= (border.top + border.bottom);
+      toggle_rect.y      *= scale_factor;
+      toggle_rect.width  -= border.left + border.right;
+      toggle_rect.height -= border.top + border.bottom;
 
-      if (state & GTK_STATE_FLAG_INSENSITIVE)
+      /* For high DPI displays, pixbuf size is bigger than logical size. */
+      cairo_scale (cr, (gdouble) 1.0 / scale_factor, (gdouble) 1.0 / scale_factor);
+      gdk_cairo_set_source_pixbuf (cr, priv->pixbuf,
+                                   toggle_rect.x, toggle_rect.y);
+      cairo_paint (cr);
+
+      g_object_get (cell,
+                    "inconsistent", &inconsistent,
+                    NULL);
+
+      if (inconsistent)
         {
-	  GtkIconSource *source;
+          GdkRGBA color;
 
-	  source = gtk_icon_source_new ();
-	  gtk_icon_source_set_pixbuf (source, pixbuf);
-	  /* The size here is arbitrary; since size isn't
-	   * wildcarded in the source, it isn't supposed to be
-	   * scaled by the engine function
-	   */
-	  gtk_icon_source_set_size (source, GTK_ICON_SIZE_SMALL_TOOLBAR);
-	  gtk_icon_source_set_size_wildcarded (source, FALSE);
-
-          gtk_style_context_save (context);
-          gtk_style_context_set_state (context, GTK_STATE_FLAG_INSENSITIVE);
-          insensitive = gtk_render_icon_pixbuf (context, source, (GtkIconSize)-1);
-          gtk_style_context_restore (context);
-
-	  gtk_icon_source_free (source);
-
-	  pixbuf = insensitive;
-	}
-
-      if (gdk_rectangle_intersect (cell_area, &toggle_rect, &draw_rect))
-        {
-	  gdk_cairo_set_source_pixbuf (cr, pixbuf, toggle_rect.x, toggle_rect.y);
-	  gdk_cairo_rectangle (cr, &draw_rect);
-	  cairo_fill (cr);
-	}
-
-      if (insensitive)
-        g_object_unref (insensitive);
+          gtk_style_context_get_color (context, state, &color);
+          gdk_cairo_set_source_rgba (cr, &color);
+          cairo_set_line_width (cr, 1.5);
+          cairo_move_to (cr,
+                         toggle_rect.x + toggle_rect.width - 1,
+                         toggle_rect.y + 1);
+          cairo_line_to (cr,
+                         toggle_rect.x + 1,
+                         toggle_rect.y + toggle_rect.height - 1);
+          cairo_stroke (cr);
+        }
     }
+
+  gtk_style_context_restore (context);
 }
 
 static gboolean
@@ -400,10 +465,6 @@ gimp_cell_renderer_toggle_activate (GtkCellRenderer      *cell,
     {
       GdkModifierType state = 0;
 
-      GTK_CELL_RENDERER_CLASS (parent_class)->activate (cell, event, widget,
-							path, background_area,
-							cell_area, flags);
-
       if (event && ((GdkEventAny *) event)->type == GDK_BUTTON_PRESS)
         state = ((GdkEventButton *) event)->state;
 
@@ -420,21 +481,49 @@ static void
 gimp_cell_renderer_toggle_create_pixbuf (GimpCellRendererToggle *toggle,
                                          GtkWidget              *widget)
 {
-  if (toggle->pixbuf)
-    g_object_unref (toggle->pixbuf);
+  GimpCellRendererTogglePrivate *priv = GET_PRIVATE (toggle);
 
-  toggle->pixbuf = gtk_widget_render_icon_pixbuf (widget,
-                                                  toggle->stock_id,
-                                                  toggle->stock_size);
+  g_clear_object (&priv->pixbuf);
+
+  if (priv->icon_name)
+    {
+      GdkScreen    *screen;
+      GtkIconTheme *icon_theme;
+      GtkIconInfo  *icon_info;
+      gchar        *icon_name;
+      gint          scale_factor;
+
+      scale_factor = gtk_widget_get_scale_factor (widget);
+      screen       = gtk_widget_get_screen (widget);
+      icon_theme   = gtk_icon_theme_get_for_screen (screen);
+
+      /* Look for symbolic and fallback to color icon. */
+      icon_name = g_strdup_printf ("%s-symbolic", priv->icon_name);
+      icon_info = gtk_icon_theme_lookup_icon_for_scale (icon_theme, icon_name,
+                                                        priv->icon_size, scale_factor,
+                                                        GTK_ICON_LOOKUP_GENERIC_FALLBACK);
+
+      g_free (icon_name);
+      if (icon_info)
+        {
+          GdkPixbuf *pixbuf;
+
+          pixbuf = gtk_icon_info_load_symbolic_for_context (icon_info,
+                                                            gtk_widget_get_style_context (widget),
+                                                            NULL, NULL);
+          priv->pixbuf = pixbuf;
+          g_object_unref (icon_info);
+        }
+    }
 }
 
 
 /**
  * gimp_cell_renderer_toggle_new:
- * @stock_id: the stock_id of the icon to use for the active state
+ * @icon_name: the icon name of the icon to use for the active state
  *
  * Creates a custom version of the #GtkCellRendererToggle. Instead of
- * showing the standard toggle button, it shows a stock icon if the
+ * showing the standard toggle button, it shows a named icon if the
  * cell is active and no icon otherwise. This cell renderer is for
  * example used in the Layers treeview to indicate and control the
  * layer's visibility by showing %GIMP_STOCK_VISIBLE.
@@ -444,18 +533,18 @@ gimp_cell_renderer_toggle_create_pixbuf (GimpCellRendererToggle *toggle,
  * Since: GIMP 2.2
  **/
 GtkCellRenderer *
-gimp_cell_renderer_toggle_new (const gchar *stock_id)
+gimp_cell_renderer_toggle_new (const gchar *icon_name)
 {
   return g_object_new (GIMP_TYPE_CELL_RENDERER_TOGGLE,
-                       "stock_id", stock_id,
+                       "icon-name", icon_name,
                        NULL);
 }
 
 /**
  * gimp_cell_renderer_toggle_clicked:
- * @cell: a #GimpCellRendererToggle
- * @path:
- * @state:
+ * @cell:  a #GimpCellRendererToggle
+ * @path:  the path to the clicked row
+ * @state: the modifier state
  *
  * Emits the "clicked" signal from a #GimpCellRendererToggle.
  *

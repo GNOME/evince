@@ -178,8 +178,9 @@ clear_rb_group (GtkTreeModel *model,
 }
 
 static void
-ev_sidebar_layers_visibility_changed (GtkCellRendererToggle *cell,
+ev_sidebar_layers_visibility_clicked (GtkCellRendererToggle *cell,
 				      gchar                 *path_str,
+				      GdkModifierType        state,
 				      EvSidebarLayers       *ev_layers)
 {
 	GtkTreeModel *model;
@@ -256,10 +257,13 @@ ev_sidebar_layers_create_tree_view (EvSidebarLayers *ev_layers)
 	g_object_set (G_OBJECT (renderer),
 		      "xpad", 0,
 		      "ypad", 0,
+		      "override-background", TRUE,
 		      NULL);
-	g_signal_connect (renderer, "toggled",
-			  G_CALLBACK (ev_sidebar_layers_visibility_changed),
+
+	g_signal_connect (renderer, "clicked",
+			  G_CALLBACK (ev_sidebar_layers_visibility_clicked),
 			  (gpointer)ev_layers);
+
 
 	renderer = gtk_cell_renderer_text_new ();
 	gtk_tree_view_column_pack_start (column, renderer, TRUE);
