@@ -64,6 +64,7 @@ actions = [
   'object-rotate-right.svg',
   'outline-symbolic.svg',
   'view-sidebar-symbolic.svg',
+  'visible-symbolic.svg',
 ]
 
 icons += [['scalable', actions, ['x-office-presentation.svg'], []]]
