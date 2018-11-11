@@ -34,6 +34,7 @@ typedef struct {
 
 /* Evince stock icons */
 static const EvStockIcon stock_icons [] = {
+	{ EV_STOCK_FIND_UNSUPPORTED, "find-unsupported-symbolic" },
 	{ EV_STOCK_ZOOM,	     "zoom" },
 	{ EV_STOCK_ZOOM_PAGE,        "zoom-fit-height" },
 	{ EV_STOCK_ZOOM_WIDTH,       "zoom-fit-width" },

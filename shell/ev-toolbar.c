@@ -160,12 +160,21 @@ ev_toolbar_find_button_sensitive_changed (GtkWidget  *find_button,
 					  GParamSpec *pspec,
 					  EvToolbar *ev_toolbar)
 {
-        if (gtk_widget_is_sensitive (find_button))
+        GtkWidget *image;
+
+        if (gtk_widget_is_sensitive (find_button)) {
                 gtk_widget_set_tooltip_text (find_button,
                                              _("Find a word or phrase in the document"));
-        else
+		image = gtk_image_new_from_icon_name ("edit-find-symbolic",
+						      GTK_ICON_SIZE_MENU);
+		gtk_button_set_image (GTK_BUTTON (find_button), image);
+	} else {
                 gtk_widget_set_tooltip_text (find_button,
                                              _("Search not available for this document"));
+		image = gtk_image_new_from_icon_name (EV_STOCK_FIND_UNSUPPORTED,
+						      GTK_ICON_SIZE_MENU);
+		gtk_button_set_image (GTK_BUTTON (find_button), image);
+	}
 }
 
 static void

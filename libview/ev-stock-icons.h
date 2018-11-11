@@ -33,6 +33,7 @@
 G_BEGIN_DECLS
 
 /* Evince stock icons */
+#define EV_STOCK_FIND_UNSUPPORTED       "find-unsupported-symbolic"
 #define EV_STOCK_ZOOM	                "zoom"
 #define EV_STOCK_ZOOM_PAGE              "zoom-fit-height"
 #define EV_STOCK_ZOOM_WIDTH             "zoom-fit-width"
