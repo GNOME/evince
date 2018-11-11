@@ -8,7 +8,8 @@ icons_DATA = \
 	object-rotate-left.svg	\
 	object-rotate-right.svg \
 	outline-symbolic.svg \
-	view-sidebar-symbolic.svg
+	view-sidebar-symbolic.svg \
+	visible-symbolic.svg
 
 noinst_DATA =
 

@@ -14,7 +14,6 @@ actions = [
 icons += [['16x16', actions, ['x-office-presentation.png'], [ev_namespace + '.png']]]
 
 actions = [
-  'eye.png',
   'object-rotate-left.png',
   'object-rotate-right.png',
   'view-page-continuous.png',

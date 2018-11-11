@@ -41,7 +41,7 @@ G_BEGIN_DECLS
 #define EV_STOCK_ROTATE_LEFT            "object-rotate-left"
 #define EV_STOCK_ROTATE_RIGHT           "object-rotate-right"
 #define EV_STOCK_RUN_PRESENTATION       "x-office-presentation"
-#define EV_STOCK_VISIBLE                "eye"
+#define EV_STOCK_VISIBLE                "visible-symbolic"
 #define EV_STOCK_RESIZE_SE              "resize-se"
 #define EV_STOCK_RESIZE_SW              "resize-sw"
 #define EV_STOCK_CLOSE                  "close"
