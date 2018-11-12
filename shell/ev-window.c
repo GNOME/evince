@@ -244,6 +244,8 @@ typedef struct {
 	gboolean has_mailto_handler;
 } EvWindowPrivate;
 
+#define GET_PRIVATE(o) ev_window_get_instance_private (o)
+
 #define EV_WINDOW_IS_PRESENTATION(priv) (priv->presentation_view != NULL)
 
 #define GS_LOCKDOWN_SCHEMA_NAME  "org.gnome.desktop.lockdown"
@@ -404,7 +406,7 @@ get_screen_dpi (EvWindow *window)
 static gboolean
 ev_window_is_recent_view (EvWindow *ev_window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 
 	return ev_toolbar_get_mode (EV_TOOLBAR (priv->toolbar)) == EV_TOOLBAR_MODE_RECENT_VIEW;
 }
@@ -423,7 +425,7 @@ ev_window_set_action_enabled (EvWindow   *ev_window,
 static void
 ev_window_update_actions_sensitivity (EvWindow *ev_window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 	EvDocument *document = priv->document;
 	EvView     *view = EV_VIEW (priv->view);
 	const EvDocumentInfo *info = NULL;
@@ -648,7 +650,7 @@ set_widget_visibility (GtkWidget *widget, gboolean visible)
 static void
 update_chrome_visibility (EvWindow *window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 	gboolean toolbar, sidebar;
 	gboolean presentation;
 
@@ -668,7 +670,7 @@ update_chrome_visibility (EvWindow *window)
 static void
 update_chrome_flag (EvWindow *window, EvChrome flag, gboolean active)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 
 	if (active) {
 		priv->chrome |= flag;
@@ -682,7 +684,7 @@ update_sizing_buttons (EvWindow *window)
 {
 	GAction     *action;
 	const gchar *mode = NULL;
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 
 	action = g_action_map_lookup_action (G_ACTION_MAP (window), "sizing-mode");
 
@@ -721,7 +723,7 @@ ev_window_is_empty (const EvWindow *ev_window)
 
 	g_return_val_if_fail (EV_IS_WINDOW (ev_window), FALSE);
 
-	priv = ev_window_get_instance_private (EV_WINDOW (ev_window));
+	priv = GET_PRIVATE (EV_WINDOW (ev_window));
 
 	return (priv->document == NULL) &&
 		(priv->load_job == NULL);
@@ -731,7 +733,7 @@ static void
 ev_window_set_message_area (EvWindow  *window,
 			    GtkWidget *area)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 
 	if (priv->message_area == area)
 		return;
@@ -770,7 +772,7 @@ ev_window_error_message (EvWindow    *window,
 	GtkWidget *area;
 	va_list    args;
 	gchar     *msg = NULL;
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 
 	if (priv->message_area)
 		return;
@@ -801,7 +803,7 @@ ev_window_warning_message (EvWindow    *window,
 	GtkWidget *area;
 	va_list    args;
 	gchar     *msg = NULL;
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 
 	if (priv->message_area)
 		return;
@@ -825,7 +827,7 @@ ev_window_warning_message (EvWindow    *window,
 static gboolean
 show_loading_message_cb (EvWindow *window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 
 	priv->loading_message_timeout = 0;
 	gtk_widget_show (priv->loading_message);
@@ -836,7 +838,7 @@ show_loading_message_cb (EvWindow *window)
 static void
 ev_window_show_loading_message (EvWindow *window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 
 	if (priv->loading_message_timeout)
 		return;
@@ -847,7 +849,7 @@ ev_window_show_loading_message (EvWindow *window)
 static void
 ev_window_hide_loading_message (EvWindow *window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 
 	if (priv->loading_message_timeout) {
 		g_source_remove (priv->loading_message_timeout);
@@ -891,7 +893,7 @@ static const gchar *
 ev_window_find_title_for_link (EvWindow *window,
 			       EvLink   *link)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 
 	if (EV_IS_DOCUMENT_LINKS (priv->document) &&
 	    ev_document_links_has_document_links (EV_DOCUMENT_LINKS (priv->document))) {
@@ -921,7 +923,7 @@ ev_window_find_title_for_link (EvWindow *window,
 static void
 view_handle_link_cb (EvView *view, EvLink *link, EvWindow *window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 	EvLink *new_link = NULL;
 
 	if (!ev_link_get_title (link)) {
@@ -966,7 +968,7 @@ static void
 view_layers_changed_cb (EvView   *view,
 			EvWindow *window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 
 	ev_sidebar_layers_update_layers_state (EV_SIDEBAR_LAYERS (priv->sidebar_layers));
 }
@@ -990,7 +992,7 @@ view_caret_cursor_moved_cb (EvView   *view,
 {
 	GVariant *position;
 	gchar    *caret_position;
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 
 	if (!priv->metadata)
 		return;
@@ -1009,7 +1011,7 @@ ev_window_page_changed_cb (EvWindow        *ev_window,
 			   gint             new_page,
 			   EvDocumentModel *model)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 
 	ev_window_update_actions_sensitivity (ev_window);
 
@@ -1022,7 +1024,7 @@ ev_window_sidebar_get_current_page_id (EvWindow *ev_window)
 {
 	GtkWidget   *current_page;
 	const gchar *id;
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 
 	g_object_get (priv->sidebar,
 		      "current_page", &current_page,
@@ -1053,7 +1055,7 @@ static void
 ev_window_sidebar_set_current_page (EvWindow    *window,
 				    const gchar *page_id)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 	EvDocument *document = priv->document;
 	EvSidebar  *sidebar = EV_SIDEBAR (priv->sidebar);
 	GtkWidget  *links = priv->sidebar_links;
@@ -1101,7 +1103,7 @@ update_document_mode (EvWindow *window, EvDocumentMode mode)
 static void
 ev_window_init_metadata_with_default_values (EvWindow *window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 	GSettings  *settings = priv->default_settings;
 	EvMetadata *metadata = priv->metadata;
 
@@ -1163,7 +1165,7 @@ setup_chrome_from_metadata (EvWindow *window)
 {
 	gboolean show_toolbar;
 	gboolean show_sidebar;
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 
 	if (!priv->metadata)
 		return;
@@ -1180,7 +1182,7 @@ setup_sidebar_from_metadata (EvWindow *window)
 {
 	gchar *page_id;
 	gint   sidebar_size;
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 
 	if (!priv->metadata)
 		return;
@@ -1204,7 +1206,7 @@ setup_model_from_metadata (EvWindow *window)
 	gboolean dual_page = FALSE;
 	gboolean dual_page_odd_left = FALSE;
 	gboolean fullscreen = FALSE;
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 
 	if (!priv->metadata)
 		return;
@@ -1286,7 +1288,7 @@ setup_document_from_metadata (EvWindow *window)
 	gint    height;
 	gdouble width_ratio;
 	gdouble height_ratio;
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 
 	if (!priv->metadata)
 		return;
@@ -1350,7 +1352,7 @@ setup_size_from_metadata (EvWindow *window)
 	gboolean maximized;
 	gint     x;
 	gint     y;
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 
 	if (!priv->metadata)
 		return;
@@ -1379,7 +1381,7 @@ static void
 setup_view_from_metadata (EvWindow *window)
 {
 	gboolean presentation;
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 
 	if (!priv->metadata)
 		return;
@@ -1420,7 +1422,7 @@ page_cache_size_changed (GSettings *settings,
 			 gchar     *key,
 			 EvWindow  *ev_window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 	guint page_cache_mb;
 
 	page_cache_mb = g_settings_get_uint (settings, GS_PAGE_CACHE_SIZE);
@@ -1433,7 +1435,7 @@ allow_links_change_zoom_changed (GSettings *settings,
 			 gchar     *key,
 			 EvWindow  *ev_window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 	gboolean allow_links_change_zoom = g_settings_get_boolean (settings, GS_ALLOW_LINKS_CHANGE_ZOOM);
 
 	ev_view_set_allow_links_change_zoom (EV_VIEW (priv->view), allow_links_change_zoom);
@@ -1442,7 +1444,7 @@ allow_links_change_zoom_changed (GSettings *settings,
 static void
 ev_window_setup_default (EvWindow *ev_window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 	EvDocumentModel *model = priv->model;
 	GSettings       *settings = priv->default_settings;
 
@@ -1500,7 +1502,7 @@ lockdown_changed (GSettings   *lockdown,
 static GSettings *
 ev_window_ensure_settings (EvWindow *ev_window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 
         if (priv->settings != NULL)
                 return priv->settings;
@@ -1526,7 +1528,7 @@ static gboolean
 ev_window_setup_document (EvWindow *ev_window)
 {
 	const EvDocumentInfo *info;
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 	EvDocument *document = priv->document;
 
 	priv->setup_document_idle = 0;
@@ -1581,7 +1583,7 @@ ev_window_setup_document (EvWindow *ev_window)
 static void
 ev_window_set_document_metadata (EvWindow *window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 	const EvDocumentInfo *info;
 
 	if (!priv->metadata)
@@ -1602,7 +1604,7 @@ ev_window_set_document_metadata (EvWindow *window)
 static void
 ev_window_set_document (EvWindow *ev_window, EvDocument *document)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 
 	if (priv->document == document)
 		return;
@@ -1653,7 +1655,7 @@ static void
 ev_window_file_changed (EvWindow *ev_window,
 			gpointer  user_data)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 
 	if (priv->settings &&
 	    g_settings_get_boolean (priv->settings, GS_AUTO_RELOAD))
@@ -1663,9 +1665,9 @@ ev_window_file_changed (EvWindow *ev_window,
 static void
 ev_window_password_view_unlock (EvWindow *ev_window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 	const gchar *password;
-	
+
 	g_assert (priv->load_job);
 
 	password = ev_password_view_get_password (EV_PASSWORD_VIEW (priv->password_view));
@@ -1676,12 +1678,12 @@ ev_window_password_view_unlock (EvWindow *ev_window)
 static void
 ev_window_clear_load_job (EvWindow *ev_window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 
 	if (priv->load_job != NULL) {
 		if (!ev_job_is_finished (priv->load_job))
 			ev_job_cancel (priv->load_job);
-		
+
 		g_signal_handlers_disconnect_by_func (priv->load_job, ev_window_load_job_cb, ev_window);
 		g_object_unref (priv->load_job);
 		priv->load_job = NULL;
@@ -1691,7 +1693,7 @@ ev_window_clear_load_job (EvWindow *ev_window)
 static void
 ev_window_clear_reload_job (EvWindow *ev_window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 
 	if (priv->reload_job != NULL) {
 		if (!ev_job_is_finished (priv->reload_job))
@@ -1706,7 +1708,7 @@ ev_window_clear_reload_job (EvWindow *ev_window)
 static void
 ev_window_clear_local_uri (EvWindow *ev_window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 
 	if (priv->local_uri) {
 		ev_tmp_uri_unlink (priv->local_uri);
@@ -1719,7 +1721,7 @@ static void
 ev_window_handle_link (EvWindow *ev_window,
 		       EvLinkDest *dest)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 
 	if (dest) {
 		EvLink *link;
@@ -1750,7 +1752,7 @@ ev_window_load_job_cb (EvJob *job,
 	EvJobLoad *job_load = EV_JOB_LOAD (job);
 	gchar     *text;
 	gchar 	  *display_name;
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 
 	g_assert (job_load->uri);
 
@@ -1859,7 +1861,7 @@ static void
 ev_window_reload_job_cb (EvJob    *job,
 			 EvWindow *ev_window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 
 	if (ev_job_is_failed (job)) {
 		ev_window_clear_reload_job (ev_window);
@@ -1898,7 +1900,7 @@ ev_window_reload_job_cb (EvJob    *job,
 const char *
 ev_window_get_uri (EvWindow *ev_window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 
 	return priv->uri;
 }
@@ -1913,7 +1915,7 @@ ev_window_get_uri (EvWindow *ev_window)
 static void
 ev_window_close_dialogs (EvWindow *ev_window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 
 	if (priv->print_dialog)
 		gtk_widget_destroy (priv->print_dialog);
@@ -1927,7 +1929,7 @@ ev_window_close_dialogs (EvWindow *ev_window)
 static void
 ev_window_clear_progress_idle (EvWindow *ev_window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 
 	if (priv->progress_idle > 0)
 		g_source_remove (priv->progress_idle);
@@ -1937,7 +1939,7 @@ ev_window_clear_progress_idle (EvWindow *ev_window)
 static void
 reset_progress_idle (EvWindow *ev_window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 
 	priv->progress_idle = 0;
 }
@@ -1947,7 +1949,7 @@ ev_window_show_progress_message (EvWindow   *ev_window,
 				 guint       interval,
 				 GSourceFunc function)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 
 	if (priv->progress_idle > 0)
 		g_source_remove (priv->progress_idle);
@@ -1961,7 +1963,7 @@ ev_window_show_progress_message (EvWindow   *ev_window,
 static void
 ev_window_reset_progress_cancellable (EvWindow *ev_window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 
 	if (priv->progress_cancellable)
 		g_cancellable_reset (priv->progress_cancellable);
@@ -1974,21 +1976,21 @@ ev_window_progress_response_cb (EvProgressMessageArea *area,
 				gint                   response,
 				EvWindow              *ev_window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 
 	if (response == GTK_RESPONSE_CANCEL)
 		g_cancellable_cancel (priv->progress_cancellable);
 	ev_window_set_message_area (ev_window, NULL);
 }
 
-static gboolean 
+static gboolean
 show_loading_progress (EvWindow *ev_window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 	GtkWidget *area;
 	gchar     *text;
 	gchar 	  *display_name;
-	
+
 	if (priv->message_area)
 		return FALSE;
 
@@ -2019,7 +2021,7 @@ static void
 ev_window_load_remote_failed (EvWindow *ev_window,
 			      GError   *error)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 	gchar *text;
 	gchar *display_name;
 
@@ -2043,7 +2045,7 @@ set_uri_mtime (GFile        *source,
 	       GAsyncResult *async_result,
 	       EvWindow     *ev_window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 	GFileInfo *info;
 	GError *error = NULL;
 
@@ -2088,7 +2090,7 @@ window_open_file_copy_ready_cb (GFile        *source,
 				GAsyncResult *async_result,
 				EvWindow     *ev_window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 	GError *error = NULL;
 
 	ev_window_clear_progress_idle (ev_window);
@@ -2139,7 +2141,7 @@ window_open_file_copy_progress_cb (goffset   n_bytes,
 				   goffset   total_bytes,
 				   EvWindow *ev_window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 	gchar *status;
 	gdouble fraction;
 	
@@ -2165,7 +2167,7 @@ static void
 ev_window_load_file_remote (EvWindow *ev_window,
 			    GFile    *source_file)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 	GFile *target_file;
 
 	if (!priv->local_uri) {
@@ -2215,7 +2217,7 @@ ev_window_load_file_remote (EvWindow *ev_window,
 static void
 set_filenames (EvWindow *ev_window, GFile *f)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 	GFileInfo       *info;
 	GError          *error = NULL;
 
@@ -2248,7 +2250,7 @@ ev_window_open_uri (EvWindow       *ev_window,
 		    EvWindowRunMode mode,
 		    const gchar    *search_string)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 	GFile *source_file;
 
 	priv->in_reload = FALSE;
@@ -2333,7 +2335,7 @@ ev_window_open_document (EvWindow       *ev_window,
 			 EvWindowRunMode mode,
 			 const gchar    *search_string)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 
 	if (document == priv->document)
 		return;
@@ -2400,7 +2402,7 @@ ev_window_open_document (EvWindow       *ev_window,
 void
 ev_window_open_recent_view (EvWindow *ev_window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 
 	if (priv->recent_view)
 		return;
@@ -2427,7 +2429,7 @@ ev_window_open_recent_view (EvWindow *ev_window)
 static void
 ev_window_destroy_recent_view (EvWindow *ev_window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 
 	if (!priv->recent_view)
 		return;
@@ -2440,9 +2442,9 @@ ev_window_destroy_recent_view (EvWindow *ev_window)
 static void
 ev_window_reload_local (EvWindow *ev_window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 	const gchar *uri;
-	
+
 	uri = priv->local_uri ? priv->local_uri : priv->uri;
 	priv->reload_job = ev_job_load_new (uri);
 	g_signal_connect (priv->reload_job, "finished",
@@ -2451,13 +2453,13 @@ ev_window_reload_local (EvWindow *ev_window)
 	ev_job_scheduler_push_job (priv->reload_job, EV_JOB_PRIORITY_NONE);
 }
 
-static gboolean 
+static gboolean
 show_reloading_progress (EvWindow *ev_window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 	GtkWidget *area;
 	gchar     *text;
-	
+
 	if (priv->message_area)
 		return FALSE;
 	
@@ -2484,9 +2486,9 @@ reload_remote_copy_ready_cb (GFile        *remote,
 			     EvWindow     *ev_window)
 {
 	GError *error = NULL;
-	
+
 	ev_window_clear_progress_idle (ev_window);
-	
+
 	g_file_copy_finish (remote, async_result, &error);
 	if (error) {
 		if (!g_error_matches (error, G_IO_ERROR, G_IO_ERROR_CANCELLED))
@@ -2505,7 +2507,7 @@ reload_remote_copy_progress_cb (goffset   n_bytes,
 				goffset   total_bytes,
 				EvWindow *ev_window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 	gchar *status;
 	gdouble fraction;
 	
@@ -2532,7 +2534,7 @@ query_remote_uri_mtime_cb (GFile        *remote,
 			   GAsyncResult *async_result,
 			   EvWindow     *ev_window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 	GFileInfo *info;
 	GTimeVal   mtime;
 	GError    *error = NULL;
@@ -2545,11 +2547,11 @@ query_remote_uri_mtime_cb (GFile        *remote,
 
 		return;
 	}
-	
+
 	g_file_info_get_modification_time (info, &mtime);
 	if (priv->uri_mtime != mtime.tv_sec) {
 		GFile *target_file;
-			
+
 		/* Remote file has changed */
 		priv->uri_mtime = mtime.tv_sec;
 
@@ -2578,9 +2580,9 @@ query_remote_uri_mtime_cb (GFile        *remote,
 static void
 ev_window_reload_remote (EvWindow *ev_window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 	GFile *remote;
-	
+
 	remote = g_file_new_for_uri (priv->uri);
 	/* Reload the remote uri only if it has changed */
 	g_file_query_info_async (remote,
@@ -2595,7 +2597,7 @@ static void
 ev_window_reload_document (EvWindow *ev_window,
 			   EvLinkDest *dest)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 
 	ev_window_clear_reload_job (ev_window);
 	priv->in_reload = TRUE;
@@ -2754,9 +2756,9 @@ static void
 ev_window_open_copy_at_dest (EvWindow   *window,
 			     EvLinkDest *dest)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 	EvWindow *new_window = EV_WINDOW (ev_window_new ());
-	EvWindowPrivate *new_priv = ev_window_get_instance_private (new_window);
+	EvWindowPrivate *new_priv = GET_PRIVATE (new_window);
 
 	if (priv->metadata)
 		new_priv->metadata = g_object_ref (priv->metadata);
@@ -2783,12 +2785,12 @@ ev_window_cmd_file_open_copy (GSimpleAction *action,
 static void
 ev_window_add_recent (EvWindow *window, const char *uri)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 
 	gtk_recent_manager_add_item (priv->recent_manager, uri);
 }
 
-static gboolean 
+static gboolean
 show_saving_progress (GFile *dst)
 {
 	EvWindow  *ev_window;
@@ -2798,9 +2800,9 @@ show_saving_progress (GFile *dst)
 	EvSaveType save_type;
 
 	ev_window = EV_WINDOW (g_object_get_data (G_OBJECT (dst), "ev-window"));
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 	priv->progress_idle = 0;
-	
+
 	if (priv->message_area)
 		return FALSE;
 
@@ -2875,7 +2877,7 @@ window_save_file_copy_progress_cb (goffset n_bytes,
 	gdouble    fraction;
 
 	ev_window = EV_WINDOW (g_object_get_data (G_OBJECT (dst), "ev-window"));
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 	
 	if (!priv->message_area)
 		return;
@@ -2902,7 +2904,7 @@ window_save_file_copy_progress_cb (goffset n_bytes,
 	default:
 		g_assert_not_reached ();
 	}
-	
+
 	ev_progress_message_area_set_status (EV_PROGRESS_MESSAGE_AREA (priv->message_area),
 					     status);
 	ev_progress_message_area_set_fraction (EV_PROGRESS_MESSAGE_AREA (priv->message_area),
@@ -2917,7 +2919,7 @@ ev_window_save_remote (EvWindow  *ev_window,
 		       GFile     *src,
 		       GFile     *dst)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 
 	ev_window_reset_progress_cancellable (ev_window);
 	g_object_set_data (G_OBJECT (dst), "ev-window", ev_window);
@@ -2941,7 +2943,7 @@ ev_window_save_remote (EvWindow  *ev_window,
 static void
 ev_window_clear_save_job (EvWindow *ev_window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 
 	if (priv->save_job != NULL) {
 		if (!ev_job_is_finished (priv->save_job))
@@ -2975,7 +2977,7 @@ file_save_dialog_response_cb (GtkWidget *fc,
 			      gint       response_id,
 			      EvWindow  *ev_window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 	gchar *uri;
 
 	if (response_id != GTK_RESPONSE_OK) {
@@ -2988,7 +2990,7 @@ file_save_dialog_response_cb (GtkWidget *fc,
 
 	uri = gtk_file_chooser_get_uri (GTK_FILE_CHOOSER (fc));
 
-	/* FIXME: remote copy should be done here rather than in the save job, 
+	/* FIXME: remote copy should be done here rather than in the save job,
 	 * so that we can track progress and cancel the operation
 	 */
 
@@ -3008,7 +3010,7 @@ file_save_dialog_response_cb (GtkWidget *fc,
 static void
 ev_window_save_as (EvWindow *ev_window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 	GtkWidget *fc;
 	gchar *base_name, *dir_name, *var_tmp_dir, *tmp_dir;
 	GFile *file, *parent;
@@ -3077,7 +3079,7 @@ ev_window_cmd_send_to (GSimpleAction *action,
 		       gpointer       user_data)
 {
 	EvWindow   *ev_window = user_data;
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 	GAppInfo   *app_info;
 	gchar      *command;
 	const char *uri;
@@ -3117,7 +3119,7 @@ ev_window_cmd_open_containing_folder (GSimpleAction *action,
 				      gpointer       user_data)
 {
 	EvWindow *window = user_data;
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 
 	guint32 timestamp;
 	GAppInfo *app = NULL;
@@ -3217,7 +3219,7 @@ static void
 ev_window_save_print_settings (EvWindow         *window,
 			       GtkPrintSettings *print_settings)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 	GKeyFile *key_file;
 	gint      i;
 
@@ -3251,7 +3253,7 @@ static void
 ev_window_save_print_page_setup (EvWindow     *window,
 				 GtkPageSetup *page_setup)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 	GKeyFile *key_file;
 
 	key_file = get_print_settings_file ();
@@ -3292,7 +3294,7 @@ static void
 ev_window_load_print_settings_from_metadata (EvWindow         *window,
 					     GtkPrintSettings *print_settings)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 	gint i;
 
 	if (!priv->metadata)
@@ -3313,7 +3315,7 @@ static void
 ev_window_load_print_page_setup_from_metadata (EvWindow     *window,
 					       GtkPageSetup *page_setup)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 	gint          int_value;
 	gdouble       double_value;
 	GtkPaperSize *paper_size = gtk_page_setup_get_paper_size (page_setup);
@@ -3390,9 +3392,9 @@ get_print_page_setup (GKeyFile *key_file)
 static void
 ev_window_print_cancel (EvWindow *ev_window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 	EvPrintOperation *op;
-	
+
 	if (!priv->print_queue)
 		return;
 
@@ -3405,9 +3407,9 @@ static void
 ev_window_print_update_pending_jobs_message (EvWindow *ev_window,
 					     gint      n_jobs)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 	gchar *text = NULL;
-	
+
 	if (!EV_IS_PROGRESS_MESSAGE_AREA (priv->message_area) ||
 	    !priv->print_queue)
 		return;
@@ -3432,7 +3434,7 @@ static gboolean
 destroy_window (GtkWidget *window)
 {
 	gtk_widget_destroy (window);
-	
+
 	return FALSE;
 }
 
@@ -3441,7 +3443,7 @@ ev_window_print_operation_done (EvPrintOperation       *op,
 				GtkPrintOperationResult result,
 				EvWindow               *ev_window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 	gint n_jobs;
 
 	switch (result) {
@@ -3506,7 +3508,7 @@ ev_window_print_progress_response_cb (EvProgressMessageArea *area,
 				      gint                   response,
 				      EvWindow              *ev_window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 
 	if (response == GTK_RESPONSE_CANCEL) {
 		EvPrintOperation *op;
@@ -3522,7 +3524,7 @@ static void
 ev_window_print_operation_status_changed (EvPrintOperation *op,
 					  EvWindow         *ev_window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 	const gchar *status;
 	gdouble      fraction;
 
@@ -3561,7 +3563,7 @@ static void
 ev_window_print_operation_begin_print (EvPrintOperation *op,
 				       EvWindow         *ev_window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 
 	if (!priv->print_queue)
 		priv->print_queue = g_queue_new ();
@@ -3588,7 +3590,7 @@ ev_window_print_range (EvWindow *ev_window,
 	EvWindowPrivate *priv;
 
 	g_return_if_fail (EV_IS_WINDOW (ev_window));
-	priv = ev_window_get_instance_private (ev_window);
+	priv = GET_PRIVATE (ev_window);
 	g_return_if_fail (priv->document != NULL);
 
 	if (!priv->print_queue)
@@ -3665,7 +3667,7 @@ ev_window_print_range (EvWindow *ev_window,
 static void
 ev_window_print (EvWindow *window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 
 	ev_window_print_range (window, 1,
 			       ev_document_get_n_pages (priv->document));
@@ -3687,7 +3689,7 @@ ev_window_cmd_file_properties (GSimpleAction *action,
 			       gpointer       user_data)
 {
 	EvWindow *ev_window = user_data;
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 
 	if (priv->properties == NULL) {
 		priv->properties = ev_properties_dialog_new ();
@@ -3740,7 +3742,7 @@ static gboolean
 ev_window_check_document_modified (EvWindow      *ev_window,
 				   EvWindowAction command)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 	EvDocument  *document = priv->document;
 	GtkWidget   *dialog;
 	gchar       *text, *markup;
@@ -3815,7 +3817,7 @@ print_jobs_confirmation_dialog_response (GtkDialog *dialog,
 					 gint       response,
 					 EvWindow  *ev_window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 
 	gtk_widget_destroy (GTK_WIDGET (dialog));
 
@@ -3846,7 +3848,7 @@ print_jobs_confirmation_dialog_response (GtkDialog *dialog,
 static gboolean
 ev_window_check_print_queue (EvWindow *ev_window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 	GtkWidget *dialog;
 	gchar     *text, *markup;
 	gint       n_print_jobs;
@@ -3914,7 +3916,7 @@ ev_window_check_print_queue (EvWindow *ev_window)
 static gboolean
 ev_window_close (EvWindow *ev_window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 
 	if (EV_WINDOW_IS_PRESENTATION (priv)) {
 		gint current_page;
@@ -4037,7 +4039,7 @@ ev_window_cmd_focus_page_selector (GSimpleAction *action,
 				   gpointer       user_data)
 {
 	EvWindow *window = user_data;
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 	GtkWidget *page_selector;
 	EvToolbar *toolbar;
 
@@ -4055,7 +4057,7 @@ ev_window_cmd_scroll_forward (GSimpleAction *action,
 			      gpointer       user_data)
 {
 	EvWindow *window = user_data;
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 
 	g_signal_emit_by_name (priv->view, "scroll", GTK_SCROLL_PAGE_FORWARD, GTK_ORIENTATION_VERTICAL);
 }
@@ -4066,7 +4068,7 @@ ev_window_cmd_scroll_backwards (GSimpleAction *action,
 				gpointer       user_data)
 {
 	EvWindow *window = user_data;
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 
 	g_signal_emit_by_name (priv->view, "scroll", GTK_SCROLL_PAGE_BACKWARD, GTK_ORIENTATION_VERTICAL);
 }
@@ -4077,7 +4079,7 @@ ev_window_cmd_continuous (GSimpleAction *action,
 			  gpointer       user_data)
 {
 	EvWindow *window = user_data;
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 
 	ev_window_stop_presentation (window, TRUE);
 	ev_document_model_set_continuous (priv->model, g_variant_get_boolean (state));
@@ -4090,7 +4092,7 @@ ev_window_cmd_dual (GSimpleAction *action,
 		    gpointer       user_data)
 {
 	EvWindow *window = user_data;
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 
 	ev_window_stop_presentation (window, TRUE);
 	ev_document_model_set_dual_page (priv->model, g_variant_get_boolean (state));
@@ -4103,7 +4105,7 @@ ev_window_cmd_dual_odd_pages_left (GSimpleAction *action,
 				   gpointer       user_data)
 {
 	EvWindow *window = user_data;
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 
 	ev_document_model_set_dual_page_odd_pages_left (priv->model,
 							g_variant_get_boolean (state));
@@ -4116,7 +4118,7 @@ ev_window_change_sizing_mode_action_state (GSimpleAction *action,
 					   gpointer       user_data)
 {
 	EvWindow *window = user_data;
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 	const gchar *mode;
 
 	mode = g_variant_get_string (state, NULL);
@@ -4141,7 +4143,7 @@ ev_window_cmd_view_zoom (GSimpleAction *action,
 			 gpointer       user_data)
 {
 	EvWindow *ev_window = user_data;
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 	gdouble zoom = g_variant_get_double (parameter);
 
 	ev_document_model_set_sizing_mode (priv->model, EV_SIZING_FREE);
@@ -4155,7 +4157,7 @@ ev_window_cmd_set_default_zoom (GSimpleAction *action,
 				gpointer       user_data)
 {
 	EvWindow *ev_window = user_data;
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 
 	ev_document_model_set_sizing_mode (priv->model, EV_SIZING_FREE);
 	ev_document_model_set_scale (priv->model,
@@ -4168,7 +4170,7 @@ ev_window_cmd_edit_select_all (GSimpleAction *action,
 			       gpointer       user_data)
 {
 	EvWindow *ev_window = user_data;
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 
 	ev_view_select_all (EV_VIEW (priv->view));
 }
@@ -4196,7 +4198,7 @@ ev_window_cmd_find (GSimpleAction *action,
 	EvView *view;
 	gchar *selected_text = NULL;
 	EvWindow *ev_window = user_data;
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 
 	view = EV_VIEW (priv->view);
         selected_text = ev_view_get_selected_text (view);
@@ -4213,7 +4215,7 @@ ev_window_cmd_find (GSimpleAction *action,
 static void
 ev_window_find_restart (EvWindow *ev_window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 	gint page;
 
 	page = ev_document_model_get_page (priv->model);
@@ -4224,7 +4226,7 @@ ev_window_find_restart (EvWindow *ev_window)
 static void
 ev_window_find_previous (EvWindow *ev_window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 
 	ev_view_find_previous (EV_VIEW (priv->view));
 	ev_find_sidebar_previous (EV_FIND_SIDEBAR (priv->find_sidebar));
@@ -4233,7 +4235,7 @@ ev_window_find_previous (EvWindow *ev_window)
 static void
 ev_window_find_next (EvWindow *ev_window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 
 	ev_view_find_next (EV_VIEW (priv->view));
 	ev_find_sidebar_next (EV_FIND_SIDEBAR (priv->find_sidebar));
@@ -4252,7 +4254,7 @@ ev_window_cmd_edit_find_next (GSimpleAction *action,
 			      gpointer       user_data)
 {
 	EvWindow *ev_window = user_data;
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 	gboolean search_mode_enabled;
 
 	if (EV_WINDOW_IS_PRESENTATION (priv))
@@ -4281,7 +4283,7 @@ ev_window_cmd_edit_find_previous (GSimpleAction *action,
 				  gpointer       user_data)
 {
 	EvWindow *ev_window = user_data;
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 	gboolean search_mode_enabled;
 
 	if (EV_WINDOW_IS_PRESENTATION (priv))
@@ -4303,7 +4305,7 @@ ev_window_cmd_edit_copy (GSimpleAction *action,
 			 gpointer       user_data)
 {
 	EvWindow *ev_window = user_data;
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 
 	ev_view_copy (EV_VIEW (priv->view));
 }
@@ -4313,7 +4315,7 @@ ev_window_sidebar_position_change_cb (GObject    *object,
 				      GParamSpec *pspec,
 				      EvWindow   *ev_window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 
 	if (priv->metadata && !ev_window_is_empty (ev_window))
 		ev_metadata_set_int (priv->metadata, "sidebar_size",
@@ -4323,7 +4325,7 @@ ev_window_sidebar_position_change_cb (GObject    *object,
 static void
 ev_window_update_links_model (EvWindow *window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 	GtkTreeModel *model;
 	GtkWidget *page_selector;
 
@@ -4346,7 +4348,7 @@ ev_window_update_links_model (EvWindow *window)
 static void
 ev_window_update_fullscreen_action (EvWindow *window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 	GAction *action;
 	gboolean fullscreen;
 
@@ -4358,7 +4360,7 @@ ev_window_update_fullscreen_action (EvWindow *window)
 static void
 ev_window_fullscreen_hide_toolbar (EvWindow *window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 
 	if (!ev_toolbar_has_visible_popups (EV_TOOLBAR (priv->fs_toolbar)))
 		gtk_revealer_set_reveal_child (GTK_REVEALER (priv->fs_revealer), FALSE);
@@ -4367,7 +4369,7 @@ ev_window_fullscreen_hide_toolbar (EvWindow *window)
 static gboolean
 fullscreen_toolbar_timeout_cb (EvWindow *window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 
 	ev_window_fullscreen_hide_toolbar (window);
 
@@ -4382,7 +4384,7 @@ fullscreen_toolbar_timeout_cb (EvWindow *window)
 static void
 ev_window_remove_fullscreen_timeout (EvWindow *window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 
 	if (priv->fs_timeout_id)
 		g_source_remove (priv->fs_timeout_id);
@@ -4392,7 +4394,7 @@ ev_window_remove_fullscreen_timeout (EvWindow *window)
 static void
 ev_window_add_fullscreen_timeout (EvWindow *window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 
 	priv->fs_timeout_id =
 		g_timeout_add_seconds (FULLSCREEN_POPUP_TIMEOUT,
@@ -4402,7 +4404,7 @@ ev_window_add_fullscreen_timeout (EvWindow *window)
 static void
 ev_window_fullscreen_show_toolbar (EvWindow *window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 
 	ev_window_remove_fullscreen_timeout (window);
 	if (gtk_revealer_get_reveal_child (GTK_REVEALER (priv->fs_revealer)))
@@ -4418,7 +4420,7 @@ ev_window_fullscreen_toolbar_enter_notify (GtkWidget *widget,
 					   GdkEvent  *event,
 					   EvWindow  *window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 
 	priv->fs_pointer_on_toolbar = TRUE;
 	ev_window_fullscreen_show_toolbar (window);
@@ -4431,7 +4433,7 @@ ev_window_fullscreen_toolbar_leave_notify (GtkWidget *widget,
 					   GdkEvent  *event,
 					   EvWindow  *window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 
 	priv->fs_pointer_on_toolbar = FALSE;
 	ev_window_add_fullscreen_timeout (window);
@@ -4442,7 +4444,7 @@ ev_window_fullscreen_toolbar_leave_notify (GtkWidget *widget,
 static void
 ev_window_run_fullscreen (EvWindow *window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 	gboolean fullscreen_window = TRUE;
 
 	if (ev_document_model_get_fullscreen (priv->model))
@@ -4513,7 +4515,7 @@ static void
 ev_window_stop_fullscreen (EvWindow *window,
 			   gboolean  unfullscreen_window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 
 	if (!ev_document_model_get_fullscreen (priv->model))
 		return;
@@ -4565,7 +4567,7 @@ ev_window_cmd_view_fullscreen (GSimpleAction *action,
 static void
 ev_window_inhibit_screensaver (EvWindow *window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 
         if (priv->presentation_mode_inhibit_id != 0)
                 return;
@@ -4581,7 +4583,7 @@ ev_window_inhibit_screensaver (EvWindow *window)
 static void
 ev_window_uninhibit_screensaver (EvWindow *window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 
         if (priv->presentation_mode_inhibit_id == 0)
                 return;
@@ -4616,7 +4618,7 @@ ev_window_view_presentation_focus_out (EvWindow *window)
 static void
 ev_window_run_presentation (EvWindow *window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 	gboolean fullscreen_window = TRUE;
 	guint    current_page;
 	guint    rotation;
@@ -4675,7 +4677,7 @@ static void
 ev_window_stop_presentation (EvWindow *window,
 			     gboolean  unfullscreen_window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 	guint current_page;
 	guint rotation;
 
@@ -4710,7 +4712,7 @@ ev_window_cmd_view_presentation (GSimpleAction *action,
 				 gpointer       user_data)
 {
 	EvWindow *window = user_data;
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 
 	if (!EV_WINDOW_IS_PRESENTATION (priv))
 		ev_window_run_presentation (window);
@@ -4725,7 +4727,7 @@ ev_window_state_event (GtkWidget           *widget,
 		       GdkEventWindowState *event)
 {
 	EvWindow *window = EV_WINDOW (widget);
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 
 	if (GTK_WIDGET_CLASS (ev_window_parent_class)->window_state_event) {
 		GTK_WIDGET_CLASS (ev_window_parent_class)->window_state_event (widget, event);
@@ -4737,7 +4739,7 @@ ev_window_state_event (GtkWidget           *widget,
 	if (event->new_window_state & GDK_WINDOW_STATE_FULLSCREEN) {
 		if (ev_document_model_get_fullscreen (priv->model) || EV_WINDOW_IS_PRESENTATION (priv))
 			return FALSE;
-		
+
 		ev_window_run_fullscreen (window);
 	} else {
 		if (ev_document_model_get_fullscreen (priv->model))
@@ -4753,7 +4755,7 @@ static void
 ev_window_set_page_mode (EvWindow         *window,
 			 EvWindowPageMode  page_mode)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 	GtkWidget *child = NULL;
 	GtkWidget *real_child;
 
@@ -4789,7 +4791,7 @@ ev_window_cmd_edit_rotate_left (GSimpleAction *action,
 				gpointer       user_data)
 {
 	EvWindow *ev_window = user_data;
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 	gint rotation;
 
 	if (EV_WINDOW_IS_PRESENTATION (priv)) {
@@ -4809,7 +4811,7 @@ ev_window_cmd_edit_rotate_right (GSimpleAction *action,
 				 gpointer       user_data)
 {
 	EvWindow *ev_window = user_data;
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 	gint rotation;
 
 	if (EV_WINDOW_IS_PRESENTATION (priv)) {
@@ -4829,7 +4831,7 @@ ev_window_cmd_view_inverted_colors (GSimpleAction *action,
 				    gpointer       user_data)
 {
 	EvWindow *ev_window = user_data;
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 
 	ev_document_model_set_inverted_colors (priv->model,
 					       g_variant_get_boolean (state));
@@ -4842,7 +4844,7 @@ ev_window_cmd_view_enable_spellchecking (GSimpleAction *action,
 				    gpointer       user_data)
 {
 	EvWindow *ev_window = user_data;
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 
 	ev_view_set_enable_spellchecking (EV_VIEW (priv->view),
 	g_variant_get_boolean (state));
@@ -4855,7 +4857,7 @@ ev_window_cmd_edit_save_settings (GSimpleAction *action,
 				  gpointer       user_data)
 {
 	EvWindow        *ev_window = user_data;
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 	EvView          *ev_view = EV_VIEW (priv->view);
 	EvDocumentModel *model = priv->model;
 	GSettings       *settings = priv->default_settings;
@@ -4896,7 +4898,7 @@ ev_window_cmd_view_zoom_in (GSimpleAction *action,
 			    gpointer       user_data)
 {
 	EvWindow *ev_window = user_data;
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 
 	ev_document_model_set_sizing_mode (priv->model, EV_SIZING_FREE);
 	ev_view_zoom_in (EV_VIEW (priv->view));
@@ -4908,7 +4910,7 @@ ev_window_cmd_view_zoom_out (GSimpleAction *action,
 			     gpointer       user_data)
 {
 	EvWindow *ev_window = user_data;
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 
 	ev_document_model_set_sizing_mode (priv->model, EV_SIZING_FREE);
 	ev_view_zoom_out (EV_VIEW (priv->view));
@@ -4920,7 +4922,7 @@ ev_window_cmd_go_back_history (GSimpleAction *action,
 			       gpointer       user_data)
 {
 	EvWindow *ev_window = user_data;
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 
 	ev_history_go_back (priv->history);
 }
@@ -4931,7 +4933,7 @@ ev_window_cmd_go_forward_history (GSimpleAction *action,
 				  gpointer       user_data)
 {
 	EvWindow *ev_window = user_data;
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 
 	ev_history_go_forward (priv->history);
 }
@@ -4942,7 +4944,7 @@ ev_window_cmd_go_previous_page (GSimpleAction *action,
 				gpointer       user_data)
 {
 	EvWindow *window = user_data;
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 
 	ev_view_previous_page (EV_VIEW (priv->view));
 }
@@ -4953,7 +4955,7 @@ ev_window_cmd_go_next_page (GSimpleAction *action,
 					gpointer       user_data)
 {
 	EvWindow *window = user_data;
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 
 	ev_view_next_page (EV_VIEW (priv->view));
 }
@@ -4964,7 +4966,7 @@ ev_window_cmd_go_first_page (GSimpleAction *action,
 					 gpointer       user_data)
 {
 	EvWindow *window = user_data;
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 
 	ev_document_model_set_page (priv->model, 0);
 }
@@ -4975,7 +4977,7 @@ ev_window_cmd_go_last_page (GSimpleAction *action,
 			    gpointer       user_data)
 {
 	EvWindow *window = user_data;
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 
 	ev_document_model_set_page (priv->model,
 				    ev_document_get_n_pages (priv->document) - 1);
@@ -4987,12 +4989,12 @@ ev_window_cmd_go_forward (GSimpleAction *action,
 			  gpointer       user_data)
 {
 	EvWindow *ev_window = user_data;
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 	int n_pages, current_page;
 
 	n_pages = ev_document_get_n_pages (priv->document);
 	current_page = ev_document_model_get_page (priv->model);
-	
+
 	if (current_page + 10 < n_pages) {
 		ev_document_model_set_page (priv->model, current_page + 10);
 	}
@@ -5004,11 +5006,11 @@ ev_window_cmd_go_backwards (GSimpleAction *action,
 			    gpointer       user_data)
 {
 	EvWindow *ev_window = user_data;
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 	int current_page;
 
 	current_page = ev_document_model_get_page (priv->model);
-	
+
 	if (current_page - 10 >= 0) {
 		ev_document_model_set_page (priv->model, current_page - 10);
 	}
@@ -5028,7 +5030,7 @@ compare_bookmarks (EvBookmark *a,
 static void
 ev_window_setup_bookmarks (EvWindow *window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 	GList *items, *it;
 
 	g_menu_remove_all (priv->bookmarks_menu);
@@ -5056,7 +5058,7 @@ ev_window_cmd_bookmarks_add (GSimpleAction *action,
 			     gpointer       user_data)
 {
 	EvWindow *window = user_data;
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 	EvBookmark bm;
 	gchar     *page_label;
 
@@ -5075,7 +5077,7 @@ ev_window_cmd_bookmarks_delete (GSimpleAction *action,
 				gpointer       user_data)
 {
 	EvWindow *window = user_data;
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 	EvBookmark bm;
 
 	bm.page = ev_document_model_get_page (priv->model);
@@ -5090,7 +5092,7 @@ ev_window_activate_goto_bookmark_action (GSimpleAction *action,
 					 gpointer       user_data)
 {
 	EvWindow *window = user_data;
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 
 	ev_document_model_set_page (priv->model, g_variant_get_uint32 (parameter));
 }
@@ -5114,7 +5116,7 @@ ev_window_cmd_view_autoscroll (GSimpleAction *action,
 			       gpointer       user_data)
 {
 	EvWindow *ev_window = user_data;
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 
 	ev_view_autoscroll_start (EV_VIEW (priv->view));
 }
@@ -5125,7 +5127,7 @@ ev_window_cmd_escape (GSimpleAction *action,
 		      gpointer       user_data)
 {
 	EvWindow *window = user_data;
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 
 	ev_view_autoscroll_stop (EV_VIEW (priv->view));
 
@@ -5142,7 +5144,7 @@ ev_window_cmd_escape (GSimpleAction *action,
 static void
 save_sizing_mode (EvWindow *window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 	EvSizingMode mode;
 	GEnumValue *enum_value;
 
@@ -5169,7 +5171,7 @@ ev_window_sizing_mode_changed_cb (EvDocumentModel *model,
 				  GParamSpec      *pspec,
 		 		  EvWindow        *ev_window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 	EvSizingMode sizing_mode = ev_document_model_get_sizing_mode (model);
 
 	g_object_set (priv->scrolled_window,
@@ -5186,7 +5188,7 @@ ev_window_sizing_mode_changed_cb (EvDocumentModel *model,
 static void
 ev_window_zoom_changed_cb (EvDocumentModel *model, GParamSpec *pspec, EvWindow *ev_window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 
         ev_window_update_actions_sensitivity (ev_window);
 
@@ -5207,7 +5209,7 @@ ev_window_continuous_changed_cb (EvDocumentModel *model,
 				 GParamSpec      *pspec,
 				 EvWindow        *ev_window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 	gboolean continuous;
 	GAction *action;
 
@@ -5225,7 +5227,7 @@ ev_window_rotation_changed_cb (EvDocumentModel *model,
 			       GParamSpec      *pspec,
 			       EvWindow        *window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 	gint rotation = ev_document_model_get_rotation (model);
 
 	if (priv->metadata && !ev_window_is_empty (window))
@@ -5238,7 +5240,7 @@ ev_window_inverted_colors_changed_cb (EvDocumentModel *model,
 			              GParamSpec      *pspec,
 			              EvWindow        *window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 	gboolean inverted_colors = ev_document_model_get_inverted_colors (model);
 	GAction *action;
 
@@ -5256,7 +5258,7 @@ ev_window_dual_mode_changed_cb (EvDocumentModel *model,
 				GParamSpec      *pspec,
 				EvWindow        *ev_window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 	gboolean dual_page;
 	GAction *action;
 
@@ -5274,7 +5276,7 @@ ev_window_dual_mode_odd_pages_left_changed_cb (EvDocumentModel *model,
 					       GParamSpec      *pspec,
 					       EvWindow        *ev_window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 	gboolean odd_left;
 	GAction *action;
 
@@ -5294,7 +5296,7 @@ ev_window_cmd_action_menu (GSimpleAction *action,
 			   gpointer       user_data)
 {
 	EvWindow  *ev_window = user_data;
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 	EvToolbar *toolbar;
 
 	toolbar = priv->fs_toolbar ? EV_TOOLBAR (priv->fs_toolbar) : EV_TOOLBAR (priv->toolbar);
@@ -5307,7 +5309,7 @@ ev_window_view_cmd_toggle_sidebar (GSimpleAction *action,
 				   gpointer       user_data)
 {
 	EvWindow *ev_window = user_data;
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 	gboolean show_side_pane;
 
 	if (EV_WINDOW_IS_PRESENTATION (priv))
@@ -5325,7 +5327,7 @@ ev_window_sidebar_current_page_changed_cb (EvSidebar  *ev_sidebar,
 					   GParamSpec *pspec,
 					   EvWindow   *ev_window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 
 	if (priv->metadata && !ev_window_is_empty (ev_window)) {
 		ev_metadata_set_string (priv->metadata,
@@ -5339,7 +5341,7 @@ ev_window_sidebar_visibility_changed_cb (EvSidebar  *ev_sidebar,
 					 GParamSpec *pspec,
 					 EvWindow   *ev_window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 
 	if (!EV_WINDOW_IS_PRESENTATION (priv)) {
 		gboolean visible = gtk_widget_get_visible (GTK_WIDGET (ev_sidebar));
@@ -5359,7 +5361,7 @@ static void
 view_menu_link_popup (EvWindow *ev_window,
 		      EvLink   *link)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 	gboolean  show_external = FALSE;
 	gboolean  show_internal = FALSE;
 
@@ -5397,7 +5399,7 @@ static void
 view_menu_image_popup (EvWindow  *ev_window,
 		       EvImage   *image)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 	gboolean show_image = FALSE;
 
 	g_clear_object (&priv->image);
@@ -5414,7 +5416,7 @@ static void
 view_menu_annot_popup (EvWindow     *ev_window,
 		       EvAnnotation *annot)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 	gboolean show_annot_props = FALSE;
 	gboolean show_attachment = FALSE;
 	gboolean can_remove_annots = FALSE;
@@ -5456,7 +5458,7 @@ view_menu_popup_cb (EvView   *view,
 		    GList    *items,
 		    EvWindow *ev_window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 	GList   *l;
 	gboolean has_link = FALSE;
 	gboolean has_image = FALSE;
@@ -5504,7 +5506,7 @@ attachment_bar_menu_popup_cb (EvSidebarAttachments *attachbar,
 			      GList                *attach_list,
 			      EvWindow             *ev_window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 
 	g_assert (attach_list != NULL);
 
@@ -5611,7 +5613,7 @@ find_sidebar_result_activated_cb (EvFindSidebar *find_sidebar,
 				  gint           result,
 				  EvWindow      *window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 
 	ev_view_find_set_result (EV_VIEW (priv->view), page, result);
 }
@@ -5638,7 +5640,7 @@ search_started_cb (EvSearchBox *search_box,
 		   EvJobFind   *job,
 		   EvWindow    *ev_window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 
 	if (!priv->document || !EV_IS_DOCUMENT_FIND (priv->document))
 		return;
@@ -5653,7 +5655,7 @@ search_updated_cb (EvSearchBox *search_box,
 		   gint         page,
 		   EvWindow    *ev_window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 
 	ev_window_update_actions_sensitivity (ev_window);
 	ev_find_sidebar_update (EV_FIND_SIDEBAR (priv->find_sidebar));
@@ -5663,7 +5665,7 @@ static void
 search_cleared_cb (EvSearchBox *search_box,
 		   EvWindow    *ev_window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 
 	ev_window_update_actions_sensitivity (ev_window);
 	ev_find_sidebar_clear (EV_FIND_SIDEBAR (priv->find_sidebar));
@@ -5691,7 +5693,7 @@ search_bar_search_mode_enabled_changed (GtkSearchBar *search_bar,
 					GParamSpec   *param,
 					EvWindow     *ev_window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 	gboolean enabled = gtk_search_bar_get_search_mode (search_bar);
 
 	ev_view_find_set_highlight_search (EV_VIEW (priv->view), enabled);
@@ -5714,7 +5716,7 @@ static void
 ev_window_show_find_bar (EvWindow *ev_window,
 			 gboolean  restart)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 
 	if (gtk_widget_get_visible (priv->find_sidebar)) {
 		gtk_widget_grab_focus (priv->search_box);
@@ -5754,7 +5756,7 @@ ev_window_show_find_bar (EvWindow *ev_window,
 static void
 ev_window_close_find_bar (EvWindow *ev_window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 
 	if (!gtk_widget_get_visible (priv->find_sidebar))
 		return;
@@ -5818,7 +5820,7 @@ static void
 ev_window_set_caret_navigation_enabled (EvWindow *window,
 					gboolean enabled)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 	GAction *action;
 
 	if (priv->metadata)
@@ -5835,7 +5837,7 @@ ev_window_caret_navigation_message_area_response_cb (EvMessageArea *area,
 						     gint           response_id,
 						     EvWindow      *window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 
 	/* Turn the caret navigation mode on */
 	if (response_id == GTK_RESPONSE_YES)
@@ -5858,7 +5860,7 @@ ev_window_cmd_view_toggle_caret_navigation (GSimpleAction *action,
 					    gpointer       user_data)
 {
 	EvWindow  *window = user_data;
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 	GtkWidget *message_area;
 	GtkWidget *box;
 	GtkWidget *hbox;
@@ -5929,7 +5931,7 @@ ev_window_cmd_toggle_edit_annots (GSimpleAction *action,
 				  gpointer       user_data)
 {
 	EvWindow *ev_window = user_data;
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 
 	if (g_variant_get_boolean (state))
 		gtk_widget_show (priv->annots_toolbar);
@@ -5943,7 +5945,7 @@ static void
 ev_window_dispose (GObject *object)
 {
 	EvWindow *window = EV_WINDOW (object);
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 	GObject *mpkeys = ev_application_get_media_keys (EV_APP);
 
 	if (mpkeys) {
@@ -6155,7 +6157,7 @@ ev_window_button_press_event (GtkWidget      *widget,
                               GdkEventButton *event)
 {
         EvWindow *window = EV_WINDOW (widget);
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 
         switch (event->button) {
         case MOUSE_BACK_BUTTON:
@@ -6268,7 +6270,7 @@ static const GActionEntry actions[] = {
 static void
 sidebar_links_link_activated_cb (EvSidebarLinks *sidebar_links, EvLink *link, EvWindow *window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 
 	ev_view_handle_link (EV_VIEW (priv->view), link);
 }
@@ -6276,7 +6278,7 @@ sidebar_links_link_activated_cb (EvSidebarLinks *sidebar_links, EvLink *link, Ev
 static void
 activate_link_cb (GObject *object, EvLink *link, EvWindow *window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 
 	ev_view_handle_link (EV_VIEW (priv->view), link);
 	gtk_widget_grab_focus (priv->view);
@@ -6286,7 +6288,7 @@ static void
 history_changed_cb (EvHistory *history,
                     EvWindow  *window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 
 	ev_window_set_action_enabled (window, "go-back-history",
 				      ev_history_can_go_back (priv->history));
@@ -6298,7 +6300,7 @@ static void
 sidebar_layers_visibility_changed (EvSidebarLayers *layers,
 				   EvWindow        *window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 
 	ev_view_reload (EV_VIEW (priv->view));
 }
@@ -6308,7 +6310,7 @@ sidebar_annots_annot_activated_cb (EvSidebarAnnotations *sidebar_annots,
 				   EvMapping            *annot_mapping,
 				   EvWindow             *window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 
 	ev_view_focus_annotation (EV_VIEW (priv->view), annot_mapping);
 }
@@ -6317,7 +6319,7 @@ static void
 ev_window_begin_add_annot (EvWindow        *window,
 			   EvAnnotationType annot_type)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 
 	if (annot_type == EV_ANNOTATION_TYPE_TEXT_MARKUP &&
 	    ev_view_get_has_selection (EV_VIEW (priv->view))) {
@@ -6333,7 +6335,7 @@ view_annot_added (EvView       *view,
 		  EvAnnotation *annot,
 		  EvWindow     *window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 
 	ev_sidebar_annotations_annot_added (EV_SIDEBAR_ANNOTATIONS (priv->sidebar_annots),
 					    annot);
@@ -6345,7 +6347,7 @@ view_annot_removed (EvView       *view,
 		    EvAnnotation *annot,
 		    EvWindow     *window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 
 	ev_sidebar_annotations_annot_removed (EV_SIDEBAR_ANNOTATIONS (priv->sidebar_annots));
 }
@@ -6353,7 +6355,7 @@ view_annot_removed (EvView       *view,
 static void
 ev_window_cancel_add_annot(EvWindow *window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 
 	ev_view_cancel_add_annotation (EV_VIEW (priv->view));
 }
@@ -6389,7 +6391,7 @@ sidebar_page_main_widget_update_cb (GObject *ev_sidebar_page,
 				    EvWindow           *ev_window)
 {
 	GtkWidget *widget;
-	
+
 	g_object_get (ev_sidebar_page, "main_widget", &widget, NULL);
 
     	if (widget != NULL) {
@@ -6403,7 +6405,7 @@ sidebar_page_main_widget_update_cb (GObject *ev_sidebar_page,
 static gboolean
 window_state_event_cb (EvWindow *window, GdkEventWindowState *event, gpointer dummy)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 
 	if (!(event->new_window_state & GDK_WINDOW_STATE_FULLSCREEN)) {
 		gboolean maximized;
@@ -6419,7 +6421,7 @@ window_state_event_cb (EvWindow *window, GdkEventWindowState *event, gpointer du
 static gboolean
 window_configure_event_cb (EvWindow *window, GdkEventConfigure *event, gpointer dummy)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 	GdkWindowState state;
 	gdouble document_width, document_height;
 	gint window_x, window_y, window_width, window_height;
@@ -6452,7 +6454,7 @@ window_configure_event_cb (EvWindow *window, GdkEventConfigure *event, gpointer 
 static void
 launch_action (EvWindow *window, EvLinkAction *action)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 	const char *filename = ev_link_action_get_filename (action);
 	GAppInfo *app_info;
 	GFile *file;
@@ -6513,7 +6515,7 @@ launch_action (EvWindow *window, EvLinkAction *action)
 static void
 launch_external_uri (EvWindow *window, EvLinkAction *action)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 	const gchar *uri = ev_link_action_get_uri (action);
 	GError *error = NULL;
 	gboolean ret;
@@ -6570,7 +6572,7 @@ launch_external_uri (EvWindow *window, EvLinkAction *action)
 static void
 open_remote_link (EvWindow *window, EvLinkAction *action)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 	gchar *uri;
 	gchar *dir;
 
@@ -6656,7 +6658,7 @@ ev_window_popup_cmd_open_link (GSimpleAction *action,
 			       gpointer       user_data)
 {
 	EvWindow *window = user_data;
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 
 	ev_view_handle_link (EV_VIEW (priv->view), priv->link);
 }
@@ -6667,7 +6669,7 @@ ev_window_popup_cmd_annotate_selected_text (GSimpleAction *action,
 					    gpointer       user_data)
 {
 	EvWindow *ev_window = user_data;
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 	EvView *view = EV_VIEW (priv->view);
 	ev_view_add_text_markup_annotation_for_selected_text (view);
 }
@@ -6680,7 +6682,7 @@ ev_window_popup_cmd_open_link_new_window (GSimpleAction *action,
 	EvLinkAction *ev_action = NULL;
 	EvLinkDest   *dest;
 	EvWindow     *window = user_data;
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 
 	ev_action = ev_link_get_action (priv->link);
 	if (!ev_action)
@@ -6700,7 +6702,7 @@ ev_window_popup_cmd_copy_link_address (GSimpleAction *action,
 {
 	EvLinkAction *ev_action;
 	EvWindow     *window = user_data;
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 
 	ev_action = ev_link_get_action (priv->link);
 	if (!ev_action)
@@ -6740,7 +6742,7 @@ image_save_dialog_response_cb (GtkWidget *fc,
 			       gint       response_id,
 			       EvWindow  *ev_window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 	GFile           *target_file;
 	gboolean         is_native;
 	GError          *error = NULL;
@@ -6842,7 +6844,7 @@ ev_window_popup_cmd_save_image_as (GSimpleAction *action,
 {
 	GtkWidget *fc;
 	EvWindow  *window = user_data;
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 
 	if (!priv->image)
 		return;
@@ -6859,7 +6861,7 @@ ev_window_popup_cmd_save_image_as (GSimpleAction *action,
 
 	gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (fc), FALSE);
 	gtk_file_chooser_set_do_overwrite_confirmation (GTK_FILE_CHOOSER (fc), TRUE);
-	
+
 	file_chooser_dialog_add_writable_pixbuf_formats	(GTK_FILE_CHOOSER (fc));
 
         ev_window_file_chooser_restore_folder (window, GTK_FILE_CHOOSER (fc), NULL,
@@ -6880,11 +6882,11 @@ ev_window_popup_cmd_copy_image (GSimpleAction *action,
 	GtkClipboard *clipboard;
 	GdkPixbuf    *pixbuf;
 	EvWindow     *window = user_data;
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 
 	if (!priv->image)
 		return;
-	
+
 	clipboard = gtk_widget_get_clipboard (GTK_WIDGET (window),
 					      GDK_SELECTION_CLIPBOARD);
 	ev_document_doc_mutex_lock ();
@@ -6902,7 +6904,7 @@ ev_window_popup_cmd_annot_properties (GSimpleAction *action,
 				      gpointer       user_data)
 {
 	EvWindow                     *window = user_data;
-	EvWindowPrivate              *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate              *priv = GET_PRIVATE (window);
 	const gchar                  *author;
 	GdkRGBA                       rgba;
 	gdouble                       opacity;
@@ -6975,7 +6977,7 @@ ev_window_popup_cmd_remove_annotation (GSimpleAction *action,
 				       gpointer       user_data)
 {
 	EvWindow *window = user_data;
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 
 	ev_view_remove_annotation (EV_VIEW (priv->view),
 				   priv->annot);
@@ -6989,7 +6991,7 @@ ev_window_popup_cmd_open_attachment (GSimpleAction *action,
 	GList     *l;
 	GdkScreen *screen;
 	EvWindow  *window = user_data;
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 
 	if (!priv->attach_list)
 		return;
@@ -6999,9 +7001,9 @@ ev_window_popup_cmd_open_attachment (GSimpleAction *action,
 	for (l = priv->attach_list; l && l->data; l = g_list_next (l)) {
 		EvAttachment *attachment;
 		GError       *error = NULL;
-		
+
 		attachment = (EvAttachment *) l->data;
-		
+
 		ev_attachment_open (attachment, screen, gtk_get_current_event_time (), &error);
 
 		if (error) {
@@ -7017,14 +7019,14 @@ attachment_save_dialog_response_cb (GtkWidget *fc,
 				    gint       response_id,
 				    EvWindow  *ev_window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 	GFile                *target_file;
 	gchar                *uri;
 	GList                *l;
 	GtkFileChooserAction  fc_action;
 	gboolean              is_dir;
 	gboolean              is_native;
-	
+
 	if (response_id != GTK_RESPONSE_OK) {
 		gtk_widget_destroy (fc);
 		return;
@@ -7065,7 +7067,7 @@ ev_window_popup_cmd_save_attachment_as (GSimpleAction *action,
 	GtkWidget    *fc;
 	EvAttachment *attachment = NULL;
 	EvWindow     *window = user_data;
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 
 	if (!priv->attach_list)
 		return;
@@ -7106,11 +7108,11 @@ ev_window_media_player_key_pressed (EvWindow    *window,
 				    const gchar *key,
 				    gpointer     user_data)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 
 	if (!gtk_window_is_active (GTK_WINDOW (window)))
 		return;
-	
+
 	/* Note how Previous/Next only go to the
 	 * next/previous page despite their icon telling you
 	 * they should go to the beginning/end.
@@ -7143,7 +7145,7 @@ static void
 ev_window_sync_source (EvWindow     *window,
 		       EvSourceLink *link)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 	guint32		 timestamp;
 	gchar		*uri_input;
 	GFile		*input_gfile;
@@ -7184,7 +7186,7 @@ ev_window_sync_source (EvWindow     *window,
 static void
 ev_window_emit_closed (EvWindow *window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 
 	if (priv->skeleton == NULL)
 		return;
@@ -7201,7 +7203,7 @@ ev_window_emit_closed (EvWindow *window)
 static void
 ev_window_emit_doc_loaded (EvWindow *window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 
         if (priv->skeleton == NULL)
                 return;
@@ -7217,7 +7219,7 @@ handle_sync_view_cb (EvEvinceWindow        *object,
 		     guint                  timestamp,
 		     EvWindow              *window)
 {
-	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 
 	if (priv->document && ev_document_has_synctex (priv->document)) {
 		EvSourceLink link;
@@ -7302,7 +7304,7 @@ ev_window_init (EvWindow *ev_window)
 	g_signal_connect (ev_window, "window_state_event",
 			  G_CALLBACK (window_state_event_cb), NULL);
 
-	priv = ev_window_get_instance_private (ev_window);
+	priv = GET_PRIVATE (ev_window);
 
 #ifdef ENABLE_DBUS
 	connection = g_application_get_dbus_connection (g_application_get_default ());
@@ -7749,7 +7751,7 @@ const gchar *
 ev_window_get_dbus_object_path (EvWindow *ev_window)
 {
 #ifdef ENABLE_DBUS
-	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 
 	return priv->dbus_object_path;
 #else
@@ -7764,7 +7766,7 @@ ev_window_get_bookmarks_menu (EvWindow *ev_window)
 
 	g_return_val_if_fail (EV_WINDOW (ev_window), NULL);
 
-	priv = ev_window_get_instance_private (ev_window);
+	priv = GET_PRIVATE (ev_window);
 
 	return G_MENU_MODEL (priv->bookmarks_menu);
 }
@@ -7776,7 +7778,7 @@ ev_window_get_history (EvWindow *ev_window)
 
 	g_return_val_if_fail (EV_WINDOW (ev_window), NULL);
 
-	priv = ev_window_get_instance_private (ev_window);
+	priv = GET_PRIVATE (ev_window);
 
 	return priv->history;
 }
@@ -7788,7 +7790,7 @@ ev_window_get_document_model (EvWindow *ev_window)
 
 	g_return_val_if_fail (EV_WINDOW (ev_window), NULL);
 
-	priv = ev_window_get_instance_private (ev_window);
+	priv = GET_PRIVATE (ev_window);
 
 	return priv->model;
 }
@@ -7800,7 +7802,7 @@ ev_window_get_toolbar (EvWindow *ev_window)
 
 	g_return_val_if_fail (EV_WINDOW (ev_window), NULL);
 
-	priv = ev_window_get_instance_private (ev_window);
+	priv = GET_PRIVATE (ev_window);
 
 	return priv->toolbar;
 }
@@ -7812,7 +7814,7 @@ ev_window_focus_view (EvWindow *ev_window)
 
 	g_return_if_fail (EV_WINDOW (ev_window));
 
-	priv = ev_window_get_instance_private (ev_window);
+	priv = GET_PRIVATE (ev_window);
 
 	gtk_widget_grab_focus (priv->view);
 }
@@ -7824,7 +7826,7 @@ ev_window_get_metadata (EvWindow *ev_window)
 
 	g_return_val_if_fail (EV_WINDOW (ev_window), NULL);
 
-	priv = ev_window_get_instance_private (ev_window);
+	priv = GET_PRIVATE (ev_window);
 
 	return priv->metadata;
 }
