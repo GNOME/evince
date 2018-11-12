@@ -27,7 +27,6 @@ G_BEGIN_DECLS
 
 typedef struct _EvRecentView        EvRecentView;
 typedef struct _EvRecentViewClass   EvRecentViewClass;
-typedef struct _EvRecentViewPrivate EvRecentViewPrivate;
 
 #define EV_TYPE_RECENT_VIEW              (ev_recent_view_get_type ())
 #define EV_RECENT_VIEW(obj)              (G_TYPE_CHECK_INSTANCE_CAST ((obj), EV_TYPE_RECENT_VIEW, EvRecentView))
@@ -39,8 +38,6 @@ typedef struct _EvRecentViewPrivate EvRecentViewPrivate;
 struct _EvRecentView
 {
         GtkScrolledWindow parent;
-
-        EvRecentViewPrivate *priv;
 };
 
 struct _EvRecentViewClass

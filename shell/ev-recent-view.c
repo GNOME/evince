@@ -47,7 +47,7 @@ typedef enum {
         NUM_COLUMNS
 } EvRecentViewColumns;
 
-struct _EvRecentViewPrivate {
+typedef struct {
         GtkWidget        *view;
         GtkListStore     *model;
         GtkRecentManager *recent_manager;
@@ -57,7 +57,7 @@ struct _EvRecentViewPrivate {
 #ifdef HAVE_LIBGNOME_DESKTOP
         GnomeDesktopThumbnailFactory *thumbnail_factory;
 #endif
-};
+} EvRecentViewPrivate;
 
 enum {
         ITEM_ACTIVATED,
@@ -66,10 +66,11 @@ enum {
 
 static guint signals[NUM_SIGNALS] = { 0, };
 
-G_DEFINE_TYPE (EvRecentView, ev_recent_view, GTK_TYPE_SCROLLED_WINDOW)
+G_DEFINE_TYPE_WITH_PRIVATE (EvRecentView, ev_recent_view, GTK_TYPE_SCROLLED_WINDOW)
 
 #define ICON_VIEW_SIZE 128
 #define MAX_RECENT_VIEW_ITEMS 64
+#define GET_PRIVATE(o) ev_recent_view_get_instance_private (o);
 
 typedef struct {
         EvRecentView        *ev_recent_view;
@@ -87,6 +88,7 @@ get_document_info_async_data_free (GetDocumentInfoAsyncData *data)
 {
         GtkTreePath *path;
         GtkTreeIter  iter;
+	EvRecentViewPrivate *priv = GET_PRIVATE (data->ev_recent_view);
 
         if (data->job) {
                 g_signal_handlers_disconnect_by_data (data->job, data->ev_recent_view);
@@ -99,8 +101,8 @@ get_document_info_async_data_free (GetDocumentInfoAsyncData *data)
 
         path = gtk_tree_row_reference_get_path (data->row);
         if (path) {
-                gtk_tree_model_get_iter (GTK_TREE_MODEL (data->ev_recent_view->priv->model), &iter, path);
-                gtk_list_store_set (data->ev_recent_view->priv->model, &iter,
+                gtk_tree_model_get_iter (GTK_TREE_MODEL (priv->model), &iter, path);
+                gtk_list_store_set (priv->model, &iter,
                                     EV_RECENT_VIEW_COLUMN_ASYNC_DATA, NULL,
                                     -1);
                 gtk_tree_path_free (path);
@@ -129,7 +131,7 @@ ev_recent_view_clear_async_data (GtkTreeModel *model,
 static void
 ev_recent_view_clear_model (EvRecentView *ev_recent_view)
 {
-        EvRecentViewPrivate *priv = ev_recent_view->priv;
+        EvRecentViewPrivate *priv = GET_PRIVATE (ev_recent_view);
 
         gtk_tree_model_foreach (GTK_TREE_MODEL (priv->model),
                                 (GtkTreeModelForeachFunc)ev_recent_view_clear_async_data,
@@ -142,7 +144,7 @@ static void
 ev_recent_view_dispose (GObject *obj)
 {
         EvRecentView        *ev_recent_view = EV_RECENT_VIEW (obj);
-        EvRecentViewPrivate *priv = ev_recent_view->priv;
+        EvRecentViewPrivate *priv = GET_PRIVATE (ev_recent_view);
 
         if (priv->model) {
                 ev_recent_view_clear_model (ev_recent_view);
@@ -198,7 +200,7 @@ on_query_tooltip_event (GtkWidget     *widget,
                         GtkTooltip    *tooltip,
                         EvRecentView  *ev_recent_view)
 {
-        EvRecentViewPrivate *priv = ev_recent_view->priv;
+        EvRecentViewPrivate *priv = GET_PRIVATE (ev_recent_view);
         GtkTreeModel        *model;
         GtkTreeIter          iter;
         GtkTreePath         *path = NULL;
@@ -229,7 +231,7 @@ on_button_release_event (GtkWidget      *view,
                          GdkEventButton *event,
                          EvRecentView   *ev_recent_view)
 {
-        EvRecentViewPrivate *priv = ev_recent_view->priv;
+        EvRecentViewPrivate *priv = GET_PRIVATE (ev_recent_view);
         GtkTreePath         *path;
 
         /* eat double/triple click events */
@@ -262,7 +264,7 @@ on_button_press_event (GtkWidget      *view,
                        GdkEventButton *event,
                        EvRecentView   *ev_recent_view)
 {
-        EvRecentViewPrivate *priv = ev_recent_view->priv;
+        EvRecentViewPrivate *priv = GET_PRIVATE (ev_recent_view);
 
         g_clear_pointer (&priv->pressed_item_tree_path, gtk_tree_path_free);
         priv->pressed_item_tree_path =
@@ -276,7 +278,7 @@ on_icon_view_item_activated (GtkIconView  *iconview,
                              GtkTreePath  *path,
                              EvRecentView *ev_recent_view)
 {
-        EvRecentViewPrivate *priv = ev_recent_view->priv;
+        EvRecentViewPrivate *priv = GET_PRIVATE (ev_recent_view);
         GtkTreeIter          iter;
         gchar               *uri;
 
@@ -294,7 +296,7 @@ static void
 add_thumbnail_to_model (GetDocumentInfoAsyncData *data,
                         cairo_surface_t          *thumbnail)
 {
-        EvRecentViewPrivate *priv = data->ev_recent_view->priv;
+        EvRecentViewPrivate *priv = GET_PRIVATE (data->ev_recent_view);
         GtkTreePath         *path;
         GtkTreeIter          iter;
         GtkBorder            border;
@@ -327,10 +329,12 @@ add_thumbnail_to_model (GetDocumentInfoAsyncData *data,
 static void
 ev_rencent_view_ensure_desktop_thumbnail_factory (EvRecentView *ev_recent_view)
 {
-        if (ev_recent_view->priv->thumbnail_factory)
+	EvRecentViewPrivate *priv = GET_PRIVATE (ev_recent_view);
+
+        if (priv->thumbnail_factory)
                 return;
 
-        ev_recent_view->priv->thumbnail_factory = gnome_desktop_thumbnail_factory_new (GNOME_DESKTOP_THUMBNAIL_SIZE_LARGE);
+        priv->thumbnail_factory = gnome_desktop_thumbnail_factory_new (GNOME_DESKTOP_THUMBNAIL_SIZE_LARGE);
 }
 
 static void
@@ -341,13 +345,14 @@ save_thumbnail_in_cache_thread (GTask                    *task,
 {
         GdkPixbuf       *thumbnail;
         cairo_surface_t *surface;
+	EvRecentViewPrivate *priv = GET_PRIVATE (ev_recent_view);
 
         surface = EV_JOB_THUMBNAIL (data->job)->thumbnail_surface;
         thumbnail = gdk_pixbuf_get_from_surface (surface, 0, 0,
                                                  cairo_image_surface_get_width (surface),
                                                  cairo_image_surface_get_height (surface));
 
-        gnome_desktop_thumbnail_factory_save_thumbnail (ev_recent_view->priv->thumbnail_factory,
+        gnome_desktop_thumbnail_factory_save_thumbnail (priv->thumbnail_factory,
                                                         thumbnail, data->uri, data->mtime);
         g_object_unref (thumbnail);
 
@@ -398,7 +403,7 @@ static void
 document_load_job_completed_callback (EvJobLoad                *job_load,
                                       GetDocumentInfoAsyncData *data)
 {
-        EvRecentViewPrivate *priv = data->ev_recent_view->priv;
+        EvRecentViewPrivate *priv = GET_PRIVATE (data->ev_recent_view);
         EvDocument          *document = EV_JOB (job_load)->document;
 
         if (g_cancellable_is_cancelled (data->cancellable) ||
@@ -497,6 +502,7 @@ get_thumbnail_from_cache_thread (GTask                    *task,
         gchar           *path;
         GdkPixbuf       *thumbnail;
         cairo_surface_t *surface = NULL;
+	EvRecentViewPrivate *priv = GET_PRIVATE (ev_recent_view);
 
         if (g_task_return_error_if_cancelled (task))
                 return;
@@ -514,7 +520,7 @@ get_thumbnail_from_cache_thread (GTask                    *task,
         data->mtime = g_file_info_get_attribute_uint64 (info, G_FILE_ATTRIBUTE_TIME_MODIFIED);
         g_object_unref (info);
 
-        path = gnome_desktop_thumbnail_factory_lookup (ev_recent_view->priv->thumbnail_factory,
+        path = gnome_desktop_thumbnail_factory_lookup (priv->thumbnail_factory,
                                                        data->uri, data->mtime);
         if (!path) {
                 g_task_return_pointer (task, NULL, NULL);
@@ -635,6 +641,7 @@ document_query_info_cb (GFile                    *file,
         const char *author = NULL;
         char      **attrs;
         guint       i;
+	EvRecentViewPrivate *priv = GET_PRIVATE (data->ev_recent_view);
 
         if (g_cancellable_is_cancelled (data->cancellable)) {
                 get_document_info_async_data_free (data);
@@ -676,16 +683,16 @@ document_query_info_cb (GFile                    *file,
                 if (path) {
                         GtkTreeIter  iter;
 
-                        gtk_tree_model_get_iter (GTK_TREE_MODEL (data->ev_recent_view->priv->model), &iter, path);
+                        gtk_tree_model_get_iter (GTK_TREE_MODEL (priv->model), &iter, path);
 
                         if (title && title[0] != '\0') {
-                                gtk_list_store_set (data->ev_recent_view->priv->model, &iter,
+                                gtk_list_store_set (priv->model, &iter,
                                                     EV_RECENT_VIEW_COLUMN_PRIMARY_TEXT, title,
                                                     -1);
                         }
 
                         if (author && author[0] != '\0') {
-                                gtk_list_store_set (data->ev_recent_view->priv->model, &iter,
+                                gtk_list_store_set (priv->model, &iter,
                                                     EV_RECENT_VIEW_COLUMN_SECONDARY_TEXT, author,
                                                     -1);
                         }
@@ -706,11 +713,12 @@ ev_recent_view_get_document_info (EvRecentView  *ev_recent_view,
 {
         GFile                    *file;
         GetDocumentInfoAsyncData *data;
+	EvRecentViewPrivate *priv = GET_PRIVATE (ev_recent_view);
 
         data = g_slice_new0 (GetDocumentInfoAsyncData);
         data->ev_recent_view = ev_recent_view;
         data->uri = g_strdup (uri);
-        data->row = gtk_tree_row_reference_new (GTK_TREE_MODEL (ev_recent_view->priv->model), path);;
+        data->row = gtk_tree_row_reference_new (GTK_TREE_MODEL (priv->model), path);;
         data->cancellable = g_cancellable_new ();
         data->needs_metadata = TRUE;
         data->needs_thumbnail = TRUE;
@@ -731,7 +739,7 @@ ev_recent_view_refresh (EvRecentView *ev_recent_view)
         GList               *items, *l;
         guint                n_items = 0;
         const gchar         *evince = g_get_application_name ();
-        EvRecentViewPrivate *priv = ev_recent_view->priv;
+        EvRecentViewPrivate *priv = GET_PRIVATE (ev_recent_view);
 
         items = gtk_recent_manager_get_items (priv->recent_manager);
         items = g_list_sort (items, (GCompareFunc) compare_recent_items);
@@ -789,7 +797,7 @@ static void
 ev_recent_view_constructed (GObject *object)
 {
         EvRecentView        *ev_recent_view = EV_RECENT_VIEW (object);
-        EvRecentViewPrivate *priv = ev_recent_view->priv;
+        EvRecentViewPrivate *priv = GET_PRIVATE (ev_recent_view);
         GtkCellRenderer     *renderer;
 
         G_OBJECT_CLASS (ev_recent_view_parent_class)->constructed (object);
@@ -847,11 +855,8 @@ ev_recent_view_constructed (GObject *object)
 static void
 ev_recent_view_init (EvRecentView *ev_recent_view)
 {
-        EvRecentViewPrivate *priv;
+        EvRecentViewPrivate *priv = GET_PRIVATE (ev_recent_view);
 
-        ev_recent_view->priv = G_TYPE_INSTANCE_GET_PRIVATE (ev_recent_view, EV_TYPE_RECENT_VIEW, EvRecentViewPrivate);
-
-        priv = ev_recent_view->priv;
         priv->recent_manager = gtk_recent_manager_get_default ();
         priv->model = gtk_list_store_new (NUM_COLUMNS,
                                           G_TYPE_STRING,
@@ -888,8 +893,6 @@ ev_recent_view_class_init (EvRecentViewClass *klass)
                                 g_cclosure_marshal_generic,
                                 G_TYPE_NONE, 1,
                                 G_TYPE_STRING);
-
-        g_type_class_add_private (klass, sizeof (EvRecentViewPrivate));
 }
 
 GtkWidget *
