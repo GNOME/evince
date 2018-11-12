@@ -1,10 +1,8 @@
 /* -*- Mode: C; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8 -*- */
 /* Stock icons for Evince
  *
- * Copyright (C) 2003 Martin Kretzschmar
- *
- * Author:
- *   Martin Kretzschmar <Martin.Kretzschmar@inf.tu-dresden.de>
+ * Copyright (C) 2003 Martin Kretzschmar <Martin.Kretzschmar@inf.tu-dresden.de>
+ * Copyright (C) 2018 Germán Poo-Caamaño <gpoo@gnome.org>
  *
  * Evince is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by
@@ -34,6 +32,8 @@ typedef struct {
 
 /* Evince stock icons */
 static const EvStockIcon stock_icons [] = {
+	{ EV_STOCK_ANNOT_TEXT,       "annotation-text-symbolic" },
+	{ EV_STOCK_ANNOT_SQUIGGLY,   "annotation-squiggly-symbolic" },
 	{ EV_STOCK_FIND_UNSUPPORTED, "find-unsupported-symbolic" },
 	{ EV_STOCK_ZOOM,	     "zoom" },
 	{ EV_STOCK_ZOOM_PAGE,        "zoom-fit-height" },

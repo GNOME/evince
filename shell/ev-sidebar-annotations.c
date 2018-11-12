@@ -429,9 +429,8 @@ job_finished_callback (EvJobAnnots          *job,
 
 			if (EV_IS_ANNOTATION_TEXT (annot)) {
 				if (!text_icon) {
-					/* FIXME: use a better icon than EDIT */
 					text_icon = gtk_icon_theme_load_icon (icon_theme,
-									      "accessories-text-editor-symbolic",
+									      EV_STOCK_ANNOT_TEXT,
 									      ANNOT_ICON_SIZE,
 									      0, NULL);
 				}
@@ -478,9 +477,9 @@ job_finished_callback (EvJobAnnots          *job,
                                 case EV_ANNOTATION_TEXT_MARKUP_SQUIGGLY:
                                         if (!squiggly_icon) {
 						squiggly_icon = gtk_icon_theme_load_icon (icon_theme,
-											    "tools-check-spelling-symbolic",
-											    ANNOT_ICON_SIZE,
-											    0, NULL);
+											  EV_STOCK_ANNOT_SQUIGGLY,
+											  ANNOT_ICON_SIZE,
+											  0, NULL);
                                         }
                                         pixbuf = squiggly_icon;
                                         break;

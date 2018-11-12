@@ -33,6 +33,8 @@
 G_BEGIN_DECLS
 
 /* Evince stock icons */
+#define EV_STOCK_ANNOT_TEXT             "annotations-text-symbolic"
+#define EV_STOCK_ANNOT_SQUIGGLY         "annotations-squiggly-symbolic"
 #define EV_STOCK_FIND_UNSUPPORTED       "find-unsupported-symbolic"
 #define EV_STOCK_ZOOM	                "zoom"
 #define EV_STOCK_ZOOM_PAGE              "zoom-fit-height"
