@@ -35,7 +35,7 @@ enum
 	PROP_DATA
 };
 
-struct _EvAttachmentPrivate {
+typedef struct {
 	gchar                   *name;
 	gchar                   *description;
 	GTime                    mtime;
@@ -46,12 +46,11 @@ struct _EvAttachmentPrivate {
 
 	GAppInfo                *app;
 	GFile                   *tmp_file;
-};
+} EvAttachmentPrivate;
 
-#define EV_ATTACHMENT_GET_PRIVATE(object) \
-                (G_TYPE_INSTANCE_GET_PRIVATE ((object), EV_TYPE_ATTACHMENT, EvAttachmentPrivate))
+G_DEFINE_TYPE_WITH_PRIVATE (EvAttachment, ev_attachment, G_TYPE_OBJECT)
 
-G_DEFINE_TYPE (EvAttachment, ev_attachment, G_TYPE_OBJECT)
+#define GET_PRIVATE(o) ev_attachment_get_instance_private (o);
 
 GQuark
 ev_attachment_error_quark (void)
@@ -69,36 +68,37 @@ static void
 ev_attachment_finalize (GObject *object)
 {
 	EvAttachment *attachment = EV_ATTACHMENT (object);
+	EvAttachmentPrivate *priv = GET_PRIVATE (attachment);
 
-	if (attachment->priv->name) {
-		g_free (attachment->priv->name);
-		attachment->priv->name = NULL;
+	if (priv->name) {
+		g_free (priv->name);
+		priv->name = NULL;
 	}
 
-	if (attachment->priv->description) {
-		g_free (attachment->priv->description);
-		attachment->priv->description = NULL;
+	if (priv->description) {
+		g_free (priv->description);
+		priv->description = NULL;
 	}
 
-	if (attachment->priv->data) {
-		g_free (attachment->priv->data);
-		attachment->priv->data = NULL;
+	if (priv->data) {
+		g_free (priv->data);
+		priv->data = NULL;
 	}
 
-	if (attachment->priv->mime_type) {
-		g_free (attachment->priv->mime_type);
-		attachment->priv->mime_type = NULL;
+	if (priv->mime_type) {
+		g_free (priv->mime_type);
+		priv->mime_type = NULL;
 	}
 
-	if (attachment->priv->app) {
-		g_object_unref (attachment->priv->app);
-		attachment->priv->app = NULL;
+	if (priv->app) {
+		g_object_unref (priv->app);
+		priv->app = NULL;
 	}
 
-	if (attachment->priv->tmp_file) {
-		ev_tmp_file_unlink (attachment->priv->tmp_file);
-		g_object_unref (attachment->priv->tmp_file);
-		attachment->priv->tmp_file = NULL;
+	if (priv->tmp_file) {
+		ev_tmp_file_unlink (priv->tmp_file);
+		g_object_unref (priv->tmp_file);
+		priv->tmp_file = NULL;
 	}
 
 	G_OBJECT_CLASS (ev_attachment_parent_class)->finalize (object);
@@ -111,28 +111,29 @@ ev_attachment_set_property (GObject      *object,
 			    GParamSpec   *param_spec)
 {
 	EvAttachment *attachment = EV_ATTACHMENT (object);
+	EvAttachmentPrivate *priv = GET_PRIVATE (attachment);
 
 	switch (prop_id) {
 	case PROP_NAME:
-		attachment->priv->name = g_value_dup_string (value);
+		priv->name = g_value_dup_string (value);
 		break;
 	case PROP_DESCRIPTION:
-		attachment->priv->description = g_value_dup_string (value);
+		priv->description = g_value_dup_string (value);
 		break;
 	case PROP_MTIME:
-		attachment->priv->mtime = g_value_get_ulong (value);
+		priv->mtime = g_value_get_ulong (value);
 		break;
 	case PROP_CTIME:
-		attachment->priv->ctime = g_value_get_ulong (value);
+		priv->ctime = g_value_get_ulong (value);
 		break;
 	case PROP_SIZE:
-		attachment->priv->size = g_value_get_uint (value);
+		priv->size = g_value_get_uint (value);
 		break;
 	case PROP_DATA:
-		attachment->priv->data = g_value_get_pointer (value);
-		attachment->priv->mime_type = g_content_type_guess (attachment->priv->name,
-								    (guchar *) attachment->priv->data,
-								    attachment->priv->size,
+		priv->data = g_value_get_pointer (value);
+		priv->mime_type = g_content_type_guess (priv->name,
+								    (guchar *) priv->data,
+								    priv->size,
 								    NULL);
 		break;
 	default:
@@ -151,8 +152,6 @@ ev_attachment_class_init (EvAttachmentClass *klass)
 	g_object_class = G_OBJECT_CLASS (klass);
 
 	g_object_class->set_property = ev_attachment_set_property;
-
-	g_type_class_add_private (g_object_class, sizeof (EvAttachmentPrivate));
 
 	/* Properties */
 	g_object_class_install_property (g_object_class,
@@ -215,14 +214,14 @@ ev_attachment_class_init (EvAttachmentClass *klass)
 static void
 ev_attachment_init (EvAttachment *attachment)
 {
-	attachment->priv = EV_ATTACHMENT_GET_PRIVATE (attachment);
+	EvAttachmentPrivate *priv = GET_PRIVATE (attachment);
 
-	attachment->priv->name = NULL;
-	attachment->priv->description = NULL;
-	attachment->priv->data = NULL;
-	attachment->priv->mime_type = NULL;
+	priv->name = NULL;
+	priv->description = NULL;
+	priv->data = NULL;
+	priv->mime_type = NULL;
 
-	attachment->priv->tmp_file = NULL;
+	priv->tmp_file = NULL;
 }
 
 EvAttachment *
@@ -250,41 +249,61 @@ ev_attachment_new (const gchar *name,
 const gchar *
 ev_attachment_get_name (EvAttachment *attachment)
 {
+	EvAttachmentPrivate *priv;
+
 	g_return_val_if_fail (EV_IS_ATTACHMENT (attachment), NULL);
 
-	return attachment->priv->name;
+	priv = GET_PRIVATE (attachment);
+
+	return priv->name;
 }
 
 const gchar *
 ev_attachment_get_description (EvAttachment *attachment)
 {
+	EvAttachmentPrivate *priv;
+
 	g_return_val_if_fail (EV_IS_ATTACHMENT (attachment), NULL);
 
-	return attachment->priv->description;
+	priv = GET_PRIVATE (attachment);
+
+	return priv->description;
 }
 
 GTime
 ev_attachment_get_modification_date (EvAttachment *attachment)
 {
-	g_return_val_if_fail (EV_IS_ATTACHMENT (attachment), 0);
+	EvAttachmentPrivate *priv;
 
-	return attachment->priv->mtime;
+	g_return_val_if_fail (EV_IS_ATTACHMENT (attachment), NULL);
+
+	priv = GET_PRIVATE (attachment);
+
+	return priv->mtime;
 }
 
 GTime
 ev_attachment_get_creation_date (EvAttachment *attachment)
 {
-	g_return_val_if_fail (EV_IS_ATTACHMENT (attachment), 0);
+	EvAttachmentPrivate *priv;
 
-	return attachment->priv->ctime;
+	g_return_val_if_fail (EV_IS_ATTACHMENT (attachment), NULL);
+
+	priv = GET_PRIVATE (attachment);
+
+	return priv->ctime;
 }
 
 const gchar *
 ev_attachment_get_mime_type (EvAttachment *attachment)
 {
+	EvAttachmentPrivate *priv;
+
 	g_return_val_if_fail (EV_IS_ATTACHMENT (attachment), NULL);
 
-	return attachment->priv->mime_type;
+	priv = GET_PRIVATE (attachment);
+
+	return priv->mime_type;
 }
 
 gboolean
@@ -295,6 +314,7 @@ ev_attachment_save (EvAttachment *attachment,
 	GFileOutputStream *output_stream;
 	GError *ioerror = NULL;
 	gssize  written_bytes;
+	EvAttachmentPrivate *priv = GET_PRIVATE (attachment);
 
 	g_return_val_if_fail (EV_IS_ATTACHMENT (attachment), FALSE);
 	g_return_val_if_fail (G_IS_FILE (file), FALSE);
@@ -318,8 +338,8 @@ ev_attachment_save (EvAttachment *attachment,
 	}
 	
 	written_bytes = g_output_stream_write (G_OUTPUT_STREAM (output_stream),
-					       attachment->priv->data,
-					       attachment->priv->size,
+					       priv->data,
+					       priv->size,
 					       NULL, &ioerror);
 	if (written_bytes == -1) {
 		char *uri;
@@ -356,18 +376,19 @@ ev_attachment_launch_app (EvAttachment *attachment,
 	GdkAppLaunchContext *context;
         GdkDisplay          *display;
 	GError              *ioerror = NULL;
+	EvAttachmentPrivate *priv = GET_PRIVATE (attachment);
 
-	g_assert (G_IS_FILE (attachment->priv->tmp_file));
-	g_assert (G_IS_APP_INFO (attachment->priv->app));
+	g_assert (G_IS_FILE (priv->tmp_file));
+	g_assert (G_IS_APP_INFO (priv->app));
 
-	files = g_list_prepend (files, attachment->priv->tmp_file);
+	files = g_list_prepend (files, priv->tmp_file);
 
         display = screen ? gdk_screen_get_display (screen) : gdk_display_get_default ();
 	context = gdk_display_get_app_launch_context (display);
 	gdk_app_launch_context_set_screen (context, screen);
 	gdk_app_launch_context_set_timestamp (context, timestamp);
 
-	result = g_app_info_launch (attachment->priv->app, files,
+	result = g_app_info_launch (priv->app, files,
 				    G_APP_LAUNCH_CONTEXT (context),
                                     &ioerror);
         g_object_unref (context);
@@ -377,7 +398,7 @@ ev_attachment_launch_app (EvAttachment *attachment,
 			     EV_ATTACHMENT_ERROR,
 			     (gint) result,
 			     _("Couldn’t open attachment “%s”: %s"),
-			     attachment->priv->name,
+			     priv->name,
 			     ioerror->message);
 
 		g_list_free (files);
@@ -387,7 +408,7 @@ ev_attachment_launch_app (EvAttachment *attachment,
 	}
 
 	g_list_free (files);
-	
+
 	return TRUE;
 }
 
@@ -399,25 +420,28 @@ ev_attachment_open (EvAttachment *attachment,
 {
 	GAppInfo *app_info;
 	gboolean  retval = FALSE;
+	EvAttachmentPrivate *priv;
 
 	g_return_val_if_fail (EV_IS_ATTACHMENT (attachment), FALSE);
-	
-	if (!attachment->priv->app) {
-		app_info = g_app_info_get_default_for_type (attachment->priv->mime_type, FALSE);
-		attachment->priv->app = app_info;
+
+	priv = GET_PRIVATE (attachment);
+
+	if (!priv->app) {
+		app_info = g_app_info_get_default_for_type (priv->mime_type, FALSE);
+		priv->app = app_info;
 	}
 
-	if (!attachment->priv->app) {
+	if (!priv->app) {
 		g_set_error (error,
 			     EV_ATTACHMENT_ERROR,
 			     0,
 			     _("Couldn’t open attachment “%s”"),
-			     attachment->priv->name);
+			     priv->name);
 		
 		return FALSE;
 	}
 
-	if (attachment->priv->tmp_file) {
+	if (priv->tmp_file) {
 		retval = ev_attachment_launch_app (attachment, screen,
 						   timestamp, error);
 	} else {
@@ -440,9 +464,9 @@ ev_attachment_open (EvAttachment *attachment,
                 g_free (basename);
 
 		if (file != NULL && ev_attachment_save (attachment, file, error)) {
-			if (attachment->priv->tmp_file)
-				g_object_unref (attachment->priv->tmp_file);
-			attachment->priv->tmp_file = g_object_ref (file);
+			if (priv->tmp_file)
+				g_object_unref (priv->tmp_file);
+			priv->tmp_file = g_object_ref (file);
 
 			retval = ev_attachment_launch_app (attachment, screen,
 							   timestamp, error);

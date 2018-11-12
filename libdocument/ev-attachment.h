@@ -31,7 +31,6 @@ G_BEGIN_DECLS
 
 typedef struct _EvAttachment        EvAttachment;
 typedef struct _EvAttachmentClass   EvAttachmentClass;
-typedef struct _EvAttachmentPrivate EvAttachmentPrivate;
 
 #define EV_TYPE_ATTACHMENT              (ev_attachment_get_type())
 #define EV_ATTACHMENT(object)           (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_ATTACHMENT, EvAttachment))
@@ -44,8 +43,6 @@ typedef struct _EvAttachmentPrivate EvAttachmentPrivate;
 
 struct _EvAttachment {
 	GObject base_instance;
-	
-	EvAttachmentPrivate *priv;
 };
 
 struct _EvAttachmentClass {
