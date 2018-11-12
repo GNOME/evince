@@ -29,37 +29,7 @@
 G_BEGIN_DECLS
 
 #define GD_TYPE_TWO_LINES_RENDERER gd_two_lines_renderer_get_type()
-
-#define GD_TWO_LINES_RENDERER(obj) \
-  (G_TYPE_CHECK_INSTANCE_CAST ((obj), \
-   GD_TYPE_TWO_LINES_RENDERER, GdTwoLinesRenderer))
-
-#define GD_TWO_LINES_RENDERER_CLASS(klass) \
-  (G_TYPE_CHECK_CLASS_CAST ((klass), \
-   GD_TYPE_TWO_LINES_RENDERER, GdTwoLinesRendererClass))
-
-#define GD_IS_TWO_LINES_RENDERER(obj) \
-  (G_TYPE_CHECK_INSTANCE_TYPE ((obj), \
-   GD_TYPE_TWO_LINES_RENDERER))
-
-#define GD_IS_TWO_LINES_RENDERER_CLASS(klass) \
-  (G_TYPE_CHECK_CLASS_TYPE ((klass), \
-   GD_TYPE_TWO_LINES_RENDERER))
-
-#define GD_TWO_LINES_RENDERER_GET_CLASS(obj) \
-  (G_TYPE_INSTANCE_GET_CLASS ((obj), \
-   GD_TYPE_TWO_LINES_RENDERER, GdTwoLinesRendererClass))
-
-typedef struct _GdTwoLinesRenderer GdTwoLinesRenderer;
-typedef struct _GdTwoLinesRendererClass GdTwoLinesRendererClass;
-typedef struct _GdTwoLinesRendererPrivate GdTwoLinesRendererPrivate;
-
-struct _GdTwoLinesRenderer
-{
-  GtkCellRendererText parent;
-
-  GdTwoLinesRendererPrivate *priv;
-};
+G_DECLARE_DERIVABLE_TYPE (GdTwoLinesRenderer, gd_two_lines_renderer, GD, TWO_LINES_RENDERER, GtkCellRendererText)
 
 struct _GdTwoLinesRendererClass
 {
