@@ -1281,6 +1281,31 @@ setup_model_from_metadata (EvWindow *window)
 }
 
 static void
+monitor_get_dimesions (EvWindow *ev_window,
+                       gint     *width,
+                       gint     *height)
+{
+	GdkDisplay  *display;
+	GdkWindow   *gdk_window;
+	GdkMonitor  *monitor;
+	GdkRectangle geometry;
+
+	*width = 0;
+	*height = 0;
+
+	display = gtk_widget_get_display (GTK_WIDGET (ev_window));
+	gdk_window = gtk_widget_get_window (GTK_WIDGET (ev_window));
+
+	if (gdk_window) {
+		monitor = gdk_display_get_monitor_at_window (display,
+							     gdk_window);
+		gdk_monitor_get_workarea (monitor, &geometry);
+		*width = geometry.width;
+		*height = geometry.height;
+	}
+}
+
+static void
 setup_document_from_metadata (EvWindow *window)
 {
 	gint    page, n_pages;
@@ -1320,9 +1345,10 @@ setup_document_from_metadata (EvWindow *window)
 	if (width_ratio > 0. && height_ratio > 0.) {
 		gdouble    document_width;
 		gdouble    document_height;
-		GdkScreen *screen;
 		gint       request_width;
 		gint       request_height;
+		gint       monitor_width;
+		gint       monitor_height;
 
 		ev_document_get_max_page_size (priv->document,
 					       &document_width, &document_height);
@@ -1330,10 +1356,10 @@ setup_document_from_metadata (EvWindow *window)
 		request_width = (gint)(width_ratio * document_width + 0.5);
 		request_height = (gint)(height_ratio * document_height + 0.5);
 
-		screen = gtk_window_get_screen (GTK_WINDOW (window));
-		if (screen) {
-			request_width = MIN (request_width, gdk_screen_get_width (screen));
-			request_height = MIN (request_height, gdk_screen_get_height (screen));
+		monitor_get_dimesions (window, &monitor_width, &monitor_height);
+		if (monitor_width > 0 && monitor_height > 0) {
+			request_width = MIN (request_width, monitor_width);
+			request_height = MIN (request_height, monitor_height);
 		}
 
 		if (request_width > 0 && request_height > 0) {
