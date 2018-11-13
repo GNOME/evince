@@ -81,7 +81,7 @@ ev_toolbar_set_button_action (EvToolbar   *ev_toolbar,
 {
         gtk_actionable_set_action_name (GTK_ACTIONABLE (button), action_name);
         gtk_button_set_label (button, NULL);
-        gtk_button_set_focus_on_click (button, FALSE);
+        gtk_widget_set_focus_on_click (GTK_WIDGET (button), FALSE);
         if (tooltip)
                 gtk_widget_set_tooltip_text (GTK_WIDGET (button), tooltip);
 }
