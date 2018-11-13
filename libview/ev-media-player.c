@@ -414,7 +414,7 @@ ev_media_player_setup_media_controls (EvMediaPlayer *player)
                               gtk_image_new_from_icon_name ("media-playback-start-symbolic",
                                                             GTK_ICON_SIZE_MENU));
         gtk_button_set_label(GTK_BUTTON (player->play_button), NULL);
-        gtk_button_set_focus_on_click (GTK_BUTTON (player->play_button), FALSE);
+        gtk_widget_set_focus_on_click (player->play_button, FALSE);
 
         provider = gtk_css_provider_new ();
         gtk_css_provider_load_from_data (provider, "#ev-media-player-play-button { padding: 0px 8px 0px 8px; }", -1, NULL);
