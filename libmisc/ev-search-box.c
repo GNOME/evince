@@ -43,7 +43,7 @@ enum
         PROP_OPTIONS
 };
 
-struct _EvSearchBoxPrivate {
+typedef struct {
         EvDocumentModel *model;
         EvJob           *job;
         EvFindOptions    options;
@@ -54,9 +54,11 @@ struct _EvSearchBoxPrivate {
         GtkWidget       *prev_button;
 
         guint            pages_searched;
-};
+} EvSearchBoxPrivate;
 
-G_DEFINE_TYPE (EvSearchBox, ev_search_box, GTK_TYPE_BOX)
+G_DEFINE_TYPE_WITH_PRIVATE (EvSearchBox, ev_search_box, GTK_TYPE_BOX)
+
+#define GET_PRIVATE(o) ev_search_box_get_instance_private(o)
 
 static guint signals[LAST_SIGNAL] = { 0 };
 
@@ -65,7 +67,7 @@ static guint signals[LAST_SIGNAL] = { 0 };
 static void
 ev_search_box_update_progress (EvSearchBox *box)
 {
-        EvSearchBoxPrivate *priv = box->priv;
+        EvSearchBoxPrivate *priv = GET_PRIVATE (box);
         gdouble fraction;
 
         fraction = priv->job ? MIN ((gdouble)priv->pages_searched / EV_JOB_FIND (priv->job)->n_pages, 1.) : 0.;
@@ -75,7 +77,7 @@ ev_search_box_update_progress (EvSearchBox *box)
 static void
 ev_search_box_clear_job (EvSearchBox *box)
 {
-        EvSearchBoxPrivate *priv = box->priv;
+        EvSearchBoxPrivate *priv = GET_PRIVATE (box);
 
         if (!priv->job)
                 return;
@@ -97,7 +99,7 @@ find_job_finished_cb (EvJobFind   *job,
         ev_search_box_update_progress (box);
 
         if (!ev_job_find_has_results (job)) {
-                EvSearchBoxPrivate *priv = box->priv;
+                EvSearchBoxPrivate *priv = GET_PRIVATE (box);
 
                 gtk_style_context_add_class (gtk_widget_get_style_context (priv->entry), GTK_STYLE_CLASS_ERROR);
 
@@ -141,7 +143,7 @@ find_job_updated_cb (EvJobFind   *job,
                      gint         page,
                      EvSearchBox *box)
 {
-        EvSearchBoxPrivate *priv = box->priv;
+        EvSearchBoxPrivate *priv = GET_PRIVATE (box);
 
         priv->pages_searched++;
 
@@ -165,7 +167,7 @@ search_changed_cb (GtkSearchEntry *entry,
                    EvSearchBox    *box)
 {
         const char *search_string;
-        EvSearchBoxPrivate *priv = box->priv;
+        EvSearchBoxPrivate *priv = GET_PRIVATE (box);
 
         ev_search_box_clear_job (box);
         priv->pages_searched = 0;
@@ -226,7 +228,7 @@ static void
 ev_search_box_set_supported_options (EvSearchBox  *box,
                                      EvFindOptions options)
 {
-        EvSearchBoxPrivate *priv = box->priv;
+        EvSearchBoxPrivate *priv = GET_PRIVATE (box);
         gboolean            enable_search_options;
 
         if (priv->supported_options == options)
@@ -267,7 +269,7 @@ static void
 ev_search_box_set_options (EvSearchBox  *box,
                            EvFindOptions options)
 {
-        EvSearchBoxPrivate *priv = box->priv;
+        EvSearchBoxPrivate *priv = GET_PRIVATE (box);
 
         if (priv->options == options)
                 return;
@@ -280,7 +282,8 @@ static void
 whole_words_only_toggled_cb (GtkCheckMenuItem *menu_item,
                              EvSearchBox      *box)
 {
-        EvFindOptions options = box->priv->options;
+        EvSearchBoxPrivate *priv = GET_PRIVATE (box);
+        EvFindOptions options = priv->options;
 
         if (gtk_check_menu_item_get_active (menu_item))
                 options |= EV_FIND_WHOLE_WORDS_ONLY;
@@ -293,7 +296,8 @@ static void
 case_sensitive_toggled_cb (GtkCheckMenuItem *menu_item,
                            EvSearchBox      *box)
 {
-        EvFindOptions options = box->priv->options;
+        EvSearchBoxPrivate *priv = GET_PRIVATE (box);
+        EvFindOptions options = priv->options;
 
         if (gtk_check_menu_item_get_active (menu_item))
                 options |= EV_FIND_CASE_SENSITIVE;
@@ -306,7 +310,7 @@ static void
 ev_search_box_entry_populate_popup (EvSearchBox *box,
                                     GtkWidget   *menu)
 {
-        EvSearchBoxPrivate *priv = box->priv;
+        EvSearchBoxPrivate *priv = GET_PRIVATE (box);
 
         if (priv->supported_options & EV_FIND_WHOLE_WORDS_ONLY) {
                 GtkWidget *menu_item;
@@ -364,7 +368,7 @@ entry_populate_popup_cb (GtkEntry    *entry,
                          GtkMenu     *menu,
                          EvSearchBox *box)
 {
-        EvSearchBoxPrivate *priv = box->priv;
+        EvSearchBoxPrivate *priv = GET_PRIVATE (box);
         GtkWidget          *separator;
 
         if (priv->supported_options == EV_FIND_DEFAULT)
@@ -401,10 +405,11 @@ static void
 ev_search_box_finalize (GObject *object)
 {
         EvSearchBox *box = EV_SEARCH_BOX (object);
+        EvSearchBoxPrivate *priv = GET_PRIVATE (box);
 
-        if (box->priv->model) {
-                g_object_remove_weak_pointer (G_OBJECT (box->priv->model),
-                                              (gpointer)&box->priv->model);
+        if (priv->model) {
+                g_object_remove_weak_pointer (G_OBJECT (priv->model),
+                                              (gpointer)&priv->model);
         }
 
         G_OBJECT_CLASS (ev_search_box_parent_class)->finalize (object);
@@ -427,10 +432,11 @@ ev_search_box_set_property (GObject      *object,
                              GParamSpec   *pspec)
 {
         EvSearchBox *box = EV_SEARCH_BOX (object);
+        EvSearchBoxPrivate *priv = GET_PRIVATE (box);
 
         switch (prop_id) {
         case PROP_DOCUMENT_MODEL:
-                box->priv->model = g_value_get_object (value);
+                priv->model = g_value_get_object (value);
                 break;
         default:
                 G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -444,10 +450,11 @@ ev_search_box_get_property (GObject    *object,
                             GParamSpec *pspec)
 {
         EvSearchBox *box = EV_SEARCH_BOX (object);
+        EvSearchBoxPrivate *priv = GET_PRIVATE (box);
 
         switch (prop_id) {
         case PROP_OPTIONS:
-                g_value_set_flags (value, box->priv->options);
+                g_value_set_flags (value, priv->options);
                 break;
         default:
                 G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -458,14 +465,15 @@ static void
 ev_search_box_constructed (GObject *object)
 {
         EvSearchBox *box = EV_SEARCH_BOX (object);
+        EvSearchBoxPrivate *priv = GET_PRIVATE (box);
 
         G_OBJECT_CLASS (ev_search_box_parent_class)->constructed (object);
 
-        g_object_add_weak_pointer (G_OBJECT (box->priv->model),
-                                   (gpointer)&box->priv->model);
+        g_object_add_weak_pointer (G_OBJECT (priv->model),
+                                   (gpointer)&priv->model);
 
-        ev_search_box_setup_document (box, ev_document_model_get_document (box->priv->model));
-        g_signal_connect_object (box->priv->model, "notify::document",
+        ev_search_box_setup_document (box, ev_document_model_get_document (priv->model));
+        g_signal_connect_object (priv->model, "notify::document",
                                  G_CALLBACK (document_changed_cb),
                                  box, 0);
 }
@@ -474,8 +482,9 @@ static void
 ev_search_box_grab_focus (GtkWidget *widget)
 {
         EvSearchBox *box = EV_SEARCH_BOX (widget);
+        EvSearchBoxPrivate *priv = GET_PRIVATE (box);
 
-        gtk_widget_grab_focus (box->priv->entry);
+        gtk_widget_grab_focus (priv->entry);
 }
 
 static void
@@ -558,8 +567,6 @@ ev_search_box_class_init (EvSearchBoxClass *klass)
                               g_cclosure_marshal_VOID__VOID,
                               G_TYPE_NONE, 0);
 
-        g_type_class_add_private (object_class, sizeof (EvSearchBoxPrivate));
-
         binding_set = gtk_binding_set_by_class (klass);
         gtk_binding_entry_add_signal (binding_set, GDK_KEY_Return, GDK_SHIFT_MASK,
                                       "previous", 0);
@@ -576,11 +583,8 @@ ev_search_box_class_init (EvSearchBoxClass *klass)
 static void
 ev_search_box_init (EvSearchBox *box)
 {
-        EvSearchBoxPrivate *priv;
         GtkStyleContext    *style_context;
-
-        box->priv = G_TYPE_INSTANCE_GET_PRIVATE (box, EV_TYPE_SEARCH_BOX, EvSearchBoxPrivate);
-        priv = box->priv;
+        EvSearchBoxPrivate *priv = GET_PRIVATE (box);
 
         gtk_orientable_set_orientation (GTK_ORIENTABLE (box), GTK_ORIENTATION_HORIZONTAL);
         style_context = gtk_widget_get_style_context (GTK_WIDGET (box));
@@ -643,23 +647,35 @@ ev_search_box_new (EvDocumentModel *model)
 GtkSearchEntry *
 ev_search_box_get_entry (EvSearchBox *box)
 {
+        EvSearchBoxPrivate *priv;
+
         g_return_val_if_fail (EV_IS_SEARCH_BOX (box), NULL);
 
-        return GTK_SEARCH_ENTRY (box->priv->entry);
+	priv = GET_PRIVATE (box);
+
+        return GTK_SEARCH_ENTRY (priv->entry);
 }
 
 gboolean
 ev_search_box_has_results (EvSearchBox *box)
 {
+        EvSearchBoxPrivate *priv;
+
         g_return_val_if_fail (EV_IS_SEARCH_BOX (box), FALSE);
 
-        return gtk_widget_get_sensitive (box->priv->next_button);
+	priv = GET_PRIVATE (box);
+
+        return gtk_widget_get_sensitive (priv->next_button);
 }
 
 void
 ev_search_box_restart (EvSearchBox *box)
 {
+        EvSearchBoxPrivate *priv;
+
         g_return_if_fail (EV_IS_SEARCH_BOX (box));
 
-        search_changed_cb (GTK_SEARCH_ENTRY (box->priv->entry), box);
+	priv = GET_PRIVATE (box);
+
+        search_changed_cb (GTK_SEARCH_ENTRY (priv->entry), box);
 }

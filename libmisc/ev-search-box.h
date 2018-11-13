@@ -36,12 +36,9 @@ G_BEGIN_DECLS
 
 typedef struct _EvSearchBox        EvSearchBox;
 typedef struct _EvSearchBoxClass   EvSearchBoxClass;
-typedef struct _EvSearchBoxPrivate EvSearchBoxPrivate;
 
 struct _EvSearchBox {
         GtkBox parent;
-
-        EvSearchBoxPrivate *priv;
 };
 
 struct _EvSearchBoxClass {
