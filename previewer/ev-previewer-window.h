@@ -39,14 +39,25 @@ typedef struct _EvPreviewerWindow      EvPreviewerWindow;
 typedef struct _EvPreviewerWindowClass EvPreviewerWindowClass;
 
 GType              ev_previewer_window_get_type   (void) G_GNUC_CONST;
-EvPreviewerWindow *ev_previewer_window_new        (EvDocumentModel   *model);
+EvPreviewerWindow *ev_previewer_window_new        (void);
 
+/* FIXME: This one was needed for ev-previewer-toolbar */
 EvDocumentModel   *ev_previewer_window_get_document_model (EvPreviewerWindow *window);
 
-void       ev_previewer_window_set_print_settings (EvPreviewerWindow *window,
-						   const gchar       *print_settings);
-void       ev_previewer_window_set_source_file    (EvPreviewerWindow *window,
-						   const gchar       *source_file);
+void       ev_previewer_window_set_job                (EvPreviewerWindow *window,
+                                                       EvJob             *job);
+gboolean   ev_previewer_window_set_print_settings     (EvPreviewerWindow *window,
+                                                       const gchar       *print_settings,
+                                                       GError           **error);
+gboolean   ev_previewer_window_set_print_settings_fd  (EvPreviewerWindow *window,
+                                                       int                fd,
+                                                       GError           **error);
+void       ev_previewer_window_set_source_file        (EvPreviewerWindow *window,
+                                                       const gchar       *source_file);
+void       ev_previewer_window_set_source_fd          (EvPreviewerWindow *window,
+                                                       int                fd);
+void       ev_previewer_window_take_source_fd         (EvPreviewerWindow *window,
+                                                       int                fd);
 
 G_END_DECLS
 
