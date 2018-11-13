@@ -37,12 +37,9 @@ G_BEGIN_DECLS
 
 typedef struct _EvFindSidebar EvFindSidebar;
 typedef struct _EvFindSidebarClass EvFindSidebarClass;
-typedef struct _EvFindSidebarPrivate EvFindSidebarPrivate;
 
 struct _EvFindSidebar {
         GtkBox base_instance;
-
-        EvFindSidebarPrivate *priv;
 };
 
 struct _EvFindSidebarClass {

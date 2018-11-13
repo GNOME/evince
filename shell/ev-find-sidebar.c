@@ -26,7 +26,7 @@
 #include "ev-find-sidebar.h"
 #include <string.h>
 
-struct _EvFindSidebarPrivate {
+typedef struct {
         GtkWidget *tree_view;
 
         guint selection_id;
@@ -39,7 +39,7 @@ struct _EvFindSidebarPrivate {
         gint       job_current_page;
         gint       current_page;
         gint       insert_position;
-};
+} EvFindSidebarPrivate;
 
 enum {
         TEXT_COLUMN,
@@ -57,12 +57,14 @@ enum {
 
 static guint signals[N_SIGNALS];
 
-G_DEFINE_TYPE (EvFindSidebar, ev_find_sidebar, GTK_TYPE_BOX)
+G_DEFINE_TYPE_WITH_PRIVATE (EvFindSidebar, ev_find_sidebar, GTK_TYPE_BOX)
+
+#define GET_PRIVATE(o) ev_find_sidebar_get_instance_private (o)
 
 static void
 ev_find_sidebar_cancel (EvFindSidebar *sidebar)
 {
-        EvFindSidebarPrivate *priv = sidebar->priv;
+        EvFindSidebarPrivate *priv = GET_PRIVATE (sidebar);
 
         if (priv->process_matches_idle_id > 0) {
                 g_source_remove (priv->process_matches_idle_id);
@@ -75,9 +77,10 @@ static void
 ev_find_sidebar_dispose (GObject *object)
 {
         EvFindSidebar *sidebar = EV_FIND_SIDEBAR (object);
+        EvFindSidebarPrivate *priv = GET_PRIVATE (sidebar);
 
         ev_find_sidebar_cancel (sidebar);
-        g_clear_pointer (&sidebar->priv->highlighted_result, (GDestroyNotify)gtk_tree_path_free);
+        g_clear_pointer (&(priv->highlighted_result), gtk_tree_path_free);
 
         G_OBJECT_CLASS (ev_find_sidebar_parent_class)->dispose (object);
 }
@@ -98,8 +101,6 @@ ev_find_sidebar_class_init (EvFindSidebarClass *find_sidebar_class)
                               G_TYPE_NONE, 2,
                               G_TYPE_INT,
                               G_TYPE_INT);
-
-        g_type_class_add_private (g_object_class, sizeof (EvFindSidebarPrivate));
 }
 
 static void
@@ -107,11 +108,10 @@ ev_find_sidebar_activate_result_at_iter (EvFindSidebar *sidebar,
                                          GtkTreeModel  *model,
                                          GtkTreeIter   *iter)
 {
-        EvFindSidebarPrivate *priv;
+        EvFindSidebarPrivate *priv = GET_PRIVATE (sidebar);
         gint                  page;
         gint                  result;
 
-        priv = sidebar->priv;
 
         if (priv->highlighted_result)
                 gtk_tree_path_free (priv->highlighted_result);
@@ -140,12 +140,10 @@ sidebar_tree_button_press_cb (GtkTreeView    *view,
                               GdkEventButton *event,
                               EvFindSidebar  *sidebar)
 {
-        EvFindSidebarPrivate *priv;
+        EvFindSidebarPrivate *priv = GET_PRIVATE (sidebar);
         GtkTreeModel         *model;
         GtkTreePath          *path;
         GtkTreeIter           iter;
-
-        priv = sidebar->priv;
 
         gtk_tree_view_get_path_at_pos (view, event->x, event->y, &path,
                                        NULL, NULL, NULL);
@@ -173,10 +171,11 @@ sidebar_tree_button_press_cb (GtkTreeView    *view,
 static void
 ev_find_sidebar_reset_model (EvFindSidebar *sidebar)
 {
+        EvFindSidebarPrivate *priv = GET_PRIVATE (sidebar);
         GtkListStore *model;
 
         model = gtk_list_store_new (N_COLUMNS, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_INT, G_TYPE_INT);
-        gtk_tree_view_set_model (GTK_TREE_VIEW (sidebar->priv->tree_view),
+        gtk_tree_view_set_model (GTK_TREE_VIEW (priv->tree_view),
                                  GTK_TREE_MODEL (model));
         g_object_unref (model);
 }
@@ -190,8 +189,7 @@ ev_find_sidebar_init (EvFindSidebar *sidebar)
         GtkCellRenderer      *renderer;
         GtkTreeSelection     *selection;
 
-        sidebar->priv = G_TYPE_INSTANCE_GET_PRIVATE (sidebar, EV_TYPE_FIND_SIDEBAR, EvFindSidebarPrivate);
-        priv = sidebar->priv;
+        priv = GET_PRIVATE (sidebar);
 
         swindow = gtk_scrolled_window_new (NULL, NULL);
         gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (swindow),
@@ -248,7 +246,7 @@ ev_find_sidebar_new (void)
 static void
 ev_find_sidebar_select_highlighted_result (EvFindSidebar *sidebar)
 {
-        EvFindSidebarPrivate *priv = sidebar->priv;
+        EvFindSidebarPrivate *priv = GET_PRIVATE (sidebar);
         GtkTreeSelection     *selection;
 
         selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (priv->tree_view));
@@ -262,7 +260,7 @@ static void
 ev_find_sidebar_highlight_first_match_of_page (EvFindSidebar *sidebar,
                                                gint           page)
 {
-        EvFindSidebarPrivate *priv = sidebar->priv;
+        EvFindSidebarPrivate *priv = GET_PRIVATE (sidebar);
         gint                  index = 0;
         gint                  i;
 
@@ -439,7 +437,7 @@ get_match_offset (EvRectangle *areas,
 static gboolean
 process_matches_idle (EvFindSidebar *sidebar)
 {
-        EvFindSidebarPrivate *priv = sidebar->priv;
+        EvFindSidebarPrivate *priv = GET_PRIVATE (sidebar);
         GtkTreeModel         *model;
         gint                  current_page;
         EvDocument           *document;
@@ -543,7 +541,9 @@ find_job_updated_cb (EvJobFind     *job,
                      gint           page,
                      EvFindSidebar *sidebar)
 {
-        sidebar->priv->job_current_page = page;
+        EvFindSidebarPrivate *priv = GET_PRIVATE (sidebar);
+
+        priv->job_current_page = page;
 }
 
 static void
@@ -557,7 +557,7 @@ void
 ev_find_sidebar_start (EvFindSidebar *sidebar,
                        EvJobFind     *job)
 {
-        EvFindSidebarPrivate *priv = sidebar->priv;
+        EvFindSidebarPrivate *priv = GET_PRIVATE (sidebar);
 
         if (priv->job == job)
                 return;
@@ -580,7 +580,7 @@ void
 ev_find_sidebar_restart (EvFindSidebar *sidebar,
                          gint           page)
 {
-        EvFindSidebarPrivate *priv = sidebar->priv;
+        EvFindSidebarPrivate *priv = GET_PRIVATE (sidebar);
         gint                  first_match_page = -1;
         gint                  i;
 
@@ -608,7 +608,7 @@ ev_find_sidebar_restart (EvFindSidebar *sidebar,
 void
 ev_find_sidebar_update (EvFindSidebar *sidebar)
 {
-        EvFindSidebarPrivate *priv = sidebar->priv;
+        EvFindSidebarPrivate *priv = GET_PRIVATE (sidebar);
 
         if (!priv->job)
                 return;
@@ -620,7 +620,7 @@ ev_find_sidebar_update (EvFindSidebar *sidebar)
 void
 ev_find_sidebar_clear (EvFindSidebar *sidebar)
 {
-        EvFindSidebarPrivate *priv = sidebar->priv;
+        EvFindSidebarPrivate *priv = GET_PRIVATE (sidebar);
 
         ev_find_sidebar_cancel (sidebar);
 
@@ -628,13 +628,13 @@ ev_find_sidebar_clear (EvFindSidebar *sidebar)
          * clearing the model that would emit row-deleted signal for every row in the model
          */
         ev_find_sidebar_reset_model (sidebar);
-        g_clear_pointer (&priv->highlighted_result, (GDestroyNotify)gtk_tree_path_free);
+        g_clear_pointer (&priv->highlighted_result, gtk_tree_path_free);
 }
 
 void
 ev_find_sidebar_previous (EvFindSidebar *sidebar)
 {
-        EvFindSidebarPrivate *priv = sidebar->priv;
+        EvFindSidebarPrivate *priv = GET_PRIVATE (sidebar);
 
         if (!priv->highlighted_result)
                 return;
@@ -654,7 +654,7 @@ ev_find_sidebar_previous (EvFindSidebar *sidebar)
 void
 ev_find_sidebar_next (EvFindSidebar *sidebar)
 {
-        EvFindSidebarPrivate *priv = sidebar->priv;
+        EvFindSidebarPrivate *priv = GET_PRIVATE (sidebar);
         GtkTreeModel         *model;
         GtkTreeIter           iter;
 
