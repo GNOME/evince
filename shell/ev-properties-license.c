@@ -107,7 +107,6 @@ ev_properties_license_add_section (EvPropertiesLicense *properties,
 				   GtkWidget           *contents)
 {
 	GtkWidget *title;
-	GtkWidget *alignment;
 	gchar     *markup;
 
 
@@ -120,13 +119,10 @@ ev_properties_license_add_section (EvPropertiesLicense *properties,
 	gtk_box_pack_start (GTK_BOX (properties), title, FALSE, FALSE, 0);
 	gtk_widget_show (title);
 
-	alignment = gtk_alignment_new (0.5, 0.5, 1., 1.);
-	gtk_alignment_set_padding (GTK_ALIGNMENT (alignment), 0, 0, 12, 0);
-	gtk_container_add (GTK_CONTAINER (alignment), contents);
-	gtk_widget_show (contents);
+	g_object_set (G_OBJECT (contents), "margin-left", 12, NULL);
 
-	gtk_box_pack_start (GTK_BOX (properties), alignment, FALSE, TRUE, 0);
-	gtk_widget_show (alignment);
+	gtk_box_pack_start (GTK_BOX (properties), contents, FALSE, TRUE, 0);
+	gtk_widget_show (contents);
 }
 
 void
