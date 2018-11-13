@@ -275,7 +275,7 @@ ev_attachment_get_modification_date (EvAttachment *attachment)
 {
 	EvAttachmentPrivate *priv;
 
-	g_return_val_if_fail (EV_IS_ATTACHMENT (attachment), NULL);
+	g_return_val_if_fail (EV_IS_ATTACHMENT (attachment), 0);
 
 	priv = GET_PRIVATE (attachment);
 
@@ -287,7 +287,7 @@ ev_attachment_get_creation_date (EvAttachment *attachment)
 {
 	EvAttachmentPrivate *priv;
 
-	g_return_val_if_fail (EV_IS_ATTACHMENT (attachment), NULL);
+	g_return_val_if_fail (EV_IS_ATTACHMENT (attachment), 0);
 
 	priv = GET_PRIVATE (attachment);
 
