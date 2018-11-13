@@ -39,7 +39,7 @@ enum
         PROP_WINDOW
 };
 
-struct _EvToolbarPrivate {
+typedef struct {
         EvWindow  *window;
 
         GtkWidget *action_menu_button;
@@ -52,9 +52,11 @@ struct _EvToolbarPrivate {
         GtkWidget *sidebar_button;
 
         EvToolbarMode toolbar_mode;
-};
+} EvToolbarPrivate;
 
-G_DEFINE_TYPE (EvToolbar, ev_toolbar, GTK_TYPE_HEADER_BAR)
+G_DEFINE_TYPE_WITH_PRIVATE (EvToolbar, ev_toolbar, GTK_TYPE_HEADER_BAR)
+
+# define GET_PRIVATE(o) ev_toolbar_get_instance_private (o)
 
 static void
 ev_toolbar_set_property (GObject      *object,
@@ -63,10 +65,11 @@ ev_toolbar_set_property (GObject      *object,
                          GParamSpec   *pspec)
 {
         EvToolbar *ev_toolbar = EV_TOOLBAR (object);
+	EvToolbarPrivate *priv = GET_PRIVATE (ev_toolbar);
 
         switch (prop_id) {
         case PROP_WINDOW:
-                ev_toolbar->priv->window = g_value_get_object (value);
+                priv->window = g_value_get_object (value);
                 break;
         default:
                 G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -150,9 +153,11 @@ ev_toolbar_create_menu_button (EvToolbar   *ev_toolbar,
 
 static void
 zoom_selector_activated (GtkWidget *zoom_action,
-                         EvToolbar *toolbar)
+                         EvToolbar *ev_toolbar)
 {
-        ev_window_focus_view (toolbar->priv->window);
+	EvToolbarPrivate *priv = GET_PRIVATE (ev_toolbar);
+
+        ev_window_focus_view (priv->window);
 }
 
 static void
@@ -181,6 +186,7 @@ static void
 ev_toolbar_constructed (GObject *object)
 {
         EvToolbar      *ev_toolbar = EV_TOOLBAR (object);
+	EvToolbarPrivate *priv = GET_PRIVATE (ev_toolbar);
         GtkBuilder     *builder;
         GtkWidget      *tool_item;
         GtkWidget      *vbox;
@@ -195,14 +201,14 @@ ev_toolbar_constructed (GObject *object)
                                            NULL,
                                            _("Open…"),
                                            _("Open an existing document"));
-        ev_toolbar->priv->open_button = button;
+        priv->open_button = button;
         gtk_container_add (GTK_CONTAINER (ev_toolbar), button);
 
         /* Sidebar */
         button = ev_toolbar_create_toggle_button (ev_toolbar, "win.show-side-pane",
                                                   EV_STOCK_VIEW_SIDEBAR,
                                                   _("Side pane"));
-        ev_toolbar->priv->sidebar_button = button;
+        priv->sidebar_button = button;
         gtk_header_bar_pack_start (GTK_HEADER_BAR (ev_toolbar), button);
 
         /* Page selector */
@@ -210,15 +216,15 @@ ev_toolbar_constructed (GObject *object)
         tool_item = GTK_WIDGET (g_object_new (EV_TYPE_PAGE_ACTION_WIDGET, NULL));
         gtk_widget_set_tooltip_text (tool_item, _("Select page or search in the index"));
         atk_object_set_name (gtk_widget_get_accessible (tool_item), _("Select page"));
-        ev_toolbar->priv->page_selector = tool_item;
+        priv->page_selector = tool_item;
         ev_page_action_widget_set_model (EV_PAGE_ACTION_WIDGET (tool_item),
-                                         ev_window_get_document_model (ev_toolbar->priv->window));
+                                         ev_window_get_document_model (priv->window));
         gtk_header_bar_pack_start (GTK_HEADER_BAR (ev_toolbar), tool_item);
 
         /* Edit Annots */
         button = ev_toolbar_create_toggle_button (ev_toolbar, "win.toggle-edit-annots", "document-edit-symbolic",
                                                   _("Annotate the document"));
-        ev_toolbar->priv->annots_button = button;
+        priv->annots_button = button;
         gtk_header_bar_pack_start (GTK_HEADER_BAR (ev_toolbar), button);
 
         /* Action Menu */
@@ -228,13 +234,13 @@ ev_toolbar_constructed (GObject *object)
         gtk_widget_set_tooltip_text (button, _("File options"));
         atk_object_set_name (gtk_widget_get_accessible (button), _("File options"));
 
-        ev_toolbar->priv->action_menu_button = button;
+        priv->action_menu_button = button;
         gtk_header_bar_pack_end (GTK_HEADER_BAR (ev_toolbar), button);
 
         /* Find */
         button = ev_toolbar_create_toggle_button (ev_toolbar, "win.toggle-find", "edit-find-symbolic",
                                                   NULL);
-        ev_toolbar->priv->find_button = button;
+        priv->find_button = button;
         gtk_header_bar_pack_end (GTK_HEADER_BAR (ev_toolbar), button);
         g_signal_connect (button,
                           "notify::sensitive",
@@ -242,9 +248,9 @@ ev_toolbar_constructed (GObject *object)
                           ev_toolbar);
 
         /* Zoom selector */
-        vbox = ev_zoom_action_new (ev_window_get_document_model (ev_toolbar->priv->window),
+        vbox = ev_zoom_action_new (ev_window_get_document_model (priv->window),
                                    G_MENU (gtk_builder_get_object (builder, "zoom-menu")));
-        ev_toolbar->priv->zoom_action = vbox;
+        priv->zoom_action = vbox;
         gtk_widget_set_tooltip_text (vbox, _("Select or set the zoom level of the document"));
         atk_object_set_name (gtk_widget_get_accessible (vbox), _("Set zoom level"));
         g_signal_connect (vbox, "activated",
@@ -272,15 +278,14 @@ ev_toolbar_class_init (EvToolbarClass *klass)
                                                               G_PARAM_WRITABLE |
                                                               G_PARAM_CONSTRUCT_ONLY |
                                                               G_PARAM_STATIC_STRINGS));
-
-        g_type_class_add_private (g_object_class, sizeof (EvToolbarPrivate));
 }
 
 static void
 ev_toolbar_init (EvToolbar *ev_toolbar)
 {
-        ev_toolbar->priv = G_TYPE_INSTANCE_GET_PRIVATE (ev_toolbar, EV_TYPE_TOOLBAR, EvToolbarPrivate);
-        ev_toolbar->priv->toolbar_mode = EV_TOOLBAR_MODE_NORMAL;
+	EvToolbarPrivate *priv = GET_PRIVATE (ev_toolbar);
+
+        priv->toolbar_mode = EV_TOOLBAR_MODE_NORMAL;
 }
 
 GtkWidget *
@@ -301,13 +306,13 @@ ev_toolbar_has_visible_popups (EvToolbar *ev_toolbar)
 
         g_return_val_if_fail (EV_IS_TOOLBAR (ev_toolbar), FALSE);
 
-        priv = ev_toolbar->priv;
+        priv = GET_PRIVATE (ev_toolbar);
 
         popover = gtk_menu_button_get_popover (GTK_MENU_BUTTON (priv->action_menu_button));
         if (gtk_widget_get_visible (GTK_WIDGET (popover)))
                 return TRUE;
 
-        if (ev_zoom_action_get_popup_shown (EV_ZOOM_ACTION (ev_toolbar->priv->zoom_action)))
+        if (ev_zoom_action_get_popup_shown (EV_ZOOM_ACTION (priv->zoom_action)))
                 return TRUE;
 
         return FALSE;
@@ -316,18 +321,26 @@ ev_toolbar_has_visible_popups (EvToolbar *ev_toolbar)
 void
 ev_toolbar_action_menu_popup (EvToolbar *ev_toolbar)
 {
+	EvToolbarPrivate *priv;
+
         g_return_if_fail (EV_IS_TOOLBAR (ev_toolbar));
 
-        gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (ev_toolbar->priv->action_menu_button),
+        priv = GET_PRIVATE (ev_toolbar);
+
+        gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->action_menu_button),
                                       TRUE);
 }
 
 GtkWidget *
 ev_toolbar_get_page_selector (EvToolbar *ev_toolbar)
 {
+	EvToolbarPrivate *priv;
+
         g_return_val_if_fail (EV_IS_TOOLBAR (ev_toolbar), NULL);
 
-        return ev_toolbar->priv->page_selector;
+        priv = GET_PRIVATE (ev_toolbar);
+
+        return priv->page_selector;
 }
 
 void
@@ -338,7 +351,7 @@ ev_toolbar_set_mode (EvToolbar     *ev_toolbar,
 
         g_return_if_fail (EV_IS_TOOLBAR (ev_toolbar));
 
-        priv = ev_toolbar->priv;
+        priv = GET_PRIVATE (ev_toolbar);
         priv->toolbar_mode = mode;
 
         switch (mode) {
@@ -367,7 +380,11 @@ ev_toolbar_set_mode (EvToolbar     *ev_toolbar,
 EvToolbarMode
 ev_toolbar_get_mode (EvToolbar *ev_toolbar)
 {
+        EvToolbarPrivate *priv;
+
         g_return_val_if_fail (EV_IS_TOOLBAR (ev_toolbar), EV_TOOLBAR_MODE_NORMAL);
 
-        return ev_toolbar->priv->toolbar_mode;
+        priv = GET_PRIVATE (ev_toolbar);
+
+        return priv->toolbar_mode;
 }

@@ -41,12 +41,9 @@ typedef enum {
 
 typedef struct _EvToolbar        EvToolbar;
 typedef struct _EvToolbarClass   EvToolbarClass;
-typedef struct _EvToolbarPrivate EvToolbarPrivate;
 
 struct _EvToolbar {
         GtkHeaderBar base_instance;
-
-        EvToolbarPrivate *priv;
 };
 
 struct _EvToolbarClass {
