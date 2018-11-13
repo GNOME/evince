@@ -27,7 +27,6 @@ G_BEGIN_DECLS
 
 typedef struct _EvFileMonitor        EvFileMonitor;
 typedef struct _EvFileMonitorClass   EvFileMonitorClass;
-typedef struct _EvFileMonitorPrivate EvFileMonitorPrivate;
 
 #define EV_TYPE_FILE_MONITOR              (ev_file_monitor_get_type())
 #define EV_FILE_MONITOR(object)           (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_FILE_MONITOR, EvFileMonitor))
@@ -38,8 +37,6 @@ typedef struct _EvFileMonitorPrivate EvFileMonitorPrivate;
 
 struct _EvFileMonitor {
 	GObject base_instance;
-
-	EvFileMonitorPrivate *priv;
 };
 
 struct _EvFileMonitorClass {
