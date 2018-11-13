@@ -36,12 +36,9 @@ G_BEGIN_DECLS
 
 typedef struct _EvZoomAction        EvZoomAction;
 typedef struct _EvZoomActionClass   EvZoomActionClass;
-typedef struct _EvZoomActionPrivate EvZoomActionPrivate;
 
 struct _EvZoomAction {
         GtkBox parent;
-
-        EvZoomActionPrivate *priv;
 };
 
 struct _EvZoomActionClass {

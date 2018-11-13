@@ -2,6 +2,7 @@
  *  this file is part of evince, a gnome document viewer
  *
  * Copyright (C) 2012 Carlos Garcia Campos  <carlosgc@gnome.org>
+ * Copyright (C) 2018 Germán Poo-Caamaño <gpoo@gnome.org>
  *
  * Evince is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by
@@ -61,7 +62,7 @@ static const struct {
         { N_("6400%"), 64.0 }
 };
 
-struct _EvZoomActionPrivate {
+typedef struct {
         GtkWidget       *entry;
 
         EvDocumentModel *model;
@@ -70,9 +71,11 @@ struct _EvZoomActionPrivate {
         GMenuModel      *zoom_free_section;
         GtkPopover      *popup;
         gboolean         popup_shown;
-};
+} EvZoomActionPrivate;
 
-G_DEFINE_TYPE (EvZoomAction, ev_zoom_action, GTK_TYPE_BOX)
+G_DEFINE_TYPE_WITH_PRIVATE (EvZoomAction, ev_zoom_action, GTK_TYPE_BOX)
+
+#define GET_PRIVATE(o) ev_zoom_action_get_instance_private (o)
 
 static guint signals[LAST_SIGNAL] = { 0 };
 
@@ -82,13 +85,14 @@ static void
 ev_zoom_action_set_zoom_level (EvZoomAction *zoom_action,
                                float         zoom)
 {
+	EvZoomActionPrivate *priv = GET_PRIVATE (zoom_action);
         gchar *zoom_str;
         float  zoom_perc;
         guint  i;
 
         for (i = 0; i < G_N_ELEMENTS (zoom_levels); i++) {
                 if (ABS (zoom - zoom_levels[i].level) < EPSILON) {
-                        gtk_entry_set_text (GTK_ENTRY (zoom_action->priv->entry),
+                        gtk_entry_set_text (GTK_ENTRY (priv->entry),
                                             zoom_levels[i].name);
                         return;
                 }
@@ -99,14 +103,16 @@ ev_zoom_action_set_zoom_level (EvZoomAction *zoom_action,
                 zoom_str = g_strdup_printf ("%d%%", (gint)zoom_perc);
         else
                 zoom_str = g_strdup_printf ("%.1f%%", zoom_perc);
-        gtk_entry_set_text (GTK_ENTRY (zoom_action->priv->entry), zoom_str);
+        gtk_entry_set_text (GTK_ENTRY (priv->entry), zoom_str);
         g_free (zoom_str);
 }
 
 static void
 ev_zoom_action_update_zoom_level (EvZoomAction *zoom_action)
 {
-        float      zoom = ev_document_model_get_scale (zoom_action->priv->model);
+	EvZoomActionPrivate *priv = GET_PRIVATE (zoom_action);
+
+        float      zoom = ev_document_model_get_scale (priv->model);
         GdkScreen *screen = gtk_widget_get_screen (GTK_WIDGET (zoom_action));
 
         zoom *= 72.0 / ev_document_misc_get_screen_dpi (screen);
@@ -141,18 +147,21 @@ static void
 ev_zoom_action_set_width_chars (EvZoomAction *zoom_action,
                                 gint          width)
 {
+	EvZoomActionPrivate *priv = GET_PRIVATE (zoom_action);
+
         /* width + 2 (one decimals and the comma) + 3 (for the icon) */
-        gtk_entry_set_width_chars (GTK_ENTRY (zoom_action->priv->entry), width + 2 + 3);
+        gtk_entry_set_width_chars (GTK_ENTRY (priv->entry), width + 2 + 3);
 }
 
 static void
 ev_zoom_action_populate_free_zoom_section (EvZoomAction *zoom_action)
 {
+	EvZoomActionPrivate *priv = GET_PRIVATE (zoom_action);
         gdouble max_scale;
         guint   i;
         gint    width = 0;
 
-        max_scale = ev_document_model_get_max_scale (zoom_action->priv->model);
+        max_scale = ev_document_model_get_max_scale (priv->model);
 
         for (i = 0; i < G_N_ELEMENTS (zoom_levels); i++) {
                 GMenuItem *item;
@@ -168,7 +177,7 @@ ev_zoom_action_populate_free_zoom_section (EvZoomAction *zoom_action)
                 item = g_menu_item_new (zoom_levels[i].name, NULL);
                 g_menu_item_set_action_and_target (item, "win.zoom",
                                                    "d", zoom_levels[i].level);
-                g_menu_append_item (G_MENU (zoom_action->priv->zoom_free_section), item);
+                g_menu_append_item (G_MENU (priv->zoom_free_section), item);
                 g_object_unref (item);
         }
 
@@ -180,8 +189,10 @@ max_zoom_changed_cb (EvDocumentModel *model,
                      GParamSpec      *pspec,
                      EvZoomAction    *zoom_action)
 {
-        g_menu_remove_all (G_MENU (zoom_action->priv->zoom_free_section));
-        g_clear_pointer (&zoom_action->priv->popup, (GDestroyNotify)gtk_widget_destroy);
+	EvZoomActionPrivate *priv = GET_PRIVATE (zoom_action);
+
+        g_menu_remove_all (G_MENU (priv->zoom_free_section));
+        g_clear_pointer (&priv->popup, (GDestroyNotify)gtk_widget_destroy);
         ev_zoom_action_populate_free_zoom_section (zoom_action);
 }
 
@@ -189,6 +200,8 @@ static void
 entry_activated_cb (GtkEntry     *entry,
                     EvZoomAction *zoom_action)
 {
+	EvZoomActionPrivate *priv = GET_PRIVATE (zoom_action);
+
         GdkScreen   *screen;
         double       zoom_perc;
         float        zoom;
@@ -210,8 +223,8 @@ entry_activated_cb (GtkEntry     *entry,
 
         screen = gtk_widget_get_screen (GTK_WIDGET (zoom_action));
         zoom = zoom_perc / 100.;
-        ev_document_model_set_sizing_mode (zoom_action->priv->model, EV_SIZING_FREE);
-        ev_document_model_set_scale (zoom_action->priv->model,
+        ev_document_model_set_sizing_mode (priv->model, EV_SIZING_FREE);
+        ev_document_model_set_scale (priv->model,
                                      zoom * ev_document_misc_get_screen_dpi (screen) / 72.0);
         g_signal_emit (zoom_action, signals[ACTIVATED], 0, NULL);
 }
@@ -228,32 +241,35 @@ static void
 popup_menu_closed (GtkPopover   *popup,
                    EvZoomAction *zoom_action)
 {
-        if (zoom_action->priv->popup != popup)
+	EvZoomActionPrivate *priv = GET_PRIVATE (zoom_action);
+
+        if (priv->popup != popup)
                 return;
 
-        zoom_action->priv->popup_shown = FALSE;
-        zoom_action->priv->popup = NULL;
+        priv->popup_shown = FALSE;
+        priv->popup = NULL;
 }
 
 static GtkPopover *
 get_popup (EvZoomAction *zoom_action)
 {
+	EvZoomActionPrivate *priv = GET_PRIVATE (zoom_action);
         GdkRectangle rect;
 
-        if (zoom_action->priv->popup)
-                return zoom_action->priv->popup;
+        if (priv->popup)
+                return priv->popup;
 
-        zoom_action->priv->popup = GTK_POPOVER (gtk_popover_new_from_model (GTK_WIDGET (zoom_action),
-                                                                            G_MENU_MODEL (zoom_action->priv->menu)));
-        g_signal_connect (zoom_action->priv->popup, "closed",
+        priv->popup = GTK_POPOVER (gtk_popover_new_from_model (GTK_WIDGET (zoom_action),
+                                                                            G_MENU_MODEL (priv->menu)));
+        g_signal_connect (priv->popup, "closed",
                           G_CALLBACK (popup_menu_closed),
                           zoom_action);
-        gtk_entry_get_icon_area (GTK_ENTRY (zoom_action->priv->entry),
+        gtk_entry_get_icon_area (GTK_ENTRY (priv->entry),
                                  GTK_ENTRY_ICON_SECONDARY, &rect);
-        gtk_popover_set_pointing_to (zoom_action->priv->popup, &rect);
-        gtk_popover_set_position (zoom_action->priv->popup, GTK_POS_BOTTOM);
+        gtk_popover_set_pointing_to (priv->popup, &rect);
+        gtk_popover_set_position (priv->popup, GTK_POS_BOTTOM);
 
-        return zoom_action->priv->popup;
+        return priv->popup;
 }
 
 static void
@@ -262,6 +278,7 @@ entry_icon_press_callback (GtkEntry            *entry,
                            GdkEvent            *event,
                            EvZoomAction        *zoom_action)
 {
+	EvZoomActionPrivate *priv = GET_PRIVATE (zoom_action);
         guint button = 0;
 
         if (gdk_event_get_button (event, &button) &&
@@ -269,21 +286,22 @@ entry_icon_press_callback (GtkEntry            *entry,
                 return;
 
         gtk_popover_popup (get_popup (zoom_action));
-        zoom_action->priv->popup_shown = TRUE;
+        priv->popup_shown = TRUE;
 }
 
 static void
 ev_zoom_action_finalize (GObject *object)
 {
         EvZoomAction *zoom_action = EV_ZOOM_ACTION (object);
+	EvZoomActionPrivate *priv = GET_PRIVATE (zoom_action);
 
-        if (zoom_action->priv->model) {
-                g_object_remove_weak_pointer (G_OBJECT (zoom_action->priv->model),
-                                              (gpointer)&zoom_action->priv->model);
+        if (priv->model) {
+                g_object_remove_weak_pointer (G_OBJECT (priv->model),
+                                              (gpointer)&priv->model);
         }
 
-        g_clear_object (&zoom_action->priv->menu);
-        g_clear_object (&zoom_action->priv->zoom_free_section);
+        g_clear_object (&priv->menu);
+        g_clear_object (&priv->zoom_free_section);
 
         G_OBJECT_CLASS (ev_zoom_action_parent_class)->finalize (object);
 }
@@ -295,13 +313,14 @@ ev_zoom_action_set_property (GObject      *object,
                              GParamSpec   *pspec)
 {
         EvZoomAction *zoom_action = EV_ZOOM_ACTION (object);
+	EvZoomActionPrivate *priv = GET_PRIVATE (zoom_action);
 
         switch (prop_id) {
         case PROP_DOCUMENT_MODEL:
-                zoom_action->priv->model = g_value_get_object (value);
+                priv->model = g_value_get_object (value);
                 break;
         case PROP_MENU:
-                zoom_action->priv->menu = g_value_dup_object (value);
+                priv->menu = g_value_dup_object (value);
                 break;
         default:
                 G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -332,30 +351,31 @@ static void
 ev_zoom_action_constructed (GObject *object)
 {
         EvZoomAction *zoom_action = EV_ZOOM_ACTION (object);
+	EvZoomActionPrivate *priv = GET_PRIVATE (zoom_action);
 
         G_OBJECT_CLASS (ev_zoom_action_parent_class)->constructed (object);
 
-        zoom_action->priv->zoom_free_section =
-                g_menu_model_get_item_link (G_MENU_MODEL (zoom_action->priv->menu),
+        priv->zoom_free_section =
+                g_menu_model_get_item_link (G_MENU_MODEL (priv->menu),
                                             ZOOM_FREE_SECTION, G_MENU_LINK_SECTION);
         ev_zoom_action_populate_free_zoom_section (zoom_action);
 
-        g_object_add_weak_pointer (G_OBJECT (zoom_action->priv->model),
-                                   (gpointer)&zoom_action->priv->model);
-        if (ev_document_model_get_document (zoom_action->priv->model)) {
+        g_object_add_weak_pointer (G_OBJECT (priv->model),
+                                   (gpointer)&priv->model);
+        if (ev_document_model_get_document (priv->model)) {
                 ev_zoom_action_update_zoom_level (zoom_action);
         } else {
                 ev_zoom_action_set_zoom_level (zoom_action, 1.);
                 gtk_widget_set_sensitive (GTK_WIDGET (zoom_action), FALSE);
         }
 
-        g_signal_connect_object (zoom_action->priv->model, "notify::document",
+        g_signal_connect_object (priv->model, "notify::document",
                                  G_CALLBACK (document_changed_cb),
                                  zoom_action, 0);
-        g_signal_connect_object (zoom_action->priv->model, "notify::scale",
+        g_signal_connect_object (priv->model, "notify::scale",
                                  G_CALLBACK (zoom_changed_cb),
                                  zoom_action, 0);
-        g_signal_connect_object (zoom_action->priv->model, "notify::max-scale",
+        g_signal_connect_object (priv->model, "notify::max-scale",
                                  G_CALLBACK (max_zoom_changed_cb),
                                  zoom_action, 0);
 
@@ -401,17 +421,12 @@ ev_zoom_action_class_init (EvZoomActionClass *klass)
                               0, NULL, NULL,
                               g_cclosure_marshal_VOID__VOID,
                               G_TYPE_NONE, 0);
-
-        g_type_class_add_private (object_class, sizeof (EvZoomActionPrivate));
 }
 
 static void
 ev_zoom_action_init (EvZoomAction *zoom_action)
 {
-        EvZoomActionPrivate *priv;
-
-        zoom_action->priv = G_TYPE_INSTANCE_GET_PRIVATE (zoom_action, EV_TYPE_ZOOM_ACTION, EvZoomActionPrivate);
-        priv = zoom_action->priv;
+        EvZoomActionPrivate *priv = GET_PRIVATE (zoom_action);
 
         gtk_orientable_set_orientation (GTK_ORIENTABLE (zoom_action), GTK_ORIENTATION_VERTICAL);
 
@@ -448,9 +463,13 @@ ev_zoom_action_new (EvDocumentModel *model,
 }
 
 gboolean
-ev_zoom_action_get_popup_shown (EvZoomAction *action)
+ev_zoom_action_get_popup_shown (EvZoomAction *zoom_action)
 {
-        g_return_val_if_fail (EV_IS_ZOOM_ACTION (action), FALSE);
+	EvZoomActionPrivate *priv;
 
-        return action->priv->popup_shown;
+        g_return_val_if_fail (EV_IS_ZOOM_ACTION (zoom_action), FALSE);
+
+	priv = GET_PRIVATE (zoom_action);
+
+        return priv->popup_shown;
 }

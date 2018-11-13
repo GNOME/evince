@@ -34,15 +34,11 @@ G_BEGIN_DECLS
 #define EV_HISTORY_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS((obj), EV_TYPE_HISTORY, EvHistoryClass))
 
 typedef struct _EvHistory		EvHistory;
-typedef struct _EvHistoryPrivate	EvHistoryPrivate;
 typedef struct _EvHistoryClass		EvHistoryClass;
 
 struct _EvHistory
 {
 	GObject parent;
-
-	/*< private >*/
-	EvHistoryPrivate *priv;
 };
 
 struct _EvHistoryClass

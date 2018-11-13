@@ -1,5 +1,6 @@
 /*
  *  Copyright (C) 2005 Marco Pesenti Gritti
+ *  Copyright (C) 2018 Germán Poo-Caamaño <gpoo@gnome.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -35,7 +36,7 @@ enum {
 
 static guint signals[N_SIGNALS] = {0, };
 
-struct _EvHistoryPrivate {
+typedef struct {
 	GList           *list;
         GList           *current;
 
@@ -43,9 +44,11 @@ struct _EvHistoryPrivate {
         gulong           page_changed_handler_id;
 
         guint            frozen;
-};
+} EvHistoryPrivate;
 
-G_DEFINE_TYPE (EvHistory, ev_history, G_TYPE_OBJECT)
+G_DEFINE_TYPE_WITH_PRIVATE (EvHistory, ev_history, G_TYPE_OBJECT)
+
+#define GET_PRIVATE(o) ev_history_get_instance_private (o);
 
 static void ev_history_set_model (EvHistory       *history,
                                   EvDocumentModel *model);
@@ -59,16 +62,18 @@ clear_list (GList *list)
 static void
 ev_history_clear (EvHistory *history)
 {
-        clear_list (history->priv->list);
-        history->priv->list = NULL;
+	EvHistoryPrivate *priv = GET_PRIVATE (history);
 
-        history->priv->current = NULL;
+        clear_list (priv->list);
+        priv->list = NULL;
+
+        priv->current = NULL;
 }
 
 static void
 ev_history_prune (EvHistory *history)
 {
-        EvHistoryPrivate *priv = history->priv;
+	EvHistoryPrivate *priv = GET_PRIVATE (history);
         GList *l;
         guint i;
 
@@ -127,20 +132,19 @@ ev_history_class_init (EvHistoryClass *class)
                               g_cclosure_marshal_VOID__OBJECT,
                               G_TYPE_NONE, 1,
                               G_TYPE_OBJECT);
-
-	g_type_class_add_private (object_class, sizeof (EvHistoryPrivate));
 }
 
 static void
 ev_history_init (EvHistory *history)
 {
-	history->priv = G_TYPE_INSTANCE_GET_PRIVATE (history, EV_TYPE_HISTORY, EvHistoryPrivate);
 }
 
 gboolean
 ev_history_is_frozen (EvHistory *history)
 {
-        return history->priv->frozen > 0;
+	EvHistoryPrivate *priv = GET_PRIVATE (history);
+
+        return priv->frozen > 0;
 }
 
 void
@@ -155,7 +159,7 @@ ev_history_add_link (EvHistory *history,
         if (ev_history_is_frozen (history))
                 return;
 
-        priv = history->priv;
+	priv = GET_PRIVATE (history);
 
         if (priv->current) {
                 /* Truncate forward history at @current */
@@ -175,12 +179,14 @@ ev_history_add_link (EvHistory *history,
 static void
 ev_history_activate_current_link (EvHistory *history)
 {
-        g_assert (history->priv->current);
+	EvHistoryPrivate *priv = GET_PRIVATE (history);
+
+        g_assert (priv->current);
 
         ev_history_freeze (history);
-        g_signal_handler_block (history->priv->model, history->priv->page_changed_handler_id);
-        g_signal_emit (history, signals[ACTIVATE_LINK], 0, history->priv->current->data);
-        g_signal_handler_unblock (history->priv->model, history->priv->page_changed_handler_id);
+        g_signal_handler_block (priv->model, priv->page_changed_handler_id);
+        g_signal_emit (history, signals[ACTIVATE_LINK], 0, priv->current->data);
+        g_signal_handler_unblock (priv->model, priv->page_changed_handler_id);
         ev_history_thaw (history);
 
         g_signal_emit (history, signals[CHANGED], 0);
@@ -196,7 +202,7 @@ ev_history_can_go_back (EvHistory *history)
         if (ev_history_is_frozen (history))
                 return FALSE;
 
-        priv = history->priv;
+        priv = GET_PRIVATE (history);
         return priv->current && priv->current->prev;
 }
 
@@ -210,7 +216,7 @@ ev_history_go_back (EvHistory *history)
         if (!ev_history_can_go_back (history))
                 return;
 
-        priv = history->priv;
+        priv = GET_PRIVATE (history);
 
         /* Move current back one step */
         priv->current = priv->current->prev;
@@ -228,7 +234,7 @@ ev_history_can_go_forward (EvHistory *history)
         if (ev_history_is_frozen (history))
                 return FALSE;
 
-        priv = history->priv;
+        priv = GET_PRIVATE (history);
         return priv->current && priv->current->next;
 }
 
@@ -242,7 +248,7 @@ ev_history_go_forward (EvHistory *history)
         if (!ev_history_can_go_forward (history))
                 return;
 
-        priv = history->priv;
+        priv = GET_PRIVATE (history);
 
         /* Move current forward one step */
         priv->current = priv->current->next;
@@ -282,7 +288,7 @@ ev_history_go_to_link (EvHistory *history,
         if (ev_history_is_frozen (history))
                 return FALSE;
 
-        priv = history->priv;
+        priv = GET_PRIVATE (history);
 
         l = g_list_find_custom (priv->list, link, (GCompareFunc) compare_link);
         if (l == NULL)
@@ -310,7 +316,7 @@ ev_history_get_back_list (EvHistory *history)
 
         g_return_val_if_fail (EV_IS_HISTORY (history), NULL);
 
-        priv = history->priv;
+        priv = GET_PRIVATE (history);
 
         if (priv->current == NULL)
                 return NULL;
@@ -331,40 +337,54 @@ ev_history_get_back_list (EvHistory *history)
 GList *
 ev_history_get_forward_list (EvHistory *history)
 {
+        EvHistoryPrivate *priv;
+
         g_return_val_if_fail (EV_IS_HISTORY (history), NULL);
 
-        return g_list_copy (history->priv->current->next);
+        priv = GET_PRIVATE (history);
+
+        return g_list_copy (priv->current->next);
 }
 
 void
 ev_history_freeze (EvHistory *history)
 {
+        EvHistoryPrivate *priv;
+
         g_return_if_fail (EV_IS_HISTORY (history));
 
-        history->priv->frozen++;
+        priv = GET_PRIVATE (history);
+
+        priv->frozen++;
 }
 
 void
 ev_history_thaw (EvHistory *history)
 {
-        g_return_if_fail (EV_IS_HISTORY (history));
-        g_return_if_fail (history->priv->frozen > 0);
+        EvHistoryPrivate *priv;
 
-        history->priv->frozen--;
+        g_return_if_fail (EV_IS_HISTORY (history));
+
+        priv = GET_PRIVATE (history);
+
+        g_return_if_fail (priv->frozen > 0);
+
+        priv->frozen--;
 }
 
 static gint
 ev_history_get_current_page (EvHistory *history)
 {
+        EvHistoryPrivate *priv = GET_PRIVATE (history);
         EvLink       *link;
         EvDocument   *document;
         EvLinkDest   *dest;
         EvLinkAction *action;
 
-        if (!history->priv->current)
+        if (!priv->current)
                 return -1;
 
-        link = history->priv->current->data;
+        link = priv->current->data;
         action = ev_link_get_action (link);
         if (!action)
                 return -1;
@@ -375,7 +395,7 @@ ev_history_get_current_page (EvHistory *history)
 
         switch (ev_link_dest_get_dest_type (dest)) {
         case EV_LINK_DEST_TYPE_NAMED:
-                document = ev_document_model_get_document (history->priv->model);
+                document = ev_document_model_get_document (priv->model);
                 if (!EV_IS_DOCUMENT_LINKS (document))
                         return -1;
 
@@ -384,7 +404,7 @@ ev_history_get_current_page (EvHistory *history)
         case EV_LINK_DEST_TYPE_PAGE_LABEL: {
                 gint page = -1;
 
-                document = ev_document_model_get_document (history->priv->model);
+                document = ev_document_model_get_document (priv->model);
                 ev_document_find_page_by_label (document,
                                                 ev_link_dest_get_page_label (dest),
                                                 &page);
@@ -402,6 +422,7 @@ static void
 ev_history_add_link_for_page (EvHistory *history,
                               gint       page)
 {
+        EvHistoryPrivate *priv = GET_PRIVATE (history);
         EvDocument   *document;
         EvLinkDest   *dest;
         EvLinkAction *action;
@@ -415,7 +436,7 @@ ev_history_add_link_for_page (EvHistory *history,
         if (ev_history_get_current_page (history) == page)
                 return;
 
-        document = ev_document_model_get_document (history->priv->model);
+        document = ev_document_model_get_document (priv->model);
         if (!document)
                 return;
 
@@ -461,32 +482,34 @@ static void
 ev_history_set_model (EvHistory       *history,
                       EvDocumentModel *model)
 {
-        if (history->priv->model == model)
+        EvHistoryPrivate *priv = GET_PRIVATE (history);
+
+        if (priv->model == model)
                 return;
 
-        if (history->priv->model) {
-                g_object_remove_weak_pointer (G_OBJECT (history->priv->model),
-                                              (gpointer)&history->priv->model);
+        if (priv->model) {
+                g_object_remove_weak_pointer (G_OBJECT (priv->model),
+                                              (gpointer)&priv->model);
 
-                if (history->priv->page_changed_handler_id) {
-                        g_signal_handler_disconnect (history->priv->model,
-                                                     history->priv->page_changed_handler_id);
-                        history->priv->page_changed_handler_id = 0;
+                if (priv->page_changed_handler_id) {
+                        g_signal_handler_disconnect (priv->model,
+                                                     priv->page_changed_handler_id);
+                        priv->page_changed_handler_id = 0;
                 }
         }
 
-        history->priv->model = model;
+        priv->model = model;
         if (!model)
                 return;
 
         g_object_add_weak_pointer (G_OBJECT (model),
-                                   (gpointer)&history->priv->model);
+                                   (gpointer)&priv->model);
 
-        g_signal_connect (history->priv->model, "notify::document",
+        g_signal_connect (priv->model, "notify::document",
                           G_CALLBACK (document_changed_cb),
                           history);
-        history->priv->page_changed_handler_id =
-                g_signal_connect (history->priv->model, "page-changed",
+        priv->page_changed_handler_id =
+                g_signal_connect (priv->model, "page-changed",
                                   G_CALLBACK (page_changed_cb),
                                   history);
 }

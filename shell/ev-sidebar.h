@@ -34,7 +34,6 @@ G_BEGIN_DECLS
 
 typedef struct _EvSidebar EvSidebar;
 typedef struct _EvSidebarClass EvSidebarClass;
-typedef struct _EvSidebarPrivate EvSidebarPrivate;
 
 #define EV_TYPE_SIDEBAR		     (ev_sidebar_get_type())
 #define EV_SIDEBAR(object)	     (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_SIDEBAR, EvSidebar))
@@ -45,8 +44,6 @@ typedef struct _EvSidebarPrivate EvSidebarPrivate;
 
 struct _EvSidebar {
 	GtkBox base_instance;
-
-	EvSidebarPrivate *priv;
 };
 
 struct _EvSidebarClass {

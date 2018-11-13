@@ -52,27 +52,27 @@ enum
 	PAGE_COLUMN_NUM_COLS
 };
 
-struct _EvSidebarPrivate {
+typedef struct {
 	GtkWidget *stack;
 	GtkWidget *switcher;
 
 	EvDocumentModel *model;
 	GtkTreeModel *page_model;
-};
+} EvSidebarPrivate;
 
-G_DEFINE_TYPE (EvSidebar, ev_sidebar, GTK_TYPE_BOX)
+G_DEFINE_TYPE_WITH_PRIVATE (EvSidebar, ev_sidebar, GTK_TYPE_BOX)
 
-#define EV_SIDEBAR_GET_PRIVATE(object) \
-		(G_TYPE_INSTANCE_GET_PRIVATE ((object), EV_TYPE_SIDEBAR, EvSidebarPrivate))
+#define GET_PRIVATE(o) ev_sidebar_get_instance_private (o)
 
 static void
 ev_sidebar_dispose (GObject *object)
 {
 	EvSidebar *ev_sidebar = EV_SIDEBAR (object);
+	EvSidebarPrivate *priv = GET_PRIVATE (ev_sidebar);
 
-	if (ev_sidebar->priv->page_model) {
-		g_object_unref (ev_sidebar->priv->page_model);
-		ev_sidebar->priv->page_model = NULL;
+	if (priv->page_model) {
+		g_object_unref (priv->page_model);
+		priv->page_model = NULL;
 	}
 
 	G_OBJECT_CLASS (ev_sidebar_parent_class)->dispose (object);
@@ -99,7 +99,9 @@ ev_sidebar_set_property (GObject      *object,
 static GtkWidget *
 ev_sidebar_get_current_page (EvSidebar *ev_sidebar)
 {
-	return gtk_stack_get_visible_child (GTK_STACK (ev_sidebar->priv->stack));
+	EvSidebarPrivate *priv = GET_PRIVATE (ev_sidebar);
+
+	return gtk_stack_get_visible_child (GTK_STACK (priv->stack));
 }
 
 static gchar *
@@ -108,8 +110,9 @@ ev_sidebar_get_visible_icon_name (EvSidebar *ev_sidebar)
 	GtkStack *stack;
 	GtkWidget *widget;
 	gchar *icon_name;
+	EvSidebarPrivate *priv = GET_PRIVATE (ev_sidebar);
 
-	stack = GTK_STACK (ev_sidebar->priv->stack);
+	stack = GTK_STACK (priv->stack);
 	widget = gtk_stack_get_visible_child (stack);
 	gtk_container_child_get (GTK_CONTAINER (stack), widget,
 				 "icon-name", &icon_name,
@@ -147,8 +150,6 @@ ev_sidebar_class_init (EvSidebarClass *ev_sidebar_class)
 {
         GObjectClass *g_object_class = G_OBJECT_CLASS (ev_sidebar_class);
 
-	g_type_class_add_private (g_object_class, sizeof (EvSidebarPrivate));
-
 	g_object_class->dispose = ev_sidebar_dispose;
 	g_object_class->get_property = ev_sidebar_get_property;
 	g_object_class->set_property = ev_sidebar_set_property;
@@ -176,7 +177,8 @@ ev_sidebar_child_change_cb (GObject    *gobject,
 			    GParamSpec *pspec,
 			    EvSidebar  *ev_sidebar)
 {
-	GtkStack *stack = GTK_STACK (ev_sidebar->priv->stack);
+	EvSidebarPrivate *priv = GET_PRIVATE (ev_sidebar);
+	GtkStack *stack = GTK_STACK (priv->stack);
 	const gchar *name;
 
 	name = gtk_stack_get_visible_child_name (stack);
@@ -187,13 +189,14 @@ ev_sidebar_child_change_cb (GObject    *gobject,
 static void
 ev_sidebar_init (EvSidebar *ev_sidebar)
 {
+	EvSidebarPrivate *priv;
 	GtkWidget *switcher;
 	GtkWidget *stack;
 
-	ev_sidebar->priv = EV_SIDEBAR_GET_PRIVATE (ev_sidebar);
+	priv = GET_PRIVATE (ev_sidebar);
 
 	/* data model */
-	ev_sidebar->priv->page_model = (GtkTreeModel *)
+	priv->page_model = (GtkTreeModel *)
 			gtk_list_store_new (PAGE_COLUMN_NUM_COLS,
 					    G_TYPE_STRING,
 					    GTK_TYPE_WIDGET,
@@ -201,22 +204,22 @@ ev_sidebar_init (EvSidebar *ev_sidebar)
 					    G_TYPE_STRING);
 
 	switcher = gtk_stack_switcher_new ();
-	ev_sidebar->priv->switcher = switcher;
+	priv->switcher = switcher;
 	gtk_box_pack_end (GTK_BOX (ev_sidebar), switcher, FALSE, TRUE, 0);
 	g_object_set (switcher, "icon-size", 1, NULL);
 	gtk_container_set_border_width (GTK_CONTAINER (switcher), 6);
 	gtk_widget_set_halign (switcher, GTK_ALIGN_FILL);
 	gtk_widget_set_hexpand (switcher, TRUE);
 	gtk_box_set_homogeneous (GTK_BOX (switcher), TRUE);
-	gtk_widget_show (ev_sidebar->priv->switcher);
+	gtk_widget_show (priv->switcher);
 
 	stack = gtk_stack_new ();
-	ev_sidebar->priv->stack = stack;
+	priv->stack = stack;
 	gtk_stack_set_homogeneous (GTK_STACK (stack), TRUE);
 	gtk_stack_switcher_set_stack (GTK_STACK_SWITCHER (switcher),
 				      GTK_STACK (stack));
 	gtk_box_pack_end (GTK_BOX (ev_sidebar), stack, TRUE, TRUE, 0);
-	gtk_widget_show (ev_sidebar->priv->stack);
+	gtk_widget_show (priv->stack);
 
 	g_signal_connect (stack, "notify::visible-child",
 			  G_CALLBACK (ev_sidebar_child_change_cb),
@@ -238,7 +241,7 @@ ev_sidebar_document_changed_cb (EvDocumentModel *model,
 				GParamSpec      *pspec,
 				EvSidebar       *ev_sidebar)
 {
-	EvSidebarPrivate *priv = ev_sidebar->priv;
+	EvSidebarPrivate *priv = GET_PRIVATE (ev_sidebar);
 	EvDocument *document = ev_document_model_get_document (model);
 	GtkTreeIter iter;
 	gboolean valid;
@@ -315,7 +318,7 @@ ev_sidebar_add_page (EvSidebar   *ev_sidebar,
 	g_return_if_fail (EV_IS_SIDEBAR (ev_sidebar));
 	g_return_if_fail (GTK_IS_WIDGET (widget));
 
-	priv = ev_sidebar->priv;
+	priv = GET_PRIVATE (ev_sidebar);
 
 	ev_sidebar_page_set_model (EV_SIDEBAR_PAGE (widget), priv->model);
 
@@ -341,13 +344,17 @@ void
 ev_sidebar_set_model (EvSidebar       *ev_sidebar,
 		      EvDocumentModel *model)
 {
+	EvSidebarPrivate *priv;
+
 	g_return_if_fail (EV_IS_SIDEBAR (ev_sidebar));
 	g_return_if_fail (EV_IS_DOCUMENT_MODEL (model));
 
-	if (model == ev_sidebar->priv->model)
+	priv = GET_PRIVATE (ev_sidebar);
+
+	if (model == priv->model)
 		return;
 
-	ev_sidebar->priv->model = model;
+	priv->model = model;
 
 	g_signal_connect (model, "notify::document",
 			  G_CALLBACK (ev_sidebar_document_changed_cb),
@@ -358,10 +365,14 @@ void
 ev_sidebar_set_page (EvSidebar   *ev_sidebar,
 		     GtkWidget   *main_widget)
 {
+	EvSidebarPrivate *priv;
+
 	g_return_if_fail (EV_IS_SIDEBAR (ev_sidebar));
 	g_return_if_fail (GTK_IS_WIDGET (main_widget));
 
-	gtk_stack_set_visible_child (GTK_STACK (ev_sidebar->priv->stack),
+	priv = GET_PRIVATE (ev_sidebar);
+
+	gtk_stack_set_visible_child (GTK_STACK (priv->stack),
 				     main_widget);
 	g_object_notify (G_OBJECT (ev_sidebar), "current-page");
 }
