@@ -353,8 +353,10 @@ entry_icon_release_cb (GtkEntry            *entry,
         ev_search_box_entry_populate_popup (box, menu);
         gtk_widget_show (menu);
 
-        gtk_menu_popup (GTK_MENU (menu), NULL, NULL, NULL, NULL,
-                        event->button, event->time);
+        gtk_menu_popup_at_widget (GTK_MENU (menu), GTK_WIDGET (entry),
+				  GDK_GRAVITY_SOUTH_WEST,
+				  GDK_GRAVITY_NORTH_WEST,
+				  (GdkEvent *)event);
 }
 
 static void
