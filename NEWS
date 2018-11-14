@@ -1,4 +1,55 @@
 ================
+Evince    3.31.2
+================
+
+ci:
+  *  Add flatpak that can build on master and MR (#1, #995, Germán Poo-Caamaño)
+  *  Fix type in exception for stop-deploy target (Germán Poo-Caamaño)
+  *  Make flatpak-meson target the only flatpak build (Germán Poo-Caamaño)
+
+UI:
+  *  Fix appearance of editable GtkComboBox in PDF form (#1002, #1422, Nelson Benítez León)
+  *  Handle adjustment change during drag event (Jason Crain)
+  *  Set propergravity on popup menu in search box (Germán Poo-Caamaño)
+  *  Fix default icon name in evince-previewer (Germán Poo-Caamaño)
+  *  Use GtkHeaderBar in print preview (#405, Germán Poo-Caamaño)
+  *  Beautify placeholder text for password locked documents (Germán Poo-Caamaño)
+  *  Remove App menu (#4, #624, #994, Germán Poo-Caamaño)
+  *  Use monitor instead of screen to determine window size (#757, Germán Poo-Caamaño)
+  *  Close auto-expanded rows and remember state (#85, Nelson Benítez León)
+  *  Provide a visual cue when find is unsupported (#105, Germán Poo-Caamaño)
+  *  Add symbolic to show a layer when is visible (Germán Poo-Caamaño)
+  *  Use the info bar close button instead of a custom one (Germán Poo-Caamaño)
+  *  Add icons for squiggly and text annotations (Germán Poo-Caamaño)
+
+flatpak:
+  *  Add support for XPS files (Germán Poo-Caamaño)
+  *  Fix reproducibility on webp-pixbuf-loader (Germán Poo-Caamaño)
+  *  Set meson as default build system (Germán Poo-Caamaño)
+
+misc:
+  *  Remove EvPageAction widget (Germán Poo-Caamaño)
+
+general (Germán Poo-Caamaño):
+  *  Code cleanup:
+    * Remove unused variables
+    * Replace deprecated symbols
+    * Sync cut-n-paste code
+    * Fix dependencies
+    * Sync overwrite dialog against GtkFileChooserWidget
+
+Developers (in alphabetical order by name):
+  * Germán Poo-Caamaño, Jason Crain, John Beard, Jordan Petridis,
+    Nelson Benítez León, Piotr Drąg
+
+Translations:
+  * Marek Cernocky (Czech)
+  * Carmen Bianca BAKKER (Esperanto)
+  * Matej Urbančič (Slovenian)
+  * Update en_GB translation typo (#1022, John Beard)
+
+
+================
 Evince    3.31.1
 ================
 
