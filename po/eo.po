@@ -15,27 +15,27 @@
 # Daniel PUENTES <blatberk@openmailbox.org>, 2015.
 # Kristjan SCHMIDT <kristjan.schmidt@googlemail.com>, 2010, 2011, 2012, 2014, 2015, 2018.
 # Carmen Bianca BAKKER <carmen@carmenbianca.eu>, 2018.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: evince\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
-"POT-Creation-Date: 2018-09-29 19:28+0000\n"
-"PO-Revision-Date: 2018-11-10 02:53+0200\n"
-"Last-Translator: Kristjan SCHMIDT <kristjan.schmidt@googlemail.com>\n"
+"POT-Creation-Date: 2018-11-10 01:54+0000\n"
+"PO-Revision-Date: 2018-11-27 14:34+0100\n"
+"Last-Translator: Carmen Bianca Bakker <carmen@carmenbianca.eu>\n"
 "Language-Team: Esperanto <gnome-eo-list@gnome.org>\n"
 "Language: eo\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Virtaal 0.7.1\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"X-Generator: Gtranslator 3.30.1\n"
 "X-Project-Style: gnome\n"
 
 #: ../backend/comics/comics-document.c:163
 #: ../backend/comics/comics-document.c:187
-#| msgid "File corrupted"
 msgid "File is corrupted"
-msgstr "Damaĝita dosiero"
+msgstr "Dosiero estas damaĝita"
 
 #: ../backend/comics/comics-document.c:228
 msgid "Archive is encrypted"
@@ -383,7 +383,7 @@ msgstr "Montri mult-paĝajn dokumentojn"
 
 #: ../data/org.gnome.Evince.desktop.in.in.h:3
 msgid "pdf;ps;postscript;dvi;xps;djvu;tiff;document;presentation;viewer;"
-msgstr "pdf;ps;postscript;dvi;xps;djvu;tiff;dokumento;prezentaĵo;vidilo;"
+msgstr "pdf;ps;postscript;dvi;xps;djvu;tiff;dokumento;prezentaĵo;montrilo;"
 
 #: ../data/org.gnome.Evince-previewer.desktop.in.in.h:1
 msgid "Print Preview"
@@ -462,8 +462,8 @@ msgid "File type %s (%s) is not supported"
 msgstr "Dosiertipo %s (%s) ne estas subtenata"
 
 #: ../libdocument/ev-document-factory.c:369
-#: ../libdocument/ev-file-helpers.c:493 ../libdocument/ev-file-helpers.c:539
-#: ../libdocument/ev-file-helpers.c:558
+#: ../libdocument/ev-file-helpers.c:498 ../libdocument/ev-file-helpers.c:544
+#: ../libdocument/ev-file-helpers.c:563
 msgid "Unknown MIME Type"
 msgstr "Nekonata MIME-tipo"
 
@@ -475,12 +475,12 @@ msgstr "Ĉiuj dokumentoj"
 msgid "All Files"
 msgstr "Ĉiuj dosieroj"
 
-#: ../libdocument/ev-file-helpers.c:148
+#: ../libdocument/ev-file-helpers.c:153
 #, c-format
 msgid "Failed to create a temporary file: %s"
 msgstr "Malsukcesis krei provizoran dosieron: %s"
 
-#: ../libdocument/ev-file-helpers.c:310
+#: ../libdocument/ev-file-helpers.c:315
 #, c-format
 msgid "Failed to create a temporary directory: %s"
 msgstr "Malsukcesis krei provizoran dosierujon: %s"
@@ -995,12 +995,13 @@ msgstr ""
 "Kristjan SCHMIDT <kristjan.schmidt@googlemail.com>\n"
 "Denizo PRISKORN <tradukado@riseup.net>\n"
 "Daniel PUENTES <blatberk@openmailbox.org>\n"
-"Aisano https://launchpad.net/~info-ais-sanmarino\n"
-"Andreas SCHLAPSI https://launchpad.net/~a-schlapsi\n"
-"Michael MORONI https://launchpad.net/~airon90\n"
-"Serge LEBLANC https://launchpad.net/~serge-leblanc\n"
-"Sergio ALDANA https://launchpad.net/~sangtrinkulo\n"
-"William THEAKER https://launchpad.net/~wsttrollboy"
+"Aisano <https://launchpad.net/~info-ais-sanmarino>\n"
+"Andreas SCHLAPSI <https://launchpad.net/~a-schlapsi>\n"
+"Michael MORONI <https://launchpad.net/~airon90>\n"
+"Serge LEBLANC <https://launchpad.net/~serge-leblanc>\n"
+"Sergio ALDANA <https://launchpad.net/~sangtrinkulo>\n"
+"William THEAKER <https://launchpad.net/~wsttrollboy>\n"
+"Carmen Bianca BAKKER <carmen@carmenbianca.eu>"
 
 #: ../shell/ev-keyring.c:86
 #, c-format
@@ -1209,7 +1210,7 @@ msgstr "Agordi zomnivelon"
 
 #: ../shell/ev-utils.c:305
 msgid "Supported Image Files"
-msgstr "Subtenataj Bildoaj Dosieroj"
+msgstr "Subtenataj bildaj dosieroj"
 
 #: ../shell/ev-window.c:1585
 msgid "The document contains no pages"
@@ -1439,7 +1440,7 @@ msgstr "Lastatempaj dokumentoj"
 #: ../shell/ev-window-title.c:151 ../shell/ev-window-title.c:153
 #: ../shell/ev-window-title.c:158
 msgid "Password Required"
-msgstr "Pasvorto bezonatas"
+msgstr "Pasvorto necesas"
 
 #: ../shell/ev-zoom-action.c:48
 msgid "50%"
@@ -1499,11 +1500,11 @@ msgstr "6400%"
 
 #: ../shell/main.c:63 ../shell/main.c:269
 msgid "GNOME Document Viewer"
-msgstr "GNOMEa vidigilo de dokumentoj"
+msgstr "GNOME Dokumentmontrilo"
 
 #: ../shell/main.c:71
 msgid "The page label of the document to display."
-msgstr "La paĝ-etikedo de la dokumento por vidigi."
+msgstr "La montrenda paĝ-etikedo de la dokumento."
 
 #: ../shell/main.c:71
 msgid "PAGE"
@@ -1511,7 +1512,7 @@ msgstr "PAĜO"
 
 #: ../shell/main.c:72
 msgid "The page number of the document to display."
-msgstr "La paĝnumero de la dokumento por vidigi."
+msgstr "La montrenda paĝnumero de la dokumento."
 
 #: ../shell/main.c:72
 msgid "NUMBER"
@@ -1519,7 +1520,7 @@ msgstr "NUMERO"
 
 #: ../shell/main.c:73
 msgid "Named destination to display."
-msgstr "Nomo de celloko por montri."
+msgstr "Nomo de montrenda celloko."
 
 #: ../shell/main.c:73
 msgid "DEST"
@@ -1535,7 +1536,7 @@ msgstr "Ruli Evincon prezentaĵe"
 
 #: ../shell/main.c:76
 msgid "Run evince as a previewer"
-msgstr "Lanĉi Evincon kiel antaŭvidilo"
+msgstr "Lanĉi Evincon kiel antaŭrigardilo"
 
 #: ../shell/main.c:77
 msgid "The word or phrase to find in the document"
@@ -1936,14 +1937,14 @@ msgstr "Iri al antaŭa paĝo"
 
 #: ../org.gnome.Evince.appdata.xml.in.h:2
 msgid "Document viewer for popular document formats"
-msgstr "Dokumentovidigilo por popularaj dokumentaj dosierformoj"
+msgstr "Dokumentmontrilo por popularaj dokumentaj dosierformoj"
 
 #: ../org.gnome.Evince.appdata.xml.in.h:3
 msgid ""
 "A document viewer for the GNOME desktop. You can view, search or annotate "
 "documents in many different formats."
 msgstr ""
-"Dokumentvidilo por la GNOME labortablo. Vi povas vidi, serĉi aŭ noti "
+"Dokumentmontrilo por la GNOME labortablo. Vi povas vidi, serĉi aŭ noti "
 "dokumentojn en multe da diversaj formoj."
 
 #: ../org.gnome.Evince.appdata.xml.in.h:4
