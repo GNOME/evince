@@ -1000,7 +1000,10 @@ thumbnail_job_completed_callback (EvJobThumbnail      *job,
 			    -1);
         cairo_surface_destroy (surface);
 
-        gtk_widget_queue_draw (priv->icon_view);
+	if (ev_sidebar_thumbnails_use_icon_view (sidebar_thumbnails))
+		gtk_widget_queue_draw (priv->icon_view);
+	else
+		gtk_widget_queue_draw (priv->tree_view);
 }
 
 static void
