@@ -4936,15 +4936,21 @@ static void
 link_preview_show_thumbnail (GdkPixbuf *pixbuf, EvView *view)
 {
 	GtkWidget *popover = view->link_preview.popover;
-	gdouble		left = view->link_preview.left;
-	gdouble		top = view->link_preview.top;
-	int		width = MIN(gdk_pixbuf_get_width (pixbuf) - left, gtk_widget_get_allocated_width (GTK_WIDGET (view)));
-	int		height = MIN (gdk_pixbuf_get_height (pixbuf) - top, 365);
-	GdkPixbuf	*thumbnail_slice;
+	GdkPixbuf *thumbnail_slice;
 	GtkWidget *image_view;
+	gdouble    x = view->link_preview.left;
+	gdouble    y = view->link_preview.top;
+	gint       pwidth = gdk_pixbuf_get_width (pixbuf);
+	gint       pheight = gdk_pixbuf_get_height (pixbuf);
+	gint       vwidth = gtk_widget_get_allocated_width (GTK_WIDGET (view));
+	gint       vheight = gtk_widget_get_allocated_height (GTK_WIDGET (view));
+	gint       width = MIN (pwidth, vwidth);
+	gint       height = MIN (pheight, (int)(vheight / 3.0));
+	gint       left = MIN (MAX (0, (int)(x - width * 0.5)), pwidth - width);
+	gint       top = MIN (MAX (0, (int)(y - height * 0.3)), pheight - height);
 
 	thumbnail_slice = gdk_pixbuf_new_subpixbuf (pixbuf,
-						    (int)left, (int)top,
+						    left, top,
 						    width, height);
 	image_view = gtk_image_new_from_pixbuf (thumbnail_slice);
 
