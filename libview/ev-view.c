@@ -118,6 +118,10 @@ typedef struct {
 #define ANNOT_POPUP_WINDOW_DEFAULT_HEIGHT 150
 #define ANNOTATION_ICON_SIZE 24
 
+#define LINK_PREVIEW_PAGE_RATIO 1.0 / 3.0     /* Size of popover with respect to page size */
+#define LINK_PREVIEW_HORIZONTAL_LINK_POS 0.5  /* as fraction of preview width */
+#define LINK_PREVIEW_VERTICAL_LINK_POS 0.3    /* as fraction of preview height */
+
 /*** Scrolling ***/
 static void       view_update_range_and_current_page         (EvView             *view);
 
@@ -5062,15 +5066,53 @@ link_preview_show_thumbnail (GdkPixbuf *pixbuf,
 			     EvView *view)
 {
 	GtkWidget *popover = view->link_preview.popover;
-	gdouble		left = view->link_preview.left;
-	gdouble		top = view->link_preview.top;
-	int		width = MIN(gdk_pixbuf_get_width (pixbuf) - left, gtk_widget_get_allocated_width (GTK_WIDGET (view)));
-	int		height = MIN (gdk_pixbuf_get_height (pixbuf) - top, 365);
-	GdkPixbuf	*thumbnail_slice;
+	GdkPixbuf *thumbnail_slice;
 	GtkWidget *image_view;
+	gdouble    x, y;   /* position of the link on destination page */
+	gint       pwidth, pheight;  /* dimensions of destination page */
+	gint       vwidth, vheight;  /* dimensions of main view */
+	gint       width, height;    /* dimensions of popup */
+	gint       left, top;
+
+	x = view->link_preview.left;
+	y = view->link_preview.top;
+
+	pwidth = gdk_pixbuf_get_width (pixbuf);
+	pheight = gdk_pixbuf_get_height (pixbuf);
+
+	vwidth = gtk_widget_get_allocated_width (GTK_WIDGET (view));
+	vheight = gtk_widget_get_allocated_height (GTK_WIDGET (view));
+
+	/* Horizontally, we try to display the full width of the destination
+	 * page. This is needed to make the popup useful for two-column papers.
+	 * Vertically, we limit the height to maximally LINK_PREVIEW_PAGE_RATIO
+	 * of the main view. The idea is avoid the popup dominte the main view,
+	 * and the reader can see context both in the popup and the main page.
+	 */
+	width = MIN (pwidth, vwidth);
+	height = MIN (pheight, (int)(vheight * LINK_PREVIEW_PAGE_RATIO));
+
+	/* Position on the destination page that will be in the top left
+	 * corner of the popup. We choose the link destination to be centered
+	 * horizontally, and slightly above the center vertically. This is a
+	 * compromise given that a link contains only (x,y) information for a
+	 * single point, and some links have their (x,y) point to the top left
+	 * of their main content (e.g. section headers, bibliographic
+	 * references, footnotes, and tables), while other links have their
+	 * (x,y) point to the center right of the main contents (e.g.
+	 * equations). Also, figures usually have their (x,y) point to the
+	 * caption below the figure, so seeing a little of the figure above is
+	 * often enough to remind the reader of the rest of the figure.
+	 */
+	left = x - width * LINK_PREVIEW_HORIZONTAL_LINK_POS;
+	top = y - height * LINK_PREVIEW_VERTICAL_LINK_POS;
+
+	/* link preview destination should stay within the destination page: */
+	left = MIN (MAX (0, left), pwidth - width);
+	top = MIN (MAX (0, top), pheight - height);
 
 	thumbnail_slice = gdk_pixbuf_new_subpixbuf (pixbuf,
-						    (int)left, (int)top,
+						    left, top,
 						    width, height);
 	image_view = gtk_image_new_from_pixbuf (thumbnail_slice);
 
