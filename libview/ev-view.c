@@ -4809,15 +4809,21 @@ static void
 link_preview_show_thumbnail (GdkPixbuf *pixbuf, EvView *view)
 {
 	GtkWidget *popover = view->link_preview.popover;
-	gdouble		left = view->link_preview.left;
-	gdouble		top = view->link_preview.top;
-	int		width = MIN(gdk_pixbuf_get_width (pixbuf) - left, gtk_widget_get_allocated_width (GTK_WIDGET (view)));
-	int		height = MIN (gdk_pixbuf_get_height (pixbuf) - top, 365);
-	GdkPixbuf	*thumbnail_slice;
+	gdouble    x = view->link_preview.left;
+	gdouble    y = view->link_preview.top;
+	int        pwidth = gdk_pixbuf_get_width (pixbuf);
+	int        pheight = gdk_pixbuf_get_height (pixbuf);
+	int        vwidth = gtk_widget_get_allocated_width(GTK_WIDGET(view));
+	int        vheight = gtk_widget_get_allocated_height(GTK_WIDGET(view));
+	int        width = MIN(pwidth, vwidth);
+	int        height = MIN(pheight, (int)(vheight/3.0));
+	int        left = MIN(MAX(0, (int)(x - width*0.5)), pwidth - width);
+	int        top = MIN(MAX(0, (int)(y - height*0.3)), pheight - height);
+	GdkPixbuf *thumbnail_slice;
 	GtkWidget *image_view;
 
 	thumbnail_slice = gdk_pixbuf_new_subpixbuf (pixbuf,
-						    (int)left, (int)top,
+						    left, top,
 						    width, height);
 	image_view = gtk_image_new_from_pixbuf (thumbnail_slice);
 
@@ -4955,7 +4961,7 @@ ev_view_query_tooltip (GtkWidget  *widget,
 			view->scale);
 		ev_job_thumbnail_set_output_format (EV_JOB_THUMBNAIL (view->link_preview.job), EV_JOB_THUMBNAIL_SURFACE);
 
-        EvPoint link_dest_doc;
+		EvPoint link_dest_doc;
 		GdkPoint link_dest_view;
 		link_dest_doc.x = ev_link_dest_get_left (dest, NULL);
 		link_dest_doc.y = ev_link_dest_get_top (dest, NULL);
