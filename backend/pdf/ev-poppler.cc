@@ -846,10 +846,10 @@ pdf_document_get_dates_from_metadata (GTime *result, xmlXPathContextPtr xpathCtx
 		g_free (datestr);
 	}
 
-	if (createdate != NULL) {
+	if (metadate != NULL) {
 		datestr = g_strdup_printf ("%s", metadate);
 		g_time_val_from_iso8601 (datestr, &tmp_time);
-		result[1] = (GTime)tmp_time.tv_sec;
+		result[2] = (GTime)tmp_time.tv_sec;
 		g_free (datestr);
 	}
 
@@ -957,7 +957,7 @@ pdf_document_parse_metadata (const gchar    *metadata,
 	gchar             *subject;
 	gchar             *creatortool;
 	gchar             *producer;
-	GTime             dates[3] = {0};
+	GTime              dates[3] = {0};
 
 	doc = xmlParseMemory (metadata, strlen (metadata));
 	if (doc == NULL)
@@ -969,55 +969,64 @@ pdf_document_parse_metadata (const gchar    *metadata,
 		return;		/* invalid xpath context */
 	}
 
-	fmt = pdf_document_get_format_from_metadata (xpathCtx);
-	if (fmt != NULL) {
-		g_free (info->format);
-		info->format = fmt;
-	}
-
-	author = pdf_document_get_author_from_metadata (xpathCtx);
-	if (author != NULL) {
-		g_free (info->author);
-		info->author = author;
-	}
-
-	keywords = pdf_document_get_keywords_from_metadata (xpathCtx);
-	if (keywords != NULL) {
-		g_free (info->keywords);
-		info->keywords = keywords;
-	}
-
-	title = pdf_document_get_title_from_metadata (xpathCtx);
-	if (title != NULL) {
-		g_free (info->title);
-		info->title = title;
-	}
-
-	subject = pdf_document_get_subject_from_metadata (xpathCtx);
-	if (subject != NULL) {
-		g_free (info->subject);
-		info->subject = subject;
-	}
-
-	creatortool = pdf_document_get_creatortool_from_metadata (xpathCtx);
-	if (creatortool != NULL) {
-		g_free (info->creator);
-		info->creator = creatortool;
-	}
-
-	producer = pdf_document_get_producer_from_metadata (xpathCtx);
-	if (producer != NULL) {
-		g_free (info->producer);
-		info->producer = producer;
-	}
-
 	pdf_document_get_dates_from_metadata (dates, xpathCtx);
-	if (dates[0] != 0){
-		info->modified_date = dates[0];
-	}
+	/* From PDF spec, if the PDF modified date is newer than metadata date,
+	 * it indicates that the file was edited by a non-XMP aware software.
+	 * Then, the information dictionary is considered authoritative and the
+	 * XMP metadata should not be displayed. */
+	if (dates[2] >= info->modified_date) {
 
-	if (dates[1] != 0) {
-		info->creation_date = dates[1];
+		fmt = pdf_document_get_format_from_metadata (xpathCtx);
+		if (fmt != NULL) {
+			g_free (info->format);
+			info->format = fmt;
+		}
+
+		author = pdf_document_get_author_from_metadata (xpathCtx);
+		if (author != NULL) {
+			g_free (info->author);
+			info->author = author;
+		}
+
+		keywords = pdf_document_get_keywords_from_metadata (xpathCtx);
+		if (keywords != NULL) {
+			g_free (info->keywords);
+			info->keywords = keywords;
+		}
+
+		title = pdf_document_get_title_from_metadata (xpathCtx);
+		if (title != NULL) {
+			g_free (info->title);
+			info->title = title;
+		}
+
+		subject = pdf_document_get_subject_from_metadata (xpathCtx);
+		if (subject != NULL) {
+			g_free (info->subject);
+			info->subject = subject;
+		}
+
+		creatortool = pdf_document_get_creatortool_from_metadata (xpathCtx);
+		if (creatortool != NULL) {
+			g_free (info->creator);
+			info->creator = creatortool;
+		}
+
+		producer = pdf_document_get_producer_from_metadata (xpathCtx);
+		if (producer != NULL) {
+			g_free (info->producer);
+			info->producer = producer;
+		}
+
+
+		if (dates[0] != 0){
+			info->modified_date = dates[0];
+		}
+
+		if (dates[1] != 0) {
+			info->creation_date = dates[1];
+		}
+
 	}
 
 	info->license = pdf_document_get_license_from_metadata (xpathCtx);
