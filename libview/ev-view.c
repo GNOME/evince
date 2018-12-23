@@ -2472,6 +2472,7 @@ ev_view_form_field_text_create_widget (EvView      *view,
 	EvFormFieldText *field_text = EV_FORM_FIELD_TEXT (field);
 	GtkWidget       *text = NULL;
 	gchar           *txt;
+	GtkStyleContext *context;
 
 	txt = ev_document_forms_form_field_text_get_text (EV_DOCUMENT_FORMS (view->document),
 							  field);
@@ -2482,6 +2483,10 @@ ev_view_form_field_text_create_widget (EvView      *view,
 	        case EV_FORM_FIELD_TEXT_NORMAL:
 			text = gtk_entry_new ();
 			gtk_entry_set_has_frame (GTK_ENTRY (text), FALSE);
+			/* Remove '.flat' style added by previous call
+			 * gtk_entry_set_has_frame(FALSE) which caused bug #687 */
+			context = gtk_widget_get_style_context (text);
+			gtk_style_context_remove_class (context, GTK_STYLE_CLASS_FLAT);
 			gtk_entry_set_max_length (GTK_ENTRY (text), field_text->max_len);
 			gtk_entry_set_visibility (GTK_ENTRY (text), !field_text->is_password);
 			
