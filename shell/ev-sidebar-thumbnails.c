@@ -42,10 +42,6 @@
 
 #define THUMBNAIL_WIDTH 100
 
-/* The IconView doesn't scale nearly as well as the TreeView, so we arbitrarily
- * limit its use */
-#define MAX_ICON_VIEW_PAGE_COUNT 1500
-
 typedef struct _EvThumbsSize
 {
 	gint width;
@@ -62,7 +58,6 @@ typedef struct _EvThumbsSizeCache {
 struct _EvSidebarThumbnailsPrivate {
 	GtkWidget *swindow;
 	GtkWidget *icon_view;
-	GtkWidget *tree_view;
 	GtkAdjustment *vadjustment;
 	GtkListStore *list_store;
 	GHashTable *loading_icons;
@@ -231,37 +226,21 @@ ev_sidebar_thumbnails_page_is_in_visible_range (EvSidebarThumbnails *sidebar,
         GtkTreePath *path;
         GtkTreePath *start, *end;
         gboolean     retval;
+        GList *selection;
 
-        if (sidebar->priv->tree_view) {
-                GtkTreeSelection *selection;
-                GtkTreeIter       iter;
+        selection = gtk_icon_view_get_selected_items (GTK_ICON_VIEW (sidebar->priv->icon_view));
+        if (!selection)
+                return FALSE;
 
-                selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (sidebar->priv->tree_view));
-                if (!gtk_tree_selection_get_selected (selection, NULL, &iter))
-                        return FALSE;
+        path = (GtkTreePath *)selection->data;
 
-                path = gtk_tree_model_get_path (GTK_TREE_MODEL (sidebar->priv->list_store), &iter);
-                if (!gtk_tree_view_get_visible_range (GTK_TREE_VIEW (sidebar->priv->tree_view), &start, &end)) {
-                        gtk_tree_path_free (path);
-                        return FALSE;
-                }
-        } else {
-                GList *selection;
+        /* We don't handle or expect multiple selection. */
+        g_assert (selection->next == NULL);
+        g_list_free (selection);
 
-                selection = gtk_icon_view_get_selected_items (GTK_ICON_VIEW (sidebar->priv->icon_view));
-                if (!selection)
-                        return FALSE;
-
-                path = (GtkTreePath *)selection->data;
-
-                /* We don't handle or expect multiple selection. */
-                g_assert (selection->next == NULL);
-                g_list_free (selection);
-
-                if (!gtk_icon_view_get_visible_range (GTK_ICON_VIEW (sidebar->priv->icon_view), &start, &end)) {
-                        gtk_tree_path_free (path);
-                        return FALSE;
-                }
+        if (!gtk_icon_view_get_visible_range (GTK_ICON_VIEW (sidebar->priv->icon_view), &start, &end)) {
+                gtk_tree_path_free (path);
+                return FALSE;
         }
 
         retval = gtk_tree_path_compare (path, start) >= 0 && gtk_tree_path_compare (path, end) <= 0;
@@ -301,10 +280,7 @@ ev_sidebar_thumbnails_get_property (GObject    *object,
 
 	switch (prop_id) {
 	case PROP_WIDGET:
-		if (sidebar->priv->tree_view)
-			g_value_set_object (value, sidebar->priv->tree_view);
-		else
-			g_value_set_object (value, sidebar->priv->icon_view);
+		g_value_set_object (value, sidebar->priv->icon_view);
 		break;
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -620,23 +596,7 @@ adjustment_changed_cb (EvSidebarThumbnails *sidebar_thumbnails)
 
 	value = gtk_adjustment_get_value (priv->vadjustment);
 	
-	if (priv->tree_view) {
-		if (! gtk_widget_get_realized (priv->tree_view))
-			return;
-
-		gtk_tree_view_convert_tree_to_bin_window_coords (GTK_TREE_VIEW (priv->tree_view),
-								 0, (int) value,
-								 NULL, &wy1);
-		gtk_tree_view_convert_tree_to_bin_window_coords (GTK_TREE_VIEW (priv->tree_view),
-								 0, (int) (value + page_size),
-								 NULL, &wy2);
-		gtk_tree_view_get_path_at_pos (GTK_TREE_VIEW (priv->tree_view),
-					       1, wy1 + 1, &path,
-					       NULL, NULL, NULL);
-		gtk_tree_view_get_path_at_pos (GTK_TREE_VIEW (priv->tree_view),
-					       1, wy2 -1, &path2,
-					       NULL, NULL, NULL);
-	} else if (priv->icon_view) {
+	if (priv->icon_view) {
 		if (! gtk_widget_get_realized (priv->icon_view))
 			return;
 		if (! gtk_icon_view_get_visible_range (GTK_ICON_VIEW (priv->icon_view), &path, &path2))
@@ -752,35 +712,6 @@ ev_sidebar_icon_selection_changed (GtkIconView         *icon_view,
 }
 
 static void
-ev_sidebar_init_tree_view (EvSidebarThumbnails *ev_sidebar_thumbnails)
-{
-	EvSidebarThumbnailsPrivate *priv;
-	GtkTreeSelection *selection;
-	GtkCellRenderer *renderer;
-
-	priv = ev_sidebar_thumbnails->priv;
-	priv->tree_view = gtk_tree_view_new_with_model (GTK_TREE_MODEL (priv->list_store));
-
-	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (priv->tree_view));
-	g_signal_connect (selection, "changed",
-			  G_CALLBACK (ev_sidebar_tree_selection_changed), ev_sidebar_thumbnails);
-	gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (priv->tree_view), FALSE);
-	renderer = g_object_new (GTK_TYPE_CELL_RENDERER_PIXBUF,
-				 "xpad", 2,
-				 "ypad", 2,
-				 NULL);
-	gtk_tree_view_insert_column_with_attributes (GTK_TREE_VIEW (priv->tree_view), -1,
-						     NULL, renderer,
-						     "surface", 1,
-						     NULL);
-	gtk_tree_view_insert_column_with_attributes (GTK_TREE_VIEW (priv->tree_view), -1,
-						     NULL, gtk_cell_renderer_text_new (),
-						     "markup", 0, NULL);
-	gtk_container_add (GTK_CONTAINER (priv->swindow), priv->tree_view);
-	gtk_widget_show (priv->tree_view);
-}
-
-static void
 ev_sidebar_init_icon_view (EvSidebarThumbnails *ev_sidebar_thumbnails)
 {
 	EvSidebarThumbnailsPrivate *priv;
@@ -826,14 +757,6 @@ ev_sidebar_init_icon_view (EvSidebarThumbnails *ev_sidebar_thumbnails)
 	check_toggle_blank_first_dual_mode (ev_sidebar_thumbnails);
 	gtk_container_add (GTK_CONTAINER (priv->swindow), priv->icon_view);
 	gtk_widget_show (priv->icon_view);
-}
-
-static gboolean
-ev_sidebar_thumbnails_use_icon_view (EvSidebarThumbnails *sidebar_thumbnails)
-{
-	EvSidebarThumbnailsPrivate *priv = sidebar_thumbnails->priv;
-
-	return (ev_document_get_n_pages (priv->document) <= MAX_ICON_VIEW_PAGE_COUNT);
 }
 
 static void
@@ -905,7 +828,6 @@ static void
 ev_sidebar_thumbnails_set_current_page (EvSidebarThumbnails *sidebar,
 					gint                 page)
 {
-	GtkTreeView *tree_view;
 	GtkTreePath *path;
 
 	if (sidebar->priv->blank_first_dual_mode)
@@ -913,11 +835,7 @@ ev_sidebar_thumbnails_set_current_page (EvSidebarThumbnails *sidebar,
 
 	path = gtk_tree_path_new_from_indices (page, -1);
 
-	if (sidebar->priv->tree_view) {
-		tree_view = GTK_TREE_VIEW (sidebar->priv->tree_view);
-		gtk_tree_view_set_cursor (tree_view, path, NULL, FALSE);
-		gtk_tree_view_scroll_to_cell (tree_view, path, NULL, FALSE, 0.0, 0.0);
-	} else if (sidebar->priv->icon_view) {
+	if (sidebar->priv->icon_view) {
 
 		g_signal_handlers_block_by_func
 			(sidebar->priv->icon_view,
@@ -1032,10 +950,7 @@ thumbnail_job_completed_callback (EvJobThumbnail      *job,
 			    -1);
         cairo_surface_destroy (surface);
 
-	if (ev_sidebar_thumbnails_use_icon_view (sidebar_thumbnails))
-		gtk_widget_queue_draw (priv->icon_view);
-	else
-		gtk_widget_queue_draw (priv->tree_view);
+	gtk_widget_queue_draw (priv->icon_view);
 }
 
 static void
@@ -1068,29 +983,11 @@ ev_sidebar_thumbnails_document_changed_cb (EvDocumentModel     *model,
 	ev_sidebar_thumbnails_clear_model (sidebar_thumbnails);
 	ev_sidebar_thumbnails_fill_model (sidebar_thumbnails);
 
-	/* Create the view widget, and remove the old one, if needed */
-	if (ev_sidebar_thumbnails_use_icon_view (sidebar_thumbnails)) {
-		if (priv->tree_view) {
-			gtk_container_remove (GTK_CONTAINER (priv->swindow), priv->tree_view);
-			priv->tree_view = NULL;
-		}
-
-		if (! priv->icon_view) {
-			ev_sidebar_init_icon_view (sidebar_thumbnails);
-			g_object_notify (G_OBJECT (sidebar_thumbnails), "main_widget");
-		} else {
-			gtk_widget_queue_resize (priv->icon_view);
-		}
+	if (! priv->icon_view) {
+		ev_sidebar_init_icon_view (sidebar_thumbnails);
+		g_object_notify (G_OBJECT (sidebar_thumbnails), "main_widget");
 	} else {
-		if (priv->icon_view) {
-			gtk_container_remove (GTK_CONTAINER (priv->swindow), priv->icon_view);
-			priv->icon_view = NULL;
-		}
-
-		if (! priv->tree_view) {
-			ev_sidebar_init_tree_view (sidebar_thumbnails);
-			g_object_notify (G_OBJECT (sidebar_thumbnails), "main_widget");
-		}
+		gtk_widget_queue_resize (priv->icon_view);
 	}
 
 	/* Connect to the signal and trigger a fake callback */
@@ -1235,9 +1132,6 @@ ev_sidebar_thumbnails_is_two_columns (EvSidebarThumbnails *sidebar)
         gint sidebar_width, two_columns_width, three_columns_width;
         gint margin, column_spacing, item_padding, thumbnail_width;
         static gint frame_horizontal_width;
-
-        if (!ev_sidebar_thumbnails_use_icon_view (sidebar))
-                return FALSE;
 
         priv = sidebar->priv;
         icon_view = GTK_ICON_VIEW (priv->icon_view);
