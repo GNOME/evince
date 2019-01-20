@@ -5224,6 +5224,10 @@ ev_view_button_press_event (GtkWidget      *widget,
 			view->scroll_info.start_y = event->y;
 			ev_view_set_focused_element_at_location (view, event->x, event->y);
 			return ev_view_do_popup_menu (view, event->x, event->y);
+		case 8:
+			return ev_view_previous_page (view);
+		case 9:
+			return ev_view_next_page (view);
 	}
 	
 	return FALSE;
