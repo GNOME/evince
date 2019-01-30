@@ -52,6 +52,7 @@ sources = [
   'formats.page',
   'forms.page',
   'forms-saving.page',
+  'headerbar.page',
   'index.page',
   'introduction.page',
   'invert-colors.page',
@@ -86,7 +87,6 @@ sources = [
   'synctex-search.page',
   'synctex-support.page',
   'textselection.page',
-  'titlebar.page',
   'translate.page',
 ]
 

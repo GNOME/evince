@@ -50,6 +50,7 @@ HELP_FILES = \
 	formats.page			\
 	forms.page			\
 	forms-saving.page		\
+	headerbar.page			\
 	index.page			\
 	introduction.page		\
 	invert-colors.page		\
@@ -84,7 +85,6 @@ HELP_FILES = \
 	synctex-search.page		\
 	synctex-support.page		\
 	textselection.page		\
-	titlebar.page			\
 	translate.page
 
 HELP_LINGUAS = bg ca cs da de el en_GB es eu fi fr gl hu id it ja ko lv nl oc pl pt_BR ro ru sl sr sv te uk vi zh_CN zh_HK zh_TW
