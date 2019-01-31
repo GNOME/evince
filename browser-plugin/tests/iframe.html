@@ -1,0 +1,15 @@
+<html>
+<head>
+  <title>Evince Browser Plugin Test: Iframe</title>
+</head>
+
+<body>
+  <h1>PDF document inside an Iframe</h1>
+  <button onclick="document.getElementById('container').setAttribute('style', 'display: none');">Hide</button>
+  <button onclick="document.getElementById('container').setAttribute('style', 'display: block');">Show</button>
+  <div id="container">
+    <iframe id="frame" src="test.pdf" width="450" height="450"/>
+  </div>
+</body>
+</html>
+
