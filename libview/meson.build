@@ -65,11 +65,14 @@ deps = [
   gstreamer_base_dep,
   gstreamer_dep,
   gstreamer_video_dep,
-  gtk_unix_print_dep,
   gthread_dep,
   libevdocument_dep,
   m_dep,
 ]
+
+if enable_gtk_unix_print
+  deps += gtk_unix_print_dep
+endif
 
 cflags = [
   '-DG_LOG_DOMAIN="EvinceView"',
