@@ -288,6 +288,12 @@ else
   endif
 endif
 
+# *** shlwapi ***
+if not external_synctex and ev_platform == 'win32'
+  # The internal synctex library uses SHLWAPI Wrapper Functions
+  shlwapi_dep = cc.find_library('shlwapi')
+endif
+
 # *** Mime types list ***
 mime_types_list = {
   'comics': [
