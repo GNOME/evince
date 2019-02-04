@@ -246,7 +246,7 @@ ev_document_model_class_init (EvDocumentModelClass *klass)
 							      G_PARAM_READWRITE |
                                                               G_PARAM_STATIC_STRINGS));
 	g_object_class_install_property (g_object_class,
-					 PROP_SCALE,
+					 PROP_MIN_SCALE,
 					 g_param_spec_double ("min-scale",
 							      "Minimum Scale",
 							      "Minium scale factor",
@@ -254,7 +254,7 @@ ev_document_model_class_init (EvDocumentModelClass *klass)
 							      G_PARAM_READWRITE |
                                                               G_PARAM_STATIC_STRINGS));
 	g_object_class_install_property (g_object_class,
-					 PROP_SCALE,
+					 PROP_MAX_SCALE,
 					 g_param_spec_double ("max-scale",
 							      "Maximum Scale",
 							      "Maximum scale factor",
