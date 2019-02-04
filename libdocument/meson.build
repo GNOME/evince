@@ -166,7 +166,7 @@ pkg.generate(
   name: 'Evince Document',
   description: 'GNOME document viewer backend library',
   subdirs: ev_include_subdir,
-  requires: [
+  libraries: [
     gio_dep,
     gtk_dep,
   ],

@@ -108,7 +108,7 @@ pkg.generate(
   name: 'Evince View',
   description: 'GNOME document viewer view library',
   subdirs: ev_include_subdir,
-  requires: [
+  libraries: [
     'evince-document-@0@ = @1@'.format(ev_api_version, ev_version),
     gthread_dep,
   ],
