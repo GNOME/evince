@@ -281,6 +281,12 @@ config_h.set('HAVE_DESKTOP_SCHEMAS', gsettings_desktop_schemas_dep.found())
 synctex_dep = dependency('synctex', version: '>= 1.19', required: false)
 external_synctex = synctex_dep.found()
 
+# *** shlwapi ***
+if not external_synctex and ev_platform == 'win32'
+  # The internal synctex library uses SHLWAPI Wrapper Functions
+  shlwapi_dep = cc.find_library('shlwapi')
+endif
+
 # *** Mime types list ***
 mime_types_list = {
   'comics': [
