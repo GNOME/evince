@@ -102,7 +102,7 @@ typedef struct {
 	EvRectangle doc_rect;
 } EvViewChild;
 
-#define MIN_SCALE 0.2
+#define MIN_SCALE 0.05409 /* large documents (comics) need a small value, see #702 */
 #define ZOOM_IN_FACTOR  1.2
 #define ZOOM_OUT_FACTOR (1.0/ZOOM_IN_FACTOR)
 
