@@ -176,6 +176,12 @@ config_h.set('HAVE_HIDPI_SUPPORT', cc.has_function('cairo_surface_set_device_sca
 
 # ZLIB support (required)
 zlib_dep = cc.find_library('z', required: false)
+if not zlib_dep.found()
+  zlib_dep = dependency(
+    'zlib',
+    fallback: ['zlib', 'zlib_dep']
+  )
+endif
 assert(zlib_dep.found() and cc.has_function('inflate', dependencies: zlib_dep) and cc.has_function('crc32', dependencies: zlib_dep),
       'No sufficient zlib library found on your system')
 
