@@ -86,7 +86,7 @@ ldflags = common_ldflags
 if ev_platform == 'win32'
   resource = 'evince-icon.o'
 
-  ldflag += custom_target(
+  sources += custom_target(
     resource,
     input: 'evince-icon.rc',
     output: resource,
