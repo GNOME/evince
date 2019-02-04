@@ -137,6 +137,7 @@ add_project_arguments(common_flags, language: 'c')
 gnome = import('gnome')
 i18n = import('i18n')
 pkg = import('pkgconfig')
+windows = import('windows')
 
 source_root = meson.current_source_dir()
 

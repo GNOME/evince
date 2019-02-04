@@ -82,14 +82,9 @@ evince_cflags = [
 evince_ldflags = common_ldflags
 
 if ev_platform == 'win32'
-  resource = 'evince-icon.o'
-
-  evince_ldflag += custom_target(
-    resource,
-    input: 'evince-icon.rc',
-    output: resource,
-    command: [find_program('windres'), '@INPUT@', '-I', data_dir, '@OUTPUT@'],
-  )
+  sources += windows.compile_resources(
+    'evince-icon.rc',
+    include_directories: data_dir)
 else
   evince_deps += adwaita_icon_theme_dep
 endif
