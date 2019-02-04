@@ -6,6 +6,7 @@ sources = files(
 libsynctex = static_library(
   'synctex',
   sources: sources,
+  dependencies: zlib_dep,
   include_directories: top_inc,
   c_args: '-DSYNCTEX_VERBOSE=0',
 )
