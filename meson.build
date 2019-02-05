@@ -162,7 +162,9 @@ m_dep = cc.find_library('m')
 # so we need check for that explicity.
 cairo_dep = dependency('cairo', version: '>= 1.10.0',
                        fallback : ['cairo', 'libcairo_dep'])
-config_h.set('HAVE_HIDPI_SUPPORT', cc.has_function('cairo_surface_set_device_scale', dependencies: cairo_dep))
+if cairo_dep.type_name() != 'internal'
+  config_h.set('HAVE_HIDPI_SUPPORT', cc.has_function('cairo_surface_set_device_scale', dependencies: cairo_dep))
+endif
 
 # ZLIB support (required)
 zlib_dep = cc.find_library('z', required: false)
@@ -171,8 +173,10 @@ if not zlib_dep.found()
     fallback : ['zlib', 'zlib_dep'],
   )
 endif
-assert(zlib_dep.found() and cc.has_function('inflate', dependencies: zlib_dep) and cc.has_function('crc32', dependencies: zlib_dep),
-      'No sufficient zlib library found on your system')
+if zlib_dep.type_name() != 'internal'
+  assert(zlib_dep.found() and cc.has_function('inflate', dependencies: zlib_dep) and cc.has_function('crc32', dependencies: zlib_dep),
+        'No sufficient zlib library found on your system')
+endif
 
 ev_platform = get_option('platform')
 if ev_platform == 'gnome'
