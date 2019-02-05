@@ -40,8 +40,8 @@ static gchar *tmp_dir = NULL;
 #endif
 
 /* On Windows, O_CLOEXEC does not exist */
-#ifndef O_CLOEXEC
-#define O_CLOEXEC 0
+#if !defined O_CLOEXEC && defined O_NOINHERIT
+#define O_CLOEXEC O_NOINHERIT
 #endif
 
 /*
@@ -588,13 +588,10 @@ static const char *compressor_cmds[] = {
 #define N_ARGS      4
 #define BUFFER_SIZE 1024
 
+#ifndef G_OS_WIN32
 static void
 compression_child_setup_cb (gpointer fd_ptr)
 {
-#ifdef _WIN32
-        /* On Windows, processes are not inherited by default */
-        (void)fd_ptr;
-#else
         int fd = GPOINTER_TO_INT (fd_ptr);
         int flags;
 
@@ -603,8 +600,8 @@ compression_child_setup_cb (gpointer fd_ptr)
                 flags &= ~FD_CLOEXEC;
                 fcntl (fd, F_SETFD, flags);
         }
-#endif
 }
+#endif
 
 static gchar *
 compression_run (const gchar       *uri,
@@ -653,7 +650,11 @@ compression_run (const gchar       *uri,
 
 	if (g_spawn_async_with_pipes (NULL, argv, NULL,
 				      G_SPAWN_STDERR_TO_DEV_NULL,
+#ifdef G_OS_WIN32
+                                      NULL, NULL,
+#else
                                       compression_child_setup_cb, GINT_TO_POINTER (fd),
+#endif
                                       NULL,
 				      NULL, &pout, NULL, &err)) {
 		GIOChannel *in, *out;
