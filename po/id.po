@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
-"POT-Creation-Date: 2019-01-08 01:18+0000\n"
-"PO-Revision-Date: 2019-01-26 21:51+0700\n"
+"POT-Creation-Date: 2019-02-04 21:04+0000\n"
+"PO-Revision-Date: 2019-02-06 20:56+0700\n"
 "Last-Translator: Kukuh Syafaat <kukuhsyafaat@gnome.org>\n"
 "Language-Team: GNOME Indonesian Translation Team <gnome@i15n.org>\n"
 "Language: id\n"
@@ -301,6 +301,56 @@ msgstr "Dokumen XPS"
 #: backend/xps/evince-xpsdocument.metainfo.xml.in.in:6
 msgid "Adds support for reading XPS documents"
 msgstr "Menambahkan dukungan untuk membaca dokumen XPS"
+
+#: browser-plugin/EvBrowserPluginToolbar.cpp:288 shell/evince-menus.ui:124
+msgid "Fit Pa_ge"
+msgstr "Pas Hala_man"
+
+#: browser-plugin/EvBrowserPluginToolbar.cpp:297 shell/evince-menus.ui:129
+msgid "Fit _Width"
+msgstr "Pas _Lebar"
+
+#: browser-plugin/EvBrowserPluginToolbar.cpp:306 shell/evince-menus.ui:134
+msgid "_Automatic"
+msgstr "Otom_atis"
+
+#. Navigation buttons
+#: browser-plugin/EvBrowserPluginToolbar.cpp:331
+msgid "Go to the previous page"
+msgstr "Ke halaman sebelumnya"
+
+#: browser-plugin/EvBrowserPluginToolbar.cpp:335
+msgid "Go to the next page"
+msgstr "Ke halaman selanjutnya"
+
+#. Search.
+#: browser-plugin/EvBrowserPluginToolbar.cpp:362 shell/ev-toolbar.c:172
+msgid "Find a word or phrase in the document"
+msgstr "Temukan kata atau frasa dalam dokumen"
+
+#: browser-plugin/EvBrowserPluginToolbar.cpp:381
+msgid "Show the entire document"
+msgstr "Tampilkan seluruh dokumen"
+
+#: browser-plugin/EvBrowserPluginToolbar.cpp:389
+msgid "Show two pages at once"
+msgstr "Tampilkan dua halaman sekaligus"
+
+#: browser-plugin/EvBrowserPluginToolbar.cpp:411 previewer/previewer.ui:34
+msgid "Enlarge the document"
+msgstr "Perbesar tampilan dokumen"
+
+#: browser-plugin/EvBrowserPluginToolbar.cpp:415 previewer/previewer.ui:42
+msgid "Shrink the document"
+msgstr "Perkecil tampilan dokumen"
+
+#: browser-plugin/EvBrowserPluginToolbar.cpp:437
+msgid "Download document"
+msgstr "Unduh dokumen"
+
+#: browser-plugin/EvBrowserPluginToolbar.cpp:450
+msgid "Print document"
+msgstr "Cetak dokumen"
 
 #. Manually set name and icon
 #: data/org.gnome.Evince.desktop.in.in:3 shell/ev-window.c:4054
@@ -749,14 +799,6 @@ msgstr "Halaman Sebelumnya"
 msgid "Next Page"
 msgstr "Halaman Selanjutnya"
 
-#: previewer/previewer.ui:34
-msgid "Enlarge the document"
-msgstr "Perbesar tampilan dokumen"
-
-#: previewer/previewer.ui:42
-msgid "Shrink the document"
-msgstr "Perkecil tampilan dokumen"
-
 #: previewer/previewer.ui:49
 msgid "Reset zoom and make the page fit in the window"
 msgstr "Atur ulang zum dan buat halaman pas di jendela"
@@ -1045,18 +1087,6 @@ msgstr "_Bantuan"
 msgid "_About Document Viewer"
 msgstr "Tent_ang Penampil Dokumen"
 
-#: shell/evince-menus.ui:124
-msgid "Fit Pa_ge"
-msgstr "Pas Hala_man"
-
-#: shell/evince-menus.ui:129
-msgid "Fit _Width"
-msgstr "Pas _Lebar"
-
-#: shell/evince-menus.ui:134
-msgid "_Automatic"
-msgstr "Otom_atis"
-
 #: shell/evince-menus.ui:146
 msgid "_Open Link"
 msgstr "_Buka Taut"
@@ -1314,10 +1344,6 @@ msgstr "Garis Besar"
 #: shell/ev-sidebar-thumbnails.c:1067 shell/ev-window.c:7480
 msgid "Thumbnails"
 msgstr "Gambar Mini"
-
-#: shell/ev-toolbar.c:172
-msgid "Find a word or phrase in the document"
-msgstr "Temukan kata atau frasa dalam dokumen"
 
 #: shell/ev-toolbar.c:178
 msgid "Search not available for this document"
@@ -1949,24 +1975,6 @@ msgstr "STRING"
 #: shell/main.c:81
 msgid "[FILE…]"
 msgstr "[BERKAS…]"
-
-#~ msgid "Go to the previous page"
-#~ msgstr "Ke halaman sebelumnya"
-
-#~ msgid "Go to the next page"
-#~ msgstr "Ke halaman selanjutnya"
-
-#~ msgid "Show the entire document"
-#~ msgstr "Tampilkan seluruh dokumen"
-
-#~ msgid "Show two pages at once"
-#~ msgstr "Tampilkan dua halaman sekaligus"
-
-#~ msgid "Download document"
-#~ msgstr "Unduh dokumen"
-
-#~ msgid "Print document"
-#~ msgstr "Cetak dokumen"
 
 #~ msgid "Make the current document fill the window"
 #~ msgstr "Buat dokumen saat ini mengisi seluruh jendela"
