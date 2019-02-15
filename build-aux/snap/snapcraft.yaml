@@ -7,12 +7,25 @@ description: |
 
 grade: devel # must be 'stable' to release into candidate/stable channels
 confinement: strict
+base: core18
 
 plugs:
-    gnome-3-26-1604:
-      interface: content
-      target: $SNAP/gnome-platform
-      default-provider: gnome-3-26-1604:gnome-3-26-1604
+  gnome-3-28-1804:
+    interface: content
+    target: $SNAP/gnome-platform
+    default-provider: gnome-3-28-1804
+  gtk-3-themes:
+    interface: content
+    target: $SNAP/data-dir/themes
+    default-provider: gtk-common-themes
+  icon-themes:
+    interface: content
+    target: $SNAP/data-dir/icons
+    default-provider: gtk-common-themes
+  sound-themes:
+    interface: content
+    target: $SNAP/data-dir/sounds
+    default-provider: gtk-common-themes
 
 slots:
   # for GtkApplication registration
@@ -21,10 +34,17 @@ slots:
     bus: session
     name: org.gnome.Evince
 
+passthrough:
+  layout:
+    /usr/share/xml/iso-codes:
+      symlink: $SNAP/gnome-platform/usr/share/xml/iso-codes
+
 apps:
   evince:
     command: desktop-launch evince
     plugs:
+      - avahi-observe
+      - cups-control
       - desktop
       - desktop-legacy
       - gsettings
@@ -36,6 +56,8 @@ apps:
   evince-previewer:
     command: desktop-launch evince-previewer
     plugs:
+      - avahi-observe
+      - cups-control
       - desktop
       - desktop-legacy
       - gsettings
@@ -46,31 +68,38 @@ apps:
     desktop: usr/share/applications/org.gnome.Evince-previewer.desktop
 
 parts:
+  desktop-gnome-platform:
+    source: https://github.com/ubuntu/snapcraft-desktop-helpers.git
+    source-subdir: gtk
+    plugin: make
+    make-parameters: ["FLAVOR=gtk3"]
+    build-packages:
+      - build-essential
+      - libgtk-3-dev
+    override-build: |
+      snapcraftctl build
+      mkdir -pv $SNAPCRAFT_PART_INSTALL/gnome-platform
   evince:
-    build-attributes: [no-system-libraries]
     after: [desktop-gnome-platform]
     source: .
     source-type: git
     plugin: autotools
-    prepare:
-      sed -i.bak -e 's|=evince$|=${SNAP}/meta/gui/evince.png|g' data/org.gnome.Evince.desktop.in.in
-    install: |
-      mkdir -p $SNAPCRAFT_PART_INSTALL/meta/gui/
-      cp ../src/data/icons/256x256/apps/org.gnome.Evince.png $SNAPCRAFT_PART_INSTALL/meta/gui/
-      cp data/evince.desktop $SNAPCRAFT_PART_INSTALL/meta/gui/
-    configflags: [--disable-maintainer-mode, --prefix=/snap/evince/current/usr]
+    configflags: [--prefix=/snap/evince/current/usr]
     organize:
       snap/evince/current/usr: usr
     build-packages:
+      - appstream
       - intltool
       - gnome-pkg-tools
       - yelp-tools
       - gtk-doc-tools
       - libx11-dev
+      - libarchive-dev
       - libcairo2-dev
       - libgtk-3-dev
       - libgail-3-dev
       - libglib2.0-dev
+      - libgspell-1-dev
       - libgstreamer1.0-dev
       - libgstreamer-plugins-base1.0-dev
       - libsecret-1-dev
@@ -90,7 +119,6 @@ parts:
       - gsettings-desktop-schemas-dev
       - gnome-common
       - dh-apparmor
-      - libgrip-dev
     prime:
       - "-usr/lib/*.a"
       - "-usr/lib/mozilla"
@@ -102,8 +130,18 @@ parts:
   libraries:
     plugin: nil
     stage-packages:
+      - libarchive13
       - libpoppler-glib8
-      - libpoppler58
+      - libpoppler73
+      - libnss3
+      - libnspr4
     prime:
-      - "usr/lib/x86_64-linux-gnu/libpoppler-glib.so.*"
-      - "usr/lib/x86_64-linux-gnu/libpoppler.so.*"
+      - "usr/lib/*/libarchive.so.*"
+      - "usr/lib/*/libpoppler-glib.so.*"
+      - "usr/lib/*/libpoppler.so.*"
+      - "usr/lib/*/libnss3.so"
+      - "usr/lib/*/libnssutil3.so"
+      - "usr/lib/*/libsmime3.so"
+      - "usr/lib/*/libnspr4.so"
+      - "usr/lib/*/libplc4.so"
+      - "usr/lib/*/libplds4.so"
