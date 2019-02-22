@@ -1283,9 +1283,14 @@ ev_view_get_page_extents (EvView       *view,
 		max_width = max_width + border->left + border->right;
 		/* Get the location of the bounding box */
 		if (is_dual_page (view, &odd_left)) {
-			x = view->spacing + ((page % 2 == !odd_left) ? 0 : 1) * (max_width + view->spacing);
+			gboolean right_page;
+
+			right_page = (gtk_widget_get_direction (widget) == GTK_TEXT_DIR_LTR && page % 2 == !odd_left) ||
+			             (gtk_widget_get_direction (widget) == GTK_TEXT_DIR_RTL && page % 2 == odd_left);
+
+			x = view->spacing + (right_page ? 0 : 1) * (max_width + view->spacing);
 			x = x + MAX (0, allocation.width - (max_width * 2 + view->spacing * 3)) / 2;
-			if (page % 2 == !odd_left)
+			if (right_page)
 				x = x + (max_width - width - border->left - border->right);
 		} else {
 			x = view->spacing;
@@ -1326,7 +1331,8 @@ ev_view_get_page_extents (EvView       *view,
 			y = view->spacing;
 
 			/* Adjust for being the left or right page */
-			if (page % 2 == !odd_left)
+			if ((gtk_widget_get_direction (widget) == GTK_TEXT_DIR_LTR && page % 2 == !odd_left) ||
+			    (gtk_widget_get_direction (widget) == GTK_TEXT_DIR_RTL && page % 2 == odd_left))
 				x = x + max_width - width;
 			else
 				x = x + (max_width + overall_border.left + overall_border.right) + view->spacing;
