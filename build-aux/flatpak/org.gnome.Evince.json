@@ -169,7 +169,9 @@
             "name": "evince",
             "buildsystem": "meson",
             "config-opts": [
-                "-Dnautilus=false"
+                "-Dnautilus=false",
+                "-Dgtk_doc=false",
+                "-Dintrospection=false"
             ],
             "sources": [
                 {
