@@ -972,6 +972,7 @@ ev_application_startup (GApplication *gapplication)
           "win.caret-navigation",       "F7", NULL,
           "win.zoom-in",                "plus", "<Ctrl>plus", "KP_Add", "<Ctrl>KP_Add", "equal", "<Ctrl>equal", NULL,
           "win.zoom-out",               "minus", "<Ctrl>minus", "KP_Subtract", "<Ctrl>KP_Subtract", NULL,
+          "win.toggle-toolbar",         "<Shift>H", NULL,
           "win.show-side-pane",         "F9", NULL,
           "win.fullscreen",             "F11", NULL,
           "win.presentation",           "F5", "<Shift>F5", NULL,
