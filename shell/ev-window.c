@@ -387,6 +387,7 @@ static void     recent_view_item_activated_cb           (EvRecentView     *recen
                                                          const char       *uri,
                                                          EvWindow         *ev_window);
 static void     ev_window_fullscreen_show_toolbar       (EvWindow         *ev_window);
+static void     ev_window_fullscreen_hide_toolbar       (EvWindow         *ev_window);
 static void     ev_window_begin_add_annot               (EvWindow         *ev_window,
 							 EvAnnotationType  annot_type);
 
@@ -4207,11 +4208,17 @@ ev_window_cmd_toggle_find (GSimpleAction *action,
 			   gpointer       user_data)
 {
 	EvWindow *ev_window = user_data;
+	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
 
-	if (g_variant_get_boolean (state))
+	if (g_variant_get_boolean (state)) {
 		ev_window_show_find_bar (ev_window, TRUE);
-	else
+		// In fullscreen mode hide fs_toolbar
+		if (ev_document_model_get_fullscreen (priv->model))
+			if (gtk_revealer_get_reveal_child (GTK_REVEALER (priv->fs_revealer)))
+				ev_window_fullscreen_hide_toolbar (ev_window);
+	} else {
 		ev_window_close_find_bar (ev_window);
+	}
 
 	g_simple_action_set_state (action, state);
 }
