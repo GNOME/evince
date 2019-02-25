@@ -5962,10 +5962,15 @@ ev_window_cmd_toggle_edit_annots (GSimpleAction *action,
 	EvWindow *ev_window = user_data;
 	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 
-	if (g_variant_get_boolean (state))
+	if (g_variant_get_boolean (state)) {
 		gtk_widget_show (priv->annots_toolbar);
-	else
+		// In fullscreen mode hide fs_toolbar
+		if (ev_document_model_get_fullscreen (priv->model))
+			if (gtk_revealer_get_reveal_child (GTK_REVEALER (priv->fs_revealer)))
+				ev_window_fullscreen_hide_toolbar (ev_window);
+	} else {
 		gtk_widget_hide (priv->annots_toolbar);
+	}
 
 	g_simple_action_set_state (action, state);
 }
