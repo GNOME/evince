@@ -13,7 +13,9 @@ if enable_gtk_doc
 
   subdir('reference/libdocument')
   subdir('reference/libview')
-  subdir('reference/shell')
+  if enable_viewer
+    subdir('reference/shell')
+  endif
 endif
 
 sources = [
