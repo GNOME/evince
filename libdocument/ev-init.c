@@ -114,6 +114,7 @@ ev_init (void)
 	bindtextdomain (GETTEXT_PACKAGE, ev_get_locale_dir ());
 	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
 
+        gdk_pixbuf_init_modules (EXTRA_GDK_PIXBUF_LOADERS_DIR, NULL);
         _ev_debug_init ();
         _ev_file_helpers_init ();
         have_backends = _ev_document_factory_init ();
