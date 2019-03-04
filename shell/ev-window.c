@@ -537,6 +537,8 @@ ev_window_update_actions_sensitivity (EvWindow *ev_window)
 				      !recent_view_mode);
 	ev_window_set_action_enabled (ev_window, "dual-page", has_pages &&
 				      !recent_view_mode);
+	ev_window_set_action_enabled (ev_window, "rtl", has_pages &&
+				      !recent_view_mode);
 	ev_window_set_action_enabled (ev_window, "reload", has_pages &&
 				      !recent_view_mode);
 	ev_window_set_action_enabled (ev_window, "auto-scroll", has_pages &&
@@ -1139,6 +1141,10 @@ ev_window_init_metadata_with_default_values (EvWindow *window)
 		ev_metadata_set_boolean (metadata, "dual-page-odd-left",
 					 g_settings_get_boolean (settings, "dual-page-odd-left"));
 	}
+	if (!ev_metadata_has_key (metadata, "rtl")) {
+		ev_metadata_set_boolean (metadata, "rtl",
+					 gtk_widget_get_default_direction () == GTK_TEXT_DIR_RTL ? TRUE : FALSE);
+	}
 	if (!ev_metadata_has_key (metadata, "inverted-colors")) {
 		ev_metadata_set_boolean (metadata, "inverted-colors",
 					 g_settings_get_boolean (settings, "inverted-colors"));
@@ -1206,6 +1212,7 @@ setup_model_from_metadata (EvWindow *window)
 	gboolean continuous = FALSE;
 	gboolean dual_page = FALSE;
 	gboolean dual_page_odd_left = FALSE;
+	gboolean rtl = FALSE;
 	gboolean fullscreen = FALSE;
 	EvWindowPrivate *priv = GET_PRIVATE (window);
 
@@ -1272,6 +1279,11 @@ setup_model_from_metadata (EvWindow *window)
 	/* Dual page odd pages left */
 	if (ev_metadata_get_boolean (priv->metadata, "dual-page-odd-left", &dual_page_odd_left)) {
 		ev_document_model_set_dual_page_odd_pages_left (priv->model, dual_page_odd_left);
+	}
+
+	/* Right to left document */
+	if (ev_metadata_get_boolean (priv->metadata, "rtl", &rtl)) {
+		ev_document_model_set_rtl (priv->model, rtl);
 	}
 
 	/* Fullscreen */
@@ -1487,6 +1499,7 @@ ev_window_setup_default (EvWindow *ev_window)
 	ev_document_model_set_continuous (model, g_settings_get_boolean (settings, "continuous"));
 	ev_document_model_set_dual_page (model, g_settings_get_boolean (settings, "dual-page"));
 	ev_document_model_set_dual_page_odd_pages_left (model, g_settings_get_boolean (settings, "dual-page-odd-left"));
+	ev_document_model_set_rtl (model, gtk_widget_get_default_direction () == GTK_TEXT_DIR_RTL ? TRUE : FALSE);
 	ev_document_model_set_inverted_colors (model, g_settings_get_boolean (settings, "inverted-colors"));
 	ev_document_model_set_sizing_mode (model, g_settings_get_enum (settings, "sizing-mode"));
 	if (ev_document_model_get_sizing_mode (model) == EV_SIZING_FREE)
@@ -4147,6 +4160,19 @@ ev_window_cmd_dual_odd_pages_left (GSimpleAction *action,
 }
 
 static void
+ev_window_cmd_rtl (GSimpleAction *action,
+                   GVariant      *state,
+                   gpointer       user_data)
+{
+	EvWindow *window = user_data;
+	EvWindowPrivate *priv = GET_PRIVATE (window);
+
+	ev_document_model_set_rtl (priv->model,
+	                           g_variant_get_boolean (state));
+	g_simple_action_set_state (action, state);
+}
+
+static void
 ev_window_change_sizing_mode_action_state (GSimpleAction *action,
 					   GVariant      *state,
 					   gpointer       user_data)
@@ -5326,6 +5352,25 @@ ev_window_dual_mode_odd_pages_left_changed_cb (EvDocumentModel *model,
 }
 
 static void
+ev_window_direction_changed_cb (EvDocumentModel *model,
+                          GParamSpec      *pspec,
+                          EvWindow        *ev_window)
+{
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
+	gboolean rtl;
+	GAction *action;
+
+	rtl = ev_document_model_get_rtl (model);
+
+	action = g_action_map_lookup_action (G_ACTION_MAP (ev_window), "rtl");
+	g_simple_action_set_state (G_SIMPLE_ACTION (action), g_variant_new_boolean (rtl));
+
+	if (priv->metadata && !ev_window_is_empty (ev_window))
+		ev_metadata_set_boolean (priv->metadata, "rtl",
+					 rtl);
+}
+
+static void
 ev_window_cmd_action_menu (GSimpleAction *action,
 			   GVariant      *parameter,
 			   gpointer       user_data)
@@ -6256,6 +6301,7 @@ static const GActionEntry actions[] = {
 	{ "continuous", NULL, NULL, "true", ev_window_cmd_continuous },
 	{ "dual-page", NULL, NULL, "false", ev_window_cmd_dual },
 	{ "dual-odd-left", NULL, NULL, "false", ev_window_cmd_dual_odd_pages_left },
+	{ "rtl", NULL, NULL, "false", ev_window_cmd_rtl },
 	{ "show-side-pane", NULL, NULL, "false", ev_window_view_cmd_toggle_sidebar },
 	{ "inverted-colors", NULL, NULL, "false", ev_window_cmd_view_inverted_colors },
 	{ "enable-spellchecking", NULL, NULL, "false", ev_window_cmd_view_enable_spellchecking },
@@ -7678,6 +7724,10 @@ ev_window_init (EvWindow *ev_window)
 	g_signal_connect (priv->model,
 			  "notify::dual-odd-left",
 			  G_CALLBACK (ev_window_dual_mode_odd_pages_left_changed_cb),
+			  ev_window);
+	g_signal_connect (priv->model,
+			  "notify::rtl",
+			  G_CALLBACK (ev_window_direction_changed_cb),
 			  ev_window);
 	g_signal_connect (priv->model,
 			  "notify::inverted-colors",
