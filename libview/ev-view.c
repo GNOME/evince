@@ -8490,6 +8490,17 @@ ev_view_dual_odd_left_changed_cb (EvDocumentModel *model,
 }
 
 static void
+ev_view_direction_changed_cb (EvDocumentModel *model,
+                              GParamSpec      *pspec,
+                              EvView          *view)
+{
+	gboolean rtl = ev_document_model_get_rtl (model);
+	gtk_widget_set_direction (GTK_WIDGET (view), rtl ? GTK_TEXT_DIR_RTL : GTK_TEXT_DIR_LTR);
+	view->pending_scroll = SCROLL_TO_PAGE_POSITION;
+	gtk_widget_queue_resize (GTK_WIDGET (view));
+}
+
+static void
 ev_view_fullscreen_changed_cb (EvDocumentModel *model,
 			       GParamSpec      *pspec,
 			       EvView          *view)
@@ -8522,6 +8533,7 @@ ev_view_set_model (EvView          *view,
 	view->scale = ev_document_model_get_scale (view->model);
 	view->continuous = ev_document_model_get_continuous (view->model);
 	view->page_layout = ev_document_model_get_page_layout (view->model);
+	gtk_widget_set_direction (GTK_WIDGET(view), ev_document_model_get_rtl (view->model));
 	view->fullscreen = ev_document_model_get_fullscreen (view->model);
 	ev_view_document_changed_cb (view->model, NULL, view);
 
@@ -8554,6 +8566,9 @@ ev_view_set_model (EvView          *view,
 			  view);
 	g_signal_connect (view->model, "notify::dual-odd-left",
 			  G_CALLBACK (ev_view_dual_odd_left_changed_cb),
+			  view);
+	g_signal_connect (view->model, "notify::rtl",
+			  G_CALLBACK (ev_view_direction_changed_cb),
 			  view);
 	g_signal_connect (view->model, "notify::fullscreen",
 			  G_CALLBACK (ev_view_fullscreen_changed_cb),
