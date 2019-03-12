@@ -83,8 +83,13 @@ parts:
     after: [desktop-gnome-platform]
     source: .
     source-type: git
-    plugin: autotools
-    configflags: [--prefix=/snap/evince/current/usr]
+    plugin: meson
+    meson-parameters:
+       - --prefix=/snap/evince/current/usr
+       - -Dnautilus=false
+       - -Dgtk_doc=false
+       - -Dintrospection=false
+
     organize:
       snap/evince/current/usr: usr
     build-packages:
@@ -106,7 +111,6 @@ parts:
       - libxml2-dev
       - libsm-dev
       - zlib1g-dev
-      - libnautilus-extension-dev
       - libpoppler-glib-dev
       - libspectre-dev
       - libtiff-dev
@@ -122,7 +126,6 @@ parts:
     prime:
       - "-usr/lib/*.a"
       - "-usr/lib/mozilla"
-      - "-usr/lib/nautilus"
       - "-usr/lib/pkgconfig"
       - "-usr/lib/systemd"
       - "-usr/lib/evince/4/backends/*.a"
