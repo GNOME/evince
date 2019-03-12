@@ -5,7 +5,7 @@ description: |
   This is a document viewer for the GNOME desktop.
   It supports the following document formats: PDF, PS, EPS, XPS, DjVu, TIFF, DVI (with SyncTeX), and Comic Books archives (CBR, CBT, CBZ, CB7).
 
-grade: devel # must be 'stable' to release into candidate/stable channels
+grade: stable # must be 'stable' to release into candidate/stable channels
 confinement: strict
 base: core18
 
@@ -89,7 +89,6 @@ parts:
        - -Dnautilus=false
        - -Dgtk_doc=false
        - -Dintrospection=false
-
     organize:
       snap/evince/current/usr: usr
     build-packages:
