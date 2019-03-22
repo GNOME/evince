@@ -157,6 +157,11 @@ static gboolean    attachment_save_to_buffer (PopplerAttachment *attachment,
 					      gchar            **buffer,
 					      gsize             *buffer_size,
 					      GError           **error);
+static GList *pdf_document_find_find_text_with_options_real (EvDocumentFind *document_find,
+							     EvPage         *page,
+							     const gchar    *text,
+							     EvFindOptions   options,
+							     gboolean        returnFindRects);
 
 EV_BACKEND_REGISTER_WITH_CODE (PdfDocument, pdf_document,
 			 {
@@ -1950,6 +1955,7 @@ pdf_document_find_find_text_with_options (EvDocumentFind *document_find,
 	GList *matches, *l;
 	PopplerPage *poppler_page;
 	gdouble height;
+	gboolean uses_new_api;
 	GList *retval = NULL;
 	guint find_flags = 0;
 
@@ -1965,29 +1971,48 @@ pdf_document_find_find_text_with_options (EvDocumentFind *document_find,
 	        to broaden our search in order to match on more expected results */
 		find_flags |= POPPLER_FIND_IGNORE_DIACRITICS;
 #endif
+
 	if (options & EV_FIND_WHOLE_WORDS_ONLY)
 		find_flags |= POPPLER_FIND_WHOLE_WORDS_ONLY;
+
+#if POPPLER_CHECK_VERSION(0, 77, 0)
+	/* Allow to match on text across lines */
+	find_flags |= POPPLER_FIND_ACROSS_LINES;
+	matches = poppler_page_find_text_with_options2 (poppler_page, text, (PopplerFindFlags)find_flags);
+	uses_new_api = TRUE;
+#else
 	matches = poppler_page_find_text_with_options (poppler_page, text, (PopplerFindFlags)find_flags);
+	uses_new_api = FALSE;
+#endif
 	if (!matches)
 		return NULL;
 
 	poppler_page_get_size (poppler_page, NULL, &height);
 	for (l = matches; l && l->data; l = g_list_next (l)) {
-		PopplerRectangle *rect = (PopplerRectangle *)l->data;
-		EvRectangle      *ev_rect;
-
-		ev_rect = ev_rectangle_new ();
-		ev_rect->x1 = rect->x1;
-		ev_rect->x2 = rect->x2;
-		/* Invert this for X-style coordinates */
-		ev_rect->y1 = height - rect->y2;
-		ev_rect->y2 = height - rect->y1;
-
+		EvFindRectangle *ev_rect = ev_find_rectangle_new ();
+		if (uses_new_api) {
+			PopplerFindRectangle *rect = (PopplerFindRectangle *)l->data;
+			ev_rect->x1 = rect->x1;
+			ev_rect->x2 = rect->x2;
+			ev_rect->y1 = height - rect->y2;
+			ev_rect->y2 = height - rect->y1;
+			ev_rect->next_line = rect->next_line;
+			ev_rect->after_hyphen = rect->after_hyphen;
+		} else {
+			PopplerRectangle *rect = (PopplerRectangle *)l->data;
+			ev_rect->x1 = rect->x1;
+			ev_rect->x2 = rect->x2;
+			/* Invert this for X-style coordinates */
+			ev_rect->y1 = height - rect->y2;
+			ev_rect->y2 = height - rect->y1;
+			ev_rect->next_line = FALSE;
+			ev_rect->after_hyphen = FALSE;
+		}
 		retval = g_list_prepend (retval, ev_rect);
 	}
 
-	g_list_foreach (matches, (GFunc)poppler_rectangle_free, NULL);
-	g_list_free (matches);
+	g_list_free_full (matches, (uses_new_api ? (GDestroyNotify) poppler_find_rectangle_free
+	                                         : (GDestroyNotify) poppler_rectangle_free));
 
 	return g_list_reverse (retval);
 }
