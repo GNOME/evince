@@ -898,6 +898,15 @@ djvu_document_find_find_text (EvDocumentFind   *document,
 
 		r->y1 = height - r->y2 * 72.0 / dpi;
 		r->y2 = height - tmp * 72.0 / dpi;
+
+		EvFindRectangle *ev_rect = ev_find_rectangle_new ();
+		ev_rect->x1 = r->x1;
+		ev_rect->x2 = r->x2;
+		ev_rect->y1 = r->y1;
+		ev_rect->y2 = r->y2;
+
+		ev_rectangle_free (r);
+		l->data = ev_rect;
 	}
 	
 
