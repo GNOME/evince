@@ -518,7 +518,7 @@ row_collapsed_cb (GtkTreeView *tree_view,
 		if (ev_metadata_get_string (metadata, "index-collapse", &index_collapse)) {
 			/* If collapsed row is not in 'index_collapse' we add it. */
 			if (g_strstr_len (index_collapse, -1, path_token) == NULL) {
-				if (!strcmp (index_expand, ""))
+				if (!index_expand || !strcmp (index_expand, ""))
 					new_index = g_strconcat (index_collapse, path_token, NULL);
 				else
 					new_index = g_strconcat (index_collapse, path_token + 1, NULL);
