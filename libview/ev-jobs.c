@@ -1627,6 +1627,7 @@ ev_job_find_init (EvJobFind *job)
 static void
 ev_job_find_dispose (GObject *object)
 {
+	gint i;
 	EvJobFind *job = EV_JOB_FIND (object);
 
 	ev_debug_message (DEBUG_JOBS, NULL);
@@ -1637,17 +1638,23 @@ ev_job_find_dispose (GObject *object)
 	}
 
 	if (job->pages) {
-		gint i;
-
-		for (i = 0; i < job->n_pages; i++) {
-			g_list_foreach (job->pages[i], (GFunc)ev_rectangle_free, NULL);
+		/* Free each GList. Don't free EvRectangles because they are
+		 * owned by match_results. */
+		for (i = 0; i < job->n_pages; i++)
 			g_list_free (job->pages[i]);
+
+		g_clear_pointer (&job->pages, g_free);
+	}
+
+	if (job->match_results) {
+		for (i = 0; i < job->n_pages; i++) {
+			if (job->match_results[i])
+				g_ptr_array_unref (job->match_results[i]);
 		}
 
-		g_free (job->pages);
-		job->pages = NULL;
+		g_clear_pointer (&job->match_results, g_free);
 	}
-	
+
 	(* G_OBJECT_CLASS (ev_job_find_parent_class)->dispose) (object);
 }
 
@@ -1657,7 +1664,7 @@ ev_job_find_run (EvJob *job)
 	EvJobFind      *job_find = EV_JOB_FIND (job);
 	EvDocumentFind *find = EV_DOCUMENT_FIND (job->document);
 	EvPage         *ev_page;
-	GList          *matches;
+	GPtrArray      *matches;
 
 	ev_debug_message (DEBUG_JOBS, NULL);
 	
@@ -1672,8 +1679,8 @@ ev_job_find_run (EvJob *job)
 #endif
 
 	ev_page = ev_document_get_page (job->document, job_find->current_page);
-	matches = ev_document_find_find_text_with_options (find, ev_page, job_find->text,
-                                                           job_find->options);
+	matches = ev_document_find_find_text_offset (find, ev_page, job_find->text,
+						     job_find->options);
 	g_object_unref (ev_page);
 	
 	ev_document_doc_mutex_unlock ();
@@ -1681,7 +1688,28 @@ ev_job_find_run (EvJob *job)
 	if (!job_find->has_results)
 		job_find->has_results = (matches != NULL);
 
-	job_find->pages[job_find->current_page] = matches;
+	job_find->match_results[job_find->current_page] = matches;
+
+	/* Add rectangles to deprecated `pages` list if it has been initialized
+	 * in `ev_job_find_get_results`. */
+	if (job_find->pages && matches) {
+		GList *rectList = job_find->pages[job_find->current_page];
+		gint i;
+
+		for (i = 0; i < matches->len; i++) {
+			EvDocumentFindMatch *match;
+			GList *areaList;
+			EvRectangle *area;
+
+			match = (EvDocumentFindMatch *) g_ptr_array_index (matches, i);
+			areaList = ev_document_find_match_get_area (match);
+			area = (EvRectangle *) areaList->data;
+			rectList = g_list_prepend (rectList, area);
+		}
+
+		job_find->pages[job_find->current_page] = g_list_reverse (rectList);
+	}
+
 	g_signal_emit (job_find, job_find_signals[FIND_UPDATED], 0, job_find->current_page);
 		       
 	job_find->current_page = (job_find->current_page + 1) % job_find->n_pages;
@@ -1714,6 +1742,18 @@ ev_job_find_class_init (EvJobFindClass *class)
 			      1, G_TYPE_INT);
 }
 
+/**
+ * ev_job_find_new:
+ * @document: an #EvDocument
+ * @start_page: zero-based page number at which to start the search
+ * @n_pages: number of pages in @document
+ * @text: text to search for
+ * @case_sensitive: TRUE if the search is case sensitive
+ *
+ * Creates a new #EvJobFind to search for @text in @document.
+ *
+ * Returns: a new #EvJobFind
+ */
 EvJob *
 ev_job_find_new (EvDocument  *document,
 		 gint         start_page,
@@ -1731,13 +1771,15 @@ ev_job_find_new (EvDocument  *document,
 	job->start_page = start_page;
 	job->current_page = start_page;
 	job->n_pages = n_pages;
-	job->pages = g_new0 (GList *, n_pages);
+	/* Keep for compatibility */
+	job->pages = NULL;
 	job->text = g_strdup (text);
         /* Keep for compatibility */
 	job->case_sensitive = case_sensitive;
 	job->has_results = FALSE;
         if (case_sensitive)
                 job->options |= EV_FIND_CASE_SENSITIVE;
+	job->match_results = g_new0 (GPtrArray *, n_pages);
 
 	return EV_JOB (job);
 }
@@ -1772,11 +1814,21 @@ ev_job_find_get_options (EvJobFind *job)
         return job->options;
 }
 
+/**
+ * ev_job_find_get_n_results:
+ * @job: an #EvJobFind
+ * @page: a zero-based page number
+ *
+ * Returns the number of search results found on @page of the document.
+ *
+ * Returns: number of search results on @page
+ */
 gint
 ev_job_find_get_n_results (EvJobFind *job,
 			   gint       page)
 {
-	return g_list_length (job->pages[page]);
+	g_return_val_if_fail (page >= 0 && page < job->n_pages, 0);
+	return job->match_results[page] ? job->match_results[page]->len : 0;
 }
 
 gdouble
@@ -1805,14 +1857,77 @@ ev_job_find_has_results (EvJobFind *job)
 }
 
 /**
+ * ev_job_find_get_page_matches:
+ * @job: an #EvJobFind
+ * @page: a page index
+ *
+ * Returns search results for @page.
+ *
+ * Returns: (transfer none) (element-type EvDocumentFindMatch): an array of
+ *          matches for @page.
+ *
+ * Since: 3.34
+ */
+GPtrArray *
+ev_job_find_get_page_matches (EvJobFind *job, gint page)
+{
+        g_return_val_if_fail (page >= 0 && page < job->n_pages, NULL);
+
+        return job->match_results[page];
+}
+
+/**
+ * ev_job_find_get_matches: (skip)
+ * @job: an #EvJobFind
+ *
+ * Returns all search results.
+ *
+ * Returns: (transfer none) (element-type GPtrArray): an array of #GPtrArray
+ *          containing #EvDocumentFindMatch
+ *
+ * Since: 3.34
+ */
+GPtrArray **
+ev_job_find_get_matches (EvJobFind *job)
+{
+	return job->match_results;
+}
+
+/**
  * ev_job_find_get_results: (skip)
  * @job: an #EvJobFind
  *
- * Returns: a #GList of #GList<!-- -->s containing #EvRectangle<!-- -->s
+ * Returns: an array of #GList<!-- -->s containing #EvRectangle<!-- -->s
+ *
+ * Deprecated: 3.34: Use ev_job_find_get_matches() instead
  */
 GList **
 ev_job_find_get_results (EvJobFind *job)
 {
+	/* someone is using this deprecated api; convert results from the new
+	 * api on demand */
+	if (!job->pages) {
+		gint i, m;
+
+		job->pages = g_new0 (GList *, job->n_pages);
+		for (i = 0; i < job->n_pages; i++) {
+			if (!job->match_results[i])
+				continue;
+
+			for (m = 0; m < job->match_results[i]->len; m++) {
+				EvDocumentFindMatch *match;
+				GList *areaList;
+				EvRectangle *area;
+
+				match = (EvDocumentFindMatch *) g_ptr_array_index (job->match_results[i], m);
+				areaList = ev_document_find_match_get_area (match);
+				area = (EvRectangle *) areaList->data;
+				job->pages[i] = g_list_prepend (job->pages[i], area);
+			}
+			job->pages[i] = g_list_reverse (job->pages[i]);
+		}
+	}
+
 	return job->pages;
 }
 
