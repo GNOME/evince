@@ -470,7 +470,7 @@ process_matches_idle (EvFindSidebar *sidebar)
                 current_page = priv->current_page;
                 priv->current_page = (priv->current_page + 1) % priv->job->n_pages;
 
-                matches = priv->job->pages[current_page];
+                matches = ev_job_find_get_results (priv->job)[current_page];
                 if (!matches)
                         continue;
 
