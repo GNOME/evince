@@ -325,10 +325,16 @@ ev_form_field_signature_get_type
 <TITLE>EvDocumentFind</TITLE>
 EvDocumentFind
 EvDocumentFindInterface
+EvDocumentFindMatch
 EvFindOptions
 ev_document_find_find_text
+ev_document_find_find_text_offset
 ev_document_find_find_text_with_options
 ev_document_find_get_supported_options
+ev_document_find_match_free
+ev_document_find_match_get_area
+ev_document_find_match_get_end_offset
+ev_document_find_match_get_start_offset
 <SUBSECTION Standard>
 EV_DOCUMENT_FIND
 EV_IS_DOCUMENT_FIND
@@ -337,8 +343,11 @@ EV_DOCUMENT_FIND_IFACE
 EV_IS_DOCUMENT_FIND_IFACE
 EV_DOCUMENT_FIND_GET_IFACE
 EV_TYPE_FIND_OPTIONS
+EV_TYPE_DOCUMENT_FIND_MATCH
 <SUBSECTION Private>
 ev_document_find_get_type
+ev_document_find_match_get_type
+ev_document_find_match_new
 ev_find_options_get_type
 </SECTION>
 
