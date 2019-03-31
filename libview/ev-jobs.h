@@ -436,11 +436,12 @@ struct _EvJobFind
 	gint start_page;
 	gint current_page;
 	gint n_pages;
-	GList **pages;
+	GList **pages; /* Backwards compatability */
 	gchar *text;
 	gboolean case_sensitive;
 	gboolean has_results;
         EvFindOptions options;
+	GPtrArray **match_results;
 };
 
 struct _EvJobFindClass
@@ -595,20 +596,24 @@ EvJob          *ev_job_save_new           (EvDocument      *document,
 					   const gchar     *uri,
 					   const gchar     *document_uri);
 /* EvJobFind */
-GType           ev_job_find_get_type      (void) G_GNUC_CONST;
-EvJob          *ev_job_find_new           (EvDocument      *document,
-					   gint             start_page,
-					   gint             n_pages,
-					   const gchar     *text,
-					   gboolean         case_sensitive);
-void            ev_job_find_set_options   (EvJobFind       *job,
-                                           EvFindOptions    options);
-EvFindOptions   ev_job_find_get_options   (EvJobFind       *job);
-gint            ev_job_find_get_n_results (EvJobFind       *job,
-					   gint             pages);
-gdouble         ev_job_find_get_progress  (EvJobFind       *job);
-gboolean        ev_job_find_has_results   (EvJobFind       *job);
-GList         **ev_job_find_get_results   (EvJobFind       *job);
+GType           ev_job_find_get_type         (void) G_GNUC_CONST;
+EvJob          *ev_job_find_new              (EvDocument    *document,
+					      gint           start_page,
+					      gint           n_pages,
+					      const gchar   *text,
+					      gboolean       case_sensitive);
+void            ev_job_find_set_options      (EvJobFind     *job,
+                                              EvFindOptions  options);
+EvFindOptions   ev_job_find_get_options      (EvJobFind     *job);
+gint            ev_job_find_get_n_results    (EvJobFind     *job,
+					      gint           page);
+gdouble         ev_job_find_get_progress     (EvJobFind     *job);
+gboolean        ev_job_find_has_results      (EvJobFind     *job);
+GPtrArray     **ev_job_find_get_matches      (EvJobFind     *job);
+GPtrArray      *ev_job_find_get_page_matches (EvJobFind     *job,
+					      gint           page);
+EV_DEPRECATED_FOR(ev_job_find_get_matches)
+GList         **ev_job_find_get_results      (EvJobFind     *job);
 
 /* EvJobLayers */
 GType           ev_job_layers_get_type    (void) G_GNUC_CONST;
