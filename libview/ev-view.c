@@ -284,7 +284,7 @@ static void       ev_view_handle_cursor_over_xy              (EvView *view,
 /*** Find ***/
 static gint         ev_view_find_get_n_results               (EvView             *view,
 							      gint                page);
-static EvRectangle *ev_view_find_get_result                  (EvView             *view,
+static GList       *ev_view_find_get_result                  (EvView             *view,
 							      gint                page,
 							      gint                result);
 static void       jump_to_find_result                        (EvView             *view);
@@ -6730,12 +6730,56 @@ ev_view_style_updated (GtkWidget *widget)
 
 /*** Drawing ***/
 
+/**
+ * path_find_result:
+ * @view: an #EvView
+ * @cr: a cairo context
+ * @page: the page index
+ * @find_index: index of the find result
+ *
+ * Adds paths for the find result's rectangles to cairo context @cr.
+ */
 static void
-draw_rubberband (EvView             *view,
-		 cairo_t            *cr,
-		 const GdkRectangle *rect,
-		 gdouble             alpha)
+path_find_result (EvView  *view,
+		  cairo_t *cr,
+		  int      page,
+		  int      find_index)
 {
+	GList *rectList, *l;
+
+	rectList = ev_view_find_get_result (view, page, find_index);
+
+	for (l = rectList; l != NULL; l = l->next) {
+		EvRectangle *rectangle;
+		GdkRectangle view_rectangle;
+
+		rectangle = (EvRectangle *) l->data;
+		_ev_view_transform_doc_rect_to_view_rect (view,
+							  page,
+							  rectangle,
+							  &view_rectangle);
+		cairo_rectangle (cr,
+				 view_rectangle.x - view->scroll_x,
+				 view_rectangle.y - view->scroll_y,
+				 view_rectangle.width,
+				 view_rectangle.height);
+	}
+}
+
+/**
+ * highlight_find_results:
+ * @view: an #EvView
+ * @cr: a cairo context
+ * @page: a page index
+ *
+ * Draws highlight boxes for the find results for @page.
+ */
+static void
+highlight_find_results (EvView *view,
+                        cairo_t *cr,
+                        int page)
+{
+	gint i, n_results = 0;
 	GtkStyleContext *context;
 	GdkRGBA          color;
 
@@ -6743,47 +6787,35 @@ draw_rubberband (EvView             *view,
 	gtk_style_context_save (context);
 	gtk_style_context_get_background_color (context, GTK_STATE_FLAG_SELECTED, &color);
 	gtk_style_context_restore (context);
-        cairo_save (cr);
-
-	cairo_set_source_rgba (cr, color.red, color.green, color.blue, alpha);
-	cairo_rectangle (cr,
-			 rect->x - view->scroll_x,
-			 rect->y - view->scroll_y,
-			 rect->width, rect->height);
-	cairo_fill_preserve (cr);
-
+	cairo_save (cr);
 	cairo_set_line_width (cr, 0.5);
-	cairo_set_source_rgb (cr, color.red, color.green, color.blue);
-	cairo_stroke (cr);
-
-	cairo_restore (cr);
-}
-
-
-static void
-highlight_find_results (EvView *view,
-                        cairo_t *cr,
-                        int page)
-{
-	gint i, n_results = 0;
 
 	n_results = ev_view_find_get_n_results (view, page);
 
+	/* highlight find results except for the current result */
+	cairo_set_source_rgba (cr, color.red, color.green, color.blue, 0.3);
+
 	for (i = 0; i < n_results; i++) {
-		EvRectangle *rectangle;
-		GdkRectangle view_rectangle;
-		gdouble      alpha;
+		if (i == view->find_result && page == view->find_page)
+			continue;
 
-		if (i == view->find_result && page == view->find_page) {
-			alpha = 0.6;
-		} else {
-			alpha = 0.3;
-		}
+		path_find_result (view, cr, page, i);
+	}
 
-		rectangle = ev_view_find_get_result (view, page, i);
-		_ev_view_transform_doc_rect_to_view_rect (view, page, rectangle, &view_rectangle);
-		draw_rubberband (view, cr, &view_rectangle, alpha);
-        }
+	cairo_fill_preserve (cr);
+	cairo_set_source_rgb (cr, color.red, color.green, color.blue);
+	cairo_stroke (cr);
+
+	/* highlight the current find result a more opaque color */
+	if (n_results > 0 && view->find_page == page) {
+		cairo_set_source_rgba (cr, color.red, color.green, color.blue, 0.6);
+		path_find_result (view, cr, view->find_page, view->find_result);
+		cairo_fill_preserve (cr);
+		cairo_set_source_rgb (cr, color.red, color.green, color.blue);
+		cairo_stroke (cr);
+	}
+
+	cairo_restore (cr);
 }
 
 static void
@@ -8895,13 +8927,23 @@ ev_view_page_fits (EvView         *view,
 static gint
 ev_view_find_get_n_results (EvView *view, gint page)
 {
-	return view->find_pages ? g_list_length (view->find_pages[page]) : 0;
+	if (view->find_pages && view->find_pages[page])
+		return view->find_pages[page]->len;
+	return 0;
 }
 
-static EvRectangle *
+static GList *
 ev_view_find_get_result (EvView *view, gint page, gint result)
 {
-	return view->find_pages ? (EvRectangle *) g_list_nth_data (view->find_pages[page], result) : NULL;
+	EvDocumentFindMatch *match;
+
+	if (view->find_pages && view->find_pages[page]) {
+		match = (EvDocumentFindMatch *) g_ptr_array_index (view->find_pages[page],
+		                                                   result);
+		return ev_document_find_match_get_area (match);
+	}
+
+	return NULL;
 }
 
 static void
@@ -8913,11 +8955,23 @@ jump_to_find_result (EvView *view)
 	n_results = ev_view_find_get_n_results (view, page);
 
 	if (n_results > 0 && view->find_result < n_results) {
+		GList       *rectList, *l;
 		EvRectangle *rect;
 		GdkRectangle view_rect;
 
-		rect = ev_view_find_get_result (view, page, view->find_result);
+		/* find the union of all rectangles for this result */
+		rectList = ev_view_find_get_result (view, page, view->find_result);
+		rect = (EvRectangle *) rectList->data;
 		_ev_view_transform_doc_rect_to_view_rect (view, page, rect, &view_rect);
+
+		for (l = rectList->next; l != NULL; l = l->next) {
+			GdkRectangle view_rect_2;
+
+			rect = (EvRectangle *) l->data;
+			_ev_view_transform_doc_rect_to_view_rect (view, page, rect, &view_rect_2);
+			gdk_rectangle_union (&view_rect, &view_rect_2, &view_rect);
+		}
+
 		ensure_rectangle_is_visible (view, &view_rect);
 		if (view->caret_enabled && view->rotation == 0)
 			position_caret_cursor_at_doc_point (view, page, rect->x1, rect->y1);
@@ -8957,7 +9011,7 @@ jump_to_find_page (EvView *view, EvViewFindDirection direction, gint shift)
 		else if (page < 0)
 			page = page + n_pages;
 
-		if (view->find_pages && view->find_pages[page]) {
+		if (ev_view_find_get_n_results (view, page) > 0) {
 			view->find_page = page;
 			break;
 		}
@@ -8970,7 +9024,18 @@ jump_to_find_page (EvView *view, EvViewFindDirection direction, gint shift)
 static void
 find_job_updated_cb (EvJobFind *job, gint page, EvView *view)
 {
-	ev_view_find_changed (view, ev_job_find_get_results (job), page);
+	view->find_pages = ev_job_find_get_matches (job);
+
+	if (view->find_page == -1)
+		view->find_page = view->current_page;
+
+	if (view->jump_to_find_result == TRUE) {
+		jump_to_find_page (view, EV_VIEW_FIND_NEXT, 0);
+		jump_to_find_result (view);
+	}
+
+	if (view->find_page == page)
+		gtk_widget_queue_draw (GTK_WIDGET (view));
 }
 
 /**
@@ -8992,32 +9057,6 @@ ev_view_find_started (EvView *view, EvJobFind *job)
 	view->find_result = 0;
 
 	g_signal_connect (job, "updated", G_CALLBACK (find_job_updated_cb), view);
-}
-
-/**
- * ev_view_find_changed: (skip)
- * @view: an #EvView
- * @results: the results as returned by ev_job_find_get_results()
- * @page: page index
- *
- * Deprecated: 3.6: Use ev_view_find_started() instead
- */
-void
-ev_view_find_changed (EvView *view, GList **results, gint page)
-{
-	g_return_if_fail (view->current_page >= 0);
-
-	view->find_pages = results;
-	if (view->find_page == -1)
-		view->find_page = view->current_page;
-
-	if (view->jump_to_find_result == TRUE) {
-		jump_to_find_page (view, EV_VIEW_FIND_NEXT, 0);
-		jump_to_find_result (view);
-	}
-
-	if (view->find_page == page)
-		gtk_widget_queue_draw (GTK_WIDGET (view));
 }
 
 /**
