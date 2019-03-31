@@ -339,7 +339,8 @@ get_surrounding_text_markup (const gchar  *text,
                              gboolean      case_sensitive,
                              PangoLogAttr *log_attrs,
                              gint          log_attrs_length,
-                             gint          offset)
+                             gint          start_offset,
+                             gint          end_offset)
 {
         gint   iter;
         gchar *prec = NULL;
@@ -348,18 +349,16 @@ get_surrounding_text_markup (const gchar  *text,
         gchar *markup;
         gint   max_chars;
 
-        iter = MAX (0, offset - 1);
+        iter = MAX (0, start_offset - 1);
         while (!log_attrs[iter].is_word_start && iter > 0)
                 iter--;
 
-        prec = sanitized_substring (text, iter, offset);
+        prec = sanitized_substring (text, iter, start_offset);
 
-        iter = offset;
-        offset += g_utf8_strlen (find_text, -1);
         if (!case_sensitive)
-                match = g_utf8_substring (text, iter, offset);
+                match = g_utf8_substring (text, start_offset, end_offset);
 
-        iter = MIN (log_attrs_length, offset + 1);
+        iter = MIN (log_attrs_length, end_offset + 1);
         max_chars = MIN (log_attrs_length - 1, iter + 100);
         while (TRUE) {
                 gint word = iter;
@@ -373,7 +372,7 @@ get_surrounding_text_markup (const gchar  *text,
                 iter = word + 1;
         }
 
-        succ = sanitized_substring (text, offset, iter);
+        succ = sanitized_substring (text, end_offset, iter);
 
         markup = g_markup_printf_escaped ("%s<span weight=\"bold\">%s</span>%s",
                                           prec ? prec : "", match ? match : find_text, succ ? succ : "");
@@ -386,52 +385,15 @@ get_surrounding_text_markup (const gchar  *text,
 
 static gchar *
 get_page_text (EvDocument   *document,
-               EvPage       *page,
-               EvRectangle **areas,
-               guint        *n_areas)
+               EvPage       *page)
 {
         gchar   *text;
-        gboolean success;
 
         ev_document_doc_mutex_lock ();
         text = ev_document_text_get_text (EV_DOCUMENT_TEXT (document), page);
-        success = ev_document_text_get_text_layout (EV_DOCUMENT_TEXT (document), page, areas, n_areas);
         ev_document_doc_mutex_unlock ();
 
-        if (!success) {
-                g_free (text);
-                return NULL;
-        }
-
         return text;
-}
-
-static gint
-get_match_offset (EvRectangle *areas,
-                  guint        n_areas,
-                  EvRectangle *match,
-                  gint         offset)
-{
-        gdouble x, y;
-        gint i;
-
-        x = match->x1;
-        y = (match->y1 + match->y2) / 2;
-
-        i = offset;
-
-        do {
-                EvRectangle *area = areas + i;
-
-                if (x >= area->x1 && x < area->x2 &&
-                    y >= area->y1 && y <= area->y2) {
-                        return i;
-                }
-
-                i = (i + 1) % n_areas;
-        } while (i != offset);
-
-        return -1;
 }
 
 static gboolean
@@ -454,27 +416,24 @@ process_matches_idle (EvFindSidebar *sidebar)
         model = gtk_tree_view_get_model (GTK_TREE_VIEW (priv->tree_view));
 
         do {
-                GList        *matches, *l;
+                GPtrArray    *matches;
                 EvPage       *page;
                 gint          result;
                 gchar        *page_label;
                 gchar        *page_text;
-                EvRectangle  *areas = NULL;
-                guint         n_areas;
                 PangoLogAttr *text_log_attrs;
                 gulong        text_log_attrs_length;
-                gint          offset;
 
                 current_page = priv->current_page;
                 priv->current_page = (priv->current_page + 1) % priv->job->n_pages;
 
-                matches = ev_job_find_get_results (priv->job)[current_page];
+                matches = ev_job_find_get_page_matches (priv->job, current_page);
                 if (!matches)
                         continue;
 
                 page = ev_document_get_page (document, current_page);
 		page_label = ev_document_get_page_label (document, current_page);
-                page_text = get_page_text (document, page, &areas, &n_areas);
+                page_text = get_page_text (document, page);
                 g_object_unref (page);
                 if (!page_text)
                         continue;
@@ -486,19 +445,10 @@ process_matches_idle (EvFindSidebar *sidebar)
                 if (priv->first_match_page == -1)
                         priv->first_match_page = current_page;
 
-                offset = 0;
-
-                for (l = matches, result = 0; l; l = g_list_next (l), result++) {
-                        EvRectangle *match = (EvRectangle *)l->data;
-                        gchar       *markup;
-                        GtkTreeIter  iter;
-
-                        offset = get_match_offset (areas, n_areas, match, offset);
-                        if (offset == -1) {
-                                g_warning ("No offset found for match \"%s\" at page %d after processing %d results\n",
-                                           priv->job->text, current_page, result);
-                                break;
-                        }
+                for (result = 0; result < matches->len; result++) {
+                        EvDocumentFindMatch *match = g_ptr_array_index (matches, result);
+                        gchar               *markup;
+                        GtkTreeIter          iter;
 
                         if (current_page >= priv->job->start_page) {
                                 gtk_list_store_append (GTK_LIST_STORE (model), &iter);
@@ -513,7 +463,8 @@ process_matches_idle (EvFindSidebar *sidebar)
                                                               priv->job->case_sensitive,
                                                               text_log_attrs,
                                                               text_log_attrs_length,
-                                                              offset);
+                                                              ev_document_find_match_get_start_offset (match),
+                                                              ev_document_find_match_get_end_offset (match));
 
                         gtk_list_store_set (GTK_LIST_STORE (model), &iter,
                                             TEXT_COLUMN, markup,
@@ -527,7 +478,6 @@ process_matches_idle (EvFindSidebar *sidebar)
                 g_free (page_label);
                 g_free (page_text);
                 g_free (text_log_attrs);
-                g_free (areas);
         } while (current_page != priv->job_current_page);
 
         if (ev_job_is_finished (EV_JOB (priv->job)) && priv->current_page == priv->job->start_page)
