@@ -30,15 +30,17 @@ typedef struct _DjvuTextPage DjvuTextPage;
 typedef struct _DjvuTextLink DjvuTextLink;
 
 struct _DjvuTextPage {
-	char *text;
+	GString *text;
 	GArray *links;
 	GList *results;
 	miniexp_t char_symbol;
 	miniexp_t word_symbol;
-	EvRectangle *bounding_box;
+	GList *lines;
 	miniexp_t text_structure;
 	miniexp_t start;
 	miniexp_t end;
+	GArray *utf8_map;
+	int utf8_count;
 };
 
 struct _DjvuTextLink {
@@ -57,8 +59,10 @@ char         *djvu_text_page_copy                 (DjvuTextPage *page,
                                                    EvRectangle  *rectangle);
 void          djvu_text_page_index_text           (DjvuTextPage *page,
                                                    gboolean      case_sensitive);
-void          djvu_text_page_search               (DjvuTextPage *page,
-                                                   const char   *text);
+GPtrArray    *djvu_text_page_search               (DjvuTextPage *page,
+                                                   const char   *text,
+                                                   gdouble       height,
+                                                   gdouble       dpi);
 DjvuTextPage *djvu_text_page_new                  (miniexp_t     text);
 void          djvu_text_page_free                 (DjvuTextPage *page);
 
