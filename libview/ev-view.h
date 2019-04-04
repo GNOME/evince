@@ -126,6 +126,8 @@ void           ev_view_begin_add_annotation  (EvView          *view,
 void           ev_view_cancel_add_annotation (EvView          *view);
 void           ev_view_remove_annotation     (EvView          *view,
 					      EvAnnotation    *annot);
+void           ev_view_set_annotation_rgba (EvView        *view,
+                                            const GdkRGBA *rgba);
 gboolean       ev_view_add_text_markup_annotation_for_selected_text (EvView  *view);
 void           ev_view_set_enable_spellchecking (EvView *view,
                                                  gboolean spellcheck);

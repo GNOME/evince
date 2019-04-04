@@ -7303,6 +7303,16 @@ ev_window_init_css (void)
 }
 
 static void
+annotation_color_set_cb (GtkColorButton *button,
+			     GdkRGBA *rgba,
+			     EvWindow *window)
+{
+	EvWindowPrivate *priv = GET_PRIVATE(window);
+	EvView *view = EV_VIEW(priv->view);
+	ev_view_set_annotation_rgba (view, rgba);
+}
+
+static void
 ev_window_init (EvWindow *ev_window)
 {
 	GtkBuilder *builder;
@@ -7619,6 +7629,10 @@ ev_window_init (EvWindow *ev_window)
 				  G_CALLBACK (ev_window_sync_source),
 				  ev_window);
 #endif
+	g_signal_connect (priv->annots_toolbar,
+			  "annot-rgba-set",
+			  G_CALLBACK (annotation_color_set_cb),
+			  ev_window);
 	gtk_widget_show (priv->view);
 	gtk_widget_show (priv->password_view);
 
