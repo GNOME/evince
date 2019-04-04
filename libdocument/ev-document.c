@@ -858,6 +858,14 @@ _ev_document_get_info (EvDocument *document)
 	return klass->get_info (document);
 }
 
+/**
+ * ev_document_get_info:
+ * @document: a #EvDocument
+ *
+ * Returns the #EvDocumentInfo for the document.
+ *
+ * Returns: (transfer none): a #EvDocumentInfo
+ */
 EvDocumentInfo *
 ev_document_get_info (EvDocument *document)
 {
