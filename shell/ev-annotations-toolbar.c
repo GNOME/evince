@@ -27,6 +27,7 @@
 enum {
         BEGIN_ADD_ANNOT,
         CANCEL_ADD_ANNOT,
+        ANNOT_RGBA_SET,
         N_SIGNALS
 };
 
@@ -35,6 +36,9 @@ struct _EvAnnotationsToolbar {
 
         GtkWidget *text_button;
         GtkWidget *highlight_button;
+        GtkWidget *annot_rgba_button;
+        GdkRGBA annot_rgba;
+
 };
 
 struct _EvAnnotationsToolbarClass {
@@ -68,6 +72,44 @@ ev_annotations_toolbar_annot_button_toggled (GtkWidget            *button,
         }
 
         g_signal_emit (toolbar, signals[BEGIN_ADD_ANNOT], 0, annot_type);
+}
+
+static void
+annot_rgba_button_clicked (GtkWidget *button)
+{
+        GtkColorButton *color_button = GTK_COLOR_BUTTON (gtk_tool_button_get_icon_widget (GTK_TOOL_BUTTON(button)));
+        GtkColorButtonClass *color_button_class = GTK_COLOR_BUTTON_GET_CLASS (color_button);
+        /* Forward signal to the underlying GtkColorbutton */
+        GTK_BUTTON_CLASS (color_button_class)->clicked (GTK_BUTTON(color_button));
+}
+
+
+static void
+annot_rgba_set (GtkColorButton *button,
+                EvAnnotationsToolbar *toolbar)
+{
+        gtk_color_chooser_get_rgba (GTK_COLOR_CHOOSER(button), &(toolbar->annot_rgba));
+        g_signal_emit (toolbar, signals[ANNOT_RGBA_SET], 0, &(toolbar->annot_rgba));
+}
+
+
+
+static GtkColorButton *
+ev_annotations_toolbar_get_annot_rgba_button (EvAnnotationsToolbar *toolbar)
+{
+        return GTK_COLOR_BUTTON(gtk_tool_button_get_icon_widget(GTK_TOOL_BUTTON(toolbar->annot_rgba_button)));
+}
+
+void
+ev_annotations_toolbar_set_annot_rgba (EvAnnotationsToolbar *toolbar,
+                                       const GdkRGBA        *rgba)
+{
+        GtkColorButton *button = ev_annotations_toolbar_get_annot_rgba_button (toolbar);
+        toolbar->annot_rgba.red = rgba->red;
+        toolbar->annot_rgba.green = rgba->green;
+        toolbar->annot_rgba.blue = rgba->blue;
+        toolbar->annot_rgba.alpha = rgba->alpha;
+        gtk_color_chooser_set_rgba (GTK_COLOR_CHOOSER(button), &(toolbar->annot_rgba));
 }
 
 static gboolean
@@ -116,6 +158,11 @@ ev_annotations_toolbar_create_toggle_button (EvAnnotationsToolbar *toolbar,
 static void
 ev_annotations_toolbar_init (EvAnnotationsToolbar *toolbar)
 {
+        toolbar->annot_rgba.red = 1.0;
+        toolbar->annot_rgba.green = 1.0;
+        toolbar->annot_rgba.blue = 0.0;
+        toolbar->annot_rgba.alpha = 1.0;
+        GtkColorButton *color_button = GTK_COLOR_BUTTON (gtk_color_button_new_with_rgba (&(toolbar->annot_rgba)));
         gtk_orientable_set_orientation (GTK_ORIENTABLE (toolbar), GTK_ORIENTATION_HORIZONTAL);
 
         gtk_toolbar_set_icon_size (GTK_TOOLBAR (toolbar), GTK_ICON_SIZE_MENU);
@@ -132,14 +179,21 @@ ev_annotations_toolbar_init (EvAnnotationsToolbar *toolbar)
                                                                             NULL,
                                                                             _("Add text annotation"));
         gtk_container_add (GTK_CONTAINER(toolbar), toolbar->text_button);
-        gtk_widget_show (toolbar->text_button);
 
         toolbar->highlight_button = ev_annotations_toolbar_create_toggle_button (toolbar,
                                                                                  _("Highlight text"),
                                                                                  NULL,
                                                                                  _("Add highlight annotation"));
         gtk_container_add (GTK_CONTAINER (toolbar), toolbar->highlight_button);
-        gtk_widget_show (toolbar->highlight_button);
+
+        toolbar->annot_rgba_button = GTK_WIDGET (gtk_tool_button_new (GTK_WIDGET (color_button), NULL));
+        g_signal_connect (toolbar->annot_rgba_button, "clicked", G_CALLBACK (annot_rgba_button_clicked), NULL);
+        g_signal_connect (gtk_tool_button_get_icon_widget (GTK_TOOL_BUTTON(toolbar->annot_rgba_button)),
+                          "color-set",
+                          G_CALLBACK (annot_rgba_set),
+                          toolbar);
+        gtk_container_add (GTK_CONTAINER(toolbar), toolbar->annot_rgba_button);
+        gtk_widget_show_all (GTK_WIDGET (toolbar));
 }
 
 static void
@@ -166,6 +220,15 @@ ev_annotations_toolbar_class_init (EvAnnotationsToolbarClass *klass)
                               g_cclosure_marshal_VOID__VOID,
                               G_TYPE_NONE, 0,
                               G_TYPE_NONE);
+        signals[ANNOT_RGBA_SET] =
+                g_signal_new ("annot-rgba-set",
+                              G_TYPE_FROM_CLASS (g_object_class),
+                              G_SIGNAL_RUN_LAST,
+                              0,
+                              NULL, NULL,
+                              g_cclosure_marshal_VOID__POINTER,
+                              G_TYPE_NONE, 1,
+                              G_TYPE_POINTER);
 }
 
 GtkWidget *
