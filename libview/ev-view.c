@@ -3423,7 +3423,6 @@ ev_view_create_annotation_real (EvView *view,
 	EvAnnotation   *annot;
 	EvRectangle     doc_rect, popup_rect;
 	EvPage         *page;
-	GdkColor        color = { 0, 65535, 65535, 0 };
 	GdkRectangle    view_rect;
 	cairo_region_t *region;
 
@@ -3455,7 +3454,7 @@ ev_view_create_annotation_real (EvView *view,
 	g_object_unref (page);
 
 	ev_annotation_set_area (annot, &doc_rect);
-	ev_annotation_set_color (annot, &color);
+	ev_annotation_set_rgba (annot, &view->adding_annot_info.rgba);
 
 	if (EV_IS_ANNOTATION_MARKUP (annot)) {
 		popup_rect.x1 = doc_rect.x2;
@@ -3646,6 +3645,18 @@ ev_view_remove_annotation (EvView       *view,
 
 	g_signal_emit (view, signals[SIGNAL_ANNOT_REMOVED], 0, annot);
 	g_object_unref (annot);
+}
+
+void
+ev_view_set_annotation_rgba (EvView	   *view,
+			     const GdkRGBA *rgba)
+{
+	if (rgba) {
+		view->adding_annot_info.rgba.red = rgba->red;
+		view->adding_annot_info.rgba.green = rgba->green;
+		view->adding_annot_info.rgba.blue = rgba->blue;
+		view->adding_annot_info.rgba.alpha = rgba->alpha;
+	}
 }
 
 static gboolean
@@ -8049,6 +8060,11 @@ ev_view_init (EvView *view)
 	view->allow_links_change_zoom = TRUE;
 	view->zoom_center_x = -1;
 	view->zoom_center_y = -1;
+
+	view->adding_annot_info.rgba.red = 1.0;
+	view->adding_annot_info.rgba.green = 1.0;
+	view->adding_annot_info.rgba.blue = 0.0;
+	view->adding_annot_info.rgba.alpha = 1.0;
 
 	g_signal_connect (view, "notify::scale-factor",
 			  G_CALLBACK (on_notify_scale_factor), NULL);
