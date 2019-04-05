@@ -222,6 +222,7 @@ typedef struct {
 	EvJob            *load_job;
 	EvJob            *reload_job;
 	EvJob            *save_job;
+	gboolean          close_after_save;
 
 	/* Printing */
 	GQueue           *print_queue;
@@ -2987,6 +2988,7 @@ static void
 ev_window_save_job_cb (EvJob     *job,
 		       EvWindow  *window)
 {
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 	if (ev_job_is_failed (job)) {
 		ev_window_error_message (window, job->error,
 					 _("The file could not be saved as “%s”."),
@@ -2996,6 +2998,10 @@ ev_window_save_job_cb (EvJob     *job,
 	}
 
 	ev_window_clear_save_job (window);
+	if (priv->close_after_save) {
+		gtk_widget_destroy (GTK_WIDGET(window));
+	}
+
 }
 
 static void
@@ -3007,6 +3013,7 @@ file_save_dialog_response_cb (GtkWidget *fc,
 	gchar *uri;
 
 	if (response_id != GTK_RESPONSE_OK) {
+		priv->close_after_save = FALSE;
 		gtk_widget_destroy (fc);
 		return;
 	}
@@ -3749,10 +3756,12 @@ document_modified_confirmation_dialog_response (GtkDialog *dialog,
 						gint       response,
 						EvWindow  *ev_window)
 {
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 	gtk_widget_destroy (GTK_WIDGET (dialog));
 
 	switch (response) {
 	case GTK_RESPONSE_YES:
+		priv->close_after_save = TRUE;
 		ev_window_save_as (ev_window);
 		break;
 	case GTK_RESPONSE_NO:
