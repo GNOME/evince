@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
-"POT-Creation-Date: 2019-02-10 11:13+0000\n"
+"POT-Creation-Date: 2019-03-25 00:21+0000\n"
 "PO-Revision-Date: 2019-02-13 11:27+0100\n"
 "Last-Translator: Alan Mortensen <alanmortensen.am@gmail.com>\n"
 "Language-Team: Danish <dansk@dansk-gruppen.dk>\n"
@@ -373,11 +373,6 @@ msgstr "Vis dokumenter med flere sider"
 msgid "pdf;ps;postscript;dvi;xps;djvu;tiff;document;presentation;viewer;"
 msgstr "pdf;ps;postscript;dvi;xps;djvu;tiff;dokument;præsentation;fremviser;"
 
-#. Translators: Do NOT translate or transliterate this text (this is an icon file name)!
-#: data/org.gnome.Evince.desktop.in.in:13
-msgid "org.gnome.Evince"
-msgstr "org.gnome.Evince"
-
 #: data/org.gnome.Evince.gschema.xml:14
 msgid "Override document restrictions"
 msgstr "Ignorér dokumentbegrænsninger"
@@ -437,11 +432,6 @@ msgstr "Forhåndsvisning af udskrift"
 #: data/org.gnome.Evince-previewer.desktop.in.in:4
 msgid "Preview before printing"
 msgstr "Forhåndsvisning før udskrift"
-
-#. Translators: Do NOT translate or transliterate this text (this is an icon file name)!
-#: data/org.gnome.Evince-previewer.desktop.in.in:11
-msgid "document-print-preview"
-msgstr "document-print-preview"
 
 #: libdocument/ev-attachment.c:330 libdocument/ev-attachment.c:351
 #, c-format
@@ -1334,7 +1324,8 @@ msgstr "Der findes allerede en fil ved navn “%s”. Vil du erstatte den?"
 
 #: shell/ev-sidebar-attachments.c:491
 #, c-format
-msgid "The file “%s” already exists. Replacing it will overwrite its contents."
+msgid ""
+"The file “%s” already exists. Replacing it will overwrite its contents."
 msgstr ""
 "Filen “%s” findes allerede. Hvis den erstattes, overskrives dens indhold."
 
@@ -1548,7 +1539,8 @@ msgstr "Genindlæs dokumentet “%s”?"
 
 #: shell/ev-window.c:3799
 msgid "If you reload the document, changes will be permanently lost."
-msgstr "Hvis du genindlæser dokumentet, så vil ændringer blive permanent tabt."
+msgstr ""
+"Hvis du genindlæser dokumentet, så vil ændringer blive permanent tabt."
 
 #: shell/ev-window.c:3801
 msgid "_No"
@@ -1581,7 +1573,8 @@ msgstr "Vent indtil udskriftsjob “%s” færdiggøres, før der lukkes?"
 #. so the ngettext is needed.
 #: shell/ev-window.c:3906
 #, c-format
-msgid "There is %d print job active. Wait until print finishes before closing?"
+msgid ""
+"There is %d print job active. Wait until print finishes before closing?"
 msgid_plural ""
 "There are %d print jobs active. Wait until print finishes before closing?"
 msgstr[0] ""
@@ -1617,8 +1610,9 @@ msgstr ""
 "scootergrisen\n"
 "Alan Mortensen\n"
 "\n"
-"Dansk-gruppen <dansk@dansk-gruppen.dk>\n"
-"Mere info: http://www.dansk-gruppen.dk"
+"Dansk-gruppen\n"
+"Websted <http://dansk-gruppen.dk>\n"
+"E-mail <dansk@dansk-gruppen.dk>"
 
 #: shell/ev-window.c:4605
 msgid "Running in presentation mode"
@@ -2021,6 +2015,12 @@ msgstr "STRENG"
 msgid "[FILE…]"
 msgstr "[FIL …]"
 
+#~ msgid "org.gnome.Evince"
+#~ msgstr "org.gnome.Evince"
+
+#~ msgid "document-print-preview"
+#~ msgstr "document-print-preview"
+
 #~ msgid "Make the current document fill the window"
 #~ msgstr "Lad det aktuelle dokument udfylde vinduet"
 
@@ -2048,7 +2048,7 @@ msgstr "[FIL …]"
 #~ msgid "Substituting with"
 #~ msgstr "Erstatter med"
 
-# scootergrisen: forrige?
+#~ # scootergrisen: forrige?
 #~ msgid "Go to previous history item"
 #~ msgstr "Gå til forrige historikelement"
 
@@ -2080,15 +2080,15 @@ msgstr "[FIL …]"
 #~ msgstr "Dette er en dokumentfremviser til GNOME-skrivebordet."
 
 #~ msgid ""
-#~ "Evince is free software; you can redistribute it and/or modify it under "
-#~ "the terms of the GNU General Public License as published by the Free "
-#~ "Software Foundation; either version 2 of the License, or (at your option) "
-#~ "any later version.\n"
+#~ "Evince is free software; you can redistribute it and/or modify it under the "
+#~ "terms of the GNU General Public License as published by the Free Software "
+#~ "Foundation; either version 2 of the License, or (at your option) any later "
+#~ "version.\n"
 #~ msgstr ""
-#~ "Evince er fri software. Du kan redistribuere og/eller ændre programmet "
-#~ "under betingelserne givet i GNU General Public License som udgives af "
-#~ "Free Software Foundation; enten version 2 af licensen, eller (hvis du "
-#~ "ønsker det) enhver senere version.\n"
+#~ "Evince er fri software. Du kan redistribuere og/eller ændre programmet under "
+#~ "betingelserne givet i GNU General Public License som udgives af Free "
+#~ "Software Foundation; enten version 2 af licensen, eller (hvis du ønsker det) "
+#~ "enhver senere version.\n"
 
 #~ msgid ""
 #~ "Evince is distributed in the hope that it will be useful, but WITHOUT ANY "
@@ -2098,13 +2098,12 @@ msgstr "[FIL …]"
 #~ msgstr ""
 #~ "Gossip distribueres i håb om at programmet er nyttigt, men uden NOGEN "
 #~ "GARANTI, ikke engang underforstået garanti om at det er SALGBART eller "
-#~ "PASSER TIL ET BESTEMT FORMÅL. Se GNU General Public License for "
-#~ "detaljer.\n"
+#~ "PASSER TIL ET BESTEMT FORMÅL. Se GNU General Public License for detaljer.\n"
 
 #~ msgid ""
-#~ "You should have received a copy of the GNU General Public License along "
-#~ "with Evince; if not, write to the Free Software Foundation, Inc., 51 "
-#~ "Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA\n"
+#~ "You should have received a copy of the GNU General Public License along with "
+#~ "Evince; if not, write to the Free Software Foundation, Inc., 51 Franklin "
+#~ "Street, Fifth Floor, Boston, MA 02110-1301  USA\n"
 #~ msgstr ""
 #~ "Du bør have modtaget en kopi af GNU General Public License sammen med "
 #~ "Evince. Hvis du ikke har det, kan du skrive til Free Software Foundation, "
@@ -2162,3 +2161,4 @@ msgstr "[FIL …]"
 
 #~ msgid "Opaque"
 #~ msgstr "Ugennemsigtig"
+
