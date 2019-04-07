@@ -179,21 +179,24 @@ ev_annotations_toolbar_init (EvAnnotationsToolbar *toolbar)
                                                                             NULL,
                                                                             _("Add text annotation"));
         gtk_container_add (GTK_CONTAINER(toolbar), toolbar->text_button);
+        gtk_widget_show (toolbar->text_button);
 
         toolbar->highlight_button = ev_annotations_toolbar_create_toggle_button (toolbar,
                                                                                  _("Highlight text"),
                                                                                  NULL,
                                                                                  _("Add highlight annotation"));
         gtk_container_add (GTK_CONTAINER (toolbar), toolbar->highlight_button);
+        gtk_widget_show (toolbar->highlight_button);
 
         toolbar->annot_rgba_button = GTK_WIDGET (gtk_tool_button_new (GTK_WIDGET (color_button), NULL));
         g_signal_connect (toolbar->annot_rgba_button, "clicked", G_CALLBACK (annot_rgba_button_clicked), NULL);
-        g_signal_connect (gtk_tool_button_get_icon_widget (GTK_TOOL_BUTTON(toolbar->annot_rgba_button)),
+        g_signal_connect (gtk_tool_button_get_icon_widget(GTK_TOOL_BUTTON(toolbar->annot_rgba_button)),
                           "color-set",
                           G_CALLBACK (annot_rgba_set),
                           toolbar);
         gtk_container_add (GTK_CONTAINER(toolbar), toolbar->annot_rgba_button);
-        gtk_widget_show_all (GTK_WIDGET (toolbar));
+        gtk_widget_show (toolbar->annot_rgba_button);
+        gtk_widget_show (gtk_tool_button_get_icon_widget(GTK_TOOL_BUTTON(toolbar->annot_rgba_button)));
 }
 
 static void
