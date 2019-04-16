@@ -292,18 +292,22 @@ tiff_document_render (EvDocument      *document,
 		g_warning("Failed to allocate memory for rendering.");
 		return NULL;
 	}
-	
+
+	if (!TIFFReadRGBAImageOriented (tiff_document->tiff,
+					width, height,
+					(uint32 *)pixels,
+					orientation, 0)) {
+		g_warning ("Failed to read TIFF image.");
+		g_free (pixels);
+		return NULL;
+	}
+
 	surface = cairo_image_surface_create_for_data (pixels,
 						       CAIRO_FORMAT_RGB24,
 						       width, height,
 						       rowstride);
 	cairo_surface_set_user_data (surface, &key,
 				     pixels, (cairo_destroy_func_t)g_free);
-
-	TIFFReadRGBAImageOriented (tiff_document->tiff,
-				   width, height,
-				   (uint32 *)pixels,
-				   orientation, 0);
 	pop_handlers ();
 
 	/* Convert the format returned by libtiff to
@@ -384,13 +388,17 @@ tiff_document_get_thumbnail (EvDocument      *document,
 	if (!pixels)
 		return NULL;
 	
+	if (!TIFFReadRGBAImageOriented (tiff_document->tiff,
+					width, height,
+					(uint32 *)pixels,
+					ORIENTATION_TOPLEFT, 0)) {
+		g_free (pixels);
+		return NULL;
+	}
+
 	pixbuf = gdk_pixbuf_new_from_data (pixels, GDK_COLORSPACE_RGB, TRUE, 8, 
 					   width, height, rowstride,
 					   (GdkPixbufDestroyNotify) g_free, NULL);
-	TIFFReadRGBAImageOriented (tiff_document->tiff,
-				   width, height,
-				   (uint32 *)pixels,
-				   ORIENTATION_TOPLEFT, 0);
 	pop_handlers ();
 
 	ev_render_context_compute_scaled_size (rc, width, height * (x_res / y_res),
