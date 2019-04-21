@@ -2984,6 +2984,14 @@ ev_window_clear_save_job (EvWindow *ev_window)
 	}
 }
 
+static gboolean
+destroy_window (GtkWidget *window)
+{
+	gtk_widget_destroy (window);
+
+	return FALSE;
+}
+
 static void
 ev_window_save_job_cb (EvJob     *job,
 		       EvWindow  *window)
@@ -3461,14 +3469,6 @@ ev_window_print_update_pending_jobs_message (EvWindow *ev_window,
 	ev_message_area_set_secondary_text (EV_MESSAGE_AREA (priv->message_area),
 					    text);
 	g_free (text);
-}
-
-static gboolean
-destroy_window (GtkWidget *window)
-{
-	gtk_widget_destroy (window);
-
-	return FALSE;
 }
 
 static void
