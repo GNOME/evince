@@ -2990,6 +2990,7 @@ ev_window_save_job_cb (EvJob     *job,
 {
 	EvWindowPrivate *priv = GET_PRIVATE (window);
 	if (ev_job_is_failed (job)) {
+		priv->close_after_save = FALSE;
 		ev_window_error_message (window, job->error,
 					 _("The file could not be saved as “%s”."),
 					 EV_JOB_SAVE (job)->uri);
