@@ -222,6 +222,7 @@ typedef struct {
 	EvJob            *load_job;
 	EvJob            *reload_job;
 	EvJob            *save_job;
+	gboolean          close_after_save;
 
 	/* Printing */
 	GQueue           *print_queue;
@@ -2983,11 +2984,21 @@ ev_window_clear_save_job (EvWindow *ev_window)
 	}
 }
 
+static gboolean
+destroy_window (GtkWidget *window)
+{
+	gtk_widget_destroy (window);
+
+	return FALSE;
+}
+
 static void
 ev_window_save_job_cb (EvJob     *job,
 		       EvWindow  *window)
 {
+	EvWindowPrivate *priv = GET_PRIVATE (window);
 	if (ev_job_is_failed (job)) {
+		priv->close_after_save = FALSE;
 		ev_window_error_message (window, job->error,
 					 _("The file could not be saved as “%s”."),
 					 EV_JOB_SAVE (job)->uri);
@@ -2996,6 +3007,9 @@ ev_window_save_job_cb (EvJob     *job,
 	}
 
 	ev_window_clear_save_job (window);
+
+	if (priv->close_after_save)
+		g_idle_add ((GSourceFunc)destroy_window, window);
 }
 
 static void
@@ -3007,6 +3021,7 @@ file_save_dialog_response_cb (GtkWidget *fc,
 	gchar *uri;
 
 	if (response_id != GTK_RESPONSE_OK) {
+		priv->close_after_save = FALSE;
 		gtk_widget_destroy (fc);
 		return;
 	}
@@ -3456,14 +3471,6 @@ ev_window_print_update_pending_jobs_message (EvWindow *ev_window,
 	g_free (text);
 }
 
-static gboolean
-destroy_window (GtkWidget *window)
-{
-	gtk_widget_destroy (window);
-
-	return FALSE;
-}
-
 static void
 ev_window_print_operation_done (EvPrintOperation       *op,
 				GtkPrintOperationResult result,
@@ -3749,10 +3756,12 @@ document_modified_confirmation_dialog_response (GtkDialog *dialog,
 						gint       response,
 						EvWindow  *ev_window)
 {
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 	gtk_widget_destroy (GTK_WIDGET (dialog));
 
 	switch (response) {
 	case GTK_RESPONSE_YES:
+		priv->close_after_save = TRUE;
 		ev_window_save_as (ev_window);
 		break;
 	case GTK_RESPONSE_NO:
@@ -3760,7 +3769,7 @@ document_modified_confirmation_dialog_response (GtkDialog *dialog,
 		break;
 	case GTK_RESPONSE_CANCEL:
 	default:
-		break;
+		priv->close_after_save = FALSE;
 	}
 }
 
