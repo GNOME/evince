@@ -4431,6 +4431,7 @@ ev_window_add_fullscreen_timeout (EvWindow *window)
 {
 	EvWindowPrivate *priv = GET_PRIVATE (window);
 
+	ev_window_remove_fullscreen_timeout (window);
 	priv->fs_timeout_id =
 		g_timeout_add_seconds (FULLSCREEN_POPUP_TIMEOUT,
 				       (GSourceFunc)fullscreen_toolbar_timeout_cb, window);
