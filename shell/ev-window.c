@@ -2999,10 +2999,8 @@ ev_window_save_job_cb (EvJob     *job,
 	}
 
 	ev_window_clear_save_job (window);
-	if (priv->close_after_save) {
+	if (priv->close_after_save)
 		gtk_widget_destroy (GTK_WIDGET(window));
-	}
-
 }
 
 static void
