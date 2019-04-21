@@ -2999,8 +2999,9 @@ ev_window_save_job_cb (EvJob     *job,
 	}
 
 	ev_window_clear_save_job (window);
+
 	if (priv->close_after_save)
-		gtk_widget_destroy (GTK_WIDGET(window));
+		g_idle_add ((GSourceFunc)destroy_window, ev_window);
 }
 
 static void
@@ -3768,7 +3769,7 @@ document_modified_confirmation_dialog_response (GtkDialog *dialog,
 		break;
 	case GTK_RESPONSE_CANCEL:
 	default:
-		break;
+		priv->close_after_save = FALSE;
 	}
 }
 
