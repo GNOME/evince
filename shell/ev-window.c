@@ -3001,7 +3001,7 @@ ev_window_save_job_cb (EvJob     *job,
 	ev_window_clear_save_job (window);
 
 	if (priv->close_after_save)
-		g_idle_add ((GSourceFunc)destroy_window, ev_window);
+		g_idle_add ((GSourceFunc)destroy_window, window);
 }
 
 static void
