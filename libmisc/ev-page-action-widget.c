@@ -47,7 +47,8 @@ struct _EvPageActionWidget
 
 	GtkWidget *entry;
 	GtkWidget *label;
-	guint signal_id;
+	gulong signal_id;
+	gulong notify_document_signal_id;
 	GtkTreeModel *filter_model;
 	GtkTreeModel *model;
 };
@@ -309,9 +310,11 @@ ev_page_action_widget_set_model (EvPageActionWidget *action_widget,
 				   (gpointer)&action_widget->doc_model);
 
         ev_page_action_widget_set_document (action_widget, ev_document_model_get_document (model));
-	g_signal_connect (model, "notify::document",
-			  G_CALLBACK (ev_page_action_widget_document_changed_cb),
-			  action_widget);
+
+	action_widget->notify_document_signal_id =
+		g_signal_connect (model, "notify::document",
+				  G_CALLBACK (ev_page_action_widget_document_changed_cb),
+				  action_widget);
 }
 
 static void
@@ -324,6 +327,11 @@ ev_page_action_widget_finalize (GObject *object)
 			g_signal_handler_disconnect (action_widget->doc_model,
 						     action_widget->signal_id);
 			action_widget->signal_id = 0;
+		}
+		if (action_widget->notify_document_signal_id > 0) {
+			g_signal_handler_disconnect (action_widget->doc_model,
+						     action_widget->notify_document_signal_id);
+			action_widget->notify_document_signal_id = 0;
 		}
 		g_object_remove_weak_pointer (G_OBJECT (action_widget->doc_model),
 					      (gpointer)&action_widget->doc_model);
