@@ -9,14 +9,14 @@
 # Juanje Ojeda Croissier <jojeda@emergya.es>, 2008, 2009.
 # Jorge González <jorgegonz@svn.gnome.org>, 2007, 2008, 2010.
 # Alberto Caso <alberto@acaso.net>, 2016.
-# Daniel Mustieles <daniel.mustieles@gmail.com>, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018.
+# Daniel Mustieles <daniel.mustieles@gmail.com>, 2010-2019.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: evince.master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
-"POT-Creation-Date: 2019-02-04 21:04+0000\n"
-"PO-Revision-Date: 2018-12-04 15:31+0100\n"
+"POT-Creation-Date: 2019-04-16 12:29+0000\n"
+"PO-Revision-Date: 2019-04-23 09:54+0200\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: es <gnome-es-list@gnome.org>\n"
 "Language: es\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Gtranslator 2.91.7\n"
+"X-Generator: Gtranslator 3.32.0\n"
 
 #: backend/comics/comics-document.c:163 backend/comics/comics-document.c:187
 msgid "File is corrupted"
@@ -372,11 +372,6 @@ msgstr "Vea documentos de varias páginas"
 msgid "pdf;ps;postscript;dvi;xps;djvu;tiff;document;presentation;viewer;"
 msgstr "pdf;ps;postscript;dvi;xps;djvu;tiff;documento;presentación;visor;"
 
-#. Translators: Do NOT translate or transliterate this text (this is an icon file name)!
-#: data/org.gnome.Evince.desktop.in.in:13
-msgid "org.gnome.Evince"
-msgstr "org.gnome.Evince"
-
 #: data/org.gnome.Evince.gschema.xml:14
 msgid "Override document restrictions"
 msgstr "Saltarse las restricciones del documento"
@@ -434,11 +429,6 @@ msgstr "Vista previa de impresión"
 #: data/org.gnome.Evince-previewer.desktop.in.in:4
 msgid "Preview before printing"
 msgstr "Previsualizar antes de imprimir"
-
-#. Translators: Do NOT translate or transliterate this text (this is an icon file name)!
-#: data/org.gnome.Evince-previewer.desktop.in.in:11
-msgid "document-print-preview"
-msgstr "document-print-preview"
 
 #: libdocument/ev-attachment.c:330 libdocument/ev-attachment.c:351
 #, c-format
@@ -1075,8 +1065,9 @@ msgid "Ni_ght Mode"
 msgstr "Modo no_cturno"
 
 #: shell/evince-menus.ui:96
-msgid "Prop_erties…"
-msgstr "_Propiedades…"
+#| msgid "Properties"
+msgid "Prop_erties"
+msgstr "Propi_edades"
 
 #: shell/evince-menus.ui:102
 msgid "Save Current Settings as Defa_ult"
@@ -1986,6 +1977,15 @@ msgstr "CADENA"
 #: shell/main.c:81
 msgid "[FILE…]"
 msgstr "[ARCHIVO…]"
+
+#~ msgid "org.gnome.Evince"
+#~ msgstr "org.gnome.Evince"
+
+#~ msgid "document-print-preview"
+#~ msgstr "document-print-preview"
+
+#~ msgid "Prop_erties…"
+#~ msgstr "_Propiedades…"
 
 #~ msgid "Make the current document fill the window"
 #~ msgstr "Hace que el documento actual llene la ventana"
