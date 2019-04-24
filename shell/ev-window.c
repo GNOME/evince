@@ -3163,21 +3163,18 @@ ev_window_cmd_open_containing_folder (GSimpleAction *action,
 	EvWindowPrivate *priv = GET_PRIVATE (window);
 
 	guint32 timestamp;
-	GAppInfo *app = NULL;
+
 	GdkAppLaunchContext *context;
 	GdkDisplay *display;
 	GdkScreen *screen;
-	GFile *file;
+	GFile *file, *dir;
+	char *dir_uri;
 	GList list;
 	GError *error = NULL;
 
-	app =  g_app_info_get_default_for_type ("inode/directory", FALSE);
-
-	if (app == NULL) {
-		return;
-	}
-
 	file = g_file_new_for_uri (priv->uri);
+	dir = g_file_get_parent (file);
+	dir_uri = g_file_get_uri (dir);
 	list.next = list.prev = NULL;
 	list.data = file;
 
@@ -3189,8 +3186,7 @@ ev_window_cmd_open_containing_folder (GSimpleAction *action,
 	gdk_app_launch_context_set_screen (context, screen);
 	gdk_app_launch_context_set_timestamp (context, timestamp);
 
-	g_app_info_launch (app, &list,
-                           G_APP_LAUNCH_CONTEXT (context), &error);
+	g_app_info_launch_default_for_uri (dir_uri, G_APP_LAUNCH_CONTEXT (context), &error);
 
 	if (error != NULL) {
 		gchar *uri;
@@ -3204,7 +3200,9 @@ ev_window_cmd_open_containing_folder (GSimpleAction *action,
 	}
 
 	g_object_unref (context);
-	g_object_unref (app);
+	g_free (dir_uri);
+	g_object_unref (dir);
+	g_object_unref (file);
 }
 
 static GKeyFile *
