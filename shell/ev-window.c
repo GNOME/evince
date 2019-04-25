@@ -3172,6 +3172,7 @@ open_containing_folder_cb (GObject      *source,
 		g_error_free (error);
 		g_free (uri);
 	}
+	g_object_unref (file);
 }
 
 static void
@@ -3190,7 +3191,6 @@ ev_window_cmd_open_containing_folder (GSimpleAction *action,
 	GFile *file, *dir;
 	char *dir_uri;
 	GList list;
-	GError *error = NULL;
 
 	file = g_file_new_for_uri (priv->uri);
 	dir = g_file_get_parent (file);
