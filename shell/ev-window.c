@@ -3155,6 +3155,26 @@ ev_window_cmd_send_to (GSimpleAction *action,
 }
 
 static void
+open_containing_folder_cb (GObject      *source,
+                           GAsyncResult *res,
+                           gpointer      user_data)
+{
+	GError *error = NULL;
+	GFile *file = G_FILE (user_data);
+	g_app_info_launch_default_for_uri_finish (res, &error);
+	if (error != NULL) {
+		gchar *uri;
+
+		uri = g_file_get_uri (file);
+		g_warning ("Could not show containing folder for \"%s\": %s",
+			   uri, error->message);
+
+		g_error_free (error);
+		g_free (uri);
+	}
+}
+
+static void
 ev_window_cmd_open_containing_folder (GSimpleAction *action,
 				      GVariant      *parameter,
 				      gpointer       user_data)
@@ -3186,18 +3206,8 @@ ev_window_cmd_open_containing_folder (GSimpleAction *action,
 	gdk_app_launch_context_set_screen (context, screen);
 	gdk_app_launch_context_set_timestamp (context, timestamp);
 
-	g_app_info_launch_default_for_uri (dir_uri, G_APP_LAUNCH_CONTEXT (context), &error);
-
-	if (error != NULL) {
-		gchar *uri;
-
-		uri = g_file_get_uri (file);
-		g_warning ("Could not show containing folder for \"%s\": %s",
-			   uri, error->message);
-
-		g_error_free (error);
-		g_free (uri);
-	}
+	g_app_info_launch_default_for_uri_async (dir_uri, G_APP_LAUNCH_CONTEXT (context),
+						 NULL, open_containing_folder_cb, file);
 
 	g_object_unref (context);
 	g_free (dir_uri);
