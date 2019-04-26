@@ -58,8 +58,12 @@ get_backend_info_for_mime_type (const gchar *mime_type)
                 guint i;
 
                 for (i = 0; mime_types[i] != NULL; ++i) {
-                        if (g_content_type_is_mime_type (mime_type, mime_types[i]))
+                        gchar *content_type = g_content_type_from_mime_type(mime_type);
+                        if (g_content_type_is_mime_type (content_type, mime_types[i])) {
+                                g_free(content_type);
                                 return info;
+                        }
+                        g_free(content_type);
                 }
         }
 
