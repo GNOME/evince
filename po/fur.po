@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
-"POT-Creation-Date: 2019-04-16 12:29+0000\n"
-"PO-Revision-Date: 2019-04-20 02:20+0200\n"
+"POT-Creation-Date: 2019-05-02 18:55+0000\n"
+"PO-Revision-Date: 2019-05-03 19:43+0200\n"
 "Last-Translator: Fabio Tomat <f.t.public@gmail.com>\n"
 "Language-Team: Friulian <f.t.public@gmail.com>\n"
 "Language: fur\n"
@@ -351,7 +351,7 @@ msgid "Print document"
 msgstr "Stampe il document"
 
 #. Manually set name and icon
-#: data/org.gnome.Evince.desktop.in.in:3 shell/ev-window.c:4054
+#: data/org.gnome.Evince.desktop.in.in:3 shell/ev-window.c:4063
 #: shell/ev-window-title.c:133 shell/main.c:298
 msgid "Document Viewer"
 msgstr "Visualizadôr di Documents"
@@ -362,9 +362,11 @@ msgstr "Mostre documents multi-pagjine"
 
 #. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
 #: data/org.gnome.Evince.desktop.in.in:6
-msgid "pdf;ps;postscript;dvi;xps;djvu;tiff;document;presentation;viewer;"
+msgid ""
+"pdf;ps;postscript;dvi;xps;djvu;tiff;document;presentation;viewer;evince;"
 msgstr ""
 "pdf;ps;postscript;dvi;xps;djvu;tiff;document;presentazion;visualizadôr;"
+"evince;"
 
 #: data/org.gnome.Evince.gschema.xml:14
 msgid "Override document restrictions"
@@ -440,21 +442,21 @@ msgstr "Impussibil vierzi la zonte “%s”: %s"
 msgid "Couldn’t open attachment “%s”"
 msgstr "Impussibil vierzi la zonte “%s”"
 
-#: libdocument/ev-document-factory.c:101
+#: libdocument/ev-document-factory.c:105
 #, c-format
 msgid "File type %s (%s) is not supported"
 msgstr "Gjenar di file %s (%s) nol è supuartât"
 
-#: libdocument/ev-document-factory.c:369 libdocument/ev-file-helpers.c:498
+#: libdocument/ev-document-factory.c:373 libdocument/ev-file-helpers.c:498
 #: libdocument/ev-file-helpers.c:544 libdocument/ev-file-helpers.c:563
 msgid "Unknown MIME Type"
 msgstr "Gjenar MIME no cognossût"
 
-#: libdocument/ev-document-factory.c:578
+#: libdocument/ev-document-factory.c:582
 msgid "All Documents"
 msgstr "Ducj i Documents"
 
-#: libdocument/ev-document-factory.c:605 shell/ev-utils.c:327
+#: libdocument/ev-document-factory.c:609 shell/ev-utils.c:327
 msgid "All Files"
 msgstr "Ducj i File"
 
@@ -468,19 +470,19 @@ msgstr "No soi rivât a creâ un file temporani: %s"
 msgid "Failed to create a temporary directory: %s"
 msgstr "No soi rivât a creâ une cartele temporanie : %s"
 
-#: libmisc/ev-page-action-widget.c:85 libmisc/ev-page-action-widget.c:124
+#: libmisc/ev-page-action-widget.c:86 libmisc/ev-page-action-widget.c:125
 #, c-format
 msgid "(%d of %d)"
 msgstr "(%d di %d)"
 
-#: libmisc/ev-page-action-widget.c:87 libmisc/ev-page-action-widget.c:128
+#: libmisc/ev-page-action-widget.c:88 libmisc/ev-page-action-widget.c:129
 #, c-format
 msgid "of %d"
 msgstr "di %d"
 
-#: libmisc/ev-page-action-widget.c:186 shell/ev-history.c:447
-#: shell/ev-sidebar-bookmarks.c:310 shell/ev-window.c:947
-#: shell/ev-window.c:5093
+#: libmisc/ev-page-action-widget.c:187 shell/ev-history.c:447
+#: shell/ev-sidebar-bookmarks.c:310 shell/ev-window.c:948
+#: shell/ev-window.c:5103
 #, c-format
 msgid "Page %s"
 msgstr "Pagjine %s"
@@ -708,7 +710,7 @@ msgstr "Salte ae pagjine:"
 msgid "End of presentation. Press Esc or click to exit."
 msgstr "Presentazion finide. Frache Esc o fâs clic par jessî."
 
-#: org.gnome.Evince.appdata.xml.in:23 shell/ev-window.c:4049
+#: org.gnome.Evince.appdata.xml.in:23 shell/ev-window.c:4058
 msgid "Evince"
 msgstr "Evince"
 
@@ -764,7 +766,7 @@ msgstr "Selezione la pagjine o cîr tal indiç"
 msgid "Select page"
 msgstr "Selezione pagjine"
 
-#: previewer/ev-previewer-window.c:88 shell/ev-window.c:3506
+#: previewer/ev-previewer-window.c:88 shell/ev-window.c:3513
 msgid "Failed to print document"
 msgstr "No soi rivât a stampâ il document"
 
@@ -1101,7 +1103,7 @@ msgstr "_Pagjine Prime"
 msgid "_Next Page"
 msgstr "Prossi_me Pagjine"
 
-#: shell/evince-menus.ui:176 shell/ev-window.c:3803
+#: shell/evince-menus.ui:176 shell/ev-window.c:3812
 msgid "_Reload"
 msgstr "_Torne Cjame"
 
@@ -1207,8 +1209,8 @@ msgid "Password required"
 msgstr "Password necessarie"
 
 #: shell/ev-password-view.c:252 shell/ev-sidebar-attachments.c:495
-#: shell/ev-window.c:2762 shell/ev-window.c:3048 shell/ev-window.c:3927
-#: shell/ev-window.c:6877 shell/ev-window.c:7104
+#: shell/ev-window.c:2763 shell/ev-window.c:3063 shell/ev-window.c:3936
+#: shell/ev-window.c:6887 shell/ev-window.c:7114
 msgid "_Cancel"
 msgstr "_Anule"
 
@@ -1278,7 +1280,7 @@ msgstr "Il document nol ten notis"
 msgid "Page %d"
 msgstr "Pagjine %d"
 
-#: shell/ev-sidebar-annotations.c:669 shell/ev-window.c:7509
+#: shell/ev-sidebar-annotations.c:669 shell/ev-window.c:7519
 msgid "Annotations"
 msgstr "Notis"
 
@@ -1298,7 +1300,7 @@ msgstr ""
 msgid "_Replace"
 msgstr "_Sostituìs"
 
-#: shell/ev-sidebar-attachments.c:903 shell/ev-window.c:7533
+#: shell/ev-sidebar-attachments.c:903 shell/ev-window.c:7543
 msgid "Attachments"
 msgstr "Alegâts"
 
@@ -1322,22 +1324,22 @@ msgstr "Zonte segnelibri"
 msgid "Remove bookmark"
 msgstr "Gjave segnelibri"
 
-#: shell/ev-sidebar-bookmarks.c:598 shell/ev-window.c:7517
+#: shell/ev-sidebar-bookmarks.c:598 shell/ev-window.c:7527
 msgid "Bookmarks"
 msgstr "Segnelibri"
 
-#: shell/ev-sidebar-layers.c:448 shell/ev-window.c:7545
+#: shell/ev-sidebar-layers.c:448 shell/ev-window.c:7555
 msgid "Layers"
 msgstr "Nivei"
 
 #. Translators: This is the title for the sidebar pane that
 #. * shows the Outline or Table of Contents of the document.
 #.
-#: shell/ev-sidebar-links.c:1030 shell/ev-window.c:7497
+#: shell/ev-sidebar-links.c:1030 shell/ev-window.c:7507
 msgid "Outline"
 msgstr "Contor"
 
-#: shell/ev-sidebar-thumbnails.c:1067 shell/ev-window.c:7480
+#: shell/ev-sidebar-thumbnails.c:1067 shell/ev-window.c:7490
 msgid "Thumbnails"
 msgstr "Miniaturis"
 
@@ -1377,156 +1379,156 @@ msgstr "Met nivel di ingradiment"
 msgid "Supported Image Files"
 msgstr "File imagjin supuartâts"
 
-#: shell/ev-window.c:1648
+#: shell/ev-window.c:1649
 msgid "The document contains no pages"
 msgstr "Il document nol à pagjinis"
 
-#: shell/ev-window.c:1651
+#: shell/ev-window.c:1652
 msgid "The document contains only empty pages"
 msgstr "Il document al à dome pagjinis vueidis"
 
-#: shell/ev-window.c:1879 shell/ev-window.c:2061
+#: shell/ev-window.c:1880 shell/ev-window.c:2062
 #, c-format
 msgid "Unable to open document “%s”."
 msgstr "Impussibil vierzi il document \"%s\"."
 
-#: shell/ev-window.c:2026
+#: shell/ev-window.c:2027
 #, c-format
 msgid "Loading document from “%s”"
 msgstr "Daûr a cjamâ il document di \"%s\""
 
-#: shell/ev-window.c:2031 shell/ev-window.c:2496 shell/ev-window.c:2853
-#: shell/ev-window.c:3570 shell/ev-window.c:3816
+#: shell/ev-window.c:2032 shell/ev-window.c:2497 shell/ev-window.c:2854
+#: shell/ev-window.c:3577 shell/ev-window.c:3825
 msgid "C_ancel"
 msgstr "A_nule"
 
-#: shell/ev-window.c:2181 shell/ev-window.c:2547
+#: shell/ev-window.c:2182 shell/ev-window.c:2548
 #, c-format
 msgid "Downloading document (%d%%)"
 msgstr "Daûr a scjamâ il document (%d%%)"
 
-#: shell/ev-window.c:2214
+#: shell/ev-window.c:2215
 msgid "Failed to load remote file."
 msgstr "No soi rivât a cjariâ il file rimot."
 
-#: shell/ev-window.c:2492
+#: shell/ev-window.c:2493
 #, c-format
 msgid "Reloading document from %s"
 msgstr "Daûr a tornâ a cjamâ il document di %s"
 
-#: shell/ev-window.c:2522
+#: shell/ev-window.c:2523
 msgid "Failed to reload document."
 msgstr "No soi rivât a tornâ a cjamâ il document."
 
-#: shell/ev-window.c:2759
+#: shell/ev-window.c:2760
 msgid "Open Document"
 msgstr "Vierç document"
 
-#: shell/ev-window.c:2764
+#: shell/ev-window.c:2765
 msgid "_Open"
 msgstr "_Vierç"
 
-#: shell/ev-window.c:2839
+#: shell/ev-window.c:2840
 #, c-format
 msgid "Saving document to %s"
 msgstr "Daûr a salvâ document in %s"
 
-#: shell/ev-window.c:2842
+#: shell/ev-window.c:2843
 #, c-format
 msgid "Saving attachment to %s"
 msgstr "Daûr a salvâ alegât in %s"
 
-#: shell/ev-window.c:2845
+#: shell/ev-window.c:2846
 #, c-format
 msgid "Saving image to %s"
 msgstr "Daûr a salvâ imagjin in %s"
 
-#: shell/ev-window.c:2887 shell/ev-window.c:2992
+#: shell/ev-window.c:2888 shell/ev-window.c:3003
 #, c-format
 msgid "The file could not be saved as “%s”."
 msgstr "Il file nol pues jessi salvât come \"%s\"."
 
-#: shell/ev-window.c:2919
+#: shell/ev-window.c:2920
 #, c-format
 msgid "Uploading document (%d%%)"
 msgstr "Cjariament document (%d%%)"
 
-#: shell/ev-window.c:2923
+#: shell/ev-window.c:2924
 #, c-format
 msgid "Uploading attachment (%d%%)"
 msgstr "Cjariament alegât (%d%%)"
 
-#: shell/ev-window.c:2927
+#: shell/ev-window.c:2928
 #, c-format
 msgid "Uploading image (%d%%)"
 msgstr "Cjariament Imagjin (%d%%)"
 
-#: shell/ev-window.c:3046
+#: shell/ev-window.c:3061
 msgid "Save As…"
 msgstr "Salve come…"
 
-#: shell/ev-window.c:3049 shell/ev-window.c:6879 shell/ev-window.c:7106
+#: shell/ev-window.c:3064 shell/ev-window.c:6889 shell/ev-window.c:7116
 msgid "_Save"
 msgstr "_Salve"
 
-#: shell/ev-window.c:3137
+#: shell/ev-window.c:3152
 msgid "Could not send current document"
 msgstr "Impussibil inviâ il document atuâl"
 
-#: shell/ev-window.c:3449
+#: shell/ev-window.c:3464
 #, c-format
 msgid "%d pending job in queue"
 msgid_plural "%d pending jobs in queue"
 msgstr[0] "%d lavôr in spiete in liste"
 msgstr[1] "%d lavôrs in spiete in liste"
 
-#: shell/ev-window.c:3566
+#: shell/ev-window.c:3573
 #, c-format
 msgid "Printing job “%s”"
 msgstr "Lavôr di stampe \"%s\""
 
-#: shell/ev-window.c:3782
+#: shell/ev-window.c:3791
 msgid "Document contains form fields that have been filled out. "
 msgstr "Il document al ten dai cjamps che a son stâts compilâts. "
 
-#: shell/ev-window.c:3785
+#: shell/ev-window.c:3794
 msgid "Document contains new or modified annotations. "
 msgstr "Il document al ten notis gnovis o modificadis. "
 
-#: shell/ev-window.c:3797
+#: shell/ev-window.c:3806
 #, c-format
 msgid "Reload document “%s”?"
 msgstr "Tornâ a cjariâ il document “%s”?"
 
-#: shell/ev-window.c:3799
+#: shell/ev-window.c:3808
 msgid "If you reload the document, changes will be permanently lost."
 msgstr ""
 "Se tu tornis a cjariâ il document lis modifichis a laran pierdudis par "
 "simpri."
 
-#: shell/ev-window.c:3801
+#: shell/ev-window.c:3810
 msgid "_No"
 msgstr "_No"
 
-#: shell/ev-window.c:3810
+#: shell/ev-window.c:3819
 #, c-format
 msgid "Save a copy of document “%s” before closing?"
 msgstr "Salvâ une copie dal document \"%s\" prime di sierâ?"
 
-#: shell/ev-window.c:3812
+#: shell/ev-window.c:3821
 msgid "If you don’t save a copy, changes will be permanently lost."
 msgstr ""
 "Se no si salve une copie, lis modifichis a vignaran pierdudis par simpri."
 
-#: shell/ev-window.c:3814
+#: shell/ev-window.c:3823
 msgid "Close _without Saving"
 msgstr "Siere _cence Salvâ"
 
-#: shell/ev-window.c:3818
+#: shell/ev-window.c:3827
 msgid "Save a _Copy"
 msgstr "Salve une _Copie"
 
-#: shell/ev-window.c:3900
+#: shell/ev-window.c:3909
 #, c-format
 msgid "Wait until print job “%s” finishes before closing?"
 msgstr ""
@@ -1535,7 +1537,7 @@ msgstr ""
 #. TRANS: the singular form is not really used as n_print_jobs > 1
 #. but some languages distinguish between different plurals forms,
 #. so the ngettext is needed.
-#: shell/ev-window.c:3906
+#: shell/ev-window.c:3915
 #, c-format
 msgid "There is %d print job active. Wait until print finishes before closing?"
 msgid_plural ""
@@ -1547,43 +1549,43 @@ msgstr[1] ""
 "A son %d lavôrs di stampe atîfs. Spietâ fintremai che la stampe e finissi "
 "prime di sierâ?"
 
-#: shell/ev-window.c:3921
+#: shell/ev-window.c:3930
 msgid "If you close the window, pending print jobs will not be printed."
 msgstr "Se tu sieris il barcon lis stampis in spiete no saran stampadis."
 
-#: shell/ev-window.c:3925
+#: shell/ev-window.c:3934
 msgid "Cancel _print and Close"
 msgstr "Anule _stampe e Siere"
 
-#: shell/ev-window.c:3929
+#: shell/ev-window.c:3938
 msgid "Close _after Printing"
 msgstr "Siere _dopo vê stampât"
 
-#: shell/ev-window.c:4051
+#: shell/ev-window.c:4060
 msgid "© 1996–2017 The Evince authors"
 msgstr "© 1996–2017 i autôrs di Evince"
 
-#: shell/ev-window.c:4057
+#: shell/ev-window.c:4066
 msgid "translator-credits"
 msgstr "Fabio Tomat, <f.t.public@gmail.com>"
 
-#: shell/ev-window.c:4605
+#: shell/ev-window.c:4615
 msgid "Running in presentation mode"
 msgstr "Al zire in modalitât presentazion"
 
-#: shell/ev-window.c:5582
+#: shell/ev-window.c:5592
 msgid "The attachment could not be saved."
 msgstr "No si pues salvâ il alegât."
 
-#: shell/ev-window.c:5904
+#: shell/ev-window.c:5914
 msgid "Enable caret navigation?"
 msgstr "Abilitâ la navigazion cun cursôr?"
 
-#: shell/ev-window.c:5905
+#: shell/ev-window.c:5915
 msgid "_Enable"
 msgstr "_Abilite"
 
-#: shell/ev-window.c:5908
+#: shell/ev-window.c:5918
 msgid ""
 "Pressing F7 turns the caret navigation on or off. This feature places a "
 "moveable cursor in text pages, allowing you to move around and select text "
@@ -1594,35 +1596,35 @@ msgstr ""
 "movisi e selezionâ il test doprant la tastiere. Abilitâ la navigazion cun "
 "cursôr?"
 
-#: shell/ev-window.c:5913
+#: shell/ev-window.c:5923
 msgid "Don’t show this message again"
 msgstr "No stâ mostrâ plui chest messaç"
 
-#: shell/ev-window.c:6509 shell/ev-window.c:6525
+#: shell/ev-window.c:6519 shell/ev-window.c:6535
 msgid "Unable to launch external application."
 msgstr "Impussibil inviâ la aplicazion esterne."
 
-#: shell/ev-window.c:6587
+#: shell/ev-window.c:6597
 msgid "Unable to open external link"
 msgstr "Impussibil vierzi il link esterni"
 
-#: shell/ev-window.c:6806
+#: shell/ev-window.c:6816
 msgid "Couldn’t find appropriate format to save image"
 msgstr "No rivi a cjatâ un formât just par salvâ la imagjin"
 
-#: shell/ev-window.c:6838
+#: shell/ev-window.c:6848
 msgid "The image could not be saved."
 msgstr "No si pues salvâ la imagjin."
 
-#: shell/ev-window.c:6874
+#: shell/ev-window.c:6884
 msgid "Save Image"
 msgstr "Salve imagjin"
 
-#: shell/ev-window.c:7033
+#: shell/ev-window.c:7043
 msgid "Unable to open attachment"
 msgstr "Impussibil vierzi alegât"
 
-#: shell/ev-window.c:7101
+#: shell/ev-window.c:7111
 msgid "Save Attachment"
 msgstr "Salve alegât"
 
