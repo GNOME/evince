@@ -3485,6 +3485,40 @@ ev_view_create_annotation (EvView *view)
 	ev_view_create_annotation_real (view, annot_page, start, end);
 }
 
+static gboolean
+ev_view_get_doc_points_from_selection_region (EvView  *view,
+					      gint     page,
+					      EvPoint *begin,
+					      EvPoint *end)
+{
+	cairo_rectangle_int_t extents;
+	GdkPoint start, stop;
+	cairo_region_t *region = NULL;
+
+	if (!view->pixbuf_cache)
+		return FALSE;
+
+	region = ev_pixbuf_cache_get_selection_region (view->pixbuf_cache, page, view->scale);
+
+	if (!region)
+		return FALSE;
+
+	cairo_region_get_extents (region, &extents);
+
+	if (!get_doc_point_from_offset (view, page, extents.x, extents.y + (extents.height / 2), &(start.x), &(start.y)))
+		return FALSE;
+
+	if (!get_doc_point_from_offset (view, page, extents.x + extents.width, extents.y + (extents.height / 2), &(stop.x), &(stop.y)))
+		return FALSE;
+
+	begin->x = start.x;
+	begin->y = start.y;
+	end->x = stop.x;
+	end->y = stop.y;
+
+	return TRUE;
+}
+
 static void
 ev_view_create_annotation_from_selection (EvView          *view,
 					  EvViewSelection *selection)
@@ -3492,10 +3526,20 @@ ev_view_create_annotation_from_selection (EvView          *view,
 	EvPoint doc_point_start;
 	EvPoint doc_point_end;
 
-	doc_point_start.x = selection->rect.x1;
-	doc_point_start.y = selection->rect.y1;
-	doc_point_end.x = selection->rect.x2;
-	doc_point_end.y = selection->rect.y2;
+	/* Check if selection is of double/triple click type (STYLE_WORD and STYLE_LINE) and in that
+	 * case get the start/end points from the selection region of pixbuf cache. Issue #1119 */
+	if (selection->rect.x1 == selection->rect.x2 && selection->rect.y1 == selection->rect.y2 &&
+            (selection->style == EV_SELECTION_STYLE_WORD || selection->style == EV_SELECTION_STYLE_LINE)) {
+
+		if (!ev_view_get_doc_points_from_selection_region (view, selection->page,
+								   &doc_point_start, &doc_point_end))
+			return;
+	} else {
+		doc_point_start.x = selection->rect.x1;
+		doc_point_start.y = selection->rect.y1;
+		doc_point_end.x = selection->rect.x2;
+		doc_point_end.y = selection->rect.y2;
+	}
 
 	ev_view_create_annotation_real (view, selection->page, doc_point_start, doc_point_end);
 }
