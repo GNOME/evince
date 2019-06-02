@@ -1459,6 +1459,9 @@ ev_view_presentation_get_property (GObject    *object,
 static void
 ev_view_presentation_notify_scale_factor (EvViewPresentation *pview)
 {
+        if (!gtk_widget_get_realized (GTK_WIDGET (pview)))
+                return;
+
         ev_view_presentation_update_monitor_geometry (pview);
         ev_view_presentation_reset_jobs (pview);
         ev_view_presentation_update_current_page (pview, pview->current_page);
