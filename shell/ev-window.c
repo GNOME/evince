@@ -1354,15 +1354,6 @@ setup_size_from_metadata (EvWindow *window)
 	if (!window->priv->metadata)
 		return;
 
-	if (ev_metadata_get_boolean (window->priv->metadata, "window_maximized", &maximized)) {
-		if (maximized) {
-			gtk_window_maximize (GTK_WINDOW (window));
-			return;
-		} else {
-			gtk_window_unmaximize (GTK_WINDOW (window));
-		}
-	}
-
 	if (ev_metadata_get_int (window->priv->metadata, "window_x", &x) &&
 	    ev_metadata_get_int (window->priv->metadata, "window_y", &y)) {
 		gtk_window_move (GTK_WINDOW (window), x, y);
@@ -1371,6 +1362,14 @@ setup_size_from_metadata (EvWindow *window)
         if (ev_metadata_get_int (window->priv->metadata, "window_width", &width) &&
 	    ev_metadata_get_int (window->priv->metadata, "window_height", &height)) {
 		gtk_window_resize (GTK_WINDOW (window), width, height);
+	}
+
+	if (ev_metadata_get_boolean (window->priv->metadata, "window_maximized", &maximized)) {
+		if (maximized) {
+			gtk_window_maximize (GTK_WINDOW (window));
+		} else {
+			gtk_window_unmaximize (GTK_WINDOW (window));
+		}
 	}
 }
 
@@ -6146,7 +6145,8 @@ window_configure_event_cb (EvWindow *window, GdkEventConfigure *event, gpointer 
 
 	state = gdk_window_get_state (gtk_widget_get_window (GTK_WIDGET (window)));
 
-	if (!(state & GDK_WINDOW_STATE_FULLSCREEN)) {
+	if (!(state & GDK_WINDOW_STATE_FULLSCREEN) &&
+	    !(state & GDK_WINDOW_STATE_MAXIMIZED)) {
 		if (window->priv->document) {
 			ev_document_get_max_page_size (window->priv->document,
 						       &document_width, &document_height);
