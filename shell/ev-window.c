@@ -567,19 +567,22 @@ ev_window_update_actions_sensitivity (EvWindow *ev_window)
 	ev_window_set_action_enabled (ev_window, "escape", !recent_view_mode);
 	ev_window_set_action_enabled (ev_window, "open-menu", !recent_view_mode);
 
-	/* Same for popups specific actions */
-	ev_window_set_action_enabled (ev_window, "annotate-selected-text", can_annotate &&
-				      !recent_view_mode);
-	ev_window_set_action_enabled (ev_window, "open-link", !recent_view_mode);
-	ev_window_set_action_enabled (ev_window, "open-link-new-window", !recent_view_mode);
-	ev_window_set_action_enabled (ev_window, "go-to-link", !recent_view_mode);
-	ev_window_set_action_enabled (ev_window, "copy-link-address", !recent_view_mode);
-	ev_window_set_action_enabled (ev_window, "save-image", !recent_view_mode);
-	ev_window_set_action_enabled (ev_window, "copy-image", !recent_view_mode);
-	ev_window_set_action_enabled (ev_window, "open-attachment", !recent_view_mode);
-	ev_window_set_action_enabled (ev_window, "save-attachment", !recent_view_mode);
-	ev_window_set_action_enabled (ev_window, "annot-properties", !recent_view_mode);
-	ev_window_set_action_enabled (ev_window, "remove-annot", !recent_view_mode);
+	/* Don't enable popup actions here because the page can change while a
+	 * popup is visible due to kinetic scrolling. The 'popup' functions
+	 * will enable appropriate actions when the popup is shown. */
+	if (recent_view_mode) {
+		ev_window_set_action_enabled (ev_window, "annotate-selected-text", FALSE);
+		ev_window_set_action_enabled (ev_window, "open-link", FALSE);
+		ev_window_set_action_enabled (ev_window, "open-link-new-window", FALSE);
+		ev_window_set_action_enabled (ev_window, "go-to-link", FALSE);
+		ev_window_set_action_enabled (ev_window, "copy-link-address", FALSE);
+		ev_window_set_action_enabled (ev_window, "save-image", FALSE);
+		ev_window_set_action_enabled (ev_window, "copy-image", FALSE);
+		ev_window_set_action_enabled (ev_window, "open-attachment", FALSE);
+		ev_window_set_action_enabled (ev_window, "save-attachment", FALSE);
+		ev_window_set_action_enabled (ev_window, "annot-properties", FALSE);
+		ev_window_set_action_enabled (ev_window, "remove-annot", FALSE);
+	}
 
 	can_find_in_page = ev_search_box_has_results (EV_SEARCH_BOX (priv->search_box));
 
