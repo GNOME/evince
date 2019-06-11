@@ -341,11 +341,12 @@ build_popup_menu (EvSidebarLinks *sidebar)
 	GtkWidget *item;
 
 	menu = gtk_menu_new ();
-	item = gtk_label_new_with_mnemonic(_("Print…"));
+	item = gtk_menu_item_new_with_mnemonic(_("Print…"));
 	gtk_widget_show (item);
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
 	g_signal_connect (item, "activate",
 			  G_CALLBACK (print_section_cb), sidebar);
+	gtk_menu_attach_to_widget (menu, sidebar->priv->tree_view, NULL);
 
 	return GTK_MENU (menu);
 }
