@@ -26,23 +26,17 @@ struct _EvLayerPrivate {
 	gint     rb_group;
 };
 
-#define EV_LAYER_GET_PRIVATE(object) \
-                (G_TYPE_INSTANCE_GET_PRIVATE ((object), EV_TYPE_LAYER, EvLayerPrivate))
-
-G_DEFINE_TYPE (EvLayer, ev_layer, G_TYPE_OBJECT)
+G_DEFINE_TYPE_WITH_PRIVATE (EvLayer, ev_layer, G_TYPE_OBJECT)
 
 static void
 ev_layer_class_init (EvLayerClass *klass)
 {
-	GObjectClass *g_object_class = G_OBJECT_CLASS (klass);
-
-	g_type_class_add_private (g_object_class, sizeof (EvLayerPrivate));
 }
 
 static void
 ev_layer_init (EvLayer *layer)
 {
-	layer->priv = EV_LAYER_GET_PRIVATE (layer);
+	layer->priv = ev_layer_get_instance_private (layer);
 }
 
 EvLayer *

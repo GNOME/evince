@@ -75,11 +75,9 @@ G_DEFINE_TYPE_EXTENDED (EvSidebarAnnotations,
                         ev_sidebar_annotations,
                         GTK_TYPE_BOX,
                         0,
+                        G_ADD_PRIVATE (EvSidebarAnnotations)
                         G_IMPLEMENT_INTERFACE (EV_TYPE_SIDEBAR_PAGE,
 					       ev_sidebar_annotations_page_iface_init))
-
-#define EV_SIDEBAR_ANNOTATIONS_GET_PRIVATE(object) \
-	(G_TYPE_INSTANCE_GET_PRIVATE ((object), EV_TYPE_SIDEBAR_ANNOTATIONS, EvSidebarAnnotationsPrivate))
 
 #define ANNOT_ICON_SIZE 16
 
@@ -131,7 +129,7 @@ ev_sidebar_annotations_init (EvSidebarAnnotations *ev_annots)
 	GtkTreeSelection  *selection;
 	GtkBuilder        *builder;
 
-        ev_annots->priv = EV_SIDEBAR_ANNOTATIONS_GET_PRIVATE (ev_annots);
+        ev_annots->priv = ev_sidebar_annotations_get_instance_private (ev_annots);
 
 	ev_annots->priv->swindow = gtk_scrolled_window_new (NULL, NULL);
 
@@ -201,8 +199,6 @@ ev_sidebar_annotations_class_init (EvSidebarAnnotationsClass *klass)
 	g_object_class->get_property = ev_sidebar_annotations_get_property;
 	g_object_class->dispose = ev_sidebar_annotations_dispose;
 	gtk_widget_class->popup_menu = ev_sidebar_annotations_popup_menu;
-
-	g_type_class_add_private (g_object_class, sizeof (EvSidebarAnnotationsPrivate));
 
 	g_object_class_override_property (g_object_class, PROP_WIDGET, "main-widget");
 
