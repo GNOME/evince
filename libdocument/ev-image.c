@@ -33,10 +33,7 @@ struct _EvImagePrivate {
 	gchar     *tmp_uri;
 };
 
-#define EV_IMAGE_GET_PRIVATE(object) \
-                (G_TYPE_INSTANCE_GET_PRIVATE ((object), EV_TYPE_IMAGE, EvImagePrivate))
-
-G_DEFINE_TYPE (EvImage, ev_image, G_TYPE_OBJECT)
+G_DEFINE_TYPE_WITH_PRIVATE (EvImage, ev_image, G_TYPE_OBJECT)
 
 static void
 ev_image_finalize (GObject *object)
@@ -68,15 +65,13 @@ ev_image_class_init (EvImageClass *klass)
 
 	g_object_class = G_OBJECT_CLASS (klass);
 
-	g_type_class_add_private (g_object_class, sizeof (EvImagePrivate));
-
 	g_object_class->finalize = ev_image_finalize;
 }
 
 static void
 ev_image_init (EvImage *image)
 {
-	image->priv = EV_IMAGE_GET_PRIVATE (image);
+	image->priv = ev_image_get_instance_private (image);
 }
 
 EvImage *

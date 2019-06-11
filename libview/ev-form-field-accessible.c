@@ -39,6 +39,7 @@ struct _EvFormFieldAccessiblePrivate {
 static void ev_form_field_accessible_component_iface_init (AtkComponentIface *iface);
 
 G_DEFINE_TYPE_WITH_CODE (EvFormFieldAccessible, ev_form_field_accessible, ATK_TYPE_OBJECT,
+			 G_ADD_PRIVATE (EvFormFieldAccessible)
 			 G_IMPLEMENT_INTERFACE (ATK_TYPE_COMPONENT, ev_form_field_accessible_component_iface_init))
 
 static void
@@ -360,14 +361,12 @@ ev_form_field_accessible_class_init (EvFormFieldAccessibleClass *klass)
 	atk_class->get_parent = ev_form_field_accessible_get_parent;
 	atk_class->get_role = ev_form_field_accessible_get_role;
 	atk_class->ref_state_set = ev_form_field_accessible_ref_state_set;
-
-	g_type_class_add_private (klass, sizeof (EvFormFieldAccessiblePrivate));
 }
 
 static void
 ev_form_field_accessible_init (EvFormFieldAccessible *accessible)
 {
-	accessible->priv = G_TYPE_INSTANCE_GET_PRIVATE (accessible, EV_TYPE_FORM_FIELD_ACCESSIBLE, EvFormFieldAccessiblePrivate);
+	accessible->priv = ev_form_field_accessible_get_instance_private (accessible);
 	accessible->priv->start_index = -1;
 	accessible->priv->end_index = -1;
 }

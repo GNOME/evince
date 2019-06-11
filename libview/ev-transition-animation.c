@@ -24,12 +24,11 @@
 #include "ev-transition-animation.h"
 #include "ev-timeline.h"
 
-#define EV_TRANSITION_ANIMATION_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), EV_TYPE_TRANSITION_ANIMATION, EvTransitionAnimationPriv))
 #define N_BLINDS 6
 
-typedef struct EvTransitionAnimationPriv EvTransitionAnimationPriv;
+typedef struct EvTransitionAnimationPrivate EvTransitionAnimationPrivate;
 
-struct EvTransitionAnimationPriv {
+struct EvTransitionAnimationPrivate {
 	EvTransitionEffect *effect;
 	cairo_surface_t *origin_surface;
 	cairo_surface_t *dest_surface;
@@ -43,7 +42,7 @@ enum {
 };
 
 
-G_DEFINE_TYPE (EvTransitionAnimation, ev_transition_animation, EV_TYPE_TIMELINE)
+G_DEFINE_TYPE_WITH_PRIVATE (EvTransitionAnimation, ev_transition_animation, EV_TYPE_TIMELINE)
 
 
 static void
@@ -57,9 +56,9 @@ ev_transition_animation_set_property (GObject      *object,
 				      const GValue *value,
 				      GParamSpec   *pspec)
 {
-	EvTransitionAnimationPriv *priv;
+	EvTransitionAnimationPrivate *priv;
 
-	priv = EV_TRANSITION_ANIMATION_GET_PRIVATE (object);
+	priv = ev_transition_animation_get_instance_private (EV_TRANSITION_ANIMATION (object));
 
 	switch (prop_id) {
 	case PROP_EFFECT:
@@ -87,9 +86,9 @@ ev_transition_animation_get_property (GObject      *object,
 				      GValue       *value,
 				      GParamSpec   *pspec)
 {
-	EvTransitionAnimationPriv *priv;
+	EvTransitionAnimationPrivate *priv;
 
-	priv = EV_TRANSITION_ANIMATION_GET_PRIVATE (object);
+	priv = ev_transition_animation_get_instance_private (EV_TRANSITION_ANIMATION (object));
 
 	switch (prop_id) {
 	case PROP_EFFECT:
@@ -109,9 +108,9 @@ ev_transition_animation_get_property (GObject      *object,
 static void
 ev_transition_animation_finalize (GObject *object)
 {
-	EvTransitionAnimationPriv *priv;
+	EvTransitionAnimationPrivate *priv;
 
-	priv = EV_TRANSITION_ANIMATION_GET_PRIVATE (object);
+	priv = ev_transition_animation_get_instance_private (EV_TRANSITION_ANIMATION (object));
 
 	if (priv->effect)
 		g_object_unref (priv->effect);
@@ -130,16 +129,16 @@ ev_transition_animation_constructor (GType                  type,
 				     guint                  n_construct_properties,
 				     GObjectConstructParam *construct_params)
 {
-	GObject *object;
-	EvTransitionAnimationPriv *priv;
-	EvTransitionEffect *effect;
-	gint duration;
+	GObject                      *object;
+	EvTransitionAnimationPrivate *priv;
+	EvTransitionEffect           *effect;
+	gint                          duration;
 
 	object = G_OBJECT_CLASS (ev_transition_animation_parent_class)->constructor (type,
 										     n_construct_properties,
 										     construct_params);
 
-	priv = EV_TRANSITION_ANIMATION_GET_PRIVATE (object);
+	priv = ev_transition_animation_get_instance_private (EV_TRANSITION_ANIMATION (object));
 	effect = priv->effect;
 
 	g_object_get (effect, "duration", &duration, NULL);
@@ -180,8 +179,6 @@ ev_transition_animation_class_init (EvTransitionAnimationClass *klass)
 							       "Cairo surface to which the animation will happen",
 							       G_PARAM_READWRITE |
                                                                G_PARAM_STATIC_STRINGS));
-
-	g_type_class_add_private (klass, sizeof (EvTransitionAnimationPriv));
 }
 
 static void
@@ -215,12 +212,12 @@ ev_transition_animation_split (cairo_t               *cr,
 			       gdouble                progress,
 			       GdkRectangle           page_area)
 {
-	EvTransitionAnimationPriv *priv;
-	EvTransitionEffectAlignment alignment;
-	EvTransitionEffectDirection direction;
-	gint width, height;
+	EvTransitionAnimationPrivate *priv;
+	EvTransitionEffectAlignment   alignment;
+	EvTransitionEffectDirection   direction;
+	gint                          width, height;
 
-	priv = EV_TRANSITION_ANIMATION_GET_PRIVATE (animation);
+	priv = ev_transition_animation_get_instance_private (animation);
 	width = page_area.width;
 	height = page_area.height;
 
@@ -279,11 +276,11 @@ ev_transition_animation_blinds (cairo_t               *cr,
 				gdouble                progress,
 				GdkRectangle           page_area)
 {
-	EvTransitionAnimationPriv *priv;
-	EvTransitionEffectAlignment alignment;
-	gint width, height, i;
+	EvTransitionAnimationPrivate *priv;
+	EvTransitionEffectAlignment   alignment;
+	gint                          width, height, i;
 
-	priv = EV_TRANSITION_ANIMATION_GET_PRIVATE (animation);
+	priv = ev_transition_animation_get_instance_private (animation);
 	width = page_area.width;
 	height = page_area.height;
 
@@ -323,11 +320,11 @@ ev_transition_animation_box (cairo_t               *cr,
 			     gdouble                progress,
 			     GdkRectangle           page_area)
 {
-	EvTransitionAnimationPriv *priv;
-	EvTransitionEffectDirection direction;
-	gint width, height;
+	EvTransitionAnimationPrivate *priv;
+	EvTransitionEffectDirection   direction;
+	gint                          width, height;
 
-	priv = EV_TRANSITION_ANIMATION_GET_PRIVATE (animation);
+	priv = ev_transition_animation_get_instance_private (animation);
 	width = page_area.width;
 	height = page_area.height;
 
@@ -367,11 +364,11 @@ ev_transition_animation_wipe (cairo_t               *cr,
 			      gdouble                progress,
 			      GdkRectangle           page_area)
 {
-	EvTransitionAnimationPriv *priv;
-	gint width, height;
-	gint angle;
+	EvTransitionAnimationPrivate *priv;
+	gint                          width, height;
+	gint                          angle;
 
-	priv = EV_TRANSITION_ANIMATION_GET_PRIVATE (animation);
+	priv = ev_transition_animation_get_instance_private (animation);
 	width = page_area.width;
 	height = page_area.height;
 
@@ -421,9 +418,9 @@ ev_transition_animation_dissolve (cairo_t               *cr,
 				  gdouble                progress,
 				  GdkRectangle           page_area)
 {
-	EvTransitionAnimationPriv *priv;
+	EvTransitionAnimationPrivate *priv;
 
-	priv = EV_TRANSITION_ANIMATION_GET_PRIVATE (animation);
+	priv = ev_transition_animation_get_instance_private (animation);
 
 	paint_surface (cr, priv->dest_surface, 0, 0, 1., page_area);
 	paint_surface (cr, priv->origin_surface, 0, 0, 1 - progress, page_area);
@@ -436,11 +433,11 @@ ev_transition_animation_push (cairo_t               *cr,
 			      gdouble                progress,
 			      GdkRectangle           page_area)
 {
-	EvTransitionAnimationPriv *priv;
-	gint width, height;
-	gint angle;
+	EvTransitionAnimationPrivate *priv;
+	gint                          width, height;
+	gint                          angle;
 
-	priv = EV_TRANSITION_ANIMATION_GET_PRIVATE (animation);
+	priv = ev_transition_animation_get_instance_private (animation);
 	width = page_area.width;
 	height = page_area.height;
 
@@ -466,11 +463,11 @@ ev_transition_animation_cover (cairo_t               *cr,
 			       gdouble                progress,
 			       GdkRectangle           page_area)
 {
-	EvTransitionAnimationPriv *priv;
-	gint width, height;
-	gint angle;
+	EvTransitionAnimationPrivate *priv;
+	gint                          width, height;
+	gint                          angle;
 
-	priv = EV_TRANSITION_ANIMATION_GET_PRIVATE (animation);
+	priv = ev_transition_animation_get_instance_private (animation);
 	width = page_area.width;
 	height = page_area.height;
 
@@ -496,11 +493,11 @@ ev_transition_animation_uncover (cairo_t               *cr,
 				 gdouble                progress,
 				 GdkRectangle           page_area)
 {
-	EvTransitionAnimationPriv *priv;
-	gint width, height;
-	gint angle;
+	EvTransitionAnimationPrivate *priv;
+	gint                          width, height;
+	gint                          angle;
 
-	priv = EV_TRANSITION_ANIMATION_GET_PRIVATE (animation);
+	priv = ev_transition_animation_get_instance_private (animation);
 	width = page_area.width;
 	height = page_area.height;
 
@@ -526,9 +523,9 @@ ev_transition_animation_fade (cairo_t               *cr,
 			      gdouble                progress,
 			      GdkRectangle           page_area)
 {
-	EvTransitionAnimationPriv *priv;
+	EvTransitionAnimationPrivate *priv;
 
-	priv = EV_TRANSITION_ANIMATION_GET_PRIVATE (animation);
+	priv = ev_transition_animation_get_instance_private (animation);
 
 	paint_surface (cr, priv->origin_surface, 0, 0, 1., page_area);
 	paint_surface (cr, priv->dest_surface, 0, 0, progress, page_area);
@@ -539,13 +536,13 @@ ev_transition_animation_paint (EvTransitionAnimation *animation,
 			       cairo_t               *cr,
 			       GdkRectangle           page_area)
 {
-	EvTransitionAnimationPriv *priv;
-	EvTransitionEffectType type;
-	gdouble progress;
+	EvTransitionAnimationPrivate *priv;
+	EvTransitionEffectType        type;
+	gdouble                       progress;
 
 	g_return_if_fail (EV_IS_TRANSITION_ANIMATION (animation));
 
-	priv = EV_TRANSITION_ANIMATION_GET_PRIVATE (animation);
+	priv = ev_transition_animation_get_instance_private (animation);
 
 	if (!priv->dest_surface) {
 		/* animation is still not ready, paint the origin surface */
@@ -619,12 +616,12 @@ void
 ev_transition_animation_set_origin_surface (EvTransitionAnimation *animation,
 					    cairo_surface_t       *origin_surface)
 {
-	EvTransitionAnimationPriv *priv;
-	cairo_surface_t *surface;
+	EvTransitionAnimationPrivate *priv;
+	cairo_surface_t              *surface;
 
 	g_return_if_fail (EV_IS_TRANSITION_ANIMATION (animation));
 
-	priv = EV_TRANSITION_ANIMATION_GET_PRIVATE (animation);
+	priv = ev_transition_animation_get_instance_private (animation);
 
 	if (priv->origin_surface == origin_surface)
 		return;
@@ -645,12 +642,12 @@ void
 ev_transition_animation_set_dest_surface (EvTransitionAnimation *animation,
 					  cairo_surface_t       *dest_surface)
 {
-	EvTransitionAnimationPriv *priv;
-	cairo_surface_t *surface;
+	EvTransitionAnimationPrivate *priv;
+	cairo_surface_t              *surface;
 
 	g_return_if_fail (EV_IS_TRANSITION_ANIMATION (animation));
 
-	priv = EV_TRANSITION_ANIMATION_GET_PRIVATE (animation);
+	priv = ev_transition_animation_get_instance_private (animation);
 
 	if (priv->dest_surface == dest_surface)
 		return;
@@ -670,11 +667,11 @@ ev_transition_animation_set_dest_surface (EvTransitionAnimation *animation,
 gboolean
 ev_transition_animation_ready (EvTransitionAnimation *animation)
 {
-	EvTransitionAnimationPriv *priv;
+	EvTransitionAnimationPrivate *priv;
 
 	g_return_val_if_fail (EV_IS_TRANSITION_ANIMATION (animation), FALSE);
 
-	priv = EV_TRANSITION_ANIMATION_GET_PRIVATE (animation);
+	priv = ev_transition_animation_get_instance_private (animation);
 
 	return (priv->origin_surface != NULL);
 }
