@@ -5880,7 +5880,9 @@ ev_view_button_release_event (GtkWidget      *widget,
 				       (GSourceFunc)ev_view_scroll_drag_release, view);
 	}
 
-	if (view->document && !view->drag_info.in_drag && view->pressed_button != 3) {
+	if (view->document && !view->drag_info.in_drag &&
+	    (view->pressed_button == GDK_BUTTON_PRIMARY ||
+	     view->pressed_button == GDK_BUTTON_MIDDLE)) {
 		link = ev_view_get_link_at_location (view, event->x, event->y);
 	}
 
