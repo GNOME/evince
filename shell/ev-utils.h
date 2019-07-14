@@ -23,6 +23,7 @@
 
 #include <gdk-pixbuf/gdk-pixbuf.h>
 #include <gtk/gtk.h>
+#include <gio/gio.h>
 
 G_BEGIN_DECLS
 
@@ -40,6 +41,8 @@ void 			ev_gui_menu_position_tree_selection (GtkMenu   *menu,
 void           		file_chooser_dialog_add_writable_pixbuf_formats (GtkFileChooser *chooser);
 GdkPixbufFormat* 	get_gdk_pixbuf_format_by_extension (const gchar *uri);
 gchar*                  ev_str_replace (const char *str, const char *substr, const char *repl);
+
+gboolean                file_manager_show (GFile   *file, GError **error);
 
 G_END_DECLS
 
