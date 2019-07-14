@@ -41,6 +41,7 @@
 #include <gio/gio.h>
 #include <gtk/gtk.h>
 
+#include "dzl-file-manager.h"
 #include "ev-find-sidebar.h"
 #include "ev-annotations-toolbar.h"
 #include "ev-application.h"
@@ -3174,12 +3175,23 @@ ev_window_cmd_open_containing_folder (GSimpleAction *action,
 	GError *error = NULL;
 
 	app =  g_app_info_get_default_for_type ("inode/directory", FALSE);
-
+	file = g_file_new_for_uri (priv->uri);
 	if (app == NULL) {
+		dzl_file_manager_show (file, &error);
+		if (error) {
+			gchar *uri;
+			uri = g_file_get_uri (file);
+			g_warning ("Could not show containing folder for \"%s\": %s",
+				   uri, error->message);
+
+			g_error_free (error);
+			g_free (uri);
+		}
+		g_object_unref (file);
 		return;
 	}
 
-	file = g_file_new_for_uri (priv->uri);
+
 	list.next = list.prev = NULL;
 	list.data = file;
 
