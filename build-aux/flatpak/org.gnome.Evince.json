@@ -118,6 +118,13 @@
         {
             "name" : "libgxps",
             "buildsystem" : "meson",
+            "config-opts" : [
+                "-Denable-test=false",
+                "-Ddisable-introspection=true"
+            ],
+            "cleanup" : [
+                "/bin"
+            ],
             "sources" : [
                 {
                     "type" : "archive",
