@@ -500,6 +500,7 @@ ev_window_update_actions_sensitivity (EvWindow *ev_window)
 
 	/* File menu */
 	ev_window_set_action_enabled (ev_window, "open-copy", has_document);
+	ev_window_set_action_enabled (ev_window, "open-with", has_document);
 	ev_window_set_action_enabled (ev_window, "save-as", has_document &&
 				      ok_to_copy && !recent_view_mode);
 	ev_window_set_action_enabled (ev_window, "print", has_pages &&
@@ -3233,6 +3234,24 @@ get_print_settings_file (void)
 	g_free (filename);
 
 	return print_settings_file;
+}
+
+static void
+ev_window_open_with (GSimpleAction *action,
+					 GVariant      *parameter,
+					 gpointer       user_data)
+{
+	EvWindow *window;
+	EvToolbar *toolbar;
+	g_return_if_fail (EV_IS_WINDOW (user_data));
+	window = EV_WINDOW (user_data);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
+
+	toolbar = priv->fs_toolbar ? EV_TOOLBAR (priv->fs_toolbar) : EV_TOOLBAR (priv->toolbar);
+
+
+	ev_toolbar_open_with (toolbar, priv->uri, parameter);
+	
 }
 
 static void
@@ -6295,7 +6314,8 @@ static const GActionEntry actions[] = {
 	{ "open-attachment", ev_window_popup_cmd_open_attachment },
 	{ "save-attachment", ev_window_popup_cmd_save_attachment_as },
 	{ "annot-properties", ev_window_popup_cmd_annot_properties },
-	{ "remove-annot", ev_window_popup_cmd_remove_annotation }
+	{ "remove-annot", ev_window_popup_cmd_remove_annotation },
+	{ "open-with", ev_window_open_with, "u"},
 };
 
 static void

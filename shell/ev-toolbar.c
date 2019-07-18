@@ -51,8 +51,13 @@ typedef struct {
         GtkWidget *annots_button;
         GtkWidget *sidebar_button;
 
+        GMenu     *open_with_menu;
+        GPtrArray *appinfo;
+
         EvToolbarMode toolbar_mode;
 } EvToolbarPrivate;
+
+static void ev_toolbar_update_open_with_menu(EvToolbarPrivate *);
 
 G_DEFINE_TYPE_WITH_PRIVATE (EvToolbar, ev_toolbar, GTK_TYPE_HEADER_BAR)
 
@@ -192,6 +197,7 @@ ev_toolbar_constructed (GObject *object)
         GtkWidget      *vbox;
         GtkWidget      *button;
         GMenuModel     *menu;
+        GObject        *open_with_obj;
 
         G_OBJECT_CLASS (ev_toolbar_parent_class)->constructed (object);
 
@@ -257,6 +263,15 @@ ev_toolbar_constructed (GObject *object)
                           G_CALLBACK (zoom_selector_activated),
                           ev_toolbar);
         gtk_header_bar_pack_end (GTK_HEADER_BAR (ev_toolbar), vbox);
+
+        /* Open with menu */
+        priv->open_with_menu = g_menu_new();
+        open_with_obj = gtk_builder_get_object (builder, "open-with-menu");
+        g_menu_append_section (G_MENU (open_with_obj),
+             NULL,
+             G_MENU_MODEL (priv->open_with_menu));
+
+        priv->appinfo = g_ptr_array_new_with_free_func (g_object_unref);
 
         g_object_unref (builder);
 }
@@ -364,6 +379,7 @@ ev_toolbar_set_mode (EvToolbar     *ev_toolbar,
                 gtk_widget_show (priv->find_button);
                 gtk_widget_show (priv->annots_button);
                 gtk_widget_hide (priv->open_button);
+                ev_toolbar_update_open_with_menu (priv);
                 break;
 	case EV_TOOLBAR_MODE_RECENT_VIEW:
                 gtk_widget_hide (priv->sidebar_button);
@@ -387,4 +403,127 @@ ev_toolbar_get_mode (EvToolbar *ev_toolbar)
         priv = GET_PRIVATE (ev_toolbar);
 
         return priv->toolbar_mode;
+}
+
+
+static void
+ev_toolbar_update_open_with_menu(EvToolbarPrivate *priv)
+{
+  GFile *file;
+  GFileInfo *file_info;
+  GList *apps = NULL, *li = NULL;
+  const gchar *mime_type;
+  guint32 count = 0;
+
+  EvWindow *ev_window = priv->window;
+
+  file = g_file_new_for_uri (ev_window_get_uri (ev_window));
+  g_menu_remove_all (priv->open_with_menu);
+  g_ptr_array_free (priv->appinfo, TRUE);
+  priv->appinfo = g_ptr_array_new_with_free_func (g_object_unref);
+
+  file_info = g_file_query_info (file,
+               G_FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE,
+               0, NULL, NULL);
+
+  if (!file_info) {
+    g_object_unref (file);
+    return;
+  }
+
+  mime_type = g_file_info_get_content_type (file_info);
+  apps = g_app_info_get_all_for_type (mime_type);
+  g_object_unref (file_info);
+  if (!apps) {
+    g_object_unref (file);
+    return;
+  }
+
+  for (li = apps; li; li = li->next) {
+    GAppInfo *app = li->data;
+    gchar *label;
+    GIcon *icon;
+    GVariant *value;
+    GMenuItem *item;
+
+
+
+    if (g_ascii_strcasecmp (g_app_info_get_executable (app),
+          g_get_prgname ()) == 0) {
+      g_object_unref (app);
+      continue;
+    }
+
+    label = g_strdup (g_app_info_get_display_name (app));
+    printf("Label: %s\n", label);
+    item = g_menu_item_new (label, NULL);
+    g_free (label);
+    icon = g_app_info_get_icon (app);
+    g_menu_item_set_icon (item, icon);
+
+    value = g_variant_new_uint32 (count++);
+    g_menu_item_set_action_and_target_value (item,
+               "win.open-with",
+               value);
+    g_ptr_array_add (priv->appinfo, app);
+    g_menu_append_item (priv->open_with_menu, item);
+    g_object_unref (item);
+  }
+
+  g_object_unref (file);
+  g_list_free (apps);
+}
+
+static void
+_ev_toolbar_launch_appinfo_with_files (EvWindow *window,
+               GAppInfo *appinfo,
+               GList *files)
+{
+  GdkAppLaunchContext *context;
+
+  context = gdk_display_get_app_launch_context (
+    gtk_widget_get_display (GTK_WIDGET (window)));
+  gdk_app_launch_context_set_screen (context,
+    gtk_widget_get_screen (GTK_WIDGET (window)));
+  gdk_app_launch_context_set_icon (context,
+    g_app_info_get_icon (appinfo));
+  gdk_app_launch_context_set_timestamp (context,
+    gtk_get_current_event_time ());
+
+  g_app_info_launch (appinfo, files, G_APP_LAUNCH_CONTEXT (context), NULL);
+
+  g_object_unref (context);
+}
+
+
+void
+ev_toolbar_open_with (EvToolbar *ev_toolbar, 
+                      const char *file_path,
+                      GVariant *parameter)
+{
+  guint32 index = G_MAXUINT32;
+  GAppInfo *app;
+  GFile *file;
+  GList *files = NULL;
+  EvToolbarPrivate *priv;
+
+  priv = GET_PRIVATE (ev_toolbar);
+
+  index = g_variant_get_uint32 (parameter);
+
+  if (G_UNLIKELY (index >= priv->appinfo->len))
+    return;
+
+  app = g_ptr_array_index (priv->appinfo, index);
+  if (!app)
+    return;
+
+  file = g_file_new_for_uri (file_path);
+  files = g_list_append (files, file);
+
+  _ev_toolbar_launch_appinfo_with_files (priv->window, app, files);
+
+  g_list_free (files);
+  g_object_unref (file);
+
 }
