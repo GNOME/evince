@@ -568,7 +568,8 @@ ev_window_update_actions_sensitivity (EvWindow *ev_window)
 	ev_window_set_action_enabled (ev_window, "open-menu", !recent_view_mode);
 
 	/* Same for popups specific actions */
-	ev_window_set_action_enabled (ev_window, "annotate-selected-text", !recent_view_mode);
+	ev_window_set_action_enabled (ev_window, "annotate-selected-text", can_annotate &&
+				      !recent_view_mode);
 	ev_window_set_action_enabled (ev_window, "open-link", !recent_view_mode);
 	ev_window_set_action_enabled (ev_window, "open-link-new-window", !recent_view_mode);
 	ev_window_set_action_enabled (ev_window, "go-to-link", !recent_view_mode);
@@ -5494,6 +5495,7 @@ view_menu_popup_cb (EvView   *view,
 		    EvWindow *ev_window)
 {
 	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
+	EvDocument *document = priv->document;
 	GList   *l;
 	gboolean has_link = FALSE;
 	gboolean has_image = FALSE;
@@ -5520,7 +5522,9 @@ view_menu_popup_cb (EvView   *view,
 	if (!has_annot)
 		view_menu_annot_popup (ev_window, NULL);
 
-	can_annotate = !has_annot && ev_view_get_has_selection (view);
+	can_annotate = EV_IS_DOCUMENT_ANNOTATIONS (document) &&
+		ev_document_annotations_can_add_annotation (EV_DOCUMENT_ANNOTATIONS (document)) &&
+		!has_annot && ev_view_get_has_selection (view);
 
 	ev_window_set_action_enabled (ev_window, "annotate-selected-text", can_annotate);
 
