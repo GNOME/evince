@@ -859,6 +859,7 @@ djvu_document_find_find_text (EvDocumentFind   *document,
 	miniexp_t page_text;
 	gdouble width, height, dpi;
 	GList *matches = NULL, *l;
+	char *search_text = NULL;
 
 	g_return_val_if_fail (text != NULL, NULL);
 
@@ -872,7 +873,13 @@ djvu_document_find_find_text (EvDocumentFind   *document,
 		
 		djvu_text_page_index_text (tpage, case_sensitive);
 		if (tpage->links->len > 0) {
-			djvu_text_page_search (tpage, text);
+			if (!case_sensitive) {
+				search_text = g_utf8_casefold (text, -1);
+				djvu_text_page_search (tpage, search_text);
+				g_free (search_text);
+			} else {
+				djvu_text_page_search (tpage, text);
+			}
 			matches = tpage->results;
 		}
 		djvu_text_page_free (tpage);
