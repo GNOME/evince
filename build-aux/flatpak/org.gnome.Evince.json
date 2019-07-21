@@ -147,6 +147,25 @@
             ]
         },
         {
+            "name": "gnome-desktop",
+            "buildsystem": "meson",
+            "config-opts": [
+                "-Ddesktop_docs=false",
+                "-Ddebug_tools=false"
+            ],
+            "cleanup": [
+                "/lib/girepository-1.0",
+                "/share/gir-1.0"
+            ],
+            "sources": [
+                {
+                    "type": "archive",
+                    "url": "http://ftp.gnome.org/pub/GNOME/sources/gnome-desktop/3.33/gnome-desktop-3.33.4.tar.xz",
+                    "sha256": "655639cc5a060b9518c541fdd1d6af7a7765c0f4dab14188b1e1b7dff2a76857"
+                }
+            ]
+        },
+        {
             "name": "evince",
             "buildsystem": "meson",
             "config-opts": [
