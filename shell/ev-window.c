@@ -1160,6 +1160,25 @@ ev_window_init_metadata_with_default_values (EvWindow *window)
 		ev_metadata_set_boolean (metadata, "fullscreen",
 					 g_settings_get_boolean (settings, "fullscreen"));
 	}
+
+	/* Annotations */
+	if (!ev_metadata_has_key (metadata, "annotations_rgba_r")) {
+		ev_metadata_set_double (metadata, "annotations_rgba_r",
+				        1.0);
+	}
+	if (!ev_metadata_has_key (metadata, "annotations_rgba_g")) {
+		ev_metadata_set_double (metadata, "annotations_rgba_g",
+				        1.0);
+	}
+	if (!ev_metadata_has_key (metadata, "annotations_rgba_b")) {
+		ev_metadata_set_double (metadata, "annotations_rgba_b",
+					0.0);
+	}
+	if (!ev_metadata_has_key (metadata, "annotations_rgba_a")) {
+		ev_metadata_set_double (metadata, "annotations_rgba_a",
+					1.0);
+	}
+
 }
 
 static void
@@ -1409,6 +1428,7 @@ setup_view_from_metadata (EvWindow *window)
 {
 	gboolean presentation;
 	EvWindowPrivate *priv = GET_PRIVATE (window);
+	GdkRGBA rgba;
 
 	if (!priv->metadata)
 		return;
@@ -1442,6 +1462,18 @@ setup_view_from_metadata (EvWindow *window)
 		if (ev_metadata_get_boolean (priv->metadata, "caret-navigation", &caret_navigation))
 			ev_view_set_caret_navigation_enabled (EV_VIEW (priv->view), caret_navigation);
 	}
+
+	/* Color of new annotations */
+	if (ev_metadata_get_double (priv->metadata, "annotations_rgba_r", &(rgba.red))
+	    && ev_metadata_get_double (priv->metadata, "annotations_rgba_g", &(rgba.green))
+	    && ev_metadata_get_double (priv->metadata, "annotations_rgba_b", &(rgba.blue))
+	    && ev_metadata_get_double (priv->metadata, "annotations_rgba_a", &(rgba.alpha))) {
+
+		ev_annotations_toolbar_set_annot_rgba (EV_ANNOTATIONS_TOOLBAR (priv->annots_toolbar),
+						       &rgba);
+		ev_view_set_annotation_rgba (EV_VIEW (priv->view), &rgba);
+	}
+
 }
 
 static void
@@ -7323,7 +7355,12 @@ annotation_color_set_cb (GtkColorButton *button,
 {
 	EvWindowPrivate *priv = GET_PRIVATE(window);
 	EvView *view = EV_VIEW(priv->view);
+	EvMetadata *metadata = priv->metadata;
 	ev_view_set_annotation_rgba (view, rgba);
+	ev_metadata_set_double (metadata, "annotations_rgba_r", rgba->red);
+	ev_metadata_set_double (metadata, "annotations_rgba_g", rgba->green);
+	ev_metadata_set_double (metadata, "annotations_rgba_b", rgba->blue);
+	ev_metadata_set_double (metadata, "annotations_rgba_a", rgba->alpha);
 }
 
 static void
