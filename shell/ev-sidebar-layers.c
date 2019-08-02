@@ -57,11 +57,9 @@ G_DEFINE_TYPE_EXTENDED (EvSidebarLayers,
                         ev_sidebar_layers,
                         GTK_TYPE_BOX,
                         0, 
+                        G_ADD_PRIVATE (EvSidebarLayers)
                         G_IMPLEMENT_INTERFACE (EV_TYPE_SIDEBAR_PAGE, 
 					       ev_sidebar_layers_page_iface_init))
-
-#define EV_SIDEBAR_LAYERS_GET_PRIVATE(object) \
-	(G_TYPE_INSTANCE_GET_PRIVATE ((object), EV_TYPE_SIDEBAR_LAYERS, EvSidebarLayersPrivate))
 
 static void
 ev_sidebar_layers_dispose (GObject *object)
@@ -284,7 +282,7 @@ ev_sidebar_layers_init (EvSidebarLayers *ev_layers)
 	GtkWidget    *swindow;
 	GtkTreeModel *model;
 	
-	ev_layers->priv = EV_SIDEBAR_LAYERS_GET_PRIVATE (ev_layers);
+	ev_layers->priv = ev_sidebar_layers_get_instance_private (ev_layers);
 
 	swindow = gtk_scrolled_window_new (NULL, NULL);
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (swindow),
@@ -312,8 +310,6 @@ ev_sidebar_layers_class_init (EvSidebarLayersClass *ev_layers_class)
 
 	g_object_class->get_property = ev_sidebar_layers_get_property;
 	g_object_class->dispose = ev_sidebar_layers_dispose;
-
-	g_type_class_add_private (g_object_class, sizeof (EvSidebarLayersPrivate));
 
 	g_object_class_override_property (g_object_class, PROP_WIDGET, "main-widget");
 

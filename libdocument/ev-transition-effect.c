@@ -24,8 +24,6 @@
 
 #include "ev-document-type-builtins.h"
 
-#define EV_TRANSITION_EFFECT_GET_PRIV(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), EV_TYPE_TRANSITION_EFFECT, EvTransitionEffectPrivate))
-
 typedef struct EvTransitionEffectPrivate EvTransitionEffectPrivate;
 
 struct EvTransitionEffectPrivate {
@@ -51,7 +49,7 @@ enum {
 	PROP_RECTANGULAR
 };
 
-G_DEFINE_TYPE (EvTransitionEffect, ev_transition_effect, G_TYPE_OBJECT)
+G_DEFINE_TYPE_WITH_PRIVATE (EvTransitionEffect, ev_transition_effect, G_TYPE_OBJECT)
 
 static void
 ev_transition_effect_set_property (GObject	*object,
@@ -61,7 +59,7 @@ ev_transition_effect_set_property (GObject	*object,
 {
 	EvTransitionEffectPrivate *priv;
 
-	priv = EV_TRANSITION_EFFECT_GET_PRIV (object);
+	priv = ev_transition_effect_get_instance_private (EV_TRANSITION_EFFECT (object));
 
 	switch (prop_id) {
 	case PROP_TYPE:
@@ -99,7 +97,7 @@ ev_transition_effect_get_property (GObject    *object,
 {
 	EvTransitionEffectPrivate *priv;
 
-	priv = EV_TRANSITION_EFFECT_GET_PRIV (object);
+	priv = ev_transition_effect_get_instance_private (EV_TRANSITION_EFFECT (object));
 
 	switch (prop_id) {
 	case PROP_TYPE:
@@ -134,7 +132,7 @@ ev_transition_effect_init (EvTransitionEffect *effect)
 {
 	EvTransitionEffectPrivate *priv;
 
-	priv = EV_TRANSITION_EFFECT_GET_PRIV (effect);
+	priv = ev_transition_effect_get_instance_private (effect);
 
 	priv->scale = 1.;
 }
@@ -207,8 +205,6 @@ ev_transition_effect_class_init (EvTransitionEffectClass *klass)
 							       FALSE,
 							       G_PARAM_READWRITE |
                                                                G_PARAM_STATIC_STRINGS));
-
-	g_type_class_add_private (klass, sizeof (EvTransitionEffectPrivate));
 }
 
 EvTransitionEffect *

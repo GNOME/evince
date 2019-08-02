@@ -87,12 +87,10 @@ G_DEFINE_TYPE_EXTENDED (EvSidebarLinks,
                         ev_sidebar_links, 
                         GTK_TYPE_BOX,
                         0, 
+                        G_ADD_PRIVATE (EvSidebarLinks)
                         G_IMPLEMENT_INTERFACE (EV_TYPE_SIDEBAR_PAGE, 
 					       ev_sidebar_links_page_iface_init))
 
-
-#define EV_SIDEBAR_LINKS_GET_PRIVATE(object) \
-	(G_TYPE_INSTANCE_GET_PRIVATE ((object), EV_TYPE_SIDEBAR_LINKS, EvSidebarLinksPrivate))
 
 static void
 ev_sidebar_links_set_property (GObject      *object,
@@ -218,8 +216,6 @@ ev_sidebar_links_class_init (EvSidebarLinksClass *ev_sidebar_links_class)
 	g_object_class_override_property (g_object_class,
 					  PROP_WIDGET,
 					  "main-widget");
-
-	g_type_class_add_private (g_object_class, sizeof (EvSidebarLinksPrivate));
 }
 
 static void
@@ -688,7 +684,7 @@ ev_sidebar_links_construct (EvSidebarLinks *ev_sidebar_links)
 static void
 ev_sidebar_links_init (EvSidebarLinks *ev_sidebar_links)
 {
-	ev_sidebar_links->priv = EV_SIDEBAR_LINKS_GET_PRIVATE (ev_sidebar_links);
+	ev_sidebar_links->priv = ev_sidebar_links_get_instance_private (ev_sidebar_links);
 
 	ev_sidebar_links_construct (ev_sidebar_links);
 }

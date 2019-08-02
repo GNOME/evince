@@ -57,10 +57,7 @@ struct _EvLinkActionPrivate {
 	GList            *toggle_list;
 };
 
-G_DEFINE_TYPE (EvLinkAction, ev_link_action, G_TYPE_OBJECT)
-
-#define EV_LINK_ACTION_GET_PRIVATE(object) \
-        (G_TYPE_INSTANCE_GET_PRIVATE ((object), EV_TYPE_LINK_ACTION, EvLinkActionPrivate))
+G_DEFINE_TYPE_WITH_PRIVATE (EvLinkAction, ev_link_action, G_TYPE_OBJECT)
 
 EvLinkActionType
 ev_link_action_get_action_type (EvLinkAction *self)
@@ -305,7 +302,7 @@ ev_link_action_finalize (GObject *object)
 static void
 ev_link_action_init (EvLinkAction *ev_link_action)
 {
-	ev_link_action->priv = EV_LINK_ACTION_GET_PRIVATE (ev_link_action);
+	ev_link_action->priv = ev_link_action_get_instance_private (ev_link_action);
 
 	ev_link_action->priv->dest = NULL;
 	ev_link_action->priv->uri = NULL;
@@ -325,8 +322,6 @@ ev_link_action_class_init (EvLinkActionClass *ev_link_action_class)
 	g_object_class->get_property = ev_link_action_get_property;
 
 	g_object_class->finalize = ev_link_action_finalize;
-
-	g_type_class_add_private (g_object_class, sizeof (EvLinkActionPrivate));
 
 	g_object_class_install_property (g_object_class,
 					 PROP_TYPE,

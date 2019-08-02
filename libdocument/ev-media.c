@@ -27,7 +27,7 @@ struct _EvMediaPrivate {
         gboolean show_controls;
 };
 
-G_DEFINE_TYPE (EvMedia, ev_media, G_TYPE_OBJECT)
+G_DEFINE_TYPE_WITH_PRIVATE (EvMedia, ev_media, G_TYPE_OBJECT)
 
 static void
 ev_media_finalize (GObject *object)
@@ -45,14 +45,12 @@ ev_media_class_init (EvMediaClass *klass)
         GObjectClass *g_object_class = G_OBJECT_CLASS (klass);
 
         g_object_class->finalize = ev_media_finalize;
-
-        g_type_class_add_private (g_object_class, sizeof (EvMediaPrivate));
 }
 
 static void
 ev_media_init (EvMedia *media)
 {
-        media->priv = G_TYPE_INSTANCE_GET_PRIVATE (media, EV_TYPE_MEDIA, EvMediaPrivate);
+        media->priv = ev_media_get_instance_private (media);
 }
 
 EvMedia *

@@ -62,6 +62,7 @@ G_DEFINE_TYPE_EXTENDED (EvSidebarBookmarks,
                         ev_sidebar_bookmarks,
                         GTK_TYPE_BOX,
                         0,
+                        G_ADD_PRIVATE (EvSidebarBookmarks)
                         G_IMPLEMENT_INTERFACE (EV_TYPE_SIDEBAR_PAGE,
                                                ev_sidebar_bookmarks_page_iface_init))
 
@@ -422,9 +423,7 @@ ev_sidebar_bookmarks_init (EvSidebarBookmarks *sidebar_bookmarks)
         GtkCellRenderer           *renderer;
         GtkTreeSelection          *selection;
 
-        sidebar_bookmarks->priv = G_TYPE_INSTANCE_GET_PRIVATE (sidebar_bookmarks,
-                                                               EV_TYPE_SIDEBAR_BOOKMARKS,
-                                                               EvSidebarBookmarksPrivate);
+        sidebar_bookmarks->priv = ev_sidebar_bookmarks_get_instance_private (sidebar_bookmarks);
         priv = sidebar_bookmarks->priv;
 
         swindow = gtk_scrolled_window_new (NULL, NULL);
@@ -533,8 +532,6 @@ ev_sidebar_bookmarks_class_init (EvSidebarBookmarksClass *klass)
         g_object_class->dispose = ev_sidebar_bookmarks_dispose;
 
         widget_class->popup_menu = ev_sidebar_bookmarks_popup_menu;
-
-        g_type_class_add_private (g_object_class, sizeof (EvSidebarBookmarksPrivate));
 
         g_object_class_override_property (g_object_class, PROP_WIDGET, "main-widget");
 }

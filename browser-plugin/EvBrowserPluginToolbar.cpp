@@ -40,7 +40,7 @@ struct _EvBrowserPluginToolbarPrivate {
         GtkWidget *searchPopover;
 };
 
-G_DEFINE_TYPE(EvBrowserPluginToolbar, ev_browser_plugin_toolbar, GTK_TYPE_TOOLBAR)
+G_DEFINE_TYPE_WITH_PRIVATE(EvBrowserPluginToolbar, ev_browser_plugin_toolbar, GTK_TYPE_TOOLBAR)
 
 static void goToPreviousPage(EvBrowserPluginToolbar *toolbar)
 {
@@ -480,13 +480,11 @@ static void ev_browser_plugin_toolbar_class_init(EvBrowserPluginToolbarClass *kl
                                                               "Plugin",
                                                               "The plugin",
                                                               static_cast<GParamFlags>(G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS)));
-
-        g_type_class_add_private(gObjectClass, sizeof(EvBrowserPluginToolbarPrivate));
 }
 
 static void ev_browser_plugin_toolbar_init(EvBrowserPluginToolbar *toolbar)
 {
-        toolbar->priv = G_TYPE_INSTANCE_GET_PRIVATE(toolbar, EV_TYPE_BROWSER_PLUGIN_TOOLBAR, EvBrowserPluginToolbarPrivate);
+        toolbar->priv = static_cast<EvBrowserPluginToolbarPrivate *>(ev_browser_plugin_toolbar_get_instance_private(toolbar));
 }
 
 GtkWidget *ev_browser_plugin_toolbar_new(EvBrowserPlugin *plugin)

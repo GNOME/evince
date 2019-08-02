@@ -49,6 +49,7 @@ static void ev_page_accessible_hypertext_iface_init (AtkHypertextIface *iface);
 static void ev_page_accessible_text_iface_init (AtkTextIface *iface);
 
 G_DEFINE_TYPE_WITH_CODE (EvPageAccessible, ev_page_accessible, ATK_TYPE_OBJECT,
+			 G_ADD_PRIVATE (EvPageAccessible)
 			 G_IMPLEMENT_INTERFACE (ATK_TYPE_COMPONENT, ev_page_accessible_component_iface_init)
 			 G_IMPLEMENT_INTERFACE (ATK_TYPE_HYPERTEXT, ev_page_accessible_hypertext_iface_init)
 			 G_IMPLEMENT_INTERFACE (ATK_TYPE_TEXT, ev_page_accessible_text_iface_init))
@@ -346,8 +347,6 @@ ev_page_accessible_class_init (EvPageAccessibleClass *klass)
 {
 	GObjectClass   *g_object_class = G_OBJECT_CLASS (klass);
 	AtkObjectClass *atk_class = ATK_OBJECT_CLASS (klass);
-
-        g_type_class_add_private (klass, sizeof (EvPageAccessiblePrivate));
 
 	atk_class->get_parent  = ev_page_accessible_get_parent;
 	atk_class->ref_relation_set = ev_page_accessible_ref_relation_set;
@@ -1048,7 +1047,7 @@ ev_page_accessible_init (EvPageAccessible *page)
 {
 	atk_object_set_role (ATK_OBJECT (page), ATK_ROLE_PAGE);
 
-        page->priv = G_TYPE_INSTANCE_GET_PRIVATE (page, EV_TYPE_PAGE_ACCESSIBLE, EvPageAccessiblePrivate);
+        page->priv = ev_page_accessible_get_instance_private (page);
 }
 
 static void

@@ -106,11 +106,9 @@ G_DEFINE_TYPE_EXTENDED (EvSidebarThumbnails,
                         ev_sidebar_thumbnails, 
                         GTK_TYPE_BOX,
                         0, 
+                        G_ADD_PRIVATE (EvSidebarThumbnails)
                         G_IMPLEMENT_INTERFACE (EV_TYPE_SIDEBAR_PAGE, 
 					       ev_sidebar_thumbnails_page_iface_init))
-
-#define EV_SIDEBAR_THUMBNAILS_GET_PRIVATE(object) \
-	(G_TYPE_INSTANCE_GET_PRIVATE ((object), EV_TYPE_SIDEBAR_THUMBNAILS, EvSidebarThumbnailsPrivate));
 
 /* Thumbnails dimensions cache */
 #define EV_THUMBNAILS_SIZE_CACHE_KEY "ev-thumbnails-size-cache"
@@ -361,8 +359,6 @@ ev_sidebar_thumbnails_class_init (EvSidebarThumbnailsClass *ev_sidebar_thumbnail
 	g_object_class_override_property (g_object_class,
 					  PROP_WIDGET,
 					  "main-widget");
-
-	g_type_class_add_private (g_object_class, sizeof (EvSidebarThumbnailsPrivate));
 }
 
 GtkWidget *
@@ -789,7 +785,7 @@ ev_sidebar_thumbnails_init (EvSidebarThumbnails *ev_sidebar_thumbnails)
 	EvSidebarThumbnailsPrivate *priv;
 	guint signal_id;
 
-	priv = ev_sidebar_thumbnails->priv = EV_SIDEBAR_THUMBNAILS_GET_PRIVATE (ev_sidebar_thumbnails);
+	priv = ev_sidebar_thumbnails->priv = ev_sidebar_thumbnails_get_instance_private (ev_sidebar_thumbnails);
 	priv->blank_first_dual_mode = FALSE;
 
 	priv->list_store = gtk_list_store_new (NUM_COLUMNS,
