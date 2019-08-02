@@ -558,7 +558,7 @@ comics_document_render (EvDocument      *document,
 
 	pixbuf = comics_document_render_pixbuf (document, rc);
 	surface = ev_document_misc_surface_from_pixbuf (pixbuf);
-	g_object_unref (pixbuf);
+	g_clear_object (&pixbuf);
 
 	return surface;
 }
