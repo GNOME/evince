@@ -207,6 +207,7 @@ static void ev_link_accessible_action_interface_init     (AtkActionIface        
 static void ev_link_accessible_component_iface_init      (AtkComponentIface     *iface);
 
 G_DEFINE_TYPE_WITH_CODE (EvLinkAccessible, ev_link_accessible, ATK_TYPE_OBJECT,
+			 G_ADD_PRIVATE (EvLinkAccessible)
 			 G_IMPLEMENT_INTERFACE (ATK_TYPE_HYPERLINK_IMPL, ev_link_accessible_hyperlink_impl_iface_init)
 			 G_IMPLEMENT_INTERFACE (ATK_TYPE_ACTION, ev_link_accessible_action_interface_init)
 			 G_IMPLEMENT_INTERFACE (ATK_TYPE_COMPONENT, ev_link_accessible_component_iface_init))
@@ -289,8 +290,6 @@ ev_link_accessible_class_init (EvLinkAccessibleClass *klass)
 
         object_class->finalize = ev_link_accessible_finalize;
 
-        g_type_class_add_private (klass, sizeof (EvLinkAccessiblePrivate));
-
         atk_class->get_parent = ev_link_accessible_get_parent;
         atk_class->get_name = ev_link_accessible_get_name;
         atk_class->ref_state_set = ev_link_accessible_ref_state_set;
@@ -300,7 +299,7 @@ static void
 ev_link_accessible_init (EvLinkAccessible *link)
 {
         atk_object_set_role (ATK_OBJECT (link), ATK_ROLE_LINK);
-        link->priv = G_TYPE_INSTANCE_GET_PRIVATE (link, EV_TYPE_LINK_ACCESSIBLE, EvLinkAccessiblePrivate);
+        link->priv = ev_link_accessible_get_instance_private (link);
         link->priv->start_index = -1;
         link->priv->end_index = -1;
 }

@@ -66,10 +66,7 @@ struct _EvLinkDestPrivate {
 	gchar	      *page_label;
 };
 
-G_DEFINE_TYPE (EvLinkDest, ev_link_dest, G_TYPE_OBJECT)
-
-#define EV_LINK_DEST_GET_PRIVATE(object) \
-        (G_TYPE_INSTANCE_GET_PRIVATE ((object), EV_TYPE_LINK_DEST, EvLinkDestPrivate))
+G_DEFINE_TYPE_WITH_PRIVATE (EvLinkDest, ev_link_dest, G_TYPE_OBJECT)
 
 EvLinkDestType
 ev_link_dest_get_dest_type (EvLinkDest *self)
@@ -273,7 +270,7 @@ ev_link_dest_finalize (GObject *object)
 static void
 ev_link_dest_init (EvLinkDest *ev_link_dest)
 {
-	ev_link_dest->priv = EV_LINK_DEST_GET_PRIVATE (ev_link_dest);
+	ev_link_dest->priv = ev_link_dest_get_instance_private (ev_link_dest);
 
 	ev_link_dest->priv->named = NULL;
 }
@@ -289,8 +286,6 @@ ev_link_dest_class_init (EvLinkDestClass *ev_link_dest_class)
 	g_object_class->get_property = ev_link_dest_get_property;
 
 	g_object_class->finalize = ev_link_dest_finalize;
-
-	g_type_class_add_private (g_object_class, sizeof (EvLinkDestPrivate));
 
 	g_object_class_install_property (g_object_class,
 					 PROP_TYPE,

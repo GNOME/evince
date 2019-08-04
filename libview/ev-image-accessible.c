@@ -34,6 +34,7 @@ static void ev_image_accessible_component_iface_init (AtkComponentIface *iface);
 static void ev_image_accessible_image_iface_init     (AtkImageIface *iface);
 
 G_DEFINE_TYPE_WITH_CODE (EvImageAccessible, ev_image_accessible, ATK_TYPE_OBJECT,
+			 G_ADD_PRIVATE (EvImageAccessible)
 			 G_IMPLEMENT_INTERFACE (ATK_TYPE_COMPONENT, ev_image_accessible_component_iface_init)
 			 G_IMPLEMENT_INTERFACE (ATK_TYPE_IMAGE, ev_image_accessible_image_iface_init))
 
@@ -171,8 +172,6 @@ ev_image_accessible_class_init (EvImageAccessibleClass *klass)
 	object_class->finalize = ev_image_accessible_finalize;
 	atk_class->get_parent = ev_image_accessible_get_parent;
 	atk_class->ref_state_set = ev_image_accessible_ref_state_set;
-
-	g_type_class_add_private (klass, sizeof (EvImageAccessiblePrivate));
 }
 
 static void
@@ -180,7 +179,7 @@ ev_image_accessible_init (EvImageAccessible *image)
 {
 	atk_object_set_role (ATK_OBJECT (image), ATK_ROLE_IMAGE);
 
-	image->priv = G_TYPE_INSTANCE_GET_PRIVATE (image, EV_TYPE_IMAGE_ACCESSIBLE, EvImageAccessiblePrivate);
+	image->priv = ev_image_accessible_get_instance_private (image);
 }
 
 static void

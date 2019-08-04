@@ -41,10 +41,7 @@ struct _EvLinkPrivate {
 	EvLinkAction *action;
 };
 
-G_DEFINE_TYPE (EvLink, ev_link, G_TYPE_OBJECT)
-
-#define EV_LINK_GET_PRIVATE(object) \
-	(G_TYPE_INSTANCE_GET_PRIVATE ((object), EV_TYPE_LINK, EvLinkPrivate))
+G_DEFINE_TYPE_WITH_PRIVATE (EvLink, ev_link, G_TYPE_OBJECT)
 
 const gchar *
 ev_link_get_title (EvLink *self)
@@ -136,7 +133,7 @@ ev_link_finalize (GObject *object)
 static void
 ev_link_init (EvLink *ev_link)
 {
-	ev_link->priv = EV_LINK_GET_PRIVATE (ev_link);
+	ev_link->priv = ev_link_get_instance_private (ev_link);
 
 	ev_link->priv->title = NULL;
 	ev_link->priv->action = NULL;
@@ -153,8 +150,6 @@ ev_link_class_init (EvLinkClass *ev_window_class)
 	g_object_class->get_property = ev_link_get_property;
 
 	g_object_class->finalize = ev_link_finalize;
-
-	g_type_class_add_private (g_object_class, sizeof (EvLinkPrivate));
 
 	g_object_class_install_property (g_object_class,
 					 PROP_TITLE,
