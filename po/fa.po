@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince HEAD\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
-"POT-Creation-Date: 2019-05-02 18:55+0000\n"
-"PO-Revision-Date: 2019-08-14 14:51+0430\n"
+"POT-Creation-Date: 2019-08-21 18:21+0000\n"
+"PO-Revision-Date: 2019-08-21 22:57+0430\n"
 "Last-Translator: Danial Behzadi <dani.behzi@ubuntu.com>\n"
 "Language-Team: Persian\n"
 "Language: fa\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Poedit-SourceCharset: utf-8\n"
-"X-Generator: Poedit 2.2.1\n"
+"X-Generator: Poedit 2.2.3\n"
 
 #: backend/comics/comics-document.c:163 backend/comics/comics-document.c:187
 msgid "File is corrupted"
@@ -31,7 +31,7 @@ msgstr "پرونده مخدوش است"
 
 #: backend/comics/comics-document.c:228
 msgid "Archive is encrypted"
-msgstr "آرشیو رمزگذاری شده است"
+msgstr "بایگانی رمز شده است"
 
 #: backend/comics/comics-document.c:233
 msgid "No supported images in archive"
@@ -39,7 +39,7 @@ msgstr "تصاویر پشتیبانی‌شده‌ای در بایگانی وجو
 
 #: backend/comics/comics-document.c:238
 msgid "No files in archive"
-msgstr "پرونده‌ای در آرشیو پیدا نشد"
+msgstr "پرونده‌ای در بایگانی پیدا نشد"
 
 #: backend/comics/comics-document.c:276
 #, c-format
@@ -56,7 +56,7 @@ msgstr ""
 
 #: backend/comics/comics-document.c:323
 msgid "Can not get local path for archive"
-msgstr "امکان گرفتن مکانِ محلی آرشیو نیست"
+msgstr "امکان گرفتن مکانِ محلی بایگانی نیست"
 
 #: backend/comics/comicsdocument.evince-backend.desktop.in.in:4
 #: backend/comics/evince-comicsdocument.metainfo.xml.in.in:5
@@ -237,6 +237,11 @@ msgid ""
 "Substituting with <b>%s</b>\n"
 "(%s)"
 msgstr ""
+"%s%s\n"
+"رمزگذاری: %s\n"
+"%s\n"
+"جایگزینی با <b>%s</b>\n"
+"(%s)"
 
 #. Translators: string is a concatenation of previous
 #. * translated strings to indicate the fonts properties
@@ -254,6 +259,9 @@ msgid ""
 "Encoding: %s\n"
 "%s"
 msgstr ""
+"%s%s\n"
+"رمزگذاری: %s\n"
+"%s"
 
 #: backend/ps/evince-psdocument.metainfo.xml.in.in:5
 #: backend/ps/psdocument.evince-backend.desktop.in.in:5
@@ -471,7 +479,7 @@ msgid "of %d"
 msgstr "از %Id"
 
 #: libmisc/ev-page-action-widget.c:187 shell/ev-history.c:447
-#: shell/ev-sidebar-bookmarks.c:310 shell/ev-window.c:948 shell/ev-window.c:5103
+#: shell/ev-sidebar-bookmarks.c:311 shell/ev-window.c:949 shell/ev-window.c:5103
 #, c-format
 msgid "Page %s"
 msgstr "صفحه %s"
@@ -639,7 +647,7 @@ msgstr "لغزشِ نما به بالا"
 msgid "Scroll View Down"
 msgstr "لغزشِ نما به پایین"
 
-#: libview/ev-view-accessible.c:129
+#: libview/ev-view-accessible.c:130
 msgid "Document View"
 msgstr "نمای سند"
 
@@ -991,7 +999,7 @@ msgstr "متن نشانه‌گذاری"
 msgid "Add highlight annotation"
 msgstr "افزودن حاشیه‌نویسی پررنگ"
 
-#: shell/evince-menus.ui:25 shell/ev-sidebar-links.c:344
+#: shell/evince-menus.ui:25 shell/ev-sidebar-links.c:340
 msgid "Print…"
 msgstr "چاپ…"
 
@@ -1161,8 +1169,8 @@ msgid "Password for document %s"
 msgstr "گذرواژهٔ سند %s"
 
 #. Create tree view
-#: shell/ev-loading-message.c:50 shell/ev-sidebar-annotations.c:139
-#: shell/ev-sidebar-layers.c:125 shell/ev-sidebar-links.c:269
+#: shell/ev-loading-message.c:50 shell/ev-sidebar-annotations.c:137
+#: shell/ev-sidebar-layers.c:123 shell/ev-sidebar-links.c:265
 msgid "Loading…"
 msgstr "در حال بارکردن…"
 
@@ -1185,9 +1193,9 @@ msgstr "سند «%s» قفل شده است و پیش از باز شدن به گ�
 msgid "Password required"
 msgstr "گذرواژه لازم است"
 
-#: shell/ev-password-view.c:252 shell/ev-sidebar-attachments.c:495
+#: shell/ev-password-view.c:252 shell/ev-sidebar-attachments.c:493
 #: shell/ev-window.c:2763 shell/ev-window.c:3063 shell/ev-window.c:3936
-#: shell/ev-window.c:6887 shell/ev-window.c:7114
+#: shell/ev-window.c:6891 shell/ev-window.c:7118
 msgid "_Cancel"
 msgstr "_لغو"
 
@@ -1248,73 +1256,73 @@ msgstr "مجوز متن"
 msgid "Further Information"
 msgstr "اطلاعات بیشتر"
 
-#: shell/ev-sidebar-annotations.c:362
+#: shell/ev-sidebar-annotations.c:358
 msgid "Document contains no annotations"
 msgstr "سند هیچ حاشیه‌نویسی‌ای ندارد"
 
-#: shell/ev-sidebar-annotations.c:401
+#: shell/ev-sidebar-annotations.c:397
 #, c-format
 msgid "Page %d"
 msgstr "صفحه %Id"
 
-#: shell/ev-sidebar-annotations.c:669 shell/ev-window.c:7519
+#: shell/ev-sidebar-annotations.c:665 shell/ev-window.c:7523
 msgid "Annotations"
 msgstr "حاشیه‌نویسی‌ها"
 
-#: shell/ev-sidebar-attachments.c:487
+#: shell/ev-sidebar-attachments.c:485
 #, c-format
 msgid "A file named “%s” already exists. Do you want to replace it?"
 msgstr "پرونده‌ای با نام «%s» ار پیش موجود است. می‌خواهید جایگزینش کنید؟"
 
-#: shell/ev-sidebar-attachments.c:491
+#: shell/ev-sidebar-attachments.c:489
 #, c-format
 msgid "The file “%s” already exists. Replacing it will overwrite its contents."
 msgstr "پروندهٔ «%s» از پیش موجود است. جایگزینیش محتویاتش را بازنویسی خواهد کرد."
 
-#: shell/ev-sidebar-attachments.c:496
+#: shell/ev-sidebar-attachments.c:494
 msgid "_Replace"
 msgstr "_جایگزینی"
 
-#: shell/ev-sidebar-attachments.c:903 shell/ev-window.c:7543
+#: shell/ev-sidebar-attachments.c:899 shell/ev-window.c:7547
 msgid "Attachments"
 msgstr "پیوست‌ها"
 
-#: shell/ev-sidebar-bookmarks.c:150
+#: shell/ev-sidebar-bookmarks.c:151
 msgid "_Open Bookmark"
 msgstr "_گشودن نشانک‌ها"
 
-#: shell/ev-sidebar-bookmarks.c:152
+#: shell/ev-sidebar-bookmarks.c:153
 msgid "_Rename Bookmark"
 msgstr "_تغییر نام نشانک"
 
-#: shell/ev-sidebar-bookmarks.c:154
+#: shell/ev-sidebar-bookmarks.c:155
 msgid "_Remove Bookmark"
 msgstr "_حذف نشانک"
 
-#: shell/ev-sidebar-bookmarks.c:472 shell/ev-sidebar-bookmarks.c:473
+#: shell/ev-sidebar-bookmarks.c:471 shell/ev-sidebar-bookmarks.c:472
 msgid "Add bookmark"
 msgstr "افزودن نشانک"
 
-#: shell/ev-sidebar-bookmarks.c:481 shell/ev-sidebar-bookmarks.c:482
+#: shell/ev-sidebar-bookmarks.c:480 shell/ev-sidebar-bookmarks.c:481
 msgid "Remove bookmark"
 msgstr "برداشتن نشانک"
 
-#: shell/ev-sidebar-bookmarks.c:598 shell/ev-window.c:7527
+#: shell/ev-sidebar-bookmarks.c:595 shell/ev-window.c:7531
 msgid "Bookmarks"
 msgstr "نشانک‌ها"
 
-#: shell/ev-sidebar-layers.c:448 shell/ev-window.c:7555
+#: shell/ev-sidebar-layers.c:444 shell/ev-window.c:7559
 msgid "Layers"
 msgstr "لایه‌ها"
 
 #. Translators: This is the title for the sidebar pane that
 #. * shows the Outline or Table of Contents of the document.
 #.
-#: shell/ev-sidebar-links.c:1030 shell/ev-window.c:7507
+#: shell/ev-sidebar-links.c:1027 shell/ev-window.c:7511
 msgid "Outline"
 msgstr "رئوس مطالب"
 
-#: shell/ev-sidebar-thumbnails.c:1067 shell/ev-window.c:7490
+#: shell/ev-sidebar-thumbnails.c:1063 shell/ev-window.c:7494
 msgid "Thumbnails"
 msgstr "تصاویر بندانگشتی"
 
@@ -1442,7 +1450,7 @@ msgstr "بارگذاری تصویری (٪%Id)"
 msgid "Save As…"
 msgstr "ذخیرهٔ به نام…"
 
-#: shell/ev-window.c:3064 shell/ev-window.c:6889 shell/ev-window.c:7116
+#: shell/ev-window.c:3064 shell/ev-window.c:6893 shell/ev-window.c:7120
 msgid "_Save"
 msgstr "_ذخیره"
 
@@ -1545,19 +1553,19 @@ msgstr ""
 msgid "Running in presentation mode"
 msgstr "در حال اجرا در حالت ارائه"
 
-#: shell/ev-window.c:5592
+#: shell/ev-window.c:5595
 msgid "The attachment could not be saved."
 msgstr "پیوست ذخیره نشد."
 
-#: shell/ev-window.c:5914
+#: shell/ev-window.c:5917
 msgid "Enable caret navigation?"
 msgstr "فعال‌سازی حالت پیمایش مکان‌نما؟"
 
-#: shell/ev-window.c:5915
+#: shell/ev-window.c:5918
 msgid "_Enable"
 msgstr "_فعال‌سازی"
 
-#: shell/ev-window.c:5918
+#: shell/ev-window.c:5921
 msgid ""
 "Pressing F7 turns the caret navigation on or off. This feature places a "
 "moveable cursor in text pages, allowing you to move around and select text with "
@@ -1567,35 +1575,35 @@ msgstr ""
 "قابل حرکت را در صفحات متنی قرار می‌دهد، که به شما اجازه می‌دهد در سند حرکت کنید و "
 "با کیبورد متن‌ها را انتخاب کنید. آیا مایلید که حالت پیمایش مکان‌نما را فعال کنید؟"
 
-#: shell/ev-window.c:5923
+#: shell/ev-window.c:5926
 msgid "Don’t show this message again"
 msgstr "این پیام را دوباره نشان نده"
 
-#: shell/ev-window.c:6519 shell/ev-window.c:6535
+#: shell/ev-window.c:6523 shell/ev-window.c:6539
 msgid "Unable to launch external application."
 msgstr "راه‌انداختن برنامهٔ خارجی ممکن نیست."
 
-#: shell/ev-window.c:6597
+#: shell/ev-window.c:6601
 msgid "Unable to open external link"
 msgstr "گشودن پیوند خارجی ممکن نیست"
 
-#: shell/ev-window.c:6816
+#: shell/ev-window.c:6820
 msgid "Couldn’t find appropriate format to save image"
 msgstr "قالب مناسب برای ذخیرهٔ عکس پیدا نشد"
 
-#: shell/ev-window.c:6848
+#: shell/ev-window.c:6852
 msgid "The image could not be saved."
 msgstr "تصویر ذخیره نشد."
 
-#: shell/ev-window.c:6884
+#: shell/ev-window.c:6888
 msgid "Save Image"
 msgstr "ذخیرهٔ تصویر"
 
-#: shell/ev-window.c:7043
+#: shell/ev-window.c:7047
 msgid "Unable to open attachment"
 msgstr "گشودن پیوست ممکن نیست"
 
-#: shell/ev-window.c:7111
+#: shell/ev-window.c:7115
 msgid "Save Attachment"
 msgstr "ذخیرهٔ پیوست"
 
@@ -1850,11 +1858,9 @@ msgid "Go to the previous search result"
 msgstr "رفتن به نتیجه بعدی جست‌وجو"
 
 #: shell/help-overlay.ui:279
-#, fuzzy
-#| msgid "Document View"
 msgctxt "shortcut window"
 msgid "Document view and handling"
-msgstr "نمای سند"
+msgstr "نمای سند و مدیریت"
 
 #: shell/help-overlay.ui:283
 msgctxt "shortcut window"
@@ -1864,7 +1870,7 @@ msgstr "افزودن نشانک"
 #: shell/help-overlay.ui:290
 msgctxt "shortcut window"
 msgid "Toggle inverted colors"
-msgstr " تغییر وضعیت رنگ‌های وارونه"
+msgstr "تغییر وضعیت رنگ‌های وارونه"
 
 #: shell/help-overlay.ui:297
 msgctxt "shortcut window"
