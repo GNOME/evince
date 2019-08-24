@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: lv\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
-"POT-Creation-Date: 2019-02-10 11:13+0000\n"
-"PO-Revision-Date: 2019-03-03 13:13+0200\n"
+"POT-Creation-Date: 2019-06-07 09:53+0000\n"
+"PO-Revision-Date: 2019-08-24 14:21+0200\n"
 "Last-Translator: Rūdolfs Mazurs <rudolfs.mazurs@gmail.com>\n"
 "Language-Team: Latvian <lata-l10n@googlegroups.com>\n"
 "Language: lv\n"
@@ -354,7 +354,7 @@ msgid "Print document"
 msgstr "Drukāt dokumentu"
 
 #. Manually set name and icon
-#: data/org.gnome.Evince.desktop.in.in:3 shell/ev-window.c:4054
+#: data/org.gnome.Evince.desktop.in.in:3 shell/ev-window.c:4062
 #: shell/ev-window-title.c:133 shell/main.c:298
 msgid "Document Viewer"
 msgstr "Dokumentu skatītājs"
@@ -365,13 +365,11 @@ msgstr "Skatīt dokumentus, kas sastāv no vairākām lappusēm"
 
 #. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
 #: data/org.gnome.Evince.desktop.in.in:6
-msgid "pdf;ps;postscript;dvi;xps;djvu;tiff;document;presentation;viewer;"
-msgstr "pdf;ps;postscript;dvi;xps;djvu;tiff;dokuments;prezentācija;skatītājs;"
-
-#. Translators: Do NOT translate or transliterate this text (this is an icon file name)!
-#: data/org.gnome.Evince.desktop.in.in:13
-msgid "org.gnome.Evince"
-msgstr "org.gnome.Evince"
+#| msgid "pdf;ps;postscript;dvi;xps;djvu;tiff;document;presentation;viewer;"
+msgid ""
+"pdf;ps;postscript;dvi;xps;djvu;tiff;document;presentation;viewer;evince;"
+msgstr ""
+"pdf;ps;postscript;dvi;xps;djvu;tiff;dokuments;prezentācija;skatītājs;evince;"
 
 #: data/org.gnome.Evince.gschema.xml:14
 msgid "Override document restrictions"
@@ -429,11 +427,6 @@ msgstr "Drukas priekšskatījums"
 msgid "Preview before printing"
 msgstr "Priekšskatīt pirms drukāt"
 
-#. Translators: Do NOT translate or transliterate this text (this is an icon file name)!
-#: data/org.gnome.Evince-previewer.desktop.in.in:11
-msgid "document-print-preview"
-msgstr "document-print-preview"
-
 #: libdocument/ev-attachment.c:330 libdocument/ev-attachment.c:351
 #, c-format
 msgid "Couldn’t save attachment “%s”: %s"
@@ -449,21 +442,21 @@ msgstr "Neizdevās atvērt pielikumu “%s” — %s"
 msgid "Couldn’t open attachment “%s”"
 msgstr "Neizdevās atvērt pielikumu “%s”"
 
-#: libdocument/ev-document-factory.c:101
+#: libdocument/ev-document-factory.c:105
 #, c-format
 msgid "File type %s (%s) is not supported"
 msgstr "Datņu tips %s (%s) nav atbalstīts"
 
-#: libdocument/ev-document-factory.c:369 libdocument/ev-file-helpers.c:498
+#: libdocument/ev-document-factory.c:373 libdocument/ev-file-helpers.c:498
 #: libdocument/ev-file-helpers.c:544 libdocument/ev-file-helpers.c:563
 msgid "Unknown MIME Type"
 msgstr "Nezināms MIME Tips"
 
-#: libdocument/ev-document-factory.c:578
+#: libdocument/ev-document-factory.c:582
 msgid "All Documents"
 msgstr "Visi dokumenti"
 
-#: libdocument/ev-document-factory.c:605 shell/ev-utils.c:327
+#: libdocument/ev-document-factory.c:609 shell/ev-utils.c:327
 msgid "All Files"
 msgstr "Visas datnes"
 
@@ -477,19 +470,19 @@ msgstr "Neizdevās izveidot pagaidu datni — %s"
 msgid "Failed to create a temporary directory: %s"
 msgstr "Neizdevās izveidot pagaidu mapi — %s"
 
-#: libmisc/ev-page-action-widget.c:85 libmisc/ev-page-action-widget.c:124
+#: libmisc/ev-page-action-widget.c:86 libmisc/ev-page-action-widget.c:125
 #, c-format
 msgid "(%d of %d)"
 msgstr "(%d no %d)"
 
-#: libmisc/ev-page-action-widget.c:87 libmisc/ev-page-action-widget.c:128
+#: libmisc/ev-page-action-widget.c:88 libmisc/ev-page-action-widget.c:129
 #, c-format
 msgid "of %d"
 msgstr "no %d"
 
-#: libmisc/ev-page-action-widget.c:186 shell/ev-history.c:447
-#: shell/ev-sidebar-bookmarks.c:310 shell/ev-window.c:947
-#: shell/ev-window.c:5093
+#: libmisc/ev-page-action-widget.c:187 shell/ev-history.c:447
+#: shell/ev-sidebar-bookmarks.c:310 shell/ev-window.c:948
+#: shell/ev-window.c:5102
 #, c-format
 msgid "Page %s"
 msgstr "Lappuse %s"
@@ -714,7 +707,7 @@ msgstr "Iet uz lappusi:"
 msgid "End of presentation. Press Esc or click to exit."
 msgstr "Prezentācijas beigas. Spiediet Esc vai klikšķiniet, lai izietu."
 
-#: org.gnome.Evince.appdata.xml.in:23 shell/ev-window.c:4049
+#: org.gnome.Evince.appdata.xml.in:23 shell/ev-window.c:4057
 msgid "Evince"
 msgstr "Evince"
 
@@ -770,7 +763,7 @@ msgstr "Izvēlēties lappusi vai meklējiet rādītājā"
 msgid "Select page"
 msgstr "Izvēlieties lappusi"
 
-#: previewer/ev-previewer-window.c:88 shell/ev-window.c:3506
+#: previewer/ev-previewer-window.c:88 shell/ev-window.c:3512
 msgid "Failed to print document"
 msgstr "Neizdevās izdrukāt dokumentu"
 
@@ -780,7 +773,6 @@ msgid "The selected printer “%s” could not be found"
 msgstr "Neizdevās atrast izvēlēto printeri “%s”"
 
 #: previewer/previewer.ui:7
-#| msgid "Print"
 msgid "_Print"
 msgstr "_Drukāt"
 
@@ -1065,8 +1057,9 @@ msgid "Ni_ght Mode"
 msgstr "Na_kts režīms"
 
 #: shell/evince-menus.ui:96
-msgid "Prop_erties…"
-msgstr "Īpašī_bas…"
+#| msgid "Properties"
+msgid "Prop_erties"
+msgstr "Īpašī_bas"
 
 #: shell/evince-menus.ui:102
 msgid "Save Current Settings as Defa_ult"
@@ -1081,7 +1074,6 @@ msgid "_Help"
 msgstr "_Palīdzība"
 
 #: shell/evince-menus.ui:115
-#| msgid "Document Viewer"
 msgid "_About Document Viewer"
 msgstr "P_ar dokumentu skatītāju"
 
@@ -1109,7 +1101,7 @@ msgstr "Ie_priekšējā lappuse"
 msgid "_Next Page"
 msgstr "_Nākamā lappuse"
 
-#: shell/evince-menus.ui:176 shell/ev-window.c:3803
+#: shell/evince-menus.ui:176 shell/ev-window.c:3811
 msgid "_Reload"
 msgstr "Pā_rlādēt"
 
@@ -1211,13 +1203,12 @@ msgid "Password required"
 msgstr "Nepieciešama parole"
 
 #: shell/ev-password-view.c:252 shell/ev-sidebar-attachments.c:495
-#: shell/ev-window.c:2762 shell/ev-window.c:3048 shell/ev-window.c:3927
-#: shell/ev-window.c:6877 shell/ev-window.c:7104
+#: shell/ev-window.c:2762 shell/ev-window.c:3062 shell/ev-window.c:3935
+#: shell/ev-window.c:6887 shell/ev-window.c:7114
 msgid "_Cancel"
 msgstr "At_celt"
 
 #: shell/ev-password-view.c:253
-#| msgid "_Unlock Document"
 msgid "_Unlock"
 msgstr "_Atslēgt"
 
@@ -1283,7 +1274,7 @@ msgstr "Šis dokuments nesatur anotācijas"
 msgid "Page %d"
 msgstr "%d. lappuse"
 
-#: shell/ev-sidebar-annotations.c:669 shell/ev-window.c:7509
+#: shell/ev-sidebar-annotations.c:669 shell/ev-window.c:7519
 msgid "Annotations"
 msgstr "Anotācijas"
 
@@ -1301,7 +1292,7 @@ msgstr "Datne “%s” jau eksistē. Tās aizstāšana pārrakstīs tagadējo sa
 msgid "_Replace"
 msgstr "_Aizstāt"
 
-#: shell/ev-sidebar-attachments.c:903 shell/ev-window.c:7533
+#: shell/ev-sidebar-attachments.c:903 shell/ev-window.c:7543
 msgid "Attachments"
 msgstr "Pielikumi"
 
@@ -1325,22 +1316,22 @@ msgstr "Pievienot grāmatzīmi"
 msgid "Remove bookmark"
 msgstr "Izņemt grāmatzīmi"
 
-#: shell/ev-sidebar-bookmarks.c:598 shell/ev-window.c:7517
+#: shell/ev-sidebar-bookmarks.c:598 shell/ev-window.c:7527
 msgid "Bookmarks"
 msgstr "Grāmatzīmes"
 
-#: shell/ev-sidebar-layers.c:448 shell/ev-window.c:7545
+#: shell/ev-sidebar-layers.c:448 shell/ev-window.c:7555
 msgid "Layers"
 msgstr "Slāņi"
 
 #. Translators: This is the title for the sidebar pane that
 #. * shows the Outline or Table of Contents of the document.
 #.
-#: shell/ev-sidebar-links.c:1030 shell/ev-window.c:7497
+#: shell/ev-sidebar-links.c:1030 shell/ev-window.c:7507
 msgid "Outline"
 msgstr "Struktūra"
 
-#: shell/ev-sidebar-thumbnails.c:1067 shell/ev-window.c:7480
+#: shell/ev-sidebar-thumbnails.c:1067 shell/ev-window.c:7490
 msgid "Thumbnails"
 msgstr "Sīktēli"
 
@@ -1399,7 +1390,7 @@ msgid "Loading document from “%s”"
 msgstr "Ielādē dokumentu no “%s”"
 
 #: shell/ev-window.c:2031 shell/ev-window.c:2496 shell/ev-window.c:2853
-#: shell/ev-window.c:3570 shell/ev-window.c:3816
+#: shell/ev-window.c:3576 shell/ev-window.c:3824
 msgid "C_ancel"
 msgstr "At_celt"
 
@@ -1426,7 +1417,6 @@ msgid "Open Document"
 msgstr "Atvērt dokumentu"
 
 #: shell/ev-window.c:2764
-#| msgid "Open"
 msgid "_Open"
 msgstr "_Atvērt"
 
@@ -1445,7 +1435,7 @@ msgstr "Saglabā pielikumu mapē %s"
 msgid "Saving image to %s"
 msgstr "Saglabā attēlu mapē %s"
 
-#: shell/ev-window.c:2887 shell/ev-window.c:2992
+#: shell/ev-window.c:2887 shell/ev-window.c:3002
 #, c-format
 msgid "The file could not be saved as “%s”."
 msgstr "Neizdevās saglabāt datni kā “%s”."
@@ -1465,20 +1455,19 @@ msgstr "Augšupielādē pielikumu (%d%%)"
 msgid "Uploading image (%d%%)"
 msgstr "Augšupielādē attēlu (%d%%)"
 
-#: shell/ev-window.c:3046
+#: shell/ev-window.c:3060
 msgid "Save As…"
 msgstr "Saglabāt kā…"
 
-#: shell/ev-window.c:3049 shell/ev-window.c:6879 shell/ev-window.c:7106
-#| msgid "_Save As…"
+#: shell/ev-window.c:3063 shell/ev-window.c:6889 shell/ev-window.c:7116
 msgid "_Save"
 msgstr "_Saglabāt"
 
-#: shell/ev-window.c:3137
+#: shell/ev-window.c:3151
 msgid "Could not send current document"
 msgstr "Neizdevās nosūtīt šo dokumentu"
 
-#: shell/ev-window.c:3449
+#: shell/ev-window.c:3463
 #, c-format
 msgid "%d pending job in queue"
 msgid_plural "%d pending jobs in queue"
@@ -1486,52 +1475,51 @@ msgstr[0] "%d uzdevums rindā"
 msgstr[1] "%d uzdevumi rindā"
 msgstr[2] "%d uzdevumu rindā"
 
-#: shell/ev-window.c:3566
+#: shell/ev-window.c:3572
 #, c-format
 msgid "Printing job “%s”"
 msgstr "Drukā darbu “%s”"
 
-#: shell/ev-window.c:3782
+#: shell/ev-window.c:3790
 msgid "Document contains form fields that have been filled out. "
 msgstr "Dokuments satur formu laukus, kuri ir aizpildīti."
 
-#: shell/ev-window.c:3785
+#: shell/ev-window.c:3793
 msgid "Document contains new or modified annotations. "
 msgstr "Šis dokuments satur jaunas vai mainītas anotācijas. "
 
-#: shell/ev-window.c:3797
+#: shell/ev-window.c:3805
 #, c-format
 msgid "Reload document “%s”?"
 msgstr "Pārlādēt dokumentu “%s”?"
 
-#: shell/ev-window.c:3799
+#: shell/ev-window.c:3807
 msgid "If you reload the document, changes will be permanently lost."
 msgstr ""
 "Ja atkārtoti lejupielādēsiet dokumentu, izmaiņas neatgriezeniski pazudīs."
 
-#: shell/ev-window.c:3801
-#| msgid "No"
+#: shell/ev-window.c:3809
 msgid "_No"
 msgstr "_Nē"
 
-#: shell/ev-window.c:3810
+#: shell/ev-window.c:3818
 #, c-format
 msgid "Save a copy of document “%s” before closing?"
 msgstr "Vai pirms aizvēršanas saglabāt dokumenta “%s” kopiju?"
 
-#: shell/ev-window.c:3812
+#: shell/ev-window.c:3820
 msgid "If you don’t save a copy, changes will be permanently lost."
 msgstr "Ja nesaglabāsiet kopiju, izmaiņas neatgriezeniski zudīs."
 
-#: shell/ev-window.c:3814
+#: shell/ev-window.c:3822
 msgid "Close _without Saving"
 msgstr "Aiz_vērt bez saglabāšanas"
 
-#: shell/ev-window.c:3818
+#: shell/ev-window.c:3826
 msgid "Save a _Copy"
 msgstr "Saglabāt _kopiju"
 
-#: shell/ev-window.c:3900
+#: shell/ev-window.c:3908
 #, c-format
 msgid "Wait until print job “%s” finishes before closing?"
 msgstr "Vai pirms iziešanas sagaidīt, kamēr tiks izdrukāts “%s”?"
@@ -1539,7 +1527,7 @@ msgstr "Vai pirms iziešanas sagaidīt, kamēr tiks izdrukāts “%s”?"
 #. TRANS: the singular form is not really used as n_print_jobs > 1
 #. but some languages distinguish between different plurals forms,
 #. so the ngettext is needed.
-#: shell/ev-window.c:3906
+#: shell/ev-window.c:3914
 #, c-format
 msgid "There is %d print job active. Wait until print finishes before closing?"
 msgid_plural ""
@@ -1551,46 +1539,46 @@ msgstr[1] ""
 msgstr[2] ""
 "%d aktīvu drukāšanas uzdevumu. Vai pirms iziešanas sagaidīt to beigas?"
 
-#: shell/ev-window.c:3921
+#: shell/ev-window.c:3929
 msgid "If you close the window, pending print jobs will not be printed."
 msgstr "Ja aizvērsiet logu, rindā gaidošie uzdevumi netiks izdrukāti."
 
-#: shell/ev-window.c:3925
+#: shell/ev-window.c:3933
 msgid "Cancel _print and Close"
 msgstr "Atcelt _drukāšanu un iziet"
 
-#: shell/ev-window.c:3929
+#: shell/ev-window.c:3937
 msgid "Close _after Printing"
 msgstr "Iziet pēc drukāš_anas"
 
-#: shell/ev-window.c:4051
+#: shell/ev-window.c:4059
 msgid "© 1996–2017 The Evince authors"
 msgstr "© 1996-2017 Evince autori"
 
-#: shell/ev-window.c:4057
+#: shell/ev-window.c:4065
 msgid "translator-credits"
 msgstr ""
 "Raivis Dejus <orvils@gmail.com>\n"
 "Anita Reitere <nitalynx@gmail.com>\n"
 "Rūdolfs Mazurs <rudolfs.mazurs@gmail.com>"
 
-#: shell/ev-window.c:4605
+#: shell/ev-window.c:4614
 msgid "Running in presentation mode"
 msgstr "Darbojas prezentācijas režīmā"
 
-#: shell/ev-window.c:5582
+#: shell/ev-window.c:5591
 msgid "The attachment could not be saved."
 msgstr "Neizdevās saglabāt pielikumu."
 
-#: shell/ev-window.c:5904
+#: shell/ev-window.c:5913
 msgid "Enable caret navigation?"
 msgstr "Aktivēt navigāciju ar kursoru?"
 
-#: shell/ev-window.c:5905
+#: shell/ev-window.c:5914
 msgid "_Enable"
 msgstr "_Aktivēt"
 
-#: shell/ev-window.c:5908
+#: shell/ev-window.c:5917
 msgid ""
 "Pressing F7 turns the caret navigation on or off. This feature places a "
 "moveable cursor in text pages, allowing you to move around and select text "
@@ -1600,35 +1588,35 @@ msgstr ""
 "novieto kursoru teksta lapās, kas ļauj pārvietoties un izvēlēties tekstu ar "
 "tastatūru. Vai vēlaties aktivēt kursora navigāciju?"
 
-#: shell/ev-window.c:5913
+#: shell/ev-window.c:5922
 msgid "Don’t show this message again"
 msgstr "Vairs nerādīt šo ziņojumu"
 
-#: shell/ev-window.c:6509 shell/ev-window.c:6525
+#: shell/ev-window.c:6519 shell/ev-window.c:6535
 msgid "Unable to launch external application."
 msgstr "Neizdevās palaist ārējo lietotni."
 
-#: shell/ev-window.c:6587
+#: shell/ev-window.c:6597
 msgid "Unable to open external link"
 msgstr "Neizdevās atvērt ārējo saiti"
 
-#: shell/ev-window.c:6806
+#: shell/ev-window.c:6816
 msgid "Couldn’t find appropriate format to save image"
 msgstr "Neizdevās atrast attēla saglabāšanai piemērotu formātu"
 
-#: shell/ev-window.c:6838
+#: shell/ev-window.c:6848
 msgid "The image could not be saved."
 msgstr "Neizdevās saglabāt attēlu."
 
-#: shell/ev-window.c:6874
+#: shell/ev-window.c:6884
 msgid "Save Image"
 msgstr "Saglabāt attēlu"
 
-#: shell/ev-window.c:7033
+#: shell/ev-window.c:7043
 msgid "Unable to open attachment"
 msgstr "Neizdevās atvērt pielikumu"
 
-#: shell/ev-window.c:7101
+#: shell/ev-window.c:7111
 msgid "Save Attachment"
 msgstr "Saglabāt pielikumu"
 
@@ -1973,6 +1961,15 @@ msgstr "VIRKNE"
 #: shell/main.c:81
 msgid "[FILE…]"
 msgstr "[DATNE...]"
+
+#~ msgid "org.gnome.Evince"
+#~ msgstr "org.gnome.Evince"
+
+#~ msgid "document-print-preview"
+#~ msgstr "document-print-preview"
+
+#~ msgid "Prop_erties…"
+#~ msgstr "Īpašī_bas…"
 
 #~ msgid "Make the current document fill the window"
 #~ msgstr "Lai dokuments aizpilda programmas logu"
