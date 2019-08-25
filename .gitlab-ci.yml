@@ -78,7 +78,7 @@ flatpak:
     script:
         - flatpak-builder --stop-at=evince app ${MANIFEST_PATH}
         - flatpak build app meson --prefix=/app ${MESON_ARGS} _build
-        - flatpak build app ninja -C _build install
+        - flatpak build app ninja -j1 -C _build install
         - flatpak-builder --finish-only --repo=_repo app ${MANIFEST_PATH}
         # Run automatic tests inside the Flatpak env
         - xvfb-run -a -s "-screen 0 1024x768x24" flatpak build app ninja -C _build test
