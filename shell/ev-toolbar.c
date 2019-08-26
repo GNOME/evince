@@ -224,6 +224,7 @@ ev_toolbar_constructed (GObject *object)
         /* Edit Annots */
         button = ev_toolbar_create_toggle_button (ev_toolbar, "win.toggle-edit-annots", "document-edit-symbolic",
                                                   _("Annotate the document"));
+        atk_object_set_name (gtk_widget_get_accessible (button), _("Annotate document"));
         priv->annots_button = button;
         gtk_header_bar_pack_start (GTK_HEADER_BAR (ev_toolbar), button);
 
