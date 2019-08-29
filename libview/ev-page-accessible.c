@@ -961,8 +961,8 @@ ev_page_accessible_get_offset_at_point (AtkText      *text,
 
 	view_point.x = x;
 	view_point.y = y;
-	toplevel = gtk_widget_get_toplevel (GTK_WIDGET (self));
-	gtk_widget_translate_coordinates (GTK_WIDGET (self), toplevel, 0, 0, &x_widget, &y_widget);
+	toplevel = gtk_widget_get_toplevel (GTK_WIDGET (view));
+	gtk_widget_translate_coordinates (GTK_WIDGET (view), toplevel, 0, 0, &x_widget, &y_widget);
 	view_point.x -= x_widget;
 	view_point.y -= y_widget;
 
