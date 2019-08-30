@@ -122,6 +122,8 @@ static void
 ev_view_accessible_initialize (AtkObject *obj,
 			       gpointer   data)
 {
+	EvViewAccessiblePrivate *priv;
+
 	if (ATK_OBJECT_CLASS (ev_view_accessible_parent_class)->initialize != NULL)
 		ATK_OBJECT_CLASS (ev_view_accessible_parent_class)->initialize (obj, data);
 
@@ -129,6 +131,11 @@ ev_view_accessible_initialize (AtkObject *obj,
 
 	atk_object_set_name (obj, _("Document View"));
 	atk_object_set_role (obj, ATK_ROLE_DOCUMENT_FRAME);
+
+	priv = EV_VIEW_ACCESSIBLE (obj)->priv;
+	priv->previous_cursor_page = -1;
+	priv->start_page = 0;
+	priv->end_page = -1;
 }
 
 gint
