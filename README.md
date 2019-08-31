@@ -1,4 +1,4 @@
-# ![evince-logo] Evince
+# <a><img height="48" src="data/icons/scalable/apps/org.gnome.Evince.svg" /> Evince</a>
 
 Evince is a document viewer capable of displaying multiple and single
 page document formats like PDF and Postscript.  For more general
@@ -30,4 +30,3 @@ This software is licensed under the [GPLv2][license].
 [tiff]: http://libtiff.org/
 [xps]: https://wiki.gnome.org/Projects/libgxps
 [license]: COPYING
-[evince-logo]: data/icons/48x48/apps/org.gnome.Evince.png
