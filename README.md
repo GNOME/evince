@@ -33,4 +33,4 @@ This software is licensed under the [GPLv2][license].
 [xps]: https://wiki.gnome.org/Projects/libgxps
 [license]: COPYING
 [evince-logo]: data/icons/scalable/apps/org.gnome.Evince.svg
-[flatpak]: https://flathub.org/assets/badges/flathub-badge-i-en.png
+[flatpak]: https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Flathub-badge-en.svg/240px-Flathub-badge-en.svg.png
