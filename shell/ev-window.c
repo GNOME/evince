@@ -4034,7 +4034,7 @@ ev_window_cmd_about (GSimpleAction *action,
                 "Bryan Clark <clarkbw@gnome.org>",
                 "Carlos Garcia Campos <carlosgc@gnome.org>",
                 "Wouter Bolsterlee <wbolster@gnome.org>",
-                "Christian Persch <chpe" "\100" "gnome.org>",
+                "Christian Persch <chpe" "\100" "src.gnome.org>",
                 "Germán Poo-Caamaño <gpoo" "\100" "gnome.org>",
                 NULL
         };
