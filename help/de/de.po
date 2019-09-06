@@ -14,9 +14,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: evince manual\n"
-"POT-Creation-Date: 2019-03-25 00:21+0000\n"
-"PO-Revision-Date: 2019-03-25 22:35+0100\n"
-"Last-Translator: Tim Sabsch <tim@sabsch.com>\n"
+"POT-Creation-Date: 2019-06-07 09:53+0000\n"
+"PO-Revision-Date: 2019-09-04 20:58+0200\n"
+"Last-Translator: Christian Kirbach <christian.kirbach@gmail.com>\n"
 "Language-Team: Deutsch <gnome-de@gnome.org>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -44,7 +44,7 @@ msgstr ""
 
 #. (itstool) path: credit/name
 #: C/annotation-properties.page:11 C/annotations-disabled.page:11
-#: C/annotations-navigate.page:12 C/annotations.page:12
+#: C/annotations-navigate.page:12 C/annotations.page:13
 #: C/annotations-save.page:12 C/bookmarks.page:13 C/bug-filing.page:11
 #: C/commandline.page:16 C/develop.page:10 C/documentation.page:9
 #: C/duplex-10pages.page:12 C/duplex-11pages.page:12 C/duplex-12pages.page:12
@@ -65,7 +65,7 @@ msgstr "Tiffany Antopolski"
 
 #. (itstool) path: license/p
 #: C/annotation-properties.page:15 C/annotations-disabled.page:15
-#: C/annotations-navigate.page:16 C/annotations.page:20
+#: C/annotations-navigate.page:16 C/annotations.page:21
 #: C/annotations-save.page:20 C/bookmarks.page:22 C/bug-filing.page:15
 #: C/commandline.page:20 C/convertpdf.page:21 C/convertPostScript.page:21
 #: C/convertSVG.page:20 C/default-settings.page:15 C/develop.page:15
@@ -273,22 +273,22 @@ msgid ""
 msgstr "ok"
 
 #. (itstool) path: info/desc
-#: C/annotations.page:7
+#: C/annotations.page:8
 msgid "How to create and customize annotations."
 msgstr "So erstellen Sie Anmerkungen und passen diese an."
 
 #. (itstool) path: credit/name
-#: C/annotations.page:16 C/shortcuts.page:33
+#: C/annotations.page:17 C/shortcuts.page:33
 msgid "Andre Klapper"
 msgstr "Andre Klapper"
 
 #. (itstool) path: page/title
-#: C/annotations.page:25
+#: C/annotations.page:26
 msgid "Adding annotations"
 msgstr "Anmerkungen hinzufügen"
 
 #. (itstool) path: page/p
-#: C/annotations.page:26
+#: C/annotations.page:27
 msgid ""
 "An annotation is a note or comment added to a PDF document. You can add "
 "annotations using the <app>document viewer</app>."
@@ -297,7 +297,7 @@ msgstr ""
 "können mit dem <app>Dokumentenbetrachter</app> solche Anmerkungen hinzufügen."
 
 #. (itstool) path: page/p
-#: C/annotations.page:29
+#: C/annotations.page:30
 msgid ""
 "When you open a file, you should have a side pane on the left side of the "
 "window. If you do not have a visible side pane, click the <gui>View options</"
@@ -310,7 +310,7 @@ msgstr ""
 "<gui>Seitenleiste</gui> oder drücken Sie <key>F9</key> auf der Tastatur."
 
 #. (itstool) path: page/p
-#: C/annotations.page:33
+#: C/annotations.page:34
 msgid ""
 "At the top of this side pane, there is a drop-down menu with options like "
 "<gui>Thumbnails</gui>, <gui>Outline</gui> and <gui>Annotations</gui> (some "
@@ -321,31 +321,19 @@ msgstr ""
 "(einige können je nach Dokument <em>ausgegraut</em> sein)."
 
 #. (itstool) path: page/p
-#: C/annotations.page:36
+#: C/annotations.page:37
 msgid "To create an annotation:"
 msgstr "So erstellen Sie eine Anmerkung:"
 
 #. (itstool) path: item/p
-#: C/annotations.page:41
+#: C/annotations.page:42
 msgid "Select <gui>Annotate the document</gui> from the header bar."
 msgstr ""
 "Wählen Sie <gui>Das Dokument mit Anmerkungen versehen</gui> in der "
 "Titelleiste aus."
 
-#. (itstool) path: item/media
-#. This is a reference to an external file such as an image or video. When
-#. the file changes, the md5 hash will change to let you know you need to
-#. update your localized copy. The msgstr is not used at all. Set it to
-#. whatever you like once you have updated your copy of the file.
-#: C/annotations.page:44
-msgctxt "_"
-msgid ""
-"external ref='figures/add-text-annotation.png' "
-"md5='bc446cfb5663859ed0f85a4fab3f89cb'"
-msgstr "ok."
-
 #. (itstool) path: item/p
-#: C/annotations.page:47
+#: C/annotations.page:48
 msgid ""
 "You should now see <gui>Add text annotation</gui> and <gui>Add highlight "
 "annotation</gui> buttons below the header bar."
@@ -358,7 +346,7 @@ msgstr ""
 #. the file changes, the md5 hash will change to let you know you need to
 #. update your localized copy. The msgstr is not used at all. Set it to
 #. whatever you like once you have updated your copy of the file.
-#: C/annotations.page:50
+#: C/annotations.page:51
 msgctxt "_"
 msgid ""
 "external ref='figures/list-add-tabs.png' "
@@ -366,13 +354,13 @@ msgid ""
 msgstr "ok"
 
 #. (itstool) path: item/p
-#: C/annotations.page:55
+#: C/annotations.page:56
 msgid "Click on the first icon to add a text annotation."
 msgstr ""
 "Klicken Sie auf das erste Symbol, um eine Anmerkung in Textform hinzuzufügen."
 
 #. (itstool) path: item/p
-#: C/annotations.page:60
+#: C/annotations.page:61
 msgid ""
 "Click on the spot in the document window you would like to add the "
 "annotation to. Your <em>annotation</em> window will open."
@@ -381,12 +369,12 @@ msgstr ""
 "schreiben möchten. Das Fenster <em>Anmerkung</em> wird daraufhin geöffnet."
 
 #. (itstool) path: item/p
-#: C/annotations.page:65
+#: C/annotations.page:66
 msgid "Type your text into the <em>annotation</em> window."
 msgstr "Tippen Sie den Text in das Fenster <em>Anmerkung</em>."
 
 #. (itstool) path: note/p
-#: C/annotations.page:69
+#: C/annotations.page:70
 msgid ""
 "You can resize the note by clicking and holding the left mouse button on one "
 "of the bottom corners of the note, and moving it around."
@@ -396,7 +384,7 @@ msgstr ""
 "bewegen."
 
 #. (itstool) path: item/p
-#: C/annotations.page:75
+#: C/annotations.page:76
 msgid ""
 "Close the note by clicking on the <gui>x</gui> in the top corner of the note."
 msgstr ""
@@ -1170,13 +1158,13 @@ msgstr "10-seitige Broschüre"
 #. (itstool) path: item/p
 #: C/duplex-10pages.page:24 C/duplex-10pages.page:67 C/duplex-11pages.page:24
 #: C/duplex-11pages.page:62 C/duplex-12pages.page:24 C/duplex-13pages.page:24
-#: C/duplex-13pages.page:62 C/duplex-13pages.page:100 C/duplex-13pages.page:114
+#: C/duplex-13pages.page:62 C/duplex-13pages.page:106 C/duplex-13pages.page:123
 #: C/duplex-14pages.page:24 C/duplex-14pages.page:66 C/duplex-16pages.page:24
 #: C/duplex-3pages.page:26 C/duplex-4pages.page:24 C/duplex-5pages.page:24
-#: C/duplex-5pages.page:64 C/duplex-5pages.page:108 C/duplex-6pages.page:25
+#: C/duplex-5pages.page:64 C/duplex-5pages.page:111 C/duplex-6pages.page:25
 #: C/duplex-6pages.page:68 C/duplex-7pages.page:25 C/duplex-7pages.page:62
 #: C/duplex-8pages.page:24 C/duplex-9pages.page:24 C/duplex-9pages.page:64
-#: C/duplex-9pages.page:84 C/duplex-9pages.page:107 C/duplex-9pages.page:123
+#: C/duplex-9pages.page:87 C/duplex-9pages.page:112 C/duplex-9pages.page:130
 #: C/duplex-npages.page:48 C/print-2sided.page:29 C/print-differentsize.page:36
 #: C/print-order.page:33 C/print-order.page:51 C/print-select.page:26
 #: C/singlesided-13-16pages.page:44 C/singlesided-13-16pages.page:92
@@ -1195,14 +1183,15 @@ msgstr ""
 #. (itstool) path: item/p
 #: C/duplex-10pages.page:30 C/duplex-10pages.page:72 C/duplex-11pages.page:31
 #: C/duplex-11pages.page:67 C/duplex-12pages.page:30 C/duplex-13pages.page:29
-#: C/duplex-14pages.page:29 C/duplex-14pages.page:71 C/duplex-16pages.page:29
-#: C/duplex-3pages.page:31 C/duplex-4pages.page:31 C/duplex-5pages.page:31
-#: C/duplex-6pages.page:30 C/duplex-6pages.page:73 C/duplex-7pages.page:32
-#: C/duplex-7pages.page:67 C/duplex-8pages.page:30 C/duplex-9pages.page:31
-#: C/duplex-9pages.page:67 C/duplex-npages.page:53
-#: C/singlesided-13-16pages.page:51 C/singlesided-17-20pages.page:49
-#: C/singlesided-3-4pages.page:51 C/singlesided-5-8pages.page:51
-#: C/singlesided-9-12pages.page:51 C/singlesided-npages.page:54
+#: C/duplex-13pages.page:65 C/duplex-14pages.page:29 C/duplex-14pages.page:71
+#: C/duplex-16pages.page:29 C/duplex-3pages.page:31 C/duplex-4pages.page:31
+#: C/duplex-5pages.page:31 C/duplex-5pages.page:67 C/duplex-6pages.page:30
+#: C/duplex-6pages.page:73 C/duplex-7pages.page:32 C/duplex-7pages.page:67
+#: C/duplex-8pages.page:30 C/duplex-9pages.page:31 C/duplex-9pages.page:67
+#: C/duplex-npages.page:53 C/singlesided-13-16pages.page:51
+#: C/singlesided-17-20pages.page:49 C/singlesided-3-4pages.page:51
+#: C/singlesided-5-8pages.page:51 C/singlesided-9-12pages.page:51
+#: C/singlesided-npages.page:54
 msgid "Choose the <gui>General</gui> tab."
 msgstr "Wählen Sie den Reiter <gui>Allgemein</gui>."
 
@@ -1221,17 +1210,20 @@ msgstr ""
 #. (itstool) path: item/p
 #: C/duplex-10pages.page:42 C/duplex-10pages.page:81 C/duplex-11pages.page:43
 #: C/duplex-11pages.page:75 C/duplex-12pages.page:42 C/duplex-13pages.page:39
+#: C/duplex-13pages.page:73 C/duplex-13pages.page:90 C/duplex-13pages.page:112
 #: C/duplex-14pages.page:41 C/duplex-14pages.page:81 C/duplex-16pages.page:43
 #: C/duplex-3pages.page:39 C/duplex-4pages.page:42 C/duplex-5pages.page:40
-#: C/duplex-5pages.page:75 C/duplex-6pages.page:43 C/duplex-6pages.page:83
-#: C/duplex-7pages.page:44 C/duplex-7pages.page:77 C/duplex-8pages.page:42
-#: C/duplex-9pages.page:40 C/duplex-npages.page:68
-#: C/singlesided-13-16pages.page:65 C/singlesided-13-16pages.page:97
-#: C/singlesided-17-20pages.page:63 C/singlesided-17-20pages.page:95
-#: C/singlesided-3-4pages.page:62 C/singlesided-3-4pages.page:94
-#: C/singlesided-5-8pages.page:62 C/singlesided-5-8pages.page:94
-#: C/singlesided-9-12pages.page:62 C/singlesided-9-12pages.page:94
-#: C/singlesided-npages.page:69 C/singlesided-npages.page:101
+#: C/duplex-5pages.page:75 C/duplex-5pages.page:95 C/duplex-5pages.page:117
+#: C/duplex-6pages.page:43 C/duplex-6pages.page:83 C/duplex-7pages.page:44
+#: C/duplex-7pages.page:77 C/duplex-8pages.page:42 C/duplex-9pages.page:40
+#: C/duplex-9pages.page:75 C/duplex-9pages.page:96 C/duplex-9pages.page:118
+#: C/duplex-npages.page:68 C/singlesided-13-16pages.page:65
+#: C/singlesided-13-16pages.page:97 C/singlesided-17-20pages.page:63
+#: C/singlesided-17-20pages.page:95 C/singlesided-3-4pages.page:62
+#: C/singlesided-3-4pages.page:94 C/singlesided-5-8pages.page:62
+#: C/singlesided-5-8pages.page:94 C/singlesided-9-12pages.page:62
+#: C/singlesided-9-12pages.page:94 C/singlesided-npages.page:69
+#: C/singlesided-npages.page:101
 msgid "Choose the <gui>Page Setup</gui> tab."
 msgstr "Wählen Sie den Reiter <gui>Seite einrichten</gui>."
 
@@ -1240,11 +1232,11 @@ msgstr "Wählen Sie den Reiter <gui>Seite einrichten</gui>."
 #: C/duplex-3pages.page:42 C/duplex-5pages.page:43 C/duplex-7pages.page:47
 #: C/duplex-9pages.page:43
 msgid ""
-"Under <em>Layout</em>, in the <gui>Two-side</gui> option, select <gui>Short "
+"Under <em>Layout</em>, in the <gui>Two-sided</gui> option, select <gui>Short "
 "Edge (Flip)</gui>."
 msgstr ""
 "Wählen Sie für <gui>Beidseitig</gui> unter <em>Layout</em> die Option "
-"<gui>Kurzer Rand (Umdrehen)</gui>."
+"<gui>Kurzer Rand (Umdrehen)</gui>"
 
 #. (itstool) path: item/p
 #: C/duplex-10pages.page:48 C/duplex-11pages.page:49 C/duplex-12pages.page:48
@@ -1257,12 +1249,14 @@ msgstr "Wählen Sie <gui>2</gui> im Menü <gui>Seiten pro Blatt</gui>."
 
 #. (itstool) path: item/p
 #: C/duplex-10pages.page:51 C/duplex-11pages.page:78 C/duplex-12pages.page:51
+#: C/duplex-13pages.page:76 C/duplex-13pages.page:115 C/duplex-13pages.page:129
 #: C/duplex-14pages.page:50 C/duplex-16pages.page:52 C/duplex-4pages.page:51
-#: C/duplex-5pages.page:78 C/duplex-6pages.page:52 C/duplex-8pages.page:51
-#: C/duplex-npages.page:77 C/singlesided-13-16pages.page:74
-#: C/singlesided-17-20pages.page:72 C/singlesided-3-4pages.page:71
-#: C/singlesided-5-8pages.page:71 C/singlesided-9-12pages.page:71
-#: C/singlesided-npages.page:78
+#: C/duplex-5pages.page:78 C/duplex-5pages.page:120 C/duplex-6pages.page:52
+#: C/duplex-7pages.page:80 C/duplex-8pages.page:51 C/duplex-9pages.page:78
+#: C/duplex-9pages.page:121 C/duplex-9pages.page:136 C/duplex-npages.page:77
+#: C/singlesided-13-16pages.page:74 C/singlesided-17-20pages.page:72
+#: C/singlesided-3-4pages.page:71 C/singlesided-5-8pages.page:71
+#: C/singlesided-9-12pages.page:71 C/singlesided-npages.page:78
 msgid "In the <gui>Page ordering</gui> menu, select <gui>Left to right</gui>."
 msgstr ""
 "Wählen Sie <gui>Links nach rechts</gui> im Menü <gui>Reihenfolge</gui>."
@@ -1270,14 +1264,14 @@ msgstr ""
 #. (itstool) path: item/p
 #: C/duplex-10pages.page:54 C/duplex-10pages.page:87 C/duplex-11pages.page:55
 #: C/duplex-11pages.page:81 C/duplex-12pages.page:54 C/duplex-13pages.page:51
-#: C/duplex-13pages.page:76 C/duplex-13pages.page:90 C/duplex-13pages.page:109
-#: C/duplex-13pages.page:120 C/duplex-14pages.page:53 C/duplex-14pages.page:87
+#: C/duplex-13pages.page:79 C/duplex-13pages.page:96 C/duplex-13pages.page:118
+#: C/duplex-13pages.page:132 C/duplex-14pages.page:53 C/duplex-14pages.page:87
 #: C/duplex-16pages.page:57 C/duplex-3pages.page:53 C/duplex-4pages.page:56
-#: C/duplex-5pages.page:52 C/duplex-5pages.page:81 C/duplex-5pages.page:98
-#: C/duplex-5pages.page:117 C/duplex-6pages.page:55 C/duplex-6pages.page:89
+#: C/duplex-5pages.page:52 C/duplex-5pages.page:81 C/duplex-5pages.page:101
+#: C/duplex-5pages.page:123 C/duplex-6pages.page:55 C/duplex-6pages.page:89
 #: C/duplex-7pages.page:56 C/duplex-7pages.page:83 C/duplex-8pages.page:54
-#: C/duplex-9pages.page:52 C/duplex-9pages.page:78 C/duplex-9pages.page:97
-#: C/duplex-9pages.page:117 C/duplex-9pages.page:129 C/duplex-npages.page:82
+#: C/duplex-9pages.page:52 C/duplex-9pages.page:81 C/duplex-9pages.page:102
+#: C/duplex-9pages.page:124 C/duplex-9pages.page:139 C/duplex-npages.page:82
 #: C/printing.page:40 C/singlesided-13-16pages.page:82
 #: C/singlesided-13-16pages.page:105 C/singlesided-17-20pages.page:80
 #: C/singlesided-17-20pages.page:103 C/singlesided-3-4pages.page:79
@@ -1308,8 +1302,9 @@ msgstr ""
 
 #. (itstool) path: item/p
 #: C/duplex-10pages.page:84 C/duplex-11pages.page:52 C/duplex-13pages.page:48
-#: C/duplex-14pages.page:84 C/duplex-3pages.page:48 C/duplex-5pages.page:49
-#: C/duplex-6pages.page:86 C/duplex-7pages.page:53 C/duplex-9pages.page:49
+#: C/duplex-13pages.page:93 C/duplex-14pages.page:84 C/duplex-3pages.page:48
+#: C/duplex-5pages.page:49 C/duplex-5pages.page:98 C/duplex-6pages.page:86
+#: C/duplex-7pages.page:53 C/duplex-9pages.page:49 C/duplex-9pages.page:99
 msgid "In the <gui>Page ordering</gui> menu, select <gui>Right to left</gui>."
 msgstr ""
 "Wählen Sie <gui>Rechts nach links</gui> im Menü <gui>Reihenfolge</gui>."
@@ -1333,9 +1328,9 @@ msgstr ""
 "Writer</app>."
 
 #. (itstool) path: item/p
-#: C/duplex-10pages.page:104 C/duplex-13pages.page:136
-#: C/duplex-14pages.page:103 C/duplex-5pages.page:133 C/duplex-6pages.page:106
-#: C/duplex-9pages.page:145
+#: C/duplex-10pages.page:104 C/duplex-13pages.page:148
+#: C/duplex-14pages.page:103 C/duplex-5pages.page:139 C/duplex-6pages.page:106
+#: C/duplex-9pages.page:155
 msgid ""
 "Merge the blank PDF with your PDF document using <app>PDF-Shuffler</app> "
 "placing the blank pages at the end."
@@ -1344,7 +1339,7 @@ msgstr ""
 "app> zusammen, so dass die leeren Seiten ans Dokumentende gelegt werden."
 
 #. (itstool) path: item/p
-#: C/duplex-10pages.page:110 C/duplex-11pages.page:103 C/duplex-9pages.page:151
+#: C/duplex-10pages.page:110 C/duplex-11pages.page:103 C/duplex-9pages.page:161
 msgid ""
 "Follow the steps for printing a <link xref=\"duplex-12page\">12-page "
 "booklet</link>."
@@ -1382,10 +1377,10 @@ msgstr "Geben Sie die Seitenzahlen in dieser Reihenfolge ein: 11, 2, 1"
 #: C/duplex-4pages.page:45 C/duplex-6pages.page:46 C/duplex-8pages.page:45
 #: C/duplex-npages.page:71
 msgid ""
-"Under <em>Layout</em>, in the <gui>Two-side</gui> menu, select <gui>Short "
+"Under <em>Layout</em>, in the <gui>Two-sided</gui> menu, select <gui>Short "
 "Edge (Flip)</gui>."
 msgstr ""
-"Wählen Sie für <gui>Beidseitig</gui> unter <em>Layout</em> die Option "
+"Wählen Sie unter <em>Layout</em> im Menü <gui>Beidseitig</gui> die Option "
 "<gui>Kurzer Rand (Umdrehen)</gui>."
 
 #. (itstool) path: item/p
@@ -1468,27 +1463,13 @@ msgstr ""
 "die andere Seite gedruckt."
 
 #. (itstool) path: item/p
-#: C/duplex-13pages.page:65 C/duplex-5pages.page:67
-msgid "Choose the General tab."
-msgstr "Wählen Sie den Reiter »Allgemein«."
-
-#. (itstool) path: item/p
 #: C/duplex-13pages.page:68 C/duplex-5pages.page:70 C/duplex-9pages.page:70
 msgid "Under <em>Range</em>, select <gui>Pages</gui> and type: 2"
 msgstr ""
 "Wählen Sie <gui>Seiten:</gui> unter <em>Seiten</em> und geben Sie »2« ein."
 
 #. (itstool) path: item/p
-#: C/duplex-13pages.page:73 C/duplex-9pages.page:75
-msgid ""
-"Choose the <gui>Page Setup</gui> tab and in the <gui>Page ordering</gui> "
-"menu, select <gui>Left to right</gui>."
-msgstr ""
-"Wählen Sie den Reiter <gui>Seite einrichten</gui> und wählen Sie <gui>Links "
-"nach rechts</gui> im Menü <gui>Reihenfolge</gui>."
-
-#. (itstool) path: item/p
-#: C/duplex-13pages.page:81 C/duplex-5pages.page:87
+#: C/duplex-13pages.page:84 C/duplex-5pages.page:87
 msgid ""
 "To print page 3, press the menu button in the top-right corner of the window "
 "and press the <gui style=\"button\">Print</gui> button."
@@ -1497,7 +1478,7 @@ msgstr ""
 "wählen Sie dann <gui style=\"button\">Drucken</gui>."
 
 #. (itstool) path: item/p
-#: C/duplex-13pages.page:84
+#: C/duplex-13pages.page:87
 msgid ""
 "In the <gui>General</gui> tab, enter 3 in the <gui>Pages</gui> selection."
 msgstr ""
@@ -1505,16 +1486,7 @@ msgstr ""
 "<gui>Seiten</gui> ein."
 
 #. (itstool) path: item/p
-#: C/duplex-13pages.page:87 C/duplex-5pages.page:95 C/duplex-9pages.page:93
-msgid ""
-"In the <gui>Page Setup</gui> tab, set the <gui>Page ordering</gui> to "
-"<gui>Right to left</gui>."
-msgstr ""
-"Wählen Sie im Reiter <gui>Seite einrichten</gui> die Option <gui>Rechts nach "
-"links</gui> im Menü <gui>Reihenfolge</gui>."
-
-#. (itstool) path: item/p
-#: C/duplex-13pages.page:95
+#: C/duplex-13pages.page:101
 msgid ""
 "Once page 3 has printed, place the paper back in the printer taking care to "
 "orient it correctly (pages 4 and 13 will be printed on the other side)."
@@ -1524,7 +1496,7 @@ msgstr ""
 "werden auf die andere Seite gedruckt."
 
 #. (itstool) path: item/p
-#: C/duplex-13pages.page:103
+#: C/duplex-13pages.page:109
 msgid ""
 "In the <gui>General</gui> tab enter pages 4, 13 in the <gui>Pages</gui> "
 "selection."
@@ -1533,26 +1505,15 @@ msgstr ""
 "13« unter <gui>Seiten</gui> ein."
 
 #. (itstool) path: item/p
-#: C/duplex-13pages.page:106 C/duplex-5pages.page:114 C/duplex-9pages.page:113
+#: C/duplex-13pages.page:126
 msgid ""
-"In the <gui>Page Setup</gui> tab set <gui>Page ordering</gui> to <gui>Left "
-"to right</gui>."
+"Enter pages 8, 9, 10, 7, 6, 11, 12, 5 in the <gui>Pages</gui> selection menu."
 msgstr ""
-"Wählen Sie im Reiter <gui>Seite einrichten</gui> die Option <gui>Links nach "
-"rechts</gui> im Menü <gui>Reihenfolge</gui>."
-
-#. (itstool) path: item/p
-#: C/duplex-13pages.page:117
-msgid ""
-"Enter pages 8, 9, 10, 7, 6, 11, 12, 5 in the <gui>Pages</gui> selection menu "
-"and set <gui>Page ordering</gui> to <gui>Left to right</gui>."
-msgstr ""
-"Geben Sie die Seiten 8, 9, 10, 7, 6, 11, 12, 5 im Auswahlmenü <gui>Seiten</"
-"gui> ein und setzen Sie <gui>Reihenfolge</gui> auf <gui>Links nach rechts</"
-"gui>."
+"Geben Sie die Seiten »8, 9, 10, 7, 6, 11, 12, 5« im Auswahlmenü <gui>Seiten</"
+"gui> ein."
 
 #. (itstool) path: note/p
-#: C/duplex-13pages.page:126
+#: C/duplex-13pages.page:138
 msgid ""
 "It is easier to print a 16-page booklet. You may wish to add 3 blank pages "
 "to your PDF document to make it 16-pages. To do so, you can:"
@@ -1562,7 +1523,7 @@ msgstr ""
 "zu machen. Dies können Sie so tun:"
 
 #. (itstool) path: item/p
-#: C/duplex-13pages.page:131 C/duplex-5pages.page:128 C/duplex-9pages.page:140
+#: C/duplex-13pages.page:143 C/duplex-5pages.page:134 C/duplex-9pages.page:150
 msgid ""
 "Create a blank PDF document 3-pages long using <app>LibreOffice Writer</app>."
 msgstr ""
@@ -1570,7 +1531,7 @@ msgstr ""
 "Writer</app>."
 
 #. (itstool) path: item/p
-#: C/duplex-13pages.page:142 C/duplex-14pages.page:109 C/duplex-15pages.page:40
+#: C/duplex-13pages.page:154 C/duplex-14pages.page:109 C/duplex-15pages.page:40
 msgid ""
 "Follow the steps for printing a <link xref=\"duplex-16page\">16-page "
 "booklet</link>."
@@ -1757,7 +1718,7 @@ msgstr ""
 "unter <gui>Seiten</gui> ein."
 
 #. (itstool) path: item/p
-#: C/duplex-5pages.page:103 C/duplex-9pages.page:102
+#: C/duplex-5pages.page:106 C/duplex-9pages.page:107
 msgid ""
 "Once page 3 has printed, place the paper back in the printer taking care to "
 "orient it correctly (pages 4 and 9 will be printed on the other side)."
@@ -1767,7 +1728,7 @@ msgstr ""
 "werden auf die andere Seite gedruckt."
 
 #. (itstool) path: item/p
-#: C/duplex-5pages.page:111
+#: C/duplex-5pages.page:114 C/duplex-9pages.page:115
 msgid ""
 "In the <gui>General</gui> tab enter pages 4, 9 in the <gui>Pages</gui> "
 "selection."
@@ -1776,7 +1737,7 @@ msgstr ""
 "9« unter <gui>Seiten</gui> ein."
 
 #. (itstool) path: note/p
-#: C/duplex-5pages.page:123
+#: C/duplex-5pages.page:129
 msgid ""
 "It is easier to print a 8-page booklet. You may wish to add 3 blank pages to "
 "your PDF document to make it 8-pages. To do so, you can:"
@@ -1786,7 +1747,7 @@ msgstr ""
 "machen. Dies können Sie so tun:"
 
 #. (itstool) path: item/p
-#: C/duplex-5pages.page:139 C/duplex-6pages.page:112 C/duplex-7pages.page:105
+#: C/duplex-5pages.page:145 C/duplex-6pages.page:112 C/duplex-7pages.page:105
 msgid ""
 "Follow the steps for printing a <link xref=\"duplex-8page\">8-page booklet</"
 "link>."
@@ -1853,15 +1814,6 @@ msgstr ""
 "Geben Sie die Zahlen der verbleibenden Seiten in dieser Reihenfolge ein: 6, "
 "3, 4, 5"
 
-#. (itstool) path: item/p
-#: C/duplex-7pages.page:80
-msgid ""
-"In the <gui>Page ordering</gui> menu, change the selection to <gui>Left to "
-"right</gui>."
-msgstr ""
-"Wählen Sie im Menü <gui>Reihenfolge</gui> die Option <gui>Links nach rechts</"
-"gui>."
-
 #. (itstool) path: note/p
 #: C/duplex-7pages.page:89
 msgid ""
@@ -1911,7 +1863,7 @@ msgid "9-page booklet"
 msgstr "9-seitige Broschüre"
 
 #. (itstool) path: item/p
-#: C/duplex-9pages.page:87
+#: C/duplex-9pages.page:90
 msgid ""
 "In the <gui>General</gui> tab enter 3 in the <gui>Pages</gui> selection."
 msgstr ""
@@ -1919,25 +1871,13 @@ msgstr ""
 "<gui>Seiten</gui> ein."
 
 #. (itstool) path: item/p
-#: C/duplex-9pages.page:110
-msgid ""
-"In the <gui>General</gui> tab enter pages 4,9 in the <gui>Pages</gui> "
-"selection."
+#: C/duplex-9pages.page:133
+msgid "Enter pages 8, 5, 6, 7 in the <gui>Pages</gui> selection menu."
 msgstr ""
-"Wechseln Sie in den Reiter <gui>Allgemein</gui> und geben Sie die Seiten "
-"»4,9« unter <gui>Seiten</gui> ein."
-
-#. (itstool) path: item/p
-#: C/duplex-9pages.page:126
-msgid ""
-"Enter pages 8, 5, 6, 7 in the <gui>Pages</gui> selection menu and set "
-"<gui>Page ordering</gui> to <gui>Left to right</gui>."
-msgstr ""
-"Wählen Sie die Seiten »8, 5, 6, 7« unter <gui>Seiten</gui> ein und legen Sie "
-"<gui>Links nach rechts</gui> im Menü <gui>Reihenfolge</gui> fest."
+"Geben Sie die Seiten »8, 5, 6, 7« im Auswahlmenü <gui>Seiten</gui> ein."
 
 #. (itstool) path: note/p
-#: C/duplex-9pages.page:135
+#: C/duplex-9pages.page:145
 msgid ""
 "It is easier to print a 12-page booklet. You may wish to add 3 blank pages "
 "to your PDF document to make it 12-pages. To do so, you can:"
@@ -2903,16 +2843,6 @@ msgid ""
 "select desired zoom percentage from the drop-down menu above the window."
 msgstr ""
 "Wählen Sie die gewünschte Vergrößerung in der Auswahlliste über dem Fenster."
-
-#. (itstool) path: item/media
-#. This is a reference to an external file such as an image or video. When
-#. the file changes, the md5 hash will change to let you know you need to
-#. update your localized copy. The msgstr is not used at all. Set it to
-#. whatever you like once you have updated your copy of the file.
-#: C/movingaround.page:180
-msgctxt "_"
-msgid "external ref='figures/zoom.png' md5='ce72aea79459526a5fa69a9bcecc530b'"
-msgstr "ok"
 
 #. (itstool) path: note/p
 #: C/movingaround.page:185
@@ -4300,7 +4230,7 @@ msgstr "So drucken Sie:"
 #: C/singlesided-3-4pages.page:65 C/singlesided-5-8pages.page:65
 #: C/singlesided-9-12pages.page:65 C/singlesided-npages.page:72
 msgid ""
-"Under <em>Layout</em>, in the <gui>Two-side</gui> menu, select <gui>One "
+"Under <em>Layout</em>, in the <gui>Two-sided</gui> menu, select <gui>One "
 "Sided</gui>."
 msgstr ""
 "Wählen Sie unter <em>Layout</em> im Menü <gui>Beidseitig</gui> die "
@@ -5013,6 +4943,62 @@ msgstr ""
 "Alternativ können Sie das Internationalisierungsteam über dessen <link href="
 "\"http://mail.gnome.org/mailman/listinfo/gnome-i18n\">Mailingliste</link> "
 "kontaktieren."
+
+#~ msgctxt "_"
+#~ msgid ""
+#~ "external ref='figures/add-text-annotation.png' "
+#~ "md5='bc446cfb5663859ed0f85a4fab3f89cb'"
+#~ msgstr "ok."
+
+#~ msgid "Choose the General tab."
+#~ msgstr "Wählen Sie den Reiter »Allgemein«."
+
+#~ msgid ""
+#~ "Choose the <gui>Page Setup</gui> tab and in the <gui>Page ordering</gui> "
+#~ "menu, select <gui>Left to right</gui>."
+#~ msgstr ""
+#~ "Wählen Sie den Reiter <gui>Seite einrichten</gui> und wählen Sie "
+#~ "<gui>Links nach rechts</gui> im Menü <gui>Reihenfolge</gui>."
+
+#~ msgid ""
+#~ "In the <gui>Page Setup</gui> tab, set the <gui>Page ordering</gui> to "
+#~ "<gui>Right to left</gui>."
+#~ msgstr ""
+#~ "Wählen Sie im Reiter <gui>Seite einrichten</gui> die Option <gui>Rechts "
+#~ "nach links</gui> im Menü <gui>Reihenfolge</gui>."
+
+#~ msgid ""
+#~ "In the <gui>Page Setup</gui> tab set <gui>Page ordering</gui> to "
+#~ "<gui>Left to right</gui>."
+#~ msgstr ""
+#~ "Wählen Sie im Reiter <gui>Seite einrichten</gui> die Option <gui>Links "
+#~ "nach rechts</gui> im Menü <gui>Reihenfolge</gui>."
+
+#~ msgid ""
+#~ "In the <gui>Page ordering</gui> menu, change the selection to <gui>Left "
+#~ "to right</gui>."
+#~ msgstr ""
+#~ "Wählen Sie im Menü <gui>Reihenfolge</gui> die Option <gui>Links nach "
+#~ "rechts</gui>."
+
+#~ msgid ""
+#~ "In the <gui>General</gui> tab enter pages 4,9 in the <gui>Pages</gui> "
+#~ "selection."
+#~ msgstr ""
+#~ "Wechseln Sie in den Reiter <gui>Allgemein</gui> und geben Sie die Seiten "
+#~ "»4,9« unter <gui>Seiten</gui> ein."
+
+#~ msgid ""
+#~ "Enter pages 8, 5, 6, 7 in the <gui>Pages</gui> selection menu and set "
+#~ "<gui>Page ordering</gui> to <gui>Left to right</gui>."
+#~ msgstr ""
+#~ "Wählen Sie die Seiten »8, 5, 6, 7« unter <gui>Seiten</gui> ein und legen "
+#~ "Sie <gui>Links nach rechts</gui> im Menü <gui>Reihenfolge</gui> fest."
+
+#~ msgctxt "_"
+#~ msgid ""
+#~ "external ref='figures/zoom.png' md5='ce72aea79459526a5fa69a9bcecc530b'"
+#~ msgstr "ok"
 
 #~ msgid "Click <guiseq><gui>File</gui><gui>Print</gui></guiseq>."
 #~ msgstr ""
