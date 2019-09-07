@@ -4,13 +4,13 @@
 #
 # Martin Picek <picek.martin@gnome-cesko.cz>, 2009.
 # Lucas Lommer <llommer@svn.gnome.org>, 2009. (mikroopravy)
-# Marek Černocký <marek@manet.cz>, 2013, 2014, 2015, 2017, 2018.
+# Marek Černocký <marek@manet.cz>, 2013, 2014, 2015, 2017, 2018, 2019.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: evince\n"
-"POT-Creation-Date: 2018-09-02 17:25+0000\n"
-"PO-Revision-Date: 2018-09-05 13:31+0200\n"
+"Project-Id-Version: evince gnome-3.32\n"
+"POT-Creation-Date: 2019-03-15 16:07+0000\n"
+"PO-Revision-Date: 2019-09-07 15:40+0200\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: čeština <gnome-cs-list@gnome.org>\n"
 "Language: cs\n"
@@ -43,15 +43,14 @@ msgstr "Jak si u poznámky upravit autora, barvu, styl nebo ikonu."
 #: C/duplex-16pages.page:12 C/duplex-3pages.page:12 C/duplex-4pages.page:12
 #: C/duplex-5pages.page:12 C/duplex-6pages.page:12 C/duplex-7pages.page:12
 #: C/duplex-8pages.page:12 C/duplex-9pages.page:12 C/duplex-npages.page:12
-#: C/forms.page:11 C/forms-saving.page:15 C/index.page:18
+#: C/forms.page:11 C/forms-saving.page:15 C/headerbar.page:13 C/index.page:18
 #: C/introduction.page:12 C/openerror.page:13 C/opening.page:14
 #: C/print-booklet.page:12 C/shortcuts.page:17 C/singlesided-13-16pages.page:12
 #: C/singlesided-17-20pages.page:12 C/singlesided-3-4pages.page:12
 #: C/singlesided-5-8pages.page:12 C/singlesided-9-12pages.page:12
 #: C/singlesided-npages.page:12 C/synctex-beamer.page:11
 #: C/synctex-compile.page:11 C/synctex-editors.page:11 C/synctex.page:12
-#: C/synctex-search.page:11 C/synctex-support.page:12 C/titlebar.page:13
-#: C/translate.page:10
+#: C/synctex-search.page:11 C/synctex-support.page:12 C/translate.page:10
 msgid "Tiffany Antopolski"
 msgstr "Tiffany Antopolski"
 
@@ -67,16 +66,17 @@ msgstr "Tiffany Antopolski"
 #: C/duplex-4pages.page:16 C/duplex-5pages.page:16 C/duplex-6pages.page:16
 #: C/duplex-7pages.page:16 C/duplex-8pages.page:16 C/duplex-9pages.page:16
 #: C/duplex-npages.page:16 C/editing.page:15 C/formats.page:22 C/forms.page:15
-#: C/forms-saving.page:23 C/invert-colors.page:23 C/noprint.page:14
-#: C/openerror.page:17 C/presentations.page:20 C/print-2sided.page:16
-#: C/print-booklet.page:16 C/printing.page:22 C/print-order.page:16
-#: C/print-select.page:15 C/reload.page:18 C/shortcuts.page:42
-#: C/singlesided-13-16pages.page:16 C/singlesided-17-20pages.page:16
-#: C/singlesided-3-4pages.page:16 C/singlesided-5-8pages.page:16
-#: C/singlesided-9-12pages.page:16 C/singlesided-npages.page:16
-#: C/synctex-beamer.page:15 C/synctex-compile.page:15 C/synctex-editors.page:15
-#: C/synctex.page:16 C/synctex-search.page:15 C/synctex-support.page:20
-#: C/textselection.page:15 C/titlebar.page:17 C/translate.page:19
+#: C/forms-saving.page:23 C/headerbar.page:17 C/invert-colors.page:23
+#: C/noprint.page:15 C/openerror.page:17 C/presentations.page:20
+#: C/print-2sided.page:16 C/print-booklet.page:16 C/printing.page:22
+#: C/print-order.page:16 C/print-select.page:15 C/reload.page:18
+#: C/shortcuts.page:42 C/singlesided-13-16pages.page:16
+#: C/singlesided-17-20pages.page:16 C/singlesided-3-4pages.page:16
+#: C/singlesided-5-8pages.page:16 C/singlesided-9-12pages.page:16
+#: C/singlesided-npages.page:16 C/synctex-beamer.page:15
+#: C/synctex-compile.page:15 C/synctex-editors.page:15 C/synctex.page:16
+#: C/synctex-search.page:15 C/synctex-support.page:20 C/textselection.page:15
+#: C/translate.page:19
 msgid "Creative Commons Share Alike 3.0"
 msgstr "Creative Commons Share Alike 3.0"
 
@@ -311,8 +311,8 @@ msgstr "Poznámku vytvoříte následovně:"
 
 #. (itstool) path: item/p
 #: C/annotations.page:41
-msgid "Select <gui>Annotate the document</gui> from the title bar."
-msgstr "Na hlavičkové liště vyberte <gui>Přidat poznámky k dokumentu</gui>."
+msgid "Select <gui>Annotate the document</gui> from the header bar."
+msgstr "Na záhlavní liště vyberte <gui>Přidat poznámky k dokumentu</gui>."
 
 #. (itstool) path: item/media
 #. This is a reference to an external file such as an image or video. When
@@ -332,9 +332,9 @@ msgstr ""
 #: C/annotations.page:47
 msgid ""
 "You should now see <gui>Add text annotation</gui> and <gui>Add highlight "
-"annotation</gui> buttons below the title bar."
+"annotation</gui> buttons below the header bar."
 msgstr ""
-"Nyní byste pod hlavičkovou lištou měli vidět tlačítka <gui>Přidat textovou "
+"Nyní byste pod záhlavní lištou měli vidět tlačítka <gui>Přidat textovou "
 "poznámku</gui> a <gui>Přidat zvýrazněnou poznámku</gui>."
 
 #. (itstool) path: item/media
@@ -437,7 +437,7 @@ msgstr ""
 "umí."
 
 #. (itstool) path: credit/name
-#: C/bookmarks.page:17 C/finding.page:22 C/formats.page:18 C/opening.page:18
+#: C/bookmarks.page:17 C/finding.page:23 C/formats.page:18 C/opening.page:18
 #: C/password.page:16 C/print-differentsize.page:17 C/print-pagescaling.page:12
 msgid "Ekaterina Gerasimova"
 msgstr "Ekaterina Gerasimova"
@@ -649,9 +649,9 @@ msgstr ""
 
 #. (itstool) path: credit/name
 #: C/commandline.page:12 C/convertpdf.page:13 C/convertPostScript.page:13
-#: C/convertSVG.page:12 C/editing.page:11 C/finding.page:14 C/formats.page:14
+#: C/convertSVG.page:12 C/editing.page:11 C/finding.page:15 C/formats.page:14
 #: C/index.page:14 C/invert-colors.page:15 C/movingaround.page:12
-#: C/noprint.page:10 C/password.page:12 C/presentations.page:12
+#: C/noprint.page:11 C/password.page:12 C/presentations.page:12
 #: C/print-2sided.page:12 C/print-differentsize.page:13 C/printing.page:14
 #: C/print-order.page:12 C/print-select.page:11 C/reload.page:14
 #: C/shortcuts.page:13 C/textselection.page:11
@@ -735,10 +735,10 @@ msgstr "evince --page-label=3 soubor.pdf"
 #: C/commandline.page:46
 msgid ""
 "The page label should be in the same format as the page number displayed in "
-"the <app>Document Viewer</app> title bar."
+"the <app>Document Viewer</app> header bar."
 msgstr ""
 "Parametr --page-label by měl být ve stejném formátu jako číslo stránky "
-"zobrazené na hlavičkové liště v <app>Prohlížeči dokumentů</app>."
+"zobrazené na záhlavní liště v <app>Prohlížeči dokumentů</app>."
 
 #. (itstool) path: section/title
 #: C/commandline.page:52
@@ -780,7 +780,7 @@ msgstr "Dokument můžete převést do PDF jeho „vytisknutím“ do souboru."
 
 #. (itstool) path: credit/name
 #: C/convertpdf.page:17 C/convertPostScript.page:17 C/convertSVG.page:16
-#: C/finding.page:18 C/forms-saving.page:19 C/invert-colors.page:19
+#: C/finding.page:19 C/forms-saving.page:19 C/invert-colors.page:19
 #: C/movingaround.page:16 C/presentations.page:16 C/printing.page:18
 msgid "Anna Philips"
 msgstr "Anna Philips"
@@ -1131,20 +1131,28 @@ msgstr "10stránková brožura"
 
 #. (itstool) path: item/p
 #: C/duplex-10pages.page:24 C/duplex-10pages.page:67 C/duplex-11pages.page:24
-#: C/duplex-12pages.page:24 C/duplex-13pages.page:24 C/duplex-14pages.page:24
-#: C/duplex-16pages.page:24 C/duplex-3pages.page:26 C/duplex-4pages.page:24
-#: C/duplex-5pages.page:24 C/duplex-5pages.page:108 C/duplex-6pages.page:25
+#: C/duplex-11pages.page:62 C/duplex-12pages.page:24 C/duplex-13pages.page:24
+#: C/duplex-13pages.page:62 C/duplex-13pages.page:100 C/duplex-13pages.page:114
+#: C/duplex-14pages.page:24 C/duplex-14pages.page:66 C/duplex-16pages.page:24
+#: C/duplex-3pages.page:26 C/duplex-4pages.page:24 C/duplex-5pages.page:24
+#: C/duplex-5pages.page:64 C/duplex-5pages.page:108 C/duplex-6pages.page:25
 #: C/duplex-6pages.page:68 C/duplex-7pages.page:25 C/duplex-7pages.page:62
-#: C/duplex-8pages.page:24 C/duplex-9pages.page:24 C/duplex-9pages.page:104
-#: C/duplex-9pages.page:120 C/duplex-npages.page:48 C/print-2sided.page:29
+#: C/duplex-8pages.page:24 C/duplex-9pages.page:24 C/duplex-9pages.page:64
+#: C/duplex-9pages.page:84 C/duplex-9pages.page:107 C/duplex-9pages.page:123
+#: C/duplex-npages.page:48 C/print-2sided.page:29 C/print-differentsize.page:36
+#: C/print-order.page:33 C/print-order.page:51 C/print-select.page:26
 #: C/singlesided-13-16pages.page:44 C/singlesided-13-16pages.page:92
 #: C/singlesided-17-20pages.page:44 C/singlesided-17-20pages.page:90
 #: C/singlesided-3-4pages.page:44 C/singlesided-3-4pages.page:89
 #: C/singlesided-5-8pages.page:44 C/singlesided-5-8pages.page:89
 #: C/singlesided-9-12pages.page:44 C/singlesided-9-12pages.page:89
 #: C/singlesided-npages.page:49 C/singlesided-npages.page:96
-msgid "Click <guiseq><gui>File</gui><gui>Print</gui></guiseq>."
-msgstr "Klikněte na <guiseq><gui>Soubor</gui><gui>Tisk</gui></guiseq>."
+msgid ""
+"Press the menu button in the top-right corner of the window and press the "
+"<gui style=\"button\">Print</gui> button."
+msgstr ""
+"Zmáčkněte tlačítko nabídky v pravém horním rohu okna a následně zmáčkněte "
+"tlačítko <gui style=\"button\">Tisk</gui>."
 
 #. (itstool) path: item/p
 #: C/duplex-10pages.page:30 C/duplex-10pages.page:72 C/duplex-11pages.page:31
@@ -1153,10 +1161,10 @@ msgstr "Klikněte na <guiseq><gui>Soubor</gui><gui>Tisk</gui></guiseq>."
 #: C/duplex-3pages.page:31 C/duplex-4pages.page:31 C/duplex-5pages.page:31
 #: C/duplex-6pages.page:30 C/duplex-6pages.page:73 C/duplex-7pages.page:32
 #: C/duplex-7pages.page:67 C/duplex-8pages.page:30 C/duplex-9pages.page:31
-#: C/duplex-npages.page:53 C/singlesided-13-16pages.page:51
-#: C/singlesided-17-20pages.page:49 C/singlesided-3-4pages.page:51
-#: C/singlesided-5-8pages.page:51 C/singlesided-9-12pages.page:51
-#: C/singlesided-npages.page:54
+#: C/duplex-9pages.page:67 C/duplex-npages.page:53
+#: C/singlesided-13-16pages.page:51 C/singlesided-17-20pages.page:49
+#: C/singlesided-3-4pages.page:51 C/singlesided-5-8pages.page:51
+#: C/singlesided-9-12pages.page:51 C/singlesided-npages.page:54
 msgid "Choose the <gui>General</gui> tab."
 msgstr "Zvolte kartu <gui>Obecné</gui>."
 
@@ -1227,8 +1235,8 @@ msgstr "V nabídce <gui>Řazení stránek</gui> vyberte <gui>Zleva doprava</gui>
 #: C/duplex-5pages.page:52 C/duplex-5pages.page:81 C/duplex-5pages.page:98
 #: C/duplex-5pages.page:117 C/duplex-6pages.page:55 C/duplex-6pages.page:89
 #: C/duplex-7pages.page:56 C/duplex-7pages.page:83 C/duplex-8pages.page:54
-#: C/duplex-9pages.page:52 C/duplex-9pages.page:75 C/duplex-9pages.page:94
-#: C/duplex-9pages.page:114 C/duplex-9pages.page:126 C/duplex-npages.page:82
+#: C/duplex-9pages.page:52 C/duplex-9pages.page:78 C/duplex-9pages.page:97
+#: C/duplex-9pages.page:117 C/duplex-9pages.page:129 C/duplex-npages.page:82
 #: C/printing.page:40 C/singlesided-13-16pages.page:82
 #: C/singlesided-13-16pages.page:105 C/singlesided-17-20pages.page:80
 #: C/singlesided-17-20pages.page:103 C/singlesided-3-4pages.page:79
@@ -1283,7 +1291,7 @@ msgstr ""
 #. (itstool) path: item/p
 #: C/duplex-10pages.page:104 C/duplex-13pages.page:136
 #: C/duplex-14pages.page:103 C/duplex-5pages.page:133 C/duplex-6pages.page:106
-#: C/duplex-9pages.page:142
+#: C/duplex-9pages.page:145
 msgid ""
 "Merge the blank PDF with your PDF document using <app>PDF-Shuffler</app> "
 "placing the blank pages at the end."
@@ -1292,7 +1300,7 @@ msgstr ""
 "tak, aby prázdné stránky byly na konci."
 
 #. (itstool) path: item/p
-#: C/duplex-10pages.page:110 C/duplex-11pages.page:103 C/duplex-9pages.page:148
+#: C/duplex-10pages.page:110 C/duplex-11pages.page:103 C/duplex-9pages.page:151
 msgid ""
 "Follow the steps for printing a <link xref=\"duplex-12page\">12-page "
 "booklet</link>."
@@ -1335,13 +1343,6 @@ msgid ""
 msgstr ""
 "V <em>Rozvržení</em> u položky <gui>Oboustranné</gui> vyberte <gui>Kratší "
 "okraj (otočení)</gui>."
-
-#. (itstool) path: item/p
-#: C/duplex-11pages.page:62 C/duplex-13pages.page:62 C/duplex-13pages.page:100
-#: C/duplex-13pages.page:114 C/duplex-14pages.page:66 C/duplex-5pages.page:64
-#: C/duplex-9pages.page:81
-msgid "Click <guiseq><gui>File</gui><gui>Print</gui></guiseq> again."
-msgstr "Klikněte na <guiseq><gui>Soubor</gui><gui>Tisk</gui></guiseq> znovu."
 
 #. (itstool) path: item/p
 #: C/duplex-11pages.page:70
@@ -1426,12 +1427,12 @@ msgid "Choose the General tab."
 msgstr "Přejděte na kartu <gui>Obecné</gui>."
 
 #. (itstool) path: item/p
-#: C/duplex-13pages.page:68 C/duplex-5pages.page:70 C/duplex-9pages.page:67
+#: C/duplex-13pages.page:68 C/duplex-5pages.page:70 C/duplex-9pages.page:70
 msgid "Under <em>Range</em>, select <gui>Pages</gui> and type: 2"
 msgstr "V <em>Rozsah</em> vyberte možnost <gui>Stránky</gui> a zadejte: 2"
 
 #. (itstool) path: item/p
-#: C/duplex-13pages.page:73 C/duplex-9pages.page:72
+#: C/duplex-13pages.page:73 C/duplex-9pages.page:75
 msgid ""
 "Choose the <gui>Page Setup</gui> tab and in the <gui>Page ordering</gui> "
 "menu, select <gui>Left to right</gui>."
@@ -1442,11 +1443,11 @@ msgstr ""
 #. (itstool) path: item/p
 #: C/duplex-13pages.page:81 C/duplex-5pages.page:87
 msgid ""
-"To print page 3, click <guiseq><gui>File</gui><gui>Print</gui></guiseq> "
-"again."
+"To print page 3, press the menu button in the top-right corner of the window "
+"and press the <gui style=\"button\">Print</gui> button."
 msgstr ""
-"Pro vytisknutí stránky 3 klikněte znovu <guiseq><gui>Soubor</gui><gui>Tisk</"
-"gui></guiseq>."
+"Pro tisk stránky 3 zmáčkněte tlačítko nabídky v pravém horním rohu okna a "
+"následně zmáčkněte tlačítko <gui style=\"button\">Tisk</gui>."
 
 #. (itstool) path: item/p
 #: C/duplex-13pages.page:84
@@ -1455,7 +1456,7 @@ msgid ""
 msgstr "Na kartě <gui>Obecné</gui> zadejte 3 do kolonky <gui>Stránky</gui>."
 
 #. (itstool) path: item/p
-#: C/duplex-13pages.page:87 C/duplex-5pages.page:95 C/duplex-9pages.page:90
+#: C/duplex-13pages.page:87 C/duplex-5pages.page:95 C/duplex-9pages.page:93
 msgid ""
 "In the <gui>Page Setup</gui> tab, set the <gui>Page ordering</gui> to "
 "<gui>Right to left</gui>."
@@ -1482,7 +1483,7 @@ msgstr ""
 "Na kartě <gui>Obecné</gui> zadejte 4, 13 do kolonky <gui>Stránky</gui>."
 
 #. (itstool) path: item/p
-#: C/duplex-13pages.page:106 C/duplex-5pages.page:114 C/duplex-9pages.page:110
+#: C/duplex-13pages.page:106 C/duplex-5pages.page:114 C/duplex-9pages.page:113
 msgid ""
 "In the <gui>Page Setup</gui> tab set <gui>Page ordering</gui> to <gui>Left "
 "to right</gui>."
@@ -1510,7 +1511,7 @@ msgstr ""
 "můžete následovně:"
 
 #. (itstool) path: item/p
-#: C/duplex-13pages.page:131 C/duplex-5pages.page:128 C/duplex-9pages.page:137
+#: C/duplex-13pages.page:131 C/duplex-5pages.page:128 C/duplex-9pages.page:140
 msgid ""
 "Create a blank PDF document 3-pages long using <app>LibreOffice Writer</app>."
 msgstr ""
@@ -1706,7 +1707,7 @@ msgstr ""
 "stránky."
 
 #. (itstool) path: item/p
-#: C/duplex-5pages.page:103 C/duplex-9pages.page:99
+#: C/duplex-5pages.page:103 C/duplex-9pages.page:102
 msgid ""
 "Once page 3 has printed, place the paper back in the printer taking care to "
 "orient it correctly (pages 4 and 9 will be printed on the other side)."
@@ -1854,29 +1855,20 @@ msgid "9-page booklet"
 msgstr "9stránková brožura"
 
 #. (itstool) path: item/p
-#: C/duplex-9pages.page:64
-msgid ""
-"Click <guiseq><gui>File</gui><gui>Print</gui></guiseq> again and choose the "
-"General tab."
-msgstr ""
-"Klikněte na <guiseq><gui>Soubor</gui><gui>Tisk</gui></guiseq> znovu a zvolte "
-"kartu Obecné."
-
-#. (itstool) path: item/p
-#: C/duplex-9pages.page:84
+#: C/duplex-9pages.page:87
 msgid ""
 "In the <gui>General</gui> tab enter 3 in the <gui>Pages</gui> selection."
 msgstr "Na kartě <gui>Obecné</gui> zadejte 3 do kolonky <gui>Stránky</gui>."
 
 #. (itstool) path: item/p
-#: C/duplex-9pages.page:107
+#: C/duplex-9pages.page:110
 msgid ""
 "In the <gui>General</gui> tab enter pages 4,9 in the <gui>Pages</gui> "
 "selection."
 msgstr "Na kartě <gui>Obecné</gui> zadejte 4, 9 do kolonky <gui>Stránky</gui>."
 
 #. (itstool) path: item/p
-#: C/duplex-9pages.page:123
+#: C/duplex-9pages.page:126
 msgid ""
 "Enter pages 8, 5, 6, 7 in the <gui>Pages</gui> selection menu and set "
 "<gui>Page ordering</gui> to <gui>Left to right</gui>."
@@ -1885,7 +1877,7 @@ msgstr ""
 "nastavte na <gui>Zleva doprava</gui>."
 
 #. (itstool) path: note/p
-#: C/duplex-9pages.page:132
+#: C/duplex-9pages.page:135
 msgid ""
 "It is easier to print a 12-page booklet. You may wish to add 3 blank pages "
 "to your PDF document to make it 12-pages. To do so, you can:"
@@ -1984,17 +1976,17 @@ msgstr ""
 "\">pdfedit</link>."
 
 #. (itstool) path: info/desc
-#: C/finding.page:28
+#: C/finding.page:29
 msgid "Search for a word or phrase in a document."
 msgstr "Jak najít v dokumentu slovo či frázi"
 
 #. (itstool) path: page/title
-#: C/finding.page:31
+#: C/finding.page:32
 msgid "Find text in a document"
 msgstr "Hledání textu v dokumentu"
 
 #. (itstool) path: item/p
-#: C/finding.page:35
+#: C/finding.page:36
 msgid ""
 "Click the <gui>Magnifying glass button</gui> or press <keyseq><key>Ctrl</"
 "key><key>F</key></keyseq> or <key>/</key> to display a search box."
@@ -2004,13 +1996,13 @@ msgstr ""
 "pole."
 
 #. (itstool) path: item/p
-#: C/finding.page:40
+#: C/finding.page:41
 msgid ""
 "Start typing into the search box and the search will start automatically."
 msgstr "Začněte psát do vyhledávacího pole a hledání samo započne."
 
 #. (itstool) path: item/p
-#: C/finding.page:44
+#: C/finding.page:45
 msgid ""
 "Use the <gui>∧</gui> and <gui>∨</gui> buttons to move to the previous or "
 "next search result."
@@ -2019,7 +2011,7 @@ msgstr ""
 "jednotlivými výsledky hledání."
 
 #. (itstool) path: item/p
-#: C/finding.page:48
+#: C/finding.page:49
 msgid ""
 "To hide the search bar, click the <gui>Magnifying glass button</gui> again "
 "or press <key>Esc</key>."
@@ -2028,7 +2020,7 @@ msgstr ""
 "gui> nebo zmáčknutím <key>Esc</key>."
 
 #. (itstool) path: note/p
-#: C/finding.page:54
+#: C/finding.page:55
 msgid ""
 "To filter words by case or completion, you can right click on the search box "
 "and select <gui>Case Sensitive</gui> or <gui>Whole Words Only</gui>."
@@ -2037,21 +2029,35 @@ msgstr ""
 "úplností, klikněte na vyhledávací pole pravým tlačítkem a vyberte "
 "<gui>Rozlišovat velikost písmen</gui> nebo <gui>Pouze celá slova</gui>."
 
+#. (itstool) path: p/media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/finding.page:61
+msgctxt "_"
+msgid ""
+"external ref='figures/search-not-found.png' "
+"md5='7625554be0bda18f7393a681fc4d9086'"
+msgstr ""
+"external ref='figures/search-not-found.png' "
+"md5='7625554be0bda18f7393a681fc4d9086'"
+
 #. (itstool) path: page/p
-#: C/finding.page:59
+#: C/finding.page:60
 msgid ""
 "If the word or phrase that you searched for is not found in the document, "
-"you will see <em>Not found</em> next to the search box. However, if it "
-"appears in the document at least once, you will be shown how many times the "
-"search result appears on the current page."
+"you will see <media type=\"image\" src=\"figures/search-not-found.png\"/> in "
+"the search box. However, if it appears in the document at least once, you "
+"will be shown how many times the search result appears on the current page."
 msgstr ""
 "Pokud se hledané slovo nebo fráze nikde v dokumentu nenajde, zobrazí se "
-"vedle vyhledávacího pole zpráva <em>Nenalezeno</em>. V případě, že se v něm "
-"nachází alespoň jednou, zobrazí se vám, kolikrát se hledané slovo vyskytuje "
-"na aktuální stránce."
+"ve vyhledávacím poli <media type=\"image\" src=\"figures/"
+"search-not-found.png\"/>. V případě, že se v něm nachází alespoň jednou, "
+"zobrazí se vám, kolikrát se hledané slovo vyskytuje na aktuální stránce."
 
 #. (itstool) path: note/p
-#: C/finding.page:65
+#: C/finding.page:66
 msgid ""
 "Only PDF documents are searchable. Some PDF documents are not searchable "
 "because their text is encoded in the document as an image."
@@ -2223,6 +2229,70 @@ msgstr ""
 #: C/forms-saving.page:77
 msgid "Copies of encrypted files can't be saved or printed."
 msgstr "Kopie šifrovaných souborů nelze ukládat a tisknout."
+
+#. (itstool) path: info/desc
+#: C/headerbar.page:8
+msgid "Using the header bar."
+msgstr "Jak používat záhlavní lištu."
+
+#. (itstool) path: page/title
+#: C/headerbar.page:22
+msgid "Header bar"
+msgstr "Záhlavní lišta"
+
+#. (itstool) path: page/p
+#: C/headerbar.page:24
+msgid "The header bar contains:"
+msgstr "Záhlavní lišta obsahuje:"
+
+#. (itstool) path: item/p
+#: C/headerbar.page:27
+msgid ""
+"A text field to <link xref=\"movingaround#between-pages\">go to a certain "
+"page</link> or to <link xref=\"finding\">search</link> in the <link xref="
+"\"movingaround#navigating\">index</link>."
+msgstr ""
+"Testové pole <link xref=\"movingaround#between-pages\">pro přechod na "
+"konkrétní stránku</link> nebo <link xref=\"finding\">hledání</link> v <link "
+"xref=\"movingaround#navigating\">rejstříku</link>."
+
+#. (itstool) path: item/p
+#: C/headerbar.page:32
+msgid "<gui>&lt;</gui> and <gui>&gt;</gui> for moving between history items."
+msgstr "<gui>&lt;</gui> a <gui>&gt;</gui> pro pohyb v položkách historie."
+
+#. (itstool) path: item/p
+#: C/headerbar.page:35
+msgid ""
+"A <gui>Magnifying glass button</gui> to <link xref=\"finding\">find a word "
+"or phrase in the document</link>."
+msgstr ""
+"<gui>Tlačítko s lupou</gui> pro <link xref=\"finding\">hledání slov nebo "
+"frází v dokumentu</link>."
+
+#. (itstool) path: item/p
+#: C/headerbar.page:39
+msgid "A button to manage <link xref=\"annotations\">annotations</link>."
+msgstr "Tlačítko pro správu <link xref=\"annotations\">poznámek</link>."
+
+#. (itstool) path: item/p
+#: C/headerbar.page:42
+msgid ""
+"A drop-down box to adjust the <link xref=\"movingaround#zoom\">zoom</link> "
+"level."
+msgstr ""
+"Rozbalovací seznam pro změnu úrovně <link xref=\"movingaround#zoom"
+"\">přiblížení</link>."
+
+#. (itstool) path: item/p
+#: C/headerbar.page:45
+msgid "A button to open the <gui>View options</gui> menu."
+msgstr "Tlačítko pro otevření nabídky <gui>Volby zobrazení</gui>."
+
+#. (itstool) path: item/p
+#: C/headerbar.page:48
+msgid "A button to open the <gui>File options</gui> menu."
+msgstr "Tlačítko pro otevření nabídky <gui>Volby souboru</gui>."
 
 #. (itstool) path: info/title
 #: C/index.page:8
@@ -2591,20 +2661,20 @@ msgstr "Pro přejití na konkrétní stránku:"
 #: C/movingaround.page:91
 msgid ""
 "Type a page number in <gui style=\"input\">Select Page</gui> on the <link "
-"xref=\"titlebar\">title bar</link> and press <key>Enter</key>."
+"xref=\"headerbar\">header bar</link> and press <key>Enter</key>."
 msgstr ""
 "Napište číslo stránky do kolonky <gui style=\"input\">Zvolit stránku</gui> "
-"na <link xref=\"titlebar\">hlavičkové liště</link> a zmáčkněte <key>Enter</"
+"na <link xref=\"headerbar\">záhlavní liště</link> a zmáčkněte <key>Enter</"
 "key>."
 
 #. (itstool) path: item/p
 #: C/movingaround.page:95
 msgid ""
 "If you want to see the previously visited pages press <gui style=\"button"
-"\">&lt;</gui> or <gui style=\"button\">&gt;</gui> on the title bar."
+"\">&lt;</gui> or <gui style=\"button\">&gt;</gui> on the header bar."
 msgstr ""
 "Pokud chcete vidět předchozí navštívené stránky, zmáčkněte <gui style="
-"\"button\">&lt;</gui> nebo <gui style=\"button\">&gt;</gui> na hlavičkové "
+"\"button\">&lt;</gui> nebo <gui style=\"button\">&gt;</gui> na záhlavní "
 "liště."
 
 #. (itstool) path: item/p
@@ -2834,37 +2904,37 @@ msgid "The author may have put printing restrictions on the document."
 msgstr "Autor dokumentu může omezit možnosti tisku."
 
 #. (itstool) path: page/title
-#: C/noprint.page:19
+#: C/noprint.page:20
 msgid "I can't print a document"
 msgstr "Nemůžu vytisknout dokument"
 
 #. (itstool) path: section/title
-#: C/noprint.page:21
+#: C/noprint.page:22
 msgid "Possible reasons for printing failure"
 msgstr "Možné důvody selhání tisku"
 
 #. (itstool) path: section/p
-#: C/noprint.page:22
+#: C/noprint.page:23
 msgid "A document might not print because of:"
 msgstr "Dokument se možná nevytiskl, protože:"
 
 #. (itstool) path: item/p
-#: C/noprint.page:24
+#: C/noprint.page:25
 msgid "Printer problems or,"
 msgstr "je problém s tiskárnou nebo"
 
 #. (itstool) path: item/p
-#: C/noprint.page:25
+#: C/noprint.page:26
 msgid "PDF printing restrictions."
 msgstr "je omezen tisk PDF."
 
 #. (itstool) path: section/title
-#: C/noprint.page:31
+#: C/noprint.page:32
 msgid "Printer problems"
 msgstr "Problémy s tiskárnou"
 
 #. (itstool) path: section/p
-#: C/noprint.page:32
+#: C/noprint.page:33
 msgid ""
 "There are many reasons why your printer might not be working. For example, "
 "it could be out of paper or ink, or unplugged or damaged."
@@ -2873,23 +2943,42 @@ msgstr ""
 "papír nebo inkoust/toner, může být odpojená nebo poškozená."
 
 #. (itstool) path: section/p
-#: C/noprint.page:37
+#: C/noprint.page:38
 msgid "To check if your printer is printing correctly:"
 msgstr "Zkontrolujte, jestli tiskárna správně tiskne:"
 
 #. (itstool) path: item/p
-#: C/noprint.page:39
-msgid "Click your name on the topbar and select <gui>System Settings</gui>."
+#: C/noprint.page:41
+msgid ""
+"Open the <gui href=\"help:gnome-help/shell-introduction#activities"
+"\">Activities</gui> overview and start typing <gui>Settings</gui>."
 msgstr ""
-"Klikněte na své jméno na hlavní liště a vyberte <gui>Nastavení systému</gui>."
+"Otevřete přehled <gui href=\"help:gnome-help/shell-introduction#activities"
+"\">Činnosti</gui> a začněte psát <gui>nastavení</gui>."
 
 #. (itstool) path: item/p
-#: C/noprint.page:40
+#: C/noprint.page:45
+msgid "Click on <gui>Settings</gui>."
+msgstr "Klikněte na <gui>Nastavení</gui>."
+
+#. (itstool) path: item/p
+#: C/noprint.page:48
+msgid "Click <gui>Devices</gui> in the sidebar."
+msgstr "V postranním panelu klikněte na <gui>Zařízení</gui>."
+
+#. (itstool) path: item/p
+#: C/noprint.page:51
+msgid "Click <gui>Printers</gui> in the sidebar to open the panel."
+msgstr ""
+"Kliknutím na <gui>Tiskárny</gui> v postranním panelu otevřete příslušný panel."
+
+#. (itstool) path: item/p
+#: C/noprint.page:53
 msgid "Click on your printer in the list."
 msgstr "V seznamu klikněte na svoji tiskárnu"
 
 #. (itstool) path: item/p
-#: C/noprint.page:41
+#: C/noprint.page:54
 msgid ""
 "Click on <gui>Print Test Page</gui>. A page should be sent to your printer."
 msgstr ""
@@ -2897,7 +2986,7 @@ msgstr ""
 "vaší tiskárny."
 
 #. (itstool) path: note/p
-#: C/noprint.page:43
+#: C/noprint.page:56
 msgid ""
 "If this fails, see <link href=\"help:gnome-help/printing\">Printing help</"
 "link>. You may also need to see your printer's manual to see what else you "
@@ -2908,12 +2997,12 @@ msgstr ""
 "příručky své tiskárny, co dalšího by se dalo udělat."
 
 #. (itstool) path: section/title
-#: C/noprint.page:55
+#: C/noprint.page:68
 msgid "PDF printing restrictions"
 msgstr "Omezení tisku PDF"
 
 #. (itstool) path: section/p
-#: C/noprint.page:56
+#: C/noprint.page:69
 msgid ""
 "Some PDF documents have a setting which prevents you from printing them. "
 "Authors can set this printing restriction when they write a document. The "
@@ -2926,7 +3015,7 @@ msgstr ""
 "úvahu, ale možná budete chtít zkontrolovat, zda toto chování nebylo vypnuto:"
 
 #. (itstool) path: item/p
-#: C/noprint.page:65
+#: C/noprint.page:78
 msgid ""
 "Press <keyseq><key>Alt</key><key>F2</key></keyseq> to open the Run "
 "Application window."
@@ -2935,7 +3024,7 @@ msgstr ""
 "Spuštění aplikace."
 
 #. (itstool) path: item/p
-#: C/noprint.page:71
+#: C/noprint.page:84
 msgid ""
 "Type <input>dconf-editor</input> into the text box and click <gui>Run</gui>. "
 "The Configuration Editor will open."
@@ -2944,17 +3033,17 @@ msgstr ""
 "<gui>Spustit</gui>. Otevře se editor nastavení."
 
 #. (itstool) path: item/p
-#: C/noprint.page:76
+#: C/noprint.page:89
 msgid "Browse to <sys>/org/gnome/evince</sys> using the side pane."
 msgstr "V postranním panelu přejděte na <sys>/org/gnome/evince</sys>."
 
 #. (itstool) path: item/p
-#: C/noprint.page:78
+#: C/noprint.page:91
 msgid "Make sure that the <gui>override_restrictions</gui> option is checked."
 msgstr "Ujistěte se, že volba <gui>override_restrictions</gui> je zaškrtnutá."
 
 #. (itstool) path: item/p
-#: C/noprint.page:83
+#: C/noprint.page:96
 msgid ""
 "Go back to the <app>Document Viewer</app> and try to print the document "
 "again."
@@ -3260,21 +3349,12 @@ msgstr ""
 "s rozměry US Letter na papír A4), můžete změnit tiskový formát dokumentu."
 
 #. (itstool) path: item/p
-#: C/print-differentsize.page:36 C/print-pagescaling.page:30
-msgid ""
-"Open the menu at the top-right of the window, then select <gui style="
-"\"menuitem\">Print…</gui>."
-msgstr ""
-"Otevřete nabídku v pravém horním rohu okna a následně vyberte <gui style="
-"\"menuitem\">Tisk…</gui>."
-
-#. (itstool) path: item/p
-#: C/print-differentsize.page:40
+#: C/print-differentsize.page:39
 msgid "Select the <gui>Page Setup</gui> tab."
 msgstr "Vyberte kartu <gui>Vzhled stánky</gui>."
 
 #. (itstool) path: item/p
-#: C/print-differentsize.page:43
+#: C/print-differentsize.page:42
 msgid ""
 "Under the <em>Paper</em> column, choose your <em>Paper size</em> from the "
 "drop-down list."
@@ -3283,12 +3363,12 @@ msgstr ""
 "rozbalovacím seznamu."
 
 #. (itstool) path: item/p
-#: C/print-differentsize.page:47
+#: C/print-differentsize.page:46
 msgid "Click <gui>Print</gui> and your document should print."
 msgstr "Klikněte na <gui>Tisk</gui> a váš dokument by se měl vytisknout."
 
 #. (itstool) path: page/p
-#: C/print-differentsize.page:51
+#: C/print-differentsize.page:50
 msgid ""
 "You can also use the <em>Orientation</em> menu to choose a different "
 "orientation:"
@@ -3296,22 +3376,22 @@ msgstr ""
 "Můžete také použít nabídku <em>Orientace</em> k výběru jiného otočení papíru:"
 
 #. (itstool) path: item/p
-#: C/print-differentsize.page:56
+#: C/print-differentsize.page:55
 msgid "<gui>Portrait</gui>"
 msgstr "<gui>Na výšku</gui>"
 
 #. (itstool) path: item/p
-#: C/print-differentsize.page:59
+#: C/print-differentsize.page:58
 msgid "<gui>Landscape</gui>"
 msgstr "<gui>Na šířku</gui>"
 
 #. (itstool) path: item/p
-#: C/print-differentsize.page:62
+#: C/print-differentsize.page:61
 msgid "<gui>Reverse portrait</gui>"
 msgstr "<gui>Obráceně na výšku</gui>"
 
 #. (itstool) path: item/p
-#: C/print-differentsize.page:65
+#: C/print-differentsize.page:64
 msgid "<gui>Reverse landscape</gui>"
 msgstr "<gui>Obráceně na šířku</gui>"
 
@@ -3371,11 +3451,6 @@ msgid "To reverse the order:"
 msgstr "Pro obrácení pořadí:"
 
 #. (itstool) path: item/p
-#: C/print-order.page:33
-msgid "<guiseq><gui>File</gui><gui>Print</gui></guiseq>"
-msgstr "<guiseq><gui>Soubor</gui><gui>Tisk</gui></guiseq>"
-
-#. (itstool) path: item/p
 #: C/print-order.page:34
 msgid ""
 "In the <gui>General</gui> tab of the Print window under <em>Copies</em>, "
@@ -3406,11 +3481,6 @@ msgstr ""
 #: C/print-order.page:47
 msgid "To collate:"
 msgstr "Pro setřídění:"
-
-#. (itstool) path: item/p
-#: C/print-order.page:51 C/print-select.page:26
-msgid "Click <guiseq><gui>File</gui><gui>Print</gui></guiseq>"
-msgstr "Klikněte na <guiseq><gui>Soubor</gui><gui>Tisk</gui></guiseq>"
 
 #. (itstool) path: item/p
 #: C/print-order.page:52
@@ -3445,6 +3515,15 @@ msgstr ""
 #: C/print-pagescaling.page:22
 msgid "Scale page for printing"
 msgstr "Škálování stránky pro tisk"
+
+#. (itstool) path: item/p
+#: C/print-pagescaling.page:30
+msgid ""
+"Open the menu at the top-right of the window, then select <gui style="
+"\"menuitem\">Print…</gui>."
+msgstr ""
+"Otevřete nabídku v pravém horním rohu okna a následně vyberte <gui style="
+"\"menuitem\">Tisk…</gui>."
 
 #. (itstool) path: item/p
 #: C/print-pagescaling.page:34
@@ -3734,83 +3813,83 @@ msgstr ""
 #. (itstool) path: td/p
 #: C/shortcuts.page:109
 msgid ""
-"Go to the beginning of a page (beginning of the document if "
-"<guiseq><gui>View</gui> <gui>Continuous</gui></guiseq> is selected)."
+"Go to the beginning of a page (beginning of the document if <gui>Continuous</"
+"gui> is selected in the <gui>View options</gui> menu)."
 msgstr ""
-"Přejít na začátek stránky (případně začátek dokumentu, kdy je vybráno "
-"<guiseq><gui>Zobrazit</gui> <gui>Souvislé</gui></guiseq>)."
+"Přejít na začátek stránky (případně začátek dokumentu, když je v nabídce "
+"<gui>Volby zobrazení</gui> vybráno <gui>Souvislé</gui>)."
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:112
+#: C/shortcuts.page:111
 msgid "<key>Home</key>"
 msgstr "<key>Home</key>"
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:115
+#: C/shortcuts.page:114
 msgid ""
-"Go to the end of a page (end of the document if <guiseq><gui>View</"
-"gui><gui>Continuous</gui></guiseq> is selected)."
+"Go to the end of a page (end of the document if <gui>Continuous</gui> is "
+"selected in the <gui>View options</gui> menu)."
 msgstr ""
-"Přejít na konec stránky (případně konec dokumentu, kdy je vybráno "
-"<guiseq><gui>Zobrazit</gui> <gui>Souvislé</gui></guiseq>)."
+"Přejít na konec stránky (případně konec dokumentu, když je v nabídce "
+"<gui>Volby zobrazení</gui> vybráno <gui>Souvislé</gui>)."
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:117
+#: C/shortcuts.page:116
 msgid "<key>End</key>"
 msgstr "<key>End</key>"
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:120
+#: C/shortcuts.page:119
 msgid "Go to the beginning of the document."
 msgstr "Přejít na začátek dokumentu"
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:121
+#: C/shortcuts.page:120
 msgid "<keyseq><key>Ctrl</key><key>Home</key></keyseq>"
 msgstr "<keyseq><key>Ctrl</key><key>Home</key></keyseq>"
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:124
+#: C/shortcuts.page:123
 msgid "Go to the end of the document."
 msgstr "Přejít na konec dokumentu"
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:125
+#: C/shortcuts.page:124
 msgid "<keyseq><key>Ctrl</key><key>End</key></keyseq>"
 msgstr "<keyseq><key>Ctrl</key><key>End</key></keyseq>"
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:128
+#: C/shortcuts.page:127
 msgid "Add a bookmark in the current page."
 msgstr "Přidat záložku pro aktuální stránku."
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:129
+#: C/shortcuts.page:128
 msgid "<keyseq><key>Ctrl</key><key>D</key></keyseq>"
 msgstr "<keyseq><key>Ctrl</key><key>D</key></keyseq>"
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:132
+#: C/shortcuts.page:131
 msgid "Delete the bookmark in the current page if there is one."
 msgstr "Smazat záložku pro aktuální stránku, pokud taková existuje."
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:133
+#: C/shortcuts.page:132
 msgid "<keyseq><key>Shift</key><key>Ctrl</key><key>D</key></keyseq>"
 msgstr "<keyseq><key>Shift</key><key>Ctrl</key><key>D</key></keyseq>"
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:136
+#: C/shortcuts.page:135
 msgid "Display the side bar with a table of contents and bookmarks."
 msgstr "Zobrazit postranní panel s obsahem a záložkami."
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:137
+#: C/shortcuts.page:136
 msgid "<key>F9</key>"
 msgstr "<key>F9</key>"
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:140
+#: C/shortcuts.page:139
 msgid ""
 "Enable caret navigation placing a moveable cursor in text pages, allowing "
 "you to move around and select text with the keyboard."
@@ -3819,22 +3898,22 @@ msgstr ""
 "můžete po textu pohybovat pomocí klávesnice a text vybírat."
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:141
+#: C/shortcuts.page:140
 msgid "<key>F7</key>"
 msgstr "<key>F7</key>"
 
 #. (itstool) path: section/title
-#: C/shortcuts.page:147
+#: C/shortcuts.page:146
 msgid "Selecting and copying text"
 msgstr "Výběr a kopírování textu"
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:150
+#: C/shortcuts.page:149
 msgid "Copy highlighted text."
 msgstr "Kopírovat zvýrazněný text"
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:151
+#: C/shortcuts.page:150
 msgid ""
 "<keyseq><key>Ctrl</key><key>C</key></keyseq> / <keyseq><key>Ctrl</"
 "key><key>Insert</key></keyseq>"
@@ -3843,22 +3922,22 @@ msgstr ""
 "key><key>Insert</key></keyseq>"
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:154
+#: C/shortcuts.page:153
 msgid "Select all the text in a document."
 msgstr "Vybrat všechen text v dokumentu"
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:155
+#: C/shortcuts.page:154
 msgid "<keyseq><key>Ctrl</key><key>A</key></keyseq>"
 msgstr "<keyseq><key>Ctrl</key><key>A</key></keyseq>"
 
 #. (itstool) path: section/title
-#: C/shortcuts.page:161
+#: C/shortcuts.page:160
 msgid "Finding text"
 msgstr "Hledání textu"
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:164
+#: C/shortcuts.page:163
 msgid ""
 "Show the toolbar that lets you search for words in the document. The search "
 "box is automatically highlighted when you press this, and the search will "
@@ -3872,27 +3951,27 @@ msgstr ""
 "zadáním pro hledání."
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:171
+#: C/shortcuts.page:170
 msgid "<keyseq><key>Ctrl</key><key>F</key></keyseq> / <key>/</key>"
 msgstr "<keyseq><key>Ctrl</key><key>F</key></keyseq> / <key>/</key>"
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:174
+#: C/shortcuts.page:173
 msgid "Go to the next search result."
 msgstr "Přejít na následující výsledek hledání"
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:175
+#: C/shortcuts.page:174
 msgid "<keyseq><key>Ctrl</key><key>G</key></keyseq> / <key>F3</key>"
 msgstr "<keyseq><key>Ctrl</key><key>G</key></keyseq> / <key>F3</key>"
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:178
+#: C/shortcuts.page:177
 msgid "Go to the previous search result."
 msgstr "Přejít na předchozí výsledek hledání"
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:179
+#: C/shortcuts.page:178
 msgid ""
 "<keyseq><key>Ctrl</key><key>Shift</key><key>G</key></keyseq> / "
 "<keyseq><key>Shift</key><key>F3</key></keyseq>"
@@ -3901,47 +3980,47 @@ msgstr ""
 "<keyseq><key>Shift</key><key>F3</key></keyseq>"
 
 #. (itstool) path: section/title
-#: C/shortcuts.page:185
+#: C/shortcuts.page:184
 msgid "Rotating and zooming"
 msgstr "Otáčení a přibližování"
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:188
+#: C/shortcuts.page:187
 msgid "Rotate the pages 90 degrees counter-clockwise."
 msgstr "Otočit stránku o 90 stupňů proti směru hodinových ručiček"
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:189
+#: C/shortcuts.page:188
 msgid "<keyseq><key>Ctrl</key><key>Left arrow</key></keyseq>"
 msgstr "<keyseq><key>Ctrl</key><key>šipka vlevo</key></keyseq>"
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:192
+#: C/shortcuts.page:191
 msgid "Rotate the pages 90 degrees clockwise."
 msgstr "Otočit stránku o 90 stupňů po směru hodinových ručiček"
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:193
+#: C/shortcuts.page:192
 msgid "<keyseq><key>Ctrl</key><key>Right arrow</key></keyseq>"
 msgstr "<keyseq><key>Ctrl</key><key>šipka vpravo</key></keyseq>"
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:197
+#: C/shortcuts.page:196
 msgid "Default zoom."
 msgstr "Výchozí přiblížení."
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:198
+#: C/shortcuts.page:197
 msgid "<keyseq><key>Ctrl</key><key>0</key></keyseq>"
 msgstr "<keyseq><key>Ctrl</key><key>0</key></keyseq>"
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:201
+#: C/shortcuts.page:200
 msgid "Zoom in."
 msgstr "Přiblížit"
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:202
+#: C/shortcuts.page:201
 msgid ""
 "<keyseq><key>Ctrl</key><key>+</key></keyseq> / <key>=</key> / "
 "<keyseq><key>Ctrl</key><key>=</key></keyseq>"
@@ -3950,129 +4029,129 @@ msgstr ""
 "<keyseq><key>Ctrl</key><key>=</key></keyseq>"
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:206
+#: C/shortcuts.page:205
 msgid "Zoom out."
 msgstr "Oddálit"
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:207
+#: C/shortcuts.page:206
 msgid "<keyseq><key>Ctrl</key><key>-</key></keyseq>"
 msgstr "<keyseq><key>Ctrl</key><key>-</key></keyseq>"
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:210
+#: C/shortcuts.page:209
 msgid "Fit the page into the window."
 msgstr "Přizpůsobit stránku oknu."
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:211
+#: C/shortcuts.page:210
 msgid "<key>F</key>"
 msgstr "<key>F</key>"
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:214
+#: C/shortcuts.page:213
 msgid "Fit the content width to the space available."
 msgstr "Přizpůsobit šířku obsahu dostupnému místu."
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:215
+#: C/shortcuts.page:214
 msgid "<key>W</key>"
 msgstr "<key>W</key>"
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:218
+#: C/shortcuts.page:217
 msgid "Automatic zoom."
 msgstr "Automatické přiblížení."
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:219
+#: C/shortcuts.page:218
 msgid "<key>A</key>"
 msgstr "<key>A</key>"
 
 #. (itstool) path: section/title
-#: C/shortcuts.page:225
+#: C/shortcuts.page:224
 msgid "Window"
 msgstr "Okno"
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:228
+#: C/shortcuts.page:227
 msgid "Use the full screen to view the document."
 msgstr "K zobrazení dokumentu můžete použít celou obrazovku."
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:229
+#: C/shortcuts.page:228
 msgid "<key>F11</key>"
 msgstr "<key>F11</key>"
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:232
+#: C/shortcuts.page:231
 msgid "Start a presentation."
 msgstr "Spustit prezentaci."
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:233
+#: C/shortcuts.page:232
 msgid "<key>F5</key> / <keyseq><key>Shift</key><key>F5</key></keyseq>"
 msgstr "<key>F5</key> / <keyseq><key>Shift</key><key>F5</key></keyseq>"
 
 #. (itstool) path: section/title
-#: C/shortcuts.page:239
+#: C/shortcuts.page:238
 msgid "Document view"
 msgstr "Zobrazení dokumentu"
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:242
+#: C/shortcuts.page:241
 msgid "Invert background and text colors."
 msgstr "Prohodit barvu pozadí a textu."
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:243
+#: C/shortcuts.page:242
 msgid "<keyseq><key>Ctrl</key><key>I</key></keyseq>"
 msgstr "<keyseq><key>Ctrl</key><key>I</key></keyseq>"
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:246
+#: C/shortcuts.page:245
 msgid "Swap between continuous and page by page view of the document."
 msgstr ""
 "Přepnout mezi plynulým a stránkovým posuvem pro posouvání zobrazeného "
 "dokumentu."
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:247
+#: C/shortcuts.page:246
 msgid "<key>C</key>"
 msgstr "<key>C</key>"
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:250
+#: C/shortcuts.page:249
 msgid "Display two pages side by side."
 msgstr "Zobrazit dvě stránky vedle sebe."
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:251
+#: C/shortcuts.page:250
 msgid "<key>D</key>"
 msgstr "<key>D</key>"
 
 #. (itstool) path: section/title
-#: C/shortcuts.page:257
+#: C/shortcuts.page:256
 msgid "Annotate the document"
 msgstr "Poznámky v dokumentu"
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:260
+#: C/shortcuts.page:259
 msgid "Add a post-it like note."
 msgstr "Přidat připojenou poznámku."
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:261
+#: C/shortcuts.page:260
 msgid "<key>S</key>"
 msgstr "<key>S</key>"
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:264
+#: C/shortcuts.page:263
 msgid "Highlight text."
 msgstr "Zvýraznit text."
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:265
+#: C/shortcuts.page:264
 msgid "<keyseq><key>Ctrl</key><key>H</key></keyseq>"
 msgstr "<keyseq><key>Ctrl</key><key>H</key></keyseq>"
 
@@ -4732,70 +4811,6 @@ msgstr ""
 "předejít kopírováním menších částí textu nebo zkopírováním textu do "
 "textového editoru (jako je <app>gedit</app>), který pracuje jen s prostým "
 "textem."
-
-#. (itstool) path: info/desc
-#: C/titlebar.page:8
-msgid "Using the title bar."
-msgstr "Jak používat hlavičkovou lištu."
-
-#. (itstool) path: page/title
-#: C/titlebar.page:22
-msgid "Title bar"
-msgstr "Hlavičková lišta"
-
-#. (itstool) path: page/p
-#: C/titlebar.page:24
-msgid "The title bar contains:"
-msgstr "Hlavičková lišta obsahuje:"
-
-#. (itstool) path: item/p
-#: C/titlebar.page:27
-msgid ""
-"A text field to <link xref=\"movingaround#between-pages\">go to a certain "
-"page</link> or to <link xref=\"finding\">search</link> in the <link xref="
-"\"movingaround#navigating\">index</link>."
-msgstr ""
-"Testové pole <link xref=\"movingaround#between-pages\">pro přechod na "
-"konkrétní stránku</link> nebo <link xref=\"finding\">hledání</link> v <link "
-"xref=\"movingaround#navigating\">rejstříku</link>."
-
-#. (itstool) path: item/p
-#: C/titlebar.page:32
-msgid "<gui>&lt;</gui> and <gui>&gt;</gui> for moving between history items."
-msgstr "<gui>&lt;</gui> a <gui>&gt;</gui> pro pohyb v položkách historie."
-
-#. (itstool) path: item/p
-#: C/titlebar.page:35
-msgid ""
-"A <gui>Magnifying glass button</gui> to <link xref=\"finding\">find a word "
-"or phrase in the document</link>."
-msgstr ""
-"<gui>Tlačítko s lupou</gui> pro <link xref=\"finding\">hledání slov nebo "
-"frází v dokumentu</link>."
-
-#. (itstool) path: item/p
-#: C/titlebar.page:39
-msgid "A button to manage <link xref=\"annotations\">annotations</link>."
-msgstr "Tlačítko pro správu <link xref=\"annotations\">poznámek</link>."
-
-#. (itstool) path: item/p
-#: C/titlebar.page:42
-msgid ""
-"A drop-down box to adjust the <link xref=\"movingaround#zoom\">zoom</link> "
-"level."
-msgstr ""
-"Rozbalovací seznam pro změnu úrovně <link xref=\"movingaround#zoom"
-"\">přiblížení</link>."
-
-#. (itstool) path: item/p
-#: C/titlebar.page:45
-msgid "A button to open the <gui>View options</gui> menu."
-msgstr "Tlačítko pro otevření nabídky <gui>Volby zobrazení</gui>."
-
-#. (itstool) path: item/p
-#: C/titlebar.page:48
-msgid "A button to open the <gui>File options</gui> menu."
-msgstr "Tlačítko pro otevření nabídky <gui>Volby souboru</gui>."
 
 #. (itstool) path: info/desc
 #: C/translate.page:7
