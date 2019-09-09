@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
-"POT-Creation-Date: 2019-05-02 18:55+0000\n"
-"PO-Revision-Date: 2019-06-01 15:10+0200\n"
+"POT-Creation-Date: 2019-09-07 14:08+0000\n"
+"PO-Revision-Date: 2019-09-09 08:04+0200\n"
 "Last-Translator: Balázs Úr <ur.balazs at fsf dot hu>\n"
 "Language-Team: Hungarian <gnome-hu-list at gnome dot org>\n"
 "Language: hu\n"
@@ -477,7 +477,7 @@ msgid "of %d"
 msgstr "/ %d"
 
 #: libmisc/ev-page-action-widget.c:187 shell/ev-history.c:447
-#: shell/ev-sidebar-bookmarks.c:310 shell/ev-window.c:948
+#: shell/ev-sidebar-bookmarks.c:311 shell/ev-window.c:949
 #: shell/ev-window.c:5103
 #, c-format
 msgid "Page %s"
@@ -648,7 +648,7 @@ msgstr "Nézet görgetése felfelé"
 msgid "Scroll View Down"
 msgstr "Nézet görgetése lefelé"
 
-#: libview/ev-view-accessible.c:129
+#: libview/ev-view-accessible.c:130
 msgid "Document View"
 msgstr "Dokumentumnézet"
 
@@ -989,7 +989,7 @@ msgstr "Zárt"
 #. Translators: an annotation that looks like a "sticky note"
 #: shell/ev-annotations-toolbar.c:131
 msgid "Note text"
-msgstr "Szöveges jegyzet"
+msgstr "Szöveg jegyzetelése"
 
 #: shell/ev-annotations-toolbar.c:133
 msgid "Add text annotation"
@@ -997,13 +997,13 @@ msgstr "Szöveges jegyzet hozzáadása"
 
 #: shell/ev-annotations-toolbar.c:138
 msgid "Highlight text"
-msgstr "Kiemelési szöveg"
+msgstr "Szöveg kiemelése"
 
 #: shell/ev-annotations-toolbar.c:140
 msgid "Add highlight annotation"
-msgstr "Kiemelés jegyzet hozzáadása"
+msgstr "Szöveg kiemelésének hozzáadása"
 
-#: shell/evince-menus.ui:25 shell/ev-sidebar-links.c:344
+#: shell/evince-menus.ui:25 shell/ev-sidebar-links.c:340
 msgid "Print…"
 msgstr "Nyomtatás…"
 
@@ -1135,11 +1135,11 @@ msgstr "Melléklet m_entése másként…"
 
 #: shell/evince-menus.ui:220 shell/evince-menus.ui:292
 msgid "Annotation Properties…"
-msgstr "Jegyzetek tulajdonságai…"
+msgstr "Jegyzet tulajdonságai…"
 
 #: shell/evince-menus.ui:225 shell/evince-menus.ui:297
 msgid "Remove Annotation"
-msgstr "Jegyzetek eltávolítása"
+msgstr "Jegyzet eltávolítása"
 
 #: shell/evince-menus.ui:232
 msgid "Highlight Selected Text"
@@ -1175,8 +1175,8 @@ msgid "Password for document %s"
 msgstr "%s dokumentum jelszava"
 
 #. Create tree view
-#: shell/ev-loading-message.c:50 shell/ev-sidebar-annotations.c:139
-#: shell/ev-sidebar-layers.c:125 shell/ev-sidebar-links.c:269
+#: shell/ev-loading-message.c:50 shell/ev-sidebar-annotations.c:137
+#: shell/ev-sidebar-layers.c:123 shell/ev-sidebar-links.c:265
 msgid "Loading…"
 msgstr "Betöltés…"
 
@@ -1202,9 +1202,9 @@ msgstr "A dokumentum („%s”) zárolva van és megnyitásához jelszó szüks�
 msgid "Password required"
 msgstr "Jelszó szükséges"
 
-#: shell/ev-password-view.c:252 shell/ev-sidebar-attachments.c:495
+#: shell/ev-password-view.c:252 shell/ev-sidebar-attachments.c:493
 #: shell/ev-window.c:2763 shell/ev-window.c:3063 shell/ev-window.c:3936
-#: shell/ev-window.c:6887 shell/ev-window.c:7114
+#: shell/ev-window.c:6891 shell/ev-window.c:7118
 msgid "_Cancel"
 msgstr "_Mégse"
 
@@ -1265,73 +1265,73 @@ msgstr "Szöveg licence"
 msgid "Further Information"
 msgstr "További információk"
 
-#: shell/ev-sidebar-annotations.c:362
+#: shell/ev-sidebar-annotations.c:358
 msgid "Document contains no annotations"
 msgstr "A dokumentum nem tartalmaz jegyzeteket"
 
-#: shell/ev-sidebar-annotations.c:401
+#: shell/ev-sidebar-annotations.c:397
 #, c-format
 msgid "Page %d"
 msgstr "%d. oldal"
 
-#: shell/ev-sidebar-annotations.c:669 shell/ev-window.c:7519
+#: shell/ev-sidebar-annotations.c:665 shell/ev-window.c:7523
 msgid "Annotations"
 msgstr "Jegyzetek"
 
-#: shell/ev-sidebar-attachments.c:487
+#: shell/ev-sidebar-attachments.c:485
 #, c-format
 msgid "A file named “%s” already exists. Do you want to replace it?"
 msgstr "Már létezik „%s” nevű fájl. Le akarja cserélni?"
 
-#: shell/ev-sidebar-attachments.c:491
+#: shell/ev-sidebar-attachments.c:489
 #, c-format
 msgid "The file “%s” already exists. Replacing it will overwrite its contents."
 msgstr "A(z) „%s” fájl már létezik. Lecserélésével a tartalma felül lesz írva."
 
-#: shell/ev-sidebar-attachments.c:496
+#: shell/ev-sidebar-attachments.c:494
 msgid "_Replace"
 msgstr "Cs_ere"
 
-#: shell/ev-sidebar-attachments.c:903 shell/ev-window.c:7543
+#: shell/ev-sidebar-attachments.c:899 shell/ev-window.c:7547
 msgid "Attachments"
 msgstr "Mellékletek"
 
-#: shell/ev-sidebar-bookmarks.c:150
+#: shell/ev-sidebar-bookmarks.c:151
 msgid "_Open Bookmark"
 msgstr "Könyvjelző _megnyitása"
 
-#: shell/ev-sidebar-bookmarks.c:152
+#: shell/ev-sidebar-bookmarks.c:153
 msgid "_Rename Bookmark"
 msgstr "Könyvjelző á_tnevezése"
 
-#: shell/ev-sidebar-bookmarks.c:154
+#: shell/ev-sidebar-bookmarks.c:155
 msgid "_Remove Bookmark"
 msgstr "Könyvjelző _eltávolítása"
 
-#: shell/ev-sidebar-bookmarks.c:472 shell/ev-sidebar-bookmarks.c:473
+#: shell/ev-sidebar-bookmarks.c:471 shell/ev-sidebar-bookmarks.c:472
 msgid "Add bookmark"
 msgstr "Könyvjelző hozzáadása"
 
-#: shell/ev-sidebar-bookmarks.c:481 shell/ev-sidebar-bookmarks.c:482
+#: shell/ev-sidebar-bookmarks.c:480 shell/ev-sidebar-bookmarks.c:481
 msgid "Remove bookmark"
 msgstr "Könyvjelző eltávolítása"
 
-#: shell/ev-sidebar-bookmarks.c:598 shell/ev-window.c:7527
+#: shell/ev-sidebar-bookmarks.c:595 shell/ev-window.c:7531
 msgid "Bookmarks"
 msgstr "Könyvjelzők"
 
-#: shell/ev-sidebar-layers.c:448 shell/ev-window.c:7555
+#: shell/ev-sidebar-layers.c:444 shell/ev-window.c:7559
 msgid "Layers"
 msgstr "Rétegek"
 
 #. Translators: This is the title for the sidebar pane that
 #. * shows the Outline or Table of Contents of the document.
 #.
-#: shell/ev-sidebar-links.c:1030 shell/ev-window.c:7507
+#: shell/ev-sidebar-links.c:1027 shell/ev-window.c:7511
 msgid "Outline"
 msgstr "Vázlat"
 
-#: shell/ev-sidebar-thumbnails.c:1067 shell/ev-window.c:7490
+#: shell/ev-sidebar-thumbnails.c:1063 shell/ev-window.c:7494
 msgid "Thumbnails"
 msgstr "Bélyegképek"
 
@@ -1459,7 +1459,7 @@ msgstr "Kép feltöltése (%d%%)"
 msgid "Save As…"
 msgstr "Mentés másként…"
 
-#: shell/ev-window.c:3064 shell/ev-window.c:6889 shell/ev-window.c:7116
+#: shell/ev-window.c:3064 shell/ev-window.c:6893 shell/ev-window.c:7120
 msgid "_Save"
 msgstr "M_entés"
 
@@ -1564,19 +1564,19 @@ msgstr ""
 msgid "Running in presentation mode"
 msgstr "Bemutató mód"
 
-#: shell/ev-window.c:5592
+#: shell/ev-window.c:5595
 msgid "The attachment could not be saved."
 msgstr "A melléklet nem menthető."
 
-#: shell/ev-window.c:5914
+#: shell/ev-window.c:5917
 msgid "Enable caret navigation?"
 msgstr "Engedélyezi a kurzoros navigációt?"
 
-#: shell/ev-window.c:5915
+#: shell/ev-window.c:5918
 msgid "_Enable"
 msgstr "_Engedélyezés"
 
-#: shell/ev-window.c:5918
+#: shell/ev-window.c:5921
 msgid ""
 "Pressing F7 turns the caret navigation on or off. This feature places a "
 "moveable cursor in text pages, allowing you to move around and select text "
@@ -1587,35 +1587,35 @@ msgstr ""
 "téve a billentyűzettel való mozgást és szövegkijelölést. Be szeretné "
 "kapcsolni a kurzoros navigációt?"
 
-#: shell/ev-window.c:5923
+#: shell/ev-window.c:5926
 msgid "Don’t show this message again"
 msgstr "Ne mutassa ezt az üzenetet újra"
 
-#: shell/ev-window.c:6519 shell/ev-window.c:6535
+#: shell/ev-window.c:6523 shell/ev-window.c:6539
 msgid "Unable to launch external application."
 msgstr "A külső alkalmazás nem indítható."
 
-#: shell/ev-window.c:6597
+#: shell/ev-window.c:6601
 msgid "Unable to open external link"
 msgstr "A külső hivatkozás nem nyitható meg"
 
-#: shell/ev-window.c:6816
+#: shell/ev-window.c:6820
 msgid "Couldn’t find appropriate format to save image"
 msgstr "Nem található megfelelő formátum a kép mentéséhez"
 
-#: shell/ev-window.c:6848
+#: shell/ev-window.c:6852
 msgid "The image could not be saved."
 msgstr "A kép nem menthető."
 
-#: shell/ev-window.c:6884
+#: shell/ev-window.c:6888
 msgid "Save Image"
 msgstr "Kép mentése"
 
-#: shell/ev-window.c:7043
+#: shell/ev-window.c:7047
 msgid "Unable to open attachment"
 msgstr "A melléklet nem nyitható meg"
 
-#: shell/ev-window.c:7111
+#: shell/ev-window.c:7115
 msgid "Save Attachment"
 msgstr "Melléklet mentése"
 
