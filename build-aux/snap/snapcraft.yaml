@@ -9,24 +9,6 @@ grade: devel # must be 'stable' to release into candidate/stable channels
 confinement: strict
 base: core18
 
-plugs:
-  gnome-3-28-1804:
-    interface: content
-    target: $SNAP/gnome-platform
-    default-provider: gnome-3-28-1804
-  gtk-3-themes:
-    interface: content
-    target: $SNAP/data-dir/themes
-    default-provider: gtk-common-themes
-  icon-themes:
-    interface: content
-    target: $SNAP/data-dir/icons
-    default-provider: gtk-common-themes
-  sound-themes:
-    interface: content
-    target: $SNAP/data-dir/sounds
-    default-provider: gtk-common-themes
-
 slots:
   # for GtkApplication registration
   evince:
@@ -34,53 +16,34 @@ slots:
     bus: session
     name: org.gnome.Evince
 
-passthrough:
-  layout:
-    /usr/share/xml/iso-codes:
-      symlink: $SNAP/gnome-platform/usr/share/xml/iso-codes
-
 apps:
   evince:
-    command: desktop-launch evince
+    command: usr/bin/evince
+    extensions: [gnome-3-28]
     plugs:
       - avahi-observe
       - cups-control
-      - desktop
-      - desktop-legacy
       - gsettings
       - home
       - network
-      - unity7
-      - wayland
     desktop: usr/share/applications/org.gnome.Evince.desktop
   evince-previewer:
-    command: desktop-launch evince-previewer
+    command: usr/bin/evince-previewer
     plugs:
       - avahi-observe
       - cups-control
-      - desktop
-      - desktop-legacy
       - gsettings
       - home
       - network
-      - unity7
-      - wayland
     desktop: usr/share/applications/org.gnome.Evince-previewer.desktop
+  evince-previewer:
+    command: usr/bin/evince-thumbnailer
+    plugs:
+      - gsettings
+      - home
 
 parts:
-  desktop-gnome-platform:
-    source: https://github.com/ubuntu/snapcraft-desktop-helpers.git
-    source-subdir: gtk
-    plugin: make
-    make-parameters: ["FLAVOR=gtk3"]
-    build-packages:
-      - build-essential
-      - libgtk-3-dev
-    override-build: |
-      snapcraftctl build
-      mkdir -pv $SNAPCRAFT_PART_INSTALL/gnome-platform
   evince:
-    after: [desktop-gnome-platform]
     source: .
     source-type: git
     plugin: meson
