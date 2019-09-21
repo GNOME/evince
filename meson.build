@@ -140,7 +140,9 @@ top_inc = include_directories('.')
 glib_req_version = '>= 2.38.0'
 gtk_req_version = '>= 3.22.0'
 
-gdk_pixbuf_dep = dependency('gdk-pixbuf-2.0', version: '>= 2.36.5')
+gdk_pixbuf_dep = dependency('gdk-pixbuf-2.0', version: '>= 2.39.1')
+config_h.set_quoted('EXTRA_GDK_PIXBUF_LOADERS_DIR',
+                    join_paths (ev_libdir, ev_name, 'gdk-pixbuf', gdk_pixbuf_dep.get_pkgconfig_variable('gdk_pixbuf_binary_version')))
 gio_dep = dependency('gio-2.0', version: glib_req_version)
 glib_dep = dependency('glib-2.0', version: glib_req_version)
 gmodule_dep = dependency('gmodule-2.0')
