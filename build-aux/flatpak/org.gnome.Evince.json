@@ -47,23 +47,6 @@
     ],
     "modules": [
         {
-            "name": "openjpeg",
-            "buildsystem": "cmake-ninja",
-            "config-opts": [
-                "-DBUILD_CODEC=OFF"
-            ],
-            "cleanup": [
-                "/lib/openjpeg-2.3"
-            ],
-            "sources": [
-                {
-                    "type": "archive",
-                    "url": "https://github.com/uclouvain/openjpeg/archive/v2.3.0.tar.gz",
-                    "sha256": "3dc787c1bb6023ba846c2a0d9b1f6e179f1cd255172bde9eb75b01f1e6c7d71a"
-                }
-            ]
-        },
-        {
             "name": "webp-pixbuf-loader",
             "buildsystem": "cmake-ninja",
             "sources": [
@@ -87,7 +70,7 @@
             "sources": [
                 {
                     "type": "archive",
-                    "url": "http://poppler.freedesktop.org/poppler-data-0.4.9.tar.gz",
+                    "url": "https://poppler.freedesktop.org/poppler-data-0.4.9.tar.gz",
                     "sha256": "1f9c7e7de9ecd0db6ab287349e31bf815ca108a5a175cf906a90163bdbe32012"
                 }
             ]
@@ -97,7 +80,13 @@
             "buildsystem": "cmake-ninja",
             "config-opts": [
                 "-DCMAKE_INSTALL_LIBDIR=/app/lib",
-                "-DCMAKE_INSTALL_INCLUDEDIR=/app/include"
+                "-DCMAKE_INSTALL_INCLUDEDIR=/app/include",
+                "-DENABLE_LIBOPENJPEG=openjpeg2",
+                "-DENABLE_SPLASH=OFF",
+                "-DENABLE_GOBJECT_INTROSPECTION=OFF",
+                "-DENABLE_CPP=OFF",
+                "-DENABLE_UTILS=OFF",
+                "-DBUILD_GTK_TESTS=OFF"
             ],
             "cleanup": [
                 "/bin"
@@ -105,8 +94,8 @@
             "sources": [
                 {
                     "type": "archive",
-                    "url": "https://poppler.freedesktop.org/poppler-0.69.0.tar.xz",
-                    "sha256": "637ff943f805f304ff1da77ba2e7f1cbd675f474941fd8ae1e0fc01a5b45a3f9"
+                    "url": "https://poppler.freedesktop.org/poppler-0.79.0.tar.xz",
+                    "sha256": "f985a4608fe592d2546d9d37d4182e502ff6b4c42f8db4be0a021a1c369528c8"
                 }
             ]
         },
@@ -129,11 +118,18 @@
         {
             "name": "libgxps",
             "buildsystem": "meson",
+            "config-opts": [
+                "-Denable-test=false",
+                "-Ddisable-introspection=true"
+            ],
+            "cleanup": [
+                "/bin"
+            ],
             "sources": [
                 {
                     "type": "archive",
-                    "url": "http://ftp.gnome.org/pub/gnome/sources/libgxps/0.3/libgxps-0.3.0.tar.xz",
-                    "sha256": "412b1343bd31fee41f7204c47514d34c563ae34dafa4cc710897366bd6cd0fae"
+                    "url": "https://download.gnome.org/sources/libgxps/0.3/libgxps-0.3.1.tar.xz",
+                    "sha256": "1a939fc8fcea9471b7eca46b1ac90cff89a30d26f65c7c9a375a4bf91223fa94"
                 }
             ]
         },
@@ -148,20 +144,24 @@
                     "url": "https://download.gnome.org/sources/gspell/1.8/gspell-1.8.1.tar.xz",
                     "sha256": "819a1d23c7603000e73f5e738bdd284342e0cd345fb0c7650999c31ec741bbe5"
                 }
+            ]
+        },
+        {
+            "name": "gnome-desktop",
+            "buildsystem": "meson",
+            "config-opts": [
+                "-Ddesktop_docs=false",
+                "-Ddebug_tools=false"
             ],
-            "modules": [
+            "cleanup": [
+                "/lib/girepository-1.0",
+                "/share/gir-1.0"
+            ],
+            "sources": [
                 {
-                    "name": "enchant2",
-                    "cleanup": [
-                        "/bin"
-                    ],
-                    "sources": [
-                        {
-                            "type": "archive",
-                            "url": "https://github.com/AbiWord/enchant/releases/download/v2.2.3/enchant-2.2.3.tar.gz",
-                            "sha256": "abd8e915675cff54c0d4da5029d95c528362266557c61c7149d53fa069b8076d"
-                        }
-                    ]
+                    "type": "archive",
+                    "url": "http://ftp.gnome.org/pub/GNOME/sources/gnome-desktop/3.33/gnome-desktop-3.33.4.tar.xz",
+                    "sha256": "655639cc5a060b9518c541fdd1d6af7a7765c0f4dab14188b1e1b7dff2a76857"
                 }
             ]
         },
@@ -171,7 +171,8 @@
             "config-opts": [
                 "-Dnautilus=false",
                 "-Dgtk_doc=false",
-                "-Dintrospection=false"
+                "-Dintrospection=false",
+                "-Dthumbnailer=false"
             ],
             "sources": [
                 {
