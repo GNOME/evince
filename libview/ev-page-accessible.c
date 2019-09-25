@@ -1042,6 +1042,145 @@ ev_page_accessible_add_selection (AtkText *text,
 
 }
 
+#if ATK_CHECK_VERSION (2, 32, 0)
+static gboolean
+ev_page_accessible_scroll_substring_to (AtkText       *text,
+					gint           start_pos,
+					gint           end_pos,
+					AtkScrollType  type)
+{
+	EvPageAccessible *self = EV_PAGE_ACCESSIBLE (text);
+	EvView *view = ev_page_accessible_get_view (self);
+	GdkRectangle start_rect, end_rect;
+	GdkPoint start_point, end_point;
+	gdouble hpage_size, vpage_size;
+	EvRectangle *areas = NULL;
+	guint pos, n_areas = 0;
+
+	if (end_pos < start_pos)
+		return FALSE;
+
+	ev_page_cache_get_text_layout (view->page_cache, self->priv->page, &areas, &n_areas);
+	if (start_pos < 0 || end_pos >= n_areas)
+		return FALSE;
+
+	_ev_view_transform_doc_rect_to_view_rect (view, self->priv->page, areas + start_pos, &start_rect);
+	_ev_view_transform_doc_rect_to_view_rect (view, self->priv->page, areas + end_pos - 1, &end_rect);
+	start_point.x = start_rect.x;
+	start_point.y = start_rect.y;
+	end_point.x = end_rect.x + end_rect.width;
+	end_point.y = end_rect.y + end_rect.height;
+
+	hpage_size = gtk_adjustment_get_page_size (view->hadjustment);
+	vpage_size = gtk_adjustment_get_page_size (view->vadjustment);
+
+	switch (type) {
+	case ATK_SCROLL_TOP_LEFT:
+		gtk_adjustment_clamp_page (view->hadjustment, start_point.x, start_point.x + hpage_size);
+		gtk_adjustment_changed (view->hadjustment);
+		gtk_adjustment_clamp_page (view->vadjustment, start_point.y, start_point.y + vpage_size);
+		gtk_adjustment_changed (view->vadjustment);
+		break;
+	case ATK_SCROLL_BOTTOM_RIGHT:
+		gtk_adjustment_clamp_page (view->hadjustment, end_point.x - hpage_size, end_point.x);
+		gtk_adjustment_changed (view->hadjustment);
+		gtk_adjustment_clamp_page (view->vadjustment, end_point.y - vpage_size, end_point.y);
+		gtk_adjustment_changed (view->vadjustment);
+		break;
+	case ATK_SCROLL_TOP_EDGE:
+		gtk_adjustment_clamp_page (view->vadjustment, start_point.y, start_point.y + vpage_size);
+		gtk_adjustment_changed (view->vadjustment);
+		break;
+	case ATK_SCROLL_BOTTOM_EDGE:
+		gtk_adjustment_clamp_page (view->vadjustment, end_point.y - vpage_size, end_point.y);
+		gtk_adjustment_changed (view->vadjustment);
+		break;
+	case ATK_SCROLL_LEFT_EDGE:
+		gtk_adjustment_clamp_page (view->hadjustment, start_point.x, start_point.x + hpage_size);
+		gtk_adjustment_changed (view->hadjustment);
+		break;
+	case ATK_SCROLL_RIGHT_EDGE:
+		gtk_adjustment_clamp_page (view->hadjustment, end_point.x - hpage_size, end_point.x);
+		gtk_adjustment_changed (view->hadjustment);
+		break;
+	case ATK_SCROLL_ANYWHERE:
+		_ev_view_ensure_rectangle_is_visible (view, &end_rect);
+		_ev_view_ensure_rectangle_is_visible (view, &start_rect);
+		break;
+	default:
+		return FALSE;
+	}
+
+	return TRUE;
+}
+
+static gboolean
+ev_page_accessible_scroll_substring_to_point (AtkText      *text,
+					      gint          start_pos,
+					      gint          end_pos,
+                                              AtkCoordType  coords,
+                                              gint          x,
+                                              gint          y)
+{
+	EvPageAccessible *self = EV_PAGE_ACCESSIBLE (text);
+	EvView *view = ev_page_accessible_get_view (self);
+	GdkRectangle start_rect;
+	GdkPoint view_point, start_point;
+	gdouble hpage_size, vpage_size;
+	EvRectangle *areas = NULL;
+	guint n_areas = 0;
+	GtkWidget *toplevel;
+	gint x_widget, y_widget;
+	GtkBorder border;
+	GdkRectangle page_area;
+	gdouble doc_x, doc_y;
+
+	if (end_pos < start_pos)
+		return FALSE;
+
+	ev_page_cache_get_text_layout (view->page_cache, self->priv->page, &areas, &n_areas);
+	if (start_pos < 0 || end_pos >= n_areas)
+		return FALSE;
+
+	/* Assume that the API wants to place the top left of the substring at (x, y). */
+	_ev_view_transform_doc_rect_to_view_rect (view, self->priv->page, areas + start_pos, &start_rect);
+	start_point.x = start_rect.x;
+	start_point.y = start_rect.y;
+
+	hpage_size = gtk_adjustment_get_page_size (view->hadjustment);
+	vpage_size = gtk_adjustment_get_page_size (view->vadjustment);
+
+	view_point.x = x;
+	view_point.y = y;
+	toplevel = gtk_widget_get_toplevel (GTK_WIDGET (view));
+	gtk_widget_translate_coordinates (GTK_WIDGET (view), toplevel, 0, 0, &x_widget, &y_widget);
+	view_point.x -= x_widget;
+	view_point.y -= y_widget;
+
+	if (coords == ATK_XY_SCREEN) {
+		gint x_window, y_window;
+
+		gdk_window_get_origin (gtk_widget_get_window (toplevel), &x_window, &y_window);
+		view_point.x -= x_window;
+		view_point.y -= y_window;
+	}
+
+	ev_view_get_page_extents (view, self->priv->page, &page_area, &border);
+	_ev_view_transform_view_point_to_doc_point (view, &view_point, &page_area, &border, &doc_x, &doc_y);
+
+	/* Calculate scrolling difference */
+	start_point.x -= doc_x;
+	start_point.y -= doc_y;
+
+	gtk_adjustment_clamp_page (view->hadjustment, start_point.x, start_point.x + hpage_size);
+	gtk_adjustment_changed (view->hadjustment);
+	gtk_adjustment_clamp_page (view->vadjustment, start_point.y, start_point.y + vpage_size);
+	gtk_adjustment_changed (view->vadjustment);
+
+	return TRUE;
+}
+#endif
+
 static void
 ev_page_accessible_init (EvPageAccessible *page)
 {
@@ -1067,6 +1206,10 @@ ev_page_accessible_text_iface_init (AtkTextIface *iface)
 	iface->get_default_attributes = ev_page_accessible_get_default_attributes;
 	iface->get_character_extents = ev_page_accessible_get_character_extents;
 	iface->get_offset_at_point = ev_page_accessible_get_offset_at_point;
+#if ATK_CHECK_VERSION (2, 32, 0)
+	iface->scroll_substring_to = ev_page_accessible_scroll_substring_to;
+	iface->scroll_substring_to_point = ev_page_accessible_scroll_substring_to_point;
+#endif
 }
 
 static GHashTable *
