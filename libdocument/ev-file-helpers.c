@@ -39,6 +39,10 @@ static gchar *tmp_dir = NULL;
 #define O_BINARY 0
 #endif
 
+#ifndef O_CLOEXEC
+#define O_CLOEXEC 0
+#endif
+
 /*
  * ev_dir_ensure_exists:
  * @dir: the directory name
@@ -601,11 +605,13 @@ compression_child_setup_cb (gpointer fd_ptr)
         int fd = GPOINTER_TO_INT (fd_ptr);
         int flags;
 
+#ifdef F_GETFD
         flags = fcntl (fd, F_GETFD);
         if (flags >= 0 && (flags & FD_CLOEXEC)) {
                 flags &= ~FD_CLOEXEC;
                 fcntl (fd, F_SETFD, flags);
         }
+#endif
 }
 
 static gchar *

@@ -64,11 +64,14 @@ deps = [
   gstreamer_base_dep,
   gstreamer_dep,
   gstreamer_video_dep,
-  gtk_unix_print_dep,
   gthread_dep,
   libevdocument_dep,
   m_dep,
 ]
+
+if enable_gtk_unix_print
+  deps += gtk_unix_print_dep
+endif
 
 cflags = [
   '-DG_LOG_DOMAIN="EvinceView"',
@@ -105,7 +108,7 @@ pkg.generate(
   name: 'Evince View',
   description: 'GNOME document viewer view library',
   subdirs: ev_include_subdir,
-  requires: [
+  libraries: [
     'evince-document-@0@ = @1@'.format(ev_api_version, ev_version),
     gthread_dep,
   ],

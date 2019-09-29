@@ -140,26 +140,67 @@ top_inc = include_directories('.')
 glib_req_version = '>= 2.38.0'
 gtk_req_version = '>= 3.22.0'
 
-gdk_pixbuf_dep = dependency('gdk-pixbuf-2.0', version: '>= 2.36.5')
-gio_dep = dependency('gio-2.0', version: glib_req_version)
-glib_dep = dependency('glib-2.0', version: glib_req_version)
-gmodule_dep = dependency('gmodule-2.0')
-gmodule_no_export_dep = dependency('gmodule-no-export-2.0', version: glib_req_version)
-gtk_dep = dependency('gtk+-3.0', version: gtk_req_version)
-gthread_dep = dependency('gthread-2.0', version: glib_req_version)
+gdk_pixbuf_dep = dependency(
+  'gdk-pixbuf-2.0',
+  version: '>= 2.36.5',
+  fallback: ['gdk-pixbuf', 'gdkpixbuf_dep']
+)
+gio_dep = dependency(
+  'gio-2.0',
+  version: glib_req_version,
+  fallback: ['glib', 'libgio_dep']
+)
+glib_dep = dependency(
+  'glib-2.0',
+  version: glib_req_version,
+  fallback: ['glib', 'libglib_dep']
+)
+gmodule_dep = dependency(
+  'gmodule-2.0',
+  fallback: ['glib', 'libgmodule_dep']
+)
+gmodule_no_export_dep = dependency(
+  'gmodule-no-export-2.0',
+  version: glib_req_version,
+  fallback: ['glib', 'libgmodule_dep']
+)
+gtk_dep = dependency(
+  'gtk+-3.0',
+  version: gtk_req_version,
+  fallback: ['gtk', 'libgtk_dep']
+)
+gthread_dep = dependency(
+  'gthread-2.0',
+  version: glib_req_version,
+  fallback: ['glib', 'libgthread_dep']
+)
 
 m_dep = cc.find_library('m')
 
 # Although GTK+ 3.10 includes hi-dpi functionality, it does not require a cairo with
 # cairo_surface_set_device_scale(), which we also need if we're to support hi-dpi,
 # so we need check for that explicity.
-cairo_dep = dependency('cairo', version: '>= 1.10.0')
-config_h.set('HAVE_HIDPI_SUPPORT', cc.has_function('cairo_surface_set_device_scale', dependencies: cairo_dep))
+cairo_dep = dependency(
+  'cairo',
+  version: '>= 1.10.0',
+  fallback: ['cairo', 'libcairo_dep']
+)
+if cairo_dep.type_name() != 'internal'
+  config_h.set('HAVE_HIDPI_SUPPORT', cc.has_function('cairo_surface_set_device_scale', dependencies: cairo_dep))
+endif
 
 # ZLIB support (required)
 zlib_dep = cc.find_library('z', required: false)
-assert(zlib_dep.found() and cc.has_function('inflate', dependencies: zlib_dep) and cc.has_function('crc32', dependencies: zlib_dep),
-      'No sufficient zlib library found on your system')
+if not zlib_dep.found()
+  zlib_dep = dependency(
+    'zlib',
+    fallback: ['zlib', 'zlib_dep']
+  )
+endif
+if zlib_dep.type_name() != 'internal'
+  assert(zlib_dep.found() and cc.has_function('inflate', dependencies: zlib_dep) and cc.has_function('crc32', dependencies: zlib_dep),
+        'No sufficient zlib library found on your system')
+endif
 
 ev_platform = get_option('platform')
 if ev_platform == 'gnome'
@@ -243,6 +284,12 @@ config_h.set('HAVE_DESKTOP_SCHEMAS', gsettings_desktop_schemas_dep.found())
 # *** libsynctex ***
 synctex_dep = dependency('synctex', version: '>= 1.19', required: false)
 external_synctex = synctex_dep.found()
+
+# *** shlwapi ***
+if not external_synctex and ev_platform == 'win32'
+  # The internal synctex library uses SHLWAPI Wrapper Functions
+  shlwapi_dep = cc.find_library('shlwapi')
+endif
 
 # *** Mime types list ***
 mime_types_list = {
