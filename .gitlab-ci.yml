@@ -26,7 +26,7 @@ meson:
 
     script:
         - meson _build
-        - ninja -C _build all
+        - ninja -C _build all libevdocument-doc libevview-doc evince-doc
 
     artifacts:
         when: on_failure
