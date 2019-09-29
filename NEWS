@@ -1,4 +1,74 @@
 ================
+Evince    3.32.1
+================
+
+* AppData
+  * Add release information (Mika Väinölä, Germán Poo-Caamaño)
+
+backend:
+  * fix swapped y-coordinates when adding annotations (#1008, Casey Jao)
+  * Handle failure from TIFFReadRGBAImageOriented (#1129, Jason Crain)
+
+help:
+  * Update German screen-shots (Christian Kirbach)
+  * No more 'File > Print' menu in 3.32 (Andre Klapper)
+  * Update localized print-select screenshots (Andre Klapper)
+  * Update localized reverse-collate screenshots (Andre Klapper)
+
+libdocument:
+  * Add transfer annotation for ev_document_get_info (#1125, Dylan McCall)
+
+shell:
+  * Don't start render job until realized (#1177, Jason Crain)
+  * Check for Poppler 0.76.0 for ignoreDiacritics feature (#1179, Nelson Benítez León)
+  * fix get_backend_info_for_mime_type for macOS and Windows (#1145, Germán Poo-Caamaño)
+  * disconnect notify::document signal in finalize (#789, Jason Crain)
+  * prevent NULL metadata being passed (#1120, Nelson Benítez León)
+  * remember unmaximized window size (Jason Crain)
+  * fix popup (Jason Crain)
+  * protect against NULL var reaching strcmp() (#1113, Nelson Benítez León)
+
+snap:
+  * Updated to build with meson (Ken VanDine)
+  * Updated to use core18 and newer GNOME platform (Ken VanDine)
+  * set grade to stable (Ken VanDine)
+
+Developers:
+  * Andre Klapper, Casey Jao, Christian Kirbach, Dylan McCall, Germán Poo-Caamaño, Jason Crain, Ken VanDine, Mika Väinölä, Nelson Benítez León
+
+Translations:
+  * Khaled Hosny (Arabic)
+  * Asier Sarasua Garmendia (Basque)
+  * Rafael Fontenelle (Brazilian Portuguese)
+  * Cheng-Chia Tseng (Chinese (Taiwan))
+  * Goran Vidović (Croatian)
+  * Marek Černocký (Czech help)
+  * Alan Mortensen (Danish)
+  * Ask Hjorth Larsen (Danish)
+  * Nathan Follens (Dutch)
+  * Kristjan SCHMIDT (Esperanto)
+  * Charles Monzat (French)
+  * Fabio Tomat (Friulian)
+  * Fran Dieguez (Galician)
+  * Christian Kirbach (German)
+  * Tim Sabsch (German)
+  * Balázs Úr (Hungarian)
+  * Gábor Kelemen (Hungarian)
+  * Sveinn í Felli (Icelandic)
+  * Gianvito Cavasoli (Italian)
+  * Baurzhan Muftakhidinov (Kazakh)
+  * Changwoo Ryu (Korean)
+  * Rūdolfs Mazurs (Latvian)
+  * Aurimas Černius (Lithuanian)
+  * Piotr Drąg (Polish)
+  * Daniel Șerbănescu (Romanian)
+  * Stas Solovey (Russian)
+  * Марко Костић (Serbian)
+  * Dušan Kazik (Slovak)
+  * Anders Jonsson (Swedish)
+  * Emin Tufan Çetin (Turkish)
+
+================
 Evince    3.32.0
 ================
 
