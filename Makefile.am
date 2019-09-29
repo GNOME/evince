@@ -59,7 +59,45 @@ EXTRA_DIST = \
 	$(appdata_in_files) \
 	autogen.sh \
 	MAINTAINERS \
-	README.md
+	README.md \
+	generate-changelog.sh \
+	lib-symbol.map \
+	meson.build \
+	meson_post_install.py \
+	meson_options.txt \
+	previewer/meson.build \
+	libmisc/meson.build \
+	cut-n-paste/libgd/meson.build \
+	cut-n-paste/unarr/meson.build \
+	cut-n-paste/gimpcellrenderertoggle/meson.build \
+	cut-n-paste/meson.build \
+	cut-n-paste/synctex/meson.build \
+	shell/meson.build \
+	properties/meson.build \
+	thumbnailer/meson.build \
+	data/icons/meson.build \
+	data/meson.build \
+	help/reference/shell/meson.build \
+	help/reference/libview/meson.build \
+	help/reference/libdocument/meson.build \
+	help/meson.build \
+	help/LINGUAS \
+	libview/meson.build \
+	backend/backend-symbol.map \
+	backend/xps/meson.build \
+	backend/tiff/meson.build \
+	backend/pdf/meson.build \
+	backend/comics/meson.build \
+	backend/dvi/mdvi-lib/meson.build \
+	backend/dvi/meson.build \
+	backend/ps/meson.build \
+	backend/meson.build \
+	backend/djvu/meson.build \
+	po/meson.build \
+	libdocument/meson.build \
+	browser-plugin/meson.build \
+	browser-plugin/plugin-symbol.map
+
 
 CLEANFILES = \
 	$(nodist_appdata_DATA) \
