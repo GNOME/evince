@@ -1,3 +1,127 @@
+================
+Evince    3.34.0
+================
+
+AppData:
+  * Add release information to AppData (Mika Väinölä, Germán Poo-Caamaño)
+
+backend:
+  * fix swapped y-coordinates when adding annotations (#1008, Casey Jao)
+  * casefold search text in case insensitive search (#1212, Jason Crain)
+  * Fix warning if page cannot be rendered (Bastien Nocera)
+  * check for Poppler 0.76.0 for ignoreDiacritics feature (#1179, Nelson Benítez León)
+  * Handle failure from TIFFReadRGBAImageOriented (#1129, Jason Crain)
+
+build:
+  * Bump required glib version to 2.38.0 (Jason Crain)
+  * Bump requirement of meson version (Germán Poo-Caamaño)
+  * Include "evince" in .desktop keywords (#1706, #2749, Felipe Borges)
+  * Disable gtk-doc when building flatpak package (Germán Poo-Caamaño)
+  * build gtk-doc by default on meson (Germán Poo-Caamaño)
+  * Fix GtkDoc documentation generation (Iñigo Martínez)
+
+flatpak:
+  * Disable unnecessary poppler options (Jason Crain)
+  * Update libgxps to version 0.3.1 (Jason Crain)
+  * Update poppler to 0.79.0 (Jason Crain)
+  * Use https for poppler-data url (Jason Crain)
+  * add gnome-desktop dependency (Jason Crain)
+  * disable evince's thumbnailer (Jason Crain)
+  * disable introspection and gtk-doc (Abderrahim Kitouni)
+  * disable unnecessary libgxps files (Jason Crain)
+  * remove enchant2 module (Jason Crain)
+  * remove openjpeg module (Jason Crain)
+
+help:
+  * Dropdown in Print dialog is called 'Two-sided', not 'Two-side' (Andre Klapper)
+  * Fix meson build with shell disabled (Bastien Nocera)
+  * No more 'File > Print' menu in 3.32 (Andre Klapper)
+  * Stop translating screenshots with no text (Piotr Drąg)
+  * Synchronize repetitive strings. Less work for translators. (Andre Klapper)
+  * Synchronize repetitive strings. Less work for translators. (Andre Klapper)
+  * Synchronize repetitive strings. Less work for translators. (Andre Klapper)
+  * Update annotation screenshot to not contain any text (Andre Klapper)
+  * Update localized print-select screenshots (Andre Klapper)
+  * Update localized reverse-collate screenshots (Andre Klapper)
+  * Update zoom dropdown screenshot to not include localizable content (Andre Klapper)
+  * Update German screen-shots (Christian Kirbach)
+  * Remove numerous ancient outdated localized screenshots (Andre Klapper)
+
+libdocument and shell:
+  * Add transfer annotation for ev_document_get_info (#1125, Dylan McCall)
+  * Remove use of deprecated g_type_class_add_private function (#1023, Jason Crain)
+  * fix get_backend_info_for_mime_type for macOS and Windows (Tom Schoonjans)
+  * disconnect notify::document signal in finalize (#789, Jason Crain)
+  * fix adding annotations from dbl/tpl click selections (#1119, Nelson Benítez León)
+  * disable "annotate-selected-text" action (#1218, Nelson Benítez León)
+  * prevent NULL metadata being passed (#1120, Nelson Benítez León)
+  * Removing ellipsis property. (#1135, Veerasamy Sevagen)
+  * Schedule the window destroy in case of events waiting (Casey)
+  * don't start render job until realized (#1177, Jason Crain)
+  *  prevent multiple fullscreen toolbar timeouts (#787, Jason Crain)
+  *  remember unmaximized window size (Jason Crain)
+  *  fix popup (Jason Crain)
+  *  protect against NULL var reaching strcmp() (#1113, Nelson Benítez León)
+
+snap:
+  *  Update yaml to use GNOME extensions (Heather Ellsworth)
+  *  Updated to build with meson (Ken VanDine)
+  *  Updated to build with meson (Ken VanDine)
+  *  Updated to use core18 and newer GNOME platform (Ken VanDine)
+
+unarr:
+  * Disable debug output (Bastien Nocera)
+  * Update LZMA SDK (Bastien Nocera)
+
+Developers:
+  * Abderrahim Kitouni, Andre Klapper, Bastien Nocera, Casey, Casey Jao, Christian Kirbach, Christian Persch, Dylan McCall, Felipe Borges, Germán Poo-Caamaño, Heather Ellsworth, Iñigo Martínez, Jason Crain, Ken VanDine, Mika Väinölä, Nelson Benítez León, Piotr Drąg, Tom Schoonjans, Veerasamy Sevagen
+
+Translations:
+  * Jor Teron (Add Karbi)
+  * Khaled Hosny (Arabic)
+  * Asier Sarasua Garmendia (Basque)
+  * Rafael Fontenelle (Brazilian Portuguese)
+  * Jordi Mas (Catalan)
+  * Cheng-Chia Tseng (Chinese (Taiwan))
+  * Goran Vidović (Croatian)
+  * Marek Černocký (Czech)
+  * Marek Černocký (Czech help)
+  * Alan Mortensen (Danish)
+  * Ask Hjorth Larsen (Danish)
+  * Nathan Follens (Dutch)
+  * Kristjan SCHMIDT (Esperanto)
+  * Jiri Grönroos (Finnish)
+  * Charles Monzat (French)
+  * Claude Paroz (French)
+  * Fabio Tomat (Friulian)
+  * Fran Dieguez (Galician)
+  * Christian Kirbach (German)
+  * Tim Sabsch (German)
+  * Efstathios Iosifidis (Greek)
+  * Balázs Úr (Hungarian)
+  * Gábor Kelemen (Hungarian)
+  * Sveinn í Felli (Icelandic)
+  * Kukuh Syafaat (Indonesian)
+  * Gianvito Cavasoli (Italian)
+  * Ryuta Fujii (Japanese)
+  * Baurzhan Muftakhidinov (Kazakh)
+  * Changwoo Ryu (Korean)
+  * Rūdolfs Mazurs (Latvian)
+  * Aurimas Černius (Lithuanian)
+  * Danial Behzadi (Persian)
+  * Piotr Drąg (Polish)
+  * A S Alam (Punjabi)
+  * Daniel Șerbănescu (Romanian)
+  * Florentina Mușat (Romanian)
+  * Stas Solovey (Russian)
+  * Марко Костић (Serbian)
+  * Dušan Kazik (Slovak)
+  * Matej Urbančič (Slovenian)
+  * Daniel Mustieles (Spanish)
+  * Anders Jonsson (Swedish)
+  * Sabri Ünal (Turkish)
+  * Trần Ngọc Quân (Vietnamese)
+
 =================
 Evince    3.31.90
 =================
