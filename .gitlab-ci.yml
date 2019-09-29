@@ -72,7 +72,7 @@ flatpak:
         MANIFEST_PATH: "build-aux/flatpak/org.gnome.Evince.json"
         RUNTIME_REPO: "https://sdk.gnome.org/gnome-nightly.flatpakrepo"
         FLATPAK_MODULE: "evince"
-        MESON_ARGS: "-Dnautilus=false"
+        MESON_ARGS: "-Dnautilus=false -Dgtk_doc=false"
         APP_ID: "org.gnome.Evince"
 
     script:
