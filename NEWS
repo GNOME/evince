@@ -1,4 +1,42 @@
 ================
+Evince    3.30.3
+================
+
+backends:
+  * Handle failure from TIFFReadRGBAImageOriented (#1129, Jason Crain)
+
+help:
+  * Update German screen-shots (Christian Kirbach)
+
+libdocument:
+  * Add transfer annotation for ev_document_get_info (#1125, Dylan McCall)
+
+shell:
+  * Use monitor instead of screen to determine window size (#757, Germán Poo-Caamaño)
+  * remember unmaximized window size (Jason Crain)
+  * Fix default icon name (Germán Poo-Caamaño)
+  * don't start render job until realized (#1177, Jason Crain)
+  * disconnect notify::document signal in finalize (#789, Jason Crain)
+  * fix get_backend_info_for_mime_type for macOS and Windows (Tom Schoonjans)
+  * Update en_GB translation typo (#1022, John Beard)
+
+snap:
+  *  Updated to use core18 and newer GNOME platform (Ken VanDine)
+
+Developers:
+  * Christian Kirbach, Dylan McCall, Germán Poo-Caamaño, Jason Crain, John Beard, Ken VanDine, Tom Schoonjans
+
+Translations:
+  * Iñaki Larrañaga Murgoitio (Basque)
+  * Carmen Bianca BAKKER (Esperanto)
+  * Kristjan SCHMIDT (Esperanto)
+  * Balázs Úr (Hungarian)
+  * Sveinn í Felli (Icelandic)
+  * Dušan Kazik (Slovak)
+  * Daniel Mustieles (Spanish)
+  * Rodrigo Lledó (Spanish)
+
+================
 Evince    3.30.2
 ================
 
