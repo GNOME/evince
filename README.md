@@ -7,6 +7,8 @@ https://wiki.gnome.org/Apps/Evince.
 
 This software is licensed under the [GPLv2][license].
 
+[![flatpak]](https://flathub.org/apps/details/org.gnome.Evince)
+
 ## Evince Requirements
 
 * [GNOME Platform libraries][gnome]
@@ -30,4 +32,5 @@ This software is licensed under the [GPLv2][license].
 [tiff]: http://libtiff.org/
 [xps]: https://wiki.gnome.org/Projects/libgxps
 [license]: COPYING
-[evince-logo]: data/icons/48x48/apps/org.gnome.Evince.png
+[evince-logo]: data/icons/scalable/apps/org.gnome.Evince.svg
+[flatpak]: https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Flathub-badge-en.svg/240px-Flathub-badge-en.svg.png
