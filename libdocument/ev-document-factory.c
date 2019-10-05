@@ -569,7 +569,7 @@ file_filter_add_mime_types (EvBackendInfo *info, GtkFileFilter *filter)
  * can handle.
  */
 void
-ev_document_factory_add_filters (GtkWidget *chooser, EvDocument *document)
+ev_document_factory_add_filters (GtkFileChooser *chooser, EvDocument *document)
 {
 	GtkFileFilter *filter;
 	GtkFileFilter *default_filter;

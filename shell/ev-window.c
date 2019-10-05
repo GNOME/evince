@@ -2710,11 +2710,11 @@ ev_window_file_chooser_save_folder (EvWindow       *window,
 }
 
 static void
-file_open_dialog_response_cb (GtkWidget *chooser,
+file_open_dialog_response_cb (GtkFileChooserNative *chooser,
 			      gint       response_id,
 			      EvWindow  *ev_window)
 {
-	if (response_id == GTK_RESPONSE_OK) {
+	if (response_id == GTK_RESPONSE_ACCEPT) {
 		GSList *uris;
 
                 ev_window_file_chooser_save_folder (ev_window, GTK_FILE_CHOOSER (chooser),
@@ -2730,7 +2730,7 @@ file_open_dialog_response_cb (GtkWidget *chooser,
 		g_slist_free (uris);
 	}
 
-	gtk_widget_destroy (chooser);
+	g_object_unref (chooser);
 }
 
 static void
@@ -2755,17 +2755,15 @@ ev_window_cmd_file_open (GSimpleAction *action,
 			 gpointer       user_data)
 {
 	EvWindow  *window = user_data;
-	GtkWidget *chooser;
+	GtkFileChooserNative *chooser;
 
-	chooser = gtk_file_chooser_dialog_new (_("Open Document"),
+	chooser = gtk_file_chooser_native_new (_("Open Document"),
 					       GTK_WINDOW (window),
 					       GTK_FILE_CHOOSER_ACTION_OPEN,
-					       _("_Cancel"),
-					       GTK_RESPONSE_CANCEL,
-					       _("_Open"), GTK_RESPONSE_OK,
-					       NULL);
+					       _("_Open"),
+					       _("_Cancel"));
 
-	ev_document_factory_add_filters (chooser, NULL);
+	ev_document_factory_add_filters (GTK_FILE_CHOOSER (chooser), NULL);
 	gtk_file_chooser_set_select_multiple (GTK_FILE_CHOOSER (chooser), TRUE);
 	gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (chooser), FALSE);
 
@@ -2776,7 +2774,7 @@ ev_window_cmd_file_open (GSimpleAction *action,
 			  G_CALLBACK (file_open_dialog_response_cb),
 			  window);
 
-	gtk_widget_show (chooser);
+	gtk_native_dialog_run (GTK_NATIVE_DIALOG (chooser));
 }
 
 static void
@@ -3013,16 +3011,16 @@ ev_window_save_job_cb (EvJob     *job,
 }
 
 static void
-file_save_dialog_response_cb (GtkWidget *fc,
+file_save_dialog_response_cb (GtkFileChooserNative *fc,
 			      gint       response_id,
 			      EvWindow  *ev_window)
 {
 	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 	gchar *uri;
 
-	if (response_id != GTK_RESPONSE_OK) {
+	if (response_id != GTK_RESPONSE_ACCEPT) {
 		priv->close_after_save = FALSE;
-		gtk_widget_destroy (fc);
+		g_object_unref (fc);
 		return;
 	}
 
@@ -3045,27 +3043,25 @@ file_save_dialog_response_cb (GtkWidget *fc,
 	ev_job_scheduler_push_job (priv->save_job, EV_JOB_PRIORITY_NONE);
 
 	g_free (uri);
-	gtk_widget_destroy (fc);
+	g_object_unref (fc);
 }
 
 static void
 ev_window_save_as (EvWindow *ev_window)
 {
 	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
-	GtkWidget *fc;
+	GtkFileChooserNative *fc;
 	gchar *base_name, *dir_name, *var_tmp_dir, *tmp_dir;
 	GFile *file, *parent;
 	const gchar *default_dir, *dest_dir, *documents_dir;
 
-	fc = gtk_file_chooser_dialog_new (
+	fc = gtk_file_chooser_native_new (
 		_("Save As…"),
 		GTK_WINDOW (ev_window), GTK_FILE_CHOOSER_ACTION_SAVE,
-		_("_Cancel"), GTK_RESPONSE_CANCEL,
-		_("_Save"), GTK_RESPONSE_OK,
-		NULL);
+		_("_Save"),
+		_("_Cancel"));
 
-	ev_document_factory_add_filters (fc, priv->document);
-	gtk_dialog_set_default_response (GTK_DIALOG (fc), GTK_RESPONSE_OK);
+	ev_document_factory_add_filters (GTK_FILE_CHOOSER (fc), priv->document);
 
 	gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (fc), FALSE);
 	gtk_file_chooser_set_do_overwrite_confirmation (GTK_FILE_CHOOSER (fc), TRUE);
@@ -3101,7 +3097,7 @@ ev_window_save_as (EvWindow *ev_window)
 			  G_CALLBACK (file_save_dialog_response_cb),
 			  ev_window);
 
-	gtk_widget_show (fc);
+	gtk_native_dialog_run (GTK_NATIVE_DIALOG (fc));
 }
 
 static void
@@ -6774,7 +6770,7 @@ create_file_from_uri_for_format (const gchar     *uri,
 }
 
 static void
-image_save_dialog_response_cb (GtkWidget *fc,
+image_save_dialog_response_cb (GtkFileChooserNative *fc,
 			       gint       response_id,
 			       EvWindow  *ev_window)
 {
@@ -6789,8 +6785,8 @@ image_save_dialog_response_cb (GtkWidget *fc,
 	GdkPixbufFormat *format;
 	GtkFileFilter   *filter;
 
-	if (response_id != GTK_RESPONSE_OK) {
-		gtk_widget_destroy (fc);
+	if (response_id != GTK_RESPONSE_ACCEPT) {
+		g_object_unref (fc);
 		return;
 	}
 
@@ -6819,7 +6815,7 @@ image_save_dialog_response_cb (GtkWidget *fc,
 					 "%s",
 					 _("Couldn’t find appropriate format to save image"));
 		g_free (uri);
-		gtk_widget_destroy (fc);
+		g_object_unref (fc);
 
 		return;
 	}
@@ -6853,7 +6849,7 @@ image_save_dialog_response_cb (GtkWidget *fc,
 		g_error_free (error);
 		g_free (filename);
 		g_object_unref (target_file);
-		gtk_widget_destroy (fc);
+		g_object_unref (fc);
 
 		return;
 	}
@@ -6870,7 +6866,7 @@ image_save_dialog_response_cb (GtkWidget *fc,
 	
 	g_free (filename);
 	g_object_unref (target_file);
-	gtk_widget_destroy (fc);
+	g_object_unref (fc);
 }
 
 static void
@@ -6878,22 +6874,19 @@ ev_window_popup_cmd_save_image_as (GSimpleAction *action,
 				   GVariant      *parameter,
 				   gpointer       user_data)
 {
-	GtkWidget *fc;
+	GtkFileChooserNative *fc;
 	EvWindow  *window = user_data;
 	EvWindowPrivate *priv = GET_PRIVATE (window);
 
 	if (!priv->image)
 		return;
 
-	fc = gtk_file_chooser_dialog_new (_("Save Image"),
+	fc = gtk_file_chooser_native_new (_("Save Image"),
 					  GTK_WINDOW (window),
 					  GTK_FILE_CHOOSER_ACTION_SAVE,
-					  _("_Cancel"),
-					  GTK_RESPONSE_CANCEL,
-					  _("_Save"), GTK_RESPONSE_OK,
-					  NULL);
+					  _("_Save"),
+					  _("_Cancel"));
 
-	gtk_dialog_set_default_response (GTK_DIALOG (fc), GTK_RESPONSE_OK);
 
 	gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (fc), FALSE);
 	gtk_file_chooser_set_do_overwrite_confirmation (GTK_FILE_CHOOSER (fc), TRUE);
@@ -6907,7 +6900,7 @@ ev_window_popup_cmd_save_image_as (GSimpleAction *action,
 			  G_CALLBACK (image_save_dialog_response_cb),
 			  window);
 
-	gtk_widget_show (fc);
+	gtk_native_dialog_run (GTK_NATIVE_DIALOG (fc));
 }
 
 static void
@@ -7051,7 +7044,7 @@ ev_window_popup_cmd_open_attachment (GSimpleAction *action,
 }
 
 static void
-attachment_save_dialog_response_cb (GtkWidget *fc,
+attachment_save_dialog_response_cb (GtkFileChooser *fc,
 				    gint       response_id,
 				    EvWindow  *ev_window)
 {
@@ -7063,8 +7056,8 @@ attachment_save_dialog_response_cb (GtkWidget *fc,
 	gboolean              is_dir;
 	gboolean              is_native;
 
-	if (response_id != GTK_RESPONSE_OK) {
-		gtk_widget_destroy (fc);
+	if (response_id != GTK_RESPONSE_ACCEPT) {
+		g_object_unref (fc);
 		return;
 	}
 
@@ -7092,7 +7085,7 @@ attachment_save_dialog_response_cb (GtkWidget *fc,
 	g_free (uri);
 	g_object_unref (target_file);
 
-	gtk_widget_destroy (fc);
+	g_object_unref (fc);
 }
 
 static void
@@ -7100,7 +7093,7 @@ ev_window_popup_cmd_save_attachment_as (GSimpleAction *action,
 					GVariant      *parameter,
 					gpointer       user_data)
 {
-	GtkWidget    *fc;
+	GtkFileChooserNative    *fc;
 	EvAttachment *attachment = NULL;
 	EvWindow     *window = user_data;
 	EvWindowPrivate *priv = GET_PRIVATE (window);
@@ -7111,16 +7104,13 @@ ev_window_popup_cmd_save_attachment_as (GSimpleAction *action,
 	if (g_list_length (priv->attach_list) == 1)
 		attachment = (EvAttachment *) priv->attach_list->data;
 	
-	fc = gtk_file_chooser_dialog_new (
+	fc = gtk_file_chooser_native_new (
 		_("Save Attachment"),
 		GTK_WINDOW (window),
 		attachment ? GTK_FILE_CHOOSER_ACTION_SAVE : GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
-		_("_Cancel"),
-		GTK_RESPONSE_CANCEL,
-		_("_Save"), GTK_RESPONSE_OK,
-		NULL);
+		_("_Save"),
+		_("_Cancel"));
 
-	gtk_dialog_set_default_response (GTK_DIALOG (fc), GTK_RESPONSE_OK);
 
 	gtk_file_chooser_set_do_overwrite_confirmation (GTK_FILE_CHOOSER (fc), TRUE);
 	gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (fc), FALSE);
@@ -7136,7 +7126,7 @@ ev_window_popup_cmd_save_attachment_as (GSimpleAction *action,
 			  G_CALLBACK (attachment_save_dialog_response_cb),
 			  window);
 
-	gtk_widget_show (fc);
+	gtk_native_dialog_run (GTK_NATIVE_DIALOG (fc));
 }
 
 static void
