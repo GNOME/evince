@@ -334,5 +334,8 @@ void _ev_view_set_focused_element (EvView *view,
 void _ev_view_focus_form_field    (EvView      *view,
 				   EvFormField *field);
 
+void _ev_view_ensure_rectangle_is_visible (EvView       *view,
+					   GdkRectangle *rect);
+
 #endif  /* __EV_VIEW_PRIVATE_H__ */
 

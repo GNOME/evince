@@ -120,8 +120,6 @@ typedef struct {
 
 /*** Scrolling ***/
 static void       view_update_range_and_current_page         (EvView             *view);
-static void       ensure_rectangle_is_visible                (EvView             *view,
-							      GdkRectangle       *rect);
 
 /*** Geometry computations ***/
 static void       compute_border                             (EvView             *view,
@@ -1132,8 +1130,8 @@ ev_view_scroll_internal (EvView        *view,
 
 #define MARGIN 5
 
-static void
-ensure_rectangle_is_visible (EvView *view, GdkRectangle *rect)
+void
+_ev_view_ensure_rectangle_is_visible (EvView *view, GdkRectangle *rect)
 {
 	GtkWidget *widget = GTK_WIDGET (view);
 	GtkAdjustment *adjustment;
@@ -2277,7 +2275,7 @@ _ev_view_set_focused_element (EvView *view,
 		ev_document_model_set_page (view->model, page);
 		view_rect.x += view->scroll_x;
 		view_rect.y += view->scroll_y;
-		ensure_rectangle_is_visible (view, &view_rect);
+		_ev_view_ensure_rectangle_is_visible (view, &view_rect);
 	}
 
 	if (region) {
@@ -6607,7 +6605,7 @@ ev_view_move_cursor (EvView         *view,
 	rect.y += view->scroll_y;
 
 	ev_document_model_set_page (view->model, view->cursor_page);
-	ensure_rectangle_is_visible (view, &rect);
+	_ev_view_ensure_rectangle_is_visible (view, &rect);
 
 	g_signal_emit (view, signals[SIGNAL_CURSOR_MOVED], 0, view->cursor_page, view->cursor_offset);
 
@@ -9042,7 +9040,7 @@ jump_to_find_result (EvView *view)
 
 		rect = ev_view_find_get_result (view, page, view->find_result);
 		_ev_view_transform_doc_rect_to_view_rect (view, page, rect, &view_rect);
-		ensure_rectangle_is_visible (view, &view_rect);
+		_ev_view_ensure_rectangle_is_visible (view, &view_rect);
 		if (view->caret_enabled && view->rotation == 0)
 			position_caret_cursor_at_doc_point (view, page, rect->x1, rect->y1);
 
@@ -9276,7 +9274,7 @@ ev_view_highlight_forward_search (EvView       *view,
 	ev_document_model_set_page (view->model, page);
 
 	_ev_view_transform_doc_rect_to_view_rect (view, page, &mapping->area, &view_rect);
-	ensure_rectangle_is_visible (view, &view_rect);
+	_ev_view_ensure_rectangle_is_visible (view, &view_rect);
 	gtk_widget_queue_draw (GTK_WIDGET (view));
 }
 
