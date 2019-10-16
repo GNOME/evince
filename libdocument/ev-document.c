@@ -811,6 +811,30 @@ ev_document_get_page_size (EvDocument *document,
 	}
 }
 
+/**
+ * ev_document_get_page_crop_box:
+ * @document: a #EvDocument
+ * @page: a #EvPage
+ * @rect: (out) : return location for the #EvRectangle representing the crop box,
+ *                will be filled with zeros if @page has no crop box.
+ */
+void
+ev_document_get_page_crop_box (EvDocument  *document,
+			       EvPage      *page,
+			       EvRectangle *rect)
+{
+	EvDocumentClass *klass = EV_DOCUMENT_GET_CLASS (document);
+
+	if (klass->get_page_crop_box)
+		return klass->get_page_crop_box (document, page, rect);
+
+	// set to zero when there's no implementation
+	rect->x1 = 0;
+	rect->y1 = 0;
+	rect->x2 = 0;
+	rect->y2 = 0;
+}
+
 static gchar *
 _ev_document_get_page_label (EvDocument *document,
 			     EvPage     *page)

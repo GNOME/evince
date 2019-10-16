@@ -379,6 +379,29 @@ pdf_document_get_page_size (EvDocument *document,
 	poppler_page_get_size (POPPLER_PAGE (page->backend_page), width, height);
 }
 
+static void
+get_page_crop_box (EvPage      *page,
+		   EvRectangle *rect)
+{
+	PopplerPage *poppler_page;
+	PopplerRectangle poppler_rect;
+
+	poppler_page = POPPLER_PAGE (page->backend_page);
+	poppler_page_get_crop_box (poppler_page, &poppler_rect);
+	rect->x1 = poppler_rect.x1;
+	rect->x2 = poppler_rect.x2;
+	rect->y1 = poppler_rect.y1;
+	rect->y2 = poppler_rect.y2;
+}
+
+static void
+pdf_document_get_page_crop_box (EvDocument  *document,
+				EvPage      *page,
+				EvRectangle *rect)
+{
+	get_page_crop_box (page, rect);
+}
+
 static char *
 pdf_document_get_page_label (EvDocument *document,
 			     EvPage     *page)
@@ -1231,6 +1254,7 @@ pdf_document_class_init (PdfDocumentClass *klass)
 	ev_document_class->get_n_pages = pdf_document_get_n_pages;
 	ev_document_class->get_page = pdf_document_get_page;
 	ev_document_class->get_page_size = pdf_document_get_page_size;
+	ev_document_class->get_page_crop_box = pdf_document_get_page_crop_box;
 	ev_document_class->get_page_label = pdf_document_get_page_label;
 	ev_document_class->render = pdf_document_render;
 	ev_document_class->get_thumbnail = pdf_document_get_thumbnail;
@@ -2631,26 +2655,6 @@ pdf_document_page_transition_iface_init (EvDocumentTransitionInterface *iface)
 }
 
 /* Forms */
-#if 0
-static void
-pdf_document_get_crop_box (EvDocument  *document,
-			   int          page,
-			   EvRectangle *rect)
-{
-	PdfDocument *pdf_document;
-	PopplerPage *poppler_page;
-	PopplerRectangle poppler_rect;
-
-	pdf_document = PDF_DOCUMENT (document);
-	poppler_page = poppler_document_get_page (pdf_document->document, page);
-	poppler_page_get_crop_box (poppler_page, &poppler_rect);
-	rect->x1 = poppler_rect.x1;
-	rect->x2 = poppler_rect.x2;
-	rect->y1 = poppler_rect.y1;
-	rect->y2 = poppler_rect.y2;
-}
-#endif
-
 static EvFormField *
 ev_form_field_from_poppler_field (PdfDocument      *pdf_document,
 				  PopplerFormField *poppler_field)
@@ -3350,7 +3354,15 @@ annot_area_changed_cb (EvAnnotation *annot,
 		       GParamSpec   *spec,
 		       EvMapping    *mapping)
 {
-	ev_annotation_get_area (annot, &mapping->area);
+	EvRectangle crop_box, area;
+
+	get_page_crop_box (ev_annotation_get_page (annot), &crop_box);
+	ev_annotation_get_area (annot, &area);
+
+	mapping->area.x1 = area.x1 - crop_box.x1;
+	mapping->area.x2 = area.x2 - crop_box.x1;
+	mapping->area.y1 = area.y1 + crop_box.y1;
+	mapping->area.y2 = area.y2 + crop_box.y1;
 }
 
 static EvMappingList *
@@ -3571,7 +3583,7 @@ pdf_document_annotations_add_annotation (EvDocumentAnnotations *document_annotat
 	gdouble          height;
 	PopplerColor     poppler_color;
 	GdkColor         color;
-	EvRectangle      rect;
+	EvRectangle      rect, cropbox_rect, cropped_rect;
 
 	pdf_document = PDF_DOCUMENT (document_annotations);
 	page = ev_annotation_get_page (annot);
@@ -3659,7 +3671,14 @@ pdf_document_annotations_add_annotation (EvDocumentAnnotations *document_annotat
 	poppler_page_add_annot (poppler_page, poppler_annot);
 
 	annot_mapping = g_new (EvMapping, 1);
-	annot_mapping->area = rect;
+
+	get_page_crop_box (page, &cropbox_rect);
+	cropped_rect.x1 = rect.x1 - cropbox_rect.x1;
+	cropped_rect.x2 = rect.x2 - cropbox_rect.x1;
+	cropped_rect.y1 = rect.y1 + cropbox_rect.y1;
+	cropped_rect.y2 = rect.y2 + cropbox_rect.y1;
+
+	annot_mapping->area = cropped_rect;
 	annot_mapping->data = annot;
 	g_signal_connect (annot, "notify::area",
 			  G_CALLBACK (annot_area_changed_cb),
