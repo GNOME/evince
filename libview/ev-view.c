@@ -9789,7 +9789,7 @@ ev_view_set_cursor (EvView *view, EvViewCursor new_cursor)
 	widget = gtk_widget_get_toplevel (GTK_WIDGET (view));
 	cursor = ev_view_cursor_new (gtk_widget_get_display (widget), new_cursor);
 	gdk_window_set_cursor (window, cursor);
-	gdk_flush ();
+	gdk_display_flush (gtk_widget_get_display (widget));
 	if (cursor)
 		g_object_unref (cursor);
 }
