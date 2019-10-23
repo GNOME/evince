@@ -108,6 +108,9 @@ struct _EvDocumentClass
 						     EvPage              *page,
 						     double              *width,
 						     double              *height);
+        void              (* get_page_crop_box)     (EvDocument          *document,
+						     EvPage              *page,
+						     EvRectangle         *rect);
         gchar           * (* get_page_label)        (EvDocument          *document,
 						     EvPage              *page);
         cairo_surface_t * (* render)                (EvDocument          *document,
@@ -182,6 +185,9 @@ void             ev_document_get_page_size        (EvDocument      *document,
 						   gint             page_index,
 						   double          *width,
 						   double          *height);
+void             ev_document_get_page_crop_box    (EvDocument  *document,
+						   EvPage      *page,
+						   EvRectangle *rect);
 gchar           *ev_document_get_page_label       (EvDocument      *document,
 						   gint             page_index);
 cairo_surface_t *ev_document_render               (EvDocument      *document,

@@ -3421,7 +3421,7 @@ ev_view_create_annotation_real (EvView *view,
 				EvPoint end)
 {
 	EvAnnotation   *annot;
-	EvRectangle     doc_rect, popup_rect;
+	EvRectangle     doc_rect, popup_rect, cropbox_rect;
 	EvPage         *page;
 	GdkColor        color = { 0, 65535, 65535, 0 };
 	GdkRectangle    view_rect;
@@ -3429,19 +3429,21 @@ ev_view_create_annotation_real (EvView *view,
 
 	ev_document_doc_mutex_lock ();
 	page = ev_document_get_page (view->document, annot_page);
+	ev_document_get_page_crop_box (view->document, page, &cropbox_rect);
+
         switch (view->adding_annot_info.type) {
         case EV_ANNOTATION_TYPE_TEXT:
-                doc_rect.x1 = end.x;
-                doc_rect.y1 = end.y;
+                doc_rect.x1 = end.x + cropbox_rect.x1;
+                doc_rect.y1 = end.y - cropbox_rect.y1;
                 doc_rect.x2 = doc_rect.x1 + ANNOTATION_ICON_SIZE;
                 doc_rect.y2 = doc_rect.y1 + ANNOTATION_ICON_SIZE;
                 annot = ev_annotation_text_new (page);
                 break;
 	case EV_ANNOTATION_TYPE_TEXT_MARKUP:
-		doc_rect.x1 = start.x;
-		doc_rect.y1 = start.y;
-		doc_rect.x2 = end.x;
-		doc_rect.y2 = end.y;
+		doc_rect.x1 = start.x + cropbox_rect.x1;
+		doc_rect.y1 = start.y - cropbox_rect.y1;
+		doc_rect.x2 = end.x + cropbox_rect.x1;
+		doc_rect.y2 = end.y - cropbox_rect.y1;
 		annot = ev_annotation_text_markup_highlight_new (page);
 		break;
 	case EV_ANNOTATION_TYPE_ATTACHMENT:
@@ -3480,6 +3482,10 @@ ev_view_create_annotation_real (EvView *view,
 	if (!ev_page_cache_get_annot_mapping (view->page_cache, annot_page))
 		ev_page_cache_mark_dirty (view->page_cache, annot_page, EV_PAGE_DATA_INCLUDE_ANNOTS);
 
+	doc_rect.x1 -= cropbox_rect.x1;
+	doc_rect.y1 += cropbox_rect.y1;
+	doc_rect.x2 -= cropbox_rect.x1;
+	doc_rect.y2 += cropbox_rect.y1;
 	_ev_view_transform_doc_rect_to_view_rect (view, annot_page, &doc_rect, &view_rect);
 	view_rect.x -= view->scroll_x;
 	view_rect.y -= view->scroll_y;
@@ -5606,11 +5612,13 @@ ev_view_motion_notify_event (GtkWidget      *widget,
 		if (view->adding_annot_info.adding_annot) {
 			EvRectangle  rect;
 			EvRectangle  current_area;
+			EvRectangle  cropbox_rect;
 			EvPoint      start;
 			EvPoint      end;
 			GdkRectangle page_area;
 			GtkBorder    border;
 			guint        annot_page;
+			EvPage      *page;
 
 			if (!view->adding_annot_info.annot)
 				return TRUE;
@@ -5625,19 +5633,21 @@ ev_view_motion_notify_event (GtkWidget      *widget,
 								    &start.x, &start.y);
 			_ev_view_transform_view_point_to_doc_point (view, &view->adding_annot_info.stop, &page_area, &border,
 								    &end.x, &end.y);
+			page = ev_document_get_page (view->document, annot_page);
+			ev_document_get_page_crop_box (view->document, page, &cropbox_rect);
 
 			switch (view->adding_annot_info.type) {
 			case EV_ANNOTATION_TYPE_TEXT:
-				rect.x1 = end.x;
-				rect.y1 = end.y;
+				rect.x1 = end.x + cropbox_rect.x1;
+				rect.y1 = end.y - cropbox_rect.y1;
 				rect.x2 = rect.x1 + current_area.x2 - current_area.x1;
 				rect.y2 = rect.y1 + current_area.y2 - current_area.y1;
 				break;
 			case EV_ANNOTATION_TYPE_TEXT_MARKUP:
-				rect.x1 = start.x;
-				rect.y1 = start.y;
-				rect.x2 = end.x;
-				rect.y2 = end.y;
+				rect.x1 = start.x + cropbox_rect.x1;
+				rect.y1 = start.y - cropbox_rect.y1;
+				rect.x2 = end.x + cropbox_rect.x1;
+				rect.y2 = end.y - cropbox_rect.y1;
 				break;
 			default:
 				g_assert_not_reached ();
