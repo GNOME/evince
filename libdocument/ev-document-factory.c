@@ -1,6 +1,6 @@
-/* -*- Mode: C; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8; c-indent-level: 8 -*- */
 /*
- *  Copyright (C) 2005, Red Hat, Inc. 
+ *  Copyright (C) 2005, Red Hat, Inc.
+ *  Copyright © 2018 Christian Persch
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -533,6 +533,66 @@ ev_document_factory_get_document_for_stream (GInputStream *stream,
                 return NULL;
 
         if (!ev_document_load_stream (document, stream, flags, cancellable, error)) {
+                g_object_unref (document);
+                return NULL;
+        }
+
+        return document;
+}
+
+/**
+ * ev_document_factory_get_document_for_fd:
+ * @stream: a file descriptor
+ * @mime_type: the mime type
+ * @flags: flags from #EvDocumentLoadFlags
+ * @cancellable: (allow-none): a #GCancellable, or %NULL
+ * @error: (allow-none): a #GError location to store an error, or %NULL
+ *
+ * Synchronously creates a #EvDocument for the document from @fd using the backend
+ * for loading documents of type @mime_type; or, if the backend does not support
+ * loading from file descriptors, or an error occurred on opening the document,
+ * returns %NULL and fills in @error.
+ * If the document is encrypted, it is returned but also @error is set to
+ * %EV_DOCUMENT_ERROR_ENCRYPTED.
+ *
+ * If the mime type cannot be inferred from the file descriptor, and @mime_type is %NULL,
+ * an error is returned.
+ *
+ * Note that this function takes ownership of @fd; you must not ever
+ * operate on it again. It will be closed automatically if the document
+ * is destroyed, or if this function returns %NULL.
+ *
+ * Returns: (transfer full): a new #EvDocument, or %NULL
+ *
+ * Since: 3.30
+ */
+EvDocument*
+ev_document_factory_get_document_for_fd (int fd,
+                                         const char *mime_type,
+                                         EvDocumentLoadFlags flags,
+                                         GCancellable *cancellable,
+                                         GError **error)
+{
+        EvDocument *document;
+
+        g_return_val_if_fail (fd != -1, NULL);
+        g_return_val_if_fail (error == NULL || *error == NULL, NULL);
+
+        if (mime_type == NULL) {
+                g_set_error_literal (error, G_IO_ERROR, G_IO_ERROR_NOT_SUPPORTED,
+                                     "Cannot query mime type from file descriptor");
+                close (fd);
+                return NULL;
+        }
+
+        document = ev_document_factory_new_document_for_mime_type (mime_type, error);
+        if (document == NULL) {
+                close (fd);
+                return NULL;
+        }
+
+        if (!ev_document_load_fd (document, fd, flags, cancellable, error)) {
+                /* fd is now consumed */
                 g_object_unref (document);
                 return NULL;
         }

@@ -1,7 +1,7 @@
-/* -*- Mode: C; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8; c-indent-level: 8 -*- */
 /*
  *  Copyright (C) 2009 Carlos Garcia Campos
  *  Copyright (C) 2004 Marco Pesenti Gritti
+ *  Copyright © 2018 Christian Persch
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -23,6 +23,9 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <fcntl.h>
+#include <sys/stat.h>
+#include <errno.h>
 
 #include "ev-document.h"
 #include "ev-document-misc.h"
@@ -564,13 +567,99 @@ ev_document_load_gfile (EvDocument         *document,
 }
 
 /**
+ * ev_document_load_fd:
+ * @document: a #EvDocument
+ * @fd: a file descriptor
+ * @flags: flags from #EvDocumentLoadFlags
+ * @cancellable: (allow-none): a #GCancellable, or %NULL
+ * @error: (allow-none): a #GError location to store an error, or %NULL
+ *
+ * Synchronously loads the document from @fd, which must refer to
+ * a regular file.
+ *
+ * Note that this function takes ownership of @fd; you must not ever
+ * operate on it again. It will be closed automatically if the document
+ * is destroyed, or if this function returns %NULL.
+ *
+ * See ev_document_load() for more information.
+ *
+ * Returns: %TRUE if loading succeeded, or %FALSE on error with @error filled in
+ *
+ * Since: 3.30
+ */
+gboolean
+ev_document_load_fd (EvDocument         *document,
+                     int                 fd,
+                     EvDocumentLoadFlags flags,
+                     GCancellable       *cancellable,
+                     GError            **error)
+{
+        EvDocumentClass *klass;
+	struct stat statbuf;
+	int fd_flags;
+
+        g_return_val_if_fail (EV_IS_DOCUMENT (document), FALSE);
+        g_return_val_if_fail (fd != -1, FALSE);
+        g_return_val_if_fail (cancellable == NULL || G_IS_CANCELLABLE (cancellable), FALSE);
+        g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
+
+        klass = EV_DOCUMENT_GET_CLASS (document);
+        if (!klass->load_fd) {
+                g_set_error_literal (error, G_IO_ERROR, G_IO_ERROR_NOT_SUPPORTED,
+                                     "Backend does not support loading from file descriptor");
+                close (fd);
+                return FALSE;
+        }
+
+	if (fstat(fd, &statbuf) == -1 ||
+	    (fd_flags = fcntl (fd, F_GETFL, &flags)) == -1) {
+	        int errsv = errno;
+		g_set_error_literal(error, G_FILE_ERROR,
+				    g_file_error_from_errno(errsv),
+				    g_strerror(errsv));
+                close (fd);
+		return FALSE;
+	}
+
+	if (!S_ISREG(statbuf.st_mode)) {
+	        g_set_error_literal(error, G_FILE_ERROR, G_FILE_ERROR_BADF,
+				    "Not a regular file.");
+                close (fd);
+		return FALSE;
+	}
+
+	switch (fd_flags & O_ACCMODE) {
+	case O_RDONLY:
+	case O_RDWR:
+	        break;
+	case O_WRONLY:
+	default:
+	        g_set_error_literal(error, G_FILE_ERROR, G_FILE_ERROR_BADF,
+				    "Not a readable file descriptor.");
+                close (fd);
+		return FALSE;
+	}
+
+        if (!klass->load_fd (document, fd, flags, cancellable, error))
+                return FALSE;
+
+	document->priv->info = _ev_document_get_info (document);
+	document->priv->n_pages = _ev_document_get_n_pages (document);
+
+        if (!(flags & EV_DOCUMENT_LOAD_FLAG_NO_CACHE))
+                ev_document_setup_cache (document);
+
+        return TRUE;
+}
+
+/**
  * ev_document_save:
  * @document: a #EvDocument
  * @uri: the target URI
  * @error: a #GError location to store an error, or %NULL
  *
  * Saves @document to @uri.
- * 
+ *
  * Returns: %TRUE on success, or %FALSE on error with @error filled in
  */
 gboolean
