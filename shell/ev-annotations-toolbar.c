@@ -98,8 +98,10 @@ ev_annotations_toolbar_create_toggle_button (EvAnnotationsToolbar *toolbar,
 
         gtk_widget_set_tooltip_text (button, tooltip);
 
-        if (label)
+        if (label) {
                 gtk_tool_button_set_label (GTK_TOOL_BUTTON (button), label);
+                atk_object_set_name (gtk_widget_get_accessible (button), label);
+        }
 
         if (icon_name)
                 gtk_tool_button_set_icon_name (GTK_TOOL_BUTTON (button), icon_name);
