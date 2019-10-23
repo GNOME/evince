@@ -2,6 +2,7 @@
 /*
  *  Copyright (C) 2009 Carlos Garcia Campos
  *  Copyright (C) 2000-2003 Marco Pesenti Gritti
+ *  Copyright (C) 2016 Jakub Alba <jakubalba@gmail.com>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -115,6 +116,9 @@ struct _EvDocumentClass
 	GdkPixbuf       * (* get_thumbnail)         (EvDocument          *document,
 						     EvRenderContext     *rc);
         EvDocumentInfo  * (* get_info)              (EvDocument          *document);
+        guint             (* get_edit_info_mask)    (EvDocument          *document);
+        void              (* set_info)              (EvDocument          *document,
+						     EvDocumentInfo      *info);
         gboolean          (* get_backend_info)      (EvDocument          *document,
 						     EvDocumentBackendInfo *info);
         gboolean	  (* support_synctex)       (EvDocument          *document);
@@ -150,6 +154,10 @@ void             ev_document_fc_mutex_unlock      (void);
 gboolean         ev_document_fc_mutex_trylock     (void);
 
 EvDocumentInfo  *ev_document_get_info             (EvDocument      *document);
+guint            ev_document_get_edit_info_mask   (EvDocument      *document);
+void             ev_document_set_info             (EvDocument      *document,
+						   EvDocumentInfo  *info);
+gboolean         ev_document_can_set_info         (EvDocument      *document);
 gboolean         ev_document_get_backend_info     (EvDocument      *document,
 						   EvDocumentBackendInfo *info);
 gboolean         ev_document_get_modified         (EvDocument      *document);
