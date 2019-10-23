@@ -48,7 +48,7 @@ EvDocument* ev_document_factory_get_document_for_stream (GInputStream *stream,
                                                          GCancellable *cancellable,
                                                          GError **error);
 
-void 	    ev_document_factory_add_filters  (GtkWidget *chooser, EvDocument *document);
+void 	    ev_document_factory_add_filters  (GtkFileChooser *chooser, EvDocument *document);
 
 G_END_DECLS
 
