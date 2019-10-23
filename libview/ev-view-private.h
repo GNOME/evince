@@ -118,6 +118,7 @@ typedef struct _EvHeightToPageCache {
 typedef struct {
 	GdkPoint         start;
 	GdkPoint         stop;
+        GdkRGBA          rgba;
 	gboolean         adding_annot;
 	EvAnnotationType type;
 	EvAnnotation    *annot;
