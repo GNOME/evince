@@ -361,9 +361,22 @@ static void	ev_window_popup_cmd_open_attachment     (GSimpleAction    *action,
 static void	ev_window_popup_cmd_save_attachment_as  (GSimpleAction    *action,
 							 GVariant         *parameter,
 							 gpointer          user_data);
-static void	view_handle_link_cb 			(EvView           *view, 
+static void	view_handle_link_cb 			(EvView           *view,
+							 gint              old_page,
 							 EvLink           *link, 
 							 EvWindow         *window);
+static void	bookmark_activated_cb 		        (EvSidebarBookmarks *sidebar_bookmarks,
+							 gint              old_page,
+							 gint              page,
+							 EvWindow         *window);
+static void     scroll_history_cb                       (EvView           *view,
+							 GtkScrollType     scroll,
+							 gboolean          horizontal,
+							 EvWindow         *window);
+static void     scroll_child_history_cb                 (GtkScrolledWindow *scrolled_window,
+							 GtkScrollType      scroll,
+							 gboolean           horizontal,
+							 EvWindow          *window);
 static void     activate_link_cb                        (GObject          *object,
 							 EvLink           *link,
 							 EvWindow         *window);
@@ -873,6 +886,7 @@ find_link_cb (GtkTreeModel  *tree_model,
 	      LinkTitleData *data)
 {
 	EvLink *link;
+	EvLinkAction *a, *b;
 	gboolean retval = FALSE;
 
 	gtk_tree_model_get (tree_model, iter,
@@ -881,7 +895,9 @@ find_link_cb (GtkTreeModel  *tree_model,
 	if (!link)
 		return retval;
 
-	if (ev_link_action_equal (ev_link_get_action (data->link), ev_link_get_action (link))) {
+	a = ev_link_get_action (data->link);
+	b = ev_link_get_action (link);
+	if (a && b && ev_link_action_equal (a, b)) {
 		data->link_title = ev_link_get_title (link);
 		retval = TRUE;
 	}
@@ -923,7 +939,7 @@ ev_window_find_title_for_link (EvWindow *window,
 }
 
 static void
-view_handle_link_cb (EvView *view, EvLink *link, EvWindow *window)
+view_handle_link_cb (EvView *view, gint old_page, EvLink *link, EvWindow *window)
 {
 	EvWindowPrivate *priv = GET_PRIVATE (window);
 	EvLink *new_link = NULL;
@@ -953,9 +969,84 @@ view_handle_link_cb (EvView *view, EvLink *link, EvWindow *window)
 			g_free (title);
 		}
 	}
+	ev_history_add_page (priv->history, old_page);
 	ev_history_add_link (priv->history, new_link ? new_link : link);
 	if (new_link)
 		g_object_unref (new_link);
+}
+
+static void
+bookmark_activated_cb (EvSidebarBookmarks *sidebar_bookmarks,
+		       gint                old_page,
+		       gint                page,
+		       EvWindow           *window)
+{
+	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	ev_history_add_page (priv->history, old_page);
+	ev_history_add_page (priv->history, page);
+}
+
+static void
+scroll_history_cb (EvView        *view,
+		   GtkScrollType  scroll,
+		   gboolean       horizontal,
+		   EvWindow      *window)
+{
+	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	if (!priv->document)
+		return;
+
+	gint old_page = -1;
+	gint new_page = -1;
+	switch (scroll) {
+		case GTK_SCROLL_START:
+			old_page = ev_document_model_get_page (priv->model);
+			new_page = 0;
+			break;
+		case GTK_SCROLL_END:
+			old_page = ev_document_model_get_page (priv->model);
+			new_page = ev_document_get_n_pages (priv->document) - 1;
+			break;
+		default:
+			break;
+	}
+	if (old_page >= 0 && new_page >= 0) {
+		ev_history_add_page (priv->history, old_page);
+		ev_history_add_page (priv->history, new_page);
+	}
+}
+
+static void
+scroll_child_history_cb (GtkScrolledWindow *scrolled_window,
+			 GtkScrollType      scroll,
+			 gboolean           horizontal,
+			 EvWindow          *window)
+{
+	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	if (!priv->document)
+		return;
+
+	if (ev_document_model_get_continuous (priv->model) && !horizontal) {
+		gint old_page = -1;
+		gint new_page = -1;
+		switch (scroll) {
+		case GTK_SCROLL_START:
+			old_page = ev_document_model_get_page (priv->model);
+			new_page = 0;
+			break;
+		case GTK_SCROLL_END:
+			old_page = ev_document_model_get_page (priv->model);
+			new_page = ev_document_get_n_pages (priv->document) - 1;
+			break;
+		default:
+			break;
+		}
+		if (old_page >= 0 && new_page >= 0) {
+			ev_history_add_page (priv->history, old_page);
+			ev_history_add_page (priv->history, new_page);
+
+		}
+	}
 }
 
 static void
@@ -4960,6 +5051,10 @@ ev_window_cmd_go_back_history (GSimpleAction *action,
 	EvWindow *ev_window = user_data;
 	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 
+	gint old_page = ev_document_model_get_page (priv->model);
+	if (old_page >= 0) {
+		ev_history_add_page (priv->history, old_page);
+	}
 	ev_history_go_back (priv->history);
 }
 
@@ -5004,7 +5099,13 @@ ev_window_cmd_go_first_page (GSimpleAction *action,
 	EvWindow *window = user_data;
 	EvWindowPrivate *priv = GET_PRIVATE (window);
 
+	gint old_page = ev_document_model_get_page (priv->model);
+	gint new_page = 0;
 	ev_document_model_set_page (priv->model, 0);
+	if (old_page >= 0) {
+		ev_history_add_page (priv->history, old_page);
+		ev_history_add_page (priv->history, new_page);
+	}
 }
 
 static void
@@ -5015,8 +5116,16 @@ ev_window_cmd_go_last_page (GSimpleAction *action,
 	EvWindow *window = user_data;
 	EvWindowPrivate *priv = GET_PRIVATE (window);
 
+	gint old_page = ev_document_model_get_page (priv->model);
+	gint new_page = ev_document_get_n_pages (priv->document) - 1;
+
 	ev_document_model_set_page (priv->model,
 				    ev_document_get_n_pages (priv->document) - 1);
+	if (old_page >= 0 && new_page >= 0) {
+		ev_history_add_page (priv->history, old_page);
+		ev_history_add_page (priv->history, new_page);
+	}
+
 }
 
 static void
@@ -5129,6 +5238,10 @@ ev_window_activate_goto_bookmark_action (GSimpleAction *action,
 {
 	EvWindow *window = user_data;
 	EvWindowPrivate *priv = GET_PRIVATE (window);
+
+	gint old_page = ev_document_model_get_page (priv->model);
+	ev_history_add_page (priv->history, old_page);
+	ev_history_add_page (priv->history, g_variant_get_uint32 (parameter));
 
 	ev_document_model_set_page (priv->model, g_variant_get_uint32 (parameter));
 }
@@ -6195,9 +6308,15 @@ ev_window_button_press_event (GtkWidget      *widget,
 	EvWindowPrivate *priv = GET_PRIVATE (window);
 
         switch (event->button) {
-        case MOUSE_BACK_BUTTON:
+
+        case MOUSE_BACK_BUTTON: {
+		gint old_page = ev_document_model_get_page (priv->model);
+		if (old_page >= 0) {
+			ev_history_add_page (priv->history, old_page);
+		}
                 ev_history_go_back (priv->history);
                 return TRUE;
+	}
         case MOUSE_FORWARD_BUTTON:
                 ev_history_go_forward (priv->history);
                 return TRUE;
@@ -7612,6 +7731,15 @@ ev_window_init (EvWindow *ev_window)
 				 ev_window, 0);
 	g_signal_connect_object (priv->view, "selection-changed",
 				 G_CALLBACK (view_selection_changed_cb),
+				 ev_window, 0);
+	g_signal_connect_object (priv->sidebar_bookmarks, "bookmark-activated",
+				 G_CALLBACK (bookmark_activated_cb),
+				 ev_window, 0);
+	g_signal_connect_object (priv->view, "scroll",
+				 G_CALLBACK (scroll_history_cb),
+				 ev_window, 0);
+	g_signal_connect_object (priv->scrolled_window, "scroll-child",
+				 G_CALLBACK (scroll_child_history_cb),
 				 ev_window, 0);
 	g_signal_connect_object (priv->view, "annot-added",
 				 G_CALLBACK (view_annot_added),

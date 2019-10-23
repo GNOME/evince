@@ -22,6 +22,7 @@
 
 #include <glib/gi18n.h>
 #include <string.h>
+#include <stdlib.h>
 
 #include "ev-history.h"
 
@@ -41,7 +42,6 @@ typedef struct {
         GList           *current;
 
         EvDocumentModel *model;
-        gulong           page_changed_handler_id;
 
         guint            frozen;
 } EvHistoryPrivate;
@@ -52,6 +52,8 @@ G_DEFINE_TYPE_WITH_PRIVATE (EvHistory, ev_history, G_TYPE_OBJECT)
 
 static void ev_history_set_model (EvHistory       *history,
                                   EvDocumentModel *model);
+
+static gint ev_history_get_current_page (EvHistory *history);
 
 static void
 clear_list (GList *list)
@@ -184,9 +186,7 @@ ev_history_activate_current_link (EvHistory *history)
         g_assert (priv->current);
 
         ev_history_freeze (history);
-        g_signal_handler_block (priv->model, priv->page_changed_handler_id);
         g_signal_emit (history, signals[ACTIVATE_LINK], 0, priv->current->data);
-        g_signal_handler_unblock (priv->model, priv->page_changed_handler_id);
         ev_history_thaw (history);
 
         g_signal_emit (history, signals[CHANGED], 0);
@@ -199,10 +199,12 @@ ev_history_can_go_back (EvHistory *history)
 
         g_return_val_if_fail (EV_IS_HISTORY (history), FALSE);
 
+        priv = GET_PRIVATE (history);
         if (ev_history_is_frozen (history))
                 return FALSE;
+        if (abs(ev_document_model_get_page (priv->model) - ev_history_get_current_page (history)) > 1)
+              return TRUE;
 
-        priv = GET_PRIVATE (history);
         return priv->current && priv->current->prev;
 }
 
@@ -260,10 +262,15 @@ static gint
 compare_link (EvLink *a,
               EvLink *b)
 {
+        EvLinkAction *aa, *bb;
+
         if (a == b)
                 return 0;
 
-        return ev_link_action_equal (ev_link_get_action (a), ev_link_get_action (b)) ? 0 : 1;
+        aa = ev_link_get_action (a);
+        bb = ev_link_get_action (b);
+
+        return (aa && bb && ev_link_action_equal (aa, bb)) ? 0 : 1;
 }
 
 /*
@@ -418,9 +425,9 @@ ev_history_get_current_page (EvHistory *history)
         return -1;
 }
 
-static void
-ev_history_add_link_for_page (EvHistory *history,
-                              gint       page)
+void
+ev_history_add_page (EvHistory *history,
+                     gint       page)
 {
         EvHistoryPrivate *priv = GET_PRIVATE (history);
         EvDocument   *document;
@@ -460,22 +467,12 @@ ev_history_add_link_for_page (EvHistory *history,
 }
 
 static void
-page_changed_cb (EvDocumentModel *model,
-                 gint             old_page,
-                 gint             new_page,
-                 EvHistory       *history)
-{
-        if (ABS (new_page - old_page) > 1)
-                ev_history_add_link_for_page (history, new_page);
-}
-
-static void
 document_changed_cb (EvDocumentModel *model,
                      GParamSpec      *pspec,
                      EvHistory       *history)
 {
         ev_history_clear (history);
-        ev_history_add_link_for_page (history, ev_document_model_get_page (model));
+        ev_history_add_page (history, ev_document_model_get_page (model));
 }
 
 static void
@@ -490,12 +487,6 @@ ev_history_set_model (EvHistory       *history,
         if (priv->model) {
                 g_object_remove_weak_pointer (G_OBJECT (priv->model),
                                               (gpointer)&priv->model);
-
-                if (priv->page_changed_handler_id) {
-                        g_signal_handler_disconnect (priv->model,
-                                                     priv->page_changed_handler_id);
-                        priv->page_changed_handler_id = 0;
-                }
         }
 
         priv->model = model;
@@ -508,10 +499,6 @@ ev_history_set_model (EvHistory       *history,
         g_signal_connect (priv->model, "notify::document",
                           G_CALLBACK (document_changed_cb),
                           history);
-        priv->page_changed_handler_id =
-                g_signal_connect (priv->model, "page-changed",
-                                  G_CALLBACK (page_changed_cb),
-                                  history);
 }
 
 EvHistory *
