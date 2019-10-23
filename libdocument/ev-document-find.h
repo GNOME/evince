@@ -42,6 +42,7 @@ G_BEGIN_DECLS
 
 typedef struct _EvDocumentFind	        EvDocumentFind;
 typedef struct _EvDocumentFindInterface EvDocumentFindInterface;
+typedef struct _EvDocumentFindMatch     EvDocumentFindMatch;
 
 typedef enum {
 	EV_FIND_DEFAULT          = 0,
@@ -49,6 +50,11 @@ typedef enum {
 	EV_FIND_WHOLE_WORDS_ONLY = 1 << 1
 } EvFindOptions;
 
+/**
+ * EvDocumentFindInterface:
+ * @find_text_offset: Searches for text in a document page. Returns a
+ *     #GPtrArray of #EvDocumentFindMatch.
+ */
 struct _EvDocumentFindInterface
 {
 	GTypeInterface base_iface;
@@ -63,6 +69,10 @@ struct _EvDocumentFindInterface
 						  const gchar    *text,
 						  EvFindOptions   options);
 	EvFindOptions (*get_supported_options)   (EvDocumentFind *document_find);
+	GPtrArray    *(* find_text_offset)       (EvDocumentFind *document_find,
+						  EvPage         *page,
+						  const gchar    *text,
+						  EvFindOptions   options);
 };
 
 GType         ev_document_find_get_type               (void) G_GNUC_CONST;
@@ -74,7 +84,22 @@ GList        *ev_document_find_find_text_with_options (EvDocumentFind *document_
 						       EvPage         *page,
 						       const gchar    *text,
 						       EvFindOptions   options);
+GPtrArray    *ev_document_find_find_text_offset       (EvDocumentFind *document_find,
+						       EvPage         *page,
+						       const gchar    *text,
+						       EvFindOptions   options);
 EvFindOptions ev_document_find_get_supported_options  (EvDocumentFind *document_find);
+
+#define EV_TYPE_DOCUMENT_FIND_MATCH (ev_document_find_match_get_type ())
+
+EvDocumentFindMatch *ev_document_find_match_new              (GList *area,
+							      gsize  start_offset,
+							      gsize  end_offset);
+GType                ev_document_find_match_get_type         (void) G_GNUC_CONST;
+void                 ev_document_find_match_free             (EvDocumentFindMatch *match);
+GList               *ev_document_find_match_get_area         (EvDocumentFindMatch *match);
+gsize                ev_document_find_match_get_start_offset (EvDocumentFindMatch *match);
+gsize                ev_document_find_match_get_end_offset   (EvDocumentFindMatch *match);
 
 G_END_DECLS
 

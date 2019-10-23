@@ -87,10 +87,6 @@ void            ev_view_find_set_result           (EvView         *view,
 void            ev_view_find_search_changed       (EvView         *view);
 void     	ev_view_find_set_highlight_search (EvView         *view,
 						   gboolean        value);
-EV_DEPRECATED_FOR(ev_view_find_started)
-void            ev_view_find_changed              (EvView         *view,
-						   GList         **results,
-						   gint            page);
 void            ev_view_find_cancel               (EvView         *view);
 
 /* Synctex */
