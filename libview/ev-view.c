@@ -1309,9 +1309,14 @@ real_ev_view_get_page_extents (EvView       *view,
 		max_width = max_width + border->left + border->right;
 		/* Get the location of the bounding box */
 		if (is_dual_page (view, &odd_left)) {
-			x = view->spacing + ((page % 2 == !odd_left) ? 0 : 1) * (max_width + view->spacing);
+			gboolean right_page;
+
+			right_page = (gtk_widget_get_direction (widget) == GTK_TEXT_DIR_LTR && page % 2 == !odd_left) ||
+			             (gtk_widget_get_direction (widget) == GTK_TEXT_DIR_RTL && page % 2 == odd_left);
+
+			x = view->spacing + (right_page ? 0 : 1) * (max_width + view->spacing);
 			x = x + MAX (0, allocation.width - (max_width * 2 + view->spacing * 3)) / 2;
-			if (page % 2 == !odd_left)
+			if (right_page)
 				x = x + (max_width - width - border->left - border->right);
 		} else {
 			x = view->spacing;
@@ -1355,7 +1360,8 @@ real_ev_view_get_page_extents (EvView       *view,
 			y = view->spacing;
 
 			/* Adjust for being the left or right page */
-			if (page % 2 == !odd_left)
+			if ((gtk_widget_get_direction (widget) == GTK_TEXT_DIR_LTR && page % 2 == !odd_left) ||
+			    (gtk_widget_get_direction (widget) == GTK_TEXT_DIR_RTL && page % 2 == odd_left))
 				x = x + max_width - width;
 			else
 				x = x + (max_width + overall_border.left + overall_border.right) + view->spacing;
@@ -8561,6 +8567,17 @@ ev_view_dual_odd_left_changed_cb (EvDocumentModel *model,
 }
 
 static void
+ev_view_direction_changed_cb (EvDocumentModel *model,
+                              GParamSpec      *pspec,
+                              EvView          *view)
+{
+	gboolean rtl = ev_document_model_get_rtl (model);
+	gtk_widget_set_direction (GTK_WIDGET (view), rtl ? GTK_TEXT_DIR_RTL : GTK_TEXT_DIR_LTR);
+	view->pending_scroll = SCROLL_TO_PAGE_POSITION;
+	gtk_widget_queue_resize (GTK_WIDGET (view));
+}
+
+static void
 ev_view_fullscreen_changed_cb (EvDocumentModel *model,
 			       GParamSpec      *pspec,
 			       EvView          *view)
@@ -8593,6 +8610,7 @@ ev_view_set_model (EvView          *view,
 	view->scale = ev_document_model_get_scale (view->model);
 	view->continuous = ev_document_model_get_continuous (view->model);
 	view->page_layout = ev_document_model_get_page_layout (view->model);
+	gtk_widget_set_direction (GTK_WIDGET(view), ev_document_model_get_rtl (view->model));
 	view->fullscreen = ev_document_model_get_fullscreen (view->model);
 	ev_view_document_changed_cb (view->model, NULL, view);
 
@@ -8625,6 +8643,9 @@ ev_view_set_model (EvView          *view,
 			  view);
 	g_signal_connect (view->model, "notify::dual-odd-left",
 			  G_CALLBACK (ev_view_dual_odd_left_changed_cb),
+			  view);
+	g_signal_connect (view->model, "notify::rtl",
+			  G_CALLBACK (ev_view_direction_changed_cb),
 			  view);
 	g_signal_connect (view->model, "notify::fullscreen",
 			  G_CALLBACK (ev_view_fullscreen_changed_cb),
