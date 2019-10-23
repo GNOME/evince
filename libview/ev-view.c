@@ -1426,7 +1426,7 @@ _ev_view_transform_view_rect_to_doc_rect (EvView       *view,
 }
 
 void
-_ev_view_transform_doc_point_to_view_point (EvView   *view,
+_ev_view_transform_doc_point_by_rotation_scale (EvView   *view,
 					    int       page,
 					    EvPoint  *doc_point,
 					    GdkPoint *view_point)
@@ -1473,8 +1473,25 @@ _ev_view_transform_doc_point_to_view_point (EvView   *view,
 
 	view_x = CLAMP ((gint)(x * view->scale + 0.5), 0, page_area.width);
 	view_y = CLAMP ((gint)(y * view->scale + 0.5), 0, page_area.height);
-	view_point->x = view_x + page_area.x + border.left;
-	view_point->y = view_y + page_area.y + border.top;
+
+	view_point->x = view_x;
+	view_point->y = view_y;
+}
+
+void
+_ev_view_transform_doc_point_to_view_point (EvView   *view,
+					    int       page,
+					    EvPoint  *doc_point,
+					    GdkPoint *view_point)
+{
+	GdkRectangle page_area;
+	GtkBorder border;
+	_ev_view_transform_doc_point_by_rotation_scale (view, page, doc_point, view_point);
+
+	ev_view_get_page_extents (view, page, &page_area, &border);
+
+	view_point->x = view_point->x + page_area.x + border.left;
+	view_point->y = view_point->y + page_area.y + border.top;
 }
 
 void
@@ -4292,6 +4309,8 @@ ev_view_scroll_event (GtkWidget *widget, GdkEventScroll *event)
 	guint state;
 	gboolean fit_width, fit_height;
 
+	_ev_view_cleanup_link_preview_popover (view);
+
 	state = event->state & gtk_accelerator_get_default_mod_mask ();
 
 	if (state == GDK_CONTROL_MASK) {
@@ -4909,6 +4928,76 @@ get_annot_area (EvView       *view,
 				       annot, area);
 }
 
+static void
+link_preview_show_thumbnail (GdkPixbuf *pixbuf, EvView *view)
+{
+	GtkWidget *popover = view->link_preview.popover;
+	gdouble    x = view->link_preview.left;
+	gdouble    y = view->link_preview.top;
+	int        pwidth = gdk_pixbuf_get_width (pixbuf);
+	int        pheight = gdk_pixbuf_get_height (pixbuf);
+	int        vwidth = gtk_widget_get_allocated_width(GTK_WIDGET(view));
+	int        vheight = gtk_widget_get_allocated_height(GTK_WIDGET(view));
+	int        width = MIN(pwidth, vwidth);
+	int        height = MIN(pheight, (int)(vheight/3.0));
+	int        left = MIN(MAX(0, (int)(x - width*0.5)), pwidth - width);
+	int        top = MIN(MAX(0, (int)(y - height*0.3)), pheight - height);
+	GdkPixbuf *thumbnail_slice;
+	GtkWidget *image_view;
+
+	thumbnail_slice = gdk_pixbuf_new_subpixbuf (pixbuf,
+						    left, top,
+						    width, height);
+	image_view = gtk_image_new_from_pixbuf (thumbnail_slice);
+
+	gtk_widget_destroy (gtk_bin_get_child (GTK_BIN (popover)));
+	gtk_container_add (GTK_CONTAINER (popover), image_view);
+	gtk_widget_show (image_view);
+
+	g_object_unref (thumbnail_slice);
+}
+
+static void
+link_preview_job_finished_cb (EvJobThumbnail *job,
+				EvView *view)
+{
+	GtkWidget *popover = view->link_preview.popover;
+	GdkPixbuf *pixbuf;
+	if (ev_job_is_failed (EV_JOB (job))) {
+		printf("job failed");
+		gtk_widget_destroy (popover);
+		view->link_preview.popover = NULL;
+		g_object_unref (job);
+		view->link_preview.job = NULL;
+		return;
+	}
+
+	if (ev_document_model_get_inverted_colors (view->model)) {
+		ev_document_misc_invert_surface (job->thumbnail_surface);
+	}
+
+	pixbuf = ev_document_misc_pixbuf_from_surface (job->thumbnail_surface);
+
+	link_preview_show_thumbnail (pixbuf, view);
+
+	g_object_unref (pixbuf);
+	g_object_unref (job);
+	view->link_preview.job = NULL;
+}
+
+void
+_ev_view_cleanup_link_preview_popover (EvView	*view) {
+	if (view->link_preview.job) {
+		ev_job_cancel (view->link_preview.job);
+		g_object_unref (view->link_preview.job);
+		view->link_preview.job = NULL;
+	}
+	if (view->link_preview.popover) {
+		gtk_widget_destroy (view->link_preview.popover);
+		view->link_preview.popover = NULL;
+	}
+}
+
 static gboolean
 ev_view_query_tooltip (GtkWidget  *widget,
 		       gint        x,
@@ -4938,18 +5027,91 @@ ev_view_query_tooltip (GtkWidget  *widget,
 	}
 
 	link = ev_view_get_link_at_location (view, x, y);
-	if (!link)
+
+	if (!link) {
+		_ev_view_cleanup_link_preview_popover (view);
+		view->link_preview.link = NULL;
 		return FALSE;
+	}
 
 	text = tip_from_link (view, link);
 	if (text && g_utf8_validate (text, -1, NULL)) {
-		GdkRectangle link_area;
+		GdkRectangle		link_area;
+		EvLinkAction		*action;
+		EvLinkDest			*dest;
+		EvLinkDestType	type;
+		GtkWidget				*popover, *spinner;
+		cairo_surface_t *page_surface = NULL;
+		guint 					link_dest_page;
 
 		get_link_area (view, x, y, link, &link_area);
 		gtk_tooltip_set_text (tooltip, text);
 		gtk_tooltip_set_tip_area (tooltip, &link_area);
 		g_free (text);
 
+		if (link == view->link_preview.link)
+			return TRUE;
+
+		/* Display thumbnail, if applicable */
+		action = ev_link_get_action (link);
+		if (!action) return TRUE;
+		dest = ev_link_action_get_dest (action);
+		if (!dest) return TRUE;
+		type = ev_link_dest_get_dest_type (dest);
+
+		if (type == EV_LINK_DEST_TYPE_NAMED) {
+			dest = ev_document_links_find_link_dest (EV_DOCUMENT_LINKS (view->document),
+				ev_link_dest_get_named_dest (dest));
+		}
+
+		_ev_view_cleanup_link_preview_popover(view);
+
+		/* Init popover */
+		view->link_preview.popover = popover = gtk_popover_new (GTK_WIDGET (view));
+		gtk_popover_set_pointing_to (GTK_POPOVER (popover), &link_area);
+		gtk_popover_set_modal (GTK_POPOVER (popover), FALSE);
+
+		spinner = gtk_spinner_new ();
+		gtk_spinner_start (GTK_SPINNER (spinner));
+		gtk_container_add (GTK_CONTAINER (popover) , spinner);
+		gtk_widget_show (spinner);
+
+		/* Start thumbnailing job async */
+		link_dest_page = ev_link_dest_get_page (dest);
+		view->link_preview.job = ev_job_thumbnail_new (view->document,
+			link_dest_page,
+			view->rotation,
+			view->scale);
+		ev_job_thumbnail_set_output_format (EV_JOB_THUMBNAIL (view->link_preview.job), EV_JOB_THUMBNAIL_SURFACE);
+
+		EvPoint link_dest_doc;
+		GdkPoint link_dest_view;
+		link_dest_doc.x = ev_link_dest_get_left (dest, NULL);
+		link_dest_doc.y = ev_link_dest_get_top (dest, NULL);
+		_ev_view_transform_doc_point_by_rotation_scale (view, link_dest_page, &link_dest_doc, &link_dest_view);
+		view->link_preview.left = link_dest_view.x;
+		view->link_preview.top = link_dest_view.y;
+		view->link_preview.link = link;
+
+		page_surface = ev_pixbuf_cache_get_surface (view->pixbuf_cache, link_dest_page);
+
+		if (page_surface) {
+			GdkPixbuf *slice = gdk_pixbuf_get_from_surface (page_surface, 0, 0, cairo_image_surface_get_width(page_surface), cairo_image_surface_get_height(page_surface));
+			link_preview_show_thumbnail (slice, view);
+			g_object_unref(slice);
+		}
+		else {
+			g_signal_connect (view->link_preview.job, "finished",
+					  G_CALLBACK (link_preview_job_finished_cb),
+					  view);
+			ev_job_scheduler_push_job (view->link_preview.job, EV_JOB_PRIORITY_LOW);
+		}
+
+		if (type == EV_LINK_DEST_TYPE_NAMED) {
+			g_object_unref (dest);
+		}
+
+		gtk_widget_show (popover);
 		return TRUE;
 	}
 	g_free (text);
@@ -5147,6 +5309,8 @@ ev_view_button_press_event (GtkWidget      *widget,
 			    GdkEventButton *event)
 {
 	EvView *view = EV_VIEW (widget);
+
+	_ev_view_cleanup_link_preview_popover (view);
 
 	if (!view->document || ev_document_get_n_pages (view->document) <= 0)
 		return FALSE;
@@ -6639,6 +6803,8 @@ ev_view_key_press_event (GtkWidget   *widget,
 	EvView  *view = EV_VIEW (widget);
 	gboolean retval;
 
+	_ev_view_cleanup_link_preview_popover(view);
+
 	if (!view->document)
 		return FALSE;
 
@@ -7226,6 +7392,12 @@ ev_view_dispose (GObject *object)
 	if (view->child_focus_idle_id) {
 		g_source_remove (view->child_focus_idle_id);
 		view->child_focus_idle_id = 0;
+	}
+
+	if (view->link_preview.job) {
+		ev_job_cancel (view->link_preview.job);
+		g_object_unref (view->link_preview.job);
+		view->link_preview.job = NULL;
 	}
 
         gtk_scrollable_set_hadjustment (GTK_SCROLLABLE (view), NULL);

@@ -131,6 +131,15 @@ typedef struct {
 	EvAnnotation *annot;
 } MovingAnnotInfo;
 
+/* Information for handling link preview thumbnails */
+typedef struct {
+	EvJob		*job;
+	gdouble		left;
+	gdouble		top;
+	GtkWidget	*popover;
+	EvLink		*link;
+} EvLinkPreview;
+
 struct _EvView {
 	GtkContainer layout;
 
@@ -261,6 +270,9 @@ struct _EvView {
 	/* Current zoom center */
 	gdouble zoom_center_x;
 	gdouble zoom_center_y;
+
+	/* Link preview */
+	EvLinkPreview link_preview;
 };
 
 struct _EvViewClass {
@@ -311,6 +323,10 @@ void _ev_view_transform_doc_point_to_view_point (EvView   *view,
 						 int       page,
 						 EvPoint  *doc_point,
 						 GdkPoint *view_point);
+void _ev_view_transform_doc_point_by_rotation_scale (EvView   *view,
+						 int       page,
+						 EvPoint  *doc_point,
+						 GdkPoint *view_point);
 void _ev_view_transform_doc_rect_to_view_rect (EvView       *view,
 					       int           page,
 					       EvRectangle  *doc_rect,
@@ -322,6 +338,7 @@ gint _ev_view_get_caret_cursor_offset_at_doc_point (EvView *view,
 						    gint    page,
 						    gdouble doc_x,
 						    gdouble doc_y);
+void _ev_view_cleanup_link_preview_popover (EvView	*view);
 
 void _ev_view_clear_selection (EvView   *view);
 void _ev_view_set_selection   (EvView   *view,
