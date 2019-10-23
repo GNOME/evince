@@ -6498,6 +6498,7 @@ ev_view_move_cursor (EvView         *view,
 	gint            prev_offset;
 	gint            prev_page;
 	cairo_region_t *damage_region;
+	gboolean        changed_page;
 	gboolean        clear_selections = FALSE;
 	const gboolean  forward = count >= 0;
 
@@ -6573,6 +6574,28 @@ ev_view_move_cursor (EvView         *view,
 	/* Scroll to make the caret visible */
 	if (!get_caret_cursor_area (view, view->cursor_page, view->cursor_offset, &rect))
 		return TRUE;
+
+	if (!view->continuous) {
+		changed_page = FALSE;
+		if (prev_page < view->cursor_page) {
+			ev_view_next_page (view);
+			cursor_go_to_page_start (view);
+			changed_page = TRUE;
+		} else if (prev_page > view->cursor_page) {
+			ev_view_previous_page (view);
+			cursor_go_to_page_end (view);
+			changed_page = TRUE;
+		}
+
+		if (changed_page) {
+                       rect.x += view->scroll_x;
+                       rect.y += view->scroll_y;
+                       ensure_rectangle_is_visible (view, &rect);
+			g_signal_emit (view, signals[SIGNAL_CURSOR_MOVED], 0, view->cursor_page, view->cursor_offset);
+			clear_selection (view);
+			return TRUE;
+		}
+	}
 
 	if (step == GTK_MOVEMENT_DISPLAY_LINES) {
 		const gint prev_cursor_offset = view->cursor_offset;
