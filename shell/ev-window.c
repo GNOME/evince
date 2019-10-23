@@ -388,6 +388,7 @@ static void     recent_view_item_activated_cb           (EvRecentView     *recen
                                                          const char       *uri,
                                                          EvWindow         *ev_window);
 static void     ev_window_fullscreen_show_toolbar       (EvWindow         *ev_window);
+static void     ev_window_fullscreen_hide_toolbar       (EvWindow         *ev_window);
 static void     ev_window_begin_add_annot               (EvWindow         *ev_window,
 							 EvAnnotationType  annot_type);
 
@@ -4216,11 +4217,17 @@ ev_window_cmd_toggle_find (GSimpleAction *action,
 			   gpointer       user_data)
 {
 	EvWindow *ev_window = user_data;
+	EvWindowPrivate *priv = ev_window_get_instance_private (ev_window);
 
-	if (g_variant_get_boolean (state))
+	if (g_variant_get_boolean (state)) {
 		ev_window_show_find_bar (ev_window, TRUE);
-	else
+		// In fullscreen mode hide fs_toolbar
+		if (ev_document_model_get_fullscreen (priv->model))
+			if (gtk_revealer_get_reveal_child (GTK_REVEALER (priv->fs_revealer)))
+				ev_window_fullscreen_hide_toolbar (ev_window);
+	} else {
 		ev_window_close_find_bar (ev_window);
+	}
 
 	g_simple_action_set_state (action, state);
 }
@@ -5340,6 +5347,39 @@ ev_window_cmd_action_menu (GSimpleAction *action,
 }
 
 static void
+ev_window_view_cmd_toggle_toolbar (GSimpleAction *action,
+				   GVariant      *state,
+				   gpointer       user_data)
+{
+	EvWindow        *ev_window = user_data;
+	EvWindowPrivate *priv      = ev_window_get_instance_private (ev_window);
+
+	gboolean toolbar;
+
+	// Skip for presentation view
+	if (EV_WINDOW_IS_PRESENTATION (priv))
+		return;
+
+	// In fullscreen mode toggle fs_toolbar
+	if (ev_document_model_get_fullscreen (priv->model)) {
+		if (gtk_revealer_get_reveal_child (GTK_REVEALER (priv->fs_revealer))) {
+			ev_window_fullscreen_hide_toolbar (ev_window);
+		} else {
+			ev_window_fullscreen_show_toolbar (ev_window);
+		}
+
+		return;
+	}
+
+	// Toggle header bar
+	toolbar = g_variant_get_boolean (state);
+	g_simple_action_set_state (action, g_variant_new_boolean (toolbar));
+
+	update_chrome_flag (ev_window, EV_CHROME_TOOLBAR, toolbar);
+	update_chrome_visibility (ev_window);
+}
+
+static void
 ev_window_view_cmd_toggle_sidebar (GSimpleAction *action,
 				   GVariant      *state,
 				   gpointer       user_data)
@@ -5968,10 +6008,15 @@ ev_window_cmd_toggle_edit_annots (GSimpleAction *action,
 	EvWindow *ev_window = user_data;
 	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 
-	if (g_variant_get_boolean (state))
+	if (g_variant_get_boolean (state)) {
 		gtk_widget_show (priv->annots_toolbar);
-	else
+		// In fullscreen mode hide fs_toolbar
+		if (ev_document_model_get_fullscreen (priv->model))
+			if (gtk_revealer_get_reveal_child (GTK_REVEALER (priv->fs_revealer)))
+				ev_window_fullscreen_hide_toolbar (ev_window);
+	} else {
 		gtk_widget_hide (priv->annots_toolbar);
+	}
 
 	g_simple_action_set_state (action, state);
 }
@@ -6260,6 +6305,7 @@ static const GActionEntry actions[] = {
 	{ "continuous", NULL, NULL, "true", ev_window_cmd_continuous },
 	{ "dual-page", NULL, NULL, "false", ev_window_cmd_dual },
 	{ "dual-odd-left", NULL, NULL, "false", ev_window_cmd_dual_odd_pages_left },
+	{ "toggle-toolbar", NULL, NULL, "true", ev_window_view_cmd_toggle_toolbar },
 	{ "show-side-pane", NULL, NULL, "false", ev_window_view_cmd_toggle_sidebar },
 	{ "inverted-colors", NULL, NULL, "false", ev_window_cmd_view_inverted_colors },
 	{ "enable-spellchecking", NULL, NULL, "false", ev_window_cmd_view_enable_spellchecking },
