@@ -42,6 +42,23 @@ G_BEGIN_DECLS
 
 typedef struct _EvDocumentFind	        EvDocumentFind;
 typedef struct _EvDocumentFindInterface EvDocumentFindInterface;
+typedef struct _EvFindRectangle         EvFindRectangle;
+
+#define EV_TYPE_FIND_RECTANGLE (ev_find_rectangle_get_type ())
+struct _EvFindRectangle
+{
+	gdouble x1;
+	gdouble y1;
+	gdouble x2;
+	gdouble y2;
+	gboolean next_line;
+	gboolean after_hyphen;
+};
+
+GType            ev_find_rectangle_get_type (void) G_GNUC_CONST;
+EvFindRectangle *ev_find_rectangle_new      (void);
+EvFindRectangle *ev_find_rectangle_copy     (EvFindRectangle *ev_find_rect);
+void             ev_find_rectangle_free     (EvFindRectangle *ev_find_rect);
 
 typedef enum {
 	EV_FIND_DEFAULT          = 0,

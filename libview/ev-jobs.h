@@ -604,6 +604,8 @@ EvJob          *ev_job_find_new           (EvDocument      *document,
 void            ev_job_find_set_options   (EvJobFind       *job,
                                            EvFindOptions    options);
 EvFindOptions   ev_job_find_get_options   (EvJobFind       *job);
+gint       ev_job_find_get_n_main_results (EvJobFind       *job,
+					   gint             pages);
 gint            ev_job_find_get_n_results (EvJobFind       *job,
 					   gint             pages);
 gdouble         ev_job_find_get_progress  (EvJobFind       *job);
