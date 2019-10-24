@@ -81,6 +81,7 @@ void             ev_document_misc_invert_surface (cairo_surface_t *surface);
 void		 ev_document_misc_invert_pixbuf  (GdkPixbuf       *pixbuf);
 
 gdouble          ev_document_misc_get_screen_dpi (GdkScreen *screen);
+gdouble          ev_document_misc_get_widget_dpi (GtkWidget *widget);
 
 gchar           *ev_document_misc_format_date (GTime utime);
 

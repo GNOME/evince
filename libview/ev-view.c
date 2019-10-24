@@ -254,7 +254,7 @@ static double	zoom_for_size_fit_page 			     (gdouble doc_width,
 							      gdouble doc_height,
 							      int     target_width,
 							      int     target_height);
-static double   zoom_for_size_automatic                      (GdkScreen *screen,
+static double   zoom_for_size_automatic                      (GtkWidget *widget,
 							      gdouble    doc_width,
 							      gdouble    doc_height,
 							      int        target_width,
@@ -526,14 +526,12 @@ is_dual_page (EvView   *view,
 
 	switch (view->page_layout) {
 	case EV_PAGE_LAYOUT_AUTOMATIC: {
-		GdkScreen    *screen;
 		double        scale;
 		double        doc_width;
 		double        doc_height;
 		GtkAllocation allocation;
 
-		screen = gtk_widget_get_screen (GTK_WIDGET (view));
-		scale = ev_document_misc_get_screen_dpi (screen) / 72.0;
+		scale = ev_document_misc_get_widget_dpi (GTK_WIDGET (view)) / 72.0;
 
 		ev_document_get_max_page_size (view->document, &doc_width, &doc_height);
 		gtk_widget_get_allocation (GTK_WIDGET (view), &allocation);
@@ -7369,14 +7367,13 @@ view_update_scale_limits (EvView *view)
 	gdouble    max_scale;
 	gdouble    dpi;
 	gint       rotation;
-	GdkScreen *screen;
 
 	if (!view->document)
 		return;
 
 	rotation = ev_document_model_get_rotation (view->model);
-	screen = gtk_widget_get_screen (GTK_WIDGET (view));
-	dpi = ev_document_misc_get_screen_dpi (screen) / 72.0;
+
+	dpi = ev_document_misc_get_widget_dpi (GTK_WIDGET (view)) / 72.0;
 
 	ev_document_get_min_page_size (view->document, &min_width, &min_height);
 	width = (rotation == 0 || rotation == 180) ? min_width : min_height;
@@ -8742,7 +8739,7 @@ zoom_for_size_fit_page (gdouble doc_width,
 }
 
 static double
-zoom_for_size_automatic (GdkScreen *screen,
+zoom_for_size_automatic (GtkWidget *widget,
 			 gdouble    doc_width,
 			 gdouble    doc_height,
 			 int        target_width,
@@ -8761,7 +8758,7 @@ zoom_for_size_automatic (GdkScreen *screen,
 	} else {
 		double actual_scale;
 
-		actual_scale = ev_document_misc_get_screen_dpi (screen) / 72.0;
+		actual_scale = ev_document_misc_get_widget_dpi (widget) / 72.0;
 		scale = MIN (fit_width_scale, actual_scale);
 	}
 
@@ -8803,7 +8800,7 @@ ev_view_zoom_for_size_continuous_and_dual_page (EvView *view,
 		scale = zoom_for_size_fit_page (doc_width, doc_height, width - sb_size, height);
 		break;
 	case EV_SIZING_AUTOMATIC:
-		scale = zoom_for_size_automatic (gtk_widget_get_screen (GTK_WIDGET (view)),
+		scale = zoom_for_size_automatic (GTK_WIDGET (view),
 						 doc_width, doc_height, width - sb_size, height);
 		break;
 	default:
@@ -8847,7 +8844,7 @@ ev_view_zoom_for_size_continuous (EvView *view,
 		scale = zoom_for_size_fit_page (doc_width, doc_height, width - sb_size, height);
 		break;
 	case EV_SIZING_AUTOMATIC:
-		scale = zoom_for_size_automatic (gtk_widget_get_screen (GTK_WIDGET (view)),
+		scale = zoom_for_size_automatic (GTK_WIDGET (view),
 						 doc_width, doc_height, width - sb_size, height);
 		break;
 	default:
@@ -8897,7 +8894,7 @@ ev_view_zoom_for_size_dual_page (EvView *view,
 		break;
 	case EV_SIZING_AUTOMATIC:
 		sb_size = ev_view_get_scrollbar_size (view, GTK_ORIENTATION_VERTICAL);
-		scale = zoom_for_size_automatic (gtk_widget_get_screen (GTK_WIDGET (view)),
+		scale = zoom_for_size_automatic (GTK_WIDGET (view),
 						 doc_width, doc_height, width - sb_size, height);
 		break;
 	default:
@@ -8935,7 +8932,7 @@ ev_view_zoom_for_size_single_page (EvView *view,
 		break;
 	case EV_SIZING_AUTOMATIC:
 		sb_size = ev_view_get_scrollbar_size (view, GTK_ORIENTATION_VERTICAL);
-		scale = zoom_for_size_automatic (gtk_widget_get_screen (GTK_WIDGET (view)),
+		scale = zoom_for_size_automatic (GTK_WIDGET (view),
 						 doc_width, doc_height, width - sb_size, height);
 		break;
 	default:
