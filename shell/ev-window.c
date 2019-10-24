@@ -395,15 +395,6 @@ static gchar *nautilus_sendto = NULL;
 
 G_DEFINE_TYPE_WITH_PRIVATE (EvWindow, ev_window, GTK_TYPE_APPLICATION_WINDOW)
 
-static gdouble
-get_screen_dpi (EvWindow *window)
-{
-	GdkScreen *screen;
-
-	screen = gtk_window_get_screen (GTK_WINDOW (window));
-	return ev_document_misc_get_screen_dpi (screen);
-}
-
 static gboolean
 ev_window_is_recent_view (EvWindow *ev_window)
 {
@@ -1231,7 +1222,7 @@ setup_model_from_metadata (EvWindow *window)
 	/* Zoom */
 	if (ev_document_model_get_sizing_mode (priv->model) == EV_SIZING_FREE) {
 		if (ev_metadata_get_double (priv->metadata, "zoom", &zoom)) {
-			zoom *= get_screen_dpi (window) / 72.0;
+			zoom *= ev_document_misc_get_widget_dpi  (GTK_WIDGET (window)) / 72.0;
 			ev_document_model_set_scale (priv->model, zoom);
 		}
 	}
@@ -4183,7 +4174,7 @@ ev_window_cmd_view_zoom (GSimpleAction *action,
 
 	ev_document_model_set_sizing_mode (priv->model, EV_SIZING_FREE);
 	ev_document_model_set_scale (priv->model,
-				     zoom * get_screen_dpi (ev_window) / 72.0);
+				     zoom * ev_document_misc_get_widget_dpi (GTK_WIDGET (ev_window)) / 72.0);
 }
 
 static void
@@ -4196,7 +4187,7 @@ ev_window_cmd_set_default_zoom (GSimpleAction *action,
 
 	ev_document_model_set_sizing_mode (priv->model, EV_SIZING_FREE);
 	ev_document_model_set_scale (priv->model,
-				     1. * get_screen_dpi (ev_window) / 72.0);
+				     1. * ev_document_misc_get_widget_dpi (GTK_WIDGET (ev_window)) / 72.0);
 }
 
 static void
@@ -4914,7 +4905,7 @@ ev_window_cmd_edit_save_settings (GSimpleAction *action,
 	if (sizing_mode == EV_SIZING_FREE) {
 		gdouble zoom = ev_document_model_get_scale (model);
 
-		zoom *= 72.0 / get_screen_dpi (ev_window);
+		zoom *= 72.0 / ev_document_misc_get_widget_dpi (GTK_WIDGET (ev_window));
 		g_settings_set_double (settings, "zoom", zoom);
 	}
 	g_settings_set_boolean (settings, "show-sidebar",
@@ -5235,7 +5226,7 @@ ev_window_zoom_changed_cb (EvDocumentModel *model, GParamSpec *pspec, EvWindow *
 		gdouble zoom;
 
 		zoom = ev_document_model_get_scale (model);
-		zoom *= 72.0 / get_screen_dpi (ev_window);
+		zoom *= 72.0 / ev_document_misc_get_widget_dpi (GTK_WIDGET (ev_window));
 		ev_metadata_set_double (priv->metadata, "zoom", zoom);
 	}
 }
