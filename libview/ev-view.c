@@ -3523,7 +3523,7 @@ ev_view_get_doc_points_from_selection_region (EvView  *view,
 					      EvPoint *begin,
 					      EvPoint *end)
 {
-	cairo_rectangle_int_t extents;
+	cairo_rectangle_int_t first, last;
 	GdkPoint start, stop;
 	cairo_region_t *region = NULL;
 
@@ -3535,12 +3535,15 @@ ev_view_get_doc_points_from_selection_region (EvView  *view,
 	if (!region)
 		return FALSE;
 
-	cairo_region_get_extents (region, &extents);
+	cairo_region_get_rectangle (region, 0, &first);
+	cairo_region_get_rectangle (region, cairo_region_num_rectangles(region) - 1, &last);
 
-	if (!get_doc_point_from_offset (view, page, extents.x, extents.y + (extents.height / 2), &(start.x), &(start.y)))
+	if (!get_doc_point_from_offset (view, page, first.x, first.y + (first.height / 2),
+					&(start.x), &(start.y)))
 		return FALSE;
 
-	if (!get_doc_point_from_offset (view, page, extents.x + extents.width, extents.y + (extents.height / 2), &(stop.x), &(stop.y)))
+	if (!get_doc_point_from_offset (view, page, last.x + last.width, last.y + (last.height / 2),
+					&(stop.x), &(stop.y)))
 		return FALSE;
 
 	begin->x = start.x;
@@ -3560,8 +3563,7 @@ ev_view_create_annotation_from_selection (EvView          *view,
 
 	/* Check if selection is of double/triple click type (STYLE_WORD and STYLE_LINE) and in that
 	 * case get the start/end points from the selection region of pixbuf cache. Issue #1119 */
-	if (selection->rect.x1 == selection->rect.x2 && selection->rect.y1 == selection->rect.y2 &&
-            (selection->style == EV_SELECTION_STYLE_WORD || selection->style == EV_SELECTION_STYLE_LINE)) {
+	if (selection->style == EV_SELECTION_STYLE_WORD || selection->style == EV_SELECTION_STYLE_LINE) {
 
 		if (!ev_view_get_doc_points_from_selection_region (view, selection->page,
 								   &doc_point_start, &doc_point_end))
