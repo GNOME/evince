@@ -80,6 +80,7 @@ cairo_surface_t *ev_document_misc_surface_rotate_and_scale (cairo_surface_t *sur
 void             ev_document_misc_invert_surface (cairo_surface_t *surface);
 void		 ev_document_misc_invert_pixbuf  (GdkPixbuf       *pixbuf);
 
+EV_DEPRECATED_FOR(ev_document_misc_get_widget_dpi)
 gdouble          ev_document_misc_get_screen_dpi (GdkScreen *screen);
 gdouble          ev_document_misc_get_widget_dpi (GtkWidget *widget);
 

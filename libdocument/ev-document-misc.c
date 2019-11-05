@@ -506,9 +506,20 @@ ev_document_misc_invert_pixbuf (GdkPixbuf *pixbuf)
 	}
 }
 
+/**
+ * ev_document_misc_get_screen_dpi:
+ * @screen: a #GtkScreen
+ *
+ * Returns: The DPI of @screen, or 96 if the DPI is not available
+ *
+ * Deprecated: 3.36: This uses a deprecated GDK API. Use
+ * ev_document_misc_get_widget_dpi() instead, which uses GDK's per-monitor
+ * information.
+ */
 gdouble
 ev_document_misc_get_screen_dpi (GdkScreen *screen)
 {
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 	gdouble dp, di;
 
 	/*diagonal in pixels*/
@@ -522,6 +533,7 @@ ev_document_misc_get_screen_dpi (GdkScreen *screen)
 		return 96;
 
 	return (dp / di);
+G_GNUC_END_IGNORE_DEPRECATIONS
 }
 
 /**
