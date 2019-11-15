@@ -308,6 +308,8 @@ sidebar_tree_button_press_cb (GtkTreeView    *view,
 	if (gdk_event_triggers_context_menu ((const GdkEvent *) event) &&
 	    iter_has_mapping (model, &iter, &annot_mapping)) {
 
+		ev_sidebar_annotations_activate_result_at_iter (sidebar_annots, model, &iter);
+
 		if (!EV_IS_ANNOTATION (annot_mapping->data))
 			return GDK_EVENT_PROPAGATE;
 
