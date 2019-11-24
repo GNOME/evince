@@ -1,4 +1,29 @@
 ================
+Evince    3.35.1
+================
+
+libview/ev-view:
+  * Make document direction independent of UI direction (#830, Abderrahim Kitouni)
+  * Follow the text direction for laying out pages in dual mode (#830, Abderrahim Kitouni)
+  * Fix annots from dbl/tpl click + drag (#1274, Nelson Benítez León)
+  * Fix caret cursor navigation in non-continuous mode (#390, Nelson Benítez León)
+  * Keep cursor visible when changing pages (#390, Jason Crain)
+  * Don't enable popup actions on page change (#1168, Jason Crain)
+  * Implement ATK's scrollSubstringTo() and scrollSubstringToPoint(). (#1203, Martin Pieuchot)
+
+libdocument:
+  * Get DPI from GdkMonitor (#617, Marek Kasik)
+  * Deprecate ev_document_misc_get_screen_dpi() (#617, Jason Crain)
+
+shell:
+  * Set a11y names for annotation buttons (Marek Kasik)
+  * Go to annotation on right click (Nelson Benítez León)
+  * Document presentation mode shortcuts (#1302, Jason Crain)
+
+Developers:
+  * Abderrahim Kitouni, Germán Poo-Caamaño, Jason Crain, Marek Kasik, Martin Pieuchot, Nelson Benítez León
+
+================
 Evince    3.34.2
 ================
 
