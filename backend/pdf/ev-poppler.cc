@@ -1018,15 +1018,11 @@ pdf_document_parse_metadata (const gchar    *metadata,
 			info->producer = producer;
 		}
 
-
-		if (dates[0] != 0){
+		if (dates[0] != 0)
 			info->modified_date = dates[0];
-		}
 
-		if (dates[1] != 0) {
+		if (dates[1] != 0)
 			info->creation_date = dates[1];
-		}
-
 	}
 
 	info->license = pdf_document_get_license_from_metadata (xpathCtx);
