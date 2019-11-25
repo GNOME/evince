@@ -8,8 +8,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: evince.help.master\n"
-"POT-Creation-Date: 2019-06-07 09:53+0000\n"
-"PO-Revision-Date: 2019-08-28 09:54+0200\n"
+"POT-Creation-Date: 2019-11-23 01:55+0000\n"
+"PO-Revision-Date: 2019-11-25 15:09+0100\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Spanish - Spain <gnome-es-list@gnome.org>\n"
 "Language: es_ES\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Gtranslator 3.32.1\n"
+"X-Generator: Gtranslator 3.34.0\n"
 
 #. Put one translator per line, in the form NAME <EMAIL>, YEAR1, YEAR2
 msgctxt "_"
@@ -318,15 +318,11 @@ msgstr "Crear una anotación:"
 
 #. (itstool) path: item/p
 #: C/annotations.page:42
-#| msgid "Select <gui>Annotate the document</gui> from the title bar."
 msgid "Select <gui>Annotate the document</gui> from the header bar."
 msgstr "Seleccione <gui>Anotar el documento</gui> en la barra de cabecera."
 
 #. (itstool) path: item/p
 #: C/annotations.page:48
-#| msgid ""
-#| "You should now see <gui>Add text annotation</gui> and <gui>Add highlight "
-#| "annotation</gui> buttons below the title bar."
 msgid ""
 "You should now see <gui>Add text annotation</gui> and <gui>Add highlight "
 "annotation</gui> buttons below the header bar."
@@ -601,13 +597,6 @@ msgstr ""
 
 #. (itstool) path: page/p
 #: C/bug-filing.page:29
-#| msgid ""
-#| "Once you have an account, log in, click on <guiseq><gui>File a Bug</"
-#| "gui><gui>Core</gui><gui>evince</gui></guiseq>. Before reporting a bug, "
-#| "please read the <link href=\"https://bugzilla.gnome.org/page.cgi?id=bug-"
-#| "writing.html\">bug writing guidelines</link>, and please <link href="
-#| "\"https://bugzilla.gnome.org/browse.cgi?product=evince\">browse</link> "
-#| "for the bug to see if it already exists."
 msgid ""
 "Once you have an account, log in, and click on <gui>New issue</gui>. Before "
 "reporting a bug, please read the <link href=\"https://wiki.gnome.org/"
@@ -623,10 +612,6 @@ msgstr ""
 
 #. (itstool) path: page/p
 #: C/bug-filing.page:33
-#| msgid ""
-#| "If you are requesting a new feature, choose <gui>enhancement</gui> in the "
-#| "<gui>Severity</gui> menu. Fill in the Summary and Description sections "
-#| "and click <gui>Submit Bug</gui>."
 msgid ""
 "If you are requesting a new feature, choose <gui>1. Feature</gui> in the "
 "<gui>Labels</gui> menu. Fill in the Title and Description sections and click "
@@ -748,9 +733,6 @@ msgstr "evince --page-label=3 archivo.pdf"
 
 #. (itstool) path: section/p
 #: C/commandline.page:46
-#| msgid ""
-#| "The page label should be in the same format as the page number displayed "
-#| "in the <app>Document Viewer</app> title bar."
 msgid ""
 "The page label should be in the same format as the page number displayed in "
 "the <app>Document Viewer</app> header bar."
@@ -815,13 +797,13 @@ msgid ""
 msgstr "Puede convertir documentos de los siguientes tipos de formato a PDF:"
 
 #. (itstool) path: item/p
-#: C/convertpdf.page:32 C/formats.page:34 C/presentations.page:69
+#: C/convertpdf.page:32 C/formats.page:34 C/presentations.page:77
 #: C/printing.page:49
 msgid "Device Independent file format (.dvi)"
 msgstr "Formato de archivo independiente del dispositivo (.dvi)"
 
 #. (itstool) path: item/p
-#: C/convertpdf.page:33 C/formats.page:38 C/presentations.page:73
+#: C/convertpdf.page:33 C/formats.page:38 C/presentations.page:81
 #: C/printing.page:52
 msgid "PostScript (.ps)"
 msgstr "PostScript (.ps)"
@@ -903,14 +885,14 @@ msgstr ""
 "formato:"
 
 #. (itstool) path: item/p
-#: C/convertPostScript.page:32 C/formats.page:35 C/presentations.page:70
+#: C/convertPostScript.page:32 C/formats.page:35 C/presentations.page:78
 #: C/printing.page:50
 msgid "DjVu (.djvu, .djv)"
 msgstr "DjVu (.djvu, .djv)"
 
 #. (itstool) path: item/p
 #: C/convertPostScript.page:33 C/convertSVG.page:30 C/formats.page:37
-#: C/presentations.page:72 C/printing.page:51
+#: C/presentations.page:80 C/printing.page:51
 msgid "Portable Document Format (.pdf)"
 msgstr "Formato de documento portable (.pdf)"
 
@@ -1173,9 +1155,6 @@ msgstr "Folleto de 10 páginas"
 #: C/singlesided-5-8pages.page:44 C/singlesided-5-8pages.page:89
 #: C/singlesided-9-12pages.page:44 C/singlesided-9-12pages.page:89
 #: C/singlesided-npages.page:49 C/singlesided-npages.page:96
-#| msgid ""
-#| "Open the menu at the top-right of the window, then select <gui style="
-#| "\"menuitem\">Print…</gui>."
 msgid ""
 "Press the menu button in the top-right corner of the window and press the "
 "<gui style=\"button\">Print</gui> button."
@@ -1233,9 +1212,6 @@ msgstr "Elija la pestaña <gui>Configuración de página</gui>."
 #: C/duplex-10pages.page:45 C/duplex-12pages.page:45 C/duplex-14pages.page:44
 #: C/duplex-3pages.page:42 C/duplex-5pages.page:43 C/duplex-7pages.page:47
 #: C/duplex-9pages.page:43
-#| msgid ""
-#| "Under <em>Layout</em>, in the <gui>Two-side</gui> option, select "
-#| "<gui>Short Edge (Flip)</gui>."
 msgid ""
 "Under <em>Layout</em>, in the <gui>Two-sided</gui> option, select <gui>Short "
 "Edge (Flip)</gui>."
@@ -1382,9 +1358,6 @@ msgstr "Escriba el número de páginas en este orden: 11, 2, 1"
 #: C/duplex-11pages.page:46 C/duplex-13pages.page:42 C/duplex-16pages.page:46
 #: C/duplex-4pages.page:45 C/duplex-6pages.page:46 C/duplex-8pages.page:45
 #: C/duplex-npages.page:71
-#| msgid ""
-#| "Under <em>Layout</em>, in the <gui>Two-side</gui> menu, select <gui>Short "
-#| "Edge (Flip)</gui>."
 msgid ""
 "Under <em>Layout</em>, in the <gui>Two-sided</gui> menu, select <gui>Short "
 "Edge (Flip)</gui>."
@@ -1479,9 +1452,6 @@ msgstr "En <em>Rango</em>, seleccione <gui>Páginas</gui> y escriba: 2"
 
 #. (itstool) path: item/p
 #: C/duplex-13pages.page:84 C/duplex-5pages.page:87
-#| msgid ""
-#| "Open the menu at the top-right of the window, then select <gui style="
-#| "\"menuitem\">Print…</gui>."
 msgid ""
 "To print page 3, press the menu button in the top-right corner of the window "
 "and press the <gui style=\"button\">Print</gui> button."
@@ -1518,9 +1488,6 @@ msgstr ""
 
 #. (itstool) path: item/p
 #: C/duplex-13pages.page:126
-#| msgid ""
-#| "Enter pages 8, 9, 10, 7, 6, 11, 12, 5 in the <gui>Pages</gui> selection "
-#| "menu and set <gui>Page ordering</gui> to <gui>Left to right</gui>."
 msgid ""
 "Enter pages 8, 9, 10, 7, 6, 11, 12, 5 in the <gui>Pages</gui> selection menu."
 msgstr ""
@@ -1885,9 +1852,6 @@ msgstr ""
 
 #. (itstool) path: item/p
 #: C/duplex-9pages.page:133
-#| msgid ""
-#| "In the <gui>General</gui> tab enter pages 4, 9 in the <gui>Pages</gui> "
-#| "selection."
 msgid "Enter pages 8, 5, 6, 7 in the <gui>Pages</gui> selection menu."
 msgstr ""
 "Introduzca las páginas 8, 5, 6, 7 en el menú de selección <gui>Páginas</gui>."
@@ -2099,7 +2063,7 @@ msgid "The <app>document viewer</app> supports the following formats:"
 msgstr "El <app>Visor de documentos</app> soporta los siguientes formatos:"
 
 #. (itstool) path: item/p
-#: C/formats.page:33 C/presentations.page:68
+#: C/formats.page:33 C/presentations.page:76
 msgid "Comic Book Archive (.cbr and .cbz)"
 msgstr "Archivo de cómic (.cbr y .cbz)"
 
@@ -2252,7 +2216,6 @@ msgstr "Las copias de archivos cifrados no se pueden guardar ni imprimir."
 
 #. (itstool) path: info/desc
 #: C/headerbar.page:8
-#| msgid "Using the title bar."
 msgid "Using the header bar."
 msgstr "Usar la barra de cabecera."
 
@@ -2263,7 +2226,6 @@ msgstr "Barra de cabecera"
 
 #. (itstool) path: page/p
 #: C/headerbar.page:24
-#| msgid "The title bar contains:"
 msgid "The header bar contains:"
 msgstr "La barra de cabecera contiene:"
 
@@ -2692,9 +2654,6 @@ msgstr "Ir a una página específica:"
 
 #. (itstool) path: item/p
 #: C/movingaround.page:91
-#| msgid ""
-#| "Type a page number in <gui style=\"input\">Select Page</gui> on the <link "
-#| "xref=\"titlebar\">title bar</link> and press <key>Enter</key>."
 msgid ""
 "Type a page number in <gui style=\"input\">Select Page</gui> on the <link "
 "xref=\"headerbar\">header bar</link> and press <key>Enter</key>."
@@ -2705,9 +2664,6 @@ msgstr ""
 
 #. (itstool) path: item/p
 #: C/movingaround.page:95
-#| msgid ""
-#| "If you want to see the previously visited pages press <gui style=\"button"
-#| "\">&lt;</gui> or <gui style=\"button\">&gt;</gui> on the title bar."
 msgid ""
 "If you want to see the previously visited pages press <gui style=\"button"
 "\">&lt;</gui> or <gui style=\"button\">&gt;</gui> on the header bar."
@@ -2977,9 +2933,6 @@ msgstr "Para comprobar si su impresora imprime correctamente:"
 
 #. (itstool) path: item/p
 #: C/noprint.page:41
-#| msgid ""
-#| "Open the <gui xref=\"help:gnome-help/shell-introduction#activities"
-#| "\">Activities</gui> overview and start typing <gui>dconf Editor</gui>."
 msgid ""
 "Open the <gui href=\"help:gnome-help/shell-introduction#activities"
 "\">Activities</gui> overview and start typing <gui>Settings</gui>."
@@ -2999,7 +2952,6 @@ msgstr "Pulse <gui>Dispositivos</gui> en la barra lateral."
 
 #. (itstool) path: item/p
 #: C/noprint.page:51
-#| msgid "Click <gui>dconf Editor</gui> to open the application."
 msgid "Click <gui>Printers</gui> in the sidebar to open the panel."
 msgstr "Abra <gui>Impresoras</gui> en la barra lateral para abrir el panel."
 
@@ -3284,17 +3236,45 @@ msgstr "Use <key>Esc</key> para salir de la presentación."
 
 #. (itstool) path: section/title
 #: C/presentations.page:63
+msgid "Showing a blank screen"
+msgstr "Mostrar una pantalla vacía"
+
+#. (itstool) path: section/p
+#: C/presentations.page:64
+#| msgid "Press <key>F11</key> or <key>Escape</key>"
+msgid "Press <key>B</key> or <key>.</key> to show a black screen."
+msgstr "Pulse <key>B</key> o <key>.</key> para mostrar una pantalla en negro."
+
+#. (itstool) path: section/p
+#: C/presentations.page:65
+#| msgid "Use <key>Esc</key> to exit the presentation."
+msgid "Press <key>W</key> to show a white screen."
+msgstr "Pulse <key>W</key> para mostrar una pantalla en blanco."
+
+#. (itstool) path: section/p
+#: C/presentations.page:66
+#| msgid ""
+#| "Press <keyseq><key>Alt</key><key>F2</key></keyseq> to open the Run "
+#| "Application window."
+msgid ""
+"Press <key>B</key>, <key>.</key>, or <key>W</key> again to show the slide."
+msgstr ""
+"Pulse <key>B</key>, <key>.</key>, o <key>W</key> otra vez para mostrar la "
+"diapositiva."
+
+#. (itstool) path: section/title
+#: C/presentations.page:71
 msgid "Supported presentation file formats"
 msgstr "Formatos de archivos de presentaciones soportados"
 
 #. (itstool) path: section/p
-#: C/presentations.page:64
+#: C/presentations.page:72
 msgid "The following file formats can be used for presentations:"
 msgstr ""
 "Se pueden usar los siguientes formatos de archivos para presentaciones:"
 
 #. (itstool) path: item/p
-#: C/presentations.page:71
+#: C/presentations.page:79
 msgid "Open Document Presentation (.odp)"
 msgstr "Presentación de Open Document (.odp)"
 
@@ -3856,9 +3836,6 @@ msgstr ""
 
 #. (itstool) path: td/p
 #: C/shortcuts.page:109
-#| msgid ""
-#| "Go to the beginning of a page (beginning of the document if "
-#| "<guiseq><gui>View</gui> <gui>Continuous</gui></guiseq> is selected)."
 msgid ""
 "Go to the beginning of a page (beginning of the document if <gui>Continuous</"
 "gui> is selected in the <gui>View options</gui> menu)."
@@ -3918,7 +3895,6 @@ msgstr "<keyseq><key>Ctrl</key><key>D</key></keyseq>"
 
 #. (itstool) path: td/p
 #: C/shortcuts.page:131
-#| msgid "Select the bookmark in the side pane."
 msgid "Delete the bookmark in the current page if there is one."
 msgstr "Eliminar el marcador en la página actual si hay alguno."
 
@@ -3988,10 +3964,6 @@ msgstr "Buscar texto"
 
 #. (itstool) path: td/p
 #: C/shortcuts.page:163
-#| msgid ""
-#| "Show the toolbar that lets you search for words in the document. The "
-#| "search box is automatically highlighted when you press this, and the "
-#| "search will start as soon as you type some text."
 msgid ""
 "Show the toolbar that lets you search for words in the document. The search "
 "box is automatically highlighted when you press this, and the search will "
@@ -4108,7 +4080,7 @@ msgid "Fit the content width to the space available."
 msgstr "Ajustar la anchura del contenido al espacio disponible."
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:214
+#: C/shortcuts.page:214 C/shortcuts.page:264
 msgid "<key>W</key>"
 msgstr "<key>W</key>"
 
@@ -4185,26 +4157,48 @@ msgstr "<key>D</key>"
 
 #. (itstool) path: section/title
 #: C/shortcuts.page:256
+#| msgid "Presentations"
+msgid "Presentation mode"
+msgstr "Modo presentación"
+
+#. (itstool) path: td/p
+#: C/shortcuts.page:259
+msgid "Toggle black screen."
+msgstr "Cambiar a pantalla en negro."
+
+#. (itstool) path: td/p
+#: C/shortcuts.page:260
+#| msgid "<key>Page Up</key> / <key>Page Down</key>"
+msgid "<key>B</key> / <key>.</key>"
+msgstr "<key>B</key> / <key>.</key>"
+
+#. (itstool) path: td/p
+#: C/shortcuts.page:263
+msgid "Toggle white screen."
+msgstr "Cambiar a pantalla en blanco."
+
+#. (itstool) path: section/title
+#: C/shortcuts.page:270
 msgid "Annotate the document"
 msgstr "Anotar el documento"
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:259
+#: C/shortcuts.page:273
 msgid "Add a post-it like note."
 msgstr "Añadir una nota tipo post-it."
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:260
+#: C/shortcuts.page:274
 msgid "<key>S</key>"
 msgstr "<key>S</key>"
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:263
+#: C/shortcuts.page:277
 msgid "Highlight text."
 msgstr "Resaltar texto."
 
 #. (itstool) path: td/p
-#: C/shortcuts.page:264
+#: C/shortcuts.page:278
 msgid "<keyseq><key>Ctrl</key><key>H</key></keyseq>"
 msgstr "<keyseq><key>Ctrl</key><key>H</key></keyseq>"
 
@@ -4238,9 +4232,6 @@ msgstr "Imprimir:"
 #: C/singlesided-13-16pages.page:68 C/singlesided-17-20pages.page:66
 #: C/singlesided-3-4pages.page:65 C/singlesided-5-8pages.page:65
 #: C/singlesided-9-12pages.page:65 C/singlesided-npages.page:72
-#| msgid ""
-#| "Under <em>Layout</em>, in the <gui>Two-side</gui> menu, select <gui>One "
-#| "Sided</gui>."
 msgid ""
 "Under <em>Layout</em>, in the <gui>Two-sided</gui> menu, select <gui>One "
 "Sided</gui>."
@@ -4789,9 +4780,6 @@ msgstr "Un motor LaTeX con soporte de SyncTex como <app>pdflatex</app>."
 
 #. (itstool) path: item/p
 #: C/synctex-support.page:36
-#| msgid ""
-#| "A text editor with SynxTeX support, such as <app>gedit</app> with gedit-"
-#| "plugins installed."
 msgid ""
 "A text editor with SyncTeX support, such as <app>gedit</app> with gedit-"
 "plugins installed."
