@@ -1,3 +1,5 @@
+include: 'https://gitlab.gnome.org/GNOME/citemplates/raw/master/flatpak/flatpak_ci_initiative.yml'
+
 stages:
     - build
     - deploy
@@ -70,10 +72,11 @@ flatpak:
 
     variables:
         MANIFEST_PATH: "build-aux/flatpak/org.gnome.Evince.json"
-        RUNTIME_REPO: "https://sdk.gnome.org/gnome-nightly.flatpakrepo"
+        RUNTIME_REPO: "https://nightly.gnome.org/gnome-nightly.flatpakrepo"
         FLATPAK_MODULE: "evince"
         MESON_ARGS: "-Dnautilus=false -Dgtk_doc=false"
         APP_ID: "org.gnome.Evince"
+    extends: .flatpak
 
     script:
         - flatpak-builder --stop-at=evince app ${MANIFEST_PATH}
@@ -95,43 +98,17 @@ flatpak:
             - .flatpak-builder/downloads
             - .flatpak-builder/git
 
-deploy:
+review:
     stage: deploy
-
     dependencies:
         - flatpak
+    extends: .review
 
-    script:
-        - echo "Generating flatpak deployment"
-
-    artifacts:
-        paths:
-            - ${BUNDLE}
-        expire_in: 2 days
-
-    environment:
-        name: deploy/$CI_COMMIT_REF_NAME
-        url: https://gitlab.gnome.org/$CI_PROJECT_PATH/-/jobs/$CI_JOB_ID/artifacts/raw/${BUNDLE}
-        on_stop: stop_deploy
-
-    except:
-        - tags
-        # don't run on stable branches
-        - /^gnome-\d-\d\d$/
-        # No need to run on the upstream master branch either
-        - master@GNOME/evince
-
-stop_deploy:
+stop_review:
     stage: deploy
-    script:
-        - echo "Stopping flatpak deployment"
-    when: manual
-    environment:
-        name: deploy/$CI_COMMIT_REF_NAME
-        action: stop
-    except:
-        - tags
-        # don't run on stable branches
-        - /^gnome-\d-\d\d$/
-        # No need to run on the upstream master branch either
-        - master@GNOME/evince
+    extends: .stop_review
+
+nightly:
+    dependencies:
+        - flatpak
+    extends: .publish_nightly
