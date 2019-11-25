@@ -78,26 +78,6 @@ flatpak:
         APP_ID: "org.gnome.Evince"
     extends: .flatpak
 
-    script:
-        - flatpak-builder --stop-at=evince app ${MANIFEST_PATH}
-        - flatpak build app meson --prefix=/app ${MESON_ARGS} _build
-        - flatpak build app ninja -C _build install
-        - flatpak-builder --finish-only --repo=_repo app ${MANIFEST_PATH}
-        # Run automatic tests inside the Flatpak env
-        - xvfb-run -a -s "-screen 0 1024x768x24" flatpak build app ninja -C _build test
-        - flatpak build-bundle _repo ${BUNDLE} --runtime-repo=${RUNTIME_REPO} ${APP_ID}
-
-    artifacts:
-        paths:
-            - ${BUNDLE}
-            - _build/meson-logs/meson-log.txt
-        expire_in: 2 days
-
-    cache:
-        paths:
-            - .flatpak-builder/downloads
-            - .flatpak-builder/git
-
 review:
     stage: deploy
     dependencies:
