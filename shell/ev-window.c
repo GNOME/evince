@@ -6689,6 +6689,8 @@ do_action_named (EvWindow *window, EvLinkAction *action)
 		g_action_group_activate_action (G_ACTION_GROUP (window), "close", NULL);
 	} else if (g_ascii_strcasecmp (name, "Print") == 0) {
 		g_action_group_activate_action (G_ACTION_GROUP (window), "print", NULL);
+	} else if (g_ascii_strcasecmp (name, "SaveAs") == 0) {
+		g_action_group_activate_action (G_ACTION_GROUP (window), "save-as", NULL);
 	} else {
 		g_warning ("Unimplemented named action: %s, please post a "
 		           "bug report in Evince bugzilla "
