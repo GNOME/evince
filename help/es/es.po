@@ -8,8 +8,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: evince.help.master\n"
-"POT-Creation-Date: 2019-11-23 01:55+0000\n"
-"PO-Revision-Date: 2019-11-25 15:09+0100\n"
+"POT-Creation-Date: 2019-12-02 16:10+0000\n"
+"PO-Revision-Date: 2019-12-11 15:54+0100\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Spanish - Spain <gnome-es-list@gnome.org>\n"
 "Language: es_ES\n"
@@ -58,13 +58,13 @@ msgstr "Tiffany Antopolski"
 #: C/annotations-navigate.page:16 C/annotations.page:21
 #: C/annotations-save.page:20 C/bookmarks.page:22 C/bug-filing.page:15
 #: C/commandline.page:20 C/convertpdf.page:21 C/convertPostScript.page:21
-#: C/convertSVG.page:20 C/default-settings.page:15 C/develop.page:15
+#: C/convertSVG.page:20 C/default-settings.page:16 C/develop.page:15
 #: C/documentation.page:14 C/duplex-10pages.page:16 C/duplex-11pages.page:16
 #: C/duplex-12pages.page:16 C/duplex-13pages.page:16 C/duplex-14pages.page:16
 #: C/duplex-15pages.page:16 C/duplex-16pages.page:16 C/duplex-3pages.page:16
 #: C/duplex-4pages.page:16 C/duplex-5pages.page:16 C/duplex-6pages.page:16
 #: C/duplex-7pages.page:16 C/duplex-8pages.page:16 C/duplex-9pages.page:16
-#: C/duplex-npages.page:16 C/editing.page:15 C/formats.page:22 C/forms.page:15
+#: C/duplex-npages.page:16 C/editing.page:16 C/formats.page:22 C/forms.page:15
 #: C/forms-saving.page:23 C/headerbar.page:17 C/invert-colors.page:23
 #: C/noprint.page:15 C/openerror.page:17 C/presentations.page:20
 #: C/print-2sided.page:16 C/print-booklet.page:16 C/printing.page:22
@@ -647,7 +647,7 @@ msgstr ""
 
 #. (itstool) path: credit/name
 #: C/commandline.page:12 C/convertpdf.page:13 C/convertPostScript.page:13
-#: C/convertSVG.page:12 C/editing.page:11 C/finding.page:15 C/formats.page:14
+#: C/convertSVG.page:12 C/editing.page:12 C/finding.page:15 C/formats.page:14
 #: C/index.page:14 C/invert-colors.page:15 C/movingaround.page:12
 #: C/noprint.page:11 C/password.page:12 C/presentations.page:12
 #: C/print-2sided.page:12 C/print-differentsize.page:13 C/printing.page:14
@@ -1001,17 +1001,17 @@ msgstr ""
 "nuevos."
 
 #. (itstool) path: credit/name
-#: C/default-settings.page:11
+#: C/default-settings.page:12
 msgid "Sindhu S"
 msgstr "Sindhu S"
 
 #. (itstool) path: page/title
-#: C/default-settings.page:20
+#: C/default-settings.page:21
 msgid "Change default settings"
 msgstr "Cambiar la configuración predeterminada"
 
 #. (itstool) path: page/p
-#: C/default-settings.page:22
+#: C/default-settings.page:23
 msgid ""
 "When a document is opened for the first time, default settings, such as zoom "
 "and page view preferences, are applied. Any changes you make to these "
@@ -1023,18 +1023,22 @@ msgstr ""
 "documento."
 
 #. (itstool) path: page/p
-#: C/default-settings.page:25
+#: C/default-settings.page:26
+#| msgid ""
+#| "You can save the settings which you are currently using as default for "
+#| "all new documents by selecting <guiseq><gui style=\"menu\">Edit</gui> "
+#| "<gui style=\"menuitem\">Save Current Settings as Default</gui></guiseq> "
+#| "or press <keyseq><key>Ctrl</key><key>T</key></keyseq>."
 msgid ""
 "You can save the settings which you are currently using as default for all "
-"new documents by selecting <guiseq><gui style=\"menu\">Edit</gui> <gui style="
-"\"menuitem\">Save Current Settings as Default</gui></guiseq> or press "
-"<keyseq><key>Ctrl</key><key>T</key></keyseq>."
+"new documents by pressing the menu button in the top-right corner of the "
+"window and selecting <gui style=\"menuitem\">Save Current Settings as "
+"Default</gui>."
 msgstr ""
 "Puede guardar la configuración que está usando actualmente como "
-"predeterminada para todos los documentos nuevos seleccionando <guiseq><gui "
-"style=\"menu\">Editar</gui> <gui style=\"menuitem\">Guardar la configuración "
-"actual como predeterminada</gui></guiseq> o pulsando <keyseq><key>Ctrl</"
-"key><key>T</key></keyseq>."
+"predeterminada para todos los documentos nuevos pulsando el botón de menú en "
+"la esquina superior derecha de la ventana y eligiendo <gui style=\"menuitem"
+"\">Guardar la configuración actual como predeterminada</gui>."
 
 #. (itstool) path: note/p
 #: C/default-settings.page:31
@@ -1928,12 +1932,12 @@ msgid "You can't use the <app>document viewer</app> to edit files."
 msgstr "No puede usar el <app>Visor de documentos</app> para editar archivos."
 
 #. (itstool) path: page/title
-#: C/editing.page:20
+#: C/editing.page:21
 msgid "Can I edit documents in the document viewer?"
 msgstr "¿Puedo editar documentos en el Visor de documentos?"
 
 #. (itstool) path: page/p
-#: C/editing.page:23
+#: C/editing.page:24
 msgid ""
 "The <app>document viewer</app> can't be used to make changes to documents. "
 "You need to use the appropriate editing application for the type of file you "
@@ -1944,16 +1948,22 @@ msgstr ""
 "archivo que quiere cambiar."
 
 #. (itstool) path: note/p
-#: C/editing.page:29
+#: C/editing.page:30
+#| msgid ""
+#| "PDF and PostScript (.ps) files are not usually intended to be edited, but "
+#| "PDF editing software is available. Try <link href=\"http://pdfedit.cz/en/"
+#| "index.html\">pdfedit</link>, for example."
 msgid ""
 "PDF and PostScript (.ps) files are not usually intended to be edited, but "
-"PDF editing software is available. Try <link href=\"http://pdfedit.cz/en/"
-"index.html\">pdfedit</link>, for example."
+"PDF editing software is available. Try <app>LibreOffice Draw</app> or "
+"<app>Okular</app>, for example. Furthermore, <app>pdfarranger</app> allows "
+"rearranging or removing pages and merging files."
 msgstr ""
 "Los archivos PDF y PostScript (.ps) no están pensados generalmente para que "
-"se editen, pero hay programas de edición de PDF disponibles. Pruebe<link "
-"href=\"http://pdfedit.petricek.net/en/index.html\">pdfedit</link>, por "
-"ejemplo."
+"se editen, pero hay programas de edición de PDF disponibles. Pruebe "
+"<app>LibreOffice Draw</app> or <app>Okular</app>, por ejemplo. También, "
+"<app>pdfarranger</app>, le permite reordenar o eliminar páginas y unir "
+"archivos."
 
 #. (itstool) path: info/desc
 #: C/finding.page:29
@@ -3241,21 +3251,16 @@ msgstr "Mostrar una pantalla vacía"
 
 #. (itstool) path: section/p
 #: C/presentations.page:64
-#| msgid "Press <key>F11</key> or <key>Escape</key>"
 msgid "Press <key>B</key> or <key>.</key> to show a black screen."
 msgstr "Pulse <key>B</key> o <key>.</key> para mostrar una pantalla en negro."
 
 #. (itstool) path: section/p
 #: C/presentations.page:65
-#| msgid "Use <key>Esc</key> to exit the presentation."
 msgid "Press <key>W</key> to show a white screen."
 msgstr "Pulse <key>W</key> para mostrar una pantalla en blanco."
 
 #. (itstool) path: section/p
 #: C/presentations.page:66
-#| msgid ""
-#| "Press <keyseq><key>Alt</key><key>F2</key></keyseq> to open the Run "
-#| "Application window."
 msgid ""
 "Press <key>B</key>, <key>.</key>, or <key>W</key> again to show the slide."
 msgstr ""
@@ -4157,7 +4162,6 @@ msgstr "<key>D</key>"
 
 #. (itstool) path: section/title
 #: C/shortcuts.page:256
-#| msgid "Presentations"
 msgid "Presentation mode"
 msgstr "Modo presentación"
 
@@ -4168,7 +4172,6 @@ msgstr "Cambiar a pantalla en negro."
 
 #. (itstool) path: td/p
 #: C/shortcuts.page:260
-#| msgid "<key>Page Up</key> / <key>Page Down</key>"
 msgid "<key>B</key> / <key>.</key>"
 msgstr "<key>B</key> / <key>.</key>"
 
