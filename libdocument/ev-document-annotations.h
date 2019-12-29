@@ -66,6 +66,13 @@ typedef enum {
 	EV_ANNOTATIONS_SAVE_ALL              = (1 << 11) - 1
 } EvAnnotationsSaveMask;
 
+typedef enum {
+	EV_ANNOTATION_OVER_MARKUP_NOT_IMPLEMENTED = 0,
+	EV_ANNOTATION_OVER_MARKUP_UNKNOWN,
+	EV_ANNOTATION_OVER_MARKUP_YES,
+	EV_ANNOTATION_OVER_MARKUP_NOT
+} EvAnnotationsOverMarkup;
+
 typedef struct _EvDocumentAnnotations          EvDocumentAnnotations;
 typedef struct _EvDocumentAnnotationsInterface EvDocumentAnnotationsInterface;
 
@@ -85,6 +92,10 @@ struct _EvDocumentAnnotationsInterface
 						 EvAnnotationsSaveMask  mask);
 	void	       (* remove_annotation)    (EvDocumentAnnotations *document_annots,
 						 EvAnnotation          *annot);
+	EvAnnotationsOverMarkup (* over_markup) (EvDocumentAnnotations *document_annots,
+						 EvAnnotation          *annot,
+						 gdouble                 x,
+						 gdouble                 y);
 };
 
 GType          ev_document_annotations_get_type             (void) G_GNUC_CONST;
@@ -102,6 +113,10 @@ void           ev_document_annotations_save_annotation      (EvDocumentAnnotatio
 							     EvAnnotationsSaveMask  mask);
 gboolean       ev_document_annotations_can_add_annotation    (EvDocumentAnnotations *document_annots);
 gboolean       ev_document_annotations_can_remove_annotation (EvDocumentAnnotations *document_annots);
+EvAnnotationsOverMarkup ev_document_annotations_over_markup  (EvDocumentAnnotations *document_annots,
+							      EvAnnotation          *annot,
+							      gdouble                x,
+							      gdouble                y);
 
 G_END_DECLS
 

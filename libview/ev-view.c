@@ -3318,6 +3318,30 @@ hide_annotation_windows (EvView *view,
 	}
 }
 
+static int
+cmp_mapping_area_size (EvMapping *a,
+		       EvMapping *b)
+{
+	gdouble wa, ha, wb, hb;
+
+	wa = a->area.x2 - a->area.x1;
+	ha = a->area.y2 - a->area.y1;
+	wb = b->area.x2 - b->area.x1;
+	hb = b->area.y2 - b->area.y1;
+
+	if (wa == wb) {
+		if (ha == hb)
+			return 0;
+		return (ha < hb) ? -1 : 1;
+	}
+
+	if (ha == hb) {
+		return (wa < wb) ? -1 : 1;
+	}
+
+	return (wa * ha < wb * hb) ? -1 : 1;
+}
+
 static EvMapping *
 get_annotation_mapping_at_location (EvView *view,
 				    gdouble x,
@@ -3326,8 +3350,14 @@ get_annotation_mapping_at_location (EvView *view,
 {
 	gint x_new = 0, y_new = 0;
 	EvMappingList *annotations_mapping;
+	EvDocumentAnnotations *doc_annots;
+	EvAnnotation *annot;
+	EvMapping *best;
+	GList *list;
 
-	if (!EV_IS_DOCUMENT_ANNOTATIONS (view->document))
+	doc_annots = EV_DOCUMENT_ANNOTATIONS (view->document);
+
+	if (!doc_annots)
 		return NULL;
 
 	if (!get_doc_point_from_location (view, x, y, page, &x_new, &y_new))
@@ -3335,10 +3365,33 @@ get_annotation_mapping_at_location (EvView *view,
 
 	annotations_mapping = ev_page_cache_get_annot_mapping (view->page_cache, *page);
 
-	if (annotations_mapping)
-		return ev_mapping_list_get (annotations_mapping, x_new, y_new);
+	if (!annotations_mapping)
+		return NULL;
 
-	return NULL;
+	best = NULL;
+	for (list = ev_mapping_list_get_list (annotations_mapping); list; list = list->next) {
+		EvMapping *mapping = list->data;
+
+		if ((x_new >= mapping->area.x1) &&
+		    (y_new >= mapping->area.y1) &&
+		    (x_new <= mapping->area.x2) &&
+		    (y_new <= mapping->area.y2)) {
+
+			annot = EV_ANNOTATION (mapping->data);
+
+			if (ev_annotation_get_annotation_type (annot) == EV_ANNOTATION_TYPE_TEXT_MARKUP &&
+			    ev_document_annotations_over_markup (doc_annots, annot, (gdouble) x_new, (gdouble) y_new)
+								== EV_ANNOTATION_OVER_MARKUP_NOT)
+				continue; /* ignore markup annots clicked outside the markup text */
+
+			/* In case of only one match choose that. Otherwise
+			 * compare the area of the bounding boxes and return the
+			 * smallest element */
+			if (best == NULL || cmp_mapping_area_size (mapping, best) < 0)
+				best = mapping;
+		}
+	}
+	return best;
 }
 
 static EvAnnotation *

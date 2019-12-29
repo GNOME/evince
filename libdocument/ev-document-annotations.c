@@ -91,3 +91,17 @@ ev_document_annotations_can_remove_annotation (EvDocumentAnnotations *document_a
 
 	return iface->remove_annotation != NULL;
 }
+
+EvAnnotationsOverMarkup
+ev_document_annotations_over_markup (EvDocumentAnnotations *document_annots,
+				     EvAnnotation          *annot,
+				     gdouble                x,
+				     gdouble                y)
+{
+	EvDocumentAnnotationsInterface *iface = EV_DOCUMENT_ANNOTATIONS_GET_IFACE (document_annots);
+
+	if (iface->over_markup)
+		return iface->over_markup (document_annots, annot, x, y);
+
+	return EV_ANNOTATION_OVER_MARKUP_NOT_IMPLEMENTED;
+}
