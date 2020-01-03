@@ -3276,8 +3276,6 @@ show_annotation_windows (EvView *view,
 		window = get_window_for_annot (view, annot);
 		if (window) {
 			ev_view_window_child_move_with_parent (view, window);
-		} else {
-			ev_view_create_annotation_window (view, annot, parent);
 		}
 	}
 }
