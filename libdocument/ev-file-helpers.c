@@ -202,91 +202,6 @@ ev_mkstemp_file (const char        *tmpl,
         return file;
 }
 
-/*
- * This function is copied from
- * http://bugzilla.gnome.org/show_bug.cgi?id=524831
- * and renamed from g_mkdtemp to _ev_g_mkdtemp.
- *
- * If/when this function gets added to glib, it can be removed from
- * evince' sources.
- */
-/**
- * g_mkdtemp:
- * @tmpl: template directory name
- *
- * Creates a temporary directory. See the mkdtemp() documentation
- * on most UNIX-like systems.
- *
- * The parameter is a string that should follow the rules for
- * mkdtemp() templates, i.e. contain the string "XXXXXX".  g_mkdtemp()
- * is slightly more flexible than mkdtemp() in that the sequence does
- * not have to occur at the very end of the template. The X string
- * will be modified to form the name of a directory that didn't
- * already exist.  The string should be in the GLib file name
- * encoding. Most importantly, on Windows it should be in UTF-8.
- *
- * Return value: If a temporary directory was successfully created,
- * @tmpl will be returned with the XXXXXX string modified in such a
- * way as to make the path unique.  In case of errors, %NULL is
- * returned.
- */
-static gchar *
-_ev_g_mkdtemp (gchar *tmpl)
-{
-  static const char letters[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-  static const int NLETTERS = sizeof (letters) - 1;
-  static int counter = 0;
-  char *XXXXXX;
-  GTimeVal tv;
-  glong value;
-  int count;
-
-  /* find the last occurrence of "XXXXXX" */
-  XXXXXX = g_strrstr (tmpl, "XXXXXX");
-
-  if (!XXXXXX || strncmp (XXXXXX, "XXXXXX", 6))
-    {
-      errno = EINVAL;
-      return NULL;
-    }
-
-  /* Get some more or less random data.  */
-  g_get_current_time (&tv);
-  value = (tv.tv_usec ^ tv.tv_sec) + counter++;
-
-  for (count = 0; count < 100; value += 7777, ++count)
-    {
-      glong v = value;
-
-      /* Fill in the random bits.  */
-      XXXXXX[0] = letters[v % NLETTERS];
-      v /= NLETTERS;
-      XXXXXX[1] = letters[v % NLETTERS];
-      v /= NLETTERS;
-      XXXXXX[2] = letters[v % NLETTERS];
-      v /= NLETTERS;
-      XXXXXX[3] = letters[v % NLETTERS];
-      v /= NLETTERS;
-      XXXXXX[4] = letters[v % NLETTERS];
-      v /= NLETTERS;
-      XXXXXX[5] = letters[v % NLETTERS];
-
-      /* tmpl is in UTF-8 on Windows, thus use g_mkdir() */
-      if (g_mkdir (tmpl, 0700) == 0)
-        return tmpl;
-
-      if (errno != EEXIST)
-         /* Any other error will apply also to other names we might
-         *  try, and there are 2^32 or so of them, so give up now.
-         */
-         return NULL;
-    }
-
-  /* We got out of the loop because we ran out of combinations to try.  */
-  errno = EEXIST;
-  return NULL;
-}
-
 /**
  * ev_mkdtemp:
  * @tmpl: a template string; must end in 'XXXXXX'
@@ -308,7 +223,7 @@ ev_mkdtemp (const char        *tmpl,
               return NULL;
 
         name = g_build_filename (tmp, tmpl, NULL);
-        if (_ev_g_mkdtemp (name) == NULL) {
+        if (g_mkdtemp (name) == NULL) {
 		int errsv = errno;
 
                 g_set_error (error, G_IO_ERROR, g_io_error_from_errno (errsv),
