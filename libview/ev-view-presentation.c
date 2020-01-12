@@ -723,6 +723,7 @@ ev_view_presentation_goto_window_create (EvViewPresentation *pview)
 	pview->goto_window = gtk_window_new (GTK_WINDOW_POPUP);
         goto_window = GTK_WINDOW (pview->goto_window);
 	gtk_window_set_screen (goto_window, gtk_widget_get_screen (GTK_WIDGET (pview)));
+	gtk_window_set_transient_for (goto_window, toplevel);
 
 	if (gtk_window_has_group (toplevel))
 		gtk_window_group_add_window (gtk_window_get_group (toplevel), goto_window);
