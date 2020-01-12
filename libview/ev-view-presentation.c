@@ -779,14 +779,6 @@ ev_view_presentation_goto_window_send_key_event (EvViewPresentation *pview,
 						 GdkEvent           *event)
 {
 	GdkEventKey *new_event;
-	GdkScreen   *screen;
-
-	/* Move goto window off screen */
-	screen = gtk_widget_get_screen (GTK_WIDGET (pview));
-	gtk_window_move (GTK_WINDOW (pview->goto_window),
-			 gdk_screen_get_width (screen) + 1,
-			 gdk_screen_get_height (screen) + 1);
-	gtk_widget_show (pview->goto_window);
 
 	new_event = (GdkEventKey *) gdk_event_copy (event);
 	g_object_unref (new_event->window);
@@ -797,7 +789,6 @@ ev_view_presentation_goto_window_send_key_event (EvViewPresentation *pview,
 
 	gtk_widget_event (pview->goto_window, (GdkEvent *)new_event);
 	gdk_event_free ((GdkEvent *)new_event);
-	gtk_widget_hide (pview->goto_window);
 }
 
 /* Links */
@@ -1211,10 +1202,10 @@ ev_view_presentation_key_press_event (GtkWidget   *widget,
 		gint x, y;
 
 		ev_view_presentation_goto_window_create (pview);
-		ev_view_presentation_goto_window_send_key_event (pview, (GdkEvent *)event);
 		ev_document_misc_get_pointer_position (GTK_WIDGET (pview), &x, &y);
 		gtk_window_move (GTK_WINDOW (pview->goto_window), x, y);
 		gtk_widget_show (pview->goto_window);
+		ev_view_presentation_goto_window_send_key_event (pview, (GdkEvent *)event);
 		ev_view_presentation_goto_entry_grab_focus (pview);
 
 		return TRUE;
