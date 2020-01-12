@@ -1285,14 +1285,18 @@ ev_view_presentation_motion_notify_event (GtkWidget      *widget,
 static void
 ev_view_presentation_update_monitor_geometry (EvViewPresentation *pview)
 {
-	GdkScreen          *screen = gtk_widget_get_screen (GTK_WIDGET (pview));
-	GdkRectangle        monitor;
-	gint                monitor_num;
+	GdkDisplay  *display;
+	GdkWindow   *window;
+	GdkMonitor  *monitor;
+	GdkRectangle geometry;
 
-	monitor_num = gdk_screen_get_monitor_at_window (screen, gtk_widget_get_window (GTK_WIDGET (pview)));
-	gdk_screen_get_monitor_geometry (screen, monitor_num, &monitor);
-	pview->monitor_width = monitor.width;
-	pview->monitor_height = monitor.height;
+	display = gtk_widget_get_display (GTK_WIDGET (pview));
+	window = gtk_widget_get_window (GTK_WIDGET (pview));
+	monitor = gdk_display_get_monitor_at_window (display, window);
+	gdk_monitor_get_geometry (monitor, &geometry);
+
+	pview->monitor_width = geometry.width;
+	pview->monitor_height = geometry.height;
 }
 
 static gboolean
