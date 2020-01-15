@@ -408,6 +408,7 @@ job_finished_callback (EvJobAnnots          *job,
 			EvAnnotation *annot;
 			const gchar  *label;
 			const gchar  *modified;
+			const gchar  *contents;
 			gchar        *markup;
 			GtkTreeIter   child_iter;
 			GdkPixbuf    *pixbuf = NULL;
@@ -418,7 +419,10 @@ job_finished_callback (EvJobAnnots          *job,
 
 			label = ev_annotation_markup_get_label (EV_ANNOTATION_MARKUP (annot));
 			modified = ev_annotation_get_modified (annot);
-			if (modified) {
+			contents = ev_annotation_get_contents (annot);
+			if (contents) {
+				markup = g_strdup_printf ("%s", contents);
+			} else if (modified) {
 				markup = g_strdup_printf ("<span weight=\"bold\">%s</span>\n%s",
 							  label, modified);
 			} else {
