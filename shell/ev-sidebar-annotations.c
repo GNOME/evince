@@ -40,6 +40,7 @@ enum {
 	COLUMN_MARKUP,
 	COLUMN_ICON,
 	COLUMN_ANNOT_MAPPING,
+	COLUMN_TOOLTIP,
 	N_COLUMNS
 };
 
@@ -107,7 +108,8 @@ ev_sidebar_annotations_create_simple_model (const gchar *message)
 	retval = (GtkTreeModel *)gtk_list_store_new (N_COLUMNS,
 						     G_TYPE_STRING,
 						     GDK_TYPE_PIXBUF,
-						     G_TYPE_POINTER);
+						     G_TYPE_POINTER,
+						     G_TYPE_STRING);
 
 	gtk_list_store_append (GTK_LIST_STORE (retval), &iter);
 	markup = g_strdup_printf ("<span size=\"larger\" style=\"italic\">%s</span>",
@@ -158,6 +160,9 @@ ev_sidebar_annotations_init (EvSidebarAnnotations *ev_annots)
 					     NULL);
 	gtk_tree_view_append_column (GTK_TREE_VIEW (ev_annots->priv->tree_view),
 				     column);
+
+	gtk_tree_view_set_tooltip_column (GTK_TREE_VIEW (ev_annots->priv->tree_view),
+					  COLUMN_TOOLTIP);
 
 	gtk_container_add (GTK_CONTAINER (ev_annots->priv->swindow), ev_annots->priv->tree_view);
 	gtk_widget_show (ev_annots->priv->tree_view);
@@ -383,7 +388,8 @@ job_finished_callback (EvJobAnnots          *job,
 	model = gtk_tree_store_new (N_COLUMNS,
 				    G_TYPE_STRING,
 				    GDK_TYPE_PIXBUF,
-				    G_TYPE_POINTER);
+				    G_TYPE_POINTER,
+				    G_TYPE_STRING);
 
 	screen = gtk_widget_get_screen (GTK_WIDGET (sidebar_annots));
 	icon_theme = gtk_icon_theme_get_for_screen (screen);
@@ -409,7 +415,8 @@ job_finished_callback (EvJobAnnots          *job,
 			const gchar  *label;
 			const gchar  *modified;
 			const gchar  *contents;
-			gchar        *markup;
+			gchar        *markup = NULL;
+			gchar        *tooltip = NULL;
 			GtkTreeIter   child_iter;
 			GdkPixbuf    *pixbuf = NULL;
 
@@ -420,14 +427,17 @@ job_finished_callback (EvJobAnnots          *job,
 			label = ev_annotation_markup_get_label (EV_ANNOTATION_MARKUP (annot));
 			modified = ev_annotation_get_modified (annot);
 			contents = ev_annotation_get_contents (annot);
-			if (contents) {
+
+			if (modified)
+				tooltip = g_strdup_printf ("<span weight=\"bold\">%s</span>\n%s",
+							   label, modified);
+			else
+				tooltip = g_strdup_printf ("<span weight=\"bold\">%s</span>", label);
+
+			if (contents)
 				markup = g_strdup_printf ("%s", contents);
-			} else if (modified) {
-				markup = g_strdup_printf ("<span weight=\"bold\">%s</span>\n%s",
-							  label, modified);
-			} else {
-				markup = g_strdup_printf ("<span weight=\"bold\">%s</span>", label);
-			}
+			else
+				markup = g_strdup_printf ("%s", tooltip);
 
 			if (EV_IS_ANNOTATION_TEXT (annot)) {
 				if (!text_icon) {
@@ -493,8 +503,10 @@ job_finished_callback (EvJobAnnots          *job,
 					    COLUMN_MARKUP, markup,
 					    COLUMN_ICON, pixbuf,
 					    COLUMN_ANNOT_MAPPING, ll->data,
+					    COLUMN_TOOLTIP, tooltip,
 					    -1);
 			g_free (markup);
+			g_free (tooltip);
 			found = TRUE;
 		}
 
