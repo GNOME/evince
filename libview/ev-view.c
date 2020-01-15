@@ -3555,6 +3555,22 @@ ev_view_annotation_show_popup_window (EvView    *view,
 }
 
 static void
+ev_view_annotation_create_show_popup_window (EvView       *view,
+					     EvAnnotation *annot)
+{
+	GtkWindow  *parent;
+	/* the annotation window might already exist */
+	GtkWidget  *window = get_window_for_annot (view, annot);
+
+	if (!window) {
+		parent = GTK_WINDOW (gtk_widget_get_toplevel (GTK_WIDGET (view)));
+		window = ev_view_create_annotation_window (view, annot, parent);
+	}
+
+	ev_view_annotation_show_popup_window (view, window);
+}
+
+static void
 ev_view_handle_annotation (EvView       *view,
 			   EvAnnotation *annot,
 			   gdouble       x,
@@ -6285,6 +6301,8 @@ ev_view_add_text_markup_annotation_for_selected_text (EvView  *view)
 			g_signal_emit (view, signals[SIGNAL_ANNOT_ADDED], 0, view->adding_annot_info.annot);
 	}
 
+	ev_view_annotation_create_show_popup_window (view, view->adding_annot_info.annot);
+
 	clear_selection (view);
 
 	view->adding_annot_info.adding_annot = FALSE;
@@ -6389,8 +6407,6 @@ ev_view_button_release_event (GtkWidget      *widget,
 		g_assert (view->adding_annot_info.annot);
 
 		if (EV_IS_ANNOTATION_MARKUP (view->adding_annot_info.annot)) {
-			GtkWindow  *parent;
-			GtkWidget  *window;
 			EvRectangle area;
 			EvRectangle popup_rect;
 
@@ -6422,16 +6438,8 @@ ev_view_button_release_event (GtkWidget      *widget,
 										 EV_ANNOTATIONS_SAVE_POPUP_RECT);
 					ev_document_doc_mutex_unlock ();
 				}
-				/* the annotation window might already exist */
-				window = get_window_for_annot (view, view->adding_annot_info.annot);
 
-				if (window == NULL) {
-					parent = GTK_WINDOW (gtk_widget_get_toplevel (GTK_WIDGET (view)));
-					window = ev_view_create_annotation_window (view, view->adding_annot_info.annot, parent);
-				}
-				/* Show the annot window the first time for text annotations */
-				if (view->adding_annot_info.type == EV_ANNOTATION_TYPE_TEXT)
-					ev_view_annotation_show_popup_window (view, window);
+				ev_view_annotation_create_show_popup_window (view, view->adding_annot_info.annot);
 			}
 		}
 
