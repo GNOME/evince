@@ -500,6 +500,7 @@ job_finished_callback (EvJobAnnots          *job,
 
 	gtk_tree_view_set_model (GTK_TREE_VIEW (priv->tree_view),
 				 GTK_TREE_MODEL (model));
+	gtk_tree_view_expand_all (GTK_TREE_VIEW (priv->tree_view));
 	g_object_unref (model);
 
 	if (text_icon)
