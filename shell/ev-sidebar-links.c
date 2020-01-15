@@ -352,10 +352,7 @@ popup_menu_cb (GtkWidget *treeview, EvSidebarLinks *sidebar)
 {
 	GtkMenu *menu = build_popup_menu (sidebar);
 
-	gtk_menu_popup (menu, NULL, NULL,
-			ev_gui_menu_position_tree_selection,
-			sidebar->priv->tree_view, 0,
-			gtk_get_current_event_time ());
+	ev_gui_menu_popup_at_tree_view_selection (menu, GTK_TREE_VIEW (sidebar->priv->tree_view));
 	gtk_menu_shell_select_first (GTK_MENU_SHELL (menu), FALSE);
 }
 
@@ -374,9 +371,8 @@ button_press_cb (GtkWidget *treeview,
         	                                   NULL, NULL, NULL)) {
 			gtk_tree_view_set_cursor (GTK_TREE_VIEW (treeview),
 						  path, NULL, FALSE);
-			gtk_menu_popup (build_popup_menu (sidebar), NULL,
-					NULL, NULL, NULL, event->button,
-					gtk_get_current_event_time ());
+			gtk_menu_popup_at_pointer (build_popup_menu (sidebar),
+						   (GdkEvent *) event);
 			gtk_tree_path_free (path);
 
 			return TRUE;

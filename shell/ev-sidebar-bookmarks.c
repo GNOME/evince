@@ -354,12 +354,13 @@ ev_sidebar_bookmarks_popup_menu_show (EvSidebarBookmarks *sidebar_bookmarks,
         if (!priv->popup)
                 priv->popup = gtk_ui_manager_get_widget (priv->ui_manager, "/BookmarksPopup");
 
-        gtk_menu_popup (GTK_MENU (priv->popup),
-                        NULL, NULL,
-                        keyboard_mode ? ev_gui_menu_position_tree_selection : NULL,
-                        keyboard_mode ? tree_view : NULL,
-                        keyboard_mode ? 0 : 3,
-                        gtk_get_current_event_time ());
+        if (keyboard_mode) {
+                ev_gui_menu_popup_at_tree_view_selection (GTK_MENU (priv->popup),
+                                                          tree_view);
+        } else {
+                gtk_menu_popup_at_pointer (GTK_MENU (priv->popup), NULL);
+        }
+
         return TRUE;
 }
 

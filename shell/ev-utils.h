@@ -36,6 +36,8 @@ void 			ev_gui_menu_position_tree_selection (GtkMenu   *menu,
 							     gint      *y,
 							     gboolean  *push_in,
 							     gpointer   user_data);
+void                    ev_gui_menu_popup_at_tree_view_selection (GtkMenu     *menu,
+								  GtkTreeView *tree_view);
 
 void           		file_chooser_dialog_add_writable_pixbuf_formats (GtkFileChooser *chooser);
 GdkPixbufFormat* 	get_gdk_pixbuf_format_by_extension (const gchar *uri);
