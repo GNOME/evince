@@ -1055,7 +1055,7 @@ ev_page_accessible_scroll_substring_to (AtkText       *text,
 	GdkPoint start_point, end_point;
 	gdouble hpage_size, vpage_size;
 	EvRectangle *areas = NULL;
-	guint pos, n_areas = 0;
+	guint n_areas = 0;
 
 	if (end_pos < start_pos)
 		return FALSE;

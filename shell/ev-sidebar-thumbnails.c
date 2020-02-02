@@ -577,9 +577,6 @@ adjustment_changed_cb (EvSidebarThumbnails *sidebar_thumbnails)
 	GtkTreePath *path = NULL;
 	GtkTreePath *path2 = NULL;
 	gdouble page_size;
-	gdouble value;
-	gint wy1;
-	gint wy2;
 
 	/* Widget is not currently visible */
 	if (!gtk_widget_get_mapped (GTK_WIDGET (sidebar_thumbnails)))
@@ -590,8 +587,6 @@ adjustment_changed_cb (EvSidebarThumbnails *sidebar_thumbnails)
 	if (page_size == 0)
 		return;
 
-	value = gtk_adjustment_get_value (priv->vadjustment);
-	
 	if (priv->icon_view) {
 		if (! gtk_widget_get_realized (priv->icon_view))
 			return;
@@ -649,26 +644,6 @@ ev_sidebar_thumbnails_fill_model (EvSidebarThumbnails *sidebar_thumbnails)
 		g_free (page_label);
 		g_free (page_string);
 	}
-}
-
-static void
-ev_sidebar_tree_selection_changed (GtkTreeSelection *selection,
-				   EvSidebarThumbnails *ev_sidebar_thumbnails)
-{
-	EvSidebarThumbnailsPrivate *priv = ev_sidebar_thumbnails->priv;
-	GtkTreePath *path;
-	GtkTreeIter iter;
-	int page;
-
-	if (!gtk_tree_selection_get_selected (selection, NULL, &iter))
-		return;
-
-	path = gtk_tree_model_get_path (GTK_TREE_MODEL (priv->list_store),
-					&iter);
-	page = gtk_tree_path_get_indices (path)[0];
-	gtk_tree_path_free (path);
-
-	ev_document_model_set_page (priv->model, page);
 }
 
 static void
