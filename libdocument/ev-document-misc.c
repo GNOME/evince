@@ -610,14 +610,24 @@ ev_document_misc_format_date (GTime utime)
 	return g_locale_to_utf8 (s, -1, NULL, NULL, NULL);
 }
 
+/**
+ * ev_document_misc_get_pointer_position:
+ * @widget: a #GtkWidget
+ * @x: (out): the pointer's "x" position, or -1 if the position is not
+ *   available
+ * @y: (out): the pointer's "y" position, or -1 if the position is not
+ *   available
+ *
+ * Get the pointer's x and y position relative to @widget.
+ */
 void
 ev_document_misc_get_pointer_position (GtkWidget *widget,
                                        gint      *x,
                                        gint      *y)
 {
-        GdkDeviceManager *device_manager;
-        GdkDevice        *device_pointer;
-        GdkRectangle      allocation;
+        GdkSeat      *seat;
+        GdkDevice    *device_pointer;
+        GdkRectangle  allocation;
 
         if (x)
                 *x = -1;
@@ -627,8 +637,8 @@ ev_document_misc_get_pointer_position (GtkWidget *widget,
         if (!gtk_widget_get_realized (widget))
                 return;
 
-        device_manager = gdk_display_get_device_manager (gtk_widget_get_display (widget));
-        device_pointer = gdk_device_manager_get_client_pointer (device_manager);
+        seat = gdk_display_get_default_seat (gtk_widget_get_display (widget));
+        device_pointer = gdk_seat_get_pointer (seat);
         gdk_window_get_device_position (gtk_widget_get_window (widget),
                                         device_pointer,
                                         x, y, NULL);
