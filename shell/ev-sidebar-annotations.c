@@ -589,24 +589,8 @@ ev_sidebar_annotations_popup_menu_show (EvSidebarAnnotations *sidebar_annots,
 	window = gtk_widget_get_toplevel (GTK_WIDGET (sidebar_annots));
 
 	ev_window_handle_annot_popup (EV_WINDOW (window), EV_ANNOTATION (annot_mapping->data));
-
-#if GTK_CHECK_VERSION (3, 22, 0)
 	gtk_menu_popup_at_rect (GTK_MENU (priv->popup), rect_window, rect,
 				GDK_GRAVITY_SOUTH_WEST, GDK_GRAVITY_NORTH_WEST, event);
-#else
-	if (event != NULL)
-		gtk_menu_popup_for_device (GTK_MENU (priv->popup),
-					   gdk_event_get_device (event),
-					   NULL, NULL, NULL, NULL, NULL, 0,
-					   gdk_event_get_time (event));
-	else
-		/* popup was triggered from keyboard */
-		gtk_menu_popup (GTK_MENU (priv->popup), NULL, NULL,
-				ev_gui_menu_position_tree_selection,
-				priv->tree_view, 0,
-				gtk_get_current_event_time ());
-#endif
-
 	return TRUE;
 }
 
