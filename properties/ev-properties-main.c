@@ -34,8 +34,7 @@
 #include <glib/gi18n-lib.h>
 #include <gtk/gtk.h>
 
-#include <libnautilus-extension/nautilus-extension-types.h>
-#include <libnautilus-extension/nautilus-property-page-provider.h>
+#include <nautilus-extension.h>
 
 #include <evince-document.h>
 #include "ev-properties-view.h"

@@ -174,7 +174,7 @@ if ev_platform == 'gnome'
   # *** Nautilus property page build ***
   enable_nautilus = get_option('nautilus')
   if enable_nautilus
-    libnautilus_extension_dep = dependency('libnautilus-extension', version: '>= 2.91.4')
+    libnautilus_extension_dep = dependency('libnautilus-extension', version: '>= 3.28.0')
     nautilus_extension_dir = libnautilus_extension_dep.get_pkgconfig_variable('extensiondir', define_variable: ['libdir', ev_libdir])
   endif
 
