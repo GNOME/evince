@@ -6693,8 +6693,9 @@ do_action_named (EvWindow *window, EvLinkAction *action)
 		g_action_group_activate_action (G_ACTION_GROUP (window), "save-as", NULL);
 	} else {
 		g_warning ("Unimplemented named action: %s, please post a "
-		           "bug report in Evince bugzilla "
-		           "(http://bugzilla.gnome.org) with a testcase.",
+		           "bug report in Evince Gitlab "
+		           "(https://gitlab.gnome.org/GNOME/evince/issues) "
+			   "with a testcase.",
 			   name);
 	}
 }
