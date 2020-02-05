@@ -9,14 +9,14 @@
 # Juanje Ojeda Croissier <jojeda@emergya.es>, 2008, 2009.
 # Jorge González <jorgegonz@svn.gnome.org>, 2007, 2008, 2010.
 # Alberto Caso <alberto@acaso.net>, 2016.
-# Daniel Mustieles <daniel.mustieles@gmail.com>, 2010-2019.
+# Daniel Mustieles <daniel.mustieles@gmail.com>, 2010-2020.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: evince.master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
-"POT-Creation-Date: 2019-11-25 11:48+0000\n"
-"PO-Revision-Date: 2019-11-25 12:52+0100\n"
+"POT-Creation-Date: 2020-02-05 00:35+0000\n"
+"PO-Revision-Date: 2020-02-05 11:16+0100\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Spanish - Spain <gnome-es-list@gnome.org>\n"
 "Language: es_ES\n"
@@ -307,15 +307,15 @@ msgstr "Documentos XPS"
 msgid "Adds support for reading XPS documents"
 msgstr "Añade soporte para leer documentos XPS"
 
-#: browser-plugin/EvBrowserPluginToolbar.cpp:288 shell/evince-menus.ui:128
+#: browser-plugin/EvBrowserPluginToolbar.cpp:288 shell/evince-menus.ui:127
 msgid "Fit Pa_ge"
 msgstr "Ajusta_r página"
 
-#: browser-plugin/EvBrowserPluginToolbar.cpp:297 shell/evince-menus.ui:133
+#: browser-plugin/EvBrowserPluginToolbar.cpp:297 shell/evince-menus.ui:132
 msgid "Fit _Width"
 msgstr "Ajustar _anchura"
 
-#: browser-plugin/EvBrowserPluginToolbar.cpp:306 shell/evince-menus.ui:138
+#: browser-plugin/EvBrowserPluginToolbar.cpp:306 shell/evince-menus.ui:137
 msgid "_Automatic"
 msgstr "_Automático"
 
@@ -452,8 +452,8 @@ msgstr "No se pudo abrir el adjunto «%s»"
 msgid "File type %s (%s) is not supported"
 msgstr "El tipo de archivo %s (%s) no está soportado"
 
-#: libdocument/ev-document-factory.c:373 libdocument/ev-file-helpers.c:498
-#: libdocument/ev-file-helpers.c:544 libdocument/ev-file-helpers.c:563
+#: libdocument/ev-document-factory.c:373 libdocument/ev-file-helpers.c:413
+#: libdocument/ev-file-helpers.c:459 libdocument/ev-file-helpers.c:478
 msgid "Unknown MIME Type"
 msgstr "Tipo MIME desconocido"
 
@@ -470,7 +470,7 @@ msgstr "Todos los archivos"
 msgid "Failed to create a temporary file: %s"
 msgstr "Falló al crear un archivo temporal: %s"
 
-#: libdocument/ev-file-helpers.c:315
+#: libdocument/ev-file-helpers.c:230
 #, c-format
 msgid "Failed to create a temporary directory: %s"
 msgstr "Falló al crear una carpeta temporal: %s"
@@ -708,11 +708,11 @@ msgstr "Ir al archivo «%s»"
 msgid "Launch %s"
 msgstr "Lanzar %s"
 
-#: libview/ev-view-presentation.c:752
+#: libview/ev-view-presentation.c:753
 msgid "Jump to page:"
 msgstr "Saltar a la página:"
 
-#: libview/ev-view-presentation.c:1055
+#: libview/ev-view-presentation.c:1047
 msgid "End of presentation. Press Esc or click to exit."
 msgstr "Fin de la presentación. Pulse Esc o con el ratón para salir."
 
@@ -790,11 +790,11 @@ msgstr "Im_primir"
 msgid "Print this document"
 msgstr "Imprime este documento"
 
-#: previewer/previewer.ui:20 shell/evince-menus.ui:255
+#: previewer/previewer.ui:20 shell/evince-menus.ui:254
 msgid "Previous Page"
 msgstr "Página anterior"
 
-#: previewer/previewer.ui:27 shell/evince-menus.ui:259
+#: previewer/previewer.ui:27 shell/evince-menus.ui:258
 msgid "Next Page"
 msgstr "Siguiente página"
 
@@ -802,7 +802,7 @@ msgstr "Siguiente página"
 msgid "Reset zoom and make the page fit in the window"
 msgstr "Restaurar ampliación y ajustar la página a la ventana"
 
-#: properties/ev-properties-main.c:117
+#: properties/ev-properties-main.c:116
 msgid "Document"
 msgstr "Documento"
 
@@ -1034,7 +1034,7 @@ msgstr "_Ventana nueva"
 msgid "Open a C_opy"
 msgstr "Abrir una c_opia"
 
-#: shell/evince-menus.ui:52 shell/evince-menus.ui:241
+#: shell/evince-menus.ui:52 shell/evince-menus.ui:240
 msgid "Open Containing _Folder"
 msgstr "Abrir la _carpeta contenedora"
 
@@ -1059,7 +1059,6 @@ msgid "_Odd Pages Left"
 msgstr "Páginas _impares a la izquierda"
 
 #: shell/evince-menus.ui:82
-#| msgid "Recent Documents"
 msgid "Right to Left Document"
 msgstr "Documentos de derecha a izquierda"
 
@@ -1087,101 +1086,101 @@ msgstr "_Atajos del teclado"
 msgid "_Help"
 msgstr "Ay_uda"
 
-#: shell/evince-menus.ui:119
+#: shell/evince-menus.ui:118
 msgid "_About Document Viewer"
 msgstr "_Acerca del visor de documentos"
 
-#: shell/evince-menus.ui:150
+#: shell/evince-menus.ui:149
 msgid "_Open Link"
 msgstr "_Abrir enlace"
 
-#: shell/evince-menus.ui:155
+#: shell/evince-menus.ui:154
 msgid "_Copy Link Address"
 msgstr "_Copiar dirección del enlace"
 
-#: shell/evince-menus.ui:160
+#: shell/evince-menus.ui:159
 msgid "_Go To"
 msgstr "_Ir"
 
-#: shell/evince-menus.ui:165
+#: shell/evince-menus.ui:164
 msgid "Open in New _Window"
 msgstr "Abrir en una _ventana nueva"
 
-#: shell/evince-menus.ui:172
+#: shell/evince-menus.ui:171
 msgid "_Previous Page"
 msgstr "Página _anterior"
 
-#: shell/evince-menus.ui:176
+#: shell/evince-menus.ui:175
 msgid "_Next Page"
 msgstr "_Siguiente página"
 
-#: shell/evince-menus.ui:180 shell/ev-window.c:3819
+#: shell/evince-menus.ui:179 shell/ev-window.c:3819
 msgid "_Reload"
 msgstr "Re_cargar"
 
-#: shell/evince-menus.ui:184
+#: shell/evince-menus.ui:183
 msgid "Auto_scroll"
 msgstr "Autode_splazar"
 
-#: shell/evince-menus.ui:190
+#: shell/evince-menus.ui:189
 msgid "_Copy"
 msgstr "_Copiar"
 
-#: shell/evince-menus.ui:194
+#: shell/evince-menus.ui:193
 msgid "Select _All"
 msgstr "Seleccionar _todo"
 
-#: shell/evince-menus.ui:200
+#: shell/evince-menus.ui:199
 msgid "_Save Image As…"
 msgstr "Guardar imagen _como…"
 
-#: shell/evince-menus.ui:205
+#: shell/evince-menus.ui:204
 msgid "Copy _Image"
 msgstr "Copiar _imagen"
 
-#: shell/evince-menus.ui:212 shell/evince-menus.ui:283
-#: shell/evince-menus.ui:306
+#: shell/evince-menus.ui:211 shell/evince-menus.ui:282
+#: shell/evince-menus.ui:305
 msgid "_Open Attachment"
 msgstr "_Abrir adjuntos"
 
-#: shell/evince-menus.ui:217 shell/evince-menus.ui:287
-#: shell/evince-menus.ui:311
+#: shell/evince-menus.ui:216 shell/evince-menus.ui:286
+#: shell/evince-menus.ui:310
 msgid "_Save Attachment As…"
 msgstr "_Guardar adjunto como…"
 
-#: shell/evince-menus.ui:224 shell/evince-menus.ui:296
+#: shell/evince-menus.ui:223 shell/evince-menus.ui:295
 msgid "Annotation Properties…"
 msgstr "Propiedades de la anotación…"
 
-#: shell/evince-menus.ui:229 shell/evince-menus.ui:301
+#: shell/evince-menus.ui:228 shell/evince-menus.ui:300
 msgid "Remove Annotation"
 msgstr "Quitar anotación"
 
-#: shell/evince-menus.ui:236
+#: shell/evince-menus.ui:235
 msgid "Highlight Selected Text"
 msgstr "Resaltar el texto seleccionado"
 
-#: shell/evince-menus.ui:249
+#: shell/evince-menus.ui:248
 msgid "Navigation"
 msgstr "Navegación"
 
-#: shell/evince-menus.ui:251
+#: shell/evince-menus.ui:250
 msgid "First Page"
 msgstr "Primera página"
 
-#: shell/evince-menus.ui:263
+#: shell/evince-menus.ui:262
 msgid "Last Page"
 msgstr "Última página"
 
-#: shell/evince-menus.ui:268
+#: shell/evince-menus.ui:267
 msgid "History"
 msgstr "Histórico"
 
-#: shell/evince-menus.ui:270
+#: shell/evince-menus.ui:269
 msgid "Back"
 msgstr "Atrás"
 
-#: shell/evince-menus.ui:274
+#: shell/evince-menus.ui:273
 msgid "Forward"
 msgstr "Adelante"
 
@@ -1222,7 +1221,7 @@ msgstr "Se requiere una contraseña"
 
 #: shell/ev-password-view.c:252 shell/ev-sidebar-attachments.c:493
 #: shell/ev-window.c:2770 shell/ev-window.c:3070 shell/ev-window.c:3943
-#: shell/ev-window.c:6931 shell/ev-window.c:7158
+#: shell/ev-window.c:6934 shell/ev-window.c:7161
 msgid "_Cancel"
 msgstr "_Cancelar"
 
@@ -1292,7 +1291,7 @@ msgstr "El documento no contiene ninguna anotación"
 msgid "Page %d"
 msgstr "Página %d"
 
-#: shell/ev-sidebar-annotations.c:667 shell/ev-window.c:7563
+#: shell/ev-sidebar-annotations.c:667 shell/ev-window.c:7566
 msgid "Annotations"
 msgstr "Anotaciones"
 
@@ -1310,7 +1309,7 @@ msgstr "El archivo ya existe en «%s». Reemplazarlo sobrescribirá su contenido
 msgid "_Replace"
 msgstr "_Reemplazar"
 
-#: shell/ev-sidebar-attachments.c:899 shell/ev-window.c:7587
+#: shell/ev-sidebar-attachments.c:899 shell/ev-window.c:7590
 msgid "Attachments"
 msgstr "Adjuntos"
 
@@ -1334,22 +1333,22 @@ msgstr "Añadir marcador"
 msgid "Remove bookmark"
 msgstr "Quitar marcador"
 
-#: shell/ev-sidebar-bookmarks.c:595 shell/ev-window.c:7571
+#: shell/ev-sidebar-bookmarks.c:595 shell/ev-window.c:7574
 msgid "Bookmarks"
 msgstr "Marcadores"
 
-#: shell/ev-sidebar-layers.c:444 shell/ev-window.c:7599
+#: shell/ev-sidebar-layers.c:444 shell/ev-window.c:7602
 msgid "Layers"
 msgstr "Capas"
 
 #. Translators: This is the title for the sidebar pane that
 #. * shows the Outline or Table of Contents of the document.
 #.
-#: shell/ev-sidebar-links.c:1027 shell/ev-window.c:7551
+#: shell/ev-sidebar-links.c:1027 shell/ev-window.c:7554
 msgid "Outline"
 msgstr "Índice"
 
-#: shell/ev-sidebar-thumbnails.c:1063 shell/ev-window.c:7534
+#: shell/ev-sidebar-thumbnails.c:1038 shell/ev-window.c:7537
 msgid "Thumbnails"
 msgstr "Miniaturas"
 
@@ -1481,7 +1480,7 @@ msgstr "Subiendo la imagen (%d%%)"
 msgid "Save As…"
 msgstr "Guardar como…"
 
-#: shell/ev-window.c:3071 shell/ev-window.c:6933 shell/ev-window.c:7160
+#: shell/ev-window.c:3071 shell/ev-window.c:6936 shell/ev-window.c:7163
 msgid "_Save"
 msgstr "_Guardar"
 
@@ -1626,23 +1625,23 @@ msgstr "No se pudo lanzar la aplicación externa."
 msgid "Unable to open external link"
 msgstr "No se pudo abrir el enlace externo"
 
-#: shell/ev-window.c:6860
+#: shell/ev-window.c:6863
 msgid "Couldn’t find appropriate format to save image"
 msgstr "No se pudo encontrar un formato apropiado para guardar la imagen"
 
-#: shell/ev-window.c:6892
+#: shell/ev-window.c:6895
 msgid "The image could not be saved."
 msgstr "La imagen no se pudo guardar."
 
-#: shell/ev-window.c:6928
+#: shell/ev-window.c:6931
 msgid "Save Image"
 msgstr "Guardar imagen"
 
-#: shell/ev-window.c:7087
+#: shell/ev-window.c:7090
 msgid "Unable to open attachment"
 msgstr "No se pudo abrir el adjunto"
 
-#: shell/ev-window.c:7155
+#: shell/ev-window.c:7158
 msgid "Save Attachment"
 msgstr "Guardar adjuntos"
 
@@ -1746,210 +1745,295 @@ msgctxt "shortcut window"
 msgid "Reload the document"
 msgstr "Recarga el documento"
 
-#: shell/help-overlay.ui:62
+#: shell/help-overlay.ui:61
 msgctxt "shortcut window"
 msgid "Window"
 msgstr "Ventana"
 
-#: shell/help-overlay.ui:66
+#: shell/help-overlay.ui:65
 msgctxt "shortcut window"
 msgid "Toggle fullscreen"
 msgstr "Alternar la vista de pantalla completa"
 
-#: shell/help-overlay.ui:73
+#: shell/help-overlay.ui:72
 msgctxt "shortcut window"
 msgid "Enter presentation mode"
 msgstr "Activar el modo presentación"
 
-#: shell/help-overlay.ui:80
+#: shell/help-overlay.ui:79
 msgctxt "shortcut window"
 msgid "Toggle sidebar"
 msgstr "Alternar barra lateral"
 
-#: shell/help-overlay.ui:87
+#: shell/help-overlay.ui:86
 msgctxt "shortcut window"
 msgid "Toggle caret navigation"
 msgstr "Alternar la navegación de cursor"
 
-#: shell/help-overlay.ui:97
+#: shell/help-overlay.ui:95
 msgctxt "shortcut window"
 msgid "Selecting and copying text"
 msgstr "Seleccionar y copiar texto"
 
-#: shell/help-overlay.ui:101
+#: shell/help-overlay.ui:99
 msgctxt "shortcut window"
 msgid "Copy highlighted text"
 msgstr "Copiar el texto resaltado"
 
-#: shell/help-overlay.ui:108
+#: shell/help-overlay.ui:106
 msgctxt "shortcut window"
 msgid "Select all the text in a document"
 msgstr "Seleccionar todo el texto de un documento"
 
-#: shell/help-overlay.ui:118
+#: shell/help-overlay.ui:115
 msgctxt "shortcut window"
 msgid "Rotating and zooming"
 msgstr "Rotar y ampliar"
 
-#: shell/help-overlay.ui:122
+#: shell/help-overlay.ui:119
 msgctxt "shortcut window"
 msgid "Rotate the page 90 degrees counter-clockwise"
 msgstr "Rotar la página 90º en sentido antihorario"
 
-#: shell/help-overlay.ui:129
+#: shell/help-overlay.ui:126
 msgctxt "shortcut window"
 msgid "Rotate the page 90 degrees clockwise"
 msgstr "Rotar la página 90º en sentido horario"
 
-#: shell/help-overlay.ui:136 shell/help-overlay.ui:339
+#: shell/help-overlay.ui:133 shell/help-overlay.ui:442
 msgctxt "shortcut window"
 msgid "Zoom in"
 msgstr "Ampliar"
 
-#: shell/help-overlay.ui:143 shell/help-overlay.ui:346
+#: shell/help-overlay.ui:140 shell/help-overlay.ui:449
 msgctxt "shortcut window"
 msgid "Zoom out"
 msgstr "Reducir"
 
-#: shell/help-overlay.ui:150
+#: shell/help-overlay.ui:147
 msgctxt "shortcut window"
 msgid "Zoom 1∶1"
 msgstr "Ampliación 1:1"
 
-#: shell/help-overlay.ui:157
+#: shell/help-overlay.ui:154
+msgctxt "shortcut window"
+msgid "Zoom in (alternative)"
+msgstr "Ampliar (alternativa)"
+
+#: shell/help-overlay.ui:161
 msgctxt "shortcut window"
 msgid "Fit page"
 msgstr "Ajustar página"
 
-#: shell/help-overlay.ui:164
+#: shell/help-overlay.ui:168
 msgctxt "shortcut window"
 msgid "Fit width"
 msgstr "Ajustar anchura"
 
-#: shell/help-overlay.ui:171
+#: shell/help-overlay.ui:175
 msgctxt "shortcut window"
 msgid "Automatic zoom"
 msgstr "Ampliación automática"
 
-#: shell/help-overlay.ui:181
+#: shell/help-overlay.ui:184
 msgctxt "shortcut window"
 msgid "Moving around the document"
 msgstr "Moverse por el documento"
 
-#: shell/help-overlay.ui:185 shell/help-overlay.ui:192
+#: shell/help-overlay.ui:188 shell/help-overlay.ui:195
 msgctxt "shortcut window"
 msgid "Move around a page"
 msgstr "Moverse por una página"
 
-#: shell/help-overlay.ui:199
+#: shell/help-overlay.ui:202
 msgctxt "shortcut window"
 msgid "Move up/down a page several lines at a time"
 msgstr "Subir/bajar varias líneas a la vez"
 
-#: shell/help-overlay.ui:206
+#: shell/help-overlay.ui:209 shell/help-overlay.ui:463
 msgctxt "shortcut window"
-msgid "Go to previous/next page"
-msgstr "Ir a la página anterior/siguiente"
+msgid "Go to previous page"
+msgstr "Ir a la página anterior"
 
-#: shell/help-overlay.ui:213
-msgctxt "shortcut window"
-msgid "Go to previous/next page visited"
-msgstr "Ir a la página anterior/siguiente visitada"
-
-#: shell/help-overlay.ui:220
-msgctxt "shortcut window"
-msgid "Go to page number"
-msgstr "Ir a la página número"
-
-#: shell/help-overlay.ui:227
-msgctxt "shortcut window"
-msgid "Go to the beginning/end of a page"
-msgstr "Ir al principio/final de una página"
-
-#: shell/help-overlay.ui:234
-msgctxt "shortcut window"
-msgid "Go to the beginning of the document"
-msgstr "Ir al principio del documento"
-
-#: shell/help-overlay.ui:241
-msgctxt "shortcut window"
-msgid "Go to the end of the document"
-msgstr "Ir al final del documento"
-
-#: shell/help-overlay.ui:251
-msgctxt "shortcut window"
-msgid "Finding text"
-msgstr "Buscando texto"
-
-#: shell/help-overlay.ui:255
-msgctxt "shortcut window"
-msgid "Show the search bar"
-msgstr "Muestra la barra de búsqueda"
-
-#: shell/help-overlay.ui:262
-msgctxt "shortcut window"
-msgid "Go to the next search result"
-msgstr "Ir al siguiente resultado de búsqueda"
-
-#: shell/help-overlay.ui:269
-msgctxt "shortcut window"
-msgid "Go to the previous search result"
-msgstr "Ir al resultado de búsqueda anterior"
-
-#: shell/help-overlay.ui:279
-msgctxt "shortcut window"
-msgid "Document view and handling"
-msgstr "Vista y manejo del documento"
-
-#: shell/help-overlay.ui:283
-msgctxt "shortcut window"
-msgid "Add bookmark"
-msgstr "Añadir marcador"
-
-#: shell/help-overlay.ui:290
-msgctxt "shortcut window"
-msgid "Toggle inverted colors"
-msgstr "Alternar colores invertidos"
-
-#: shell/help-overlay.ui:297
-msgctxt "shortcut window"
-msgid "Toggle continuous scrolling"
-msgstr "Alternar desplazamiento continuo"
-
-#: shell/help-overlay.ui:304
-msgctxt "shortcut window"
-msgid "Toggle dual page"
-msgstr "Alternar doble página"
-
-#: shell/help-overlay.ui:314
-msgctxt "shortcut window"
-msgid "Presentation mode"
-msgstr "Modo presentación"
-
-#: shell/help-overlay.ui:318
-msgctxt "shortcut window"
-msgid "Toggle black screen"
-msgstr "Alternar la pantalla oscura"
-
-#: shell/help-overlay.ui:325
-msgctxt "shortcut window"
-msgid "Toggle white screen"
-msgstr "Alternar la pantalla clara"
-
-#: shell/help-overlay.ui:335
-msgctxt "shortcut window"
-msgid "Touchpad gestures"
-msgstr "Gestos del «touchpad»"
-
-#: shell/help-overlay.ui:353
+#: shell/help-overlay.ui:216 shell/help-overlay.ui:456
 msgctxt "shortcut window"
 msgid "Go to next page"
 msgstr "Ir a la página siguiente"
 
-#: shell/help-overlay.ui:360
+#: shell/help-overlay.ui:223
 msgctxt "shortcut window"
-msgid "Go to previous page"
-msgstr "Ir a la página anterior"
+msgid "Go to page number"
+msgstr "Ir a la página número"
+
+#: shell/help-overlay.ui:230
+#| msgid "Go to previous page"
+msgctxt "shortcut window"
+msgid "Go to previous page (fast)"
+msgstr "Ir a la página anterior (rápido)"
+
+#: shell/help-overlay.ui:237
+#| msgid "Go to next page"
+msgctxt "shortcut window"
+msgid "Go to next page (fast)"
+msgstr "Ir a la página siguiente (rápido)"
+
+#: shell/help-overlay.ui:244
+#| msgctxt "shortcut window"
+#| msgid "Go to previous/next page visited"
+msgctxt "shortcut window"
+msgid "Go to previous page visited"
+msgstr "Ir a la página anterior visitada"
+
+#: shell/help-overlay.ui:251
+#| msgctxt "shortcut window"
+#| msgid "Go to previous/next page visited"
+msgctxt "shortcut window"
+msgid "Go to next page visited"
+msgstr "Ir a la siguiente página visitada"
+
+#: shell/help-overlay.ui:258
+msgctxt "shortcut window"
+msgid "Go to the beginning/end of a page"
+msgstr "Ir al principio/final de una página"
+
+#: shell/help-overlay.ui:265
+msgctxt "shortcut window"
+msgid "Go to the beginning of the document"
+msgstr "Ir al principio del documento"
+
+#: shell/help-overlay.ui:272
+msgctxt "shortcut window"
+msgid "Go to the end of the document"
+msgstr "Ir al final del documento"
+
+#: shell/help-overlay.ui:281
+msgctxt "shortcut window"
+msgid "Document view and handling"
+msgstr "Vista y manejo del documento"
+
+#: shell/help-overlay.ui:285
+msgctxt "shortcut window"
+msgid "Add bookmark"
+msgstr "Añadir marcador"
+
+#: shell/help-overlay.ui:292
+#| msgid "Remove bookmark"
+msgctxt "shortcut window"
+msgid "Remove bookmark"
+msgstr "Quitar marcador"
+
+#: shell/help-overlay.ui:299
+#| msgctxt "shortcut window"
+#| msgid "Toggle sidebar"
+msgctxt "shortcut window"
+msgid "Toggle night mode"
+msgstr "Conmutar modo noche"
+
+#: shell/help-overlay.ui:306
+msgctxt "shortcut window"
+msgid "Toggle continuous scrolling"
+msgstr "Alternar desplazamiento continuo"
+
+#: shell/help-overlay.ui:313
+msgctxt "shortcut window"
+msgid "Toggle dual page"
+msgstr "Alternar doble página"
+
+#: shell/help-overlay.ui:320
+#| msgid "Document View"
+msgctxt "shortcut window"
+msgid "Document properties"
+msgstr "Propiedades del documento"
+
+#: shell/help-overlay.ui:327
+msgctxt "shortcut window"
+msgid "Add a post-it like note"
+msgstr "Añadir una nota tipo post-it"
+
+#: shell/help-overlay.ui:334
+#| msgid "Highlight text"
+msgctxt "shortcut window"
+msgid "Highlight text"
+msgstr "Resaltar texto"
+
+#: shell/help-overlay.ui:343
+msgctxt "shortcut window"
+msgid "Finding text"
+msgstr "Buscando texto"
+
+#: shell/help-overlay.ui:347
+msgctxt "shortcut window"
+msgid "Show the search bar"
+msgstr "Muestra la barra de búsqueda"
+
+#: shell/help-overlay.ui:354
+msgctxt "shortcut window"
+msgid "Go to the next search result"
+msgstr "Ir al siguiente resultado de búsqueda"
+
+#: shell/help-overlay.ui:361
+msgctxt "shortcut window"
+msgid "Go to the previous search result"
+msgstr "Ir al resultado de búsqueda anterior"
+
+#: shell/help-overlay.ui:370
+#| msgid "General"
+msgctxt "shortcut window"
+msgid "General"
+msgstr "General"
+
+#: shell/help-overlay.ui:374
+msgctxt "shortcut window"
+msgid "Show help"
+msgstr "Mostrar ayuda"
+
+#: shell/help-overlay.ui:381
+msgctxt "shortcut window"
+msgid "Show primary menu"
+msgstr "Mostrar menú primario"
+
+#: shell/help-overlay.ui:388
+#| msgid "_Keyboard Shortcuts"
+msgctxt "shortcut window"
+msgid "Keyboard shortcuts"
+msgstr "Atajos del teclado"
+
+#: shell/help-overlay.ui:395
+#| msgid "New _Window"
+msgctxt "shortcut window"
+msgid "Close window"
+msgstr "Cerrar la ventana"
+
+#: shell/help-overlay.ui:402
+msgctxt "shortcut window"
+msgid "Quit"
+msgstr "Salir"
+
+#: shell/help-overlay.ui:409
+#| msgid "Save Current Settings as Defa_ult"
+msgctxt "shortcut window"
+msgid "Save current settings as default"
+msgstr "Guardar la configuración actual como predeterminada"
+
+#: shell/help-overlay.ui:418
+msgctxt "shortcut window"
+msgid "Presentation mode"
+msgstr "Modo presentación"
+
+#: shell/help-overlay.ui:422
+msgctxt "shortcut window"
+msgid "Toggle black screen"
+msgstr "Alternar la pantalla oscura"
+
+#: shell/help-overlay.ui:429
+msgctxt "shortcut window"
+msgid "Toggle white screen"
+msgstr "Alternar la pantalla clara"
+
+#: shell/help-overlay.ui:438
+msgctxt "shortcut window"
+msgid "Touchpad gestures"
+msgstr "Gestos del «touchpad»"
 
 #: shell/main.c:63 shell/main.c:269
 msgid "GNOME Document Viewer"
@@ -2002,6 +2086,14 @@ msgstr "CADENA"
 #: shell/main.c:81
 msgid "[FILE…]"
 msgstr "[ARCHIVO…]"
+
+#~ msgctxt "shortcut window"
+#~ msgid "Go to previous/next page"
+#~ msgstr "Ir a la página anterior/siguiente"
+
+#~ msgctxt "shortcut window"
+#~ msgid "Toggle inverted colors"
+#~ msgstr "Alternar colores invertidos"
 
 #~ msgid "org.gnome.Evince"
 #~ msgstr "org.gnome.Evince"
