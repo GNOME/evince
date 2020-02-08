@@ -1,5 +1,5 @@
 # Japanese messages catalogue for evince - PS/PDF viewer for GNOME
-# Copyright (C) 2005-2019 THE evince's COPYRIGHT HOLDER
+# Copyright (C) 2005-2020 THE evince's COPYRIGHT HOLDER
 # This file is distributed under the same license as the evince package.
 # Satoru SATOH <ss@gnome.gr.jp>, 2005, 2006.
 # Takeshi AIHANA <takshi.aihana@gmail.com>, 2005-2009.
@@ -11,14 +11,14 @@
 # Jiro Matsuzawa <jmatsuzawa@src.gnome.org>, 2011, 2013, 2014, 2015, 2016.
 # Ikuya Awashiro <ikuya@fruitsbasket.info>, 2012, 2014.
 # OKANO Takayoshi <>, 2013.
-# sicklylife <translation@sicklylife.jp>, 2019.
+# sicklylife <translation@sicklylife.jp>, 2019-2020.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: evince master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
 "POT-Creation-Date: 2020-02-05 00:35+0000\n"
-"PO-Revision-Date: 2019-10-02 18:30+0900\n"
+"PO-Revision-Date: 2020-02-08 20:00+0900\n"
 "Last-Translator: sicklylife <translation@sicklylife.jp>\n"
 "Language-Team: Japanese <gnome-translation@gnome.gr.jp>\n"
 "Language: ja\n"
@@ -37,7 +37,7 @@ msgstr "アーカイブが暗号化されています"
 
 #: backend/comics/comics-document.c:233
 msgid "No supported images in archive"
-msgstr "アーカイブにサポートしている画像が含まれていません"
+msgstr "サポートしている画像がアーカイブに含まれていません"
 
 #: backend/comics/comics-document.c:238
 msgid "No files in archive"
@@ -276,12 +276,12 @@ msgstr "PostScript ドキュメントの読み込みサポートを追加する"
 #: backend/ps/ev-spectre.c:98
 #, c-format
 msgid "Failed to load document “%s”"
-msgstr "ドキュメント“%s”を読み込めませんでした"
+msgstr "ドキュメント“%s”の読み込みに失敗しました"
 
 #: backend/ps/ev-spectre.c:131
 #, c-format
 msgid "Failed to save document “%s”"
-msgstr "ドキュメント“%s”を保存できませんでした"
+msgstr "ドキュメント“%s”の保存に失敗しました"
 
 #: backend/tiff/evince-tiffdocument.metainfo.xml.in.in:5
 #: backend/tiff/tiffdocument.evince-backend.desktop.in.in:4
@@ -1050,10 +1050,8 @@ msgid "_Odd Pages Left"
 msgstr "奇数ページを左に(_O)"
 
 #: shell/evince-menus.ui:82
-#, fuzzy
-#| msgid "Recent Documents"
 msgid "Right to Left Document"
-msgstr "最近使用したドキュメント"
+msgstr "右横書きのドキュメント"
 
 #: shell/evince-menus.ui:88
 msgid "Ro_tate ⤵"
@@ -1365,10 +1363,8 @@ msgid "Annotate the document"
 msgstr "ドキュメントに注釈を付けます"
 
 #: shell/ev-toolbar.c:227
-#, fuzzy
-#| msgid "Annotate the document"
 msgid "Annotate document"
-msgstr "ドキュメントに注釈を付けます"
+msgstr "ドキュメントに注釈を付ける"
 
 #: shell/ev-toolbar.c:235 shell/ev-toolbar.c:236
 msgid "File options"
@@ -1858,34 +1854,24 @@ msgid "Go to page number"
 msgstr "指定したページへ移動する"
 
 #: shell/help-overlay.ui:230
-#, fuzzy
-#| msgid "Go to previous page"
 msgctxt "shortcut window"
 msgid "Go to previous page (fast)"
-msgstr "前のページへ移動します"
+msgstr "前のページへ戻る (高速)"
 
 #: shell/help-overlay.ui:237
-#, fuzzy
-#| msgid "Go to next page"
 msgctxt "shortcut window"
 msgid "Go to next page (fast)"
-msgstr "次のページへ移動します"
+msgstr "次のページへ進む (高速)"
 
 #: shell/help-overlay.ui:244
-#, fuzzy
-#| msgctxt "shortcut window"
-#| msgid "Go to previous/next page visited"
 msgctxt "shortcut window"
 msgid "Go to previous page visited"
-msgstr "履歴の前のページ/次のページへ移動する"
+msgstr "履歴の前のページへ移動する"
 
 #: shell/help-overlay.ui:251
-#, fuzzy
-#| msgctxt "shortcut window"
-#| msgid "Go to previous/next page visited"
 msgctxt "shortcut window"
 msgid "Go to next page visited"
-msgstr "履歴の前のページ/次のページへ移動する"
+msgstr "履歴の次のページへ移動する"
 
 #: shell/help-overlay.ui:258
 msgctxt "shortcut window"
@@ -1913,19 +1899,14 @@ msgid "Add bookmark"
 msgstr "ブックマークに追加する"
 
 #: shell/help-overlay.ui:292
-#, fuzzy
-#| msgid "Remove bookmark"
 msgctxt "shortcut window"
 msgid "Remove bookmark"
-msgstr "ブックマークを削除"
+msgstr "ブックマークを削除する"
 
 #: shell/help-overlay.ui:299
-#, fuzzy
-#| msgctxt "shortcut window"
-#| msgid "Toggle sidebar"
 msgctxt "shortcut window"
 msgid "Toggle night mode"
-msgstr "サイドバーを切り替える"
+msgstr "夜間モードを切り替える"
 
 #: shell/help-overlay.ui:306
 msgctxt "shortcut window"
@@ -1938,23 +1919,19 @@ msgid "Toggle dual page"
 msgstr "見開きページを切り替える"
 
 #: shell/help-overlay.ui:320
-#, fuzzy
-#| msgid "Document View"
 msgctxt "shortcut window"
 msgid "Document properties"
-msgstr "ドキュメントビューアー"
+msgstr "プロパティを表示する"
 
 #: shell/help-overlay.ui:327
 msgctxt "shortcut window"
 msgid "Add a post-it like note"
-msgstr ""
+msgstr "付箋 (メモ) を追加する"
 
 #: shell/help-overlay.ui:334
-#, fuzzy
-#| msgid "Highlight text"
 msgctxt "shortcut window"
 msgid "Highlight text"
-msgstr "テキストをハイライト"
+msgstr "テキストをハイライトする"
 
 #: shell/help-overlay.ui:343
 msgctxt "shortcut window"
@@ -1977,8 +1954,6 @@ msgid "Go to the previous search result"
 msgstr "前の検索結果に戻る"
 
 #: shell/help-overlay.ui:370
-#, fuzzy
-#| msgid "General"
 msgctxt "shortcut window"
 msgid "General"
 msgstr "全般"
@@ -1986,62 +1961,47 @@ msgstr "全般"
 #: shell/help-overlay.ui:374
 msgctxt "shortcut window"
 msgid "Show help"
-msgstr ""
+msgstr "ヘルプを表示する"
 
 #: shell/help-overlay.ui:381
 msgctxt "shortcut window"
 msgid "Show primary menu"
-msgstr ""
+msgstr "プライマリメニューを表示する"
 
 #: shell/help-overlay.ui:388
-#, fuzzy
-#| msgid "_Keyboard Shortcuts"
 msgctxt "shortcut window"
 msgid "Keyboard shortcuts"
-msgstr "キーボードショートカット(_K)"
+msgstr "キーボードショートカットを表示する"
 
 #: shell/help-overlay.ui:395
-#, fuzzy
-#| msgid "New _Window"
 msgctxt "shortcut window"
 msgid "Close window"
-msgstr "新しいウィンドウ(_W)"
+msgstr "ウィンドウを閉じる"
 
 #: shell/help-overlay.ui:402
 msgctxt "shortcut window"
 msgid "Quit"
-msgstr ""
+msgstr "終了する"
 
 #: shell/help-overlay.ui:409
-#, fuzzy
-#| msgid "Save Current Settings as Defa_ult"
 msgctxt "shortcut window"
 msgid "Save current settings as default"
-msgstr "現在の設定をデフォルトとして保存(_U)"
+msgstr "現在の設定をデフォルトとして保存する"
 
 #: shell/help-overlay.ui:418
-#, fuzzy
-#| msgctxt "shortcut window"
-#| msgid "Enter presentation mode"
 msgctxt "shortcut window"
 msgid "Presentation mode"
-msgstr "プレゼンテーションモードに入る"
+msgstr "プレゼンテーションモード"
 
 #: shell/help-overlay.ui:422
-#, fuzzy
-#| msgctxt "shortcut window"
-#| msgid "Toggle fullscreen"
 msgctxt "shortcut window"
 msgid "Toggle black screen"
-msgstr "フルスクリーンを切り替える"
+msgstr "黒い画面を切り替える"
 
 #: shell/help-overlay.ui:429
-#, fuzzy
-#| msgctxt "shortcut window"
-#| msgid "Toggle fullscreen"
 msgctxt "shortcut window"
 msgid "Toggle white screen"
-msgstr "フルスクリーンを切り替える"
+msgstr "白い画面を切り替える"
 
 #: shell/help-overlay.ui:438
 msgctxt "shortcut window"
