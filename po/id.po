@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
-"POT-Creation-Date: 2019-12-27 15:25+0000\n"
-"PO-Revision-Date: 2020-01-12 22:36+0700\n"
+"POT-Creation-Date: 2020-02-05 00:35+0000\n"
+"PO-Revision-Date: 2020-02-07 13:13+0700\n"
 "Last-Translator: Kukuh Syafaat <kukuhsyafaat@gnome.org>\n"
 "Language-Team: GNOME Indonesian Translation Team <gnome@i15n.org>\n"
 "Language: id\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural= n!=1;\n"
-"X-Generator: Poedit 2.2.4\n"
+"X-Generator: Poedit 2.3\n"
 
 #: backend/comics/comics-document.c:163 backend/comics/comics-document.c:187
 msgid "File is corrupted"
@@ -303,15 +303,15 @@ msgstr "Dokumen XPS"
 msgid "Adds support for reading XPS documents"
 msgstr "Menambahkan dukungan untuk membaca dokumen XPS"
 
-#: browser-plugin/EvBrowserPluginToolbar.cpp:288 shell/evince-menus.ui:128
+#: browser-plugin/EvBrowserPluginToolbar.cpp:288 shell/evince-menus.ui:127
 msgid "Fit Pa_ge"
 msgstr "Pas Hala_man"
 
-#: browser-plugin/EvBrowserPluginToolbar.cpp:297 shell/evince-menus.ui:133
+#: browser-plugin/EvBrowserPluginToolbar.cpp:297 shell/evince-menus.ui:132
 msgid "Fit _Width"
 msgstr "Pas _Lebar"
 
-#: browser-plugin/EvBrowserPluginToolbar.cpp:306 shell/evince-menus.ui:138
+#: browser-plugin/EvBrowserPluginToolbar.cpp:306 shell/evince-menus.ui:137
 msgid "_Automatic"
 msgstr "Otom_atis"
 
@@ -448,8 +448,8 @@ msgstr "Tidak dapat membuka lampiran “%s”"
 msgid "File type %s (%s) is not supported"
 msgstr "Jenis berkas %s (%s) tidak didukung"
 
-#: libdocument/ev-document-factory.c:373 libdocument/ev-file-helpers.c:498
-#: libdocument/ev-file-helpers.c:544 libdocument/ev-file-helpers.c:563
+#: libdocument/ev-document-factory.c:373 libdocument/ev-file-helpers.c:413
+#: libdocument/ev-file-helpers.c:459 libdocument/ev-file-helpers.c:478
 msgid "Unknown MIME Type"
 msgstr "Jenis MIME Tidak Dikenal"
 
@@ -466,7 +466,7 @@ msgstr "Semua Berkas"
 msgid "Failed to create a temporary file: %s"
 msgstr "Gagal membuat berkas sementara: %s"
 
-#: libdocument/ev-file-helpers.c:315
+#: libdocument/ev-file-helpers.c:230
 #, c-format
 msgid "Failed to create a temporary directory: %s"
 msgstr "Gagal membuat direktori sementara: %s"
@@ -703,11 +703,11 @@ msgstr "Pergi ke berkas “%s”"
 msgid "Launch %s"
 msgstr "Luncurkan %s"
 
-#: libview/ev-view-presentation.c:752
+#: libview/ev-view-presentation.c:753
 msgid "Jump to page:"
 msgstr "Lompat ke halaman:"
 
-#: libview/ev-view-presentation.c:1055
+#: libview/ev-view-presentation.c:1047
 msgid "End of presentation. Press Esc or click to exit."
 msgstr "Akhir dari presentasi. Tekan Esc atau klik untuk keluar."
 
@@ -784,11 +784,11 @@ msgstr "C_etak"
 msgid "Print this document"
 msgstr "Cetak dokumen ini"
 
-#: previewer/previewer.ui:20 shell/evince-menus.ui:255
+#: previewer/previewer.ui:20 shell/evince-menus.ui:254
 msgid "Previous Page"
 msgstr "Halaman Sebelumnya"
 
-#: previewer/previewer.ui:27 shell/evince-menus.ui:259
+#: previewer/previewer.ui:27 shell/evince-menus.ui:258
 msgid "Next Page"
 msgstr "Halaman Selanjutnya"
 
@@ -796,7 +796,7 @@ msgstr "Halaman Selanjutnya"
 msgid "Reset zoom and make the page fit in the window"
 msgstr "Atur ulang zum dan buat halaman pas di jendela"
 
-#: properties/ev-properties-main.c:117
+#: properties/ev-properties-main.c:116
 msgid "Document"
 msgstr "Dokumen"
 
@@ -1028,7 +1028,7 @@ msgstr "Jendela _Baru"
 msgid "Open a C_opy"
 msgstr "Bu_ka Salinan"
 
-#: shell/evince-menus.ui:52 shell/evince-menus.ui:241
+#: shell/evince-menus.ui:52 shell/evince-menus.ui:240
 msgid "Open Containing _Folder"
 msgstr "Buka _Folder Pemuat"
 
@@ -1080,101 +1080,101 @@ msgstr "_Tombol Pintas"
 msgid "_Help"
 msgstr "_Bantuan"
 
-#: shell/evince-menus.ui:119
+#: shell/evince-menus.ui:118
 msgid "_About Document Viewer"
 msgstr "Tent_ang Penampil Dokumen"
 
-#: shell/evince-menus.ui:150
+#: shell/evince-menus.ui:149
 msgid "_Open Link"
 msgstr "_Buka Taut"
 
-#: shell/evince-menus.ui:155
+#: shell/evince-menus.ui:154
 msgid "_Copy Link Address"
 msgstr "_Salin Alamat Taut"
 
-#: shell/evince-menus.ui:160
+#: shell/evince-menus.ui:159
 msgid "_Go To"
 msgstr "_Ke"
 
-#: shell/evince-menus.ui:165
+#: shell/evince-menus.ui:164
 msgid "Open in New _Window"
 msgstr "Buka di _Jendela Baru"
 
-#: shell/evince-menus.ui:172
+#: shell/evince-menus.ui:171
 msgid "_Previous Page"
 msgstr "Halaman _Sebelumnya"
 
-#: shell/evince-menus.ui:176
+#: shell/evince-menus.ui:175
 msgid "_Next Page"
 msgstr "Halaman Sela_njutnya"
 
-#: shell/evince-menus.ui:180 shell/ev-window.c:3819
+#: shell/evince-menus.ui:179 shell/ev-window.c:3819
 msgid "_Reload"
 msgstr "_Muat Ulang"
 
-#: shell/evince-menus.ui:184
+#: shell/evince-menus.ui:183
 msgid "Auto_scroll"
 msgstr "Menggulung Otomati_s"
 
-#: shell/evince-menus.ui:190
+#: shell/evince-menus.ui:189
 msgid "_Copy"
 msgstr "_Salin"
 
-#: shell/evince-menus.ui:194
+#: shell/evince-menus.ui:193
 msgid "Select _All"
 msgstr "Pilih Semu_a"
 
-#: shell/evince-menus.ui:200
+#: shell/evince-menus.ui:199
 msgid "_Save Image As…"
 msgstr "_Simpan Gambar Sebagai…"
 
-#: shell/evince-menus.ui:205
+#: shell/evince-menus.ui:204
 msgid "Copy _Image"
 msgstr "Salin _Gambar"
 
-#: shell/evince-menus.ui:212 shell/evince-menus.ui:283
-#: shell/evince-menus.ui:306
+#: shell/evince-menus.ui:211 shell/evince-menus.ui:282
+#: shell/evince-menus.ui:305
 msgid "_Open Attachment"
 msgstr "_Buka Lampiran"
 
-#: shell/evince-menus.ui:217 shell/evince-menus.ui:287
-#: shell/evince-menus.ui:311
+#: shell/evince-menus.ui:216 shell/evince-menus.ui:286
+#: shell/evince-menus.ui:310
 msgid "_Save Attachment As…"
 msgstr "_Simpan Lampiran Sebagai…"
 
-#: shell/evince-menus.ui:224 shell/evince-menus.ui:296
+#: shell/evince-menus.ui:223 shell/evince-menus.ui:295
 msgid "Annotation Properties…"
 msgstr "Properti Anotasi…"
 
-#: shell/evince-menus.ui:229 shell/evince-menus.ui:301
+#: shell/evince-menus.ui:228 shell/evince-menus.ui:300
 msgid "Remove Annotation"
 msgstr "Buang Anotasi"
 
-#: shell/evince-menus.ui:236
+#: shell/evince-menus.ui:235
 msgid "Highlight Selected Text"
 msgstr "Sorot Teks yang Dipilih"
 
-#: shell/evince-menus.ui:249
+#: shell/evince-menus.ui:248
 msgid "Navigation"
 msgstr "Navigasi"
 
-#: shell/evince-menus.ui:251
+#: shell/evince-menus.ui:250
 msgid "First Page"
 msgstr "Halaman Pertama"
 
-#: shell/evince-menus.ui:263
+#: shell/evince-menus.ui:262
 msgid "Last Page"
 msgstr "Halaman Terakhir"
 
-#: shell/evince-menus.ui:268
+#: shell/evince-menus.ui:267
 msgid "History"
 msgstr "Riwayat"
 
-#: shell/evince-menus.ui:270
+#: shell/evince-menus.ui:269
 msgid "Back"
 msgstr "Kembali"
 
-#: shell/evince-menus.ui:274
+#: shell/evince-menus.ui:273
 msgid "Forward"
 msgstr "Maju"
 
@@ -1211,7 +1211,7 @@ msgstr "Memerlukan sandi"
 
 #: shell/ev-password-view.c:252 shell/ev-sidebar-attachments.c:493
 #: shell/ev-window.c:2770 shell/ev-window.c:3070 shell/ev-window.c:3943
-#: shell/ev-window.c:6931 shell/ev-window.c:7158
+#: shell/ev-window.c:6934 shell/ev-window.c:7161
 msgid "_Cancel"
 msgstr "_Batal"
 
@@ -1281,7 +1281,7 @@ msgstr "Dokumen tidak memiliki anotasi"
 msgid "Page %d"
 msgstr "Halaman %d"
 
-#: shell/ev-sidebar-annotations.c:667 shell/ev-window.c:7563
+#: shell/ev-sidebar-annotations.c:667 shell/ev-window.c:7566
 msgid "Annotations"
 msgstr "Anotasi"
 
@@ -1299,7 +1299,7 @@ msgstr "Berkas \"%s\" sudah ada. Menggantinya itu akan menimpa isinya."
 msgid "_Replace"
 msgstr "_Ganti"
 
-#: shell/ev-sidebar-attachments.c:899 shell/ev-window.c:7587
+#: shell/ev-sidebar-attachments.c:899 shell/ev-window.c:7590
 msgid "Attachments"
 msgstr "Lampiran"
 
@@ -1323,22 +1323,22 @@ msgstr "Tambah penanda taut"
 msgid "Remove bookmark"
 msgstr "Buang penanda taut"
 
-#: shell/ev-sidebar-bookmarks.c:595 shell/ev-window.c:7571
+#: shell/ev-sidebar-bookmarks.c:595 shell/ev-window.c:7574
 msgid "Bookmarks"
 msgstr "Penanda Taut"
 
-#: shell/ev-sidebar-layers.c:444 shell/ev-window.c:7599
+#: shell/ev-sidebar-layers.c:444 shell/ev-window.c:7602
 msgid "Layers"
 msgstr "Lapisan"
 
 #. Translators: This is the title for the sidebar pane that
 #. * shows the Outline or Table of Contents of the document.
 #.
-#: shell/ev-sidebar-links.c:1027 shell/ev-window.c:7551
+#: shell/ev-sidebar-links.c:1027 shell/ev-window.c:7554
 msgid "Outline"
 msgstr "Garis Besar"
 
-#: shell/ev-sidebar-thumbnails.c:1063 shell/ev-window.c:7534
+#: shell/ev-sidebar-thumbnails.c:1038 shell/ev-window.c:7537
 msgid "Thumbnails"
 msgstr "Gambar Mini"
 
@@ -1470,7 +1470,7 @@ msgstr "Mengunggah gambar (%d%%)"
 msgid "Save As…"
 msgstr "Simpan Sebagai…"
 
-#: shell/ev-window.c:3071 shell/ev-window.c:6933 shell/ev-window.c:7160
+#: shell/ev-window.c:3071 shell/ev-window.c:6936 shell/ev-window.c:7163
 msgid "_Save"
 msgstr "_Simpan"
 
@@ -1615,23 +1615,23 @@ msgstr "Tidak dapat meluncurkan aplikasi eksternal."
 msgid "Unable to open external link"
 msgstr "Tidak dapat membuka tautan eksternal"
 
-#: shell/ev-window.c:6860
+#: shell/ev-window.c:6863
 msgid "Couldn’t find appropriate format to save image"
 msgstr "Tidak dapat menemukan format yang cocok tepat menyimpan gambar"
 
-#: shell/ev-window.c:6892
+#: shell/ev-window.c:6895
 msgid "The image could not be saved."
 msgstr "Gambar tidak dapat disimpan."
 
-#: shell/ev-window.c:6928
+#: shell/ev-window.c:6931
 msgid "Save Image"
 msgstr "Simpan Gambar"
 
-#: shell/ev-window.c:7087
+#: shell/ev-window.c:7090
 msgid "Unable to open attachment"
 msgstr "Tidak dapat membuka lampiran"
 
-#: shell/ev-window.c:7155
+#: shell/ev-window.c:7158
 msgid "Save Attachment"
 msgstr "Simpan Lampiran"
 
@@ -1735,210 +1735,280 @@ msgctxt "shortcut window"
 msgid "Reload the document"
 msgstr "Memuat ulang dokumen"
 
-#: shell/help-overlay.ui:62
+#: shell/help-overlay.ui:61
 msgctxt "shortcut window"
 msgid "Window"
 msgstr "Jendela"
 
-#: shell/help-overlay.ui:66
+#: shell/help-overlay.ui:65
 msgctxt "shortcut window"
 msgid "Toggle fullscreen"
 msgstr "Jungkitkan layar penuh"
 
-#: shell/help-overlay.ui:73
+#: shell/help-overlay.ui:72
 msgctxt "shortcut window"
 msgid "Enter presentation mode"
 msgstr "Masuk mode presentasi"
 
-#: shell/help-overlay.ui:80
+#: shell/help-overlay.ui:79
 msgctxt "shortcut window"
 msgid "Toggle sidebar"
 msgstr "Jungkitkan bilah sisi"
 
-#: shell/help-overlay.ui:87
+#: shell/help-overlay.ui:86
 msgctxt "shortcut window"
 msgid "Toggle caret navigation"
 msgstr "Jungkitkan navigasi caret"
 
-#: shell/help-overlay.ui:97
+#: shell/help-overlay.ui:95
 msgctxt "shortcut window"
 msgid "Selecting and copying text"
 msgstr "Memilih dan menyalin teks"
 
-#: shell/help-overlay.ui:101
+#: shell/help-overlay.ui:99
 msgctxt "shortcut window"
 msgid "Copy highlighted text"
 msgstr "Menyalin teks yang disorot"
 
-#: shell/help-overlay.ui:108
+#: shell/help-overlay.ui:106
 msgctxt "shortcut window"
 msgid "Select all the text in a document"
 msgstr "Memilih semua teks pada dokumen"
 
-#: shell/help-overlay.ui:118
+#: shell/help-overlay.ui:115
 msgctxt "shortcut window"
 msgid "Rotating and zooming"
 msgstr "Memutar dan memperbesar"
 
-#: shell/help-overlay.ui:122
+#: shell/help-overlay.ui:119
 msgctxt "shortcut window"
 msgid "Rotate the page 90 degrees counter-clockwise"
 msgstr "Memutar halaman 90 derajat berlawan arah jam"
 
-#: shell/help-overlay.ui:129
+#: shell/help-overlay.ui:126
 msgctxt "shortcut window"
 msgid "Rotate the page 90 degrees clockwise"
 msgstr "Memutar halaman 90 derajat searah jam"
 
-#: shell/help-overlay.ui:136 shell/help-overlay.ui:339
+#: shell/help-overlay.ui:133 shell/help-overlay.ui:442
 msgctxt "shortcut window"
 msgid "Zoom in"
 msgstr "Memperbesar"
 
-#: shell/help-overlay.ui:143 shell/help-overlay.ui:346
+#: shell/help-overlay.ui:140 shell/help-overlay.ui:449
 msgctxt "shortcut window"
 msgid "Zoom out"
 msgstr "Memperkecil"
 
-#: shell/help-overlay.ui:150
+#: shell/help-overlay.ui:147
 msgctxt "shortcut window"
 msgid "Zoom 1∶1"
 msgstr "Sesuaikan 1:1"
 
-#: shell/help-overlay.ui:157
+#: shell/help-overlay.ui:154
+msgctxt "shortcut window"
+msgid "Zoom in (alternative)"
+msgstr "Memperbesar (alternatif)"
+
+#: shell/help-overlay.ui:161
 msgctxt "shortcut window"
 msgid "Fit page"
 msgstr "Pas halaman"
 
-#: shell/help-overlay.ui:164
+#: shell/help-overlay.ui:168
 msgctxt "shortcut window"
 msgid "Fit width"
 msgstr "Pas lebar"
 
-#: shell/help-overlay.ui:171
+#: shell/help-overlay.ui:175
 msgctxt "shortcut window"
 msgid "Automatic zoom"
 msgstr "Zum otomatis"
 
-#: shell/help-overlay.ui:181
+#: shell/help-overlay.ui:184
 msgctxt "shortcut window"
 msgid "Moving around the document"
 msgstr "Berpindah pada dokumen"
 
-#: shell/help-overlay.ui:185 shell/help-overlay.ui:192
+#: shell/help-overlay.ui:188 shell/help-overlay.ui:195
 msgctxt "shortcut window"
 msgid "Move around a page"
 msgstr "Berpindah pada halaman"
 
-#: shell/help-overlay.ui:199
+#: shell/help-overlay.ui:202
 msgctxt "shortcut window"
 msgid "Move up/down a page several lines at a time"
 msgstr "Naik/turun halaman beberapa baris sekaligus"
 
-#: shell/help-overlay.ui:206
+#: shell/help-overlay.ui:209 shell/help-overlay.ui:463
 msgctxt "shortcut window"
-msgid "Go to previous/next page"
-msgstr "Pergi ke halaman sebelumnya/selanjutnya"
+msgid "Go to previous page"
+msgstr "Menuju halaman sebelumnya"
 
-#: shell/help-overlay.ui:213
-msgctxt "shortcut window"
-msgid "Go to previous/next page visited"
-msgstr "Pergi ke halaman sebelumnya/selanjutnya yang dikunjungi"
-
-#: shell/help-overlay.ui:220
-msgctxt "shortcut window"
-msgid "Go to page number"
-msgstr "Menuju nomor halaman"
-
-#: shell/help-overlay.ui:227
-msgctxt "shortcut window"
-msgid "Go to the beginning/end of a page"
-msgstr "Menuju awal/akhir halaman"
-
-#: shell/help-overlay.ui:234
-msgctxt "shortcut window"
-msgid "Go to the beginning of the document"
-msgstr "Menuju awal dokumen"
-
-#: shell/help-overlay.ui:241
-msgctxt "shortcut window"
-msgid "Go to the end of the document"
-msgstr "Menuju akhir dokumen"
-
-#: shell/help-overlay.ui:251
-msgctxt "shortcut window"
-msgid "Finding text"
-msgstr "Mencari teks"
-
-#: shell/help-overlay.ui:255
-msgctxt "shortcut window"
-msgid "Show the search bar"
-msgstr "Menampilkan bilah cari"
-
-#: shell/help-overlay.ui:262
-msgctxt "shortcut window"
-msgid "Go to the next search result"
-msgstr "Menuju pencarian selanjutnya"
-
-#: shell/help-overlay.ui:269
-msgctxt "shortcut window"
-msgid "Go to the previous search result"
-msgstr "Menuju pencarian sebelumnya"
-
-#: shell/help-overlay.ui:279
-msgctxt "shortcut window"
-msgid "Document view and handling"
-msgstr "Tampilan dan penanganan dokumen"
-
-#: shell/help-overlay.ui:283
-msgctxt "shortcut window"
-msgid "Add bookmark"
-msgstr "Tambah penanda taut"
-
-#: shell/help-overlay.ui:290
-msgctxt "shortcut window"
-msgid "Toggle inverted colors"
-msgstr "Jungitkan warna terbalik"
-
-#: shell/help-overlay.ui:297
-msgctxt "shortcut window"
-msgid "Toggle continuous scrolling"
-msgstr "Jungkitkan gulir berkelanjutan"
-
-#: shell/help-overlay.ui:304
-msgctxt "shortcut window"
-msgid "Toggle dual page"
-msgstr "Jungkitkan layar ganda"
-
-#: shell/help-overlay.ui:314
-msgctxt "shortcut window"
-msgid "Presentation mode"
-msgstr "Mode presentasi"
-
-#: shell/help-overlay.ui:318
-msgctxt "shortcut window"
-msgid "Toggle black screen"
-msgstr "Jungkitkan layar hitam"
-
-#: shell/help-overlay.ui:325
-msgctxt "shortcut window"
-msgid "Toggle white screen"
-msgstr "Jungkitkan layar putih"
-
-#: shell/help-overlay.ui:335
-msgctxt "shortcut window"
-msgid "Touchpad gestures"
-msgstr "Gestur papan sentuh"
-
-#: shell/help-overlay.ui:353
+#: shell/help-overlay.ui:216 shell/help-overlay.ui:456
 msgctxt "shortcut window"
 msgid "Go to next page"
 msgstr "Menuju halaman selanjutnya"
 
-#: shell/help-overlay.ui:360
+#: shell/help-overlay.ui:223
 msgctxt "shortcut window"
-msgid "Go to previous page"
-msgstr "Menuju halaman sebelumnya"
+msgid "Go to page number"
+msgstr "Menuju nomor halaman"
+
+#: shell/help-overlay.ui:230
+msgctxt "shortcut window"
+msgid "Go to previous page (fast)"
+msgstr "Pergi ke halaman sebelumnya (cepat)"
+
+#: shell/help-overlay.ui:237
+msgctxt "shortcut window"
+msgid "Go to next page (fast)"
+msgstr "Pergi ke halaman selanjutnya (cepat)"
+
+#: shell/help-overlay.ui:244
+msgctxt "shortcut window"
+msgid "Go to previous page visited"
+msgstr "Pergi ke halaman sebelumnya yang dikunjungi"
+
+#: shell/help-overlay.ui:251
+msgctxt "shortcut window"
+msgid "Go to next page visited"
+msgstr "Pergi ke halaman selanjutnya yang dikunjungi"
+
+#: shell/help-overlay.ui:258
+msgctxt "shortcut window"
+msgid "Go to the beginning/end of a page"
+msgstr "Menuju awal/akhir halaman"
+
+#: shell/help-overlay.ui:265
+msgctxt "shortcut window"
+msgid "Go to the beginning of the document"
+msgstr "Menuju awal dokumen"
+
+#: shell/help-overlay.ui:272
+msgctxt "shortcut window"
+msgid "Go to the end of the document"
+msgstr "Menuju akhir dokumen"
+
+#: shell/help-overlay.ui:281
+msgctxt "shortcut window"
+msgid "Document view and handling"
+msgstr "Tampilan dan penanganan dokumen"
+
+#: shell/help-overlay.ui:285
+msgctxt "shortcut window"
+msgid "Add bookmark"
+msgstr "Tambah penanda taut"
+
+#: shell/help-overlay.ui:292
+msgctxt "shortcut window"
+msgid "Remove bookmark"
+msgstr "Buang penanda taut"
+
+#: shell/help-overlay.ui:299
+msgctxt "shortcut window"
+msgid "Toggle night mode"
+msgstr "Jungkitkan mode malam"
+
+#: shell/help-overlay.ui:306
+msgctxt "shortcut window"
+msgid "Toggle continuous scrolling"
+msgstr "Jungkitkan gulir berkelanjutan"
+
+#: shell/help-overlay.ui:313
+msgctxt "shortcut window"
+msgid "Toggle dual page"
+msgstr "Jungkitkan layar ganda"
+
+#: shell/help-overlay.ui:320
+msgctxt "shortcut window"
+msgid "Document properties"
+msgstr "Properti dokumen"
+
+#: shell/help-overlay.ui:327
+msgctxt "shortcut window"
+msgid "Add a post-it like note"
+msgstr "Tambahkan post-it seperti catatan"
+
+#: shell/help-overlay.ui:334
+msgctxt "shortcut window"
+msgid "Highlight text"
+msgstr "Sorot teks"
+
+#: shell/help-overlay.ui:343
+msgctxt "shortcut window"
+msgid "Finding text"
+msgstr "Mencari teks"
+
+#: shell/help-overlay.ui:347
+msgctxt "shortcut window"
+msgid "Show the search bar"
+msgstr "Menampilkan bilah cari"
+
+#: shell/help-overlay.ui:354
+msgctxt "shortcut window"
+msgid "Go to the next search result"
+msgstr "Menuju pencarian selanjutnya"
+
+#: shell/help-overlay.ui:361
+msgctxt "shortcut window"
+msgid "Go to the previous search result"
+msgstr "Menuju pencarian sebelumnya"
+
+#: shell/help-overlay.ui:370
+msgctxt "shortcut window"
+msgid "General"
+msgstr "Umum"
+
+#: shell/help-overlay.ui:374
+msgctxt "shortcut window"
+msgid "Show help"
+msgstr "Tampilkan bantuan"
+
+#: shell/help-overlay.ui:381
+msgctxt "shortcut window"
+msgid "Show primary menu"
+msgstr "Tampilkan menu primer"
+
+#: shell/help-overlay.ui:388
+msgctxt "shortcut window"
+msgid "Keyboard shortcuts"
+msgstr "Tombol Pintas"
+
+#: shell/help-overlay.ui:395
+msgctxt "shortcut window"
+msgid "Close window"
+msgstr "Tutup jendela"
+
+#: shell/help-overlay.ui:402
+msgctxt "shortcut window"
+msgid "Quit"
+msgstr "Keluar"
+
+#: shell/help-overlay.ui:409
+msgctxt "shortcut window"
+msgid "Save current settings as default"
+msgstr "Simpan pengaturan saat ini sebagai bawaan"
+
+#: shell/help-overlay.ui:418
+msgctxt "shortcut window"
+msgid "Presentation mode"
+msgstr "Mode presentasi"
+
+#: shell/help-overlay.ui:422
+msgctxt "shortcut window"
+msgid "Toggle black screen"
+msgstr "Jungkitkan layar hitam"
+
+#: shell/help-overlay.ui:429
+msgctxt "shortcut window"
+msgid "Toggle white screen"
+msgstr "Jungkitkan layar putih"
+
+#: shell/help-overlay.ui:438
+msgctxt "shortcut window"
+msgid "Touchpad gestures"
+msgstr "Gestur papan sentuh"
 
 #: shell/main.c:63 shell/main.c:269
 msgid "GNOME Document Viewer"
@@ -1991,6 +2061,14 @@ msgstr "STRING"
 #: shell/main.c:81
 msgid "[FILE…]"
 msgstr "[BERKAS…]"
+
+#~ msgctxt "shortcut window"
+#~ msgid "Go to previous/next page"
+#~ msgstr "Pergi ke halaman sebelumnya/selanjutnya"
+
+#~ msgctxt "shortcut window"
+#~ msgid "Toggle inverted colors"
+#~ msgstr "Jungitkan warna terbalik"
 
 #~ msgid "org.gnome.Evince"
 #~ msgstr "org.gnome.Evince"
