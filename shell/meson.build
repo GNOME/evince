@@ -4,7 +4,6 @@ sources = files(
   'ev-annotation-properties-dialog.c',
   'ev-annotations-toolbar.c',
   'ev-application.c',
-  'ev-bookmark-action.c',
   'ev-bookmarks.c',
   'ev-file-monitor.c',
   'ev-find-sidebar.c',

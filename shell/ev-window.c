@@ -83,7 +83,6 @@
 #include "ev-print-operation.h"
 #include "ev-progress-message-area.h"
 #include "ev-annotation-properties-dialog.h"
-#include "ev-bookmark-action.h"
 #include "ev-zoom-action.h"
 #include "ev-toolbar.h"
 #include "ev-bookmarks.h"
