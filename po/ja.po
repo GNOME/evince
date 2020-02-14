@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: evince master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
 "POT-Creation-Date: 2020-02-08 20:44+0000\n"
-"PO-Revision-Date: 2020-02-08 20:00+0900\n"
+"PO-Revision-Date: 2020-02-15 00:00+0900\n"
 "Last-Translator: sicklylife <translation@sicklylife.jp>\n"
 "Language-Team: Japanese <gnome-translation@gnome.gr.jp>\n"
 "Language: ja\n"
@@ -65,7 +65,7 @@ msgstr "コミックブック"
 
 #: backend/comics/evince-comicsdocument.metainfo.xml.in.in:6
 msgid "Adds support for reading comic books"
-msgstr "コミックブックの読み込みサポートを追加する"
+msgstr "コミックブックの読み取りサポートを追加する"
 
 #: backend/djvu/djvu-document.c:179
 msgid "DjVu document has incorrect format"
@@ -86,7 +86,7 @@ msgstr "DjVu ドキュメント"
 
 #: backend/djvu/evince-djvudocument.metainfo.xml.in.in:6
 msgid "Adds support for reading DjVu documents"
-msgstr "DjVu ドキュメントの読み込みサポートを追加する"
+msgstr "DjVu ドキュメントの読み取りサポートを追加する"
 
 #: backend/dvi/dvi-document.c:110
 msgid "DVI document has incorrect format"
@@ -99,7 +99,7 @@ msgstr "DVI ドキュメント"
 
 #: backend/dvi/evince-dvidocument.metainfo.xml.in.in:6
 msgid "Adds support for reading DVI documents"
-msgstr "DVI ドキュメントの読み込みサポートを追加する"
+msgstr "DVI ドキュメントの読み取りサポートを追加する"
 
 #: backend/pdf/evince-pdfdocument.metainfo.xml.in.in:5
 #: backend/pdf/pdfdocument.evince-backend.desktop.in.in:5
@@ -108,7 +108,7 @@ msgstr "PDF ドキュメント"
 
 #: backend/pdf/evince-pdfdocument.metainfo.xml.in.in:6
 msgid "Adds support for reading PDF Documents"
-msgstr "PDF ドキュメントの読み込みサポートを追加する"
+msgstr "PDF ドキュメントの読み取りサポートを追加する"
 
 #: backend/pdf/ev-poppler.cc:917
 msgid "This work is in the Public Domain"
@@ -208,7 +208,7 @@ msgstr "埋め込みではない"
 #.
 #: backend/pdf/ev-poppler.cc:1442
 msgid " (One of the Standard 14 Fonts)"
-msgstr " (標準 14 フォントのひとつ)"
+msgstr " (標準 14 フォントの一つ)"
 
 #. Translators: string starting with a space
 #. * because it is directly appended to the font
@@ -217,7 +217,7 @@ msgstr " (標準 14 フォントのひとつ)"
 #.
 #: backend/pdf/ev-poppler.cc:1449
 msgid " (Not one of the Standard 14 Fonts)"
-msgstr " (標準 14 フォントのひとつではない)"
+msgstr " (標準 14 フォントの一つではない)"
 
 #. Translators: string is a concatenation of previous
 #. * translated strings to indicate the fonts properties
@@ -271,7 +271,7 @@ msgstr "PostScript ドキュメント"
 
 #: backend/ps/evince-psdocument.metainfo.xml.in.in:6
 msgid "Adds support for reading PostScript documents"
-msgstr "PostScript ドキュメントの読み込みサポートを追加する"
+msgstr "PostScript ドキュメントの読み取りサポートを追加する"
 
 #: backend/ps/ev-spectre.c:98
 #, c-format
@@ -290,7 +290,7 @@ msgstr "TIFF ドキュメント"
 
 #: backend/tiff/evince-tiffdocument.metainfo.xml.in.in:6
 msgid "Adds support for reading TIFF documents"
-msgstr "TIFF ドキュメントの読み込みサポートを追加する"
+msgstr "TIFF ドキュメントの読み取りサポートを追加する"
 
 #: backend/tiff/tiff-document.c:123
 msgid "Invalid document"
@@ -303,7 +303,7 @@ msgstr "XPS ドキュメント"
 
 #: backend/xps/evince-xpsdocument.metainfo.xml.in.in:6
 msgid "Adds support for reading XPS documents"
-msgstr "XPS ドキュメントの読み込みサポートを追加する"
+msgstr "XPS ドキュメントの読み取りサポートを追加する"
 
 #: browser-plugin/EvBrowserPluginToolbar.cpp:288 shell/evince-menus.ui:127
 msgid "Fit Pa_ge"
@@ -320,11 +320,11 @@ msgstr "自動(_A)"
 #. Navigation buttons
 #: browser-plugin/EvBrowserPluginToolbar.cpp:331
 msgid "Go to the previous page"
-msgstr "前のページに移動します"
+msgstr "前のページへ移動します"
 
 #: browser-plugin/EvBrowserPluginToolbar.cpp:335
 msgid "Go to the next page"
-msgstr "次のページに移動します"
+msgstr "次のページへ移動します"
 
 #. Search.
 #: browser-plugin/EvBrowserPluginToolbar.cpp:362 shell/ev-toolbar.c:172
@@ -564,7 +564,7 @@ msgstr "警告"
 
 #: libview/ev-print-operation.c:1280
 msgid "Your print range selection does not include any pages"
-msgstr "選択された印刷範囲にページが含まれていません"
+msgstr "選択した印刷範囲にページが含まれていません"
 
 #. translators: Title of the print dialog
 #: libview/ev-print-operation.c:1358
@@ -676,7 +676,7 @@ msgstr "最後のページへ移動します"
 
 #: libview/ev-view.c:2082
 msgid "Go to page"
-msgstr "指定したページに移動します"
+msgstr "指定したページへ移動します"
 
 #: libview/ev-view.c:2084
 msgid "Find"
@@ -700,7 +700,7 @@ msgstr "ファイル“%s”へ移動します"
 #: libview/ev-view.c:2129
 #, c-format
 msgid "Launch %s"
-msgstr "%s の起動"
+msgstr "%s を起動"
 
 #: libview/ev-view-presentation.c:753
 msgid "Jump to page:"
@@ -832,7 +832,7 @@ msgstr "作成日時:"
 
 #: properties/ev-properties-view.c:69
 msgid "Modified:"
-msgstr "変更日時:"
+msgstr "更新日時:"
 
 #: properties/ev-properties-view.c:70
 msgid "Number of Pages:"
@@ -871,12 +871,12 @@ msgstr "default:mm"
 #: properties/ev-properties-view.c:312
 #, c-format
 msgid "%.0f × %.0f mm"
-msgstr "%.0f x %.0f ミリ"
+msgstr "%.0f × %.0f ミリ"
 
 #: properties/ev-properties-view.c:316
 #, c-format
 msgid "%.2f × %.2f inch"
-msgstr "%.2f x %.2f インチ"
+msgstr "%.2f × %.2f インチ"
 
 #. Note to translators: first placeholder is the paper name (eg.
 #. * A4), second placeholder is the paper size (eg. 297x210 mm)
@@ -1027,7 +1027,7 @@ msgstr "コピーを開く(_O)"
 
 #: shell/evince-menus.ui:52 shell/evince-menus.ui:240
 msgid "Open Containing _Folder"
-msgstr "このファイルのフォルダーを開く(_F)"
+msgstr "ファイルがあるフォルダーを開く(_F)"
 
 #: shell/evince-menus.ui:58
 msgid "_Save As…"
@@ -1127,7 +1127,7 @@ msgstr "名前を付けて画像を保存(_S)…"
 
 #: shell/evince-menus.ui:204
 msgid "Copy _Image"
-msgstr "画像のコピー(_I)"
+msgstr "画像をコピー(_I)"
 
 #: shell/evince-menus.ui:211 shell/evince-menus.ui:282
 #: shell/evince-menus.ui:305
@@ -1184,15 +1184,15 @@ msgstr "ドキュメント %s のパスワード"
 #: shell/ev-loading-message.c:50 shell/ev-sidebar-annotations.c:137
 #: shell/ev-sidebar-layers.c:123 shell/ev-sidebar-links.c:265
 msgid "Loading…"
-msgstr "読み込み中です…"
+msgstr "読み込み中…"
 
 #: shell/ev-password-view.c:131
 msgid ""
 "This document is locked and can only be read by entering the correct "
 "password."
 msgstr ""
-"このドキュメントはロックされているので、正しいパスワードを入力したときのみ読"
-"み込みが可能です。"
+"このドキュメントはロックされているため、正しいパスワードを入力したときのみ読"
+"み込み可能です。"
 
 #: shell/ev-password-view.c:142
 msgid "_Unlock Document"
@@ -1287,7 +1287,7 @@ msgstr "注釈"
 #: shell/ev-sidebar-attachments.c:485
 #, c-format
 msgid "A file named “%s” already exists. Do you want to replace it?"
-msgstr "ファイル“%s”はすでに存在します。置換してもよろしいですか?"
+msgstr "ファイル“%s”はすでに存在します。置換しますか?"
 
 #: shell/ev-sidebar-attachments.c:489
 #, c-format
@@ -1376,7 +1376,7 @@ msgstr "ドキュメントのズームレベルを選択するか入力します
 
 #: shell/ev-toolbar.c:256
 msgid "Set zoom level"
-msgstr "ズームレベルを設定します"
+msgstr "ズームレベルを設定"
 
 #: shell/ev-utils.c:279
 msgid "Supported Image Files"
@@ -1398,7 +1398,7 @@ msgstr "ドキュメント“%s”を開けません。"
 #: shell/ev-window.c:2034
 #, c-format
 msgid "Loading document from “%s”"
-msgstr "“%s”からドキュメントを読み込んでいます"
+msgstr "“%s”からドキュメントを読み込み中"
 
 #: shell/ev-window.c:2039 shell/ev-window.c:2504 shell/ev-window.c:2861
 #: shell/ev-window.c:3584 shell/ev-window.c:3832
@@ -1408,7 +1408,7 @@ msgstr "キャンセル(_A)"
 #: shell/ev-window.c:2189 shell/ev-window.c:2555
 #, c-format
 msgid "Downloading document (%d%%)"
-msgstr "ドキュメントのダウンロード中 (%d%%)"
+msgstr "ドキュメントをダウンロード中 (%d%%)"
 
 #: shell/ev-window.c:2222
 msgid "Failed to load remote file."
@@ -1417,7 +1417,7 @@ msgstr "リモートファイルの読み込みに失敗しました。"
 #: shell/ev-window.c:2500
 #, c-format
 msgid "Reloading document from %s"
-msgstr "%s からドキュメントを再度読み込んでいます"
+msgstr "%s からドキュメントを再読み込み中"
 
 #: shell/ev-window.c:2530
 msgid "Failed to reload document."
@@ -1434,17 +1434,17 @@ msgstr "開く(_O)"
 #: shell/ev-window.c:2847
 #, c-format
 msgid "Saving document to %s"
-msgstr "%s にドキュメントを保存しています"
+msgstr "%s にドキュメントを保存中"
 
 #: shell/ev-window.c:2850
 #, c-format
 msgid "Saving attachment to %s"
-msgstr "%s に添付ファイルを保存しています"
+msgstr "%s に添付ファイルを保存中"
 
 #: shell/ev-window.c:2853
 #, c-format
 msgid "Saving image to %s"
-msgstr "%s に画像を保存しています"
+msgstr "%s に画像を保存中"
 
 #: shell/ev-window.c:2895 shell/ev-window.c:3010
 #, c-format
@@ -1454,17 +1454,17 @@ msgstr "ファイルを“%s”として保存できませんでした。"
 #: shell/ev-window.c:2927
 #, c-format
 msgid "Uploading document (%d%%)"
-msgstr "ドキュメントのアップロード中 (%d%%)"
+msgstr "ドキュメントをアップロード中 (%d%%)"
 
 #: shell/ev-window.c:2931
 #, c-format
 msgid "Uploading attachment (%d%%)"
-msgstr "添付ファイルのアップロード中 (%d%%)"
+msgstr "添付ファイルをアップロード中 (%d%%)"
 
 #: shell/ev-window.c:2935
 #, c-format
 msgid "Uploading image (%d%%)"
-msgstr "画像のアップロード中 (%d%%)"
+msgstr "画像をアップロード中 (%d%%)"
 
 #: shell/ev-window.c:3068
 msgid "Save As…"
@@ -1476,7 +1476,7 @@ msgstr "保存(_S)"
 
 #: shell/ev-window.c:3159
 msgid "Could not send current document"
-msgstr "現在のドキュメントを送れません"
+msgstr "現在のドキュメントを送信できませんでした"
 
 #: shell/ev-window.c:3471
 #, c-format
@@ -1603,11 +1603,11 @@ msgstr ""
 
 #: shell/ev-window.c:5965
 msgid "Don’t show this message again"
-msgstr "このメッセージを今後表示しない"
+msgstr "今後このメッセージを表示しない"
 
 #: shell/ev-window.c:6563 shell/ev-window.c:6579
 msgid "Unable to launch external application."
-msgstr "外部のアプリケーションを起動できませんでした。"
+msgstr "外部アプリケーションを起動できません。"
 
 #: shell/ev-window.c:6641
 msgid "Unable to open external link"
@@ -1623,7 +1623,7 @@ msgstr "画像を保存できませんでした。"
 
 #: shell/ev-window.c:6931
 msgid "Save Image"
-msgstr "画像の保存"
+msgstr "画像を保存"
 
 #: shell/ev-window.c:7090
 msgid "Unable to open attachment"
@@ -1631,7 +1631,7 @@ msgstr "添付ファイルを開けません"
 
 #: shell/ev-window.c:7158
 msgid "Save Attachment"
-msgstr "添付ファイルの保存"
+msgstr "添付ファイルを保存"
 
 #: shell/ev-window-title.c:107
 msgid "Recent Documents"
@@ -1711,7 +1711,7 @@ msgstr "ドキュメントを開く"
 #: shell/help-overlay.ui:24
 msgctxt "shortcut window"
 msgid "Open a copy of the current document"
-msgstr "現在のドキュメントのコピーを新しいウィンドウで開く"
+msgstr "現在のドキュメントのコピーを開く"
 
 #: shell/help-overlay.ui:31
 msgctxt "shortcut window"
@@ -2061,50 +2061,8 @@ msgid "[FILE…]"
 msgstr "[ファイル…]"
 
 #~ msgctxt "shortcut window"
-#~ msgid "Go to previous/next page"
-#~ msgstr "前のページ/次のページへ移動する"
-
-#~ msgctxt "shortcut window"
 #~ msgid "Toggle inverted colors"
 #~ msgstr "色の反転を切り替える"
-
-#~ msgid "org.gnome.Evince"
-#~ msgstr "org.gnome.Evince"
-
-#~ msgid "document-print-preview"
-#~ msgstr "document-print-preview"
-
-#~ msgid "Prop_erties…"
-#~ msgstr "プロパティ(_E)…"
-
-#~ msgid ""
-#~ "Error launching the command “%s” in order to decompress the comic book: %s"
-#~ msgstr ""
-#~ "コミックブックを解凍するためコマンド“%s”を起動する際にエラーが発生しまし"
-#~ "た: %s"
-
-#~ msgid "The command “%s” failed at decompressing the comic book."
-#~ msgstr "コミックブックの解凍中にコマンド“%s”が失敗しました。"
-
-#~ msgid "The command “%s” did not end normally."
-#~ msgstr "コマンド“%s”が正常に終了しませんでした。"
-
-#~ msgid ""
-#~ "Can't find an appropriate command to decompress this type of comic book"
-#~ msgstr ""
-#~ "このタイプのコミックブックを解凍するのに適したコマンドが見つかりません"
-
-#~ msgid "No images found in archive %s"
-#~ msgstr "%s のアーカイブには画像は含まれていません"
-
-#~ msgid "There was an error deleting “%s”."
-#~ msgstr "“%s”の削除中にエラーが発生しました。"
-
-#~ msgid "Error %s"
-#~ msgstr "エラー %s"
-
-#~ msgid "Encoding"
-#~ msgstr "エンコーディング"
 
 #~ msgid "Substituting with"
 #~ msgstr "代替フォントは"
@@ -2117,15 +2075,6 @@ msgstr "[ファイル…]"
 
 #~ msgid "Make the current document fill the window width"
 #~ msgstr "このドキュメントの幅をウィンドウの幅に合わせます"
-
-#~ msgid "Page"
-#~ msgstr "ページ"
-
-#~ msgid "Select Page"
-#~ msgstr "直接ページを指定します"
-
-#~ msgid "Style:"
-#~ msgstr "スタイル:"
 
 #~ msgid "Transparent"
 #~ msgstr "透明"
@@ -2163,50 +2112,11 @@ msgstr "[ファイル…]"
 #~ "Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA まで手紙を書いて"
 #~ "ください。\n"
 
-#~ msgid "Go to previous history item"
-#~ msgstr "前の履歴へ移動します"
-
-#~ msgid "Go to next history item"
-#~ msgstr "次の履歴へ移動します"
-
-#~ msgid "Enter password"
-#~ msgstr "パスワードの入力"
-
-#~ msgid "Add"
-#~ msgstr "追加"
-
-#~ msgid "Remove"
-#~ msgstr "削除"
-
-#~ msgid "View options"
-#~ msgstr "表示オプション"
-
-#~ msgid "Save a Copy"
-#~ msgstr "名前を付けて保存"
-
-#~ msgid "Could not open the containing folder"
-#~ msgstr "フォルダーを開けません"
-
-#~ msgid "_About"
-#~ msgstr "このアプリケーションについて(_A)"
-
-#~ msgid "Pre_sentation"
-#~ msgstr "プレゼンテーション表示(_S)"
-
-#~ msgid "Rotate _Right"
-#~ msgstr "右へ回転(_R)"
-
 #~ msgid "Zoom _In"
 #~ msgstr "拡大(_I)"
 
 #~ msgid "Zoom _Out"
 #~ msgstr "縮小(_O)"
 
-#~ msgid "_Save a Copy…"
-#~ msgstr "名前を付けて保存(_S)…"
-
 #~ msgid "_Print…"
 #~ msgstr "印刷(_P)…"
-
-#~ msgid "This is a document viewer for the GNOME desktop."
-#~ msgstr "これは GNOME デスクトップ用のドキュメントビューアーです。"
