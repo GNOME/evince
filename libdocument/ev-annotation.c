@@ -313,7 +313,7 @@ ev_annotation_class_init (EvAnnotationClass *klass)
          * Since: 3.6
          */
         g_object_class_install_property (g_object_class,
-                                         PROP_ANNOT_COLOR,
+                                         PROP_ANNOT_RGBA,
                                          g_param_spec_boxed ("rgba", NULL, NULL,
                                                              GDK_TYPE_RGBA,
                                                              G_PARAM_READWRITE |
