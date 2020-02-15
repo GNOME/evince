@@ -97,7 +97,6 @@ media = [
   'figures/annotations-nav-to-page.png',
   'figures/evincelogo.png',
   'figures/evince-trail.png',
-  'figures/list-add-tabs.png',
   'figures/print-select.png',
   'figures/reverse-collate.png',
   'figures/zoom.png',
