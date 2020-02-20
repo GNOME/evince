@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince 3.3.5\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
-"POT-Creation-Date: 2019-12-27 12:35+0000\n"
-"PO-Revision-Date: 2020-01-21 17:29+0800\n"
+"POT-Creation-Date: 2020-02-05 00:35+0000\n"
+"PO-Revision-Date: 2020-02-20 14:31+0800\n"
 "Last-Translator: Yi-Jyun Pan <pan93412@gmail.com>\n"
 "Language-Team: Chinese <zh-l10n@linux.org.tw>\n"
 "Language: zh_TW\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 2.2.4\n"
+"X-Generator: Poedit 2.3\n"
 
 #: backend/comics/comics-document.c:163 backend/comics/comics-document.c:187
 msgid "File is corrupted"
@@ -298,15 +298,15 @@ msgstr "XPS 文件"
 msgid "Adds support for reading XPS documents"
 msgstr "加入讀取 XPS 文件的支援"
 
-#: browser-plugin/EvBrowserPluginToolbar.cpp:288 shell/evince-menus.ui:128
+#: browser-plugin/EvBrowserPluginToolbar.cpp:288 shell/evince-menus.ui:127
 msgid "Fit Pa_ge"
 msgstr "符合頁面(_G)"
 
-#: browser-plugin/EvBrowserPluginToolbar.cpp:297 shell/evince-menus.ui:133
+#: browser-plugin/EvBrowserPluginToolbar.cpp:297 shell/evince-menus.ui:132
 msgid "Fit _Width"
 msgstr "符合頁寬(_W)"
 
-#: browser-plugin/EvBrowserPluginToolbar.cpp:306 shell/evince-menus.ui:138
+#: browser-plugin/EvBrowserPluginToolbar.cpp:306 shell/evince-menus.ui:137
 msgid "_Automatic"
 msgstr "自動(_A)"
 
@@ -438,8 +438,8 @@ msgstr "無法開啟「%s」附件"
 msgid "File type %s (%s) is not supported"
 msgstr "檔案類型 %s (%s) 不支援"
 
-#: libdocument/ev-document-factory.c:373 libdocument/ev-file-helpers.c:498
-#: libdocument/ev-file-helpers.c:544 libdocument/ev-file-helpers.c:563
+#: libdocument/ev-document-factory.c:373 libdocument/ev-file-helpers.c:413
+#: libdocument/ev-file-helpers.c:459 libdocument/ev-file-helpers.c:478
 msgid "Unknown MIME Type"
 msgstr "未知的 MIME 型態"
 
@@ -456,7 +456,7 @@ msgstr "所有檔案"
 msgid "Failed to create a temporary file: %s"
 msgstr "無法建立暫存檔案：%s"
 
-#: libdocument/ev-file-helpers.c:315
+#: libdocument/ev-file-helpers.c:230
 #, c-format
 msgid "Failed to create a temporary directory: %s"
 msgstr "無法建立暫存目錄：%s"
@@ -688,11 +688,11 @@ msgstr "前往「%s」檔案"
 msgid "Launch %s"
 msgstr "執行 %s"
 
-#: libview/ev-view-presentation.c:752
+#: libview/ev-view-presentation.c:753
 msgid "Jump to page:"
 msgstr "前往頁面："
 
-#: libview/ev-view-presentation.c:1055
+#: libview/ev-view-presentation.c:1047
 msgid "End of presentation. Press Esc or click to exit."
 msgstr "簡報結束。請按 Esc 或點一下離開。"
 
@@ -767,11 +767,11 @@ msgstr "列印(_P)"
 msgid "Print this document"
 msgstr "列印這份文件"
 
-#: previewer/previewer.ui:20 shell/evince-menus.ui:255
+#: previewer/previewer.ui:20 shell/evince-menus.ui:254
 msgid "Previous Page"
 msgstr "上一頁"
 
-#: previewer/previewer.ui:27 shell/evince-menus.ui:259
+#: previewer/previewer.ui:27 shell/evince-menus.ui:258
 msgid "Next Page"
 msgstr "下一頁"
 
@@ -779,7 +779,7 @@ msgstr "下一頁"
 msgid "Reset zoom and make the page fit in the window"
 msgstr "重設遠近並讓頁面適應視窗大小"
 
-#: properties/ev-properties-main.c:117
+#: properties/ev-properties-main.c:116
 msgid "Document"
 msgstr "文件"
 
@@ -1011,7 +1011,7 @@ msgstr "新增視窗(_W)"
 msgid "Open a C_opy"
 msgstr "開啟副本(_O)"
 
-#: shell/evince-menus.ui:52 shell/evince-menus.ui:241
+#: shell/evince-menus.ui:52 shell/evince-menus.ui:240
 msgid "Open Containing _Folder"
 msgstr "開啟包含的資料夾(_F)"
 
@@ -1063,101 +1063,101 @@ msgstr "鍵盤快捷鍵(_K)"
 msgid "_Help"
 msgstr "求助(_H)"
 
-#: shell/evince-menus.ui:119
+#: shell/evince-menus.ui:118
 msgid "_About Document Viewer"
 msgstr "關於文件檢視器(_A)"
 
-#: shell/evince-menus.ui:150
+#: shell/evince-menus.ui:149
 msgid "_Open Link"
 msgstr "開啟連結(_O)"
 
-#: shell/evince-menus.ui:155
+#: shell/evince-menus.ui:154
 msgid "_Copy Link Address"
 msgstr "複製連結位址(_C)"
 
-#: shell/evince-menus.ui:160
+#: shell/evince-menus.ui:159
 msgid "_Go To"
 msgstr "移至(_G)"
 
-#: shell/evince-menus.ui:165
+#: shell/evince-menus.ui:164
 msgid "Open in New _Window"
 msgstr "在新視窗開啟(_W)"
 
-#: shell/evince-menus.ui:172
+#: shell/evince-menus.ui:171
 msgid "_Previous Page"
 msgstr "上一頁(_P)"
 
-#: shell/evince-menus.ui:176
+#: shell/evince-menus.ui:175
 msgid "_Next Page"
 msgstr "下一頁(_N)"
 
-#: shell/evince-menus.ui:180 shell/ev-window.c:3819
+#: shell/evince-menus.ui:179 shell/ev-window.c:3819
 msgid "_Reload"
 msgstr "重新載入(_R)"
 
-#: shell/evince-menus.ui:184
+#: shell/evince-menus.ui:183
 msgid "Auto_scroll"
 msgstr "自動捲動(_S)"
 
-#: shell/evince-menus.ui:190
+#: shell/evince-menus.ui:189
 msgid "_Copy"
 msgstr "複製(_C)"
 
-#: shell/evince-menus.ui:194
+#: shell/evince-menus.ui:193
 msgid "Select _All"
 msgstr "全部選取(_A)"
 
-#: shell/evince-menus.ui:200
+#: shell/evince-menus.ui:199
 msgid "_Save Image As…"
 msgstr "另存影像為(_S)…"
 
-#: shell/evince-menus.ui:205
+#: shell/evince-menus.ui:204
 msgid "Copy _Image"
 msgstr "複製影像(_I)"
 
-#: shell/evince-menus.ui:212 shell/evince-menus.ui:283
-#: shell/evince-menus.ui:306
+#: shell/evince-menus.ui:211 shell/evince-menus.ui:282
+#: shell/evince-menus.ui:305
 msgid "_Open Attachment"
 msgstr "開啟附件(_O)"
 
-#: shell/evince-menus.ui:217 shell/evince-menus.ui:287
-#: shell/evince-menus.ui:311
+#: shell/evince-menus.ui:216 shell/evince-menus.ui:286
+#: shell/evince-menus.ui:310
 msgid "_Save Attachment As…"
 msgstr "另存附件為(_S)…"
 
-#: shell/evince-menus.ui:224 shell/evince-menus.ui:296
+#: shell/evince-menus.ui:223 shell/evince-menus.ui:295
 msgid "Annotation Properties…"
 msgstr "註解屬性…"
 
-#: shell/evince-menus.ui:229 shell/evince-menus.ui:301
+#: shell/evince-menus.ui:228 shell/evince-menus.ui:300
 msgid "Remove Annotation"
 msgstr "移除註解"
 
-#: shell/evince-menus.ui:236
+#: shell/evince-menus.ui:235
 msgid "Highlight Selected Text"
 msgstr "突顯選取文字"
 
-#: shell/evince-menus.ui:249
+#: shell/evince-menus.ui:248
 msgid "Navigation"
 msgstr "導航"
 
-#: shell/evince-menus.ui:251
+#: shell/evince-menus.ui:250
 msgid "First Page"
 msgstr "第一頁"
 
-#: shell/evince-menus.ui:263
+#: shell/evince-menus.ui:262
 msgid "Last Page"
 msgstr "最後一頁"
 
-#: shell/evince-menus.ui:268
+#: shell/evince-menus.ui:267
 msgid "History"
 msgstr "歷史紀錄"
 
-#: shell/evince-menus.ui:270
+#: shell/evince-menus.ui:269
 msgid "Back"
 msgstr "後退"
 
-#: shell/evince-menus.ui:274
+#: shell/evince-menus.ui:273
 msgid "Forward"
 msgstr "下一頁"
 
@@ -1194,7 +1194,7 @@ msgstr "需要密碼"
 
 #: shell/ev-password-view.c:252 shell/ev-sidebar-attachments.c:493
 #: shell/ev-window.c:2770 shell/ev-window.c:3070 shell/ev-window.c:3943
-#: shell/ev-window.c:6931 shell/ev-window.c:7158
+#: shell/ev-window.c:6934 shell/ev-window.c:7161
 msgid "_Cancel"
 msgstr "取消(_C)"
 
@@ -1264,7 +1264,7 @@ msgstr "文件不包含任何註解"
 msgid "Page %d"
 msgstr "第 %d 頁"
 
-#: shell/ev-sidebar-annotations.c:667 shell/ev-window.c:7563
+#: shell/ev-sidebar-annotations.c:667 shell/ev-window.c:7566
 msgid "Annotations"
 msgstr "註解"
 
@@ -1282,7 +1282,7 @@ msgstr "檔案「%s」已經存在，替換它將會覆寫其資料。"
 msgid "_Replace"
 msgstr "替換(_R)"
 
-#: shell/ev-sidebar-attachments.c:899 shell/ev-window.c:7587
+#: shell/ev-sidebar-attachments.c:899 shell/ev-window.c:7590
 msgid "Attachments"
 msgstr "附加檔案"
 
@@ -1306,22 +1306,22 @@ msgstr "加入書籤"
 msgid "Remove bookmark"
 msgstr "移除書籤"
 
-#: shell/ev-sidebar-bookmarks.c:595 shell/ev-window.c:7571
+#: shell/ev-sidebar-bookmarks.c:595 shell/ev-window.c:7574
 msgid "Bookmarks"
 msgstr "書籤"
 
-#: shell/ev-sidebar-layers.c:444 shell/ev-window.c:7599
+#: shell/ev-sidebar-layers.c:444 shell/ev-window.c:7602
 msgid "Layers"
 msgstr "圖層"
 
 #. Translators: This is the title for the sidebar pane that
 #. * shows the Outline or Table of Contents of the document.
 #.
-#: shell/ev-sidebar-links.c:1027 shell/ev-window.c:7551
+#: shell/ev-sidebar-links.c:1027 shell/ev-window.c:7554
 msgid "Outline"
 msgstr "大綱"
 
-#: shell/ev-sidebar-thumbnails.c:1063 shell/ev-window.c:7534
+#: shell/ev-sidebar-thumbnails.c:1038 shell/ev-window.c:7537
 msgid "Thumbnails"
 msgstr "縮圖"
 
@@ -1453,7 +1453,7 @@ msgstr "正在上傳影像 (%d%%)"
 msgid "Save As…"
 msgstr "另存為…"
 
-#: shell/ev-window.c:3071 shell/ev-window.c:6933 shell/ev-window.c:7160
+#: shell/ev-window.c:3071 shell/ev-window.c:6936 shell/ev-window.c:7163
 msgid "_Save"
 msgstr "儲存(_S)"
 
@@ -1590,23 +1590,23 @@ msgstr "無法啟動外部應用程式。"
 msgid "Unable to open external link"
 msgstr "無法開啟外部連結"
 
-#: shell/ev-window.c:6860
+#: shell/ev-window.c:6863
 msgid "Couldn’t find appropriate format to save image"
 msgstr "找不到合適的格式來儲存影像"
 
-#: shell/ev-window.c:6892
+#: shell/ev-window.c:6895
 msgid "The image could not be saved."
 msgstr "影像無法儲存。"
 
-#: shell/ev-window.c:6928
+#: shell/ev-window.c:6931
 msgid "Save Image"
 msgstr "儲存影像"
 
-#: shell/ev-window.c:7087
+#: shell/ev-window.c:7090
 msgid "Unable to open attachment"
 msgstr "無法開啟附件"
 
-#: shell/ev-window.c:7155
+#: shell/ev-window.c:7158
 msgid "Save Attachment"
 msgstr "儲存附件"
 
@@ -1710,210 +1710,280 @@ msgctxt "shortcut window"
 msgid "Reload the document"
 msgstr "重新載入文件"
 
-#: shell/help-overlay.ui:62
+#: shell/help-overlay.ui:61
 msgctxt "shortcut window"
 msgid "Window"
 msgstr "視窗"
 
-#: shell/help-overlay.ui:66
+#: shell/help-overlay.ui:65
 msgctxt "shortcut window"
 msgid "Toggle fullscreen"
 msgstr "切換全螢幕"
 
-#: shell/help-overlay.ui:73
+#: shell/help-overlay.ui:72
 msgctxt "shortcut window"
 msgid "Enter presentation mode"
 msgstr "進入簡報模式"
 
-#: shell/help-overlay.ui:80
+#: shell/help-overlay.ui:79
 msgctxt "shortcut window"
 msgid "Toggle sidebar"
 msgstr "切換側邊欄"
 
-#: shell/help-overlay.ui:87
+#: shell/help-overlay.ui:86
 msgctxt "shortcut window"
 msgid "Toggle caret navigation"
 msgstr "切換成鍵盤瀏覽"
 
-#: shell/help-overlay.ui:97
+#: shell/help-overlay.ui:95
 msgctxt "shortcut window"
 msgid "Selecting and copying text"
 msgstr "選擇與複製文字"
 
-#: shell/help-overlay.ui:101
+#: shell/help-overlay.ui:99
 msgctxt "shortcut window"
 msgid "Copy highlighted text"
 msgstr "複製突顯的文字"
 
-#: shell/help-overlay.ui:108
+#: shell/help-overlay.ui:106
 msgctxt "shortcut window"
 msgid "Select all the text in a document"
 msgstr "選取文件內的全部文字"
 
-#: shell/help-overlay.ui:118
+#: shell/help-overlay.ui:115
 msgctxt "shortcut window"
 msgid "Rotating and zooming"
 msgstr "旋轉和縮放"
 
-#: shell/help-overlay.ui:122
+#: shell/help-overlay.ui:119
 msgctxt "shortcut window"
 msgid "Rotate the page 90 degrees counter-clockwise"
 msgstr "逆時針 90 度旋轉頁面"
 
-#: shell/help-overlay.ui:129
+#: shell/help-overlay.ui:126
 msgctxt "shortcut window"
 msgid "Rotate the page 90 degrees clockwise"
 msgstr "順時針 90 度旋轉頁面"
 
-#: shell/help-overlay.ui:136 shell/help-overlay.ui:339
+#: shell/help-overlay.ui:133 shell/help-overlay.ui:442
 msgctxt "shortcut window"
 msgid "Zoom in"
 msgstr "拉近"
 
-#: shell/help-overlay.ui:143 shell/help-overlay.ui:346
+#: shell/help-overlay.ui:140 shell/help-overlay.ui:449
 msgctxt "shortcut window"
 msgid "Zoom out"
 msgstr "拉遠"
 
-#: shell/help-overlay.ui:150
+#: shell/help-overlay.ui:147
 msgctxt "shortcut window"
 msgid "Zoom 1∶1"
 msgstr "縮放 1:1"
 
-#: shell/help-overlay.ui:157
+#: shell/help-overlay.ui:154
+msgctxt "shortcut window"
+msgid "Zoom in (alternative)"
+msgstr "拉近 (替代)"
+
+#: shell/help-overlay.ui:161
 msgctxt "shortcut window"
 msgid "Fit page"
 msgstr "符合頁面"
 
-#: shell/help-overlay.ui:164
+#: shell/help-overlay.ui:168
 msgctxt "shortcut window"
 msgid "Fit width"
 msgstr "符合頁寬"
 
-#: shell/help-overlay.ui:171
+#: shell/help-overlay.ui:175
 msgctxt "shortcut window"
 msgid "Automatic zoom"
 msgstr "自動調整遠近"
 
-#: shell/help-overlay.ui:181
+#: shell/help-overlay.ui:184
 msgctxt "shortcut window"
 msgid "Moving around the document"
 msgstr "在文件中移動"
 
-#: shell/help-overlay.ui:185 shell/help-overlay.ui:192
+#: shell/help-overlay.ui:188 shell/help-overlay.ui:195
 msgctxt "shortcut window"
 msgid "Move around a page"
 msgstr "在頁面中移動"
 
-#: shell/help-overlay.ui:199
+#: shell/help-overlay.ui:202
 msgctxt "shortcut window"
 msgid "Move up/down a page several lines at a time"
 msgstr "一次上移/下移一頁"
 
-#: shell/help-overlay.ui:206
+#: shell/help-overlay.ui:209 shell/help-overlay.ui:463
 msgctxt "shortcut window"
-msgid "Go to previous/next page"
-msgstr "前往上一頁 / 下一頁"
+msgid "Go to previous page"
+msgstr "移至上一頁"
 
-#: shell/help-overlay.ui:213
-msgctxt "shortcut window"
-msgid "Go to previous/next page visited"
-msgstr "前往上一頁 / 下一頁瀏覽"
-
-#: shell/help-overlay.ui:220
-msgctxt "shortcut window"
-msgid "Go to page number"
-msgstr "移至頁碼"
-
-#: shell/help-overlay.ui:227
-msgctxt "shortcut window"
-msgid "Go to the beginning/end of a page"
-msgstr "移至頁面的開頭/結尾"
-
-#: shell/help-overlay.ui:234
-msgctxt "shortcut window"
-msgid "Go to the beginning of the document"
-msgstr "移至文件的開頭"
-
-#: shell/help-overlay.ui:241
-msgctxt "shortcut window"
-msgid "Go to the end of the document"
-msgstr "移至文件的結尾"
-
-#: shell/help-overlay.ui:251
-msgctxt "shortcut window"
-msgid "Finding text"
-msgstr "找下一個"
-
-#: shell/help-overlay.ui:255
-msgctxt "shortcut window"
-msgid "Show the search bar"
-msgstr "顯示搜尋列"
-
-#: shell/help-overlay.ui:262
-msgctxt "shortcut window"
-msgid "Go to the next search result"
-msgstr "移至下一個搜尋結果"
-
-#: shell/help-overlay.ui:269
-msgctxt "shortcut window"
-msgid "Go to the previous search result"
-msgstr "移至上一個搜尋結果"
-
-#: shell/help-overlay.ui:279
-msgctxt "shortcut window"
-msgid "Document view and handling"
-msgstr "文件檢視與處理"
-
-#: shell/help-overlay.ui:283
-msgctxt "shortcut window"
-msgid "Add bookmark"
-msgstr "加入書籤"
-
-#: shell/help-overlay.ui:290
-msgctxt "shortcut window"
-msgid "Toggle inverted colors"
-msgstr "切換到反轉顏色模式"
-
-#: shell/help-overlay.ui:297
-msgctxt "shortcut window"
-msgid "Toggle continuous scrolling"
-msgstr "切換到連續滾動模式"
-
-#: shell/help-overlay.ui:304
-msgctxt "shortcut window"
-msgid "Toggle dual page"
-msgstr "切換到雙頁面模式"
-
-#: shell/help-overlay.ui:314
-msgctxt "shortcut window"
-msgid "Presentation mode"
-msgstr "簡報模式"
-
-#: shell/help-overlay.ui:318
-msgctxt "shortcut window"
-msgid "Toggle black screen"
-msgstr "切換黑色螢幕"
-
-#: shell/help-overlay.ui:325
-msgctxt "shortcut window"
-msgid "Toggle white screen"
-msgstr "切換白色螢幕"
-
-#: shell/help-overlay.ui:335
-msgctxt "shortcut window"
-msgid "Touchpad gestures"
-msgstr "觸控板手勢"
-
-#: shell/help-overlay.ui:353
+#: shell/help-overlay.ui:216 shell/help-overlay.ui:456
 msgctxt "shortcut window"
 msgid "Go to next page"
 msgstr "移至下一頁"
 
-#: shell/help-overlay.ui:360
+#: shell/help-overlay.ui:223
 msgctxt "shortcut window"
-msgid "Go to previous page"
-msgstr "移至上一頁"
+msgid "Go to page number"
+msgstr "移至頁碼"
+
+#: shell/help-overlay.ui:230
+msgctxt "shortcut window"
+msgid "Go to previous page (fast)"
+msgstr "回到上一頁 (快速)"
+
+#: shell/help-overlay.ui:237
+msgctxt "shortcut window"
+msgid "Go to next page (fast)"
+msgstr "前往下一頁 (快速)"
+
+#: shell/help-overlay.ui:244
+msgctxt "shortcut window"
+msgid "Go to previous page visited"
+msgstr "前往瀏覽過的上一頁"
+
+#: shell/help-overlay.ui:251
+msgctxt "shortcut window"
+msgid "Go to next page visited"
+msgstr "前往瀏覽過的下一頁"
+
+#: shell/help-overlay.ui:258
+msgctxt "shortcut window"
+msgid "Go to the beginning/end of a page"
+msgstr "移至頁面的開頭/結尾"
+
+#: shell/help-overlay.ui:265
+msgctxt "shortcut window"
+msgid "Go to the beginning of the document"
+msgstr "移至文件的開頭"
+
+#: shell/help-overlay.ui:272
+msgctxt "shortcut window"
+msgid "Go to the end of the document"
+msgstr "移至文件的結尾"
+
+#: shell/help-overlay.ui:281
+msgctxt "shortcut window"
+msgid "Document view and handling"
+msgstr "文件檢視與處理"
+
+#: shell/help-overlay.ui:285
+msgctxt "shortcut window"
+msgid "Add bookmark"
+msgstr "加入書籤"
+
+#: shell/help-overlay.ui:292
+msgctxt "shortcut window"
+msgid "Remove bookmark"
+msgstr "移除書籤"
+
+#: shell/help-overlay.ui:299
+msgctxt "shortcut window"
+msgid "Toggle night mode"
+msgstr "切換夜間模式"
+
+#: shell/help-overlay.ui:306
+msgctxt "shortcut window"
+msgid "Toggle continuous scrolling"
+msgstr "切換到連續滾動模式"
+
+#: shell/help-overlay.ui:313
+msgctxt "shortcut window"
+msgid "Toggle dual page"
+msgstr "切換到雙頁面模式"
+
+#: shell/help-overlay.ui:320
+msgctxt "shortcut window"
+msgid "Document properties"
+msgstr "文件屬性"
+
+#: shell/help-overlay.ui:327
+msgctxt "shortcut window"
+msgid "Add a post-it like note"
+msgstr "加入便利貼式筆記"
+
+#: shell/help-overlay.ui:334
+msgctxt "shortcut window"
+msgid "Highlight text"
+msgstr "標示文字"
+
+#: shell/help-overlay.ui:343
+msgctxt "shortcut window"
+msgid "Finding text"
+msgstr "找下一個"
+
+#: shell/help-overlay.ui:347
+msgctxt "shortcut window"
+msgid "Show the search bar"
+msgstr "顯示搜尋列"
+
+#: shell/help-overlay.ui:354
+msgctxt "shortcut window"
+msgid "Go to the next search result"
+msgstr "移至下一個搜尋結果"
+
+#: shell/help-overlay.ui:361
+msgctxt "shortcut window"
+msgid "Go to the previous search result"
+msgstr "移至上一個搜尋結果"
+
+#: shell/help-overlay.ui:370
+msgctxt "shortcut window"
+msgid "General"
+msgstr "一般"
+
+#: shell/help-overlay.ui:374
+msgctxt "shortcut window"
+msgid "Show help"
+msgstr "顯示求助"
+
+#: shell/help-overlay.ui:381
+msgctxt "shortcut window"
+msgid "Show primary menu"
+msgstr "顯示主選單"
+
+#: shell/help-overlay.ui:388
+msgctxt "shortcut window"
+msgid "Keyboard shortcuts"
+msgstr "鍵盤快捷鍵"
+
+#: shell/help-overlay.ui:395
+msgctxt "shortcut window"
+msgid "Close window"
+msgstr "關閉視窗"
+
+#: shell/help-overlay.ui:402
+msgctxt "shortcut window"
+msgid "Quit"
+msgstr "結束"
+
+#: shell/help-overlay.ui:409
+msgctxt "shortcut window"
+msgid "Save current settings as default"
+msgstr "將目前的設定儲存為預設值"
+
+#: shell/help-overlay.ui:418
+msgctxt "shortcut window"
+msgid "Presentation mode"
+msgstr "簡報模式"
+
+#: shell/help-overlay.ui:422
+msgctxt "shortcut window"
+msgid "Toggle black screen"
+msgstr "切換黑色螢幕"
+
+#: shell/help-overlay.ui:429
+msgctxt "shortcut window"
+msgid "Toggle white screen"
+msgstr "切換白色螢幕"
+
+#: shell/help-overlay.ui:438
+msgctxt "shortcut window"
+msgid "Touchpad gestures"
+msgstr "觸控板手勢"
 
 #: shell/main.c:63 shell/main.c:269
 msgid "GNOME Document Viewer"
@@ -1966,6 +2036,14 @@ msgstr "字串"
 #: shell/main.c:81
 msgid "[FILE…]"
 msgstr "[檔案…]"
+
+#~ msgctxt "shortcut window"
+#~ msgid "Go to previous/next page"
+#~ msgstr "前往上一頁 / 下一頁"
+
+#~ msgctxt "shortcut window"
+#~ msgid "Toggle inverted colors"
+#~ msgstr "切換到反轉顏色模式"
 
 #~ msgid "Prop_erties…"
 #~ msgstr "屬性(_E)…"
