@@ -1,3 +1,97 @@
+=================
+Evince    3.35.92
+=================
+
+backends:
+  * Show XMP data if newer than modification date (Evangelos Rigas)
+  * Fix some code formatting in poppler (Germán Poo-Caamaño)
+  
+build:
+  * Allow building with gettext >= 0.20 with autotools (#1312, Henry Gebhardt)
+  * Bump dependency versions (Germán Poo-Caamaño)
+  * Update URL for libgxps (Germán Poo-Caamaño)
+  * Update flatpak rules to match Flatpak CI (Germán Poo-Caamaño)
+  * snap: Change grade (Ken VanDine)
+  * Remove flatpak parts to use inherited instructions instead (Germán Poo-Caamaño)
+
+help:
+  *  Fix broken pt_BR help translation (Andre Klapper)
+  *  Mark an icon as non-translatable (Andre Klapper)
+  *  No more 'Fullscreen' menu item (Andre Klapper)
+  *  No more 'View options' menu (Andre Klapper)
+  *  No more 'previously visited pages' (Andre Klapper)
+  *  No more First Page and Last Page menu items (Andre Klapper)
+  *  No more Previous Page and Next Page menu items (Andre Klapper)
+  *  PDFEdit is dead (Andre Klapper)
+  *  Remove an unneeded localized screenshot without any text (Andre Klapper)
+  *  Remove deleted file also from Makefile.am, not only meson.build (Andre Klapper)
+  *  Side bar is called Side Pane in the UI (Andre Klapper)
+  *  Update Bookmarks instructions to 3.35 UI (Andre Klapper)
+  *  Update items (and their order) shown in the header (Andre Klapper)
+  *  Update names of annotation buttons below header bar (Andre Klapper)
+  *  Add danish screenshots
+  *  No 'Edit' menu anymore to save current settings as default (Andre Klapper)
+
+shell/libraries:
+  * Hopefully fix pipeline for 740f12f6 by removing another localized image (Andre Klapper)
+  * Implement SaveAs named action. (#1314, Kris Jurka)
+  * Remove accelerator label from menu (Sabri Ünal)
+  * Remove gtk_menu_popup() calls (#1023, Jason Crain)
+  * Remove shell/ev-bookmark-action.* (#1023, Jason Crain)
+  * Remove unused variables and functions (Jason Crain)
+  * Revert "ignore scroll, text selection events while unfocused" (#1316, Germán Poo-Caamaño)
+  * Update Keyboard Shortcuts page (Sabri Ünal)
+  * ignore scroll, text selection events while unfocused (#943, Nelson Benítez León)
+  * Lazily create annotation windows (#1010, Niels De Graef)
+  * Don't move goto window offscreen (#1023, Jason Crain)
+  * remove deprecated GdkScreen functions (#1023, Jason Crain)
+  * set goto window's parent (Jason Crain)
+  * Remove GTK < 3.22 popup code (Jason Crain)
+  * Stop using GdkDeviceManager (#1023, Jason Crain)
+  * fix rgba property id (Jason Crain)
+  * remove _ev_g_mkdtemp function (Jason Crain)
+  * Fix running_job volatile type (Jason Crain)
+  * Update libnautilus-extension includes (Jason Crain)
+  * Fix url in unimplemented named actions message (Germán Poo-Caamaño)
+  * Update screenshots to fit current UI (#1278, Germán Poo-Caamaño)
+
+Developers:
+  * Andre Klapper, Evangelos Rigas, Germán Poo-Caamaño, Henry Gebhardt,
+    Jason Crain, Ken VanDine, Kris Jurka, Nelson Benítez León,
+    Niels De Graef, Sabri Ünal, scootergrisen
+
+Translations:
+  * Asier Sarasua Garmendia (Basque)
+  * Rafael Fontenelle (Brazilian Portuguese)
+  * Bruce Cowan (British English)
+  * Jordi Mas (Catalan)
+  * Dz Chen (Chinese (China))
+  * Chao-Hsiung Liao (Chinese (Taiwan))
+  * Yi-Jyun Pan (Chinese (Taiwan))
+  * Goran Vidović (Croatian)
+  * Marek Černocký (Czech)
+  * Alan Mortensen (Danish)
+  * Carmen Bianca BAKKER (Esperanto)
+  * Jiri Grönroos (Finnish)
+  * Alexandre Franke (French)
+  * Alexandre Franke (French docs)
+  * Fabio Tomat (Friulian)
+  * Fran Dieguez (Galician)
+  * Balázs Úr (Hungarian)
+  * Andika Triwidada (Indonesian)
+  * Kukuh Syafaat (Indonesian)
+  * sicklylife (Japanese)
+  * Jor Teron (Karbi)
+  * Aurimas Černius (Lithuanian)
+  * Umarzuki Bin Mochlis Moktar (Malay)
+  * Danial Behzadi (Persian)
+  * Марко Костић (Serbian)
+  * Dušan Kazik (Slovak)
+  * Daniel Mustieles (Spanish)
+  * Anders Jonsson (Swedish)
+  * Emin Tufan Çetin (Turkish)
+  * Daniel Korostil (Ukrainian)
+  
 ================
 Evince    3.35.1
 ================
