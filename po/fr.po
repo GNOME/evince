@@ -23,15 +23,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Evince HEAD\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
-"POT-Creation-Date: 2020-02-05 00:35+0000\n"
-"PO-Revision-Date: 2019-08-24 19:36+0200\n"
-"Last-Translator: Claude Paroz <claude@2xlibre.net>\n"
+"POT-Creation-Date: 2020-02-07 23:47+0000\n"
+"PO-Revision-Date: 2020-02-22 22:29+0100\n"
+"Last-Translator: Guillaume Bernard <associations@guillaume-bernard.fr>\n"
 "Language-Team: GNOME French Team <gnomefr@traduc.org>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n > 1)\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 2.3\n"
 
 #: backend/comics/comics-document.c:163 backend/comics/comics-document.c:187
 msgid "File is corrupted"
@@ -472,7 +473,7 @@ msgstr "Type MIME inconnu"
 msgid "All Documents"
 msgstr "Tous les documents"
 
-#: libdocument/ev-document-factory.c:609 shell/ev-utils.c:327
+#: libdocument/ev-document-factory.c:609 shell/ev-utils.c:283
 msgid "All Files"
 msgstr "Tous les fichiers"
 
@@ -1068,10 +1069,8 @@ msgid "_Odd Pages Left"
 msgstr "_Pages impaires à gauche"
 
 #: shell/evince-menus.ui:82
-#, fuzzy
-#| msgid "Recent Documents"
 msgid "Right to Left Document"
-msgstr "Documents récents"
+msgstr "Document de droite à gauche"
 
 #: shell/evince-menus.ui:88
 msgid "Ro_tate ⤵"
@@ -1302,7 +1301,7 @@ msgstr "Le document ne contient aucune annotation"
 msgid "Page %d"
 msgstr "Page %d"
 
-#: shell/ev-sidebar-annotations.c:667 shell/ev-window.c:7566
+#: shell/ev-sidebar-annotations.c:651 shell/ev-window.c:7566
 msgid "Annotations"
 msgstr "Annotations"
 
@@ -1336,15 +1335,15 @@ msgstr "_Renommer le signet"
 msgid "_Remove Bookmark"
 msgstr "_Supprimer le signet"
 
-#: shell/ev-sidebar-bookmarks.c:471 shell/ev-sidebar-bookmarks.c:472
+#: shell/ev-sidebar-bookmarks.c:472 shell/ev-sidebar-bookmarks.c:473
 msgid "Add bookmark"
 msgstr "Ajouter un signet"
 
-#: shell/ev-sidebar-bookmarks.c:480 shell/ev-sidebar-bookmarks.c:481
+#: shell/ev-sidebar-bookmarks.c:481 shell/ev-sidebar-bookmarks.c:482
 msgid "Remove bookmark"
 msgstr "Supprimer le signet"
 
-#: shell/ev-sidebar-bookmarks.c:595 shell/ev-window.c:7574
+#: shell/ev-sidebar-bookmarks.c:596 shell/ev-window.c:7574
 msgid "Bookmarks"
 msgstr "Signets"
 
@@ -1355,7 +1354,7 @@ msgstr "Couches"
 #. Translators: This is the title for the sidebar pane that
 #. * shows the Outline or Table of Contents of the document.
 #.
-#: shell/ev-sidebar-links.c:1027 shell/ev-window.c:7554
+#: shell/ev-sidebar-links.c:1023 shell/ev-window.c:7554
 msgid "Outline"
 msgstr "Sommaire"
 
@@ -1399,7 +1398,7 @@ msgstr "Choisir ou définir le niveau de zoom du document"
 msgid "Set zoom level"
 msgstr "Définir le niveau de zoom"
 
-#: shell/ev-utils.c:323
+#: shell/ev-utils.c:279
 msgid "Supported Image Files"
 msgstr "Fichiers images pris en charge"
 
@@ -1839,7 +1838,7 @@ msgstr "Zoom 1∶1"
 #: shell/help-overlay.ui:154
 msgctxt "shortcut window"
 msgid "Zoom in (alternative)"
-msgstr ""
+msgstr "Zoom avant (alternative)"
 
 #: shell/help-overlay.ui:161
 msgctxt "shortcut window"
@@ -1887,18 +1886,14 @@ msgid "Go to page number"
 msgstr "Aller à un numéro de page"
 
 #: shell/help-overlay.ui:230
-#, fuzzy
-#| msgid "Go to previous page"
 msgctxt "shortcut window"
 msgid "Go to previous page (fast)"
-msgstr "Aller à la page précédente"
+msgstr "Aller à la page précédente (rapide)"
 
 #: shell/help-overlay.ui:237
-#, fuzzy
-#| msgid "Go to next page"
 msgctxt "shortcut window"
 msgid "Go to next page (fast)"
-msgstr "Aller à la page suivante"
+msgstr "Aller à la page suivante (rapide)"
 
 #: shell/help-overlay.ui:244
 msgctxt "shortcut window"
@@ -1963,7 +1958,7 @@ msgstr "Propriétés du document"
 #: shell/help-overlay.ui:327
 msgctxt "shortcut window"
 msgid "Add a post-it like note"
-msgstr ""
+msgstr "Ajouter une annotation de type post-it"
 
 #: shell/help-overlay.ui:334
 msgctxt "shortcut window"
@@ -2021,11 +2016,9 @@ msgid "Quit"
 msgstr "Quitter"
 
 #: shell/help-overlay.ui:409
-#, fuzzy
-#| msgid "Save Current Settings as Defa_ult"
 msgctxt "shortcut window"
 msgid "Save current settings as default"
-msgstr "Se souvenir des réglages _actuels"
+msgstr "Se souvenir des réglages actuels"
 
 #: shell/help-overlay.ui:418
 msgctxt "shortcut window"
@@ -2033,20 +2026,14 @@ msgid "Presentation mode"
 msgstr "Mode présentation"
 
 #: shell/help-overlay.ui:422
-#, fuzzy
-#| msgctxt "shortcut window"
-#| msgid "Toggle fullscreen"
 msgctxt "shortcut window"
 msgid "Toggle black screen"
-msgstr "Basculer le mode plein écran"
+msgstr "Basculer l’écran noir"
 
 #: shell/help-overlay.ui:429
-#, fuzzy
-#| msgctxt "shortcut window"
-#| msgid "Toggle fullscreen"
 msgctxt "shortcut window"
 msgid "Toggle white screen"
-msgstr "Basculer le mode plein écran"
+msgstr "Basculer l’écran blanc"
 
 #: shell/help-overlay.ui:438
 msgctxt "shortcut window"
