@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
-"POT-Creation-Date: 2020-01-02 14:39+0000\n"
-"PO-Revision-Date: 2018-01-22 00:35+0100\n"
+"POT-Creation-Date: 2020-02-05 00:35+0000\n"
+"PO-Revision-Date: 2020-02-26 21:48+0100\n"
 "Last-Translator: Gil Forcada Codinachs <gil.gnome@gmail.com>\n"
 "Language-Team: Catalan <tradgnome@softcatala.org>\n"
 "Language: ca\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Gtranslator 2.91.6\n"
+"X-Generator: Poedit 2.2.4\n"
 
 #: backend/comics/comics-document.c:163 backend/comics/comics-document.c:187
 msgid "File is corrupted"
@@ -301,15 +301,15 @@ msgstr "Documents XPS"
 msgid "Adds support for reading XPS documents"
 msgstr "Permet la lectura de documents XPS"
 
-#: browser-plugin/EvBrowserPluginToolbar.cpp:288 shell/evince-menus.ui:128
+#: browser-plugin/EvBrowserPluginToolbar.cpp:288 shell/evince-menus.ui:127
 msgid "Fit Pa_ge"
 msgstr "Ajusta a la _pàgina"
 
-#: browser-plugin/EvBrowserPluginToolbar.cpp:297 shell/evince-menus.ui:133
+#: browser-plugin/EvBrowserPluginToolbar.cpp:297 shell/evince-menus.ui:132
 msgid "Fit _Width"
 msgstr "Ajusta a l'_amplada"
 
-#: browser-plugin/EvBrowserPluginToolbar.cpp:306 shell/evince-menus.ui:138
+#: browser-plugin/EvBrowserPluginToolbar.cpp:306 shell/evince-menus.ui:137
 msgid "_Automatic"
 msgstr "_Automàtic"
 
@@ -447,8 +447,8 @@ msgstr "No s'ha pogut obrir l'adjunció «%s»"
 msgid "File type %s (%s) is not supported"
 msgstr "Encara no es pot gestionar el tipus de fitxer %s (%s)"
 
-#: libdocument/ev-document-factory.c:373 libdocument/ev-file-helpers.c:498
-#: libdocument/ev-file-helpers.c:544 libdocument/ev-file-helpers.c:563
+#: libdocument/ev-document-factory.c:373 libdocument/ev-file-helpers.c:413
+#: libdocument/ev-file-helpers.c:459 libdocument/ev-file-helpers.c:478
 msgid "Unknown MIME Type"
 msgstr "Tipus MIME desconegut"
 
@@ -465,7 +465,7 @@ msgstr "Tots els fitxers"
 msgid "Failed to create a temporary file: %s"
 msgstr "No s'ha pogut crear el fitxer temporal: %s"
 
-#: libdocument/ev-file-helpers.c:315
+#: libdocument/ev-file-helpers.c:230
 #, c-format
 msgid "Failed to create a temporary directory: %s"
 msgstr "No s'ha pogut crear el directori temporal: %s"
@@ -700,11 +700,11 @@ msgstr "Vés al fitxer «%s»"
 msgid "Launch %s"
 msgstr "Engega %s"
 
-#: libview/ev-view-presentation.c:752
+#: libview/ev-view-presentation.c:753
 msgid "Jump to page:"
 msgstr "Salta a la pàgina:"
 
-#: libview/ev-view-presentation.c:1055
+#: libview/ev-view-presentation.c:1047
 msgid "End of presentation. Press Esc or click to exit."
 msgstr "Final de la presentació. Premeu Esc o clic per sortir."
 
@@ -782,11 +782,11 @@ msgstr "_Imprimeix"
 msgid "Print this document"
 msgstr "Imprimeix el document"
 
-#: previewer/previewer.ui:20 shell/evince-menus.ui:255
+#: previewer/previewer.ui:20 shell/evince-menus.ui:254
 msgid "Previous Page"
 msgstr "Pàgina anterior"
 
-#: previewer/previewer.ui:27 shell/evince-menus.ui:259
+#: previewer/previewer.ui:27 shell/evince-menus.ui:258
 msgid "Next Page"
 msgstr "Pàgina següent"
 
@@ -794,7 +794,7 @@ msgstr "Pàgina següent"
 msgid "Reset zoom and make the page fit in the window"
 msgstr "Reinicia l'ampliació i ajusta la pàgina a la finestra"
 
-#: properties/ev-properties-main.c:117
+#: properties/ev-properties-main.c:116
 msgid "Document"
 msgstr "Document"
 
@@ -1026,7 +1026,7 @@ msgstr "_Finestra nova"
 msgid "Open a C_opy"
 msgstr "Obre'n una _còpia"
 
-#: shell/evince-menus.ui:52 shell/evince-menus.ui:241
+#: shell/evince-menus.ui:52 shell/evince-menus.ui:240
 msgid "Open Containing _Folder"
 msgstr "Obre la _carpeta que el conté"
 
@@ -1078,101 +1078,101 @@ msgstr "_Dreceres de teclat"
 msgid "_Help"
 msgstr "A_juda"
 
-#: shell/evince-menus.ui:119
+#: shell/evince-menus.ui:118
 msgid "_About Document Viewer"
 msgstr "_Quant al Visualitzador de documents"
 
-#: shell/evince-menus.ui:150
+#: shell/evince-menus.ui:149
 msgid "_Open Link"
 msgstr "_Obre l'enllaç"
 
-#: shell/evince-menus.ui:155
+#: shell/evince-menus.ui:154
 msgid "_Copy Link Address"
 msgstr "_Copia l'adreça de l'enllaç"
 
-#: shell/evince-menus.ui:160
+#: shell/evince-menus.ui:159
 msgid "_Go To"
 msgstr "Vé_s a"
 
-#: shell/evince-menus.ui:165
+#: shell/evince-menus.ui:164
 msgid "Open in New _Window"
 msgstr "Obre en una _finestra nova"
 
-#: shell/evince-menus.ui:172
+#: shell/evince-menus.ui:171
 msgid "_Previous Page"
 msgstr "Pàgina _anterior"
 
-#: shell/evince-menus.ui:176
+#: shell/evince-menus.ui:175
 msgid "_Next Page"
 msgstr "Pàgina _següent"
 
-#: shell/evince-menus.ui:180 shell/ev-window.c:3819
+#: shell/evince-menus.ui:179 shell/ev-window.c:3819
 msgid "_Reload"
 msgstr "_Torna a carregar"
 
-#: shell/evince-menus.ui:184
+#: shell/evince-menus.ui:183
 msgid "Auto_scroll"
 msgstr "Desplaça _automàticament"
 
-#: shell/evince-menus.ui:190
+#: shell/evince-menus.ui:189
 msgid "_Copy"
 msgstr "_Copia"
 
-#: shell/evince-menus.ui:194
+#: shell/evince-menus.ui:193
 msgid "Select _All"
 msgstr "Selecciona-ho _tot"
 
-#: shell/evince-menus.ui:200
+#: shell/evince-menus.ui:199
 msgid "_Save Image As…"
 msgstr "_Anomena i desa la imatge…"
 
-#: shell/evince-menus.ui:205
+#: shell/evince-menus.ui:204
 msgid "Copy _Image"
 msgstr "Copia la _imatge"
 
-#: shell/evince-menus.ui:212 shell/evince-menus.ui:283
-#: shell/evince-menus.ui:306
+#: shell/evince-menus.ui:211 shell/evince-menus.ui:282
+#: shell/evince-menus.ui:305
 msgid "_Open Attachment"
 msgstr "_Obre l'adjunció"
 
-#: shell/evince-menus.ui:217 shell/evince-menus.ui:287
-#: shell/evince-menus.ui:311
+#: shell/evince-menus.ui:216 shell/evince-menus.ui:286
+#: shell/evince-menus.ui:310
 msgid "_Save Attachment As…"
 msgstr "_Desa l'adjunció com a…"
 
-#: shell/evince-menus.ui:224 shell/evince-menus.ui:296
+#: shell/evince-menus.ui:223 shell/evince-menus.ui:295
 msgid "Annotation Properties…"
 msgstr "Propietats de l'anotació…"
 
-#: shell/evince-menus.ui:229 shell/evince-menus.ui:301
+#: shell/evince-menus.ui:228 shell/evince-menus.ui:300
 msgid "Remove Annotation"
 msgstr "Suprimeix l'anotació"
 
-#: shell/evince-menus.ui:236
+#: shell/evince-menus.ui:235
 msgid "Highlight Selected Text"
 msgstr "Ressalta el text seleccionat"
 
-#: shell/evince-menus.ui:249
+#: shell/evince-menus.ui:248
 msgid "Navigation"
 msgstr "Navegació"
 
-#: shell/evince-menus.ui:251
+#: shell/evince-menus.ui:250
 msgid "First Page"
 msgstr "Primera pàgina"
 
-#: shell/evince-menus.ui:263
+#: shell/evince-menus.ui:262
 msgid "Last Page"
 msgstr "Última pàgina"
 
-#: shell/evince-menus.ui:268
+#: shell/evince-menus.ui:267
 msgid "History"
 msgstr "Història"
 
-#: shell/evince-menus.ui:270
+#: shell/evince-menus.ui:269
 msgid "Back"
 msgstr "Torna"
 
-#: shell/evince-menus.ui:274
+#: shell/evince-menus.ui:273
 msgid "Forward"
 msgstr "Endavant"
 
@@ -1212,7 +1212,7 @@ msgstr "Cal una contrasenya"
 
 #: shell/ev-password-view.c:252 shell/ev-sidebar-attachments.c:493
 #: shell/ev-window.c:2770 shell/ev-window.c:3070 shell/ev-window.c:3943
-#: shell/ev-window.c:6931 shell/ev-window.c:7158
+#: shell/ev-window.c:6934 shell/ev-window.c:7161
 msgid "_Cancel"
 msgstr "_Cancel·la"
 
@@ -1282,7 +1282,7 @@ msgstr "El document no conté cap anotació"
 msgid "Page %d"
 msgstr "Pàgina %d"
 
-#: shell/ev-sidebar-annotations.c:667 shell/ev-window.c:7563
+#: shell/ev-sidebar-annotations.c:667 shell/ev-window.c:7566
 msgid "Annotations"
 msgstr "Anotacions"
 
@@ -1301,7 +1301,7 @@ msgstr ""
 msgid "_Replace"
 msgstr "_Reemplaça"
 
-#: shell/ev-sidebar-attachments.c:899 shell/ev-window.c:7587
+#: shell/ev-sidebar-attachments.c:899 shell/ev-window.c:7590
 msgid "Attachments"
 msgstr "Adjuncions"
 
@@ -1325,22 +1325,22 @@ msgstr "Afegeix un marcador"
 msgid "Remove bookmark"
 msgstr "Suprimeix el marcador"
 
-#: shell/ev-sidebar-bookmarks.c:595 shell/ev-window.c:7571
+#: shell/ev-sidebar-bookmarks.c:595 shell/ev-window.c:7574
 msgid "Bookmarks"
 msgstr "Marcadors"
 
-#: shell/ev-sidebar-layers.c:444 shell/ev-window.c:7599
+#: shell/ev-sidebar-layers.c:444 shell/ev-window.c:7602
 msgid "Layers"
 msgstr "Capes"
 
 #. Translators: This is the title for the sidebar pane that
 #. * shows the Outline or Table of Contents of the document.
 #.
-#: shell/ev-sidebar-links.c:1027 shell/ev-window.c:7551
+#: shell/ev-sidebar-links.c:1027 shell/ev-window.c:7554
 msgid "Outline"
 msgstr "Contorn"
 
-#: shell/ev-sidebar-thumbnails.c:1063 shell/ev-window.c:7534
+#: shell/ev-sidebar-thumbnails.c:1038 shell/ev-window.c:7537
 msgid "Thumbnails"
 msgstr "Miniatures"
 
@@ -1472,7 +1472,7 @@ msgstr "S'està pujant la imatge (%d%%)"
 msgid "Save As…"
 msgstr "Anomena i desa…"
 
-#: shell/ev-window.c:3071 shell/ev-window.c:6933 shell/ev-window.c:7160
+#: shell/ev-window.c:3071 shell/ev-window.c:6936 shell/ev-window.c:7163
 msgid "_Save"
 msgstr "_Desa"
 
@@ -1612,23 +1612,23 @@ msgstr "No s'ha pogut executar l'aplicació externa."
 msgid "Unable to open external link"
 msgstr "No s'ha pogut obrir l'enllaç extern"
 
-#: shell/ev-window.c:6860
+#: shell/ev-window.c:6863
 msgid "Couldn’t find appropriate format to save image"
 msgstr "No s'ha trobat cap format adequat per desar la imatge"
 
-#: shell/ev-window.c:6892
+#: shell/ev-window.c:6895
 msgid "The image could not be saved."
 msgstr "No s'ha pogut desar la imatge."
 
-#: shell/ev-window.c:6928
+#: shell/ev-window.c:6931
 msgid "Save Image"
 msgstr "Desa la imatge"
 
-#: shell/ev-window.c:7087
+#: shell/ev-window.c:7090
 msgid "Unable to open attachment"
 msgstr "No s'ha pogut obrir l'adjunció"
 
-#: shell/ev-window.c:7155
+#: shell/ev-window.c:7158
 msgid "Save Attachment"
 msgstr "Desa l'adjunció"
 
@@ -1733,213 +1733,283 @@ msgctxt "shortcut window"
 msgid "Reload the document"
 msgstr "Torna a carregar el document"
 
-#: shell/help-overlay.ui:62
+#: shell/help-overlay.ui:61
 msgctxt "shortcut window"
 msgid "Window"
 msgstr "Finestra"
 
-#: shell/help-overlay.ui:66
+#: shell/help-overlay.ui:65
 msgctxt "shortcut window"
 msgid "Toggle fullscreen"
 msgstr "Pantalla completa"
 
 # FIXME
-#: shell/help-overlay.ui:73
+#: shell/help-overlay.ui:72
 msgctxt "shortcut window"
 msgid "Enter presentation mode"
 msgstr "Entra al mode de presentació"
 
-#: shell/help-overlay.ui:80
+#: shell/help-overlay.ui:79
 msgctxt "shortcut window"
 msgid "Toggle sidebar"
 msgstr "Commuta la barra lateral"
 
-#: shell/help-overlay.ui:87
+#: shell/help-overlay.ui:86
 msgctxt "shortcut window"
 msgid "Toggle caret navigation"
 msgstr "Commuta la navegació per cursor"
 
 # N.T.: Títol en la finestra de dreceres
-#: shell/help-overlay.ui:97
+#: shell/help-overlay.ui:95
 msgctxt "shortcut window"
 msgid "Selecting and copying text"
 msgstr "Selecció i copiat de text"
 
-#: shell/help-overlay.ui:101
+#: shell/help-overlay.ui:99
 msgctxt "shortcut window"
 msgid "Copy highlighted text"
 msgstr "Copia el text realçat"
 
-#: shell/help-overlay.ui:108
+#: shell/help-overlay.ui:106
 msgctxt "shortcut window"
 msgid "Select all the text in a document"
 msgstr "Selecciona tot el text d'un document"
 
-#: shell/help-overlay.ui:118
+#: shell/help-overlay.ui:115
 msgctxt "shortcut window"
 msgid "Rotating and zooming"
 msgstr "Rotació i ampliació"
 
-#: shell/help-overlay.ui:122
+#: shell/help-overlay.ui:119
 msgctxt "shortcut window"
 msgid "Rotate the page 90 degrees counter-clockwise"
 msgstr "Gira la pàgina 90 graus a l'esquerra"
 
-#: shell/help-overlay.ui:129
+#: shell/help-overlay.ui:126
 msgctxt "shortcut window"
 msgid "Rotate the page 90 degrees clockwise"
 msgstr "Gira la pàgina 90 graus a la dreta"
 
-#: shell/help-overlay.ui:136 shell/help-overlay.ui:339
+#: shell/help-overlay.ui:133 shell/help-overlay.ui:442
 msgctxt "shortcut window"
 msgid "Zoom in"
 msgstr "Apropa"
 
-#: shell/help-overlay.ui:143 shell/help-overlay.ui:346
+#: shell/help-overlay.ui:140 shell/help-overlay.ui:449
 msgctxt "shortcut window"
 msgid "Zoom out"
 msgstr "Allunya"
 
-#: shell/help-overlay.ui:150
+#: shell/help-overlay.ui:147
 msgctxt "shortcut window"
 msgid "Zoom 1∶1"
 msgstr "Escala 1∶1"
 
-#: shell/help-overlay.ui:157
+#: shell/help-overlay.ui:154
+msgctxt "shortcut window"
+msgid "Zoom in (alternative)"
+msgstr "Apropa (alternatiu)"
+
+#: shell/help-overlay.ui:161
 msgctxt "shortcut window"
 msgid "Fit page"
 msgstr "Ajusta a la pàgina"
 
-#: shell/help-overlay.ui:164
+#: shell/help-overlay.ui:168
 msgctxt "shortcut window"
 msgid "Fit width"
 msgstr "Ajusta a l'amplada"
 
-#: shell/help-overlay.ui:171
+#: shell/help-overlay.ui:175
 msgctxt "shortcut window"
 msgid "Automatic zoom"
 msgstr "Ampliació automàtica"
 
-#: shell/help-overlay.ui:181
+#: shell/help-overlay.ui:184
 msgctxt "shortcut window"
 msgid "Moving around the document"
 msgstr "Moure's pel document"
 
-#: shell/help-overlay.ui:185 shell/help-overlay.ui:192
+#: shell/help-overlay.ui:188 shell/help-overlay.ui:195
 msgctxt "shortcut window"
 msgid "Move around a page"
 msgstr "Mou per la pàgina"
 
-#: shell/help-overlay.ui:199
+#: shell/help-overlay.ui:202
 msgctxt "shortcut window"
 msgid "Move up/down a page several lines at a time"
 msgstr "Mou la pàgina amunt/avall diverses línies de cop"
 
-#: shell/help-overlay.ui:206
+#: shell/help-overlay.ui:209 shell/help-overlay.ui:463
 msgctxt "shortcut window"
-msgid "Go to previous/next page"
-msgstr "Vés a la pàgina anterior/següent"
+msgid "Go to previous page"
+msgstr "Vés a la pàgina anterior"
 
-#: shell/help-overlay.ui:213
-msgctxt "shortcut window"
-msgid "Go to previous/next page visited"
-msgstr "Vés a la pàgina visitada anterior/següent"
-
-#: shell/help-overlay.ui:220
-msgctxt "shortcut window"
-msgid "Go to page number"
-msgstr "Vés a la pàgina número"
-
-#: shell/help-overlay.ui:227
-msgctxt "shortcut window"
-msgid "Go to the beginning/end of a page"
-msgstr "Vés al començament/final d'una pàgina"
-
-#: shell/help-overlay.ui:234
-msgctxt "shortcut window"
-msgid "Go to the beginning of the document"
-msgstr "Vés al començament del document"
-
-#: shell/help-overlay.ui:241
-msgctxt "shortcut window"
-msgid "Go to the end of the document"
-msgstr "Vés al final del document"
-
-#: shell/help-overlay.ui:251
-msgctxt "shortcut window"
-msgid "Finding text"
-msgstr "Cerca de text"
-
-#: shell/help-overlay.ui:255
-msgctxt "shortcut window"
-msgid "Show the search bar"
-msgstr "Mostra la barra de cerca"
-
-#: shell/help-overlay.ui:262
-msgctxt "shortcut window"
-msgid "Go to the next search result"
-msgstr "Vés al resultat de cerca següent"
-
-#: shell/help-overlay.ui:269
-msgctxt "shortcut window"
-msgid "Go to the previous search result"
-msgstr "Vés al resultat de cerca anterior"
-
-#: shell/help-overlay.ui:279
-msgctxt "shortcut window"
-msgid "Document view and handling"
-msgstr "Visualització del document i gestió"
-
-#: shell/help-overlay.ui:283
-msgctxt "shortcut window"
-msgid "Add bookmark"
-msgstr "Afegeix un marcador"
-
-#: shell/help-overlay.ui:290
-msgctxt "shortcut window"
-msgid "Toggle inverted colors"
-msgstr "Commuta els colors invertits"
-
-#: shell/help-overlay.ui:297
-msgctxt "shortcut window"
-msgid "Toggle continuous scrolling"
-msgstr "Commuta el desplaçament continu"
-
-#: shell/help-overlay.ui:304
-msgctxt "shortcut window"
-msgid "Toggle dual page"
-msgstr "Commuta a doble pàgina"
-
-# FIXME
-#: shell/help-overlay.ui:314
-msgctxt "shortcut window"
-msgid "Presentation mode"
-msgstr "Mode de presentació"
-
-#: shell/help-overlay.ui:318
-msgctxt "shortcut window"
-msgid "Toggle black screen"
-msgstr "Commuta a pantalla en negre"
-
-#: shell/help-overlay.ui:325
-msgctxt "shortcut window"
-msgid "Toggle white screen"
-msgstr "Commuta a pantalla en blanc"
-
-#: shell/help-overlay.ui:335
-msgctxt "shortcut window"
-msgid "Touchpad gestures"
-msgstr "Gestos del ratolí tàctil"
-
-#: shell/help-overlay.ui:353
+#: shell/help-overlay.ui:216 shell/help-overlay.ui:456
 msgctxt "shortcut window"
 msgid "Go to next page"
 msgstr "Vés a la pàgina següent"
 
-#: shell/help-overlay.ui:360
+#: shell/help-overlay.ui:223
 msgctxt "shortcut window"
-msgid "Go to previous page"
-msgstr "Vés a la pàgina anterior"
+msgid "Go to page number"
+msgstr "Vés a la pàgina número"
+
+#: shell/help-overlay.ui:230
+msgctxt "shortcut window"
+msgid "Go to previous page (fast)"
+msgstr "Vés a la pàgina anterior (ràpid)"
+
+#: shell/help-overlay.ui:237
+msgctxt "shortcut window"
+msgid "Go to next page (fast)"
+msgstr "Vés a la pàgina següent (ràpid)"
+
+#: shell/help-overlay.ui:244
+msgctxt "shortcut window"
+msgid "Go to previous page visited"
+msgstr "Vés a la pàgina visitada anterior"
+
+#: shell/help-overlay.ui:251
+msgctxt "shortcut window"
+msgid "Go to next page visited"
+msgstr "Vés a la pàgina visitada següent"
+
+#: shell/help-overlay.ui:258
+msgctxt "shortcut window"
+msgid "Go to the beginning/end of a page"
+msgstr "Vés al començament/final d'una pàgina"
+
+#: shell/help-overlay.ui:265
+msgctxt "shortcut window"
+msgid "Go to the beginning of the document"
+msgstr "Vés al començament del document"
+
+#: shell/help-overlay.ui:272
+msgctxt "shortcut window"
+msgid "Go to the end of the document"
+msgstr "Vés al final del document"
+
+#: shell/help-overlay.ui:281
+msgctxt "shortcut window"
+msgid "Document view and handling"
+msgstr "Visualització del document i gestió"
+
+#: shell/help-overlay.ui:285
+msgctxt "shortcut window"
+msgid "Add bookmark"
+msgstr "Afegeix un marcador"
+
+#: shell/help-overlay.ui:292
+msgctxt "shortcut window"
+msgid "Remove bookmark"
+msgstr "Suprimeix el marcador"
+
+#: shell/help-overlay.ui:299
+msgctxt "shortcut window"
+msgid "Toggle night mode"
+msgstr "Commuta el mode nocturn"
+
+#: shell/help-overlay.ui:306
+msgctxt "shortcut window"
+msgid "Toggle continuous scrolling"
+msgstr "Commuta el desplaçament continu"
+
+#: shell/help-overlay.ui:313
+msgctxt "shortcut window"
+msgid "Toggle dual page"
+msgstr "Commuta a doble pàgina"
+
+#: shell/help-overlay.ui:320
+msgctxt "shortcut window"
+msgid "Document properties"
+msgstr "Propietats del document"
+
+#: shell/help-overlay.ui:327
+msgctxt "shortcut window"
+msgid "Add a post-it like note"
+msgstr "Afegeix una nota de tipus Post-it"
+
+#: shell/help-overlay.ui:334
+msgctxt "shortcut window"
+msgid "Highlight text"
+msgstr "Ressalta el text"
+
+#: shell/help-overlay.ui:343
+msgctxt "shortcut window"
+msgid "Finding text"
+msgstr "Cerca de text"
+
+#: shell/help-overlay.ui:347
+msgctxt "shortcut window"
+msgid "Show the search bar"
+msgstr "Mostra la barra de cerca"
+
+#: shell/help-overlay.ui:354
+msgctxt "shortcut window"
+msgid "Go to the next search result"
+msgstr "Vés al resultat de cerca següent"
+
+#: shell/help-overlay.ui:361
+msgctxt "shortcut window"
+msgid "Go to the previous search result"
+msgstr "Vés al resultat de cerca anterior"
+
+#: shell/help-overlay.ui:370
+msgctxt "shortcut window"
+msgid "General"
+msgstr "General"
+
+#: shell/help-overlay.ui:374
+msgctxt "shortcut window"
+msgid "Show help"
+msgstr "Mostra l'ajuda"
+
+#: shell/help-overlay.ui:381
+msgctxt "shortcut window"
+msgid "Show primary menu"
+msgstr "Mostra el menú principal"
+
+#: shell/help-overlay.ui:388
+msgctxt "shortcut window"
+msgid "Keyboard shortcuts"
+msgstr "Dreceres de teclat"
+
+#: shell/help-overlay.ui:395
+msgctxt "shortcut window"
+msgid "Close window"
+msgstr "Finestra nova"
+
+#: shell/help-overlay.ui:402
+msgctxt "shortcut window"
+msgid "Quit"
+msgstr "Surt"
+
+#: shell/help-overlay.ui:409
+msgctxt "shortcut window"
+msgid "Save current settings as default"
+msgstr "Desa la configuració actual com a predeterminada"
+
+# FIXME
+#: shell/help-overlay.ui:418
+msgctxt "shortcut window"
+msgid "Presentation mode"
+msgstr "Mode de presentació"
+
+#: shell/help-overlay.ui:422
+msgctxt "shortcut window"
+msgid "Toggle black screen"
+msgstr "Commuta a pantalla en negre"
+
+#: shell/help-overlay.ui:429
+msgctxt "shortcut window"
+msgid "Toggle white screen"
+msgstr "Commuta a pantalla en blanc"
+
+#: shell/help-overlay.ui:438
+msgctxt "shortcut window"
+msgid "Touchpad gestures"
+msgstr "Gestos del ratolí tàctil"
 
 #: shell/main.c:63 shell/main.c:269
 msgid "GNOME Document Viewer"
@@ -1993,3 +2063,11 @@ msgstr "CADENA"
 #: shell/main.c:81
 msgid "[FILE…]"
 msgstr "[FITXER…]"
+
+#~ msgctxt "shortcut window"
+#~ msgid "Go to previous/next page"
+#~ msgstr "Vés a la pàgina anterior/següent"
+
+#~ msgctxt "shortcut window"
+#~ msgid "Toggle inverted colors"
+#~ msgstr "Commuta els colors invertits"
