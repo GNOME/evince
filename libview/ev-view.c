@@ -3404,6 +3404,41 @@ ev_view_handle_annotation (EvView       *view,
 
 			parent = GTK_WINDOW (gtk_widget_get_toplevel (GTK_WIDGET (view)));
 			window = ev_view_create_annotation_window (view, annot, parent);
+		} else if (window && ev_annotation_markup_has_popup (EV_ANNOTATION_MARKUP (annot))) {
+			EvViewWindowChild *child;
+			EvMappingList     *annots;
+			EvRectangle        popup_rect;
+			EvMapping         *mapping;
+			GdkPoint           view_point;
+			EvPoint            annotation_corner;
+
+			child = ev_view_get_window_child (view, window);
+			annots = ev_page_cache_get_annot_mapping (view->page_cache,
+								  ev_annotation_get_page_index (annot));
+			mapping = ev_mapping_list_find (annots, annot);
+			ev_annotation_markup_get_rectangle (EV_ANNOTATION_MARKUP (annot),
+							    &popup_rect);
+
+			popup_rect.x2 = mapping->area.x2 + popup_rect.x2 - popup_rect.x1;
+			popup_rect.y2 = mapping->area.y2 + popup_rect.y2 - popup_rect.y1;
+			popup_rect.x1 = mapping->area.x2;
+			popup_rect.y1 = mapping->area.y2;
+			g_object_set (annot,
+				      "rectangle", &popup_rect,
+				      "popup_is_open", TRUE,
+				      NULL);
+
+			annotation_corner.x = mapping->area.x2;
+			annotation_corner.y = mapping->area.y2;
+
+			_ev_view_transform_doc_point_to_view_point (view,
+								    ev_annotation_get_page_index (annot),
+								    &annotation_corner,
+								    &view_point);
+
+			ev_view_window_child_move (view, child,
+						   child->parent_x + view_point.x - view->scroll_x,
+						   child->parent_y + view_point.y - view->scroll_y);
 		}
 		ev_view_annotation_show_popup_window (view, window);
 	}
