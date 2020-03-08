@@ -77,6 +77,16 @@ struct _EvAnnotationTextMarkupClass {
 	EvAnnotationClass parent_class;
 };
 
+struct _EvAnnotationTooltip {
+	EvAnnotation parent;
+
+	gchar *tooltip;
+};
+
+struct _EvAnnotationTooltipClass {
+	EvAnnotationClass parent_class;
+};
+
 static void ev_annotation_markup_default_init           (EvAnnotationMarkupInterface *iface);
 static void ev_annotation_text_markup_iface_init        (EvAnnotationMarkupInterface *iface);
 static void ev_annotation_attachment_markup_iface_init  (EvAnnotationMarkupInterface *iface);
@@ -138,6 +148,7 @@ G_DEFINE_TYPE_WITH_CODE (EvAnnotationTextMarkup, ev_annotation_text_markup, EV_T
 		 G_IMPLEMENT_INTERFACE (EV_TYPE_ANNOTATION_MARKUP,
 					ev_annotation_text_markup_markup_iface_init);
 	 });
+G_DEFINE_TYPE (EvAnnotationTooltip, ev_annotation_tooltip, EV_TYPE_ANNOTATION);
 
 /* EvAnnotation */
 static void
@@ -1505,4 +1516,78 @@ ev_annotation_text_markup_set_markup_type (EvAnnotationTextMarkup    *annot,
         g_object_notify (G_OBJECT (annot), "type");
 
         return TRUE;
+}
+
+/* EvAnnotationTooltip */
+EvAnnotation *
+ev_annotation_tooltip_new (EvPage *page)
+{
+	g_return_val_if_fail (EV_IS_PAGE (page), NULL);
+
+	return EV_ANNOTATION (g_object_new (EV_TYPE_ANNOTATION_TOOLTIP,
+					    "page", page,
+					    NULL));
+}
+
+static void
+ev_annotation_tooltip_init (EvAnnotationTooltip *annot)
+{
+	annot->tooltip = NULL;
+}
+
+static void
+ev_annotation_tooltip_finalize (GObject *object)
+{
+        EvAnnotationTooltip *annot = EV_ANNOTATION_TOOLTIP (object);
+
+	g_clear_pointer (&annot->tooltip, g_free);
+
+        G_OBJECT_CLASS (ev_annotation_tooltip_parent_class)->finalize (object);
+}
+
+static void
+ev_annotation_tooltip_class_init (EvAnnotationTooltipClass *klass)
+{
+	GObjectClass *g_object_class = G_OBJECT_CLASS (klass);
+
+	g_object_class->finalize = ev_annotation_tooltip_finalize;
+}
+
+/**
+ * ev_annotation_tooltip_get_text:
+ * @annot: an #EvAnnotationTooltip
+ *
+ * Get the tooltip string of @annot .
+ *
+ * Returns: (transfer none): A string containing the tooltip text.
+ */
+const gchar *
+ev_annotation_tooltip_get_text (EvAnnotationTooltip *annot)
+{
+	g_return_val_if_fail (EV_IS_ANNOTATION_TOOLTIP (annot), NULL);
+
+	return annot->tooltip;
+}
+
+/**
+ * ev_annotation_tooltip_take_text:
+ * @annot: an #EvAnnotationTooltip
+ * @text: (transfer full): an allocated string containing the tooltip text.
+ *
+ * Set the tooltip string of @annot to be @text.
+ *
+ */
+void
+ev_annotation_tooltip_take_text (EvAnnotationTooltip *annot,
+                                 gchar               *text)
+{
+	g_return_if_fail (EV_IS_ANNOTATION_TOOLTIP (annot));
+
+	if (annot->tooltip == text)
+		return;
+
+	if (annot->tooltip)
+		g_free (annot->tooltip);
+
+	annot->tooltip = text;
 }

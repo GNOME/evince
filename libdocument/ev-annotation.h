@@ -74,6 +74,14 @@ G_BEGIN_DECLS
 #define EV_IS_ANNOTATION_TEXT_MARKUP_CLASS(klass)   (G_TYPE_CHECK_CLASS_TYPE ((klass), EV_TYPE_ANNOTATION_TEXT_MARKUP))
 #define EV_ANNOTATION_TEXT_MARKUP_GET_CLASS(object) (G_TYPE_INSTANCE_GET_CLASS ((object), EV_TYPE_ANNOTATION_TEXT_MARKUP, EvAnnotationTextMarkupClass))
 
+/* EvAnnotationTooltip */
+#define EV_TYPE_ANNOTATION_TOOLTIP                  (ev_annotation_tooltip_get_type())
+#define EV_ANNOTATION_TOOLTIP(object)               (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_ANNOTATION_TOOLTIP, EvAnnotationTooltip))
+#define EV_ANNOTATION_TOOLTIP_CLASS(klass)          (G_TYPE_CHECK_CLASS_CAST((klass), EV_TYPE_ANNOTATION_TOOLTIP, EvAnnotationTooltipClass))
+#define EV_IS_ANNOTATION_TOOLTIP(object)            (G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_ANNOTATION_TOOLTIP))
+#define EV_IS_ANNOTATION_TOOLTIP_CLASS(klass)       (G_TYPE_CHECK_CLASS_TYPE((klass), EV_TYPE_ANNOTATION_TOOLTIP))
+#define EV_ANNOTATION_TOOLTIP_GET_CLASS(object)     (G_TYPE_INSTANCE_GET_CLASS((object), EV_TYPE_ANNOTATION_TOOLTIP, EvAnnotationTooltipClass))
+
 typedef struct _EvAnnotation                EvAnnotation;
 typedef struct _EvAnnotationClass           EvAnnotationClass;
 
@@ -89,11 +97,15 @@ typedef struct _EvAnnotationAttachmentClass EvAnnotationAttachmentClass;
 typedef struct _EvAnnotationTextMarkup      EvAnnotationTextMarkup;
 typedef struct _EvAnnotationTextMarkupClass EvAnnotationTextMarkupClass;
 
+typedef struct _EvAnnotationTooltip         EvAnnotationTooltip;
+typedef struct _EvAnnotationTooltipClass    EvAnnotationTooltipClass;
+
 typedef enum {
 	EV_ANNOTATION_TYPE_UNKNOWN,
 	EV_ANNOTATION_TYPE_TEXT,
 	EV_ANNOTATION_TYPE_ATTACHMENT,
-	EV_ANNOTATION_TYPE_TEXT_MARKUP
+	EV_ANNOTATION_TYPE_TEXT_MARKUP,
+	EV_ANNOTATION_TYPE_TOOLTIP
 } EvAnnotationType;
 
 typedef enum {
@@ -196,6 +208,13 @@ EvAnnotation              *ev_annotation_text_markup_squiggly_new    (EvPage    
 EvAnnotationTextMarkupType ev_annotation_text_markup_get_markup_type (EvAnnotationTextMarkup    *annot);
 gboolean                   ev_annotation_text_markup_set_markup_type (EvAnnotationTextMarkup    *annot,
                                                                       EvAnnotationTextMarkupType markup_type);
+
+/* EvAnnotationTooltip */
+GType                ev_annotation_tooltip_get_type          (void) G_GNUC_CONST;
+EvAnnotation        *ev_annotation_tooltip_new               (EvPage              *page);
+const gchar         *ev_annotation_tooltip_get_text          (EvAnnotationTooltip *annot);
+void                 ev_annotation_tooltip_take_text         (EvAnnotationTooltip *annot,
+                                                              gchar               *text);
 
 G_END_DECLS
 

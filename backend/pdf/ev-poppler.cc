@@ -3204,10 +3204,24 @@ ev_annot_from_poppler_annot (PopplerAnnot *poppler_annot,
 	        case POPPLER_ANNOT_SQUIGGLY:
 			ev_annot = ev_annotation_text_markup_squiggly_new (page);
 			break;
+	        case POPPLER_ANNOT_WIDGET: {
+			gchar *tooltip = NULL;
+
+#if POPPLER_CHECK_VERSION(0, 87, 0)
+			tooltip = poppler_annot_get_alternate_name (poppler_annot);
+#endif
+			/* Widget annots with no form field associated (i.e. standalone) are
+			 * used by pdf readers/producers to show tooltips. If that's the case
+			 * then poppler_annot_get_alternate_name() will return non null. */
+			if (tooltip) {
+				ev_annot = ev_annotation_tooltip_new (page);
+				ev_annotation_tooltip_take_text (EV_ANNOTATION_TOOLTIP (ev_annot), tooltip);
+			}
+		}
+			break;
 	        case POPPLER_ANNOT_LINK:
-	        case POPPLER_ANNOT_WIDGET:
 	        case POPPLER_ANNOT_MOVIE:
-			/* Ignore link, widgets and movie annots since they are already handled */
+			/* Ignore link and movie annots since they are already handled */
 			break;
 	        case POPPLER_ANNOT_SCREEN: {
 			PopplerAction *action;
