@@ -132,8 +132,10 @@ gboolean             ev_annotation_set_name                  (EvAnnotation      
 const gchar         *ev_annotation_get_modified              (EvAnnotation           *annot);
 gboolean             ev_annotation_set_modified              (EvAnnotation           *annot,
 							      const gchar            *modified);
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 gboolean             ev_annotation_set_modified_from_time    (EvAnnotation           *annot,
 							      GTime                   utime);
+G_GNUC_END_IGNORE_DEPRECATIONS
 EV_DEPRECATED_FOR(ev_annotaion_get_rgba)
 void                 ev_annotation_get_color                 (EvAnnotation           *annot,
 							      GdkColor               *color);

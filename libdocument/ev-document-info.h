@@ -104,6 +104,7 @@ typedef enum
 
 } EvDocumentInfoFields;
 
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 struct _EvDocumentInfo
 {
 	char *title;
@@ -129,6 +130,7 @@ struct _EvDocumentInfo
 	/* Mask of all the valid fields */
 	guint fields_mask;
 };
+G_GNUC_END_IGNORE_DEPRECATIONS
 
 GType           ev_document_info_get_type (void) G_GNUC_CONST;
 EvDocumentInfo *ev_document_info_copy     (EvDocumentInfo *info);

@@ -84,7 +84,9 @@ EV_DEPRECATED_FOR(ev_document_misc_get_widget_dpi)
 gdouble          ev_document_misc_get_screen_dpi (GdkScreen *screen);
 gdouble          ev_document_misc_get_widget_dpi (GtkWidget *widget);
 
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 gchar           *ev_document_misc_format_date (GTime utime);
+G_GNUC_END_IGNORE_DEPRECATIONS
 
 void             ev_document_misc_get_pointer_position (GtkWidget *widget,
 							gint      *x,

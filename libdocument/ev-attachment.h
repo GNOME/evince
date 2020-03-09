@@ -51,17 +51,21 @@ struct _EvAttachmentClass {
 
 GType         ev_attachment_get_type             (void) G_GNUC_CONST;
 GQuark        ev_attachment_error_quark          (void) G_GNUC_CONST;
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 EvAttachment *ev_attachment_new                  (const gchar  *name,
 						  const gchar  *description,
 						  GTime         mtime,
 						  GTime         ctime,
 						  gsize         size,
 						  gpointer      data);
+G_GNUC_END_IGNORE_DEPRECATIONS
 
 const gchar *ev_attachment_get_name              (EvAttachment *attachment);
 const gchar *ev_attachment_get_description       (EvAttachment *attachment);
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 GTime        ev_attachment_get_modification_date (EvAttachment *attachment);
 GTime        ev_attachment_get_creation_date     (EvAttachment *attachment);
+G_GNUC_END_IGNORE_DEPRECATIONS
 const gchar *ev_attachment_get_mime_type         (EvAttachment *attachment);
 gboolean     ev_attachment_save                  (EvAttachment *attachment,
 						  GFile        *file,
