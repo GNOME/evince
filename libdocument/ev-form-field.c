@@ -45,6 +45,7 @@ ev_form_field_init (EvFormField *field)
 	field->page = NULL;
 	field->changed = FALSE;
 	field->is_read_only = FALSE;
+	field->alt_ui_name = NULL;
 }
 
 static void
@@ -56,6 +57,7 @@ ev_form_field_finalize (GObject *object)
 	field->page = NULL;
 
 	g_clear_object (&field->activation_link);
+	g_clear_pointer (&field->alt_ui_name, g_free);
 
 	(* G_OBJECT_CLASS (ev_form_field_parent_class)->finalize) (object);
 }

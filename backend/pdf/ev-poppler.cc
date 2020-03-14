@@ -2665,11 +2665,15 @@ ev_form_field_from_poppler_field (PdfDocument      *pdf_document,
 	gdouble      font_size;
 	gboolean     is_read_only;
 	PopplerAction *action;
+	gchar       *alt_ui_name = NULL;
 
 	id = poppler_form_field_get_id (poppler_field);
 	font_size = poppler_form_field_get_font_size (poppler_field);
 	is_read_only = poppler_form_field_is_read_only (poppler_field);
 	action = poppler_form_field_get_action (poppler_field);
+#if POPPLER_CHECK_VERSION(0, 88, 0)
+	alt_ui_name = poppler_form_field_get_alternate_ui_name (poppler_field);
+#endif
 
 	switch (poppler_form_field_get_field_type (poppler_field)) {
 	        case POPPLER_FORM_FIELD_TEXT: {
@@ -2759,6 +2763,7 @@ ev_form_field_from_poppler_field (PdfDocument      *pdf_document,
 
 	ev_field->font_size = font_size;
 	ev_field->is_read_only = is_read_only;
+	ev_field->alt_ui_name = alt_ui_name;
 
 	if (action)
 		ev_field->activation_link = ev_link_from_action (pdf_document, action);

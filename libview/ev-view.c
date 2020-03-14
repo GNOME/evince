@@ -2205,7 +2205,7 @@ ev_view_handle_cursor_over_xy (EvView *view, gint x, gint y)
 			ev_view_set_cursor (view, EV_VIEW_CURSOR_NORMAL);
 	}
 
-	if (link || annot)
+	if (link || annot || (field && field->alt_ui_name))
 		g_object_set (view, "has-tooltip", TRUE, NULL);
 }
 
@@ -4911,6 +4911,26 @@ get_annot_area (EvView       *view,
 				       annot, area);
 }
 
+static void
+get_field_area (EvView       *view,
+	        gint          x,
+	        gint          y,
+	        EvFormField  *field,
+	        GdkRectangle *area)
+{
+	EvMappingList *field_mapping;
+	gint           page;
+	gint           x_offset = 0, y_offset = 0;
+
+	x += view->scroll_x;
+	y += view->scroll_y;
+
+	find_page_at_location (view, x, y, &page, &x_offset, &y_offset);
+
+	field_mapping = ev_page_cache_get_form_field_mapping (view->page_cache, page);
+	ev_view_get_area_from_mapping (view, page, field_mapping, field, area);
+}
+
 static gboolean
 ev_view_query_tooltip (GtkWidget  *widget,
 		       gint        x,
@@ -4919,6 +4939,7 @@ ev_view_query_tooltip (GtkWidget  *widget,
 		       GtkTooltip *tooltip)
 {
 	EvView       *view = EV_VIEW (widget);
+	EvFormField  *field;
 	EvLink       *link;
 	EvAnnotation *annot;
 	gchar        *text;
@@ -4937,6 +4958,17 @@ ev_view_query_tooltip (GtkWidget  *widget,
 
 			return TRUE;
 		}
+	}
+
+	field = ev_view_get_form_field_at_location (view, x, y);
+	if (field && field->alt_ui_name && *(field->alt_ui_name) != '\0') {
+		GdkRectangle field_area;
+
+		get_field_area (view, x, y, field, &field_area);
+		gtk_tooltip_set_text (tooltip, field->alt_ui_name);
+		gtk_tooltip_set_tip_area (tooltip, &field_area);
+
+		return TRUE;
 	}
 
 	link = ev_view_get_link_at_location (view, x, y);
