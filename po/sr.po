@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Evince\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
-"POT-Creation-Date: 2020-02-05 00:35+0000\n"
-"PO-Revision-Date: 2020-02-18 15:46+0100\n"
+"POT-Creation-Date: 2020-02-18 14:48+0000\n"
+"PO-Revision-Date: 2020-03-15 09:41+0100\n"
 "Last-Translator: Марко М. Костић <marko.m.kostic@gmail.com>\n"
 "Language-Team: српски <gnome-sr@googlegroups.org>\n"
 "Language: sr\n"
@@ -354,7 +354,7 @@ msgid "Print document"
 msgstr "Штампајте документ"
 
 #. Manually set name and icon
-#: data/org.gnome.Evince.desktop.in.in:3 shell/ev-window.c:4070
+#: data/org.gnome.Evince.desktop.in.in:3 shell/ev-window.c:4069
 #: shell/ev-window-title.c:133 shell/main.c:298
 msgid "Document Viewer"
 msgstr "Прегледач докумената"
@@ -461,7 +461,7 @@ msgstr "Непозната МИМЕ врста"
 msgid "All Documents"
 msgstr "Сви документи"
 
-#: libdocument/ev-document-factory.c:609 shell/ev-utils.c:327
+#: libdocument/ev-document-factory.c:609 shell/ev-utils.c:283
 msgid "All Files"
 msgstr "Све датотеке"
 
@@ -486,8 +486,8 @@ msgid "of %d"
 msgstr "од %d"
 
 #: libmisc/ev-page-action-widget.c:187 shell/ev-history.c:447
-#: shell/ev-sidebar-bookmarks.c:311 shell/ev-window.c:945
-#: shell/ev-window.c:5123
+#: shell/ev-sidebar-bookmarks.c:311 shell/ev-window.c:944
+#: shell/ev-window.c:5122
 #, c-format
 msgid "Page %s"
 msgstr "Страница %s"
@@ -711,7 +711,7 @@ msgstr "Скочи на страну:"
 msgid "End of presentation. Press Esc or click to exit."
 msgstr "Крај презентације. Притисните Esc за излазак."
 
-#: org.gnome.Evince.appdata.xml.in:23 shell/ev-window.c:4065
+#: org.gnome.Evince.appdata.xml.in:23 shell/ev-window.c:4064
 msgid "Evince"
 msgstr "Евинс"
 
@@ -767,7 +767,7 @@ msgstr "Изаберите страницу или потражите у инд�
 msgid "Select page"
 msgstr "Изабери страницу"
 
-#: previewer/ev-previewer-window.c:79 shell/ev-window.c:3520
+#: previewer/ev-previewer-window.c:79 shell/ev-window.c:3519
 msgid "Failed to print document"
 msgstr "Нисам успео да одштампам документ"
 
@@ -1090,7 +1090,7 @@ msgstr "Отвори _везу"
 
 #: shell/evince-menus.ui:154
 msgid "_Copy Link Address"
-msgstr "_Умножи адресу везе"
+msgstr "_Копирај адресу везе"
 
 #: shell/evince-menus.ui:159
 msgid "_Go To"
@@ -1108,7 +1108,7 @@ msgstr "_Претходна страна"
 msgid "_Next Page"
 msgstr "_Следећа страна"
 
-#: shell/evince-menus.ui:179 shell/ev-window.c:3819
+#: shell/evince-menus.ui:179 shell/ev-window.c:3818
 msgid "_Reload"
 msgstr "_Освежи"
 
@@ -1118,7 +1118,7 @@ msgstr "Самостално _померај"
 
 #: shell/evince-menus.ui:189
 msgid "_Copy"
-msgstr "_Умножи"
+msgstr "_Копирај"
 
 #: shell/evince-menus.ui:193
 msgid "Select _All"
@@ -1130,7 +1130,7 @@ msgstr "Сачувај слику _као…"
 
 #: shell/evince-menus.ui:204
 msgid "Copy _Image"
-msgstr "Умножи _слику"
+msgstr "Копирај _слику"
 
 #: shell/evince-menus.ui:211 shell/evince-menus.ui:282
 #: shell/evince-menus.ui:305
@@ -1214,8 +1214,8 @@ msgid "Password required"
 msgstr "Потребна је лозинка"
 
 #: shell/ev-password-view.c:252 shell/ev-sidebar-attachments.c:493
-#: shell/ev-window.c:2770 shell/ev-window.c:3070 shell/ev-window.c:3943
-#: shell/ev-window.c:6934 shell/ev-window.c:7161
+#: shell/ev-window.c:2769 shell/ev-window.c:3069 shell/ev-window.c:3942
+#: shell/ev-window.c:6933 shell/ev-window.c:7160
 msgid "_Cancel"
 msgstr "От_кажи"
 
@@ -1285,7 +1285,7 @@ msgstr "Документ не садржи забелешке"
 msgid "Page %d"
 msgstr "Страница %d"
 
-#: shell/ev-sidebar-annotations.c:667 shell/ev-window.c:7566
+#: shell/ev-sidebar-annotations.c:651 shell/ev-window.c:7565
 msgid "Annotations"
 msgstr "Забелешке"
 
@@ -1304,7 +1304,7 @@ msgstr ""
 msgid "_Replace"
 msgstr "_Замени"
 
-#: shell/ev-sidebar-attachments.c:899 shell/ev-window.c:7590
+#: shell/ev-sidebar-attachments.c:899 shell/ev-window.c:7589
 msgid "Attachments"
 msgstr "Прилози"
 
@@ -1320,30 +1320,30 @@ msgstr "_Преименуј обележивач"
 msgid "_Remove Bookmark"
 msgstr "_Уклони обележивач"
 
-#: shell/ev-sidebar-bookmarks.c:471 shell/ev-sidebar-bookmarks.c:472
+#: shell/ev-sidebar-bookmarks.c:472 shell/ev-sidebar-bookmarks.c:473
 msgid "Add bookmark"
 msgstr "Додај обележивач"
 
-#: shell/ev-sidebar-bookmarks.c:480 shell/ev-sidebar-bookmarks.c:481
+#: shell/ev-sidebar-bookmarks.c:481 shell/ev-sidebar-bookmarks.c:482
 msgid "Remove bookmark"
 msgstr "Уклони обележивач"
 
-#: shell/ev-sidebar-bookmarks.c:595 shell/ev-window.c:7574
+#: shell/ev-sidebar-bookmarks.c:596 shell/ev-window.c:7573
 msgid "Bookmarks"
 msgstr "Обележивачи"
 
-#: shell/ev-sidebar-layers.c:444 shell/ev-window.c:7602
+#: shell/ev-sidebar-layers.c:444 shell/ev-window.c:7601
 msgid "Layers"
 msgstr "Слојеви"
 
 #. Translators: This is the title for the sidebar pane that
 #. * shows the Outline or Table of Contents of the document.
 #.
-#: shell/ev-sidebar-links.c:1027 shell/ev-window.c:7554
+#: shell/ev-sidebar-links.c:1023 shell/ev-window.c:7553
 msgid "Outline"
 msgstr "Контура"
 
-#: shell/ev-sidebar-thumbnails.c:1038 shell/ev-window.c:7537
+#: shell/ev-sidebar-thumbnails.c:1038 shell/ev-window.c:7536
 msgid "Thumbnails"
 msgstr "Умањени прикази"
 
@@ -1383,107 +1383,107 @@ msgstr "Изаберите или подесите ниво увеличања �
 msgid "Set zoom level"
 msgstr "Подеси ниво увеличања"
 
-#: shell/ev-utils.c:323
+#: shell/ev-utils.c:279
 msgid "Supported Image Files"
 msgstr "Подржане датотеке слика"
 
-#: shell/ev-window.c:1656
+#: shell/ev-window.c:1655
 msgid "The document contains no pages"
 msgstr "Документ не садржи странице"
 
-#: shell/ev-window.c:1659
+#: shell/ev-window.c:1658
 msgid "The document contains only empty pages"
 msgstr "Документ садржи само празне странице"
 
-#: shell/ev-window.c:1887 shell/ev-window.c:2069
+#: shell/ev-window.c:1886 shell/ev-window.c:2068
 #, c-format
 msgid "Unable to open document “%s”."
 msgstr "Не могу да отворим документ „%s“."
 
-#: shell/ev-window.c:2034
+#: shell/ev-window.c:2033
 #, c-format
 msgid "Loading document from “%s”"
 msgstr "Учитавам документ из „%s“"
 
-#: shell/ev-window.c:2039 shell/ev-window.c:2504 shell/ev-window.c:2861
-#: shell/ev-window.c:3584 shell/ev-window.c:3832
+#: shell/ev-window.c:2038 shell/ev-window.c:2503 shell/ev-window.c:2860
+#: shell/ev-window.c:3583 shell/ev-window.c:3831
 msgid "C_ancel"
 msgstr "О_ткажи"
 
-#: shell/ev-window.c:2189 shell/ev-window.c:2555
+#: shell/ev-window.c:2188 shell/ev-window.c:2554
 #, c-format
 msgid "Downloading document (%d%%)"
 msgstr "Преузимам документ (%d%%)"
 
-#: shell/ev-window.c:2222
+#: shell/ev-window.c:2221
 msgid "Failed to load remote file."
 msgstr "Не могу да учитам удаљену датотеку."
 
-#: shell/ev-window.c:2500
+#: shell/ev-window.c:2499
 #, c-format
 msgid "Reloading document from %s"
 msgstr "Изнова учитавам документ из %s"
 
-#: shell/ev-window.c:2530
+#: shell/ev-window.c:2529
 msgid "Failed to reload document."
 msgstr "Не могу поново да учитам документ."
 
-#: shell/ev-window.c:2767
+#: shell/ev-window.c:2766
 msgid "Open Document"
 msgstr "Отвори документ"
 
-#: shell/ev-window.c:2772
+#: shell/ev-window.c:2771
 msgid "_Open"
 msgstr "От_вори"
 
-#: shell/ev-window.c:2847
+#: shell/ev-window.c:2846
 #, c-format
 msgid "Saving document to %s"
 msgstr "Чувам документ у %s"
 
-#: shell/ev-window.c:2850
+#: shell/ev-window.c:2849
 #, c-format
 msgid "Saving attachment to %s"
 msgstr "Чувам прилог у %s"
 
-#: shell/ev-window.c:2853
+#: shell/ev-window.c:2852
 #, c-format
 msgid "Saving image to %s"
 msgstr "Чувам слику у %s"
 
-#: shell/ev-window.c:2895 shell/ev-window.c:3010
+#: shell/ev-window.c:2894 shell/ev-window.c:3009
 #, c-format
 msgid "The file could not be saved as “%s”."
 msgstr "Датотека није могла бити сачувана као „%s“."
 
-#: shell/ev-window.c:2927
+#: shell/ev-window.c:2926
 #, c-format
 msgid "Uploading document (%d%%)"
 msgstr "Шаљем документ (%d%%)"
 
-#: shell/ev-window.c:2931
+#: shell/ev-window.c:2930
 #, c-format
 msgid "Uploading attachment (%d%%)"
 msgstr "Шаљем прилог (%d%%)"
 
-#: shell/ev-window.c:2935
+#: shell/ev-window.c:2934
 #, c-format
 msgid "Uploading image (%d%%)"
 msgstr "Шаљем слику (%d%%)"
 
-#: shell/ev-window.c:3068
+#: shell/ev-window.c:3067
 msgid "Save As…"
 msgstr "Сачувај као…"
 
-#: shell/ev-window.c:3071 shell/ev-window.c:6936 shell/ev-window.c:7163
+#: shell/ev-window.c:3070 shell/ev-window.c:6935 shell/ev-window.c:7162
 msgid "_Save"
 msgstr "_Сачувај"
 
-#: shell/ev-window.c:3159
+#: shell/ev-window.c:3158
 msgid "Could not send current document"
 msgstr "Не могу да пошаљем текући документ"
 
-#: shell/ev-window.c:3471
+#: shell/ev-window.c:3470
 #, c-format
 msgid "%d pending job in queue"
 msgid_plural "%d pending jobs in queue"
@@ -1492,50 +1492,50 @@ msgstr[1] "%d задужења чекају у заказаним"
 msgstr[2] "%d задужења чекају у заказаним"
 msgstr[3] "Једно задужење чека у заказаним"
 
-#: shell/ev-window.c:3580
+#: shell/ev-window.c:3579
 #, c-format
 msgid "Printing job “%s”"
 msgstr "Штампам задужење „%s“"
 
-#: shell/ev-window.c:3798
+#: shell/ev-window.c:3797
 msgid "Document contains form fields that have been filled out. "
 msgstr "Документ садржи образац са пољима која су попуњена. "
 
-#: shell/ev-window.c:3801
+#: shell/ev-window.c:3800
 msgid "Document contains new or modified annotations. "
 msgstr "Документ садржи нове или измењене забелешке. "
 
-#: shell/ev-window.c:3813
+#: shell/ev-window.c:3812
 #, c-format
 msgid "Reload document “%s”?"
 msgstr "Да поново учитам документ „%s“?"
 
-#: shell/ev-window.c:3815
+#: shell/ev-window.c:3814
 msgid "If you reload the document, changes will be permanently lost."
 msgstr "Ако поново учитате документ, измене ће бити трајно изгубљене."
 
-#: shell/ev-window.c:3817
+#: shell/ev-window.c:3816
 msgid "_No"
 msgstr "_Не"
 
-#: shell/ev-window.c:3826
+#: shell/ev-window.c:3825
 #, c-format
 msgid "Save a copy of document “%s” before closing?"
 msgstr "Да сачувам примерак документа „%s“ пре затварања?"
 
-#: shell/ev-window.c:3828
+#: shell/ev-window.c:3827
 msgid "If you don’t save a copy, changes will be permanently lost."
-msgstr "Уколико не сачувате умножак, измене ће бити трајно изгубљене."
+msgstr "Уколико не сачувате копију, измене ће бити трајно изгубљене."
 
-#: shell/ev-window.c:3830
+#: shell/ev-window.c:3829
 msgid "Close _without Saving"
 msgstr "Затвори _без чувања"
 
-#: shell/ev-window.c:3834
+#: shell/ev-window.c:3833
 msgid "Save a _Copy"
 msgstr "_Сачувај примерак"
 
-#: shell/ev-window.c:3916
+#: shell/ev-window.c:3915
 #, c-format
 msgid "Wait until print job “%s” finishes before closing?"
 msgstr "Да сачекам док се не одштампа задужење „%s“ пре затварања?"
@@ -1543,7 +1543,7 @@ msgstr "Да сачекам док се не одштампа задужење �
 #. TRANS: the singular form is not really used as n_print_jobs > 1
 #. but some languages distinguish between different plurals forms,
 #. so the ngettext is needed.
-#: shell/ev-window.c:3922
+#: shell/ev-window.c:3921
 #, c-format
 msgid "There is %d print job active. Wait until print finishes before closing?"
 msgid_plural ""
@@ -1561,24 +1561,24 @@ msgstr[3] ""
 "Имате једно активно задужење за штампу. Да сачекам док се не заврши штампање "
 "пре затварања?"
 
-#: shell/ev-window.c:3937
+#: shell/ev-window.c:3936
 msgid "If you close the window, pending print jobs will not be printed."
 msgstr ""
 "Уколико затворите прозор, задужења која су на чекању неће бити одштампана."
 
-#: shell/ev-window.c:3941
+#: shell/ev-window.c:3940
 msgid "Cancel _print and Close"
 msgstr "Прекини штампање и _затвори"
 
-#: shell/ev-window.c:3945
+#: shell/ev-window.c:3944
 msgid "Close _after Printing"
 msgstr "Затвори _након штампе"
 
-#: shell/ev-window.c:4067
+#: shell/ev-window.c:4066
 msgid "© 1996–2017 The Evince authors"
 msgstr "© 1996-2017 Аутори Евинса"
 
-#: shell/ev-window.c:4073
+#: shell/ev-window.c:4072
 msgid "translator-credits"
 msgstr ""
 "Данило Шеган <danilo@gnome.org>\n"
@@ -1590,23 +1590,23 @@ msgstr ""
 "\n"
 "http://prevod.org — превод на српски језик"
 
-#: shell/ev-window.c:4635
+#: shell/ev-window.c:4634
 msgid "Running in presentation mode"
 msgstr "Покретање у режиму презентације"
 
-#: shell/ev-window.c:5634
+#: shell/ev-window.c:5633
 msgid "The attachment could not be saved."
 msgstr "Не могу да сачувам прилог."
 
-#: shell/ev-window.c:5956
+#: shell/ev-window.c:5955
 msgid "Enable caret navigation?"
 msgstr "Да укључим кретање уметком?"
 
-#: shell/ev-window.c:5957
+#: shell/ev-window.c:5956
 msgid "_Enable"
 msgstr "_Укључи"
 
-#: shell/ev-window.c:5960
+#: shell/ev-window.c:5959
 msgid ""
 "Pressing F7 turns the caret navigation on or off. This feature places a "
 "moveable cursor in text pages, allowing you to move around and select text "
@@ -1616,35 +1616,35 @@ msgstr ""
 "поставља курсор унутар Интернет страница и омогућава вам да листате садржај "
 "помоћу тастатуре. Да ли желите да укључите преглед са уметком?"
 
-#: shell/ev-window.c:5965
+#: shell/ev-window.c:5964
 msgid "Don’t show this message again"
 msgstr "Не приказуј више ову поруку"
 
-#: shell/ev-window.c:6563 shell/ev-window.c:6579
+#: shell/ev-window.c:6562 shell/ev-window.c:6578
 msgid "Unable to launch external application."
 msgstr "Не могу да покренем спољни програм."
 
-#: shell/ev-window.c:6641
+#: shell/ev-window.c:6640
 msgid "Unable to open external link"
 msgstr "Не могу да отворим спољну везу"
 
-#: shell/ev-window.c:6863
+#: shell/ev-window.c:6862
 msgid "Couldn’t find appropriate format to save image"
 msgstr "Не могу да пронађем пригодан формат за чување слике"
 
-#: shell/ev-window.c:6895
+#: shell/ev-window.c:6894
 msgid "The image could not be saved."
 msgstr "Нисам могао да сачувам слику."
 
-#: shell/ev-window.c:6931
+#: shell/ev-window.c:6930
 msgid "Save Image"
 msgstr "Сачувај слику"
 
-#: shell/ev-window.c:7090
+#: shell/ev-window.c:7089
 msgid "Unable to open attachment"
 msgstr "Не могу да отворим прилог"
 
-#: shell/ev-window.c:7158
+#: shell/ev-window.c:7157
 msgid "Save Attachment"
 msgstr "Сачувај прилог"
 
@@ -1726,12 +1726,12 @@ msgstr "Отвара документ"
 #: shell/help-overlay.ui:24
 msgctxt "shortcut window"
 msgid "Open a copy of the current document"
-msgstr "Отвара умножак текућег документа"
+msgstr "Отвара копију текућег документа"
 
 #: shell/help-overlay.ui:31
 msgctxt "shortcut window"
 msgid "Save a copy of the current document"
-msgstr "Чува умножак текућег документа"
+msgstr "Чува копију текућег документа"
 
 #: shell/help-overlay.ui:38
 msgctxt "shortcut window"
@@ -1776,12 +1776,12 @@ msgstr "Кретање уметком"
 #: shell/help-overlay.ui:95
 msgctxt "shortcut window"
 msgid "Selecting and copying text"
-msgstr "Бирање и умножавање текста"
+msgstr "Бирање и копирање текста"
 
 #: shell/help-overlay.ui:99
 msgctxt "shortcut window"
 msgid "Copy highlighted text"
-msgstr "Умножава истакнути текст"
+msgstr "Копира истакнути текст"
 
 #: shell/help-overlay.ui:106
 msgctxt "shortcut window"
