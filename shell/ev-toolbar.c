@@ -140,6 +140,7 @@ ev_toolbar_create_menu_button (EvToolbar   *ev_toolbar,
 
         button = gtk_menu_button_new ();
         gtk_widget_set_valign (button, GTK_ALIGN_CENTER);
+        gtk_widget_set_focus_on_click (button, FALSE);
         gtk_button_set_image (GTK_BUTTON (button), gtk_image_new ());
         gtk_image_set_from_icon_name (GTK_IMAGE (gtk_button_get_image (GTK_BUTTON (button))),
                                       icon_name, GTK_ICON_SIZE_MENU);
