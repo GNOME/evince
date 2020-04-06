@@ -2497,6 +2497,14 @@ ev_view_form_field_text_focus_out (GtkWidget     *widget,
 	return FALSE;
 }
 
+static gboolean
+ev_view_form_field_text_button_pressed (GtkWidget      *widget,
+					GdkEventButton *event,
+					gpointer        data)
+{
+	return GDK_EVENT_STOP;
+}
+
 static GtkWidget *
 ev_view_form_field_text_create_widget (EvView      *view,
 				       EvFormField *field)
@@ -2536,6 +2544,9 @@ ev_view_form_field_text_create_widget (EvView      *view,
 			g_signal_connect_after (text, "activate",
 						G_CALLBACK (ev_view_form_field_destroy),
 						view);
+			g_signal_connect_after (text, "button-press-event",
+						G_CALLBACK (ev_view_form_field_text_button_pressed),
+						NULL);
 			break;
 	        case EV_FORM_FIELD_TEXT_MULTILINE: {
 			GtkTextBuffer *buffer;
@@ -2554,6 +2565,9 @@ ev_view_form_field_text_create_widget (EvView      *view,
 			g_signal_connect (buffer, "changed",
 					  G_CALLBACK (ev_view_form_field_text_changed),
 					  field);
+			g_signal_connect_after (text, "button-press-event",
+						G_CALLBACK (ev_view_form_field_text_button_pressed),
+						NULL);
 		}
 			break;
 	}			
