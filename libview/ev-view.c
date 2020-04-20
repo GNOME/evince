@@ -3478,6 +3478,7 @@ ev_view_create_annotation_real (EvView *view,
 		popup_rect.y2 = popup_rect.y1 + ANNOT_POPUP_WINDOW_DEFAULT_HEIGHT;
 		g_object_set (annot,
 			      "rectangle", &popup_rect,
+			      "can-have-popup", TRUE,
 			      "has_popup", TRUE,
 			      "popup_is_open", FALSE,
 			      "label", g_get_real_name (),
