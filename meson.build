@@ -1,5 +1,5 @@
 project(
-  'Evince', ['c', 'cpp'],
+  'evince', ['c', 'cpp'],
   version: '3.36.1',
   license: 'GPL2',
   default_options: 'buildtype=debugoptimized',
@@ -60,7 +60,7 @@ ev_backends_binary_version = ev_binary_version
 ev_backends_subdir = join_paths(ev_name, ev_backends_binary_version.to_string(), 'backends')
 ev_backendsdir = join_paths(ev_libdir, ev_backends_subdir)
 
-ev_namespace = 'org.gnome.' + meson.project_name()
+ev_namespace = 'org.gnome.Evince'
 
 ev_code_prefix = 'Ev'
 
