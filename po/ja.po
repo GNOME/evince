@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
-"POT-Creation-Date: 2020-02-08 20:44+0000\n"
+"POT-Creation-Date: 2020-05-19 04:13+0000\n"
 "PO-Revision-Date: 2020-02-15 00:00+0900\n"
 "Last-Translator: sicklylife <translation@sicklylife.jp>\n"
 "Language-Team: Japanese <gnome-translation@gnome.gr.jp>\n"
@@ -327,7 +327,7 @@ msgid "Go to the next page"
 msgstr "次のページへ移動します"
 
 #. Search.
-#: browser-plugin/EvBrowserPluginToolbar.cpp:362 shell/ev-toolbar.c:172
+#: browser-plugin/EvBrowserPluginToolbar.cpp:362 shell/ev-toolbar.c:173
 msgid "Find a word or phrase in the document"
 msgstr "このドキュメントの中にある単語や語句を検索します"
 
@@ -356,7 +356,7 @@ msgid "Print document"
 msgstr "ドキュメントを印刷します"
 
 #. Manually set name and icon
-#: data/org.gnome.Evince.desktop.in.in:3 shell/ev-window.c:4070
+#: data/org.gnome.Evince.desktop.in.in:3 shell/ev-window.c:4069
 #: shell/ev-window-title.c:133 shell/main.c:298
 msgid "Document Viewer"
 msgstr "ドキュメントビューアー"
@@ -481,8 +481,8 @@ msgid "of %d"
 msgstr "/ %d"
 
 #: libmisc/ev-page-action-widget.c:187 shell/ev-history.c:447
-#: shell/ev-sidebar-bookmarks.c:311 shell/ev-window.c:945
-#: shell/ev-window.c:5123
+#: shell/ev-sidebar-bookmarks.c:311 shell/ev-window.c:944
+#: shell/ev-window.c:5122
 #, c-format
 msgid "Page %s"
 msgstr "%s ページ"
@@ -710,7 +710,7 @@ msgstr "移動先のページ:"
 msgid "End of presentation. Press Esc or click to exit."
 msgstr "プレゼンテーションの最後です。Esc を押すかクリックで終了します。"
 
-#: org.gnome.Evince.appdata.xml.in:23 shell/ev-window.c:4065
+#: org.gnome.Evince.appdata.xml.in:23 shell/ev-window.c:4064
 msgid "Evince"
 msgstr "Evince"
 
@@ -756,15 +756,15 @@ msgstr "FILE"
 msgid "GNOME Document Previewer"
 msgstr "GNOME ドキュメントプレビューアー"
 
-#: previewer/ev-previewer-toolbar.c:112 shell/ev-toolbar.c:217
+#: previewer/ev-previewer-toolbar.c:112 shell/ev-toolbar.c:218
 msgid "Select page or search in the index"
 msgstr "ページを指定するかインデックスで検索します"
 
-#: previewer/ev-previewer-toolbar.c:114 shell/ev-toolbar.c:218
+#: previewer/ev-previewer-toolbar.c:114 shell/ev-toolbar.c:219
 msgid "Select page"
 msgstr "直接ページを指定します"
 
-#: previewer/ev-previewer-window.c:79 shell/ev-window.c:3520
+#: previewer/ev-previewer-window.c:79 shell/ev-window.c:3519
 msgid "Failed to print document"
 msgstr "ドキュメントの印刷に失敗しました"
 
@@ -1105,7 +1105,7 @@ msgstr "前のページ(_P)"
 msgid "_Next Page"
 msgstr "次のページ(_N)"
 
-#: shell/evince-menus.ui:179 shell/ev-window.c:3819
+#: shell/evince-menus.ui:179 shell/ev-window.c:3818
 msgid "_Reload"
 msgstr "再読み込み(_R)"
 
@@ -1209,8 +1209,8 @@ msgid "Password required"
 msgstr "パスワードが必要です"
 
 #: shell/ev-password-view.c:252 shell/ev-sidebar-attachments.c:493
-#: shell/ev-window.c:2770 shell/ev-window.c:3070 shell/ev-window.c:3943
-#: shell/ev-window.c:6934 shell/ev-window.c:7161
+#: shell/ev-window.c:2769 shell/ev-window.c:3069 shell/ev-window.c:3942
+#: shell/ev-window.c:6933 shell/ev-window.c:7160
 msgid "_Cancel"
 msgstr "キャンセル(_C)"
 
@@ -1280,7 +1280,7 @@ msgstr "ドキュメントには注釈がありません"
 msgid "Page %d"
 msgstr "%d ページ"
 
-#: shell/ev-sidebar-annotations.c:651 shell/ev-window.c:7566
+#: shell/ev-sidebar-annotations.c:651 shell/ev-window.c:7565
 msgid "Annotations"
 msgstr "注釈"
 
@@ -1299,7 +1299,7 @@ msgstr ""
 msgid "_Replace"
 msgstr "置換(_R)"
 
-#: shell/ev-sidebar-attachments.c:899 shell/ev-window.c:7590
+#: shell/ev-sidebar-attachments.c:899 shell/ev-window.c:7589
 msgid "Attachments"
 msgstr "添付ファイル"
 
@@ -1323,58 +1323,58 @@ msgstr "ブックマークに追加"
 msgid "Remove bookmark"
 msgstr "ブックマークを削除"
 
-#: shell/ev-sidebar-bookmarks.c:596 shell/ev-window.c:7574
+#: shell/ev-sidebar-bookmarks.c:596 shell/ev-window.c:7573
 msgid "Bookmarks"
 msgstr "ブックマーク"
 
-#: shell/ev-sidebar-layers.c:444 shell/ev-window.c:7602
+#: shell/ev-sidebar-layers.c:444 shell/ev-window.c:7601
 msgid "Layers"
 msgstr "レイヤー"
 
 #. Translators: This is the title for the sidebar pane that
 #. * shows the Outline or Table of Contents of the document.
 #.
-#: shell/ev-sidebar-links.c:1023 shell/ev-window.c:7554
+#: shell/ev-sidebar-links.c:1023 shell/ev-window.c:7553
 msgid "Outline"
 msgstr "アウトライン"
 
-#: shell/ev-sidebar-thumbnails.c:1038 shell/ev-window.c:7537
+#: shell/ev-sidebar-thumbnails.c:1038 shell/ev-window.c:7536
 msgid "Thumbnails"
 msgstr "サムネイル"
 
-#: shell/ev-toolbar.c:178
+#: shell/ev-toolbar.c:179
 msgid "Search not available for this document"
 msgstr "このドキュメントは検索できません"
 
-#: shell/ev-toolbar.c:202
+#: shell/ev-toolbar.c:203
 msgid "Open…"
 msgstr "開く…"
 
-#: shell/ev-toolbar.c:203
+#: shell/ev-toolbar.c:204
 msgid "Open an existing document"
 msgstr "ドキュメントを開きます"
 
-#: shell/ev-toolbar.c:210
+#: shell/ev-toolbar.c:211
 msgid "Side pane"
 msgstr "サイドペイン"
 
-#: shell/ev-toolbar.c:226
+#: shell/ev-toolbar.c:227
 msgid "Annotate the document"
 msgstr "ドキュメントに注釈を付けます"
 
-#: shell/ev-toolbar.c:227
+#: shell/ev-toolbar.c:228
 msgid "Annotate document"
 msgstr "ドキュメントに注釈を付ける"
 
-#: shell/ev-toolbar.c:235 shell/ev-toolbar.c:236
+#: shell/ev-toolbar.c:236 shell/ev-toolbar.c:237
 msgid "File options"
 msgstr "ファイルオプション"
 
-#: shell/ev-toolbar.c:255
+#: shell/ev-toolbar.c:256
 msgid "Select or set the zoom level of the document"
 msgstr "ドキュメントのズームレベルを選択するか入力します"
 
-#: shell/ev-toolbar.c:256
+#: shell/ev-toolbar.c:257
 msgid "Set zoom level"
 msgstr "ズームレベルを設定"
 
@@ -1382,152 +1382,152 @@ msgstr "ズームレベルを設定"
 msgid "Supported Image Files"
 msgstr "サポートする画像ファイル"
 
-#: shell/ev-window.c:1656
+#: shell/ev-window.c:1655
 msgid "The document contains no pages"
 msgstr "ドキュメントにはページがありません"
 
-#: shell/ev-window.c:1659
+#: shell/ev-window.c:1658
 msgid "The document contains only empty pages"
 msgstr "ドキュメントには空のページしかありません"
 
-#: shell/ev-window.c:1887 shell/ev-window.c:2069
+#: shell/ev-window.c:1886 shell/ev-window.c:2068
 #, c-format
 msgid "Unable to open document “%s”."
 msgstr "ドキュメント“%s”を開けません。"
 
-#: shell/ev-window.c:2034
+#: shell/ev-window.c:2033
 #, c-format
 msgid "Loading document from “%s”"
 msgstr "“%s”からドキュメントを読み込み中"
 
-#: shell/ev-window.c:2039 shell/ev-window.c:2504 shell/ev-window.c:2861
-#: shell/ev-window.c:3584 shell/ev-window.c:3832
+#: shell/ev-window.c:2038 shell/ev-window.c:2503 shell/ev-window.c:2860
+#: shell/ev-window.c:3583 shell/ev-window.c:3831
 msgid "C_ancel"
 msgstr "キャンセル(_A)"
 
-#: shell/ev-window.c:2189 shell/ev-window.c:2555
+#: shell/ev-window.c:2188 shell/ev-window.c:2554
 #, c-format
 msgid "Downloading document (%d%%)"
 msgstr "ドキュメントをダウンロード中 (%d%%)"
 
-#: shell/ev-window.c:2222
+#: shell/ev-window.c:2221
 msgid "Failed to load remote file."
 msgstr "リモートファイルの読み込みに失敗しました。"
 
-#: shell/ev-window.c:2500
+#: shell/ev-window.c:2499
 #, c-format
 msgid "Reloading document from %s"
 msgstr "%s からドキュメントを再読み込み中"
 
-#: shell/ev-window.c:2530
+#: shell/ev-window.c:2529
 msgid "Failed to reload document."
 msgstr "ドキュメントの再読み込みに失敗しました。"
 
-#: shell/ev-window.c:2767
+#: shell/ev-window.c:2766
 msgid "Open Document"
 msgstr "ドキュメントを開く"
 
-#: shell/ev-window.c:2772
+#: shell/ev-window.c:2771
 msgid "_Open"
 msgstr "開く(_O)"
 
-#: shell/ev-window.c:2847
+#: shell/ev-window.c:2846
 #, c-format
 msgid "Saving document to %s"
 msgstr "%s にドキュメントを保存中"
 
-#: shell/ev-window.c:2850
+#: shell/ev-window.c:2849
 #, c-format
 msgid "Saving attachment to %s"
 msgstr "%s に添付ファイルを保存中"
 
-#: shell/ev-window.c:2853
+#: shell/ev-window.c:2852
 #, c-format
 msgid "Saving image to %s"
 msgstr "%s に画像を保存中"
 
-#: shell/ev-window.c:2895 shell/ev-window.c:3010
+#: shell/ev-window.c:2894 shell/ev-window.c:3009
 #, c-format
 msgid "The file could not be saved as “%s”."
 msgstr "ファイルを“%s”として保存できませんでした。"
 
-#: shell/ev-window.c:2927
+#: shell/ev-window.c:2926
 #, c-format
 msgid "Uploading document (%d%%)"
 msgstr "ドキュメントをアップロード中 (%d%%)"
 
-#: shell/ev-window.c:2931
+#: shell/ev-window.c:2930
 #, c-format
 msgid "Uploading attachment (%d%%)"
 msgstr "添付ファイルをアップロード中 (%d%%)"
 
-#: shell/ev-window.c:2935
+#: shell/ev-window.c:2934
 #, c-format
 msgid "Uploading image (%d%%)"
 msgstr "画像をアップロード中 (%d%%)"
 
-#: shell/ev-window.c:3068
+#: shell/ev-window.c:3067
 msgid "Save As…"
 msgstr "名前を付けて保存…"
 
-#: shell/ev-window.c:3071 shell/ev-window.c:6936 shell/ev-window.c:7163
+#: shell/ev-window.c:3070 shell/ev-window.c:6935 shell/ev-window.c:7162
 msgid "_Save"
 msgstr "保存(_S)"
 
-#: shell/ev-window.c:3159
+#: shell/ev-window.c:3158
 msgid "Could not send current document"
 msgstr "現在のドキュメントを送信できませんでした"
 
-#: shell/ev-window.c:3471
+#: shell/ev-window.c:3470
 #, c-format
 msgid "%d pending job in queue"
 msgid_plural "%d pending jobs in queue"
 msgstr[0] "保留中の印刷ジョブが %d 個あります"
 
-#: shell/ev-window.c:3580
+#: shell/ev-window.c:3579
 #, c-format
 msgid "Printing job “%s”"
 msgstr "印刷ジョブ“%s”"
 
-#: shell/ev-window.c:3798
+#: shell/ev-window.c:3797
 msgid "Document contains form fields that have been filled out. "
 msgstr "ドキュメントには内容を埋めたフォームフィールドが含まれています。"
 
-#: shell/ev-window.c:3801
+#: shell/ev-window.c:3800
 msgid "Document contains new or modified annotations. "
 msgstr "ドキュメントには新規または変更された注釈が含まれています。"
 
-#: shell/ev-window.c:3813
+#: shell/ev-window.c:3812
 #, c-format
 msgid "Reload document “%s”?"
 msgstr "ドキュメント“%s”を再読み込みしますか?"
 
-#: shell/ev-window.c:3815
+#: shell/ev-window.c:3814
 msgid "If you reload the document, changes will be permanently lost."
 msgstr "ドキュメントを再読み込みした場合、変更点は失われます。"
 
-#: shell/ev-window.c:3817
+#: shell/ev-window.c:3816
 msgid "_No"
 msgstr "いいえ(_N)"
 
-#: shell/ev-window.c:3826
+#: shell/ev-window.c:3825
 #, c-format
 msgid "Save a copy of document “%s” before closing?"
 msgstr "ドキュメント“%s”を閉じる前に名前を付けて保存しますか?"
 
-#: shell/ev-window.c:3828
+#: shell/ev-window.c:3827
 msgid "If you don’t save a copy, changes will be permanently lost."
 msgstr "名前を付けて保存しない場合、変更点は失われます。"
 
-#: shell/ev-window.c:3830
+#: shell/ev-window.c:3829
 msgid "Close _without Saving"
 msgstr "保存せずに閉じる(_W)"
 
-#: shell/ev-window.c:3834
+#: shell/ev-window.c:3833
 msgid "Save a _Copy"
 msgstr "名前を付けて保存(_C)"
 
-#: shell/ev-window.c:3916
+#: shell/ev-window.c:3915
 #, c-format
 msgid "Wait until print job “%s” finishes before closing?"
 msgstr "印刷ジョブ“%s”が完了するまで閉じずに待機しますか?"
@@ -1535,7 +1535,7 @@ msgstr "印刷ジョブ“%s”が完了するまで閉じずに待機します�
 #. TRANS: the singular form is not really used as n_print_jobs > 1
 #. but some languages distinguish between different plurals forms,
 #. so the ngettext is needed.
-#: shell/ev-window.c:3922
+#: shell/ev-window.c:3921
 #, c-format
 msgid "There is %d print job active. Wait until print finishes before closing?"
 msgid_plural ""
@@ -1544,23 +1544,23 @@ msgstr[0] ""
 "現在 %d 個の印刷ジョブがあります。すべてのジョブが完了するまで、閉じずに待機"
 "しますか?"
 
-#: shell/ev-window.c:3937
+#: shell/ev-window.c:3936
 msgid "If you close the window, pending print jobs will not be printed."
 msgstr "ウィンドウを閉じた場合、保留中の印刷ジョブは破棄されます。"
 
-#: shell/ev-window.c:3941
+#: shell/ev-window.c:3940
 msgid "Cancel _print and Close"
 msgstr "キャンセルして閉じる(_P)"
 
-#: shell/ev-window.c:3945
+#: shell/ev-window.c:3944
 msgid "Close _after Printing"
 msgstr "印刷してから閉じる(_A)"
 
-#: shell/ev-window.c:4067
+#: shell/ev-window.c:4066
 msgid "© 1996–2017 The Evince authors"
 msgstr "© 1996-2017 Evince 開発者"
 
-#: shell/ev-window.c:4073
+#: shell/ev-window.c:4072
 msgid "translator-credits"
 msgstr ""
 "相花 毅 <takeshi.aihana@gmail.com>\n"
@@ -1575,23 +1575,23 @@ msgstr ""
 "Shushi Kurose <md81bird@hitaki.net>\n"
 "sicklylife <translation@sicklylife.jp>"
 
-#: shell/ev-window.c:4635
+#: shell/ev-window.c:4634
 msgid "Running in presentation mode"
 msgstr "プレゼンテーションモードで実行中です"
 
-#: shell/ev-window.c:5634
+#: shell/ev-window.c:5633
 msgid "The attachment could not be saved."
 msgstr "添付ファイルを保存できませんでした。"
 
-#: shell/ev-window.c:5956
+#: shell/ev-window.c:5955
 msgid "Enable caret navigation?"
 msgstr "キャレット移動を有効にしますか?"
 
-#: shell/ev-window.c:5957
+#: shell/ev-window.c:5956
 msgid "_Enable"
 msgstr "有効(_E)"
 
-#: shell/ev-window.c:5960
+#: shell/ev-window.c:5959
 msgid ""
 "Pressing F7 turns the caret navigation on or off. This feature places a "
 "moveable cursor in text pages, allowing you to move around and select text "
@@ -1601,35 +1601,35 @@ msgstr ""
 "動可能なカーソルがテキストページに表示され、キーボード操作で移動したり、テキ"
 "ストを選択したりできるようになります。キャレット移動を有効にしますか?"
 
-#: shell/ev-window.c:5965
+#: shell/ev-window.c:5964
 msgid "Don’t show this message again"
 msgstr "今後このメッセージを表示しない"
 
-#: shell/ev-window.c:6563 shell/ev-window.c:6579
+#: shell/ev-window.c:6562 shell/ev-window.c:6578
 msgid "Unable to launch external application."
 msgstr "外部アプリケーションを起動できません。"
 
-#: shell/ev-window.c:6641
+#: shell/ev-window.c:6640
 msgid "Unable to open external link"
 msgstr "外部へのリンクを開けません"
 
-#: shell/ev-window.c:6863
+#: shell/ev-window.c:6862
 msgid "Couldn’t find appropriate format to save image"
 msgstr "画像を保存するのに適切な形式が見つかりませんでした"
 
-#: shell/ev-window.c:6895
+#: shell/ev-window.c:6894
 msgid "The image could not be saved."
 msgstr "画像を保存できませんでした。"
 
-#: shell/ev-window.c:6931
+#: shell/ev-window.c:6930
 msgid "Save Image"
 msgstr "画像を保存"
 
-#: shell/ev-window.c:7090
+#: shell/ev-window.c:7089
 msgid "Unable to open attachment"
 msgstr "添付ファイルを開けません"
 
-#: shell/ev-window.c:7158
+#: shell/ev-window.c:7157
 msgid "Save Attachment"
 msgstr "添付ファイルを保存"
 
