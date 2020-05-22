@@ -257,7 +257,7 @@ ev_document_model_class_init (EvDocumentModelClass *klass)
 					 PROP_MIN_SCALE,
 					 g_param_spec_double ("min-scale",
 							      "Minimum Scale",
-							      "Minium scale factor",
+							      "Minimum scale factor",
 							      0., G_MAXDOUBLE, DEFAULT_MIN_SCALE,
 							      G_PARAM_READWRITE |
                                                               G_PARAM_STATIC_STRINGS));
