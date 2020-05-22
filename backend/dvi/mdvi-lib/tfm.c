@@ -77,7 +77,7 @@ DviFontInfo afm_font_info = {
 /* 
  * Although it does not seem that way, this conversion is independent of the
  * shrinking factors, within roundoff (that's because `conv' and `vconv'
- * have already been scaled by hshrink and vshrink, repsectively). We
+ * have already been scaled by hshrink and vshrink, respectively). We
  * should really use `dviconv' and `dvivconv', but I'm not so sure those
  * should be moved to the DviParams structure.
  */

@@ -364,7 +364,7 @@ struct _DviContext {
 	FILE	*in;		/* from here we read */
 	char	*fileid;	/* from preamble */
 	int	npages;		/* number of pages */
-	int	currpage;	/* currrent page (0 based) */
+	int	currpage;	/* current page (0 based) */
 	int	depth;		/* recursion depth */
 	DviBuffer buffer;	/* input buffer */
 	DviParams params;	/* parameters */

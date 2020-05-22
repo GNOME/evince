@@ -563,7 +563,7 @@ static void t1_font_remove(T1Info *info)
 	/* first remove it from our list */
 	listh_remove(&t1fonts, LIST(info));
 
-	/* it it's in the hash table, we may need to replace this by another font */
+	/* if it's in the hash table, we may need to replace this by another font */
 	old = (T1Info *)mdvi_hash_lookup(&t1hash, (unsigned char *)info->fontname);
 	if(old == info) {
 		mdvi_hash_remove(&t1hash, (unsigned char *) info->fontname);
