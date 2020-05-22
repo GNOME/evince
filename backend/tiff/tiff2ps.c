@@ -701,7 +701,7 @@ PS_Lvl2colorspace(TIFF2PSContext* ctx, TIFF* tif)
 
 	/*
 	 * Set up PostScript Level 2 colorspace according to
-	 * section 4.8 in the PostScript refenence manual.
+	 * section 4.8 in the PostScript reference manual.
 	 */
 	fputs("% PostScript Level 2 only.\n", ctx->fd);
 	if (ctx->photometric != PHOTOMETRIC_PALETTE) {
@@ -859,7 +859,7 @@ PS_Lvl2ImageDict(TIFF2PSContext* ctx, TIFF* tif, uint32 w, uint32 h)
 			case COMPRESSION_CCITTFAX4:
 				/*
 				 * Manage inverting with /Blackis1 flag
-				 * since there migth be uncompressed parts
+				 * since there might be uncompressed parts
 				 */
 				fputs("  /Decode [0 1]\n", ctx->fd);
 				break;
