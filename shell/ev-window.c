@@ -1288,7 +1288,7 @@ setup_model_from_metadata (EvWindow *window)
 }
 
 static void
-monitor_get_dimesions (EvWindow *ev_window,
+monitor_get_dimensions (EvWindow *ev_window,
                        gint     *width,
                        gint     *height)
 {
@@ -1363,7 +1363,7 @@ setup_document_from_metadata (EvWindow *window)
 		request_width = (gint)(width_ratio * document_width + 0.5);
 		request_height = (gint)(height_ratio * document_height + 0.5);
 
-		monitor_get_dimesions (window, &monitor_width, &monitor_height);
+		monitor_get_dimensions (window, &monitor_width, &monitor_height);
 		if (monitor_width > 0 && monitor_height > 0) {
 			request_width = MIN (request_width, monitor_width);
 			request_height = MIN (request_height, monitor_height);
