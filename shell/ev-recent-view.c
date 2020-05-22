@@ -327,7 +327,7 @@ add_thumbnail_to_model (GetDocumentInfoAsyncData *data,
 
 #ifdef HAVE_LIBGNOME_DESKTOP
 static void
-ev_rencent_view_ensure_desktop_thumbnail_factory (EvRecentView *ev_recent_view)
+ev_recent_view_ensure_desktop_thumbnail_factory (EvRecentView *ev_recent_view)
 {
 	EvRecentViewPrivate *priv = GET_PRIVATE (ev_recent_view);
 
@@ -374,7 +374,7 @@ save_document_thumbnail_in_cache (GetDocumentInfoAsyncData *data)
 #ifdef HAVE_LIBGNOME_DESKTOP
         GTask *task;
 
-        ev_rencent_view_ensure_desktop_thumbnail_factory (data->ev_recent_view);
+        ev_recent_view_ensure_desktop_thumbnail_factory (data->ev_recent_view);
         task = g_task_new (data->ev_recent_view, data->cancellable,
                            (GAsyncReadyCallback)save_thumbnail_in_cache_cb, data);
         g_task_set_task_data (task, data, NULL);
@@ -604,7 +604,7 @@ get_document_thumbnail_from_cache (GetDocumentInfoAsyncData *data)
 #ifdef HAVE_LIBGNOME_DESKTOP
         GTask *task;
 
-        ev_rencent_view_ensure_desktop_thumbnail_factory (data->ev_recent_view);
+        ev_recent_view_ensure_desktop_thumbnail_factory (data->ev_recent_view);
         task = g_task_new (data->ev_recent_view, data->cancellable,
                            (GAsyncReadyCallback)get_thumbnail_from_cache_cb, data);
         g_task_set_task_data (task, data, NULL);
