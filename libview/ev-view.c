@@ -6470,7 +6470,7 @@ cursor_forward_word_end (EvView *view)
 	if (!log_attrs)
 		return FALSE;
 
-	/* Skip current current word ends */
+	/* Skip current word ends */
 	for (i = view->cursor_offset; i < n_attrs && log_attrs[i].is_word_end; i++);
 	if (i >= n_attrs) {
 		if (cursor_go_to_next_page (view))
@@ -9231,7 +9231,7 @@ jump_to_find_result (EvView *view)
  * @direction: Direction to look
  * @shift: Shift from current page
  *
- * Jumps to the first page that has occurences of searched word.
+ * Jumps to the first page that has occurrences of searched word.
  * Uses a direction where to look and a shift from current page. 
  *
  */
@@ -9597,7 +9597,7 @@ compute_new_selection (EvView          *view,
 }
 
 /* This function takes the newly calculated list, and figures out which regions
- * have changed.  It then queues a redraw approporiately.
+ * have changed.  It then queues a redraw appropriately.
  */
 static void
 merge_selection_region (EvView *view,

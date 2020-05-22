@@ -270,7 +270,7 @@ ev_job_scheduler_update_job (EvJob         *job,
 	EvSchedulerJob *s_job = NULL;
 	gboolean        need_resort = FALSE;
 
-	/* Main loop jobs are scheduled inmediately */
+	/* Main loop jobs are scheduled immediately */
 	if (ev_job_get_run_mode (job) == EV_JOB_RUN_MAIN_LOOP)
 		return;
 
