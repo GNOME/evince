@@ -342,7 +342,7 @@ build_popup_menu (EvSidebarLinks *sidebar)
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
 	g_signal_connect (item, "activate",
 			  G_CALLBACK (print_section_cb), sidebar);
-	gtk_menu_attach_to_widget (menu, sidebar->priv->tree_view, NULL);
+	gtk_menu_attach_to_widget (GTK_MENU (menu), sidebar->priv->tree_view, NULL);
 
 	return GTK_MENU (menu);
 }
