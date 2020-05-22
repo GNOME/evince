@@ -230,7 +230,7 @@ ev_job_scheduler_push_job (EvJob         *job,
 
 	g_once (&once_init, ev_job_scheduler_init, NULL);
 
-	ev_debug_message (DEBUG_JOBS, "%s pirority %d", EV_GET_TYPE_NAME (job), priority);
+	ev_debug_message (DEBUG_JOBS, "%s priority %d", EV_GET_TYPE_NAME (job), priority);
 
 	s_job = g_new0 (EvSchedulerJob, 1);
 	s_job->job = g_object_ref (job);
@@ -274,7 +274,7 @@ ev_job_scheduler_update_job (EvJob         *job,
 	if (ev_job_get_run_mode (job) == EV_JOB_RUN_MAIN_LOOP)
 		return;
 
-	ev_debug_message (DEBUG_JOBS, "%s pirority %d", EV_GET_TYPE_NAME (job), priority);
+	ev_debug_message (DEBUG_JOBS, "%s priority %d", EV_GET_TYPE_NAME (job), priority);
 	
 	G_LOCK (job_list);
 
@@ -296,7 +296,7 @@ ev_job_scheduler_update_job (EvJob         *job,
 		
 		list = g_queue_find (job_queue[s_job->priority], s_job);
 		if (list) {
-			ev_debug_message (DEBUG_JOBS, "Moving job %s from pirority %d to %d",
+			ev_debug_message (DEBUG_JOBS, "Moving job %s from priority %d to %d",
 					  EV_GET_TYPE_NAME (job), s_job->priority, priority);
 			g_queue_delete_link (job_queue[s_job->priority], list);
 			g_queue_push_tail (job_queue[priority], s_job);
