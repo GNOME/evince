@@ -105,7 +105,7 @@ get_djvu_link_dest (const DjvuDocument *djvu_document, const gchar *link_name, i
 			return ev_link_dest_new_page (get_djvu_link_page (djvu_document, link_name, base_page));
 		} else {
 			/* #pagenum #page_label: the djvu spec is not clear on whether #pagenum represents
-			 * a link to a page number or to a page label. Here we mimick djview,
+			 * a link to a page number or to a page label. Here we mimic djview,
 			 * and always treat #pagenum as a link to a page label */
 			return ev_link_dest_new_page_label (link_name + 1);
 		}
