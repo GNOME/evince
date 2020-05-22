@@ -205,7 +205,7 @@ job_fonts_updated_cb (EvJobFonts *job, gdouble progress, EvPropertiesFonts *prop
 	update_progress_label (properties->fonts_progress_label, progress);
 
 	model = gtk_tree_view_get_model (GTK_TREE_VIEW (properties->fonts_treeview));
-	/* Documen lock is already held by the jop */
+	/* Document lock is already held by the jop */
 	ev_document_fonts_fill_model (document_fonts, model);
 }
 

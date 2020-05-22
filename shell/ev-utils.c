@@ -340,7 +340,7 @@ get_gdk_pixbuf_format_by_extension (const gchar *uri)
 }
 
 /*
- * Replace all occurences of substr in str with repl
+ * Replace all occurrences of substr in str with repl
  *
  * @param str a string
  * @param substr some string to replace
