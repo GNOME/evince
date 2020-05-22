@@ -675,7 +675,7 @@ ev_document_synctex_backward_search (EvDocument *document,
  * corresponding to the position (line and column in @source_link) in
  * the source Tex file.
  *
- * Returns: An EvMapping with the page number and area corresponfing to
+ * Returns: An EvMapping with the page number and area corresponding to
  * the given line in the source file. It must be free with g_free when done
  */
 EvMapping *
