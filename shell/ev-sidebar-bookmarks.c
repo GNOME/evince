@@ -57,6 +57,9 @@ struct _EvSidebarBookmarksPrivate {
 static void ev_sidebar_bookmarks_page_iface_init (EvSidebarPageInterface *iface);
 static void ev_sidebar_bookmarks_selection_changed (GtkTreeSelection   *selection,
 						    EvSidebarBookmarks *sidebar_bookmarks);
+static void ev_sidebar_bookmarks_page_changed (EvSidebarBookmarks *sidebar_bookmarks,
+                                               gint                old_page,
+                                               gint                new_page);
 
 G_DEFINE_TYPE_EXTENDED (EvSidebarBookmarks,
                         ev_sidebar_bookmarks,
@@ -228,6 +231,21 @@ ev_sidebar_bookmarks_selection_changed (GtkTreeSelection   *selection,
         } else {
                 gtk_widget_set_sensitive (priv->del_button, FALSE);
         }
+}
+
+static void ev_sidebar_bookmarks_page_changed (EvSidebarBookmarks *sidebar_bookmarks,
+                                               gint                old_page,
+                                               gint                new_page)
+{
+        EvSidebarBookmarksPrivate *priv = sidebar_bookmarks->priv;
+        GtkTreeSelection          *selection;
+        gint                       selected_page;
+
+        selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (priv->tree_view));
+        selected_page = ev_sidebar_bookmarks_get_selected_page (sidebar_bookmarks, selection);
+
+        if (selected_page != new_page)
+                gtk_tree_selection_unselect_all (selection);
 }
 
 static void
@@ -581,6 +599,9 @@ ev_sidebar_bookmarks_set_model (EvSidebarPage   *sidebar_page,
         if (priv->model)
                 g_object_unref (priv->model);
         priv->model = g_object_ref (model);
+        g_signal_connect_swapped (model, "page-changed",
+                                  G_CALLBACK (ev_sidebar_bookmarks_page_changed),
+                                  sidebar_page);
 }
 
 static gboolean
