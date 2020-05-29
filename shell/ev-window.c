@@ -7886,6 +7886,18 @@ ev_window_get_history (EvWindow *ev_window)
 	return priv->history;
 }
 
+EvView *
+ev_window_get_view (EvWindow *ev_window)
+{
+	EvWindowPrivate *priv;
+
+	g_return_val_if_fail (EV_WINDOW (ev_window), NULL);
+
+	priv = GET_PRIVATE (ev_window);
+
+	return EV_VIEW (priv->view);
+}
+
 EvDocumentModel *
 ev_window_get_document_model (EvWindow *ev_window)
 {

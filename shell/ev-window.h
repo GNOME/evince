@@ -90,6 +90,7 @@ void		ev_window_print_range                    (EvWindow       *ev_window,
 const gchar    *ev_window_get_dbus_object_path           (EvWindow       *ev_window);
 GMenuModel     *ev_window_get_bookmarks_menu             (EvWindow       *ev_window);
 EvHistory      *ev_window_get_history                    (EvWindow       *ev_window);
+EvView         *ev_window_get_view                       (EvWindow       *ev_window);
 EvDocumentModel *ev_window_get_document_model            (EvWindow       *ev_window);
 void            ev_window_focus_view                     (EvWindow       *ev_window);
 GtkWidget      *ev_window_get_toolbar			 (EvWindow	 *ev_window);
