@@ -1130,7 +1130,10 @@ ev_sidebar_thumbnails_is_two_columns (EvSidebarThumbnails *sidebar)
 
         if (priv->width == 0) {
                 window = gtk_widget_get_toplevel (GTK_WIDGET (sidebar));
-                sidebar_width = ev_window_get_metadata_sidebar_size (EV_WINDOW (window));
+                if (EV_IS_WINDOW (window))
+                        sidebar_width = ev_window_get_metadata_sidebar_size (EV_WINDOW (window));
+                else
+                        sidebar_width = 0;
         } else {
                 sidebar_width = priv->width;
         }
