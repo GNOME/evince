@@ -43,6 +43,7 @@
 
 #include "ev-find-sidebar.h"
 #include "ev-annotations-toolbar.h"
+#include "ev-annotation-action.h"
 #include "ev-application.h"
 #include "ev-document-factory.h"
 #include "ev-document-find.h"
@@ -6015,6 +6016,30 @@ ev_window_cmd_toggle_edit_annots (GSimpleAction *action,
 }
 
 static void
+ev_window_change_select_annotation_action_state (GSimpleAction *action,
+						 GVariant      *state,
+						 gpointer       user_data)
+{
+	EvWindow  *ev_window = user_data;
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
+	EvToolbar *toolbar;
+	const gchar *mode;
+
+	toolbar = priv->fs_toolbar ? EV_TOOLBAR (priv->fs_toolbar) : EV_TOOLBAR (priv->toolbar);
+
+	mode = g_variant_get_string (state, NULL);
+
+	if (g_str_equal (mode, "note"))
+		ev_toolbar_select_annotation_type (toolbar, EV_ANNOTATION_ACTION_TYPE_NOTE);
+	else if (g_str_equal (mode, "highlight"))
+		ev_toolbar_select_annotation_type (toolbar, EV_ANNOTATION_ACTION_TYPE_HIGHLIGHT);
+	else
+		g_assert_not_reached ();
+
+	g_simple_action_set_state (action, state);
+}
+
+static void
 ev_window_dispose (GObject *object)
 {
 	EvWindow *window = EV_WINDOW (object);
@@ -6346,6 +6371,7 @@ static const GActionEntry actions[] = {
 	{ "add-annotation", NULL, NULL, "false", ev_window_cmd_add_annotation },
 	{ "highlight-annotation", NULL, NULL, "false", ev_window_cmd_add_highlight_annotation },
 	{ "toggle-edit-annots", NULL, NULL, "false", ev_window_cmd_toggle_edit_annots },
+	{ "select-annotation", NULL, "s", "'note'", ev_window_change_select_annotation_action_state },
 	{ "about", ev_window_cmd_about },
 	{ "help", ev_window_cmd_help },
 	/* Popups specific items */
