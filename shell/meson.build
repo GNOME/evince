@@ -1,6 +1,7 @@
 shell_inc = include_directories('.')
 
 sources = files(
+  'ev-annotation-action.c',
   'ev-annotation-properties-dialog.c',
   'ev-annotations-toolbar.c',
   'ev-application.c',

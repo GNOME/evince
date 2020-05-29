@@ -7,6 +7,8 @@ libexec_PROGRAMS = evinced
 endif
 
 evince_SOURCES=				\
+	ev-annotation-action.h	\
+	ev-annotation-action.c	\
 	ev-annotation-properties-dialog.h \
 	ev-annotation-properties-dialog.c \
 	ev-annotations-toolbar.h	\
