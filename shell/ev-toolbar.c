@@ -30,6 +30,7 @@
 #include "ev-stock-icons.h"
 #include "ev-zoom-action.h"
 #include "ev-application.h"
+#include "ev-annotation-action.h"
 #include "ev-page-action-widget.h"
 #include <math.h>
 
@@ -48,6 +49,7 @@ typedef struct {
         GtkWidget *navigation_action;
         GtkWidget *find_button;
         GtkWidget *open_button;
+        GtkWidget *annots_action;
         GtkWidget *annots_button;
         GtkWidget *sidebar_button;
 
@@ -162,6 +164,40 @@ zoom_selector_activated (GtkWidget *zoom_action,
 }
 
 static void
+ev_toolbar_begin_add_annot (EvToolbar       *ev_toolbar,
+                            EvAnnotationType annot_type)
+{
+	EvToolbarPrivate *priv = GET_PRIVATE (ev_toolbar);
+        EvView *view = ev_window_get_view (priv->window);
+
+	if (annot_type == EV_ANNOTATION_TYPE_TEXT_MARKUP &&
+	    ev_view_get_has_selection (view)) {
+		ev_view_add_text_markup_annotation_for_selected_text (view);
+		return;
+	}
+
+	ev_view_begin_add_annotation (view, annot_type);
+}
+
+static void
+ev_toolbar_cancel_add_annot (EvToolbar *ev_toolbar)
+{
+	EvToolbarPrivate *priv = GET_PRIVATE (ev_toolbar);
+        EvView *view = ev_window_get_view (priv->window);
+
+	ev_view_cancel_add_annotation (view);
+}
+
+static void
+annotation_selector_activated (GtkWidget *annotation_action,
+                               EvToolbar *ev_toolbar)
+{
+	EvToolbarPrivate *priv = GET_PRIVATE (ev_toolbar);
+
+        ev_window_focus_view (priv->window);
+}
+
+static void
 ev_toolbar_find_button_sensitive_changed (GtkWidget  *find_button,
 					  GParamSpec *pspec,
 					  EvToolbar *ev_toolbar)
@@ -221,6 +257,24 @@ ev_toolbar_constructed (GObject *object)
         ev_page_action_widget_set_model (EV_PAGE_ACTION_WIDGET (tool_item),
                                          ev_window_get_document_model (priv->window));
         gtk_header_bar_pack_start (GTK_HEADER_BAR (ev_toolbar), tool_item);
+
+        /* New edit annotations */
+        vbox = ev_annotation_action_new ();
+        priv->annots_action = vbox;
+        gtk_widget_set_tooltip_text (vbox, _("Select or set the tool to annotate the document"));
+        atk_object_set_name (gtk_widget_get_accessible (vbox), _("Set annotation tool"));
+        g_signal_connect_swapped (priv->annots_action,
+                                  "begin-add-annot",
+				  G_CALLBACK (ev_toolbar_begin_add_annot),
+                                  ev_toolbar);
+        g_signal_connect_swapped (priv->annots_action,
+                                  "cancel-add-annot",
+                                  G_CALLBACK (ev_toolbar_cancel_add_annot),
+                                  ev_toolbar);
+        g_signal_connect (vbox, "activated",
+                          G_CALLBACK (annotation_selector_activated),
+                          ev_toolbar);
+        gtk_header_bar_pack_start (GTK_HEADER_BAR (ev_toolbar), vbox);
 
         /* Edit Annots */
         button = ev_toolbar_create_toggle_button (ev_toolbar, "win.toggle-edit-annots", "document-edit-symbolic",
@@ -346,11 +400,23 @@ ev_toolbar_get_page_selector (EvToolbar *ev_toolbar)
 }
 
 void
+ev_toolbar_select_annotation_type (EvToolbar              *ev_toolbar,
+                                   EvAnnotationActionType  annot_type)
+{
+        EvToolbarPrivate *priv;
+
+        g_return_if_fail (EV_IS_TOOLBAR (ev_toolbar));
+
+        priv = GET_PRIVATE (ev_toolbar);
+        ev_annotation_action_select_annotation (EV_ANNOTATION_ACTION (priv->annots_action),
+                                                annot_type);
+}
+
+void
 ev_toolbar_set_mode (EvToolbar     *ev_toolbar,
                      EvToolbarMode  mode)
 {
         EvToolbarPrivate *priv;
-
         g_return_if_fail (EV_IS_TOOLBAR (ev_toolbar));
 
         priv = GET_PRIVATE (ev_toolbar);
@@ -364,6 +430,7 @@ ev_toolbar_set_mode (EvToolbar     *ev_toolbar,
                 gtk_widget_show (priv->zoom_action);
                 gtk_widget_show (priv->page_selector);
                 gtk_widget_show (priv->find_button);
+                gtk_widget_show (priv->annots_action);
                 gtk_widget_show (priv->annots_button);
                 gtk_widget_hide (priv->open_button);
                 break;
@@ -373,6 +440,7 @@ ev_toolbar_set_mode (EvToolbar     *ev_toolbar,
                 gtk_widget_hide (priv->zoom_action);
                 gtk_widget_hide (priv->page_selector);
                 gtk_widget_hide (priv->find_button);
+                gtk_widget_hide (priv->annots_action);
                 gtk_widget_hide (priv->annots_button);
                 gtk_widget_show (priv->open_button);
                 break;
