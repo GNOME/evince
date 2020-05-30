@@ -8411,6 +8411,7 @@ struct synctex_updater_t {
     int length;             /*  the number of chars appended */
 };
 
+__attribute__((__format__ (__printf__, 2, 3)))
 static int _synctex_updater_print(synctex_updater_p updater, const char * format, ...) {
     int result = 0;
     if (updater) {
@@ -8447,6 +8448,7 @@ static int vasprintf(char **ret,
 /**
  *  gzvprintf is not available until OSX 10.10
  */
+__attribute__((__format__ (__printf__, 2, 3)))
 static int _synctex_updater_print_gz(synctex_updater_p updater, const char * format, ...) {
     int result = 0;
     if (updater) {

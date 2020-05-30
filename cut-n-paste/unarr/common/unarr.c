@@ -92,6 +92,7 @@ size_t ar_get_global_comment(ar_archive *ar, void *buffer, size_t count)
     return ar->get_comment(ar, buffer, count);
 }
 
+__attribute__((__format__ (__printf__, 4, 0)))
 void ar_log(const char *prefix, const char *file, int line, const char *msg, ...)
 {
     va_list args;
