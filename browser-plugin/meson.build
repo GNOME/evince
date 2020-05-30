@@ -52,4 +52,5 @@ shared_module(
   cpp_args: cppflags,
   install: true,
   install_dir: browser_plugin_dir,
+  name_suffix: name_suffix,
 )

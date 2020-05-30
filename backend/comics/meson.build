@@ -20,6 +20,7 @@ shared_module(
   link_depends: backends_symbol_map,
   install: true,
   install_dir: ev_backendsdir,
+  name_suffix: name_suffix,
 )
 
 test_name = 'test-ev-archive'

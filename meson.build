@@ -107,6 +107,13 @@ if build_machine.system() == 'windows'
   common_ldflags = cc.get_supported_link_arguments('-mwindows')
 endif
 
+# GLib on macOS expects so as shared_module suffix, while meson uses dylib by default
+if host_machine.system() == 'darwin'
+  name_suffix = 'so'
+else
+  name_suffix = []
+endif
+
 if ev_debug
   common_flags += ['-DEV_ENABLE_DEBUG'] + cc.get_supported_arguments([
     '-Wnested-externs',
