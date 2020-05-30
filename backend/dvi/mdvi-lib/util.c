@@ -48,6 +48,7 @@ int mdvi_set_logfile(const char *filename);
 int mdvi_set_logstream(FILE *file);
 int mdvi_set_loglevel(int level);
 
+__attribute__((__format__ (__printf__, 3, 0)))
 static void vputlog(int level, const char *head, const char *format, va_list ap)
 {
 	if(logfile != NULL && _mdvi_log_level >= level) {
@@ -93,6 +94,7 @@ int mdvi_set_loglevel(int level)
 #ifndef NODEBUG
 Uint32 _mdvi_debug_mask = 0;
 
+__attribute__((__format__ (__printf__, 2, 3)))
 void	__debug(int mask, const char *format, ...)
 {
 	va_list	ap;
@@ -115,6 +117,7 @@ void	__debug(int mask, const char *format, ...)
 }
 #endif
 
+__attribute__((__format__ (__printf__, 1, 2)))
 void	mdvi_message(const char *format, ...)
 {
 	va_list	ap;
@@ -132,6 +135,7 @@ void	mdvi_message(const char *format, ...)
 	va_end(ap);
 }
 
+__attribute__((__format__ (__printf__, 1, 2)))
 void	mdvi_crash(const char *format, ...)
 {
 	va_list ap;
@@ -151,6 +155,7 @@ void	mdvi_crash(const char *format, ...)
 	abort();
 }
 
+__attribute__((__format__ (__printf__, 1, 2)))
 void	mdvi_error(const char *format, ...)
 {
 	va_list	ap;
@@ -167,6 +172,7 @@ void	mdvi_error(const char *format, ...)
 	va_end(ap);
 }
 
+__attribute__((__format__ (__printf__, 1, 2)))
 void	mdvi_warning(const char *format, ...)
 {
 	va_list	ap;
@@ -183,6 +189,7 @@ void	mdvi_warning(const char *format, ...)
 	va_end(ap);
 }
 
+__attribute__((__format__ (__printf__, 1, 2)))
 void	mdvi_fatal(const char *format, ...)
 {
 	va_list	ap;

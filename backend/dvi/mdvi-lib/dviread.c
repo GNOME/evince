@@ -169,6 +169,7 @@ static void dummy_dev_set_color(void *a, Ulong b, Ulong c)
 }
 
 /* functions to report errors */
+__attribute__((__format__ (__printf__, 2, 3)))
 static void dvierr(DviContext *dvi, const char *format, ...)
 {
 	va_list	ap;
@@ -180,6 +181,7 @@ static void dvierr(DviContext *dvi, const char *format, ...)
 	va_end(ap);
 }
 
+__attribute__((__format__ (__printf__, 2, 3)))
 static void dviwarn(DviContext *dvi, const char *format, ...)
 {
 	va_list	ap;
@@ -317,6 +319,7 @@ static void dreset(DviContext *dvi)
 #define duget4(d)	dugetn((d), 4)
 
 #ifndef NODEBUG
+__attribute__((__format__ (__printf__, 4, 5)))
 static void dviprint(DviContext *dvi, const char *command, int sub, const char *fmt, ...)
 {
 	int	i;
