@@ -10,6 +10,7 @@ variables:
 master:
     image: registry.gitlab.gnome.org/gnome/evince/master-amd64:latest
     stage: build
+    when: manual
 
     script:
         - ./autogen.sh --enable-debug --enable-nautilus
@@ -24,7 +25,6 @@ master:
 meson:
     image: registry.gitlab.gnome.org/gnome/evince/master-amd64:latest
     stage: build
-    when: manual
 
     script:
         - meson _build
