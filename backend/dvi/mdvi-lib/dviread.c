@@ -1329,7 +1329,7 @@ int	set_rule(DviContext *dvi, int opcode)
 
 int	no_op(DviContext *dvi, int opcode)
 {
-	SHOWCMD((dvi, "noop", -1, ""));
+	SHOWCMD((dvi, "noop", -1, "\n"));
 	return 0;
 }
 
