@@ -28,7 +28,7 @@ meson:
 
     script:
         - meson _build
-        - ninja -C _build all libevdocument-doc libevview-doc evince-doc
+        - ninja -C _build all
 
     artifacts:
         when: on_failure
@@ -43,7 +43,7 @@ meson-gtk-doc:
 
     script:
         - meson -Dgtk_doc=true _build
-        - ninja -C _build all libevdocument-doc libevview-doc evince-doc
+        - ninja -C _build all 
 
     artifacts:
         when: on_failure
