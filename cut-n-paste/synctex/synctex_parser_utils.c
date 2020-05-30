@@ -149,6 +149,7 @@ int _synctex_error(const char * reason,...) {
     return result;
 }
 
+__attribute__((__format__ (__printf__, 1, 2)))
 int _synctex_debug(const char * reason,...) {
     va_list arg;
     int result;
