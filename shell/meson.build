@@ -67,6 +67,7 @@ deps = [
   gnome_desktop_dep,
   libevmisc_dep,
   libevproperties_dep,
+  libdazzle_dep,
   libgd_dep,
   libgimpcellrenderertoggle_dep,
   m_dep,
