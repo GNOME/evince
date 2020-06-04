@@ -5299,6 +5299,11 @@ ev_window_inverted_colors_changed_cb (EvDocumentModel *model,
 	g_simple_action_set_state (G_SIMPLE_ACTION (action),
 				   g_variant_new_boolean (inverted_colors));
 
+	/* Active GTK dark theme */
+	g_object_set (gtk_settings_get_default (),
+		      "gtk-application-prefer-dark-theme", inverted_colors,
+		      NULL);
+
 	if (priv->metadata && !ev_window_is_empty (window))
 		ev_metadata_set_boolean (priv->metadata, "inverted-colors",
 					 inverted_colors);
