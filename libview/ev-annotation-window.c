@@ -22,6 +22,7 @@
 #include "config.h"
 
 #include <string.h>
+#include <math.h>
 
 #include "ev-annotation-window.h"
 #include "ev-stock-icons.h"
@@ -118,28 +119,89 @@ ev_annotation_window_sync_contents (EvAnnotationWindow *window)
 	g_free (contents);
 }
 
+static double
+get_srgb (const double color_component)
+{
+	/* calculation of sRGB color is based on note 1 of https://www.w3.org/TR/2008/REC-WCAG20-20081211/#relativeluminancedef */
+	if (color_component <= 0.03928)
+		return color_component / 12.92;
+	else
+		return powf (((color_component + 0.055) / 1.055), 2.4);
+}
+
+static double
+get_relative_luminance (const GdkRGBA *color)
+{
+	/* calculation of relative luminance is based on note 1 of https://www.w3.org/TR/2008/REC-WCAG20-20081211/#relativeluminancedef */
+	return get_srgb (color->red) * 0.2126 + get_srgb (color->blue) * 0.0722 + get_srgb (color->green) * 0.7152;
+}
+
+static double
+get_contrast_level (const GdkRGBA *bg_color,
+		    const GdkRGBA *fg_color)
+{
+	/* the contrast level calculus is based on WCAG 2.0 guideline 1.4  */
+	/* https://www.w3.org/WAI/GL/UNDERSTANDING-WCAG20/visual-audio-contrast7.html#key-terms */
+	const double bg_luminance = get_relative_luminance (bg_color);
+	const double fg_luminance = get_relative_luminance (fg_color);
+	return (fmax (bg_luminance, fg_luminance) + 0.05) / (fmin (bg_luminance, fg_luminance) + 0.05);
+}
+
+/**
+ * get_most_readable_color:
+ *
+ * Returns: (transfer none): the most readable color on bg_color between first_color and second_color
+ */
+static GdkRGBA *
+get_most_readable_color (const GdkRGBA *bg_color,
+			 GdkRGBA *first_color,
+			 GdkRGBA *second_color)
+{
+	const double first_contrast = get_contrast_level (bg_color, first_color);
+	const double second_contrast = get_contrast_level (bg_color, second_color);
+	/* higher is more readable (more contrast) */
+	return first_contrast > second_contrast ? first_color : second_color;
+}
+
+/**
+ * get_best_foreground_color:
+ *
+ * Returns: (transfer full): the most readable foreground color on bg_color between black #000000 and white #FFFFFF
+ */
+static GdkRGBA *
+get_best_foreground_color (const GdkRGBA *bg_color)
+{
+	GdkRGBA black, white;
+	gdk_rgba_parse (&black, "#000000");
+	gdk_rgba_parse (&white, "#FFFFFF");
+	return gdk_rgba_copy (get_most_readable_color (bg_color, &black, &white));
+}
+
 static void
 ev_annotation_window_set_color (EvAnnotationWindow *window,
 				GdkRGBA            *color)
 {
-        GtkStyleProperties *properties;
-        GtkStyleProvider   *provider;
+	GtkCssProvider     *css_provider = gtk_css_provider_new ();
+	g_autofree char    *rgba_str = gdk_rgba_to_string (color);
+	g_autofree char    *css_data = NULL;
+	g_autoptr (GError)  error = NULL;
+	g_autoptr (GdkRGBA) icon_color = get_best_foreground_color (color);
+	g_autofree char    *icon_color_str = gdk_rgba_to_string (icon_color);
+	css_data = g_strdup_printf ("button {border-color: %1$s; color: %2$s; -gtk-icon-shadow:0 0; box-shadow:0 0;}\n\
+				     button:hover {background: lighter(%1$s); border-color: darker(%1$s);}\n\
+				     button:active {background: darker(%1$s);}\n\
+				     evannotationwindow.background, button {background: %1$s}",
+				    rgba_str, icon_color_str);
 
-        properties = gtk_style_properties_new ();
-        gtk_style_properties_set (properties, 0,
-                                  "background-color", color,
-                                  NULL);
+	gtk_css_provider_load_from_data (css_provider, css_data, strlen (css_data), &error);
+	if (error != NULL)
+		g_error ("%s", error->message);
 
-        provider = GTK_STYLE_PROVIDER (properties);
-        gtk_style_context_add_provider (gtk_widget_get_style_context (GTK_WIDGET (window)),
-                                        provider, GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
-        gtk_style_context_add_provider (gtk_widget_get_style_context (window->close_button),
-                                        provider, GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
-        gtk_style_context_add_provider (gtk_widget_get_style_context (window->resize_se),
-                                        provider, GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
-        gtk_style_context_add_provider (gtk_widget_get_style_context (window->resize_sw),
-                                        provider, GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
-        g_object_unref (properties);
+	gtk_style_context_add_provider (gtk_widget_get_style_context (GTK_WIDGET (window)),
+					GTK_STYLE_PROVIDER (css_provider), GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+	gtk_style_context_add_provider (gtk_widget_get_style_context (window->close_button),
+					GTK_STYLE_PROVIDER (css_provider), GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+	gtk_style_context_add_class (gtk_widget_get_style_context (window->close_button), "circular");
 }
 
 static void
@@ -333,18 +395,10 @@ ev_annotation_window_init (EvAnnotationWindow *window)
 	gtk_box_pack_start (GTK_BOX (hbox), header, TRUE, TRUE, 0);
 	gtk_widget_show (header);
 
-	window->close_button = gtk_button_new ();
-	gtk_button_set_relief (GTK_BUTTON (window->close_button), GTK_RELIEF_NONE);
-	gtk_container_set_border_width (GTK_CONTAINER (window->close_button), 0);
+	window->close_button = gtk_button_new_from_icon_name ("window-close-symbolic", GTK_ICON_SIZE_BUTTON);
 	g_signal_connect_swapped (window->close_button, "clicked",
 				  G_CALLBACK (ev_annotation_window_close),
 				  window);
-	pixbuf = gtk_icon_theme_load_icon (icon_theme, EV_STOCK_CLOSE, 8,
-					   GTK_ICON_LOOKUP_FORCE_SIZE, NULL);
-	icon = gtk_image_new_from_pixbuf (pixbuf);
-	g_object_unref (pixbuf);
-	gtk_container_add (GTK_CONTAINER (window->close_button), icon);
-	gtk_widget_show (icon);
 
 	gtk_box_pack_start (GTK_BOX (hbox), window->close_button, FALSE, FALSE, 0);
 	gtk_widget_show (window->close_button);
