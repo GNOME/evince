@@ -19,6 +19,7 @@ install_headers(
 
 sources = files(
   'ev-annotation-window.c',
+  'ev-color-contrast.c',
   'ev-document-model.c',
   'ev-form-field-accessible.c',
   'ev-image-accessible.c',
