@@ -773,6 +773,7 @@ pdf_document_get_keywords_from_metadata (xmlXPathContextPtr xpathCtx)
 	return result;
 }
 
+__attribute__((__format__ (__printf__, 2, 0)))
 static char *
 pdf_document_get_localized_object_from_metadata (xmlXPathContextPtr xpathCtx,
                                                  const char* xpath)
