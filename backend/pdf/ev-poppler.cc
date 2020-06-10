@@ -1962,7 +1962,7 @@ pdf_document_images_get_image_mapping (EvDocumentImages *document_images,
 	return ev_mapping_list_new (page->index, g_list_reverse (retval), (GDestroyNotify)g_object_unref);
 }
 
-GdkPixbuf *
+static GdkPixbuf *
 pdf_document_images_get_image (EvDocumentImages *document_images,
 			       EvImage          *image)
 {
