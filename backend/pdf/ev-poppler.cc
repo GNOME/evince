@@ -4282,7 +4282,7 @@ attachment_save_to_buffer_callback (const gchar  *buf,
 				    gpointer      user_data,
 				    GError      **error)
 {
-	struct SaveToBufferData *sdata = (SaveToBufferData *)user_data;
+	struct SaveToBufferData *sdata = (struct SaveToBufferData *)user_data;
 	gchar *new_buffer;
 	gsize new_max;
 
