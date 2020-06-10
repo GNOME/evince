@@ -78,8 +78,6 @@ config_h.set_quoted('VERSION', ev_version)
 config_h.set_quoted('GETTEXT_PACKAGE', ev_name)
 config_h.set('ENABLE_NLS', true)
 
-config_h.set('HAVE_LOCALTIME_R', cc.has_function('localtime_r'))
-
 # portability checks
 # FIXME: there is no use of backtrace in the code
 # for backtrace()
