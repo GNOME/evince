@@ -877,40 +877,6 @@ pdf_document_get_dates_from_metadata (GTime *result, xmlXPathContextPtr xpathCtx
 	xmlFree (metadate);
 }
 
-static char *
-pdf_document_get_creatortool_from_metadata (xmlXPathContextPtr xpathCtx)
-{
-	xmlChar *creatortool = NULL;
-	char *result = NULL;
-
-	/* reads CreatorTool */
-	creatortool = pdf_document_get_xmptag_from_path (xpathCtx, CREATOR);
-	if (creatortool != NULL) {
-		result = g_strdup_printf ("%s", creatortool);
-	}
-
-	/* Cleanup */
-	xmlFree (creatortool);
-	return result;
-}
-
-static char *
-pdf_document_get_producer_from_metadata (xmlXPathContextPtr xpathCtx)
-{
-	xmlChar *producer = NULL;
-	char *result = NULL;
-
-	/* reads Producer  */
-	producer = pdf_document_get_xmptag_from_path (xpathCtx, PRODUCER);
-	if (producer != NULL) {
-		result = g_strdup_printf ("%s", producer);
-	}
-
-	/* Cleanup */
-	xmlFree (producer);
-	return result;
-}
-
 static EvDocumentLicense *
 pdf_document_get_license_from_metadata (xmlXPathContextPtr xpathCtx)
 {
@@ -1028,13 +994,13 @@ pdf_document_parse_metadata (const gchar    *metadata,
 			info->subject = subject;
 		}
 
-		creatortool = pdf_document_get_creatortool_from_metadata (xpathCtx);
+		creatortool = (char*)pdf_document_get_xmptag_from_path (xpathCtx, CREATOR);
 		if (creatortool != NULL) {
 			g_free (info->creator);
 			info->creator = creatortool;
 		}
 
-		producer = pdf_document_get_producer_from_metadata (xpathCtx);
+		producer = (char*)pdf_document_get_xmptag_from_path (xpathCtx, PRODUCER);
 		if (producer != NULL) {
 			g_free (info->producer);
 			info->producer = producer;
