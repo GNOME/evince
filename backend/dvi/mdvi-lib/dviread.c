@@ -1319,7 +1319,7 @@ int	set_rule(DviContext *dvi, int opcode)
 		}
 	} else { 
 		SHOWCMD((dvi, opcode == DVI_SET_RULE ? "setrule" : "putrule", -1,
-			"(moving left only, by %d)\n", b));
+			"(moving left only, by %ld)\n", (long) b));
 	}
 			
 	if(opcode == DVI_SET_RULE) {
@@ -1542,8 +1542,8 @@ int	def_font(DviContext *dvi, int opcode)
 		return -1;
 	}
 	SHOWCMD((dvi, "fntdef", opcode - DVI_FNT_DEF1 + 1,
-		"%d -> %s (%d links)\n",
-		ref->fontid, ref->ref->fontname,
+		"%ld -> %s (%d links)\n",
+		(long) ref->fontid, ref->ref->fontname,
 		ref->ref->links));
 	return 0;
 }
