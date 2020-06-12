@@ -1287,9 +1287,9 @@ int	set_char(DviContext *dvi, int opcode)
 	} else {
 		h = dvi->pos.h + ch->tfmwidth;
 		hh = dvi->pos.hh + pixel_round(dvi, ch->tfmwidth);
-		SHOWCMD((dvi, "setchar", num, "(%d,%d) h:=%d%c%d=%d, hh:=%d (%s)\n",
+		SHOWCMD((dvi, "setchar", num, "(%d,%d) h:=%d%c%ld=%d, hh:=%d (%s)\n",
 			dvi->pos.hh, dvi->pos.vv,
-			DBGSUM(dvi->pos.h, ch->tfmwidth, h), hh,
+			DBGSUM(dvi->pos.h, (long) ch->tfmwidth, h), hh,
 			font->fontname));
 		dvi->pos.h  = h;
 		dvi->pos.hh = hh;
@@ -1309,8 +1309,8 @@ int	set_rule(DviContext *dvi, int opcode)
 	if(a > 0 && b > 0) {
 		h = vrule_round(dvi, a); 
 		SHOWCMD((dvi, opcode == DVI_SET_RULE ? "setrule" : "putrule", -1,
-			"width %d, height %d (%dx%d pixels)\n",
-			b, a, w, h));
+			"width %ld, height %ld (%dx%d pixels)\n",
+			(long) b, (long) a, w, h));
 		/* the `draw' functions expect the origin to be at the top left
 		 * corner of the rule, not the bottom left, as in DVI files */
 		if(dvi->curr_layer <= dvi->params.layer) {
@@ -1380,8 +1380,8 @@ int	move_right(DviContext *dvi, int opcode)
 	h = dvi->pos.h;
 	hh = move_horizontal(dvi, arg);
 	SHOWCMD((dvi, "right", opcode - DVI_RIGHT1 + 1,
-		"%d h:=%d%c%d=%d, hh:=%d\n",
-		arg, DBGSUM(h, arg, dvi->pos.h), hh));
+		"%ld h:=%d%c%ld=%d, hh:=%d\n",
+		(long) arg, DBGSUM(h, (long) arg, dvi->pos.h), hh));
 	dvi->pos.hh = hh;
 	return 0;
 }
@@ -1395,8 +1395,8 @@ int	move_down(DviContext *dvi, int opcode)
 	v = dvi->pos.v;
 	vv = move_vertical(dvi, arg);
 	SHOWCMD((dvi, "down", opcode - DVI_DOWN1 + 1,
-		"%d v:=%d%c%d=%d, vv:=%d\n",
-		arg, DBGSUM(v, arg, dvi->pos.v), vv));
+		"%ld v:=%d%c%ld=%d, vv:=%d\n",
+		(long) arg, DBGSUM(v, (long) arg, dvi->pos.v), vv));
 	dvi->pos.vv = vv;
 	return 0;
 }
@@ -1494,12 +1494,12 @@ int	sel_fontn(DviContext *dvi, int opcode)
 	else
 		ref = dvi->findref(dvi, arg);
 	if(ref == NULL) {
-		dvierr(dvi, _("font %d is not defined\n"), arg);
+		dvierr(dvi, _("font %ld is not defined\n"), (long) arg);
 		return -1;
 	}
 	SHOWCMD((dvi, "fnt", opcode - DVI_FNT1 + 1,
-		"current font is %s (id %d)\n", 
-		ref->ref->fontname, arg));
+		"current font is %s (id %ld)\n", 
+		ref->ref->fontname, (long) arg));
 	dvi->currfont = ref;
 	return 0;
 }
@@ -1538,7 +1538,7 @@ int	def_font(DviContext *dvi, int opcode)
 	dskip(dvi, 12);
 	dskip(dvi, duget1(dvi) + duget1(dvi));
 	if(ref == NULL) {
-		dvierr(dvi, _("font %d is not defined in postamble\n"), arg);
+		dvierr(dvi, _("font %ld is not defined in postamble\n"), (long) arg);
 		return -1;
 	}
 	SHOWCMD((dvi, "fntdef", opcode - DVI_FNT_DEF1 + 1,
