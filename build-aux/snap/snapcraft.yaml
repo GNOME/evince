@@ -19,7 +19,7 @@ slots:
 apps:
   evince:
     command: usr/bin/evince
-    extensions: [gnome-3-28]
+    extensions: [gnome-3-34]
     plugs:
       - avahi-observe
       - cups-control
@@ -56,23 +56,16 @@ parts:
 
     organize:
       snap/evince/current/usr: usr
+    build-snaps: [ gnome-3-34-1804-sdk/latest/candidate ]
     build-packages:
       - appstream
       - intltool
-      - gnome-pkg-tools
-      - yelp-tools
-      - gtk-doc-tools
-      - libx11-dev
       - libarchive-dev
-      - libcairo2-dev
-      - libgtk-3-dev
       - libgail-3-dev
-      - libglib2.0-dev
       - libgspell-1-dev
       - libgstreamer1.0-dev
       - libgstreamer-plugins-base1.0-dev
       - libsecret-1-dev
-      - libxml2-dev
       - libsm-dev
       - zlib1g-dev
       - libpoppler-glib-dev
@@ -82,10 +75,7 @@ parts:
       - libkpathsea-dev
       - libgxps-dev
       - autotools-dev
-      - gobject-introspection
-      - libgirepository1.0-dev
       - gsettings-desktop-schemas-dev
-      - gnome-common
       - dh-apparmor
     prime:
       - "-usr/lib/*.a"
