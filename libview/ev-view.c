@@ -3355,6 +3355,9 @@ get_annotation_mapping_at_location (EvView *view,
 	EvMapping *best;
 	GList *list;
 
+	if (!EV_IS_DOCUMENT_ANNOTATIONS (view->document))
+		return NULL;
+
 	doc_annots = EV_DOCUMENT_ANNOTATIONS (view->document);
 
 	if (!doc_annots)
