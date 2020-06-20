@@ -2,6 +2,7 @@
  *
  * Copyright (C) 1995-2017 GIMP Authors
  * Copyright (C) 2015-2017 Christian Hergert <christian@hergert.me>
+ * Copyright (C) 2020      Germán Poo-Caamaño <gpoo@gnome.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -38,6 +39,60 @@
 #endif
 
 #include "dzl-file-manager.h"
+
+#if !(defined(G_OS_WIN32) || defined(PLATFORM_OSX))
+static void
+select_file_in_containing_folder_cb (GObject      *source_object,
+                                     GAsyncResult *result,
+                                     gpointer      user_data)
+{
+  GError *error = NULL;
+
+  g_dbus_proxy_call_finish (G_DBUS_PROXY (source_object), result, &error);
+
+  if (error != NULL)
+   {
+     g_prefix_error (&error, _("Calling ShowItems failed: "));
+     g_error_free (error);
+   }
+}
+
+static void
+select_file_in_containing_folder (GObject      *source_object,
+                                  GAsyncResult *result,
+                                  gchar        *uri)
+{
+  GDBusProxy *proxy;
+  GError *error = NULL;
+  GVariantBuilder *builder;
+
+  proxy = g_dbus_proxy_new_finish (result, &error);
+
+  if (proxy != NULL)
+    {
+      g_prefix_error (&error,
+                      _("Connecting to org.freedesktop.FileManager1 failed: "));
+      g_error_free (error);
+      return;
+    }
+
+  builder = g_variant_builder_new (G_VARIANT_TYPE ("as"));
+  g_variant_builder_add (builder, "s", uri);
+
+  g_free (uri);
+
+  g_dbus_proxy_call (proxy,
+         "ShowItems",
+         g_variant_new ("(ass)", builder, ""),
+         G_DBUS_CALL_FLAGS_NONE,
+         -1,
+         NULL,
+         (GAsyncReadyCallback) select_file_in_containing_folder_cb,
+         NULL);
+
+  g_variant_builder_unref (builder);
+}
+#endif /* !(defined(G_OS_WIN32) || defined(PLATFORM_OSX)) */
 
 /* Copied from the GIMP */
 gboolean
@@ -143,51 +198,20 @@ dzl_file_manager_show (GFile   *file,
 #else /* UNIX */
 
   {
-    GDBusProxy      *proxy;
-    GVariant        *retval;
-    GVariantBuilder *builder;
-    gchar           *uri;
-
-    proxy = g_dbus_proxy_new_for_bus_sync (G_BUS_TYPE_SESSION,
-                                           G_DBUS_PROXY_FLAGS_NONE,
-                                           NULL,
-                                           "org.freedesktop.FileManager1",
-                                           "/org/freedesktop/FileManager1",
-                                           "org.freedesktop.FileManager1",
-                                           NULL, error);
-
-    if (!proxy)
-      {
-        g_prefix_error (error,
-                        _("Connecting to org.freedesktop.FileManager1 failed: "));
-        return FALSE;
-      }
+    gchar *uri;
 
     uri = g_file_get_uri (file);
 
-    builder = g_variant_builder_new (G_VARIANT_TYPE ("as"));
-    g_variant_builder_add (builder, "s", uri);
-
-    g_free (uri);
-
-    retval = g_dbus_proxy_call_sync (proxy,
-                                     "ShowItems",
-                                     g_variant_new ("(ass)",
-                                                    builder,
-                                                    ""),
-                                     G_DBUS_CALL_FLAGS_NONE,
-                                     -1, NULL, error);
-
-    g_variant_builder_unref (builder);
-    g_object_unref (proxy);
-
-    if (!retval)
-      {
-        g_prefix_error (error, _("Calling ShowItems failed: "));
-        return FALSE;
-      }
-
-    g_variant_unref (retval);
+    g_dbus_proxy_new_for_bus (G_BUS_TYPE_SESSION,
+                              G_DBUS_PROXY_FLAGS_NONE,
+                              NULL,
+                              "org.freedesktop.FileManager1",
+                              "/org/freedesktop/FileManager1",
+                              "org.freedesktop.FileManager1",
+                              NULL,
+                              (GAsyncReadyCallback) select_file_in_containing_folder,
+                              uri);
+    /* select_file_in_containing_folder must free `uri` when no longer needed */
 
     return TRUE;
   }
