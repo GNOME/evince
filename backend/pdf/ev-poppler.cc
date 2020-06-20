@@ -2763,6 +2763,13 @@ ev_form_field_from_poppler_field (PdfDocument      *pdf_document,
 	if (action)
 		ev_field->activation_link = ev_link_from_action (pdf_document, action);
 
+#if POPPLER_CHECK_VERSION(0, 88, 0)
+	gchar *alt_name = poppler_form_field_get_alternate_ui_name (poppler_field);
+	if (alt_name) {
+		g_object_set_data_full (G_OBJECT (ev_field), "alt-name", alt_name, (GDestroyNotify) g_free);
+	}
+#endif
+
 	return ev_field;
 }
 
