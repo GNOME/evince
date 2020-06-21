@@ -120,7 +120,6 @@ gboolean  do_something_four  (GtkWidget  *widget);
    opening brace is its own line, for other statements, right after
    the statement.
  * Spaces before braces and parenthesis.
- * No tabs, spaces only.
  * Always compare against `NULL` rather than implicit comparisons.
    This eases ports to other languages and readability.
  * Use #define for constants. Try to avoid “magic constants” or
