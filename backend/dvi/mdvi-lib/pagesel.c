@@ -198,7 +198,7 @@ DviPageSpec *mdvi_parse_page_spec(const char *format)
 	DviRange *range;
 	int	count;
 	int	i;
-	char	*ptr;
+	char	*ptr = NULL;
 	
 	spec = xnalloc(struct _DviPageSpec *, 11);
 	for(i = 0; i < 11; i++)
