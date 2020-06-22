@@ -2734,7 +2734,7 @@ ev_form_field_from_poppler_field (PdfDocument      *pdf_document,
 			        case POPPLER_FORM_CHOICE_COMBO:
 					ev_choice_type = EV_FORM_FIELD_CHOICE_COMBO;
 					break;
-			        case EV_FORM_FIELD_CHOICE_LIST:
+			        case POPPLER_FORM_CHOICE_LIST:
 					ev_choice_type = EV_FORM_FIELD_CHOICE_LIST;
 					break;
 			}
