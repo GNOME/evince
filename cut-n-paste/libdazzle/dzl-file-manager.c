@@ -42,55 +42,20 @@
 
 #if !(defined(G_OS_WIN32) || defined(PLATFORM_OSX))
 static void
-select_file_in_containing_folder_cb (GObject      *source_object,
-                                     GAsyncResult *result,
-                                     gpointer      user_data)
+show_items_cb (GObject      *source_object,
+               GAsyncResult *result,
+               gpointer      user_data)
 {
-  GError *error = NULL;
+  GDBusProxy *proxy = (GDBusProxy *)source_object;
+  g_autoptr(GVariant) reply = NULL;
+  g_autoptr(GError) error = NULL;
 
-  g_dbus_proxy_call_finish (G_DBUS_PROXY (source_object), result, &error);
+  g_assert (G_IS_DBUS_PROXY (proxy));
+  g_assert (G_IS_ASYNC_RESULT (result));
+  g_assert (user_data == NULL);
 
-  if (error != NULL)
-   {
-     g_prefix_error (&error, _("Calling ShowItems failed: "));
-     g_error_free (error);
-   }
-}
-
-static void
-select_file_in_containing_folder (GObject      *source_object,
-                                  GAsyncResult *result,
-                                  gchar        *uri)
-{
-  GDBusProxy *proxy;
-  GError *error = NULL;
-  GVariantBuilder *builder;
-
-  proxy = g_dbus_proxy_new_finish (result, &error);
-
-  if (proxy != NULL)
-    {
-      g_prefix_error (&error,
-                      _("Connecting to org.freedesktop.FileManager1 failed: "));
-      g_error_free (error);
-      return;
-    }
-
-  builder = g_variant_builder_new (G_VARIANT_TYPE ("as"));
-  g_variant_builder_add (builder, "s", uri);
-
-  g_free (uri);
-
-  g_dbus_proxy_call (proxy,
-         "ShowItems",
-         g_variant_new ("(ass)", builder, ""),
-         G_DBUS_CALL_FLAGS_NONE,
-         -1,
-         NULL,
-         (GAsyncReadyCallback) select_file_in_containing_folder_cb,
-         NULL);
-
-  g_variant_builder_unref (builder);
+  if (!(reply = g_dbus_proxy_call_finish (proxy, result, &error)))
+    g_warning ("Failed to show items: %s", error->message);
 }
 #endif /* !(defined(G_OS_WIN32) || defined(PLATFORM_OSX)) */
 
@@ -198,20 +163,35 @@ dzl_file_manager_show (GFile   *file,
 #else /* UNIX */
 
   {
-    gchar *uri;
+    g_autofree gchar *uri = g_file_get_uri (file);
+    g_autoptr(GVariantBuilder) builder = NULL;
+    g_autoptr(GDBusProxy) proxy = NULL;
 
-    uri = g_file_get_uri (file);
+    proxy = g_dbus_proxy_new_for_bus_sync (G_BUS_TYPE_SESSION,
+                                           (G_DBUS_PROXY_FLAGS_DO_NOT_LOAD_PROPERTIES |
+                                            G_DBUS_PROXY_FLAGS_DO_NOT_CONNECT_SIGNALS |
+                                            G_DBUS_PROXY_FLAGS_DO_NOT_AUTO_START_AT_CONSTRUCTION),
+                                           NULL,
+                                           "org.freedesktop.FileManager1",
+                                           "/org/freedesktop/FileManager1",
+                                           "org.freedesktop.FileManager1",
+                                           NULL,
+                                           error);
 
-    g_dbus_proxy_new_for_bus (G_BUS_TYPE_SESSION,
-                              G_DBUS_PROXY_FLAGS_NONE,
-                              NULL,
-                              "org.freedesktop.FileManager1",
-                              "/org/freedesktop/FileManager1",
-                              "org.freedesktop.FileManager1",
-                              NULL,
-                              (GAsyncReadyCallback) select_file_in_containing_folder,
-                              uri);
-    /* select_file_in_containing_folder must free `uri` when no longer needed */
+    /* Implausible */
+    if (proxy == NULL)
+      return FALSE;
+
+    builder = g_variant_builder_new (G_VARIANT_TYPE ("as"));
+    g_variant_builder_add (builder, "s", uri);
+    g_dbus_proxy_call (proxy,
+                       "ShowItems",
+                       g_variant_new ("(ass)", builder, ""),
+                       G_DBUS_CALL_FLAGS_NONE,
+                       -1,
+                       NULL,
+                       show_items_cb,
+                       NULL);
 
     return TRUE;
   }
