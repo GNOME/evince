@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
-"POT-Creation-Date: 2020-06-08 20:47+0000\n"
-"PO-Revision-Date: 2020-06-09 22:19+0200\n"
+"POT-Creation-Date: 2020-06-22 07:32+0000\n"
+"PO-Revision-Date: 2020-06-22 22:02+0200\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenščina <gnome-si@googlegroups.com>\n"
 "Language: sl_SI\n"
@@ -355,8 +355,8 @@ msgid "Print document"
 msgstr "Natisni dokument"
 
 #. Manually set name and icon
-#: data/org.gnome.Evince.desktop.in.in:3 shell/ev-window.c:4065
-#: shell/ev-window-title.c:133 shell/main.c:298
+#: data/org.gnome.Evince.desktop.in.in:3 shell/ev-window-title.c:133
+#: shell/main.c:298
 msgid "Document Viewer"
 msgstr "Pregledovalnik dokumentov"
 
@@ -483,7 +483,7 @@ msgid "of %d"
 msgstr "od %d"
 
 #: libmisc/ev-page-action-widget.c:187 shell/ev-history.c:447
-#: shell/ev-sidebar-bookmarks.c:311 shell/ev-window.c:944
+#: shell/ev-sidebar-bookmarks.c:329 shell/ev-window.c:944
 #: shell/ev-window.c:5118
 #, c-format
 msgid "Page %s"
@@ -1303,27 +1303,27 @@ msgstr "_Zamenjaj"
 msgid "Attachments"
 msgstr "Priloge"
 
-#: shell/ev-sidebar-bookmarks.c:151
+#: shell/ev-sidebar-bookmarks.c:154
 msgid "_Open Bookmark"
 msgstr "_Odpri zaznamek"
 
-#: shell/ev-sidebar-bookmarks.c:153
+#: shell/ev-sidebar-bookmarks.c:156
 msgid "_Rename Bookmark"
 msgstr "_Preimenuj zaznamek"
 
-#: shell/ev-sidebar-bookmarks.c:155
+#: shell/ev-sidebar-bookmarks.c:158
 msgid "_Remove Bookmark"
 msgstr "_Odstrani zaznamek"
 
-#: shell/ev-sidebar-bookmarks.c:472 shell/ev-sidebar-bookmarks.c:473
+#: shell/ev-sidebar-bookmarks.c:490 shell/ev-sidebar-bookmarks.c:491
 msgid "Add bookmark"
 msgstr "Dodaj zaznamek"
 
-#: shell/ev-sidebar-bookmarks.c:481 shell/ev-sidebar-bookmarks.c:482
+#: shell/ev-sidebar-bookmarks.c:499 shell/ev-sidebar-bookmarks.c:500
 msgid "Remove bookmark"
 msgstr "Odstrani zaznamek"
 
-#: shell/ev-sidebar-bookmarks.c:596 shell/ev-window.c:7584
+#: shell/ev-sidebar-bookmarks.c:617 shell/ev-window.c:7584
 msgid "Bookmarks"
 msgstr "Zaznamki"
 
@@ -1569,8 +1569,12 @@ msgid "Close _after Printing"
 msgstr "Zapri _po tiskanju"
 
 #: shell/ev-window.c:4062
-msgid "© 1996–2017 The Evince authors"
-msgstr "© 1996-2017 Avtorji programa Evince"
+msgid "© 1996–2020 The Evince authors"
+msgstr "© 1996-2020 Avtorji programa Evince"
+
+#: shell/ev-window.c:4065
+msgid "Evince is a simple document viewer for GNOME"
+msgstr "Pregledovalnik dokumentov za namizje GNOME."
 
 #: shell/ev-window.c:4068
 msgid "translator-credits"
@@ -2137,9 +2141,6 @@ msgstr "[DATOTEKA ...]"
 
 #~ msgid "_Add Bookmark"
 #~ msgstr "_Dodaj zaznamek"
-
-#~ msgid "This is a document viewer for the GNOME desktop."
-#~ msgstr "Pregledovalnik dokumentov za namizje GNOME."
 
 #~ msgid ""
 #~ "Evince is free software; you can redistribute it and/or modify it under "
