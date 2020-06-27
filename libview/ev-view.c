@@ -159,6 +159,8 @@ static void       link_preview_show_thumbnail                (GdkPixbuf         
 							      EvView             *view);
 static void       link_preview_job_finished_cb               (EvJobThumbnail     *job,
 							      EvView             *view);
+static gboolean   link_preview_popover_motion_notify         (EvView             *view,
+							      GdkEventMotion     *event);
 /*** Forms ***/
 static EvFormField *ev_view_get_form_field_at_location       (EvView             *view,
 							       gdouble            x,
@@ -2243,6 +2245,9 @@ ev_view_handle_cursor_over_xy (EvView *view, gint x, gint y)
 		get_link_area (view, x, y, link, &link_area);
 		gtk_popover_set_pointing_to (GTK_POPOVER (popover), &link_area);
 		gtk_popover_set_modal (GTK_POPOVER (popover), FALSE);
+		g_signal_connect_swapped (popover, "motion-notify-event",
+					  G_CALLBACK (link_preview_popover_motion_notify),
+					  view);
 
 		spinner = gtk_spinner_new ();
 		gtk_spinner_start (GTK_SPINNER (spinner));
@@ -5215,6 +5220,14 @@ link_preview_show_thumbnail (GdkPixbuf *pixbuf,
 	gtk_widget_show (image_view);
 
 	g_object_unref (thumbnail_slice);
+}
+
+static gboolean
+link_preview_popover_motion_notify (EvView         *view,
+				    GdkEventMotion *event)
+{
+	ev_view_link_preview_popover_cleanup (view);
+	return TRUE;
 }
 
 static void
