@@ -138,6 +138,7 @@ typedef struct {
 	gdouble    top;
 	GtkWidget *popover;
 	EvLink    *link;
+	guint      delay_timeout_id;
 } EvLinkPreview;
 
 struct _EvView {

@@ -121,6 +121,7 @@ typedef struct {
 #define LINK_PREVIEW_PAGE_RATIO 1.0 / 3.0     /* Size of popover with respect to page size */
 #define LINK_PREVIEW_HORIZONTAL_LINK_POS 0.5  /* as fraction of preview width */
 #define LINK_PREVIEW_VERTICAL_LINK_POS 0.3    /* as fraction of preview height */
+#define LINK_PREVIEW_DELAY_MS 300             /* Delay before showing preview in milliseconds */
 
 /*** Scrolling ***/
 static void       view_update_range_and_current_page         (EvView             *view);
@@ -161,6 +162,7 @@ static void       link_preview_job_finished_cb               (EvJobThumbnail    
 							      EvView             *view);
 static gboolean   link_preview_popover_motion_notify         (EvView             *view,
 							      GdkEventMotion     *event);
+static gboolean   link_preview_delayed_show                  (EvView *view);
 /*** Forms ***/
 static EvFormField *ev_view_get_form_field_at_location       (EvView             *view,
 							       gdouble            x,
@@ -2291,7 +2293,11 @@ ev_view_handle_cursor_over_xy (EvView *view, gint x, gint y)
 		if (type == EV_LINK_DEST_TYPE_NAMED)
 			g_object_unref (dest);
 
-		gtk_widget_show (popover);
+		view->link_preview.delay_timeout_id = g_timeout_add (LINK_PREVIEW_DELAY_MS,
+								     (GSourceFunc)link_preview_delayed_show,
+								     view);
+		g_source_set_name_by_id (view->link_preview.delay_timeout_id,
+					 "[evince] link_preview_timeout");
 	} else {
 		ev_view_link_preview_popover_cleanup (view);
 		view->link_preview.link = NULL;
@@ -5230,6 +5236,16 @@ link_preview_popover_motion_notify (EvView         *view,
 	return TRUE;
 }
 
+static gboolean
+link_preview_delayed_show (EvView *view)
+{
+	GtkWidget *popover = view->link_preview.popover;
+	gtk_widget_show (popover);
+
+	view->link_preview.delay_timeout_id = 0;
+	return FALSE;
+}
+
 static void
 link_preview_job_finished_cb (EvJobThumbnail *job,
 			      EvView *view)
@@ -5269,6 +5285,11 @@ ev_view_link_preview_popover_cleanup (EvView *view) {
 	if (view->link_preview.popover) {
 		gtk_widget_destroy (view->link_preview.popover);
 		view->link_preview.popover = NULL;
+	}
+
+	if (view->link_preview.delay_timeout_id) {
+		g_source_remove (view->link_preview.delay_timeout_id);
+		view->link_preview.delay_timeout_id = 0;
 	}
 }
 
