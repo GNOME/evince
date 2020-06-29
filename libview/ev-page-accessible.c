@@ -1077,31 +1077,23 @@ ev_page_accessible_scroll_substring_to (AtkText       *text,
 	switch (type) {
 	case ATK_SCROLL_TOP_LEFT:
 		gtk_adjustment_clamp_page (view->hadjustment, start_point.x, start_point.x + hpage_size);
-		gtk_adjustment_changed (view->hadjustment);
 		gtk_adjustment_clamp_page (view->vadjustment, start_point.y, start_point.y + vpage_size);
-		gtk_adjustment_changed (view->vadjustment);
 		break;
 	case ATK_SCROLL_BOTTOM_RIGHT:
 		gtk_adjustment_clamp_page (view->hadjustment, end_point.x - hpage_size, end_point.x);
-		gtk_adjustment_changed (view->hadjustment);
 		gtk_adjustment_clamp_page (view->vadjustment, end_point.y - vpage_size, end_point.y);
-		gtk_adjustment_changed (view->vadjustment);
 		break;
 	case ATK_SCROLL_TOP_EDGE:
 		gtk_adjustment_clamp_page (view->vadjustment, start_point.y, start_point.y + vpage_size);
-		gtk_adjustment_changed (view->vadjustment);
 		break;
 	case ATK_SCROLL_BOTTOM_EDGE:
 		gtk_adjustment_clamp_page (view->vadjustment, end_point.y - vpage_size, end_point.y);
-		gtk_adjustment_changed (view->vadjustment);
 		break;
 	case ATK_SCROLL_LEFT_EDGE:
 		gtk_adjustment_clamp_page (view->hadjustment, start_point.x, start_point.x + hpage_size);
-		gtk_adjustment_changed (view->hadjustment);
 		break;
 	case ATK_SCROLL_RIGHT_EDGE:
 		gtk_adjustment_clamp_page (view->hadjustment, end_point.x - hpage_size, end_point.x);
-		gtk_adjustment_changed (view->hadjustment);
 		break;
 	case ATK_SCROLL_ANYWHERE:
 		_ev_view_ensure_rectangle_is_visible (view, &end_rect);
@@ -1173,9 +1165,7 @@ ev_page_accessible_scroll_substring_to_point (AtkText      *text,
 	start_point.y -= doc_y;
 
 	gtk_adjustment_clamp_page (view->hadjustment, start_point.x, start_point.x + hpage_size);
-	gtk_adjustment_changed (view->hadjustment);
 	gtk_adjustment_clamp_page (view->vadjustment, start_point.y, start_point.y + vpage_size);
-	gtk_adjustment_changed (view->vadjustment);
 
 	return TRUE;
 }

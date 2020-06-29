@@ -726,8 +726,6 @@ ev_view_set_adjustment_values (EvView         *view,
 			gtk_adjustment_set_value (adjustment, (int)new_value);
 			break;
 	}
-
-	gtk_adjustment_changed (adjustment);
 }
 
 static void
