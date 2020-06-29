@@ -4705,20 +4705,21 @@ static void
 get_cursor_color (GtkStyleContext *context,
 		  GdkRGBA         *color)
 {
-	GdkColor *style_color;
+	GdkRGBA *caret_color;
 
-	gtk_style_context_get_style (context,
-				     "cursor-color",
-				     &style_color,
-				     NULL);
+	gtk_style_context_get (context,
+			       gtk_style_context_get_state (context),
+			       "caret-color",
+			       &caret_color,
+			       NULL);
 
-	if (style_color) {
-		color->red = style_color->red / 65535.0;
-		color->green = style_color->green / 65535.0;
-		color->blue = style_color->blue / 65535.0;
-		color->alpha = 1;
+	if (caret_color) {
+		color->red = caret_color->red;
+		color->green = caret_color->green;
+		color->blue = caret_color->blue;
+		color->alpha = caret_color->alpha;
 
-		gdk_color_free (style_color);
+		gdk_rgba_free (caret_color);
 	} else {
 		gtk_style_context_save (context);
 		gtk_style_context_get_color (context, GTK_STATE_FLAG_NORMAL, color);
