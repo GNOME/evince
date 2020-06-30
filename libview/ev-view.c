@@ -5955,9 +5955,10 @@ ev_view_motion_notify_event (GtkWidget      *widget,
 
 			gtk_target_list_add_text_targets (target_list, TARGET_DND_TEXT);
 
-			gtk_drag_begin (widget, target_list,
-					GDK_ACTION_COPY,
-					1, (GdkEvent *)event);
+			gtk_drag_begin_with_coordinates (widget, target_list,
+							 GDK_ACTION_COPY,
+							 1, (GdkEvent *)event,
+							 -1, -1);
 
 			view->selection_info.in_drag = FALSE;
 			view->pressed_button = -1;
@@ -5976,9 +5977,10 @@ ev_view_motion_notify_event (GtkWidget      *widget,
 			gtk_target_list_add_uri_targets (target_list, TARGET_DND_URI);
 			gtk_target_list_add_image_targets (target_list, TARGET_DND_IMAGE, TRUE);
 
-			gtk_drag_begin (widget, target_list,
-					GDK_ACTION_COPY,
-					1, (GdkEvent *)event);
+			gtk_drag_begin_with_coordinates (widget, target_list,
+							 GDK_ACTION_COPY,
+							 1, (GdkEvent *)event,
+							 -1, -1);
 
 			view->image_dnd_info.in_drag = FALSE;
 			view->pressed_button = -1;
