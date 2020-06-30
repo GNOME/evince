@@ -152,8 +152,8 @@ Closes #1234
  second newline, but that is not nice for the interfaces).
 
  - Whenever possible, the first line should include the subsystem of
-   the evince the commit belongs: `shell`, `libdocument`, libview`,
-   `libmisc`, `backends`, `cut-n-paste`, `build`, `flatpak`.
+   the evince the commit belongs: `shell`, `libdocument`, `libview`,
+   `libmisc`, `backends`, `cut-n-paste`, `build`, `doc`, `flatpak`.
    e.g. “flatpak: bump version of poppler”
 
  - First line (the brief description) must only be one sentence and
