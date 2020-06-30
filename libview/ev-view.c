@@ -3394,9 +3394,6 @@ show_annotation_windows (EvView *view,
 {
 	EvMappingList *annots;
 	GList         *l;
-	GtkWindow     *parent;
-
-	parent = GTK_WINDOW (gtk_widget_get_toplevel (GTK_WIDGET (view)));
 
 	annots = ev_page_cache_get_annot_mapping (view->page_cache, page);
 
