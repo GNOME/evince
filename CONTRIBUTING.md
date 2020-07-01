@@ -167,6 +167,11 @@ Closes #1234
  down the line) detailing **why** you changed something. There's no need
  to specify the **how**: the changes can be inlined.
 
+ - While adding the main description please make sure that individual lines 
+within the body are no longer than 80 columns, ideally a bit less. This makes
+it easier to read without scrolling (both in GitLab as well as a terminal with 
+the default terminal size).
+
  - When committing code on behalf of others use the `--author` option, e.g.
  `git commit -a --author "Joe Coder <joe@coder.org>"` and `--signoff`.
 
