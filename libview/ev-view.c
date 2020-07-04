@@ -113,6 +113,7 @@ typedef struct {
 
 #define EV_STYLE_CLASS_DOCUMENT_PAGE "document-page"
 #define EV_STYLE_CLASS_INVERTED      "inverted"
+#define EV_STYLE_CLASS_FIND_RESULTS  "find-results"
 
 #define ANNOT_POPUP_WINDOW_DEFAULT_WIDTH  200
 #define ANNOT_POPUP_WINDOW_DEFAULT_HEIGHT 150
@@ -7281,29 +7282,23 @@ static void
 draw_rubberband (EvView             *view,
 		 cairo_t            *cr,
 		 const GdkRectangle *rect,
-		 gdouble             alpha)
+		 gboolean            active)
 {
 	GtkStyleContext *context;
-	GdkRGBA          color;
 
 	context = gtk_widget_get_style_context (GTK_WIDGET (view));
 	gtk_style_context_save (context);
-	gtk_style_context_get_background_color (context, GTK_STATE_FLAG_SELECTED, &color);
+	gtk_style_context_add_class (context, EV_STYLE_CLASS_FIND_RESULTS);
+	if (active)
+		gtk_style_context_set_state (context, GTK_STATE_FLAG_ACTIVE);
+	else
+		gtk_style_context_set_state (context, GTK_STATE_FLAG_SELECTED);
+
+	gtk_render_background (context, cr,
+			  rect->x - view->scroll_x,
+			  rect->y - view->scroll_y,
+			  rect->width, rect->height);
 	gtk_style_context_restore (context);
-        cairo_save (cr);
-
-	cairo_set_source_rgba (cr, color.red, color.green, color.blue, alpha);
-	cairo_rectangle (cr,
-			 rect->x - view->scroll_x,
-			 rect->y - view->scroll_y,
-			 rect->width, rect->height);
-	cairo_fill_preserve (cr);
-
-	cairo_set_line_width (cr, 0.5);
-	cairo_set_source_rgb (cr, color.red, color.green, color.blue);
-	cairo_stroke (cr);
-
-	cairo_restore (cr);
 }
 
 
@@ -7319,17 +7314,13 @@ highlight_find_results (EvView *view,
 	for (i = 0; i < n_results; i++) {
 		EvRectangle *rectangle;
 		GdkRectangle view_rectangle;
-		gdouble      alpha;
+		gboolean     active;
 
-		if (i == view->find_result && page == view->find_page) {
-			alpha = 0.6;
-		} else {
-			alpha = 0.3;
-		}
+		active = i == view->find_result && page == view->find_page;
 
 		rectangle = ev_view_find_get_result (view, page, i);
 		_ev_view_transform_doc_rect_to_view_rect (view, page, rectangle, &view_rectangle);
-		draw_rubberband (view, cr, &view_rectangle, alpha);
+		draw_rubberband (view, cr, &view_rectangle, active);
         }
 }
 
