@@ -198,7 +198,7 @@ typedef struct {
 	/* Document */
 	EvDocumentModel *model;
 	char *uri;
-	glong uri_mtime;
+	gint64 uri_mtime;
 	char *local_uri;
 	char *display_name;
 	char *edit_name;
@@ -2185,10 +2185,14 @@ set_uri_mtime (GFile        *source,
 		priv->uri_mtime = 0;
 		g_error_free (error);
 	} else {
-		GTimeVal mtime;
+		g_autoptr(GDateTime) dt;
 
-		g_file_info_get_modification_time (info, &mtime);
-		priv->uri_mtime = mtime.tv_sec;
+		dt = g_file_info_get_modification_date_time (info);
+		if (dt != NULL)
+			priv->uri_mtime = g_date_time_to_unix (dt);
+		else
+			priv->uri_mtime = 0;
+
 		g_object_unref (info);
 	}
 
@@ -2666,8 +2670,9 @@ query_remote_uri_mtime_cb (GFile        *remote,
 {
 	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 	GFileInfo *info;
-	GTimeVal   mtime;
+	gint64     mtime;
 	GError    *error = NULL;
+	g_autoptr(GDateTime) dt;
 
 	info = g_file_query_info_finish (remote, async_result, &error);
 	if (error) {
@@ -2678,12 +2683,22 @@ query_remote_uri_mtime_cb (GFile        *remote,
 		return;
 	}
 
-	g_file_info_get_modification_time (info, &mtime);
-	if (priv->uri_mtime != mtime.tv_sec) {
+	dt = g_file_info_get_modification_date_time (info);
+	if (dt == NULL) {
+		g_object_unref (remote);
+		ev_window_reload_local (ev_window);
+		g_object_unref (info);
+
+		return;
+	}
+
+	 mtime = g_date_time_to_unix (dt);
+
+	if (priv->uri_mtime != mtime) {
 		GFile *target_file;
 
 		/* Remote file has changed */
-		priv->uri_mtime = mtime.tv_sec;
+		priv->uri_mtime = mtime;
 
 		ev_window_reset_progress_cancellable (ev_window);
 		
@@ -2703,7 +2718,7 @@ query_remote_uri_mtime_cb (GFile        *remote,
 		g_object_unref (remote);
 		ev_window_reload_local (ev_window);
 	}
-	
+
 	g_object_unref (info);
 }
 
