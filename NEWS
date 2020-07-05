@@ -1,4 +1,108 @@
 ================
+Evince    3.37.3
+================
+
+backend:
+  * Add support for xmpRights:UsageTerms in PDF (#128, Juanjo Marín)
+  * Fix -Werror=format=2 fixes on dvi for ARM (#1429, Germán Poo-Caamaño)
+  * Fix warnings (Germán Poo-Caamaño)
+
+build:
+  * Remove autotools (Iñigo Martínez)
+  * add usual meson build directory to gitignore (vanadiae)
+
+cut-n-paste:
+  * Add libdazzle utilities to open file manager (Germán Poo-Caamaño)
+  * Use async calls in file manager (Germán Poo-Caamaño)
+  * filemanager: create proxy synchronously (Christian Hergert)
+
+data:
+  * Add man pages for evince-previewer and evince-thumbnailer (#680, Caolán McNamara)
+  * Crop out of place pixel line of screenshot (Germán Poo-Caamaño)
+
+flatpak:
+  * Bump gnome-desktop to 3.36.1 (Germán Poo-Caamaño)
+  * Bump poppler to 0.89.0 (Germán Poo-Caamaño)
+  * Update Flatpak for app-provided gdk-pixbuf loader (Bastien Nocera)
+  * don't build user help as slow and not needed for development (vanadiae)
+
+help:
+  * Link to the GNOME Desktop help for two print pages (#1344, Pranali Deshmukh)
+  * Updated annotation navigation page (#1345, Pranali Deshmukh)
+
+history:
+  * Add links when jumping to first or last page. (#785627, #810, Casey Jao)
+  * Don't assume EvLink has always a valid EvLinkAction (#810, Nelson Benítez León)
+  * Move some responsibilities out of EvHistory. (#785627, #810, Casey Jao)
+  * Record current page when going back in history (#810, Casey Jao)
+  * Record links in history when activating bookmarks (#785627, #810, Casey Jao)
+
+libdocument:
+  * Annotate deprecated function (Germán Poo-Caamaño)
+  * Load application-specific gdk-pixbuf loaders (Bastien Nocera)
+
+libview:
+  * Add delay before showing link preview popover (#662, Mads Chr. Olesen)
+  * Adjust preview size and contents' position (#662, Henry Gebhardt)
+  * Allow find results be styled with CSS (Germán Poo-Caamaño)
+  * Cleanup link preview popover, on mouseover of it (#662, Mads Chr. Olesen)
+  * Fix deprecated use of gdk_flush (Germán Poo-Caamaño)
+  * Fix gtk_drag_begin deprecations (Germán Poo-Caamaño)
+  * Increase page duration resolution (#637, Marc Vinyals)
+  * Let handle_cursor_over_xy handle link preview (#662, Mads Chr. Olesen)
+  * Make a preview popover for links (#662, Mads Chr. Olesen)
+  * Remove gtk_adjustment_changed calls (Germán Poo-Caamaño)
+  * Remove unused variables (#1010, Germán Poo-Caamaño)
+  * Replace "cursor-color" by "caret-color" (Germán Poo-Caamaño)
+  * Make contrast functions available in all libview/ (vanadiae)
+  * Use annotation color for the close button (vanadiae)
+
+meson:
+  *  set license to GPLv2+ as it's the one for the license notices (vanadiae)
+
+misc:
+  * Add contribution guidelines (Germán Poo-Caamaño)
+  * Add editorconfig file to keep style consistency (vanadiae)
+  * Fix formatting CONTRIBUTING.md (Germán Poo-Caamaño)
+  * Fix tabs in guidelines for contributors (Germán Poo-Caamaño)
+  * Make "Open Containing Folder" work in flatpak (#1147, Casey Jao)
+  * Update POTFILES.skip (Piotr Drąg)
+  * Updated Contribution Guidelines (Pranali Deshmukh)
+  * Fix warning on documents lacking annotations interface (Nelson Benítez León)
+
+shell:
+  *  Add meaningful description in about dialog (#1418, Germán Poo-Caamaño)
+  *  Check "page-changed" in EvSidebarBookmarks (#623, Casey Jao)
+  *  Fix interval for displaying the loading message (Germán Poo-Caamaño)
+  *  Make opening file year-2038-safe (Germán Poo-Caamaño)
+  *  Use GMenu for bookmarks' popup menu (Germán Poo-Caamaño)
+  *  Use GtkFileChooserNative for opening and saving files. (Casey Jao)
+
+snap:
+  *  Don't specify candidate channel for the build snap (Ken VanDine)
+  *  updated to use latest snapcraft extension. Fixes #1426 (Ken VanDine)
+
+synctex:
+  *  Annotate more functions that wraps formatting strings (Germán Poo-Caamaño)
+  *  Sync against upstream synctex (Germán Poo-Caamaño)
+Developers:
+
+  * Bastien Nocera, Caolán McNamara, Casey Jao, Christian Hergert, Germán Poo-Caamaño, Henry Gebhardt, Iñigo Martínez, Juanjo Marín, Ken VanDine, Mads Chr. Olesen, Marc Vinyals, Nelson Benítez León, Piotr Drąg, Pranali Deshmukh, vanadiae
+
+Translations:
+
+  * Gil Forcada (Catalan)
+  * Jordi Mas (Catalan)
+  * Boyuan Yang (Chinese (China))
+  * Baurzhan Muftakhidinov (Kazakh)
+  * Daniel Șerbănescu (Romanian)
+  * Florentina Mușat (Romanian)
+  * Matej Urbančič (Slovenian)
+  * Daniel Mustieles (Spanish)
+  * Emin Tufan Çetin (Turkish)
+  * Yuri Chornoivan (Ukrainian)
+
+================
 Evince    3.37.2
 ================
 
