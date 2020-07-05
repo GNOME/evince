@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince manual\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-06-30 23:41+0000\n"
-"PO-Revision-Date: 2020-07-01 09:18+0300\n"
+"POT-Creation-Date: 2020-07-04 22:19+0000\n"
+"PO-Revision-Date: 2020-07-05 09:30+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
@@ -211,12 +211,11 @@ msgstr "7-сторінковий буклет"
 #: C/duplex-14pages.page:24 C/duplex-14pages.page:66 C/duplex-13pages.page:24
 #: C/duplex-13pages.page:62 C/duplex-13pages.page:106 C/duplex-13pages.page:123
 #: C/duplex-10pages.page:24 C/duplex-10pages.page:67 C/duplex-6pages.page:25
-#: C/duplex-6pages.page:68 C/print-order.page:33 C/print-order.page:51
-#: C/duplex-9pages.page:24 C/duplex-9pages.page:64 C/duplex-9pages.page:87
-#: C/duplex-9pages.page:112 C/duplex-9pages.page:130
+#: C/duplex-6pages.page:68 C/duplex-9pages.page:24 C/duplex-9pages.page:64
+#: C/duplex-9pages.page:87 C/duplex-9pages.page:112 C/duplex-9pages.page:130
 #: C/singlesided-5-8pages.page:44 C/singlesided-5-8pages.page:89
-#: C/duplex-8pages.page:24 C/print-select.page:26 C/duplex-11pages.page:24
-#: C/duplex-11pages.page:62 C/duplex-3pages.page:26 C/print-2sided.page:29
+#: C/duplex-8pages.page:24 C/duplex-11pages.page:24 C/duplex-11pages.page:62
+#: C/duplex-3pages.page:26 C/print-2sided.page:29
 msgid ""
 "Press the menu button in the top-right corner of the window and press the "
 "<gui style=\"button\">Print</gui> button."
@@ -2354,10 +2353,6 @@ msgstr "Навігація анотаціями"
 
 #. (itstool) path: page/p
 #: C/annotations-navigate.page:22
-#| msgid ""
-#| "If you have created annotations on your document, you can use the side "
-#| "pane to display the list of all the annotations in the document. The list "
-#| "indicates the type, page number, author and date of the annotation."
 msgid ""
 "If you have created annotations on your document, you can use the side pane "
 "to display the list of all the annotations in the document. The list "
@@ -2387,10 +2382,6 @@ msgstr ""
 #. update your localized copy. The msgstr is not used at all. Set it to
 #. whatever you like once you have updated your copy of the file.
 #: C/annotations-navigate.page:28
-#| msgctxt "_"
-#| msgid ""
-#| "external ref='figures/annotations-nav-to-page.png' "
-#| "md5='a19842a04a2fbb895e6a4dbb411c6077'"
 msgctxt "_"
 msgid ""
 "external ref='figures/annotations-nav-to-page.png' "
@@ -2476,80 +2467,18 @@ msgstr ""
 msgid "Getting copies to print in the correct order"
 msgstr "Друкування копій у потрібному порядку"
 
-#. (itstool) path: section/title
-#: C/print-order.page:23
-msgid "Reverse"
-msgstr "Зворотний порядок"
-
-#. (itstool) path: section/p
-#: C/print-order.page:26
+#. (itstool) path: page/p
+#: C/print-order.page:22
 msgid ""
-"Printers usually print the first page first, and the last page last, so the "
-"pages end up in reverse order when you pick them up."
+"Please see <link xref=\"help:gnome-help/printing-order\" href=\"https://help."
+"gnome.org/users/gnome-help/stable/printing-order\">the GNOME Desktop Help</"
+"link>."
 msgstr ""
-"Принтери, зазвичай, друкують спочатку першу сторінку, а в кінці – останню, "
-"тому сторінки лежать у стосі надрукованих сторінок у зворотньому порядку."
-
-#. (itstool) path: section/p
-#: C/print-order.page:29
-msgid "To reverse the order:"
-msgstr "Щоб визначити зворотний порядок сторінок, виконайте такі дії:"
-
-#. (itstool) path: item/p
-#: C/print-order.page:34
-msgid ""
-"In the <gui>General</gui> tab of the Print window under <em>Copies</em>, "
-"check <gui>Reverse</gui>. The last page will be printed first, and so on."
-msgstr ""
-"На вкладці <gui>Загальне</gui> вікна друку у розділі <em>Копії</em> позначте "
-"пункт <gui>Обернено</gui>. Після цього, останню сторінку діапазону друку "
-"буде надруковано першою тощо."
-
-#. (itstool) path: section/title
-#: C/print-order.page:39
-msgid "Collate"
-msgstr "Впорядкування"
-
-#. (itstool) path: section/p
-#: C/print-order.page:42
-msgid ""
-"If you are printing more than one copy of the document, the print outs will "
-"be grouped by page number by default. (e.g. The copies of page one come out, "
-"then the copies of page two, etc.) Collating will make each copy come out "
-"with its pages grouped together."
-msgstr ""
-"Якщо друкується більш, ніж один екземпляр документа, то, типово, роздруківки "
-"будуть згруповані за номерами сторінок (наприклад, копії першої сторінки, "
-"потім копії другої сторінки, і так далі). Впорядкування дозволяє групувати "
-"сторінки одного екземпляру."
-
-#. (itstool) path: section/p
-#: C/print-order.page:47
-msgid "To collate:"
-msgstr "Для впорядкування:"
-
-#. (itstool) path: item/p
-#: C/print-order.page:52
-msgid ""
-"In the <gui>General</gui> tab of the Print window under <em>Copies</em> "
-"check <gui>Collate</gui>."
-msgstr ""
-"На вкладці <gui>Загальне</gui> діалогового вікна друку у розділі <em>Копії</"
-"em> позначте пункт <gui>Впорядкувати</gui>."
-
-#. (itstool) path: section/media
-#. This is a reference to an external file such as an image or video. When
-#. the file changes, the md5 hash will change to let you know you need to
-#. update your localized copy. The msgstr is not used at all. Set it to
-#. whatever you like once you have updated your copy of the file.
-#: C/print-order.page:54
-msgctxt "_"
-msgid ""
-"external ref='figures/reverse-collate.png' "
-"md5='5d306e1be829b42f27402e0640cb221c'"
-msgstr ""
-"external ref='figures/reverse-collate.png' "
-"md5='5d306e1be829b42f27402e0640cb221c'"
+"Будь ласка, ознайомтеся із <link xref=\"help:gnome-help/printing-order\""
+" href=\"https://help."
+"gnome.org/users/gnome-help/stable/printing-order\">довідкою щодо стільничного"
+" середовища GNOME</"
+"link>."
 
 #. (itstool) path: info/title
 #: C/duplex-9pages.page:7
@@ -3413,50 +3342,15 @@ msgid "Only printing certain pages"
 msgstr "Друк вказаного набору сторінок"
 
 #. (itstool) path: page/p
-#: C/print-select.page:22
-msgid "To only print certain pages from the document:"
-msgstr "Щоб надрукувати лише частину сторінок з документа, виконайте такі дії:"
-
-#. (itstool) path: item/p
-#: C/print-select.page:27
+#: C/print-select.page:21
 msgid ""
-"In the <gui>General</gui> tab in the Print window choose <gui>Pages</gui> "
-"from the <gui>Range</gui> section."
+"Please see <link xref=\"help:gnome-help/printing-select\" href=\"https://"
+"help.gnome.org/users/gnome-help/stable/printing-select\">the GNOME Desktop "
+"Help</link>."
 msgstr ""
-"На вкладці <gui>Загальне</gui> вікна друку виберіть пункт <gui>Сторінки</"
-"gui> у розділі <gui>Діапазон</gui>."
-
-#. (itstool) path: item/p
-#: C/print-select.page:28
-msgid ""
-"Type the numbers of the pages you want to print in the textbox, separated by "
-"commas. Use a dash to denote a range of pages."
-msgstr ""
-"Введіть номери сторінок, які слід надрукувати, у поле для введення тексту, "
-"розділяючи їх комами. Скористайтеся дефісом для задання діапазону сторінок."
-
-#. (itstool) path: note/p
-#: C/print-select.page:35
-msgid ""
-"For example, if you enter \"1,3,5-7,9\" in the <gui>Pages</gui> textbox, "
-"pages 1,3,5,6,7 and 9 will be printed."
-msgstr ""
-"Наприклад, якщо ви введете «1,3,5-7,9» до поля <gui>Сторінки</gui>, буде "
-"надруковано сторінки 1, 3, 5, 6, 7 і 9."
-
-#. (itstool) path: note/media
-#. This is a reference to an external file such as an image or video. When
-#. the file changes, the md5 hash will change to let you know you need to
-#. update your localized copy. The msgstr is not used at all. Set it to
-#. whatever you like once you have updated your copy of the file.
-#: C/print-select.page:38
-msgctxt "_"
-msgid ""
-"external ref='figures/print-select.png' "
-"md5='b5aab6e63b3b332eada00ac163129d78'"
-msgstr ""
-"external ref='figures/print-select.png' "
-"md5='b5aab6e63b3b332eada00ac163129d78'"
+"Будь ласка, ознайомтеся із <link xref=\"help:gnome-help/printing-select\""
+" href=\"https://help.gnome.org/users/gnome-help/stable/printing-select\""
+">довідкою щодо стільничного середовища GNOME</link>."
 
 #. (itstool) path: info/desc
 #: C/movingaround.page:23
@@ -4866,3 +4760,91 @@ msgstr ""
 "key>клацання лівою кнопкою миші</keyseq> у вікні <app>Переглядача "
 "документів</app>. У відповідь на цю комбінацію буде підсвічено відповідний "
 "рядок у початковому коді TeX."
+
+#~ msgid "Reverse"
+#~ msgstr "Зворотний порядок"
+
+#~ msgid ""
+#~ "Printers usually print the first page first, and the last page last, so "
+#~ "the pages end up in reverse order when you pick them up."
+#~ msgstr ""
+#~ "Принтери, зазвичай, друкують спочатку першу сторінку, а в кінці – "
+#~ "останню, тому сторінки лежать у стосі надрукованих сторінок у зворотньому "
+#~ "порядку."
+
+#~ msgid "To reverse the order:"
+#~ msgstr "Щоб визначити зворотний порядок сторінок, виконайте такі дії:"
+
+#~ msgid ""
+#~ "In the <gui>General</gui> tab of the Print window under <em>Copies</em>, "
+#~ "check <gui>Reverse</gui>. The last page will be printed first, and so on."
+#~ msgstr ""
+#~ "На вкладці <gui>Загальне</gui> вікна друку у розділі <em>Копії</em> "
+#~ "позначте пункт <gui>Обернено</gui>. Після цього, останню сторінку "
+#~ "діапазону друку буде надруковано першою тощо."
+
+#~ msgid "Collate"
+#~ msgstr "Впорядкування"
+
+#~ msgid ""
+#~ "If you are printing more than one copy of the document, the print outs "
+#~ "will be grouped by page number by default. (e.g. The copies of page one "
+#~ "come out, then the copies of page two, etc.) Collating will make each "
+#~ "copy come out with its pages grouped together."
+#~ msgstr ""
+#~ "Якщо друкується більш, ніж один екземпляр документа, то, типово, "
+#~ "роздруківки будуть згруповані за номерами сторінок (наприклад, копії "
+#~ "першої сторінки, потім копії другої сторінки, і так далі). Впорядкування "
+#~ "дозволяє групувати сторінки одного екземпляру."
+
+#~ msgid "To collate:"
+#~ msgstr "Для впорядкування:"
+
+#~ msgid ""
+#~ "In the <gui>General</gui> tab of the Print window under <em>Copies</em> "
+#~ "check <gui>Collate</gui>."
+#~ msgstr ""
+#~ "На вкладці <gui>Загальне</gui> діалогового вікна друку у розділі "
+#~ "<em>Копії</em> позначте пункт <gui>Впорядкувати</gui>."
+
+#~ msgctxt "_"
+#~ msgid ""
+#~ "external ref='figures/reverse-collate.png' "
+#~ "md5='5d306e1be829b42f27402e0640cb221c'"
+#~ msgstr ""
+#~ "external ref='figures/reverse-collate.png' "
+#~ "md5='5d306e1be829b42f27402e0640cb221c'"
+
+#~ msgid "To only print certain pages from the document:"
+#~ msgstr ""
+#~ "Щоб надрукувати лише частину сторінок з документа, виконайте такі дії:"
+
+#~ msgid ""
+#~ "In the <gui>General</gui> tab in the Print window choose <gui>Pages</gui> "
+#~ "from the <gui>Range</gui> section."
+#~ msgstr ""
+#~ "На вкладці <gui>Загальне</gui> вікна друку виберіть пункт <gui>Сторінки</"
+#~ "gui> у розділі <gui>Діапазон</gui>."
+
+#~ msgid ""
+#~ "Type the numbers of the pages you want to print in the textbox, separated "
+#~ "by commas. Use a dash to denote a range of pages."
+#~ msgstr ""
+#~ "Введіть номери сторінок, які слід надрукувати, у поле для введення "
+#~ "тексту, розділяючи їх комами. Скористайтеся дефісом для задання діапазону "
+#~ "сторінок."
+
+#~ msgid ""
+#~ "For example, if you enter \"1,3,5-7,9\" in the <gui>Pages</gui> textbox, "
+#~ "pages 1,3,5,6,7 and 9 will be printed."
+#~ msgstr ""
+#~ "Наприклад, якщо ви введете «1,3,5-7,9» до поля <gui>Сторінки</gui>, буде "
+#~ "надруковано сторінки 1, 3, 5, 6, 7 і 9."
+
+#~ msgctxt "_"
+#~ msgid ""
+#~ "external ref='figures/print-select.png' "
+#~ "md5='b5aab6e63b3b332eada00ac163129d78'"
+#~ msgstr ""
+#~ "external ref='figures/print-select.png' "
+#~ "md5='b5aab6e63b3b332eada00ac163129d78'"
