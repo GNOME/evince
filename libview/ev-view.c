@@ -7401,12 +7401,18 @@ _ev_view_get_selection_colors (EvView  *view,
 
 	context = gtk_widget_get_style_context (widget);
 	gtk_style_context_save (context);
+	gtk_style_context_add_class (context, EV_STYLE_CLASS_FIND_RESULTS);
 	state = gtk_style_context_get_state (context) |
 		(gtk_widget_has_focus (widget) ? GTK_STATE_FLAG_SELECTED : GTK_STATE_FLAG_ACTIVE);
 	gtk_style_context_set_state (context, state);
 
-	if (bg_color)
-		gtk_style_context_get_background_color (context, state, bg_color);
+	if (bg_color) {
+		g_autoptr (GdkRGBA) color = NULL;
+		gtk_style_context_get (context, state,
+				       GTK_STYLE_PROPERTY_BACKGROUND_COLOR,
+				       &color, NULL);
+		*bg_color = *color;
+	}
 
 	if (fg_color)
 		gtk_style_context_get_color (context, state, fg_color);
