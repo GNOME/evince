@@ -27,6 +27,7 @@ headers = files(
   'ev-file-exporter.h',
   'ev-file-helpers.h',
   'ev-form-field.h',
+  'ev-form-field-private.h',
   'ev-image.h',
   'ev-init.h',
   'ev-layer.h',

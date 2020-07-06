@@ -52,6 +52,7 @@
 #include "ev-document-annotations.h"
 #include "ev-document-attachments.h"
 #include "ev-document-text.h"
+#include "ev-form-field-private.h"
 #include "ev-selection.h"
 #include "ev-transition-effect.h"
 #include "ev-attachment.h"
@@ -2780,7 +2781,7 @@ ev_form_field_from_poppler_field (PdfDocument      *pdf_document,
 
 	ev_field->font_size = font_size;
 	ev_field->is_read_only = is_read_only;
-	ev_field->alt_ui_name = alt_ui_name;
+	ev_form_field_set_alternate_name (ev_field, alt_ui_name);
 
 	if (action)
 		ev_field->activation_link = ev_link_from_action (pdf_document, action);

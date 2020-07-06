@@ -35,6 +35,7 @@
 #include "ev-document-layers.h"
 #include "ev-document-media.h"
 #include "ev-document-misc.h"
+#include "ev-form-field-private.h"
 #include "ev-pixbuf-cache.h"
 #include "ev-page-cache.h"
 #include "ev-view-marshal.h"
@@ -2331,7 +2332,7 @@ ev_view_handle_cursor_over_xy (EvView *view, gint x, gint y)
 		}
 	}
 
-	if (link || annot || (field && field->alt_ui_name))
+	if (link || annot || (field && ev_form_field_get_alternate_name (field)))
 		g_object_set (view, "has-tooltip", TRUE, NULL);
 }
 
@@ -5320,14 +5321,18 @@ ev_view_query_tooltip (GtkWidget  *widget,
 	}
 
 	field = ev_view_get_form_field_at_location (view, x, y);
-	if (field && field->alt_ui_name && *(field->alt_ui_name) != '\0') {
-		GdkRectangle field_area;
+	if (field != NULL) {
+		gchar *alt_ui_name = ev_form_field_get_alternate_name (field);
 
-		get_field_area (view, x, y, field, &field_area);
-		gtk_tooltip_set_text (tooltip, field->alt_ui_name);
-		gtk_tooltip_set_tip_area (tooltip, &field_area);
+		if (alt_ui_name && *(alt_ui_name) != '\0') {
+			GdkRectangle field_area;
 
-		return TRUE;
+			get_field_area (view, x, y, field, &field_area);
+			gtk_tooltip_set_text (tooltip, alt_ui_name);
+			gtk_tooltip_set_tip_area (tooltip, &field_area);
+
+			return TRUE;
+		}
 	}
 
 	link = ev_view_get_link_at_location (view, x, y);
