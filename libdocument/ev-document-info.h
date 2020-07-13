@@ -57,6 +57,13 @@ typedef enum
 
 typedef enum
 {
+	EV_DOCUMENT_CONTAINS_JS_UNKNOWN,
+	EV_DOCUMENT_CONTAINS_JS_NO,
+	EV_DOCUMENT_CONTAINS_JS_YES
+} EvDocumentContainsJS;
+
+typedef enum
+{
 	EV_DOCUMENT_UI_HINT_HIDE_TOOLBAR = 1 << 0,
 	EV_DOCUMENT_UI_HINT_HIDE_MENUBAR = 1 << 1,
 	EV_DOCUMENT_UI_HINT_HIDE_WINDOWUI = 1 << 2,
@@ -100,7 +107,8 @@ typedef enum
 	EV_DOCUMENT_INFO_N_PAGES = 1 << 14,
 	EV_DOCUMENT_INFO_SECURITY = 1 << 15,
 	EV_DOCUMENT_INFO_PAPER_SIZE = 1 << 16,
-	EV_DOCUMENT_INFO_LICENSE = 1 << 17
+	EV_DOCUMENT_INFO_LICENSE = 1 << 17,
+	EV_DOCUMENT_INFO_CONTAINS_JS = 1 << 18
 
 } EvDocumentInfoFields;
 
@@ -126,6 +134,7 @@ struct _EvDocumentInfo
 	double paper_height;
 	double paper_width;
 	EvDocumentLicense *license;
+	EvDocumentContainsJS contains_js; /* wheter it contains any javascript */
 
 	/* Mask of all the valid fields */
 	guint fields_mask;
