@@ -47,6 +47,7 @@ typedef enum {
 	LINEARIZED_PROPERTY,
 	FORMAT_PROPERTY,
 	SECURITY_PROPERTY,
+	CONTAINS_JS_PROPERTY,
 	PAPER_SIZE_PROPERTY,
 	FILE_SIZE_PROPERTY,
 	N_PROPERTIES,
@@ -71,6 +72,7 @@ static const PropertyInfo properties_info[] = {
 	{ LINEARIZED_PROPERTY,    N_("Optimized:") },
 	{ FORMAT_PROPERTY,        N_("Format:") },
 	{ SECURITY_PROPERTY,      N_("Security:") },
+	{ CONTAINS_JS_PROPERTY,   N_("Contains Javascript:") },
 	{ PAPER_SIZE_PROPERTY,    N_("Paper Size:") },
 	{ FILE_SIZE_PROPERTY,     N_("Size:") }
 };
@@ -417,6 +419,16 @@ ev_properties_view_set_info (EvPropertiesView *properties, const EvDocumentInfo 
 		text = ev_regular_paper_size (info);
 		set_property (properties, GTK_GRID (grid), PAPER_SIZE_PROPERTY, text, &row);
 		g_free (text);
+	}
+	if (info->fields_mask & EV_DOCUMENT_INFO_CONTAINS_JS) {
+		if (info->contains_js == EV_DOCUMENT_CONTAINS_JS_YES) {
+			text = _("Yes");
+		} else if (info->contains_js == EV_DOCUMENT_CONTAINS_JS_NO) {
+			text = _("No");
+		} else {
+			text = _("Unknown");
+		}
+		set_property (properties, GTK_GRID (grid), CONTAINS_JS_PROPERTY, text, &row);
 	}
 	if (properties->file_size) {
 		text = g_format_size (properties->file_size);
