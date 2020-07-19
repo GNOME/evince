@@ -2060,6 +2060,53 @@ ev_view_goto_dest (EvView *view, EvLinkDest *dest)
 	goto_dest (view, dest);
 }
 
+static void
+ev_view_link_to_current_view (EvView *view, EvLink **backlink)
+{
+	EvLinkDest   *backlink_dest = NULL;
+	EvLinkAction *backlink_action = NULL;
+
+	gint          backlink_page = view->start_page;
+	gdouble       zoom = ev_document_model_get_scale (view->model);
+
+	GtkBorder     border;
+	GdkRectangle  backlink_page_area;
+
+	gboolean is_dual = ev_document_model_get_page_layout (view->model) == EV_PAGE_LAYOUT_DUAL;
+	gint x_offset;
+	gint y_offset;
+
+	ev_view_get_page_extents (view, backlink_page, &backlink_page_area, &border);
+	x_offset = backlink_page_area.x;
+	y_offset = backlink_page_area.y;
+
+	if (!view->continuous && is_dual && view->scroll_x > backlink_page_area.width + border.left) {
+		/* For dual-column, non-continuous mode, view->start_page is always
+		 * the page in the left-hand column, even if that page isn't visible.
+		 * We adjust for that here when we know the page can't be visible due
+		 * to horizontal scroll. */
+		backlink_page = backlink_page + 1;
+
+		/* get right-hand page extents (no need to recompute border) */
+		ev_view_get_page_extents_for_border (view, backlink_page,
+						     &border, &backlink_page_area);
+		x_offset = backlink_page_area.x;
+	}
+
+	gdouble backlink_dest_x = (view->scroll_x - x_offset - border.left) / view->scale;
+	gdouble backlink_dest_y = (view->scroll_y - y_offset - border.top) / view->scale;
+
+	backlink_dest = ev_link_dest_new_xyz (backlink_page, backlink_dest_x,
+					      backlink_dest_y, zoom, TRUE,
+					      TRUE, TRUE);
+
+	backlink_action = ev_link_action_new_dest (backlink_dest);
+	g_object_unref (backlink_dest);
+
+	*backlink = ev_link_new ("Backlink", backlink_action);
+	g_object_unref (backlink_action);
+}
+
 void
 ev_view_handle_link (EvView *view, EvLink *link)
 {
@@ -2074,9 +2121,15 @@ ev_view_handle_link (EvView *view, EvLink *link)
 
 	switch (type) {
 	        case EV_LINK_ACTION_TYPE_GOTO_DEST: {
+			/* Build a synthetic Link representing our current view into the
+			 * document. */
+
 			EvLinkDest *dest;
-			gint old_page = ev_document_model_get_page (view->model);
-			g_signal_emit (view, signals[SIGNAL_HANDLE_LINK], 0, old_page, link);
+			EvLink     *backlink = NULL;
+
+			ev_view_link_to_current_view (view, &backlink);
+
+			g_signal_emit (view, signals[SIGNAL_HANDLE_LINK], 0, link, backlink);
 
 			dest = ev_link_action_get_dest (action);
 			ev_view_goto_dest (view, dest);
@@ -8136,7 +8189,7 @@ ev_view_class_init (EvViewClass *class)
 		         NULL, NULL,
 		         NULL,
 		         G_TYPE_NONE, 2,
-		         G_TYPE_INT, G_TYPE_OBJECT);
+		         G_TYPE_OBJECT, G_TYPE_OBJECT);
 	signals[SIGNAL_EXTERNAL_LINK] = g_signal_new ("external-link",
 	  	         G_TYPE_FROM_CLASS (object_class),
 		         G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,

@@ -145,6 +145,7 @@ gboolean       ev_view_get_page_extents_for_border (EvView       *view,
                                                     gint          page,
                                                     GtkBorder    *border,
                                                     GdkRectangle *page_area);
+
 /* Annotations */
 EV_PUBLIC
 void           ev_view_focus_annotation      (EvView          *view,
