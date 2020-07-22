@@ -1721,6 +1721,7 @@ ev_link_from_action (PdfDocument   *pdf_document,
 	        case POPPLER_ACTION_JAVASCRIPT:
 			unimplemented_action = "POPPLER_ACTION_JAVASCRIPT";
 			break;
+#if POPPLER_CHECK_VERSION(0, 90, 0)
 	        case POPPLER_ACTION_RESET_FORM: {
 			gboolean  exclude_reset_fields;
 			GList    *reset_fields = NULL;
@@ -1736,6 +1737,7 @@ ev_link_from_action (PdfDocument   *pdf_document,
 								   exclude_reset_fields);
 			break;
 		}
+#endif
 	        case POPPLER_ACTION_UNKNOWN:
 			unimplemented_action = "POPPLER_ACTION_UNKNOWN";
 	}
@@ -2864,9 +2866,11 @@ static void
 pdf_document_forms_reset_form (EvDocumentForms *document,
                                EvLinkAction    *action)
 {
+#if POPPLER_CHECK_VERSION(0, 90, 0)
 	poppler_document_reset_form (PDF_DOCUMENT (document)->document,
 	                             ev_link_action_get_reset_fields (action),
 	                             ev_link_action_get_exclude_reset_fields (action));
+#endif
 }
 
 static gchar *
