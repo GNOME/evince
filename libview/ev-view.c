@@ -2095,6 +2095,7 @@ ev_view_handle_link (EvView *view, EvLink *link)
 	        case EV_LINK_ACTION_TYPE_EXTERNAL_URI:
 	        case EV_LINK_ACTION_TYPE_LAUNCH:
 	        case EV_LINK_ACTION_TYPE_NAMED:
+	        case EV_LINK_ACTION_TYPE_RESET_FORM:
 			g_signal_emit (view, signals[SIGNAL_EXTERNAL_LINK], 0, action);
 			break;
 	}
@@ -2166,6 +2167,9 @@ tip_from_link (EvView *view, EvLink *link)
 			break;
 	        case EV_LINK_ACTION_TYPE_NAMED:
 			msg = tip_from_action_named (action);
+			break;
+	        case EV_LINK_ACTION_TYPE_RESET_FORM:
+			msg = g_strdup_printf (_("Reset form"));
 			break;
 	        default:
 			if (title)

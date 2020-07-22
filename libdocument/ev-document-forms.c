@@ -45,6 +45,16 @@ ev_document_forms_document_is_modified (EvDocumentForms *document_forms)
 	return (iface->document_is_modified) ? iface->document_is_modified (document_forms) : FALSE;
 }
 
+void
+ev_document_forms_reset_form (EvDocumentForms *document_forms,
+                              EvLinkAction    *action)
+{
+	EvDocumentFormsInterface *iface = EV_DOCUMENT_FORMS_GET_IFACE (document_forms);
+
+	if (iface->reset_form)
+		iface->reset_form (document_forms, action);
+}
+
 gchar *
 ev_document_forms_form_field_text_get_text (EvDocumentForms *document_forms, 
 					    EvFormField     *field)

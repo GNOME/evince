@@ -32,7 +32,9 @@ enum {
 	PROP_NAME,
 	PROP_SHOW_LIST,
 	PROP_HIDE_LIST,
-	PROP_TOGGLE_LIST
+	PROP_TOGGLE_LIST,
+	PROP_RESET_FIELDS,
+	PROP_EXCLUDE_RESET_FIELDS
 };
 
 struct _EvLinkAction {
@@ -55,6 +57,8 @@ struct _EvLinkActionPrivate {
 	GList            *show_list;
 	GList            *hide_list;
 	GList            *toggle_list;
+	GList            *reset_fields;
+	gboolean          exclude_reset_fields;
 };
 
 G_DEFINE_TYPE_WITH_PRIVATE (EvLinkAction, ev_link_action, G_TYPE_OBJECT)
@@ -155,6 +159,34 @@ ev_link_action_get_toggle_list (EvLinkAction *self)
 	return self->priv->toggle_list;
 }
 
+/**
+ * ev_link_action_get_reset_fields:
+ * @self: an #EvLinkAction
+ *
+ * Returns: (transfer none) (element-type gchar *): a list of fields to reset
+ */
+GList *
+ev_link_action_get_reset_fields (EvLinkAction *self)
+{
+	g_return_val_if_fail (EV_IS_LINK_ACTION (self), NULL);
+
+	return self->priv->reset_fields;
+}
+
+/**
+ * ev_link_action_get_exclude_reset_fields:
+ * @self: an #EvLinkAction
+ *
+ * Returns: whether to exclude reset fields when resetting form
+ */
+gboolean
+ev_link_action_get_exclude_reset_fields (EvLinkAction *self)
+{
+	g_return_val_if_fail (EV_IS_LINK_ACTION (self), NULL);
+
+	return self->priv->exclude_reset_fields;
+}
+
 static void
 ev_link_action_get_property (GObject    *object,
 			     guint       prop_id,
@@ -192,6 +224,12 @@ ev_link_action_get_property (GObject    *object,
 			break;
 	        case PROP_TOGGLE_LIST:
 			g_value_set_pointer (value, self->priv->toggle_list);
+			break;
+	        case PROP_RESET_FIELDS:
+			g_value_set_pointer (value, self->priv->reset_fields);
+			break;
+	        case PROP_EXCLUDE_RESET_FIELDS:
+			g_value_set_boolean (value, self->priv->exclude_reset_fields);
 			break;
 	        default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object,
@@ -240,6 +278,12 @@ ev_link_action_set_property (GObject      *object,
 			break;
 	        case PROP_TOGGLE_LIST:
 			self->priv->toggle_list = g_value_get_pointer (value);
+			break;
+	        case PROP_RESET_FIELDS:
+			self->priv->reset_fields = g_value_get_pointer (value);
+			break;
+	        case PROP_EXCLUDE_RESET_FIELDS:
+			self->priv->exclude_reset_fields = g_value_get_boolean (value);
 			break;
 	        default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object,
@@ -296,6 +340,11 @@ ev_link_action_finalize (GObject *object)
 		priv->toggle_list = NULL;
 	}
 
+	if (priv->reset_fields) {
+		g_list_free_full (priv->reset_fields, g_free);
+		priv->reset_fields = NULL;
+	}
+
 	G_OBJECT_CLASS (ev_link_action_parent_class)->finalize (object);
 }
 
@@ -309,6 +358,8 @@ ev_link_action_init (EvLinkAction *ev_link_action)
 	ev_link_action->priv->filename = NULL;
 	ev_link_action->priv->params = NULL;
 	ev_link_action->priv->name = NULL;
+	ev_link_action->priv->reset_fields = NULL;
+	ev_link_action->priv->exclude_reset_fields = FALSE;
 }
 
 static void
@@ -402,6 +453,23 @@ ev_link_action_class_init (EvLinkActionClass *ev_link_action_class)
 							       G_PARAM_READWRITE |
 							       G_PARAM_CONSTRUCT_ONLY |
                                                                G_PARAM_STATIC_STRINGS));
+	g_object_class_install_property (g_object_class,
+					 PROP_RESET_FIELDS,
+					 g_param_spec_pointer ("reset-fields",
+							       "ResetFields",
+							       "The list of fields that should be/should not be reset",
+							       G_PARAM_READWRITE |
+							       G_PARAM_CONSTRUCT_ONLY |
+							       G_PARAM_STATIC_STRINGS));
+	g_object_class_install_property (g_object_class,
+					 PROP_EXCLUDE_RESET_FIELDS,
+					 g_param_spec_boolean ("exclude-reset-fields",
+							       "ExcludeResetFields",
+							       "Whether to exclude/include reset-fields when resetting form",
+							       FALSE,
+							       G_PARAM_READWRITE |
+							       G_PARAM_CONSTRUCT_ONLY |
+							       G_PARAM_STATIC_STRINGS));
 }
 
 EvLinkAction *
@@ -471,6 +539,17 @@ ev_link_action_new_layers_state (GList *show_list,
 					     "hide-list", hide_list,
 					     "toggle-list", toggle_list,
 					     "type", EV_LINK_ACTION_TYPE_LAYERS_STATE,
+					     NULL));
+}
+
+EvLinkAction *
+ev_link_action_new_reset_form (GList    *reset_fields,
+			       gboolean  exclude_reset_fields)
+{
+	return EV_LINK_ACTION (g_object_new (EV_TYPE_LINK_ACTION,
+					     "exclude-reset-fields", exclude_reset_fields,
+					     "reset-fields", reset_fields,
+					     "type", EV_LINK_ACTION_TYPE_RESET_FORM,
 					     NULL));
 }
 

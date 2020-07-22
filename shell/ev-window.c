@@ -6868,6 +6868,18 @@ do_action_named (EvWindow *window, EvLinkAction *action)
 }
 
 static void
+reset_form (EvWindow *window, EvLinkAction *action)
+{
+	EvWindowPrivate *priv = GET_PRIVATE (window);
+	EvDocument      *document = priv->document;
+
+	if (EV_IS_DOCUMENT_FORMS (document)) {
+		ev_document_forms_reset_form (EV_DOCUMENT_FORMS (document), action);
+		ev_view_reload (EV_VIEW (priv->view));
+	}
+}
+
+static void
 view_external_link_cb (EvWindow *window, EvLinkAction *action)
 {
 	switch (ev_link_action_get_action_type (action)) {
@@ -6892,6 +6904,9 @@ view_external_link_cb (EvWindow *window, EvLinkAction *action)
 			break;
 	        case EV_LINK_ACTION_TYPE_NAMED:
 			do_action_named (window, action);
+			break;
+	        case EV_LINK_ACTION_TYPE_RESET_FORM:
+			reset_form (window, action);
 			break;
 	        default:
 			g_assert_not_reached ();

@@ -82,6 +82,8 @@ struct _EvDocumentFormsInterface
 							       const gchar       *text);
 	gchar         *(* form_field_choice_get_text)         (EvDocumentForms   *document_forms,
 							       EvFormField       *field);
+	void           (* reset_form)                         (EvDocumentForms   *document_forms,
+							       EvLinkAction      *action);
 };
 
 GType          ev_document_forms_get_type                           (void) G_GNUC_CONST;
@@ -122,6 +124,8 @@ void 	       ev_document_forms_form_field_choice_set_text         (EvDocumentFor
 								     const gchar       *text);
 gchar         *ev_document_forms_form_field_choice_get_text         (EvDocumentForms   *document_forms,
 								     EvFormField       *field);
+void           ev_document_forms_reset_form                         (EvDocumentForms   *document_forms,
+								     EvLinkAction      *action);
 
 G_END_DECLS
 

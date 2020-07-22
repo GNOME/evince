@@ -47,36 +47,41 @@ typedef enum {
 	EV_LINK_ACTION_TYPE_EXTERNAL_URI,
 	EV_LINK_ACTION_TYPE_LAUNCH,
 	EV_LINK_ACTION_TYPE_NAMED,
-	EV_LINK_ACTION_TYPE_LAYERS_STATE
+	EV_LINK_ACTION_TYPE_LAYERS_STATE,
+	EV_LINK_ACTION_TYPE_RESET_FORM
 	/* We'll probably fill this in more as we support the other types of
 	 * actions */
 } EvLinkActionType;
 
-GType            ev_link_action_get_type         (void) G_GNUC_CONST;
+GType            ev_link_action_get_type                 (void) G_GNUC_CONST;
 
-EvLinkActionType ev_link_action_get_action_type  (EvLinkAction *self);
-EvLinkDest      *ev_link_action_get_dest         (EvLinkAction *self);
-const gchar     *ev_link_action_get_uri          (EvLinkAction *self);
-const gchar     *ev_link_action_get_filename     (EvLinkAction *self);
-const gchar     *ev_link_action_get_params       (EvLinkAction *self);
-const gchar     *ev_link_action_get_name         (EvLinkAction *self);
-GList           *ev_link_action_get_show_list    (EvLinkAction *self);
-GList           *ev_link_action_get_hide_list    (EvLinkAction *self);
-GList           *ev_link_action_get_toggle_list  (EvLinkAction *self);
+EvLinkActionType ev_link_action_get_action_type          (EvLinkAction *self);
+EvLinkDest      *ev_link_action_get_dest                 (EvLinkAction *self);
+const gchar     *ev_link_action_get_uri                  (EvLinkAction *self);
+const gchar     *ev_link_action_get_filename             (EvLinkAction *self);
+const gchar     *ev_link_action_get_params               (EvLinkAction *self);
+const gchar     *ev_link_action_get_name                 (EvLinkAction *self);
+GList           *ev_link_action_get_show_list            (EvLinkAction *self);
+GList           *ev_link_action_get_hide_list            (EvLinkAction *self);
+GList           *ev_link_action_get_toggle_list          (EvLinkAction *self);
+GList           *ev_link_action_get_reset_fields         (EvLinkAction *self);
+gboolean         ev_link_action_get_exclude_reset_fields (EvLinkAction *self);
 
-EvLinkAction    *ev_link_action_new_dest         (EvLinkDest   *dest);
-EvLinkAction    *ev_link_action_new_remote       (EvLinkDest   *dest,
-						  const gchar  *filename);
-EvLinkAction    *ev_link_action_new_external_uri (const gchar  *uri);
-EvLinkAction    *ev_link_action_new_launch       (const gchar  *filename,
-						  const gchar  *params);
-EvLinkAction    *ev_link_action_new_named        (const gchar  *name);
-EvLinkAction    *ev_link_action_new_layers_state (GList        *show_list,
-						  GList        *hide_list,
-						  GList        *toggle_list);
+EvLinkAction    *ev_link_action_new_dest                 (EvLinkDest   *dest);
+EvLinkAction    *ev_link_action_new_remote               (EvLinkDest   *dest,
+						          const gchar  *filename);
+EvLinkAction    *ev_link_action_new_external_uri         (const gchar  *uri);
+EvLinkAction    *ev_link_action_new_launch               (const gchar  *filename,
+						          const gchar  *params);
+EvLinkAction    *ev_link_action_new_named                (const gchar  *name);
+EvLinkAction    *ev_link_action_new_layers_state         (GList        *show_list,
+						          GList        *hide_list,
+						          GList        *toggle_list);
+EvLinkAction    *ev_link_action_new_reset_form           (GList        *fields,
+						          gboolean      exclude_fields);
 
-gboolean         ev_link_action_equal            (EvLinkAction *a,
-                                                  EvLinkAction *b);
+gboolean         ev_link_action_equal                    (EvLinkAction *a,
+                                                          EvLinkAction *b);
 
 G_END_DECLS
 
