@@ -160,7 +160,7 @@ m_dep = cc.find_library('m')
 
 # Although GTK+ 3.10 includes hi-dpi functionality, it does not require a cairo with
 # cairo_surface_set_device_scale(), which we also need if we're to support hi-dpi,
-# so we need check for that explicity.
+# so we need check for that explicitly.
 cairo_dep = dependency('cairo', version: '>= 1.10.0')
 config_h.set('HAVE_HIDPI_SUPPORT', cc.has_function('cairo_surface_set_device_scale', dependencies: cairo_dep))
 
