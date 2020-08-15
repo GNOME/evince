@@ -354,7 +354,7 @@ again:
 	
 	/* get the unscaled glyph, maybe loading it from disk */
 	ch = FONTCHAR(font, code);
-	if(!ch || !glyph_present(ch))
+	if(!ch)
 		return NULL;
 	if(!ch->loaded && load_one_glyph(dvi, font, code) == -1) {
 		if(font->chars == NULL) {
