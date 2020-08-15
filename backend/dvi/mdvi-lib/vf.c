@@ -134,8 +134,10 @@ static int vf_load_font(DviParams *params, DviFont *font)
 		mdvi_free(name);
 		if(last == NULL)
 			font->subfonts = last = ref;
-		else
+		else {
 			last->next = ref;
+			last = ref;
+		}
 		ref->next = NULL;
 		op = fuget1(p);
 	}
