@@ -20,8 +20,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Evince\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
-"POT-Creation-Date: 2020-02-05 00:35+0000\n"
-"PO-Revision-Date: 2020-02-24 21:57+0100\n"
+"POT-Creation-Date: 2020-06-30 06:02+0000\n"
+"PO-Revision-Date: 2020-08-25 17:50+0200\n"
 "Last-Translator: Nathan Follens <nthn@unseen.is>\n"
 "Language-Team: Dutch <gnome-nl-list@gnome.org>\n"
 "Language: nl\n"
@@ -29,7 +29,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.3\n"
+"X-Generator: Poedit 2.4.1\n"
 
 #: backend/comics/comics-document.c:163 backend/comics/comics-document.c:187
 msgid "File is corrupted"
@@ -118,53 +118,53 @@ msgstr "PDF-documenten"
 msgid "Adds support for reading PDF Documents"
 msgstr "Voegt ondersteuning toe voor het lezen van PDF-documenten"
 
-#: backend/pdf/ev-poppler.cc:917
+#: backend/pdf/ev-poppler.cc:930
 msgid "This work is in the Public Domain"
 msgstr "Dit werk is in het publieke domein"
 
 #. translators: this is the document security state
-#: backend/pdf/ev-poppler.cc:1184 backend/pdf/ev-poppler.cc:1190
+#: backend/pdf/ev-poppler.cc:1201 backend/pdf/ev-poppler.cc:1207
 msgid "Yes"
 msgstr "Ja"
 
 #. translators: this is the document security state
-#: backend/pdf/ev-poppler.cc:1187 backend/pdf/ev-poppler.cc:1190
+#: backend/pdf/ev-poppler.cc:1204 backend/pdf/ev-poppler.cc:1207
 msgid "No"
 msgstr "Nee"
 
-#: backend/pdf/ev-poppler.cc:1321
+#: backend/pdf/ev-poppler.cc:1338
 msgid "Type 1"
 msgstr "Type 1"
 
-#: backend/pdf/ev-poppler.cc:1323
+#: backend/pdf/ev-poppler.cc:1340
 msgid "Type 1C"
 msgstr "Type 1C"
 
-#: backend/pdf/ev-poppler.cc:1325
+#: backend/pdf/ev-poppler.cc:1342
 msgid "Type 3"
 msgstr "Type 3"
 
-#: backend/pdf/ev-poppler.cc:1327
+#: backend/pdf/ev-poppler.cc:1344
 msgid "TrueType"
 msgstr "TrueType"
 
-#: backend/pdf/ev-poppler.cc:1329
+#: backend/pdf/ev-poppler.cc:1346
 msgid "Type 1 (CID)"
 msgstr "Type 1 (CID)"
 
-#: backend/pdf/ev-poppler.cc:1331
+#: backend/pdf/ev-poppler.cc:1348
 msgid "Type 1C (CID)"
 msgstr "Type 1C (CID)"
 
-#: backend/pdf/ev-poppler.cc:1333
+#: backend/pdf/ev-poppler.cc:1350
 msgid "TrueType (CID)"
 msgstr "TrueType (CID)"
 
-#: backend/pdf/ev-poppler.cc:1335
+#: backend/pdf/ev-poppler.cc:1352
 msgid "Unknown font type"
 msgstr "Onbekend soort lettertype"
 
-#: backend/pdf/ev-poppler.cc:1379
+#: backend/pdf/ev-poppler.cc:1396
 msgid ""
 "This document contains non-embedded fonts that are not from the PDF Standard "
 "14 fonts. If the substitute fonts selected by fontconfig are not the same as "
@@ -175,12 +175,12 @@ msgstr ""
 "uitgekozen vervangende lettertypes niet hetzelfde zijn als de lettertypes "
 "waarmee dit document is gemaakt, kan de weergave afwijken."
 
-#: backend/pdf/ev-poppler.cc:1384
+#: backend/pdf/ev-poppler.cc:1401
 msgid "All fonts are either standard or embedded."
 msgstr "Alle lettertypes zijn ofwel standaard ofwel ingevoegd."
 
 # geen/naamloos/zonder naam/geen naam
-#: backend/pdf/ev-poppler.cc:1414
+#: backend/pdf/ev-poppler.cc:1431
 msgid "No name"
 msgstr "Naamloos"
 
@@ -195,21 +195,21 @@ msgstr "Naamloos"
 #. Author: None
 #. Keywords: None
 #.
-#: backend/pdf/ev-poppler.cc:1423 libview/ev-print-operation.c:1975
+#: backend/pdf/ev-poppler.cc:1440 libview/ev-print-operation.c:1975
 #: properties/ev-properties-view.c:231
 msgid "None"
 msgstr "Geen"
 
 # deel/onderdeel
-#: backend/pdf/ev-poppler.cc:1431
+#: backend/pdf/ev-poppler.cc:1448
 msgid "Embedded subset"
 msgstr "Ingebed deel"
 
-#: backend/pdf/ev-poppler.cc:1433
+#: backend/pdf/ev-poppler.cc:1450
 msgid "Embedded"
 msgstr "Ingebed"
 
-#: backend/pdf/ev-poppler.cc:1435
+#: backend/pdf/ev-poppler.cc:1452
 msgid "Not embedded"
 msgstr "Niet ingebed"
 
@@ -218,7 +218,7 @@ msgstr "Niet ingebed"
 #. * type. Example:
 #. * "Type 1 (One of the Standard 14 Fonts)"
 #.
-#: backend/pdf/ev-poppler.cc:1442
+#: backend/pdf/ev-poppler.cc:1459
 msgid " (One of the Standard 14 Fonts)"
 msgstr " (een van de 14 standaard-lettertypes)"
 
@@ -227,7 +227,7 @@ msgstr " (een van de 14 standaard-lettertypes)"
 #. * type. Example:
 #. * "TrueType (Not one of the Standard 14 Fonts)"
 #.
-#: backend/pdf/ev-poppler.cc:1449
+#: backend/pdf/ev-poppler.cc:1466
 msgid " (Not one of the Standard 14 Fonts)"
 msgstr " (niet een van de 14 standaard-lettertypes)"
 
@@ -241,7 +241,7 @@ msgstr " (niet een van de 14 standaard-lettertypes)"
 #. * Substituting with TeXGyreTermes-Regular
 #. * (/usr/share/textmf/.../texgyretermes-regular.otf)
 #.
-#: backend/pdf/ev-poppler.cc:1468
+#: backend/pdf/ev-poppler.cc:1485
 #, c-format
 msgid ""
 "%s%s\n"
@@ -265,7 +265,7 @@ msgstr ""
 #. * Encoding: Custom
 #. * Embedded subset
 #.
-#: backend/pdf/ev-poppler.cc:1486
+#: backend/pdf/ev-poppler.cc:1503
 #, c-format
 msgid ""
 "%s%s\n"
@@ -343,7 +343,7 @@ msgstr "Ga naar de volgende pagina"
 
 # zinsdeel/zin/frase
 #. Search.
-#: browser-plugin/EvBrowserPluginToolbar.cpp:362 shell/ev-toolbar.c:172
+#: browser-plugin/EvBrowserPluginToolbar.cpp:362 shell/ev-toolbar.c:173
 msgid "Find a word or phrase in the document"
 msgstr "Een woord of een zin in het document zoeken"
 
@@ -375,8 +375,8 @@ msgstr "Document afdrukken"
 # Misschien Evince documentenviewer
 # viewer is ook nederlands
 #. Manually set name and icon
-#: data/org.gnome.Evince.desktop.in.in:3 shell/ev-window.c:4070
-#: shell/ev-window-title.c:133 shell/main.c:298
+#: data/org.gnome.Evince.desktop.in.in:3 shell/ev-window-title.c:133
+#: shell/main.c:298
 msgid "Document Viewer"
 msgstr "Documentweergave"
 
@@ -482,7 +482,7 @@ msgstr "Onbekend MIME-type"
 msgid "All Documents"
 msgstr "Alle documenten"
 
-#: libdocument/ev-document-factory.c:609 shell/ev-utils.c:327
+#: libdocument/ev-document-factory.c:609 shell/ev-utils.c:283
 msgid "All Files"
 msgstr "Alle bestanden"
 
@@ -508,9 +508,9 @@ msgstr "(%d van %d)"
 msgid "of %d"
 msgstr "van %d"
 
-#: libmisc/ev-page-action-widget.c:187 shell/ev-history.c:447
-#: shell/ev-sidebar-bookmarks.c:311 shell/ev-window.c:945
-#: shell/ev-window.c:5123
+#: libmisc/ev-page-action-widget.c:187 shell/ev-history.c:455
+#: shell/ev-sidebar-bookmarks.c:343 shell/ev-window.c:962
+#: shell/ev-window.c:5244
 #, c-format
 msgid "Page %s"
 msgstr "Pagina %s"
@@ -688,46 +688,46 @@ msgstr "Beeld omlaag schuiven"
 msgid "Document View"
 msgstr "Documentbeeld"
 
-#: libview/ev-view.c:2074
+#: libview/ev-view.c:2107
 msgid "Go to first page"
 msgstr "Ga naar de eerste pagina"
 
-#: libview/ev-view.c:2076
+#: libview/ev-view.c:2109
 msgid "Go to previous page"
 msgstr "Ga naar de vorige pagina"
 
-#: libview/ev-view.c:2078
+#: libview/ev-view.c:2111
 msgid "Go to next page"
 msgstr "Ga naar de volgende pagina"
 
-#: libview/ev-view.c:2080
+#: libview/ev-view.c:2113
 msgid "Go to last page"
 msgstr "Ga naar de laatste pagina"
 
-#: libview/ev-view.c:2082
+#: libview/ev-view.c:2115
 msgid "Go to page"
 msgstr "Ga naar pagina"
 
-#: libview/ev-view.c:2084
+#: libview/ev-view.c:2117
 msgid "Find"
 msgstr "Zoeken"
 
-#: libview/ev-view.c:2112
+#: libview/ev-view.c:2145
 #, c-format
 msgid "Go to page %s"
 msgstr "Ga naar pagina %s"
 
-#: libview/ev-view.c:2118
+#: libview/ev-view.c:2151
 #, c-format
 msgid "Go to %s on file “%s”"
 msgstr "Ga naar %s in bestand ‘%s’"
 
-#: libview/ev-view.c:2121
+#: libview/ev-view.c:2154
 #, c-format
 msgid "Go to file “%s”"
 msgstr "Ga naar bestand ‘%s’"
 
-#: libview/ev-view.c:2129
+#: libview/ev-view.c:2162
 #, c-format
 msgid "Launch %s"
 msgstr "%s opstarten"
@@ -740,7 +740,7 @@ msgstr "Ga naar pagina:"
 msgid "End of presentation. Press Esc or click to exit."
 msgstr "Einde van presentatie. Druk op Esc of klik om af te sluiten."
 
-#: org.gnome.Evince.appdata.xml.in:23 shell/ev-window.c:4065
+#: org.gnome.Evince.appdata.xml.in:23 shell/ev-window.c:4168
 msgid "Evince"
 msgstr "Evince"
 
@@ -790,16 +790,16 @@ msgstr "BESTAND"
 msgid "GNOME Document Previewer"
 msgstr "Gnome documentenvoorbeeldweergave"
 
-#: previewer/ev-previewer-toolbar.c:112 shell/ev-toolbar.c:217
+#: previewer/ev-previewer-toolbar.c:112 shell/ev-toolbar.c:218
 msgid "Select page or search in the index"
 msgstr "Pagina selecteren of zoeken in de index"
 
-#: previewer/ev-previewer-toolbar.c:114 shell/ev-toolbar.c:218
+#: previewer/ev-previewer-toolbar.c:114 shell/ev-toolbar.c:219
 msgid "Select page"
 msgstr "Pagina selecteren"
 
 # niet in staat/kon
-#: previewer/ev-previewer-window.c:79 shell/ev-window.c:3520
+#: previewer/ev-previewer-window.c:79 shell/ev-window.c:3623
 msgid "Failed to print document"
 msgstr "Afdrukken van het document is mislukt"
 
@@ -1159,7 +1159,7 @@ msgstr "Vo_rige pagina"
 msgid "_Next Page"
 msgstr "V_olgende pagina"
 
-#: shell/evince-menus.ui:179 shell/ev-window.c:3819
+#: shell/evince-menus.ui:179 shell/ev-window.c:3922
 msgid "_Reload"
 msgstr "He_rladen"
 
@@ -1229,6 +1229,18 @@ msgstr "Vorige"
 msgid "Forward"
 msgstr "Volgende"
 
+#: shell/evince-menus.ui:320
+msgid "_Open Bookmark"
+msgstr "Bladwijzer _openen"
+
+#: shell/evince-menus.ui:326
+msgid "_Rename Bookmark"
+msgstr "Bladwijzer _hernoemen"
+
+#: shell/evince-menus.ui:330
+msgid "_Delete Bookmark"
+msgstr "Bladwijzer verwij_deren"
+
 #: shell/ev-keyring.c:86
 #, c-format
 msgid "Password for document %s"
@@ -1265,8 +1277,8 @@ msgid "Password required"
 msgstr "Wachtwoord vereist"
 
 #: shell/ev-password-view.c:252 shell/ev-sidebar-attachments.c:493
-#: shell/ev-window.c:2770 shell/ev-window.c:3070 shell/ev-window.c:3943
-#: shell/ev-window.c:6934 shell/ev-window.c:7161
+#: shell/ev-window.c:2867 shell/ev-window.c:3165 shell/ev-window.c:4046
+#: shell/ev-window.c:7087 shell/ev-window.c:7311
 msgid "_Cancel"
 msgstr "_Annuleren"
 
@@ -1336,7 +1348,7 @@ msgstr "Dit document bevat geen annotaties"
 msgid "Page %d"
 msgstr "Pagina %d"
 
-#: shell/ev-sidebar-annotations.c:667 shell/ev-window.c:7566
+#: shell/ev-sidebar-annotations.c:651 shell/ev-window.c:7712
 msgid "Annotations"
 msgstr "Annotaties"
 
@@ -1356,243 +1368,231 @@ msgstr ""
 msgid "_Replace"
 msgstr "_Vervangen"
 
-#: shell/ev-sidebar-attachments.c:899 shell/ev-window.c:7590
+#: shell/ev-sidebar-attachments.c:899 shell/ev-window.c:7736
 msgid "Attachments"
 msgstr "Bijlagen"
 
-#: shell/ev-sidebar-bookmarks.c:151
-msgid "_Open Bookmark"
-msgstr "Bladwijzer _openen"
-
-#: shell/ev-sidebar-bookmarks.c:153
-msgid "_Rename Bookmark"
-msgstr "Bladwijzer _hernoemen"
-
-#: shell/ev-sidebar-bookmarks.c:155
-msgid "_Remove Bookmark"
-msgstr "Bladwijzer ver_wijderen"
-
-#: shell/ev-sidebar-bookmarks.c:471 shell/ev-sidebar-bookmarks.c:472
+#: shell/ev-sidebar-bookmarks.c:493 shell/ev-sidebar-bookmarks.c:494
 msgid "Add bookmark"
 msgstr "Bladwijzer toevoegen"
 
-#: shell/ev-sidebar-bookmarks.c:480 shell/ev-sidebar-bookmarks.c:481
+#: shell/ev-sidebar-bookmarks.c:502 shell/ev-sidebar-bookmarks.c:503
 msgid "Remove bookmark"
 msgstr "Bladwijzer verwijderen"
 
-#: shell/ev-sidebar-bookmarks.c:595 shell/ev-window.c:7574
+#: shell/ev-sidebar-bookmarks.c:628 shell/ev-window.c:7720
 msgid "Bookmarks"
 msgstr "Bladwijzers"
 
-#: shell/ev-sidebar-layers.c:444 shell/ev-window.c:7602
+#: shell/ev-sidebar-layers.c:444 shell/ev-window.c:7748
 msgid "Layers"
 msgstr "Lagen"
 
 #. Translators: This is the title for the sidebar pane that
 #. * shows the Outline or Table of Contents of the document.
 #.
-#: shell/ev-sidebar-links.c:1027 shell/ev-window.c:7554
+#: shell/ev-sidebar-links.c:1023 shell/ev-window.c:7700
 msgid "Outline"
 msgstr "Inhoud"
 
-#: shell/ev-sidebar-thumbnails.c:1038 shell/ev-window.c:7537
+#: shell/ev-sidebar-thumbnails.c:1038 shell/ev-window.c:7683
 msgid "Thumbnails"
 msgstr "Miniaturen"
 
-#: shell/ev-toolbar.c:178
+#: shell/ev-toolbar.c:179
 msgid "Search not available for this document"
 msgstr "De zoekfunctie is niet beschikbaar voor dit document"
 
-#: shell/ev-toolbar.c:202
+#: shell/ev-toolbar.c:203
 msgid "Open…"
 msgstr "Openen…"
 
-#: shell/ev-toolbar.c:203
+#: shell/ev-toolbar.c:204
 msgid "Open an existing document"
 msgstr "Een bestaand document openen"
 
-#: shell/ev-toolbar.c:210
+#: shell/ev-toolbar.c:211
 msgid "Side pane"
 msgstr "Zijpaneel"
 
-#: shell/ev-toolbar.c:226
+#: shell/ev-toolbar.c:227
 msgid "Annotate the document"
 msgstr "Het document annoteren"
 
-#: shell/ev-toolbar.c:227
+#: shell/ev-toolbar.c:228
 msgid "Annotate document"
 msgstr "Document annoteren"
 
-#: shell/ev-toolbar.c:235 shell/ev-toolbar.c:236
+#: shell/ev-toolbar.c:236 shell/ev-toolbar.c:237
 msgid "File options"
 msgstr "Bestandsopties"
 
-#: shell/ev-toolbar.c:255
+#: shell/ev-toolbar.c:256
 msgid "Select or set the zoom level of the document"
 msgstr "Het zoomniveau van het document selecteren of instellen"
 
-#: shell/ev-toolbar.c:256
+#: shell/ev-toolbar.c:257
 msgid "Set zoom level"
 msgstr "Het zoomniveau instellen"
 
-#: shell/ev-utils.c:323
+#: shell/ev-utils.c:279
 msgid "Supported Image Files"
 msgstr "Ondersteunde afbeeldingsbestanden"
 
-#: shell/ev-window.c:1656
+#: shell/ev-window.c:1752
 msgid "The document contains no pages"
 msgstr "Het document bevat geen pagina's"
 
-#: shell/ev-window.c:1659
+#: shell/ev-window.c:1755
 msgid "The document contains only empty pages"
 msgstr "Het document bevat slechts lege pagina's"
 
-#: shell/ev-window.c:1887 shell/ev-window.c:2069
+#: shell/ev-window.c:1983 shell/ev-window.c:2165
 #, c-format
 msgid "Unable to open document “%s”."
 msgstr "Kon het document ‘%s’ niet openen."
 
-#: shell/ev-window.c:2034
+#: shell/ev-window.c:2130
 #, c-format
 msgid "Loading document from “%s”"
 msgstr "Document van ʻ%sʼ laden"
 
-#: shell/ev-window.c:2039 shell/ev-window.c:2504 shell/ev-window.c:2861
-#: shell/ev-window.c:3584 shell/ev-window.c:3832
+#: shell/ev-window.c:2135 shell/ev-window.c:2600 shell/ev-window.c:2955
+#: shell/ev-window.c:3687 shell/ev-window.c:3935
 msgid "C_ancel"
 msgstr "A_nnuleren"
 
-#: shell/ev-window.c:2189 shell/ev-window.c:2555
+#: shell/ev-window.c:2285 shell/ev-window.c:2651
 #, c-format
 msgid "Downloading document (%d%%)"
 msgstr "Document downloaden (%d%%)"
 
 # niet in staat/kon
-#: shell/ev-window.c:2222
+#: shell/ev-window.c:2318
 msgid "Failed to load remote file."
 msgstr "Kon bestand op afstand niet laden."
 
-#: shell/ev-window.c:2500
+#: shell/ev-window.c:2596
 #, c-format
 msgid "Reloading document from %s"
 msgstr "Document van %s herladen"
 
 # niet in staat/kon
-#: shell/ev-window.c:2530
+#: shell/ev-window.c:2626
 msgid "Failed to reload document."
 msgstr "Kon document niet herladen."
 
-#: shell/ev-window.c:2767
+#: shell/ev-window.c:2863
 msgid "Open Document"
 msgstr "Document openen"
 
-#: shell/ev-window.c:2772
+#: shell/ev-window.c:2866
 msgid "_Open"
 msgstr "_Openen"
 
-#: shell/ev-window.c:2847
+#: shell/ev-window.c:2941
 #, c-format
 msgid "Saving document to %s"
 msgstr "Document opslaan naar %s"
 
-#: shell/ev-window.c:2850
+#: shell/ev-window.c:2944
 #, c-format
 msgid "Saving attachment to %s"
 msgstr "Bijlage opslaan naar %s"
 
-#: shell/ev-window.c:2853
+#: shell/ev-window.c:2947
 #, c-format
 msgid "Saving image to %s"
 msgstr "Afbeelding opslaan naar %s"
 
-#: shell/ev-window.c:2895 shell/ev-window.c:3010
+#: shell/ev-window.c:2989 shell/ev-window.c:3104
 #, c-format
 msgid "The file could not be saved as “%s”."
 msgstr "Het bestand kon niet worden opgeslagen als ‘%s’."
 
-#: shell/ev-window.c:2927
+#: shell/ev-window.c:3021
 #, c-format
 msgid "Uploading document (%d%%)"
 msgstr "Document uploaden (%d%%)"
 
-#: shell/ev-window.c:2931
+#: shell/ev-window.c:3025
 #, c-format
 msgid "Uploading attachment (%d%%)"
 msgstr "Bijlage uploaden (%d%%)"
 
-#: shell/ev-window.c:2935
+#: shell/ev-window.c:3029
 #, c-format
 msgid "Uploading image (%d%%)"
 msgstr "Afbeelding uploaden (%d%%)"
 
-#: shell/ev-window.c:3068
+#: shell/ev-window.c:3162
 msgid "Save As…"
 msgstr "Afbeelding op_slaan als…"
 
-#: shell/ev-window.c:3071 shell/ev-window.c:6936 shell/ev-window.c:7163
+#: shell/ev-window.c:3164 shell/ev-window.c:7086 shell/ev-window.c:7310
 msgid "_Save"
 msgstr "Op_slaan"
 
-#: shell/ev-window.c:3159
+#: shell/ev-window.c:3251
 msgid "Could not send current document"
 msgstr "Het huidige document kon niet worden verstuurd"
 
-#: shell/ev-window.c:3471
+#: shell/ev-window.c:3574
 #, c-format
 msgid "%d pending job in queue"
 msgid_plural "%d pending jobs in queue"
 msgstr[0] "Eén taak in de wachtrij"
 msgstr[1] "%d taken in de wachtrij"
 
-#: shell/ev-window.c:3580
+#: shell/ev-window.c:3683
 #, c-format
 msgid "Printing job “%s”"
 msgstr "Afdrukken van taak ‘%s’"
 
-#: shell/ev-window.c:3798
+#: shell/ev-window.c:3901
 msgid "Document contains form fields that have been filled out. "
 msgstr "Het document bevat ingevulde formuliervelden. "
 
-#: shell/ev-window.c:3801
+#: shell/ev-window.c:3904
 msgid "Document contains new or modified annotations. "
 msgstr "Het document bevat nieuwe of gewijzigde annotaties. "
 
 # niet in staat/kon
-#: shell/ev-window.c:3813
+#: shell/ev-window.c:3916
 #, c-format
 msgid "Reload document “%s”?"
 msgstr "Document ‘%s’ herladen?"
 
-#: shell/ev-window.c:3815
+#: shell/ev-window.c:3918
 msgid "If you reload the document, changes will be permanently lost."
 msgstr ""
 "Als u het document opnieuw laadt, zullen wijzigingen definitief verloren "
 "gaan."
 
-#: shell/ev-window.c:3817
+#: shell/ev-window.c:3920
 msgid "_No"
 msgstr "_Nee"
 
-#: shell/ev-window.c:3826
+#: shell/ev-window.c:3929
 #, c-format
 msgid "Save a copy of document “%s” before closing?"
 msgstr "Kopie van document ‘%s’ opslaan alvorens af te sluiten?"
 
-#: shell/ev-window.c:3828
+#: shell/ev-window.c:3931
 msgid "If you don’t save a copy, changes will be permanently lost."
 msgstr ""
 "Als u geen kopie van het document opslaat, zullen wijzigingen definitief "
 "verloren gaan."
 
-#: shell/ev-window.c:3830
+#: shell/ev-window.c:3933
 msgid "Close _without Saving"
 msgstr "Sluiten _zonder opslaan"
 
-#: shell/ev-window.c:3834
+#: shell/ev-window.c:3937
 msgid "Save a _Copy"
 msgstr "Een _kopie opslaan"
 
-#: shell/ev-window.c:3916
+#: shell/ev-window.c:4019
 #, c-format
 msgid "Wait until print job “%s” finishes before closing?"
 msgstr "Wachten tot afdruktaak ‘%s’ voltooid alvorens af te sluiten?"
@@ -1600,7 +1600,7 @@ msgstr "Wachten tot afdruktaak ‘%s’ voltooid alvorens af te sluiten?"
 #. TRANS: the singular form is not really used as n_print_jobs > 1
 #. but some languages distinguish between different plurals forms,
 #. so the ngettext is needed.
-#: shell/ev-window.c:3922
+#: shell/ev-window.c:4025
 #, c-format
 msgid "There is %d print job active. Wait until print finishes before closing?"
 msgid_plural ""
@@ -1612,26 +1612,30 @@ msgstr[1] ""
 "Er zijn %d afdruktaken actief. Wachten tot deze voltooid zijn alvorens af te "
 "sluiten?"
 
-#: shell/ev-window.c:3937
+#: shell/ev-window.c:4040
 msgid "If you close the window, pending print jobs will not be printed."
 msgstr ""
 "Als het venster gesloten wordt, zullen afdruktaken in de wachtrij niet meer "
 "uitgevoerd worden."
 
-#: shell/ev-window.c:3941
+#: shell/ev-window.c:4044
 msgid "Cancel _print and Close"
 msgstr "Afdrukken annuleren en sl_uiten"
 
-#: shell/ev-window.c:3945
+#: shell/ev-window.c:4048
 msgid "Close _after Printing"
 msgstr "Sluiten na _afdrukken"
 
 # makers/auteurs
-#: shell/ev-window.c:4067
-msgid "© 1996–2017 The Evince authors"
-msgstr "© 1996‒2017 De auteurs van Evince"
+#: shell/ev-window.c:4170
+msgid "© 1996–2020 The Evince authors"
+msgstr "© 1996‒2020 De auteurs van Evince"
 
-#: shell/ev-window.c:4073
+#: shell/ev-window.c:4173
+msgid "Evince is a simple document viewer for GNOME"
+msgstr "Evince is een eenvoudige documentenviewer voor Gnome"
+
+#: shell/ev-window.c:4176
 msgid "translator-credits"
 msgstr ""
 "Tino Meinen\n"
@@ -1645,23 +1649,23 @@ msgstr ""
 
 # Dit is de reden die opgegeven wordt voor het tijdelijk uitschakelen van de
 # schermbeveiliging (Wouter Bolsterlee)
-#: shell/ev-window.c:4635
+#: shell/ev-window.c:4738
 msgid "Running in presentation mode"
 msgstr "Diapresentatie bezig"
 
-#: shell/ev-window.c:5634
+#: shell/ev-window.c:5759
 msgid "The attachment could not be saved."
 msgstr "De bijlage kon niet worden opgeslagen."
 
-#: shell/ev-window.c:5956
+#: shell/ev-window.c:6081
 msgid "Enable caret navigation?"
 msgstr "Cursornavigatie inschakelen?"
 
-#: shell/ev-window.c:5957
+#: shell/ev-window.c:6082
 msgid "_Enable"
 msgstr "I_nschakelen"
 
-#: shell/ev-window.c:5960
+#: shell/ev-window.c:6085
 msgid ""
 "Pressing F7 turns the caret navigation on or off. This feature places a "
 "moveable cursor in text pages, allowing you to move around and select text "
@@ -1671,38 +1675,38 @@ msgstr ""
 "verplaatsbare cursor in tekstpagina's, waardoor u kunt navigeren en tekst "
 "selecteren via het toetsenbord. Wilt u de cursornavigatie inschakelen?"
 
-#: shell/ev-window.c:5965
+#: shell/ev-window.c:6090
 msgid "Don’t show this message again"
 msgstr "Dit bericht niet meer tonen"
 
 # niet in staat/kon
-#: shell/ev-window.c:6563 shell/ev-window.c:6579
+#: shell/ev-window.c:6715 shell/ev-window.c:6731
 msgid "Unable to launch external application."
 msgstr "De externe toepassing kon niet geopend worden."
 
 # niet in staat/kon
-#: shell/ev-window.c:6641
+#: shell/ev-window.c:6793
 msgid "Unable to open external link"
 msgstr "De externe verwijzing kon niet geopend worden"
 
-#: shell/ev-window.c:6863
+#: shell/ev-window.c:7015
 msgid "Couldn’t find appropriate format to save image"
 msgstr "Kon geen geschikt bestandstype voor opslaan van afbeelding vinden"
 
-#: shell/ev-window.c:6895
+#: shell/ev-window.c:7047
 msgid "The image could not be saved."
 msgstr "De afbeelding kon niet worden opgeslagen."
 
-#: shell/ev-window.c:6931
+#: shell/ev-window.c:7083
 msgid "Save Image"
 msgstr "Afbeelding opslaan"
 
 # niet in staat/kon
-#: shell/ev-window.c:7090
+#: shell/ev-window.c:7239
 msgid "Unable to open attachment"
 msgstr "De bijlage kon niet geopend worden"
 
-#: shell/ev-window.c:7158
+#: shell/ev-window.c:7307
 msgid "Save Attachment"
 msgstr "Bijlage opslaan"
 
@@ -2151,6 +2155,9 @@ msgstr "STRING"
 msgid "[FILE…]"
 msgstr "[BESTAND…]"
 
+#~ msgid "_Remove Bookmark"
+#~ msgstr "Bladwijzer ver_wijderen"
+
 #~ msgctxt "shortcut window"
 #~ msgid "Go to previous/next page"
 #~ msgstr "Naar de vorige/volgende pagina gaan"
@@ -2225,9 +2232,6 @@ msgstr "[BESTAND…]"
 
 #~ msgid "_Add Bookmark"
 #~ msgstr "_Bladwijzer toevoegen"
-
-#~ msgid "This is a document viewer for the GNOME desktop."
-#~ msgstr "Dit is een documentenviewer voor de Gnome-werkomgeving."
 
 #~ msgid ""
 #~ "Evince is free software; you can redistribute it and/or modify it under "
