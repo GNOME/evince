@@ -12,6 +12,7 @@ deps = backends_deps + [
   libspectre_dep,
   kpathsea_dep,
   t1_dep,
+  m_dep
 ]
 
 shared_module(
