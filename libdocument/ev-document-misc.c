@@ -540,9 +540,8 @@ G_GNUC_END_IGNORE_DEPRECATIONS
  * ev_document_misc_get_widget_dpi:
  * @widget: a #GtkWidget
  *
- * Returns DPI for monitor on which given widget has been realized.
- * Returns DPI of primary monitor or DPI of first monitor in the list inside
- * of GdkDisplay if the widget has not been realized yet.
+ * Returns sensible guess for DPI of monitor on which given widget has been
+ * realized. If HiDPI display, use 192, else 96.
  * Returns 96 as fallback value.
  *
  * Returns: DPI as gdouble
@@ -554,7 +553,7 @@ ev_document_misc_get_widget_dpi (GtkWidget *widget)
 	GdkDisplay   *display;
 	GdkMonitor   *monitor;
 	GdkWindow    *window;
-	gdouble       dp, di;
+	gboolean      is_landscape;
 
 	display = gtk_widget_get_display (widget);
 	window = gtk_widget_get_window (widget);
@@ -566,22 +565,25 @@ ev_document_misc_get_widget_dpi (GtkWidget *widget)
 			monitor = gdk_display_get_monitor (display, 0);
 	}
 
-	if (monitor != NULL) {
-		/* diagonal in pixels */
-		gdk_monitor_get_geometry (monitor, &geometry);
-		dp = hypot (geometry.width, geometry.height);
-		if (dp == 0)
-			return 96;
-
-		/* diagonal in inches */
-		di = hypot (gdk_monitor_get_width_mm (monitor), gdk_monitor_get_height_mm (monitor)) / 25.4;
-		if (di == 0)
-			return 96;
-
-		return (dp / di);
-	} else {
+	/* The only safe assumption you can make, on Unix-like/X11 and
+	 * Linux/Wayland, is to always set the DPI to 96, regardless of
+	 * physical/logical resolution, because that's the only safe
+	 * guarantee we can make.
+	 * https://gitlab.gnome.org/GNOME/gtk/-/issues/3115#note_904622 */
+	if (monitor == NULL)
 		return 96;
-	}
+
+	gdk_monitor_get_geometry (monitor, &geometry);
+	is_landscape = geometry.width > geometry.height;
+
+	/* DPI is 192 if height ≥ 1080 and the orientation is not portrait,
+	 * which is, incidentally, how GTK detects HiDPI displays and set a
+	 * scaling factor for the logical output
+	 * https://gitlab.gnome.org/GNOME/gtk/-/issues/3115#note_904622 */
+	if (is_landscape && geometry.height >= 1080)
+		return 192;
+	else
+		return 96;
 }
 
 /* Returns a locale specific date and time representation */
