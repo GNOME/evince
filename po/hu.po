@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
-"POT-Creation-Date: 2020-08-30 15:33+0000\n"
-"PO-Revision-Date: 2020-09-12 20:55+0200\n"
+"POT-Creation-Date: 2020-09-22 19:22+0000\n"
+"PO-Revision-Date: 2020-09-23 18:20+0200\n"
 "Last-Translator: Balázs Úr <ur.balazs at fsf dot hu>\n"
 "Language-Team: Hungarian <gnome-hu-list at gnome dot org>\n"
 "Language: hu\n"
@@ -1186,7 +1186,6 @@ msgid "_Rename Bookmark"
 msgstr "Könyvjelző át_nevezése"
 
 #: shell/evince-menus.ui:330
-#| msgid "_Rename Bookmark"
 msgid "_Delete Bookmark"
 msgstr "Könyvjelző _törlése"
 
@@ -1225,7 +1224,7 @@ msgstr "Jelszó szükséges"
 
 #: shell/ev-password-view.c:252 shell/ev-sidebar-attachments.c:493
 #: shell/ev-window.c:2882 shell/ev-window.c:3180 shell/ev-window.c:4061
-#: shell/ev-window.c:7117 shell/ev-window.c:7341
+#: shell/ev-window.c:7064 shell/ev-window.c:7288
 msgid "_Cancel"
 msgstr "_Mégse"
 
@@ -1295,7 +1294,7 @@ msgstr "A dokumentum nem tartalmaz jegyzeteket"
 msgid "Page %d"
 msgstr "%d. oldal"
 
-#: shell/ev-sidebar-annotations.c:651 shell/ev-window.c:7742
+#: shell/ev-sidebar-annotations.c:651 shell/ev-window.c:7689
 msgid "Annotations"
 msgstr "Jegyzetek"
 
@@ -1313,7 +1312,7 @@ msgstr "A(z) „%s” fájl már létezik. Lecserélésével a tartalma felül l
 msgid "_Replace"
 msgstr "Cs_ere"
 
-#: shell/ev-sidebar-attachments.c:899 shell/ev-window.c:7766
+#: shell/ev-sidebar-attachments.c:899 shell/ev-window.c:7713
 msgid "Attachments"
 msgstr "Mellékletek"
 
@@ -1325,22 +1324,22 @@ msgstr "Könyvjelző hozzáadása"
 msgid "Remove bookmark"
 msgstr "Könyvjelző eltávolítása"
 
-#: shell/ev-sidebar-bookmarks.c:628 shell/ev-window.c:7750
+#: shell/ev-sidebar-bookmarks.c:628 shell/ev-window.c:7697
 msgid "Bookmarks"
 msgstr "Könyvjelzők"
 
-#: shell/ev-sidebar-layers.c:444 shell/ev-window.c:7778
+#: shell/ev-sidebar-layers.c:444 shell/ev-window.c:7725
 msgid "Layers"
 msgstr "Rétegek"
 
 #. Translators: This is the title for the sidebar pane that
 #. * shows the Outline or Table of Contents of the document.
 #.
-#: shell/ev-sidebar-links.c:1023 shell/ev-window.c:7730
+#: shell/ev-sidebar-links.c:1023 shell/ev-window.c:7677
 msgid "Outline"
 msgstr "Vázlat"
 
-#: shell/ev-sidebar-thumbnails.c:1038 shell/ev-window.c:7713
+#: shell/ev-sidebar-thumbnails.c:1038 shell/ev-window.c:7660
 msgid "Thumbnails"
 msgstr "Bélyegképek"
 
@@ -1472,7 +1471,7 @@ msgstr "Kép feltöltése (%d%%)"
 msgid "Save As…"
 msgstr "Mentés másként…"
 
-#: shell/ev-window.c:3179 shell/ev-window.c:7116 shell/ev-window.c:7340
+#: shell/ev-window.c:3179 shell/ev-window.c:7063 shell/ev-window.c:7287
 msgid "_Save"
 msgstr "M_entés"
 
@@ -1564,7 +1563,6 @@ msgid "Close _after Printing"
 msgstr "Bezárás nyomtatás _után"
 
 #: shell/ev-window.c:4185
-#| msgid "© 1996–2017 The Evince authors"
 msgid "© 1996–2020 The Evince authors"
 msgstr "© 1996-2020 Az Evince szerzői"
 
@@ -1609,31 +1607,35 @@ msgstr ""
 msgid "Don’t show this message again"
 msgstr "Ne mutassa ezt az üzenetet újra"
 
-#: shell/ev-window.c:6730 shell/ev-window.c:6746
-msgid "Unable to launch external application."
-msgstr "A külső alkalmazás nem indítható."
+#: shell/ev-window.c:6701
+#, c-format
+msgid ""
+"Security alert: this document has been prevented from opening the file “%s”"
+msgstr ""
+"Biztonsági riasztás: megakadályozásra került, hogy ez a dokumentum megnyissa"
+" a(z) „%s” fájlt"
 
-#: shell/ev-window.c:6808
+#: shell/ev-window.c:6755
 msgid "Unable to open external link"
 msgstr "A külső hivatkozás nem nyitható meg"
 
-#: shell/ev-window.c:7045
+#: shell/ev-window.c:6992
 msgid "Couldn’t find appropriate format to save image"
 msgstr "Nem található megfelelő formátum a kép mentéséhez"
 
-#: shell/ev-window.c:7077
+#: shell/ev-window.c:7024
 msgid "The image could not be saved."
 msgstr "A kép nem menthető."
 
-#: shell/ev-window.c:7113
+#: shell/ev-window.c:7060
 msgid "Save Image"
 msgstr "Kép mentése"
 
-#: shell/ev-window.c:7269
+#: shell/ev-window.c:7216
 msgid "Unable to open attachment"
 msgstr "A melléklet nem nyitható meg"
 
-#: shell/ev-window.c:7337
+#: shell/ev-window.c:7284
 msgid "Save Attachment"
 msgstr "Melléklet mentése"
 
@@ -2063,6 +2065,9 @@ msgstr "KARAKTERLÁNC"
 #: shell/main.c:81
 msgid "[FILE…]"
 msgstr "[FÁJL…]"
+
+#~ msgid "Unable to launch external application."
+#~ msgstr "A külső alkalmazás nem indítható."
 
 #~ msgid "_Remove Bookmark"
 #~ msgstr "Könyvjelző _eltávolítása"
