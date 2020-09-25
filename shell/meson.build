@@ -33,29 +33,16 @@ sources = files(
   'ev-zoom-action.c',
 )
 
-evince_css = (gtk_dep.version().version_compare('>= 3.20.0') ? 'evince.css' : 'evince-3.18.css')
-
 resource_data = files(
-  evince_css,
+  'evince.css',
   '../data/thumbnail-frame.png',
   'evince-menus.ui',
   'help-overlay.ui',
 )
 
-resource_conf = configuration_data()
-resource_conf.set('EVINCE_CSS',  evince_css)
-
-resource = 'evince.gresource.xml'
-
-resource_xml = configure_file(
-  input: resource + '.in',
-  output: resource,
-  configuration: resource_conf,
-)
-
 sources += gnome.compile_resources(
   'ev-resources',
-  resource_xml,
+  'evince.gresource.xml',
   source_dir: data_dir,
   c_name: ev_code_prefix.to_lower(),
   dependencies: resource_data,
