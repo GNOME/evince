@@ -389,6 +389,7 @@ static void     recent_view_item_activated_cb           (EvRecentView     *recen
 static void     ev_window_fullscreen_show_toolbar       (EvWindow         *ev_window);
 static void     ev_window_begin_add_annot               (EvWindow         *ev_window,
 							 EvAnnotationType  annot_type);
+static void	ev_window_cancel_add_annot		(EvWindow *window);
 
 static gchar *nautilus_sendto = NULL;
 
@@ -5192,8 +5193,13 @@ ev_window_cmd_escape (GSimpleAction *action,
 		ev_window_stop_fullscreen (window, TRUE);
 	else if (EV_WINDOW_IS_PRESENTATION (priv))
 		ev_window_stop_presentation (window, TRUE);
-	else
+	else {
+		/* Cancel any annotation in progress and untoggle the
+		 * toolbar button. */
+		ev_window_cancel_add_annot (window);
+		ev_annotations_toolbar_add_annot_finished (EV_ANNOTATIONS_TOOLBAR (priv->annots_toolbar));
 		gtk_widget_grab_focus (priv->view);
+	}
 }
 
 static void
