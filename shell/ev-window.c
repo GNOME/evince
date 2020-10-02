@@ -313,6 +313,9 @@ static void	ev_window_load_job_cb  			(EvJob            *job,
 							 gpointer          data);
 static void     ev_window_reload_document               (EvWindow         *window,
 							 EvLinkDest *dest);
+static void	ev_window_document_modified_cb		(EvDocument *document,
+                                                         GParamSpec *pspec,
+                                                         EvWindow   *ev_window);
 static void     ev_window_reload_job_cb                 (EvJob            *job,
 							 EvWindow         *window);
 static void     ev_window_save_job_cb                   (EvJob            *save,
@@ -1774,6 +1777,8 @@ ev_window_set_document (EvWindow *ev_window, EvDocument *document)
 		ev_document_model_set_page (priv->model, current_page);
 		ev_window_run_presentation (ev_window);
 	}
+
+	g_signal_connect (document, "notify::modified", G_CALLBACK (ev_window_document_modified_cb), ev_window);
 
 	if (priv->setup_document_idle > 0)
 		g_source_remove (priv->setup_document_idle);
@@ -5360,6 +5365,32 @@ ev_window_document_changed_cb (EvDocumentModel *model,
 {
 	ev_window_set_document (ev_window,
 				ev_document_model_get_document (model));
+}
+
+static void
+ev_window_document_modified_cb (EvDocument *document,
+                                GParamSpec *pspec,
+                                EvWindow   *ev_window)
+{
+	GtkHeaderBar *toolbar = GTK_HEADER_BAR (ev_window_get_toolbar (ev_window));
+	const gchar *title = gtk_header_bar_get_title (toolbar);
+	gchar *new_title;
+
+	if (!((EV_IS_DOCUMENT_FORMS (document) &&
+	    ev_document_forms_document_is_modified (EV_DOCUMENT_FORMS (document))) ||
+	    (EV_IS_DOCUMENT_ANNOTATIONS (document) &&
+	    ev_document_annotations_document_is_modified (EV_DOCUMENT_ANNOTATIONS (document)))))
+		return;
+
+	if (gtk_widget_get_direction (GTK_WIDGET (ev_window)) == GTK_TEXT_DIR_RTL)
+		new_title = g_strconcat ("• ", title, NULL);
+	else
+		new_title = g_strconcat (title, " •", NULL);
+
+	if (new_title) {
+		gtk_header_bar_set_title (toolbar, new_title);
+		g_free (new_title);
+	}
 }
 
 static void
