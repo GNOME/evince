@@ -321,16 +321,18 @@ ev_toolbar_has_visible_popups (EvToolbar *ev_toolbar)
 }
 
 void
-ev_toolbar_action_menu_popup (EvToolbar *ev_toolbar)
+ev_toolbar_action_menu_toggle (EvToolbar *ev_toolbar)
 {
 	EvToolbarPrivate *priv;
+	gboolean is_active;
 
         g_return_if_fail (EV_IS_TOOLBAR (ev_toolbar));
 
         priv = GET_PRIVATE (ev_toolbar);
+        is_active = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (priv->action_menu_button));
 
         gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->action_menu_button),
-                                      TRUE);
+                                      !is_active);
 }
 
 GtkWidget *
