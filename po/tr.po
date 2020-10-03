@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
-"POT-Creation-Date: 2020-07-04 01:45+0000\n"
-"PO-Revision-Date: 2020-07-30 00:31+0300\n"
+"POT-Creation-Date: 2020-10-02 15:26+0000\n"
+"PO-Revision-Date: 2020-10-03 14:22+0300\n"
 "Last-Translator: Emin Tufan Çetin <etcetin@gmail.com>\n"
 "Language-Team: Turkish <gnome-turk@gnome.org>\n"
 "Language: tr\n"
@@ -113,53 +113,53 @@ msgstr "PDF Belgeleri"
 msgid "Adds support for reading PDF Documents"
 msgstr "PDF belgelerini görüntüleme desteği ekler"
 
-#: backend/pdf/ev-poppler.cc:930
+#: backend/pdf/ev-poppler.cc:931
 msgid "This work is in the Public Domain"
 msgstr "Bu çalışma Kamu Malıdır"
 
 #. translators: this is the document security state
-#: backend/pdf/ev-poppler.cc:1201 backend/pdf/ev-poppler.cc:1207
+#: backend/pdf/ev-poppler.cc:1202 backend/pdf/ev-poppler.cc:1208
 msgid "Yes"
 msgstr "Evet"
 
 #. translators: this is the document security state
-#: backend/pdf/ev-poppler.cc:1204 backend/pdf/ev-poppler.cc:1207
+#: backend/pdf/ev-poppler.cc:1205 backend/pdf/ev-poppler.cc:1208
 msgid "No"
 msgstr "Hayır"
 
-#: backend/pdf/ev-poppler.cc:1338
+#: backend/pdf/ev-poppler.cc:1339
 msgid "Type 1"
 msgstr "Tür 1"
 
-#: backend/pdf/ev-poppler.cc:1340
+#: backend/pdf/ev-poppler.cc:1341
 msgid "Type 1C"
 msgstr "Tür 1C"
 
-#: backend/pdf/ev-poppler.cc:1342
+#: backend/pdf/ev-poppler.cc:1343
 msgid "Type 3"
 msgstr "Tür 3"
 
-#: backend/pdf/ev-poppler.cc:1344
+#: backend/pdf/ev-poppler.cc:1345
 msgid "TrueType"
 msgstr "TrueType"
 
-#: backend/pdf/ev-poppler.cc:1346
+#: backend/pdf/ev-poppler.cc:1347
 msgid "Type 1 (CID)"
 msgstr "Tür 1 (CID)"
 
-#: backend/pdf/ev-poppler.cc:1348
+#: backend/pdf/ev-poppler.cc:1349
 msgid "Type 1C (CID)"
 msgstr "Tür 1C (CID)"
 
-#: backend/pdf/ev-poppler.cc:1350
+#: backend/pdf/ev-poppler.cc:1351
 msgid "TrueType (CID)"
 msgstr "TrueType (CID)"
 
-#: backend/pdf/ev-poppler.cc:1352
+#: backend/pdf/ev-poppler.cc:1353
 msgid "Unknown font type"
 msgstr "Bilinmeyen yazı tipi türü"
 
-#: backend/pdf/ev-poppler.cc:1396
+#: backend/pdf/ev-poppler.cc:1397
 msgid ""
 "This document contains non-embedded fonts that are not from the PDF Standard "
 "14 fonts. If the substitute fonts selected by fontconfig are not the same as "
@@ -170,11 +170,11 @@ msgstr ""
 "PDF’yi oluşturmak için kullanılan yazı tipleriyle aynı değilse, belge doğru "
 "görüntülenemeyebilir."
 
-#: backend/pdf/ev-poppler.cc:1401
+#: backend/pdf/ev-poppler.cc:1402
 msgid "All fonts are either standard or embedded."
 msgstr "Tüm yazı tipleri ya standart ya da gömülü."
 
-#: backend/pdf/ev-poppler.cc:1431
+#: backend/pdf/ev-poppler.cc:1432
 msgid "No name"
 msgstr "Adsız"
 
@@ -188,20 +188,20 @@ msgstr "Adsız"
 #. Author: None
 #. Keywords: None
 #.
-#: backend/pdf/ev-poppler.cc:1440 libview/ev-print-operation.c:1975
+#: backend/pdf/ev-poppler.cc:1441 libview/ev-print-operation.c:1975
 #: properties/ev-properties-view.c:231
 msgid "None"
 msgstr "Hiçbiri"
 
-#: backend/pdf/ev-poppler.cc:1448
+#: backend/pdf/ev-poppler.cc:1449
 msgid "Embedded subset"
 msgstr "Gömülü alt küme"
 
-#: backend/pdf/ev-poppler.cc:1450
+#: backend/pdf/ev-poppler.cc:1451
 msgid "Embedded"
 msgstr "Gömülü"
 
-#: backend/pdf/ev-poppler.cc:1452
+#: backend/pdf/ev-poppler.cc:1453
 msgid "Not embedded"
 msgstr "Gömülü değil"
 
@@ -210,7 +210,7 @@ msgstr "Gömülü değil"
 #. * type. Example:
 #. * "Type 1 (One of the Standard 14 Fonts)"
 #.
-#: backend/pdf/ev-poppler.cc:1459
+#: backend/pdf/ev-poppler.cc:1460
 msgid " (One of the Standard 14 Fonts)"
 msgstr " (Standart 14 Yazı Tipinden Biri)"
 
@@ -219,7 +219,7 @@ msgstr " (Standart 14 Yazı Tipinden Biri)"
 #. * type. Example:
 #. * "TrueType (Not one of the Standard 14 Fonts)"
 #.
-#: backend/pdf/ev-poppler.cc:1466
+#: backend/pdf/ev-poppler.cc:1467
 msgid " (Not one of the Standard 14 Fonts)"
 msgstr " (Standart 14 Yazı Tipinden Biri Değil)"
 
@@ -233,7 +233,7 @@ msgstr " (Standart 14 Yazı Tipinden Biri Değil)"
 #. * Substituting with TeXGyreTermes-Regular
 #. * (/usr/share/textmf/.../texgyretermes-regular.otf)
 #.
-#: backend/pdf/ev-poppler.cc:1485
+#: backend/pdf/ev-poppler.cc:1486
 #, c-format
 msgid ""
 "%s%s\n"
@@ -257,7 +257,7 @@ msgstr ""
 #. * Encoding: Custom
 #. * Embedded subset
 #.
-#: backend/pdf/ev-poppler.cc:1503
+#: backend/pdf/ev-poppler.cc:1504
 #, c-format
 msgid ""
 "%s%s\n"
@@ -661,49 +661,53 @@ msgstr "Görünümü Aşağı Kaydır"
 msgid "Document View"
 msgstr "Belge Görünümü"
 
-#: libview/ev-view.c:2107
+#: libview/ev-view.c:2110
 msgid "Go to first page"
 msgstr "İlk sayfaya git"
 
-#: libview/ev-view.c:2109
+#: libview/ev-view.c:2112
 msgid "Go to previous page"
 msgstr "Önceki sayfaya git"
 
-#: libview/ev-view.c:2111
+#: libview/ev-view.c:2114
 msgid "Go to next page"
 msgstr "Sonraki sayfaya git"
 
-#: libview/ev-view.c:2113
+#: libview/ev-view.c:2116
 msgid "Go to last page"
 msgstr "Son sayfaya git"
 
-#: libview/ev-view.c:2115
+#: libview/ev-view.c:2118
 msgid "Go to page"
 msgstr "Sayfaya git"
 
-#: libview/ev-view.c:2117
+#: libview/ev-view.c:2120
 msgid "Find"
 msgstr "Bul"
 
-#: libview/ev-view.c:2145
+#: libview/ev-view.c:2148
 #, c-format
 msgid "Go to page %s"
 msgstr "%s sayfasına git"
 
-#: libview/ev-view.c:2151
+#: libview/ev-view.c:2154
 #, c-format
 msgid "Go to %s on file “%s”"
 msgstr "“%2$s” dosyasındaki %1$s konumuna git"
 
-#: libview/ev-view.c:2154
+#: libview/ev-view.c:2157
 #, c-format
 msgid "Go to file “%s”"
 msgstr "“%s” dosyasına git"
 
-#: libview/ev-view.c:2162
+#: libview/ev-view.c:2165
 #, c-format
 msgid "Launch %s"
 msgstr "%s başlat"
+
+#: libview/ev-view.c:2172
+msgid "Reset form"
+msgstr "Formu sıfırla"
 
 #: libview/ev-view-presentation.c:753
 msgid "Jump to page:"
@@ -1225,7 +1229,7 @@ msgstr "Parola gerekli"
 
 #: shell/ev-password-view.c:252 shell/ev-sidebar-attachments.c:493
 #: shell/ev-window.c:2882 shell/ev-window.c:3180 shell/ev-window.c:4061
-#: shell/ev-window.c:7102 shell/ev-window.c:7326
+#: shell/ev-window.c:7064 shell/ev-window.c:7288
 msgid "_Cancel"
 msgstr "İptal _Et"
 
@@ -1295,7 +1299,7 @@ msgstr "Belge hiçbir açıklama içermiyor"
 msgid "Page %d"
 msgstr "Sayfa %d"
 
-#: shell/ev-sidebar-annotations.c:651 shell/ev-window.c:7727
+#: shell/ev-sidebar-annotations.c:651 shell/ev-window.c:7689
 msgid "Annotations"
 msgstr "Açıklamalar"
 
@@ -1313,7 +1317,7 @@ msgstr "“%s” adlı dosya zaten var. Değiştirerek içeriğin üzerine yazı
 msgid "_Replace"
 msgstr "_Değiştir"
 
-#: shell/ev-sidebar-attachments.c:899 shell/ev-window.c:7751
+#: shell/ev-sidebar-attachments.c:899 shell/ev-window.c:7713
 msgid "Attachments"
 msgstr "Ekler"
 
@@ -1325,22 +1329,22 @@ msgstr "Yer imi ekle"
 msgid "Remove bookmark"
 msgstr "Yer imini sil"
 
-#: shell/ev-sidebar-bookmarks.c:628 shell/ev-window.c:7735
+#: shell/ev-sidebar-bookmarks.c:628 shell/ev-window.c:7697
 msgid "Bookmarks"
 msgstr "Yer İmleri"
 
-#: shell/ev-sidebar-layers.c:444 shell/ev-window.c:7763
+#: shell/ev-sidebar-layers.c:444 shell/ev-window.c:7725
 msgid "Layers"
 msgstr "Katmanlar"
 
 #. Translators: This is the title for the sidebar pane that
 #. * shows the Outline or Table of Contents of the document.
 #.
-#: shell/ev-sidebar-links.c:1023 shell/ev-window.c:7715
+#: shell/ev-sidebar-links.c:1023 shell/ev-window.c:7677
 msgid "Outline"
 msgstr "Ana Hat"
 
-#: shell/ev-sidebar-thumbnails.c:1038 shell/ev-window.c:7698
+#: shell/ev-sidebar-thumbnails.c:1038 shell/ev-window.c:7660
 msgid "Thumbnails"
 msgstr "Küçük Resimler"
 
@@ -1472,7 +1476,7 @@ msgstr "Resim gönderiliyor (%%%d)"
 msgid "Save As…"
 msgstr "Farklı Kaydet…"
 
-#: shell/ev-window.c:3179 shell/ev-window.c:7101 shell/ev-window.c:7325
+#: shell/ev-window.c:3179 shell/ev-window.c:7063 shell/ev-window.c:7287
 msgid "_Save"
 msgstr "_Kaydet"
 
@@ -1605,31 +1609,34 @@ msgstr ""
 msgid "Don’t show this message again"
 msgstr "Bu iletiyi yeniden gösterme"
 
-#: shell/ev-window.c:6730 shell/ev-window.c:6746
-msgid "Unable to launch external application."
-msgstr "Dış uygulama başlatılamadı."
+#: shell/ev-window.c:6701
+#, c-format
+msgid ""
+"Security alert: this document has been prevented from opening the file “%s”"
+msgstr ""
+"Güvenlik uyarısı: bu belgenin “%s” dosyasını açması önlenmiştir"
 
-#: shell/ev-window.c:6808
+#: shell/ev-window.c:6755
 msgid "Unable to open external link"
 msgstr "Dış bağlantı açılamadı"
 
-#: shell/ev-window.c:7030
+#: shell/ev-window.c:6992
 msgid "Couldn’t find appropriate format to save image"
 msgstr "Resmi kaydetmek için uygun biçim bulunamadı"
 
-#: shell/ev-window.c:7062
+#: shell/ev-window.c:7024
 msgid "The image could not be saved."
 msgstr "Resim kaydedilemedi."
 
-#: shell/ev-window.c:7098
+#: shell/ev-window.c:7060
 msgid "Save Image"
 msgstr "Resmi Kaydet"
 
-#: shell/ev-window.c:7254
+#: shell/ev-window.c:7216
 msgid "Unable to open attachment"
 msgstr "Ek açılamadı"
 
-#: shell/ev-window.c:7322
+#: shell/ev-window.c:7284
 msgid "Save Attachment"
 msgstr "Ekleri Kaydet"
 
@@ -1965,8 +1972,8 @@ msgstr "Yardımı göster"
 
 #: shell/help-overlay.ui:381
 msgctxt "shortcut window"
-msgid "Show primary menu"
-msgstr "Ana menüyü göster"
+msgid "Toggle primary menu"
+msgstr "Ana menüyü aç/kapa"
 
 #: shell/help-overlay.ui:388
 msgctxt "shortcut window"
@@ -2059,6 +2066,9 @@ msgstr "DİZGE"
 #: shell/main.c:81
 msgid "[FILE…]"
 msgstr "[DOSYA…]"
+
+#~ msgid "Unable to launch external application."
+#~ msgstr "Dış uygulama başlatılamadı."
 
 #~ msgid "_Remove Bookmark"
 #~ msgstr "Ye_r İmini Sil"
