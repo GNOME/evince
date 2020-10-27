@@ -205,6 +205,7 @@ on_query_tooltip_event (GtkWidget     *widget,
         GtkTreeIter          iter;
         GtkTreePath         *path = NULL;
         gchar               *uri;
+        gchar               *uri_unescaped;
 
         model = gtk_icon_view_get_model (GTK_ICON_VIEW (priv->view));
         if (!gtk_icon_view_get_tooltip_context (GTK_ICON_VIEW (priv->view),
@@ -216,8 +217,11 @@ on_query_tooltip_event (GtkWidget     *widget,
                             EV_RECENT_VIEW_COLUMN_URI, &uri,
                             -1);
 
-        gtk_tooltip_set_text (tooltip, uri);
+        uri_unescaped = g_uri_unescape_string (uri, NULL);
         g_free (uri);
+
+        gtk_tooltip_set_text (tooltip, uri_unescaped);
+        g_free (uri_unescaped);
 
         gtk_icon_view_set_tooltip_item (GTK_ICON_VIEW (priv->view),
                                         tooltip, path);
