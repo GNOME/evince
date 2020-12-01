@@ -1559,9 +1559,10 @@ typedef enum {
 	EV_SCALE_FIT_TO_PRINTABLE_AREA
 } EvPrintScale;
 
-#define EV_PRINT_SETTING_PAGE_SCALE "evince-print-setting-page-scale"
-#define EV_PRINT_SETTING_AUTOROTATE "evince-print-setting-page-autorotate"
-#define EV_PRINT_SETTING_PAGE_SIZE  "evince-print-setting-page-size"
+#define EV_PRINT_SETTING_PAGE_SCALE   "evince-print-setting-page-scale"
+#define EV_PRINT_SETTING_AUTOROTATE   "evince-print-setting-page-autorotate"
+#define EV_PRINT_SETTING_PAGE_SIZE    "evince-print-setting-page-size"
+#define EV_PRINT_SETTING_DRAW_BORDERS "evince-print-setting-page-draw-borders"
 
 struct _EvPrintOperationPrint {
 	EvPrintOperation parent;
@@ -1579,6 +1580,8 @@ struct _EvPrintOperationPrint {
 	gboolean     autorotate;
 	GtkWidget   *source_button;
 	gboolean     use_source_size;
+	GtkWidget   *borders_button;
+	gboolean     draw_borders;
 };
 
 struct _EvPrintOperationPrintClass {
@@ -1939,6 +1942,15 @@ ev_print_operation_print_draw_page (EvPrintOperationPrint *print,
 		}
 	}
 
+	if (print->draw_borders) {
+		cairo_set_line_width (cr, 1);
+		cairo_set_source_rgb (cr, 0., 0., 0.);
+		cairo_rectangle (cr, 0, 0,
+				 gtk_print_context_get_width (context),
+				 gtk_print_context_get_height (context));
+		cairo_stroke (cr);
+	}
+
 	ev_job_print_set_cairo (EV_JOB_PRINT (print->job_print), cr);
 	ev_job_scheduler_push_job (print->job_print, EV_JOB_PRIORITY_NONE);
 }
@@ -1953,6 +1965,7 @@ ev_print_operation_print_create_custom_widget (EvPrintOperationPrint *print,
 	EvPrintScale      page_scale;
 	gboolean          autorotate;
 	gboolean          use_source_size;
+	gboolean          draw_borders;
 
 	settings = gtk_print_operation_get_print_settings (print->op);
 	page_scale = gtk_print_settings_get_int_with_default (settings, EV_PRINT_SETTING_PAGE_SCALE, 1);
@@ -1960,6 +1973,9 @@ ev_print_operation_print_create_custom_widget (EvPrintOperationPrint *print,
 		gtk_print_settings_get_bool (settings, EV_PRINT_SETTING_AUTOROTATE) :
 		TRUE;
 	use_source_size = gtk_print_settings_get_bool (settings, EV_PRINT_SETTING_PAGE_SIZE);
+	draw_borders = gtk_print_settings_has_key (settings, EV_PRINT_SETTING_DRAW_BORDERS) ?
+		gtk_print_settings_get_bool (settings, EV_PRINT_SETTING_DRAW_BORDERS) :
+		FALSE;
 
 	grid = gtk_grid_new ();
 	gtk_grid_set_row_spacing (GTK_GRID (grid), 6);
@@ -2004,6 +2020,13 @@ ev_print_operation_print_create_custom_widget (EvPrintOperationPrint *print,
 	gtk_grid_attach (GTK_GRID (grid), print->source_button, 0, 2, 2, 1);
 	gtk_widget_show (print->source_button);
 
+	print->borders_button = gtk_check_button_new_with_label (_("Draw border around pages"));
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (print->borders_button), draw_borders);
+	gtk_widget_set_tooltip_text (print->borders_button, _("When enabled, a border will be drawn "
+							     "around each page."));
+	gtk_grid_attach (GTK_GRID (grid), print->borders_button, 0, 3, 2, 1);
+	gtk_widget_show (print->borders_button);
+
 	return G_OBJECT (grid);
 }
 
@@ -2016,10 +2039,12 @@ ev_print_operation_print_custom_widget_apply (EvPrintOperationPrint *print,
 	print->page_scale = gtk_combo_box_get_active (GTK_COMBO_BOX (print->scale_combo));
 	print->autorotate = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (print->autorotate_button));
 	print->use_source_size = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (print->source_button));
+	print->draw_borders = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (print->borders_button));
 	settings = gtk_print_operation_get_print_settings (print->op);
 	gtk_print_settings_set_int (settings, EV_PRINT_SETTING_PAGE_SCALE, print->page_scale);
 	gtk_print_settings_set_bool (settings, EV_PRINT_SETTING_AUTOROTATE, print->autorotate);
 	gtk_print_settings_set_bool (settings, EV_PRINT_SETTING_PAGE_SIZE, print->use_source_size);
+	gtk_print_settings_set_bool (settings, EV_PRINT_SETTING_PAGE_SIZE, print->draw_borders);
 }
 
 static gboolean
