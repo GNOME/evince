@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
-"POT-Creation-Date: 2020-08-30 15:33+0000\n"
-"PO-Revision-Date: 2020-08-30 18:35+0300\n"
+"POT-Creation-Date: 2020-10-02 15:26+0000\n"
+"PO-Revision-Date: 2020-12-03 10:00+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
 "Language: uk\n"
@@ -1229,7 +1229,7 @@ msgstr "Вимагається пароль"
 
 #: shell/ev-password-view.c:252 shell/ev-sidebar-attachments.c:493
 #: shell/ev-window.c:2882 shell/ev-window.c:3180 shell/ev-window.c:4061
-#: shell/ev-window.c:7117 shell/ev-window.c:7341
+#: shell/ev-window.c:7064 shell/ev-window.c:7288
 msgid "_Cancel"
 msgstr "_Скасувати"
 
@@ -1299,7 +1299,7 @@ msgstr "Документ не містить нотаток"
 msgid "Page %d"
 msgstr "Сторінка %d"
 
-#: shell/ev-sidebar-annotations.c:651 shell/ev-window.c:7742
+#: shell/ev-sidebar-annotations.c:651 shell/ev-window.c:7689
 msgid "Annotations"
 msgstr "Примітка"
 
@@ -1318,7 +1318,7 @@ msgstr ""
 msgid "_Replace"
 msgstr "_Замінити"
 
-#: shell/ev-sidebar-attachments.c:899 shell/ev-window.c:7766
+#: shell/ev-sidebar-attachments.c:899 shell/ev-window.c:7713
 msgid "Attachments"
 msgstr "Долучення"
 
@@ -1330,22 +1330,22 @@ msgstr "Додати закладку"
 msgid "Remove bookmark"
 msgstr "Вилучити закладку"
 
-#: shell/ev-sidebar-bookmarks.c:628 shell/ev-window.c:7750
+#: shell/ev-sidebar-bookmarks.c:628 shell/ev-window.c:7697
 msgid "Bookmarks"
 msgstr "Закладки"
 
-#: shell/ev-sidebar-layers.c:444 shell/ev-window.c:7778
+#: shell/ev-sidebar-layers.c:444 shell/ev-window.c:7725
 msgid "Layers"
 msgstr "Шари"
 
 #. Translators: This is the title for the sidebar pane that
 #. * shows the Outline or Table of Contents of the document.
 #.
-#: shell/ev-sidebar-links.c:1023 shell/ev-window.c:7730
+#: shell/ev-sidebar-links.c:1023 shell/ev-window.c:7677
 msgid "Outline"
 msgstr "Нарис"
 
-#: shell/ev-sidebar-thumbnails.c:1038 shell/ev-window.c:7713
+#: shell/ev-sidebar-thumbnails.c:1038 shell/ev-window.c:7660
 msgid "Thumbnails"
 msgstr "Мініатюри"
 
@@ -1477,7 +1477,7 @@ msgstr "Вивантаження зображення (%d%%)"
 msgid "Save As…"
 msgstr "Зберегти як…"
 
-#: shell/ev-window.c:3179 shell/ev-window.c:7116 shell/ev-window.c:7340
+#: shell/ev-window.c:3179 shell/ev-window.c:7063 shell/ev-window.c:7287
 msgid "_Save"
 msgstr "З_берегти"
 
@@ -1617,31 +1617,35 @@ msgstr ""
 msgid "Don’t show this message again"
 msgstr "Не показувати це повідомлення надалі"
 
-#: shell/ev-window.c:6730 shell/ev-window.c:6746
-msgid "Unable to launch external application."
-msgstr "Не вдалось відкрити зовнішню програму."
+#: shell/ev-window.c:6701
+#, c-format
+msgid ""
+"Security alert: this document has been prevented from opening the file “%s”"
+msgstr ""
+"Попередження безпеки: програма запобігла відкриттю файла «%s» з цього"
+" документа"
 
-#: shell/ev-window.c:6808
+#: shell/ev-window.c:6755
 msgid "Unable to open external link"
 msgstr "Не вдалось відкрити зовнішнє посилання"
 
-#: shell/ev-window.c:7045
+#: shell/ev-window.c:6992
 msgid "Couldn’t find appropriate format to save image"
 msgstr "Неможливо знайти відповідний формат для збереження зображення"
 
-#: shell/ev-window.c:7077
+#: shell/ev-window.c:7024
 msgid "The image could not be saved."
 msgstr "Не вдалось зберегти зображення."
 
-#: shell/ev-window.c:7113
+#: shell/ev-window.c:7060
 msgid "Save Image"
 msgstr "Зберегти зображення"
 
-#: shell/ev-window.c:7269
+#: shell/ev-window.c:7216
 msgid "Unable to open attachment"
 msgstr "Не вдалось відкрити долучення"
 
-#: shell/ev-window.c:7337
+#: shell/ev-window.c:7284
 msgid "Save Attachment"
 msgstr "Зберегти долучення"
 
@@ -1976,9 +1980,11 @@ msgid "Show help"
 msgstr "Показати довідку"
 
 #: shell/help-overlay.ui:381
+#| msgctxt "shortcut window"
+#| msgid "Show primary menu"
 msgctxt "shortcut window"
-msgid "Show primary menu"
-msgstr "Показати основне меню"
+msgid "Toggle primary menu"
+msgstr "Увімкнути або вимкнути основне меню"
 
 #: shell/help-overlay.ui:388
 msgctxt "shortcut window"
@@ -2071,3 +2077,6 @@ msgstr "РЯДОК"
 #: shell/main.c:81
 msgid "[FILE…]"
 msgstr "[ФАЙЛ…]"
+
+#~ msgid "Unable to launch external application."
+#~ msgstr "Не вдалось відкрити зовнішню програму."
