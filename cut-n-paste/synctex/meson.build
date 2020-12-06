@@ -10,7 +10,15 @@ libsynctex = static_library(
   c_args: '-DSYNCTEX_VERBOSE=0',
 )
 
+# for PathFindExtension
+if host_machine.system() == 'windows'
+  shlwapi = cc.find_library('shlwapi')
+else
+  shlwapi = []
+endif
+
 synctex_dep = declare_dependency(
   include_directories: include_directories('.'),
+  dependencies: shlwapi,
   link_with: libsynctex,
 )
