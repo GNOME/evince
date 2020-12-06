@@ -39,6 +39,11 @@ static gchar *tmp_dir = NULL;
 #define O_BINARY 0
 #endif
 
+/* On Windows, O_CLOEXEC does not exist */
+#ifndef O_CLOEXEC
+#define O_CLOEXEC 0
+#endif
+
 /*
  * ev_dir_ensure_exists:
  * @dir: the directory name
@@ -513,6 +518,10 @@ static const char *compressor_cmds[] = {
 static void
 compression_child_setup_cb (gpointer fd_ptr)
 {
+#ifdef _WIN32
+        /* On Windows, processes are not inherited by default */
+        (void)fd_ptr;
+#else
         int fd = GPOINTER_TO_INT (fd_ptr);
         int flags;
 
@@ -521,6 +530,7 @@ compression_child_setup_cb (gpointer fd_ptr)
                 flags &= ~FD_CLOEXEC;
                 fcntl (fd, F_SETFD, flags);
         }
+#endif
 }
 
 static gchar *
