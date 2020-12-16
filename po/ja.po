@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: evince master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
 "POT-Creation-Date: 2020-06-30 06:02+0000\n"
-"PO-Revision-Date: 2020-08-23 23:30+0900\n"
+"PO-Revision-Date: 2020-12-16 20:40+0900\n"
 "Last-Translator: sicklylife <translation@sicklylife.jp>\n"
 "Language-Team: Japanese <gnome-translation@gnome.gr.jp>\n"
 "Language: ja\n"
@@ -703,6 +703,10 @@ msgstr "ファイル“%s”へ移動します"
 #, c-format
 msgid "Launch %s"
 msgstr "%s を起動"
+
+#: libview/ev-view.c:2172
+msgid "Reset form"
+msgstr "フォームをリセット"
 
 #: libview/ev-view-presentation.c:753
 msgid "Jump to page:"
@@ -1578,7 +1582,7 @@ msgstr ""
 "日本 GNOME ユーザー会 <http://www.gnome.gr.jp/>\n"
 "松澤 二郎 <jmatsuzawa@src.gnome.org>\n"
 "やまねひでき <henrich@debian.org>\n"
-"Kentaro KAZUHAMA <kazken3@gmail.com>,\n"
+"Kentaro KAZUHAMA <kazken3@gmail.com>\n"
 "OKANO Takayoshi <>\n"
 "Shushi Kurose <md81bird@hitaki.net>\n"
 "sicklylife <translation@sicklylife.jp>"
@@ -1612,6 +1616,12 @@ msgstr ""
 #: shell/ev-window.c:6090
 msgid "Don’t show this message again"
 msgstr "今後このメッセージを表示しない"
+
+#: shell/ev-window.c:6701
+#, c-format
+msgid ""
+"Security alert: this document has been prevented from opening the file “%s”"
+msgstr ""
 
 #: shell/ev-window.c:6715 shell/ev-window.c:6731
 msgid "Unable to launch external application."
@@ -1973,8 +1983,8 @@ msgstr "ヘルプを表示する"
 
 #: shell/help-overlay.ui:381
 msgctxt "shortcut window"
-msgid "Show primary menu"
-msgstr "プライマリメニューを表示する"
+msgid "Toggle primary menu"
+msgstr "プライマリメニューの表示を切り替える"
 
 #: shell/help-overlay.ui:388
 msgctxt "shortcut window"
