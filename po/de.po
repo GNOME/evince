@@ -28,9 +28,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Evince master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
-"POT-Creation-Date: 2020-09-22 19:20+0000\n"
-"PO-Revision-Date: 2020-12-06 22:41+0100\n"
-"Last-Translator: Christian Kirbach <christian.kirbach@gmail.com>\n"
+"POT-Creation-Date: 2020-10-02 15:26+0000\n"
+"PO-Revision-Date: 2020-12-13 20:23+0100\n"
+"Last-Translator: Philipp Kiemle <philipp.kiemle@gmail.com>\n"
 "Language-Team: Deutsch <gnome-de@gnome.org>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -681,49 +681,53 @@ msgstr "Ansicht nach unten verschieben"
 msgid "Document View"
 msgstr "Dokumentenansicht"
 
-#: libview/ev-view.c:2109
+#: libview/ev-view.c:2110
 msgid "Go to first page"
 msgstr "Zur ersten Seite gehen"
 
-#: libview/ev-view.c:2111
+#: libview/ev-view.c:2112
 msgid "Go to previous page"
 msgstr "Zur vorherigen Seite gehen"
 
-#: libview/ev-view.c:2113
+#: libview/ev-view.c:2114
 msgid "Go to next page"
 msgstr "Zur nächsten Seite gehen"
 
-#: libview/ev-view.c:2115
+#: libview/ev-view.c:2116
 msgid "Go to last page"
 msgstr "Zur letzten Seite gehen"
 
-#: libview/ev-view.c:2117
+#: libview/ev-view.c:2118
 msgid "Go to page"
 msgstr "Zu Seite gehen"
 
-#: libview/ev-view.c:2119
+#: libview/ev-view.c:2120
 msgid "Find"
 msgstr "Suchen"
 
-#: libview/ev-view.c:2147
+#: libview/ev-view.c:2148
 #, c-format
 msgid "Go to page %s"
 msgstr "Zu Seite %s gehen"
 
-#: libview/ev-view.c:2153
+#: libview/ev-view.c:2154
 #, c-format
 msgid "Go to %s on file “%s”"
 msgstr "Zu %s in Datei »%s« gehen"
 
-#: libview/ev-view.c:2156
+#: libview/ev-view.c:2157
 #, c-format
 msgid "Go to file “%s”"
 msgstr "Zu Datei »%s« gehen"
 
-#: libview/ev-view.c:2164
+#: libview/ev-view.c:2165
 #, c-format
 msgid "Launch %s"
 msgstr "%s starten"
+
+#: libview/ev-view.c:2172
+msgid "Reset form"
+msgstr "Formular zurücksetzen"
 
 #: libview/ev-view-presentation.c:753
 msgid "Jump to page:"
@@ -1250,7 +1254,7 @@ msgstr "Passwort erforderlich"
 
 #: shell/ev-password-view.c:252 shell/ev-sidebar-attachments.c:493
 #: shell/ev-window.c:2882 shell/ev-window.c:3180 shell/ev-window.c:4061
-#: shell/ev-window.c:7049 shell/ev-window.c:7273
+#: shell/ev-window.c:7064 shell/ev-window.c:7288
 msgid "_Cancel"
 msgstr "A_bbrechen"
 
@@ -1320,7 +1324,7 @@ msgstr "Das Dokument enthält keine Anmerkungen"
 msgid "Page %d"
 msgstr "Seite %d"
 
-#: shell/ev-sidebar-annotations.c:651 shell/ev-window.c:7674
+#: shell/ev-sidebar-annotations.c:651 shell/ev-window.c:7689
 msgid "Annotations"
 msgstr "Anmerkungen"
 
@@ -1340,7 +1344,7 @@ msgstr ""
 msgid "_Replace"
 msgstr "_Ersetzen"
 
-#: shell/ev-sidebar-attachments.c:899 shell/ev-window.c:7698
+#: shell/ev-sidebar-attachments.c:899 shell/ev-window.c:7713
 msgid "Attachments"
 msgstr "Anlagen"
 
@@ -1352,22 +1356,22 @@ msgstr "Lesezeichen hinzufügen"
 msgid "Remove bookmark"
 msgstr "Lesezeichen entfernen"
 
-#: shell/ev-sidebar-bookmarks.c:628 shell/ev-window.c:7682
+#: shell/ev-sidebar-bookmarks.c:628 shell/ev-window.c:7697
 msgid "Bookmarks"
 msgstr "Lesezeichen"
 
-#: shell/ev-sidebar-layers.c:444 shell/ev-window.c:7710
+#: shell/ev-sidebar-layers.c:444 shell/ev-window.c:7725
 msgid "Layers"
 msgstr "Ebenen"
 
 #. Translators: This is the title for the sidebar pane that
 #. * shows the Outline or Table of Contents of the document.
 #.
-#: shell/ev-sidebar-links.c:1023 shell/ev-window.c:7662
+#: shell/ev-sidebar-links.c:1023 shell/ev-window.c:7677
 msgid "Outline"
 msgstr "Gliederung"
 
-#: shell/ev-sidebar-thumbnails.c:1038 shell/ev-window.c:7645
+#: shell/ev-sidebar-thumbnails.c:1038 shell/ev-window.c:7660
 msgid "Thumbnails"
 msgstr "Vorschaubilder"
 
@@ -1499,7 +1503,7 @@ msgstr "Bild wird hochgeladen (%d%%)"
 msgid "Save As…"
 msgstr "Speichern unter …"
 
-#: shell/ev-window.c:3179 shell/ev-window.c:7048 shell/ev-window.c:7272
+#: shell/ev-window.c:3179 shell/ev-window.c:7063 shell/ev-window.c:7287
 msgid "_Save"
 msgstr "_Speichern"
 
@@ -1650,27 +1654,35 @@ msgstr ""
 msgid "Don’t show this message again"
 msgstr "Diese Nachricht nicht mehr anzeigen"
 
+#: shell/ev-window.c:6701
+#, c-format
+msgid ""
+"Security alert: this document has been prevented from opening the file “%s”"
+msgstr ""
+"Sicherheitswarnung: Dieses Dokument wurde daran gehindert, die Datei »%s« zu "
+"öffnen"
+
 #: shell/ev-window.c:6755
 msgid "Unable to open external link"
 msgstr "Externer Link konnte nicht geöffnet werden"
 
-#: shell/ev-window.c:6977
+#: shell/ev-window.c:6992
 msgid "Couldn’t find appropriate format to save image"
 msgstr "Es wurde kein geeignetes Format zum Speichern des Bildes gefunden"
 
-#: shell/ev-window.c:7009
+#: shell/ev-window.c:7024
 msgid "The image could not be saved."
 msgstr "Das Bild konnte nicht gespeichert werden."
 
-#: shell/ev-window.c:7045
+#: shell/ev-window.c:7060
 msgid "Save Image"
 msgstr "Bild speichern"
 
-#: shell/ev-window.c:7201
+#: shell/ev-window.c:7216
 msgid "Unable to open attachment"
 msgstr "Anlage konnte nicht geöffnet werden"
 
-#: shell/ev-window.c:7269
+#: shell/ev-window.c:7284
 msgid "Save Attachment"
 msgstr "Anlage speichern"
 
@@ -2006,8 +2018,8 @@ msgstr "Hilfe anzeigen"
 
 #: shell/help-overlay.ui:381
 msgctxt "shortcut window"
-msgid "Show primary menu"
-msgstr "Primäres Menü anzeigen"
+msgid "Toggle primary menu"
+msgstr "Primäres Menü anzeigen/ausblenden"
 
 #: shell/help-overlay.ui:388
 msgctxt "shortcut window"
