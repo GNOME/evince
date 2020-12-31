@@ -3926,10 +3926,10 @@ ev_window_check_document_modified (EvWindow      *ev_window,
 
 	if (EV_IS_DOCUMENT_FORMS (document) &&
 	    ev_document_forms_document_is_modified (EV_DOCUMENT_FORMS (document))) {
-		secondary_text = _("Document contains form fields that have been filled out. ");
+		secondary_text = _("Document contains form fields that have been filled out.");
 	} else if (EV_IS_DOCUMENT_ANNOTATIONS (document) &&
 		   ev_document_annotations_document_is_modified (EV_DOCUMENT_ANNOTATIONS (document))) {
-		secondary_text = _("Document contains new or modified annotations. ");
+		secondary_text = _("Document contains new or modified annotations.");
 	} else {
 		return FALSE;
 	}
