@@ -214,6 +214,9 @@ typedef struct {
 	EvBookmarks *bookmarks;
 	GMenu *bookmarks_menu;
 
+	/* Has the document been modified? */
+	gboolean is_modified;
+
 	/* Load params */
 	EvLinkDest       *dest;
 	gchar            *search_string;
@@ -1778,6 +1781,7 @@ ev_window_set_document (EvWindow *ev_window, EvDocument *document)
 		ev_window_run_presentation (ev_window);
 	}
 
+	priv->is_modified = FALSE;
 	g_signal_connect (document, "notify::modified", G_CALLBACK (ev_window_document_modified_cb), ev_window);
 
 	if (priv->setup_document_idle > 0)
@@ -5372,16 +5376,15 @@ ev_window_document_modified_cb (EvDocument *document,
                                 GParamSpec *pspec,
                                 EvWindow   *ev_window)
 {
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 	GtkHeaderBar *toolbar = GTK_HEADER_BAR (ev_window_get_toolbar (ev_window));
 	const gchar *title = gtk_header_bar_get_title (toolbar);
 	gchar *new_title;
 
-	if (!((EV_IS_DOCUMENT_FORMS (document) &&
-	    ev_document_forms_document_is_modified (EV_DOCUMENT_FORMS (document))) ||
-	    (EV_IS_DOCUMENT_ANNOTATIONS (document) &&
-	    ev_document_annotations_document_is_modified (EV_DOCUMENT_ANNOTATIONS (document)))))
+	if (priv->is_modified)
 		return;
 
+	priv->is_modified = TRUE;
 	if (gtk_widget_get_direction (GTK_WIDGET (ev_window)) == GTK_TEXT_DIR_RTL)
 		new_title = g_strconcat ("• ", title, NULL);
 	else
