@@ -314,6 +314,8 @@ static void     ev_window_set_page_mode                 (EvWindow         *windo
 							 EvWindowPageMode  page_mode);
 static void	ev_window_load_job_cb  			(EvJob            *job,
 							 gpointer          data);
+static gboolean ev_window_check_document_modified 	(EvWindow         *ev_window,
+							 EvWindowAction    command);
 static void     ev_window_reload_document               (EvWindow         *window,
 							 EvLinkDest *dest);
 static void	ev_window_document_modified_cb		(EvDocument *document,
@@ -2404,6 +2406,8 @@ ev_window_open_uri (EvWindow       *ev_window,
 
 	if (priv->uri &&
 	    g_ascii_strcasecmp (priv->uri, uri) == 0) {
+		if (ev_window_check_document_modified (ev_window, EV_WINDOW_ACTION_RELOAD))
+			return;
 		ev_window_reload_document (ev_window, dest);
 		return;
 	}
