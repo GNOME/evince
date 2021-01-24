@@ -492,13 +492,17 @@ process_matches_idle (EvFindSidebar *sidebar)
                         EvRectangle *match = (EvRectangle *)l->data;
                         gchar       *markup;
                         GtkTreeIter  iter;
+                        gint         new_offset;
 
-                        offset = get_match_offset (areas, n_areas, match, offset);
-                        if (offset == -1) {
+                        new_offset = get_match_offset (areas, n_areas, match, offset);
+                        if (new_offset == -1) {
                                 g_warning ("No offset found for match \"%s\" at page %d after processing %d results\n",
                                            priv->job->text, current_page, result);
-                                break;
+                                /* It may happen that a vertical text match has no corresponding text area, skip
+                                 * that but keep iterating to show any other matches in page (issue #1545) */
+                                continue;
                         }
+                        offset = new_offset;
 
                         if (current_page >= priv->job->start_page) {
                                 gtk_list_store_append (GTK_LIST_STORE (model), &iter);
