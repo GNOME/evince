@@ -1,4 +1,71 @@
 ================
+Evince    3.39.1
+================
+
+build:
+  * Build using libm in some of the backends (Sebastien Bacher)
+  * Check poppler version when resetting form (#46, Marek Kasik)
+  * Make the build reproducible (Chris Lamb)
+  * Remove compulsory_for_desktop (#445, Michael Catanzaro)
+  * Updated bug list url (Cyrille Médard de Chardon)
+  * Fix compilation, CLOEXEC does not exist (Vincent Torri)
+  * Fix compilation on windows: open() needs io.h (Vincent Torri)
+  * Build in windows needs shlwapi (Vincent Torri)
+
+help:
+  * Make order of keys consistent. (scootergrisen)
+  * Sync help against menu (scootergrisen)
+  * Sync help against the text in the print dialog (scootergrisen)
+
+shell:
+  * Make Esc cancel any annotation in progress (#1416, Casey Jao)
+  * Make F10 toggle the main menu (#1328, herypt)
+  * Mark the document title when modified (Casey Jao)
+  * Remove style for gtk < 3.18 (Germán Poo-Caamaño)
+  * Track document modified status (Casey Jao)
+  * Check for file changes when reopening a PDF (#339, Antonio Eletto)
+  * Handle reset form action (#46, Marek Kasik)
+  * Remove ability to launch actions (#1333, Michael Catanzaro)
+  * Remove trailing spaces (scootergrisen)
+  * Add new field "contains_js" (Nelson Benítez León)
+  * Unescape tooltip URI in Recent Documents view (Santurysim)
+  * Fix X11 regression (#1504, Nelson Benítez León)
+  * Add print setting to draw borders (#221, Jonas Danielsson)
+  * Fix text search if match not in page keep looking for others (#1545, Nelson Benítez León)
+
+Developers:
+  * Antonio Eletto, Casey Jao, Chris Lamb, Cyrille Médard de Chardon, Germán Poo-Caamaño, Jonas Danielsson, Marek Kasik, Michael Catanzaro, Nelson Benítez León, Santurysim, Sebastien Bacher, Vincent Torri, herypt, scootergrisen
+
+Translations:
+  * Gil Forcada (Catalan)
+  * Jordi Mas (Catalan)
+  * Boyuan Yang (Chinese (China))
+  * Marek Černocký (Czech)
+  * Jiri Grönroos (Finnish)
+  * Fabio Tomat (Friulian)
+  * Fran Dieguez (Galician)
+  * Christian Kirbach (German)
+  * Philipp Kiemle (German)
+  * Yosef Or Boczko (Hebrew)
+  * Balázs Úr (Hungarian)
+  * Kukuh Syafaat (Indonesian)
+  * Gianvito Cavasoli (Italian)
+  * sicklylife (Japanese)
+  * Changwoo Ryu (Korean)
+  * Kjartan Maraas (Norwegian Bokmål)
+  * Hugo Carvalho (Portuguese)
+  * Juliano Camargo (Portuguese)
+  * Florentina Mușat (Romanian)
+  * Dušan Kazik (Slovak)
+  * Matej Urbančič (Slovenian)
+  * Daniel Mustieles (Spanish)
+  * Anders Jonsson (Swedish)
+  * Emin Tufan Çetin (Turkish)
+  * Yuri Chornoivan (Ukrainian)
+  * Ngọc Quân Trần (Vietnamese)
+
+
+================
 Evince    3.38.0
 ================
 
