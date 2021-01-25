@@ -2,6 +2,28 @@
 Evince    3.36.7
 ================
 
+ci:
+  *  remove deprecated jobs (Jordan Petridis)
+
+dvi:
+  *  Fix some math fonts when using virtual fonts (#53, David C. Sterratt)
+
+shell:
+  * Make Esc cancel any annotation in progress (#1416, Casey Jao)
+  * Unescape tooltip URI in Recent Documents view (Santurysim)
+  * Text search if match not in page keep looking for others (#1545, Nelson Benítez León)
+  * Fix X11 regression (#1504, Nelson Benítez León)
+
+Developers:
+  * Casey Jao, David C. Sterratt, Jordan Petridis, Nelson Benítez León, Santurysim
+
+Translations:
+  * Yuri Chornoivan (Ukrainian)
+
+================
+Evince    3.36.7
+================
+
 pdf:
   * Add back 'de facto' tooltip feature (#842, Nelson Benítez León)
 
