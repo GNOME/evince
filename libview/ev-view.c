@@ -158,7 +158,7 @@ static void       get_link_area                              (EvView            
 							      gint                y,
 							      EvLink             *link,
 							      GdkRectangle       *area);
-static void       link_preview_show_thumbnail                (GdkPixbuf          *pixbuf,
+static void       link_preview_show_thumbnail                (cairo_surface_t    *page_surface,
 							      EvView             *view);
 static void       link_preview_job_finished_cb               (EvJobThumbnail     *job,
 							      EvView             *view);
@@ -2219,6 +2219,7 @@ ev_view_handle_cursor_over_xy (EvView *view, gint x, gint y)
 		guint            link_dest_page;
 		EvPoint          link_dest_doc;
 		GdkPoint         link_dest_view;
+		gint             device_scale = 1;
 
 		ev_view_set_cursor (view, EV_VIEW_CURSOR_LINK);
 
@@ -2258,10 +2259,13 @@ ev_view_handle_cursor_over_xy (EvView *view, gint x, gint y)
 
 		/* Start thumbnailing job async */
 		link_dest_page = ev_link_dest_get_page (dest);
+#ifdef HAVE_HIDPI_SUPPORT
+		device_scale = gtk_widget_get_scale_factor (GTK_WIDGET (view));
+#endif
 		view->link_preview.job = ev_job_thumbnail_new (view->document,
 							       link_dest_page,
 							       view->rotation,
-							       view->scale);
+							       view->scale * device_scale);
 		ev_job_thumbnail_set_output_format (EV_JOB_THUMBNAIL (view->link_preview.job),
 						    EV_JOB_THUMBNAIL_SURFACE);
 
@@ -2275,15 +2279,9 @@ ev_view_handle_cursor_over_xy (EvView *view, gint x, gint y)
 
 		page_surface = ev_pixbuf_cache_get_surface (view->pixbuf_cache, link_dest_page);
 
-		if (page_surface) {
-			GdkPixbuf *slice;
-
-			slice = gdk_pixbuf_get_from_surface (page_surface, 0, 0,
-							     cairo_image_surface_get_width(page_surface),
-							     cairo_image_surface_get_height(page_surface));
-			link_preview_show_thumbnail (slice, view);
-			g_object_unref(slice);
-		} else {
+		if (page_surface)
+			link_preview_show_thumbnail (page_surface, view);
+		else {
 			g_signal_connect (view->link_preview.job, "finished",
 					  G_CALLBACK (link_preview_job_finished_cb),
 					  view);
@@ -5165,23 +5163,28 @@ get_field_area (EvView       *view,
 }
 
 static void
-link_preview_show_thumbnail (GdkPixbuf *pixbuf,
+link_preview_show_thumbnail (cairo_surface_t *page_surface,
 			     EvView *view)
 {
-	GtkWidget *popover = view->link_preview.popover;
-	GdkPixbuf *thumbnail_slice;
-	GtkWidget *image_view;
-	gdouble    x, y;   /* position of the link on destination page */
-	gint       pwidth, pheight;  /* dimensions of destination page */
-	gint       vwidth, vheight;  /* dimensions of main view */
-	gint       width, height;    /* dimensions of popup */
-	gint       left, top;
+	GtkWidget       *popover = view->link_preview.popover;
+	GtkWidget       *image_view;
+	gdouble          x, y;   /* position of the link on destination page */
+	gint             pwidth, pheight;  /* dimensions of destination page */
+	gint             vwidth, vheight;  /* dimensions of main view */
+	gint             width, height;    /* dimensions of popup */
+	gint             left, top;
+	gdouble          device_scale_x = 1, device_scale_y = 1;
+	cairo_surface_t *thumbnail_slice;
+	cairo_t         *cr;
 
 	x = view->link_preview.left;
 	y = view->link_preview.top;
 
-	pwidth = gdk_pixbuf_get_width (pixbuf);
-	pheight = gdk_pixbuf_get_height (pixbuf);
+#ifdef HAVE_HIDPI_SUPPORT
+	cairo_surface_get_device_scale (page_surface, &device_scale_x, &device_scale_y);
+#endif
+	pwidth = cairo_image_surface_get_width (page_surface) / device_scale_x;
+	pheight = cairo_image_surface_get_height (page_surface) / device_scale_y;
 
 	vwidth = gtk_widget_get_allocated_width (GTK_WIDGET (view));
 	vheight = gtk_widget_get_allocated_height (GTK_WIDGET (view));
@@ -5214,16 +5217,21 @@ link_preview_show_thumbnail (GdkPixbuf *pixbuf,
 	left = MIN (MAX (0, left), pwidth - width);
 	top = MIN (MAX (0, top), pheight - height);
 
-	thumbnail_slice = gdk_pixbuf_new_subpixbuf (pixbuf,
-						    left, top,
-						    width, height);
-	image_view = gtk_image_new_from_pixbuf (thumbnail_slice);
+	/* paint out the part of the page we want to a separate cairo_surface_t */
+	thumbnail_slice = cairo_surface_create_similar (page_surface, CAIRO_CONTENT_COLOR, width, height);
+	cr = cairo_create (thumbnail_slice);
+	cairo_set_source_surface (cr, page_surface, -left, -top);
+	cairo_rectangle (cr, 0, 0, width, height);
+	cairo_fill (cr);
+
+	image_view = gtk_image_new_from_surface (thumbnail_slice);
 
 	gtk_widget_destroy (gtk_bin_get_child (GTK_BIN (popover)));
 	gtk_container_add (GTK_CONTAINER (popover), image_view);
 	gtk_widget_show (image_view);
 
-	g_object_unref (thumbnail_slice);
+	cairo_destroy (cr);
+	cairo_surface_destroy (thumbnail_slice);
 }
 
 static gboolean
@@ -5249,7 +5257,7 @@ link_preview_job_finished_cb (EvJobThumbnail *job,
 			      EvView *view)
 {
 	GtkWidget *popover = view->link_preview.popover;
-	GdkPixbuf *pixbuf;
+	gint       device_scale = 1;
 
 	if (ev_job_is_failed (EV_JOB (job))) {
 		gtk_widget_destroy (popover);
@@ -5260,14 +5268,16 @@ link_preview_job_finished_cb (EvJobThumbnail *job,
 		return;
 	}
 
+#ifdef HAVE_HIDPI_SUPPORT
+        device_scale = gtk_widget_get_scale_factor (GTK_WIDGET (view));
+        cairo_surface_set_device_scale (job->thumbnail_surface, device_scale, device_scale);
+#endif
+
 	if (ev_document_model_get_inverted_colors (view->model))
 		ev_document_misc_invert_surface (job->thumbnail_surface);
 
-	pixbuf = ev_document_misc_pixbuf_from_surface (job->thumbnail_surface);
+	link_preview_show_thumbnail (job->thumbnail_surface, view);
 
-	link_preview_show_thumbnail (pixbuf, view);
-
-	g_object_unref (pixbuf);
 	g_object_unref (job);
 	view->link_preview.job = NULL;
 }
