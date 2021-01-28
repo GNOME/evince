@@ -8132,3 +8132,17 @@ ev_window_get_metadata_sidebar_size (EvWindow *ev_window)
 
 	return 0;
 }
+
+/* Sets the position of the divider between the sidebar and the main view */
+void
+ev_window_set_divider_position (EvWindow *ev_window,
+				gint sidebar_width)
+{
+	EvWindowPrivate *priv;
+
+	g_return_if_fail (EV_WINDOW (ev_window));
+
+	priv = GET_PRIVATE (ev_window);
+
+	gtk_paned_set_position (GTK_PANED (priv->hpaned), sidebar_width);
+}

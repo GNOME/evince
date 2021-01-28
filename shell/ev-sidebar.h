@@ -61,6 +61,7 @@ void       ev_sidebar_set_page  (EvSidebar       *ev_sidebar,
                                  GtkWidget       *main_widget);
 void       ev_sidebar_set_model (EvSidebar       *ev_sidebar,
                                  EvDocumentModel *model);
+GtkWidget *ev_sidebar_get_current_page (EvSidebar *ev_sidebar);
 
 G_END_DECLS
 

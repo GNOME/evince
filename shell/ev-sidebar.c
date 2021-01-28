@@ -96,7 +96,7 @@ ev_sidebar_set_property (GObject      *object,
 	}
 }
 
-static GtkWidget *
+GtkWidget *
 ev_sidebar_get_current_page (EvSidebar *ev_sidebar)
 {
 	EvSidebarPrivate *priv = GET_PRIVATE (ev_sidebar);
