@@ -4,7 +4,7 @@
 
 m4_define([ev_major_version],[3])
 m4_define([ev_minor_version],[36])
-m4_define([ev_micro_version],[7])
+m4_define([ev_micro_version],[9])
 m4_define([ev_extra_version],[])
 m4_define([ev_version],[ev_major_version.ev_minor_version.ev_micro_version()ev_extra_version])
 
@@ -879,7 +879,7 @@ AC_CHECK_FUNC(localtime_r, AC_DEFINE(HAVE_LOCALTIME_R, 1, [Defines if localtime_
 # Help files
 # *****************
 
-YELP_HELP_INIT
+YELP_HELP_INIT(no-lc-dist)
 
 # *****************
 # API documentation
