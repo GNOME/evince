@@ -508,7 +508,7 @@ ev_document_misc_invert_pixbuf (GdkPixbuf *pixbuf)
 
 /**
  * ev_document_misc_get_screen_dpi:
- * @screen: a #GtkScreen
+ * @screen: a #GdkScreen
  *
  * Returns: The DPI of @screen, or 96 if the DPI is not available
  *
