@@ -30,6 +30,7 @@
 #include <glib/gi18n.h>
 #include <glib/gstdio.h>
 #include <gtk/gtk.h>
+#include <libhandy-1/handy.h>
 #ifdef GDK_WINDOWING_X11
 #include <gdk/gdkx.h>
 #endif
@@ -994,6 +995,8 @@ ev_application_startup (GApplication *gapplication)
 	g_application_set_resource_base_path (gapplication, "/org/gnome/evince");
 
         G_APPLICATION_CLASS (ev_application_parent_class)->startup (gapplication);
+
+        hdy_init ();
 
         for (it = action_accels; it[0]; it += g_strv_length ((gchar **)it) + 1)
                 gtk_application_set_accels_for_action (GTK_APPLICATION (application), it[0], &it[1]);

@@ -97,13 +97,13 @@ static void
 ev_window_title_update (EvWindowTitle *window_title)
 {
 	GtkWindow *window = GTK_WINDOW (window_title->window);
-	GtkHeaderBar *toolbar = GTK_HEADER_BAR (ev_window_get_toolbar (EV_WINDOW (window)));
+	HdyHeaderBar *toolbar = HDY_HEADER_BAR (ev_window_get_toolbar (EV_WINDOW (window)));
 	char *title = NULL, *p;
 	char *subtitle = NULL, *title_header = NULL;
 	gboolean ltr;
 
         if (window_title->type == EV_WINDOW_TITLE_RECENT) {
-                gtk_header_bar_set_subtitle (toolbar, NULL);
+                hdy_header_bar_set_subtitle (toolbar, NULL);
                 gtk_window_set_title (window, _("Recent Documents"));
                 return;
         }
@@ -137,8 +137,8 @@ ev_window_title_update (EvWindowTitle *window_title)
 	case EV_WINDOW_TITLE_DOCUMENT:
 		gtk_window_set_title (window, title);
 		if (title_header && subtitle) {
-			gtk_header_bar_set_title (toolbar, title_header);
-			gtk_header_bar_set_subtitle (toolbar, subtitle);
+			hdy_header_bar_set_title (toolbar, title_header);
+			hdy_header_bar_set_subtitle (toolbar, subtitle);
 		}
 		if (window_title->dirname)
 			gtk_widget_set_tooltip_text (GTK_WIDGET (toolbar),
@@ -155,8 +155,8 @@ ev_window_title_update (EvWindowTitle *window_title)
 		gtk_window_set_title (window, password_title);
 		g_free (password_title);
 
-                gtk_header_bar_set_title (toolbar, _("Password Required"));
-                gtk_header_bar_set_subtitle (toolbar, title);
+                hdy_header_bar_set_title (toolbar, _("Password Required"));
+                hdy_header_bar_set_subtitle (toolbar, title);
         }
 		break;
         case EV_WINDOW_TITLE_RECENT:

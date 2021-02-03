@@ -43,11 +43,11 @@ typedef struct _EvToolbar        EvToolbar;
 typedef struct _EvToolbarClass   EvToolbarClass;
 
 struct _EvToolbar {
-        GtkHeaderBar base_instance;
+        HdyHeaderBar base_instance;
 };
 
 struct _EvToolbarClass {
-        GtkHeaderBarClass base_class;
+        HdyHeaderBarClass base_class;
 };
 
 GType         ev_toolbar_get_type           (void);

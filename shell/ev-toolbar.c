@@ -54,7 +54,7 @@ typedef struct {
         EvToolbarMode toolbar_mode;
 } EvToolbarPrivate;
 
-G_DEFINE_TYPE_WITH_PRIVATE (EvToolbar, ev_toolbar, GTK_TYPE_HEADER_BAR)
+G_DEFINE_TYPE_WITH_PRIVATE (EvToolbar, ev_toolbar, HDY_TYPE_HEADER_BAR)
 
 # define GET_PRIVATE(o) ev_toolbar_get_instance_private (o)
 
@@ -210,7 +210,7 @@ ev_toolbar_constructed (GObject *object)
                                                   EV_STOCK_VIEW_SIDEBAR,
                                                   _("Side pane"));
         priv->sidebar_button = button;
-        gtk_header_bar_pack_start (GTK_HEADER_BAR (ev_toolbar), button);
+        hdy_header_bar_pack_start (HDY_HEADER_BAR (ev_toolbar), button);
 
         /* Page selector */
         /* Use EvPageActionWidget for now, since the page selector action is also used by the previewer */
@@ -220,14 +220,14 @@ ev_toolbar_constructed (GObject *object)
         priv->page_selector = tool_item;
         ev_page_action_widget_set_model (EV_PAGE_ACTION_WIDGET (tool_item),
                                          ev_window_get_document_model (priv->window));
-        gtk_header_bar_pack_start (GTK_HEADER_BAR (ev_toolbar), tool_item);
+        hdy_header_bar_pack_start (HDY_HEADER_BAR (ev_toolbar), tool_item);
 
         /* Edit Annots */
         button = ev_toolbar_create_toggle_button (ev_toolbar, "win.toggle-edit-annots", "document-edit-symbolic",
                                                   _("Annotate the document"));
         atk_object_set_name (gtk_widget_get_accessible (button), _("Annotate document"));
         priv->annots_button = button;
-        gtk_header_bar_pack_start (GTK_HEADER_BAR (ev_toolbar), button);
+        hdy_header_bar_pack_start (HDY_HEADER_BAR (ev_toolbar), button);
 
         /* Action Menu */
         menu = G_MENU_MODEL (gtk_builder_get_object (builder, "action-menu"));
@@ -237,13 +237,13 @@ ev_toolbar_constructed (GObject *object)
         atk_object_set_name (gtk_widget_get_accessible (button), _("File options"));
 
         priv->action_menu_button = button;
-        gtk_header_bar_pack_end (GTK_HEADER_BAR (ev_toolbar), button);
+        hdy_header_bar_pack_end (HDY_HEADER_BAR (ev_toolbar), button);
 
         /* Find */
         button = ev_toolbar_create_toggle_button (ev_toolbar, "win.toggle-find", "edit-find-symbolic",
                                                   NULL);
         priv->find_button = button;
-        gtk_header_bar_pack_end (GTK_HEADER_BAR (ev_toolbar), button);
+        hdy_header_bar_pack_end (HDY_HEADER_BAR (ev_toolbar), button);
         g_signal_connect (button,
                           "notify::sensitive",
                           G_CALLBACK (ev_toolbar_find_button_sensitive_changed),
@@ -258,7 +258,7 @@ ev_toolbar_constructed (GObject *object)
         g_signal_connect (vbox, "activated",
                           G_CALLBACK (zoom_selector_activated),
                           ev_toolbar);
-        gtk_header_bar_pack_end (GTK_HEADER_BAR (ev_toolbar), vbox);
+        hdy_header_bar_pack_end (HDY_HEADER_BAR (ev_toolbar), vbox);
 
         g_object_unref (builder);
 }

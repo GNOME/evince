@@ -40,6 +40,7 @@
 #include <glib/gi18n.h>
 #include <gio/gio.h>
 #include <gtk/gtk.h>
+#include <libhandy-1/handy.h>
 
 #include "dzl-file-manager.h"
 #include "ev-find-sidebar.h"
@@ -415,7 +416,7 @@ static void	ev_window_cancel_add_annot		(EvWindow *window);
 
 static gchar *nautilus_sendto = NULL;
 
-G_DEFINE_TYPE_WITH_PRIVATE (EvWindow, ev_window, GTK_TYPE_APPLICATION_WINDOW)
+G_DEFINE_TYPE_WITH_PRIVATE (EvWindow, ev_window, HDY_TYPE_APPLICATION_WINDOW)
 
 static gboolean
 ev_window_is_recent_view (EvWindow *ev_window)
@@ -5387,8 +5388,8 @@ ev_window_document_modified_cb (EvDocument *document,
                                 EvWindow   *ev_window)
 {
 	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
-	GtkHeaderBar *toolbar = GTK_HEADER_BAR (ev_window_get_toolbar (ev_window));
-	const gchar *title = gtk_header_bar_get_title (toolbar);
+	HdyHeaderBar *toolbar = HDY_HEADER_BAR (ev_window_get_toolbar (ev_window));
+	const gchar *title = hdy_header_bar_get_title (toolbar);
 	gchar *new_title;
 
 	if (priv->is_modified)
@@ -5401,7 +5402,7 @@ ev_window_document_modified_cb (EvDocument *document,
 		new_title = g_strconcat (title, " •", NULL);
 
 	if (new_title) {
-		gtk_header_bar_set_title (toolbar, new_title);
+		hdy_header_bar_set_title (toolbar, new_title);
 		g_free (new_title);
 	}
 }
@@ -7616,8 +7617,8 @@ ev_window_init (EvWindow *ev_window)
 
 	priv->toolbar = ev_toolbar_new (ev_window);
 	gtk_widget_set_no_show_all (priv->toolbar, TRUE);
-	gtk_header_bar_set_show_close_button (GTK_HEADER_BAR (priv->toolbar), TRUE);
-	gtk_window_set_titlebar (GTK_WINDOW (ev_window), priv->toolbar);
+	hdy_header_bar_set_show_close_button (HDY_HEADER_BAR (priv->toolbar), TRUE);
+	gtk_box_pack_start (GTK_BOX (priv->main_box), priv->toolbar, FALSE, TRUE, 0);
 	gtk_widget_show (priv->toolbar);
 
 	/* Window title */

@@ -52,6 +52,7 @@ sources += gnome.compile_resources(
 deps = [
   gdk_pixbuf_dep,
   gnome_desktop_dep,
+  hdy_dep,
   libevmisc_dep,
   libevproperties_dep,
   libdazzle_dep,

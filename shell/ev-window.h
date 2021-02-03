@@ -26,6 +26,7 @@
 
 #include <glib.h>
 #include <gtk/gtk.h>
+#include <libhandy-1/handy.h>
 
 #include "ev-link.h"
 #include "ev-history.h"
@@ -63,11 +64,11 @@ typedef struct _EvWindowClass EvWindowClass;
 
 
 struct _EvWindow {
-	GtkApplicationWindow base_instance;
+	HdyApplicationWindow base_instance;
 };
 
 struct _EvWindowClass {
-	GtkApplicationWindowClass base_class;
+	HdyApplicationWindowClass base_class;
 };
 
 GType		ev_window_get_type	                 (void) G_GNUC_CONST;
