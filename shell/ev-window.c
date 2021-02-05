@@ -164,14 +164,6 @@ typedef struct {
 	guint progress_idle;
 	GCancellable *progress_cancellable;
 
-	/* Fullscreen */
-	GtkWidget *fs_overlay;
-	GtkWidget *fs_eventbox;
-	GtkWidget *fs_revealer;
-	GtkWidget *fs_toolbar;
-	gboolean   fs_pointer_on_toolbar;
-	guint      fs_timeout_id;
-
 	/* Loading message */
 	guint loading_message_timeout;
 
@@ -409,7 +401,6 @@ static void     ev_window_destroy_recent_view           (EvWindow         *ev_wi
 static void     recent_view_item_activated_cb           (EvRecentView     *recent_view,
                                                          const char       *uri,
                                                          EvWindow         *ev_window);
-static void     ev_window_fullscreen_show_toolbar       (EvWindow         *ev_window);
 static void     ev_window_begin_add_annot               (EvWindow         *ev_window,
 							 EvAnnotationType  annot_type);
 static void	ev_window_cancel_add_annot		(EvWindow *window);
@@ -683,9 +674,6 @@ update_chrome_visibility (EvWindow *window)
 
 	set_widget_visibility (priv->toolbar, toolbar);
 	set_widget_visibility (priv->sidebar, sidebar);
-
-	if (toolbar && ev_document_model_get_fullscreen (priv->model))
-		ev_window_fullscreen_show_toolbar (window);
 }
 
 static void
@@ -4221,7 +4209,7 @@ ev_window_cmd_focus_page_selector (GSimpleAction *action,
 	update_chrome_flag (window, EV_CHROME_RAISE_TOOLBAR, TRUE);
 	update_chrome_visibility (window);
 
-	toolbar = priv->fs_toolbar ? EV_TOOLBAR (priv->fs_toolbar) : EV_TOOLBAR (priv->toolbar);
+	toolbar = EV_TOOLBAR (priv->toolbar);
 	page_selector = ev_toolbar_get_page_selector (toolbar);
 	ev_page_action_widget_grab_focus (EV_PAGE_ACTION_WIDGET (page_selector));
 }
@@ -4526,10 +4514,6 @@ ev_window_update_links_model (EvWindow *window)
 
 	page_selector = ev_toolbar_get_page_selector (EV_TOOLBAR (priv->toolbar));
 	ev_page_action_widget_update_links_model (EV_PAGE_ACTION_WIDGET (page_selector), model);
-	if (priv->fs_toolbar) {
-		page_selector = ev_toolbar_get_page_selector (EV_TOOLBAR (priv->fs_toolbar));
-		ev_page_action_widget_update_links_model (EV_PAGE_ACTION_WIDGET (page_selector), model);
-	}
 	g_object_unref (model);
 }
 
@@ -4546,91 +4530,6 @@ ev_window_update_fullscreen_action (EvWindow *window)
 }
 
 static void
-ev_window_fullscreen_hide_toolbar (EvWindow *window)
-{
-	EvWindowPrivate *priv = GET_PRIVATE (window);
-
-	if (!ev_toolbar_has_visible_popups (EV_TOOLBAR (priv->fs_toolbar)))
-		gtk_revealer_set_reveal_child (GTK_REVEALER (priv->fs_revealer), FALSE);
-}
-
-static gboolean
-fullscreen_toolbar_timeout_cb (EvWindow *window)
-{
-	EvWindowPrivate *priv = GET_PRIVATE (window);
-
-	ev_window_fullscreen_hide_toolbar (window);
-
-	if (!gtk_revealer_get_reveal_child (GTK_REVEALER (priv->fs_revealer))) {
-		priv->fs_timeout_id = 0;
-		return FALSE;
-	}
-
-	return TRUE;
-}
-
-static void
-ev_window_remove_fullscreen_timeout (EvWindow *window)
-{
-	EvWindowPrivate *priv = GET_PRIVATE (window);
-
-	if (priv->fs_timeout_id)
-		g_source_remove (priv->fs_timeout_id);
-	priv->fs_timeout_id = 0;
-}
-
-static void
-ev_window_add_fullscreen_timeout (EvWindow *window)
-{
-	EvWindowPrivate *priv = GET_PRIVATE (window);
-
-	ev_window_remove_fullscreen_timeout (window);
-	priv->fs_timeout_id =
-		g_timeout_add_seconds (FULLSCREEN_POPUP_TIMEOUT,
-				       (GSourceFunc)fullscreen_toolbar_timeout_cb, window);
-}
-
-static void
-ev_window_fullscreen_show_toolbar (EvWindow *window)
-{
-	EvWindowPrivate *priv = GET_PRIVATE (window);
-
-	ev_window_remove_fullscreen_timeout (window);
-	if (gtk_revealer_get_reveal_child (GTK_REVEALER (priv->fs_revealer)))
-		return;
-
-	gtk_revealer_set_reveal_child (GTK_REVEALER (priv->fs_revealer), TRUE);
-	if (!priv->fs_pointer_on_toolbar)
-		ev_window_add_fullscreen_timeout (window);
-}
-
-static gboolean
-ev_window_fullscreen_toolbar_enter_notify (GtkWidget *widget,
-					   GdkEvent  *event,
-					   EvWindow  *window)
-{
-	EvWindowPrivate *priv = GET_PRIVATE (window);
-
-	priv->fs_pointer_on_toolbar = TRUE;
-	ev_window_fullscreen_show_toolbar (window);
-
-	return FALSE;
-}
-
-static gboolean
-ev_window_fullscreen_toolbar_leave_notify (GtkWidget *widget,
-					   GdkEvent  *event,
-					   EvWindow  *window)
-{
-	EvWindowPrivate *priv = GET_PRIVATE (window);
-
-	priv->fs_pointer_on_toolbar = FALSE;
-	ev_window_add_fullscreen_timeout (window);
-
-	return FALSE;
-}
-
-static void
 ev_window_run_fullscreen (EvWindow *window)
 {
 	EvWindowPrivate *priv = GET_PRIVATE (window);
@@ -4644,53 +4543,10 @@ ev_window_run_fullscreen (EvWindow *window)
 		fullscreen_window = FALSE;
 	}
 
-	priv->fs_overlay = gtk_overlay_new ();
-	priv->fs_eventbox = gtk_event_box_new ();
-	priv->fs_revealer = gtk_revealer_new ();
-	g_signal_connect (priv->fs_eventbox, "enter-notify-event",
-			  G_CALLBACK (ev_window_fullscreen_toolbar_enter_notify),
-			  window);
-	g_signal_connect (priv->fs_eventbox, "leave-notify-event",
-			  G_CALLBACK (ev_window_fullscreen_toolbar_leave_notify),
-			  window);
-
-	gtk_widget_set_size_request (priv->fs_eventbox, -1, 1);
-	gtk_widget_set_valign (priv->fs_eventbox, GTK_ALIGN_START);
-	gtk_revealer_set_transition_duration (GTK_REVEALER (priv->fs_revealer), FULLSCREEN_TRANSITION_DURATION);
-
-	g_object_ref (priv->main_box);
-	gtk_container_remove (GTK_CONTAINER (window), priv->main_box);
-	gtk_container_add (GTK_CONTAINER (priv->fs_overlay),
-			   priv->main_box);
-	g_object_unref (priv->main_box);
-
-	priv->fs_toolbar = ev_toolbar_new (window);
-	ev_toolbar_set_mode (EV_TOOLBAR (priv->fs_toolbar),
-		             EV_TOOLBAR_MODE_FULLSCREEN);
-
 	ev_window_update_links_model (window);
-	g_signal_connect (ev_toolbar_get_page_selector (EV_TOOLBAR (priv->fs_toolbar)),
-			  "activate-link",
-			  G_CALLBACK (activate_link_cb),
-			  window);
-	gtk_container_add (GTK_CONTAINER (priv->fs_revealer),
-			   priv->fs_toolbar);
-	gtk_widget_show (priv->fs_toolbar);
-
-	gtk_container_add (GTK_CONTAINER (priv->fs_eventbox),
-			   priv->fs_revealer);
-	gtk_widget_show (priv->fs_revealer);
-	gtk_overlay_add_overlay (GTK_OVERLAY (priv->fs_overlay),
-				 priv->fs_eventbox);
-	gtk_widget_show (priv->fs_eventbox);
-
-	gtk_container_add (GTK_CONTAINER (window), priv->fs_overlay);
-	gtk_widget_show (priv->fs_overlay);
 
 	ev_document_model_set_fullscreen (priv->model, TRUE);
 	ev_window_update_fullscreen_action (window);
-
-	ev_window_fullscreen_show_toolbar (window);
 
 	if (fullscreen_window)
 		gtk_window_fullscreen (GTK_WINDOW (window));
@@ -4708,24 +4564,6 @@ ev_window_stop_fullscreen (EvWindow *window,
 
 	if (!ev_document_model_get_fullscreen (priv->model))
 		return;
-
-	gtk_container_remove (GTK_CONTAINER (priv->fs_revealer),
-			      priv->fs_toolbar);
-	priv->fs_toolbar = NULL;
-	gtk_container_remove (GTK_CONTAINER (priv->fs_eventbox),
-			      priv->fs_revealer);
-	gtk_container_remove (GTK_CONTAINER (priv->fs_overlay),
-			      priv->fs_eventbox);
-
-	g_object_ref (priv->main_box);
-	gtk_container_remove (GTK_CONTAINER (priv->fs_overlay),
-			      priv->main_box);
-	gtk_container_remove (GTK_CONTAINER (window), priv->fs_overlay);
-	priv->fs_overlay = NULL;
-	gtk_container_add (GTK_CONTAINER (window), priv->main_box);
-	g_object_unref (priv->main_box);
-
-	ev_window_remove_fullscreen_timeout (window);
 
 	ev_document_model_set_fullscreen (priv->model, FALSE);
 	ev_window_update_fullscreen_action (window);
@@ -5559,7 +5397,7 @@ ev_window_cmd_action_menu (GSimpleAction *action,
 	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 	EvToolbar *toolbar;
 
-	toolbar = priv->fs_toolbar ? EV_TOOLBAR (priv->fs_toolbar) : EV_TOOLBAR (priv->toolbar);
+	toolbar = EV_TOOLBAR (priv->toolbar);
 	ev_toolbar_action_menu_toggle (toolbar);
 }
 
@@ -6244,8 +6082,6 @@ ev_window_dispose (GObject *object)
 		g_source_remove (priv->loading_message_timeout);
 		priv->loading_message_timeout = 0;
 	}
-
-	ev_window_remove_fullscreen_timeout (window);
 
 	if (priv->monitor) {
 		g_object_unref (priv->monitor);
