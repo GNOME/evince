@@ -7397,10 +7397,7 @@ draw_surface (cairo_t 	      *cr,
 		offset_y /= scale_y;
 	}
 
-	cairo_surface_set_device_offset (surface,
-					 offset_x * device_scale_x,
-					 offset_y * device_scale_y);
-	cairo_set_source_surface (cr, surface, 0, 0);
+	cairo_set_source_surface (cr, surface, -offset_x, -offset_y);
 	cairo_paint (cr);
 	cairo_restore (cr);
 }
