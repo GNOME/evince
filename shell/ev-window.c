@@ -771,7 +771,7 @@ ev_window_set_message_area (EvWindow  *window,
 			    FALSE, FALSE, 0);
         /* Pack the message area right after the search bar */
         gtk_box_reorder_child (GTK_BOX (priv->main_box),
-                               priv->message_area, 2);
+                               priv->message_area, 3);
 	g_object_add_weak_pointer (G_OBJECT (priv->message_area),
 				   (gpointer) &(priv->message_area));
 }
