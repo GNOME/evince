@@ -234,6 +234,13 @@ ev_sidebar_annotations_annot_added (EvSidebarAnnotations *sidebar_annots,
 }
 
 void
+ev_sidebar_annotations_annot_changed (EvSidebarAnnotations *sidebar_annots,
+				      EvAnnotation         *annot)
+{
+	ev_sidebar_annotations_load (sidebar_annots);
+}
+
+void
 ev_sidebar_annotations_annot_removed (EvSidebarAnnotations *sidebar_annots)
 {
 	ev_sidebar_annotations_load (sidebar_annots);

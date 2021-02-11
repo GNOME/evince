@@ -6504,6 +6504,17 @@ view_annot_added (EvView       *view,
 }
 
 static void
+view_annot_changed (EvView       *view,
+		    EvAnnotation *annot,
+		    EvWindow     *window)
+{
+	EvWindowPrivate *priv = GET_PRIVATE (window);
+
+	ev_sidebar_annotations_annot_changed (EV_SIDEBAR_ANNOTATIONS (priv->sidebar_annots),
+					      annot);
+}
+
+static void
 view_annot_removed (EvView       *view,
 		    EvAnnotation *annot,
 		    EvWindow     *window)
@@ -7713,6 +7724,9 @@ ev_window_init (EvWindow *ev_window)
 				 ev_window, 0);
 	g_signal_connect_object (priv->view, "annot-added",
 				 G_CALLBACK (view_annot_added),
+				 ev_window, 0);
+	g_signal_connect_object (priv->view, "annot-changed",
+				 G_CALLBACK (view_annot_changed),
 				 ev_window, 0);
 	g_signal_connect_object (priv->view, "annot-removed",
 				 G_CALLBACK (view_annot_removed),

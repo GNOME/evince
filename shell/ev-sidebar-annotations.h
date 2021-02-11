@@ -54,6 +54,8 @@ GType      ev_sidebar_annotations_get_type      (void) G_GNUC_CONST;
 GtkWidget *ev_sidebar_annotations_new           (void);
 void       ev_sidebar_annotations_annot_added   (EvSidebarAnnotations *sidebar_annots,
 					         EvAnnotation         *annot);
+void       ev_sidebar_annotations_annot_changed (EvSidebarAnnotations *sidebar_annots,
+					         EvAnnotation         *annot);
 void       ev_sidebar_annotations_annot_removed (EvSidebarAnnotations *sidebar_annots);
 G_END_DECLS
 
