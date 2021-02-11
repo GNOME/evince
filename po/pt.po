@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 3.8\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
-"POT-Creation-Date: 2021-01-31 23:05+0000\n"
-"PO-Revision-Date: 2021-02-01 14:33+0000\n"
+"POT-Creation-Date: 2021-02-09 20:15+0000\n"
+"PO-Revision-Date: 2021-02-11 15:54+0000\n"
 "Last-Translator: Hugo Carvalho <hugokarvalho@hotmail.com>\n"
 "Language-Team: Portuguese <>\n"
 "Language: pt\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.3\n"
+"X-Generator: Poedit 2.4.1\n"
 
 #: backend/comics/comics-document.c:163 backend/comics/comics-document.c:187
 msgid "File is corrupted"
@@ -283,7 +283,7 @@ msgstr "Falha ao ler o documento “%s”"
 #: backend/ps/ev-spectre.c:131
 #, c-format
 msgid "Failed to save document “%s”"
-msgstr "Falha ao gravar o documento “%s”"
+msgstr "Falha ao guardar o documento “%s”"
 
 #: backend/tiff/evince-tiffdocument.metainfo.xml.in.in:5
 #: backend/tiff/tiffdocument.evince-backend.desktop.in.in:4
@@ -396,11 +396,11 @@ msgstr ""
 #: data/org.gnome.Evince.gschema.xml:24
 msgid "The URI of the directory last used to open or save a document"
 msgstr ""
-"O URI da pasta utilizada pela última vez para abrir ou gravar um documento"
+"O URI da pasta utilizada pela última vez para abrir ou guardar um documento"
 
 #: data/org.gnome.Evince.gschema.xml:28
 msgid "The URI of the directory last used to save a picture"
-msgstr "O URI da pasta utilizada pela última vez para gravar uma imagem"
+msgstr "O URI da pasta utilizada pela última vez para guardar uma imagem"
 
 #: data/org.gnome.Evince.gschema.xml:32
 msgid "Page cache size in MiB"
@@ -437,7 +437,7 @@ msgstr "Antever antes de imprimir"
 #: libdocument/ev-attachment.c:330 libdocument/ev-attachment.c:351
 #, c-format
 msgid "Couldn’t save attachment “%s”: %s"
-msgstr "Impossível gravar o anexo “%s”: %s"
+msgstr "Impossível guardar o anexo “%s”: %s"
 
 #: libdocument/ev-attachment.c:400
 #, c-format
@@ -673,7 +673,7 @@ msgstr "Rolar a vista abaixo"
 
 #: libview/ev-view-accessible.c:132
 msgid "Document View"
-msgstr "Vista Documento"
+msgstr "Vista de Documento"
 
 #: libview/ev-view.c:2110
 msgid "Go to first page"
@@ -744,8 +744,8 @@ msgid ""
 "A document viewer for the GNOME desktop. You can view, search or annotate "
 "documents in many different formats."
 msgstr ""
-"Um visualizador de documentos para o ambiente GNOME. Permite visualizar, "
-"pesquisar ou anotar documentos em vários formatos."
+"Um visualizador de documentos para o ambiente gráfico GNOME. Permite "
+"visualizar, pesquisar ou anotar documentos em vários formatos."
 
 #: org.gnome.Evince.appdata.xml.in:27
 msgid ""
@@ -1059,11 +1059,11 @@ msgstr "Abrir a _pasta que contém"
 
 #: shell/evince-menus.ui:58
 msgid "_Save As…"
-msgstr "Gravar a im_agem como…"
+msgstr "Guardar a im_agem como…"
 
 #: shell/evince-menus.ui:64
 msgid "Present as _Slideshow"
-msgstr "Exibir como apresentação de _slides"
+msgstr "Apresentação de diapositivos"
 
 #: shell/evince-menus.ui:70
 msgid "_Continuous"
@@ -1095,11 +1095,11 @@ msgstr "Propri_edades"
 
 #: shell/evince-menus.ui:106
 msgid "Save Current Settings as Defa_ult"
-msgstr "Gravar as definições atuais como pre_definição"
+msgstr "Guardar as definições at_uais como predefinição"
 
 #: shell/evince-menus.ui:110
 msgid "_Keyboard Shortcuts"
-msgstr "_Atalhos de teclado"
+msgstr "_Teclas de atalho"
 
 #: shell/evince-menus.ui:114
 msgid "_Help"
@@ -1107,7 +1107,7 @@ msgstr "A_juda"
 
 #: shell/evince-menus.ui:118
 msgid "_About Document Viewer"
-msgstr "_Sobre o Visualizador de documentos"
+msgstr "_Acerca do Visualizador de documentos"
 
 #: shell/evince-menus.ui:149
 msgid "_Open Link"
@@ -1151,7 +1151,7 @@ msgstr "Selecion_ar tudo"
 
 #: shell/evince-menus.ui:199
 msgid "_Save Image As…"
-msgstr "Gravar a im_agem como…"
+msgstr "Guardar a im_agem como…"
 
 #: shell/evince-menus.ui:204
 msgid "Copy _Image"
@@ -1165,7 +1165,7 @@ msgstr "_Abrir o anexo"
 #: shell/evince-menus.ui:216 shell/evince-menus.ui:286
 #: shell/evince-menus.ui:310
 msgid "_Save Attachment As…"
-msgstr "_Gravar o anexo como…"
+msgstr "_Guardar o anexo como…"
 
 #: shell/evince-menus.ui:223 shell/evince-menus.ui:295
 msgid "Annotation Properties…"
@@ -1367,7 +1367,7 @@ msgstr "Camadas"
 msgid "Outline"
 msgstr "Tópicos"
 
-#: shell/ev-sidebar-thumbnails.c:1038 shell/ev-window.c:7704
+#: shell/ev-sidebar-thumbnails.c:1047 shell/ev-window.c:7704
 msgid "Thumbnails"
 msgstr "Miniaturas"
 
@@ -1478,7 +1478,7 @@ msgstr "A gravar a imagem em %s"
 #: shell/ev-window.c:3018 shell/ev-window.c:3133
 #, c-format
 msgid "The file could not be saved as “%s”."
-msgstr "Impossível gravar o ficheiro como “%s”."
+msgstr "Impossível guardar o ficheiro como “%s”."
 
 #: shell/ev-window.c:3050
 #, c-format
@@ -1497,11 +1497,11 @@ msgstr "A enviar a imagem (%d%%)"
 
 #: shell/ev-window.c:3191
 msgid "Save As…"
-msgstr "Gravar como…"
+msgstr "Guardar como…"
 
 #: shell/ev-window.c:3193 shell/ev-window.c:7107 shell/ev-window.c:7331
 msgid "_Save"
-msgstr "_Gravar"
+msgstr "_Guardar"
 
 #: shell/ev-window.c:3280
 msgid "Could not send current document"
@@ -1544,11 +1544,12 @@ msgstr "_Não"
 #: shell/ev-window.c:3958
 #, c-format
 msgid "Save a copy of document “%s” before closing?"
-msgstr "Gravar uma cópia do documento “%s” antes de fechar?"
+msgstr "Guardar uma cópia do documento “%s” antes de fechar?"
 
 #: shell/ev-window.c:3960
 msgid "If you don’t save a copy, changes will be permanently lost."
-msgstr "Se não gravar uma cópia, as alterações serão definitivamente perdidas."
+msgstr ""
+"Se não guardar uma cópia, as alterações serão definitivamente perdidas."
 
 #: shell/ev-window.c:3962
 msgid "Close _without Saving"
@@ -1556,7 +1557,7 @@ msgstr "Fechar _sem gravar"
 
 #: shell/ev-window.c:3966
 msgid "Save a _Copy"
-msgstr "Gravar uma _cópia"
+msgstr "Guardar uma _cópia"
 
 #: shell/ev-window.c:4048
 #, c-format
@@ -1613,7 +1614,7 @@ msgstr "Em execução em modo de apresentação"
 
 #: shell/ev-window.c:5818
 msgid "The attachment could not be saved."
-msgstr "Impossível gravar o anexo."
+msgstr "Impossível guardar o anexo."
 
 #: shell/ev-window.c:6140
 msgid "Enable caret navigation?"
@@ -1650,15 +1651,15 @@ msgstr "Impossível abrir uma ligação externa"
 
 #: shell/ev-window.c:7036
 msgid "Couldn’t find appropriate format to save image"
-msgstr "Impossível encontrar o formato apropriado para gravar a imagem"
+msgstr "Impossível encontrar o formato apropriado para guardar a imagem"
 
 #: shell/ev-window.c:7068
 msgid "The image could not be saved."
-msgstr "Impossível gravar a imagem."
+msgstr "Impossível guardar a imagem."
 
 #: shell/ev-window.c:7104
 msgid "Save Image"
-msgstr "Gravar a imagem"
+msgstr "Guardar a imagem"
 
 #: shell/ev-window.c:7260
 msgid "Unable to open attachment"
@@ -1666,7 +1667,7 @@ msgstr "Impossível abrir o anexo"
 
 #: shell/ev-window.c:7328
 msgid "Save Attachment"
-msgstr "Gravar o anexo"
+msgstr "Guardar o anexo"
 
 #: shell/ev-window-title.c:107
 msgid "Recent Documents"
@@ -1751,7 +1752,7 @@ msgstr "Abrir uma cópia do documento atual"
 #: shell/help-overlay.ui:31
 msgctxt "shortcut window"
 msgid "Save a copy of the current document"
-msgstr "Gravar uma cópia do documento atual"
+msgstr "Guardar uma cópia do documento atual"
 
 #: shell/help-overlay.ui:38
 msgctxt "shortcut window"
@@ -2021,7 +2022,7 @@ msgstr "Sair"
 #: shell/help-overlay.ui:409
 msgctxt "shortcut window"
 msgid "Save current settings as default"
-msgstr "Gravar as definições atuais como predefinição"
+msgstr "Guardar as definições atuais como predefinição"
 
 # 48x48/emblems/emblem-presentation.icon.in.h:1
 # 48x48/emblems/emblem-presentation.icon.in.h:1
