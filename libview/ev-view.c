@@ -9781,7 +9781,10 @@ get_selected_text (EvView *view)
 
 	ev_document_doc_mutex_unlock ();
 	
-	normalized_text = g_utf8_normalize (text->str, text->len, G_NORMALIZE_NFKC);
+	/* For copying text from the document to the clipboard, we want a normalization
+	 * that preserves 'canonical equivalence' i.e. that text after normalization
+	 * is not visually different than the original text. Issue #1085 */
+	normalized_text = g_utf8_normalize (text->str, text->len, G_NORMALIZE_NFC);
 	g_string_free (text, TRUE);
 	return normalized_text;
 }
