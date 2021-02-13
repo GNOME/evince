@@ -7484,7 +7484,6 @@ ev_window_init (EvWindow *ev_window)
 
 	/* Search Bar */
 	priv->search_bar = gtk_search_bar_new ();
-	gtk_search_bar_set_show_close_button (GTK_SEARCH_BAR (priv->search_bar), TRUE);
 
 	priv->search_box = ev_search_box_new (priv->model);
 	search_entry = GTK_ENTRY (ev_search_box_get_entry (EV_SEARCH_BOX (priv->search_box)));
