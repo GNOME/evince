@@ -182,7 +182,7 @@ ev_link_action_get_reset_fields (EvLinkAction *self)
 gboolean
 ev_link_action_get_exclude_reset_fields (EvLinkAction *self)
 {
-	g_return_val_if_fail (EV_IS_LINK_ACTION (self), NULL);
+	g_return_val_if_fail (EV_IS_LINK_ACTION (self), FALSE);
 
 	return self->priv->exclude_reset_fields;
 }
