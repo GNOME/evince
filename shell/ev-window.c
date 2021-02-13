@@ -7101,6 +7101,8 @@ ev_window_popup_cmd_annot_properties (GSimpleAction *action,
 
 		/* FIXME: update annot region only */
 		ev_view_reload (EV_VIEW (priv->view));
+
+		ev_sidebar_annotations_annot_changed (EV_SIDEBAR_ANNOTATIONS (priv->sidebar_annots), annot);
 	}
 
 	gtk_widget_destroy (GTK_WIDGET (dialog));
