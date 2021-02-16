@@ -3306,6 +3306,10 @@ ev_window_cmd_open_containing_folder (GSimpleAction *action,
 
 	app =  g_app_info_get_default_for_type ("inode/directory", FALSE);
 	file = g_file_new_for_uri (priv->uri);
+	if (!g_file_is_native (file)) {
+		g_object_unref (file);
+		file = g_file_new_for_uri (ev_document_get_uri (priv->document));
+	}
 	if (app == NULL) {
 		dzl_file_manager_show (file, &error);
 		if (error) {
