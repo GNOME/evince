@@ -12,6 +12,14 @@ typedef int64_t time64_t;
 
 #define UNARR_API_VERSION 100
 
+typedef enum {
+  AR_ARCHIVE_ERROR_NONE,
+  AR_ARCHIVE_ERROR_UNKNOWN,
+  AR_ARCHIVE_ERROR_RAR5,
+  AR_ARCHIVE_ERROR_OLDRAR,
+  AR_ARCHIVE_ERROR_SFX
+} ArArchiveError;
+
 /***** common/stream *****/
 
 typedef struct ar_stream_s ar_stream;
@@ -74,6 +82,7 @@ size_t ar_get_global_comment(ar_archive *ar, void *buffer, size_t count);
 
 /* checks whether 'stream' could contain RAR data and prepares for archive listing/extraction; returns NULL on failure */
 ar_archive *ar_open_rar_archive(ar_stream *stream);
+ar_archive *ar_open_rar_archive_with_error(ar_stream *stream, ArArchiveError *error_code);
 
 /***** tar/tar *****/
 

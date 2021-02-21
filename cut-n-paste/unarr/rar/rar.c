@@ -221,3 +221,34 @@ ar_archive *ar_open_rar_archive(ar_stream *stream)
 
     return ar_open_archive(stream, sizeof(ar_archive_rar), rar_close, rar_parse_entry, rar_get_name, rar_uncompress, NULL, FILE_SIGNATURE_SIZE);
 }
+
+ar_archive *ar_open_rar_archive_with_error(ar_stream *stream,
+					   ArArchiveError *error_code)
+{
+    char signature[FILE_SIGNATURE_SIZE];
+    ar_archive *ret;
+
+    if (!ar_seek(stream, 0, SEEK_SET)) {
+        *error_code = AR_ARCHIVE_ERROR_UNKNOWN;
+        return NULL;
+    }
+    if (ar_read(stream, signature, sizeof(signature)) != sizeof(signature)) {
+        *error_code = AR_ARCHIVE_ERROR_UNKNOWN;
+        return NULL;
+    }
+    if (memcmp(signature, "Rar!\x1A\x07\x00", sizeof(signature)) != 0) {
+        if (memcmp(signature, "Rar!\x1A\x07\x01", sizeof(signature)) == 0)
+            *error_code = AR_ARCHIVE_ERROR_RAR5;
+        else if (memcmp(signature, "RE~^", 4) == 0)
+            *error_code = AR_ARCHIVE_ERROR_OLDRAR;
+        else if (memcmp(signature, "MZ", 2) == 0 || memcmp(signature, "\x7F\x45LF", 4) == 0)
+            *error_code = AR_ARCHIVE_ERROR_SFX;
+        return NULL;
+    }
+
+
+    ret = ar_open_archive(stream, sizeof(ar_archive_rar), rar_close, rar_parse_entry, rar_get_name, rar_uncompress, NULL, FILE_SIGNATURE_SIZE);
+    if (!ret)
+        *error_code = AR_ARCHIVE_ERROR_UNKNOWN;
+    return ret;
+}
