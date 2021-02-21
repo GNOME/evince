@@ -40,7 +40,7 @@
 #include <glib/gi18n.h>
 #include <gio/gio.h>
 #include <gtk/gtk.h>
-#include <libhandy-1/handy.h>
+#include <handy.h>
 
 #include "dzl-file-manager.h"
 #include "ev-find-sidebar.h"

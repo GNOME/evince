@@ -26,7 +26,7 @@
 
 #include <glib.h>
 #include <gtk/gtk.h>
-#include <libhandy-1/handy.h>
+#include <handy.h>
 
 #include "ev-link.h"
 #include "ev-history.h"
