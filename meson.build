@@ -163,7 +163,8 @@ gmodule_dep = dependency('gmodule-2.0')
 gmodule_no_export_dep = dependency('gmodule-no-export-2.0', version: glib_req_version)
 gtk_dep = dependency('gtk+-3.0', version: gtk_req_version)
 gthread_dep = dependency('gthread-2.0', version: glib_req_version)
-hdy_dep = dependency('libhandy-1', version: hdy_req_version)
+# Keep the version here synchronised with subprojects/libhandy.wrap
+hdy_dep = dependency('libhandy-1', version: hdy_req_version, fallback: ['libhandy', 'libhandy_dep'])
 
 m_dep = cc.find_library('m')
 
