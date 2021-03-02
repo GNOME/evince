@@ -40,7 +40,8 @@ struct _EvPasswordViewClass {
 	GtkViewportClass parent_class;
 
 	/* signals */
-	void (*unlock) (EvPasswordView	*self);
+	void (*unlock)    (EvPasswordView	*self);
+	void (*cancelled) (EvPasswordView	*self);
 };
 
 GType	      ev_password_view_get_type                (void) G_GNUC_CONST;

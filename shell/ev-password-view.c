@@ -38,6 +38,7 @@
 
 enum {
 	UNLOCK,
+	CANCELLED,
 	LAST_SIGNAL
 };
 typedef struct {
@@ -87,6 +88,15 @@ ev_password_view_class_init (EvPasswordViewClass *class)
 			      G_TYPE_FROM_CLASS (g_object_class),
 			      G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
 			      G_STRUCT_OFFSET (EvPasswordViewClass, unlock),
+			      NULL, NULL,
+			      g_cclosure_marshal_VOID__VOID,
+			      G_TYPE_NONE, 0);
+
+	password_view_signals[CANCELLED] =
+		g_signal_new ("cancelled",
+			      G_TYPE_FROM_CLASS (g_object_class),
+			      G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
+			      G_STRUCT_OFFSET (EvPasswordViewClass, cancelled),
 			      NULL, NULL,
 			      g_cclosure_marshal_VOID__VOID,
 			      G_TYPE_NONE, 0);
@@ -183,6 +193,10 @@ ev_password_dialog_got_response (GtkDialog      *dialog,
 			g_strdup (gtk_entry_get_text (GTK_ENTRY (priv->password_entry)));
 
 		g_signal_emit (password_view, password_view_signals[UNLOCK], 0);
+	} else if (response_id == GTK_RESPONSE_CANCEL ||
+		   response_id == GTK_RESPONSE_CLOSE ||
+		   response_id == GTK_RESPONSE_DELETE_EVENT) {
+		g_signal_emit (password_view, password_view_signals[CANCELLED], 0);
 	}
 	
 	gtk_widget_destroy (GTK_WIDGET (dialog));

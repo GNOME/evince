@@ -239,6 +239,8 @@ typedef struct {
 
 	/* Send to */
 	gboolean has_mailto_handler;
+
+	gboolean password_view_cancelled;
 } EvWindowPrivate;
 
 #define GET_PRIVATE(o) ev_window_get_instance_private (o)
@@ -1804,6 +1806,7 @@ ev_window_password_view_unlock (EvWindow *ev_window)
 	password = ev_password_view_get_password (EV_PASSWORD_VIEW (priv->password_view));
 	ev_job_load_set_password (EV_JOB_LOAD (priv->load_job), password);
 	ev_job_scheduler_push_job (priv->load_job, EV_JOB_PRIORITY_NONE);
+	priv->password_view_cancelled = FALSE;
 }
 
 static void
@@ -1818,6 +1821,18 @@ ev_window_clear_load_job (EvWindow *ev_window)
 		g_signal_handlers_disconnect_by_func (priv->load_job, ev_window_load_job_cb, ev_window);
 		g_object_unref (priv->load_job);
 		priv->load_job = NULL;
+	}
+}
+
+static void
+ev_window_password_view_cancelled (EvWindow *ev_window)
+{
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
+
+	priv->password_view_cancelled = TRUE;
+	if (ev_window_is_recent_view (ev_window)) {
+		ev_window_clear_load_job (ev_window);
+		ev_application_clear_uri (EV_APP);
 	}
 }
 
@@ -2395,7 +2410,8 @@ ev_window_open_uri (EvWindow       *ev_window,
 		g_strdup (search_string) : NULL;
 
 	if (priv->uri &&
-	    g_ascii_strcasecmp (priv->uri, uri) == 0) {
+	    g_ascii_strcasecmp (priv->uri, uri) == 0 &&
+	    !priv->password_view_cancelled) {
 		if (ev_window_check_document_modified (ev_window, EV_WINDOW_ACTION_RELOAD))
 			return;
 		ev_window_reload_document (ev_window, dest);
@@ -7643,10 +7659,15 @@ ev_window_init (EvWindow *ev_window)
 				     allow_links_change_zoom);
 	ev_view_set_model (EV_VIEW (priv->view), priv->model);
 
+	priv->password_view_cancelled = FALSE;
 	priv->password_view = ev_password_view_new (GTK_WINDOW (ev_window));
 	g_signal_connect_swapped (priv->password_view,
 				  "unlock",
 				  G_CALLBACK (ev_window_password_view_unlock),
+				  ev_window);
+	g_signal_connect_swapped (priv->password_view,
+				  "cancelled",
+				  G_CALLBACK (ev_window_password_view_cancelled),
 				  ev_window);
 	g_signal_connect_object (priv->view, "focus_in_event",
 			         G_CALLBACK (view_actions_focus_in_cb),

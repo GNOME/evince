@@ -539,6 +539,7 @@ ev_application_unregister_uri (EvApplication *application,
 		g_error_free (error);
 	} else {
                 g_variant_unref (value);
+		application->doc_registered = FALSE;
 	}
 }
 #endif /* ENABLE_DBUS */
@@ -1164,6 +1165,21 @@ const gchar *
 ev_application_get_uri (EvApplication *application)
 {
 	return application->uri;
+}
+
+/**
+ * ev_application_clear_uri:
+ * @application: The instance of the application.
+ *
+ * This unregisters current uri and clears it so that another document
+ * can be opened in this instance. E.g. after cancelled password dialog
+ * in recent view.
+ */
+void
+ev_application_clear_uri (EvApplication *application)
+{
+	ev_application_unregister_uri (application, application->uri);
+	g_clear_pointer (&application->uri, g_free);
 }
 
 /**
