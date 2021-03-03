@@ -1557,7 +1557,7 @@ page_cache_size_changed (GSettings *settings,
 
 	page_cache_mb = g_settings_get_uint (settings, GS_PAGE_CACHE_SIZE);
 	ev_view_set_page_cache_size (EV_VIEW (priv->view),
-				     page_cache_mb * 1024 * 1024);
+				     (gsize) page_cache_mb * 1024 * 1024);
 }
 
 static void
@@ -7743,7 +7743,7 @@ ev_window_init (EvWindow *ev_window)
 	page_cache_mb = g_settings_get_uint (ev_window_ensure_settings (ev_window),
 					     GS_PAGE_CACHE_SIZE);
 	ev_view_set_page_cache_size (EV_VIEW (priv->view),
-				     page_cache_mb * 1024 * 1024);
+				     (gsize) page_cache_mb * 1024 * 1024);
 	allow_links_change_zoom = g_settings_get_boolean (ev_window_ensure_settings (ev_window),
 				     GS_ALLOW_LINKS_CHANGE_ZOOM);
 	ev_view_set_allow_links_change_zoom (EV_VIEW (priv->view),
