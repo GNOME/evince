@@ -9,6 +9,7 @@
     <link type="seealso" xref="commandline"/>
     <revision pkgversion="3.2" date="2011-09-05" status="final"/>
     <revision pkgversion="3.12" date="2014-02-28" status="candidate"/>
+    <revision pkgversion="3.39.2" date="2021-03-05" status="candidate"/>
 
     <credit type="author">
       <name>Tiffany Antopolski</name>
@@ -43,7 +44,7 @@
     </item>
   </list>
 
-  <p>If a <app>Document Viewer</app> window is already open you can:</p>
+  <p>If an empty <app>Document Viewer</app> window is already open you can:</p>
 
   <list>
     <item>
@@ -51,8 +52,22 @@
       open in a new window.</p>
     </item>
     <item>
-      <p>Press the <gui>File options</gui> button in the top-right corner of
-      the window, then select <gui>Open…</gui>. In the <gui>Open Document</gui>
+      <p>Press the <gui>Open…</gui> button in the top-left corner of
+      the window. In the <gui>Open Document</gui>
+      dialog, choose the file which you wish to open, and click
+      <gui>Open</gui>. The file will open in a new window.</p>
+    </item>
+  </list>
+
+  <p>If a document is already opened in a <app>Document Viewer</app> window you can:</p>
+
+  <list>
+    <item>
+      <p>Drag a file into the window from <app>Files</app>. The new file will
+      open in a new window.</p>
+    </item>
+    <item>
+      <p>Press <keyseq><key>Ctrl</key><key>O</key></keyseq>. In the <gui>Open Document</gui>
       dialog, choose the file which you wish to open, and click
       <gui>Open</gui>. The file will open in a new window.</p>
     </item>
