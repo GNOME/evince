@@ -3,22 +3,21 @@
 # This file is distributed under the same license as the epiphany package.
 #
 # Maxim Dziumanenko <dziumanenko@gmail.com>, 2005-2006.
-# Yuri Chornoivan <yurchor@ukr.net>, 2020.
+# Yuri Chornoivan <yurchor@ukr.net>, 2020, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: evince manual\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-07-04 22:19+0000\n"
-"PO-Revision-Date: 2020-07-05 09:30+0300\n"
+"POT-Creation-Date: 2021-03-05 07:57+0000\n"
+"PO-Revision-Date: 2021-03-05 13:42+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<"
-"=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Lokalize 20.07.70\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Lokalize 20.11.70\n"
 
 #. Put one translator per line, in the form NAME <EMAIL>, YEAR1, YEAR2
 msgctxt "_"
@@ -36,7 +35,7 @@ msgstr "Використання SyncTeX з класом Beamer LaTeX."
 #: C/synctex-beamer.page:11 C/openerror.page:13 C/duplex-7pages.page:12
 #: C/duplex-4pages.page:12 C/introduction.page:12 C/duplex-12pages.page:12
 #: C/singlesided-3-4pages.page:12 C/synctex.page:12 C/annotations-save.page:12
-#: C/documentation.page:9 C/synctex-editors.page:11 C/opening.page:14
+#: C/documentation.page:9 C/synctex-editors.page:11 C/opening.page:15
 #: C/singlesided-17-20pages.page:12 C/singlesided-npages.page:12
 #: C/synctex-support.page:12 C/duplex-npages.page:12 C/duplex-16pages.page:12
 #: C/translate.page:10 C/synctex-compile.page:11 C/duplex-5pages.page:12
@@ -878,14 +877,12 @@ msgid ""
 "\n"
 "let g:Tex_ViewRule_pdf = 'evince_dbus.py'\n"
 "let g:Tex_DefaultTargetFormat = 'pdf'\n"
-"let g:Tex_CompileRule_pdf = 'pdflatex --synctex=1 -interaction=nonstopmode"
-" $*'\n"
+"let g:Tex_CompileRule_pdf = 'pdflatex --synctex=1 -interaction=nonstopmode $*'\n"
 msgstr ""
 "\n"
 "let g:Tex_ViewRule_pdf = 'evince_dbus.py'\n"
 "let g:Tex_DefaultTargetFormat = 'pdf'\n"
-"let g:Tex_CompileRule_pdf = 'pdflatex --synctex=1 -interaction=nonstopmode"
-" $*'\n"
+"let g:Tex_CompileRule_pdf = 'pdflatex --synctex=1 -interaction=nonstopmode $*'\n"
 
 #. (itstool) path: item/p
 #: C/synctex-editors.page:52
@@ -897,29 +894,29 @@ msgstr ""
 "введення комбінації \\ls. Підтримки зворотного пошуку ще не передбачено."
 
 #. (itstool) path: credit/name
-#: C/opening.page:18 C/print-differentsize.page:17 C/finding.page:23
+#: C/opening.page:19 C/print-differentsize.page:17 C/finding.page:23
 #: C/formats.page:18 C/password.page:16 C/print-pagescaling.page:12
 #: C/bookmarks.page:18
 msgid "Ekaterina Gerasimova"
 msgstr "Єкатерина Герасимова (Ekaterina Gerasimova)"
 
 #. (itstool) path: info/desc
-#: C/opening.page:24
+#: C/opening.page:25
 msgid "How to open a document."
 msgstr "Як відкрити документ."
 
 #. (itstool) path: page/title
-#: C/opening.page:27
+#: C/opening.page:28
 msgid "Open a document"
 msgstr "Відкрити документ"
 
 #. (itstool) path: page/p
-#: C/opening.page:29
+#: C/opening.page:30
 msgid "You can open a document using any one of the following ways:"
 msgstr "Ви можете відкрити документ в один з таких способів:"
 
 #. (itstool) path: item/p
-#: C/opening.page:33
+#: C/opening.page:34
 msgid ""
 "Double-click on the file in <app>Files</app> or your <em>file manager</em>."
 msgstr ""
@@ -927,7 +924,7 @@ msgstr ""
 "<em>програмі для керування файлами</em>."
 
 #. (itstool) path: note/p
-#: C/opening.page:36
+#: C/opening.page:37
 msgid ""
 "Double clicking PDF, PostScript, .djvu, .dvi and Comic Book Archive files "
 "opens them in <app>Document Viewer</app> by default."
@@ -936,7 +933,7 @@ msgstr ""
 "архівів коміксів у <app>Переглядачі документів</app>."
 
 #. (itstool) path: item/p
-#: C/opening.page:41
+#: C/opening.page:42
 msgid ""
 "Right-click on a file icon in <app>Files</app> and click <guiseq><gui>Open "
 "With</gui><gui>Document Viewer</gui></guiseq>."
@@ -946,12 +943,13 @@ msgstr ""
 "документів</gui></guiseq>."
 
 #. (itstool) path: page/p
-#: C/opening.page:46
-msgid "If a <app>Document Viewer</app> window is already open you can:"
-msgstr "Якщо вікно <app>Переглядача документів</app> вже відкрито, ви можете:"
+#: C/opening.page:47
+#| msgid "If a <app>Document Viewer</app> window is already open you can:"
+msgid "If an empty <app>Document Viewer</app> window is already open you can:"
+msgstr "Якщо вже відкрито порожнє вікно <app>Переглядача документів</app>, ви можете:"
 
 #. (itstool) path: item/p
-#: C/opening.page:50
+#: C/opening.page:51 C/opening.page:66
 msgid ""
 "Drag a file into the window from <app>Files</app>. The new file will open in "
 "a new window."
@@ -960,16 +958,42 @@ msgstr ""
 "відкрито у новому вікні."
 
 #. (itstool) path: item/p
-#: C/opening.page:54
+#: C/opening.page:55
+#| msgid ""
+#| "Press the <gui>File options</gui> button in the top-right corner of the "
+#| "window, then select <gui>Open…</gui>. In the <gui>Open Document</gui> "
+#| "dialog, choose the file which you wish to open, and click <gui>Open</"
+#| "gui>. The file will open in a new window."
 msgid ""
-"Press the <gui>File options</gui> button in the top-right corner of the "
-"window, then select <gui>Open…</gui>. In the <gui>Open Document</gui> "
-"dialog, choose the file which you wish to open, and click <gui>Open</gui>. "
-"The file will open in a new window."
+"Press the <gui>Open…</gui> button in the top-left corner of the window. In "
+"the <gui>Open Document</gui> dialog, choose the file which you wish to open, "
+"and click <gui>Open</gui>. The file will open in a new window."
 msgstr ""
-"Натиснути кнопку <gui>Дії з файлами</gui> у верхньому правому куті вікна "
-"програми, і вибрати пункт <gui>Відкрити…</gui>. У вікні <gui>Відкрити "
-"документ</gui> виберіть файл, який слід відкрити, і натисніть кнопку "
+"Натиснути кнопку <gui>Відкрити…</gui> у верхньому лівому куті вікна "
+"програми. У вікні <gui>Відкрити документ</gui> виберіть файл, який слід відкрити, і натисніть кнопку "
+"<gui>Відкрити</gui>. Файл буде відкрито у новому вікні програми."
+
+#. (itstool) path: page/p
+#: C/opening.page:62
+#| msgid "If a <app>Document Viewer</app> window is already open you can:"
+msgid ""
+"If a document is already opened in a <app>Document Viewer</app> window you "
+"can:"
+msgstr "Якщо у вікні <app>Переглядача документів</app> вже відкрито документ, ви можете:"
+
+#. (itstool) path: item/p
+#: C/opening.page:70
+#| msgid ""
+#| "Press the <gui>File options</gui> button in the top-right corner of the "
+#| "window, then select <gui>Open…</gui>. In the <gui>Open Document</gui> "
+#| "dialog, choose the file which you wish to open, and click <gui>Open</"
+#| "gui>. The file will open in a new window."
+msgid ""
+"Press <keyseq><key>Ctrl</key><key>O</key></keyseq>. In the <gui>Open "
+"Document</gui> dialog, choose the file which you wish to open, and click "
+"<gui>Open</gui>. The file will open in a new window."
+msgstr ""
+"Натиснути комбінацію клавіш <keyseq><key>Ctrl</key><key>O</key></keyseq>, у вікні <gui>Відкрити документ</gui> вибрати файл, який слід відкрити, і натиснути кнопку "
 "<gui>Відкрити</gui>. Файл буде відкрито у новому вікні програми."
 
 #. (itstool) path: info/desc
@@ -2474,11 +2498,9 @@ msgid ""
 "gnome.org/users/gnome-help/stable/printing-order\">the GNOME Desktop Help</"
 "link>."
 msgstr ""
-"Будь ласка, ознайомтеся із <link xref=\"help:gnome-help/printing-order\""
-" href=\"https://help."
-"gnome.org/users/gnome-help/stable/printing-order\">довідкою щодо стільничного"
-" середовища GNOME</"
-"link>."
+"Будь ласка, ознайомтеся із <link xref=\"help:gnome-help/printing-order\" "
+"href=\"https://help.gnome.org/users/gnome-help/stable/printing-order"
+"\">довідкою щодо стільничного середовища GNOME</link>."
 
 #. (itstool) path: info/title
 #: C/duplex-9pages.page:7
@@ -3348,9 +3370,9 @@ msgid ""
 "help.gnome.org/users/gnome-help/stable/printing-select\">the GNOME Desktop "
 "Help</link>."
 msgstr ""
-"Будь ласка, ознайомтеся із <link xref=\"help:gnome-help/printing-select\""
-" href=\"https://help.gnome.org/users/gnome-help/stable/printing-select\""
-">довідкою щодо стільничного середовища GNOME</link>."
+"Будь ласка, ознайомтеся із <link xref=\"help:gnome-help/printing-select\" "
+"href=\"https://help.gnome.org/users/gnome-help/stable/printing-select"
+"\">довідкою щодо стільничного середовища GNOME</link>."
 
 #. (itstool) path: info/desc
 #: C/movingaround.page:23
@@ -3538,15 +3560,17 @@ msgstr ""
 
 #. (itstool) path: note/p
 #: C/movingaround.page:132
+#| msgid ""
+#| "Some documents have an index or table of contents, which you can display "
+#| "in the side pane. Click the drop-down list at the top of the side pane "
+#| "and select <gui>Outline</gui> to view it."
 msgid ""
 "Some documents have an index or table of contents, which you can display in "
-"the side pane. Click the drop-down list at the top of the side pane and "
-"select <gui>Outline</gui> to view it."
+"the side pane. Select the <gui>Outline</gui> button at the bottom of the "
+"side pane to view it."
 msgstr ""
 "У деяких документах передбачено покажчик або таблицю змісту, які може бути "
-"показано на бічній панелі. Натисніть кнопку спадного списку у верхній "
-"частині бічної панелі виберіть пункт <gui>Нарис</gui>, щоб переглянути ці "
-"дані."
+"показано на бічній панелі. Натисніть кнопку <gui>Нарис</gui> у нижній частині бічної панелі, щоб переглянути покажчик."
 
 #. (itstool) path: note/p
 #: C/movingaround.page:136
@@ -4139,14 +4163,17 @@ msgstr ""
 
 #. (itstool) path: page/p
 #: C/annotations.page:36
+#| msgid ""
+#| "At the top of this side pane, there is a drop-down menu with options like "
+#| "<gui>Thumbnails</gui>, <gui>Outline</gui> and <gui>Annotations</gui> "
+#| "(some of which may be <em>dimmed</em> for some documents)."
 msgid ""
-"At the top of this side pane, there is a drop-down menu with options like "
-"<gui>Thumbnails</gui>, <gui>Outline</gui> and <gui>Annotations</gui> (some "
-"of which may be <em>dimmed</em> for some documents)."
+"At the bottom of the side pane, the buttons <gui>Thumbnails</gui>, "
+"<gui>Outline</gui>, <gui>Annotations</gui> and <gui>Bookmarks</gui> let you "
+"choose what to display in the side pane. (Some options may not be available "
+"for some documents)."
 msgstr ""
-"У верхній частині бічної панелі буде показано спадне меню із пунктами "
-"<gui>Мініатюри</gui>, <gui>Нарис</gui> і <gui>Примітки</gui> (деякі з цих "
-"пунктів може бути <em>вимкнено</em> для певних документів)."
+"У нижній частині бічної панелі розташовано кнопки <gui>Мініатюри</gui>, <gui>Нарис</gui>, <gui>Примітки</gui> і <gui>Закладки</gui>, за допомогою яких ви можете вибрати дані, які буде показано на панелі. Деякі з цих пунктів можуть бути недоступними для певних документів."
 
 #. (itstool) path: page/p
 #: C/annotations.page:39
