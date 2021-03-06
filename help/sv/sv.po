@@ -10,8 +10,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: evince doc\n"
-"POT-Creation-Date: 2021-03-05 11:45+0000\n"
-"PO-Revision-Date: 2021-03-05 22:23+0100\n"
+"POT-Creation-Date: 2021-03-06 06:29+0000\n"
+"PO-Revision-Date: 2021-03-06 12:45+0100\n"
 "Last-Translator: Anders Jonsson <anders.jonsson@norsjovallen.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
 "Language: sv\n"
@@ -59,7 +59,7 @@ msgstr "Tiffany Antopolski"
 #: C/convertSVG.page:20 C/convertPostScript.page:21 C/duplex-4pages.page:16
 #: C/duplex-12pages.page:16 C/singlesided-3-4pages.page:16 C/synctex.page:16
 #: C/annotations-save.page:20 C/documentation.page:14 C/synctex-editors.page:15
-#: C/noprint.page:15 C/singlesided-17-20pages.page:16
+#: C/noprint.page:18 C/singlesided-17-20pages.page:16
 #: C/singlesided-npages.page:16 C/synctex-support.page:20
 #: C/duplex-npages.page:16 C/duplex-16pages.page:16 C/translate.page:19
 #: C/default-settings.page:16 C/textselection.page:15 C/synctex-compile.page:15
@@ -385,7 +385,7 @@ msgstr ""
 "fil."
 
 #. (itstool) path: credit/name
-#: C/convertSVG.page:12 C/convertPostScript.page:13 C/noprint.page:11
+#: C/convertSVG.page:12 C/convertPostScript.page:13 C/noprint.page:14
 #: C/print-differentsize.page:13 C/finding.page:15 C/textselection.page:11
 #: C/formats.page:14 C/password.page:12 C/printing.page:14
 #: C/print-order.page:12 C/print-select.page:11 C/movingaround.page:13
@@ -976,42 +976,42 @@ msgstr ""
 "<gui>Öppna</gui>. Filen kommer att öppnas i ett nytt fönster."
 
 #. (itstool) path: info/desc
-#: C/noprint.page:7
+#: C/noprint.page:9
 msgid "The author may have put printing restrictions on the document."
 msgstr "Upphovsmannen kan ha satt utskriftsrestriktioner på dokumentet."
 
 #. (itstool) path: page/title
-#: C/noprint.page:20
+#: C/noprint.page:23
 msgid "I can't print a document"
 msgstr "Jag kan inte skriva ut ett dokument"
 
 #. (itstool) path: section/title
-#: C/noprint.page:22
+#: C/noprint.page:25
 msgid "Possible reasons for printing failure"
 msgstr "Möjliga skäl till att utskrift misslyckas"
 
 #. (itstool) path: section/p
-#: C/noprint.page:23
+#: C/noprint.page:26
 msgid "A document might not print because of:"
 msgstr "Ett dokument kanske inte kan skrivas ut på grund av:"
 
 #. (itstool) path: item/p
-#: C/noprint.page:25
+#: C/noprint.page:28
 msgid "Printer problems or,"
 msgstr "Skrivarproblem eller,"
 
 #. (itstool) path: item/p
-#: C/noprint.page:26
+#: C/noprint.page:29
 msgid "PDF printing restrictions."
 msgstr "Restriktioner för utskrift av PDF."
 
 #. (itstool) path: section/title
-#: C/noprint.page:32
+#: C/noprint.page:35
 msgid "Printer problems"
 msgstr "Skrivarproblem"
 
 #. (itstool) path: section/p
-#: C/noprint.page:33
+#: C/noprint.page:36
 msgid ""
 "There are many reasons why your printer might not be working. For example, "
 "it could be out of paper or ink, or unplugged or damaged."
@@ -1021,12 +1021,12 @@ msgstr ""
 "skadad."
 
 #. (itstool) path: section/p
-#: C/noprint.page:38
+#: C/noprint.page:41
 msgid "To check if your printer is printing correctly:"
 msgstr "För att kontrollera om din skrivare kan skriva ut korrekt:"
 
 #. (itstool) path: item/p
-#: C/noprint.page:41
+#: C/noprint.page:44
 msgid ""
 "Open the <gui href=\"help:gnome-help/shell-introduction#activities"
 "\">Activities</gui> overview and start typing <gui>Settings</gui>."
@@ -1035,35 +1035,37 @@ msgstr ""
 "\">Aktiviteter</gui> och börja skriva <gui>Inställningar</gui>."
 
 #. (itstool) path: item/p
-#: C/noprint.page:45
+#: C/noprint.page:48
 msgid "Click on <gui>Settings</gui>."
 msgstr "Klicka på <gui>Inställningar</gui>."
 
 #. (itstool) path: item/p
-#: C/noprint.page:48
-msgid "Click <gui>Devices</gui> in the sidebar."
-msgstr "Klicka på <gui>Enheter</gui> i sidopanelen."
-
-#. (itstool) path: item/p
 #: C/noprint.page:51
-msgid "Click <gui>Printers</gui> in the sidebar to open the panel."
-msgstr "Klicka på <gui>Skrivare</gui> i sidopanelen för att öppna panelen."
+msgid "Click <gui>Printers</gui> in the sidebar."
+msgstr "Klicka på <gui>Skrivare</gui> i sidopanelen."
 
-#. (itstool) path: item/p
-#: C/noprint.page:53
-msgid "Click on your printer in the list."
-msgstr "Klicka på din skrivare i listan."
+#. (itstool) path: media/span
+#: C/noprint.page:54
+msgid "settings"
+msgstr "inställningar"
 
 #. (itstool) path: item/p
 #: C/noprint.page:54
-msgid ""
-"Click on <gui>Print Test Page</gui>. A page should be sent to your printer."
-msgstr ""
-"Klicka på <gui>Skriv ut testsida</gui>. En sida bör skickas till din "
-"skrivare."
+msgid "Click the <_:media-1/> button next to the printer."
+msgstr "Klicka på knappen <_:media-1/> intill skrivaren."
+
+#. (itstool) path: item/p
+#: C/noprint.page:58
+msgid "Select <gui style=\"menuitem\">Printing Options</gui>."
+msgstr "Välj <gui style=\"menuitem\">Utskriftsalternativ</gui>."
+
+#. (itstool) path: item/p
+#: C/noprint.page:61
+msgid "Click on <gui>Test Page</gui>. A page should be sent to your printer."
+msgstr "Klicka på <gui>Testsida</gui>. En sida bör skickas till din skrivare."
 
 #. (itstool) path: note/p
-#: C/noprint.page:56
+#: C/noprint.page:63
 msgid ""
 "If this fails, see <link href=\"help:gnome-help/printing\">Printing help</"
 "link>. You may also need to see your printer's manual to see what else you "
@@ -1074,12 +1076,12 @@ msgstr ""
 "handbok för att se om det finns något du kan göra."
 
 #. (itstool) path: section/title
-#: C/noprint.page:68
+#: C/noprint.page:74
 msgid "PDF printing restrictions"
 msgstr "Restriktioner för utskrift av PDF"
 
 #. (itstool) path: section/p
-#: C/noprint.page:69
+#: C/noprint.page:75
 msgid ""
 "Some PDF documents have a setting which prevents you from printing them. "
 "Authors can set this printing restriction when they write a document. The "
@@ -1091,37 +1093,51 @@ msgstr ""
 "dokument. Programmet <app>Dokumentvisare</app> åsidosätter denna restriktion "
 "som standard, men du kan behöva kontrollera att den inte har inaktiverats:"
 
-#. (itstool) path: item/p
-#: C/noprint.page:78
+#. (itstool) path: note/p
+#: C/noprint.page:83
 msgid ""
-"Press <keyseq><key>Alt</key><key>F2</key></keyseq> to open the Run "
-"Application window."
+"You need to have <app>dconf Editor</app> installed on your computer to "
+"change this setting."
 msgstr ""
-"Tryck <keyseq><key>Alt</key><key>F2</key></keyseq> för att öppna fönstret "
-"Kör program."
+"Du måste ha <app>dconf-redigerare</app> installerat på din dator för att "
+"ändra denna inställning."
 
-#. (itstool) path: item/p
-#: C/noprint.page:84
+#. (itstool) path: if/p
+#: C/noprint.page:86
 msgid ""
-"Type <input>dconf-editor</input> into the text box and click <gui>Run</gui>. "
-"The Configuration Editor will open."
+"<link style=\"button\" action=\"install:dconf-editor\">Install <app>dconf "
+"Editor</app></link>"
 msgstr ""
-"Skriv <input>dconf-editor</input> i textrutan och klicka på <gui>Kör</gui>. "
-"Konfigurationsredigeraren kommer att öppnas."
+"<link style=\"button\" action=\"install:dconf-editor\">Installera <app>dconf-"
+"redigerare</app></link>"
 
 #. (itstool) path: item/p
-#: C/noprint.page:89
-msgid "Browse to <sys>/org/gnome/evince</sys> using the side pane."
-msgstr "Bläddra till <sys>/org/gnome/evince</sys> visa sidopanelen."
-
-#. (itstool) path: item/p
-#: C/noprint.page:91
-msgid "Make sure that the <gui>override_restrictions</gui> option is checked."
+#: C/noprint.page:93
+msgid ""
+"Open the <gui href=\"help:gnome-help/shell-introduction#activities"
+"\">Activities</gui> overview and start typing <gui>dconf Editor</gui>."
 msgstr ""
-"Säkerställ att inställningen <gui>override_restrictions</gui> är ikryssad."
+"Öppna översiktsvyn <gui href=\"help:gnome-help/shell-introduction#activities"
+"\">Aktiviteter</gui> och börja skriva <gui>dconf-redigerare</gui>."
 
 #. (itstool) path: item/p
-#: C/noprint.page:96
+#: C/noprint.page:97
+msgid "Click on <gui>dconf Editor</gui>."
+msgstr "Klicka på <gui>dconf-redigerare</gui>."
+
+#. (itstool) path: item/p
+#: C/noprint.page:100
+msgid "Browse to <sys>/org/gnome/evince</sys>."
+msgstr "Bläddra till <sys>/org/gnome/evince</sys>."
+
+#. (itstool) path: item/p
+#: C/noprint.page:103
+msgid "Make sure that the <gui>override-restrictions</gui> option is checked."
+msgstr ""
+"Säkerställ att inställningen <gui>override-restrictions</gui> är ikryssad."
+
+#. (itstool) path: item/p
+#: C/noprint.page:108
 msgid ""
 "Go back to the <app>Document Viewer</app> and try to print the document "
 "again."
