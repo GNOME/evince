@@ -1,14 +1,14 @@
 # Polish translation for evince help.
-# Copyright © 2017-2020 the evince authors.
+# Copyright © 2017-2021 the evince authors.
 # This file is distributed under the same license as the evince help.
-# Piotr Drąg <piotrdrag@gmail.com>, 2017-2020.
-# Aviary.pl <community-poland@mozilla.org>, 2017-2020.
+# Piotr Drąg <piotrdrag@gmail.com>, 2017-2021.
+# Aviary.pl <community-poland@mozilla.org>, 2017-2021.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: evince-help\n"
-"POT-Creation-Date: 2020-07-04 22:19+0000\n"
-"PO-Revision-Date: 2020-08-15 13:20+0200\n"
+"POT-Creation-Date: 2021-03-05 07:57+0000\n"
+"PO-Revision-Date: 2021-03-06 14:04+0100\n"
 "Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
 "Language-Team: Polish <community-poland@mozilla.org>\n"
 "Language: pl\n"
@@ -22,8 +22,8 @@ msgstr ""
 msgctxt "_"
 msgid "translator-credits"
 msgstr ""
-"Piotr Drąg <piotrdrag@gmail.com>, 2017-2020\n"
-"Aviary.pl <community-poland@mozilla.org>, 2017-2020"
+"Piotr Drąg <piotrdrag@gmail.com>, 2017-2021\n"
+"Aviary.pl <community-poland@mozilla.org>, 2017-2021"
 
 #. (itstool) path: info/desc
 #: C/synctex-beamer.page:7
@@ -34,7 +34,7 @@ msgstr "Używanie SyncTeX za pomocą klasy Beamer LaTeX-a."
 #: C/synctex-beamer.page:11 C/openerror.page:13 C/duplex-7pages.page:12
 #: C/duplex-4pages.page:12 C/introduction.page:12 C/duplex-12pages.page:12
 #: C/singlesided-3-4pages.page:12 C/synctex.page:12 C/annotations-save.page:12
-#: C/documentation.page:9 C/synctex-editors.page:11 C/opening.page:14
+#: C/documentation.page:9 C/synctex-editors.page:11 C/opening.page:15
 #: C/singlesided-17-20pages.page:12 C/singlesided-npages.page:12
 #: C/synctex-support.page:12 C/duplex-npages.page:12 C/duplex-16pages.page:12
 #: C/translate.page:10 C/synctex-compile.page:11 C/duplex-5pages.page:12
@@ -881,35 +881,35 @@ msgstr ""
 "Wyszukiwanie do tyłu nie jest jeszcze obsługiwane."
 
 #. (itstool) path: credit/name
-#: C/opening.page:18 C/print-differentsize.page:17 C/finding.page:23
+#: C/opening.page:19 C/print-differentsize.page:17 C/finding.page:23
 #: C/formats.page:18 C/password.page:16 C/print-pagescaling.page:12
 #: C/bookmarks.page:18
 msgid "Ekaterina Gerasimova"
 msgstr "Ekaterina Gerasimova"
 
 #. (itstool) path: info/desc
-#: C/opening.page:24
+#: C/opening.page:25
 msgid "How to open a document."
 msgstr "Jak otworzyć dokument."
 
 #. (itstool) path: page/title
-#: C/opening.page:27
+#: C/opening.page:28
 msgid "Open a document"
 msgstr "Otwieranie dokumentu"
 
 #. (itstool) path: page/p
-#: C/opening.page:29
+#: C/opening.page:30
 msgid "You can open a document using any one of the following ways:"
 msgstr "Można otworzyć dokument za pomocą jednego z poniższych sposobów."
 
 #. (itstool) path: item/p
-#: C/opening.page:33
+#: C/opening.page:34
 msgid ""
 "Double-click on the file in <app>Files</app> or your <em>file manager</em>."
 msgstr "Podwójnie kliknij plik w <app>Menedżerze plików</app>."
 
 #. (itstool) path: note/p
-#: C/opening.page:36
+#: C/opening.page:37
 msgid ""
 "Double clicking PDF, PostScript, .djvu, .dvi and Comic Book Archive files "
 "opens them in <app>Document Viewer</app> by default."
@@ -918,7 +918,7 @@ msgstr ""
 "z komiksem domyślnie otworzy go w <app>Przeglądarce dokumentów</app>."
 
 #. (itstool) path: item/p
-#: C/opening.page:41
+#: C/opening.page:42
 msgid ""
 "Right-click on a file icon in <app>Files</app> and click <guiseq><gui>Open "
 "With</gui><gui>Document Viewer</gui></guiseq>."
@@ -928,12 +928,12 @@ msgstr ""
 "gui></guiseq>."
 
 #. (itstool) path: page/p
-#: C/opening.page:46
-msgid "If a <app>Document Viewer</app> window is already open you can:"
-msgstr "Jeśli okno <app>Przeglądarki dokumentów</app> jest już otwarte:"
+#: C/opening.page:47
+msgid "If an empty <app>Document Viewer</app> window is already open you can:"
+msgstr "Jeśli puste okno <app>Przeglądarki dokumentów</app> jest już otwarte:"
 
 #. (itstool) path: item/p
-#: C/opening.page:50
+#: C/opening.page:51 C/opening.page:66
 msgid ""
 "Drag a file into the window from <app>Files</app>. The new file will open in "
 "a new window."
@@ -942,17 +942,35 @@ msgstr ""
 "otwarty w nowym oknie."
 
 #. (itstool) path: item/p
-#: C/opening.page:54
+#: C/opening.page:55
 msgid ""
-"Press the <gui>File options</gui> button in the top-right corner of the "
-"window, then select <gui>Open…</gui>. In the <gui>Open Document</gui> "
-"dialog, choose the file which you wish to open, and click <gui>Open</gui>. "
-"The file will open in a new window."
+"Press the <gui>Open…</gui> button in the top-left corner of the window. In "
+"the <gui>Open Document</gui> dialog, choose the file which you wish to open, "
+"and click <gui>Open</gui>. The file will open in a new window."
 msgstr ""
-"Kliknij przycisk <gui>Opcje plików</gui> w górnym prawym rogu okna, "
-"a następnie wybierz <gui>Otwórz…</gui>. W oknie <gui>Otwarcie dokumentu</"
-"gui> wybierz plik i kliknij przycisk <gui>Otwórz</gui>. Plik zostanie "
-"otwarty w nowym oknie."
+"Kliknij przycisk <gui>Otwórz</gui> w górnym lewym rogu okna. W oknie "
+"<gui>Otwarcie dokumentu</gui> wybierz plik i kliknij przycisk <gui>Otwórz</"
+"gui>. Plik zostanie otwarty w nowym oknie."
+
+#. (itstool) path: page/p
+#: C/opening.page:62
+msgid ""
+"If a document is already opened in a <app>Document Viewer</app> window you "
+"can:"
+msgstr ""
+"Jeśli w oknie <app>Przeglądarki dokumentów</app> jest już otwarty jakiś "
+"dokument:"
+
+#. (itstool) path: item/p
+#: C/opening.page:70
+msgid ""
+"Press <keyseq><key>Ctrl</key><key>O</key></keyseq>. In the <gui>Open "
+"Document</gui> dialog, choose the file which you wish to open, and click "
+"<gui>Open</gui>. The file will open in a new window."
+msgstr ""
+"Naciśnij klawisze <keyseq><key>Ctrl</key><key>O</key></keyseq>. W oknie "
+"<gui>Otwarcie dokumentu</gui> wybierz plik i kliknij przycisk <gui>Otwórz</"
+"gui>. Plik zostanie otwarty w nowym oknie."
 
 #. (itstool) path: info/desc
 #: C/noprint.page:7
@@ -3435,12 +3453,12 @@ msgstr "Można przechodzić między stronami klikając je w panelu bocznym."
 #: C/movingaround.page:132
 msgid ""
 "Some documents have an index or table of contents, which you can display in "
-"the side pane. Click the drop-down list at the top of the side pane and "
-"select <gui>Outline</gui> to view it."
+"the side pane. Select the <gui>Outline</gui> button at the bottom of the "
+"side pane to view it."
 msgstr ""
 "Niektóre dokumenty mają indeks lub spis treści, który można wyświetlić "
-"w panelu bocznym. Kliknij rozwijaną listę na górze panelu bocznego i wybierz "
-"<gui>Konspekt</gui>, aby go wyświetlić."
+"w panelu bocznym. Kliknij przycisk <gui>Konspekt</gui> na dole panelu "
+"bocznego, aby go wyświetlić."
 
 #. (itstool) path: note/p
 #: C/movingaround.page:136
@@ -4017,13 +4035,14 @@ msgstr ""
 #. (itstool) path: page/p
 #: C/annotations.page:36
 msgid ""
-"At the top of this side pane, there is a drop-down menu with options like "
-"<gui>Thumbnails</gui>, <gui>Outline</gui> and <gui>Annotations</gui> (some "
-"of which may be <em>dimmed</em> for some documents)."
+"At the bottom of the side pane, the buttons <gui>Thumbnails</gui>, "
+"<gui>Outline</gui>, <gui>Annotations</gui> and <gui>Bookmarks</gui> let you "
+"choose what to display in the side pane. (Some options may not be available "
+"for some documents)."
 msgstr ""
-"Na górze tego panelu znajduje się rozwijane menu z opcjami <gui>Miniatury</"
-"gui>, <gui>Konspekt</gui> i <gui>Przypisy</gui> (część z nich może być "
-"nieaktywna dla niektórych dokumentów)."
+"Na dole panelu bocznego przyciski <gui>Miniatury</gui>, <gui>Konspekt</gui> "
+"i <gui>Przypisy</gui> umożliwiają wybór, co w nim wyświetlać (część z nich "
+"może nie być dostępna dla niektórych dokumentów)."
 
 #. (itstool) path: page/p
 #: C/annotations.page:39
