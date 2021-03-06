@@ -1,4 +1,6 @@
 <page xmlns="http://projectmallard.org/1.0/"
+      xmlns:its="http://www.w3.org/2005/11/its"
+      xmlns:if="http://projectmallard.org/if/1.0/"
       type="topic" style="task"
       id="noprint">
 
@@ -7,6 +9,7 @@
     <desc>The author may have put printing restrictions on the document.</desc>
     <revision pkgversion="3.2" version="0.1" date="2011-09-05" status="final"/>
     <revision pkgversion="3.30.2" version="0.2" date="2018-11-25" status="final"/>
+    <revision pkgversion="3.38.2" version="0.3" date="2021-03-06" status="final"/>
     <credit type="author">
       <name>Phil Bull</name>
       <email>philbull@gmail.com</email>
@@ -45,20 +48,23 @@
       <p>Click on <gui>Settings</gui>.</p>
     </item>
     <item>
-      <p>Click <gui>Devices</gui> in the sidebar.</p>
+      <p>Click <gui>Printers</gui> in the sidebar.</p>
+    </item>
+   <item>
+      <p>Click the <media its:translate="no" type="image" src="figures/emblem-system-symbolic.svg"><span its:translate="yes">settings</span></media>
+      button next to the printer.</p>
     </item>
     <item>
-      <p>Click <gui>Printers</gui> in the sidebar to open the panel.</p>
+      <p>Select <gui style="menuitem">Printing Options</gui>.</p>
     </item>
-   <item><p>Click on your printer in the list.</p></item>
-   <item><p>Click on <gui>Print Test Page</gui>.  A page should be sent to your printer.</p>
-<note>
- <p>
-If this fails, see <link href="help:gnome-help/printing">Printing help</link>.  You may also need to see your printer's manual to see what else you can do.
-</p>
-</note>
-
-</item>
+    <item>
+      <p>Click on <gui>Test Page</gui>. A page should be sent to your printer.</p>
+      <note>
+        <p>
+        If this fails, see <link href="help:gnome-help/printing">Printing help</link>.  You may also need to see your printer's manual to see what else you can do.
+        </p>
+      </note>
+    </item>
   </steps>
 
 
@@ -73,23 +79,29 @@ If this fails, see <link href="help:gnome-help/printing">Printing help</link>.  
   that it hasn't been disabled:
   </p>
 
+  <note style="important">
+    <p>You need to have <app>dconf Editor</app> installed on your computer to
+    change this setting.</p>
+    <if:if test="action:install">
+      <p><link style="button" action="install:dconf-editor">Install
+      <app>dconf Editor</app></link></p>
+    </if:if>
+  </note>
+
   <steps>
     <item>
-      <p>
-      Press <keyseq><key>Alt</key><key>F2</key></keyseq> to open the Run
-      Application window.
-      </p>
+      <p>Open the <gui href="help:gnome-help/shell-introduction#activities">Activities</gui> 
+      overview and start typing <gui>dconf Editor</gui>.</p>
+    </item>
+    <item>
+      <p>Click on <gui>dconf Editor</gui>.</p>
+    </item>
+    <item>
+      <p>Browse to <sys>/org/gnome/evince</sys>.</p>
     </item>
     <item>
       <p>
-      Type <input>dconf-editor</input> into the text box and click
-      <gui>Run</gui>. The Configuration Editor will open.
-      </p>
-    </item>
-    <item><p>Browse to <sys>/org/gnome/evince</sys> using the side pane.</p></item>
-    <item>
-      <p>
-      Make sure that the <gui>override_restrictions</gui> option is checked.
+      Make sure that the <gui>override-restrictions</gui> option is checked.
       </p>
     </item>
     <item>
