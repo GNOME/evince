@@ -96,6 +96,7 @@ if enable_user_doc
   media = [
     'figures/add-text-annotation.png',
     'figures/annotations-nav-to-page.png',
+    'figures/emblem-system-symbolic.svg',
     'figures/evincelogo.png',
     'figures/evince-trail.png',
     'figures/print-select.png',
