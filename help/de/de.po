@@ -14,8 +14,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: evince manual\n"
-"POT-Creation-Date: 2021-03-05 11:45+0000\n"
-"PO-Revision-Date: 2021-03-05 20:07+0100\n"
+"POT-Creation-Date: 2021-03-06 13:04+0000\n"
+"PO-Revision-Date: 2021-03-07 10:23+0100\n"
 "Last-Translator: Tim Sabsch <tim@sabsch.com>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "Language: de\n"
@@ -34,7 +34,8 @@ msgstr ""
 "Christian Kirbach <Christian.Kirbach@gmail.com>, 2011, 2014-2015, 2018,2019\n"
 "Wolfgang Stöggl <c72578@yahoo.de>, 2011\n"
 "Gabor Karsay <gabor.karsay@gmx.at>, 2011\n"
-"Benjamin Steinwender <b@stbe.at>, 2015"
+"Benjamin Steinwender <b@stbe.at>, 2015\n"
+"Tim Sabsch <tim@sabsch.com>, 2021"
 
 #. (itstool) path: info/desc
 #: C/synctex-beamer.page:7
@@ -67,7 +68,7 @@ msgstr "Tiffany Antopolski"
 #: C/convertSVG.page:20 C/convertPostScript.page:21 C/duplex-4pages.page:16
 #: C/duplex-12pages.page:16 C/singlesided-3-4pages.page:16 C/synctex.page:16
 #: C/annotations-save.page:20 C/documentation.page:14 C/synctex-editors.page:15
-#: C/noprint.page:15 C/singlesided-17-20pages.page:16
+#: C/noprint.page:18 C/singlesided-17-20pages.page:16
 #: C/singlesided-npages.page:16 C/synctex-support.page:20
 #: C/duplex-npages.page:16 C/duplex-16pages.page:16 C/translate.page:19
 #: C/default-settings.page:16 C/textselection.page:15 C/synctex-compile.page:15
@@ -400,7 +401,7 @@ msgstr ""
 "»drucken«."
 
 #. (itstool) path: credit/name
-#: C/convertSVG.page:12 C/convertPostScript.page:13 C/noprint.page:11
+#: C/convertSVG.page:12 C/convertPostScript.page:13 C/noprint.page:14
 #: C/print-differentsize.page:13 C/finding.page:15 C/textselection.page:11
 #: C/formats.page:14 C/password.page:12 C/printing.page:14
 #: C/print-order.page:12 C/print-select.page:11 C/movingaround.page:13
@@ -1008,43 +1009,43 @@ msgstr ""
 "geöffnet."
 
 #. (itstool) path: info/desc
-#: C/noprint.page:7
+#: C/noprint.page:9
 msgid "The author may have put printing restrictions on the document."
 msgstr ""
 "Der Verfasser hat eventuell Druckbeschränkungen für das Dokument festgelegt."
 
 #. (itstool) path: page/title
-#: C/noprint.page:20
+#: C/noprint.page:23
 msgid "I can't print a document"
 msgstr "Ich kann ein Dokument nicht drucken"
 
 #. (itstool) path: section/title
-#: C/noprint.page:22
+#: C/noprint.page:25
 msgid "Possible reasons for printing failure"
 msgstr "Mögliche Gründe für Druckprobleme"
 
 #. (itstool) path: section/p
-#: C/noprint.page:23
+#: C/noprint.page:26
 msgid "A document might not print because of:"
 msgstr "Ein Dokument kann eventuell nicht gedruckt werden, wegen:"
 
 #. (itstool) path: item/p
-#: C/noprint.page:25
+#: C/noprint.page:28
 msgid "Printer problems or,"
 msgstr "Problemen mit dem Drucker, oder"
 
 #. (itstool) path: item/p
-#: C/noprint.page:26
+#: C/noprint.page:29
 msgid "PDF printing restrictions."
 msgstr "Druckbeschränkungen durch PDF."
 
 #. (itstool) path: section/title
-#: C/noprint.page:32
+#: C/noprint.page:35
 msgid "Printer problems"
 msgstr "Probleme beim Drucken"
 
 #. (itstool) path: section/p
-#: C/noprint.page:33
+#: C/noprint.page:36
 msgid ""
 "There are many reasons why your printer might not be working. For example, "
 "it could be out of paper or ink, or unplugged or damaged."
@@ -1054,12 +1055,12 @@ msgstr ""
 "ist beschädigt oder nicht angeschlossen."
 
 #. (itstool) path: section/p
-#: C/noprint.page:38
+#: C/noprint.page:41
 msgid "To check if your printer is printing correctly:"
 msgstr "So prüfen Sie, ob Ihr Drucker ordnungsgemäß drucken kann:"
 
 #. (itstool) path: item/p
-#: C/noprint.page:41
+#: C/noprint.page:44
 msgid ""
 "Open the <gui href=\"help:gnome-help/shell-introduction#activities"
 "\">Activities</gui> overview and start typing <gui>Settings</gui>."
@@ -1069,53 +1070,55 @@ msgstr ""
 "<gui>Einstellungen</gui>."
 
 #. (itstool) path: item/p
-#: C/noprint.page:45
+#: C/noprint.page:48
 msgid "Click on <gui>Settings</gui>."
 msgstr "Klicken Sie auf <gui>Einstellungen</gui>."
 
 #. (itstool) path: item/p
-#: C/noprint.page:48
-msgid "Click <gui>Devices</gui> in the sidebar."
-msgstr "Klicken Sie auf <gui>Geräte</gui> in der Seitenleiste."
-
-#. (itstool) path: item/p
 #: C/noprint.page:51
-msgid "Click <gui>Printers</gui> in the sidebar to open the panel."
-msgstr ""
-"Klicken Sie auf <gui>Drucker</gui> in der Seitenleiste, um das Panel zu "
-"öffnen."
+msgid "Click <gui>Printers</gui> in the sidebar."
+msgstr "Klicken Sie auf <gui>Drucker</gui> in der Seitenleiste."
 
-#. (itstool) path: item/p
-#: C/noprint.page:53
-msgid "Click on your printer in the list."
-msgstr "Klicken Sie auf Ihren Drucker in der Liste."
+#. (itstool) path: media/span
+#: C/noprint.page:54
+msgid "settings"
+msgstr "Einstellungen"
 
 #. (itstool) path: item/p
 #: C/noprint.page:54
-msgid ""
-"Click on <gui>Print Test Page</gui>. A page should be sent to your printer."
+msgid "Click the <_:media-1/> button next to the printer."
+msgstr "Klicken Sie auf den <_:media-1/>-Knopf neben dem Drucker."
+
+#. (itstool) path: item/p
+#: C/noprint.page:58
+msgid "Select <gui style=\"menuitem\">Printing Options</gui>."
+msgstr "Wählen Sie <gui style=\"menutitem\">Druckoptionen</gui>."
+
+#. (itstool) path: item/p
+#: C/noprint.page:61
+msgid "Click on <gui>Test Page</gui>. A page should be sent to your printer."
 msgstr ""
-"Klicken Sie auf <gui>Testseite drucken</gui>. Eine Seite sollte nun "
-"ausgedruckt werden."
+"Klicken Sie auf <gui>Testseite</gui>. Eine Seite sollte nun ausgedruckt "
+"werden."
 
 #. (itstool) path: note/p
-#: C/noprint.page:56
+#: C/noprint.page:63
 msgid ""
 "If this fails, see <link href=\"help:gnome-help/printing\">Printing help</"
 "link>. You may also need to see your printer's manual to see what else you "
 "can do."
 msgstr ""
 "Falls dies fehl schlägt, finden Sie möglicherweise in der <link href=\"help:"
-"gnome-help?printing\">Hilfe zum Drucken</link> weitere Informationen, oder "
+"gnome-help/printing\">Hilfe zum Drucken</link> weitere Informationen, oder "
 "lesen Sie bitte im Handbuch zu Ihrem Drucker, was Sie sonst noch tun können."
 
 #. (itstool) path: section/title
-#: C/noprint.page:68
+#: C/noprint.page:74
 msgid "PDF printing restrictions"
 msgstr "Druckbeschränkungen durch PDF"
 
 #. (itstool) path: section/p
-#: C/noprint.page:69
+#: C/noprint.page:75
 msgid ""
 "Some PDF documents have a setting which prevents you from printing them. "
 "Authors can set this printing restriction when they write a document. The "
@@ -1128,38 +1131,53 @@ msgstr ""
 "Beschränkungen per Voreinstellung, aber eventuell wollen Sie prüfen, ob dies "
 "nicht deaktiviert wurde:"
 
-#. (itstool) path: item/p
-#: C/noprint.page:78
+#. (itstool) path: note/p
+#: C/noprint.page:83
 msgid ""
-"Press <keyseq><key>Alt</key><key>F2</key></keyseq> to open the Run "
-"Application window."
+"You need to have <app>dconf Editor</app> installed on your computer to "
+"change this setting."
 msgstr ""
-"Drücken Sie <keyseq><key>Alt</key><key>F2</key></keyseq>, um den Dialog "
-"»Anwendung ausführen« zu öffnen."
+"Um diese Einstellung ändern zu können, muss der <app>Dconf-Editor</app> auf "
+"Ihrem Rechner installiert sein."
 
-#. (itstool) path: item/p
-#: C/noprint.page:84
+#. (itstool) path: if/p
+#: C/noprint.page:86
 msgid ""
-"Type <input>dconf-editor</input> into the text box and click <gui>Run</gui>. "
-"The Configuration Editor will open."
+"<link style=\"button\" action=\"install:dconf-editor\">Install <app>dconf "
+"Editor</app></link>"
 msgstr ""
-"Geben Sie <input>dconf-editor</input> in das Textfeld ein und klicken Sie "
-"auf <gui>Ausführen</gui>. Der Konfigurationseditor wird geöffnet."
+"<link style=\"button\" action=\"install:dconf-editor\"><app>Dconf-Editor</"
+"app> installieren</link>"
 
 #. (itstool) path: item/p
-#: C/noprint.page:89
-msgid "Browse to <sys>/org/gnome/evince</sys> using the side pane."
-msgstr "Suchen Sie <sys>/org/gnome/evince</sys> in der Seitenleiste."
+#: C/noprint.page:93
+msgid ""
+"Open the <gui href=\"help:gnome-help/shell-introduction#activities"
+"\">Activities</gui> overview and start typing <gui>dconf Editor</gui>."
+msgstr ""
+"Öffnen Sie die <gui href=\"help:gnome-help/shell-introduction#activities"
+"\">Aktivitäten</gui>-Übersicht und beginnen Sie mit der Eingabe von "
+"<gui>Dconf-Editor</gui>."
 
 #. (itstool) path: item/p
-#: C/noprint.page:91
-msgid "Make sure that the <gui>override_restrictions</gui> option is checked."
+#: C/noprint.page:97
+msgid "Click on <gui>dconf Editor</gui>."
+msgstr "Klicken Sie auf <gui>Dconf-Editor</gui>."
+
+#. (itstool) path: item/p
+#: C/noprint.page:100
+msgid "Browse to <sys>/org/gnome/evince</sys>."
+msgstr "Suchen Sie <sys>/org/gnome/evince</sys>."
+
+#. (itstool) path: item/p
+#: C/noprint.page:103
+msgid "Make sure that the <gui>override-restrictions</gui> option is checked."
 msgstr ""
-"Stellen Sie sicher, dass die Option <gui>override_restrictions</gui> "
+"Stellen Sie sicher, dass die Option <gui>override-restrictions</gui> "
 "aktiviert ist."
 
 #. (itstool) path: item/p
-#: C/noprint.page:96
+#: C/noprint.page:108
 msgid ""
 "Go back to the <app>Document Viewer</app> and try to print the document "
 "again."
@@ -4282,6 +4300,28 @@ msgstr ""
 "Sie können eine Rückwärtssuche durch Ausführen von <keyseq><key>Strg</"
 "key><key>Linksklick</key></keyseq> im <app>Dokumentenbetrachter</app> "
 "starten. Die entsprechende Zeile wird im TeX-Quellcode hervorgehoben."
+
+#~ msgid "Click <gui>Printers</gui> in the sidebar to open the panel."
+#~ msgstr ""
+#~ "Klicken Sie auf <gui>Drucker</gui> in der Seitenleiste, um das Panel zu "
+#~ "öffnen."
+
+#~ msgid "Click on your printer in the list."
+#~ msgstr "Klicken Sie auf Ihren Drucker in der Liste."
+
+#~ msgid ""
+#~ "Press <keyseq><key>Alt</key><key>F2</key></keyseq> to open the Run "
+#~ "Application window."
+#~ msgstr ""
+#~ "Drücken Sie <keyseq><key>Alt</key><key>F2</key></keyseq>, um den Dialog "
+#~ "»Anwendung ausführen« zu öffnen."
+
+#~ msgid ""
+#~ "Type <input>dconf-editor</input> into the text box and click <gui>Run</"
+#~ "gui>. The Configuration Editor will open."
+#~ msgstr ""
+#~ "Geben Sie <input>dconf-editor</input> in das Textfeld ein und klicken Sie "
+#~ "auf <gui>Ausführen</gui>. Der Konfigurationseditor wird geöffnet."
 
 #~ msgid "See a list of all shortcuts."
 #~ msgstr "Vorgegebene Tastenkombinationen."
