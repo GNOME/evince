@@ -465,7 +465,7 @@ get_mime_type_from_data (const gchar *uri, GError **error)
                 return NULL;
         }
 
-#ifndef G_OS_WIN32
+#ifdef G_OS_WIN32
        /* On Windows, the implementation of g_content_type_guess() is
         * sometimes too limited, so we do use get_mime_type_from_uri()
         * as a fallback */
