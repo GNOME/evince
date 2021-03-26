@@ -82,7 +82,7 @@ if enable_multimedia
 endif
 
 libevview = shared_library(
-  'evview' + ev_major_version.to_string(),
+  'evview3',
   version: ev_view_version,
   sources: sources + marshal_sources + enum_sources,
   include_directories: top_inc,
