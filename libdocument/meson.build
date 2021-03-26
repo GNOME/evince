@@ -91,7 +91,6 @@ sources = files(
 version_conf = configuration_data()
 version_conf.set('EV_MAJOR_VERSION', ev_major_version)
 version_conf.set('EV_MINOR_VERSION', ev_minor_version)
-version_conf.set('EV_MICRO_VERSION', ev_micro_version)
 
 version = 'ev-version.h'
 

@@ -1,6 +1,6 @@
 project(
   'evince', ['c', 'cpp'],
-  version: '3.39.2',
+  version: '40.0',
   license: 'GPL2+',
   default_options: 'buildtype=debugoptimized',
   meson_version: '>= 0.50.0',
@@ -12,7 +12,6 @@ ev_version = meson.project_version()
 version_array = ev_version.split('.')
 ev_major_version = version_array[0].to_int()
 ev_minor_version = version_array[1].to_int()
-ev_micro_version = version_array[2].to_int()
 
 ev_prefix = get_option('prefix')
 ev_bindir = join_paths(ev_prefix, get_option('bindir'))

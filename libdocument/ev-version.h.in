@@ -44,26 +44,16 @@
 #define EV_MINOR_VERSION (@EV_MINOR_VERSION@)
 
 /**
- * EV_MICRO_VERSION:
- *
- * The micro version number of the EV library
- * (e.g. in version 3.1.4 this is 4).
- */
-#define EV_MICRO_VERSION (@EV_MICRO_VERSION@)
-
-/**
  * EV_CHECK_VERSION:
  * @major: required major version
  * @minor: required minor version
- * @micro: required micro version
  *
  * Macro to check the library version at compile time.
  * It returns <literal>1</literal> if the version of EV is greater or
  * equal to the required one, and <literal>0</literal> otherwise.
  */
-#define EV_CHECK_VERSION(major,minor,micro) \
+#define EV_CHECK_VERSION(major,minor) \
   (EV_MAJOR_VERSION > (major) || \
-   (EV_MAJOR_VERSION == (major) && EV_MINOR_VERSION > (minor)) || \
-   (EV_MAJOR_VERSION == (major) && EV_MINOR_VERSION == (minor) && EV_MICRO_VERSION >= (micro)))
+   (EV_MAJOR_VERSION == (major) && EV_MINOR_VERSION > (minor))
 
 #endif /* #ifndef EV_VERSION_H */
