@@ -714,6 +714,9 @@ EV_PUBLIC
 gint            ev_job_find_get_n_results (EvJobFind       *job,
 					   gint             pages);
 EV_PUBLIC
+gint            ev_job_find_get_n_main_results (EvJobFind  *job,
+						gint        page);
+EV_PUBLIC
 gdouble         ev_job_find_get_progress  (EvJobFind       *job);
 EV_PUBLIC
 gboolean        ev_job_find_has_results   (EvJobFind       *job);

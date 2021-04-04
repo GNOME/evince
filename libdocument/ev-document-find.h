@@ -40,6 +40,29 @@ G_BEGIN_DECLS
 
 typedef struct _EvDocumentFind	        EvDocumentFind;
 typedef struct _EvDocumentFindInterface EvDocumentFindInterface;
+typedef struct _EvFindRectangle         EvFindRectangle;
+
+#define EV_TYPE_FIND_RECTANGLE (ev_find_rectangle_get_type ())
+struct _EvFindRectangle
+{
+	gdouble x1;
+	gdouble y1;
+	gdouble x2;
+	gdouble y2;
+	gboolean next_line; /* the boolean from poppler_rectangle_find_get_match_continued() */
+	gboolean after_hyphen; /* the boolean from poppler_rectangle_find_get_ignored_hyphen() */
+	void (*_ev_reserved1) (void);
+	void (*_ev_reserved2) (void);
+};
+
+EV_PUBLIC
+GType            ev_find_rectangle_get_type (void) G_GNUC_CONST;
+EV_PUBLIC
+EvFindRectangle *ev_find_rectangle_new      (void);
+EV_PUBLIC
+EvFindRectangle *ev_find_rectangle_copy     (EvFindRectangle *ev_find_rect);
+EV_PUBLIC
+void             ev_find_rectangle_free     (EvFindRectangle *ev_find_rect);
 
 typedef enum {
 	EV_FIND_DEFAULT          = 0,
@@ -61,6 +84,10 @@ struct _EvDocumentFindInterface
 						  const gchar    *text,
 						  EvFindOptions   options);
 	EvFindOptions (*get_supported_options)   (EvDocumentFind *document_find);
+	GList        *(* find_text_extended)     (EvDocumentFind *document_find,
+						  EvPage         *page,
+						  const gchar    *text,
+						  EvFindOptions   options);
 };
 
 EV_PUBLIC
@@ -77,5 +104,10 @@ GList        *ev_document_find_find_text_with_options (EvDocumentFind *document_
 						       EvFindOptions   options);
 EV_PUBLIC
 EvFindOptions ev_document_find_get_supported_options  (EvDocumentFind *document_find);
+EV_PUBLIC
+GList        *ev_document_find_find_text_extended     (EvDocumentFind *document_find,
+						       EvPage         *page,
+						       const gchar    *text,
+						       EvFindOptions   options);
 
 G_END_DECLS

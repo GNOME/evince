@@ -150,9 +150,11 @@ struct _EvView {
 
 	/* Find */
 	EvJobFind *find_job;
-	GList **find_pages; /* Backwards compatibility */
-	gint find_page;
-	gint find_result;
+	GList **find_pages; /* Backwards compatibility. Contains EvFindRectangles's elements per page */
+	gint find_page;     /* Page of active find result */
+	gint find_result;   /* Index of active find result on find_pages[find_page]. For matches across
+	                     * two lines (which comprise two EvFindRectangle's), this will always point
+	                     * to the first one, i.e. the one where rect->next_line is TRUE */
 	gboolean jump_to_find_result;
 	gboolean highlight_find_results;
 

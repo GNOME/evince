@@ -268,7 +268,7 @@ ev_find_sidebar_highlight_first_match_of_page (EvFindSidebar *sidebar,
                 return;
 
         for (i = 0; i < page; i++)
-                index += ev_job_find_get_n_results (priv->job, i);
+                index += ev_job_find_get_n_main_results (priv->job, i);
 
         if (priv->highlighted_result)
                 gtk_tree_path_free (priv->highlighted_result);
@@ -339,7 +339,9 @@ get_surrounding_text_markup (const gchar  *text,
                              gboolean      case_sensitive,
                              PangoLogAttr *log_attrs,
                              gint          log_attrs_length,
-                             gint          offset)
+                             gint          offset,
+                             gboolean      has_nextline,
+                             gboolean      hyphen_was_ignored)
 {
         gint   iter;
         gchar *prec = NULL;
@@ -356,7 +358,15 @@ get_surrounding_text_markup (const gchar  *text,
 
         iter = offset;
         offset += g_utf8_strlen (find_text, -1);
-        if (!case_sensitive)
+
+        if (has_nextline || g_utf8_offset_to_pointer (text, offset-1)[0] == '\n') {
+                if (has_nextline) {
+                        offset += 1; /* for newline */
+                        if (hyphen_was_ignored)
+                                offset += 1; /* for hyphen */
+                }
+                match = sanitized_substring (text, iter, offset);
+        } else if (!case_sensitive)
                 match = g_utf8_substring (text, iter, offset);
 
         iter = MIN (log_attrs_length, offset + 1);
@@ -409,7 +419,7 @@ get_page_text (EvDocument   *document,
 static gint
 get_match_offset (EvRectangle *areas,
                   guint        n_areas,
-                  EvRectangle *match,
+                  EvFindRectangle *match,
                   gint         offset)
 {
         gdouble x, y;
@@ -493,10 +503,13 @@ process_matches_idle (EvFindSidebar *sidebar)
                 offset = 0;
 
                 for (l = matches, result = 0; l; l = g_list_next (l), result++) {
-                        EvRectangle *match = (EvRectangle *)l->data;
+                        EvFindRectangle *match = (EvFindRectangle *)l->data;
                         gchar       *markup;
                         GtkTreeIter  iter;
                         gint         new_offset;
+
+                        if (l->prev && ((EvFindRectangle *)l->prev->data)->next_line)
+                                continue; /* Skip as this is second part of a multi-line match */
 
                         new_offset = get_match_offset (areas, n_areas, match, offset);
                         if (new_offset == -1) {
@@ -521,7 +534,9 @@ process_matches_idle (EvFindSidebar *sidebar)
                                                               priv->job->case_sensitive,
                                                               text_log_attrs,
                                                               text_log_attrs_length,
-                                                              offset);
+                                                              offset,
+                                                              match->next_line,
+                                                              match->after_hyphen);
 
                         gtk_list_store_set (GTK_LIST_STORE (model), &iter,
                                             TEXT_COLUMN, markup,

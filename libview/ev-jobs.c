@@ -1950,8 +1950,7 @@ ev_job_find_dispose (GObject *object)
 		gint i;
 
 		for (i = 0; i < job->n_pages; i++) {
-			g_list_foreach (job->pages[i], (GFunc)ev_rectangle_free, NULL);
-			g_list_free (job->pages[i]);
+			g_list_free_full (job->pages[i], (GDestroyNotify)ev_find_rectangle_free);
 		}
 
 		g_free (job->pages);
@@ -1982,8 +1981,8 @@ ev_job_find_run (EvJob *job)
 #endif
 
 	ev_page = ev_document_get_page (job->document, job_find->current_page);
-	matches = ev_document_find_find_text_with_options (find, ev_page, job_find->text,
-                                                           job_find->options);
+	matches = ev_document_find_find_text_extended (find, ev_page, job_find->text,
+                                                       job_find->options);
 	g_object_unref (ev_page);
 	
 	ev_document_doc_mutex_unlock ();
@@ -2089,6 +2088,31 @@ ev_job_find_get_n_results (EvJobFind *job,
 	return g_list_length (job->pages[page]);
 }
 
+/**
+ * ev_job_find_get_n_main_results:
+ * @job: an #EvJobFind job
+ * @page: number of the page we want to count its match results.
+ *
+ * This is similar to ev_job_find_get_n_results() but it takes
+ * care to treat any multi-line matches as being only one result.
+ *
+ * Returns: total number of match results in @page
+ */
+gint
+ev_job_find_get_n_main_results (EvJobFind *job,
+				gint       page)
+{
+	GList *l;
+	int n = 0;
+
+	for (l = job->pages[page]; l; l = l->next) {
+		if ( !((EvFindRectangle *) l->data)->next_line )
+			n++;
+	}
+
+	return n;
+}
+
 gdouble
 ev_job_find_get_progress (EvJobFind *job)
 {
@@ -2118,7 +2142,7 @@ ev_job_find_has_results (EvJobFind *job)
  * ev_job_find_get_results: (skip)
  * @job: an #EvJobFind
  *
- * Returns: a #GList of #GList<!-- -->s containing #EvRectangle<!-- -->s
+ * Returns: a #GList of #GList<!-- -->s containing #EvFindRectangle<!-- -->s
  */
 GList **
 ev_job_find_get_results (EvJobFind *job)

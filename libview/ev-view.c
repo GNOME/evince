@@ -314,7 +314,7 @@ static void       ev_view_handle_cursor_over_xy              (EvView *view,
 /*** Find ***/
 static gint         ev_view_find_get_n_results               (EvView             *view,
 							      gint                page);
-static EvRectangle *ev_view_find_get_result                  (EvView             *view,
+static EvFindRectangle *ev_view_find_get_result              (EvView             *view,
 							      gint                page,
 							      gint                result);
 static void       jump_to_find_result                        (EvView             *view);
@@ -7395,21 +7395,41 @@ highlight_find_results (EvView *view,
                         cairo_t *cr,
                         int page)
 {
+	EvRectangle *ev_rect;
 	gint i, n_results = 0;
 
 	n_results = ev_view_find_get_n_results (view, page);
+	ev_rect = ev_rectangle_new ();
 
 	for (i = 0; i < n_results; i++) {
-		EvRectangle *rectangle;
+		EvFindRectangle *find_rect;
 		GdkRectangle view_rectangle;
-		gboolean     active;
+		gboolean active;
 
-		active = i == view->find_result && page == view->find_page;
+		find_rect = ev_view_find_get_result (view, page, i);
+		ev_rect->x1 = find_rect->x1;
+		ev_rect->x2 = find_rect->x2;
+		ev_rect->y1 = find_rect->y1;
+		ev_rect->y2 = find_rect->y2;
 
-		rectangle = ev_view_find_get_result (view, page, i);
-		_ev_view_transform_doc_rect_to_view_rect (view, page, rectangle, &view_rectangle);
+		active = page == view->find_page && i == view->find_result;
+		_ev_view_transform_doc_rect_to_view_rect (view, page, ev_rect, &view_rectangle);
 		draw_rubberband (view, cr, &view_rectangle, active);
+
+		if (active && find_rect->next_line) {
+			/* Draw now next result (which is second part of multi-line match) */
+			i++;
+			find_rect = ev_view_find_get_result (view, page, i);
+			ev_rect->x1 = find_rect->x1;
+			ev_rect->x2 = find_rect->x2;
+			ev_rect->y1 = find_rect->y1;
+			ev_rect->y2 = find_rect->y2;
+			_ev_view_transform_doc_rect_to_view_rect (view, page, ev_rect, &view_rectangle);
+			draw_rubberband (view, cr, &view_rectangle, TRUE);
+		}
         }
+
+	ev_rectangle_free (ev_rect);
 }
 
 static void
@@ -9561,32 +9581,60 @@ ev_view_find_get_n_results (EvView *view, gint page)
 	return view->find_pages ? g_list_length (view->find_pages[page]) : 0;
 }
 
-static EvRectangle *
+static EvFindRectangle *
 ev_view_find_get_result (EvView *view, gint page, gint result)
 {
-	return view->find_pages ? (EvRectangle *) g_list_nth_data (view->find_pages[page], result) : NULL;
+	return view->find_pages ? (EvFindRectangle *) g_list_nth_data (view->find_pages[page], result) : NULL;
+}
+
+static gboolean
+ev_view_find_is_next_line (EvView *view, gint page, gint result)
+{
+	if (!view->find_pages)
+		return FALSE;
+
+	GList *elem = g_list_nth (view->find_pages[page], result);
+	return elem && ((EvFindRectangle *) elem->data)->next_line;
 }
 
 static void
 jump_to_find_result (EvView *view)
 {
+	EvRectangle *rect;
 	gint n_results;
 	gint page = view->find_page;
 
 	n_results = ev_view_find_get_n_results (view, page);
+	rect = ev_rectangle_new ();
 
 	if (n_results > 0 && view->find_result < n_results) {
-		EvRectangle *rect;
+		EvFindRectangle *find_rect, *rect_next;
 		GdkRectangle view_rect;
 
-		rect = ev_view_find_get_result (view, page, view->find_result);
+		rect_next = NULL;
+		find_rect = ev_view_find_get_result (view, page, view->find_result);
+		if (find_rect->next_line) {
+			/* For an across-lines match, make sure both rectangles are visible */
+			rect_next = ev_view_find_get_result (view, page, view->find_result + 1);
+			rect->x1 = MIN (find_rect->x1, rect_next->x1);
+			rect->y1 = MIN (find_rect->y1, rect_next->y1);
+			rect->x2 = MAX (find_rect->x2, rect_next->x2);
+			rect->y2 = MAX (find_rect->y2, rect_next->y2);
+		} else {
+			rect->x1 = find_rect->x1;
+			rect->y1 = find_rect->y1;
+			rect->x2 = find_rect->x2;
+			rect->y2 = find_rect->y2;
+		}
 		_ev_view_transform_doc_rect_to_view_rect (view, page, rect, &view_rect);
 		_ev_view_ensure_rectangle_is_visible (view, &view_rect);
 		if (view->caret_enabled && view->rotation == 0)
-			position_caret_cursor_at_doc_point (view, page, rect->x1, rect->y1);
+			position_caret_cursor_at_doc_point (view, page, find_rect->x1, find_rect->y1);
 
 		view->jump_to_find_result = FALSE;
 	}
+
+	ev_rectangle_free (rect);
 }
 
 /**
@@ -9712,7 +9760,8 @@ ev_view_find_next (EvView *view)
 	gint n_results;
 
 	n_results = ev_view_find_get_n_results (view, view->find_page);
-	view->find_result++;
+	view->find_result += ev_view_find_is_next_line (view, view->find_page, view->find_result)
+	                     ? 2 : 1;
 
 	if (view->find_result >= n_results) {
 		view->find_result = 0;
@@ -9728,11 +9777,14 @@ ev_view_find_next (EvView *view)
 void
 ev_view_find_previous (EvView *view)
 {
-	view->find_result--;
+	view->find_result -= ev_view_find_is_next_line (view, view->find_page, view->find_result - 2)
+	                     ? 2 : 1;
 
 	if (view->find_result < 0) {
 		jump_to_find_page (view, EV_VIEW_FIND_PREV, -1);
 		view->find_result = MAX (0, ev_view_find_get_n_results (view, view->find_page) - 1);
+		if (view->find_result && ev_view_find_is_next_line (view, view->find_page, view->find_result))
+			view->find_result--; /* set to last "non-nextline" result */
 	} else if (view->find_page != view->current_page) {
 		jump_to_find_page (view, EV_VIEW_FIND_PREV, 0);
 	}
