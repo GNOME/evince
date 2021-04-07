@@ -7,7 +7,7 @@ description: |
 
 grade: stable # must be 'stable' to release into candidate/stable channels
 confinement: strict
-base: core18
+base: core20
 
 slots:
   # for GtkApplication registration
@@ -19,7 +19,7 @@ slots:
 apps:
   evince:
     command: usr/bin/evince
-    extensions: [gnome-3-34]
+    extensions: [gnome-3-38]
     plugs:
       - avahi-observe
       - cups-control
@@ -88,7 +88,7 @@ parts:
     stage-packages:
       - libarchive13
       - libpoppler-glib8
-      - libpoppler73
+      - libpoppler97
       - libnss3
       - libnspr4
     prime:
