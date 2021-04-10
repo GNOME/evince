@@ -359,6 +359,7 @@ ev_annotation_window_init (EvAnnotationWindow *window)
 	gspell_text_view_basic_setup (window->spellcheck_view);
 #endif
 
+	gtk_container_set_border_width (GTK_CONTAINER (window->text_view), 6);
 	gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (window->text_view), GTK_WRAP_WORD);
 	g_signal_connect (window->text_view, "state-flags-changed",
 			  G_CALLBACK (text_view_state_flags_changed),
