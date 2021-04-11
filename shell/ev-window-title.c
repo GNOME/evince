@@ -139,6 +139,8 @@ ev_window_title_update (EvWindowTitle *window_title)
 		if (title_header && subtitle) {
 			hdy_header_bar_set_title (toolbar, title_header);
 			hdy_header_bar_set_subtitle (toolbar, subtitle);
+		} else if (title) {
+			hdy_header_bar_set_title (toolbar, title);
 		}
 		if (window_title->dirname)
 			gtk_widget_set_tooltip_text (GTK_WIDGET (toolbar),
