@@ -259,8 +259,16 @@ gsettings_desktop_schemas_dep = dependency('gsettings-desktop-schemas', required
 config_h.set('HAVE_DESKTOP_SCHEMAS', gsettings_desktop_schemas_dep.found())
 
 # *** libsynctex ***
-synctex_dep = dependency('synctex', version: '>= 1.19', required: false)
-external_synctex = synctex_dep.found()
+if get_option('internal_synctex') == 'true'
+  external_synctex = false
+else
+  synctex_dep = dependency('synctex', version: '>= 1.19', required: false)
+  external_synctex = synctex_dep.found()
+
+  if not external_synctex and get_option('internal_synctex') == 'false'
+    error('External synctex requested but not found')
+  endif
+endif
 
 # *** Mime types list ***
 mime_types_list = {
