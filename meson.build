@@ -365,7 +365,7 @@ if enable_dvi
   endforeach
 
   t1_dep = cc.find_library('t1', required: get_option('t1lib'))
-  enable_t1lib = t1_dep.found() and cc.has_function('T1_initLib', dependencies: t1_dep)
+  enable_t1lib = t1_dep.found() and cc.has_function('T1_InitLib', dependencies: t1_dep)
   config_h.set('WITH_TYPE1_FONTS', enable_t1lib)
 
   backends += {'dvi': mime_types_list.get('dvi')}
