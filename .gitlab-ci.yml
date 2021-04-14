@@ -36,6 +36,20 @@ meson:
         - _build/meson-logs/meson-log.txt
         expire_in: 2 days
 
+meson-internal-synctex:
+    image: registry.gitlab.gnome.org/gnome/evince/master-amd64:latest
+    stage: build
+
+    script:
+        - meson -Dinternal_synctex=true _build
+        - ninja -C _build all
+
+    artifacts:
+        when: on_failure
+        paths:
+        - _build/meson-logs/meson-log.txt
+        expire_in: 2 days
+
 meson-gtk-doc:
     image: registry.gitlab.gnome.org/gnome/evince/master-amd64:latest
     stage: build
