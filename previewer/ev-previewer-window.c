@@ -263,7 +263,9 @@ ev_previewer_window_print (GSimpleAction *action,
 #endif
 
 static const GActionEntry actions[] = {
+#if GTKUNIXPRINT_ENABLED
 	{ "print", ev_previewer_window_print },
+#endif
 	{ "go-previous-page", ev_previewer_window_previous_page },
 	{ "go-next-page", ev_previewer_window_next_page },
 	{ "select-page", ev_previewer_window_focus_page_selector },
