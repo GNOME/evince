@@ -236,6 +236,7 @@ ev_view_presentation_get_page_area (EvViewPresentation *pview,
 static gboolean
 transition_next_page (EvViewPresentation *pview)
 {
+	pview->trans_timeout_id = 0;
 	ev_view_presentation_next_page (pview);
 
 	return FALSE;
