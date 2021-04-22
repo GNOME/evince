@@ -34,6 +34,7 @@ struct EvTransitionEffectPrivate {
 	gint duration;
 	gint angle;
 	gdouble scale;
+	gdouble duration_real;
 
 	guint rectangular : 1;
 };
@@ -44,6 +45,7 @@ enum {
 	PROP_ALIGNMENT,
 	PROP_DIRECTION,
 	PROP_DURATION,
+	PROP_DURATION_REAL,
 	PROP_ANGLE,
 	PROP_SCALE,
 	PROP_RECTANGULAR
@@ -73,6 +75,9 @@ ev_transition_effect_set_property (GObject	*object,
 		break;
 	case PROP_DURATION:
 		priv->duration = g_value_get_int (value);
+		break;
+	case PROP_DURATION_REAL:
+		priv->duration_real = g_value_get_double (value);
 		break;
 	case PROP_ANGLE:
 		priv->angle = g_value_get_int (value);
@@ -111,6 +116,9 @@ ev_transition_effect_get_property (GObject    *object,
 		break;
 	case PROP_DURATION:
 		g_value_set_int (value, priv->duration);
+		break;
+	case PROP_DURATION_REAL:
+		g_value_set_double (value, priv->duration_real);
 		break;
 	case PROP_ANGLE:
 		g_value_set_int (value, priv->angle);
@@ -179,7 +187,16 @@ ev_transition_effect_class_init (EvTransitionEffectClass *klass)
 							   "Effect duration in seconds",
 							   0, G_MAXINT, 0,
 							   G_PARAM_READWRITE |
-                                                           G_PARAM_STATIC_STRINGS));
+                                                           G_PARAM_STATIC_STRINGS |
+                                                           G_PARAM_DEPRECATED));
+	g_object_class_install_property (object_class,
+					 PROP_DURATION_REAL,
+					 g_param_spec_double ("duration-real",
+							      "Effect duration in seconds (expressed as decimal number)",
+							      "Effect duration in seconds (expressed as decimal number)",
+							      0., 86400., 0., /* Arbitrary 1 day max value */
+							      G_PARAM_READWRITE |
+							      G_PARAM_STATIC_STRINGS));
 	g_object_class_install_property (object_class,
 					 PROP_ANGLE,
 					 g_param_spec_int ("angle",

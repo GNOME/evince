@@ -132,7 +132,7 @@ ev_transition_animation_constructor (GType                  type,
 	GObject                      *object;
 	EvTransitionAnimationPrivate *priv;
 	EvTransitionEffect           *effect;
-	gint                          duration;
+	gdouble                       duration;
 
 	object = G_OBJECT_CLASS (ev_transition_animation_parent_class)->constructor (type,
 										     n_construct_properties,
@@ -141,7 +141,7 @@ ev_transition_animation_constructor (GType                  type,
 	priv = ev_transition_animation_get_instance_private (EV_TRANSITION_ANIMATION (object));
 	effect = priv->effect;
 
-	g_object_get (effect, "duration", &duration, NULL);
+	g_object_get (effect, "duration-real", &duration, NULL);
 	ev_timeline_set_duration (EV_TIMELINE (object), duration * 1000);
 
 	return object;
