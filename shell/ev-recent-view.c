@@ -641,8 +641,8 @@ document_query_info_cb (GFile                    *file,
                         GetDocumentInfoAsyncData *data)
 {
         GFileInfo  *info;
-        const char *title = NULL;
-        const char *author = NULL;
+        char       *title = NULL;
+        char       *author = NULL;
         char      **attrs;
         guint       i;
 	EvRecentViewPrivate *priv = GET_PRIVATE (data->ev_recent_view);
@@ -668,9 +668,9 @@ document_query_info_cb (GFile                    *file,
         attrs = g_file_info_list_attributes (info, "metadata");
         for (i = 0; attrs[i]; i++) {
                 if (g_str_equal (attrs[i], "metadata::evince::title")) {
-                        title = g_file_info_get_attribute_string (info, attrs[i]);
+                        title = (gchar *) g_file_info_get_attribute_string (info, attrs[i]);
                 } else if (g_str_equal (attrs[i], "metadata::evince::author")) {
-                        author = g_file_info_get_attribute_string (info, attrs[i]);
+                        author = (gchar *) g_file_info_get_attribute_string (info, attrs[i]);
                 }
 
                 if (title && author)
@@ -689,17 +689,15 @@ document_query_info_cb (GFile                    *file,
 
                         gtk_tree_model_get_iter (GTK_TREE_MODEL (priv->model), &iter, path);
 
-                        if (title && title[0] != '\0') {
-                                gtk_list_store_set (priv->model, &iter,
-                                                    EV_RECENT_VIEW_COLUMN_PRIMARY_TEXT, title,
-                                                    -1);
-                        }
+                        if (title && (g_strstrip (title))[0] != '\0')
+				gtk_list_store_set (priv->model, &iter,
+						    EV_RECENT_VIEW_COLUMN_PRIMARY_TEXT, title,
+						    -1);
 
-                        if (author && author[0] != '\0') {
+                        if (author && (g_strstrip (author))[0] != '\0')
                                 gtk_list_store_set (priv->model, &iter,
                                                     EV_RECENT_VIEW_COLUMN_SECONDARY_TEXT, author,
                                                     -1);
-                        }
 
                         gtk_tree_path_free (path);
                 }
