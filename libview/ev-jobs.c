@@ -636,16 +636,27 @@ ev_job_render_run (EvJob *job)
 
 	job_render->surface = ev_document_render (job->document, rc);
 
-	if (job_render->surface == NULL) {
+	if (job_render->surface == NULL ||
+	    cairo_surface_status (job_render->surface) != CAIRO_STATUS_SUCCESS) {
 		ev_document_fc_mutex_unlock ();
 		ev_document_doc_mutex_unlock ();
 		g_object_unref (rc);
 
-		ev_job_failed (job,
-		               EV_DOCUMENT_ERROR,
-		               EV_DOCUMENT_ERROR_INVALID,
-		               _("Failed to render page %d"),
-		               job_render->page);
+                if (job_render->surface != NULL) {
+                        cairo_status_t status = cairo_surface_status (job_render->surface);
+                        ev_job_failed (job,
+                                       EV_DOCUMENT_ERROR,
+                                       EV_DOCUMENT_ERROR_INVALID,
+                                       _("Failed to render page %d: %s"),
+                                       job_render->page,
+                                       cairo_status_to_string (status));
+                } else {
+                        ev_job_failed (job,
+                                       EV_DOCUMENT_ERROR,
+                                       EV_DOCUMENT_ERROR_INVALID,
+                                       _("Failed to render page %d"),
+                                       job_render->page);
+                }
 
 		return FALSE;
 	}
