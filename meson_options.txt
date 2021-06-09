@@ -3,7 +3,6 @@ option('platform', type: 'combo', choices: ['gnome', 'win32'], value: 'gnome', d
 option('viewer', type: 'boolean', value: true, description: 'whether Viewer support is requested')
 option('previewer', type: 'boolean', value: true, description: 'whether Previewer support is requested')
 option('thumbnailer', type: 'boolean', value: true, description: 'whether Thumbnailer support is requested')
-option('browser_plugin', type: 'boolean', value: false, description: 'whether Browser Plugin support is requested')
 option('nautilus', type: 'boolean', value: true, description: 'whether Nautilus support is requested')
 
 option('comics', type: 'feature', value: 'auto', description: 'whether Comics support is requested')
@@ -26,5 +25,4 @@ option('gspell', type: 'feature', value: 'auto', description: 'whether gpsell su
 
 option('t1lib', type: 'feature', value: 'auto', description: 'whether support of t1lib for type1 fonts in dvi is requested')
 
-option('browser_plugin_dir', type: 'string', value: 'mozilla/plugins', description: 'custom directory for browser plugin')
 option('systemduserunitdir', type: 'string', value: '', description: 'custom directory for systemd user units, or \'no\' to disable')
