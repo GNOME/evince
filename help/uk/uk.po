@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince manual\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-03-06 06:29+0000\n"
-"PO-Revision-Date: 2021-03-06 10:07+0200\n"
+"POT-Creation-Date: 2021-06-09 04:44+0000\n"
+"PO-Revision-Date: 2021-06-09 14:49+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Lokalize 20.11.70\n"
+"X-Generator: Lokalize 20.12.0\n"
 
 #. Put one translator per line, in the form NAME <EMAIL>, YEAR1, YEAR2
 msgctxt "_"
@@ -948,25 +948,32 @@ msgstr ""
 "Якщо вже відкрито порожнє вікно <app>Переглядача документів</app>, ви можете:"
 
 #. (itstool) path: item/p
-#: C/opening.page:51 C/opening.page:66
+#: C/opening.page:51
+#| msgid ""
+#| "Drag a file into the window from <app>Files</app>. The new file will open "
+#| "in a new window."
 msgid ""
 "Drag a file into the window from <app>Files</app>. The new file will open in "
-"a new window."
+"the same window."
 msgstr ""
 "Перетягнути позначку файла до вікна з <app>Файлів</app>. Новий файл буде "
-"відкрито у новому вікні."
+"відкрито у тому самому вікні."
 
 #. (itstool) path: item/p
 #: C/opening.page:55
+#| msgid ""
+#| "Press the <gui>Open…</gui> button in the top-left corner of the window. "
+#| "In the <gui>Open Document</gui> dialog, choose the file which you wish to "
+#| "open, and click <gui>Open</gui>. The file will open in a new window."
 msgid ""
 "Press the <gui>Open…</gui> button in the top-left corner of the window. In "
 "the <gui>Open Document</gui> dialog, choose the file which you wish to open, "
-"and click <gui>Open</gui>. The file will open in a new window."
+"and click <gui>Open</gui>. The file will open in the same window."
 msgstr ""
 "Натиснути кнопку <gui>Відкрити…</gui> у верхньому лівому куті вікна "
 "програми. У вікні <gui>Відкрити документ</gui> виберіть файл, який слід "
 "відкрити, і натисніть кнопку <gui>Відкрити</gui>. Файл буде відкрито у "
-"новому вікні програми."
+"тому самому вікні вікні програми."
 
 #. (itstool) path: page/p
 #: C/opening.page:62
@@ -976,6 +983,15 @@ msgid ""
 msgstr ""
 "Якщо у вікні <app>Переглядача документів</app> вже відкрито документ, ви "
 "можете:"
+
+#. (itstool) path: item/p
+#: C/opening.page:66
+msgid ""
+"Drag a file into the window from <app>Files</app>. The new file will open in "
+"a new window."
+msgstr ""
+"Перетягнути позначку файла до вікна з <app>Файлів</app>. Новий файл буде "
+"відкрито у новому вікні."
 
 #. (itstool) path: item/p
 #: C/opening.page:70
@@ -1055,15 +1071,13 @@ msgstr "Натисніть пункт <gui>Параметри</gui>."
 
 #. (itstool) path: item/p
 #: C/noprint.page:51
-#| msgid "Click <gui>Devices</gui> in the sidebar."
 msgid "Click <gui>Printers</gui> in the sidebar."
 msgstr "Натисніть пункт <gui>Принтери</gui> на бічній панелі."
 
 #. (itstool) path: media/span
 #: C/noprint.page:54
 msgid "settings"
-msgstr ""
-"параметри"
+msgstr "параметри"
 
 #. (itstool) path: item/p
 #: C/noprint.page:54
@@ -1073,19 +1087,15 @@ msgstr ""
 
 #. (itstool) path: item/p
 #: C/noprint.page:58
-#| msgid "Select the <gui style=\"tab\">Page Handling</gui> tab."
 msgid "Select <gui style=\"menuitem\">Printing Options</gui>."
 msgstr "Виберіть <gui style=\"menuitem\">Параметри друкування</gui>."
 
 #. (itstool) path: item/p
 #: C/noprint.page:61
-#| msgid ""
-#| "Click on <gui>Print Test Page</gui>. A page should be sent to your "
-#| "printer."
 msgid "Click on <gui>Test Page</gui>. A page should be sent to your printer."
 msgstr ""
-"Натисніть кнопку <gui>Тестова сторінка</gui>. У відповідь має "
-"бути надіслано на друк тестову сторінку."
+"Натисніть кнопку <gui>Тестова сторінка</gui>. У відповідь має бути надіслано "
+"на друк тестову сторінку."
 
 #. (itstool) path: note/p
 #: C/noprint.page:63
@@ -1124,7 +1134,8 @@ msgid ""
 "You need to have <app>dconf Editor</app> installed on your computer to "
 "change this setting."
 msgstr ""
-"Для внесення змін до цього параметра вам слід встановити у вашій системі <app>Редактор dconf</app>."
+"Для внесення змін до цього параметра вам слід встановити у вашій системі "
+"<app>Редактор dconf</app>."
 
 #. (itstool) path: if/p
 #: C/noprint.page:86
@@ -1132,13 +1143,11 @@ msgid ""
 "<link style=\"button\" action=\"install:dconf-editor\">Install <app>dconf "
 "Editor</app></link>"
 msgstr ""
-"<link style=\"button\" action=\"install:dconf-editor\">Встановити <app>Редактор dconf</app></link>"
+"<link style=\"button\" action=\"install:dconf-editor\">Встановити "
+"<app>Редактор dconf</app></link>"
 
 #. (itstool) path: item/p
 #: C/noprint.page:93
-#| msgid ""
-#| "Open the <gui href=\"help:gnome-help/shell-introduction#activities"
-#| "\">Activities</gui> overview and start typing <gui>Settings</gui>."
 msgid ""
 "Open the <gui href=\"help:gnome-help/shell-introduction#activities"
 "\">Activities</gui> overview and start typing <gui>dconf Editor</gui>."
@@ -1148,21 +1157,16 @@ msgstr ""
 
 #. (itstool) path: item/p
 #: C/noprint.page:97
-#| msgid "Click <gui>Print</gui>."
 msgid "Click on <gui>dconf Editor</gui>."
 msgstr "Натисніть пункт <gui>Редактор dconf</gui>."
 
 #. (itstool) path: item/p
 #: C/noprint.page:100
-#| msgid "Browse to <sys>/org/gnome/evince</sys> using the side pane."
 msgid "Browse to <sys>/org/gnome/evince</sys>."
-msgstr ""
-"Перейдіть до пункту <sys>/org/gnome/evince</sys>."
+msgstr "Перейдіть до пункту <sys>/org/gnome/evince</sys>."
 
 #. (itstool) path: item/p
 #: C/noprint.page:103
-#| msgid ""
-#| "Make sure that the <gui>override_restrictions</gui> option is checked."
 msgid "Make sure that the <gui>override-restrictions</gui> option is checked."
 msgstr "Переконайтеся, що позначено пункт <gui>override-restrictions</gui>."
 
