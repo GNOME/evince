@@ -1178,7 +1178,9 @@ ev_application_get_uri (EvApplication *application)
 void
 ev_application_clear_uri (EvApplication *application)
 {
+#ifdef ENABLE_DBUS
 	ev_application_unregister_uri (application, application->uri);
+#endif
 	g_clear_pointer (&application->uri, g_free);
 }
 
