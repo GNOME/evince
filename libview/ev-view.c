@@ -566,7 +566,8 @@ is_dual_page (EvView   *view,
 		break;
 	case EV_PAGE_LAYOUT_DUAL:
 		odd_left = !view->dual_even_left;
-		dual = TRUE;
+		if (ev_document_get_n_pages (view->document) > 1)
+			dual = TRUE;
 		break;
 	case EV_PAGE_LAYOUT_SINGLE:
 		break;
