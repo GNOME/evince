@@ -4135,10 +4135,24 @@ ev_window_cmd_dual (GSimpleAction *action,
 {
 	EvWindow *window = user_data;
 	EvWindowPrivate *priv = GET_PRIVATE (window);
+	EvDocument *document = priv->document;
+	gboolean has_pages = FALSE;
+	gboolean dual_page;
+	gboolean recent_view_mode;
+
+	dual_page = g_variant_get_boolean (state);
 
 	ev_window_stop_presentation (window, TRUE);
-	ev_document_model_set_dual_page (priv->model, g_variant_get_boolean (state));
+	ev_document_model_set_dual_page (priv->model, dual_page);
 	g_simple_action_set_state (action, state);
+
+	recent_view_mode = ev_window_is_recent_view (window);
+
+	if (document)
+		has_pages = ev_document_get_n_pages (priv->document) > 0;
+
+	ev_window_set_action_enabled (window, "dual-odd-left", dual_page &&
+				      has_pages && !recent_view_mode);
 }
 
 static void
