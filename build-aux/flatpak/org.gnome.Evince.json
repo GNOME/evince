@@ -64,56 +64,72 @@
             ]
         },
         {
-            "name" : "popplerdata",
-            "no-autogen" : true,
-            "make-install-args" : [
+            "name": "popplerdata",
+            "no-autogen": true,
+            "make-install-args": [
                 "prefix=/app"
             ],
-            "sources" : [
+            "sources": [
                 {
-                    "type" : "archive",
-                    "url" : "https://poppler.freedesktop.org/poppler-data-0.4.9.tar.gz",
-                    "sha256" : "1f9c7e7de9ecd0db6ab287349e31bf815ca108a5a175cf906a90163bdbe32012"
+                    "type": "archive",
+                    "url": "https://poppler.freedesktop.org/poppler-data-0.4.10.tar.gz",
+                    "sha256": "6e2fcef66ec8c44625f94292ccf8af9f1d918b410d5aa69c274ce67387967b30",
+                    "x-checker-data": {
+                        "type": "anitya",
+                        "project-id": 3687,
+                        "url-template": "https://poppler.freedesktop.org/poppler-data-$version.tar.gz"
+                    }
                 }
             ]
         },
         {
-            "name" : "poppler",
-            "buildsystem" : "cmake-ninja",
-            "config-opts" : [
+            "name": "poppler",
+            "buildsystem": "cmake-ninja",
+            "config-opts": [
                 "-DCMAKE_INSTALL_LIBDIR=/app/lib",
                 "-DCMAKE_INSTALL_INCLUDEDIR=/app/include",
-				"-DENABLE_LIBOPENJPEG=openjpeg2",
+                "-DBUILD_GTK_TESTS=OFF",
+                "-DBUILD_CPP_TESTS=OFF",
                 "-DENABLE_SPLASH=OFF",
-                "-DENABLE_GOBJECT_INTROSPECTION=OFF",
-                "-DENABLE_CPP=OFF",
                 "-DENABLE_UTILS=OFF",
-                "-DBUILD_GTK_TESTS=OFF"
+                "-DENABLE_CPP=OFF",
+                "-DENABLE_GOBJECT_INTROSPECTION=OFF",
+                "-DENABLE_LIBOPENJPEG=openjpeg2"
             ],
-            "cleanup" : [
+            "cleanup": [
                 "/bin"
             ],
-            "sources" : [
+            "sources": [
                 {
-                    "type" : "archive",
-                    "url" : "https://poppler.freedesktop.org/poppler-0.89.0.tar.xz",
-                    "sha256" : "fba230364537782cc5d43b08d693ef69c36586286349683c7b127156a8ef9b5c"
+                    "type": "archive",
+                    "url": "https://poppler.freedesktop.org/poppler-21.06.1.tar.xz",
+                    "sha256": "86b09e5a02de40081a3916ef8711c5128eaf4b1fc59d5f87d0ec66f04f595db4",
+                    "x-checker-data": {
+                        "type": "anitya",
+                        "project-id": 3686,
+                        "url-template": "https://poppler.freedesktop.org/poppler-$version.tar.xz"
+                    }
                 }
             ]
         },
         {
-            "name" : "djvulibre",
-            "config-opts" : [
+            "name": "djvulibre",
+            "config-opts": [
                 "--disable-desktopfiles"
             ],
-            "cleanup" : [
+            "cleanup": [
                 "/bin"
             ],
-            "sources" : [
+            "sources": [
                 {
-                    "type" : "archive",
-                    "url" : "https://downloads.sourceforge.net/project/djvu/DjVuLibre/3.5.27/djvulibre-3.5.27.tar.gz",
-                    "sha256" : "e69668252565603875fb88500cde02bf93d12d48a3884e472696c896e81f505f"
+                    "type": "archive",
+                    "url": "https://downloads.sourceforge.net/project/djvu/DjVuLibre/3.5.28/djvulibre-3.5.28.tar.gz",
+                    "sha256": "fcd009ea7654fde5a83600eb80757bd3a76998e47d13c66b54c8db849f8f2edc",
+                    "x-checker-data": {
+                        "type": "anitya",
+                        "project-id": 10159,
+                        "url-template": "https://downloads.sourceforge.net/project/djvu/DjVuLibre/$version/djvulibre-$version.tar.gz"
+                    }
                 }
             ]
         },
@@ -130,57 +146,57 @@
             "sources" : [
                 {
                     "type" : "archive",
-                    "url" : "https://download.gnome.org/sources/libgxps/0.3/libgxps-0.3.1.tar.xz",
-                    "sha256" : "1a939fc8fcea9471b7eca46b1ac90cff89a30d26f65c7c9a375a4bf91223fa94"
+                    "url" : "https://download.gnome.org/sources/libgxps/0.3/libgxps-0.3.2.tar.xz",
+                    "sha256" : "6d27867256a35ccf9b69253eb2a88a32baca3b97d5f4ef7f82e3667fa435251c"
                 }
             ]
         },
         {
-            "name" : "gspell",
-            "cleanup" : [
+            "name": "gspell",
+            "cleanup": [
                 "/bin"
             ],
-            "sources" : [
+            "sources": [
                 {
-                    "type" : "archive",
-                    "url" : "https://download.gnome.org/sources/gspell/1.8/gspell-1.8.2.tar.xz",
-                    "sha256" : "bb9195c3a95bacf556d0203e9691f7489e0d3bc5ae1e5a440c89b2f2435d3ed6"
+                    "type": "archive",
+                    "url": "https://download.gnome.org/sources/gspell/1.9/gspell-1.9.1.tar.xz",
+                    "sha256": "dcbb769dfdde8e3c0a8ed3102ce7e661abbf7ddf85df08b29915e92cd723abdd"
                 }
             ]
         },
         {
-            "name" : "gnome-desktop",
-            "buildsystem" : "meson",
-            "config-opts" : [
+            "name": "gnome-desktop",
+            "buildsystem": "meson",
+            "config-opts": [
                 "-Ddesktop_docs=false",
                 "-Ddebug_tools=false"
             ],
-            "cleanup" : [
+            "cleanup": [
                 "/lib/girepository-1.0",
                 "/share/gir-1.0"
             ],
-            "sources" : [
+            "sources": [
                 {
-                    "type" : "archive",
-                    "url" : "http://download.gnome.org/sources/gnome-desktop/3.36/gnome-desktop-3.36.1.tar.xz",
-                    "sha256" : "8c6fe59e567f134e4f6508d968d5d09cbe12382d18af9a11a4f51ada6c80a880"
+                    "type": "archive",
+                    "url": "https://download.gnome.org/sources/gnome-desktop/40/gnome-desktop-40.0.tar.xz",
+                    "sha256": "20abfd3f831e4e8092b55839311661dc73b2bf13fc9bef71c4a5a4475da9ee04"
                 }
             ]
         },
         {
-            "name" : "evince",
-            "buildsystem" : "meson",
-            "config-opts" : [
+            "name": "evince",
+            "buildsystem": "meson",
+            "config-opts": [
                 "-Dnautilus=false",
+                "-Dthumbnailer=false",
                 "-Dgtk_doc=false",
                 "-Dintrospection=false",
-				"-Dthumbnailer=false",
                 "-Duser_doc=false"
             ],
-            "sources" : [
+            "sources": [
                 {
-                    "type" : "git",
-                    "url" : "https://gitlab.gnome.org/GNOME/evince.git"
+                    "type": "git",
+                    "url": "https://gitlab.gnome.org/GNOME/evince.git"
                 }
             ]
         }
