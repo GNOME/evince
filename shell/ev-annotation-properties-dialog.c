@@ -138,6 +138,7 @@ ev_annotation_properties_dialog_constructed (GObject *object)
 	default:
 		break;
 	}
+	G_OBJECT_CLASS (ev_annotation_properties_dialog_parent_class)->constructed (object);
 }
 
 static void
@@ -153,7 +154,7 @@ ev_annotation_properties_dialog_init (EvAnnotationPropertiesDialog *annot_dialog
 	gtk_window_set_destroy_with_parent (GTK_WINDOW (annot_dialog), TRUE);
 	gtk_container_set_border_width (GTK_CONTAINER (annot_dialog), 5);
 	gtk_dialog_add_buttons (dialog,
-				_("_Close"), GTK_RESPONSE_CLOSE,
+				_("_Close"), GTK_RESPONSE_CANCEL,
 				_("_Apply"), GTK_RESPONSE_APPLY,
 				NULL);
 	gtk_dialog_set_default_response (dialog, GTK_RESPONSE_APPLY);
@@ -240,6 +241,7 @@ ev_annotation_properties_dialog_new (EvAnnotationType annot_type)
 {
 	return GTK_WIDGET (g_object_new (EV_TYPE_ANNOTATION_PROPERTIES_DIALOG,
 					 "annot-type", annot_type,
+					 "use-header-bar", TRUE,
 					 NULL));
 }
 
