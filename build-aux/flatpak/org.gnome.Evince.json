@@ -46,21 +46,27 @@
         "*.la",
         "*.a"
     ],
-    "modules" : [
+    "modules": [
         {
-            "name" : "webp-pixbuf-loader",
-            "buildsystem" : "cmake-ninja",
-            "env": {
-                "GDK_PIXBUF_MODULEDIR": "/app/lib/evince/gdk-pixbuf/2.10.0/"
+            "name": "webp-pixbuf-loader",
+            "buildsystem": "meson",
+            "build-options": {
+                "env": {
+                    "GDK_PIXBUF_MODULEDIR": "/app/lib/evince/gdk-pixbuf/2.10.0/"
+                }
             },
-            "sources" : [
+            "config-opts" : [
+                "-Dgdk_pixbuf_moduledir=/app/lib/evince/gdk-pixbuf/2.10.0/"
+            ],
+            "sources": [
                 {
-                    "type" : "git",
-                    "url" : "https://github.com/aruiz/webp-pixbuf-loader.git",
-                    "commit" : "9b92950d49d7939f90ba7413deb7ec6b392b2054"
+                    "type": "git",
+                    "url": "https://github.com/aruiz/webp-pixbuf-loader.git",
+                    "commit": "ffddc060497ee11d6cc573dae01a528b357b91ec",
+                    "tag": "0.0.3"
                 }
             ],
-            "post-install" : [
+            "post-install": [
                 "gdk-pixbuf-query-loaders > $GDK_PIXBUF_MODULEDIR/loaders.cache"
             ]
         },
