@@ -6,6 +6,12 @@ project(
   meson_version: '>= 0.50.0',
 )
 
+if get_option('development')
+  app_id = 'org.gnome.Evince.Devel'
+else
+  app_id = 'org.gnome.Evince'
+endif
+
 ev_name = meson.project_name().to_lower()
 
 ev_version = meson.project_version()
@@ -69,7 +75,9 @@ cc = meson.get_compiler('c')
 cpp = meson.get_compiler('cpp')
 
 config_h = configuration_data()
+
 # package
+config_h.set_quoted('PACKAGE_ICON_NAME', app_id)
 config_h.set_quoted('PACKAGE_VERSION', ev_version)
 config_h.set_quoted('VERSION', ev_version)
 
@@ -437,6 +445,7 @@ endif
 
 mime_types_conf = configuration_data()
 mime_types_conf.set('EVINCE_MIME_TYPES', ';'.join(evince_mime_types))
+mime_types_conf.set('PACKAGE_ICON_NAME', app_id)
 
 subdir('cut-n-paste')
 subdir('libdocument')

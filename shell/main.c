@@ -296,7 +296,7 @@ main (int argc, char *argv[])
 
 	/* Manually set name and icon */
 	g_set_application_name (_("Document Viewer"));
-	gtk_window_set_default_icon_name ("org.gnome.Evince");
+	gtk_window_set_default_icon_name (PACKAGE_ICON_NAME);
 
         application = ev_application_new ();
         if (!g_application_register (G_APPLICATION (application), NULL, &error)) {

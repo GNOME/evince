@@ -91,7 +91,7 @@ foreach icon: icons
 endforeach
 
 install_data(
-  join_paths('scalable', 'apps', '@0@.svg'.format(ev_namespace)),
+  join_paths('scalable', 'apps', '@0@.svg'.format(app_id)),
   install_dir: join_paths(ev_datadir, 'icons', 'hicolor', 'scalable', 'apps'),
 )
 

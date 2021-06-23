@@ -220,7 +220,7 @@ main (gint argc, gchar **argv)
 	ev_stock_icons_init ();
 
 	g_set_application_name (_("GNOME Document Previewer"));
-	gtk_window_set_default_icon_name ("org.gnome.Evince");
+	gtk_window_set_default_icon_name (PACKAGE_ICON_NAME);
 
         application = gtk_application_new (NULL,
                                            G_APPLICATION_NON_UNIQUE |

@@ -4212,7 +4212,7 @@ ev_window_cmd_about (GSimpleAction *action,
                                "authors", authors,
                                "documenters", documenters,
                                "translator-credits", _("translator-credits"),
-                               "logo-icon-name", "org.gnome.Evince",
+                               "logo-icon-name", PACKAGE_ICON_NAME,
                                NULL);
 }
 
