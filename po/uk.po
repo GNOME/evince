@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
-"POT-Creation-Date: 2021-06-21 19:18+0000\n"
-"PO-Revision-Date: 2021-06-22 10:18+0300\n"
+"POT-Creation-Date: 2021-06-25 12:54+0000\n"
+"PO-Revision-Date: 2021-06-25 17:50+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
 "Language: uk\n"
@@ -305,7 +305,7 @@ msgstr "Додає підтримування читання документі�
 
 #. Manually set name and icon
 #: data/org.gnome.Evince.desktop.in.in:3 shell/ev-window-title.c:133
-#: shell/main.c:298
+#: shell/main.c:300
 msgid "Document Viewer"
 msgstr "Переглядач документів"
 
@@ -320,6 +320,11 @@ msgid ""
 msgstr ""
 "pdf;ps;postscript;dvi;xps;djvu;tiff;document;presentation;viewer;evince;"
 "документ;презентація;перегляд;евінс;"
+
+#: data/org.gnome.Evince.desktop.in.in:19
+#| msgid "New _Window"
+msgid "New Window"
+msgstr "Створити вікно"
 
 #: data/org.gnome.Evince.gschema.xml:14
 msgid "Override document restrictions"
@@ -783,7 +788,7 @@ msgid "Subject:"
 msgstr "Тема:"
 
 #: properties/ev-properties-view.c:65
-#: shell/ev-annotation-properties-dialog.c:171
+#: shell/ev-annotation-properties-dialog.c:172
 msgid "Author:"
 msgstr "Автор:"
 
@@ -934,35 +939,35 @@ msgstr "Підкреслення"
 msgid "Squiggly"
 msgstr "Напис"
 
-#: shell/ev-annotation-properties-dialog.c:152
+#: shell/ev-annotation-properties-dialog.c:153
 msgid "Annotation Properties"
 msgstr "Властивості примітки"
 
-#: shell/ev-annotation-properties-dialog.c:156
+#: shell/ev-annotation-properties-dialog.c:157
 msgid "_Close"
 msgstr "_Закрити"
 
-#: shell/ev-annotation-properties-dialog.c:157
+#: shell/ev-annotation-properties-dialog.c:158
 msgid "_Apply"
 msgstr "З_астосувати"
 
-#: shell/ev-annotation-properties-dialog.c:182
+#: shell/ev-annotation-properties-dialog.c:183
 msgid "Color:"
 msgstr "Колір:"
 
-#: shell/ev-annotation-properties-dialog.c:192
+#: shell/ev-annotation-properties-dialog.c:193
 msgid "Opacity:"
 msgstr "Непрозорість:"
 
-#: shell/ev-annotation-properties-dialog.c:204
+#: shell/ev-annotation-properties-dialog.c:205
 msgid "Initial window state:"
 msgstr "Початковий стан вікна:"
 
-#: shell/ev-annotation-properties-dialog.c:210
+#: shell/ev-annotation-properties-dialog.c:211
 msgid "Open"
 msgstr "Відкрити"
 
-#: shell/ev-annotation-properties-dialog.c:211
+#: shell/ev-annotation-properties-dialog.c:212
 msgid "Close"
 msgstr "Закрити"
 
@@ -1130,17 +1135,14 @@ msgid "_Save Attachment As…"
 msgstr "З_берегти долучення як…"
 
 #: shell/evince-menus.ui:223
-#| msgid "Annotation Properties…"
 msgid "Annotation _Properties…"
 msgstr "Властивості при_мітки…"
 
 #: shell/evince-menus.ui:228
-#| msgid "Remove Annotation"
 msgid "R_emove Annotation"
 msgstr "Ви_лучити примітку"
 
 #: shell/evince-menus.ui:235
-#| msgid "Highlight Selected Text"
 msgid "_Highlight Selected Text"
 msgstr "_Підсвітити вибраний текст"
 
@@ -2022,55 +2024,60 @@ msgctxt "shortcut window"
 msgid "Touchpad gestures"
 msgstr "Жести дотику"
 
-#: shell/main.c:63 shell/main.c:269
+#: shell/main.c:64 shell/main.c:271
 msgid "GNOME Document Viewer"
 msgstr "Переглядач документів у GNOME"
 
-#: shell/main.c:71
+#: shell/main.c:72
+#| msgid "Open in New _Window"
+msgid "Open a new window."
+msgstr "Відкрити нове вікно."
+
+#: shell/main.c:73
 msgid "The page label of the document to display."
 msgstr "Показати мітку сторінки цього документа."
 
-#: shell/main.c:71
+#: shell/main.c:73
 msgid "PAGE"
 msgstr "СТОРІНКА"
 
-#: shell/main.c:72
+#: shell/main.c:74
 msgid "The page number of the document to display."
 msgstr "Показати номер сторінки цього документа."
 
-#: shell/main.c:72
+#: shell/main.c:74
 msgid "NUMBER"
 msgstr "НОМЕР"
 
-#: shell/main.c:73
+#: shell/main.c:75
 msgid "Named destination to display."
 msgstr "Іменоване місце для показу."
 
-#: shell/main.c:73
+#: shell/main.c:75
 msgid "DEST"
 msgstr "МІСЦЕ"
 
-#: shell/main.c:74
+#: shell/main.c:76
 msgid "Run evince in fullscreen mode"
 msgstr "Запустити evince у повноекранного режимі"
 
-#: shell/main.c:75
+#: shell/main.c:77
 msgid "Run evince in presentation mode"
 msgstr "Запустити evince у режимі презентації"
 
-#: shell/main.c:76
+#: shell/main.c:78
 msgid "Run evince as a previewer"
 msgstr "Запустити evince у режимі попереднього перегляду"
 
-#: shell/main.c:77
+#: shell/main.c:79
 msgid "The word or phrase to find in the document"
 msgstr "Слово чи фраза, що шукається у документі"
 
-#: shell/main.c:77
+#: shell/main.c:79
 msgid "STRING"
 msgstr "РЯДОК"
 
-#: shell/main.c:81
+#: shell/main.c:83
 msgid "[FILE…]"
 msgstr "[ФАЙЛ…]"
 
