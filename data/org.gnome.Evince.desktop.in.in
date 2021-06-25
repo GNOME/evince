@@ -12,3 +12,8 @@ Type=Application
 Icon=@PACKAGE_ICON_NAME@
 Categories=GNOME;GTK;Office;Viewer;Graphics;2DGraphics;VectorGraphics;
 MimeType=@EVINCE_MIME_TYPES@;
+Actions=new-window;
+
+[Desktop Action new-window]
+Name=New Window
+Exec=evince --new-window

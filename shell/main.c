@@ -46,6 +46,7 @@ static gchar   *ev_page_label;
 static gchar   *ev_find_string;
 static gint     ev_page_index = 0;
 static gchar   *ev_named_dest;
+static gboolean new_window = FALSE;
 static gboolean preview_mode = FALSE;
 static gboolean fullscreen_mode = FALSE;
 static gboolean presentation_mode = FALSE;
@@ -68,6 +69,7 @@ option_version_cb (const gchar *option_name,
 
 static const GOptionEntry goption_options[] =
 {
+	{ "new-window", 'o', 0, G_OPTION_ARG_NONE, &new_window, N_("Open a new window."), NULL },
 	{ "page-label", 'p', 0, G_OPTION_ARG_STRING, &ev_page_label, N_("The page label of the document to display."), N_("PAGE")},
 	{ "page-index", 'i', 0, G_OPTION_ARG_INT, &ev_page_index, N_("The page number of the document to display."), N_("NUMBER")},
 	{ "named-dest", 'n', 0, G_OPTION_ARG_STRING, &ev_named_dest, N_("Named destination to display."), N_("DEST")},
@@ -168,8 +170,8 @@ load_files (const char **files)
 	gint             i;
 	EvLinkDest      *global_dest = NULL;
 
-	if (!files) {
-		if (!ev_application_has_window (EV_APP))
+	if (!files || new_window) {
+		if (!ev_application_has_window (EV_APP) || new_window)
 			ev_application_open_recent_view (EV_APP, screen, GDK_CURRENT_TIME);
 		return;
 	}
