@@ -16,6 +16,7 @@ apt-get -yq install gnome-common libglib2.0-dev-bin \
 					libpoppler-glib-dev poppler-data \
 					libspectre-dev libtiff5-dev libdjvulibre-dev \
 					libkpathsea-dev libarchive-dev libgxps-dev \
+					libsynctex-dev \
 					ccache systemd ninja-build python3-pip
 apt-get clean
 rm -rf /var/lib/apt/lists/*
