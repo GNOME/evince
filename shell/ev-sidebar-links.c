@@ -35,6 +35,8 @@
 #include "ev-sidebar-page.h"
 #include "ev-window.h"
 
+#define GSTRING_INIT_SIZE 4096
+
 struct _EvSidebarLinksPrivate {
 	GtkWidget *tree_view;
 
@@ -858,7 +860,7 @@ collapse_all_cb (GtkWidget *menuitem, EvSidebarLinks *sidebar_links)
 		metadata = ev_window_get_metadata (EV_WINDOW (window));
 		if (metadata) {
 			ev_metadata_set_string (metadata, "index-expand", "");
-			index_collapse = g_string_sized_new (4096);
+			index_collapse = g_string_sized_new (GSTRING_INIT_SIZE);
 			g_string_append (index_collapse, "|");
 		}
 	}
@@ -941,7 +943,7 @@ expand_all_cb (GtkWidget *menuitem, EvSidebarLinks *sidebar_links)
 		metadata = ev_window_get_metadata (EV_WINDOW (window));
 		if (metadata) {
 			ev_metadata_set_string (metadata, "index-collapse", "");
-			index_expand = g_string_sized_new (4096);
+			index_expand = g_string_sized_new (GSTRING_INIT_SIZE);
 			g_string_append (index_expand, "|");
 		}
 	}
