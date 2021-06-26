@@ -13,7 +13,11 @@ master:
     when: manual
 
     script:
-        - meson _build
+        - >
+            meson 
+            -Dlibhandy:examples=false -Dlibhandy:tests=false -Dlibhandy:vapi=false 
+            -Dlibhandy:glade_catalog=disabled -Dlibhandy:introspection=disabled 
+            _build
         - ninja -C _build all
 
     artifacts:
@@ -27,7 +31,11 @@ meson:
     stage: build
 
     script:
-        - meson _build
+        - >
+            meson 
+            -Dlibhandy:examples=false -Dlibhandy:tests=false -Dlibhandy:vapi=false 
+            -Dlibhandy:glade_catalog=disabled -Dlibhandy:introspection=disabled 
+            _build
         - ninja -C _build all
 
     artifacts:
@@ -56,7 +64,11 @@ meson-gtk-doc:
     when: manual
 
     script:
-        - meson -Dgtk_doc=true _build
+        - >
+            meson -Dgtk_doc=true 
+            -Dlibhandy:examples=false -Dlibhandy:tests=false -Dlibhandy:vapi=false 
+            -Dlibhandy:glade_catalog=disabled -Dlibhandy:introspection=disabled 
+            _build
         - ninja -C _build all 
 
     artifacts:
