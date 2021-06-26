@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
-"POT-Creation-Date: 2021-06-25 12:54+0000\n"
-"PO-Revision-Date: 2021-06-25 17:50+0300\n"
+"POT-Creation-Date: 2021-06-26 05:22+0000\n"
+"PO-Revision-Date: 2021-06-26 08:54+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
 "Language: uk\n"
@@ -112,13 +112,13 @@ msgstr "Ця праця є власністю спільнот"
 
 #. translators: this is the document security state
 #: backend/pdf/ev-poppler.cc:1207 backend/pdf/ev-poppler.cc:1213
-#: properties/ev-properties-view.c:425
+#: properties/ev-properties-view.c:433
 msgid "Yes"
 msgstr "Так"
 
 #. translators: this is the document security state
 #: backend/pdf/ev-poppler.cc:1210 backend/pdf/ev-poppler.cc:1213
-#: properties/ev-properties-view.c:427
+#: properties/ev-properties-view.c:435
 msgid "No"
 msgstr "Ні"
 
@@ -322,7 +322,6 @@ msgstr ""
 "документ;презентація;перегляд;евінс;"
 
 #: data/org.gnome.Evince.desktop.in.in:19
-#| msgid "New _Window"
 msgid "New Window"
 msgstr "Створити вікно"
 
@@ -668,11 +667,11 @@ msgstr "Запустити %s"
 msgid "Reset form"
 msgstr "Відновити початковий стан форми"
 
-#: libview/ev-view-presentation.c:756
+#: libview/ev-view-presentation.c:757
 msgid "Jump to page:"
 msgstr "Перейти до сторінки:"
 
-#: libview/ev-view-presentation.c:1050
+#: libview/ev-view-presentation.c:1051
 msgid "End of presentation. Press Esc or click to exit."
 msgstr "Кінець презентації. Натисніть Esc або клацніть для виходу."
 
@@ -874,7 +873,7 @@ msgstr "%s, книжкова (%s)"
 msgid "%s, Landscape (%s)"
 msgstr "%s, альбомна (%s)"
 
-#: properties/ev-properties-view.c:429
+#: properties/ev-properties-view.c:437
 #: shell/ev-annotation-properties-dialog.c:112
 msgid "Unknown"
 msgstr "Невідомо"
@@ -988,7 +987,7 @@ msgstr "Підсвітити текст"
 msgid "Add highlight annotation"
 msgstr "Додати позначену нотатку"
 
-#: shell/evince-menus.ui:25 shell/ev-sidebar-links.c:340
+#: shell/evince-menus.ui:25 shell/ev-sidebar-links.c:351
 msgid "Print…"
 msgstr "Надрукувати…"
 
@@ -1197,7 +1196,7 @@ msgstr "Пароль для документа %s"
 
 #. Create tree view
 #: shell/ev-loading-message.c:50 shell/ev-sidebar-annotations.c:137
-#: shell/ev-sidebar-layers.c:123 shell/ev-sidebar-links.c:265
+#: shell/ev-sidebar-layers.c:123 shell/ev-sidebar-links.c:276
 msgid "Loading…"
 msgstr "Завантаження…"
 
@@ -1335,10 +1334,25 @@ msgstr "Закладки"
 msgid "Layers"
 msgstr "Шари"
 
+#: shell/ev-sidebar-links.c:357
+msgid "Collapse all tree"
+msgstr ""
+"Згорнути усю ієрархію"
+
+#: shell/ev-sidebar-links.c:364
+msgid "Expand all tree"
+msgstr ""
+"Розгорнути усю ієрархію"
+
+#: shell/ev-sidebar-links.c:371
+msgid "Expand all under this element"
+msgstr ""
+"Розгорнути усе під цим елементом"
+
 #. Translators: This is the title for the sidebar pane that
 #. * shows the Outline or Table of Contents of the document.
 #.
-#: shell/ev-sidebar-links.c:1023 shell/ev-window.c:7595
+#: shell/ev-sidebar-links.c:1431 shell/ev-window.c:7595
 msgid "Outline"
 msgstr "Нарис"
 
@@ -2029,7 +2043,6 @@ msgid "GNOME Document Viewer"
 msgstr "Переглядач документів у GNOME"
 
 #: shell/main.c:72
-#| msgid "Open in New _Window"
 msgid "Open a new window."
 msgstr "Відкрити нове вікно."
 
