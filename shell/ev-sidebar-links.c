@@ -534,6 +534,11 @@ remove_path_descendants (const gchar *metadata_index, GtkTreePath *path)
 			g_free (ret);
 			ret = g_strdup ("");
 		}
+		/* Purpose of 'first_iteration' is so that, just in the first iteration, we don't
+		 * free 'haystack'. In first iteration, 'haystack' references const char data, while
+		 * subsequent iterations will reference allocated char data. This optimization is to
+		 * avoid an initial g_strdup() of the passed in 'const gchar *metadata_index' string,
+		 * which can be large in documents with big outlines. */
 		if (!first_iteration)
 			g_free (haystack);
 		else
