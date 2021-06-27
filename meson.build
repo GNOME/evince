@@ -1,5 +1,5 @@
 project(
-  'evince', ['c', 'cpp'],
+  'evince', ['c'],
   version: '41.alpha',
   license: 'GPL2+',
   default_options: 'buildtype=debugoptimized',
@@ -72,7 +72,6 @@ ev_code_prefix = 'Ev'
 ev_debug = get_option('buildtype').contains('debug')
 
 cc = meson.get_compiler('c')
-cpp = meson.get_compiler('cpp')
 
 config_h = configuration_data()
 

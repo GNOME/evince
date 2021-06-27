@@ -805,7 +805,10 @@ pdf_document_get_localized_object_from_metadata (xmlXPathContextPtr xpathCtx,
 			g_free (tag);
 			tag = tag_aux;
 		}
+		#pragma GCC diagnostic push
+		#pragma GCC diagnostic ignored "-Wformat-nonliteral"
 		aux = g_strdup_printf (xpath, tag);
+		#pragma GCC diagnostic pop
 		loc_object = (gchar *)pdf_document_get_xmptag_from_path (xpathCtx, aux);
 		g_free (tag);
 		g_free (aux);
@@ -814,7 +817,10 @@ pdf_document_get_localized_object_from_metadata (xmlXPathContextPtr xpathCtx,
 
 	/* 2) if not, use the default string */
 	if (!loc_object) {
+		#pragma GCC diagnostic push
+		#pragma GCC diagnostic ignored "-Wformat-nonliteral"
 		aux = g_strdup_printf (xpath, "x-default");
+		#pragma GCC diagnostic pop
 		loc_object = (gchar *)pdf_document_get_xmptag_from_path (xpathCtx, aux);
 		g_free (aux);
 	}
