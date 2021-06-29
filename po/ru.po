@@ -13,17 +13,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince trunk\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
-"POT-Creation-Date: 2021-06-25 12:54+0000\n"
-"PO-Revision-Date: 2021-06-25 17:04+0300\n"
-"Last-Translator: Дронова Ю <juliette.tux@gmail.com>\n"
+"POT-Creation-Date: 2021-06-26 05:22+0000\n"
+"PO-Revision-Date: 2021-06-28 23:02+0300\n"
+"Last-Translator: Alexey Rubtsov <rushills@gmail.com>\n"
 "Language-Team: Russian <kde-i18n-doc@kde.org>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<"
-"=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Lokalize 19.12.3\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Poedit 3.0\n"
 
 #: backend/comics/comics-document.c:163 backend/comics/comics-document.c:187
 msgid "File is corrupted"
@@ -116,13 +116,13 @@ msgstr "Эта работа находится в общественном до�
 
 #. translators: this is the document security state
 #: backend/pdf/ev-poppler.cc:1207 backend/pdf/ev-poppler.cc:1213
-#: properties/ev-properties-view.c:425
+#: properties/ev-properties-view.c:433
 msgid "Yes"
 msgstr "Да"
 
 #. translators: this is the document security state
 #: backend/pdf/ev-poppler.cc:1210 backend/pdf/ev-poppler.cc:1213
-#: properties/ev-properties-view.c:427
+#: properties/ev-properties-view.c:435
 msgid "No"
 msgstr "Нет"
 
@@ -326,7 +326,6 @@ msgstr ""
 "pdf;ps;postscript;dvi;xps;djvu;tiff;документ;презентация;просмотр;evince;"
 
 #: data/org.gnome.Evince.desktop.in.in:19
-#| msgid "New _Window"
 msgid "New Window"
 msgstr "Создать окно"
 
@@ -594,8 +593,6 @@ msgstr ""
 "как у страницы документа."
 
 #: libview/ev-print-operation.c:2023
-#| msgctxt "shortcut window"
-#| msgid "Move around a page"
 msgid "Draw border around pages"
 msgstr "Рисовать границы страницы"
 
@@ -675,11 +672,11 @@ msgstr "Запустить %s"
 msgid "Reset form"
 msgstr "Очистить форму"
 
-#: libview/ev-view-presentation.c:756
+#: libview/ev-view-presentation.c:757
 msgid "Jump to page:"
 msgstr "Перейти к странице:"
 
-#: libview/ev-view-presentation.c:1050
+#: libview/ev-view-presentation.c:1051
 msgid "End of presentation. Press Esc or click to exit."
 msgstr "Конец презентации. Нажмите мышкой или клавишу Esc для выхода."
 
@@ -880,7 +877,7 @@ msgstr "%s, прямая (%s)"
 msgid "%s, Landscape (%s)"
 msgstr "%s, повёрнутая (%s)"
 
-#: properties/ev-properties-view.c:429
+#: properties/ev-properties-view.c:437
 #: shell/ev-annotation-properties-dialog.c:112
 msgid "Unknown"
 msgstr "Неизвестно"
@@ -994,7 +991,7 @@ msgstr "Подсветить текст"
 msgid "Add highlight annotation"
 msgstr "Добавить выделенное примечание"
 
-#: shell/evince-menus.ui:25 shell/ev-sidebar-links.c:340
+#: shell/evince-menus.ui:25 shell/ev-sidebar-links.c:351
 msgid "Print…"
 msgstr "Печать…"
 
@@ -1039,7 +1036,6 @@ msgid "_Odd Pages Left"
 msgstr "_Нечётные страницы слева"
 
 #: shell/evince-menus.ui:82
-#| msgid "Recent Documents"
 msgid "Right to Left Document"
 msgstr "Документ справа на лево"
 
@@ -1142,17 +1138,14 @@ msgid "_Save Attachment As…"
 msgstr "_Сохранить вложение как…"
 
 #: shell/evince-menus.ui:223
-#| msgid "Annotation Properties…"
 msgid "Annotation _Properties…"
 msgstr "Свойства п_римечания…"
 
 #: shell/evince-menus.ui:228
-#| msgid "Remove Annotation"
 msgid "R_emove Annotation"
 msgstr "_Удалить примечание"
 
 #: shell/evince-menus.ui:235
-#| msgid "Highlight Selected Text"
 msgid "_Highlight Selected Text"
 msgstr "_Подсветить выделенный текст"
 
@@ -1197,7 +1190,6 @@ msgid "_Rename Bookmark"
 msgstr "Пе_реименовать закладку"
 
 #: shell/evince-menus.ui:330
-#| msgid "_Rename Bookmark"
 msgid "_Delete Bookmark"
 msgstr "_Удалить закладку"
 
@@ -1208,7 +1200,7 @@ msgstr "Пароль к документу %s"
 
 #. Create tree view
 #: shell/ev-loading-message.c:50 shell/ev-sidebar-annotations.c:137
-#: shell/ev-sidebar-layers.c:123 shell/ev-sidebar-links.c:265
+#: shell/ev-sidebar-layers.c:123 shell/ev-sidebar-links.c:276
 msgid "Loading…"
 msgstr "Загрузка…"
 
@@ -1345,10 +1337,22 @@ msgstr "Закладки"
 msgid "Layers"
 msgstr "Слои"
 
+#: shell/ev-sidebar-links.c:357
+msgid "Collapse all tree"
+msgstr "Свернуть всё дерево"
+
+#: shell/ev-sidebar-links.c:364
+msgid "Expand all tree"
+msgstr "Развернуть всё дерево"
+
+#: shell/ev-sidebar-links.c:371
+msgid "Expand all under this element"
+msgstr "Развернуть всё под этим элементом"
+
 #. Translators: This is the title for the sidebar pane that
 #. * shows the Outline or Table of Contents of the document.
 #.
-#: shell/ev-sidebar-links.c:1023 shell/ev-window.c:7595
+#: shell/ev-sidebar-links.c:1431 shell/ev-window.c:7595
 msgid "Outline"
 msgstr "Схема"
 
@@ -1381,7 +1385,6 @@ msgid "Annotate the document"
 msgstr "Добавить примечание к документу"
 
 #: shell/ev-toolbar.c:228
-#| msgid "Annotate the document"
 msgid "Annotate document"
 msgstr "Добавить примечание к документу"
 
@@ -1511,12 +1514,10 @@ msgid "Printing job “%s”"
 msgstr "Печать задания «%s»"
 
 #: shell/ev-window.c:3939
-#| msgid "Document contains form fields that have been filled out. "
 msgid "Document contains form fields that have been filled out."
 msgstr "Документ содержит поля форм, которые были заполнены."
 
 #: shell/ev-window.c:3942
-#| msgid "Document contains new or modified annotations. "
 msgid "Document contains new or modified annotations."
 msgstr "Документ содержит новые или изменённые примечания."
 
@@ -1588,20 +1589,19 @@ msgid "Close _after Printing"
 msgstr "Закрыть п_осле печати"
 
 #: shell/ev-window.c:4208
-#| msgid "© 1996–2017 The Evince authors"
 msgid "© 1996–2020 The Evince authors"
 msgstr "© 1996-2020 Авторы Evince"
 
 #: shell/ev-window.c:4211
-#| msgid "This is a document viewer for the GNOME desktop."
 msgid "Evince is a simple document viewer for GNOME"
 msgstr "Приложение для просмотра документов для GNOME"
 
 #: shell/ev-window.c:4214
 msgid "translator-credits"
 msgstr ""
-"Yuri Myasoedov <ymyasoedov@yandex.ru>, 2012-2014.\n"
-"Stas Solovey <whats_up@tut.by>, 2014-2019."
+"Станислав Соловей <whats_up@tut.by>, 2013-2019.\n"
+"Юрий Мясоедов <ymyasoedov@yandex.ru>, 2014.\n"
+"Alexey Rubtsov <rushills@gmail.com>, 2021"
 
 #: shell/ev-window.c:4644
 msgid "Running in presentation mode"
@@ -1884,27 +1884,21 @@ msgid "Go to page number"
 msgstr "Перейти к определённой странице"
 
 #: shell/help-overlay.ui:230
-#| msgid "Go to previous page"
 msgctxt "shortcut window"
 msgid "Go to previous page (fast)"
 msgstr "Перейти к предыдущей странице (быстро)"
 
 #: shell/help-overlay.ui:237
-#| msgid "Go to next page"
 msgctxt "shortcut window"
 msgid "Go to next page (fast)"
 msgstr "Перейти к следующей странице (быстро)"
 
 #: shell/help-overlay.ui:244
-#| msgctxt "shortcut window"
-#| msgid "Go to previous/next page visited"
 msgctxt "shortcut window"
 msgid "Go to previous page visited"
 msgstr "Перейти к предыдущей посещённой странице"
 
 #: shell/help-overlay.ui:251
-#| msgctxt "shortcut window"
-#| msgid "Go to previous/next page visited"
 msgctxt "shortcut window"
 msgid "Go to next page visited"
 msgstr "Перейти к следующей посещённой странице"
@@ -1935,14 +1929,11 @@ msgid "Add bookmark"
 msgstr "Добавить закладку"
 
 #: shell/help-overlay.ui:292
-#| msgid "Remove bookmark"
 msgctxt "shortcut window"
 msgid "Remove bookmark"
 msgstr "Удалить закладку"
 
 #: shell/help-overlay.ui:299
-#| msgctxt "shortcut window"
-#| msgid "Toggle sidebar"
 msgctxt "shortcut window"
 msgid "Toggle night mode"
 msgstr "Переключить ночной режим"
@@ -1958,7 +1949,6 @@ msgid "Toggle dual page"
 msgstr "Переключить двойную страницу"
 
 #: shell/help-overlay.ui:320
-#| msgid "Document View"
 msgctxt "shortcut window"
 msgid "Document properties"
 msgstr "Свойства документа"
@@ -1969,7 +1959,6 @@ msgid "Add a post-it like note"
 msgstr "Добавить примечание в виде заметки на стикере"
 
 #: shell/help-overlay.ui:334
-#| msgid "Highlight text"
 msgctxt "shortcut window"
 msgid "Highlight text"
 msgstr "Подсветить текст"
@@ -1995,7 +1984,6 @@ msgid "Go to the previous search result"
 msgstr "Перейти к предыдущему результату поиска"
 
 #: shell/help-overlay.ui:370
-#| msgid "General"
 msgctxt "shortcut window"
 msgid "General"
 msgstr "Общие"
@@ -2006,20 +1994,16 @@ msgid "Show help"
 msgstr "Показать справку"
 
 #: shell/help-overlay.ui:381
-#| msgctxt "shortcut window"
-#| msgid "Toggle sidebar"
 msgctxt "shortcut window"
 msgid "Toggle primary menu"
 msgstr "Переключить основное меню"
 
 #: shell/help-overlay.ui:388
-#| msgid "_Keyboard Shortcuts"
 msgctxt "shortcut window"
 msgid "Keyboard shortcuts"
 msgstr "Комбинации клавиш"
 
 #: shell/help-overlay.ui:395
-#| msgid "New _Window"
 msgctxt "shortcut window"
 msgid "Close window"
 msgstr "Закрыть окно"
@@ -2030,28 +2014,21 @@ msgid "Quit"
 msgstr "Выйти"
 
 #: shell/help-overlay.ui:409
-#| msgid "Save Current Settings as Defa_ult"
 msgctxt "shortcut window"
 msgid "Save current settings as default"
 msgstr "Сохранить текущие параметры как параметры по умолчанию"
 
 #: shell/help-overlay.ui:418
-#| msgctxt "shortcut window"
-#| msgid "Enter presentation mode"
 msgctxt "shortcut window"
 msgid "Presentation mode"
 msgstr "Режим презентации"
 
 #: shell/help-overlay.ui:422
-#| msgctxt "shortcut window"
-#| msgid "Toggle fullscreen"
 msgctxt "shortcut window"
 msgid "Toggle black screen"
 msgstr "Переключить чёрный экран"
 
 #: shell/help-overlay.ui:429
-#| msgctxt "shortcut window"
-#| msgid "Toggle fullscreen"
 msgctxt "shortcut window"
 msgid "Toggle white screen"
 msgstr "Переключить белый экран"
@@ -2066,7 +2043,6 @@ msgid "GNOME Document Viewer"
 msgstr "Просмотр документов"
 
 #: shell/main.c:72
-#| msgid "Open in New _Window"
 msgid "Open a new window."
 msgstr "Открыть новое окно"
 
