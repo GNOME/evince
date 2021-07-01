@@ -68,46 +68,8 @@ static void PpmdRAR_RangeDec_Init(struct CPpmdRAR_RangeDec *p)
     }
 }
 
-static UInt32 Range_GetThreshold(const IPpmd7_RangeDec *p, UInt32 total)
-{
-    struct CPpmdRAR_RangeDec *self = (struct CPpmdRAR_RangeDec *) p;
-    return self->Code / (self->Range /= total);
-}
-
-static void Range_Decode_RAR(const IPpmd7_RangeDec *p, UInt32 start, UInt32 size)
-{
-    struct CPpmdRAR_RangeDec *self = (struct CPpmdRAR_RangeDec *) p;
-    self->Low += start * self->Range;
-    self->Code -= start * self->Range;
-    self->Range *= size;
-    for (;;) {
-        if ((self->Low ^ (self->Low + self->Range)) >= (1 << 24)) {
-            if (self->Range >= (1 << 15))
-                break;
-            self->Range = ((uint32_t)(-(int32_t)self->Low)) & ((1 << 15) - 1);
-        }
-        self->Code = (self->Code << 8) | self->Stream->Read(self->Stream);
-        self->Range <<= 8;
-        self->Low <<= 8;
-    }
-}
-
-static UInt32 Range_DecodeBit_RAR(const IPpmd7_RangeDec *p, UInt32 size0)
-{
-    UInt32 value = Range_GetThreshold(p, PPMD_BIN_SCALE);
-    UInt32 bit = value < size0 ? 0 : 1;
-    if (!bit)
-        Range_Decode_RAR(p, 0, size0);
-    else
-        Range_Decode_RAR(p, size0, PPMD_BIN_SCALE - size0);
-    return bit;
-}
-
 static void PpmdRAR_RangeDec_CreateVTable(struct CPpmdRAR_RangeDec *p, IByteIn *stream)
 {
-    p->super.GetThreshold = Range_GetThreshold;
-    p->super.Decode = Range_Decode_RAR;
-    p->super.DecodeBit = Range_DecodeBit_RAR;
     p->Stream = stream;
 }
 
@@ -716,7 +678,7 @@ static bool rar_read_filter(ar_archive_rar *rar, bool (* decode_byte)(ar_archive
 
 static inline bool rar_decode_ppmd7_symbol(struct ar_archive_rar_uncomp_v3 *uncomp_v3, Byte *symbol)
 {
-    int value = Ppmd7_DecodeSymbol(&uncomp_v3->ppmd7_context, &uncomp_v3->range_dec.super);
+    int value = Ppmd7z_DecodeSymbol(&uncomp_v3->ppmd7_context);
     if (value < 0) {
         warn("Invalid data in bitstream"); /* invalid PPMd symbol */
         return false;
