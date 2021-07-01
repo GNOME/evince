@@ -142,7 +142,7 @@ struct ByteReader {
 };
 
 struct CPpmdRAR_RangeDec {
-    IPpmd7_RangeDec super;
+    CPpmd7_RangeDec super;
     UInt32 Range;
     UInt32 Code;
     UInt32 Low;
