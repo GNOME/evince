@@ -1,3 +1,85 @@
+==================
+Evince    41.alpha
+==================
+
+backends:
+  * add format attribute to stop warning on string literal (vanadiae)
+  * make function static as only used in this file (vanadiae)
+  * simplify metadata tags getters (vanadiae)
+  * use SaveToBufferData only with "struct" before (vanadiae)
+
+browser-plugin:
+  * Remove browser-plugin support (#968, Germán Poo-Caamaño)
+
+build:
+  * Add option to control internal vs external synctex (Matt Turner)
+  * Allow building without libhandy-1 available (Bastien Nocera)
+  * Bump version requirement for Poppler (Germán Poo-Caamaño)
+  * Fix conversion to match new version scheme (Germán Poo-Caamaño)
+  * Update dependency versions for flatpak (Germán Poo-Caamaño)
+  * Use devel icon for unstable version installed (Germán Poo-Caamaño)
+  * Use platform/master as runtime instead of SDK (#1557, Germán Poo-Caamaño)
+  * Remove c++ dependency, and use only C (Germán Poo-Caamaño)
+
+data:
+  * Fix AppData urls for issues (Germán Poo-Caamaño)
+
+flatpak:
+  * Bump manifest to latest WebP version (Germán Poo-Caamaño)
+  * Remove dconf permissions (Germán Poo-Caamaño)
+  * Require Flatpak >= 0.11.6 (Patrick)
+  * Use development flag when building the unstable version (Germán Poo-Caamaño)
+  * Add access to pulseaudio sound server to flatpak. (Berteaux)
+
+gitlab-ci:
+  * Update versions for gitlab-ci's Docker image (Germán Poo-Caamaño)
+  * fix pipeline error libhandy cannot find vapigen (Nelson Benítez León)
+  * Add meson-internal-synctex job (Matt Turner)
+
+help:
+  * Update Evince icon as svg (Sabri Ünal)
+  * correct Window action (Sabri Ünal)
+
+libview:
+  * dual page option is ignored for single page documents (#220, Raghuveer Kasaraneni)
+
+shell:
+  * Add mnemonics to annotations contextual menus (Germán Poo-Caamaño)
+  * Added mnemonic for highlight option in context menu (#1618, Chayut Liewlom)
+  * Adding padding to improve readability (#1571, Jose Santos)
+  * Always show the annotation window on new annotations (Mads Chr. Olesen)
+  * Enable odd pages left when dual page is on (#602, Germán Poo-Caamaño)
+  * Expand sidebar annotations by default (Mads Chr. Olesen)
+  * Fix libhandy includes (Bastien Nocera)
+  * Implemented headerbar for Annotation Properties dialog (#1570, Chayut Liewlom)
+  * Reload annotation sidebar on annotation properties changes (#1004, Mads Chr. Olesen)
+  * Reload the annotation sidebar when the type changes (#1004, Mads Chr. Olesen)
+  * Show annotation contents in sidebar when available (#386, Mads Chr. Olesen)
+  * Show content in tooltip popup in annotations sidebar (Mads Chr. Olesen)
+  * Show filename in recent view when title has only spaces (#1587, Alphonse Daudet Chokossa Hemadeu)
+  * support duration in decimal value (#637, Nelson Benítez León)
+  * be able to collapse/expand all entries (#736, Nelson Benítez León)
+  * fix g_critical about removing non-existant timer (Nelson Benítez León)
+  * fix compilation error when DBus is disabled (Tom Schoonjans)
+  * Add new-window desktop action (#1351, Mpho Jele)
+  * Show None when missing creation/modification date (#1549, Volte--Vieira Philippe)
+  * Use a constant for GString init size (Nelson Benítez León)
+
+Developers:
+  * Alphonse Daudet Chokossa Hemadeu, Bastien Nocera, Berteaux, Chayut Liewlom, Germán Poo-Caamaño, Jose Santos, Mads Chr. Olesen, Matt Turner, Mpho Jele, Nelson Benítez León, Patrick, Piotr Drąg, Raghuveer Kasaraneni, Sabri Ünal, Tom Schoonjans, Volte--Vieira Philippe, vanadiae
+
+Translations:
+  * Rafael Fontenelle (Brazilian Portuguese)
+  * Jordi Mas (Catalan)
+  * Kukuh Syafaat (Indonesian)
+  * Hugo Carvalho (Portuguese)
+  * Florentina Mușat (Romanian)
+  * Alexey Rubtsov (Russian)
+  * Julia Dronova (Russian)
+  * Matej Urbančič (Slovenian)
+  * Anders Jonsson (Swedish)
+  * Yuri Chornoivan (Ukrainian)
+
 ==============
 Evince    40.2
 ==============
