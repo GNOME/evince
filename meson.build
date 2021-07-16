@@ -1,9 +1,9 @@
 project(
-  'evince', ['c'],
+  'Evince', ['c'],
   version: '41.alpha',
   license: 'GPL2+',
   default_options: 'buildtype=debugoptimized',
-  meson_version: '>= 0.50.0',
+  meson_version: '>= 0.53.0',
 )
 
 if get_option('development')
@@ -522,33 +522,32 @@ meson.add_install_script(
   ev_datadir,
 )
 
-output = '\n' + meson.project_name() + ' configure summary\n'
-output += '========================\n\n'
-output += 'Platform .................:  ' + ev_platform + '\n'
-output += 'Debug mode ...............:  ' + ev_debug.to_string() + '\n\n\n'
-output += 'FRONTENDS\n\n'
-output += 'Viewer ...................:  ' + enable_viewer.to_string() + '\n'
-output += 'Previewer ................:  ' + enable_previewer.to_string() + '\n'
-output += 'Thumbnailer ..............:  ' + enable_thumbnailer.to_string() + '\n'
-output += 'Nautilus Extensions ......:  ' + enable_nautilus.to_string() + '\n'
-output += 'BACKENDS\n\n'
-output += 'Comics ...................:  ' + enable_comics.to_string() + '\n'
-output += 'DJVU .....................:  ' + enable_djvu.to_string() + '\n'
-output += 'DVI ......................:  ' + enable_dvi.to_string() + '\n'
-output += 'PDF ......................:  ' + enable_pdf.to_string() + '\n'
-output += 'PostScript ...............:  ' + enable_ps.to_string() + '\n'
-output += 'TIFF .....................:  ' + enable_tiff.to_string() + '\n'
-output += 'XPS ......................:  ' + enable_xps.to_string() + '\n\n\n'
-output += 'FEATURES\n\n'
-output += 'GTK Doc reference ........:  ' + enable_gtk_doc.to_string() + '\n'
-output += 'User documentation .......:  ' + enable_user_doc.to_string() + '\n'
-output += 'GObject Introspection ....:  ' + enable_introspection.to_string() + '\n'
-output += 'DBUS communication .......:  ' + enable_dbus.to_string() + '\n'
-output += 'systemd units installation:  ' + systemd_user_unit_dir + '\n'
-output += 'Keyring integration ......:  ' + enable_keyring.to_string() + '\n'
-output += 'GTK+ Unix Print ..........:  ' + enable_gtk_unix_print.to_string() + '\n'
-output += 'Thumbnail cache ..........:  ' + enable_thumbnail_cache.to_string() + '\n'
-output += 'Multimedia ...............:  ' + enable_multimedia.to_string() + '\n'
-output += 'Spell Checker ............:  ' + enable_gspell.to_string() + '\n'
-output += 'SyncTex ..................:  ' + external_synctex.to_string('external', 'internal')
-message(output)
+
+summary({'Platform...................': ev_platform,
+         'Debug mode.................': ev_debug,
+        }, section: 'General', bool_yn: true)
+summary({'Viewer.....................': enable_viewer,
+         'Previewer..................': enable_previewer,
+         'Thumbnailer................': enable_thumbnailer,
+         'Nautilus extension.........': enable_nautilus,
+        }, section: 'Frontends', bool_yn: true)
+summary({'Comics.....................': enable_comics,
+         'DJVU.......................': enable_djvu,
+         'DVI........................': enable_dvi,
+         'PDF........................': enable_pdf,
+         'PostScript.................': enable_ps,
+         'TIFF.......................': enable_tiff,
+         'XPS........................': enable_xps,
+        }, section: 'Backends', bool_yn: true)
+summary({'Gtk-doc reference..........': enable_gtk_doc,
+         'User documentation.........': enable_user_doc,
+         'GObject introspection......': enable_introspection,
+         'DBus communication.........': enable_dbus,
+         'Systemd units installation.': systemd_user_unit_dir,
+         'Keyring integration........': enable_keyring,
+         'GTK+ Unix print ...........': enable_gtk_unix_print,
+         'Thumbnail cache ...........': enable_thumbnail_cache,
+         'Multimedia ................': enable_multimedia,
+         'Spell checker .............': enable_gspell,
+         'SyncTex ...................': external_synctex.to_string('external', 'internal'),
+        }, section: 'Features', bool_yn: true)
