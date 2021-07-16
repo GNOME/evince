@@ -422,14 +422,13 @@ elif not get_option('ps').disabled()
 endif
 
 # *** TIFF ***
-# FIXME: libtiff-4 supports required features by default, so probably there is no need for header and function checks
 libtiff_dep = dependency('libtiff-4', required: get_option('tiff'))
-enable_tiff = libtiff_dep.found() and cc.has_header('tiff.h', dependencies: libtiff_dep) and cc.has_function('TIFFOpen', dependencies: libtiff_dep) and cc.has_function('TIFFReadRGBAImageOriented', dependencies: libtiff_dep)
+enable_tiff = libtiff_dep.found()
 if enable_tiff
   backends += {'tiff': mime_types_list.get('tiff')}
   evince_mime_types += mime_types_list.get('tiff')
 elif get_option('tiff').auto()
-  warning('Tiff support is disabled since tiff library version 3.6 or newer not found')
+  warning('Tiff support is disabled since tiff library version 4.0 or newer not found')
 endif
 
 # *** XPS ***
