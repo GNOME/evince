@@ -506,11 +506,6 @@ i18n.merge_file(
   install_dir: ev_appstreamdir,
 )
 
-run_target(
-  'ChangeLog',
-  command: [find_program('generate-changelog.sh'), source_root, 'ChangeLog'],
-)
-
 configure_file(
   output: 'config.h',
   configuration: config_h,
