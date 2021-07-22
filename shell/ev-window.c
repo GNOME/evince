@@ -530,6 +530,10 @@ ev_window_update_actions_sensitivity (EvWindow *ev_window)
 				      !recent_view_mode);
 	ev_window_set_action_enabled (ev_window, "toggle-find", can_find &&
 				      !recent_view_mode);
+	ev_window_set_action_enabled (ev_window, "add-annotation", can_annotate &&
+				      !recent_view_mode);
+	ev_window_set_action_enabled (ev_window, "highlight-annotation", can_annotate &&
+				      !recent_view_mode);
 	ev_window_set_action_enabled (ev_window, "toggle-edit-annots", can_annotate &&
 				      !recent_view_mode);
 	ev_window_set_action_enabled (ev_window, "rotate-left", has_pages &&
