@@ -21,7 +21,6 @@
 #include "config.h"
 
 #include <glib/gi18n.h>
-#include "gimpcellrenderertoggle.h"
 
 #include "ev-document-layers.h"
 #include "ev-sidebar-page.h"
@@ -38,7 +37,8 @@ struct _EvSidebarLayersPrivate {
 
 enum {
 	PROP_0,
-	PROP_WIDGET
+	PROP_WIDGET,
+	PROP_DOCUMENT_MODEL,
 };
 
 enum {
@@ -49,6 +49,8 @@ enum {
 static void ev_sidebar_layers_page_iface_init (EvSidebarPageInterface *iface);
 static void job_finished_callback             (EvJobLayers            *job,
 					       EvSidebarLayers        *sidebar_layers);
+static void ev_sidebar_layers_set_model (EvSidebarPage   *sidebar_page,
+					 EvDocumentModel *model);
 
 static guint signals[N_SIGNALS];
 
@@ -95,6 +97,26 @@ ev_sidebar_layers_get_property (GObject    *object,
 	        default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
 			break;
+	}
+}
+
+static void
+ev_sidebar_layers_set_property (GObject      *object,
+			       guint         prop_id,
+			       const GValue *value,
+			       GParamSpec   *pspec)
+{
+	EvSidebarLayers *sidebar_layers = EV_SIDEBAR_LAYERS (object);
+
+	switch (prop_id)
+	{
+	case PROP_DOCUMENT_MODEL:
+		ev_sidebar_layers_set_model (EV_SIDEBAR_PAGE (sidebar_layers),
+			EV_DOCUMENT_MODEL (g_value_get_object (value)));
+		break;
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+		break;
 	}
 }
 
@@ -171,9 +193,8 @@ clear_rb_group (GtkTreeModel *model,
 }
 
 static void
-ev_sidebar_layers_visibility_clicked (GtkCellRendererToggle *cell,
+ev_sidebar_layers_visibility_toggled (GtkCellRendererToggle *cell,
 				      gchar                 *path_str,
-				      GdkModifierType        state,
 				      EvSidebarLayers       *ev_layers)
 {
 	GtkTreeModel *model;
@@ -239,7 +260,7 @@ ev_sidebar_layers_create_tree_view (EvSidebarLayers *ev_layers)
 
 	column = gtk_tree_view_column_new ();
 
-	renderer = gimp_cell_renderer_toggle_new ("visible-symbolic");
+	renderer = gtk_cell_renderer_toggle_new ();
 	gtk_tree_view_column_pack_start (column, renderer, FALSE);
 	gtk_tree_view_column_set_attributes (column, renderer,
 					     "active", EV_DOCUMENT_LAYERS_COLUMN_VISIBLE,
@@ -250,11 +271,10 @@ ev_sidebar_layers_create_tree_view (EvSidebarLayers *ev_layers)
 	g_object_set (G_OBJECT (renderer),
 		      "xpad", 0,
 		      "ypad", 0,
-		      "override-background", TRUE,
 		      NULL);
 
-	g_signal_connect (renderer, "clicked",
-			  G_CALLBACK (ev_sidebar_layers_visibility_clicked),
+	g_signal_connect (renderer, "toggled",
+			  G_CALLBACK (ev_sidebar_layers_visibility_toggled),
 			  (gpointer)ev_layers);
 
 
@@ -279,10 +299,13 @@ ev_sidebar_layers_init (EvSidebarLayers *ev_layers)
 
 	ev_layers->priv = ev_sidebar_layers_get_instance_private (ev_layers);
 
-	swindow = gtk_scrolled_window_new (NULL, NULL);
+	swindow = gtk_scrolled_window_new ();
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (swindow),
 					GTK_POLICY_NEVER,
 					GTK_POLICY_AUTOMATIC);
+	gtk_widget_set_vexpand (swindow, TRUE);
+	gtk_widget_set_hexpand (swindow, TRUE);
+
 	/* Data Model */
 	model = ev_sidebar_layers_create_loading_model ();
 
@@ -291,11 +314,10 @@ ev_sidebar_layers_init (EvSidebarLayers *ev_layers)
 	gtk_tree_view_set_model (ev_layers->priv->tree_view, model);
 	g_object_unref (model);
 
-	gtk_container_add (GTK_CONTAINER (swindow),
-			   GTK_WIDGET (ev_layers->priv->tree_view));
+	gtk_scrolled_window_set_child (GTK_SCROLLED_WINDOW (swindow),
+		GTK_WIDGET (ev_layers->priv->tree_view));
 
-        gtk_box_pack_start (GTK_BOX (ev_layers), swindow, TRUE, TRUE, 0);
-	gtk_widget_show_all (GTK_WIDGET (ev_layers));
+        gtk_box_prepend (GTK_BOX (ev_layers), swindow);
 }
 
 static void
@@ -304,9 +326,11 @@ ev_sidebar_layers_class_init (EvSidebarLayersClass *ev_layers_class)
 	GObjectClass *g_object_class = G_OBJECT_CLASS (ev_layers_class);
 
 	g_object_class->get_property = ev_sidebar_layers_get_property;
+	g_object_class->set_property = ev_sidebar_layers_set_property;
 	g_object_class->dispose = ev_sidebar_layers_dispose;
 
 	g_object_class_override_property (g_object_class, PROP_WIDGET, "main-widget");
+	g_object_class_override_property (g_object_class, PROP_DOCUMENT_MODEL, "document-model");
 
 	signals[LAYERS_VISIBILITY_CHANGED] =
 		g_signal_new ("layers_visibility_changed",
