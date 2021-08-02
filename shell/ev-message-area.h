@@ -22,6 +22,7 @@
 #pragma once
 
 #include <gtk/gtk.h>
+#include <adwaita.h>
 
 G_BEGIN_DECLS
 
@@ -36,11 +37,11 @@ typedef struct _EvMessageArea        EvMessageArea;
 typedef struct _EvMessageAreaClass   EvMessageAreaClass;
 
 struct _EvMessageArea {
-	GtkBin parent_instance;
+	AdwBin parent_instance;
 };
 
 struct _EvMessageAreaClass {
-	GtkBinClass parent_class;
+	AdwBinClass parent_class;
 };
 
 GType      ev_message_area_get_type                 (void) G_GNUC_CONST;

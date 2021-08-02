@@ -1,25 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <template class="EvMessageArea" parent="GtkBin">
+  <template class="EvMessageArea" parent="AdwBin">
     <property name="visible">True</property>
     <child>
       <object class="GtkInfoBar" id="info_bar">
         <property name="show-close-button">True</property>
         <property name="visible">True</property>
-        <child internal-child="content_area">
+        <child>
           <object class="GtkBox" id="main_box">
             <property name="orientation">vertical</property>
             <property name="spacing">12</property>
-            <property name="border-width">12</property>
             <child>
               <object class="GtkBox" id="hbox">
                 <property name="orientation">horizontal</property>
                 <property name="spacing">12</property>
                 <child>
                   <object class="GtkImage" id="image">
-                    <property name="icon-size">6</property>
-                    <property name="xalign">0.5</property>
-                    <property name="yalign">0.0</property>
+                    <property name="pixel-size">48</property>
+                    <property name="margin-top">6</property>
+                    <property name="margin-bottom">6</property>
+                    <property name="margin-start">6</property>
+                    <property name="margin-end">6</property>
                   </object>
                 </child>
                 <child>

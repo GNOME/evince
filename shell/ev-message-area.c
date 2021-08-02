@@ -25,7 +25,6 @@
 
 typedef struct {
 	GtkWidget *info_bar;
-
 	GtkWidget *main_box;
 	GtkWidget *image;
 	GtkWidget *label;
@@ -51,7 +50,7 @@ static void ev_message_area_get_property (GObject      *object,
 					  GParamSpec   *pspec);
 static void ev_message_area_buildable_iface_init (GtkBuildableIface *iface);
 
-G_DEFINE_TYPE_WITH_CODE (EvMessageArea, ev_message_area, GTK_TYPE_BIN,
+G_DEFINE_TYPE_WITH_CODE (EvMessageArea, ev_message_area, ADW_TYPE_BIN,
                          G_ADD_PRIVATE (EvMessageArea)
                          G_IMPLEMENT_INTERFACE (GTK_TYPE_BUILDABLE,
                                                 ev_message_area_buildable_iface_init))
@@ -59,22 +58,11 @@ G_DEFINE_TYPE_WITH_CODE (EvMessageArea, ev_message_area, GTK_TYPE_BIN,
 #define GET_PRIVATE(o) ev_message_area_get_instance_private (o);
 
 static void
-ev_message_area_constructed (GObject *object)
-{
-	EvMessageArea *ev_message_area = EV_MESSAGE_AREA (object);
-
-	G_OBJECT_CLASS (ev_message_area_parent_class)->constructed (object);
-
-	gtk_widget_show_all (GTK_WIDGET (ev_message_area));
-}
-
-static void
 ev_message_area_class_init (EvMessageAreaClass *class)
 {
 	GObjectClass *gobject_class = G_OBJECT_CLASS (class);
 	GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (class);
 
-	gobject_class->constructed = ev_message_area_constructed;
 	gobject_class->set_property = ev_message_area_set_property;
 	gobject_class->get_property = ev_message_area_get_property;
 
@@ -84,6 +72,8 @@ ev_message_area_class_init (EvMessageAreaClass *class)
 	gtk_widget_class_bind_template_child_private (widget_class, EvMessageArea, image);
 	gtk_widget_class_bind_template_child_private (widget_class, EvMessageArea, label);
 	gtk_widget_class_bind_template_child_private (widget_class, EvMessageArea, secondary_label);
+
+	gtk_widget_class_set_accessible_role (widget_class, GTK_ACCESSIBLE_ROLE_ALERT);
 
 	g_object_class_install_property (gobject_class,
 					 PROP_TEXT,
@@ -122,10 +112,7 @@ ev_message_area_set_image_for_type (EvMessageArea *area,
 				    GtkMessageType type)
 {
 	const gchar *icon_name = NULL;
-	AtkObject   *atk_obj;
-	EvMessageAreaPrivate *priv;
-
-	priv = GET_PRIVATE (area);
+	EvMessageAreaPrivate *priv = GET_PRIVATE (area);
 
 	switch (type) {
 	case GTK_MESSAGE_INFO:
@@ -149,16 +136,11 @@ ev_message_area_set_image_for_type (EvMessageArea *area,
 
 	if (icon_name)
 		gtk_image_set_from_icon_name (GTK_IMAGE (priv->image),
-					      icon_name,
-					      GTK_ICON_SIZE_DIALOG);
+					      icon_name);
 
-	atk_obj = gtk_widget_get_accessible (GTK_WIDGET (area));
-	if (GTK_IS_ACCESSIBLE (atk_obj)) {
-		atk_object_set_role (atk_obj, ATK_ROLE_ALERT);
-		if (icon_name) {
-			atk_object_set_name (atk_obj, icon_name);
-		}
-	}
+	if (icon_name)
+		gtk_accessible_update_property (GTK_ACCESSIBLE (area),
+			GTK_ACCESSIBLE_PROPERTY_LABEL, icon_name, -1);
 }
 
 static void
@@ -311,9 +293,10 @@ ev_message_area_set_image (EvMessageArea *area,
 	priv->message_type = GTK_MESSAGE_OTHER;
 
 	parent = gtk_widget_get_parent (priv->image);
-	gtk_container_add (GTK_CONTAINER (parent), image);
-	gtk_container_remove (GTK_CONTAINER (parent), priv->image);
-	gtk_box_reorder_child (GTK_BOX (parent), image, 0);
+	g_assert (GTK_IS_BOX (parent));
+	gtk_box_remove (GTK_BOX (parent), image);
+	gtk_box_prepend (GTK_BOX (parent), priv->image);
+	gtk_box_reorder_child_after (GTK_BOX (parent), image, NULL);
 
 	priv->image = image;
 
@@ -332,8 +315,7 @@ ev_message_area_set_image_from_icon_name (EvMessageArea *area,
 	priv = GET_PRIVATE (area);
 
 	gtk_image_set_from_icon_name (GTK_IMAGE (priv->image),
-				      icon_name,
-				      GTK_ICON_SIZE_DIALOG);
+				      icon_name);
 }
 
 void
