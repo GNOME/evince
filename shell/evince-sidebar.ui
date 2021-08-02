@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk" version="4.0"/>
+  <requires lib="libadwaita" version="1.0"/>
+  <template class="EvSidebar" parent="GtkBox">
+    <property name="orientation">vertical</property>
+    <child type="start">
+      <object class="GtkStack" id="stack">
+        <signal name="notify::visible-child" handler="on_child_change" />
+      </object>
+    </child>
+    <child type="start">
+      <object class="GtkStackSwitcher" id="switcher">
+        <property name="stack">stack</property>
+        <property name="halign">fill</property>
+        <property name="hexpand">True</property>
+        <property name="margin-top">6</property>
+        <property name="margin-bottom">6</property>
+        <property name="margin-start">6</property>
+        <property name="margin-end">6</property>
+      </object>
+    </child>
+  </template>
+</interface>
