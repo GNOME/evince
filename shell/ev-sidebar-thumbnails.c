@@ -89,11 +89,14 @@ enum {
 enum {
 	PROP_0,
 	PROP_WIDGET,
+	PROP_DOCUMENT_MODEL,
 };
 
 static void         ev_sidebar_thumbnails_clear_model      (EvSidebarThumbnails     *sidebar);
 static gboolean     ev_sidebar_thumbnails_support_document (EvSidebarPage           *sidebar_page,
 							    EvDocument              *document);
+static void         ev_sidebar_thumbnails_set_model	   (EvSidebarPage   *sidebar_page,
+							    EvDocumentModel *model);
 static void         ev_sidebar_thumbnails_page_iface_init  (EvSidebarPageInterface  *iface);
 static const gchar* ev_sidebar_thumbnails_get_label        (EvSidebarPage           *sidebar_page);
 static void         ev_sidebar_thumbnails_set_current_page (EvSidebarThumbnails *sidebar,
@@ -105,12 +108,12 @@ static void         adjustment_changed_cb                  (EvSidebarThumbnails 
 static void         check_toggle_blank_first_dual_mode     (EvSidebarThumbnails     *sidebar_thumbnails);
 static void         check_toggle_blank_first_dual_mode_when_resizing (EvSidebarThumbnails *sidebar_thumbnails);
 
-G_DEFINE_TYPE_EXTENDED (EvSidebarThumbnails, 
-                        ev_sidebar_thumbnails, 
+G_DEFINE_TYPE_EXTENDED (EvSidebarThumbnails,
+                        ev_sidebar_thumbnails,
                         GTK_TYPE_BOX,
-                        0, 
+                        0,
                         G_ADD_PRIVATE (EvSidebarThumbnails)
-                        G_IMPLEMENT_INTERFACE (EV_TYPE_SIDEBAR_PAGE, 
+                        G_IMPLEMENT_INTERFACE (EV_TYPE_SIDEBAR_PAGE,
 					       ev_sidebar_thumbnails_page_iface_init))
 
 /* Thumbnails dimensions cache */
@@ -256,16 +259,10 @@ static void
 ev_sidebar_thumbnails_dispose (GObject *object)
 {
 	EvSidebarThumbnails *sidebar_thumbnails = EV_SIDEBAR_THUMBNAILS (object);
-	
+
 	if (sidebar_thumbnails->priv->loading_icons) {
 		g_hash_table_destroy (sidebar_thumbnails->priv->loading_icons);
 		sidebar_thumbnails->priv->loading_icons = NULL;
-	}
-	
-	if (sidebar_thumbnails->priv->list_store) {
-		ev_sidebar_thumbnails_clear_model (sidebar_thumbnails);
-		g_object_unref (sidebar_thumbnails->priv->list_store);
-		sidebar_thumbnails->priv->list_store = NULL;
 	}
 
 	G_OBJECT_CLASS (ev_sidebar_thumbnails_parent_class)->dispose (object);
@@ -290,6 +287,26 @@ ev_sidebar_thumbnails_get_property (GObject    *object,
 }
 
 static void
+ev_sidebar_thumbnails_set_property (GObject      *object,
+			       guint         prop_id,
+			       const GValue *value,
+			       GParamSpec   *pspec)
+{
+	EvSidebarThumbnails *sidebar_thumbnails = EV_SIDEBAR_THUMBNAILS (object);
+
+	switch (prop_id)
+	{
+	case PROP_DOCUMENT_MODEL:
+		ev_sidebar_thumbnails_set_model (EV_SIDEBAR_PAGE (sidebar_thumbnails),
+			EV_DOCUMENT_MODEL (g_value_get_object (value)));
+		break;
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+		break;
+	}
+}
+
+static void
 ev_sidebar_thumbnails_map (GtkWidget *widget)
 {
 	EvSidebarThumbnails *sidebar;
@@ -297,7 +314,7 @@ ev_sidebar_thumbnails_map (GtkWidget *widget)
 	sidebar = EV_SIDEBAR_THUMBNAILS (widget);
 
 	GTK_WIDGET_CLASS (ev_sidebar_thumbnails_parent_class)->map (widget);
-	
+
 	adjustment_changed_cb (sidebar);
 }
 
@@ -332,53 +349,27 @@ ev_sidebar_check_reset_current_page (EvSidebarThumbnails *sidebar)
 }
 
 static void
-ev_sidebar_thumbnails_size_allocate (GtkWidget     *widget,
-                                     GtkAllocation *allocation)
+ev_sidebar_thumbnails_size_allocate (GtkWidget	*widget,
+				     int	 width,
+				     int	 height,
+				     int	 baseline)
 {
         EvSidebarThumbnails *sidebar = EV_SIDEBAR_THUMBNAILS (widget);
 
-        GTK_WIDGET_CLASS (ev_sidebar_thumbnails_parent_class)->size_allocate (widget, allocation);
+        GTK_WIDGET_CLASS (ev_sidebar_thumbnails_parent_class)->size_allocate (widget, width, height, baseline);
 
-        if (allocation->width != sidebar->priv->width) {
-                sidebar->priv->width = allocation->width;
+        if (width != sidebar->priv->width) {
+                sidebar->priv->width = width;
 
                 /* Might have a new number of columns, reset current page */
                 ev_sidebar_check_reset_current_page (sidebar);
         }
 }
 
-static void
-ev_sidebar_thumbnails_class_init (EvSidebarThumbnailsClass *ev_sidebar_thumbnails_class)
-{
-	GObjectClass *g_object_class;
-	GtkWidgetClass *widget_class;
-
-	g_object_class = G_OBJECT_CLASS (ev_sidebar_thumbnails_class);
-	widget_class = GTK_WIDGET_CLASS (ev_sidebar_thumbnails_class);
-
-	g_object_class->dispose = ev_sidebar_thumbnails_dispose;
-	g_object_class->get_property = ev_sidebar_thumbnails_get_property;
-	widget_class->map = ev_sidebar_thumbnails_map;
-        widget_class->size_allocate = ev_sidebar_thumbnails_size_allocate;
-
-        gtk_widget_class_set_css_name (widget_class, "evsidebarthumbnails");
-
-	g_object_class_override_property (g_object_class,
-					  PROP_WIDGET,
-					  "main-widget");
-}
-
 GtkWidget *
 ev_sidebar_thumbnails_new (void)
 {
-	GtkWidget *ev_sidebar_thumbnails;
-
-	ev_sidebar_thumbnails = g_object_new (EV_TYPE_SIDEBAR_THUMBNAILS,
-                                              "orientation", GTK_ORIENTATION_VERTICAL,
-                                              NULL);
-
-
-	return ev_sidebar_thumbnails;
+	return GTK_WIDGET (g_object_new (EV_TYPE_SIDEBAR_THUMBNAILS, NULL));
 }
 
 static cairo_surface_t *
@@ -409,7 +400,7 @@ ev_sidebar_thumbnails_get_loading_icon (EvSidebarThumbnails *sidebar_thumbnails,
 	} else {
 		g_free (key);
 	}
-	
+
 	return icon;
 }
 
@@ -530,7 +521,7 @@ add_range (EvSidebarThumbnails *sidebar_thumbnails,
 					    COLUMN_JOB, job,
 					    -1);
 			ev_job_scheduler_push_job (EV_JOB (job), EV_JOB_PRIORITY_HIGH);
-			
+
 			/* The queue and the list own a ref to the job now */
 			g_object_unref (job);
 		} else if (job) {
@@ -567,12 +558,12 @@ update_visible_range (EvSidebarThumbnails *sidebar_thumbnails,
 	/* Clear the areas we no longer display */
 	if (old_start_page >= 0 && old_start_page < start_page)
 		cancel_running_jobs (sidebar_thumbnails, old_start_page, MIN (start_page - 1, old_end_page));
-	
+
 	if (old_end_page > 0 && old_end_page > end_page)
 		cancel_running_jobs (sidebar_thumbnails, MAX (end_page + 1, old_start_page), old_end_page);
 
 	add_range (sidebar_thumbnails, start_page, end_page);
-	
+
 	priv->start_page = start_page;
 	priv->end_page = end_page;
 }
@@ -613,6 +604,33 @@ adjustment_changed_cb (EvSidebarThumbnails *sidebar_thumbnails)
 	gtk_tree_path_free (path2);
 }
 
+static GdkTexture *
+gdk_texture_new_for_surface (cairo_surface_t *surface)
+{
+  GdkTexture *texture;
+  GBytes *bytes;
+
+  g_return_val_if_fail (cairo_surface_get_type (surface) == CAIRO_SURFACE_TYPE_IMAGE, NULL);
+  g_return_val_if_fail (cairo_image_surface_get_width (surface) > 0, NULL);
+  g_return_val_if_fail (cairo_image_surface_get_height (surface) > 0, NULL);
+
+  bytes = g_bytes_new_with_free_func (cairo_image_surface_get_data (surface),
+                                      cairo_image_surface_get_height (surface)
+                                      * cairo_image_surface_get_stride (surface),
+                                      (GDestroyNotify) cairo_surface_destroy,
+                                      cairo_surface_reference (surface));
+
+  texture = gdk_memory_texture_new (cairo_image_surface_get_width (surface),
+                                    cairo_image_surface_get_height (surface),
+                                    GDK_MEMORY_DEFAULT,
+                                    bytes,
+                                    cairo_image_surface_get_stride (surface));
+
+  g_bytes_unref (bytes);
+
+  return texture;
+}
+
 static void
 ev_sidebar_thumbnails_fill_model (EvSidebarThumbnails *sidebar_thumbnails)
 {
@@ -626,6 +644,7 @@ ev_sidebar_thumbnails_fill_model (EvSidebarThumbnails *sidebar_thumbnails)
 		gchar     *page_label;
 		gchar     *page_string;
 		cairo_surface_t *loading_icon = NULL;
+		GdkTexture *texture;
 		gint       width, height;
 
 		page_label = ev_document_get_page_label (priv->document, i);
@@ -641,15 +660,18 @@ ev_sidebar_thumbnails_fill_model (EvSidebarThumbnails *sidebar_thumbnails)
 
 		prev_width = width;
 		prev_height = height;
-		
+
+		texture = gdk_texture_new_for_surface (loading_icon);
+
 		gtk_list_store_append (priv->list_store, &iter);
 		gtk_list_store_set (priv->list_store, &iter,
 				    COLUMN_PAGE_STRING, page_string,
-				    COLUMN_SURFACE, loading_icon,
+				    COLUMN_SURFACE, texture,
 				    COLUMN_THUMBNAIL_SET, FALSE,
 				    -1);
 		g_free (page_label);
 		g_free (page_string);
+		cairo_surface_destroy (loading_icon);
 	}
 }
 
@@ -693,36 +715,8 @@ static void
 ev_sidebar_init_icon_view (EvSidebarThumbnails *ev_sidebar_thumbnails)
 {
 	EvSidebarThumbnailsPrivate *priv;
-        GtkCellRenderer *renderer;
 
 	priv = ev_sidebar_thumbnails->priv;
-
-	priv->icon_view = gtk_icon_view_new_with_model (GTK_TREE_MODEL (priv->list_store));
-
-        renderer = g_object_new (GTK_TYPE_CELL_RENDERER_PIXBUF,
-                                 "xalign", 0.5,
-                                 "yalign", 1.0,
-                                 NULL);
-        gtk_cell_layout_pack_start (GTK_CELL_LAYOUT (priv->icon_view), renderer, FALSE);
-        gtk_cell_layout_set_attributes (GTK_CELL_LAYOUT (priv->icon_view),
-                                        renderer, "surface", 1, NULL);
-
-        renderer = g_object_new (GTK_TYPE_CELL_RENDERER_TEXT,
-                                 "alignment", PANGO_ALIGN_CENTER,
-                                 "wrap-mode", PANGO_WRAP_WORD_CHAR,
-                                 "xalign", 0.5,
-                                 "yalign", 0.0,
-                                 "width", THUMBNAIL_WIDTH,
-                                 "wrap-width", THUMBNAIL_WIDTH,
-                                 NULL);
-        gtk_cell_layout_pack_end (GTK_CELL_LAYOUT (priv->icon_view), renderer, FALSE);
-        gtk_cell_layout_set_attributes (GTK_CELL_LAYOUT (priv->icon_view),
-                                        renderer, "markup", 0, NULL);
-	g_signal_connect (priv->icon_view, "selection-changed",
-			  G_CALLBACK (ev_sidebar_icon_selection_changed), ev_sidebar_thumbnails);
-
-	g_signal_connect_swapped (priv->icon_view, "size-allocate",
-				  G_CALLBACK (check_toggle_blank_first_dual_mode_when_resizing), ev_sidebar_thumbnails);
 
 	g_signal_connect_data (priv->model, "notify::dual-page",
 			       G_CALLBACK (check_toggle_blank_first_dual_mode), ev_sidebar_thumbnails,
@@ -733,8 +727,6 @@ ev_sidebar_init_icon_view (EvSidebarThumbnails *ev_sidebar_thumbnails)
 			       NULL, G_CONNECT_SWAPPED | G_CONNECT_AFTER);
 
 	check_toggle_blank_first_dual_mode (ev_sidebar_thumbnails);
-	gtk_container_add (GTK_CONTAINER (priv->swindow), priv->icon_view);
-	gtk_widget_show (priv->icon_view);
 }
 
 static void
@@ -770,36 +762,22 @@ ev_sidebar_thumbnails_init (EvSidebarThumbnails *ev_sidebar_thumbnails)
 	priv = ev_sidebar_thumbnails->priv = ev_sidebar_thumbnails_get_instance_private (ev_sidebar_thumbnails);
 	priv->blank_first_dual_mode = FALSE;
 
-	priv->list_store = gtk_list_store_new (NUM_COLUMNS,
-					       G_TYPE_STRING,
-					       CAIRO_GOBJECT_TYPE_SURFACE,
-					       G_TYPE_BOOLEAN,
-					       EV_TYPE_JOB_THUMBNAIL);
+	gtk_widget_init_template (GTK_WIDGET (ev_sidebar_thumbnails));
 
 	signal_id = g_signal_lookup ("row-changed", GTK_TYPE_TREE_MODEL);
 	g_signal_connect (GTK_TREE_MODEL (priv->list_store), "row-changed",
 			  G_CALLBACK (ev_sidebar_thumbnails_row_changed),
 			  GUINT_TO_POINTER (signal_id));
 
-	priv->swindow = gtk_scrolled_window_new (NULL, NULL);
 
-	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (priv->swindow),
-					GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
 	priv->vadjustment = gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW (priv->swindow));
 	g_signal_connect_data (priv->vadjustment, "value-changed",
 			       G_CALLBACK (adjustment_changed_cb),
 			       ev_sidebar_thumbnails, NULL,
 			       G_CONNECT_SWAPPED | G_CONNECT_AFTER);
-	g_signal_connect_swapped (priv->swindow, "size-allocate",
-				  G_CALLBACK (adjustment_changed_cb),
-				  ev_sidebar_thumbnails);
-	gtk_box_pack_start (GTK_BOX (ev_sidebar_thumbnails), priv->swindow, TRUE, TRUE, 0);
 
 	g_signal_connect (ev_sidebar_thumbnails, "notify::scale-factor",
 			  G_CALLBACK (ev_sidebar_thumbnails_device_scale_factor_changed_cb), NULL);
-
-	/* Put it all together */
-	gtk_widget_show_all (priv->swindow);
 }
 
 static void
@@ -901,6 +879,7 @@ thumbnail_job_completed_callback (EvJobThumbnail      *job,
 	EvSidebarThumbnailsPrivate *priv = sidebar_thumbnails->priv;
 	GtkTreeIter                *iter;
         cairo_surface_t            *surface;
+	GdkTexture                 *texture;
 #ifdef HAVE_HIDPI_SUPPORT
         gint                        device_scale;
 #endif
@@ -920,9 +899,12 @@ thumbnail_job_completed_callback (EvJobThumbnail      *job,
 	iter = (GtkTreeIter *) g_object_get_data (G_OBJECT (job), "tree_iter");
 	if (priv->inverted_colors)
 		ev_document_misc_invert_surface (surface);
+
+	texture = gdk_texture_new_for_surface (surface);
+
 	gtk_list_store_set (priv->list_store,
 			    iter,
-			    COLUMN_SURFACE, surface,
+			    COLUMN_SURFACE, texture,
 			    COLUMN_THUMBNAIL_SET, TRUE,
 			    COLUMN_JOB, NULL,
 			    -1);
@@ -1005,29 +987,29 @@ ev_sidebar_thumbnails_set_model (EvSidebarPage   *sidebar_page,
 }
 
 static gboolean
-ev_sidebar_thumbnails_clear_job (GtkTreeModel *model,                                             
+ev_sidebar_thumbnails_clear_job (GtkTreeModel *model,
 			         GtkTreePath *path,
 			         GtkTreeIter *iter,
 				 gpointer data)
 {
 	EvJob *job;
-	
+
 	gtk_tree_model_get (model, iter, COLUMN_JOB, &job, -1);
-	
+
 	if (job != NULL) {
 		ev_job_cancel (job);
 		g_signal_handlers_disconnect_by_func (job, thumbnail_job_completed_callback, data);
 		g_object_unref (job);
 	}
-	
-	return FALSE;    
+
+	return FALSE;
 }
 
-static void 
+static void
 ev_sidebar_thumbnails_clear_model (EvSidebarThumbnails *sidebar_thumbnails)
 {
 	EvSidebarThumbnailsPrivate *priv = sidebar_thumbnails->priv;
-	
+
 	gtk_tree_model_foreach (GTK_TREE_MODEL (priv->list_store), ev_sidebar_thumbnails_clear_job, sidebar_thumbnails);
 	gtk_list_store_clear (priv->list_store);
 }
@@ -1057,12 +1039,12 @@ static gboolean
 iter_is_blank_thumbnail (GtkTreeModel *tree_model,
 			 GtkTreeIter  *iter)
 {
-	cairo_surface_t *surface = NULL;
+	GdkTexture *texture = NULL;
 	EvJob *job = NULL;
 	gboolean thumbnail_set = FALSE;
 
 	gtk_tree_model_get (tree_model, iter,
-			    COLUMN_SURFACE, &surface,
+			    COLUMN_SURFACE, &texture,
 			    COLUMN_THUMBNAIL_SET, &thumbnail_set,
 			    COLUMN_JOB, &job, -1);
 
@@ -1070,7 +1052,7 @@ iter_is_blank_thumbnail (GtkTreeModel *tree_model,
 	 * other items in the GtkIconView as it's the only one which
 	 * has the COLUMN_SURFACE as NULL while COLUMN_THUMBNAIL_SET
 	 * is set to TRUE. */
-	return surface == NULL && job == NULL && thumbnail_set;
+	return texture == NULL && job == NULL && thumbnail_set;
 }
 
 /* Returns the total horizontal(left+right) width of thumbnail frames.
@@ -1080,18 +1062,16 @@ ev_sidebar_thumbnails_frame_horizontal_width (EvSidebarThumbnails *sidebar)
 {
         GtkWidget *widget;
         GtkStyleContext *context;
-        GtkStateFlags state;
         GtkBorder border = {0, };
         gint offset;
 
         widget = GTK_WIDGET (sidebar);
         context = gtk_widget_get_style_context (widget);
-        state = gtk_widget_get_state_flags (widget);
 
         gtk_style_context_save (context);
 
         gtk_style_context_add_class (context, "page-thumbnail");
-        gtk_style_context_get_border (context, state, &border);
+        gtk_style_context_get_border (context, &border);
         offset = border.left + border.right;
 
         gtk_style_context_restore (context);
@@ -1102,9 +1082,9 @@ ev_sidebar_thumbnails_frame_horizontal_width (EvSidebarThumbnails *sidebar)
 static EvWindow *
 ev_sidebar_thumbnails_get_ev_window (EvSidebarThumbnails *sidebar)
 {
-	GtkWidget *toplevel;
+	GtkRoot *toplevel;
 
-	toplevel = gtk_widget_get_toplevel (GTK_WIDGET (sidebar));
+	toplevel = gtk_widget_get_root (GTK_WIDGET (sidebar));
 
 	if (toplevel && EV_IS_WINDOW (toplevel))
 		return EV_WINDOW (toplevel);
@@ -1382,4 +1362,42 @@ static void
 check_toggle_blank_first_dual_mode (EvSidebarThumbnails *sidebar_thumbnails)
 {
 	check_toggle_blank_first_dual_mode_real (sidebar_thumbnails, TRUE);
+}
+
+static void
+ev_sidebar_thumbnails_class_init (EvSidebarThumbnailsClass *ev_sidebar_thumbnails_class)
+{
+	GObjectClass *g_object_class;
+	GtkWidgetClass *widget_class;
+
+	g_object_class = G_OBJECT_CLASS (ev_sidebar_thumbnails_class);
+	widget_class = GTK_WIDGET_CLASS (ev_sidebar_thumbnails_class);
+
+	g_object_class->dispose = ev_sidebar_thumbnails_dispose;
+	g_object_class->get_property = ev_sidebar_thumbnails_get_property;
+	g_object_class->set_property = ev_sidebar_thumbnails_set_property;
+	widget_class->map = ev_sidebar_thumbnails_map;
+	widget_class->size_allocate = ev_sidebar_thumbnails_size_allocate;
+
+	gtk_widget_class_set_css_name (widget_class, "evsidebarthumbnails");
+
+	gtk_widget_class_set_template_from_resource (widget_class,
+				"/org/gnome/evince/ui/sidebar-thumbnails.ui");
+	gtk_widget_class_bind_template_child_private (widget_class, EvSidebarThumbnails, icon_view);
+	gtk_widget_class_bind_template_child_private (widget_class, EvSidebarThumbnails, list_store);
+	gtk_widget_class_bind_template_child_private (widget_class, EvSidebarThumbnails, swindow);
+
+	gtk_widget_class_bind_template_callback (widget_class, ev_sidebar_icon_selection_changed);
+
+	g_object_class_install_property (g_object_class,
+					 PROP_DOCUMENT_MODEL,
+					 g_param_spec_object ("document-model",
+							      "DocumentModel",
+							      "The document model",
+							      EV_TYPE_DOCUMENT_MODEL,
+							      G_PARAM_WRITABLE |
+							      G_PARAM_CONSTRUCT_ONLY |
+                                                              G_PARAM_STATIC_STRINGS));
+
+	g_object_class_override_property (g_object_class, PROP_WIDGET, "main-widget");
 }
