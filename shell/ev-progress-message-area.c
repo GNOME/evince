@@ -52,9 +52,14 @@ static void
 ev_progress_message_area_class_init (EvProgressMessageAreaClass *class)
 {
 	GObjectClass *gobject_class = G_OBJECT_CLASS (class);
+	GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (class);
 
 	gobject_class->set_property = ev_progress_message_area_set_property;
 	gobject_class->get_property = ev_progress_message_area_get_property;
+
+	gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/evince/ui/progress-message-area.ui");
+	gtk_widget_class_bind_template_child_private (widget_class, EvProgressMessageArea, label);
+	gtk_widget_class_bind_template_child_private (widget_class, EvProgressMessageArea, progress_bar);
 
 	g_object_class_install_property (gobject_class,
 					 PROP_STATUS,
@@ -77,31 +82,7 @@ ev_progress_message_area_class_init (EvProgressMessageAreaClass *class)
 static void
 ev_progress_message_area_init (EvProgressMessageArea *area)
 {
-	GtkWidget *contents;
-	GtkWidget *vbox;
-	EvProgressMessageAreaPrivate *priv;
-
-	priv = ev_progress_message_area_get_instance_private (area);
-
-	contents = _ev_message_area_get_main_box (EV_MESSAGE_AREA (area));
-	
-	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
-	
-	priv->label = gtk_label_new (NULL);
-	gtk_label_set_use_markup (GTK_LABEL (priv->label), TRUE);
-	gtk_label_set_ellipsize (GTK_LABEL (priv->label),
-				 PANGO_ELLIPSIZE_END);
-	g_object_set (G_OBJECT (priv->label), "xalign", 0., "yalign", 0.5, NULL);
-	gtk_box_pack_start (GTK_BOX (vbox), priv->label, TRUE, TRUE, 0);
-	gtk_widget_show (priv->label);
-
-	priv->progress_bar = gtk_progress_bar_new ();
-	gtk_widget_set_size_request (priv->progress_bar, -1, 15);
-	gtk_box_pack_start (GTK_BOX (vbox), priv->progress_bar, TRUE, FALSE, 0);
-	gtk_widget_show (priv->progress_bar);
-
-	gtk_box_pack_start (GTK_BOX (contents), vbox, TRUE, TRUE, 0);
-	gtk_widget_show (vbox);
+	gtk_widget_init_template (GTK_WIDGET (area));
 }
 
 static void
@@ -158,11 +139,14 @@ ev_progress_message_area_new (const gchar *icon_name,
 			      ...)
 {
 	GtkWidget *widget;
+	GtkWidget *info_bar;
 
 	widget = g_object_new (EV_TYPE_PROGRESS_MESSAGE_AREA,
-			       "message-type", GTK_MESSAGE_OTHER,
 			       "text", text,
 			       NULL);
+	info_bar = ev_message_area_get_info_bar (EV_MESSAGE_AREA (widget));
+	gtk_info_bar_set_message_type (GTK_INFO_BAR (info_bar), GTK_MESSAGE_OTHER);
+
 	if (first_button_text) {
 		va_list args;
 
@@ -175,8 +159,6 @@ ev_progress_message_area_new (const gchar *icon_name,
 
 	ev_message_area_set_image_from_icon_name (EV_MESSAGE_AREA (widget),
 						  icon_name);
-
-	gtk_info_bar_set_show_close_button (GTK_INFO_BAR (widget), TRUE);
 
 	return widget;
 }
