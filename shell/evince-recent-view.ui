@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk" version="4.0"/>
+  <template class="EvRecentView" parent="GtkBox">
+    <property name="orientation">vertical</property>
+    <child type="end">
+      <object class="GtkScrolledWindow" id="swindow">
+        <property name="vexpand">True</property>
+        <property name="hexpand">True</property>
+        <property name="hscrollbar-policy">never</property>
+        <property name="vscrollbar-policy">automatic</property>
+        <child>
+          <object class="GtkIconView" id="view">
+            <property name="model">model</property>
+            <property name="hexpand">True</property>
+            <property name="vexpand">True</property>
+            <property name="has-tooltip">True</property>
+            <property name="column-spacing">20</property>
+            <property name="margin">16</property>
+            <property name="activate-on-single-click">True</property>
+            <style>
+              <class name="content-view" />
+            </style>
+            <child>
+              <object class="GtkCellRendererPixbuf">
+                <property name="xalign">0.5</property>
+                <property name="yalign">0.5</property>
+              </object>
+              <attributes>
+                <attribute name="texture">3</attribute>
+              </attributes>
+            </child>
+            <child>
+              <object class="GdTwoLinesRenderer">
+                <property name="xalign">0.5</property>
+                <property name="alignment">center</property>
+                <property name="wrap-mode">2</property>
+                <property name="wrap-width">128</property>
+                <property name="text-lines">3</property>
+              </object>
+              <attributes>
+                <attribute name="text">1</attribute>
+                <attribute name="line-two">2</attribute>
+              </attributes>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+    <object class="GtkListStore" id="model">
+      <columns>
+        <column type="gchararray" />
+        <column type="gchararray" />
+        <column type="gchararray" />
+        <column type="GdkTexture" />
+        <column type="gpointer" />
+      </columns>
+    </object>
+  </template>
+</interface>

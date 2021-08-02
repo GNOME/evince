@@ -36,12 +36,12 @@ typedef struct _EvRecentViewClass   EvRecentViewClass;
 
 struct _EvRecentView
 {
-        GtkScrolledWindow parent;
+        GtkBox parent;
 };
 
 struct _EvRecentViewClass
 {
-        GtkScrolledWindowClass parent_class;
+        GtkBoxClass parent_class;
 };
 
 GType      ev_recent_view_get_type (void) G_GNUC_CONST;
