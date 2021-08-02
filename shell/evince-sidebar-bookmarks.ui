@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk" version="4.0"/>
+  <requires lib="libadwaita" version="1.0"/>
+  <template class="EvSidebarBookmarks" parent="GtkBox">
+    <property name="orientation">vertical</property>
+    <child type="start">
+      <object class="GtkScrolledWindow" id="swindow">
+        <property name="valign">fill</property>
+        <property name="vexpand">True</property>
+        <child>
+          <object class="GtkTreeView" id="tree_view">
+            <property name="model">list-model</property>
+            <property name="headers-visible">False</property>
+            <signal name="query-tooltip" handler="on_query_tooltip" />
+            <child>
+              <object class="GtkTreeViewColumn">
+                <child type="start">
+                  <object class="GtkCellRendererText">
+                    <property name="ellipsize">end</property>
+                    <property name="editable">True</property>
+                    <signal name="edited" handler="on_bookmark_renamed" />
+                  </object>
+                  <attributes>
+                    <attribute name="markup">0</attribute>
+                  </attributes>
+                </child>
+              </object>
+            </child>
+            <child internal-child="selection">
+              <object class="GtkTreeSelection" id="selection">
+                <signal name="changed" handler="on_selection_changed" />
+              </object>
+            </child>
+            <child>
+              <object class="GtkGestureClick">
+                <!-- GDK_BUTTON_SECONDARY -->
+                <property name="button">3</property>
+                <signal name="pressed" handler="on_button_press"/>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+
+    <child type="end">
+      <object class="GtkBox" id="hbox">
+        <property name="orientation">horizontal</property>
+        <property name="margin-bottom">6</property>
+        <property name="margin-end">6</property>
+        <property name="margin-start">6</property>
+        <property name="margin-top">6</property>
+        <property name="halign">center</property>
+        <property name="valign">fill</property>
+        <child>
+          <object class="GtkButton" id="add_button">
+            <property name="icon-name">list-add-symbolic</property>
+            <property name="sensitive">False</property>
+            <property name="tooltip-text" translatable="yes">Add bookmark</property>
+            <property name="action-name">win.add-bookmark</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkButton" id="del_button">
+            <property name="icon-name">list-remove-symbolic</property>
+            <property name="sensitive">False</property>
+            <property name="tooltip-text" translatable="yes">Remove bookmark</property>
+            <signal name="clicked" handler="on_del_clicked" />
+          </object>
+        </child>
+      </object>
+    </child>
+
+    <child>
+      <object class="GtkPopoverMenu" id="popup">
+        <property name="has-arrow">False</property>
+        <property name="menu-model">bookmarks-menu</property>
+      </object>
+    </child>
+
+  </template>
+  <object class="GtkListStore" id="list-model">
+    <columns>
+      <column type="gchararray" />
+      <column type="gint" />
+    </columns>
+  </object>
+
+  <menu id="bookmarks-menu">
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">_Open Bookmark</attribute>
+        <attribute name="action">bookmarks.open-bookmark</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">_Rename Bookmark</attribute>
+        <attribute name="action">bookmarks.rename-bookmark</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">_Delete Bookmark</attribute>
+        <attribute name="action">bookmarks.delete-bookmark</attribute>
+      </item>
+    </section>
+  </menu>
+</interface>
