@@ -41,6 +41,7 @@ enum
 {
 	PROP_0,
 	PROP_CURRENT_PAGE,
+	PROP_DOCUMENT_MODEL,
 };
 
 typedef struct {
@@ -75,6 +76,10 @@ ev_sidebar_set_property (GObject      *object,
 	{
 	case PROP_CURRENT_PAGE:
 		ev_sidebar_set_page (sidebar, g_value_get_object (value));
+		break;
+	case PROP_DOCUMENT_MODEL:
+		ev_sidebar_set_model (sidebar,
+			EV_DOCUMENT_MODEL (g_value_get_object (value)));
 		break;
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -131,6 +136,16 @@ ev_sidebar_class_init (EvSidebarClass *ev_sidebar_class)
 							      GTK_TYPE_WIDGET,
 							      G_PARAM_READWRITE |
 							      G_PARAM_STATIC_STRINGS));
+
+	g_object_class_install_property (g_object_class,
+					 PROP_DOCUMENT_MODEL,
+					 g_param_spec_object ("document-model",
+							      "DocumentModel",
+							      "The document model",
+							      EV_TYPE_DOCUMENT_MODEL,
+							      G_PARAM_WRITABLE |
+							      G_PARAM_CONSTRUCT_ONLY |
+                                                              G_PARAM_STATIC_STRINGS));
 }
 
 static void
@@ -170,23 +185,27 @@ ev_sidebar_document_changed_cb (EvDocumentModel *model,
 {
 	EvSidebarPrivate *priv = GET_PRIVATE (ev_sidebar);
 	EvDocument *document = ev_document_model_get_document (model);
-	GtkWidget *first_supported_page = NULL;
-	GList *list = gtk_container_get_children (GTK_CONTAINER (priv->stack));
+	GListModel *list = G_LIST_MODEL (gtk_stack_get_pages (GTK_STACK (priv->stack)));
+	EvSidebarPage *first_supported_page = NULL, *sidebar_page;
+	guint i = 0;
+	GtkStackPage *page;
+	gboolean supported;
 
+	while ((page = g_list_model_get_item (list, i)) != NULL) {
+		sidebar_page = EV_SIDEBAR_PAGE (gtk_stack_page_get_child (page));
 
-	for (GList *l = list; l; l = l->next) {
-		gboolean supported;
-		GtkWidget *page = GTK_WIDGET (l->data);
-		supported = ev_sidebar_page_support_document (EV_SIDEBAR_PAGE (page), document);
-		gtk_widget_set_visible (page, supported);
+		supported = ev_sidebar_page_support_document (sidebar_page, document);
+		gtk_stack_page_set_visible (page, supported);
 
 		if (supported && !first_supported_page)
-			first_supported_page = page;
+			first_supported_page = sidebar_page;
+
+		i++;
 	}
 
 	if (first_supported_page != NULL) {
 		if (!ev_sidebar_current_page_support_document (ev_sidebar, document)) {
-			ev_sidebar_set_page (ev_sidebar, first_supported_page);
+			ev_sidebar_set_page (ev_sidebar, GTK_WIDGET (first_supported_page));
 		}
 	} else {
 		gtk_widget_hide (GTK_WIDGET (ev_sidebar));
@@ -224,29 +243,6 @@ ev_sidebar_new (void)
 }
 
 void
-ev_sidebar_add_page (EvSidebar   *ev_sidebar,
-                     GtkWidget   *widget,
-                     const gchar *name,
-		     const gchar *title,
-		     const gchar *icon_name)
-{
-	EvSidebarPrivate *priv;
-
-	g_return_if_fail (EV_IS_SIDEBAR (ev_sidebar));
-	g_return_if_fail (GTK_IS_WIDGET (widget));
-
-	priv = GET_PRIVATE (ev_sidebar);
-
-	ev_sidebar_page_set_model (EV_SIDEBAR_PAGE (widget), priv->model);
-
-	gtk_stack_add_named (GTK_STACK (priv->stack), widget, name);
-	gtk_container_child_set (GTK_CONTAINER (priv->stack), widget,
-				 "icon-name", icon_name,
-				 "title", title,
-				 NULL);
-}
-
-void
 ev_sidebar_set_model (EvSidebar       *ev_sidebar,
 		      EvDocumentModel *model)
 {
@@ -260,8 +256,13 @@ ev_sidebar_set_model (EvSidebar       *ev_sidebar,
 	if (model == priv->model)
 		return;
 
-	priv->model = model;
+	if (priv->model) {
+		g_signal_handlers_disconnect_by_func (priv->model,
+			G_CALLBACK (ev_sidebar_document_changed_cb), ev_sidebar);
+		g_object_unref (priv->model);
+	}
 
+	priv->model = g_object_ref (model);
 	g_signal_connect (model, "notify::document",
 			  G_CALLBACK (ev_sidebar_document_changed_cb),
 			  ev_sidebar);
