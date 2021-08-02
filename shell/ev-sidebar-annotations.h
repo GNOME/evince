@@ -25,22 +25,10 @@
 
 G_BEGIN_DECLS
 
-typedef struct _EvSidebarAnnotations        EvSidebarAnnotations;
-typedef struct _EvSidebarAnnotationsClass   EvSidebarAnnotationsClass;
 typedef struct _EvSidebarAnnotationsPrivate EvSidebarAnnotationsPrivate;
 
 #define EV_TYPE_SIDEBAR_ANNOTATIONS              (ev_sidebar_annotations_get_type())
-#define EV_SIDEBAR_ANNOTATIONS(object)           (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_SIDEBAR_ANNOTATIONS, EvSidebarAnnotations))
-#define EV_SIDEBAR_ANNOTATIONS_CLASS(klass)      (G_TYPE_CHECK_CLASS_CAST((klass), EV_TYPE_SIDEBAR_ANNOTATIONS, EvSidebarAnnotationsClass))
-#define EV_IS_SIDEBAR_ANNOTATIONS(object)        (G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_SIDEBAR_ANNOTATIONS))
-#define EV_IS_SIDEBAR_ANNOTATIONS_CLASS(klass)   (G_TYPE_CHECK_CLASS_TYPE((klass), EV_TYPE_SIDEBAR_ANNOTATIONS))
-#define EV_SIDEBAR_ANNOTATIONS_GET_CLASS(object) (G_TYPE_INSTANCE_GET_CLASS((object), EV_TYPE_SIDEBAR_ANNOTATIONS, EvSidebarAnnotationsClass))
-
-struct _EvSidebarAnnotations {
-	GtkBox base_instance;
-
-	EvSidebarAnnotationsPrivate *priv;
-};
+G_DECLARE_DERIVABLE_TYPE (EvSidebarAnnotations, ev_sidebar_annotations, EV, SIDEBAR_ANNOTATIONS, GtkBox);
 
 struct _EvSidebarAnnotationsClass {
 	GtkBoxClass base_class;
@@ -49,7 +37,6 @@ struct _EvSidebarAnnotationsClass {
 					 EvMapping            *mapping);
 };
 
-GType      ev_sidebar_annotations_get_type      (void) G_GNUC_CONST;
 GtkWidget *ev_sidebar_annotations_new           (void);
 void       ev_sidebar_annotations_annot_added   (EvSidebarAnnotations *sidebar_annots,
 					         EvAnnotation         *annot);

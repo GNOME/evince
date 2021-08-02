@@ -32,7 +32,8 @@
 
 enum {
 	PROP_0,
-	PROP_WIDGET
+	PROP_WIDGET,
+	PROP_DOCUMENT_MODEL
 };
 
 enum {
@@ -49,32 +50,24 @@ enum {
 };
 
 struct _EvSidebarAnnotationsPrivate {
-	EvDocument  *document;
+	EvDocumentModel  *model;
 
-	GtkWidget    *swindow;
-	GtkWidget    *tree_view;
-	GtkTreeStore *tree_model;
-	GtkListStore *list_model;
+        GtkWidget   *swindow;
+	GtkWidget   *tree_view;
 
-	GMenuModel   *popup_model;
-	GtkWidget    *popup;
+	GMenuModel  *popup_model;
+	GtkWidget   *popup;
 
-	EvJob        *job;
-	guint         selection_changed_id;
+	EvJob       *job;
+	guint        selection_changed_id;
 };
-
-#define GET_PRIVATE(o) ev_sidebar_annotations_get_instance_private (o)
 
 static void ev_sidebar_annotations_page_iface_init (EvSidebarPageInterface *iface);
 static void ev_sidebar_annotations_load            (EvSidebarAnnotations   *sidebar_annots);
-static gboolean ev_sidebar_annotations_popup_menu (GtkWidget *widget);
-static gboolean ev_sidebar_annotations_popup_menu_show (EvSidebarAnnotations *sidebar_annots,
-							GdkWindow            *rect_window,
-							const GdkRectangle   *rect,
-							EvMapping            *annot_mapping,
-							const GdkEvent       *event);
 static void job_finished_callback (EvJobAnnots          *job,
 				   EvSidebarAnnotations *sidebar_annots);
+static void ev_sidebar_annotations_set_model (EvSidebarPage   *sidebar_page,
+					      EvDocumentModel *model);
 static guint signals[N_SIGNALS];
 
 G_DEFINE_TYPE_EXTENDED (EvSidebarAnnotations,
@@ -84,6 +77,8 @@ G_DEFINE_TYPE_EXTENDED (EvSidebarAnnotations,
                         G_ADD_PRIVATE (EvSidebarAnnotations)
                         G_IMPLEMENT_INTERFACE (EV_TYPE_SIDEBAR_PAGE,
 					       ev_sidebar_annotations_page_iface_init))
+
+#define GET_PRIVATE(t) (ev_sidebar_annotations_get_instance_private (t))
 
 #define ANNOT_ICON_SIZE 16
 
@@ -100,51 +95,40 @@ ev_sidebar_annotations_dispose (GObject *object)
 		g_clear_object (&priv->job);
 	}
 
-	if (priv->document) {
-		g_object_unref (priv->document);
-		priv->document = NULL;
-	}
-
+	g_clear_object (&priv->model);
 	g_clear_object (&priv->popup_model);
 	G_OBJECT_CLASS (ev_sidebar_annotations_parent_class)->dispose (object);
 }
 
-static void
-ev_sidebar_annotations_set_simple_message (EvSidebarAnnotations *sidebar_annots,
-					   const gchar          *message)
+static GtkTreeModel *
+ev_sidebar_annotations_create_simple_model (const gchar *message)
 {
-	EvSidebarAnnotationsPrivate *priv = GET_PRIVATE (sidebar_annots);
+	GtkTreeModel *retval;
 	GtkTreeIter iter;
 	gchar *markup;
 
-	gtk_tree_model_get_iter_first (GTK_TREE_MODEL (priv->list_model), &iter);
+	/* Creates a fake model to indicate that we're loading */
+	retval = (GtkTreeModel *)gtk_list_store_new (N_COLUMNS,
+						     G_TYPE_STRING,
+						     G_TYPE_STRING,
+						     G_TYPE_POINTER,
+						     G_TYPE_STRING);
+
+	gtk_list_store_append (GTK_LIST_STORE (retval), &iter);
 	markup = g_strdup_printf ("<span size=\"larger\" style=\"italic\">%s</span>",
 				  message);
-	gtk_list_store_set (GTK_LIST_STORE (priv->list_model), &iter,
-			    COLUMN_MARKUP, markup, -1);
+	gtk_list_store_set (GTK_LIST_STORE (retval), &iter,
+			    COLUMN_MARKUP, markup,
+			    -1);
 	g_free (markup);
 
-	gtk_tree_view_set_model (GTK_TREE_VIEW (priv->tree_view),
-				 GTK_TREE_MODEL (priv->list_model));
+	return retval;
 }
 
 static void
-ev_sidebar_annotations_init (EvSidebarAnnotations *sidebar_annots)
+ev_sidebar_annotations_init (EvSidebarAnnotations *ev_annots)
 {
-	EvSidebarAnnotationsPrivate *priv = GET_PRIVATE (sidebar_annots);
-	GtkBuilder *builder;
-
-	gtk_widget_init_template (GTK_WIDGET (sidebar_annots));
-
-	ev_sidebar_annotations_set_simple_message (sidebar_annots, _("Loading…"));
-
-	/* Annotation pop-up */
-	builder = gtk_builder_new_from_resource ("/org/gnome/evince/gtk/menus.ui");
-	priv->popup_model = g_object_ref (G_MENU_MODEL (gtk_builder_get_object (builder, "annotation-popup")));
-	g_object_unref (builder);
-	priv->popup = gtk_menu_new_from_model (priv->popup_model);
-	gtk_menu_attach_to_widget (GTK_MENU (priv->popup),
-				   GTK_WIDGET (sidebar_annots), NULL);
+	gtk_widget_init_template (GTK_WIDGET (ev_annots));
 }
 
 static void
@@ -153,17 +137,36 @@ ev_sidebar_annotations_get_property (GObject    *object,
 				     GValue     *value,
 				     GParamSpec *pspec)
 {
-	EvSidebarAnnotations *ev_sidebar_annots;
-
-	ev_sidebar_annots = EV_SIDEBAR_ANNOTATIONS (object);
+	EvSidebarAnnotations *sidebar_annots = EV_SIDEBAR_ANNOTATIONS (object);
+	EvSidebarAnnotationsPrivate *priv = GET_PRIVATE (sidebar_annots);
 
 	switch (prop_id) {
 	        case PROP_WIDGET:
-			g_value_set_object (value, ev_sidebar_annots->priv->swindow);
+			g_value_set_object (value, priv->swindow);
 			break;
 	        default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
 			break;
+	}
+}
+
+static void
+ev_sidebar_annotations_set_property (GObject      *object,
+			       guint         prop_id,
+			       const GValue *value,
+			       GParamSpec   *pspec)
+{
+	EvSidebarAnnotations *sidebar_annots = EV_SIDEBAR_ANNOTATIONS (object);
+
+	switch (prop_id)
+	{
+	case PROP_DOCUMENT_MODEL:
+		ev_sidebar_annotations_set_model (EV_SIDEBAR_PAGE (sidebar_annots),
+			EV_DOCUMENT_MODEL (g_value_get_object (value)));
+		break;
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+		break;
 	}
 }
 
@@ -174,16 +177,15 @@ ev_sidebar_annotations_class_init (EvSidebarAnnotationsClass *klass)
 	GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
 
 	g_object_class->get_property = ev_sidebar_annotations_get_property;
+	g_object_class->set_property = ev_sidebar_annotations_set_property;
 	g_object_class->dispose = ev_sidebar_annotations_dispose;
-	widget_class->popup_menu = ev_sidebar_annotations_popup_menu;
 
 	gtk_widget_class_set_template_from_resource (widget_class,
-						     "/org/gnome/evince/ui/sidebar-annotations.ui");
+			"/org/gnome/evince/ui/sidebar-annotations.ui");
 	gtk_widget_class_bind_template_child_private (widget_class, EvSidebarAnnotations, swindow);
 	gtk_widget_class_bind_template_child_private (widget_class, EvSidebarAnnotations, tree_view);
-	gtk_widget_class_bind_template_child_private (widget_class, EvSidebarAnnotations, tree_model);
-	gtk_widget_class_bind_template_child_private (widget_class, EvSidebarAnnotations, list_model);
 
+	g_object_class_override_property (g_object_class, PROP_DOCUMENT_MODEL, "document-model");
 	g_object_class_override_property (g_object_class, PROP_WIDGET, "main-widget");
 
 	signals[ANNOT_ACTIVATED] =
@@ -200,9 +202,7 @@ ev_sidebar_annotations_class_init (EvSidebarAnnotationsClass *klass)
 GtkWidget *
 ev_sidebar_annotations_new (void)
 {
-	return GTK_WIDGET (g_object_new (EV_TYPE_SIDEBAR_ANNOTATIONS,
-                                         "orientation", GTK_ORIENTATION_VERTICAL,
-                                         NULL));
+	return GTK_WIDGET (g_object_new (EV_TYPE_SIDEBAR_ANNOTATIONS, NULL));
 }
 
 void
@@ -257,10 +257,10 @@ ev_sidebar_annotations_activate_result_at_iter (EvSidebarAnnotations *sidebar_an
                                                 GtkTreeModel  *model,
                                                 GtkTreeIter   *iter)
 {
-	EvMapping *mapping;
+		EvMapping *mapping;
 
-	if (iter_has_mapping (model, iter, &mapping))
-		g_signal_emit (sidebar_annots, signals[ANNOT_ACTIVATED], 0, mapping);
+		if (iter_has_mapping (model, iter, &mapping))
+			g_signal_emit (sidebar_annots, signals[ANNOT_ACTIVATED], 0, mapping);
 }
 
 static void
@@ -274,6 +274,7 @@ selection_changed_cb (GtkTreeSelection     *selection,
 	    ev_sidebar_annotations_activate_result_at_iter (sidebar_annots, model, &iter);
 }
 
+#if 0
 static gboolean
 sidebar_tree_button_press_cb (GtkTreeView    *view,
                               GdkEventButton *event,
@@ -326,19 +327,26 @@ sidebar_tree_button_press_cb (GtkTreeView    *view,
         return GDK_EVENT_PROPAGATE;
 }
 
+#endif
+
 static void
 job_finished_callback (EvJobAnnots          *job,
 		       EvSidebarAnnotations *sidebar_annots)
 {
 	EvSidebarAnnotationsPrivate *priv = GET_PRIVATE (sidebar_annots);
-	GtkTreeStore *model = priv->tree_model;
+	GtkTreeStore *model;
 	GtkTreeSelection *selection;
 	GList *l;
 
 	if (!job->annots) {
-		ev_sidebar_annotations_set_simple_message (sidebar_annots,
-							   _("Document contains no annotations"));
-		g_clear_object (&priv->job);
+		GtkTreeModel *list;
+
+		list = ev_sidebar_annotations_create_simple_model (_("Document contains no annotations"));
+		gtk_tree_view_set_model (GTK_TREE_VIEW (priv->tree_view), list);
+		g_object_unref (list);
+
+		g_object_unref (job);
+		priv->job = NULL;
 
 		return;
 	}
@@ -351,13 +359,17 @@ job_finished_callback (EvJobAnnots          *job,
 					  G_CALLBACK (selection_changed_cb),
 					  sidebar_annots);
 	}
-	g_signal_connect (priv->tree_view, "button-press-event",
-			  G_CALLBACK (sidebar_tree_button_press_cb),
-			  sidebar_annots);
+#if 0
+    g_signal_connect (priv->tree_view, "button-press-event",
+                      G_CALLBACK (sidebar_tree_button_press_cb),
+                      sidebar_annots);
+#endif
 
-	g_signal_handler_block (selection, priv->selection_changed_id);
-	gtk_tree_store_clear (model);
-	g_signal_handler_unblock (selection, priv->selection_changed_id);
+	model = gtk_tree_store_new (N_COLUMNS,
+				    G_TYPE_STRING,
+				    G_TYPE_STRING,
+				    G_TYPE_POINTER,
+				    G_TYPE_STRING);
 
 	for (l = job->annots; l; l = g_list_next (l)) {
 		EvMappingList *mapping_list;
@@ -440,17 +452,20 @@ job_finished_callback (EvJobAnnots          *job,
 			gtk_tree_store_remove (model, &iter);
 	}
 
-	gtk_tree_view_expand_all (GTK_TREE_VIEW (priv->tree_view));
 	gtk_tree_view_set_model (GTK_TREE_VIEW (priv->tree_view),
 				 GTK_TREE_MODEL (model));
+	gtk_tree_view_expand_all (GTK_TREE_VIEW (priv->tree_view));
+	g_object_unref (model);
 
-	g_clear_object (&priv->job);
+	g_object_unref (job);
+	priv->job = NULL;
 }
 
 static void
 ev_sidebar_annotations_load (EvSidebarAnnotations *sidebar_annots)
 {
 	EvSidebarAnnotationsPrivate *priv = GET_PRIVATE (sidebar_annots);
+	EvDocument *document = ev_document_model_get_document (priv->model);
 
 	if (priv->job) {
 		g_signal_handlers_disconnect_by_func (priv->job,
@@ -459,7 +474,7 @@ ev_sidebar_annotations_load (EvSidebarAnnotations *sidebar_annots)
 		g_object_unref (priv->job);
 	}
 
-	priv->job = ev_job_annots_new (priv->document);
+	priv->job = ev_job_annots_new (document);
 	g_signal_connect (priv->job, "finished",
 			  G_CALLBACK (job_finished_callback),
 			  sidebar_annots);
@@ -473,18 +488,14 @@ ev_sidebar_annotations_document_changed_cb (EvDocumentModel      *model,
 					    EvSidebarAnnotations *sidebar_annots)
 {
 	EvDocument *document = ev_document_model_get_document (model);
-	EvSidebarAnnotationsPrivate *priv = GET_PRIVATE (sidebar_annots);
 
 	if (!EV_IS_DOCUMENT_ANNOTATIONS (document))
 		return;
 
-	if (priv->document)
-		g_object_unref (priv->document);
-	priv->document = g_object_ref (document);
-
 	ev_sidebar_annotations_load (sidebar_annots);
 }
 
+#if 0
 /* event parameter can be NULL, that means popup was triggered from keyboard */
 static gboolean
 ev_sidebar_annotations_popup_menu_show (EvSidebarAnnotations *sidebar_annots,
@@ -495,7 +506,7 @@ ev_sidebar_annotations_popup_menu_show (EvSidebarAnnotations *sidebar_annots,
 {
 	GtkWidget *window;
 
-	EvSidebarAnnotationsPrivate *priv = GET_PRIVATE (sidebar_annots);
+	EvSidebarAnnotationsPrivate *priv = sidebar_annots->priv;
 
 	if (!EV_IS_ANNOTATION (annot_mapping->data))
 		return FALSE;
@@ -520,7 +531,7 @@ ev_sidebar_annotations_popup_menu (GtkWidget *widget)
 	GdkRectangle          rect;
 
 	EvSidebarAnnotations *sidebar_annots = EV_SIDEBAR_ANNOTATIONS (widget);
-	EvSidebarAnnotationsPrivate *priv = GET_PRIVATE (sidebar_annots);
+	EvSidebarAnnotationsPrivate *priv = sidebar_annots->priv;
 
 	tree_view = GTK_TREE_VIEW (priv->tree_view);
 	selection = gtk_tree_view_get_selection (tree_view);
@@ -542,11 +553,28 @@ ev_sidebar_annotations_popup_menu (GtkWidget *widget)
 						       &rect, annot_mapping, NULL);
 }
 
+#endif
+
 /* EvSidebarPageIface */
 static void
 ev_sidebar_annotations_set_model (EvSidebarPage   *sidebar_page,
 				  EvDocumentModel *model)
 {
+	g_return_if_fail (EV_IS_SIDEBAR_ANNOTATIONS (sidebar_page));
+	g_return_if_fail (EV_IS_DOCUMENT_MODEL (model));
+	EvSidebarAnnotationsPrivate *priv = GET_PRIVATE (EV_SIDEBAR_ANNOTATIONS (sidebar_page));
+
+	if (priv->model == model)
+		return;
+
+	if (priv->model) {
+		g_signal_handlers_disconnect_by_func (priv->model,
+			G_CALLBACK (ev_sidebar_annotations_document_changed_cb), sidebar_page);
+		g_object_unref (priv->model);
+	}
+
+	priv->model = g_object_ref (model);
+
 	g_signal_connect (model, "notify::document",
 			  G_CALLBACK (ev_sidebar_annotations_document_changed_cb),
 			  sidebar_page);
