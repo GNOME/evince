@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk" version="4.0"/>
+  <requires lib="libadwaita" version="1.0"/>
+  <template class="EvMessageArea" parent="GtkBox">
+    <property name="orientation">vertical</property>
+    <property name="spacing">12</property>
+    <child>
+      <object class="GtkInfoBar" id="info_bar">
+        <property name="show-close-button">True</property>
+        <child>
+          <object class="GtkBox" id="main_box">
+            <property name="orientation">vertical</property>
+            <property name="spacing">12</property>
+            <child type="start">
+              <object class="GtkBox" id="hbox">
+                <property name="orientation">horizontal</property>
+                <property name="spacing">12</property>
+                <property name="vexpand">True</property>
+                <property name="valign">fill</property>
+                <child type="start">
+                  <object class="GtkImage" id="image">
+                    <property name="icon-size">large</property>
+                  </object>
+                </child>
+                <child type="start">
+                  <object class="GtkBox" id="vbox">
+                    <property name="orientation">vertical</property>
+                    <property name="spacing">12</property>
+                    <property name="hexpand">True</property>
+                    <property name="halign">fill</property>
+                    <child type="start">
+                      <object class="GtkLabel" id="label">
+                        <property name="use-markup">True</property>
+                        <property name="wrap">True</property>
+                        <property name="selectable">True</property>
+                        <property name="can-focus">True</property>
+                        <property name="vexpand">True</property>
+                        <property name="valign">fill</property>
+                      </object>
+                    </child>
+                    <child type="start">
+                      <object class="GtkLabel" id="secondary_label">
+                        <property name="use-markup">True</property>
+                        <property name="wrap">True</property>
+                        <property name="selectable">True</property>
+                        <property name="can-focus">True</property>
+                        <property name="vexpand">True</property>
+                        <property name="valign">fill</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+</interface>
