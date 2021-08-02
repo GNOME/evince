@@ -21,7 +21,7 @@
 #include "config.h"
 
 #include <glib/gi18n.h>
-#include "gimpcellrenderertoggle.h"
+// #include "gimpcellrenderertoggle.h"
 
 #include "ev-document-layers.h"
 #include "ev-sidebar-page.h"
@@ -56,9 +56,9 @@ static guint signals[N_SIGNALS];
 G_DEFINE_TYPE_EXTENDED (EvSidebarLayers,
                         ev_sidebar_layers,
                         GTK_TYPE_BOX,
-                        0, 
+                        0,
                         G_ADD_PRIVATE (EvSidebarLayers)
-                        G_IMPLEMENT_INTERFACE (EV_TYPE_SIDEBAR_PAGE, 
+                        G_IMPLEMENT_INTERFACE (EV_TYPE_SIDEBAR_PAGE,
 					       ev_sidebar_layers_page_iface_init))
 
 static void
@@ -70,7 +70,7 @@ ev_sidebar_layers_dispose (GObject *object)
 		g_signal_handlers_disconnect_by_func (sidebar->priv->job,
 						      job_finished_callback,
 						      sidebar);
-		ev_job_cancel (sidebar->priv->job);						      
+		ev_job_cancel (sidebar->priv->job);
 		g_object_unref (sidebar->priv->job);
 		sidebar->priv->job = NULL;
 	}
@@ -90,7 +90,7 @@ ev_sidebar_layers_get_property (GObject    *object,
 				GParamSpec *pspec)
 {
 	EvSidebarLayers *ev_sidebar_layers;
-  
+
 	ev_sidebar_layers = EV_SIDEBAR_LAYERS (object);
 
 	switch (prop_id) {
@@ -188,18 +188,18 @@ ev_sidebar_layers_visibility_clicked (GtkCellRendererToggle *cell,
 	EvLayer      *layer;
 
 	model = gtk_tree_view_get_model (ev_layers->priv->tree_view);
-	
+
 	path = gtk_tree_path_new_from_string (path_str);
 	gtk_tree_model_get_iter (model, &iter, path);
 	gtk_tree_model_get (model, &iter,
 			    EV_DOCUMENT_LAYERS_COLUMN_VISIBLE, &visible,
-			    EV_DOCUMENT_LAYERS_COLUMN_LAYER, &layer, 
+			    EV_DOCUMENT_LAYERS_COLUMN_LAYER, &layer,
 			    -1);
-	
+
 	visible = !visible;
 	if (visible) {
 		gint rb_group;
-		
+
 		ev_document_layers_show_layer (EV_DOCUMENT_LAYERS (ev_layers->priv->document),
 					       layer);
 
@@ -213,7 +213,7 @@ ev_sidebar_layers_visibility_clicked (GtkCellRendererToggle *cell,
 		ev_document_layers_hide_layer (EV_DOCUMENT_LAYERS (ev_layers->priv->document),
 					       layer);
 	}
-	
+
 	gtk_tree_store_set (GTK_TREE_STORE (model), &iter,
 			    EV_DOCUMENT_LAYERS_COLUMN_VISIBLE, visible,
 			    -1);
@@ -223,7 +223,7 @@ ev_sidebar_layers_visibility_clicked (GtkCellRendererToggle *cell,
 					(GtkTreeModelForeachFunc)update_kids,
 					&iter);
 	}
-	
+
 	gtk_tree_path_free (path);
 
 	g_signal_emit (ev_layers, signals[LAYERS_VISIBILITY_CHANGED], 0);
@@ -235,7 +235,7 @@ ev_sidebar_layers_create_tree_view (EvSidebarLayers *ev_layers)
 	GtkTreeView       *tree_view;
 	GtkTreeViewColumn *column;
 	GtkCellRenderer   *renderer;
-	
+
 	tree_view = GTK_TREE_VIEW (gtk_tree_view_new ());
 	gtk_tree_view_set_headers_visible (tree_view, FALSE);
 	gtk_tree_selection_set_mode (gtk_tree_view_get_selection (tree_view),
@@ -244,7 +244,7 @@ ev_sidebar_layers_create_tree_view (EvSidebarLayers *ev_layers)
 
 	column = gtk_tree_view_column_new ();
 
-	renderer = gimp_cell_renderer_toggle_new (EV_STOCK_VISIBLE);
+	renderer = gtk_cell_renderer_toggle_new ();
 	gtk_tree_view_column_pack_start (column, renderer, FALSE);
 	gtk_tree_view_column_set_attributes (column, renderer,
 					     "active", EV_DOCUMENT_LAYERS_COLUMN_VISIBLE,
@@ -270,7 +270,7 @@ ev_sidebar_layers_create_tree_view (EvSidebarLayers *ev_layers)
 					     "sensitive", EV_DOCUMENT_LAYERS_COLUMN_ENABLED,
 					     NULL);
 	g_object_set (G_OBJECT (renderer), "ellipsize", PANGO_ELLIPSIZE_END, NULL);
-	
+
 	gtk_tree_view_append_column (tree_view, column);
 
 	return tree_view;
@@ -281,10 +281,10 @@ ev_sidebar_layers_init (EvSidebarLayers *ev_layers)
 {
 	GtkWidget    *swindow;
 	GtkTreeModel *model;
-	
+
 	ev_layers->priv = ev_sidebar_layers_get_instance_private (ev_layers);
 
-	swindow = gtk_scrolled_window_new (NULL, NULL);
+	swindow = gtk_scrolled_window_new ();
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (swindow),
 					GTK_POLICY_NEVER,
 					GTK_POLICY_AUTOMATIC);
@@ -296,11 +296,10 @@ ev_sidebar_layers_init (EvSidebarLayers *ev_layers)
 	gtk_tree_view_set_model (ev_layers->priv->tree_view, model);
 	g_object_unref (model);
 
-	gtk_container_add (GTK_CONTAINER (swindow),
-			   GTK_WIDGET (ev_layers->priv->tree_view));
+	gtk_scrolled_window_set_child (GTK_SCROLLED_WINDOW (swindow),
+		GTK_WIDGET (ev_layers->priv->tree_view));
 
-        gtk_box_pack_start (GTK_BOX (ev_layers), swindow, TRUE, TRUE, 0);
-	gtk_widget_show_all (GTK_WIDGET (ev_layers));
+        gtk_box_prepend (GTK_BOX (ev_layers), swindow);
 }
 
 static void
@@ -383,7 +382,7 @@ job_finished_callback (EvJobLayers     *job,
 	priv = sidebar_layers->priv;
 
 	gtk_tree_view_set_model (GTK_TREE_VIEW (priv->tree_view), job->model);
-	
+
 	g_object_unref (job);
 	priv->job = NULL;
 }
