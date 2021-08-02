@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk" version="4.0"/>
+  <template class="EvSidebarThumbnails" parent="GtkBox">
+    <property name="orientation">vertical</property>
+    <child>
+      <object class="GtkScrolledWindow" id="swindow">
+        <property name="valign">fill</property>
+        <property name="vexpand">True</property>
+        <property name="hscrollbar-policy">never</property>
+        <property name="vscrollbar-policy">automatic</property>
+        <child>
+          <object class="GtkIconView" id="icon_view">
+            <property name="model">list_store</property>
+            <signal name="selection-changed" handler="ev_sidebar_icon_selection_changed" />
+            <child>
+              <object class="GtkCellRendererPixbuf">
+                <property name="xalign">0.5</property>
+                <property name="yalign">1.0</property>
+              </object>
+              <attributes>
+                <attribute name="texture">1</attribute>
+              </attributes>
+            </child>
+            <child>
+              <object class="GtkCellRendererText">
+                <property name="alignment">center</property>
+                <property name="wrap-mode">char</property>
+                <property name="xalign">0.5</property>
+                <property name="yalign">0.5</property>
+                <property name="width">100</property>
+                <property name="wrap-width">100</property>
+              </object>
+              <attributes>
+                <attribute name="markup">0</attribute>
+              </attributes>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+
+  <object class="GtkListStore" id="list_store">
+    <columns>
+      <column type="gchararray" />
+      <column type="GdkTexture" />
+      <column type="gboolean" />
+      <column type="EvJobThumbnailCairo" />
+    </columns>
+  </object>
+</interface>
