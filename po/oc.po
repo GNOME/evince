@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Evince HEAD\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
-"POT-Creation-Date: 2021-07-29 17:02+0000\n"
-"PO-Revision-Date: 2021-08-03 19:08+0200\n"
+"POT-Creation-Date: 2021-08-03 17:10+0000\n"
+"PO-Revision-Date: 2021-08-03 19:16+0200\n"
 "Last-Translator: Quentin PAGÈS\n"
 "Language-Team: Tot En Òc\n"
 "Language: oc\n"
@@ -104,55 +104,55 @@ msgstr "Documents PDF"
 msgid "Adds support for reading PDF Documents"
 msgstr "Apond la presa en carga de la lectura dels documents PDF"
 
-#: backend/pdf/ev-poppler.cc:934
+#: backend/pdf/ev-poppler.c:907
 msgid "This work is in the Public Domain"
 msgstr "Aquesta òbra es dins lo domeni public"
 
 #. translators: this is the document security state
-#: backend/pdf/ev-poppler.cc:1206 backend/pdf/ev-poppler.cc:1212
+#: backend/pdf/ev-poppler.c:1179 backend/pdf/ev-poppler.c:1185
 #: properties/ev-properties-view.c:433
 msgid "Yes"
 msgstr "Òc"
 
 #. translators: this is the document security state
-#: backend/pdf/ev-poppler.cc:1209 backend/pdf/ev-poppler.cc:1212
+#: backend/pdf/ev-poppler.c:1182 backend/pdf/ev-poppler.c:1185
 #: properties/ev-properties-view.c:435
 msgid "No"
 msgstr "Non"
 
-#: backend/pdf/ev-poppler.cc:1350
+#: backend/pdf/ev-poppler.c:1323
 msgid "Type 1"
 msgstr "Tipe 1"
 
-#: backend/pdf/ev-poppler.cc:1352
+#: backend/pdf/ev-poppler.c:1325
 msgid "Type 1C"
 msgstr "Tipe 1C"
 
-#: backend/pdf/ev-poppler.cc:1354
+#: backend/pdf/ev-poppler.c:1327
 msgid "Type 3"
 msgstr "Tipe 3"
 
-#: backend/pdf/ev-poppler.cc:1356
+#: backend/pdf/ev-poppler.c:1329
 msgid "TrueType"
 msgstr "TrueType"
 
-#: backend/pdf/ev-poppler.cc:1358
+#: backend/pdf/ev-poppler.c:1331
 msgid "Type 1 (CID)"
 msgstr "Tipe 1 (CID)"
 
-#: backend/pdf/ev-poppler.cc:1360
+#: backend/pdf/ev-poppler.c:1333
 msgid "Type 1C (CID)"
 msgstr "Tipe 1C (CID)"
 
-#: backend/pdf/ev-poppler.cc:1362
+#: backend/pdf/ev-poppler.c:1335
 msgid "TrueType (CID)"
 msgstr "TrueTipe (CID)"
 
-#: backend/pdf/ev-poppler.cc:1364
+#: backend/pdf/ev-poppler.c:1337
 msgid "Unknown font type"
 msgstr "Tipe de poliça desconegut"
 
-#: backend/pdf/ev-poppler.cc:1408
+#: backend/pdf/ev-poppler.c:1381
 msgid ""
 "This document contains non-embedded fonts that are not from the PDF Standard "
 "14 fonts. If the substitute fonts selected by fontconfig are not the same as "
@@ -163,11 +163,11 @@ msgstr ""
 "fontconfig » son pas las meteissas que las poliças utilizadas per crear lo "
 "PDF, lo rendut risca d'èsser incorrècte."
 
-#: backend/pdf/ev-poppler.cc:1413
+#: backend/pdf/ev-poppler.c:1386
 msgid "All fonts are either standard or embedded."
 msgstr "Totas las poliças son siá estandards o integradas."
 
-#: backend/pdf/ev-poppler.cc:1443
+#: backend/pdf/ev-poppler.c:1416
 msgid "No name"
 msgstr "Sens nom"
 
@@ -181,20 +181,20 @@ msgstr "Sens nom"
 #. Author: None
 #. Keywords: None
 #.
-#: backend/pdf/ev-poppler.cc:1452 libview/ev-print-operation.c:1991
+#: backend/pdf/ev-poppler.c:1425 libview/ev-print-operation.c:1991
 #: properties/ev-properties-view.c:233
 msgid "None"
 msgstr "Pas cap"
 
-#: backend/pdf/ev-poppler.cc:1460
+#: backend/pdf/ev-poppler.c:1433
 msgid "Embedded subset"
 msgstr "Sosensemble integrat"
 
-#: backend/pdf/ev-poppler.cc:1462
+#: backend/pdf/ev-poppler.c:1435
 msgid "Embedded"
 msgstr "Integrat"
 
-#: backend/pdf/ev-poppler.cc:1464
+#: backend/pdf/ev-poppler.c:1437
 msgid "Not embedded"
 msgstr "Pas integrat"
 
@@ -203,7 +203,7 @@ msgstr "Pas integrat"
 #. * type. Example:
 #. * "Type 1 (One of the Standard 14 Fonts)"
 #.
-#: backend/pdf/ev-poppler.cc:1471
+#: backend/pdf/ev-poppler.c:1444
 msgid " (One of the Standard 14 Fonts)"
 msgstr " (una de las 14 poliças estandardas)"
 
@@ -212,7 +212,7 @@ msgstr " (una de las 14 poliças estandardas)"
 #. * type. Example:
 #. * "TrueType (Not one of the Standard 14 Fonts)"
 #.
-#: backend/pdf/ev-poppler.cc:1478
+#: backend/pdf/ev-poppler.c:1451
 msgid " (Not one of the Standard 14 Fonts)"
 msgstr " (pas una de las 14 poliças estandardas)"
 
@@ -226,7 +226,7 @@ msgstr " (pas una de las 14 poliças estandardas)"
 #. * Substituting with TeXGyreTermes-Regular
 #. * (/usr/share/textmf/.../texgyretermes-regular.otf)
 #.
-#: backend/pdf/ev-poppler.cc:1497
+#: backend/pdf/ev-poppler.c:1470
 #, c-format
 msgid ""
 "%s%s\n"
@@ -250,7 +250,7 @@ msgstr ""
 #. * Encoding: Custom
 #. * Embedded subset
 #.
-#: backend/pdf/ev-poppler.cc:1515
+#: backend/pdf/ev-poppler.c:1488
 #, c-format
 msgid ""
 "%s%s\n"
@@ -302,59 +302,9 @@ msgstr "Documents XPS"
 msgid "Adds support for reading XPS documents"
 msgstr "Apond la presa en carga de la lectura dels documents XPS"
 
-#: browser-plugin/EvBrowserPluginToolbar.cpp:288 shell/evince-menus.ui:127
-msgid "Fit Pa_ge"
-msgstr "_Ajustar a la pagina"
-
-#: browser-plugin/EvBrowserPluginToolbar.cpp:297 shell/evince-menus.ui:132
-msgid "Fit _Width"
-msgstr "Ajustar a la _largor"
-
-#: browser-plugin/EvBrowserPluginToolbar.cpp:306 shell/evince-menus.ui:137
-msgid "_Automatic"
-msgstr "_Automatic"
-
-#. Navigation buttons
-#: browser-plugin/EvBrowserPluginToolbar.cpp:331
-msgid "Go to the previous page"
-msgstr "Anar a la pagina precedenta"
-
-#: browser-plugin/EvBrowserPluginToolbar.cpp:335
-msgid "Go to the next page"
-msgstr "Anar a la pagina seguenta"
-
-#. Search.
-#: browser-plugin/EvBrowserPluginToolbar.cpp:362 shell/ev-toolbar.c:173
-msgid "Find a word or phrase in the document"
-msgstr "Recèrca un mot o una frasa dins lo document"
-
-#: browser-plugin/EvBrowserPluginToolbar.cpp:381
-msgid "Show the entire document"
-msgstr "Aficha lo document entièr"
-
-#: browser-plugin/EvBrowserPluginToolbar.cpp:389
-msgid "Show two pages at once"
-msgstr "Aficha doas paginas a l'encòp"
-
-#: browser-plugin/EvBrowserPluginToolbar.cpp:411 previewer/previewer.ui:34
-msgid "Enlarge the document"
-msgstr "Agrandir lo document"
-
-#: browser-plugin/EvBrowserPluginToolbar.cpp:415 previewer/previewer.ui:42
-msgid "Shrink the document"
-msgstr "Reduire lo document"
-
-#: browser-plugin/EvBrowserPluginToolbar.cpp:437
-msgid "Download document"
-msgstr "Telecargar lo document"
-
-#: browser-plugin/EvBrowserPluginToolbar.cpp:450
-msgid "Print document"
-msgstr "Imprimir lo document"
-
 #. Manually set name and icon
 #: data/org.gnome.Evince.desktop.in.in:3 shell/ev-window-title.c:133
-#: shell/main.c:298
+#: shell/main.c:300
 msgid "Document Viewer"
 msgstr "Visionador de documents"
 
@@ -370,6 +320,10 @@ msgid ""
 "pdf;ps;postscript;dvi;xps;djvu;tiff;document;presentation;viewer;evince;"
 msgstr ""
 "pdf;ps;postscript;dvi;xps;djvu;tiff;document;presentacion;evince;visionador;"
+
+#: data/org.gnome.Evince.desktop.in.in:19
+msgid "New Window"
+msgstr "Fenèstra novèla"
 
 #: data/org.gnome.Evince.gschema.xml:14
 msgid "Override document restrictions"
@@ -670,59 +624,59 @@ msgstr "Far desfilar la vista cap aval"
 msgid "Document View"
 msgstr "Vista del document"
 
-#: libview/ev-view.c:2110
+#: libview/ev-view.c:2112
 msgid "Go to first page"
 msgstr "Anar a la primièra pagina"
 
-#: libview/ev-view.c:2112
+#: libview/ev-view.c:2114
 msgid "Go to previous page"
 msgstr "Anar a la pagina precedenta"
 
-#: libview/ev-view.c:2114
+#: libview/ev-view.c:2116
 msgid "Go to next page"
 msgstr "Anar a la pagina seguenta"
 
-#: libview/ev-view.c:2116
+#: libview/ev-view.c:2118
 msgid "Go to last page"
 msgstr "Anar a la darrièra pagina"
 
-#: libview/ev-view.c:2118
+#: libview/ev-view.c:2120
 msgid "Go to page"
 msgstr "Anar a la pagina"
 
-#: libview/ev-view.c:2120
+#: libview/ev-view.c:2122
 msgid "Find"
 msgstr "Recercar"
 
-#: libview/ev-view.c:2148
+#: libview/ev-view.c:2150
 #, c-format
 msgid "Go to page %s"
 msgstr "Anar a la pagina %s"
 
-#: libview/ev-view.c:2154
+#: libview/ev-view.c:2156
 #, c-format
 msgid "Go to %s on file “%s”"
 msgstr "Anar a %s sul fichièr « %s »"
 
-#: libview/ev-view.c:2157
+#: libview/ev-view.c:2159
 #, c-format
 msgid "Go to file “%s”"
 msgstr "Anar a la pagina « %s »"
 
-#: libview/ev-view.c:2165
+#: libview/ev-view.c:2167
 #, c-format
 msgid "Launch %s"
 msgstr "Aviar %s"
 
-#: libview/ev-view.c:2172
+#: libview/ev-view.c:2174
 msgid "Reset form"
 msgstr "Reïnicializar lo formulari"
 
-#: libview/ev-view-presentation.c:756
+#: libview/ev-view-presentation.c:757
 msgid "Jump to page:"
 msgstr "Anar a la pagina :"
 
-#: libview/ev-view-presentation.c:1050
+#: libview/ev-view-presentation.c:1051
 msgid "End of presentation. Press Esc or click to exit."
 msgstr "Fin de la presentacion.Quichat Esc o clicatz per sortir."
 
@@ -807,6 +761,14 @@ msgstr "Pagina precedenta"
 msgid "Next Page"
 msgstr "Pagina seguenta"
 
+#: previewer/previewer.ui:34
+msgid "Enlarge the document"
+msgstr "Agrandir lo document"
+
+#: previewer/previewer.ui:42
+msgid "Shrink the document"
+msgstr "Reduire lo document"
+
 #: previewer/previewer.ui:49
 msgid "Reset zoom and make the page fit in the window"
 msgstr "Reïnicializar lo zoom e ajustar la pagina a la talha de la fenèstra"
@@ -828,7 +790,7 @@ msgid "Subject:"
 msgstr "Subjècte :"
 
 #: properties/ev-properties-view.c:65
-#: shell/ev-annotation-properties-dialog.c:171
+#: shell/ev-annotation-properties-dialog.c:172
 msgid "Author:"
 msgstr "Autor :"
 
@@ -979,35 +941,35 @@ msgstr "Soslinhar"
 msgid "Squiggly"
 msgstr "Desformat"
 
-#: shell/ev-annotation-properties-dialog.c:152
+#: shell/ev-annotation-properties-dialog.c:153
 msgid "Annotation Properties"
 msgstr "Proprietats de las anotacions"
 
-#: shell/ev-annotation-properties-dialog.c:156
+#: shell/ev-annotation-properties-dialog.c:157
 msgid "_Close"
 msgstr "_Tampar"
 
-#: shell/ev-annotation-properties-dialog.c:157
+#: shell/ev-annotation-properties-dialog.c:158
 msgid "_Apply"
 msgstr "_Aplicar"
 
-#: shell/ev-annotation-properties-dialog.c:182
+#: shell/ev-annotation-properties-dialog.c:183
 msgid "Color:"
 msgstr "Color :"
 
-#: shell/ev-annotation-properties-dialog.c:192
+#: shell/ev-annotation-properties-dialog.c:193
 msgid "Opacity:"
 msgstr "Opacitat :"
 
-#: shell/ev-annotation-properties-dialog.c:204
+#: shell/ev-annotation-properties-dialog.c:205
 msgid "Initial window state:"
 msgstr "Estat inicial de la fenèstra :"
 
-#: shell/ev-annotation-properties-dialog.c:210
+#: shell/ev-annotation-properties-dialog.c:211
 msgid "Open"
 msgstr "Dobrir"
 
-#: shell/ev-annotation-properties-dialog.c:211
+#: shell/ev-annotation-properties-dialog.c:212
 msgid "Close"
 msgstr "Tampar"
 
@@ -1028,7 +990,7 @@ msgstr "Suslinhar lo tèxt"
 msgid "Add highlight annotation"
 msgstr "Apondre una anotacion en susbrilhança"
 
-#: shell/evince-menus.ui:25 shell/ev-sidebar-links.c:340
+#: shell/evince-menus.ui:25 shell/ev-sidebar-links.c:351
 msgid "Print…"
 msgstr "Imprimir…"
 
@@ -1104,6 +1066,18 @@ msgstr "Ajud_a"
 msgid "_About Document Viewer"
 msgstr "_A prepaus del Visionador de documents"
 
+#: shell/evince-menus.ui:127
+msgid "Fit Pa_ge"
+msgstr "_Ajustar a la pagina"
+
+#: shell/evince-menus.ui:132
+msgid "Fit _Width"
+msgstr "Ajustar a la _largor"
+
+#: shell/evince-menus.ui:137
+msgid "_Automatic"
+msgstr "_Automatic"
+
 #: shell/evince-menus.ui:149
 msgid "_Open Link"
 msgstr "_Dobrir lo ligam"
@@ -1162,17 +1136,17 @@ msgstr "_Dobrir la pèça junta"
 msgid "_Save Attachment As…"
 msgstr "_Enregistrar la pèça junta jos…"
 
-#: shell/evince-menus.ui:223 shell/evince-menus.ui:295
-msgid "Annotation Properties…"
-msgstr "Proprietats de l'anotacion…"
+#: shell/evince-menus.ui:223
+msgid "Annotation _Properties…"
+msgstr "_Proprietats de l'anotacion…"
 
-#: shell/evince-menus.ui:228 shell/evince-menus.ui:300
-msgid "Remove Annotation"
-msgstr "Levar las anotacions"
+#: shell/evince-menus.ui:228
+msgid "R_emove Annotation"
+msgstr "L_evar las anotacions"
 
 #: shell/evince-menus.ui:235
-msgid "Highlight Selected Text"
-msgstr "Copiar lo tèxte en susbrilhança"
+msgid "_Highlight Selected Text"
+msgstr "_Metre en susbrilhança lo tèxt seleccionat"
 
 #: shell/evince-menus.ui:248
 msgid "Navigation"
@@ -1198,6 +1172,14 @@ msgstr "Precedent"
 msgid "Forward"
 msgstr "Seguent"
 
+#: shell/evince-menus.ui:295
+msgid "Annotation Properties…"
+msgstr "Proprietats de l'anotacion…"
+
+#: shell/evince-menus.ui:300
+msgid "Remove Annotation"
+msgstr "Levar las anotacions"
+
 #: shell/evince-menus.ui:320
 msgid "_Open Bookmark"
 msgstr "_Dobrir lo signet"
@@ -1216,8 +1198,8 @@ msgid "Password for document %s"
 msgstr "Senhal pel document %s"
 
 #. Create tree view
-#: shell/ev-loading-message.c:50 shell/ev-sidebar-annotations.c:137
-#: shell/ev-sidebar-layers.c:123 shell/ev-sidebar-links.c:265
+#: shell/ev-loading-message.c:50 shell/ev-sidebar-annotations.c:139
+#: shell/ev-sidebar-layers.c:123 shell/ev-sidebar-links.c:276
 msgid "Loading…"
 msgstr "Cargament…"
 
@@ -1247,7 +1229,7 @@ msgstr "Senhal requesit"
 
 #: shell/ev-password-view.c:266 shell/ev-sidebar-attachments.c:493
 #: shell/ev-window.c:2905 shell/ev-window.c:3203 shell/ev-window.c:4088
-#: shell/ev-window.c:6987 shell/ev-window.c:7211
+#: shell/ev-window.c:6998 shell/ev-window.c:7224
 msgid "_Cancel"
 msgstr "_Anullar"
 
@@ -1308,16 +1290,16 @@ msgstr "Tèxte de la licéncia"
 msgid "Further Information"
 msgstr "Informacions complémentaires"
 
-#: shell/ev-sidebar-annotations.c:360
+#: shell/ev-sidebar-annotations.c:372
 msgid "Document contains no annotations"
 msgstr "Lo document conten pas cap d'anotacion"
 
-#: shell/ev-sidebar-annotations.c:399
+#: shell/ev-sidebar-annotations.c:412
 #, c-format
 msgid "Page %d"
 msgstr "Page %d"
 
-#: shell/ev-sidebar-annotations.c:651 shell/ev-window.c:7611
+#: shell/ev-sidebar-annotations.c:675 shell/ev-window.c:7624
 msgid "Annotations"
 msgstr "Anotacions"
 
@@ -1335,7 +1317,7 @@ msgstr "Lo fichièr « %s » existís ja. Lo remplaçar subrecargarà son cont
 msgid "_Replace"
 msgstr "_Remplaçar"
 
-#: shell/ev-sidebar-attachments.c:899 shell/ev-window.c:7635
+#: shell/ev-sidebar-attachments.c:899 shell/ev-window.c:7648
 msgid "Attachments"
 msgstr "Pèças juntas"
 
@@ -1347,24 +1329,40 @@ msgstr "Apondre un signet"
 msgid "Remove bookmark"
 msgstr "Suprimir lo signet"
 
-#: shell/ev-sidebar-bookmarks.c:628 shell/ev-window.c:7619
+#: shell/ev-sidebar-bookmarks.c:628 shell/ev-window.c:7632
 msgid "Bookmarks"
 msgstr "Signets"
 
-#: shell/ev-sidebar-layers.c:444 shell/ev-window.c:7647
+#: shell/ev-sidebar-layers.c:444 shell/ev-window.c:7660
 msgid "Layers"
 msgstr "Jaces"
+
+#: shell/ev-sidebar-links.c:357
+msgid "Collapse all tree"
+msgstr "Replegar las arborescéncias"
+
+#: shell/ev-sidebar-links.c:364
+msgid "Expand all tree"
+msgstr "Desplegar totas las arborescéncias"
+
+#: shell/ev-sidebar-links.c:371
+msgid "Expand all under this element"
+msgstr "O desplegar tot jos aqueste element"
 
 #. Translators: This is the title for the sidebar pane that
 #. * shows the Outline or Table of Contents of the document.
 #.
-#: shell/ev-sidebar-links.c:1023 shell/ev-window.c:7599
+#: shell/ev-sidebar-links.c:1431 shell/ev-window.c:7612
 msgid "Outline"
 msgstr "Contorn"
 
-#: shell/ev-sidebar-thumbnails.c:1047 shell/ev-window.c:7582
+#: shell/ev-sidebar-thumbnails.c:1047 shell/ev-window.c:7595
 msgid "Thumbnails"
 msgstr "Vinhetas"
+
+#: shell/ev-toolbar.c:173
+msgid "Find a word or phrase in the document"
+msgstr "Recèrca un mot o una frasa dins lo document"
 
 #: shell/ev-toolbar.c:179
 msgid "Search not available for this document"
@@ -1494,7 +1492,7 @@ msgstr "Mandadís de l'imatge (%d %%)"
 msgid "Save As…"
 msgstr "Enregistrar jos…"
 
-#: shell/ev-window.c:3202 shell/ev-window.c:6986 shell/ev-window.c:7210
+#: shell/ev-window.c:3202 shell/ev-window.c:6997 shell/ev-window.c:7223
 msgid "_Save"
 msgstr "_Enregistrar"
 
@@ -1632,7 +1630,7 @@ msgstr ""
 msgid "Don’t show this message again"
 msgstr "Mostrar pas mai aqueste messatge"
 
-#: shell/ev-window.c:6624
+#: shell/ev-window.c:6635
 #, c-format
 msgid ""
 "Security alert: this document has been prevented from opening the file “%s”"
@@ -1640,27 +1638,27 @@ msgstr ""
 "Alterta de seguretat : avèm empachat aquesta document de dobrir lo fichièr "
 "« %s »"
 
-#: shell/ev-window.c:6678
+#: shell/ev-window.c:6689
 msgid "Unable to open external link"
 msgstr "Impossible de dobrir lo ligam extèrne"
 
-#: shell/ev-window.c:6915
+#: shell/ev-window.c:6926
 msgid "Couldn’t find appropriate format to save image"
 msgstr "Impossible de trobar lo format apropriat per enregistrar l'imatge"
 
-#: shell/ev-window.c:6947
+#: shell/ev-window.c:6958
 msgid "The image could not be saved."
 msgstr "L'imatge pòt pas èsser enregistrada."
 
-#: shell/ev-window.c:6983
+#: shell/ev-window.c:6994
 msgid "Save Image"
 msgstr "Enregistrar l'imatge"
 
-#: shell/ev-window.c:7139
+#: shell/ev-window.c:7152
 msgid "Unable to open attachment"
 msgstr "Impossible de dobrir la pèça junta"
 
-#: shell/ev-window.c:7207
+#: shell/ev-window.c:7220
 msgid "Save Attachment"
 msgstr "Enregistrar la pèça junta"
 
@@ -2039,57 +2037,79 @@ msgctxt "shortcut window"
 msgid "Touchpad gestures"
 msgstr "Gèstes amb lo pavat tactil"
 
-#: shell/main.c:63 shell/main.c:269
+#: shell/main.c:64 shell/main.c:271
 msgid "GNOME Document Viewer"
 msgstr "Visionador de documents de GNOME"
 
-#: shell/main.c:71
+#: shell/main.c:72
+msgid "Open a new window."
+msgstr "Dobrir dins una fenèstra novèla."
+
+#: shell/main.c:73
 msgid "The page label of the document to display."
 msgstr "L'etiqueta de la pagina del document d'afichar."
 
-#: shell/main.c:71
+#: shell/main.c:73
 msgid "PAGE"
 msgstr "PAGINA"
 
-#: shell/main.c:72
+#: shell/main.c:74
 msgid "The page number of the document to display."
 msgstr "Lo numèro de la pagina del document d'afichar."
 
-#: shell/main.c:72
+#: shell/main.c:74
 msgid "NUMBER"
 msgstr "NUMÈRO"
 
-#: shell/main.c:73
+#: shell/main.c:75
 msgid "Named destination to display."
 msgstr "Destinacion nomenada d'afichar."
 
-#: shell/main.c:73
+#: shell/main.c:75
 msgid "DEST"
 msgstr "DEST"
 
-#: shell/main.c:74
+#: shell/main.c:76
 msgid "Run evince in fullscreen mode"
 msgstr "Executa evince en mòde ecran complet"
 
-#: shell/main.c:75
+#: shell/main.c:77
 msgid "Run evince in presentation mode"
 msgstr "Executa evince en mòde presentacion"
 
-#: shell/main.c:76
+#: shell/main.c:78
 msgid "Run evince as a previewer"
 msgstr "Executa evince en mòde apercebut"
 
-#: shell/main.c:77
+#: shell/main.c:79
 msgid "The word or phrase to find in the document"
 msgstr "Lo mot o la frasa a recercar dins lo document"
 
-#: shell/main.c:77
+#: shell/main.c:79
 msgid "STRING"
 msgstr "CADENA"
 
-#: shell/main.c:81
+#: shell/main.c:83
 msgid "[FILE…]"
 msgstr "[FICHIÈR…]"
+
+#~ msgid "Go to the previous page"
+#~ msgstr "Anar a la pagina precedenta"
+
+#~ msgid "Go to the next page"
+#~ msgstr "Anar a la pagina seguenta"
+
+#~ msgid "Show the entire document"
+#~ msgstr "Aficha lo document entièr"
+
+#~ msgid "Show two pages at once"
+#~ msgstr "Aficha doas paginas a l'encòp"
+
+#~ msgid "Download document"
+#~ msgstr "Telecargar lo document"
+
+#~ msgid "Print document"
+#~ msgstr "Imprimir lo document"
 
 #~ msgid ""
 #~ "Error launching the command “%s” in order to decompress the comic book: %s"
