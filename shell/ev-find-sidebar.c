@@ -135,37 +135,37 @@ selection_changed_callback (GtkTreeSelection *selection,
                 ev_find_sidebar_activate_result_at_iter (sidebar, model, &iter);
 }
 
-static gboolean
-sidebar_tree_button_press_cb (GtkTreeView    *view,
-                              GdkEventButton *event,
-                              EvFindSidebar  *sidebar)
+static void
+sidebar_tree_button_press_cb (GtkGestureClick	*self,
+			      gint		 n_press,
+			      gdouble		 x,
+			      gdouble		 y,
+                              EvFindSidebar	*sidebar)
 {
         EvFindSidebarPrivate *priv = GET_PRIVATE (sidebar);
+	GtkWidget            *view;
         GtkTreeModel         *model;
         GtkTreePath          *path;
         GtkTreeIter           iter;
 
-        gtk_tree_view_get_path_at_pos (view, event->x, event->y, &path,
-                                       NULL, NULL, NULL);
+	view = gtk_event_controller_get_widget (GTK_EVENT_CONTROLLER (self));
+
+        gtk_tree_view_get_path_at_pos (GTK_TREE_VIEW (view), x, y, &path,
+			NULL, NULL, NULL);
         if (!path)
-                return FALSE;
+                return;
 
         if (priv->highlighted_result &&
             gtk_tree_path_compare (priv->highlighted_result, path) != 0) {
                 gtk_tree_path_free (path);
-                return FALSE;
+                return;
         }
 
-        model = gtk_tree_view_get_model (view);
+        model = gtk_tree_view_get_model (GTK_TREE_VIEW (view));
         gtk_tree_model_get_iter (model, &iter, path);
         gtk_tree_path_free (path);
 
         ev_find_sidebar_activate_result_at_iter (sidebar, model, &iter);
-
-        /* Always return FALSE so the tree view gets the event and can update
-         * the selection etc.
-         */
-        return FALSE;
 }
 
 static void
@@ -188,10 +188,11 @@ ev_find_sidebar_init (EvFindSidebar *sidebar)
         GtkTreeViewColumn    *column;
         GtkCellRenderer      *renderer;
         GtkTreeSelection     *selection;
+	GtkEventController   *controller;
 
         priv = GET_PRIVATE (sidebar);
 
-        swindow = gtk_scrolled_window_new (NULL, NULL);
+        swindow = gtk_scrolled_window_new ();
         gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (swindow),
                                         GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 
@@ -200,11 +201,10 @@ ev_find_sidebar_init (EvFindSidebar *sidebar)
 
         gtk_tree_view_set_search_column (GTK_TREE_VIEW (priv->tree_view), -1);
         gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (priv->tree_view), FALSE);
-        gtk_container_add (GTK_CONTAINER (swindow), priv->tree_view);
-        gtk_widget_show (priv->tree_view);
+	gtk_widget_set_hexpand (priv->tree_view, TRUE);
+        gtk_scrolled_window_set_child (GTK_SCROLLED_WINDOW (swindow), priv->tree_view);
 
-        gtk_box_pack_start (GTK_BOX (sidebar), swindow, TRUE, TRUE, 0);
-        gtk_widget_show (swindow);
+        gtk_box_prepend (GTK_BOX (sidebar), swindow);
 
         column = gtk_tree_view_column_new ();
         gtk_tree_view_column_set_expand (GTK_TREE_VIEW_COLUMN (column), TRUE);
@@ -230,9 +230,12 @@ ev_find_sidebar_init (EvFindSidebar *sidebar)
         priv->selection_id = g_signal_connect (selection, "changed",
                                                G_CALLBACK (selection_changed_callback),
                                                sidebar);
-        g_signal_connect (priv->tree_view, "button-press-event",
+
+	controller = GTK_EVENT_CONTROLLER (gtk_gesture_click_new ());
+        g_signal_connect (controller, "pressed",
                           G_CALLBACK (sidebar_tree_button_press_cb),
                           sidebar);
+	gtk_widget_add_controller (priv->tree_view, controller);
 }
 
 GtkWidget *
