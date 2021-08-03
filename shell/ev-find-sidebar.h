@@ -47,7 +47,6 @@ struct _EvFindSidebarClass {
 
 GType      ev_find_sidebar_get_type (void);
 GtkWidget *ev_find_sidebar_new      (void);
-
 void       ev_find_sidebar_start    (EvFindSidebar *find_sidebar,
                                      EvJobFind     *job);
 void       ev_find_sidebar_restart  (EvFindSidebar *find_sidebar,
