@@ -21,7 +21,7 @@
 #pragma once
 
 #include <evince-view.h>
- 
+
 #include <gtk/gtk.h>
 
 G_BEGIN_DECLS
@@ -34,7 +34,7 @@ typedef struct _EvPageActionWidgetClass EvPageActionWidgetClass;
 
 struct _EvPageActionWidgetClass
 {
-	GtkToolItemClass parent_class;
+	GtkBoxClass parent_class;
 
 	void (* activate_link) (EvPageActionWidget *page_action,
 			        EvLink             *link);
