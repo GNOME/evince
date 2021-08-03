@@ -149,8 +149,8 @@ po_dir = join_paths(source_root, 'po')
 top_inc = include_directories('.')
 
 glib_req_version = '>= 2.44.0'
-gtk_req_version = '>= 3.22.0'
-hdy_req_version = '>= 1.5.0'
+gtk_req_version = '>= 4.4.0'
+libaw_req_version = '>= 1.0.0'
 
 gdk_pixbuf_dep = dependency('gdk-pixbuf-2.0', version: '>= 2.40.0')
 config_h.set_quoted('EXTRA_GDK_PIXBUF_LOADERS_DIR',
@@ -160,10 +160,11 @@ gio_dep = dependency('gio-2.0', version: glib_req_version)
 glib_dep = dependency('glib-2.0', version: glib_req_version)
 gmodule_dep = dependency('gmodule-2.0')
 gmodule_no_export_dep = dependency('gmodule-no-export-2.0', version: glib_req_version)
-gtk_dep = dependency('gtk+-3.0', version: gtk_req_version)
+gmodule_export_dep = dependency('gmodule-export-2.0', version: glib_req_version)
+gtk_dep = dependency('gtk4', version: gtk_req_version)
 gthread_dep = dependency('gthread-2.0', version: glib_req_version)
-# Keep the version here synchronised with subprojects/libhandy.wrap
-hdy_dep = dependency('libhandy-1', version: hdy_req_version, fallback: ['libhandy', 'libhandy_dep'])
+# Keep the version here synchronised with subprojects/libadwaita.wrap
+libaw_dep = dependency('libadwaita-1', version: libaw_req_version, fallback: ['libadwaita', 'libadwaita_dep'])
 
 m_dep = cc.find_library('m')
 
@@ -213,7 +214,7 @@ if ev_platform == 'gnome'
   config_h.set('WITH_KEYRING', enable_keyring)
 
   # GKT+ Unix Printing
-  gtk_unix_print_dep = dependency('gtk+-unix-print-3.0', version: gtk_req_version, required: get_option('gtk_unix_print'))
+  gtk_unix_print_dep = dependency('gtk4-unix-print', version: gtk_req_version, required: get_option('gtk_unix_print'))
   enable_gtk_unix_print = gtk_unix_print_dep.found()
   config_h.set10('GTKUNIXPRINT_ENABLED', enable_gtk_unix_print)
 
@@ -240,7 +241,7 @@ if enable_introspection
 endif
 
 # *** GNOME Desktop (Thumbnail cache) ***
-gnome_desktop_dep = dependency('gnome-desktop-3.0', required: get_option('thumbnail_cache'))
+gnome_desktop_dep = dependency('gnome-desktop-4', required: get_option('thumbnail_cache'))
 enable_thumbnail_cache = gdk_pixbuf_dep.found() and gnome_desktop_dep.found()
 config_h.set('HAVE_LIBGNOME_DESKTOP', enable_thumbnail_cache)
 
