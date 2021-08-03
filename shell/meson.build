@@ -43,7 +43,7 @@ evince_sources += gnome.compile_resources(
 evince_deps = [
   gdk_pixbuf_dep,
   gnome_desktop_dep,
-  hdy_dep,
+  libaw_dep,
   libevmisc_dep,
   libevdocument_dep,
   libevview_dep,

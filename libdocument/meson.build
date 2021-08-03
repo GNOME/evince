@@ -182,11 +182,11 @@ pkg.generate(
 # GObject Introspection
 if enable_introspection
   incs = [
-    'Gdk-3.0',
+    'Gdk-4.0',
     'GdkPixbuf-2.0',
     'Gio-2.0',
     'GLib-2.0',
-    'Gtk-3.0',
+    'Gtk-4.0',
   ]
 
   libevdocument_gir = gnome.generate_gir(

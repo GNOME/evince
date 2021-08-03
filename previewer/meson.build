@@ -15,7 +15,7 @@ previewer_deps = [
   libevdocument_dep,
   libevmisc_dep,
   libevview_dep,
-  hdy_dep
+  libaw_dep
 ]
 
 if enable_gtk_unix_print
