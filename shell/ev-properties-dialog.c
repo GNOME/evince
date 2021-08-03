@@ -58,14 +58,14 @@ ev_properties_dialog_init (EvPropertiesDialog *properties)
 	GtkBox *content_area;
 
 	content_area = GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (properties)));
-	gtk_container_set_border_width (GTK_CONTAINER (content_area), 0);
+	// gtk_container_set_border_width (GTK_CONTAINER (content_area), 0);
 
 	gtk_window_set_title (GTK_WINDOW (properties), _("Properties"));
 	gtk_window_set_destroy_with_parent (GTK_WINDOW (properties), TRUE);
 
 	properties->notebook = gtk_notebook_new ();
 	gtk_notebook_set_show_border (GTK_NOTEBOOK (properties->notebook), FALSE);
-	gtk_box_pack_start (content_area, properties->notebook, TRUE, TRUE, 0);
+	gtk_box_prepend (content_area, properties->notebook);
 	gtk_widget_show (properties->notebook);
 }
 

@@ -119,13 +119,13 @@ ev_properties_get_pages (NautilusPropertyPageProvider *provider,
 				     ev_document_get_info (document));
 	gtk_widget_show (page);
 
-	scrolled = gtk_scrolled_window_new (NULL, NULL);
+	scrolled = gtk_scrolled_window_new ();
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled),
 					GTK_POLICY_NEVER,
 					GTK_POLICY_AUTOMATIC);
 	gtk_scrolled_window_set_propagate_natural_width (GTK_SCROLLED_WINDOW (scrolled),
 							 TRUE);
-	gtk_container_add (GTK_CONTAINER (scrolled), page);
+	gtk_scrolled_window_set_child (GTK_SCROLLED_WINDOW (scrolled), page);
 	gtk_widget_show (scrolled);
 
 	property_page = nautilus_property_page_new ("document-properties",

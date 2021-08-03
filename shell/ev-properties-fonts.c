@@ -58,12 +58,12 @@ ev_properties_fonts_dispose (GObject *object)
 	EvPropertiesFonts *properties = EV_PROPERTIES_FONTS (object);
 
 	if (properties->fonts_job) {
-		g_signal_handlers_disconnect_by_func (properties->fonts_job, 
-						      job_fonts_finished_cb, 
+		g_signal_handlers_disconnect_by_func (properties->fonts_job,
+						      job_fonts_finished_cb,
 						      properties);
 		ev_job_cancel (properties->fonts_job);
 
-		g_object_unref (properties->fonts_job);		
+		g_object_unref (properties->fonts_job);
 		properties->fonts_job = NULL;
 	}
 
@@ -110,7 +110,7 @@ font_cell_data_func (GtkTreeViewColumn *col, GtkCellRenderer *renderer,
 		markup = g_strdup_printf ("<b><big>%s</big></b>", name);
 	}
 
-	g_object_set (renderer, "markup", markup, NULL, NULL);
+	g_object_set (renderer, "markup", markup, NULL);
 
 	g_free (markup);
 	g_free (details);
@@ -156,11 +156,11 @@ job_fonts_finished_cb (EvJob *job, EvPropertiesFonts *properties)
 
 	font_summary = ev_document_fonts_get_fonts_summary (document_fonts);
 	if (font_summary) {
-		gtk_label_set_text (GTK_LABEL (properties->fonts_summary),
+		gtk_label_set_text (GTK_LABEL (properties->summary),
 				    font_summary);
 		/* show the label only when fonts are scanned, so the label
 		 * does not take space while it is loading */
-		gtk_widget_show (properties->fonts_summary);
+		gtk_widget_show (properties->summary);
 	}
 }
 
@@ -170,7 +170,7 @@ job_fonts_updated_cb (EvJobFonts *job, gdouble progress, EvPropertiesFonts *prop
 	GtkTreeModel *model;
 	EvDocumentFonts *document_fonts = EV_DOCUMENT_FONTS (properties->document);
 
-	update_progress_label (properties->fonts_progress_label, progress);
+	update_progress_label (properties->progress_label, progress);
 
 	model = gtk_tree_view_get_model (properties->fonts_treeview);
 	/* Document lock is already held by the jop */

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Generated with glade 3.38.2 -->
 <interface>
-  <requires lib="gtk+" version="3.16"/>
+  <requires lib="gtk" version="4.0"/>
   <template class="EvPropertiesFonts" parent="GtkBox">
     <property name="can-focus">False</property>
     <property name="margin-start">12</property>
@@ -10,19 +10,14 @@
     <property name="margin-bottom">12</property>
     <property name="orientation">vertical</property>
     <property name="spacing">6</property>
-    <child>
+    <child type="start">
       <object class="GtkLabel" id="fonts_summary">
         <property name="can-focus">False</property>
         <property name="wrap">True</property>
         <property name="xalign">0.0</property>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">False</property>
-        <property name="position">0</property>
-      </packing>
     </child>
-    <child>
+    <child type="start">
       <object class="GtkScrolledWindow">
         <property name="can-focus">False</property>
         <property name="shadow-type">in</property>
@@ -49,22 +44,12 @@
           </object>
         </child>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">1</property>
-      </packing>
     </child>
     <child>
       <object class="GtkLabel" id="fonts_progress_label">
         <property name="can-focus">False</property>
-        <property name="xalign">0</property>
+        <property name="xalign">0.0</property>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">2</property>
-      </packing>
     </child>
   </template>
 </interface>
