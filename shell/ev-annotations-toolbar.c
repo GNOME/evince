@@ -37,11 +37,6 @@ struct _EvAnnotationsToolbar {
         GtkWidget *highlight_button;
 };
 
-struct _EvAnnotationsToolbarClass {
-	GtkBoxClass base_class;
-
-};
-
 static guint signals[N_SIGNALS];
 
 G_DEFINE_TYPE (EvAnnotationsToolbar, ev_annotations_toolbar, GTK_TYPE_BOX)
@@ -101,13 +96,11 @@ ev_annotations_toolbar_create_toggle_button (EvAnnotationsToolbar *toolbar,
 	if (label)
                 gtk_button_set_label (GTK_BUTTON (button), label);
 
-        if (icon_name) {
-                GtkWidget *image = gtk_image_new_from_icon_name (icon_name, GTK_ICON_SIZE_BUTTON);
-                gtk_button_set_image (GTK_BUTTON (button), image);
-        }
+        if (icon_name)
+                gtk_button_set_icon_name (GTK_BUTTON (button), icon_name);
 
         /* For some reason adding text-button class to the GtkToogleButton makes the button smaller */
-        gtk_style_context_add_class (gtk_widget_get_style_context (GTK_WIDGET (button)), "text-button");
+	gtk_widget_add_css_class(button, "text-button");
         g_signal_connect (button, "toggled",
                           G_CALLBACK (ev_annotations_toolbar_annot_button_toggled),
                           toolbar);
@@ -120,8 +113,8 @@ ev_annotations_toolbar_init (EvAnnotationsToolbar *toolbar)
 {
         gtk_orientable_set_orientation (GTK_ORIENTABLE (toolbar), GTK_ORIENTATION_HORIZONTAL);
 
-        gtk_style_context_add_class (gtk_widget_get_style_context (GTK_WIDGET (toolbar)), "inline-toolbar");
-        gtk_style_context_add_class (gtk_widget_get_style_context (GTK_WIDGET (toolbar)), "linked");
+	gtk_widget_add_css_class(GTK_WIDGET (toolbar), "inline-toolbar");
+	gtk_widget_add_css_class(GTK_WIDGET (toolbar), "linked");
 
         /* Use Text label until we have:
          *   1. More buttons in the toolbar (lack of space)
@@ -132,15 +125,14 @@ ev_annotations_toolbar_init (EvAnnotationsToolbar *toolbar)
                                                                             _("Note text"),
                                                                             NULL,
                                                                             _("Add text annotation"));
-        gtk_box_pack_start (GTK_BOX(toolbar), toolbar->text_button, FALSE, FALSE, 0);
-        gtk_widget_show (toolbar->text_button);
+        gtk_box_append (GTK_BOX(toolbar), toolbar->text_button);
 
         toolbar->highlight_button = ev_annotations_toolbar_create_toggle_button (toolbar,
                                                                                  _("Highlight text"),
                                                                                  NULL,
                                                                                  _("Add highlight annotation"));
-        gtk_box_pack_start (GTK_BOX (toolbar), toolbar->highlight_button, FALSE, FALSE, 0);
-        gtk_widget_show (toolbar->highlight_button);
+
+        gtk_box_append (GTK_BOX (toolbar), toolbar->highlight_button);
 }
 
 static void
