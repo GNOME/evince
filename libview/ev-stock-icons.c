@@ -57,29 +57,33 @@ static const EvStockIcon stock_icons [] = {
 static gchar *ev_icons_path;
 
 static void
-ev_stock_icons_add_icons_path_for_screen (GdkScreen *screen)
+ev_stock_icons_add_icons_path_for_display (GdkDisplay *display)
 {
 	GtkIconTheme *icon_theme;
 
 	g_return_if_fail (ev_icons_path != NULL);
 
-	icon_theme = screen ? gtk_icon_theme_get_for_screen (screen) : gtk_icon_theme_get_default ();
+	if (!display)
+		display = gdk_display_get_default ();
+
+	icon_theme = gtk_icon_theme_get_for_display (display);
 	if (icon_theme) {
-		gchar **path = NULL;
-		gint    n_paths;
-		gint    i;
+		gchar **path = NULL, **tp;
+		gboolean found = FALSE;
 
 		/* GtkIconTheme will then look in Evince custom hicolor dir
 		 * for icons as well as the standard search paths
 		 */
-		gtk_icon_theme_get_search_path (icon_theme, &path, &n_paths);
-		for (i = n_paths - 1; i >= 0; i--) {
-			if (g_ascii_strcasecmp (ev_icons_path, path[i]) == 0)
+		path = gtk_icon_theme_get_search_path (icon_theme);
+		for (tp = path; tp && *tp; tp++) {
+			if (g_ascii_strcasecmp (ev_icons_path, *tp) == 0) {
+				found = TRUE;
 				break;
+			}
 		}
 
-		if (i < 0)
-			gtk_icon_theme_append_search_path (icon_theme,
+		if (!found)
+			gtk_icon_theme_add_search_path (icon_theme,
 							   ev_icons_path);
 
 		g_strfreev (path);
@@ -94,9 +98,6 @@ ev_stock_icons_add_icons_path_for_screen (GdkScreen *screen)
 void
 ev_stock_icons_init (void)
 {
-	GtkIconFactory *factory;
-	GtkIconSource *source;
-	gint i;
 #ifdef G_OS_WIN32
 	gchar *dir;
 
@@ -107,36 +108,15 @@ ev_stock_icons_init (void)
 	ev_icons_path = g_build_filename (EVINCEDATADIR, "icons", NULL);
 #endif
 
-        factory = gtk_icon_factory_new ();
-        gtk_icon_factory_add_default (factory);
-
-	source = gtk_icon_source_new ();
-
-	for (i = 0; i < G_N_ELEMENTS (stock_icons); i++) {
-		GtkIconSet *set;
-
-		gtk_icon_source_set_icon_name (source, stock_icons [i].icon);
-
-		set = gtk_icon_set_new ();
-		gtk_icon_set_add_source (set, source);
-
-		gtk_icon_factory_add (factory, stock_icons [i].stock_id, set);
-		gtk_icon_set_unref (set);
-	}
-
-	gtk_icon_source_free (source);
-
-	g_object_unref (G_OBJECT (factory));
-
-	ev_stock_icons_add_icons_path_for_screen (gdk_screen_get_default ());
+	ev_stock_icons_add_icons_path_for_display (gdk_display_get_default ());
 }
 
 void
-ev_stock_icons_set_screen (GdkScreen *screen)
+ev_stock_icons_set_display (GdkDisplay *display)
 {
-	g_return_if_fail (GDK_IS_SCREEN (screen));
+	g_return_if_fail (GDK_IS_DISPLAY (display));
 
-	ev_stock_icons_add_icons_path_for_screen (screen);
+	ev_stock_icons_add_icons_path_for_display (display);
 }
 
 void
@@ -144,4 +124,3 @@ ev_stock_icons_shutdown (void)
 {
 	g_free (ev_icons_path);
 }
-

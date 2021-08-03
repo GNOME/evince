@@ -60,6 +60,6 @@ void ev_stock_icons_init       (void);
 EV_PUBLIC
 void ev_stock_icons_shutdown   (void);
 EV_PUBLIC
-void ev_stock_icons_set_screen (GdkScreen *screen);
+void ev_stock_icons_set_display(GdkDisplay *display);
 
 G_END_DECLS
