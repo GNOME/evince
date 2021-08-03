@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <template class="EvSearchBox" parent="AdwBin">
+    <property name="hexpand">True</property>
+    <child>
+      <object class="GtkOverlay">
+        <child type="overlay">
+          <object class="GtkProgressBar" id="progress">
+            <property name="valign">start</property>
+            <style>
+              <class name="osd" />
+            </style>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox">
+            <property name="orientation">horizontal</property>
+            <property name="halign">center</property>
+            <style>
+              <class name="linked" />
+            </style>
+            <child>
+              <object class="GtkSearchEntry" id="entry">
+                <signal name="search-changed" handler="search_changed_cb" />
+                <signal name="activate" handler="entry_activate_cb" />
+                <signal name="next-match" handler="entry_next_match_cb" />
+                <signal name="previous-match" handler="entry_previous_match_cb" />
+              </object>
+            </child>
+            <child>
+              <object class="GtkMenuButton">
+                <property name="direction">down</property>
+                <property name="icon-name">pan-down</property>
+                <property name="popover">
+                  <object class="GtkPopover">
+                    <child>
+                      <object class="GtkBox">
+                        <property name="orientation">vertical</property>
+                        <child>
+                          <object class="GtkCheckButton">
+                            <property name="label">_Whole Words Only</property>
+                            <property name="use-underline">True</property>
+                            <signal name="toggled" handler="whole_words_only_toggled_cb" />
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkCheckButton">
+                            <property name="label">C_ase Sensitive</property>
+                            <property name="use-underline">True</property>
+                            <signal name="toggled" handler="case_sensitive_toggled_cb" />
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="prev_button">
+                <property name="icon-name">go-up-symbolic</property>
+                <property name="focus-on-click">False</property>
+                <property name="tooltip-text" translatable="yes">Find previous occurrence of the search string</property>
+                <signal name="clicked" handler="previous_clicked_cb" />
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="next_button">
+                <property name="icon-name">go-down-symbolic</property>
+                <property name="focus-on-click">False</property>
+                <property name="tooltip-text" translatable="yes">Find next occurrence of the search string</property>
+                <signal name="clicked" handler="next_clicked_cb" />
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+</interface>

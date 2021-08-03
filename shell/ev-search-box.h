@@ -21,17 +21,18 @@
 #pragma once
 
 #include <gtk/gtk.h>
+#include <adwaita.h>
 #include <evince-document.h>
 #include <evince-view.h>
 
 G_BEGIN_DECLS
 
-#define EV_TYPE_SEARCH_BOX (ev_search_box_get_type())
+#define EV_TYPE_SEARCH_BOX            (ev_search_box_get_type ())
 
-G_DECLARE_FINAL_TYPE (EvSearchBox, ev_search_box, EV, SEARCH_BOX, GtkBox);
+G_DECLARE_FINAL_TYPE (EvSearchBox, ev_search_box, EV, SEARCH_BOX, AdwBin);
 
 struct _EvSearchBox {
-	GtkBox parent;
+        AdwBin parent;
 };
 
 GtkWidget      *ev_search_box_new         (EvDocumentModel *model);
