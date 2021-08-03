@@ -71,7 +71,7 @@ ev_window_title_sanitize_title (EvWindowTitle *window_title, char **title) {
 	backend = G_OBJECT_TYPE_NAME (window_title->document);
 
 	for (i = 0; i < G_N_ELEMENTS (bad_extensions); i++) {
-		if (g_ascii_strcasecmp (bad_extensions[i].backend, backend) == 0 && 
+		if (g_ascii_strcasecmp (bad_extensions[i].backend, backend) == 0 &&
 		    g_str_has_suffix (*title, bad_extensions[i].text)) {
 			char *new_title;
 
@@ -85,7 +85,7 @@ ev_window_title_sanitize_title (EvWindowTitle *window_title, char **title) {
 		    g_str_has_prefix (*title, bad_prefixes[i].text)) {
 			char *new_title;
 			int len = strlen(bad_prefixes[i].text);
-			
+
 			new_title = g_strdup_printf ("%s", (*title) + len);
 			g_free (*title);
 			*title = new_title;
@@ -97,15 +97,16 @@ static void
 ev_window_title_update (EvWindowTitle *window_title)
 {
 	GtkWindow *window = GTK_WINDOW (window_title->window);
-	HdyHeaderBar *toolbar = HDY_HEADER_BAR (ev_window_get_toolbar (EV_WINDOW (window)));
+	EvWindow *ev_window = EV_WINDOW (window_title->window);
+
+	AdwHeaderBar *toolbar = ADW_HEADER_BAR (ev_window_get_toolbar (EV_WINDOW (window)));
 	char *title = NULL, *p;
 	char *subtitle = NULL, *title_header = NULL;
 	gboolean ltr;
 
         if (window_title->type == EV_WINDOW_TITLE_RECENT) {
-                hdy_header_bar_set_title (toolbar, g_get_application_name ());
-                hdy_header_bar_set_subtitle (toolbar, NULL);
-                gtk_window_set_title (window, _("Recent Documents"));
+		ev_window_set_subtitle (ev_window, NULL);
+                ev_window_set_title (ev_window, _("Recent Documents"));
                 return;
         }
 
@@ -138,10 +139,10 @@ ev_window_title_update (EvWindowTitle *window_title)
 	case EV_WINDOW_TITLE_DOCUMENT:
 		gtk_window_set_title (window, title);
 		if (title_header && subtitle) {
-			hdy_header_bar_set_title (toolbar, title_header);
-			hdy_header_bar_set_subtitle (toolbar, subtitle);
+			ev_window_set_title (ev_window, title_header);
+			ev_window_set_subtitle (ev_window, subtitle);
 		} else if (title) {
-			hdy_header_bar_set_title (toolbar, title);
+			ev_window_set_title (ev_window, title);
 		}
 		if (window_title->dirname)
 			gtk_widget_set_tooltip_text (GTK_WIDGET (toolbar),
@@ -158,8 +159,8 @@ ev_window_title_update (EvWindowTitle *window_title)
 		gtk_window_set_title (window, password_title);
 		g_free (password_title);
 
-                hdy_header_bar_set_title (toolbar, _("Password Required"));
-                hdy_header_bar_set_subtitle (toolbar, title);
+                ev_window_set_title (ev_window, _("Password Required"));
+                ev_window_set_subtitle (ev_window, title);
         }
 		break;
         case EV_WINDOW_TITLE_RECENT:
