@@ -7,7 +7,6 @@ evince_sources = files(
   'ev-find-sidebar.c',
   'ev-history.c',
   'ev-keyring.c',
-  'ev-loading-message.c',
   'ev-message-area.c',
   'ev-metadata.c',
   'ev-password-view.c',
