@@ -97,17 +97,19 @@ static void
 ev_window_title_update (EvWindowTitle *window_title)
 {
 	GtkWindow *window = GTK_WINDOW (window_title->window);
-	HdyHeaderBar *toolbar = ev_window_get_toolbar (EV_WINDOW (window));
+	AdwHeaderBar *toolbar = ev_window_get_toolbar (EV_WINDOW (window));
+	AdwWindowTitle *title_widget = ADW_WINDOW_TITLE (adw_header_bar_get_title_widget (toolbar));
+
 	char *title = NULL, *p;
 	char *subtitle = NULL, *title_header = NULL;
 	gboolean ltr;
 
-        if (window_title->type == EV_WINDOW_TITLE_RECENT) {
-                hdy_header_bar_set_title (toolbar, g_get_application_name ());
-                hdy_header_bar_set_subtitle (toolbar, NULL);
-                gtk_window_set_title (window, _("Recent Documents"));
+	if (window_title->type == EV_WINDOW_TITLE_RECENT) {
+		adw_window_title_set_title (title_widget, g_get_application_name ());
+		adw_window_title_set_subtitle (title_widget, NULL);
+		gtk_window_set_title (window, _("Recent Documents"));
                 return;
-        }
+	}
 
 	ltr = gtk_widget_get_direction (GTK_WIDGET (window)) == GTK_TEXT_DIR_LTR;
 
@@ -135,10 +137,10 @@ ev_window_title_update (EvWindowTitle *window_title)
 	case EV_WINDOW_TITLE_DOCUMENT:
 		gtk_window_set_title (window, title);
 		if (title_header && subtitle) {
-			hdy_header_bar_set_title (toolbar, title_header);
-			hdy_header_bar_set_subtitle (toolbar, subtitle);
+			adw_window_title_set_title (title_widget, title_header);
+			adw_window_title_set_subtitle (title_widget, subtitle);
 		} else if (title) {
-			hdy_header_bar_set_title (toolbar, title);
+			adw_window_title_set_title (title_widget, title);
 		}
 		if (window_title->dirname)
 			gtk_widget_set_tooltip_text (GTK_WIDGET (toolbar),
@@ -155,8 +157,8 @@ ev_window_title_update (EvWindowTitle *window_title)
 		gtk_window_set_title (window, password_title);
 		g_free (password_title);
 
-                hdy_header_bar_set_title (toolbar, _("Password Required"));
-                hdy_header_bar_set_subtitle (toolbar, title);
+		adw_window_title_set_title (title_widget, _("Password Required"));
+		adw_window_title_set_subtitle (title_widget, title);
         }
 		break;
         case EV_WINDOW_TITLE_RECENT:
