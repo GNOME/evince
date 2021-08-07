@@ -77,6 +77,14 @@ cflags = [
   '-DEVINCE_COMPILATION'
 ]
 
+sources += gnome.compile_resources(
+  'ev-view-resources',
+  'libview.gresource.xml',
+  source_dir: data_dir,
+  c_name: 'ev_view',
+)
+
+
 libevview = shared_library(
   'evview-' + ev_api_version,
   version: ev_view_version,

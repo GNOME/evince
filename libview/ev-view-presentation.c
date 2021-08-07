@@ -27,12 +27,8 @@
 #include "ev-view-presentation.h"
 #include "ev-jobs.h"
 #include "ev-job-scheduler.h"
-#include "ev-transition-animation.h"
 #include "ev-view-cursor.h"
 #include "ev-page-cache.h"
-#ifdef GDK_WINDOWING_WAYLAND
-#include <gdk/gdkwayland.h>
-#endif
 
 enum {
 	PROP_0,
@@ -45,7 +41,7 @@ enum {
 enum {
 	CHANGE_PAGE,
 	FINISHED,
-        SIGNAL_EXTERNAL_LINK,
+	SIGNAL_EXTERNAL_LINK,
 	N_SIGNALS
 };
 
@@ -62,30 +58,29 @@ struct _EvViewPresentation
 
         guint                  is_constructing : 1;
 
+	gint64		       start_time;
+	gdouble		       transition_time;
+	gint                   animation_tick_id;
+
 	guint                  current_page;
-	cairo_surface_t       *current_surface;
+	guint                  previous_page;
+	GdkTexture            *current_texture;
+	GdkTexture	      *previous_texture;
 	EvDocument            *document;
 	guint                  rotation;
 	gboolean               inverted_colors;
 	EvPresentationState    state;
-	gint                   monitor_width;
-	gint                   monitor_height;
 
 	/* Cursors */
 	EvViewCursor           cursor;
 	guint                  hide_cursor_timeout_id;
 
 	/* Goto Window */
-	GtkWidget             *goto_window;
+	GtkWidget             *goto_popup;
 	GtkWidget             *goto_entry;
 
 	/* Page Transition */
 	guint                  trans_timeout_id;
-
-	/* Animations */
-	gboolean               enable_animations;
-        gboolean               animation_finished;
-	EvTransitionAnimation *animation;
 
 	/* Links */
 	EvPageCache           *page_cache;
@@ -113,6 +108,9 @@ static void ev_view_presentation_set_cursor_for_location (EvViewPresentation *pv
 							  gdouble             x,
 							  gdouble             y);
 
+static void ev_view_presentation_update_current_texture (EvViewPresentation *pview,
+							 GdkTexture    *surface);
+
 #define HIDE_CURSOR_TIMEOUT 5000
 
 G_DEFINE_TYPE (EvViewPresentation, ev_view_presentation, GTK_TYPE_WIDGET)
@@ -126,8 +124,8 @@ ev_view_presentation_set_normal (EvViewPresentation *pview)
 		return;
 
 	pview->state = EV_PRESENTATION_NORMAL;
-	gtk_style_context_remove_class (gtk_widget_get_style_context (widget),
-					"white-mode");
+
+	gtk_widget_remove_css_class(widget, "white-mode");
         gtk_widget_queue_draw (widget);
 }
 
@@ -140,9 +138,9 @@ ev_view_presentation_set_black (EvViewPresentation *pview)
 		return;
 
 	pview->state = EV_PRESENTATION_BLACK;
-	gtk_style_context_remove_class (gtk_widget_get_style_context (widget),
-					"white-mode");
-        gtk_widget_queue_draw (widget);
+
+	gtk_widget_remove_css_class(widget, "white-mode");
+	gtk_widget_queue_draw (widget);
 }
 
 static void
@@ -154,8 +152,8 @@ ev_view_presentation_set_white (EvViewPresentation *pview)
 		return;
 
 	pview->state = EV_PRESENTATION_WHITE;
-	gtk_style_context_add_class (gtk_widget_get_style_context (widget),
-				     "white-mode");
+
+	gtk_widget_add_css_class(widget, "white-mode");
 }
 
 static void
@@ -177,6 +175,7 @@ ev_view_presentation_get_view_size (EvViewPresentation *pview,
 				    int                *view_height)
 {
 	gdouble width, height;
+	int widget_width, widget_height;
 
 	ev_document_get_page_size (pview->document, page, &width, &height);
 	if (pview->rotation == 90 || pview->rotation == 270) {
@@ -187,12 +186,15 @@ ev_view_presentation_get_view_size (EvViewPresentation *pview,
 		height = tmp;
 	}
 
-	if (pview->monitor_width / width < pview->monitor_height / height) {
-		*view_width = pview->monitor_width;
-		*view_height = (int)((pview->monitor_width / width) * height + 0.5);
+	widget_width = gtk_widget_get_width (GTK_WIDGET (pview));
+	widget_height = gtk_widget_get_height (GTK_WIDGET (pview));
+
+	if (widget_width / width < widget_height / height) {
+		*view_width = widget_width;
+		*view_height = (int)((widget_width / width) * height + 0.5);
 	} else {
-		*view_width = (int)((pview->monitor_height / height) * width + 0.5);
-		*view_height = pview->monitor_height;
+		*view_width = (int)((widget_height / height) * width + 0.5);
+		*view_height = widget_height;
 	}
 }
 
@@ -201,16 +203,16 @@ ev_view_presentation_get_page_area (EvViewPresentation *pview,
 				    GdkRectangle       *area)
 {
 	GtkWidget    *widget = GTK_WIDGET (pview);
-	GtkAllocation allocation;
-	gint          view_width, view_height;
+	gint          view_width, view_height, widget_width, widget_height;
 
 	ev_view_presentation_get_view_size (pview, pview->current_page,
 					    &view_width, &view_height);
 
-	gtk_widget_get_allocation (widget, &allocation);
+	widget_width = gtk_widget_get_width (widget);
+	widget_height = gtk_widget_get_height (widget);
 
-	area->x = (MAX (0, allocation.width - view_width)) / 2;
-	area->y = (MAX (0, allocation.height - view_height)) / 2;
+	area->x = (MAX (0, widget_width - view_width)) / 2;
+	area->y = (MAX (0, widget_height - view_height)) / 2;
 	area->width = view_width;
 	area->height = view_height;
 }
@@ -251,91 +253,68 @@ ev_view_presentation_transition_start (EvViewPresentation *pview)
 	}
 }
 
-/* Animations */
+static gboolean
+animation_tick_cb (GtkWidget     *widget,
+		   GdkFrameClock *clock,
+		   gpointer       unused)
+{
+	EvViewPresentation *pview = EV_VIEW_PRESENTATION (widget);
+	gint64 frame_time = gdk_frame_clock_get_frame_time (clock);
+	EvTransitionEffect *effect;
+	gdouble duration = 0;
+
+	if (!EV_IS_DOCUMENT_TRANSITION (pview->document))
+		return G_SOURCE_REMOVE;
+
+	if (pview->start_time == 0)
+		pview->start_time = frame_time;
+
+	pview->transition_time = (frame_time - pview->start_time) / (float)G_USEC_PER_SEC;
+
+	gtk_widget_queue_draw (widget);
+
+	effect = ev_document_transition_get_effect (
+			EV_DOCUMENT_TRANSITION (pview->document),
+			pview->current_page);
+	g_object_get (effect, "duration-real", &duration, NULL);
+
+	if (pview->transition_time >= duration) {
+		ev_view_presentation_transition_start (pview);
+		return G_SOURCE_REMOVE;
+	}
+	else {
+		return G_SOURCE_CONTINUE;
+	}
+}
+
 static void
 ev_view_presentation_animation_cancel (EvViewPresentation *pview)
 {
-	g_clear_object (&pview->animation);
+	if (pview->animation_tick_id) {
+		gtk_widget_remove_tick_callback (GTK_WIDGET (pview), pview->animation_tick_id);
+		pview->animation_tick_id = 0;
+	}
 }
 
 static void
-ev_view_presentation_transition_animation_finish (EvViewPresentation *pview)
+ev_view_presentation_animation_start (EvViewPresentation *pview)
 {
-        pview->animation_finished = TRUE;
-	ev_view_presentation_transition_start (pview);
-	gtk_widget_queue_draw (GTK_WIDGET (pview));
+	GtkWidget *widget = GTK_WIDGET (pview);
+
+	pview->start_time = 0;
+	pview->animation_tick_id = gtk_widget_add_tick_callback (widget,
+			animation_tick_cb, pview, NULL);
+	gtk_widget_queue_draw (widget);
 }
 
-static void
-ev_view_presentation_transition_animation_frame (EvViewPresentation *pview,
-						 gdouble             progress)
-{
-	gtk_widget_queue_draw (GTK_WIDGET (pview));
-}
-
-static cairo_surface_t *
-get_surface_from_job (EvViewPresentation *pview,
+static GdkTexture *
+get_texture_from_job (EvViewPresentation *pview,
                       EvJob              *job)
 {
-        cairo_surface_t *surface;
-
         if (!job)
                 return NULL;
 
-	surface = EV_JOB_RENDER_CAIRO(job)->surface;
-        if (!surface)
-                return NULL;
-
-        int scale_factor = gtk_widget_get_scale_factor (GTK_WIDGET (pview));
-        cairo_surface_set_device_scale (surface, scale_factor, scale_factor);
-
-        return surface;
-}
-
-static void
-ev_view_presentation_animation_start (EvViewPresentation *pview,
-				      gint                new_page)
-{
-	EvTransitionEffect *effect = NULL;
-	EvJob		   *job;
-	cairo_surface_t    *surface;
-	gint                jump;
-
-	if (!pview->enable_animations)
-		return;
-
-	if (pview->current_page == new_page)
-		return;
-
-	effect = ev_document_transition_get_effect (EV_DOCUMENT_TRANSITION (pview->document),
-						    new_page);
-	if (!effect)
-		return;
-
-	pview->animation = ev_transition_animation_new (effect);
-
-	surface = pview->curr_job ? EV_JOB_RENDER_CAIRO (pview->curr_job)->surface : NULL;
-	ev_transition_animation_set_origin_surface (pview->animation,
-						    surface != NULL ?
-						    surface : pview->current_surface);
-
-	jump = new_page - pview->current_page;
-	if (jump == -1)
-		job = pview->prev_job;
-	else if (jump == 1)
-		job = pview->next_job;
-	else
-		job = NULL;
-	surface = get_surface_from_job (pview, job);
-	if (surface)
-		ev_transition_animation_set_dest_surface (pview->animation, surface);
-
-	g_signal_connect_swapped (pview->animation, "frame",
-				  G_CALLBACK (ev_view_presentation_transition_animation_frame),
-				  pview);
-	g_signal_connect_swapped (pview->animation, "finished",
-				  G_CALLBACK (ev_view_presentation_transition_animation_finish),
-				  pview);
+        return EV_JOB_RENDER_TEXTURE (job)->texture;
 }
 
 /* Page Navigation */
@@ -343,21 +322,13 @@ static void
 job_finished_cb (EvJob              *job,
 		 EvViewPresentation *pview)
 {
-	EvJobRenderCairo *job_render = EV_JOB_RENDER_CAIRO (job);
-
-	if (pview->inverted_colors)
-		ev_document_misc_invert_surface (job_render->surface);
-
 	if (job != pview->curr_job)
 		return;
 
-	if (pview->animation) {
-		ev_transition_animation_set_dest_surface (pview->animation,
-							  get_surface_from_job (pview, job));
-	} else {
-		ev_view_presentation_transition_start (pview);
-		gtk_widget_queue_draw (GTK_WIDGET (pview));
-	}
+	ev_view_presentation_update_current_texture (pview,
+			get_texture_from_job (pview, job));
+
+	ev_view_presentation_animation_start (pview);
 }
 
 static EvJob *
@@ -375,7 +346,7 @@ ev_view_presentation_schedule_new_job (EvViewPresentation *pview,
 	gint device_scale = gtk_widget_get_scale_factor (GTK_WIDGET (pview));
 	view_width *= device_scale;
 	view_height *= device_scale;
-	job = ev_job_render_cairo_new (pview->document, page, pview->rotation, 0.,
+	job = ev_job_render_texture_new (pview->document, page, pview->rotation, 0.,
 				       view_width, view_height);
 	g_signal_connect (job, "finished",
 			  G_CALLBACK (job_finished_cb),
@@ -417,6 +388,21 @@ ev_view_presentation_reset_jobs (EvViewPresentation *pview)
 }
 
 static void
+ev_view_presentation_update_current_texture (EvViewPresentation *pview,
+					     GdkTexture    *texture)
+{
+	if (!texture || pview->current_texture == texture)
+		return;
+
+	g_object_ref (texture);
+
+	g_clear_object (&pview->previous_texture);
+
+	pview->previous_texture = pview->current_texture;
+	pview->current_texture = texture;
+}
+
+static void
 ev_view_presentation_update_current_page (EvViewPresentation *pview,
 					  guint               page)
 {
@@ -426,7 +412,7 @@ ev_view_presentation_update_current_page (EvViewPresentation *pview,
 		return;
 
 	ev_view_presentation_animation_cancel (pview);
-	ev_view_presentation_animation_start (pview, page);
+	ev_view_presentation_transition_stop (pview);
 
 	jump = page - pview->current_page;
 
@@ -462,7 +448,9 @@ ev_view_presentation_update_current_page (EvViewPresentation *pview,
 		else
 			ev_job_scheduler_update_job (pview->curr_job, EV_JOB_PRIORITY_URGENT);
 		pview->next_job = ev_view_presentation_schedule_new_job (pview, page + 1, EV_JOB_PRIORITY_HIGH);
-		ev_job_scheduler_update_job (pview->prev_job, EV_JOB_PRIORITY_LOW);
+
+		if (pview->prev_job)
+			ev_job_scheduler_update_job (pview->prev_job, EV_JOB_PRIORITY_LOW);
 
 		break;
 	case -2:
@@ -505,6 +493,7 @@ ev_view_presentation_update_current_page (EvViewPresentation *pview,
 	}
 
 	if (pview->current_page != page) {
+		pview->previous_page = pview->current_page;
 		pview->current_page = page;
 		g_object_notify (G_OBJECT (pview), "current-page");
 	}
@@ -519,8 +508,12 @@ ev_view_presentation_update_current_page (EvViewPresentation *pview,
 		ev_view_presentation_set_cursor_for_location (pview, x, y);
 	}
 
-	if (EV_JOB_RENDER_CAIRO (pview->curr_job)->surface)
-		gtk_widget_queue_draw (GTK_WIDGET (pview));
+	if (EV_JOB_RENDER_TEXTURE (pview->curr_job)->texture) {
+		ev_view_presentation_update_current_texture (pview,
+				EV_JOB_RENDER_TEXTURE (pview->curr_job)->texture);
+
+		ev_view_presentation_animation_start (pview);
+	}
 }
 
 static void
@@ -586,80 +579,22 @@ ev_view_presentation_previous_page (EvViewPresentation *pview)
 }
 
 /* Goto Window */
-#define KEY_IS_NUMERIC(keyval) \
-	((keyval >= GDK_KEY_0 && keyval <= GDK_KEY_9) || (keyval >= GDK_KEY_KP_0 && keyval <= GDK_KEY_KP_9))
-
-/* Cut and paste from gtkwindow.c */
-static void
-send_focus_change (GtkWidget *widget,
-		   gboolean   in)
+static int
+key_to_digit (int keyval)
 {
-	GdkEvent *fevent = gdk_event_new (GDK_FOCUS_CHANGE);
+	if (keyval >= GDK_KEY_0 && keyval <= GDK_KEY_9)
+		return keyval - GDK_KEY_0;
 
-	fevent->focus_change.type = GDK_FOCUS_CHANGE;
-	fevent->focus_change.window = gtk_widget_get_window (widget);
-	fevent->focus_change.in = in;
-	if (fevent->focus_change.window)
-		g_object_ref (fevent->focus_change.window);
+	if (keyval >= GDK_KEY_KP_0 && keyval <= GDK_KEY_KP_9)
+		return keyval - GDK_KEY_KP_0;
 
-	gtk_widget_send_focus_change (widget, fevent);
-
-	gdk_event_free (fevent);
-}
-
-static void
-ev_view_presentation_goto_window_hide (EvViewPresentation *pview)
-{
-	/* send focus-in event */
-	send_focus_change (pview->goto_entry, FALSE);
-	gtk_widget_hide (pview->goto_window);
-	gtk_entry_set_text (GTK_ENTRY (pview->goto_entry), "");
+	return -1;
 }
 
 static gboolean
-ev_view_presentation_goto_window_delete_event (GtkWidget          *widget,
-					       GdkEventAny        *event,
-					       EvViewPresentation *pview)
+key_is_numeric (int keyval)
 {
-	ev_view_presentation_goto_window_hide (pview);
-
-	return TRUE;
-}
-
-static gboolean
-ev_view_presentation_goto_window_key_press_event (GtkWidget          *widget,
-						  GdkEventKey        *event,
-						  EvViewPresentation *pview)
-{
-	switch (event->keyval) {
-	case GDK_KEY_Escape:
-	case GDK_KEY_Tab:
-	case GDK_KEY_KP_Tab:
-	case GDK_KEY_ISO_Left_Tab:
-		ev_view_presentation_goto_window_hide (pview);
-		return TRUE;
-	case GDK_KEY_Return:
-	case GDK_KEY_KP_Enter:
-	case GDK_KEY_ISO_Enter:
-	case GDK_KEY_BackSpace:
-	case GDK_KEY_Delete:
-		return FALSE;
-	default:
-		if (!KEY_IS_NUMERIC (event->keyval))
-			return TRUE;
-	}
-
-	return FALSE;
-}
-
-static gboolean
-ev_view_presentation_goto_window_button_press_event (GtkWidget          *widget,
-						     GdkEventButton     *event,
-						     EvViewPresentation *pview)
-{
-	ev_view_presentation_goto_window_hide (pview);
-
-	return TRUE;
+	return key_to_digit (keyval) >= 0;
 }
 
 static void
@@ -669,101 +604,43 @@ ev_view_presentation_goto_entry_activate (GtkEntry           *entry,
 	const gchar *text;
 	gint         page;
 
-	text = gtk_entry_get_text (entry);
+	text = gtk_editable_get_text (GTK_EDITABLE (entry));
 	page = atoi (text) - 1;
 
-	ev_view_presentation_goto_window_hide (pview);
+	gtk_popover_popdown (GTK_POPOVER (pview->goto_popup));
 	ev_view_presentation_update_current_page (pview, page);
 }
+
 
 static void
 ev_view_presentation_goto_window_create (EvViewPresentation *pview)
 {
-	GtkWidget *frame, *hbox, *label;
-	GtkWindow *toplevel, *goto_window;
+	GtkWidget *hbox, *label;
 
-	toplevel = GTK_WINDOW (gtk_widget_get_toplevel (GTK_WIDGET (pview)));
-
-	if (pview->goto_window) {
-                goto_window = GTK_WINDOW (pview->goto_window);
-		if (gtk_window_has_group (toplevel))
-			gtk_window_group_add_window (gtk_window_get_group (toplevel), goto_window);
-		else if (gtk_window_has_group (goto_window))
-			gtk_window_group_remove_window (gtk_window_get_group (goto_window), goto_window);
-
-		return;
-	}
-
-	pview->goto_window = gtk_window_new (GTK_WINDOW_POPUP);
-        goto_window = GTK_WINDOW (pview->goto_window);
-	gtk_window_set_screen (goto_window, gtk_widget_get_screen (GTK_WIDGET (pview)));
-	gtk_window_set_transient_for (goto_window, toplevel);
-
-	if (gtk_window_has_group (toplevel))
-		gtk_window_group_add_window (gtk_window_get_group (toplevel), goto_window);
-
-	gtk_window_set_modal (goto_window, TRUE);
-
-	g_signal_connect (pview->goto_window, "delete_event",
-			  G_CALLBACK (ev_view_presentation_goto_window_delete_event),
-			  pview);
-	g_signal_connect (pview->goto_window, "key_press_event",
-			  G_CALLBACK (ev_view_presentation_goto_window_key_press_event),
-			  pview);
-	g_signal_connect (pview->goto_window, "button_press_event",
-			  G_CALLBACK (ev_view_presentation_goto_window_button_press_event),
-			  pview);
-
-	frame = gtk_frame_new (NULL);
-	gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_ETCHED_IN);
-	gtk_container_add (GTK_CONTAINER (pview->goto_window), frame);
-	gtk_widget_show (frame);
+	pview->goto_popup = gtk_popover_new ();
+	gtk_popover_set_position (GTK_POPOVER (pview->goto_popup), GTK_POS_BOTTOM);
+	gtk_popover_set_has_arrow (GTK_POPOVER (pview->goto_popup), FALSE);
+	gtk_widget_set_halign (pview->goto_popup, GTK_ALIGN_START);
+	gtk_widget_set_parent (pview->goto_popup, GTK_WIDGET (pview));
 
 	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
-	gtk_container_set_border_width (GTK_CONTAINER (hbox), 3);
-	gtk_container_add (GTK_CONTAINER (frame), hbox);
-	gtk_widget_show (hbox);
+	gtk_box_set_spacing (GTK_BOX (hbox), 3);
+	gtk_widget_set_margin_top (hbox, 3);
+	gtk_widget_set_margin_bottom (hbox, 3);
+	gtk_widget_set_margin_start (hbox, 3);
+	gtk_widget_set_margin_end (hbox, 3);
+	gtk_popover_set_child (GTK_POPOVER (pview->goto_popup), hbox);
 
 	label = gtk_label_new (_("Jump to page:"));
-	gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 3);
-	gtk_widget_show (label);
-	gtk_widget_realize (label);
+	gtk_box_append (GTK_BOX (hbox), label);
 
 	pview->goto_entry = gtk_entry_new ();
+
+	gtk_box_append (GTK_BOX (hbox), pview->goto_entry);
+
 	g_signal_connect (pview->goto_entry, "activate",
 			  G_CALLBACK (ev_view_presentation_goto_entry_activate),
 			  pview);
-	gtk_box_pack_start (GTK_BOX (hbox), pview->goto_entry, TRUE, TRUE, 0);
-	gtk_widget_show (pview->goto_entry);
-	gtk_widget_realize (pview->goto_entry);
-}
-
-static void
-ev_view_presentation_goto_entry_grab_focus (EvViewPresentation *pview)
-{
-	GtkWidgetClass *entry_parent_class;
-
-	entry_parent_class = g_type_class_peek_parent (GTK_ENTRY_GET_CLASS (pview->goto_entry));
-	(entry_parent_class->grab_focus) (pview->goto_entry);
-
-	send_focus_change (pview->goto_entry, TRUE);
-}
-
-static void
-ev_view_presentation_goto_window_send_key_event (EvViewPresentation *pview,
-						 GdkEvent           *event)
-{
-	GdkEventKey *new_event;
-
-	new_event = (GdkEventKey *) gdk_event_copy (event);
-	g_object_unref (new_event->window);
-	new_event->window = gtk_widget_get_window (pview->goto_window);
-	if (new_event->window)
-		g_object_ref (new_event->window);
-	gtk_widget_realize (pview->goto_window);
-
-	gtk_widget_event (pview->goto_window, (GdkEvent *)new_event);
-	gdk_event_free ((GdkEvent *)new_event);
 }
 
 /* Links */
@@ -890,23 +767,18 @@ static void
 ev_view_presentation_set_cursor (EvViewPresentation *pview,
 				 EvViewCursor        view_cursor)
 {
-	GtkWidget  *widget;
-	GdkCursor  *cursor;
+	GtkWidget  *widget = GTK_WIDGET (pview);
 
 	if (pview->cursor == view_cursor)
 		return;
 
-	widget = GTK_WIDGET (pview);
 	if (!gtk_widget_get_realized (widget))
 		gtk_widget_realize (widget);
 
 	pview->cursor = view_cursor;
 
-	cursor = ev_view_cursor_new (gtk_widget_get_display (widget), view_cursor);
-	gdk_window_set_cursor (gtk_widget_get_window (widget), cursor);
-	gdk_display_flush (gtk_widget_get_display (widget));
-	if (cursor)
-		g_object_unref (cursor);
+	gtk_widget_set_cursor_from_name (widget,
+			ev_view_cursor_name (view_cursor));
 }
 
 static void
@@ -946,60 +818,27 @@ ev_view_presentation_hide_cursor_timeout_start (EvViewPresentation *pview)
 }
 
 static void
-ev_view_presentation_update_current_surface (EvViewPresentation *pview,
-					     cairo_surface_t    *surface)
-{
-	if (!surface || pview->current_surface == surface)
-		return;
-
-	cairo_surface_reference (surface);
-	if (pview->current_surface)
-		cairo_surface_destroy (pview->current_surface);
-	pview->current_surface = surface;
-}
-
-static void
 ev_view_presentation_dispose (GObject *object)
 {
 	EvViewPresentation *pview = EV_VIEW_PRESENTATION (object);
 
 	g_clear_object (&pview->document);
 
-	ev_view_presentation_animation_cancel (pview);
 	ev_view_presentation_transition_stop (pview);
 	ev_view_presentation_hide_cursor_timeout_stop (pview);
         ev_view_presentation_reset_jobs (pview);
 
-	g_clear_pointer (&pview->current_surface, cairo_surface_destroy);
+	g_clear_object (&pview->current_texture);
 	g_clear_object (&pview->page_cache);
+	g_clear_object (&pview->previous_texture);
 
-	if (pview->goto_window) {
-		g_clear_pointer (&pview->goto_window, gtk_widget_destroy);
-		pview->goto_entry = NULL;
-	}
+	g_clear_pointer (&pview->goto_popup, gtk_widget_unparent);
 
 	G_OBJECT_CLASS (ev_view_presentation_parent_class)->dispose (object);
 }
 
 static void
-ev_view_presentation_get_preferred_width (GtkWidget *widget,
-                                          gint      *minimum,
-                                          gint      *natural)
-{
-        *minimum = *natural = 0;
-}
-
-static void
-ev_view_presentation_get_preferred_height (GtkWidget *widget,
-                                           gint      *minimum,
-                                           gint      *natural)
-{
-        *minimum = *natural = 0;
-}
-
-static void
-ev_view_presentation_draw_end_page (EvViewPresentation *pview,
-                                    cairo_t *cr)
+ev_view_presentation_snapshot_end_page (EvViewPresentation *pview, GtkSnapshot *snapshot)
 {
 	GtkWidget *widget = GTK_WIDGET (pview);
 	PangoLayout *layout;
@@ -1021,109 +860,208 @@ ev_view_presentation_draw_end_page (EvViewPresentation *pview,
 	pango_layout_set_font_description (layout, font_desc);
 	pango_layout_get_pixel_size (layout, &text_width, &text_height);
 	x_center = gtk_widget_get_allocated_width (widget) / 2 - text_width / 2;
-	gtk_render_layout (gtk_widget_get_style_context (widget), cr, x_center, 15, layout);
+
+	gtk_snapshot_render_layout (snapshot, gtk_widget_get_style_context (widget),
+				x_center, 15, layout);
 
 	pango_font_description_free (font_desc);
 	g_object_unref (layout);
 }
 
-static gboolean
-ev_view_presentation_draw (GtkWidget *widget,
-                           cairo_t   *cr)
+static GskGLShader *
+ev_view_presentation_load_shader (EvTransitionEffectType type)
+{
+	static const char *shader_resources[] = {
+		[EV_TRANSITION_EFFECT_REPLACE] = NULL,
+		[EV_TRANSITION_EFFECT_SPLIT] = "/org/gnome/evince/shader/split.glsl",
+		[EV_TRANSITION_EFFECT_WIPE] = "/org/gnome/evince/shader/wipe.glsl",
+		[EV_TRANSITION_EFFECT_COVER] = "/org/gnome/evince/shader/cover.glsl",
+		[EV_TRANSITION_EFFECT_UNCOVER] = "/org/gnome/evince/shader/uncover.glsl",
+		[EV_TRANSITION_EFFECT_DISSOLVE] = "/org/gnome/evince/shader/dissolve.glsl",
+		[EV_TRANSITION_EFFECT_PUSH] = "/org/gnome/evince/shader/push.glsl",
+		[EV_TRANSITION_EFFECT_BOX] = "/org/gnome/evince/shader/box.glsl",
+		[EV_TRANSITION_EFFECT_BLINDS] = "/org/gnome/evince/shader/blinds.glsl",
+		[EV_TRANSITION_EFFECT_FLY] = "/org/gnome/evince/shader/fly.glsl",
+		[EV_TRANSITION_EFFECT_GLITTER] = "/org/gnome/evince/shader/glitter.glsl",
+		[EV_TRANSITION_EFFECT_FADE] = "/org/gnome/evince/shader/fade.glsl",
+	};
+
+	static GskGLShader *shaders[G_N_ELEMENTS (shader_resources)] = {};
+
+	if (type >= G_N_ELEMENTS (shader_resources) || !shader_resources[type])
+		return NULL;
+
+	if (!shaders[type]) {
+		shaders[type] = gsk_gl_shader_new_from_resource (shader_resources[type]);
+		g_assert (shaders[type] != NULL);
+	}
+
+	return shaders[type];
+}
+
+static GBytes *
+ev_view_presentation_build_shader_args (GskGLShader *shader,
+					EvTransitionEffect *effect,
+					gdouble progress)
+{
+	GskShaderArgsBuilder *builder = gsk_shader_args_builder_new (shader, NULL);
+	EvTransitionEffectType type;
+	EvTransitionEffectAlignment alignment;
+	EvTransitionEffectDirection direction;
+	gint angle;
+	gdouble scale;
+
+	g_object_get (effect, "type", &type, NULL);
+
+	switch (type) {
+	case EV_TRANSITION_EFFECT_SPLIT:
+		g_object_get (effect, "direction", &direction,
+				"alignment", &alignment, NULL);
+		gsk_shader_args_builder_set_int (builder, 1, direction);
+		gsk_shader_args_builder_set_int (builder, 2, alignment);
+		break;
+	case EV_TRANSITION_EFFECT_WIPE:
+	case EV_TRANSITION_EFFECT_PUSH:
+	case EV_TRANSITION_EFFECT_COVER:
+	case EV_TRANSITION_EFFECT_UNCOVER:
+	case EV_TRANSITION_EFFECT_GLITTER:
+		g_object_get (effect, "angle", &angle, NULL);
+		gsk_shader_args_builder_set_int (builder, 1, angle);
+		break;
+	case EV_TRANSITION_EFFECT_BOX:
+		g_object_get (effect, "direction", &direction, NULL);
+		gsk_shader_args_builder_set_int (builder, 1, direction);
+		break;
+	case EV_TRANSITION_EFFECT_BLINDS:
+		g_object_get (effect, "alignment", &alignment, NULL);
+		gsk_shader_args_builder_set_int (builder, 1, alignment);
+		break;
+	case EV_TRANSITION_EFFECT_FLY:
+		g_object_get (effect, "angle", &angle,
+				"scale", &scale, NULL);
+		gsk_shader_args_builder_set_int (builder, 1, angle);
+		gsk_shader_args_builder_set_float (builder, 2, scale);
+		break;
+	default:
+		g_assert_not_reached ();
+	}
+
+	gsk_shader_args_builder_set_float (builder, 0, progress);
+
+	return gsk_shader_args_builder_free_to_args (builder);
+}
+
+static void
+ev_view_presentation_animation_snapshot (EvViewPresentation *pview,
+					 GtkSnapshot *snapshot,
+					 graphene_rect_t *area)
+{
+	GtkNative *native = gtk_widget_get_native (GTK_WIDGET (pview));
+	GskRenderer *renderer = gtk_native_get_renderer (native);
+	GskGLShader *shader;
+	double duration;
+	EvTransitionEffectType type;
+	GError *error = NULL;
+
+	int width = gtk_widget_get_width (GTK_WIDGET (pview));
+	int height = gtk_widget_get_height (GTK_WIDGET (pview));
+
+	EvTransitionEffect *effect = ev_document_transition_get_effect (
+					EV_DOCUMENT_TRANSITION (pview->document),
+					pview->current_page);
+	g_object_get (effect, "duration-real", &duration, "type", &type, NULL);
+
+	shader = ev_view_presentation_load_shader (type);
+
+	gdouble progress = pview->transition_time / duration;
+
+	if (shader && gsk_gl_shader_compile (shader, renderer, &error)) {
+		gtk_snapshot_push_gl_shader (snapshot, shader, &GRAPHENE_RECT_INIT (0, 0, width, height),
+					ev_view_presentation_build_shader_args (shader, effect, progress));
+
+		// TODO: handle different page size
+		if (pview->previous_texture)
+			gtk_snapshot_append_texture (snapshot, pview->previous_texture, area);
+		else
+			gtk_snapshot_append_color (snapshot, &(GdkRGBA){0., 0., 0., 1.}, area);
+
+		gtk_snapshot_gl_shader_pop_texture (snapshot); /* current child */
+
+		gtk_snapshot_append_texture (snapshot, pview->current_texture, area);
+		gtk_snapshot_gl_shader_pop_texture (snapshot); /* next child */
+		gtk_snapshot_pop(snapshot);
+	} else {
+		if (error)
+			g_warning ("failed to compile shader '%s'\n", error->message);
+		else if (type != EV_TRANSITION_EFFECT_REPLACE)
+			g_warning ("shader for type %d is not implemented\n", type);
+
+		gtk_snapshot_append_texture (snapshot, pview->current_texture, area);
+	}
+
+	g_clear_pointer (&error, g_error_free);
+}
+
+static void ev_view_presentation_snapshot(GtkWidget *widget, GtkSnapshot *snapshot)
 {
 	EvViewPresentation *pview = EV_VIEW_PRESENTATION (widget);
+	GtkStyleContext    *context = gtk_widget_get_style_context (widget);
 	GdkRectangle        page_area;
-	GdkRectangle        overlap;
-	cairo_surface_t    *surface;
-        GdkRectangle        clip_rect;
-	GtkStyleContext    *context;
+	graphene_rect_t     area;
 
-	context = gtk_widget_get_style_context (GTK_WIDGET (pview));
-	gtk_render_background (context, cr,
-                               0, 0,
-                               gtk_widget_get_allocated_width (widget),
-                               gtk_widget_get_allocated_height (widget));
-
-        if (!gdk_cairo_get_clip_rectangle (cr, &clip_rect))
-                return FALSE;
+	gtk_snapshot_render_background (snapshot, context, 0, 0,
+                               gtk_widget_get_width (widget),
+                               gtk_widget_get_height (widget));
 
 	switch (pview->state) {
 	case EV_PRESENTATION_END:
-		ev_view_presentation_draw_end_page (pview, cr);
-		return FALSE;
+		ev_view_presentation_snapshot_end_page (pview, snapshot);
+		return;
 	case EV_PRESENTATION_BLACK:
 	case EV_PRESENTATION_WHITE:
-		return FALSE;
+		return;
 	case EV_PRESENTATION_NORMAL:
 		break;
 	}
 
-	if (pview->animation) {
-		if (ev_transition_animation_ready (pview->animation)) {
-			ev_view_presentation_get_page_area (pview, &page_area);
-
-                        cairo_save (cr);
-
-			/* normalize to x=0, y=0 */
-			cairo_translate (cr, page_area.x, page_area.y);
-			page_area.x = page_area.y = 0;
-
-			/* Try to fix rounding errors */
-			page_area.width--;
-
-			ev_transition_animation_paint (pview->animation, cr, page_area);
-
-                        cairo_restore (cr);
-		}
-
-                if (pview->animation_finished) {
-                        ev_view_presentation_animation_cancel (pview);
-                        pview->animation_finished = FALSE;
-                }
-
-		return TRUE;
+	if (!pview->curr_job) {
+		ev_view_presentation_update_current_page (pview, pview->current_page);
+		ev_view_presentation_hide_cursor_timeout_start (pview);
+		return;
 	}
 
-	surface = get_surface_from_job (pview, pview->curr_job);
-	if (surface) {
-		ev_view_presentation_update_current_surface (pview, surface);
-	} else if (pview->current_surface) {
-		surface = pview->current_surface;
-	} else {
-		return FALSE;
-	}
+	if (!pview->current_texture)
+		return;
 
 	ev_view_presentation_get_page_area (pview, &page_area);
-	if (gdk_rectangle_intersect (&page_area, &clip_rect, &overlap)) {
-                cairo_save (cr);
+	area = GRAPHENE_RECT_INIT (page_area.x, page_area.y,
+				   page_area.width, page_area.height);
 
-		/* Try to fix rounding errors. See bug #438760 */
-		if (overlap.width == page_area.width)
-			overlap.width--;
-
-		cairo_rectangle (cr, overlap.x, overlap.y, overlap.width, overlap.height);
-		cairo_set_source_surface (cr, surface, page_area.x, page_area.y);
-		cairo_fill (cr);
-
-                cairo_restore (cr);
+	if (pview->inverted_colors) {
+		gtk_snapshot_push_blend (snapshot, GSK_BLEND_MODE_DIFFERENCE);
+		gtk_snapshot_append_color (snapshot, &(GdkRGBA) { 1., 1., 1., 1.}, &area);
+		gtk_snapshot_pop (snapshot);
 	}
 
-	return FALSE;
+	if (EV_IS_DOCUMENT_TRANSITION (pview->document))
+		ev_view_presentation_animation_snapshot (pview, snapshot, &area);
+	else
+		gtk_snapshot_append_texture (snapshot, pview->current_texture, &area);
+
+	if (pview->inverted_colors)
+		gtk_snapshot_pop (snapshot);
 }
 
 static gboolean
-ev_view_presentation_key_press_event (GtkWidget   *widget,
-				      GdkEventKey *event)
+ev_view_presentation_key_press_event (GtkEventControllerKey *self,
+				      guint keyval,
+				      guint keycode,
+				      GdkModifierType state,
+				      GtkWidget *widget)
 {
 	EvViewPresentation *pview = EV_VIEW_PRESENTATION (widget);
 
-	if (pview->state == EV_PRESENTATION_END)
-                return gtk_bindings_activate_event (G_OBJECT (widget), event);
-
-        if (event->state & GDK_CONTROL_MASK)
-                return gtk_bindings_activate_event (G_OBJECT (widget), event);
-
-	switch (event->keyval) {
+	switch (keyval) {
 	case GDK_KEY_b:
 	case GDK_KEY_B:
 	case GDK_KEY_period:
@@ -1164,30 +1102,37 @@ ev_view_presentation_key_press_event (GtkWidget   *widget,
 
 	ev_view_presentation_set_normal (pview);
 
-	if (ev_document_get_n_pages (pview->document) > 1 && KEY_IS_NUMERIC (event->keyval)) {
+	if (ev_document_get_n_pages (pview->document) > 1 && key_is_numeric (keyval)) {
 		gint x, y;
+		gchar *digit = g_strdup_printf ("%d", key_to_digit (keyval));
 
-		ev_view_presentation_goto_window_create (pview);
 		ev_document_misc_get_pointer_position (GTK_WIDGET (pview), &x, &y);
-		gtk_window_move (GTK_WINDOW (pview->goto_window), x, y);
-		gtk_widget_show (pview->goto_window);
-		ev_view_presentation_goto_window_send_key_event (pview, (GdkEvent *)event);
-		ev_view_presentation_goto_entry_grab_focus (pview);
+		gtk_popover_set_pointing_to (GTK_POPOVER (pview->goto_popup),
+				&(GdkRectangle) {x, y, 1, 1});
 
+		gtk_editable_set_text (GTK_EDITABLE (pview->goto_entry), digit);
+		gtk_editable_set_position (GTK_EDITABLE (pview->goto_entry), -1);
+		gtk_entry_grab_focus_without_selecting (GTK_ENTRY (pview->goto_entry));
+		gtk_popover_popup (GTK_POPOVER (pview->goto_popup));
+		g_free (digit);
 		return TRUE;
 	}
 
-	return gtk_bindings_activate_event (G_OBJECT (widget), event);
+	return FALSE;
 }
 
 static gboolean
-ev_view_presentation_button_release_event (GtkWidget      *widget,
-					   GdkEventButton *event)
+ev_view_presentation_button_release_event (GtkGestureClick    *self,
+					   gint		       n_press,
+					   gdouble             x,
+					   gdouble             y,
+					   GtkWidget          *widget)
 {
 	EvViewPresentation *pview = EV_VIEW_PRESENTATION (widget);
+	GdkEvent *event = gtk_event_controller_get_current_event (GTK_EVENT_CONTROLLER (self));
 
-	switch (event->button) {
-	case 1: {
+	switch (gdk_button_event_get_button (event)) {
+	case GDK_BUTTON_PRIMARY: {
 		EvLink *link;
 
 		if (pview->state == EV_PRESENTATION_END) {
@@ -1196,16 +1141,14 @@ ev_view_presentation_button_release_event (GtkWidget      *widget,
 			return FALSE;
 		}
 
-		link = ev_view_presentation_get_link_at_location (pview,
-								  event->x,
-								  event->y);
+		link = ev_view_presentation_get_link_at_location (pview, x, y);
 		if (link)
 			ev_view_presentation_handle_link (pview, link);
 		else
 			ev_view_presentation_next_page (pview);
 	}
 		break;
-	case 3:
+	case GDK_BUTTON_SECONDARY:
 		ev_view_presentation_previous_page (pview);
 		break;
 	default:
@@ -1215,104 +1158,16 @@ ev_view_presentation_button_release_event (GtkWidget      *widget,
 	return FALSE;
 }
 
-static gint
-ev_view_presentation_focus_out (GtkWidget     *widget,
-				GdkEventFocus *event)
-{
-	EvViewPresentation *pview = EV_VIEW_PRESENTATION (widget);
-
-	if (pview->goto_window)
-		ev_view_presentation_goto_window_hide (pview);
-
-	return FALSE;
-}
-
-static gboolean
-ev_view_presentation_motion_notify_event (GtkWidget      *widget,
-					  GdkEventMotion *event)
+static void
+ev_view_presentation_motion_notify_event (GtkEventControllerMotion	*self,
+					  gdouble			 x,
+					  gdouble			 y,
+					  GtkWidget			*widget)
 {
 	EvViewPresentation *pview = EV_VIEW_PRESENTATION (widget);
 
 	ev_view_presentation_hide_cursor_timeout_start (pview);
-	ev_view_presentation_set_cursor_for_location (pview, event->x, event->y);
-
-	return FALSE;
-}
-
-static void
-ev_view_presentation_update_monitor_geometry (EvViewPresentation *pview)
-{
-	GdkDisplay  *display;
-	GdkWindow   *window;
-	GdkMonitor  *monitor;
-	GdkRectangle geometry;
-
-	display = gtk_widget_get_display (GTK_WIDGET (pview));
-	window = gtk_widget_get_window (GTK_WIDGET (pview));
-	monitor = gdk_display_get_monitor_at_window (display, window);
-	gdk_monitor_get_geometry (monitor, &geometry);
-
-	pview->monitor_width = geometry.width;
-	pview->monitor_height = geometry.height;
-
-#if GTK_CHECK_VERSION(3, 24, 9) && !GTK_CHECK_VERSION(3, 24, 42) && defined (GDK_WINDOWING_WAYLAND)
-	if (GDK_IS_WAYLAND_DISPLAY (display)) {
-		/* See Evince issue #1365 and GTK regression gtk#2599 */
-		int scale_factor = gdk_monitor_get_scale_factor (monitor);
-		pview->monitor_width = geometry.width / scale_factor;
-		pview->monitor_height = geometry.height / scale_factor;
-	}
-#endif
-}
-
-static void
-init_presentation (GtkWidget *widget)
-{
-	EvViewPresentation *pview = EV_VIEW_PRESENTATION (widget);
-
-	ev_view_presentation_update_monitor_geometry (pview);
-
-	ev_view_presentation_update_current_page (pview, pview->current_page);
-	ev_view_presentation_hide_cursor_timeout_start (pview);
-}
-
-static void
-ev_view_presentation_realize (GtkWidget *widget)
-{
-	GdkWindow     *window;
-	GdkWindowAttr  attributes;
-	GtkAllocation  allocation;
-
-	gtk_widget_set_realized (widget, TRUE);
-
-	attributes.window_type = GDK_WINDOW_CHILD;
-	attributes.wclass = GDK_INPUT_OUTPUT;
-	attributes.visual = gtk_widget_get_visual (widget);
-
-	gtk_widget_get_allocation (widget, &allocation);
-	attributes.x = allocation.x;
-	attributes.y = allocation.y;
-	attributes.width = allocation.width;
-	attributes.height = allocation.height;
-	attributes.event_mask = GDK_EXPOSURE_MASK |
-		GDK_BUTTON_PRESS_MASK |
-		GDK_BUTTON_RELEASE_MASK |
-		GDK_SCROLL_MASK |
-		GDK_KEY_PRESS_MASK |
-		GDK_POINTER_MOTION_MASK |
-		GDK_POINTER_MOTION_HINT_MASK |
-		GDK_ENTER_NOTIFY_MASK |
-		GDK_LEAVE_NOTIFY_MASK;
-
-	window = gdk_window_new (gtk_widget_get_parent_window (widget),
-				 &attributes,
-				 GDK_WA_X | GDK_WA_Y |
-				 GDK_WA_VISUAL);
-
-	gdk_window_set_user_data (window, widget);
-	gtk_widget_set_window (widget, window);
-
-	g_idle_add_once ((GSourceOnceFunc)init_presentation, widget);
+	ev_view_presentation_set_cursor_for_location (pview, x, y);
 }
 
 static void
@@ -1332,17 +1187,19 @@ ev_view_presentation_change_page (EvViewPresentation *pview,
 }
 
 static gboolean
-ev_view_presentation_scroll_event (GtkWidget      *widget,
-				   GdkEventScroll *event)
+ev_view_presentation_scroll_event (GtkEventControllerScroll *self,
+				   gdouble dx,
+				   gdouble dy,
+				   EvViewPresentation *pview)
 {
-	EvViewPresentation *pview = EV_VIEW_PRESENTATION (widget);
-	guint               state;
-
-	state = event->state & gtk_accelerator_get_default_mod_mask ();
+	GtkEventController *controller = GTK_EVENT_CONTROLLER (self);
+	GdkEvent *event = gtk_event_controller_get_current_event (controller);
+	guint state = gtk_event_controller_get_current_event_state (controller)
+			& gtk_accelerator_get_default_mod_mask ();
 	if (state != 0)
 		return FALSE;
 
-	switch (event->direction) {
+	switch (gdk_scroll_event_get_direction (event)) {
 	case GDK_SCROLL_DOWN:
 	case GDK_SCROLL_RIGHT:
 		ev_view_presentation_change_page (pview, GTK_SCROLL_PAGE_FORWARD);
@@ -1360,19 +1217,17 @@ ev_view_presentation_scroll_event (GtkWidget      *widget,
 
 
 static void
-add_change_page_binding_keypad (GtkBindingSet  *binding_set,
+add_change_page_binding_keypad (GtkWidgetClass *widget_class,
 				guint           keyval,
 				GdkModifierType modifiers,
 				GtkScrollType   scroll)
 {
 	guint keypad_keyval = keyval - GDK_KEY_Left + GDK_KEY_KP_Left;
 
-	gtk_binding_entry_add_signal (binding_set, keyval, modifiers,
-				      "change_page", 1,
-				      GTK_TYPE_SCROLL_TYPE, scroll);
-	gtk_binding_entry_add_signal (binding_set, keypad_keyval, modifiers,
-				      "change_page", 1,
-				      GTK_TYPE_SCROLL_TYPE, scroll);
+	gtk_widget_class_add_binding_signal (widget_class, keyval, modifiers,
+					"change_page", "(i)", scroll);
+	gtk_widget_class_add_binding_signal (widget_class, keypad_keyval, modifiers,
+					"change_page", "(i)", scroll);
 }
 
 static void
@@ -1386,7 +1241,6 @@ ev_view_presentation_set_property (GObject      *object,
 	switch (prop_id) {
 	case PROP_DOCUMENT:
 		pview->document = g_value_dup_object (value);
-		pview->enable_animations = EV_IS_DOCUMENT_TRANSITION (pview->document);
 		break;
 	case PROP_CURRENT_PAGE:
 		ev_view_presentation_set_current_page (pview, g_value_get_uint (value));
@@ -1428,7 +1282,6 @@ ev_view_presentation_notify_scale_factor (EvViewPresentation *pview)
         if (!gtk_widget_get_realized (GTK_WIDGET (pview)))
                 return;
 
-        ev_view_presentation_update_monitor_geometry (pview);
         ev_view_presentation_reset_jobs (pview);
         ev_view_presentation_update_current_page (pview, pview->current_page);
 }
@@ -1459,25 +1312,32 @@ ev_view_presentation_constructor (GType                  type,
 }
 
 static void
+ev_view_presentation_size_allocate (GtkWidget	*widget,
+				    int		 width,
+				    int		 height,
+				    int		 baseline)
+{
+	EvViewPresentation *pview = EV_VIEW_PRESENTATION (widget);
+	GtkWidgetClass *parent_class = GTK_WIDGET_CLASS (
+		ev_view_presentation_parent_class);
+	parent_class->size_allocate (widget, width, height, baseline);
+
+	if (pview->goto_popup)
+		gtk_popover_present (GTK_POPOVER (pview->goto_popup));
+}
+
+static void
 ev_view_presentation_class_init (EvViewPresentationClass *klass)
 {
 	GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
 	GObjectClass   *gobject_class = G_OBJECT_CLASS (klass);
-	GtkBindingSet  *binding_set;
 
 	klass->change_page = ev_view_presentation_change_page;
 
         gobject_class->dispose = ev_view_presentation_dispose;
 
-	widget_class->get_preferred_width = ev_view_presentation_get_preferred_width;
-	widget_class->get_preferred_height = ev_view_presentation_get_preferred_height;
-	widget_class->realize = ev_view_presentation_realize;
-        widget_class->draw = ev_view_presentation_draw;
-	widget_class->key_press_event = ev_view_presentation_key_press_event;
-	widget_class->button_release_event = ev_view_presentation_button_release_event;
-	widget_class->focus_out_event = ev_view_presentation_focus_out;
-	widget_class->motion_notify_event = ev_view_presentation_motion_notify_event;
-	widget_class->scroll_event = ev_view_presentation_scroll_event;
+	widget_class->snapshot = ev_view_presentation_snapshot;
+	widget_class->size_allocate = ev_view_presentation_size_allocate;
 
 	gtk_widget_class_set_css_name (widget_class, "evpresentationview");
 
@@ -1550,45 +1410,64 @@ ev_view_presentation_class_init (EvViewPresentationClass *klass)
                               G_TYPE_NONE, 1,
                               G_TYPE_OBJECT);
 
-	binding_set = gtk_binding_set_by_class (klass);
-	add_change_page_binding_keypad (binding_set, GDK_KEY_Left,  0, GTK_SCROLL_PAGE_BACKWARD);
-	add_change_page_binding_keypad (binding_set, GDK_KEY_Right, 0, GTK_SCROLL_PAGE_FORWARD);
-	add_change_page_binding_keypad (binding_set, GDK_KEY_Up,    0, GTK_SCROLL_PAGE_BACKWARD);
-	add_change_page_binding_keypad (binding_set, GDK_KEY_Down,  0, GTK_SCROLL_PAGE_FORWARD);
-	gtk_binding_entry_add_signal (binding_set, GDK_KEY_space, 0,
-				      "change_page", 1,
-				      GTK_TYPE_SCROLL_TYPE, GTK_SCROLL_PAGE_FORWARD);
-	gtk_binding_entry_add_signal (binding_set, GDK_KEY_space, GDK_SHIFT_MASK,
-				      "change_page", 1,
-				      GTK_TYPE_SCROLL_TYPE, GTK_SCROLL_PAGE_BACKWARD);
-	gtk_binding_entry_add_signal (binding_set, GDK_KEY_BackSpace, 0,
-				      "change_page", 1,
-				      GTK_TYPE_SCROLL_TYPE, GTK_SCROLL_PAGE_BACKWARD);
-	gtk_binding_entry_add_signal (binding_set, GDK_KEY_Page_Down, 0,
-				      "change_page", 1,
-				      GTK_TYPE_SCROLL_TYPE, GTK_SCROLL_PAGE_FORWARD);
-	gtk_binding_entry_add_signal (binding_set, GDK_KEY_Page_Up, 0,
-				      "change_page", 1,
-				      GTK_TYPE_SCROLL_TYPE, GTK_SCROLL_PAGE_BACKWARD);
-	gtk_binding_entry_add_signal (binding_set, GDK_KEY_J, 0,
-				      "change_page", 1,
-				      GTK_TYPE_SCROLL_TYPE, GTK_SCROLL_PAGE_FORWARD);
-	gtk_binding_entry_add_signal (binding_set, GDK_KEY_H, 0,
-				      "change_page", 1,
-				      GTK_TYPE_SCROLL_TYPE, GTK_SCROLL_PAGE_BACKWARD);
-	gtk_binding_entry_add_signal (binding_set, GDK_KEY_L, 0,
-				      "change_page", 1,
-				      GTK_TYPE_SCROLL_TYPE, GTK_SCROLL_PAGE_FORWARD);
-	gtk_binding_entry_add_signal (binding_set, GDK_KEY_K, 0,
-				      "change_page", 1,
-				      GTK_TYPE_SCROLL_TYPE, GTK_SCROLL_PAGE_BACKWARD);
+	add_change_page_binding_keypad (widget_class, GDK_KEY_Left,  0, GTK_SCROLL_PAGE_BACKWARD);
+	add_change_page_binding_keypad (widget_class, GDK_KEY_Right, 0, GTK_SCROLL_PAGE_FORWARD);
+	add_change_page_binding_keypad (widget_class, GDK_KEY_Up,    0, GTK_SCROLL_PAGE_BACKWARD);
+	add_change_page_binding_keypad (widget_class, GDK_KEY_Down,  0, GTK_SCROLL_PAGE_FORWARD);
+
+	gtk_widget_class_add_binding_signal (widget_class, GDK_KEY_space, 0,
+			"change_page", "(i)", GTK_SCROLL_PAGE_FORWARD);
+	gtk_widget_class_add_binding_signal (widget_class, GDK_KEY_space, 0,
+			"change_page", "(i)", GTK_SCROLL_PAGE_FORWARD);
+	gtk_widget_class_add_binding_signal (widget_class, GDK_KEY_space, GDK_SHIFT_MASK,
+			"change_page", "(i)", GTK_SCROLL_PAGE_BACKWARD);
+	gtk_widget_class_add_binding_signal (widget_class, GDK_KEY_BackSpace, 0,
+			"change_page", "(i)", GTK_SCROLL_PAGE_BACKWARD);
+	gtk_widget_class_add_binding_signal (widget_class, GDK_KEY_Page_Down, 0,
+			"change_page", "(i)", GTK_SCROLL_PAGE_FORWARD);
+	gtk_widget_class_add_binding_signal (widget_class, GDK_KEY_Page_Up, 0,
+			"change_page", "(i)", GTK_SCROLL_PAGE_BACKWARD);
+	gtk_widget_class_add_binding_signal (widget_class, GDK_KEY_J, 0,
+			"change_page", "(i)", GTK_SCROLL_PAGE_FORWARD);
+	gtk_widget_class_add_binding_signal (widget_class, GDK_KEY_H, 0,
+			"change_page", "(i)", GTK_SCROLL_PAGE_BACKWARD);
+	gtk_widget_class_add_binding_signal (widget_class, GDK_KEY_L, 0,
+			"change_page", "(i)", GTK_SCROLL_PAGE_FORWARD);
+	gtk_widget_class_add_binding_signal (widget_class, GDK_KEY_K, 0,
+			"change_page", "(i)", GTK_SCROLL_PAGE_BACKWARD);
 }
 
 static void
 ev_view_presentation_init (EvViewPresentation *pview)
 {
-	gtk_widget_set_can_focus (GTK_WIDGET (pview), TRUE);
-        pview->is_constructing = TRUE;
+	GtkWidget *widget = GTK_WIDGET (pview);
+	GtkEventController *controller;
+
+	gtk_widget_set_can_focus (widget, TRUE);
+	gtk_widget_set_focusable (widget, TRUE);
+	pview->is_constructing = TRUE;
+
+	controller = gtk_event_controller_scroll_new (GTK_EVENT_CONTROLLER_SCROLL_VERTICAL);
+	g_signal_connect (G_OBJECT (controller), "scroll",
+			G_CALLBACK (ev_view_presentation_scroll_event), widget);
+	gtk_widget_add_controller (widget, controller);
+
+	controller = gtk_event_controller_key_new ();
+	g_signal_connect (G_OBJECT (controller), "key-pressed",
+			G_CALLBACK (ev_view_presentation_key_press_event), widget);
+	gtk_widget_add_controller (widget, controller);
+
+	controller = gtk_event_controller_motion_new ();
+	g_signal_connect (G_OBJECT (controller), "motion",
+			G_CALLBACK (ev_view_presentation_motion_notify_event), widget);
+	gtk_widget_add_controller (widget, controller);
+
+	controller = GTK_EVENT_CONTROLLER (gtk_gesture_click_new ());
+	g_signal_connect (G_OBJECT (controller), "released",
+			G_CALLBACK (ev_view_presentation_button_release_event), widget);
+	gtk_widget_add_controller (widget, controller);
+
+	ev_view_presentation_goto_window_create (pview);
 }
 
 GtkWidget *
