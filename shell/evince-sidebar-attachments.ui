@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk" version="4.0"/>
+  <requires lib="libadwaita" version="1.0"/>
+  <template class="EvSidebarAttachments" parent="GtkBox">
+    <property name="orientation">vertical</property>
+    <child type="start">
+      <object class="GtkScrolledWindow" id="swindow">
+        <property name="valign">fill</property>
+        <property name="vexpand">True</property>
+        <property name="hscrollbar-policy">never</property>
+        <property name="vscrollbar-policy">automatic</property>
+
+        <child>
+          <object class="GtkIconView" id="icon_view">
+            <property name="model">model</property>
+            <property name="selection-mode">multiple</property>
+            <property name="columns">-1</property>
+            <property name="pixbuf-column">0</property>
+            <property name="text-column">1</property>
+            <property name="tooltip-column">2</property>
+          </object>
+        </child>
+      </object>
+    </child>
+
+    <child type="end">
+      <object class="GtkBox" id="hbox">
+        <property name="orientation">horizontal</property>
+        <!-- <property name="margin">6</property> -->
+        <property name="halign">center</property>
+        <child>
+          <object class="GtkButton" id="add_button">
+            <property name="icon-name">list-add-symbolic</property>
+            <property name="sensitive">False</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkButton" id="del_button">
+            <property name="icon-name">list-remove-symbolic</property>
+            <property name="sensitive">False</property>
+          </object>
+        </child>
+      </object>
+    </child>
+
+  </template>
+  <object class="GtkListStore" id="model">
+    <columns>
+      <column type="GdkPixbuf" />
+      <column type="gchararray" />
+      <column type="gchararray" />
+      <column type="EvAttachment" />
+    </columns>
+  </object>
+</interface>
