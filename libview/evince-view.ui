@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <template class="EvView" parent="GtkWidget">
+    <style>
+      <class name="content-view" />
+      <class name="view" />
+    </style>
+    <property name="has-tooltip">True</property>
+    <property name="can-focus">True</property>
+    <property name="focusable">True</property>
+    <signal name="notify::scale-factor" handler="notify_scale_factor_cb" />
+
+    <child>
+      <object class="GtkGestureClick">
+        <property name="button">0</property>
+        <signal name="pressed" handler="ev_view_button_press_event" />
+        <signal name="released" handler="ev_view_button_release_event" />
+      </object>
+    </child>
+    <child>
+      <object class="GtkEventControllerMotion">
+        <signal name="motion" handler="ev_view_motion_notify_event" />
+        <signal name="enter" handler="ev_view_enter_notify_event" />
+        <signal name="leave" handler="ev_view_leave_notify_event" />
+      </object>
+    </child>
+    <child>
+      <object class="GtkEventControllerScroll">
+        <signal name="scroll" handler="ev_view_scroll_event" />
+      </object>
+    </child>
+    <child>
+      <object class="GtkEventControllerFocus">
+        <signal name="enter" handler="ev_view_focus_in" />
+        <signal name="leave" handler="ev_view_focus_out" />
+      </object>
+    </child>
+    <child>
+      <object class="GtkGestureZoom" id="zoom_gesture">
+        <property name="propagation-phase">capture</property>
+        <signal name="begin" handler="zoom_gesture_begin_cb" />
+        <signal name="scale-changed" handler="zoom_gesture_scale_changed_cb" />
+      </object>
+    </child>
+    <child>
+      <object class="GtkGestureDrag">
+        <!-- GTK_BUTTON_MIDDLE -->
+        <property name="button">2</property>
+        <signal name="drag-begin" handler="middle_clicked_drag_begin_cb" />
+        <signal name="drag-end" handler="middle_clicked_drag_end_cb" />
+        <signal name="drag-update" handler="middle_clicked_drag_update_cb" />
+      </object>
+    </child>
+    <child>
+      <object class="GtkGesturePan" id="pan_gesture">
+        <property name="orientation">horizontal</property>
+        <property name="propagation-phase">capture</property>
+        <property name="touch-only">True</property>
+        <signal name="pan" handler="pan_gesture_pan_cb" />
+        <signal name="end" handler="pan_gesture_end_cb" />
+      </object>
+    </child>
+    <child>
+      <!-- DnD for text selection and image -->
+      <object class="GtkDragSource">
+        <signal name="prepare" handler="drag_prepare_cb" />
+      </object>
+    </child>
+  </template>
+</interface>
