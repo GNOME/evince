@@ -36,6 +36,13 @@
 
 #define DRAG_HISTORY 10
 
+struct GdkPoint {
+  gint x;
+  gint y;
+};
+
+typedef struct GdkPoint GdkPoint;
+
 /* Information for middle clicking and moving around the doc */
 typedef struct {
         gboolean in_drag;
@@ -54,11 +61,12 @@ typedef struct {
 	gboolean autoscrolling;
 	guint last_y;
 	guint start_y;
-	guint timeout_id;	
+	guint timeout_id;
 } AutoScrollInfo;
 
 /* Information for handling selection */
 typedef struct {
+	gboolean in_select;
 	gboolean in_drag;
 	GdkPoint start;
 	GList *selections;
@@ -86,10 +94,6 @@ typedef struct {
 	/* Current position */
 	gint       x;
 	gint       y;
-
-	/* EvView root position */
-	gint       parent_x;
-	gint       parent_y;
 
 	/* Document coords */
 	gdouble    orig_x;
@@ -141,7 +145,7 @@ typedef struct {
 } EvLinkPreview;
 
 struct _EvView {
-	GtkContainer layout;
+	GtkWidget parent;
 
 	/* Container */
 	GList *children;
@@ -176,7 +180,7 @@ struct _EvView {
 	guint vscroll_policy : 1;
 
 	gint scroll_x;
-	gint scroll_y;	
+	gint scroll_y;
 
 	guint update_cursor_idle_id;
 
@@ -187,7 +191,7 @@ struct _EvView {
 	EvPoint       pending_point;
 
 	/* Current geometry */
-    
+
 	gint start_page;
 	gint end_page;
 	gint current_page;
@@ -216,7 +220,7 @@ struct _EvView {
 
 	/* Information for middle clicking and dragging around. */
 	DragInfo drag_info;
-	
+
 	/* Autoscrolling */
 	AutoScrollInfo scroll_info;
 
@@ -249,9 +253,6 @@ struct _EvView {
 	/* Synctex */
 	EvMapping *synctex_result;
 
-	/* Accessibility */
-	AtkObject *accessible;
-
 	/* Caret navigation */
 	gboolean caret_enabled;
 	gint     cursor_offset;
@@ -276,7 +277,7 @@ struct _EvView {
 };
 
 struct _EvViewClass {
-	GtkContainerClass parent_class;
+	GtkWidgetClass parent_class;
 
         void     (*scroll)            (EvView         *view,
 				       GtkScrollType   scroll,
