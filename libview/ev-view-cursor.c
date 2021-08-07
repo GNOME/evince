@@ -19,37 +19,22 @@
 
 #include "ev-view-cursor.h"
 
-GdkCursor *
-ev_view_cursor_new (GdkDisplay  *display,
-		    EvViewCursor new_cursor)
+static const gchar *cursors[] = {
+	[EV_VIEW_CURSOR_NORMAL]		= NULL,
+	[EV_VIEW_CURSOR_IBEAM]		= "text",
+	[EV_VIEW_CURSOR_LINK]		= "pointer",
+	[EV_VIEW_CURSOR_WAIT]		= "wait",
+	[EV_VIEW_CURSOR_HIDDEN]		= "none",
+	[EV_VIEW_CURSOR_DRAG]		= "grabbing",
+	[EV_VIEW_CURSOR_AUTOSCROLL]	= "move",
+	[EV_VIEW_CURSOR_ADD]		= "crosshair",
+};
+
+const gchar *
+ev_view_cursor_name (EvViewCursor cursor)
 {
-	GdkCursor *cursor = NULL;
+	if (cursor < sizeof (cursors) / sizeof (cursors[0]))
+		return cursors[cursor];
 
-	switch (new_cursor) {
-	case EV_VIEW_CURSOR_NORMAL:
-		break;
-	case EV_VIEW_CURSOR_IBEAM:
-		cursor = gdk_cursor_new_for_display (display, GDK_XTERM);
-		break;
-	case EV_VIEW_CURSOR_LINK:
-		cursor = gdk_cursor_new_for_display (display, GDK_HAND2);
-		break;
-	case EV_VIEW_CURSOR_WAIT:
-		cursor = gdk_cursor_new_for_display (display, GDK_WATCH);
-		break;
-	case EV_VIEW_CURSOR_HIDDEN:
-		cursor = gdk_cursor_new_for_display (display, GDK_BLANK_CURSOR);
-		break;
-	case EV_VIEW_CURSOR_DRAG:
-		cursor = gdk_cursor_new_for_display (display, GDK_FLEUR);
-		break;
-	case EV_VIEW_CURSOR_AUTOSCROLL:
-		cursor = gdk_cursor_new_for_display (display, GDK_DOUBLE_ARROW);
-		break;
-	case EV_VIEW_CURSOR_ADD:
-		cursor = gdk_cursor_new_for_display (display, GDK_PLUS);
-		break;
-	}
-
-	return cursor;
+	return NULL;
 }
