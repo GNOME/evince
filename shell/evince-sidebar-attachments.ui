@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk" version="4.0"/>
+  <template class="EvSidebarAttachments" parent="GtkBox">
+    <property name="name">ev-sidebar-attachments</property>
+    <property name="orientation">vertical</property>
+    <child type="start">
+      <object class="GtkScrolledWindow" id="swindow">
+        <property name="valign">fill</property>
+        <property name="vexpand">True</property>
+        <property name="hscrollbar-policy">never</property>
+        <property name="vscrollbar-policy">automatic</property>
+
+        <child>
+          <object class="GtkIconView" id="icon_view">
+            <property name="model">model</property>
+            <property name="selection-mode">multiple</property>
+            <property name="columns">-1</property>
+            <property name="tooltip-column">2</property>
+            <signal name="item-activated" handler="icon_view_item_activated_cb" />
+
+            <child>
+              <object class="GtkCellRendererPixbuf">
+                <property name="xalign">0.5</property>
+                <property name="yalign">0.5</property>
+                <property name="icon-size">large</property>
+              </object>
+              <attributes>
+                <attribute name="gicon">0</attribute>
+              </attributes>
+            </child>
+            <child>
+              <object class="GtkCellRendererText">
+                <property name="xalign">0.5</property>
+              </object>
+              <attributes>
+                <attribute name="text">1</attribute>
+              </attributes>
+            </child>
+            <child>
+              <object class="GtkGestureClick">
+                <property name="button">3</property>
+                <signal name="pressed" handler="secondary_button_clicked_cb" />
+              </object>
+            </child>
+            <child>
+              <object class="GtkDragSource">
+                <signal name="prepare" handler="ev_sidebar_attachments_drag_prepare" />
+              </object>
+            </child>
+            <child>
+              <object class="GtkDropTarget">
+                <property name="formats">GFile</property>
+                <property name="actions">copy</property>
+                <signal name="drop" handler="ev_sidebar_attachments_drop_cb" />
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+
+    <child type="end">
+      <object class="GtkBox" id="hbox">
+        <property name="orientation">horizontal</property>
+        <property name="margin-top">6</property>
+        <property name="margin-bottom">6</property>
+        <property name="margin-start">6</property>
+        <property name="margin-end">6</property>
+        <property name="halign">center</property>
+        <child>
+          <object class="GtkButton" id="add_button">
+            <property name="icon-name">list-add-symbolic</property>
+            <property name="sensitive">False</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkButton" id="del_button">
+            <property name="icon-name">list-remove-symbolic</property>
+            <property name="sensitive">False</property>
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+
+  <object class="GtkListStore" id="model">
+    <columns>
+      <column type="GIcon" />
+      <column type="gchararray" />
+      <column type="gchararray" />
+      <column type="EvAttachment" />
+    </columns>
+  </object>
+</interface>

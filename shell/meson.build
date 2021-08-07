@@ -41,6 +41,18 @@ evince_sources += gnome.compile_resources(
   c_name: ev_code_prefix.to_lower(),
 )
 
+marshal = 'ev-shell-marshal'
+
+marshal_sources = gnome.genmarshal(
+  marshal,
+  sources: marshal + '.list',
+  prefix: 'ev_shell_marshal',
+  internal: true,
+  extra_args: '--prototypes',
+)
+
+evince_sources += marshal_sources
+
 evince_deps = [
   gdk_pixbuf_dep,
   gnome_desktop_dep,

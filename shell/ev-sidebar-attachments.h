@@ -28,22 +28,10 @@
 
 G_BEGIN_DECLS
 
-typedef struct _EvSidebarAttachments        EvSidebarAttachments;
-typedef struct _EvSidebarAttachmentsClass   EvSidebarAttachmentsClass;
 typedef struct _EvSidebarAttachmentsPrivate EvSidebarAttachmentsPrivate;
 
 #define EV_TYPE_SIDEBAR_ATTACHMENTS              (ev_sidebar_attachments_get_type())
-#define EV_SIDEBAR_ATTACHMENTS(object)           (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_SIDEBAR_ATTACHMENTS, EvSidebarAttachments))
-#define EV_SIDEBAR_ATTACHMENTS_CLASS(klass)      (G_TYPE_CHECK_CLASS_CAST((klass), EV_TYPE_SIDEBAR_ATTACHMENTS, EvSidebarAttachmentsClass))
-#define EV_IS_SIDEBAR_ATTACHMENTS(object)        (G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_SIDEBAR_ATTACHMENTS))
-#define EV_IS_SIDEBAR_ATTACHMENTS_CLASS(klass)   (G_TYPE_CHECK_CLASS_TYPE((klass), EV_TYPE_SIDEBAR_ATTACHMENTS))
-#define EV_SIDEBAR_ATTACHMENTS_GET_CLASS(object) (G_TYPE_INSTANCE_GET_CLASS((object), EV_TYPE_SIDEBAR_ATTACHMENTS, EvSidebarAttachmentsClass))
-
-struct _EvSidebarAttachments {
-	GtkBox base_instance;
-
-	EvSidebarAttachmentsPrivate *priv;
-};
+G_DECLARE_DERIVABLE_TYPE (EvSidebarAttachments, ev_sidebar_attachments, EV, SIDEBAR_ATTACHMENTS, GtkBox);
 
 struct _EvSidebarAttachmentsClass {
 	GtkBoxClass base_class;
@@ -56,7 +44,6 @@ struct _EvSidebarAttachmentsClass {
 	                         const char          *uri);
 };
 
-GType      ev_sidebar_attachments_get_type     (void) G_GNUC_CONST;
 GtkWidget *ev_sidebar_attachments_new          (void);
 
 G_END_DECLS
