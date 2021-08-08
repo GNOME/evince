@@ -4,7 +4,7 @@ option('platform', type: 'combo', choices: ['gnome', 'win32'], value: 'gnome', d
 option('viewer', type: 'boolean', value: true, description: 'whether Viewer support is requested')
 option('previewer', type: 'boolean', value: true, description: 'whether Previewer support is requested')
 option('thumbnailer', type: 'boolean', value: true, description: 'whether Thumbnailer support is requested')
-option('nautilus', type: 'boolean', value: true, description: 'whether Nautilus support is requested')
+option('nautilus', type: 'boolean', value: false, description: 'whether Nautilus support is requested')
 
 option('comics', type: 'feature', value: 'auto', description: 'whether Comics support is requested')
 option('djvu', type: 'feature', value: 'auto', description: 'whether DJVU support is requested')
@@ -22,7 +22,7 @@ option('keyring', type: 'feature', value: 'auto', description: 'whether keyring 
 option('gtk_unix_print', type: 'feature', value: 'auto', description: 'whether gtk+-unix-print support is requested')
 option('thumbnail_cache', type: 'feature', value: 'auto', description: 'whether GNOME Desktop (Thumbnail cache) is requested')
 option('multimedia', type: 'feature', value: 'auto', description: 'whether multimedia support is requested')
-option('gspell', type: 'feature', value: 'auto', description: 'whether gpsell support is requested')
+option('gspell', type: 'feature', value: 'disabled', description: 'whether gpsell support is requested')
 
 option('internal_synctex', type: 'combo', value: 'auto', choices : ['auto', 'true', 'false'], description: 'whether to use the internal synctex')
 
