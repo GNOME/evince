@@ -1,7 +1,3 @@
-#ev-fullscreen-toolbar {
-    -GtkToolbar-shadow-type: none;
-}
-
 #ev-loading-message {
     background-color: @theme_bg_color;
     color: @theme_fg_color;
@@ -25,11 +21,11 @@ evview:selected {
 }
 
 evview.find-results:selected {
-    background-color: alpha (@theme_selected_bg_color, 0.3);
+    background-color: alpha(blue, 0.3);
 }
 
 evview.find-results:active {
-    background-color: alpha (@theme_selected_bg_color, 0.6);
+    background-color: alpha(@accent_bg_color, 0.6);
 }
 
 evview.document-page {
@@ -48,24 +44,6 @@ evsidebarthumbnails.page-thumbnail {
 
 evsidebarthumbnails.page-thumbnail.inverted {
     background-color: black;
-}
-
-@binding-set MoveCursor {
-    unbind "<Control>p";
-    unbind "<Control>n";
-}
-
-iconview {
-    -gtk-key-bindings: MoveCursor;
-}
-
-@binding-set HorizontalScroll {
-    unbind "<Control>Right";
-    unbind "<Control>Left";
-}
-
-scrolledwindow {
-    -gtk-key-bindings: HorizontalScroll;
 }
 
 evpresentationview {
