@@ -272,8 +272,6 @@ main (int argc, char *argv[])
 	g_option_context_set_translation_domain(context, GETTEXT_PACKAGE);
 	g_option_context_add_main_entries (context, goption_options, GETTEXT_PACKAGE);
 
-	g_option_context_add_group (context, gtk_get_option_group (TRUE));
-
 	if (!g_option_context_parse (context, &argc, &argv, &error)) {
 		g_printerr ("Cannot parse arguments: %s\n", error->message);
 		g_error_free (error);
