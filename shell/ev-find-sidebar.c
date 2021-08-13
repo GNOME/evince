@@ -422,9 +422,13 @@ get_match_offset (EvRectangle *areas,
 
         do {
                 EvRectangle *area = areas + i;
+                gdouble area_y = (area->y1 + area->y2) / 2;
+                gdouble area_x = (area->x1 + area->x2) / 2;
 
                 if (x >= area->x1 && x < area->x2 &&
-                    y >= area->y1 && y <= area->y2) {
+                    y >= area->y1 && y <= area->y2 &&
+                    area_x >= match->x1 && area_x <= match->x2 &&
+                    area_y >= match->y1 && area_y <= match->y2) {
                         return i;
                 }
 
