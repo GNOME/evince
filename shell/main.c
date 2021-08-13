@@ -165,14 +165,14 @@ get_label_from_filename (const gchar *filename)
 static void
 load_files (const char **files)
 {
-	GdkScreen       *screen = gdk_screen_get_default ();
+	GdkDisplay *display = gdk_display_get_default();
 	EvWindowRunMode  mode = EV_WINDOW_MODE_NORMAL;
 	gint             i;
 	EvLinkDest      *global_dest = NULL;
 
 	if (!files || new_window) {
 		if (!ev_application_has_window (EV_APP) || new_window)
-			ev_application_open_recent_view (EV_APP, screen, GDK_CURRENT_TIME);
+			ev_application_open_recent_view (EV_APP, display, GDK_CURRENT_TIME);
 		return;
 	}
 
@@ -218,7 +218,7 @@ load_files (const char **files)
 
 
 
-		ev_application_open_uri_at_dest (EV_APP, uri, screen, dest,
+		ev_application_open_uri_at_dest (EV_APP, uri, display, dest,
 						 mode, ev_find_string,
 						 GDK_CURRENT_TIME);
 
