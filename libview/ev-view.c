@@ -4983,7 +4983,7 @@ ev_view_do_popup_menu (EvView *view,
 	if (annot)
 		items = g_list_prepend (items, annot);
 
-	g_signal_emit (view, signals[SIGNAL_POPUP_MENU], 0, items);
+	g_signal_emit (view, signals[SIGNAL_POPUP_MENU], 0, items, x, y);
 
 	g_list_free (items);
 
@@ -7982,9 +7982,11 @@ ev_view_class_init (EvViewClass *class)
 		         G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
 		         G_STRUCT_OFFSET (EvViewClass, popup_menu),
 		         NULL, NULL,
-		         g_cclosure_marshal_VOID__POINTER,
-		         G_TYPE_NONE, 1,
-			 G_TYPE_POINTER);
+		         ev_view_marshal_VOID__POINTER_DOUBLE_DOUBLE,
+		         G_TYPE_NONE, 3,
+			 G_TYPE_POINTER,
+			 G_TYPE_DOUBLE,
+			 G_TYPE_DOUBLE);
 	signals[SIGNAL_SELECTION_CHANGED] = g_signal_new ("selection-changed",
                          G_TYPE_FROM_CLASS (object_class),
                          G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
