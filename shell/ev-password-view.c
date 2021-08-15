@@ -53,8 +53,7 @@ typedef struct {
 
 static guint password_view_signals [LAST_SIGNAL] = { 0 };
 
-
-G_DEFINE_TYPE_WITH_PRIVATE (EvPasswordView, ev_password_view, GTK_TYPE_VIEWPORT)
+G_DEFINE_TYPE_WITH_PRIVATE (EvPasswordView, ev_password_view, GTK_TYPE_BOX)
 
 static void ev_password_view_clicked_cb (GtkWidget      *button,
 					 EvPasswordView *password_view);
@@ -80,6 +79,13 @@ ev_password_view_finalize (GObject *object)
 }
 
 static void
+on_clicked (GtkWidget      *button,
+			     EvPasswordView *password_view)
+{
+	ev_password_view_ask_password (password_view);
+}
+
+static void
 ev_password_view_class_init (EvPasswordViewClass *class)
 {
 	GObjectClass *g_object_class;
@@ -87,6 +93,10 @@ ev_password_view_class_init (EvPasswordViewClass *class)
 
 	g_object_class = G_OBJECT_CLASS (class);
 	widget_class = GTK_WIDGET_CLASS (class);
+
+	gtk_widget_class_set_template_from_resource (widget_class,
+				"/org/gnome/evince/ui/password-view.ui");
+	gtk_widget_class_bind_template_callback (widget_class, on_clicked);
 
 	password_view_signals[UNLOCK] =
 		g_signal_new ("unlock",
@@ -112,13 +122,6 @@ ev_password_view_class_init (EvPasswordViewClass *class)
 						 ev_password_view_clicked_cb);
 
 	g_object_class->finalize = ev_password_view_finalize;
-}
-
-static void
-ev_password_view_clicked_cb (GtkWidget      *button,
-			     EvPasswordView *password_view)
-{
-	ev_password_view_ask_password (password_view);
 }
 
 static void
@@ -166,7 +169,7 @@ ev_password_dialog_got_response (GtkDialog      *dialog,
 	if (response_id == GTK_RESPONSE_OK) {
 		g_free (priv->password);
 		priv->password =
-			g_strdup (gtk_entry_get_text (GTK_ENTRY (priv->password_entry)));
+			g_strdup (gtk_editable_get_text (GTK_EDITABLE (priv->password_entry)));
 
 		g_signal_emit (password_view, password_view_signals[UNLOCK], 0);
 	} else if (response_id == GTK_RESPONSE_CANCEL ||
@@ -175,7 +178,7 @@ ev_password_dialog_got_response (GtkDialog      *dialog,
 		g_signal_emit (password_view, password_view_signals[CANCELLED], 0);
 	}
 
-	gtk_widget_destroy (GTK_WIDGET (dialog));
+	// gtk_widget_destroy (GTK_WIDGET (dialog));
 }
 
 static void
@@ -200,7 +203,7 @@ ev_password_dialog_entry_changed_cb (GtkEditable *editable,
 {
 	const char *text;
 
-	text = gtk_entry_get_text (GTK_ENTRY (editable));
+	text = gtk_editable_get_text (GTK_EDITABLE (editable));
 
 	gtk_dialog_set_response_sensitive (GTK_DIALOG (dialog), GTK_RESPONSE_OK,
 					   (text != NULL && *text != '\0'));
@@ -247,8 +250,8 @@ ev_password_view_ask_password (EvPasswordView *password_view)
 
 	grid = gtk_grid_new ();
 	gtk_grid_set_column_spacing (GTK_GRID (grid), 12);
-	gtk_box_pack_start (GTK_BOX (message_area), grid,
-			    FALSE, FALSE, 0);
+	gtk_box_prepend (GTK_BOX (message_area), grid);
+
 	gtk_widget_set_halign (grid, GTK_ALIGN_CENTER);
 	gtk_widget_show (grid);
 
@@ -279,51 +282,50 @@ ev_password_view_ask_password (EvPasswordView *password_view)
 	if (ev_keyring_is_available ()) {
 		GtkWidget  *choice;
 		GtkWidget  *remember_box;
-		GSList     *group;
+		GtkWidget  *group;
 
 		remember_box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
-		gtk_box_pack_start (GTK_BOX (message_area), remember_box,
-				    FALSE, FALSE, 0);
+		gtk_box_prepend (GTK_BOX (message_area), remember_box);
 		gtk_widget_set_halign (remember_box, GTK_ALIGN_CENTER);
 
-		choice = gtk_radio_button_new_with_mnemonic (NULL, _("Forget password _immediately"));
-		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (choice),
+		choice = gtk_check_button_new_with_mnemonic (_("Forget password _immediately"));
+		gtk_check_button_set_active (GTK_CHECK_BUTTON (choice),
 					      priv->password_save == G_PASSWORD_SAVE_NEVER);
 		g_object_set_data (G_OBJECT (choice), "password-save",
 				   GINT_TO_POINTER (G_PASSWORD_SAVE_NEVER));
 		g_signal_connect (choice, "toggled",
 				  G_CALLBACK (ev_password_dialog_remember_button_toggled),
 				  password_view);
-		gtk_box_pack_start (GTK_BOX (remember_box), choice, FALSE, FALSE, 0);
+		gtk_box_prepend (GTK_BOX (remember_box), choice);
 
-		group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (choice));
-		choice = gtk_radio_button_new_with_mnemonic (group, _("Remember password until you _log out"));
-		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (choice),
+		group = choice;
+		choice = gtk_check_button_new_with_mnemonic (_("Remember password until you _log out"));
+		gtk_check_button_set_group (GTK_CHECK_BUTTON (choice), GTK_CHECK_BUTTON (group));
+		gtk_check_button_set_active (GTK_CHECK_BUTTON (choice),
 					      priv->password_save == G_PASSWORD_SAVE_FOR_SESSION);
 		g_object_set_data (G_OBJECT (choice), "password-save",
 				   GINT_TO_POINTER (G_PASSWORD_SAVE_FOR_SESSION));
 		g_signal_connect (choice, "toggled",
 				  G_CALLBACK (ev_password_dialog_remember_button_toggled),
 				  password_view);
-		gtk_box_pack_start (GTK_BOX (remember_box), choice, FALSE, FALSE, 0);
+		gtk_box_prepend (GTK_BOX (remember_box), choice);
 
-		group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (choice));
-		choice = gtk_radio_button_new_with_mnemonic (group, _("Remember _forever"));
-		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (choice),
+		group = choice;
+		choice = gtk_check_button_new_with_mnemonic (_("Remember _forever"));
+		gtk_check_button_set_group (GTK_CHECK_BUTTON (choice), GTK_CHECK_BUTTON (group));
+		gtk_check_button_set_active (GTK_CHECK_BUTTON (choice),
 					      priv->password_save == G_PASSWORD_SAVE_PERMANENTLY);
 		g_object_set_data (G_OBJECT (choice), "password-save",
 				   GINT_TO_POINTER (G_PASSWORD_SAVE_PERMANENTLY));
 		g_signal_connect (choice, "toggled",
 				  G_CALLBACK (ev_password_dialog_remember_button_toggled),
 				  password_view);
-		gtk_box_pack_start (GTK_BOX (remember_box), choice, FALSE, FALSE, 0);
+		gtk_box_prepend (GTK_BOX (remember_box), choice);
 	}
 
 	g_signal_connect (dialog, "response",
 			  G_CALLBACK (ev_password_dialog_got_response),
 			  password_view);
-
-	gtk_widget_show_all (GTK_WIDGET (dialog));
 }
 
 const gchar *
@@ -361,4 +363,3 @@ ev_password_view_new (GtkWindow *parent)
 
 	return GTK_WIDGET (retval);
 }
-

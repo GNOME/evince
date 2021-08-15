@@ -32,11 +32,11 @@ typedef struct _EvPasswordView        EvPasswordView;
 typedef struct _EvPasswordViewClass   EvPasswordViewClass;
 
 struct _EvPasswordView {
-	GtkViewport parent_instance;
+	GtkBox parent_instance;
 };
 
 struct _EvPasswordViewClass {
-	GtkViewportClass parent_class;
+	GtkBoxClass parent_class;
 
 	/* signals */
 	void (*unlock)    (EvPasswordView	*self);
