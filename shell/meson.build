@@ -36,6 +36,7 @@ resource_data = files(
   'evince.css',
   '../data/thumbnail-frame.png',
   'evince-menus.ui',
+  'evince-password-view.ui',
   'help-overlay.ui',
 )
 

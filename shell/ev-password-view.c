@@ -56,6 +56,9 @@ static guint password_view_signals [LAST_SIGNAL] = { 0 };
 
 G_DEFINE_TYPE_WITH_PRIVATE (EvPasswordView, ev_password_view, GTK_TYPE_VIEWPORT)
 
+static void ev_password_view_clicked_cb (GtkWidget      *button,
+					 EvPasswordView *password_view);
+
 static void
 ev_password_view_finalize (GObject *object)
 {
@@ -80,8 +83,10 @@ static void
 ev_password_view_class_init (EvPasswordViewClass *class)
 {
 	GObjectClass *g_object_class;
+	GtkWidgetClass *widget_class;
 
 	g_object_class = G_OBJECT_CLASS (class);
+	widget_class = GTK_WIDGET_CLASS (class);
 
 	password_view_signals[UNLOCK] =
 		g_signal_new ("unlock",
@@ -101,6 +106,11 @@ ev_password_view_class_init (EvPasswordViewClass *class)
 			      g_cclosure_marshal_VOID__VOID,
 			      G_TYPE_NONE, 0);
 
+	gtk_widget_class_set_template_from_resource (widget_class,
+				"/org/gnome/evince/ui/password-view.ui");
+	gtk_widget_class_bind_template_callback (widget_class,
+						 ev_password_view_clicked_cb);
+
 	g_object_class->finalize = ev_password_view_finalize;
 }
 
@@ -114,47 +124,13 @@ ev_password_view_clicked_cb (GtkWidget      *button,
 static void
 ev_password_view_init (EvPasswordView *password_view)
 {
-	GtkWidget *vbox;
-	GtkWidget *hbox;
-	GtkWidget *image;
-	GtkWidget *button;
-	GtkWidget *label;
 	EvPasswordViewPrivate *priv;
 
 	priv = ev_password_view_get_instance_private (password_view);
 
 	priv->password_save = G_PASSWORD_SAVE_NEVER;
 
-	gtk_widget_push_composite_child ();
-
-	/* set ourselves up */
-	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 24);
-	gtk_container_set_border_width (GTK_CONTAINER (vbox), 64);
-	gtk_container_add (GTK_CONTAINER (password_view), vbox);
-	gtk_widget_set_halign (vbox, GTK_ALIGN_CENTER);
-	gtk_widget_set_valign (vbox, GTK_ALIGN_CENTER);
-
-	image = gtk_image_new_from_icon_name ("dialog-password-symbolic",
-					      GTK_ICON_SIZE_DIALOG);
-	gtk_box_pack_start (GTK_BOX (vbox), image, FALSE, FALSE, 0);
-
-	label = gtk_label_new (_("This document is locked and can only be read by entering the correct password."));
-	gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
-	gtk_label_set_max_width_chars (GTK_LABEL (label), MAX_WIDHT_LABEL);
-	gtk_label_set_line_wrap_mode (GTK_LABEL (label), PANGO_WRAP_WORD_CHAR);
-
-	gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
-
-	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
-	gtk_widget_set_halign (hbox, GTK_ALIGN_CENTER);
-	gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
-
-	button = gtk_button_new_with_mnemonic (_("_Unlock Document"));
-	g_signal_connect (button, "clicked", G_CALLBACK (ev_password_view_clicked_cb), password_view);
-	gtk_box_pack_end (GTK_BOX (hbox), button, FALSE, FALSE, 0);
-
-	gtk_widget_show_all (vbox);
-	gtk_widget_pop_composite_child ();
+	gtk_widget_init_template (GTK_WIDGET (password_view));
 }
 
 /* Public functions */
@@ -186,7 +162,7 @@ ev_password_dialog_got_response (GtkDialog      *dialog,
 	priv = ev_password_view_get_instance_private (password_view);
 
 	gtk_widget_set_sensitive (GTK_WIDGET (password_view), TRUE);
-	
+
 	if (response_id == GTK_RESPONSE_OK) {
 		g_free (priv->password);
 		priv->password =
@@ -198,7 +174,7 @@ ev_password_dialog_got_response (GtkDialog      *dialog,
 		   response_id == GTK_RESPONSE_DELETE_EVENT) {
 		g_signal_emit (password_view, password_view_signals[CANCELLED], 0);
 	}
-	
+
 	gtk_widget_destroy (GTK_WIDGET (dialog));
 }
 
@@ -272,7 +248,7 @@ ev_password_view_ask_password (EvPasswordView *password_view)
 	grid = gtk_grid_new ();
 	gtk_grid_set_column_spacing (GTK_GRID (grid), 12);
 	gtk_box_pack_start (GTK_BOX (message_area), grid,
-			    FALSE, FALSE, 6);
+			    FALSE, FALSE, 0);
 	gtk_widget_set_halign (grid, GTK_ALIGN_CENTER);
 	gtk_widget_show (grid);
 
@@ -309,7 +285,6 @@ ev_password_view_ask_password (EvPasswordView *password_view)
 		gtk_box_pack_start (GTK_BOX (message_area), remember_box,
 				    FALSE, FALSE, 0);
 		gtk_widget_set_halign (remember_box, GTK_ALIGN_CENTER);
-		gtk_widget_show (remember_box);
 
 		choice = gtk_radio_button_new_with_mnemonic (NULL, _("Forget password _immediately"));
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (choice),
@@ -320,7 +295,6 @@ ev_password_view_ask_password (EvPasswordView *password_view)
 				  G_CALLBACK (ev_password_dialog_remember_button_toggled),
 				  password_view);
 		gtk_box_pack_start (GTK_BOX (remember_box), choice, FALSE, FALSE, 0);
-		gtk_widget_show (choice);
 
 		group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (choice));
 		choice = gtk_radio_button_new_with_mnemonic (group, _("Remember password until you _log out"));
@@ -332,7 +306,6 @@ ev_password_view_ask_password (EvPasswordView *password_view)
 				  G_CALLBACK (ev_password_dialog_remember_button_toggled),
 				  password_view);
 		gtk_box_pack_start (GTK_BOX (remember_box), choice, FALSE, FALSE, 0);
-		gtk_widget_show (choice);
 
 		group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (choice));
 		choice = gtk_radio_button_new_with_mnemonic (group, _("Remember _forever"));
@@ -344,14 +317,13 @@ ev_password_view_ask_password (EvPasswordView *password_view)
 				  G_CALLBACK (ev_password_dialog_remember_button_toggled),
 				  password_view);
 		gtk_box_pack_start (GTK_BOX (remember_box), choice, FALSE, FALSE, 0);
-		gtk_widget_show (choice);
 	}
 
 	g_signal_connect (dialog, "response",
 			  G_CALLBACK (ev_password_dialog_got_response),
 			  password_view);
 
-	gtk_widget_show (GTK_WIDGET (dialog));
+	gtk_widget_show_all (GTK_WIDGET (dialog));
 }
 
 const gchar *
@@ -384,6 +356,8 @@ ev_password_view_new (GtkWindow *parent)
 	priv = ev_password_view_get_instance_private (retval);
 
 	priv->parent_window = parent;
+
+	gtk_widget_show_all (GTK_WIDGET (retval));
 
 	return GTK_WIDGET (retval);
 }
