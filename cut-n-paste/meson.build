@@ -1,6 +1,7 @@
 cut_n_paste_inc = include_directories('.')
 
-subdir('gimpcellrenderertoggle')
+
+#subdir('gimpcellrenderertoggle')
 subdir('libdazzle')
 subdir('libgd')
 
