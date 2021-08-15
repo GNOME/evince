@@ -1349,10 +1349,10 @@ ev_print_operation_export_class_init (EvPrintOperationExportClass *klass)
 #include <gio/gunixfdlist.h>
 
 #ifdef GDK_WINDOWING_X11
-#include <gdk/gdkx.h>
+#include <gdk/x11/gdkx.h>
 #endif
 #ifdef GDK_WINDOWING_WAYLAND
-#include <gdk/gdkwayland.h>
+#include <gdk/wayland/gdkwayland.h>
 #endif
 
 #define EV_TYPE_PRINT_OPERATION_EXPORT_PORTAL            (ev_print_operation_export_portal_get_type())
@@ -1396,22 +1396,22 @@ static gboolean ev_gtk_window_export_handle   (GtkWindow                 *window
 
 #ifdef GDK_WINDOWING_WAYLAND
 
-typedef void (*EvGdkWaylandWindowExported) (GdkWindow  *window,
-                                            const char *handle,
-                                            gpointer    user_data);
+typedef void (*EvGdkWaylandToplevelExported) (GdkToplevel  *toplevel,
+                                              const char   *handle,
+                                              gpointer      user_data);
 
 typedef struct {
         GtkWindow *window;
         EvGtkWindowHandleExported callback;
         gpointer user_data;
-} WaylandWindowHandleExportedData;
+} WaylandSurfaceHandleExportedData;
 
 static void
-wayland_window_handle_exported_cb (GdkWindow  *window,
-                                   const char *wayland_handle_str,
-                                   gpointer    user_data)
+wayland_window_handle_exported_cb (GdkToplevel  *toplevel,
+                                   const char   *wayland_handle_str,
+                                   gpointer      user_data)
 {
-        WaylandWindowHandleExportedData *data = user_data;
+        WaylandSurfaceHandleExportedData *data = user_data;
         char *handle_str;
 
         handle_str = g_strdup_printf ("wayland:%s", wayland_handle_str);
@@ -1425,11 +1425,11 @@ ev_gtk_window_export_handle (GtkWindow                 *window,
                              EvGtkWindowHandleExported  callback,
                              gpointer                   user_data)
 {
+	GdkSurface *surface = gtk_native_get_surface (GTK_NATIVE (window));
 #ifdef GDK_WINDOWING_X11
         if (GDK_IS_X11_DISPLAY (gtk_widget_get_display (GTK_WIDGET (window)))) {
-                GdkWindow *gdk_window = gtk_widget_get_window (GTK_WIDGET (window));
                 char *handle_str;
-                guint32 xid = (guint32) gdk_x11_window_get_xid (gdk_window);
+                guint32 xid = (guint32) gdk_x11_surface_get_xid (surface);
 
                 handle_str = g_strdup_printf ("x11:%x", xid);
                 callback (window, handle_str, user_data);
@@ -1440,17 +1440,16 @@ ev_gtk_window_export_handle (GtkWindow                 *window,
 #endif
 #ifdef GDK_WINDOWING_WAYLAND
         if (GDK_IS_WAYLAND_DISPLAY (gtk_widget_get_display (GTK_WIDGET (window)))) {
-                GdkWindow *gdk_window = gtk_widget_get_window (GTK_WIDGET (window));
-                WaylandWindowHandleExportedData *data;
-                data = g_new0 (WaylandWindowHandleExportedData, 1);
+                WaylandSurfaceHandleExportedData *data;
+                data = g_new0 (WaylandSurfaceHandleExportedData, 1);
                 data->window = window;
                 data->callback = callback;
                 data->user_data = user_data;
 
-                if (!gdk_wayland_window_export_handle (gdk_window,
-                                                       wayland_window_handle_exported_cb,
-                                                       data,
-                                                       g_free)) {
+                if (!gdk_wayland_toplevel_export_handle (GDK_TOPLEVEL (surface),
+                                                         wayland_window_handle_exported_cb,
+                                                         data,
+                                                         g_free)) {
                         g_free (data);
                         return FALSE;
                 }
@@ -1971,7 +1970,7 @@ export_unix_print_dialog_response_cb (GtkDialog              *dialog,
 
 	if (response != GTK_RESPONSE_OK &&
 	    response != GTK_RESPONSE_APPLY) {
-		gtk_widget_destroy (GTK_WIDGET (dialog));
+		gtk_window_destroy (GTK_WINDOW (dialog));
 		g_signal_emit (op, signals[DONE], 0, GTK_PRINT_OPERATION_RESULT_CANCEL);
 
 		return;
@@ -1993,7 +1992,7 @@ export_unix_print_dialog_response_cb (GtkDialog              *dialog,
 
 	if ((format == EV_FILE_FORMAT_PS && !gtk_printer_accepts_ps (export_unix->printer)) ||
 	    (format == EV_FILE_FORMAT_PDF && !gtk_printer_accepts_pdf (export_unix->printer))) {
-		gtk_widget_destroy (GTK_WIDGET (dialog));
+		gtk_window_destroy (GTK_WINDOW (dialog));
 
 		g_set_error_literal (&export->error,
                                      GTK_PRINT_ERROR,
@@ -2005,7 +2004,7 @@ export_unix_print_dialog_response_cb (GtkDialog              *dialog,
 	}
 
         if (!ev_print_operation_export_mkstemp (export, format)) {
-		gtk_widget_destroy (GTK_WIDGET (dialog));
+		gtk_window_destroy (GTK_WINDOW (dialog));
 
 		g_signal_emit (op, signals[DONE], 0, GTK_PRINT_OPERATION_RESULT_ERROR);
 		return;
@@ -2026,14 +2025,14 @@ export_unix_print_dialog_response_cb (GtkDialog              *dialog,
 		gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (message_dialog),
 							  "%s", _("Your print range selection does not include any pages"));
 		g_signal_connect (message_dialog, "response",
-				  G_CALLBACK (gtk_widget_destroy),
+				  G_CALLBACK (gtk_window_destroy),
 				  NULL);
 		gtk_widget_show (message_dialog);
 
 		return;
 	}
 
-	gtk_widget_destroy (GTK_WIDGET (dialog));
+	gtk_window_destroy (GTK_WINDOW (dialog));
 
         ev_print_operation_export_prepare (export, format);
 }
@@ -2155,7 +2154,6 @@ ev_print_operation_export_unix_run_previewer (EvPrintOperationExport *export,
 
                 if (app != NULL) {
                         ctx = gdk_display_get_app_launch_context (gtk_widget_get_display (GTK_WIDGET (export_unix->parent_window)));
-                        gdk_app_launch_context_set_screen (ctx, gtk_window_get_screen (export_unix->parent_window));
 
                         g_app_info_launch (app, NULL, G_APP_LAUNCH_CONTEXT (ctx), &err);
 
@@ -2679,7 +2677,10 @@ ev_print_operation_print_create_custom_widget (EvPrintOperationPrint *print,
 	grid = gtk_grid_new ();
 	gtk_grid_set_row_spacing (GTK_GRID (grid), 6);
 	gtk_grid_set_column_spacing (GTK_GRID (grid), 12);
-	gtk_container_set_border_width (GTK_CONTAINER (grid), 12);
+	gtk_widget_set_margin_top (grid, 12);
+	gtk_widget_set_margin_bottom (grid, 12);
+	gtk_widget_set_margin_start (grid, 12);
+	gtk_widget_set_margin_end (grid, 12);
 
 	label = gtk_label_new (_("Page Scaling:"));
 	gtk_grid_attach (GTK_GRID (grid), label, 0, 0, 1, 1);
@@ -2705,7 +2706,7 @@ ev_print_operation_print_create_custom_widget (EvPrintOperationPrint *print,
 	gtk_widget_show (print->scale_combo);
 
 	print->autorotate_button = gtk_check_button_new_with_label (_("Auto Rotate and Center"));
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (print->autorotate_button), autorotate);
+	gtk_check_button_set_active (GTK_CHECK_BUTTON (print->autorotate_button), autorotate);
 	gtk_widget_set_tooltip_text (print->autorotate_button,
 		_("Rotate printer page orientation of each page to match orientation of each document page. "
 		  "Document pages will be centered within the printer page."));
@@ -2713,14 +2714,14 @@ ev_print_operation_print_create_custom_widget (EvPrintOperationPrint *print,
 	gtk_widget_show (print->autorotate_button);
 
 	print->source_button = gtk_check_button_new_with_label (_("Select page size using document page size"));
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (print->source_button), use_source_size);
+	gtk_check_button_set_active (GTK_CHECK_BUTTON (print->source_button), use_source_size);
 	gtk_widget_set_tooltip_text (print->source_button, _("When enabled, each page will be printed on "
 							     "the same size paper as the document page."));
 	gtk_grid_attach (GTK_GRID (grid), print->source_button, 0, 2, 2, 1);
 	gtk_widget_show (print->source_button);
 
 	print->borders_button = gtk_check_button_new_with_label (_("Draw border around pages"));
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (print->borders_button), draw_borders);
+	gtk_check_button_set_active (GTK_CHECK_BUTTON (print->borders_button), draw_borders);
 	gtk_widget_set_tooltip_text (print->borders_button, _("When enabled, a border will be drawn "
 							     "around each page."));
 	gtk_grid_attach (GTK_GRID (grid), print->borders_button, 0, 3, 2, 1);
@@ -2736,9 +2737,9 @@ ev_print_operation_print_custom_widget_apply (EvPrintOperationPrint *print,
 	GtkPrintSettings *settings;
 
 	print->page_scale = gtk_combo_box_get_active (GTK_COMBO_BOX (print->scale_combo));
-	print->autorotate = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (print->autorotate_button));
-	print->use_source_size = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (print->source_button));
-	print->draw_borders = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (print->borders_button));
+	print->autorotate = gtk_check_button_get_active (GTK_CHECK_BUTTON (print->autorotate_button));
+	print->use_source_size = gtk_check_button_get_active (GTK_CHECK_BUTTON (print->source_button));
+	print->draw_borders = gtk_check_button_get_active (GTK_CHECK_BUTTON (print->borders_button));
 	settings = gtk_print_operation_get_print_settings (print->op);
 	gtk_print_settings_set_int (settings, EV_PRINT_SETTING_PAGE_SCALE, print->page_scale);
 	gtk_print_settings_set_bool (settings, EV_PRINT_SETTING_AUTOROTATE, print->autorotate);
