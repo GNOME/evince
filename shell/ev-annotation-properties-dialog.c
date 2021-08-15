@@ -152,7 +152,7 @@ ev_annotation_properties_dialog_init (EvAnnotationPropertiesDialog *annot_dialog
 
 	gtk_window_set_title (GTK_WINDOW (annot_dialog), _("Annotation Properties"));
 	gtk_window_set_destroy_with_parent (GTK_WINDOW (annot_dialog), TRUE);
-	gtk_container_set_border_width (GTK_CONTAINER (annot_dialog), 5);
+	// gtk_container_set_border_width (GTK_CONTAINER (annot_dialog), 5);
 	gtk_dialog_add_buttons (dialog,
 				_("_Close"), GTK_RESPONSE_CANCEL,
 				_("_Apply"), GTK_RESPONSE_APPLY,
@@ -166,7 +166,7 @@ ev_annotation_properties_dialog_init (EvAnnotationPropertiesDialog *annot_dialog
 	annot_dialog->grid = grid;
 	gtk_grid_set_column_spacing (GTK_GRID (grid), 12);
 	gtk_grid_set_row_spacing (GTK_GRID (grid), 6);
-	gtk_box_pack_start (GTK_BOX (content_area), grid, FALSE, FALSE, 0);
+	gtk_box_prepend (GTK_BOX (content_area), grid);
 	gtk_widget_show (grid);
 
 	label = gtk_label_new (_("Author:"));
@@ -175,7 +175,8 @@ ev_annotation_properties_dialog_init (EvAnnotationPropertiesDialog *annot_dialog
 	gtk_widget_show (label);
 
 	annot_dialog->author = gtk_entry_new ();
-	gtk_entry_set_text (GTK_ENTRY (annot_dialog->author), g_get_real_name ());
+	gtk_entry_buffer_set_text (gtk_entry_get_buffer (GTK_ENTRY (annot_dialog->author)),
+			g_get_real_name (), -1);
 	gtk_grid_attach (GTK_GRID (grid), annot_dialog->author, 1, 0, 1, 1);
         gtk_widget_set_hexpand (annot_dialog->author, TRUE);
 	gtk_widget_show (annot_dialog->author);
@@ -259,7 +260,7 @@ ev_annotation_properties_dialog_new_with_annotation (EvAnnotation *annot)
 
 	label = ev_annotation_markup_get_label (EV_ANNOTATION_MARKUP (annot));
 	if (label)
-		gtk_entry_set_text (GTK_ENTRY (dialog->author), label);
+		gtk_entry_buffer_set_text (gtk_entry_get_buffer (GTK_ENTRY (dialog->author)), label, -1);
 
 	ev_annotation_get_rgba (annot, &rgba);
 	gtk_color_chooser_set_rgba (GTK_COLOR_CHOOSER (dialog->color), &rgba);
@@ -289,7 +290,7 @@ ev_annotation_properties_dialog_new_with_annotation (EvAnnotation *annot)
 const gchar *
 ev_annotation_properties_dialog_get_author (EvAnnotationPropertiesDialog *dialog)
 {
-	return gtk_entry_get_text (GTK_ENTRY (dialog->author));
+	return gtk_entry_buffer_get_text (gtk_entry_get_buffer (GTK_ENTRY (dialog->author)));
 }
 
 void
