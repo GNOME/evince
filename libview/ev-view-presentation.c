@@ -870,8 +870,8 @@ ev_view_presentation_get_link_at_location (EvViewPresentation *pview,
 }
 
 static void
-ev_vew_presentation_handle_link (EvViewPresentation *pview,
-                                 EvLink             *link)
+ev_view_presentation_handle_link (EvViewPresentation *pview,
+                                  EvLink             *link)
 {
 	EvLinkAction *action;
 
@@ -1239,7 +1239,7 @@ ev_view_presentation_button_release_event (GtkWidget      *widget,
 								  event->x,
 								  event->y);
 		if (link)
-			ev_vew_presentation_handle_link (pview, link);
+			ev_view_presentation_handle_link (pview, link);
 		else
 			ev_view_presentation_next_page (pview);
 	}
