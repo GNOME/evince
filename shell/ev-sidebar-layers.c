@@ -255,12 +255,14 @@ ev_sidebar_layers_create_tree_view (EvSidebarLayers *ev_layers)
 	g_object_set (G_OBJECT (renderer),
 		      "xpad", 0,
 		      "ypad", 0,
-		      "override-background", TRUE,
+//		      "override-background", TRUE,
 		      NULL);
 
+#if 0
 	g_signal_connect (renderer, "clicked",
 			  G_CALLBACK (ev_sidebar_layers_visibility_clicked),
 			  (gpointer)ev_layers);
+#endif
 
 
 	renderer = gtk_cell_renderer_text_new ();
@@ -450,4 +452,3 @@ ev_sidebar_layers_page_iface_init (EvSidebarPageInterface *iface)
 	iface->set_model = ev_sidebar_layers_set_model;
 	iface->get_label = ev_sidebar_layers_get_label;
 }
-
