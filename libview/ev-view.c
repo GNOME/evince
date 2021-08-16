@@ -2638,10 +2638,7 @@ ev_view_form_field_text_changed (GtkWidget   *widget,
 	gchar           *text = NULL;
 
 	if (GTK_IS_ENTRY (widget)) {
-		GtkEntryBuffer *buffer;
-
-		buffer = gtk_entry_get_buffer (GTK_ENTRY (widget));
-		text = g_strdup (gtk_entry_buffer_get_text (buffer));
+		text = g_strdup (gtk_editable_get_text (GTK_EDITABLE (widget)));
 	} else if (GTK_IS_TEXT_BUFFER (widget)) {
 		GtkTextIter start, end;
 
@@ -2705,7 +2702,7 @@ ev_view_form_field_text_create_widget (EvView      *view,
 			gtk_entry_set_visibility (GTK_ENTRY (text), !field_text->is_password);
 
 			if (txt) {
-				gtk_entry_buffer_set_text (gtk_entry_get_buffer (GTK_ENTRY (text)), txt, -1);
+				gtk_editable_set_text (GTK_EDITABLE (text), txt);
 				g_free (txt);
 			}
 
@@ -2725,13 +2722,10 @@ ev_view_form_field_text_create_widget (EvView      *view,
 #endif
 			break;
 	        case EV_FORM_FIELD_TEXT_MULTILINE: {
-			GtkTextBuffer *buffer;
-
 			text = gtk_text_view_new ();
-			buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (text));
 
 			if (txt) {
-				gtk_text_buffer_set_text (buffer, txt, -1);
+				gtk_editable_set_text (GTK_EDITABLE (text), txt);
 				g_free (txt);
 			}
 #if 0
@@ -2812,10 +2806,8 @@ ev_view_form_field_choice_changed (GtkWidget   *widget,
 
 		if (gtk_combo_box_get_has_entry (GTK_COMBO_BOX (widget))) {
 			const gchar *text;
-			GtkEntryBuffer *buffer;
 
-			buffer = gtk_entry_get_buffer (GTK_ENTRY (gtk_combo_box_get_child (GTK_COMBO_BOX (widget))));
-			text = gtk_entry_buffer_get_text (buffer);
+			text = gtk_editable_get_text (GTK_EDITABLE (gtk_combo_box_get_child (GTK_COMBO_BOX (widget))));
 			if (!field_choice->text ||
 			    (field_choice->text && g_ascii_strcasecmp (field_choice->text, text) != 0)) {
 				g_free (field_choice->text);
@@ -2979,7 +2971,7 @@ ev_view_form_field_choice_create_widget (EvView      *view,
 
 		text = ev_document_forms_form_field_choice_get_text (EV_DOCUMENT_FORMS (view->document), field);
 		if (text) {
-			gtk_entry_buffer_set_text (gtk_entry_get_buffer (GTK_ENTRY (combo_entry)), text, -1);
+			gtk_editable_set_text (GTK_EDITABLE (combo_entry), text);
 			g_free (text);
 		}
 
