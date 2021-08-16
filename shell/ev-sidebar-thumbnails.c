@@ -361,9 +361,7 @@ ev_sidebar_thumbnails_class_init (EvSidebarThumbnailsClass *ev_sidebar_thumbnail
 	widget_class->map = ev_sidebar_thumbnails_map;
         widget_class->size_allocate = ev_sidebar_thumbnails_size_allocate;
 
-#if GTK_CHECK_VERSION(3, 20, 0)
         gtk_widget_class_set_css_name (widget_class, "evsidebarthumbnails");
-#endif
 
 	g_object_class_override_property (g_object_class,
 					  PROP_WIDGET,

@@ -574,9 +574,7 @@ ev_annotation_window_class_init (EvAnnotationWindowClass *klass)
 	gtk_widget_class->focus_out_event = ev_annotation_window_focus_out_event;
         gtk_widget_class->key_press_event = ev_annotation_window_key_press_event;
 
-#if GTK_CHECK_VERSION(3, 20, 0)
 	gtk_widget_class_set_css_name (gtk_widget_class, "evannotationwindow");
-#endif
 	g_object_class_install_property (g_object_class,
 					 PROP_ANNOTATION,
 					 g_param_spec_object ("annotation",

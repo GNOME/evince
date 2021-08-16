@@ -8165,9 +8165,7 @@ ev_view_class_init (EvViewClass *class)
 	widget_class->parent_set = ev_view_parent_set;
 	widget_class->hierarchy_changed = ev_view_hierarchy_changed;
 
-#if GTK_CHECK_VERSION(3, 20, 0)
 	gtk_widget_class_set_css_name (widget_class, "evview");
-#endif
 
 	container_class->remove = ev_view_remove;
 	container_class->forall = ev_view_forall;
