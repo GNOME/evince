@@ -292,6 +292,7 @@ main (int argc, char *argv[])
         if (!ev_init ())
                 return 1;
 
+	gtk_init ();
 	ev_stock_icons_init ();
 
 	/* Manually set name and icon */
