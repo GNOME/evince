@@ -8549,7 +8549,7 @@ ev_view_init (EvView *view)
 
 	view->start_page = -1;
 	view->end_page = -1;
-	view->spacing = 5;
+	view->spacing = 14;
 	view->scale = 1.0;
 	view->current_page = 0;
 	view->pressed_button = -1;
