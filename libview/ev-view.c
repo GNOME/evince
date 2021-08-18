@@ -4891,9 +4891,7 @@ static void ev_view_snapshot(GtkWidget *widget, GtkSnapshot *snapshot)
 	height = gtk_widget_get_height(widget);
 
 	gtk_snapshot_render_background (snapshot, gtk_widget_get_style_context (widget),
-			       0, 0,
-			       gtk_widget_get_allocated_width (widget),
-			       gtk_widget_get_allocated_height (widget));
+			       0, 0, width, height);
 
 	clip_rect.x = 0;
 	clip_rect.y = 0;
@@ -4902,6 +4900,8 @@ static void ev_view_snapshot(GtkWidget *widget, GtkSnapshot *snapshot)
 
 	if (view->document == NULL)
 		return;
+
+	gtk_snapshot_push_clip (snapshot, &GRAPHENE_RECT_INIT (0, 0, width, height));
 
 	compute_border (view, &border);
 	for (i = view->start_page; i >= 0 && i <= view->end_page; i++) {
@@ -4933,6 +4933,8 @@ static void ev_view_snapshot(GtkWidget *widget, GtkSnapshot *snapshot)
 #endif
 #endif
 	}
+
+	gtk_snapshot_pop (snapshot);
 
 }
 
