@@ -4691,23 +4691,27 @@ draw_focus (EvView       *view,
 
 #ifdef EV_ENABLE_DEBUG
 static void
-stroke_view_rect (cairo_t      *cr,
+stroke_view_rect (GtkSnapshot  *snapshot,
 		  GdkRectangle *clip,
+		  GdkRGBA      *color,
 		  GdkRectangle *view_rect)
 {
 	GdkRectangle intersect;
+	GdkRGBA border_color[4] = { *color, *color, *color, *color };
+	float border_width[4] = { 1, 1, 1, 1 };
 
 	if (gdk_rectangle_intersect (view_rect, clip, &intersect)) {
-		cairo_rectangle (cr,
-				 intersect.x, intersect.y,
-				 intersect.width, intersect.height);
-		cairo_stroke (cr);
+		gtk_snapshot_append_border (snapshot,
+			&GSK_ROUNDED_RECT_INIT (intersect.x, intersect.y,
+				 intersect.width, intersect.height),
+			border_width, border_color);
 	}
 }
 
 static void
 stroke_doc_rect (EvView       *view,
-		 cairo_t      *cr,
+		 GtkSnapshot  *snapshot,
+		 GdkRGBA      *color,
 		 gint          page,
 		 GdkRectangle *clip,
 		 EvRectangle  *doc_rect)
@@ -4717,35 +4721,35 @@ stroke_doc_rect (EvView       *view,
 	_ev_view_transform_doc_rect_to_view_rect (view, page, doc_rect, &view_rect);
 	view_rect.x -= view->scroll_x;
 	view_rect.y -= view->scroll_y;
-	stroke_view_rect (cr, clip, &view_rect);
+	stroke_view_rect (snapshot, clip, color, &view_rect);
 }
 
 static void
 show_chars_border (EvView       *view,
-		   cairo_t      *cr,
+		   GtkSnapshot  *snapshot,
 		   gint          page,
 		   GdkRectangle *clip)
 {
 	EvRectangle *areas = NULL;
 	guint        n_areas = 0;
 	guint        i;
+	GdkRGBA      color = { 1, 0, 0, 1 };
 
 	ev_page_cache_get_text_layout (view->page_cache, page, &areas, &n_areas);
 	if (!areas)
 		return;
 
-	cairo_set_source_rgb (cr, 1., 0., 0.);
-
 	for (i = 0; i < n_areas; i++) {
 		EvRectangle  *doc_rect = areas + i;
 
-		stroke_doc_rect (view, cr, page, clip, doc_rect);
+		stroke_doc_rect (view, snapshot, &color, page, clip, doc_rect);
 	}
 }
 
 static void
 show_mapping_list_border (EvView        *view,
-			  cairo_t       *cr,
+			  GtkSnapshot   *snapshot,
+			  GdkRGBA       *color,
 			  gint           page,
 			  GdkRectangle  *clip,
 			  EvMappingList *mapping_list)
@@ -4755,80 +4759,79 @@ show_mapping_list_border (EvView        *view,
 	for (l = ev_mapping_list_get_list (mapping_list); l; l = g_list_next (l)) {
 		EvMapping *mapping = (EvMapping *)l->data;
 
-		stroke_doc_rect (view, cr, page, clip, &mapping->area);
+		stroke_doc_rect (view, snapshot, color, page, clip, &mapping->area);
 	}
 }
 
 static void
 show_links_border (EvView       *view,
-		   cairo_t      *cr,
+		   GtkSnapshot  *snapshot,
 		   gint          page,
 		   GdkRectangle *clip)
 {
-	cairo_set_source_rgb (cr, 0., 0., 1.);
-	show_mapping_list_border (view,cr, page, clip,
+	GdkRGBA color = { 0, 0, 1, 1 };
+	show_mapping_list_border (view, snapshot, &color, page, clip,
 				  ev_page_cache_get_link_mapping (view->page_cache, page));
 }
 
 static void
 show_forms_border (EvView       *view,
-		   cairo_t      *cr,
+		   GtkSnapshot  *snapshot,
 		   gint          page,
 		   GdkRectangle *clip)
 {
-	cairo_set_source_rgb (cr, 0., 1., 0.);
-	show_mapping_list_border (view, cr, page, clip,
+	GdkRGBA color = { 0, 1, 0, 1 };
+	show_mapping_list_border (view, snapshot, &color, page, clip,
 				  ev_page_cache_get_form_field_mapping (view->page_cache, page));
 }
 
 static void
 show_annots_border (EvView       *view,
-		    cairo_t      *cr,
+		    GtkSnapshot  *snapshot,
 		    gint          page,
 		    GdkRectangle *clip)
 {
-	cairo_set_source_rgb (cr, 0., 1., 1.);
-	show_mapping_list_border (view, cr, page, clip,
+	GdkRGBA color = { 0, 1, 1, 1 };
+	show_mapping_list_border (view, snapshot, &color, page, clip,
 				  ev_page_cache_get_annot_mapping (view->page_cache, page));
 }
 
 static void
 show_images_border (EvView       *view,
-		    cairo_t      *cr,
+		    GtkSnapshot  *snapshot,
 		    gint          page,
 		    GdkRectangle *clip)
 {
-	cairo_set_source_rgb (cr, 1., 0., 1.);
-	show_mapping_list_border (view, cr, page, clip,
+	GdkRGBA color = { 1, 0, 1, 1 };
+	show_mapping_list_border (view, snapshot, &color, page, clip,
 				  ev_page_cache_get_image_mapping (view->page_cache, page));
 }
 
 static void
 show_media_border (EvView       *view,
-		   cairo_t      *cr,
+		   GtkSnapshot  *snapshot,
 		   gint          page,
 		   GdkRectangle *clip)
 {
-	cairo_set_source_rgb (cr, 1., 1., 0.);
-	show_mapping_list_border (view, cr, page, clip,
+	GdkRGBA color = { 1, 1, 0, 1 };
+	show_mapping_list_border (view, snapshot, &color, page, clip,
 				  ev_page_cache_get_media_mapping (view->page_cache, page));
 }
 
 
 static void
 show_selections_border (EvView       *view,
-			cairo_t      *cr,
+			GtkSnapshot  *snapshot,
 			gint          page,
 			GdkRectangle *clip)
 {
 	cairo_region_t *region;
 	guint           i, n_rects;
+	GdkRGBA color = { 0.75, 0.50, 0.25, 1 };
 
 	region = ev_page_cache_get_text_mapping (view->page_cache, page);
 	if (!region)
 		return;
-
-	cairo_set_source_rgb (cr, 0.75, 0.50, 0.25);
 
 	region = cairo_region_copy (region);
 	n_rects = cairo_region_num_rectangles (region);
@@ -4844,38 +4847,33 @@ show_selections_border (EvView       *view,
 		doc_rect_float.x2 = doc_rect_int.x + doc_rect_int.width;
 		doc_rect_float.y2 = doc_rect_int.y + doc_rect_int.height;
 
-		stroke_doc_rect (view, cr, page, clip, &doc_rect_float);
+		stroke_doc_rect (view, snapshot, &color, page, clip, &doc_rect_float);
 	}
 	cairo_region_destroy (region);
 }
 
 static void
 draw_debug_borders (EvView       *view,
-		    cairo_t      *cr,
+		    GtkSnapshot  *snapshot,
 		    gint          page,
 		    GdkRectangle *clip)
 {
 	EvDebugBorders borders = ev_debug_get_debug_borders();
 
-	cairo_save (cr);
-	cairo_set_line_width (cr, 0.5);
-
 	if (borders & EV_DEBUG_BORDER_CHARS)
-		show_chars_border (view, cr, page, clip);
+		show_chars_border (view, snapshot, page, clip);
 	if (borders & EV_DEBUG_BORDER_LINKS)
-		show_links_border (view, cr, page, clip);
+		show_links_border (view, snapshot, page, clip);
 	if (borders & EV_DEBUG_BORDER_FORMS)
-		show_forms_border (view, cr, page, clip);
+		show_forms_border (view, snapshot, page, clip);
 	if (borders & EV_DEBUG_BORDER_ANNOTS)
-		show_annots_border (view, cr, page, clip);
+		show_annots_border (view, snapshot, page, clip);
 	if (borders & EV_DEBUG_BORDER_IMAGES)
-		show_images_border (view, cr, page, clip);
+		show_images_border (view, snapshot, page, clip);
 	if (borders & EV_DEBUG_BORDER_MEDIA)
-		show_media_border (view, cr, page, clip);
+		show_media_border (view, snapshot, page, clip);
 	if (borders & EV_DEBUG_BORDER_SELECTIONS)
-		show_selections_border (view, cr, page, clip);
-
-	cairo_restore (cr);
+		show_selections_border (view, snapshot, page, clip);
 }
 #endif
 
@@ -4926,11 +4924,9 @@ static void ev_view_snapshot(GtkWidget *widget, GtkSnapshot *snapshot)
 			draw_focus (view, snapshot, i, &clip_rect);
 		if (page_ready && view->synctex_result)
 			highlight_forward_search_results (view, snapshot, i);
-#if 0
 #ifdef EV_ENABLE_DEBUG
 		if (page_ready)
-			draw_debug_borders (view, cr, i, &clip_rect);
-#endif
+			draw_debug_borders (view, snapshot, i, &clip_rect);
 #endif
 	}
 
