@@ -49,10 +49,6 @@
 #include "ev-view-type-builtins.h"
 #include "ev-debug.h"
 
-#ifdef ENABLE_MULTIMEDIA
-#include "ev-media-player.h"
-#endif
-
 enum {
 	SIGNAL_SCROLL,
 	SIGNAL_HANDLE_LINK,
@@ -3108,14 +3104,13 @@ ev_view_find_player_for_media (EvView  *view,
 	for (l = view->children; l; l = g_list_next (l)) {
 		EvViewChild *child = (EvViewChild *)l->data;
 
-		if (!EV_IS_MEDIA_PLAYER (child->widget))
-			continue;
+		//if (!EV_IS_MEDIA_PLAYER (child->widget))
+		//	continue;
 
-		if (ev_media_player_get_media (EV_MEDIA_PLAYER (child->widget)) == media)
-			return TRUE;
+		//if (ev_media_player_get_media (EV_MEDIA_PLAYER (child->widget)) == media)
+		//	return TRUE;
 	}
 #endif
-
 	return FALSE;
 }
 
@@ -3129,6 +3124,7 @@ ev_view_handle_media (EvView  *view,
 	EvMapping     *mapping;
 	GdkRectangle   render_area;
 	guint          page;
+	GFile	      *uri;
 
 	page = ev_media_get_page_index (media);
 	media_mapping = ev_page_cache_get_media_mapping (view->page_cache, page);
@@ -3138,7 +3134,10 @@ ev_view_handle_media (EvView  *view,
 	if (ev_view_find_player_for_media (view, media))
 		return;
 
-	player = ev_media_player_new (media);
+	uri = g_file_new_for_uri (ev_media_get_uri (media));
+	player = gtk_video_new_for_file (uri);
+	gtk_video_set_autoplay (GTK_VIDEO (player), TRUE);
+	g_object_unref (uri);
 
 	mapping = ev_mapping_list_find (media_mapping, media);
 	_ev_view_transform_doc_rect_to_view_rect (view, page, &mapping->area, &render_area);
@@ -8126,10 +8125,6 @@ ev_view_init (EvView *view)
 	GtkStyleContext *context;
 	GtkEventController *controller;
 
-#if defined (ENABLE_MULTIMEDIA) && defined (GDK_WINDOWING_X11)
-	GdkVisual       *visual;
-#endif
-
 	// gtk_widget_set_has_window (GTK_WIDGET (view), TRUE);
 	gtk_widget_set_can_focus (GTK_WIDGET (view), TRUE);
 	gtk_widget_set_focusable (GTK_WIDGET (view), TRUE);
@@ -8139,15 +8134,6 @@ ev_view_init (EvView *view)
 	context = gtk_widget_get_style_context (GTK_WIDGET (view));
 	gtk_style_context_add_class (context, "content-view");
 	gtk_style_context_add_class (context, "view");
-
-#if defined (ENABLE_MULTIMEDIA) && defined (GDK_WINDOWING_X11)
-	/* Use always the system visual, instead of the one inherited from the
-	 * window, because gst xvimagesink doesn't work with RGBA visuals.
-	 * See https://bugzilla.gnome.org/show_bug.cgi?id=721148
-	 */
-	visual = gdk_screen_get_system_visual (gdk_screen_get_default ());
-	gtk_widget_set_visual (GTK_WIDGET (view), visual);
-#endif
 
 	view->start_page = -1;
 	view->end_page = -1;
