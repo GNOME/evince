@@ -2513,7 +2513,7 @@ ev_view_form_field_get_region (EvView      *view,
 static gboolean
 ev_view_forms_remove_widgets (EvView *view)
 {
-	// ev_view_remove_all_form_fields (view);
+	ev_view_remove_all_form_fields (view);
 
 	return FALSE;
 }
@@ -2657,26 +2657,23 @@ ev_view_form_field_text_changed (GtkWidget   *widget,
 	}
 }
 
-#if 0
-static gboolean
-ev_view_form_field_text_focus_out (GtkWidget     *widget,
-				   GdkEventFocus *event,
-				   EvView        *view)
+static void
+ev_view_form_field_text_focus_out (GtkEventControllerFocus	*self,
+				   EvView			*view)
 {
+	GtkWidget *widget = gtk_event_controller_get_widget (GTK_EVENT_CONTROLLER (self));
 	ev_view_form_field_text_save (view, widget);
-
-	return FALSE;
 }
 
-static gboolean
-ev_view_form_field_text_button_pressed (GtkWidget      *widget,
-					GdkEventButton *event,
-					gpointer        data)
+static void
+ev_view_form_field_text_button_pressed (GtkGestureClick	*self,
+					gint n_press,
+					gdouble x,
+					gdouble y,
+					gpointer user_data)
 {
-	return GDK_EVENT_STOP;
+	gtk_gesture_set_state (GTK_GESTURE (self), GTK_EVENT_SEQUENCE_CLAIMED);
 }
-
-#endif
 
 static GtkWidget *
 ev_view_form_field_text_create_widget (EvView      *view,
@@ -2686,6 +2683,7 @@ ev_view_form_field_text_create_widget (EvView      *view,
 	GtkWidget       *text = NULL;
 	gchar           *txt;
 	GtkStyleContext *context;
+	GtkEventController *controller;
 
 	txt = ev_document_forms_form_field_text_get_text (EV_DOCUMENT_FORMS (view->document),
 							  field);
@@ -2693,6 +2691,7 @@ ev_view_form_field_text_create_widget (EvView      *view,
 	switch (field_text->type) {
 	        case EV_FORM_FIELD_TEXT_FILE_SELECT:
 			/* TODO */
+			return NULL;
 	        case EV_FORM_FIELD_TEXT_NORMAL:
 			text = gtk_entry_new ();
 			gtk_entry_set_has_frame (GTK_ENTRY (text), FALSE);
@@ -2703,47 +2702,35 @@ ev_view_form_field_text_create_widget (EvView      *view,
 			gtk_entry_set_max_length (GTK_ENTRY (text), field_text->max_len);
 			gtk_entry_set_visibility (GTK_ENTRY (text), !field_text->is_password);
 
-			if (txt) {
-				gtk_editable_set_text (GTK_EDITABLE (text), txt);
-				g_free (txt);
-			}
-
-#if 0
-			g_signal_connect (text, "focus-out-event",
-					  G_CALLBACK (ev_view_form_field_text_focus_out),
-					  view);
-			g_signal_connect (text, "changed",
-					  G_CALLBACK (ev_view_form_field_text_changed),
-					  field);
 			g_signal_connect_after (text, "activate",
 						G_CALLBACK (ev_view_form_field_destroy),
 						view);
-			g_signal_connect_after (text, "button-press-event",
-						G_CALLBACK (ev_view_form_field_text_button_pressed),
-						NULL);
-#endif
 			break;
 	        case EV_FORM_FIELD_TEXT_MULTILINE: {
 			text = gtk_text_view_new ();
-
-			if (txt) {
-				gtk_editable_set_text (GTK_EDITABLE (text), txt);
-				g_free (txt);
-			}
-#if 0
-			g_signal_connect (text, "focus-out-event",
-					  G_CALLBACK (ev_view_form_field_text_focus_out),
-					  view);
-			g_signal_connect (buffer, "changed",
-					  G_CALLBACK (ev_view_form_field_text_changed),
-					  field);
-			g_signal_connect_after (text, "button-press-event",
-						G_CALLBACK (ev_view_form_field_text_button_pressed),
-						NULL);
-#endif
 		}
 			break;
 	}
+
+	if (txt) {
+		gtk_editable_set_text (GTK_EDITABLE (text), txt);
+		g_free (txt);
+	}
+
+	g_signal_connect (text, "changed",
+				G_CALLBACK (ev_view_form_field_text_changed),
+				field);
+
+	controller = GTK_EVENT_CONTROLLER (gtk_event_controller_focus_new ());
+	g_signal_connect (controller, "leave",
+				G_CALLBACK (ev_view_form_field_text_focus_out),
+				view);
+	gtk_widget_add_controller (text, controller);
+
+	controller = GTK_EVENT_CONTROLLER (gtk_gesture_click_new ());
+	g_signal_connect (controller, "pressed",
+				G_CALLBACK (ev_view_form_field_text_button_pressed), NULL);
+	gtk_widget_add_controller (text, controller);
 
 	g_object_weak_ref (G_OBJECT (text),
 			   (GWeakNotify)ev_view_form_field_text_save,
@@ -4431,6 +4418,23 @@ ev_view_size_allocate (GtkWidget      *widget,
 	view->pending_point.x = 0;
 	view->pending_point.y = 0;
 
+	for (l = view->children; l && l->data; l = g_list_next (l)) {
+		GdkRectangle view_area;
+		EvViewChild *child = (EvViewChild *)l->data;
+
+		if (!gtk_widget_get_visible (child->widget))
+			continue;
+
+		_ev_view_transform_doc_rect_to_view_rect (view, child->page, &child->doc_rect, &view_area);
+		view_area.x -= view->scroll_x;
+		view_area.y -= view->scroll_y;
+
+		gtk_widget_set_size_request (child->widget, view_area.width, view_area.height);
+		// TODO: this is a temporary solution to eliminate the warning
+		gtk_widget_measure (child->widget, GTK_ORIENTATION_HORIZONTAL, view_area.width, NULL, NULL, NULL, NULL);
+		gtk_widget_size_allocate (child->widget, &view_area, baseline);
+	}
+
 	if (view->link_preview.popover)
 		gtk_popover_present (GTK_POPOVER (view->link_preview.popover));
 }
@@ -4930,6 +4934,15 @@ static void ev_view_snapshot(GtkWidget *widget, GtkSnapshot *snapshot)
 #endif
 	}
 
+	for (GList *l = view->children; l && l->data; l = g_list_next (l)) {
+		EvViewChild *child = (EvViewChild *)l->data;
+
+		if (!gtk_widget_get_visible (child->widget))
+			continue;
+
+		gtk_widget_snapshot_child (GTK_WIDGET (view), child->widget, snapshot);
+	}
+
 	gtk_snapshot_pop (snapshot);
 
 }
@@ -4956,7 +4969,7 @@ ev_view_set_focused_element_at_location (EvView *view,
 	}
 
 	if ((field = ev_view_get_form_field_at_location (view, x, y))) {
-		// ev_view_remove_all_form_fields (view);
+		ev_view_remove_all_form_fields (view);
 		_ev_view_focus_form_field (view, field);
 		return;
 	}
@@ -5557,7 +5570,7 @@ ev_view_button_press_event (GtkGestureClick	*gesture,
 					view->moving_annot_info.cursor_offset.y = doc_point.y - current_area.y1;
 				}
 			} else if ((field = ev_view_get_form_field_at_location (view, x, y))) {
-				// ev_view_remove_all_form_fields (view);
+				ev_view_remove_all_form_fields (view);
 				ev_view_handle_form_field (view, field);
 			} else if ((link = get_link_mapping_at_location (view, x, y, &page))){
 				_ev_view_set_focused_element (view, link, page);
@@ -5571,7 +5584,7 @@ ev_view_button_press_event (GtkGestureClick	*gesture,
 				view->image_dnd_info.start.x = x + view->scroll_x;
 				view->image_dnd_info.start.y = y + view->scroll_y;
 			} else {
-				// ev_view_remove_all_form_fields (view);
+				ev_view_remove_all_form_fields (view);
 				_ev_view_set_focused_element (view, NULL, -1);
 
 				if (view->synctex_result) {
@@ -5754,26 +5767,21 @@ on_middle_clicked_drag_update (GtkGestureDrag	*self,
 	view->drag_info.buffer[0].y = y;
 }
 
-#if 0
-static void
-ev_view_remove_all (EvView *view)
+static void remove_ev_view_child (EvViewChild *child)
 {
-	gtk_container_foreach (GTK_CONTAINER (view), (GtkCallback) gtk_widget_destroy, NULL);
-}
-
-static void
-destroy_child_if_form_widget (GtkWidget *widget)
-{
-	if (g_object_get_data (G_OBJECT (widget), "form-field"))
-		gtk_widget_destroy (widget);
+	gtk_widget_unparent (child->widget);
+	g_slice_free (EvViewChild, child);
 }
 
 static void
 ev_view_remove_all_form_fields (EvView *view)
 {
-	gtk_container_foreach (GTK_CONTAINER (view), (GtkCallback)destroy_child_if_form_widget, NULL);
+	g_list_free_full (view->children, remove_ev_view_child);
+	view->children = NULL;
+	gtk_widget_queue_draw (GTK_WIDGET (view));
 }
 
+#if 0
 /*** Drag and Drop ***/
 static void
 ev_view_drag_data_get (GtkWidget        *widget,
@@ -7547,50 +7555,6 @@ ev_view_get_accessible (GtkWidget *widget)
 	if (!view->accessible)
 		view->accessible = ev_view_accessible_new (widget);
 	return view->accessible;
-}
-
-/* GtkContainer */
-static void
-ev_view_remove (GtkContainer *container,
-		GtkWidget    *widget)
-{
-	EvView *view = EV_VIEW (container);
-	GList *tmp_list = view->children;
-	EvViewChild *child;
-
-	while (tmp_list) {
-		child = tmp_list->data;
-
-		if (child->widget == widget) {
-			gtk_widget_unparent (widget);
-
-			view->children = g_list_remove_link (view->children, tmp_list);
-			g_list_free_1 (tmp_list);
-			g_slice_free (EvViewChild, child);
-
-			return;
-		}
-
-		tmp_list = tmp_list->next;
-	}
-}
-
-static void
-ev_view_forall (GtkContainer *container,
-		gboolean      include_internals,
-		GtkCallback   callback,
-		gpointer      callback_data)
-{
-	EvView *view = EV_VIEW (container);
-	GList *tmp_list = view->children;
-	EvViewChild *child;
-
-	while (tmp_list) {
-		child = tmp_list->data;
-		tmp_list = tmp_list->next;
-
-		(* callback) (child->widget, callback_data);
-	}
 }
 
 #endif
