@@ -881,9 +881,8 @@ ev_view_set_scroll_adjustment (EvView         *view,
 	g_object_notify (G_OBJECT (view), prop_name);
 }
 
-#if 0
 static void
-add_scroll_binding_keypad (GtkBindingSet  *binding_set,
+add_scroll_binding_keypad (GtkWidgetClass *widget_class,
     			   guint           keyval,
     			   GdkModifierType modifiers,
     			   GtkScrollType   scroll,
@@ -891,16 +890,11 @@ add_scroll_binding_keypad (GtkBindingSet  *binding_set,
 {
 	guint keypad_keyval = keyval - GDK_KEY_Left + GDK_KEY_KP_Left;
 
-	gtk_binding_entry_add_signal (binding_set, keyval, modifiers,
-				      "scroll", 2,
-				      GTK_TYPE_SCROLL_TYPE, scroll,
-				      GTK_TYPE_ORIENTATION, orientation);
-	gtk_binding_entry_add_signal (binding_set, keypad_keyval, modifiers,
-				      "scroll", 2,
-				      GTK_TYPE_SCROLL_TYPE, scroll,
-				      GTK_TYPE_ORIENTATION, orientation);
+	gtk_widget_class_add_binding_signal (widget_class, keyval, modifiers,
+				      "scroll", "(ii)", scroll, orientation);
+	gtk_widget_class_add_binding_signal (widget_class, keypad_keyval, modifiers,
+				      "scroll", "(ii)", scroll, orientation);
 }
-#endif
 
 static gdouble
 compute_scroll_increment (EvView        *view,
@@ -1024,7 +1018,7 @@ ev_view_scroll (EvView        *view,
 	gboolean first_page = FALSE;
 	gboolean last_page = FALSE;
 
-	if (view->key_binding_handled)
+	if (view->key_binding_handled || view->caret_enabled)
 		return;
 
 	view->jump_to_find_result = FALSE;
@@ -1133,6 +1127,9 @@ ev_view_scroll_internal (EvView        *view,
 			 GtkScrollType  scroll,
 			 GtkOrientation orientation)
 {
+	if (view->caret_enabled)
+		return;
+
 	ev_view_scroll (view, scroll, orientation == GTK_ORIENTATION_HORIZONTAL);
 }
 
@@ -3941,7 +3938,7 @@ get_caret_cursor_area (EvView       *view,
 	EvRectangle *areas = NULL;
 	EvRectangle *doc_rect;
 	guint        n_areas = 0;
-	gfloat       cursor_aspect_ratio;
+	gdouble      cursor_aspect_ratio;
 	gint         stem_width;
 
 	if (!view->caret_enabled || view->rotation != 0)
@@ -3981,11 +3978,11 @@ get_caret_cursor_area (EvView       *view,
 	area->x -= view->scroll_x;
 	area->y -= view->scroll_y;
 
-#if 0
-	gtk_style_context_get_style (gtk_widget_get_style_context (GTK_WIDGET (view)),
-				     "cursor-aspect-ratio", &cursor_aspect_ratio,
-				     NULL);
-#endif
+	g_object_get (gtk_settings_get_for_display (
+		gtk_style_context_get_display (gtk_widget_get_style_context (GTK_WIDGET (view)))),
+                "gtk-cursor-aspect-ratio", &cursor_aspect_ratio,
+                NULL);
+
 	stem_width = area->height * cursor_aspect_ratio + 1;
 	area->x -= (stem_width / 2);
 	area->width = stem_width;
@@ -4052,9 +4049,8 @@ blink_cb (EvView *view)
 		blink_time *= CURSOR_ON_MULTIPLIER;
 	}
 
-#if 0
-	view->cursor_blink_timeout_id = gdk_threads_add_timeout (blink_time / CURSOR_DIVIDER, (GSourceFunc)blink_cb, view);
-#endif
+	view->cursor_blink_timeout_id = g_timeout_add (blink_time / CURSOR_DIVIDER, (GSourceFunc)blink_cb, view);
+
 	return FALSE;
 }
 
@@ -4064,8 +4060,8 @@ ev_view_check_cursor_blink (EvView *view)
 	if (cursor_should_blink (view))	{
 		if (view->cursor_blink_timeout_id == 0) {
 			show_cursor (view);
-			//view->cursor_blink_timeout_id = gdk_threads_add_timeout (get_cursor_blink_time (view) * CURSOR_ON_MULTIPLIER / CURSOR_DIVIDER,
-			//							 (GSourceFunc)blink_cb, view);
+			view->cursor_blink_timeout_id = g_timeout_add (get_cursor_blink_time (view) * CURSOR_ON_MULTIPLIER / CURSOR_DIVIDER,
+										 (GSourceFunc)blink_cb, view);
 		}
 
 		return;
@@ -4090,8 +4086,8 @@ ev_view_pend_cursor_blink (EvView *view)
 		g_source_remove (view->cursor_blink_timeout_id);
 
 	show_cursor (view);
-	// view->cursor_blink_timeout_id = gdk_threads_add_timeout (get_cursor_blink_time (view) * CURSOR_PEND_MULTIPLIER / CURSOR_DIVIDER,
-	//							 (GSourceFunc)blink_cb, view);
+	view->cursor_blink_timeout_id = g_timeout_add (get_cursor_blink_time (view) * CURSOR_PEND_MULTIPLIER / CURSOR_DIVIDER,
+								 (GSourceFunc)blink_cb, view);
 }
 
 static void
@@ -4598,28 +4594,9 @@ static void
 get_cursor_color (GtkStyleContext *context,
 		  GdkRGBA         *color)
 {
-	GdkRGBA *caret_color;
-
-#if 0
-	gtk_style_context_get (context,
-			       gtk_style_context_get_state (context),
-			       "caret-color",
-			       &caret_color,
-			       NULL);
-
-	if (caret_color) {
-		color->red = caret_color->red;
-		color->green = caret_color->green;
-		color->blue = caret_color->blue;
-		color->alpha = caret_color->alpha;
-
-		gdk_rgba_free (caret_color);
-	} else {
-#endif
-		gtk_style_context_save (context);
-		gtk_style_context_get_color (context, color);
-		gtk_style_context_restore (context);
-	// }
+	gtk_style_context_save (context);
+	gtk_style_context_get_color (context, color);
+	gtk_style_context_restore (context);
 }
 
 /* This is based on the deprecated function gtk_draw_insertion_cursor. */
@@ -6707,7 +6684,6 @@ ev_view_move_cursor (EvView         *view,
 	GdkRectangle    prev_rect;
 	gint            prev_offset;
 	gint            prev_page;
-	cairo_region_t *damage_region;
 	gboolean        changed_page;
 	gboolean        clear_selections = FALSE;
 	const gboolean  forward = count >= 0;
@@ -6833,10 +6809,6 @@ ev_view_move_cursor (EvView         *view,
 		view->cursor_line_offset = rect.x;
 	}
 
-	damage_region = cairo_region_create_rectangle (&rect);
-	if (get_caret_cursor_area (view, prev_page, prev_offset, &prev_rect))
-		cairo_region_union_rectangle (damage_region, &prev_rect);
-
 	rect.x += view->scroll_x;
 	rect.y += view->scroll_y;
 
@@ -6846,8 +6818,6 @@ ev_view_move_cursor (EvView         *view,
 	g_signal_emit (view, signals[SIGNAL_CURSOR_MOVED], 0, view->cursor_page, view->cursor_offset);
 
 	gtk_widget_queue_draw (GTK_WIDGET (view));
-
-	cairo_region_destroy (damage_region);
 
 	/* Select text */
 	if (extend_selections && EV_IS_SELECTION (view->document)) {
@@ -6891,6 +6861,7 @@ ev_view_key_press_event (GtkWidget   *widget,
 
 	return retval;
 }
+
 
 static gboolean
 ev_view_activate_form_field (EvView      *view,
@@ -7608,9 +7579,10 @@ pan_gesture_end_cb (GtkGesture       *gesture,
 
 	view->pan_action = EV_PAN_ACTION_NONE;
 }
+#endif
 
 static void
-add_move_binding_keypad (GtkBindingSet  *binding_set,
+add_move_binding_keypad (GtkWidgetClass	*widget_class,
 			 guint           keyval,
 			 GdkModifierType modifiers,
 			 GtkMovementStep step,
@@ -7618,30 +7590,22 @@ add_move_binding_keypad (GtkBindingSet  *binding_set,
 {
 	guint keypad_keyval = keyval - GDK_KEY_Left + GDK_KEY_KP_Left;
 
-	gtk_binding_entry_add_signal (binding_set, keyval, modifiers,
-				      "move-cursor", 3,
-				      GTK_TYPE_MOVEMENT_STEP, step,
-				      G_TYPE_INT, count,
-				      G_TYPE_BOOLEAN, FALSE);
-	gtk_binding_entry_add_signal (binding_set, keypad_keyval, modifiers,
-				      "move-cursor", 3,
-				      GTK_TYPE_MOVEMENT_STEP, step,
-				      G_TYPE_INT, count,
-				      G_TYPE_BOOLEAN, FALSE);
+	gtk_widget_class_add_binding_signal (widget_class, keyval, modifiers,
+					"move-cursor", "(iib)",
+					step, count, FALSE);
+
+	gtk_widget_class_add_binding_signal (widget_class, keypad_keyval, modifiers,
+					"move-cursor", "(iib)",
+					step, count, FALSE);
 
 	/* Selection-extending version */
-	gtk_binding_entry_add_signal (binding_set, keyval, modifiers | GDK_SHIFT_MASK,
-				      "move-cursor", 3,
-				      GTK_TYPE_MOVEMENT_STEP, step,
-				      G_TYPE_INT, count,
-				      G_TYPE_BOOLEAN, TRUE);
-	gtk_binding_entry_add_signal (binding_set, keypad_keyval, modifiers | GDK_SHIFT_MASK,
-				      "move-cursor", 3,
-				      GTK_TYPE_MOVEMENT_STEP, step,
-				      G_TYPE_INT, count,
-				      G_TYPE_BOOLEAN, TRUE);
+	gtk_widget_class_add_binding_signal (widget_class, keyval, modifiers | GDK_SHIFT_MASK,
+					"move-cursor", "(iib)",
+					step, count, TRUE);
+	gtk_widget_class_add_binding_signal (widget_class, keypad_keyval, modifiers | GDK_SHIFT_MASK,
+					"move-cursor", "(iib)",
+					step, count, TRUE);
 }
-#endif
 
 static gint
 ev_view_mapping_compare (const EvMapping *a,
@@ -7886,8 +7850,8 @@ ev_view_class_init (EvViewClass *class)
 		         G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
 		         G_STRUCT_OFFSET (EvViewClass, scroll),
 		         NULL, NULL,
-		         ev_view_marshal_VOID__ENUM_ENUM,
-		         G_TYPE_NONE, 2,
+		         ev_view_marshal_BOOLEAN__ENUM_ENUM,
+		         G_TYPE_BOOLEAN, 2,
 		         GTK_TYPE_SCROLL_TYPE,
 		         GTK_TYPE_ORIENTATION);
 	signals[SIGNAL_HANDLE_LINK] = g_signal_new ("handle-link",
@@ -8003,78 +7967,64 @@ ev_view_class_init (EvViewClass *class)
 
 	// widget_class->activate_signal = signals[SIGNAL_ACTIVATE];
 
-#if 0
-	binding_set = gtk_binding_set_by_class (class);
+	add_move_binding_keypad (widget_class, GDK_KEY_Left,  0, GTK_MOVEMENT_VISUAL_POSITIONS, -1);
+	add_move_binding_keypad (widget_class, GDK_KEY_Right, 0, GTK_MOVEMENT_VISUAL_POSITIONS, 1);
+	add_move_binding_keypad (widget_class, GDK_KEY_Left,  GDK_CONTROL_MASK, GTK_MOVEMENT_WORDS, -1);
+	add_move_binding_keypad (widget_class, GDK_KEY_Right, GDK_CONTROL_MASK, GTK_MOVEMENT_WORDS, 1);
+	add_move_binding_keypad (widget_class, GDK_KEY_Up,    0, GTK_MOVEMENT_DISPLAY_LINES, -1);
+	add_move_binding_keypad (widget_class, GDK_KEY_Down,  0, GTK_MOVEMENT_DISPLAY_LINES, 1);
+	add_move_binding_keypad (widget_class, GDK_KEY_Home,  0, GTK_MOVEMENT_DISPLAY_LINE_ENDS, -1);
+	add_move_binding_keypad (widget_class, GDK_KEY_End,   0, GTK_MOVEMENT_DISPLAY_LINE_ENDS, 1);
+	add_move_binding_keypad (widget_class, GDK_KEY_Home,  GDK_CONTROL_MASK, GTK_MOVEMENT_BUFFER_ENDS, -1);
+	add_move_binding_keypad (widget_class, GDK_KEY_End,   GDK_CONTROL_MASK, GTK_MOVEMENT_BUFFER_ENDS, 1);
 
-	add_move_binding_keypad (binding_set, GDK_KEY_Left,  0, GTK_MOVEMENT_VISUAL_POSITIONS, -1);
-	add_move_binding_keypad (binding_set, GDK_KEY_Right, 0, GTK_MOVEMENT_VISUAL_POSITIONS, 1);
-	add_move_binding_keypad (binding_set, GDK_KEY_Left,  GDK_CONTROL_MASK, GTK_MOVEMENT_WORDS, -1);
-	add_move_binding_keypad (binding_set, GDK_KEY_Right, GDK_CONTROL_MASK, GTK_MOVEMENT_WORDS, 1);
-	add_move_binding_keypad (binding_set, GDK_KEY_Up,    0, GTK_MOVEMENT_DISPLAY_LINES, -1);
-	add_move_binding_keypad (binding_set, GDK_KEY_Down,  0, GTK_MOVEMENT_DISPLAY_LINES, 1);
-	add_move_binding_keypad (binding_set, GDK_KEY_Home,  0, GTK_MOVEMENT_DISPLAY_LINE_ENDS, -1);
-	add_move_binding_keypad (binding_set, GDK_KEY_End,   0, GTK_MOVEMENT_DISPLAY_LINE_ENDS, 1);
-	add_move_binding_keypad (binding_set, GDK_KEY_Home,  GDK_CONTROL_MASK, GTK_MOVEMENT_BUFFER_ENDS, -1);
-	add_move_binding_keypad (binding_set, GDK_KEY_End,   GDK_CONTROL_MASK, GTK_MOVEMENT_BUFFER_ENDS, 1);
-
-        add_scroll_binding_keypad (binding_set, GDK_KEY_Left,  0, GTK_SCROLL_STEP_BACKWARD, GTK_ORIENTATION_HORIZONTAL);
-        add_scroll_binding_keypad (binding_set, GDK_KEY_Right, 0, GTK_SCROLL_STEP_FORWARD, GTK_ORIENTATION_HORIZONTAL);
-        add_scroll_binding_keypad (binding_set, GDK_KEY_Left,  GDK_MOD1_MASK, GTK_SCROLL_STEP_DOWN, GTK_ORIENTATION_HORIZONTAL);
-        add_scroll_binding_keypad (binding_set, GDK_KEY_Right, GDK_MOD1_MASK, GTK_SCROLL_STEP_UP, GTK_ORIENTATION_HORIZONTAL);
-        add_scroll_binding_keypad (binding_set, GDK_KEY_Up,    0, GTK_SCROLL_STEP_BACKWARD, GTK_ORIENTATION_VERTICAL);
-        add_scroll_binding_keypad (binding_set, GDK_KEY_Down,  0, GTK_SCROLL_STEP_FORWARD, GTK_ORIENTATION_VERTICAL);
-        add_scroll_binding_keypad (binding_set, GDK_KEY_Up,    GDK_MOD1_MASK, GTK_SCROLL_STEP_DOWN, GTK_ORIENTATION_VERTICAL);
-        add_scroll_binding_keypad (binding_set, GDK_KEY_Down,  GDK_MOD1_MASK, GTK_SCROLL_STEP_UP, GTK_ORIENTATION_VERTICAL);
-	add_scroll_binding_keypad (binding_set, GDK_KEY_Page_Up, 0, GTK_SCROLL_PAGE_BACKWARD, GTK_ORIENTATION_VERTICAL);
-	add_scroll_binding_keypad (binding_set, GDK_KEY_Page_Down, 0, GTK_SCROLL_PAGE_FORWARD, GTK_ORIENTATION_VERTICAL);
-	add_scroll_binding_keypad (binding_set, GDK_KEY_Home, GDK_CONTROL_MASK, GTK_SCROLL_START, GTK_ORIENTATION_VERTICAL);
-	add_scroll_binding_keypad (binding_set, GDK_KEY_End, GDK_CONTROL_MASK, GTK_SCROLL_END, GTK_ORIENTATION_VERTICAL);
+        add_scroll_binding_keypad (widget_class, GDK_KEY_Left,  0, GTK_SCROLL_STEP_BACKWARD, GTK_ORIENTATION_HORIZONTAL);
+        add_scroll_binding_keypad (widget_class, GDK_KEY_Right, 0, GTK_SCROLL_STEP_FORWARD, GTK_ORIENTATION_HORIZONTAL);
+        add_scroll_binding_keypad (widget_class, GDK_KEY_Left,  GDK_ALT_MASK, GTK_SCROLL_STEP_DOWN, GTK_ORIENTATION_HORIZONTAL);
+        add_scroll_binding_keypad (widget_class, GDK_KEY_Right, GDK_ALT_MASK, GTK_SCROLL_STEP_UP, GTK_ORIENTATION_HORIZONTAL);
+        add_scroll_binding_keypad (widget_class, GDK_KEY_Up,    0, GTK_SCROLL_STEP_BACKWARD, GTK_ORIENTATION_VERTICAL);
+        add_scroll_binding_keypad (widget_class, GDK_KEY_Down,  0, GTK_SCROLL_STEP_FORWARD, GTK_ORIENTATION_VERTICAL);
+        add_scroll_binding_keypad (widget_class, GDK_KEY_Up,    GDK_ALT_MASK, GTK_SCROLL_STEP_DOWN, GTK_ORIENTATION_VERTICAL);
+        add_scroll_binding_keypad (widget_class, GDK_KEY_Down,  GDK_ALT_MASK, GTK_SCROLL_STEP_UP, GTK_ORIENTATION_VERTICAL);
+	add_scroll_binding_keypad (widget_class, GDK_KEY_Page_Up, 0, GTK_SCROLL_PAGE_BACKWARD, GTK_ORIENTATION_VERTICAL);
+	add_scroll_binding_keypad (widget_class, GDK_KEY_Page_Down, 0, GTK_SCROLL_PAGE_FORWARD, GTK_ORIENTATION_VERTICAL);
+	add_scroll_binding_keypad (widget_class, GDK_KEY_Home, GDK_CONTROL_MASK, GTK_SCROLL_START, GTK_ORIENTATION_VERTICAL);
+	add_scroll_binding_keypad (widget_class, GDK_KEY_End, GDK_CONTROL_MASK, GTK_SCROLL_END, GTK_ORIENTATION_VERTICAL);
 
 	/* We can't use the bindings defined in GtkWindow for Space and Return,
 	 * because we also have those bindings for scrolling.
 	 */
-	gtk_binding_entry_add_signal (binding_set, GDK_KEY_space, 0,
-				      "activate", 0);
-	gtk_binding_entry_add_signal (binding_set, GDK_KEY_KP_Space, 0,
-				      "activate", 0);
-	gtk_binding_entry_add_signal (binding_set, GDK_KEY_Return, 0,
-				      "activate", 0);
-	gtk_binding_entry_add_signal (binding_set, GDK_KEY_ISO_Enter, 0,
-				      "activate", 0);
-	gtk_binding_entry_add_signal (binding_set, GDK_KEY_KP_Enter, 0,
-				      "activate", 0);
+	gtk_widget_class_add_binding_signal (widget_class, GDK_KEY_space, 0,
+				      "activate", NULL);
+	gtk_widget_class_add_binding_signal (widget_class, GDK_KEY_KP_Space, 0,
+				      "activate", NULL);
+	gtk_widget_class_add_binding_signal (widget_class, GDK_KEY_Return, 0,
+				      "activate", NULL);
+	gtk_widget_class_add_binding_signal (widget_class, GDK_KEY_ISO_Enter, 0,
+				      "activate", NULL);
+	gtk_widget_class_add_binding_signal (widget_class, GDK_KEY_KP_Enter, 0,
+				      "activate", NULL);
 
-	gtk_binding_entry_add_signal (binding_set, GDK_KEY_Return, 0, "scroll", 2,
-				      GTK_TYPE_SCROLL_TYPE, GTK_SCROLL_PAGE_FORWARD,
-				      GTK_TYPE_ORIENTATION, GTK_ORIENTATION_VERTICAL);
-	gtk_binding_entry_add_signal (binding_set, GDK_KEY_Return, GDK_SHIFT_MASK, "scroll", 2,
-				      GTK_TYPE_SCROLL_TYPE, GTK_SCROLL_PAGE_BACKWARD,
-				      GTK_TYPE_ORIENTATION, GTK_ORIENTATION_VERTICAL);
-        gtk_binding_entry_add_signal (binding_set, GDK_KEY_H, 0, "scroll", 2,
-				      GTK_TYPE_SCROLL_TYPE, GTK_SCROLL_STEP_BACKWARD,
-				      GTK_TYPE_ORIENTATION, GTK_ORIENTATION_HORIZONTAL);
-	gtk_binding_entry_add_signal (binding_set, GDK_KEY_J, 0, "scroll", 2,
-				      GTK_TYPE_SCROLL_TYPE, GTK_SCROLL_STEP_FORWARD,
-				      GTK_TYPE_ORIENTATION, GTK_ORIENTATION_VERTICAL);
-	gtk_binding_entry_add_signal (binding_set, GDK_KEY_K, 0, "scroll", 2,
-				      GTK_TYPE_SCROLL_TYPE, GTK_SCROLL_STEP_BACKWARD,
-				      GTK_TYPE_ORIENTATION, GTK_ORIENTATION_VERTICAL);
-	gtk_binding_entry_add_signal (binding_set, GDK_KEY_L, 0, "scroll", 2,
-				      GTK_TYPE_SCROLL_TYPE, GTK_SCROLL_STEP_FORWARD,
-				      GTK_TYPE_ORIENTATION, GTK_ORIENTATION_HORIZONTAL);
-	gtk_binding_entry_add_signal (binding_set, GDK_KEY_space, 0, "scroll", 2,
-				      GTK_TYPE_SCROLL_TYPE, GTK_SCROLL_PAGE_FORWARD,
-				      GTK_TYPE_ORIENTATION, GTK_ORIENTATION_VERTICAL);
-	gtk_binding_entry_add_signal (binding_set, GDK_KEY_space, GDK_SHIFT_MASK, "scroll", 2,
-				      GTK_TYPE_SCROLL_TYPE, GTK_SCROLL_PAGE_BACKWARD,
-				      GTK_TYPE_ORIENTATION, GTK_ORIENTATION_VERTICAL);
-	gtk_binding_entry_add_signal (binding_set, GDK_KEY_BackSpace, 0, "scroll", 2,
-				      GTK_TYPE_SCROLL_TYPE, GTK_SCROLL_PAGE_BACKWARD,
-				      GTK_TYPE_ORIENTATION, GTK_ORIENTATION_VERTICAL);
-	gtk_binding_entry_add_signal (binding_set, GDK_KEY_BackSpace, GDK_SHIFT_MASK, "scroll", 2,
-				      GTK_TYPE_SCROLL_TYPE, GTK_SCROLL_PAGE_FORWARD,
-				      GTK_TYPE_ORIENTATION, GTK_ORIENTATION_VERTICAL);
-#endif
+	gtk_widget_class_add_binding_signal (widget_class, GDK_KEY_Return, 0, "scroll",
+				      "(ii)", GTK_SCROLL_PAGE_FORWARD, GTK_ORIENTATION_VERTICAL);
+	gtk_widget_class_add_binding_signal (widget_class, GDK_KEY_Return, GDK_SHIFT_MASK, "scroll",
+				      "(ii)", GTK_SCROLL_PAGE_BACKWARD, GTK_ORIENTATION_VERTICAL);
+	gtk_widget_class_add_binding_signal (widget_class, GDK_KEY_H, 0, "scroll",
+				      "(ii)", GTK_SCROLL_STEP_BACKWARD, GTK_ORIENTATION_HORIZONTAL);
+	gtk_widget_class_add_binding_signal (widget_class, GDK_KEY_J, 0, "scroll",
+				      "(ii)", GTK_SCROLL_STEP_FORWARD, GTK_ORIENTATION_VERTICAL);
+	gtk_widget_class_add_binding_signal (widget_class, GDK_KEY_K, 0, "scroll",
+				      "(ii)", GTK_SCROLL_STEP_BACKWARD, GTK_ORIENTATION_VERTICAL);
+	gtk_widget_class_add_binding_signal (widget_class, GDK_KEY_L, 0, "scroll",
+				      "(ii)", GTK_SCROLL_STEP_FORWARD, GTK_ORIENTATION_HORIZONTAL);
+	gtk_widget_class_add_binding_signal (widget_class, GDK_KEY_space, 0, "scroll",
+				      "(ii)", GTK_SCROLL_PAGE_FORWARD, GTK_ORIENTATION_VERTICAL);
+	gtk_widget_class_add_binding_signal (widget_class, GDK_KEY_space, GDK_SHIFT_MASK, "scroll",
+				      "(ii)", GTK_SCROLL_PAGE_BACKWARD, GTK_ORIENTATION_VERTICAL);
+	gtk_widget_class_add_binding_signal (widget_class, GDK_KEY_BackSpace, 0, "scroll",
+				      "(ii)", GTK_SCROLL_PAGE_BACKWARD, GTK_ORIENTATION_VERTICAL);
+	gtk_widget_class_add_binding_signal (widget_class, GDK_KEY_BackSpace, GDK_SHIFT_MASK, "scroll",
+				      "(ii)",  GTK_SCROLL_PAGE_FORWARD, GTK_ORIENTATION_VERTICAL);
 }
 
 static void
