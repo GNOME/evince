@@ -5781,79 +5781,46 @@ ev_view_remove_all_form_fields (EvView *view)
 	gtk_widget_queue_draw (GTK_WIDGET (view));
 }
 
-#if 0
 /*** Drag and Drop ***/
-static void
-ev_view_drag_data_get (GtkWidget        *widget,
-		       GdkDragContext   *context,
-		       GtkSelectionData *selection_data,
-		       guint             info,
-		       guint             time)
+static GdkContentProvider *
+on_drag_prepare (GtkDragSource	*self,
+		 gdouble	 x,
+		 gdouble	 y,
+		 EvView		*view)
 {
-	EvView *view = EV_VIEW (widget);
+	EvImage *image;
+	GdkPixbuf *pixbuf;
+	const char *tmp_uri;
+	GFile *file;
 
-	switch (info) {
-	        case TARGET_DND_TEXT:
-			if (EV_IS_SELECTION (view->document) &&
-			    view->selection_info.selections) {
-				gchar *text;
+	if (view->selection_info.in_select)
+		return NULL;
 
-				text = get_selected_text (view);
-				gtk_selection_data_set_text (selection_data,
-							     text,
-							     strlen (text));
-				g_free (text);
-			}
-			break;
-	        case TARGET_DND_IMAGE:
-			if (view->image_dnd_info.image) {
-				GdkPixbuf *pixbuf;
+	if (EV_IS_SELECTION (view->document) && view->selection_info.in_drag &&
+	    location_in_selected_text (view, x + view->scroll_x, y + view->scroll_y)) {
+		gchar *text = get_selected_text (view);
 
-				ev_document_doc_mutex_lock ();
-				pixbuf = ev_document_images_get_image (EV_DOCUMENT_IMAGES (view->document),
-								       view->image_dnd_info.image);
-				ev_document_doc_mutex_unlock ();
-
-				gtk_selection_data_set_pixbuf (selection_data, pixbuf);
-				g_object_unref (pixbuf);
-			}
-			break;
-	        case TARGET_DND_URI:
-			if (view->image_dnd_info.image) {
-				GdkPixbuf   *pixbuf;
-				const gchar *tmp_uri;
-				gchar       *uris[2];
-
-				ev_document_doc_mutex_lock ();
-				pixbuf = ev_document_images_get_image (EV_DOCUMENT_IMAGES (view->document),
-								       view->image_dnd_info.image);
-				ev_document_doc_mutex_unlock ();
-
-				tmp_uri = ev_image_save_tmp (view->image_dnd_info.image, pixbuf);
-				g_object_unref (pixbuf);
-
-				uris[0] = (gchar *)tmp_uri;
-                                uris[1] = NULL;
-				gtk_selection_data_set_uris (selection_data, uris);
-			}
+		return gdk_content_provider_new_for_bytes ("text/plain",
+				g_bytes_new_take (text, strlen (text)));
 	}
-}
 
-static gboolean
-ev_view_drag_motion (GtkWidget      *widget,
-		     GdkDragContext *context,
-		     gint            x,
-		     gint            y,
-		     guint           time)
-{
-	if (gtk_drag_get_source_widget (context) == widget)
-		gdk_drag_status (context, 0, time);
-	else
-		gdk_drag_status (context, gdk_drag_context_get_suggested_action (context), time);
+	if (!location_in_text (view, x + view->scroll_x, y + view->scroll_y) &&
+				   (image = ev_view_get_image_at_location (view, x, y))) {
+		ev_document_doc_mutex_lock ();
+		pixbuf = ev_document_images_get_image (EV_DOCUMENT_IMAGES (view->document), image);
+		ev_document_doc_mutex_unlock ();
 
-	return TRUE;
+		tmp_uri = ev_image_save_tmp (image, pixbuf);
+		file = g_file_new_for_uri (tmp_uri);
+
+		return gdk_content_provider_new_union ((GdkContentProvider *[2]) {
+				gdk_content_provider_new_typed (G_TYPE_FILE, file),
+				gdk_content_provider_new_typed (GDK_TYPE_PIXBUF, pixbuf),
+				}, 2);
+	}
+
+	return NULL;
 }
-#endif
 
 static gboolean
 selection_update_idle_cb (EvView *view)
@@ -8247,6 +8214,12 @@ ev_view_init (EvView *view)
 			  G_CALLBACK (on_middle_clicked_drag_begin), view);
 	g_signal_connect (controller, "drag-end",
 			  G_CALLBACK (on_middle_clicked_drag_end), view);
+	gtk_widget_add_controller (widget, controller);
+
+	/* DnD for text selection and image */
+	controller = GTK_EVENT_CONTROLLER (gtk_drag_source_new ());
+	g_signal_connect (controller, "prepare",
+			   G_CALLBACK (on_drag_prepare), view);
 	gtk_widget_add_controller (widget, controller);
 }
 
