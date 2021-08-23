@@ -62,9 +62,6 @@ enum_sources = gnome.mkenums(
 
 deps = [
   gspell_dep,
-  gstreamer_base_dep,
-  gstreamer_dep,
-  gstreamer_video_dep,
   gtk_unix_print_dep,
   gthread_dep,
   libevdocument_dep,
