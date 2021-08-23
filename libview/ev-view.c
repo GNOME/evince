@@ -203,7 +203,6 @@ static void       ev_view_size_allocate                      (GtkWidget         
 							      int		  width,
 							      int		  height,
 							      int		  baseline);
-static void       ev_view_style_updated                      (GtkWidget          *widget);
 static void       ev_view_remove_all                         (EvView             *view);
 static void       ev_view_remove_all_form_fields             (EvView             *view);
 
@@ -5119,8 +5118,6 @@ static void
 link_preview_job_finished_cb (EvJobThumbnail *job,
 			      EvView *view)
 {
-	gint       device_scale = 1;
-
 	if (ev_job_is_failed (EV_JOB (job))) {
 		gtk_widget_unparent (view->link_preview.popover);
 		view->link_preview.popover = NULL;
@@ -5128,16 +5125,6 @@ link_preview_job_finished_cb (EvJobThumbnail *job,
 		view->link_preview.job = NULL;
 		return;
 	}
-
-#if 0
-#ifdef HAVE_HIDPI_SUPPORT
-        device_scale = gtk_widget_get_scale_factor (GTK_WIDGET (view));
-        cairo_surface_set_device_scale (job->thumbnail_surface, device_scale, device_scale);
-#endif
-
-	if (ev_document_model_get_inverted_colors (view->model))
-		ev_document_misc_invert_surface (job->thumbnail_surface);
-#endif
 
 	link_preview_show_thumbnail (gdk_texture_new_for_pixbuf (job->thumbnail), view);
 
@@ -7048,17 +7035,6 @@ ev_view_enter_notify_event (GtkEventControllerMotion	*self,
 	ev_view_handle_cursor_over_xy (EV_VIEW (user_data), x, y);
 }
 
-#if 0
-static void
-ev_view_style_updated (GtkWidget *widget)
-{
-	if (EV_VIEW (widget)->pixbuf_cache)
-		ev_pixbuf_cache_style_changed (EV_VIEW (widget)->pixbuf_cache);
-
-	GTK_WIDGET_CLASS (ev_view_parent_class)->style_updated (widget);
-}
-#endif
-
 /*** Drawing ***/
 
 static void
@@ -7132,11 +7108,23 @@ static void
 draw_surface (GtkSnapshot     *snapshot,
 	      GdkTexture      *texture,
 	      const graphene_point_t *point,
-	      const graphene_rect_t *area)
+	      const graphene_rect_t *area,
+	      gboolean inverted)
 {
 	gtk_snapshot_save (snapshot);
 	gtk_snapshot_translate (snapshot, point);
+
+	if (inverted) {
+		gtk_snapshot_push_blend (snapshot, GSK_BLEND_MODE_DIFFERENCE);
+		gtk_snapshot_append_color (snapshot, &(GdkRGBA) {1., 1., 1., 1.}, area);
+		gtk_snapshot_pop (snapshot);
+	}
+
 	gtk_snapshot_append_texture (snapshot, texture, area);
+
+	if (inverted)
+		gtk_snapshot_pop (snapshot);
+
 	gtk_snapshot_restore (snapshot);
 }
 
@@ -7247,6 +7235,7 @@ draw_one_page (EvView       *view,
 		graphene_point_t point;
 		graphene_rect_t area;
 		cairo_region_t *region = NULL;
+		gboolean inverted = ev_document_model_get_inverted_colors (view->model);
 
 		page_texture = ev_pixbuf_cache_get_texture (view->pixbuf_cache, page);
 
@@ -7269,7 +7258,7 @@ draw_one_page (EvView       *view,
 					   width, height);
 		point = GRAPHENE_POINT_INIT (overlap.x, overlap.y);
 
-		draw_surface (snapshot, page_texture, &point, &area);
+		draw_surface (snapshot, page_texture, &point, &area, inverted);
 
 		/* Get the selection pixbuf iff we have something to draw */
 		if (!find_selection_for_page (view, page))
@@ -7279,7 +7268,7 @@ draw_one_page (EvView       *view,
 									   page,
 									   view->scale);
 		if (selection_texture) {
-			draw_surface (snapshot, selection_texture, &point, &area);
+			draw_surface (snapshot, selection_texture, &point, &area, false);
 			return;
 		}
 
@@ -8319,8 +8308,6 @@ ev_view_new (void)
 static void
 setup_caches (EvView *view)
 {
-	gboolean inverted_colors;
-
 	view->height_to_page_cache = ev_view_get_height_to_page_cache (view);
 	view->pixbuf_cache = ev_pixbuf_cache_new (GTK_WIDGET (view), view->model, view->pixbuf_cache_size);
 	view->page_cache = ev_page_cache_new (view->document);
@@ -8332,8 +8319,6 @@ setup_caches (EvView *view)
 				 EV_PAGE_DATA_INCLUDE_TEXT_ATTRS |
 		                 EV_PAGE_DATA_INCLUDE_TEXT_LOG_ATTRS);
 
-	inverted_colors = ev_document_model_get_inverted_colors (view->model);
-	ev_pixbuf_cache_set_inverted_colors (view->pixbuf_cache, inverted_colors);
 	g_signal_connect (view->pixbuf_cache, "job-finished", G_CALLBACK (job_finished_cb), view);
 }
 
@@ -8517,13 +8502,7 @@ ev_view_inverted_colors_changed_cb (EvDocumentModel *model,
 				    GParamSpec      *pspec,
 				    EvView          *view)
 {
-	if (view->pixbuf_cache) {
-		gboolean inverted_colors;
-
-		inverted_colors = ev_document_model_get_inverted_colors (model);
-		ev_pixbuf_cache_set_inverted_colors (view->pixbuf_cache, inverted_colors);
-		gtk_widget_queue_draw (GTK_WIDGET (view));
-	}
+	gtk_widget_queue_draw (GTK_WIDGET (view));
 }
 
 static void
