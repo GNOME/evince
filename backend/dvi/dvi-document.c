@@ -479,14 +479,14 @@ dvi_document_do_color_special (DviContext *dvi, const char *prefix, const char *
 
 			mdvi_push_color (dvi, RGB2ULONG (rgb, rgb, rgb), 0xFFFFFFFF);
                 } else {
-                        GdkColor color;
-			
-                        if (gdk_color_parse (tmp, &color)) {
+                        GdkRGBA rgba;
+
+                        if (gdk_rgba_parse (&rgba, tmp)) {
 				guchar red, green, blue;
 
-				red = color.red * 255 / 65535.;
-				green = color.green * 255 / 65535.;
-				blue = color.blue * 255 / 65535.;
+				red = rgba.red * 255;
+				green = rgba.green * 255;
+				blue = rgba.blue * 255;
 
                                 mdvi_push_color (dvi, RGB2ULONG (red, green, blue), 0xFFFFFFFF);
 			}

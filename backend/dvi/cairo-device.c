@@ -202,26 +202,27 @@ dvi_cairo_alloc_colors (void  *device_data,
 			int    density)
 {
 	double  frac;
-	GdkColor color, color_fg;
+	GdkRGBA color, color_fg;
 	int     i, n;
 	unsigned int alpha;
 
-	color_fg.red = (fg >> 16) & 0xff;
-	color_fg.green = (fg >> 8) & 0xff;
-	color_fg.blue = (fg >> 0) & 0xff;
+	color_fg.red = ((fg >> 16) & 0xff) / 255.;
+	color_fg.green = ((fg >> 8) & 0xff) / 255.;
+	color_fg.blue = ((fg >> 0) & 0xff) / 255.;
 
 	n = npixels - 1;
 	for (i = 0; i < npixels; i++) {
 		frac = (gamma > 0) ?
 			pow ((double)i / n, 1 / gamma) :
 			1 - pow ((double)(n - i) / n, -gamma);
-		
+
 		color.red = frac * color_fg.red;
 		color.green = frac * color_fg.green;
 		color.blue = frac * color_fg.blue;
 		alpha = frac * 0xFF;
 
-		pixels[i] = (alpha << 24) + (color.red << 16) + (color.green << 8) + color.blue;
+		pixels[i] = (alpha << 24) + ((uint8_t)(color.red * 255) << 16) +
+			((uint8_t)(color.green * 255) << 8) + (uint8_t)(color.blue * 255);
 	}
 
 	return npixels;
