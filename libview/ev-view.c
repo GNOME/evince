@@ -3063,7 +3063,6 @@ get_media_mapping_at_location (EvView *view,
 			       gdouble y,
 			       gint *page)
 {
-#ifdef ENABLE_MULTIMEDIA
 	gint x_new = 0, y_new = 0;
 	EvMappingList *media_mapping;
 
@@ -3076,9 +3075,6 @@ get_media_mapping_at_location (EvView *view,
 	media_mapping = ev_page_cache_get_media_mapping (view->page_cache, *page);
 
 	return media_mapping ? ev_mapping_list_get (media_mapping, x_new, y_new) : NULL;
-#else
-	return NULL;
-#endif
 }
 
 static EvMedia *
@@ -3098,7 +3094,6 @@ static gboolean
 ev_view_find_player_for_media (EvView  *view,
 			       EvMedia *media)
 {
-#ifdef ENABLE_MULTIMEDIA
 	GList *l;
 
 	for (l = view->children; l; l = g_list_next (l)) {
@@ -3110,7 +3105,7 @@ ev_view_find_player_for_media (EvView  *view,
 		//if (ev_media_player_get_media (EV_MEDIA_PLAYER (child->widget)) == media)
 		//	return TRUE;
 	}
-#endif
+
 	return FALSE;
 }
 
@@ -3118,7 +3113,6 @@ static void
 ev_view_handle_media (EvView  *view,
 		      EvMedia *media)
 {
-#ifdef ENABLE_MULTIMEDIA
 	GtkWidget     *player;
 	EvMappingList *media_mapping;
 	EvMapping     *mapping;
@@ -3146,7 +3140,6 @@ ev_view_handle_media (EvView  *view,
 
 	ev_view_put (view, player, render_area.x, render_area.y, page, &mapping->area);
 	gtk_widget_show (player);
-#endif /* ENABLE_MULTIMEDIA */
 }
 
 /* Annotations */
