@@ -6303,8 +6303,6 @@ ev_view_add_text_markup_annotation_for_selected_text (EvView  *view)
 			g_signal_emit (view, signals[SIGNAL_ANNOT_ADDED], 0, view->adding_annot_info.annot);
 	}
 
-	ev_view_annotation_create_show_popup_window (view, view->adding_annot_info.annot);
-
 	clear_selection (view);
 
 	view->adding_annot_info.adding_annot = FALSE;
@@ -6440,11 +6438,12 @@ ev_view_button_release_event (GtkWidget      *widget,
 										 EV_ANNOTATIONS_SAVE_POPUP_RECT);
 					ev_document_doc_mutex_unlock ();
 				}
-
-				ev_view_annotation_create_show_popup_window (view, view->adding_annot_info.annot);
 			}
 		}
 
+		if (view->adding_annot_info.type == EV_ANNOTATION_TYPE_TEXT)
+			ev_view_annotation_create_show_popup_window (view, view->adding_annot_info.annot);
+			
 		view->adding_annot_info.stop.x = event->x + view->scroll_x;
 		view->adding_annot_info.stop.y = event->y + view->scroll_y;
 		if (annot_added)
