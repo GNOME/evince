@@ -3094,16 +3094,15 @@ static gboolean
 ev_view_find_player_for_media (EvView  *view,
 			       EvMedia *media)
 {
-	GList *l;
+	for (GtkWidget *child = gtk_widget_get_first_child (GTK_WIDGET (view));
+		child != NULL;
+		child = gtk_widget_get_next_sibling (child))
+	{
+		if (!GTK_IS_VIDEO (child))
+			continue;
 
-	for (l = view->children; l; l = g_list_next (l)) {
-		EvViewChild *child = (EvViewChild *)l->data;
-
-		//if (!EV_IS_MEDIA_PLAYER (child->widget))
-		//	continue;
-
-		//if (ev_media_player_get_media (EV_MEDIA_PLAYER (child->widget)) == media)
-		//	return TRUE;
+		if (g_object_get_data (G_OBJECT(child), "media") == media)
+			return TRUE;
 	}
 
 	return FALSE;
@@ -3133,13 +3132,16 @@ ev_view_handle_media (EvView  *view,
 	gtk_video_set_autoplay (GTK_VIDEO (player), TRUE);
 	g_object_unref (uri);
 
+	g_object_set_data_full (G_OBJECT (player), "media",
+				g_object_ref (media),
+				(GDestroyNotify)g_object_unref);
+
 	mapping = ev_mapping_list_find (media_mapping, media);
 	_ev_view_transform_doc_rect_to_view_rect (view, page, &mapping->area, &render_area);
 	render_area.x -= view->scroll_x;
 	render_area.y -= view->scroll_y;
 
 	ev_view_put (view, player, render_area.x, render_area.y, page, &mapping->area);
-	gtk_widget_show (player);
 }
 
 /* Annotations */
@@ -5759,18 +5761,19 @@ on_middle_clicked_drag_update (GtkGestureDrag	*self,
 	view->drag_info.buffer[0].y = y;
 }
 
-static void remove_ev_view_child (EvViewChild *child)
-{
-	gtk_widget_unparent (child->widget);
-	g_slice_free (EvViewChild, child);
-}
-
 static void
 ev_view_remove_all_form_fields (EvView *view)
 {
-	g_list_free_full (view->children, remove_ev_view_child);
-	view->children = NULL;
-	gtk_widget_queue_draw (GTK_WIDGET (view));
+	GtkWidget *child = gtk_widget_get_first_child (GTK_WIDGET (view));
+
+	while (child != NULL) {
+		GtkWidget *next = gtk_widget_get_next_sibling (child);
+
+		if (g_object_get_data (G_OBJECT (child), "form-field"))
+			gtk_widget_unparent (child);
+
+		child = next;
+	}
 }
 
 static void
@@ -7752,13 +7755,13 @@ ev_view_focus_next (EvView           *view,
 	g_list_free (elements);
 
 	if (focus_element) {
-		//ev_view_remove_all_form_fields (view);
-		//_ev_view_focus_form_field (view, EV_FORM_FIELD (focus_element->data));
+		ev_view_remove_all_form_fields (view);
+		_ev_view_focus_form_field (view, EV_FORM_FIELD (focus_element->data));
 
 		return TRUE;
 	}
 
-	//ev_view_remove_all_form_fields (view);
+	ev_view_remove_all_form_fields (view);
 	_ev_view_set_focused_element (view, NULL, -1);
 
 	/* Only try to move the focus to next/previous pages when the current page had
