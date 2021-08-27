@@ -9,8 +9,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: evince\n"
-"POT-Creation-Date: 2021-03-06 06:29+0000\n"
-"PO-Revision-Date: 2021-03-14 10:12+0100\n"
+"POT-Creation-Date: 2021-08-25 13:26+0000\n"
+"PO-Revision-Date: 2021-08-27 09:57+0200\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: čeština <gnome-cs-list@gnome.org>\n"
 "Language: cs\n"
@@ -941,24 +941,25 @@ msgstr ""
 "Pokud je již otevřeno prázdné okno <app>Prohlížeče dokumentů</app>, můžete:"
 
 #. (itstool) path: item/p
-#: C/opening.page:51 C/opening.page:66
+#: C/opening.page:51
 msgid ""
 "Drag a file into the window from <app>Files</app>. The new file will open in "
-"a new window."
+"the same window."
 msgstr ""
 "Přetáhněte soubor z aplikace <app>Soubory</app> do okna. Nový soubor se "
-"otevře v novém okně."
+"otevře ve stávajícím okně."
 
 #. (itstool) path: item/p
 #: C/opening.page:55
 msgid ""
 "Press the <gui>Open…</gui> button in the top-left corner of the window. In "
 "the <gui>Open Document</gui> dialog, choose the file which you wish to open, "
-"and click <gui>Open</gui>. The file will open in a new window."
+"and click <gui>Open</gui>. The file will open in the same window."
 msgstr ""
 "Zmáčkněte tlačítko <gui>Otevřít…</gui> v pravém horním rohu okna. V "
 "dialogovém okně <gui>Otevření dokumentu</gui> zvolte soubor, který chcete "
-"otevřít, a klikněte na <gui>Otevřít</gui>. Soubor se otevře v novém okně."
+"otevřít, a klikněte na <gui>Otevřít</gui>. Soubor se otevře ve stávajícím "
+"okně."
 
 #. (itstool) path: page/p
 #: C/opening.page:62
@@ -966,7 +967,17 @@ msgid ""
 "If a document is already opened in a <app>Document Viewer</app> window you "
 "can:"
 msgstr ""
-"Pokud je dokument v okně <app>Prohlížeče dokumentů</app> již otevřený, můžete:"
+"Pokud je dokument v okně <app>Prohlížeče dokumentů</app> již otevřený, "
+"můžete:"
+
+#. (itstool) path: item/p
+#: C/opening.page:66
+msgid ""
+"Drag a file into the window from <app>Files</app>. The new file will open in "
+"a new window."
+msgstr ""
+"Přetáhněte soubor z aplikace <app>Soubory</app> do okna. Nový soubor se "
+"otevře v novém okně."
 
 #. (itstool) path: item/p
 #: C/opening.page:70
@@ -976,8 +987,8 @@ msgid ""
 "<gui>Open</gui>. The file will open in a new window."
 msgstr ""
 "Zmáčkněte <keyseq><key>Ctrl</key><key>O</key></keyseq>. V dialogovém okně "
-"<gui>Otevření dokumentu</gui> zvolte soubor, který chcete otevřít, a klikněte "
-"na <gui>Otevřít</gui>. Soubor se otevře v novém okně."
+"<gui>Otevření dokumentu</gui> zvolte soubor, který chcete otevřít, a "
+"klikněte na <gui>Otevřít</gui>. Soubor se otevře v novém okně."
 
 #. (itstool) path: info/desc
 #: C/noprint.page:9
@@ -1104,8 +1115,8 @@ msgid ""
 "You need to have <app>dconf Editor</app> installed on your computer to "
 "change this setting."
 msgstr ""
-"Abyste mohli změnit toto nastavení, musíte mít v počítači nainstalovaný <app>"
-"Editor dconf</app>."
+"Abyste mohli změnit toto nastavení, musíte mít v počítači nainstalovaný "
+"<app>Editor dconf</app>."
 
 #. (itstool) path: if/p
 #: C/noprint.page:86
@@ -1113,8 +1124,8 @@ msgid ""
 "<link style=\"button\" action=\"install:dconf-editor\">Install <app>dconf "
 "Editor</app></link>"
 msgstr ""
-"<link style=\"button\" action=\"install:dconf-editor\">Nainstalovat <app>"
-"Editor dconf</app></link>"
+"<link style=\"button\" action=\"install:dconf-editor\">Nainstalovat "
+"<app>Editor dconf</app></link>"
 
 #. (itstool) path: item/p
 #: C/noprint.page:93
@@ -2749,14 +2760,14 @@ msgstr ""
 msgid ""
 "Once you have an account, log in, and click on <gui>New issue</gui>. Before "
 "reporting a bug, please read the <link href=\"https://wiki.gnome.org/"
-"Community/GettingInTouch/Bugzilla/Guidelines\">bug writing guidelines</"
-"link>, and please <link href=\"https://gitlab.gnome.org/GNOME/evince/issues"
-"\">browse</link> for the bug to see if it already exists."
+"GettingInTouch/BugReportingGuidelines\">bug writing guidelines</link>, and "
+"please <link href=\"https://gitlab.gnome.org/GNOME/evince/issues\">browse</"
+"link> for the bug to see if it already exists."
 msgstr ""
 "Když už účet máte, přihlaste se a klikněte na <gui>New issue</gui>. Před "
-"nahlášením chyby si prosím přečtěte <link href=\"https://bugzilla.gnome.org/"
-"page.cgi?id=bug-writing.html\">přiručku k hlášení chyb</link> (odkaz je v "
-"angličtině) a <link href=\"https://gitlab.gnome.org/GNOME/evince/issues"
+"nahlášením chyby si prosím přečtěte <link href=\"https://wiki.gnome.org/"
+"GettingInTouch/BugReportingGuidelines\">přiručku k hlášení chyb</link> (odkaz "
+"je v angličtině) a <link href=\"https://gitlab.gnome.org/GNOME/evince/issues"
 "\">podívejte</link> se prosím, jestli stejnou chybu nenahlásil už někdo jiný."
 
 #. (itstool) path: page/p
@@ -3574,10 +3585,10 @@ msgid ""
 "choose what to display in the side pane. (Some options may not be available "
 "for some documents)."
 msgstr ""
-"V dolní části postranního panelu jsou tlačítka <gui>Náhledy</gui>, <gui>Obsah"
-"</gui>, <gui>Poznámky</gui> a <gui>Záložky</gui>, kterými se volí, co má být "
-"v postranním panelu zobrazené. (Některé z nich mohou být pro některé "
-"dokumenty nepřístupné)."
+"V dolní části postranního panelu jsou tlačítka <gui>Náhledy</gui>, "
+"<gui>Obsah</gui>, <gui>Poznámky</gui> a <gui>Záložky</gui>, kterými se volí, "
+"co má být v postranním panelu zobrazené. (Některé z nich mohou být pro "
+"některé dokumenty nepřístupné)."
 
 #. (itstool) path: page/p
 #: C/annotations.page:39
@@ -3698,6 +3709,12 @@ msgid ""
 msgstr ""
 "Postupujte podle kroků pro tisk <link xref=\"duplex-4page\">4stránkové "
 "brožury</link>."
+
+#. (itstool) path: info/title
+#: C/index.page:7
+msgctxt "link:trail"
+msgid "Evince Document Viewer"
+msgstr "Prohlížeč dokumentů Evince"
 
 #. (itstool) path: info/title
 #: C/index.page:8
@@ -4167,3 +4184,4 @@ msgstr ""
 "Zpětné hledání provedete zmáčknutím <keyseq><key>Ctrl</key>levé kliknutí</"
 "keyseq> v <app>prohlížeči dokumentů</app>. Odpovídající řádek ve zdrojovém "
 "kódu TeX se zvýrazní."
+
