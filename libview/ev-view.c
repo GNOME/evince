@@ -5781,6 +5781,20 @@ ev_view_remove_all_form_fields (EvView *view)
 	gtk_widget_queue_draw (GTK_WIDGET (view));
 }
 
+static void
+ev_view_remove_all (EvView *view)
+{
+	GtkWidget *child = gtk_widget_get_first_child (GTK_WIDGET (view));
+
+	while (child != NULL) {
+		GtkWidget *next = gtk_widget_get_next_sibling (child);
+
+		gtk_widget_unparent (child);
+
+		child = next;
+	}
+}
+
 /*** Drag and Drop ***/
 static GdkContentProvider *
 on_drag_prepare (GtkDragSource	*self,
@@ -8508,7 +8522,7 @@ ev_view_document_changed_cb (EvDocumentModel *model,
 	if (document != view->document) {
 		gint current_page;
 
-		// ev_view_remove_all (view);
+		ev_view_remove_all (view);
 		clear_caches (view);
 
 		if (view->document) {
@@ -8559,7 +8573,7 @@ ev_view_rotation_changed_cb (EvDocumentModel *model,
 		gtk_widget_queue_resize (GTK_WIDGET (view));
 	}
 
-	// ev_view_remove_all (view);
+	ev_view_remove_all (view);
 	view_update_scale_limits (view);
 
 	if (rotation != 0)
