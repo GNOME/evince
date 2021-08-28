@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk" version="4.0"/>
-  <requires lib="libadwaita" version="1.0"/>
   <template class="EvSidebarAttachments" parent="GtkBox">
+    <property name="name">ev-sidebar-attachments</property>
     <property name="orientation">vertical</property>
     <child type="start">
       <object class="GtkScrolledWindow" id="swindow">
@@ -16,9 +16,33 @@
             <property name="model">model</property>
             <property name="selection-mode">multiple</property>
             <property name="columns">-1</property>
-            <property name="pixbuf-column">0</property>
-            <property name="text-column">1</property>
             <property name="tooltip-column">2</property>
+            <signal name="item-activated" handler="on_icon_view_item_activated" />
+
+            <child>
+              <object class="GtkCellRendererPixbuf">
+                <property name="xalign">0.5</property>
+                <property name="yalign">0.5</property>
+                <property name="icon-size">large</property>
+              </object>
+              <attributes>
+                <attribute name="gicon">0</attribute>
+              </attributes>
+            </child>
+            <child>
+              <object class="GtkCellRendererText">
+                <property name="xalign">0.5</property>
+              </object>
+              <attributes>
+                <attribute name="text">1</attribute>
+              </attributes>
+            </child>
+            <child>
+              <object class="GtkGestureClick">
+                <property name="button">3</property>
+                <signal name="pressed" handler="on_secondary_button_clicked" />
+              </object>
+            </child>
           </object>
         </child>
       </object>
@@ -27,7 +51,10 @@
     <child type="end">
       <object class="GtkBox" id="hbox">
         <property name="orientation">horizontal</property>
-        <!-- <property name="margin">6</property> -->
+        <property name="margin-top">6</property>
+        <property name="margin-bottom">6</property>
+        <property name="margin-start">6</property>
+        <property name="margin-end">6</property>
         <property name="halign">center</property>
         <child>
           <object class="GtkButton" id="add_button">
@@ -43,11 +70,11 @@
         </child>
       </object>
     </child>
-
   </template>
+
   <object class="GtkListStore" id="model">
     <columns>
-      <column type="GdkPixbuf" />
+      <column type="GIcon" />
       <column type="gchararray" />
       <column type="gchararray" />
       <column type="EvAttachment" />
