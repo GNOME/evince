@@ -51,13 +51,6 @@ static const GOptionEntry goption_options[] = {
 	{ NULL }
 };
 
-struct AsyncData {
-	EvDocument  *document;
-	const gchar *output;
-	gint         size;
-	gboolean     success;
-};
-
 /* Time monitor: copied from totem */
 G_GNUC_NORETURN static gpointer
 time_monitor (gpointer data)
@@ -223,20 +216,6 @@ evince_thumbnail_pngenc_get (EvDocument *document, const char *thumbnail, int si
 	return FALSE;
 }
 
-static gpointer
-evince_thumbnail_pngenc_get_async (struct AsyncData *data)
-{
-	ev_document_doc_mutex_lock ();
-	data->success = evince_thumbnail_pngenc_get (data->document,
-						     data->output,
-						     data->size);
-	ev_document_doc_mutex_unlock ();
-
-	g_idle_add ((GSourceFunc)gtk_main_quit, NULL);
-
-	return NULL;
-}
-
 static void
 print_usage (GOptionContext *context)
 {
@@ -304,27 +283,6 @@ main (int argc, char *argv[])
 
         if (time_limit)
                 time_monitor_start (input);
-
-	if (EV_IS_ASYNC_RENDERER (document)) {
-		struct AsyncData data;
-
-		gtk_init (&argc, &argv);
-
-		data.document = document;
-		data.output = output;
-		data.size = size;
-
-		g_thread_new ("ThmbnlrAsyncRndr",
-				(GThreadFunc) evince_thumbnail_pngenc_get_async,
-				&data);
-
-		gtk_main ();
-
-		g_object_unref (document);
-		ev_shutdown ();
-
-		return data.success ? 0 : -2;
-	}
 
 	if (!evince_thumbnail_pngenc_get (document, output, size)) {
 		g_object_unref (document);
