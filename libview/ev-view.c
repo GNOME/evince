@@ -7142,17 +7142,28 @@ _ev_view_get_selection_colors (EvView  *view,
 	GtkWidget       *widget = GTK_WIDGET (view);
 	GtkStyleContext *context = gtk_widget_get_style_context (widget);
 
-	if (bg_color) {
-                gtk_style_context_lookup_color (context, "accent_bg_color", bg_color);
+	if (bg_color &&
+	    !gtk_style_context_lookup_color (context, "accent_bg_color", bg_color) &&
+	    !gtk_style_context_lookup_color (context, "theme_selected_bg_color", bg_color)) {
+		bg_color->red = 0;
+		bg_color->green = 0.623;
+		bg_color->blue = 1.;
+		bg_color->alpha = 1.;
+	}
 
-		if (gtk_widget_has_focus (widget))
-			bg_color->alpha = 0.3;
-		else
-			bg_color->alpha = 0.6;
-        }
+	if (gtk_widget_has_focus (widget))
+		bg_color->alpha = 0.3;
+	else
+		bg_color->alpha = 0.6;
 
-	if (fg_color)
-		gtk_style_context_lookup_color (context, "accent_fg_color", fg_color);
+	if (fg_color &&
+	    !gtk_style_context_lookup_color (context, "accent_fg_color", fg_color) &&
+	    !gtk_style_context_lookup_color (context, "theme_selected_fg_color", fg_color)) {
+		fg_color->red = 1.;
+		fg_color->green = 1.;
+		fg_color->blue = 1.;
+		fg_color->alpha = 1.;
+	}
 }
 
 static void
