@@ -51,13 +51,6 @@ static const GOptionEntry goption_options[] = {
 	{ NULL }
 };
 
-struct AsyncData {
-	EvDocument  *document;
-	const gchar *output;
-	gint         size;
-	gboolean     success;
-};
-
 /* Time monitor: copied from totem */
 G_GNUC_NORETURN static gpointer
 time_monitor (gpointer data)
@@ -203,14 +196,14 @@ evince_thumbnail_pngenc_get (EvDocument *document, const char *thumbnail, int si
 	EvPage *page;
 
 	page = ev_document_get_page (document, 0);
-	
+
 	ev_document_get_page_size (document, 0, &width, &height);
 
 	rc = ev_render_context_new (page, 0, size / MAX (height, width));
 	pixbuf = ev_document_get_thumbnail (document, rc);
 	g_object_unref (rc);
 	g_object_unref (page);
-	
+
 	if (pixbuf != NULL) {
 		if (gdk_pixbuf_save (pixbuf, thumbnail, "png", NULL, NULL)) {
 			g_object_unref  (pixbuf);
@@ -219,22 +212,8 @@ evince_thumbnail_pngenc_get (EvDocument *document, const char *thumbnail, int si
 
 		g_object_unref  (pixbuf);
 	}
-	
-	return FALSE;
-}
 
-static gpointer
-evince_thumbnail_pngenc_get_async (struct AsyncData *data)
-{
-	ev_document_doc_mutex_lock ();
-	data->success = evince_thumbnail_pngenc_get (data->document,
-						     data->output,
-						     data->size);
-	ev_document_doc_mutex_unlock ();
-	
-	g_idle_add ((GSourceFunc)gtk_main_quit, NULL);
-	
-	return NULL;
+	return FALSE;
 }
 
 static void
@@ -279,7 +258,7 @@ main (int argc, char *argv[])
 
 		return -1;
 	}
-	
+
 	g_option_context_free (context);
 
 	if (size < 1) {
@@ -304,27 +283,6 @@ main (int argc, char *argv[])
 
         if (time_limit)
                 time_monitor_start (input);
-
-	if (EV_IS_ASYNC_RENDERER (document)) {
-		struct AsyncData data;
-
-		gtk_init (&argc, &argv);
-		
-		data.document = document;
-		data.output = output;
-		data.size = size;
-
-		g_thread_new ("ThmbnlrAsyncRndr",
-				(GThreadFunc) evince_thumbnail_pngenc_get_async,
-				&data);
-		
-		gtk_main ();
-
-		g_object_unref (document);
-		ev_shutdown ();
-
-		return data.success ? 0 : -2;
-	}
 
 	if (!evince_thumbnail_pngenc_get (document, output, size)) {
 		g_object_unref (document);
