@@ -1,6 +1,5 @@
 previewer_sources = files(
-  'ev-previewer-toolbar.c',
-  'ev-previewer-toolbar.h',
+  'ev-previewer.c',
   'ev-previewer-window.c',
   'ev-previewer-window.h',
   'ev-previewer.c',
@@ -9,7 +8,6 @@ previewer_sources = files(
 resource_data = files(
   '../data/thumbnail-frame.png',
   'evince-previewer.css',
-  'previewer.ui',
 )
 
 previewer_sources += gnome.compile_resources(
@@ -24,7 +22,7 @@ previewer_deps = [
   libevdocument_dep,
   libevmisc_dep,
   libevview_dep,
-  hdy_dep
+  libaw_dep,
 ]
 
 if enable_gtk_unix_print

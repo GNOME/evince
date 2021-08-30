@@ -1,4 +1,4 @@
-/* ev-previewer-window.c: 
+/* ev-previewer-window.c:
  *  this file is part of evince, a gnome document viewer
  *
  * Copyright (C) 2009 Carlos Garcia Campos <carlosgc@gnome.org>
@@ -28,21 +28,21 @@
 #include <gtk/gtkunixprint.h>
 #endif
 #include <glib/gi18n.h>
+#include <adwaita.h>
 #include <evince-view.h>
 #include "ev-page-action-widget.h"
 
 #include "ev-previewer-window.h"
-#include "ev-previewer-toolbar.h"
 
 struct _EvPreviewerWindow {
-	GtkApplicationWindow base_instance;
+	AdwApplicationWindow base_instance;
 
 	EvJob            *job;
 	EvDocumentModel  *model;
 	EvDocument       *document;
 
 	EvView           *view;
-	GtkWidget        *toolbar;
+	GtkWidget        *page_selector;
 
 	/* Printing */
 	GtkPrintSettings *print_settings;
@@ -56,13 +56,13 @@ struct _EvPreviewerWindow {
 };
 
 struct _EvPreviewerWindowClass {
-	GtkApplicationWindowClass base_class;
+	AdwApplicationWindowClass base_class;
 };
 
 #define MIN_SCALE 0.05409
 #define MAX_SCALE 4.0
 
-G_DEFINE_TYPE (EvPreviewerWindow, ev_previewer_window, GTK_TYPE_APPLICATION_WINDOW)
+G_DEFINE_TYPE (EvPreviewerWindow, ev_previewer_window, ADW_TYPE_APPLICATION_WINDOW)
 
 static void
 ev_previewer_window_error_dialog_run (EvPreviewerWindow *window,
@@ -78,8 +78,8 @@ ev_previewer_window_error_dialog_run (EvPreviewerWindow *window,
 					 "%s", _("Failed to print document"));
 	gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog),
 						  "%s", error->message);
-	gtk_dialog_run (GTK_DIALOG (dialog));
-	gtk_widget_destroy (dialog);
+
+	gtk_widget_show (dialog);
 }
 
 static void
@@ -87,9 +87,7 @@ ev_previewer_window_close (GSimpleAction *action,
 			   GVariant      *parameter,
                            gpointer       user_data)
 {
-        EvPreviewerWindow *window = EV_PREVIEWER_WINDOW (user_data);
-
-	gtk_widget_destroy (GTK_WIDGET (window));
+	gtk_window_destroy (GTK_WINDOW (user_data));
 }
 
 static void
@@ -146,7 +144,7 @@ ev_previewer_window_zoom_default (GSimpleAction *action,
 }
 
 static void
-ev_previewer_window_action_page_activated (GtkAction         *action,
+ev_previewer_window_action_page_activated (GObject           *object,
                                            EvLink            *link,
                                            EvPreviewerWindow *window)
 {
@@ -160,10 +158,8 @@ ev_previewer_window_focus_page_selector (GSimpleAction *action,
                                          gpointer       user_data)
 {
         EvPreviewerWindow *window = EV_PREVIEWER_WINDOW (user_data);
-	GtkWidget *page_selector;
 
-	page_selector = ev_previewer_toolbar_get_page_selector (EV_PREVIEWER_TOOLBAR (window->toolbar));
-	ev_page_action_widget_grab_focus (EV_PAGE_ACTION_WIDGET (page_selector));
+	ev_page_action_widget_grab_focus (EV_PAGE_ACTION_WIDGET (window->page_selector));
 }
 
 #if GTKUNIXPRINT_ENABLED
@@ -178,7 +174,7 @@ ev_previewer_window_print_finished (GtkPrintJob       *print_job,
 	}
 
 	g_object_unref (print_job);
-	gtk_widget_destroy (GTK_WIDGET (window));
+	gtk_window_destroy (GTK_WINDOW (window));
 }
 
 static void
@@ -410,99 +406,44 @@ ev_previewer_window_init (EvPreviewerWindow *window)
 {
 	window->source_fd = -1;
 
-	gtk_window_set_default_size (GTK_WINDOW (window), 600, 600);
+	gtk_widget_init_template (GTK_WIDGET (window));
 
 	g_action_map_add_action_entries (G_ACTION_MAP (window),
 					 actions, G_N_ELEMENTS (actions),
 					 window);
-
-	gtk_window_set_default_size (GTK_WINDOW (window), 600, 600);
-}
-
-static gboolean
-_gtk_css_provider_load_from_resource (GtkCssProvider *provider,
-                                      const char     *resource_path,
-                                      GError        **error)
-{
-        GBytes  *data;
-        gboolean retval;
-
-        data = g_resources_lookup_data (resource_path, 0, error);
-        if (!data)
-                return FALSE;
-
-        retval = gtk_css_provider_load_from_data (provider,
-                                                  g_bytes_get_data (data, NULL),
-                                                  g_bytes_get_size (data),
-                                                  error);
-        g_bytes_unref (data);
-
-        return retval;
 }
 
 static void
 ev_previewer_window_constructed (GObject *object)
 {
 	EvPreviewerWindow *window = EV_PREVIEWER_WINDOW (object);
-	GtkWidget         *vbox;
-	GtkWidget         *swindow;
-	GError            *error = NULL;
 	gdouble            dpi;
-        GtkCssProvider    *css_provider;
 
 	G_OBJECT_CLASS (ev_previewer_window_parent_class)->constructed (object);
 
 	window->model = ev_document_model_new ();
+	ev_document_model_set_continuous (window->model, FALSE);
+
+	ev_view_set_model (window->view, window->model);
+	ev_page_action_widget_set_model (EV_PAGE_ACTION_WIDGET (window->page_selector),
+			window->model);
 
 	dpi = ev_document_misc_get_widget_dpi (GTK_WIDGET (window));
 	ev_document_model_set_min_scale (window->model, MIN_SCALE * dpi / 72.0);
 	ev_document_model_set_max_scale (window->model, MAX_SCALE * dpi / 72.0);
 	ev_document_model_set_sizing_mode (window->model, EV_SIZING_AUTOMATIC);
 
-        css_provider = gtk_css_provider_new ();
-        _gtk_css_provider_load_from_resource (css_provider,
-                                              "/org/gnome/evince/previewer/ui/evince-previewer.css",
-                                              &error);
-        g_assert_no_error (error);
-        gtk_style_context_add_provider_for_screen (gtk_widget_get_screen (GTK_WIDGET (window)),
-                                                   GTK_STYLE_PROVIDER (css_provider),
-                                                   GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
-        g_object_unref (css_provider);
-
 	view_sizing_mode_changed (window->model, NULL, window);
 
-	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
-
-	window->toolbar = ev_previewer_toolbar_new (window);
-	gtk_widget_set_no_show_all (window->toolbar, TRUE);
-	gtk_header_bar_set_show_close_button (GTK_HEADER_BAR (window->toolbar),
-                                              TRUE);
-	gtk_window_set_titlebar (GTK_WINDOW (window), window->toolbar);
-	gtk_widget_show (window->toolbar);
-
-	g_signal_connect (ev_previewer_toolbar_get_page_selector (EV_PREVIEWER_TOOLBAR (window->toolbar)),
+	g_signal_connect (window->page_selector,
 			  "activate-link",
 			  G_CALLBACK (ev_previewer_window_action_page_activated),
 			  window);
 
-	swindow = gtk_scrolled_window_new (NULL, NULL);
-
-	window->view = EV_VIEW (ev_view_new ());
-	ev_view_set_model (window->view, window->model);
-	ev_document_model_set_continuous (window->model, FALSE);
 
 	g_signal_connect_object (window->model, "page-changed",
 				 G_CALLBACK (model_page_changed),
 				 window, 0);
-
-	gtk_container_add (GTK_CONTAINER (swindow), GTK_WIDGET (window->view));
-	gtk_widget_show (GTK_WIDGET (window->view));
-
-	gtk_box_pack_start (GTK_BOX (vbox), swindow, TRUE, TRUE, 0);
-	gtk_widget_show (swindow);
-
-	gtk_container_add (GTK_CONTAINER (window), vbox);
-	gtk_widget_show (vbox);
 }
 
 
@@ -510,9 +451,17 @@ static void
 ev_previewer_window_class_init (EvPreviewerWindowClass *klass)
 {
 	GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
+	GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
 
 	gobject_class->constructed = ev_previewer_window_constructed;
 	gobject_class->dispose = ev_previewer_window_dispose;
+
+	g_type_ensure (EV_TYPE_PAGE_ACTION_WIDGET);
+	gtk_widget_class_set_template_from_resource (widget_class,
+			"/org/gnome/evince/previewer/ui/previewer-window.ui");
+
+	gtk_widget_class_bind_template_child (widget_class, EvPreviewerWindow, view);
+	gtk_widget_class_bind_template_child (widget_class, EvPreviewerWindow, page_selector);
 }
 
 /* Public methods */

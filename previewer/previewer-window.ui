@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk" version="4.0" />
+  <requires lib="libadwaita" version="1.0" />
+  <template class="EvPreviewerWindow" parent="AdwApplicationWindow">
+    <property name="default-width">600</property>
+    <property name="default-height">600</property>
+    <property name="title"></property>
+
+    <child>
+      <object class="GtkBox">
+        <property name="orientation">vertical</property>
+        <child>
+          <object class="AdwHeaderBar">
+            <child>
+              <object class="GtkButton" id="go-previous-page">
+                <property name="tooltip-text" translatable="yes">Previous Page</property>
+                <property name="action-name">win.go-previous-page</property>
+                <property name="icon-name">go-up-symbolic</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="go-next-page">
+                <property name="tooltip-text" translatable="yes">Next Page</property>
+                <property name="action-name">win.go-next-page</property>
+                <property name="icon-name">go-down-symbolic</property>
+              </object>
+            </child>
+            <child>
+              <object class="EvPageActionWidget" id="page_selector">
+                <property name="tooltip-text" translatable="yes">Select Page or Search in the Index</property>
+              </object>
+            </child>
+
+            <child type="end">
+              <object class="GtkButton" id="print">
+                <property name="label" translatable="yes">_Print</property>
+                <property name="tooltip-text" translatable="yes">Print this Document</property>
+                <property name="action-name">win.print</property>
+                <property name="use-underline">True</property>
+                <style>
+                  <class name="suggested-action" />
+                </style>
+              </object>
+            </child>
+            <child type="end">
+              <object class="GtkButton" id="zoom-out">
+                <property name="tooltip-text" translatable="yes">Shrink the Document</property>
+                <property name="action-name">win.zoom-out</property>
+                <property name="icon-name">zoom-out-symbolic</property>
+              </object>
+            </child>
+            <child type="end">
+              <object class="GtkButton" id="zoom-default">
+                <property name="tooltip-text" translatable="yes">Reset Zoom and Make the Page Fit in the Window</property>
+                <property name="action-name">win.zoom-default</property>
+                <property name="icon-name">zoom-fit-best-symbolic</property>
+              </object>
+            </child>
+            <child type="end">
+              <object class="GtkButton" id="zoom-in">
+                <property name="tooltip-text" translatable="yes">Enlarge the Document</property>
+                <property name="action-name">win.zoom-in</property>
+                <property name="icon-name">zoom-in-symbolic</property>
+              </object>
+            </child>
+          </object>
+        </child>
+
+        <child>
+          <object class="GtkScrolledWindow">
+            <property name="hexpand">True</property>
+            <property name="vexpand">True</property>
+            <child>
+              <object class="EvView" id="view" />
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+</interface>
