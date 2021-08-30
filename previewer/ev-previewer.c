@@ -29,7 +29,7 @@
 
 #include <gtk/gtk.h>
 #include <glib/gi18n.h>
-#include <handy.h>
+#include <adwaita.h>
 #include <evince-document.h>
 #include <evince-view.h>
 
@@ -100,10 +100,6 @@ startup_cb (GApplication *application,
         gboolean ps_ok = TRUE;
 
         g_assert (input_fd != -1 || input_file != NULL);
-
-        hdy_init ();
-        hdy_style_manager_set_color_scheme (hdy_style_manager_get_default (),
-                                            HDY_COLOR_SCHEME_PREFER_LIGHT);
 
         window = ev_previewer_window_new ();
 
@@ -242,7 +238,7 @@ check_arguments (int argc,
 gint
 main (gint argc, gchar **argv)
 {
-        GtkApplication  *application;
+        AdwApplication  *application;
 	GOptionContext  *context;
 	GError          *error = NULL;
         int              status = 1;
@@ -294,8 +290,6 @@ main (gint argc, gchar **argv)
 	g_option_context_set_translation_domain (context, GETTEXT_PACKAGE);
 	g_option_context_add_main_entries (context, goption_options, GETTEXT_PACKAGE);
 
-	g_option_context_add_group (context, gtk_get_option_group (TRUE));
-
 	if (!g_option_context_parse (context, &argc, &argv, &error) ||
             !check_arguments (argc, argv, &error)) {
 		g_printerr ("Error parsing command line arguments: %s\n", error->message);
@@ -311,7 +305,9 @@ main (gint argc, gchar **argv)
 	g_set_application_name (_("GNOME Document Previewer"));
 	gtk_window_set_default_icon_name (APPLICATION_ID);
 
-        application = gtk_application_new (NULL, G_APPLICATION_NON_UNIQUE);
+        application = adw_application_new (NULL, G_APPLICATION_NON_UNIQUE);
+	g_application_set_resource_base_path (G_APPLICATION (application),
+			"/org/gnome/evince/previewer");
         g_signal_connect (application, "startup", G_CALLBACK (startup_cb), NULL);
         g_signal_connect (application, "activate", G_CALLBACK (activate_cb), NULL);
 
