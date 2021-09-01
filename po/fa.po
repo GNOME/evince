@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince HEAD\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
-"POT-Creation-Date: 2021-02-26 10:07+0000\n"
-"PO-Revision-Date: 2021-03-04 00:42+0000\n"
+"POT-Creation-Date: 2021-08-25 13:26+0000\n"
+"PO-Revision-Date: 2021-09-01 14:26+0430\n"
 "Last-Translator: Danial Behzadi <dani.behzi@ubuntu.com>\n"
 "Language-Team: Persian\n"
 "Language: fa\n"
@@ -110,55 +110,55 @@ msgstr "سندهای PDF"
 msgid "Adds support for reading PDF Documents"
 msgstr "پشتیبانی از خواندن سندهای PDF را اضافه می‌کند"
 
-#: backend/pdf/ev-poppler.cc:934
+#: backend/pdf/ev-poppler.c:907
 msgid "This work is in the Public Domain"
 msgstr "این کار در دامنهٔ عمومی است"
 
 #. translators: this is the document security state
-#: backend/pdf/ev-poppler.cc:1206 backend/pdf/ev-poppler.cc:1212
-#: properties/ev-properties-view.c:425
+#: backend/pdf/ev-poppler.c:1179 backend/pdf/ev-poppler.c:1185
+#: properties/ev-properties-view.c:433
 msgid "Yes"
 msgstr "بله"
 
 #. translators: this is the document security state
-#: backend/pdf/ev-poppler.cc:1209 backend/pdf/ev-poppler.cc:1212
-#: properties/ev-properties-view.c:427
+#: backend/pdf/ev-poppler.c:1182 backend/pdf/ev-poppler.c:1185
+#: properties/ev-properties-view.c:435
 msgid "No"
 msgstr "خیر"
 
-#: backend/pdf/ev-poppler.cc:1350
+#: backend/pdf/ev-poppler.c:1323
 msgid "Type 1"
 msgstr "نوع ۱"
 
-#: backend/pdf/ev-poppler.cc:1352
+#: backend/pdf/ev-poppler.c:1325
 msgid "Type 1C"
 msgstr "نوع ‎1C"
 
-#: backend/pdf/ev-poppler.cc:1354
+#: backend/pdf/ev-poppler.c:1327
 msgid "Type 3"
 msgstr "نوع ۳"
 
-#: backend/pdf/ev-poppler.cc:1356
+#: backend/pdf/ev-poppler.c:1329
 msgid "TrueType"
 msgstr "تروتایپ"
 
-#: backend/pdf/ev-poppler.cc:1358
+#: backend/pdf/ev-poppler.c:1331
 msgid "Type 1 (CID)"
 msgstr "نوع ۱ (CID)"
 
-#: backend/pdf/ev-poppler.cc:1360
+#: backend/pdf/ev-poppler.c:1333
 msgid "Type 1C (CID)"
 msgstr "نوع ‏1C‏ (CID)"
 
-#: backend/pdf/ev-poppler.cc:1362
+#: backend/pdf/ev-poppler.c:1335
 msgid "TrueType (CID)"
 msgstr "تروتایپ (CID)"
 
-#: backend/pdf/ev-poppler.cc:1364
+#: backend/pdf/ev-poppler.c:1337
 msgid "Unknown font type"
 msgstr "نوع قلم نامعلوم"
 
-#: backend/pdf/ev-poppler.cc:1408
+#: backend/pdf/ev-poppler.c:1381
 msgid ""
 "This document contains non-embedded fonts that are not from the PDF Standard 14 "
 "fonts. If the substitute fonts selected by fontconfig are not the same as the "
@@ -168,11 +168,11 @@ msgstr ""
 "جایگزین انتخاب شده به‌وسیلهٔ fontconfig مشابه قلم‌های استفاده شده در ساخت PDF "
 "نباشند، ممکن است نمایش آن صحیح نباشد."
 
-#: backend/pdf/ev-poppler.cc:1413
+#: backend/pdf/ev-poppler.c:1386
 msgid "All fonts are either standard or embedded."
 msgstr "تمام قلم‌ها یا استاندارد هستند یا توکار."
 
-#: backend/pdf/ev-poppler.cc:1443
+#: backend/pdf/ev-poppler.c:1416
 msgid "No name"
 msgstr "بدون نام"
 
@@ -186,20 +186,20 @@ msgstr "بدون نام"
 #. Author: None
 #. Keywords: None
 #.
-#: backend/pdf/ev-poppler.cc:1452 libview/ev-print-operation.c:1991
+#: backend/pdf/ev-poppler.c:1425 libview/ev-print-operation.c:1991
 #: properties/ev-properties-view.c:233
 msgid "None"
 msgstr "هیچ‌کدام"
 
-#: backend/pdf/ev-poppler.cc:1460
+#: backend/pdf/ev-poppler.c:1433
 msgid "Embedded subset"
 msgstr "زیرمجموعهٔ توکار"
 
-#: backend/pdf/ev-poppler.cc:1462
+#: backend/pdf/ev-poppler.c:1435
 msgid "Embedded"
 msgstr "توکار"
 
-#: backend/pdf/ev-poppler.cc:1464
+#: backend/pdf/ev-poppler.c:1437
 msgid "Not embedded"
 msgstr "غیر توکار"
 
@@ -208,7 +208,7 @@ msgstr "غیر توکار"
 #. * type. Example:
 #. * "Type 1 (One of the Standard 14 Fonts)"
 #.
-#: backend/pdf/ev-poppler.cc:1471
+#: backend/pdf/ev-poppler.c:1444
 msgid " (One of the Standard 14 Fonts)"
 msgstr " (یکی از ۱۴ قلم اصلی)"
 
@@ -217,7 +217,7 @@ msgstr " (یکی از ۱۴ قلم اصلی)"
 #. * type. Example:
 #. * "TrueType (Not one of the Standard 14 Fonts)"
 #.
-#: backend/pdf/ev-poppler.cc:1478
+#: backend/pdf/ev-poppler.c:1451
 msgid " (Not one of the Standard 14 Fonts)"
 msgstr " (یکی از ۱۴ قلم اصلی نیست)"
 
@@ -231,7 +231,7 @@ msgstr " (یکی از ۱۴ قلم اصلی نیست)"
 #. * Substituting with TeXGyreTermes-Regular
 #. * (/usr/share/textmf/.../texgyretermes-regular.otf)
 #.
-#: backend/pdf/ev-poppler.cc:1497
+#: backend/pdf/ev-poppler.c:1470
 #, c-format
 msgid ""
 "%s%s\n"
@@ -255,7 +255,7 @@ msgstr ""
 #. * Encoding: Custom
 #. * Embedded subset
 #.
-#: backend/pdf/ev-poppler.cc:1515
+#: backend/pdf/ev-poppler.c:1488
 #, c-format
 msgid ""
 "%s%s\n"
@@ -307,59 +307,9 @@ msgstr "سندهای XPS"
 msgid "Adds support for reading XPS documents"
 msgstr "پشتیبانی از خواندن سندهای XPS را اضافه می‌کند"
 
-#: browser-plugin/EvBrowserPluginToolbar.cpp:288 shell/evince-menus.ui:127
-msgid "Fit Pa_ge"
-msgstr "جا دادن _صفحه"
-
-#: browser-plugin/EvBrowserPluginToolbar.cpp:297 shell/evince-menus.ui:132
-msgid "Fit _Width"
-msgstr "جا دادن در _عرض"
-
-#: browser-plugin/EvBrowserPluginToolbar.cpp:306 shell/evince-menus.ui:137
-msgid "_Automatic"
-msgstr "_خودکار"
-
-#. Navigation buttons
-#: browser-plugin/EvBrowserPluginToolbar.cpp:331
-msgid "Go to the previous page"
-msgstr "رفتن به صفحهٔ قبل"
-
-#: browser-plugin/EvBrowserPluginToolbar.cpp:335
-msgid "Go to the next page"
-msgstr "رفتن به صفحهٔ بعد"
-
-#. Search.
-#: browser-plugin/EvBrowserPluginToolbar.cpp:362 shell/ev-toolbar.c:173
-msgid "Find a word or phrase in the document"
-msgstr "یافتن یک کلمه یا عبارت در سند"
-
-#: browser-plugin/EvBrowserPluginToolbar.cpp:381
-msgid "Show the entire document"
-msgstr "نشان دادن همهٔ سند"
-
-#: browser-plugin/EvBrowserPluginToolbar.cpp:389
-msgid "Show two pages at once"
-msgstr "نمایش دو صفحه در یک زمان"
-
-#: browser-plugin/EvBrowserPluginToolbar.cpp:411 previewer/previewer.ui:34
-msgid "Enlarge the document"
-msgstr "بسط سند"
-
-#: browser-plugin/EvBrowserPluginToolbar.cpp:415 previewer/previewer.ui:42
-msgid "Shrink the document"
-msgstr "تقلیل سند"
-
-#: browser-plugin/EvBrowserPluginToolbar.cpp:437
-msgid "Download document"
-msgstr "بارگیری سند"
-
-#: browser-plugin/EvBrowserPluginToolbar.cpp:450
-msgid "Print document"
-msgstr "چاپ سند"
-
 #. Manually set name and icon
 #: data/org.gnome.Evince.desktop.in.in:3 shell/ev-window-title.c:133
-#: shell/main.c:298
+#: shell/main.c:300
 msgid "Document Viewer"
 msgstr "نمایشگر سند"
 
@@ -373,6 +323,10 @@ msgid "pdf;ps;postscript;dvi;xps;djvu;tiff;document;presentation;viewer;evince;"
 msgstr ""
 "سند;ارائه;نوشتار;pdf;ps;postscript;dvi;xps;djvu;tiff;document;presentation;"
 "viewer;evince;"
+
+#: data/org.gnome.Evince.desktop.in.in:19
+msgid "New Window"
+msgstr "پنجرهٔ جدید"
 
 #: data/org.gnome.Evince.gschema.xml:14
 msgid "Override document restrictions"
@@ -482,7 +436,7 @@ msgid "of %d"
 msgstr "از %Id"
 
 #: libmisc/ev-page-action-widget.c:187 shell/ev-history.c:455
-#: shell/ev-sidebar-bookmarks.c:343 shell/ev-window.c:960 shell/ev-window.c:5116
+#: shell/ev-sidebar-bookmarks.c:343 shell/ev-window.c:966 shell/ev-window.c:5154
 #, c-format
 msgid "Page %s"
 msgstr "صفحه %s"
@@ -662,63 +616,63 @@ msgstr "لغزشِ نما به پایین"
 msgid "Document View"
 msgstr "نمای سند"
 
-#: libview/ev-view.c:2110
+#: libview/ev-view.c:2112
 msgid "Go to first page"
 msgstr "رفتن به صفحهٔ نخست"
 
-#: libview/ev-view.c:2112
+#: libview/ev-view.c:2114
 msgid "Go to previous page"
 msgstr "رفتن به صفحهٔ پیشین"
 
-#: libview/ev-view.c:2114
+#: libview/ev-view.c:2116
 msgid "Go to next page"
 msgstr "رفتن به صفحهٔ بعدی"
 
-#: libview/ev-view.c:2116
+#: libview/ev-view.c:2118
 msgid "Go to last page"
 msgstr "رفتن به صفحهٔ پایانی"
 
-#: libview/ev-view.c:2118
+#: libview/ev-view.c:2120
 msgid "Go to page"
 msgstr "رفتن به صفحه"
 
-#: libview/ev-view.c:2120
+#: libview/ev-view.c:2122
 msgid "Find"
 msgstr "یافتن"
 
-#: libview/ev-view.c:2148
+#: libview/ev-view.c:2150
 #, c-format
 msgid "Go to page %s"
 msgstr "رفتن به صفحهٔ %s"
 
-#: libview/ev-view.c:2154
+#: libview/ev-view.c:2156
 #, c-format
 msgid "Go to %s on file “%s”"
 msgstr "برو به %s در پروندهٔ «%s»"
 
-#: libview/ev-view.c:2157
+#: libview/ev-view.c:2159
 #, c-format
 msgid "Go to file “%s”"
 msgstr "رفتن به پروندهٔ «%s»"
 
-#: libview/ev-view.c:2165
+#: libview/ev-view.c:2167
 #, c-format
 msgid "Launch %s"
 msgstr "راه‌اندازی %s"
 
-#: libview/ev-view.c:2172
+#: libview/ev-view.c:2174
 msgid "Reset form"
 msgstr "بازنشانی فرم"
 
-#: libview/ev-view-presentation.c:756
+#: libview/ev-view-presentation.c:757
 msgid "Jump to page:"
 msgstr "پریدن به صفحه‌:"
 
-#: libview/ev-view-presentation.c:1050
+#: libview/ev-view-presentation.c:1051
 msgid "End of presentation. Press Esc or click to exit."
 msgstr "پایان ارائه. برای خروج کلید گریز را بزنید."
 
-#: org.gnome.Evince.appdata.xml.in:23 shell/ev-window.c:4186
+#: org.gnome.Evince.appdata.xml.in:23 shell/ev-window.c:4210
 msgid "Evince"
 msgstr "اوینس"
 
@@ -774,7 +728,7 @@ msgstr "انتخاب صفحه یا جست‌وجو در فهرست"
 msgid "Select page"
 msgstr "انتخاب صفحه"
 
-#: previewer/ev-previewer-window.c:79 shell/ev-window.c:3641
+#: previewer/ev-previewer-window.c:79 shell/ev-window.c:3665
 msgid "Failed to print document"
 msgstr "چاپ سند شکست خورد"
 
@@ -799,6 +753,14 @@ msgstr "صفحهٔ قبل"
 msgid "Next Page"
 msgstr "صفحهٔ بعد"
 
+#: previewer/previewer.ui:34
+msgid "Enlarge the document"
+msgstr "بسط سند"
+
+#: previewer/previewer.ui:42
+msgid "Shrink the document"
+msgstr "تقلیل سند"
+
 #: previewer/previewer.ui:49
 msgid "Reset zoom and make the page fit in the window"
 msgstr "بازنشانی بزرگ‌نمایی و جا دادن صفحه در پنجره"
@@ -819,7 +781,7 @@ msgstr "مکان:"
 msgid "Subject:"
 msgstr "موضوع:"
 
-#: properties/ev-properties-view.c:65 shell/ev-annotation-properties-dialog.c:171
+#: properties/ev-properties-view.c:65 shell/ev-annotation-properties-dialog.c:172
 msgid "Author:"
 msgstr "سازنده:"
 
@@ -905,7 +867,7 @@ msgstr "%s، عمودی (%s)"
 msgid "%s, Landscape (%s)"
 msgstr "%s، منظره‌ای (%s)"
 
-#: properties/ev-properties-view.c:429 shell/ev-annotation-properties-dialog.c:112
+#: properties/ev-properties-view.c:437 shell/ev-annotation-properties-dialog.c:112
 msgid "Unknown"
 msgstr "ناشناس"
 
@@ -969,35 +931,35 @@ msgstr "زیر خط"
 msgid "Squiggly"
 msgstr "پیچ و تاب"
 
-#: shell/ev-annotation-properties-dialog.c:152
+#: shell/ev-annotation-properties-dialog.c:153
 msgid "Annotation Properties"
 msgstr "ویژگی‌های حاشیه‌نویسی"
 
-#: shell/ev-annotation-properties-dialog.c:156
+#: shell/ev-annotation-properties-dialog.c:157
 msgid "_Close"
 msgstr "_بستن"
 
-#: shell/ev-annotation-properties-dialog.c:157
+#: shell/ev-annotation-properties-dialog.c:158
 msgid "_Apply"
 msgstr "_اعمال"
 
-#: shell/ev-annotation-properties-dialog.c:182
+#: shell/ev-annotation-properties-dialog.c:183
 msgid "Color:"
 msgstr "رنگ:"
 
-#: shell/ev-annotation-properties-dialog.c:192
+#: shell/ev-annotation-properties-dialog.c:193
 msgid "Opacity:"
 msgstr "شفافیت:"
 
-#: shell/ev-annotation-properties-dialog.c:204
+#: shell/ev-annotation-properties-dialog.c:205
 msgid "Initial window state:"
 msgstr "وضعیت اولیه پنجره:"
 
-#: shell/ev-annotation-properties-dialog.c:210
+#: shell/ev-annotation-properties-dialog.c:211
 msgid "Open"
 msgstr "گشودن"
 
-#: shell/ev-annotation-properties-dialog.c:211
+#: shell/ev-annotation-properties-dialog.c:212
 msgid "Close"
 msgstr "بستن"
 
@@ -1018,7 +980,7 @@ msgstr "متن نشانه‌گذاری"
 msgid "Add highlight annotation"
 msgstr "افزودن حاشیه‌نویسی پررنگ"
 
-#: shell/evince-menus.ui:25 shell/ev-sidebar-links.c:340
+#: shell/evince-menus.ui:25 shell/ev-sidebar-links.c:351
 msgid "Print…"
 msgstr "چاپ…"
 
@@ -1094,6 +1056,18 @@ msgstr "_راهنما"
 msgid "_About Document Viewer"
 msgstr "_دربارهٔ نمایشگر سند"
 
+#: shell/evince-menus.ui:127
+msgid "Fit Pa_ge"
+msgstr "جا دادن _صفحه"
+
+#: shell/evince-menus.ui:132
+msgid "Fit _Width"
+msgstr "جا دادن در _عرض"
+
+#: shell/evince-menus.ui:137
+msgid "_Automatic"
+msgstr "_خودکار"
+
 #: shell/evince-menus.ui:149
 msgid "_Open Link"
 msgstr "_گشودن پیوند"
@@ -1118,7 +1092,7 @@ msgstr "صفحهٔ _قبل"
 msgid "_Next Page"
 msgstr "صفحهٔ _بعد"
 
-#: shell/evince-menus.ui:179 shell/ev-window.c:3940
+#: shell/evince-menus.ui:179 shell/ev-window.c:3964
 msgid "_Reload"
 msgstr "_بازخوانی"
 
@@ -1150,17 +1124,17 @@ msgstr "_گشودن پیوست"
 msgid "_Save Attachment As…"
 msgstr "_ذخیرهٔ پیوست به نام…"
 
-#: shell/evince-menus.ui:223 shell/evince-menus.ui:295
-msgid "Annotation Properties…"
-msgstr "ویژگی‌های حاشیه‌نویسی…"
+#: shell/evince-menus.ui:223
+msgid "Annotation _Properties…"
+msgstr "_ویژگی‌های حاشیه‌نویسی…"
 
-#: shell/evince-menus.ui:228 shell/evince-menus.ui:300
-msgid "Remove Annotation"
-msgstr "حذف حاشیه‌نویسی"
+#: shell/evince-menus.ui:228
+msgid "R_emove Annotation"
+msgstr "_برداشتن حاشیه‌نویسی"
 
 #: shell/evince-menus.ui:235
-msgid "Highlight Selected Text"
-msgstr "نشانه‌گذاری متن گزیده"
+msgid "_Highlight Selected Text"
+msgstr "_نشانه‌گذاری متن گزیده"
 
 #: shell/evince-menus.ui:248
 msgid "Navigation"
@@ -1186,6 +1160,14 @@ msgstr "عقب"
 msgid "Forward"
 msgstr "پیشروی"
 
+#: shell/evince-menus.ui:295
+msgid "Annotation Properties…"
+msgstr "ویژگی‌های حاشیه‌نویسی…"
+
+#: shell/evince-menus.ui:300
+msgid "Remove Annotation"
+msgstr "حذف حاشیه‌نویسی"
+
 #: shell/evince-menus.ui:320
 msgid "_Open Bookmark"
 msgstr "_گشودن نشانک‌ها"
@@ -1204,53 +1186,53 @@ msgid "Password for document %s"
 msgstr "گذرواژهٔ سند %s"
 
 #. Create tree view
-#: shell/ev-loading-message.c:50 shell/ev-sidebar-annotations.c:137
-#: shell/ev-sidebar-layers.c:123 shell/ev-sidebar-links.c:265
+#: shell/ev-loading-message.c:50 shell/ev-sidebar-annotations.c:139
+#: shell/ev-sidebar-layers.c:123 shell/ev-sidebar-links.c:276
 msgid "Loading…"
 msgstr "در حال بارکردن…"
 
-#: shell/ev-password-view.c:131
+#: shell/ev-password-view.c:141
 msgid ""
 "This document is locked and can only be read by entering the correct password."
 msgstr "این سند قفل شده و فقط با ورود گذرواژهٔ درست قابل خواندن است."
 
-#: shell/ev-password-view.c:142
+#: shell/ev-password-view.c:152
 msgid "_Unlock Document"
 msgstr "_قفل‌گشایی سند"
 
-#: shell/ev-password-view.c:238
+#: shell/ev-password-view.c:252
 #, c-format
 msgid ""
 "The document “%s” is locked and requires a password before it can be opened."
 msgstr "سند «%s» قفل شده است و پیش از باز شدن به گذرواژه نیاز دارد."
 
-#: shell/ev-password-view.c:245
+#: shell/ev-password-view.c:259
 msgid "Password required"
 msgstr "گذرواژه لازم است"
 
-#: shell/ev-password-view.c:252 shell/ev-sidebar-attachments.c:493
-#: shell/ev-window.c:2885 shell/ev-window.c:3183 shell/ev-window.c:4064
-#: shell/ev-window.c:6949 shell/ev-window.c:7173
+#: shell/ev-password-view.c:266 shell/ev-sidebar-attachments.c:493
+#: shell/ev-window.c:2905 shell/ev-window.c:3203 shell/ev-window.c:4088
+#: shell/ev-window.c:6998 shell/ev-window.c:7224
 msgid "_Cancel"
 msgstr "_لغو"
 
-#: shell/ev-password-view.c:253
+#: shell/ev-password-view.c:267
 msgid "_Unlock"
 msgstr "_قفل‌گشایی"
 
-#: shell/ev-password-view.c:265
+#: shell/ev-password-view.c:279
 msgid "_Password:"
 msgstr "_گذرواژه:"
 
-#: shell/ev-password-view.c:300
+#: shell/ev-password-view.c:314
 msgid "Forget password _immediately"
 msgstr "گذرواژه را بی‌درنگ _فراموش کن"
 
-#: shell/ev-password-view.c:312
+#: shell/ev-password-view.c:326
 msgid "Remember password until you _log out"
 msgstr "گذرواژه تا زمان _خروج خاطر سپرده شود"
 
-#: shell/ev-password-view.c:324
+#: shell/ev-password-view.c:338
 msgid "Remember _forever"
 msgstr "برای _همیشه بخاطر بسپار"
 
@@ -1291,16 +1273,16 @@ msgstr "مجوز متن"
 msgid "Further Information"
 msgstr "اطلاعات بیشتر"
 
-#: shell/ev-sidebar-annotations.c:360
+#: shell/ev-sidebar-annotations.c:372
 msgid "Document contains no annotations"
 msgstr "سند هیچ حاشیه‌نویسی‌ای ندارد"
 
-#: shell/ev-sidebar-annotations.c:399
+#: shell/ev-sidebar-annotations.c:412
 #, c-format
 msgid "Page %d"
 msgstr "صفحه %Id"
 
-#: shell/ev-sidebar-annotations.c:651 shell/ev-window.c:7573
+#: shell/ev-sidebar-annotations.c:675 shell/ev-window.c:7624
 msgid "Annotations"
 msgstr "حاشیه‌نویسی‌ها"
 
@@ -1318,7 +1300,7 @@ msgstr "پروندهٔ «%s» از پیش موجود است. جایگزینیش 
 msgid "_Replace"
 msgstr "_جایگزینی"
 
-#: shell/ev-sidebar-attachments.c:899 shell/ev-window.c:7597
+#: shell/ev-sidebar-attachments.c:899 shell/ev-window.c:7648
 msgid "Attachments"
 msgstr "پیوست‌ها"
 
@@ -1330,24 +1312,40 @@ msgstr "افزودن نشانک"
 msgid "Remove bookmark"
 msgstr "برداشتن نشانک"
 
-#: shell/ev-sidebar-bookmarks.c:628 shell/ev-window.c:7581
+#: shell/ev-sidebar-bookmarks.c:628 shell/ev-window.c:7632
 msgid "Bookmarks"
 msgstr "نشانک‌ها"
 
-#: shell/ev-sidebar-layers.c:444 shell/ev-window.c:7609
+#: shell/ev-sidebar-layers.c:444 shell/ev-window.c:7660
 msgid "Layers"
 msgstr "لایه‌ها"
+
+#: shell/ev-sidebar-links.c:357
+msgid "Collapse all tree"
+msgstr "جمع کردن تمامی درخت"
+
+#: shell/ev-sidebar-links.c:364
+msgid "Expand all tree"
+msgstr "گستردن تمامی درخت"
+
+#: shell/ev-sidebar-links.c:371
+msgid "Expand all under this element"
+msgstr "گستردن همه زیر این عنصر"
 
 #. Translators: This is the title for the sidebar pane that
 #. * shows the Outline or Table of Contents of the document.
 #.
-#: shell/ev-sidebar-links.c:1023 shell/ev-window.c:7561
+#: shell/ev-sidebar-links.c:1431 shell/ev-window.c:7612
 msgid "Outline"
 msgstr "رئوس مطالب"
 
-#: shell/ev-sidebar-thumbnails.c:1047 shell/ev-window.c:7544
+#: shell/ev-sidebar-thumbnails.c:1047 shell/ev-window.c:7595
 msgid "Thumbnails"
 msgstr "تصاویر بندانگشتی"
+
+#: shell/ev-toolbar.c:173
+msgid "Find a word or phrase in the document"
+msgstr "یافتن یک کلمه یا عبارت در سند"
 
 #: shell/ev-toolbar.c:179
 msgid "Search not available for this document"
@@ -1389,153 +1387,153 @@ msgstr "تنظیم سطح بزرگنمایی"
 msgid "Supported Image Files"
 msgstr "پشتیبانی از پرونده‌های تصویر"
 
-#: shell/ev-window.c:1750
+#: shell/ev-window.c:1756
 msgid "The document contains no pages"
 msgstr "سند هیچ صفحه‌ای ندارد"
 
-#: shell/ev-window.c:1753
+#: shell/ev-window.c:1759
 msgid "The document contains only empty pages"
 msgstr "سند تنها صفحه‌های خالی دارد"
 
-#: shell/ev-window.c:1984 shell/ev-window.c:2166
+#: shell/ev-window.c:2003 shell/ev-window.c:2185
 #, c-format
 msgid "Unable to open document “%s”."
 msgstr "گشودن سند «%s» ممکن نیست."
 
-#: shell/ev-window.c:2131
+#: shell/ev-window.c:2150
 #, c-format
 msgid "Loading document from “%s”"
 msgstr "در حال بار کردن سند از «%s»"
 
-#: shell/ev-window.c:2136 shell/ev-window.c:2607 shell/ev-window.c:2973
-#: shell/ev-window.c:3705 shell/ev-window.c:3953
+#: shell/ev-window.c:2155 shell/ev-window.c:2627 shell/ev-window.c:2993
+#: shell/ev-window.c:3729 shell/ev-window.c:3977
 msgid "C_ancel"
 msgstr "_لغو"
 
-#: shell/ev-window.c:2290 shell/ev-window.c:2658
+#: shell/ev-window.c:2309 shell/ev-window.c:2678
 #, c-format
 msgid "Downloading document (%d%%)"
 msgstr "در حال بارگیری سند (٪%Id)"
 
-#: shell/ev-window.c:2323
+#: shell/ev-window.c:2342
 msgid "Failed to load remote file."
 msgstr "بار کردن سند شکست خورد."
 
-#: shell/ev-window.c:2603
+#: shell/ev-window.c:2623
 #, c-format
 msgid "Reloading document from %s"
 msgstr "در حال بار کردن مجدد سند از %s"
 
-#: shell/ev-window.c:2633
+#: shell/ev-window.c:2653
 msgid "Failed to reload document."
 msgstr "بار کردن مجدد سند شکست خورد."
 
-#: shell/ev-window.c:2881
+#: shell/ev-window.c:2901
 msgid "Open Document"
 msgstr "گشودن سند"
 
-#: shell/ev-window.c:2884
+#: shell/ev-window.c:2904
 msgid "_Open"
 msgstr "_گشودن"
 
-#: shell/ev-window.c:2959
+#: shell/ev-window.c:2979
 #, c-format
 msgid "Saving document to %s"
 msgstr "درحال ذخیرهٔ سند در %s"
 
-#: shell/ev-window.c:2962
+#: shell/ev-window.c:2982
 #, c-format
 msgid "Saving attachment to %s"
 msgstr "درحال ذخیرهٔ پیوست در %s"
 
-#: shell/ev-window.c:2965
+#: shell/ev-window.c:2985
 #, c-format
 msgid "Saving image to %s"
 msgstr "درحال ذخیرهٔ تصویر در %s"
 
-#: shell/ev-window.c:3007 shell/ev-window.c:3122
+#: shell/ev-window.c:3027 shell/ev-window.c:3142
 #, c-format
 msgid "The file could not be saved as “%s”."
 msgstr "پرونده با نام «%s» قابل ذخیره نیست."
 
-#: shell/ev-window.c:3039
+#: shell/ev-window.c:3059
 #, c-format
 msgid "Uploading document (%d%%)"
 msgstr "در حال بارگذاری سند (٪%Id)"
 
-#: shell/ev-window.c:3043
+#: shell/ev-window.c:3063
 #, c-format
 msgid "Uploading attachment (%d%%)"
 msgstr "در حال بارگذاری پیوست (٪%Id)"
 
-#: shell/ev-window.c:3047
+#: shell/ev-window.c:3067
 #, c-format
 msgid "Uploading image (%d%%)"
 msgstr "بارگذاری تصویری (٪%Id)"
 
-#: shell/ev-window.c:3180
+#: shell/ev-window.c:3200
 msgid "Save As…"
 msgstr "ذخیرهٔ به نام…"
 
-#: shell/ev-window.c:3182 shell/ev-window.c:6948 shell/ev-window.c:7172
+#: shell/ev-window.c:3202 shell/ev-window.c:6997 shell/ev-window.c:7223
 msgid "_Save"
 msgstr "_ذخیره"
 
-#: shell/ev-window.c:3269
+#: shell/ev-window.c:3289
 msgid "Could not send current document"
 msgstr "نمی‌توان سند جاری را ارسال کرد"
 
-#: shell/ev-window.c:3592
+#: shell/ev-window.c:3616
 #, c-format
 msgid "%d pending job in queue"
 msgid_plural "%d pending jobs in queue"
 msgstr[0] "%Id کار منتظر در صف"
 
-#: shell/ev-window.c:3701
+#: shell/ev-window.c:3725
 #, c-format
 msgid "Printing job “%s”"
 msgstr "در حال چاپ «%s»"
 
-#: shell/ev-window.c:3919
+#: shell/ev-window.c:3943
 msgid "Document contains form fields that have been filled out."
 msgstr "سند دارای زمینه‌های فرمی است که پُر شده‌اند."
 
-#: shell/ev-window.c:3922
+#: shell/ev-window.c:3946
 msgid "Document contains new or modified annotations."
 msgstr "سند دارای حاشیه‌نویسی‌های جدید یا تغییر یافته است."
 
-#: shell/ev-window.c:3934
+#: shell/ev-window.c:3958
 #, c-format
 msgid "Reload document “%s”?"
 msgstr "بارگذاری مجدد «%s»؟"
 
-#: shell/ev-window.c:3936
+#: shell/ev-window.c:3960
 msgid "If you reload the document, changes will be permanently lost."
 msgstr "اگر سند را بازخوانی کنید، تغییرات برای همیشه از بین خواهند رفت."
 
-#: shell/ev-window.c:3938
+#: shell/ev-window.c:3962
 msgid "_No"
 msgstr "_خیر"
 
-#: shell/ev-window.c:3947
+#: shell/ev-window.c:3971
 #, c-format
 msgid "Save a copy of document “%s” before closing?"
 msgstr "قبل از بستن، یک رونوشت از سند «%s» ذخیره شود؟"
 
-#: shell/ev-window.c:3949
+#: shell/ev-window.c:3973
 msgid "If you don’t save a copy, changes will be permanently lost."
 msgstr ""
 "اگر یک رونوشت از سند را ذخیره نکنید، تغییرات برای همیشه از بین خواهند رفت."
 
-#: shell/ev-window.c:3951
+#: shell/ev-window.c:3975
 msgid "Close _without Saving"
 msgstr "بستن _بدون ذخیره"
 
-#: shell/ev-window.c:3955
+#: shell/ev-window.c:3979
 msgid "Save a _Copy"
 msgstr "ذخیرهٔ یک _رونوشت"
 
-#: shell/ev-window.c:4037
+#: shell/ev-window.c:4061
 #, c-format
 msgid "Wait until print job “%s” finishes before closing?"
 msgstr "قبل از بستن، تا پایان کار چاپ «%s» منتظر شوم؟"
@@ -1543,34 +1541,34 @@ msgstr "قبل از بستن، تا پایان کار چاپ «%s» منتظر �
 #. TRANS: the singular form is not really used as n_print_jobs > 1
 #. but some languages distinguish between different plurals forms,
 #. so the ngettext is needed.
-#: shell/ev-window.c:4043
+#: shell/ev-window.c:4067
 #, c-format
 msgid "There is %d print job active. Wait until print finishes before closing?"
 msgid_plural ""
 "There are %d print jobs active. Wait until print finishes before closing?"
 msgstr[0] "%Id مورد جهت چاپ فعال هستند. قبل از بستن تا پایان چاپ منتظر شوم؟"
 
-#: shell/ev-window.c:4058
+#: shell/ev-window.c:4082
 msgid "If you close the window, pending print jobs will not be printed."
 msgstr "اگر پنجره را ببندید، کارهای در انتظارچاپ، چاپ نخواهند شد."
 
-#: shell/ev-window.c:4062
+#: shell/ev-window.c:4086
 msgid "Cancel _print and Close"
 msgstr "لغو _چاپ و بستن"
 
-#: shell/ev-window.c:4066
+#: shell/ev-window.c:4090
 msgid "Close _after Printing"
 msgstr "بستن _بعد از چاپ"
 
-#: shell/ev-window.c:4188
+#: shell/ev-window.c:4212
 msgid "© 1996–2020 The Evince authors"
 msgstr "© ۱۹۹۶ - ۲۰۲۰ سازندگان اوینس"
 
-#: shell/ev-window.c:4191
+#: shell/ev-window.c:4215
 msgid "Evince is a simple document viewer for GNOME"
 msgstr "اوینس یک نمایشگر سند برای میزکار گنوم است"
 
-#: shell/ev-window.c:4194
+#: shell/ev-window.c:4218
 msgid "translator-credits"
 msgstr ""
 "آرش موسوی <mousavi.arash@gmail.com>\n"
@@ -1580,23 +1578,23 @@ msgstr ""
 "الناز سربر <elnaz@farsiweb.info>\n"
 "مهیار مقیمی <mahyar.moqimi@gmail.com>"
 
-#: shell/ev-window.c:4610
+#: shell/ev-window.c:4648
 msgid "Running in presentation mode"
 msgstr "در حال اجرا در حالت ارائه"
 
-#: shell/ev-window.c:5661
+#: shell/ev-window.c:5699
 msgid "The attachment could not be saved."
 msgstr "پیوست ذخیره نشد."
 
-#: shell/ev-window.c:5983
+#: shell/ev-window.c:6021
 msgid "Enable caret navigation?"
 msgstr "فعال‌سازی حالت پیمایش مکان‌نما؟"
 
-#: shell/ev-window.c:5984
+#: shell/ev-window.c:6022
 msgid "_Enable"
 msgstr "_فعال‌سازی"
 
-#: shell/ev-window.c:5987
+#: shell/ev-window.c:6025
 msgid ""
 "Pressing F7 turns the caret navigation on or off. This feature places a "
 "moveable cursor in text pages, allowing you to move around and select text with "
@@ -1606,37 +1604,37 @@ msgstr ""
 "قابل حرکت را در صفحات متنی قرار می‌دهد، که به شما اجازه می‌دهد در سند حرکت کنید و "
 "با کیبورد متن‌ها را انتخاب کنید. آیا مایلید که حالت پیمایش مکان‌نما را فعال کنید؟"
 
-#: shell/ev-window.c:5992
+#: shell/ev-window.c:6030
 msgid "Don’t show this message again"
 msgstr "این پیام را دوباره نشان نده"
 
-#: shell/ev-window.c:6586
+#: shell/ev-window.c:6635
 #, c-format
 msgid ""
 "Security alert: this document has been prevented from opening the file “%s”"
 msgstr "هشدار امنیتی: این سند از گشودن پروندهٔ «%s» باز داشته شد"
 
-#: shell/ev-window.c:6640
+#: shell/ev-window.c:6689
 msgid "Unable to open external link"
 msgstr "گشودن پیوند خارجی ممکن نیست"
 
-#: shell/ev-window.c:6877
+#: shell/ev-window.c:6926
 msgid "Couldn’t find appropriate format to save image"
 msgstr "قالب مناسب برای ذخیرهٔ عکس پیدا نشد"
 
-#: shell/ev-window.c:6909
+#: shell/ev-window.c:6958
 msgid "The image could not be saved."
 msgstr "تصویر ذخیره نشد."
 
-#: shell/ev-window.c:6945
+#: shell/ev-window.c:6994
 msgid "Save Image"
 msgstr "ذخیرهٔ تصویر"
 
-#: shell/ev-window.c:7101
+#: shell/ev-window.c:7152
 msgid "Unable to open attachment"
 msgstr "گشودن پیوست ممکن نیست"
 
-#: shell/ev-window.c:7169
+#: shell/ev-window.c:7220
 msgid "Save Attachment"
 msgstr "ذخیرهٔ پیوست"
 
@@ -1644,8 +1642,8 @@ msgstr "ذخیرهٔ پیوست"
 msgid "Recent Documents"
 msgstr "سندهای اخیر"
 
-#: shell/ev-window-title.c:151 shell/ev-window-title.c:153
-#: shell/ev-window-title.c:158
+#: shell/ev-window-title.c:153 shell/ev-window-title.c:155
+#: shell/ev-window-title.c:160
 msgid "Password Required"
 msgstr "گذرواژه لازم است"
 
@@ -2015,57 +2013,79 @@ msgctxt "shortcut window"
 msgid "Touchpad gestures"
 msgstr "حرکات صفحه‌لمسی"
 
-#: shell/main.c:63 shell/main.c:269
+#: shell/main.c:64 shell/main.c:271
 msgid "GNOME Document Viewer"
 msgstr "نمایشگر سند گنوم"
 
-#: shell/main.c:71
+#: shell/main.c:72
+msgid "Open a new window."
+msgstr "گشودن پنجره‌ای جدید."
+
+#: shell/main.c:73
 msgid "The page label of the document to display."
 msgstr "برچسب صفحهٔ سند که نمایش‌داده شود."
 
-#: shell/main.c:71
+#: shell/main.c:73
 msgid "PAGE"
 msgstr "PAGE"
 
-#: shell/main.c:72
+#: shell/main.c:74
 msgid "The page number of the document to display."
 msgstr "شمارهٔ صفحهٔ سند که نمایش‌داده شود."
 
-#: shell/main.c:72
+#: shell/main.c:74
 msgid "NUMBER"
 msgstr "NUMBER"
 
-#: shell/main.c:73
+#: shell/main.c:75
 msgid "Named destination to display."
 msgstr "مقصد نامگذاری شده جهت نمایش."
 
-#: shell/main.c:73
+#: shell/main.c:75
 msgid "DEST"
 msgstr "DEST"
 
-#: shell/main.c:74
+#: shell/main.c:76
 msgid "Run evince in fullscreen mode"
 msgstr "اجرای اوینس در حالت تمام صفحه"
 
-#: shell/main.c:75
+#: shell/main.c:77
 msgid "Run evince in presentation mode"
 msgstr "اجرای اوینس در حالت ارائه"
 
-#: shell/main.c:76
+#: shell/main.c:78
 msgid "Run evince as a previewer"
 msgstr "اجرای اوینس به عنوان یک پیش‌نمایش‌‌گر"
 
-#: shell/main.c:77
+#: shell/main.c:79
 msgid "The word or phrase to find in the document"
 msgstr "کلمه یا عبارتی که در سند پیدا شود"
 
-#: shell/main.c:77
+#: shell/main.c:79
 msgid "STRING"
 msgstr "STRING"
 
-#: shell/main.c:81
+#: shell/main.c:83
 msgid "[FILE…]"
 msgstr "[FILE…]"
+
+#~ msgid "Go to the previous page"
+#~ msgstr "رفتن به صفحهٔ قبل"
+
+#~ msgid "Go to the next page"
+#~ msgstr "رفتن به صفحهٔ بعد"
+
+#~ msgid "Show the entire document"
+#~ msgstr "نشان دادن همهٔ سند"
+
+#~ msgid "Show two pages at once"
+#~ msgstr "نمایش دو صفحه در یک زمان"
+
+#~ msgid "Download document"
+#~ msgstr "بارگیری سند"
+
+#~ msgid "Print document"
+#~ msgstr "چاپ سند"
 
 #~ msgid "Unable to launch external application."
 #~ msgstr "راه‌انداختن برنامهٔ خارجی ممکن نیست."
