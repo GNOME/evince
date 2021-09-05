@@ -13,8 +13,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: evince-doc\n"
-"POT-Creation-Date: 2021-03-10 19:17+0000\n"
-"PO-Revision-Date: 2021-03-12 17:49+0100\n"
+"POT-Creation-Date: 2021-08-25 13:26+0000\n"
+"PO-Revision-Date: 2021-09-05 10:51+0200\n"
 "Last-Translator: Charles Monzat <charles.monzat@free.fr>\n"
 "Language-Team: GNOME French Team <gnomefr@traduc.org>\n"
 "Language: fr\n"
@@ -976,25 +976,25 @@ msgstr ""
 "vous pouvez :"
 
 #. (itstool) path: item/p
-#: C/opening.page:51 C/opening.page:66
+#: C/opening.page:51
 msgid ""
 "Drag a file into the window from <app>Files</app>. The new file will open in "
-"a new window."
+"the same window."
 msgstr ""
 "Faire glisser une icône de fichier sur la fenêtre à partir de <app>Fichiers</"
-"app>. Le nouveau fichier s’ouvre dans une nouvelle fenêtre."
+"app>. Le nouveau fichier s’ouvre dans la même fenêtre."
 
 #. (itstool) path: item/p
 #: C/opening.page:55
 msgid ""
 "Press the <gui>Open…</gui> button in the top-left corner of the window. In "
 "the <gui>Open Document</gui> dialog, choose the file which you wish to open, "
-"and click <gui>Open</gui>. The file will open in a new window."
+"and click <gui>Open</gui>. The file will open in the same window."
 msgstr ""
 "Appuyer sur le bouton <gui>Ouvrir</gui> situé dans le coin supérieur gauche "
 "de la fenêtre. Dans la boîte de dialogue <gui>Ouvrir un document</gui>, "
 "choisissez le fichier que vous souhaitez ouvrir et cliquez sur <gui>Ouvrir</"
-"gui>. Le fichier s’ouvrira dans une nouvelle fenêtre."
+"gui>. Le fichier s’ouvrira dans la même fenêtre."
 
 #. (itstool) path: page/p
 #: C/opening.page:62
@@ -1004,6 +1004,15 @@ msgid ""
 msgstr ""
 "Si un document est déjà ouvert dans une fenêtre du <app>Visionneur de "
 "documents</app>, vous pouvez :"
+
+#. (itstool) path: item/p
+#: C/opening.page:66
+msgid ""
+"Drag a file into the window from <app>Files</app>. The new file will open in "
+"a new window."
+msgstr ""
+"Faire glisser une icône de fichier sur la fenêtre à partir de <app>Fichiers</"
+"app>. Le nouveau fichier s’ouvre dans une nouvelle fenêtre."
 
 #. (itstool) path: item/p
 #: C/opening.page:70
@@ -1086,7 +1095,6 @@ msgstr "Cliquez sur <gui>Paramètres</gui>."
 
 #. (itstool) path: item/p
 #: C/noprint.page:51
-#| msgid "Click <gui>Devices</gui> in the sidebar."
 msgid "Click <gui>Printers</gui> in the sidebar."
 msgstr "Cliquez sur <gui>Imprimantes</gui> dans la barre latérale."
 
@@ -1102,15 +1110,11 @@ msgstr "Cliquez sur le bouton <_:media-1/> situé à côté de l’imprimante."
 
 #. (itstool) path: item/p
 #: C/noprint.page:58
-#| msgid "Select the <gui style=\"tab\">Page Handling</gui> tab."
 msgid "Select <gui style=\"menuitem\">Printing Options</gui>."
 msgstr "Sélectionnez <gui style=\"menuitem\">Options d’impression</gui>."
 
 #. (itstool) path: item/p
 #: C/noprint.page:61
-#| msgid ""
-#| "Click on <gui>Print Test Page</gui>. A page should be sent to your "
-#| "printer."
 msgid "Click on <gui>Test Page</gui>. A page should be sent to your printer."
 msgstr ""
 "Cliquez sur <gui>Page de test</gui>. Une page devrait être envoyée à votre "
@@ -1166,9 +1170,6 @@ msgstr ""
 
 #. (itstool) path: item/p
 #: C/noprint.page:93
-#| msgid ""
-#| "Open the <gui href=\"help:gnome-help/shell-introduction#activities"
-#| "\">Activities</gui> overview and start typing <gui>Settings</gui>."
 msgid ""
 "Open the <gui href=\"help:gnome-help/shell-introduction#activities"
 "\">Activities</gui> overview and start typing <gui>dconf Editor</gui>."
@@ -1179,20 +1180,16 @@ msgstr ""
 
 #. (itstool) path: item/p
 #: C/noprint.page:97
-#| msgid "Click <gui>Print</gui>."
 msgid "Click on <gui>dconf Editor</gui>."
 msgstr "Cliquez sur <gui>Éditeur dconf</gui>."
 
 #. (itstool) path: item/p
 #: C/noprint.page:100
-#| msgid "Browse to <sys>/org/gnome/evince</sys> using the side pane."
 msgid "Browse to <sys>/org/gnome/evince</sys>."
 msgstr "Déplacez-vous vers <sys>/org/gnome/evince</sys>."
 
 #. (itstool) path: item/p
 #: C/noprint.page:103
-#| msgid ""
-#| "Make sure that the <gui>override_restrictions</gui> option is checked."
 msgid "Make sure that the <gui>override-restrictions</gui> option is checked."
 msgstr "Vérifiez que l’option <gui>override-restrictions</gui> est cochée."
 
@@ -2395,7 +2392,6 @@ msgstr "Sélectionnez l’onglet <gui style=\"tab\">Gestion des pages</gui>."
 
 #. (itstool) path: item/p
 #: C/print-pagescaling.page:37
-#| msgid "Choose a <em>Paper Scaling</em> from the drop-down list."
 msgid "Choose a <em>Page Scaling</em> from the drop-down list."
 msgstr "Choisissez un <em>Ajustement des pages</em> dans la liste déroulante."
 
@@ -2673,10 +2669,6 @@ msgstr ""
 
 #. (itstool) path: item/p
 #: C/forms-saving.page:39
-#| msgid ""
-#| "Click the <gui>File options</gui> menu in the top right corner and select "
-#| "<gui>Save as</gui> or press <keyseq><key>Ctrl</key><key>S</key></keyseq> "
-#| "on your keyboard."
 msgid ""
 "Click the <gui>File options</gui> menu in the top right corner and select "
 "<gui>Save As…</gui> or press <keyseq><key>Ctrl</key><key>S</key></keyseq> on "
@@ -2868,14 +2860,14 @@ msgstr ""
 msgid ""
 "Once you have an account, log in, and click on <gui>New issue</gui>. Before "
 "reporting a bug, please read the <link href=\"https://wiki.gnome.org/"
-"Community/GettingInTouch/Bugzilla/Guidelines\">bug writing guidelines</"
-"link>, and please <link href=\"https://gitlab.gnome.org/GNOME/evince/issues"
-"\">browse</link> for the bug to see if it already exists."
+"GettingInTouch/BugReportingGuidelines\">bug writing guidelines</link>, and "
+"please <link href=\"https://gitlab.gnome.org/GNOME/evince/issues\">browse</"
+"link> for the bug to see if it already exists."
 msgstr ""
 "Une fois inscrit, connectez-vous, et cliquez sur <gui>New issue</gui>. Avant "
 "de signaler un bogue, il est important de lire le <link href=\"https://wiki."
-"gnome.org/Community/GettingInTouch/Bugzilla/Guidelines\">bug writing "
-"guidelines (guide sur le rapport de bogue)</link> et de cliquer sur <link "
+"gnome.org/GettingInTouch/BugReportingGuidelines\">guide sur les rapports de "
+"bogue</link> et de cliquer sur <link "
 "href=\"https://gitlab.gnome.org/GNOME/evince/issues\">Browse (rechercher)</"
 "link> pour voir si le bogue n’est pas déjà signalé."
 
@@ -3097,11 +3089,6 @@ msgstr "Navigation avec une liste de pages ou une table des matières"
 #. (itstool) path: section/p
 #. (itstool) path: page/p
 #: C/movingaround.page:124 C/annotations.page:30 C/bookmarks.page:34
-#| msgid ""
-#| "When you open a file, you should have a side pane on the left side of the "
-#| "window. If you do not have a visible side pane, select the <gui style="
-#| "\"button\">Side pane</gui> button in the header bar, or press <key>F9</"
-#| "key> on the keyboard."
 msgid ""
 "When you open a file, you should have a side pane on the left side of the "
 "window. If you do not have a visible side pane, click the <gui style=\"button"
@@ -3862,6 +3849,12 @@ msgstr ""
 "\">livret de 4 pages</link>."
 
 #. (itstool) path: info/title
+#: C/index.page:7
+msgctxt "link:trail"
+msgid "Evince Document Viewer"
+msgstr "Visionneur de documents Evince"
+
+#. (itstool) path: info/title
 #: C/index.page:8
 msgctxt "link"
 msgid "Evince Document Viewer"
@@ -4347,374 +4340,3 @@ msgstr ""
 "documents</app>. La ligne correspondante dans le fichier source TeX est mise "
 "en évidence."
 
-#~ msgid "Click <gui>Printers</gui> in the sidebar to open the panel."
-#~ msgstr ""
-#~ "Cliquez sur <gui>Imprimantes</gui> dans la barre latérale pour ouvrir le "
-#~ "panneau."
-
-#~ msgid "Click on your printer in the list."
-#~ msgstr "Cliquez sur votre imprimante dans la liste."
-
-#~ msgid ""
-#~ "Press <keyseq><key>Alt</key><key>F2</key></keyseq> to open the Run "
-#~ "Application window."
-#~ msgstr ""
-#~ "Appuyez sur <keyseq><key>Alt</key><key>F2</key></keyseq> pour ouvrir la "
-#~ "boîte de dialogue Lancer une application."
-
-#~ msgid ""
-#~ "Type <input>dconf-editor</input> into the text box and click <gui>Run</"
-#~ "gui>. The Configuration Editor will open."
-#~ msgstr ""
-#~ "Saisissez <input>dconf-editor</input> dans la boîte de texte et cliquez "
-#~ "sur <gui>Lancer</gui>. L’éditeur de configuration s’ouvre."
-
-#~ msgid "See a list of all shortcuts."
-#~ msgstr "Afficher une liste de tous les raccourcis clavier."
-
-#~ msgid "Taufan Lubis"
-#~ msgstr "Taufan Lubis"
-
-#~ msgid "Ronaldi Santosa"
-#~ msgstr "Ronaldi Santosa"
-
-#~ msgid "Ibnu Amansyah"
-#~ msgstr "Ibnu Amansyah"
-
-#~ msgid "Keyboard shortcuts"
-#~ msgstr "Raccourcis clavier"
-
-#~ msgid "Default shortcuts"
-#~ msgstr "Raccourcis clavier par défaut"
-
-#~ msgid "Opening, closing, saving and printing"
-#~ msgstr "Ouverture, fermeture, enregistrement et impression"
-
-#~ msgid "Open a document."
-#~ msgstr "Ouvrir un document."
-
-#~ msgid "<keyseq><key>Ctrl</key><key>O</key></keyseq>"
-#~ msgstr "<keyseq><key>Ctrl</key><key>O</key></keyseq>"
-
-#~ msgid "Open a copy of the current document."
-#~ msgstr "Ouvrir une copie du document actuel."
-
-#~ msgid "<keyseq><key>Ctrl</key><key>N</key></keyseq>"
-#~ msgstr "<keyseq><key>Ctrl</key><key>N</key></keyseq>"
-
-#~ msgid "Save a copy of the current document with a new file name."
-#~ msgstr ""
-#~ "Enregistrer une copie du document actuel sous un nouveau nom de fichier."
-
-#~ msgid "<keyseq><key>Ctrl</key><key>S</key></keyseq>"
-#~ msgstr "<keyseq><key>Ctrl</key><key>S</key></keyseq>"
-
-#~ msgid "Print the current document."
-#~ msgstr "Imprimer le document actuel."
-
-#~ msgid "<keyseq><key>Ctrl</key><key>P</key></keyseq>"
-#~ msgstr "<keyseq><key>Ctrl</key><key>P</key></keyseq>"
-
-#~ msgid "Close the current document window."
-#~ msgstr "Fermer la fenêtre du document actuel."
-
-#~ msgid "<keyseq><key>Ctrl</key><key>W</key></keyseq>"
-#~ msgstr "<keyseq><key>Ctrl</key><key>W</key></keyseq>"
-
-#~ msgid "Reload the document (effectively closes and re-opens the document)."
-#~ msgstr ""
-#~ "Recharger le document (en réalité, fermer et ouvrir le document à "
-#~ "nouveau)."
-
-#~ msgid "<keyseq><key>Ctrl</key><key>R</key></keyseq>"
-#~ msgstr "<keyseq><key>Ctrl</key><key>R</key></keyseq>"
-
-#~ msgid "Move up/down a page."
-#~ msgstr "Avancer ou reculer d’une page."
-
-#~ msgid "Arrow keys"
-#~ msgstr "Flèches"
-
-#~ msgid "Move up/down a page several lines at a time."
-#~ msgstr "Avancer ou reculer d’une page plusieurs lignes à la fois."
-
-#~ msgid "<key>Page Up</key> / <key>Page Down</key>"
-#~ msgstr "<key>Page haut</key> / <key>Page bas</key>"
-
-#~ msgid "Go to the previous page."
-#~ msgstr "Aller à la page précédente."
-
-#~ msgid "<keyseq><key>Ctrl</key><key>Page Up</key></keyseq> / <key>P</key>"
-#~ msgstr "<keyseq><key>Ctrl</key><key>Page haut</key></keyseq> / <key>P</key>"
-
-#~ msgid "Go to the next page."
-#~ msgstr "Aller à la page suivante."
-
-#~ msgid "<keyseq><key>Ctrl</key><key>Page Down</key></keyseq> / <key>N</key>"
-#~ msgstr "<keyseq><key>Ctrl</key><key>Page bas</key></keyseq> / <key>N</key>"
-
-#~ msgid "Go to page number."
-#~ msgstr "Aller au numéro de page."
-
-#~ msgid ""
-#~ "<keyseq><key>Ctrl</key><key>L</key></keyseq> followed by the page number "
-#~ "and <key>Enter</key>"
-#~ msgstr ""
-#~ "<keyseq><key>Ctrl</key><key>L</key></keyseq> suivi par le numéro de page "
-#~ "puis <key>Entrée</key>"
-
-#~ msgid ""
-#~ "Go to the beginning of a page (beginning of the document if "
-#~ "<gui>Continuous</gui> is selected in the main menu in the top-right "
-#~ "corner)."
-#~ msgstr ""
-#~ "Aller au début de la page (au début du document si l’option <gui>Continu</"
-#~ "gui> est sélectionnée dans le menu principal, dans le coin supérieur "
-#~ "droit)."
-
-#~ msgid "<key>Home</key>"
-#~ msgstr "<key>Origine</key>"
-
-#~ msgid ""
-#~ "Go to the end of a page (end of the document if <gui>Continuous</gui> is "
-#~ "selected in the main menu in the top-right corner)."
-#~ msgstr ""
-#~ "Aller à la fin de la page (à la fin du document si l’option <gui>Continu</"
-#~ "gui> est sélectionnée dans le menu principal, dans le coin supérieur "
-#~ "droit)."
-
-#~ msgid "<key>End</key>"
-#~ msgstr "<key>Fin</key>"
-
-#~ msgid "Go to the beginning of the document."
-#~ msgstr "Aller au début du document."
-
-#~ msgid "<keyseq><key>Ctrl</key><key>Home</key></keyseq>"
-#~ msgstr "<keyseq><key>Ctrl</key><key>Origine</key></keyseq>"
-
-#~ msgid "Go to the end of the document."
-#~ msgstr "Aller à la fin du document."
-
-#~ msgid "<keyseq><key>Ctrl</key><key>End</key></keyseq>"
-#~ msgstr "<keyseq><key>Ctrl</key><key>Fin</key></keyseq>"
-
-#~ msgid "Add a bookmark in the current page."
-#~ msgstr "Ajouter un signet pour la page actuelle."
-
-#~ msgid "<keyseq><key>Ctrl</key><key>D</key></keyseq>"
-#~ msgstr "<keyseq><key>Ctrl</key><key>D</key></keyseq>"
-
-#~ msgid "Delete the bookmark in the current page if there is one."
-#~ msgstr "Supprimer le signet de la page actuelle s’il y en a un."
-
-#~ msgid "<keyseq><key>Shift</key><key>Ctrl</key><key>D</key></keyseq>"
-#~ msgstr "<keyseq><key>Maj</key><key>Ctrl</key><key>D</key></keyseq>"
-
-#~ msgid "Display the side pane with a table of contents and bookmarks."
-#~ msgstr ""
-#~ "Afficher le panneau latéral avec une table des matières et les signets."
-
-#~ msgid "<key>F9</key>"
-#~ msgstr "<key>F9</key>"
-
-#~ msgid ""
-#~ "Enable caret navigation placing a moveable cursor in text pages, allowing "
-#~ "you to move around and select text with the keyboard."
-#~ msgstr ""
-#~ "Activer un repère de navigation en plaçant un curseur mobile dans les "
-#~ "pages de texte, ce qui vous permet de vous déplacer et sélectionner le "
-#~ "texte avec le clavier."
-
-#~ msgid "<key>F7</key>"
-#~ msgstr "<key>F7</key>"
-
-#~ msgid "Selecting and copying text"
-#~ msgstr "Sélection et copie de texte"
-
-#~ msgid "Copy highlighted text."
-#~ msgstr "Copier le texte sélectionné."
-
-#~ msgid ""
-#~ "<keyseq><key>Ctrl</key><key>C</key></keyseq> / <keyseq><key>Ctrl</"
-#~ "key><key>Insert</key></keyseq>"
-#~ msgstr ""
-#~ "<keyseq><key>Ctrl</key><key>C</key></keyseq> / <keyseq><key>Ctrl</"
-#~ "key><key>Inser</key></keyseq>"
-
-#~ msgid "Select all the text in a document."
-#~ msgstr "Sélectionner tout le texte d’un document."
-
-#~ msgid "<keyseq><key>Ctrl</key><key>A</key></keyseq>"
-#~ msgstr "<keyseq><key>Ctrl</key><key>A</key></keyseq>"
-
-#~ msgid "Finding text"
-#~ msgstr "Recherche de texte"
-
-#~ msgid ""
-#~ "Show the toolbar that lets you search for words in the document. The "
-#~ "search box is automatically highlighted when you press this, and the "
-#~ "search will start as soon as you type some text. If you select a text in "
-#~ "the document before searching, then the search will start using that text "
-#~ "as input."
-#~ msgstr ""
-#~ "Afficher la barre d’outils qui vous permet de rechercher des mots dans le "
-#~ "document. La boîte de recherche est automatiquement activée lorsque vous "
-#~ "utilisez ce raccourci et la recherche commence dès que vous saisissez du "
-#~ "texte. Si vous sélectionnez un texte dans le document avant la recherche, "
-#~ "elle va commencer en utilisant ce texte comme entrée."
-
-#~ msgid "<keyseq><key>Ctrl</key><key>F</key></keyseq> / <key>/</key>"
-#~ msgstr "<keyseq><key>Ctrl</key><key>F</key></keyseq> / <key>/</key>"
-
-#~ msgid "Go to the next search result."
-#~ msgstr "Aller à la prochaine occurrence de recherche."
-
-#~ msgid "<keyseq><key>Ctrl</key><key>G</key></keyseq> / <key>F3</key>"
-#~ msgstr "<keyseq><key>Ctrl</key><key>G</key></keyseq> / <key>F3</key>"
-
-#~ msgid "Go to the previous search result."
-#~ msgstr "Aller à la précédente occurrence de recherche."
-
-#~ msgid ""
-#~ "<keyseq><key>Ctrl</key><key>Shift</key><key>G</key></keyseq> / "
-#~ "<keyseq><key>Shift</key><key>F3</key></keyseq>"
-#~ msgstr ""
-#~ "<keyseq><key>Ctrl</key><key>Maj</key><key>G</key></keyseq> / "
-#~ "<keyseq><key>Maj</key><key>F3</key></keyseq>"
-
-#~ msgid "Rotating and zooming"
-#~ msgstr "Rotation et zoom"
-
-#~ msgid "Rotate the pages 90 degrees counter-clockwise."
-#~ msgstr "Tourner les pages de 90 degrés dans le sens antihoraire."
-
-#~ msgid "<keyseq><key>Ctrl</key><key>Left arrow</key></keyseq>"
-#~ msgstr "<keyseq><key>Ctrl</key><key>Flèche gauche</key></keyseq>"
-
-#~ msgid "Rotate the pages 90 degrees clockwise."
-#~ msgstr "Tourner les pages de 90 degrés dans le sens horaire."
-
-#~ msgid "<keyseq><key>Ctrl</key><key>Right arrow</key></keyseq>"
-#~ msgstr "<keyseq><key>Ctrl</key><key>Flèche droite</key></keyseq>"
-
-#~ msgid "Default zoom."
-#~ msgstr "Zoom par défaut."
-
-#~ msgid "<keyseq><key>Ctrl</key><key>0</key></keyseq>"
-#~ msgstr "<keyseq><key>Ctrl</key><key>0</key></keyseq>"
-
-#~ msgid "Zoom in."
-#~ msgstr "Effectuer un zoom en avant."
-
-#~ msgid ""
-#~ "<keyseq><key>Ctrl</key><key>+</key></keyseq> / <key>=</key> / "
-#~ "<keyseq><key>Ctrl</key><key>=</key></keyseq>"
-#~ msgstr ""
-#~ "<keyseq><key>Ctrl</key><key>+</key></keyseq> / <key>=</key> / "
-#~ "<keyseq><key>Ctrl</key><key>=</key></keyseq>"
-
-#~ msgid "Zoom out."
-#~ msgstr "Effectuer un zoom en arrière."
-
-#~ msgid "<keyseq><key>Ctrl</key><key>-</key></keyseq>"
-#~ msgstr "<keyseq><key>Ctrl</key><key>-</key></keyseq>"
-
-#~ msgid "Fit the page into the window."
-#~ msgstr "Ajuster la page à la fenêtre."
-
-#~ msgid "<key>F</key>"
-#~ msgstr "<key>F</key>"
-
-#~ msgid "Fit the content width to the space available."
-#~ msgstr "Ajuster la largeur du contenu à l’espace disponible."
-
-#~ msgid "<key>W</key>"
-#~ msgstr "<key>W</key>"
-
-#~ msgid "Automatic zoom."
-#~ msgstr "Zoom automatique."
-
-#~ msgid "<key>A</key>"
-#~ msgstr "<key>A</key>"
-
-#~ msgid "Window"
-#~ msgstr "Fenêtre"
-
-#~ msgid "Use the full screen to view the document."
-#~ msgstr "Utiliser le plein écran pour afficher le document."
-
-#~ msgid "<key>F11</key>"
-#~ msgstr "<key>F11</key>"
-
-#~ msgid "Start a presentation."
-#~ msgstr "Démarrer une présentation."
-
-#~ msgid "<key>F5</key> / <keyseq><key>Shift</key><key>F5</key></keyseq>"
-#~ msgstr "<key>F5</key> / <keyseq><key>Maj</key><key>F5</key></keyseq>"
-
-#~ msgid "Document view"
-#~ msgstr "Vue du document"
-
-#~ msgid "Invert background and text colors."
-#~ msgstr "Inverser les couleurs de l’arrière-plan et du texte."
-
-#~ msgid "<keyseq><key>Ctrl</key><key>I</key></keyseq>"
-#~ msgstr "<keyseq><key>Ctrl</key><key>I</key></keyseq>"
-
-#~ msgid "Swap between continuous and page by page view of the document."
-#~ msgstr "Permuter entre affichage continu et page par page du document."
-
-#~ msgid "<key>C</key>"
-#~ msgstr "<key>C</key>"
-
-#~ msgid "Display two pages side by side."
-#~ msgstr "Afficher 2 pages côte à côte."
-
-#~ msgid "<key>D</key>"
-#~ msgstr "<key>D</key>"
-
-#~ msgid "Presentation mode"
-#~ msgstr "Mode présentation"
-
-#~ msgid "Toggle black screen."
-#~ msgstr "Basculer l’écran noir."
-
-#~ msgid "<key>B</key> / <key>.</key>"
-#~ msgstr "<key>B</key> / <key>.</key>"
-
-#~ msgid "Toggle white screen."
-#~ msgstr "Basculer l’écran blanc."
-
-#~ msgid "Annotate the document"
-#~ msgstr "Annoter le document"
-
-#~ msgid "Add a post-it like note."
-#~ msgstr "Ajouter une note type post-it."
-
-#~ msgid "<key>S</key>"
-#~ msgstr "<key>S</key>"
-
-#~ msgid "Highlight text."
-#~ msgstr "Surligner du texte."
-
-#~ msgid "<keyseq><key>Ctrl</key><key>H</key></keyseq>"
-#~ msgstr "<keyseq><key>Ctrl</key><key>H</key></keyseq>"
-
-#~ msgid ""
-#~ "To make the side pane visible, select the <gui>Side pane</gui> button in "
-#~ "the top-left corner, or press <key>F9</key> on the keyboard. You should "
-#~ "see a preview of all of the pages in the document."
-#~ msgstr ""
-#~ "Pour ouvrir le panneau latéral, cliquez sur le bouton <gui>Panneau "
-#~ "latéral</gui> situé dans le coin supérieur gauche, ou appuyez sur la "
-#~ "touche <key>F9</key> du clavier. Un aperçu de toutes les pages du "
-#~ "document s’affiche."
-
-#~ msgid ""
-#~ "When you open a file, you should see a side pane on the left side of the "
-#~ "window. If you do not have a visible side pane, press the <key>F9</key> "
-#~ "key."
-#~ msgstr ""
-#~ "Lorsque vous ouvrez un fichier, vous devriez avoir un panneau latéral sur "
-#~ "le côté gauche de la fenêtre. S’il n’est pas visible, appuyez sur la "
-#~ "touche <key>F9</key> du clavier."
