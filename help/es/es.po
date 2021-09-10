@@ -8,7 +8,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: evince.help.master\n"
-"POT-Creation-Date: 2021-05-06 10:50+0000\n"
+"POT-Creation-Date: 2021-08-25 13:26+0000\n"
 "PO-Revision-Date: 2021-05-10 11:44+0200\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Spanish - Spain <gnome-es-list@gnome.org>\n"
@@ -951,10 +951,14 @@ msgstr ""
 "Si la ventana del <app>Visor de documentos</app> ya está abierta, puede:"
 
 #. (itstool) path: item/p
-#: C/opening.page:51 C/opening.page:66
+#: C/opening.page:51
+#, fuzzy
+#| msgid ""
+#| "Drag a file into the window from <app>Files</app>. The new file will open "
+#| "in a new window."
 msgid ""
 "Drag a file into the window from <app>Files</app>. The new file will open in "
-"a new window."
+"the same window."
 msgstr ""
 "Arrastre un archivo dentro de la ventana desde <app>Archivos</app>. El "
 "archivo nuevo se abrirá en una ventana nueva."
@@ -970,7 +974,7 @@ msgstr ""
 msgid ""
 "Press the <gui>Open…</gui> button in the top-left corner of the window. In "
 "the <gui>Open Document</gui> dialog, choose the file which you wish to open, "
-"and click <gui>Open</gui>. The file will open in a new window."
+"and click <gui>Open</gui>. The file will open in the same window."
 msgstr ""
 "Pulse el botón de <gui>Opciones del archivo</gui> en la esquina superior "
 "derecha de la ventana y seleccione <gui>Abrir…</gui>. En el diálogo "
@@ -986,6 +990,15 @@ msgid ""
 "can:"
 msgstr ""
 "Si la ventana del <app>Visor de documentos</app> ya está abierta, puede:"
+
+#. (itstool) path: item/p
+#: C/opening.page:66
+msgid ""
+"Drag a file into the window from <app>Files</app>. The new file will open in "
+"a new window."
+msgstr ""
+"Arrastre un archivo dentro de la ventana desde <app>Archivos</app>. El "
+"archivo nuevo se abrirá en una ventana nueva."
 
 #. (itstool) path: item/p
 #: C/opening.page:70
@@ -1070,13 +1083,11 @@ msgstr "Pulse en <gui>Configuración</gui>."
 
 #. (itstool) path: item/p
 #: C/noprint.page:51
-#| msgid "Click <gui>Devices</gui> in the sidebar."
 msgid "Click <gui>Printers</gui> in the sidebar."
 msgstr "Pulse <gui>Impresoras</gui> en la barra lateral."
 
 #. (itstool) path: media/span
 #: C/noprint.page:54
-#| msgid "Settings"
 msgid "settings"
 msgstr "configuración"
 
@@ -1087,16 +1098,12 @@ msgstr "Pulse el botón <_:media-1/> junto a la impresora."
 
 #. (itstool) path: item/p
 #: C/noprint.page:58
-#| msgid "Select the <gui style=\"tab\">Page Handling</gui> tab."
 msgid "Select <gui style=\"menuitem\">Printing Options</gui>."
 msgstr ""
 "Seleccione la pestaña <gui style=\"menuitem\">Opciones de impresión</gui>."
 
 #. (itstool) path: item/p
 #: C/noprint.page:61
-#| msgid ""
-#| "Click on <gui>Print Test Page</gui>. A page should be sent to your "
-#| "printer."
 msgid "Click on <gui>Test Page</gui>. A page should be sent to your printer."
 msgstr ""
 "Pulse en <gui>Imprimir página de prueba</gui>. Se debería enviar una página "
@@ -1134,9 +1141,6 @@ msgstr ""
 
 #. (itstool) path: note/p
 #: C/noprint.page:83
-#| msgid ""
-#| "You need to have the <app>dconf Editor</app> installed on your computer "
-#| "to change this setting."
 msgid ""
 "You need to have <app>dconf Editor</app> installed on your computer to "
 "change this setting."
@@ -1168,20 +1172,16 @@ msgstr ""
 
 #. (itstool) path: item/p
 #: C/noprint.page:97
-#| msgid "Click <gui>Print</gui>."
 msgid "Click on <gui>dconf Editor</gui>."
 msgstr "Pulse <gui>Editor dconf</gui>."
 
 #. (itstool) path: item/p
 #: C/noprint.page:100
-#| msgid "Browse to <sys>/org/gnome/evince</sys> using the side pane."
 msgid "Browse to <sys>/org/gnome/evince</sys>."
 msgstr "Navegue hasta <sys>/org/gnome/evince</sys>."
 
 #. (itstool) path: item/p
 #: C/noprint.page:103
-#| msgid ""
-#| "Make sure that the <gui>override_restrictions</gui> option is checked."
 msgid "Make sure that the <gui>override-restrictions</gui> option is checked."
 msgstr ""
 "Asegúrese de que la opción <gui>Saltarse las restricciones</gui> está "
@@ -1981,7 +1981,7 @@ msgid ""
 "Unported license."
 msgstr ""
 "Este trabajo está licenciado bajo una Licencia Creative Commons Atribución - "
-"Compartir igual 3.0 sin soporte."
+"Compartir igual 3.0 no portada."
 
 #. (itstool) path: page/p
 #: C/license.page:20
@@ -2361,7 +2361,6 @@ msgstr "Seleccione la pestaña <gui>Configuración de página</gui>."
 
 #. (itstool) path: item/p
 #: C/print-pagescaling.page:37
-#| msgid "Choose a <em>Paper Scaling</em> from the drop-down list."
 msgid "Choose a <em>Page Scaling</em> from the drop-down list."
 msgstr "Seleccione un <em>Escalado de página</em> en la lista desplegable."
 
@@ -2821,12 +2820,19 @@ msgstr ""
 
 #. (itstool) path: page/p
 #: C/bug-filing.page:29
+#, fuzzy
+#| msgid ""
+#| "Once you have an account, log in, and click on <gui>New issue</gui>. "
+#| "Before reporting a bug, please read the <link href=\"https://wiki.gnome."
+#| "org/Community/GettingInTouch/Bugzilla/Guidelines\">bug writing "
+#| "guidelines</link>, and please <link href=\"https://gitlab.gnome.org/GNOME/"
+#| "evince/issues\">browse</link> for the bug to see if it already exists."
 msgid ""
 "Once you have an account, log in, and click on <gui>New issue</gui>. Before "
 "reporting a bug, please read the <link href=\"https://wiki.gnome.org/"
-"Community/GettingInTouch/Bugzilla/Guidelines\">bug writing guidelines</"
-"link>, and please <link href=\"https://gitlab.gnome.org/GNOME/evince/issues"
-"\">browse</link> for the bug to see if it already exists."
+"GettingInTouch/BugReportingGuidelines\">bug writing guidelines</link>, and "
+"please <link href=\"https://gitlab.gnome.org/GNOME/evince/issues\">browse</"
+"link> for the bug to see if it already exists."
 msgstr ""
 "Una vez que tenga su cuenta, inicie sesión y pulse en <gui>New issue</gui>. "
 "Antes de informar de un error, lea la <link href=\"https://wiki.gnome.org/"
@@ -3812,6 +3818,15 @@ msgstr ""
 "páginas</link>"
 
 #. (itstool) path: info/title
+#: C/index.page:7
+#, fuzzy
+#| msgctxt "link"
+#| msgid "Evince Document Viewer"
+msgctxt "link:trail"
+msgid "Evince Document Viewer"
+msgstr "Visor de documentos Evince"
+
+#. (itstool) path: info/title
 #: C/index.page:8
 msgctxt "link"
 msgid "Evince Document Viewer"
@@ -4655,7 +4670,7 @@ msgstr ""
 
 #~ msgid "Creative Commons Attribution-Share Alike 3.0 United States License"
 #~ msgstr ""
-#~ "Creative Commons Atribución - Compartir igual 3.0 sin soporte de Estados "
+#~ "Creative Commons Atribución - Compartir igual 3.0 no portada de Estados "
 #~ "Unidos."
 
 #~ msgid "This work is licensed under a <_:link-1/>."
@@ -4673,7 +4688,7 @@ msgstr ""
 
 #~ msgid "Creative Commons Attribution-ShareAlike 3.0 Unported License"
 #~ msgstr ""
-#~ "Licencia Creative Commons de Atribución-Compartir Igual 3.0 sin soporte"
+#~ "Licencia Creative Commons de Atribución-Compartir Igual 3.0 no portada"
 
 #~ msgid "Reverse"
 #~ msgstr "Invertir"
