@@ -9,8 +9,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: evince master\n"
-"POT-Creation-Date: 2021-03-09 14:56+0000\n"
-"PO-Revision-Date: 2021-03-10 01:24+0100\n"
+"POT-Creation-Date: 2021-08-25 13:26+0000\n"
+"PO-Revision-Date: 2021-09-12 21:19+0200\n"
 "Last-Translator: Balázs Úr <ur.balazs at fsf dot hu>\n"
 "Language-Team: Hungarian <gnome-hu-list at gnome dot org>\n"
 "Language: hu\n"
@@ -951,12 +951,48 @@ msgstr ""
 
 #. (itstool) path: page/p
 #: C/opening.page:47
-#| msgid "If a <app>Document Viewer</app> window is already open you can:"
 msgid "If an empty <app>Document Viewer</app> window is already open you can:"
 msgstr "Ha már nyitva van egy üres <app>Dokumentummegjelenítő</app> ablak:"
 
 #. (itstool) path: item/p
-#: C/opening.page:51 C/opening.page:66
+#: C/opening.page:51
+#| msgid ""
+#| "Drag a file into the window from <app>Files</app>. The new file will open "
+#| "in a new window."
+msgid ""
+"Drag a file into the window from <app>Files</app>. The new file will open in "
+"the same window."
+msgstr ""
+"Húzzon egy fájlt az ablakba a <app>Fájlok</app> alkalmazásból. Az új fájl"
+" ugyanabban az ablakban nyílik meg."
+
+#. (itstool) path: item/p
+#: C/opening.page:55
+#| msgid ""
+#| "Press the <gui>Open…</gui> button in the top-left corner of the window. "
+#| "In the <gui>Open Document</gui> dialog, choose the file which you wish to "
+#| "open, and click <gui>Open</gui>. The file will open in a new window."
+msgid ""
+"Press the <gui>Open…</gui> button in the top-left corner of the window. In "
+"the <gui>Open Document</gui> dialog, choose the file which you wish to open, "
+"and click <gui>Open</gui>. The file will open in the same window."
+msgstr ""
+"Nyomja meg az ablak bal felső sarkában lévő <gui>Megnyitás…</gui> gombot. A "
+"<gui>Dokumentum megnyitása</gui> párbeszédablakban válassza ki a megnyitni "
+"kívánt fájlt, és kattintson a <gui>Megnyitás</gui> gombra. A fájl ugyanabban "
+"az ablakban nyílik meg."
+
+#. (itstool) path: page/p
+#: C/opening.page:62
+msgid ""
+"If a document is already opened in a <app>Document Viewer</app> window you "
+"can:"
+msgstr ""
+"Ha egy dokumentum már meg van nyitva egy <app>Dokumentummegjelenítő</app> "
+"ablakban:"
+
+#. (itstool) path: item/p
+#: C/opening.page:66
 msgid ""
 "Drag a file into the window from <app>Files</app>. The new file will open in "
 "a new window."
@@ -965,48 +1001,16 @@ msgstr ""
 "ablakban nyílik meg."
 
 #. (itstool) path: item/p
-#: C/opening.page:55
-#| msgid ""
-#| "Press the <gui>File options</gui> button in the top-right corner of the "
-#| "window, then select <gui>Open…</gui>. In the <gui>Open Document</gui> "
-#| "dialog, choose the file which you wish to open, and click <gui>Open</"
-#| "gui>. The file will open in a new window."
-msgid ""
-"Press the <gui>Open…</gui> button in the top-left corner of the window. In "
-"the <gui>Open Document</gui> dialog, choose the file which you wish to open, "
-"and click <gui>Open</gui>. The file will open in a new window."
-msgstr ""
-"Nyomja meg az ablak bal felső sarkában lévő <gui>Megnyitás…</gui> gombot. A <"
-"gui>Dokumentum megnyitása</gui> párbeszédablakban válassza ki a megnyitni"
-" kívánt fájlt, és kattintson a <gui>Megnyitás</gui> gombra. A fájl új"
-" ablakban nyílik meg."
-
-#. (itstool) path: page/p
-#: C/opening.page:62
-#| msgid "If a <app>Document Viewer</app> window is already open you can:"
-msgid ""
-"If a document is already opened in a <app>Document Viewer</app> window you "
-"can:"
-msgstr ""
-"Ha egy dokumentum már meg van nyitva egy <app>Dokumentummegjelenítő</app>"
-" ablakban:"
-
-#. (itstool) path: item/p
 #: C/opening.page:70
-#| msgid ""
-#| "Press the <gui>File options</gui> button in the top-right corner of the "
-#| "window, then select <gui>Open…</gui>. In the <gui>Open Document</gui> "
-#| "dialog, choose the file which you wish to open, and click <gui>Open</"
-#| "gui>. The file will open in a new window."
 msgid ""
 "Press <keyseq><key>Ctrl</key><key>O</key></keyseq>. In the <gui>Open "
 "Document</gui> dialog, choose the file which you wish to open, and click "
 "<gui>Open</gui>. The file will open in a new window."
 msgstr ""
-"Nyomja meg a <keyseq><key>Ctrl</key><key>O</key></keyseq>"
-" billentyűkombinációt. A <gui>Dokumentum megnyitása</gui> párbeszédablakban"
-" válassza ki a megnyitni kívánt fájlt, és kattintson a <gui>Megnyitás</gui>"
-" gombra. A fájl új ablakban nyílik meg."
+"Nyomja meg a <keyseq><key>Ctrl</key><key>O</key></keyseq> "
+"billentyűkombinációt. A <gui>Dokumentum megnyitása</gui> párbeszédablakban "
+"válassza ki a megnyitni kívánt fájlt, és kattintson a <gui>Megnyitás</gui> "
+"gombra. A fájl új ablakban nyílik meg."
 
 #. (itstool) path: info/desc
 #: C/noprint.page:9
@@ -1074,7 +1078,6 @@ msgstr "Kattintson a <gui>Beállítások</gui> elemre."
 
 #. (itstool) path: item/p
 #: C/noprint.page:51
-#| msgid "Click <gui>Devices</gui> in the sidebar."
 msgid "Click <gui>Printers</gui> in the sidebar."
 msgstr "Kattintson a <gui>Nyomtatók</gui> elemre az oldalsávon."
 
@@ -1090,20 +1093,16 @@ msgstr "Kattintson a nyomtató mellett lévő <_:media-1/> gombra."
 
 #. (itstool) path: item/p
 #: C/noprint.page:58
-#| msgid "Select the <gui style=\"tab\">Page Handling</gui> tab."
 msgid "Select <gui style=\"menuitem\">Printing Options</gui>."
 msgstr ""
 "Válassza a <gui style=\"menuitem\">Nyomtatási beállítások</gui> menüpontot."
 
 #. (itstool) path: item/p
 #: C/noprint.page:61
-#| msgid ""
-#| "Click on <gui>Print Test Page</gui>. A page should be sent to your "
-#| "printer."
 msgid "Click on <gui>Test Page</gui>. A page should be sent to your printer."
 msgstr ""
-"Kattintson a <gui>Tesztoldal</gui> gombra. Egy oldal kerül kiküldésre a"
-" nyomtatóra."
+"Kattintson a <gui>Tesztoldal</gui> gombra. Egy oldal kerül kiküldésre a "
+"nyomtatóra."
 
 #. (itstool) path: note/p
 #: C/noprint.page:63
@@ -1140,8 +1139,8 @@ msgid ""
 "You need to have <app>dconf Editor</app> installed on your computer to "
 "change this setting."
 msgstr ""
-"A <app>dconf szerkesztő</app> alkalmazásnak telepítve kell lennie a"
-" számítógépén a beállítás megváltoztatásához."
+"A <app>dconf szerkesztő</app> alkalmazásnak telepítve kell lennie a "
+"számítógépén a beállítás megváltoztatásához."
 
 #. (itstool) path: if/p
 #: C/noprint.page:86
@@ -1149,38 +1148,31 @@ msgid ""
 "<link style=\"button\" action=\"install:dconf-editor\">Install <app>dconf "
 "Editor</app></link>"
 msgstr ""
-"<link style=\"button\" action=\"install:dconf-editor\">A <app>dconf"
-" szerkesztő</app> telepítése</link>"
+"<link style=\"button\" action=\"install:dconf-editor\">A <app>dconf "
+"szerkesztő</app> telepítése</link>"
 
 #. (itstool) path: item/p
 #: C/noprint.page:93
-#| msgid ""
-#| "Open the <gui href=\"help:gnome-help/shell-introduction#activities"
-#| "\">Activities</gui> overview and start typing <gui>Settings</gui>."
 msgid ""
 "Open the <gui href=\"help:gnome-help/shell-introduction#activities"
 "\">Activities</gui> overview and start typing <gui>dconf Editor</gui>."
 msgstr ""
-"Nyissa meg a <gui href=\"help:gnome-help/shell-introduction#activities\""
-">Tevékenységek</gui> áttekintést, és kezdje el gépelni a <gui>dconf"
-" szerkesztő</gui> szót."
+"Nyissa meg a <gui href=\"help:gnome-help/shell-introduction#activities"
+"\">Tevékenységek</gui> áttekintést, és kezdje el gépelni a <gui>dconf "
+"szerkesztő</gui> szót."
 
 #. (itstool) path: item/p
 #: C/noprint.page:97
-#| msgid "Click <gui>Print</gui>."
 msgid "Click on <gui>dconf Editor</gui>."
 msgstr "Kattintson a <gui>dconf szerkesztő</gui> gombra."
 
 #. (itstool) path: item/p
 #: C/noprint.page:100
-#| msgid "Browse to <sys>/org/gnome/evince</sys> using the side pane."
 msgid "Browse to <sys>/org/gnome/evince</sys>."
 msgstr "Tallózzon rá az <sys>/org/gnome/evince</sys> helyre."
 
 #. (itstool) path: item/p
 #: C/noprint.page:103
-#| msgid ""
-#| "Make sure that the <gui>override_restrictions</gui> option is checked."
 msgid "Make sure that the <gui>override-restrictions</gui> option is checked."
 msgstr ""
 "Győződjön meg róla, hogy az <gui>override-restrictions</gui> lehetőség be "
@@ -2805,18 +2797,25 @@ msgstr ""
 
 #. (itstool) path: page/p
 #: C/bug-filing.page:29
+#| msgid ""
+#| "Once you have an account, log in, and click on <gui>New issue</gui>. "
+#| "Before reporting a bug, please read the <link href=\"https://wiki.gnome."
+#| "org/Community/GettingInTouch/Bugzilla/Guidelines\">bug writing "
+#| "guidelines</link>, and please <link href=\"https://gitlab.gnome.org/GNOME/"
+#| "evince/issues\">browse</link> for the bug to see if it already exists."
 msgid ""
 "Once you have an account, log in, and click on <gui>New issue</gui>. Before "
 "reporting a bug, please read the <link href=\"https://wiki.gnome.org/"
-"Community/GettingInTouch/Bugzilla/Guidelines\">bug writing guidelines</"
-"link>, and please <link href=\"https://gitlab.gnome.org/GNOME/evince/issues"
-"\">browse</link> for the bug to see if it already exists."
+"GettingInTouch/BugReportingGuidelines\">bug writing guidelines</link>, and "
+"please <link href=\"https://gitlab.gnome.org/GNOME/evince/issues\">browse</"
+"link> for the bug to see if it already exists."
 msgstr ""
-"Ha létrehozta fiókját, jelentkezzen be és kattintson a <gui>New issue</gui> "
-"gombra. Hiba jelentése előtt olvassa el a <link href=\"https://wiki.gnome."
-"org/Community/GettingInTouch/Bugzilla/Guidelines\">hibajelentés-írási "
-"irányelveket</link>, és <link href=\"https://gitlab.gnome.org/GNOME/evince/"
-"issues\">ellenőrizze</link>, hogy nincs-e már a hiba bejelentve."
+"Ha létrehozta fiókját, jelentkezzen be és kattintson a <gui>New issue</gui>"
+" gombra. Hiba jelentése előtt olvassa el a <link"
+" href=\"https://wiki.gnome.org/GettingInTouch/BugReportingGuidelines\""
+">hibajelentés-írási irányelveket</link>, és <link"
+" href=\"https://gitlab.gnome.org/GNOME/evince/issues\">ellenőrizze</link>,"
+" hogy nincs-e már a hiba bejelentve."
 
 #. (itstool) path: page/p
 #: C/bug-filing.page:33
@@ -3028,21 +3027,16 @@ msgstr "Navigálás oldallistával vagy tartalomjegyzékkel"
 #. (itstool) path: section/p
 #. (itstool) path: page/p
 #: C/movingaround.page:124 C/annotations.page:30 C/bookmarks.page:34
-#| msgid ""
-#| "When you open a file, you should have a side pane on the left side of the "
-#| "window. If you do not have a visible side pane, select the <gui style="
-#| "\"button\">Side pane</gui> button in the header bar, or press <key>F9</"
-#| "key> on the keyboard."
 msgid ""
 "When you open a file, you should have a side pane on the left side of the "
 "window. If you do not have a visible side pane, click the <gui style=\"button"
 "\">Side pane</gui> button in the top-left corner, or press the <key>F9</key> "
 "key on the keyboard."
 msgstr ""
-"Ha megnyit egy fájlt, akkor az ablak bal oldalán lennie kell egy oldalsávnak."
-" Ha ez az oldalsáv nem látható, akkor kattintson a bal felső sarokban lévő <"
-"gui style=\"button\">Oldalsáv</gui> gombra, vagy nyomja meg az "
-"<key>F9</key> billentyűt."
+"Ha megnyit egy fájlt, akkor az ablak bal oldalán lennie kell egy "
+"oldalsávnak. Ha ez az oldalsáv nem látható, akkor kattintson a bal felső "
+"sarokban lévő <gui style=\"button\">Oldalsáv</gui> gombra, vagy nyomja meg "
+"az <key>F9</key> billentyűt."
 
 #. (itstool) path: section/p
 #: C/movingaround.page:128
@@ -3056,18 +3050,14 @@ msgstr "Az oldalak közt az oldalsávban azokra kattintva mozoghat."
 
 #. (itstool) path: note/p
 #: C/movingaround.page:133
-#| msgid ""
-#| "Some documents have an index or table of contents, which you can display "
-#| "in the side pane. Click the drop-down list at the top of the side pane "
-#| "and select <gui>Outline</gui> to view it."
 msgid ""
 "Some documents have an index or table of contents, which you can display in "
 "the side pane. Select the <gui>Outline</gui> button at the bottom of the "
 "side pane to view it."
 msgstr ""
-"Egyes dokumentumok rendelkeznek indexszel vagy tartalomjegyzékkel, amit az"
-" oldalsávban megjeleníthet. Kattintson az oldalsáv alján lévő <gui>Vázlat<"
-"/gui> gombra a megjelenítéséhez."
+"Egyes dokumentumok rendelkeznek indexszel vagy tartalomjegyzékkel, amit az "
+"oldalsávban megjeleníthet. Kattintson az oldalsáv alján lévő <gui>Vázlat</"
+"gui> gombra a megjelenítéséhez."
 
 #. (itstool) path: note/p
 #: C/movingaround.page:137
@@ -3644,20 +3634,16 @@ msgstr ""
 
 #. (itstool) path: page/p
 #: C/annotations.page:36
-#| msgid ""
-#| "At the top of this side pane, there is a drop-down menu with options like "
-#| "<gui>Thumbnails</gui>, <gui>Outline</gui> and <gui>Annotations</gui> "
-#| "(some of which may be <em>dimmed</em> for some documents)."
 msgid ""
 "At the bottom of the side pane, the buttons <gui>Thumbnails</gui>, "
 "<gui>Outline</gui>, <gui>Annotations</gui> and <gui>Bookmarks</gui> let you "
 "choose what to display in the side pane. (Some options may not be available "
 "for some documents)."
 msgstr ""
-"Az oldalsáv alján található <gui>Bélyegképek</gui>, <gui>Vázlat</gui>, <gui"
-">Jegyzetek</gui> és <gui>Könyvjelzők</gui> gombok lehetővé teszik annak"
-" kiválasztását, hogy mi jelenjen meg az oldalsávon (némelyik lehet, hogy nem"
-" érhető el egyes dokumentumok esetén)."
+"Az oldalsáv alján található <gui>Bélyegképek</gui>, <gui>Vázlat</gui>, "
+"<gui>Jegyzetek</gui> és <gui>Könyvjelzők</gui> gombok lehetővé teszik annak "
+"kiválasztását, hogy mi jelenjen meg az oldalsávon (némelyik lehet, hogy nem "
+"érhető el egyes dokumentumok esetén)."
 
 #. (itstool) path: page/p
 #: C/annotations.page:39
@@ -3779,6 +3765,14 @@ msgid ""
 msgstr ""
 "Kövesse a <link xref=\"duplex-4page\">4 oldalas füzet</link> nyomtatásának "
 "lépéseit."
+
+#. (itstool) path: info/title
+#: C/index.page:7
+#| msgctxt "link"
+#| msgid "Evince Document Viewer"
+msgctxt "link:trail"
+msgid "Evince Document Viewer"
+msgstr "Evince dokumentummegjelenítő"
 
 #. (itstool) path: info/title
 #: C/index.page:8
