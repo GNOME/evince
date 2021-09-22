@@ -29,8 +29,6 @@ sources = files(
   'ev-page-cache.c',
   'ev-pixbuf-cache.c',
   'ev-print-operation.c',
-  'ev-timeline.c',
-  'ev-transition-animation.c',
   'ev-view.c',
   #'ev-view-accessible.c',
   'ev-view-cursor.c',
