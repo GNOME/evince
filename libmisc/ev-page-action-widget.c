@@ -216,8 +216,8 @@ ev_page_action_widget_init (EvPageActionWidget *action_widget)
 	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
 
         style_context = gtk_widget_get_style_context (hbox);
-        gtk_style_context_add_class (style_context, GTK_STYLE_CLASS_RAISED);
-        gtk_style_context_add_class (style_context, GTK_STYLE_CLASS_LINKED);
+        gtk_style_context_add_class (style_context, "raised");
+        gtk_style_context_add_class (style_context, "linked");
 
 	action_widget->entry = gtk_entry_new ();
 	gtk_widget_add_events (action_widget->entry,

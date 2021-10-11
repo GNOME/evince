@@ -101,7 +101,8 @@ find_job_finished_cb (EvJobFind   *job,
         if (!ev_job_find_has_results (job)) {
                 EvSearchBoxPrivate *priv = GET_PRIVATE (box);
 
-                gtk_style_context_add_class (gtk_widget_get_style_context (priv->entry), GTK_STYLE_CLASS_ERROR);
+                gtk_style_context_add_class (gtk_widget_get_style_context (priv->entry),
+					     "error");
 
                 gtk_entry_set_icon_from_icon_name (GTK_ENTRY (priv->entry),
                                                    GTK_ENTRY_ICON_PRIMARY,
