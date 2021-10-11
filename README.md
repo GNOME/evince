@@ -23,6 +23,19 @@ This software is licensed under the [GPLv2][license].
 * [LibTiff for Multipage TIFF viewing][tiff]
 * [LibGXPS for XML Paper Specification (XPS) viewing][xps]
 
+## Default branch renamed to `main`
+
+The default development branch of Evince has been renamed to `main`. To update
+your local checkout, use:
+```sh
+git checkout master
+git branch -m master main
+git fetch
+git branch --unset-upstream
+git branch -u origin/main
+git symbolic-ref refs/remotes/origin/HEAD refs/remotes/origin/main
+```
+
 [gnome]: https://www.gnome.org/start/
 [poppler]: https://poppler.freedesktop.org/
 [ghostscript]: https://www.freedesktop.org/wiki/Software/libspectre/
