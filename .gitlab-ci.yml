@@ -10,6 +10,7 @@ variables:
 meson:
     image: registry.gitlab.gnome.org/gnome/evince/x86_64-ubuntu:poppler
     stage: build
+    when: manual
 
     script:
         - >
@@ -28,6 +29,7 @@ meson:
 meson-internal-synctex:
     image: registry.gitlab.gnome.org/gnome/evince/x86_64-ubuntu:poppler
     stage: build
+    when: manual
 
     script:
         - meson -Dinternal_synctex=true _build
@@ -47,7 +49,7 @@ flatpak:
         MANIFEST_PATH: "build-aux/flatpak/org.gnome.Evince.json"
         RUNTIME_REPO: "https://nightly.gnome.org/gnome-nightly.flatpakrepo"
         FLATPAK_MODULE: "evince"
-        MESON_ARGS: "-Dnautilus=false -Dgtk_doc=false"
+        MESON_ARGS: "-Dnautilus=false -Ddevelopment=true"
         APP_ID: "org.gnome.Evince"
     extends: .flatpak
 
