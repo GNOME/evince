@@ -839,50 +839,6 @@ pdf_document_get_subject_from_metadata (xmlXPathContextPtr xpathCtx)
 	return pdf_document_get_localized_object_from_metadata (xpathCtx, SUBJECT);
 }
 
-static void
-pdf_document_get_dates_from_metadata (GTime *result, xmlXPathContextPtr xpathCtx)
-{
-	xmlChar *modifydate = NULL;
-	xmlChar *createdate = NULL;
-	xmlChar *metadate = NULL;
-	char    *datestr;
-	GTimeVal  tmp_time;
-
-	/* reads modify date */
-	modifydate = pdf_document_get_xmptag_from_path (xpathCtx, MOD_DATE);
-	/* reads pdf create date */
-	createdate = pdf_document_get_xmptag_from_path (xpathCtx, CREATE_DATE);
-	/* reads pdf metadata date */
-	metadate = pdf_document_get_xmptag_from_path (xpathCtx, META_DATE);
-
-	if (modifydate != NULL) {
-		/* return buffer */
-		datestr = g_strdup_printf ("%s", modifydate);
-		g_time_val_from_iso8601 (datestr, &tmp_time);
-		result[0] = (GTime)tmp_time.tv_sec;
-		g_free (datestr);
-	}
-
-	if (createdate != NULL) {
-		datestr = g_strdup_printf ("%s", createdate);
-		g_time_val_from_iso8601 (datestr, &tmp_time);
-		result[1] = (GTime)tmp_time.tv_sec;
-		g_free (datestr);
-	}
-
-	if (metadate != NULL) {
-		datestr = g_strdup_printf ("%s", metadate);
-		g_time_val_from_iso8601 (datestr, &tmp_time);
-		result[2] = (GTime)tmp_time.tv_sec;
-		g_free (datestr);
-	}
-
-	/* Cleanup */
-	xmlFree (modifydate);
-	xmlFree (createdate);
-	xmlFree (metadate);
-}
-
 static EvDocumentLicense *
 pdf_document_get_license_from_metadata (xmlXPathContextPtr xpathCtx)
 {
@@ -951,7 +907,11 @@ pdf_document_parse_metadata (const gchar    *metadata,
 	gchar             *subject;
 	gchar             *creatortool;
 	gchar             *producer;
-	GTime              dates[3] = {0};
+	gchar             *datestr;
+	gchar             *modified_date;
+	gchar             *creation_date;
+	gchar             *metadata_date;
+	GDateTime         *dt = NULL;
 
 	doc = xmlParseMemory (metadata, strlen (metadata));
 	if (doc == NULL)
@@ -963,12 +923,21 @@ pdf_document_parse_metadata (const gchar    *metadata,
 		return;		/* invalid xpath context */
 	}
 
-	pdf_document_get_dates_from_metadata (dates, xpathCtx);
+	/* reads pdf metadata date */
+	metadata_date = (gchar *)pdf_document_get_xmptag_from_path (xpathCtx, META_DATE);
+	if (metadata_date != NULL) {
+		datestr = g_strdup_printf ("%s", metadata_date);
+		dt = g_date_time_new_from_iso8601 (datestr, NULL);
+		g_free (datestr);
+		g_free (metadata_date);
+	}
+
 	/* From PDF spec, if the PDF modified date is newer than metadata date,
 	 * it indicates that the file was edited by a non-XMP aware software.
 	 * Then, the information dictionary is considered authoritative and the
 	 * XMP metadata should not be displayed. */
-	if (dates[2] >= info->modified_date) {
+	if (info->modified_date == NULL || dt == NULL ||
+	    ! (g_date_time_compare (dt, info->modified_date) == -1)) {
 
 		fmt = pdf_document_get_format_from_metadata (xpathCtx);
 		if (fmt != NULL) {
@@ -1012,15 +981,32 @@ pdf_document_parse_metadata (const gchar    *metadata,
 			info->producer = producer;
 		}
 
-		if (dates[0] != 0)
-			info->modified_date = dates[0];
+		/* reads modify date */
+		modified_date = (gchar *)pdf_document_get_xmptag_from_path (xpathCtx, MOD_DATE);
+		if (modified_date != NULL) {
+			g_clear_pointer (&info->modified_date, g_date_time_unref);
 
-		if (dates[1] != 0)
-			info->creation_date = dates[1];
+			datestr = g_strdup_printf ("%s", modified_date);
+			info->modified_date = g_date_time_new_from_iso8601 (datestr, NULL);
+			g_free (datestr);
+			g_free (modified_date);
+		}
+
+		/* reads pdf create date */
+		creation_date = (gchar *)pdf_document_get_xmptag_from_path (xpathCtx, CREATE_DATE);
+		if (creation_date != NULL) {
+			g_clear_pointer (&info->creation_date, g_date_time_unref);
+
+			datestr = g_strdup_printf ("%s", creation_date);
+			info->creation_date = g_date_time_new_from_iso8601 (datestr, NULL);
+			g_free (datestr);
+			g_free (creation_date);
+		}
 	}
 
 	info->license = pdf_document_get_license_from_metadata (xpathCtx);
 
+	g_clear_pointer (&dt, g_date_time_unref);
 	xmlXPathFreeContext (xpathCtx);
 	xmlFreeDoc (doc);
 }
@@ -1071,8 +1057,8 @@ pdf_document_get_info (EvDocument *document)
 		      "permissions", &permissions,
 		      "creator", &(info->creator),
 		      "producer", &(info->producer),
-		      "creation-date", &(info->creation_date),
-		      "mod-date", &(info->modified_date),
+		      "creation-datetime", &(info->creation_date),
+		      "mod-datetime", &(info->modified_date),
 		      "linearized", &linearized,
 		      "metadata", &metadata,
 		      NULL);

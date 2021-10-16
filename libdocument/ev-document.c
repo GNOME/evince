@@ -1187,8 +1187,8 @@ ev_document_info_copy (EvDocumentInfo *info)
 	copy->producer = g_strdup (info->producer);
 	copy->linearized = g_strdup (info->linearized);
 	
-	copy->creation_date = info->creation_date;
-	copy->modified_date = info->modified_date;
+	copy->creation_date = g_date_time_add (info->creation_date, 0);
+	copy->modified_date = g_date_time_add (info->modified_date, 0);
 	copy->layout = info->layout;
 	copy->mode = info->mode;
 	copy->ui_hints = info->ui_hints;
@@ -1216,6 +1216,8 @@ ev_document_info_free (EvDocumentInfo *info)
 	g_free (info->producer);
 	g_free (info->linearized);
 	g_free (info->security);
+	g_clear_pointer (&(info->creation_date), g_date_time_unref);
+	g_clear_pointer (&(info->modified_date), g_date_time_unref);
 	ev_document_license_free (info->license);
 
 	g_free (info);

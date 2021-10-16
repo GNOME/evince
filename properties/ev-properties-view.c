@@ -392,19 +392,19 @@ ev_properties_view_set_info (EvPropertiesView *properties, const EvDocumentInfo 
 		set_property (properties, GTK_GRID (grid), CREATOR_PROPERTY, info->creator, &row);
 	}
 	if (info->fields_mask & EV_DOCUMENT_INFO_CREATION_DATE) {
-		if (info->creation_date == -1) {
+		if (info->creation_date == NULL) {
 			set_property (properties, GTK_GRID (grid), CREATION_DATE_PROPERTY, NULL, &row);
 		} else {
-			text = ev_document_misc_format_date (info->creation_date);
+			text = ev_document_misc_format_datetime (info->creation_date);
 			set_property (properties, GTK_GRID (grid), CREATION_DATE_PROPERTY, text, &row);
 			g_free (text);
 		}
 	}
 	if (info->fields_mask & EV_DOCUMENT_INFO_MOD_DATE) {
-		if (info->modified_date == -1) {
+		if (info->modified_date == NULL) {
 			set_property (properties, GTK_GRID (grid), MOD_DATE_PROPERTY, NULL, &row);
 		} else {
-			text = ev_document_misc_format_date (info->modified_date);
+			text = ev_document_misc_format_datetime (info->modified_date);
 			set_property (properties, GTK_GRID (grid), MOD_DATE_PROPERTY, text, &row);
 			g_free (text);
 		}
