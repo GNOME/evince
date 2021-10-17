@@ -132,16 +132,19 @@ gboolean             ev_annotation_set_name                  (EvAnnotation      
 const gchar         *ev_annotation_get_modified              (EvAnnotation           *annot);
 gboolean             ev_annotation_set_modified              (EvAnnotation           *annot,
 							      const gchar            *modified);
+gboolean             ev_annotation_set_modified_from_time_t  (EvAnnotation           *annot,
+							      time_t                  utime);
 G_GNUC_BEGIN_IGNORE_DEPRECATIONS
+EV_DEPRECATED_FOR(ev_annotaion_set_modified_from_time_t)
 gboolean             ev_annotation_set_modified_from_time    (EvAnnotation           *annot,
 							      GTime                   utime);
-G_GNUC_END_IGNORE_DEPRECATIONS
 EV_DEPRECATED_FOR(ev_annotaion_get_rgba)
 void                 ev_annotation_get_color                 (EvAnnotation           *annot,
 							      GdkColor               *color);
 EV_DEPRECATED_FOR(ev_annotaion_set_rgba)
 gboolean             ev_annotation_set_color                 (EvAnnotation           *annot,
 							      const GdkColor         *color);
+G_GNUC_END_IGNORE_DEPRECATIONS
 void                 ev_annotation_get_rgba                  (EvAnnotation           *annot,
                                                               GdkRGBA                *rgba);
 gboolean             ev_annotation_set_rgba                  (EvAnnotation           *annot,
