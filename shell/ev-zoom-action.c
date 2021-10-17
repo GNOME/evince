@@ -192,7 +192,8 @@ max_zoom_changed_cb (EvDocumentModel *model,
 	EvZoomActionPrivate *priv = GET_PRIVATE (zoom_action);
 
         g_menu_remove_all (G_MENU (priv->zoom_free_section));
-        g_clear_pointer (&priv->popup, (GDestroyNotify)gtk_widget_destroy);
+        gtk_widget_destroy (GTK_WIDGET (priv->popup));
+        priv->popup = NULL;
         ev_zoom_action_populate_free_zoom_section (zoom_action);
 }
 
