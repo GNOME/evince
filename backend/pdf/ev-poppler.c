@@ -2473,7 +2473,6 @@ pdf_document_text_get_text_mapping (EvDocumentText *document_text,
 {
 	PopplerPage *poppler_page;
 	PopplerRectangle points;
-	GList *region;
 	cairo_region_t *retval;
 
 	g_return_val_if_fail (POPPLER_IS_PAGE (page->backend_page), NULL);
@@ -2484,11 +2483,9 @@ pdf_document_text_get_text_mapping (EvDocumentText *document_text,
 	points.y1 = 0.0;
 	poppler_page_get_size (poppler_page, &(points.x2), &(points.y2));
 
-	region = poppler_page_get_selection_region (poppler_page, 1.0,
-						    POPPLER_SELECTION_GLYPH,
-						    &points);
-	retval = create_region_from_poppler_region (region, 1.0, 1.0);
-	g_list_free (region);
+	retval = poppler_page_get_selected_region (poppler_page, 1.0,
+						   POPPLER_SELECTION_GLYPH,
+						   &points);
 
 	return retval;
 }
