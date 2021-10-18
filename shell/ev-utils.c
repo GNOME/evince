@@ -117,7 +117,7 @@ create_shadow (GdkPixbuf *src, int blur_radius,
     {
       for (x = 0; x < width; x++)
 	{
-	  int sumr = 0, sumg = 0, sumb = 0, suma = 0;
+	  int suma = 0;
 
 	  for (i = 0; i < filter->size; i++)
 	    {
@@ -132,17 +132,6 @@ create_shadow (GdkPixbuf *src, int blur_radius,
 		      src_x < 0 || src_x > gdk_pixbuf_get_width (src))
 		    continue;
 
-		  sumr += src_pixels [src_y * src_rowstride +
-				      src_x * src_bpp + 0] *
-		    filter->data [i * filter->size + j];
-		  sumg += src_pixels [src_y * src_rowstride +
-				      src_x * src_bpp + 1] * 
-		    filter->data [i * filter->size + j];
-
-		  sumb += src_pixels [src_y * src_rowstride +
-				      src_x * src_bpp + 2] * 
-		    filter->data [i * filter->size + j];
-		  
 		  if (src_bpp == 4)
 		    suma += src_pixels [src_y * src_rowstride +
 					src_x * src_bpp + 3] *
