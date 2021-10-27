@@ -445,7 +445,6 @@ ev_annotation_window_constructor (GType                  type,
 	GdkRGBA             color;
 	EvRectangle        *rect;
 	gdouble             scale;
-	gdouble             opacity;
 
 	object = G_OBJECT_CLASS (ev_annotation_window_parent_class)->constructor (type,
 										  n_construct_properties,
@@ -472,8 +471,8 @@ ev_annotation_window_constructor (GType                  type,
 	ev_annotation_get_rgba (annot, &color);
 	ev_annotation_window_set_color (window, &color);
 
-	opacity = ev_annotation_markup_get_opacity (markup);
-	ev_annotation_window_set_opacity (window, opacity);
+	/* The popup window should always be opaque - Issue #1399 */
+	ev_annotation_window_set_opacity (window, 1.);
 
 	gtk_widget_set_name (GTK_WIDGET (window), ev_annotation_get_name (annot));
 	gtk_window_set_title (GTK_WINDOW (window), label);
