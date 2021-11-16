@@ -94,9 +94,9 @@ libevview = shared_library(
 )
 
 libevview_dep = declare_dependency(
-  sources: enum_sources[1],
+  sources: headers + [enum_sources[1]],
   include_directories: libview_inc,
-  dependencies: libevdocument_dep,
+  dependencies: deps,
   link_with: libevview,
 )
 

@@ -150,9 +150,9 @@ libevdocument = shared_library(
 )
 
 libevdocument_dep = declare_dependency(
-  sources: [enum_sources[1], version_header],
+  sources: headers + [enum_sources[1]] + [version_header],
   include_directories: libdocument_inc,
-  dependencies: common_deps,
+  dependencies: deps,
   link_with: libevdocument,
 )
 

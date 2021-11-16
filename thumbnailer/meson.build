@@ -8,13 +8,19 @@ configure_file(
   install_dir: join_paths(ev_datadir, 'thumbnailers'),
 )
 
-program = 'evince-thumbnailer'
+thumbnailer_sources = files(
+  'evince-thumbnailer.c',
+)
 
-executable(
-  program,
-  program + '.c',
+thumbnailer_deps = [
+  libevdocument_dep,
+]
+
+thumbnailer = executable(
+  'evince-thumbnailer',
+  sources: thumbnailer_sources,
   include_directories: top_inc,
-  dependencies: libevdocument_dep,
+  dependencies: thumbnailer_deps,
   link_args: common_ldflags,
   install: true,
 )
