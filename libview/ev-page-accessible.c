@@ -170,9 +170,7 @@ ev_page_accessible_finalize (GObject *object)
 {
 	EvPageAccessiblePrivate *priv = EV_PAGE_ACCESSIBLE (object)->priv;
 
-	g_hash_table_remove_all (priv->links);
-	g_hash_table_destroy (priv->links);
-	priv->links = NULL;
+        g_clear_pointer (&priv->links, g_hash_table_destroy);
 	clear_children (EV_PAGE_ACCESSIBLE (object));
 
 	G_OBJECT_CLASS (ev_page_accessible_parent_class)->finalize (object);
