@@ -14,9 +14,6 @@ if enable_gtk_doc
 
   subdir('reference/libdocument')
   subdir('reference/libview')
-  if enable_viewer
-    subdir('reference/shell')
-  endif
 endif
 
 if enable_user_doc
