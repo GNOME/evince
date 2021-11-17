@@ -15,7 +15,6 @@ foreach desktop: desktops
   )
 
   i18n.merge_file(
-    desktop,
     type: 'desktop',
     input: desktop_in,
     output: desktop,

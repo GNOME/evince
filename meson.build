@@ -498,7 +498,6 @@ install_headers(
 appdata = ev_namespace + '.appdata.xml'
 
 i18n.merge_file(
-  appdata,
   input: appdata + '.in',
   output: appdata,
   po_dir: po_dir,
