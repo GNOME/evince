@@ -50,7 +50,6 @@ foreach backend, backend_mime_types: backends
   )
 
   i18n.merge_file(
-    appstream,
     input: appstream_in,
     output: appstream,
     po_dir: po_dir,
