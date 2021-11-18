@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Evince HEAD\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
-"POT-Creation-Date: 2021-10-15 00:48+0000\n"
-"PO-Revision-Date: 2021-11-07 20:32+0100\n"
+"POT-Creation-Date: 2021-11-07 19:33+0000\n"
+"PO-Revision-Date: 2021-11-18 20:39+0100\n"
 "Last-Translator: Quentin PAGÈS\n"
 "Language-Team: Tot En Òc\n"
 "Language: oc\n"
@@ -21,7 +21,7 @@ msgstr ""
 
 #: backend/comics/comics-document.c:163 backend/comics/comics-document.c:187
 msgid "File is corrupted"
-msgstr "Fichièr corromput"
+msgstr "Lo fichièr es corromput"
 
 #: backend/comics/comics-document.c:228
 msgid "Archive is encrypted"
@@ -38,7 +38,7 @@ msgstr "Pas cap de fichièr dins l'archiu"
 #: backend/comics/comics-document.c:276
 #, c-format
 msgid "Not a comic book MIME type: %s"
-msgstr "Marrit tipe MIME benda dessenhada : %s"
+msgstr "Marrit tipe MIME benda dessenhada : %s"
 
 #: backend/comics/comics-document.c:283
 msgid ""
@@ -104,70 +104,70 @@ msgstr "Documents PDF"
 msgid "Adds support for reading PDF Documents"
 msgstr "Apond la presa en carga de la lectura dels documents PDF"
 
-#: backend/pdf/ev-poppler.c:907
+#: backend/pdf/ev-poppler.c:863
 msgid "This work is in the Public Domain"
 msgstr "Aquesta òbra es dins lo domeni public"
 
 #. translators: this is the document security state
-#: backend/pdf/ev-poppler.c:1179 backend/pdf/ev-poppler.c:1185
+#: backend/pdf/ev-poppler.c:1165 backend/pdf/ev-poppler.c:1171
 #: properties/ev-properties-view.c:433
 msgid "Yes"
 msgstr "Òc"
 
 #. translators: this is the document security state
-#: backend/pdf/ev-poppler.c:1182 backend/pdf/ev-poppler.c:1185
+#: backend/pdf/ev-poppler.c:1168 backend/pdf/ev-poppler.c:1171
 #: properties/ev-properties-view.c:435
 msgid "No"
 msgstr "Non"
 
-#: backend/pdf/ev-poppler.c:1323
+#: backend/pdf/ev-poppler.c:1309
 msgid "Type 1"
 msgstr "Tipe 1"
 
-#: backend/pdf/ev-poppler.c:1325
+#: backend/pdf/ev-poppler.c:1311
 msgid "Type 1C"
 msgstr "Tipe 1C"
 
-#: backend/pdf/ev-poppler.c:1327
+#: backend/pdf/ev-poppler.c:1313
 msgid "Type 3"
 msgstr "Tipe 3"
 
-#: backend/pdf/ev-poppler.c:1329
+#: backend/pdf/ev-poppler.c:1315
 msgid "TrueType"
 msgstr "TrueType"
 
-#: backend/pdf/ev-poppler.c:1331
+#: backend/pdf/ev-poppler.c:1317
 msgid "Type 1 (CID)"
 msgstr "Tipe 1 (CID)"
 
-#: backend/pdf/ev-poppler.c:1333
+#: backend/pdf/ev-poppler.c:1319
 msgid "Type 1C (CID)"
 msgstr "Tipe 1C (CID)"
 
-#: backend/pdf/ev-poppler.c:1335
+#: backend/pdf/ev-poppler.c:1321
 msgid "TrueType (CID)"
 msgstr "TrueTipe (CID)"
 
-#: backend/pdf/ev-poppler.c:1337
+#: backend/pdf/ev-poppler.c:1323
 msgid "Unknown font type"
 msgstr "Tipe de poliça desconegut"
 
-#: backend/pdf/ev-poppler.c:1381
+#: backend/pdf/ev-poppler.c:1367
 msgid ""
 "This document contains non-embedded fonts that are not from the PDF Standard "
 "14 fonts. If the substitute fonts selected by fontconfig are not the same as "
 "the fonts used to create the PDF, the rendering may not be correct."
 msgstr ""
 "Aqueste document conten de poliças pas integradas que fan pas partida de las "
-"14 poliças PDF standards. Se las poliças de substitucion seleccionadas per « "
-"fontconfig » son pas las meteissas que las poliças utilizadas per crear lo "
+"14 poliças PDF standards. Se las poliças de substitucion seleccionadas per « "
+"fontconfig » son pas las meteissas que las poliças utilizadas per crear lo "
 "PDF, lo rendut risca d'èsser incorrècte."
 
-#: backend/pdf/ev-poppler.c:1386
+#: backend/pdf/ev-poppler.c:1372
 msgid "All fonts are either standard or embedded."
 msgstr "Totas las poliças son siá estandards o integradas."
 
-#: backend/pdf/ev-poppler.c:1416
+#: backend/pdf/ev-poppler.c:1402
 msgid "No name"
 msgstr "Sens nom"
 
@@ -181,20 +181,20 @@ msgstr "Sens nom"
 #. Author: None
 #. Keywords: None
 #.
-#: backend/pdf/ev-poppler.c:1425 libview/ev-print-operation.c:1991
+#: backend/pdf/ev-poppler.c:1411 libview/ev-print-operation.c:1991
 #: properties/ev-properties-view.c:233
 msgid "None"
 msgstr "Pas cap"
 
-#: backend/pdf/ev-poppler.c:1433
+#: backend/pdf/ev-poppler.c:1419
 msgid "Embedded subset"
 msgstr "Sosensemble integrat"
 
-#: backend/pdf/ev-poppler.c:1435
+#: backend/pdf/ev-poppler.c:1421
 msgid "Embedded"
 msgstr "Integrat"
 
-#: backend/pdf/ev-poppler.c:1437
+#: backend/pdf/ev-poppler.c:1423
 msgid "Not embedded"
 msgstr "Pas integrat"
 
@@ -203,7 +203,7 @@ msgstr "Pas integrat"
 #. * type. Example:
 #. * "Type 1 (One of the Standard 14 Fonts)"
 #.
-#: backend/pdf/ev-poppler.c:1444
+#: backend/pdf/ev-poppler.c:1430
 msgid " (One of the Standard 14 Fonts)"
 msgstr " (una de las 14 poliças estandardas)"
 
@@ -212,7 +212,7 @@ msgstr " (una de las 14 poliças estandardas)"
 #. * type. Example:
 #. * "TrueType (Not one of the Standard 14 Fonts)"
 #.
-#: backend/pdf/ev-poppler.c:1451
+#: backend/pdf/ev-poppler.c:1437
 msgid " (Not one of the Standard 14 Fonts)"
 msgstr " (pas una de las 14 poliças estandardas)"
 
@@ -226,7 +226,7 @@ msgstr " (pas una de las 14 poliças estandardas)"
 #. * Substituting with TeXGyreTermes-Regular
 #. * (/usr/share/textmf/.../texgyretermes-regular.otf)
 #.
-#: backend/pdf/ev-poppler.c:1470
+#: backend/pdf/ev-poppler.c:1456
 #, c-format
 msgid ""
 "%s%s\n"
@@ -250,7 +250,7 @@ msgstr ""
 #. * Encoding: Custom
 #. * Embedded subset
 #.
-#: backend/pdf/ev-poppler.c:1488
+#: backend/pdf/ev-poppler.c:1474
 #, c-format
 msgid ""
 "%s%s\n"
@@ -273,12 +273,12 @@ msgstr "Apond la presa en carga de la lectura dels documents PostScript"
 #: backend/ps/ev-spectre.c:98
 #, c-format
 msgid "Failed to load document “%s”"
-msgstr "Lo cargament del document « %s » a fracassat"
+msgstr "Lo cargament del document « %s » a fracassat"
 
 #: backend/ps/ev-spectre.c:131
 #, c-format
 msgid "Failed to save document “%s”"
-msgstr "L'enregistrament del document « %s » a fracassat"
+msgstr "L'enregistrament del document « %s » a fracassat"
 
 #: backend/tiff/evince-tiffdocument.metainfo.xml.in.in:5
 #: backend/tiff/tiffdocument.evince-backend.desktop.in.in:4
@@ -320,6 +320,7 @@ msgid ""
 "pdf;ps;postscript;dvi;xps;djvu;tiff;document;presentation;viewer;evince;"
 msgstr ""
 "pdf;ps;postscript;dvi;xps;djvu;tiff;document;presentacion;evince;visionador;"
+"visualizaire;visualizaira;visualizador;visualizadora;"
 
 #: data/org.gnome.Evince.desktop.in.in:19
 msgid "New Window"
@@ -388,17 +389,17 @@ msgstr "Apercebut abans impression"
 #: libdocument/ev-attachment.c:330 libdocument/ev-attachment.c:351
 #, c-format
 msgid "Couldn’t save attachment “%s”: %s"
-msgstr "Impossible d'enregistrar la pèça junta « %s » : %s"
+msgstr "Impossible d'enregistrar la pèça junta « %s » : %s"
 
 #: libdocument/ev-attachment.c:400
 #, c-format
 msgid "Couldn’t open attachment “%s”: %s"
-msgstr "Impossible de dobrir la pèça junta « %s » : %s"
+msgstr "Impossible de dobrir la pèça junta « %s » : %s"
 
 #: libdocument/ev-attachment.c:438
 #, c-format
 msgid "Couldn’t open attachment “%s”"
-msgstr "Impossible de dobrir la pèça junta « %s »"
+msgstr "Impossible de dobrir la pèça junta « %s »"
 
 #: libdocument/ev-document-factory.c:105
 #, c-format
@@ -414,19 +415,19 @@ msgstr "Tipe MIME desconegut"
 msgid "All Documents"
 msgstr "Totes los documents"
 
-#: libdocument/ev-document-factory.c:609 shell/ev-utils.c:283
+#: libdocument/ev-document-factory.c:609 shell/ev-utils.c:272
 msgid "All Files"
 msgstr "Totes los fichièrs"
 
 #: libdocument/ev-file-helpers.c:158
 #, c-format
 msgid "Failed to create a temporary file: %s"
-msgstr "Impossible de crear un fichièr temporari : %s"
+msgstr "Impossible de crear un fichièr temporari : %s"
 
 #: libdocument/ev-file-helpers.c:235
 #, c-format
 msgid "Failed to create a temporary directory: %s"
-msgstr "Impossible de crear un repertòri temporari : %s"
+msgstr "Impossible de crear un repertòri temporari : %s"
 
 #: libmisc/ev-page-action-widget.c:86 libmisc/ev-page-action-widget.c:125
 #, c-format
@@ -482,7 +483,7 @@ msgstr "Impossible de crear una miniatura per la pagina %d"
 #: libview/ev-jobs.c:2033
 #, c-format
 msgid "Failed to print page %d: %s"
-msgstr "Impossible d'imprimir la pagina %d : %s"
+msgstr "Impossible d'imprimir la pagina %d : %s"
 
 #. Initial state
 #: libview/ev-print-operation.c:350
@@ -496,7 +497,7 @@ msgstr "Finalizacion…"
 #: libview/ev-print-operation.c:354
 #, c-format
 msgid "Generating preview: page %d of %d"
-msgstr "Generacion de l'apercebut : pagina %d sus %d"
+msgstr "Generacion de l'apercebut : pagina %d sus %d"
 
 #. Initial state
 #: libview/ev-print-operation.c:360
@@ -531,7 +532,7 @@ msgstr "Imprimir"
 
 #: libview/ev-print-operation.c:1985
 msgid "Page Scaling:"
-msgstr "Ajustement de las paginas :"
+msgstr "Ajustement de las paginas :"
 
 #: libview/ev-print-operation.c:1992
 msgid "Shrink to Printable Area"
@@ -555,15 +556,15 @@ msgid ""
 "required to fit the printable area of the printer page.\n"
 msgstr ""
 "Redimensiona las paginas del document per correspondre a la talha de pagina "
-"de l'imprimenta seleccionada. Causissètz demest las opcions seguentas :\n"
+"de l'imprimenta seleccionada. Causissètz demest las opcions seguentas :\n"
 "\n"
-"• Pas cap : las paginas son pas redimensionadas.\n"
+"• Pas cap : las paginas son pas redimensionadas.\n"
 "\n"
-"• Reduire segon la zòna imprimibla : las paginas mai grandas que la zòna "
+"• Reduire segon la zòna imprimibla : las paginas mai grandas que la zòna "
 "imprimibla son reduitas per correspondre a la zòna imprimibla de "
 "l'imprimenta.\n"
 "\n"
-"• Ajustar segon la zòna imprimibla : las paginas son reduitas o agrandidas "
+"• Ajustar segon la zòna imprimibla : las paginas son reduitas o agrandidas "
 "per fin de correspondre al pus juste a la zòna imprimibla de l'imprimenta.\n"
 
 #: libview/ev-print-operation.c:2008
@@ -656,12 +657,12 @@ msgstr "Anar a la pagina %s"
 #: libview/ev-view.c:2156
 #, c-format
 msgid "Go to %s on file “%s”"
-msgstr "Anar a %s sul fichièr « %s »"
+msgstr "Anar a %s sul fichièr « %s »"
 
 #: libview/ev-view.c:2159
 #, c-format
 msgid "Go to file “%s”"
-msgstr "Anar a la pagina « %s »"
+msgstr "Anar a la pagina « %s »"
 
 #: libview/ev-view.c:2167
 #, c-format
@@ -674,11 +675,11 @@ msgstr "Reïnicializar lo formulari"
 
 #: libview/ev-view-presentation.c:739
 msgid "Jump to page:"
-msgstr "Anar a la pagina :"
+msgstr "Anar a la pagina :"
 
 #: libview/ev-view-presentation.c:1033
 msgid "End of presentation. Press Esc or click to exit."
-msgstr "Fin de la presentacion.Quichat Esc o clicatz per sortir."
+msgstr "Fin de la presentacion. Quichat Esc o clicatz per sortir."
 
 #: org.gnome.Evince.appdata.xml.in:24
 msgid "Document viewer for popular document formats"
@@ -739,7 +740,7 @@ msgstr "L'impression del document a fracassat"
 #: previewer/ev-previewer-window.c:220
 #, c-format
 msgid "The selected printer “%s” could not be found"
-msgstr "L'imprimenta seleccionada « %s » pòt pas èsser trobada"
+msgstr "L'imprimenta seleccionada « %s » pòt pas èsser trobada"
 
 #: previewer/previewer.ui:7
 msgid "_Print"
@@ -775,56 +776,56 @@ msgstr "Document"
 
 #: properties/ev-properties-view.c:62
 msgid "Title:"
-msgstr "Títol :"
+msgstr "Títol :"
 
 #: properties/ev-properties-view.c:63
 msgid "Location:"
-msgstr "Emplaçament :"
+msgstr "Emplaçament :"
 
 #: properties/ev-properties-view.c:64
 msgid "Subject:"
-msgstr "Subjècte :"
+msgstr "Subjècte :"
 
 #: properties/ev-properties-view.c:65
 #: shell/ev-annotation-properties-dialog.c:172
 msgid "Author:"
-msgstr "Autor :"
+msgstr "Autor :"
 
 #: properties/ev-properties-view.c:66
 msgid "Keywords:"
-msgstr "Mots claus :"
+msgstr "Mots claus :"
 
 #: properties/ev-properties-view.c:67
 msgid "Producer:"
-msgstr "Productor :"
+msgstr "Productor :"
 
 #: properties/ev-properties-view.c:68
 msgid "Creator:"
-msgstr "Creator :"
+msgstr "Creator :"
 
 #: properties/ev-properties-view.c:69
 msgid "Created:"
-msgstr "Creat lo :"
+msgstr "Creat lo :"
 
 #: properties/ev-properties-view.c:70
 msgid "Modified:"
-msgstr "Modificat lo :"
+msgstr "Modificat lo :"
 
 #: properties/ev-properties-view.c:71
 msgid "Number of Pages:"
-msgstr "Nombre de paginas :"
+msgstr "Nombre de paginas :"
 
 #: properties/ev-properties-view.c:72
 msgid "Optimized:"
-msgstr "Optimizat :"
+msgstr "Optimizat :"
 
 #: properties/ev-properties-view.c:73
 msgid "Format:"
-msgstr "Format :"
+msgstr "Format :"
 
 #: properties/ev-properties-view.c:74
 msgid "Security:"
-msgstr "Seguretat :"
+msgstr "Seguretat :"
 
 #: properties/ev-properties-view.c:75
 msgid "Contains Javascript:"
@@ -832,11 +833,11 @@ msgstr "Conten de Javascript :"
 
 #: properties/ev-properties-view.c:76
 msgid "Paper Size:"
-msgstr "Format de papièr :"
+msgstr "Format de papièr :"
 
 #: properties/ev-properties-view.c:77
 msgid "Size:"
-msgstr "Talha :"
+msgstr "Talha :"
 
 #. Translate to the default units to use for presenting
 #. * lengths to the user. Translate to default:inch if you
@@ -879,7 +880,7 @@ msgstr "Desconegut"
 
 #: shell/ev-annotation-properties-dialog.c:97
 msgid "Icon:"
-msgstr "Icòna :"
+msgstr "Icòna :"
 
 #: shell/ev-annotation-properties-dialog.c:103
 msgid "Note"
@@ -919,7 +920,7 @@ msgstr "Cercle"
 
 #: shell/ev-annotation-properties-dialog.c:123
 msgid "Markup type:"
-msgstr "Tipe de balisatge :"
+msgstr "Tipe de balisatge :"
 
 #: shell/ev-annotation-properties-dialog.c:129
 msgid "Highlight"
@@ -951,15 +952,15 @@ msgstr "_Aplicar"
 
 #: shell/ev-annotation-properties-dialog.c:183
 msgid "Color:"
-msgstr "Color :"
+msgstr "Color :"
 
 #: shell/ev-annotation-properties-dialog.c:193
 msgid "Opacity:"
-msgstr "Opacitat :"
+msgstr "Opacitat :"
 
 #: shell/ev-annotation-properties-dialog.c:205
 msgid "Initial window state:"
-msgstr "Estat inicial de la fenèstra :"
+msgstr "Estat inicial de la fenèstra :"
 
 #: shell/ev-annotation-properties-dialog.c:211
 msgid "Open"
@@ -1216,7 +1217,7 @@ msgstr "_Desverrolhar lo document"
 msgid ""
 "The document “%s” is locked and requires a password before it can be opened."
 msgstr ""
-"Lo document « %s » es verrolhat e necessita un senhal abans de poder èsser "
+"Lo document « %s » es verrolhat e necessita un senhal abans de poder èsser "
 "dobèrt."
 
 #: shell/ev-password-view.c:259
@@ -1235,7 +1236,7 @@ msgstr "_Desverrolhar"
 
 #: shell/ev-password-view.c:279
 msgid "_Password:"
-msgstr "_Senhal :"
+msgstr "_Senhal :"
 
 #: shell/ev-password-view.c:314
 msgid "Forget password _immediately"
@@ -1396,7 +1397,7 @@ msgstr "Causir o definir lo nivèl d’agrandiment del document"
 msgid "Set zoom level"
 msgstr "Definir lo nivèl de zoom"
 
-#: shell/ev-utils.c:279
+#: shell/ev-utils.c:268
 msgid "Supported Image Files"
 msgstr "Fichièrs imatges preses en carga"
 
@@ -1411,12 +1412,12 @@ msgstr "Lo document conten pas que de paginas voidas"
 #: shell/ev-window.c:2003 shell/ev-window.c:2185
 #, c-format
 msgid "Unable to open document “%s”."
-msgstr "Impossible de dobrir lo document « %s »."
+msgstr "Impossible de dobrir lo document « %s »."
 
 #: shell/ev-window.c:2150
 #, c-format
 msgid "Loading document from “%s”"
-msgstr "Cargament del document a partir de « %s »"
+msgstr "Cargament del document a partir de « %s »"
 
 #: shell/ev-window.c:2155 shell/ev-window.c:2627 shell/ev-window.c:2993
 #: shell/ev-window.c:3729 shell/ev-window.c:3977
@@ -1467,7 +1468,7 @@ msgstr "Enregistrament de l'imatge cap a %s"
 #: shell/ev-window.c:3027 shell/ev-window.c:3142
 #, c-format
 msgid "The file could not be saved as “%s”."
-msgstr "Lo fichièr pòt pas èsser enregistrat sous « %s »."
+msgstr "Lo fichièr pòt pas èsser enregistrat sous « %s »."
 
 #: shell/ev-window.c:3059
 #, c-format
@@ -1506,7 +1507,7 @@ msgstr[1] "%d prètzfaits en espèra dins la fila"
 #: shell/ev-window.c:3725
 #, c-format
 msgid "Printing job “%s”"
-msgstr "Impression de lo prètzfait « %s »"
+msgstr "Impression de lo prètzfait « %s »"
 
 #: shell/ev-window.c:3943
 msgid "Document contains form fields that have been filled out."
@@ -1519,7 +1520,7 @@ msgstr "Lo document conten d'anotacions novèlas o modificadas."
 #: shell/ev-window.c:3958
 #, c-format
 msgid "Reload document “%s”?"
-msgstr "Cargar lo document « %s » ?"
+msgstr "Cargar lo document « %s » ?"
 
 #: shell/ev-window.c:3960
 msgid "If you reload the document, changes will be permanently lost."
@@ -1533,7 +1534,7 @@ msgstr "_Non"
 #: shell/ev-window.c:3971
 #, c-format
 msgid "Save a copy of document “%s” before closing?"
-msgstr "Enregistrar una còpia del document « %s » abans de tampar ?"
+msgstr "Enregistrar una còpia del document « %s » abans de tampar ?"
 
 #: shell/ev-window.c:3973
 msgid "If you don’t save a copy, changes will be permanently lost."
@@ -1552,7 +1553,7 @@ msgstr "Enregistrar una _còpia"
 #: shell/ev-window.c:4061
 #, c-format
 msgid "Wait until print job “%s” finishes before closing?"
-msgstr "Cal esperar la fin de l'impression de « %s » abans de tampar ?"
+msgstr "Cal esperar la fin de l'impression de « %s » abans de tampar ?"
 
 #. TRANS: the singular form is not really used as n_print_jobs > 1
 #. but some languages distinguish between different plurals forms,
@@ -1564,10 +1565,10 @@ msgid_plural ""
 "There are %d print jobs active. Wait until print finishes before closing?"
 msgstr[0] ""
 "%d prètzfait d'impression es en cors. Cal esperar la fin de l'impression "
-"abans de tampar ?"
+"abans de tampar ?"
 msgstr[1] ""
 "%d prètzfaits d'impression son en cors. Cal esperar la fin de l'impression "
-"abans de tampar ?"
+"abans de tampar ?"
 
 #: shell/ev-window.c:4082
 msgid "If you close the window, pending print jobs will not be printed."
@@ -1597,7 +1598,9 @@ msgstr "Aquesta aplicacion es un visionador de documents pel burèu GNOME"
 
 #: shell/ev-window.c:4218
 msgid "translator-credits"
-msgstr "Cédric Valmary <cvalmary@yahoo.fr>"
+msgstr ""
+"Cédric Valmary <cvalmary@yahoo.fr>\n"
+"Quentin PAGÈS"
 
 #: shell/ev-window.c:4648
 msgid "Running in presentation mode"
@@ -1609,7 +1612,7 @@ msgstr "La pèça junta pòt pas èsser enregistrada."
 
 #: shell/ev-window.c:6021
 msgid "Enable caret navigation?"
-msgstr "Activar la navigacion al cursor ?"
+msgstr "Activar la navigacion al cursor ?"
 
 #: shell/ev-window.c:6022
 msgid "_Enable"
@@ -1624,7 +1627,7 @@ msgstr ""
 "En quichant sus F7, la navigacion al cursor s'activa e se desactiva. Aquesta "
 "foncionalitat plaça un cursor desplaçable dins las paginas de tèxte, que "
 "permet de se desplaçar e de seleccionar de tèxte amb vòstre clavièr. Volètz "
-"activar la navigacion amb lo cursor ?"
+"activar la navigacion amb lo cursor ?"
 
 #: shell/ev-window.c:6030
 msgid "Don’t show this message again"
