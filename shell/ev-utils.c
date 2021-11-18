@@ -201,47 +201,6 @@ ev_print_region_contents (cairo_region_t *region)
 	}
 }
 
-/**
- * ev_gui_menu_popup_at_tree_view_selection:
- * @menu: a #GtkMenu to show
- * @tree_view: a #GtkTreeView
- *
- * Opens a popup menu positioned at the currently selected row of @tree_view.
- */
-void
-ev_gui_menu_popup_at_tree_view_selection (GtkMenu     *menu,
-					  GtkTreeView *tree_view)
-{
-	GtkTreeSelection *selection;
-	GList            *selected_rows;
-
-	selection = gtk_tree_view_get_selection (tree_view);
-	selected_rows = gtk_tree_selection_get_selected_rows (selection, NULL);
-	if (selected_rows) {
-		GdkWindow     *window;
-		GdkRectangle   rect;
-		GtkAllocation  allocation;
-
-	        window = gtk_widget_get_window (GTK_WIDGET (tree_view));
-		gtk_tree_view_get_cell_area (tree_view, selected_rows->data,
-					     NULL, &rect);
-		gtk_tree_view_convert_bin_window_to_widget_coords (tree_view, 0, rect.y,
-								   NULL, &rect.y);
-		gtk_widget_get_allocation (GTK_WIDGET (tree_view), &allocation);
-		rect.width = allocation.width;
-		gtk_menu_popup_at_rect (menu, window, &rect,
-					GDK_GRAVITY_SOUTH_WEST,
-					GDK_GRAVITY_NORTH_WEST,
-					NULL);
-		g_list_free_full (selected_rows, (GDestroyNotify)gtk_tree_path_free);
-	} else {
-		gtk_menu_popup_at_widget (menu, GTK_WIDGET (tree_view),
-					  GDK_GRAVITY_CENTER,
-					  GDK_GRAVITY_CENTER,
-					  NULL);
-	}
-}
-
 static void
 file_filter_add_mime_types (GdkPixbufFormat *format, GtkFileFilter *filter,
 			    GtkFileFilter   *supported_filter)

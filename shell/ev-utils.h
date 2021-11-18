@@ -30,9 +30,6 @@ GdkPixbuf*		ev_pixbuf_add_shadow (GdkPixbuf *src, int size,
 
 void			ev_print_region_contents (cairo_region_t *region);
 
-void                    ev_gui_menu_popup_at_tree_view_selection (GtkMenu     *menu,
-								  GtkTreeView *tree_view);
-
 void           		file_chooser_dialog_add_writable_pixbuf_formats (GtkFileChooser *chooser);
 GdkPixbufFormat* 	get_gdk_pixbuf_format_by_extension (const gchar *uri);
 gchar*                  ev_str_replace (const char *str, const char *substr, const char *repl);
