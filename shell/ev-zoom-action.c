@@ -83,7 +83,7 @@ ev_zoom_action_set_zoom_level (EvZoomAction *zoom_action,
 
         for (i = 0; i < G_N_ELEMENTS (zoom_levels); i++) {
                 if (ABS (zoom - zoom_levels[i].level) < EPSILON) {
-                        gtk_entry_set_text (GTK_ENTRY (priv->entry),
+                        gtk_editable_set_text (GTK_EDITABLE (priv->entry),
                                             zoom_levels[i].name);
                         return;
                 }
@@ -94,7 +94,7 @@ ev_zoom_action_set_zoom_level (EvZoomAction *zoom_action,
                 zoom_str = g_strdup_printf ("%d%%", (gint)zoom_perc);
         else
                 zoom_str = g_strdup_printf ("%.1f%%", zoom_perc);
-        gtk_entry_set_text (GTK_ENTRY (priv->entry), zoom_str);
+        gtk_editable_set_text (GTK_EDITABLE (priv->entry), zoom_str);
         g_free (zoom_str);
 }
 
@@ -141,7 +141,7 @@ ev_zoom_action_set_width_chars (EvZoomAction *zoom_action,
 	EvZoomActionPrivate *priv = GET_PRIVATE (zoom_action);
 
         /* width + 2 (one decimals and the comma) + 3 (for the icon) */
-        gtk_entry_set_width_chars (GTK_ENTRY (priv->entry), width + 2 + 3);
+        gtk_editable_set_width_chars (GTK_EDITABLE (priv->entry), width + 2 + 3);
 }
 
 static void
@@ -195,7 +195,7 @@ entry_activated_cb (GtkEntry     *entry,
 
         double       zoom_perc;
         float        zoom;
-        const gchar *text = gtk_entry_get_text (entry);
+        const gchar *text = gtk_editable_get_text (GTK_EDITABLE (entry));
         gchar       *end_ptr = NULL;
 
         if (!text || text[0] == '\0') {
@@ -218,29 +218,15 @@ entry_activated_cb (GtkEntry     *entry,
         g_signal_emit (zoom_action, signals[ACTIVATED], 0, NULL);
 }
 
-static gboolean
-focus_out_cb (EvZoomAction *zoom_action)
-{
-        ev_zoom_action_update_zoom_level (zoom_action);
-
-        return FALSE;
-}
-
 static void
 entry_icon_press_cb (GtkEntry            *entry,
 		     GtkEntryIconPosition icon_pos,
-		     GdkEvent            *event,
 		     EvZoomAction        *zoom_action)
 {
 	EvZoomActionPrivate *priv = GET_PRIVATE (zoom_action);
-        guint button = 0;
 	GdkRectangle rect;
 
 	g_return_if_fail (priv->popup != NULL);
-
-        if (gdk_event_get_button (event, &button) &&
-            button != GDK_BUTTON_PRIMARY)
-                return;
 
 	/* This cannot be done during init, as window does not yet exist
 	 * and therefore the rectangle is not yet available */
@@ -317,6 +303,7 @@ ev_zoom_action_constructed (GObject *object)
 
         G_OBJECT_CLASS (ev_zoom_action_parent_class)->constructed (object);
 
+
         priv->zoom_free_section =
                 g_menu_model_get_item_link (G_MENU_MODEL (priv->menu),
                                             ZOOM_FREE_SECTION, G_MENU_LINK_SECTION);
@@ -342,7 +329,7 @@ ev_zoom_action_class_init (EvZoomActionClass *klass)
 	gtk_widget_class_bind_template_child_private (widget_class, EvZoomAction, menu);
 	gtk_widget_class_bind_template_callback (widget_class, entry_icon_press_cb);
 	gtk_widget_class_bind_template_callback (widget_class, entry_activated_cb);
-	gtk_widget_class_bind_template_callback (widget_class, focus_out_cb);
+	gtk_widget_class_bind_template_callback (widget_class, ev_zoom_action_update_zoom_level);
 
         signals[ACTIVATED] =
                 g_signal_new ("activated",
@@ -356,13 +343,5 @@ ev_zoom_action_class_init (EvZoomActionClass *klass)
 static void
 ev_zoom_action_init (EvZoomAction *zoom_action)
 {
-        EvZoomActionPrivate *priv = GET_PRIVATE (zoom_action);
-
         gtk_widget_init_template (GTK_WIDGET (zoom_action));
-
-       /* TODO: In GTK4, GtkPopoverMenu has a menu-model property.
-           So this could be moved to the template instead after the
-           GTK4 move
-       */
-        gtk_popover_bind_model (priv->popup, G_MENU_MODEL (priv->menu), NULL);
 }

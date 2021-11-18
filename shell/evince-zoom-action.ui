@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
+  <requires lib="gtk" version="4.0" />
   <template class="EvZoomAction" parent="GtkBox">
     <property name="orientation">vertical</property>
     <property name="tooltip-text" translatable="yes">Select or set the zoom level of the document</property>
@@ -9,20 +10,26 @@
           <class name="tnum" />
         </style>
         <property name="secondary-icon-name">pan-down-symbolic</property>
+        <property name="vexpand">True</property>
         <property name="xalign">1.0</property>
         <property name="max-width-chars">0</property>
         <property name="visible">True</property>
-        <signal name="icon-press" handler="entry_icon_press_cb"/>
-        <signal name="activate" handler="entry_activated_cb"/>
-        <signal name="focus-out-event" handler="focus_out_cb" swapped="yes"/>
+        <signal name="icon-press" handler="entry_icon_press_cb" />
+        <signal name="activate" handler="entry_activated_cb" />
+        <child>
+          <object class="GtkEventControllerFocus">
+            <signal name="leave" handler="ev_zoom_action_update_zoom_level" swapped="yes" />
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="GtkPopoverMenu" id="popup">
+        <property name="position">bottom</property>
+        <property name="menu-model">menu</property>
       </object>
     </child>
   </template>
-
-  <object class="GtkPopover" id="popup">
-    <property name="position">3</property>
-    <property name="relative-to">entry</property>
-  </object>
 
   <menu id="menu">
     <section>
@@ -42,7 +49,6 @@
         <attribute name="target">automatic</attribute>
       </item>
     </section>
-    <section>
-    </section>
+    <section />
   </menu>
 </interface>
