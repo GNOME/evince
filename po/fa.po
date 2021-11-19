@@ -14,9 +14,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince HEAD\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
-"POT-Creation-Date: 2021-08-25 13:26+0000\n"
-"PO-Revision-Date: 2021-09-01 14:26+0430\n"
-"Last-Translator: Danial Behzadi <dani.behzi@ubuntu.com>\n"
+"POT-Creation-Date: 2021-10-15 00:48+0000\n"
+"PO-Revision-Date: 2021-11-10 16:34+0330\n"
+"Last-Translator: MohammadSaleh Kamyab <mskf1383@protonmail.com>\n"
 "Language-Team: Persian\n"
 "Language: fa\n"
 "MIME-Version: 1.0\n"
@@ -308,8 +308,8 @@ msgid "Adds support for reading XPS documents"
 msgstr "پشتیبانی از خواندن سندهای XPS را اضافه می‌کند"
 
 #. Manually set name and icon
-#: data/org.gnome.Evince.desktop.in.in:3 shell/ev-window-title.c:133
-#: shell/main.c:300
+#: data/org.gnome.Evince.desktop.in.in:3 org.gnome.Evince.appdata.xml.in:23
+#: shell/ev-window-title.c:133 shell/main.c:300
 msgid "Document Viewer"
 msgstr "نمایشگر سند"
 
@@ -441,27 +441,27 @@ msgstr "از %Id"
 msgid "Page %s"
 msgstr "صفحه %s"
 
-#: libmisc/ev-search-box.c:112
+#: libmisc/ev-search-box.c:113
 msgid "Not found, click to change search options"
 msgstr "پیدا نشد، برای تغییر گزینه‌های جست‌وجو کلیک کنید"
 
-#: libmisc/ev-search-box.c:186 libmisc/ev-search-box.c:242
+#: libmisc/ev-search-box.c:187 libmisc/ev-search-box.c:243
 msgid "Search options"
 msgstr "گزینه‌های جست‌وجو"
 
-#: libmisc/ev-search-box.c:318
+#: libmisc/ev-search-box.c:319
 msgid "_Whole Words Only"
 msgstr "_فقط تمام کلمات"
 
-#: libmisc/ev-search-box.c:331
+#: libmisc/ev-search-box.c:332
 msgid "C_ase Sensitive"
 msgstr "_حساس به کوچکی و بزرگی حروف"
 
-#: libmisc/ev-search-box.c:600
+#: libmisc/ev-search-box.c:601
 msgid "Find previous occurrence of the search string"
 msgstr "یافتن رخداد پیشین رشتهٔ جستجو شده"
 
-#: libmisc/ev-search-box.c:606
+#: libmisc/ev-search-box.c:607
 msgid "Find next occurrence of the search string"
 msgstr "یافتن رخداد بعدی رشتهٔ جستجو شده"
 
@@ -664,17 +664,13 @@ msgstr "راه‌اندازی %s"
 msgid "Reset form"
 msgstr "بازنشانی فرم"
 
-#: libview/ev-view-presentation.c:757
+#: libview/ev-view-presentation.c:739
 msgid "Jump to page:"
 msgstr "پریدن به صفحه‌:"
 
-#: libview/ev-view-presentation.c:1051
+#: libview/ev-view-presentation.c:1033
 msgid "End of presentation. Press Esc or click to exit."
 msgstr "پایان ارائه. برای خروج کلید گریز را بزنید."
-
-#: org.gnome.Evince.appdata.xml.in:23 shell/ev-window.c:4210
-msgid "Evince"
-msgstr "اوینس"
 
 #: org.gnome.Evince.appdata.xml.in:24
 msgid "Document viewer for popular document formats"
@@ -1339,7 +1335,7 @@ msgstr "گستردن همه زیر این عنصر"
 msgid "Outline"
 msgstr "رئوس مطالب"
 
-#: shell/ev-sidebar-thumbnails.c:1047 shell/ev-window.c:7595
+#: shell/ev-sidebar-thumbnails.c:1045 shell/ev-window.c:7595
 msgid "Thumbnails"
 msgstr "تصاویر بندانگشتی"
 
@@ -1559,6 +1555,10 @@ msgstr "لغو _چاپ و بستن"
 #: shell/ev-window.c:4090
 msgid "Close _after Printing"
 msgstr "بستن _بعد از چاپ"
+
+#: shell/ev-window.c:4210
+msgid "Evince"
+msgstr "اوینس"
 
 #: shell/ev-window.c:4212
 msgid "© 1996–2020 The Evince authors"
@@ -1925,68 +1925,68 @@ msgstr "تغییر وضعیت جفت صفحه"
 
 #: shell/help-overlay.ui:320
 msgctxt "shortcut window"
+msgid "Toggle odd pages left"
+msgstr "تغییر وضعیت صفحات فرد به چپ"
+
+#: shell/help-overlay.ui:327
+msgctxt "shortcut window"
 msgid "Document properties"
 msgstr "ویژگی‌های سند"
 
-#: shell/help-overlay.ui:327
+#: shell/help-overlay.ui:334
 msgctxt "shortcut window"
 msgid "Add a post-it like note"
 msgstr "افزودن یک یادداشت"
 
-#: shell/help-overlay.ui:334
+#: shell/help-overlay.ui:341
 msgctxt "shortcut window"
 msgid "Highlight text"
 msgstr "نشانه‌گذاری متن"
 
-#: shell/help-overlay.ui:343
+#: shell/help-overlay.ui:350
 msgctxt "shortcut window"
 msgid "Finding text"
 msgstr "یافتن متن"
 
-#: shell/help-overlay.ui:347
+#: shell/help-overlay.ui:354
 msgctxt "shortcut window"
 msgid "Show the search bar"
 msgstr "نمایش نوار جست‌وجو"
 
-#: shell/help-overlay.ui:354
+#: shell/help-overlay.ui:361
 msgctxt "shortcut window"
 msgid "Go to the next search result"
 msgstr "رفتن به نتیجه بعدی جست‌وجو"
 
-#: shell/help-overlay.ui:361
+#: shell/help-overlay.ui:368
 msgctxt "shortcut window"
 msgid "Go to the previous search result"
 msgstr "رفتن به نتیجه بعدی جست‌وجو"
 
-#: shell/help-overlay.ui:370
+#: shell/help-overlay.ui:377
 msgctxt "shortcut window"
 msgid "General"
 msgstr "عمومی"
 
-#: shell/help-overlay.ui:374
+#: shell/help-overlay.ui:381
 msgctxt "shortcut window"
 msgid "Show help"
 msgstr "نمایش راهنما"
 
-#: shell/help-overlay.ui:381
+#: shell/help-overlay.ui:388
 msgctxt "shortcut window"
 msgid "Toggle primary menu"
 msgstr "تغییر وضعیت فهرست اصلی"
 
-#: shell/help-overlay.ui:388
+#: shell/help-overlay.ui:395
 msgctxt "shortcut window"
 msgid "Keyboard shortcuts"
 msgstr "میان‌برهای صفحه‌کلید"
 
-#: shell/help-overlay.ui:395
+#: shell/help-overlay.ui:402
 msgctxt "shortcut window"
 msgid "Close window"
 msgstr "بستن پنجره"
-
-#: shell/help-overlay.ui:402
-msgctxt "shortcut window"
-msgid "Quit"
-msgstr "خروج"
 
 #: shell/help-overlay.ui:409
 msgctxt "shortcut window"
@@ -2068,6 +2068,10 @@ msgstr "STRING"
 #: shell/main.c:83
 msgid "[FILE…]"
 msgstr "[FILE…]"
+
+#~ msgctxt "shortcut window"
+#~ msgid "Quit"
+#~ msgstr "خروج"
 
 #~ msgid "Go to the previous page"
 #~ msgstr "رفتن به صفحهٔ قبل"
