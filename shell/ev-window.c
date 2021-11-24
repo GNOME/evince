@@ -3561,13 +3561,38 @@ ev_window_load_print_page_setup_from_metadata (EvWindow     *window,
 static GtkPrintSettings *
 get_print_settings (GKeyFile *key_file)
 {
-	GtkPrintSettings *print_settings;
+	static const char *migrate_keys[] = {
+		"evince-print-setting-page-scale",
+		"evince-print-setting-page-autorotate",
+		"evince-print-setting-page-size",
+		"evince-print-setting-page-draw-borders"
+	};
+	GtkPrintSettings *print_settings = NULL;
+	guint i;
 
-	print_settings = g_key_file_has_group (key_file, EV_PRINT_SETTINGS_GROUP) ?
-		gtk_print_settings_new_from_key_file (key_file, EV_PRINT_SETTINGS_GROUP, NULL) :
-		gtk_print_settings_new ();
+	/* Migrate some keys */
+	for (i = 0; i < G_N_ELEMENTS (migrate_keys); ++i) {
+		const char *key = migrate_keys[i];
+		char *new_key, *value;
 
-	return print_settings ? print_settings : gtk_print_settings_new ();
+		if (!g_key_file_has_key (key_file, EV_PRINT_SETTINGS_GROUP, key, NULL))
+			continue;
+
+		new_key = g_strdup_printf ("xdp-custom-%s", key);
+		value = g_key_file_get_value (key_file, EV_PRINT_SETTINGS_GROUP, key, NULL);
+
+		g_key_file_remove_key (key_file, EV_PRINT_SETTINGS_GROUP, key, NULL);
+		g_key_file_set_value (key_file, EV_PRINT_SETTINGS_GROUP, new_key, value);
+
+		g_free (new_key);
+		g_free (value);
+	}
+
+	print_settings = gtk_print_settings_new_from_key_file (key_file, EV_PRINT_SETTINGS_GROUP, NULL);
+	if (print_settings == NULL)
+		print_settings = gtk_print_settings_new ();
+
+	return print_settings;
 }
 
 static GtkPageSetup *
