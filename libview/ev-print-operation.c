@@ -34,6 +34,15 @@
 #define PORTAL_ENABLED
 #endif
 
+#if defined (WITH_CUSTOM_OPTIONS) // && GTK_CHECK_VERSION (3, 24, 30)
+#define CUSTOM_OPTIONS_ENABLED
+#endif
+
+#define EV_PRINT_SETTING_PAGE_SCALE   "xdp-custom-evince-print-setting-page-scale"
+#define EV_PRINT_SETTING_AUTOROTATE   "xdp-custom-evince-print-setting-page-autorotate"
+#define EV_PRINT_SETTING_PAGE_SIZE    "xdp-custom-evince-print-setting-page-size"
+#define EV_PRINT_SETTING_DRAW_BORDERS "xdp-custom-evince-print-setting-page-draw-borders"
+
 enum {
 	PROP_0,
 	PROP_DOCUMENT
@@ -372,6 +381,80 @@ ev_print_operation_update_status (EvPrintOperation *op,
 	op->progress = MIN (1.0, progress);
 
 	g_signal_emit (op, signals[STATUS_CHANGED], 0);
+}
+
+
+static GVariant *
+ev_print_operation_get_custom_options (void)
+{
+        GVariantBuilder builder, abuilder;
+
+        g_variant_builder_init (&builder, G_VARIANT_TYPE_ARRAY);
+
+        g_variant_builder_open (&builder, G_VARIANT_TYPE ("(sa*)")); /* page */
+        g_variant_builder_add (&builder, "s", _("Page Handling"));
+
+        g_variant_builder_open (&builder, G_VARIANT_TYPE_ARRAY); /* sections */
+        g_variant_builder_open (&builder, G_VARIANT_TYPE ("(sa*)")); /* section */
+        g_variant_builder_add (&builder, "s", "");
+        g_variant_builder_open (&builder, G_VARIANT_TYPE_ARRAY); /* options */
+
+        /* Page Scaling option */
+        g_variant_builder_open (&builder, G_VARIANT_TYPE ("(ssssa{sv})")); /* option */
+        g_variant_builder_add (&builder, "s", "pickone"); /* type */
+        g_variant_builder_add (&builder, "s", EV_PRINT_SETTING_PAGE_SCALE); /* key */
+        g_variant_builder_add (&builder, "s", "1"); /* default */
+        g_variant_builder_add (&builder, "s", _("Page Scaling")); /* label */
+
+        g_variant_builder_open (&builder, G_VARIANT_TYPE ("a{sv}")); /* dict */
+        g_variant_builder_open (&builder, G_VARIANT_TYPE ("{sv}")); /* dict entry */
+        g_variant_builder_add (&builder, "s", "choices");
+        g_variant_builder_open (&builder, G_VARIANT_TYPE_VARIANT);
+        g_variant_builder_open (&builder, G_VARIANT_TYPE ("a(ss)"));
+	/* translators: Value for 'Page Scaling:' to not scale the document pages on printing */
+        g_variant_builder_add (&builder, "(ss)", "0", _("None"));
+        g_variant_builder_add (&builder, "(ss)", "1",  _("Shrink to Printable Area"));
+        g_variant_builder_add (&builder, "(ss)", "2", _("Fit to Printable Area"));
+
+        g_variant_builder_close (&builder); /* a(ss) */
+        g_variant_builder_close (&builder); /* v */
+        g_variant_builder_close (&builder); /* {sv} */
+        g_variant_builder_close (&builder); /* a{sv} */
+        g_variant_builder_close (&builder); /* option */
+
+        /* Autorotate option */
+        g_variant_builder_init (&abuilder, G_VARIANT_TYPE ("a{sv}"));
+        g_variant_builder_add (&builder, "(ssssa{sv})",
+                               "bool",
+                               EV_PRINT_SETTING_AUTOROTATE,
+                               "True",
+                               _("Auto Rotate and Center"),
+                               &abuilder);
+
+        /* Page Size option */
+        g_variant_builder_init (&abuilder, G_VARIANT_TYPE ("a{sv}"));
+        g_variant_builder_add (&builder, "(ssssa{sv})",
+                               "bool",
+                               EV_PRINT_SETTING_PAGE_SIZE,
+                               "False",
+                               _("Select page size using document page size"),
+                               &abuilder);
+
+        /* Draw Borders option */
+        g_variant_builder_init (&abuilder, G_VARIANT_TYPE ("a{sv}"));
+        g_variant_builder_add (&builder, "(ssssa{sv})",
+                               "bool",
+                               EV_PRINT_SETTING_DRAW_BORDERS,
+                               "False",
+                               _("Draw border around pages"),
+                               &abuilder);
+
+        g_variant_builder_close (&builder); // options
+        g_variant_builder_close (&builder); // section
+        g_variant_builder_close (&builder); // sections
+        g_variant_builder_close (&builder); // page
+
+        return g_variant_builder_end (&builder);
 }
 
 /* Export interface */
@@ -1691,18 +1774,18 @@ export_portal_create_proxy_cb (GObject *source,
         export_portal_subscribe_response (export_portal);
 
 #if 0
-        /* FIXMEchpe: There is no way to specify the GtkPrintCapabilities
-         * and the custom options. Needs to be fixed in the Portal!
+        /* FIXMEchpe: Do we need to pass the GtkPrintCapabilities also with the portal?
+         * If so, needs to be added to the Portal first.
          */
         capabilities = GTK_PRINT_CAPABILITY_PREVIEW |
                 ev_file_exporter_get_capabilities (EV_FILE_EXPORTER (op->document));
         /* ... */
-        /* install custom options... */
 #endif
 
         g_variant_builder_init (&options_builder, G_VARIANT_TYPE_VARDICT);
         g_variant_builder_add (&options_builder, "{sv}", "handle_token", g_variant_new_string (token));
         g_variant_builder_add (&options_builder, "{sv}", "modal", g_variant_new_boolean (TRUE));
+        g_variant_builder_add (&options_builder, "{sv}", "custom-options", ev_print_operation_get_custom_options ());
         g_free (token);
 
         options_variant = g_variant_builder_end (&options_builder);
@@ -2290,11 +2373,6 @@ typedef enum {
 	EV_SCALE_FIT_TO_PRINTABLE_AREA
 } EvPrintScale;
 
-#define EV_PRINT_SETTING_PAGE_SCALE   "evince-print-setting-page-scale"
-#define EV_PRINT_SETTING_AUTOROTATE   "evince-print-setting-page-autorotate"
-#define EV_PRINT_SETTING_PAGE_SIZE    "evince-print-setting-page-size"
-#define EV_PRINT_SETTING_DRAW_BORDERS "evince-print-setting-page-draw-borders"
-
 struct _EvPrintOperationPrint {
 	EvPrintOperation parent;
 
@@ -2857,6 +2935,11 @@ ev_print_operation_print_init (EvPrintOperationPrint *print)
 	gtk_print_operation_set_unit (print->op, GTK_UNIT_POINTS);
 	gtk_print_operation_set_custom_tab_label (print->op, _("Page Handling"));
 
+#ifdef CUSTOM_OPTIONS_ENABLED
+        gtk_print_operation_set_custom_options (print->op,
+                                                ev_print_operation_get_custom_options ());
+#endif
+
 	application = g_application_get_default ();
 	if (application)
 	        g_application_hold (application);
@@ -2895,10 +2978,12 @@ ev_print_operation_get_gtype_for_document (EvDocument *document)
         /* Allow to override the selection by an env var */
         env = g_getenv ("EV_PRINT");
 
-        if (EV_IS_DOCUMENT_PRINT (document) && g_strcmp0 (env, "export") != 0) {
+        if (EV_IS_DOCUMENT_PRINT (document) &&
+            g_strcmp0 (env, "export") != 0 &&
+            g_strcmp0 (env, "export-portal") != 0) {
                 type = EV_TYPE_PRINT_OPERATION_PRINT;
         } else if (EV_IS_FILE_EXPORTER (document)) {
-                if (ev_should_use_portal ()) {
+                if (ev_should_use_portal () || g_strcmp0 (env, "export-portal") == 0) {
 #ifdef PORTAL_ENABLED
                         type = EV_TYPE_PRINT_OPERATION_EXPORT_PORTAL;
 #endif
