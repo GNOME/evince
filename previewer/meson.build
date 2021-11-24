@@ -19,11 +19,7 @@ sources += gnome.compile_resources(
   export: true,
 )
 
-deps = [libevmisc_dep]
-
-if enable_gtk_unix_print
-  deps += gtk_unix_print_dep
-endif
+deps = [libevmisc_dep, gtk_unix_print_dep]
 
 program = 'evince-previewer'
 
