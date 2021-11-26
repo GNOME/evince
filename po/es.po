@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince.master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
-"POT-Creation-Date: 2021-09-06 09:37+0000\n"
-"PO-Revision-Date: 2021-07-13 11:33+0200\n"
+"POT-Creation-Date: 2021-10-15 00:48+0000\n"
+"PO-Revision-Date: 2021-11-26 17:34+0100\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Spanish - Spain <gnome-es-list@gnome.org>\n"
 "Language: es_ES\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Gtranslator 40.0\n"
+"X-Generator: Gtranslator 41.0\n"
 
 #: backend/comics/comics-document.c:163 backend/comics/comics-document.c:187
 msgid "File is corrupted"
@@ -310,8 +310,8 @@ msgid "Adds support for reading XPS documents"
 msgstr "Añade soporte para leer documentos XPS"
 
 #. Manually set name and icon
-#: data/org.gnome.Evince.desktop.in.in:3 shell/ev-window-title.c:133
-#: shell/main.c:300
+#: data/org.gnome.Evince.desktop.in.in:3 org.gnome.Evince.appdata.xml.in:23
+#: shell/ev-window-title.c:133 shell/main.c:300
 msgid "Document Viewer"
 msgstr "Visor de documentos"
 
@@ -448,27 +448,27 @@ msgstr "de %d"
 msgid "Page %s"
 msgstr "Página %s"
 
-#: libmisc/ev-search-box.c:112
+#: libmisc/ev-search-box.c:113
 msgid "Not found, click to change search options"
 msgstr "No encontrado; pulse para cambiar las opciones de búsqueda"
 
-#: libmisc/ev-search-box.c:186 libmisc/ev-search-box.c:242
+#: libmisc/ev-search-box.c:187 libmisc/ev-search-box.c:243
 msgid "Search options"
 msgstr "Opciones de búsqueda"
 
-#: libmisc/ev-search-box.c:318
+#: libmisc/ev-search-box.c:319
 msgid "_Whole Words Only"
 msgstr "_Solo palabras completas"
 
-#: libmisc/ev-search-box.c:331
+#: libmisc/ev-search-box.c:332
 msgid "C_ase Sensitive"
 msgstr "Coi_ncidir con capitalización"
 
-#: libmisc/ev-search-box.c:600
+#: libmisc/ev-search-box.c:601
 msgid "Find previous occurrence of the search string"
 msgstr "Buscar la aparición anterior de la cadena"
 
-#: libmisc/ev-search-box.c:606
+#: libmisc/ev-search-box.c:607
 msgid "Find next occurrence of the search string"
 msgstr "Buscar la siguiente aparición de la cadena"
 
@@ -676,17 +676,13 @@ msgstr "Lanzar %s"
 msgid "Reset form"
 msgstr "Reiniciar formulario"
 
-#: libview/ev-view-presentation.c:757
+#: libview/ev-view-presentation.c:739
 msgid "Jump to page:"
 msgstr "Saltar a la página:"
 
-#: libview/ev-view-presentation.c:1051
+#: libview/ev-view-presentation.c:1033
 msgid "End of presentation. Press Esc or click to exit."
 msgstr "Fin de la presentación. Pulse Esc o con el ratón para salir."
-
-#: org.gnome.Evince.appdata.xml.in:23 shell/ev-window.c:4210
-msgid "Evince"
-msgstr "Evince"
 
 #: org.gnome.Evince.appdata.xml.in:24
 msgid "Document viewer for popular document formats"
@@ -1361,7 +1357,7 @@ msgstr "Expandir todo bajo este elemento"
 msgid "Outline"
 msgstr "Índice"
 
-#: shell/ev-sidebar-thumbnails.c:1047 shell/ev-window.c:7595
+#: shell/ev-sidebar-thumbnails.c:1045 shell/ev-window.c:7595
 msgid "Thumbnails"
 msgstr "Miniaturas"
 
@@ -1589,6 +1585,10 @@ msgstr "Cancelar la _impresión y cerrar"
 #: shell/ev-window.c:4090
 msgid "Close _after Printing"
 msgstr "Cerrar _después de imprimir"
+
+#: shell/ev-window.c:4210
+msgid "Evince"
+msgstr "Evince"
 
 #: shell/ev-window.c:4212
 msgid "© 1996–2020 The Evince authors"
@@ -1955,69 +1955,71 @@ msgid "Toggle dual page"
 msgstr "Alternar doble página"
 
 #: shell/help-overlay.ui:320
+#| msgctxt "shortcut window"
+#| msgid "Toggle dual page"
+msgctxt "shortcut window"
+msgid "Toggle odd pages left"
+msgstr "Alternar páginas impares a la izquierda"
+
+#: shell/help-overlay.ui:327
 msgctxt "shortcut window"
 msgid "Document properties"
 msgstr "Propiedades del documento"
 
-#: shell/help-overlay.ui:327
+#: shell/help-overlay.ui:334
 msgctxt "shortcut window"
 msgid "Add a post-it like note"
 msgstr "Añadir una nota tipo post-it"
 
-#: shell/help-overlay.ui:334
+#: shell/help-overlay.ui:341
 msgctxt "shortcut window"
 msgid "Highlight text"
 msgstr "Resaltar texto"
 
-#: shell/help-overlay.ui:343
+#: shell/help-overlay.ui:350
 msgctxt "shortcut window"
 msgid "Finding text"
 msgstr "Buscando texto"
 
-#: shell/help-overlay.ui:347
+#: shell/help-overlay.ui:354
 msgctxt "shortcut window"
 msgid "Show the search bar"
 msgstr "Muestra la barra de búsqueda"
 
-#: shell/help-overlay.ui:354
+#: shell/help-overlay.ui:361
 msgctxt "shortcut window"
 msgid "Go to the next search result"
 msgstr "Ir al siguiente resultado de búsqueda"
 
-#: shell/help-overlay.ui:361
+#: shell/help-overlay.ui:368
 msgctxt "shortcut window"
 msgid "Go to the previous search result"
 msgstr "Ir al resultado de búsqueda anterior"
 
-#: shell/help-overlay.ui:370
+#: shell/help-overlay.ui:377
 msgctxt "shortcut window"
 msgid "General"
 msgstr "General"
 
-#: shell/help-overlay.ui:374
+#: shell/help-overlay.ui:381
 msgctxt "shortcut window"
 msgid "Show help"
 msgstr "Mostrar ayuda"
 
-#: shell/help-overlay.ui:381
+#: shell/help-overlay.ui:388
 msgctxt "shortcut window"
 msgid "Toggle primary menu"
 msgstr "Conmutar el menú principal"
 
-#: shell/help-overlay.ui:388
+#: shell/help-overlay.ui:395
 msgctxt "shortcut window"
 msgid "Keyboard shortcuts"
 msgstr "Atajos del teclado"
 
-#: shell/help-overlay.ui:395
+#: shell/help-overlay.ui:402
 msgctxt "shortcut window"
 msgid "Close window"
 msgstr "Cerrar la ventana"
-
-#: shell/help-overlay.ui:402
-msgctxt "shortcut window"
-msgid "Quit"
-msgstr "Salir"
 
 #: shell/help-overlay.ui:409
 msgctxt "shortcut window"
@@ -2099,6 +2101,10 @@ msgstr "CADENA"
 #: shell/main.c:83
 msgid "[FILE…]"
 msgstr "[ARCHIVO…]"
+
+#~ msgctxt "shortcut window"
+#~ msgid "Quit"
+#~ msgstr "Salir"
 
 #~ msgid "Go to the previous page"
 #~ msgstr "Ir a la página anterior"
