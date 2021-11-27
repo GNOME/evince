@@ -84,11 +84,6 @@ config_h.set_quoted('VERSION', ev_version)
 config_h.set_quoted('GETTEXT_PACKAGE', ev_name)
 config_h.set('ENABLE_NLS', true)
 
-# portability checks
-# FIXME: there is no use of backtrace in the code
-# for backtrace()
-cc.has_header('execinfo.h')
-
 # Support for nl_langinfo (_NL_MEASUREMENT_MEASUREMENT) (optional)
 langinfo_measurement_src = '''
   #include <langinfo.h>
