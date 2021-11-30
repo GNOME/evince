@@ -35,6 +35,7 @@
 #include <config.h>
 #include <stdio.h>
 #include <stdlib.h>			/* for atof */
+#include <stdint.h>
 #include <math.h>
 #include <time.h>
 #include <string.h>
@@ -106,7 +107,7 @@
 #define	EXP_ASCII85ENCODER
 
 /*
- * NB: this code assumes uint32 works with printf's %l[ud].
+ * NB: this code assumes uint32_t works with printf's %l[ud].
  */
 
 struct _TIFF2PSContext
@@ -125,7 +126,7 @@ struct _TIFF2PSContext
 	double splitOverlap;	/* amount for split pages to overlag */
 	int rotate;		/* rotate image by 180 degrees */
 	int useImagemask;	/* Use imagemask instead of image operator */
-	uint16 res_unit;	/* Resolution units: 2 - inches, 3 - cm */
+	uint16_t res_unit;	/* Resolution units: 2 - inches, 3 - cm */
 	int npages;		/* number of pages processed */
 
 	tsize_t tf_bytesperrow;
@@ -139,32 +140,32 @@ struct _TIFF2PSContext
 	unsigned char ascii85buf[10];
 	int ascii85count;
 	int ascii85breaklen;
-	uint16 samplesperpixel;
-	uint16 bitspersample;
-	uint16 planarconfiguration;
-	uint16 photometric;
-	uint16 compression;
-	uint16 extrasamples;
+	uint16_t samplesperpixel;
+	uint16_t bitspersample;
+	uint16_t planarconfiguration;
+	uint16_t photometric;
+	uint16_t compression;
+	uint16_t extrasamples;
 	int alpha;
 };
 
-static void PSpage(TIFF2PSContext*, TIFF*, uint32, uint32);
-static void PSColorContigPreamble(TIFF2PSContext*, uint32, uint32, int);
-static void PSColorSeparatePreamble(TIFF2PSContext*, uint32, uint32, int);
-static void PSDataColorContig(TIFF2PSContext*, TIFF*, uint32, uint32, int);
-static void PSDataColorSeparate(TIFF2PSContext*, TIFF*, uint32, uint32, int);
-static void PSDataPalette(TIFF2PSContext*, TIFF*, uint32, uint32);
-static void PSDataBW(TIFF2PSContext*, TIFF*, uint32, uint32);
+static void PSpage(TIFF2PSContext*, TIFF*, uint32_t, uint32_t);
+static void PSColorContigPreamble(TIFF2PSContext*, uint32_t, uint32_t, int);
+static void PSColorSeparatePreamble(TIFF2PSContext*, uint32_t, uint32_t, int);
+static void PSDataColorContig(TIFF2PSContext*, TIFF*, uint32_t, uint32_t, int);
+static void PSDataColorSeparate(TIFF2PSContext*, TIFF*, uint32_t, uint32_t, int);
+static void PSDataPalette(TIFF2PSContext*, TIFF*, uint32_t, uint32_t);
+static void PSDataBW(TIFF2PSContext*, TIFF*, uint32_t, uint32_t);
 static void Ascii85Init(TIFF2PSContext*);
 static void Ascii85Put(TIFF2PSContext*, unsigned char);
 static void Ascii85Flush(TIFF2PSContext*);
-static void PSHead(TIFF2PSContext*, TIFF*, uint32, uint32,
+static void PSHead(TIFF2PSContext*, TIFF*, uint32_t, uint32_t,
 		   double, double, double, double);
 static void PSTail(TIFF2PSContext*);
 
 #if defined( EXP_ASCII85ENCODER )
-static int Ascii85EncodeBlock(TIFF2PSContext*, uint8 * ascii85_p,
-			      unsigned f_eod, const uint8 * raw_p, int raw_l);
+static int Ascii85EncodeBlock(TIFF2PSContext*, uint8_t * ascii85_p,
+			      unsigned f_eod, const uint8_t * raw_p, int raw_l);
 #endif
 
 #define IMAGEOP(ctx) ((ctx)->useImagemask && ((ctx)->bitspersample == 1)) ? "imagemask" : "image"
@@ -298,7 +299,7 @@ static	char RGBcolorimage[] = "\
  * It is claimed to be part of some future revision of the EPS spec.
  */
 G_GNUC_PRINTF (6, 7) static void
-PhotoshopBanner(TIFF2PSContext* ctx, uint32 w, uint32 h, int bs, int nc,
+PhotoshopBanner(TIFF2PSContext* ctx, uint32_t w, uint32_t h, int bs, int nc,
 		const char* startline, ...)
 {
 	va_list args;
@@ -319,7 +320,7 @@ PhotoshopBanner(TIFF2PSContext* ctx, uint32 w, uint32 h, int bs, int nc,
  * pprh : image height in PS units (72 dpi)
  */
 static void
-setupPageState(TIFF2PSContext *ctx, TIFF* tif, uint32* pw, uint32* ph,
+setupPageState(TIFF2PSContext *ctx, TIFF* tif, uint32_t* pw, uint32_t* ph,
 	       double* pprw, double* pprh)
 {
 	float xres = 0.0F, yres = 0.0F;
@@ -355,7 +356,7 @@ setupPageState(TIFF2PSContext *ctx, TIFF* tif, uint32* pw, uint32* ph,
 static int
 isCCITTCompression(TIFF* tif)
 {
-    uint16 compress;
+    uint16_t compress;
     TIFFGetField(tif, TIFFTAG_COMPRESSION, &compress);
     return (compress == COMPRESSION_CCITTFAX3 ||
 	    compress == COMPRESSION_CCITTFAX4 ||
@@ -454,13 +455,13 @@ void
 tiff2ps_process_page(TIFF2PSContext* ctx, TIFF* tif, double pw, double ph,
 		     double lm, double bm, gboolean cnt)
 {
-	uint32 w, h;
+	uint32_t w, h;
 	float ox, oy;
         double prw, prh;
 	double scale = 1.0;
 	double left_offset = lm * PS_UNIT_SIZE;
 	double bottom_offset = bm * PS_UNIT_SIZE;
-	uint16* sampleinfo;
+	uint16_t* sampleinfo;
 	int split;
 	/* buffers for locale-insitive number formatting */
 	gchar buf[2][G_ASCII_DTOSTR_BUF_SIZE];
@@ -626,7 +627,7 @@ gsave newpath clippath pathbbox grestore\n\
 ";
 
 void
-PSHead(TIFF2PSContext *ctx, TIFF *tif, uint32 w, uint32 h,
+PSHead(TIFF2PSContext *ctx, TIFF *tif, uint32_t w, uint32_t h,
        double pw, double ph, double ox, double oy)
 {
 	time_t t;
@@ -668,7 +669,7 @@ PSTail(TIFF2PSContext *ctx)
 
 static int
 checkcmap(TIFF2PSContext* ctx, TIFF* tif, int n,
-	  uint16* r, uint16* g, uint16* b)
+	  uint16_t* r, uint16_t* g, uint16_t* b)
 {
 	(void) tif;
 	while (n-- > 0)
@@ -681,7 +682,7 @@ checkcmap(TIFF2PSContext* ctx, TIFF* tif, int n,
 static void
 PS_Lvl2colorspace(TIFF2PSContext* ctx, TIFF* tif)
 {
-	uint16 *rmap, *gmap, *bmap;
+	uint16_t *rmap, *gmap, *bmap;
 	int i, num_colors;
 	const char * colorspace_p;
 
@@ -759,11 +760,11 @@ PS_Lvl2colorspace(TIFF2PSContext* ctx, TIFF* tif)
 }
 
 static int
-PS_Lvl2ImageDict(TIFF2PSContext* ctx, TIFF* tif, uint32 w, uint32 h)
+PS_Lvl2ImageDict(TIFF2PSContext* ctx, TIFF* tif, uint32_t w, uint32_t h)
 {
 	int use_rawdata;
-	uint32 tile_width, tile_height;
-	uint16 predictor, minsamplevalue, maxsamplevalue;
+	uint32_t tile_width, tile_height;
+	uint16_t predictor, minsamplevalue, maxsamplevalue;
 	int repeat_count;
 	char im_h[64], im_x[64], im_y[64];
 
@@ -928,7 +929,7 @@ PS_Lvl2ImageDict(TIFF2PSContext* ctx, TIFF* tif, uint32 w, uint32 h)
 	case COMPRESSION_CCITTFAX4:	/* 4: CCITT Group 4 fax encoding */
 		fputs("\n\t<<\n", ctx->fd);
 		if (ctx->compression == COMPRESSION_CCITTFAX3) {
-			uint32 g3_options;
+			uint32_t g3_options;
 
 			fputs("\t /EndOfLine true\n", ctx->fd);
 			fputs("\t /EndOfBlock false\n", ctx->fd);
@@ -943,7 +944,7 @@ PS_Lvl2ImageDict(TIFF2PSContext* ctx, TIFF* tif, uint32 w, uint32 h)
 				fputs("\t /EncodedByteAlign true\n", ctx->fd);
 		}
 		if (ctx->compression == COMPRESSION_CCITTFAX4) {
-			uint32 g4_options;
+			uint32_t g4_options;
 
 			fputs("\t /K -1\n", ctx->fd);
 			TIFFGetFieldDefaulted(tif, TIFFTAG_GROUP4OPTIONS,
@@ -1033,7 +1034,7 @@ PS_Lvl2ImageDict(TIFF2PSContext* ctx, TIFF* tif, uint32 w, uint32 h)
 	}
 	if (ctx->planarconfiguration == PLANARCONFIG_SEPARATE &&
 	    ctx->samplesperpixel > 1) {
-		uint16 i;
+		uint16_t i;
 
 		/*
 		 * NOTE: This code does not work yet...
@@ -1086,17 +1087,17 @@ PS_Lvl2ImageDict(TIFF2PSContext* ctx, TIFF* tif, uint32 w, uint32 h)
 #define MAXLINE		36
 
 static int
-PS_Lvl2page(TIFF2PSContext* ctx, TIFF* tif, uint32 w, uint32 h)
+PS_Lvl2page(TIFF2PSContext* ctx, TIFF* tif, uint32_t w, uint32_t h)
 {
-	uint16 fillorder;
+	uint16_t fillorder;
 	int use_rawdata, tiled_image, breaklen = MAXLINE;
-	uint32 chunk_no, num_chunks, *bc;
+	uint32_t chunk_no, num_chunks, *bc;
 	unsigned char *buf_data, *cp;
 	tsize_t chunk_size, byte_count;
 
 #if defined( EXP_ASCII85ENCODER )
 	int			ascii85_l;	/* Length, in bytes, of ascii85_p[] data */
-	uint8		*	ascii85_p = 0;	/* Holds ASCII85 encoded data */
+	uint8_t		*	ascii85_p = 0;	/* Holds ASCII85 encoded data */
 #endif
 
 	PS_Lvl2colorspace(ctx, tif);
@@ -1268,7 +1269,7 @@ PS_Lvl2page(TIFF2PSContext* ctx, TIFF* tif, uint32 w, uint32 h)
 }
 
 void
-PSpage(TIFF2PSContext* ctx, TIFF* tif, uint32 w, uint32 h)
+PSpage(TIFF2PSContext* ctx, TIFF* tif, uint32_t w, uint32_t h)
 {
 	if ((ctx->level2 || ctx->level3) && PS_Lvl2page(ctx, tif, w, h))
 		return;
@@ -1328,7 +1329,7 @@ PSpage(TIFF2PSContext* ctx, TIFF* tif, uint32 w, uint32 h)
 }
 
 void
-PSColorContigPreamble(TIFF2PSContext* ctx, uint32 w, uint32 h, int nc)
+PSColorContigPreamble(TIFF2PSContext* ctx, uint32_t w, uint32_t h, int nc)
 {
 	ctx->ps_bytesperrow = nc * (ctx->tf_bytesperrow / ctx->samplesperpixel);
 	PhotoshopBanner(ctx, w, h, 1, nc, "false %d colorimage", nc);
@@ -1342,7 +1343,7 @@ PSColorContigPreamble(TIFF2PSContext* ctx, uint32 w, uint32 h, int nc)
 }
 
 void
-PSColorSeparatePreamble(TIFF2PSContext* ctx, uint32 w, uint32 h, int nc)
+PSColorSeparatePreamble(TIFF2PSContext* ctx, uint32_t w, uint32_t h, int nc)
 {
 	int i;
 
@@ -1367,9 +1368,9 @@ PSColorSeparatePreamble(TIFF2PSContext* ctx, uint32 w, uint32 h, int nc)
 #define	PUTHEX(c,fd)	putc(hex[((c)>>4)&0xf],fd); putc(hex[(c)&0xf],fd)
 
 void
-PSDataColorContig(TIFF2PSContext* ctx, TIFF* tif, uint32 w, uint32 h, int nc)
+PSDataColorContig(TIFF2PSContext* ctx, TIFF* tif, uint32_t w, uint32_t h, int nc)
 {
-	uint32 row;
+	uint32_t row;
 	int breaklen = MAXLINE, cc, es = ctx->samplesperpixel - nc;
 	unsigned char *tf_buf;
 	unsigned char *cp, c;
@@ -1422,9 +1423,9 @@ PSDataColorContig(TIFF2PSContext* ctx, TIFF* tif, uint32 w, uint32 h, int nc)
 }
 
 void
-PSDataColorSeparate(TIFF2PSContext* ctx, TIFF* tif, uint32 w, uint32 h, int nc)
+PSDataColorSeparate(TIFF2PSContext* ctx, TIFF* tif, uint32_t w, uint32_t h, int nc)
 {
-	uint32 row;
+	uint32_t row;
 	int breaklen = MAXLINE, cc;
 	tsample_t s, maxs;
 	unsigned char *tf_buf;
@@ -1455,10 +1456,10 @@ PSDataColorSeparate(TIFF2PSContext* ctx, TIFF* tif, uint32 w, uint32 h, int nc)
 	PUTHEX(rmap[c],fd); PUTHEX(gmap[c],fd); PUTHEX(bmap[c],fd)
 
 void
-PSDataPalette(TIFF2PSContext* ctx, TIFF* tif, uint32 w, uint32 h)
+PSDataPalette(TIFF2PSContext* ctx, TIFF* tif, uint32_t w, uint32_t h)
 {
-	uint16 *rmap, *gmap, *bmap;
-	uint32 row;
+	uint16_t *rmap, *gmap, *bmap;
+	uint32_t row;
 	int breaklen = MAXLINE, cc, nc;
 	unsigned char *tf_buf;
 	unsigned char *cp, c;
@@ -1527,7 +1528,7 @@ PSDataPalette(TIFF2PSContext* ctx, TIFF* tif, uint32 w, uint32 h)
 }
 
 void
-PSDataBW(TIFF2PSContext* ctx, TIFF* tif, uint32 w, uint32 h)
+PSDataBW(TIFF2PSContext* ctx, TIFF* tif, uint32_t w, uint32_t h)
 {
 	int breaklen = MAXLINE;
 	unsigned char* tf_buf;
@@ -1537,7 +1538,7 @@ PSDataBW(TIFF2PSContext* ctx, TIFF* tif, uint32 w, uint32 h)
 
 #if defined( EXP_ASCII85ENCODER )
 	int	ascii85_l;		/* Length, in bytes, of ascii85_p[] data */
-	uint8	*ascii85_p = 0;		/* Holds ASCII85 encoded data */
+	uint8_t	*ascii85_p = 0;		/* Holds ASCII85 encoded data */
 #endif
 
 	(void) w; (void) h;
@@ -1659,12 +1660,12 @@ Ascii85Init(TIFF2PSContext *ctx)
 static void
 Ascii85Encode(unsigned char* raw, char *buf)
 {
-	uint32 word;
+	uint32_t word;
 
 	word = (((raw[0]<<8)+raw[1])<<16) + (raw[2]<<8) + raw[3];
 	if (word != 0L) {
-		uint32 q;
-		uint16 w1;
+		uint32_t q;
+		uint16_t w1;
 
 		q = word / (85L*85*85*85);	/* actually only a byte */
 		buf[0] = (char) (q + '!');
@@ -1675,7 +1676,7 @@ Ascii85Encode(unsigned char* raw, char *buf)
 		word -= q * (85L*85*85); q = word / (85*85);
 		buf[2] = (char) (q + '!');
 
-		w1 = (uint16) (word - q*(85L*85));
+		w1 = (uint16_t) (word - q*(85L*85));
 		buf[3] = (char) ((w1 / 85) + '!');
 		buf[4] = (char) ((w1 % 85) + '!');
 		buf[5] = '\0';
@@ -1764,14 +1765,14 @@ Ascii85Flush(TIFF2PSContext* ctx)
 *
 *****************************************************************************/
 
-int Ascii85EncodeBlock( TIFF2PSContext *ctx, uint8 * ascii85_p,
-			unsigned f_eod, const uint8 * raw_p, int raw_l )
+int Ascii85EncodeBlock( TIFF2PSContext *ctx, uint8_t * ascii85_p,
+			unsigned f_eod, const uint8_t * raw_p, int raw_l )
 
 {
     char                        ascii85[5];     /* Encoded 5 tuple */
     int                         ascii85_l;      /* Number of bytes written to ascii85_p[] */
     int                         rc;             /* Return code */
-    uint32                      val32;          /* Unencoded 4 tuple */
+    uint32_t                      val32;          /* Unencoded 4 tuple */
 
     ascii85_l = 0;                              /* Nothing written yet */
 
