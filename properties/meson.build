@@ -3,6 +3,7 @@ libevproperties = static_library(
   sources: 'ev-properties-view.c',
   include_directories: top_inc,
   dependencies: libevdocument_dep,
+  gnu_symbol_visibility: 'hidden',
 )
 
 libevproperties_dep = declare_dependency(
@@ -26,5 +27,6 @@ if enable_nautilus
     install: true,
     install_dir: nautilus_extension_dir,
     name_suffix: name_suffix,
+    gnu_symbol_visibility: 'hidden',
   )
 endif

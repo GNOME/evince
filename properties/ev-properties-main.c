@@ -144,6 +144,8 @@ end:
 }
 
 /* --- extension interface --- */
+
+EV_PUBLIC
 void
 nautilus_module_initialize (GTypeModule *module)
 {
@@ -153,12 +155,14 @@ nautilus_module_initialize (GTypeModule *module)
         ev_init ();
 }
 
+EV_PUBLIC
 void
 nautilus_module_shutdown (void)
 {
         ev_shutdown ();
 }
 
+EV_PUBLIC
 void
 nautilus_module_list_types (const GType **types,
                             int          *num_types)
