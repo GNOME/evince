@@ -16,8 +16,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-#ifndef __PDF_DOCUMENT_H__
-#define __PDF_DOCUMENT_H__
+#pragma once
 
 #include "ev-macros.h"
 #include "ev-document.h"
@@ -37,5 +36,3 @@ EV_PUBLIC
 GType                 register_evince_backend (GTypeModule *module);
 
 G_END_DECLS
-
-#endif /* __PDF_DOCUMENT_H__ */

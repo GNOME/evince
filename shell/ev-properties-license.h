@@ -19,8 +19,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-#ifndef __EV_PROPERTIES_LICENSE_VIEW_H__
-#define __EV_PROPERTIES_LICENSE_VIEW_H__
+#pragma once
 
 #include <gtk/gtk.h>
 
@@ -46,5 +45,3 @@ void       ev_properties_license_set_license (EvPropertiesLicense *properties_li
 					      EvDocumentLicense   *license);
 
 G_END_DECLS
-
-#endif /* __EV_PROPERTIES_LICENSE_VIEW_H__ */

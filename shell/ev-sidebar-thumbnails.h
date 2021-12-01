@@ -21,8 +21,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-#ifndef __EV_SIDEBAR_THUMBNAILS_H__
-#define __EV_SIDEBAR_THUMBNAILS_H__
+#pragma once
 
 #include <gtk/gtk.h>
 
@@ -53,7 +52,3 @@ GType      ev_sidebar_thumbnails_get_type     (void) G_GNUC_CONST;
 GtkWidget *ev_sidebar_thumbnails_new          (void);
 
 G_END_DECLS
-
-#endif /* __EV_SIDEBAR_THUMBNAILS_H__ */
-
-

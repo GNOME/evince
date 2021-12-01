@@ -20,12 +20,11 @@
  * Author: Alejandro Piñeiro Iglesias <apinheiro@igalia.com>
  */
 
+#pragma once
+
 #if !defined (EVINCE_COMPILATION)
 #error "This is a private header."
 #endif
-
-#ifndef __EV_PAGE_ACCESSIBLE_H__
-#define __EV_PAGE_ACCESSIBLE_H__
 
 #include <gtk/gtk-a11y.h>
 #include "ev-view-accessible.h"
@@ -59,6 +58,3 @@ AtkObject        *ev_page_accessible_get_accessible_for_mapping (EvPageAccessibl
 								 EvMapping        *mapping);
 void              ev_page_accessible_update_element_state (EvPageAccessible *page_accessible,
 							   EvMapping        *mapping);
-
-#endif  /* __EV_PAGE_ACCESSIBLE_H__ */
-

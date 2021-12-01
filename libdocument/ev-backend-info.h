@@ -17,12 +17,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
+#pragma once
+
 #if !defined (EVINCE_COMPILATION)
 #error "This is a private header."
 #endif
-
-#ifndef EV_BACKEND_INFO
-#define EV_BACKEND_INFO
 
 #include <glib.h>
 
@@ -51,5 +50,3 @@ EvBackendInfo *_ev_backend_info_new_from_file (const char *file,
 GList         *_ev_backend_info_load_from_dir (const char *path);
 
 G_END_DECLS
-
-#endif /* !EV_BACKEND_INFO */

@@ -18,8 +18,7 @@
  *
  */
 
-#ifndef __EV_PAGE_ACTION_WIDET_H__
-#define __EV_PAGE_ACTION_WIDET_H__
+#pragma once
 
 #include <evince-view.h>
  
@@ -51,5 +50,3 @@ void ev_page_action_widget_set_model          (EvPageActionWidget *action_widget
 void ev_page_action_widget_grab_focus         (EvPageActionWidget *proxy);
 
 G_END_DECLS
-
-#endif /* __EV_PAGE_ACTION_WIDET_H__ */

@@ -19,12 +19,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
+#pragma once
+
 #if !defined (EVINCE_COMPILATION)
 #error "This is a private header."
 #endif
-
-#ifndef __EV_IMAGE_ACCESSIBLE_H__
-#define __EV_IMAGE_ACCESSIBLE_H__
 
 #include <gtk/gtk-a11y.h>
 #include "ev-page-accessible.h"
@@ -51,5 +50,3 @@ GType ev_image_accessible_get_type (void);
 EvImageAccessible *ev_image_accessible_new (EvPageAccessible *page,
 					    EvImage          *image,
 					    EvRectangle      *area);
-
-#endif  /* __EV_IMAGE_ACCESSIBLE_H__ */

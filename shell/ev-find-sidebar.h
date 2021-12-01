@@ -19,8 +19,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-#ifndef EV_FIND_SIDEBAR_H
-#define EV_FIND_SIDEBAR_H
+#pragma once
 
 #include <gtk/gtk.h>
 
@@ -59,6 +58,3 @@ void       ev_find_sidebar_previous (EvFindSidebar *find_sidebar);
 void       ev_find_sidebar_next     (EvFindSidebar *find_sidebar);
 
 G_END_DECLS
-
-#endif /* EV_FIND_SIDEBAR_H */
-

@@ -19,12 +19,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
+#pragma once
+
 #if !defined (EVINCE_COMPILATION)
 #error "This is a private header."
 #endif
-
-#ifndef EV_ANNOTATION_WINDOW_H
-#define EV_ANNOTATION_WINDOW_H
 
 #include <gtk/gtk.h>
 
@@ -58,6 +57,5 @@ void          ev_annotation_window_ungrab_focus   (EvAnnotationWindow *window);
 void          ev_annotation_window_set_enable_spellchecking (EvAnnotationWindow *window,
                                                              gboolean spellcheck);
 gboolean      ev_annotation_window_get_enable_spellchecking (EvAnnotationWindow *window);
-G_END_DECLS
 
-#endif /* EV_ANNOTATION_WINDOW_H */
+G_END_DECLS

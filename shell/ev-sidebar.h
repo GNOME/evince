@@ -23,8 +23,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-#ifndef __EV_SIDEBAR_H__
-#define __EV_SIDEBAR_H__
+#pragma once
 
 #include <gtk/gtk.h>
 
@@ -64,7 +63,3 @@ void       ev_sidebar_set_model (EvSidebar       *ev_sidebar,
 GtkWidget *ev_sidebar_get_current_page (EvSidebar *ev_sidebar);
 
 G_END_DECLS
-
-#endif /* __EV_SIDEBAR_H__ */
-
-

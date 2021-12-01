@@ -19,8 +19,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-#ifndef EV_PROGRESS_MESSAGE_AREA_H
-#define EV_PROGRESS_MESSAGE_AREA_H
+#pragma once
 
 #include <gtk/gtk.h>
 
@@ -57,5 +56,3 @@ void       ev_progress_message_area_set_fraction    (EvProgressMessageArea *area
 						     gdouble                fraction);
 
 G_END_DECLS
-
-#endif /* EV_PROGRESS_MESSAGE_AREA_H */

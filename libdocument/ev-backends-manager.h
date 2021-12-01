@@ -17,12 +17,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
+#pragma once
+
 #if !defined (__EV_EVINCE_DOCUMENT_H_INSIDE__) && !defined (EVINCE_COMPILATION)
 #error "Only <evince-document.h> can be included directly."
 #endif
-
-#ifndef EV_BACKENDS_MANAGER
-#define EV_BACKENDS_MANAGER
 
 #include <glib.h>
 
@@ -50,5 +49,3 @@ EV_PUBLIC
 GList       *ev_backends_manager_get_all_types_info       (void);
 
 G_END_DECLS
-
-#endif /* EV_BACKENDS_MANAGER */

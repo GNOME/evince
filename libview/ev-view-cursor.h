@@ -17,12 +17,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
+#pragma once
+
 #if !defined (EVINCE_COMPILATION)
 #error "This is a private header."
 #endif
-
-#ifndef __EV_VIEW_CURSOR_H__
-#define __EV_VIEW_CURSOR_H__
 
 #include <gtk/gtk.h>
 
@@ -43,5 +42,3 @@ GdkCursor *ev_view_cursor_new (GdkDisplay  *display,
 			       EvViewCursor cursor);
 
 G_END_DECLS
-
-#endif /* __EV_VIEW_CURSOR_H__ */

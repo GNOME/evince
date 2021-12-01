@@ -18,12 +18,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
+#pragma once
+
 #if !defined (EVINCE_COMPILATION)
 #error "This is a private header."
 #endif
-
-#ifndef __EV_COLOR_CONTRAST_H__
-#define __EV_COLOR_CONTRAST_H__
 
 #include <gdk/gdk.h>
 
@@ -32,5 +31,3 @@ GdkRGBA  *ev_color_contrast_get_most_readable_color   (const GdkRGBA *bg_color,
 						       GdkRGBA *second_color);
 
 GdkRGBA  *ev_color_contrast_get_best_foreground_color (const GdkRGBA *bg_color);
-
-#endif /* __EV_COLOR_CONTRAST_H__ */

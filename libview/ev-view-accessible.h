@@ -18,12 +18,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
+#pragma once
+
 #if !defined (EVINCE_COMPILATION)
 #error "This is a private header."
 #endif
-
-#ifndef __EV_VIEW_ACCESSIBLE_H__
-#define __EV_VIEW_ACCESSIBLE_H__
 
 #include <gtk/gtk-a11y.h>
 #include "ev-document-model.h"
@@ -71,6 +70,3 @@ void       ev_view_accessible_set_focused_element (EvViewAccessible *accessible,
 void       ev_view_accessible_update_element_state (EvViewAccessible *accessible,
 						    EvMapping        *element,
 						    gint              element_page);
-
-#endif  /* __EV_VIEW_ACCESSIBLE_H__ */
-

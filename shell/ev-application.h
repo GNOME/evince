@@ -20,8 +20,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-#ifndef EV_APPLICATION_H
-#define EV_APPLICATION_H
+#pragma once
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -76,6 +75,3 @@ void              ev_application_new_window          (EvApplication *application
                                                       guint32        timestamp);
 
 G_END_DECLS
-
-#endif /* !EV_APPLICATION_H */
-

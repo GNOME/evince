@@ -18,8 +18,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef __EV_ANNOTATIONS_TOOLBAR_H__
-#define __EV_ANNOTATIONS_TOOLBAR_H__
+#pragma once
 
 #include <gtk/gtk.h>
 
@@ -40,5 +39,3 @@ GtkWidget *ev_annotations_toolbar_new                (void);
 void       ev_annotations_toolbar_add_annot_finished (EvAnnotationsToolbar *toolbar);
 
 G_END_DECLS
-
-#endif /* __EV_ANNOTATIONS_TOOLBAR_H__ */

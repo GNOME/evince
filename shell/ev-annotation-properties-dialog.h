@@ -18,8 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-#ifndef __EV_ANNOTATION_PROPERTIES_DIALOG_H__
-#define __EV_ANNOTATION_PROPERTIES_DIALOG_H__
+#pragma once
 
 #include <gtk/gtk.h>
 #include <glib-object.h>
@@ -51,5 +50,3 @@ EvAnnotationTextIcon       ev_annotation_properties_dialog_get_text_icon        
 EvAnnotationTextMarkupType ev_annotation_properties_dialog_get_text_markup_type (EvAnnotationPropertiesDialog *dialog);
 
 G_END_DECLS
-
-#endif /* __EV_ANNOTATION_PROPERTIES_DIALOG_H__ */

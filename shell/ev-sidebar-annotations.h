@@ -18,8 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-#ifndef __EV_SIDEBAR_ANNOTATIONS_H__
-#define __EV_SIDEBAR_ANNOTATIONS_H__
+#pragma once
 
 #include <gtk/gtk.h>
 #include <glib-object.h>
@@ -57,6 +56,5 @@ void       ev_sidebar_annotations_annot_added   (EvSidebarAnnotations *sidebar_a
 void       ev_sidebar_annotations_annot_changed (EvSidebarAnnotations *sidebar_annots,
 					         EvAnnotation         *annot);
 void       ev_sidebar_annotations_annot_removed (EvSidebarAnnotations *sidebar_annots);
-G_END_DECLS
 
-#endif /* __EV_SIDEBAR_ANNOTATIONS_H__ */
+G_END_DECLS

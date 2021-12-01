@@ -17,8 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-#ifndef __EV_ARCHIVE_H__
-#define __EV_ARCHIVE_H__
+#pragma once
 
 #include <glib-object.h>
 
@@ -55,5 +54,3 @@ gssize         ev_archive_read_data          (EvArchive     *archive,
 void           ev_archive_reset              (EvArchive     *archive);
 
 G_END_DECLS
-
-#endif /* __EV_ARCHIVE_H__ */

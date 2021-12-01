@@ -18,8 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-#ifndef EV_MEDIA_PLAYER_H
-#define EV_MEDIA_PLAYER_H
+#pragma once
 
 #include <glib-object.h>
 #include <gtk/gtk.h>
@@ -47,5 +46,3 @@ GtkWidget *ev_media_player_new       (EvMedia       *media);
 EvMedia   *ev_media_player_get_media (EvMediaPlayer *player);
 
 G_END_DECLS
-
-#endif /* EV_MEDIA_PLAYER_H */

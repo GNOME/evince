@@ -16,8 +16,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-#ifndef EV_VERSION_H
-#define EV_VERSION_H
+#pragma once
 
 /**
  * SECTION:ev-version
@@ -55,5 +54,3 @@
 #define EV_CHECK_VERSION(major,minor) \
   (EV_MAJOR_VERSION > (major) || \
    (EV_MAJOR_VERSION == (major) && EV_MINOR_VERSION > (minor))
-
-#endif /* #ifndef EV_VERSION_H */

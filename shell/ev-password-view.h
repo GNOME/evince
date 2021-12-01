@@ -17,8 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-#ifndef __EV_PASSWORD_VIEW_H__
-#define __EV_PASSWORD_VIEW_H__
+#pragma once
 
 #include <gtk/gtk.h>
 #include <gio/gio.h>
@@ -53,5 +52,3 @@ const gchar  *ev_password_view_get_password            (EvPasswordView *password
 GPasswordSave ev_password_view_get_password_save_flags (EvPasswordView *password_view);
 
 G_END_DECLS
-
-#endif /* __EV_PASSWORD_VIEW_H__ */

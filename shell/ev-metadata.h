@@ -18,8 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-#ifndef EV_METADATA_H
-#define EV_METADATA_H
+#pragma once
 
 #include <glib-object.h>
 #include <gio/gio.h>
@@ -68,5 +67,3 @@ gboolean    ev_metadata_has_key               (EvMetadata  *metadata,
 gboolean    ev_is_metadata_supported_for_file (GFile       *file);
 
 G_END_DECLS
-
-#endif /* EV_METADATA_H */

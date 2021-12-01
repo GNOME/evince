@@ -21,12 +21,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
+#pragma once
+
 #if !defined (__EV_EVINCE_VIEW_H_INSIDE__) && !defined (EVINCE_COMPILATION)
 #error "Only <evince-view.h> can be included directly."
 #endif
-
-#ifndef __EV_STOCK_ICONS_H__
-#define __EV_STOCK_ICONS_H__
 
 #include <gdk/gdk.h>
 
@@ -64,5 +63,3 @@ EV_PUBLIC
 void ev_stock_icons_set_screen (GdkScreen *screen);
 
 G_END_DECLS
-
-#endif /* __EV_STOCK_ICONS_H__ */

@@ -19,12 +19,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
+#pragma once
+
 #if !defined (EVINCE_COMPILATION)
 #error "This is a private header."
 #endif
-
-#ifndef __EV_FORM_FIELD_ACCESSIBLE_H__
-#define __EV_FORM_FIELD_ACCESSIBLE_H__
 
 #include <gtk/gtk-a11y.h>
 #include "ev-page-accessible.h"
@@ -53,5 +52,3 @@ EvFormFieldAccessible *ev_form_field_accessible_new (EvPageAccessible *page,
 						     EvRectangle      *area);
 EvFormField           *ev_form_field_accessible_get_field (EvFormFieldAccessible *accessible);
 void                   ev_form_field_accessible_update_state (EvFormFieldAccessible *accessible);
-
-#endif  /* __EV_FORM_FIELD_ACCESSIBLE_H__ */

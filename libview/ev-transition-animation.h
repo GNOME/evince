@@ -19,12 +19,11 @@
  * Boston, MA 02110-1301, USA.
  */
 
+#pragma once
+
 #if !defined (EVINCE_COMPILATION)
 #error "This is a private header."
 #endif
-
-#ifndef __EV_TRANSITION_ANIMATION_H__
-#define __EV_TRANSITION_ANIMATION_H__
 
 #include <evince-document.h>
 #include "ev-timeline.h"
@@ -67,7 +66,4 @@ void                    ev_transition_animation_paint              (EvTransition
 								    GdkRectangle           page_area);
 gboolean                ev_transition_animation_ready              (EvTransitionAnimation *animation);
 
-
 G_END_DECLS
-
-#endif /* __EV_TRANSITION_ANIMATION_H__ */

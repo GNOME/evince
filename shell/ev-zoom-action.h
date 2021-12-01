@@ -18,8 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-#ifndef EV_ZOOM_ACTION_H
-#define EV_ZOOM_ACTION_H
+#pragma once
 
 #include <gtk/gtk.h>
 #include <evince-document.h>
@@ -52,5 +51,3 @@ GtkWidget *ev_zoom_action_new             (EvDocumentModel *model,
 gboolean   ev_zoom_action_get_popup_shown (EvZoomAction    *action);
 
 G_END_DECLS
-
-#endif

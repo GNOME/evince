@@ -19,8 +19,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-#ifndef __EV_PREVIEWER_TOOLBAR_H__
-#define __EV_PREVIEWER_TOOLBAR_H__
+#pragma once
 
 #include <gtk/gtk.h>
 #include "ev-previewer-window.h"
@@ -50,5 +49,3 @@ GtkWidget    *ev_previewer_toolbar_new                (EvPreviewerWindow *window
 GtkWidget    *ev_previewer_toolbar_get_page_selector  (EvPreviewerToolbar *ev_previewer_toolbar);
 
 G_END_DECLS
-
-#endif /* __EV_PREVIEWER_TOOLBAR_H__ */

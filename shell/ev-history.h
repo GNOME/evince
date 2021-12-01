@@ -17,8 +17,7 @@
  *
  */
 
-#ifndef EV_HISTORY_H
-#define EV_HISTORY_H
+#pragma once
 
 #include <glib-object.h>
 #include <evince-document.h>
@@ -70,5 +69,3 @@ void            ev_history_thaw             (EvHistory       *history);
 gboolean        ev_history_is_frozen        (EvHistory       *history);
 
 G_END_DECLS
-
-#endif

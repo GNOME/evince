@@ -18,8 +18,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-#ifndef EV_DOCUMENT_PRINT_H
-#define EV_DOCUMENT_PRINT_H
+#pragma once
+
+#if !defined (__EV_EVINCE_DOCUMENT_H_INSIDE__) && !defined (EVINCE_COMPILATION)
+#error "Only <evince-document.h> can be included directly."
+#endif
 
 #include <glib-object.h>
 #include <cairo.h>
@@ -58,5 +61,3 @@ void  ev_document_print_print_page (EvDocumentPrint *document_print,
 				    cairo_t         *cr);
 
 G_END_DECLS
-
-#endif /* EV_DOCUMENT_PRINT_H */

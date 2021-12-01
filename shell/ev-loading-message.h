@@ -18,8 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-#ifndef EV_LOADING_MESSAGE_H
-#define EV_LOADING_MESSAGE_H
+#pragma once
 
 #include <gtk/gtk.h>
 
@@ -40,5 +39,3 @@ GType      ev_loading_message_get_type (void) G_GNUC_CONST;
 GtkWidget *ev_loading_message_new      (void);
 
 G_END_DECLS
-
-#endif /* EV_LOADING_MESSAGE_H */

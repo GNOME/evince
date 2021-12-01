@@ -32,12 +32,11 @@
 
 /* Modified by Evince Team */
 
+#pragma once
+
 #if !defined (EVINCE_COMPILATION)
 #error "This is a private header."
 #endif
-
-#ifndef __EV_DEBUG_H__
-#define __EV_DEBUG_H__
 
 #include <glib-object.h>
 
@@ -124,5 +123,3 @@ EvDebugBorders ev_debug_get_debug_borders (void);
 #endif /* EV_ENABLE_DEBUG */
 
 G_END_DECLS
-
-#endif /* __EV_DEBUG_H__ */

@@ -18,8 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-#ifndef __EV_TOOLBAR_H__
-#define __EV_TOOLBAR_H__
+#pragma once
 
 #include <gtk/gtk.h>
 #include "ev-window.h"
@@ -60,5 +59,3 @@ void          ev_toolbar_set_mode           (EvToolbar     *ev_toolbar,
 EvToolbarMode ev_toolbar_get_mode           (EvToolbar     *ev_toolbar);
 
 G_END_DECLS
-
-#endif /* __EV_TOOLBAR_H__ */

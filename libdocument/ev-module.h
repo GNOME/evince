@@ -38,12 +38,11 @@
 
 /* Modified by Evince Team */
  
+#pragma once
+
 #if !defined (EVINCE_COMPILATION)
 #error "This is a private header."
 #endif
-
-#ifndef EV_MODULE_H
-#define EV_MODULE_H
 
 #include <glib-object.h>
 
@@ -70,5 +69,3 @@ GObject     *_ev_module_new_object      (EvModule    *module);
 GType        _ev_module_get_object_type (EvModule    *module);
 
 G_END_DECLS
-
-#endif /* EV_MODULE_H */

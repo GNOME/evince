@@ -18,12 +18,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
+#pragma once
+
 #if !defined (__EV_EVINCE_DOCUMENT_H_INSIDE__) && !defined (EVINCE_COMPILATION)
 #error "Only <evince-document.h> can be included directly."
 #endif
-
-#ifndef EV_MAPPING_LIST_H
-#define EV_MAPPING_LIST_H
 
 #include "ev-macros.h"
 #include "ev-document.h"
@@ -74,5 +73,3 @@ EV_PUBLIC
 guint          ev_mapping_list_length      (EvMappingList *mapping_list);
 
 G_END_DECLS
-
-#endif /* EV_MAPPING_LIST_H */

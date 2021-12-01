@@ -18,8 +18,7 @@
  *
  */
 
-#ifndef __EV_UTILS_H__
-#define __EV_UTILS_H__
+#pragma once
 
 #include <gdk-pixbuf/gdk-pixbuf.h>
 #include <gtk/gtk.h>
@@ -39,5 +38,3 @@ GdkPixbufFormat* 	get_gdk_pixbuf_format_by_extension (const gchar *uri);
 gchar*                  ev_str_replace (const char *str, const char *substr, const char *repl);
 
 G_END_DECLS
-
-#endif /* __EV_VIEW_H__ */

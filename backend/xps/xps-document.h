@@ -17,8 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-#ifndef __XPS_DOCUMENT_H__
-#define __XPS_DOCUMENT_H__
+#pragma once
 
 #include <glib-object.h>
 
@@ -42,5 +41,3 @@ EV_PUBLIC
 GType                 register_evince_backend (GTypeModule *module);
 
 G_END_DECLS
-
-#endif /* __XPS_DOCUMENT_H__ */

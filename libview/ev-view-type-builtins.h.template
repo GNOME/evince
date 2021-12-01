@@ -1,11 +1,10 @@
 /*** BEGIN file-header ***/
 
+#pragma once
+
 #if !defined (__EV_EVINCE_VIEW_H_INSIDE__) && !defined (EVINCE_COMPILATION)
 #error "Only <evince-view.h> can be included directly."
 #endif
-
-#ifndef EV_VIEW_TYPE_BUILTINS_H
-#define EV_VIEW_TYPE_BUILTINS_H
 
 #include <glib-object.h>
 
@@ -27,6 +26,4 @@ GType @enum_name@_get_type (void) G_GNUC_CONST;
 
 /*** BEGIN file-tail ***/
 G_END_DECLS
-
-#endif /* !EV_VIEW_TYPE_BUILTINS_H */
 /*** END file-tail ***/

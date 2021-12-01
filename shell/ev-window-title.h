@@ -17,8 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-#ifndef __EV_WINDOW_TITLE_H__
-#define __EV_WINDOW_TITLE_H__
+#pragma once
 
 #include "ev-window.h"
 #include "ev-document.h"
@@ -44,5 +43,3 @@ void	       ev_window_title_set_filename (EvWindowTitle     *window_title,
 void	       ev_window_title_free         (EvWindowTitle     *window_title);
 
 G_END_DECLS
-
-#endif /* __EV_WINDOW_TITLE_H__ */

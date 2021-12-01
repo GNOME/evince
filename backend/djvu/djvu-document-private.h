@@ -18,8 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
  
-#ifndef __DJVU_DOCUMENT_INTERNAL_H__
-#define __DJVU_DOCUMENT_INTERNAL_H__
+#pragma once
 
 #include "djvu-document.h"
 
@@ -47,5 +46,3 @@ int  djvu_document_get_n_pages (EvDocument   *document);
 void djvu_handle_events        (DjvuDocument *djvu_document, 
 			        int           wait,
 				GError      **error);
-
-#endif /* __DJVU_DOCUMENT_INTERNAL_H__ */

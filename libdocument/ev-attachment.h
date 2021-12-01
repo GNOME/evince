@@ -17,12 +17,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
+#pragma once
+
 #if !defined (__EV_EVINCE_DOCUMENT_H_INSIDE__) && !defined (EVINCE_COMPILATION)
 #error "Only <evince-document.h> can be included directly."
 #endif
-
-#ifndef __EV_ATTACHMENT_H__
-#define __EV_ATTACHMENT_H__
 
 #include <glib-object.h>
 #include <gio/gio.h>
@@ -91,5 +90,3 @@ gboolean     ev_attachment_open                  (EvAttachment *attachment,
 						  GError      **error);
 
 G_END_DECLS
-
-#endif /* __EV_ATTACHMENT_H__ */

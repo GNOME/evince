@@ -18,8 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-#ifndef EV_SEARCH_BOX_H
-#define EV_SEARCH_BOX_H
+#pragma once
 
 #include <gtk/gtk.h>
 #include <evince-document.h>
@@ -53,5 +52,3 @@ gboolean        ev_search_box_has_results (EvSearchBox     *box);
 void            ev_search_box_restart     (EvSearchBox     *box);
 
 G_END_DECLS
-
-#endif

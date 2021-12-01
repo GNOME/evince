@@ -19,8 +19,7 @@
  *
  */
 
-#ifndef EV_MEDIA_PLAYER_KEYS_H
-#define EV_MEDIA_PLAYER_KEYS_H
+#pragma once
 
 #include <glib-object.h>
 #include <gio/gio.h>
@@ -45,5 +44,3 @@ EvMediaPlayerKeys *ev_media_player_keys_new	  (void);
 void               ev_media_player_keys_focused	  (EvMediaPlayerKeys *keys);
 
 G_END_DECLS
-
-#endif /* !EV_MEDIA_PLAYER_KEYS_H */

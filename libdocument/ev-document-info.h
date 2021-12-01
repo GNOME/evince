@@ -19,12 +19,11 @@
  *
  */
 
+#pragma once
+
 #if !defined (__EV_EVINCE_DOCUMENT_H_INSIDE__) && !defined (EVINCE_COMPILATION)
 #error "Only <evince-document.h> can be included directly."
 #endif
-
-#ifndef EV_DOCUMENT_INFO_H
-#define EV_DOCUMENT_INFO_H
 
 #include <glib-object.h>
 #include <glib.h>
@@ -187,5 +186,3 @@ EV_PUBLIC
 const gchar       *ev_document_license_get_web_statement (EvDocumentLicense *license);
 
 G_END_DECLS
-
-#endif /* EV_DOCUMENT_INFO_H */

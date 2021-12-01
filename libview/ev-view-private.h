@@ -18,12 +18,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
+#pragma once
+
 #if !defined (EVINCE_COMPILATION)
 #error "This is a private header."
 #endif
-
-#ifndef __EV_VIEW_PRIVATE_H__
-#define __EV_VIEW_PRIVATE_H__
 
 #include "ev-view.h"
 #include "ev-document-model.h"
@@ -355,6 +354,3 @@ void _ev_view_focus_form_field    (EvView      *view,
 
 void _ev_view_ensure_rectangle_is_visible (EvView       *view,
 					   GdkRectangle *rect);
-
-#endif  /* __EV_VIEW_PRIVATE_H__ */
-

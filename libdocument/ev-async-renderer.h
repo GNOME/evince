@@ -18,12 +18,11 @@
  *
  */
 
+#pragma once
+
 #if !defined (__EV_EVINCE_DOCUMENT_H_INSIDE__) && !defined (EVINCE_COMPILATION)
 #error "Only <evince-document.h> can be included directly."
 #endif
-
-#ifndef EV_ASYNC_RENDERER_H
-#define EV_ASYNC_RENDERER_H
 
 #include <glib-object.h>
 #include <glib.h>
@@ -65,5 +64,3 @@ void		ev_async_renderer_render_pixbuf  (EvAsyncRenderer *renderer,
 						  int              rotation);
 
 G_END_DECLS
-
-#endif

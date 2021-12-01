@@ -15,16 +15,13 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
- *
- *  $Id$
  */
+
+#pragma once
 
 #if !defined (__EV_EVINCE_DOCUMENT_H_INSIDE__) && !defined (EVINCE_COMPILATION)
 #error "Only <evince-document.h> can be included directly."
 #endif
-
-#ifndef EV_DOCUMENT_MISC_H
-#define EV_DOCUMENT_MISC_H
 
 #include <cairo.h>
 
@@ -115,5 +112,3 @@ void             ev_document_misc_get_pointer_position (GtkWidget *widget,
 							gint      *y);
 
 G_END_DECLS
-
-#endif /* EV_DOCUMENT_MISC_H */

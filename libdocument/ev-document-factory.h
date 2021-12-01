@@ -18,12 +18,11 @@
  *
  */
 
+#pragma once
+
 #if !defined (__EV_EVINCE_DOCUMENT_H_INSIDE__) && !defined (EVINCE_COMPILATION)
 #error "Only <evince-document.h> can be included directly."
 #endif
-
-#ifndef EV_DOCUMENT_FACTORY_H
-#define EV_DOCUMENT_FACTORY_H
 
 #include <gtk/gtk.h>
 
@@ -57,5 +56,3 @@ EV_PUBLIC
 void 	    ev_document_factory_add_filters  (GtkWidget *chooser, EvDocument *document);
 
 G_END_DECLS
-
-#endif

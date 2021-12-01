@@ -16,8 +16,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-#ifndef __DJVU_TEXT_PAGE_H__
-#define __DJVU_TEXT_PAGE_H__
+#pragma once
 
 #include "ev-document.h"
 
@@ -61,6 +60,3 @@ void          djvu_text_page_search               (DjvuTextPage *page,
                                                    const char   *text);
 DjvuTextPage *djvu_text_page_new                  (miniexp_t     text);
 void          djvu_text_page_free                 (DjvuTextPage *page);
-
-#endif /* __DJVU_TEXT_PAGE_H__ */
-

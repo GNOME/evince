@@ -21,8 +21,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-#ifndef EV_WINDOW_H
-#define EV_WINDOW_H
+#pragma once
 
 #include <glib.h>
 #include <gtk/gtk.h>
@@ -105,5 +104,3 @@ void            ev_window_set_divider_position		 (EvWindow	 *ev_window,
 							  gint		  sidebar_width);
 
 G_END_DECLS
-
-#endif /* !EV_WINDOW_H */

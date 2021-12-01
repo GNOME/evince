@@ -16,8 +16,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-#ifndef __DJVU_LINK_H__
-#define __DJVU_LINK_H__
+#pragma once
 
 #include "ev-document-links.h"
 #include "djvu-document.h"
@@ -33,5 +32,3 @@ EvLinkDest    *djvu_links_find_link_dest     (EvDocumentLinks *document_links,
 gint           djvu_links_find_link_page     (EvDocumentLinks *document_links,
 					      const gchar     *link_name);
 gboolean       djvu_links_has_document_links (EvDocumentLinks *document_links);
-
-#endif /* __DJVU_LINK_H__ */

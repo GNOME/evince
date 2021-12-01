@@ -18,12 +18,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
+#pragma once
+
 #if !defined (__EV_EVINCE_VIEW_H_INSIDE__) && !defined (EVINCE_COMPILATION)
 #error "Only <evince-view.h> can be included directly."
 #endif
-
-#ifndef __EV_JOBS_H__
-#define __EV_JOBS_H__
 
 #include <gio/gio.h>
 #include <gtk/gtk.h>
@@ -690,5 +689,3 @@ void            ev_job_print_set_cairo   (EvJobPrint     *job,
 					  cairo_t        *cr);
 
 G_END_DECLS
-
-#endif /* __EV_JOBS_H__ */

@@ -18,8 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-#ifndef EV_PREVIEWER_WINDOW_H
-#define EV_PREVIEWER_WINDOW_H
+#pragma once
 
 #include <gtk/gtk.h>
 
@@ -49,5 +48,3 @@ void       ev_previewer_window_set_source_file    (EvPreviewerWindow *window,
 						   const gchar       *source_file);
 
 G_END_DECLS
-
-#endif /* EV_PREVIEWER_WINDOW_H */

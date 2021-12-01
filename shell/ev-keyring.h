@@ -18,8 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-#ifndef __EV_KEYRING_H__
-#define __EV_KEYRING_H__
+#pragma once
 
 #include <glib.h>
 #include <gio/gio.h>
@@ -33,5 +32,3 @@ gboolean ev_keyring_save_password   (const gchar  *uri,
 				     GPasswordSave flags);
 
 G_END_DECLS
-
-#endif /* __EV_KEYRING_H__ */

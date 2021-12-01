@@ -18,8 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-#ifndef __EV_PROPERTIES_FONTS_H__
-#define __EV_PROPERTIES_FONTS_H__
+#pragma once
 
 #include "ev-document.h"
 
@@ -44,5 +43,3 @@ void		   ev_properties_fonts_set_document (EvPropertiesFonts *properties,
 					  	     EvDocument        *document);
 
 G_END_DECLS
-
-#endif /* __EV_PROPERTIES_FONTS_H__ */

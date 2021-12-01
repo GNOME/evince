@@ -18,8 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-#ifndef __EV_SIDEBAR_LAYERS_H__
-#define __EV_SIDEBAR_LAYERS_H__
+#pragma once
 
 #include <gtk/gtk.h>
 #include <glib-object.h>
@@ -55,5 +54,3 @@ GtkWidget *ev_sidebar_layers_new                 (void);
 void       ev_sidebar_layers_update_layers_state (EvSidebarLayers *sidebar_layers);
 
 G_END_DECLS
-
-#endif /* __EV_SIDEBAR_LAYERS_H__ */

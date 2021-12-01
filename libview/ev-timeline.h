@@ -19,12 +19,11 @@
  * Boston, MA 02110-1301, USA.
  */
 
+#pragma once
+
 #if !defined (EVINCE_COMPILATION)
 #error "This is a private header."
 #endif
-
-#ifndef __EV_TIMELINE_H__
-#define __EV_TIMELINE_H__
 
 #include <glib-object.h>
 
@@ -86,5 +85,3 @@ gdouble               ev_timeline_get_progress       (EvTimeline             *ti
 
 
 G_END_DECLS
-
-#endif /* __EV_TIMELINE_H__ */

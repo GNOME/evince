@@ -17,12 +17,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
+#pragma once
+
 #if !defined (__EV_EVINCE_VIEW_H_INSIDE__) && !defined (EVINCE_COMPILATION)
 #error "Only <evince-view.h> can be included directly."
 #endif
-
-#ifndef __EV_DOCUMENT_MODEL_H__
-#define __EV_DOCUMENT_MODEL_H__
 
 #include <glib-object.h>
 #include <evince-document.h>
@@ -141,5 +140,3 @@ EV_PUBLIC
 gboolean         ev_document_model_get_dual_page     (EvDocumentModel *model);
 
 G_END_DECLS
-
-#endif /* __EV_DOCUMENT_MODEL_H__ */

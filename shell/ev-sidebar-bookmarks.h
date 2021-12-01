@@ -18,8 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-#ifndef __EV_SIDEBAR_BOOKMARKS_H__
-#define __EV_SIDEBAR_BOOKMARKS_H__
+#pragma once
 
 #include <gtk/gtk.h>
 #include <glib-object.h>
@@ -59,5 +58,3 @@ GtkWidget *ev_sidebar_bookmarks_new           (void);
 void       ev_sidebar_bookmarks_set_bookmarks (EvSidebarBookmarks *sidebar_bookmarks,
 					       EvBookmarks        *bookmarks);
 G_END_DECLS
-
-#endif /* __EV_SIDEBAR_BOOKMARKS_H__ */

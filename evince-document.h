@@ -16,8 +16,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-#ifndef EVINCE_DOCUMENT_H
-#define EVINCE_DOCUMENT_H
+#pragma once
 
 #define __EV_EVINCE_DOCUMENT_H_INSIDE__
 
@@ -62,5 +61,3 @@
 #include <libdocument/ev-version.h>
 
 #undef __EV_EVINCE_DOCUMENT_H_INSIDE__
-
-#endif /* !EVINCE_DOCUMENT_H */

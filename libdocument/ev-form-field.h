@@ -18,12 +18,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
+#pragma once
+
 #if !defined (__EV_EVINCE_DOCUMENT_H_INSIDE__) && !defined (EVINCE_COMPILATION)
 #error "Only <evince-document.h> can be included directly."
 #endif
-
-#ifndef EV_FORM_FIELD_H
-#define EV_FORM_FIELD_H
 
 #include <glib-object.h>
 
@@ -221,6 +220,3 @@ EvFormField *ev_form_field_signature_new      (gint                  id);
 
 
 G_END_DECLS
-
-#endif /* !EV_FORM_FIELD_H */
-

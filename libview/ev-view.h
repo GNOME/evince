@@ -17,12 +17,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
+#pragma once
+
 #if !defined (__EV_EVINCE_VIEW_H_INSIDE__) && !defined (EVINCE_COMPILATION)
 #error "Only <evince-view.h> can be included directly."
 #endif
-
-#ifndef __EV_VIEW_H__
-#define __EV_VIEW_H__
 
 #include <gtk/gtk.h>
 
@@ -193,5 +192,3 @@ void           ev_view_set_caret_cursor_position    (EvView  *view,
                                                      guint    page,
                                                      guint    offset);
 G_END_DECLS
-
-#endif /* __EV_VIEW_H__ */

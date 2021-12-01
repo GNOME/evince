@@ -17,12 +17,11 @@
  *
  */
 
+#pragma once
+
 #if !defined (__EV_EVINCE_DOCUMENT_H_INSIDE__) && !defined (EVINCE_COMPILATION)
 #error "Only <evince-document.h> can be included directly."
 #endif
-
-#ifndef EV_FILE_HELPERS_H
-#define EV_FILE_HELPERS_H
 
 #include <glib.h>
 #include <gio/gio.h>
@@ -84,5 +83,3 @@ gchar       *ev_file_compress         (const gchar       *uri,
 				       GError           **error);
 
 G_END_DECLS
-
-#endif /* EV_FILE_HELPERS_H */

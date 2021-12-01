@@ -18,12 +18,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
+#pragma once
+
 #if !defined (__EV_EVINCE_DOCUMENT_H_INSIDE__) && !defined (EVINCE_COMPILATION)
 #error "Only <evince-document.h> can be included directly."
 #endif
-
-#ifndef EV_DOCUMENT_TRANSITION_H
-#define EV_DOCUMENT_TRANSITION_H
 
 #include <glib-object.h>
 
@@ -64,5 +63,3 @@ EvTransitionEffect * ev_document_transition_get_effect        (EvDocumentTransit
 							       gint                  page);
 
 G_END_DECLS
-
-#endif /* EV_DOCUMENT_TRANSITION_H */

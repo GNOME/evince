@@ -18,12 +18,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
+#pragma once
+
 #if !defined (__EV_EVINCE_DOCUMENT_H_INSIDE__) && !defined (EVINCE_COMPILATION)
 #error "Only <evince-document.h> can be included directly."
 #endif
-
-#ifndef EV_LINK_DEST_H
-#define EV_LINK_DEST_H
 
 #include <glib-object.h>
 
@@ -115,5 +114,3 @@ gboolean        ev_link_dest_equal          (EvLinkDest  *a,
                                              EvLinkDest  *b);
 
 G_END_DECLS
-
-#endif /* EV_LINK_DEST_H */

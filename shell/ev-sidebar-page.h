@@ -18,8 +18,7 @@
  *
  */
 
-#ifndef EV_SIDEBAR_PAGE_H
-#define EV_SIDEBAR_PAGE_H
+#pragma once
 
 #include <glib-object.h>
 #include <glib.h>
@@ -60,5 +59,3 @@ const gchar*  ev_sidebar_page_get_label         (EvSidebarPage *page);
 
 
 G_END_DECLS
-
-#endif /* EV_SIDEBAR_PAGE */

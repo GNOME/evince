@@ -21,12 +21,11 @@
  * ev-view.c from exploding.
  */
 
+#pragma once
+
 #if !defined (EVINCE_COMPILATION)
 #error "This is a private header."
 #endif
-
-#ifndef __EV_PIXBUF_CACHE_H__
-#define __EV_PIXBUF_CACHE_H__
 
 #include <gtk/gtk.h>
 
@@ -89,5 +88,3 @@ void           ev_pixbuf_cache_set_selection_list   (EvPixbufCache *pixbuf_cache
 GList         *ev_pixbuf_cache_get_selection_list   (EvPixbufCache *pixbuf_cache);
 
 G_END_DECLS
-
-#endif /* __EV_PIXBUF_CACHE_H__ */

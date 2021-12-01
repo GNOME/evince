@@ -18,8 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-#ifndef EV_FILE_MONITOR_H
-#define EV_FILE_MONITOR_H
+#pragma once
 
 #include <glib-object.h>
 
@@ -50,5 +49,3 @@ GType          ev_file_monitor_get_type (void) G_GNUC_CONST;
 EvFileMonitor *ev_file_monitor_new      (const gchar *uri);
 
 G_END_DECLS
-
-#endif /* EV_FILE_MONITOR_H */

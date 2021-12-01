@@ -17,12 +17,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
+#pragma once
+
 #if !defined (__EV_EVINCE_DOCUMENT_H_INSIDE__) && !defined (EVINCE_COMPILATION)
 #error "Only <evince-document.h> can be included directly."
 #endif
 
-#ifndef EV_PAGE_H
-#define EV_PAGE_H
 
 #include <glib-object.h>
 
@@ -63,5 +63,3 @@ EV_PUBLIC
 EvPage *ev_page_new      (gint index);
 
 G_END_DECLS
-
-#endif /* EV_PAGE_H */

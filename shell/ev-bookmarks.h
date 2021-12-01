@@ -18,8 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-#ifndef EV_BOOKMARKS_H
-#define EV_BOOKMARKS_H
+#pragma once
 
 #include <glib-object.h>
 
@@ -51,8 +50,4 @@ void         ev_bookmarks_delete        (EvBookmarks *bookmarks,
 void         ev_bookmarks_update        (EvBookmarks *bookmarks,
                                          EvBookmark  *bookmark);
 
-
-
 G_END_DECLS
-
-#endif /* EV_BOOKMARKS_H */

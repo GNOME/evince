@@ -19,8 +19,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-#ifndef EV_MESSAGE_AREA_H
-#define EV_MESSAGE_AREA_H
+#pragma once
 
 #include <gtk/gtk.h>
 
@@ -64,5 +63,3 @@ void      _ev_message_area_add_buttons_valist       (EvMessageArea *area,
 GtkWidget *_ev_message_area_get_main_box            (EvMessageArea *area);
 
 G_END_DECLS
-
-#endif /* EV_MESSAGE_AREA_H */
