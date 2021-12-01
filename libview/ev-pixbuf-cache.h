@@ -21,8 +21,8 @@
  * ev-view.c from exploding.
  */
 
-#if !defined (__EV_EVINCE_VIEW_H_INSIDE__) && !defined (EVINCE_COMPILATION)
-#error "Only <evince-view.h> can be included directly."
+#if !defined (EVINCE_COMPILATION)
+#error "This is a private header."
 #endif
 
 #ifndef __EV_PIXBUF_CACHE_H__
