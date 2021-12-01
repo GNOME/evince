@@ -43,6 +43,13 @@
 #include <glib/gstdio.h>
 #include <glib/gi18n-lib.h>
 #include <unistd.h>
+#include <fcntl.h>
+
+typedef struct _EvJobLoadStreamPrivate EvJobLoadStreamPrivate;
+struct _EvJobLoadStreamPrivate
+{
+        char *mime_type;
+};
 
 static void ev_job_init                   (EvJob                 *job);
 static void ev_job_class_init             (EvJobClass            *class);
@@ -100,8 +107,9 @@ G_DEFINE_TYPE (EvJobPageData, ev_job_page_data, EV_TYPE_JOB)
 G_DEFINE_TYPE (EvJobThumbnail, ev_job_thumbnail, EV_TYPE_JOB)
 G_DEFINE_TYPE (EvJobFonts, ev_job_fonts, EV_TYPE_JOB)
 G_DEFINE_TYPE (EvJobLoad, ev_job_load, EV_TYPE_JOB)
-G_DEFINE_TYPE (EvJobLoadStream, ev_job_load_stream, EV_TYPE_JOB)
+G_DEFINE_TYPE_WITH_PRIVATE (EvJobLoadStream, ev_job_load_stream, EV_TYPE_JOB)
 G_DEFINE_TYPE (EvJobLoadGFile, ev_job_load_gfile, EV_TYPE_JOB)
+G_DEFINE_TYPE (EvJobLoadFd, ev_job_load_fd, EV_TYPE_JOB)
 G_DEFINE_TYPE (EvJobSave, ev_job_save, EV_TYPE_JOB)
 G_DEFINE_TYPE (EvJobFind, ev_job_find, EV_TYPE_JOB)
 G_DEFINE_TYPE (EvJobLayers, ev_job_layers, EV_TYPE_JOB)
@@ -1209,12 +1217,15 @@ static void
 ev_job_load_stream_dispose (GObject *object)
 {
         EvJobLoadStream *job = EV_JOB_LOAD_STREAM (object);
+        EvJobLoadStreamPrivate *priv = ev_job_load_stream_get_instance_private (job);
 
         if (job->stream) {
                 g_object_unref (job->stream);
                 job->stream = NULL;
         }
 
+        g_free (priv->mime_type);
+        priv->mime_type = NULL;
         g_free (job->password);
         job->password = NULL;
 
@@ -1225,6 +1236,7 @@ static gboolean
 ev_job_load_stream_run (EvJob *job)
 {
         EvJobLoadStream *job_load_stream = EV_JOB_LOAD_STREAM (job);
+        EvJobLoadStreamPrivate *priv = ev_job_load_stream_get_instance_private (job_load_stream);
         GError *error = NULL;
 
         ev_profiler_start (EV_PROFILE_JOBS, "%s (%p)", EV_GET_TYPE_NAME (job), job);
@@ -1253,7 +1265,7 @@ ev_job_load_stream_run (EvJob *job)
                                          &error);
         } else {
                 job->document = ev_document_factory_get_document_for_stream (job_load_stream->stream,
-                                                                             NULL /* mime-type FIXME? */,
+                                                                             priv->mime_type,
                                                                              job_load_stream->flags,
                                                                              job->cancellable,
                                                                              &error);
@@ -1305,6 +1317,19 @@ ev_job_load_stream_set_stream (EvJobLoadStream *job,
         if (job->stream)
               g_object_unref (job->stream);
         job->stream = stream;
+}
+
+void
+ev_job_load_stream_set_mime_type (EvJobLoadStream    *job,
+                                  const char         *mime_type)
+{
+        EvJobLoadStreamPrivate *priv;
+
+        g_return_if_fail (EV_IS_JOB_LOAD_STREAM (job));
+
+        priv = ev_job_load_stream_get_instance_private (job);
+        g_free (priv->mime_type);
+        priv->mime_type = g_strdup (mime_type);
 }
 
 void
@@ -1467,6 +1492,282 @@ ev_job_load_gfile_set_password (EvJobLoadGFile *job,
         ev_debug_message (DEBUG_JOBS, NULL);
 
         g_return_if_fail (EV_IS_JOB_LOAD_GFILE (job));
+
+        old_password = job->password;
+        job->password = g_strdup (password);
+        g_free (old_password);
+}
+
+/* EvJobLoadFd */
+
+/**
+ * EvJobLoadFd:
+ *
+ * A job class to load a #EvDocument from a file descriptor
+ * referring to a regular file.
+ *
+ * Since: 42.0
+ */
+
+static int
+ev_dupfd (int fd,
+          GError **error)
+{
+        int new_fd;
+
+        new_fd = fcntl (fd, F_DUPFD_CLOEXEC, 3);
+        if (new_fd == -1) {
+                int errsv = errno;
+                g_set_error_literal (error, G_FILE_ERROR, g_file_error_from_errno (errsv),
+                                     g_strerror (errsv));
+        }
+
+        return new_fd;
+}
+
+static void
+ev_job_load_fd_init (EvJobLoadFd *job)
+{
+        job->flags = EV_DOCUMENT_LOAD_FLAG_NONE;
+        job->fd = -1;
+
+        EV_JOB (job)->run_mode = EV_JOB_RUN_THREAD;
+}
+
+static void
+ev_job_load_fd_dispose (GObject *object)
+{
+        EvJobLoadFd *job = EV_JOB_LOAD_FD (object);
+
+        if (job->fd != -1) {
+                close (job->fd);
+                job->fd = -1;
+        }
+
+        g_free (job->mime_type);
+        job->mime_type = NULL;
+        g_free (job->password);
+        job->password = NULL;
+
+        G_OBJECT_CLASS (ev_job_load_fd_parent_class)->dispose (object);
+}
+
+static gboolean
+ev_job_load_fd_run (EvJob *job)
+{
+        EvJobLoadFd *job_load_fd = EV_JOB_LOAD_FD (job);
+        GError *error = NULL;
+        int fd;
+
+        if (job_load_fd->fd == -1) {
+                g_set_error_literal (&error, G_FILE_ERROR, G_FILE_ERROR_BADF,
+                                     "Invalid file descriptor");
+                goto out;
+        }
+
+        /* We need to dup the FD here since we may need to pass it again
+         * to ev_document_load_fd() if the document is encrypted,
+         * and the previous call to it consumes the FD.
+         */
+        fd = ev_dupfd (job_load_fd->fd, &error);
+        if (fd == -1)
+                goto out;
+
+        ev_profiler_start (EV_PROFILE_JOBS, "%s (%p)", EV_GET_TYPE_NAME (job), job);
+
+        ev_document_fc_mutex_lock ();
+
+        /* This job may already have a document even if the job didn't complete
+           because, e.g., a password is required - if so, just reload_fd rather than
+           creating a new instance */
+
+        if (job->document) {
+
+                if (job_load_fd->password) {
+                        ev_document_security_set_password (EV_DOCUMENT_SECURITY (job->document),
+                                                           job_load_fd->password);
+                }
+
+                job->failed = FALSE;
+                job->finished = FALSE;
+                g_clear_error (&job->error);
+
+                ev_document_load_fd (job->document,
+                                     fd,
+                                     job_load_fd->flags,
+                                     job->cancellable,
+                                     &error);
+                fd = -1; /* consumed */
+        } else {
+                job->document = ev_document_factory_get_document_for_fd (fd,
+                                                                         job_load_fd->mime_type,
+                                                                         job_load_fd->flags,
+                                                                         job->cancellable,
+                                                                         &error);
+                fd = -1; /* consumed */
+        }
+
+        ev_document_fc_mutex_unlock ();
+
+ out:
+        if (error) {
+                ev_job_failed_from_error (job, error);
+                g_error_free (error);
+        } else {
+                ev_job_succeeded (job);
+        }
+
+        return FALSE;
+}
+
+static void
+ev_job_load_fd_class_init (EvJobLoadFdClass *class)
+{
+        GObjectClass *oclass = G_OBJECT_CLASS (class);
+        EvJobClass   *job_class = EV_JOB_CLASS (class);
+
+        oclass->dispose = ev_job_load_fd_dispose;
+        job_class->run = ev_job_load_fd_run;
+}
+
+/**
+ * ev_job_load_fd_new:
+ * @fd: (transfer none): a file descriptor
+ * @mime_type: the mime type
+ * @flags:flags from #EvDocumentLoadFlags
+ * @error: (nullable): a location to store a #GError, or %NULL
+ *
+ * Creates a new #EvJobLoadFd for @fd. If duplicating @fd fails,
+ * returns %NULL with @error filled in.
+ *
+ * Returns: (tranfer full): the new #EvJobLoadFd, or %NULL
+ *
+ * Since: 42.0
+ */
+EvJob *
+ev_job_load_fd_new (int                 fd,
+                    const char         *mime_type,
+                    EvDocumentLoadFlags flags,
+                    GError            **error)
+{
+        EvJobLoadFd *job;
+
+        job = g_object_new (EV_TYPE_JOB_LOAD_FD, NULL);
+        if (!ev_job_load_fd_set_fd (job, fd, error)) {
+                g_object_unref (job);
+                return NULL;
+        }
+
+        ev_job_load_fd_set_mime_type (job, mime_type);
+        ev_job_load_fd_set_load_flags (job, flags);
+
+        return EV_JOB (job);
+}
+
+/**
+ * ev_job_load_new_take:
+ * @fd: (transfer none): a file descriptor
+ * @mime_type: the mime type
+ * @flags:flags from #EvDocumentLoadFlags
+ *
+ * Creates a new #EvJobLoadFd for @fd.
+ * Note that the job takes ownership of @fd; you must not do anything
+ * with it afterwards.
+ *
+ * Returns: (tranfer full): the new #EvJobLoadFd
+ *
+ * Since: 42.0
+ */
+EvJob *
+ev_job_load_fd_new_take (int                 fd,
+                         const char         *mime_type,
+                         EvDocumentLoadFlags flags)
+{
+        EvJobLoadFd *job;
+
+        job = g_object_new (EV_TYPE_JOB_LOAD_FD, NULL);
+        ev_job_load_fd_take_fd (job, fd);
+        ev_job_load_fd_set_mime_type (job, mime_type);
+        ev_job_load_fd_set_load_flags (job, flags);
+
+        return EV_JOB (job);
+}
+
+/**
+ * ev_job_load_fd_set_fd:
+ * @job: an #EvJob
+ * @fd: (transfer none): a file descriptor
+ * @error: (nullable): a location to store a #GError, or %NULL
+ *
+ * Sets @fd as the file descriptor in @job. If duplicating @fd fails,
+ * returns %FALSE with @error filled in.
+ *
+ * Returns: %TRUE if the file descriptor could be set
+ *
+ * Since: 42.0
+ */
+gboolean
+ev_job_load_fd_set_fd (EvJobLoadFd *job,
+                       int          fd,
+                       GError     **error)
+{
+        g_return_val_if_fail (EV_IS_JOB_LOAD_FD (job), FALSE);
+        g_return_val_if_fail (fd != -1, FALSE);
+
+        job->fd = ev_dupfd (fd, error);
+        return job->fd != -1;
+}
+
+/**
+ * ev_job_load_fd_set_fd:
+ * @job: an #EvJob
+ * @fd: (transfer full):
+ *
+ * Sets @fd as the file descriptor in @job.
+ * Note that @job takes ownership of @fd; you must not do anything
+ * with it afterwards.
+ *
+ * Since: 42.0
+ */
+void
+ev_job_load_fd_take_fd (EvJobLoadFd *job,
+                        int          fd)
+{
+        g_return_if_fail (EV_IS_JOB_LOAD_FD (job));
+        g_return_if_fail (fd != -1);
+
+        job->fd = fd;
+}
+
+void
+ev_job_load_fd_set_mime_type (EvJobLoadFd *job,
+                              const char  *mime_type)
+{
+        g_return_if_fail (EV_IS_JOB_LOAD_FD (job));
+        g_return_if_fail (mime_type != NULL);
+
+        g_free (job->mime_type);
+        job->mime_type = g_strdup (mime_type);
+}
+
+void
+ev_job_load_fd_set_load_flags (EvJobLoadFd        *job,
+                               EvDocumentLoadFlags flags)
+{
+        g_return_if_fail (EV_IS_JOB_LOAD_FD (job));
+
+        job->flags = flags;
+}
+
+void
+ev_job_load_fd_set_password (EvJobLoadFd *job,
+                             const char  *password)
+{
+        char *old_password;
+
+        ev_debug_message (DEBUG_JOBS, NULL);
+
+        g_return_if_fail (EV_IS_JOB_LOAD_FD (job));
 
         old_password = job->password;
         job->password = g_strdup (password);
