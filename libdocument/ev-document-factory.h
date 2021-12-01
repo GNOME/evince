@@ -27,6 +27,7 @@
 
 #include <gtk/gtk.h>
 
+#include "ev-macros.h"
 #include "ev-document.h"
 
 G_BEGIN_DECLS
@@ -34,20 +35,25 @@ G_BEGIN_DECLS
 gboolean   _ev_document_factory_init         (void);
 void       _ev_document_factory_shutdown     (void);
 
+EV_PUBLIC
 EvDocument* ev_document_factory_get_document (const char *uri, GError **error);
+EV_PUBLIC
 EvDocument *ev_document_factory_get_document_full (const char           *uri,
 						   EvDocumentLoadFlags   flags,
 						   GError              **error);
+EV_PUBLIC
 EvDocument* ev_document_factory_get_document_for_gfile (GFile *file,
                                                         EvDocumentLoadFlags flags,
                                                         GCancellable *cancellable,
                                                         GError **error);
+EV_PUBLIC
 EvDocument* ev_document_factory_get_document_for_stream (GInputStream *stream,
                                                          const char *mime_type,
                                                          EvDocumentLoadFlags flags,
                                                          GCancellable *cancellable,
                                                          GError **error);
 
+EV_PUBLIC
 void 	    ev_document_factory_add_filters  (GtkWidget *chooser, EvDocument *document);
 
 G_END_DECLS

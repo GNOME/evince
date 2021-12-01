@@ -29,6 +29,8 @@
 #include <glib.h>
 #include <gdk/gdk.h>
 
+#include "ev-macros.h"
+
 G_BEGIN_DECLS
 
 #define EV_TYPE_ASYNC_RENDERER	          (ev_async_renderer_get_type ())
@@ -54,7 +56,9 @@ struct _EvAsyncRendererInterface
 					 int              rotation);
 };
 
+EV_PUBLIC
 GType		ev_async_renderer_get_type       (void);
+EV_PUBLIC
 void		ev_async_renderer_render_pixbuf  (EvAsyncRenderer *renderer,
 				      	          int              page,
 						  double           scale,

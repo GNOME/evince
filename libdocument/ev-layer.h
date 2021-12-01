@@ -26,6 +26,8 @@
 
 #include <glib-object.h>
 
+#include "ev-macros.h"
+
 G_BEGIN_DECLS
 
 typedef struct _EvLayer        EvLayer;
@@ -49,10 +51,14 @@ struct _EvLayerClass {
 	GObjectClass base_class;
 };
 
+EV_PUBLIC
 GType     ev_layer_get_type     (void) G_GNUC_CONST;
+EV_PUBLIC
 EvLayer  *ev_layer_new          (gboolean is_parent,
 				 gint     rb_group);
+EV_PUBLIC
 gboolean  ev_layer_is_parent    (EvLayer *layer);
+EV_PUBLIC
 gint      ev_layer_get_rb_group (EvLayer *layer);
 
 G_END_DECLS

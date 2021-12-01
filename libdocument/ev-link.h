@@ -25,6 +25,8 @@
 #define EV_LINK_H
 
 #include <glib-object.h>
+
+#include "ev-macros.h"
 #include "ev-document.h"
 #include "ev-link-action.h"
 
@@ -41,12 +43,16 @@ typedef struct _EvLinkPrivate EvLinkPrivate;
 #define EV_IS_LINK_CLASS(klass)   (G_TYPE_CHECK_CLASS_TYPE((klass), EV_TYPE_LINK))
 #define EV_LINK_GET_CLASS(object) (G_TYPE_INSTANCE_GET_CLASS((object), EV_TYPE_LINK, EvLinkClass))
 
+EV_PUBLIC
 GType         ev_link_get_type	 (void) G_GNUC_CONST;
 
+EV_PUBLIC
 EvLink	     *ev_link_new	 (const gchar  *title,
 				  EvLinkAction *action);
 
+EV_PUBLIC
 const gchar  *ev_link_get_title  (EvLink       *self);
+EV_PUBLIC
 EvLinkAction *ev_link_get_action (EvLink       *self);
 
 G_END_DECLS

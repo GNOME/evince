@@ -28,6 +28,7 @@
 #include <glib-object.h>
 #include <glib.h>
 
+#include "ev-macros.h"
 #include "ev-document.h"
 #include "ev-media.h"
 #include "ev-mapping-list.h"
@@ -52,7 +53,9 @@ struct _EvDocumentMediaInterface {
                                               EvPage          *page);
 };
 
+EV_PUBLIC
 GType          ev_document_media_get_type          (void) G_GNUC_CONST;
+EV_PUBLIC
 EvMappingList *ev_document_media_get_media_mapping (EvDocumentMedia *document_media,
                                                     EvPage          *page);
 

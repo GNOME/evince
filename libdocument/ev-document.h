@@ -33,6 +33,7 @@
 #include <gdk/gdk.h>
 #include <cairo.h>
 
+#include "ev-macros.h"
 #include "ev-document-info.h"
 #include "ev-page.h"
 #include "ev-render-context.h"
@@ -134,90 +135,130 @@ struct _EvDocumentClass
 						     EvRenderContext     *rc);
 };
 
+EV_PUBLIC
 GType            ev_document_get_type             (void) G_GNUC_CONST;
+EV_PUBLIC
 GQuark           ev_document_error_quark          (void);
 
 /* Document mutex */
+EV_PUBLIC
 GMutex          *ev_document_get_doc_mutex        (void);
+EV_PUBLIC
 void             ev_document_doc_mutex_lock       (void);
+EV_PUBLIC
 void             ev_document_doc_mutex_unlock     (void);
+EV_PUBLIC
 gboolean         ev_document_doc_mutex_trylock    (void);
 
 /* FontConfig mutex */
+EV_PUBLIC
 GMutex          *ev_document_get_fc_mutex         (void);
+EV_PUBLIC
 void             ev_document_fc_mutex_lock        (void);
+EV_PUBLIC
 void             ev_document_fc_mutex_unlock      (void);
+EV_PUBLIC
 gboolean         ev_document_fc_mutex_trylock     (void);
 
+EV_PUBLIC
 EvDocumentInfo  *ev_document_get_info             (EvDocument      *document);
+EV_PUBLIC
 gboolean         ev_document_get_backend_info     (EvDocument      *document,
 						   EvDocumentBackendInfo *info);
+EV_PUBLIC
 gboolean         ev_document_get_modified         (EvDocument      *document);
+EV_PUBLIC
 void             ev_document_set_modified         (EvDocument      *document,
 						   gboolean         modified);
+EV_PUBLIC
 gboolean         ev_document_load                 (EvDocument      *document,
 						   const char      *uri,
 						   GError         **error);
+EV_PUBLIC
 gboolean         ev_document_load_full            (EvDocument           *document,
 						   const char           *uri,
 						   EvDocumentLoadFlags   flags,
 						   GError              **error);
+EV_PUBLIC
 gboolean         ev_document_load_stream          (EvDocument         *document,
                                                    GInputStream       *stream,
                                                    EvDocumentLoadFlags flags,
                                                    GCancellable       *cancellable,
                                                    GError            **error);
+EV_PUBLIC
 gboolean         ev_document_load_gfile           (EvDocument         *document,
                                                    GFile              *file,
                                                    EvDocumentLoadFlags flags,
                                                    GCancellable       *cancellable,
                                                    GError            **error);
+EV_PUBLIC
 gboolean         ev_document_save                 (EvDocument      *document,
 						   const char      *uri,
 						   GError         **error);
+EV_PUBLIC
 gint             ev_document_get_n_pages          (EvDocument      *document);
+EV_PUBLIC
 EvPage          *ev_document_get_page             (EvDocument      *document,
 						   gint             index);
+EV_PUBLIC
 void             ev_document_get_page_size        (EvDocument      *document,
 						   gint             page_index,
 						   double          *width,
 						   double          *height);
+EV_PUBLIC
 gchar           *ev_document_get_page_label       (EvDocument      *document,
 						   gint             page_index);
+EV_PUBLIC
 cairo_surface_t *ev_document_render               (EvDocument      *document,
 						   EvRenderContext *rc);
+EV_PUBLIC
 GdkPixbuf       *ev_document_get_thumbnail        (EvDocument      *document,
 						   EvRenderContext *rc);
+EV_PUBLIC
 cairo_surface_t *ev_document_get_thumbnail_surface (EvDocument      *document,
 						    EvRenderContext *rc);
+EV_PUBLIC
 guint64          ev_document_get_size             (EvDocument      *document);
+EV_PUBLIC
 const gchar     *ev_document_get_uri              (EvDocument      *document);
+EV_PUBLIC
 const gchar     *ev_document_get_title            (EvDocument      *document);
+EV_PUBLIC
 gboolean         ev_document_is_page_size_uniform (EvDocument      *document);
+EV_PUBLIC
 void             ev_document_get_max_page_size    (EvDocument      *document,
 						   gdouble         *width,
 						   gdouble         *height);
+EV_PUBLIC
 void             ev_document_get_min_page_size    (EvDocument      *document,
 						   gdouble         *width,
 						   gdouble         *height);
+EV_PUBLIC
 gboolean         ev_document_check_dimensions     (EvDocument      *document);
+EV_PUBLIC
 gint             ev_document_get_max_label_len    (EvDocument      *document);
+EV_PUBLIC
 gboolean         ev_document_has_text_page_labels (EvDocument      *document);
+EV_PUBLIC
 gboolean         ev_document_find_page_by_label   (EvDocument      *document,
 						   const gchar     *page_label,
 						   gint            *page_index);
+EV_PUBLIC
 gboolean	 ev_document_has_synctex 	  (EvDocument      *document);
 
+EV_PUBLIC
 EvSourceLink    *ev_document_synctex_backward_search
                                                   (EvDocument      *document,
                                                    gint             page_index,
                                                    gfloat           x,
                                                    gfloat           y);
 
+EV_PUBLIC
 EvMapping       *ev_document_synctex_forward_search
                                                   (EvDocument      *document,
 						   EvSourceLink    *source_link);
 
+EV_PUBLIC
 gint             ev_rect_cmp                      (EvRectangle     *a,
 					           EvRectangle     *b);
 
@@ -230,9 +271,13 @@ struct _EvRectangle
 	gdouble y2;
 };
 
+EV_PUBLIC
 GType        ev_rectangle_get_type (void) G_GNUC_CONST;
+EV_PUBLIC
 EvRectangle *ev_rectangle_new      (void);
+EV_PUBLIC
 EvRectangle *ev_rectangle_copy     (EvRectangle *ev_rect);
+EV_PUBLIC
 void         ev_rectangle_free     (EvRectangle *ev_rect);
 
 struct _EvMapping {
@@ -248,11 +293,15 @@ struct _EvSourceLink
         gint   col;
 };
 
+EV_PUBLIC
 GType          ev_source_link_get_type (void) G_GNUC_CONST;
+EV_PUBLIC
 EvSourceLink  *ev_source_link_new      (const gchar *filename,
 					gint         line,
 					gint         col);
+EV_PUBLIC
 EvSourceLink  *ev_source_link_copy     (EvSourceLink *link);
+EV_PUBLIC
 void           ev_source_link_free     (EvSourceLink *link);
 
 /* convenience macro to ease interface addition in the CODE
@@ -296,8 +345,9 @@ static void     backend_name##_class_intern_init (gpointer klass)		\
 	backend_name##_parent_class = g_type_class_peek_parent (klass);		\
 	backend_name##_class_init ((BackendName##Class *) klass);		\
 }										\
-										\
-G_MODULE_EXPORT GType								\
+                                                                                \
+EV_PUBLIC                                                                       \
+GType				                                                \
 register_evince_backend (GTypeModule *module)					\
 {										\
 	const GTypeInfo our_info = {  				                \

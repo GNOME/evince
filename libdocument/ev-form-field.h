@@ -27,6 +27,7 @@
 
 #include <glib-object.h>
 
+#include "ev-macros.h"
 #include "ev-document.h"
 #include "ev-link.h"
 
@@ -188,25 +189,34 @@ struct _EvFormFieldSignatureClass
 };
 
 /* EvFormField base class */
+EV_PUBLIC
 GType        ev_form_field_get_type           (void) G_GNUC_CONST;
 
 /* EvFormFieldText */
+EV_PUBLIC
 GType        ev_form_field_text_get_type      (void) G_GNUC_CONST;
+EV_PUBLIC
 EvFormField *ev_form_field_text_new           (gint                  id,
 					       EvFormFieldTextType   type);
 
 /* EvFormFieldButton */
+EV_PUBLIC
 GType        ev_form_field_button_get_type    (void) G_GNUC_CONST;
+EV_PUBLIC
 EvFormField *ev_form_field_button_new         (gint                  id,
 					       EvFormFieldButtonType type);
 
 /* EvFormFieldChoice */
+EV_PUBLIC
 GType        ev_form_field_choice_get_type    (void) G_GNUC_CONST;
+EV_PUBLIC
 EvFormField *ev_form_field_choice_new         (gint                  id,
 					       EvFormFieldChoiceType type);
 
 /* EvFormFieldSignature */
+EV_PUBLIC
 GType        ev_form_field_signature_get_type (void) G_GNUC_CONST;
+EV_PUBLIC
 EvFormField *ev_form_field_signature_new      (gint                  id);
 
 

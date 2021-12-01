@@ -27,6 +27,8 @@
 #include <glib.h>
 #include <gio/gio.h>
 
+#include "ev-macros.h"
+
 G_BEGIN_DECLS
 
 typedef enum {
@@ -40,35 +42,46 @@ void        _ev_file_helpers_init     (void);
 
 void        _ev_file_helpers_shutdown (void);
 
+EV_PUBLIC
 int          ev_mkstemp               (const char        *tmpl,
                                        char             **file_name,
                                        GError           **error);
+EV_PUBLIC
 GFile       *ev_mkstemp_file          (const char        *tmpl,
                                        GError           **error);
+EV_PUBLIC
 gchar       *ev_mkdtemp               (const char        *tmpl,
                                        GError           **error);
+EV_PUBLIC
 void         ev_tmp_filename_unlink   (const gchar       *filename);
+EV_PUBLIC
 void         ev_tmp_file_unlink       (GFile             *file);
+EV_PUBLIC
 void         ev_tmp_uri_unlink        (const gchar       *uri);
+EV_PUBLIC
 gboolean     ev_file_is_temp          (GFile             *file);
+EV_PUBLIC
 gboolean     ev_xfer_uri_simple       (const char        *from,
 				       const char        *to,
 				       GError           **error);
+EV_PUBLIC
 gboolean     ev_file_copy_metadata    (const char        *from,
                                        const char        *to,
                                        GError           **error);
 
+EV_PUBLIC
 gchar       *ev_file_get_mime_type    (const gchar       *uri,
 				       gboolean           fast,
 				       GError           **error);
 
+EV_PUBLIC
 gchar       *ev_file_uncompress       (const gchar       *uri,
 				       EvCompressionType  type,
 				       GError           **error);
+EV_PUBLIC
 gchar       *ev_file_compress         (const gchar       *uri,
 				       EvCompressionType  type,
 				       GError           **error);
-
 
 G_END_DECLS
 

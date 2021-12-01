@@ -32,6 +32,7 @@
 #include <glib.h>
 #include <gtk/gtk.h>
 
+#include "ev-macros.h"
 #include "ev-document.h"
 #include "ev-link.h"
 #include "ev-mapping-list.h"
@@ -71,22 +72,32 @@ struct _EvDocumentLinksInterface
 					       const gchar     *link_name);
 };
 
+EV_PUBLIC
 GType          ev_document_links_get_type            (void) G_GNUC_CONST;
+EV_PUBLIC
 gboolean       ev_document_links_has_document_links  (EvDocumentLinks *document_links);
+EV_PUBLIC
 GtkTreeModel  *ev_document_links_get_links_model     (EvDocumentLinks *document_links);
 
+EV_PUBLIC
 EvMappingList *ev_document_links_get_links           (EvDocumentLinks *document_links,
 						      EvPage          *page);
+EV_PUBLIC
 EvLinkDest    *ev_document_links_find_link_dest      (EvDocumentLinks *document_links,
 						      const gchar     *link_name);
+EV_PUBLIC
 gint           ev_document_links_find_link_page      (EvDocumentLinks *document_links,
 						      const gchar     *link_name);
+EV_PUBLIC
 gint           ev_document_links_get_dest_page       (EvDocumentLinks *document_links,
 						      EvLinkDest      *dest);
+EV_PUBLIC
 gchar         *ev_document_links_get_dest_page_label (EvDocumentLinks *document_links,
 						      EvLinkDest      *dest);
+EV_PUBLIC
 gint           ev_document_links_get_link_page       (EvDocumentLinks *document_links,
 						      EvLink          *link);
+EV_PUBLIC
 gchar         *ev_document_links_get_link_page_label (EvDocumentLinks *document_links,
 						      EvLink          *link);
 

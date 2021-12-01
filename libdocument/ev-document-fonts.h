@@ -32,6 +32,7 @@
 #include <glib.h>
 #include <gtk/gtk.h>
 
+#include "ev-macros.h"
 #include "ev-document.h"
 #include "ev-link.h"
 
@@ -67,12 +68,17 @@ struct _EvDocumentFontsInterface
         const gchar *(* get_fonts_summary) (EvDocumentFonts *document_fonts);
 };
 
+EV_PUBLIC
 GType        ev_document_fonts_get_type          (void);
+EV_PUBLIC
 gboolean     ev_document_fonts_scan              (EvDocumentFonts *document_fonts,
                                                   int              n_pages);
+EV_PUBLIC
 double       ev_document_fonts_get_progress      (EvDocumentFonts *document_fonts);
+EV_PUBLIC
 void         ev_document_fonts_fill_model        (EvDocumentFonts *document_fonts,
                                                   GtkTreeModel    *model);
+EV_PUBLIC
 const gchar *ev_document_fonts_get_fonts_summary (EvDocumentFonts *document_fonts);
 
 G_END_DECLS

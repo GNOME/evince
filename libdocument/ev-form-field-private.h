@@ -27,12 +27,15 @@
 
 //#include <glib-object.h>
 
+#include "ev-macros.h"
 #include "ev-form-field.h"
 
 G_BEGIN_DECLS
 
 /* EvFormField base class */
+EV_PRIVATE
 gchar *ev_form_field_get_alternate_name (EvFormField *field);
+EV_PRIVATE
 void   ev_form_field_set_alternate_name (EvFormField *field,
 					 gchar       *alternative_text);
 

@@ -28,6 +28,7 @@
 #include <glib-object.h>
 #include <glib.h>
 
+#include "ev-macros.h"
 #include "ev-document.h"
 #include "ev-image.h"
 #include "ev-mapping-list.h"
@@ -54,9 +55,12 @@ struct _EvDocumentImagesInterface {
 					      EvImage          *image);
 };
 
+EV_PUBLIC
 GType          ev_document_images_get_type          (void) G_GNUC_CONST;
+EV_PUBLIC
 EvMappingList *ev_document_images_get_image_mapping (EvDocumentImages *document_images,
 						     EvPage           *page);
+EV_PUBLIC
 GdkPixbuf     *ev_document_images_get_image         (EvDocumentImages *document_images,
 						     EvImage          *image);
 

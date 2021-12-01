@@ -26,6 +26,8 @@
 #define EV_LINK_ACTION_H
 
 #include <glib-object.h>
+
+#include "ev-macros.h"
 #include "ev-link-dest.h"
 
 G_BEGIN_DECLS
@@ -53,33 +55,53 @@ typedef enum {
 	 * actions */
 } EvLinkActionType;
 
+EV_PUBLIC
 GType            ev_link_action_get_type                 (void) G_GNUC_CONST;
 
+EV_PUBLIC
 EvLinkActionType ev_link_action_get_action_type          (EvLinkAction *self);
+EV_PUBLIC
 EvLinkDest      *ev_link_action_get_dest                 (EvLinkAction *self);
+EV_PUBLIC
 const gchar     *ev_link_action_get_uri                  (EvLinkAction *self);
+EV_PUBLIC
 const gchar     *ev_link_action_get_filename             (EvLinkAction *self);
+EV_PUBLIC
 const gchar     *ev_link_action_get_params               (EvLinkAction *self);
+EV_PUBLIC
 const gchar     *ev_link_action_get_name                 (EvLinkAction *self);
+EV_PUBLIC
 GList           *ev_link_action_get_show_list            (EvLinkAction *self);
+EV_PUBLIC
 GList           *ev_link_action_get_hide_list            (EvLinkAction *self);
+EV_PUBLIC
 GList           *ev_link_action_get_toggle_list          (EvLinkAction *self);
+EV_PUBLIC
 GList           *ev_link_action_get_reset_fields         (EvLinkAction *self);
+EV_PUBLIC
 gboolean         ev_link_action_get_exclude_reset_fields (EvLinkAction *self);
 
+EV_PUBLIC
 EvLinkAction    *ev_link_action_new_dest                 (EvLinkDest   *dest);
+EV_PUBLIC
 EvLinkAction    *ev_link_action_new_remote               (EvLinkDest   *dest,
 						          const gchar  *filename);
+EV_PUBLIC
 EvLinkAction    *ev_link_action_new_external_uri         (const gchar  *uri);
+EV_PUBLIC
 EvLinkAction    *ev_link_action_new_launch               (const gchar  *filename,
 						          const gchar  *params);
+EV_PUBLIC
 EvLinkAction    *ev_link_action_new_named                (const gchar  *name);
+EV_PUBLIC
 EvLinkAction    *ev_link_action_new_layers_state         (GList        *show_list,
 						          GList        *hide_list,
 						          GList        *toggle_list);
+EV_PUBLIC
 EvLinkAction    *ev_link_action_new_reset_form           (GList        *fields,
 						          gboolean      exclude_fields);
 
+EV_PUBLIC
 gboolean         ev_link_action_equal                    (EvLinkAction *a,
                                                           EvLinkAction *b);
 

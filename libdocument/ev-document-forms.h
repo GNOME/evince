@@ -27,6 +27,7 @@
 
 #include <glib-object.h>
 
+#include "ev-macros.h"
 #include "ev-document.h"
 #include "ev-form-field.h"
 #include "ev-mapping-list.h"
@@ -86,44 +87,60 @@ struct _EvDocumentFormsInterface
 							       EvLinkAction      *action);
 };
 
+EV_PUBLIC
 GType          ev_document_forms_get_type                           (void) G_GNUC_CONST;
+EV_PUBLIC
 EvMappingList *ev_document_forms_get_form_fields                    (EvDocumentForms   *document_forms,
 								     EvPage            *page);
+EV_PUBLIC
 gboolean       ev_document_forms_document_is_modified               (EvDocumentForms   *document_forms);
 
+EV_PUBLIC
 gchar 	      *ev_document_forms_form_field_text_get_text           (EvDocumentForms   *document_forms,
 								     EvFormField       *field);
+EV_PUBLIC
 void 	       ev_document_forms_form_field_text_set_text           (EvDocumentForms   *document_forms,
 								     EvFormField       *field,
 								     const gchar       *text);
 
+EV_PUBLIC
 gboolean       ev_document_forms_form_field_button_get_state        (EvDocumentForms   *document_forms,
 								     EvFormField       *field);
+EV_PUBLIC
 void 	       ev_document_forms_form_field_button_set_state        (EvDocumentForms   *document_forms,
 								     EvFormField       *field,
 								     gboolean           state);
 
+EV_PUBLIC
 gchar         *ev_document_forms_form_field_choice_get_item         (EvDocumentForms   *document_forms,
 								     EvFormField       *field,
 								     gint               index);
+EV_PUBLIC
 gint 	       ev_document_forms_form_field_choice_get_n_items      (EvDocumentForms   *document_forms,
 								     EvFormField       *field);
+EV_PUBLIC
 gboolean       ev_document_forms_form_field_choice_is_item_selected (EvDocumentForms   *document_forms,
 								     EvFormField       *field,
 								     gint               index);
+EV_PUBLIC
 void 	       ev_document_forms_form_field_choice_select_item      (EvDocumentForms   *document_forms,
 								     EvFormField       *field,
 								     gint               index);
+EV_PUBLIC
 void 	       ev_document_forms_form_field_choice_toggle_item      (EvDocumentForms   *document_forms,
 								     EvFormField       *field,
 								     gint               index);
+EV_PUBLIC
 void 	       ev_document_forms_form_field_choice_unselect_all     (EvDocumentForms   *document_forms,
 								     EvFormField       *field);
+EV_PUBLIC
 void 	       ev_document_forms_form_field_choice_set_text         (EvDocumentForms   *document_forms,
 								     EvFormField       *field,
 								     const gchar       *text);
+EV_PUBLIC
 gchar         *ev_document_forms_form_field_choice_get_text         (EvDocumentForms   *document_forms,
 								     EvFormField       *field);
+EV_PUBLIC
 void           ev_document_forms_reset_form                         (EvDocumentForms   *document_forms,
 								     EvLinkAction      *action);
 

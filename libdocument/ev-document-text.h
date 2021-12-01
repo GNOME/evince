@@ -30,6 +30,7 @@
 #include <glib.h>
 #include <gdk/gdk.h>
 
+#include "ev-macros.h"
 #include "ev-document.h"
 
 G_BEGIN_DECLS
@@ -61,16 +62,21 @@ struct _EvDocumentTextInterface
 					      EvPage           *page);
 };
 
+EV_PUBLIC
 GType           ev_document_text_get_type         (void) G_GNUC_CONST;
 
+EV_PUBLIC
 gchar          *ev_document_text_get_text         (EvDocumentText  *document_text,
 						   EvPage          *page);
+EV_PUBLIC
 gboolean        ev_document_text_get_text_layout  (EvDocumentText  *document_text,
 						   EvPage          *page,
 						   EvRectangle    **areas,
 						   guint           *n_areas);
+EV_PUBLIC
 cairo_region_t *ev_document_text_get_text_mapping (EvDocumentText  *document_text,
 						   EvPage          *page);
+EV_PUBLIC
 PangoAttrList  *ev_document_text_get_text_attrs   (EvDocumentText  *document_text,
 						   EvPage          *page);
 G_END_DECLS

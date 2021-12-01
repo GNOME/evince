@@ -28,6 +28,8 @@
 #include <glib-object.h>
 #include <glib.h>
 
+#include "ev-macros.h"
+
 G_BEGIN_DECLS
 
 typedef struct _EvDocumentInfo    EvDocumentInfo;
@@ -141,8 +143,11 @@ struct _EvDocumentInfo
 };
 G_GNUC_END_IGNORE_DEPRECATIONS
 
+EV_PUBLIC
 GType           ev_document_info_get_type (void) G_GNUC_CONST;
+EV_PUBLIC
 EvDocumentInfo *ev_document_info_copy     (EvDocumentInfo *info);
+EV_PUBLIC
 void            ev_document_info_free     (EvDocumentInfo *info);
 
 /* EvDocumentLicense */
@@ -152,12 +157,19 @@ struct _EvDocumentLicense {
 	gchar *uri;
 	gchar *web_statement;
 };
+EV_PUBLIC
 GType              ev_document_license_get_type          (void) G_GNUC_CONST;
+EV_PUBLIC
 EvDocumentLicense *ev_document_license_new               (void);
+EV_PUBLIC
 EvDocumentLicense *ev_document_license_copy              (EvDocumentLicense *license);
+EV_PUBLIC
 void               ev_document_license_free              (EvDocumentLicense *license);
+EV_PUBLIC
 const gchar       *ev_document_license_get_text          (EvDocumentLicense *license);
+EV_PUBLIC
 const gchar       *ev_document_license_get_uri           (EvDocumentLicense *license);
+EV_PUBLIC
 const gchar       *ev_document_license_get_web_statement (EvDocumentLicense *license);
 
 G_END_DECLS

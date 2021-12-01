@@ -117,88 +117,137 @@ typedef enum {
 } EvAnnotationTextMarkupType;
 
 /* EvAnnotation */
+EV_PUBLIC
 GType                ev_annotation_get_type                  (void) G_GNUC_CONST;
+EV_PUBLIC
 EvAnnotationType     ev_annotation_get_annotation_type       (EvAnnotation           *annot);
+EV_PUBLIC
 EvPage              *ev_annotation_get_page                  (EvAnnotation           *annot);
+EV_PUBLIC
 guint                ev_annotation_get_page_index            (EvAnnotation           *annot);
+EV_PUBLIC
 gboolean             ev_annotation_equal                     (EvAnnotation           *annot,
 							      EvAnnotation           *other);
+EV_PUBLIC
 const gchar         *ev_annotation_get_contents              (EvAnnotation           *annot);
+EV_PUBLIC
 gboolean             ev_annotation_set_contents              (EvAnnotation           *annot,
 							      const gchar            *contents);
+EV_PUBLIC
 const gchar         *ev_annotation_get_name                  (EvAnnotation           *annot);
+EV_PUBLIC
 gboolean             ev_annotation_set_name                  (EvAnnotation           *annot,
 							      const gchar            *name);
+EV_PUBLIC
 const gchar         *ev_annotation_get_modified              (EvAnnotation           *annot);
+EV_PUBLIC
 gboolean             ev_annotation_set_modified              (EvAnnotation           *annot,
 							      const gchar            *modified);
+EV_PUBLIC
 gboolean             ev_annotation_set_modified_from_time_t  (EvAnnotation           *annot,
 							      time_t                  utime);
 G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 EV_DEPRECATED_FOR(ev_annotaion_set_modified_from_time_t)
+EV_PUBLIC
 gboolean             ev_annotation_set_modified_from_time    (EvAnnotation           *annot,
 							      GTime                   utime);
 EV_DEPRECATED_FOR(ev_annotaion_get_rgba)
+EV_PUBLIC
 void                 ev_annotation_get_color                 (EvAnnotation           *annot,
 							      GdkColor               *color);
 EV_DEPRECATED_FOR(ev_annotaion_set_rgba)
+EV_PUBLIC
 gboolean             ev_annotation_set_color                 (EvAnnotation           *annot,
 							      const GdkColor         *color);
 G_GNUC_END_IGNORE_DEPRECATIONS
+
+EV_PUBLIC
 void                 ev_annotation_get_rgba                  (EvAnnotation           *annot,
                                                               GdkRGBA                *rgba);
+EV_PUBLIC
 gboolean             ev_annotation_set_rgba                  (EvAnnotation           *annot,
                                                               const GdkRGBA          *rgba);
+EV_PUBLIC
 void                 ev_annotation_get_area                  (EvAnnotation           *annot,
                                                               EvRectangle            *area);
+EV_PUBLIC
 gboolean             ev_annotation_set_area                  (EvAnnotation           *annot,
                                                               const EvRectangle      *area);
 
 /* EvAnnotationMarkup */
+EV_PUBLIC
 GType                ev_annotation_markup_get_type           (void) G_GNUC_CONST;
+EV_PUBLIC
 const gchar         *ev_annotation_markup_get_label          (EvAnnotationMarkup     *markup);
+EV_PUBLIC
 gboolean             ev_annotation_markup_set_label          (EvAnnotationMarkup     *markup,
 							      const gchar            *label);
+EV_PUBLIC
 gdouble              ev_annotation_markup_get_opacity        (EvAnnotationMarkup     *markup);
+EV_PUBLIC
 gboolean             ev_annotation_markup_set_opacity        (EvAnnotationMarkup     *markup,
 							      gdouble                 opacity);
+EV_PUBLIC
 gboolean             ev_annotation_markup_can_have_popup     (EvAnnotationMarkup     *markup);
+EV_PUBLIC
 gboolean             ev_annotation_markup_has_popup          (EvAnnotationMarkup     *markup);
+EV_PUBLIC
 gboolean             ev_annotation_markup_set_has_popup      (EvAnnotationMarkup     *markup,
 							      gboolean                has_popup);
+EV_PUBLIC
 void                 ev_annotation_markup_get_rectangle      (EvAnnotationMarkup     *markup,
 							      EvRectangle            *ev_rect);
+EV_PUBLIC
 gboolean             ev_annotation_markup_set_rectangle      (EvAnnotationMarkup     *markup,
 							      const EvRectangle      *ev_rect);
+EV_PUBLIC
 gboolean             ev_annotation_markup_get_popup_is_open  (EvAnnotationMarkup     *markup);
+EV_PUBLIC
 gboolean             ev_annotation_markup_set_popup_is_open  (EvAnnotationMarkup     *markup,
 							      gboolean                is_open);
 
 /* EvAnnotationText */
+EV_PUBLIC
 GType                ev_annotation_text_get_type             (void) G_GNUC_CONST;
+EV_PUBLIC
 EvAnnotation        *ev_annotation_text_new                  (EvPage                 *page);
+EV_PUBLIC
 EvAnnotationTextIcon ev_annotation_text_get_icon             (EvAnnotationText       *text);
+EV_PUBLIC
 gboolean             ev_annotation_text_set_icon             (EvAnnotationText       *text,
 							      EvAnnotationTextIcon    icon);
+EV_PUBLIC
 gboolean             ev_annotation_text_get_is_open          (EvAnnotationText       *text);
+EV_PUBLIC
 gboolean             ev_annotation_text_set_is_open          (EvAnnotationText       *text,
 							      gboolean                is_open);
 
 /* EvAnnotationAttachment */
+EV_PUBLIC
 GType                ev_annotation_attachment_get_type       (void) G_GNUC_CONST;
+EV_PUBLIC
 EvAnnotation        *ev_annotation_attachment_new            (EvPage                 *page,
 							      EvAttachment           *attachment);
+EV_PUBLIC
 EvAttachment        *ev_annotation_attachment_get_attachment (EvAnnotationAttachment *annot);
+EV_PUBLIC
 gboolean             ev_annotation_attachment_set_attachment (EvAnnotationAttachment *annot,
 							      EvAttachment           *attachment);
 
 /* EvAnnotationTextMarkup */
+EV_PUBLIC
 GType                      ev_annotation_text_markup_get_type        (void) G_GNUC_CONST;
+EV_PUBLIC
 EvAnnotation              *ev_annotation_text_markup_highlight_new   (EvPage                    *page);
+EV_PUBLIC
 EvAnnotation              *ev_annotation_text_markup_strike_out_new  (EvPage                    *page);
+EV_PUBLIC
 EvAnnotation              *ev_annotation_text_markup_underline_new   (EvPage                    *page);
+EV_PUBLIC
 EvAnnotation              *ev_annotation_text_markup_squiggly_new    (EvPage                    *page);
+EV_PUBLIC
 EvAnnotationTextMarkupType ev_annotation_text_markup_get_markup_type (EvAnnotationTextMarkup    *annot);
+EV_PUBLIC
 gboolean                   ev_annotation_text_markup_set_markup_type (EvAnnotationTextMarkup    *annot,
                                                                       EvAnnotationTextMarkupType markup_type);
 

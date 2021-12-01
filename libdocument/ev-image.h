@@ -27,6 +27,8 @@
 #include <glib-object.h>
 #include <gdk/gdk.h>
 
+#include "ev-macros.h"
+
 G_BEGIN_DECLS
 
 typedef struct _EvImage        EvImage;
@@ -50,16 +52,24 @@ struct _EvImageClass {
 	GObjectClass base_class;
 };
 
+EV_PUBLIC
 GType        ev_image_get_type         (void) G_GNUC_CONST;
+EV_PUBLIC
 EvImage     *ev_image_new              (gint             page,
 					gint             img_id);
+EV_PUBLIC
 EvImage     *ev_image_new_from_pixbuf  (GdkPixbuf       *pixbuf);
 
+EV_PUBLIC
 gint         ev_image_get_id           (EvImage         *image);
+EV_PUBLIC
 gint         ev_image_get_page         (EvImage         *image);
+EV_PUBLIC
 GdkPixbuf   *ev_image_get_pixbuf       (EvImage         *image);
+EV_PUBLIC
 const gchar *ev_image_save_tmp         (EvImage         *image,
 					GdkPixbuf       *pixbuf);
+EV_PUBLIC
 const gchar *ev_image_get_tmp_uri      (EvImage         *image);
 
 

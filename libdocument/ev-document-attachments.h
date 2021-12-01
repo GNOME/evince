@@ -28,6 +28,8 @@
 #include <glib-object.h>
 #include <glib.h>
 
+#include "ev-macros.h"
+
 G_BEGIN_DECLS
 
 #define EV_TYPE_DOCUMENT_ATTACHMENTS		(ev_document_attachments_get_type ())
@@ -49,9 +51,12 @@ struct _EvDocumentAttachmentsInterface
 	GList    *(* get_attachments) (EvDocumentAttachments *document_attachments);
 };
 
+EV_PUBLIC
 GType     ev_document_attachments_get_type        (void) G_GNUC_CONST;
 
+EV_PUBLIC
 gboolean  ev_document_attachments_has_attachments (EvDocumentAttachments *document_attachments);
+EV_PUBLIC
 GList    *ev_document_attachments_get_attachments (EvDocumentAttachments *document_attachments);
 
 G_END_DECLS

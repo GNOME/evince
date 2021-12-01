@@ -29,4 +29,15 @@
 #define EV_UNAVAILABLE(maj,min) G_UNAVAILABLE(maj,min)
 #endif
 
+#ifdef __has_attribute
+#if __has_attribute(__visibility__)
+#define EV_PUBLIC __attribute__((__visibility__("default"))) extern
+#endif
+#endif
+#ifndef EV_PUBLIC
+#define EV_PUBLIC extern
+#endif
+
+#define EV_PRIVATE EV_PUBLIC
+
 #endif /* #ifndef EV_MACROS_H */

@@ -28,6 +28,8 @@
 #include <glib-object.h>
 #include <glib.h>
 #include <gdk/gdk.h>
+
+#include "ev-macros.h"
 #include "ev-document.h"
 
 G_BEGIN_DECLS
@@ -70,7 +72,9 @@ struct _EvSelectionInterface
 						   EvRectangle      *points);
 };
 
+EV_PUBLIC
 GType           ev_selection_get_type             (void) G_GNUC_CONST;
+EV_PUBLIC
 void            ev_selection_render_selection     (EvSelection      *selection,
 						   EvRenderContext  *rc,
 						   cairo_surface_t **surface,
@@ -79,10 +83,12 @@ void            ev_selection_render_selection     (EvSelection      *selection,
 						   EvSelectionStyle  style,
 						   GdkColor         *text,
 						   GdkColor         *base);
+EV_PUBLIC
 gchar          *ev_selection_get_selected_text    (EvSelection      *selection,
 						   EvPage           *page,
 						   EvSelectionStyle  style,
 						   EvRectangle      *points);
+EV_PUBLIC
 cairo_region_t *ev_selection_get_selection_region (EvSelection      *selection,
 						   EvRenderContext  *rc,
 						   EvSelectionStyle  style,

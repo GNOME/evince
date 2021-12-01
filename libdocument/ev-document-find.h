@@ -29,6 +29,7 @@
 #include <glib-object.h>
 #include <glib.h>
 
+#include "ev-macros.h"
 #include "ev-document.h"
 
 G_BEGIN_DECLS
@@ -65,15 +66,19 @@ struct _EvDocumentFindInterface
 	EvFindOptions (*get_supported_options)   (EvDocumentFind *document_find);
 };
 
+EV_PUBLIC
 GType         ev_document_find_get_type               (void) G_GNUC_CONST;
+EV_PUBLIC
 GList        *ev_document_find_find_text              (EvDocumentFind *document_find,
 						       EvPage         *page,
 						       const gchar    *text,
 						       gboolean        case_sensitive);
+EV_PUBLIC
 GList        *ev_document_find_find_text_with_options (EvDocumentFind *document_find,
 						       EvPage         *page,
 						       const gchar    *text,
 						       EvFindOptions   options);
+EV_PUBLIC
 EvFindOptions ev_document_find_get_supported_options  (EvDocumentFind *document_find);
 
 G_END_DECLS

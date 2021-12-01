@@ -26,6 +26,7 @@
 
 #include <glib-object.h>
 
+#include "ev-macros.h"
 #include "ev-page.h"
 
 G_BEGIN_DECLS
@@ -55,29 +56,38 @@ struct _EvRenderContext
 };
 
 
+EV_PUBLIC
 GType            ev_render_context_get_type        (void) G_GNUC_CONST;
+EV_PUBLIC
 EvRenderContext *ev_render_context_new             (EvPage          *page,
 						    gint             rotation,
 						    gdouble          scale);
+EV_PUBLIC
 void             ev_render_context_set_page        (EvRenderContext *rc,
 						    EvPage          *page);
+EV_PUBLIC
 void             ev_render_context_set_rotation    (EvRenderContext *rc,
 						    gint             rotation);
+EV_PUBLIC
 void             ev_render_context_set_scale       (EvRenderContext *rc,
 						    gdouble          scale);
+EV_PUBLIC
 void             ev_render_context_set_target_size (EvRenderContext *rc,
                                                     int              target_width,
                                                     int              target_height);
+EV_PUBLIC
 void             ev_render_context_compute_scaled_size      (EvRenderContext *rc,
                                                              double           width_points,
                                                              double           height_points,
                                                              int             *scaled_width,
                                                              int             *scaled_height);
+EV_PUBLIC
 void             ev_render_context_compute_transformed_size (EvRenderContext *rc,
                                                              double	      width_points,
                                                              double	      height_points,
                                                              int	     *transformed_width,
                                                              int	     *transformed_height);
+EV_PUBLIC
 void             ev_render_context_compute_scales  (EvRenderContext *rc,
                                                     double           width_points,
                                                     double           height_points,

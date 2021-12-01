@@ -27,6 +27,8 @@
 
 #include <glib-object.h>
 
+#include "ev-macros.h"
+
 G_BEGIN_DECLS
 
 typedef struct _EvLinkDest        EvLinkDest;
@@ -52,22 +54,34 @@ typedef enum {
 	EV_LINK_DEST_TYPE_UNKNOWN
 } EvLinkDestType; 
 
+EV_PUBLIC
 GType           ev_link_dest_get_type       (void) G_GNUC_CONST;
 
+EV_PUBLIC
 EvLinkDestType  ev_link_dest_get_dest_type  (EvLinkDest  *self);
+EV_PUBLIC
 gint            ev_link_dest_get_page       (EvLinkDest  *self);
+EV_PUBLIC
 gdouble         ev_link_dest_get_top        (EvLinkDest  *self,
 					     gboolean    *change_top);
+EV_PUBLIC
 gdouble         ev_link_dest_get_left       (EvLinkDest  *self,
 					     gboolean    *change_left);
+EV_PUBLIC
 gdouble         ev_link_dest_get_bottom     (EvLinkDest  *self);
+EV_PUBLIC
 gdouble         ev_link_dest_get_right      (EvLinkDest  *self);
+EV_PUBLIC
 gdouble         ev_link_dest_get_zoom       (EvLinkDest  *self,
 					     gboolean    *change_zoom);
+EV_PUBLIC
 const gchar    *ev_link_dest_get_named_dest (EvLinkDest  *self);
+EV_PUBLIC
 const gchar    *ev_link_dest_get_page_label (EvLinkDest  *self);
 
+EV_PUBLIC
 EvLinkDest     *ev_link_dest_new_page       (gint         page);
+EV_PUBLIC
 EvLinkDest     *ev_link_dest_new_xyz        (gint         page,
 					     gdouble      left,
 					     gdouble      top,
@@ -75,21 +89,28 @@ EvLinkDest     *ev_link_dest_new_xyz        (gint         page,
 					     gboolean     change_left,
 					     gboolean     change_top,
 					     gboolean     change_zoom);
+EV_PUBLIC
 EvLinkDest     *ev_link_dest_new_fit        (gint         page);
+EV_PUBLIC
 EvLinkDest     *ev_link_dest_new_fith       (gint         page,
 					     gdouble      top,
 					     gboolean     change_top);
+EV_PUBLIC
 EvLinkDest     *ev_link_dest_new_fitv       (gint         page,
 					     gdouble      left,
 					     gboolean     change_left);
+EV_PUBLIC
 EvLinkDest     *ev_link_dest_new_fitr       (gint         page,
 					     gdouble      left,
 					     gdouble      bottom,
 					     gdouble      right,
 					     gdouble      top);
+EV_PUBLIC
 EvLinkDest     *ev_link_dest_new_named      (const gchar *named_dest);
+EV_PUBLIC
 EvLinkDest     *ev_link_dest_new_page_label (const gchar *page_label);
 
+EV_PUBLIC
 gboolean        ev_link_dest_equal          (EvLinkDest  *a,
                                              EvLinkDest  *b);
 

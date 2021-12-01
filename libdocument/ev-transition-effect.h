@@ -27,6 +27,8 @@
 
 #include <glib-object.h>
 
+#include "ev-macros.h"
+
 G_BEGIN_DECLS
 
 #define EV_TYPE_TRANSITION_EFFECT		  (ev_transition_effect_get_type ())
@@ -75,8 +77,10 @@ struct _EvTransitionEffectClass
 	GObjectClass parent_class;
 };
 
+EV_PUBLIC
 GType                 ev_transition_effect_get_type           (void) G_GNUC_CONST;
 
+EV_PUBLIC
 EvTransitionEffect   *ev_transition_effect_new                (EvTransitionEffectType  type,
 							       const gchar            *first_property_name,
 							       ...);

@@ -32,6 +32,7 @@
 #include <glib.h>
 #include <gdk/gdk.h>
 
+#include "ev-macros.h"
 #include "ev-document.h"
 
 G_BEGIN_DECLS
@@ -57,8 +58,11 @@ struct _EvDocumentSecurityInterface
 							const char         *password);
 };
 
+EV_PUBLIC
 GType    ev_document_security_get_type              (void);
+EV_PUBLIC
 gboolean ev_document_security_has_document_security (EvDocumentSecurity *document_security);
+EV_PUBLIC
 void     ev_document_security_set_password          (EvDocumentSecurity *document_security,
 						     const char         *password);
 

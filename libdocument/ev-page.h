@@ -26,6 +26,8 @@
 
 #include <glib-object.h>
 
+#include "ev-macros.h"
+
 G_BEGIN_DECLS
 
 #define EV_TYPE_PAGE              (ev_page_get_type())
@@ -54,8 +56,10 @@ struct _EvPageClass {
 	GObjectClass base_class;
 };
 
+EV_PUBLIC
 GType   ev_page_get_type (void) G_GNUC_CONST;
 
+EV_PUBLIC
 EvPage *ev_page_new      (gint index);
 
 G_END_DECLS

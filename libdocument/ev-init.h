@@ -26,12 +26,17 @@
 
 #include <glib.h>
 
+#include "ev-macros.h"
+
 G_BEGIN_DECLS
 
+EV_PUBLIC
 const gchar* ev_get_locale_dir (void);
 
+EV_PUBLIC
 gboolean    ev_init           (void);
 
+EV_PUBLIC
 void        ev_shutdown       (void);
 
 gboolean   _ev_is_initialized (void);

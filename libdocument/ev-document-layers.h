@@ -29,6 +29,7 @@
 #include <glib.h>
 #include <gtk/gtk.h>
 
+#include "ev-macros.h"
 #include "ev-layer.h"
 
 G_BEGIN_DECLS
@@ -69,14 +70,20 @@ struct _EvDocumentLayersInterface
 					    EvLayer          *layer);
 };
 
+EV_PUBLIC
 GType         ev_document_layers_get_type         (void) G_GNUC_CONST;
 
+EV_PUBLIC
 gboolean      ev_document_layers_has_layers       (EvDocumentLayers *document_layers);
+EV_PUBLIC
 GtkTreeModel *ev_document_layers_get_layers       (EvDocumentLayers *document_layers);
+EV_PUBLIC
 void          ev_document_layers_show_layer       (EvDocumentLayers *document_layers,
 						   EvLayer          *layer);
+EV_PUBLIC
 void          ev_document_layers_hide_layer       (EvDocumentLayers *document_layers,
 						   EvLayer          *layer);
+EV_PUBLIC
 gboolean      ev_document_layers_layer_is_visible (EvDocumentLayers *document_layers,
 						   EvLayer          *layer);
 

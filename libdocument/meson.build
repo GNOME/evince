@@ -144,9 +144,8 @@ libevdocument = shared_library(
   include_directories: top_inc,
   dependencies: deps,
   c_args: cflags,
-  link_args: lib_ldflags,
-  link_depends: lib_symbol_map,
   install: true,
+  gnu_symbol_visibility: 'hidden',
 )
 
 libevdocument_dep = declare_dependency(

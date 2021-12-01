@@ -27,6 +27,7 @@
 
 #include <glib-object.h>
 
+#include "ev-macros.h"
 #include "ev-document.h"
 #include "ev-annotation.h"
 #include "ev-mapping-list.h"
@@ -98,21 +99,30 @@ struct _EvDocumentAnnotationsInterface
 						 gdouble                 y);
 };
 
+EV_PUBLIC
 GType          ev_document_annotations_get_type             (void) G_GNUC_CONST;
+EV_PUBLIC
 EvMappingList *ev_document_annotations_get_annotations      (EvDocumentAnnotations *document_annots,
 							     EvPage                *page);
+EV_PUBLIC
 gboolean       ev_document_annotations_document_is_modified (EvDocumentAnnotations *document_annots);
+EV_PUBLIC
 void           ev_document_annotations_add_annotation       (EvDocumentAnnotations *document_annots,
 							     EvAnnotation          *annot,
 							     EvRectangle           *rect);
+EV_PUBLIC
 void           ev_document_annotations_remove_annotation    (EvDocumentAnnotations *document_annots,
                                                              EvAnnotation          *annot);
 
+EV_PUBLIC
 void           ev_document_annotations_save_annotation      (EvDocumentAnnotations *document_annots,
 							     EvAnnotation          *annot,
 							     EvAnnotationsSaveMask  mask);
+EV_PUBLIC
 gboolean       ev_document_annotations_can_add_annotation    (EvDocumentAnnotations *document_annots);
+EV_PUBLIC
 gboolean       ev_document_annotations_can_remove_annotation (EvDocumentAnnotations *document_annots);
+EV_PUBLIC
 EvAnnotationsOverMarkup ev_document_annotations_over_markup  (EvDocumentAnnotations *document_annots,
 							      EvAnnotation          *annot,
 							      gdouble                x,

@@ -25,6 +25,7 @@
 #ifndef EV_MAPPING_LIST_H
 #define EV_MAPPING_LIST_H
 
+#include "ev-macros.h"
 #include "ev-document.h"
 
 G_BEGIN_DECLS
@@ -32,31 +33,44 @@ G_BEGIN_DECLS
 typedef struct _EvMappingList EvMappingList;
 
 #define        EV_TYPE_MAPPING_LIST        (ev_mapping_list_get_type())
+EV_PUBLIC
 GType          ev_mapping_list_get_type    (void) G_GNUC_CONST;
 
+EV_PUBLIC
 EvMappingList *ev_mapping_list_new         (guint          page,
 					    GList         *list,
 					    GDestroyNotify data_destroy_func);
+EV_PUBLIC
 EvMappingList *ev_mapping_list_ref         (EvMappingList *mapping_list);
+EV_PUBLIC
 void           ev_mapping_list_unref       (EvMappingList *mapping_list);
 
+EV_PUBLIC
 guint          ev_mapping_list_get_page    (EvMappingList *mapping_list);
+EV_PUBLIC
 GList         *ev_mapping_list_get_list    (EvMappingList *mapping_list);
+EV_PUBLIC
 void           ev_mapping_list_remove      (EvMappingList *mapping_list,
 					    EvMapping     *mapping);
+EV_PUBLIC
 EvMapping     *ev_mapping_list_find        (EvMappingList *mapping_list,
 					    gconstpointer  data);
+EV_PUBLIC
 EvMapping     *ev_mapping_list_find_custom (EvMappingList *mapping_list,
 					    gconstpointer  data,
 					    GCompareFunc   func);
+EV_PUBLIC
 EvMapping     *ev_mapping_list_get         (EvMappingList *mapping_list,
 					    gdouble        x,
 					    gdouble        y);
+EV_PUBLIC
 gpointer       ev_mapping_list_get_data    (EvMappingList *mapping_list,
 					    gdouble        x,
 					    gdouble        y);
+EV_PUBLIC
 EvMapping     *ev_mapping_list_nth         (EvMappingList *mapping_list,
                                             guint          n);
+EV_PUBLIC
 guint          ev_mapping_list_length      (EvMappingList *mapping_list);
 
 G_END_DECLS

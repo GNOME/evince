@@ -24,6 +24,7 @@
 #include <glib-object.h>
 #include <cairo.h>
 
+#include "ev-macros.h"
 #include "ev-page.h"
 
 G_BEGIN_DECLS
@@ -48,8 +49,10 @@ struct _EvDocumentPrintInterface
 			     cairo_t         *cr);
 };
 
+EV_PUBLIC
 GType ev_document_print_get_type   (void) G_GNUC_CONST;
 
+EV_PUBLIC
 void  ev_document_print_print_page (EvDocumentPrint *document_print,
 				    EvPage          *page,
 				    cairo_t         *cr);
