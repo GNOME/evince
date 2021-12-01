@@ -29,6 +29,7 @@ libmdvi = static_library(
   'mdvi',
   sources: sources,
   include_directories: top_inc,
+  gnu_symbol_visibility: 'hidden',
 )
 
 libmdvi_dep = declare_dependency(

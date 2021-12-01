@@ -18,7 +18,8 @@ libunarr = static_library(
   'unarr',
   sources: sources,
   dependencies: zlib_dep,
-  c_args: [ '-DHAVE_ZLIB', '-DNDEBUG' ]
+  c_args: [ '-DHAVE_ZLIB', '-DNDEBUG' ],
+  gnu_symbol_visibility: 'hidden',
 )
 
 libunarr_dep = declare_dependency(
