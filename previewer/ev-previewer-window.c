@@ -3,6 +3,7 @@
  *
  * Copyright (C) 2009 Carlos Garcia Campos <carlosgc@gnome.org>
  * Copyright (C) 2018 Germán Poo-Caamaño <gpoo@gnome.org>
+ * Copyright © 2018, 2021 Christian Persch
  *
  * Evince is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by
@@ -21,6 +22,8 @@
 
 #include <config.h>
 
+#include <fcntl.h>
+
 #if GTKUNIXPRINT_ENABLED
 #include <gtk/gtkunixprint.h>
 #endif
@@ -34,6 +37,7 @@
 struct _EvPreviewerWindow {
 	GtkApplicationWindow base_instance;
 
+	EvJob            *job;
 	EvDocumentModel  *model;
 	EvDocument       *document;
 
@@ -48,15 +52,11 @@ struct _EvPreviewerWindow {
 #endif
 	gchar            *print_job_title;
 	gchar            *source_file;
+	int               source_fd;
 };
 
 struct _EvPreviewerWindowClass {
 	GtkApplicationWindowClass base_class;
-};
-
-enum {
-	PROP_0,
-	PROP_MODEL
 };
 
 #define MIN_SCALE 0.05409
@@ -64,7 +64,6 @@ enum {
 
 G_DEFINE_TYPE (EvPreviewerWindow, ev_previewer_window, GTK_TYPE_APPLICATION_WINDOW)
 
-#if GTKUNIXPRINT_ENABLED
 static void
 ev_previewer_window_error_dialog_run (EvPreviewerWindow *window,
 				      GError            *error)
@@ -82,7 +81,6 @@ ev_previewer_window_error_dialog_run (EvPreviewerWindow *window,
 	gtk_dialog_run (GTK_DIALOG (dialog));
 	gtk_widget_destroy (dialog);
 }
-#endif
 
 static void
 ev_previewer_window_close (GSimpleAction *action,
@@ -169,6 +167,7 @@ ev_previewer_window_focus_page_selector (GSimpleAction *action,
 }
 
 #if GTKUNIXPRINT_ENABLED
+
 static void
 ev_previewer_window_print_finished (GtkPrintJob       *print_job,
 				    EvPreviewerWindow *window,
@@ -186,15 +185,25 @@ static void
 ev_previewer_window_do_print (EvPreviewerWindow *window)
 {
 	GtkPrintJob *job;
+	gboolean     rv = FALSE;
 	GError      *error = NULL;
 
 	job = gtk_print_job_new (window->print_job_title ?
 				 window->print_job_title :
-				 window->source_file,
+				 (window->source_file ? window->source_file : _("Evince Document Viewer")),
 				 window->printer,
 				 window->print_settings,
 				 window->print_page_setup);
-	if (gtk_print_job_set_source_file (job, window->source_file, &error)) {
+
+        if (window->source_fd != -1)
+                rv = gtk_print_job_set_source_fd (job, window->source_fd, &error);
+        else if (window->source_file != NULL)
+                rv = gtk_print_job_set_source_file (job, window->source_file, &error);
+        else
+                g_set_error_literal (&error, GTK_PRINT_ERROR, GTK_PRINT_ERROR_GENERAL,
+                                     "Neither file nor FD to print.");
+
+        if (rv) {
 		gtk_print_job_send (job,
 				    (GtkPrintJobCompleteFunc)ev_previewer_window_print_finished,
 				    window, NULL);
@@ -220,6 +229,7 @@ ev_previewer_window_enumerate_finished (EvPreviewerWindow *window)
 			     _("The selected printer “%s” could not be found"),
 			     gtk_print_settings_get_printer (window->print_settings));
 
+		ev_previewer_window_error_dialog_run (window, error);
 		g_error_free (error);
 	}
 }
@@ -260,7 +270,8 @@ ev_previewer_window_print (GSimpleAction *action,
 				(GDestroyNotify)ev_previewer_window_enumerate_finished,
 				FALSE);
 }
-#endif
+
+#endif /* GTKUNIXPRINT_ENABLED */
 
 static const GActionEntry actions[] = {
 #if GTKUNIXPRINT_ENABLED
@@ -315,23 +326,39 @@ view_sizing_mode_changed (EvDocumentModel   *model,
 }
 
 static void
-ev_previewer_window_set_document (EvPreviewerWindow *window,
-				  GParamSpec        *pspec,
-				  EvDocumentModel   *model)
+load_job_finished_cb (EvJob             *job,
+                      EvPreviewerWindow *window)
 {
-	EvDocument *document = ev_document_model_get_document (model);
+        g_assert (job == window->job);
 
-	window->document = g_object_ref (document);
+        if (ev_job_is_failed (job)) {
+                ev_previewer_window_error_dialog_run (window, job->error);
 
-	g_signal_connect (model, "notify::sizing-mode",
-			  G_CALLBACK (view_sizing_mode_changed),
-			  window);
+                g_object_unref (window->job);
+                window->job = NULL;
+                return;
+        }
+
+        window->document = g_object_ref (job->document);
+
+        g_object_unref (window->job);
+        window->job = NULL;
+
+        ev_document_model_set_document (window->model, window->document);
+        g_signal_connect (window->model, "notify::sizing-mode",
+                          G_CALLBACK (view_sizing_mode_changed),
+                          window);
 }
 
 static void
 ev_previewer_window_dispose (GObject *object)
 {
 	EvPreviewerWindow *window = EV_PREVIEWER_WINDOW (object);
+
+        if (window->job) {
+                g_object_unref (window->job);
+                window->job = NULL;
+        }
 
 	if (window->model) {
 		g_object_unref (window->model);
@@ -370,34 +397,26 @@ ev_previewer_window_dispose (GObject *object)
                 window->source_file = NULL;
         }
 
+        if (window->source_fd != -1) {
+                close (window->source_fd);
+                window->source_fd = -1;
+        }
+
 	G_OBJECT_CLASS (ev_previewer_window_parent_class)->dispose (object);
 }
 
 static void
 ev_previewer_window_init (EvPreviewerWindow *window)
 {
+	window->source_fd = -1;
+
 	gtk_window_set_default_size (GTK_WINDOW (window), 600, 600);
 
 	g_action_map_add_action_entries (G_ACTION_MAP (window),
 					 actions, G_N_ELEMENTS (actions),
 					 window);
-}
 
-static void
-ev_previewer_window_set_property (GObject      *object,
-				  guint         prop_id,
-				  const GValue *value,
-				  GParamSpec   *pspec)
-{
-	EvPreviewerWindow *window = EV_PREVIEWER_WINDOW (object);
-
-	switch (prop_id) {
-	case PROP_MODEL:
-		window->model = g_value_dup_object (value);
-		break;
-	default:
-		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
-	}
+	gtk_window_set_default_size (GTK_WINDOW (window), 600, 600);
 }
 
 static gboolean
@@ -421,31 +440,24 @@ _gtk_css_provider_load_from_resource (GtkCssProvider *provider,
         return retval;
 }
 
-static GObject *
-ev_previewer_window_constructor (GType                  type,
-				 guint                  n_construct_properties,
-				 GObjectConstructParam *construct_params)
+static void
+ev_previewer_window_constructed (GObject *object)
 {
-	GObject           *object;
-	EvPreviewerWindow *window;
+	EvPreviewerWindow *window = EV_PREVIEWER_WINDOW (object);
 	GtkWidget         *vbox;
 	GtkWidget         *swindow;
 	GError            *error = NULL;
 	gdouble            dpi;
         GtkCssProvider    *css_provider;
 
-	object = G_OBJECT_CLASS (ev_previewer_window_parent_class)->constructor (type,
-										 n_construct_properties,
-										 construct_params);
-	window = EV_PREVIEWER_WINDOW (object);
+	G_OBJECT_CLASS (ev_previewer_window_parent_class)->constructed (object);
+
+	window->model = ev_document_model_new ();
 
 	dpi = ev_document_misc_get_widget_dpi (GTK_WIDGET (window));
 	ev_document_model_set_min_scale (window->model, MIN_SCALE * dpi / 72.0);
 	ev_document_model_set_max_scale (window->model, MAX_SCALE * dpi / 72.0);
 	ev_document_model_set_sizing_mode (window->model, EV_SIZING_AUTOMATIC);
-	g_signal_connect_swapped (window->model, "notify::document",
-				  G_CALLBACK (ev_previewer_window_set_document),
-				  window);
 
         css_provider = gtk_css_provider_new ();
         _gtk_css_provider_load_from_resource (css_provider,
@@ -491,8 +503,6 @@ ev_previewer_window_constructor (GType                  type,
 
 	gtk_container_add (GTK_CONTAINER (window), vbox);
 	gtk_widget_show (vbox);
-
-	return object;
 }
 
 
@@ -501,99 +511,188 @@ ev_previewer_window_class_init (EvPreviewerWindowClass *klass)
 {
 	GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
 
-	gobject_class->constructor = ev_previewer_window_constructor;
-	gobject_class->set_property = ev_previewer_window_set_property;
+	gobject_class->constructed = ev_previewer_window_constructed;
 	gobject_class->dispose = ev_previewer_window_dispose;
-
-	g_object_class_install_property (gobject_class,
-					 PROP_MODEL,
-					 g_param_spec_object ("model",
-							      "Model",
-							      "The document model",
-							      EV_TYPE_DOCUMENT_MODEL,
-							      G_PARAM_WRITABLE |
-							      G_PARAM_CONSTRUCT_ONLY));
 }
 
 /* Public methods */
 EvPreviewerWindow *
-ev_previewer_window_new (EvDocumentModel *model)
+ev_previewer_window_new (void)
 {
-	return g_object_new (EV_TYPE_PREVIEWER_WINDOW, 
+	return g_object_new (EV_TYPE_PREVIEWER_WINDOW,
                              "application", g_application_get_default (),
-                             "model", model,
                              NULL);
 }
 
 void
-ev_previewer_window_set_print_settings (EvPreviewerWindow *window,
-					const gchar       *print_settings)
+ev_previewer_window_set_job (EvPreviewerWindow *window,
+                             EvJob             *job)
 {
-	if (window->print_settings)
-		g_object_unref (window->print_settings);
-	if (window->print_page_setup)
-		g_object_unref (window->print_page_setup);
-	if (window->print_job_title)
-		g_free (window->print_job_title);
+        g_return_if_fail (EV_IS_PREVIEWER_WINDOW (window));
+        g_return_if_fail (EV_IS_JOB (job));
 
-	if (print_settings && g_file_test (print_settings, G_FILE_TEST_IS_REGULAR)) {
-		GKeyFile *key_file;
-		GError   *error = NULL;
+        g_clear_object (&window->job);
+        window->job = g_object_ref (job);
 
-		key_file = g_key_file_new ();
-		g_key_file_load_from_file (key_file,
-					   print_settings,
-					   G_KEY_FILE_KEEP_COMMENTS |
-					   G_KEY_FILE_KEEP_TRANSLATIONS,
-					   &error);
-		if (!error) {
-			GtkPrintSettings *psettings;
-			GtkPageSetup     *psetup;
-			gchar            *job_name;
+        g_signal_connect_object (window->job, "finished",
+                                 G_CALLBACK (load_job_finished_cb),
+                                 window, 0);
+        ev_job_scheduler_push_job (window->job, EV_JOB_PRIORITY_NONE);
+}
 
-			psettings = gtk_print_settings_new_from_key_file (key_file,
-									  "Print Settings",
-									  NULL);
-			window->print_settings = psettings ? psettings : gtk_print_settings_new ();
+static gboolean
+ev_previewer_window_set_print_settings_take_file (EvPreviewerWindow *window,
+                                                  GMappedFile       *file,
+                                                  GError           **error)
+{
+        GBytes           *bytes;
+        GKeyFile         *key_file;
+        GtkPrintSettings *psettings;
+        GtkPageSetup     *psetup;
+        char             *job_name;
+        gboolean          rv;
 
-			psetup = gtk_page_setup_new_from_key_file (key_file,
-								   "Page Setup",
-								   NULL);
-			window->print_page_setup = psetup ? psetup : gtk_page_setup_new ();
+        g_clear_object (&window->print_settings);
+        g_clear_object (&window->print_page_setup);
+        g_clear_pointer (&window->print_job_title, g_free);
 
-			job_name = g_key_file_get_string (key_file,
-							  "Print Job", "title",
-							  NULL);
-			if (job_name) {
-				window->print_job_title = job_name;
-				gtk_window_set_title (GTK_WINDOW (window), job_name);
-			}
-		} else {
-			window->print_settings = gtk_print_settings_new ();
-			window->print_page_setup = gtk_page_setup_new ();
-			g_error_free (error);
-		}
+        bytes = g_mapped_file_get_bytes (file);
+        key_file = g_key_file_new ();
+        rv = g_key_file_load_from_bytes (key_file, bytes, G_KEY_FILE_NONE, error);
+        g_bytes_unref (bytes);
+        g_mapped_file_unref (file);
 
-		g_key_file_free (key_file);
-	} else {
-		window->print_settings = gtk_print_settings_new ();
-		window->print_page_setup = gtk_page_setup_new ();
-	}
+        if (!rv) {
+                window->print_settings = gtk_print_settings_new ();
+                window->print_page_setup = gtk_page_setup_new ();
+                window->print_job_title = g_strdup (_("Evince"));
+                return FALSE;
+        }
+
+        psettings = gtk_print_settings_new_from_key_file (key_file,
+                                                          "Print Settings",
+                                                          NULL);
+        window->print_settings = psettings ? psettings : gtk_print_settings_new ();
+
+        psetup = gtk_page_setup_new_from_key_file (key_file,
+                                                   "Page Setup",
+                                                   NULL);
+        window->print_page_setup = psetup ? psetup : gtk_page_setup_new ();
+
+        job_name = g_key_file_get_string (key_file,
+                                          "Print Job", "title",
+                                          NULL);
+        if (job_name && job_name[0]) {
+                window->print_job_title = job_name;
+                gtk_window_set_title (GTK_WINDOW (window), job_name);
+        } else {
+                g_free (job_name);
+                window->print_job_title = g_strdup (_("Evince Document Viewer"));
+        }
+
+        g_key_file_free (key_file);
+
+        return TRUE;
+}
+
+gboolean
+ev_previewer_window_set_print_settings (EvPreviewerWindow *window,
+					const gchar       *print_settings,
+                                        GError           **error)
+{
+        GMappedFile *file;
+
+        g_return_val_if_fail (EV_IS_PREVIEWER_WINDOW (window), FALSE);
+        g_return_val_if_fail (print_settings != NULL, FALSE);
+        g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
+
+        file = g_mapped_file_new (print_settings, FALSE, error);
+        if (file == NULL)
+                return FALSE;
+
+        return ev_previewer_window_set_print_settings_take_file (window, file, error);
+}
+
+/**
+ * ev_previewer_window_set_print_settings_fd:
+ * @window:
+ * @fd:
+ * @error:
+ *
+ * Sets the print settings from FD.
+ *
+ * Note that this function takes ownership of @fd.
+ */
+gboolean
+ev_previewer_window_set_print_settings_fd (EvPreviewerWindow *window,
+                                           int                fd,
+                                           GError           **error)
+{
+        GMappedFile *file;
+
+        g_return_val_if_fail (EV_IS_PREVIEWER_WINDOW (window), FALSE);
+        g_return_val_if_fail (fd != -1, FALSE);
+        g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
+
+        file = g_mapped_file_new_from_fd (fd, FALSE, error);
+        if (file == NULL)
+                return FALSE;
+
+        return ev_previewer_window_set_print_settings_take_file (window, file, error);
 }
 
 void
 ev_previewer_window_set_source_file (EvPreviewerWindow *window,
 				     const gchar       *source_file)
 {
-	if (window->source_file)
-		g_free (window->source_file);
+        g_return_if_fail (EV_IS_PREVIEWER_WINDOW (window));
+
+        g_free (window->source_file);
 	window->source_file = g_strdup (source_file);
 }
 
 EvDocumentModel *
 ev_previewer_window_get_document_model (EvPreviewerWindow *window)
 {
-	g_return_val_if_fail (EV_PREVIEWER_WINDOW (window), NULL);
+        g_return_val_if_fail (EV_IS_PREVIEWER_WINDOW (window), NULL);
 
-	return window->model;
+        return window->model;
+}
+
+/**
+ * ev_previewer_window_set_source_fd:
+ * @window:
+ * @fd:
+ *
+ * Sets the source document FD.
+ *
+ * Note that this function takes ownership of @fd.
+ *
+ * Returns: %TRUE on success
+ */
+gboolean
+ev_previewer_window_set_source_fd (EvPreviewerWindow *window,
+                                   int                fd,
+                                   GError           **error)
+{
+        int nfd;
+
+        g_return_val_if_fail (EV_IS_PREVIEWER_WINDOW (window), FALSE);
+        g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
+
+        nfd = fcntl (fd, F_DUPFD_CLOEXEC, 3);
+        if (nfd == -1) {
+                int errsv = errno;
+                g_set_error (error, G_IO_ERROR, g_io_error_from_errno (errsv),
+                             "Failed to duplicate file descriptor: %s",
+                             g_strerror (errsv));
+                return FALSE;
+        }
+
+        if (window->source_fd != -1)
+                close (window->source_fd);
+
+        window->source_fd = fd;
+
+        return TRUE;
 }
