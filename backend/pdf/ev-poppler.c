@@ -30,6 +30,7 @@
 #include <poppler.h>
 #include <poppler-document.h>
 #include <poppler-page.h>
+#include <poppler-features.h>
 #ifdef HAVE_CAIRO_PDF
 #include <cairo-pdf.h>
 #endif
@@ -64,6 +65,10 @@
 
 #if (defined (HAVE_CAIRO_PDF) || defined (HAVE_CAIRO_PS))
 #define HAVE_CAIRO_PRINT
+#endif
+
+#if POPPLER_CHECK_VERSION (21, 12, 0)
+#define HAVE_POPPLER_LOAD_FD
 #endif
 
 typedef struct {
@@ -313,6 +318,32 @@ pdf_document_load_gfile (EvDocument          *document,
 
         return TRUE;
 }
+
+#ifdef HAVE_POPPLER_LOAD_FD
+static gboolean
+pdf_document_load_fd (EvDocument          *document,
+                      int                  fd,
+                      EvDocumentLoadFlags  flags,
+                      GCancellable        *cancellable,
+                      GError             **error)
+{
+        GError *err = NULL;
+        PdfDocument *pdf_document = PDF_DOCUMENT (document);
+
+        /* Note: this consumes @fd */
+        pdf_document->document =
+                poppler_document_new_from_fd (fd,
+                                              pdf_document->password,
+                                              &err);
+
+        if (pdf_document->document == NULL) {
+                convert_error (err, error);
+                return FALSE;
+        }
+
+        return TRUE;
+}
+#endif
 
 static int
 pdf_document_get_n_pages (EvDocument *document)
@@ -767,6 +798,9 @@ pdf_document_class_init (PdfDocumentClass *klass)
 	ev_document_class->get_info = pdf_document_get_info;
 	ev_document_class->get_backend_info = pdf_document_get_backend_info;
 	ev_document_class->support_synctex = pdf_document_support_synctex;
+#ifdef HAVE_POPPLER_LOAD_FD
+        ev_document_class->load_fd = pdf_document_load_fd;
+#endif
 }
 
 /* EvDocumentSecurity */
