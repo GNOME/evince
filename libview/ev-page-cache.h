@@ -17,8 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-#if !defined (__EV_EVINCE_VIEW_H_INSIDE__) && !defined (EVINCE_COMPILATION)
-#error "Only <evince-view.h> can be included directly."
+#if !defined (EVINCE_COMPILATION)
+#error "This is a private header."
 #endif
 
 #ifndef EV_PAGE_CACHE_H
