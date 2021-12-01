@@ -30,7 +30,7 @@ typedef struct _EvSchedulerJob {
 G_LOCK_DEFINE_STATIC(job_list);
 static GSList *job_list = NULL;
 
-static EvJob * volatile running_job = NULL;
+static EvJob *running_job = NULL;
 
 static gpointer ev_job_thread_proxy               (gpointer        data);
 static void     ev_scheduler_thread_job_cancelled (EvSchedulerJob *job,
