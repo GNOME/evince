@@ -43,103 +43,152 @@ G_BEGIN_DECLS
 typedef struct _EvView       EvView;
 typedef struct _EvViewClass  EvViewClass;
 
+EV_PUBLIC
 GType		ev_view_get_type	    (void) G_GNUC_CONST;
 
+EV_PUBLIC
 GtkWidget*	ev_view_new		    (void);
+EV_PUBLIC
 void		ev_view_set_model	    (EvView          *view,
 					     EvDocumentModel *model);
 EV_DEPRECATED
+EV_PUBLIC
 void 		ev_view_set_loading         (EvView 	     *view,
 					     gboolean         loading);
+EV_PUBLIC
 gboolean        ev_view_is_loading          (EvView          *view);
+EV_PUBLIC
 void            ev_view_reload              (EvView          *view);
+EV_PUBLIC
 void            ev_view_set_page_cache_size (EvView          *view,
 					     gsize            cache_size);
 
+EV_PUBLIC
 void            ev_view_set_allow_links_change_zoom (EvView  *view,
                                                      gboolean allowed);
+EV_PUBLIC
 gboolean        ev_view_get_allow_links_change_zoom (EvView  *view);
 
 /* Clipboard */
+EV_PUBLIC
 void		ev_view_copy		  (EvView         *view);
+EV_PUBLIC
 void            ev_view_copy_link_address (EvView         *view,
 					   EvLinkAction   *action);
+EV_PUBLIC
 void		ev_view_select_all	  (EvView         *view);
+EV_PUBLIC
 gboolean        ev_view_get_has_selection (EvView         *view);
+EV_PUBLIC
 char *   ev_view_get_selected_text (EvView  *view);
 
 /* Page size */
+EV_PUBLIC
 gboolean	ev_view_can_zoom_in       (EvView         *view);
+EV_PUBLIC
 void		ev_view_zoom_in		  (EvView         *view);
+EV_PUBLIC
 gboolean        ev_view_can_zoom_out      (EvView         *view);
+EV_PUBLIC
 void		ev_view_zoom_out	  (EvView         *view);
 
 /* Find */
+EV_PUBLIC
 void            ev_view_find_started              (EvView         *view,
 						   EvJobFind      *job);
+EV_PUBLIC
 void            ev_view_find_restart              (EvView         *view,
                                                    gint            page);
+EV_PUBLIC
 void            ev_view_find_next                 (EvView         *view);
+EV_PUBLIC
 void            ev_view_find_previous             (EvView         *view);
+EV_PUBLIC
 void            ev_view_find_set_result           (EvView         *view,
 						   gint            page,
 						   gint            result);
+EV_PUBLIC
 void            ev_view_find_search_changed       (EvView         *view);
+EV_PUBLIC
 void     	ev_view_find_set_highlight_search (EvView         *view,
 						   gboolean        value);
 EV_DEPRECATED_FOR(ev_view_find_started)
+EV_PUBLIC
 void            ev_view_find_changed              (EvView         *view,
 						   GList         **results,
 						   gint            page);
+EV_PUBLIC
 void            ev_view_find_cancel               (EvView         *view);
 
 /* Synctex */
+EV_PUBLIC
 void            ev_view_highlight_forward_search (EvView       *view,
 						  EvSourceLink *link);
 
 /* Cursor */
+EV_PUBLIC
 void           ev_view_hide_cursor        (EvView         *view);
+EV_PUBLIC
 void           ev_view_show_cursor        (EvView         *view);
 
 /* Navigation */
 EV_DEPRECATED_FOR(g_signal_emit_by_name)
+EV_PUBLIC
 void	       ev_view_scroll             (EvView         *view,
 	                                   GtkScrollType   scroll,
 					   gboolean        horizontal);
+EV_PUBLIC
 void	       ev_view_handle_link        (EvView         *view,
 					   EvLink         *link);
+EV_PUBLIC
 gboolean       ev_view_next_page	  (EvView         *view);
+EV_PUBLIC
 gboolean       ev_view_previous_page	  (EvView         *view);
 
+EV_PUBLIC
 void	       ev_view_autoscroll_start   (EvView *view);
+EV_PUBLIC
 void           ev_view_autoscroll_stop    (EvView *view);
 
+EV_PUBLIC
 gboolean       ev_view_get_page_extents   (EvView       *view,
                                            gint          page,
                                            GdkRectangle *page_area,
                                            GtkBorder    *border);
+EV_PUBLIC
 gboolean       ev_view_get_page_extents_for_border (EvView       *view,
                                                     gint          page,
                                                     GtkBorder    *border,
                                                     GdkRectangle *page_area);
 /* Annotations */
+EV_PUBLIC
 void           ev_view_focus_annotation      (EvView          *view,
 					      EvMapping       *annot_mapping);
+EV_PUBLIC
 void           ev_view_begin_add_annotation  (EvView          *view,
 					      EvAnnotationType annot_type);
+EV_PUBLIC
 void           ev_view_cancel_add_annotation (EvView          *view);
+EV_PUBLIC
 void           ev_view_remove_annotation     (EvView          *view,
 					      EvAnnotation    *annot);
+EV_PUBLIC
 gboolean       ev_view_add_text_markup_annotation_for_selected_text (EvView  *view);
+EV_PUBLIC
 void           ev_view_set_enable_spellchecking (EvView *view,
                                                  gboolean spellcheck);
+EV_PUBLIC
 gboolean       ev_view_get_enable_spellchecking (EvView *view);
 
 /* Caret navigation */
+EV_PUBLIC
 gboolean       ev_view_supports_caret_navigation    (EvView  *view);
+EV_PUBLIC
 gboolean       ev_view_is_caret_navigation_enabled  (EvView  *view);
+EV_PUBLIC
 void           ev_view_set_caret_navigation_enabled (EvView  *view,
                                                      gboolean enabled);
+EV_PUBLIC
 void           ev_view_set_caret_cursor_position    (EvView  *view,
                                                      guint    page,
                                                      guint    offset);

@@ -41,17 +41,24 @@ G_BEGIN_DECLS
 typedef struct _EvViewPresentation       EvViewPresentation;
 typedef struct _EvViewPresentationClass  EvViewPresentationClass;
 
+EV_PUBLIC
 GType		ev_view_presentation_get_type	      (void) G_GNUC_CONST;
 
+EV_PUBLIC
 GtkWidget      *ev_view_presentation_new	      (EvDocument         *document,
 						       guint               current_page,
 						       guint               rotation,
 						       gboolean            inverted_colors);
+EV_PUBLIC
 guint           ev_view_presentation_get_current_page (EvViewPresentation *pview);
+EV_PUBLIC
 void            ev_view_presentation_next_page        (EvViewPresentation *pview);
+EV_PUBLIC
 void            ev_view_presentation_previous_page    (EvViewPresentation *pview);
+EV_PUBLIC
 void            ev_view_presentation_set_rotation     (EvViewPresentation *pview,
                                                        gint                rotation);
+EV_PUBLIC
 guint           ev_view_presentation_get_rotation     (EvViewPresentation *pview);
 
 G_END_DECLS

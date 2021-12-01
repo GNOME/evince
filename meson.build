@@ -131,9 +131,6 @@ endif
 
 add_project_arguments(common_flags, language: 'c')
 
-lib_symbol_map = join_paths(meson.current_source_dir(), 'lib-symbol.map')
-lib_ldflags = cc.get_supported_link_arguments('-Wl,--version-script,' + lib_symbol_map)
-
 gnome = import('gnome')
 i18n = import('i18n')
 pkg = import('pkgconfig')

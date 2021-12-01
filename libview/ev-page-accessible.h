@@ -20,6 +20,10 @@
  * Author: Alejandro Piñeiro Iglesias <apinheiro@igalia.com>
  */
 
+#if !defined (EVINCE_COMPILATION)
+#error "This is a private header."
+#endif
+
 #ifndef __EV_PAGE_ACCESSIBLE_H__
 #define __EV_PAGE_ACCESSIBLE_H__
 

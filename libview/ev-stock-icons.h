@@ -30,6 +30,8 @@
 
 #include <gdk/gdk.h>
 
+#include <evince-document.h>
+
 G_BEGIN_DECLS
 
 /* Evince stock icons */
@@ -54,8 +56,11 @@ G_BEGIN_DECLS
 #define EV_STOCK_VIEW_SIDEBAR           "view-sidebar-symbolic"
 #define EV_STOCK_OUTLINE                "outline-symbolic"
 
+EV_PUBLIC
 void ev_stock_icons_init       (void);
+EV_PUBLIC
 void ev_stock_icons_shutdown   (void);
+EV_PUBLIC
 void ev_stock_icons_set_screen (GdkScreen *screen);
 
 G_END_DECLS

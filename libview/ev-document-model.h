@@ -30,6 +30,8 @@
 G_BEGIN_DECLS
 
 #define EV_TYPE_DOCUMENT_MODEL (ev_document_model_get_type ())
+
+EV_PUBLIC
 G_DECLARE_FINAL_TYPE(EvDocumentModel, ev_document_model, EV, DOCUMENT_MODEL, GObject)
 
 /**
@@ -54,57 +56,88 @@ typedef enum {
 	EV_PAGE_LAYOUT_AUTOMATIC
 } EvPageLayout;
 
+EV_PUBLIC
 EvDocumentModel *ev_document_model_new               (void);
+EV_PUBLIC
 EvDocumentModel *ev_document_model_new_with_document (EvDocument      *document);
 
+EV_PUBLIC
 void             ev_document_model_set_document      (EvDocumentModel *model,
 						      EvDocument      *document);
+EV_PUBLIC
 EvDocument      *ev_document_model_get_document      (EvDocumentModel *model);
+EV_PUBLIC
 void             ev_document_model_set_page          (EvDocumentModel *model,
 						      gint             page);
+EV_PUBLIC
 void             ev_document_model_set_page_by_label (EvDocumentModel *model,
 						      const gchar     *page_label);
+EV_PUBLIC
 gint             ev_document_model_get_page          (EvDocumentModel *model);
+EV_PUBLIC
 void             ev_document_model_set_scale         (EvDocumentModel *model,
 						      gdouble          scale);
+EV_PUBLIC
 gdouble          ev_document_model_get_scale         (EvDocumentModel *model);
+EV_PUBLIC
 void             ev_document_model_set_max_scale     (EvDocumentModel *model,
 						      gdouble          max_scale);
+EV_PUBLIC
 gdouble          ev_document_model_get_max_scale     (EvDocumentModel *model);
+EV_PUBLIC
 void             ev_document_model_set_min_scale     (EvDocumentModel *model,
 						      gdouble          min_scale);
+EV_PUBLIC
 gdouble          ev_document_model_get_min_scale     (EvDocumentModel *model);
+EV_PUBLIC
 void             ev_document_model_set_sizing_mode   (EvDocumentModel *model,
 						      EvSizingMode     mode);
+EV_PUBLIC
 EvSizingMode     ev_document_model_get_sizing_mode   (EvDocumentModel *model);
+EV_PUBLIC
 void             ev_document_model_set_page_layout   (EvDocumentModel *model,
 						     EvPageLayout     layout);
+EV_PUBLIC
 EvPageLayout	 ev_document_model_get_page_layout   (EvDocumentModel *model);
+EV_PUBLIC
 void             ev_document_model_set_rotation      (EvDocumentModel *model,
 						      gint             rotation);
+EV_PUBLIC
 gint             ev_document_model_get_rotation      (EvDocumentModel *model);
+EV_PUBLIC
 void           ev_document_model_set_inverted_colors (EvDocumentModel *model,
 						      gboolean         inverted_colors);
+EV_PUBLIC
 gboolean       ev_document_model_get_inverted_colors (EvDocumentModel *model);
+EV_PUBLIC
 void             ev_document_model_set_continuous    (EvDocumentModel *model,
 						      gboolean         continuous);
+EV_PUBLIC
 gboolean         ev_document_model_get_continuous    (EvDocumentModel *model);
+EV_PUBLIC
 void             ev_document_model_set_dual_page_odd_pages_left (EvDocumentModel *model,
 								 gboolean         odd_left);
+EV_PUBLIC
 gboolean         ev_document_model_get_dual_page_odd_pages_left (EvDocumentModel *model);
+EV_PUBLIC
 void             ev_document_model_set_rtl (EvDocumentModel *model,
                                             gboolean         rtl);
+EV_PUBLIC
 gboolean         ev_document_model_get_rtl (EvDocumentModel *model);
+EV_PUBLIC
 void             ev_document_model_set_fullscreen    (EvDocumentModel *model,
 						      gboolean         fullscreen);
+EV_PUBLIC
 gboolean         ev_document_model_get_fullscreen    (EvDocumentModel *model);
 
 /* deprecated */
 
 EV_DEPRECATED_FOR(ev_document_model_set_page_layout)
+EV_PUBLIC
 void             ev_document_model_set_dual_page     (EvDocumentModel *model,
 						      gboolean         dual_page);
 EV_DEPRECATED_FOR(ev_document_model_get_page_layout)
+EV_PUBLIC
 gboolean         ev_document_model_get_dual_page     (EvDocumentModel *model);
 
 G_END_DECLS
