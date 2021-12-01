@@ -25,6 +25,7 @@
 #include <libdocument/ev-async-renderer.h>
 #include <libdocument/ev-attachment.h>
 #include <libdocument/ev-backends-manager.h>
+#include <libdocument/ev-document-annotations.h>
 #include <libdocument/ev-document-attachments.h>
 #include <libdocument/ev-document-factory.h>
 #include <libdocument/ev-document-find.h>
@@ -34,6 +35,7 @@
 #include <libdocument/ev-document-images.h>
 #include <libdocument/ev-document-info.h>
 #include <libdocument/ev-document-layers.h>
+#include <libdocument/ev-document-media.h>
 #include <libdocument/ev-document-print.h>
 #include <libdocument/ev-document-links.h>
 #include <libdocument/ev-document-misc.h>
@@ -51,6 +53,7 @@
 #include <libdocument/ev-link-dest.h>
 #include <libdocument/ev-link.h>
 #include <libdocument/ev-mapping-list.h>
+#include <libdocument/ev-media.h>
 #include <libdocument/ev-page.h>
 #include <libdocument/ev-render-context.h>
 #include <libdocument/ev-selection.h>
