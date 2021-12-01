@@ -1,4 +1,3 @@
-/* -*- Mode: C; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8; c-indent-level: 8 -*- */
 /*
  *  Copyright (C) 2009 Carlos Garcia Campos
  *  Copyright (C) 2000-2003 Marco Pesenti Gritti
@@ -130,6 +129,11 @@ struct _EvDocumentClass
 						     GError             **error);
 	cairo_surface_t * (* get_thumbnail_surface) (EvDocument          *document,
 						     EvRenderContext     *rc);
+        gboolean          (* load_fd)               (EvDocument          *document,
+						     int                  fd,
+						     EvDocumentLoadFlags  flags,
+						     GCancellable        *cancellable,
+						     GError             **error);
 };
 
 EV_PUBLIC
@@ -185,6 +189,12 @@ gboolean         ev_document_load_stream          (EvDocument         *document,
 EV_PUBLIC
 gboolean         ev_document_load_gfile           (EvDocument         *document,
                                                    GFile              *file,
+                                                   EvDocumentLoadFlags flags,
+                                                   GCancellable       *cancellable,
+                                                   GError            **error);
+EV_PUBLIC
+gboolean         ev_document_load_fd              (EvDocument         *document,
+                                                   int                 fd,
                                                    EvDocumentLoadFlags flags,
                                                    GCancellable       *cancellable,
                                                    GError            **error);

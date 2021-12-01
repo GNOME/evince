@@ -1,6 +1,5 @@
-/* -*- Mode: C; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8; c-indent-level: 8 -*- */
 /*
- *  Copyright (C) 2005, Red Hat, Inc. 
+ *  Copyright (C) 2005, Red Hat, Inc.
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -51,6 +50,12 @@ EvDocument* ev_document_factory_get_document_for_stream (GInputStream *stream,
                                                          EvDocumentLoadFlags flags,
                                                          GCancellable *cancellable,
                                                          GError **error);
+EV_PUBLIC
+EvDocument* ev_document_factory_get_document_for_fd (int fd,
+                                                     const char *mime_type,
+                                                     EvDocumentLoadFlags flags,
+                                                     GCancellable *cancellable,
+                                                     GError **error);
 
 EV_PUBLIC
 void 	    ev_document_factory_add_filters  (GtkWidget *chooser, EvDocument *document);
