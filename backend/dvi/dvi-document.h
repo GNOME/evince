@@ -19,6 +19,7 @@
 #ifndef __DVI_DOCUMENT_H__
 #define __DVI_DOCUMENT_H__
 
+#include "ev-macros.h"
 #include "ev-document.h"
 
 G_BEGIN_DECLS
@@ -31,8 +32,9 @@ typedef struct _DviDocument DviDocument;
 
 GType                 dvi_document_get_type   (void) G_GNUC_CONST;
 
-G_MODULE_EXPORT GType register_evince_backend (GTypeModule *module);
-     
+EV_PUBLIC
+GType                 register_evince_backend (GTypeModule *module);
+
 G_END_DECLS
 
 #endif /* __DVI_DOCUMENT_H__ */

@@ -22,6 +22,7 @@
 
 #include <glib-object.h>
 
+#include "ev-macros.h"
 #include "ev-document.h"
 
 G_BEGIN_DECLS
@@ -37,7 +38,8 @@ typedef struct _XPSDocumentClass XPSDocumentClass;
 
 GType                 xps_document_get_type   (void) G_GNUC_CONST;
 
-G_MODULE_EXPORT GType register_evince_backend (GTypeModule *module);
+EV_PUBLIC
+GType                 register_evince_backend (GTypeModule *module);
 
 G_END_DECLS
 
