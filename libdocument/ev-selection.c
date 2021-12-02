@@ -36,8 +36,8 @@ ev_selection_render_selection (EvSelection      *selection,
 			       EvRectangle      *points,
 			       EvRectangle      *old_points,
 			       EvSelectionStyle  style,
-			       GdkColor         *text,
-			       GdkColor         *base)
+			       GdkRGBA          *text,
+			       GdkRGBA          *base)
 {
 	EvSelectionInterface *iface = EV_SELECTION_GET_IFACE (selection);
 

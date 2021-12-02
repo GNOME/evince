@@ -150,14 +150,6 @@ EV_DEPRECATED_FOR(ev_annotaion_set_modified_from_time_t)
 EV_PUBLIC
 gboolean             ev_annotation_set_modified_from_time    (EvAnnotation           *annot,
 							      GTime                   utime);
-EV_DEPRECATED_FOR(ev_annotaion_get_rgba)
-EV_PUBLIC
-void                 ev_annotation_get_color                 (EvAnnotation           *annot,
-							      GdkColor               *color);
-EV_DEPRECATED_FOR(ev_annotaion_set_rgba)
-EV_PUBLIC
-gboolean             ev_annotation_set_color                 (EvAnnotation           *annot,
-							      const GdkColor         *color);
 G_GNUC_END_IGNORE_DEPRECATIONS
 
 EV_PUBLIC
