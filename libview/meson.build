@@ -124,7 +124,7 @@ if enable_introspection
     libevdocument_gir[0],
   ]
 
-  gnome.generate_gir(
+  libevview_gir = gnome.generate_gir(
     [libevview, libevdocument],
     sources: sources + headers + [enum_sources[1]],
     includes: incs,

@@ -161,6 +161,10 @@ hdy_dep = dependency('libhandy-1', version: hdy_req_version, fallback: ['libhand
 
 m_dep = cc.find_library('m')
 
+gidocgen_dep = dependency('gi-docgen', version: '>= 2021.1',
+			  fallback: ['gi-docgen', 'dummy_dep'],
+			  required: get_option('gtk_doc'))
+
 # Although GTK+ 3.10 includes hi-dpi functionality, it does not require a cairo with
 # cairo_surface_set_device_scale(), which we also need if we're to support hi-dpi,
 # so we need check for that explicitly.
