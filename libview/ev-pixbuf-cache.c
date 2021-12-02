@@ -630,24 +630,6 @@ ev_pixbuf_cache_clear_job_sizes (EvPixbufCache *pixbuf_cache,
 }
 
 static void
-get_selection_colors (EvView *view, GdkColor *text, GdkColor *base)
-{
-        GdkRGBA fg, bg;
-
-        _ev_view_get_selection_colors (view, &bg, &fg);
-
-        text->pixel = 0;
-        text->red = CLAMP ((guint) (fg.red * 65535), 0, 65535);
-        text->green = CLAMP ((guint) (fg.green * 65535), 0, 65535);
-        text->blue = CLAMP ((guint) (fg.blue * 65535), 0, 65535);
-
-        base->pixel = 0;
-        base->red = CLAMP ((guint) (bg.red * 65535), 0, 65535);
-        base->green = CLAMP ((guint) (bg.green * 65535), 0, 65535);
-        base->blue = CLAMP ((guint) (bg.blue * 65535), 0, 65535);
-}
-
-static void
 add_job (EvPixbufCache  *pixbuf_cache,
 	 CacheJobInfo   *job_info,
 	 cairo_region_t *region,
@@ -675,9 +657,9 @@ add_job (EvPixbufCache  *pixbuf_cache,
                                            height * job_info->device_scale);
 
 	if (new_selection_surface_needed (pixbuf_cache, job_info, page, scale)) {
-		GdkColor text, base;
+		GdkRGBA text, base;
 
-		get_selection_colors (EV_VIEW (pixbuf_cache->view), &text, &base);
+		_ev_view_get_selection_colors (EV_VIEW (pixbuf_cache->view), &base, &text);
 		ev_job_render_set_selection_info (EV_JOB_RENDER (job_info->job),
 						  &(job_info->target_points),
 						  job_info->selection_style,
@@ -1037,7 +1019,7 @@ ev_pixbuf_cache_get_selection_surface (EvPixbufCache   *pixbuf_cache,
 	 */
 	if (ev_rect_cmp (&(job_info->target_points), &(job_info->selection_points))) {
 		EvRectangle *old_points;
-		GdkColor text, base;
+		GdkRGBA text, base;
 		EvRenderContext *rc;
 		EvPage *ev_page;
 		gint width, height;
@@ -1061,7 +1043,7 @@ ev_pixbuf_cache_get_selection_surface (EvPixbufCache   *pixbuf_cache,
                 ev_render_context_set_target_size (rc, width, height);
 		g_object_unref (ev_page);
 
-		get_selection_colors (EV_VIEW (pixbuf_cache->view), &text, &base);
+		_ev_view_get_selection_colors (EV_VIEW (pixbuf_cache->view), &base, &text);
 		ev_selection_render_selection (EV_SELECTION (pixbuf_cache->document),
 					       rc, &(job_info->selection),
 					       &(job_info->target_points),

@@ -59,8 +59,8 @@ struct _EvSelectionInterface
 						   EvRectangle      *points,
 						   EvRectangle      *old_points,
 						   EvSelectionStyle  style,
-						   GdkColor         *text,
-						   GdkColor         *base);
+						   GdkRGBA          *text,
+						   GdkRGBA          *base);
 	gchar          * (* get_selected_text)    (EvSelection      *selection,
 						   EvPage           *page,
 						   EvSelectionStyle  style,
@@ -80,8 +80,8 @@ void            ev_selection_render_selection     (EvSelection      *selection,
 						   EvRectangle      *points,
 						   EvRectangle      *old_points,
 						   EvSelectionStyle  style,
-						   GdkColor         *text,
-						   GdkColor         *base);
+						   GdkRGBA          *text,
+						   GdkRGBA          *base);
 EV_PUBLIC
 gchar          *ev_selection_get_selected_text    (EvSelection      *selection,
 						   EvPage           *page,
