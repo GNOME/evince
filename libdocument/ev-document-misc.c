@@ -318,66 +318,6 @@ ev_document_misc_get_page_border_size (gint       page_width,
 	}
 }
 
-/**
- * ev_document_misc_paint_one_page:
- * @cr: a #cairo_tEvannotation
- * @widget a #GtkWidget
- * @area: a #GdkRectangle
- * @border: a #GtkBorder
- * @highlight: whether to highlight the text
- * @inverted_colors: whether to invert colors
- *
- * Deprecated: 3.10.
- */
-void
-ev_document_misc_paint_one_page (cairo_t      *cr,
-				 GtkWidget    *widget,
-				 GdkRectangle *area,
-				 GtkBorder    *border,
-				 gboolean      highlight,
-				 gboolean      inverted_colors)
-{
-G_GNUC_BEGIN_IGNORE_DEPRECATIONS
-	GtkStyleContext *context = gtk_widget_get_style_context (widget);
-	GtkStateFlags state = gtk_widget_get_state_flags (widget);
-        GdkRGBA fg, bg, shade_bg;
-
-        gtk_style_context_get_background_color (context, state, &bg);
-        gtk_style_context_get_color (context, state, &fg);
-        gtk_style_context_get_color (context, GTK_STATE_FLAG_INSENSITIVE, &shade_bg);
-
-	gdk_cairo_set_source_rgba (cr, highlight ? &fg : &shade_bg);
-	gdk_cairo_rectangle (cr, area);
-	cairo_fill (cr);
-
-	if (inverted_colors)
-		cairo_set_source_rgb (cr, 0, 0, 0);
-	else
-		cairo_set_source_rgb (cr, 1, 1, 1);
-	cairo_rectangle (cr,
-			 area->x + border->left,
-			 area->y + border->top,
-			 area->width - (border->left + border->right),
-			 area->height - (border->top + border->bottom));
-	cairo_fill (cr);
-
-	gdk_cairo_set_source_rgba (cr, &bg);
-	cairo_rectangle (cr,
-			 area->x,
-			 area->y + area->height - (border->bottom - border->top),
-			 border->bottom - border->top,
-			 border->bottom - border->top);
-	cairo_fill (cr);
-
-	cairo_rectangle (cr,
-			 area->x + area->width - (border->right - border->left),
-			 area->y,
-			 border->right - border->left,
-			 border->right - border->left);
-	cairo_fill (cr);
-G_GNUC_END_IGNORE_DEPRECATIONS
-}
-
 cairo_surface_t *
 ev_document_misc_surface_from_pixbuf (GdkPixbuf *pixbuf)
 {
