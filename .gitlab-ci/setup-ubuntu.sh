@@ -22,6 +22,6 @@ apt-get -yq install gnome-common libglib2.0-dev-bin \
 apt-get clean
 rm -rf /var/lib/apt/lists/*
 
-pip3 install meson
+pip3 install meson gi-docgen
 
 useradd -u 1984 -ms /bin/bash user
