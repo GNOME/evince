@@ -85,7 +85,7 @@ gboolean     ev_attachment_save                  (EvAttachment *attachment,
 						  GError      **error);
 EV_PUBLIC
 gboolean     ev_attachment_open                  (EvAttachment *attachment,
-						  GdkScreen    *screen,
+						  GdkDisplay   *display,
 						  guint32       timestamp,
 						  GError      **error);
 

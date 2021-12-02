@@ -135,7 +135,6 @@ ev_document_misc_render_thumbnail_frame (GtkWidget       *widget,
                                          cairo_surface_t *source_surface)
 {
         GtkStyleContext *context = gtk_widget_get_style_context (widget);
-        GtkStateFlags    state = gtk_widget_get_state_flags (widget);
         double           width_r, height_r;
         double           width_f, height_f;
         cairo_surface_t *surface;
@@ -175,7 +174,7 @@ ev_document_misc_render_thumbnail_frame (GtkWidget       *widget,
         if (inverted_colors)
                 gtk_style_context_add_class (context, "inverted");
 
-        gtk_style_context_get_border (context, state, &border);
+        gtk_style_context_get_border (context, &border);
         width_f = width_r + border.left + border.right;
         height_f = height_r + border.top + border.bottom;
 
@@ -459,36 +458,6 @@ ev_document_misc_invert_pixbuf (GdkPixbuf *pixbuf)
 }
 
 /**
- * ev_document_misc_get_screen_dpi:
- * @screen: a #GdkScreen
- *
- * Returns: The DPI of @screen, or 96 if the DPI is not available
- *
- * Deprecated: 3.36: This uses a deprecated GDK API. Use
- * ev_document_misc_get_widget_dpi() instead, which uses GDK's per-monitor
- * information.
- */
-gdouble
-ev_document_misc_get_screen_dpi (GdkScreen *screen)
-{
-G_GNUC_BEGIN_IGNORE_DEPRECATIONS
-	gdouble dp, di;
-
-	/*diagonal in pixels*/
-	dp = hypot (gdk_screen_get_width (screen), gdk_screen_get_height (screen));
-	if (dp == 0)
-		return 96;
-
-	/*diagonal in inches*/
-	di = hypot (gdk_screen_get_width_mm(screen), gdk_screen_get_height_mm (screen)) / 25.4;
-	if (di == 0)
-		return 96;
-
-	return (dp / di);
-G_GNUC_END_IGNORE_DEPRECATIONS
-}
-
-/**
  * ev_document_misc_get_widget_dpi:
  * @widget: a #GtkWidget
  *
@@ -501,10 +470,11 @@ G_GNUC_END_IGNORE_DEPRECATIONS
 gdouble
 ev_document_misc_get_widget_dpi (GtkWidget *widget)
 {
+#if 0
 	GdkRectangle  geometry;
 	GdkDisplay   *display;
 	GdkMonitor   *monitor;
-	GdkWindow    *window;
+	GdkSurface   *surface;
 	gboolean      is_landscape;
 
 	display = gtk_widget_get_display (widget);
@@ -535,6 +505,7 @@ ev_document_misc_get_widget_dpi (GtkWidget *widget)
 	if (is_landscape && geometry.height >= 1080)
 		return 192;
 	else
+#endif
 		return 96;
 }
 
@@ -590,9 +561,11 @@ ev_document_misc_get_pointer_position (GtkWidget *widget,
                                        gint      *x,
                                        gint      *y)
 {
+	gdouble       dx, dy;
         GdkSeat      *seat;
+        GtkNative    *native;
         GdkDevice    *device_pointer;
-        GdkRectangle  allocation;
+	GdkSurface   *surface;
 
         if (x)
                 *x = -1;
@@ -603,17 +576,30 @@ ev_document_misc_get_pointer_position (GtkWidget *widget,
                 return;
 
         seat = gdk_display_get_default_seat (gtk_widget_get_display (widget));
-        device_pointer = gdk_seat_get_pointer (seat);
-        gdk_window_get_device_position (gtk_widget_get_window (widget),
-                                        device_pointer,
-                                        x, y, NULL);
 
-        if (gtk_widget_get_has_window (widget))
+        device_pointer = gdk_seat_get_pointer (seat);
+        native = gtk_widget_get_native (widget);
+
+        if (!native)
                 return;
 
-        gtk_widget_get_allocation (widget, &allocation);
+	surface = gtk_native_get_surface (native);
+	if (!surface)
+		return;
+
+        gdk_surface_get_device_position (surface,
+                                        device_pointer,
+                                        &dx, &dy, NULL);
+
+	if (x)
+		*x = dx;
+	if (y)
+		*y = dy;
+
+	gtk_widget_translate_coordinates (widget, GTK_WIDGET (native), 0, 0, &dx, &dy);
+
         if (x)
-                *x -= allocation.x;
+                *x -= dx;
         if (y)
-                *y -= allocation.y;
+                *y -= dy;
 }
