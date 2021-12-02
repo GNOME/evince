@@ -246,12 +246,12 @@ ps_document_get_info (EvDocument *document)
 	SpectrePage    *ps_page;
 	gint            width, height;
 
-	info = g_new0 (EvDocumentInfo, 1);
-	info->fields_mask = EV_DOCUMENT_INFO_TITLE |
-	                    EV_DOCUMENT_INFO_FORMAT |
-			    EV_DOCUMENT_INFO_CREATOR |
-			    EV_DOCUMENT_INFO_N_PAGES |
-	                    EV_DOCUMENT_INFO_PAPER_SIZE;
+	info = ev_document_info_new ();
+	info->fields_mask |= EV_DOCUMENT_INFO_TITLE |
+	                     EV_DOCUMENT_INFO_FORMAT |
+			     EV_DOCUMENT_INFO_CREATOR |
+			     EV_DOCUMENT_INFO_N_PAGES |
+	                     EV_DOCUMENT_INFO_PAPER_SIZE;
 
 	creator = spectre_document_get_creator (ps->doc);
 

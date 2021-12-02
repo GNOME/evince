@@ -102,7 +102,7 @@ ev_document_impl_get_page (EvDocument *document,
 static EvDocumentInfo *
 ev_document_impl_get_info (EvDocument *document)
 {
-	return g_new0 (EvDocumentInfo, 1);
+	return ev_document_info_new ();
 }
 
 static void

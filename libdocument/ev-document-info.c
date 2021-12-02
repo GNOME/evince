@@ -25,7 +25,29 @@
 
 #include "ev-document-info.h"
 
+typedef struct _EvDocumentInfoExtended EvDocumentInfoExtended;
+struct _EvDocumentInfoExtended {
+        EvDocumentInfo info;
+};
+
 G_DEFINE_BOXED_TYPE (EvDocumentInfo, ev_document_info, ev_document_info_copy, ev_document_info_free)
+
+/**
+ * ev_document_info_new:
+ * @info: a #EvDocumentInfo
+ *
+ * Returns: (transfer full): a new, empty #EvDocumentInfo
+ */
+EvDocumentInfo *
+ev_document_info_new (void)
+{
+        EvDocumentInfoExtended *info_ex;
+
+        info_ex = g_new0 (EvDocumentInfoExtended, 1);
+        info_ex->info.fields_mask |= _EV_DOCUMENT_INFO_EXTENDED;
+
+        return &info_ex->info;
+}
 
 /**
  * ev_document_info_copy:
@@ -36,11 +58,16 @@ G_DEFINE_BOXED_TYPE (EvDocumentInfo, ev_document_info, ev_document_info_copy, ev
 EvDocumentInfo *
 ev_document_info_copy (EvDocumentInfo *info)
 {
-	EvDocumentInfo *copy;
+        EvDocumentInfoExtended *info_ex = (EvDocumentInfoExtended*)info;
+        EvDocumentInfo *copy;
+        EvDocumentInfoExtended *copy_ex;
 
-	g_return_val_if_fail (info != NULL, NULL);
+        g_return_val_if_fail (info_ex != NULL, NULL);
+        g_return_val_if_fail (info_ex->info.fields_mask & _EV_DOCUMENT_INFO_EXTENDED, NULL);
 
-	copy = g_new0 (EvDocumentInfo, 1);
+        copy = ev_document_info_new ();
+        copy_ex = (EvDocumentInfoExtended*)copy;
+
 	copy->title = g_strdup (info->title);
 	copy->format = g_strdup (info->format);
 	copy->author = g_strdup (info->author);
@@ -60,9 +87,9 @@ ev_document_info_copy (EvDocumentInfo *info)
 	copy->n_pages = info->n_pages;
 	copy->license = ev_document_license_copy (info->license);
 
-	copy->fields_mask = info->fields_mask;
+        copy->fields_mask |= info->fields_mask;
 
-	return copy;
+        return &copy_ex->info;
 }
 
 /**
@@ -74,8 +101,12 @@ ev_document_info_copy (EvDocumentInfo *info)
 void
 ev_document_info_free (EvDocumentInfo *info)
 {
-	if (info == NULL)
-		return;
+        EvDocumentInfoExtended *info_ex = (EvDocumentInfoExtended*)info;
+
+        if (info_ex == NULL)
+                return;
+
+        g_return_if_fail (info_ex->info.fields_mask & _EV_DOCUMENT_INFO_EXTENDED);
 
 	g_free (info->title);
 	g_free (info->format);
@@ -90,7 +121,7 @@ ev_document_info_free (EvDocumentInfo *info)
 	g_clear_pointer (&(info->modified_date), g_date_time_unref);
 	ev_document_license_free (info->license);
 
-	g_free (info);
+        g_free (info_ex);
 }
 
 /* EvDocumentLicense */

@@ -110,8 +110,8 @@ typedef enum
 	EV_DOCUMENT_INFO_SECURITY = 1 << 15,
 	EV_DOCUMENT_INFO_PAPER_SIZE = 1 << 16,
 	EV_DOCUMENT_INFO_LICENSE = 1 << 17,
-	EV_DOCUMENT_INFO_CONTAINS_JS = 1 << 18
-
+	EV_DOCUMENT_INFO_CONTAINS_JS = 1 << 18,
+	_EV_DOCUMENT_INFO_EXTENDED = 1 << 30 /*< skip >*/
 } EvDocumentInfoFields;
 
 G_GNUC_BEGIN_IGNORE_DEPRECATIONS
@@ -145,6 +145,8 @@ G_GNUC_END_IGNORE_DEPRECATIONS
 
 EV_PUBLIC
 GType           ev_document_info_get_type (void) G_GNUC_CONST;
+EV_PUBLIC
+EvDocumentInfo* ev_document_info_new      (void);
 EV_PUBLIC
 EvDocumentInfo *ev_document_info_copy     (EvDocumentInfo *info);
 EV_PUBLIC

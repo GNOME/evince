@@ -1023,27 +1023,27 @@ pdf_document_get_info (EvDocument *document)
 	char *metadata;
 	gboolean linearized;
 
-	info = g_new0 (EvDocumentInfo, 1);
+	info = ev_document_info_new ();
 
-	info->fields_mask = EV_DOCUMENT_INFO_TITLE |
-			    EV_DOCUMENT_INFO_FORMAT |
-			    EV_DOCUMENT_INFO_AUTHOR |
-			    EV_DOCUMENT_INFO_SUBJECT |
-			    EV_DOCUMENT_INFO_KEYWORDS |
-			    EV_DOCUMENT_INFO_LAYOUT |
-			    EV_DOCUMENT_INFO_START_MODE |
-		            EV_DOCUMENT_INFO_PERMISSIONS |
-			    EV_DOCUMENT_INFO_UI_HINTS |
-			    EV_DOCUMENT_INFO_CREATOR |
-			    EV_DOCUMENT_INFO_PRODUCER |
-			    EV_DOCUMENT_INFO_CREATION_DATE |
-			    EV_DOCUMENT_INFO_MOD_DATE |
-			    EV_DOCUMENT_INFO_LINEARIZED |
-			    EV_DOCUMENT_INFO_N_PAGES |
-			    EV_DOCUMENT_INFO_SECURITY |
-		            EV_DOCUMENT_INFO_PAPER_SIZE |
-			    EV_DOCUMENT_INFO_CONTAINS_JS |
-			    EV_DOCUMENT_INFO_LICENSE;
+	info->fields_mask |= EV_DOCUMENT_INFO_TITLE |
+			     EV_DOCUMENT_INFO_FORMAT |
+			     EV_DOCUMENT_INFO_AUTHOR |
+			     EV_DOCUMENT_INFO_SUBJECT |
+			     EV_DOCUMENT_INFO_KEYWORDS |
+			     EV_DOCUMENT_INFO_LAYOUT |
+			     EV_DOCUMENT_INFO_START_MODE |
+		             EV_DOCUMENT_INFO_PERMISSIONS |
+			     EV_DOCUMENT_INFO_UI_HINTS |
+			     EV_DOCUMENT_INFO_CREATOR |
+			     EV_DOCUMENT_INFO_PRODUCER |
+			     EV_DOCUMENT_INFO_CREATION_DATE |
+			     EV_DOCUMENT_INFO_MOD_DATE |
+			     EV_DOCUMENT_INFO_LINEARIZED |
+			     EV_DOCUMENT_INFO_N_PAGES |
+			     EV_DOCUMENT_INFO_SECURITY |
+		             EV_DOCUMENT_INFO_PAPER_SIZE |
+			     EV_DOCUMENT_INFO_CONTAINS_JS |
+			     EV_DOCUMENT_INFO_LICENSE;
 
 	g_object_get (PDF_DOCUMENT (document)->document,
 		      "title", &(info->title),

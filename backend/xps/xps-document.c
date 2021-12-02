@@ -165,8 +165,8 @@ xps_document_get_info (EvDocument *document)
 	XPSDocument    *xps = XPS_DOCUMENT (document);
 	EvDocumentInfo *info;
 
-	info = g_new0 (EvDocumentInfo, 1);
-	info->fields_mask =
+	info = ev_document_info_new ();
+	info->fields_mask |=
 		EV_DOCUMENT_INFO_N_PAGES |
 		EV_DOCUMENT_INFO_PAPER_SIZE;
 
