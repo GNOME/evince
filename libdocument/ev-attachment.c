@@ -367,14 +367,13 @@ ev_attachment_save (EvAttachment *attachment,
 
 static gboolean
 ev_attachment_launch_app (EvAttachment *attachment,
-			  GdkScreen    *screen,
+			  GdkDisplay    *display,
 			  guint32       timestamp,
 			  GError      **error)
 {
 	gboolean             result;
 	GList               *files = NULL;
 	GdkAppLaunchContext *context;
-        GdkDisplay          *display;
 	GError              *ioerror = NULL;
 	EvAttachmentPrivate *priv = GET_PRIVATE (attachment);
 
@@ -383,9 +382,8 @@ ev_attachment_launch_app (EvAttachment *attachment,
 
 	files = g_list_prepend (files, priv->tmp_file);
 
-        display = screen ? gdk_screen_get_display (screen) : gdk_display_get_default ();
+	display = display ?: gdk_display_get_default ();
 	context = gdk_display_get_app_launch_context (display);
-	gdk_app_launch_context_set_screen (context, screen);
 	gdk_app_launch_context_set_timestamp (context, timestamp);
 
 	result = g_app_info_launch (priv->app, files,
@@ -421,6 +419,7 @@ ev_attachment_open (EvAttachment *attachment,
 	GAppInfo *app_info;
 	gboolean  retval = FALSE;
 	EvAttachmentPrivate *priv;
+	GdkDisplay *display = gdk_screen_get_display (screen);
 
 	g_return_val_if_fail (EV_IS_ATTACHMENT (attachment), FALSE);
 
@@ -442,7 +441,7 @@ ev_attachment_open (EvAttachment *attachment,
 	}
 
 	if (priv->tmp_file) {
-		retval = ev_attachment_launch_app (attachment, screen,
+		retval = ev_attachment_launch_app (attachment, display,
 						   timestamp, error);
 	} else {
                 char *basename;
@@ -468,7 +467,7 @@ ev_attachment_open (EvAttachment *attachment,
 				g_object_unref (priv->tmp_file);
 			priv->tmp_file = g_object_ref (file);
 
-			retval = ev_attachment_launch_app (attachment, screen,
+			retval = ev_attachment_launch_app (attachment, display,
 							   timestamp, error);
 		}
 
@@ -477,4 +476,3 @@ ev_attachment_open (EvAttachment *attachment,
 
 	return retval;
 }
-
