@@ -17,7 +17,8 @@ apt-get -yq install gnome-common libglib2.0-dev-bin \
                     libspectre-dev libtiff5-dev libdjvulibre-dev \
                     libkpathsea-dev libarchive-dev libgxps-dev \
                     libhandy-1-dev libsynctex-dev git \
-                    ccache systemd ninja-build python3-pip
+                    ccache systemd ninja-build python3-pip \
+                    python3-jinja2 python3-toml python3-typogrify
 apt-get clean
 rm -rf /var/lib/apt/lists/*
 
