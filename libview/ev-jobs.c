@@ -710,8 +710,8 @@ void
 ev_job_render_set_selection_info (EvJobRender     *job,
 				  EvRectangle     *selection_points,
 				  EvSelectionStyle selection_style,
-				  GdkColor        *text,
-				  GdkColor        *base)
+				  GdkRGBA         *text,
+				  GdkRGBA         *base)
 {
 	job->include_selection = TRUE;
 
