@@ -68,14 +68,6 @@ EV_PUBLIC
 void       ev_document_misc_get_page_border_size (gint          page_width,
 						  gint          page_height,
 						  GtkBorder    *border);
-EV_DEPRECATED
-EV_PUBLIC
-void       ev_document_misc_paint_one_page       (cairo_t      *cr,
-						  GtkWidget    *widget,
-						  GdkRectangle *area,
-						  GtkBorder    *border,
-						  gboolean      highlight,
-						  gboolean      inverted_colors);
 
 EV_PUBLIC
 cairo_surface_t *ev_document_misc_surface_from_pixbuf (GdkPixbuf *pixbuf);
