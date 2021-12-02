@@ -1,6 +1,7 @@
 /* -*- Mode: C; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8; c-indent-level: 8 -*- */
 /*
  *  Copyright (C) 2000-2003 Marco Pesenti Gritti
+ *  Copyright © 2021 Christian Persch
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -126,8 +127,8 @@ struct _EvDocumentInfo
 	char *producer;
 	char *linearized;
         char *security;
-	GDateTime *creation_date;
-	GDateTime *modified_date;
+	GTime creation_date G_GNUC_DEPRECATED_FOR(ev_document_info_get_created_datetime);
+	GTime modified_date G_GNUC_DEPRECATED_FOR(ev_document_info_get_modified_datetime);
 	EvDocumentLayout layout;
 	EvDocumentMode mode;
 	guint ui_hints;
@@ -151,6 +152,17 @@ EV_PUBLIC
 EvDocumentInfo *ev_document_info_copy     (EvDocumentInfo *info);
 EV_PUBLIC
 void            ev_document_info_free     (EvDocumentInfo *info);
+EV_PUBLIC
+GDateTime      *ev_document_info_get_created_datetime   (const EvDocumentInfo *info);
+EV_PUBLIC
+GDateTime      *ev_document_info_get_modified_datetime  (const EvDocumentInfo *info);
+
+EV_PRIVATE
+void            ev_document_info_take_created_datetime  (EvDocumentInfo *info,
+                                                         GDateTime      *datetime);
+EV_PRIVATE
+void            ev_document_info_take_modified_datetime (EvDocumentInfo *info,
+                                                         GDateTime      *datetime);
 
 /* EvDocumentLicense */
 #define EV_TYPE_DOCUMENT_LICENSE (ev_document_license_get_type())

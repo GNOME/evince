@@ -369,6 +369,7 @@ ev_properties_view_set_info (EvPropertiesView *properties, const EvDocumentInfo 
 	GtkWidget *grid;
 	gchar     *text;
 	gint       row = 0;
+        GDateTime *datetime;
 
 	grid = properties->grid;
 
@@ -391,24 +392,23 @@ ev_properties_view_set_info (EvPropertiesView *properties, const EvDocumentInfo 
 	if (info->fields_mask & EV_DOCUMENT_INFO_CREATOR) {
 		set_property (properties, GTK_GRID (grid), CREATOR_PROPERTY, info->creator, &row);
 	}
-	if (info->fields_mask & EV_DOCUMENT_INFO_CREATION_DATE) {
-		if (info->creation_date == NULL) {
-			set_property (properties, GTK_GRID (grid), CREATION_DATE_PROPERTY, NULL, &row);
-		} else {
-			text = ev_document_misc_format_datetime (info->creation_date);
-			set_property (properties, GTK_GRID (grid), CREATION_DATE_PROPERTY, text, &row);
-			g_free (text);
-		}
-	}
-	if (info->fields_mask & EV_DOCUMENT_INFO_MOD_DATE) {
-		if (info->modified_date == NULL) {
-			set_property (properties, GTK_GRID (grid), MOD_DATE_PROPERTY, NULL, &row);
-		} else {
-			text = ev_document_misc_format_datetime (info->modified_date);
-			set_property (properties, GTK_GRID (grid), MOD_DATE_PROPERTY, text, &row);
-			g_free (text);
-		}
-	}
+
+        datetime = ev_document_info_get_created_datetime (info);
+        if (datetime != NULL) {
+                text = ev_document_misc_format_datetime (datetime);
+                set_property (properties, GTK_GRID (grid), CREATION_DATE_PROPERTY, text, &row);
+                g_free (text);
+        } else {
+                set_property (properties, GTK_GRID (grid), CREATION_DATE_PROPERTY, NULL, &row);
+        }
+        datetime = ev_document_info_get_modified_datetime (info);
+        if (datetime != NULL) {
+                text = ev_document_misc_format_datetime (datetime);
+                set_property (properties, GTK_GRID (grid), MOD_DATE_PROPERTY, text, &row);
+                g_free (text);
+        } else {
+                set_property (properties, GTK_GRID (grid), MOD_DATE_PROPERTY, NULL, &row);
+        }
 	if (info->fields_mask & EV_DOCUMENT_INFO_FORMAT) {
 		set_property (properties, GTK_GRID (grid), FORMAT_PROPERTY, info->format, &row);
 	}

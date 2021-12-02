@@ -1,6 +1,7 @@
 /*
  *  Copyright (C) 2009 Carlos Garcia Campos
  *  Copyright (C) 2004 Marco Pesenti Gritti
+ *  Copyright © 2021 Christian Persch
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -28,6 +29,9 @@
 typedef struct _EvDocumentInfoExtended EvDocumentInfoExtended;
 struct _EvDocumentInfoExtended {
         EvDocumentInfo info;
+
+        GDateTime *created_datetime;
+        GDateTime *modified_datetime;
 };
 
 G_DEFINE_BOXED_TYPE (EvDocumentInfo, ev_document_info, ev_document_info_copy, ev_document_info_free)
@@ -78,8 +82,8 @@ ev_document_info_copy (EvDocumentInfo *info)
 	copy->producer = g_strdup (info->producer);
 	copy->linearized = g_strdup (info->linearized);
 
-	copy->creation_date = g_date_time_add (info->creation_date, 0);
-	copy->modified_date = g_date_time_add (info->modified_date, 0);
+        copy->creation_date = info->creation_date;
+        copy->modified_date = info->modified_date;
 	copy->layout = info->layout;
 	copy->mode = info->mode;
 	copy->ui_hints = info->ui_hints;
@@ -87,7 +91,9 @@ ev_document_info_copy (EvDocumentInfo *info)
 	copy->n_pages = info->n_pages;
 	copy->license = ev_document_license_copy (info->license);
 
-        copy->fields_mask |= info->fields_mask;
+        copy_ex->info.fields_mask |= info->fields_mask;
+        copy_ex->created_datetime = g_date_time_ref (info_ex->created_datetime);
+        copy_ex->modified_datetime = g_date_time_ref (info_ex->modified_datetime);
 
         return &copy_ex->info;
 }
@@ -117,11 +123,104 @@ ev_document_info_free (EvDocumentInfo *info)
 	g_free (info->producer);
 	g_free (info->linearized);
 	g_free (info->security);
-	g_clear_pointer (&(info->creation_date), g_date_time_unref);
-	g_clear_pointer (&(info->modified_date), g_date_time_unref);
 	ev_document_license_free (info->license);
 
+        g_clear_pointer (&info_ex->created_datetime, g_date_time_unref);
+        g_clear_pointer (&info_ex->modified_datetime, g_date_time_unref);
+
         g_free (info_ex);
+}
+
+/*
+ * ev_document_info_take_created_datetime:
+ * @info: a #EvDocumentInfo
+ * @datetime: (transfer full): a #GDateTime
+ *
+ * Sets the #GDateTime for when the document was created.
+ */
+void
+ev_document_info_take_created_datetime (EvDocumentInfo *info,
+                                        GDateTime      *datetime)
+{
+        EvDocumentInfoExtended *info_ex = (EvDocumentInfoExtended*)info;
+        gint64 ut;
+
+        g_return_if_fail (info_ex != NULL);
+        g_return_if_fail (info_ex->info.fields_mask & _EV_DOCUMENT_INFO_EXTENDED);
+
+        g_clear_pointer (&info_ex->created_datetime, g_date_time_unref);
+        info_ex->created_datetime = datetime; /* adopts */
+
+        if (datetime != NULL && (ut = g_date_time_to_unix (datetime)) < G_MAXINT) {
+                info_ex->info.creation_date = (GTime) ut;
+                info_ex->info.fields_mask |= EV_DOCUMENT_INFO_CREATION_DATE;
+        } else {
+                info_ex->info.creation_date = 0;
+                info_ex->info.fields_mask &= ~EV_DOCUMENT_INFO_CREATION_DATE;
+        }
+}
+
+/**
+ * ev_document_info_get_created_datetime:
+ * @info: a #EvDocumentInfo
+ *
+ * Returns: (transfer none) (nullable): a #GDateTime for when the document was created
+ */
+GDateTime *
+ev_document_info_get_created_datetime (const EvDocumentInfo *info)
+{
+        EvDocumentInfoExtended *info_ex = (EvDocumentInfoExtended*)info;
+
+        g_return_val_if_fail (info_ex != NULL, NULL);
+        g_return_val_if_fail (info_ex->info.fields_mask & _EV_DOCUMENT_INFO_EXTENDED, NULL);
+
+        return info_ex->created_datetime;
+}
+
+/*
+ * ev_document_info_take_modified_datetime:
+ * @info: a #EvDocumentInfo
+ * @datetime: (transfer full): a #GDateTime
+ *
+ * Sets the #GDateTime for when the document was last modified.
+ */
+void
+ev_document_info_take_modified_datetime (EvDocumentInfo *info,
+                                         GDateTime      *datetime)
+{
+        EvDocumentInfoExtended *info_ex = (EvDocumentInfoExtended*)info;
+        gint64 ut;
+
+        g_return_if_fail (info_ex != NULL);
+        g_return_if_fail (info_ex->info.fields_mask & _EV_DOCUMENT_INFO_EXTENDED);
+
+        g_clear_pointer (&info_ex->modified_datetime, g_date_time_unref);
+        info_ex->modified_datetime = datetime; /* adopts */
+
+        if (datetime != NULL && (ut = g_date_time_to_unix (datetime)) < G_MAXINT) {
+                info_ex->info.modified_date = (GTime) ut;
+                info_ex->info.fields_mask |= EV_DOCUMENT_INFO_MOD_DATE;
+        } else {
+                info_ex->info.modified_date = 0;
+                info_ex->info.fields_mask &= ~EV_DOCUMENT_INFO_MOD_DATE;
+        }
+}
+
+/**
+ * ev_document_info_get_modified_datetime:
+ * @info: a #EvDocumentInfo
+ *
+ * Returns: (transfer none) (nullable): a #GDateTime for when the document was last modified
+ */
+GDateTime *
+ev_document_info_get_modified_datetime (const EvDocumentInfo *info)
+{
+        EvDocumentInfoExtended *info_ex = (EvDocumentInfoExtended*)info;
+
+        g_return_val_if_fail (info_ex != NULL, NULL);
+        g_return_val_if_fail (info_ex->info.fields_mask & _EV_DOCUMENT_INFO_EXTENDED, NULL);
+
+        return info_ex->modified_datetime;
 }
 
 /* EvDocumentLicense */
