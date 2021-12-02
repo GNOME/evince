@@ -61,6 +61,7 @@ sources = files(
   'ev-document-fonts.c',
   'ev-document-forms.c',
   'ev-document-images.c',
+  'ev-document-info.c',
   'ev-document-layers.c',
   'ev-document-links.c',
   'ev-document-media.c',
