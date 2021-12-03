@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
-"POT-Creation-Date: 2021-10-15 00:48+0000\n"
-"PO-Revision-Date: 2021-11-05 21:12+0200\n"
+"POT-Creation-Date: 2021-12-02 23:36+0000\n"
+"PO-Revision-Date: 2021-12-03 17:33+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
 "Language: uk\n"
@@ -106,55 +106,55 @@ msgstr "Документи PDF"
 msgid "Adds support for reading PDF Documents"
 msgstr "Додає підтримування читання документів PDF"
 
-#: backend/pdf/ev-poppler.c:907
+#: backend/pdf/ev-poppler.c:863
 msgid "This work is in the Public Domain"
 msgstr "Ця праця є власністю спільнот"
 
 #. translators: this is the document security state
-#: backend/pdf/ev-poppler.c:1179 backend/pdf/ev-poppler.c:1185
+#: backend/pdf/ev-poppler.c:1162 backend/pdf/ev-poppler.c:1168
 #: properties/ev-properties-view.c:433
 msgid "Yes"
 msgstr "Так"
 
 #. translators: this is the document security state
-#: backend/pdf/ev-poppler.c:1182 backend/pdf/ev-poppler.c:1185
+#: backend/pdf/ev-poppler.c:1165 backend/pdf/ev-poppler.c:1168
 #: properties/ev-properties-view.c:435
 msgid "No"
 msgstr "Ні"
 
-#: backend/pdf/ev-poppler.c:1323
+#: backend/pdf/ev-poppler.c:1309
 msgid "Type 1"
 msgstr "Type 1"
 
-#: backend/pdf/ev-poppler.c:1325
+#: backend/pdf/ev-poppler.c:1311
 msgid "Type 1C"
 msgstr "Type 1C"
 
-#: backend/pdf/ev-poppler.c:1327
+#: backend/pdf/ev-poppler.c:1313
 msgid "Type 3"
 msgstr "Type 3"
 
-#: backend/pdf/ev-poppler.c:1329
+#: backend/pdf/ev-poppler.c:1315
 msgid "TrueType"
 msgstr "TrueType"
 
-#: backend/pdf/ev-poppler.c:1331
+#: backend/pdf/ev-poppler.c:1317
 msgid "Type 1 (CID)"
 msgstr "Type 1 (CID)"
 
-#: backend/pdf/ev-poppler.c:1333
+#: backend/pdf/ev-poppler.c:1319
 msgid "Type 1C (CID)"
 msgstr "Type 1C (CID)"
 
-#: backend/pdf/ev-poppler.c:1335
+#: backend/pdf/ev-poppler.c:1321
 msgid "TrueType (CID)"
 msgstr "TrueType (CID)"
 
-#: backend/pdf/ev-poppler.c:1337
+#: backend/pdf/ev-poppler.c:1323
 msgid "Unknown font type"
 msgstr "Шрифт невідомого типу"
 
-#: backend/pdf/ev-poppler.c:1381
+#: backend/pdf/ev-poppler.c:1367
 msgid ""
 "This document contains non-embedded fonts that are not from the PDF Standard "
 "14 fonts. If the substitute fonts selected by fontconfig are not the same as "
@@ -164,11 +164,11 @@ msgstr ""
 "для PDF. Якщо замінник шрифтів, вибраний через fontconfig, не такий самий як "
 "шрифт для створення PDF, то відтворення може бути неправильним."
 
-#: backend/pdf/ev-poppler.c:1386
+#: backend/pdf/ev-poppler.c:1372
 msgid "All fonts are either standard or embedded."
 msgstr "Усі шрифти є або стандартними, або вбудованими."
 
-#: backend/pdf/ev-poppler.c:1416
+#: backend/pdf/ev-poppler.c:1402
 msgid "No name"
 msgstr "Без назви"
 
@@ -182,20 +182,20 @@ msgstr "Без назви"
 #. Author: None
 #. Keywords: None
 #.
-#: backend/pdf/ev-poppler.c:1425 libview/ev-print-operation.c:1991
+#: backend/pdf/ev-poppler.c:1411 libview/ev-print-operation.c:1991
 #: properties/ev-properties-view.c:233
 msgid "None"
 msgstr "Немає"
 
-#: backend/pdf/ev-poppler.c:1433
+#: backend/pdf/ev-poppler.c:1419
 msgid "Embedded subset"
 msgstr "Вбудований набір"
 
-#: backend/pdf/ev-poppler.c:1435
+#: backend/pdf/ev-poppler.c:1421
 msgid "Embedded"
 msgstr "Вбудований"
 
-#: backend/pdf/ev-poppler.c:1437
+#: backend/pdf/ev-poppler.c:1423
 msgid "Not embedded"
 msgstr "Не вбудований"
 
@@ -204,7 +204,7 @@ msgstr "Не вбудований"
 #. * type. Example:
 #. * "Type 1 (One of the Standard 14 Fonts)"
 #.
-#: backend/pdf/ev-poppler.c:1444
+#: backend/pdf/ev-poppler.c:1430
 msgid " (One of the Standard 14 Fonts)"
 msgstr " (Один із стандартних 14 шрифтів)"
 
@@ -213,7 +213,7 @@ msgstr " (Один із стандартних 14 шрифтів)"
 #. * type. Example:
 #. * "TrueType (Not one of the Standard 14 Fonts)"
 #.
-#: backend/pdf/ev-poppler.c:1451
+#: backend/pdf/ev-poppler.c:1437
 msgid " (Not one of the Standard 14 Fonts)"
 msgstr " (Один не із стандартних 14 шрифтів)"
 
@@ -227,7 +227,7 @@ msgstr " (Один не із стандартних 14 шрифтів)"
 #. * Substituting with TeXGyreTermes-Regular
 #. * (/usr/share/textmf/.../texgyretermes-regular.otf)
 #.
-#: backend/pdf/ev-poppler.c:1470
+#: backend/pdf/ev-poppler.c:1456
 #, c-format
 msgid ""
 "%s%s\n"
@@ -251,7 +251,7 @@ msgstr ""
 #. * Encoding: Custom
 #. * Embedded subset
 #.
-#: backend/pdf/ev-poppler.c:1488
+#: backend/pdf/ev-poppler.c:1474
 #, c-format
 msgid ""
 "%s%s\n"
@@ -290,7 +290,7 @@ msgstr "Документи TIFF"
 msgid "Adds support for reading TIFF documents"
 msgstr "Додає підтримування читання документів TIFF"
 
-#: backend/tiff/tiff-document.c:123
+#: backend/tiff/tiff-document.c:124
 msgid "Invalid document"
 msgstr "Некоректний документ"
 
@@ -412,7 +412,7 @@ msgstr "Невідомий тип MIME"
 msgid "All Documents"
 msgstr "Усі документи"
 
-#: libdocument/ev-document-factory.c:609 shell/ev-utils.c:283
+#: libdocument/ev-document-factory.c:609 shell/ev-utils.c:272
 msgid "All Files"
 msgstr "Усі файли"
 
@@ -467,17 +467,23 @@ msgstr "Знайти попереднє повторення шуканого р
 msgid "Find next occurrence of the search string"
 msgstr "Знайти наступне повторення шуканого рядка"
 
-#: libview/ev-jobs.c:649
+#: libview/ev-jobs.c:650
+#, c-format
+#| msgid "Failed to render page %d"
+msgid "Failed to render page %d: %s"
+msgstr "Не вдалося відтворити сторінку %d: %s"
+
+#: libview/ev-jobs.c:657
 #, c-format
 msgid "Failed to render page %d"
 msgstr "Не вдалося відтворити сторінку %d"
 
-#: libview/ev-jobs.c:901
+#: libview/ev-jobs.c:910
 #, c-format
 msgid "Failed to create thumbnail for page %d"
 msgstr "Не вдалося створити мініатюру для сторінки %d"
 
-#: libview/ev-jobs.c:2033
+#: libview/ev-jobs.c:2042
 #, c-format
 msgid "Failed to print page %d: %s"
 msgstr "Не вдалось надрукувати сторінку %d: %s"
@@ -1393,7 +1399,7 @@ msgstr "Виберіть або вкажіть рівень масштабу д�
 msgid "Set zoom level"
 msgstr "Вказати рівень масштабу"
 
-#: shell/ev-utils.c:279
+#: shell/ev-utils.c:268
 msgid "Supported Image Files"
 msgstr "Підтримувані файли зображень"
 
@@ -1946,8 +1952,6 @@ msgid "Toggle dual page"
 msgstr "Увімкнути/Вимкнути режим пари сторінок"
 
 #: shell/help-overlay.ui:320
-#| msgctxt "shortcut window"
-#| msgid "Toggle dual page"
 msgctxt "shortcut window"
 msgid "Toggle odd pages left"
 msgstr "Увімкнути/Вимкнути режим непарних сторінок ліворуч"
