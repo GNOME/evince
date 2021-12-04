@@ -227,7 +227,8 @@ ev_document_info_get_modified_datetime (const EvDocumentInfo *info)
 /*
  * ev_document_info_set_from_xmp:
  * @info: a #EvDocumentInfo
- * @xmp: a string containing an XMP document
+ * @xmp: a XMP document
+ * @size: the size of @xmp in bytes, or -1 if @xmp is a NUL-terminated string
  *
  * Parses the XMP document and sets @info from it.
  *
@@ -235,9 +236,10 @@ ev_document_info_get_modified_datetime (const EvDocumentInfo *info)
  */
 gboolean
 ev_document_info_set_from_xmp (EvDocumentInfo *info,
-                               const char     *xmp)
+                               const char     *xmp,
+                               gssize          size)
 {
-        return ev_xmp_parse (xmp, info);
+        return ev_xmp_parse (xmp, size != -1 ? size : strlen (xmp), info);
 }
 
 /* EvDocumentLicense */

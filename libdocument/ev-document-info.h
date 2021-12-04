@@ -163,7 +163,8 @@ void            ev_document_info_take_modified_datetime (EvDocumentInfo *info,
                                                          GDateTime      *datetime);
 EV_PRIVATE
 gboolean        ev_document_info_set_from_xmp           (EvDocumentInfo *info,
-                                                         const char     *xmp);
+                                                         const char     *xmp,
+                                                         gssize          size);
 
 /* EvDocumentLicense */
 #define EV_TYPE_DOCUMENT_LICENSE (ev_document_license_get_type())

@@ -540,7 +540,7 @@ djvu_document_get_info (EvDocument *document)
 
         xmp = ddjvu_anno_get_xmp (anno);
         if (xmp != NULL) {
-                ev_document_info_set_from_xmp (info, xmp);
+                ev_document_info_set_from_xmp (info, xmp, -1);
         }
 
         ddjvu_miniexp_release (djvu_document->d_document, anno);

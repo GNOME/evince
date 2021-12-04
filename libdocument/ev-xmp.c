@@ -383,13 +383,15 @@ xmp_get_license (xmlXPathContextPtr xpathCtx)
 
 /*
  * ev_xmp_parse:
- * @metadata: a XMP document as a string
+ * @metadata: XMP document data
+ * @size: size of @metadata in bytes
  * @info: a #EvDocumentInfo
  *
  * Returns: %TRUE iff @metadata could be successfully parsed
  */
 gboolean
-ev_xmp_parse (const gchar    *metadata,
+ev_xmp_parse (const char    *metadata,
+              gsize          size,
               EvDocumentInfo *info)
 {
         xmlDocPtr          doc;
@@ -405,7 +407,7 @@ ev_xmp_parse (const gchar    *metadata,
         GDateTime         *metadata_datetime = NULL;
         GDateTime         *datetime;
 
-        doc = xmlParseMemory (metadata, strlen (metadata));
+        doc = xmlParseMemory (metadata, size);
         if (doc == NULL)
                 return FALSE; /* invalid xml metadata */
 

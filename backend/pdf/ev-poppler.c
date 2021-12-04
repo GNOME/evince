@@ -1,4 +1,3 @@
-/* -*- Mode: C++; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8; c-indent-level: 8 -*- */
 /* this file is part of evince, a gnome document viewer
  *
  * Copyright (C) 2018, Evangelos Rigas <erigas@rnd2.org>
@@ -600,7 +599,7 @@ pdf_document_get_info (EvDocument *document)
         ev_document_info_take_modified_datetime (info, modified_datetime);
 
 	if (metadata != NULL) {
-                ev_document_info_set_from_xmp (info, metadata);
+                ev_document_info_set_from_xmp (info, metadata, -1);
 		g_free (metadata);
 	}
 

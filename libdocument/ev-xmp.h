@@ -27,6 +27,7 @@
 G_BEGIN_DECLS
 
 gboolean ev_xmp_parse (const char     *xmp,
+                       gsize           size,
                        EvDocumentInfo *info);
 
 G_END_DECLS
