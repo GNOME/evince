@@ -554,23 +554,14 @@ pdf_document_get_info (EvDocument *document)
 
 	info = ev_document_info_new ();
 
-	info->fields_mask |= EV_DOCUMENT_INFO_TITLE |
-			     EV_DOCUMENT_INFO_FORMAT |
-			     EV_DOCUMENT_INFO_AUTHOR |
-			     EV_DOCUMENT_INFO_SUBJECT |
-			     EV_DOCUMENT_INFO_KEYWORDS |
-			     EV_DOCUMENT_INFO_LAYOUT |
+	info->fields_mask |= EV_DOCUMENT_INFO_LAYOUT |
 			     EV_DOCUMENT_INFO_START_MODE |
 		             EV_DOCUMENT_INFO_PERMISSIONS |
 			     EV_DOCUMENT_INFO_UI_HINTS |
-			     EV_DOCUMENT_INFO_CREATOR |
-			     EV_DOCUMENT_INFO_PRODUCER |
 			     EV_DOCUMENT_INFO_LINEARIZED |
 			     EV_DOCUMENT_INFO_N_PAGES |
 			     EV_DOCUMENT_INFO_SECURITY |
-		             EV_DOCUMENT_INFO_PAPER_SIZE |
-			     EV_DOCUMENT_INFO_CONTAINS_JS |
-			     EV_DOCUMENT_INFO_LICENSE;
+		             EV_DOCUMENT_INFO_PAPER_SIZE;
 
 	g_object_get (PDF_DOCUMENT (document)->document,
 		      "title", &(info->title),
@@ -589,6 +580,21 @@ pdf_document_get_info (EvDocument *document)
 		      "linearized", &linearized,
 		      "metadata", &metadata,
 		      NULL);
+
+        if (info->title)
+                info->fields_mask |= EV_DOCUMENT_INFO_TITLE;
+        if (info->format)
+                info->fields_mask |= EV_DOCUMENT_INFO_FORMAT;
+        if (info->author)
+                info->fields_mask |= EV_DOCUMENT_INFO_AUTHOR;
+        if (info->subject)
+                info->fields_mask |= EV_DOCUMENT_INFO_SUBJECT;
+        if (info->keywords)
+                info->fields_mask |= EV_DOCUMENT_INFO_KEYWORDS;
+        if (info->creator)
+                info->fields_mask |= EV_DOCUMENT_INFO_CREATOR;
+        if (info->producer)
+                info->fields_mask |= EV_DOCUMENT_INFO_PRODUCER;
 
         ev_document_info_take_created_datetime (info, created_datetime);
         ev_document_info_take_modified_datetime (info, modified_datetime);
@@ -703,6 +709,7 @@ pdf_document_get_info (EvDocument *document)
 #if POPPLER_CHECK_VERSION(0, 90, 0)
 	info->contains_js = poppler_document_has_javascript (PDF_DOCUMENT (document)->document) ?
 	                    EV_DOCUMENT_CONTAINS_JS_YES : EV_DOCUMENT_CONTAINS_JS_NO;
+        info->fields_mask |= EV_DOCUMENT_INFO_CONTAINS_JS;
 #else
 	info->contains_js = EV_DOCUMENT_CONTAINS_JS_UNKNOWN;
 #endif
