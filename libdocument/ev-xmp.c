@@ -438,7 +438,8 @@ ev_xmp_parse (const gchar    *metadata,
         /* From PDF spec, if the PDF modified date is newer than metadata date,
          * it indicates that the file was edited by a non-XMP aware software.
          * Then, the information dictionary is considered authoritative and the
-         * XMP metadata should not be displayed. */
+         * XMP metadata should not be displayed.
+         */
         modified_datetime = ev_document_info_get_modified_datetime (info);
         if (modified_datetime == NULL ||
             metadata_datetime == NULL ||
@@ -448,42 +449,49 @@ ev_xmp_parse (const gchar    *metadata,
                 if (fmt != NULL) {
                         g_free (info->format);
                         info->format = fmt;
+                        info->fields_mask |= EV_DOCUMENT_INFO_FORMAT;
                 }
 
                 author = xmp_get_author (xpathCtx);
                 if (author != NULL) {
                         g_free (info->author);
                         info->author = author;
+                        info->fields_mask |= EV_DOCUMENT_INFO_AUTHOR;
                 }
 
                 keywords = xmp_get_keywords (xpathCtx);
                 if (keywords != NULL) {
                         g_free (info->keywords);
                         info->keywords = keywords;
+                        info->fields_mask |= EV_DOCUMENT_INFO_KEYWORDS;
                 }
 
                 title = xmp_get_title (xpathCtx);
                 if (title != NULL) {
                         g_free (info->title);
                         info->title = title;
+                        info->fields_mask |= EV_DOCUMENT_INFO_TITLE;
                 }
 
                 subject = xmp_get_subject (xpathCtx);
                 if (subject != NULL) {
                         g_free (info->subject);
                         info->subject = subject;
+                        info->fields_mask |= EV_DOCUMENT_INFO_SUBJECT;
                 }
 
                 creatortool = strexchange (xmp_get_tag_from_xpath (xpathCtx, CREATOR));
                 if (creatortool != NULL) {
                         g_free (info->creator);
                         info->creator = creatortool;
+                        info->fields_mask |= EV_DOCUMENT_INFO_CREATOR;
                 }
 
                 producer = strexchange (xmp_get_tag_from_xpath (xpathCtx, PRODUCER));
                 if (producer != NULL) {
                         g_free (info->producer);
                         info->producer = producer;
+                        info->fields_mask |= EV_DOCUMENT_INFO_PRODUCER;
                 }
 
                 /* reads modify date */
@@ -498,6 +506,9 @@ ev_xmp_parse (const gchar    *metadata,
         }
 
         info->license = xmp_get_license (xpathCtx);
+        if (info->license)
+                info->fields_mask |= EV_DOCUMENT_INFO_LICENSE;
+
 
         g_clear_pointer (&metadata_datetime, g_date_time_unref);
         xmlXPathFreeContext (xpathCtx);
