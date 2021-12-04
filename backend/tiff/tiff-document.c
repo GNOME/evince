@@ -1,4 +1,3 @@
-/* -*- Mode: C; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8; c-indent-level: 8 -*- */
 /*
  * Copyright (C) 2005, Jonathan Blandford <jrb@gnome.org>
  *
@@ -31,6 +30,7 @@
 #include "tiffio.h"
 #include "tiff2ps.h"
 #include "tiff-document.h"
+#include "ev-document-info.h"
 #include "ev-document-misc.h"
 #include "ev-file-exporter.h"
 #include "ev-file-helpers.h"
@@ -430,6 +430,23 @@ tiff_document_get_page_label (EvDocument *document,
 	return NULL;
 }
 
+static EvDocumentInfo *
+tiff_document_get_info (EvDocument *document)
+{
+        TiffDocument *tiff_document = TIFF_DOCUMENT (document);
+        EvDocumentInfo *info;
+        const void *data;
+        uint32_t size;
+
+        info = ev_document_info_new ();
+
+        if (TIFFGetField (tiff_document->tiff, TIFFTAG_XMLPACKET, &size, &data) == 1) {
+                ev_document_info_set_from_xmp (info, (const char*)data, size);
+        }
+
+        return info;
+}
+
 static void
 tiff_document_finalize (GObject *object)
 {
@@ -458,6 +475,7 @@ tiff_document_class_init (TiffDocumentClass *klass)
 	ev_document_class->render = tiff_document_render;
 	ev_document_class->get_thumbnail = tiff_document_get_thumbnail;
 	ev_document_class->get_page_label = tiff_document_get_page_label;
+	ev_document_class->get_info = tiff_document_get_info;
 }
 
 /* postscript exporter implementation */
