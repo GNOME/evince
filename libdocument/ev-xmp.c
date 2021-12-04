@@ -106,6 +106,23 @@ xmp_get_tag_from_xpath (xmlXPathContextPtr xpathCtx,
         return result;
 }
 
+static GDateTime *
+xmp_get_datetime_from_xpath (xmlXPathContextPtr xpathCtx,
+                             const char* xpath)
+{
+        xmlChar *tag;
+        GDateTime *datetime;
+
+        tag = xmp_get_tag_from_xpath (xpathCtx, xpath);
+        if (tag == NULL)
+                return NULL;
+
+        datetime = g_date_time_new_from_iso8601 ((const char*)tag, NULL);
+        xmlFree (tag);
+
+        return datetime;
+}
+
 /* Reference:
  * http://www.pdfa.org/lib/exe/fetch.php?id=pdfa%3Aen%3Atechdoc&cache=cache&media=pdfa:techdoc:tn0001_pdfa-1_and_namespaces_2008-03-18.pdf
  */
@@ -380,11 +397,9 @@ ev_xmp_parse (const gchar    *metadata,
         gchar             *subject;
         gchar             *creatortool;
         gchar             *producer;
-        gchar             *modified_date;
-        gchar             *created_date;
-        gchar             *metadata_date;
         GDateTime         *modified_datetime;
         GDateTime         *metadata_datetime = NULL;
+        GDateTime         *datetime;
 
         doc = xmlParseMemory (metadata, strlen (metadata));
         if (doc == NULL)
@@ -414,11 +429,7 @@ ev_xmp_parse (const gchar    *metadata,
         xmlXPathRegisterNs (xpathCtx, BAD_CAST "cc", BAD_CAST "http://creativecommons.org/ns#");
 
         /* Read metadata date */
-        metadata_date = (gchar *)xmp_get_tag_from_xpath (xpathCtx, META_DATE);
-        if (metadata_date != NULL) {
-                metadata_datetime = g_date_time_new_from_iso8601 (metadata_date, NULL);
-                g_free (metadata_date);
-        }
+        metadata_datetime = xmp_get_datetime_from_xpath (xpathCtx, META_DATE);
 
         /* From PDF spec, if the PDF modified date is newer than metadata date,
          * it indicates that the file was edited by a non-XMP aware software.
@@ -472,24 +483,14 @@ ev_xmp_parse (const gchar    *metadata,
                 }
 
                 /* reads modify date */
-                modified_date = (gchar *)xmp_get_tag_from_xpath (xpathCtx, MOD_DATE);
-                if (modified_date != NULL) {
-                        GDateTime *datetime;
-
-                        datetime = g_date_time_new_from_iso8601 (modified_date, NULL);
+                datetime = xmp_get_datetime_from_xpath (xpathCtx, MOD_DATE);
+                if (datetime)
                         ev_document_info_take_modified_datetime (info, datetime);
-                        g_free (modified_date);
-                }
 
                 /* reads pdf create date */
-                created_date = (gchar *)xmp_get_tag_from_xpath (xpathCtx, CREATE_DATE);
-                if (created_date != NULL) {
-                        GDateTime *datetime;
-
-                        datetime = g_date_time_new_from_iso8601 (created_date, NULL);
+                datetime = xmp_get_datetime_from_xpath (xpathCtx, CREATE_DATE);
+                if (datetime)
                         ev_document_info_take_created_datetime (info, datetime);
-                        g_free (created_date);
-                }
         }
 
         info->license = xmp_get_license (xpathCtx);
