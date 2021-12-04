@@ -1052,6 +1052,9 @@ pdf_document_get_info (EvDocument *document)
 		      "metadata", &metadata,
 		      NULL);
 
+        ev_document_info_take_created_datetime (info, created_datetime);
+        ev_document_info_take_modified_datetime (info, modified_datetime);
+
 	if (metadata != NULL) {
 		pdf_document_parse_metadata (metadata, info);
 		g_free (metadata);
@@ -1165,9 +1168,6 @@ pdf_document_get_info (EvDocument *document)
 #else
 	info->contains_js = EV_DOCUMENT_CONTAINS_JS_UNKNOWN;
 #endif
-
-        ev_document_info_take_created_datetime (info, created_datetime);
-        ev_document_info_take_modified_datetime (info, modified_datetime);
 
 	return info;
 }
