@@ -77,19 +77,6 @@ xmp_get_tag_from_xpath (xmlXPathContextPtr xpathCtx,
 
         xmpmetapath = g_strdup_printf ("%s%s", "/x:xmpmeta", xpath);
 
-        /* add pdf/a and pdf/x namespaces */
-        xmlXPathRegisterNs (xpathCtx, BAD_CAST "x", BAD_CAST "adobe:ns:meta/");
-        xmlXPathRegisterNs (xpathCtx, BAD_CAST "rdf", BAD_CAST "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
-        xmlXPathRegisterNs (xpathCtx, BAD_CAST "pdfaid", BAD_CAST "http://www.aiim.org/pdfa/ns/id/");
-        xmlXPathRegisterNs (xpathCtx, BAD_CAST "pdfxid", BAD_CAST "http://www.npes.org/pdfx/ns/id/");
-        xmlXPathRegisterNs (xpathCtx, BAD_CAST "pdfx", BAD_CAST "http://ns.adobe.com/pdfx/1.3/");
-        xmlXPathRegisterNs (xpathCtx, BAD_CAST "pdf", BAD_CAST "http://ns.adobe.com/pdf/1.3/");
-        xmlXPathRegisterNs (xpathCtx, BAD_CAST "xmp", BAD_CAST "http://ns.adobe.com/xap/1.0/");
-        /* XMP Rights Management Schema */
-        xmlXPathRegisterNs (xpathCtx, BAD_CAST "xmpRights", BAD_CAST "http://ns.adobe.com/xap/1.0/rights/");
-        /* Creative Commons Schema */
-        xmlXPathRegisterNs (xpathCtx, BAD_CAST "cc", BAD_CAST "http://creativecommons.org/ns#");
-
         /* Try in /rdf:RDF/ */
         xpathObj = xmlXPathEvalExpression (BAD_CAST xpath, xpathCtx);
         if (xpathObj == NULL)
@@ -176,7 +163,7 @@ xmp_get_pdf_format (xmlXPathContextPtr xpathCtx)
 
 static char *
 xmp_get_lists_from_dc_tags (xmlXPathContextPtr xpathCtx,
-                                     const char* xpath)
+                            const char* xpath)
 {
         xmlXPathObjectPtr xpathObj;
         int i;
@@ -184,11 +171,6 @@ xmp_get_lists_from_dc_tags (xmlXPathContextPtr xpathCtx,
         char* tmp_elements = NULL;
         char* result = NULL;
         xmlChar* content;
-
-        /* add xmp namespaces */
-        xmlXPathRegisterNs (xpathCtx, BAD_CAST "x", BAD_CAST "adobe:ns:meta/");
-        xmlXPathRegisterNs (xpathCtx, BAD_CAST "rdf", BAD_CAST "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
-        xmlXPathRegisterNs (xpathCtx, BAD_CAST "dc", BAD_CAST "http://purl.org/dc/elements/1.1/");
 
         /* reads pdf/a sequence*/
         xpathObj = xmlXPathEvalExpression (BAD_CAST xpath, xpathCtx);
@@ -277,15 +259,6 @@ xmp_get_localized_object_from_xpath_format (xmlXPathContextPtr xpathCtx,
         gchar *tag, *tag_aux;
         int i, j;
         char *loc_object= NULL;
-
-        /* register namespaces */
-        xmlXPathRegisterNs (xpathCtx, BAD_CAST "x", BAD_CAST "adobe:ns:meta/");
-        xmlXPathRegisterNs (xpathCtx, BAD_CAST "rdf", BAD_CAST "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
-        xmlXPathRegisterNs (xpathCtx, BAD_CAST "dc", BAD_CAST "http://purl.org/dc/elements/1.1/");
-        /* XMP Rights Management Schema */
-        xmlXPathRegisterNs (xpathCtx, BAD_CAST "xmpRights", BAD_CAST "http://ns.adobe.com/xap/1.0/rights/");
-        /* Creative Commons Schema */
-        xmlXPathRegisterNs (xpathCtx, BAD_CAST "cc", BAD_CAST "http://creativecommons.org/ns#");
 
         /* 1) checking for a suitable localized string */
         language_string = pango_language_to_string (pango_language_get_default ());
@@ -423,7 +396,24 @@ ev_xmp_parse (const gchar    *metadata,
                 return FALSE; /* invalid xpath context */
         }
 
-        /* reads pdf metadata date */
+        /* Register namespaces */
+        /* XMP */
+        xmlXPathRegisterNs (xpathCtx, BAD_CAST "dc", BAD_CAST "http://purl.org/dc/elements/1.1/");
+        xmlXPathRegisterNs (xpathCtx, BAD_CAST "x", BAD_CAST "adobe:ns:meta/");
+        xmlXPathRegisterNs (xpathCtx, BAD_CAST "xmp", BAD_CAST "http://ns.adobe.com/xap/1.0/");
+        /* XMP Rights Management Schema */
+        xmlXPathRegisterNs (xpathCtx, BAD_CAST "xmpRights", BAD_CAST "http://ns.adobe.com/xap/1.0/rights/");
+        /* RDF */
+        xmlXPathRegisterNs (xpathCtx, BAD_CAST "rdf", BAD_CAST "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
+        /* PDF/A and PDF/X namespaces */
+        xmlXPathRegisterNs (xpathCtx, BAD_CAST "pdf", BAD_CAST "http://ns.adobe.com/pdf/1.3/");
+        xmlXPathRegisterNs (xpathCtx, BAD_CAST "pdfaid", BAD_CAST "http://www.aiim.org/pdfa/ns/id/");
+        xmlXPathRegisterNs (xpathCtx, BAD_CAST "pdfx", BAD_CAST "http://ns.adobe.com/pdfx/1.3/");
+        xmlXPathRegisterNs (xpathCtx, BAD_CAST "pdfxid", BAD_CAST "http://www.npes.org/pdfx/ns/id/");
+        /* Creative Commons Schema */
+        xmlXPathRegisterNs (xpathCtx, BAD_CAST "cc", BAD_CAST "http://creativecommons.org/ns#");
+
+        /* Read metadata date */
         metadata_date = (gchar *)xmp_get_tag_from_xpath (xpathCtx, META_DATE);
         if (metadata_date != NULL) {
                 metadata_datetime = g_date_time_new_from_iso8601 (metadata_date, NULL);
