@@ -86,6 +86,8 @@ sources = files(
   'ev-render-context.c',
   'ev-selection.c',
   'ev-transition-effect.c',
+  'ev-xmp.c',
+  'ev-xmp.h',
 )
 
 version_conf = configuration_data()
@@ -124,6 +126,7 @@ common_deps = [
 deps = common_deps + [
   gmodule_dep,
   gmodule_no_export_dep,
+  libxml_dep,
   m_dep,
   synctex_dep,
   zlib_dep,

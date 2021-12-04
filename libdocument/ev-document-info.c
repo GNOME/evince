@@ -25,6 +25,7 @@
 #include <string.h>
 
 #include "ev-document-info.h"
+#include "ev-xmp.h"
 
 typedef struct _EvDocumentInfoExtended EvDocumentInfoExtended;
 struct _EvDocumentInfoExtended {
@@ -221,6 +222,22 @@ ev_document_info_get_modified_datetime (const EvDocumentInfo *info)
         g_return_val_if_fail (info_ex->info.fields_mask & _EV_DOCUMENT_INFO_EXTENDED, NULL);
 
         return info_ex->modified_datetime;
+}
+
+/*
+ * ev_document_info_set_from_xmp:
+ * @info: a #EvDocumentInfo
+ * @xmp: a string containing an XMP document
+ *
+ * Parses the XMP document and sets @info from it.
+ *
+ * Returns: %TRUE iff @xmp could be successfully parsed as a XMP document
+ */
+gboolean
+ev_document_info_set_from_xmp (EvDocumentInfo *info,
+                               const char     *xmp)
+{
+        return ev_xmp_parse (xmp, info);
 }
 
 /* EvDocumentLicense */

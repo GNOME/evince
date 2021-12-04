@@ -1,4 +1,3 @@
-/* -*- Mode: C; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8; c-indent-level: 8 -*- */
 /*
  *  Copyright (C) 2000-2003 Marco Pesenti Gritti
  *  Copyright © 2021 Christian Persch
@@ -162,6 +161,9 @@ void            ev_document_info_take_created_datetime  (EvDocumentInfo *info,
 EV_PRIVATE
 void            ev_document_info_take_modified_datetime (EvDocumentInfo *info,
                                                          GDateTime      *datetime);
+EV_PRIVATE
+gboolean        ev_document_info_set_from_xmp           (EvDocumentInfo *info,
+                                                         const char     *xmp);
 
 /* EvDocumentLicense */
 #define EV_TYPE_DOCUMENT_LICENSE (ev_document_license_get_type())
