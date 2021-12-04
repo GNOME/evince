@@ -67,6 +67,20 @@
 #define CREATOR "/rdf:RDF/rdf:Description/xmp:CreatorTool"
 #define PRODUCER "/rdf:RDF/rdf:Description/pdf:Producer"
 
+/*
+ * strexchange:
+ * @str: (transfer full): a string from libxml allocator
+ *
+ * Returns: (transfer full): @str from glib allocator
+ */
+static char *
+strexchange (xmlChar *str)
+{
+        char *rv = g_strdup ((char*)str);
+        xmlFree (str);
+        return rv;
+}
+
 static xmlChar *
 xmp_get_tag_from_xpath (xmlXPathContextPtr xpathCtx,
                         const char* xpath)
@@ -275,7 +289,7 @@ xmp_get_localized_object_from_xpath_format (xmlXPathContextPtr xpathCtx,
         gchar **tags;
         gchar *tag, *tag_aux;
         int i, j;
-        char *loc_object= NULL;
+        xmlChar *loc_object= NULL;
 
         /* 1) checking for a suitable localized string */
         language_string = pango_language_to_string (pango_language_get_default ());
@@ -292,7 +306,7 @@ xmp_get_localized_object_from_xpath_format (xmlXPathContextPtr xpathCtx,
 #pragma GCC diagnostic ignored "-Wformat-nonliteral"
                 aux = g_strdup_printf (xpath_format, tag);
 #pragma GCC diagnostic pop
-                loc_object = (gchar *)xmp_get_tag_from_xpath (xpathCtx, aux);
+                loc_object = xmp_get_tag_from_xpath (xpathCtx, aux);
                 g_free (tag);
                 g_free (aux);
         }
@@ -304,10 +318,10 @@ xmp_get_localized_object_from_xpath_format (xmlXPathContextPtr xpathCtx,
 #pragma GCC diagnostic ignored "-Wformat-nonliteral"
                 aux = g_strdup_printf (xpath_format, "x-default");
 #pragma GCC diagnostic pop
-                loc_object = (gchar *)xmp_get_tag_from_xpath (xpathCtx, aux);
+                loc_object = xmp_get_tag_from_xpath (xpathCtx, aux);
                 g_free (aux);
         }
-        return loc_object;
+        return strexchange (loc_object);
 }
 
 static char *
@@ -359,13 +373,13 @@ xmp_get_license (xmlXPathContextPtr xpathCtx)
                 /* Checking the license URI as defined by the Creative Commons
                  * Schema. This field is recomended to be checked by Creative
                  * Commons */
-                license->uri = (gchar *)xmp_get_tag_from_xpath (xpathCtx, LICENSE_URI);
+                license->uri = strexchange (xmp_get_tag_from_xpath (xpathCtx, LICENSE_URI));
 
                 /* Checking the web statement as defined by the XMP Rights
                  * Management Schema. Checking it out is a sort of above-and-beyond
                  * the basic recommendations by Creative Commons. It can be
                  * considered as a "reinforcement" approach to add certainty. */
-                license->web_statement = (gchar *)xmp_get_tag_from_xpath (xpathCtx, LICENSE_WEB_STATEMENT);
+                license->web_statement = strexchange (xmp_get_tag_from_xpath (xpathCtx, LICENSE_WEB_STATEMENT));
         }
         xmlFree (marked);
 
@@ -470,13 +484,13 @@ ev_xmp_parse (const gchar    *metadata,
                         info->subject = subject;
                 }
 
-                creatortool = (char*)xmp_get_tag_from_xpath (xpathCtx, CREATOR);
+                creatortool = strexchange (xmp_get_tag_from_xpath (xpathCtx, CREATOR));
                 if (creatortool != NULL) {
                         g_free (info->creator);
                         info->creator = creatortool;
                 }
 
-                producer = (char*)xmp_get_tag_from_xpath (xpathCtx, PRODUCER);
+                producer = strexchange (xmp_get_tag_from_xpath (xpathCtx, PRODUCER));
                 if (producer != NULL) {
                         g_free (info->producer);
                         info->producer = producer;
