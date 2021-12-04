@@ -89,8 +89,6 @@ xmp_get_tag_from_xpath (xmlXPathContextPtr xpathCtx,
         xmlChar *result = NULL;
         char *xmpmetapath;
 
-        xmpmetapath = g_strdup_printf ("%s%s", "/x:xmpmeta", xpath);
-
         /* Try in /rdf:RDF/ */
         xpathObj = xmlXPathEvalExpression (BAD_CAST xpath, xpathCtx);
         if (xpathObj == NULL)
@@ -108,7 +106,9 @@ xmp_get_tag_from_xpath (xmlXPathContextPtr xpathCtx,
           Try in /x:xmpmeta/ (xmpmeta is optional)
           https://wwwimages2.adobe.com/content/dam/acom/en/devnet/xmp/pdfs/XMP SDK Release cc-2016-08/XMPSpecificationPart1.pdf (Section 7.3.3)
         */
+        xmpmetapath = g_strdup_printf ("%s%s", "/x:xmpmeta", xpath);
         xpathObj = xmlXPathEvalExpression (BAD_CAST xmpmetapath, xpathCtx);
+        g_free (xmpmetapath);
         if (xpathObj == NULL)
                 return NULL;
 
@@ -116,7 +116,6 @@ xmp_get_tag_from_xpath (xmlXPathContextPtr xpathCtx,
                 result = xmlNodeGetContent (xpathObj->nodesetval->nodeTab[0]);
 
         xmlXPathFreeObject (xpathObj);
-        g_free (xmpmetapath);
         return result;
 }
 
@@ -224,7 +223,6 @@ xmp_get_lists_from_dc_tags (xmlXPathContextPtr xpathCtx,
         }
         xmlXPathFreeObject (xpathObj);
 
-
         if (elements != NULL) {
                 /* return buffer */
                 result = g_strdup (elements);
@@ -242,16 +240,13 @@ xmp_get_author (xmlXPathContextPtr xpathCtx)
         char* result = NULL;
         char* xmpmetapath;
 
-        xmpmetapath = g_strdup_printf ("%s%s", "/x:xmpmeta", AUTHORS);
-
         /* Try in /rdf:RDF/ */
         result = xmp_get_lists_from_dc_tags (xpathCtx, AUTHORS);
-        if (result != NULL) {
-                g_free (xmpmetapath);
+        if (result != NULL)
                 return result;
-        }
 
         /* Try in /x:xmpmeta/ */
+        xmpmetapath = g_strdup_printf ("%s%s", "/x:xmpmeta", AUTHORS);
         result = xmp_get_lists_from_dc_tags (xpathCtx, xmpmetapath);
         g_free (xmpmetapath);
 
@@ -264,16 +259,13 @@ xmp_get_keywords (xmlXPathContextPtr xpathCtx)
         char* result = NULL;
         char* xmpmetapath;
 
-        xmpmetapath = g_strdup_printf ("%s%s", "/x:xmpmeta", KEYWORDS);
-
         /* Try in /rdf:RDF/ */
         result = xmp_get_lists_from_dc_tags (xpathCtx, KEYWORDS);
-        if (result != NULL) {
-                g_free (xmpmetapath);
+        if (result != NULL)
                 return result;
-        }
 
         /* Try in /x:xmpmeta/ */
+        xmpmetapath = g_strdup_printf ("%s%s", "/x:xmpmeta", KEYWORDS);
         result = xmp_get_lists_from_dc_tags (xpathCtx, xmpmetapath);
         g_free (xmpmetapath);
 
@@ -347,10 +339,8 @@ xmp_get_license (xmlXPathContextPtr xpathCtx)
         marked = xmp_get_tag_from_xpath (xpathCtx, LICENSE_MARKED);
 
         /* a) Not marked => No XMP Rights information */
-        if (!marked) {
-                xmlFree (marked);
+        if (!marked)
                 return NULL;
-        }
 
         license = ev_document_license_new ();
 
