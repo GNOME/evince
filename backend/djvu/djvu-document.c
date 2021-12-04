@@ -1,4 +1,3 @@
-/* -*- Mode: C; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8; c-indent-level: 8 -*- */
 /*
  * Copyright (C) 2005, Nickolay V. Shmyrev <nshmyrev@yandex.ru>
  *
@@ -25,6 +24,7 @@
 #include "djvu-links.h"
 #include "djvu-document-private.h"
 #include "ev-file-exporter.h"
+#include "ev-document-info.h"
 #include "ev-document-misc.h"
 #include "ev-document-find.h"
 #include "ev-document-links.h"
@@ -522,6 +522,31 @@ djvu_document_get_thumbnail_surface (EvDocument      *document,
 	return surface;
 }
 
+static EvDocumentInfo *
+djvu_document_get_info (EvDocument *document)
+{
+        DjvuDocument *djvu_document = DJVU_DOCUMENT (document);
+        const char *xmp;
+        miniexp_t anno;
+        EvDocumentInfo *info;
+
+        info = ev_document_info_new ();
+
+        anno = ddjvu_document_get_anno (djvu_document->d_document, 1);
+        if (anno == miniexp_nil) {
+                ddjvu_miniexp_release (djvu_document->d_document, anno);
+                return info;
+        }
+
+        xmp = ddjvu_anno_get_xmp (anno);
+        if (xmp != NULL) {
+                ev_document_info_set_from_xmp (info, xmp);
+        }
+
+        ddjvu_miniexp_release (djvu_document->d_document, anno);
+        return info;
+}
+
 static void
 djvu_document_finalize (GObject *object)
 {
@@ -566,6 +591,7 @@ djvu_document_class_init (DjvuDocumentClass *klass)
 	ev_document_class->render = djvu_document_render;
 	ev_document_class->get_thumbnail = djvu_document_get_thumbnail;
 	ev_document_class->get_thumbnail_surface = djvu_document_get_thumbnail_surface;
+	ev_document_class->get_info = djvu_document_get_info;
 }
 
 static gchar *
