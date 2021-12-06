@@ -2873,7 +2873,7 @@ ev_annot_from_poppler_annot (PopplerAnnot *poppler_annot,
 
 		modified = poppler_annot_get_modified (poppler_annot);
 		if (poppler_date_parse (modified, &utime)) {
-			ev_annotation_set_modified_from_time (ev_annot, utime);
+			ev_annotation_set_modified_from_time_t (ev_annot, utime);
 		} else {
 			ev_annotation_set_modified (ev_annot, modified);
 		}
