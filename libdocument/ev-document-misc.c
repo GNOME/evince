@@ -510,24 +510,6 @@ ev_document_misc_get_widget_dpi (GtkWidget *widget)
 }
 
 /**
- * ev_document_misc_format_date:
- * @utime: a #GTime
- *
- * Returns: (transfer full): a locale specific date and time representation.
- *
- * Deprecated: 3.38: use ev_document_misc_format_datetime instead as GTime is
- *                   deprecated because it is not year-2038 safe.
- */
-G_GNUC_BEGIN_IGNORE_DEPRECATIONS
-gchar *
-ev_document_misc_format_date (GTime utime)
-{
-	g_autoptr (GDateTime) dt = g_date_time_new_from_unix_utc ((gint64)utime);
-	return ev_document_misc_format_datetime (dt);
-}
-G_GNUC_END_IGNORE_DEPRECATIONS
-
-/**
  * ev_document_misc_format_datetime:
  * @dt: a #GDateTime
  *
