@@ -470,21 +470,14 @@ ev_document_misc_invert_pixbuf (GdkPixbuf *pixbuf)
 gdouble
 ev_document_misc_get_widget_dpi (GtkWidget *widget)
 {
-#if 0
-	GdkRectangle  geometry;
-	GdkDisplay   *display;
-	GdkMonitor   *monitor;
-	GdkSurface   *surface;
+	GdkDisplay   *display = gtk_widget_get_display (widget);
+	GdkSurface   *surface = gtk_native_get_surface (gtk_widget_get_native (widget));
+	GdkMonitor   *monitor = NULL;
 	gboolean      is_landscape;
+	GdkRectangle  geometry;
 
-	display = gtk_widget_get_display (widget);
-	window = gtk_widget_get_window (widget);
-	if (window != NULL) {
-		monitor = gdk_display_get_monitor_at_window (display, window);
-	} else {
-		monitor = gdk_display_get_primary_monitor (display);
-		if (monitor == NULL)
-			monitor = gdk_display_get_monitor (display, 0);
+	if (surface != NULL) {
+		monitor = gdk_display_get_monitor_at_surface (display, surface);
 	}
 
 	/* The only safe assumption you can make, on Unix-like/X11 and
@@ -505,7 +498,6 @@ ev_document_misc_get_widget_dpi (GtkWidget *widget)
 	if (is_landscape && geometry.height >= 1080)
 		return 192;
 	else
-#endif
 		return 96;
 }
 
