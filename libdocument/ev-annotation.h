@@ -147,13 +147,6 @@ gboolean             ev_annotation_set_modified              (EvAnnotation      
 EV_PUBLIC
 gboolean             ev_annotation_set_modified_from_time_t  (EvAnnotation           *annot,
 							      time_t                  utime);
-G_GNUC_BEGIN_IGNORE_DEPRECATIONS
-EV_DEPRECATED_FOR(ev_annotaion_set_modified_from_time_t)
-EV_PUBLIC
-gboolean             ev_annotation_set_modified_from_time    (EvAnnotation           *annot,
-							      GTime                   utime);
-G_GNUC_END_IGNORE_DEPRECATIONS
-
 EV_PUBLIC
 void                 ev_annotation_get_rgba                  (EvAnnotation           *annot,
                                                               GdkRGBA                *rgba);
