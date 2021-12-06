@@ -497,47 +497,6 @@ ev_annotation_set_modified (EvAnnotation *annot,
 }
 
 /**
- * ev_annotation_set_modified_from_time:
- * @annot: an #EvAnnotation
- * @utime: a #GTime
- *
- * Set the last modification date of @annot to @utime.  You can
- * monitor changes to the last modification date by connecting to the
- * notify::modified sinal on @annot.
- * For the time-format used, see ev_document_misc_format_date().
- *
- * Returns: %TRUE if the last modified date has been updated, %FALSE otherwise.
- *
- * Deprecated: 3.42: use ev_annotation_set_modified_from_time_t instead as GTime is
- *                   deprecated because it is not year-2038 safe
- */
-G_GNUC_BEGIN_IGNORE_DEPRECATIONS
-gboolean
-ev_annotation_set_modified_from_time (EvAnnotation *annot,
-				      GTime         utime)
-{
-	gchar *modified;
-
-	g_return_val_if_fail (EV_IS_ANNOTATION (annot), FALSE);
-
-	modified = ev_document_misc_format_date (utime);
-
-	if (g_strcmp0 (annot->modified, modified) == 0) {
-		g_free (modified);
-		return FALSE;
-	}
-
-	if (annot->modified)
-		g_free (annot->modified);
-	annot->modified = modified;
-
-	g_object_notify (G_OBJECT (annot), "modified");
-
-	return TRUE;
-}
-G_GNUC_END_IGNORE_DEPRECATIONS
-
-/**
  * ev_annotation_set_modified_from_time_t:
  * @annot: an #EvAnnotation
  * @utime: a #time_t
