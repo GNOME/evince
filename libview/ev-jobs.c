@@ -602,13 +602,13 @@ ev_job_render_dispose (GObject *object)
 
 	ev_debug_message (DEBUG_JOBS, "page: %d (%p)", job->page, job);
 
-	if (job->surface) {
-		cairo_surface_destroy (job->surface);
-		job->surface = NULL;
+	if (job->texture) {
+		g_object_unref (job->texture);
+		job->texture = NULL;
 	}
 
 	if (job->selection) {
-		cairo_surface_destroy (job->selection);
+		g_object_unref (job->selection);
 		job->selection = NULL;
 	}
 
@@ -620,12 +620,40 @@ ev_job_render_dispose (GObject *object)
 	(* G_OBJECT_CLASS (ev_job_render_parent_class)->dispose) (object);
 }
 
+static GdkTexture *
+gdk_texture_new_for_surface(cairo_surface_t *surface)
+{
+        GdkTexture *texture;
+        GBytes *bytes;
+
+        g_return_val_if_fail(surface != NULL, NULL);
+        g_return_val_if_fail(cairo_surface_get_type(surface) == CAIRO_SURFACE_TYPE_IMAGE, NULL);
+        g_return_val_if_fail(cairo_image_surface_get_width(surface) > 0, NULL);
+        g_return_val_if_fail(cairo_image_surface_get_height(surface) > 0, NULL);
+
+        bytes = g_bytes_new_with_free_func(cairo_image_surface_get_data(surface),
+                                           cairo_image_surface_get_height(surface) * cairo_image_surface_get_stride(surface),
+                                           (GDestroyNotify)cairo_surface_destroy,
+                                           cairo_surface_reference(surface));
+
+        texture = gdk_memory_texture_new(cairo_image_surface_get_width(surface),
+                                         cairo_image_surface_get_height(surface),
+                                         GDK_MEMORY_DEFAULT,
+                                         bytes,
+                                         cairo_image_surface_get_stride(surface));
+
+        g_bytes_unref(bytes);
+
+        return texture;
+}
+
 static gboolean
 ev_job_render_run (EvJob *job)
 {
 	EvJobRender     *job_render = EV_JOB_RENDER (job);
 	EvPage          *ev_page;
 	EvRenderContext *rc;
+	cairo_surface_t *surface, *selection = NULL;
 
 	ev_debug_message (DEBUG_JOBS, "page: %d (%p)", job_render->page, job);
 	ev_profiler_start (EV_PROFILE_JOBS, "%s (%p)", EV_GET_TYPE_NAME (job), job);
@@ -642,16 +670,16 @@ ev_job_render_run (EvJob *job)
 					   job_render->target_width, job_render->target_height);
 	g_object_unref (ev_page);
 
-	job_render->surface = ev_document_render (job->document, rc);
+	surface = ev_document_render (job->document, rc);
 
-	if (job_render->surface == NULL ||
-	    cairo_surface_status (job_render->surface) != CAIRO_STATUS_SUCCESS) {
+	if (surface == NULL ||
+	    cairo_surface_status (surface) != CAIRO_STATUS_SUCCESS) {
 		ev_document_fc_mutex_unlock ();
 		ev_document_doc_mutex_unlock ();
 		g_object_unref (rc);
 
-                if (job_render->surface != NULL) {
-                        cairo_status_t status = cairo_surface_status (job_render->surface);
+                if (surface != NULL) {
+                        cairo_status_t status = cairo_surface_status (surface);
                         ev_job_failed (job,
                                        EV_DOCUMENT_ERROR,
                                        EV_DOCUMENT_ERROR_INVALID,
@@ -666,8 +694,12 @@ ev_job_render_run (EvJob *job)
                                        job_render->page);
                 }
 
+		job_render->texture = NULL;
 		return FALSE;
 	}
+
+	job_render->texture = gdk_texture_new_for_surface (surface);
+	cairo_surface_destroy (surface);
 
 	/* If job was cancelled during the page rendering,
 	 * we return now, so that the thread is finished ASAP
@@ -683,7 +715,7 @@ ev_job_render_run (EvJob *job)
 	if (job_render->include_selection && EV_IS_SELECTION (job->document)) {
 		ev_selection_render_selection (EV_SELECTION (job->document),
 					       rc,
-					       &(job_render->selection),
+					       &selection,
 					       &(job_render->selection_points),
 					       NULL,
 					       job_render->selection_style,
@@ -693,6 +725,11 @@ ev_job_render_run (EvJob *job)
 							   rc,
 							   job_render->selection_style,
 							   &(job_render->selection_points));
+
+		if (selection != NULL) {
+			job_render->selection = gdk_texture_new_for_surface (selection);
+			cairo_surface_destroy (selection);
+		}
 	}
 
 	g_object_unref (rc);
@@ -743,8 +780,8 @@ void
 ev_job_render_set_selection_info (EvJobRender     *job,
 				  EvRectangle     *selection_points,
 				  EvSelectionStyle selection_style,
-				  GdkColor        *text,
-				  GdkColor        *base)
+				  GdkRGBA         *text,
+				  GdkRGBA         *base)
 {
 	job->include_selection = TRUE;
 

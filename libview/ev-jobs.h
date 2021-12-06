@@ -285,15 +285,15 @@ struct _EvJobRender
 	gboolean page_ready;
 	gint target_width;
 	gint target_height;
-	cairo_surface_t *surface;
+	GdkTexture *texture;
 
 	gboolean include_selection;
-	cairo_surface_t *selection;
+	GdkTexture *selection;
 	cairo_region_t *selection_region;
 	EvRectangle selection_points;
 	EvSelectionStyle selection_style;
-	GdkColor base;
-	GdkColor text;
+	GdkRGBA base;
+	GdkRGBA text;
 };
 
 struct _EvJobRenderClass
@@ -576,8 +576,8 @@ EV_PUBLIC
 void     ev_job_render_set_selection_info (EvJobRender     *job,
 					   EvRectangle     *selection_points,
 					   EvSelectionStyle selection_style,
-					   GdkColor        *text,
-					   GdkColor        *base);
+					   GdkRGBA         *text,
+					   GdkRGBA         *base);
 /* EvJobPageData */
 EV_PUBLIC
 GType           ev_job_page_data_get_type (void) G_GNUC_CONST;
