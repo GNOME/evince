@@ -65,7 +65,7 @@ void           ev_pixbuf_cache_set_page_range       (EvPixbufCache *pixbuf_cache
 						     gint           start_page,
 						     gint           end_page,
 						     GList          *selection_list);
-cairo_surface_t *ev_pixbuf_cache_get_surface        (EvPixbufCache *pixbuf_cache,
+GdkTexture *ev_pixbuf_cache_get_texture        (EvPixbufCache *pixbuf_cache,
 						     gint           page);
 void           ev_pixbuf_cache_clear                (EvPixbufCache *pixbuf_cache);
 void           ev_pixbuf_cache_style_changed        (EvPixbufCache *pixbuf_cache);
@@ -74,10 +74,8 @@ void           ev_pixbuf_cache_reload_page 	    (EvPixbufCache  *pixbuf_cache,
                     				     gint            page,
 			                             gint            rotation,
 						     gdouble         scale);
-void           ev_pixbuf_cache_set_inverted_colors  (EvPixbufCache *pixbuf_cache,
-						     gboolean       inverted_colors);
 /* Selection */
-cairo_surface_t *ev_pixbuf_cache_get_selection_surface (EvPixbufCache   *pixbuf_cache,
+GdkTexture *ev_pixbuf_cache_get_selection_texture (EvPixbufCache   *pixbuf_cache,
 							gint             page,
 							gfloat           scale);
 cairo_region_t *ev_pixbuf_cache_get_selection_region (EvPixbufCache *pixbuf_cache,
