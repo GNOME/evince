@@ -15,9 +15,7 @@ typedef struct _CacheJobInfo
 
 	/* Region of the page that needs to be drawn */
 	cairo_region_t  *region;
-
-	/* Data we get from rendering */
-	cairo_surface_t *surface;
+	GdkTexture *texture;
 
 	/* Device scale factor of target widget */
 	int device_scale;
@@ -29,7 +27,7 @@ typedef struct _CacheJobInfo
 	EvSelectionStyle selection_style;
 	gboolean         points_set;
 
-	cairo_surface_t *selection;
+	GdkTexture	*selection_texture;
 	gdouble          selection_scale;
 	EvRectangle      selection_points;
 
@@ -49,7 +47,6 @@ struct _EvPixbufCache
 	int start_page;
 	int end_page;
         ScrollDirection scroll_direction;
-	gboolean inverted_colors;
 
 	gsize max_size;
 
@@ -184,8 +181,8 @@ dispose_cache_job_info (CacheJobInfo *job_info,
 	if (job_info->job)
 		end_job (job_info, data);
 
-	g_clear_pointer (&job_info->surface, cairo_surface_destroy);
-	g_clear_pointer (&job_info->selection, cairo_surface_destroy);
+	g_clear_object (&job_info->texture);
+	g_clear_object (&job_info->selection_texture);
 	g_clear_pointer (&job_info->region, cairo_region_destroy);
 	g_clear_pointer (&job_info->selection_region, cairo_region_destroy);
 
@@ -255,29 +252,48 @@ set_device_scale_on_surface (cairo_surface_t *surface,
         cairo_surface_set_device_scale (surface, device_scale, device_scale);
 }
 
+static GdkTexture *
+gdk_texture_new_for_surface (cairo_surface_t *surface)
+{
+	GdkTexture *texture;
+	GBytes *bytes;
+
+	g_return_val_if_fail (surface != NULL, NULL);
+	g_return_val_if_fail (cairo_surface_get_type (surface) == CAIRO_SURFACE_TYPE_IMAGE, NULL);
+	g_return_val_if_fail (cairo_image_surface_get_width (surface) > 0, NULL);
+	g_return_val_if_fail (cairo_image_surface_get_height (surface) > 0, NULL);
+
+	bytes = g_bytes_new_with_free_func (cairo_image_surface_get_data (surface),
+					    cairo_image_surface_get_height (surface) * cairo_image_surface_get_stride (surface),
+					    (GDestroyNotify)cairo_surface_destroy,
+					    cairo_surface_reference (surface));
+
+	texture = gdk_memory_texture_new (cairo_image_surface_get_width (surface),
+					  cairo_image_surface_get_height (surface),
+					  GDK_MEMORY_DEFAULT,
+					  bytes,
+					  cairo_image_surface_get_stride (surface));
+
+	g_bytes_unref (bytes);
+
+	return texture;
+}
+
 static void
-copy_job_to_job_info (EvJobRenderCairo *job_render,
+copy_job_to_job_info (EvJobRenderTexture *job_render,
 		      CacheJobInfo     *job_info,
 		      EvPixbufCache    *pixbuf_cache)
 {
-	if (job_info->surface) {
-		cairo_surface_destroy (job_info->surface);
-	}
-	job_info->surface = cairo_surface_reference (job_render->surface);
-	set_device_scale_on_surface (job_info->surface, job_info->device_scale);
-	if (pixbuf_cache->inverted_colors) {
-		ev_document_misc_invert_surface (job_info->surface);
-	}
+	g_clear_object (&job_info->texture);
+
+	job_info->texture = g_object_ref (job_render->texture);
 
 	job_info->points_set = FALSE;
 	if (job_render->include_selection) {
-		g_clear_pointer (&job_info->selection, cairo_surface_destroy);
+		g_clear_object (&job_info->selection_texture);
 		g_clear_pointer (&job_info->selection_region, cairo_region_destroy);
 
 		job_info->selection_points = job_render->selection_points;
-		job_info->selection = cairo_surface_reference (job_render->selection);
-                if (job_info->selection)
-                        set_device_scale_on_surface (job_info->selection, job_info->device_scale);
 		job_info->selection_scale = job_render->scale * job_info->device_scale;
 		g_assert (job_info->selection_points.x1 >= 0);
 
@@ -285,6 +301,7 @@ copy_job_to_job_info (EvJobRenderCairo *job_render,
 		job_info->selection_region = cairo_region_reference (job_render->selection_region);
 		job_info->selection_region_scale = job_render->scale;
 
+		job_info->selection_texture = g_object_ref (job_render->selection);
 		job_info->points_set = TRUE;
 	}
 
@@ -299,7 +316,7 @@ job_finished_cb (EvJob         *job,
 		 EvPixbufCache *pixbuf_cache)
 {
 	CacheJobInfo *job_info;
-	EvJobRenderCairo *job_render = EV_JOB_RENDER_CAIRO (job);
+	EvJobRenderTexture *job_render = EV_JOB_RENDER_TEXTURE (job);
 
 	/* If the job is outside of our interest, we silently discard it */
 	if ((job_render->page < (pixbuf_cache->start_page - pixbuf_cache->preload_cache_size)) ||
@@ -338,12 +355,12 @@ check_job_size_and_unref (EvPixbufCache *pixbuf_cache,
         device_scale = get_device_scale (pixbuf_cache);
 	if (job_info->device_scale == device_scale) {
 		_get_page_size_for_scale_and_rotation (job_info->job->document,
-						       EV_JOB_RENDER_CAIRO (job_info->job)->page,
+						       EV_JOB_RENDER_TEXTURE (job_info->job)->page,
 						       scale,
-						       EV_JOB_RENDER_CAIRO (job_info->job)->rotation,
+						       EV_JOB_RENDER_TEXTURE (job_info->job)->rotation,
 						       &width, &height);
-		if (width * device_scale == EV_JOB_RENDER_CAIRO (job_info->job)->target_width &&
-		    height * device_scale == EV_JOB_RENDER_CAIRO (job_info->job)->target_height)
+		if (width * device_scale == EV_JOB_RENDER_TEXTURE (job_info->job)->target_width &&
+		    height * device_scale == EV_JOB_RENDER_TEXTURE (job_info->job)->target_height)
 			return;
 	}
 
@@ -401,7 +418,7 @@ move_one_job (CacheJobInfo  *job_info,
 	*target_page = *job_info;
 	job_info->job = NULL;
 	job_info->region = NULL;
-	job_info->surface = NULL;
+	job_info->texture = NULL;
 
 	if (new_priority != priority && target_page->job) {
 		ev_job_scheduler_update_job (target_page->job, new_priority);
@@ -642,7 +659,7 @@ add_job (EvPixbufCache  *pixbuf_cache,
 	if (job_info->job)
 		end_job (job_info, pixbuf_cache);
 
-	job_info->job = ev_job_render_cairo_new (pixbuf_cache->document,
+	job_info->job = ev_job_render_texture_new (pixbuf_cache->document,
 						 page, rotation,
 						 scale * job_info->device_scale,
 						 width * job_info->device_scale,
@@ -652,7 +669,7 @@ add_job (EvPixbufCache  *pixbuf_cache,
 		GdkRGBA text, base;
 
 		_ev_view_get_selection_colors (EV_VIEW (pixbuf_cache->view), &base, &text);
-		ev_job_render_cairo_set_selection_info (EV_JOB_RENDER_CAIRO (job_info->job),
+		ev_job_render_texture_set_selection_info (EV_JOB_RENDER_TEXTURE (job_info->job),
 							&(job_info->target_points),
 							job_info->selection_style,
 							&text, &base);
@@ -682,16 +699,16 @@ add_job_if_needed (EvPixbufCache *pixbuf_cache,
 					       page, scale, rotation,
 					       &width, &height);
 
-	if (job_info->surface &&
+	if (job_info->texture &&
 	    job_info->device_scale == device_scale &&
-	    cairo_image_surface_get_width (job_info->surface) == width * device_scale &&
-	    cairo_image_surface_get_height (job_info->surface) == height * device_scale)
+	    gdk_texture_get_width (job_info->texture) == width * device_scale &&
+	    gdk_texture_get_height (job_info->texture) == height * device_scale)
 		return;
 
 	/* Free old surfaces for non visible pages */
 	if (priority == EV_JOB_PRIORITY_LOW) {
-		g_clear_pointer (&job_info->surface, cairo_surface_destroy);
-		g_clear_pointer (&job_info->selection, cairo_surface_destroy);
+		g_clear_object (&job_info->texture);
+		g_clear_object (&job_info->selection_texture);
 	}
 
 	add_job (pixbuf_cache, job_info, NULL,
@@ -817,40 +834,8 @@ ev_pixbuf_cache_set_page_range (EvPixbufCache  *pixbuf_cache,
 	ev_pixbuf_cache_add_jobs_if_needed (pixbuf_cache, rotation, scale);
 }
 
-void
-ev_pixbuf_cache_set_inverted_colors (EvPixbufCache *pixbuf_cache,
-				     gboolean       inverted_colors)
-{
-	gint i;
-
-	if (pixbuf_cache->inverted_colors == inverted_colors)
-		return;
-
-	pixbuf_cache->inverted_colors = inverted_colors;
-
-	for (i = 0; i < pixbuf_cache->preload_cache_size; i++) {
-		CacheJobInfo *job_info;
-
-		job_info = pixbuf_cache->prev_job + i;
-		if (job_info && job_info->surface)
-			ev_document_misc_invert_surface (job_info->surface);
-
-		job_info = pixbuf_cache->next_job + i;
-		if (job_info && job_info->surface)
-			ev_document_misc_invert_surface (job_info->surface);
-	}
-
-	for (i = 0; i < PAGE_CACHE_LEN (pixbuf_cache); i++) {
-		CacheJobInfo *job_info;
-
-		job_info = pixbuf_cache->job_list + i;
-		if (job_info && job_info->surface)
-			ev_document_misc_invert_surface (job_info->surface);
-	}
-}
-
-cairo_surface_t *
-ev_pixbuf_cache_get_surface (EvPixbufCache *pixbuf_cache,
+GdkTexture *
+ev_pixbuf_cache_get_texture (EvPixbufCache *pixbuf_cache,
 			     gint           page)
 {
 	CacheJobInfo *job_info;
@@ -860,16 +845,16 @@ ev_pixbuf_cache_get_surface (EvPixbufCache *pixbuf_cache,
 		return NULL;
 
 	if (job_info->page_ready)
-		return job_info->surface;
+		return job_info->texture;
 
 	/* We don't need to wait for the idle to handle the callback */
 	if (job_info->job &&
-	    EV_JOB_RENDER_CAIRO (job_info->job)->page_ready) {
-		copy_job_to_job_info (EV_JOB_RENDER_CAIRO (job_info->job), job_info, pixbuf_cache);
+	    EV_JOB_RENDER_TEXTURE (job_info->job)->page_ready) {
+		copy_job_to_job_info (EV_JOB_RENDER_TEXTURE (job_info->job), job_info, pixbuf_cache);
 		g_signal_emit (pixbuf_cache, signals[JOB_FINISHED], 0, job_info->region);
 	}
 
-	return job_info->surface;
+	return job_info->texture;
 }
 
 static gboolean
@@ -878,7 +863,7 @@ new_selection_surface_needed (EvPixbufCache *pixbuf_cache,
 			      gint           page,
 			      gfloat         scale)
 {
-	if (job_info->selection)
+	if (job_info->selection_texture)
 		return job_info->selection_scale != scale;
 	return job_info->points_set;
 }
@@ -901,7 +886,7 @@ clear_selection_surface_if_needed (EvPixbufCache *pixbuf_cache,
                                    gfloat         scale)
 {
 	if (new_selection_surface_needed (pixbuf_cache, job_info, page, scale)) {
-		g_clear_pointer (&job_info->selection, cairo_surface_destroy);
+		g_clear_object (&job_info->selection_texture);
 		job_info->selection_points.x1 = -1;
 	}
 }
@@ -952,14 +937,15 @@ ev_pixbuf_cache_style_changed (EvPixbufCache *pixbuf_cache)
 		CacheJobInfo *job_info;
 
 		job_info = pixbuf_cache->prev_job + i;
-		if (job_info->selection) {
-			g_clear_pointer (&job_info->selection, cairo_surface_destroy);
+		if (job_info->selection_texture) {
+			g_clear_object (&job_info->selection_texture);
 			job_info->selection_points.x1 = -1;
 		}
 
 		job_info = pixbuf_cache->next_job + i;
-		if (job_info->selection) {
-			g_clear_pointer (&job_info->selection, cairo_surface_destroy);
+
+		if (job_info->selection_texture) {
+			g_clear_object (&job_info->selection_texture);
 			job_info->selection_points.x1 = -1;
 		}
 	}
@@ -968,15 +954,16 @@ ev_pixbuf_cache_style_changed (EvPixbufCache *pixbuf_cache)
 		CacheJobInfo *job_info;
 
 		job_info = pixbuf_cache->job_list + i;
-		if (job_info->selection) {
-			g_clear_pointer (&job_info->selection, cairo_surface_destroy);
+
+		if (job_info->selection_texture) {
+			g_clear_object (&job_info->selection_texture);
 			job_info->selection_points.x1 = -1;
 		}
 	}
 }
 
-cairo_surface_t *
-ev_pixbuf_cache_get_selection_surface (EvPixbufCache   *pixbuf_cache,
+GdkTexture *
+ev_pixbuf_cache_get_selection_texture (EvPixbufCache   *pixbuf_cache,
 				       gint             page,
 				       gfloat           scale)
 {
@@ -997,8 +984,8 @@ ev_pixbuf_cache_get_selection_surface (EvPixbufCache   *pixbuf_cache,
 	/* If we have a running job, we just return what we have under the
 	 * assumption that it'll be updated later and we can scale it as need
 	 * be */
-	if (job_info->job && EV_JOB_RENDER_CAIRO (job_info->job)->include_selection)
-		return job_info->selection;
+	if (job_info->job && EV_JOB_RENDER_TEXTURE (job_info->job)->include_selection)
+		return job_info->selection_texture;
 
 	/* Now, lets see if we need to resize the image.  If we do, we clear the
 	 * old one. */
@@ -1015,11 +1002,12 @@ ev_pixbuf_cache_get_selection_surface (EvPixbufCache   *pixbuf_cache,
 		EvRenderContext *rc;
 		EvPage *ev_page;
 		gint width, height;
+		cairo_surface_t *selection = NULL;
 
 		/* we need to get a new selection pixbuf */
 		ev_document_doc_mutex_lock ();
 		if (job_info->selection_points.x1 < 0) {
-			g_assert (job_info->selection == NULL);
+			g_assert (job_info->selection_texture == NULL);
 			old_points = NULL;
 		} else {
 			old_points = &(job_info->selection_points);
@@ -1037,19 +1025,21 @@ ev_pixbuf_cache_get_selection_surface (EvPixbufCache   *pixbuf_cache,
 
 		_ev_view_get_selection_colors (EV_VIEW (pixbuf_cache->view), &base, &text);
 		ev_selection_render_selection (EV_SELECTION (pixbuf_cache->document),
-					       rc, &(job_info->selection),
+					       rc, &selection,
 					       &(job_info->target_points),
 					       old_points,
 					       job_info->selection_style,
 					       &text, &base);
-                if (job_info->selection)
-                        set_device_scale_on_surface (job_info->selection, job_info->device_scale);
+                if (selection)
+                        set_device_scale_on_surface (selection, job_info->device_scale);
 		job_info->selection_points = job_info->target_points;
 		job_info->selection_scale = scale * job_info->device_scale;
+		job_info->selection_texture = gdk_texture_new_for_surface (selection);
+		cairo_surface_destroy (selection);
 		g_object_unref (rc);
 		ev_document_doc_mutex_unlock ();
 	}
-	return job_info->selection;
+	return job_info->selection_texture;
 }
 
 cairo_region_t *
@@ -1131,7 +1121,7 @@ clear_job_selection (CacheJobInfo *job_info)
 	job_info->points_set = FALSE;
 	job_info->selection_points.x1 = -1;
 
-	g_clear_pointer (&job_info->selection, cairo_surface_destroy);
+	g_clear_object (&job_info->selection_texture);
 	g_clear_pointer (&job_info->selection_region, cairo_region_destroy);
 }
 

@@ -55,36 +55,34 @@ struct _EvViewSelection {
 typedef struct _EvPixbufCache       EvPixbufCache;
 typedef struct _EvPixbufCacheClass  EvPixbufCacheClass;
 
-GType          ev_pixbuf_cache_get_type             (void) G_GNUC_CONST;
-EvPixbufCache *ev_pixbuf_cache_new                  (GtkWidget     *view,
-						     EvDocumentModel *model,
-						     gsize            max_size);
-void           ev_pixbuf_cache_set_max_size         (EvPixbufCache   *pixbuf_cache,
-						     gsize            max_size);
-void           ev_pixbuf_cache_set_page_range       (EvPixbufCache *pixbuf_cache,
-						     gint           start_page,
-						     gint           end_page,
-						     GList          *selection_list);
-cairo_surface_t *ev_pixbuf_cache_get_surface        (EvPixbufCache *pixbuf_cache,
-						     gint           page);
-void           ev_pixbuf_cache_clear                (EvPixbufCache *pixbuf_cache);
-void           ev_pixbuf_cache_style_changed        (EvPixbufCache *pixbuf_cache);
-void           ev_pixbuf_cache_reload_page 	    (EvPixbufCache  *pixbuf_cache,
-						     cairo_region_t *region,
-                    				     gint            page,
-			                             gint            rotation,
-						     gdouble         scale);
-void           ev_pixbuf_cache_set_inverted_colors  (EvPixbufCache *pixbuf_cache,
-						     gboolean       inverted_colors);
+GType           ev_pixbuf_cache_get_type                (void) G_GNUC_CONST;
+EvPixbufCache  *ev_pixbuf_cache_new                     (GtkWidget       *view,
+						         EvDocumentModel *model,
+						         gsize            max_size);
+void            ev_pixbuf_cache_set_max_size            (EvPixbufCache   *pixbuf_cache,
+						         gsize            max_size);
+void            ev_pixbuf_cache_set_page_range          (EvPixbufCache   *pixbuf_cache,
+						         gint             start_page,
+						         gint             end_page,
+						         GList           *selection_list);
+GdkTexture     *ev_pixbuf_cache_get_texture             (EvPixbufCache   *pixbuf_cache,
+						         gint             page);
+void            ev_pixbuf_cache_clear                   (EvPixbufCache   *pixbuf_cache);
+void            ev_pixbuf_cache_style_changed           (EvPixbufCache   *pixbuf_cache);
+void            ev_pixbuf_cache_reload_page 	        (EvPixbufCache   *pixbuf_cache,
+                    				         cairo_region_t  *region,
+                    				         gint             page,
+			                                 gint             rotation,
+						         gdouble          scale);
 /* Selection */
-cairo_surface_t *ev_pixbuf_cache_get_selection_surface (EvPixbufCache   *pixbuf_cache,
-							gint             page,
-							gfloat           scale);
-cairo_region_t *ev_pixbuf_cache_get_selection_region (EvPixbufCache *pixbuf_cache,
-						      gint           page,
-						      gfloat         scale);
-void           ev_pixbuf_cache_set_selection_list   (EvPixbufCache *pixbuf_cache,
-						     GList         *selection_list);
-GList         *ev_pixbuf_cache_get_selection_list   (EvPixbufCache *pixbuf_cache);
+GdkTexture     *ev_pixbuf_cache_get_selection_texture   (EvPixbufCache   *pixbuf_cache,
+							 gint             page,
+							 gfloat           scale);
+cairo_region_t *ev_pixbuf_cache_get_selection_region    (EvPixbufCache   *pixbuf_cache,
+						         gint             page,
+						         gfloat           scale);
+void            ev_pixbuf_cache_set_selection_list      (EvPixbufCache   *pixbuf_cache,
+						         GList           *selection_list);
+GList          *ev_pixbuf_cache_get_selection_list      (EvPixbufCache   *pixbuf_cache);
 
 G_END_DECLS
