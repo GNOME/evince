@@ -224,17 +224,9 @@ pdf_document_dispose (GObject *object)
 		pdf_document->annots = NULL;
 	}
 
-	if (pdf_document->document) {
-		g_object_unref (pdf_document->document);
-	}
-
-	if (pdf_document->font_info) {
-		poppler_font_info_free (pdf_document->font_info);
-	}
-
-	if (pdf_document->fonts_iter) {
-		poppler_fonts_iter_free (pdf_document->fonts_iter);
-	}
+        g_clear_object (&pdf_document->document);
+        g_clear_pointer (&pdf_document->font_info, poppler_font_info_free);
+        g_clear_pointer (&pdf_document->fonts_iter, poppler_fonts_iter_free);
 
 	G_OBJECT_CLASS (pdf_document_parent_class)->dispose (object);
 }
