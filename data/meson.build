@@ -68,9 +68,3 @@ foreach man_page: man_pages
     install_dir: join_paths(ev_mandir, 'man1'),
   )
 endforeach
-
-# UI descriptions
-install_data(
-  'hand-open.png',
-  install_dir: ev_pkgdatadir,
-)
