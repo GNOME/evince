@@ -54,7 +54,7 @@ typedef struct {
 	gboolean autoscrolling;
 	guint last_y;
 	guint start_y;
-	guint timeout_id;	
+	guint timeout_id;
 } AutoScrollInfo;
 
 /* Information for handling selection */
@@ -178,7 +178,7 @@ struct _EvView {
 	guint vscroll_policy : 1;
 
 	gint scroll_x;
-	gint scroll_y;	
+	gint scroll_y;
 
 	guint update_cursor_idle_id;
 
@@ -189,7 +189,7 @@ struct _EvView {
 	EvPoint       pending_point;
 
 	/* Current geometry */
-    
+
 	gint start_page;
 	gint end_page;
 	gint current_page;
@@ -218,7 +218,7 @@ struct _EvView {
 
 	/* Information for middle clicking and dragging around. */
 	DragInfo drag_info;
-	
+
 	/* Autoscrolling */
 	AutoScrollInfo scroll_info;
 

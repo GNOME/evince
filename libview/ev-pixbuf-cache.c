@@ -22,13 +22,13 @@ typedef struct _CacheJobInfo
 	/* Device scale factor of target widget */
 	int device_scale;
 
-	/* Selection data. 
+	/* Selection data.
 	 * Selection_points are the coordinates encapsulated in selection.
 	 * target_points is the target selection size. */
 	EvRectangle      target_points;
 	EvSelectionStyle selection_style;
 	gboolean         points_set;
-	
+
 	cairo_surface_t *selection;
 	gdouble          selection_scale;
 	EvRectangle      selection_points;
@@ -234,7 +234,7 @@ ev_pixbuf_cache_new (GtkWidget       *view,
 	EvPixbufCache *pixbuf_cache;
 
 	pixbuf_cache = (EvPixbufCache *) g_object_new (EV_TYPE_PIXBUF_CACHE, NULL);
-	/* This is a backlink, so we don't ref this */ 
+	/* This is a backlink, so we don't ref this */
 	pixbuf_cache->view = view;
 	pixbuf_cache->model = g_object_ref (model);
 	pixbuf_cache->document = ev_document_model_get_document (model);
@@ -698,7 +698,7 @@ add_job (EvPixbufCache  *pixbuf_cache,
 		GdkColor text, base;
 
 		get_selection_colors (EV_VIEW (pixbuf_cache->view), &text, &base);
-		ev_job_render_set_selection_info (EV_JOB_RENDER (job_info->job), 
+		ev_job_render_set_selection_info (EV_JOB_RENDER (job_info->job),
 						  &(job_info->target_points),
 						  job_info->selection_style,
 						  &text, &base);
@@ -1180,7 +1180,7 @@ static void
 update_job_selection (CacheJobInfo    *job_info,
 		      EvViewSelection *selection)
 {
-	job_info->points_set = TRUE;		
+	job_info->points_set = TRUE;
 	job_info->target_points = selection->rect;
 	job_info->selection_style = selection->style;
 }
@@ -1236,7 +1236,7 @@ ev_pixbuf_cache_set_selection_list (EvPixbufCache *pixbuf_cache,
 			if (((EvViewSelection *)list->data)->page == page) {
 				selection = list->data;
 				break;
-			} else if (((EvViewSelection *)list->data)->page > page) 
+			} else if (((EvViewSelection *)list->data)->page > page)
 				break;
 			list = list->next;
 		}
@@ -1255,7 +1255,7 @@ ev_pixbuf_cache_set_selection_list (EvPixbufCache *pixbuf_cache,
 			if (((EvViewSelection *)list->data)->page == page) {
 				selection = list->data;
 				break;
-			} else if (((EvViewSelection *)list->data)->page > page) 
+			} else if (((EvViewSelection *)list->data)->page > page)
 				break;
 			list = list->next;
 		}
@@ -1276,7 +1276,7 @@ ev_pixbuf_cache_set_selection_list (EvPixbufCache *pixbuf_cache,
 			if (((EvViewSelection *)list->data)->page == page) {
 				selection = list->data;
 				break;
-			} else if (((EvViewSelection *)list->data)->page > page) 
+			} else if (((EvViewSelection *)list->data)->page > page)
 				break;
 			list = list->next;
 		}
@@ -1321,7 +1321,7 @@ ev_pixbuf_cache_get_selection_list (EvPixbufCache *pixbuf_cache)
 				selection->covered_region = cairo_region_reference (pixbuf_cache->prev_job[i].selection_region);
 			retval = g_list_prepend (retval, selection);
 		}
-		
+
 		page ++;
 	}
 
@@ -1335,7 +1335,7 @@ ev_pixbuf_cache_get_selection_list (EvPixbufCache *pixbuf_cache)
 				selection->covered_region = cairo_region_reference (pixbuf_cache->job_list[i].selection_region);
 			retval = g_list_prepend (retval, selection);
 		}
-		
+
 		page ++;
 	}
 
@@ -1351,7 +1351,7 @@ ev_pixbuf_cache_get_selection_list (EvPixbufCache *pixbuf_cache)
 				selection->covered_region = cairo_region_reference (pixbuf_cache->next_job[i].selection_region);
 			retval = g_list_prepend (retval, selection);
 		}
-		
+
 		page ++;
 	}
 
@@ -1379,5 +1379,3 @@ ev_pixbuf_cache_reload_page (EvPixbufCache  *pixbuf_cache,
 		 width, height, page, rotation, scale,
 		 EV_JOB_PRIORITY_URGENT);
 }
-
-
