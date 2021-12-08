@@ -25,7 +25,7 @@
 
 #include <glib.h>
 #include <gtk/gtk.h>
-#include <handy.h>
+#include <adwaita.h>
 
 #include "ev-link.h"
 #include "ev-history.h"
@@ -63,11 +63,11 @@ typedef struct _EvWindowClass EvWindowClass;
 
 
 struct _EvWindow {
-	HdyApplicationWindow base_instance;
+	AdwApplicationWindow base_instance;
 };
 
 struct _EvWindowClass {
-	HdyApplicationWindowClass base_class;
+	AdwApplicationWindowClass base_class;
 };
 
 GType		ev_window_get_type	                 (void) G_GNUC_CONST;
@@ -90,7 +90,7 @@ void		ev_window_print_range                    (EvWindow       *ev_window,
                                                           int		 last_page);
 const gchar    *ev_window_get_dbus_object_path           (EvWindow       *ev_window);
 void            ev_window_focus_view                     (EvWindow       *ev_window);
-HdyHeaderBar   *ev_window_get_toolbar                    (EvWindow       *ev_window);
+AdwHeaderBar   *ev_window_get_toolbar                    (EvWindow       *ev_window);
 void            ev_window_handle_annot_popup             (EvWindow       *ev_window,
                                                           EvAnnotation   *annot);
 EvMetadata     *ev_window_get_metadata			 (EvWindow	 *ev_window);

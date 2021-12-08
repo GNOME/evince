@@ -33,19 +33,11 @@
 
 G_BEGIN_DECLS
 
-typedef struct _EvApplication EvApplication;
-typedef struct _EvApplicationClass EvApplicationClass;
-
 #define EV_TYPE_APPLICATION			(ev_application_get_type ())
-#define EV_APPLICATION(object)			(G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_APPLICATION, EvApplication))
-#define EV_APPLICATION_CLASS(klass)		(G_TYPE_CHECK_CLASS_CAST((klass), EV_TYPE_APPLICATION, EvApplicationClass))
-#define EV_IS_APPLICATION(object)		(G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_APPLICATION))
-#define EV_IS_APPLICATION_CLASS(klass)		(G_TYPE_CHECK_CLASS_TYPE((klass), EV_TYPE_APPLICATION))
-#define EV_APPLICATION_GET_CLASS(object)	(G_TYPE_INSTANCE_GET_CLASS((object), EV_TYPE_APPLICATION, EvApplicationClass))
+G_DECLARE_FINAL_TYPE (EvApplication, ev_application, EV, APPLICATION, AdwApplication)
 
 #define EV_APP					((EvApplication *) g_application_get_default ())
 
-GType	          ev_application_get_type	     (void) G_GNUC_CONST;
 EvApplication    *ev_application_new                 (void);
 
 void              ev_application_open_recent_view    (EvApplication   *application,
