@@ -9924,21 +9924,14 @@ ev_view_copy_link_address (EvView       *view,
 static void
 ev_view_set_cursor (EvView *view, EvViewCursor new_cursor)
 {
-	GdkCursor *cursor = NULL;
-	GtkWidget *widget;
-
 	if (view->cursor == new_cursor) {
 		return;
 	}
 
 	view->cursor = new_cursor;
 
-	widget = GTK_WIDGET (gtk_widget_get_native (GTK_WIDGET (view)));
-	cursor = ev_view_cursor_new (new_cursor);
-	gtk_widget_set_cursor (widget, cursor);
-	gdk_display_flush (gtk_widget_get_display (widget));
-	if (cursor)
-		g_object_unref (cursor);
+	gtk_widget_set_cursor_from_name (GTK_WIDGET (view),
+			ev_view_cursor_name (new_cursor));
 }
 
 void
