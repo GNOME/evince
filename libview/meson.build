@@ -74,10 +74,6 @@ cflags = [
   '-DEVINCE_COMPILATION'
 ]
 
-if enable_multimedia
-  sources += files('ev-media-player.c')
-endif
-
 libevview = shared_library(
   'evview3',
   version: ev_view_version,
