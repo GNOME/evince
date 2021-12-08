@@ -25,7 +25,7 @@
 
 #include <glib.h>
 #include <gtk/gtk.h>
-#include <handy.h>
+#include <adwaita.h>
 
 #include "ev-link.h"
 #include "ev-history.h"
@@ -63,11 +63,11 @@ typedef struct _EvWindowClass EvWindowClass;
 
 
 struct _EvWindow {
-	HdyApplicationWindow base_instance;
+	AdwApplicationWindow base_instance;
 };
 
 struct _EvWindowClass {
-	HdyApplicationWindowClass base_class;
+	AdwApplicationWindowClass base_class;
 };
 
 GType		ev_window_get_type	                 (void) G_GNUC_CONST;
@@ -102,5 +102,9 @@ GtkWidget      *ev_window_get_sidebar			 (EvWindow	 *ev_window);
 GtkWidget      *ev_window_get_find_sidebar		 (EvWindow	 *ev_window);
 void            ev_window_set_divider_position		 (EvWindow	 *ev_window,
 							  gint		  sidebar_width);
+void            ev_window_set_title			 (EvWindow	 *ev_window,
+							  const gchar	 *title);
+void            ev_window_set_subtitle			 (EvWindow	 *ev_window,
+							  const gchar	 *subtitle);
 
 G_END_DECLS

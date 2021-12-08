@@ -1,0 +1,552 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk" version="4.0"/>
+  <requires lib="libadwaita" version="1.0"/>
+
+  <object class="EvDocumentModel" id="model">
+    <!-- This object should be constructed before it can be used as construct-only properties. -->>
+    <signal name="page-changed" handler="on_page_changed" swapped="yes" />
+    <signal name="notify::document" handler="on_document_changed" />
+    <signal name="notify::scale" handler="on_zoom_changed" />
+    <signal name="notify::sizing-mode" handler="on_sizing_mode_changed" />
+    <signal name="notify::rotation" handler="on_rotation_changed" />
+    <signal name="notify::continuous" handler="on_continuous_changed" />
+    <signal name="notify::dual-page" handler="on_dual_mode_changed" />
+    <signal name="notify::dual-odd-left" handler="on_dual_mode_odd_pages_left_changed" />
+    <signal name="notify::rtl" handler="on_direction_changed" />
+    <signal name="notify::inverted-colors" handler="on_inverted_colors_changed" />
+  </object>
+
+  <template class="EvWindow" parent="AdwApplicationWindow">
+    <property name="default-width">600</property>
+    <property name="default-height">600</property>
+    <signal name="notify::maximized" handler="on_window_maximized_changed" />
+    <signal name="notify::default-width" handler="on_window_size_changed" />
+    <signal name="notify::default-height" handler="on_window_size_changed" />
+    <child>
+      <object class="GtkBox" id="main_box">
+        <property name="orientation">vertical</property>
+        <child>
+          <object class="AdwHeaderBar" id="toolbar">
+            <child type="title">
+              <object class="AdwWindowTitle" id="title_widget">
+              </object>
+            </child>
+            <child type="start">
+              <object class="GtkButton" id="open_button">
+                <property name="action-name">win.open</property>
+                <property name="label" translatable="yes">Open…</property>
+                <property name="tooltip-text" translatable="yes">Open an existing document</property>
+                <property name="valign">center</property>
+                <style>
+                  <class name="suggested-action"/>
+                </style>
+              </object>
+            </child>
+            <child type="start">
+              <object class="GtkToggleButton" id="sidebar_button">
+                <property name="action-name">win.show-side-pane</property>
+                <property name="icon-name">view-sidebar-symbolic</property>
+                <property name="tooltip-text" translatable="yes">Side pane</property>
+                <property name="valign">center</property>
+              </object>
+            </child>
+            <child type="start">
+              <object class="EvPageActionWidget" id="page_selector">
+                <property name="tooltip-text">Select page or search in the index</property>
+                <signal name="activate-link" handler="on_activate_link" />
+              </object>
+            </child>
+            <child type="start">
+              <object class="GtkToggleButton" id="annots_button">                <!-- TODO: ATK stuff -->
+                <property name="action-name">win.toggle-edit-annots</property>
+                <property name="icon-name">document-edit-symbolic</property>
+                <property name="tooltip-text" translatable="yes">Annotate the document</property>
+                <property name="valign">center</property>
+              </object>
+            </child>
+            <child type="end">
+              <object class="GtkMenuButton" id="action_menu_button">                <!-- TODO: ATK stuff -->
+                <property name="menu-model">action-menu</property>
+                <property name="icon-name">open-menu-symbolic</property>
+                <property name="tooltip-text" translatable="yes">File options</property>
+                <property name="valign">center</property>
+                <property name="focus-on-click">False</property>
+              </object>
+            </child>
+            <child type="end">
+              <object class="GtkToggleButton" id="find_button">
+                <property name="action-name">win.toggle-find</property>
+                <property name="icon-name">edit-find-symbolic</property>
+                <property name="valign">center</property>
+                <!-- <signal name="notify::sensitive" handler="todo" /> -->
+              </object>
+            </child>
+            <child type="end">
+              <object class="EvZoomAction" id="zoom_action">
+                <property name="document-model">model</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="EvAnnotationsToolbar" id="annots_toolbar">
+            <property name="visible">False</property>
+            <signal name="begin-add-annot" handler="ev_window_begin_add_annot" swapped="yes" />
+            <signal name="cancel-add-annot" handler="ev_window_cancel_add_annot" swapped="yes" />
+          </object>
+        </child>
+        <child>
+          <object class="GtkSearchBar" id="search_bar">
+            <!-- We don't use gtk_search_bar_connect_entry, because it clears the
+             entry when the search is closed, but we want to keep the current search.-->
+            <signal name="notify::search-mode-enabled" handler="search_bar_search_mode_enabled_changed" />
+            <child>
+              <object class="EvSearchBox" id="search_box">
+                <property name="document-model">model</property>
+                <signal name="started" handler="on_search_started" />
+                <signal name="updated" handler="on_search_updated" />
+                <signal name="cleared" handler="on_search_cleared" />
+                <signal name="previous" handler="on_search_previous" />
+                <signal name="next" handler="on_search_next" />
+                <child internal-child="entry">
+                  <object class="GtkSearchEntry">
+                    <property name="width-chars">32</property>
+                    <signal name="stop-search" handler="on_search_entry_stop_search" />
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkPaned" id="hpaned">
+            <property name="orientation">horizontal</property>
+            <property name="vexpand">True</property>
+            <property name="valign">fill</property>
+            <property name="position">132</property>
+            <property name="wide-handle">True</property>
+            <signal name="notify::position" handler="on_sidebar_position_changed" />
+            <child>
+              <object class="EvSidebar" id="sidebar">
+                <property name="document-model">model</property>
+                <signal name="notify::visible" handler="on_sidebar_visibility_changed" />
+                <signal name="notify::current-page" handler="on_sidebar_current_page_changed" />
+                <child internal-child="stack">
+                  <object class="GtkStack">
+                    <property name="transition-type">crossfade</property>
+                    <child>
+                      <object class="GtkStackPage">
+                        <property name="name">thumbnails</property>
+                        <property name="title" translatable="yes">Thumbnails</property>
+                        <property name="icon-name">view-grid-symbolic</property>
+                        <property name="child">
+                          <object class="EvSidebarThumbnails" id="sidebar_thumbs">
+                            <property name="document-model">model</property>
+                            <signal name="notify::main-widget" handler="on_sidebar_page_main_widget_update" />
+                          </object>
+                        </property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkStackPage">
+                        <property name="name">links</property>
+                        <property name="title" translatable="yes">Outline</property>
+                        <property name="icon-name">outline-symbolic</property>
+                        <property name="child">
+                          <object class="EvSidebarLinks" id="sidebar_links">
+                            <property name="document-model">model</property>
+                            <signal name="notify::model" handler="on_sidebar_widget_model_set" />
+                            <signal name="link-activated" handler="on_sidebar_links_link_activated" />
+                          </object>
+                        </property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox" id="view_box">
+                <child>
+                  <object class="GtkOverlay">
+                    <property name="valign">fill</property>
+                    <property name="vexpand">True</property>
+                    <child>
+                      <object class="GtkScrolledWindow" id="scrolled_window">
+                        <child>
+                          <object class="EvView" id="view">
+                            <property name="hexpand">True</property>
+                            <property name="vexpand">True</property>
+                            <property name="halign">fill</property>
+                            <property name="valign">fill</property>
+                            <child>
+                              <object class="GtkEventControllerFocus">
+                                <signal name="enter" handler="on_view_actions_focus_in" />
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child type="overlay">
+                      <object class="GtkBox" id="loading_message">
+                        <property name="name">ev-loading-message</property>
+                        <property name="orientation">horizontal</property>
+                        <property name="spacing">12</property>
+                        <property name="margin-start">10</property>
+                        <property name="margin-end">10</property>
+                        <property name="margin-top">10</property>
+                        <property name="margin-bottom">10</property>
+                        <property name="halign">end</property>
+                        <property name="valign">start</property>
+                        <property name="visible">True</property>
+                        <child>
+                          <object class="GtkSpinner">
+                            <property name="spinning">True</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="label" translatable="yes">Loading…</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkPopoverMenu" id="view_popup">
+            <property name="has-arrow">False</property>
+            <property name="menu-model">view-popup-menu</property>
+            <property name="halign">start</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkPopoverMenu" id="attachment_popup">
+            <property name="has-arrow">False</property>
+            <property name="menu-model">attachments-popup</property>
+            <property name="halign">start</property>
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+
+  <object class="EvFindSidebar" id="find_sidebar">
+    <property name="visible">False</property>
+    <signal name="result-activated" handler="on_find_sidebar_result_activated" />
+  </object>
+
+  <menu id="action-menu">
+    <section>
+      <attribute name="display-hint">horizontal-buttons</attribute>
+      <item>
+        <attribute name="label" translatable="yes">Print…</attribute>
+        <attribute name="action">win.print</attribute>
+        <attribute name="verb-icon">printer-symbolic</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Fullscreen</attribute>
+        <attribute name="action">win.fullscreen</attribute>
+        <attribute name="verb-icon">view-fullscreen-symbolic</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Send To…</attribute>
+        <attribute name="action">win.send-to</attribute>
+        <attribute name="verb-icon">send-to-symbolic</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">New _Window</attribute>
+        <attribute name="action">win.new</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">Open a C_opy</attribute>
+        <attribute name="action">win.open-copy</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Open Containing _Folder</attribute>
+        <attribute name="action">win.open-containing-folder</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">_Save As…</attribute>
+        <attribute name="action">win.save-as</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">Present as _Slideshow</attribute>
+        <attribute name="action">win.presentation</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">_Continuous</attribute>
+        <attribute name="action">win.continuous</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">_Dual</attribute>
+        <attribute name="action">win.dual-page</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">_Odd Pages Left</attribute>
+        <attribute name="action">win.dual-odd-left</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Right to Left Document</attribute>
+        <attribute name="action">win.rtl</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">Ro_tate ⤵</attribute>
+        <attribute name="action">win.rotate-right</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">Ni_ght Mode</attribute>
+        <attribute name="action">win.inverted-colors</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">Prop_erties</attribute>
+        <attribute name="action">win.show-properties</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">Save Current Settings as Defa_ult</attribute>
+        <attribute name="action">win.save-settings</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">_Keyboard Shortcuts</attribute>
+        <attribute name="action">win.show-help-overlay</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">_Help</attribute>
+        <attribute name="action">win.help</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">_About Document Viewer</attribute>
+        <attribute name="action">win.about</attribute>
+      </item>
+    </section>
+  </menu>
+  <menu id="zoom-menu">
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">Fit Pa_ge</attribute>
+        <attribute name="action">win.sizing-mode</attribute>
+        <attribute name="target">fit-page</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Fit _Width</attribute>
+        <attribute name="action">win.sizing-mode</attribute>
+        <attribute name="target">fit-width</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">_Automatic</attribute>
+        <attribute name="action">win.sizing-mode</attribute>
+        <attribute name="target">automatic</attribute>
+      </item>
+    </section>
+    <section/>
+  </menu>
+  <menu id="view-popup-menu">
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">_Open Link</attribute>
+        <attribute name="action">win.open-link</attribute>
+        <attribute name="hidden-when">action-disabled</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">_Copy Link Address</attribute>
+        <attribute name="action">win.copy-link-address</attribute>
+        <attribute name="hidden-when">action-disabled</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">_Go To</attribute>
+        <attribute name="action">win.go-to-link</attribute>
+        <attribute name="hidden-when">action-disabled</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Open in New _Window</attribute>
+        <attribute name="action">win.open-link-new-window</attribute>
+        <attribute name="hidden-when">action-disabled</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">_Previous Page</attribute>
+        <attribute name="action">win.go-previous-page</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">_Next Page</attribute>
+        <attribute name="action">win.go-next-page</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">_Reload</attribute>
+        <attribute name="action">win.reload</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Auto_scroll</attribute>
+        <attribute name="action">win.auto-scroll</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">_Copy</attribute>
+        <attribute name="action">win.copy</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Select _All</attribute>
+        <attribute name="action">win.select-all</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">_Save Image As…</attribute>
+        <attribute name="action">win.save-image</attribute>
+        <attribute name="hidden-when">action-disabled</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Copy _Image</attribute>
+        <attribute name="action">win.copy-image</attribute>
+        <attribute name="hidden-when">action-disabled</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">_Open Attachment</attribute>
+        <attribute name="action">win.open-attachment</attribute>
+        <attribute name="hidden-when">action-disabled</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">_Save Attachment As…</attribute>
+        <attribute name="action">win.save-attachment</attribute>
+        <attribute name="hidden-when">action-disabled</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">Annotation _Properties…</attribute>
+        <attribute name="action">win.annot-properties</attribute>
+        <attribute name="hidden-when">action-disabled</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">R_emove Annotation</attribute>
+        <attribute name="action">win.remove-annot</attribute>
+        <attribute name="hidden-when">action-disabled</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">_Highlight Selected Text</attribute>
+        <attribute name="action">win.annotate-selected-text</attribute>
+        <attribute name="hidden-when">action-disabled</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Open Containing _Folder</attribute>
+        <attribute name="action">win.open-containing-folder</attribute>
+      </item>
+    </section>
+  </menu>
+  <menu id="navigation-menu">
+    <section>
+      <attribute name="label" translatable="yes">Navigation</attribute>
+      <item>
+        <attribute name="label" translatable="yes">First Page</attribute>
+        <attribute name="action">win.go-first-page</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Previous Page</attribute>
+        <attribute name="action">win.go-previous-page</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Next Page</attribute>
+        <attribute name="action">win.go-next-page</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Last Page</attribute>
+        <attribute name="action">win.go-last-page</attribute>
+      </item>
+    </section>
+    <section>
+      <attribute name="label" translatable="yes">History</attribute>
+      <item>
+        <attribute name="label" translatable="yes">Back</attribute>
+        <attribute name="action">win.go-back-history</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Forward</attribute>
+        <attribute name="action">win.go-forward-history</attribute>
+      </item>
+    </section>
+  </menu>
+  <menu id="attachments-popup">
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">_Open Attachment</attribute>
+        <attribute name="action">win.open-attachment</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">_Save Attachment As…</attribute>
+        <attribute name="action">win.save-attachment</attribute>
+      </item>
+    </section>
+  </menu>
+  <menu id="annotation-popup">
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">Annotation Properties…</attribute>
+        <attribute name="action">win.annot-properties</attribute>
+        <attribute name="hidden-when">action-disabled</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Remove Annotation</attribute>
+        <attribute name="action">win.remove-annot</attribute>
+        <attribute name="hidden-when">action-disabled</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">_Open Attachment</attribute>
+        <attribute name="action">win.open-attachment</attribute>
+        <attribute name="hidden-when">action-disabled</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">_Save Attachment As…</attribute>
+        <attribute name="action">win.save-attachment</attribute>
+        <attribute name="hidden-when">action-disabled</attribute>
+      </item>
+    </section>
+  </menu>
+  <menu id="bookmarks-popup">
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">_Open Bookmark</attribute>
+        <attribute name="action">bookmarks.open-bookmark</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">_Rename Bookmark</attribute>
+        <attribute name="action">bookmarks.rename-bookmark</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">_Delete Bookmark</attribute>
+        <attribute name="action">bookmarks.delete-bookmark</attribute>
+      </item>
+    </section>
+  </menu>
+</interface>
