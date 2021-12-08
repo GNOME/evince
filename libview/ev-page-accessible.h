@@ -26,7 +26,6 @@
 #error "This is a private header."
 #endif
 
-#include <gtk/gtk-a11y.h>
 #include "ev-view-accessible.h"
 #include "ev-view.h"
 

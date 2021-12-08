@@ -24,7 +24,6 @@
 #error "This is a private header."
 #endif
 
-#include <gtk/gtk-a11y.h>
 #include "ev-page-accessible.h"
 #include "ev-link.h"
 
