@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Evince HEAD\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
-"POT-Creation-Date: 2021-11-07 19:33+0000\n"
-"PO-Revision-Date: 2021-11-18 20:39+0100\n"
+"POT-Creation-Date: 2021-12-08 09:45+0000\n"
+"PO-Revision-Date: 2021-12-11 23:58+0100\n"
 "Last-Translator: Quentin PAGÈS\n"
 "Language-Team: Tot En Òc\n"
 "Language: oc\n"
@@ -109,13 +109,13 @@ msgid "This work is in the Public Domain"
 msgstr "Aquesta òbra es dins lo domeni public"
 
 #. translators: this is the document security state
-#: backend/pdf/ev-poppler.c:1165 backend/pdf/ev-poppler.c:1171
+#: backend/pdf/ev-poppler.c:1162 backend/pdf/ev-poppler.c:1168
 #: properties/ev-properties-view.c:433
 msgid "Yes"
 msgstr "Òc"
 
 #. translators: this is the document security state
-#: backend/pdf/ev-poppler.c:1168 backend/pdf/ev-poppler.c:1171
+#: backend/pdf/ev-poppler.c:1165 backend/pdf/ev-poppler.c:1168
 #: properties/ev-properties-view.c:435
 msgid "No"
 msgstr "Non"
@@ -159,8 +159,8 @@ msgid ""
 "the fonts used to create the PDF, the rendering may not be correct."
 msgstr ""
 "Aqueste document conten de poliças pas integradas que fan pas partida de las "
-"14 poliças PDF standards. Se las poliças de substitucion seleccionadas per « "
-"fontconfig » son pas las meteissas que las poliças utilizadas per crear lo "
+"14 poliças PDF standards. Se las poliças de substitucion seleccionadas per "
+"« fontconfig » son pas las meteissas que las poliças utilizadas per crear lo "
 "PDF, lo rendut risca d'èsser incorrècte."
 
 #: backend/pdf/ev-poppler.c:1372
@@ -289,7 +289,7 @@ msgstr "Documents TIFF"
 msgid "Adds support for reading TIFF documents"
 msgstr "Apond la presa en carga de la lectura dels documents TIFF"
 
-#: backend/tiff/tiff-document.c:123
+#: backend/tiff/tiff-document.c:124
 msgid "Invalid document"
 msgstr "Document invalid"
 
@@ -470,17 +470,22 @@ msgstr "Recèrca l'ocurréncia precedenta de la cadena"
 msgid "Find next occurrence of the search string"
 msgstr "Recèrca l'ocurréncia seguenta de la cadena"
 
-#: libview/ev-jobs.c:649
+#: libview/ev-jobs.c:650
+#, c-format
+msgid "Failed to render page %d: %s"
+msgstr "Fracàs del rendut de la pagina %d : %s"
+
+#: libview/ev-jobs.c:657
 #, c-format
 msgid "Failed to render page %d"
 msgstr "Fracàs del rendut de la pagina %d"
 
-#: libview/ev-jobs.c:901
+#: libview/ev-jobs.c:910
 #, c-format
 msgid "Failed to create thumbnail for page %d"
 msgstr "Impossible de crear una miniatura per la pagina %d"
 
-#: libview/ev-jobs.c:2033
+#: libview/ev-jobs.c:2042
 #, c-format
 msgid "Failed to print page %d: %s"
 msgstr "Impossible d'imprimir la pagina %d : %s"
