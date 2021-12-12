@@ -8173,6 +8173,25 @@ ev_view_init (EvView *view)
 	g_signal_connect (controller, "prepare",
 			   G_CALLBACK (on_drag_prepare), view);
 	gtk_widget_add_controller (widget, controller);
+
+	controller = gtk_shortcut_controller_new();
+	gtk_shortcut_controller_add_shortcut (GTK_SHORTCUT_CONTROLLER (controller),
+			gtk_shortcut_new_with_arguments (
+				gtk_shortcut_trigger_parse_string ("w"),
+				gtk_shortcut_action_parse_string("action(win.sizing-mode)"),
+				"s", "fit-width"));
+	gtk_shortcut_controller_add_shortcut (GTK_SHORTCUT_CONTROLLER (controller),
+			gtk_shortcut_new_with_arguments (
+				gtk_shortcut_trigger_parse_string ("f"),
+				gtk_shortcut_action_parse_string("action(win.sizing-mode)"),
+				"s", "fit-page"));
+	gtk_shortcut_controller_add_shortcut (GTK_SHORTCUT_CONTROLLER (controller),
+			gtk_shortcut_new_with_arguments (
+				gtk_shortcut_trigger_parse_string ("a"),
+				gtk_shortcut_action_parse_string("action(win.sizing-mode)"),
+				"s", "automatic"));
+	gtk_widget_add_controller (widget, controller);
+
 }
 
 /*** Callbacks ***/
