@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince.master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
-"POT-Creation-Date: 2021-10-11 16:57+0000\n"
-"PO-Revision-Date: 2021-10-17 15:17+0000\n"
+"POT-Creation-Date: 2021-12-02 23:36+0000\n"
+"PO-Revision-Date: 2021-12-15 23:02+0000\n"
 "Last-Translator: Sveinn í Felli <sv1@fellsnet.is>\n"
 "Language-Team: Icelandic <translation-team-is@lists.sourceforge.org>\n"
 "Language: is\n"
@@ -103,55 +103,55 @@ msgstr "PDF skjöl"
 msgid "Adds support for reading PDF Documents"
 msgstr "Bætir við stuðningi til lestrar á PDF skjölum"
 
-#: backend/pdf/ev-poppler.c:907
+#: backend/pdf/ev-poppler.c:863
 msgid "This work is in the Public Domain"
 msgstr "Þetta verk tilheyrir almenningi"
 
 #. translators: this is the document security state
-#: backend/pdf/ev-poppler.c:1179 backend/pdf/ev-poppler.c:1185
+#: backend/pdf/ev-poppler.c:1162 backend/pdf/ev-poppler.c:1168
 #: properties/ev-properties-view.c:433
 msgid "Yes"
 msgstr "Já"
 
 #. translators: this is the document security state
-#: backend/pdf/ev-poppler.c:1182 backend/pdf/ev-poppler.c:1185
+#: backend/pdf/ev-poppler.c:1165 backend/pdf/ev-poppler.c:1168
 #: properties/ev-properties-view.c:435
 msgid "No"
 msgstr "Nei"
 
-#: backend/pdf/ev-poppler.c:1323
+#: backend/pdf/ev-poppler.c:1309
 msgid "Type 1"
 msgstr "Gerð 1"
 
-#: backend/pdf/ev-poppler.c:1325
+#: backend/pdf/ev-poppler.c:1311
 msgid "Type 1C"
 msgstr "Gerð 1C"
 
-#: backend/pdf/ev-poppler.c:1327
+#: backend/pdf/ev-poppler.c:1313
 msgid "Type 3"
 msgstr "Gerð 3"
 
-#: backend/pdf/ev-poppler.c:1329
+#: backend/pdf/ev-poppler.c:1315
 msgid "TrueType"
 msgstr "TrueType"
 
-#: backend/pdf/ev-poppler.c:1331
+#: backend/pdf/ev-poppler.c:1317
 msgid "Type 1 (CID)"
 msgstr "Gerð 1 (CID)"
 
-#: backend/pdf/ev-poppler.c:1333
+#: backend/pdf/ev-poppler.c:1319
 msgid "Type 1C (CID)"
 msgstr "Gerð 1C (CID)"
 
-#: backend/pdf/ev-poppler.c:1335
+#: backend/pdf/ev-poppler.c:1321
 msgid "TrueType (CID)"
 msgstr "TrueType (CID)"
 
-#: backend/pdf/ev-poppler.c:1337
+#: backend/pdf/ev-poppler.c:1323
 msgid "Unknown font type"
 msgstr "Óþekkt stafagerð"
 
-#: backend/pdf/ev-poppler.c:1381
+#: backend/pdf/ev-poppler.c:1367
 msgid ""
 "This document contains non-embedded fonts that are not from the PDF Standard "
 "14 fonts. If the substitute fonts selected by fontconfig are not the same as "
@@ -162,12 +162,12 @@ msgstr ""
 "útskiptingar eru ekki þær sömu og voru notaðar þegar PDF skjalið var búið "
 "til má vera að það birtist ekki rétt."
 
-#: backend/pdf/ev-poppler.c:1386
+#: backend/pdf/ev-poppler.c:1372
 msgid "All fonts are either standard or embedded."
 msgstr ""
 "Allar leturgerðir eru annað hvort staðlaðar eða ívafinn hluti af skjalinu"
 
-#: backend/pdf/ev-poppler.c:1416
+#: backend/pdf/ev-poppler.c:1402
 msgid "No name"
 msgstr "Ekkert heiti"
 
@@ -181,20 +181,20 @@ msgstr "Ekkert heiti"
 #. Author: None
 #. Keywords: None
 #.
-#: backend/pdf/ev-poppler.c:1425 libview/ev-print-operation.c:1991
+#: backend/pdf/ev-poppler.c:1411 libview/ev-print-operation.c:1991
 #: properties/ev-properties-view.c:233
 msgid "None"
 msgstr "Ekkert"
 
-#: backend/pdf/ev-poppler.c:1433
+#: backend/pdf/ev-poppler.c:1419
 msgid "Embedded subset"
 msgstr "Ívafið hlutmengi"
 
-#: backend/pdf/ev-poppler.c:1435
+#: backend/pdf/ev-poppler.c:1421
 msgid "Embedded"
 msgstr "Ívafið"
 
-#: backend/pdf/ev-poppler.c:1437
+#: backend/pdf/ev-poppler.c:1423
 msgid "Not embedded"
 msgstr "Ekki ívafið"
 
@@ -203,7 +203,7 @@ msgstr "Ekki ívafið"
 #. * type. Example:
 #. * "Type 1 (One of the Standard 14 Fonts)"
 #.
-#: backend/pdf/ev-poppler.c:1444
+#: backend/pdf/ev-poppler.c:1430
 msgid " (One of the Standard 14 Fonts)"
 msgstr " (Ein af hinum 14 stöðluðu leturgerðum)"
 
@@ -212,7 +212,7 @@ msgstr " (Ein af hinum 14 stöðluðu leturgerðum)"
 #. * type. Example:
 #. * "TrueType (Not one of the Standard 14 Fonts)"
 #.
-#: backend/pdf/ev-poppler.c:1451
+#: backend/pdf/ev-poppler.c:1437
 msgid " (Not one of the Standard 14 Fonts)"
 msgstr " (Ekki ein af hinum 14 stöðluðu leturgerðum)"
 
@@ -226,7 +226,7 @@ msgstr " (Ekki ein af hinum 14 stöðluðu leturgerðum)"
 #. * Substituting with TeXGyreTermes-Regular
 #. * (/usr/share/textmf/.../texgyretermes-regular.otf)
 #.
-#: backend/pdf/ev-poppler.c:1470
+#: backend/pdf/ev-poppler.c:1456
 #, c-format
 msgid ""
 "%s%s\n"
@@ -250,7 +250,7 @@ msgstr ""
 #. * Encoding: Custom
 #. * Embedded subset
 #.
-#: backend/pdf/ev-poppler.c:1488
+#: backend/pdf/ev-poppler.c:1474
 #, c-format
 msgid ""
 "%s%s\n"
@@ -289,7 +289,7 @@ msgstr "TIFF skjöl"
 msgid "Adds support for reading TIFF documents"
 msgstr "Bætir við stuðningi til lestrar á TIFF skjölum"
 
-#: backend/tiff/tiff-document.c:123
+#: backend/tiff/tiff-document.c:124
 msgid "Invalid document"
 msgstr "Ógilt skjal"
 
@@ -303,8 +303,8 @@ msgid "Adds support for reading XPS documents"
 msgstr "Bætir við stuðningi til lestrar á XPS skjölum"
 
 #. Manually set name and icon
-#: data/org.gnome.Evince.desktop.in.in:3 shell/ev-window-title.c:133
-#: shell/main.c:300
+#: data/org.gnome.Evince.desktop.in.in:3 org.gnome.Evince.appdata.xml.in:23
+#: shell/ev-window-title.c:133 shell/main.c:300
 msgid "Document Viewer"
 msgstr "Skjalaskoðari"
 
@@ -314,13 +314,11 @@ msgstr "Skoða margsíðna skjöl"
 
 #. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
 #: data/org.gnome.Evince.desktop.in.in:6
-#| msgid "pdf;ps;postscript;dvi;xps;djvu;tiff;document;presentation;viewer;"
 msgid ""
 "pdf;ps;postscript;dvi;xps;djvu;tiff;document;presentation;viewer;evince;"
 msgstr "pdf;ps;postscript;dvi;xps;djvu;tiff;skjal;kynning;skoðari;evince;"
 
 #: data/org.gnome.Evince.desktop.in.in:19
-#| msgid "New _Window"
 msgid "New Window"
 msgstr "Nýr gluggi"
 
@@ -409,7 +407,7 @@ msgstr "Óþekkt MIME-tegund"
 msgid "All Documents"
 msgstr "Öll skjöl"
 
-#: libdocument/ev-document-factory.c:609 shell/ev-utils.c:283
+#: libdocument/ev-document-factory.c:609 shell/ev-utils.c:272
 msgid "All Files"
 msgstr "Allar skrár"
 
@@ -440,41 +438,47 @@ msgstr "af %d"
 msgid "Page %s"
 msgstr "Síða %s"
 
-#: libmisc/ev-search-box.c:112
+#: libmisc/ev-search-box.c:113
 msgid "Not found, click to change search options"
 msgstr "Fannst ekki, smelltu til að breyta leitarskilyrðum"
 
-#: libmisc/ev-search-box.c:186 libmisc/ev-search-box.c:242
+#: libmisc/ev-search-box.c:187 libmisc/ev-search-box.c:243
 msgid "Search options"
 msgstr "Leitarvalkostir"
 
-#: libmisc/ev-search-box.c:318
+#: libmisc/ev-search-box.c:319
 msgid "_Whole Words Only"
 msgstr "Aðeins _heil orð"
 
-#: libmisc/ev-search-box.c:331
+#: libmisc/ev-search-box.c:332
 msgid "C_ase Sensitive"
 msgstr "_Næmt fyrir há og lágstöfum"
 
-#: libmisc/ev-search-box.c:600
+#: libmisc/ev-search-box.c:601
 msgid "Find previous occurrence of the search string"
 msgstr "Leita afturábak að næsta tilviki leitarstrengs"
 
-#: libmisc/ev-search-box.c:606
+#: libmisc/ev-search-box.c:607
 msgid "Find next occurrence of the search string"
 msgstr "Leita áfram að næsta tilviki leitarstrengs"
 
-#: libview/ev-jobs.c:649
+#: libview/ev-jobs.c:650
+#, c-format
+#| msgid "Failed to render page %d"
+msgid "Failed to render page %d: %s"
+msgstr "Mistókst að myndgera síðu %d: %s"
+
+#: libview/ev-jobs.c:657
 #, c-format
 msgid "Failed to render page %d"
 msgstr "Mistókst að myndgera síðu %d"
 
-#: libview/ev-jobs.c:901
+#: libview/ev-jobs.c:910
 #, c-format
 msgid "Failed to create thumbnail for page %d"
 msgstr "Tókst ekki að gera smámynd fyrir %d"
 
-#: libview/ev-jobs.c:2033
+#: libview/ev-jobs.c:2042
 #, c-format
 msgid "Failed to print page %d: %s"
 msgstr "Það tókst ekki að prenta síðu %d: %s"
@@ -586,8 +590,6 @@ msgstr ""
 "pappír eins og síða skjalsins segir til um."
 
 #: libview/ev-print-operation.c:2023
-#| msgctxt "shortcut window"
-#| msgid "Move around a page"
 msgid "Draw border around pages"
 msgstr "Teikna jaðar í kringum síður"
 
@@ -667,17 +669,13 @@ msgstr "Ræsa %s"
 msgid "Reset form"
 msgstr "Frumstilla innfyllingarform"
 
-#: libview/ev-view-presentation.c:757
+#: libview/ev-view-presentation.c:739
 msgid "Jump to page:"
 msgstr "Fara á síðu:"
 
-#: libview/ev-view-presentation.c:1051
+#: libview/ev-view-presentation.c:1033
 msgid "End of presentation. Press Esc or click to exit."
 msgstr "Endi kynningar. Ýttu á Esc eða smelltu til að hætta."
-
-#: org.gnome.Evince.appdata.xml.in:23 shell/ev-window.c:4210
-msgid "Evince"
-msgstr "Evince"
 
 #: org.gnome.Evince.appdata.xml.in:24
 msgid "Document viewer for popular document formats"
@@ -742,7 +740,6 @@ msgid "The selected printer “%s” could not be found"
 msgstr "Prentarinn '%s' sem þú valdir, fannst ekki"
 
 #: previewer/previewer.ui:7
-#| msgid "Print"
 msgid "_Print"
 msgstr "_Prenta"
 
@@ -1032,7 +1029,6 @@ msgid "_Odd Pages Left"
 msgstr "_Oddatölusíður vinstra megin"
 
 #: shell/evince-menus.ui:82
-#| msgid "Recent Documents"
 msgid "Right to Left Document"
 msgstr "Hægri til vinstri skjöl"
 
@@ -1045,7 +1041,6 @@ msgid "Ni_ght Mode"
 msgstr "Nætur_hamur"
 
 #: shell/evince-menus.ui:100
-#| msgid "Properties"
 msgid "Prop_erties"
 msgstr "_Eiginleikar"
 
@@ -1062,7 +1057,6 @@ msgid "_Help"
 msgstr "_Hjálp"
 
 #: shell/evince-menus.ui:118
-#| msgid "Document Viewer"
 msgid "_About Document Viewer"
 msgstr "Um Skj_alaskoðarann"
 
@@ -1137,17 +1131,14 @@ msgid "_Save Attachment As…"
 msgstr "Vi_sta viðhengi sem..."
 
 #: shell/evince-menus.ui:223
-#| msgid "Annotation Properties…"
 msgid "Annotation _Properties…"
 msgstr "Eiginlei_kar glósu…"
 
 #: shell/evince-menus.ui:228
-#| msgid "Remove Annotation"
 msgid "R_emove Annotation"
 msgstr "Fja_rlægja glósu"
 
 #: shell/evince-menus.ui:235
-#| msgid "Highlight Selected Text"
 msgid "_Highlight Selected Text"
 msgstr "Á_herslulita valinn texta"
 
@@ -1192,7 +1183,6 @@ msgid "_Rename Bookmark"
 msgstr "_Endurnefna bókamerki"
 
 #: shell/evince-menus.ui:330
-#| msgid "_Rename Bookmark"
 msgid "_Delete Bookmark"
 msgstr "_Eyða bókamerki"
 
@@ -1235,7 +1225,6 @@ msgid "_Cancel"
 msgstr "Hætt_a við"
 
 #: shell/ev-password-view.c:267
-#| msgid "_Unlock Document"
 msgid "_Unlock"
 msgstr "_Aflæsa"
 
@@ -1360,7 +1349,7 @@ msgstr "Fletta út öllu undir þessu atriði"
 msgid "Outline"
 msgstr "Outline"
 
-#: shell/ev-sidebar-thumbnails.c:1047 shell/ev-window.c:7595
+#: shell/ev-sidebar-thumbnails.c:1045 shell/ev-window.c:7595
 msgid "Thumbnails"
 msgstr "Smámyndir"
 
@@ -1389,7 +1378,6 @@ msgid "Annotate the document"
 msgstr "Glósa í skjalið"
 
 #: shell/ev-toolbar.c:228
-#| msgid "Annotate the document"
 msgid "Annotate document"
 msgstr "Glósa í skjal"
 
@@ -1405,7 +1393,7 @@ msgstr "Velja eða stilla aðdráttarstig skjalsins"
 msgid "Set zoom level"
 msgstr "Setja aðdráttargildi"
 
-#: shell/ev-utils.c:279
+#: shell/ev-utils.c:268
 msgid "Supported Image Files"
 msgstr "Studdar myndaskrár"
 
@@ -1455,7 +1443,6 @@ msgid "Open Document"
 msgstr "Opna skjal"
 
 #: shell/ev-window.c:2904
-#| msgid "Open"
 msgid "_Open"
 msgstr "_Opna"
 
@@ -1499,7 +1486,6 @@ msgid "Save As…"
 msgstr "Vista sem…"
 
 #: shell/ev-window.c:3202 shell/ev-window.c:6997 shell/ev-window.c:7223
-#| msgid "_Save As…"
 msgid "_Save"
 msgstr "Vi_sta"
 
@@ -1520,12 +1506,10 @@ msgid "Printing job “%s”"
 msgstr "Prenta verk „%s“"
 
 #: shell/ev-window.c:3943
-#| msgid "Document contains form fields that have been filled out. "
 msgid "Document contains form fields that have been filled out."
 msgstr "Skjalið inniheldur reiti sem þú hefur fyllt út."
 
 #: shell/ev-window.c:3946
-#| msgid "Document contains new or modified annotations. "
 msgid "Document contains new or modified annotations."
 msgstr "Skjalið inniheldur nýjar eða breyttar glósur."
 
@@ -1539,7 +1523,6 @@ msgid "If you reload the document, changes will be permanently lost."
 msgstr "Ef þú endurhleður skjalið, munu breytingar tapast endanlega."
 
 #: shell/ev-window.c:3962
-#| msgid "No"
 msgid "_No"
 msgstr "_Nei"
 
@@ -1592,13 +1575,15 @@ msgstr "Hætta við _prentun og loka"
 msgid "Close _after Printing"
 msgstr "Loka _eftir prentun"
 
+#: shell/ev-window.c:4210
+msgid "Evince"
+msgstr "Evince"
+
 #: shell/ev-window.c:4212
-#| msgid "© 1996–2017 The Evince authors"
 msgid "© 1996–2020 The Evince authors"
 msgstr "© 1996–2020 - Höfundar Evince"
 
 #: shell/ev-window.c:4215
-#| msgid "This is a document viewer for the GNOME desktop."
 msgid "Evince is a simple document viewer for GNOME"
 msgstr "Evince er einfaldur skjalaskoðari fyrir GNOME"
 
@@ -1888,27 +1873,21 @@ msgid "Go to page number"
 msgstr "Fara á síðunúmer"
 
 #: shell/help-overlay.ui:230
-#| msgid "Go to previous page"
 msgctxt "shortcut window"
 msgid "Go to previous page (fast)"
 msgstr "Fara á fyrri síðu (hratt)"
 
 #: shell/help-overlay.ui:237
-#| msgid "Go to next page"
 msgctxt "shortcut window"
 msgid "Go to next page (fast)"
 msgstr "Fara á næstu síðu (hratt)"
 
 #: shell/help-overlay.ui:244
-#| msgctxt "shortcut window"
-#| msgid "Go to previous/next page visited"
 msgctxt "shortcut window"
 msgid "Go to previous page visited"
 msgstr "Fara á fyrri heimsóttu síðu"
 
 #: shell/help-overlay.ui:251
-#| msgctxt "shortcut window"
-#| msgid "Go to previous/next page visited"
 msgctxt "shortcut window"
 msgid "Go to next page visited"
 msgstr "Fara á næstu heimsóttu síðu"
@@ -1939,14 +1918,11 @@ msgid "Add bookmark"
 msgstr "Bæta við bókamerki"
 
 #: shell/help-overlay.ui:292
-#| msgid "Remove bookmark"
 msgctxt "shortcut window"
 msgid "Remove bookmark"
 msgstr "Fjarlægja bókamerki"
 
 #: shell/help-overlay.ui:299
-#| msgctxt "shortcut window"
-#| msgid "Toggle sidebar"
 msgctxt "shortcut window"
 msgid "Toggle night mode"
 msgstr "Víxla næturham af/á"
@@ -1962,100 +1938,88 @@ msgid "Toggle dual page"
 msgstr "Víxla tveggja-síðna af/á"
 
 #: shell/help-overlay.ui:320
-#| msgid "Document View"
+#| msgctxt "shortcut window"
+#| msgid "Toggle dual page"
+msgctxt "shortcut window"
+msgid "Toggle odd pages left"
+msgstr "Víxla oddatölusíðum vinstra megin af/á"
+
+#: shell/help-overlay.ui:327
 msgctxt "shortcut window"
 msgid "Document properties"
 msgstr "Eiginleikar skjals"
 
-#: shell/help-overlay.ui:327
+#: shell/help-overlay.ui:334
 msgctxt "shortcut window"
 msgid "Add a post-it like note"
 msgstr "Bæta við minnismiða"
 
-#: shell/help-overlay.ui:334
-#| msgid "Highlight text"
+#: shell/help-overlay.ui:341
 msgctxt "shortcut window"
 msgid "Highlight text"
 msgstr "Áherslulita texta"
 
-#: shell/help-overlay.ui:343
+#: shell/help-overlay.ui:350
 msgctxt "shortcut window"
 msgid "Finding text"
 msgstr "Finna texta"
 
-#: shell/help-overlay.ui:347
+#: shell/help-overlay.ui:354
 msgctxt "shortcut window"
 msgid "Show the search bar"
 msgstr "Birta leitarstikuna"
 
-#: shell/help-overlay.ui:354
+#: shell/help-overlay.ui:361
 msgctxt "shortcut window"
 msgid "Go to the next search result"
 msgstr "Fara á næstu leitarniðurstöðu"
 
-#: shell/help-overlay.ui:361
+#: shell/help-overlay.ui:368
 msgctxt "shortcut window"
 msgid "Go to the previous search result"
 msgstr "Fara á fyrri leitarniðurstöðu"
 
-#: shell/help-overlay.ui:370
-#| msgid "General"
+#: shell/help-overlay.ui:377
 msgctxt "shortcut window"
 msgid "General"
 msgstr "Almennt"
 
-#: shell/help-overlay.ui:374
+#: shell/help-overlay.ui:381
 msgctxt "shortcut window"
 msgid "Show help"
 msgstr "Birta hjálp"
 
-#: shell/help-overlay.ui:381
-#| msgctxt "shortcut window"
-#| msgid "Toggle sidebar"
+#: shell/help-overlay.ui:388
 msgctxt "shortcut window"
 msgid "Toggle primary menu"
 msgstr "Víxla aðalvalmynd af/á"
 
-#: shell/help-overlay.ui:388
-#| msgid "_Keyboard Shortcuts"
+#: shell/help-overlay.ui:395
 msgctxt "shortcut window"
 msgid "Keyboard shortcuts"
 msgstr "Flýtivísanir á lyklaborði"
 
-#: shell/help-overlay.ui:395
-#| msgid "New _Window"
+#: shell/help-overlay.ui:402
 msgctxt "shortcut window"
 msgid "Close window"
 msgstr "Loka glugga"
 
-#: shell/help-overlay.ui:402
-msgctxt "shortcut window"
-msgid "Quit"
-msgstr "Hætta"
-
 #: shell/help-overlay.ui:409
-#| msgid "Save Current Settings as Defa_ult"
 msgctxt "shortcut window"
 msgid "Save current settings as default"
 msgstr "Vista núverandi stillingar sem sjálfgefnar"
 
 #: shell/help-overlay.ui:418
-#| msgctxt "shortcut window"
-#| msgid "Enter presentation mode"
 msgctxt "shortcut window"
 msgid "Presentation mode"
 msgstr "Kynningarhamur"
 
 #: shell/help-overlay.ui:422
-#| msgctxt "shortcut window"
-#| msgid "Toggle fullscreen"
 msgctxt "shortcut window"
 msgid "Toggle black screen"
 msgstr "Víxla svörtum skjá af/á"
 
 #: shell/help-overlay.ui:429
-#| msgctxt "shortcut window"
-#| msgid "Toggle fullscreen"
 msgctxt "shortcut window"
 msgid "Toggle white screen"
 msgstr "Víxla hvítum skjá af/á"
@@ -2070,7 +2034,6 @@ msgid "GNOME Document Viewer"
 msgstr "GNOME skjalaskoðari"
 
 #: shell/main.c:72
-#| msgid "Open in New _Window"
 msgid "Open a new window."
 msgstr "Opna nýjan glugga."
 
@@ -2121,6 +2084,10 @@ msgstr "STRENGUR"
 #: shell/main.c:83
 msgid "[FILE…]"
 msgstr "[SKRÁ…]"
+
+#~ msgctxt "shortcut window"
+#~ msgid "Quit"
+#~ msgstr "Hætta"
 
 #~ msgid "Go to the previous page"
 #~ msgstr "Fara á fyrri síðu"
