@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
-"POT-Creation-Date: 2021-11-07 17:17+0000\n"
-"PO-Revision-Date: 2021-11-22 15:33+0100\n"
+"POT-Creation-Date: 2021-12-08 09:45+0000\n"
+"PO-Revision-Date: 2021-12-23 08:53+0100\n"
 "Last-Translator: Fabio Tomat <f.t.public@gmail.com>\n"
 "Language-Team: Friulian <f.t.public@gmail.com>\n"
 "Language: fur\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.0\n"
+"X-Generator: Poedit 3.0.1\n"
 
 #: backend/comics/comics-document.c:163 backend/comics/comics-document.c:187
 msgid "File is corrupted"
@@ -109,13 +109,13 @@ msgid "This work is in the Public Domain"
 msgstr "Chest lavôr al è intal Domini Public"
 
 #. translators: this is the document security state
-#: backend/pdf/ev-poppler.c:1165 backend/pdf/ev-poppler.c:1171
+#: backend/pdf/ev-poppler.c:1162 backend/pdf/ev-poppler.c:1168
 #: properties/ev-properties-view.c:433
 msgid "Yes"
 msgstr "Sì"
 
 #. translators: this is the document security state
-#: backend/pdf/ev-poppler.c:1168 backend/pdf/ev-poppler.c:1171
+#: backend/pdf/ev-poppler.c:1165 backend/pdf/ev-poppler.c:1168
 #: properties/ev-properties-view.c:435
 msgid "No"
 msgstr "No"
@@ -289,7 +289,7 @@ msgstr "Documents TIFF"
 msgid "Adds support for reading TIFF documents"
 msgstr "Al zonte il supuart par lei i documents TIFF"
 
-#: backend/tiff/tiff-document.c:123
+#: backend/tiff/tiff-document.c:124
 msgid "Invalid document"
 msgstr "Document no valit"
 
@@ -467,17 +467,22 @@ msgstr "Cjate il precedent câs de stringhe di ricercje"
 msgid "Find next occurrence of the search string"
 msgstr "Cjate il sucessîf câs de stringhe di ricercje"
 
-#: libview/ev-jobs.c:649
+#: libview/ev-jobs.c:650
+#, c-format
+msgid "Failed to render page %d: %s"
+msgstr "Impussibil rapresentâ la pagjine %d: %s"
+
+#: libview/ev-jobs.c:657
 #, c-format
 msgid "Failed to render page %d"
 msgstr "Visualizazion de pagjine %d falide"
 
-#: libview/ev-jobs.c:901
+#: libview/ev-jobs.c:910
 #, c-format
 msgid "Failed to create thumbnail for page %d"
 msgstr "Impussibil creâ miniature pe pagjine %d"
 
-#: libview/ev-jobs.c:2033
+#: libview/ev-jobs.c:2042
 #, c-format
 msgid "Failed to print page %d: %s"
 msgstr "No soi rivât a stampâ la pagjine %d: %s"
