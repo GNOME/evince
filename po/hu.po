@@ -9,16 +9,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
-"POT-Creation-Date: 2021-08-25 13:26+0000\n"
-"PO-Revision-Date: 2021-09-11 22:29+0200\n"
-"Last-Translator: Balázs Úr <ur.balazs at fsf dot hu>\n"
+"POT-Creation-Date: 2021-12-02 23:36+0000\n"
+"PO-Revision-Date: 2021-12-12 19:40+0100\n"
+"Last-Translator: Meskó Balázs <mesko.balazs@fsf.hu>\n"
 "Language-Team: Hungarian <gnome-hu-list at gnome dot org>\n"
 "Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 19.12.3\n"
+"X-Generator: Poedit 3.0\n"
 
 #: backend/comics/comics-document.c:163 backend/comics/comics-document.c:187
 msgid "File is corrupted"
@@ -103,55 +103,55 @@ msgstr "PDF-dokumentumok"
 msgid "Adds support for reading PDF Documents"
 msgstr "Támogatást nyújt PDF dokumentumok olvasásához"
 
-#: backend/pdf/ev-poppler.c:907
+#: backend/pdf/ev-poppler.c:863
 msgid "This work is in the Public Domain"
 msgstr "Ez a munka közkincs"
 
 #. translators: this is the document security state
-#: backend/pdf/ev-poppler.c:1179 backend/pdf/ev-poppler.c:1185
+#: backend/pdf/ev-poppler.c:1162 backend/pdf/ev-poppler.c:1168
 #: properties/ev-properties-view.c:433
 msgid "Yes"
 msgstr "Engedélyezve"
 
 #. translators: this is the document security state
-#: backend/pdf/ev-poppler.c:1182 backend/pdf/ev-poppler.c:1185
+#: backend/pdf/ev-poppler.c:1165 backend/pdf/ev-poppler.c:1168
 #: properties/ev-properties-view.c:435
 msgid "No"
 msgstr "Tiltva"
 
-#: backend/pdf/ev-poppler.c:1323
+#: backend/pdf/ev-poppler.c:1309
 msgid "Type 1"
 msgstr "Type 1"
 
-#: backend/pdf/ev-poppler.c:1325
+#: backend/pdf/ev-poppler.c:1311
 msgid "Type 1C"
 msgstr "Type 1C"
 
-#: backend/pdf/ev-poppler.c:1327
+#: backend/pdf/ev-poppler.c:1313
 msgid "Type 3"
 msgstr "Type 3"
 
-#: backend/pdf/ev-poppler.c:1329
+#: backend/pdf/ev-poppler.c:1315
 msgid "TrueType"
 msgstr "TrueType"
 
-#: backend/pdf/ev-poppler.c:1331
+#: backend/pdf/ev-poppler.c:1317
 msgid "Type 1 (CID)"
 msgstr "Type 1 (CID)"
 
-#: backend/pdf/ev-poppler.c:1333
+#: backend/pdf/ev-poppler.c:1319
 msgid "Type 1C (CID)"
 msgstr "Type 1C (CID)"
 
-#: backend/pdf/ev-poppler.c:1335
+#: backend/pdf/ev-poppler.c:1321
 msgid "TrueType (CID)"
 msgstr "TrueType (CID)"
 
-#: backend/pdf/ev-poppler.c:1337
+#: backend/pdf/ev-poppler.c:1323
 msgid "Unknown font type"
 msgstr "Ismeretlen betűkészlet-típus"
 
-#: backend/pdf/ev-poppler.c:1381
+#: backend/pdf/ev-poppler.c:1367
 msgid ""
 "This document contains non-embedded fonts that are not from the PDF Standard "
 "14 fonts. If the substitute fonts selected by fontconfig are not the same as "
@@ -162,11 +162,11 @@ msgstr ""
 "helyettesítő betűkészletek nem azonosak a PDF előállításához használtakkal, "
 "akkor a dokumentum hibásan jelenhet meg."
 
-#: backend/pdf/ev-poppler.c:1386
+#: backend/pdf/ev-poppler.c:1372
 msgid "All fonts are either standard or embedded."
 msgstr "Minden betűkészlet szabványos vagy beágyazott."
 
-#: backend/pdf/ev-poppler.c:1416
+#: backend/pdf/ev-poppler.c:1402
 msgid "No name"
 msgstr "Névtelen"
 
@@ -180,20 +180,20 @@ msgstr "Névtelen"
 #. Author: None
 #. Keywords: None
 #.
-#: backend/pdf/ev-poppler.c:1425 libview/ev-print-operation.c:1991
+#: backend/pdf/ev-poppler.c:1411 libview/ev-print-operation.c:1991
 #: properties/ev-properties-view.c:233
 msgid "None"
 msgstr "Nincs"
 
-#: backend/pdf/ev-poppler.c:1433
+#: backend/pdf/ev-poppler.c:1419
 msgid "Embedded subset"
 msgstr "Beágyazott részhalmaz"
 
-#: backend/pdf/ev-poppler.c:1435
+#: backend/pdf/ev-poppler.c:1421
 msgid "Embedded"
 msgstr "Beágyazott"
 
-#: backend/pdf/ev-poppler.c:1437
+#: backend/pdf/ev-poppler.c:1423
 msgid "Not embedded"
 msgstr "Be nem ágyazott"
 
@@ -202,7 +202,7 @@ msgstr "Be nem ágyazott"
 #. * type. Example:
 #. * "Type 1 (One of the Standard 14 Fonts)"
 #.
-#: backend/pdf/ev-poppler.c:1444
+#: backend/pdf/ev-poppler.c:1430
 msgid " (One of the Standard 14 Fonts)"
 msgstr " (a 14 szabványos betűkészlet egyike)"
 
@@ -211,7 +211,7 @@ msgstr " (a 14 szabványos betűkészlet egyike)"
 #. * type. Example:
 #. * "TrueType (Not one of the Standard 14 Fonts)"
 #.
-#: backend/pdf/ev-poppler.c:1451
+#: backend/pdf/ev-poppler.c:1437
 msgid " (Not one of the Standard 14 Fonts)"
 msgstr " (nem a 14 szabványos betűkészlet egyike)"
 
@@ -225,7 +225,7 @@ msgstr " (nem a 14 szabványos betűkészlet egyike)"
 #. * Substituting with TeXGyreTermes-Regular
 #. * (/usr/share/textmf/.../texgyretermes-regular.otf)
 #.
-#: backend/pdf/ev-poppler.c:1470
+#: backend/pdf/ev-poppler.c:1456
 #, c-format
 msgid ""
 "%s%s\n"
@@ -249,7 +249,7 @@ msgstr ""
 #. * Encoding: Custom
 #. * Embedded subset
 #.
-#: backend/pdf/ev-poppler.c:1488
+#: backend/pdf/ev-poppler.c:1474
 #, c-format
 msgid ""
 "%s%s\n"
@@ -272,12 +272,12 @@ msgstr "Támogatást nyújt PostScript dokumentumok olvasásához"
 #: backend/ps/ev-spectre.c:98
 #, c-format
 msgid "Failed to load document “%s”"
-msgstr "A(z) „%s” dokumentum betöltése meghiúsult"
+msgstr "A(z) „%s” dokumentum betöltése sikertelen"
 
 #: backend/ps/ev-spectre.c:131
 #, c-format
 msgid "Failed to save document “%s”"
-msgstr "A(z) „%s” dokumentum mentése meghiúsult"
+msgstr "A(z) „%s” dokumentum mentése sikertelen"
 
 #: backend/tiff/evince-tiffdocument.metainfo.xml.in.in:5
 #: backend/tiff/tiffdocument.evince-backend.desktop.in.in:4
@@ -288,7 +288,7 @@ msgstr "TIFF-dokumentumok"
 msgid "Adds support for reading TIFF documents"
 msgstr "Támogatást nyújt TIFF dokumentumok olvasásához"
 
-#: backend/tiff/tiff-document.c:123
+#: backend/tiff/tiff-document.c:124
 msgid "Invalid document"
 msgstr "Érvénytelen dokumentum"
 
@@ -302,8 +302,8 @@ msgid "Adds support for reading XPS documents"
 msgstr "Támogatást nyújt XPS dokumentumok olvasásához"
 
 #. Manually set name and icon
-#: data/org.gnome.Evince.desktop.in.in:3 shell/ev-window-title.c:133
-#: shell/main.c:300
+#: data/org.gnome.Evince.desktop.in.in:3 org.gnome.Evince.appdata.xml.in:23
+#: shell/ev-window-title.c:133 shell/main.c:300
 msgid "Document Viewer"
 msgstr "Dokumentummegjelenítő"
 
@@ -319,7 +319,6 @@ msgstr ""
 "pdf;ps;postscript;dvi;xps;djvu;tiff;dokumentum;prezentáció;nézegető;evince;"
 
 #: data/org.gnome.Evince.desktop.in.in:19
-#| msgid "New _Window"
 msgid "New Window"
 msgstr "Új ablak"
 
@@ -410,19 +409,19 @@ msgstr "Ismeretlen MIME típus"
 msgid "All Documents"
 msgstr "Minden dokumentum"
 
-#: libdocument/ev-document-factory.c:609 shell/ev-utils.c:283
+#: libdocument/ev-document-factory.c:609 shell/ev-utils.c:272
 msgid "All Files"
 msgstr "Minden fájl"
 
 #: libdocument/ev-file-helpers.c:158
 #, c-format
 msgid "Failed to create a temporary file: %s"
-msgstr "Az átmeneti fájl létrehozása meghiúsult: %s"
+msgstr "Az átmeneti fájl létrehozása sikertelen: %s"
 
 #: libdocument/ev-file-helpers.c:235
 #, c-format
 msgid "Failed to create a temporary directory: %s"
-msgstr "Az átmeneti könyvtár létrehozása meghiúsult: %s"
+msgstr "Az átmeneti könyvtár létrehozása sikertelen: %s"
 
 #: libmisc/ev-page-action-widget.c:86 libmisc/ev-page-action-widget.c:125
 #, c-format
@@ -441,44 +440,49 @@ msgstr "/ %d"
 msgid "Page %s"
 msgstr "Oldal: %s"
 
-#: libmisc/ev-search-box.c:112
+#: libmisc/ev-search-box.c:113
 msgid "Not found, click to change search options"
 msgstr "Nem található, kattintson a keresési beállítások módosításához"
 
-#: libmisc/ev-search-box.c:186 libmisc/ev-search-box.c:242
+#: libmisc/ev-search-box.c:187 libmisc/ev-search-box.c:243
 msgid "Search options"
 msgstr "Keresési beállítások"
 
-#: libmisc/ev-search-box.c:318
+#: libmisc/ev-search-box.c:319
 msgid "_Whole Words Only"
 msgstr "Cs_ak teljes szavak"
 
-#: libmisc/ev-search-box.c:331
+#: libmisc/ev-search-box.c:332
 msgid "C_ase Sensitive"
 msgstr "Na_gybetűérzékeny"
 
-#: libmisc/ev-search-box.c:600
+#: libmisc/ev-search-box.c:601
 msgid "Find previous occurrence of the search string"
 msgstr "A keresőkifejezés előző előfordulása az oldalon"
 
-#: libmisc/ev-search-box.c:606
+#: libmisc/ev-search-box.c:607
 msgid "Find next occurrence of the search string"
 msgstr "A keresőkifejezés következő előfordulása az oldalon"
 
-#: libview/ev-jobs.c:649
+#: libview/ev-jobs.c:650
+#, c-format
+msgid "Failed to render page %d: %s"
+msgstr "A(z) %d. oldal megjelenítése sikertelen: %s"
+
+#: libview/ev-jobs.c:657
 #, c-format
 msgid "Failed to render page %d"
-msgstr "A(z) %d. oldal renderelése meghiúsult"
+msgstr "A(z) %d. oldal megjelenítése sikertelen"
 
-#: libview/ev-jobs.c:901
+#: libview/ev-jobs.c:910
 #, c-format
 msgid "Failed to create thumbnail for page %d"
 msgstr "A bélyegkép létrehozása sikertelen a(z) %d. oldalhoz"
 
-#: libview/ev-jobs.c:2033
+#: libview/ev-jobs.c:2042
 #, c-format
 msgid "Failed to print page %d: %s"
-msgstr "A(z) %d. oldal nyomtatása meghiúsult: %s"
+msgstr "A(z) %d. oldal nyomtatása sikertelen: %s"
 
 #. Initial state
 #: libview/ev-print-operation.c:350
@@ -666,18 +670,14 @@ msgstr "%s indítása"
 msgid "Reset form"
 msgstr "Űrlap visszaállítása"
 
-#: libview/ev-view-presentation.c:757
+#: libview/ev-view-presentation.c:739
 msgid "Jump to page:"
 msgstr "Ugrás oldalra:"
 
-#: libview/ev-view-presentation.c:1051
+#: libview/ev-view-presentation.c:1033
 msgid "End of presentation. Press Esc or click to exit."
 msgstr ""
 "Vége a bemutatónak. A kilépéshez kattintson, vagy nyomja meg az Esc gombot."
-
-#: org.gnome.Evince.appdata.xml.in:23 shell/ev-window.c:4210
-msgid "Evince"
-msgstr "Evince"
 
 #: org.gnome.Evince.appdata.xml.in:24
 msgid "Document viewer for popular document formats"
@@ -734,7 +734,7 @@ msgstr "Oldal kiválasztása"
 
 #: previewer/ev-previewer-window.c:79 shell/ev-window.c:3665
 msgid "Failed to print document"
-msgstr "A dokumentum nyomtatása meghiúsult"
+msgstr "A dokumentum nyomtatása sikertelen"
 
 #: previewer/ev-previewer-window.c:220
 #, c-format
@@ -1133,17 +1133,14 @@ msgid "_Save Attachment As…"
 msgstr "Melléklet m_entése másként…"
 
 #: shell/evince-menus.ui:223
-#| msgid "Annotation Properties…"
 msgid "Annotation _Properties…"
 msgstr "Jegyzet _tulajdonságai…"
 
 #: shell/evince-menus.ui:228
-#| msgid "Remove Annotation"
 msgid "R_emove Annotation"
 msgstr "Jegyzet _eltávolítása"
 
 #: shell/evince-menus.ui:235
-#| msgid "Highlight Selected Text"
 msgid "_Highlight Selected Text"
 msgstr "_Kijelölt szöveg kiemelése"
 
@@ -1353,7 +1350,7 @@ msgstr "Összes kinyitása ezen elem alatt"
 msgid "Outline"
 msgstr "Vázlat"
 
-#: shell/ev-sidebar-thumbnails.c:1047 shell/ev-window.c:7595
+#: shell/ev-sidebar-thumbnails.c:1045 shell/ev-window.c:7595
 msgid "Thumbnails"
 msgstr "Bélyegképek"
 
@@ -1397,7 +1394,7 @@ msgstr "A dokumentum nagyítási szintjének kiválasztása vagy beállítása"
 msgid "Set zoom level"
 msgstr "Nagyítási szint beállítása"
 
-#: shell/ev-utils.c:279
+#: shell/ev-utils.c:268
 msgid "Supported Image Files"
 msgstr "Támogatott képfájlok"
 
@@ -1431,7 +1428,7 @@ msgstr "Dokumentum letöltése (%d%%)"
 
 #: shell/ev-window.c:2342
 msgid "Failed to load remote file."
-msgstr "A távoli fájl betöltése meghiúsult."
+msgstr "A távoli fájl betöltése sikertelen."
 
 #: shell/ev-window.c:2623
 #, c-format
@@ -1440,7 +1437,7 @@ msgstr "Dokumentum újratöltése innen: %s"
 
 #: shell/ev-window.c:2653
 msgid "Failed to reload document."
-msgstr "A dokumentum újratöltése meghiúsult."
+msgstr "A dokumentum újratöltése sikertelen."
 
 #: shell/ev-window.c:2901
 msgid "Open Document"
@@ -1579,6 +1576,10 @@ msgstr "_Nyomtatás megszakítása és bezárás"
 #: shell/ev-window.c:4090
 msgid "Close _after Printing"
 msgstr "Bezárás nyomtatás _után"
+
+#: shell/ev-window.c:4210
+msgid "Evince"
+msgstr "Evince"
 
 #: shell/ev-window.c:4212
 msgid "© 1996–2020 The Evince authors"
@@ -1944,68 +1945,68 @@ msgstr "Két oldal be/ki"
 
 #: shell/help-overlay.ui:320
 msgctxt "shortcut window"
+msgid "Toggle odd pages left"
+msgstr "Páratlan oldalak balra be/ki"
+
+#: shell/help-overlay.ui:327
+msgctxt "shortcut window"
 msgid "Document properties"
 msgstr "Dokumentumtulajdonságok"
 
-#: shell/help-overlay.ui:327
+#: shell/help-overlay.ui:334
 msgctxt "shortcut window"
 msgid "Add a post-it like note"
 msgstr "Egy ragadós cetlihez hasonló jegyzet hozzáadása"
 
-#: shell/help-overlay.ui:334
+#: shell/help-overlay.ui:341
 msgctxt "shortcut window"
 msgid "Highlight text"
 msgstr "Szöveg kiemelése"
 
-#: shell/help-overlay.ui:343
+#: shell/help-overlay.ui:350
 msgctxt "shortcut window"
 msgid "Finding text"
 msgstr "Szöveg keresése"
 
-#: shell/help-overlay.ui:347
+#: shell/help-overlay.ui:354
 msgctxt "shortcut window"
 msgid "Show the search bar"
 msgstr "A keresősáv megjelenítése"
 
-#: shell/help-overlay.ui:354
+#: shell/help-overlay.ui:361
 msgctxt "shortcut window"
 msgid "Go to the next search result"
 msgstr "Ugrás a következő találatra"
 
-#: shell/help-overlay.ui:361
+#: shell/help-overlay.ui:368
 msgctxt "shortcut window"
 msgid "Go to the previous search result"
 msgstr "Ugrás az előző találatra"
 
-#: shell/help-overlay.ui:370
+#: shell/help-overlay.ui:377
 msgctxt "shortcut window"
 msgid "General"
 msgstr "Általános"
 
-#: shell/help-overlay.ui:374
+#: shell/help-overlay.ui:381
 msgctxt "shortcut window"
 msgid "Show help"
 msgstr "Súgó megjelenítése"
 
-#: shell/help-overlay.ui:381
+#: shell/help-overlay.ui:388
 msgctxt "shortcut window"
 msgid "Toggle primary menu"
 msgstr "Elsődleges menü be/ki"
 
-#: shell/help-overlay.ui:388
+#: shell/help-overlay.ui:395
 msgctxt "shortcut window"
 msgid "Keyboard shortcuts"
 msgstr "Gyorsbillentyűk"
 
-#: shell/help-overlay.ui:395
+#: shell/help-overlay.ui:402
 msgctxt "shortcut window"
 msgid "Close window"
 msgstr "Ablak bezárása"
-
-#: shell/help-overlay.ui:402
-msgctxt "shortcut window"
-msgid "Quit"
-msgstr "Kilépés"
 
 #: shell/help-overlay.ui:409
 msgctxt "shortcut window"
@@ -2037,7 +2038,6 @@ msgid "GNOME Document Viewer"
 msgstr "GNOME dokumentummegjelenítő"
 
 #: shell/main.c:72
-#| msgid "Open in New _Window"
 msgid "Open a new window."
 msgstr "Új ablak megnyitása."
 
@@ -2088,3 +2088,7 @@ msgstr "KARAKTERLÁNC"
 #: shell/main.c:83
 msgid "[FILE…]"
 msgstr "[FÁJL…]"
+
+#~ msgctxt "shortcut window"
+#~ msgid "Quit"
+#~ msgstr "Kilépés"
