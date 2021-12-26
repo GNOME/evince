@@ -218,6 +218,7 @@ ev_page_action_widget_init (EvPageActionWidget *action_widget)
         style_context = gtk_widget_get_style_context (hbox);
         gtk_style_context_add_class (style_context, "raised");
         gtk_style_context_add_class (style_context, "linked");
+        gtk_style_context_add_class (style_context, "tnum");
 
 	action_widget->entry = gtk_entry_new ();
 	gtk_widget_add_events (action_widget->entry,
