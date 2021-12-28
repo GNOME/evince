@@ -280,7 +280,7 @@ mime_types_list = {
   'djvu': [
     'application/x-ext-djv',
     'application/x-ext-djvu',
-    'image/vnd.djvu+multipage',
+    'image/vnd.djvu',
   ],
   'dvi': [
     'application/x-bzdvi',
