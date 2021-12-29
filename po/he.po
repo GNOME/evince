@@ -13,17 +13,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince.HEAD.he\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
-"POT-Creation-Date: 2021-10-15 00:48+0000\n"
-"PO-Revision-Date: 2021-11-12 00:45+0200\n"
-"Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
-"Language-Team: Hebrew <yoseforb@gmail.com>\n"
+"POT-Creation-Date: 2021-12-08 09:45+0000\n"
+"PO-Revision-Date: 2021-12-29 18:24+0200\n"
+"Last-Translator: Yosef Or Boczko <yoseforb@gmail.com>\n"
+"Language-Team: Hebrew <>\n"
 "Language: he\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : n==2 ? 1 : n>10 && n%10==0 ? "
-"2 : 3);\n"
-"X-Generator: Poedit 3.0\n"
+"2 : 3)\n"
+"X-Generator: Gtranslator 40.0\n"
 
 #: backend/comics/comics-document.c:163 backend/comics/comics-document.c:187
 msgid "File is corrupted"
@@ -107,55 +107,55 @@ msgstr "מסמכי PDF"
 msgid "Adds support for reading PDF Documents"
 msgstr "הוספת תמיכה לקריאת מסמכי PDF"
 
-#: backend/pdf/ev-poppler.c:907
+#: backend/pdf/ev-poppler.c:863
 msgid "This work is in the Public Domain"
 msgstr "יצירה זו היא לרשות הציבור"
 
 #. translators: this is the document security state
-#: backend/pdf/ev-poppler.c:1179 backend/pdf/ev-poppler.c:1185
+#: backend/pdf/ev-poppler.c:1162 backend/pdf/ev-poppler.c:1168
 #: properties/ev-properties-view.c:433
 msgid "Yes"
 msgstr "כן"
 
 #. translators: this is the document security state
-#: backend/pdf/ev-poppler.c:1182 backend/pdf/ev-poppler.c:1185
+#: backend/pdf/ev-poppler.c:1165 backend/pdf/ev-poppler.c:1168
 #: properties/ev-properties-view.c:435
 msgid "No"
 msgstr "לא"
 
-#: backend/pdf/ev-poppler.c:1323
+#: backend/pdf/ev-poppler.c:1309
 msgid "Type 1"
 msgstr "Type 1"
 
-#: backend/pdf/ev-poppler.c:1325
+#: backend/pdf/ev-poppler.c:1311
 msgid "Type 1C"
 msgstr "Type 1C"
 
-#: backend/pdf/ev-poppler.c:1327
+#: backend/pdf/ev-poppler.c:1313
 msgid "Type 3"
 msgstr "Type 3"
 
-#: backend/pdf/ev-poppler.c:1329
+#: backend/pdf/ev-poppler.c:1315
 msgid "TrueType"
 msgstr "TrueType"
 
-#: backend/pdf/ev-poppler.c:1331
+#: backend/pdf/ev-poppler.c:1317
 msgid "Type 1 (CID)"
 msgstr "Type 1 (CID)"
 
-#: backend/pdf/ev-poppler.c:1333
+#: backend/pdf/ev-poppler.c:1319
 msgid "Type 1C (CID)"
 msgstr "Type 1C (CID)"
 
-#: backend/pdf/ev-poppler.c:1335
+#: backend/pdf/ev-poppler.c:1321
 msgid "TrueType (CID)"
 msgstr "TrueType (CID)"
 
-#: backend/pdf/ev-poppler.c:1337
+#: backend/pdf/ev-poppler.c:1323
 msgid "Unknown font type"
 msgstr "סוג גופן לא ידוע"
 
-#: backend/pdf/ev-poppler.c:1381
+#: backend/pdf/ev-poppler.c:1367
 msgid ""
 "This document contains non-embedded fonts that are not from the PDF Standard "
 "14 fonts. If the substitute fonts selected by fontconfig are not the same as "
@@ -165,11 +165,11 @@ msgstr ""
 "גופני ההחלפה שנבחרו על ידי fontconfig אינם זהים לגופנים בהם נעשה שימוש "
 "ליצירת ה־PDF, העיבוד עשוי להיות שגוי."
 
-#: backend/pdf/ev-poppler.c:1386
+#: backend/pdf/ev-poppler.c:1372
 msgid "All fonts are either standard or embedded."
 msgstr "כל הגופנים הם תקניים או מוטמעים."
 
-#: backend/pdf/ev-poppler.c:1416
+#: backend/pdf/ev-poppler.c:1402
 msgid "No name"
 msgstr "ללא שם"
 
@@ -183,20 +183,20 @@ msgstr "ללא שם"
 #. Author: None
 #. Keywords: None
 #.
-#: backend/pdf/ev-poppler.c:1425 libview/ev-print-operation.c:1991
+#: backend/pdf/ev-poppler.c:1411 libview/ev-print-operation.c:1991
 #: properties/ev-properties-view.c:233
 msgid "None"
 msgstr "ללא"
 
-#: backend/pdf/ev-poppler.c:1433
+#: backend/pdf/ev-poppler.c:1419
 msgid "Embedded subset"
 msgstr "תת־קבוצה מוטמעת"
 
-#: backend/pdf/ev-poppler.c:1435
+#: backend/pdf/ev-poppler.c:1421
 msgid "Embedded"
 msgstr "מוטמע"
 
-#: backend/pdf/ev-poppler.c:1437
+#: backend/pdf/ev-poppler.c:1423
 msgid "Not embedded"
 msgstr "לא מוטמע"
 
@@ -205,7 +205,7 @@ msgstr "לא מוטמע"
 #. * type. Example:
 #. * "Type 1 (One of the Standard 14 Fonts)"
 #.
-#: backend/pdf/ev-poppler.c:1444
+#: backend/pdf/ev-poppler.c:1430
 msgid " (One of the Standard 14 Fonts)"
 msgstr " (אחד מ־14 הגופנים הרגילים)"
 
@@ -214,7 +214,7 @@ msgstr " (אחד מ־14 הגופנים הרגילים)"
 #. * type. Example:
 #. * "TrueType (Not one of the Standard 14 Fonts)"
 #.
-#: backend/pdf/ev-poppler.c:1451
+#: backend/pdf/ev-poppler.c:1437
 msgid " (Not one of the Standard 14 Fonts)"
 msgstr " (אף אחד מ־14 הגופנים הרגילים)"
 
@@ -228,7 +228,7 @@ msgstr " (אף אחד מ־14 הגופנים הרגילים)"
 #. * Substituting with TeXGyreTermes-Regular
 #. * (/usr/share/textmf/.../texgyretermes-regular.otf)
 #.
-#: backend/pdf/ev-poppler.c:1470
+#: backend/pdf/ev-poppler.c:1456
 #, c-format
 msgid ""
 "%s%s\n"
@@ -252,7 +252,7 @@ msgstr ""
 #. * Encoding: Custom
 #. * Embedded subset
 #.
-#: backend/pdf/ev-poppler.c:1488
+#: backend/pdf/ev-poppler.c:1474
 #, c-format
 msgid ""
 "%s%s\n"
@@ -291,7 +291,7 @@ msgstr "מסמכי TIFF"
 msgid "Adds support for reading TIFF documents"
 msgstr "הוספת תמיכה לקריאת מסמכי TIFF"
 
-#: backend/tiff/tiff-document.c:123
+#: backend/tiff/tiff-document.c:124
 msgid "Invalid document"
 msgstr "מסמך לא תקין"
 
@@ -407,7 +407,7 @@ msgstr "סוג MIME לא ידוע"
 msgid "All Documents"
 msgstr "כל המסמכים"
 
-#: libdocument/ev-document-factory.c:609 shell/ev-utils.c:283
+#: libdocument/ev-document-factory.c:609 shell/ev-utils.c:272
 msgid "All Files"
 msgstr "כל הקבצים"
 
@@ -462,17 +462,23 @@ msgstr "חיפוש המופע הקודם של המחרוזת"
 msgid "Find next occurrence of the search string"
 msgstr "חיפוש המופע הבא של המחרוזת"
 
-#: libview/ev-jobs.c:649
+#: libview/ev-jobs.c:650
+#, c-format
+#| msgid "Failed to render page %d"
+msgid "Failed to render page %d: %s"
+msgstr "עיבוד עמוד %d נכשל: %s"
+
+#: libview/ev-jobs.c:657
 #, c-format
 msgid "Failed to render page %d"
 msgstr "עיבוד עמוד %d נכשל"
 
-#: libview/ev-jobs.c:901
+#: libview/ev-jobs.c:910
 #, c-format
 msgid "Failed to create thumbnail for page %d"
 msgstr "יצירת תמונה ממוזערת עבור עמוד %d נכשלה"
 
-#: libview/ev-jobs.c:2033
+#: libview/ev-jobs.c:2042
 #, c-format
 msgid "Failed to print page %d: %s"
 msgstr "הדפסת עמוד %d נכשלה: ‏%s"
@@ -1379,7 +1385,7 @@ msgstr "בחירה או הגדרת רמה התקריב של המסמך"
 msgid "Set zoom level"
 msgstr "הגדרת רמת התקריב"
 
-#: shell/ev-utils.c:279
+#: shell/ev-utils.c:268
 msgid "Supported Image Files"
 msgstr "קובצי תמונות נתמכים"
 
