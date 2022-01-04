@@ -9,14 +9,14 @@
 # Juanje Ojeda Croissier <jojeda@emergya.es>, 2008, 2009.
 # Jorge González <jorgegonz@svn.gnome.org>, 2007, 2008, 2010.
 # Alberto Caso <alberto@acaso.net>, 2016.
-# Daniel Mustieles <daniel.mustieles@gmail.com>, 2010-2021.
+# Daniel Mustieles <daniel.mustieles@gmail.com>, 2010-2022.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: evince.master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
-"POT-Creation-Date: 2021-10-15 00:48+0000\n"
-"PO-Revision-Date: 2021-11-26 17:34+0100\n"
+"POT-Creation-Date: 2021-12-08 09:45+0000\n"
+"PO-Revision-Date: 2022-01-04 10:41+0100\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Spanish - Spain <gnome-es-list@gnome.org>\n"
 "Language: es_ES\n"
@@ -111,55 +111,55 @@ msgstr "Documentos PDF"
 msgid "Adds support for reading PDF Documents"
 msgstr "Añade soporte para leer documentos PDF"
 
-#: backend/pdf/ev-poppler.c:907
+#: backend/pdf/ev-poppler.c:863
 msgid "This work is in the Public Domain"
 msgstr "Este trabajo está en el dominio público"
 
 #. translators: this is the document security state
-#: backend/pdf/ev-poppler.c:1179 backend/pdf/ev-poppler.c:1185
+#: backend/pdf/ev-poppler.c:1162 backend/pdf/ev-poppler.c:1168
 #: properties/ev-properties-view.c:433
 msgid "Yes"
 msgstr "Sí"
 
 #. translators: this is the document security state
-#: backend/pdf/ev-poppler.c:1182 backend/pdf/ev-poppler.c:1185
+#: backend/pdf/ev-poppler.c:1165 backend/pdf/ev-poppler.c:1168
 #: properties/ev-properties-view.c:435
 msgid "No"
 msgstr "No"
 
-#: backend/pdf/ev-poppler.c:1323
+#: backend/pdf/ev-poppler.c:1309
 msgid "Type 1"
 msgstr "Tipo 1"
 
-#: backend/pdf/ev-poppler.c:1325
+#: backend/pdf/ev-poppler.c:1311
 msgid "Type 1C"
 msgstr "Tipo 1C"
 
-#: backend/pdf/ev-poppler.c:1327
+#: backend/pdf/ev-poppler.c:1313
 msgid "Type 3"
 msgstr "Tipo 3"
 
-#: backend/pdf/ev-poppler.c:1329
+#: backend/pdf/ev-poppler.c:1315
 msgid "TrueType"
 msgstr "TrueType"
 
-#: backend/pdf/ev-poppler.c:1331
+#: backend/pdf/ev-poppler.c:1317
 msgid "Type 1 (CID)"
 msgstr "Tipo 1 (CID)"
 
-#: backend/pdf/ev-poppler.c:1333
+#: backend/pdf/ev-poppler.c:1319
 msgid "Type 1C (CID)"
 msgstr "Tipo 1C (CID)"
 
-#: backend/pdf/ev-poppler.c:1335
+#: backend/pdf/ev-poppler.c:1321
 msgid "TrueType (CID)"
 msgstr "TrueType (CID)"
 
-#: backend/pdf/ev-poppler.c:1337
+#: backend/pdf/ev-poppler.c:1323
 msgid "Unknown font type"
 msgstr "Tipo de tipografía desconocida"
 
-#: backend/pdf/ev-poppler.c:1381
+#: backend/pdf/ev-poppler.c:1367
 msgid ""
 "This document contains non-embedded fonts that are not from the PDF Standard "
 "14 fonts. If the substitute fonts selected by fontconfig are not the same as "
@@ -170,11 +170,11 @@ msgstr ""
 "seleccionadas por «fontconfig» no son las mismas tipografías que las usadas "
 "para crear el PDF, el renderizado puede no ser correcto."
 
-#: backend/pdf/ev-poppler.c:1386
+#: backend/pdf/ev-poppler.c:1372
 msgid "All fonts are either standard or embedded."
 msgstr "Todas las tipografías son estándar o empotradas."
 
-#: backend/pdf/ev-poppler.c:1416
+#: backend/pdf/ev-poppler.c:1402
 msgid "No name"
 msgstr "Sin nombre"
 
@@ -188,20 +188,20 @@ msgstr "Sin nombre"
 #. Author: None
 #. Keywords: None
 #.
-#: backend/pdf/ev-poppler.c:1425 libview/ev-print-operation.c:1991
+#: backend/pdf/ev-poppler.c:1411 libview/ev-print-operation.c:1991
 #: properties/ev-properties-view.c:233
 msgid "None"
 msgstr "Ninguno"
 
-#: backend/pdf/ev-poppler.c:1433
+#: backend/pdf/ev-poppler.c:1419
 msgid "Embedded subset"
 msgstr "Subconjunto empotrado"
 
-#: backend/pdf/ev-poppler.c:1435
+#: backend/pdf/ev-poppler.c:1421
 msgid "Embedded"
 msgstr "Empotrada"
 
-#: backend/pdf/ev-poppler.c:1437
+#: backend/pdf/ev-poppler.c:1423
 msgid "Not embedded"
 msgstr "No empotrada"
 
@@ -210,7 +210,7 @@ msgstr "No empotrada"
 #. * type. Example:
 #. * "Type 1 (One of the Standard 14 Fonts)"
 #.
-#: backend/pdf/ev-poppler.c:1444
+#: backend/pdf/ev-poppler.c:1430
 msgid " (One of the Standard 14 Fonts)"
 msgstr " (una de las tipografías estándar de 14 puntos)"
 
@@ -219,7 +219,7 @@ msgstr " (una de las tipografías estándar de 14 puntos)"
 #. * type. Example:
 #. * "TrueType (Not one of the Standard 14 Fonts)"
 #.
-#: backend/pdf/ev-poppler.c:1451
+#: backend/pdf/ev-poppler.c:1437
 msgid " (Not one of the Standard 14 Fonts)"
 msgstr " (no es una de las estándares de 14 puntos)"
 
@@ -233,7 +233,7 @@ msgstr " (no es una de las estándares de 14 puntos)"
 #. * Substituting with TeXGyreTermes-Regular
 #. * (/usr/share/textmf/.../texgyretermes-regular.otf)
 #.
-#: backend/pdf/ev-poppler.c:1470
+#: backend/pdf/ev-poppler.c:1456
 #, c-format
 msgid ""
 "%s%s\n"
@@ -257,7 +257,7 @@ msgstr ""
 #. * Encoding: Custom
 #. * Embedded subset
 #.
-#: backend/pdf/ev-poppler.c:1488
+#: backend/pdf/ev-poppler.c:1474
 #, c-format
 msgid ""
 "%s%s\n"
@@ -296,7 +296,7 @@ msgstr "Documentos TIFF"
 msgid "Adds support for reading TIFF documents"
 msgstr "Añade soporte para leer documentos TIFF"
 
-#: backend/tiff/tiff-document.c:123
+#: backend/tiff/tiff-document.c:124
 msgid "Invalid document"
 msgstr "Documento no válido"
 
@@ -417,7 +417,7 @@ msgstr "Tipo MIME desconocido"
 msgid "All Documents"
 msgstr "Todos los documentos"
 
-#: libdocument/ev-document-factory.c:609 shell/ev-utils.c:283
+#: libdocument/ev-document-factory.c:609 shell/ev-utils.c:272
 msgid "All Files"
 msgstr "Todos los archivos"
 
@@ -472,17 +472,23 @@ msgstr "Buscar la aparición anterior de la cadena"
 msgid "Find next occurrence of the search string"
 msgstr "Buscar la siguiente aparición de la cadena"
 
-#: libview/ev-jobs.c:649
+#: libview/ev-jobs.c:650
+#, c-format
+#| msgid "Failed to render page %d"
+msgid "Failed to render page %d: %s"
+msgstr "Falló al renderizar la página %d: %s"
+
+#: libview/ev-jobs.c:657
 #, c-format
 msgid "Failed to render page %d"
 msgstr "Falló al renderizar la página %d"
 
-#: libview/ev-jobs.c:901
+#: libview/ev-jobs.c:910
 #, c-format
 msgid "Failed to create thumbnail for page %d"
 msgstr "Falló al crear la miniatura para la página %d"
 
-#: libview/ev-jobs.c:2033
+#: libview/ev-jobs.c:2042
 #, c-format
 msgid "Failed to print page %d: %s"
 msgstr "Falló al imprimir la página %d: %s"
@@ -1401,7 +1407,7 @@ msgstr "Seleccionar o establecer el nivel de ampliación del documento"
 msgid "Set zoom level"
 msgstr "Establecer el nivel de ampliación"
 
-#: shell/ev-utils.c:279
+#: shell/ev-utils.c:268
 msgid "Supported Image Files"
 msgstr "Archivos de imagen soportados"
 
@@ -1955,8 +1961,6 @@ msgid "Toggle dual page"
 msgstr "Alternar doble página"
 
 #: shell/help-overlay.ui:320
-#| msgctxt "shortcut window"
-#| msgid "Toggle dual page"
 msgctxt "shortcut window"
 msgid "Toggle odd pages left"
 msgstr "Alternar páginas impares a la izquierda"
