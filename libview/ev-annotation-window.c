@@ -133,6 +133,8 @@ ev_annotation_window_set_color (EvAnnotationWindow *window,
 	css_data = g_strdup_printf ("button {border-color: %1$s; color: %2$s; -gtk-icon-shadow:0 0; box-shadow:0 0;}\n\
 				     button:hover {background: lighter(%1$s); border-color: darker(%1$s);}\n\
 				     button:active {background: darker(%1$s);}\n\
+				     evannotationwindow.background { color: %2$s; }\n\
+				     evannotationwindow.background:backdrop { color: alpha(%2$s, .75); }\n\
 				     evannotationwindow.background, button {background: %1$s}",
 				    rgba_str, icon_color_str);
 
