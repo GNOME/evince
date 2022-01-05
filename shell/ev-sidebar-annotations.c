@@ -107,7 +107,7 @@ ev_sidebar_annotations_create_simple_model (const gchar *message)
 	/* Creates a fake model to indicate that we're loading */
 	retval = (GtkTreeModel *)gtk_list_store_new (N_COLUMNS,
 						     G_TYPE_STRING,
-						     GDK_TYPE_PIXBUF,
+						     G_TYPE_STRING,
 						     G_TYPE_POINTER,
 						     G_TYPE_STRING);
 
@@ -150,7 +150,7 @@ ev_sidebar_annotations_init (EvSidebarAnnotations *ev_annots)
 	renderer = gtk_cell_renderer_pixbuf_new ();
 	gtk_tree_view_column_pack_start (column, renderer, FALSE);
 	gtk_tree_view_column_set_attributes (column, renderer,
-					     "pixbuf", COLUMN_ICON,
+					     "icon-name", COLUMN_ICON,
 					     NULL);
 
 	renderer = gtk_cell_renderer_text_new ();
@@ -355,14 +355,6 @@ job_finished_callback (EvJobAnnots          *job,
 	GtkTreeStore *model;
 	GtkTreeSelection *selection;
 	GList *l;
-	GtkIconTheme *icon_theme;
-	GdkScreen *screen;
-	GdkPixbuf *text_icon = NULL;
-	GdkPixbuf *attachment_icon = NULL;
-        GdkPixbuf *highlight_icon = NULL;
-        GdkPixbuf *strike_out_icon = NULL;
-        GdkPixbuf *underline_icon = NULL;
-        GdkPixbuf *squiggly_icon = NULL;
 
 	priv = sidebar_annots->priv;
 
@@ -394,12 +386,9 @@ job_finished_callback (EvJobAnnots          *job,
 
 	model = gtk_tree_store_new (N_COLUMNS,
 				    G_TYPE_STRING,
-				    GDK_TYPE_PIXBUF,
+				    G_TYPE_STRING,
 				    G_TYPE_POINTER,
 				    G_TYPE_STRING);
-
-	screen = gtk_widget_get_screen (GTK_WIDGET (sidebar_annots));
-	icon_theme = gtk_icon_theme_get_for_screen (screen);
 
 	for (l = job->annots; l; l = g_list_next (l)) {
 		EvMappingList *mapping_list;
@@ -425,7 +414,7 @@ job_finished_callback (EvJobAnnots          *job,
 			gchar        *markup = NULL;
 			gchar        *tooltip = NULL;
 			GtkTreeIter   child_iter;
-			GdkPixbuf    *pixbuf = NULL;
+			const gchar  *icon_name = NULL;
 
 			annot = ((EvMapping *)(ll->data))->data;
 			if (!EV_IS_ANNOTATION_MARKUP (annot))
@@ -447,60 +436,22 @@ job_finished_callback (EvJobAnnots          *job,
 				markup = g_strdup_printf ("%s", tooltip);
 
 			if (EV_IS_ANNOTATION_TEXT (annot)) {
-				if (!text_icon) {
-					text_icon = gtk_icon_theme_load_icon (icon_theme,
-									      EV_STOCK_ANNOT_TEXT,
-									      ANNOT_ICON_SIZE,
-									      0, NULL);
-				}
-				pixbuf = text_icon;
+				icon_name = EV_STOCK_ANNOT_TEXT;
 			} else if (EV_IS_ANNOTATION_ATTACHMENT (annot)) {
-				if (!attachment_icon) {
-					attachment_icon = gtk_icon_theme_load_icon (icon_theme,
-										    "mail-attachment-symbolic",
-										    ANNOT_ICON_SIZE,
-										    0, NULL);
-				}
-				pixbuf = attachment_icon;
+				icon_name = "mail-attachment-symbolic";
 			} else if (EV_IS_ANNOTATION_TEXT_MARKUP (annot)) {
                                 switch (ev_annotation_text_markup_get_markup_type (EV_ANNOTATION_TEXT_MARKUP (annot))) {
                                 case EV_ANNOTATION_TEXT_MARKUP_HIGHLIGHT:
-                                        if (!highlight_icon) {
-                                                /* FIXME: use better icon than select all */
-						highlight_icon = gtk_icon_theme_load_icon (icon_theme,
-											   "format-justify-left-symbolic",
-											   ANNOT_ICON_SIZE,
-											   0, NULL);
-                                        }
-                                        pixbuf = highlight_icon;
-
+                                        icon_name = "format-justify-left-symbolic";
                                         break;
                                 case EV_ANNOTATION_TEXT_MARKUP_STRIKE_OUT:
-                                        if (!strike_out_icon) {
-						strike_out_icon = gtk_icon_theme_load_icon (icon_theme,
-											    "format-text-strikethrough-symbolic",
-											    ANNOT_ICON_SIZE,
-											    0, NULL);
-                                        }
-                                        pixbuf = strike_out_icon;
+                                        icon_name = "format-text-strikethrough-symbolic";
                                         break;
                                 case EV_ANNOTATION_TEXT_MARKUP_UNDERLINE:
-                                        if (!underline_icon) {
-						underline_icon = gtk_icon_theme_load_icon (icon_theme,
-											    "format-text-underline-symbolic",
-											    ANNOT_ICON_SIZE,
-											    0, NULL);
-                                        }
-                                        pixbuf = underline_icon;
+                                        icon_name = "format-text-underline-symbolic";
                                         break;
                                 case EV_ANNOTATION_TEXT_MARKUP_SQUIGGLY:
-                                        if (!squiggly_icon) {
-						squiggly_icon = gtk_icon_theme_load_icon (icon_theme,
-											  EV_STOCK_ANNOT_SQUIGGLY,
-											  ANNOT_ICON_SIZE,
-											  0, NULL);
-                                        }
-                                        pixbuf = squiggly_icon;
+                                        icon_name = EV_STOCK_ANNOT_SQUIGGLY;
                                         break;
                                 }
                         }
@@ -508,7 +459,7 @@ job_finished_callback (EvJobAnnots          *job,
 			gtk_tree_store_append (model, &child_iter, &iter);
 			gtk_tree_store_set (model, &child_iter,
 					    COLUMN_MARKUP, markup,
-					    COLUMN_ICON, pixbuf,
+					    COLUMN_ICON, icon_name,
 					    COLUMN_ANNOT_MAPPING, ll->data,
 					    COLUMN_TOOLTIP, tooltip,
 					    -1);
@@ -525,19 +476,6 @@ job_finished_callback (EvJobAnnots          *job,
 				 GTK_TREE_MODEL (model));
 	gtk_tree_view_expand_all (GTK_TREE_VIEW (priv->tree_view));
 	g_object_unref (model);
-
-	if (text_icon)
-		g_object_unref (text_icon);
-	if (attachment_icon)
-		g_object_unref (attachment_icon);
-        if (highlight_icon)
-                g_object_unref (highlight_icon);
-        if (strike_out_icon)
-                g_object_unref (strike_out_icon);
-        if (underline_icon)
-                g_object_unref (underline_icon);
-        if (squiggly_icon)
-                g_object_unref (squiggly_icon);
 
 	g_object_unref (job);
 	priv->job = NULL;
