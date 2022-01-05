@@ -4,6 +4,11 @@ project(
   license: 'GPL2+',
   default_options: 'buildtype=debugoptimized',
   meson_version: '>= 0.53.0',
+  default_options: [
+    'libhandy:vapi=false',
+    'libhandy:introspection=disabled',
+    'libhandy:tests=false',
+  ]
 )
 
 if get_option('development')
@@ -145,7 +150,7 @@ top_inc = include_directories('.')
 
 glib_req_version = '>= 2.44.0'
 gtk_req_version = '>= 3.22.0'
-hdy_req_version = '>= 1.0.0'
+hdy_req_version = '>= 1.5.0'
 
 gdk_pixbuf_dep = dependency('gdk-pixbuf-2.0', version: '>= 2.40.0')
 config_h.set_quoted('EXTRA_GDK_PIXBUF_LOADERS_DIR',
