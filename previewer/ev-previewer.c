@@ -29,6 +29,7 @@
 
 #include <gtk/gtk.h>
 #include <glib/gi18n.h>
+#include <handy.h>
 #include <evince-document.h>
 #include <evince-view.h>
 
@@ -99,6 +100,10 @@ startup_cb (GApplication *application,
         gboolean ps_ok = TRUE;
 
         g_assert (input_fd != -1 || input_file != NULL);
+
+        hdy_init ();
+        hdy_style_manager_set_color_scheme (hdy_style_manager_get_default (),
+                                            HDY_COLOR_SCHEME_PREFER_LIGHT);
 
         window = ev_previewer_window_new ();
 
