@@ -1,5 +1,5 @@
 # evince's Portuguese translation.
-# Copyright © 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014 evince
+# Copyright © 1996-2022 evince
 # This file is distributed under the same license as the evince package.
 # Duarte Loreto <happyguy_pt@hotmail.com>, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014.
 # António Lima <amrlima@gmail.com>, 2013.
@@ -8,14 +8,14 @@
 # Sérgio Cardeira <cardeira dot sergio at gmail dot com>, 2016.
 # José Vieira <jvieira33@sapo.pt>, 2020.
 # Juliano de Souza Camargo <julianosc@protonmail.com>, 2020.
-# Hugo Carvalho <hugokarvalho@hotmail.com>, 2021.
+# Hugo Carvalho <hugokarvalho@hotmail.com>, 2021, 2022.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: 3.8\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
-"POT-Creation-Date: 2021-12-02 23:36+0000\n"
-"PO-Revision-Date: 2021-12-03 16:48+0000\n"
+"POT-Creation-Date: 2022-01-06 02:02+0000\n"
+"PO-Revision-Date: 2022-01-06 22:37+0000\n"
 "Last-Translator: Hugo Carvalho <hugokarvalho@hotmail.com>\n"
 "Language-Team: Portuguese <https://l10n.gnome.org/teams/pt/>\n"
 "Language: pt\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.0\n"
+"X-Generator: Poedit 3.0.1\n"
 
 #: backend/comics/comics-document.c:163 backend/comics/comics-document.c:187
 msgid "File is corrupted"
@@ -110,55 +110,55 @@ msgstr "Documentos PDF"
 msgid "Adds support for reading PDF Documents"
 msgstr "Adiciona suporte para ler documentos PDF"
 
-#: backend/pdf/ev-poppler.c:863
+#: backend/pdf/ev-poppler.c:855
 msgid "This work is in the Public Domain"
 msgstr "Este trabalho encontra-se no Domínio Público"
 
 #. translators: this is the document security state
-#: backend/pdf/ev-poppler.c:1162 backend/pdf/ev-poppler.c:1168
+#: backend/pdf/ev-poppler.c:1154 backend/pdf/ev-poppler.c:1160
 #: properties/ev-properties-view.c:433
 msgid "Yes"
 msgstr "Sim"
 
 #. translators: this is the document security state
-#: backend/pdf/ev-poppler.c:1165 backend/pdf/ev-poppler.c:1168
+#: backend/pdf/ev-poppler.c:1157 backend/pdf/ev-poppler.c:1160
 #: properties/ev-properties-view.c:435
 msgid "No"
 msgstr "Não"
 
-#: backend/pdf/ev-poppler.c:1309
+#: backend/pdf/ev-poppler.c:1301
 msgid "Type 1"
 msgstr "Tipo 1"
 
-#: backend/pdf/ev-poppler.c:1311
+#: backend/pdf/ev-poppler.c:1303
 msgid "Type 1C"
 msgstr "Tipo 1C"
 
-#: backend/pdf/ev-poppler.c:1313
+#: backend/pdf/ev-poppler.c:1305
 msgid "Type 3"
 msgstr "Tipo 3"
 
-#: backend/pdf/ev-poppler.c:1315
+#: backend/pdf/ev-poppler.c:1307
 msgid "TrueType"
 msgstr "TrueType"
 
-#: backend/pdf/ev-poppler.c:1317
+#: backend/pdf/ev-poppler.c:1309
 msgid "Type 1 (CID)"
 msgstr "Tipo 1 (CID)"
 
-#: backend/pdf/ev-poppler.c:1319
+#: backend/pdf/ev-poppler.c:1311
 msgid "Type 1C (CID)"
 msgstr "Tipo 1C (CID)"
 
-#: backend/pdf/ev-poppler.c:1321
+#: backend/pdf/ev-poppler.c:1313
 msgid "TrueType (CID)"
 msgstr "TrueType (CID)"
 
-#: backend/pdf/ev-poppler.c:1323
+#: backend/pdf/ev-poppler.c:1315
 msgid "Unknown font type"
 msgstr "Tipo de fonte desconhecido"
 
-#: backend/pdf/ev-poppler.c:1367
+#: backend/pdf/ev-poppler.c:1359
 msgid ""
 "This document contains non-embedded fonts that are not from the PDF Standard "
 "14 fonts. If the substitute fonts selected by fontconfig are not the same as "
@@ -169,11 +169,11 @@ msgstr ""
 "forem as mesmas que as utilizadas para criar o PDF, o aspeto poderá não ser "
 "o correto."
 
-#: backend/pdf/ev-poppler.c:1372
+#: backend/pdf/ev-poppler.c:1364
 msgid "All fonts are either standard or embedded."
 msgstr "Todas as fontes são ou padrão ou embutidas."
 
-#: backend/pdf/ev-poppler.c:1402
+#: backend/pdf/ev-poppler.c:1394
 msgid "No name"
 msgstr "Nenhum nome"
 
@@ -187,20 +187,20 @@ msgstr "Nenhum nome"
 #. Author: None
 #. Keywords: None
 #.
-#: backend/pdf/ev-poppler.c:1411 libview/ev-print-operation.c:1991
+#: backend/pdf/ev-poppler.c:1403 libview/ev-print-operation.c:1991
 #: properties/ev-properties-view.c:233
 msgid "None"
 msgstr "Nenhum"
 
-#: backend/pdf/ev-poppler.c:1419
+#: backend/pdf/ev-poppler.c:1411
 msgid "Embedded subset"
 msgstr "Subconjunto embutido"
 
-#: backend/pdf/ev-poppler.c:1421
+#: backend/pdf/ev-poppler.c:1413
 msgid "Embedded"
 msgstr "Embutido"
 
-#: backend/pdf/ev-poppler.c:1423
+#: backend/pdf/ev-poppler.c:1415
 msgid "Not embedded"
 msgstr "Não embutido"
 
@@ -209,7 +209,7 @@ msgstr "Não embutido"
 #. * type. Example:
 #. * "Type 1 (One of the Standard 14 Fonts)"
 #.
-#: backend/pdf/ev-poppler.c:1430
+#: backend/pdf/ev-poppler.c:1422
 msgid " (One of the Standard 14 Fonts)"
 msgstr " (Uma das 14 fontes padrão)"
 
@@ -218,7 +218,7 @@ msgstr " (Uma das 14 fontes padrão)"
 #. * type. Example:
 #. * "TrueType (Not one of the Standard 14 Fonts)"
 #.
-#: backend/pdf/ev-poppler.c:1437
+#: backend/pdf/ev-poppler.c:1429
 msgid " (Not one of the Standard 14 Fonts)"
 msgstr " (não é uma das 14 fontes padrão)"
 
@@ -232,7 +232,7 @@ msgstr " (não é uma das 14 fontes padrão)"
 #. * Substituting with TeXGyreTermes-Regular
 #. * (/usr/share/textmf/.../texgyretermes-regular.otf)
 #.
-#: backend/pdf/ev-poppler.c:1456
+#: backend/pdf/ev-poppler.c:1448
 #, c-format
 msgid ""
 "%s%s\n"
@@ -256,7 +256,7 @@ msgstr ""
 #. * Encoding: Custom
 #. * Embedded subset
 #.
-#: backend/pdf/ev-poppler.c:1474
+#: backend/pdf/ev-poppler.c:1466
 #, c-format
 msgid ""
 "%s%s\n"
@@ -1597,8 +1597,8 @@ msgid "Evince"
 msgstr "Evince"
 
 #: shell/ev-window.c:4212
-msgid "© 1996–2020 The Evince authors"
-msgstr "© 1996–2020 Os autores do Evince"
+msgid "© 1996–2022 The Evince document viewer authors"
+msgstr "© 1996–2022 Os autores do visualizador de documentos Evince"
 
 #: shell/ev-window.c:4215
 msgid "Evince is a simple document viewer for GNOME"
