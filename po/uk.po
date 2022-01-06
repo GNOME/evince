@@ -3,13 +3,13 @@
 # This file is distributed under the same license as the evince package.
 # Maxim Dziumanenko <dziumanenko@gmail.com>, 2005-2010.
 # Daniel Korostil <ted.korostiled@gmail.com>, 2013, 2014, 2015, 2016, 2017.
-# Yuri Chornoivan <yurchor@ukr.net>, 2020, 2021.
+# Yuri Chornoivan <yurchor@ukr.net>, 2020, 2021, 2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: evince\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
-"POT-Creation-Date: 2021-12-02 23:36+0000\n"
-"PO-Revision-Date: 2021-12-03 17:33+0200\n"
+"POT-Creation-Date: 2022-01-06 02:02+0000\n"
+"PO-Revision-Date: 2022-01-06 10:47+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
 "Language: uk\n"
@@ -106,55 +106,55 @@ msgstr "Документи PDF"
 msgid "Adds support for reading PDF Documents"
 msgstr "Додає підтримування читання документів PDF"
 
-#: backend/pdf/ev-poppler.c:863
+#: backend/pdf/ev-poppler.c:855
 msgid "This work is in the Public Domain"
 msgstr "Ця праця є власністю спільнот"
 
 #. translators: this is the document security state
-#: backend/pdf/ev-poppler.c:1162 backend/pdf/ev-poppler.c:1168
+#: backend/pdf/ev-poppler.c:1154 backend/pdf/ev-poppler.c:1160
 #: properties/ev-properties-view.c:433
 msgid "Yes"
 msgstr "Так"
 
 #. translators: this is the document security state
-#: backend/pdf/ev-poppler.c:1165 backend/pdf/ev-poppler.c:1168
+#: backend/pdf/ev-poppler.c:1157 backend/pdf/ev-poppler.c:1160
 #: properties/ev-properties-view.c:435
 msgid "No"
 msgstr "Ні"
 
-#: backend/pdf/ev-poppler.c:1309
+#: backend/pdf/ev-poppler.c:1301
 msgid "Type 1"
 msgstr "Type 1"
 
-#: backend/pdf/ev-poppler.c:1311
+#: backend/pdf/ev-poppler.c:1303
 msgid "Type 1C"
 msgstr "Type 1C"
 
-#: backend/pdf/ev-poppler.c:1313
+#: backend/pdf/ev-poppler.c:1305
 msgid "Type 3"
 msgstr "Type 3"
 
-#: backend/pdf/ev-poppler.c:1315
+#: backend/pdf/ev-poppler.c:1307
 msgid "TrueType"
 msgstr "TrueType"
 
-#: backend/pdf/ev-poppler.c:1317
+#: backend/pdf/ev-poppler.c:1309
 msgid "Type 1 (CID)"
 msgstr "Type 1 (CID)"
 
-#: backend/pdf/ev-poppler.c:1319
+#: backend/pdf/ev-poppler.c:1311
 msgid "Type 1C (CID)"
 msgstr "Type 1C (CID)"
 
-#: backend/pdf/ev-poppler.c:1321
+#: backend/pdf/ev-poppler.c:1313
 msgid "TrueType (CID)"
 msgstr "TrueType (CID)"
 
-#: backend/pdf/ev-poppler.c:1323
+#: backend/pdf/ev-poppler.c:1315
 msgid "Unknown font type"
 msgstr "Шрифт невідомого типу"
 
-#: backend/pdf/ev-poppler.c:1367
+#: backend/pdf/ev-poppler.c:1359
 msgid ""
 "This document contains non-embedded fonts that are not from the PDF Standard "
 "14 fonts. If the substitute fonts selected by fontconfig are not the same as "
@@ -164,11 +164,11 @@ msgstr ""
 "для PDF. Якщо замінник шрифтів, вибраний через fontconfig, не такий самий як "
 "шрифт для створення PDF, то відтворення може бути неправильним."
 
-#: backend/pdf/ev-poppler.c:1372
+#: backend/pdf/ev-poppler.c:1364
 msgid "All fonts are either standard or embedded."
 msgstr "Усі шрифти є або стандартними, або вбудованими."
 
-#: backend/pdf/ev-poppler.c:1402
+#: backend/pdf/ev-poppler.c:1394
 msgid "No name"
 msgstr "Без назви"
 
@@ -182,20 +182,20 @@ msgstr "Без назви"
 #. Author: None
 #. Keywords: None
 #.
-#: backend/pdf/ev-poppler.c:1411 libview/ev-print-operation.c:1991
+#: backend/pdf/ev-poppler.c:1403 libview/ev-print-operation.c:1991
 #: properties/ev-properties-view.c:233
 msgid "None"
 msgstr "Немає"
 
-#: backend/pdf/ev-poppler.c:1419
+#: backend/pdf/ev-poppler.c:1411
 msgid "Embedded subset"
 msgstr "Вбудований набір"
 
-#: backend/pdf/ev-poppler.c:1421
+#: backend/pdf/ev-poppler.c:1413
 msgid "Embedded"
 msgstr "Вбудований"
 
-#: backend/pdf/ev-poppler.c:1423
+#: backend/pdf/ev-poppler.c:1415
 msgid "Not embedded"
 msgstr "Не вбудований"
 
@@ -204,7 +204,7 @@ msgstr "Не вбудований"
 #. * type. Example:
 #. * "Type 1 (One of the Standard 14 Fonts)"
 #.
-#: backend/pdf/ev-poppler.c:1430
+#: backend/pdf/ev-poppler.c:1422
 msgid " (One of the Standard 14 Fonts)"
 msgstr " (Один із стандартних 14 шрифтів)"
 
@@ -213,7 +213,7 @@ msgstr " (Один із стандартних 14 шрифтів)"
 #. * type. Example:
 #. * "TrueType (Not one of the Standard 14 Fonts)"
 #.
-#: backend/pdf/ev-poppler.c:1437
+#: backend/pdf/ev-poppler.c:1429
 msgid " (Not one of the Standard 14 Fonts)"
 msgstr " (Один не із стандартних 14 шрифтів)"
 
@@ -227,7 +227,7 @@ msgstr " (Один не із стандартних 14 шрифтів)"
 #. * Substituting with TeXGyreTermes-Regular
 #. * (/usr/share/textmf/.../texgyretermes-regular.otf)
 #.
-#: backend/pdf/ev-poppler.c:1456
+#: backend/pdf/ev-poppler.c:1448
 #, c-format
 msgid ""
 "%s%s\n"
@@ -251,7 +251,7 @@ msgstr ""
 #. * Encoding: Custom
 #. * Embedded subset
 #.
-#: backend/pdf/ev-poppler.c:1474
+#: backend/pdf/ev-poppler.c:1466
 #, c-format
 msgid ""
 "%s%s\n"
@@ -469,7 +469,6 @@ msgstr "Знайти наступне повторення шуканого ря
 
 #: libview/ev-jobs.c:650
 #, c-format
-#| msgid "Failed to render page %d"
 msgid "Failed to render page %d: %s"
 msgstr "Не вдалося відтворити сторінку %d: %s"
 
@@ -1591,8 +1590,9 @@ msgid "Evince"
 msgstr "Evince"
 
 #: shell/ev-window.c:4212
-msgid "© 1996–2020 The Evince authors"
-msgstr "© Автори Evince, 1996–2020"
+#| msgid "© 1996–2020 The Evince authors"
+msgid "© 1996–2022 The Evince document viewer authors"
+msgstr "© Автори програми для перегляду документів Evince, 1996–2022"
 
 #: shell/ev-window.c:4215
 msgid "Evince is a simple document viewer for GNOME"
