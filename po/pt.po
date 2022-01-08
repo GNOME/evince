@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 3.8\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
-"POT-Creation-Date: 2022-01-06 02:02+0000\n"
-"PO-Revision-Date: 2022-01-06 22:37+0000\n"
+"POT-Creation-Date: 2022-01-08 03:11+0000\n"
+"PO-Revision-Date: 2022-01-08 12:40+0000\n"
 "Last-Translator: Hugo Carvalho <hugokarvalho@hotmail.com>\n"
 "Language-Team: Portuguese <https://l10n.gnome.org/teams/pt/>\n"
 "Language: pt\n"
@@ -110,55 +110,51 @@ msgstr "Documentos PDF"
 msgid "Adds support for reading PDF Documents"
 msgstr "Adiciona suporte para ler documentos PDF"
 
-#: backend/pdf/ev-poppler.c:855
-msgid "This work is in the Public Domain"
-msgstr "Este trabalho encontra-se no Domínio Público"
-
 #. translators: this is the document security state
-#: backend/pdf/ev-poppler.c:1154 backend/pdf/ev-poppler.c:1160
+#: backend/pdf/ev-poppler.c:731 backend/pdf/ev-poppler.c:737
 #: properties/ev-properties-view.c:433
 msgid "Yes"
 msgstr "Sim"
 
 #. translators: this is the document security state
-#: backend/pdf/ev-poppler.c:1157 backend/pdf/ev-poppler.c:1160
+#: backend/pdf/ev-poppler.c:734 backend/pdf/ev-poppler.c:737
 #: properties/ev-properties-view.c:435
 msgid "No"
 msgstr "Não"
 
-#: backend/pdf/ev-poppler.c:1301
+#: backend/pdf/ev-poppler.c:879
 msgid "Type 1"
 msgstr "Tipo 1"
 
-#: backend/pdf/ev-poppler.c:1303
+#: backend/pdf/ev-poppler.c:881
 msgid "Type 1C"
 msgstr "Tipo 1C"
 
-#: backend/pdf/ev-poppler.c:1305
+#: backend/pdf/ev-poppler.c:883
 msgid "Type 3"
 msgstr "Tipo 3"
 
-#: backend/pdf/ev-poppler.c:1307
+#: backend/pdf/ev-poppler.c:885
 msgid "TrueType"
 msgstr "TrueType"
 
-#: backend/pdf/ev-poppler.c:1309
+#: backend/pdf/ev-poppler.c:887
 msgid "Type 1 (CID)"
 msgstr "Tipo 1 (CID)"
 
-#: backend/pdf/ev-poppler.c:1311
+#: backend/pdf/ev-poppler.c:889
 msgid "Type 1C (CID)"
 msgstr "Tipo 1C (CID)"
 
-#: backend/pdf/ev-poppler.c:1313
+#: backend/pdf/ev-poppler.c:891
 msgid "TrueType (CID)"
 msgstr "TrueType (CID)"
 
-#: backend/pdf/ev-poppler.c:1315
+#: backend/pdf/ev-poppler.c:893
 msgid "Unknown font type"
 msgstr "Tipo de fonte desconhecido"
 
-#: backend/pdf/ev-poppler.c:1359
+#: backend/pdf/ev-poppler.c:937
 msgid ""
 "This document contains non-embedded fonts that are not from the PDF Standard "
 "14 fonts. If the substitute fonts selected by fontconfig are not the same as "
@@ -169,11 +165,11 @@ msgstr ""
 "forem as mesmas que as utilizadas para criar o PDF, o aspeto poderá não ser "
 "o correto."
 
-#: backend/pdf/ev-poppler.c:1364
+#: backend/pdf/ev-poppler.c:942
 msgid "All fonts are either standard or embedded."
 msgstr "Todas as fontes são ou padrão ou embutidas."
 
-#: backend/pdf/ev-poppler.c:1394
+#: backend/pdf/ev-poppler.c:972
 msgid "No name"
 msgstr "Nenhum nome"
 
@@ -187,20 +183,20 @@ msgstr "Nenhum nome"
 #. Author: None
 #. Keywords: None
 #.
-#: backend/pdf/ev-poppler.c:1403 libview/ev-print-operation.c:1991
+#: backend/pdf/ev-poppler.c:981 libview/ev-print-operation.c:1991
 #: properties/ev-properties-view.c:233
 msgid "None"
 msgstr "Nenhum"
 
-#: backend/pdf/ev-poppler.c:1411
+#: backend/pdf/ev-poppler.c:989
 msgid "Embedded subset"
 msgstr "Subconjunto embutido"
 
-#: backend/pdf/ev-poppler.c:1413
+#: backend/pdf/ev-poppler.c:991
 msgid "Embedded"
 msgstr "Embutido"
 
-#: backend/pdf/ev-poppler.c:1415
+#: backend/pdf/ev-poppler.c:993
 msgid "Not embedded"
 msgstr "Não embutido"
 
@@ -209,7 +205,7 @@ msgstr "Não embutido"
 #. * type. Example:
 #. * "Type 1 (One of the Standard 14 Fonts)"
 #.
-#: backend/pdf/ev-poppler.c:1422
+#: backend/pdf/ev-poppler.c:1000
 msgid " (One of the Standard 14 Fonts)"
 msgstr " (Uma das 14 fontes padrão)"
 
@@ -218,7 +214,7 @@ msgstr " (Uma das 14 fontes padrão)"
 #. * type. Example:
 #. * "TrueType (Not one of the Standard 14 Fonts)"
 #.
-#: backend/pdf/ev-poppler.c:1429
+#: backend/pdf/ev-poppler.c:1007
 msgid " (Not one of the Standard 14 Fonts)"
 msgstr " (não é uma das 14 fontes padrão)"
 
@@ -232,7 +228,7 @@ msgstr " (não é uma das 14 fontes padrão)"
 #. * Substituting with TeXGyreTermes-Regular
 #. * (/usr/share/textmf/.../texgyretermes-regular.otf)
 #.
-#: backend/pdf/ev-poppler.c:1448
+#: backend/pdf/ev-poppler.c:1026
 #, c-format
 msgid ""
 "%s%s\n"
@@ -256,7 +252,7 @@ msgstr ""
 #. * Encoding: Custom
 #. * Embedded subset
 #.
-#: backend/pdf/ev-poppler.c:1466
+#: backend/pdf/ev-poppler.c:1044
 #, c-format
 msgid ""
 "%s%s\n"
@@ -394,12 +390,12 @@ msgstr "Antever antes de imprimir"
 msgid "Couldn’t save attachment “%s”: %s"
 msgstr "Impossível guardar o anexo “%s”: %s"
 
-#: libdocument/ev-attachment.c:400
+#: libdocument/ev-attachment.c:398
 #, c-format
 msgid "Couldn’t open attachment “%s”: %s"
 msgstr "Impossível abrir o anexo “%s”: %s"
 
-#: libdocument/ev-attachment.c:438
+#: libdocument/ev-attachment.c:437
 #, c-format
 msgid "Couldn’t open attachment “%s”"
 msgstr "Impossível abrir o anexo “%s”"
@@ -416,11 +412,11 @@ msgstr "Tipo de MIME desconhecido"
 
 # 48x48/emblems/emblem-documents.icon.in.h:1
 # 48x48/emblems/emblem-documents.icon.in.h:1
-#: libdocument/ev-document-factory.c:582
+#: libdocument/ev-document-factory.c:642
 msgid "All Documents"
 msgstr "Todos os documentos"
 
-#: libdocument/ev-document-factory.c:609 shell/ev-utils.c:272
+#: libdocument/ev-document-factory.c:669 shell/ev-utils.c:272
 msgid "All Files"
 msgstr "Todos os ficheiros"
 
@@ -433,6 +429,10 @@ msgstr "Falha ao criar um ficheiro temporário: %s"
 #, c-format
 msgid "Failed to create a temporary directory: %s"
 msgstr "Falha ao criar uma pasta temporária: %s"
+
+#: libdocument/ev-xmp.c:350
+msgid "This work is in the Public Domain"
+msgstr "Este trabalho encontra-se no Domínio Público"
 
 #: libmisc/ev-page-action-widget.c:86 libmisc/ev-page-action-widget.c:125
 #, c-format
@@ -475,22 +475,22 @@ msgstr "Localizar a ocorrência anterior da cadeia de procura"
 msgid "Find next occurrence of the search string"
 msgstr "Localizar a ocorrência seguinte da cadeia de procura"
 
-#: libview/ev-jobs.c:650
+#: libview/ev-jobs.c:658
 #, c-format
 msgid "Failed to render page %d: %s"
 msgstr "Falha ao renderizar a página %d: %s"
 
-#: libview/ev-jobs.c:657
+#: libview/ev-jobs.c:665
 #, c-format
 msgid "Failed to render page %d"
 msgstr "Falha ao desenhar a página %d"
 
-#: libview/ev-jobs.c:910
+#: libview/ev-jobs.c:918
 #, c-format
 msgid "Failed to create thumbnail for page %d"
 msgstr "Falha ao criar miniatura da página: %d"
 
-#: libview/ev-jobs.c:2042
+#: libview/ev-jobs.c:2343
 #, c-format
 msgid "Failed to print page %d: %s"
 msgstr "Falha ao imprimir a página %d: %s"
@@ -719,19 +719,39 @@ msgstr "Uma interface simples e intuitiva"
 msgid "Advanced highlighting and annotation"
 msgstr "Anotação e realce avançados"
 
-#: previewer/ev-previewer.c:45
+#: previewer/ev-previewer.c:56
 msgid "Delete the temporary file"
-msgstr "Apagar o ficheiro temporário"
+msgstr "Eliminar o ficheiro temporário"
 
-#: previewer/ev-previewer.c:46
+#: previewer/ev-previewer.c:58
 msgid "File specifying print settings"
 msgstr "Ficheiro que especifica as definições de impressão"
 
-#: previewer/ev-previewer.c:46
+#: previewer/ev-previewer.c:58
 msgid "FILE"
 msgstr "FICHEIRO"
 
-#: previewer/ev-previewer.c:188 previewer/ev-previewer.c:222
+#: previewer/ev-previewer.c:60
+msgid "File descriptor of input file"
+msgstr "Descritor de ficheiro do ficheiro de entrada"
+
+#: previewer/ev-previewer.c:60 previewer/ev-previewer.c:64
+msgid "FD"
+msgstr "FD"
+
+#: previewer/ev-previewer.c:62
+msgid "MIME type of input file"
+msgstr "Tipo de MIME do ficheiro de entrada"
+
+#: previewer/ev-previewer.c:62
+msgid "TYPE"
+msgstr "TIPO"
+
+#: previewer/ev-previewer.c:64
+msgid "File descriptor of print settings file"
+msgstr "Descritor de ficheiro do ficheiro de definições de impressão"
+
+#: previewer/ev-previewer.c:290 previewer/ev-previewer.c:310
 msgid "GNOME Document Previewer"
 msgstr "Antevisão de documentos do GNOME"
 
@@ -743,14 +763,22 @@ msgstr "Selecionar página ou procurar no índice"
 msgid "Select page"
 msgstr "Selecionar página"
 
-#: previewer/ev-previewer-window.c:79 shell/ev-window.c:3665
+#: previewer/ev-previewer-window.c:78 shell/ev-window.c:3665
 msgid "Failed to print document"
 msgstr "Falha ao imprimir o documento"
 
-#: previewer/ev-previewer-window.c:220
+#: previewer/ev-previewer-window.c:193 previewer/ev-previewer-window.c:590
+msgid "Evince Document Viewer"
+msgstr "Visualizador de documentos Evince"
+
+#: previewer/ev-previewer-window.c:229
 #, c-format
 msgid "The selected printer “%s” could not be found"
 msgstr "Impossível encontrar a impressora \"%s\" selecionada"
+
+#: previewer/ev-previewer-window.c:568 shell/ev-window.c:4210
+msgid "Evince"
+msgstr "Evince"
 
 #: previewer/previewer.ui:7
 msgid "_Print"
@@ -1591,10 +1619,6 @@ msgstr "Cancelar a im_pressão e fechar"
 #: shell/ev-window.c:4090
 msgid "Close _after Printing"
 msgstr "Fechar _após imprimir"
-
-#: shell/ev-window.c:4210
-msgid "Evince"
-msgstr "Evince"
 
 #: shell/ev-window.c:4212
 msgid "© 1996–2022 The Evince document viewer authors"
