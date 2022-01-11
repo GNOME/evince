@@ -503,6 +503,80 @@ ev_file_get_mime_type (const gchar *uri,
 	return fast ? get_mime_type_from_uri (uri, error) : get_mime_type_from_data (uri, error);
 }
 
+/**
+ * ev_file_get_mime_type_from_fd:
+ * @fd: an file descriptor (must be seekable)
+ * @error: a #GError location to store an error, or %NULL
+ *
+ * Returns: a newly allocated string with the MIME type of the file referred to
+ *   by @fd, or %NULL on error or if the MIME type could not be determined
+ */
+gchar *
+ev_file_get_mime_type_from_fd (int      fd,
+                               GError **error)
+{
+        guchar buffer[4096];
+        ssize_t r;
+        off_t pos;
+        char *content_type, *mime_type;
+
+        g_return_val_if_fail (fd != -1, NULL);
+
+        pos = lseek (fd, 0, SEEK_CUR);
+        if (pos == (off_t)-1) {
+                int errsv = errno;
+                g_set_error (error, G_IO_ERROR,
+                             g_io_error_from_errno (errsv),
+                             "Failed to get MIME type: %s",
+                             g_strerror (errsv));
+                return NULL;
+        }
+
+        do {
+                r = read (fd, buffer, sizeof (buffer));
+        } while (r == -1 && errno == EINTR);
+
+        if (r == -1) {
+                int errsv = errno;
+                g_set_error (error, G_IO_ERROR,
+                             g_io_error_from_errno (errsv),
+                             "Failed to get MIME type: %s",
+                             g_strerror (errsv));
+
+                (void) lseek (fd, pos, SEEK_SET);
+                return NULL;
+        }
+
+        if (lseek (fd, pos, SEEK_SET) == (off_t)-1) {
+                int errsv = errno;
+                g_set_error (error, G_IO_ERROR,
+                             g_io_error_from_errno (errsv),
+                             "Failed to get MIME type: %s",
+                             g_strerror (errsv));
+                return NULL;
+        }
+
+        content_type = g_content_type_guess (NULL, /* no filename */
+                                             buffer, r,
+                                             NULL);
+        if (content_type == NULL) {
+                g_set_error_literal (error, G_IO_ERROR, G_IO_ERROR_FAILED,
+                                     _("Unknown MIME Type"));
+                return NULL;
+        }
+
+        mime_type = g_content_type_get_mime_type (content_type);
+        g_free (content_type);
+
+        if (mime_type == NULL) {
+                g_set_error_literal (error, G_IO_ERROR, G_IO_ERROR_FAILED,
+                                     _("Unknown MIME Type"));
+                return NULL;
+        }
+
+        return mime_type;
+}
+
 /* Compressed files support */
 
 static const char *compressor_cmds[] = {

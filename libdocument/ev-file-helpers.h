@@ -74,6 +74,10 @@ gchar       *ev_file_get_mime_type    (const gchar       *uri,
 				       GError           **error);
 
 EV_PUBLIC
+gchar       *ev_file_get_mime_type_from_fd (int           fd,
+                                            GError      **error);
+
+EV_PUBLIC
 gchar       *ev_file_uncompress       (const gchar       *uri,
 				       EvCompressionType  type,
 				       GError           **error);
