@@ -74,6 +74,7 @@ ev_debug = get_option('buildtype').contains('debug')
 cc = meson.get_compiler('c')
 
 config_h = configuration_data()
+config_h.set10('_GNU_SOURCE', true)
 
 # package
 config_h.set_quoted('PACKAGE_ICON_NAME', app_id)
@@ -198,7 +199,6 @@ if ev_platform == 'gnome'
   if enable_dbus
     # Check for dbus service dir
     dbus_service_dir = dependency('dbus-1').get_pkgconfig_variable('session_bus_services_dir', define_variable: ['datadir', ev_datadir])
-    gio_unix_dep = dependency('gio-unix-2.0', version: glib_req_version)
   endif
   config_h.set('ENABLE_DBUS', enable_dbus)
 
@@ -211,12 +211,21 @@ if ev_platform == 'gnome'
   gtk_unix_print_dep = dependency('gtk+-unix-print-3.0', version: gtk_req_version, required: get_option('gtk_unix_print'))
   enable_gtk_unix_print = gtk_unix_print_dep.found()
   config_h.set10('GTKUNIXPRINT_ENABLED', enable_gtk_unix_print)
+
+  if enable_dbus or enable_gtk_unix_print
+    gio_unix_dep = dependency('gio-unix-2.0', version: glib_req_version)
+  else
+    gio_unix_dep = dependency('', required: false)
+  endif
+
 else
   message('Evince has a soft run-time dependency on hicolor-icon-theme. You are advised to have this theme installed when running Evince.')
   enable_nautilus = false
   enable_dbus = false
   enable_keyring = false
   enable_gtk_unix_print = false
+  gio_unix_dep = dependency('', required: false)
+  gtk_unix_print_dep = dependency('', required: false)
 endif
 
 # *** GObject Introspection ***
