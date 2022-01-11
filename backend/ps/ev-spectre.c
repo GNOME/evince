@@ -29,6 +29,10 @@
 #include "ev-file-exporter.h"
 #include "ev-document-misc.h"
 
+#if SPECTRE_VERSION >= 10000000
+#define HAVE_LOAD_FD
+#endif
+
 struct _PSDocument {
 	EvDocument object;
 
@@ -107,6 +111,31 @@ ps_document_load (EvDocument *document,
 
 	return TRUE;
 }
+
+#ifdef HAVE_LOAD_FD
+static gboolean
+ps_document_load_fd (EvDocument         *document,
+		     int                 fd,
+                     EvDocumentLoadFlags flags,
+                     GCancellable       *cancellable,
+		     GError            **error)
+{
+	PSDocument *ps = PS_DOCUMENT (document);
+
+	ps->doc = spectre_document_new ();
+
+	spectre_document_load_from_fd (ps->doc, fd);
+	if (spectre_document_status (ps->doc)) {
+		g_set_error_literal (error,
+				     G_FILE_ERROR,
+				     G_FILE_ERROR_FAILED,
+				     _("Failed to load document"));
+		return FALSE;
+	}
+
+	return TRUE;
+}
+#endif
 
 static gboolean
 ps_document_save (EvDocument *document,
@@ -357,6 +386,9 @@ ps_document_class_init (PSDocumentClass *klass)
 	ev_document_class->get_info = ps_document_get_info;
 	ev_document_class->get_backend_info = ps_document_get_backend_info;
 	ev_document_class->render = ps_document_render;
+#ifdef HAVE_LOAD_FD
+	ev_document_class->load_fd = ps_document_load_fd;
+#endif
 }
 
 /* EvFileExporterIface */
