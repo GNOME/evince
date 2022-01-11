@@ -47,7 +47,7 @@ struct _TiffDocument
   TIFF *tiff;
   gint n_pages;
   TIFF2PSContext *ps_export_ctx;
-  
+
   gchar *uri;
 };
 
@@ -86,11 +86,11 @@ tiff_document_load (EvDocument  *document,
 	TiffDocument *tiff_document = TIFF_DOCUMENT (document);
 	gchar *filename;
 	TIFF *tiff;
-	
+
 	filename = g_filename_from_uri (uri, NULL, error);
 	if (!filename)
 		return FALSE;
-	
+
 	push_handlers ();
 
 #ifdef G_OS_WIN32
@@ -109,12 +109,12 @@ tiff_document_load (EvDocument  *document,
 #endif
 	if (tiff) {
 		guint32 w, h;
-		
+
 		/* FIXME: unused data? why bother here */
 		TIFFGetField(tiff, TIFFTAG_IMAGEWIDTH, &w);
 		TIFFGetField(tiff, TIFFTAG_IMAGELENGTH, &h);
 	}
-	
+
 	if (!tiff) {
 		pop_handlers ();
 
@@ -126,12 +126,12 @@ tiff_document_load (EvDocument  *document,
 		g_free (filename);
 		return FALSE;
 	}
-	
+
 	tiff_document->tiff = tiff;
 	g_free (tiff_document->uri);
 	g_free (filename);
 	tiff_document->uri = g_strdup (uri);
-	
+
 	pop_handlers ();
 	return TRUE;
 }
@@ -140,24 +140,24 @@ static gboolean
 tiff_document_save (EvDocument  *document,
 		    const char  *uri,
 		    GError     **error)
-{		
+{
 	TiffDocument *tiff_document = TIFF_DOCUMENT (document);
 
-	return ev_xfer_uri_simple (tiff_document->uri, uri, error); 
+	return ev_xfer_uri_simple (tiff_document->uri, uri, error);
 }
 
 static int
 tiff_document_get_n_pages (EvDocument  *document)
 {
 	TiffDocument *tiff_document = TIFF_DOCUMENT (document);
-	
+
 	g_return_val_if_fail (TIFF_IS_DOCUMENT (document), 0);
 	g_return_val_if_fail (tiff_document->tiff != NULL, 0);
-	
+
 	if (tiff_document->n_pages == -1) {
 		push_handlers ();
 		tiff_document->n_pages = 0;
-		
+
 		do {
 			tiff_document->n_pages ++;
 		}
@@ -201,24 +201,24 @@ tiff_document_get_page_size (EvDocument *document,
 	guint32 w, h;
 	gfloat x_res, y_res;
 	TiffDocument *tiff_document = TIFF_DOCUMENT (document);
-	
+
 	g_return_if_fail (TIFF_IS_DOCUMENT (document));
 	g_return_if_fail (tiff_document->tiff != NULL);
-	
+
 	push_handlers ();
 	if (TIFFSetDirectory (tiff_document->tiff, page->index) != 1) {
 		pop_handlers ();
 		return;
 	}
-	
+
 	TIFFGetField (tiff_document->tiff, TIFFTAG_IMAGEWIDTH, &w);
 	TIFFGetField (tiff_document->tiff, TIFFTAG_IMAGELENGTH, &h);
 	tiff_document_get_resolution (tiff_document, &x_res, &y_res);
 	h = h * (x_res / y_res);
-	
+
 	*width = w;
 	*height = h;
-	
+
 	pop_handlers ();
 }
 
@@ -237,10 +237,10 @@ tiff_document_render (EvDocument      *document,
 	cairo_surface_t *surface;
 	cairo_surface_t *rotated_surface;
 	static const cairo_user_data_key_t key;
-	
+
 	g_return_val_if_fail (TIFF_IS_DOCUMENT (document), NULL);
 	g_return_val_if_fail (tiff_document->tiff != NULL, NULL);
-  
+
 	push_handlers ();
 	if (TIFFSetDirectory (tiff_document->tiff, rc->page->index) != 1) {
 		pop_handlers ();
@@ -265,9 +265,9 @@ tiff_document_render (EvDocument      *document,
 	}
 
 	tiff_document_get_resolution (tiff_document, &x_res, &y_res);
-	
+
 	pop_handlers ();
-  
+
 	/* Sanity check the doc */
 	if (width <= 0 || height <= 0) {
 		g_warning("Invalid width or height.");
@@ -278,16 +278,16 @@ tiff_document_render (EvDocument      *document,
 	if (rowstride / 4 != width) {
 		g_warning("Overflow while rendering document.");
 		/* overflow, or cairo was changed in an unsupported way */
-		return NULL;                
+		return NULL;
 	}
-	
+
 	if (height >= INT_MAX / rowstride) {
 		g_warning("Overflow while rendering document.");
 		/* overflow */
 		return NULL;
 	}
 	bytes = height * rowstride;
-	
+
 	pixels = g_try_malloc (bytes);
 	if (!pixels) {
 		g_warning("Failed to allocate memory for rendering.");
@@ -333,7 +333,7 @@ tiff_document_render (EvDocument      *document,
 								     scaled_width, scaled_height,
 								     rc->rotation);
 	cairo_surface_destroy (surface);
-	
+
 	return rotated_surface;
 }
 
@@ -350,7 +350,7 @@ tiff_document_get_thumbnail (EvDocument      *document,
 	GdkPixbuf *pixbuf;
 	GdkPixbuf *scaled_pixbuf;
 	GdkPixbuf *rotated_pixbuf;
-	
+
 	push_handlers ();
 	if (TIFFSetDirectory (tiff_document->tiff, rc->page->index) != 1) {
 		pop_handlers ();
@@ -368,27 +368,27 @@ tiff_document_get_thumbnail (EvDocument      *document,
 	}
 
 	tiff_document_get_resolution (tiff_document, &x_res, &y_res);
-	
+
 	pop_handlers ();
-  
+
 	/* Sanity check the doc */
 	if (width <= 0 || height <= 0)
-		return NULL;                
+		return NULL;
 
 	if (width >= INT_MAX / 4)
 		/* overflow */
-		return NULL;                
+		return NULL;
 	rowstride = width * 4;
-        
+
 	if (height >= INT_MAX / rowstride)
 		/* overflow */
-		return NULL;                
+		return NULL;
 	bytes = height * rowstride;
-	
+
 	pixels = g_try_malloc (bytes);
 	if (!pixels)
 		return NULL;
-	
+
 	if (!TIFFReadRGBAImageOriented (tiff_document->tiff,
 					width, height,
 					(uint32_t *)pixels,
@@ -397,7 +397,7 @@ tiff_document_get_thumbnail (EvDocument      *document,
 		return NULL;
 	}
 
-	pixbuf = gdk_pixbuf_new_from_data (pixels, GDK_COLORSPACE_RGB, TRUE, 8, 
+	pixbuf = gdk_pixbuf_new_from_data (pixels, GDK_COLORSPACE_RGB, TRUE, 8,
 					   width, height, rowstride,
 					   (GdkPixbufDestroyNotify) g_free, NULL);
 	pop_handlers ();
@@ -408,10 +408,10 @@ tiff_document_get_thumbnail (EvDocument      *document,
 						 scaled_width, scaled_height,
 						 GDK_INTERP_BILINEAR);
 	g_object_unref (pixbuf);
-	
+
 	rotated_pixbuf = gdk_pixbuf_rotate_simple (scaled_pixbuf, 360 - rc->rotation);
 	g_object_unref (scaled_pixbuf);
-	
+
 	return rotated_pixbuf;
 }
 
