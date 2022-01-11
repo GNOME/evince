@@ -104,7 +104,7 @@ ev_print_operation_finalize (GObject *object)
 		op->status = NULL;
 	}
 
-	(* G_OBJECT_CLASS (ev_print_operation_parent_class)->finalize) (object);
+	G_OBJECT_CLASS (ev_print_operation_parent_class)->finalize (object);
 }
 
 static void
@@ -1488,7 +1488,7 @@ ev_print_operation_export_finalize (GObject *object)
 		export->printer = NULL;
 	}
 
-	(* G_OBJECT_CLASS (ev_print_operation_export_parent_class)->finalize) (object);
+	G_OBJECT_CLASS (ev_print_operation_export_parent_class)->finalize (object);
 }
 
 static void
@@ -1498,23 +1498,15 @@ ev_print_operation_export_init (EvPrintOperationExport *export)
 	export->sheet = 1;
 }
 
-static GObject *
-ev_print_operation_export_constructor (GType                  type,
-				       guint                  n_construct_properties,
-				       GObjectConstructParam *construct_params)
+static void
+ev_print_operation_export_constructed (GObject *object)
 {
-	GObject                *object;
-	EvPrintOperationExport *export;
-	EvPrintOperation       *op;
+        EvPrintOperation *op = EV_PRINT_OPERATION (object);
+        EvPrintOperationExport *export = EV_PRINT_OPERATION_EXPORT (object);
 
-	object = G_OBJECT_CLASS (ev_print_operation_export_parent_class)->constructor (type,
-										       n_construct_properties,
-										       construct_params);
-	export = EV_PRINT_OPERATION_EXPORT (object);
-	op = EV_PRINT_OPERATION (object);
+        G_OBJECT_CLASS (ev_print_operation_export_parent_class)->constructed (object);
+
 	export->n_pages = ev_document_get_n_pages (op->document);
-
-	return object;
 }
 
 static void
@@ -1536,7 +1528,7 @@ ev_print_operation_export_class_init (EvPrintOperationExportClass *klass)
 	ev_print_op_class->set_embed_page_setup = ev_print_operation_export_set_embed_page_setup;
 	ev_print_op_class->get_embed_page_setup = ev_print_operation_export_get_embed_page_setup;
 
-	g_object_class->constructor = ev_print_operation_export_constructor;
+	g_object_class->constructed = ev_print_operation_export_constructed;
 	g_object_class->finalize = ev_print_operation_export_finalize;
 }
 
@@ -2084,7 +2076,7 @@ ev_print_operation_print_finalize (GObject *object)
 		print->job_print = NULL;
 	}
 
-	(* G_OBJECT_CLASS (ev_print_operation_print_parent_class)->finalize) (object);
+	G_OBJECT_CLASS (ev_print_operation_print_parent_class)->finalize (object);
 
         application = g_application_get_default ();
         if (application)
