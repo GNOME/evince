@@ -2,7 +2,7 @@
  *  this file is part of evince, a gnome document viewer
  *
  * Copyright (C) 2009 Carlos Garcia Campos <carlosgc@gnome.org>
- * Copyright © 2012, 2018 Christian Persch
+ * Copyright © 2012, 2018, 2021, 2022 Christian Persch
  *
  * Evince is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by
@@ -200,9 +200,11 @@ check_arguments (int argc,
                         return FALSE;
                 }
                 if (input_mime_type == NULL) {
-                        g_set_error_literal (error, G_OPTION_ERROR, G_OPTION_ERROR_BAD_VALUE,
-                                             "Must specify --mime-type");
-                        return FALSE;
+                        input_mime_type = ev_file_get_mime_type_from_fd (input_fd, error);
+                        if (input_mime_type == NULL) {
+                                g_prefix_error (error, "Must specify --mime-type: ");
+                                return FALSE;
+                        }
                 }
                 if (unlink_temp_file) {
                         g_set_error_literal (error, G_OPTION_ERROR, G_OPTION_ERROR_BAD_VALUE,
