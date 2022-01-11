@@ -137,11 +137,47 @@ tiff_document_load (EvDocument  *document,
 }
 
 static gboolean
+tiff_document_load_fd (EvDocument          *document,
+                       int                  fd,
+                       EvDocumentLoadFlags  flags,
+                       GCancellable        *cancellable,
+                       GError             **error)
+{
+        TiffDocument *tiff_document = TIFF_DOCUMENT (document);
+        TIFF *tiff;
+
+        push_handlers ();
+        tiff = TIFFFdOpen (fd, "document.tiff" /* fake filename */, "r");
+        pop_handlers ();
+
+        if (!tiff) {
+                g_set_error_literal (error,
+                                     EV_DOCUMENT_ERROR,
+                                     EV_DOCUMENT_ERROR_INVALID,
+                                     _("Invalid document"));
+                return FALSE;
+        }
+
+
+        tiff_document->tiff = tiff;
+        g_clear_pointer (&tiff_document->uri, g_free);
+
+        return TRUE;
+}
+
+static gboolean
 tiff_document_save (EvDocument  *document,
 		    const char  *uri,
 		    GError     **error)
 {
 	TiffDocument *tiff_document = TIFF_DOCUMENT (document);
+
+        /* FIXME: create an output stream for the uri, then splice the source fd to it */
+        if (tiff_document->uri == NULL) {
+                g_set_error_literal (error, G_IO_ERROR, G_IO_ERROR_NOT_SUPPORTED,
+                                     "Cannot save document from FD");
+                return FALSE;
+        }
 
 	return ev_xfer_uri_simple (tiff_document->uri, uri, error);
 }
@@ -469,6 +505,7 @@ tiff_document_class_init (TiffDocumentClass *klass)
 	gobject_class->finalize = tiff_document_finalize;
 
 	ev_document_class->load = tiff_document_load;
+	ev_document_class->load_fd = tiff_document_load_fd;
 	ev_document_class->save = tiff_document_save;
 	ev_document_class->get_n_pages = tiff_document_get_n_pages;
 	ev_document_class->get_page_size = tiff_document_get_page_size;
