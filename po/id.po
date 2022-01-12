@@ -7,13 +7,13 @@
 # Andika Triwidada <andika@gmail.com>, 2009-2015.
 # Dirgita <dirgitadevina@yahoo.co.id>, 2010, 2016.
 # Zamani Karmana <zamani.karmana@gmail.com>, 2015.
-# Kukuh Syafaat <kukuhsyafaat@gnome.org>, 2017-2021.
+# Kukuh Syafaat <kukuhsyafaat@gnome.org>, 2017-2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: evince master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
-"POT-Creation-Date: 2021-12-02 23:36+0000\n"
-"PO-Revision-Date: 2021-12-22 10:37+0700\n"
+"POT-Creation-Date: 2022-01-08 03:11+0000\n"
+"PO-Revision-Date: 2022-01-12 11:30+0700\n"
 "Last-Translator: Kukuh Syafaat <kukuhsyafaat@gnome.org>\n"
 "Language-Team: GNOME Indonesian Translation Team <gnome@i15n.org>\n"
 "Language: id\n"
@@ -108,55 +108,51 @@ msgstr "Dokumen PDF"
 msgid "Adds support for reading PDF Documents"
 msgstr "Menambahkan dukungan untuk membaca dokumen PDF"
 
-#: backend/pdf/ev-poppler.c:863
-msgid "This work is in the Public Domain"
-msgstr "Karya ini berada di Ranah Publik"
-
 #. translators: this is the document security state
-#: backend/pdf/ev-poppler.c:1162 backend/pdf/ev-poppler.c:1168
+#: backend/pdf/ev-poppler.c:731 backend/pdf/ev-poppler.c:737
 #: properties/ev-properties-view.c:433
 msgid "Yes"
 msgstr "Ya"
 
 #. translators: this is the document security state
-#: backend/pdf/ev-poppler.c:1165 backend/pdf/ev-poppler.c:1168
+#: backend/pdf/ev-poppler.c:734 backend/pdf/ev-poppler.c:737
 #: properties/ev-properties-view.c:435
 msgid "No"
 msgstr "Tidak"
 
-#: backend/pdf/ev-poppler.c:1309
+#: backend/pdf/ev-poppler.c:879
 msgid "Type 1"
 msgstr "Jenis 1"
 
-#: backend/pdf/ev-poppler.c:1311
+#: backend/pdf/ev-poppler.c:881
 msgid "Type 1C"
 msgstr "Jenis 1C"
 
-#: backend/pdf/ev-poppler.c:1313
+#: backend/pdf/ev-poppler.c:883
 msgid "Type 3"
 msgstr "Jenis 3"
 
-#: backend/pdf/ev-poppler.c:1315
+#: backend/pdf/ev-poppler.c:885
 msgid "TrueType"
 msgstr "TrueType"
 
-#: backend/pdf/ev-poppler.c:1317
+#: backend/pdf/ev-poppler.c:887
 msgid "Type 1 (CID)"
 msgstr "Jenis 1 (CID)"
 
-#: backend/pdf/ev-poppler.c:1319
+#: backend/pdf/ev-poppler.c:889
 msgid "Type 1C (CID)"
 msgstr "Jenis 1C (CID)"
 
-#: backend/pdf/ev-poppler.c:1321
+#: backend/pdf/ev-poppler.c:891
 msgid "TrueType (CID)"
 msgstr "TrueType (CID)"
 
-#: backend/pdf/ev-poppler.c:1323
+#: backend/pdf/ev-poppler.c:893
 msgid "Unknown font type"
 msgstr "Jenis fonta tidak dikenal"
 
-#: backend/pdf/ev-poppler.c:1367
+#: backend/pdf/ev-poppler.c:937
 msgid ""
 "This document contains non-embedded fonts that are not from the PDF Standard "
 "14 fonts. If the substitute fonts selected by fontconfig are not the same as "
@@ -166,11 +162,11 @@ msgstr ""
 "Jika fonta pengganti yang dipilih oleh fontconfig tidak sama dengan fonta "
 "yang dipakai untuk membuat PDF, perenderan mungkin jadi tak benar."
 
-#: backend/pdf/ev-poppler.c:1372
+#: backend/pdf/ev-poppler.c:942
 msgid "All fonts are either standard or embedded."
 msgstr "Semua fonta standar atau tertanam."
 
-#: backend/pdf/ev-poppler.c:1402
+#: backend/pdf/ev-poppler.c:972
 msgid "No name"
 msgstr "Tidak ada nama"
 
@@ -184,20 +180,20 @@ msgstr "Tidak ada nama"
 #. Author: None
 #. Keywords: None
 #.
-#: backend/pdf/ev-poppler.c:1411 libview/ev-print-operation.c:1991
+#: backend/pdf/ev-poppler.c:981 libview/ev-print-operation.c:1991
 #: properties/ev-properties-view.c:233
 msgid "None"
 msgstr "Nihil"
 
-#: backend/pdf/ev-poppler.c:1419
+#: backend/pdf/ev-poppler.c:989
 msgid "Embedded subset"
 msgstr "Subset yang tertanam"
 
-#: backend/pdf/ev-poppler.c:1421
+#: backend/pdf/ev-poppler.c:991
 msgid "Embedded"
 msgstr "Tertanam"
 
-#: backend/pdf/ev-poppler.c:1423
+#: backend/pdf/ev-poppler.c:993
 msgid "Not embedded"
 msgstr "Tidak tertanam"
 
@@ -206,7 +202,7 @@ msgstr "Tidak tertanam"
 #. * type. Example:
 #. * "Type 1 (One of the Standard 14 Fonts)"
 #.
-#: backend/pdf/ev-poppler.c:1430
+#: backend/pdf/ev-poppler.c:1000
 msgid " (One of the Standard 14 Fonts)"
 msgstr " (Satu dari Standar 14 Fonta)"
 
@@ -215,7 +211,7 @@ msgstr " (Satu dari Standar 14 Fonta)"
 #. * type. Example:
 #. * "TrueType (Not one of the Standard 14 Fonts)"
 #.
-#: backend/pdf/ev-poppler.c:1437
+#: backend/pdf/ev-poppler.c:1007
 msgid " (Not one of the Standard 14 Fonts)"
 msgstr " (Bukan satu dari Standar 14 Fonta)"
 
@@ -229,7 +225,7 @@ msgstr " (Bukan satu dari Standar 14 Fonta)"
 #. * Substituting with TeXGyreTermes-Regular
 #. * (/usr/share/textmf/.../texgyretermes-regular.otf)
 #.
-#: backend/pdf/ev-poppler.c:1456
+#: backend/pdf/ev-poppler.c:1026
 #, c-format
 msgid ""
 "%s%s\n"
@@ -253,7 +249,7 @@ msgstr ""
 #. * Encoding: Custom
 #. * Embedded subset
 #.
-#: backend/pdf/ev-poppler.c:1474
+#: backend/pdf/ev-poppler.c:1044
 #, c-format
 msgid ""
 "%s%s\n"
@@ -389,12 +385,12 @@ msgstr "Pratinjau sebelum mencetak"
 msgid "Couldn’t save attachment “%s”: %s"
 msgstr "Tidak dapat menyimpan lampiran “%s”: %s"
 
-#: libdocument/ev-attachment.c:400
+#: libdocument/ev-attachment.c:398
 #, c-format
 msgid "Couldn’t open attachment “%s”: %s"
 msgstr "Tidak dapat membuka lampiran “%s”: %s"
 
-#: libdocument/ev-attachment.c:438
+#: libdocument/ev-attachment.c:437
 #, c-format
 msgid "Couldn’t open attachment “%s”"
 msgstr "Tidak dapat membuka lampiran “%s”"
@@ -409,11 +405,11 @@ msgstr "Jenis berkas %s (%s) tidak didukung"
 msgid "Unknown MIME Type"
 msgstr "Jenis MIME Tidak Dikenal"
 
-#: libdocument/ev-document-factory.c:582
+#: libdocument/ev-document-factory.c:642
 msgid "All Documents"
 msgstr "Semua Dokumen"
 
-#: libdocument/ev-document-factory.c:609 shell/ev-utils.c:272
+#: libdocument/ev-document-factory.c:669 shell/ev-utils.c:272
 msgid "All Files"
 msgstr "Semua Berkas"
 
@@ -426,6 +422,10 @@ msgstr "Gagal membuat berkas sementara: %s"
 #, c-format
 msgid "Failed to create a temporary directory: %s"
 msgstr "Gagal membuat direktori sementara: %s"
+
+#: libdocument/ev-xmp.c:350
+msgid "This work is in the Public Domain"
+msgstr "Karya ini berada di Ranah Publik"
 
 #: libmisc/ev-page-action-widget.c:86 libmisc/ev-page-action-widget.c:125
 #, c-format
@@ -468,22 +468,22 @@ msgstr "Menuju kata yang ditemukan sebelumnya"
 msgid "Find next occurrence of the search string"
 msgstr "Menuju kata yang ditemukan berikutnya"
 
-#: libview/ev-jobs.c:650
+#: libview/ev-jobs.c:658
 #, c-format
 msgid "Failed to render page %d: %s"
 msgstr "Gagal merender halaman %d: %s"
 
-#: libview/ev-jobs.c:657
+#: libview/ev-jobs.c:665
 #, c-format
 msgid "Failed to render page %d"
 msgstr "Gagal merender halaman %d"
 
-#: libview/ev-jobs.c:910
+#: libview/ev-jobs.c:918
 #, c-format
 msgid "Failed to create thumbnail for page %d"
 msgstr "Gagal membuat gambar mini untuk halaman %d"
 
-#: libview/ev-jobs.c:2042
+#: libview/ev-jobs.c:2343
 #, c-format
 msgid "Failed to print page %d: %s"
 msgstr "Gagal mencetak halaman %d: %s"
@@ -712,19 +712,39 @@ msgstr "Antarmuka (UI) yang jelas dan sederhana"
 msgid "Advanced highlighting and annotation"
 msgstr "Sorotan dan anotasi lanjutan"
 
-#: previewer/ev-previewer.c:45
+#: previewer/ev-previewer.c:56
 msgid "Delete the temporary file"
 msgstr "Hapus berkas sementara"
 
-#: previewer/ev-previewer.c:46
+#: previewer/ev-previewer.c:58
 msgid "File specifying print settings"
 msgstr "Berkas yang menyatakan pengaturan cetak"
 
-#: previewer/ev-previewer.c:46
+#: previewer/ev-previewer.c:58
 msgid "FILE"
 msgstr "BERKAS"
 
-#: previewer/ev-previewer.c:188 previewer/ev-previewer.c:222
+#: previewer/ev-previewer.c:60
+msgid "File descriptor of input file"
+msgstr "Deskriptor berkas dari berkas masukan"
+
+#: previewer/ev-previewer.c:60 previewer/ev-previewer.c:64
+msgid "FD"
+msgstr "FD"
+
+#: previewer/ev-previewer.c:62
+msgid "MIME type of input file"
+msgstr "Jenis berkas masukan MIME"
+
+#: previewer/ev-previewer.c:62
+msgid "TYPE"
+msgstr "TIPE"
+
+#: previewer/ev-previewer.c:64
+msgid "File descriptor of print settings file"
+msgstr "Deskriptor berkas dari berkas pengaturan cetak"
+
+#: previewer/ev-previewer.c:290 previewer/ev-previewer.c:310
 msgid "GNOME Document Previewer"
 msgstr "Peninjau Dokumen GNOME"
 
@@ -736,14 +756,22 @@ msgstr "Pilih halaman atau cari dalam indeks"
 msgid "Select page"
 msgstr "Pilih halaman"
 
-#: previewer/ev-previewer-window.c:79 shell/ev-window.c:3665
+#: previewer/ev-previewer-window.c:78 shell/ev-window.c:3665
 msgid "Failed to print document"
 msgstr "Gagal mencetak dokumen"
 
-#: previewer/ev-previewer-window.c:220
+#: previewer/ev-previewer-window.c:193 previewer/ev-previewer-window.c:590
+msgid "Evince Document Viewer"
+msgstr "Penampil Dokumen Evince"
+
+#: previewer/ev-previewer-window.c:229
 #, c-format
 msgid "The selected printer “%s” could not be found"
 msgstr "Pencetak '%s' yang dipilih tidak ditemukan"
+
+#: previewer/ev-previewer-window.c:568 shell/ev-window.c:4210
+msgid "Evince"
+msgstr "Evince"
 
 #: previewer/previewer.ui:7
 msgid "_Print"
@@ -1576,13 +1604,9 @@ msgstr "Batal _Mencetak dan Keluar"
 msgid "Close _after Printing"
 msgstr "Tutup _setelah Mencetak"
 
-#: shell/ev-window.c:4210
-msgid "Evince"
-msgstr "Evince"
-
 #: shell/ev-window.c:4212
-msgid "© 1996–2020 The Evince authors"
-msgstr "© 1996-2020 Para penulis Evince"
+msgid "© 1996–2022 The Evince document viewer authors"
+msgstr "© 1996–2022 Penulis penampil dokumen Evince"
 
 #: shell/ev-window.c:4215
 msgid "Evince is a simple document viewer for GNOME"
@@ -1596,7 +1620,7 @@ msgstr ""
 "Dirgita <dirgitadevina@yahoo.co.id>, 2010, 2016.\n"
 "Andika Triwidada <andika@gmail.com>, 2009-2015.\n"
 "Zamani Karmana <zamani.karmana@gmail.com>, 2015.\n"
-"Kukuh Syafaat <kukuhsyafaat@gnome.org>, 2017-2021."
+"Kukuh Syafaat <kukuhsyafaat@gnome.org>, 2017-2022."
 
 #: shell/ev-window.c:4648
 msgid "Running in presentation mode"
