@@ -7,7 +7,6 @@ incs = backends_incs + [cut_n_paste_inc]
 
 deps = backends_deps + [
   libarchive_dep,
-  libunarr_dep,
 ]
 
 shared_module(

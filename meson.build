@@ -349,7 +349,7 @@ else
 endif
 
 # *** Comic Book ***
-libarchive_req_version = '>= 3.2.0'
+libarchive_req_version = '>= 3.6.0'
 libarchive_dep = dependency('libarchive', version: libarchive_req_version, required: get_option('comics'))
 enable_comics = libarchive_dep.found()
 if enable_comics
