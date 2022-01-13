@@ -13,14 +13,14 @@
 # Jan Drábek <repli2dev@gmail.com>, 2009.
 # Lucas Lommer <llommer@svn.gnome.org>, 2010, 2011, 2012, 2013.
 # Adam Matoušek <adydas95@gmail.com>, 2012
-# Marek Černocký <marek@manet.cz>, 2009, 2010, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021.
+# Marek Černocký <marek@manet.cz>, 2009, 2010, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: evince\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
-"POT-Creation-Date: 2021-07-23 19:21+0000\n"
-"PO-Revision-Date: 2021-08-09 12:14+0200\n"
+"POT-Creation-Date: 2022-01-08 03:11+0000\n"
+"PO-Revision-Date: 2022-01-13 07:58+0100\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: čeština <gnome-cs-list@gnome.org>\n"
 "Language: cs\n"
@@ -116,55 +116,51 @@ msgstr "Dokumenty PDF"
 msgid "Adds support for reading PDF Documents"
 msgstr "Přidává podporu pro čtení dokumentů PDF"
 
-#: backend/pdf/ev-poppler.c:907
-msgid "This work is in the Public Domain"
-msgstr "Toto je volné dílo (Public Domain)"
-
 #. translators: this is the document security state
-#: backend/pdf/ev-poppler.c:1179 backend/pdf/ev-poppler.c:1185
+#: backend/pdf/ev-poppler.c:731 backend/pdf/ev-poppler.c:737
 #: properties/ev-properties-view.c:433
 msgid "Yes"
 msgstr "Ano"
 
 #. translators: this is the document security state
-#: backend/pdf/ev-poppler.c:1182 backend/pdf/ev-poppler.c:1185
+#: backend/pdf/ev-poppler.c:734 backend/pdf/ev-poppler.c:737
 #: properties/ev-properties-view.c:435
 msgid "No"
 msgstr "Ne"
 
-#: backend/pdf/ev-poppler.c:1323
+#: backend/pdf/ev-poppler.c:879
 msgid "Type 1"
 msgstr "Typ 1"
 
-#: backend/pdf/ev-poppler.c:1325
+#: backend/pdf/ev-poppler.c:881
 msgid "Type 1C"
 msgstr "Typ 1C"
 
-#: backend/pdf/ev-poppler.c:1327
+#: backend/pdf/ev-poppler.c:883
 msgid "Type 3"
 msgstr "Typ 3"
 
-#: backend/pdf/ev-poppler.c:1329
+#: backend/pdf/ev-poppler.c:885
 msgid "TrueType"
 msgstr "TrueType"
 
-#: backend/pdf/ev-poppler.c:1331
+#: backend/pdf/ev-poppler.c:887
 msgid "Type 1 (CID)"
 msgstr "Typ 1 (CID)"
 
-#: backend/pdf/ev-poppler.c:1333
+#: backend/pdf/ev-poppler.c:889
 msgid "Type 1C (CID)"
 msgstr "Typ 1C (CID)"
 
-#: backend/pdf/ev-poppler.c:1335
+#: backend/pdf/ev-poppler.c:891
 msgid "TrueType (CID)"
 msgstr "TrueType (CID)"
 
-#: backend/pdf/ev-poppler.c:1337
+#: backend/pdf/ev-poppler.c:893
 msgid "Unknown font type"
 msgstr "Neznámý řez písma"
 
-#: backend/pdf/ev-poppler.c:1381
+#: backend/pdf/ev-poppler.c:937
 msgid ""
 "This document contains non-embedded fonts that are not from the PDF Standard "
 "14 fonts. If the substitute fonts selected by fontconfig are not the same as "
@@ -175,11 +171,11 @@ msgstr ""
 "nebudou stejná jako ta, která byla použita při vytváření PDF, nemusí být "
 "dokument správně vykreslen."
 
-#: backend/pdf/ev-poppler.c:1386
+#: backend/pdf/ev-poppler.c:942
 msgid "All fonts are either standard or embedded."
 msgstr "Všechna písma jsou buď standardní nebo přibalena."
 
-#: backend/pdf/ev-poppler.c:1416
+#: backend/pdf/ev-poppler.c:972
 msgid "No name"
 msgstr "Žádný název"
 
@@ -193,20 +189,20 @@ msgstr "Žádný název"
 #. Author: None
 #. Keywords: None
 #.
-#: backend/pdf/ev-poppler.c:1425 libview/ev-print-operation.c:1991
+#: backend/pdf/ev-poppler.c:981 libview/ev-print-operation.c:1991
 #: properties/ev-properties-view.c:233
 msgid "None"
 msgstr "Žádné"
 
-#: backend/pdf/ev-poppler.c:1433
+#: backend/pdf/ev-poppler.c:989
 msgid "Embedded subset"
 msgstr "Vložená podmnožina"
 
-#: backend/pdf/ev-poppler.c:1435
+#: backend/pdf/ev-poppler.c:991
 msgid "Embedded"
 msgstr "Vložené"
 
-#: backend/pdf/ev-poppler.c:1437
+#: backend/pdf/ev-poppler.c:993
 msgid "Not embedded"
 msgstr "Nevložené"
 
@@ -215,7 +211,7 @@ msgstr "Nevložené"
 #. * type. Example:
 #. * "Type 1 (One of the Standard 14 Fonts)"
 #.
-#: backend/pdf/ev-poppler.c:1444
+#: backend/pdf/ev-poppler.c:1000
 msgid " (One of the Standard 14 Fonts)"
 msgstr " (jedno ze 14 standardních písem)"
 
@@ -224,7 +220,7 @@ msgstr " (jedno ze 14 standardních písem)"
 #. * type. Example:
 #. * "TrueType (Not one of the Standard 14 Fonts)"
 #.
-#: backend/pdf/ev-poppler.c:1451
+#: backend/pdf/ev-poppler.c:1007
 msgid " (Not one of the Standard 14 Fonts)"
 msgstr " (nepatřící mezi 14 standardních písem)"
 
@@ -238,7 +234,7 @@ msgstr " (nepatřící mezi 14 standardních písem)"
 #. * Substituting with TeXGyreTermes-Regular
 #. * (/usr/share/textmf/.../texgyretermes-regular.otf)
 #.
-#: backend/pdf/ev-poppler.c:1470
+#: backend/pdf/ev-poppler.c:1026
 #, c-format
 msgid ""
 "%s%s\n"
@@ -262,7 +258,7 @@ msgstr ""
 #. * Encoding: Custom
 #. * Embedded subset
 #.
-#: backend/pdf/ev-poppler.c:1488
+#: backend/pdf/ev-poppler.c:1044
 #, c-format
 msgid ""
 "%s%s\n"
@@ -301,7 +297,7 @@ msgstr "Dokumenty TIFF"
 msgid "Adds support for reading TIFF documents"
 msgstr "Přidává podporu pro čtení dokumentů TIFF"
 
-#: backend/tiff/tiff-document.c:123
+#: backend/tiff/tiff-document.c:124
 msgid "Invalid document"
 msgstr "Neplatný dokument"
 
@@ -315,8 +311,8 @@ msgid "Adds support for reading XPS documents"
 msgstr "Přidává podporu pro čtení dokumentů XPS"
 
 #. Manually set name and icon
-#: data/org.gnome.Evince.desktop.in.in:3 shell/ev-window-title.c:133
-#: shell/main.c:300
+#: data/org.gnome.Evince.desktop.in.in:3 org.gnome.Evince.appdata.xml.in:23
+#: shell/ev-window-title.c:133 shell/main.c:300
 msgid "Document Viewer"
 msgstr "Prohlížeč dokumentů"
 
@@ -399,12 +395,12 @@ msgstr "Náhled před vytištěním"
 msgid "Couldn’t save attachment “%s”: %s"
 msgstr "Nepodařilo se uložit přílohu „%s“: %s"
 
-#: libdocument/ev-attachment.c:400
+#: libdocument/ev-attachment.c:398
 #, c-format
 msgid "Couldn’t open attachment “%s”: %s"
 msgstr "Nepodařilo se otevřít přílohu „%s“: %s"
 
-#: libdocument/ev-attachment.c:438
+#: libdocument/ev-attachment.c:437
 #, c-format
 msgid "Couldn’t open attachment “%s”"
 msgstr "Nepodařilo se otevřít přílohu „%s“"
@@ -419,11 +415,11 @@ msgstr "Typ souboru %s (%s) není podporován"
 msgid "Unknown MIME Type"
 msgstr "Neznámý typ MIME"
 
-#: libdocument/ev-document-factory.c:582
+#: libdocument/ev-document-factory.c:642
 msgid "All Documents"
 msgstr "Všechny dokumenty"
 
-#: libdocument/ev-document-factory.c:609 shell/ev-utils.c:283
+#: libdocument/ev-document-factory.c:669 shell/ev-utils.c:272
 msgid "All Files"
 msgstr "Všechny soubory"
 
@@ -436,6 +432,10 @@ msgstr "Nepodařilo se vytvořit dočasný soubor: %s"
 #, c-format
 msgid "Failed to create a temporary directory: %s"
 msgstr "Nepodařilo se vytvořit dočasný adresář: %s"
+
+#: libdocument/ev-xmp.c:350
+msgid "This work is in the Public Domain"
+msgstr "Toto je volné dílo (Public Domain)"
 
 #: libmisc/ev-page-action-widget.c:86 libmisc/ev-page-action-widget.c:125
 #, c-format
@@ -454,41 +454,46 @@ msgstr "z %d"
 msgid "Page %s"
 msgstr "Stránka %s"
 
-#: libmisc/ev-search-box.c:112
+#: libmisc/ev-search-box.c:113
 msgid "Not found, click to change search options"
 msgstr "Nenalezeno, kliknutím můžete změnit podmínky hledání"
 
-#: libmisc/ev-search-box.c:186 libmisc/ev-search-box.c:242
+#: libmisc/ev-search-box.c:187 libmisc/ev-search-box.c:243
 msgid "Search options"
 msgstr "Volby hledání"
 
-#: libmisc/ev-search-box.c:318
+#: libmisc/ev-search-box.c:319
 msgid "_Whole Words Only"
 msgstr "Pouze _celá slova"
 
-#: libmisc/ev-search-box.c:331
+#: libmisc/ev-search-box.c:332
 msgid "C_ase Sensitive"
 msgstr "_Rozlišovat velikost písmen"
 
-#: libmisc/ev-search-box.c:600
+#: libmisc/ev-search-box.c:601
 msgid "Find previous occurrence of the search string"
 msgstr "Najít předchozí výskyt hledaného řetězce"
 
-#: libmisc/ev-search-box.c:606
+#: libmisc/ev-search-box.c:607
 msgid "Find next occurrence of the search string"
 msgstr "Najít následující výskyt hledaného řetězce"
 
-#: libview/ev-jobs.c:649
+#: libview/ev-jobs.c:658
+#, c-format
+msgid "Failed to render page %d: %s"
+msgstr "Selhalo vykreslení stránky %d: %s"
+
+#: libview/ev-jobs.c:665
 #, c-format
 msgid "Failed to render page %d"
 msgstr "Selhalo vykreslení stránky %d"
 
-#: libview/ev-jobs.c:901
+#: libview/ev-jobs.c:918
 #, c-format
 msgid "Failed to create thumbnail for page %d"
 msgstr "Selhalo vytvoření náhledu pro stránku %d"
 
-#: libview/ev-jobs.c:2033
+#: libview/ev-jobs.c:2343
 #, c-format
 msgid "Failed to print page %d: %s"
 msgstr "Selhal tisk stránky %d: %s"
@@ -679,17 +684,13 @@ msgstr "Spustit %s"
 msgid "Reset form"
 msgstr "Čistý formulář"
 
-#: libview/ev-view-presentation.c:757
+#: libview/ev-view-presentation.c:739
 msgid "Jump to page:"
 msgstr "Přejít na stránku:"
 
-#: libview/ev-view-presentation.c:1051
+#: libview/ev-view-presentation.c:1033
 msgid "End of presentation. Press Esc or click to exit."
 msgstr "Konec prezentace. Opustíte ji kliknutím nebo klávesou Esc."
-
-#: org.gnome.Evince.appdata.xml.in:23 shell/ev-window.c:4210
-msgid "Evince"
-msgstr "Evince"
 
 #: org.gnome.Evince.appdata.xml.in:24
 msgid "Document viewer for popular document formats"
@@ -719,19 +720,39 @@ msgstr "Čisté a jednoduché uživatelské rozhraní"
 msgid "Advanced highlighting and annotation"
 msgstr "Pokročilé zvýrazňování a psaní poznámek"
 
-#: previewer/ev-previewer.c:45
+#: previewer/ev-previewer.c:56
 msgid "Delete the temporary file"
 msgstr "Smazat dočasný soubor"
 
-#: previewer/ev-previewer.c:46
+#: previewer/ev-previewer.c:58
 msgid "File specifying print settings"
 msgstr "Soubor určující nastavení tisku"
 
-#: previewer/ev-previewer.c:46
+#: previewer/ev-previewer.c:58
 msgid "FILE"
 msgstr "SOUBOR"
 
-#: previewer/ev-previewer.c:188 previewer/ev-previewer.c:222
+#: previewer/ev-previewer.c:60
+msgid "File descriptor of input file"
+msgstr "Popisovač souboru vstupního souboru"
+
+#: previewer/ev-previewer.c:60 previewer/ev-previewer.c:64
+msgid "FD"
+msgstr "PS"
+
+#: previewer/ev-previewer.c:62
+msgid "MIME type of input file"
+msgstr "Typ MIME vstupního souboru"
+
+#: previewer/ev-previewer.c:62
+msgid "TYPE"
+msgstr "TYP"
+
+#: previewer/ev-previewer.c:64
+msgid "File descriptor of print settings file"
+msgstr "Popisovač souboru souboru s nastavením tisku"
+
+#: previewer/ev-previewer.c:290 previewer/ev-previewer.c:310
 msgid "GNOME Document Previewer"
 msgstr "Prohlížeč dokumentů pro uživatelské prostředí GNOME"
 
@@ -743,14 +764,22 @@ msgstr "Zvolit stránku nebo ji vyhledat v rejstříku"
 msgid "Select page"
 msgstr "Zvolit stránku"
 
-#: previewer/ev-previewer-window.c:79 shell/ev-window.c:3665
+#: previewer/ev-previewer-window.c:78 shell/ev-window.c:3665
 msgid "Failed to print document"
 msgstr "Nepodařilo se vytisknout dokument"
 
-#: previewer/ev-previewer-window.c:220
+#: previewer/ev-previewer-window.c:193 previewer/ev-previewer-window.c:590
+msgid "Evince Document Viewer"
+msgstr "Prohlížeč dokumentů Evince"
+
+#: previewer/ev-previewer-window.c:229
 #, c-format
 msgid "The selected printer “%s” could not be found"
 msgstr "Vybraná tiskárna „%s“ nebyla nalezena"
+
+#: previewer/ev-previewer-window.c:568 shell/ev-window.c:4210
+msgid "Evince"
+msgstr "Evince"
 
 #: previewer/previewer.ui:7
 msgid "_Print"
@@ -1361,7 +1390,7 @@ msgstr "Rozbalit vše pod tímto prvkem"
 msgid "Outline"
 msgstr "Obsah"
 
-#: shell/ev-sidebar-thumbnails.c:1047 shell/ev-window.c:7595
+#: shell/ev-sidebar-thumbnails.c:1045 shell/ev-window.c:7595
 msgid "Thumbnails"
 msgstr "Náhledy"
 
@@ -1405,7 +1434,7 @@ msgstr "Vybrat nebo nastavit úroveň přiblížení dokumentu"
 msgid "Set zoom level"
 msgstr "Nastavit přiblížení"
 
-#: shell/ev-utils.c:279
+#: shell/ev-utils.c:268
 msgid "Supported Image Files"
 msgstr "Podporované soubory s obrázky"
 
@@ -1589,8 +1618,8 @@ msgid "Close _after Printing"
 msgstr "Zavřít _po vytištění"
 
 #: shell/ev-window.c:4212
-msgid "© 1996–2020 The Evince authors"
-msgstr "© 1996 — 2020 autoři aplikace Evince"
+msgid "© 1996–2022 The Evince document viewer authors"
+msgstr "© 1996 — 2022 autoři prohlížeče dokumentů Evince"
 
 #: shell/ev-window.c:4215
 msgid "Evince is a simple document viewer for GNOME"
@@ -1780,7 +1809,7 @@ msgstr "Okno"
 #: shell/help-overlay.ui:65
 msgctxt "shortcut window"
 msgid "Toggle fullscreen"
-msgstr "Přepnout režim celé obrazovky"
+msgstr "Zapnout/vypnout režim celé obrazovky"
 
 #: shell/help-overlay.ui:72
 msgctxt "shortcut window"
@@ -1790,12 +1819,12 @@ msgstr "Přepnout do režimu prezentace"
 #: shell/help-overlay.ui:79
 msgctxt "shortcut window"
 msgid "Toggle sidebar"
-msgstr "Přepnout postranní panel"
+msgstr "Zobrazit/skrýt postranní panel"
 
 #: shell/help-overlay.ui:86
 msgctxt "shortcut window"
 msgid "Toggle caret navigation"
-msgstr "Přepnout kurzorovou navigaci?"
+msgstr "Zapnout/vypnout kurzorovou navigaci"
 
 #: shell/help-overlay.ui:95
 msgctxt "shortcut window"
@@ -1945,82 +1974,82 @@ msgstr "Odstranit záložku"
 #: shell/help-overlay.ui:299
 msgctxt "shortcut window"
 msgid "Toggle night mode"
-msgstr "Přepnout noční režim"
+msgstr "Zapnout/vypnout noční režim"
 
 #: shell/help-overlay.ui:306
 msgctxt "shortcut window"
 msgid "Toggle continuous scrolling"
-msgstr "Přepnout souvislý posuv"
+msgstr "Zapnout/vypnout souvislý posuv"
 
 #: shell/help-overlay.ui:313
 msgctxt "shortcut window"
 msgid "Toggle dual page"
-msgstr "Přepnout dvojstránky"
+msgstr "Zapnout/vypnout dvojstránky"
 
 #: shell/help-overlay.ui:320
+msgctxt "shortcut window"
+msgid "Toggle odd pages left"
+msgstr "Zapnout/vypnout liché stránky vlevo"
+
+#: shell/help-overlay.ui:327
 msgctxt "shortcut window"
 msgid "Document properties"
 msgstr "Vlastnosti dokumentu"
 
-#: shell/help-overlay.ui:327
+#: shell/help-overlay.ui:334
 msgctxt "shortcut window"
 msgid "Add a post-it like note"
 msgstr "Přidat poznámku ve stylu post-it"
 
-#: shell/help-overlay.ui:334
+#: shell/help-overlay.ui:341
 msgctxt "shortcut window"
 msgid "Highlight text"
 msgstr "Zvýraznit text"
 
-#: shell/help-overlay.ui:343
+#: shell/help-overlay.ui:350
 msgctxt "shortcut window"
 msgid "Finding text"
 msgstr "Hledání textu"
 
-#: shell/help-overlay.ui:347
+#: shell/help-overlay.ui:354
 msgctxt "shortcut window"
 msgid "Show the search bar"
 msgstr "Zobrazit vyhledávací lištu"
 
-#: shell/help-overlay.ui:354
+#: shell/help-overlay.ui:361
 msgctxt "shortcut window"
 msgid "Go to the next search result"
 msgstr "Přejít na následující výsledek hledání"
 
-#: shell/help-overlay.ui:361
+#: shell/help-overlay.ui:368
 msgctxt "shortcut window"
 msgid "Go to the previous search result"
 msgstr "Přejít na předchozí výsledek hledání"
 
-#: shell/help-overlay.ui:370
+#: shell/help-overlay.ui:377
 msgctxt "shortcut window"
 msgid "General"
 msgstr "Obecné"
 
-#: shell/help-overlay.ui:374
+#: shell/help-overlay.ui:381
 msgctxt "shortcut window"
 msgid "Show help"
 msgstr "Zobrazit nápovědu"
 
-#: shell/help-overlay.ui:381
+#: shell/help-overlay.ui:388
 msgctxt "shortcut window"
 msgid "Toggle primary menu"
 msgstr "Zobrazit/skrýt hlavní nabídku"
 
-#: shell/help-overlay.ui:388
+#: shell/help-overlay.ui:395
 msgctxt "shortcut window"
 msgid "Keyboard shortcuts"
 msgstr "Klávesové zkratky"
 
-#: shell/help-overlay.ui:395
+#: shell/help-overlay.ui:402
 msgctxt "shortcut window"
 msgid "Close window"
 msgstr "Zavřít okno"
-
-#: shell/help-overlay.ui:402
-msgctxt "shortcut window"
-msgid "Quit"
-msgstr "Ukončit"
 
 #: shell/help-overlay.ui:409
 msgctxt "shortcut window"
@@ -2035,12 +2064,12 @@ msgstr "Režim prezentace"
 #: shell/help-overlay.ui:422
 msgctxt "shortcut window"
 msgid "Toggle black screen"
-msgstr "Přepnout černou obrazovku"
+msgstr "Zapnout/vypnout černou obrazovku"
 
 #: shell/help-overlay.ui:429
 msgctxt "shortcut window"
 msgid "Toggle white screen"
-msgstr "Přepnout bílou obrazovku"
+msgstr "Zapnout/vypnout bílou obrazovku"
 
 #: shell/help-overlay.ui:438
 msgctxt "shortcut window"
@@ -2102,4 +2131,3 @@ msgstr "ŘETĚZEC"
 #: shell/main.c:83
 msgid "[FILE…]"
 msgstr "[SOUBOR…]"
-
