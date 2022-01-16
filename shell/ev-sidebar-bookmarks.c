@@ -494,6 +494,7 @@ ev_sidebar_bookmarks_init (EvSidebarBookmarks *sidebar_bookmarks)
         atk_object_set_name (gtk_widget_get_accessible (priv->add_button), _("Add bookmark"));
         gtk_actionable_set_action_name (GTK_ACTIONABLE (priv->add_button),
                                         "win.add-bookmark");
+        gtk_widget_set_focus_on_click (priv->add_button, FALSE);
         gtk_widget_set_sensitive (priv->add_button, FALSE);
         gtk_box_pack_start (GTK_BOX (hbox), priv->add_button, FALSE, FALSE, 0);
         gtk_widget_show (priv->add_button);
@@ -504,6 +505,7 @@ ev_sidebar_bookmarks_init (EvSidebarBookmarks *sidebar_bookmarks)
         g_signal_connect (priv->del_button, "clicked",
                           G_CALLBACK (ev_sidebar_bookmarks_del_clicked),
                           sidebar_bookmarks);
+        gtk_widget_set_focus_on_click (priv->del_button, FALSE);
         gtk_widget_set_sensitive (priv->del_button, FALSE);
         gtk_box_pack_start (GTK_BOX (hbox), priv->del_button, FALSE, FALSE, 0);
         gtk_widget_show (priv->del_button);
