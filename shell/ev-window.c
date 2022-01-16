@@ -1054,6 +1054,15 @@ scroll_child_history_cb (GtkScrolledWindow *scrolled_window,
 	}
 }
 
+static gboolean
+scrolled_window_focus_in_cb (GtkScrolledWindow *scrolled_window,
+			     GdkEventFocus     *event,
+			     EvWindow          *window)
+{
+	ev_window_focus_view (window);
+	return GDK_EVENT_STOP;
+}
+
 static void
 view_selection_changed_cb (EvView   *view,
 			   EvWindow *window)
@@ -7727,6 +7736,9 @@ ev_window_init (EvWindow *ev_window)
 				 ev_window, 0);
 	g_signal_connect_object (priv->scrolled_window, "scroll-child",
 				 G_CALLBACK (scroll_child_history_cb),
+				 ev_window, 0);
+	g_signal_connect_object (priv->scrolled_window, "focus-in-event",
+				 G_CALLBACK (scrolled_window_focus_in_cb),
 				 ev_window, 0);
 	g_signal_connect_object (priv->view, "annot-added",
 				 G_CALLBACK (view_annot_added),
