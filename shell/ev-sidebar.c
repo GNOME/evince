@@ -35,6 +35,7 @@
 
 #include "ev-sidebar.h"
 #include "ev-sidebar-page.h"
+#include "ev-window.h"
 
 enum
 {
@@ -186,6 +187,34 @@ ev_sidebar_child_change_cb (GObject    *gobject,
 		g_object_notify (G_OBJECT (ev_sidebar), "current-page");
 }
 
+static EvWindow *
+ev_sidebar_get_ev_window (EvSidebar *sidebar)
+{
+	GtkWidget *toplevel;
+
+	toplevel = gtk_widget_get_toplevel (GTK_WIDGET (sidebar));
+
+	if (toplevel && EV_IS_WINDOW (toplevel))
+		return EV_WINDOW (toplevel);
+
+	return NULL;
+}
+
+static gboolean
+button_release_cb (EvSidebar *ev_sidebar,
+                  GdkEventButton *event,
+                  gpointer data)
+{
+	EvWindow *ev_window;
+
+	ev_window = ev_sidebar_get_ev_window (ev_sidebar);
+	if (ev_window)
+		ev_window_focus_view (ev_window);
+
+	return GDK_EVENT_STOP;
+}
+
+
 static void
 ev_sidebar_init (EvSidebar *ev_sidebar)
 {
@@ -224,6 +253,8 @@ ev_sidebar_init (EvSidebar *ev_sidebar)
 	g_signal_connect (stack, "notify::visible-child",
 			  G_CALLBACK (ev_sidebar_child_change_cb),
 			  ev_sidebar);
+	g_signal_connect (ev_sidebar, "button-release-event",
+			  G_CALLBACK (button_release_cb), NULL);
 }
 
 static gboolean

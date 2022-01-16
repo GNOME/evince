@@ -104,6 +104,7 @@ static void         ev_sidebar_thumbnails_reload           (EvSidebarThumbnails 
 static void         adjustment_changed_cb                  (EvSidebarThumbnails     *sidebar_thumbnails);
 static void         check_toggle_blank_first_dual_mode     (EvSidebarThumbnails     *sidebar_thumbnails);
 static void         check_toggle_blank_first_dual_mode_when_resizing (EvSidebarThumbnails *sidebar_thumbnails);
+static EvWindow *   ev_sidebar_thumbnails_get_ev_window    (EvSidebarThumbnails *sidebar);
 
 G_DEFINE_TYPE_EXTENDED (EvSidebarThumbnails, 
                         ev_sidebar_thumbnails, 
@@ -653,6 +654,20 @@ ev_sidebar_thumbnails_fill_model (EvSidebarThumbnails *sidebar_thumbnails)
 	}
 }
 
+static gboolean
+button_release_cb (GtkIconView *icon_view,
+		   GdkEventButton *event,
+		   EvSidebarThumbnails *sidebar_thumbnails)
+{
+	EvWindow *ev_window;
+
+	ev_window = ev_sidebar_thumbnails_get_ev_window (sidebar_thumbnails);
+	if (ev_window)
+		ev_window_focus_view (ev_window);
+
+	return GDK_EVENT_STOP;
+}
+
 static void
 ev_sidebar_icon_selection_changed (GtkIconView         *icon_view,
 				   EvSidebarThumbnails *ev_sidebar_thumbnails)
@@ -731,6 +746,9 @@ ev_sidebar_init_icon_view (EvSidebarThumbnails *ev_sidebar_thumbnails)
 	g_signal_connect_data (priv->model, "notify::dual-odd-left",
 			       G_CALLBACK (check_toggle_blank_first_dual_mode), ev_sidebar_thumbnails,
 			       NULL, G_CONNECT_SWAPPED | G_CONNECT_AFTER);
+	g_signal_connect (priv->icon_view, "button-release-event",
+			  G_CALLBACK (button_release_cb), ev_sidebar_thumbnails);
+
 
 	check_toggle_blank_first_dual_mode (ev_sidebar_thumbnails);
 	gtk_container_add (GTK_CONTAINER (priv->swindow), priv->icon_view);
