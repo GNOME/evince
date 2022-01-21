@@ -2377,9 +2377,6 @@ ev_view_handle_cursor_over_xy (EvView *view, gint x, gint y)
 				ev_view_set_cursor (view, EV_VIEW_CURSOR_NORMAL);
 		}
 	}
-
-	if (link || annot || (field && ev_form_field_get_alternate_name (field)))
-		g_object_set (view, "has-tooltip", TRUE, NULL);
 }
 
 /*** Images ***/
@@ -8522,6 +8519,7 @@ ev_view_init (EvView *view)
 	gtk_widget_set_has_window (GTK_WIDGET (view), TRUE);
 	gtk_widget_set_can_focus (GTK_WIDGET (view), TRUE);
 	gtk_widget_set_redraw_on_allocate (GTK_WIDGET (view), FALSE);
+	gtk_widget_set_has_tooltip (GTK_WIDGET (view), TRUE);
 
 	context = gtk_widget_get_style_context (GTK_WIDGET (view));
 	gtk_style_context_add_class (context, "content-view");
