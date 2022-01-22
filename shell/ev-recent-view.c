@@ -109,6 +109,8 @@ get_document_info_async_data_free (GetDocumentInfoAsyncData *data)
         }
         gtk_tree_row_reference_free (data->row);
 
+        g_object_unref (data->ev_recent_view);
+
         g_slice_free (GetDocumentInfoAsyncData, data);
 }
 
@@ -718,7 +720,7 @@ ev_recent_view_get_document_info (EvRecentView  *ev_recent_view,
 	EvRecentViewPrivate *priv = GET_PRIVATE (ev_recent_view);
 
         data = g_slice_new0 (GetDocumentInfoAsyncData);
-        data->ev_recent_view = ev_recent_view;
+        data->ev_recent_view = g_object_ref (ev_recent_view);
         data->uri = g_strdup (uri);
         data->row = gtk_tree_row_reference_new (GTK_TREE_MODEL (priv->model), path);;
         data->cancellable = g_cancellable_new ();
