@@ -3877,9 +3877,22 @@ void
 ev_view_cancel_add_annotation (EvView *view)
 {
 	gint x, y;
+	guint annot_page;
 
 	if (!view->adding_annot_info.adding_annot)
 		return;
+
+	if (view->adding_annot_info.annot && view->pressed_button == 1) {
+		annot_page = ev_annotation_get_page_index (view->adding_annot_info.annot);
+		ev_document_doc_mutex_lock ();
+		ev_document_annotations_remove_annotation (EV_DOCUMENT_ANNOTATIONS (view->document),
+							   view->adding_annot_info.annot);
+		ev_document_doc_mutex_unlock ();
+		ev_page_cache_mark_dirty (view->page_cache, annot_page, EV_PAGE_DATA_INCLUDE_ANNOTS);
+		view->adding_annot_info.annot = NULL;
+		view->pressed_button = -1;
+		ev_view_reload_page (view, annot_page, NULL);
+	}
 
 	view->adding_annot_info.adding_annot = FALSE;
 	g_assert(!view->adding_annot_info.annot);
