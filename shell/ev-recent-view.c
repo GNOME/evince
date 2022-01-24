@@ -48,7 +48,9 @@ typedef enum {
 } EvRecentViewColumns;
 
 typedef struct {
+	GtkWidget        *stack;
         GtkWidget        *view;
+	GtkWidget        *empty;
         GtkListStore     *model;
         GtkRecentManager *recent_manager;
         GtkTreePath      *pressed_item_tree_path;
@@ -754,6 +756,11 @@ ev_recent_view_refresh (EvRecentView *ev_recent_view)
                         break;
         }
 
+	if (n_items != 0)
+		gtk_stack_set_visible_child (GTK_STACK (priv->stack), priv->view);
+	else
+		gtk_stack_set_visible_child (GTK_STACK (priv->stack), priv->empty);
+
         g_list_free_full (items, (GDestroyNotify)gtk_recent_info_unref);
 }
 
@@ -785,6 +792,8 @@ ev_recent_view_init (EvRecentView *ev_recent_view)
 
         gtk_widget_init_template (GTK_WIDGET (ev_recent_view));
 
+	gtk_stack_set_visible_child (GTK_STACK (priv->stack), priv->empty);
+
         priv->recent_manager = gtk_recent_manager_get_default ();
         priv->model = gtk_list_store_new (NUM_COLUMNS,
                                           G_TYPE_STRING,
@@ -810,7 +819,9 @@ ev_recent_view_class_init (EvRecentViewClass *klass)
 
         g_type_ensure (GD_TYPE_TWO_LINES_RENDERER);
         gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/evince/ui/recent-view.ui");
+	gtk_widget_class_bind_template_child_private (widget_class, EvRecentView, stack);
         gtk_widget_class_bind_template_child_private (widget_class, EvRecentView, view);
+	gtk_widget_class_bind_template_child_private (widget_class, EvRecentView, empty);
 
         signals[ITEM_ACTIVATED] =
                   g_signal_new ("item-activated",
