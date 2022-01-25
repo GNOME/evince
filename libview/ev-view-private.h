@@ -293,6 +293,7 @@ struct _EvViewClass {
 				       EvSourceLink   *link);
         void     (*annot_added)       (EvView         *view,
 				       EvAnnotation   *annot);
+        void     (*annot_cancel_add)  (EvView         *view);
         void     (*annot_changed)     (EvView         *view,
 				       EvAnnotation   *annot);
         void     (*annot_removed)     (EvView         *view,

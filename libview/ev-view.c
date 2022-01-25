@@ -59,6 +59,7 @@ enum {
 	SIGNAL_SELECTION_CHANGED,
 	SIGNAL_SYNC_SOURCE,
 	SIGNAL_ANNOT_ADDED,
+	SIGNAL_ANNOT_CANCEL_ADD,
 	SIGNAL_ANNOT_CHANGED,
 	SIGNAL_ANNOT_REMOVED,
 	SIGNAL_LAYERS_CHANGED,
@@ -6467,6 +6468,8 @@ ev_view_button_release_event (GtkWidget      *widget,
 		view->adding_annot_info.stop.y = event->y + view->scroll_y;
 		if (annot_added)
 			g_signal_emit (view, signals[SIGNAL_ANNOT_ADDED], 0, view->adding_annot_info.annot);
+		else
+			g_signal_emit (view, signals[SIGNAL_ANNOT_CANCEL_ADD], 0, NULL);
 
 		view->adding_annot_info.adding_annot = FALSE;
 		view->adding_annot_info.annot = NULL;
@@ -8298,6 +8301,14 @@ ev_view_class_init (EvViewClass *class)
 		         g_cclosure_marshal_VOID__OBJECT,
 		         G_TYPE_NONE, 1,
 			 EV_TYPE_ANNOTATION);
+	signals[SIGNAL_ANNOT_CANCEL_ADD] = g_signal_new ("annot-cancel-add",
+                         G_TYPE_FROM_CLASS (object_class),
+                         G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
+                         G_STRUCT_OFFSET (EvViewClass, annot_cancel_add),
+                         NULL, NULL,
+			 g_cclosure_marshal_VOID__VOID,
+                         G_TYPE_NONE, 0,
+                         G_TYPE_NONE);
 	signals[SIGNAL_ANNOT_CHANGED] = g_signal_new ("annot-changed",
 		         G_TYPE_FROM_CLASS (object_class),
 		         G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
