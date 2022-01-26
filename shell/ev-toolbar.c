@@ -45,7 +45,6 @@ typedef struct {
         GtkWidget *action_menu_button;
         GtkWidget *zoom_action;
         GtkWidget *page_selector;
-        GtkWidget *navigation_action;
         GtkWidget *find_button;
         GtkWidget *open_button;
         GtkWidget *annots_button;
