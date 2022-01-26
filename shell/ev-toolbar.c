@@ -299,26 +299,6 @@ ev_toolbar_new (EvWindow *window)
                                          NULL));
 }
 
-gboolean
-ev_toolbar_has_visible_popups (EvToolbar *ev_toolbar)
-{
-        GtkPopover       *popover;
-        EvToolbarPrivate *priv;
-
-        g_return_val_if_fail (EV_IS_TOOLBAR (ev_toolbar), FALSE);
-
-        priv = GET_PRIVATE (ev_toolbar);
-
-        popover = gtk_menu_button_get_popover (GTK_MENU_BUTTON (priv->action_menu_button));
-        if (gtk_widget_get_visible (GTK_WIDGET (popover)))
-                return TRUE;
-
-        if (ev_zoom_action_get_popup_shown (EV_ZOOM_ACTION (priv->zoom_action)))
-                return TRUE;
-
-        return FALSE;
-}
-
 void
 ev_toolbar_action_menu_toggle (EvToolbar *ev_toolbar)
 {

@@ -51,7 +51,6 @@ struct _EvToolbarClass {
 
 GType         ev_toolbar_get_type           (void);
 GtkWidget    *ev_toolbar_new                (EvWindow *window);
-gboolean      ev_toolbar_has_visible_popups (EvToolbar *ev_toolbar);
 void          ev_toolbar_action_menu_toggle (EvToolbar *ev_toolbar);
 GtkWidget    *ev_toolbar_get_page_selector  (EvToolbar *ev_toolbar);
 void          ev_toolbar_set_mode           (EvToolbar     *ev_toolbar,
