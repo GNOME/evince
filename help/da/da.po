@@ -8,15 +8,16 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: evince master\n"
-"POT-Creation-Date: 2021-05-06 10:50+0000\n"
-"PO-Revision-Date: 2021-10-16 00:00+0200\n"
-"Last-Translator: scootergrisen\n"
+"POT-Creation-Date: 2021-12-08 09:45+0000\n"
+"PO-Revision-Date: 2022-01-26 19:15+0100\n"
+"Last-Translator: Alan Mortensen <alanmortensen.am@gmail.com>\n"
 "Language-Team: Danish <dansk@dansk-gruppen.dk>\n"
 "Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 2.3\n"
 
 #. Put one translator per line, in the form NAME <EMAIL>, YEAR1, YEAR2
 msgctxt "_"
@@ -932,13 +933,40 @@ msgstr ""
 
 #. (itstool) path: page/p
 #: C/opening.page:47
-#| msgid "If a <app>Document Viewer</app> window is already open you can:"
 msgid "If an empty <app>Document Viewer</app> window is already open you can:"
-msgstr ""
-"Hvis et tomt <app>Dokumentfremviser</app> allerede er åbent, kan du:"
+msgstr "Hvis et tomt <app>Dokumentfremviser</app> allerede er åbent, kan du:"
 
 #. (itstool) path: item/p
-#: C/opening.page:51 C/opening.page:66
+#: C/opening.page:51
+msgid ""
+"Drag a file into the window from <app>Files</app>. The new file will open in "
+"the same window."
+msgstr ""
+"Træk en fil ind i vinduet fra <app>Filer</app>. Den nye fil åbner i det "
+"samme vindue."
+
+#. (itstool) path: item/p
+#: C/opening.page:55
+msgid ""
+"Press the <gui>Open…</gui> button in the top-left corner of the window. In "
+"the <gui>Open Document</gui> dialog, choose the file which you wish to open, "
+"and click <gui>Open</gui>. The file will open in the same window."
+msgstr ""
+"Trykke på knappen <gui>Åbn …</gui> i øverste venstre hjørne af vinduet. I "
+"dialogen <gui>Åbn dokument</gui> skal du vælge den fil, som du vil åbne, og "
+"klikke på <gui>Åbn</gui>. Filen åbnes i det samme vindue."
+
+#. (itstool) path: page/p
+#: C/opening.page:62
+msgid ""
+"If a document is already opened in a <app>Document Viewer</app> window you "
+"can:"
+msgstr ""
+"Hvis et dokument allerede er åbent i et <app>Dokumentfremviser</app>-vindue, "
+"kan du:"
+
+#. (itstool) path: item/p
+#: C/opening.page:66
 msgid ""
 "Drag a file into the window from <app>Files</app>. The new file will open in "
 "a new window."
@@ -947,46 +975,15 @@ msgstr ""
 "vindue."
 
 #. (itstool) path: item/p
-#: C/opening.page:55
-#| msgid ""
-#| "Press the <gui>File options</gui> button in the top-right corner of the "
-#| "window, then select <gui>Open…</gui>. In the <gui>Open Document</gui> "
-#| "dialog, choose the file which you wish to open, and click <gui>Open</"
-#| "gui>. The file will open in a new window."
-msgid ""
-"Press the <gui>Open…</gui> button in the top-left corner of the window. In "
-"the <gui>Open Document</gui> dialog, choose the file which you wish to open, "
-"and click <gui>Open</gui>. The file will open in a new window."
-msgstr ""
-"Trykke på knappen <gui>Åbn …</gui> i øverste venstre hjørne af "
-"vinduet. I dialogen <gui>Åbn dokument</gui> "
-"skal du vælge den fil, som du vil åbne, og klikke på <gui>Åbn</gui>. Filen "
-"åbnes i et nyt vindue."
-
-#. (itstool) path: page/p
-#: C/opening.page:62
-#| msgid "If a <app>Document Viewer</app> window is already open you can:"
-msgid ""
-"If a document is already opened in a <app>Document Viewer</app> window you "
-"can:"
-msgstr ""
-"Hvis et dokument allerede er åbent i et <app>Dokumentfremviser</app>-vindue, kan du:"
-
-#. (itstool) path: item/p
 #: C/opening.page:70
-#| msgid ""
-#| "Press the <gui>File options</gui> button in the top-right corner of the "
-#| "window, then select <gui>Open…</gui>. In the <gui>Open Document</gui> "
-#| "dialog, choose the file which you wish to open, and click <gui>Open</"
-#| "gui>. The file will open in a new window."
 msgid ""
 "Press <keyseq><key>Ctrl</key><key>O</key></keyseq>. In the <gui>Open "
 "Document</gui> dialog, choose the file which you wish to open, and click "
 "<gui>Open</gui>. The file will open in a new window."
 msgstr ""
-"Tryk på <keyseq><key>Ctrl</key><key>O</key></keyseq>. I dialogen <gui>Åbn dokument</gui> "
-"skal du vælge den fil, som du vil åbne, og klikke på <gui>Åbn</gui>. Filen "
-"åbnes i et nyt vindue."
+"Tryk på <keyseq><key>Ctrl</key><key>O</key></keyseq>. I dialogen <gui>Åbn "
+"dokument</gui> skal du vælge den fil, som du vil åbne, og klikke på "
+"<gui>Åbn</gui>. Filen åbnes i et nyt vindue."
 
 #. (itstool) path: info/desc
 #: C/noprint.page:9
@@ -1055,7 +1052,6 @@ msgstr "Klik på <gui>Indstillinger</gui>."
 
 #. (itstool) path: item/p
 #: C/noprint.page:51
-#| msgid "Click <gui>Devices</gui> in the sidebar."
 msgid "Click <gui>Printers</gui> in the sidebar."
 msgstr "Klik på <gui>Printere</gui> i sidebjælken."
 
@@ -1071,18 +1067,13 @@ msgstr "Klik på knappen <_:media-1/> ved siden af printeren."
 
 #. (itstool) path: item/p
 #: C/noprint.page:58
-#| msgid "Select the <gui style=\"tab\">Page Handling</gui> tab."
 msgid "Select <gui style=\"menuitem\">Printing Options</gui>."
 msgstr "Vælg <gui style=\"menuitem\">Udskriftsindstillinger</gui>."
 
 #. (itstool) path: item/p
 #: C/noprint.page:61
-#| msgid ""
-#| "Click on <gui>Print Test Page</gui>. A page should be sent to your "
-#| "printer."
 msgid "Click on <gui>Test Page</gui>. A page should be sent to your printer."
-msgstr ""
-"Klik på <gui>Testside</gui>. Der sendes en side til din printer."
+msgstr "Klik på <gui>Testside</gui>. Der sendes en side til din printer."
 
 #. (itstool) path: note/p
 #: C/noprint.page:63
@@ -1119,7 +1110,8 @@ msgid ""
 "You need to have <app>dconf Editor</app> installed on your computer to "
 "change this setting."
 msgstr ""
-"Du skal have installeret <app>dconf-redigering</app> på din computer for at ændre indstillingen."
+"Du skal have installeret <app>dconf-redigering</app> på din computer for at "
+"ændre indstillingen."
 
 #. (itstool) path: if/p
 #: C/noprint.page:86
@@ -1127,37 +1119,31 @@ msgid ""
 "<link style=\"button\" action=\"install:dconf-editor\">Install <app>dconf "
 "Editor</app></link>"
 msgstr ""
-"<link style=\"button\" action=\"install:dconf-editor\">Installer <app>dconf-redigering"
-"</app></link>"
+"<link style=\"button\" action=\"install:dconf-editor\">Installer <app>dconf-"
+"redigering</app></link>"
 
 #. (itstool) path: item/p
 #: C/noprint.page:93
-#| msgid ""
-#| "Open the <gui href=\"help:gnome-help/shell-introduction#activities"
-#| "\">Activities</gui> overview and start typing <gui>Settings</gui>."
 msgid ""
 "Open the <gui href=\"help:gnome-help/shell-introduction#activities"
 "\">Activities</gui> overview and start typing <gui>dconf Editor</gui>."
 msgstr ""
 "Åbn <gui href=\"help:gnome-help/shell-introduction#activities"
-"\">Aktivitetsoversigten</gui> og begynd at skrive <gui>dconf-redigering</gui>."
+"\">Aktivitetsoversigten</gui> og begynd at skrive <gui>dconf-redigering</"
+"gui>."
 
 #. (itstool) path: item/p
 #: C/noprint.page:97
-#| msgid "Click <gui>Print</gui>."
 msgid "Click on <gui>dconf Editor</gui>."
 msgstr "Klik på <gui>dconf-redigering</gui>."
 
 #. (itstool) path: item/p
 #: C/noprint.page:100
-#| msgid "Browse to <sys>/org/gnome/evince</sys> using the side pane."
 msgid "Browse to <sys>/org/gnome/evince</sys>."
 msgstr "Naviger til <sys>/org/gnome/evince</sys>."
 
 #. (itstool) path: item/p
 #: C/noprint.page:103
-#| msgid ""
-#| "Make sure that the <gui>override_restrictions</gui> option is checked."
 msgid "Make sure that the <gui>override-restrictions</gui> option is checked."
 msgstr "Sørg for at <gui>override-restrictions</gui> er tilvalgt."
 
@@ -2324,7 +2310,6 @@ msgstr "Vælg fanebladet <gui style=\"tab\">Sidehåndtering</gui>."
 
 #. (itstool) path: item/p
 #: C/print-pagescaling.page:37
-#| msgid "Choose a <em>Paper Scaling</em> from the drop-down list."
 msgid "Choose a <em>Page Scaling</em> from the drop-down list."
 msgstr "Vælg en <em>Sideskalering</em> fra rullegardinslisten."
 
@@ -2401,7 +2386,7 @@ msgctxt "_"
 msgid ""
 "external ref='figures/annotations-nav-to-page.png' "
 "md5='c45d82e4fac0e7bc8218e5b5b8fdabce'"
-msgstr ""
+msgstr "[Anvendes ikke]"
 
 #. (itstool) path: info/desc
 #: C/duplex-10pages.page:8
@@ -2591,10 +2576,6 @@ msgstr ""
 
 #. (itstool) path: item/p
 #: C/forms-saving.page:39
-#| msgid ""
-#| "Click the <gui>File options</gui> menu in the top right corner and select "
-#| "<gui>Save as</gui> or press <keyseq><key>Ctrl</key><key>S</key></keyseq> "
-#| "on your keyboard."
 msgid ""
 "Click the <gui>File options</gui> menu in the top right corner and select "
 "<gui>Save As…</gui> or press <keyseq><key>Ctrl</key><key>S</key></keyseq> on "
@@ -2775,15 +2756,15 @@ msgstr ""
 msgid ""
 "Once you have an account, log in, and click on <gui>New issue</gui>. Before "
 "reporting a bug, please read the <link href=\"https://wiki.gnome.org/"
-"Community/GettingInTouch/Bugzilla/Guidelines\">bug writing guidelines</"
-"link>, and please <link href=\"https://gitlab.gnome.org/GNOME/evince/issues"
-"\">browse</link> for the bug to see if it already exists."
+"GettingInTouch/BugReportingGuidelines\">bug writing guidelines</link>, and "
+"please <link href=\"https://gitlab.gnome.org/GNOME/evince/issues\">browse</"
+"link> for the bug to see if it already exists."
 msgstr ""
 "Når du har en konto, så log ind og klik på <gui>New issue</gui>. Inden du "
 "rapporterer en fejl, så læs venligst <link href=\"https://wiki.gnome.org/"
-"Community/GettingInTouch/Bugzilla/Guidelines\">retningslinjer til "
+"GettingInTouch/BugReportingGuidelines\">retningslinjer til "
 "fejlrapportering</link> og <link href=\"https://gitlab.gnome.org/GNOME/"
-"evince/issues\">se</link> venligst om fejlen allerede er oprettet."
+"evince/issues\">se</link> venligst om fejlen allerede er anmeldt."
 
 #. (itstool) path: page/p
 #: C/bug-filing.page:33
@@ -2991,11 +2972,6 @@ msgstr "Navigere ved hjælp af en sideliste eller en indholdsfortegnelse"
 #. (itstool) path: section/p
 #. (itstool) path: page/p
 #: C/movingaround.page:124 C/annotations.page:30 C/bookmarks.page:34
-#| msgid ""
-#| "When you open a file, you should have a side pane on the left side of the "
-#| "window. If you do not have a visible side pane, select the <gui style="
-#| "\"button\">Side pane</gui> button in the header bar, or press <key>F9</"
-#| "key> on the keyboard."
 msgid ""
 "When you open a file, you should have a side pane on the left side of the "
 "window. If you do not have a visible side pane, click the <gui style=\"button"
@@ -3003,8 +2979,8 @@ msgid ""
 "key on the keyboard."
 msgstr ""
 "Når man åbner en fil er der en siderude i vinduets venstre side. Hvis "
-"sideruden ikke er synlig, skal du klikke på <gui style=\"button"
-"\">Siderude</gui> i øverste venstre hjørne eller trykke på <key>F9</key> på tastaturet."
+"sideruden ikke er synlig, skal du klikke på <gui style=\"button\">Siderude</"
+"gui> i øverste venstre hjørne eller trykke på <key>F9</key> på tastaturet."
 
 #. (itstool) path: section/p
 #: C/movingaround.page:128
@@ -3018,10 +2994,6 @@ msgstr "Du kan navigere mellem siderne ved at klikke på dem i sideruden."
 
 #. (itstool) path: note/p
 #: C/movingaround.page:133
-#| msgid ""
-#| "Some documents have an index or table of contents, which you can display "
-#| "in the side pane. Click the drop-down list at the top of the side pane "
-#| "and select <gui>Outline</gui> to view it."
 msgid ""
 "Some documents have an index or table of contents, which you can display in "
 "the side pane. Select the <gui>Outline</gui> button at the bottom of the "
@@ -3599,19 +3571,16 @@ msgstr ""
 
 #. (itstool) path: page/p
 #: C/annotations.page:36
-#| msgid ""
-#| "At the top of this side pane, there is a drop-down menu with options like "
-#| "<gui>Thumbnails</gui>, <gui>Outline</gui> and <gui>Annotations</gui> "
-#| "(some of which may be <em>dimmed</em> for some documents)."
 msgid ""
 "At the bottom of the side pane, the buttons <gui>Thumbnails</gui>, "
 "<gui>Outline</gui>, <gui>Annotations</gui> and <gui>Bookmarks</gui> let you "
 "choose what to display in the side pane. (Some options may not be available "
 "for some documents)."
 msgstr ""
-"Nederst i sideruden giver knapperne "
-"<gui>Miniaturer</gui>, <gui>Oversigt</gui>, <gui>Annoteringer</gui> og <gui>Bogmærker</gui> dig mulighed for at vælge, hvad der skal vises i sidepanelet (nogle "
-"indstillinger er ikke tilgængelige i visse dokumenter)."
+"Nederst i sideruden giver knapperne <gui>Miniaturer</gui>, <gui>Oversigt</"
+"gui>, <gui>Annoteringer</gui> og <gui>Bogmærker</gui> dig mulighed for at "
+"vælge, hvad der skal vises i sidepanelet (nogle indstillinger er ikke "
+"tilgængelige i visse dokumenter)."
 
 #. (itstool) path: page/p
 #: C/annotations.page:39
@@ -3731,6 +3700,12 @@ msgid ""
 msgstr ""
 "Fortsæt med fremgangsmåden for at udskrive en <link xref=\"duplex-4page\">4-"
 "siders brochure</link>."
+
+#. (itstool) path: info/title
+#: C/index.page:7
+msgctxt "link:trail"
+msgid "Evince Document Viewer"
+msgstr "Dokumentfremviseren Evince"
 
 #. (itstool) path: info/title
 #: C/index.page:8
