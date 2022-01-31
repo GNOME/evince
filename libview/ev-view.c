@@ -2183,6 +2183,23 @@ tip_from_link (EvView *view, EvLink *link)
 	return msg;
 }
 
+gboolean
+ev_view_current_event_is_type (EvView *view, GdkEventType type)
+{
+	GdkEvent *event;
+	gboolean ret = FALSE;
+
+	event = gtk_get_current_event ();
+	if (event) {
+		if (event->type == type &&
+		    gdk_event_get_window (event) == gtk_widget_get_window (GTK_WIDGET (view))) {
+			ret = TRUE;
+		}
+		gdk_event_free (event);
+	}
+	return ret;
+}
+
 static void
 ev_view_handle_cursor_over_xy (EvView *view, gint x, gint y)
 {
@@ -2222,13 +2239,11 @@ ev_view_handle_cursor_over_xy (EvView *view, gint x, gint y)
 		EvLinkDest      *dest;
 		EvLinkDestType   type;
 		GtkWidget       *popover, *spinner;
-		GdkEvent        *event;
 		cairo_surface_t *page_surface = NULL;
 		guint            link_dest_page;
 		EvPoint          link_dest_doc;
 		GdkPoint         link_dest_view;
 		gint             device_scale = 1;
-		gboolean         from_motion = FALSE;
 
 		ev_view_set_cursor (view, EV_VIEW_CURSOR_LINK);
 
@@ -2244,16 +2259,8 @@ ev_view_handle_cursor_over_xy (EvView *view, gint x, gint y)
 		if (!dest)
 			return;
 
-		event = gtk_get_current_event ();
-		if (event) {
-			if (event->type == GDK_MOTION_NOTIFY &&
-			    gdk_event_get_window (event) == gtk_widget_get_window (GTK_WIDGET (view))) {
-				from_motion = TRUE;
-			}
-			gdk_event_free (event);
-		}
 		/* Show preview popups only for motion events - Issue #1666 */
-		if (!from_motion)
+		if (!ev_view_current_event_is_type (view, GDK_MOTION_NOTIFY))
 			return;
 
 		type = ev_link_dest_get_dest_type (dest);

@@ -6636,12 +6636,88 @@ window_configure_event_cb (EvWindow *window, GdkEventConfigure *event, gpointer 
 	return FALSE;
 }
 
-static void
-launch_action (EvWindow *window, EvLinkAction *action)
+static gchar *
+get_uri (const char *filename, EvWindow *window)
 {
-	ev_window_warning_message (window,
-                                   _("Security alert: this document has been prevented from opening the file “%s”"),
-				   ev_link_action_get_filename (action));
+	EvWindowPrivate *priv = GET_PRIVATE (window);
+	gchar *ret;
+
+	if (g_path_is_absolute (filename)) {
+		ret =  g_strdup (filename);
+	} else {
+		GFile *base_file, *file;
+		gchar *dir;
+
+		dir = g_path_get_dirname (priv->uri);
+		base_file = g_file_new_for_uri (dir);
+		file = g_file_resolve_relative_path (base_file, filename);
+		ret = g_file_get_uri (file);
+
+		g_free (dir);
+		g_object_unref (base_file);
+		g_object_unref (file);
+	}
+
+	return ret;
+}
+
+static gboolean
+file_is_pdf (const char *uri)
+{
+	GFile *file;
+	GFileInfo *file_info;
+	gboolean ret = FALSE;
+
+	file = g_file_new_for_uri (uri);
+	file_info = g_file_query_info (file,
+				       G_FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE,
+				       G_FILE_QUERY_INFO_NONE, NULL, NULL);
+	if (file_info != NULL) {
+		const gchar *content_type;
+		content_type = g_file_info_get_content_type (file_info);
+		if (content_type) {
+			gchar *mime_type;
+			mime_type = g_content_type_get_mime_type (content_type);
+			if (g_ascii_strcasecmp (mime_type, "application/pdf") == 0)
+				ret = TRUE;
+			g_free (mime_type);
+		}
+		g_object_unref (file_info);
+	}
+	g_object_unref (file);
+
+	return ret;
+}
+
+static void
+launch_action (EvWindow *ev_window, EvLinkAction *action)
+{
+	EvView *view;
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
+	const char *filename = ev_link_action_get_filename (action);
+	gchar *uri;
+
+	if (filename == NULL)
+		return;
+
+	uri = get_uri (filename, ev_window);
+	view = EV_VIEW (priv->view);
+
+	if (!file_is_pdf (uri) || !ev_view_current_event_is_type (view, GDK_BUTTON_RELEASE)) {
+		ev_window_warning_message (ev_window,
+			_("Security alert: this document has been prevented from opening the file “%s”"),
+			filename);
+		return;
+	}
+	/* We are asked to open a PDF file, from a click event, proceed with that - Issue #48
+	 * This spawns new Evince process or if already opened presents its window */
+	ev_application_open_uri_at_dest (EV_APP, uri,
+					 gtk_window_get_screen (GTK_WINDOW (ev_window)),
+					 ev_link_action_get_dest (action),
+					 priv->window_mode, NULL,
+					 gtk_get_current_event_time ());
+	g_free (uri);
+
 }
 
 static void

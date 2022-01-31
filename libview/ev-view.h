@@ -191,4 +191,7 @@ EV_PUBLIC
 void           ev_view_set_caret_cursor_position    (EvView  *view,
                                                      guint    page,
                                                      guint    offset);
+EV_PUBLIC
+gboolean       ev_view_current_event_is_type        (EvView *view,
+						     GdkEventType type);
 G_END_DECLS
