@@ -276,7 +276,7 @@ typedef struct {
 #define THUMBNAILS_SIDEBAR_ICON "view-grid-symbolic"
 #define ATTACHMENTS_SIDEBAR_ICON "mail-attachment-symbolic"
 #define LAYERS_SIDEBAR_ICON "view-paged-symbolic"
-#define ANNOTS_SIDEBAR_ICON "accessories-text-editor-symbolic"
+#define ANNOTS_SIDEBAR_ICON "annotations-text-symbolic"
 #define BOOKMARKS_SIDEBAR_ICON "user-bookmarks-symbolic"
 
 #define EV_PRINT_SETTINGS_FILE  "print-settings"
