@@ -1,5 +1,5 @@
 # Japanese messages catalogue for evince - PS/PDF viewer for GNOME
-# Copyright (C) 2005-2016, 2019-2020 THE evince's COPYRIGHT HOLDER
+# Copyright (C) 2005-2016, 2019-2020, 2022 evince's COPYRIGHT HOLDER
 # This file is distributed under the same license as the evince package.
 # Satoru SATOH <ss@gnome.gr.jp>, 2005-2006.
 # Takeshi AIHANA <takshi.aihana@gmail.com>, 2005-2009.
@@ -11,14 +11,14 @@
 # Jiro Matsuzawa <jmatsuzawa@src.gnome.org>, 2011, 2013-2016.
 # Ikuya Awashiro <ikuya@fruitsbasket.info>, 2012, 2014.
 # OKANO Takayoshi <>, 2013.
-# sicklylife <translation@sicklylife.jp>, 2019-2020.
+# sicklylife <translation@sicklylife.jp>, 2019-2020, 2022.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: evince master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
 "POT-Creation-Date: 2021-10-17 17:18+0000\n"
-"PO-Revision-Date: 2020-12-16 20:40+0900\n"
+"PO-Revision-Date: 2022-02-09 22:00+0900\n"
 "Last-Translator: sicklylife <translation@sicklylife.jp>\n"
 "Language-Team: Japanese <gnome-translation@gnome.gr.jp>\n"
 "Language: ja\n"
@@ -328,10 +328,8 @@ msgstr ""
 "トスクリプト;ドキュメント;文書;プレゼンテーション;ビューアー;"
 
 #: data/org.gnome.Evince.desktop.in.in:19
-#, fuzzy
-#| msgid "New _Window"
 msgid "New Window"
-msgstr "新しいウィンドウ(_W)"
+msgstr "新しいウィンドウ"
 
 #: data/org.gnome.Evince.gschema.xml:14
 msgid "Override document restrictions"
@@ -591,11 +589,8 @@ msgstr ""
 "有効にした場合、各ページはドキュメントページと同じサイズの紙に印刷されます。"
 
 #: libview/ev-print-operation.c:2023
-#, fuzzy
-#| msgctxt "shortcut window"
-#| msgid "Move around a page"
 msgid "Draw border around pages"
-msgstr "移動する"
+msgstr ""
 
 #: libview/ev-print-operation.c:2025
 msgid "When enabled, a border will be drawn around each page."
@@ -835,9 +830,10 @@ msgstr "フォーマット:"
 msgid "Security:"
 msgstr "セキュリティ:"
 
+# ドキュメントがJavascriptを含んでいない場合「いいえ」と表示される。とりあえず Contains は訳さない。
 #: properties/ev-properties-view.c:75
 msgid "Contains Javascript:"
-msgstr ""
+msgstr "Javascript:"
 
 #: properties/ev-properties-view.c:76
 msgid "Paper Size:"
@@ -1045,7 +1041,7 @@ msgstr "右横書きのドキュメント"
 
 #: shell/evince-menus.ui:88
 msgid "Ro_tate ⤵"
-msgstr "⤵回転(_T)"
+msgstr "回転 ⤵(_T)"
 
 #: shell/evince-menus.ui:94
 msgid "Ni_ght Mode"
@@ -1142,22 +1138,16 @@ msgid "_Save Attachment As…"
 msgstr "名前を付けて添付ファイルを保存(_S)…"
 
 #: shell/evince-menus.ui:223
-#, fuzzy
-#| msgid "Annotation Properties…"
 msgid "Annotation _Properties…"
-msgstr "注釈のプロパティ…"
+msgstr "注釈のプロパティ(_P)…"
 
 #: shell/evince-menus.ui:228
-#, fuzzy
-#| msgid "Remove Annotation"
 msgid "R_emove Annotation"
-msgstr "注釈を削除"
+msgstr "注釈を削除(_E)"
 
 #: shell/evince-menus.ui:235
-#, fuzzy
-#| msgid "Highlight Selected Text"
 msgid "_Highlight Selected Text"
-msgstr "選択したテキストをハイライト"
+msgstr "選択したテキストをハイライト(_H)"
 
 #: shell/evince-menus.ui:248
 msgid "Navigation"
@@ -1349,15 +1339,15 @@ msgstr "レイヤー"
 
 #: shell/ev-sidebar-links.c:357
 msgid "Collapse all tree"
-msgstr ""
+msgstr "ツリーをすべて畳む"
 
 #: shell/ev-sidebar-links.c:364
 msgid "Expand all tree"
-msgstr ""
+msgstr "ツリーをすべて展開"
 
 #: shell/ev-sidebar-links.c:371
 msgid "Expand all under this element"
-msgstr ""
+msgstr "このエレメント以下をすべて展開"
 
 #. Translators: This is the title for the sidebar pane that
 #. * shows the Outline or Table of Contents of the document.
@@ -1522,14 +1512,10 @@ msgid "Printing job “%s”"
 msgstr "印刷ジョブ“%s”"
 
 #: shell/ev-window.c:3943
-#, fuzzy
-#| msgid "Document contains form fields that have been filled out. "
 msgid "Document contains form fields that have been filled out."
 msgstr "ドキュメントには内容を埋めたフォームフィールドが含まれています。"
 
 #: shell/ev-window.c:3946
-#, fuzzy
-#| msgid "Document contains new or modified annotations. "
 msgid "Document contains new or modified annotations."
 msgstr "ドキュメントには新規または変更された注釈が含まれています。"
 
@@ -1650,6 +1636,7 @@ msgstr "今後このメッセージを表示しない"
 msgid ""
 "Security alert: this document has been prevented from opening the file “%s”"
 msgstr ""
+"セキュリティ警告: “%s”からこのドキュメントを開けませんでした"
 
 #: shell/ev-window.c:6689
 msgid "Unable to open external link"
@@ -2049,11 +2036,10 @@ msgstr "タッチパッドジェスチャー"
 msgid "GNOME Document Viewer"
 msgstr "GNOME ドキュメントビューアー"
 
+# コマンドラインオプションの説明なので . を訳す必要なし
 #: shell/main.c:72
-#, fuzzy
-#| msgid "Open in New _Window"
 msgid "Open a new window."
-msgstr "新しいウィンドウで開く(_W)"
+msgstr "新しいウィンドウを開く"
 
 #: shell/main.c:73
 msgid "The page label of the document to display."
