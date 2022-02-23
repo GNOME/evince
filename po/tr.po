@@ -10,14 +10,14 @@
 # Gökhan Gurbetoğlu <ggurbet@gmail.com>, 2013, 2014.
 # Muhammet Kara <muhammetk@gmail.com>, 2011, 2012, 2014, 2015, 2016, 2017.
 # Sabri Ünal <libreajans@gmail.com>, 2014, 2019.
-# Emin Tufan Çetin <etcetin@gmail.com>, 2016-2021.
+# Emin Tufan Çetin <etcetin@gmail.com>, 2016-2022.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: evince\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
-"POT-Creation-Date: 2021-07-22 17:57+0000\n"
-"PO-Revision-Date: 2021-08-06 23:32+0300\n"
+"POT-Creation-Date: 2022-01-08 03:11+0000\n"
+"PO-Revision-Date: 2022-02-23 12:19+0300\n"
 "Last-Translator: Emin Tufan Çetin <etcetin@gmail.com>\n"
 "Language-Team: Turkish <gnome-turk@gnome.org>\n"
 "Language: tr\n"
@@ -30,7 +30,7 @@ msgstr ""
 
 #: backend/comics/comics-document.c:163 backend/comics/comics-document.c:187
 msgid "File is corrupted"
-msgstr "Dosya bozulmuş"
+msgstr "Dosya bozuk"
 
 #: backend/comics/comics-document.c:228
 msgid "Archive is encrypted"
@@ -72,7 +72,7 @@ msgstr "Çizgi romanları (comic books) görüntüleme desteği ekler"
 
 #: backend/djvu/djvu-document.c:179
 msgid "DjVu document has incorrect format"
-msgstr "DjVu belgesi geçersiz bir biçime sahip"
+msgstr "DjVu belgesi geçersiz biçimde"
 
 #: backend/djvu/djvu-document.c:266
 msgid ""
@@ -93,7 +93,7 @@ msgstr "DjVu belgelerini görüntüleme desteği ekler"
 
 #: backend/dvi/dvi-document.c:110
 msgid "DVI document has incorrect format"
-msgstr "DVI belgesi geçersiz biçime sahip"
+msgstr "DVI belgesi geçersiz biçimde"
 
 #: backend/dvi/dvidocument.evince-backend.desktop.in.in:4
 #: backend/dvi/evince-dvidocument.metainfo.xml.in.in:5
@@ -113,70 +113,66 @@ msgstr "PDF Belgeleri"
 msgid "Adds support for reading PDF Documents"
 msgstr "PDF belgelerini görüntüleme desteği ekler"
 
-#: backend/pdf/ev-poppler.c:907
-msgid "This work is in the Public Domain"
-msgstr "Bu çalışma Kamu Malıdır"
-
 #. translators: this is the document security state
-#: backend/pdf/ev-poppler.c:1179 backend/pdf/ev-poppler.c:1185
+#: backend/pdf/ev-poppler.c:731 backend/pdf/ev-poppler.c:737
 #: properties/ev-properties-view.c:433
 msgid "Yes"
 msgstr "Evet"
 
 #. translators: this is the document security state
-#: backend/pdf/ev-poppler.c:1182 backend/pdf/ev-poppler.c:1185
+#: backend/pdf/ev-poppler.c:734 backend/pdf/ev-poppler.c:737
 #: properties/ev-properties-view.c:435
 msgid "No"
 msgstr "Hayır"
 
-#: backend/pdf/ev-poppler.c:1323
+#: backend/pdf/ev-poppler.c:879
 msgid "Type 1"
 msgstr "Tür 1"
 
-#: backend/pdf/ev-poppler.c:1325
+#: backend/pdf/ev-poppler.c:881
 msgid "Type 1C"
 msgstr "Tür 1C"
 
-#: backend/pdf/ev-poppler.c:1327
+#: backend/pdf/ev-poppler.c:883
 msgid "Type 3"
 msgstr "Tür 3"
 
-#: backend/pdf/ev-poppler.c:1329
+#: backend/pdf/ev-poppler.c:885
 msgid "TrueType"
 msgstr "TrueType"
 
-#: backend/pdf/ev-poppler.c:1331
+#: backend/pdf/ev-poppler.c:887
 msgid "Type 1 (CID)"
 msgstr "Tür 1 (CID)"
 
-#: backend/pdf/ev-poppler.c:1333
+#: backend/pdf/ev-poppler.c:889
 msgid "Type 1C (CID)"
 msgstr "Tür 1C (CID)"
 
-#: backend/pdf/ev-poppler.c:1335
+#: backend/pdf/ev-poppler.c:891
 msgid "TrueType (CID)"
 msgstr "TrueType (CID)"
 
-#: backend/pdf/ev-poppler.c:1337
+#: backend/pdf/ev-poppler.c:893
 msgid "Unknown font type"
 msgstr "Bilinmeyen yazı tipi türü"
 
-#: backend/pdf/ev-poppler.c:1381
+#: backend/pdf/ev-poppler.c:937
 msgid ""
 "This document contains non-embedded fonts that are not from the PDF Standard "
 "14 fonts. If the substitute fonts selected by fontconfig are not the same as "
 "the fonts used to create the PDF, the rendering may not be correct."
 msgstr ""
-"Bu belgede gömülü olmayan ve Standart 14 PDF yazı tiplerinden farklı yazı "
+"Bu belgede gömülü olmayan ve Standart 14 PDF yazı tiplerinden başka yazı "
 "tipleri bulunuyor. Eğer fontconfig tarafından seçilen yedek yazı tipleri "
-"PDF’yi oluşturmak için kullanılan yazı tipleriyle aynı değilse, belge doğru "
-"görüntülenemeyebilir."
+"PDF’yi oluşturmak için kullanılan yazı tipleriyle aynı değilse belge doğru "
+"canlandırılamayabilir."
 
-#: backend/pdf/ev-poppler.c:1386
+#: backend/pdf/ev-poppler.c:942
 msgid "All fonts are either standard or embedded."
 msgstr "Tüm yazı tipleri ya standart ya da gömülü."
 
-#: backend/pdf/ev-poppler.c:1416
+#: backend/pdf/ev-poppler.c:972
 msgid "No name"
 msgstr "Adsız"
 
@@ -190,20 +186,20 @@ msgstr "Adsız"
 #. Author: None
 #. Keywords: None
 #.
-#: backend/pdf/ev-poppler.c:1425 libview/ev-print-operation.c:1991
+#: backend/pdf/ev-poppler.c:981 libview/ev-print-operation.c:1991
 #: properties/ev-properties-view.c:233
 msgid "None"
 msgstr "Hiçbiri"
 
-#: backend/pdf/ev-poppler.c:1433
+#: backend/pdf/ev-poppler.c:989
 msgid "Embedded subset"
-msgstr "Gömülü alt küme"
+msgstr "Gömülü alt takım"
 
-#: backend/pdf/ev-poppler.c:1435
+#: backend/pdf/ev-poppler.c:991
 msgid "Embedded"
 msgstr "Gömülü"
 
-#: backend/pdf/ev-poppler.c:1437
+#: backend/pdf/ev-poppler.c:993
 msgid "Not embedded"
 msgstr "Gömülü değil"
 
@@ -212,7 +208,7 @@ msgstr "Gömülü değil"
 #. * type. Example:
 #. * "Type 1 (One of the Standard 14 Fonts)"
 #.
-#: backend/pdf/ev-poppler.c:1444
+#: backend/pdf/ev-poppler.c:1000
 msgid " (One of the Standard 14 Fonts)"
 msgstr " (Standart 14 Yazı Tipinden Biri)"
 
@@ -221,7 +217,7 @@ msgstr " (Standart 14 Yazı Tipinden Biri)"
 #. * type. Example:
 #. * "TrueType (Not one of the Standard 14 Fonts)"
 #.
-#: backend/pdf/ev-poppler.c:1451
+#: backend/pdf/ev-poppler.c:1007
 msgid " (Not one of the Standard 14 Fonts)"
 msgstr " (Standart 14 Yazı Tipinden Biri Değil)"
 
@@ -235,7 +231,7 @@ msgstr " (Standart 14 Yazı Tipinden Biri Değil)"
 #. * Substituting with TeXGyreTermes-Regular
 #. * (/usr/share/textmf/.../texgyretermes-regular.otf)
 #.
-#: backend/pdf/ev-poppler.c:1470
+#: backend/pdf/ev-poppler.c:1026
 #, c-format
 msgid ""
 "%s%s\n"
@@ -247,7 +243,7 @@ msgstr ""
 "%s%s\n"
 "Kodlama: %s\n"
 "%s\n"
-"Şunun yerine koyuluyor: <b>%s</b>\n"
+"Şunun yerine konuyor: <b>%s</b>\n"
 "(%s)"
 
 #. Translators: string is a concatenation of previous
@@ -259,7 +255,7 @@ msgstr ""
 #. * Encoding: Custom
 #. * Embedded subset
 #.
-#: backend/pdf/ev-poppler.c:1488
+#: backend/pdf/ev-poppler.c:1044
 #, c-format
 msgid ""
 "%s%s\n"
@@ -298,7 +294,7 @@ msgstr "TIFF Belgeleri"
 msgid "Adds support for reading TIFF documents"
 msgstr "TIFF belgelerini görüntüleme desteği ekler"
 
-#: backend/tiff/tiff-document.c:123
+#: backend/tiff/tiff-document.c:124
 msgid "Invalid document"
 msgstr "Geçersiz belge"
 
@@ -312,8 +308,8 @@ msgid "Adds support for reading XPS documents"
 msgstr "XPS belgelerini görüntüleme desteği ekler"
 
 #. Manually set name and icon
-#: data/org.gnome.Evince.desktop.in.in:3 shell/ev-window-title.c:133
-#: shell/main.c:300
+#: data/org.gnome.Evince.desktop.in.in:3 org.gnome.Evince.appdata.xml.in:23
+#: shell/ev-window-title.c:133 shell/main.c:300
 msgid "Document Viewer"
 msgstr "Belge Görüntüleyici"
 
@@ -364,8 +360,8 @@ msgid ""
 "The maximum size that will be used to cache rendered pages, limits maximum "
 "zoom level."
 msgstr ""
-"İşlenmiş sayfaların önbelleğe alınmasında kullanılacak en yüksek boyut, en "
-"yüksek yakınlaştırma düzeyini sınırlar."
+"Canlandırılmış sayfaların önbelleğe alınmasında kullanılacak en yüksek "
+"boyut, en yüksek yakınlaştırma düzeyini sınırlar."
 
 #: data/org.gnome.Evince.gschema.xml:37
 msgid ""
@@ -381,23 +377,23 @@ msgstr "Bağlantıların yakınlaştırma düzeyini değiştirmesine izin ver."
 
 #: data/org.gnome.Evince-previewer.desktop.in.in:3
 msgid "Print Preview"
-msgstr "Baskı Önizleme"
+msgstr "Baskı Ön İizleme"
 
 #: data/org.gnome.Evince-previewer.desktop.in.in:4
 msgid "Preview before printing"
-msgstr "Yazdırmadan önce önizle"
+msgstr "Yazdırmadan önce ön izle"
 
 #: libdocument/ev-attachment.c:330 libdocument/ev-attachment.c:351
 #, c-format
 msgid "Couldn’t save attachment “%s”: %s"
 msgstr "“%s” eki kaydedilemedi: %s"
 
-#: libdocument/ev-attachment.c:400
+#: libdocument/ev-attachment.c:398
 #, c-format
 msgid "Couldn’t open attachment “%s”: %s"
 msgstr "“%s” eki açılamadı: %s"
 
-#: libdocument/ev-attachment.c:438
+#: libdocument/ev-attachment.c:437
 #, c-format
 msgid "Couldn’t open attachment “%s”"
 msgstr "“%s” eki açılamadı"
@@ -412,11 +408,11 @@ msgstr "Dosya türü %s (%s) desteklenmiyor"
 msgid "Unknown MIME Type"
 msgstr "Bilinmeyen MIME Türü"
 
-#: libdocument/ev-document-factory.c:582
+#: libdocument/ev-document-factory.c:642
 msgid "All Documents"
 msgstr "Tüm Belgeler"
 
-#: libdocument/ev-document-factory.c:609 shell/ev-utils.c:283
+#: libdocument/ev-document-factory.c:669 shell/ev-utils.c:272
 msgid "All Files"
 msgstr "Tüm Dosyalar"
 
@@ -429,6 +425,10 @@ msgstr "Geçici bir dosya oluşturma başarısız oldu: %s"
 #, c-format
 msgid "Failed to create a temporary directory: %s"
 msgstr "Geçici bir dizin oluşturma başarısız oldu: %s"
+
+#: libdocument/ev-xmp.c:350
+msgid "This work is in the Public Domain"
+msgstr "Bu çalışma Kamu Malıdır"
 
 #: libmisc/ev-page-action-widget.c:86 libmisc/ev-page-action-widget.c:125
 #, c-format
@@ -447,41 +447,46 @@ msgstr "/ %d"
 msgid "Page %s"
 msgstr "Sayfa %s"
 
-#: libmisc/ev-search-box.c:112
+#: libmisc/ev-search-box.c:113
 msgid "Not found, click to change search options"
 msgstr "Bulunamadı, arama seçeneklerini değiştirmek için tıkla"
 
-#: libmisc/ev-search-box.c:186 libmisc/ev-search-box.c:242
+#: libmisc/ev-search-box.c:187 libmisc/ev-search-box.c:243
 msgid "Search options"
 msgstr "Arama seçenekleri"
 
-#: libmisc/ev-search-box.c:318
+#: libmisc/ev-search-box.c:319
 msgid "_Whole Words Only"
 msgstr "Yalnızca _Tam Sözcükler"
 
-#: libmisc/ev-search-box.c:331
+#: libmisc/ev-search-box.c:332
 msgid "C_ase Sensitive"
 msgstr "Bü_yük/Küçük Harf Duyarlı"
 
-#: libmisc/ev-search-box.c:600
+#: libmisc/ev-search-box.c:601
 msgid "Find previous occurrence of the search string"
 msgstr "Arama dizgesinin bulunduğu bir önceki yeri bul"
 
-#: libmisc/ev-search-box.c:606
+#: libmisc/ev-search-box.c:607
 msgid "Find next occurrence of the search string"
 msgstr "Arama dizgesinin bulunduğu bir sonraki yeri bul"
 
-#: libview/ev-jobs.c:649
+#: libview/ev-jobs.c:658
+#, c-format
+msgid "Failed to render page %d: %s"
+msgstr "Sayfa %d canlandırılamadı: %s"
+
+#: libview/ev-jobs.c:665
 #, c-format
 msgid "Failed to render page %d"
-msgstr "%d sayfasını canlandırma başarısız oldu"
+msgstr "Sayfa %d canlandırılamadı"
 
-#: libview/ev-jobs.c:901
+#: libview/ev-jobs.c:918
 #, c-format
 msgid "Failed to create thumbnail for page %d"
 msgstr "%d sayfasına küçük resim oluşturma başarısız oldu"
 
-#: libview/ev-jobs.c:2033
+#: libview/ev-jobs.c:2343
 #, c-format
 msgid "Failed to print page %d: %s"
 msgstr "%d. sayfa yazdırılırken başarısız olundu: %s"
@@ -489,7 +494,7 @@ msgstr "%d. sayfa yazdırılırken başarısız olundu: %s"
 #. Initial state
 #: libview/ev-print-operation.c:350
 msgid "Preparing preview…"
-msgstr "Önizleme hazırlanıyor…"
+msgstr "Ön izleme hazırlanıyor…"
 
 #: libview/ev-print-operation.c:352 libview/ev-print-operation.c:362
 msgid "Finishing…"
@@ -498,7 +503,7 @@ msgstr "Bitiriliyor…"
 #: libview/ev-print-operation.c:354
 #, c-format
 msgid "Generating preview: page %d of %d"
-msgstr "Önizleme üretiliyor: sayfa %d / %d"
+msgstr "Ön izleme üretiliyor: sayfa %d / %d"
 
 #. Initial state
 #: libview/ev-print-operation.c:360
@@ -512,7 +517,7 @@ msgstr "Yazdırılan sayfa %d / %d…"
 
 #: libview/ev-print-operation.c:1214
 msgid "Requested format is not supported by this printer."
-msgstr "İstenen biçim bu yazıcı tarafından desteklenmiyor."
+msgstr "İstenen biçim bu yazıcıca desteklenmiyor."
 
 #: libview/ev-print-operation.c:1277
 msgid "Invalid page selection"
@@ -524,7 +529,7 @@ msgstr "Uyarı"
 
 #: libview/ev-print-operation.c:1280
 msgid "Your print range selection does not include any pages"
-msgstr "Yazdırma aralığı seçiminiz hiçbir sayfa içermiyor"
+msgstr "Yazdırma aralığı seçiminiz herhangi bir sayfa içermiyor"
 
 #. translators: Title of the print dialog
 #: libview/ev-print-operation.c:1358
@@ -556,17 +561,17 @@ msgid ""
 "• “Fit to Printable Area”: Document pages are enlarged or reduced as "
 "required to fit the printable area of the printer page.\n"
 msgstr ""
-"Belge sayfalarını, seçilen yazıcı sayfasına sığacak şekilde ölçeklendir. "
-"Aşağıdakilerden birini seçin:\n"
+"Belge sayfalarını seçilen yazıcı sayfasına sığacak biçimde ölçeklendir. "
+"Aşağıdakilerden birini seç:\n"
 "\n"
 "• “Yok”: Sayfa ölçeklendirmesi yapılmaz.\n"
 "\n"
 "• “Basılabilir Alana Küçült”: Yazdırılabilir alandan daha büyük belge "
-"sayfaları, yazıcı sayfasının yazdırılabilir alanına sığacak şekilde "
+"sayfaları, yazıcı sayfasının yazdırılabilir alanına sığacak biçimde "
 "küçültülür.\n"
 "\n"
 "• “Basılabilir Alana Sığdır”: Belge sayfaları yazıcı sayfasının "
-"yazdırılabilir alanına sığacak şekilde gerektiği kadar büyütülür ya da "
+"yazdırılabilir alanına sığacak biçimde gerektiğince büyütülür ya da "
 "küçültülür.\n"
 
 #: libview/ev-print-operation.c:2008
@@ -579,7 +584,7 @@ msgid ""
 "document page. Document pages will be centered within the printer page."
 msgstr ""
 "Her sayfanın yazıcı sayfası yönelimini, belge sayfasının yönelimine uyacak "
-"şekilde döndürür. Belge sayfaları yazıcı sayfası içinde ortalanır."
+"biçimde döndürür. Belge sayfaları yazıcı sayfası içinde ortalanır."
 
 #: libview/ev-print-operation.c:2016
 msgid "Select page size using document page size"
@@ -673,28 +678,24 @@ msgstr "%s başlat"
 msgid "Reset form"
 msgstr "Formu sıfırla"
 
-#: libview/ev-view-presentation.c:757
+#: libview/ev-view-presentation.c:739
 msgid "Jump to page:"
 msgstr "Sayfaya git:"
 
-#: libview/ev-view-presentation.c:1051
+#: libview/ev-view-presentation.c:1033
 msgid "End of presentation. Press Esc or click to exit."
 msgstr "Sunumun sonu. Çıkmak için tıklayın veya Escʼye basın."
 
-#: org.gnome.Evince.appdata.xml.in:23 shell/ev-window.c:4210
-msgid "Evince"
-msgstr "Evince"
-
 #: org.gnome.Evince.appdata.xml.in:24
 msgid "Document viewer for popular document formats"
-msgstr "Popüler belge biçimleri için belge görüntüleyici"
+msgstr "Gözde belge biçimleri için belge görüntüleyici"
 
 #: org.gnome.Evince.appdata.xml.in:26
 msgid ""
 "A document viewer for the GNOME desktop. You can view, search or annotate "
 "documents in many different formats."
 msgstr ""
-"GNOME masaüstü için belge görüntüleyici. Birçok farklı biçimdeki belgeyi "
+"GNOME masaüstü için belge görüntüleyici. Birçok değişik biçimdeki belgeyi "
 "görüntüleyebilir, arayabilir ve açımlayabilirsiniz."
 
 #: org.gnome.Evince.appdata.xml.in:27
@@ -713,21 +714,41 @@ msgstr "Temiz, basit kullanıcı arayüzü"
 msgid "Advanced highlighting and annotation"
 msgstr "Gelişmiş vurgulama ve açımlama"
 
-#: previewer/ev-previewer.c:45
+#: previewer/ev-previewer.c:56
 msgid "Delete the temporary file"
 msgstr "Geçici dosyayı sil"
 
-#: previewer/ev-previewer.c:46
+#: previewer/ev-previewer.c:58
 msgid "File specifying print settings"
 msgstr "Yazdırma ayarlarını belirten dosya"
 
-#: previewer/ev-previewer.c:46
+#: previewer/ev-previewer.c:58
 msgid "FILE"
 msgstr "DOSYA"
 
-#: previewer/ev-previewer.c:188 previewer/ev-previewer.c:222
+#: previewer/ev-previewer.c:60
+msgid "File descriptor of input file"
+msgstr "Girdi dosyasının dosya tanımlayıcısı"
+
+#: previewer/ev-previewer.c:60 previewer/ev-previewer.c:64
+msgid "FD"
+msgstr "DT"
+
+#: previewer/ev-previewer.c:62
+msgid "MIME type of input file"
+msgstr "Girdi dosyasının MIME türü"
+
+#: previewer/ev-previewer.c:62
+msgid "TYPE"
+msgstr "TÜR"
+
+#: previewer/ev-previewer.c:64
+msgid "File descriptor of print settings file"
+msgstr "Yazdırma ayarları dosyasının dosya tanımlayıcısı"
+
+#: previewer/ev-previewer.c:290 previewer/ev-previewer.c:310
 msgid "GNOME Document Previewer"
-msgstr "GNOME Belge Önizleyici"
+msgstr "GNOME Belge Ön İzleyici"
 
 #: previewer/ev-previewer-toolbar.c:112 shell/ev-toolbar.c:218
 msgid "Select page or search in the index"
@@ -737,14 +758,22 @@ msgstr "Sayfa seç ya da dizinde ara"
 msgid "Select page"
 msgstr "Sayfa seç"
 
-#: previewer/ev-previewer-window.c:79 shell/ev-window.c:3665
+#: previewer/ev-previewer-window.c:78 shell/ev-window.c:3665
 msgid "Failed to print document"
 msgstr "Belge yazdırılırken başarısız olundu"
 
-#: previewer/ev-previewer-window.c:220
+#: previewer/ev-previewer-window.c:193 previewer/ev-previewer-window.c:590
+msgid "Evince Document Viewer"
+msgstr "Evince Belge Görüntüleyici"
+
+#: previewer/ev-previewer-window.c:229
 #, c-format
 msgid "The selected printer “%s” could not be found"
 msgstr "Seçilen “%s” yazıcısı bulunamadı"
+
+#: previewer/ev-previewer-window.c:568 shell/ev-window.c:4210
+msgid "Evince"
+msgstr "Evince"
 
 #: previewer/previewer.ui:7
 msgid "_Print"
@@ -1244,7 +1273,7 @@ msgstr "_Parolayı hemen unut"
 
 #: shell/ev-password-view.c:326
 msgid "Remember password until you _log out"
-msgstr "Çıkış yapana kadar parolayı anım_sa"
+msgstr "Çıkana dek parolayı _anımsa"
 
 #: shell/ev-password-view.c:338
 msgid "Remember _forever"
@@ -1353,7 +1382,7 @@ msgstr "Bu ögedekilerin tümünü genişlet"
 msgid "Outline"
 msgstr "Ana Hat"
 
-#: shell/ev-sidebar-thumbnails.c:1047 shell/ev-window.c:7595
+#: shell/ev-sidebar-thumbnails.c:1045 shell/ev-window.c:7595
 msgid "Thumbnails"
 msgstr "Küçük Resimler"
 
@@ -1371,7 +1400,7 @@ msgstr "Aç…"
 
 #: shell/ev-toolbar.c:204
 msgid "Open an existing document"
-msgstr "Var olan bir belgeyi aç"
+msgstr "Var olan belgeyi aç"
 
 #: shell/ev-toolbar.c:211
 msgid "Side pane"
@@ -1397,7 +1426,7 @@ msgstr "Belgenin yakınlaştırma düzeyini seç ya da belirle"
 msgid "Set zoom level"
 msgstr "Yakınlaştırma düzeyini belirle"
 
-#: shell/ev-utils.c:279
+#: shell/ev-utils.c:268
 msgid "Supported Image Files"
 msgstr "Desteklenen Resim Dosyaları"
 
@@ -1523,7 +1552,7 @@ msgstr "“%s” belgesini yeniden yükle?"
 
 #: shell/ev-window.c:3960
 msgid "If you reload the document, changes will be permanently lost."
-msgstr "Eğer belgeyi yeniden yüklerseniz değişiklikler temelli yok olacak."
+msgstr "Eğer belgeyi yeniden yüklerseniz değişiklikler tümüyle yitirilecek."
 
 #: shell/ev-window.c:3962
 msgid "_No"
@@ -1532,19 +1561,19 @@ msgstr "_Hayır"
 #: shell/ev-window.c:3971
 #, c-format
 msgid "Save a copy of document “%s” before closing?"
-msgstr "Kapatmadan önce “%s” dosyasının bir kopyası kaydedilsin mi?"
+msgstr "Kapatmadan önce “%s” dosyasının kopyası kaydedilsin mi?"
 
 #: shell/ev-window.c:3973
 msgid "If you don’t save a copy, changes will be permanently lost."
-msgstr "Eğer bir kopya kaydetmezseniz, değişiklikler temelli yok olacak."
+msgstr "Eğer kopya kaydetmezseniz, değişiklikler tümüyle yitirilecek."
 
 #: shell/ev-window.c:3975
 msgid "Close _without Saving"
-msgstr "Ka_ydetmeden Kapat"
+msgstr "Kaydet_meden Kapat"
 
 #: shell/ev-window.c:3979
 msgid "Save a _Copy"
-msgstr "Bir Kopya _Kaydet"
+msgstr "_Kopya Kaydet"
 
 #: shell/ev-window.c:4061
 #, c-format
@@ -1577,8 +1606,8 @@ msgid "Close _after Printing"
 msgstr "Yazdırdıktan _Sonra Kapat"
 
 #: shell/ev-window.c:4212
-msgid "© 1996–2020 The Evince authors"
-msgstr "© 1996-2020 Evince geliştiricileri"
+msgid "© 1996–2022 The Evince document viewer authors"
+msgstr "© 1996-2022 Evince dosya görüntüleyici geliştiricileri"
 
 #: shell/ev-window.c:4215
 msgid "Evince is a simple document viewer for GNOME"
@@ -1587,9 +1616,9 @@ msgstr "Evince, GNOME için basit belge görüntüleyicidir"
 #: shell/ev-window.c:4218
 msgid "translator-credits"
 msgstr ""
-"Serdar Çiçek <serdar@nerd.com.tr>\n"
+"Emin Tufan Çetin <etcetin@gmail.com>\n"
 "Muhammet Kara <muhammetk@gmail.com>\n"
-"Emin Tufan Çetin <etcetin@gmail.com>"
+"Serdar Çiçek <serdar@nerd.com.tr>"
 
 #: shell/ev-window.c:4648
 msgid "Running in presentation mode"
@@ -1939,68 +1968,68 @@ msgstr "İkili sayfayı aç/kapat"
 
 #: shell/help-overlay.ui:320
 msgctxt "shortcut window"
+msgid "Toggle odd pages left"
+msgstr "Tek sayfalar soldayı aç/kapat"
+
+#: shell/help-overlay.ui:327
+msgctxt "shortcut window"
 msgid "Document properties"
 msgstr "Belge özellikleri"
 
-#: shell/help-overlay.ui:327
+#: shell/help-overlay.ui:334
 msgctxt "shortcut window"
 msgid "Add a post-it like note"
 msgstr "Post-it benzeri not ekle"
 
-#: shell/help-overlay.ui:334
+#: shell/help-overlay.ui:341
 msgctxt "shortcut window"
 msgid "Highlight text"
 msgstr "Metni vurgula"
 
-#: shell/help-overlay.ui:343
+#: shell/help-overlay.ui:350
 msgctxt "shortcut window"
 msgid "Finding text"
 msgstr "Metin bulma"
 
-#: shell/help-overlay.ui:347
+#: shell/help-overlay.ui:354
 msgctxt "shortcut window"
 msgid "Show the search bar"
 msgstr "Arama çubuğunu göster"
 
-#: shell/help-overlay.ui:354
+#: shell/help-overlay.ui:361
 msgctxt "shortcut window"
 msgid "Go to the next search result"
 msgstr "Sonraki arama sonucuna git"
 
-#: shell/help-overlay.ui:361
+#: shell/help-overlay.ui:368
 msgctxt "shortcut window"
 msgid "Go to the previous search result"
 msgstr "Önceki arama sonucuna git"
 
-#: shell/help-overlay.ui:370
+#: shell/help-overlay.ui:377
 msgctxt "shortcut window"
 msgid "General"
 msgstr "Genel"
 
-#: shell/help-overlay.ui:374
+#: shell/help-overlay.ui:381
 msgctxt "shortcut window"
 msgid "Show help"
 msgstr "Yardımı göster"
 
-#: shell/help-overlay.ui:381
+#: shell/help-overlay.ui:388
 msgctxt "shortcut window"
 msgid "Toggle primary menu"
 msgstr "Ana menüyü aç/kapa"
 
-#: shell/help-overlay.ui:388
+#: shell/help-overlay.ui:395
 msgctxt "shortcut window"
 msgid "Keyboard shortcuts"
 msgstr "Klavye kısayolları"
 
-#: shell/help-overlay.ui:395
+#: shell/help-overlay.ui:402
 msgctxt "shortcut window"
 msgid "Close window"
 msgstr "Pencereyi kapat"
-
-#: shell/help-overlay.ui:402
-msgctxt "shortcut window"
-msgid "Quit"
-msgstr "Çık"
 
 #: shell/help-overlay.ui:409
 msgctxt "shortcut window"
@@ -2069,7 +2098,7 @@ msgstr "Evince’i sunum kipinde çalıştır"
 
 #: shell/main.c:78
 msgid "Run evince as a previewer"
-msgstr "Evince’i önizleyici olarak çalıştır"
+msgstr "Evince’i ön izleyici olarak çalıştır"
 
 #: shell/main.c:79
 msgid "The word or phrase to find in the document"
@@ -2082,6 +2111,10 @@ msgstr "DİZGE"
 #: shell/main.c:83
 msgid "[FILE…]"
 msgstr "[DOSYA…]"
+
+#~ msgctxt "shortcut window"
+#~ msgid "Quit"
+#~ msgstr "Çık"
 
 #~ msgid "Go to the previous page"
 #~ msgstr "Önceki sayfaya git"
@@ -2220,10 +2253,6 @@ msgstr "[DOSYA…]"
 
 #~ msgid "_Save a Copy…"
 #~ msgstr "Bir Kopya _Kaydet…"
-
-#~| msgid "No files in archive"
-#~ msgid "File corrupted or no files in archive"
-#~ msgstr "Dosya bozuk veya arşivde dosya yok"
 
 #~ msgid "Print settings file"
 #~ msgstr "Ayar dosyasını yazdır"
