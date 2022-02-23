@@ -3882,7 +3882,7 @@ ev_view_cancel_add_annotation (EvView *view)
 	if (!view->adding_annot_info.adding_annot)
 		return;
 
-	if (view->adding_annot_info.annot && view->pressed_button == 1) {
+	if (view->adding_annot_info.annot && view->pressed_button == GDK_BUTTON_PRIMARY) {
 		annot_page = ev_annotation_get_page_index (view->adding_annot_info.annot);
 		ev_document_doc_mutex_lock ();
 		ev_document_annotations_remove_annotation (EV_DOCUMENT_ANNOTATIONS (view->document),
