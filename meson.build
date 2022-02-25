@@ -2,9 +2,9 @@ project(
   'evince', ['c'],
   version: '42.beta',
   license: 'GPL-2.0-or-later',
-  default_options: 'buildtype=debugoptimized',
   meson_version: '>= 0.53.0',
   default_options: [
+    'buildtype=debugoptimized',
     'libhandy:vapi=false',
     'libhandy:introspection=disabled',
     'libhandy:tests=false',
