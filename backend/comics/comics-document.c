@@ -51,7 +51,7 @@ struct _ComicsDocument
 	EvArchive     *archive;
 	gchar         *archive_path;
 	gchar         *archive_uri;
-	GPtrArray     *page_names;
+	GPtrArray     *page_names; /* elem: char * */
 };
 
 EV_BACKEND_REGISTER (ComicsDocument, comics_document)
