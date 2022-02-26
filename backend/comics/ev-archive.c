@@ -198,6 +198,15 @@ ev_archive_read_next_header (EvArchive *archive,
 	return FALSE;
 }
 
+gboolean
+ev_archive_at_entry (EvArchive *archive)
+{
+	g_return_val_if_fail (EV_IS_ARCHIVE (archive), FALSE);
+	g_return_val_if_fail (archive->type != EV_ARCHIVE_TYPE_NONE, FALSE);
+
+	return (archive->libar_entry != NULL);
+}
+
 const char *
 ev_archive_get_entry_pathname (EvArchive *archive)
 {

@@ -43,6 +43,7 @@ gboolean       ev_archive_open_filename      (EvArchive     *archive,
 					      GError       **error);
 gboolean       ev_archive_read_next_header   (EvArchive     *archive,
 					      GError       **error);
+gboolean       ev_archive_at_entry           (EvArchive     *archive);
 const char    *ev_archive_get_entry_pathname (EvArchive     *archive);
 gint64         ev_archive_get_entry_size     (EvArchive     *archive);
 gboolean       ev_archive_get_entry_is_encrypted (EvArchive *archive);
