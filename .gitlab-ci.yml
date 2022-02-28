@@ -7,10 +7,9 @@ stages:
 variables:
     BUNDLE: "org.gnome.Evince.flatpak"
 
-master:
-    image: registry.gitlab.gnome.org/gnome/evince/master-amd64:latest
+meson-main:
+    image: registry.gitlab.gnome.org/gnome/evince/x86_64-ubuntu:poppler
     stage: build
-    when: manual
 
     script:
         - >
@@ -19,6 +18,7 @@ master:
             -Dlibhandy:glade_catalog=disabled -Dlibhandy:introspection=disabled 
             _build
         - ninja -C _build all
+    allow_failure: true
 
     artifacts:
         when: on_failure
