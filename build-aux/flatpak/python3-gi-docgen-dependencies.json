@@ -1,0 +1,49 @@
+{
+    "name": "python3-gi-docgen",
+    "buildsystem": "simple",
+    "build-commands": [
+        "pip3 install --verbose --exists-action=i --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} \"gi-docgen\" --no-build-isolation"
+    ],
+    "sources": [
+        {
+            "type": "file",
+            "url": "https://files.pythonhosted.org/packages/52/c5/df7953fe6065185af5956265e3b16f13c2826c2b1ba23d43154f3af453bc/zipp-3.7.0-py3-none-any.whl",
+            "sha256": "b47250dd24f92b7dd6a0a8fc5244da14608f3ca90a5efcd37a3b1642fac9a375"
+        },
+        {
+            "type": "file",
+            "url": "https://files.pythonhosted.org/packages/da/ed/1da76d11aa858ee23dac5b52d9ac2db7df02b89f7679d5d8970bcd44b59c/smartypants-2.0.1-py2.py3-none-any.whl",
+            "sha256": "8db97f7cbdf08d15b158a86037cd9e116b4cf37703d24e0419a0d64ca5808f0d"
+        },
+        {
+            "type": "file",
+            "url": "https://files.pythonhosted.org/packages/8a/bf/64959d6187d42472acb846bcf462347c9124952c05bd57e5769d5f28f9a6/typogrify-2.0.7.tar.gz",
+            "sha256": "8be4668cda434163ce229d87ca273a11922cb1614cb359970b7dc96eed13cb38"
+        },
+        {
+            "type": "file",
+            "url": "https://files.pythonhosted.org/packages/62/0f/52c009332fdadd484e898dc8f2acca0663c1031b3517070fd34ad9c1b64e/MarkupSafe-2.1.0.tar.gz",
+            "sha256": "80beaf63ddfbc64a0452b841d8036ca0611e049650e20afcb882f5d3c266d65f"
+        },
+        {
+            "type": "file",
+            "url": "https://files.pythonhosted.org/packages/70/76/a44cce0f66f73ec6d5d8138f47a16cd3f9e57f4720bce7492d372ef5c74f/importlib_metadata-4.11.2-py3-none-any.whl",
+            "sha256": "d16e8c1deb60de41b8e8ed21c1a7b947b0bc62fab7e1d470bcdf331cea2e6735"
+        },
+        {
+            "type": "file",
+            "url": "https://files.pythonhosted.org/packages/44/6f/7120676b6d73228c96e17f1f794d8ab046fc910d781c8d151120c3f1569e/toml-0.10.2-py2.py3-none-any.whl",
+            "sha256": "806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b"
+        },
+        {
+            "type": "file",
+            "url": "https://files.pythonhosted.org/packages/20/9a/e5d9ec41927401e41aea8af6d16e78b5e612bca4699d417f646a9610a076/Jinja2-3.0.3-py3-none-any.whl",
+            "sha256": "077ce6014f7b40d03b47d1f1ca4b0fc8328a692bd284016f806ed0eaca390ad8"
+        },
+        {
+            "type": "file",
+            "url": "https://files.pythonhosted.org/packages/c1/53/aa5175b30b36e0095caeb2ea89a677d6aca9df1836b528df1682ca02fd98/gi_docgen-2022.1-py2.py3-none-any.whl",
+            "sha256": "25a13fcbe0e644e9738d583e0014b7819c5a8cecfba63d399a294a07ce290531"
+        }
+    ]
+}
