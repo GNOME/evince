@@ -209,14 +209,15 @@
             "config-opts": [
                 "-Dnautilus=false",
                 "-Dthumbnailer=false",
-                "-Dgtk_doc=false",
-                "-Dintrospection=false",
+                "-Dgtk_doc=true",
+                "-Dintrospection=true",
                 "-Duser_doc=false",
                 "-Ddevelopment=true"
             ],
             "sources": [
                 {
                     "type": "git",
+                    "branch": "main",
                     "url": "https://gitlab.gnome.org/GNOME/evince.git"
                 }
             ]
