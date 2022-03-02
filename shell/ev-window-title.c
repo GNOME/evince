@@ -103,6 +103,7 @@ ev_window_title_update (EvWindowTitle *window_title)
 	gboolean ltr;
 
         if (window_title->type == EV_WINDOW_TITLE_RECENT) {
+                hdy_header_bar_set_title (toolbar, g_get_application_name ());
                 hdy_header_bar_set_subtitle (toolbar, NULL);
                 gtk_window_set_title (window, _("Recent Documents"));
                 return;

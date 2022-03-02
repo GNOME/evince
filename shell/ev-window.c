@@ -1837,6 +1837,7 @@ ev_window_password_view_cancelled (EvWindow *ev_window)
 	if (ev_window_is_recent_view (ev_window)) {
 		ev_window_clear_load_job (ev_window);
 		ev_application_clear_uri (EV_APP);
+		ev_window_title_set_type (priv->title, EV_WINDOW_TITLE_RECENT);
 	}
 }
 
