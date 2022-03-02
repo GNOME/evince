@@ -5,7 +5,8 @@ if isA11yEnabled() is False:
 
 from time import time, sleep
 from functools import wraps
-from os import strerror, errno, system
+from os import strerror, system
+import errno
 from signal import signal, alarm, SIGALRM
 from subprocess import Popen, PIPE
 from behave import step,then
@@ -13,7 +14,7 @@ from gi.repository import GLib, Gio
 import fcntl, os
 from dogtail.rawinput import keyCombo, click, typeText, absoluteMotion, pressKey
 from dogtail.tree import root, SearchError
-from iniparse import ConfigParser
+from configparser import ConfigParser
 import traceback
 from unittest import TestCase
 import logging

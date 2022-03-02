@@ -32,7 +32,7 @@ def open_settings(context):
 @step(u'Copy test document to ~/Documents')
 def open_new_file(context):
     global srcdir
-    print srcdir+'/test-page-labels.pdf'
+    print(srcdir+'/test-page-labels.pdf')
     os.rename(srcdir+'/test-page-labels.pdf',os.environ["HOME"]+'/Documents/test-page-labels.pdf')
 
 @step(u'Remove test document from ~/Documents')
