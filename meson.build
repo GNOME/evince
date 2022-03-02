@@ -372,7 +372,7 @@ endif
 
 # *** DVI ***
 kpathsea_dep = cc.find_library('kpathsea', required: get_option('dvi'))
-enable_dvi = libspectre_dep.found() and kpathsea_dep.found() and cc.has_function('kpse_init_prog', dependencies: kpathsea_dep)
+enable_dvi = kpathsea_dep.found() and cc.has_function('kpse_init_prog', dependencies: kpathsea_dep)
 if enable_dvi
   config_h.set10('STDC_HEADERS', true)
 
@@ -395,7 +395,7 @@ if enable_dvi
   backends += {'dvi': mime_types_list.get('dvi')}
   evince_mime_types += mime_types_list.get('dvi')
 elif get_option('dvi').auto()
-  warning('Dvi support is disabled since kpathsea library or libspectre are not found. Check your installation.')
+  warning('Dvi support is disabled since kpathsea library was not found. Check your installation.')
 endif
 
 # *** PDF ***
