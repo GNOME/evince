@@ -11,7 +11,6 @@ deps = backends_deps + [
   libmdvi_dep,
   libspectre_dep,
   kpathsea_dep,
-  t1_dep,
   m_dep
 ]
 

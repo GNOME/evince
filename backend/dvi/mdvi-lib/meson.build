@@ -17,7 +17,6 @@ sources = files(
   'setup.c',
   'special.c',
   'sp-epsf.c',
-  't1.c',
   'tfm.c',
   'tfmfile.c',
   'tt.c',

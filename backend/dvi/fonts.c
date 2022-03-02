@@ -12,9 +12,6 @@ extern DviFontInfo ovf_font_info;
 #if 0
 extern DviFontInfo tt_font_info;
 #endif
-#ifdef WITH_TYPE1_FONTS
-extern DviFontInfo t1_font_info;
-#endif
 extern DviFontInfo afm_font_info;
 extern DviFontInfo tfm_font_info;
 extern DviFontInfo ofm_font_info;
@@ -28,9 +25,6 @@ static struct fontinfo {
 	{&ovf_font_info, "Omega's virtual fonts", 0},
 #if 0
 	{&tt_font_info, "TrueType fonts", 0},
-#endif
-#ifdef WITH_TYPE1_FONTS
-	{&t1_font_info, "Type1 PostScript fonts", 0},
 #endif
 	{&pk_font_info, "Packed bitmap (auto-generated)", 1},
 	{&pkn_font_info, "Packed bitmap", -2},

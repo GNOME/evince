@@ -392,10 +392,6 @@ if enable_dvi
     config_h.set('SIZEOF_' + type[1], cc.sizeof(type[0]))
   endforeach
 
-  t1_dep = cc.find_library('t1', required: get_option('t1lib'))
-  enable_t1lib = t1_dep.found() and cc.has_function('T1_InitLib', dependencies: t1_dep)
-  config_h.set('WITH_TYPE1_FONTS', enable_t1lib)
-
   backends += {'dvi': mime_types_list.get('dvi')}
   evince_mime_types += mime_types_list.get('dvi')
 elif get_option('dvi').auto()
