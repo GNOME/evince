@@ -1632,7 +1632,7 @@ ev_job_load_fd_class_init (EvJobLoadFdClass *class)
 
 /**
  * ev_job_load_fd_new:
- * @fd: (transfer none): a file descriptor
+ * @fd: a file descriptor
  * @mime_type: the mime type
  * @flags:flags from #EvDocumentLoadFlags
  * @error: (nullable): a location to store a #GError, or %NULL
@@ -1640,7 +1640,7 @@ ev_job_load_fd_class_init (EvJobLoadFdClass *class)
  * Creates a new #EvJobLoadFd for @fd. If duplicating @fd fails,
  * returns %NULL with @error filled in.
  *
- * Returns: (tranfer full): the new #EvJobLoadFd, or %NULL
+ * Returns: (transfer full): the new #EvJobLoadFd, or %NULL
  *
  * Since: 42.0
  */
@@ -1666,7 +1666,7 @@ ev_job_load_fd_new (int                 fd,
 
 /**
  * ev_job_load_new_take:
- * @fd: (transfer none): a file descriptor
+ * @fd: a file descriptor
  * @mime_type: the mime type
  * @flags:flags from #EvDocumentLoadFlags
  *
@@ -1674,7 +1674,7 @@ ev_job_load_fd_new (int                 fd,
  * Note that the job takes ownership of @fd; you must not do anything
  * with it afterwards.
  *
- * Returns: (tranfer full): the new #EvJobLoadFd
+ * Returns: (transfer full): the new #EvJobLoadFd
  *
  * Since: 42.0
  */
@@ -1696,7 +1696,7 @@ ev_job_load_fd_new_take (int                 fd,
 /**
  * ev_job_load_fd_set_fd:
  * @job: an #EvJob
- * @fd: (transfer none): a file descriptor
+ * @fd: a file descriptor
  * @error: (nullable): a location to store a #GError, or %NULL
  *
  * Sets @fd as the file descriptor in @job. If duplicating @fd fails,
@@ -1719,9 +1719,9 @@ ev_job_load_fd_set_fd (EvJobLoadFd *job,
 }
 
 /**
- * ev_job_load_fd_set_fd:
+ * ev_job_load_fd_take_fd:
  * @job: an #EvJob
- * @fd: (transfer full):
+ * @fd: a file descriptor
  *
  * Sets @fd as the file descriptor in @job.
  * Note that @job takes ownership of @fd; you must not do anything
