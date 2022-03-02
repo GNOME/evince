@@ -7,27 +7,8 @@ stages:
 variables:
     BUNDLE: "org.gnome.Evince.flatpak"
 
-meson-main:
-    image: registry.gitlab.gnome.org/gnome/evince/x86_64-ubuntu:poppler
-    stage: build
-
-    script:
-        - >
-            meson 
-            -Dlibhandy:examples=false -Dlibhandy:tests=false -Dlibhandy:vapi=false 
-            -Dlibhandy:glade_catalog=disabled -Dlibhandy:introspection=disabled 
-            _build
-        - ninja -C _build all
-    allow_failure: true
-
-    artifacts:
-        when: on_failure
-        paths:
-        - _build/meson-logs/meson-log.txt
-        expire_in: 2 days
-
 meson:
-    image: registry.gitlab.gnome.org/gnome/evince/master-amd64:latest
+    image: registry.gitlab.gnome.org/gnome/evince/x86_64-ubuntu:poppler
     stage: build
 
     script:
@@ -45,31 +26,12 @@ meson:
         expire_in: 2 days
 
 meson-internal-synctex:
-    image: registry.gitlab.gnome.org/gnome/evince/master-amd64:latest
+    image: registry.gitlab.gnome.org/gnome/evince/x86_64-ubuntu:poppler
     stage: build
 
     script:
         - meson -Dinternal_synctex=true _build
         - ninja -C _build all
-
-    artifacts:
-        when: on_failure
-        paths:
-        - _build/meson-logs/meson-log.txt
-        expire_in: 2 days
-
-meson-gtk-doc:
-    image: registry.gitlab.gnome.org/gnome/evince/master-amd64:latest
-    stage: build
-    when: manual
-
-    script:
-        - >
-            meson -Dgtk_doc=true 
-            -Dlibhandy:examples=false -Dlibhandy:tests=false -Dlibhandy:vapi=false 
-            -Dlibhandy:glade_catalog=disabled -Dlibhandy:introspection=disabled 
-            _build
-        - ninja -C _build all 
 
     artifacts:
         when: on_failure
