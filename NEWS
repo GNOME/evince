@@ -1,3 +1,181 @@
+=================
+Evince    42.beta
+=================
+
+Evince now requires libarchive >= 3.6.0 and Poppler >= 22.02.0
+
+all:
+  * Replace include guards with pragma once (Christian Persch)
+  * Remove legacy code path for Gtk < 3.22 (Qiu Wenbo)
+  * Rename default branch to main (Germán Poo-Caamaño)
+  * Align app name in metadata with .desktop name (Sophie Herold)
+
+appdata:
+  * Fix missing tag (Germán Poo-Caamaño)
+  * Use a nondeprecated SPDX license identifier (Maximiliano Sandoval R)
+
+backends:
+  * Use C99 types for uint family types (Germán Poo-Caamaño)
+  * Use symbol visibility for exported symbols (Christian Persch)
+  * dvi: replace GdkColor with GdkRGBA (Qiu Wenbo)
+  * dvi: Avoid using deprecated functions (Germán Poo-Caamaño)
+  * dvi: Remove support for T1 fonts on dvi (Germán Poo-Caamaño)
+  * comics: Add helper to get the state of the EvArchive (Bastien Nocera)
+  * comics: Document array contents (Bastien Nocera)
+  * comics: Speed up fetching page sizes (Bastien Nocera)
+  * comics: Use libarchive for RAR support (#1725, Bastien Nocera)
+  * djvu: Also load DjVu images (Bastien Nocera)
+  * djvu: Extract XMP metadata (Christian Persch)
+  * pdf: Use GdkRGBA instead of GdkColor (Qiu Wenbo)
+  * pdf: Fix dispose implementation (Christian Persch)
+  * pdf: Fix metadata parsing precedence (Christian Persch)
+  * pdf: Implement loading from file descriptor (Christian Persch)
+  * pdf: Only flag EvDocumentInfo fields when actually present (Christian Persch)
+  * pdf: Let launch action to open pdfs from click event (#1333, #48, Nelson Benítez León)
+  * tiff: Extract XMP metadata (Christian Persch)
+
+build:
+  * Fix dependency tracking (Christian Persch)
+  * Fix re-definition of default_options (Bastien Nocera)
+  * Only fail to build DVI by missing libkpathsea (Germán Poo-Caamaño)
+  * Remove cruft (Christian Persch)
+  * Require poppler 22.02.0 for PDF rendering (Germán Poo-Caamaño)
+  * Silence deprecated declarations warnings (Christian Persch)
+  * Use symbol visibility to hide symbols in private libs (Christian Persch)
+  * Use symbol visibility to hide symbols in the nautilus module (Christian Persch)
+  * Stop checking for execinfo.h (Alex Xu (Hello71))
+  * Remove incorrect args for i18n.merge_file (r-value)
+  * Fix multiple compilation warnings (Germán Poo-Caamaño)
+
+doc:
+  * Migrate to gi-docgen (Qiu Wenbo)
+
+flatpak:
+  * Add gi-docgen and its dependencies as modules (Germán Poo-Caamaño)
+  * Add libarchive 3.6.0 build (Germán Poo-Caamaño)
+  * Build introspection and API documentation (Germán Poo-Caamaño)
+  * Bump gnome-desktop version (Germán Poo-Caamaño)
+  * Bump poppler version and update build options (Germán Poo-Caamaño)
+  * Bump poppler-data version (Germán Poo-Caamaño)
+
+icons:
+  * update symbols (#1756, Jakub Steiner)
+
+libdocument:
+  * Add API to create EvDocument from file descriptor (Christian Persch)
+  * Add function to sniff MIME type from FD (Christian Persch)
+  * Add missing headers to evince-document.h (Christian Persch)
+  * Add portal helper function (Christian Persch)
+  * Deprecate GTime usage in annotation's properties (Germán Poo-Caamaño)
+  * Don't install private headers (Christian Persch)
+  * Factor out function to create GDateTime from tag (Christian Persch)
+  * Fix mismatched allocators (Christian Persch)
+  * Fix volatile misuse (Christian Persch)
+  * Make ev_attachment_launch_app use GdkDisplay (Qiu Wenbo)
+  * Make EvDocumentInfo extensible (Christian Persch)
+  * Make XMP parser take data length (Christian Persch)
+  * Move EvDocumentInfo to its own file (Christian Persch)
+  * Move GDateTime members to the extended struct (#1711, Christian Persch)
+  * Move XMP parsing from backend/pdf to libdocument (Christian Persch)
+  * Only register XML namespaces once (Christian Persch)
+  * Plug some mem leaks in the XMP parser (Christian Persch)
+  * Set EvDocumentInfo.fields_mask when parsing XMP (Christian Persch)
+  * Sort evince-document.h includes (Christian Persch)
+  * Use symbol visibility for exported symbols (Christian Persch)
+
+
+libmisc:
+  *  Update style context classes (Germán Poo-Caamaño)
+
+libview:
+  * Add EvJobLoad class to load from file descriptor (Christian Persch)
+  * Add Portal implementation of EvPrintOperationExport (Christian Persch)
+  * Bugfix: Move cursor over link handling to a separate function (#1695, Mads Chr. Olesen)
+  * Do not draw invalid surface (Marek Kasik)
+  * EvAnnotationWindow is private to libview (Christian Persch)
+  * EvPageCache is private to libview (Christian Persch)
+  * EvPixbufCache is private to libview (Christian Persch)
+  * Fix critical warnings when destroying EvPageAccessible (Christian Persch)
+  * Fix typos in annotations (Germán Poo-Caamaño)
+  * Fix volatile misuse (Christian Persch)
+  * Open annotation windows when opening the document (#1425, andreastedile)
+  * Split the unix printing impl from the export print operation (Christian Persch)
+  * Use GObject:constructed instead of constructor (Christian Persch)
+  * Use symbol visibility for exported symbols (Christian Persch)
+  * Whitespace cleanup (Christian Persch)
+  * ev-view-cursor.h private to libview (Christian Persch)
+  * Set has-tooltip property unconditionally at init (Mads Chr. Olesen)
+  * Fix cancelling ongoing highlight text annotation (#1690, Nelson Ben)
+  * Preview popups only triggered by motion events (#1666, Nelson Benítez León)
+  * New EvView signal to inform EvWindow we cancelled adding annotation (#1730, Nelson Benítez León)
+
+previewer:
+  * Allow passing the document and print settings as FDs (Christian Persch)
+  * Support dark style preference (Alexander Mikhaylenko)
+  * Try sniffing MIME type from file descriptor (Christian Persch)
+
+shell:
+  * Fix critical on startup (Christian Persch)
+  * Remove unused variables (Germán Poo-Caamaño)
+  * Reset window title when cancelling password dialog (#931, Gary Li)
+  * Update date and authors in about dialog (#1490, Germán Poo-Caamaño)
+  * Use tabular figures for zoom level and page numbers (Lukas K)
+  * Allow EvView to correctly receive focus (#704, Nelson Benítez León)
+  * Fix crash when thumbnail extraction takes too long (#965, Nelson Benítez León)
+  * Fix title color (Alexander Mikhaylenko)
+  * Support dark style preference (Alexander Mikhaylenko)
+  * Ignore areas with center outside of match (Vasily Galkin)
+  * Make icons recolorable (Alexander Mikhaylenko)
+  * Add binding for win.dual-odd-left (#1576, Leo Vivier)
+  * Add binding in help-overlay for win.dual-odd-left (Leo Vivier)
+  * Remove "Quit" from shortcuts page (Marek Kasik)
+  * Restore fallback to mime type from URI on Windows (Cédric Krier)
+  * Use GDateTime for handling document properties (Germán Poo-Caamaño)
+  * Fix translator-credits to render properly for Catalan (Ícar N.S)
+
+unarr:
+  * Use libarchive and remove obsolete unarr copy/paste (#1396, #848, Bastien Nocera)
+
+Developers:
+  * Alex Xu (Hello71), Alexander Mikhaylenko, Bastien Nocera,
+    Christian Persch, Cédric Krier, Gary Li, Germán Poo-Caamaño,
+    Jakub Steiner, Leo Vivier, Lukas K, Mads Chr. Olesen, Marek Kasik,
+    Maximiliano Sandoval R, Nelson Benítez León, Qiu Wenbo,
+    Sophie Herold, Vasily Galkin, andreastedile, r-value, Ícar N.S
+
+Translations:
+  * Asier Sarasua Garmendia (Basque)
+  * Leônidas Araújo (Brazilian Portuguese)
+  * Alexander Shopov (Bulgarian)
+  * Jordi Mas i Hernandez (Catalan)
+  * Boyuan Yang (Chinese (China))
+  * Goran Vidović (Croatian)
+  * Marek Černocký (Czech)
+  * Alan Mortensen (Danish)
+  * Ask Hjorth Larsen (Danish)
+  * Jiri Grönroos (Finnish)
+  * Fabio Tomat (Friulian)
+  * Fran Dieguez (Galician)
+  * Yaron Shahrabani (Hebrew)
+  * Yosef Or Boczko (Hebrew)
+  * Balázs Meskó (Hungarian)
+  * Sveinn í Felli (Icelandic)
+  * Kukuh Syafaat (Indonesian)
+  * Gianvito Cavasoli (Italian)
+  * sicklylife (Japanese)
+  * Rūdolfs Mazurs (Latvian)
+  * Aurimas Černius (Lithuanian)
+  * Quentin PAGÈS (Occitan)
+  * Danial Behzadi (Persian)
+  * MohammadSaleh Kamyab (Persian)
+  * Hugo Carvalho (Portuguese)
+  * Aleksandr Melman (Russian)
+  * Dušan Kazik (Slovak)
+  * Matej Urbančič (Slovenian)
+  * Daniel Mustieles (Spanish)
+  * Emin Tufan Çetin (Turkish)
+  * Yuri Chornoivan (Ukrainian)
+
 ==============
 Evince    41.2
 ==============
