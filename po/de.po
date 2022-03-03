@@ -22,7 +22,7 @@
 # Florian Heiser <postfuerflo@gmail.com>, 2016.
 # Franco Della-Monica <franco.della.monica@gmail.com>, 2016.
 # Jonas Hahnfeld <hahnjo@hahnjo.de>, 2017.
-# Tim Sabsch <tim@sabsch.com>, 2019-2020.
+# Tim Sabsch <tim@sabsch.com>, 2019-2020, 2022.
 # Mario Blättermann <mario.blaettermann@gmail.com>, 2008-2013, 2016-2018, 2021.
 # Philipp Kiemle <philipp.kiemle@gmail.com>, 2021.
 #
@@ -31,16 +31,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Evince master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
-"POT-Creation-Date: 2021-08-25 13:26+0000\n"
-"PO-Revision-Date: 2021-09-01 18:50+0200\n"
-"Last-Translator: Philipp Kiemle <philipp.kiemle@gmail.com>\n"
+"POT-Creation-Date: 2022-01-08 03:11+0000\n"
+"PO-Revision-Date: 2022-02-27 15:05+0100\n"
+"Last-Translator: Tim Sabsch <tim@sabsch.com>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.0\n"
+"X-Generator: Poedit 3.0.1\n"
 
 #: backend/comics/comics-document.c:163 backend/comics/comics-document.c:187
 msgid "File is corrupted"
@@ -127,55 +127,51 @@ msgstr "PDF-Dokumente"
 msgid "Adds support for reading PDF Documents"
 msgstr "Fügt Unterstützung für das Lesen von PDF-Dokumenten hinzu"
 
-#: backend/pdf/ev-poppler.c:907
-msgid "This work is in the Public Domain"
-msgstr "Dieses Werk ist Gemeinfrei"
-
 #. translators: this is the document security state
-#: backend/pdf/ev-poppler.c:1179 backend/pdf/ev-poppler.c:1185
+#: backend/pdf/ev-poppler.c:731 backend/pdf/ev-poppler.c:737
 #: properties/ev-properties-view.c:433
 msgid "Yes"
 msgstr "Ja"
 
 #. translators: this is the document security state
-#: backend/pdf/ev-poppler.c:1182 backend/pdf/ev-poppler.c:1185
+#: backend/pdf/ev-poppler.c:734 backend/pdf/ev-poppler.c:737
 #: properties/ev-properties-view.c:435
 msgid "No"
 msgstr "Nein"
 
-#: backend/pdf/ev-poppler.c:1323
+#: backend/pdf/ev-poppler.c:879
 msgid "Type 1"
 msgstr "Type 1"
 
-#: backend/pdf/ev-poppler.c:1325
+#: backend/pdf/ev-poppler.c:881
 msgid "Type 1C"
 msgstr "Type 1C"
 
-#: backend/pdf/ev-poppler.c:1327
+#: backend/pdf/ev-poppler.c:883
 msgid "Type 3"
 msgstr "Type 3"
 
-#: backend/pdf/ev-poppler.c:1329
+#: backend/pdf/ev-poppler.c:885
 msgid "TrueType"
 msgstr "TrueType"
 
-#: backend/pdf/ev-poppler.c:1331
+#: backend/pdf/ev-poppler.c:887
 msgid "Type 1 (CID)"
 msgstr "Type 1 (CID)"
 
-#: backend/pdf/ev-poppler.c:1333
+#: backend/pdf/ev-poppler.c:889
 msgid "Type 1C (CID)"
 msgstr "Type 1C (CID)"
 
-#: backend/pdf/ev-poppler.c:1335
+#: backend/pdf/ev-poppler.c:891
 msgid "TrueType (CID)"
 msgstr "TrueType (CID)"
 
-#: backend/pdf/ev-poppler.c:1337
+#: backend/pdf/ev-poppler.c:893
 msgid "Unknown font type"
 msgstr "Unbekannter Schrifttyp"
 
-#: backend/pdf/ev-poppler.c:1381
+#: backend/pdf/ev-poppler.c:937
 msgid ""
 "This document contains non-embedded fonts that are not from the PDF Standard "
 "14 fonts. If the substitute fonts selected by fontconfig are not the same as "
@@ -187,13 +183,13 @@ msgstr ""
 "gleichen sind wie bei der Erstellung des PDF-Dokuments, könnte die "
 "Darstellung nicht korrekt sein."
 
-#: backend/pdf/ev-poppler.c:1386
+#: backend/pdf/ev-poppler.c:942
 msgid "All fonts are either standard or embedded."
 msgstr ""
 "Alle Schriftarten sind entweder Standardschriftarten oder im Dokument "
 "eingebettet."
 
-#: backend/pdf/ev-poppler.c:1416
+#: backend/pdf/ev-poppler.c:972
 msgid "No name"
 msgstr "Kein Name"
 
@@ -207,20 +203,20 @@ msgstr "Kein Name"
 #. Author: None
 #. Keywords: None
 #.
-#: backend/pdf/ev-poppler.c:1425 libview/ev-print-operation.c:1991
+#: backend/pdf/ev-poppler.c:981 libview/ev-print-operation.c:1991
 #: properties/ev-properties-view.c:233
 msgid "None"
 msgstr "Kein"
 
-#: backend/pdf/ev-poppler.c:1433
+#: backend/pdf/ev-poppler.c:989
 msgid "Embedded subset"
 msgstr "Eingebetteter Teilsatz"
 
-#: backend/pdf/ev-poppler.c:1435
+#: backend/pdf/ev-poppler.c:991
 msgid "Embedded"
 msgstr "Eingebettet"
 
-#: backend/pdf/ev-poppler.c:1437
+#: backend/pdf/ev-poppler.c:993
 msgid "Not embedded"
 msgstr "Nicht eingebettet"
 
@@ -229,7 +225,7 @@ msgstr "Nicht eingebettet"
 #. * type. Example:
 #. * "Type 1 (One of the Standard 14 Fonts)"
 #.
-#: backend/pdf/ev-poppler.c:1444
+#: backend/pdf/ev-poppler.c:1000
 msgid " (One of the Standard 14 Fonts)"
 msgstr " (Eine der 14 Standardschriftarten)"
 
@@ -238,7 +234,7 @@ msgstr " (Eine der 14 Standardschriftarten)"
 #. * type. Example:
 #. * "TrueType (Not one of the Standard 14 Fonts)"
 #.
-#: backend/pdf/ev-poppler.c:1451
+#: backend/pdf/ev-poppler.c:1007
 msgid " (Not one of the Standard 14 Fonts)"
 msgstr " (Keine Standardschriftart)"
 
@@ -252,7 +248,7 @@ msgstr " (Keine Standardschriftart)"
 #. * Substituting with TeXGyreTermes-Regular
 #. * (/usr/share/textmf/.../texgyretermes-regular.otf)
 #.
-#: backend/pdf/ev-poppler.c:1470
+#: backend/pdf/ev-poppler.c:1026
 #, c-format
 msgid ""
 "%s%s\n"
@@ -276,7 +272,7 @@ msgstr ""
 #. * Encoding: Custom
 #. * Embedded subset
 #.
-#: backend/pdf/ev-poppler.c:1488
+#: backend/pdf/ev-poppler.c:1044
 #, c-format
 msgid ""
 "%s%s\n"
@@ -315,7 +311,7 @@ msgstr "TIFF-Dokumente"
 msgid "Adds support for reading TIFF documents"
 msgstr "Fügt Unterstützung für das Lesen von TIFF-Dokumenten hinzu"
 
-#: backend/tiff/tiff-document.c:123
+#: backend/tiff/tiff-document.c:124
 msgid "Invalid document"
 msgstr "Ungültiges Dokument"
 
@@ -329,8 +325,8 @@ msgid "Adds support for reading XPS documents"
 msgstr "Fügt Unterstützung für das Lesen von XPS-Dokumenten hinzu"
 
 #. Manually set name and icon
-#: data/org.gnome.Evince.desktop.in.in:3 shell/ev-window-title.c:133
-#: shell/main.c:300
+#: data/org.gnome.Evince.desktop.in.in:3 org.gnome.Evince.appdata.xml.in:23
+#: shell/ev-window-title.c:133 shell/main.c:300
 msgid "Document Viewer"
 msgstr "Dokumentenbetrachter"
 
@@ -417,12 +413,12 @@ msgstr "Vorschau auf das Dokument vor dem Druck"
 msgid "Couldn’t save attachment “%s”: %s"
 msgstr "Anlage »%s« konnte nicht gespeichert werden: %s"
 
-#: libdocument/ev-attachment.c:400
+#: libdocument/ev-attachment.c:398
 #, c-format
 msgid "Couldn’t open attachment “%s”: %s"
 msgstr "Anlage »%s« konnte nicht geöffnet werden: %s"
 
-#: libdocument/ev-attachment.c:438
+#: libdocument/ev-attachment.c:437
 #, c-format
 msgid "Couldn’t open attachment “%s”"
 msgstr "Anlage »%s« konnte nicht geöffnet werden"
@@ -437,11 +433,11 @@ msgstr "Der Dateityp %s (%s) wird nicht unterstützt"
 msgid "Unknown MIME Type"
 msgstr "Unbekannter MIME-Typ"
 
-#: libdocument/ev-document-factory.c:582
+#: libdocument/ev-document-factory.c:642
 msgid "All Documents"
 msgstr "Alle Dokumente"
 
-#: libdocument/ev-document-factory.c:609 shell/ev-utils.c:283
+#: libdocument/ev-document-factory.c:669 shell/ev-utils.c:272
 msgid "All Files"
 msgstr "Alle Dateien"
 
@@ -454,6 +450,10 @@ msgstr "Erstellung einer temporären Datei ist gescheitert: %s"
 #, c-format
 msgid "Failed to create a temporary directory: %s"
 msgstr "Erstellung eines temporären Ordners ist gescheitert: %s"
+
+#: libdocument/ev-xmp.c:350
+msgid "This work is in the Public Domain"
+msgstr "Dieses Werk ist Gemeinfrei"
 
 #: libmisc/ev-page-action-widget.c:86 libmisc/ev-page-action-widget.c:125
 #, c-format
@@ -472,41 +472,46 @@ msgstr "von %d"
 msgid "Page %s"
 msgstr "Seite %s"
 
-#: libmisc/ev-search-box.c:112
+#: libmisc/ev-search-box.c:113
 msgid "Not found, click to change search options"
 msgstr "Nicht gefunden, klicken Sie um die Suchoptionen zu ändern"
 
-#: libmisc/ev-search-box.c:186 libmisc/ev-search-box.c:242
+#: libmisc/ev-search-box.c:187 libmisc/ev-search-box.c:243
 msgid "Search options"
 msgstr "Suchoptionen"
 
-#: libmisc/ev-search-box.c:318
+#: libmisc/ev-search-box.c:319
 msgid "_Whole Words Only"
 msgstr "Nur ganze _Wörter"
 
-#: libmisc/ev-search-box.c:331
+#: libmisc/ev-search-box.c:332
 msgid "C_ase Sensitive"
 msgstr "Groß-/Kleinschreibung be_achten"
 
-#: libmisc/ev-search-box.c:600
+#: libmisc/ev-search-box.c:601
 msgid "Find previous occurrence of the search string"
 msgstr "Das vorherige Vorkommen dieser Zeichenkette suchen"
 
-#: libmisc/ev-search-box.c:606
+#: libmisc/ev-search-box.c:607
 msgid "Find next occurrence of the search string"
 msgstr "Das nächste Vorkommen dieser Zeichenkette suchen"
 
-#: libview/ev-jobs.c:649
+#: libview/ev-jobs.c:658
+#, c-format
+msgid "Failed to render page %d: %s"
+msgstr "Fehler beim Darstellen der Seite %d: %s"
+
+#: libview/ev-jobs.c:665
 #, c-format
 msgid "Failed to render page %d"
 msgstr "Fehler beim Darstellen der Seite %d"
 
-#: libview/ev-jobs.c:901
+#: libview/ev-jobs.c:918
 #, c-format
 msgid "Failed to create thumbnail for page %d"
 msgstr "Fehler beim Erstellen eines Vorschaubildes von Seite %d"
 
-#: libview/ev-jobs.c:2033
+#: libview/ev-jobs.c:2343
 #, c-format
 msgid "Failed to print page %d: %s"
 msgstr "Fehler beim Drucken der Seite %d: %s"
@@ -696,17 +701,13 @@ msgstr "%s starten"
 msgid "Reset form"
 msgstr "Formular zurücksetzen"
 
-#: libview/ev-view-presentation.c:757
+#: libview/ev-view-presentation.c:739
 msgid "Jump to page:"
 msgstr "Zu folgender Seite gehen:"
 
-#: libview/ev-view-presentation.c:1051
+#: libview/ev-view-presentation.c:1033
 msgid "End of presentation. Press Esc or click to exit."
 msgstr "Ende der Präsentation. Klicken Sie zum Schließen oder drücken Sie Esc."
-
-#: org.gnome.Evince.appdata.xml.in:23 shell/ev-window.c:4210
-msgid "Evince"
-msgstr "Evince"
 
 #: org.gnome.Evince.appdata.xml.in:24
 msgid "Document viewer for popular document formats"
@@ -737,19 +738,40 @@ msgstr "Eine klare, einfache Benutzeroberfläche"
 msgid "Advanced highlighting and annotation"
 msgstr "Fortgeschrittene Hervorhebung und Anmerkungen"
 
-#: previewer/ev-previewer.c:45
+#: previewer/ev-previewer.c:56
 msgid "Delete the temporary file"
 msgstr "Temporäre Datei löschen"
 
-#: previewer/ev-previewer.c:46
+#: previewer/ev-previewer.c:58
 msgid "File specifying print settings"
 msgstr "Datei mit Druckeinstellungen"
 
-#: previewer/ev-previewer.c:46
+#: previewer/ev-previewer.c:58
 msgid "FILE"
 msgstr "DATEI"
 
-#: previewer/ev-previewer.c:188 previewer/ev-previewer.c:222
+#: previewer/ev-previewer.c:60
+msgid "File descriptor of input file"
+msgstr "Dateideskriptor der Eingabedatei"
+
+# Abk. von File Descriptor
+#: previewer/ev-previewer.c:60 previewer/ev-previewer.c:64
+msgid "FD"
+msgstr "DD"
+
+#: previewer/ev-previewer.c:62
+msgid "MIME type of input file"
+msgstr "MIME-Typ der Eingabedatei"
+
+#: previewer/ev-previewer.c:62
+msgid "TYPE"
+msgstr "TYP"
+
+#: previewer/ev-previewer.c:64
+msgid "File descriptor of print settings file"
+msgstr "Dateideskriptor der Datei für Druckeinstellungen"
+
+#: previewer/ev-previewer.c:290 previewer/ev-previewer.c:310
 msgid "GNOME Document Previewer"
 msgstr "GNOME-Dokumentenvorschau"
 
@@ -761,14 +783,22 @@ msgstr "Seite wählen oder im Index suchen"
 msgid "Select page"
 msgstr "Seite auswählen"
 
-#: previewer/ev-previewer-window.c:79 shell/ev-window.c:3665
+#: previewer/ev-previewer-window.c:78 shell/ev-window.c:3665
 msgid "Failed to print document"
 msgstr "Dokument konnte nicht gedruckt werden"
 
-#: previewer/ev-previewer-window.c:220
+#: previewer/ev-previewer-window.c:193 previewer/ev-previewer-window.c:590
+msgid "Evince Document Viewer"
+msgstr "Evince-Dokumentenbetrachter"
+
+#: previewer/ev-previewer-window.c:229
 #, c-format
 msgid "The selected printer “%s” could not be found"
 msgstr "Der gewählte Drucker »%s« konnte nicht gefunden werden"
+
+#: previewer/ev-previewer-window.c:568 shell/ev-window.c:4210
+msgid "Evince"
+msgstr "Evince"
 
 #: previewer/previewer.ui:7
 msgid "_Print"
@@ -1383,7 +1413,7 @@ msgstr "Alles unter diesem Element ausklappen"
 msgid "Outline"
 msgstr "Gliederung"
 
-#: shell/ev-sidebar-thumbnails.c:1047 shell/ev-window.c:7595
+#: shell/ev-sidebar-thumbnails.c:1045 shell/ev-window.c:7595
 msgid "Thumbnails"
 msgstr "Vorschaubilder"
 
@@ -1427,7 +1457,7 @@ msgstr "Vergrößerungsstufe des Dokuments wählen oder festlegen"
 msgid "Set zoom level"
 msgstr "Vergrößerungsstufe festlegen"
 
-#: shell/ev-utils.c:279
+#: shell/ev-utils.c:268
 msgid "Supported Image Files"
 msgstr "Unterstützte Bildformate"
 
@@ -1615,8 +1645,8 @@ msgid "Close _after Printing"
 msgstr "Nach dem Drucken _schließen"
 
 #: shell/ev-window.c:4212
-msgid "© 1996–2020 The Evince authors"
-msgstr "© 1996-2020 Die Evince-Autoren"
+msgid "© 1996–2022 The Evince document viewer authors"
+msgstr "© 1996-2022 Die Evince-Dokumentenbetrachter-Autoren"
 
 #: shell/ev-window.c:4215
 msgid "Evince is a simple document viewer for GNOME"
@@ -1990,68 +2020,68 @@ msgstr "Zweiseitige/einseitige Ansicht umschalten"
 
 #: shell/help-overlay.ui:320
 msgctxt "shortcut window"
+msgid "Toggle odd pages left"
+msgstr "Ungerade Seiten links/rechts umschalten"
+
+#: shell/help-overlay.ui:327
+msgctxt "shortcut window"
 msgid "Document properties"
 msgstr "Dokumenteigenschaften"
 
-#: shell/help-overlay.ui:327
+#: shell/help-overlay.ui:334
 msgctxt "shortcut window"
 msgid "Add a post-it like note"
 msgstr "Eine Post-it-ähnliche Notiz hinzufügen"
 
-#: shell/help-overlay.ui:334
+#: shell/help-overlay.ui:341
 msgctxt "shortcut window"
 msgid "Highlight text"
 msgstr "Text hervorheben"
 
-#: shell/help-overlay.ui:343
+#: shell/help-overlay.ui:350
 msgctxt "shortcut window"
 msgid "Finding text"
 msgstr "Nach Text suchen"
 
-#: shell/help-overlay.ui:347
+#: shell/help-overlay.ui:354
 msgctxt "shortcut window"
 msgid "Show the search bar"
 msgstr "Die Suchleiste anzeigen"
 
-#: shell/help-overlay.ui:354
+#: shell/help-overlay.ui:361
 msgctxt "shortcut window"
 msgid "Go to the next search result"
 msgstr "Zum nächsten Suchergebnis gehen"
 
-#: shell/help-overlay.ui:361
+#: shell/help-overlay.ui:368
 msgctxt "shortcut window"
 msgid "Go to the previous search result"
 msgstr "Zum vorherigen Suchergebnis gehen"
 
-#: shell/help-overlay.ui:370
+#: shell/help-overlay.ui:377
 msgctxt "shortcut window"
 msgid "General"
 msgstr "Allgemein"
 
-#: shell/help-overlay.ui:374
+#: shell/help-overlay.ui:381
 msgctxt "shortcut window"
 msgid "Show help"
 msgstr "Hilfe anzeigen"
 
-#: shell/help-overlay.ui:381
+#: shell/help-overlay.ui:388
 msgctxt "shortcut window"
 msgid "Toggle primary menu"
 msgstr "Primäres Menü anzeigen/ausblenden"
 
-#: shell/help-overlay.ui:388
+#: shell/help-overlay.ui:395
 msgctxt "shortcut window"
 msgid "Keyboard shortcuts"
 msgstr "Tastenkombinationen"
 
-#: shell/help-overlay.ui:395
+#: shell/help-overlay.ui:402
 msgctxt "shortcut window"
 msgid "Close window"
 msgstr "Fenster schließen"
-
-#: shell/help-overlay.ui:402
-msgctxt "shortcut window"
-msgid "Quit"
-msgstr "Beenden"
 
 #: shell/help-overlay.ui:409
 msgctxt "shortcut window"
@@ -2133,6 +2163,10 @@ msgstr "ZEICHENKETTE"
 #: shell/main.c:83
 msgid "[FILE…]"
 msgstr "[DATEI …]"
+
+#~ msgctxt "shortcut window"
+#~ msgid "Quit"
+#~ msgstr "Beenden"
 
 #~ msgid "Go to the previous page"
 #~ msgstr "Zur vorherigen Seite gehen"
