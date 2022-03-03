@@ -727,7 +727,7 @@ ev_annotation_set_rgba (EvAnnotation  *annot,
 }
 
 /**
- * ev_annotation_set_area:
+ * ev_annotation_get_area:
  * @annot: an #EvAnnotation
  * @area: (out): a #EvRectangle to be filled with the annotation area
  *

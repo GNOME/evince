@@ -702,6 +702,11 @@ EvTypeInfo *ev_backends_manager_get_document_type_info (EvDocument  *document)
         return (EvTypeInfo *) get_backend_info_for_document (document);
 }
 
+/**
+ * ev_backends_manager_get_all_types_info
+ *
+ * Returns: (transfer full) (element-type EvBackendInfo): a list of #EvBackendInfo objects
+ */
 GList *
 ev_backends_manager_get_all_types_info       (void)
 {

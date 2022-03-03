@@ -39,7 +39,6 @@ G_DEFINE_BOXED_TYPE (EvDocumentInfo, ev_document_info, ev_document_info_copy, ev
 
 /**
  * ev_document_info_new:
- * @info: a #EvDocumentInfo
  *
  * Returns: (transfer full): a new, empty #EvDocumentInfo
  */

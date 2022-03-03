@@ -163,7 +163,7 @@ ev_link_action_get_toggle_list (EvLinkAction *self)
  * ev_link_action_get_reset_fields:
  * @self: an #EvLinkAction
  *
- * Returns: (transfer none) (element-type gchar *): a list of fields to reset
+ * Returns: (transfer none) (element-type gchar*): a list of fields to reset
  */
 GList *
 ev_link_action_get_reset_fields (EvLinkAction *self)
@@ -542,6 +542,13 @@ ev_link_action_new_layers_state (GList *show_list,
 					     NULL));
 }
 
+/**
+ * ev_link_action_new_reset_form:
+ * @fields: (element-type EvLayer): a list of #EvLayer objects
+ * @exclude_fields: Whether to exclude fields or not
+ *
+ * Returns: (transfer full): a new #EvLinkAction
+ */
 EvLinkAction *
 ev_link_action_new_reset_form (GList    *reset_fields,
 			       gboolean  exclude_reset_fields)
