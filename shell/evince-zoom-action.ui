@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <template class="EvZoomAction" parent="GtkBox">
+    <property name="orientation">vertical</property>
+    <property name="tooltip-text" translatable="yes">Select or set the zoom level of the document</property>
+    <child>
+      <object class="GtkEntry" id="entry">
+        <style>
+          <class name="tnum" />
+        </style>
+        <property name="secondary-icon-name">pan-down-symbolic</property>
+        <property name="xalign">1.0</property>
+        <property name="max-width-chars">0</property>
+      </object>
+    </child>
+  </template>
+</interface>
