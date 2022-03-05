@@ -177,18 +177,18 @@ ev_properties_license_set_license (EvPropertiesLicense *properties,
 static void
 ev_properties_license_init (EvPropertiesLicense *properties)
 {
+	gtk_orientable_set_orientation (GTK_ORIENTABLE (properties),
+			GTK_ORIENTATION_VERTICAL);
 	gtk_box_set_spacing (GTK_BOX (properties), 12);
-	gtk_container_set_border_width (GTK_CONTAINER (properties), 12);
+
+	gtk_widget_set_margin_top (GTK_WIDGET (properties), 12);
+	gtk_widget_set_margin_bottom (GTK_WIDGET (properties), 12);
+	gtk_widget_set_margin_start (GTK_WIDGET (properties), 12);
+	gtk_widget_set_margin_end (GTK_WIDGET (properties), 12);
 }
 
 GtkWidget *
 ev_properties_license_new (void)
 {
-	EvPropertiesLicense *properties_license;
-
-	properties_license = g_object_new (EV_TYPE_PROPERTIES_LICENSE,
-					   "orientation", GTK_ORIENTATION_VERTICAL,
-					   NULL);
-
-	return GTK_WIDGET (properties_license);
+	return GTK_WIDGET (g_object_new (EV_TYPE_PROPERTIES_LICENSE, NULL));
 }
