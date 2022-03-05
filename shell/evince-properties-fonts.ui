@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Generated with glade 3.38.2 -->
+<interface>
+  <requires lib="gtk+" version="3.16"/>
+  <template class="EvPropertiesFonts" parent="GtkBox">
+    <property name="can-focus">False</property>
+    <property name="margin-start">12</property>
+    <property name="margin-end">12</property>
+    <property name="margin-top">12</property>
+    <property name="margin-bottom">12</property>
+    <property name="orientation">vertical</property>
+    <property name="spacing">6</property>
+    <child>
+      <object class="GtkLabel" id="fonts_summary">
+        <property name="can-focus">False</property>
+        <property name="wrap">True</property>
+        <property name="xalign">0.0</property>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="fill">False</property>
+        <property name="position">0</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkScrolledWindow">
+        <property name="can-focus">False</property>
+        <property name="shadow-type">in</property>
+        <child>
+          <object class="GtkTreeView" id="fonts_treeview">
+            <property name="can-focus">False</property>
+            <property name="hexpand">True</property>
+            <property name="vexpand">True</property>
+            <property name="headers-visible">False</property>
+            <child internal-child="selection">
+              <object class="GtkTreeSelection"/>
+            </child>
+            <child>
+              <object class="GtkTreeViewColumn" id="column">
+                <property name="title" translatable="yes">Font</property>
+                <property name="expand">True</property>
+                <child>
+                  <object class="GtkCellRendererText" id="renderer">
+                    <property name="ypad">6</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="fill">True</property>
+        <property name="position">1</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkLabel" id="fonts_progress_label">
+        <property name="can-focus">False</property>
+        <property name="xalign">0</property>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="fill">True</property>
+        <property name="position">2</property>
+      </packing>
+    </child>
+  </template>
+</interface>
