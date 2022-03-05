@@ -451,9 +451,12 @@ ev_properties_view_init (EvPropertiesView *properties)
 	properties->grid = gtk_grid_new ();
 	gtk_grid_set_column_spacing (GTK_GRID (properties->grid), 12);
 	gtk_grid_set_row_spacing (GTK_GRID (properties->grid), 6);
-	gtk_container_set_border_width (GTK_CONTAINER (properties->grid), 12);
 	gtk_box_pack_start (GTK_BOX (properties), properties->grid, TRUE, TRUE, 0);
 	gtk_widget_show (properties->grid);
+	gtk_widget_set_margin_bottom (properties->grid, 12);
+	gtk_widget_set_margin_top (properties->grid, 12);
+	gtk_widget_set_margin_start (properties->grid, 12);
+	gtk_widget_set_margin_end (properties->grid, 12);
 }
 
 void
