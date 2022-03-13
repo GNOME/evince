@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: evince master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
 "POT-Creation-Date: 2021-10-17 17:18+0000\n"
-"PO-Revision-Date: 2022-02-09 22:00+0900\n"
+"PO-Revision-Date: 2022-03-13 19:00+0900\n"
 "Last-Translator: sicklylife <translation@sicklylife.jp>\n"
 "Language-Team: Japanese <gnome-translation@gnome.gr.jp>\n"
 "Language: ja\n"
@@ -469,6 +469,11 @@ msgstr "ドキュメントの先頭に向かって検索します"
 msgid "Find next occurrence of the search string"
 msgstr "ドキュメントの最後に向かって検索します"
 
+#: libview/ev-jobs.c:658
+#, c-format
+msgid "Failed to render page %d: %s"
+msgstr "%d ページの描画に失敗しました: %s"
+
 #: libview/ev-jobs.c:649
 #, c-format
 msgid "Failed to render page %d"
@@ -724,6 +729,26 @@ msgstr "印刷設定ファイルを指定する"
 msgid "FILE"
 msgstr "FILE"
 
+#: previewer/ev-previewer.c:61
+msgid "File descriptor of input file"
+msgstr "入力ファイルのファイルディスクリプターを指定する"
+
+#: previewer/ev-previewer.c:61 previewer/ev-previewer.c:65
+msgid "FD"
+msgstr "FD"
+
+#: previewer/ev-previewer.c:63
+msgid "MIME type of input file"
+msgstr "入力ファイルの MIME タイプを指定する"
+
+#: previewer/ev-previewer.c:63
+msgid "TYPE"
+msgstr "TYPE"
+
+#: previewer/ev-previewer.c:65
+msgid "File descriptor of print settings file"
+msgstr "印刷設定ファイルのファイルディスクリプターを指定する"
+
 #: previewer/ev-previewer.c:188 previewer/ev-previewer.c:222
 msgid "GNOME Document Previewer"
 msgstr "GNOME ドキュメントプレビューアー"
@@ -739,6 +764,10 @@ msgstr "直接ページを指定します"
 #: previewer/ev-previewer-window.c:79 shell/ev-window.c:3665
 msgid "Failed to print document"
 msgstr "ドキュメントの印刷に失敗しました"
+
+#: previewer/ev-previewer-window.c:193 previewer/ev-previewer-window.c:590
+msgid "Evince Document Viewer"
+msgstr "Evince ドキュメントビューアー"
 
 #: previewer/ev-previewer-window.c:220
 #, c-format
@@ -1579,8 +1608,8 @@ msgid "Close _after Printing"
 msgstr "印刷してから閉じる(_A)"
 
 #: shell/ev-window.c:4212
-msgid "© 1996–2020 The Evince authors"
-msgstr "© 1996–2020 The Evince authors"
+msgid "© 1996–2022 The Evince document viewer authors"
+msgstr "© 1996–2022 The Evince document viewer authors"
 
 #: shell/ev-window.c:4215
 msgid "Evince is a simple document viewer for GNOME"
@@ -1946,6 +1975,11 @@ msgstr "連続ページを切り替える"
 msgctxt "shortcut window"
 msgid "Toggle dual page"
 msgstr "見開きページを切り替える"
+
+#: shell/help-overlay.ui:320
+msgctxt "shortcut window"
+msgid "Toggle odd pages left"
+msgstr "奇数ページを左にする"
 
 #: shell/help-overlay.ui:320
 msgctxt "shortcut window"
