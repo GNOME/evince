@@ -569,7 +569,6 @@ ev_window_update_actions_sensitivity (EvWindow *ev_window)
 	/* Other actions that must be disabled in recent view, in
 	 * case they have a shortcut or gesture associated
 	 */
-	ev_window_set_action_enabled (ev_window, "save-settings", !recent_view_mode);
 	ev_window_set_action_enabled (ev_window, "show-side-pane", !recent_view_mode);
 	ev_window_set_action_enabled (ev_window, "scroll-forward", !recent_view_mode);
 	ev_window_set_action_enabled (ev_window, "scroll-backwards", !recent_view_mode);
@@ -4104,6 +4103,44 @@ ev_window_check_print_queue (EvWindow *ev_window)
 	return TRUE;
 }
 
+static void
+ev_window_save_settings (EvWindow *ev_window)
+{
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
+	EvView          *ev_view = EV_VIEW (priv->view);
+	EvDocumentModel *model = priv->model;
+	GSettings       *settings = priv->default_settings;
+	EvSizingMode     sizing_mode;
+
+	g_settings_set_boolean (settings, "continuous",
+				ev_document_model_get_continuous (model));
+	g_settings_set_boolean (settings, "dual-page",
+		                ev_document_model_get_dual_page (model));
+	g_settings_set_boolean (settings, "dual-page-odd-left",
+				ev_document_model_get_dual_page_odd_pages_left (model));
+	g_settings_set_boolean (settings, "fullscreen",
+				ev_document_model_get_fullscreen (model));
+	g_settings_set_boolean (settings, "inverted-colors",
+				ev_document_model_get_inverted_colors (model));
+	sizing_mode = ev_document_model_get_sizing_mode (model);
+	g_settings_set_enum (settings, "sizing-mode", sizing_mode);
+	if (sizing_mode == EV_SIZING_FREE) {
+		gdouble zoom = ev_document_model_get_scale (model);
+
+		zoom *= 72.0 / ev_document_misc_get_widget_dpi (GTK_WIDGET (ev_window));
+		g_settings_set_double (settings, "zoom", zoom);
+	}
+	g_settings_set_boolean (settings, "show-sidebar",
+				gtk_widget_get_visible (priv->sidebar));
+	g_settings_set_int (settings, "sidebar-size",
+			    gtk_paned_get_position (GTK_PANED (priv->hpaned)));
+	g_settings_set_string (settings, "sidebar-page",
+			       ev_window_sidebar_get_current_page_id (ev_window));
+	g_settings_set_boolean (settings, "enable-spellchecking",
+				ev_view_get_enable_spellchecking (ev_view));
+	g_settings_apply (settings);
+}
+
 static gboolean
 ev_window_close (EvWindow *ev_window)
 {
@@ -4128,6 +4165,9 @@ ev_window_close (EvWindow *ev_window)
 
 	if (ev_window_check_print_queue (ev_window))
 		return FALSE;
+
+	if (!ev_window_is_recent_view (ev_window))
+		ev_window_save_settings (ev_window);
 
 	return TRUE;
 }
@@ -4975,47 +5015,6 @@ ev_window_cmd_view_enable_spellchecking (GSimpleAction *action,
 	ev_view_set_enable_spellchecking (EV_VIEW (priv->view),
 	g_variant_get_boolean (state));
 	g_simple_action_set_state (action, state);
-}
-
-static void
-ev_window_cmd_edit_save_settings (GSimpleAction *action,
-				  GVariant      *state,
-				  gpointer       user_data)
-{
-	EvWindow        *ev_window = user_data;
-	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
-	EvView          *ev_view = EV_VIEW (priv->view);
-	EvDocumentModel *model = priv->model;
-	GSettings       *settings = priv->default_settings;
-	EvSizingMode     sizing_mode;
-
-	g_settings_set_boolean (settings, "continuous",
-				ev_document_model_get_continuous (model));
-	g_settings_set_boolean (settings, "dual-page",
-        			ev_document_model_get_dual_page (model));
-	g_settings_set_boolean (settings, "dual-page-odd-left",
-				ev_document_model_get_dual_page_odd_pages_left (model));
-	g_settings_set_boolean (settings, "fullscreen",
-				ev_document_model_get_fullscreen (model));
-	g_settings_set_boolean (settings, "inverted-colors",
-				ev_document_model_get_inverted_colors (model));
-	sizing_mode = ev_document_model_get_sizing_mode (model);
-	g_settings_set_enum (settings, "sizing-mode", sizing_mode);
-	if (sizing_mode == EV_SIZING_FREE) {
-		gdouble zoom = ev_document_model_get_scale (model);
-
-		zoom *= 72.0 / ev_document_misc_get_widget_dpi (GTK_WIDGET (ev_window));
-		g_settings_set_double (settings, "zoom", zoom);
-	}
-	g_settings_set_boolean (settings, "show-sidebar",
-				gtk_widget_get_visible (priv->sidebar));
-	g_settings_set_int (settings, "sidebar-size",
-			    gtk_paned_get_position (GTK_PANED (priv->hpaned)));
-	g_settings_set_string (settings, "sidebar-page",
-			       ev_window_sidebar_get_current_page_id (ev_window));
-	g_settings_set_boolean (settings, "enable-spellchecking",
-				ev_view_get_enable_spellchecking (ev_view));
-	g_settings_apply (settings);
 }
 
 static void
@@ -6313,7 +6312,6 @@ static const GActionEntry actions[] = {
 	{ "show-properties", ev_window_cmd_file_properties },
 	{ "copy", ev_window_cmd_edit_copy },
 	{ "select-all", ev_window_cmd_edit_select_all },
-	{ "save-settings", ev_window_cmd_edit_save_settings },
 	{ "go-previous-page", ev_window_cmd_go_previous_page },
 	{ "go-next-page", ev_window_cmd_go_next_page },
 	{ "go-first-page", ev_window_cmd_go_first_page },

@@ -956,7 +956,6 @@ ev_application_startup (GApplication *gapplication)
           "win.show-properties",        "<alt>Return", NULL,
           "win.copy",                   "<Ctrl>C", "<Ctrl>Insert", NULL,
           "win.select-all",             "<Ctrl>A", NULL,
-          "win.save-settings",          "<Ctrl>T", NULL,
           "win.add-bookmark",           "<Ctrl>D", NULL,
           "win.delete-bookmark",        "<Ctrl><Shift>D", NULL,
           "win.close",                  "<Ctrl>W", NULL,
