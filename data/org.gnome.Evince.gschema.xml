@@ -46,9 +46,11 @@
   <schema id="org.gnome.Evince.Default" path="/org/gnome/evince/default/" gettext-domain="evince">
     <key name="enable-spellchecking" type="b">
       <default>true</default>
+      <summary>Check spelling when writing annotation notes or filling text forms.</summary>
     </key>
     <key name="show-sidebar" type="b">
       <default>true</default>
+      <summary>Show a side bar next to the document to help navigate the document.</summary>
     </key>
     <key name="window-ratio" type="(dd)">
       <default>(0., 0.)</default>
@@ -58,18 +60,22 @@
     </key>
     <key name="zoom" type="d">
       <default>1.</default>
+      <summary>Set the default zoom lever to display a document.</summary>
     </key>
     <key name="inverted-colors" type="b">
       <default>false</default>
     </key>
     <key name="continuous" type="b">
       <default>true</default>
+      <summary>Display the document as a continuous stream of pages instead of page at a time.</summary>
     </key>
     <key name="dual-page" type="b">
       <default>false</default>
+      <summary>Show two pages side by side.</summary>
     </key>
     <key name="dual-page-odd-left" type="b">
       <default>false</default>
+      <summary>Show the first page (odd page) on the left (when displaying two pages side by side)</summary>
     </key>
     <key name="fullscreen" type="b">
       <default>false</default>
