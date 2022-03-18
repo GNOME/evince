@@ -8,6 +8,15 @@
     <value nick="automatic" value="3"/>
   </enum>
 
+  <enum id="org.gnome.Evince.SidebarPage">
+    <value nick="Annotations" value="annotations"/>
+    <value nick="Attachments" value="attachments"/>
+    <value nick="Bookmarks" value="bookmarks"/>
+    <value nick="Layers" value="layers"/>
+    <value nick="Outline" value="links"/>
+    <value nick="Thumbnails" value="thumbnails"/>
+  </enum>
+
   <schema id="org.gnome.Evince" path="/org/gnome/evince/" gettext-domain="evince">
     <key name="override-restrictions" type="b">
       <default>true</default>
@@ -77,7 +86,7 @@
     <key name="fullscreen" type="b">
       <default>false</default>
     </key>
-    <key name="sidebar-page" type="s">
+    <key name="sidebar-page" enum="org.gnome.Evince.SidebarPage">
       <default>'links'</default>
     </key>
     <key name="sidebar-size" type="i">
