@@ -147,9 +147,6 @@ typedef struct {
 struct _EvView {
 	GtkWidget parent;
 
-	/* Container */
-	GList *children;
-
 	EvDocument *document;
 
 	/* Find */

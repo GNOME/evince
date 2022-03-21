@@ -92,8 +92,6 @@ typedef enum {
 } EvViewFindDirection;
 
 typedef struct {
-	GtkWidget  *widget;
-
 	/* View coords */
 	gint        x;
 	gint        y;
@@ -1717,6 +1715,12 @@ ev_view_get_area_from_mapping (EvView        *view,
 }
 
 static void
+ev_child_free (EvViewChild *child)
+{
+	g_slice_free (EvViewChild, child);
+}
+
+static void
 ev_view_put (EvView      *view,
 	     GtkWidget   *child_widget,
 	     gint         x,
@@ -1728,14 +1732,15 @@ ev_view_put (EvView      *view,
 
 	child = g_slice_new (EvViewChild);
 
-	child->widget = child_widget;
 	child->x = x;
 	child->y = y;
 	child->page = page;
 	child->doc_rect = *doc_rect;
 
+	g_object_set_data_full (G_OBJECT (child_widget), "ev-child",
+			child, (GDestroyNotify)ev_child_free);
+
 	gtk_widget_set_parent (child_widget, GTK_WIDGET (view));
-	view->children = g_list_append (view->children, child);
 }
 
 static void
@@ -4407,21 +4412,23 @@ ev_view_size_allocate (GtkWidget      *widget,
 	view->pending_point.x = 0;
 	view->pending_point.y = 0;
 
-	for (l = view->children; l && l->data; l = g_list_next (l)) {
+	for (GtkWidget *child = gtk_widget_get_first_child (widget);
+		child != NULL;
+		child = gtk_widget_get_next_sibling (child)) {
+		EvViewChild *data = g_object_get_data (G_OBJECT (child), "ev-child");
 		GdkRectangle view_area;
-		EvViewChild *child = (EvViewChild *)l->data;
 
-		if (!gtk_widget_get_visible (child->widget))
+		if (!data || !gtk_widget_get_visible (child))
 			continue;
 
-		_ev_view_transform_doc_rect_to_view_rect (view, child->page, &child->doc_rect, &view_area);
+		_ev_view_transform_doc_rect_to_view_rect (view, data->page, &data->doc_rect, &view_area);
 		view_area.x -= view->scroll_x;
 		view_area.y -= view->scroll_y;
 
-		gtk_widget_set_size_request (child->widget, view_area.width, view_area.height);
+		gtk_widget_set_size_request (child, view_area.width, view_area.height);
 		// TODO: this is a temporary solution to eliminate the warning
-		gtk_widget_measure (child->widget, GTK_ORIENTATION_HORIZONTAL, view_area.width, NULL, NULL, NULL, NULL);
-		gtk_widget_size_allocate (child->widget, &view_area, baseline);
+		gtk_widget_measure (child, GTK_ORIENTATION_HORIZONTAL, view_area.width, NULL, NULL, NULL, NULL);
+		gtk_widget_size_allocate (child, &view_area, baseline);
 	}
 
 	if (view->link_preview.popover)
@@ -4904,17 +4911,16 @@ static void ev_view_snapshot(GtkWidget *widget, GtkSnapshot *snapshot)
 #endif
 	}
 
-	for (GList *l = view->children; l && l->data; l = g_list_next (l)) {
-		EvViewChild *child = (EvViewChild *)l->data;
-
-		if (!gtk_widget_get_visible (child->widget))
+	for (GtkWidget *child = gtk_widget_get_first_child (widget);
+		child != NULL;
+		child = gtk_widget_get_next_sibling (child)) {
+		if (!gtk_widget_get_visible (child))
 			continue;
 
-		gtk_widget_snapshot_child (GTK_WIDGET (view), child->widget, snapshot);
+		gtk_widget_snapshot_child (GTK_WIDGET (view), child, snapshot);
 	}
 
 	gtk_snapshot_pop (snapshot);
-
 }
 
 static void
@@ -8231,7 +8237,6 @@ on_adjustment_value_changed (GtkAdjustment *adjustment,
 	GtkWidget *widget = GTK_WIDGET (view);
 	int dx = 0, dy = 0;
 	gint value;
-	GList *l;
 
 	if (!gtk_widget_get_realized (widget))
 		return;
@@ -8259,12 +8264,17 @@ on_adjustment_value_changed (GtkAdjustment *adjustment,
 		view->scroll_y = 0;
 	}
 
-	for (l = view->children; l && l->data; l = g_list_next (l)) {
-		EvViewChild *child = (EvViewChild *)l->data;
+	for (GtkWidget *child = gtk_widget_get_first_child (widget);
+		child != NULL;
+		child = gtk_widget_get_next_sibling (child)) {
+		EvViewChild *data = g_object_get_data (G_OBJECT (child), "ev-child");
 
-		child->x += dx;
-		child->y += dy;
-		if (gtk_widget_get_visible (child->widget) && gtk_widget_get_visible (widget))
+		if (!data)
+			continue;
+
+		data->x += dx;
+		data->y += dy;
+		if (gtk_widget_get_visible (child) && gtk_widget_get_visible (widget))
 			gtk_widget_queue_resize (widget);
 	}
 
