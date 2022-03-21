@@ -5591,23 +5591,167 @@ ev_view_button_press_event (GtkGestureClick	*gesture,
 		}
 			return;
 		case GDK_BUTTON_MIDDLE:
-#if 0
-			/* use root coordinates as reference point because
-			 * scrolling changes window relative coordinates */
-			view->drag_info.start.x = event->x_root;
-			view->drag_info.start.y = event->y_root;
-			view->drag_info.hadj = gtk_adjustment_get_value (view->hadjustment);
-			view->drag_info.vadj = gtk_adjustment_get_value (view->vadjustment);
-
-			ev_view_set_cursor (view, EV_VIEW_CURSOR_DRAG);
 			ev_view_set_focused_element_at_location (view, x, y);
-#endif
 			return;
 		case GDK_BUTTON_SECONDARY:
 			view->scroll_info.start_y = y;
 			ev_view_set_focused_element_at_location (view, x, y);
 			ev_view_do_popup_menu (view, x, y);
 	}
+}
+
+static gboolean
+ev_view_drag_update_momentum (EvView *view)
+{
+	int i;
+	if (!view->drag_info.in_drag)
+		return FALSE;
+
+	for (i = DRAG_HISTORY - 1; i > 0; i--) {
+		view->drag_info.buffer[i].x = view->drag_info.buffer[i-1].x;
+		view->drag_info.buffer[i].y = view->drag_info.buffer[i-1].y;
+	}
+
+	/* Momentum is a moving average of 10ms granularity over
+	 * the last 100ms with each 10ms stored in buffer.
+	 */
+
+	view->drag_info.momentum.x = (view->drag_info.buffer[DRAG_HISTORY - 1].x - view->drag_info.buffer[0].x);
+	view->drag_info.momentum.y = (view->drag_info.buffer[DRAG_HISTORY - 1].y - view->drag_info.buffer[0].y);
+
+	return TRUE;
+}
+
+static gboolean
+ev_view_scroll_drag_release (EvView *view)
+{
+	gdouble dhadj_value, dvadj_value;
+	gdouble oldhadjustment, oldvadjustment;
+	gdouble h_page_size, v_page_size;
+	gdouble h_upper, v_upper;
+	GtkAllocation allocation;
+
+	view->drag_info.momentum.x /= 1.2;
+	view->drag_info.momentum.y /= 1.2; /* Alter these constants to change "friction" */
+
+	gtk_widget_get_allocation (GTK_WIDGET (view), &allocation);
+
+	h_page_size = gtk_adjustment_get_page_size (view->hadjustment);
+	v_page_size = gtk_adjustment_get_page_size (view->vadjustment);
+
+	dhadj_value = h_page_size *
+		      (gdouble)view->drag_info.momentum.x / allocation.width;
+	dvadj_value = v_page_size *
+		      (gdouble)view->drag_info.momentum.y / allocation.height;
+
+	oldhadjustment = gtk_adjustment_get_value (view->hadjustment);
+	oldvadjustment = gtk_adjustment_get_value (view->vadjustment);
+
+	h_upper = gtk_adjustment_get_upper (view->hadjustment);
+	v_upper = gtk_adjustment_get_upper (view->vadjustment);
+
+	/* When we reach the edges, we need either to absorb some momentum and bounce by
+	 * multiplying it on -0.5 or stop scrolling by setting momentum to 0. */
+	if (((oldhadjustment + dhadj_value) > (h_upper - h_page_size)) ||
+	    ((oldhadjustment + dhadj_value) < 0))
+		view->drag_info.momentum.x = 0;
+	if (((oldvadjustment + dvadj_value) > (v_upper - v_page_size)) ||
+	    ((oldvadjustment + dvadj_value) < 0))
+		view->drag_info.momentum.y = 0;
+
+	gtk_adjustment_set_value (view->hadjustment,
+				  MIN (oldhadjustment + dhadj_value,
+				       h_upper - h_page_size));
+	gtk_adjustment_set_value (view->vadjustment,
+				  MIN (oldvadjustment + dvadj_value,
+				       v_upper - v_page_size));
+
+	if (((view->drag_info.momentum.x < 1) && (view->drag_info.momentum.x > -1)) &&
+	    ((view->drag_info.momentum.y < 1) && (view->drag_info.momentum.y > -1)))
+		return FALSE;
+	else
+		return TRUE;
+}
+
+static void
+on_middle_clicked_drag_begin (GtkGestureDrag	*self,
+			      gdouble		 start_x,
+			      gdouble		 start_y,
+			      EvView		*view)
+{
+	/* use root coordinates as reference point because
+	 * scrolling changes window relative coordinates */
+	view->drag_info.hadj = gtk_adjustment_get_value (view->hadjustment);
+	view->drag_info.vadj = gtk_adjustment_get_value (view->vadjustment);
+
+	ev_view_set_cursor (view, EV_VIEW_CURSOR_DRAG);
+
+	view->drag_info.drag_timeout_id = g_timeout_add (10,
+				(GSourceFunc)ev_view_drag_update_momentum, view);
+	/* Set 100 to choose how long it takes to build up momentum */
+	/* Clear out previous momentum info: */
+	for (int i = 0; i < DRAG_HISTORY; i++) {
+		view->drag_info.buffer[i].x = start_x;
+		view->drag_info.buffer[i].y = start_y;
+	}
+	view->drag_info.momentum.x = 0;
+	view->drag_info.momentum.y = 0;
+
+	view->drag_info.in_drag = TRUE;
+}
+
+static void
+on_middle_clicked_drag_end (GtkGestureDrag	*self,
+			    gdouble		 offset_x,
+			    gdouble		 offset_y,
+			    EvView		*view)
+{
+	view->drag_info.release_timeout_id =
+			g_timeout_add (20, (GSourceFunc)ev_view_scroll_drag_release, view);
+
+	view->drag_info.in_drag = FALSE;
+}
+
+static void
+on_middle_clicked_drag_update (GtkGestureDrag	*self,
+			       gdouble		 offset_x,
+			       gdouble		 offset_y,
+			       EvView		*view)
+{
+	GdkEvent *event = gtk_event_controller_get_current_event (GTK_EVENT_CONTROLLER (self));
+	gdouble dhadj_value, dvadj_value;
+	GtkAllocation allocation;
+
+	gtk_widget_get_allocation (GTK_WIDGET (view), &allocation);
+
+	dhadj_value = gtk_adjustment_get_page_size (view->hadjustment) *
+				      offset_x / allocation.width;
+	dvadj_value = gtk_adjustment_get_page_size (view->vadjustment) *
+				      offset_y / allocation.height;
+
+	/* We will update the drag event's start position if
+	 * the adjustment value is changed, but only if the
+	 * change was not caused by this function. */
+
+	view->drag_info.in_notify = TRUE;
+
+	/* clamp scrolling to visible area */
+	gtk_adjustment_set_value (view->hadjustment, MIN (view->drag_info.hadj - dhadj_value,
+					gtk_adjustment_get_upper (view->hadjustment) -
+					gtk_adjustment_get_page_size (view->hadjustment)));
+	gtk_adjustment_set_value (view->vadjustment, MIN (view->drag_info.vadj - dvadj_value,
+					gtk_adjustment_get_upper (view->vadjustment) -
+					gtk_adjustment_get_page_size (view->vadjustment)));
+
+	view->drag_info.in_notify = FALSE;
+
+	gdouble x, y;
+
+	gdk_event_get_axis (event, GDK_AXIS_X, &x);
+	gdk_event_get_axis (event, GDK_AXIS_Y, &y);
+
+	view->drag_info.buffer[0].x = x;
+	view->drag_info.buffer[0].y = y;
 }
 
 #if 0
@@ -5753,80 +5897,6 @@ selection_scroll_timeout_cb (EvView *view)
 	return TRUE;
 }
 
-static gboolean
-ev_view_drag_update_momentum (EvView *view)
-{
-	int i;
-	if (!view->drag_info.in_drag)
-		return FALSE;
-
-	for (i = DRAG_HISTORY - 1; i > 0; i--) {
-		view->drag_info.buffer[i].x = view->drag_info.buffer[i-1].x;
-		view->drag_info.buffer[i].y = view->drag_info.buffer[i-1].y;
-	}
-
-	/* Momentum is a moving average of 10ms granularity over
-	 * the last 100ms with each 10ms stored in buffer.
-	 */
-
-	view->drag_info.momentum.x = (view->drag_info.buffer[DRAG_HISTORY - 1].x - view->drag_info.buffer[0].x);
-	view->drag_info.momentum.y = (view->drag_info.buffer[DRAG_HISTORY - 1].y - view->drag_info.buffer[0].y);
-
-	return TRUE;
-}
-
-static gboolean
-ev_view_scroll_drag_release (EvView *view)
-{
-	gdouble dhadj_value, dvadj_value;
-	gdouble oldhadjustment, oldvadjustment;
-	gdouble h_page_size, v_page_size;
-	gdouble h_upper, v_upper;
-	GtkAllocation allocation;
-
-	view->drag_info.momentum.x /= 1.2;
-	view->drag_info.momentum.y /= 1.2; /* Alter these constants to change "friction" */
-
-	gtk_widget_get_allocation (GTK_WIDGET (view), &allocation);
-
-	h_page_size = gtk_adjustment_get_page_size (view->hadjustment);
-	v_page_size = gtk_adjustment_get_page_size (view->vadjustment);
-
-	dhadj_value = h_page_size *
-		      (gdouble)view->drag_info.momentum.x / allocation.width;
-	dvadj_value = v_page_size *
-		      (gdouble)view->drag_info.momentum.y / allocation.height;
-
-	oldhadjustment = gtk_adjustment_get_value (view->hadjustment);
-	oldvadjustment = gtk_adjustment_get_value (view->vadjustment);
-
-	h_upper = gtk_adjustment_get_upper (view->hadjustment);
-	v_upper = gtk_adjustment_get_upper (view->vadjustment);
-
-	/* When we reach the edges, we need either to absorb some momentum and bounce by
-	 * multiplying it on -0.5 or stop scrolling by setting momentum to 0. */
-	if (((oldhadjustment + dhadj_value) > (h_upper - h_page_size)) ||
-	    ((oldhadjustment + dhadj_value) < 0))
-		view->drag_info.momentum.x = 0;
-	if (((oldvadjustment + dvadj_value) > (v_upper - v_page_size)) ||
-	    ((oldvadjustment + dvadj_value) < 0))
-		view->drag_info.momentum.y = 0;
-
-	gtk_adjustment_set_value (view->hadjustment,
-				  MIN (oldhadjustment + dhadj_value,
-				       h_upper - h_page_size));
-	gtk_adjustment_set_value (view->vadjustment,
-				  MIN (oldvadjustment + dvadj_value,
-				       v_upper - v_page_size));
-
-	if (((view->drag_info.momentum.x < 1) && (view->drag_info.momentum.x > -1)) &&
-	    ((view->drag_info.momentum.y < 1) && (view->drag_info.momentum.y > -1)))
-		return FALSE;
-	else
-		return TRUE;
-}
-
-
 static void
 ev_view_motion_notify_event (GtkEventControllerMotion	*self,
 			     gdouble			 x,
@@ -5835,8 +5905,6 @@ ev_view_motion_notify_event (GtkEventControllerMotion	*self,
 {
 	EvView    *view = EV_VIEW (user_data);
 	GtkWidget *widget = GTK_WIDGET (view);
-	GdkSurface *surface = gtk_native_get_surface (gtk_widget_get_native (widget));
-	GdkEvent *event = gtk_event_controller_get_current_event (GTK_EVENT_CONTROLLER (self));
 	GdkModifierType state = gtk_event_controller_get_current_event_state (GTK_EVENT_CONTROLLER (self));
 
 	if (!view->document)
@@ -6003,65 +6071,6 @@ ev_view_motion_notify_event (GtkEventControllerMotion	*self,
 
 		return;
 	case GDK_BUTTON_MIDDLE:
-#if 0
-		if (!view->drag_info.in_drag) {
-			gboolean start;
-			int i;
-
-			start = gtk_drag_check_threshold (widget,
-							  view->drag_info.start.x,
-							  view->drag_info.start.y,
-							  event->x_root,
-							  event->y_root);
-			view->drag_info.in_drag = start;
-			view->drag_info.drag_timeout_id = g_timeout_add (10,
-				(GSourceFunc)ev_view_drag_update_momentum, view);
-			/* Set 100 to choose how long it takes to build up momentum */
-			/* Clear out previous momentum info: */
-			for (i = 0; i < DRAG_HISTORY; i++) {
-				view->drag_info.buffer[i].x = event->x;
-				view->drag_info.buffer[i].y = event->y;
-			}
-			view->drag_info.momentum.x = 0;
-			view->drag_info.momentum.y = 0;
-		}
-
-		if (view->drag_info.in_drag) {
-			int dx, dy;
-			gdouble dhadj_value, dvadj_value;
-			GtkAllocation allocation;
-
-			view->drag_info.buffer[0].x = x;
-			view->drag_info.buffer[0].y = y;
-
-			dx = event->x_root - view->drag_info.start.x;
-			dy = event->y_root - view->drag_info.start.y;
-
-			gtk_widget_get_allocation (widget, &allocation);
-
-			dhadj_value = gtk_adjustment_get_page_size (view->hadjustment) *
-				      (gdouble)dx / allocation.width;
-			dvadj_value = gtk_adjustment_get_page_size (view->vadjustment) *
-				      (gdouble)dy / allocation.height;
-
-			/* We will update the drag event's start position if
-			 * the adjustment value is changed, but only if the
-			 * change was not caused by this function. */
-			view->drag_info.in_notify = TRUE;
-
-			/* clamp scrolling to visible area */
-			gtk_adjustment_set_value (view->hadjustment,
-						  MIN (view->drag_info.hadj - dhadj_value,
-						       gtk_adjustment_get_upper (view->hadjustment) -
-						       gtk_adjustment_get_page_size (view->hadjustment)));
-			gtk_adjustment_set_value (view->vadjustment,
-						  MIN (view->drag_info.vadj - dvadj_value,
-						       gtk_adjustment_get_upper (view->vadjustment) -
-						       gtk_adjustment_get_page_size (view->vadjustment)));
-
-			view->drag_info.in_notify = FALSE;
-		}
-#endif
 		break;
 	default:
 		ev_view_handle_cursor_over_xy (view, x, y);
@@ -6209,12 +6218,6 @@ ev_view_button_release_event(GtkGestureClick		*self,
 	if (view->pressed_button == GDK_BUTTON_PRIMARY && state & GDK_CONTROL_MASK) {
 		view->pressed_button = -1;
 		return;
-	}
-
-	if (view->drag_info.in_drag) {
-		view->drag_info.release_timeout_id =
-			g_timeout_add (20,
-				       (GSourceFunc)ev_view_scroll_drag_release, view);
 	}
 
 	if (view->document && !view->drag_info.in_drag &&
@@ -8270,6 +8273,17 @@ ev_view_init (EvView *view)
 			  G_CALLBACK (zoom_gesture_scale_changed_cb), view);
 
 	gtk_widget_add_controller (widget, GTK_EVENT_CONTROLLER (view->zoom_gesture));
+
+
+	controller = GTK_EVENT_CONTROLLER (gtk_gesture_drag_new ());
+	gtk_gesture_single_set_button (GTK_GESTURE_SINGLE (controller), GDK_BUTTON_MIDDLE);
+	g_signal_connect (controller, "drag-update",
+			  G_CALLBACK (on_middle_clicked_drag_update), view);
+	g_signal_connect (controller, "drag-begin",
+			  G_CALLBACK (on_middle_clicked_drag_begin), view);
+	g_signal_connect (controller, "drag-end",
+			  G_CALLBACK (on_middle_clicked_drag_end), view);
+	gtk_widget_add_controller (widget, controller);
 }
 
 /*** Callbacks ***/
