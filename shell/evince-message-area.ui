@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <template class="EvMessageArea" parent="GtkInfoBar">
+    <property name="visible">True</property>
+    <property name="show-close-button">True</property>
+    <child internal-child="content_area">
+      <object class="GtkBox" id="main_box">
+        <property name="orientation">vertical</property>
+        <property name="spacing">12</property>
+        <property name="border-width">12</property>
+        <child>
+          <object class="GtkBox" id="hbox">
+            <property name="orientation">horizontal</property>
+            <property name="spacing">12</property>
+            <child>
+              <object class="GtkImage" id="image">
+                <property name="icon-size">6</property>
+                <property name="xalign">0.5</property>
+                <property name="yalign">0.0</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox" id="vbox">
+                <property name="orientation">vertical</property>
+                <property name="spacing">12</property>
+                <property name="hexpand">True</property>
+                <property name="vexpand">False</property>
+                <property name="halign">fill</property>
+                <child>
+                  <object class="GtkLabel" id="label">
+                    <property name="use-markup">True</property>
+                    <property name="wrap">True</property>
+                    <property name="selectable">True</property>
+                    <property name="xalign">0.0</property>
+                    <property name="yalign">0.5</property>
+                    <property name="can-focus">True</property>
+                    <property name="vexpand">True</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="secondary_label">
+                    <property name="use-markup">True</property>
+                    <property name="wrap">True</property>
+                    <property name="selectable">True</property>
+                    <property name="xalign">0.0</property>
+                    <property name="yalign">0.5</property>
+                    <property name="can-focus">True</property>
+                    <property name="visible">False</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+</interface>
