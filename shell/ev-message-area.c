@@ -50,6 +50,8 @@ static void ev_message_area_get_property (GObject      *object,
 
 G_DEFINE_TYPE_WITH_PRIVATE (EvMessageArea, ev_message_area, GTK_TYPE_INFO_BAR)
 
+#define GET_PRIVATE(o) ev_message_area_get_instance_private (o);
+
 static void
 ev_message_area_class_init (EvMessageAreaClass *class)
 {
@@ -140,7 +142,7 @@ ev_message_area_set_image_for_type (EvMessageArea *area,
 	AtkObject   *atk_obj;
 	EvMessageAreaPrivate *priv;
 
-	priv = ev_message_area_get_instance_private (area);
+	priv = GET_PRIVATE (area);
 
 	switch (type) {
 	case GTK_MESSAGE_INFO:
@@ -207,9 +209,7 @@ ev_message_area_get_property (GObject     *object,
 			      GParamSpec  *pspec)
 {
 	EvMessageArea *area = EV_MESSAGE_AREA (object);
-	EvMessageAreaPrivate *priv;
-
-	priv = ev_message_area_get_instance_private (area);
+	EvMessageAreaPrivate *priv = GET_PRIVATE (area);
 
 	switch (prop_id) {
 	case PROP_TEXT:
@@ -257,7 +257,7 @@ _ev_message_area_get_main_box (EvMessageArea *area)
 {
 	EvMessageAreaPrivate *priv;
 
-	priv = ev_message_area_get_instance_private (area);
+	priv = GET_PRIVATE (area);
 	return priv->main_box;
 }
 
@@ -295,10 +295,9 @@ ev_message_area_set_image (EvMessageArea *area,
 	GtkWidget *parent;
 	EvMessageAreaPrivate *priv;
 
-	priv = ev_message_area_get_instance_private (area);
-
 	g_return_if_fail (EV_IS_MESSAGE_AREA (area));
 
+	priv = GET_PRIVATE (area);
 	priv->message_type = GTK_MESSAGE_OTHER;
 
 	parent = gtk_widget_get_parent (priv->image);
@@ -320,7 +319,7 @@ ev_message_area_set_image_from_icon_name (EvMessageArea *area,
 	g_return_if_fail (EV_IS_MESSAGE_AREA (area));
 	g_return_if_fail (icon_name != NULL);
 
-	priv = ev_message_area_get_instance_private (area);
+	priv = GET_PRIVATE (area);
 
 	gtk_image_set_from_icon_name (GTK_IMAGE (priv->image),
 				      icon_name,
@@ -335,7 +334,7 @@ ev_message_area_set_text (EvMessageArea *area,
 
 	g_return_if_fail (EV_IS_MESSAGE_AREA (area));
 
-	priv = ev_message_area_get_instance_private (area);
+	priv = GET_PRIVATE (area);
 
 	if (str) {
 		gchar *msg, *escaped;
@@ -360,7 +359,7 @@ ev_message_area_set_secondary_text (EvMessageArea *area,
 
 	g_return_if_fail (EV_IS_MESSAGE_AREA (area));
 
-	priv = ev_message_area_get_instance_private (area);
+	priv = GET_PRIVATE (area);
 
 	if (str) {
 		gchar *msg;
