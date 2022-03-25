@@ -232,53 +232,6 @@ on_query_tooltip_event (GtkWidget     *widget,
         return TRUE;
 }
 
-static gboolean
-on_button_release_event (GtkWidget      *view,
-                         GdkEventButton *event,
-                         EvRecentView   *ev_recent_view)
-{
-        EvRecentViewPrivate *priv = GET_PRIVATE (ev_recent_view);
-        GtkTreePath         *path;
-
-        /* eat double/triple click events */
-        if (event->type != GDK_BUTTON_RELEASE)
-                return TRUE;
-
-        if (priv->pressed_item_tree_path == NULL)
-                return FALSE;
-
-        path = gtk_icon_view_get_path_at_pos (GTK_ICON_VIEW (priv->view), event->x, event->y);
-        if (path == NULL)
-                return FALSE;
-
-        if (gtk_tree_path_compare (path, priv->pressed_item_tree_path) == 0) {
-                g_clear_pointer (&priv->pressed_item_tree_path, gtk_tree_path_free);
-                gtk_icon_view_item_activated (GTK_ICON_VIEW (priv->view), path);
-                gtk_tree_path_free (path);
-
-                return TRUE;
-        }
-
-        g_clear_pointer (&priv->pressed_item_tree_path, gtk_tree_path_free);
-        gtk_tree_path_free (path);
-
-        return FALSE;
-}
-
-static gboolean
-on_button_press_event (GtkWidget      *view,
-                       GdkEventButton *event,
-                       EvRecentView   *ev_recent_view)
-{
-        EvRecentViewPrivate *priv = GET_PRIVATE (ev_recent_view);
-
-        g_clear_pointer (&priv->pressed_item_tree_path, gtk_tree_path_free);
-        priv->pressed_item_tree_path =
-                gtk_icon_view_get_path_at_pos (GTK_ICON_VIEW (priv->view), event->x, event->y);
-
-	return TRUE;
-}
-
 static void
 on_icon_view_item_activated (GtkIconView  *iconview,
                              GtkTreePath  *path,
@@ -802,46 +755,9 @@ ev_recent_view_constructed (GObject *object)
 {
         EvRecentView        *ev_recent_view = EV_RECENT_VIEW (object);
         EvRecentViewPrivate *priv = GET_PRIVATE (ev_recent_view);
-        GtkCellRenderer     *renderer;
 
         G_OBJECT_CLASS (ev_recent_view_parent_class)->constructed (object);
 
-        priv->view = gtk_icon_view_new_with_model (GTK_TREE_MODEL (priv->model));
-
-        gtk_icon_view_set_column_spacing (GTK_ICON_VIEW (priv->view), 20);
-        gtk_icon_view_set_margin (GTK_ICON_VIEW (priv->view), 16);
-        gtk_icon_view_set_selection_mode (GTK_ICON_VIEW (priv->view), GTK_SELECTION_NONE);
-        gtk_widget_set_hexpand (priv->view, TRUE);
-        gtk_widget_set_vexpand (priv->view, TRUE);
-        gtk_widget_set_has_tooltip (priv->view, TRUE);
-
-        renderer = gtk_cell_renderer_pixbuf_new ();
-        g_object_set (renderer, "xalign", 0.5, "yalign", 0.5, NULL);
-
-        gtk_cell_layout_pack_start (GTK_CELL_LAYOUT (priv->view), renderer, FALSE);
-        gtk_cell_layout_add_attribute (GTK_CELL_LAYOUT (priv->view), renderer,
-                                       "surface", EV_RECENT_VIEW_COLUMN_ICON);
-
-        renderer = gd_two_lines_renderer_new ();
-        g_object_set (renderer,
-                      "xalign", 0.5,
-                      "alignment", PANGO_ALIGN_CENTER,
-                      "wrap-mode", PANGO_WRAP_WORD_CHAR,
-                      "wrap-width", 128,
-                      "text-lines", 3,
-                      NULL);
-        gtk_cell_layout_pack_start (GTK_CELL_LAYOUT (priv->view), renderer, FALSE);
-        gtk_cell_layout_add_attribute (GTK_CELL_LAYOUT (priv->view), renderer,
-                                       "text", EV_RECENT_VIEW_COLUMN_PRIMARY_TEXT);
-        gtk_cell_layout_add_attribute (GTK_CELL_LAYOUT (priv->view), renderer,
-                                       "line-two", EV_RECENT_VIEW_COLUMN_SECONDARY_TEXT);
-
-        g_signal_connect (priv->view, "button-press-event",
-                          G_CALLBACK (on_button_press_event),
-                          ev_recent_view);
-        g_signal_connect (priv->view, "button-release-event",
-                          G_CALLBACK (on_button_release_event),
-                          ev_recent_view);
         g_signal_connect (priv->view, "item-activated",
                           G_CALLBACK (on_icon_view_item_activated),
                           ev_recent_view);
@@ -849,9 +765,8 @@ ev_recent_view_constructed (GObject *object)
                           G_CALLBACK (on_query_tooltip_event),
                           ev_recent_view);
 
-        gtk_style_context_add_class (gtk_widget_get_style_context (priv->view), "content-view");
-        gtk_container_add (GTK_CONTAINER (ev_recent_view), priv->view);
-        gtk_widget_show (priv->view);
+        gtk_icon_view_set_model (GTK_ICON_VIEW (priv->view),
+        GTK_TREE_MODEL (priv->model));
 
         ev_recent_view_refresh (ev_recent_view);
 }
@@ -861,6 +776,8 @@ ev_recent_view_init (EvRecentView *ev_recent_view)
 {
         EvRecentViewPrivate *priv = GET_PRIVATE (ev_recent_view);
 
+        gtk_widget_init_template (GTK_WIDGET (ev_recent_view));
+
         priv->recent_manager = gtk_recent_manager_get_default ();
         priv->model = gtk_list_store_new (NUM_COLUMNS,
                                           G_TYPE_STRING,
@@ -868,12 +785,6 @@ ev_recent_view_init (EvRecentView *ev_recent_view)
                                           G_TYPE_STRING,
                                           CAIRO_GOBJECT_TYPE_SURFACE,
                                           G_TYPE_POINTER);
-
-        gtk_widget_set_hexpand (GTK_WIDGET (ev_recent_view), TRUE);
-        gtk_widget_set_vexpand (GTK_WIDGET (ev_recent_view), TRUE);
-        gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (ev_recent_view),
-                                        GTK_POLICY_NEVER,
-                                        GTK_POLICY_AUTOMATIC);
         priv->recent_manager_changed_handler_id =
                 g_signal_connect_swapped (priv->recent_manager,
                                           "changed",
@@ -885,9 +796,14 @@ static void
 ev_recent_view_class_init (EvRecentViewClass *klass)
 {
         GObjectClass *g_object_class = G_OBJECT_CLASS (klass);
+        GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
 
         g_object_class->constructed = ev_recent_view_constructed;
         g_object_class->dispose = ev_recent_view_dispose;
+
+        g_type_ensure (GD_TYPE_TWO_LINES_RENDERER);
+        gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/evince/ui/recent-view.ui");
+        gtk_widget_class_bind_template_child_private (widget_class, EvRecentView, view);
 
         signals[ITEM_ACTIVATED] =
                   g_signal_new ("item-activated",
