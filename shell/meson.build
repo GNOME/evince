@@ -39,6 +39,7 @@ resource_data = files(
   'evince-message-area.ui',
   'evince-password-view.ui',
   'evince-properties-fonts.ui',
+  'evince-progress-message-area.ui',
   'evince-zoom-action.ui',
   'help-overlay.ui',
 )
