@@ -35,6 +35,7 @@
 
 #include "ev-sidebar.h"
 #include "ev-sidebar-page.h"
+#include "ev-sidebar-links.h"
 
 enum
 {
@@ -60,7 +61,16 @@ typedef struct {
 	GtkTreeModel *page_model;
 } EvSidebarPrivate;
 
-G_DEFINE_TYPE_WITH_PRIVATE (EvSidebar, ev_sidebar, GTK_TYPE_BOX)
+static void ev_sidebar_child_change_cb (GObject    *gobject,
+					GParamSpec *pspec,
+					EvSidebar  *ev_sidebar);
+static void ev_sidebar_buildable_iface_init (GtkBuildableIface *iface);
+static GtkBuildableIface *parent_buildable_iface;
+
+G_DEFINE_TYPE_WITH_CODE (EvSidebar, ev_sidebar, GTK_TYPE_BOX,
+                         G_ADD_PRIVATE (EvSidebar)
+                         G_IMPLEMENT_INTERFACE (GTK_TYPE_BUILDABLE,
+                                                ev_sidebar_buildable_iface_init))
 
 #define GET_PRIVATE(o) ev_sidebar_get_instance_private (o)
 
@@ -149,10 +159,18 @@ static void
 ev_sidebar_class_init (EvSidebarClass *ev_sidebar_class)
 {
         GObjectClass *g_object_class = G_OBJECT_CLASS (ev_sidebar_class);
+	GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (ev_sidebar_class);
 
 	g_object_class->dispose = ev_sidebar_dispose;
 	g_object_class->get_property = ev_sidebar_get_property;
 	g_object_class->set_property = ev_sidebar_set_property;
+
+	g_type_ensure (EV_TYPE_SIDEBAR_LINKS);
+	gtk_widget_class_set_template_from_resource (widget_class,
+			"/org/gnome/evince/ui/sidebar.ui");
+	gtk_widget_class_bind_template_child_private (widget_class, EvSidebar, switcher);
+	gtk_widget_class_bind_template_child_private (widget_class, EvSidebar, stack);
+	gtk_widget_class_bind_template_callback (widget_class, ev_sidebar_child_change_cb);
 
 	g_object_class_install_property (g_object_class,
 					 PROP_CURRENT_PAGE,
@@ -190,8 +208,6 @@ static void
 ev_sidebar_init (EvSidebar *ev_sidebar)
 {
 	EvSidebarPrivate *priv;
-	GtkWidget *switcher;
-	GtkWidget *stack;
 
 	priv = GET_PRIVATE (ev_sidebar);
 
@@ -203,27 +219,7 @@ ev_sidebar_init (EvSidebar *ev_sidebar)
 					    G_TYPE_STRING,
 					    G_TYPE_STRING);
 
-	switcher = gtk_stack_switcher_new ();
-	priv->switcher = switcher;
-	gtk_box_pack_end (GTK_BOX (ev_sidebar), switcher, FALSE, TRUE, 0);
-	g_object_set (switcher, "icon-size", 1, NULL);
-	gtk_container_set_border_width (GTK_CONTAINER (switcher), 6);
-	gtk_widget_set_halign (switcher, GTK_ALIGN_FILL);
-	gtk_widget_set_hexpand (switcher, TRUE);
-	gtk_box_set_homogeneous (GTK_BOX (switcher), TRUE);
-	gtk_widget_show (priv->switcher);
-
-	stack = gtk_stack_new ();
-	priv->stack = stack;
-	gtk_stack_set_homogeneous (GTK_STACK (stack), TRUE);
-	gtk_stack_switcher_set_stack (GTK_STACK_SWITCHER (switcher),
-				      GTK_STACK (stack));
-	gtk_box_pack_end (GTK_BOX (ev_sidebar), stack, TRUE, TRUE, 0);
-	gtk_widget_show (priv->stack);
-
-	g_signal_connect (stack, "notify::visible-child",
-			  G_CALLBACK (ev_sidebar_child_change_cb),
-			  ev_sidebar);
+	gtk_widget_init_template (GTK_WIDGET (ev_sidebar));
 }
 
 static gboolean
@@ -291,18 +287,39 @@ ev_sidebar_document_changed_cb (EvDocumentModel *model,
 	}
 }
 
+static GObject *
+ev_sidebar_buildable_get_internal_child (GtkBuildable *buildable,
+                             GtkBuilder   *builder,
+                             const char   *childname)
+{
+        EvSidebar *sidebar = EV_SIDEBAR (buildable);
+	EvSidebarPrivate *priv = GET_PRIVATE (sidebar);
+
+        if (g_strcmp0 (childname, "stack") == 0)
+                return G_OBJECT (priv->stack);
+
+        return parent_buildable_iface->get_internal_child (buildable, builder, childname);
+}
+
+static void
+ev_sidebar_buildable_iface_init (GtkBuildableIface *iface)
+{
+        parent_buildable_iface = g_type_interface_peek_parent (iface);
+
+        iface->get_internal_child = ev_sidebar_buildable_get_internal_child;
+}
+
 /* Public functions */
 
 GtkWidget *
 ev_sidebar_new (void)
 {
-	GtkWidget *ev_sidebar;
+	GtkWidget *retval;
 
-	ev_sidebar = g_object_new (EV_TYPE_SIDEBAR,
-                                   "orientation", GTK_ORIENTATION_VERTICAL,
-				   NULL);
+	retval = GTK_WIDGET (g_object_new (EV_TYPE_SIDEBAR, NULL));
+	gtk_widget_show_all (retval);
 
-	return ev_sidebar;
+	return retval;
 }
 
 void
