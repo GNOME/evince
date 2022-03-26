@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <template class="EvSidebar" parent="GtkBox">
+    <property name="orientation">vertical</property>
+    <property name="visible">True</property>
+    <child>
+      <object class="GtkStack" id="stack">
+        <property name="expand">True</property>
+        <property name="visible">True</property>
+        <signal name="notify::visible-child" handler="ev_sidebar_child_change_cb" />
+      </object>
+    </child>
+    <child>
+      <object class="GtkStackSwitcher" id="switcher">
+        <property name="stack">stack</property>
+        <property name="halign">fill</property>
+        <property name="hexpand">True</property>
+        <property name="homogeneous">True</property>
+        <property name="margin">6</property>
+        <property name="visible">True</property>
+      </object>
+    </child>
+  </template>
+</interface>
