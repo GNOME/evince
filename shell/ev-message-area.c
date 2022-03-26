@@ -47,8 +47,12 @@ static void ev_message_area_get_property (GObject      *object,
 					  guint         prop_id,
 					  GValue       *value,
 					  GParamSpec   *pspec);
+static void ev_message_area_buildable_iface_init (GtkBuildableIface *iface);
 
-G_DEFINE_TYPE_WITH_PRIVATE (EvMessageArea, ev_message_area, GTK_TYPE_INFO_BAR)
+G_DEFINE_TYPE_WITH_CODE (EvMessageArea, ev_message_area, GTK_TYPE_INFO_BAR,
+                         G_ADD_PRIVATE (EvMessageArea)
+                         G_IMPLEMENT_INTERFACE (GTK_TYPE_BUILDABLE,
+                                                ev_message_area_buildable_iface_init))
 
 #define GET_PRIVATE(o) ev_message_area_get_instance_private (o);
 
@@ -201,6 +205,29 @@ ev_message_area_get_property (GObject     *object,
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
 		break;
 	}
+}
+
+static GtkBuildableIface *parent_buildable_iface;
+
+static GObject *
+ev_message_area_buildable_get_internal_child (GtkBuildable *buildable,
+                             GtkBuilder   *builder,
+                             const char   *childname)
+{
+        EvMessageArea *area = EV_MESSAGE_AREA (buildable);
+
+        if (g_strcmp0 (childname, "main_box") == 0)
+                return G_OBJECT (_ev_message_area_get_main_box (area));
+
+        return parent_buildable_iface->get_internal_child (buildable, builder, childname);
+}
+
+static void
+ev_message_area_buildable_iface_init (GtkBuildableIface *iface)
+{
+        parent_buildable_iface = g_type_interface_peek_parent (iface);
+
+        iface->get_internal_child = ev_message_area_buildable_get_internal_child;
 }
 
 void
