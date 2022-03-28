@@ -357,8 +357,6 @@ ev_password_view_new (GtkWindow *parent)
 
 	priv->parent_window = parent;
 
-	gtk_widget_show_all (GTK_WIDGET (retval));
-
 	return GTK_WIDGET (retval);
 }
 
