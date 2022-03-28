@@ -440,18 +440,13 @@ GtkWidget *
 ev_zoom_action_new (EvDocumentModel *model,
                     GMenu           *menu)
 {
-        GtkWidget *retval;
-
         g_return_val_if_fail (EV_IS_DOCUMENT_MODEL (model), NULL);
         g_return_val_if_fail (G_IS_MENU (menu), NULL);
 
-        retval = GTK_WIDGET (g_object_new (EV_TYPE_ZOOM_ACTION,
-                                           "document-model", model,
-                                           "menu", menu,
-                                           NULL));
-        gtk_widget_show_all (retval);
-
-        return retval;
+        return GTK_WIDGET (g_object_new (EV_TYPE_ZOOM_ACTION,
+                                         "document-model", model,
+                                         "menu", menu,
+                                         NULL));
 }
 
 gboolean
