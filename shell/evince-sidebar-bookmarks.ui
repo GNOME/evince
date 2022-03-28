@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <template class="EvSidebarBookmarks" parent="GtkBox">
+    <property name="orientation">vertical</property>
+    <property name="visible">True</property>
+    <child>
+      <object class="GtkScrolledWindow" id="swindow">
+        <property name="valign">fill</property>
+        <property name="vexpand">True</property>
+        <property name="visible">True</property>
+        <child>
+          <object class="GtkTreeView" id="tree_view">
+            <property name="model">list-model</property>
+            <property name="headers-visible">False</property>
+            <property name="visible">True</property>
+            <signal name="query-tooltip" handler="ev_sidebar_bookmarks_query_tooltip" />
+            <signal name="button-press-event" handler="ev_sidebar_bookmarks_button_press" />
+            <child>
+              <object class="GtkTreeViewColumn">
+              <property name="visible">True</property>
+                <child>
+                  <object class="GtkCellRendererText">
+                    <property name="ellipsize">end</property>
+                    <property name="editable">True</property>
+                    <signal name="edited" handler="ev_sidebar_bookmarks_bookmark_renamed" />
+                  </object>
+                  <attributes>
+                    <attribute name="markup">0</attribute>
+                  </attributes>
+                </child>
+              </object>
+            </child>
+            <child internal-child="selection">
+              <object class="GtkTreeSelection" id="selection">
+                <signal name="changed" handler="ev_sidebar_bookmarks_selection_changed" />
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+
+    <child>
+      <object class="GtkButtonBox" id="button_box">
+        <property name="orientation">horizontal</property>
+        <property name="margin">6</property>
+        <property name="layout-style">expand</property>
+        <property name="halign">center</property>
+        <property name="valign">fill</property>
+        <property name="visible">True</property>
+        <child>
+          <object class="GtkButton" id="add_button">
+            <property name="image">image_add</property>
+            <property name="sensitive">False</property>
+            <property name="tooltip-text" translatable="yes">Add bookmark</property>
+            <property name="action-name">win.add-bookmark</property>
+            <property name="visible">True</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkButton" id="del_button">
+            <property name="image">image_remove</property>
+            <property name="sensitive">False</property>
+            <property name="tooltip-text" translatable="yes">Remove bookmark</property>
+            <signal name="clicked" handler="ev_sidebar_bookmarks_del_clicked" />
+            <property name="visible">True</property>
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+
+  <object class="GtkListStore" id="list-model">
+    <columns>
+      <column type="gchararray" />
+      <column type="gint" />
+    </columns>
+  </object>
+
+  <object class="GtkImage" id="image_add">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="icon-name">list-add-symbolic</property>
+  </object>
+
+  <object class="GtkImage" id="image_remove">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="icon-name">list-remove-symbolic</property>
+  </object>
+</interface>
