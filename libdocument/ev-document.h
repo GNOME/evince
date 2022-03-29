@@ -102,7 +102,7 @@ struct _EvDocumentClass
 	EvPage          * (* get_page)              (EvDocument          *document,
 						     gint                 index);
         void              (* get_page_size)         (EvDocument          *document,
-						     EvPage              *page,
+						     EvPage              *page_index,
 						     double              *width,
 						     double              *height);
         gchar           * (* get_page_label)        (EvDocument          *document,

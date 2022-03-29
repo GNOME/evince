@@ -756,7 +756,7 @@ ev_document_synctex_backward_search (EvDocument *document,
 }
 
 /**
- * ev_document_synctex_forward_search:
+ * ev_document_synctex_forward_search: (skip)
  * @document: a #EvDocument
  * @source_link: a #EvSourceLink
  *
