@@ -4602,7 +4602,7 @@ ev_window_run_fullscreen (EvWindow *window)
 	ev_document_model_set_fullscreen (priv->model, TRUE);
 	ev_window_update_fullscreen_action (window);
 
-	hdy_header_bar_set_show_close_button (HDY_HEADER_BAR (priv->toolbar), FALSE);
+	hdy_header_bar_set_show_close_button (ev_toolbar_get_header_bar (EV_TOOLBAR (priv->toolbar)), FALSE);
 
 	if (fullscreen_window)
 		gtk_window_fullscreen (GTK_WINDOW (window));
@@ -5284,7 +5284,7 @@ ev_window_document_modified_cb (EvDocument *document,
                                 EvWindow   *ev_window)
 {
 	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
-	HdyHeaderBar *toolbar = HDY_HEADER_BAR (ev_window_get_toolbar (ev_window));
+	HdyHeaderBar *toolbar = ev_window_get_toolbar (ev_window);
 	const gchar *title = hdy_header_bar_get_title (toolbar);
 	gchar *new_title;
 
@@ -7608,7 +7608,7 @@ ev_window_init (EvWindow *ev_window)
 
 	priv->toolbar = ev_toolbar_new (ev_window);
 	gtk_widget_set_no_show_all (priv->toolbar, TRUE);
-	hdy_header_bar_set_show_close_button (HDY_HEADER_BAR (priv->toolbar), TRUE);
+	hdy_header_bar_set_show_close_button (ev_toolbar_get_header_bar (EV_TOOLBAR (priv->toolbar)), TRUE);
 	gtk_box_pack_start (GTK_BOX (priv->main_box), priv->toolbar, FALSE, TRUE, 0);
 	gtk_widget_show (priv->toolbar);
 
@@ -8059,7 +8059,7 @@ ev_window_get_document_model (EvWindow *ev_window)
 	return priv->model;
 }
 
-GtkWidget *
+HdyHeaderBar *
 ev_window_get_toolbar (EvWindow *ev_window)
 {
 	EvWindowPrivate *priv;
@@ -8068,7 +8068,7 @@ ev_window_get_toolbar (EvWindow *ev_window)
 
 	priv = GET_PRIVATE (ev_window);
 
-	return priv->toolbar;
+	return ev_toolbar_get_header_bar (EV_TOOLBAR (priv->toolbar));
 }
 
 GtkWidget *

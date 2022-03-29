@@ -42,6 +42,8 @@ enum
 typedef struct {
 	EvWindow  *window;
 
+	HdyHeaderBar *header_bar;
+
 	GtkWidget *open_button;
 	GtkWidget *sidebar_button;
 	GtkWidget *page_selector;
@@ -53,7 +55,7 @@ typedef struct {
 	EvToolbarMode toolbar_mode;
 } EvToolbarPrivate;
 
-G_DEFINE_TYPE_WITH_CODE (EvToolbar, ev_toolbar, HDY_TYPE_HEADER_BAR,
+G_DEFINE_TYPE_WITH_CODE (EvToolbar, ev_toolbar, GTK_TYPE_BIN,
 			 G_ADD_PRIVATE (EvToolbar))
 
 #define GET_PRIVATE(o) ev_toolbar_get_instance_private (o)
@@ -132,6 +134,7 @@ ev_toolbar_class_init (EvToolbarClass *klass)
         g_object_class->constructed = ev_toolbar_constructed;
 
 	gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/evince/ui/ev-toolbar.ui");
+	gtk_widget_class_bind_template_child_private (widget_class, EvToolbar, header_bar);
 	gtk_widget_class_bind_template_child_private (widget_class, EvToolbar, open_button);
 	gtk_widget_class_bind_template_child_private (widget_class, EvToolbar, sidebar_button);
 	gtk_widget_class_bind_template_child_private (widget_class, EvToolbar, page_selector);
@@ -198,6 +201,18 @@ ev_toolbar_get_page_selector (EvToolbar *ev_toolbar)
         priv = GET_PRIVATE (ev_toolbar);
 
         return priv->page_selector;
+}
+
+HdyHeaderBar *
+ev_toolbar_get_header_bar (EvToolbar *ev_toolbar)
+{
+	EvToolbarPrivate *priv;
+
+        g_return_val_if_fail (EV_IS_TOOLBAR (ev_toolbar), NULL);
+
+        priv = GET_PRIVATE (ev_toolbar);
+
+        return priv->header_bar;
 }
 
 void

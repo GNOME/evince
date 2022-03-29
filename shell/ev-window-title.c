@@ -97,7 +97,7 @@ static void
 ev_window_title_update (EvWindowTitle *window_title)
 {
 	GtkWindow *window = GTK_WINDOW (window_title->window);
-	HdyHeaderBar *toolbar = HDY_HEADER_BAR (ev_window_get_toolbar (EV_WINDOW (window)));
+	HdyHeaderBar *toolbar = ev_window_get_toolbar (EV_WINDOW (window));
 	char *title = NULL, *p;
 	char *subtitle = NULL, *title_header = NULL;
 	gboolean ltr;

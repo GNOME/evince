@@ -93,7 +93,7 @@ GMenuModel     *ev_window_get_bookmarks_menu             (EvWindow       *ev_win
 EvHistory      *ev_window_get_history                    (EvWindow       *ev_window);
 EvDocumentModel *ev_window_get_document_model            (EvWindow       *ev_window);
 void            ev_window_focus_view                     (EvWindow       *ev_window);
-GtkWidget      *ev_window_get_toolbar			 (EvWindow	 *ev_window);
+HdyHeaderBar   *ev_window_get_toolbar                    (EvWindow       *ev_window);
 void            ev_window_handle_annot_popup             (EvWindow       *ev_window,
                                                           EvAnnotation   *annot);
 EvMetadata     *ev_window_get_metadata			 (EvWindow	 *ev_window);

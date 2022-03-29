@@ -42,17 +42,18 @@ typedef struct _EvToolbar        EvToolbar;
 typedef struct _EvToolbarClass   EvToolbarClass;
 
 struct _EvToolbar {
-        HdyHeaderBar base_instance;
+        GtkBin base_instance;
 };
 
 struct _EvToolbarClass {
-        HdyHeaderBarClass base_class;
+        GtkBinClass base_class;
 };
 
 GType         ev_toolbar_get_type           (void);
 GtkWidget    *ev_toolbar_new                (EvWindow *window);
 void          ev_toolbar_action_menu_toggle (EvToolbar *ev_toolbar);
 GtkWidget    *ev_toolbar_get_page_selector  (EvToolbar *ev_toolbar);
+HdyHeaderBar *ev_toolbar_get_header_bar     (EvToolbar *ev_toolbar);
 void          ev_toolbar_set_mode           (EvToolbar     *ev_toolbar,
 					     EvToolbarMode  mode);
 EvToolbarMode ev_toolbar_get_mode           (EvToolbar     *ev_toolbar);
