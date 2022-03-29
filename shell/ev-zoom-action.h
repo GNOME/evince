@@ -44,8 +44,8 @@ struct _EvZoomActionClass {
         GtkBoxClass parent_class;
 };
 
-GType      ev_zoom_action_get_type        (void);
-
-GtkWidget *ev_zoom_action_new             (EvDocumentModel *model);
+GType ev_zoom_action_get_type  (void);
+void  ev_zoom_action_set_model (EvZoomAction *zoom_action,
+				 EvDocumentModel *model);
 
 G_END_DECLS

@@ -43,6 +43,7 @@ resource_data = files(
   'evince-recent-view.ui',
   'evince-sidebar.ui',
   'evince-sidebar-bookmarks.ui',
+  'evince-toolbar.ui',
   'evince-zoom-action.ui',
   'help-overlay.ui',
 )

@@ -29,13 +29,6 @@ enum {
         LAST_SIGNAL
 };
 
-enum
-{
-        PROP_0,
-
-        PROP_DOCUMENT_MODEL,
-};
-
 enum {
         ZOOM_MODES_SECTION,
         ZOOM_FREE_SECTION
@@ -259,6 +252,38 @@ entry_icon_press_cb (GtkEntry            *entry,
 	gtk_popover_popup (priv->popup);
 }
 
+void
+ev_zoom_action_set_model (EvZoomAction *zoom_action,
+			  EvDocumentModel *model)
+{
+	EvZoomActionPrivate *priv;
+
+	g_return_if_fail (EV_IS_ZOOM_ACTION (zoom_action));
+	g_return_if_fail (EV_IS_DOCUMENT_MODEL (model));
+
+	priv = GET_PRIVATE (zoom_action);
+
+	g_return_if_fail (priv->model == NULL);
+	priv->model = model;
+
+	ev_zoom_action_populate_free_zoom_section (zoom_action);
+
+	g_object_add_weak_pointer (G_OBJECT (priv->model),
+				   (gpointer)&priv->model);
+
+	ev_zoom_action_update_zoom_level (zoom_action);
+
+	g_signal_connect_object (priv->model, "notify::document",
+				 G_CALLBACK (document_changed_cb),
+				 zoom_action, 0);
+	g_signal_connect_object (priv->model, "notify::scale",
+				 G_CALLBACK (zoom_changed_cb),
+				 zoom_action, 0);
+	g_signal_connect_object (priv->model, "notify::max-scale",
+				 G_CALLBACK (max_zoom_changed_cb),
+				 zoom_action, 0);
+}
+
 static void
 ev_zoom_action_finalize (GObject *object)
 {
@@ -273,24 +298,6 @@ ev_zoom_action_finalize (GObject *object)
         g_clear_object (&priv->zoom_free_section);
 
         G_OBJECT_CLASS (ev_zoom_action_parent_class)->finalize (object);
-}
-
-static void
-ev_zoom_action_set_property (GObject      *object,
-                             guint         prop_id,
-                             const GValue *value,
-                             GParamSpec   *pspec)
-{
-        EvZoomAction *zoom_action = EV_ZOOM_ACTION (object);
-	EvZoomActionPrivate *priv = GET_PRIVATE (zoom_action);
-
-        switch (prop_id) {
-        case PROP_DOCUMENT_MODEL:
-                priv->model = g_value_get_object (value);
-                break;
-        default:
-                G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
-        }
 }
 
 static void
@@ -313,26 +320,6 @@ ev_zoom_action_constructed (GObject *object)
         priv->zoom_free_section =
                 g_menu_model_get_item_link (G_MENU_MODEL (priv->menu),
                                             ZOOM_FREE_SECTION, G_MENU_LINK_SECTION);
-        ev_zoom_action_populate_free_zoom_section (zoom_action);
-
-        g_object_add_weak_pointer (G_OBJECT (priv->model),
-                                   (gpointer)&priv->model);
-        if (ev_document_model_get_document (priv->model)) {
-                ev_zoom_action_update_zoom_level (zoom_action);
-        } else {
-                ev_zoom_action_set_zoom_level (zoom_action, 1.);
-                gtk_widget_set_sensitive (GTK_WIDGET (zoom_action), FALSE);
-        }
-
-        g_signal_connect_object (priv->model, "notify::document",
-                                 G_CALLBACK (document_changed_cb),
-                                 zoom_action, 0);
-        g_signal_connect_object (priv->model, "notify::scale",
-                                 G_CALLBACK (zoom_changed_cb),
-                                 zoom_action, 0);
-        g_signal_connect_object (priv->model, "notify::max-scale",
-                                 G_CALLBACK (max_zoom_changed_cb),
-                                 zoom_action, 0);
 
         setup_initial_entry_size (zoom_action);
 }
@@ -345,7 +332,6 @@ ev_zoom_action_class_init (EvZoomActionClass *klass)
 
         object_class->finalize = ev_zoom_action_finalize;
         object_class->constructed = ev_zoom_action_constructed;
-        object_class->set_property = ev_zoom_action_set_property;
 
         gtk_widget_class_set_template_from_resource (widget_class,
                         "/org/gnome/evince/ui/zoom-action.ui");
@@ -357,16 +343,6 @@ ev_zoom_action_class_init (EvZoomActionClass *klass)
 	gtk_widget_class_bind_template_callback (widget_class, entry_icon_press_cb);
 	gtk_widget_class_bind_template_callback (widget_class, entry_activated_cb);
 	gtk_widget_class_bind_template_callback (widget_class, focus_out_cb);
-
-        g_object_class_install_property (object_class,
-                                         PROP_DOCUMENT_MODEL,
-                                         g_param_spec_object ("document-model",
-                                                              "DocumentModel",
-                                                              "The document model",
-                                                              EV_TYPE_DOCUMENT_MODEL,
-                                                              G_PARAM_WRITABLE |
-                                                              G_PARAM_CONSTRUCT_ONLY |
-                                                              G_PARAM_STATIC_STRINGS));
 
         signals[ACTIVATED] =
                 g_signal_new ("activated",
@@ -389,14 +365,4 @@ ev_zoom_action_init (EvZoomAction *zoom_action)
            GTK4 move
        */
         gtk_popover_bind_model (priv->popup, G_MENU_MODEL (priv->menu), NULL);
-}
-
-GtkWidget *
-ev_zoom_action_new (EvDocumentModel *model)
-{
-        g_return_val_if_fail (EV_IS_DOCUMENT_MODEL (model), NULL);
-
-        return GTK_WIDGET (g_object_new (EV_TYPE_ZOOM_ACTION,
-                                         "document-model", model,
-                                         NULL));
 }
