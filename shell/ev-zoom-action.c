@@ -235,10 +235,10 @@ focus_out_cb (EvZoomAction *zoom_action)
 }
 
 static void
-entry_icon_press_callback (GtkEntry            *entry,
-                           GtkEntryIconPosition icon_pos,
-                           GdkEvent            *event,
-                           EvZoomAction        *zoom_action)
+entry_icon_press_cb (GtkEntry            *entry,
+		     GtkEntryIconPosition icon_pos,
+		     GdkEvent            *event,
+		     EvZoomAction        *zoom_action)
 {
 	EvZoomActionPrivate *priv = GET_PRIVATE (zoom_action);
         guint button = 0;
@@ -358,6 +358,9 @@ ev_zoom_action_class_init (EvZoomActionClass *klass)
                                                       EvZoomAction,
                                                       entry);
 	gtk_widget_class_bind_template_child_private (widget_class, EvZoomAction, popup);
+	gtk_widget_class_bind_template_callback (widget_class, entry_icon_press_cb);
+	gtk_widget_class_bind_template_callback (widget_class, entry_activated_cb);
+	gtk_widget_class_bind_template_callback (widget_class, focus_out_cb);
 
         g_object_class_install_property (object_class,
                                          PROP_DOCUMENT_MODEL,
@@ -393,17 +396,6 @@ ev_zoom_action_init (EvZoomAction *zoom_action)
         EvZoomActionPrivate *priv = GET_PRIVATE (zoom_action);
 
         gtk_widget_init_template (GTK_WIDGET (zoom_action));
-
-        g_signal_connect (priv->entry, "icon-press",
-                          G_CALLBACK (entry_icon_press_callback),
-                          zoom_action);
-        g_signal_connect (priv->entry, "activate",
-                          G_CALLBACK (entry_activated_cb),
-                          zoom_action);
-
-        g_signal_connect_swapped (priv->entry, "focus-out-event",
-                                  G_CALLBACK (focus_out_cb),
-                                  zoom_action);
 
        /* TODO: In GTK4, GtkPopoverMenu has a menu-model property.
            So this could be moved to the template instead after the
