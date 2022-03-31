@@ -50,7 +50,15 @@ flatpak:
         MESON_ARGS: "-Dnautilus=false -Dgtk_doc=false"
         APP_ID: "org.gnome.Evince"
     extends: .flatpak
-    allow_failure: true
+    artifacts:
+        # Rewrite paths and reports to "remove" testlog.txt and junit files, 
+        # which do not exists in evince build, yet.
+        paths:
+            - "${BUNDLE}"
+            - 'repo.tar'
+            - '.flatpak-builder/build/${FLATPAK_MODULE}/_flatpak_build/meson-logs/meson-log.txt'
+        reports:
+            junit: []
 
 nightly:
     dependencies:
