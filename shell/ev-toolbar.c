@@ -250,8 +250,7 @@ ev_toolbar_constructed (GObject *object)
                           ev_toolbar);
 
         /* Zoom selector */
-        vbox = ev_zoom_action_new (ev_window_get_document_model (priv->window),
-                                   G_MENU (gtk_builder_get_object (builder, "zoom-menu")));
+        vbox = ev_zoom_action_new (ev_window_get_document_model (priv->window));
         priv->zoom_action = vbox;
         atk_object_set_name (gtk_widget_get_accessible (vbox), _("Set zoom level"));
         g_signal_connect (vbox, "activated",

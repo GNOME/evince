@@ -34,7 +34,6 @@ enum
         PROP_0,
 
         PROP_DOCUMENT_MODEL,
-        PROP_MENU
 };
 
 enum {
@@ -271,7 +270,6 @@ ev_zoom_action_finalize (GObject *object)
                                               (gpointer)&priv->model);
         }
 
-        g_clear_object (&priv->menu);
         g_clear_object (&priv->zoom_free_section);
 
         G_OBJECT_CLASS (ev_zoom_action_parent_class)->finalize (object);
@@ -289,9 +287,6 @@ ev_zoom_action_set_property (GObject      *object,
         switch (prop_id) {
         case PROP_DOCUMENT_MODEL:
                 priv->model = g_value_get_object (value);
-                break;
-        case PROP_MENU:
-                priv->menu = g_value_dup_object (value);
                 break;
         default:
                 G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -358,6 +353,7 @@ ev_zoom_action_class_init (EvZoomActionClass *klass)
                                                       EvZoomAction,
                                                       entry);
 	gtk_widget_class_bind_template_child_private (widget_class, EvZoomAction, popup);
+	gtk_widget_class_bind_template_child_private (widget_class, EvZoomAction, menu);
 	gtk_widget_class_bind_template_callback (widget_class, entry_icon_press_cb);
 	gtk_widget_class_bind_template_callback (widget_class, entry_activated_cb);
 	gtk_widget_class_bind_template_callback (widget_class, focus_out_cb);
@@ -368,15 +364,6 @@ ev_zoom_action_class_init (EvZoomActionClass *klass)
                                                               "DocumentModel",
                                                               "The document model",
                                                               EV_TYPE_DOCUMENT_MODEL,
-                                                              G_PARAM_WRITABLE |
-                                                              G_PARAM_CONSTRUCT_ONLY |
-                                                              G_PARAM_STATIC_STRINGS));
-        g_object_class_install_property (object_class,
-                                         PROP_MENU,
-                                         g_param_spec_object ("menu",
-                                                              "Menu",
-                                                              "The zoom popup menu",
-                                                              G_TYPE_MENU,
                                                               G_PARAM_WRITABLE |
                                                               G_PARAM_CONSTRUCT_ONLY |
                                                               G_PARAM_STATIC_STRINGS));
@@ -405,14 +392,11 @@ ev_zoom_action_init (EvZoomAction *zoom_action)
 }
 
 GtkWidget *
-ev_zoom_action_new (EvDocumentModel *model,
-                    GMenu           *menu)
+ev_zoom_action_new (EvDocumentModel *model)
 {
         g_return_val_if_fail (EV_IS_DOCUMENT_MODEL (model), NULL);
-        g_return_val_if_fail (G_IS_MENU (menu), NULL);
 
         return GTK_WIDGET (g_object_new (EV_TYPE_ZOOM_ACTION,
                                          "document-model", model,
-                                         "menu", menu,
                                          NULL));
 }
