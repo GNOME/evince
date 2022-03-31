@@ -50,6 +50,7 @@ flatpak:
         MESON_ARGS: "-Dnautilus=false -Dgtk_doc=false"
         APP_ID: "org.gnome.Evince"
     extends: .flatpak
+    allow_failure: true
 
 nightly:
     dependencies:
