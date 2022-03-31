@@ -191,9 +191,6 @@ max_zoom_changed_cb (EvDocumentModel *model,
 	EvZoomActionPrivate *priv = GET_PRIVATE (zoom_action);
 
         g_menu_remove_all (G_MENU (priv->zoom_free_section));
-        if (priv->popup)
-                gtk_widget_destroy (GTK_WIDGET (priv->popup));
-        priv->popup = NULL;
         ev_zoom_action_populate_free_zoom_section (zoom_action);
 }
 
@@ -237,26 +234,6 @@ focus_out_cb (EvZoomAction *zoom_action)
         return FALSE;
 }
 
-static GtkPopover *
-get_popup (EvZoomAction *zoom_action)
-{
-	EvZoomActionPrivate *priv = GET_PRIVATE (zoom_action);
-        GdkRectangle rect;
-
-        if (priv->popup)
-                return priv->popup;
-
-        priv->popup = GTK_POPOVER (gtk_popover_new_from_model (GTK_WIDGET (zoom_action),
-                                                               G_MENU_MODEL (priv->menu)));
-
-        gtk_entry_get_icon_area (GTK_ENTRY (priv->entry),
-                                 GTK_ENTRY_ICON_SECONDARY, &rect);
-        gtk_popover_set_pointing_to (priv->popup, &rect);
-        gtk_popover_set_position (priv->popup, GTK_POS_BOTTOM);
-
-        return priv->popup;
-}
-
 static void
 entry_icon_press_callback (GtkEntry            *entry,
                            GtkEntryIconPosition icon_pos,
@@ -265,12 +242,22 @@ entry_icon_press_callback (GtkEntry            *entry,
 {
 	EvZoomActionPrivate *priv = GET_PRIVATE (zoom_action);
         guint button = 0;
+	GdkRectangle rect;
+
+	g_return_if_fail (priv->popup != NULL);
 
         if (gdk_event_get_button (event, &button) &&
             button != GDK_BUTTON_PRIMARY)
                 return;
 
-        gtk_popover_popup (get_popup (zoom_action));
+	/* This cannot be done during init, as window does not yet exist
+	 * and therefore the rectangle is not yet available */
+	if (gtk_popover_get_pointing_to (priv->popup, &rect) == FALSE) {
+		gtk_entry_get_icon_area (GTK_ENTRY (priv->entry),
+					 GTK_ENTRY_ICON_SECONDARY, &rect);
+		gtk_popover_set_pointing_to (priv->popup, &rect);
+	}
+	gtk_popover_popup (priv->popup);
 }
 
 static void
@@ -370,6 +357,7 @@ ev_zoom_action_class_init (EvZoomActionClass *klass)
         gtk_widget_class_bind_template_child_private (widget_class,
                                                       EvZoomAction,
                                                       entry);
+	gtk_widget_class_bind_template_child_private (widget_class, EvZoomAction, popup);
 
         g_object_class_install_property (object_class,
                                          PROP_DOCUMENT_MODEL,
@@ -416,6 +404,12 @@ ev_zoom_action_init (EvZoomAction *zoom_action)
         g_signal_connect_swapped (priv->entry, "focus-out-event",
                                   G_CALLBACK (focus_out_cb),
                                   zoom_action);
+
+       /* TODO: In GTK4, GtkPopoverMenu has a menu-model property.
+           So this could be moved to the template instead after the
+           GTK4 move
+       */
+        gtk_popover_bind_model (priv->popup, G_MENU_MODEL (priv->menu), NULL);
 }
 
 GtkWidget *
