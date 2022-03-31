@@ -70,7 +70,6 @@ typedef struct {
 
         GMenuModel      *zoom_free_section;
         GtkPopover      *popup;
-        gboolean         popup_shown;
 } EvZoomActionPrivate;
 
 G_DEFINE_TYPE_WITH_PRIVATE (EvZoomAction, ev_zoom_action, GTK_TYPE_BOX)
@@ -238,19 +237,6 @@ focus_out_cb (EvZoomAction *zoom_action)
         return FALSE;
 }
 
-static void
-popup_menu_closed (GtkPopover   *popup,
-                   EvZoomAction *zoom_action)
-{
-	EvZoomActionPrivate *priv = GET_PRIVATE (zoom_action);
-
-        if (priv->popup != popup)
-                return;
-
-        priv->popup_shown = FALSE;
-        priv->popup = NULL;
-}
-
 static GtkPopover *
 get_popup (EvZoomAction *zoom_action)
 {
@@ -263,9 +249,6 @@ get_popup (EvZoomAction *zoom_action)
         priv->popup = GTK_POPOVER (gtk_popover_new_from_model (GTK_WIDGET (zoom_action),
                                                                G_MENU_MODEL (priv->menu)));
 
-        g_signal_connect (priv->popup, "closed",
-                          G_CALLBACK (popup_menu_closed),
-                          zoom_action);
         gtk_entry_get_icon_area (GTK_ENTRY (priv->entry),
                                  GTK_ENTRY_ICON_SECONDARY, &rect);
         gtk_popover_set_pointing_to (priv->popup, &rect);
@@ -288,7 +271,6 @@ entry_icon_press_callback (GtkEntry            *entry,
                 return;
 
         gtk_popover_popup (get_popup (zoom_action));
-        priv->popup_shown = TRUE;
 }
 
 static void
@@ -447,16 +429,4 @@ ev_zoom_action_new (EvDocumentModel *model,
                                          "document-model", model,
                                          "menu", menu,
                                          NULL));
-}
-
-gboolean
-ev_zoom_action_get_popup_shown (EvZoomAction *zoom_action)
-{
-	EvZoomActionPrivate *priv;
-
-        g_return_val_if_fail (EV_IS_ZOOM_ACTION (zoom_action), FALSE);
-
-	priv = GET_PRIVATE (zoom_action);
-
-        return priv->popup_shown;
 }
