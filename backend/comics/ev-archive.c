@@ -310,6 +310,7 @@ ev_archive_reset (EvArchive *archive)
 	case EV_ARCHIVE_TYPE_TAR:
 		g_clear_pointer (&archive->libar, archive_free);
 		libarchive_set_archive_type (archive, archive->type);
+		archive->libar_entry = NULL;
 		break;
 	default:
 		g_assert_not_reached ();
