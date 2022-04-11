@@ -305,14 +305,26 @@ save_thumbnail_in_cache_thread (GTask                    *task,
         GdkPixbuf       *thumbnail;
         cairo_surface_t *surface;
 	EvRecentViewPrivate *priv = GET_PRIVATE (ev_recent_view);
+#if defined(GNOME_DESKTOP_PLATFORM_VERSION) && GNOME_DESKTOP_PLATFORM_VERSION >= 43
+        GError *error = NULL;
+#endif
 
         surface = EV_JOB_THUMBNAIL (data->job)->thumbnail_surface;
         thumbnail = gdk_pixbuf_get_from_surface (surface, 0, 0,
                                                  cairo_image_surface_get_width (surface),
                                                  cairo_image_surface_get_height (surface));
 
+#if defined(GNOME_DESKTOP_PLATFORM_VERSION) && GNOME_DESKTOP_PLATFORM_VERSION >= 43
+        gnome_desktop_thumbnail_factory_save_thumbnail (priv->thumbnail_factory,
+                                                        thumbnail, data->uri, data->mtime, NULL, &error);
+        if (error) {
+                g_warning ("Failed to save thumbnail %s: %s", data->uri, error->message);
+                g_error_free (error);
+        }
+#else
         gnome_desktop_thumbnail_factory_save_thumbnail (priv->thumbnail_factory,
                                                         thumbnail, data->uri, data->mtime);
+#endif
         g_object_unref (thumbnail);
 
         g_task_return_boolean (task, TRUE);
