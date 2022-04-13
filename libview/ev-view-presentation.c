@@ -84,6 +84,7 @@ struct _EvViewPresentation
 
 	/* Animations */
 	gboolean               enable_animations;
+        gboolean               animation_finished;
 	EvTransitionAnimation *animation;
 
 	/* Links */
@@ -265,7 +266,7 @@ ev_view_presentation_animation_cancel (EvViewPresentation *pview)
 static void
 ev_view_presentation_transition_animation_finish (EvViewPresentation *pview)
 {
-	ev_view_presentation_animation_cancel (pview);
+        pview->animation_finished = TRUE;
 	ev_view_presentation_transition_start (pview);
 	gtk_widget_queue_draw (GTK_WIDGET (pview));
 }
@@ -1099,6 +1100,11 @@ ev_view_presentation_draw (GtkWidget *widget,
 
                         cairo_restore (cr);
 		}
+
+                if (pview->animation_finished) {
+                        ev_view_presentation_animation_cancel (pview);
+                        pview->animation_finished = FALSE;
+                }
 
 		return TRUE;
 	}
