@@ -70,6 +70,8 @@ static gboolean ev_sidebar_annotations_popup_menu_show (EvSidebarAnnotations *si
 							const GdkRectangle   *rect,
 							EvMapping            *annot_mapping,
 							const GdkEvent       *event);
+static void job_finished_callback (EvJobAnnots          *job,
+				   EvSidebarAnnotations *sidebar_annots);
 static guint signals[N_SIGNALS];
 
 G_DEFINE_TYPE_EXTENDED (EvSidebarAnnotations,
@@ -87,6 +89,13 @@ ev_sidebar_annotations_dispose (GObject *object)
 {
 	EvSidebarAnnotations *sidebar_annots = EV_SIDEBAR_ANNOTATIONS (object);
 	EvSidebarAnnotationsPrivate *priv = sidebar_annots->priv;
+
+	if (priv->job != NULL) {
+		g_signal_handlers_disconnect_by_func (priv->job,
+						      job_finished_callback,
+						      sidebar_annots);
+		g_clear_object (&priv->job);
+	}
 
 	if (priv->document) {
 		g_object_unref (priv->document);
