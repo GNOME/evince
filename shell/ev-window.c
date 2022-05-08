@@ -2432,25 +2432,19 @@ ev_window_open_uri (EvWindow       *ev_window,
 		return;
 	}
 
-	if (priv->monitor) {
-		g_object_unref (priv->monitor);
-		priv->monitor = NULL;
-	}
-	
+	g_clear_object (&priv->monitor);
+
 	ev_window_close_dialogs (ev_window);
 	ev_window_clear_load_job (ev_window);
 	ev_window_clear_local_uri (ev_window);
 
 	priv->window_mode = mode;
 
-	if (priv->uri)
-		g_free (priv->uri);
+	g_clear_pointer (&priv->uri, g_free);
 	priv->uri = g_strdup (uri);
 
-	if (priv->metadata)
-		g_object_unref (priv->metadata);
-	if (priv->bookmarks)
-		g_object_unref (priv->bookmarks);
+	g_clear_object (&priv->metadata);
+	g_clear_object (&priv->bookmarks);
 
 	source_file = g_file_new_for_uri (uri);
 	if (ev_is_metadata_supported_for_file (source_file)) {
@@ -2472,8 +2466,7 @@ ev_window_open_uri (EvWindow       *ev_window,
 		priv->bookmarks = NULL;
 	}
 
-	if (priv->dest)
-		g_object_unref (priv->dest);
+	g_clear_object (&priv->dest);
 	priv->dest = dest ? g_object_ref (dest) : NULL;
 
 	set_filenames (ev_window, source_file);
