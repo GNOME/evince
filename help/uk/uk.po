@@ -3,20 +3,21 @@
 # This file is distributed under the same license as the epiphany package.
 #
 # Maxim Dziumanenko <dziumanenko@gmail.com>, 2005-2006.
-# Yuri Chornoivan <yurchor@ukr.net>, 2020, 2021.
+# Yuri Chornoivan <yurchor@ukr.net>, 2020, 2021, 2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: evince manual\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-28 20:11+0000\n"
-"PO-Revision-Date: 2021-07-29 13:18+0300\n"
+"POT-Creation-Date: 2022-05-07 13:50+0000\n"
+"PO-Revision-Date: 2022-05-16 10:24+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<"
+"=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Generator: Lokalize 20.12.0\n"
 
 #. Put one translator per line, in the form NAME <EMAIL>, YEAR1, YEAR2
@@ -876,12 +877,14 @@ msgid ""
 "\n"
 "let g:Tex_ViewRule_pdf = 'evince_dbus.py'\n"
 "let g:Tex_DefaultTargetFormat = 'pdf'\n"
-"let g:Tex_CompileRule_pdf = 'pdflatex --synctex=1 -interaction=nonstopmode $*'\n"
+"let g:Tex_CompileRule_pdf = 'pdflatex --synctex=1 -interaction=nonstopmode"
+" $*'\n"
 msgstr ""
 "\n"
 "let g:Tex_ViewRule_pdf = 'evince_dbus.py'\n"
 "let g:Tex_DefaultTargetFormat = 'pdf'\n"
-"let g:Tex_CompileRule_pdf = 'pdflatex --synctex=1 -interaction=nonstopmode $*'\n"
+"let g:Tex_CompileRule_pdf = 'pdflatex --synctex=1 -interaction=nonstopmode"
+" $*'\n"
 
 #. (itstool) path: item/p
 #: C/synctex-editors.page:52
@@ -1855,9 +1858,10 @@ msgstr ""
 "документів:"
 
 #. (itstool) path: item/p
-#: C/formats.page:33 C/presentations.page:77
-msgid "Comic Book Archive (.cbr and .cbz)"
-msgstr "Архіви коміксів (.cbr і .cbz)"
+#: C/formats.page:33
+#| msgid "Comic Book Archive (.cbr and .cbz)"
+msgid "Comic Book Archive (.cb7, .cbr, .cbt, and .cbz)"
+msgstr "Архіви коміксів (.cb7, .cbr, .cbt і .cbz)"
 
 #. (itstool) path: item/p
 #: C/formats.page:34 C/printing.page:49 C/presentations.page:78
@@ -2806,12 +2810,6 @@ msgstr ""
 
 #. (itstool) path: page/p
 #: C/bug-filing.page:29
-#| msgid ""
-#| "Once you have an account, log in, and click on <gui>New issue</gui>. "
-#| "Before reporting a bug, please read the <link href=\"https://wiki.gnome."
-#| "org/Community/GettingInTouch/Bugzilla/Guidelines\">bug writing "
-#| "guidelines</link>, and please <link href=\"https://gitlab.gnome.org/GNOME/"
-#| "evince/issues\">browse</link> for the bug to see if it already exists."
 msgid ""
 "Once you have an account, log in, and click on <gui>New issue</gui>. Before "
 "reporting a bug, please read the <link href=\"https://wiki.gnome.org/"
@@ -2821,10 +2819,11 @@ msgid ""
 msgstr ""
 "Щойно ваш обліковий запис буде зареєстровано, увійдіть до нього і натисніть "
 "кнопку <gui>New issue</gui> («Нова вада»). Перш ніж повідомляти про ваду, "
-"будь ласка, ознайомтеся із <link href=\"https://wiki.gnome.org/GettingInTouch/BugReportingGuidelines\">настановами щодо створення повідомлень "
-"про вади</link>, і, будь ласка, <link href=\"https://gitlab.gnome.org/GNOME/"
-"evince/issues\">перегляньте</link> список вад, щоб переконатися у тому, що "
-"про виявлену вами ваду ще ніхто не повідомив."
+"будь ласка, ознайомтеся із <link href=\"https://wiki.gnome.org/"
+"GettingInTouch/BugReportingGuidelines\">настановами щодо створення "
+"повідомлень про вади</link>, і, будь ласка, <link href=\"https://gitlab."
+"gnome.org/GNOME/evince/issues\">перегляньте</link> список вад, щоб "
+"переконатися у тому, що про виявлену вами ваду ще ніхто не повідомив."
 
 #. (itstool) path: page/p
 #: C/bug-filing.page:33
@@ -3363,6 +3362,11 @@ msgstr "Підтримувані формати файлів презентац�
 #: C/presentations.page:73
 msgid "The following file formats can be used for presentations:"
 msgstr "Ви можете скористатися для презентацій файлами у таких форматах:"
+
+#. (itstool) path: item/p
+#: C/presentations.page:77
+msgid "Comic Book Archive (.cbr and .cbz)"
+msgstr "Архіви коміксів (.cbr і .cbz)"
 
 #. (itstool) path: item/p
 #: C/presentations.page:80
