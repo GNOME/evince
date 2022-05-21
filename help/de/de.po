@@ -11,11 +11,12 @@
 # Wolfgang Stöggl <c72578@yahoo.de>, 2011, 2014.
 # Gabor Karsay <gabor.karsay@gmx.at>, 2011.
 # Christian Kirbach <christian.kirbach@gmail.com>, 2011, 2013.
+# Tim Sabsch <tim@sabsch.com>, 2021-2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: evince manual\n"
-"POT-Creation-Date: 2021-03-06 13:04+0000\n"
-"PO-Revision-Date: 2021-03-07 10:23+0100\n"
+"POT-Creation-Date: 2022-03-18 14:47+0000\n"
+"PO-Revision-Date: 2022-03-23 20:44+0100\n"
 "Last-Translator: Tim Sabsch <tim@sabsch.com>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "Language: de\n"
@@ -23,7 +24,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.4.2\n"
+"X-Generator: Poedit 3.0.1\n"
 
 #. Put one translator per line, in the form NAME <EMAIL>, YEAR1, YEAR2
 msgctxt "_"
@@ -35,7 +36,7 @@ msgstr ""
 "Wolfgang Stöggl <c72578@yahoo.de>, 2011\n"
 "Gabor Karsay <gabor.karsay@gmx.at>, 2011\n"
 "Benjamin Steinwender <b@stbe.at>, 2015\n"
-"Tim Sabsch <tim@sabsch.com>, 2021"
+"Tim Sabsch <tim@sabsch.com>, 2021-2022"
 
 #. (itstool) path: info/desc
 #: C/synctex-beamer.page:7
@@ -967,25 +968,25 @@ msgstr ""
 "geöffnet ist, so können Sie:"
 
 #. (itstool) path: item/p
-#: C/opening.page:51 C/opening.page:66
+#: C/opening.page:51
 msgid ""
 "Drag a file into the window from <app>Files</app>. The new file will open in "
-"a new window."
+"the same window."
 msgstr ""
 "Von <app>Dateien</app> ein Dateisymbol in das Fenster ziehen. Die neue Datei "
-"wird in einem neuen Fenster geöffnet."
+"wird im gleichen Fenster geöffnet."
 
 #. (itstool) path: item/p
 #: C/opening.page:55
 msgid ""
 "Press the <gui>Open…</gui> button in the top-left corner of the window. In "
 "the <gui>Open Document</gui> dialog, choose the file which you wish to open, "
-"and click <gui>Open</gui>. The file will open in a new window."
+"and click <gui>Open</gui>. The file will open in the same window."
 msgstr ""
 "Klicken Sie auf den Knopf <gui>Öffnen …</gui> in der linken oberen Ecke des "
 "Fensters. Wählen Sie im Dialogfenster <gui>Dokument öffnen</gui> die zu "
 "öffnende Datei und klicken Sie auf <gui>Öffnen</gui>. Die Datei wird "
-"daraufhin in einem neuen Fenster geöffnet."
+"daraufhin im gleichen Fenster geöffnet."
 
 #. (itstool) path: page/p
 #: C/opening.page:62
@@ -995,6 +996,15 @@ msgid ""
 msgstr ""
 "Falls im Fenster des <app>Dokumentenbetrachters</app> bereits ein Dokument "
 "geöffnet ist, so können Sie:"
+
+#. (itstool) path: item/p
+#: C/opening.page:66
+msgid ""
+"Drag a file into the window from <app>Files</app>. The new file will open in "
+"a new window."
+msgstr ""
+"Von <app>Dateien</app> ein Dateisymbol in das Fenster ziehen. Die neue Datei "
+"wird in einem neuen Fenster geöffnet."
 
 #. (itstool) path: item/p
 #: C/opening.page:70
@@ -2814,7 +2824,6 @@ msgstr ""
 "Die ist eine Fehlerdatenbank, in der Benutzer und Entwickler Details zu "
 "Fehlern, Abstürzen und Erweiterungswünschen hinterlegen."
 
-# Die Bugzilla-Website ist nur in Englisch
 #. (itstool) path: page/p
 #: C/bug-filing.page:26
 msgid ""
@@ -2835,14 +2844,14 @@ msgstr ""
 msgid ""
 "Once you have an account, log in, and click on <gui>New issue</gui>. Before "
 "reporting a bug, please read the <link href=\"https://wiki.gnome.org/"
-"Community/GettingInTouch/Bugzilla/Guidelines\">bug writing guidelines</"
-"link>, and please <link href=\"https://gitlab.gnome.org/GNOME/evince/issues"
-"\">browse</link> for the bug to see if it already exists."
+"GettingInTouch/BugReportingGuidelines\">bug writing guidelines</link>, and "
+"please <link href=\"https://gitlab.gnome.org/GNOME/evince/issues\">browse</"
+"link> for the bug to see if it already exists."
 msgstr ""
 "Sobald die Erstellung des Kontos abgeschlossen ist, klicken Sie auf <gui>New "
 "issue</gui>. Bevor Sie einen Fehler melden, lesen Sie bitte die <link href="
-"\"https://wiki.gnome.org/Community/GettingInTouch/Bugzilla/Guidelines\">bug "
-"writing guidelines</link> und <link href=\"https://gitlab.gnome.org/GNOME/"
+"\"https://wiki.gnome.org/GettingInTouch/BugReportingGuidelines\">Bug "
+"Reporting Guidelines</link> und <link href=\"https://gitlab.gnome.org/GNOME/"
 "evince/issues\">schauen Sie bitte nach</link>, ob der Fehler vielleicht "
 "schon gemeldet wurde."
 
@@ -3818,6 +3827,12 @@ msgid ""
 msgstr ""
 "Befolgen Sie die Anweisungen zum Drucken einer <link xref=\"duplex-4page\">4-"
 "seitigen Broschüre</link>."
+
+#. (itstool) path: info/title
+#: C/index.page:7
+msgctxt "link:trail"
+msgid "Evince Document Viewer"
+msgstr "Evince-Dokumentenbetrachter"
 
 #. (itstool) path: info/title
 #: C/index.page:8
