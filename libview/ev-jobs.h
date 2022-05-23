@@ -710,9 +710,12 @@ void            ev_job_find_set_options   (EvJobFind       *job,
                                            EvFindOptions    options);
 EV_PUBLIC
 EvFindOptions   ev_job_find_get_options   (EvJobFind       *job);
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
+EV_DEPRECATED_FOR(ev_job_find_get_n_main_results)
 EV_PUBLIC
 gint            ev_job_find_get_n_results (EvJobFind       *job,
 					   gint             pages);
+G_GNUC_END_IGNORE_DEPRECATIONS
 EV_PUBLIC
 gint            ev_job_find_get_n_main_results (EvJobFind  *job,
 						gint        page);
