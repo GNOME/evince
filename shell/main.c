@@ -318,6 +318,7 @@ main (int argc, char *argv[])
 	status = g_application_run (G_APPLICATION (application), 0, NULL);
 
     done:
+	ev_job_scheduler_wait ();
 	ev_shutdown ();
 	ev_stock_icons_shutdown ();
 

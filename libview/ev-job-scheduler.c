@@ -317,3 +317,20 @@ ev_job_scheduler_get_running_thread_job (void)
 {
         return g_atomic_pointer_get (&running_job);
 }
+
+/**
+ * ev_job_scheduler_wait:
+ *
+ * Synchronously waits until all jobs are done.
+ * Remember that main loop is not running already probably.
+ */
+void
+ev_job_scheduler_wait (void)
+{
+	ev_debug_message (DEBUG_JOBS, "Waiting for empty job list");
+
+	while (job_list != NULL)
+		g_usleep (100);
+
+	ev_debug_message (DEBUG_JOBS, "Job list is empty");
+}

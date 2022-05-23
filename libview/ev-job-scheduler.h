@@ -48,4 +48,7 @@ void   ev_job_scheduler_update_job             (EvJob        *job,
 EV_PUBLIC
 EvJob *ev_job_scheduler_get_running_thread_job (void);
 
+EV_PUBLIC
+void   ev_job_scheduler_wait                   (void);
+
 G_END_DECLS

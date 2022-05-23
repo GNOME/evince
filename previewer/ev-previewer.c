@@ -331,6 +331,7 @@ main (gint argc, gchar **argv)
         if (print_settings_file)
                 ev_previewer_unlink_tempfile (print_settings_file);
 
+	ev_job_scheduler_wait ();
 	ev_shutdown ();
 	ev_stock_icons_shutdown ();
 
