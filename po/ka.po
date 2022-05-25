@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: evince.HEAD\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
 "POT-Creation-Date: 2022-05-07 13:49+0000\n"
-"PO-Revision-Date: 2022-05-20 06:12+0200\n"
+"PO-Revision-Date: 2022-05-24 20:39+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <(nothing)>\n"
 "Language: ka\n"
@@ -152,7 +152,7 @@ msgstr ""
 
 #: backend/pdf/ev-poppler.c:942
 msgid "All fonts are either standard or embedded."
-msgstr ""
+msgstr "ყველა ფონტი ან სტანდარტულია, ან ჩაშენებული."
 
 #: backend/pdf/ev-poppler.c:972
 msgid "No name"
@@ -192,7 +192,7 @@ msgstr "არ არის ჩაშენებული"
 #.
 #: backend/pdf/ev-poppler.c:1000
 msgid " (One of the Standard 14 Fonts)"
-msgstr ""
+msgstr " (ერთერთი სტანდარტული 14 ფონტიდან)"
 
 #. Translators: string starting with a space
 #. * because it is directly appended to the font
@@ -201,7 +201,7 @@ msgstr ""
 #.
 #: backend/pdf/ev-poppler.c:1007
 msgid " (Not one of the Standard 14 Fonts)"
-msgstr ""
+msgstr " (არცერთი სტანდარტული 14 ფონტიდან)"
 
 #. Translators: string is a concatenation of previous
 #. * translated strings to indicate the fonts properties
@@ -222,6 +222,11 @@ msgid ""
 "Substituting with <b>%s</b>\n"
 "(%s)"
 msgstr ""
+"%s%s\n"
+"კოდირება: %s\n"
+"%s\n"
+"ჩანაცვლება <b>%s</b>\n"
+"(%s)"
 
 #. Translators: string is a concatenation of previous
 #. * translated strings to indicate the fonts properties
@@ -239,6 +244,9 @@ msgid ""
 "Encoding: %s\n"
 "%s"
 msgstr ""
+"%s%s\n"
+"კოდირება: %s\n"
+"%s"
 
 #: backend/ps/evince-psdocument.metainfo.xml.in.in:5
 #: backend/ps/psdocument.evince-backend.desktop.in.in:5
@@ -247,7 +255,7 @@ msgstr "PostScrip დოკუმენტები"
 
 #: backend/ps/evince-psdocument.metainfo.xml.in.in:6
 msgid "Adds support for reading PostScript documents"
-msgstr ""
+msgstr "PostScript დოკუმენტების კითხვის მხარდაჭერის დამატება"
 
 #: backend/ps/ev-spectre.c:98
 #, c-format
@@ -266,7 +274,7 @@ msgstr "TIFF დოკუმენტები"
 
 #: backend/tiff/evince-tiffdocument.metainfo.xml.in.in:6
 msgid "Adds support for reading TIFF documents"
-msgstr ""
+msgstr "TIFF დოკუმენტების კითხვის მხარდაჭერის დამატება"
 
 #: backend/tiff/tiff-document.c:124
 msgid "Invalid document"
@@ -279,7 +287,7 @@ msgstr "XPS დოკუმენტები"
 
 #: backend/xps/evince-xpsdocument.metainfo.xml.in.in:6
 msgid "Adds support for reading XPS documents"
-msgstr ""
+msgstr "XPS დოკუმენტების კითხვის მხარდაჭერის დამატება"
 
 #. Manually set name and icon
 #: data/org.gnome.Evince.desktop.in.in:3 org.gnome.Evince.appdata.xml.in:23
@@ -296,6 +304,7 @@ msgstr "მრავალგვერდიანი დოკუმენტ�
 msgid ""
 "pdf;ps;postscript;dvi;xps;djvu;tiff;document;presentation;viewer;evince;"
 msgstr ""
+"pdf;ps;postscript;dvi;xps;djvu;tiff;document;presentation;viewer;evince;"
 
 #: data/org.gnome.Evince.desktop.in.in:19
 msgid "New Window"
@@ -315,15 +324,16 @@ msgstr "დოკუმენტის ავტომატურად თა�
 
 #: data/org.gnome.Evince.gschema.xml:20
 msgid "The document is automatically reloaded on file change."
-msgstr ""
+msgstr "ფაილის ცვლილებისას დოკუმენტი ავტომატურად ჩაიტვირთება თავიდან."
 
 #: data/org.gnome.Evince.gschema.xml:24
 msgid "The URI of the directory last used to open or save a document"
 msgstr ""
+"საქაღალდის URI, რომლიდანაც ბოლოს გახსნეს ან რომელშიც შეინახეს დოკუმენტი"
 
 #: data/org.gnome.Evince.gschema.xml:28
 msgid "The URI of the directory last used to save a picture"
-msgstr ""
+msgstr "საქაღალდის URI, რომელშიც ბოლოს სურათის ჩაწერა მოხდა"
 
 #: data/org.gnome.Evince.gschema.xml:32
 msgid "Page cache size in MiB"
@@ -489,7 +499,7 @@ msgstr "მინდინარეობს %d-ე გვერდის და
 
 #: libview/ev-print-operation.c:1589 libview/ev-print-operation.c:2056
 msgid "Your print range selection does not include any pages"
-msgstr ""
+msgstr "დასაბეჭდი დიაპაზონი არც ერთ გვერდს არ შეიცავს"
 
 #. translators: Title of the print dialog
 #: libview/ev-print-operation.c:1730 libview/ev-print-operation.c:1828
@@ -537,7 +547,7 @@ msgstr ""
 
 #: libview/ev-print-operation.c:2739
 msgid "Auto Rotate and Center"
-msgstr ""
+msgstr "ავტომატური შემობრუნება და ცენტრირება"
 
 #: libview/ev-print-operation.c:2742
 msgid ""
@@ -547,7 +557,7 @@ msgstr ""
 
 #: libview/ev-print-operation.c:2747
 msgid "Select page size using document page size"
-msgstr ""
+msgstr "გვერდის ზომის დოკუმენტის გვერდის ზომის მიხედვით არჩევა"
 
 #: libview/ev-print-operation.c:2749
 msgid ""
@@ -557,15 +567,15 @@ msgstr ""
 
 #: libview/ev-print-operation.c:2754
 msgid "Draw border around pages"
-msgstr ""
+msgstr "გვერდების გარშემო საზღვრის დახატვა"
 
 #: libview/ev-print-operation.c:2756
 msgid "When enabled, a border will be drawn around each page."
-msgstr ""
+msgstr "როცა ჩართულია, თითოეულ გვერდს გარშემო საზღვარი გაუჩნდება."
 
 #: libview/ev-print-operation.c:2858
 msgid "Page Handling"
-msgstr ""
+msgstr "გვერდის დამუშავება"
 
 #: libview/ev-view-accessible.c:43
 msgid "Scroll Up"
@@ -645,35 +655,39 @@ msgstr "პრეზენტაციის დასასრული. გა
 
 #: org.gnome.Evince.appdata.xml.in:24
 msgid "Document viewer for popular document formats"
-msgstr ""
+msgstr "დოკუმენტების პოპულარული ფორმატების გამხსნელი"
 
 #: org.gnome.Evince.appdata.xml.in:26
 msgid ""
 "A document viewer for the GNOME desktop. You can view, search or annotate "
 "documents in many different formats."
 msgstr ""
+"GNOME სამუშაო მაგიდის დოკუმენტების დამთვალიერებელი. შეგიძლიათ დაათვალიეროთ, "
+"მოძებნოთ და ანოტაცია გაუკეთოთ მრავალი სახის დოკუმენტს."
 
 #: org.gnome.Evince.appdata.xml.in:27
 msgid ""
 "Evince supports documents in: PDF, PS, EPS, XPS, DjVu, TIFF, DVI (with "
 "SyncTeX), and Comic Books archives (CBR, CBT, CBZ, CB7)."
 msgstr ""
+"Evince-ს აქვს მხარდაჭერა: PDF, PS, EPS, XPS, DjVu, TIFF, DVI (SyncTeX-ით) და "
+"კომიქსების წიგნების არქივების (CBR, CBT, CBZ, CB7)."
 
 #: org.gnome.Evince.appdata.xml.in:35
 msgid "A clear, simple UI"
-msgstr ""
+msgstr "სუფთა, მარტივი UI"
 
 #: org.gnome.Evince.appdata.xml.in:39
 msgid "Advanced highlighting and annotation"
-msgstr ""
+msgstr "დამატებითი გამკვეთა და ანოტაცია"
 
 #: previewer/ev-previewer.c:57
 msgid "Delete the temporary file"
-msgstr ""
+msgstr "დროებითი ფაილის წაშლა"
 
 #: previewer/ev-previewer.c:59
 msgid "File specifying print settings"
-msgstr ""
+msgstr "ბეჭდვის პარამეტრების ფაილი"
 
 #: previewer/ev-previewer.c:59
 msgid "FILE"
@@ -681,7 +695,7 @@ msgstr "ფაილი"
 
 #: previewer/ev-previewer.c:61
 msgid "File descriptor of input file"
-msgstr ""
+msgstr "შეყვანის ფაილის დესკტიპტორი"
 
 #: previewer/ev-previewer.c:61 previewer/ev-previewer.c:65
 msgid "FD"
@@ -689,7 +703,7 @@ msgstr "FD"
 
 #: previewer/ev-previewer.c:63
 msgid "MIME type of input file"
-msgstr ""
+msgstr "შეყვანის ფაილის MIME ტიპი"
 
 #: previewer/ev-previewer.c:63
 msgid "TYPE"
@@ -697,7 +711,7 @@ msgstr "ტიპი"
 
 #: previewer/ev-previewer.c:65
 msgid "File descriptor of print settings file"
-msgstr ""
+msgstr "ბეჭდვის პარამეტრების ფაილის დესკრიპტორი"
 
 #: previewer/ev-previewer.c:297 previewer/ev-previewer.c:317
 msgid "GNOME Document Previewer"
@@ -705,7 +719,7 @@ msgstr "GNOME-ის დოკუმენტების დამთვალ�
 
 #: previewer/ev-previewer-toolbar.c:112 shell/ev-toolbar.c:218
 msgid "Select page or search in the index"
-msgstr ""
+msgstr "ინდექსიდან აირჩიეთ გვერდი ან ძებნა"
 
 #: previewer/ev-previewer-toolbar.c:114 shell/ev-toolbar.c:219
 msgid "Select page"
@@ -722,7 +736,7 @@ msgstr "ევინსი დოკუმენტების დამთვ�
 #: previewer/ev-previewer-window.c:229
 #, c-format
 msgid "The selected printer “%s” could not be found"
-msgstr ""
+msgstr "არჩეული პრინტერის პოვნა შეუძლებელია: %s"
 
 #: previewer/ev-previewer-window.c:568 shell/ev-window.c:4220
 msgid "Evince"
@@ -754,7 +768,7 @@ msgstr "დოკუმენტის შეკუმშვა"
 
 #: previewer/previewer.ui:49
 msgid "Reset zoom and make the page fit in the window"
-msgstr ""
+msgstr "გადიდების საწყის მნიშვნელობაზე დაბრუნება და ფანჯარაში ჩატევა"
 
 #: properties/ev-properties-main.c:116
 msgid "Document"
@@ -1493,11 +1507,11 @@ msgstr "ამოცანის დაბეჭდვა (%s)"
 
 #: shell/ev-window.c:3953
 msgid "Document contains form fields that have been filled out."
-msgstr ""
+msgstr "დოკუმენტი შეიცავს შევსებულ ფორმის ველებს."
 
 #: shell/ev-window.c:3956
 msgid "Document contains new or modified annotations."
-msgstr ""
+msgstr "დოკუმენტი ახალ ან შეცვლილ ანოტაციებს შეიცავს."
 
 #: shell/ev-window.c:3968
 #, c-format
@@ -1506,7 +1520,7 @@ msgstr "ჩავტვირთო დოკუმენტი (%s) თავ�
 
 #: shell/ev-window.c:3970
 msgid "If you reload the document, changes will be permanently lost."
-msgstr ""
+msgstr "თუ დოკუმენტს თავიდან ჩატვირთავთ, ცვლილებები სამუდამოდ დაიკარგება."
 
 #: shell/ev-window.c:3972
 msgid "_No"
@@ -1519,7 +1533,7 @@ msgstr "შევინახო დოკუმენტის (%s) ასლ�
 
 #: shell/ev-window.c:3983
 msgid "If you don’t save a copy, changes will be permanently lost."
-msgstr ""
+msgstr "თუ ასლს არ შეინახავთ, ცვლილებები სამუდამოდ დაიკარგება."
 
 #: shell/ev-window.c:3985
 msgid "Close _without Saving"
@@ -1532,7 +1546,7 @@ msgstr "ა_სლის შენახვა"
 #: shell/ev-window.c:4071
 #, c-format
 msgid "Wait until print job “%s” finishes before closing?"
-msgstr ""
+msgstr "დაველოდო სანამ ბეჭდვის დავალება %s დასრულდება?"
 
 #. TRANS: the singular form is not really used as n_print_jobs > 1
 #. but some languages distinguish between different plurals forms,
@@ -1542,7 +1556,7 @@ msgstr ""
 msgid "There is %d print job active. Wait until print finishes before closing?"
 msgid_plural ""
 "There are %d print jobs active. Wait until print finishes before closing?"
-msgstr[0] ""
+msgstr[0] "აქტიურია ბეჭდვის %d დავალება. დაველოდო დასრულებას?"
 
 #: shell/ev-window.c:4092
 msgid "If you close the window, pending print jobs will not be printed."
@@ -1550,11 +1564,11 @@ msgstr ""
 
 #: shell/ev-window.c:4096
 msgid "Cancel _print and Close"
-msgstr ""
+msgstr "დაბეჭდვის გაუქმება და დახურვა"
 
 #: shell/ev-window.c:4100
 msgid "Close _after Printing"
-msgstr ""
+msgstr "_დახურვა დაბეჭდვის შემდეგ"
 
 #: shell/ev-window.c:4222
 #| msgid "© 1996-2005 The Evince authors"
@@ -1579,11 +1593,11 @@ msgstr "შეუძლებელია დანართის დამა�
 
 #: shell/ev-window.c:6031
 msgid "Enable caret navigation?"
-msgstr ""
+msgstr "ჩავრთო კარეტის ნავიგაცია?"
 
 #: shell/ev-window.c:6032
 msgid "_Enable"
-msgstr ""
+msgstr "_ჩართვა"
 
 #: shell/ev-window.c:6035
 msgid ""
@@ -1608,7 +1622,7 @@ msgstr "გარე ბმულის გახსნის შეცდომ
 
 #: shell/ev-window.c:7020
 msgid "Couldn’t find appropriate format to save image"
-msgstr ""
+msgstr "გამოსახულების შესანახად შესაბამისი ფორმატის პოვნა შეუძლებელია"
 
 #: shell/ev-window.c:7052
 msgid "The image could not be saved."
@@ -1698,7 +1712,7 @@ msgstr "6400%"
 #: shell/help-overlay.ui:13
 msgctxt "shortcut window"
 msgid "Opening, closing, saving and printing"
-msgstr ""
+msgstr "გახსნა, დახურვა, შენახვა და დაბეჭდვა"
 
 #: shell/help-overlay.ui:17
 msgctxt "shortcut window"
@@ -1753,17 +1767,17 @@ msgstr "გვერდითი ზოლის ჩართ/გამორთ
 #: shell/help-overlay.ui:86
 msgctxt "shortcut window"
 msgid "Toggle caret navigation"
-msgstr ""
+msgstr "კარეტის ნავიგაციის გადართვა"
 
 #: shell/help-overlay.ui:95
 msgctxt "shortcut window"
 msgid "Selecting and copying text"
-msgstr ""
+msgstr "ტექსტის მონიშვნა და კოპირება"
 
 #: shell/help-overlay.ui:99
 msgctxt "shortcut window"
 msgid "Copy highlighted text"
-msgstr ""
+msgstr "გამოკვეთილი ტექსტის კოპირება"
 
 #: shell/help-overlay.ui:106
 msgctxt "shortcut window"
@@ -1773,17 +1787,17 @@ msgstr "დოკუმენტში არსებული ტექსტ�
 #: shell/help-overlay.ui:115
 msgctxt "shortcut window"
 msgid "Rotating and zooming"
-msgstr ""
+msgstr "შემობრუნება და გადიდება"
 
 #: shell/help-overlay.ui:119
 msgctxt "shortcut window"
 msgid "Rotate the page 90 degrees counter-clockwise"
-msgstr ""
+msgstr "გვერდის საათის ისრის საწინააღმდეგოდ 90 გრადუსით მობრუნება"
 
 #: shell/help-overlay.ui:126
 msgctxt "shortcut window"
 msgid "Rotate the page 90 degrees clockwise"
-msgstr ""
+msgstr "გვერდის საათის ისრის მიმართულებით 90 გრადუსით მობრუნება"
 
 #: shell/help-overlay.ui:133 shell/help-overlay.ui:442
 msgctxt "shortcut window"
@@ -1798,12 +1812,12 @@ msgstr "დაპატარავება"
 #: shell/help-overlay.ui:147
 msgctxt "shortcut window"
 msgid "Zoom 1∶1"
-msgstr ""
+msgstr "გადიდება 1:1"
 
 #: shell/help-overlay.ui:154
 msgctxt "shortcut window"
 msgid "Zoom in (alternative)"
-msgstr ""
+msgstr "გადიდება (სხვანაირად)"
 
 #: shell/help-overlay.ui:161
 msgctxt "shortcut window"
@@ -1818,7 +1832,7 @@ msgstr "სიგანეში ჩატევა"
 #: shell/help-overlay.ui:175
 msgctxt "shortcut window"
 msgid "Automatic zoom"
-msgstr ""
+msgstr "ავტომატური გადიდება"
 
 #: shell/help-overlay.ui:184
 msgctxt "shortcut window"
@@ -1833,7 +1847,7 @@ msgstr "ბოლო გვერდზე გადასვლა"
 #: shell/help-overlay.ui:202
 msgctxt "shortcut window"
 msgid "Move up/down a page several lines at a time"
-msgstr ""
+msgstr "გვერდის რამდენიმე ხაზით აწევა/ჩამოწევა"
 
 #: shell/help-overlay.ui:209 shell/help-overlay.ui:463
 msgctxt "shortcut window"
@@ -1893,7 +1907,7 @@ msgstr "დოკუმენტის ნახვა და დამუშა
 #: shell/help-overlay.ui:285
 msgctxt "shortcut window"
 msgid "Add bookmark"
-msgstr ""
+msgstr "სანიშნის დამატება"
 
 #: shell/help-overlay.ui:292
 msgctxt "shortcut window"
@@ -1903,22 +1917,22 @@ msgstr "სანიშნის წაშლა"
 #: shell/help-overlay.ui:299
 msgctxt "shortcut window"
 msgid "Toggle night mode"
-msgstr ""
+msgstr "ღამის რეჟიმის გადართვა"
 
 #: shell/help-overlay.ui:306
 msgctxt "shortcut window"
 msgid "Toggle continuous scrolling"
-msgstr ""
+msgstr "უწყვეტი დაქაჩვის გადართვა"
 
 #: shell/help-overlay.ui:313
 msgctxt "shortcut window"
 msgid "Toggle dual page"
-msgstr ""
+msgstr "ორმაგი გვერდების გადართვა"
 
 #: shell/help-overlay.ui:320
 msgctxt "shortcut window"
 msgid "Toggle odd pages left"
-msgstr ""
+msgstr "კენტი გვერდები მარცხნივ-ის გადართვა"
 
 #: shell/help-overlay.ui:327
 msgctxt "shortcut window"
@@ -1928,7 +1942,7 @@ msgstr "დოკუმენტის თვისებები"
 #: shell/help-overlay.ui:334
 msgctxt "shortcut window"
 msgid "Add a post-it like note"
-msgstr ""
+msgstr "პოსტის მსგავსი შენიშვნის ჩამატება"
 
 #: shell/help-overlay.ui:341
 msgctxt "shortcut window"
@@ -1968,7 +1982,7 @@ msgstr "დახმარების ჩვენება"
 #: shell/help-overlay.ui:388
 msgctxt "shortcut window"
 msgid "Toggle primary menu"
-msgstr ""
+msgstr "ძირითადი მენიუს ჩართ/გამორთ"
 
 #: shell/help-overlay.ui:395
 msgctxt "shortcut window"
@@ -1983,7 +1997,7 @@ msgstr "ფანჯრის დახურვა"
 #: shell/help-overlay.ui:409
 msgctxt "shortcut window"
 msgid "Save current settings as default"
-msgstr ""
+msgstr "მიმდინარე პარამეტრების ნაგულისხმებად შენახვა"
 
 #: shell/help-overlay.ui:418
 msgctxt "shortcut window"
@@ -1993,17 +2007,17 @@ msgstr "წარდგენის რეჟიმი"
 #: shell/help-overlay.ui:422
 msgctxt "shortcut window"
 msgid "Toggle black screen"
-msgstr ""
+msgstr "შავი ეკრანის გადართვა"
 
 #: shell/help-overlay.ui:429
 msgctxt "shortcut window"
 msgid "Toggle white screen"
-msgstr ""
+msgstr "თეთრი ეკრანის გადართვა"
 
 #: shell/help-overlay.ui:438
 msgctxt "shortcut window"
 msgid "Touchpad gestures"
-msgstr ""
+msgstr "სენსორი ეკრანის ჟესტები"
 
 #: shell/main.c:64 shell/main.c:271
 msgid "GNOME Document Viewer"
@@ -2035,7 +2049,7 @@ msgstr ""
 
 #: shell/main.c:75
 msgid "DEST"
-msgstr ""
+msgstr "DEST"
 
 #: shell/main.c:76
 msgid "Run evince in fullscreen mode"
