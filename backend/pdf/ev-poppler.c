@@ -2701,7 +2701,9 @@ poppler_annot_color_to_gdk_rgba (PopplerAnnot *poppler_annot,
 		color->alpha = 1.0;
 
 		g_free (poppler_color);
-	} /* TODO: else use a default color */
+	} else { /* default color */
+		*color = EV_ANNOTATION_DEFAULT_COLOR;
+	}
 }
 
 static EvAnnotationTextIcon
