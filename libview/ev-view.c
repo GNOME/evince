@@ -3717,7 +3717,7 @@ ev_view_create_annotation_real (EvView *view,
 	EvAnnotation   *annot;
 	EvRectangle     doc_rect, popup_rect;
 	EvPage         *page;
-	GdkColor        color = { 0, 65535, 65535, 0 };
+	GdkRGBA         color = EV_ANNOTATION_DEFAULT_COLOR;
 	GdkRectangle    view_rect;
 	cairo_region_t *region;
 
@@ -3749,7 +3749,7 @@ ev_view_create_annotation_real (EvView *view,
 	g_object_unref (page);
 
 	ev_annotation_set_area (annot, &doc_rect);
-	ev_annotation_set_color (annot, &color);
+	ev_annotation_set_rgba (annot, &color);
 
 	if (EV_IS_ANNOTATION_MARKUP (annot)) {
 		popup_rect.x1 = doc_rect.x2;
