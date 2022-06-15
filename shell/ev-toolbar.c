@@ -55,8 +55,7 @@ typedef struct {
 	EvToolbarMode toolbar_mode;
 } EvToolbarPrivate;
 
-G_DEFINE_TYPE_WITH_CODE (EvToolbar, ev_toolbar, GTK_TYPE_BIN,
-			 G_ADD_PRIVATE (EvToolbar))
+G_DEFINE_TYPE_WITH_PRIVATE (EvToolbar, ev_toolbar, GTK_TYPE_BIN)
 
 #define GET_PRIVATE(o) ev_toolbar_get_instance_private (o)
 
