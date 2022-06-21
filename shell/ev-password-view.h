@@ -25,30 +25,21 @@
 G_BEGIN_DECLS
 
 #define EV_TYPE_PASSWORD_VIEW            (ev_password_view_get_type ())
-#define EV_PASSWORD_VIEW(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), EV_TYPE_PASSWORD_VIEW, EvPasswordView))
-#define EV_IS_PASSWORD_VIEW(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), EV_TYPE_PASSWORD_VIEW))
-
-typedef struct _EvPasswordView        EvPasswordView;
-typedef struct _EvPasswordViewClass   EvPasswordViewClass;
-
-struct _EvPasswordView {
-	GtkViewport parent_instance;
-};
+G_DECLARE_DERIVABLE_TYPE (EvPasswordView, ev_password_view, EV, PASSWORD_VIEW, GtkBox);
 
 struct _EvPasswordViewClass {
-	GtkViewportClass parent_class;
+	GtkBoxClass parent_class;
 
 	/* signals */
 	void (*unlock)    (EvPasswordView	*self);
 	void (*cancelled) (EvPasswordView	*self);
 };
 
-GType	      ev_password_view_get_type                (void) G_GNUC_CONST;
-GtkWidget    *ev_password_view_new                     (GtkWindow      *parent);
-void          ev_password_view_set_filename            (EvPasswordView *password_view,
-							const char     *filename);
-void          ev_password_view_ask_password            (EvPasswordView *password_view);
-const gchar  *ev_password_view_get_password            (EvPasswordView *password_view);
-GPasswordSave ev_password_view_get_password_save_flags (EvPasswordView *password_view);
+EvPasswordView *ev_password_view_new                     (void);
+void            ev_password_view_set_filename            (EvPasswordView *password_view,
+							  const char     *filename);
+void            ev_password_view_ask_password            (EvPasswordView *password_view);
+const gchar    *ev_password_view_get_password            (EvPasswordView *password_view);
+GPasswordSave   ev_password_view_get_password_save_flags (EvPasswordView *password_view);
 
 G_END_DECLS
