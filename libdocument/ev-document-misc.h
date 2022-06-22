@@ -86,12 +86,6 @@ void		 ev_document_misc_invert_pixbuf  (GdkPixbuf       *pixbuf);
 EV_PUBLIC
 gdouble          ev_document_misc_get_widget_dpi (GtkWidget *widget);
 
-G_GNUC_BEGIN_IGNORE_DEPRECATIONS
-EV_DEPRECATED_FOR (ev_document_misc_format_datetime)
-EV_PUBLIC
-gchar           *ev_document_misc_format_date     (GTime utime);
-G_GNUC_END_IGNORE_DEPRECATIONS
-
 EV_PUBLIC
 gchar           *ev_document_misc_format_datetime (GDateTime *dt);
 
