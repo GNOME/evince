@@ -691,16 +691,6 @@ EvDocument  *ev_backends_manager_get_document (const gchar *mime_type)
         return ev_document_factory_new_document_for_mime_type (mime_type, NULL);
 }
 
-const gchar *
-ev_backends_manager_get_document_module_name (EvDocument  *document)
-{
-        EvBackendInfo *info = get_backend_info_for_document (document);
-        if (info == NULL)
-                return NULL;
-
-        return info->module_name;
-}
-
 /**
  * ev_backends_manager_get_document_type_info: (skip)
  * @document: a #EvDocument
