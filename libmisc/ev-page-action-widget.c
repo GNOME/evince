@@ -28,6 +28,8 @@
 #include <evince-document.h>
 #include "ev-page-action-widget.h"
 
+#define COMPLETION_RESULTS_WIDTH 50
+
 /* Widget we pass back */
 static void  ev_page_action_widget_init       (EvPageActionWidget      *action_widget);
 static void  ev_page_action_widget_class_init (EvPageActionWidgetClass *action_widget);
@@ -203,6 +205,8 @@ focus_out_cb (EvPageActionWidget *action_widget)
 {
         ev_page_action_widget_set_current_page (action_widget,
                                                 ev_document_model_get_page (action_widget->doc_model));
+        g_object_set (action_widget->entry, "xalign", 1.0, NULL);
+        ev_page_action_widget_update_max_width (action_widget);
         return FALSE;
 }
 
@@ -578,7 +582,7 @@ ev_page_action_widget_update_links_model (EvPageActionWidget *proxy, GtkTreeMode
 	renderer = (GtkCellRenderer *)
 		g_object_new (GTK_TYPE_CELL_RENDERER_TEXT,
 			      "ellipsize", PANGO_ELLIPSIZE_END,
-			      "width_chars", 30,
+			      "width_chars", COMPLETION_RESULTS_WIDTH,
 			      NULL);
 	gtk_cell_layout_pack_start (GTK_CELL_LAYOUT (completion), renderer, TRUE);
 	gtk_cell_layout_set_cell_data_func (GTK_CELL_LAYOUT (completion),
@@ -596,3 +600,20 @@ ev_page_action_widget_grab_focus (EvPageActionWidget *proxy)
 	gtk_widget_grab_focus (proxy->entry);
 }
 
+void
+ev_page_action_widget_clear (EvPageActionWidget *proxy)
+{
+	gtk_entry_set_text (GTK_ENTRY (proxy->entry), "");
+}
+
+/* Sets width of the text entry, width will be restablished
+ * to default one on focus_out event. This function is used
+ * when searching the Outline, so the user has more space
+ * to write the search term. */
+void
+ev_page_action_widget_set_temporary_entry_width (EvPageActionWidget *proxy, gint width)
+{
+	gtk_entry_set_width_chars (GTK_ENTRY (proxy->entry), width);
+	/* xalign will also be restablished on focus_out */
+	g_object_set (proxy->entry, "xalign", 0., NULL);
+}

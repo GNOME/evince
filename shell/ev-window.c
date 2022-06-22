@@ -4230,14 +4230,15 @@ ev_window_cmd_about (GSimpleAction *action,
 }
 
 static void
-ev_window_cmd_focus_page_selector (GSimpleAction *action,
-				   GVariant      *parameter,
-				   gpointer       user_data)
+ev_window_focus_page_selector (EvWindow *window)
 {
-	EvWindow *window = user_data;
-	EvWindowPrivate *priv = GET_PRIVATE (window);
+	EvWindowPrivate *priv;
 	GtkWidget *page_selector;
 	EvToolbar *toolbar;
+
+	g_return_if_fail (EV_IS_WINDOW (window));
+
+	priv = GET_PRIVATE (window);
 
 	update_chrome_flag (window, EV_CHROME_RAISE_TOOLBAR, TRUE);
 	update_chrome_visibility (window);
@@ -4245,6 +4246,48 @@ ev_window_cmd_focus_page_selector (GSimpleAction *action,
 	toolbar = EV_TOOLBAR (priv->toolbar);
 	page_selector = ev_toolbar_get_page_selector (toolbar);
 	ev_page_action_widget_grab_focus (EV_PAGE_ACTION_WIDGET (page_selector));
+}
+
+/**
+ * ev_window_start_page_selector_search:
+ * @ev_window: The instance of the #EvWindow.
+ *
+ * Prepares page_selector text entry for searching the Outline,
+ * basically this:
+ *    - Gives focus to the page selector entry
+ *    - Clears the text in it.
+ *    - Makes the text entry wider.
+ *
+ * All these changes will be restablished once the search
+ * it's finished by means of the entry focus_out event.
+ */
+void
+ev_window_start_page_selector_search (EvWindow *window)
+{
+	EvWindowPrivate *priv;
+	GtkWidget *page_selector;
+	EvPageActionWidget *action_widget;
+
+	g_return_if_fail (EV_IS_WINDOW (window));
+
+	priv = GET_PRIVATE (window);
+
+	page_selector = ev_toolbar_get_page_selector (EV_TOOLBAR (priv->toolbar));
+	action_widget = EV_PAGE_ACTION_WIDGET (page_selector);
+	if (!action_widget)
+		return;
+
+	ev_window_focus_page_selector (window);
+	ev_page_action_widget_clear (action_widget);
+	ev_page_action_widget_set_temporary_entry_width (action_widget, 15);
+}
+
+static void
+ev_window_cmd_focus_page_selector (GSimpleAction *action,
+				   GVariant      *parameter,
+				   gpointer       user_data)
+{
+	ev_window_focus_page_selector (EV_WINDOW (user_data));
 }
 
 static void

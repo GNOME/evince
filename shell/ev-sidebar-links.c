@@ -292,6 +292,19 @@ create_loading_model (void)
 }
 
 static void
+ev_links_popup_cmd_search_outline (GSimpleAction *action,
+				   GVariant      *parameter,
+				   gpointer       ev_sidebar_links)
+{
+	GtkWidget *window;
+
+	window = gtk_widget_get_toplevel (GTK_WIDGET (ev_sidebar_links));
+	if (EV_IS_WINDOW (window)) {
+		ev_window_start_page_selector_search (EV_WINDOW (window));
+	}
+}
+
+static void
 ev_links_popup_cmd_print_section (GSimpleAction *action,
 				  GVariant      *parameter,
 				  gpointer       ev_sidebar_links)
@@ -401,7 +414,10 @@ check_menu_sensitivity (GtkTreeView *treeview,
 		}
 	}
 
-	if (is_list)
+	if (!selected_path)
+		ev_sidebar_links_set_action_enabled (sidebar, "search-outline", FALSE);
+
+	if (is_list || !selected_path)
 		return;
 
 	/* Enable 'Expand under this' only when 'this' element has grandchildren */
@@ -440,6 +456,20 @@ check_menu_sensitivity (GtkTreeView *treeview,
 }
 
 static gboolean
+path_is_selected (GtkTreeView *treeview,
+                 GtkTreePath *path)
+{
+       GtkTreeModel *model;
+       GtkTreeSelection *selection;
+       GtkTreeIter iter;
+
+       model = gtk_tree_view_get_model (treeview);
+       selection = gtk_tree_view_get_selection (treeview);
+       return gtk_tree_model_get_iter (model, &iter, path) &&
+              gtk_tree_selection_iter_is_selected (selection, &iter);
+}
+
+static gboolean
 button_press_cb (GtkWidget *treeview,
                  GdkEventButton *event,
                  EvSidebarLinks *sidebar)
@@ -454,8 +484,9 @@ button_press_cb (GtkWidget *treeview,
 					    event->y, &path, NULL, NULL, NULL))
 		return GDK_EVENT_PROPAGATE;
 
-	gtk_tree_view_set_cursor (GTK_TREE_VIEW (treeview),
-				  path, NULL, FALSE);
+	if (! path_is_selected (GTK_TREE_VIEW (treeview), path))
+		path = NULL;
+
 	check_menu_sensitivity (GTK_TREE_VIEW (treeview), path, sidebar);
 	gtk_menu_popup_at_pointer (GTK_MENU (priv->popup),
 				   (GdkEvent *) event);
@@ -980,6 +1011,7 @@ ev_links_popup_cmd_expand_element (GSimpleAction *action,
 static GActionGroup *
 create_links_action_group (EvSidebarLinks *ev_sidebar_links) {
 	const GActionEntry popup_entries[] = {
+		{ "search-outline", ev_links_popup_cmd_search_outline },
 		{ "print-section", ev_links_popup_cmd_print_section },
 		{ "collapse-all", ev_links_popup_cmd_collapse_all },
 		{ "expand-all", ev_links_popup_cmd_expand_all },
