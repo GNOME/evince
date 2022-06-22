@@ -38,10 +38,6 @@ typedef struct _EvTypeInfo {
 EV_PUBLIC
 EvDocument  *ev_backends_manager_get_document             (const gchar *mime_type);
 
-EV_DEPRECATED
-EV_PUBLIC
-const gchar *ev_backends_manager_get_document_module_name (EvDocument  *document);
-EV_DEPRECATED
 EV_PUBLIC
 EvTypeInfo  *ev_backends_manager_get_document_type_info   (EvDocument  *document);
 
