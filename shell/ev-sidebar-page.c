@@ -88,6 +88,14 @@ ev_sidebar_page_default_init (EvSidebarPageInterface *iface)
 									  GTK_TYPE_WIDGET,
 									  G_PARAM_READABLE |
                                                                           G_PARAM_STATIC_STRINGS));
+		g_object_interface_install_property (iface,
+						     g_param_spec_object ("document-model",
+									  "DocumentModel",
+									  "The document model",
+									  EV_TYPE_DOCUMENT_MODEL,
+									  G_PARAM_WRITABLE |
+									  G_PARAM_CONSTRUCT_ONLY |
+									  G_PARAM_STATIC_STRINGS));
 		initialized = TRUE;
 	}
 }
