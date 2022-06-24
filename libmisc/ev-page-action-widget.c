@@ -33,6 +33,7 @@
 /* Widget we pass back */
 static void  ev_page_action_widget_init       (EvPageActionWidget      *action_widget);
 static void  ev_page_action_widget_class_init (EvPageActionWidgetClass *action_widget);
+static gboolean ev_page_action_widget_completion_search_is_enabled (EvPageActionWidget *proxy);
 
 enum
 {
@@ -178,12 +179,22 @@ activate_cb (EvPageActionWidget *action_widget)
 	EvLinkAction *link_action;
 	EvLink *link;
 	gchar *link_text;
+	gchar *new_text;
 	gint current_page;
 
 	model = action_widget->doc_model;
 	current_page = ev_document_model_get_page (model);
 
 	text = gtk_entry_get_text (GTK_ENTRY (action_widget->entry));
+
+	/* If we are not in search mode, i.e. we are entering a page number */
+	if (!ev_page_action_widget_completion_search_is_enabled (action_widget)) {
+		/* Convert utf8 fullwidth numbers (eg. japanese) to halfwidth - fixes #1518 */
+		new_text = g_utf8_normalize (text, -1, G_NORMALIZE_ALL);
+		gtk_entry_set_text (GTK_ENTRY (action_widget->entry), new_text);
+		text = gtk_entry_get_text (GTK_ENTRY (action_widget->entry));
+		g_free (new_text);
+	}
 
 	link_dest = ev_link_dest_new_page_label (text);
 	link_action = ev_link_action_new_dest (link_dest);
@@ -638,4 +649,11 @@ ev_page_action_widget_enable_completion_search (EvPageActionWidget *proxy, gbool
 {
 	GtkEntryCompletion *completion = enable ? proxy->completion : NULL;
 	gtk_entry_set_completion (GTK_ENTRY (proxy->entry), completion);
+}
+
+/* Returns whether the completion search is enabled in @proxy */
+static gboolean
+ev_page_action_widget_completion_search_is_enabled (EvPageActionWidget *proxy)
+{
+	return gtk_entry_get_completion (GTK_ENTRY (proxy->entry)) != NULL;
 }
