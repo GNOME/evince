@@ -53,6 +53,7 @@ struct _EvPageActionWidget
 	gulong notify_document_signal_id;
 	GtkTreeModel *filter_model;
 	GtkTreeModel *model;
+	GtkEntryCompletion *completion;
 };
 
 static guint widget_signals[WIDGET_N_SIGNALS] = {0, };
@@ -201,12 +202,21 @@ activate_cb (EvPageActionWidget *action_widget)
 }
 
 static gboolean
+disable_completion_search (EvPageActionWidget *action_widget)
+{
+	ev_page_action_widget_enable_completion_search (action_widget, FALSE);
+	return G_SOURCE_REMOVE;
+}
+
+static gboolean
 focus_out_cb (EvPageActionWidget *action_widget)
 {
         ev_page_action_widget_set_current_page (action_widget,
                                                 ev_document_model_get_page (action_widget->doc_model));
         g_object_set (action_widget->entry, "xalign", 1.0, NULL);
         ev_page_action_widget_update_max_width (action_widget);
+        g_idle_add ((GSourceFunc)disable_completion_search, action_widget);
+
         return FALSE;
 }
 
@@ -342,6 +352,8 @@ ev_page_action_widget_finalize (GObject *object)
 					      (gpointer)&action_widget->doc_model);
 		action_widget->doc_model = NULL;
 	}
+
+	g_clear_object (&action_widget->completion);
 
         ev_page_action_widget_set_document (action_widget, NULL);
 
@@ -568,6 +580,8 @@ ev_page_action_widget_update_links_model (EvPageActionWidget *proxy, GtkTreeMode
 	filter_model = get_filter_model_from_model (model);
 
 	completion = gtk_entry_completion_new ();
+	g_clear_object (&proxy->completion);
+	proxy->completion = completion;
 	g_object_set (G_OBJECT (completion),
 		      "popup-set-width", FALSE,
 		      "model", filter_model,
@@ -616,4 +630,12 @@ ev_page_action_widget_set_temporary_entry_width (EvPageActionWidget *proxy, gint
 	gtk_entry_set_width_chars (GTK_ENTRY (proxy->entry), width);
 	/* xalign will also be restablished on focus_out */
 	g_object_set (proxy->entry, "xalign", 0., NULL);
+}
+
+/* Enables or disables the completion search on @proxy according to @enable */
+void
+ev_page_action_widget_enable_completion_search (EvPageActionWidget *proxy, gboolean enable)
+{
+	GtkEntryCompletion *completion = enable ? proxy->completion : NULL;
+	gtk_entry_set_completion (GTK_ENTRY (proxy->entry), completion);
 }

@@ -4257,6 +4257,7 @@ ev_window_focus_page_selector (EvWindow *window)
  *    - Gives focus to the page selector entry
  *    - Clears the text in it.
  *    - Makes the text entry wider.
+ *    - Enables the completion search.
  *
  * All these changes will be restablished once the search
  * it's finished by means of the entry focus_out event.
@@ -4280,6 +4281,7 @@ ev_window_start_page_selector_search (EvWindow *window)
 	ev_window_focus_page_selector (window);
 	ev_page_action_widget_clear (action_widget);
 	ev_page_action_widget_set_temporary_entry_width (action_widget, 15);
+	ev_page_action_widget_enable_completion_search (action_widget, TRUE);
 }
 
 static void
@@ -4604,6 +4606,9 @@ ev_window_update_links_model (EvWindow *window)
 
 	page_selector = ev_toolbar_get_page_selector (EV_TOOLBAR (priv->toolbar));
 	ev_page_action_widget_update_links_model (EV_PAGE_ACTION_WIDGET (page_selector), model);
+	/* Let's disable initially the completion search so it does not misfire when the user
+	 * is entering page numbers. Fixes issue #1759 */
+	ev_page_action_widget_enable_completion_search (EV_PAGE_ACTION_WIDGET (page_selector), FALSE);
 	g_object_unref (model);
 }
 
