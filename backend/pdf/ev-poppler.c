@@ -2979,10 +2979,11 @@ ev_annot_from_poppler_annot (PopplerAnnot *poppler_annot,
 			}
 
 			label = poppler_annot_markup_get_label (markup);
+			if (label)
+				g_object_set (ev_annot, "label", label, NULL);
 			opacity = poppler_annot_markup_get_opacity (markup);
 
 			g_object_set (ev_annot,
-				      "label", label,
 				      "opacity", opacity,
 				      "can_have_popup", TRUE,
 				      NULL);
