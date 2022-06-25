@@ -1056,6 +1056,7 @@ ev_sidebar_links_construct (EvSidebarLinks *ev_sidebar_links)
 	gtk_tree_selection_set_mode (selection, GTK_SELECTION_NONE);
 	gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (priv->tree_view), FALSE);
 	gtk_tree_view_set_tooltip_column (GTK_TREE_VIEW (priv->tree_view), 0);
+	gtk_tree_view_set_enable_search (GTK_TREE_VIEW (priv->tree_view), FALSE);
 	gtk_container_add (GTK_CONTAINER (swindow), priv->tree_view);
 
 	gtk_box_pack_start (GTK_BOX (ev_sidebar_links), swindow, TRUE, TRUE, 0);
