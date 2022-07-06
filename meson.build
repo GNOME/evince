@@ -169,7 +169,8 @@ m_dep = cc.find_library('m')
 
 gidocgen_dep = dependency('gi-docgen', version: '>= 2021.1',
 			  fallback: ['gi-docgen', 'dummy_dep'],
-			  required: get_option('gtk_doc'))
+			  required: get_option('gtk_doc'),
+			  native: true)
 
 # Although GTK+ 3.10 includes hi-dpi functionality, it does not require a cairo with
 # cairo_surface_set_device_scale(), which we also need if we're to support hi-dpi,
