@@ -1,3 +1,87 @@
+==================
+Evince    43.alpha
+==================
+
+backends:
+  * Handle labels as optional on markup annotations (#1814, Nelson Benítez León)
+  * Use default color when annotation has no color (#1800, Nelson Benítez León)
+
+build:
+  * Add deprecation guards to now old find text related functions (Germán Poo-Caamaño)
+  * Always enable the pdf backend (Germán Poo-Caamaño)
+  * Bump poppler's version to latest stable (Germán Poo-Caamaño)
+  * Bump version after release (Germán Poo-Caamaño)
+  * Let flatpak build fail (Germán Poo-Caamaño)
+
+ci:
+  * Remove unused path when building flatpak (Germán Poo-Caamaño)
+
+comics:
+  * Fix use-after-free (#1776, Bastien Nocera)
+
+data:
+  * Fix typo that broke the build (Germán Poo-Caamaño)
+  * Remove 42.x development releases from appdata (Germán Poo-Caamaño)
+
+flatpak:
+  * Update access to gvfs (Germán Poo-Caamaño)
+
+help:
+  * Add missing comics file already supported (#1779, Germán Poo-Caamaño)
+
+libdocument:
+  * Fix annotations in functions (Germán Poo-Caamaño)
+  * Get backends directory from environment (Cédric Krier)
+  * Remove headers of already removed functions (Germán Poo-Caamaño)
+
+libview:
+  * Fix missing last frame of an animation (#1821, Romain)
+
+shell:
+  * Add access to internal child to EvMessageArea (Qiu Wenbo)
+  * Add support for multi-line text search (#333, Nelson Benítez León)
+  * Avoid gtk_window_show_all in EvPassword (Germán Poo-Caamaño)
+  * Avoid using gtk_widget_show_all on ev-zoom-action (Germán Poo-Caamaño)
+  * Create EvZoomAction popup during init and add to template (Pablo Correa Gómez)
+  * Disconnect signal handler to prevent invalid read (#1784, Marek Kasik)
+  * Don't copy whole files from remote shares (Bastien Nocera)
+  * Make zoom-menu internal to EvZoomAction (Pablo Correa Gómez)
+  * Modernize access to private members on ev-message-area (Germán Poo-Caamaño)
+  * Move EvZoomAction signal connection to composite template (Pablo Correa Gómez)
+  * Prepare properties license tab for gtk4 (Germán Poo-Caamaño)
+  * Prepare properties view for gtk4 (Germán Poo-Caamaño)
+  * Remove unused ev_toolbar_has_visible_popups function (Pablo Correa Gómez)
+  * Remove unused ev_zoom_action_get_popup_shown function (Pablo Correa Gómez)
+  * Simplify memory management in ev_window_open_uri() (Bastien Nocera)
+  * Use composite template for EvPasswordView (Qiu Wenbo)
+  * Use composite template for EvSidebar (Germán Poo-Caamaño)
+  * Use composite template for EvSidebarBookmarks (Germán Poo-Caamaño)
+  * Use composite template for EvZoomView (Germán Poo-Caamaño)
+  * Use composite template for the Fonts property tab (Germán Poo-Caamaño)
+  * Use composite template for the message area (Germán Poo-Caamaño)
+  * Use composite template for the progress message area (Germán Poo-Caamaño)
+  * Use composite template for the recents view (Germán Poo-Caamaño)
+  * Update for new gnome-desktop API (Michael Catanzaro)
+  * Wait until all jobs finish before exit (#1713, Marek Kasik)
+
+Developers:
+  * Bastien Nocera, Cédric Krier, Germán Poo-Caamaño, Marek Kasik, Michael Catanzaro, Nelson Benítez León, Pablo Correa Gómez, Piotr Drąg, Qiu Wenbo, Romain
+
+Translations:
+  * Asier Sarasua Garmendia (Basque)
+  * Jordi Mas (Catalan)
+  * Nathan Follens (Dutch)
+  * Fabio Tomat (Friulian)
+  * Zurab Kargareteli (Georgian)
+  * Tim Sabsch (German)
+  * Sveinn í Felli (Icelandic)
+  * Gianvito Cavasoli (Italian)
+  * Rūdolfs Mazurs (Latvian)
+  * Sergej A (Russian)
+  * Dušan Kazik (Slovak)
+  * Anders Jonsson (Swedish)
+  * Yuri Chornoivan (Ukrainian)
+
 ==============
 Evince    42.0
 ==============
