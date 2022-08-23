@@ -185,6 +185,11 @@ ev_spawn (const char     *uri,
                                                 ev_link_dest_get_page_label (dest));
                         break;
                 case EV_LINK_DEST_TYPE_PAGE:
+                case EV_LINK_DEST_TYPE_XYZ:
+                case EV_LINK_DEST_TYPE_FIT:
+                case EV_LINK_DEST_TYPE_FITH:
+                case EV_LINK_DEST_TYPE_FITV:
+                case EV_LINK_DEST_TYPE_FITR:
                         g_string_append_printf (cmd, " --page-index=%d",
                                                 ev_link_dest_get_page (dest) + 1);
                         break;
