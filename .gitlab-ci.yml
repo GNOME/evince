@@ -40,7 +40,7 @@ meson-internal-synctex:
         expire_in: 2 days
 
 flatpak:
-    image: registry.gitlab.gnome.org/gnome/gnome-runtime-images/gnome:master
+    extends: .flatpak
     stage: build
 
     variables:
@@ -49,7 +49,6 @@ flatpak:
         FLATPAK_MODULE: "evince"
         MESON_ARGS: "-Dnautilus=false -Dgtk_doc=false"
         APP_ID: "org.gnome.Evince"
-    extends: .flatpak
     artifacts:
         # Rewrite paths and reports to "remove" testlog.txt and junit files, 
         # which do not exists in evince build, yet.
