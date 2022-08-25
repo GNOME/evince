@@ -9,7 +9,7 @@ variables:
     BUNDLE: "org.gnome.Evince.flatpak"
 
 meson:
-    image: registry.gitlab.gnome.org/gnome/evince/x86_64-ubuntu:poppler
+    image: registry.gitlab.gnome.org/gnome/evince/x86_64-ubuntu:latest
     stage: build
 
     script:
@@ -27,7 +27,7 @@ meson:
         expire_in: 2 days
 
 meson-internal-synctex:
-    image: registry.gitlab.gnome.org/gnome/evince/x86_64-ubuntu:poppler
+    image: registry.gitlab.gnome.org/gnome/evince/x86_64-ubuntu:latest
     stage: build
 
     script:
@@ -65,16 +65,28 @@ nightly:
         - flatpak
     extends: .publish_nightly
 
-update registry image:
-    image: registry.gitlab.gnome.org/gnome/evince/x86_64-ubuntu:poppler
+update image:
+    variables:
+        IMAGE_TAG: $CI_REGISTRY_IMAGE/x86_64-ubuntu
+        # Tell 'docker:dind' to enable TLS (recommended)
+        # and generate certificates in the specified directory.
+        DOCKER_TLS_CERTDIR: "/certs"
+        STORAGE_DRIVER: vfs
+        BUILDAH_FORMAT: docker
+        BUILDAH_ISOLATION: chroot
+    image: alpine:latest
     stage: image
     script:
-        - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-        - docker build -t $CI_REGISTRY_IMAGE -f .gitlab-ci/ubuntu.Dockerfile
+        - apk add --no-cache buildah runc
+        - buildah bud --tag $IMAGE_TAG -f .gitlab-ci/ubuntu.Dockerfile
+        - buildah tag $IMAGE_TAG "$IMAGE_TAG:v$CI_JOB_ID"
+        - buildah login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+        - buildah push --creds $CI_REGISTRY_USER:$CI_REGISTRY_PASSWORD $IMAGE_TAG
+        - buildah push --creds $CI_REGISTRY_USER:$CI_REGISTRY_PASSWORD "$IMAGE_TAG:v$CI_JOB_ID"
     when: manual
     only:
-        - web
-        - main
+       - web
+       - main
     except:
-        variables:
-            - $CI_PROJECT_NAMESPACE != "GNOME"
+       variables:
+           - $CI_PROJECT_NAMESPACE != "GNOME"
