@@ -14,11 +14,13 @@ apt-get -yqq install --no-install-recommends \
     libgirepository1.0-dev libgtk-3-dev \
     libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev \
     libxml2-dev libxml2-utils \
+    libarchive-dev \
     libsecret-1-dev libgspell-1-dev \
     libgnome-desktop-3-dev libnautilus-extension-dev \
     libspectre-dev libtiff5-dev libdjvulibre-dev \
     libkpathsea-dev libgxps-dev libsynctex-dev \
-    git ccache systemd ninja-build meson
+    git ccache systemd ninja-build meson \
+    cmake
 
 # Install gi-docgen and its dependencies
 apt-get -yqq install --no-install-recommends \
@@ -26,20 +28,11 @@ apt-get -yqq install --no-install-recommends \
 
 pip install gi-docgen
 
-# Install dependencies to build libarchive
-apt-get -yqq install --no-install-recommends \
-    cmake liblz4-dev libzstd-dev libb2-dev libssl-dev
-
 # Install dependencies to build poppler
 apt-get -yqq install --no-install-recommends \
     poppler-data libboost-container-dev libopenjp2-7-dev libcurl4-openssl-dev
 
-git clone --depth 1 --branch v3.6.0 \
-    https://github.com/libarchive/libarchive.git /tmp/libarchive
-cd /tmp/libarchive
-cmake .; make --silent -j4; make install
-
-git clone --depth 1 --branch poppler-22.02.0 \
+git clone --depth 1 --branch poppler-22.07.0 \
     https://gitlab.freedesktop.org/poppler/poppler.git /tmp/poppler
 cd /tmp/poppler
 cmake -DBUILD_GTK_TESTS=OFF, -DBUILD_CPP_TESTS=OFF, -DENABLE_UTILS=OFF, \
@@ -50,6 +43,6 @@ ninja && ninja install
 
 # Clean up
 apt-get clean
-rm -rf /tmp/libarchive /tmp/poppler
+rm -rf /tmp/poppler
 
 useradd -u 1984 -ms /bin/sh user
