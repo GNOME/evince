@@ -3,6 +3,7 @@ include: 'https://gitlab.gnome.org/GNOME/citemplates/raw/master/flatpak/flatpak_
 stages:
     - build
     - deploy
+    - image
 
 variables:
     BUNDLE: "org.gnome.Evince.flatpak"
@@ -63,3 +64,17 @@ nightly:
     dependencies:
         - flatpak
     extends: .publish_nightly
+
+update registry image:
+    image: registry.gitlab.gnome.org/gnome/evince/x86_64-ubuntu:poppler
+    stage: image
+    script:
+        - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+        - docker build -t $CI_REGISTRY_IMAGE -f .gitlab-ci/ubuntu.Dockerfile
+    when: manual
+    only:
+        - web
+        - main
+    except:
+        variables:
+            - $CI_PROJECT_NAMESPACE != "GNOME"
