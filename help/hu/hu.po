@@ -1,16 +1,16 @@
 # Hungarian translation for evince_help.
-# Copyright (C) 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2021. Free Software Foundation, Inc.
+# Copyright (C) 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2021, 2022. Free Software Foundation, Inc.
 # This file is distributed under the same license as the evince help.
 #
 # Attila Hammer <hammera at pickup dot hu>, 2014.
 # Gabor Kelemen <kelemeng at gnome dot hu>, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2019.
-# Balázs Úr <ur.balazs at fsf dot hu>, 2014, 2018, 2019, 2021.
+# Balázs Úr <ur.balazs at fsf dot hu>, 2014, 2018, 2019, 2021, 2022.
 # Balázs Meskó <mesko.balazs at fsf dot hu>, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: evince master\n"
-"POT-Creation-Date: 2021-08-25 13:26+0000\n"
-"PO-Revision-Date: 2021-09-12 21:19+0200\n"
+"POT-Creation-Date: 2022-07-15 19:37+0000\n"
+"PO-Revision-Date: 2022-09-03 00:19+0200\n"
 "Last-Translator: Balázs Úr <ur.balazs at fsf dot hu>\n"
 "Language-Team: Hungarian <gnome-hu-list at gnome dot org>\n"
 "Language: hu\n"
@@ -26,7 +26,7 @@ msgid "translator-credits"
 msgstr ""
 "Hammer Attila <hammera at pickup dot hu>, 2014.\n"
 "Kelemen Gábor <kelemeng at gnome dot hu>, 2011, 2012, 2013, 2014, 2015.\n"
-"Úr Balázs <ur.balazs at fsf dot hu>, 2019, 2021."
+"Úr Balázs <ur.balazs at fsf dot hu>, 2019, 2021, 2022."
 
 #. (itstool) path: info/desc
 #: C/synctex-beamer.page:7
@@ -956,22 +956,15 @@ msgstr "Ha már nyitva van egy üres <app>Dokumentummegjelenítő</app> ablak:"
 
 #. (itstool) path: item/p
 #: C/opening.page:51
-#| msgid ""
-#| "Drag a file into the window from <app>Files</app>. The new file will open "
-#| "in a new window."
 msgid ""
 "Drag a file into the window from <app>Files</app>. The new file will open in "
 "the same window."
 msgstr ""
-"Húzzon egy fájlt az ablakba a <app>Fájlok</app> alkalmazásból. Az új fájl"
-" ugyanabban az ablakban nyílik meg."
+"Húzzon egy fájlt az ablakba a <app>Fájlok</app> alkalmazásból. Az új fájl "
+"ugyanabban az ablakban nyílik meg."
 
 #. (itstool) path: item/p
 #: C/opening.page:55
-#| msgid ""
-#| "Press the <gui>Open…</gui> button in the top-left corner of the window. "
-#| "In the <gui>Open Document</gui> dialog, choose the file which you wish to "
-#| "open, and click <gui>Open</gui>. The file will open in a new window."
 msgid ""
 "Press the <gui>Open…</gui> button in the top-left corner of the window. In "
 "the <gui>Open Document</gui> dialog, choose the file which you wish to open, "
@@ -1859,9 +1852,10 @@ msgid "The <app>document viewer</app> supports the following formats:"
 msgstr "A <app>dokumentummegjelenítő</app> a következő formátumokat támogatja:"
 
 #. (itstool) path: item/p
-#: C/formats.page:33 C/presentations.page:77
-msgid "Comic Book Archive (.cbr and .cbz)"
-msgstr "Comic Book Archive (.cbr és .cbz)"
+#: C/formats.page:33
+#| msgid "Comic Book Archive (.cbr and .cbz)"
+msgid "Comic Book Archive (.cb7, .cbr, .cbt, and .cbz)"
+msgstr "Comic Book Archive (.cb7, .cbr, .cbt és .cbz)"
 
 #. (itstool) path: item/p
 #: C/formats.page:34 C/printing.page:49 C/presentations.page:78
@@ -2797,12 +2791,6 @@ msgstr ""
 
 #. (itstool) path: page/p
 #: C/bug-filing.page:29
-#| msgid ""
-#| "Once you have an account, log in, and click on <gui>New issue</gui>. "
-#| "Before reporting a bug, please read the <link href=\"https://wiki.gnome."
-#| "org/Community/GettingInTouch/Bugzilla/Guidelines\">bug writing "
-#| "guidelines</link>, and please <link href=\"https://gitlab.gnome.org/GNOME/"
-#| "evince/issues\">browse</link> for the bug to see if it already exists."
 msgid ""
 "Once you have an account, log in, and click on <gui>New issue</gui>. Before "
 "reporting a bug, please read the <link href=\"https://wiki.gnome.org/"
@@ -2810,12 +2798,11 @@ msgid ""
 "please <link href=\"https://gitlab.gnome.org/GNOME/evince/issues\">browse</"
 "link> for the bug to see if it already exists."
 msgstr ""
-"Ha létrehozta fiókját, jelentkezzen be és kattintson a <gui>New issue</gui>"
-" gombra. Hiba jelentése előtt olvassa el a <link"
-" href=\"https://wiki.gnome.org/GettingInTouch/BugReportingGuidelines\""
-">hibajelentés-írási irányelveket</link>, és <link"
-" href=\"https://gitlab.gnome.org/GNOME/evince/issues\">ellenőrizze</link>,"
-" hogy nincs-e már a hiba bejelentve."
+"Ha létrehozta fiókját, jelentkezzen be és kattintson a <gui>New issue</gui> "
+"gombra. Hiba jelentése előtt olvassa el a <link href=\"https://wiki.gnome."
+"org/GettingInTouch/BugReportingGuidelines\">hibajelentés-írási irányelveket</"
+"link>, és <link href=\"https://gitlab.gnome.org/GNOME/evince/issues"
+"\">ellenőrizze</link>, hogy nincs-e már a hiba bejelentve."
 
 #. (itstool) path: page/p
 #: C/bug-filing.page:33
@@ -3344,6 +3331,11 @@ msgid "The following file formats can be used for presentations:"
 msgstr "A következő fájlformátumok használhatók a bemutatókhoz:"
 
 #. (itstool) path: item/p
+#: C/presentations.page:77
+msgid "Comic Book Archive (.cbr and .cbz)"
+msgstr "Comic Book Archive (.cbr és .cbz)"
+
+#. (itstool) path: item/p
 #: C/presentations.page:80
 msgid "Open Document Presentation (.odp)"
 msgstr "Open Document bemutató (.odp)"
@@ -3768,8 +3760,6 @@ msgstr ""
 
 #. (itstool) path: info/title
 #: C/index.page:7
-#| msgctxt "link"
-#| msgid "Evince Document Viewer"
 msgctxt "link:trail"
 msgid "Evince Document Viewer"
 msgstr "Evince dokumentummegjelenítő"
