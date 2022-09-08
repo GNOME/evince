@@ -1,14 +1,14 @@
 # Translators:
-# Jordi Mas <jmas@softcatala.org>, 2020
+# Jordi Mas i Hernàndez <jmas@softcatala.org>, 2020
 # Assumpta, 2020
-# Jaume Jorba. Correu particular <jaume.jorba@gmail.com>, 2020
+# Jaume Jorba <jaume.jorba@gmail.com>, 2020
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: evince\n"
-"POT-Creation-Date: 2022-03-01 20:49+0000\n"
-"PO-Revision-Date: 2020-03-14 20:54+0000\n"
-"Last-Translator: Jaume Jorba <jaume.jorba@gmail.com>, 2020\n"
+"POT-Creation-Date: 2022-08-17 12:06+0000\n"
+"PO-Revision-Date: 2022-09-08 20:54+0000\n"
+"Last-Translator: Jordi Mas i Herǹandez <jmas@softcatala.org>\n"
 "Language-Team: Catalan (https://www.transifex.com/softcatala/teams/62837/"
 "ca/)\n"
 "Language: ca\n"
@@ -827,7 +827,7 @@ msgid ""
 "search#backward-search\">Backward search</link> (from the <app>document "
 "viewer</app> to <app>gedit</app>) are both supported."
 msgstr ""
-"També es poden realitzar <link xref=\"synctex-search#forward-search\">Cerca "
+"També es poden realitzar la <link xref=\"synctex-search#forward-search\">Cerca "
 "cap endavant</link> (des de l'editor de text <app>gedit</app> al "
 "<app>Visualitzador de document</app>) i la <link xref=\"synctex-"
 "search#backward-search\">Cerca cap enrere</link> (des del <app>Visualitzador "
@@ -952,8 +952,8 @@ msgid ""
 "Drag a file into the window from <app>Files</app>. The new file will open in "
 "the same window."
 msgstr ""
-"Arrossegueu un fitxer cap a dins de la finestra des de <app>Fitxers</app>. El "
-"fitxer nou s'obrirà en una finestra nova."
+"Arrossegueu un fitxer cap a dins de la finestra des de <app>Fitxers</app>. "
+"El fitxer nou s'obrirà en una finestra nova."
 
 #. (itstool) path: item/p
 #: C/opening.page:55
@@ -1111,10 +1111,10 @@ msgid ""
 "<app>document viewer</app> overrides this restriction by default, but you "
 "may want to check that it hasn't been disabled:"
 msgstr ""
-"Alguns documents PDF estan configurats de tal manera que no es poden imprimir. "
-"Els autors poden configurar aquesta restricció d'impressió quan escriuen un "
-"document. El <app>Visualitzador de documents</app> anul·la aquesta "
-"restricció per defecte, però si voleu podeu comprovar que no estigui "
+"Alguns documents PDF estan configurats de tal manera que no es poden "
+"imprimir. Els autors poden configurar aquesta restricció d'impressió quan "
+"escriuen un document. El <app>Visualitzador de documents</app> anul·la "
+"aquesta restricció per defecte, però si voleu podeu comprovar que no estigui "
 "deshabilitat:"
 
 #. (itstool) path: note/p
@@ -1834,7 +1834,7 @@ msgstr "PDF, PostScript i molts altres ho són."
 #. (itstool) path: page/title
 #: C/formats.page:27
 msgid "Supported formats"
-msgstr "Formats suportats"
+msgstr "Formats admesos"
 
 #. (itstool) path: page/p
 #: C/formats.page:29
@@ -1842,9 +1842,9 @@ msgid "The <app>document viewer</app> supports the following formats:"
 msgstr "El <app>Visualitzador de documents</app> admet els formats següents:"
 
 #. (itstool) path: item/p
-#: C/formats.page:33 C/presentations.page:77
-msgid "Comic Book Archive (.cbr and .cbz)"
-msgstr "Arxiu de llibre de còmic (.cbr i .cbz)"
+#: C/formats.page:33
+msgid "Comic Book Archive (.cb7, .cbr, .cbt, and .cbz)"
+msgstr "Arxiu de llibre de còmic (.cb7, .cbr, .cbt, and .cbz)"
 
 #. (itstool) path: item/p
 #: C/formats.page:34 C/printing.page:49 C/presentations.page:78
@@ -2794,11 +2794,11 @@ msgid ""
 "please <link href=\"https://gitlab.gnome.org/GNOME/evince/issues\">browse</"
 "link> for the bug to see if it already exists."
 msgstr ""
-"Quan tingueu un compte, accediu-hi, i feu clic a <gui>New issue</gui>. "
-"Abans d'informar sobre un error, si us plau llegiu <link href=\"https://wiki.gnome.org/"
-"GettingInTouch/BugReportingGuidelines\">pautes d'escriptura "
-"d'errors</link>, i si us plau <link href=\"https://gitlab.gnome.org/GNOME/"
-"evince/issues\">navegueu</link> per la llista d'error per a comprovar si ja existeix."
+"Quan tingueu un compte, accediu-hi, i feu clic a <gui>New issue</gui>. Abans "
+"d'informar sobre un error, si us plau llegiu <link href=\"https://wiki.gnome."
+"org/GettingInTouch/BugReportingGuidelines\">pautes d'escriptura d'errors</"
+"link>, i si us plau <link href=\"https://gitlab.gnome.org/GNOME/evince/issues"
+"\">navegueu</link> per la llista d'error per a comprovar si ja existeix."
 
 #. (itstool) path: page/p
 #: C/bug-filing.page:33
@@ -3330,6 +3330,11 @@ msgid "The following file formats can be used for presentations:"
 msgstr "Els següents formats de fitxer es poden utilitzar a les presentacions:"
 
 #. (itstool) path: item/p
+#: C/presentations.page:77
+msgid "Comic Book Archive (.cbr and .cbz)"
+msgstr "Arxiu de llibre de còmic (.cbr i .cbz)"
+
+#. (itstool) path: item/p
 #: C/presentations.page:80
 msgid "Open Document Presentation (.odp)"
 msgstr "Presentació Open Document (.odp)"
@@ -3763,6 +3768,7 @@ msgstr ""
 
 #. (itstool) path: info/title
 #: C/index.page:7
+msgctxt "link:trail"
 msgid "Evince Document Viewer"
 msgstr "Visualitzador de documents Evince"
 
