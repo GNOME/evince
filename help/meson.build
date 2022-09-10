@@ -93,8 +93,6 @@ if enable_user_doc
     'figures/annotations-nav-to-page.png',
     'figures/emblem-system-symbolic.svg',
     'figures/org.gnome.Evince.svg',
-    'figures/print-select.png',
-    'figures/reverse-collate.png',
     'figures/zoom.png',
   ]
 
