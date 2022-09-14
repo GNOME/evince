@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: evince.HEAD\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
 "POT-Creation-Date: 2022-05-07 13:49+0000\n"
-"PO-Revision-Date: 2022-05-24 20:39+0200\n"
+"PO-Revision-Date: 2022-09-14 16:41+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <(nothing)>\n"
 "Language: ka\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 3.0.1\n"
+"X-Generator: Poedit 3.1.1\n"
 
 #: backend/comics/comics-document.c:190 backend/comics/comics-document.c:214
 msgid "File is corrupted"
@@ -44,6 +44,8 @@ msgid ""
 "libarchive lacks support for this comic book’s compression, please contact "
 "your distributor"
 msgstr ""
+"libarchive-ს კომიქსის წიგნების შეკუმშვის გარეშეა აგებული. დაუკავშირდით "
+"მომწოდებელს"
 
 #: backend/comics/comics-document.c:362
 msgid "Can not get local path for archive"
@@ -67,6 +69,8 @@ msgid ""
 "The document is composed of several files. One or more of these files cannot "
 "be accessed."
 msgstr ""
+"დოკუმენტი რამდენიმე ფაილისგან შედგება. ამ ფაილებიდან ერთი ან მეტი, "
+"მიუწვდომელია."
 
 #: backend/djvu/djvudocument.evince-backend.desktop.in.in:4
 #: backend/djvu/evince-djvudocument.metainfo.xml.in.in:5
@@ -149,6 +153,10 @@ msgid ""
 "14 fonts. If the substitute fonts selected by fontconfig are not the same as "
 "the fonts used to create the PDF, the rendering may not be correct."
 msgstr ""
+"დოკუმენტი შეიცავს არა-ჩადგმულ ფონტებს, რომლებიც PDF-ის Standard 14-ის "
+"ფონტებს არ წარმოადგენენ. თუ fontconfig-ის მიერ შერჩეული შემცვლელი ფონტი "
+"იგივე არაა, რაც PDF-ის შექმნის დროს გამოიყურებოდა, რენდერი შეიძლება "
+"არასწორად მოხდეს."
 
 #: backend/pdf/ev-poppler.c:942
 msgid "All fonts are either standard or embedded."
@@ -344,12 +352,16 @@ msgid ""
 "The maximum size that will be used to cache rendered pages, limits maximum "
 "zoom level."
 msgstr ""
+"დარენდერებული გვერდებისთვის გამოყენებული ქეშის მაქსიმალური ზომა. ზღუდავს "
+"გადიდების მაქსიმალურ დონეს."
 
 #: data/org.gnome.Evince.gschema.xml:37
 msgid ""
 "Show a dialog to confirm that the user wants to activate the caret "
 "navigation."
 msgstr ""
+"ფანჯრის ჩვენება დასადასტურებლად, რომ მომხმარებელს კარეტით ნავიგაციის "
+"გააქტიურება სურს."
 
 #: data/org.gnome.Evince.gschema.xml:41
 msgid "Allow links to change the zoom level."
