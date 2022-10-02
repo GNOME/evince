@@ -6455,7 +6455,7 @@ ev_view_button_release_event (GtkWidget      *widget,
 
 	view->drag_info.in_drag = FALSE;
 
-	if (view->adding_annot_info.adding_annot) {
+	if (view->adding_annot_info.adding_annot && !view->selection_scroll_id) {
 		gboolean annot_added = TRUE;
 
 		/* We ignore right-click buttons while in annotation add mode */
