@@ -2796,7 +2796,7 @@ ev_window_cmd_file_open (GSimpleAction *action,
 					       _("_Open"),
 					       _("_Cancel"));
 
-	ev_document_factory_add_filters (GTK_WIDGET (chooser), NULL);
+	ev_document_factory_add_filters (GTK_FILE_CHOOSER (chooser), NULL);
 	gtk_file_chooser_set_select_multiple (GTK_FILE_CHOOSER (chooser), TRUE);
 	gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (chooser), FALSE);
 
@@ -3094,7 +3094,7 @@ ev_window_save_as (EvWindow *ev_window)
 		_("_Save"),
 		_("_Cancel"));
 
-	ev_document_factory_add_filters (GTK_WIDGET (fc), priv->document);
+	ev_document_factory_add_filters (GTK_FILE_CHOOSER (fc), priv->document);
 
 	gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (fc), FALSE);
 	gtk_file_chooser_set_do_overwrite_confirmation (GTK_FILE_CHOOSER (fc), TRUE);
