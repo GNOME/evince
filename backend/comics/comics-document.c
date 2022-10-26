@@ -207,6 +207,7 @@ comics_document_list (ComicsDocument  *comics_document,
 				g_clear_error (error);
 
 				g_ptr_array_free (array, TRUE);
+				array = NULL;
 
 				g_set_error_literal (error,
 						     EV_DOCUMENT_ERROR,
