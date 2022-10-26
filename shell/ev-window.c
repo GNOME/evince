@@ -209,6 +209,7 @@ typedef struct {
 
 	/* Has the document been modified? */
 	gboolean is_modified;
+	guint modified_handler_id;
 
 	/* Load params */
 	EvLinkDest       *dest;
@@ -1789,7 +1790,7 @@ ev_window_set_document (EvWindow *ev_window, EvDocument *document)
 	}
 
 	priv->is_modified = FALSE;
-	g_signal_connect (document, "notify::modified", G_CALLBACK (ev_window_document_modified_cb), ev_window);
+	priv->modified_handler_id = g_signal_connect (document, "notify::modified", G_CALLBACK (ev_window_document_modified_cb), ev_window);
 
 	if (priv->setup_document_idle > 0)
 		g_source_remove (priv->setup_document_idle);
@@ -4122,6 +4123,11 @@ ev_window_close (EvWindow *ev_window)
 		current_page = ev_view_presentation_get_current_page (
 			EV_VIEW_PRESENTATION (priv->presentation_view));
 		ev_document_model_set_page (priv->model, current_page);
+	}
+
+	if (priv->modified_handler_id) {
+		g_signal_handler_disconnect (priv->document, priv->modified_handler_id);
+		priv->modified_handler_id = 0;
 	}
 
 	if (ev_window_check_document_modified (ev_window, EV_WINDOW_ACTION_CLOSE))
