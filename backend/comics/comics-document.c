@@ -180,7 +180,7 @@ comics_document_list (ComicsDocument  *comics_document,
 
 	if (!ev_archive_open_filename (comics_document->archive, comics_document->archive_path, error)) {
 		if (*error != NULL) {
-			g_debug ("Fatal error handling archive: %s", (*error)->message);
+			g_warning ("Fatal error handling archive (%s): %s", G_STRFUNC, (*error)->message);
 			g_clear_error (error);
 		}
 
@@ -203,7 +203,7 @@ comics_document_list (ComicsDocument  *comics_document,
 
 		if (!ev_archive_read_next_header (comics_document->archive, error)) {
 			if (*error != NULL) {
-				g_debug ("Fatal error handling archive: %s", (*error)->message);
+				g_debug ("Fatal error handling archive (%s): %s", G_STRFUNC, (*error)->message);
 				g_clear_error (error);
 
 				g_ptr_array_free (array, TRUE);
@@ -459,7 +459,7 @@ comics_document_get_page_size (EvDocument *document,
 
 		if (!ev_archive_read_next_header (comics_document->archive, &error)) {
 			if (error != NULL) {
-				g_warning ("Fatal error handling archive: %s", error->message);
+				g_warning ("Fatal error handling archive (%s): %s", G_STRFUNC, error->message);
 				g_error_free (error);
 			}
 			break;
@@ -543,7 +543,7 @@ comics_document_render_pixbuf (EvDocument      *document,
 
 		if (!ev_archive_read_next_header (comics_document->archive, &error)) {
 			if (error != NULL) {
-				g_warning ("Fatal error handling archive: %s", error->message);
+				g_warning ("Fatal error handling archive (%s): %s", G_STRFUNC, error->message);
 				g_error_free (error);
 			}
 			break;
