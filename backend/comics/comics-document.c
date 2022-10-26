@@ -148,7 +148,7 @@ comics_document_list (ComicsDocument  *comics_document,
 		      GError         **error)
 {
 	GPtrArray *array = NULL;
-	gboolean has_encrypted_files, has_unsupported_images;
+	gboolean has_encrypted_files, has_unsupported_images, has_archive_errors;
 	GHashTable *supported_extensions = NULL;
 
 	if (!ev_archive_open_filename (comics_document->archive, comics_document->archive_path, error)) {
@@ -168,6 +168,7 @@ comics_document_list (ComicsDocument  *comics_document,
 
 	has_encrypted_files = FALSE;
 	has_unsupported_images = FALSE;
+	has_archive_errors = FALSE;
 	array = g_ptr_array_sized_new (64);
 
 	while (1) {
@@ -178,14 +179,7 @@ comics_document_list (ComicsDocument  *comics_document,
 			if (*error != NULL) {
 				g_debug ("Fatal error handling archive (%s): %s", G_STRFUNC, (*error)->message);
 				g_clear_error (error);
-
-				g_ptr_array_free (array, TRUE);
-				array = NULL;
-
-				g_set_error_literal (error,
-						     EV_DOCUMENT_ERROR,
-						     EV_DOCUMENT_ERROR_INVALID,
-						     _("File is corrupted"));
+				has_archive_errors = TRUE;
 				goto out;
 			}
 			break;
@@ -218,6 +212,7 @@ comics_document_list (ComicsDocument  *comics_document,
 		g_ptr_array_add (array, g_strdup (name));
 	}
 
+out:
 	if (array->len == 0) {
 		g_ptr_array_free (array, TRUE);
 		array = NULL;
@@ -232,6 +227,11 @@ comics_document_list (ComicsDocument  *comics_document,
 					     EV_DOCUMENT_ERROR,
 					     EV_DOCUMENT_ERROR_UNSUPPORTED_CONTENT,
 					     _("No supported images in archive"));
+		} else if (has_archive_errors) {
+			g_set_error_literal (error,
+					     EV_DOCUMENT_ERROR,
+					     EV_DOCUMENT_ERROR_INVALID,
+					     _("File is corrupted"));
 		} else {
 			g_set_error_literal (error,
 					     EV_DOCUMENT_ERROR,
@@ -240,7 +240,6 @@ comics_document_list (ComicsDocument  *comics_document,
 		}
 	}
 
-out:
 	if (supported_extensions)
 		g_hash_table_destroy (supported_extensions);
 	ev_archive_reset (comics_document->archive);
