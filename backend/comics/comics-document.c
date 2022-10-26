@@ -594,6 +594,8 @@ comics_document_render (EvDocument      *document,
 	cairo_surface_t *surface;
 
 	pixbuf = comics_document_render_pixbuf (document, rc);
+	if (!pixbuf)
+		return NULL;
 	surface = ev_document_misc_surface_from_pixbuf (pixbuf);
 	g_clear_object (&pixbuf);
 
