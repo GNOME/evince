@@ -1,4 +1,29 @@
 ==============
+Evince    41.5
+==============
+
+build:
+  * Remove incorrect args for i18n.merge_file (r-value)
+  * Disable nautilus extension by default (Bastien Nocera)
+  * Narrow the version to enable nautilus plugin (#1822, Germán Poo-Caamaño)
+
+comics:
+  * Avoid critical when pixbuf can't be rendered (Bastien Nocera)
+  * Better debug on archive error (Bastien Nocera)
+  * Fix crash that can happen if archive is damaged (#1866, Bastien Nocera)
+  * Still try to open broken comics (Bastien Nocera)
+
+shell:
+  * Fix use-after-free on a modified document (#1766, Gary Li)
+  * recent-view: Update for new gnome-desktop API (Michael Catanzaro)
+
+Developers:
+  * Bastien Nocera, Gary Li, Germán Poo-Caamaño, Michael Catanzaro, r-value
+
+Translations:
+  * Christian Kirbach (German)
+
+==============
 Evince    41.4
 ==============
 
