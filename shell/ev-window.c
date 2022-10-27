@@ -796,15 +796,15 @@ ev_window_error_message (EvWindow    *window,
 	va_start (args, format);
 	msg = g_strdup_vprintf (format, args);
 	va_end (args);
-	
+
 	area = ev_message_area_new (GTK_MESSAGE_ERROR,
 				    msg,
 				    NULL);
 	g_free (msg);
-	
+
 	if (error)
 		ev_message_area_set_secondary_text (EV_MESSAGE_AREA (area), error->message);
-	g_signal_connect (area, "response",
+	g_signal_connect (ev_message_area_get_info_bar (EV_MESSAGE_AREA (area)), "response",
 			  G_CALLBACK (ev_window_message_area_response_cb),
 			  window);
 	gtk_widget_show (area);
@@ -832,8 +832,8 @@ ev_window_warning_message (EvWindow    *window,
 				    msg,
 				    NULL);
 	g_free (msg);
-	
-	g_signal_connect (area, "response",
+
+	g_signal_connect (ev_message_area_get_info_bar (EV_MESSAGE_AREA (area)), "response",
 			  G_CALLBACK (ev_window_message_area_response_cb),
 			  window);
 	gtk_widget_show (area);
@@ -2166,7 +2166,7 @@ show_loading_progress (EvWindow *ev_window)
 					     _("C_ancel"),
 					     GTK_RESPONSE_CANCEL,
 					     NULL);
-	g_signal_connect (area, "response",
+	g_signal_connect (ev_message_area_get_info_bar (EV_MESSAGE_AREA (area)), "response",
 			  G_CALLBACK (ev_window_progress_response_cb),
 			  ev_window);
 	gtk_widget_show (area);
@@ -2638,7 +2638,7 @@ show_reloading_progress (EvWindow *ev_window)
 					     _("C_ancel"),
 					     GTK_RESPONSE_CANCEL,
 					     NULL);
-	g_signal_connect (area, "response",
+	g_signal_connect (ev_message_area_get_info_bar (EV_MESSAGE_AREA (area)), "response",
 			  G_CALLBACK (ev_window_progress_response_cb),
 			  ev_window);
 	gtk_widget_show (area);
@@ -3004,7 +3004,7 @@ show_saving_progress (GFile *dst)
 					     _("C_ancel"),
 					     GTK_RESPONSE_CANCEL,
 					     NULL);
-	g_signal_connect (area, "response",
+	g_signal_connect (ev_message_area_get_info_bar (EV_MESSAGE_AREA (area)), "response",
 			  G_CALLBACK (ev_window_progress_response_cb),
 			  ev_window);
 	gtk_widget_show (area);
@@ -3741,7 +3741,7 @@ ev_window_print_operation_status_changed (EvPrintOperation *op,
 						     GTK_RESPONSE_CANCEL,
 						     NULL);
 		ev_window_print_update_pending_jobs_message (ev_window, 1);
-		g_signal_connect (area, "response",
+		g_signal_connect (ev_message_area_get_info_bar (EV_MESSAGE_AREA (area)), "response",
 				  G_CALLBACK (ev_window_print_progress_response_cb),
 				  ev_window);
 		gtk_widget_show (area);
@@ -6052,7 +6052,7 @@ ev_window_cmd_view_toggle_caret_navigation (GSimpleAction *action,
 	box = _ev_message_area_get_main_box (EV_MESSAGE_AREA (message_area));
 	gtk_box_pack_start (GTK_BOX (box), hbox, TRUE, TRUE, 0);
 
-	g_signal_connect (message_area, "response",
+	g_signal_connect (ev_message_area_get_info_bar (EV_MESSAGE_AREA (message_area)), "response",
 			  G_CALLBACK (ev_window_caret_navigation_message_area_response_cb),
 			  window);
 

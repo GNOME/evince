@@ -139,11 +139,14 @@ ev_progress_message_area_new (const gchar *icon_name,
 			      ...)
 {
 	GtkWidget *widget;
+	GtkWidget *info_bar;
 
 	widget = g_object_new (EV_TYPE_PROGRESS_MESSAGE_AREA,
-			       "message-type", GTK_MESSAGE_OTHER,
 			       "text", text,
 			       NULL);
+	info_bar = ev_message_area_get_info_bar (EV_MESSAGE_AREA (widget));
+	gtk_info_bar_set_message_type (GTK_INFO_BAR (info_bar), GTK_MESSAGE_OTHER);
+
 
 	if (first_button_text) {
 		va_list args;

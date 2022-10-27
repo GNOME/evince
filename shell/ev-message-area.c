@@ -24,6 +24,8 @@
 #include "ev-message-area.h"
 
 typedef struct {
+	GtkWidget *info_bar;
+
 	GtkWidget *main_box;
 	GtkWidget *image;
 	GtkWidget *label;
@@ -49,7 +51,7 @@ static void ev_message_area_get_property (GObject      *object,
 					  GParamSpec   *pspec);
 static void ev_message_area_buildable_iface_init (GtkBuildableIface *iface);
 
-G_DEFINE_TYPE_WITH_CODE (EvMessageArea, ev_message_area, GTK_TYPE_INFO_BAR,
+G_DEFINE_TYPE_WITH_CODE (EvMessageArea, ev_message_area, GTK_TYPE_BIN,
                          G_ADD_PRIVATE (EvMessageArea)
                          G_IMPLEMENT_INTERFACE (GTK_TYPE_BUILDABLE,
                                                 ev_message_area_buildable_iface_init))
@@ -77,6 +79,7 @@ ev_message_area_class_init (EvMessageAreaClass *class)
 	gobject_class->get_property = ev_message_area_get_property;
 
 	gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/evince/ui/message-area.ui");
+	gtk_widget_class_bind_template_child_private (widget_class, EvMessageArea, info_bar);
 	gtk_widget_class_bind_template_child_private (widget_class, EvMessageArea, main_box);
 	gtk_widget_class_bind_template_child_private (widget_class, EvMessageArea, image);
 	gtk_widget_class_bind_template_child_private (widget_class, EvMessageArea, label);
@@ -235,6 +238,7 @@ _ev_message_area_add_buttons_valist (EvMessageArea *area,
 				     const gchar   *first_button_text,
 				     va_list        args)
 {
+	EvMessageAreaPrivate *priv = GET_PRIVATE (area);
 	const gchar* text;
 	gint response_id;
 
@@ -245,7 +249,7 @@ _ev_message_area_add_buttons_valist (EvMessageArea *area,
 	response_id = va_arg (args, gint);
 
 	while (text != NULL) {
-		gtk_info_bar_add_button (GTK_INFO_BAR (area), text, response_id);
+		gtk_info_bar_add_button (GTK_INFO_BAR (priv->info_bar), text, response_id);
 
 		text = va_arg (args, gchar*);
 		if (text == NULL)
@@ -265,17 +269,22 @@ _ev_message_area_get_main_box (EvMessageArea *area)
 }
 
 GtkWidget *
+ev_message_area_get_info_bar (EvMessageArea *area)
+{
+	EvMessageAreaPrivate *priv = GET_PRIVATE (area);
+
+	return priv->info_bar;
+}
+
+GtkWidget *
 ev_message_area_new (GtkMessageType type,
 		     const gchar   *text,
 		     const gchar   *first_button_text,
 		     ...)
 {
-	GtkWidget *widget;
-
-	widget = g_object_new (EV_TYPE_MESSAGE_AREA,
-			       "message-type", type,
-			       "text", text,
-			       NULL);
+	GtkWidget *widget = g_object_new (EV_TYPE_MESSAGE_AREA, "text", text, NULL);
+	GtkWidget *info_bar = ev_message_area_get_info_bar (EV_MESSAGE_AREA (widget));
+	gtk_info_bar_set_message_type (GTK_INFO_BAR (info_bar), type);
 	ev_message_area_set_image_for_type (EV_MESSAGE_AREA (widget), type);
 	if (first_button_text) {
 		va_list args;
@@ -285,8 +294,6 @@ ev_message_area_new (GtkMessageType type,
 						     first_button_text, args);
 		va_end (args);
 	}
-
-	gtk_info_bar_set_show_close_button (GTK_INFO_BAR (widget), TRUE);
 
 	return widget;
 }
