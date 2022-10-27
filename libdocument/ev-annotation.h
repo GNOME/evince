@@ -116,8 +116,6 @@ typedef enum {
         EV_ANNOTATION_TEXT_MARKUP_SQUIGGLY
 } EvAnnotationTextMarkupType;
 
-#define EV_ANNOTATION_DEFAULT_COLOR ((const GdkRGBA) { 1., 1., 0, 1.});
-
 /* EvAnnotation */
 GType                ev_annotation_get_type                  (void) G_GNUC_CONST;
 EvAnnotationType     ev_annotation_get_annotation_type       (EvAnnotation           *annot);

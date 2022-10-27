@@ -3086,9 +3086,7 @@ poppler_annot_color_to_gdk_color (PopplerAnnot *poppler_annot,
 		color->blue = poppler_color->blue;
 
 		g_free (poppler_color);
-	} else { /* default color */
-		*color = EV_ANNOTATION_DEFAULT_COLOR;
-	}
+	} /* TODO: else use a default color */
 }
 
 static EvAnnotationTextIcon
