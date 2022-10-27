@@ -1,4 +1,31 @@
 ==============
+Evince    42.4
+==============
+
+build:
+  * Narrow the version to enable nautilus plugin (#1822, Germán Poo-Caamaño)
+  * Disable nautilus extension by default (Bastien Nocera)
+
+comics:
+  * Avoid critical when pixbuf can't be rendered (Bastien Nocera)
+  * Better debug on archive error (Bastien Nocera)
+  * Fix crash that can happen if archive is damaged (#1866, Bastien Nocera)
+  * Still try to open broken comics (Bastien Nocera)
+
+shell:
+  * Fix use-after-free on a modified document (#1766, Gary Li)
+  * Use default color when annotation has no color (#1800, Nelson Benítez León)
+  * recent-view: Update for new gnome-desktop API (Michael Catanzaro)
+
+Developers:
+  * Bastien Nocera, Gary Li, Germán Poo-Caamaño, Michael Catanzaro, Nelson Benítez León
+
+Translations:
+  * Charles Monzat (French)
+  * Zurab Kargareteli (Georgian)
+  * Gianvito Cavasoli (Italian)
+
+==============
 Evince    42.3
 ==============
 
