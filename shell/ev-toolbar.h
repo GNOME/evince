@@ -21,38 +21,28 @@
 #pragma once
 
 #include <gtk/gtk.h>
+#include <adwaita.h>
 #include "ev-window.h"
 
 G_BEGIN_DECLS
 
 typedef enum {
 	EV_TOOLBAR_MODE_NORMAL,
-	EV_TOOLBAR_MODE_RECENT_VIEW
+	EV_TOOLBAR_MODE_RECENT_VIEW,
+	EV_TOOLBAR_MODE_PASSWORD_VIEW
 } EvToolbarMode;
 
 #define EV_TYPE_TOOLBAR              (ev_toolbar_get_type())
-#define EV_TOOLBAR(object)           (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_TOOLBAR, EvToolbar))
-#define EV_IS_TOOLBAR(object)        (G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_TOOLBAR))
-#define EV_TOOLBAR_CLASS(klass)      (G_TYPE_CHECK_CLASS_CAST((klass), EV_TYPE_TOOLBAR, EvToolbarClass))
-#define EV_IS_TOOLBAR_CLASS(klass)   (G_TYPE_CHECK_CLASS_TYPE((klass), EV_TYPE_TOOLBAR))
-#define EV_TOOLBAR_GET_CLASS(object) (G_TYPE_INSTANCE_GET_CLASS((object), EV_TYPE_TOOLBAR, EvToolbarClass))
-
-typedef struct _EvToolbar        EvToolbar;
-typedef struct _EvToolbarClass   EvToolbarClass;
+G_DECLARE_FINAL_TYPE (EvToolbar, ev_toolbar, EV, TOOLBAR, AdwBin);
 
 struct _EvToolbar {
-        GtkBin base_instance;
+        AdwBin base_instance;
 };
 
-struct _EvToolbarClass {
-        GtkBinClass base_class;
-};
-
-GType         ev_toolbar_get_type           (void);
-GtkWidget    *ev_toolbar_new                (EvDocumentModel *model);
+GtkWidget    *ev_toolbar_new                (void);
 void          ev_toolbar_action_menu_toggle (EvToolbar *ev_toolbar);
 GtkWidget    *ev_toolbar_get_page_selector  (EvToolbar *ev_toolbar);
-HdyHeaderBar *ev_toolbar_get_header_bar     (EvToolbar *ev_toolbar);
+AdwHeaderBar *ev_toolbar_get_header_bar     (EvToolbar *ev_toolbar);
 void          ev_toolbar_set_mode           (EvToolbar     *ev_toolbar,
 					     EvToolbarMode  mode);
 EvToolbarMode ev_toolbar_get_mode           (EvToolbar     *ev_toolbar);

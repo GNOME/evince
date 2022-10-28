@@ -1,120 +1,71 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <template class="EvToolbar" parent="GtkBin">
+  <template class="EvToolbar" parent="AdwBin">
     <child>
-      <object class="HdyHeaderBar" id="header_bar">
-        <property name="visible">true</property>
-        <property name="show-close-button">true</property>
-        <child>
+      <object class="AdwHeaderBar" id="header_bar">
+        <child type="title">
+          <object class="AdwWindowTitle">
+          </object>
+        </child>
+        <child type="start">
           <object class="GtkButton" id="open_button">
             <property name="action-name">win.open</property>
             <property name="label" translatable="yes">Open…</property>
             <property name="tooltip-text" translatable="yes">Open an existing document</property>
+            <style>
+              <class name="suggested-action" />
+            </style>
           </object>
-          <packing>
-            <property name="pack-type">start</property>
-          </packing>
         </child>
-        <child>
+        <child type="start">
           <object class="GtkToggleButton" id="sidebar_button">
+            <property name="icon-name">sidebar-show-symbolic</property>
             <property name="action-name">win.show-side-pane</property>
             <property name="tooltip-text" translatable="yes">Side pane</property>
-            <child>
-              <object class="GtkImage">
-                <property name="icon-name">sidebar-show-symbolic</property>
-                <property name="icon-size">1</property>
-                <property name="visible">true</property>
-              </object>
-            </child>
           </object>
-          <packing>
-            <property name="pack-type">start</property>
-          </packing>
         </child>
-        <child>
+        <child type="start">
           <object class="EvPageActionWidget" id="page_selector">
             <property name="tooltip-text" translatable="yes">Select page or search in the outline</property>
-            <child internal-child="accessible">
-              <object class="AtkObject">
-                <property name="AtkObject::accessible-name" translatable="yes">Select page</property>
-              </object>
-            </child>
+            <accessibility>
+              <property name="label" translatable="yes">Select page</property>
+            </accessibility>
           </object>
-          <packing>
-            <property name="pack-type">start</property>
-          </packing>
         </child>
-        <child>
+        <child type="start">
           <object class="GtkToggleButton" id="annots_button">
+            <property name="icon-name">document-edit-symbolic</property>
             <property name="action-name">win.toggle-edit-annots</property>
             <property name="tooltip-text" translatable="yes">Annotate the document</property>
-            <child>
-              <object class="GtkImage">
-                <property name="icon-name">document-edit-symbolic</property>
-                <property name="icon-size">1</property>
-                <property name="visible">true</property>
-              </object>
-            </child>
-            <child internal-child="accessible">
-              <object class="AtkObject">
-                <property name="AtkObject::accessible-name" translatable="yes">Annotate document</property>
-              </object>
-            </child>
+            <accessibility>
+              <property name="label" translatable="yes">Annotate document</property>
+            </accessibility>
           </object>
-          <packing>
-            <property name="pack-type">start</property>
-          </packing>
         </child>
-        <child>
+        <child type="end">
           <object class="GtkMenuButton" id="action_menu_button">
-            <property name="direction">1</property>
+            <property name="icon-name">open-menu-symbolic</property>
             <property name="tooltip-text" translatable="yes">File options</property>
             <property name="menu-model">action-menu</property>
-            <child>
-              <object class="GtkImage">
-                <property name="icon-name">open-menu-symbolic</property>
-                <property name="icon-size">1</property>
-                <property name="visible">true</property>
-              </object>
-            </child>
-            <child internal-child="accessible">
-              <object class="AtkObject">
-                <property name="AtkObject::accessible-name" translatable="yes">File options</property>
-              </object>
-            </child>
+            <accessibility>
+              <property name="label" translatable="yes">File options</property>
+            </accessibility>
           </object>
-          <packing>
-            <property name="pack-type">end</property>
-          </packing>
         </child>
-        <child>
+        <child type="end">
           <object class="GtkToggleButton" id="find_button">
+            <property name="icon-name">edit-find-symbolic</property>
             <property name="action-name">win.toggle-find</property>
-            <signal name="notify::sensitive" handler="ev_toolbar_find_button_sensitive_changed"/>
-            <child>
-              <object class="GtkImage">
-                <property name="icon-name">edit-find-symbolic</property>
-                <property name="icon-size">1</property>
-                <property name="visible">true</property>
-              </object>
-            </child>
+            <signal name="notify::sensitive" handler="ev_toolbar_find_button_sensitive_changed" />
           </object>
-          <packing>
-            <property name="pack-type">end</property>
-          </packing>
         </child>
-        <child>
+        <child type="end">
           <object class="EvZoomAction" id="zoom_action">
-            <signal name="activated" handler="ev_toolbar_zoom_selector_activated"/>
-            <child internal-child="accessible">
-              <object class="AtkObject">
-                <property name="AtkObject::accessible-name" translatable="yes">Set zoom level</property>
-              </object>
-            </child>
+            <signal name="activated" handler="ev_toolbar_zoom_selector_activated" />
+            <accessibility>
+              <property name="label" translatable="yes">Set zoom level</property>
+            </accessibility>
           </object>
-          <packing>
-            <property name="pack-type">end</property>
-          </packing>
         </child>
       </object>
     </child>

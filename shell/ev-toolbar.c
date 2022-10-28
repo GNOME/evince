@@ -39,7 +39,7 @@ enum
 };
 
 typedef struct {
-	HdyHeaderBar *header_bar;
+	AdwHeaderBar *header_bar;
 
 	GtkWidget *open_button;
 	GtkWidget *sidebar_button;
@@ -54,7 +54,7 @@ typedef struct {
 	EvToolbarMode toolbar_mode;
 } EvToolbarPrivate;
 
-G_DEFINE_TYPE_WITH_PRIVATE (EvToolbar, ev_toolbar, GTK_TYPE_BIN)
+G_DEFINE_TYPE_WITH_PRIVATE (EvToolbar, ev_toolbar, ADW_TYPE_BIN)
 
 #define GET_PRIVATE(o) ev_toolbar_get_instance_private (o)
 
@@ -69,7 +69,7 @@ ev_toolbar_set_property (GObject      *object,
 
         switch (prop_id) {
 	case PROP_DOCUMENT_MODEL:
-		 priv->model = g_value_get_object (value);
+		priv->model = g_value_get_object (value);
 		break;
         default:
                 G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -80,9 +80,11 @@ static void
 ev_toolbar_zoom_selector_activated (GtkWidget *zoom_action,
 				    EvToolbar *ev_toolbar)
 {
-	EvWindow *window = EV_WINDOW (gtk_widget_get_toplevel (GTK_WIDGET (ev_toolbar)));
+	GtkRoot *window = gtk_widget_get_root (zoom_action);
 
-	ev_window_focus_view (window);
+	g_return_if_fail (EV_IS_WINDOW (window));
+
+	ev_window_focus_view (EV_WINDOW (window));
 }
 
 static void
@@ -90,20 +92,14 @@ ev_toolbar_find_button_sensitive_changed (GtkWidget  *find_button,
 					  GParamSpec *pspec,
 					  EvToolbar *ev_toolbar)
 {
-        GtkWidget *image;
-
         if (gtk_widget_is_sensitive (find_button)) {
                 gtk_widget_set_tooltip_text (find_button,
                                              _("Find a word or phrase in the document"));
-		image = gtk_image_new_from_icon_name ("edit-find-symbolic",
-						      GTK_ICON_SIZE_MENU);
-		gtk_button_set_image (GTK_BUTTON (find_button), image);
+		gtk_button_set_icon_name (GTK_BUTTON (find_button), "edit-find-symbolic");
 	} else {
                 gtk_widget_set_tooltip_text (find_button,
                                              _("Search not available for this document"));
-		image = gtk_image_new_from_icon_name ("find-unsupported-symbolic",
-						      GTK_ICON_SIZE_MENU);
-		gtk_button_set_image (GTK_BUTTON (find_button), image);
+		gtk_button_set_icon_name (GTK_BUTTON (find_button), "find-unsupported-symbolic");
 	}
 }
 
@@ -169,26 +165,23 @@ ev_toolbar_init (EvToolbar *ev_toolbar)
 }
 
 GtkWidget *
-ev_toolbar_new (EvDocumentModel *model)
+ev_toolbar_new (void)
 {
-	return GTK_WIDGET (g_object_new (EV_TYPE_TOOLBAR,
-					 "document-model", model,
-					 NULL));
+        return GTK_WIDGET (g_object_new (EV_TYPE_TOOLBAR, NULL));
 }
 
 void
 ev_toolbar_action_menu_toggle (EvToolbar *ev_toolbar)
 {
-	EvToolbarPrivate *priv;
+	EvToolbarPrivate *priv = GET_PRIVATE (ev_toolbar);
 	gboolean is_active;
 
-        g_return_if_fail (EV_IS_TOOLBAR (ev_toolbar));
+	g_return_if_fail (EV_IS_TOOLBAR (ev_toolbar));
 
-        priv = GET_PRIVATE (ev_toolbar);
-        is_active = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (priv->action_menu_button));
+	is_active = gtk_menu_button_get_active (GTK_MENU_BUTTON (priv->action_menu_button));
 
-        gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->action_menu_button),
-                                      !is_active);
+	/* FIXME: main menu can't be closed by pressing F10 again */
+	gtk_menu_button_set_active (GTK_MENU_BUTTON (priv->action_menu_button), !is_active);
 }
 
 GtkWidget *
@@ -203,7 +196,7 @@ ev_toolbar_get_page_selector (EvToolbar *ev_toolbar)
         return priv->page_selector;
 }
 
-HdyHeaderBar *
+AdwHeaderBar *
 ev_toolbar_get_header_bar (EvToolbar *ev_toolbar)
 {
 	EvToolbarPrivate *priv;
@@ -245,6 +238,15 @@ ev_toolbar_set_mode (EvToolbar     *ev_toolbar,
                 gtk_widget_hide (priv->annots_button);
                 gtk_widget_show (priv->open_button);
                 break;
+	case EV_TOOLBAR_MODE_PASSWORD_VIEW:
+		gtk_widget_hide (priv->sidebar_button);
+		gtk_widget_hide (priv->action_menu_button);
+		gtk_widget_hide (priv->zoom_action);
+		gtk_widget_hide (priv->page_selector);
+		gtk_widget_hide (priv->find_button);
+		gtk_widget_hide (priv->annots_button);
+		gtk_widget_hide (priv->open_button);
+		break;
         }
 }
 
