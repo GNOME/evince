@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
-"POT-Creation-Date: 2022-09-22 20:27+0000\n"
+"POT-Creation-Date: 2022-10-30 11:21+0000\n"
 "Last-Translator: Нанба Наала <naala-nanba@rambler.ru>\n"
 "Language-Team: Abkhazian <daniel.abzakh@gmail.com>\n"
 "Language: ab\n"
@@ -9,20 +9,21 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-DamnedLies-Scope: partial\n"
 
-#: backend/comics/comics-document.c:190 backend/comics/comics-document.c:214
+#: backend/comics/comics-document.c:190 backend/comics/comics-document.c:261
 msgid "File is corrupted"
 msgstr ""
 
-#: backend/comics/comics-document.c:255
+#: backend/comics/comics-document.c:251
 msgid "Archive is encrypted"
 msgstr "Архив шифрркуп"
 
-#: backend/comics/comics-document.c:260
+#: backend/comics/comics-document.c:256
 msgid "No supported images in archive"
 msgstr ""
 
-#: backend/comics/comics-document.c:265
+#: backend/comics/comics-document.c:266
 msgid "No files in archive"
 msgstr "Архив аҟны афаилқәа ыҟаӡам"
 
@@ -293,49 +294,9 @@ msgstr ""
 msgid "New Window"
 msgstr ""
 
-#: data/org.gnome.Evince.gschema.xml:14
-msgid "Override document restrictions"
-msgstr ""
-
-#: data/org.gnome.Evince.gschema.xml:15
-msgid "Override document restrictions, like restriction to copy or to print."
-msgstr ""
-
 #: data/org.gnome.Evince.gschema.xml:19
 msgid "Automatically reload the document"
 msgstr "Адокумент автоматикла аиҭаҿакра"
-
-#: data/org.gnome.Evince.gschema.xml:20
-msgid "The document is automatically reloaded on file change."
-msgstr ""
-
-#: data/org.gnome.Evince.gschema.xml:24
-msgid "The URI of the directory last used to open or save a document"
-msgstr ""
-
-#: data/org.gnome.Evince.gschema.xml:28
-msgid "The URI of the directory last used to save a picture"
-msgstr ""
-
-#: data/org.gnome.Evince.gschema.xml:32
-msgid "Page cache size in MiB"
-msgstr ""
-
-#: data/org.gnome.Evince.gschema.xml:33
-msgid ""
-"The maximum size that will be used to cache rendered pages, limits maximum "
-"zoom level."
-msgstr ""
-
-#: data/org.gnome.Evince.gschema.xml:37
-msgid ""
-"Show a dialog to confirm that the user wants to activate the caret "
-"navigation."
-msgstr ""
-
-#: data/org.gnome.Evince.gschema.xml:41
-msgid "Allow links to change the zoom level."
-msgstr ""
 
 #: data/org.gnome.Evince-previewer.desktop.in.in:3
 msgid "Print Preview"
@@ -404,8 +365,8 @@ msgid "of %d"
 msgstr ""
 
 #: libmisc/ev-page-action-widget.c:187 shell/ev-history.c:455
-#: shell/ev-sidebar-bookmarks.c:343 shell/ev-window.c:966
-#: shell/ev-window.c:5164
+#: shell/ev-sidebar-bookmarks.c:343 shell/ev-window.c:967
+#: shell/ev-window.c:5170
 #, c-format
 msgid "Page %s"
 msgstr ""
@@ -702,7 +663,7 @@ msgstr ""
 msgid "Select page"
 msgstr ""
 
-#: previewer/ev-previewer-window.c:78 shell/ev-window.c:3675
+#: previewer/ev-previewer-window.c:78 shell/ev-window.c:3676
 msgid "Failed to print document"
 msgstr ""
 
@@ -715,7 +676,7 @@ msgstr ""
 msgid "The selected printer “%s” could not be found"
 msgstr ""
 
-#: previewer/ev-previewer-window.c:568 shell/ev-window.c:4220
+#: previewer/ev-previewer-window.c:568 shell/ev-window.c:4226
 msgid "Evince"
 msgstr "Evince"
 
@@ -753,7 +714,7 @@ msgstr ""
 
 #: properties/ev-properties-view.c:62
 msgid "Title:"
-msgstr ""
+msgstr "Ахьӡ:"
 
 #: properties/ev-properties-view.c:63
 msgid "Location:"
@@ -761,7 +722,7 @@ msgstr "Аҭыӡҭыԥ:"
 
 #: properties/ev-properties-view.c:64
 msgid "Subject:"
-msgstr ""
+msgstr "Атема:"
 
 #: properties/ev-properties-view.c:65
 #: shell/ev-annotation-properties-dialog.c:172
@@ -770,35 +731,35 @@ msgstr "Аԥҵаҩы:"
 
 #: properties/ev-properties-view.c:66
 msgid "Keywords:"
-msgstr ""
+msgstr "Ихадоу ажәақәа:"
 
 #: properties/ev-properties-view.c:67
 msgid "Producer:"
-msgstr ""
+msgstr "Апрограмма:"
 
 #: properties/ev-properties-view.c:68
 msgid "Creator:"
-msgstr ""
+msgstr "Аԥҵаҩы:"
 
 #: properties/ev-properties-view.c:69
 msgid "Created:"
-msgstr ""
+msgstr "Иаԥҵоуп:"
 
 #: properties/ev-properties-view.c:70
 msgid "Modified:"
-msgstr ""
+msgstr "Иԥсахуп:"
 
 #: properties/ev-properties-view.c:71
 msgid "Number of Pages:"
-msgstr ""
+msgstr "Адаҟьақәа рхыԥхьаӡара:"
 
 #: properties/ev-properties-view.c:72
 msgid "Optimized:"
-msgstr ""
+msgstr "Арманшәалара:"
 
 #: properties/ev-properties-view.c:73
 msgid "Format:"
-msgstr ""
+msgstr "Аформат:"
 
 #: properties/ev-properties-view.c:74
 msgid "Security:"
@@ -806,15 +767,15 @@ msgstr "Ашәарҭадара:"
 
 #: properties/ev-properties-view.c:75
 msgid "Contains Javascript:"
-msgstr ""
+msgstr "Иамоуп Javascript:"
 
 #: properties/ev-properties-view.c:76
 msgid "Paper Size:"
-msgstr ""
+msgstr "Адаҟьа ашәагаа:"
 
 #: properties/ev-properties-view.c:77
 msgid "Size:"
-msgstr ""
+msgstr "Ашәагаа:"
 
 #. Translate to the default units to use for presenting
 #. * lengths to the user. Translate to default:inch if you
@@ -865,11 +826,11 @@ msgstr "Азгәаҭа"
 
 #: shell/ev-annotation-properties-dialog.c:104
 msgid "Comment"
-msgstr ""
+msgstr "Ажәеилыркка"
 
 #: shell/ev-annotation-properties-dialog.c:105
 msgid "Key"
-msgstr ""
+msgstr "Ацвԥха"
 
 #: shell/ev-annotation-properties-dialog.c:106
 msgid "Help"
@@ -877,7 +838,7 @@ msgstr "Аилыркаа"
 
 #: shell/ev-annotation-properties-dialog.c:107
 msgid "New Paragraph"
-msgstr ""
+msgstr "Абзац ҿыц"
 
 #: shell/ev-annotation-properties-dialog.c:108
 msgid "Paragraph"
@@ -889,11 +850,11 @@ msgstr "Insert"
 
 #: shell/ev-annotation-properties-dialog.c:110
 msgid "Cross"
-msgstr ""
+msgstr "Аџьар"
 
 #: shell/ev-annotation-properties-dialog.c:111
 msgid "Circle"
-msgstr ""
+msgstr "Агьежь"
 
 #: shell/ev-annotation-properties-dialog.c:123
 msgid "Markup type:"
@@ -901,11 +862,11 @@ msgstr ""
 
 #: shell/ev-annotation-properties-dialog.c:129
 msgid "Highlight"
-msgstr ""
+msgstr "Алкаара"
 
 #: shell/ev-annotation-properties-dialog.c:130
 msgid "Strike out"
-msgstr ""
+msgstr "Аихьшьра"
 
 #: shell/ev-annotation-properties-dialog.c:131
 msgid "Underline"
@@ -913,7 +874,7 @@ msgstr ""
 
 #: shell/ev-annotation-properties-dialog.c:132
 msgid "Squiggly"
-msgstr ""
+msgstr "Ареицакра"
 
 #: shell/ev-annotation-properties-dialog.c:153
 msgid "Annotation Properties"
@@ -925,15 +886,15 @@ msgstr "_Аркра"
 
 #: shell/ev-annotation-properties-dialog.c:158
 msgid "_Apply"
-msgstr ""
+msgstr "_Ахархәара"
 
 #: shell/ev-annotation-properties-dialog.c:183
 msgid "Color:"
-msgstr ""
+msgstr "Аԥштәы:"
 
 #: shell/ev-annotation-properties-dialog.c:193
 msgid "Opacity:"
-msgstr ""
+msgstr "Аҵәцамзаара:"
 
 #: shell/ev-annotation-properties-dialog.c:205
 msgid "Initial window state:"
@@ -954,15 +915,15 @@ msgstr ""
 
 #: shell/ev-annotations-toolbar.c:135
 msgid "Add text annotation"
-msgstr ""
+msgstr "Атексттә азгәаҭа ацҵара"
 
 #: shell/ev-annotations-toolbar.c:140
 msgid "Highlight text"
-msgstr ""
+msgstr "Атекст арлашара"
 
 #: shell/ev-annotations-toolbar.c:142
 msgid "Add highlight annotation"
-msgstr ""
+msgstr "Иалкаау азгәаҭа аццара"
 
 #: shell/evince-menus.ui:25 shell/ev-sidebar-links.c:351
 msgid "Print…"
@@ -974,7 +935,7 @@ msgstr "Аекран зегьы иҭаӡо"
 
 #: shell/evince-menus.ui:35
 msgid "Send To…"
-msgstr ""
+msgstr "А_шьҭра..."
 
 #: shell/evince-menus.ui:42
 msgid "New _Window"
@@ -982,11 +943,11 @@ msgstr ""
 
 #: shell/evince-menus.ui:48
 msgid "Open a C_opy"
-msgstr ""
+msgstr "Ахкьыԥхьаа_аартра"
 
 #: shell/evince-menus.ui:52 shell/evince-menus.ui:218
 msgid "Open Containing _Folder"
-msgstr ""
+msgstr "Адокументқәа_зҭоу аҭаӡ аартра"
 
 #: shell/evince-menus.ui:58
 msgid "_Save As…"
@@ -998,7 +959,7 @@ msgstr ""
 
 #: shell/evince-menus.ui:70
 msgid "_Continuous"
-msgstr ""
+msgstr "_Аанҿасрада"
 
 #: shell/evince-menus.ui:74
 msgid "_Dual"
@@ -1010,11 +971,11 @@ msgstr "_Арымарахьтәи иеиҩымшо адаҟьақәа"
 
 #: shell/evince-menus.ui:82
 msgid "Right to Left Document"
-msgstr ""
+msgstr "Адокумент арыӷьарантәи арымарахь"
 
 #: shell/evince-menus.ui:88
 msgid "Ro_tate ⤵"
-msgstr ""
+msgstr "Аарҳә_ра"
 
 #: shell/evince-menus.ui:94
 msgid "Ni_ght Mode"
@@ -1022,7 +983,7 @@ msgstr "_Аԥшьы иазкны"
 
 #: shell/evince-menus.ui:100
 msgid "Prop_erties"
-msgstr ""
+msgstr "_Аҷыдаҟазшьақәа"
 
 #: shell/evince-menus.ui:106
 msgid "Save Current Settings as Defa_ult"
@@ -1050,11 +1011,11 @@ msgstr "_Азхьарԥш аҭыӡҭыԥ ахкьыҧхьаара"
 
 #: shell/evince-menus.ui:137
 msgid "_Go To"
-msgstr ""
+msgstr "_Аиасра"
 
 #: shell/evince-menus.ui:142
 msgid "Open in New _Window"
-msgstr ""
+msgstr "Аԥенџьыр ҿыц_аҟны аартра"
 
 #: shell/evince-menus.ui:149
 msgid "_Previous Page"
@@ -1064,7 +1025,7 @@ msgstr "_Шьҭахьҟа"
 msgid "_Next Page"
 msgstr "_Ԥхьаҟа"
 
-#: shell/evince-menus.ui:157 shell/ev-window.c:3974
+#: shell/evince-menus.ui:157 shell/ev-window.c:3975
 msgid "_Reload"
 msgstr ""
 
@@ -1078,7 +1039,7 @@ msgstr "_Ахкьыҧхьаара"
 
 #: shell/evince-menus.ui:171
 msgid "Select _All"
-msgstr ""
+msgstr "З_егьы алхра"
 
 #: shell/evince-menus.ui:177
 msgid "_Save Image As…"
@@ -1116,11 +1077,11 @@ msgstr ""
 
 #: shell/evince-menus.ui:228
 msgid "First Page"
-msgstr ""
+msgstr "Рапхьатәи адаҟьа"
 
 #: shell/evince-menus.ui:240
 msgid "Last Page"
-msgstr ""
+msgstr "Аҵыхәтәантәи адаҟьа"
 
 #: shell/evince-menus.ui:245
 msgid "History"
@@ -1140,7 +1101,7 @@ msgstr "Азгәаҭа  аҟазшьаҷыда"
 
 #: shell/evince-menus.ui:278
 msgid "Remove Annotation"
-msgstr ""
+msgstr "Азгәаҭа аныхра"
 
 #: shell/evince-menus.ui:298
 msgid "_Open Bookmark"
@@ -1148,7 +1109,7 @@ msgstr "_Агәылаҵа аартра"
 
 #: shell/evince-menus.ui:304
 msgid "_Rename Bookmark"
-msgstr ""
+msgstr "Агәылаҵа_ ахьӡ аԥсахра"
 
 #: shell/evince-menus.ui:308
 msgid "_Delete Bookmark"
@@ -1162,31 +1123,31 @@ msgstr ""
 
 #: shell/evince-password-view.ui:37
 msgid "_Unlock Document"
-msgstr ""
+msgstr "_Адокумент аужьра"
 
 #: shell/evince-properties-fonts.ui:40
 msgid "Font"
-msgstr ""
+msgstr "Ашрифт"
 
 #: shell/evince-sidebar-bookmarks.ui:55
 msgid "Add bookmark"
-msgstr ""
+msgstr "Агәылаҵа ацҵара"
 
 #: shell/evince-sidebar-bookmarks.ui:64
 msgid "Remove bookmark"
-msgstr ""
+msgstr "Агәылаҵа аныхра"
 
 #: shell/evince-zoom-action.ui:5
 msgid "Select or set the zoom level of the document"
-msgstr ""
+msgstr "Иқәшәыргыл,мамзар иалшәх адокумент амасштаб"
 
 #: shell/evince-zoom-action.ui:30
 msgid "Fit Pa_ge"
-msgstr ""
+msgstr "Адаҟьа ашәагаа_ала"
 
 #: shell/evince-zoom-action.ui:35
 msgid "Fit _Width"
-msgstr ""
+msgstr "Адаҟьа аҭбаара_ала"
 
 #: shell/evince-zoom-action.ui:40
 msgid "_Automatic"
@@ -1195,7 +1156,7 @@ msgstr "_Автоматикла"
 #: shell/ev-keyring.c:86
 #, c-format
 msgid "Password for document %s"
-msgstr ""
+msgstr "Адокумент %s азы ажәамаӡа"
 
 #. Create tree view
 #: shell/ev-loading-message.c:50 shell/ev-sidebar-annotations.c:148
@@ -1207,21 +1168,21 @@ msgstr "Аҭагалара..."
 #, c-format
 msgid ""
 "The document “%s” is locked and requires a password before it can be opened."
-msgstr ""
+msgstr "Адокумент «%s» аанкылоуп, аԥхьаразы иаҭахуп ажәамаӡа"
 
 #: shell/ev-password-view.c:235
 msgid "Password required"
-msgstr ""
+msgstr "Иаҭаху ажәамаӡа"
 
 #: shell/ev-password-view.c:242 shell/ev-sidebar-attachments.c:493
-#: shell/ev-window.c:2915 shell/ev-window.c:3213 shell/ev-window.c:4098
-#: shell/ev-window.c:7092 shell/ev-window.c:7318
+#: shell/ev-window.c:2916 shell/ev-window.c:3214 shell/ev-window.c:4099
+#: shell/ev-window.c:7098 shell/ev-window.c:7324
 msgid "_Cancel"
 msgstr "_Аԥыхра"
 
 #: shell/ev-password-view.c:243
 msgid "_Unlock"
-msgstr ""
+msgstr "_Аужьра:"
 
 #: shell/ev-password-view.c:255
 msgid "_Password:"
@@ -1229,15 +1190,15 @@ msgstr "_Ажәамаӡа:"
 
 #: shell/ev-password-view.c:289
 msgid "Forget password _immediately"
-msgstr ""
+msgstr "_Зыԥшрада апароль ахаршҭра"
 
 #: shell/ev-password-view.c:300
 msgid "Remember password until you _log out"
-msgstr ""
+msgstr "Ари _асеанс азы ажәамаӡа агәынкылара"
 
 #: shell/ev-password-view.c:311
 msgid "Remember _forever"
-msgstr ""
+msgstr "Наунагӡа _агәынкылара"
 
 #: shell/ev-properties-dialog.c:63
 msgid "Properties"
@@ -1253,7 +1214,7 @@ msgstr ""
 
 #: shell/ev-properties-dialog.c:108
 msgid "Document License"
-msgstr ""
+msgstr "Адокумент алицензиџ"
 
 #: shell/ev-properties-fonts.c:137
 #, c-format
@@ -1262,15 +1223,15 @@ msgstr ""
 
 #: shell/ev-properties-license.c:146
 msgid "Usage terms"
-msgstr ""
+msgstr "Ахархәара аиқәшаҳаҭра"
 
 #: shell/ev-properties-license.c:158
 msgid "Text License"
-msgstr ""
+msgstr "Алицензиа атекст"
 
 #: shell/ev-properties-license.c:169
 msgid "Further Information"
-msgstr ""
+msgstr "Иацҵоу адыррақәа"
 
 #: shell/ev-sidebar-annotations.c:373
 msgid "Document contains no annotations"
@@ -1279,11 +1240,11 @@ msgstr ""
 #: shell/ev-sidebar-annotations.c:410
 #, c-format
 msgid "Page %d"
-msgstr ""
+msgstr "Адаҟьа %d"
 
-#: shell/ev-sidebar-annotations.c:622 shell/ev-window.c:7718
+#: shell/ev-sidebar-annotations.c:622 shell/ev-window.c:7724
 msgid "Annotations"
-msgstr ""
+msgstr "Азгәаҭақәа"
 
 #: shell/ev-sidebar-attachments.c:485
 #, c-format
@@ -1299,15 +1260,15 @@ msgstr ""
 msgid "_Replace"
 msgstr "_Аҧсахра"
 
-#: shell/ev-sidebar-attachments.c:899 shell/ev-window.c:7742
+#: shell/ev-sidebar-attachments.c:899 shell/ev-window.c:7748
 msgid "Attachments"
 msgstr "Агәылаҵақәа"
 
-#: shell/ev-sidebar-bookmarks.c:571 shell/ev-window.c:7726
+#: shell/ev-sidebar-bookmarks.c:571 shell/ev-window.c:7732
 msgid "Bookmarks"
 msgstr "Агәылаҵақәа"
 
-#: shell/ev-sidebar-layers.c:444 shell/ev-window.c:7754
+#: shell/ev-sidebar-layers.c:444 shell/ev-window.c:7760
 msgid "Layers"
 msgstr ""
 
@@ -1326,13 +1287,13 @@ msgstr ""
 #. Translators: This is the title for the sidebar pane that
 #. * shows the Outline or Table of Contents of the document.
 #.
-#: shell/ev-sidebar-links.c:1431 shell/ev-window.c:7706
+#: shell/ev-sidebar-links.c:1431 shell/ev-window.c:7712
 msgid "Outline"
 msgstr ""
 
-#: shell/ev-sidebar-thumbnails.c:1045 shell/ev-window.c:7689
+#: shell/ev-sidebar-thumbnails.c:1045 shell/ev-window.c:7695
 msgid "Thumbnails"
-msgstr ""
+msgstr "Аминиатиура"
 
 #: shell/ev-toolbar.c:173
 msgid "Find a word or phrase in the document"
@@ -1374,153 +1335,153 @@ msgstr ""
 msgid "Supported Image Files"
 msgstr "Аԥшранҵақәа рҷыдахәрақәа  адкылара змоу"
 
-#: shell/ev-window.c:1765
+#: shell/ev-window.c:1766
 msgid "The document contains no pages"
 msgstr ""
 
-#: shell/ev-window.c:1768
+#: shell/ev-window.c:1769
 msgid "The document contains only empty pages"
 msgstr ""
 
-#: shell/ev-window.c:2013 shell/ev-window.c:2195
+#: shell/ev-window.c:2014 shell/ev-window.c:2196
 #, c-format
 msgid "Unable to open document “%s”."
 msgstr ""
 
-#: shell/ev-window.c:2160
+#: shell/ev-window.c:2161
 #, c-format
 msgid "Loading document from “%s”"
 msgstr ""
 
-#: shell/ev-window.c:2165 shell/ev-window.c:2637 shell/ev-window.c:3003
-#: shell/ev-window.c:3739 shell/ev-window.c:3987
+#: shell/ev-window.c:2166 shell/ev-window.c:2638 shell/ev-window.c:3004
+#: shell/ev-window.c:3740 shell/ev-window.c:3988
 msgid "C_ancel"
 msgstr ""
 
-#: shell/ev-window.c:2319 shell/ev-window.c:2688
+#: shell/ev-window.c:2320 shell/ev-window.c:2689
 #, c-format
 msgid "Downloading document (%d%%)"
 msgstr ""
 
-#: shell/ev-window.c:2352
+#: shell/ev-window.c:2353
 msgid "Failed to load remote file."
 msgstr ""
 
-#: shell/ev-window.c:2633
+#: shell/ev-window.c:2634
 #, c-format
 msgid "Reloading document from %s"
 msgstr ""
 
-#: shell/ev-window.c:2663
+#: shell/ev-window.c:2664
 msgid "Failed to reload document."
 msgstr ""
 
-#: shell/ev-window.c:2911
+#: shell/ev-window.c:2912
 msgid "Open Document"
 msgstr "Адокумент аартра"
 
-#: shell/ev-window.c:2914
+#: shell/ev-window.c:2915
 msgid "_Open"
 msgstr "_Аартра"
 
-#: shell/ev-window.c:2989
+#: shell/ev-window.c:2990
 #, c-format
 msgid "Saving document to %s"
 msgstr ""
 
-#: shell/ev-window.c:2992
+#: shell/ev-window.c:2993
 #, c-format
 msgid "Saving attachment to %s"
 msgstr ""
 
-#: shell/ev-window.c:2995
+#: shell/ev-window.c:2996
 #, c-format
 msgid "Saving image to %s"
 msgstr ""
 
-#: shell/ev-window.c:3037 shell/ev-window.c:3152
+#: shell/ev-window.c:3038 shell/ev-window.c:3153
 #, c-format
 msgid "The file could not be saved as “%s”."
 msgstr ""
 
-#: shell/ev-window.c:3069
+#: shell/ev-window.c:3070
 #, c-format
 msgid "Uploading document (%d%%)"
 msgstr ""
 
-#: shell/ev-window.c:3073
+#: shell/ev-window.c:3074
 #, c-format
 msgid "Uploading attachment (%d%%)"
 msgstr ""
 
-#: shell/ev-window.c:3077
+#: shell/ev-window.c:3078
 #, c-format
 msgid "Uploading image (%d%%)"
 msgstr ""
 
-#: shell/ev-window.c:3210
+#: shell/ev-window.c:3211
 msgid "Save As…"
 msgstr ""
 
-#: shell/ev-window.c:3212 shell/ev-window.c:7091 shell/ev-window.c:7317
+#: shell/ev-window.c:3213 shell/ev-window.c:7097 shell/ev-window.c:7323
 msgid "_Save"
 msgstr "_Аиқәырхара"
 
-#: shell/ev-window.c:3299
+#: shell/ev-window.c:3300
 msgid "Could not send current document"
 msgstr ""
 
-#: shell/ev-window.c:3626
+#: shell/ev-window.c:3627
 #, c-format
 msgid "%d pending job in queue"
 msgid_plural "%d pending jobs in queue"
 msgstr[0] ""
 msgstr[1] ""
 
-#: shell/ev-window.c:3735
+#: shell/ev-window.c:3736
 #, c-format
 msgid "Printing job “%s”"
 msgstr ""
 
-#: shell/ev-window.c:3953
+#: shell/ev-window.c:3954
 msgid "Document contains form fields that have been filled out."
 msgstr ""
 
-#: shell/ev-window.c:3956
+#: shell/ev-window.c:3957
 msgid "Document contains new or modified annotations."
 msgstr ""
 
-#: shell/ev-window.c:3968
+#: shell/ev-window.c:3969
 #, c-format
 msgid "Reload document “%s”?"
 msgstr ""
 
-#: shell/ev-window.c:3970
+#: shell/ev-window.c:3971
 msgid "If you reload the document, changes will be permanently lost."
 msgstr ""
 
-#: shell/ev-window.c:3972
+#: shell/ev-window.c:3973
 msgid "_No"
 msgstr "_Мап"
 
-#: shell/ev-window.c:3981
+#: shell/ev-window.c:3982
 #, c-format
 msgid "Save a copy of document “%s” before closing?"
 msgstr ""
 
-#: shell/ev-window.c:3983
+#: shell/ev-window.c:3984
 msgid "If you don’t save a copy, changes will be permanently lost."
 msgstr ""
 
-#: shell/ev-window.c:3985
+#: shell/ev-window.c:3986
 msgid "Close _without Saving"
 msgstr ""
 
-#: shell/ev-window.c:3989
+#: shell/ev-window.c:3990
 msgid "Save a _Copy"
 msgstr ""
 
-#: shell/ev-window.c:4071
+#: shell/ev-window.c:4072
 #, c-format
 msgid "Wait until print job “%s” finishes before closing?"
 msgstr ""
@@ -1528,7 +1489,7 @@ msgstr ""
 #. TRANS: the singular form is not really used as n_print_jobs > 1
 #. but some languages distinguish between different plurals forms,
 #. so the ngettext is needed.
-#: shell/ev-window.c:4077
+#: shell/ev-window.c:4078
 #, c-format
 msgid "There is %d print job active. Wait until print finishes before closing?"
 msgid_plural ""
@@ -1536,84 +1497,84 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: shell/ev-window.c:4092
+#: shell/ev-window.c:4093
 msgid "If you close the window, pending print jobs will not be printed."
 msgstr ""
 
-#: shell/ev-window.c:4096
+#: shell/ev-window.c:4097
 msgid "Cancel _print and Close"
 msgstr ""
 
-#: shell/ev-window.c:4100
+#: shell/ev-window.c:4101
 msgid "Close _after Printing"
 msgstr ""
 
-#: shell/ev-window.c:4222
+#: shell/ev-window.c:4228
 msgid "© 1996–2022 The Evince document viewer authors"
 msgstr "© 1996-2022 Адокуметқәа Evince рыхәаԥшыга аԥҵаҩцәа"
 
-#: shell/ev-window.c:4225
+#: shell/ev-window.c:4231
 msgid "Evince is a simple document viewer for GNOME"
 msgstr ""
 
-#: shell/ev-window.c:4228
+#: shell/ev-window.c:4234
 msgid "translator-credits"
 msgstr "Нанба Наала <naala-nanba@rambler.ru>, 2022"
 
-#: shell/ev-window.c:4658
+#: shell/ev-window.c:4664
 msgid "Running in presentation mode"
 msgstr ""
 
-#: shell/ev-window.c:5709
+#: shell/ev-window.c:5715
 msgid "The attachment could not be saved."
 msgstr ""
 
-#: shell/ev-window.c:6031
+#: shell/ev-window.c:6037
 msgid "Enable caret navigation?"
 msgstr ""
 
-#: shell/ev-window.c:6032
+#: shell/ev-window.c:6038
 msgid "_Enable"
 msgstr "_Аҿакра"
 
-#: shell/ev-window.c:6035
+#: shell/ev-window.c:6041
 msgid ""
 "Pressing F7 turns the caret navigation on or off. This feature places a "
 "moveable cursor in text pages, allowing you to move around and select text "
 "with your keyboard. Do you want to enable the caret navigation?"
 msgstr ""
 
-#: shell/ev-window.c:6040
+#: shell/ev-window.c:6046
 msgid "Don’t show this message again"
 msgstr ""
 
-#: shell/ev-window.c:6718
+#: shell/ev-window.c:6724
 #, c-format
 msgid ""
 "Security alert: this document has been prevented from opening the file “%s”"
 msgstr ""
 
-#: shell/ev-window.c:6783
+#: shell/ev-window.c:6789
 msgid "Unable to open external link"
 msgstr ""
 
-#: shell/ev-window.c:7020
+#: shell/ev-window.c:7026
 msgid "Couldn’t find appropriate format to save image"
 msgstr ""
 
-#: shell/ev-window.c:7052
+#: shell/ev-window.c:7058
 msgid "The image could not be saved."
 msgstr ""
 
-#: shell/ev-window.c:7088
+#: shell/ev-window.c:7094
 msgid "Save Image"
 msgstr ""
 
-#: shell/ev-window.c:7246
+#: shell/ev-window.c:7252
 msgid "Unable to open attachment"
 msgstr ""
 
-#: shell/ev-window.c:7314
+#: shell/ev-window.c:7320
 msgid "Save Attachment"
 msgstr ""
 
@@ -2278,7 +2239,6 @@ msgstr "ФАИЛ"
 
 
 
-#, fuzzy
 
 
 
@@ -2301,7 +2261,6 @@ msgstr "ФАИЛ"
 
 
 
-#, fuzzy
 
 
 
@@ -2388,7 +2347,6 @@ msgstr "ФАИЛ"
 
 
 
-#, fuzzy
 
 
 
@@ -2731,3031 +2689,6 @@ msgstr "ФАИЛ"
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#, fuzzy
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#, fuzzy
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#, fuzzy
-
-
-
-#, fuzzy
-
-#, fuzzy
-
-
-
-
-
-
-#, fuzzy
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#, fuzzy
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#, fuzzy
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#, fuzzy
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#, fuzzy
 
 
 
