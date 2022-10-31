@@ -17,6 +17,7 @@ evince_sources = files(
   'ev-properties-license.c',
   'ev-recent-view.c',
   'ev-toolbar.c',
+  'ev-thumbnail-item.c',
   'ev-utils.c',
   'ev-window.c',
   'ev-window-title.c',

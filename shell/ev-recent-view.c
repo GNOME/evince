@@ -25,9 +25,8 @@
 #include <cairo-gobject.h>
 
 #include "ev-recent-view.h"
+#include "ev-thumbnail-item.h"
 #include "ev-file-helpers.h"
-#include "gd-icon-utils.h"
-#include "gd-two-lines-renderer.h"
 #include "ev-document-misc.h"
 #include "ev-document-model.h"
 #include "ev-jobs.h"
@@ -38,27 +37,15 @@
 #include <libgnome-desktop/gnome-desktop-thumbnail.h>
 #endif
 
-typedef enum {
-        EV_RECENT_VIEW_COLUMN_URI,
-        EV_RECENT_VIEW_COLUMN_PRIMARY_TEXT,
-        EV_RECENT_VIEW_COLUMN_SECONDARY_TEXT,
-        EV_RECENT_VIEW_COLUMN_ICON,
-        EV_RECENT_VIEW_COLUMN_ASYNC_DATA,
-        NUM_COLUMNS
-} EvRecentViewColumns;
-
 typedef struct {
+	GtkWidget        *view;
 	GtkWidget        *stack;
-	GtkWidget        *scrolled;
-        GtkWidget        *view;
-	GtkWidget        *empty;
-        GtkListStore     *model;
-        GtkRecentManager *recent_manager;
-        GtkTreePath      *pressed_item_tree_path;
+	GListStore       *model;
+	GtkRecentManager *recent_manager;
 	gulong            recent_manager_changed_handler_id;
 
 #ifdef HAVE_LIBGNOME_DESKTOP
-        GnomeDesktopThumbnailFactory *thumbnail_factory;
+	GnomeDesktopThumbnailFactory *thumbnail_factory;
 #endif
 } EvRecentViewPrivate;
 
@@ -69,7 +56,7 @@ enum {
 
 static guint signals[NUM_SIGNALS] = { 0, };
 
-G_DEFINE_TYPE_WITH_PRIVATE (EvRecentView, ev_recent_view, GTK_TYPE_BIN)
+G_DEFINE_TYPE_WITH_PRIVATE (EvRecentView, ev_recent_view, ADW_TYPE_BIN);
 
 #define ICON_VIEW_SIZE 128
 #define MAX_RECENT_VIEW_ITEMS 64
@@ -79,7 +66,8 @@ typedef struct {
         EvRecentView        *ev_recent_view;
         char                *uri;
         time_t               mtime;
-        GtkTreeRowReference *row;
+	int                  scale;
+	EvThumbnailItem     *item;
         GCancellable        *cancellable;
         EvJob               *job;
         guint                needs_metadata : 1;
@@ -89,10 +77,6 @@ typedef struct {
 static void
 get_document_info_async_data_free (GetDocumentInfoAsyncData *data)
 {
-        GtkTreePath *path;
-        GtkTreeIter  iter;
-	EvRecentViewPrivate *priv = GET_PRIVATE (data->ev_recent_view);
-
         if (data->job) {
                 g_signal_handlers_disconnect_by_data (data->job, data->ev_recent_view);
                 ev_job_cancel (data->job);
@@ -102,35 +86,10 @@ get_document_info_async_data_free (GetDocumentInfoAsyncData *data)
         g_clear_object (&data->cancellable);
         g_free (data->uri);
 
-        path = gtk_tree_row_reference_get_path (data->row);
-        if (path) {
-                gtk_tree_model_get_iter (GTK_TREE_MODEL (priv->model), &iter, path);
-                gtk_list_store_set (priv->model, &iter,
-                                    EV_RECENT_VIEW_COLUMN_ASYNC_DATA, NULL,
-                                    -1);
-                gtk_tree_path_free (path);
-        }
-        gtk_tree_row_reference_free (data->row);
-
+	g_object_unref (data->item);
         g_object_unref (data->ev_recent_view);
 
         g_slice_free (GetDocumentInfoAsyncData, data);
-}
-
-static gboolean
-ev_recent_view_clear_async_data (GtkTreeModel *model,
-                                 GtkTreePath  *path,
-                                 GtkTreeIter  *iter,
-                                 EvRecentView *ev_recent_view)
-{
-        GetDocumentInfoAsyncData *data;
-
-        gtk_tree_model_get (model, iter, EV_RECENT_VIEW_COLUMN_ASYNC_DATA, &data, -1);
-
-        if (data != NULL)
-                g_cancellable_cancel (data->cancellable);
-
-        return FALSE;
 }
 
 static void
@@ -138,11 +97,7 @@ ev_recent_view_clear_model (EvRecentView *ev_recent_view)
 {
         EvRecentViewPrivate *priv = GET_PRIVATE (ev_recent_view);
 
-        gtk_tree_model_foreach (GTK_TREE_MODEL (priv->model),
-                                (GtkTreeModelForeachFunc)ev_recent_view_clear_async_data,
-                                ev_recent_view);
-
-        gtk_list_store_clear (priv->model);
+        g_list_store_remove_all (priv->model);
 }
 
 static void
@@ -153,7 +108,6 @@ ev_recent_view_dispose (GObject *obj)
 
         if (priv->model) {
                 ev_recent_view_clear_model (ev_recent_view);
-		g_clear_object (&priv->model);
         }
 
 	g_clear_signal_handler (&priv->recent_manager_changed_handler_id,
@@ -163,6 +117,7 @@ ev_recent_view_dispose (GObject *obj)
 #ifdef HAVE_LIBGNOME_DESKTOP
         g_clear_object (&priv->thumbnail_factory);
 #endif
+
 
         G_OBJECT_CLASS (ev_recent_view_parent_class)->dispose (obj);
 }
@@ -178,12 +133,12 @@ compare_recent_items (GtkRecentInfo *a,
         has_ev_b = gtk_recent_info_has_application (b, evince);
 
         if (has_ev_a && has_ev_b) {
-                time_t time_a, time_b;
+                GDateTime *time_a, *time_b;
 
                 time_a = gtk_recent_info_get_modified (a);
                 time_b = gtk_recent_info_get_modified (b);
 
-                return (time_b - time_a);
+                return g_date_time_compare (time_b, time_a);
         } else if (has_ev_a) {
                 return -1;
         } else if (has_ev_b) {
@@ -193,94 +148,40 @@ compare_recent_items (GtkRecentInfo *a,
         return 0;
 }
 
-static gboolean
-on_query_tooltip_event (GtkWidget     *widget,
-                        gint           x,
-                        gint           y,
-                        gboolean       keyboard_tip,
-                        GtkTooltip    *tooltip,
-                        EvRecentView  *ev_recent_view)
-{
-        EvRecentViewPrivate *priv = GET_PRIVATE (ev_recent_view);
-        GtkTreeModel        *model;
-        GtkTreeIter          iter;
-        GtkTreePath         *path = NULL;
-        gchar               *uri;
-        gchar               *uri_unescaped;
-
-        model = gtk_icon_view_get_model (GTK_ICON_VIEW (priv->view));
-        if (!gtk_icon_view_get_tooltip_context (GTK_ICON_VIEW (priv->view),
-                                                &x, &y, keyboard_tip,
-                                                &model, &path, &iter))
-                return FALSE;
-
-        gtk_tree_model_get (GTK_TREE_MODEL (priv->model), &iter,
-                            EV_RECENT_VIEW_COLUMN_URI, &uri,
-                            -1);
-
-        uri_unescaped = g_uri_unescape_string (uri, NULL);
-        g_free (uri);
-
-        gtk_tooltip_set_text (tooltip, uri_unescaped);
-        g_free (uri_unescaped);
-
-        gtk_icon_view_set_tooltip_item (GTK_ICON_VIEW (priv->view),
-                                        tooltip, path);
-        gtk_tree_path_free (path);
-
-        return TRUE;
-}
-
 static void
-on_icon_view_item_activated (GtkIconView  *iconview,
-                             GtkTreePath  *path,
+grid_view_item_activated_cb (GtkGridView  *gridview,
+                             guint	   position,
                              EvRecentView *ev_recent_view)
 {
         EvRecentViewPrivate *priv = GET_PRIVATE (ev_recent_view);
-        GtkTreeIter          iter;
+	EvThumbnailItem        *recent_item =
+			g_list_model_get_item (G_LIST_MODEL (priv->model), position);
         gchar               *uri;
 
-        if (!gtk_tree_model_get_iter (GTK_TREE_MODEL (priv->model), &iter, path))
-                return;
+	if (!recent_item)
+		return;
 
-        gtk_tree_model_get (GTK_TREE_MODEL (priv->model), &iter,
-                            EV_RECENT_VIEW_COLUMN_URI, &uri,
-                            -1);
+	g_object_get (recent_item, "uri", &uri, NULL);
+
+	if (!uri)
+		return;
+
         g_signal_emit (ev_recent_view, signals[ITEM_ACTIVATED], 0, uri);
         g_free (uri);
+	g_object_unref (recent_item);
 }
 
 static void
 add_thumbnail_to_model (GetDocumentInfoAsyncData *data,
-                        cairo_surface_t          *thumbnail)
+                        GdkPixbuf                *thumbnail)
 {
-        EvRecentViewPrivate *priv = GET_PRIVATE (data->ev_recent_view);
-        GtkTreePath         *path;
-        GtkTreeIter          iter;
-        GtkBorder            border;
-        cairo_surface_t     *surface;
+	GdkTexture          *texture;
 
         data->needs_thumbnail = FALSE;
 
-        border.left = 4;
-        border.right = 3;
-        border.top = 3;
-        border.bottom = 6;
-
-        surface = gd_embed_surface_in_frame (thumbnail,
-                                             "resource:///org/gnome/evince/ui/thumbnail-frame.png",
-                                             &border, &border);
-
-        path = gtk_tree_row_reference_get_path (data->row);
-        if (path != NULL) {
-                gtk_tree_model_get_iter (GTK_TREE_MODEL (priv->model), &iter, path);
-                gtk_list_store_set (priv->model, &iter,
-                                    EV_RECENT_VIEW_COLUMN_ICON, surface,
-                                    -1);
-                gtk_tree_path_free (path);
-        }
-
-        cairo_surface_destroy (surface);
+	texture = gdk_texture_new_for_pixbuf (thumbnail);
+	ev_thumbnail_item_set_paintable (data->item, GDK_PAINTABLE (texture));
+	g_object_unref (texture);
 }
 
 #ifdef HAVE_LIBGNOME_DESKTOP
@@ -359,13 +260,19 @@ static void
 thumbnail_job_completed_callback (EvJobThumbnailCairo      *job,
                                   GetDocumentInfoAsyncData *data)
 {
+	GdkPixbuf *pixbuf;
+
         if (g_cancellable_is_cancelled (data->cancellable) ||
             ev_job_is_failed (EV_JOB (job))) {
                 get_document_info_async_data_free (data);
                 return;
         }
 
-        add_thumbnail_to_model (data, job->thumbnail_surface);
+	pixbuf = gdk_pixbuf_get_from_surface (job->thumbnail_surface, 0, 0,
+			cairo_image_surface_get_width (job->thumbnail_surface),
+			cairo_image_surface_get_height (job->thumbnail_surface));
+
+	add_thumbnail_to_model (data, pixbuf);
         save_document_thumbnail_in_cache (data);
 }
 
@@ -373,7 +280,6 @@ static void
 document_load_job_completed_callback (EvJobLoad                *job_load,
                                       GetDocumentInfoAsyncData *data)
 {
-        EvRecentViewPrivate *priv = GET_PRIVATE (data->ev_recent_view);
         EvDocument          *document = EV_JOB (job_load)->document;
 
         if (g_cancellable_is_cancelled (data->cancellable) ||
@@ -397,9 +303,13 @@ document_load_job_completed_callback (EvJobLoad                *job_load,
                         target_height = ICON_VIEW_SIZE;
                 }
 
+		target_width *= data->scale;
+		target_height *= data->scale;
+
 		data->job = ev_job_thumbnail_cairo_new_with_target_size (document, 0, 0,
 									 target_width,
 									 target_height);
+
                 g_signal_connect (data->job, "finished",
                                   G_CALLBACK (thumbnail_job_completed_callback),
                                   data);
@@ -408,38 +318,22 @@ document_load_job_completed_callback (EvJobLoad                *job_load,
 
         if (data->needs_metadata) {
                 const EvDocumentInfo *info;
-                GtkTreePath          *path;
-                GtkTreeIter           iter;
                 GFile                *file;
                 GFileInfo            *file_info = g_file_info_new ();
 
-                path = gtk_tree_row_reference_get_path (data->row);
-                if (path)
-                        gtk_tree_model_get_iter (GTK_TREE_MODEL (priv->model), &iter, path);
-
                 info = ev_document_get_info (document);
                 if (info->fields_mask & EV_DOCUMENT_INFO_TITLE && info->title && info->title[0] != '\0') {
-                        if (path) {
-                                gtk_list_store_set (priv->model, &iter,
-                                                    EV_RECENT_VIEW_COLUMN_PRIMARY_TEXT, info->title,
-                                                    -1);
-                        }
+			ev_thumbnail_item_set_primary_text (data->item, info->title);
                         g_file_info_set_attribute_string (file_info, "metadata::evince::title", info->title);
                 } else {
                         g_file_info_set_attribute_string (file_info, "metadata::evince::title", "");
                 }
                 if (info->fields_mask & EV_DOCUMENT_INFO_AUTHOR && info->author && info->author[0] != '\0') {
-                        if (path) {
-                                gtk_list_store_set (priv->model, &iter,
-                                                    EV_RECENT_VIEW_COLUMN_SECONDARY_TEXT, info->author,
-                                                    -1);
-                        }
+			ev_thumbnail_item_set_secondary_text (data->item, info->author);
                         g_file_info_set_attribute_string (file_info, "metadata::evince::author", info->author);
                 } else {
                         g_file_info_set_attribute_string (file_info, "metadata::evince::author", "");
                 }
-
-                gtk_tree_path_free (path);
 
                 file = g_file_new_for_uri (data->uri);
                 g_file_set_attributes_async (file, file_info, G_FILE_QUERY_INFO_NONE, G_PRIORITY_DEFAULT, NULL, NULL, NULL);
@@ -471,7 +365,6 @@ get_thumbnail_from_cache_thread (GTask                    *task,
         GFileInfo       *info;
         gchar           *path;
         GdkPixbuf       *thumbnail;
-        cairo_surface_t *surface = NULL;
 	EvRecentViewPrivate *priv = GET_PRIVATE (ev_recent_view);
 
         if (g_task_return_error_if_cancelled (task))
@@ -515,6 +408,9 @@ get_thumbnail_from_cache_thread (GTask                    *task,
                         target_height = ICON_VIEW_SIZE;
                 }
 
+		target_width *= data->scale;
+		target_height *= data->scale;
+
                 if (width < target_width || height < target_height) {
                         GdkPixbuf *scaled;
 
@@ -534,12 +430,9 @@ get_thumbnail_from_cache_thread (GTask                    *task,
                         g_object_unref (thumbnail);
                         thumbnail = scaled;
                 }
-
-                surface = ev_document_misc_surface_from_pixbuf (thumbnail);
-                g_object_unref (thumbnail);
         }
 
-        g_task_return_pointer (task, surface, (GDestroyNotify)cairo_surface_destroy);
+        g_task_return_pointer (task, thumbnail, (GDestroyNotify)g_object_unref);
 }
 
 static void
@@ -548,7 +441,7 @@ get_thumbnail_from_cache_cb (EvRecentView             *ev_recent_view,
                              GetDocumentInfoAsyncData *data)
 {
         GTask           *task = G_TASK (result);
-        cairo_surface_t *thumbnail;
+        GdkPixbuf       *thumbnail;
 
         if (g_cancellable_is_cancelled (data->cancellable)) {
                 get_document_info_async_data_free (data);
@@ -558,7 +451,7 @@ get_thumbnail_from_cache_cb (EvRecentView             *ev_recent_view,
         thumbnail = g_task_propagate_pointer (task, NULL);
         if (thumbnail) {
                 add_thumbnail_to_model (data, thumbnail);
-                cairo_surface_destroy (thumbnail);
+		g_object_unref (thumbnail);
         }
 
         if (data->needs_metadata || data->needs_thumbnail)
@@ -611,7 +504,6 @@ document_query_info_cb (GFile                    *file,
         char       *author = NULL;
         char      **attrs;
         guint       i;
-	EvRecentViewPrivate *priv = GET_PRIVATE (data->ev_recent_view);
 
         if (g_cancellable_is_cancelled (data->cancellable)) {
                 get_document_info_async_data_free (data);
@@ -645,27 +537,14 @@ document_query_info_cb (GFile                    *file,
         g_strfreev (attrs);
 
         if (title || author) {
-                GtkTreePath *path;
-
                 data->needs_metadata = FALSE;
 
-                path = gtk_tree_row_reference_get_path (data->row);
-                if (path) {
-                        GtkTreeIter  iter;
-
-                        gtk_tree_model_get_iter (GTK_TREE_MODEL (priv->model), &iter, path);
-
+                if (data->item) {
                         if (title && (g_strstrip (title))[0] != '\0')
-				gtk_list_store_set (priv->model, &iter,
-						    EV_RECENT_VIEW_COLUMN_PRIMARY_TEXT, title,
-						    -1);
+				ev_thumbnail_item_set_primary_text (data->item, title);
 
                         if (author && (g_strstrip (author))[0] != '\0')
-                                gtk_list_store_set (priv->model, &iter,
-                                                    EV_RECENT_VIEW_COLUMN_SECONDARY_TEXT, author,
-                                                    -1);
-
-                        gtk_tree_path_free (path);
+				ev_thumbnail_item_set_secondary_text (data->item, author);
                 }
         }
 
@@ -677,19 +556,19 @@ document_query_info_cb (GFile                    *file,
 static GetDocumentInfoAsyncData *
 ev_recent_view_get_document_info (EvRecentView  *ev_recent_view,
                                   const gchar   *uri,
-                                  GtkTreePath   *path)
+                                  EvThumbnailItem  *item)
 {
         GFile                    *file;
         GetDocumentInfoAsyncData *data;
-	EvRecentViewPrivate *priv = GET_PRIVATE (ev_recent_view);
 
         data = g_slice_new0 (GetDocumentInfoAsyncData);
         data->ev_recent_view = g_object_ref (ev_recent_view);
         data->uri = g_strdup (uri);
-        data->row = gtk_tree_row_reference_new (GTK_TREE_MODEL (priv->model), path);;
+        data->item = g_object_ref (item);
         data->cancellable = g_cancellable_new ();
         data->needs_metadata = TRUE;
         data->needs_thumbnail = TRUE;
+	data->scale = gtk_widget_get_scale_factor (GTK_WIDGET (ev_recent_view));
 
         file = g_file_new_for_uri (uri);
         g_file_query_info_async (file, "metadata::*", G_FILE_QUERY_INFO_NONE,
@@ -712,16 +591,16 @@ ev_recent_view_refresh (EvRecentView *ev_recent_view)
         items = gtk_recent_manager_get_items (priv->recent_manager);
         items = g_list_sort (items, (GCompareFunc) compare_recent_items);
 
-        gtk_list_store_clear (priv->model);
+	g_list_store_remove_all (priv->model);
 
         for (l = items; l && l->data; l = g_list_next (l)) {
-                GetDocumentInfoAsyncData *data;
-                GtkTreePath              *path;
                 GtkRecentInfo            *info;
                 const gchar              *uri;
-                GdkPixbuf                *pixbuf;
-                cairo_surface_t          *thumbnail = NULL;
-                GtkTreeIter               iter;
+		gchar			 *uri_display;
+		GIcon                    *icon;
+		EvThumbnailItem		 *recent_item;
+		GdkPaintable             *paintable = NULL;
+		GtkIconTheme             *theme;
 
                 info = (GtkRecentInfo *) l->data;
 
@@ -732,57 +611,48 @@ ev_recent_view_refresh (EvRecentView *ev_recent_view)
                         continue;
 
                 uri = gtk_recent_info_get_uri (info);
-                pixbuf = gtk_recent_info_get_icon (info, ICON_VIEW_SIZE);
-                if (pixbuf) {
-                        thumbnail = ev_document_misc_surface_from_pixbuf (pixbuf);
-                        g_object_unref (pixbuf);
-                }
+		uri_display = gtk_recent_info_get_uri_display (info);
+                icon = gtk_recent_info_get_gicon (info);
 
-                gtk_list_store_append (priv->model, &iter);
-                path = gtk_tree_model_get_path (GTK_TREE_MODEL (priv->model), &iter);
-                data = ev_recent_view_get_document_info (ev_recent_view, uri, path);
-                gtk_tree_path_free (path);
+		theme = gtk_icon_theme_get_for_display (gdk_display_get_default ());
+		paintable = GDK_PAINTABLE(gtk_icon_theme_lookup_by_gicon (theme, icon, ICON_VIEW_SIZE,
+			gtk_widget_get_scale_factor (GTK_WIDGET (ev_recent_view)),
+			gtk_widget_get_direction (GTK_WIDGET (ev_recent_view)),
+			GTK_ICON_LOOKUP_FORCE_SYMBOLIC | GTK_ICON_LOOKUP_PRELOAD));
 
-                gtk_list_store_set (priv->model, &iter,
-                                    EV_RECENT_VIEW_COLUMN_URI, uri,
-                                    EV_RECENT_VIEW_COLUMN_PRIMARY_TEXT, gtk_recent_info_get_display_name (info),
-                                    EV_RECENT_VIEW_COLUMN_SECONDARY_TEXT, NULL,
-                                    EV_RECENT_VIEW_COLUMN_ICON, thumbnail,
-                                    EV_RECENT_VIEW_COLUMN_ASYNC_DATA, data,
-                                    -1);
+		recent_item = g_object_new (EV_TYPE_THUMBNAIL_ITEM,
+			"primary-text", gtk_recent_info_get_display_name (info),
+			"uri", uri,
+			"uri-display", uri_display,
+			"secondary-text", NULL,
+			"paintable", paintable,
+			NULL);
 
-                if (thumbnail != NULL)
-                        cairo_surface_destroy (thumbnail);
+		g_clear_pointer (&uri_display, g_free);
+		g_clear_object (&icon);
+		g_clear_object (&paintable);
+
+                ev_recent_view_get_document_info (ev_recent_view, uri, recent_item);
+		g_list_store_append (priv->model, recent_item);
 
                 if (++n_items == MAX_RECENT_VIEW_ITEMS)
                         break;
         }
 
-	if (n_items != 0)
-		gtk_stack_set_visible_child (GTK_STACK (priv->stack), priv->scrolled);
-	else
-		gtk_stack_set_visible_child (GTK_STACK (priv->stack), priv->empty);
-
         g_list_free_full (items, (GDestroyNotify)gtk_recent_info_unref);
+
+	if (n_items > 0)
+		adw_view_stack_set_visible_child_name (ADW_VIEW_STACK (priv->stack), "recent");
+	else
+		adw_view_stack_set_visible_child_name (ADW_VIEW_STACK (priv->stack), "empty");
 }
 
 static void
 ev_recent_view_constructed (GObject *object)
 {
         EvRecentView        *ev_recent_view = EV_RECENT_VIEW (object);
-        EvRecentViewPrivate *priv = GET_PRIVATE (ev_recent_view);
 
         G_OBJECT_CLASS (ev_recent_view_parent_class)->constructed (object);
-
-        g_signal_connect (priv->view, "item-activated",
-                          G_CALLBACK (on_icon_view_item_activated),
-                          ev_recent_view);
-        g_signal_connect (priv->view, "query-tooltip",
-                          G_CALLBACK (on_query_tooltip_event),
-                          ev_recent_view);
-
-        gtk_icon_view_set_model (GTK_ICON_VIEW (priv->view),
-        GTK_TREE_MODEL (priv->model));
 
         ev_recent_view_refresh (ev_recent_view);
 }
@@ -794,15 +664,7 @@ ev_recent_view_init (EvRecentView *ev_recent_view)
 
         gtk_widget_init_template (GTK_WIDGET (ev_recent_view));
 
-	gtk_stack_set_visible_child (GTK_STACK (priv->stack), priv->empty);
-
         priv->recent_manager = gtk_recent_manager_get_default ();
-        priv->model = gtk_list_store_new (NUM_COLUMNS,
-                                          G_TYPE_STRING,
-                                          G_TYPE_STRING,
-                                          G_TYPE_STRING,
-                                          CAIRO_GOBJECT_TYPE_SURFACE,
-                                          G_TYPE_POINTER);
         priv->recent_manager_changed_handler_id =
                 g_signal_connect_swapped (priv->recent_manager,
                                           "changed",
@@ -819,12 +681,12 @@ ev_recent_view_class_init (EvRecentViewClass *klass)
         g_object_class->constructed = ev_recent_view_constructed;
         g_object_class->dispose = ev_recent_view_dispose;
 
-        g_type_ensure (GD_TYPE_TWO_LINES_RENDERER);
+	g_type_ensure (EV_TYPE_THUMBNAIL_ITEM);
         gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/evince/ui/recent-view.ui");
-	gtk_widget_class_bind_template_child_private (widget_class, EvRecentView, stack);
-	gtk_widget_class_bind_template_child_private (widget_class, EvRecentView, scrolled);
+        gtk_widget_class_bind_template_child_private (widget_class, EvRecentView, model);
         gtk_widget_class_bind_template_child_private (widget_class, EvRecentView, view);
-	gtk_widget_class_bind_template_child_private (widget_class, EvRecentView, empty);
+        gtk_widget_class_bind_template_child_private (widget_class, EvRecentView, stack);
+	gtk_widget_class_bind_template_callback (widget_class, grid_view_item_activated_cb);
 
         signals[ITEM_ACTIVATED] =
                   g_signal_new ("item-activated",

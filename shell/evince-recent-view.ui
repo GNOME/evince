@@ -1,61 +1,114 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <template class="EvRecentView" parent="GtkBin">
-    <property name="visible">True</property>
+  <template class="EvRecentView" parent="AdwBin">
+    <property name="name">ev-recent-view</property>
     <child>
-      <object class="GtkStack" id="stack">
-        <property name="visible">True</property>
+      <object class="AdwViewStack" id="stack">
         <child>
-          <object class="GtkScrolledWindow" id="scrolled">
-            <property name="vexpand">True</property>
-            <property name="hexpand">True</property>
-            <property name="hscrollbar-policy">never</property>
-            <property name="vscrollbar-policy">automatic</property>
-            <property name="visible">True</property>
-            <child>
-              <object class="GtkIconView" id="view">
-                <property name="hexpand">True</property>
+          <object class="AdwViewStackPage">
+            <property name="name">recent</property>
+            <property name="child">
+              <object class="GtkScrolledWindow" id="swindow">
                 <property name="vexpand">True</property>
-                <property name="has-tooltip">True</property>
-                <property name="column-spacing">20</property>
-                <property name="margin">16</property>
-                <property name="activate-on-single-click">True</property>
-                <property name="selection-mode">none</property>
-                <property name="visible">True</property>
-                <style>
-                  <class name="content-view" />
-                </style>
+                <property name="hexpand">True</property>
+                <property name="hscrollbar-policy">never</property>
+                <property name="vscrollbar-policy">automatic</property>
                 <child>
-                  <object class="GtkCellRendererPixbuf">
-                    <property name="xalign">0.5</property>
-                    <property name="yalign">0.5</property>
-                  </object>
-                  <attributes>
-                    <attribute name="surface">3</attribute>
-                  </attributes>
-                </child>
-                <child>
-                  <object class="GdTwoLinesRenderer">
-                    <property name="xalign">0.5</property>
-                    <property name="alignment">center</property>
-                    <property name="wrap-mode">2</property>
-                    <property name="wrap-width">128</property>
-                    <property name="text-lines">3</property>
-                  </object>
-                  <attributes>
-                    <attribute name="text">1</attribute>
-                    <attribute name="line-two">2</attribute>
-                  </attributes>
-                </child>
-              </object>
-            </child>
+                  <object class="GtkGridView" id="view">
+                    <property name="single-click-activate">True</property>
+                    <property name="max-columns">15</property>
+                    <property name="min-columns">4</property>
+                    <property name="model">
+                      <object class="GtkNoSelection">
+                        <property name="model">
+                          <object class="GListStore" id="model"></object>
+                        </property>
+                      </object>
+                    </property>
+                    <property name="factory">
+                      <object class="GtkBuilderListItemFactory">
+                        <property name="bytes">
+                          <![CDATA[
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <template class="GtkListItem">
+    <property name="child">
+      <object class="GtkBox">
+        <property name="orientation">vertical</property>
+        <property name="margin-top">12</property>
+        <property name="margin-bottom">12</property>
+        <property name="margin-start">12</property>
+        <property name="margin-end">12</property>
+        <binding name="tooltip-text">
+          <lookup type="EvThumbnailItem" name="uri-display">
+            <lookup name="item">GtkListItem</lookup>
+          </lookup>
+        </binding>
+        <child>
+          <object class="GtkImage">
+            <style>
+              <class name="icon-dropshadow" />
+            </style>
+            <binding name="paintable">
+              <lookup type="EvThumbnailItem" name="paintable">
+                <lookup name="item">GtkListItem</lookup>
+              </lookup>
+            </binding>
+            <property name="pixel-size">128</property>
+            <property name="margin-bottom">4</property>
           </object>
         </child>
         <child>
-          <object class="HdyStatusPage" id="empty">
-            <property name="visible">True</property>
-            <property name="title">No recent documents</property>
-            <property name="icon-name">x-office-document-symbolic</property>
+          <object class="GtkLabel" id="primary">
+            <property name="halign">center</property>
+            <property name="justify">center</property>
+            <property name="wrap">True</property>
+            <property name="wrap-mode">word-char</property>
+            <property name="lines">3</property>
+            <property name="ellipsize">end</property>
+            <binding name="label">
+              <lookup type="EvThumbnailItem" name="primary-text">
+                <lookup name="item">GtkListItem</lookup>
+              </lookup>
+            </binding>
+          </object>
+        </child>
+        <child>
+          <object class="GtkLabel" id="secondary">
+            <style><class name="ev-author-label"/></style>
+            <property name="halign">center</property>
+            <property name="ellipsize">end</property>
+            <binding name="label">
+              <lookup type="EvThumbnailItem" name="secondary-text">
+                <lookup name="item">GtkListItem</lookup>
+              </lookup>
+            </binding>
+          </object>
+        </child>
+      </object>
+    </property>
+  </template>
+</interface>
+]]>
+                        </property>
+                      </object>
+                    </property>
+                    <signal name="activate" handler="grid_view_item_activated_cb" />
+                  </object>
+                </child>
+              </object>
+            </property>
+          </object>
+        </child>
+        <child>
+          <object class="AdwViewStackPage">
+            <property name="name">empty</property>
+            <property name="child">
+              <object class="AdwStatusPage">
+                <property name="title" translatable="yes">No Recent Documents</property>
+                <property name="icon-name">x-office-document-symbolic</property>
+              </object>
+            </property>
           </object>
         </child>
       </object>
