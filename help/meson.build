@@ -1,8 +1,8 @@
 enable_gtk_doc = get_option('gtk_doc')
 enable_user_doc = get_option('user_doc')
 if enable_gtk_doc
-  glib_prefix = glib_dep.get_pkgconfig_variable('prefix')
-  gtk_prefix = gtk_dep.get_pkgconfig_variable('prefix')
+  glib_prefix = glib_dep.get_variable(pkgconfig: 'prefix')
+  gtk_prefix = gtk_dep.get_variable(pkgconfig: 'prefix')
 
   docs_dir = get_option('prefix') / get_option('datadir') / 'doc'
 
