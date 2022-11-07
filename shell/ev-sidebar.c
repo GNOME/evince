@@ -41,7 +41,6 @@ enum
 {
 	PROP_0,
 	PROP_CURRENT_PAGE,
-	PROP_ACTIVE_ICON_NAME
 };
 
 enum
@@ -114,41 +113,18 @@ ev_sidebar_get_current_page (EvSidebar *ev_sidebar)
 	return gtk_stack_get_visible_child (GTK_STACK (priv->stack));
 }
 
-static gchar *
-ev_sidebar_get_visible_icon_name (EvSidebar *ev_sidebar)
-{
-	GtkStack *stack;
-	GtkWidget *widget;
-	gchar *icon_name;
-	EvSidebarPrivate *priv = GET_PRIVATE (ev_sidebar);
-
-	stack = GTK_STACK (priv->stack);
-	widget = gtk_stack_get_visible_child (stack);
-	gtk_container_child_get (GTK_CONTAINER (stack), widget,
-				 "icon-name", &icon_name,
-				 NULL);
-
-	return icon_name;
-}
-
 static void
 ev_sidebar_get_property (GObject *object,
-		         guint prop_id,
-		         GValue *value,
-		         GParamSpec *pspec)
+			 guint prop_id,
+			 GValue *value,
+			 GParamSpec *pspec)
 {
 	EvSidebar *sidebar = EV_SIDEBAR (object);
-	gchar *icon_name;
 
 	switch (prop_id)
 	{
 	case PROP_CURRENT_PAGE:
 		g_value_set_object (value, ev_sidebar_get_current_page (sidebar));
-		break;
-	case PROP_ACTIVE_ICON_NAME:
-		icon_name = ev_sidebar_get_visible_icon_name (sidebar);
-		g_value_set_string (value, icon_name);
-		g_free (icon_name);
 		break;
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -179,15 +155,7 @@ ev_sidebar_class_init (EvSidebarClass *ev_sidebar_class)
 							      "The currently visible page",
 							      GTK_TYPE_WIDGET,
 							      G_PARAM_READWRITE |
-                                                              G_PARAM_STATIC_STRINGS));
-	g_object_class_install_property (g_object_class,
-					 PROP_ACTIVE_ICON_NAME,
-					 g_param_spec_string ("active-icon-name",
-							      "Current page",
-							      "The icon name of the currently visible page",
-							      NULL,
-							      G_PARAM_READABLE |
-                                                              G_PARAM_STATIC_STRINGS));
+							      G_PARAM_STATIC_STRINGS));
 }
 
 static void
