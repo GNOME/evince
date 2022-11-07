@@ -43,21 +43,11 @@ enum
 	PROP_CURRENT_PAGE,
 };
 
-enum
-{
-	PAGE_COLUMN_NAME,
-	PAGE_COLUMN_MAIN_WIDGET,
-	PAGE_COLUMN_TITLE,
-	PAGE_COLUMN_ICON_NAME,
-	PAGE_COLUMN_NUM_COLS
-};
-
 typedef struct {
 	GtkWidget *stack;
 	GtkWidget *switcher;
 
 	EvDocumentModel *model;
-	GtkTreeModel *page_model;
 } EvSidebarPrivate;
 
 static void ev_sidebar_child_change_cb (GObject    *gobject,
@@ -72,20 +62,6 @@ G_DEFINE_TYPE_WITH_CODE (EvSidebar, ev_sidebar, GTK_TYPE_BOX,
                                                 ev_sidebar_buildable_iface_init))
 
 #define GET_PRIVATE(o) ev_sidebar_get_instance_private (o)
-
-static void
-ev_sidebar_dispose (GObject *object)
-{
-	EvSidebar *ev_sidebar = EV_SIDEBAR (object);
-	EvSidebarPrivate *priv = GET_PRIVATE (ev_sidebar);
-
-	if (priv->page_model) {
-		g_object_unref (priv->page_model);
-		priv->page_model = NULL;
-	}
-
-	G_OBJECT_CLASS (ev_sidebar_parent_class)->dispose (object);
-}
 
 static void
 ev_sidebar_set_property (GObject      *object,
@@ -137,7 +113,6 @@ ev_sidebar_class_init (EvSidebarClass *ev_sidebar_class)
         GObjectClass *g_object_class = G_OBJECT_CLASS (ev_sidebar_class);
 	GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (ev_sidebar_class);
 
-	g_object_class->dispose = ev_sidebar_dispose;
 	g_object_class->get_property = ev_sidebar_get_property;
 	g_object_class->set_property = ev_sidebar_set_property;
 
@@ -175,18 +150,6 @@ ev_sidebar_child_change_cb (GObject    *gobject,
 static void
 ev_sidebar_init (EvSidebar *ev_sidebar)
 {
-	EvSidebarPrivate *priv;
-
-	priv = GET_PRIVATE (ev_sidebar);
-
-	/* data model */
-	priv->page_model = (GtkTreeModel *)
-			gtk_list_store_new (PAGE_COLUMN_NUM_COLS,
-					    G_TYPE_STRING,
-					    GTK_TYPE_WIDGET,
-					    G_TYPE_STRING,
-					    G_TYPE_STRING);
-
 	gtk_widget_init_template (GTK_WIDGET (ev_sidebar));
 }
 
@@ -207,43 +170,18 @@ ev_sidebar_document_changed_cb (EvDocumentModel *model,
 {
 	EvSidebarPrivate *priv = GET_PRIVATE (ev_sidebar);
 	EvDocument *document = ev_document_model_get_document (model);
-	GtkTreeIter iter;
-	gboolean valid;
 	GtkWidget *first_supported_page = NULL;
+	GList *list = gtk_container_get_children (GTK_CONTAINER (priv->stack));
 
-	for (valid = gtk_tree_model_get_iter_first (priv->page_model, &iter);
-	     valid;
-	     valid = gtk_tree_model_iter_next (priv->page_model, &iter)) {
-		GtkWidget *widget;
-		gchar *title;
-		gchar *icon_name;
 
-		gtk_tree_model_get (priv->page_model, &iter,
-				    PAGE_COLUMN_MAIN_WIDGET, &widget,
-				    PAGE_COLUMN_TITLE, &title,
-				    PAGE_COLUMN_ICON_NAME, &icon_name,
-				    -1);
+	for (GList *l = list; l; l = l->next) {
+		gboolean supported;
+		GtkWidget *page = GTK_WIDGET (l->data);
+		supported = ev_sidebar_page_support_document (EV_SIDEBAR_PAGE (page), document);
+		gtk_widget_set_visible (page, supported);
 
-		if (ev_sidebar_page_support_document (EV_SIDEBAR_PAGE (widget),	document)) {
-			gtk_container_child_set (GTK_CONTAINER (priv->stack),
-				 widget,
-				 "icon-name", icon_name,
-				 "title", title,
-				 NULL);
-			if (!first_supported_page)
-                                first_supported_page = widget;
-		} else {
-			/* Without icon and title, the page is not shown in
-			 * the GtkStackSwitchter */
-			gtk_container_child_set (GTK_CONTAINER (priv->stack),
-				 widget,
-				 "icon-name", NULL,
-				 "title", NULL,
-				 NULL);
-		}
-		g_object_unref (widget);
-		g_free (title);
-		g_free (icon_name);
+		if (supported && !first_supported_page)
+			first_supported_page = page;
 	}
 
 	if (first_supported_page != NULL) {
@@ -293,7 +231,6 @@ ev_sidebar_add_page (EvSidebar   *ev_sidebar,
 		     const gchar *icon_name)
 {
 	EvSidebarPrivate *priv;
-	GtkTreeIter iter;
 
 	g_return_if_fail (EV_IS_SIDEBAR (ev_sidebar));
 	g_return_if_fail (GTK_IS_WIDGET (widget));
@@ -307,17 +244,6 @@ ev_sidebar_add_page (EvSidebar   *ev_sidebar,
 				 "icon-name", icon_name,
 				 "title", title,
 				 NULL);
-
-	/* Insert and move to end */
-	gtk_list_store_insert_with_values (GTK_LIST_STORE (priv->page_model),
-					   &iter, 0,
-					   PAGE_COLUMN_NAME, name,
-					   PAGE_COLUMN_MAIN_WIDGET, widget,
-					   PAGE_COLUMN_TITLE, title,
-					   PAGE_COLUMN_ICON_NAME, icon_name,
-					   -1);
-	gtk_list_store_move_before (GTK_LIST_STORE (priv->page_model),
-				    &iter, NULL);
 }
 
 void
