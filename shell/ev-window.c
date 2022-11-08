@@ -205,7 +205,6 @@ typedef struct {
 	EvWindowTitle *title;
 	EvMetadata *metadata;
 	EvBookmarks *bookmarks;
-	GMenu *bookmarks_menu;
 
 	/* Has the document been modified? */
 	gboolean is_modified;
@@ -395,7 +394,6 @@ static void     ev_window_media_player_key_pressed      (EvWindow         *windo
 static void	ev_window_emit_closed			(EvWindow         *window);
 static void 	ev_window_emit_doc_loaded		(EvWindow	  *window);
 #endif
-static void     ev_window_setup_bookmarks               (EvWindow         *window);
 
 static void     ev_window_show_find_bar                 (EvWindow         *ev_window,
 							 gboolean          restart);
@@ -573,7 +571,6 @@ ev_window_update_actions_sensitivity (EvWindow *ev_window)
 	 */
 	ev_window_set_action_enabled (ev_window, "save-settings", !recent_view_mode);
 	ev_window_set_action_enabled (ev_window, "show-side-pane", !recent_view_mode);
-	ev_window_set_action_enabled (ev_window, "goto-bookmark", !recent_view_mode);
 	ev_window_set_action_enabled (ev_window, "scroll-forward", !recent_view_mode);
 	ev_window_set_action_enabled (ev_window, "scroll-backwards", !recent_view_mode);
 	ev_window_set_action_enabled (ev_window, "sizing-mode", !recent_view_mode);
@@ -2466,10 +2463,6 @@ ev_window_open_uri (EvWindow       *ev_window,
 		priv->bookmarks = ev_bookmarks_new (priv->metadata);
 		ev_sidebar_bookmarks_set_bookmarks (EV_SIDEBAR_BOOKMARKS (priv->sidebar_bookmarks),
 						    priv->bookmarks);
-		g_signal_connect_swapped (priv->bookmarks, "changed",
-					  G_CALLBACK (ev_window_setup_bookmarks),
-					  ev_window);
-		ev_window_setup_bookmarks (ev_window);
 	} else {
 		priv->bookmarks = NULL;
 	}
@@ -5119,42 +5112,6 @@ ev_window_cmd_go_backwards (GSimpleAction *action,
 	}
 }
 
-static gint
-compare_bookmarks (EvBookmark *a,
-		   EvBookmark *b)
-{
-	if (a->page < b->page)
-		return -1;
-	if (a->page > b->page)
-		return 1;
-	return 0;
-}
-
-static void
-ev_window_setup_bookmarks (EvWindow *window)
-{
-	EvWindowPrivate *priv = GET_PRIVATE (window);
-	GList *items, *it;
-
-	g_menu_remove_all (priv->bookmarks_menu);
-
-	items = g_list_sort (ev_bookmarks_get_bookmarks (priv->bookmarks),
-			     (GCompareFunc) compare_bookmarks);
-
-	for (it = items; it; it = it->next) {
-		EvBookmark *bookmark = it->data;
-		GMenuItem *item;
-
-		item = g_menu_item_new (bookmark->title, NULL);
-		g_menu_item_set_action_and_target (item, "win.goto-bookmark", "u", bookmark->page);
-		g_menu_append_item (priv->bookmarks_menu, item);
-
-		g_object_unref (item);
-	}
-
-	g_list_free (items);
-}
-
 static void
 ev_window_cmd_bookmarks_add (GSimpleAction *action,
 			     GVariant      *parameter,
@@ -5187,21 +5144,6 @@ ev_window_cmd_bookmarks_delete (GSimpleAction *action,
 	bm.title = NULL;
 
 	ev_bookmarks_delete (priv->bookmarks, &bm);
-}
-
-static void
-ev_window_activate_goto_bookmark_action (GSimpleAction *action,
-					 GVariant      *parameter,
-					 gpointer       user_data)
-{
-	EvWindow *window = user_data;
-	EvWindowPrivate *priv = GET_PRIVATE (window);
-	gint old_page = ev_document_model_get_page (priv->model);
-
-	ev_history_add_page (priv->history, old_page);
-	ev_history_add_page (priv->history, g_variant_get_uint32 (parameter));
-
-	ev_document_model_set_page (priv->model, g_variant_get_uint32 (parameter));
 }
 
 static void
@@ -6141,7 +6083,6 @@ ev_window_dispose (GObject *object)
 		priv->title = NULL;
 	}
 
-	g_clear_object (&priv->bookmarks_menu);
 	g_clear_object (&priv->view_popup_menu);
 	g_clear_object (&priv->attachment_popup_menu);
 
@@ -6355,7 +6296,6 @@ static const GActionEntry actions[] = {
 	{ "auto-scroll", ev_window_cmd_view_autoscroll },
 	{ "add-bookmark", ev_window_cmd_bookmarks_add },
 	{ "delete-bookmark", ev_window_cmd_bookmarks_delete },
-	{ "goto-bookmark", ev_window_activate_goto_bookmark_action, "u" },
 	{ "close", ev_window_cmd_file_close_window },
 	{ "scroll-forward", ev_window_cmd_scroll_forward },
 	{ "scroll-backwards", ev_window_cmd_scroll_backwards },
@@ -7522,8 +7462,6 @@ ev_window_init (EvWindow *ev_window)
         g_signal_connect (priv->history, "changed",
                           G_CALLBACK (history_changed_cb),
                           ev_window);
-
-	priv->bookmarks_menu = g_menu_new ();
 
 	app_info = g_app_info_get_default_for_uri_scheme ("mailto");
 	priv->has_mailto_handler = app_info != NULL;
