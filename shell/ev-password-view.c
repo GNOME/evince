@@ -359,4 +359,3 @@ ev_password_view_new (GtkWindow *parent)
 
 	return GTK_WIDGET (retval);
 }
-

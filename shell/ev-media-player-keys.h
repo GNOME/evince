@@ -1,5 +1,5 @@
 /* -*- Mode: C; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8 -*- */
-/* 
+/*
  * Copyright (C) 2007 Jan Arne Petersen <jap@gnome.org>
  * Copyright (C) 2008 Bastien Nocera <hadess@hadess.net>
  *

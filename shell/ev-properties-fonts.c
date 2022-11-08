@@ -58,12 +58,12 @@ ev_properties_fonts_dispose (GObject *object)
 	EvPropertiesFonts *properties = EV_PROPERTIES_FONTS (object);
 
 	if (properties->fonts_job) {
-		g_signal_handlers_disconnect_by_func (properties->fonts_job, 
-						      job_fonts_finished_cb, 
+		g_signal_handlers_disconnect_by_func (properties->fonts_job,
+						      job_fonts_finished_cb,
 						      properties);
 		ev_job_cancel (properties->fonts_job);
 
-		g_object_unref (properties->fonts_job);		
+		g_object_unref (properties->fonts_job);
 		properties->fonts_job = NULL;
 	}
 

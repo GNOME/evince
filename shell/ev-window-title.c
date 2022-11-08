@@ -71,7 +71,7 @@ ev_window_title_sanitize_title (EvWindowTitle *window_title, char **title) {
 	backend = G_OBJECT_TYPE_NAME (window_title->document);
 
 	for (i = 0; i < G_N_ELEMENTS (bad_extensions); i++) {
-		if (g_ascii_strcasecmp (bad_extensions[i].backend, backend) == 0 && 
+		if (g_ascii_strcasecmp (bad_extensions[i].backend, backend) == 0 &&
 		    g_str_has_suffix (*title, bad_extensions[i].text)) {
 			char *new_title;
 
@@ -85,7 +85,7 @@ ev_window_title_sanitize_title (EvWindowTitle *window_title, char **title) {
 		    g_str_has_prefix (*title, bad_prefixes[i].text)) {
 			char *new_title;
 			int len = strlen(bad_prefixes[i].text);
-			
+
 			new_title = g_strdup_printf ("%s", (*title) + len);
 			g_free (*title);
 			*title = new_title;

@@ -28,7 +28,7 @@
 
 G_DEFINE_INTERFACE (EvSidebarPage, ev_sidebar_page, 0)
 
-gboolean 
+gboolean
 ev_sidebar_page_support_document (EvSidebarPage *sidebar_page,
 				  EvDocument    *document)
 {
@@ -40,8 +40,8 @@ ev_sidebar_page_support_document (EvSidebarPage *sidebar_page,
 	iface = EV_SIDEBAR_PAGE_GET_IFACE (sidebar_page);
 
         g_return_val_if_fail (iface->support_document, FALSE);
-	
-        return iface->support_document (sidebar_page, document);    
+
+        return iface->support_document (sidebar_page, document);
 }
 
 void
@@ -70,7 +70,7 @@ ev_sidebar_page_get_label (EvSidebarPage *sidebar_page)
 	iface = EV_SIDEBAR_PAGE_GET_IFACE (sidebar_page);
 
 	g_assert (iface->get_label);
-	
+
 	return iface->get_label (sidebar_page);
 }
 
@@ -79,7 +79,7 @@ static void
 ev_sidebar_page_default_init (EvSidebarPageInterface *iface)
 {
 	static gboolean initialized = FALSE;
- 
+
 	if (!initialized) {
 		g_object_interface_install_property (iface,
 						     g_param_spec_object ("main-widget",

@@ -176,7 +176,7 @@ ev_spawn (const char     *uri,
 
 	g_string_append_printf (cmd, " %s", path);
 	g_free (path);
-	
+
 	/* Page label */
 	if (dest) {
                 switch (ev_link_dest_get_dest_type (dest)) {

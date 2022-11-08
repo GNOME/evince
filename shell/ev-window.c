@@ -198,7 +198,7 @@ typedef struct {
 	gboolean in_reload;
 	EvFileMonitor *monitor;
 	guint setup_document_idle;
-	
+
 	EvDocument *document;
 	EvHistory *history;
 	EvWindowPageMode page_mode;
@@ -366,7 +366,7 @@ static void	ev_window_popup_cmd_save_attachment_as  (GSimpleAction    *action,
 							 gpointer          user_data);
 static void	view_handle_link_cb 			(EvView           *view,
 							 gint              old_page,
-							 EvLink           *link, 
+							 EvLink           *link,
 							 EvWindow         *window);
 static void	bookmark_activated_cb 		        (EvSidebarBookmarks *sidebar_bookmarks,
 							 gint              old_page,
@@ -655,7 +655,7 @@ static void
 set_widget_visibility (GtkWidget *widget, gboolean visible)
 {
 	g_assert (GTK_IS_WIDGET (widget));
-	
+
 	if (visible)
 		gtk_widget_show (widget);
 	else
@@ -671,7 +671,7 @@ update_chrome_visibility (EvWindow *window)
 
 	presentation = EV_WINDOW_IS_PRESENTATION (priv);
 
-	toolbar = ((priv->chrome & EV_CHROME_TOOLBAR) != 0  || 
+	toolbar = ((priv->chrome & EV_CHROME_TOOLBAR) != 0  ||
 		   (priv->chrome & EV_CHROME_RAISE_TOOLBAR) != 0) && !presentation;
 	sidebar = (priv->chrome & EV_CHROME_SIDEBAR) != 0 && priv->document && !presentation;
 
@@ -1855,7 +1855,7 @@ ev_window_clear_reload_job (EvWindow *ev_window)
 	if (priv->reload_job != NULL) {
 		if (!ev_job_is_finished (priv->reload_job))
 			ev_job_cancel (priv->reload_job);
-		
+
 		g_signal_handlers_disconnect_by_func (priv->reload_job, ev_window_reload_job_cb, ev_window);
 		g_object_unref (priv->reload_job);
 		priv->reload_job = NULL;
@@ -1959,7 +1959,7 @@ ev_window_load_job_cb (EvJob *job,
 		g_signal_connect_swapped (priv->monitor, "changed",
 					  G_CALLBACK (ev_window_file_changed),
 					  ev_window);
-		
+
 		ev_window_clear_load_job (ev_window);
 		return;
 	}
@@ -1967,9 +1967,9 @@ ev_window_load_job_cb (EvJob *job,
 	if (g_error_matches (job->error, EV_DOCUMENT_ERROR, EV_DOCUMENT_ERROR_ENCRYPTED) &&
 	    EV_IS_DOCUMENT_SECURITY (document)) {
 		gchar *password;
-		
+
 		setup_view_from_metadata (ev_window);
-		
+
 		/* First look whether password is in keyring */
 		password = ev_keyring_lookup_password (priv->uri);
 		if (password) {
@@ -2011,7 +2011,7 @@ ev_window_load_job_cb (EvJob *job,
 					 display_name);
 		g_free (display_name);
 		ev_window_clear_load_job (ev_window);
-	}	
+	}
 }
 
 static void
@@ -2077,7 +2077,7 @@ ev_window_close_dialogs (EvWindow *ev_window)
 	if (priv->print_dialog)
 		gtk_widget_destroy (priv->print_dialog);
 	priv->print_dialog = NULL;
-	
+
 	if (priv->properties)
 		gtk_widget_destroy (priv->properties);
 	priv->properties = NULL;
@@ -2293,7 +2293,7 @@ window_open_file_copy_ready_cb (GFile        *source,
 		ev_window_load_remote_failed (ev_window, error);
 		g_object_unref (source);
 	}
-	
+
 	g_error_free (error);
 }
 
@@ -2305,7 +2305,7 @@ window_open_file_copy_progress_cb (goffset   n_bytes,
 	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 	gchar *status;
 	gdouble fraction;
-	
+
 	if (!priv->message_area)
 		return;
 
@@ -2315,7 +2315,7 @@ window_open_file_copy_progress_cb (goffset   n_bytes,
 	fraction = n_bytes / (gdouble)total_bytes;
 	status = g_strdup_printf (_("Downloading document (%d%%)"),
 				  (gint)(fraction * 100));
-	
+
 	ev_progress_message_area_set_status (EV_PROGRESS_MESSAGE_AREA (priv->message_area),
 					     status);
 	ev_progress_message_area_set_fraction (EV_PROGRESS_MESSAGE_AREA (priv->message_area),
@@ -2366,7 +2366,7 @@ ev_window_load_file_remote (EvWindow *ev_window,
 			   G_PRIORITY_DEFAULT,
 			   priv->progress_cancellable,
 			   (GFileProgressCallback)window_open_file_copy_progress_cb,
-			   ev_window, 
+			   ev_window,
 			   (GAsyncReadyCallback)window_open_file_copy_ready_cb,
 			   ev_window);
 	g_object_unref (target_file);
@@ -2622,7 +2622,7 @@ show_reloading_progress (EvWindow *ev_window)
 
 	if (priv->message_area)
 		return FALSE;
-	
+
 	text = g_strdup_printf (_("Reloading document from %s"),
 				priv->uri);
 	area = ev_progress_message_area_new ("view-refresh-symbolic",
@@ -2658,7 +2658,7 @@ reload_remote_copy_ready_cb (GFile        *remote,
 	} else {
 		ev_window_reload_local (ev_window);
 	}
-		
+
 	g_object_unref (remote);
 }
 
@@ -2670,7 +2670,7 @@ reload_remote_copy_progress_cb (goffset   n_bytes,
 	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 	gchar *status;
 	gdouble fraction;
-	
+
 	if (!priv->message_area)
 		return;
 
@@ -2680,7 +2680,7 @@ reload_remote_copy_progress_cb (goffset   n_bytes,
 	fraction = n_bytes / (gdouble)total_bytes;
 	status = g_strdup_printf (_("Downloading document (%d%%)"),
 				  (gint)(fraction * 100));
-	
+
 	ev_progress_message_area_set_status (EV_PROGRESS_MESSAGE_AREA (priv->message_area),
 					     status);
 	ev_progress_message_area_set_fraction (EV_PROGRESS_MESSAGE_AREA (priv->message_area),
@@ -2727,14 +2727,14 @@ query_remote_uri_mtime_cb (GFile        *remote,
 		priv->uri_mtime = mtime;
 
 		ev_window_reset_progress_cancellable (ev_window);
-		
+
 		target_file = g_file_new_for_uri (priv->local_uri);
 		g_file_copy_async (remote, target_file,
 				   G_FILE_COPY_OVERWRITE,
 				   G_PRIORITY_DEFAULT,
 				   priv->progress_cancellable,
 				   (GFileProgressCallback)reload_remote_copy_progress_cb,
-				   ev_window, 
+				   ev_window,
 				   (GAsyncReadyCallback)reload_remote_copy_ready_cb,
 				   ev_window);
 		g_object_unref (target_file);
@@ -3024,7 +3024,7 @@ window_save_file_copy_ready_cb (GFile        *src,
 
 	if (!g_error_matches (error, G_IO_ERROR, G_IO_ERROR_CANCELLED)) {
 		gchar *name;
-		
+
 		name = g_file_get_basename (dst);
 		ev_window_error_message (ev_window, error,
 					 _("The file could not be saved as “%s”."),
@@ -3047,7 +3047,7 @@ window_save_file_copy_progress_cb (goffset n_bytes,
 
 	ev_window = EV_WINDOW (g_object_get_data (G_OBJECT (dst), "ev-window"));
 	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
-	
+
 	if (!priv->message_area)
 		return;
 
@@ -3117,7 +3117,7 @@ ev_window_clear_save_job (EvWindow *ev_window)
 	if (priv->save_job != NULL) {
 		if (!ev_job_is_finished (priv->save_job))
 			ev_job_cancel (priv->save_job);
-		
+
 		g_signal_handlers_disconnect_by_func (priv->save_job,
 						      ev_window_save_job_cb,
 						      ev_window);
@@ -3614,7 +3614,7 @@ ev_window_print_update_pending_jobs_message (EvWindow *ev_window,
 		ev_window_set_message_area (ev_window, NULL);
 		return;
 	}
-	
+
 	if (n_jobs > 1) {
 		text = g_strdup_printf (ngettext ("%d pending job in queue",
 						  "%d pending jobs in queue",
@@ -3656,7 +3656,7 @@ ev_window_print_operation_done (EvPrintOperation       *op,
 
 
 		ev_print_operation_get_error (op, &error);
-		
+
 		/* The message area is already used by
 		 * the printing progress, so it's better to
 		 * use a popup dialog in this case
@@ -3672,7 +3672,7 @@ ev_window_print_operation_done (EvPrintOperation       *op,
 				  G_CALLBACK (gtk_widget_destroy),
 				  NULL);
 		gtk_widget_show (dialog);
-		
+
 		g_error_free (error);
 	}
 		break;
@@ -3718,7 +3718,7 @@ ev_window_print_operation_status_changed (EvPrintOperation *op,
 
 	status = ev_print_operation_get_status (op);
 	fraction = ev_print_operation_get_progress (op);
-	
+
 	if (!priv->message_area) {
 		GtkWidget   *area;
 		const gchar *job_name;
@@ -6723,7 +6723,7 @@ open_remote_link (EvWindow *window, EvLinkAction *action)
 	gchar *dir;
 
 	dir = g_path_get_dirname (priv->uri);
-	
+
 	uri = g_build_filename (dir, ev_link_action_get_filename (action),
 				NULL);
 	g_free (dir);
@@ -6928,7 +6928,7 @@ image_save_dialog_response_cb (GtkFileChooserNative *fc,
 	uri = gtk_file_chooser_get_uri (GTK_FILE_CHOOSER (fc));
 	filter = gtk_file_chooser_get_filter (GTK_FILE_CHOOSER (fc));
 	format = g_object_get_data (G_OBJECT (filter), "pixbuf-format");
-	
+
 	if (format == NULL) {
 		format = get_gdk_pixbuf_format_by_extension (uri);
 	}
@@ -6943,7 +6943,7 @@ image_save_dialog_response_cb (GtkFileChooserNative *fc,
 	}
 
 	if (format == NULL) {
-		ev_window_error_message (ev_window, NULL, 
+		ev_window_error_message (ev_window, NULL,
 					 "%s",
 					 _("Couldn’t find appropriate format to save image"));
 		g_free (uri);
@@ -6973,10 +6973,10 @@ image_save_dialog_response_cb (GtkFileChooserNative *fc,
 	gdk_pixbuf_save (pixbuf, filename, file_format, &error, NULL);
 	g_free (file_format);
 	g_object_unref (pixbuf);
-	
+
     has_error:
 	if (error) {
-		ev_window_error_message (ev_window, error, 
+		ev_window_error_message (ev_window, error,
 					 "%s", _("The image could not be saved."));
 		g_error_free (error);
 		g_free (filename);
@@ -6995,7 +6995,7 @@ image_save_dialog_response_cb (GtkFileChooserNative *fc,
 				       source_file, target_file);
 		g_object_unref (source_file);
 	}
-	
+
 	g_free (filename);
 	g_object_unref (target_file);
 	g_object_unref (fc);
@@ -7170,7 +7170,7 @@ ev_window_popup_cmd_open_attachment (GSimpleAction *action,
 		ev_attachment_open (attachment, screen, gtk_get_current_event_time (), &error);
 
 		if (error) {
-			ev_window_error_message (window, error, 
+			ev_window_error_message (window, error,
 						 "%s", _("Unable to open attachment"));
 			g_error_free (error);
 		}
@@ -7237,7 +7237,7 @@ ev_window_popup_cmd_save_attachment_as (GSimpleAction *action,
 
 	if (g_list_length (priv->attach_list) == 1)
 		attachment = (EvAttachment *) priv->attach_list->data;
-	
+
 	fc = gtk_file_chooser_native_new (
 		_("Save Attachment"),
 		GTK_WINDOW (window),
@@ -7576,12 +7576,12 @@ ev_window_init (EvWindow *ev_window)
 			  "notify::position",
 			  G_CALLBACK (ev_window_sidebar_position_change_cb),
 			  ev_window);
-	
+
 	gtk_paned_set_position (GTK_PANED (priv->hpaned), SIDEBAR_DEFAULT_SIZE);
 	gtk_box_pack_start (GTK_BOX (priv->main_box), priv->hpaned,
 			    TRUE, TRUE, 0);
 	gtk_widget_show (priv->hpaned);
-	
+
 	priv->sidebar = ev_sidebar_new ();
 	ev_sidebar_set_model (EV_SIDEBAR (priv->sidebar),
 			      priv->model);

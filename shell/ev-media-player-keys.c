@@ -1,5 +1,5 @@
 /* -*- Mode: C; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8 -*- */
-/* 
+/*
  * Copyright (C) 2007 Jan Arne Petersen <jap@gnome.org>
  * Copyright (C) 2008 Bastien Nocera <hadess@hadess.net>
  * Copyright © 2010 Christian Persch
@@ -207,7 +207,7 @@ ev_media_player_keys_focused (EvMediaPlayerKeys *keys)
 {
 	if (keys->proxy == NULL)
 		return;
-	
+
 	ev_media_player_keys_grab_keys (keys);
 }
 
@@ -234,4 +234,3 @@ ev_media_player_keys_new (void)
 {
 	return g_object_new (EV_TYPE_MEDIA_PLAYER_KEYS, NULL);
 }
-
