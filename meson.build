@@ -236,8 +236,12 @@ endif
 
 # *** GObject Introspection ***
 enable_introspection = get_option('introspection')
+enable_gtk_doc = get_option('gtk_doc')
 if enable_introspection
   dependency('gobject-introspection-1.0', version: '>= 1.0')
+else
+  warning('Disable gtk_doc due to introspection is disabled')
+  enable_gtk_doc = false
 endif
 
 # *** GNOME Desktop (Thumbnail cache) ***
