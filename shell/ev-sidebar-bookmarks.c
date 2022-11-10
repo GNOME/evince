@@ -394,14 +394,14 @@ ev_sidebar_bookmarks_popup_menu_show (EvSidebarBookmarks *sidebar_bookmarks,
 }
 
 static gboolean
-ev_sidebar_bookmarks_button_press (GtkWidget          *widget,
-                                   GdkEventButton     *event,
-                                   EvSidebarBookmarks *sidebar_bookmarks)
+ev_sidebar_bookmarks_button_press_cb (GtkWidget          *widget,
+				      GdkEventButton     *event,
+				      EvSidebarBookmarks *sidebar_bookmarks)
 {
-        if (event->button != 3)
-                return FALSE;
+	if (!gdk_event_triggers_context_menu ((const GdkEvent *) event))
+		return GDK_EVENT_PROPAGATE;
 
-        return ev_sidebar_bookmarks_popup_menu_show (sidebar_bookmarks, event->x, event->y, FALSE);
+	return ev_sidebar_bookmarks_popup_menu_show (sidebar_bookmarks, event->x, event->y, FALSE);
 }
 
 static gboolean
@@ -496,7 +496,7 @@ ev_sidebar_bookmarks_class_init (EvSidebarBookmarksClass *klass)
 	gtk_widget_class_bind_template_callback (widget_class, ev_sidebar_bookmarks_query_tooltip);
 	gtk_widget_class_bind_template_callback (widget_class, ev_sidebar_bookmarks_selection_changed);
 	gtk_widget_class_bind_template_callback (widget_class, ev_sidebar_bookmarks_query_tooltip);
-	gtk_widget_class_bind_template_callback (widget_class, ev_sidebar_bookmarks_button_press);
+	gtk_widget_class_bind_template_callback (widget_class, ev_sidebar_bookmarks_button_press_cb);
 
         g_object_class_override_property (g_object_class, PROP_WIDGET, "main-widget");
 	/* Signals */

@@ -14,7 +14,7 @@
             <property name="headers-visible">False</property>
             <property name="visible">True</property>
             <signal name="query-tooltip" handler="ev_sidebar_bookmarks_query_tooltip" />
-            <signal name="button-press-event" handler="ev_sidebar_bookmarks_button_press" />
+            <signal name="button-press-event" handler="ev_sidebar_bookmarks_button_press_cb" />
             <child>
               <object class="GtkTreeViewColumn">
               <property name="visible">True</property>
