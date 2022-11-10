@@ -353,65 +353,54 @@ ev_sidebar_bookmarks_query_tooltip (GtkWidget          *widget,
 }
 
 static gboolean
-ev_sidebar_bookmarks_popup_menu_show (EvSidebarBookmarks *sidebar_bookmarks,
-                                      gint                x,
-                                      gint                y,
-                                      gboolean            keyboard_mode)
-{
-        EvSidebarBookmarksPrivate *priv = sidebar_bookmarks->priv;
-        GtkTreeView               *tree_view = GTK_TREE_VIEW (sidebar_bookmarks->priv->tree_view);
-        GtkTreeSelection          *selection = gtk_tree_view_get_selection (tree_view);
-
-        if (keyboard_mode) {
-                if (!gtk_tree_selection_get_selected (selection, NULL, NULL))
-                        return FALSE;
-        } else {
-                GtkTreePath *path;
-
-                if (!gtk_tree_view_get_path_at_pos (tree_view, x, y, &path, NULL, NULL, NULL))
-                        return FALSE;
-
-                g_signal_handlers_block_by_func (selection,
-                                                 ev_sidebar_bookmarks_selection_changed,
-                                                 sidebar_bookmarks);
-                gtk_tree_view_set_cursor (tree_view, path, NULL, FALSE);
-                g_signal_handlers_unblock_by_func (selection,
-                                                   ev_sidebar_bookmarks_selection_changed,
-                                                   sidebar_bookmarks);
-		if (!gtk_widget_get_sensitive (priv->del_button))
-			gtk_widget_set_sensitive (priv->del_button, TRUE);
-                gtk_tree_path_free (path);
-        }
-
-        if (keyboard_mode) {
-                ev_gui_menu_popup_at_tree_view_selection (GTK_MENU (priv->popup),
-                                                          tree_view);
-        } else {
-                gtk_menu_popup_at_pointer (GTK_MENU (priv->popup), NULL);
-        }
-
-        return TRUE;
-}
-
-static gboolean
 ev_sidebar_bookmarks_button_press_cb (GtkWidget          *widget,
 				      GdkEventButton     *event,
 				      EvSidebarBookmarks *sidebar_bookmarks)
 {
+	EvSidebarBookmarksPrivate *priv = sidebar_bookmarks->priv;
+	GtkTreeView               *tree_view = GTK_TREE_VIEW (sidebar_bookmarks->priv->tree_view);
+	GtkTreeSelection          *selection = gtk_tree_view_get_selection (tree_view);
+	GtkTreePath *path;
+
 	if (!gdk_event_triggers_context_menu ((const GdkEvent *) event))
 		return GDK_EVENT_PROPAGATE;
 
-	return ev_sidebar_bookmarks_popup_menu_show (sidebar_bookmarks, event->x, event->y, FALSE);
+	if (!gtk_tree_view_get_path_at_pos (tree_view, event->x, event->y,
+					    &path, NULL, NULL, NULL))
+		return GDK_EVENT_PROPAGATE;
+
+	g_signal_handlers_block_by_func (selection,
+					 ev_sidebar_bookmarks_selection_changed,
+					 sidebar_bookmarks);
+	gtk_tree_view_set_cursor (tree_view, path, NULL, FALSE);
+	g_signal_handlers_unblock_by_func (selection,
+					   ev_sidebar_bookmarks_selection_changed,
+					   sidebar_bookmarks);
+	gtk_tree_path_free (path);
+
+	if (!gtk_widget_get_sensitive (priv->del_button))
+		gtk_widget_set_sensitive (priv->del_button, TRUE);
+
+	gtk_menu_popup_at_pointer (GTK_MENU (priv->popup), NULL);
+
+	return GDK_EVENT_STOP;
 }
 
 static gboolean
 ev_sidebar_bookmarks_popup_menu (GtkWidget *widget)
 {
-        EvSidebarBookmarks *sidebar_bookmarks = EV_SIDEBAR_BOOKMARKS (widget);
-        gint                x, y;
+	EvSidebarBookmarks *sidebar_bookmarks = EV_SIDEBAR_BOOKMARKS (widget);
+	EvSidebarBookmarksPrivate *priv = sidebar_bookmarks->priv;
+	GtkTreeView               *tree_view = GTK_TREE_VIEW (sidebar_bookmarks->priv->tree_view);
+	GtkTreeSelection          *selection = gtk_tree_view_get_selection (tree_view);
 
-        ev_document_misc_get_pointer_position (widget, &x, &y);
-        return ev_sidebar_bookmarks_popup_menu_show (sidebar_bookmarks, x, y, TRUE);
+	if (!gtk_tree_selection_get_selected (selection, NULL, NULL))
+		return FALSE;
+
+	ev_gui_menu_popup_at_tree_view_selection (GTK_MENU (priv->popup),
+						  tree_view);
+
+	return TRUE;
 }
 
 static void
