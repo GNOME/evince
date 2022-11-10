@@ -255,10 +255,10 @@ ev_sidebar_annotations_activate_result_at_iter (EvSidebarAnnotations *sidebar_an
                                                 GtkTreeModel  *model,
                                                 GtkTreeIter   *iter)
 {
-		EvMapping *mapping;
+	EvMapping *mapping;
 
-		if (iter_has_mapping (model, iter, &mapping))
-			g_signal_emit (sidebar_annots, signals[ANNOT_ACTIVATED], 0, mapping);
+	if (iter_has_mapping (model, iter, &mapping))
+		g_signal_emit (sidebar_annots, signals[ANNOT_ACTIVATED], 0, mapping);
 }
 
 static void
