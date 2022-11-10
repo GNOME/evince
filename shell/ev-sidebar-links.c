@@ -447,24 +447,21 @@ button_press_cb (GtkWidget *treeview,
 	EvSidebarLinksPrivate *priv = sidebar->priv;
 	GtkTreePath *path = NULL;
 
-	if (event->button == 3) {
-	        if (gtk_tree_view_get_path_at_pos (GTK_TREE_VIEW (treeview),
-        	                                   event->x,
-                	                           event->y,
-	                                           &path,
-        	                                   NULL, NULL, NULL)) {
-			gtk_tree_view_set_cursor (GTK_TREE_VIEW (treeview),
-						  path, NULL, FALSE);
-			check_menu_sensitivity (GTK_TREE_VIEW (treeview), path, sidebar);
-			gtk_menu_popup_at_pointer (GTK_MENU (priv->popup),
-						   (GdkEvent *) event);
-			gtk_tree_path_free (path);
+	if (!gdk_event_triggers_context_menu ((const GdkEvent *) event))
+		return GDK_EVENT_PROPAGATE;
 
-			return TRUE;
-		}
-	}
+	if (!gtk_tree_view_get_path_at_pos (GTK_TREE_VIEW (treeview), event->x,
+					    event->y, &path, NULL, NULL, NULL))
+		return GDK_EVENT_PROPAGATE;
 
-	return FALSE;
+	gtk_tree_view_set_cursor (GTK_TREE_VIEW (treeview),
+				  path, NULL, FALSE);
+	check_menu_sensitivity (GTK_TREE_VIEW (treeview), path, sidebar);
+	gtk_menu_popup_at_pointer (GTK_MENU (priv->popup),
+				   (GdkEvent *) event);
+	gtk_tree_path_free (path);
+
+	return GDK_EVENT_STOP;
 }
 
 /**
