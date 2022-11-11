@@ -37,7 +37,7 @@
 #include <nautilus-extension.h>
 
 #include <evince-document.h>
-#include "ev-properties-view.h"
+#include "ev-properties.h"
 
 static GType epp_type = 0;
 static void property_page_provider_iface_init
@@ -209,9 +209,7 @@ void
 nautilus_module_initialize (GTypeModule *module)
 {
 	ev_properties_plugin_register_type (module);
-	ev_properties_view_register_type (module);
-
-        ev_init ();
+	ev_init ();
 }
 
 EV_PUBLIC
