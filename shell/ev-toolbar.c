@@ -35,7 +35,8 @@
 enum
 {
         PROP_0,
-        PROP_WINDOW
+        PROP_WINDOW,
+        PROP_DOCUMENT_MODEL,
 };
 
 typedef struct {
@@ -50,6 +51,8 @@ typedef struct {
 	GtkWidget *zoom_action;
 	GtkWidget *find_button;
 	GtkWidget *action_menu_button;
+
+	EvDocumentModel *model;
 
 	EvToolbarMode toolbar_mode;
 } EvToolbarPrivate;
@@ -71,6 +74,9 @@ ev_toolbar_set_property (GObject      *object,
         case PROP_WINDOW:
                 priv->window = g_value_get_object (value);
                 break;
+	case PROP_DOCUMENT_MODEL:
+		 priv->model = g_value_get_object (value);
+		break;
         default:
                 G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
         }
@@ -115,11 +121,10 @@ ev_toolbar_constructed (GObject *object)
 
         G_OBJECT_CLASS (ev_toolbar_parent_class)->constructed (object);
 
-        ev_page_action_widget_set_model (EV_PAGE_ACTION_WIDGET (priv->page_selector),
-                                         ev_window_get_document_model (priv->window));
+	ev_page_action_widget_set_model (EV_PAGE_ACTION_WIDGET (priv->page_selector),
+					 priv->model);
 
-	ev_zoom_action_set_model (EV_ZOOM_ACTION (priv->zoom_action),
-				  ev_window_get_document_model (priv->window));
+	ev_zoom_action_set_model (EV_ZOOM_ACTION (priv->zoom_action), priv->model);
 }
 
 static void
@@ -152,6 +157,16 @@ ev_toolbar_class_init (EvToolbarClass *klass)
                                                               G_PARAM_WRITABLE |
                                                               G_PARAM_CONSTRUCT_ONLY |
                                                               G_PARAM_STATIC_STRINGS));
+
+	g_object_class_install_property (g_object_class,
+					 PROP_DOCUMENT_MODEL,
+					 g_param_spec_object ("document-model",
+							      "DocumentModel",
+							      "The document model",
+							      EV_TYPE_DOCUMENT_MODEL,
+							      G_PARAM_WRITABLE |
+							      G_PARAM_CONSTRUCT_ONLY |
+							      G_PARAM_STATIC_STRINGS));
 }
 
 static void
@@ -170,12 +185,14 @@ ev_toolbar_init (EvToolbar *ev_toolbar)
 }
 
 GtkWidget *
-ev_toolbar_new (EvWindow *window)
+ev_toolbar_new (EvWindow *window,
+		EvDocumentModel *model)
 {
         g_return_val_if_fail (EV_IS_WINDOW (window), NULL);
 
         return GTK_WIDGET (g_object_new (EV_TYPE_TOOLBAR,
                                          "window", window,
+					 "document-model", model,
                                          NULL));
 }
 
