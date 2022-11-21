@@ -7300,7 +7300,7 @@ ev_window_init (EvWindow *ev_window)
 
 	priv->recent_manager = gtk_recent_manager_get_default ();
 
-	priv->toolbar = ev_toolbar_new (ev_window, priv->model);
+	priv->toolbar = ev_toolbar_new (priv->model);
 	gtk_widget_set_no_show_all (priv->toolbar, TRUE);
 	gtk_box_pack_start (GTK_BOX (priv->main_box), priv->toolbar, FALSE, TRUE, 0);
 	gtk_widget_show (priv->toolbar);
