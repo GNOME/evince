@@ -1,5 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
+  <object class="EvDocumentModel" id="model">
+    <signal name="page-changed" handler="ev_window_page_changed_cb" swapped="yes"/>
+    <signal name="notify::document" handler="ev_window_document_changed_cb"/>
+    <signal name="notify::scale" handler="ev_window_zoom_changed_cb"/>
+    <signal name="notify::sizing-mode" handler="ev_window_sizing_mode_changed_cb"/>
+    <signal name="notify::rotation" handler="ev_window_rotation_changed_cb"/>
+    <signal name="notify::continuous" handler="ev_window_continuous_changed_cb"/>
+    <signal name="notify::dual-page" handler="ev_window_dual_mode_changed_cb"/>
+    <signal name="notify::dual-odd-left" handler="ev_window_dual_mode_odd_pages_left_changed_cb"/>
+    <signal name="notify::rtl" handler="ev_window_direction_changed_cb"/>
+    <signal name="notify::inverted-colors" handler="ev_window_inverted_colors_changed_cb"/>
+  </object>
+
   <menu id="view_popup_menu">
     <section>
       <item>

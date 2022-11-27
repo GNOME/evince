@@ -6133,6 +6133,18 @@ ev_window_class_init (EvWindowClass *ev_window_class)
 
 	gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/evince/ui/window.ui");
 
+	gtk_widget_class_bind_template_child_private (widget_class, EvWindow, model);
+	gtk_widget_class_bind_template_callback (widget_class, ev_window_page_changed_cb);
+	gtk_widget_class_bind_template_callback (widget_class, ev_window_document_changed_cb);
+	gtk_widget_class_bind_template_callback (widget_class, ev_window_zoom_changed_cb);
+	gtk_widget_class_bind_template_callback (widget_class, ev_window_sizing_mode_changed_cb);
+	gtk_widget_class_bind_template_callback (widget_class, ev_window_rotation_changed_cb);
+	gtk_widget_class_bind_template_callback (widget_class, ev_window_continuous_changed_cb);
+	gtk_widget_class_bind_template_callback (widget_class, ev_window_dual_mode_changed_cb);
+	gtk_widget_class_bind_template_callback (widget_class, ev_window_dual_mode_odd_pages_left_changed_cb);
+	gtk_widget_class_bind_template_callback (widget_class, ev_window_direction_changed_cb);
+	gtk_widget_class_bind_template_callback (widget_class, ev_window_inverted_colors_changed_cb);
+
 	gtk_widget_class_bind_template_child_private (widget_class, EvWindow, view_popup_menu);
 	gtk_widget_class_bind_template_child_private (widget_class, EvWindow, attachment_popup_menu);
 
@@ -7261,8 +7273,6 @@ ev_window_init (EvWindow *ev_window)
         }
 #endif /* ENABLE_DBUS */
 
-	priv->model = ev_document_model_new ();
-
 	priv->page_mode = PAGE_MODE_DOCUMENT;
         priv->presentation_mode_inhibit_id = 0;
 
@@ -7532,49 +7542,7 @@ ev_window_init (EvWindow *ev_window)
 	gtk_container_add (GTK_CONTAINER (priv->scrolled_window),
 			   priv->view);
 
-	/* Connect to model signals */
-	g_signal_connect_swapped (priv->model,
-				  "page-changed",
-				  G_CALLBACK (ev_window_page_changed_cb),
-				  ev_window);
-	g_signal_connect (priv->model,
-			  "notify::document",
-			  G_CALLBACK (ev_window_document_changed_cb),
-			  ev_window);
-	g_signal_connect (priv->model,
-			  "notify::scale",
-			  G_CALLBACK (ev_window_zoom_changed_cb),
-			  ev_window);
-	g_signal_connect (priv->model,
-			  "notify::sizing-mode",
-			  G_CALLBACK (ev_window_sizing_mode_changed_cb),
-			  ev_window);
-	g_signal_connect (priv->model,
-			  "notify::rotation",
-			  G_CALLBACK (ev_window_rotation_changed_cb),
-			  ev_window);
-	g_signal_connect (priv->model,
-			  "notify::continuous",
-			  G_CALLBACK (ev_window_continuous_changed_cb),
-			  ev_window);
-	g_signal_connect (priv->model,
-			  "notify::dual-page",
-			  G_CALLBACK (ev_window_dual_mode_changed_cb),
-			  ev_window);
-	g_signal_connect (priv->model,
-			  "notify::dual-odd-left",
-			  G_CALLBACK (ev_window_dual_mode_odd_pages_left_changed_cb),
-			  ev_window);
-	g_signal_connect (priv->model,
-			  "notify::rtl",
-			  G_CALLBACK (ev_window_direction_changed_cb),
-			  ev_window);
-	g_signal_connect (priv->model,
-			  "notify::inverted-colors",
-			  G_CALLBACK (ev_window_inverted_colors_changed_cb),
-			  ev_window);
-
-     	/* Connect sidebar signals */
+	/* Connect sidebar signals */
 	g_signal_connect (priv->sidebar,
 			  "notify::visible",
 			  G_CALLBACK (ev_window_sidebar_visibility_changed_cb),
