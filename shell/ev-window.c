@@ -6287,28 +6287,25 @@ static gboolean
 ev_window_key_press_event (GtkWidget   *widget,
 			   GdkEventKey *event)
 {
-	GtkWidget *sidebar;
-	GtkWidget *find_sidebar;
+	GtkWindow *window = GTK_WINDOW (widget);
+	EvWindowPrivate *priv = GET_PRIVATE (EV_WINDOW (widget));
 	GtkWidget *focus_widget;
 	gboolean skip_sending_accel_to_sidebar = FALSE;
 	static gpointer grand_parent_class = NULL;
-	GtkWindow *window = GTK_WINDOW (widget);
 
 	if (grand_parent_class == NULL)
-                grand_parent_class = g_type_class_peek_parent (ev_window_parent_class);
+		grand_parent_class = g_type_class_peek_parent (ev_window_parent_class);
 
 	/* Don't send Ctrl and Alt accels to sidebar, as they may be handled by
 	 * GtkTreeView or other sidebar focused widgets, while we want them to reach
 	 * the main EvApplication accels. Issues #860 and #795 */
 	if (event->state & GDK_CONTROL_MASK || event->state & GDK_MOD1_MASK) {
-		sidebar = ev_window_get_sidebar (EV_WINDOW (widget));
-		find_sidebar = ev_window_get_find_sidebar (EV_WINDOW (widget));
 		focus_widget = gtk_window_get_focus (window);
 
 		if (focus_widget && gtk_widget_has_focus (focus_widget) &&
 		    !GTK_IS_ENTRY (focus_widget) &&
-		    (gtk_widget_is_ancestor (focus_widget, sidebar)
-		     || gtk_widget_is_ancestor (focus_widget, find_sidebar)))
+		    (gtk_widget_is_ancestor (focus_widget, priv->sidebar)
+		     || gtk_widget_is_ancestor (focus_widget, priv->find_sidebar)))
 			skip_sending_accel_to_sidebar = TRUE;
 	}
 
@@ -8069,30 +8066,6 @@ ev_window_get_toolbar (EvWindow *ev_window)
 	priv = GET_PRIVATE (ev_window);
 
 	return ev_toolbar_get_header_bar (EV_TOOLBAR (priv->toolbar));
-}
-
-GtkWidget *
-ev_window_get_sidebar (EvWindow *ev_window)
-{
-	EvWindowPrivate *priv;
-
-	g_return_val_if_fail (EV_WINDOW (ev_window), NULL);
-
-	priv = GET_PRIVATE (ev_window);
-
-	return priv->sidebar;
-}
-
-GtkWidget *
-ev_window_get_find_sidebar (EvWindow *ev_window)
-{
-	EvWindowPrivate *priv;
-
-	g_return_val_if_fail (EV_WINDOW (ev_window), NULL);
-
-	priv = GET_PRIVATE (ev_window);
-
-	return priv->find_sidebar;
 }
 
 void

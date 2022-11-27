@@ -1115,11 +1115,8 @@ ev_sidebar_thumbnails_get_ev_window (EvSidebarThumbnails *sidebar)
 static EvSidebar *
 ev_sidebar_thumbnails_get_ev_sidebar (EvSidebarThumbnails *sidebar)
 {
-	EvWindow *window = ev_sidebar_thumbnails_get_ev_window (sidebar);
-	if (window)
-		return EV_SIDEBAR (ev_window_get_sidebar (window));
-
-	return NULL;
+	return EV_SIDEBAR (gtk_widget_get_ancestor (GTK_WIDGET (sidebar),
+						    EV_TYPE_SIDEBAR));
 }
 
 static gboolean

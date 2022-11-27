@@ -98,8 +98,6 @@ void            ev_window_handle_annot_popup             (EvWindow       *ev_win
                                                           EvAnnotation   *annot);
 EvMetadata     *ev_window_get_metadata			 (EvWindow	 *ev_window);
 gint            ev_window_get_metadata_sidebar_size      (EvWindow       *ev_window);
-GtkWidget      *ev_window_get_sidebar			 (EvWindow	 *ev_window);
-GtkWidget      *ev_window_get_find_sidebar		 (EvWindow	 *ev_window);
 void            ev_window_set_divider_position		 (EvWindow	 *ev_window,
 							  gint		  sidebar_width);
 
