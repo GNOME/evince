@@ -112,16 +112,13 @@ ev_window_title_update (EvWindowTitle *window_title)
 	ltr = gtk_widget_get_direction (GTK_WIDGET (window)) == GTK_TEXT_DIR_LTR;
 
 	if (window_title->doc_title && window_title->filename) {
-                title = g_strdup (window_title->doc_title);
-                ev_window_title_sanitize_title (window_title, &title);
-
+		title_header = window_title->doc_title;
 		subtitle = window_title->filename;
 
-		title_header = title;
 		if (ltr)
-			title = g_strdup_printf ("%s — %s", subtitle, title);
+			title = g_strdup_printf ("%s — %s", subtitle, title_header);
 		else
-			title = g_strdup_printf ("%s — %s", title, subtitle);
+			title = g_strdup_printf ("%s — %s", title_header, subtitle);
 
                 for (p = title; *p; ++p) {
                         /* an '\n' byte is always ASCII, no need for UTF-8 special casing */
@@ -130,7 +127,7 @@ ev_window_title_update (EvWindowTitle *window_title)
                 }
 	} else if (window_title->filename) {
 		title = g_strdup (window_title->filename);
-	} else if (!title) {
+	} else {
 		title = g_strdup (_("Document Viewer"));
 	}
 
@@ -228,7 +225,9 @@ ev_window_title_set_document (EvWindowTitle *window_title,
 			doc_title = g_strstrip (doc_title);
 
 			if (doc_title[0] != '\0' &&
-                            g_utf8_validate (doc_title, -1, NULL)) {
+			    g_utf8_validate (doc_title, -1, NULL)) {
+				ev_window_title_sanitize_title (window_title,
+								&doc_title);
 				window_title->doc_title = doc_title;
 			} else {
                                 g_free (doc_title);
