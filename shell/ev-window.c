@@ -5981,9 +5981,6 @@ ev_window_dispose (GObject *object)
 	g_clear_object (&priv->monitor);
 	g_clear_pointer (&priv->title, ev_window_title_free);
 
-	g_clear_object (&priv->view_popup_menu);
-	g_clear_object (&priv->attachment_popup_menu);
-
 	priv->recent_manager = NULL;
 
 	g_clear_object (&priv->settings);
@@ -6133,6 +6130,11 @@ ev_window_class_init (EvWindowClass *ev_window_class)
 	widget_class->window_state_event = ev_window_state_event;
 	widget_class->drag_data_received = ev_window_drag_data_received;
 	widget_class->button_press_event = ev_window_button_press_event;
+
+	gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/evince/ui/window.ui");
+
+	gtk_widget_class_bind_template_child_private (widget_class, EvWindow, view_popup_menu);
+	gtk_widget_class_bind_template_child_private (widget_class, EvWindow, attachment_popup_menu);
 
 	nautilus_sendto = g_find_program_in_path ("nautilus-sendto");
 }
@@ -7212,7 +7214,6 @@ ev_window_init_css (void)
 static void
 ev_window_init (EvWindow *ev_window)
 {
-	GtkBuilder *builder;
 	GError *error = NULL;
 	GtkWidget *overlay;
 	guint page_cache_mb;
@@ -7224,6 +7225,8 @@ ev_window_init (EvWindow *ev_window)
 	static gint window_id = 0;
 #endif
 	GAppInfo *app_info;
+
+	gtk_widget_init_template (GTK_WIDGET (ev_window));
 
 	g_signal_connect (ev_window, "configure_event",
 			  G_CALLBACK (window_configure_event_cb), NULL);
@@ -7610,12 +7613,6 @@ ev_window_init (EvWindow *ev_window)
 			  "notify::search-mode-enabled",
 			  G_CALLBACK (search_bar_search_mode_enabled_changed),
 			  ev_window);
-
-	/* Popups */
-	builder = gtk_builder_new_from_resource ("/org/gnome/evince/gtk/menus.ui");
-	priv->view_popup_menu = g_object_ref (G_MENU_MODEL (gtk_builder_get_object (builder, "view-popup-menu")));
-	priv->attachment_popup_menu = g_object_ref (G_MENU_MODEL (gtk_builder_get_object (builder, "attachments-popup")));
-	g_object_unref (builder);
 
 	/* Give focus to the document view */
 	gtk_widget_grab_focus (priv->view);

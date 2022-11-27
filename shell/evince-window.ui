@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <menu id="view_popup_menu">
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">_Open Link</attribute>
+        <attribute name="action">win.open-link</attribute>
+        <attribute name='hidden-when'>action-disabled</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">_Copy Link Address</attribute>
+        <attribute name="action">win.copy-link-address</attribute>
+        <attribute name='hidden-when'>action-disabled</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">_Go To</attribute>
+        <attribute name="action">win.go-to-link</attribute>
+        <attribute name='hidden-when'>action-disabled</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Open in New _Window</attribute>
+        <attribute name="action">win.open-link-new-window</attribute>
+        <attribute name='hidden-when'>action-disabled</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">_Previous Page</attribute>
+        <attribute name="action">win.go-previous-page</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">_Next Page</attribute>
+        <attribute name="action">win.go-next-page</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">_Reload</attribute>
+        <attribute name="action">win.reload</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Auto_scroll</attribute>
+        <attribute name="action">win.auto-scroll</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">_Copy</attribute>
+        <attribute name="action">win.copy</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Select _All</attribute>
+        <attribute name="action">win.select-all</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">_Save Image As…</attribute>
+        <attribute name="action">win.save-image</attribute>
+        <attribute name='hidden-when'>action-disabled</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Copy _Image</attribute>
+        <attribute name="action">win.copy-image</attribute>
+        <attribute name='hidden-when'>action-disabled</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">_Open Attachment</attribute>
+        <attribute name="action">win.open-attachment</attribute>
+        <attribute name='hidden-when'>action-disabled</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">_Save Attachment As…</attribute>
+        <attribute name="action">win.save-attachment</attribute>
+        <attribute name='hidden-when'>action-disabled</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">Annotation _Properties…</attribute>
+        <attribute name="action">win.annot-properties</attribute>
+        <attribute name='hidden-when'>action-disabled</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">R_emove Annotation</attribute>
+        <attribute name="action">win.remove-annot</attribute>
+        <attribute name='hidden-when'>action-disabled</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">_Highlight Selected Text</attribute>
+        <attribute name="action">win.highlight-annotation</attribute>
+        <attribute name='hidden-when'>action-disabled</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Open Containing _Folder</attribute>
+        <attribute name="action">win.open-containing-folder</attribute>
+      </item>
+    </section>
+  </menu>
+
+  <menu id="attachment_popup_menu">
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">_Open Attachment</attribute>
+        <attribute name="action">win.open-attachment</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">_Save Attachment As…</attribute>
+        <attribute name="action">win.save-attachment</attribute>
+      </item>
+    </section>
+  </menu>
+</interface>
