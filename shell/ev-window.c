@@ -8032,18 +8032,6 @@ ev_window_get_bookmarks_menu (EvWindow *ev_window)
 	return G_MENU_MODEL (priv->bookmarks_menu);
 }
 
-EvHistory *
-ev_window_get_history (EvWindow *ev_window)
-{
-	EvWindowPrivate *priv;
-
-	g_return_val_if_fail (EV_WINDOW (ev_window), NULL);
-
-	priv = GET_PRIVATE (ev_window);
-
-	return priv->history;
-}
-
 EvDocumentModel *
 ev_window_get_document_model (EvWindow *ev_window)
 {
