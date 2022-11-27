@@ -8020,18 +8020,6 @@ ev_window_get_dbus_object_path (EvWindow *ev_window)
 #endif
 }
 
-GMenuModel *
-ev_window_get_bookmarks_menu (EvWindow *ev_window)
-{
-	EvWindowPrivate *priv;
-
-	g_return_val_if_fail (EV_WINDOW (ev_window), NULL);
-
-	priv = GET_PRIVATE (ev_window);
-
-	return G_MENU_MODEL (priv->bookmarks_menu);
-}
-
 EvDocumentModel *
 ev_window_get_document_model (EvWindow *ev_window)
 {
