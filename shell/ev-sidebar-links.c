@@ -1058,7 +1058,7 @@ ev_sidebar_links_construct (EvSidebarLinks *ev_sidebar_links)
 	renderer = gtk_cell_renderer_text_new ();
 	g_object_set (G_OBJECT (renderer),
 		      "ellipsize", PANGO_ELLIPSIZE_MIDDLE,
-		      "width-chars", 6,
+		      "width-chars", 7,
 		      "style", PANGO_STYLE_ITALIC,
 		      "xalign", 1.0,
 		      NULL);
