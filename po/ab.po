@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
-"POT-Creation-Date: 2022-10-30 11:21+0000\n"
+"POT-Creation-Date: 2022-10-31 09:54+0000\n"
 "Last-Translator: Нанба Наала <naala-nanba@rambler.ru>\n"
 "Language-Team: Abkhazian <daniel.abzakh@gmail.com>\n"
 "Language: ab\n"
@@ -102,7 +102,7 @@ msgstr "Ааи"
 #: backend/pdf/ev-poppler.c:734 backend/pdf/ev-poppler.c:737
 #: properties/ev-properties-view.c:435
 msgid "No"
-msgstr ""
+msgstr "Мап"
 
 #: backend/pdf/ev-poppler.c:879
 msgid "Type 1"
@@ -164,7 +164,7 @@ msgstr "Хьӡыда"
 #: backend/pdf/ev-poppler.c:981 libview/ev-print-operation.c:2722
 #: properties/ev-properties-view.c:233
 msgid "None"
-msgstr ""
+msgstr "Мап"
 
 #: backend/pdf/ev-poppler.c:989
 msgid "Embedded subset"
@@ -292,11 +292,51 @@ msgstr ""
 
 #: data/org.gnome.Evince.desktop.in.in:19
 msgid "New Window"
+msgstr "Аҧенџьыр ҿыц"
+
+#: data/org.gnome.Evince.gschema.xml:14
+msgid "Override document restrictions"
+msgstr ""
+
+#: data/org.gnome.Evince.gschema.xml:15
+msgid "Override document restrictions, like restriction to copy or to print."
 msgstr ""
 
 #: data/org.gnome.Evince.gschema.xml:19
 msgid "Automatically reload the document"
 msgstr "Адокумент автоматикла аиҭаҿакра"
+
+#: data/org.gnome.Evince.gschema.xml:20
+msgid "The document is automatically reloaded on file change."
+msgstr ""
+
+#: data/org.gnome.Evince.gschema.xml:24
+msgid "The URI of the directory last used to open or save a document"
+msgstr ""
+
+#: data/org.gnome.Evince.gschema.xml:28
+msgid "The URI of the directory last used to save a picture"
+msgstr ""
+
+#: data/org.gnome.Evince.gschema.xml:32
+msgid "Page cache size in MiB"
+msgstr ""
+
+#: data/org.gnome.Evince.gschema.xml:33
+msgid ""
+"The maximum size that will be used to cache rendered pages, limits maximum "
+"zoom level."
+msgstr ""
+
+#: data/org.gnome.Evince.gschema.xml:37
+msgid ""
+"Show a dialog to confirm that the user wants to activate the caret "
+"navigation."
+msgstr ""
+
+#: data/org.gnome.Evince.gschema.xml:41
+msgid "Allow links to change the zoom level."
+msgstr ""
 
 #: data/org.gnome.Evince-previewer.desktop.in.in:3
 msgid "Print Preview"
@@ -389,11 +429,11 @@ msgstr ""
 
 #: libmisc/ev-search-box.c:601
 msgid "Find previous occurrence of the search string"
-msgstr ""
+msgstr "Аԥшаара ацәаҳәа иаԥхьааиуа аҭалара аԥшаара"
 
 #: libmisc/ev-search-box.c:607
 msgid "Find next occurrence of the search string"
-msgstr ""
+msgstr "Аԥшаара ацәаҳәа анаҩстәи аҭалара аԥшаара"
 
 #: libview/ev-jobs.c:658
 #, c-format
@@ -561,7 +601,7 @@ msgstr "Адаҟьа ахь аиасра"
 
 #: libview/ev-view.c:2127
 msgid "Find"
-msgstr ""
+msgstr "Аҧшаара"
 
 #: libview/ev-view.c:2155
 #, c-format
@@ -870,7 +910,7 @@ msgstr "Аихьшьра"
 
 #: shell/ev-annotation-properties-dialog.c:131
 msgid "Underline"
-msgstr ""
+msgstr "Изыҵшьоу"
 
 #: shell/ev-annotation-properties-dialog.c:132
 msgid "Squiggly"
@@ -927,7 +967,7 @@ msgstr "Иалкаау азгәаҭа аццара"
 
 #: shell/evince-menus.ui:25 shell/ev-sidebar-links.c:351
 msgid "Print…"
-msgstr ""
+msgstr "Акьыҧхьра…"
 
 #: shell/evince-menus.ui:30
 msgid "Fullscreen"
@@ -939,7 +979,7 @@ msgstr "А_шьҭра..."
 
 #: shell/evince-menus.ui:42
 msgid "New _Window"
-msgstr ""
+msgstr "_Аԥенџьыр ашьақәыргылара"
 
 #: shell/evince-menus.ui:48
 msgid "Open a C_opy"
@@ -1027,7 +1067,7 @@ msgstr "_Ԥхьаҟа"
 
 #: shell/evince-menus.ui:157 shell/ev-window.c:3975
 msgid "_Reload"
-msgstr ""
+msgstr "_Аиҭаҿакра"
 
 #: shell/evince-menus.ui:161
 msgid "Auto_scroll"
@@ -1089,7 +1129,7 @@ msgstr "Аҭоурых"
 
 #: shell/evince-menus.ui:247
 msgid "Back"
-msgstr ""
+msgstr "Шьҭахьҟа"
 
 #: shell/evince-menus.ui:251
 msgid "Forward"
@@ -1210,7 +1250,7 @@ msgstr "Зегьы ирзаку"
 
 #: shell/ev-properties-dialog.c:95
 msgid "Fonts"
-msgstr ""
+msgstr "Ашрифтқәа"
 
 #: shell/ev-properties-dialog.c:108
 msgid "Document License"
@@ -1475,7 +1515,7 @@ msgstr ""
 
 #: shell/ev-window.c:3986
 msgid "Close _without Saving"
-msgstr ""
+msgstr "_Аиқәырхарада аркра"
 
 #: shell/ev-window.c:3990
 msgid "Save a _Copy"
@@ -1568,7 +1608,7 @@ msgstr ""
 
 #: shell/ev-window.c:7094
 msgid "Save Image"
-msgstr ""
+msgstr "Асахьа аиқәырхара"
 
 #: shell/ev-window.c:7252
 msgid "Unable to open attachment"
@@ -2008,840 +2048,3 @@ msgstr "Ацәаҳәа"
 #: shell/main.c:83
 msgid "[FILE…]"
 msgstr "ФАИЛ"
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#, fuzzy
