@@ -99,33 +99,6 @@ ev_document_misc_render_thumbnail_frame (GtkWidget       *widget,
 }
 
 /**
- * ev_document_misc_render_loading_thumbnail:
- * @widget: a #GtkWidget to use for style information
- * @width: the desired width
- * @height: the desired height
- * @inverted_colors: whether to invert colors
- *
- * Returns: (transfer full): a #GdkPixbuf
- *
- * Since: 3.8
- */
-GdkPixbuf *
-ev_document_misc_render_loading_thumbnail (GtkWidget *widget,
-                                           int        width,
-                                           int        height,
-                                           gboolean   inverted_colors)
-{
-        GdkPixbuf *retval;
-        cairo_surface_t *surface;
-
-        surface = ev_document_misc_render_thumbnail_frame (widget, width, height, inverted_colors, NULL, NULL);
-        retval = gdk_pixbuf_get_from_surface (surface, 0, 0, width, height);
-        cairo_surface_destroy (surface);
-
-        return retval;
-}
-
-/**
  * ev_document_misc_render_loading_thumbnail_surface:
  * @widget: a #GtkWidget to use for style information
  * @width: the desired width
@@ -298,36 +271,6 @@ ev_document_misc_invert_surface (cairo_surface_t *surface) {
 	cairo_set_source_rgb (cr, 1., 1., 1.);
 	cairo_paint(cr);
 	cairo_destroy (cr);
-}
-
-void
-ev_document_misc_invert_pixbuf (GdkPixbuf *pixbuf)
-{
-	guchar *data, *p;
-	guint   width, height, x, y, rowstride, n_channels;
-
-	n_channels = gdk_pixbuf_get_n_channels (pixbuf);
-	g_assert (gdk_pixbuf_get_colorspace (pixbuf) == GDK_COLORSPACE_RGB);
-	g_assert (gdk_pixbuf_get_bits_per_sample (pixbuf) == 8);
-
-	/* First grab a pointer to the raw pixel data. */
-	data = gdk_pixbuf_get_pixels (pixbuf);
-
-	/* Find the number of bytes per row (could be padded). */
-	rowstride = gdk_pixbuf_get_rowstride (pixbuf);
-
-	width = gdk_pixbuf_get_width (pixbuf);
-	height = gdk_pixbuf_get_height (pixbuf);
-	for (x = 0; x < width; x++) {
-		for (y = 0; y < height; y++) {
-			/* Calculate pixel's offset into the data array. */
-			p = data + x * n_channels + y * rowstride;
-			/* Change the RGB values*/
-			p[0] = 255 - p[0];
-			p[1] = 255 - p[1];
-			p[2] = 255 - p[2];
-		}
-	}
 }
 
 /**

@@ -33,11 +33,6 @@
 G_BEGIN_DECLS
 
 EV_PUBLIC
-GdkPixbuf *ev_document_misc_render_loading_thumbnail    (GtkWidget *widget,
-							 int        width,
-							 int        height,
-							 gboolean   inverted_colors);
-EV_PUBLIC
 GdkPixbuf *ev_document_misc_render_thumbnail_with_frame (GtkWidget *widget,
 							 GdkPixbuf *source_pixbuf);
 
@@ -63,8 +58,6 @@ cairo_surface_t *ev_document_misc_surface_rotate_and_scale (cairo_surface_t *sur
 							    gint             dest_rotation);
 EV_PUBLIC
 void             ev_document_misc_invert_surface (cairo_surface_t *surface);
-EV_PUBLIC
-void		 ev_document_misc_invert_pixbuf  (GdkPixbuf       *pixbuf);
 
 EV_PUBLIC
 gdouble          ev_document_misc_get_widget_dpi (GtkWidget *widget);
