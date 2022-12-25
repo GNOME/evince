@@ -4020,6 +4020,10 @@ build_layers_tree (PdfDocument       *pdf_document,
 			gchar *title;
 
 			title = poppler_layers_iter_get_title (iter);
+
+			if (title == NULL)
+				continue;
+
 			markup = g_markup_escape_text (title, -1);
 			g_free (title);
 
