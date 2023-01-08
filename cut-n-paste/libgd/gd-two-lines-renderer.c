@@ -80,6 +80,17 @@ create_layout_with_attrs (GtkWidget *widget,
       pango_layout_set_wrap (layout, PANGO_WRAP_CHAR);
     }
 
+#if PANGO_VERSION_CHECK (1, 44, 0)
+  {
+    PangoAttrList *attr_list = pango_attr_list_new ();
+
+    pango_attr_list_insert (attr_list, pango_attr_insert_hyphens_new (FALSE));
+    pango_layout_set_attributes (layout, attr_list);
+
+    pango_attr_list_unref (attr_list);
+  }
+#endif
+
   return layout;
 }
 
