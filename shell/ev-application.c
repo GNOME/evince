@@ -944,6 +944,7 @@ static void
 ev_application_startup (GApplication *gapplication)
 {
         const gchar *action_accels[] = {
+          "app.quit",                   "<Ctrl>Q", NULL,
           "win.open",                   "<Ctrl>O", NULL,
           "win.open-copy",              "<Ctrl>N", NULL,
           "win.save-as",                "<Ctrl>S", NULL,
@@ -1121,8 +1122,31 @@ ev_application_class_init (EvApplicationClass *ev_application_class)
 }
 
 static void
+activate_quit_cb (GSimpleAction *action,
+                  GVariant      *parameter,
+                  gpointer       user_data)
+{
+        GtkApplication *app = GTK_APPLICATION (user_data);
+        GList *windows, *l;
+
+        windows = gtk_application_get_windows (app);
+        for (l = windows; l != NULL; l = l->next) {
+                gtk_window_close (GTK_WINDOW (l->data));
+        }
+}
+
+static void
 ev_application_init (EvApplication *ev_application)
 {
+	const GActionEntry action_entries[] = {
+		{ "quit", activate_quit_cb, NULL },
+	};
+
+	g_action_map_add_action_entries (G_ACTION_MAP (ev_application),
+					 action_entries,
+					 G_N_ELEMENTS (action_entries),
+					 ev_application);
+
         ev_application->dot_dir = g_build_filename (g_get_user_config_dir (),
                                                     "evince", NULL);
         if (!g_file_test (ev_application->dot_dir, G_FILE_TEST_EXISTS | G_FILE_TEST_IS_DIR))
