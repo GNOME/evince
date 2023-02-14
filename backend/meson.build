@@ -28,17 +28,18 @@ foreach backend, backend_mime_types: backends
 
   backend_desc_in = configure_file(
     input: '@0@/@1@.desktop.in.in'.format(backend, backend_desc),
-    output: backend_desc + 'desktop.in',
+    output: backend_desc + '.desktop.in',
     configuration: backend_mime_types_conf,
   )
 
-  custom_target(
-    backend_desc,
+  i18n.merge_file(
+    type: 'desktop',
     input: backend_desc_in,
     output: backend_desc,
-    command: [msgfmt, '--desktop', '--keyword=TypeDescription', '--template', '@INPUT@', '-d', po_dir, '-o', '@OUTPUT@'],
+    po_dir: po_dir,
     install: true,
     install_dir: ev_backendsdir,
+    args: '--keyword=TypeDescription',
   )
 
   appstream = 'evince-@0@.metainfo.xml'.format(backend_name)
