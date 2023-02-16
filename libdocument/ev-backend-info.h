@@ -44,9 +44,6 @@ EvBackendInfo *_ev_backend_info_ref           (EvBackendInfo *info);
 
 void           _ev_backend_info_unref         (EvBackendInfo *info);
 
-EvBackendInfo *_ev_backend_info_new_from_file (const char *file,
-                                               GError **error);
-
 GList         *_ev_backend_info_load_from_dir (const char *path);
 
 G_END_DECLS

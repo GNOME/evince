@@ -72,7 +72,7 @@ _ev_backend_info_unref (EvBackendInfo *info)
  *
  * Returns: a new #EvBackendInfo, or %NULL on error with @error filled in
  */
-EvBackendInfo *
+static EvBackendInfo *
 _ev_backend_info_new_from_file (const char *file,
                                 GError **error)
 {
