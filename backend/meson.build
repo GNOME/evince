@@ -1,10 +1,8 @@
 msgfmt = find_program('msgfmt')
 
-backends_incs = [top_inc]
-
-backends_deps = [libevdocument_dep]
-
-backends_cflags = [
+backends_common_incs = [top_inc]
+backends_common_deps = [libevdocument_dep]
+backends_common_cflags = [
   '-DGNOMELOCALEDIR="@0@"'.format(ev_localedir),
   '-DEVINCE_COMPILATION',
   '-DGDK_MULTIHEAD_SAFE',
@@ -13,6 +11,25 @@ backends_cflags = [
 
 foreach backend, backend_mime_types: backends
   backend_name = backend + 'document'
+
+  # Set default values, let each backend configure its own
+  backend_sources = []
+  backend_incs = backends_common_incs
+  backend_deps = backends_common_deps
+  backend_cflags = backends_common_cflags
+  subdir(backend)
+
+  shared_module(
+    backend_name,
+    sources: backend_sources,
+    include_directories: backend_incs,
+    dependencies: backend_deps,
+    c_args: backend_cflags,
+    gnu_symbol_visibility: 'hidden',
+    install: true,
+    install_dir: ev_backendsdir,
+    name_suffix: name_suffix,
+  )
 
   backend_mime_types_conf = configuration_data()
   backend_mime_types_conf.set(backend.to_upper() + '_MIME_TYPES', ';'.join(backend_mime_types))
@@ -57,6 +74,4 @@ foreach backend, backend_mime_types: backends
     install: true,
     install_dir: ev_appstreamdir,
   )
-
-  subdir(backend)
 endforeach

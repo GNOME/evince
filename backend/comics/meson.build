@@ -1,36 +1,24 @@
-sources = files(
+backend_sources = files(
   'comics-document.c',
   'ev-archive.c',
 )
 
-incs = backends_incs + [cut_n_paste_inc]
+backend_incs = backends_common_incs + [cut_n_paste_inc]
 
-deps = backends_deps + [
+backend_deps = backends_common_deps + [
   libarchive_dep,
 ]
 
-shared_module(
-  backend_name,
-  sources: sources,
-  include_directories: incs,
-  dependencies: deps,
-  c_args: backends_cflags,
-  gnu_symbol_visibility: 'hidden',
-  install: true,
-  install_dir: ev_backendsdir,
-  name_suffix: name_suffix,
-)
-
 test_name = 'test-ev-archive'
 
-sources = files(
+test_sources = files(
   'ev-archive.c',
   'test-ev-archive.c',
 )
 
 executable(
   test_name,
-  sources,
-  include_directories: incs,
-  dependencies: deps,
+  test_sources,
+  include_directories: backend_incs,
+  dependencies: backend_deps,
 )
