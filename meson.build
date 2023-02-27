@@ -2,7 +2,7 @@ project(
   'evince', ['c'],
   version: '44.alpha',
   license: 'GPL-2.0-or-later',
-  meson_version: '>= 0.57.0',
+  meson_version: '>= 0.59.0',
   default_options: [
     'buildtype=debugoptimized',
     'libhandy:vapi=false',
@@ -526,6 +526,7 @@ configure_file(
 gnome.post_install(
   glib_compile_schemas: true,
   gtk_update_icon_cache: true,
+  update_desktop_database: true,
 )
 
 
