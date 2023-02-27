@@ -17,7 +17,7 @@ RUN apt-get -yqq update \
     libspectre-dev libtiff5-dev libdjvulibre-dev \
     libkpathsea-dev libgxps-dev libsynctex-dev \
     git ccache systemd ninja-build meson \
-    cmake \
+    cmake desktop-file-utils \
 && apt-get -yqq install --no-install-recommends \
     python3-pip python3-jinja2 python3-toml python3-typogrify \
 && pip install gi-docgen \
