@@ -6121,15 +6121,8 @@ ev_window_dispose (GObject *object)
 	}
 #endif /* ENABLE_DBUS */
 
-	if (priv->bookmarks) {
-		g_object_unref (priv->bookmarks);
-		priv->bookmarks = NULL;
-	}
-
-	if (priv->metadata) {
-		g_object_unref (priv->metadata);
-		priv->metadata = NULL;
-	}
+	g_clear_object (&priv->bookmarks);
+	g_clear_object (&priv->metadata);
 
 	if (priv->setup_document_idle > 0) {
 		g_source_remove (priv->setup_document_idle);
@@ -6141,10 +6134,7 @@ ev_window_dispose (GObject *object)
 		priv->loading_message_timeout = 0;
 	}
 
-	if (priv->monitor) {
-		g_object_unref (priv->monitor);
-		priv->monitor = NULL;
-	}
+	g_clear_object (&priv->monitor);
 
 	if (priv->title) {
 		ev_window_title_free (priv->title);
@@ -6159,44 +6149,23 @@ ev_window_dispose (GObject *object)
 		priv->recent_manager = NULL;
 	}
 
-	if (priv->settings) {
-		g_object_unref (priv->settings);
-		priv->settings = NULL;
-	}
-
+	g_clear_object (&priv->settings);
 	if (priv->default_settings) {
 		g_settings_apply (priv->default_settings);
-		g_object_unref (priv->default_settings);
-		priv->default_settings = NULL;
+		g_clear_object (&priv->default_settings);
 	}
-
-	if (priv->lockdown_settings) {
-		g_object_unref (priv->lockdown_settings);
-		priv->lockdown_settings = NULL;
-	}
+	g_clear_object (&priv->lockdown_settings);
 
 	if (priv->model) {
 		g_signal_handlers_disconnect_by_func (priv->model,
 						      ev_window_page_changed_cb,
 						      window);
-		g_object_unref (priv->model);
-		priv->model = NULL;
+		g_clear_object (&priv->model);
 	}
 
-	if (priv->document) {
-		g_object_unref (priv->document);
-		priv->document = NULL;
-	}
-
-	if (priv->view) {
-		g_object_unref (priv->view);
-		priv->view = NULL;
-	}
-
-	if (priv->password_view) {
-		g_object_unref (priv->password_view);
-		priv->password_view = NULL;
-	}
+	g_clear_object (&priv->document);
+	g_clear_object (&priv->view);
+	g_clear_object (&priv->password_view);
 
 	if (priv->load_job) {
 		ev_window_clear_load_job (window);
@@ -6216,60 +6185,30 @@ ev_window_dispose (GObject *object)
 	}
 
 	ev_window_clear_progress_idle (window);
-	if (priv->progress_cancellable) {
-		g_object_unref (priv->progress_cancellable);
-		priv->progress_cancellable = NULL;
-	}
+	g_clear_object (&priv->progress_cancellable);
 
 	ev_window_close_dialogs (window);
 
-	if (priv->link) {
-		g_object_unref (priv->link);
-		priv->link = NULL;
-	}
-
-	if (priv->image) {
-		g_object_unref (priv->image);
-		priv->image = NULL;
-	}
-
-	if (priv->annot) {
-		g_object_unref (priv->annot);
-		priv->annot = NULL;
-	}
+	g_clear_object (&priv->link);
+	g_clear_object (&priv->image);
+	g_clear_object (&priv->annot);
 
 	if (priv->attach_list) {
 		g_list_free_full (priv->attach_list, g_object_unref);
 		priv->attach_list = NULL;
 	}
 
-	if (priv->uri) {
-		g_free (priv->uri);
-		priv->uri = NULL;
-	}
+	g_clear_pointer (&priv->uri, g_free);
 
 	g_clear_pointer (&priv->display_name, g_free);
 	g_clear_pointer (&priv->edit_name, g_free);
 
-	if (priv->search_string) {
-		g_free (priv->search_string);
-		priv->search_string = NULL;
-	}
+	g_clear_pointer (&priv->search_string, g_free);
 
-	if (priv->dest) {
-		g_object_unref (priv->dest);
-		priv->dest = NULL;
-	}
+	g_clear_object (&priv->dest);
+	g_clear_object (&priv->history);
 
-	if (priv->history) {
-		g_object_unref (priv->history);
-		priv->history = NULL;
-	}
-
-	if (priv->print_queue) {
-		g_queue_free (priv->print_queue);
-		priv->print_queue = NULL;
-	}
+	g_clear_pointer (&priv->print_queue, g_queue_free);
 
 	G_OBJECT_CLASS (ev_window_parent_class)->dispose (object);
 }
