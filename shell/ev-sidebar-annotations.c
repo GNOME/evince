@@ -143,6 +143,9 @@ ev_sidebar_annotations_init (EvSidebarAnnotations *sidebar_annots)
 	builder = gtk_builder_new_from_resource ("/org/gnome/evince/gtk/menus.ui");
 	priv->popup_model = g_object_ref (G_MENU_MODEL (gtk_builder_get_object (builder, "annotation-popup")));
 	g_object_unref (builder);
+	priv->popup = gtk_menu_new_from_model (priv->popup_model);
+	gtk_menu_attach_to_widget (GTK_MENU (priv->popup),
+				   GTK_WIDGET (sidebar_annots), NULL);
 }
 
 static void
@@ -482,14 +485,6 @@ ev_sidebar_annotations_document_changed_cb (EvDocumentModel      *model,
 	ev_sidebar_annotations_load (sidebar_annots);
 }
 
-static void
-ev_sidebar_annotations_popup_detach_cb (GtkWidget *widget,
-					GtkMenu   *menu)
-{
-	EvSidebarAnnotationsPrivate *priv = GET_PRIVATE (EV_SIDEBAR_ANNOTATIONS (widget));
-	priv->popup = NULL;
-}
-
 /* event parameter can be NULL, that means popup was triggered from keyboard */
 static gboolean
 ev_sidebar_annotations_popup_menu_show (EvSidebarAnnotations *sidebar_annots,
@@ -504,12 +499,6 @@ ev_sidebar_annotations_popup_menu_show (EvSidebarAnnotations *sidebar_annots,
 
 	if (!EV_IS_ANNOTATION (annot_mapping->data))
 		return FALSE;
-
-	if (!priv->popup) {
-		priv->popup = gtk_menu_new_from_model (priv->popup_model);
-		gtk_menu_attach_to_widget (GTK_MENU (priv->popup), GTK_WIDGET (sidebar_annots),
-					   ev_sidebar_annotations_popup_detach_cb);
-	}
 
 	window = gtk_widget_get_toplevel (GTK_WIDGET (sidebar_annots));
 
