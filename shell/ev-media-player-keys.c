@@ -221,8 +221,7 @@ ev_media_player_keys_finalize (GObject *object)
 
         if (keys->proxy != NULL) {
 		ev_media_player_keys_release_keys (keys);
-                g_object_unref (keys->proxy);
-		keys->proxy = NULL;
+		g_clear_object (&keys->proxy);
 		keys->has_name_owner = FALSE;
 	}
 

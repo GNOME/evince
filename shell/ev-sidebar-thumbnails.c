@@ -195,11 +195,7 @@ ev_thumbnails_size_cache_get_size (EvThumbsSizeCache *cache,
 static void
 ev_thumbnails_size_cache_free (EvThumbsSizeCache *cache)
 {
-	if (cache->sizes) {
-		g_free (cache->sizes);
-		cache->sizes = NULL;
-	}
-
+	g_clear_pointer (&cache->sizes, g_free);
 	g_free (cache);
 }
 
@@ -257,15 +253,12 @@ ev_sidebar_thumbnails_dispose (GObject *object)
 {
 	EvSidebarThumbnails *sidebar_thumbnails = EV_SIDEBAR_THUMBNAILS (object);
 
-	if (sidebar_thumbnails->priv->loading_icons) {
-		g_hash_table_destroy (sidebar_thumbnails->priv->loading_icons);
-		sidebar_thumbnails->priv->loading_icons = NULL;
-	}
+	g_clear_pointer (&sidebar_thumbnails->priv->loading_icons,
+			 g_hash_table_destroy);
 
 	if (sidebar_thumbnails->priv->list_store) {
 		ev_sidebar_thumbnails_clear_model (sidebar_thumbnails);
-		g_object_unref (sidebar_thumbnails->priv->list_store);
-		sidebar_thumbnails->priv->list_store = NULL;
+		g_clear_object (&sidebar_thumbnails->priv->list_store);
 	}
 
 	G_OBJECT_CLASS (ev_sidebar_thumbnails_parent_class)->dispose (object);

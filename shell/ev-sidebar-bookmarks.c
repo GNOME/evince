@@ -409,15 +409,8 @@ ev_sidebar_bookmarks_dispose (GObject *object)
         EvSidebarBookmarks *sidebar_bookmarks = EV_SIDEBAR_BOOKMARKS (object);
         EvSidebarBookmarksPrivate *priv = sidebar_bookmarks->priv;
 
-        if (priv->model) {
-                g_object_unref (priv->model);
-                priv->model = NULL;
-        }
-
-        if (priv->bookmarks) {
-                g_object_unref (priv->bookmarks);
-                priv->bookmarks = NULL;
-        }
+	g_clear_object (&priv->model);
+	g_clear_object (&priv->bookmarks);
 
         G_OBJECT_CLASS (ev_sidebar_bookmarks_parent_class)->dispose (object);
 }

@@ -336,9 +336,7 @@ job_finished_callback (EvJobAnnots          *job,
 	if (!job->annots) {
 		ev_sidebar_annotations_set_simple_message (sidebar_annots,
 							   _("Document contains no annotations"));
-
-		g_object_unref (job);
-		priv->job = NULL;
+		g_clear_object (&priv->job);
 
 		return;
 	}
@@ -443,8 +441,7 @@ job_finished_callback (EvJobAnnots          *job,
 	gtk_tree_view_set_model (GTK_TREE_VIEW (priv->tree_view),
 				 GTK_TREE_MODEL (model));
 
-	g_object_unref (job);
-	priv->job = NULL;
+	g_clear_object (&priv->job);
 }
 
 static void

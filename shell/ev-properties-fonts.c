@@ -63,8 +63,7 @@ ev_properties_fonts_dispose (GObject *object)
 						      properties);
 		ev_job_cancel (properties->fonts_job);
 
-		g_object_unref (properties->fonts_job);
-		properties->fonts_job = NULL;
+		g_clear_object (&properties->fonts_job);
 	}
 
 	G_OBJECT_CLASS (ev_properties_fonts_parent_class)->dispose (object);
@@ -151,8 +150,7 @@ job_fonts_finished_cb (EvJob *job, EvPropertiesFonts *properties)
 	const gchar     *font_summary;
 
 	g_signal_handlers_disconnect_by_func (job, job_fonts_finished_cb, properties);
-	g_object_unref (properties->fonts_job);
-	properties->fonts_job = NULL;
+	g_clear_object (&properties->fonts_job);
 
 	font_summary = ev_document_fonts_get_fonts_summary (document_fonts);
 	if (font_summary) {

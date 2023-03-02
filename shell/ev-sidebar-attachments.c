@@ -667,15 +667,8 @@ ev_sidebar_attachments_dispose (GObject *object)
 		ev_attachbar->priv->icon_theme = NULL;
 	}
 
-	if (ev_attachbar->priv->model) {
-		g_object_unref (ev_attachbar->priv->model);
-		ev_attachbar->priv->model = NULL;
-	}
-
-	if (ev_attachbar->priv->icon_cache) {
-		g_hash_table_destroy (ev_attachbar->priv->icon_cache);
-		ev_attachbar->priv->icon_cache = NULL;
-	}
+	g_clear_object (&ev_attachbar->priv->model);
+	g_clear_pointer (&ev_attachbar->priv->icon_cache, g_hash_table_destroy);
 
 	G_OBJECT_CLASS (ev_sidebar_attachments_parent_class)->dispose (object);
 }

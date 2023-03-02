@@ -60,10 +60,7 @@ ev_annotation_properties_dialog_dispose (GObject *object)
 {
 	EvAnnotationPropertiesDialog *dialog = EV_ANNOTATION_PROPERTIES_DIALOG (object);
 
-	if (dialog->annot) {
-		g_object_unref (dialog->annot);
-		dialog->annot = NULL;
-	}
+	g_clear_object (&dialog->annot);
 
 	G_OBJECT_CLASS (ev_annotation_properties_dialog_parent_class)->dispose (object);
 }

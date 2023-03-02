@@ -65,8 +65,7 @@ ev_history_clear (EvHistory *history)
 {
 	EvHistoryPrivate *priv = GET_PRIVATE (history);
 
-        clear_list (priv->list);
-        priv->list = NULL;
+	g_clear_pointer (&priv->list, clear_list);
 
         priv->current = NULL;
 }

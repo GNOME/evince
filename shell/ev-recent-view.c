@@ -150,8 +150,7 @@ ev_recent_view_dispose (GObject *obj)
 
         if (priv->model) {
                 ev_recent_view_clear_model (ev_recent_view);
-                g_object_unref (priv->model);
-                priv->model = NULL;
+		g_clear_object (&priv->model);
         }
 
         if (priv->recent_manager_changed_handler_id) {

@@ -1015,19 +1015,16 @@ ev_application_shutdown (GApplication *gapplication)
 {
         EvApplication *application = EV_APPLICATION (gapplication);
 
-	if (application->uri) {
 #ifdef ENABLE_DBUS
+	if (application->uri)
 		ev_application_unregister_uri (application,
 					       application->uri);
 #endif
-		g_free (application->uri);
-		application->uri = NULL;
-	}
+	g_clear_pointer (&application->uri, g_free);
 
 	ev_application_accel_map_save (application);
 
-        g_free (application->dot_dir);
-        application->dot_dir = NULL;
+	g_clear_pointer (&application->dot_dir, g_free);
 
         G_APPLICATION_CLASS (ev_application_parent_class)->shutdown (gapplication);
 }
@@ -1092,14 +1089,11 @@ ev_application_dbus_unregister (GApplication    *gapplication,
 {
         EvApplication *application = EV_APPLICATION (gapplication);
 
-        if (application->keys) {
-                g_object_unref (application->keys);
-                application->keys = NULL;
-        }
+	g_clear_object (&application->keys);
+
         if (application->skeleton != NULL) {
                 g_dbus_interface_skeleton_unexport (G_DBUS_INTERFACE_SKELETON (application->skeleton));
-                g_object_unref (application->skeleton);
-                application->skeleton = NULL;
+		g_clear_object (&application->skeleton);
         }
 
         G_APPLICATION_CLASS (ev_application_parent_class)->dbus_unregister (gapplication,

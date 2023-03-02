@@ -149,23 +149,14 @@ ev_sidebar_links_dispose (GObject *object)
 		g_signal_handlers_disconnect_by_func (sidebar->priv->job,
 						      job_finished_callback, sidebar);
 		ev_job_cancel (sidebar->priv->job);
-		g_object_unref (sidebar->priv->job);
-		sidebar->priv->job = NULL;
+		g_clear_object (&sidebar->priv->job);
 	}
 
-	if (sidebar->priv->model) {
-		g_object_unref (sidebar->priv->model);
-		sidebar->priv->model = NULL;
-	}
-
-	if (sidebar->priv->page_link_tree) {
-		g_tree_unref (sidebar->priv->page_link_tree);
-		sidebar->priv->page_link_tree = NULL;
-	}
+	g_clear_object (&sidebar->priv->model);
+	g_clear_pointer (&sidebar->priv->page_link_tree, g_tree_unref);
 
 	if (sidebar->priv->document) {
-		g_object_unref (sidebar->priv->document);
-		sidebar->priv->document = NULL;
+		g_clear_object (&sidebar->priv->document);
 		sidebar->priv->doc_model = NULL;
 	}
 
@@ -1348,8 +1339,7 @@ job_finished_callback (EvJobLinks     *job,
 
 	gtk_tree_view_set_model (GTK_TREE_VIEW (priv->tree_view), job->model);
 
-	g_object_unref (job);
-	priv->job = NULL;
+	g_clear_object (&priv->job);
 
 	window = gtk_widget_get_toplevel (GTK_WIDGET (sidebar_links));
 	if (EV_IS_WINDOW (window)) {

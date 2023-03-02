@@ -82,10 +82,7 @@ ev_bookmarks_finalize (GObject *object)
                 bookmarks->items = NULL;
         }
 
-        if (bookmarks->metadata) {
-                g_object_unref (bookmarks->metadata);
-                bookmarks->metadata = NULL;
-        }
+	g_clear_object (&bookmarks->metadata);
 
         G_OBJECT_CLASS (ev_bookmarks_parent_class)->finalize (object);
 }

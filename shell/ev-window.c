@@ -1777,8 +1777,7 @@ ev_window_set_document (EvWindow *ev_window, EvDocument *document)
 
 		current_page = ev_view_presentation_get_current_page (
 			EV_VIEW_PRESENTATION (priv->presentation_view));
-		gtk_widget_destroy (priv->presentation_view);
-		priv->presentation_view = NULL;
+		g_clear_pointer (&priv->presentation_view, gtk_widget_destroy);
 
 		/* Update the model with the current presentation page */
 		ev_document_model_set_page (priv->model, current_page);
@@ -1829,8 +1828,7 @@ ev_window_clear_load_job (EvWindow *ev_window)
 			ev_job_cancel (priv->load_job);
 
 		g_signal_handlers_disconnect_by_func (priv->load_job, ev_window_load_job_cb, ev_window);
-		g_object_unref (priv->load_job);
-		priv->load_job = NULL;
+		g_clear_object (&priv->load_job);
 	}
 }
 
@@ -1857,8 +1855,7 @@ ev_window_clear_reload_job (EvWindow *ev_window)
 			ev_job_cancel (priv->reload_job);
 
 		g_signal_handlers_disconnect_by_func (priv->reload_job, ev_window_reload_job_cb, ev_window);
-		g_object_unref (priv->reload_job);
-		priv->reload_job = NULL;
+		g_clear_object (&priv->reload_job);
 	}
 }
 
@@ -1869,8 +1866,7 @@ ev_window_clear_local_uri (EvWindow *ev_window)
 
 	if (priv->local_uri) {
 		ev_tmp_uri_unlink (priv->local_uri);
-		g_free (priv->local_uri);
-		priv->local_uri = NULL;
+		g_clear_pointer (&priv->local_uri, g_free);
 	}
 }
 
@@ -2023,10 +2019,7 @@ ev_window_reload_job_cb (EvJob    *job,
 	if (ev_job_is_failed (job)) {
 		ev_window_clear_reload_job (ev_window);
 		priv->in_reload = FALSE;
-		if (priv->dest) {
-			g_object_unref (priv->dest);
-			priv->dest = NULL;
-		}
+		g_clear_object (&priv->dest);
 
 		return;
 	}
@@ -2074,13 +2067,8 @@ ev_window_close_dialogs (EvWindow *ev_window)
 {
 	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 
-	if (priv->print_dialog)
-		gtk_widget_destroy (priv->print_dialog);
-	priv->print_dialog = NULL;
-
-	if (priv->properties)
-		gtk_widget_destroy (priv->properties);
-	priv->properties = NULL;
+	g_clear_pointer (&priv->print_dialog, gtk_widget_destroy);
+	g_clear_pointer (&priv->properties, gtk_widget_destroy);
 }
 
 static void
@@ -2192,8 +2180,7 @@ ev_window_load_remote_failed (EvWindow *ev_window,
 				 _("Unable to open document “%s”."),
 				 display_name);
 	g_free (display_name);
-	g_free (priv->local_uri);
-	priv->local_uri = NULL;
+	g_clear_pointer (&priv->local_uri, g_free);
 	priv->uri_mtime = 0;
 }
 
@@ -2282,8 +2269,7 @@ window_open_file_copy_ready_cb (GFile        *source,
 	} else if (g_error_matches (error, G_IO_ERROR, G_IO_ERROR_CANCELLED)) {
 		ev_window_clear_load_job (ev_window);
 		ev_window_clear_local_uri (ev_window);
-		g_free (priv->uri);
-		priv->uri = NULL;
+		g_clear_pointer (&priv->uri, g_free);
 		g_clear_pointer (&priv->display_name, g_free);
 		g_clear_pointer (&priv->edit_name, g_free);
 		g_object_unref (source);
@@ -2504,10 +2490,7 @@ ev_window_open_document (EvWindow       *ev_window,
 	ev_window_clear_load_job (ev_window);
 	ev_window_clear_local_uri (ev_window);
 
-	if (priv->monitor) {
-		g_object_unref (priv->monitor);
-		priv->monitor = NULL;
-	}
+	g_clear_object (&priv->monitor);
 
 	if (priv->uri)
 		g_free (priv->uri);
@@ -3121,8 +3104,7 @@ ev_window_clear_save_job (EvWindow *ev_window)
 		g_signal_handlers_disconnect_by_func (priv->save_job,
 						      ev_window_save_job_cb,
 						      ev_window);
-		g_object_unref (priv->save_job);
-		priv->save_job = NULL;
+		g_clear_object (&priv->save_job);
 	}
 }
 
@@ -6103,10 +6085,8 @@ ev_window_dispose (GObject *object)
                 ev_window_emit_closed (window);
 
                 g_dbus_interface_skeleton_unexport (G_DBUS_INTERFACE_SKELETON (priv->skeleton));
-                g_object_unref (priv->skeleton);
-                priv->skeleton = NULL;
-                g_free (priv->dbus_object_path);
-                priv->dbus_object_path = NULL;
+		g_clear_object (&priv->skeleton);
+		g_clear_pointer (&priv->dbus_object_path, g_free);
 	}
 #endif /* ENABLE_DBUS */
 
@@ -6124,18 +6104,12 @@ ev_window_dispose (GObject *object)
 	}
 
 	g_clear_object (&priv->monitor);
-
-	if (priv->title) {
-		ev_window_title_free (priv->title);
-		priv->title = NULL;
-	}
+	g_clear_pointer (&priv->title, ev_window_title_free);
 
 	g_clear_object (&priv->view_popup_menu);
 	g_clear_object (&priv->attachment_popup_menu);
 
-	if (priv->recent_manager) {
-		priv->recent_manager = NULL;
-	}
+	priv->recent_manager = NULL;
 
 	g_clear_object (&priv->settings);
 	if (priv->default_settings) {
@@ -7484,13 +7458,9 @@ ev_window_init (EvWindow *ev_window)
                 } else {
                         g_printerr ("Failed to register bus object %s: %s\n",
 				    priv->dbus_object_path, error->message);
-                        g_error_free (error);
-			g_free (priv->dbus_object_path);
-			priv->dbus_object_path = NULL;
-			error = NULL;
-
-                        g_object_unref (skeleton);
-                        priv->skeleton = NULL;
+			g_clear_pointer (&error, g_error_free);
+			g_clear_pointer (&priv->dbus_object_path, g_free);
+			g_clear_object (&priv->skeleton);
                 }
         }
 #endif /* ENABLE_DBUS */

@@ -44,15 +44,8 @@ ev_metadata_finalize (GObject *object)
 {
 	EvMetadata *metadata = EV_METADATA (object);
 
-	if (metadata->items) {
-		g_hash_table_destroy (metadata->items);
-		metadata->items = NULL;
-	}
-
-	if (metadata->file) {
-		g_object_unref (metadata->file);
-		metadata->file = NULL;
-	}
+	g_clear_pointer (&metadata->items, g_hash_table_destroy);
+	g_clear_object (&metadata->file);
 
 	G_OBJECT_CLASS (ev_metadata_parent_class)->finalize (object);
 }

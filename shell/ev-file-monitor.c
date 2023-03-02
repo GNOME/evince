@@ -67,8 +67,7 @@ ev_file_monitor_finalize (GObject *object)
 		g_signal_handlers_disconnect_by_func (priv->monitor,
 						      ev_file_monitor_changed_cb,
 						      ev_monitor);
-		g_object_unref (priv->monitor);
-		priv->monitor = NULL;
+		g_clear_object (&priv->monitor);
 	}
 
 	G_OBJECT_CLASS (ev_file_monitor_parent_class)->finalize (object);

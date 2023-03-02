@@ -71,14 +71,10 @@ ev_sidebar_layers_dispose (GObject *object)
 						      job_finished_callback,
 						      sidebar);
 		ev_job_cancel (sidebar->priv->job);
-		g_object_unref (sidebar->priv->job);
-		sidebar->priv->job = NULL;
+		g_clear_object (&sidebar->priv->job);
 	}
 
-	if (sidebar->priv->document) {
-		g_object_unref (sidebar->priv->document);
-		sidebar->priv->document = NULL;
-	}
+	g_clear_object (&sidebar->priv->document);
 
 	G_OBJECT_CLASS (ev_sidebar_layers_parent_class)->dispose (object);
 }
@@ -384,8 +380,7 @@ job_finished_callback (EvJobLayers     *job,
 
 	gtk_tree_view_set_model (GTK_TREE_VIEW (priv->tree_view), job->model);
 
-	g_object_unref (job);
-	priv->job = NULL;
+	g_clear_object (&priv->job);
 }
 
 static void

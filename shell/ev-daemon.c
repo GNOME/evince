@@ -407,8 +407,7 @@ ev_daemon_application_dbus_unregister (GApplication    *gapplication,
 
         if (application->daemon) {
                 g_dbus_interface_skeleton_unexport (G_DBUS_INTERFACE_SKELETON (application->daemon));
-                g_object_unref (application->daemon);
-                application->daemon = NULL;
+		g_clear_object (&application->daemon);
         }
 
         G_APPLICATION_CLASS (ev_daemon_application_parent_class)->dbus_unregister (gapplication,

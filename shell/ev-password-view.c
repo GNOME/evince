@@ -67,13 +67,9 @@ ev_password_view_finalize (GObject *object)
 
 	priv = ev_password_view_get_instance_private (password_view);
 
-	if (priv->password) {
-		g_free (priv->password);
-		priv->password = NULL;
-	}
-
 	priv->parent_window = NULL;
 
+	g_clear_pointer (&priv->password, g_free);
 	g_clear_pointer (&priv->filename, g_free);
 
 	G_OBJECT_CLASS (ev_password_view_parent_class)->finalize (object);
