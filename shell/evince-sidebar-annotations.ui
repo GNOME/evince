@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk+" version="3.22"/>
+  <template class="EvSidebarAnnotations" parent="GtkBox">
+    <property name="orientation">vertical</property>
+    <property name="visible">True</property>
+    <child>
+      <object class="GtkScrolledWindow" id="swindow">
+        <property name="halign">fill</property>
+        <property name="hexpand">True</property>
+        <property name="vexpand">True</property>
+        <property name="visible">True</property>
+        <child>
+          <object class="GtkTreeView" id="tree_view">
+            <property name="headers-visible">False</property>
+            <property name="tooltip-column">3</property>
+            <property name="visible">True</property>
+            <child>
+              <object class="GtkTreeViewColumn">
+                <child>
+                  <object class="GtkCellRendererPixbuf">
+                  </object>
+                  <attributes>
+                    <attribute name="icon-name">1</attribute>
+                  </attributes>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkTreeViewColumn">
+                <child>
+                  <object class="GtkCellRendererText">
+                  </object>
+                  <attributes>
+                    <attribute name="markup">0</attribute>
+                  </attributes>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+
+  <object class="GtkTreeStore" id="tree_model">
+    <columns>
+      <column type="gchararray" />
+      <column type="gchararray" />
+      <column type="gpointer" />
+      <column type="gchararray" />
+    </columns>
+  </object>
+
+  <object class="GtkListStore" id="list_model">
+    <columns>
+      <column type="gchararray" />
+      <column type="gchararray" />
+      <column type="gpointer" />
+      <column type="gchararray" />
+    </columns>
+    <data>
+      <row>
+        <col id="0">Placeholder</col>
+      </row>
+    </data>
+  </object>
+</interface>
