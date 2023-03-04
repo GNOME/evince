@@ -109,7 +109,7 @@ ev_previewer_toolbar_constructed (GObject *object)
         /* Page selector */
         priv->page_selector = GTK_WIDGET (g_object_new (EV_TYPE_PAGE_ACTION_WIDGET, NULL));
         gtk_widget_set_tooltip_text (priv->page_selector,
-                                     _("Select page or search in the index"));
+                                     _("Select page or search in the outline"));
         atk_object_set_name (gtk_widget_get_accessible (priv->page_selector),
                              _("Select page"));
         ev_page_action_widget_set_model (EV_PAGE_ACTION_WIDGET (priv->page_selector),
