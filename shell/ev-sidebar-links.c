@@ -414,11 +414,15 @@ check_menu_sensitivity (GtkTreeView *treeview,
 		}
 	}
 
-	if (!selected_path)
+	if (!selected_path) {
 		ev_sidebar_links_set_action_enabled (sidebar, "search-outline", FALSE);
+		ev_sidebar_links_set_action_enabled (sidebar, "print-section", FALSE);
+	}
 
 	if (is_list || !selected_path)
 		return;
+
+	ev_sidebar_links_set_action_enabled (sidebar, "print-section", TRUE);
 
 	/* Enable 'Expand under this' only when 'this' element has grandchildren */
 	gtk_tree_model_get_iter (model, &parent, selected_path);
