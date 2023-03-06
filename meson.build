@@ -393,7 +393,7 @@ elif get_option('dvi').auto()
 endif
 
 # *** PDF ***
-poppler_req_version = '>= 22.02.0'
+poppler_req_version = '>= 22.05.0'
 poppler_glib_dep = dependency('poppler-glib', version: poppler_req_version, required: get_option('pdf'))
 
 enable_pdf = poppler_glib_dep.found()
