@@ -67,10 +67,6 @@
 #define HAVE_CAIRO_PRINT
 #endif
 
-#if POPPLER_CHECK_VERSION (21, 12, 0)
-#define HAVE_POPPLER_LOAD_FD
-#endif
-
 typedef struct {
 	EvFileExporterFormat format;
 
@@ -319,7 +315,6 @@ pdf_document_load_gfile (EvDocument          *document,
         return TRUE;
 }
 
-#ifdef HAVE_POPPLER_LOAD_FD
 static gboolean
 pdf_document_load_fd (EvDocument          *document,
                       int                  fd,
@@ -343,7 +338,6 @@ pdf_document_load_fd (EvDocument          *document,
 
         return TRUE;
 }
-#endif
 
 static int
 pdf_document_get_n_pages (EvDocument *document)
@@ -736,13 +730,9 @@ pdf_document_get_info (EvDocument *document)
 
 	info->linearized = linearized ? g_strdup (_("Yes")) : g_strdup (_("No"));
 
-#if POPPLER_CHECK_VERSION(0, 90, 0)
 	info->contains_js = poppler_document_has_javascript (PDF_DOCUMENT (document)->document) ?
 	                    EV_DOCUMENT_CONTAINS_JS_YES : EV_DOCUMENT_CONTAINS_JS_NO;
         info->fields_mask |= EV_DOCUMENT_INFO_CONTAINS_JS;
-#else
-	info->contains_js = EV_DOCUMENT_CONTAINS_JS_UNKNOWN;
-#endif
 
 	return info;
 }
@@ -798,9 +788,7 @@ pdf_document_class_init (PdfDocumentClass *klass)
 	ev_document_class->get_info = pdf_document_get_info;
 	ev_document_class->get_backend_info = pdf_document_get_backend_info;
 	ev_document_class->support_synctex = pdf_document_support_synctex;
-#ifdef HAVE_POPPLER_LOAD_FD
         ev_document_class->load_fd = pdf_document_load_fd;
-#endif
 }
 
 /* EvDocumentSecurity */
@@ -1261,7 +1249,6 @@ ev_link_from_action (PdfDocument   *pdf_document,
 	        case POPPLER_ACTION_JAVASCRIPT:
 			unimplemented_action = "POPPLER_ACTION_JAVASCRIPT";
 			break;
-#if POPPLER_CHECK_VERSION(0, 90, 0)
 	        case POPPLER_ACTION_RESET_FORM: {
 			gboolean  exclude_reset_fields;
 			GList    *reset_fields = NULL;
@@ -1277,7 +1264,6 @@ ev_link_from_action (PdfDocument   *pdf_document,
 								   exclude_reset_fields);
 			break;
 		}
-#endif
 	        case POPPLER_ACTION_UNKNOWN:
 			unimplemented_action = "POPPLER_ACTION_UNKNOWN";
 	}
@@ -1540,11 +1526,10 @@ pdf_document_find_find_text_with_options (EvDocumentFind *document_find,
 
         if (options & EV_FIND_CASE_SENSITIVE)
                 find_flags |= POPPLER_FIND_CASE_SENSITIVE;
-#if POPPLER_CHECK_VERSION(0, 76, 0)
         else    /* When search is not case sensitive, do also ignore diacritics
                 to broaden our search in order to match on more expected results */
                 find_flags |= POPPLER_FIND_IGNORE_DIACRITICS;
-#endif
+
         if (options & EV_FIND_WHOLE_WORDS_ONLY)
                 find_flags |= POPPLER_FIND_WHOLE_WORDS_ONLY;
         matches = poppler_page_find_text_with_options (poppler_page, text, (PopplerFindFlags)find_flags);
@@ -1591,18 +1576,15 @@ pdf_document_find_find_text_extended (EvDocumentFind *document_find,
 
 	if (options & EV_FIND_CASE_SENSITIVE)
 		find_flags |= POPPLER_FIND_CASE_SENSITIVE;
-#if POPPLER_CHECK_VERSION(0, 76, 0)
 	else    /* When search is not case sensitive, do also ignore diacritics
 	        to broaden our search in order to match on more expected results */
 		find_flags |= POPPLER_FIND_IGNORE_DIACRITICS;
-#endif
+
 	if (options & EV_FIND_WHOLE_WORDS_ONLY)
 		find_flags |= POPPLER_FIND_WHOLE_WORDS_ONLY;
 
-#if POPPLER_CHECK_VERSION(22, 05, 0)
 	/* Allow to match on text spanning from one line to the next */
 	find_flags |= POPPLER_FIND_MULTILINE;
-#endif
 	matches = poppler_page_find_text_with_options (poppler_page, text, (PopplerFindFlags)find_flags);
 	if (!matches)
 		return NULL;
@@ -1617,13 +1599,8 @@ pdf_document_find_find_text_extended (EvDocumentFind *document_find,
 		/* Invert this for X-style coordinates */
 		ev_rect->y1 = height - rect->y2;
 		ev_rect->y2 = height - rect->y1;
-#if POPPLER_CHECK_VERSION(22, 05, 0)
 		ev_rect->next_line = poppler_rectangle_find_get_match_continued (rect);
 		ev_rect->after_hyphen = ev_rect->next_line && poppler_rectangle_find_get_ignored_hyphen (rect);
-#else
-		ev_rect->next_line = FALSE;
-		ev_rect->after_hyphen = FALSE;
-#endif
 		retval = g_list_prepend (retval, ev_rect);
 	}
 
@@ -2305,9 +2282,7 @@ ev_form_field_from_poppler_field (PdfDocument      *pdf_document,
 	font_size = poppler_form_field_get_font_size (poppler_field);
 	is_read_only = poppler_form_field_is_read_only (poppler_field);
 	action = poppler_form_field_get_action (poppler_field);
-#if POPPLER_CHECK_VERSION(0, 88, 0)
 	alt_ui_name = poppler_form_field_get_alternate_ui_name (poppler_field);
-#endif
 
 	switch (poppler_form_field_get_field_type (poppler_field)) {
 	        case POPPLER_FORM_FIELD_TEXT: {
@@ -2465,11 +2440,9 @@ static void
 pdf_document_forms_reset_form (EvDocumentForms *document,
                                EvLinkAction    *action)
 {
-#if POPPLER_CHECK_VERSION(0, 90, 0)
 	poppler_document_reset_form (PDF_DOCUMENT (document)->document,
 	                             ev_link_action_get_reset_fields (action),
 	                             ev_link_action_get_exclude_reset_fields (action));
-#endif
 }
 
 static gchar *
