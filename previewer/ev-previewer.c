@@ -310,8 +310,6 @@ main (gint argc, gchar **argv)
 	if (!ev_init ())
                 return 1;
 
-	ev_stock_icons_init ();
-
 	g_set_application_name (_("GNOME Document Previewer"));
 	gtk_window_set_default_icon_name (PACKAGE_ICON_NAME);
 
@@ -331,7 +329,6 @@ main (gint argc, gchar **argv)
 
 	ev_job_scheduler_wait ();
 	ev_shutdown ();
-	ev_stock_icons_shutdown ();
 
 	return status;
 }
