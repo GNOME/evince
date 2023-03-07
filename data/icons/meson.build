@@ -28,7 +28,7 @@ icons += [['22x22', actions, ['x-office-presentation.png']]]
 actions = [
   'object-rotate-left.png',
   'object-rotate-right.png',
-  'stock_filters-invert.png',
+  'inverted.png',
   'view-page-continuous.png',
   'view-page-facing.png',
   'zoom-fit-height.png',
