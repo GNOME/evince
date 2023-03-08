@@ -1,4 +1,71 @@
 ==============
+Evince   44.rc
+==============
+
+* Update POTFILES.in (Piotr Drąg)
+
+backend:
+  * Handle NULL returned from poppler_layers_iter_get_title (#1723, Nelson Benítez León)
+
+build:
+  * Build the backends on the top backend directory (Pablo Correa Gómez)
+  * Replace custom target with i18n.merge_files (Pablo Correa Gómez)
+  * Disable gtk_doc when introspection is disabled (#1869, Qiu Wenbo)
+  * Fix deprecation warning on meson (Germán Poo-Caamaño)
+  * Fix docs cross build (Michal Vasilek)
+  * Update desktop database at post install (Maximiliano)
+  * Update libgd to current master to fix #1242 (#1242, Nelson Benítez León)
+
+ci:
+  * Add desktop-file-utils dependency to Dockerfile (Pablo Correa Gomez)
+  * Remove unused setup-ubuntu.sh script (Pablo Correa Gómez)
+
+data:
+  * Update URLs by GNOME Discourse (Andre Klapper)
+
+help:
+  * Update URLs by GNOME Discourse (Andre Klapper)
+  * Use action-name properties in help overlay (Sabri Ünal)
+  * Correct UI steps in gedit for SyncTex plugin (#1898, Andre Klapper)
+
+libview:
+  * Fix crash when releasing click with selected text holding click button (#1861, Gary Li)
+
+shell:
+  * Code clean up (Pablo Correa Gómez)
+  * Derive EvMessageArea from GtkBin to simplify GTK4 move (#1864, Pablo Correa Gómez)
+  * Derive EvToolbar from GtkBin instead of HdyHeaderBar (Pablo Correa Gómez)
+  * Dispose using g_clear_object and g_clear_pointer (Pablo Correa Gomez)
+  * Do not hard-code event to open context menus (Pablo Correa Gómez)
+  * Do not wrap SearchBar in GtkRevealer (#724096, Pablo Correa Gómez)
+  * Go to requested page for links to external PDF documents (Rubén Rubio)
+  * Port GtkMenu to use GActions (Pablo Correa Gómez)
+  * Remove active-icon-name property (Pablo Correa Gómez)
+  * Remove complexity in menu popup (Pablo Correa Gómez)
+  * Remove goto-bookmark action and bookmark_menu (Pablo Correa Gómez)
+  * Remove unused toolbar navigation_action widget (Pablo Correa Gómez)
+  * Simplify definition of EvToolbar type (Pablo Correa Gómez)
+  * Simplify title set logic and sanitize before use (Pablo Correa Gómez)
+  * Support display page numbers above 10000 (#1885, Qiu Wenbo)
+  * Use a GtkBox to simplify GTK4 move (Qiu Wenbo)
+  * Use composite template for EvToolbar (Pablo Correa Gómez)
+  * Use stack children to keep record of the sidebar page (Pablo Correa Gómez)
+
+Developers:
+  * Andre Klapper, Gary Li, Germán Poo-Caamaño, Maximiliano, Michal Vasilek, Nelson Benítez León, Pablo Correa Gomez, Pablo Correa Gómez, Piotr Drąg, Qiu Wenbo, Rubén Rubio, Sabri Ünal
+
+Translations:
+  * Olga Smirnova (Add Interlingue)
+  * Vasil Pupkin (Belarusian)
+  * Jürgen Benvenuti (German)
+  * Tim Sabsch (German)
+  * Seong-ho Cho (Korean)
+  * Aleksandr Melman (Russian)
+  * Anders Jonsson (Swedish)
+  * Sabri Ünal (Turkish)
+  * Yuri Chornoivan (Ukrainian)
+
+==============
 Evince    43.1
 ==============
 
