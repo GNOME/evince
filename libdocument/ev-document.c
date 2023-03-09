@@ -113,27 +113,11 @@ ev_document_finalize (GObject *object)
 {
 	EvDocument *document = EV_DOCUMENT (object);
 
-	if (document->priv->uri) {
-		g_free (document->priv->uri);
-		document->priv->uri = NULL;
-	}
-
-	if (document->priv->page_sizes) {
-		g_free (document->priv->page_sizes);
-		document->priv->page_sizes = NULL;
-	}
-
+	g_clear_pointer (&document->priv->uri, g_free);
+	g_clear_pointer (&document->priv->page_sizes, g_free);
 	g_clear_pointer (&document->priv->page_labels, g_strfreev);
-
-	if (document->priv->info) {
-		ev_document_info_free (document->priv->info);
-		document->priv->info = NULL;
-	}
-
-	if (document->priv->synctex_scanner) {
-		synctex_scanner_free (document->priv->synctex_scanner);
-		document->priv->synctex_scanner = NULL;
-	}
+	g_clear_pointer (&document->priv->info, ev_document_info_free);
+	g_clear_pointer (&document->priv->synctex_scanner, synctex_scanner_free);
 
 	G_OBJECT_CLASS (ev_document_parent_class)->finalize (object);
 }

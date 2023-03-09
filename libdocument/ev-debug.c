@@ -100,10 +100,7 @@ _ev_debug_init (void)
 void
 _ev_debug_shutdown (void)
 {
-	if (timers) {
-		g_hash_table_destroy (timers);
-		timers = NULL;
-	}
+	g_clear_pointer (&timers, g_hash_table_destroy);
 }
 
 void

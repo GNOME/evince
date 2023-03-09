@@ -302,48 +302,15 @@ ev_link_action_finalize (GObject *object)
 
 	g_clear_object (&priv->dest);
 
-	if (priv->uri) {
-		g_free (priv->uri);
-		priv->uri = NULL;
-	}
+	g_clear_pointer (&priv->uri, g_free);
+	g_clear_pointer (&priv->filename, g_free);
+	g_clear_pointer (&priv->params, g_free);
+	g_clear_pointer (&priv->name, g_free);
 
-	if (priv->filename) {
-		g_free (priv->filename);
-		priv->filename = NULL;
-	}
-
-	if (priv->params) {
-		g_free (priv->params);
-		priv->params = NULL;
-	}
-
-	if (priv->name) {
-		g_free (priv->name);
-		priv->name = NULL;
-	}
-
-	if (priv->show_list) {
-		g_list_foreach (priv->show_list, (GFunc)g_object_unref, NULL);
-		g_list_free (priv->show_list);
-		priv->show_list = NULL;
-	}
-
-	if (priv->hide_list) {
-		g_list_foreach (priv->hide_list, (GFunc)g_object_unref, NULL);
-		g_list_free (priv->hide_list);
-		priv->hide_list = NULL;
-	}
-
-	if (priv->toggle_list) {
-		g_list_foreach (priv->toggle_list, (GFunc)g_object_unref, NULL);
-		g_list_free (priv->toggle_list);
-		priv->toggle_list = NULL;
-	}
-
-	if (priv->reset_fields) {
-		g_list_free_full (priv->reset_fields, g_free);
-		priv->reset_fields = NULL;
-	}
+	g_list_free_full (g_steal_pointer (&priv->show_list), g_object_unref);
+	g_list_free_full (g_steal_pointer (&priv->hide_list), g_object_unref);
+	g_list_free_full (g_steal_pointer (&priv->toggle_list), g_object_unref);
+	g_list_free_full (g_steal_pointer (&priv->reset_fields), g_free);
 
 	G_OBJECT_CLASS (ev_link_action_parent_class)->finalize (object);
 }

@@ -70,35 +70,15 @@ ev_attachment_finalize (GObject *object)
 	EvAttachment *attachment = EV_ATTACHMENT (object);
 	EvAttachmentPrivate *priv = GET_PRIVATE (attachment);
 
-	if (priv->name) {
-		g_free (priv->name);
-		priv->name = NULL;
-	}
-
-	if (priv->description) {
-		g_free (priv->description);
-		priv->description = NULL;
-	}
-
-	if (priv->data) {
-		g_free (priv->data);
-		priv->data = NULL;
-	}
-
-	if (priv->mime_type) {
-		g_free (priv->mime_type);
-		priv->mime_type = NULL;
-	}
-
-	if (priv->app) {
-		g_object_unref (priv->app);
-		priv->app = NULL;
-	}
+	g_clear_pointer (&priv->name, g_free);
+	g_clear_pointer (&priv->description, g_free);
+	g_clear_pointer (&priv->data, g_free);
+	g_clear_pointer (&priv->mime_type, g_free);
+	g_clear_object (&priv->app);
 
 	if (priv->tmp_file) {
 		ev_tmp_file_unlink (priv->tmp_file);
-		g_object_unref (priv->tmp_file);
-		priv->tmp_file = NULL;
+		g_clear_object (&priv->tmp_file);
 	}
 
 	G_OBJECT_CLASS (ev_attachment_parent_class)->finalize (object);

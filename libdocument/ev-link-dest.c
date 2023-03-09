@@ -255,14 +255,8 @@ ev_link_dest_finalize (GObject *object)
 
 	priv = EV_LINK_DEST (object)->priv;
 
-	if (priv->named) {
-		g_free (priv->named);
-		priv->named = NULL;
-	}
-	if (priv->page_label) {
-		g_free (priv->page_label);
-		priv->page_label = NULL;
-	}
+	g_clear_pointer (&priv->named, g_free);
+	g_clear_pointer (&priv->page_label, g_free);
 
 	G_OBJECT_CLASS (ev_link_dest_parent_class)->finalize (object);
 }

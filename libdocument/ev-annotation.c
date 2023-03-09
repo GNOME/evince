@@ -145,25 +145,10 @@ ev_annotation_finalize (GObject *object)
 {
         EvAnnotation *annot = EV_ANNOTATION (object);
 
-	if (annot->page) {
-		g_object_unref (annot->page);
-		annot->page = NULL;
-	}
-
-        if (annot->contents) {
-                g_free (annot->contents);
-                annot->contents = NULL;
-        }
-
-        if (annot->name) {
-                g_free (annot->name);
-                annot->name = NULL;
-        }
-
-        if (annot->modified) {
-                g_free (annot->modified);
-                annot->modified = NULL;
-        }
+	g_clear_object (&annot->page);
+	g_clear_pointer (&annot->contents, g_free);
+	g_clear_pointer (&annot->name, g_free);
+	g_clear_pointer (&annot->modified, g_free);
 
         G_OBJECT_CLASS (ev_annotation_parent_class)->finalize (object);
 }
@@ -1279,10 +1264,7 @@ ev_annotation_attachment_finalize (GObject *object)
 {
 	EvAnnotationAttachment *annot = EV_ANNOTATION_ATTACHMENT (object);
 
-	if (annot->attachment) {
-		g_object_unref (annot->attachment);
-		annot->attachment = NULL;
-	}
+	g_clear_object (&annot->attachment);
 
 	G_OBJECT_CLASS (ev_annotation_attachment_parent_class)->finalize (object);
 }

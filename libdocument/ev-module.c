@@ -119,8 +119,7 @@ ev_module_unload (GTypeModule *gmodule)
 {
         EvModule *module = EV_MODULE (gmodule);
 
-        g_module_close (module->library);
-        module->library = NULL;
+	g_clear_pointer (&module->library, g_module_close);
 }
 
 const gchar *

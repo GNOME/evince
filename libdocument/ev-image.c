@@ -40,10 +40,7 @@ ev_image_finalize (GObject *object)
 {
 	EvImage *image = EV_IMAGE (object);
 
-	if (image->priv->pixbuf) {
-		g_object_unref (image->priv->pixbuf);
-		image->priv->pixbuf = NULL;
-	}
+	g_clear_object (&image->priv->pixbuf);
 
 	if (image->priv->tmp_uri) {
 		gchar *filename;
@@ -51,8 +48,7 @@ ev_image_finalize (GObject *object)
 		filename = g_filename_from_uri (image->priv->tmp_uri, NULL, NULL);
 		ev_tmp_filename_unlink (filename);
 		g_free (filename);
-		g_free (image->priv->tmp_uri);
-		image->priv->tmp_uri = NULL;
+		g_clear_pointer (&image->priv->tmp_uri, g_free);
 	}
 
 	(* G_OBJECT_CLASS (ev_image_parent_class)->finalize) (object);

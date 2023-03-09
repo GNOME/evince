@@ -120,11 +120,7 @@ ev_link_finalize (GObject *object)
 
 	priv = EV_LINK (object)->priv;
 
-	if (priv->title) {
-		g_free (priv->title);
-		priv->title = NULL;
-	}
-
+	g_clear_pointer (&priv->title, g_free);
 	g_clear_object (&priv->action);
 
 	G_OBJECT_CLASS (ev_link_parent_class)->finalize (object);

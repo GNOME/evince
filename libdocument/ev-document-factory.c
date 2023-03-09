@@ -265,17 +265,10 @@ _ev_document_factory_init (void)
 void
 _ev_document_factory_shutdown (void)
 {
-	g_list_foreach (ev_backends_list, (GFunc) _ev_backend_info_unref, NULL);
-	g_list_free (ev_backends_list);
-	ev_backends_list = NULL;
+	g_list_free_full (g_steal_pointer (&ev_backends_list), (GDestroyNotify) _ev_backend_info_unref);
 
-	if (ev_module_hash != NULL) {
-		g_hash_table_unref (ev_module_hash);
-		ev_module_hash = NULL;
-	}
-
-	g_free (ev_backends_dir);
-        ev_backends_dir = NULL;
+	g_clear_pointer (&ev_module_hash, g_hash_table_unref);
+	g_clear_pointer (&ev_backends_dir, g_free);
 }
 
 /**
@@ -336,8 +329,7 @@ ev_document_factory_get_document_full (const char           *uri,
 			return document;
 		}
 
-		g_object_unref (document);
-		document = NULL;
+		g_clear_object (&document);
 	}
 
 	/* Try again with slow mime detection */
@@ -381,9 +373,7 @@ ev_document_factory_get_document_full (const char           *uri,
 			return document;
 		}
 
-		g_object_unref (document);
-		document = NULL;
-
+		g_clear_object (&document);
 		g_propagate_error (error, err);
 	}
 

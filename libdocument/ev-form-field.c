@@ -64,9 +64,7 @@ ev_form_field_finalize (GObject *object)
 	EvFormField *field = EV_FORM_FIELD (object);
 	EvFormFieldPrivate *priv = GET_FIELD_PRIVATE (field);
 
-	g_object_unref (field->page);
-	field->page = NULL;
-
+	g_clear_object (&field->page);
 	g_clear_object (&field->activation_link);
 	g_clear_pointer (&priv->alt_ui_name, g_free);
 
@@ -137,10 +135,7 @@ ev_form_field_text_finalize (GObject *object)
 {
 	EvFormFieldText *field_text = EV_FORM_FIELD_TEXT (object);
 
-	if (field_text->text) {
-		g_free (field_text->text);
-		field_text->text = NULL;
-	}
+	g_clear_pointer (&field_text->text, g_free);
 
 	(* G_OBJECT_CLASS (ev_form_field_text_parent_class)->finalize) (object);
 }
@@ -173,15 +168,8 @@ ev_form_field_choice_finalize (GObject *object)
 {
 	EvFormFieldChoice *field_choice = EV_FORM_FIELD_CHOICE (object);
 
-	if (field_choice->selected_items) {
-		g_list_free (field_choice->selected_items);
-		field_choice->selected_items = NULL;
-	}
-
-	if (field_choice->text) {
-		g_free (field_choice->text);
-		field_choice->text = NULL;
-	}
+	g_clear_pointer (&field_choice->selected_items, g_list_free);
+	g_clear_pointer (&field_choice->text, g_free);
 
 	(* G_OBJECT_CLASS (ev_form_field_choice_parent_class)->finalize) (object);
 }

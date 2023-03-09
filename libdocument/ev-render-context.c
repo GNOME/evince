@@ -36,10 +36,7 @@ ev_render_context_dispose (GObject *object)
 
 	rc = (EvRenderContext *) object;
 
-	if (rc->page) {
-		g_object_unref (rc->page);
-		rc->page = NULL;
-	}
+	g_clear_object (&rc->page);
 
 	(* G_OBJECT_CLASS (ev_render_context_parent_class)->dispose) (object);
 }

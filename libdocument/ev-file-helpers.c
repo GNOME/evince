@@ -121,8 +121,7 @@ _ev_file_helpers_shutdown (void)
 	if (tmp_dir != NULL)
 		g_rmdir (tmp_dir);
 
-	g_free (tmp_dir);
-	tmp_dir = NULL;
+	g_clear_pointer (&tmp_dir, g_free);
 }
 
 /**
