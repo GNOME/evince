@@ -86,8 +86,7 @@ ev_search_box_clear_job (EvSearchBox *box)
                 ev_job_cancel (priv->job);
 
         g_signal_handlers_disconnect_matched (priv->job, G_SIGNAL_MATCH_DATA, 0, 0, NULL, NULL, box);
-        g_object_unref (priv->job);
-        priv->job = NULL;
+	g_clear_object (&priv->job);
 }
 
 static void
