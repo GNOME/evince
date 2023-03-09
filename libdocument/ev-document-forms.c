@@ -1,6 +1,6 @@
 /* ev-document-forms.c
  *  this file is part of evince, a gnome document viewer
- * 
+ *
  * Copyright (C) 2007 Carlos Garcia Campos <carlosgc@gnome.org>
  *
  * Evince is free software; you can redistribute it and/or modify it
@@ -56,7 +56,7 @@ ev_document_forms_reset_form (EvDocumentForms *document_forms,
 }
 
 gchar *
-ev_document_forms_form_field_text_get_text (EvDocumentForms *document_forms, 
+ev_document_forms_form_field_text_get_text (EvDocumentForms *document_forms,
 					    EvFormField     *field)
 {
 	EvDocumentFormsInterface *iface = EV_DOCUMENT_FORMS_GET_IFACE (document_forms);
@@ -65,8 +65,8 @@ ev_document_forms_form_field_text_get_text (EvDocumentForms *document_forms,
 }
 
 void
-ev_document_forms_form_field_text_set_text (EvDocumentForms *document_forms, 
-					    EvFormField     *field, 
+ev_document_forms_form_field_text_set_text (EvDocumentForms *document_forms,
+					    EvFormField     *field,
 					    const gchar     *text)
 {
 	EvDocumentFormsInterface *iface = EV_DOCUMENT_FORMS_GET_IFACE (document_forms);
@@ -84,8 +84,8 @@ ev_document_forms_form_field_button_get_state (EvDocumentForms   *document_forms
 }
 
 void
-ev_document_forms_form_field_button_set_state (EvDocumentForms   *document_forms, 
-					       EvFormField       *field, 
+ev_document_forms_form_field_button_set_state (EvDocumentForms   *document_forms,
+					       EvFormField       *field,
 					       gboolean           state)
 {
 	EvDocumentFormsInterface *iface = EV_DOCUMENT_FORMS_GET_IFACE (document_forms);
@@ -94,8 +94,8 @@ ev_document_forms_form_field_button_set_state (EvDocumentForms   *document_forms
 }
 
 gchar *
-ev_document_forms_form_field_choice_get_item (EvDocumentForms   *document_forms, 
-					      EvFormField       *field, 
+ev_document_forms_form_field_choice_get_item (EvDocumentForms   *document_forms,
+					      EvFormField       *field,
 					      gint               index)
 {
 	EvDocumentFormsInterface *iface = EV_DOCUMENT_FORMS_GET_IFACE (document_forms);
@@ -104,7 +104,7 @@ ev_document_forms_form_field_choice_get_item (EvDocumentForms   *document_forms,
 }
 
 gint
-ev_document_forms_form_field_choice_get_n_items (EvDocumentForms   *document_forms, 
+ev_document_forms_form_field_choice_get_n_items (EvDocumentForms   *document_forms,
 						 EvFormField       *field)
 {
 	EvDocumentFormsInterface *iface = EV_DOCUMENT_FORMS_GET_IFACE (document_forms);
@@ -113,8 +113,8 @@ ev_document_forms_form_field_choice_get_n_items (EvDocumentForms   *document_for
 }
 
 gboolean
-ev_document_forms_form_field_choice_is_item_selected (EvDocumentForms   *document_forms, 
-						      EvFormField       *field, 
+ev_document_forms_form_field_choice_is_item_selected (EvDocumentForms   *document_forms,
+						      EvFormField       *field,
 						      gint               index)
 {
 	EvDocumentFormsInterface *iface = EV_DOCUMENT_FORMS_GET_IFACE (document_forms);
@@ -123,8 +123,8 @@ ev_document_forms_form_field_choice_is_item_selected (EvDocumentForms   *documen
 }
 
 void
-ev_document_forms_form_field_choice_select_item (EvDocumentForms   *document_forms, 
-						 EvFormField       *field, 
+ev_document_forms_form_field_choice_select_item (EvDocumentForms   *document_forms,
+						 EvFormField       *field,
 						 gint               index)
 {
 	EvDocumentFormsInterface *iface = EV_DOCUMENT_FORMS_GET_IFACE (document_forms);
@@ -133,8 +133,8 @@ ev_document_forms_form_field_choice_select_item (EvDocumentForms   *document_for
 }
 
 void
-ev_document_forms_form_field_choice_toggle_item (EvDocumentForms   *document_forms, 
-						 EvFormField       *field, 
+ev_document_forms_form_field_choice_toggle_item (EvDocumentForms   *document_forms,
+						 EvFormField       *field,
 						 gint               index)
 {
 	EvDocumentFormsInterface *iface = EV_DOCUMENT_FORMS_GET_IFACE (document_forms);
@@ -143,7 +143,7 @@ ev_document_forms_form_field_choice_toggle_item (EvDocumentForms   *document_for
 }
 
 void
-ev_document_forms_form_field_choice_unselect_all (EvDocumentForms   *document_forms, 
+ev_document_forms_form_field_choice_unselect_all (EvDocumentForms   *document_forms,
 						  EvFormField       *field)
 {
 	EvDocumentFormsInterface *iface = EV_DOCUMENT_FORMS_GET_IFACE (document_forms);

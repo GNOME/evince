@@ -46,7 +46,7 @@ struct _EvRenderContextClass
 struct _EvRenderContext
 {
 	GObject parent;
-	
+
 	EvPage *page;
 	gint    rotation;
 	gdouble scale;

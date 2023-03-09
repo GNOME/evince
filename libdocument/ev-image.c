@@ -138,7 +138,7 @@ ev_image_save_tmp (EvImage   *image,
 	GError *error = NULL;
 	gchar  *filename = NULL;
         int fd;
-	
+
 	g_return_val_if_fail (EV_IS_IMAGE (image), NULL);
 	g_return_val_if_fail (GDK_IS_PIXBUF (pixbuf), NULL);
 
@@ -159,7 +159,7 @@ ev_image_save_tmp (EvImage   *image,
                         goto had_error;
 
 		g_free (filename);
-		
+
 		return image->priv->tmp_uri;
 	}
 

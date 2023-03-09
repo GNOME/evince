@@ -142,7 +142,7 @@ ev_mapping_list_get (EvMappingList *mapping_list,
 	EvMapping *found = NULL;
 
 	g_return_val_if_fail (mapping_list != NULL, NULL);
-	
+
 	for (list = mapping_list->list; list; list = list->next) {
 		EvMapping *mapping = list->data;
 

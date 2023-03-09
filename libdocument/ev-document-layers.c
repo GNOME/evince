@@ -1,6 +1,6 @@
 /* ev-document-layers.c
  *  this file is part of evince, a gnome document_links viewer
- * 
+ *
  * Copyright (C) 2008 Carlos Garcia Campos  <carlosgc@gnome.org>
  *
  * Evince is free software; you can redistribute it and/or modify it

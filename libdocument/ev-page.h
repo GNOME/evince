@@ -45,7 +45,7 @@ typedef GDestroyNotify EvBackendPageDestroyFunc;
 
 struct _EvPage {
 	GObject base_instance;
-	
+
 	gint index;
 
 	EvBackendPage            backend_page;

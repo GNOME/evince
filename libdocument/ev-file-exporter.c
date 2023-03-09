@@ -62,7 +62,7 @@ void
 ev_file_exporter_end_page (EvFileExporter *exporter)
 {
 	EvFileExporterInterface *iface = EV_FILE_EXPORTER_GET_IFACE (exporter);
-	
+
 	if (iface->end_page)
 		iface->end_page (exporter);
 }

@@ -1,6 +1,6 @@
 /* ev-document-fonts.h
  *  this file is part of evince, a gnome document viewer
- * 
+ *
  * Copyright (C) 2004 Red Hat, Inc.
  *
  * Author:

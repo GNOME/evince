@@ -32,7 +32,7 @@ static void
 ev_page_finalize (GObject *object)
 {
 	EvPage *page = EV_PAGE (object);
-	
+
 	if (page->backend_destroy_func) {
 		page->backend_destroy_func (page->backend_page);
 		page->backend_destroy_func = NULL;

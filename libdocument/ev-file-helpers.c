@@ -117,8 +117,8 @@ _ev_file_helpers_init (void)
 
 void
 _ev_file_helpers_shutdown (void)
-{	
-	if (tmp_dir != NULL)	
+{
+	if (tmp_dir != NULL)
 		g_rmdir (tmp_dir);
 
 	g_free (tmp_dir);
@@ -265,11 +265,11 @@ ev_tmp_file_unlink (GFile *file)
 
 	if (!file)
 		return;
-	
+
 	res = g_file_delete (file, NULL, &error);
 	if (!res) {
 		char *uri;
-		
+
 		uri = g_file_get_uri (file);
 		g_warning ("Unable to delete temp file %s: %s\n", uri, error->message);
 		g_free (uri);
@@ -281,17 +281,17 @@ void
 ev_tmp_uri_unlink (const gchar *uri)
 {
 	GFile *file;
-	
+
 	if (!uri)
 		return;
-	
+
 	file = g_file_new_for_uri (uri);
 	if (!g_file_is_native (file)) {
 		g_warning ("Attempting to delete non native uri: %s\n", uri);
 		g_object_unref (file);
 		return;
 	}
-	
+
 	ev_tmp_file_unlink (file);
 	g_object_unref (file);
 }
@@ -333,7 +333,7 @@ ev_xfer_uri_simple (const char *from,
 	GFile *source_file;
 	GFile *target_file;
 	gboolean result;
-	
+
 	if (!from)
 		return TRUE;
 
@@ -341,7 +341,7 @@ ev_xfer_uri_simple (const char *from,
 
 	source_file = g_file_new_for_uri (from);
 	target_file = g_file_new_for_uri (to);
-	
+
 	result = g_file_copy (source_file, target_file,
 			      G_FILE_COPY_TARGET_DEFAULT_PERMS |
 			      G_FILE_COPY_OVERWRITE,
@@ -349,7 +349,7 @@ ev_xfer_uri_simple (const char *from,
 
 	g_object_unref (target_file);
 	g_object_unref (source_file);
-    
+
 	return result;
 }
 
@@ -434,7 +434,7 @@ get_mime_type_from_data (const gchar *uri, GError **error)
         gchar            *mime_type = NULL;
 
 	file = g_file_new_for_uri (uri);
-	
+
 	input_stream = g_file_read (file, NULL, error);
 	if (!input_stream) {
 		g_object_unref (file);
@@ -610,7 +610,7 @@ compression_child_setup_cb (gpointer fd_ptr)
 static gchar *
 compression_run (const gchar       *uri,
 		 EvCompressionType  type,
-		 gboolean           compress, 
+		 gboolean           compress,
 		 GError           **error)
 {
 	gchar *argv[N_ARGS];
@@ -738,7 +738,7 @@ ev_file_uncompress (const gchar       *uri,
  * @error: a #GError location to store an error, or %NULL
  *
  * Compresses the file at @uri.
- 
+
  * If @type is %EV_COMPRESSION_NONE, it does nothing and returns %NULL.
  *
  * Otherwise, it returns the filename of a

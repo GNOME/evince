@@ -181,7 +181,7 @@ get_compression_from_mime_type (const gchar *mime_type)
  * fast or slow MIME type detection. If a document could be created,
  * @compression is filled in with the document's compression type.
  * On error, %NULL is returned and @error filled in.
- * 
+ *
  * Returns: a new #EvDocument instance, or %NULL on error with @error filled in
  */
 static EvDocument *
@@ -206,7 +206,7 @@ new_document_for_uri (const char        *uri,
 	*compression = get_compression_from_mime_type (mime_type);
 
 	g_free (mime_type);
-	
+
         return document;
 }
 
@@ -625,9 +625,9 @@ file_filter_add_mime_types (EvBackendInfo *info, GtkFileFilter *filter)
  * @document: a #EvDocument, or %NULL
  *
  * Adds some file filters to @chooser.
- 
+
  * Always add a "All documents" format.
- * 
+ *
  * If @document is not %NULL, adds a #GtkFileFilter for @document's MIME type.
  *
  * If @document is %NULL, adds a #GtkFileFilter for each document type that evince

@@ -37,7 +37,7 @@ G_BEGIN_DECLS
 #define EV_FORM_FIELD_CLASS(klass)                (G_TYPE_CHECK_CLASS_CAST((klass), EV_TYPE_FORM_FIELD, EvFormFieldClass))
 #define EV_IS_FORM_FIELD(object)                  (G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_FORM_FIELD))
 #define EV_IS_FORM_FIELD_CLASS(klass)             (G_TYPE_CHECK_CLASS_TYPE((klass), EV_TYPE_FORM_FIELD))
-#define EV_FORM_FIELD_GET_CLASS(object)           (G_TYPE_INSTANCE_GET_CLASS((object), EV_TYPE_FORM_FIELD, EvFormFieldClass)) 
+#define EV_FORM_FIELD_GET_CLASS(object)           (G_TYPE_INSTANCE_GET_CLASS((object), EV_TYPE_FORM_FIELD, EvFormFieldClass))
 
 #define EV_TYPE_FORM_FIELD_TEXT                   (ev_form_field_text_get_type())
 #define EV_FORM_FIELD_TEXT(object)                (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_FORM_FIELD_TEXT, EvFormFieldText))
@@ -119,13 +119,13 @@ struct _EvFormFieldClass
 {
 	GObjectClass parent_class;
 };
-	
+
 struct _EvFormFieldText
 {
 	EvFormField parent;
-	
+
 	EvFormFieldTextType type;
-	
+
 	gboolean do_spell_check : 1;
 	gboolean do_scroll : 1;
 	gboolean comb : 1;
@@ -144,7 +144,7 @@ struct _EvFormFieldTextClass
 struct _EvFormFieldButton
 {
 	EvFormField parent;
-	
+
 	EvFormFieldButtonType type;
 
 	gboolean state;
@@ -160,7 +160,7 @@ struct _EvFormFieldChoice
 	EvFormField parent;
 
 	EvFormFieldChoiceType type;
-	
+
 	gboolean multi_select : 1;
 	gboolean is_editable : 1;
 	gboolean do_spell_check : 1;
@@ -178,7 +178,7 @@ struct _EvFormFieldChoiceClass
 struct _EvFormFieldSignature
 {
 	EvFormField parent;
-	
+
 	/* TODO */
 };
 

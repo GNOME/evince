@@ -1,6 +1,6 @@
 /* ev-document-images.c
  *  this file is part of evince, a gnome document_links viewer
- * 
+ *
  * Copyright (C) 2006 Carlos Garcia Campos <carlosgc@gnome.org>
  *
  * Evince is free software; you can redistribute it and/or modify it

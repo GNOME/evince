@@ -2,7 +2,7 @@
  * ev-module.c
  * This file is part of Evince
  *
- * Copyright (C) 2005 - Paolo Maggi 
+ * Copyright (C) 2005 - Paolo Maggi
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,10 +16,10 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, 
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
  */
- 
+
 /* This is a modified version of ephy-module.c from Epiphany source code.
  * Here the original copyright assignment:
  *
@@ -29,9 +29,9 @@
  */
 
 /*
- * Modified by the gedit Team, 2005. See the AUTHORS file for a 
- * list of people on the gedit Team.  
- * See the ChangeLog files for a list of changes. 
+ * Modified by the gedit Team, 2005. See the AUTHORS file for a
+ * list of people on the gedit Team.
+ * See the ChangeLog files for a list of changes.
  *
  * $Id: gedit-module.c 5367 2006-12-17 14:29:49Z pborelli $
  */
@@ -104,7 +104,7 @@ ev_module_load (GTypeModule *gmodule)
 
         if (module->type == 0) {
                 g_warning ("Invalid evince backend contained by module %s", module->path);
-		
+
                 return FALSE;
         }
 
@@ -135,7 +135,7 @@ GObject *
 _ev_module_new_object (EvModule *module)
 {
 	g_return_val_if_fail (EV_IS_MODULE (module), NULL);
-	
+
         if (module->type == 0)
                 return NULL;
 

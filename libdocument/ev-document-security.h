@@ -1,6 +1,6 @@
 /* ev-document-security.h
  *  this file is part of evince, a gnome pdf viewer
- * 
+ *
  * Copyright (C) 2005 Red Hat, Inc.
  *
  * Author:

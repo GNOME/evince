@@ -392,7 +392,7 @@ ev_document_initialize_synctex (EvDocument  *document,
  * @error: a #GError location to store an error, or %NULL
  *
  * Loads @document from @uri.
- * 
+ *
  * On failure, %FALSE is returned and @error is filled in.
  * If the document is encrypted, EV_DEFINE_ERROR_ENCRYPTED is returned.
  * If the backend cannot load the specific document, EV_DOCUMENT_ERROR_INVALID
@@ -743,7 +743,7 @@ ev_document_synctex_backward_search (EvDocument *document,
 			const gchar *filename;
 
 			filename = synctex_scanner_get_name (scanner, synctex_node_tag (node));
-			
+
 			if (filename) {
 				result = ev_source_link_new (filename,
 							     synctex_node_line (node),

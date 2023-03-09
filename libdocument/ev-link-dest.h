@@ -51,7 +51,7 @@ typedef enum {
 	EV_LINK_DEST_TYPE_NAMED,
 	EV_LINK_DEST_TYPE_PAGE_LABEL,
 	EV_LINK_DEST_TYPE_UNKNOWN
-} EvLinkDestType; 
+} EvLinkDestType;
 
 EV_PUBLIC
 GType           ev_link_dest_get_type       (void) G_GNUC_CONST;

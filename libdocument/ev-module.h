@@ -2,7 +2,7 @@
  * ev-module.h
  * This file is part of Evince
  *
- * Copyright (C) 2005 - Paolo Maggi 
+ * Copyright (C) 2005 - Paolo Maggi
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,10 +16,10 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, 
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
  */
- 
+
 /* This is a modified version of gedit-module.h from Epiphany source code.
  * Here the original copyright assignment:
  *
@@ -29,15 +29,15 @@
  */
 
 /*
- * Modified by the gedit Team, 2005. See the AUTHORS file for a 
- * list of people on the gedit Team.  
- * See the ChangeLog files for a list of changes. 
+ * Modified by the gedit Team, 2005. See the AUTHORS file for a
+ * list of people on the gedit Team.
+ * See the ChangeLog files for a list of changes.
  *
  * $Id: gedit-module.h 5263 2006-10-08 14:26:02Z pborelli $
  */
 
 /* Modified by Evince Team */
- 
+
 #pragma once
 
 #if !defined (EVINCE_COMPILATION)

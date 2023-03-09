@@ -43,7 +43,7 @@ ev_selection_render_selection (EvSelection      *selection,
 
 	if (!iface->render_selection)
 		return;
-	
+
 	iface->render_selection (selection, rc,
 				 surface,
 				 points, old_points,
@@ -72,6 +72,6 @@ ev_selection_get_selection_region (EvSelection     *selection,
 
 	if (!iface->get_selection_region)
 		return NULL;
-	
+
 	return iface->get_selection_region (selection, rc, style, points);
 }

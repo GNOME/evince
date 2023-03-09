@@ -45,7 +45,7 @@ ev_document_find_find_text (EvDocumentFind *document_find,
 			    gboolean        case_sensitive)
 {
 	EvDocumentFindInterface *iface = EV_DOCUMENT_FIND_GET_IFACE (document_find);
-	
+
 	return iface->find_text (document_find, page, text, case_sensitive);
 }
 

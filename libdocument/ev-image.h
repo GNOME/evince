@@ -43,7 +43,7 @@ typedef struct _EvImagePrivate EvImagePrivate;
 
 struct _EvImage {
 	GObject base_instance;
-	
+
 	EvImagePrivate *priv;
 };
 
