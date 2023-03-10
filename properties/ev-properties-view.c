@@ -96,12 +96,12 @@ static void
 ev_properties_view_dispose (GObject *object)
 {
 	EvPropertiesView *properties = EV_PROPERTIES_VIEW (object);
-	
+
 	if (properties->uri) {
 		g_free (properties->uri);
 		properties->uri = NULL;
 	}
-	
+
 	G_OBJECT_CLASS (ev_properties_view_parent_class)->dispose (object);
 }
 
@@ -122,34 +122,34 @@ make_valid_utf8 (const gchar *name)
   GString *string;
   const gchar *remainder, *invalid;
   gint remaining_bytes, valid_bytes;
-  
+
   string = NULL;
   remainder = name;
   remaining_bytes = strlen (name);
-  
-  while (remaining_bytes != 0) 
+
+  while (remaining_bytes != 0)
     {
-      if (g_utf8_validate (remainder, remaining_bytes, &invalid)) 
+      if (g_utf8_validate (remainder, remaining_bytes, &invalid))
 	break;
       valid_bytes = invalid - remainder;
-    
-      if (string == NULL) 
+
+      if (string == NULL)
 	string = g_string_sized_new (remaining_bytes);
 
       g_string_append_len (string, remainder, valid_bytes);
       g_string_append_c (string, '?');
-      
+
       remaining_bytes -= valid_bytes + 1;
       remainder = invalid + 1;
     }
-  
+
   if (string == NULL)
     return g_strdup (name);
-  
+
   g_string_append (string, remainder);
 
   g_assert (g_utf8_validate (string->str, -1, NULL));
-  
+
   return g_string_free (string, FALSE);
 }
 
@@ -271,7 +271,7 @@ get_default_user_units (void)
 
 #ifdef HAVE__NL_MEASUREMENT_MEASUREMENT
 	gchar *imperial = NULL;
-	
+
 	imperial = nl_langinfo (_NL_MEASUREMENT_MEASUREMENT);
 	if (imperial && imperial[0] == 2)
 		return GTK_UNIT_INCH;  /* imperial */
@@ -283,9 +283,9 @@ get_default_user_units (void)
 		return GTK_UNIT_MM;
 	if (strcmp (e, "default:inch") == 0)
 		return GTK_UNIT_INCH;
-	
+
 	g_warning ("Whoever translated default:mm did so wrongly.\n");
-				
+
 	return GTK_UNIT_MM;
 }
 
@@ -321,7 +321,7 @@ ev_regular_paper_size (const EvDocumentInfo *info)
 	}
 
 	paper_sizes = gtk_paper_size_get_paper_sizes (FALSE);
-	
+
 	for (l = paper_sizes; l && l->data; l = g_list_next (l)) {
 		GtkPaperSize *size = (GtkPaperSize *) l->data;
 		gdouble paper_width;
@@ -359,7 +359,7 @@ ev_regular_paper_size (const EvDocumentInfo *info)
 		g_free (exact_size);
 		return str;
 	}
-	
+
 	return exact_size;
 }
 

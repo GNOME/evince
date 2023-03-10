@@ -102,7 +102,7 @@ ev_properties_get_pages (NautilusPropertyPageProvider *provider,
 	/* okay, make the page */
 	uri = nautilus_file_info_get_uri (file);
 	mime_type = nautilus_file_info_get_mime_type (file);
-	
+
 	document = ev_backends_manager_get_document (mime_type);
 	if (!document)
 		goto end;
@@ -112,7 +112,7 @@ ev_properties_get_pages (NautilusPropertyPageProvider *provider,
 		g_error_free (error);
 		goto end;
 	}
-	
+
 	label = gtk_label_new (_("Document"));
 	page = ev_properties_view_new (document);
 	ev_properties_view_set_info (EV_PROPERTIES_VIEW (page),
