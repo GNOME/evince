@@ -48,7 +48,7 @@ static BmUnit bit_masks[] = {
 #define SHOW_OP_DATA	(DEBUGGING(BITMAP_OPS) && DEBUGGING(BITMAP_DATA))
 #endif
 
-/* 
+/*
  * Some useful macros to manipulate bitmap data
  * SEGMENT(m,n) = bit mask for a segment of `m' contiguous bits
  * starting at column `n'. These macros assume that
@@ -118,7 +118,7 @@ static Uchar bit_swap[] = {
 };
 
 
-/* 
+/*
  * next we have three bitmap functions to convert bitmaps in LSB bit order
  * with 8, 16 and 32 bits per unit, to our internal format. The differences
  * are minimal, but writing a generic function to handle all unit sizes is
@@ -132,8 +132,8 @@ BITMAP	*bitmap_convert_lsb8(Uchar *bits, int w, int h, int stride)
 	Uchar	*unit;
 	register Uchar *curr;
 	int	bytes;
-	
-	DEBUG((DBG_BITMAP_OPS, "convert LSB %dx%d@8 -> bitmap\n", w, h));	
+
+	DEBUG((DBG_BITMAP_OPS, "convert LSB %dx%d@8 -> bitmap\n", w, h));
 
 	bm = bitmap_alloc_raw(w, h);
 
@@ -141,14 +141,14 @@ BITMAP	*bitmap_convert_lsb8(Uchar *bits, int w, int h, int stride)
 	bytes = ROUND(w, 8);
 	unit  = (Uchar *)bm->data;
 	curr = bits;
-	/* we try to do this as fast as we can */	
+	/* we try to do this as fast as we can */
 	for(i = 0; i < h; i++) {
 #ifdef WORD_LITTLE_ENDIAN
 		memcpy(unit, curr, bytes);
 		curr += stride;
 #else
 		int	j;
-		
+
 		for(j = 0; j < bytes; curr++, j++)
 			unit[j] = bit_swap[*curr];
 		cur += stride - bytes;
@@ -168,7 +168,7 @@ BITMAP	*bitmap_convert_msb8(Uchar *data, int w, int h, int stride)
 	Uchar	*curr;
 	int	i;
 	int	bytes;
-	
+
 	bm = bitmap_alloc(w, h);
 	bytes = ROUND(w, 8);
 	unit = (Uchar *)bm->data;
@@ -176,7 +176,7 @@ BITMAP	*bitmap_convert_msb8(Uchar *data, int w, int h, int stride)
 	for(i = 0; i < h; i++) {
 #ifdef WORD_LITTLE_ENDIAN
 		int	j;
-		
+
 		for(j = 0; j < bytes; curr++, j++)
 			unit[j] = bit_swap[*curr];
 		curr += stride - bytes;
@@ -197,7 +197,7 @@ BITMAP	*bitmap_copy(BITMAP *bm)
 {
 	BITMAP	*nb = bitmap_alloc(bm->width, bm->height);
 
-	DEBUG((DBG_BITMAP_OPS, "copy %dx%d\n", bm->width, bm->height));	
+	DEBUG((DBG_BITMAP_OPS, "copy %dx%d\n", bm->width, bm->height));
 	memcpy(nb->data, bm->data, bm->height * bm->stride);
 	return nb;
 }
@@ -205,7 +205,7 @@ BITMAP	*bitmap_copy(BITMAP *bm)
 BITMAP	*bitmap_alloc(int w, int h)
 {
 	BITMAP	*bm;
-	
+
 	bm = xalloc(BITMAP);
 	bm->width = w;
 	bm->height = h;
@@ -214,14 +214,14 @@ BITMAP	*bitmap_alloc(int w, int h)
 		bm->data = (BmUnit *)mdvi_calloc(h, bm->stride);
 	else
 		bm->data = NULL;
-	
+
 	return bm;
 }
 
 BITMAP	*bitmap_alloc_raw(int w, int h)
 {
 	BITMAP	*bm;
-	
+
 	bm = xalloc(BITMAP);
 	bm->width = w;
 	bm->height = h;
@@ -230,7 +230,7 @@ BITMAP	*bitmap_alloc_raw(int w, int h)
 		bm->data = (BmUnit *)mdvi_malloc(h * bm->stride);
 	else
 		bm->data = NULL;
-	
+
 	return bm;
 }
 
@@ -250,7 +250,7 @@ void	bitmap_print(FILE *out, BITMAP *bm)
 	};
 	int	sub;
 
-	a = bm->data;	
+	a = bm->data;
 	fprintf(out, "    ");
 	if(bm->width > 10) {
 		putchar('0');
@@ -292,10 +292,10 @@ void bitmap_set_col(BITMAP *bm, int row, int col, int count, int state)
 {
 	BmUnit	*ptr;
 	BmUnit	mask;
-	
+
 	ptr = __bm_unit_ptr(bm, col, row);
 	mask = FIRSTMASKAT(col);
-	
+
 	while(count-- > 0) {
 		if(state)
 			*ptr |= mask;
@@ -306,7 +306,7 @@ void bitmap_set_col(BITMAP *bm, int row, int col, int count, int state)
 	}
 }
 
-/* 
+/*
  * to use this function you should first make sure that
  * there is room for `count' bits in the scanline
  *
@@ -333,11 +333,11 @@ void	bitmap_paint_bits(BmUnit *ptr, int n, int count)
 		*ptr++ = bit_masks[BITMAP_BITS];
 
 	/* paint the tail */
-	if(count > 0) 
+	if(count > 0)
 		*ptr |= SEGMENT(count, 0);
 }
 
-/* 
+/*
  * same as paint_bits but clears pixels instead of painting them. Written
  * as a separate function for efficiency reasons.
  */
@@ -365,7 +365,7 @@ void bitmap_clear_bits(BmUnit *ptr, int n, int count)
 void	bitmap_set_row(BITMAP *bm, int row, int col, int count, int state)
 {
 	BmUnit	*ptr;
-	
+
 	ptr = __bm_unit_ptr(bm, col, row);
 	if(state)
 		bitmap_paint_bits(ptr, col & (BITMAP_BITS-1), count);
@@ -388,13 +388,13 @@ void bitmap_flip_horizontally(BITMAP *bm)
 	nb.height = bm->height;
 	nb.stride = bm->stride;
 	nb.data = mdvi_calloc(bm->height, bm->stride);
-		
+
 	fptr = bm->data;
 	tptr = __bm_unit_ptr(&nb, nb.width-1, 0);
 	for(h = 0; h < bm->height; h++) {
 		BmUnit	*fline, *tline;
-		
-		fline = fptr; 
+
+		fline = fptr;
 		tline = tptr;
 		fmask = FIRSTMASK;
 		tmask = FIRSTMASKAT(nb.width-1);
@@ -434,13 +434,13 @@ void	bitmap_flip_vertically(BITMAP *bm)
 	nb.height = bm->height;
 	nb.stride = bm->stride;
 	nb.data = mdvi_calloc(bm->height, bm->stride);
-	
+
 	fptr = bm->data;
 	tptr = __bm_unit_ptr(&nb, 0, nb.height-1);
 	for(h = 0; h < bm->height; h++) {
 		BmUnit	*fline, *tline;
-		
-		fline = fptr; 
+
+		fline = fptr;
 		tline = tptr;
 		fmask = FIRSTMASK;
 		for(w = 0; w < bm->width; w++) {
@@ -470,18 +470,18 @@ void	bitmap_flip_diagonally(BITMAP *bm)
 	BmUnit	*fptr, *tptr;
 	BmUnit	fmask, tmask;
 	int	w, h;
-	
+
 	nb.width = bm->width;
 	nb.height = bm->height;
 	nb.stride = bm->stride;
 	nb.data = mdvi_calloc(bm->height, bm->stride);
-	
+
 	fptr = bm->data;
 	tptr = __bm_unit_ptr(&nb, nb.width-1, nb.height-1);
 	for(h = 0; h < bm->height; h++) {
 		BmUnit	*fline, *tline;
-		
-		fline = fptr; 
+
+		fline = fptr;
 		tline = tptr;
 		fmask = FIRSTMASK;
 		tmask = FIRSTMASKAT(nb.width-1);
@@ -516,19 +516,19 @@ void	bitmap_rotate_clockwise(BITMAP *bm)
 	BmUnit	*fptr, *tptr;
 	BmUnit	fmask, tmask;
 	int	w, h;
-	
+
 	nb.width = bm->height;
 	nb.height = bm->width;
 	nb.stride = BM_BYTES_PER_LINE(&nb);
 	nb.data = mdvi_calloc(nb.height, nb.stride);
-	
+
 	fptr = bm->data;
 	tptr = __bm_unit_ptr(&nb, nb.width - 1, 0);
-	
+
 	tmask = FIRSTMASKAT(nb.width-1);
 	for(h = 0; h < bm->height; h++) {
 		BmUnit	*fline, *tline;
-		
+
 		fmask = FIRSTMASK;
 		fline = fptr;
 		tline = tptr;
@@ -556,7 +556,7 @@ void	bitmap_rotate_clockwise(BITMAP *bm)
 	mdvi_free(bm->data);
 	bm->data = nb.data;
 	bm->width = nb.width;
-	bm->height = nb.height;	
+	bm->height = nb.height;
 	bm->stride = nb.stride;
 	if(SHOW_OP_DATA)
 		bitmap_print(stderr, bm);
@@ -568,19 +568,19 @@ void	bitmap_rotate_counter_clockwise(BITMAP *bm)
 	BmUnit	*fptr, *tptr;
 	BmUnit	fmask, tmask;
 	int	w, h;
-	
+
 	nb.width = bm->height;
 	nb.height = bm->width;
 	nb.stride = BM_BYTES_PER_LINE(&nb);
 	nb.data = mdvi_calloc(nb.height, nb.stride);
-	
+
 	fptr = bm->data;
 	tptr = __bm_unit_ptr(&nb, 0, nb.height - 1);
 
 	tmask = FIRSTMASK;
 	for(h = 0; h < bm->height; h++) {
 		BmUnit	*fline, *tline;
-		
+
 		fmask = FIRSTMASK;
 		fline = fptr;
 		tline = tptr;
@@ -608,7 +608,7 @@ void	bitmap_rotate_counter_clockwise(BITMAP *bm)
 	mdvi_free(bm->data);
 	bm->data = nb.data;
 	bm->width = nb.width;
-	bm->height = nb.height;	
+	bm->height = nb.height;
 	bm->stride = nb.stride;
 	if(SHOW_OP_DATA)
 		bitmap_print(stderr, bm);
@@ -620,16 +620,16 @@ void	bitmap_flip_rotate_clockwise(BITMAP *bm)
 	BmUnit	*fptr, *tptr;
 	BmUnit	fmask, tmask;
 	int	w, h;
-	
+
 	nb.width = bm->height;
 	nb.height = bm->width;
 	nb.stride = BM_BYTES_PER_LINE(&nb);
 	nb.data = mdvi_calloc(nb.height, nb.stride);
-	
+
 	fptr = bm->data;
 	tptr = __bm_unit_ptr(&nb, nb.width-1, nb.height-1);
 
-	tmask = FIRSTMASKAT(nb.width-1);	
+	tmask = FIRSTMASKAT(nb.width-1);
 	for(h = 0; h < bm->height; h++) {
 		BmUnit	*fline, *tline;
 
@@ -659,7 +659,7 @@ void	bitmap_flip_rotate_clockwise(BITMAP *bm)
 	mdvi_free(bm->data);
 	bm->data = nb.data;
 	bm->width = nb.width;
-	bm->height = nb.height;	
+	bm->height = nb.height;
 	bm->stride = nb.stride;
 	if(SHOW_OP_DATA)
 		bitmap_print(stderr, bm);
@@ -671,16 +671,16 @@ void	bitmap_flip_rotate_counter_clockwise(BITMAP *bm)
 	BmUnit	*fptr, *tptr;
 	BmUnit	fmask, tmask;
 	int	w, h;
-	
+
 	nb.width = bm->height;
 	nb.height = bm->width;
 	nb.stride = BM_BYTES_PER_LINE(&nb);
 	nb.data = mdvi_calloc(nb.height, nb.stride);
-	
+
 	fptr = bm->data;
 	tptr = nb.data;
 	tmask = FIRSTMASK;
-	
+
 	for(h = 0; h < bm->height; h++) {
 		BmUnit	*fline, *tline;
 
@@ -711,7 +711,7 @@ void	bitmap_flip_rotate_counter_clockwise(BITMAP *bm)
 	mdvi_free(bm->data);
 	bm->data = nb.data;
 	bm->width = nb.width;
-	bm->height = nb.height;	
+	bm->height = nb.height;
 	bm->stride = nb.stride;
 	if(SHOW_OP_DATA)
 		bitmap_print(stderr, bm);
@@ -751,7 +751,7 @@ void	bitmap_transform(BITMAP *map, DviOrientation orient)
 /*
  * Count the number of non-zero bits in a box of dimensions w x h, starting
  * at column `step' in row `data'.
- * 
+ *
  * Shamelessly stolen from xdvi.
  */
 static int do_sample(BmUnit *data, int stride, int step, int w, int h)
@@ -760,7 +760,7 @@ static int do_sample(BmUnit *data, int stride, int step, int w, int h)
 	int	shift, n;
 	int	bits_left;
 	int	wid;
-	
+
 	ptr = data + step / BITMAP_BITS;
 	end = bm_offset(data, h * stride);
 	shift = FIRSTSHIFTAT(step);
@@ -800,17 +800,17 @@ static int do_sample(BmUnit *data, int stride, int step, int w, int h)
 	return n;
 }
 
-void	mdvi_shrink_box(DviContext *dvi, DviFont *font, 
+void	mdvi_shrink_box(DviContext *dvi, DviFont *font,
 	DviFontChar *pk, DviGlyph *dest)
 {
 	int	x, y, z;
 	DviGlyph *glyph;
 	int	hs, vs;
-	
+
 	hs = dvi->params.hshrink;
 	vs = dvi->params.vshrink;
 	glyph = &pk->glyph;
-	
+
 	x = (int)glyph->x / hs;
 	if((int)glyph->x - x * hs > 0)
 		x++;
@@ -844,15 +844,15 @@ void	mdvi_shrink_glyph(DviContext *dvi, DviFont *font,
 	int	x, y;
 	int	w, h;
 	int	hs, vs;
-	
+
 	hs = dvi->params.hshrink;
 	vs = dvi->params.vshrink;
-	
+
 	min_sample = vs * hs * dvi->params.density / 100;
 
 	glyph = &pk->glyph;
 	oldmap = (BITMAP *)glyph->data;
-		
+
 	x = (int)glyph->x / hs;
 	init_cols = (int)glyph->x - x * hs;
 	if(init_cols <= 0)
@@ -910,7 +910,7 @@ void	mdvi_shrink_glyph(DviContext *dvi, DviFont *font,
 		old_ptr = bm_offset(old_ptr, rows * old_stride);
 		rows_left -= rows;
 		rows = vs;
-	}	
+	}
 	DEBUG((DBG_BITMAPS, "shrink_glyph: (%dw,%dh,%dx,%dy) -> (%dw,%dh,%dx,%dy)\n",
 		glyph->w, glyph->h, glyph->x, glyph->y,
 		dest->w, dest->h, dest->x, dest->y));
@@ -939,10 +939,10 @@ void	mdvi_shrink_glyph_grey(DviContext *dvi, DviFont *font,
 	hs = dvi->params.hshrink;
 	vs = dvi->params.vshrink;
 	dev = &dvi->device;
-	
+
 	glyph = &pk->glyph;
 	map = (BITMAP *)glyph->data;
-	
+
 	x = (int)glyph->x / hs;
 	init_cols = (int)glyph->x - x * hs;
 	if(init_cols <= 0)
@@ -960,18 +960,18 @@ void	mdvi_shrink_glyph_grey(DviContext *dvi, DviFont *font,
 	}
 	h = y + ROUND((int)glyph->h - cols, vs) + 1;
 	ASSERT(w && h);
-	
+
 	/* before touching anything, do this */
 	image = dev->create_image(dev->device_data, w, h, BITMAP_BITS);
 	if(image == NULL) {
 		mdvi_shrink_glyph(dvi, font, pk, dest);
 		return;
 	}
-	
+
 	/* save these colors */
 	pk->fg = MDVI_CURRFG(dvi);
 	pk->bg = MDVI_CURRBG(dvi);
-	
+
 	samplemax = vs * hs;
 	npixels = samplemax + 1;
 	pixels = get_color_table(&dvi->device, npixels, pk->fg, pk->bg,
@@ -982,7 +982,7 @@ void	mdvi_shrink_glyph_grey(DviContext *dvi, DviFont *font,
 		colortab[1] = pk->bg;
 		pixels = &colortab[0];
 	}
-	
+
 	/* setup the new glyph */
 	dest->data = image;
 	dest->x = x;
@@ -1021,7 +1021,7 @@ void	mdvi_shrink_glyph_grey(DviContext *dvi, DviFont *font,
 		rows = vs;
 		y++;
 	}
-	
+
 	for(; y < h; y++) {
 		for(x = 0; x < w; x++)
 			dev->put_pixel(image, x, y, pixels[0]);

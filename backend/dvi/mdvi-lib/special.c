@@ -39,7 +39,7 @@ typedef struct _DviSpecial {
 #endif
 	DviSpecialHandler handler;
 } DviSpecial;
-	
+
 static ListHead specials = {NULL, NULL, 0};
 
 #define SPECIAL(x)	\
@@ -65,7 +65,7 @@ static void register_builtin_specials(void)
 {
 	int	i;
 
-	ASSERT(registered_builtins == 0);	
+	ASSERT(registered_builtins == 0);
 	registered_builtins = 1;
 	for(i = 0; i < NSPECIALS; i++)
 		mdvi_register_special(
@@ -79,7 +79,7 @@ static void register_builtin_specials(void)
 static DviSpecial *find_special_prefix(const char *prefix)
 {
 	DviSpecial *sp;
-	
+
 	/* should have a hash table here, but I'm so lazy */
 	for(sp = (DviSpecial *)specials.head; sp; sp = sp->next) {
 		if(STRCEQ(sp->prefix, prefix))
@@ -88,7 +88,7 @@ static DviSpecial *find_special_prefix(const char *prefix)
 	return sp;
 }
 
-int	mdvi_register_special(const char *label, const char *prefix, 
+int	mdvi_register_special(const char *label, const char *prefix,
 	const char *regex, DviSpecialHandler handler, int replace)
 {
 	DviSpecial *sp;
@@ -127,9 +127,9 @@ int	mdvi_register_special(const char *label, const char *prefix,
 	sp->label = mdvi_strdup(label);
 	sp->plen = strlen(prefix);
 	if(newsp)
-		listh_prepend(&specials, LIST(sp));		
-	DEBUG((DBG_SPECIAL, 
-		"New \\special handler `%s' with prefix `%s'\n", 
+		listh_prepend(&specials, LIST(sp));
+	DEBUG((DBG_SPECIAL,
+		"New \\special handler `%s' with prefix `%s'\n",
 		label, prefix));
 	return 0;
 }
@@ -137,8 +137,8 @@ int	mdvi_register_special(const char *label, const char *prefix,
 int	mdvi_unregister_special(const char *prefix)
 {
 	DviSpecial *sp;
-	
-	sp = find_special_prefix(prefix);	
+
+	sp = find_special_prefix(prefix);
 	if(sp == NULL)
 		return -1;
 	mdvi_free(sp->prefix);
@@ -156,7 +156,7 @@ int	mdvi_unregister_special(const char *prefix)
 int	mdvi_do_special(DviContext *dvi, char *string)
 {
 	char	*prefix;
-	char 	*ptr;	
+	char 	*ptr;
 	DviSpecial *sp;
 
 	if(!registered_builtins) {
@@ -170,7 +170,7 @@ int	mdvi_do_special(DviContext *dvi, char *string)
 		string++;
 
 	DEBUG((DBG_SPECIAL, "Looking for a handler for `%s'\n", string));
-	
+
 	/* now try to find a match */
 	ptr = string;
 	for(sp = (DviSpecial *)specials.head; sp; sp = sp->next) {
@@ -193,13 +193,13 @@ int	mdvi_do_special(DviContext *dvi, char *string)
 	/* extract the prefix */
 	if(ptr == string) {
 		prefix = NULL;
-		DEBUG((DBG_SPECIAL, 
+		DEBUG((DBG_SPECIAL,
 			"REGEX match with `%s' (arg `%s')\n",
 			sp->label, ptr));
 	} else {
 		if(*ptr) *ptr++ = 0;
 		prefix = string;
-		DEBUG((DBG_SPECIAL, 
+		DEBUG((DBG_SPECIAL,
 			"PREFIX match with `%s' (prefix `%s', arg `%s')\n",
 			sp->label, prefix, ptr));
 	}
@@ -213,8 +213,8 @@ int	mdvi_do_special(DviContext *dvi, char *string)
 void	mdvi_flush_specials(void)
 {
 	DviSpecial *sp, *list;
-	
-	
+
+
 	for(list = (DviSpecial *)specials.head; (sp = list); ) {
 		list = sp->next;
 		if(sp->prefix) mdvi_free(sp->prefix);

@@ -72,7 +72,7 @@ static int initialized = 0;
 static void init_font_classes(void)
 {
 	int	i;
-	
+
 	for(i = 0; i < MAX_CLASS; i++)
 		listh_init(&font_classes[i]);
 	initialized = 1;
@@ -88,7 +88,7 @@ char	**mdvi_list_font_class(int klass)
 	char	**list;
 	int	i, n;
 	DviFontClass *fc;
-	
+
 	if(klass == -1)
 		klass = MAX_CLASS-1;
 	if(klass < 0 || klass >= MAX_CLASS)
@@ -137,7 +137,7 @@ int	mdvi_unregister_font_type(const char *name, int klass)
 
 	if(klass == -1)
 		klass = MAX_CLASS - 1;
-	
+
 	if(klass >= 0 && klass < MAX_CLASS) {
 		k = klass;
 		LIST_FOREACH(fc, DviFontClass, &font_classes[k]) {
@@ -154,12 +154,12 @@ int	mdvi_unregister_font_type(const char *name, int klass)
 		}
 	} else
 		return -1;
-	
+
 	if(fc == NULL || fc->links)
 		return -1;
 	/* remove it */
 	listh_remove(&font_classes[k], LIST(fc));
-	
+
 	/* and destroy it */
 	mdvi_free(fc->info.name);
 	mdvi_free(fc);
@@ -171,9 +171,9 @@ static char *lookup_font(DviFontClass *ptr, const char *name, Ushort *h, Ushort 
 	char	*filename;
 
 	/*
-	 * If the font type registered a function to do the lookup, use that. 
+	 * If the font type registered a function to do the lookup, use that.
 	 * Otherwise we use kpathsea.
-	 */	
+	 */
 	if(ptr->info.lookup)
 		filename = ptr->info.lookup(name, h, v);
 	else if(ptr->info.kpse_type <= kpse_any_glyph_format) {
@@ -208,7 +208,7 @@ char	*mdvi_lookup_font(DviFontSearch *search)
 
 	if(search->id < 0)
 		return NULL;
-	
+
 	if(search->curr == NULL) {
 		/* this is the initial search */
 		name = search->wanted_name;
@@ -312,7 +312,7 @@ metrics:
 
 	search->id = -1;
 	search->actual_name = NULL;
-	
+
 	/* tough luck, nothing found */
 	return NULL;
 }
@@ -322,7 +322,7 @@ DviFont	*mdvi_add_font(const char *name, Int32 sum,
 	int hdpi, int vdpi, Int32 scale)
 {
 	DviFont	*font;
-	
+
 	font = xalloc(DviFont);
 	font->fontname = mdvi_strdup(name);
 	SEARCH_INIT(font->search, font->fontname, hdpi, vdpi);
@@ -354,7 +354,7 @@ int	mdvi_font_retry(DviParams *params, DviFont *font)
 	/* try the search again */
 	char	*filename;
 
-	ASSERT(font->search.curr != NULL);	
+	ASSERT(font->search.curr != NULL);
 	/* we won't be using this class anymore */
 	font->search.curr->links--;
 

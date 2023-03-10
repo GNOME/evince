@@ -68,11 +68,11 @@ static int vf_load_font(DviParams *params, DviFont *font)
 	int	nchars;
 	int	loc, hic;
 	DviFontRef *last;
-	
+
 	macros = NULL;
 	msize = mlen = 0;
 	p = font->in;
-	
+
 	if(fuget1(p) != 247 || fuget1(p) != 202)
 		goto badvf;
 	mlen = fuget1(p);
@@ -84,14 +84,14 @@ static int vf_load_font(DviParams *params, DviFont *font)
 	} else if(!font->checksum)
 		font->checksum = checksum;
 	font->design = fuget4(p);
-	
+
 	/* read all the fonts in the preamble */
 	last = NULL;
 
 	/* initialize alpha, beta and z for TFM width computation */
 	TFMPREPARE(font->scale, z, alpha, beta);
 
-	op = fuget1(p);	
+	op = fuget1(p);
 	while(op >= DVI_FNT_DEF1 && op <= DVI_FNT_DEF4) {
 		DviFontRef *ref;
 		Int32	scale, design;
@@ -101,9 +101,9 @@ static int vf_load_font(DviParams *params, DviFont *font)
 		int	hdpi;
 		int	vdpi;
 		char	*name;
-		
+
 		/* process fnt_def commands */
-		
+
 		id = fugetn(p, op - DVI_FNT_DEF1 + 1);
 		checksum = fuget4(p);
 		scale = fuget4(p);
@@ -121,13 +121,13 @@ static int vf_load_font(DviParams *params, DviFont *font)
 		fread(name, 1, n, p);
 		name[n] = 0;
 		DEBUG((DBG_FONTS, "(vf) %s: defined font `%s' at %.1fpt (%dx%d dpi)\n",
-			font->fontname, name, 
+			font->fontname, name,
 			(double)scale / (params->tfm_conv * 0x100000), hdpi, vdpi));
 
 		/* get the font */
 		ref = font_reference(params, id, name, checksum, hdpi, vdpi, scale);
 		if(ref == NULL) {
-			mdvi_error(_("(vf) %s: could not load font `%s'\n"), 
+			mdvi_error(_("(vf) %s: could not load font `%s'\n"),
 				   font->fontname, name);
 			goto error;
 		}
@@ -141,12 +141,12 @@ static int vf_load_font(DviParams *params, DviFont *font)
 		ref->next = NULL;
 		op = fuget1(p);
 	}
-	
+
 	if(op >= DVI_FNT_DEF1 && op <= DVI_FNT_DEF4)
 		goto error;
 
 	/* This function correctly reads both .vf and .ovf files */
-	
+
 	font->chars = xnalloc(DviFontChar, 256);
 	for(i = 0; i < 256; i++)
 		font->chars[i].offset = 0;
@@ -157,7 +157,7 @@ static int vf_load_font(DviParams *params, DviFont *font)
 		int	pl;
 		Int32	cc;
 		Int32	tfm;
-		
+
 		if(op == 242) {
 			pl = fuget4(p);
 			cc = fuget4(p);
@@ -178,7 +178,7 @@ static int vf_load_font(DviParams *params, DviFont *font)
 		if(hic < 0 || cc > hic)
 			hic = cc;
 		if(cc >= nchars) {
-			font->chars = xresize(font->chars, 
+			font->chars = xresize(font->chars,
 				DviFontChar, cc + 16);
 			for(i = nchars; i < cc + 16; i++)
 				font->chars[i].offset = 0;
@@ -189,7 +189,7 @@ static int vf_load_font(DviParams *params, DviFont *font)
 				   font->fontname, cc);
 			goto error;
 		}
-				
+
 		DEBUG((DBG_GLYPHS, "(vf) %s: defined character %d (macro length %d)\n",
 			font->fontname, cc, pl));
 		font->chars[cc].width = pl + 1;
@@ -217,8 +217,8 @@ static int vf_load_font(DviParams *params, DviFont *font)
 		macros = xresize(macros, Uchar, mlen);
 		msize = mlen;
 	}
-	
-	DEBUG((DBG_FONTS|DBG_GLYPHS, 
+
+	DEBUG((DBG_FONTS|DBG_GLYPHS,
 		"(vf) %s: macros use %d bytes\n", font->fontname, msize));
 
 	if(loc > 0 || hic < nchars-1) {
@@ -232,7 +232,7 @@ static int vf_load_font(DviParams *params, DviFont *font)
 	font->private = macros;
 
 	return 0;
-	
+
 badvf:
 	mdvi_error(_("%s: File corrupted, or not a VF file.\n"), font->fontname);
 error:
@@ -245,5 +245,5 @@ error:
 
 static void vf_free_macros(DviFont *font)
 {
-	mdvi_free(font->private);	
+	mdvi_free(font->private);
 }

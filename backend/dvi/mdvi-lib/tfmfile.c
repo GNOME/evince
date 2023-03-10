@@ -51,7 +51,7 @@ static DviHashTable tfmhash;
 static inline void swap_array(Uint32 *ptr, int n)
 {
 	Uint32 i;
-	
+
 	while(n-- > 0) {
 		i = *ptr;
 		*ptr++ = ((i & 0xff000000) >> 24)
@@ -80,7 +80,7 @@ int	afm_load_file(const char *filename, TFMInfo *info)
 	int	status;
 	CharMetricInfo *cm;
 	FILE	*in;
-	
+
 	in = fopen(filename, "rb");
 	if(in == NULL)
 		return -1;
@@ -91,7 +91,7 @@ int	afm_load_file(const char *filename, TFMInfo *info)
 		mdvi_error(_("%s: Error reading AFM data\n"), filename);
 		return -1;
 	}
-	
+
 	/* aim high */
 	info->chars = xnalloc(TFMChar, 256);
 	info->loc = 256;
@@ -106,7 +106,7 @@ int	afm_load_file(const char *filename, TFMInfo *info)
 	for(cm = fi->cmi; cm < fi->cmi + fi->numOfChars; cm++) {
 		int	code;
 		TFMChar	*ch;
-		
+
 		code = cm->code;
 		if(code < 0 || code > 255)
 			continue; /* ignore it */
@@ -179,7 +179,7 @@ int	tfm_load_file(const char *filename, TFMInfo *info)
 	/* allocate a word-aligned buffer to hold the file */
 	size = 4 * ROUND(st.st_size, 4);
 	if(size != st.st_size)
-		mdvi_warning(_("Warning: TFM file `%s' has suspicious size\n"), 
+		mdvi_warning(_("Warning: TFM file `%s' has suspicious size\n"),
 			     filename);
 	tfm = (Uchar *)mdvi_malloc(size);
 	if(fread(tfm, st.st_size, 1, in) != 1)
@@ -190,12 +190,12 @@ int	tfm_load_file(const char *filename, TFMInfo *info)
 
 	/* not a checksum, but serves a similar purpose */
 	checksum = 0;
-	
+
 	ptr = tfm;
 	/* get the counters */
 	lf = muget2(ptr);
 	lh = muget2(ptr); checksum += 6 + lh;
-	bc = muget2(ptr); 
+	bc = muget2(ptr);
 	ec = muget2(ptr); checksum += ec - bc + 1;
 	nw = muget2(ptr); checksum += nw;
 	nh = muget2(ptr); checksum += nh;
@@ -213,7 +213,7 @@ int	tfm_load_file(const char *filename, TFMInfo *info)
 	heights     = cb;  cb += nh;
 	depths      = cb;
 
-	if(widths[0] || heights[0] || depths[0] || 
+	if(widths[0] || heights[0] || depths[0] ||
 	   checksum != lf || bc - 1 > ec || ec > 255 || ne > 256)
 		goto bad_tfm;
 
@@ -250,7 +250,7 @@ int	tfm_load_file(const char *filename, TFMInfo *info)
 		ptr += n;
 	}
 	/* now we don't read from `ptr' anymore */
-	
+
 	info->loc = bc;
 	info->hic = ec;
 	info->type = DviFontTFM;
@@ -285,7 +285,7 @@ int	tfm_load_file(const char *filename, TFMInfo *info)
 
 	/* free everything */
 	mdvi_free(tfm);
-	
+
 	return 0;
 
 bad_tfm:
@@ -293,7 +293,7 @@ bad_tfm:
 error:
 	if(tfm) mdvi_free(tfm);
 	if(in)  fclose(in);
-	return -1;	
+	return -1;
 }
 
 static int ofm1_load_file(FILE *in, TFMInfo *info)
@@ -309,7 +309,7 @@ static int ofm1_load_file(FILE *in, TFMInfo *info)
 	Int32	*depths;
 	TFMChar	*tch;
 	TFMChar	*end;
-	
+
 	lh = fuget4(in);
 	bc = fuget4(in);
 	ec = fuget4(in);
@@ -355,16 +355,16 @@ static int ofm1_load_file(FILE *in, TFMInfo *info)
 	/* jump to the beginning of the char-info table */
 	fseek(in, 4L*nco, SEEK_SET);
 
-	size = ec - bc + 1;	
+	size = ec - bc + 1;
 	info->loc = bc;
 	info->hic = ec;
 	info->chars = xnalloc(TFMChar, size);
 	end = info->chars + size;
-	
+
 	for(tch = info->chars, i = 0; i < ncw; i++) {
 		TFMChar	ch;
 		int	nr;
-		
+
 		/* in the characters we store the actual indices */
 		ch.advance = fuget2(in);
 		ch.height  = fuget1(in);
@@ -383,7 +383,7 @@ static int ofm1_load_file(FILE *in, TFMInfo *info)
 			memcpy(tch++, &ch, sizeof(TFMChar));
 		if(tch == end)
 			goto bad_tfm;
-	}	
+	}
 
 	/* I wish we were done, but we aren't */
 
@@ -406,7 +406,7 @@ static int ofm1_load_file(FILE *in, TFMInfo *info)
 
 	if(widths[0] || heights[0] || depths[0])
 		goto bad_tfm;
-	
+
 	/* now fix the characters */
 	size = ec - bc + 1;
 	for(tch = info->chars; tch < end; tch++) {
@@ -451,7 +451,7 @@ static int	ofm_load_file(const char *filename, TFMInfo *info)
 
 	/* not a checksum, but serves a similar purpose */
 	checksum = 0;
-	
+
 	/* get the counters */
 	/* get file level */
 	olevel = fsget2(in);
@@ -459,7 +459,7 @@ static int	ofm_load_file(const char *filename, TFMInfo *info)
 		goto bad_tfm;
 	olevel = fsget2(in);
 	if(olevel != 0) {
-		DEBUG((DBG_FONTS, "(mt) reading Level-1 OFM file `%s'\n", 
+		DEBUG((DBG_FONTS, "(mt) reading Level-1 OFM file `%s'\n",
 			filename));
 		/* we handle level-1 files separately */
 		if(ofm1_load_file(in, info) < 0)
@@ -471,7 +471,7 @@ static int	ofm_load_file(const char *filename, TFMInfo *info)
 	nwords = 14;
 	lf = fuget4(in); checksum  = nwords;
 	lh = fuget4(in); checksum += lh;
-	bc = fuget4(in); 
+	bc = fuget4(in);
 	ec = fuget4(in); checksum += 2 * (ec - bc + 1);
 	nw = fuget4(in); checksum += nw;
 	nh = fuget4(in); checksum += nh;
@@ -482,7 +482,7 @@ static int	ofm_load_file(const char *filename, TFMInfo *info)
 	checksum += 2*fuget4(in); /* skip extensible recipe count */
 	checksum +=   fuget4(in); /* skip # of font parameters */
 
-	/* I have found several .ofm files that seem to have the 
+	/* I have found several .ofm files that seem to have the
 	 * font-direction word missing, so we try to detect that here */
 	if(checksum == lf + 1) {
 		DEBUG((DBG_FONTS, "(mt) font direction missing in `%s'\n",
@@ -553,12 +553,12 @@ static int	ofm_load_file(const char *filename, TFMInfo *info)
 	}
 
 	/* from this point on, no error checking is done */
-	
+
 	/* we don't need this anymore */
 	fclose(in);
 
 	/* now we don't read from `ptr' anymore */
-	
+
 	info->loc = bc;
 	info->hic = ec;
 	info->type = DviFontTFM;
@@ -589,13 +589,13 @@ static int	ofm_load_file(const char *filename, TFMInfo *info)
 bad_tfm:
 	mdvi_error(_("%s: File corrupted, or not a TFM file\n"), filename);
 	fclose(in);
-	return -1;	
+	return -1;
 }
 
 char	*lookup_font_metrics(const char *name, int *type)
 {
 	char	*file;
-	
+
 	switch(*type) {
 #ifndef WITH_AFM_FILES
 		case DviFontAny:
@@ -617,7 +617,7 @@ char	*lookup_font_metrics(const char *name, int *type)
 #ifdef WITH_AFM_FILES
 		case DviFontAFM:
 			file = kpse_find_file(name, kpse_afm_format, 0);
-			break;	
+			break;
 		case DviFontAny:
 			file = kpse_find_file(name, kpse_afm_format, 0);
 			*type = DviFontAFM;
@@ -634,8 +634,8 @@ char	*lookup_font_metrics(const char *name, int *type)
 	return file;
 }
 
-/* 
- * The next two functions are just wrappers for the font metric loaders, 
+/*
+ * The next two functions are just wrappers for the font metric loaders,
  * and use the pool of TFM data
  */
 
@@ -652,9 +652,9 @@ TFMInfo	*get_font_metrics(const char *short_name, int type, const char *filename
 	TFMPool *tfm = NULL;
 	int	status;
 	char	*file;
-	
+
 	if(tfmpool.count) {
-		tfm = (TFMPool *)mdvi_hash_lookup(&tfmhash, 
+		tfm = (TFMPool *)mdvi_hash_lookup(&tfmhash,
 			MDVI_KEY(short_name));
 		if(tfm != NULL) {
 			DEBUG((DBG_FONTS, "(mt) reusing metric file `%s' (%d links)\n",
@@ -693,11 +693,11 @@ TFMInfo	*get_font_metrics(const char *short_name, int type, const char *filename
 		return NULL;
 	}
 	tfm->short_name = mdvi_strdup(short_name);
-	
+
 	/* add it to the pool */
 	if(tfmpool.count == 0)
 		mdvi_hash_create(&tfmhash, TFM_HASH_SIZE);
-	mdvi_hash_add(&tfmhash, MDVI_KEY(tfm->short_name), 
+	mdvi_hash_add(&tfmhash, MDVI_KEY(tfm->short_name),
 		tfm, MDVI_HASH_UNCHECKED);
 	listh_prepend(&tfmpool, LIST(tfm));
 	tfm->links = 1;
@@ -719,7 +719,7 @@ void	free_font_metrics(TFMInfo *info)
 	if(tfm == NULL)
 		return;
 	if(--tfm->links > 0) {
-		DEBUG((DBG_FONTS, "(mt) %s not removed, still in use\n",	
+		DEBUG((DBG_FONTS, "(mt) %s not removed, still in use\n",
 			tfm->short_name));
 		return;
 	}
@@ -729,16 +729,16 @@ void	free_font_metrics(TFMInfo *info)
 	listh_remove(&tfmpool, LIST(tfm));
 	mdvi_free(tfm->short_name);
 	mdvi_free(tfm->tfminfo.chars);
-	mdvi_free(tfm);	
+	mdvi_free(tfm);
 }
 
 void	flush_font_metrics(void)
 {
 	TFMPool	*ptr;
-	
+
 	for(; (ptr = (TFMPool *)tfmpool.head); ) {
 		tfmpool.head = LIST(ptr->next);
-		
+
 		mdvi_free(ptr->short_name);
 		mdvi_free(ptr->tfminfo.chars);
 		mdvi_free(ptr);

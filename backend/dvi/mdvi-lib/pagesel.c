@@ -47,7 +47,7 @@ DviRange *mdvi_parse_range(const char *format, DviRange *limit, int *nitems, cha
 	char *	text;
 	DviRange one;
 	DviRange *range;
-	
+
 	quoted = (*format == '{');
 	if(quoted) format++;
 
@@ -59,7 +59,7 @@ DviRange *mdvi_parse_range(const char *format, DviRange *limit, int *nitems, cha
 	lower = 0;
 	upper = 0;
 	type  = MDVI_RANGE_UNBOUNDED;
-	
+
 	if(limit) {
 		switch(limit->type) {
 			case MDVI_RANGE_BOUNDED:
@@ -96,7 +96,7 @@ DviRange *mdvi_parse_range(const char *format, DviRange *limit, int *nitems, cha
 		int	this_type;
 		int	lower_given = 0;
 		int	upper_given = 0;
-		
+
 		if(*cp == 0 || *cp == '.' || (*cp == '}' && quoted))
 			done = 1;
 		else if(*cp != ',')
@@ -109,7 +109,7 @@ DviRange *mdvi_parse_range(const char *format, DviRange *limit, int *nitems, cha
 		f = lower;
 		t = upper;
 		s = 1;
-		
+
 		p = strchr(text, ':');
 		if(p) *p++ = 0;
 		if(*text) {
@@ -165,7 +165,7 @@ finish:
 		one.to   = t;
 		one.from = f;
 		one.step = s;
-		
+
 		if(curr == size) {
 			size += 8;
 			range = mdvi_realloc(range, size * sizeof(DviRange));
@@ -174,7 +174,7 @@ finish:
 		*cp = ch;
 		text = cp + 1;
 	}
-	if(done) 
+	if(done)
 		cp--;
 	if(quoted && *cp == '}')
 		cp++;
@@ -189,7 +189,7 @@ finish:
 
 DviPageSpec *mdvi_parse_page_spec(const char *format)
 {
-	/* 
+	/*
 	 * a page specification looks like this:
 	 *   '{'RANGE_SPEC'}'         for a DVI spec
 	 *   '{'RANGE_SPEC'}' '.' ... for a TeX spec
@@ -199,7 +199,7 @@ DviPageSpec *mdvi_parse_page_spec(const char *format)
 	int	count;
 	int	i;
 	char	*ptr = NULL;
-	
+
 	spec = xnalloc(struct _DviPageSpec *, 11);
 	for(i = 0; i < 11; i++)
 		spec[i] = NULL;
@@ -214,7 +214,7 @@ DviPageSpec *mdvi_parse_page_spec(const char *format)
 		}
 	} else
 		range = NULL;
-	
+
 	if(*format == 'D' || *format == 'd' || *ptr != '.')
 		i = 0;
 	else
@@ -226,13 +226,13 @@ DviPageSpec *mdvi_parse_page_spec(const char *format)
 		spec[i]->nranges = count;
 	} else
 		spec[i] = NULL;
-	
+
 	if(*ptr != '.') {
 		if(*ptr)
 			mdvi_warning(_("garbage after DVI page specification ignored\n"));
 		return spec;
 	}
-	
+
 	for(i++; *ptr == '.' && i <= 10; i++) {
 		ptr++;
 		if(*ptr == '*') {
@@ -240,7 +240,7 @@ DviPageSpec *mdvi_parse_page_spec(const char *format)
 			range = NULL;
 		} else {
 			char	*end;
-			
+
 			range = mdvi_parse_range(ptr, NULL, &count, &end);
 			if(end == ptr) {
 				if(range) mdvi_free(range);
@@ -255,13 +255,13 @@ DviPageSpec *mdvi_parse_page_spec(const char *format)
 		} else
 			spec[i] = NULL;
 	}
-	
+
 	if(i > 10)
 		mdvi_warning(_("more than 10 counters in page specification\n"));
 	else if(*ptr)
 		mdvi_warning(_("garbage after TeX page specification ignored\n"));
-	
-	return spec;	
+
+	return spec;
 }
 
 /* returns non-zero if the given page is included by `spec' */
@@ -269,11 +269,11 @@ int	mdvi_page_selected(DviPageSpec *spec, PageNum page, int dvipage)
 {
 	int	i;
 	int	not_found;
-	
+
 	if(spec == NULL)
 		return 1;
 	if(spec[0]) {
-		not_found = mdvi_in_range(spec[0]->ranges, 
+		not_found = mdvi_in_range(spec[0]->ranges,
 			spec[0]->nranges, dvipage);
 		if(not_found < 0)
 			return 0;
@@ -281,7 +281,7 @@ int	mdvi_page_selected(DviPageSpec *spec, PageNum page, int dvipage)
 	for(i = 1; i <= 10; i++) {
 		if(spec[i] == NULL)
 			continue;
-		not_found = mdvi_in_range(spec[i]->ranges, 
+		not_found = mdvi_in_range(spec[i]->ranges,
 			spec[i]->nranges, (int)page[i]);
 		if(not_found < 0)
 			return 0;
@@ -292,7 +292,7 @@ int	mdvi_page_selected(DviPageSpec *spec, PageNum page, int dvipage)
 void	mdvi_free_page_spec(DviPageSpec *spec)
 {
 	int	i;
-	
+
 	for(i = 0; i < 11; i++)
 		if(spec[i]) {
 			mdvi_free(spec[i]->ranges);
@@ -304,7 +304,7 @@ void	mdvi_free_page_spec(DviPageSpec *spec)
 int	mdvi_in_range(DviRange *range, int nitems, int value)
 {
 	DviRange *r;
-	
+
 	for(r = range; r < range + nitems; r++) {
 		int	cond;
 
@@ -330,7 +330,7 @@ int	mdvi_in_range(DviRange *range, int nitems, int value)
 				return (r - range);
 			break;
 		case MDVI_RANGE_UPPER:
-			if(value == r->to)	
+			if(value == r->to)
 				return (r - range);
 			if(r->step < 0)
 				cond = (value > r->to);
@@ -352,12 +352,12 @@ int	mdvi_range_length(DviRange *range, int nitems)
 {
 	int	count = 0;
 	DviRange *r;
-	
+
 	for(r = range; r < range + nitems; r++) {
 		int	n;
 
 		if(r->type != MDVI_RANGE_BOUNDED)
-			return -2;		
+			return -2;
 		n = (r->to - r->from) / r->step;
 		if(n < 0)
 			n = 0;
@@ -395,7 +395,7 @@ int main()
 #if 0
 	char	buf[256];
 	DviRange limit;
-		
+
 	limit.from = 0;
 	limit.to = 100;
 	limit.step = 2;
@@ -405,7 +405,7 @@ int main()
 		char	*end;
 		int	count;
 		int	i;
-		
+
 		printf("Range> "); fflush(stdout);
 		if(fgets(buf, 256, stdin) == NULL)
 			break;
@@ -419,20 +419,20 @@ int main()
 			printf("range is empty\n");
 			continue;
 		}
-		
+
 		for(i = 0; i < count; i++) {
-			printf("Range %d (%d elements):\n", 
+			printf("Range %d (%d elements):\n",
 				i, mdvi_range_length(&range[i], 1));
 			print_range(&range[i]);
 		}
 		if(end && *end)
 			printf("Tail: [%s]\n", end);
-		printf("range has %d elements\n", 
+		printf("range has %d elements\n",
 			mdvi_range_length(range, count));
 #if 1
 		while(1) {
 			int	v;
-			
+
 			printf("Value: "); fflush(stdout);
 			if(fgets(buf, 256, stdin) == NULL)
 				break;
@@ -455,7 +455,7 @@ int main()
 #else
 	DviPageSpec *spec;
 	char	buf[256];
-	
+
 	while(1) {
 		printf("Spec> "); fflush(stdout);
 		if(fgets(buf, 256, stdin) == NULL)
@@ -469,13 +469,13 @@ int main()
 			printf("no spec parsed\n");
 		else {
 			int	i;
-			
+
 			printf("spec = ");
 			for(i = 0; i < 11; i++) {
 				printf("Counter %d:\n", i);
 				if(spec[i]) {
 					int	k;
-					
+
 					for(k = 0; k < spec[i]->nranges; k++)
 						print_range(&spec[i]->ranges[k]);
 				} else

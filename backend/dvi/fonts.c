@@ -38,7 +38,7 @@ static struct fontinfo {
 void mdvi_register_fonts (void)
 {
     struct fontinfo *type;
-    
+
     if (!registered) {
 	for(type = known_fonts; type->info; type++) {
 			mdvi_register_font_type(type->info, type->klass);

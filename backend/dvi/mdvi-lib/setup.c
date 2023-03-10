@@ -25,7 +25,7 @@
 #include "mdvi.h"
 #include "private.h"
 
-void	mdvi_init_kpathsea(const char *program, 
+void	mdvi_init_kpathsea(const char *program,
 	const char *mfmode, const char *font, int dpi,
 	const char *texmfcnf)
 {
@@ -33,7 +33,7 @@ void	mdvi_init_kpathsea(const char *program,
 
 	/* Stop meaningless output generation. */
 	kpse_make_tex_discard_errors = FALSE;
-	
+
 	p = strrchr(program, '/');
 	p = (p ? p + 1 : program);
 	kpse_set_program_name(program, p);

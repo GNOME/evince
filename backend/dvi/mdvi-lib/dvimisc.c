@@ -46,7 +46,7 @@ void	mdvi_push_color(DviContext *dvi, Ulong fg, Ulong bg)
 void	mdvi_pop_color(DviContext *dvi)
 {
 	Ulong	fg, bg;
-	
+
 	if(dvi->color_top == 0)
 		return;
 	dvi->color_top--;

@@ -26,13 +26,13 @@
 char	*dgets(Dstring *dstr, FILE *in)
 {
 	char	buffer[256];
-	
+
 	dstr->length = 0;
 	if(feof(in))
 		return NULL;
 	while(fgets(buffer, 256, in) != NULL) {
 		int	len = strlen(buffer);
-		
+
  		if(buffer[len-1] == '\n') {
 			dstring_append(dstr, buffer, len - 1);
 			break;
@@ -49,21 +49,21 @@ char	*dgets(Dstring *dstr, FILE *in)
 const char *file_basename(const char *filename)
 {
 	const char *ptr = strrchr(filename, '/');
-	
+
 	return (ptr ? ptr + 1 : filename);
 }
 
 const char *file_extension(const char *filename)
 {
 	const char *ptr = strchr(file_basename(filename), '.');
-	
+
 	return (ptr ? ptr + 1 : NULL);
 }
 
 int	file_readable(const char *filename)
 {
 	int	status = (access(filename, R_OK) == 0);
-	
+
 	DEBUG((DBG_FILES, "file_redable(%s) -> %s\n",
 		filename, status ? "Yes" : "No"));
 	return status;
@@ -72,7 +72,7 @@ int	file_readable(const char *filename)
 int	file_exists(const char *filename)
 {
 	int	status = (access(filename, F_OK) == 0);
-	
+
 	DEBUG((DBG_FILES, "file_exists(%s) -> %s\n",
 		filename, status ? "Yes" : "No"));
 	return status;

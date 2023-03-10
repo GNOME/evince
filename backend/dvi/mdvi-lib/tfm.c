@@ -74,7 +74,7 @@ DviFontInfo afm_font_info = {
 #define TYPENAME(font)	\
 	((font)->search.info ? (font)->search.info : "none")
 
-/* 
+/*
  * Although it does not seem that way, this conversion is independent of the
  * shrinking factors, within roundoff (that's because `conv' and `vconv'
  * have already been scaled by hshrink and vshrink, respectively). We
@@ -91,14 +91,14 @@ int	get_tfm_chars(DviParams *params, DviFont *font, TFMInfo *info, int loaded)
 	int	n;
 	DviFontChar *ch;
 	TFMChar	*ptr;
-	
+
 	n = info->hic - info->loc + 1;
 	if(n != FONT_GLYPH_COUNT(font)) {
 		font->chars = mdvi_realloc(font->chars,
 			n * sizeof(DviFontChar));
 	}
 	font->loc = info->loc;
-	font->hic = info->hic;	
+	font->hic = info->hic;
 	ch = font->chars;
 	ptr = info->chars;
 
@@ -120,14 +120,14 @@ int	get_tfm_chars(DviParams *params, DviFont *font, TFMInfo *info, int loaded)
 		c = TFMSCALE(z, ptr->height, alpha, beta);
 		d = TFMSCALE(z, ptr->depth, alpha, beta);
 
-		/* now convert to unscaled pixels */		
+		/* now convert to unscaled pixels */
 		ch->width = XCONV(b - a);
 		ch->height = YCONV(c - d);
 		if(ch->height < 0) ch->height = -ch->height;
 		ch->x = XCONV(a);
 		ch->y = YCONV(c);
 		/*
-		 * the offset is not used, but we might as well set it to 
+		 * the offset is not used, but we might as well set it to
 		 * something meaningful (and it MUST be non-zero)
 		 */
 		ch->flags       = 0;
@@ -173,10 +173,10 @@ static int tfm_load_font(DviParams *params, DviFont *font)
 	tfm = get_font_metrics(font->fontname, type, font->filename);
 	if(tfm == NULL)
 		return -1;
-			
+
 	if(tfm->checksum && font->checksum && tfm->checksum != font->checksum) {
 		mdvi_warning(_("%s: Checksum mismatch (got %u, expected %u)\n"),
-			     font->fontname, (unsigned)tfm->checksum, 
+			     font->fontname, (unsigned)tfm->checksum,
 			     (unsigned)font->checksum);
 	}
 	font->checksum = tfm->checksum;
@@ -185,17 +185,17 @@ static int tfm_load_font(DviParams *params, DviFont *font)
 	font->hic = 0;
 	font->chars = NULL;
 	get_tfm_chars(params, font, tfm, 1);
-	
+
 	/* free everything */
 	free_font_metrics(tfm);
-	
+
 	return 0;
 }
 
 static int tfm_font_get_glyph(DviParams *params, DviFont *font, int code)
 {
 	DviFontChar *ch;
-	
+
 	ch = FONTCHAR(font, code);
 	if(!glyph_present(ch))
 		return -1;
@@ -203,9 +203,9 @@ static int tfm_font_get_glyph(DviParams *params, DviFont *font, int code)
 	ch->glyph.y = ch->y;
 	ch->glyph.w = ch->width;
 	ch->glyph.h = ch->height;
-	/* 
+	/*
 	 * This has two purposes: (1) avoid unnecessary calls to this function,
-	 * and (2) detect when the glyph data for a TFM font is actually used 
+	 * and (2) detect when the glyph data for a TFM font is actually used
 	 * (we'll get a SEGV). Any occurrence of that is a bug.
 	 */
 	ch->glyph.data = MDVI_GLYPH_EMPTY;

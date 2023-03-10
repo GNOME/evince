@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2006 Pauli Virtanen <pav@iki.fi>
  *
  * This program is free software; you can redistribute it and/or modify

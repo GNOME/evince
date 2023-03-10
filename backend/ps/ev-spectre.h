@@ -1,8 +1,8 @@
 /*
  * Ghostscript widget for GTK/GNOME
- * 
+ *
  * Copyright 1998 - 2005 The Free Software Foundation
- * 
+ *
  * Authors: Jaka Mocnik, Federico Mena (Quartic), Szekeres Istvan (Pista)
  *
  * This library is free software; you can redistribute it and/or

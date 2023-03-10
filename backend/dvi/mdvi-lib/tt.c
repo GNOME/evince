@@ -51,7 +51,7 @@ static int tt_load_font __PROTO((DviParams *, DviFont *));
 static int tt_font_get_glyph __PROTO((DviParams *, DviFont *, int));
 static void tt_free_data __PROTO((DviFont *));
 static void tt_reset_font __PROTO((DviFont *));
-static void tt_shrink_glyph 
+static void tt_shrink_glyph
 	__PROTO((DviContext *, DviFont *, DviFontChar *, DviGlyph *));
 static void tt_font_remove __PROTO((FTInfo *));
 
@@ -97,14 +97,14 @@ static void tt_encode_font(DviFont *font, FTInfo *info)
 {
 	TT_Face_Properties prop;
 	int	i;
-	
+
 	if(TT_Get_Face_Properties(info->face, &prop))
 		return;
-	
+
 	for(i = 0; i < prop.num_Glyphs; i++) {
 		char	*string;
 		int	ndx;
-		
+
 		if(TT_Get_PS_Name(info->face, i, &string))
 			continue;
 		ndx = mdvi_encode_glyph(info->encoding, string);
@@ -127,9 +127,9 @@ static int tt_really_load_font(DviParams *params, DviFont *font, FTInfo *info)
 	TT_CharMap cmap;
 	TT_Face_Properties props;
 	int	map_found;
-			
+
 	DEBUG((DBG_TT, "(tt) really_load_font(%s)\n", info->fontname));
-	
+
 	/* get the point size */
 	point_size = (double)font->scale / (params->tfm_conv * 0x100000);
 	point_size = 72.0 * point_size / 72.27;
@@ -142,7 +142,7 @@ static int tt_really_load_font(DviParams *params, DviFont *font, FTInfo *info)
 		info->hasmetrics = 1;
 		return 0;
 	}
-	
+
 	/* load the face */
 	DEBUG((DBG_TT, "(tt) loading new face `%s'\n",
 		info->fontname));
@@ -152,11 +152,11 @@ static int tt_really_load_font(DviParams *params, DviFont *font, FTInfo *info)
 			info->fontname, TT_ErrToString18(status));
 		return -1;
 	}
-	
+
 	/* create a new instance of this face */
 	status = TT_New_Instance(info->face, &info->instance);
 	if(status) {
-		mdvi_warning(_("(tt) %s: could not create face: %s\n"), 
+		mdvi_warning(_("(tt) %s: could not create face: %s\n"),
 			info->fontname, TT_ErrToString18(status));
 		TT_Close_Face(info->face);
 		return -1;
@@ -165,12 +165,12 @@ static int tt_really_load_font(DviParams *params, DviFont *font, FTInfo *info)
 	/* create a glyph */
 	status = TT_New_Glyph(info->face, &info->glyph);
 	if(status) {
-		mdvi_warning(_("(tt) %s: could not create glyph: %s\n"), 
+		mdvi_warning(_("(tt) %s: could not create glyph: %s\n"),
 			info->fontname, TT_ErrToString18(status));
 		goto tt_error;
 	}
 
-	/* 
+	/*
 	 * We'll try to find a Unicode charmap. It's not that important that we
 	 * actually find one, especially if the fontmap files are installed
 	 * properly, but it's good to have some predefined behaviour
@@ -180,14 +180,14 @@ static int tt_really_load_font(DviParams *params, DviFont *font, FTInfo *info)
 	map_found = -1;
 	for(i = 0; map_found < 0 && i < props.num_CharMaps; i++) {
 		TT_UShort	pid, eid;
-		
+
 		TT_Get_CharMap_ID(info->face, i, &pid, &eid);
 		switch(pid) {
 		case TT_PLATFORM_APPLE_UNICODE:
 			map_found = i;
 			break;
 		case TT_PLATFORM_ISO:
-			if(eid == TT_ISO_ID_7BIT_ASCII || 
+			if(eid == TT_ISO_ID_7BIT_ASCII ||
 			   eid == TT_ISO_ID_8859_1)
 			   	map_found = 1;
 			break;
@@ -205,7 +205,7 @@ static int tt_really_load_font(DviParams *params, DviFont *font, FTInfo *info)
 	DEBUG((DBG_TT, "(tt) %s: using charmap #%d\n",
 		info->fontname, map_found));
 	TT_Get_CharMap(info->face, map_found, &cmap);
-		
+
 	DEBUG((DBG_TT, "(tt) %s: Set_Char_Size(%.2f, %d, %d)\n",
 		font->fontname, point_size, font->hdpi, font->vdpi));
 	status = TT_Set_Instance_Resolutions(info->instance,
@@ -215,7 +215,7 @@ static int tt_really_load_font(DviParams *params, DviFont *font, FTInfo *info)
 			info->fontname, TT_ErrToString18(status));
 		goto tt_error;
 	}
-	status = TT_Set_Instance_CharSize(info->instance, 
+	status = TT_Set_Instance_CharSize(info->instance,
 			FROUND(point_size * 64));
 	if(status) {
 		error(_("(tt) %s: could not set point size: %s\n"),
@@ -234,7 +234,7 @@ static int tt_really_load_font(DviParams *params, DviFont *font, FTInfo *info)
 
 	if(info->encoding != NULL) {
 		TT_Post	post;
-		
+
 		status = TT_Load_PS_Names(info->face, &post);
 		if(status) {
 			mdvi_warning(_("(tt) %s: could not load PS name table\n"),
@@ -245,7 +245,7 @@ static int tt_really_load_font(DviParams *params, DviFont *font, FTInfo *info)
 	}
 
 	/* get the metrics. If this fails, it's not fatal, but certainly bad */
-	info->tfminfo = get_font_metrics(info->fontname, 
+	info->tfminfo = get_font_metrics(info->fontname,
 		info->fmftype, info->fmfname);
 
 	if(info->tfminfo == NULL) {
@@ -269,7 +269,7 @@ static int tt_really_load_font(DviParams *params, DviFont *font, FTInfo *info)
 			font->chars[i - font->loc].code = TT_Char_Index(cmap, i);
 	}
 
-	info->loaded = 1;	
+	info->loaded = 1;
 	info->hasmetrics = 1;
 	return 0;
 
@@ -285,10 +285,10 @@ static int tt_load_font(DviParams *params, DviFont *font)
 {
 	int	i;
 	FTInfo	*info;
-	
+
 	if(!initialized && init_freetype() < 0)
 		return -1;
-	
+
 	if(font->in != NULL) {
 		fclose(font->in);
 		font->in = NULL;
@@ -297,7 +297,7 @@ static int tt_load_font(DviParams *params, DviFont *font)
 	info = xalloc(FTInfo);
 
 	memzero(info, sizeof(FTInfo));
-	info->fmftype    = DviFontAny; /* any metrics type will do */	
+	info->fmftype    = DviFontAny; /* any metrics type will do */
 	info->fmfname    = lookup_font_metrics(font->fontname, &info->fmftype);
 	info->fontname   = font->fontname;
 	info->hasmetrics = 0;
@@ -320,17 +320,17 @@ static int tt_load_font(DviParams *params, DviFont *font)
 		font->chars[i].shrunk.data = NULL;
 		font->chars[i].grey.data = NULL;
 	}
-	
+
 	if(info->fmfname == NULL)
 		mdvi_warning(_("(tt) %s: no font metric data\n"), font->fontname);
-	
+
 	listh_append(&ttfonts, LIST(info));
 	font->private = info;
 
 	return 0;
 }
 
-static int tt_get_bitmap(DviParams *params, DviFont *font, 
+static int tt_get_bitmap(DviParams *params, DviFont *font,
 	int code, double xscale, double yscale, DviGlyph *glyph)
 {
 	TT_Outline	outline;
@@ -379,18 +379,18 @@ static int tt_get_bitmap(DviParams *params, DviFont *font,
 	raster.size = h * raster.cols;
 	raster.flow = TT_Flow_Down;
 	raster.bitmap = mdvi_calloc(h, raster.cols);
-	
+
 	TT_Translate_Outline(&outline, -bbox.xMin, -bbox.yMin);
 	TT_Get_Outline_Bitmap(tt_handle, &outline, &raster);
 	glyph->data = bitmap_convert_msb8(raster.bitmap, w, h, ROUND(w, 8));
 	TT_Done_Outline(&outline);
 	mdvi_free(raster.bitmap);
-	
+
 	return 0;
 tt_error:
 	if(have_outline)
 		TT_Done_Outline(&outline);
-	return -1;	
+	return -1;
 }
 
 static int tt_font_get_glyph(DviParams *params, DviFont *font, int code)
@@ -400,7 +400,7 @@ static int tt_font_get_glyph(DviParams *params, DviFont *font, int code)
 	int	error;
 	double	xs, ys;
 	int	dpi;
-			
+
 	ASSERT(info != NULL);
 	if(!info->hasmetrics && tt_really_load_font(params, font, info) < 0)
 		return -1;
@@ -420,11 +420,11 @@ static int tt_font_get_glyph(DviParams *params, DviFont *font, int code)
 		(double)font->hdpi / dpi,
 		(double)font->vdpi / dpi,
 		&ch->glyph);
-	if(error)	
+	if(error)
 		goto missing;
 	ch->x = ch->glyph.x;
 	ch->y = ch->glyph.y;
-		
+
 	return 0;
 
 missing:
@@ -452,10 +452,10 @@ static void tt_shrink_glyph(DviContext *dvi, DviFont *font, DviFontChar *ch, Dvi
 static void tt_reset_font(DviFont *font)
 {
 	FTInfo	*info = (FTInfo *)font->private;
-	
+
 	if(info == NULL)
 		return;
-	info->hasmetrics = 0;	
+	info->hasmetrics = 0;
 }
 
 static void tt_font_remove(FTInfo *info)
@@ -483,7 +483,7 @@ static void tt_free_data(DviFont *font)
 {
 	if(font->private == NULL)
 		return;
-	
+
 	tt_font_remove((FTInfo *)font->private);
 	if(initialized && ttfonts.count == 0) {
 		DEBUG((DBG_TT, "(tt) last font removed -- closing FreeType\n"));

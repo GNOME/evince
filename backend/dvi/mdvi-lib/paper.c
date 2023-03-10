@@ -75,7 +75,7 @@ static const DviPaperSpec papers[] = {
 	{"ledger", "17in", "11in"},
 	{"note", "7.5in", "10in"},
 	{"tabloid", "11in", "17in"},
-	{"statement", "5.5in", "8.5in"},	
+	{"statement", "5.5in", "8.5in"},
 	{0, 0, 0}
 };
 
@@ -111,7 +111,7 @@ int	mdvi_get_paper_size(const char *name, DviPaper *paper)
 		paper->name = _("custom");
 		return 0;
 	}
-	
+
 	for(sp = &papers[0]; sp->name; sp++) {
 		if(!sp->width || !sp->height) {
 			paper->pclass = str2class(sp->name);
@@ -132,10 +132,10 @@ DviPaperSpec *mdvi_get_paper_specs(DviPaperClass pclass)
 	int	i;
 	int	first, count;
 	DviPaperSpec *spec, *ptr;
-	
+
 	first = -1;
 	count = 0;
-	if(pclass == MDVI_PAPER_CLASS_ANY || 
+	if(pclass == MDVI_PAPER_CLASS_ANY ||
 	   pclass == MDVI_PAPER_CLASS_CUSTOM) {
 	   	first = 0;
 		count = (sizeof(papers) / sizeof(papers[0])) - 3;

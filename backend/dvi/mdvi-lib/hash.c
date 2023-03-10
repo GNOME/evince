@@ -33,7 +33,7 @@ static Ulong hash_string(DviHashKey key)
 {
 	Uchar	*p;
 	Ulong	h, g;
-	
+
 	for(h = 0, p = (Uchar *)key; *p; p++) {
 		h = (h << 4UL) + *p;
 		if((g = h & 0xf0000000L) != 0) {
@@ -41,7 +41,7 @@ static Ulong hash_string(DviHashKey key)
 			h ^= g;
 		}
 	}
-		
+
 	return h;
 }
 
@@ -63,7 +63,7 @@ void	mdvi_hash_init(DviHashTable *hash)
 void	mdvi_hash_create(DviHashTable *hash, int size)
 {
 	int	i;
-	
+
 	hash->nbucks = size;
 	hash->buckets = xnalloc(DviHashBucket *, size);
 	for(i = 0; i < size; i++)
@@ -78,9 +78,9 @@ static DviHashBucket *hash_find(DviHashTable *hash, DviHashKey key)
 {
 	Ulong	hval;
 	DviHashBucket *buck;
-	
+
 	hval = (hash->hash_func(key) % hash->nbucks);
-	
+
 	for(buck = hash->buckets[hval]; buck; buck = buck->next)
 		if(hash->hash_comp(buck->key, key) == 0)
 			break;
@@ -92,7 +92,7 @@ int	mdvi_hash_add(DviHashTable *hash, DviHashKey key, void *data, int rep)
 {
 	DviHashBucket *buck = NULL;
 	Ulong	hval;
-	
+
 	if(rep != MDVI_HASH_UNCHECKED) {
 		buck = hash_find(hash, key);
 		if(buck != NULL) {
@@ -112,11 +112,11 @@ int	mdvi_hash_add(DviHashTable *hash, DviHashKey key, void *data, int rep)
 		hash->buckets[hval] = buck;
 		hash->nkeys++;
 	}
-	
+
 	/* save key and data */
 	buck->key = key;
 	buck->data = data;
-	
+
 	return 0;
 }
 
@@ -131,10 +131,10 @@ static DviHashBucket *hash_remove(DviHashTable *hash, DviHashKey key)
 {
 	DviHashBucket *buck, *last;
 	Ulong	hval;
-	
+
 	hval = hash->hash_func(key);
 	hval %= hash->nbucks;
-	
+
 	for(last = NULL, buck = hash->buckets[hval]; buck; buck = buck->next) {
 		if(hash->hash_comp(buck->key, key) == 0)
 			break;
@@ -167,10 +167,10 @@ void	*mdvi_hash_remove_ptr(DviHashTable *hash, DviHashKey key)
 	DviHashBucket *buck, *last;
 	Ulong	hval;
 	void	*ptr;
-	
+
 	hval = hash->hash_func(key);
 	hval %= hash->nbucks;
-	
+
 	for(last = NULL, buck = hash->buckets[hval]; buck; buck = buck->next) {
 		if(buck->key == key)
 			break;
@@ -192,20 +192,20 @@ void	*mdvi_hash_remove_ptr(DviHashTable *hash, DviHashKey key)
 int	mdvi_hash_destroy_key(DviHashTable *hash, DviHashKey key)
 {
 	DviHashBucket *buck = hash_remove(hash, key);
-	
+
 	if(buck == NULL)
 		return -1;
 	if(hash->hash_free)
 		hash->hash_free(buck->key, buck->data);
 	mdvi_free(buck);
-	return 0;	
+	return 0;
 }
 
 void	mdvi_hash_reset(DviHashTable *hash, int reuse)
 {
 	int	i;
 	DviHashBucket *buck;
-	
+
 	/* remove all keys in the hash table */
 	for(i = 0; i < hash->nbucks; i++) {
 		for(; (buck = hash->buckets[i]); ) {

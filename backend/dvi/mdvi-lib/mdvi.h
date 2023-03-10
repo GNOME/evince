@@ -62,34 +62,34 @@ typedef Ulong	DviColor;
 
 typedef enum {
 	FALSE	= 0,
-	TRUE	= 1	
+	TRUE	= 1
 } DviBool;
 
 #include "hash.h"
 #include "paper.h"
 
-/* 
+/*
  * information about a page:
  *   pagenum[0] = offset to BOP
  *   pagenum[1], ..., pagenum[10] = TeX \counters
  */
 typedef long	PageNum[11];
 
-/* this structure contains the platform-specific information 
+/* this structure contains the platform-specific information
  * required to interpret a DVI file */
 
-typedef void (*DviGlyphDraw)	__PROTO((DviContext *context, 
+typedef void (*DviGlyphDraw)	__PROTO((DviContext *context,
 				          DviFontChar *glyph,
 				          int x, int y));
 
 typedef void (*DviRuleDraw)	__PROTO((DviContext *context,
-				          int x, int y, 
+				          int x, int y,
 				          Uint width, Uint height, int fill));
 
 typedef int (*DviColorScale) 	__PROTO((void *device_data,
-				         Ulong *pixels, 
+				         Ulong *pixels,
 				         int npixels,
-				         Ulong foreground, 
+				         Ulong foreground,
 				         Ulong background,
 				         double gamma,
 				         int density));
@@ -104,7 +104,7 @@ typedef void (*DviDevDestroy)   __PROTO((void *data));
 typedef void (*DviRefresh)      __PROTO((DviContext *dvi, void *device_data));
 typedef void (*DviSetColor)	__PROTO((void *device_data, Ulong, Ulong));
 typedef void (*DviPSDraw)       __PROTO((DviContext *context,
-					 const char *filename, 
+					 const char *filename,
 					 int x, int y,
 					 Uint width, Uint height));
 
@@ -155,7 +155,7 @@ struct _DviGlyph {
 	void	*data;	/* bitmap or XImage */
 };
 
-typedef void (*DviFontShrinkFunc) 
+typedef void (*DviFontShrinkFunc)
 	__PROTO((DviContext *, DviFont *, DviFontChar *, DviGlyph *));
 typedef int (*DviFontLoadFunc) __PROTO((DviParams *, DviFont *));
 typedef int (*DviFontGetGlyphFunc) __PROTO((DviParams *, DviFont *, int));
@@ -351,7 +351,7 @@ struct _DviState {
 	int	w;
 	int	x;
 	int	y;
-	int	z;	
+	int	z;
 };
 
 struct _DviColorPair {
@@ -415,7 +415,7 @@ struct _DviRange {
 };
 
 
-typedef void (*DviSpecialHandler) 
+typedef void (*DviSpecialHandler)
 	__PROTO((DviContext *dvi, const char *prefix, const char *arg));
 
 #define RANGE_HAS_LOWER(x) \
@@ -433,7 +433,7 @@ typedef void (*DviSpecialHandler)
 #define MDVI_PARAM_SHOWUNDEF	8
 #define MDVI_PARAM_DELAYFONTS	16
 
-/* 
+/*
  * The FALLBACK priority class is reserved for font formats that
  * contain no glyph information and are to be used as a last
  * resort (e.g. TFM, AFM)
@@ -553,10 +553,10 @@ extern void mdvi_flush_specials __PROTO((void));
 #define glyph_present(x) ((x) && (x)->offset)
 
 /* create a reference to a font */
-extern DviFontRef *font_reference __PROTO((DviParams *params, 
-                                           Int32 dvi_id, 
-                                           const char *font_name, 
-                                           Int32 checksum, 
+extern DviFontRef *font_reference __PROTO((DviParams *params,
+                                           Int32 dvi_id,
+                                           const char *font_name,
+                                           Int32 checksum,
                                            int xdpi,
                                            int ydpi,
                                            Int32 scale_factor));

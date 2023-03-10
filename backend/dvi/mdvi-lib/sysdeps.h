@@ -18,7 +18,7 @@
 #ifndef _SYSDEP_H
 #define _SYSDEP_H 1
 
-/* 
+/*
  * The purpose of this file is to define symbols that describe the
  * system-dependent features we use. Namely, byte order, native integer
  * types of various sizes, and safe pointer<->integer conversion.
@@ -75,7 +75,7 @@ typedef short		Int16;
 #endif	/* SIZEOF_INT != 2 */
 #endif	/* SIZEOF_SHORT != 2 */
 
-/* 
+/*
  * An integer type to convert to and from pointers safely. All we do here is
  * look for an integer type with the same size as a pointer.
  */

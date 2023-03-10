@@ -47,7 +47,7 @@ void	mdvi_push_color(DviContext *dvi, Ulong fg, Ulong bg)
 void	mdvi_pop_color(DviContext *dvi)
 {
 	Ulong	fg, bg;
-	
+
 	if(dvi->color_top == 0)
 		return;
 	dvi->color_top--;
@@ -81,7 +81,7 @@ static int		cc_entries;
 
 
 /* create a color table */
-Ulong	*get_color_table(DviDevice *dev, 
+Ulong	*get_color_table(DviDevice *dev,
 			 int nlevels, Ulong fg, Ulong bg, double gamma, int density)
 {
 	ColorCache	*cc, *tofree;
@@ -109,7 +109,7 @@ Ulong	*get_color_table(DviDevice *dev,
 
 	DEBUG((DBG_DEVICE, "Adding color table to cache (fg=%lu, bg=%lu, n=%d)\n",
 		fg, bg, nlevels));
-		
+
 	/* no entry was found in the cache, create a new one */
 	if(cc_entries < CCSIZE) {
 		cc = &color_cache[cc_entries++];
@@ -119,7 +119,7 @@ Ulong	*get_color_table(DviDevice *dev,
 		mdvi_free(cc->pixels);
 	}
 	pixels = xnalloc(Ulong, nlevels);
-	status = dev->alloc_colors(dev->device_data, 
+	status = dev->alloc_colors(dev->device_data,
 		pixels, nlevels, fg, bg, gamma, density);
 	if(status < 0) {
 		mdvi_free(pixels);
@@ -132,5 +132,5 @@ Ulong	*get_color_table(DviDevice *dev,
 	cc->nlevels = nlevels;
 	cc->pixels = pixels;
 	cc->hits = 1;
-	return pixels;	
+	return pixels;
 }

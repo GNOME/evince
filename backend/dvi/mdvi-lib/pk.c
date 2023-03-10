@@ -112,7 +112,7 @@ static char *pk_lookup(const char *name, Ushort *hdpi, Ushort *vdpi)
 	} else if(filename) {
 		*hdpi = *vdpi = type.dpi;
 	}
-	return filename;	
+	return filename;
 }
 
 static char *pk_lookupn(const char *name, Ushort *hdpi, Ushort *vdpi)
@@ -132,7 +132,7 @@ static char *pk_lookupn(const char *name, Ushort *hdpi, Ushort *vdpi)
 	} else if(filename) {
 		*hdpi = *vdpi = type.dpi;
 	}
-	return filename;	
+	return filename;
 }
 
 static inline int pk_get_nyb(FILE *p, pkread *pk)
@@ -140,10 +140,10 @@ static inline int pk_get_nyb(FILE *p, pkread *pk)
 	unsigned t;
 	int	nb;
 	char	c;
-	
+
 	t = c = pk->currbyte;
 	nb = pk->nybpos;
-	
+
 	switch(nb) {
 	case 0:
 		c = pk->currbyte = fuget1(p);
@@ -157,7 +157,7 @@ static inline int pk_get_nyb(FILE *p, pkread *pk)
 	return (t & 0xf);
 }
 
-/* 
+/*
  * this is a bit cumbersome because we have to pass around
  * the `pkread' data...
  */
@@ -165,7 +165,7 @@ static int pk_packed_num(FILE *p, pkread *pkr, int *repeat)
 {
 	int	i, j;
 	int	dyn_f = pkr->dyn_f;
-	
+
 	i = pk_get_nyb(p, pkr);
 	if(i == 0) {
 		do {
@@ -174,12 +174,12 @@ static int pk_packed_num(FILE *p, pkread *pkr, int *repeat)
 		} while(j == 0);
 		while(i-- > 0)
 			j = (j << 4) + pk_get_nyb(p, pkr);
-		return (j - 15 + ((13 - dyn_f) << 4) + 
+		return (j - 15 + ((13 - dyn_f) << 4) +
 			dyn_f);
 	} else if(i <= dyn_f)
 		return i;
 	else if(i < 14)
-		return ((i - dyn_f - 1) << 4) + 
+		return ((i - dyn_f - 1) << 4) +
 			pk_get_nyb(p, pkr) + dyn_f + 1;
 	else {
 		*repeat = 1;
@@ -198,7 +198,7 @@ static BITMAP *get_bitmap(FILE *p, int w, int h, int flags)
 	BITMAP	*bm;
 	int	bitpos;
 	int	currch;
-		
+
 	flags = 0; /* shut up that compiler */
 	bitpos = -1;
 	if((bm = bitmap_alloc(w, h)) == NULL)
@@ -209,7 +209,7 @@ static BITMAP *get_bitmap(FILE *p, int w, int h, int flags)
 	currch = 0;
 	for(i = 0; i < h; i++) {
 		BmUnit	mask;
-		
+
 		mask = FIRSTMASK;
 		for(j = 0; j < w; j++) {
 			if(bitpos < 0) {
@@ -238,7 +238,7 @@ static BITMAP *get_packed(FILE *p, int w, int h, int flags)
 	int	repeat_count;
 	int	paint;
 	pkread	pkr;
-		
+
 	pkr.nybpos = 0;
 	pkr.currbyte = 0;
 	pkr.dyn_f = PK_DYN_F(flags);
@@ -253,7 +253,7 @@ static BITMAP *get_packed(FILE *p, int w, int h, int flags)
 		w, h, flags));
 	while(row < h) {
 		int	i = 0;
-		
+
 		count = pk_packed_num(p, &pkr, &i);
 		if(i > 0) {
 			if(repeat_count)
@@ -261,11 +261,11 @@ static BITMAP *get_packed(FILE *p, int w, int h, int flags)
 					repeat_count, i);
 			repeat_count = i;
 		}
-		
+
 		if(count >= inrow) {
 			Uchar	*r, *t;
 			BmUnit	*a, mask;
-			
+
 			/* first finish current row */
 			if(paint)
 				bitmap_set_row(bm, row, w - inrow, inrow, paint);
@@ -369,11 +369,11 @@ static int pk_load_font(DviParams *unused, DviFont *font)
 	fuget4(p);
 	fuget4(p);
 	if(feof(p))
-		goto badpk;	
+		goto badpk;
 
 	/* now start reading the font */
 	loc = 256; hic = -1; maxch = 256;
-	
+
 	/* initialize alpha and beta for TFM width computation */
 	TFMPREPARE(font->scale, z, alpha, beta);
 
@@ -389,7 +389,7 @@ static int pk_load_font(DviParams *unused, DviFont *font)
 #ifndef NODEBUG
 				char	*t;
 				int	n;
-				
+
 				i = fugetn(p, flag_byte - PK_X1 + 1);
 				if(i < 256)
 					t = &s[0];
@@ -428,7 +428,7 @@ static int pk_load_font(DviParams *unused, DviFont *font)
 			int	x, y;
 			int	offset;
 			long	tfm;
-			
+
 			switch(flag_byte & 0x7) {
 			case 7:
 				pl = fuget4(p);
@@ -438,13 +438,13 @@ static int pk_load_font(DviParams *unused, DviFont *font)
 				fsget4(p); /* skip dx */
 				fsget4(p); /* skip dy */
 				w  = fuget4(p);
-				h  = fuget4(p); 
+				h  = fuget4(p);
 				x  = fsget4(p);
 				y  = fsget4(p);
 				break;
 			case 4:
 			case 5:
-			case 6:				
+			case 6:
 				pl = (flag_byte % 4) * 65536 + fuget2(p);
 				cc = fuget1(p);
 				offset = ftell(p) + pl;
@@ -478,13 +478,13 @@ static int pk_load_font(DviParams *unused, DviFont *font)
 				mdvi_error (_("%s: unexpected charcode (%d)\n"),
 					    font->fontname,cc);
 				goto error;
-			} 
+			}
 			if(cc < loc)
 				loc = cc;
 			if(cc > hic)
 				hic = cc;
 			if(cc > maxch) {
-				font->chars = xresize(font->chars, 
+				font->chars = xresize(font->chars,
 					DviFontChar, cc + 16);
 				for(i = maxch; i < cc + 16; i++)
 					font->chars[i].offset = 0;
@@ -523,13 +523,13 @@ static int pk_load_font(DviParams *unused, DviFont *font)
 
 	/* resize font char data */
 	if(loc > 0 || hic < maxch-1) {
-		memmove(font->chars, font->chars + loc, 
+		memmove(font->chars, font->chars + loc,
 			(hic - loc + 1) * sizeof(DviFontChar));
 		font->chars = xresize(font->chars,
 			DviFontChar, hic - loc + 1);
 	}
 	font->loc = loc;
-	font->hic = hic;		
+	font->hic = hic;
 	return 0;
 
 badpk:
@@ -547,7 +547,7 @@ static int pk_font_get_glyph(DviParams *params, DviFont *font, int code)
 
 	if((ch = FONTCHAR(font, code)) == NULL)
 		return -1;
-	
+
 	if(ch->offset == 0)
 		return -1;
 	DEBUG((DBG_GLYPHS, "(pk) loading glyph for character %d (%dx%d) in font `%s'\n",
@@ -561,11 +561,11 @@ static int pk_font_get_glyph(DviParams *params, DviFont *font, int code)
 		ch->glyph.w = ch->width;
 		ch->glyph.h = ch->height;
 		ch->glyph.data = NULL;
-		return 0; 
+		return 0;
 	}
 	if(fseek(font->in, ch->offset, SEEK_SET) == -1)
 		return -1;
-	ch->glyph.data = get_char(font->in, 
+	ch->glyph.data = get_char(font->in,
 		ch->width, ch->height, ch->flags);
 	if(ch->glyph.data) {
 		/* restore original settings */

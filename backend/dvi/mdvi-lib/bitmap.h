@@ -54,7 +54,7 @@ typedef struct {
 #define __bm_unit_ptr(b,x,y) \
 	bm_offset((b)->data, (y) * (b)->stride + \
 	((x) / BITMAP_BITS) * BITMAP_BYTES)
-	
+
 #define __bm_unit(b,x,y)    __bm_unit_ptr((b), (x), (y))[0]
 
 #define BM_GETPIXEL(b,x,y)  __bm_unit((b), (x), (y))
@@ -91,7 +91,7 @@ typedef struct {
        }
     }
 /* end of sample code */
-#endif          
+#endif
 
 /* bitmaps are stored in native byte order */
 #ifdef WORD_BIG_ENDIAN
@@ -116,9 +116,9 @@ extern BITMAP	*bitmap_alloc __PROTO((int, int));
 extern BITMAP	*bitmap_alloc_raw __PROTO((int, int));
 extern void	bitmap_destroy __PROTO((BITMAP *));
 
-/* 
- * set_row(bm, row, col, count, state): 
- *   sets `count' pixels to state `onoff', starting from pixel 
+/*
+ * set_row(bm, row, col, count, state):
+ *   sets `count' pixels to state `onoff', starting from pixel
  *   at position (col, row). All pixels must lie in the same
  *   row.
  */

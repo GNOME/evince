@@ -25,8 +25,8 @@
 long	fsgetn(FILE *p, size_t n)
 {
 	long	v;
-	
-	v = fgetbyte(p);	
+
+	v = fgetbyte(p);
 	if(v & 0x80)
 		v -= 0x100;
 	while(--n > 0)
@@ -37,7 +37,7 @@ long	fsgetn(FILE *p, size_t n)
 Ulong	fugetn(FILE *p, size_t n)
 {
 	Ulong	v;
-	
+
 	v = fgetbyte(p);
 	while(--n > 0)
 		v = (v << 8) | fgetbyte(p);
@@ -47,7 +47,7 @@ Ulong	fugetn(FILE *p, size_t n)
 long	msgetn(const Uchar *p, size_t n)
 {
 	long	v = (long)*p++;
-	
+
 	if(v & 0x80)
 		v -= 0x100;
 	while(--n > 0)
@@ -68,7 +68,7 @@ char	*read_string(FILE *in, int s, char *buffer, size_t len)
 {
 	int	n;
 	char	*str;
-	
+
 	n = fugetn(in, s ? s : 1);
 	if((str = buffer) == NULL || n + 1 > len)
 		str = mdvi_malloc(n + 1);
@@ -83,7 +83,7 @@ char	*read_string(FILE *in, int s, char *buffer, size_t len)
 size_t	read_bcpl(FILE *in, char *buffer, size_t maxlen, size_t wanted)
 {
 	size_t	i;
-	
+
 	i = (int)fuget1(in);
 	if(maxlen && i > maxlen)
 		i = maxlen;
@@ -99,7 +99,7 @@ char	*read_alloc_bcpl(FILE *in, size_t maxlen, size_t *size)
 {
 	size_t	i;
 	char	*buffer;
-	
+
 	i = (size_t)fuget1(in);
 	if(maxlen && i > maxlen)
 		i = maxlen;
@@ -121,7 +121,7 @@ void	buff_free(Buffer *buf)
 {
 	if(buf->data)
 		mdvi_free(buf->data);
-	buff_init(buf);	
+	buff_init(buf);
 }
 
 void	buff_init(Buffer *buf)
@@ -149,7 +149,7 @@ char	*buff_gets(Buffer *buf, size_t *length)
 	char	*ptr;
 	char	*ret;
 	size_t	len;
-	
+
 	ptr = strchr(buf->data, '\n');
 	if(ptr == NULL)
 		return NULL;
@@ -163,6 +163,6 @@ char	*buff_gets(Buffer *buf, size_t *length)
 	}
 	ret[len] = 0;
 	if(length) *length = len;
-	return ret;	
+	return ret;
 }
 

@@ -84,13 +84,13 @@ ps_document_load (EvDocument *document,
 	filename = g_filename_from_uri (uri, NULL, error);
 	if (!filename)
 		return FALSE;
-	
+
 	ps->doc = spectre_document_new ();
 
 	spectre_document_load (ps->doc, filename);
 	if (spectre_document_status (ps->doc)) {
 		gchar *filename_dsp;
-		
+
 		filename_dsp = g_filename_display_name (filename);
 		g_set_error (error,
 			     G_FILE_ERROR,
@@ -258,7 +258,7 @@ ps_document_get_info (EvDocument *document)
 	ps_page = spectre_document_get_page (ps->doc, 0);
 	spectre_page_get_size (ps_page, &width, &height);
 	spectre_page_free (ps_page);
-	
+
 	info->title = g_strdup (spectre_document_get_title (ps->doc));
 	info->format = g_strdup (spectre_document_get_format (ps->doc));
 	info->creator = g_strdup (creator ? creator : spectre_document_get_for (ps->doc));
@@ -296,7 +296,7 @@ ps_document_render (EvDocument      *document,
 	static const cairo_user_data_key_t key;
 
 	ps_page = (SpectrePage *)rc->page->backend_page;
-	
+
 	spectre_page_get_size (ps_page, &width_points, &height_points);
 
 	ev_render_context_compute_transformed_size (rc, width_points, height_points,
@@ -327,7 +327,7 @@ ps_document_render (EvDocument      *document,
 	if (spectre_page_status (ps_page)) {
 		g_warning ("%s", spectre_status_to_string (spectre_page_status (ps_page)));
 		g_free (data);
-		
+
 		return NULL;
 	}
 

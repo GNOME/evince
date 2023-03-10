@@ -61,7 +61,7 @@ static int fontmaps_loaded = 0;
 #define ENC_HASH_SIZE	31
 #define PSMAP_HASH_SIZE	57
 
-/* this hash table should be big enough to 
+/* this hash table should be big enough to
  * hold (ideally) one glyph name per bucket */
 #define ENCNAME_HASH_SIZE	131 /* most TeX fonts have 128 glyphs */
 
@@ -70,7 +70,7 @@ static DviEncoding *tex_text_encoding = NULL;
 static DviEncoding *default_encoding = NULL;
 
 /* we keep two hash tables for encodings: one for their base files (e.g.
- * "8r.enc"), and another one for their names (e.g. "TeXBase1Encoding") */ 
+ * "8r.enc"), and another one for their names (e.g. "TeXBase1Encoding") */
 static DviHashTable enctable = MDVI_EMPTY_HASH_TABLE;
 static DviHashTable enctable_file = MDVI_EMPTY_HASH_TABLE;
 
@@ -104,7 +104,7 @@ static void ps_init_default_paths __PROTO((void));
 static int	mdvi_set_default_encoding __PROTO((const char *name));
 static int	mdvi_init_fontmaps __PROTO((void));
 
-/* 
+/*
  * What we do here is allocate one block large enough to hold the entire
  * file (these files are small) minus the leading comments. This is much
  * better than allocating up to 256 tiny strings per encoding vector. */
@@ -116,7 +116,7 @@ static int read_encoding(DviEncoding *enc)
 	char	*name;
 	char	*next;
 	struct stat st;
-	
+
 	ASSERT(enc->private == NULL);
 
 	in = fopen(enc->filename, "rb");
@@ -153,7 +153,7 @@ static int read_encoding(DviEncoding *enc)
 	curr = 0;
 
 	next = name = NULL;
-	DEBUG((DBG_FMAP, "%s: reading encoding vector\n", enc->name));	
+	DEBUG((DBG_FMAP, "%s: reading encoding vector\n", enc->name));
 	for(line = enc->private; *line && curr < 256; line = next) {
 		SKIPSP(line);
 		if(*line == ']') {
@@ -176,13 +176,13 @@ static int read_encoding(DviEncoding *enc)
 
 		/* got a name */
 		if(*next) *next++ = 0;
-		
+
 		if(*name == '/')
 			name++;
 		enc->vector[curr] = name;
 		/* add it to the hash table */
 		if(!STREQ(name, ".notdef")) {
-			mdvi_hash_add(&enc->nametab, MDVI_KEY(name), 
+			mdvi_hash_add(&enc->nametab, MDVI_KEY(name),
 				Int2Ptr(curr + 1), MDVI_HASH_REPLACE);
 		}
 		curr++;
@@ -200,7 +200,7 @@ static int read_encoding(DviEncoding *enc)
 
 static DviEncoding *find_encoding(const char *name)
 {
-	return (DviEncoding *)(encodings.count ? 
+	return (DviEncoding *)(encodings.count ?
 		mdvi_hash_lookup(&enctable, MDVI_KEY(name)) : NULL);
 }
 
@@ -249,15 +249,15 @@ static DviEncoding *register_encoding(const char *basefile, int replace)
 			DEBUG((DBG_FMAP, "%s: already there\n", basefile));
 			return enc; /* no error */
 		}
-	} 
+	}
 
 	/* try our own files first */
-	filename = kpse_find_file(basefile, 
+	filename = kpse_find_file(basefile,
 		kpse_program_text_format, 0);
 
 	/* then try the system-wide ones */
 	if(filename == NULL)
-		filename = kpse_find_file(basefile, 
+		filename = kpse_find_file(basefile,
 			kpse_tex_ps_header_format, 0);
 	if(filename == NULL)
 		filename = kpse_find_file(basefile,
@@ -272,7 +272,7 @@ static DviEncoding *register_encoding(const char *basefile, int replace)
 		mdvi_free(filename);
 		return NULL;
 	}
-	
+
 	/* just lookup the name of the encoding */
 	name = NULL;
 	dstring_init(&input);
@@ -297,13 +297,13 @@ static DviEncoding *register_encoding(const char *basefile, int replace)
 	offset = ftell(in);
 	fclose(in);
 	if(name == NULL || *name == 0) {
-		DEBUG((DBG_FMAP, 
+		DEBUG((DBG_FMAP,
 			"%s: could not determine name of encoding\n",
 			basefile));
 		mdvi_free(filename);
 		return NULL;
 	}
-	
+
 	/* check if the encoding is already there */
 	enc = find_encoding(name);
 	if(enc == tex_text_encoding) {
@@ -347,9 +347,9 @@ static DviEncoding *register_encoding(const char *basefile, int replace)
 	dstring_reset(&input);
 	if(default_encoding == NULL)
 		default_encoding = enc;
-	mdvi_hash_add(&enctable, MDVI_KEY(enc->name), 
+	mdvi_hash_add(&enctable, MDVI_KEY(enc->name),
 		enc, MDVI_HASH_UNCHECKED);
-	mdvi_hash_add(&enctable_file, MDVI_KEY(mdvi_strdup(basefile)), 
+	mdvi_hash_add(&enctable_file, MDVI_KEY(mdvi_strdup(basefile)),
 		enc, MDVI_HASH_REPLACE);
 	listh_prepend(&encodings, LIST(enc));
 	DEBUG((DBG_FMAP, "%s: encoding `%s' registered\n",
@@ -377,7 +377,7 @@ DviEncoding *mdvi_request_encoding(const char *name)
 	if(enc->nametab.nkeys == 0) {
 		int	i;
 
-		DEBUG((DBG_FMAP, "%s: rehashing\n", enc->name));		
+		DEBUG((DBG_FMAP, "%s: rehashing\n", enc->name));
 		for(i = 0; i < 256; i++) {
 			if(enc->vector[i] == NULL)
 				continue;
@@ -404,7 +404,7 @@ void	mdvi_release_encoding(DviEncoding *enc, int should_free)
 int	mdvi_encode_glyph(DviEncoding *enc, const char *name)
 {
 	void	*data;
-	
+
 	data = mdvi_hash_lookup(&enc->nametab, MDVI_KEY(name));
 	if(data == NULL)
 		return -1;
@@ -420,7 +420,7 @@ int	mdvi_encode_glyph(DviEncoding *enc, const char *name)
 static void parse_spec(DviFontMapEnt *ent, char *spec)
 {
 	char	*arg, *command;
-	
+
 	/* this is a ridiculously simple parser, and recognizes only
 	 * things of the form <argument> <command>. Of these, only
 	 * command=SlantFont, ExtendFont and ReEncodeFont are handled */
@@ -429,16 +429,16 @@ static void parse_spec(DviFontMapEnt *ent, char *spec)
 		if(*spec) *spec++ = 0;
 		command = getword(spec, " \t", &spec);
 		if(*spec) *spec++ = 0;
-		if(!arg || !command)	
+		if(!arg || !command)
 			continue;
 		if(STREQ(command, "SlantFont")) {
 			double	x = 10000 * strtod(arg, 0);
-		
-			/* SFROUND evaluates arguments twice */	
+
+			/* SFROUND evaluates arguments twice */
 			ent->slant = SFROUND(x);
 		} else if(STREQ(command, "ExtendFont")) {
 			double	x = 10000 * strtod(arg, 0);
-			
+
 			ent->extend = SFROUND(x);
 		} else if(STREQ(command, "ReEncodeFont")) {
 			if(ent->encoding)
@@ -485,13 +485,13 @@ DviFontMapEnt	*mdvi_load_fontmap(const char *file)
 	}
 	if(in == NULL)
 		return NULL;
-		
+
 	ent = NULL;
 	listh_init(&list);
 	dstring_init(&input);
 	last_encoding = NULL;
 	last_encfile  = NULL;
-		
+
 	while((ptr = dgets(&input, in)) != NULL) {
 		char	*font_file;
 		char	*tex_name;
@@ -502,12 +502,12 @@ DviFontMapEnt	*mdvi_load_fontmap(const char *file)
 
 		lineno++;
 		SKIPSP(ptr);
-		
+
 		/* we skip what dvips does */
-		if(*ptr <= ' ' || *ptr == '*' || *ptr == '#' || 
+		if(*ptr <= ' ' || *ptr == '*' || *ptr == '#' ||
 		   *ptr == ';' || *ptr == '%')
 			continue;
-			
+
 		font_file   = NULL;
 		tex_name    = NULL;
 		ps_name     = NULL;
@@ -522,14 +522,14 @@ DviFontMapEnt	*mdvi_load_fontmap(const char *file)
 		}
 		while(*ptr) {
 			char	*hdr_name = NULL;
-			
+
 			while(*ptr && *ptr <= ' ')
 				ptr++;
 			if(*ptr == 0)
 				break;
 			if(*ptr == '"') {
 				char	*str;
-				
+
 				str = getstring(ptr, " \t", &ptr);
 				if(*ptr) *ptr++ = 0;
 				parse_spec(ent, str);
@@ -557,7 +557,7 @@ DviFontMapEnt	*mdvi_load_fontmap(const char *file)
 
 			if(hdr_name) {
 				const char *ext = file_extension(hdr_name);
-				
+
 				if(is_encoding || (ext && STRCEQ(ext, "enc")))
 					vec_name = hdr_name;
 				else
@@ -576,7 +576,7 @@ DviFontMapEnt	*mdvi_load_fontmap(const char *file)
 
 		/* if we have an encoding file, register it */
 		if(ent->encfile) {
-			/* register_encoding is smart enough not to load the 
+			/* register_encoding is smart enough not to load the
 			 * same file twice */
 			if(!last_encfile || !STREQ(last_encfile, ent->encfile)) {
 				last_encfile  = ent->encfile;
@@ -584,7 +584,7 @@ DviFontMapEnt	*mdvi_load_fontmap(const char *file)
 			}
 			enc = last_encoding;
 		}
-		if(ent->encfile && enc){ 		
+		if(ent->encfile && enc){
 			if(ent->encoding && !STREQ(ent->encoding, enc->name)) {
 				mdvi_warning(
 	_("%s: %d: [%s] requested encoding `%s' does not match vector `%s'\n"),
@@ -593,15 +593,15 @@ DviFontMapEnt	*mdvi_load_fontmap(const char *file)
 			} else if(!ent->encoding)
 				ent->encoding = mdvi_strdup(enc->name);
 		}
-		
+
 		/* add it to the list */
 		/*print_ent(ent);*/
 		listh_append(&list, LIST(ent));
 		ent = NULL;
 	}
-	dstring_reset(&input);	
+	dstring_reset(&input);
 	fclose(in);
-	
+
 	return (DviFontMapEnt *)list.head;
 }
 
@@ -629,7 +629,7 @@ void	mdvi_install_fontmap(DviFontMapEnt *head)
 	for(ent = head; ent; ent = next) {
 		/* add all the entries, overriding old ones */
 		DviFontMapEnt *old;
-		
+
 		old = (DviFontMapEnt *)
 			mdvi_hash_remove(&maptable, MDVI_KEY(ent->fontname));
 		if(old != NULL) {
@@ -639,7 +639,7 @@ void	mdvi_install_fontmap(DviFontMapEnt *head)
 			free_ent(old);
 		}
 		next = ent->next;
-		mdvi_hash_add(&maptable, MDVI_KEY(ent->fontname), 
+		mdvi_hash_add(&maptable, MDVI_KEY(ent->fontname),
 			ent, MDVI_HASH_UNCHECKED);
 		listh_append(&fontmaps, LIST(ent));
 	}
@@ -650,7 +650,7 @@ static void init_static_encoding(void)
 	DviEncoding	*encoding;
 	int	i;
 
-	DEBUG((DBG_FMAP, "installing static TeX text encoding\n"));	
+	DEBUG((DBG_FMAP, "installing static TeX text encoding\n"));
 	encoding = xalloc(DviEncoding);
 	encoding->private  = "";
 	encoding->filename = "";
@@ -671,7 +671,7 @@ static void init_static_encoding(void)
 	mdvi_hash_create(&enctable, ENC_HASH_SIZE);
 	mdvi_hash_create(&enctable_file, ENC_HASH_SIZE);
 	enctable_file.hash_free = file_hash_free;
-	mdvi_hash_add(&enctable, MDVI_KEY(encoding->name), 
+	mdvi_hash_add(&enctable, MDVI_KEY(encoding->name),
 		encoding, MDVI_HASH_UNCHECKED);
 	listh_prepend(&encodings, LIST(encoding));
 	tex_text_encoding = encoding;
@@ -720,7 +720,7 @@ static int	mdvi_init_fontmaps(void)
 
 	/* create the fontmap hash table */
 	mdvi_hash_create(&maptable, MAP_HASH_SIZE);
-			
+
 	/* get the name of our configuration file */
 	config = kpse_cnf_get("mdvi-config");
 	if(config == NULL)
@@ -738,13 +738,13 @@ static int	mdvi_init_fontmaps(void)
 	dstring_init(&input);
 	while((line = dgets(&input, in)) != NULL) {
 		char	*arg, *map_file;
-		
+
 		SKIPSP(line);
 		if(*line < ' ' || *line == '#' || *line == '%')
 			continue;
 		if(STRNEQ(line, "fontmap", 7)) {
 			DviFontMapEnt *ent;
-			
+
 			arg = getstring(line + 7, " \t", &line); *line = 0;
 			DEBUG((DBG_FMAP, "%s: loading fontmap\n", arg));
 			ent = mdvi_load_fontmap(arg);
@@ -756,7 +756,7 @@ static int	mdvi_init_fontmaps(void)
 			if(ent == NULL)
 				mdvi_warning(_("%s: could not load fontmap\n"), arg);
 			else {
-				DEBUG((DBG_FMAP, 
+				DEBUG((DBG_FMAP,
 					"%s: installing fontmap\n", arg));
 				mdvi_install_fontmap(ent);
 				count++;
@@ -804,7 +804,7 @@ int	mdvi_query_fontmap(DviFontMapInfo *info, const char *fontname)
 	DviFontMapEnt *ent;
 
 	if(!fontmaps_loaded && mdvi_init_fontmaps() < 0)
-		return -1;		
+		return -1;
 	ent = (DviFontMapEnt *)mdvi_hash_lookup(&maptable, MDVI_KEY(fontname));
 
 	if(ent == NULL)
@@ -815,14 +815,14 @@ int	mdvi_query_fontmap(DviFontMapInfo *info, const char *fontname)
 	info->extend   = ent->extend;
 	info->slant    = ent->slant;
 	info->fullfile = ent->fullfile;
-	
-	return 0;	
+
+	return 0;
 }
 
 int	mdvi_add_fontmap_file(const char *name, const char *fullpath)
 {
 	DviFontMapEnt *ent;
-	
+
 	if(!fontmaps_loaded && mdvi_init_fontmaps() < 0)
 		return -1;
 	ent = (DviFontMapEnt *)mdvi_hash_lookup(&maptable, MDVI_KEY(name));
@@ -856,13 +856,13 @@ void	mdvi_flush_encodings(void)
 	if(tex_text_encoding->nametab.buckets)
 		mdvi_hash_reset(&tex_text_encoding->nametab, 0);
 	mdvi_hash_reset(&enctable, 0);
-	mdvi_hash_reset(&enctable_file, 0);	
+	mdvi_hash_reset(&enctable_file, 0);
 }
 
 void	mdvi_flush_fontmaps(void)
 {
 	DviFontMapEnt *ent;
-	
+
 	if(!fontmaps_loaded)
 		return;
 
@@ -885,7 +885,7 @@ void	ps_init_default_paths(void)
 	ASSERT(psinitialized == 0);
 
 	kppath = getenv("GS_LIB");
-	kfpath = getenv("GS_FONTPATH");	
+	kfpath = getenv("GS_FONTPATH");
 
 	if(kppath != NULL)
 		pslibdir = kpse_path_expand(kppath);
@@ -904,7 +904,7 @@ int	mdvi_ps_read_fontmap(const char *name)
 	Dstring	dstr;
 	char	*line;
 	int	count = 0;
-	
+
 	if(!psinitialized)
 		ps_init_default_paths();
 	if(pslibdir)
@@ -918,17 +918,17 @@ int	mdvi_ps_read_fontmap(const char *name)
 		return -1;
 	}
 	dstring_init(&dstr);
-	
+
 	while((line = dgets(&dstr, in)) != NULL) {
 		char	*name;
 		char	*mapname;
 		const char *ext;
 		PSFontMap *ps;
-		
+
 		SKIPSP(line);
 		/* we're looking for lines of the form
 		 *  /FONT-NAME    (fontfile)
-		 *  /FONT-NAME    /FONT-ALIAS 
+		 *  /FONT-NAME    /FONT-ALIAS
 		 */
 		if(*line != '/')
 			continue;
@@ -936,12 +936,12 @@ int	mdvi_ps_read_fontmap(const char *name)
 		if(*line) *line++ = 0;
 		mapname = getword(line, " \t", &line);
 		if(*line) *line++ = 0;
-		
+
 		if(!name || !mapname || !*name)
 			continue;
 		if(*mapname == '(') {
 			char	*end;
-			
+
 			mapname++;
 			for(end = mapname; *end && *end != ')'; end++);
 			*end = 0;
@@ -960,7 +960,7 @@ int	mdvi_ps_read_fontmap(const char *name)
 		if(ps != NULL) {
 			if(STREQ(ps->mapname, mapname))
 				continue;
-			DEBUG((DBG_FMAP, 
+			DEBUG((DBG_FMAP,
 				"(ps) replacing font `%s' (%s) by `%s'\n",
 				name, ps->mapname, mapname));
 			mdvi_free(ps->mapname);
@@ -984,7 +984,7 @@ int	mdvi_ps_read_fontmap(const char *name)
 	}
 	fclose(in);
 	dstring_reset(&dstr);
-	
+
 	DEBUG((DBG_FMAP, "(ps) %s: %d PostScript fonts registered\n",
 		fullname, count));
 	return 0;
@@ -993,7 +993,7 @@ int	mdvi_ps_read_fontmap(const char *name)
 void	mdvi_ps_flush_fonts(void)
 {
 	PSFontMap *map;
-	
+
 	if(!psinitialized)
 		return;
 	DEBUG((DBG_FMAP, "(ps) flushing PS font map (%d) entries\n",
@@ -1037,11 +1037,11 @@ char	*mdvi_ps_find_font(const char *psname)
 	/* is it an alias? */
 	smap = map;
 	while(recursion_limit-- > 0 && smap && *smap->mapname == '/')
-		smap = (PSFontMap *)mdvi_hash_lookup(&pstable, 
+		smap = (PSFontMap *)mdvi_hash_lookup(&pstable,
 			MDVI_KEY(smap->mapname + 1));
 	if(smap == NULL) {
 		if(recursion_limit == 0)
-			DEBUG((DBG_FMAP, 
+			DEBUG((DBG_FMAP,
 				"(ps) %s: possible loop in PS font map\n",
 				psname));
 		return NULL;
@@ -1055,7 +1055,7 @@ char	*mdvi_ps_find_font(const char *psname)
 		filename = NULL;
 	if(filename)
 		map->fullname = mdvi_strdup(filename);
-		
+
 	return filename;
 }
 
@@ -1071,7 +1071,7 @@ char	*mdvi_ps_find_font(const char *psname)
  *  cache, so the next time it will be found at the first step (when we look
  *  up NAME.afm).
  *
- * The name `_ps_' in this function is not meant to imply that it can be 
+ * The name `_ps_' in this function is not meant to imply that it can be
  * used for Type1 fonts only. It should be usable for TrueType fonts as well.
  *
  * The returned metric info is subjected to the same caching mechanism as
@@ -1094,7 +1094,7 @@ TFMInfo *mdvi_ps_get_metrics(const char *fontname)
 	double	efactor;
 	double	sfactor;
 
-	DEBUG((DBG_FMAP, "(ps) %s: looking for metric data\n", fontname));	
+	DEBUG((DBG_FMAP, "(ps) %s: looking for metric data\n", fontname));
 	info = get_font_metrics(fontname, DviFontAny, NULL);
 	if(info != NULL)
 		return info;
@@ -1102,7 +1102,7 @@ TFMInfo *mdvi_ps_get_metrics(const char *fontname)
 	/* query the fontmap */
 	if(mdvi_query_fontmap(&map, fontname) < 0 || !map.psname)
 		return NULL;
-	
+
 	/* get the PS font */
 	psfont = mdvi_ps_find_font(map.psname);
 	if(psfont == NULL)
@@ -1140,9 +1140,9 @@ TFMInfo *mdvi_ps_get_metrics(const char *fontname)
 	if(info == NULL || (!map.extend && !map.slant))
 		return info;
 
-	/* 
-	 * transform the data as prescribed -- keep in mind that `info' 
-	 * points to CACHED data, so we're modifying the metric cache 
+	/*
+	 * transform the data as prescribed -- keep in mind that `info'
+	 * points to CACHED data, so we're modifying the metric cache
 	 * in place.
 	 */
 
@@ -1174,6 +1174,6 @@ TFMInfo *mdvi_ps_get_metrics(const char *fontname)
 			ch->right   = TRANSFORM(ch->right, ch->height);
 		}
 	}
-	
+
 	return info;
 }

@@ -59,11 +59,11 @@ struct _DviDocument
 	DviContext *context;
 	DviPageSpec *spec;
 	DviParams *params;
-	
+
 	/* To let document scale we should remember width and height */
 	double base_width;
 	double base_height;
-	
+
 	gchar *uri;
 
 	/* PDF exporter */
@@ -90,11 +90,11 @@ dvi_document_load (EvDocument  *document,
 {
 	gchar *filename;
 	DviDocument *dvi_document = DVI_DOCUMENT(document);
-	
+
 	filename = g_filename_from_uri (uri, NULL, error);
 	if (!filename)
         	return FALSE;
-	
+
 	g_mutex_lock (&dvi_context_mutex);
 	if (dvi_document->context)
 		mdvi_destroy_context (dvi_document->context);
@@ -102,7 +102,7 @@ dvi_document_load (EvDocument  *document,
 	dvi_document->context = mdvi_init_context(dvi_document->params, dvi_document->spec, filename);
 	g_mutex_unlock (&dvi_context_mutex);
 	g_free (filename);
-	
+
 	if (!dvi_document->context) {
     		g_set_error_literal (error,
                                      EV_DOCUMENT_ERROR,
@@ -110,19 +110,19 @@ dvi_document_load (EvDocument  *document,
                                      _("DVI document has incorrect format"));
         	return FALSE;
 	}
-	
+
 	mdvi_cairo_device_init (&dvi_document->context->device);
-	
-	
-	dvi_document->base_width = dvi_document->context->dvi_page_w * dvi_document->context->params.conv 
+
+
+	dvi_document->base_width = dvi_document->context->dvi_page_w * dvi_document->context->params.conv
 		+ 2 * unit2pix(dvi_document->params->dpi, MDVI_HMARGIN) / dvi_document->params->hshrink;
-	
-	dvi_document->base_height = dvi_document->context->dvi_page_h * dvi_document->context->params.vconv 
+
+	dvi_document->base_height = dvi_document->context->dvi_page_h * dvi_document->context->params.vconv
 	        + 2 * unit2pix(dvi_document->params->vdpi, MDVI_VMARGIN) / dvi_document->params->vshrink;
-	
+
 	g_free (dvi_document->uri);
 	dvi_document->uri = g_strdup (uri);
-	
+
 	return TRUE;
 }
 
@@ -141,7 +141,7 @@ static int
 dvi_document_get_n_pages (EvDocument *document)
 {
 	DviDocument *dvi_document = DVI_DOCUMENT (document);
-	
+
 	return dvi_document->context->npages;
 }
 
@@ -151,7 +151,7 @@ dvi_document_get_page_size (EvDocument *document,
 			    double     *width,
 			    double     *height)
 {
-	DviDocument *dvi_document = DVI_DOCUMENT (document);	
+	DviDocument *dvi_document = DVI_DOCUMENT (document);
 
         *width = dvi_document->base_width;
         *height = dvi_document->base_height;;
@@ -169,17 +169,17 @@ dvi_document_render (EvDocument      *document,
 	gint proposed_width, proposed_height;
 	gint xmargin = 0, ymargin = 0;
 
-	/* We should protect our context since it's not 
-	 * thread safe. The work to the future - 
+	/* We should protect our context since it's not
+	 * thread safe. The work to the future -
 	 * let context render page independently
 	 */
 	g_mutex_lock (&dvi_context_mutex);
-	
+
 	mdvi_setpage (dvi_document->context, rc->page->index);
-	
+
 	ev_render_context_compute_scales (rc, dvi_document->base_width, dvi_document->base_height,
 					  &xscale, &yscale);
-	mdvi_set_shrink (dvi_document->context, 
+	mdvi_set_shrink (dvi_document->context,
 			 (int)((dvi_document->params->hshrink - 1) / xscale) + 1,
 			 (int)((dvi_document->params->vshrink - 1) / yscale) + 1);
 
@@ -187,12 +187,12 @@ dvi_document_render (EvDocument      *document,
 					       &required_width, &required_height);
 	proposed_width = dvi_document->context->dvi_page_w * dvi_document->context->params.conv;
 	proposed_height = dvi_document->context->dvi_page_h * dvi_document->context->params.vconv;
-	
+
 	if (required_width >= proposed_width)
 	    xmargin = (required_width - proposed_width) / 2;
 	if (required_height >= proposed_height)
 	    ymargin = (required_height - proposed_height) / 2;
-	    
+
 	mdvi_cairo_device_set_margins (&dvi_document->context->device, xmargin, ymargin);
 	mdvi_cairo_device_set_scale (&dvi_document->context->device, xscale, yscale);
 	mdvi_cairo_device_render (dvi_document->context);
@@ -202,18 +202,18 @@ dvi_document_render (EvDocument      *document,
 
 	rotated_surface = ev_document_misc_surface_rotate_and_scale (surface,
 								     required_width,
-								     required_height, 
+								     required_height,
 								     rc->rotation);
 	cairo_surface_destroy (surface);
-	
+
 	return rotated_surface;
 }
 
 static void
 dvi_document_finalize (GObject *object)
-{	
+{
 	DviDocument *dvi_document = DVI_DOCUMENT(object);
-	
+
 	g_mutex_lock (&dvi_context_mutex);
 	if (dvi_document->context) {
 		mdvi_cairo_device_free (&dvi_document->context->device);
@@ -226,12 +226,12 @@ dvi_document_finalize (GObject *object)
 
 	if (dvi_document->exporter_filename)
 		g_free (dvi_document->exporter_filename);
-	
+
 	if (dvi_document->exporter_opts)
 		g_string_free (dvi_document->exporter_opts, TRUE);
 
         g_free (dvi_document->uri);
-		
+
 	G_OBJECT_CLASS (dvi_document_parent_class)->finalize (object);
 }
 
@@ -271,11 +271,11 @@ dvi_document_file_exporter_begin (EvFileExporter        *exporter,
 				  EvFileExporterContext *fc)
 {
 	DviDocument *dvi_document = DVI_DOCUMENT(exporter);
-	
+
 	if (dvi_document->exporter_filename)
-		g_free (dvi_document->exporter_filename);	
+		g_free (dvi_document->exporter_filename);
 	dvi_document->exporter_filename = g_strdup (fc->filename);
-	
+
 	if (dvi_document->exporter_opts) {
 		g_string_free (dvi_document->exporter_opts, TRUE);
 	}
@@ -298,10 +298,10 @@ dvi_document_file_exporter_end (EvFileExporter *exporter)
 	gint exit_stat;
 	GError *err = NULL;
 	gboolean success;
-	
+
 	DviDocument *dvi_document = DVI_DOCUMENT(exporter);
 	gchar* quoted_filename = g_shell_quote (dvi_document->context->filename);
-	
+
 	command_line = g_strdup_printf ("dvipdfm %s -o %s %s", /* dvipdfm -s 1,2,.., -o exporter_filename dvi_filename */
 					dvi_document->exporter_opts->str,
 					dvi_document->exporter_filename,
@@ -396,7 +396,7 @@ hsb2rgb (float h, float s, float v, guchar *red, guchar *green, guchar *blue)
         *red   = (guchar)floor(r * 255.0);
         *green = (guchar)floor(g * 255.0);
         *blue  = (guchar)floor(b * 255.0);
-	
+
         return TRUE;
 }
 
@@ -425,7 +425,7 @@ dvi_document_do_color_special (DviContext *dvi, const char *prefix, const char *
         } else if (strncmp (arg, "push", 4) == 0) {
                 /* Find color source: Named, CMYK or RGB */
                 const char *tmp = arg + 4;
-		
+
                 while (isspace (*tmp)) tmp++;
 
                 if (!strncmp ("rgb", tmp, 3)) {
@@ -433,7 +433,7 @@ dvi_document_do_color_special (DviContext *dvi, const char *prefix, const char *
                         guchar red, green, blue;
 
 			parse_color (tmp + 4, rgb, 3);
-			
+
                         red = 255 * rgb[0];
                         green = 255 * rgb[1];
                         blue = 255 * rgb[2];
@@ -444,14 +444,14 @@ dvi_document_do_color_special (DviContext *dvi, const char *prefix, const char *
                         guchar red, green, blue;
 
 			parse_color (tmp + 4, hsb, 3);
-			
+
                         if (hsb2rgb (hsb[0], hsb[1], hsb[2], &red, &green, &blue))
                                 mdvi_push_color (dvi, RGB2ULONG (red, green, blue), 0xFFFFFFFF);
                 } else if (!strncmp ("cmyk", tmp, 4)) {
 			gdouble cmyk[4];
                         double r, g, b;
 			guchar red, green, blue;
-			
+
 			parse_color (tmp + 5, cmyk, 4);
 
                         r = 1.0 - cmyk[0] - cmyk[3];
@@ -467,7 +467,7 @@ dvi_document_do_color_special (DviContext *dvi, const char *prefix, const char *
 			red = r * 255 + 0.5;
 			green = g * 255 + 0.5;
 			blue = b * 255 + 0.5;
-			
+
                         mdvi_push_color (dvi, RGB2ULONG (red, green, blue), 0xFFFFFFFF);
 		} else if (!strncmp ("gray ", tmp, 5)) {
 			gdouble gray;
@@ -496,8 +496,8 @@ dvi_document_do_color_special (DviContext *dvi, const char *prefix, const char *
 
 static void
 dvi_document_init_params (DviDocument *dvi_document)
-{	
-	dvi_document->params = g_new0 (DviParams, 1);	
+{
+	dvi_document->params = g_new0 (DviParams, 1);
 
 	dvi_document->params->dpi      = MDVI_DPI;
 	dvi_document->params->vdpi     = MDVI_VDPI;
@@ -512,7 +512,7 @@ dvi_document_init_params (DviDocument *dvi_document)
 	dvi_document->params->orientation = MDVI_ORIENT_TBLR;
 
 	dvi_document->spec = NULL;
-	
+
         dvi_document->params->bg = 0xffffffff;
         dvi_document->params->fg = 0xff000000;
 }

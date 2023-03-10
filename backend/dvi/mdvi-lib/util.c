@@ -86,7 +86,7 @@ int mdvi_set_logstream(FILE *file)
 int mdvi_set_loglevel(int level)
 {
 	int	old = _mdvi_log_level;
-	
+
 	_mdvi_log_level = level;
 	return old;
 }
@@ -98,7 +98,7 @@ __attribute__((__format__ (__printf__, 2, 3)))
 void	__debug(int mask, const char *format, ...)
 {
 	va_list	ap;
-	
+
 	va_start(ap, format);
 	if(_mdvi_debug_mask & mask) {
 		if(!DEBUGGING(SILENT)) {
@@ -121,7 +121,7 @@ __attribute__((__format__ (__printf__, 1, 2)))
 void	mdvi_message(const char *format, ...)
 {
 	va_list	ap;
-	
+
 	va_start(ap, format);
 	if(_mdvi_log_level >= LOG_INFO) {
 		fprintf(stderr, "%s: ", program_name);
@@ -139,10 +139,10 @@ __attribute__((__format__ (__printf__, 1, 2)))
 void	mdvi_crash(const char *format, ...)
 {
 	va_list ap;
-	
+
 	va_start(ap, format);
-	fprintf(stderr, "%s: %s: ", 
-		program_name, 
+	fprintf(stderr, "%s: %s: ",
+		program_name,
 		gettext(messages[(int)time(NULL) % NMSGS]));
 	vfprintf(stderr, format, ap);
 #ifndef __GNUC__
@@ -159,7 +159,7 @@ __attribute__((__format__ (__printf__, 1, 2)))
 void	mdvi_error(const char *format, ...)
 {
 	va_list	ap;
-	
+
 	va_start(ap, format);
 	fprintf(stderr, _("%s: Error: "), program_name);
 	vfprintf(stderr, format, ap);
@@ -176,7 +176,7 @@ __attribute__((__format__ (__printf__, 1, 2)))
 void	mdvi_warning(const char *format, ...)
 {
 	va_list	ap;
-	
+
 	va_start(ap, format);
 	fprintf(stderr, _("%s: Warning: "), program_name);
 	vfprintf(stderr, format, ap);
@@ -193,7 +193,7 @@ __attribute__((__format__ (__printf__, 1, 2)))
 void	mdvi_fatal(const char *format, ...)
 {
 	va_list	ap;
-	
+
 	va_start(ap, format);
 	fprintf(stderr, _("%s: Fatal: "), program_name);
 	vfprintf(stderr, format, ap);
@@ -214,7 +214,7 @@ void	mdvi_fatal(const char *format, ...)
 void	*mdvi_malloc(size_t nelems)
 {
 	void	*ptr = malloc(nelems);
-	
+
 	if(ptr == NULL)
 		mdvi_fatal(_("out of memory allocating %u bytes\n"),
 			   (unsigned)nelems);
@@ -224,19 +224,19 @@ void	*mdvi_malloc(size_t nelems)
 void	*mdvi_realloc(void *data, size_t newsize)
 {
 	void	*ptr;
-	
+
 	if(newsize == 0)
 		mdvi_crash(_("attempted to reallocate with zero size\n"));
 	ptr = realloc(data, newsize);
 	if(ptr == NULL)
 		mdvi_fatal(_("failed to reallocate %u bytes\n"), (unsigned)newsize);
-	return ptr;	
+	return ptr;
 }
 
 void	*mdvi_calloc(size_t nmemb, size_t size)
 {
 	void	*ptr;
-	
+
 	if(nmemb == 0)
 		mdvi_crash(_("attempted to callocate 0 members\n"));
 	if(size == 0)
@@ -260,7 +260,7 @@ char	*mdvi_strdup(const char *string)
 {
 	int	length;
 	char	*ptr;
-	
+
 	length = strlen(string) + 1;
 	ptr = (char *)mdvi_malloc(length);
 	memcpy(ptr, string, length);
@@ -279,7 +279,7 @@ char	*mdvi_strndup(const char *string, size_t length)
 {
 	int	n;
 	char	*ptr;
-	
+
 	n = strlen(string);
 	if(n > length)
 		n = length;
@@ -291,7 +291,7 @@ char	*mdvi_strndup(const char *string, size_t length)
 void	*mdvi_memdup(const void *data, size_t length)
 {
 	void	*ptr = mdvi_malloc(length);
-	
+
 	memcpy(ptr, data, length);
 	return ptr;
 }
@@ -346,7 +346,7 @@ char   *mdvi_build_path_from_cwd (const char *path)
 	buf = mdvi_realloc (buf, strlen (buf) + strlen (path) + 2);
 	strcat (buf, "/");
 	strncat (buf, path, strlen (path));
-	
+
 	return buf;
 }
 
@@ -356,9 +356,9 @@ double	unit2pix_factor(const char *spec)
 	double	factor;
 	const char *p, *q;
 	static const char *units = "incmmmmtptpcddccspbpftydcs";
-	
+
 	val = 0.0;
-	
+
 	for(p = spec; *p >= '0' && *p <= '9'; p++)
 		val = 10.0 * val + (double)(*p - '0');
 	if(*p == '.') {
@@ -396,14 +396,14 @@ double	unit2pix_factor(const char *spec)
 int	unit2pix(int dpi, const char *spec)
 {
 	double	factor = unit2pix_factor(spec);
-	
+
 	return (int)(factor * dpi + 0.5);
 }
 
 Ulong	get_mtime(int fd)
 {
 	struct stat st;
-	
+
 	if(fstat(fd, &st) == 0)
 		return (Ulong)st.st_mtime;
 	return 0;
@@ -426,7 +426,7 @@ char	*getword(char *string, const char *delim, char **end)
 {
 	char *ptr;
 	char *word;
-	
+
 	/* skip leading delimiters */
 	for(ptr = string; *ptr && strchr(delim, *ptr); ptr++);
 
@@ -445,10 +445,10 @@ char	*getstring(char *string, const char *delim, char **end)
 	char *ptr;
 	char *word;
 	int	quoted = 0;
-	
+
 	/* skip leading delimiters */
 	for(ptr = string; *ptr && strchr(delim, *ptr); ptr++);
-	
+
 	if(ptr == NULL)
 		return NULL;
 	quoted = (*ptr == '"');
@@ -463,7 +463,7 @@ char	*getstring(char *string, const char *delim, char **end)
 static long pow2(size_t n)
 {
 	long	x = 8; /* don't bother allocating less than this */
-	
+
 	while(x < n)
 		x <<= 1L;
 	return x;
@@ -494,7 +494,7 @@ int	dstring_append(Dstring *dstr, const char *string, int len)
 		dstr->data = mdvi_malloc(8);
 		dstr->data[0] = 0;
 	}
-		
+
 	return dstr->length;
 }
 

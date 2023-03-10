@@ -22,7 +22,7 @@
 
 #include "common.h"
 
-extern Ulong	*get_color_table(DviDevice *dev, 
+extern Ulong	*get_color_table(DviDevice *dev,
 				 int nlevels, Ulong fg, Ulong bg, double gamma, int density);
 
 extern void mdvi_set_color __PROTO((DviContext *, Ulong, Ulong));

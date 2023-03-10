@@ -48,7 +48,7 @@ int	font_reopen(DviFont *font)
 static int load_font_file(DviParams *params, DviFont *font)
 {
 	int	status;
-			
+
 	if(SEARCH_DONE(font->search))
 		return -1;
 	if(font->in == NULL && font_reopen(font) < 0)
@@ -73,7 +73,7 @@ static int load_font_file(DviParams *params, DviFont *font)
 void	font_drop_one(DviFontRef *ref)
 {
 	DviFont *font;
-	
+
 	font = ref->ref;
 	mdvi_free(ref);
 	/* drop all children */
@@ -82,7 +82,7 @@ void	font_drop_one(DviFontRef *ref)
 		ref->ref->links--;
 	}
 	if(--font->links == 0) {
-		/* 
+		/*
 		 * this font doesn't have any more references, but
 		 * we still keep it around in case a virtual font
 		 * requests it.
@@ -104,7 +104,7 @@ void	font_drop_one(DviFontRef *ref)
 void	font_drop_chain(DviFontRef *head)
 {
 	DviFontRef *ptr;
-	
+
 	for(; (ptr = head); ) {
 		head = ptr->next;
 		font_drop_one(ptr);
@@ -116,15 +116,15 @@ int	font_free_unused(DviDevice *dev)
 	DviFont	*font, *next;
 	int	count = 0;
 
-	DEBUG((DBG_FONTS, "destroying unused fonts\n"));	
+	DEBUG((DBG_FONTS, "destroying unused fonts\n"));
 	for(font = (DviFont *)fontlist.head; font; font = next) {
 		DviFontRef *ref;
-		
+
 		next = font->next;
 		if(font->links)
 			continue;
 		count++;
-		DEBUG((DBG_FONTS, "removing unused %s font `%s'\n", 
+		DEBUG((DBG_FONTS, "removing unused %s font `%s'\n",
 			TYPENAME(font), font->fontname));
 		listh_remove(&fontlist, LIST(font));
 		if(font->in)
@@ -164,7 +164,7 @@ font_reference(
 	DviFont	*font;
 	DviFontRef *ref;
 	DviFontRef *subfont_ref;
-	
+
 	/* see if there is a font with the same characteristics */
 	for(font = (DviFont *)fontlist.head; font; font = font->next) {
 		if(strcmp(name, font->fontname) == 0
@@ -210,7 +210,7 @@ void	font_transform_glyph(DviOrientation orient, DviGlyph *g)
 {
 	BITMAP	*map;
 	int	x, y;
-	
+
 	map = (BITMAP *)g->data;
 	if(MDVI_GLYPH_ISEMPTY(map))
 		map = NULL;
@@ -240,7 +240,7 @@ void	font_transform_glyph(DviOrientation orient, DviGlyph *g)
 		g->y = x;
 		SWAPINT(g->w, g->h);
 		break;
-	case MDVI_ORIENT_RM90: 
+	case MDVI_ORIENT_RM90:
 		if(map) bitmap_rotate_clockwise(map);
 		y = g->h - g->y;
 		x = g->x;
@@ -303,7 +303,7 @@ static int load_one_glyph(DviContext *dvi, DviFont *font, int code)
 	/* check if we have to scale it */
 	if(!font->finfo->scalable && font->hdpi != font->vdpi) {
 		int	hs, vs, d;
-		
+
 		/* we scale it ourselves */
 		d = Max(font->hdpi, font->vdpi);
 		hs = d / font->hdpi;
@@ -311,8 +311,8 @@ static int load_one_glyph(DviContext *dvi, DviFont *font, int code)
 		if(ch->width && ch->height && (hs > 1 || vs > 1)) {
 			int	h, v;
 			DviGlyph glyph;
-			
-			DEBUG((DBG_FONTS, 
+
+			DEBUG((DBG_FONTS,
 				"%s: scaling glyph %d to resolution %dx%d\n",
 				font->fontname, code, font->hdpi, font->vdpi));
 			h = dvi->params.hshrink;
@@ -336,10 +336,10 @@ static int load_one_glyph(DviContext *dvi, DviFont *font, int code)
 			ch->glyph.w = glyph.w;
 			ch->glyph.h = glyph.h;
 		}
-			
+
 	}
 	font_transform_glyph(dvi->params.orientation, &ch->glyph);
-		
+
 	return 0;
 }
 
@@ -351,7 +351,7 @@ again:
 	/* if we have not loaded the font yet, do so now */
 	if(!font->chars && load_font_file(&dvi->params, font) < 0)
 		return NULL;
-	
+
 	/* get the unscaled glyph, maybe loading it from disk */
 	ch = FONTCHAR(font, code);
 	if(!ch)
@@ -371,16 +371,16 @@ again:
 	   font->finfo->getglyph == NULL ||
 	   (dvi->params.hshrink == 1 && dvi->params.vshrink == 1))
 		return ch;
-	
+
 	/* If the glyph is empty, we just need to shrink the box */
 	if(ch->missing || MDVI_GLYPH_ISEMPTY(ch->glyph.data)) {
 		if(MDVI_GLYPH_UNSET(ch->shrunk.data))
 			mdvi_shrink_box(dvi, font, ch, &ch->shrunk);
 		return ch;
 	} else if(MDVI_ENABLED(dvi, MDVI_PARAM_ANTIALIASED)) {
-		if(ch->grey.data && 
+		if(ch->grey.data &&
 		   !MDVI_GLYPH_ISEMPTY(ch->grey.data) &&
-		   ch->fg == dvi->curr_fg && 
+		   ch->fg == dvi->curr_fg &&
 		   ch->bg == dvi->curr_bg)
 		   	return ch;
 		if(ch->grey.data &&
@@ -424,12 +424,12 @@ void	font_reset_font_glyphs(DviDevice *dev, DviFont *font, int what)
 {
 	int	i;
 	DviFontChar *ch;
-	
+
 	if(what & MDVI_FONTSEL_GLYPH)
-		what |= MDVI_FONTSEL_BITMAP|MDVI_FONTSEL_GREY;	
+		what |= MDVI_FONTSEL_BITMAP|MDVI_FONTSEL_GREY;
 	if(font->subfonts) {
 		DviFontRef *ref;
-		
+
 		for(ref = font->subfonts; ref; ref = ref->next)
 			font_reset_font_glyphs(dev, ref->ref, what);
 	}
@@ -447,12 +447,12 @@ void	font_reset_font_glyphs(DviDevice *dev, DviFont *font, int what)
 	}
 	if((what & MDVI_FONTSEL_GLYPH) && font->finfo->reset)
 		font->finfo->reset(font);
-}	
+}
 
 void	font_reset_chain_glyphs(DviDevice *dev, DviFontRef *head, int what)
 {
 	DviFontRef *ref;
-	
+
 	for(ref = head; ref; ref = ref->next)
 		font_reset_font_glyphs(dev, ref->ref, what);
 }
@@ -466,7 +466,7 @@ void	font_finish_definitions(DviContext *dvi)
 {
 	int	count;
 	DviFontRef **map, *ref;
-	
+
 	/* first get rid of unused fonts */
 	font_free_unused(&dvi->device);
 
@@ -485,7 +485,7 @@ void	font_finish_definitions(DviContext *dvi)
 DviFontRef *font_find_flat(DviContext *dvi, Int32 id)
 {
 	DviFontRef *ref;
-	
+
 	for(ref = dvi->fonts; ref; ref = ref->next)
 		if(ref->fontid == id)
 			break;
@@ -496,13 +496,13 @@ DviFontRef *font_find_mapped(DviContext *dvi, Int32 id)
 {
 	int	lo, hi, n;
 	DviFontRef **map;
-	
+
 	/* do a binary search */
 	lo = 0; hi = dvi->nfonts;
 	map = dvi->fontmap;
 	while(lo < hi) {
 		int	sign;
-		
+
 		n = (hi + lo) >> 1;
 		sign = (map[n]->fontid - id);
 		if(sign == 0)

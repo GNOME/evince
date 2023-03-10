@@ -53,7 +53,7 @@ typedef struct {
 void	epsf_special __PROTO((DviContext *dvi, char *prefix, char *arg));
 
 /* Note: the given strings are modified in place */
-static char *parse_epsf_special(EpsfBox *box, char **ret, 
+static char *parse_epsf_special(EpsfBox *box, char **ret,
 	char *prefix, char *arg)
 {
 	static struct {
@@ -90,11 +90,11 @@ static char *parse_epsf_special(EpsfBox *box, char **ret,
 	double	vsize;
 	double	hscale;
 	double	vscale;
-		
+
 	/* this special has the form
 	 *   ["]file.ps["] [key=valye]*
 	 */
-	
+
 	/* scan the filename */
 	while(*arg == ' ' || *arg == '\t')
 		arg++;
@@ -116,7 +116,7 @@ static char *parse_epsf_special(EpsfBox *box, char **ret,
 		value[i] = atof(keys[i].value);
 		present[i] = 0;
 	}
-	
+
 	buff_init(&buffer);
 	buff_add(&buffer, "@beginspecial ", 0);
 
@@ -128,13 +128,13 @@ static char *parse_epsf_special(EpsfBox *box, char **ret,
 		while(*ptr == ' ' || *ptr == '\t')
 			ptr++;
 		keyname = ptr;
-		
+
 		/* get the whole key=value pair */
 		for(; *ptr && *ptr != ' ' && *ptr != '\t'; ptr++);
-		
+
 		if(*ptr) *ptr++ = 0;
 		/* now we shouldn't touch `ptr' anymore */
-		
+
 		/* now work on this pair */
 		p = strchr(keyname, '=');
 		if(p == NULL)
@@ -174,18 +174,18 @@ static char *parse_epsf_special(EpsfBox *box, char **ret,
 		}
 		if(val)
 			value[i] = atof(val);
-		
+
 		/* put the argument */
 		buff_add(&buffer, val, 0);
 		buff_add(&buffer, " @", 2);
 		buff_add(&buffer, keyname, 0);
 		buff_add(&buffer, " ", 1);
-		
+
 		/* remember that this option was given */
 		present[i] = 0xff;
 	}
 	buff_add(&buffer, " @setspecial", 0);
-	
+
 	/* now compute the bounding box (code comes from dvips) */
 	originx = 0;
 	originy = 0;
@@ -193,7 +193,7 @@ static char *parse_epsf_special(EpsfBox *box, char **ret,
 	vscale = 1;
 	hsize = 0;
 	vsize = 0;
-	
+
 	if(present[HSIZE])
 		hsize = value[HSIZE];
 	if(present[VSIZE])
@@ -220,7 +220,7 @@ static char *parse_epsf_special(EpsfBox *box, char **ret,
 			vscale = value[RHI] / (10.0 * vsize);
 		}
 	}
-	
+
 	box->ox = originx;
 	box->oy = originy;
 	box->bw = hsize * hscale;
@@ -228,7 +228,7 @@ static char *parse_epsf_special(EpsfBox *box, char **ret,
 	box->angle = value[ANGLE];
 
 	*ret = buffer.data;
-	
+
 	return filename;
 }
 
@@ -243,7 +243,7 @@ void	epsf_special(DviContext *dvi, char *prefix, char *arg)
 	int	w, h;
 	double	xf, vf;
 	struct stat buf;
-	
+
 	file = parse_epsf_special(&box, &special, prefix, arg);
 	if (file != NULL)
 		mdvi_free (special);
@@ -272,7 +272,7 @@ void	epsf_special(DviContext *dvi, char *prefix, char *arg)
 	if (tmp) { /* Document directory */
 		int path_len = strlen (dvi->filename) - strlen (tmp + 1);
 		int file_len = strlen (file);
-		
+
 		psfile = mdvi_malloc (path_len + file_len + 1);
 		psfile[0] = '\0';
 		strncat (psfile, dvi->filename, path_len);
@@ -287,7 +287,7 @@ void	epsf_special(DviContext *dvi, char *prefix, char *arg)
 
 		mdvi_free (psfile);
 	}
-			
+
 	psfile = mdvi_build_path_from_cwd (file);
 	if (stat (psfile, &buf) == 0) { /* Current working dir */
 		dvi->device.draw_ps (dvi, psfile, x, y, w, h);
@@ -297,7 +297,7 @@ void	epsf_special(DviContext *dvi, char *prefix, char *arg)
 	}
 
 	mdvi_free (psfile);
-	
+
 	psfile = kpse_find_pict (file);
 	if (psfile) { /* kpse */
 		dvi->device.draw_ps (dvi, psfile, x, y, w, h);

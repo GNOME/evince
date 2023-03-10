@@ -88,7 +88,7 @@ static int gf_read_bitmap(FILE *p, DviFontChar *ch)
 	Int32	par;
 	BmUnit	*line;
 	BITMAP	*map;
-	
+
 	fseek(p, (long)ch->offset, SEEK_SET);
 	op = fuget1(p);
 	if(op == GF_BOC) {
@@ -106,7 +106,7 @@ static int gf_read_bitmap(FILE *p, DviFontChar *ch)
 		min_m = fuget1(p); /* this is max_m - min_m */
 		max_m = fuget1(p);
 		min_n = fuget1(p); /* this is max_n - min_n */
-		max_n = fuget1(p); 
+		max_n = fuget1(p);
 		min_m = max_m - min_m;
 		min_n = max_n - min_n;
 	} else {
@@ -136,18 +136,18 @@ static int gf_read_bitmap(FILE *p, DviFontChar *ch)
 	DEBUG((DBG_BITMAPS, "(gf) reading character %d\n", ch->code));
 	while((op = fuget1(p)) != GF_EOC) {
 		Int32	n;
-		
+
 		if(feof(p))
 			break;
 		if(op == GF_PAINT0) {
 			DEBUG((DBG_BITMAPS, "(gf) Paint0 %s -> %s\n",
-				COLOR(paint_switch), COLOR(!paint_switch)));	
+				COLOR(paint_switch), COLOR(!paint_switch)));
 			paint_switch = !paint_switch;
 		} else if(op <= GF_PAINT3) {
 			if(op < GF_PAINT1)
 				par = op;
 			else
-				par = fugetn(p, op - GF_PAINT1 + 1);			
+				par = fugetn(p, op - GF_PAINT1 + 1);
 			if(y >= ch->height || x + par >= ch->width)
 				goto toobig;
 			/* paint everything between columns x and x + par - 1 */
@@ -159,14 +159,14 @@ static int gf_read_bitmap(FILE *p, DviFontChar *ch)
 			paint_switch = !paint_switch;
 			x += par;
 		} else if(op >= GF_NEW_ROW_0 && op <= GF_NEW_ROW_MAX) {
-			y++; 
+			y++;
 			line = bm_offset(line, bpl);
 			x = op - GF_NEW_ROW_0;
 			paint_switch = BLACK;
 			DEBUG((DBG_BITMAPS, "(gf) new_row_%d\n", x));
 		} else switch(op) {
 			case GF_SKIP0:
-				y++; 
+				y++;
 				line = bm_offset(line, bpl);
 				x = 0;
 				paint_switch = WHITE;
@@ -264,7 +264,7 @@ static int gf_load_font(DviParams *unused, DviFont *font)
 	/* now read character locators in postamble */
 	if(fseek(p, (long)-1, SEEK_END) == -1)
 		return -1;
-	
+
 	n = 0;
 	while((op = fuget1(p)) == GF_TRAILER) {
 		if(fseek(p, (long)-2, SEEK_CUR) < 0)
@@ -306,7 +306,7 @@ static int gf_load_font(DviParams *unused, DviFont *font)
 		DviFontChar *ch;
 		int	cc;
 
-		/* get the character code */		
+		/* get the character code */
 		cc = fuget1(p);
 		if(cc < loc)
 			loc = cc;
@@ -342,11 +342,11 @@ static int gf_load_font(DviParams *unused, DviFont *font)
 		ch->grey.data = NULL;
 		ch->flags = 0;
 		ch->loaded = 0;
-	}	
+	}
 
 	if(op != GF_POST_POST)
 		goto badgf;
-	
+
 	if(loc > 0 || hic < 255) {
 		/* shrink to optimal size */
 		memmove(font->chars, font->chars + loc,
@@ -373,11 +373,11 @@ error:
 static int gf_font_get_glyph(DviParams *params, DviFont *font, int code)
 {
 	DviFontChar	*ch;
-	
+
 	if(code < font->loc || code > font->hic || !font->chars)
 		return -1;
 	ch = &font->chars[code - font->loc];
-	
+
 	if(!ch->loaded) {
 		if(ch->offset == 0)
 			return -1;

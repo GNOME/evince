@@ -94,9 +94,9 @@ djvu_text_page_selection_process_box (DjvuTextPage *page,
  * @page: #DjvuTextPage instance
  * @p: s-expression to append
  * @delimit: character/word/... delimiter
- * 
+ *
  * Appends the string in @p to the page text.
- * 
+ *
  * Returns: whether the end was not reached in this s-expression
  */
 static gboolean
@@ -108,7 +108,7 @@ djvu_text_page_selection_process_text (DjvuTextPage *page,
 		char *token_text = (char *) miniexp_to_str (miniexp_nth (5, p));
 		if (page->text) {
 			char *new_text =
-			    g_strjoin (delimit & 2 ? "\n" : 
+			    g_strjoin (delimit & 2 ? "\n" :
 			    	       delimit & 1 ? " " : NULL,
 				       page->text, token_text,
 				       NULL);
@@ -116,7 +116,7 @@ djvu_text_page_selection_process_text (DjvuTextPage *page,
 			page->text = new_text;
 		} else
 			page->text = g_strdup (token_text);
-		if (p == page->end) 
+		if (p == page->end)
 			return FALSE;
 	}
 	return TRUE;
@@ -127,11 +127,11 @@ djvu_text_page_selection_process_text (DjvuTextPage *page,
  * @page: #DjvuTextPage instance
  * @p: tree to append
  * @delimit: character/word/... delimiter
- * 
+ *
  * Walks the tree in @p and appends the text or bounding boxes with
  * djvu_text_page_selection_process_{text|box}() for all s-expressions
  * between the start and end fields.
- * 
+ *
  * Returns: whether the end was not reached in this subtree
  */
 static gboolean
@@ -145,9 +145,9 @@ djvu_text_page_selection (DjvuSelectionType type,
 	g_return_val_if_fail (miniexp_consp (p) && miniexp_symbolp
 			      (miniexp_car (p)), FALSE);
 
-	if (miniexp_car (p) != page->char_symbol) 
+	if (miniexp_car (p) != page->char_symbol)
 		delimit |= miniexp_car (p) == page->word_symbol ? 1 : 2;
-		
+
 	deeper = miniexp_cddr (miniexp_cdddr (p));
 	while (deeper != miniexp_nil) {
 		miniexp_t str = miniexp_car (deeper);
@@ -171,12 +171,12 @@ djvu_text_page_selection (DjvuSelectionType type,
 
 static void
 djvu_text_page_limits_process (DjvuTextPage *page,
-			       miniexp_t     p, 
+			       miniexp_t     p,
 			       EvRectangle  *rect)
 {
 	EvRectangle current;
 	const char *text;
-	
+
 	current.x1 = miniexp_to_int (miniexp_nth (1, p));
 	current.y1 = miniexp_to_int (miniexp_nth (2, p));
 	current.x2 = miniexp_to_int (miniexp_nth (3, p));
@@ -194,12 +194,12 @@ djvu_text_page_limits_process (DjvuTextPage *page,
 
 static void
 djvu_text_page_limits (DjvuTextPage *page,
-			  miniexp_t     p, 
+			  miniexp_t     p,
 			  EvRectangle  *rect)
 {
         miniexp_t deeper;
 
-	g_return_if_fail (miniexp_consp (p) && 
+	g_return_if_fail (miniexp_consp (p) &&
 			  miniexp_symbolp (miniexp_car (p)));
 
 	deeper = miniexp_cddr (miniexp_cdddr (p));
@@ -238,21 +238,21 @@ djvu_text_page_get_selection_region (DjvuTextPage *page,
 }
 
 char *
-djvu_text_page_copy (DjvuTextPage *page, 
+djvu_text_page_copy (DjvuTextPage *page,
 		     EvRectangle  *rectangle)
 {
 	char* text;
-	
+
 	page->start = miniexp_nil;
 	page->end = miniexp_nil;
 	djvu_text_page_limits (page, page->text_structure, rectangle);
 	djvu_text_page_selection (DJVU_SELECTION_TEXT, page,
 	                          page->text_structure, 0);
-	
-	/* Do not free the string */	  
+
+	/* Do not free the string */
 	text = page->text;
 	page->text = NULL;
-	
+
 	return text;
 }
 
@@ -260,14 +260,14 @@ djvu_text_page_copy (DjvuTextPage *page,
  * djvu_text_page_position:
  * @page: #DjvuTextPage instance
  * @position: index in the page text
- * 
- * Returns the closest s-expression that contains the given position in 
+ *
+ * Returns the closest s-expression that contains the given position in
  * the page text.
- * 
+ *
  * Returns: closest s-expression
  */
 static miniexp_t
-djvu_text_page_position (DjvuTextPage *page, 
+djvu_text_page_position (DjvuTextPage *page,
 			 int           position)
 {
 	GArray *links = page->links;
@@ -300,15 +300,15 @@ djvu_text_page_position (DjvuTextPage *page,
  * @p: s-expression to append
  * @start: first s-expression in the selection
  * @end: last s-expression in the selection
- * 
+ *
  * Appends the rectangle defined by @p to the internal bounding box rectangle.
- * 
+ *
  * Returns: whether the end was not reached in this s-expression
  */
 static gboolean
-djvu_text_page_sexpr_process (DjvuTextPage *page, 
+djvu_text_page_sexpr_process (DjvuTextPage *page,
                               miniexp_t     p,
-                              miniexp_t     start, 
+                              miniexp_t     start,
                               miniexp_t     end)
 {
 	if (page->bounding_box || p == start) {
@@ -335,16 +335,16 @@ djvu_text_page_sexpr_process (DjvuTextPage *page,
  * @p: tree to append
  * @start: first s-expression in the selection
  * @end: last s-expression in the selection
- * 
- * Walks the tree in @p and extends the rectangle with 
+ *
+ * Walks the tree in @p and extends the rectangle with
  * djvu_text_page_process() for all s-expressions between @start and @end.
- * 
+ *
  * Returns: whether the end was not reached in this subtree
  */
 static gboolean
-djvu_text_page_sexpr (DjvuTextPage *page, 
+djvu_text_page_sexpr (DjvuTextPage *page,
 		      miniexp_t p,
-		      miniexp_t start, 
+		      miniexp_t start,
 		      miniexp_t end)
 {
         miniexp_t deeper;
@@ -374,12 +374,12 @@ djvu_text_page_sexpr (DjvuTextPage *page,
  * @page: #DjvuTextPage instance
  * @start: first s-expression in the selection
  * @end: last s-expression in the selection
- * 
+ *
  * Builds a rectangle that contains all s-expressions in the given range.
  */
 static EvRectangle *
 djvu_text_page_box (DjvuTextPage *page,
-		    miniexp_t     start, 
+		    miniexp_t     start,
 		    miniexp_t     end)
 {
 	page->bounding_box = NULL;
@@ -393,23 +393,23 @@ djvu_text_page_box (DjvuTextPage *page,
  * @p: tree to append
  * @case_sensitive: do not ignore case
  * @delimit: insert spaces because of higher (sentence/paragraph/...) break
- * 
- * Appends the tree in @p to the internal text string. 
+ *
+ * Appends the tree in @p to the internal text string.
  */
 static void
 djvu_text_page_append_text (DjvuTextPage *page,
-			    miniexp_t     p, 
-			    gboolean      case_sensitive, 
+			    miniexp_t     p,
+			    gboolean      case_sensitive,
 			    gboolean      delimit)
 {
 	char *token_text;
 	miniexp_t deeper;
-	
-	g_return_if_fail (miniexp_consp (p) && 
+
+	g_return_if_fail (miniexp_consp (p) &&
 			  miniexp_symbolp (miniexp_car (p)));
 
 	delimit |= page->char_symbol != miniexp_car (p);
-	
+
 	deeper = miniexp_cddr (miniexp_cdddr (p));
 	while (deeper != miniexp_nil) {
 		miniexp_t data = miniexp_car (deeper);
@@ -436,7 +436,7 @@ djvu_text_page_append_text (DjvuTextPage *page,
 			if (!case_sensitive)
 				g_free (token_text);
 		} else
-			djvu_text_page_append_text (page, data, 
+			djvu_text_page_append_text (page, data,
 						    case_sensitive, delimit);
 		delimit = FALSE;
 		deeper = miniexp_cdr (deeper);
@@ -447,12 +447,12 @@ djvu_text_page_append_text (DjvuTextPage *page,
  * djvu_text_page_search:
  * @page: #DjvuTextPage instance
  * @text: text to search
- * 
- * Searches the page for the given text. The results list has to be 
+ *
+ * Searches the page for the given text. The results list has to be
  * externally freed afterwards.
  */
-void 
-djvu_text_page_search (DjvuTextPage *page, 
+void
+djvu_text_page_search (DjvuTextPage *page,
 		       const char   *text)
 {
 	char *haystack = page->text;
@@ -480,23 +480,23 @@ djvu_text_page_search (DjvuTextPage *page,
  * djvu_text_page_index_text:
  * @page: #DjvuTextPage instance
  * @case_sensitive: do not ignore case
- * 
+ *
  * Indexes the page text and prepares the page for subsequent searches.
  */
 void
 djvu_text_page_index_text (DjvuTextPage *page,
 	       		       gboolean      case_sensitive)
 {
-	djvu_text_page_append_text (page, page->text_structure, 
-				    case_sensitive, FALSE);	
+	djvu_text_page_append_text (page, page->text_structure,
+				    case_sensitive, FALSE);
 }
 
 /**
  * djvu_text_page_new:
  * @text: S-expression of the page text
- * 
- * Creates a new page to search. 
- * 
+ *
+ * Creates a new page to search.
+ *
  * Returns: new #DjvuTextPage instance
  */
 DjvuTextPage *
@@ -515,10 +515,10 @@ djvu_text_page_new (miniexp_t text)
 /**
  * djvu_text_page_free:
  * @page: #DjvuTextPage instance
- * 
+ *
  * Frees the given #DjvuTextPage instance.
  */
-void 
+void
 djvu_text_page_free (DjvuTextPage *page)
 {
 	g_free (page->text);
