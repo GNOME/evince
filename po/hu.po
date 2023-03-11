@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
-"POT-Creation-Date: 2023-03-10 20:32+0000\n"
-"PO-Revision-Date: 2023-03-11 00:26+0100\n"
+"POT-Creation-Date: 2023-03-11 05:02+0000\n"
+"PO-Revision-Date: 2023-03-11 10:19+0100\n"
 "Last-Translator: Balázs Úr <ur.balazs at fsf dot hu>\n"
 "Language-Team: Hungarian <gnome-hu-list at gnome dot org>\n"
 "Language: hu\n"
@@ -747,7 +747,6 @@ msgid "GNOME Document Previewer"
 msgstr "GNOME dokumentumelőnézet-készítő"
 
 #: previewer/ev-previewer-toolbar.c:112 shell/evince-toolbar.ui:35
-#| msgid "Select page or search in the index"
 msgid "Select page or search in the outline"
 msgstr "Oldal kiválasztása vagy keresés az áttekintésben"
 
@@ -968,7 +967,7 @@ msgstr "Aláhúzott"
 msgid "Squiggly"
 msgstr "Hullámos"
 
-#: shell/ev-annotation-properties-dialog.c:153
+#: shell/ev-annotation-properties-dialog.c:153 shell/evince-menus.ui:170
 msgid "Annotation Properties"
 msgstr "Jegyzettulajdonságok"
 
@@ -1074,8 +1073,9 @@ msgid "_Save Attachment As…"
 msgstr "Melléklet m_entése másként…"
 
 #: shell/evince-menus.ui:98
-msgid "Annotation _Properties…"
-msgstr "Jegyzet _tulajdonságai…"
+#| msgid "Annotation Properties"
+msgid "Annotation _Properties"
+msgstr "Jegyzet _tulajdonságai"
 
 #: shell/evince-menus.ui:103
 msgid "R_emove Annotation"
@@ -1113,10 +1113,6 @@ msgstr "Vissza"
 msgid "Forward"
 msgstr "Előre"
 
-#: shell/evince-menus.ui:170
-msgid "Annotation Properties…"
-msgstr "Jegyzet tulajdonságai…"
-
 #: shell/evince-menus.ui:175
 msgid "Remove Annotation"
 msgstr "Jegyzet eltávolítása"
@@ -1138,7 +1134,6 @@ msgid "Search in the outline…"
 msgstr "Keresés az áttekintésben…"
 
 #: shell/evince-menus.ui:218
-#| msgid "Print this document"
 msgid "Print this section…"
 msgstr "A szakasz nyomtatása…"
 
