@@ -615,8 +615,6 @@ ev_page_action_widget_update_links_model (EvPageActionWidget *proxy, GtkTreeMode
 					    (GtkCellLayoutDataFunc) display_completion_text,
 					    proxy, NULL);
 	gtk_entry_set_completion (GTK_ENTRY (proxy->entry), completion);
-
-	g_object_unref (completion);
 }
 
 void
