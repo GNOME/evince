@@ -415,7 +415,6 @@ check_menu_sensitivity (GtkTreeView *treeview,
 	}
 
 	if (!selected_path) {
-		ev_sidebar_links_set_action_enabled (sidebar, "search-outline", FALSE);
 		ev_sidebar_links_set_action_enabled (sidebar, "print-section", FALSE);
 	}
 
