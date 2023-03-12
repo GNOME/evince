@@ -639,6 +639,10 @@ ev_view_scroll_to_page_position (EvView *view, GtkOrientation orientation)
 		ev_view_get_page_extents (view, view->current_page, &page_area, &border);
 		x = page_area.x;
 		y = page_area.y;
+
+		if (view->continuous && view->sizing_mode == EV_SIZING_FIT_PAGE) {
+			y -= view->spacing + (border.top / 2);
+		}
 	} else {
 		GdkPoint view_point;
 
