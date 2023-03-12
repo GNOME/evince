@@ -1309,6 +1309,7 @@ build_tree (PdfDocument      *pdf_document,
 		EvLink *link = NULL;
 		gboolean expand;
 		char *title_markup;
+		char *p;
 
 		action = poppler_index_iter_get_action (iter);
 		expand = poppler_index_iter_is_open (iter);
@@ -1327,6 +1328,11 @@ build_tree (PdfDocument      *pdf_document,
 
 		gtk_tree_store_append (GTK_TREE_STORE (model), &tree_iter, parent);
 		title_markup = g_markup_escape_text (ev_link_get_title (link), -1);
+		for (p = title_markup; *p; ++p) {
+			/* an '\n' byte is always ASCII, no need for UTF-8 special casing */
+			if (*p == '\n')
+				*p = ' ';
+		}
 
 		gtk_tree_store_set (GTK_TREE_STORE (model), &tree_iter,
 				    EV_DOCUMENT_LINKS_COLUMN_MARKUP, title_markup,
