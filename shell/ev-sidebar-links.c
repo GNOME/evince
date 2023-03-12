@@ -416,6 +416,7 @@ check_menu_sensitivity (GtkTreeView *treeview,
 
 	if (!selected_path) {
 		ev_sidebar_links_set_action_enabled (sidebar, "print-section", FALSE);
+		ev_sidebar_links_set_action_enabled (sidebar, "expand-element", FALSE);
 	}
 
 	if (is_list || !selected_path)
@@ -423,15 +424,10 @@ check_menu_sensitivity (GtkTreeView *treeview,
 
 	ev_sidebar_links_set_action_enabled (sidebar, "print-section", TRUE);
 
-	/* Enable 'Expand under this' only when 'this' element has grandchildren */
+	/* Enable 'Expand under this' only when 'this' element has any child */
 	gtk_tree_model_get_iter (model, &parent, selected_path);
 	if (gtk_tree_model_iter_children (model, &iter, &parent)) {
-		do {
-			if (gtk_tree_model_iter_has_child (model, &iter)) {
-				expand_under_sensitive = TRUE;
-				break;
-			}
-		} while (gtk_tree_model_iter_next (model, &iter));
+		expand_under_sensitive = TRUE;
 	}
 
 	ev_sidebar_links_set_action_enabled (sidebar, "expand-element", expand_under_sensitive);
