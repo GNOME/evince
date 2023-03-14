@@ -97,10 +97,7 @@ ev_properties_view_dispose (GObject *object)
 {
 	EvPropertiesView *properties = EV_PROPERTIES_VIEW (object);
 
-	if (properties->uri) {
-		g_free (properties->uri);
-		properties->uri = NULL;
-	}
+	g_clear_pointer (&properties->uri, g_free);
 
 	G_OBJECT_CLASS (ev_properties_view_parent_class)->dispose (object);
 }
@@ -352,8 +349,7 @@ ev_regular_paper_size (const EvDocumentInfo *info)
 		}
 	}
 
-	g_list_foreach (paper_sizes, (GFunc) gtk_paper_size_free, NULL);
-	g_list_free (paper_sizes);
+	g_list_free_full (paper_sizes, (GDestroyNotify)gtk_paper_size_free);
 
 	if (str != NULL) {
 		g_free (exact_size);
