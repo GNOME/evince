@@ -105,8 +105,7 @@ ev_view_accessible_finalize (GObject *object)
 
 	if (priv->model) {
 		g_signal_handlers_disconnect_by_data (priv->model, object);
-		g_object_unref (priv->model);
-		priv->model = NULL;
+		g_clear_object (&priv->model);
 	}
 	if (priv->action_idle_handler)
 		g_source_remove (priv->action_idle_handler);

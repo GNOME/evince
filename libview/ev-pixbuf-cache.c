@@ -171,8 +171,7 @@ end_job (CacheJobInfo *job_info,
 					      G_CALLBACK (job_finished_cb),
 					      data);
 	ev_job_cancel (job_info->job);
-	g_object_unref (job_info->job);
-	job_info->job = NULL;
+	g_clear_object (&job_info->job);
 }
 
 static void
@@ -185,22 +184,10 @@ dispose_cache_job_info (CacheJobInfo *job_info,
 	if (job_info->job)
 		end_job (job_info, data);
 
-	if (job_info->surface) {
-		cairo_surface_destroy (job_info->surface);
-		job_info->surface = NULL;
-	}
-	if (job_info->region) {
-		cairo_region_destroy (job_info->region);
-		job_info->region = NULL;
-	}
-	if (job_info->selection) {
-		cairo_surface_destroy (job_info->selection);
-		job_info->selection = NULL;
-	}
-	if (job_info->selection_region) {
-		cairo_region_destroy (job_info->selection_region);
-		job_info->selection_region = NULL;
-	}
+	g_clear_pointer (&job_info->surface, cairo_surface_destroy);
+	g_clear_pointer (&job_info->selection, cairo_surface_destroy);
+	g_clear_pointer (&job_info->region, cairo_region_destroy);
+	g_clear_pointer (&job_info->selection_region, cairo_region_destroy);
 
 	job_info->points_set = FALSE;
 }
@@ -292,14 +279,8 @@ copy_job_to_job_info (EvJobRender   *job_render,
 
 	job_info->points_set = FALSE;
 	if (job_render->include_selection) {
-		if (job_info->selection) {
-			cairo_surface_destroy (job_info->selection);
-			job_info->selection = NULL;
-		}
-		if (job_info->selection_region) {
-			cairo_region_destroy (job_info->selection_region);
-			job_info->selection_region = NULL;
-		}
+		g_clear_pointer (&job_info->selection, cairo_surface_destroy);
+		g_clear_pointer (&job_info->selection_region, cairo_region_destroy);
 
 		job_info->selection_points = job_render->selection_points;
 		job_info->selection = cairo_surface_reference (job_render->selection);
@@ -338,8 +319,7 @@ job_finished_cb (EvJob         *job,
 	job_info = find_job_cache (pixbuf_cache, job_render->page);
 
 	if (ev_job_is_failed (job)) {
-		job_info->job = NULL;
-		g_object_unref (job);
+		g_clear_object (&job_info->job);
 		return;
 	}
 
@@ -736,15 +716,8 @@ add_job_if_needed (EvPixbufCache *pixbuf_cache,
 
 	/* Free old surfaces for non visible pages */
 	if (priority == EV_JOB_PRIORITY_LOW) {
-		if (job_info->surface) {
-			cairo_surface_destroy (job_info->surface);
-			job_info->surface = NULL;
-		}
-
-		if (job_info->selection) {
-			cairo_surface_destroy (job_info->selection);
-			job_info->selection = NULL;
-		}
+		g_clear_pointer (&job_info->surface, cairo_surface_destroy);
+		g_clear_pointer (&job_info->selection, cairo_surface_destroy);
 	}
 
 	add_job (pixbuf_cache, job_info, NULL,
@@ -954,9 +927,7 @@ clear_selection_surface_if_needed (EvPixbufCache *pixbuf_cache,
                                    gfloat         scale)
 {
 	if (new_selection_surface_needed (pixbuf_cache, job_info, page, scale)) {
-		if (job_info->selection)
-			cairo_surface_destroy (job_info->selection);
-		job_info->selection = NULL;
+		g_clear_pointer (&job_info->selection, cairo_surface_destroy);
 		job_info->selection_points.x1 = -1;
 	}
 }
@@ -968,9 +939,7 @@ clear_selection_region_if_needed (EvPixbufCache *pixbuf_cache,
                                   gfloat         scale)
 {
 	if (new_selection_region_needed (pixbuf_cache, job_info, page, scale)) {
-		if (job_info->selection_region)
-			cairo_region_destroy (job_info->selection_region);
-		job_info->selection_region = NULL;
+		g_clear_pointer (&job_info->selection_region, cairo_region_destroy);
 		job_info->selection_region_points.x1 = -1;
 	}
 }
@@ -1010,15 +979,13 @@ ev_pixbuf_cache_style_changed (EvPixbufCache *pixbuf_cache)
 
 		job_info = pixbuf_cache->prev_job + i;
 		if (job_info->selection) {
-			cairo_surface_destroy (job_info->selection);
-			job_info->selection = NULL;
+			g_clear_pointer (&job_info->selection, cairo_surface_destroy);
 			job_info->selection_points.x1 = -1;
 		}
 
 		job_info = pixbuf_cache->next_job + i;
 		if (job_info->selection) {
-			cairo_surface_destroy (job_info->selection);
-			job_info->selection = NULL;
+			g_clear_pointer (&job_info->selection, cairo_surface_destroy);
 			job_info->selection_points.x1 = -1;
 		}
 	}
@@ -1028,8 +995,7 @@ ev_pixbuf_cache_style_changed (EvPixbufCache *pixbuf_cache)
 
 		job_info = pixbuf_cache->job_list + i;
 		if (job_info->selection) {
-			cairo_surface_destroy (job_info->selection);
-			job_info->selection = NULL;
+			g_clear_pointer (&job_info->selection, cairo_surface_destroy);
 			job_info->selection_points.x1 = -1;
 		}
 	}
@@ -1191,15 +1157,8 @@ clear_job_selection (CacheJobInfo *job_info)
 	job_info->points_set = FALSE;
 	job_info->selection_points.x1 = -1;
 
-	if (job_info->selection) {
-		cairo_surface_destroy (job_info->selection);
-		job_info->selection = NULL;
-	}
-
-        if (job_info->selection_region) {
-                cairo_region_destroy (job_info->selection_region);
-                job_info->selection_region = NULL;
-        }
+	g_clear_pointer (&job_info->selection, cairo_surface_destroy);
+	g_clear_pointer (&job_info->selection_region, cairo_region_destroy);
 }
 
 /* This function will reset the selection on pages that no longer have them, and

@@ -97,15 +97,8 @@ ev_print_operation_finalize (GObject *object)
 {
 	EvPrintOperation *op = EV_PRINT_OPERATION (object);
 
-	if (op->document) {
-		g_object_unref (op->document);
-		op->document = NULL;
-	}
-
-	if (op->status) {
-		g_free (op->status);
-		op->status = NULL;
-	}
+	g_clear_object (&op->document);
+	g_clear_pointer (&op->status, g_free);
 
 	G_OBJECT_CLASS (ev_print_operation_parent_class)->finalize (object);
 }
@@ -794,8 +787,7 @@ ev_print_operation_export_clear_temp_file (EvPrintOperationExport *export)
 		return;
 
 	g_unlink (export->temp_file);
-	g_free (export->temp_file);
-	export->temp_file = NULL;
+	g_clear_pointer (&export->temp_file, g_free);
 }
 
 static void
@@ -923,8 +915,7 @@ export_cancel (EvPrintOperationExport *export)
 		g_signal_handlers_disconnect_by_func (export->job_export,
 						      export_job_cancelled,
 						      export);
-		g_object_unref (export->job_export);
-		export->job_export = NULL;
+		g_clear_object (&export->job_export);
 	}
 
 	if (export->fd != -1) {
@@ -1286,15 +1277,8 @@ ev_print_operation_export_finalize (GObject *object)
 		export->n_ranges = 0;
 	}
 
-	if (export->temp_file) {
-		g_free (export->temp_file);
-		export->temp_file = NULL;
-	}
-
-	if (export->job_name) {
-		g_free (export->job_name);
-		export->job_name = NULL;
-	}
+	g_clear_pointer (&export->temp_file, g_free);
+	g_clear_pointer (&export->job_name, g_free);
 
 	if (export->job_export) {
 		if (!ev_job_is_finished (export->job_export))
@@ -1305,24 +1289,12 @@ ev_print_operation_export_finalize (GObject *object)
 		g_signal_handlers_disconnect_by_func (export->job_export,
 						      export_job_cancelled,
 						      export);
-		g_object_unref (export->job_export);
-		export->job_export = NULL;
+		g_clear_object (&export->job_export);
 	}
 
-	if (export->error) {
-		g_error_free (export->error);
-		export->error = NULL;
-	}
-
-	if (export->print_settings) {
-		g_object_unref (export->print_settings);
-		export->print_settings = NULL;
-	}
-
-	if (export->page_setup) {
-		g_object_unref (export->page_setup);
-		export->page_setup = NULL;
-	}
+	g_clear_error (&export->error);
+	g_clear_object (&export->print_settings);
+	g_clear_object (&export->page_setup);
 
 	G_OBJECT_CLASS (ev_print_operation_export_parent_class)->finalize (object);
 }
@@ -2242,10 +2214,7 @@ ev_print_operation_export_unix_finalize (GObject *object)
 {
 	EvPrintOperationExportUnix *export_unix = EV_PRINT_OPERATION_EXPORT_UNIX (object);
 
-	if (export_unix->printer) {
-		g_object_unref (export_unix->printer);
-		export_unix->printer = NULL;
-	}
+	g_clear_object (&export_unix->printer);
 
 	G_OBJECT_CLASS (ev_print_operation_export_unix_parent_class)->finalize (object);
 }
@@ -2792,15 +2761,8 @@ ev_print_operation_print_finalize (GObject *object)
 	EvPrintOperationPrint *print = EV_PRINT_OPERATION_PRINT (object);
 	GApplication *application;
 
-	if (print->op) {
-		g_object_unref (print->op);
-		print->op = NULL;
-	}
-
-	if (print->job_name) {
-		g_free (print->job_name);
-		print->job_name = NULL;
-	}
+	g_clear_object (&print->op);
+	g_clear_pointer (&print->job_name, g_free);
 
 	if (print->job_print) {
 		if (!ev_job_is_finished (print->job_print))
@@ -2811,8 +2773,7 @@ ev_print_operation_print_finalize (GObject *object)
 		g_signal_handlers_disconnect_by_func (print->job_print,
 						      print_job_cancelled,
 						      print);
-		g_object_unref (print->job_print);
-		print->job_print = NULL;
+		g_clear_object (&print->job_print);
 	}
 
 	G_OBJECT_CLASS (ev_print_operation_print_parent_class)->finalize (object);

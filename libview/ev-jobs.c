@@ -130,20 +130,9 @@ ev_job_dispose (GObject *object)
 
 	job = EV_JOB (object);
 
-	if (job->document) {
-		g_object_unref (job->document);
-		job->document = NULL;
-	}
-
-	if (job->cancellable) {
-		g_object_unref (job->cancellable);
-		job->cancellable = NULL;
-	}
-
-	if (job->error) {
-		g_error_free (job->error);
-		job->error = NULL;
-	}
+	g_clear_object (&job->document);
+	g_clear_object (&job->cancellable);
+	g_clear_error (&job->error);
 
 	(* G_OBJECT_CLASS (ev_job_parent_class)->dispose) (object);
 }
@@ -343,10 +332,7 @@ ev_job_links_dispose (GObject *object)
 
 	job = EV_JOB_LINKS (object);
 
-	if (job->model) {
-		g_object_unref (job->model);
-		job->model = NULL;
-	}
+	g_clear_object (&job->model);
 
 	(* G_OBJECT_CLASS (ev_job_links_parent_class)->dispose) (object);
 }
@@ -457,11 +443,7 @@ ev_job_attachments_dispose (GObject *object)
 
 	job = EV_JOB_ATTACHMENTS (object);
 
-	if (job->attachments) {
-		g_list_foreach (job->attachments, (GFunc)g_object_unref, NULL);
-		g_list_free (job->attachments);
-		job->attachments = NULL;
-	}
+	g_list_free_full (g_steal_pointer (&job->attachments), g_object_unref);
 
 	(* G_OBJECT_CLASS (ev_job_attachments_parent_class)->dispose) (object);
 }
@@ -523,11 +505,7 @@ ev_job_annots_dispose (GObject *object)
 
 	job = EV_JOB_ANNOTS (object);
 
-	if (job->annots) {
-		g_list_foreach (job->annots, (GFunc)ev_mapping_list_unref, NULL);
-		g_list_free (job->annots);
-		job->annots = NULL;
-	}
+	g_list_free_full (g_steal_pointer (&job->annots), (GDestroyNotify) ev_mapping_list_unref);
 
 	G_OBJECT_CLASS (ev_job_annots_parent_class)->dispose (object);
 }
@@ -602,20 +580,9 @@ ev_job_render_dispose (GObject *object)
 
 	ev_debug_message (DEBUG_JOBS, "page: %d (%p)", job->page, job);
 
-	if (job->surface) {
-		cairo_surface_destroy (job->surface);
-		job->surface = NULL;
-	}
-
-	if (job->selection) {
-		cairo_surface_destroy (job->selection);
-		job->selection = NULL;
-	}
-
-	if (job->selection_region) {
-		cairo_region_destroy (job->selection_region);
-		job->selection_region = NULL;
-	}
+	g_clear_pointer (&job->surface, cairo_surface_destroy);
+	g_clear_pointer (&job->selection, cairo_surface_destroy);
+	g_clear_pointer (&job->selection_region, cairo_region_destroy);
 
 	(* G_OBJECT_CLASS (ev_job_render_parent_class)->dispose) (object);
 }
@@ -864,15 +831,8 @@ ev_job_thumbnail_dispose (GObject *object)
 
 	ev_debug_message (DEBUG_JOBS, "%d (%p)", job->page, job);
 
-	if (job->thumbnail) {
-		g_object_unref (job->thumbnail);
-		job->thumbnail = NULL;
-	}
-
-	if (job->thumbnail_surface) {
-		cairo_surface_destroy (job->thumbnail_surface);
-		job->thumbnail_surface = NULL;
-	}
+	g_clear_object (&job->thumbnail);
+	g_clear_pointer (&job->thumbnail_surface, cairo_surface_destroy);
 
 	(* G_OBJECT_CLASS (ev_job_thumbnail_parent_class)->dispose) (object);
 }
@@ -1091,15 +1051,8 @@ ev_job_load_dispose (GObject *object)
 
 	ev_debug_message (DEBUG_JOBS, "%s", job->uri);
 
-	if (job->uri) {
-		g_free (job->uri);
-		job->uri = NULL;
-	}
-
-	if (job->password) {
-		g_free (job->password);
-		job->password = NULL;
-	}
+	g_clear_pointer (&job->uri, g_free);
+	g_clear_pointer (&job->password, g_free);
 
 	(* G_OBJECT_CLASS (ev_job_load_parent_class)->dispose) (object);
 }
@@ -1219,15 +1172,10 @@ ev_job_load_stream_dispose (GObject *object)
         EvJobLoadStream *job = EV_JOB_LOAD_STREAM (object);
         EvJobLoadStreamPrivate *priv = ev_job_load_stream_get_instance_private (job);
 
-        if (job->stream) {
-                g_object_unref (job->stream);
-                job->stream = NULL;
-        }
+	g_clear_object (&job->stream);
 
-        g_free (priv->mime_type);
-        priv->mime_type = NULL;
-        g_free (job->password);
-        job->password = NULL;
+	g_clear_pointer (&priv->mime_type, g_free);
+	g_clear_pointer (&job->password, g_free);
 
         G_OBJECT_CLASS (ev_job_load_stream_parent_class)->dispose (object);
 }
@@ -1379,13 +1327,8 @@ ev_job_load_gfile_dispose (GObject *object)
 {
         EvJobLoadGFile *job = EV_JOB_LOAD_GFILE (object);
 
-        if (job->gfile) {
-                g_object_unref (job->gfile);
-                job->gfile = NULL;
-        }
-
-        g_free (job->password);
-        job->password = NULL;
+	g_clear_object (&job->gfile);
+	g_clear_pointer (&job->password, g_free);
 
         G_OBJECT_CLASS (ev_job_load_gfile_parent_class)->dispose (object);
 }
@@ -1544,10 +1487,8 @@ ev_job_load_fd_dispose (GObject *object)
                 job->fd = -1;
         }
 
-        g_free (job->mime_type);
-        job->mime_type = NULL;
-        g_free (job->password);
-        job->password = NULL;
+	g_clear_pointer (&job->mime_type, g_free);
+	g_clear_pointer (&job->password, g_free);
 
         G_OBJECT_CLASS (ev_job_load_fd_parent_class)->dispose (object);
 }
@@ -1788,15 +1729,8 @@ ev_job_save_dispose (GObject *object)
 
 	ev_debug_message (DEBUG_JOBS, "%s", job->uri);
 
-	if (job->uri) {
-		g_free (job->uri);
-		job->uri = NULL;
-	}
-
-	if (job->document_uri) {
-		g_free (job->document_uri);
-		job->document_uri = NULL;
-	}
+	g_clear_pointer (&job->uri, g_free);
+	g_clear_pointer (&job->document_uri, g_free);
 
 	(* G_OBJECT_CLASS (ev_job_save_parent_class)->dispose) (object);
 }
@@ -1941,10 +1875,7 @@ ev_job_find_dispose (GObject *object)
 
 	ev_debug_message (DEBUG_JOBS, NULL);
 
-	if (job->text) {
-		g_free (job->text);
-		job->text = NULL;
-	}
+	g_clear_pointer (&job->text, g_free);
 
 	if (job->pages) {
 		gint i;
@@ -1953,8 +1884,7 @@ ev_job_find_dispose (GObject *object)
 			g_list_free_full (job->pages[i], (GDestroyNotify)ev_find_rectangle_free);
 		}
 
-		g_free (job->pages);
-		job->pages = NULL;
+		g_clear_pointer (&job->pages, g_free);
 	}
 
 	(* G_OBJECT_CLASS (ev_job_find_parent_class)->dispose) (object);
@@ -2166,10 +2096,7 @@ ev_job_layers_dispose (GObject *object)
 
 	job = EV_JOB_LAYERS (object);
 
-	if (job->model) {
-		g_object_unref (job->model);
-		job->model = NULL;
-	}
+	g_clear_object (&job->model);
 
 	(* G_OBJECT_CLASS (ev_job_layers_parent_class)->dispose) (object);
 }
@@ -2231,10 +2158,7 @@ ev_job_export_dispose (GObject *object)
 
 	job = EV_JOB_EXPORT (object);
 
-	if (job->rc) {
-		g_object_unref (job->rc);
-		job->rc = NULL;
-	}
+	g_clear_object (&job->rc);
 
 	(* G_OBJECT_CLASS (ev_job_export_parent_class)->dispose) (object);
 }
@@ -2320,10 +2244,7 @@ ev_job_print_dispose (GObject *object)
 
 	job = EV_JOB_PRINT (object);
 
-	if (job->cr) {
-		cairo_destroy (job->cr);
-		job->cr = NULL;
-	}
+	g_clear_pointer (&job->cr, cairo_destroy);
 
 	(* G_OBJECT_CLASS (ev_job_print_parent_class)->dispose) (object);
 }

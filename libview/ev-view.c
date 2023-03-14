@@ -445,15 +445,8 @@ ev_view_build_height_to_page_cache (EvView		*view,
 static void
 ev_height_to_page_cache_free (EvHeightToPageCache *cache)
 {
-	if (cache->height_to_page) {
-		g_free (cache->height_to_page);
-		cache->height_to_page = NULL;
-	}
-
-	if (cache->dual_height_to_page) {
-		g_free (cache->dual_height_to_page);
-		cache->dual_height_to_page = NULL;
-	}
+	g_clear_pointer (&cache->height_to_page, g_free);
+	g_clear_pointer (&cache->dual_height_to_page, g_free);
 	g_free (cache);
 }
 
@@ -2800,8 +2793,7 @@ ev_view_form_field_choice_changed (GtkWidget   *widget,
 		item = gtk_combo_box_get_active (GTK_COMBO_BOX (widget));
 		if (item != -1 && (!field_choice->selected_items ||
 		    GPOINTER_TO_INT (field_choice->selected_items->data) != item)) {
-			g_list_free (field_choice->selected_items);
-			field_choice->selected_items = NULL;
+			g_clear_pointer (&field_choice->selected_items, g_list_free);
 			field_choice->selected_items = g_list_prepend (field_choice->selected_items,
 								       GINT_TO_POINTER (item));
 			field->changed = TRUE;
@@ -2824,8 +2816,7 @@ ev_view_form_field_choice_changed (GtkWidget   *widget,
 		GList            *items, *l;
 
 		items = gtk_tree_selection_get_selected_rows (selection, &model);
-		g_list_free (field_choice->selected_items);
-		field_choice->selected_items = NULL;
+		g_clear_pointer (&field_choice->selected_items, g_list_free);
 
 		for (l = items; l && l->data; l = g_list_next (l)) {
 			GtkTreeIter  iter;
@@ -3325,8 +3316,7 @@ ev_view_window_children_free (EvView *view)
 		gtk_widget_destroy (GTK_WIDGET (child->window));
 		g_free (child);
 	}
-	g_list_free (view->window_children);
-	view->window_children = NULL;
+	g_clear_pointer (&view->window_children, g_list_free);
 	view->window_child_focus = NULL;
 }
 
@@ -5368,13 +5358,9 @@ ev_view_link_preview_popover_cleanup (EvView *view) {
 	if (view->link_preview.job) {
 		ev_job_cancel (view->link_preview.job);
 		g_object_unref (view->link_preview.job);
-		view->link_preview.job = NULL;
 	}
 
-	if (view->link_preview.popover) {
-		gtk_widget_destroy (view->link_preview.popover);
-		view->link_preview.popover = NULL;
-	}
+	g_clear_pointer (&view->link_preview.popover, gtk_widget_destroy);
 
 	if (view->link_preview.delay_timeout_id) {
 		g_source_remove (view->link_preview.delay_timeout_id);
@@ -5765,8 +5751,7 @@ ev_view_button_press_event (GtkWidget      *widget,
 				_ev_view_set_focused_element (view, NULL, -1);
 
 				if (view->synctex_result) {
-					g_free (view->synctex_result);
-					view->synctex_result = NULL;
+					g_clear_pointer (&view->synctex_result, g_free);
 					gtk_widget_queue_draw (widget);
 				}
 
@@ -7661,22 +7646,13 @@ ev_view_finalize (GObject *object)
 {
 	EvView *view = EV_VIEW (object);
 
-	if (view->selection_info.selections) {
-		g_list_free_full (view->selection_info.selections, (GDestroyNotify)selection_free);
-		view->selection_info.selections = NULL;
-	}
+	g_list_free_full (g_steal_pointer (&view->selection_info.selections), (GDestroyNotify)selection_free);
 	clear_link_selected (view);
 
-	if (view->synctex_result) {
-		g_free (view->synctex_result);
-		view->synctex_result = NULL;
-	}
+	g_clear_pointer (&view->synctex_result, g_free);
 
-	if (view->image_dnd_info.image)
-		g_object_unref (view->image_dnd_info.image);
-	view->image_dnd_info.image = NULL;
-	if (view->annot_window_map)
-		g_hash_table_destroy (view->annot_window_map);
+	g_clear_object (&view->image_dnd_info.image);
+	g_clear_pointer (&view->annot_window_map, g_hash_table_destroy);
 
 	g_object_unref (view->zoom_gesture);
 
@@ -7690,24 +7666,12 @@ ev_view_dispose (GObject *object)
 
 	if (view->model) {
 		g_signal_handlers_disconnect_by_data (view->model, view);
-		g_object_unref (view->model);
-		view->model = NULL;
+		g_clear_object (&view->model);
 	}
 
-	if (view->pixbuf_cache) {
-		g_object_unref (view->pixbuf_cache);
-		view->pixbuf_cache = NULL;
-	}
-
-	if (view->document) {
-		g_object_unref (view->document);
-		view->document = NULL;
-	}
-
-	if (view->page_cache) {
-		g_object_unref (view->page_cache);
-		view->page_cache = NULL;
-	}
+	g_clear_object (&view->pixbuf_cache);
+	g_clear_object (&view->document);
+	g_clear_object (&view->page_cache);
 
 	ev_view_find_cancel (view);
 
@@ -7755,8 +7719,7 @@ ev_view_dispose (GObject *object)
 
 	if (view->link_preview.job) {
 		ev_job_cancel (view->link_preview.job);
-		g_object_unref (view->link_preview.job);
-		view->link_preview.job = NULL;
+		g_clear_object (&view->link_preview.job);
 	}
 
         gtk_scrollable_set_hadjustment (GTK_SCROLLABLE (view), NULL);
@@ -8792,15 +8755,8 @@ setup_caches (EvView *view)
 static void
 clear_caches (EvView *view)
 {
-	if (view->pixbuf_cache) {
-		g_object_unref (view->pixbuf_cache);
-		view->pixbuf_cache = NULL;
-	}
-
-	if (view->page_cache) {
-		g_object_unref (view->page_cache);
-		view->page_cache = NULL;
-	}
+	g_clear_object (&view->pixbuf_cache);
+	g_clear_object (&view->page_cache);
 }
 
 /**
@@ -9840,8 +9796,7 @@ ev_view_find_cancel (EvView *view)
 		return;
 
 	g_signal_handlers_disconnect_by_func (view->find_job, find_job_updated_cb, view);
-	g_object_unref (view->find_job);
-	view->find_job = NULL;
+	g_clear_object (&view->find_job);
 }
 
 /*** Synctex ***/
@@ -10348,10 +10303,7 @@ ev_view_update_primary_selection (EvView *ev_view)
 static void
 clear_link_selected (EvView *view)
 {
-	if (view->link_selected) {
-		g_object_unref (view->link_selected);
-		view->link_selected = NULL;
-	}
+	g_clear_object (&view->link_selected);
 }
 
 void

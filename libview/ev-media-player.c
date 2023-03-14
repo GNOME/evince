@@ -335,14 +335,12 @@ ev_media_player_dispose (GObject *object)
 
         if (player->bus) {
                 gst_bus_remove_signal_watch (player->bus);
-                gst_object_unref (player->bus);
-                player->bus = NULL;
+		g_clear_pointer (&player->bus, gst_object_unref);
         }
 
         if (player->pipeline) {
                 gst_element_set_state (player->pipeline, GST_STATE_NULL);
-                gst_object_unref (player->pipeline);
-                player->pipeline = NULL;
+		g_clear_pointer (&player->pipeline, gst_object_unref);
         }
 
         g_clear_object (&player->media);

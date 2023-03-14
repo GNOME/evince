@@ -83,10 +83,7 @@ ev_document_model_finalize (GObject *object)
 {
 	EvDocumentModel *model = EV_DOCUMENT_MODEL (object);
 
-	if (model->document) {
-		g_object_unref (model->document);
-		model->document = NULL;
-	}
+	g_clear_object (&model->document);
 
 	G_OBJECT_CLASS (ev_document_model_parent_class)->finalize (object);
 }

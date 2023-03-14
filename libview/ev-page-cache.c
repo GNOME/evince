@@ -97,60 +97,23 @@ G_DEFINE_TYPE (EvPageCache, ev_page_cache, G_TYPE_OBJECT)
 static void
 ev_page_cache_data_free (EvPageCacheData *data)
 {
-	if (data->job) {
-		g_object_unref (data->job);
-		data->job = NULL;
-	}
+	g_clear_object (&data->job);
 
-	if (data->link_mapping) {
-		ev_mapping_list_unref (data->link_mapping);
-		data->link_mapping = NULL;
-	}
+	g_clear_pointer (&data->link_mapping, ev_mapping_list_unref);
+	g_clear_pointer (&data->image_mapping, ev_mapping_list_unref);
+	g_clear_pointer (&data->form_field_mapping, ev_mapping_list_unref);
+	g_clear_pointer (&data->annot_mapping, ev_mapping_list_unref);
+	g_clear_pointer (&data->media_mapping, ev_mapping_list_unref);
+	g_clear_pointer (&data->text_mapping, cairo_region_destroy);
 
-	if (data->image_mapping) {
-		ev_mapping_list_unref (data->image_mapping);
-		data->image_mapping = NULL;
-	}
+	g_clear_pointer (&data->text_layout, g_free);
+	data->text_layout_length = 0;
 
-	if (data->form_field_mapping) {
-		ev_mapping_list_unref (data->form_field_mapping);
-		data->form_field_mapping = NULL;
-	}
-
-	if (data->annot_mapping) {
-		ev_mapping_list_unref (data->annot_mapping);
-		data->annot_mapping = NULL;
-	}
-
-        if (data->media_mapping) {
-                ev_mapping_list_unref (data->media_mapping);
-                data->media_mapping = NULL;
-        }
-
-	if (data->text_mapping) {
-		cairo_region_destroy (data->text_mapping);
-		data->text_mapping = NULL;
-	}
-
-	if (data->text_layout) {
-		g_free (data->text_layout);
-		data->text_layout = NULL;
-		data->text_layout_length = 0;
-	}
-
-	if (data->text) {
-		g_free (data->text);
-		data->text = NULL;
-	}
-
-	if (data->text_attrs) {
-		pango_attr_list_unref (data->text_attrs);
-		data->text_attrs = NULL;
-	}
+	g_clear_pointer (&data->text, g_free);
+	g_clear_pointer (&data->text_attrs, pango_attr_list_unref);
 
         if (data->text_log_attrs) {
-                g_free (data->text_log_attrs);
-                data->text_log_attrs = NULL;
+		g_clear_pointer (&data->text_log_attrs, g_free);
                 data->text_log_attrs_length = 0;
         }
 }
@@ -178,15 +141,11 @@ ev_page_cache_finalize (GObject *object)
 			ev_page_cache_data_free (data);
 		}
 
-		g_free (cache->page_list);
-		cache->page_list = NULL;
+		g_clear_pointer (&cache->page_list, g_free);
 		cache->n_pages = 0;
 	}
 
-	if (cache->document) {
-		g_object_unref (cache->document);
-		cache->document = NULL;
-	}
+	g_clear_object (&cache->document);
 
 	G_OBJECT_CLASS (ev_page_cache_parent_class)->finalize (object);
 }
@@ -339,8 +298,7 @@ job_page_data_finished_cb (EvJob       *job,
 	data->done = TRUE;
 	data->dirty = FALSE;
 
-	g_object_unref (data->job);
-	data->job = NULL;
+	g_clear_object (&data->job);
 
         g_signal_emit (cache, ev_page_cache_signals[PAGE_CACHED], 0, job_data->page);
 }
@@ -349,8 +307,7 @@ static void
 job_page_data_cancelled_cb (EvJob           *job,
 			    EvPageCacheData *data)
 {
-	g_object_unref (data->job);
-	data->job = NULL;
+	g_clear_object (&data->job);
 }
 
 static void
