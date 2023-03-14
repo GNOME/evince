@@ -330,7 +330,6 @@ static void       extend_selection                           (EvView            
 							      GdkPoint           *start,
 							      GdkPoint           *stop);
 static void       clear_selection                            (EvView             *view);
-static void       clear_link_selected                        (EvView             *view);
 static void       selection_free                             (EvViewSelection    *selection);
 static char*      get_selected_text                          (EvView             *ev_view);
 static void       ev_view_primary_get_cb                     (GtkClipboard       *clipboard,
@@ -6539,7 +6538,7 @@ ev_view_button_release_event (GtkWidget      *widget,
 	}
 
 	if (view->selection_info.selections) {
-		clear_link_selected (view);
+		g_clear_object (&view->link_selected);
 		ev_view_update_primary_selection (view);
 
 		position_caret_cursor_for_event (view, event, FALSE);
@@ -7647,7 +7646,7 @@ ev_view_finalize (GObject *object)
 	EvView *view = EV_VIEW (object);
 
 	g_list_free_full (g_steal_pointer (&view->selection_info.selections), (GDestroyNotify)selection_free);
-	clear_link_selected (view);
+	g_clear_object (&view->link_selected);
 
 	g_clear_pointer (&view->synctex_result, g_free);
 
@@ -10266,7 +10265,7 @@ ev_view_primary_clear_cb (GtkClipboard *clipboard,
 	EvView *view = EV_VIEW (data);
 
 	clear_selection (view);
-	clear_link_selected (view);
+	g_clear_object (&view->link_selected);
 }
 
 static void
@@ -10300,17 +10299,11 @@ ev_view_update_primary_selection (EvView *ev_view)
 	}
 }
 
-static void
-clear_link_selected (EvView *view)
-{
-	g_clear_object (&view->link_selected);
-}
-
 void
 ev_view_copy_link_address (EvView       *view,
 			   EvLinkAction *action)
 {
-	clear_link_selected (view);
+	g_clear_object (&view->link_selected);
 
 	ev_view_clipboard_copy (view, ev_link_action_get_uri (action));
 
