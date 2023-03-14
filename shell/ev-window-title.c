@@ -165,7 +165,6 @@ ev_window_title_update (EvWindowTitle *window_title)
 	}
 
 	g_free (title);
-	g_free (title_header);
 }
 
 EvWindowTitle *
