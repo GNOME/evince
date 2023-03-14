@@ -334,15 +334,14 @@ load_job_finished_cb (EvJob             *job,
         if (ev_job_is_failed (job)) {
                 ev_previewer_window_error_dialog_run (window, job->error);
 
-                g_object_unref (window->job);
-                window->job = NULL;
+		g_clear_object (&window->job);
+
                 return;
         }
 
         window->document = g_object_ref (job->document);
 
-        g_object_unref (window->job);
-        window->job = NULL;
+	g_clear_object (&window->job);
 
         ev_document_model_set_document (window->model, window->document);
         g_signal_connect (window->model, "notify::sizing-mode",
@@ -355,47 +354,16 @@ ev_previewer_window_dispose (GObject *object)
 {
 	EvPreviewerWindow *window = EV_PREVIEWER_WINDOW (object);
 
-        if (window->job) {
-                g_object_unref (window->job);
-                window->job = NULL;
-        }
-
-	if (window->model) {
-		g_object_unref (window->model);
-		window->model = NULL;
-	}
-
-	if (window->document) {
-		g_object_unref (window->document);
-		window->document = NULL;
-	}
-
-	if (window->print_settings) {
-		g_object_unref (window->print_settings);
-		window->print_settings = NULL;
-	}
-
-	if (window->print_page_setup) {
-		g_object_unref (window->print_page_setup);
-		window->print_page_setup = NULL;
-	}
-
+	g_clear_object (&window->job);
+	g_clear_object (&window->model);
+	g_clear_object (&window->document);
+	g_clear_object (&window->print_settings);
+	g_clear_object (&window->print_page_setup);
 #if GTKUNIXPRINT_ENABLED
-	if (window->printer) {
-		g_object_unref (window->printer);
-		window->printer = NULL;
-	}
+	g_clear_object (&window->printer);
 #endif
-
-	if (window->print_job_title) {
-		g_free (window->print_job_title);
-		window->print_job_title = NULL;
-	}
-
-        if (window->source_file) {
-                g_free (window->source_file);
-                window->source_file = NULL;
-        }
+	g_clear_pointer (&window->print_job_title, g_free);
+	g_clear_pointer (&window->source_file, g_free);
 
         if (window->source_fd != -1) {
                 close (window->source_fd);

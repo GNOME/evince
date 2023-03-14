@@ -112,8 +112,7 @@ startup_cb (GApplication *application,
                 print_settings_fd = -1;
         } else if (print_settings_file != NULL) {
                 ps_ok = ev_previewer_window_set_print_settings (EV_PREVIEWER_WINDOW (window), print_settings_file, &error);
-                g_free (print_settings_file);
-                print_settings_file = NULL;
+		g_clear_pointer (&print_settings_file, g_free);
         }
         if (!ps_ok) {
                 g_printerr ("Failed to load print settings: %s\n", error->message);
@@ -149,8 +148,7 @@ startup_cb (GApplication *application,
                 g_free (path);
                 g_object_unref (file);
 
-                g_free (input_file);
-                input_file = NULL;
+		g_clear_pointer (&input_file, g_free);
         }
 
         ev_previewer_window_set_job (window, job);
