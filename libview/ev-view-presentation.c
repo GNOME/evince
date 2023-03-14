@@ -410,20 +410,9 @@ ev_view_presentation_delete_job (EvViewPresentation *pview,
 static void
 ev_view_presentation_reset_jobs (EvViewPresentation *pview)
 {
-        if (pview->curr_job) {
-                ev_view_presentation_delete_job (pview, pview->curr_job);
-                pview->curr_job = NULL;
-        }
-
-        if (pview->prev_job) {
-                ev_view_presentation_delete_job (pview, pview->prev_job);
-                pview->prev_job = NULL;
-        }
-
-        if (pview->next_job) {
-                ev_view_presentation_delete_job (pview, pview->next_job);
-                pview->next_job = NULL;
-        }
+	ev_view_presentation_delete_job (pview, pview->curr_job);
+	ev_view_presentation_delete_job (pview, pview->prev_job);
+	ev_view_presentation_delete_job (pview, pview->next_job);
 }
 
 static void
