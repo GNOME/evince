@@ -2440,16 +2440,11 @@ ev_window_open_uri (EvWindow       *ev_window,
 	if (ev_is_metadata_supported_for_file (source_file)) {
 		priv->metadata = ev_metadata_new (source_file);
 		ev_window_init_metadata_with_default_values (ev_window);
-	} else {
-		priv->metadata = NULL;
-	}
-
-	if (priv->metadata) {
-		priv->bookmarks = ev_bookmarks_new (priv->metadata);
-		ev_sidebar_bookmarks_set_bookmarks (EV_SIDEBAR_BOOKMARKS (priv->sidebar_bookmarks),
-						    priv->bookmarks);
-	} else {
-		priv->bookmarks = NULL;
+		if (priv->metadata) {
+			priv->bookmarks = ev_bookmarks_new (priv->metadata);
+			ev_sidebar_bookmarks_set_bookmarks (EV_SIDEBAR_BOOKMARKS (priv->sidebar_bookmarks),
+							    priv->bookmarks);
+		}
 	}
 
 	g_clear_object (&priv->dest);
