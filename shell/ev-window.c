@@ -6129,23 +6129,10 @@ ev_window_dispose (GObject *object)
 	g_clear_object (&priv->view);
 	g_clear_object (&priv->password_view);
 
-	if (priv->load_job) {
-		ev_window_clear_load_job (window);
-	}
-
-	if (priv->reload_job) {
-		ev_window_clear_reload_job (window);
-	}
-
-	if (priv->save_job) {
-		ev_window_clear_save_job (window);
-	}
-
-	if (priv->local_uri) {
-		ev_window_clear_local_uri (window);
-		priv->local_uri = NULL;
-	}
-
+	ev_window_clear_load_job (window);
+	ev_window_clear_reload_job (window);
+	ev_window_clear_save_job (window);
+	ev_window_clear_local_uri (window);
 	ev_window_clear_progress_idle (window);
 	g_clear_object (&priv->progress_cancellable);
 
