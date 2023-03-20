@@ -1338,8 +1338,6 @@ ev_view_presentation_realize (GtkWidget *widget)
 
 	gdk_window_set_user_data (window, widget);
 	gtk_widget_set_window (widget, window);
-        gtk_style_context_set_background (gtk_widget_get_style_context (widget),
-                                          window);
 
 	g_idle_add ((GSourceFunc)init_presentation, widget);
 }
