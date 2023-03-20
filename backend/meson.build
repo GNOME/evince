@@ -34,12 +34,12 @@ foreach backend, backend_mime_types: backends
   backend_mime_types_conf = configuration_data()
   backend_mime_types_conf.set(backend.to_upper() + '_MIME_TYPES', ';'.join(backend_mime_types))
 
-  appdata_mime_types = ''
+  metainfo_mime_types = ''
   foreach type: backend_mime_types
-    appdata_mime_types += '\t<mimetype>@0@</mimetype>\n'.format(type)
+    metainfo_mime_types += '\t<mimetype>@0@</mimetype>\n'.format(type)
   endforeach
 
-  backend_mime_types_conf.set('APPDATA_@0@_MIME_TYPES'.format(backend.to_upper()), appdata_mime_types)
+  backend_mime_types_conf.set('METAINFO_@0@_MIME_TYPES'.format(backend.to_upper()), metainfo_mime_types)
 
   backend_desc = backend_name + '.evince-backend'
 
