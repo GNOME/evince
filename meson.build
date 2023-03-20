@@ -507,12 +507,12 @@ install_headers(
   subdir: ev_include_subdir,
 )
 
-# Appdata files
-appdata = ev_namespace + '.appdata.xml'
+# Metainfo file
+metainfo = ev_namespace + '.metainfo.xml'
 
 i18n.merge_file(
-  input: appdata + '.in',
-  output: appdata,
+  input: metainfo + '.in',
+  output: metainfo,
   po_dir: po_dir,
   install: true,
   install_dir: ev_appstreamdir,
