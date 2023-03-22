@@ -9,6 +9,7 @@ RUN apt-get -yqq update \
     gnome-common libglib2.0-dev-bin \
     yelp-tools itstool appstream \
     libgirepository1.0-dev libgtk-3-dev \
+    libhandy-1-dev \
     libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev \
     libxml2-dev libxml2-utils \
     libarchive-dev \
@@ -23,7 +24,7 @@ RUN apt-get -yqq update \
 && pip install gi-docgen \
 && apt-get -yqq install --no-install-recommends \
     poppler-data libboost-container-dev libopenjp2-7-dev libcurl4-openssl-dev \
-&& git clone --depth 1 --branch poppler-22.07.0 \
+&& git clone --depth 1 --branch poppler-23.02.0 \
     https://gitlab.freedesktop.org/poppler/poppler.git /tmp/poppler \
 && cd /tmp/poppler \
 && cmake -DBUILD_GTK_TESTS=OFF, -DBUILD_CPP_TESTS=OFF, -DENABLE_UTILS=OFF, \
