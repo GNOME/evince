@@ -82,8 +82,10 @@ ev_document_info_copy (EvDocumentInfo *info)
 	copy->producer = g_strdup (info->producer);
 	copy->linearized = g_strdup (info->linearized);
 
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
         copy->creation_date = info->creation_date;
         copy->modified_date = info->modified_date;
+G_GNUC_END_IGNORE_DEPRECATIONS
 	copy->layout = info->layout;
 	copy->mode = info->mode;
 	copy->ui_hints = info->ui_hints;
@@ -151,6 +153,7 @@ ev_document_info_take_created_datetime (EvDocumentInfo *info,
         g_clear_pointer (&info_ex->created_datetime, g_date_time_unref);
         info_ex->created_datetime = datetime; /* adopts */
 
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
         if (datetime != NULL && (ut = g_date_time_to_unix (datetime)) < G_MAXINT) {
                 info_ex->info.creation_date = (GTime) ut;
                 info_ex->info.fields_mask |= EV_DOCUMENT_INFO_CREATION_DATE;
@@ -158,6 +161,7 @@ ev_document_info_take_created_datetime (EvDocumentInfo *info,
                 info_ex->info.creation_date = 0;
                 info_ex->info.fields_mask &= ~EV_DOCUMENT_INFO_CREATION_DATE;
         }
+G_GNUC_END_IGNORE_DEPRECATIONS
 }
 
 /**
@@ -197,6 +201,7 @@ ev_document_info_take_modified_datetime (EvDocumentInfo *info,
         g_clear_pointer (&info_ex->modified_datetime, g_date_time_unref);
         info_ex->modified_datetime = datetime; /* adopts */
 
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
         if (datetime != NULL && (ut = g_date_time_to_unix (datetime)) < G_MAXINT) {
                 info_ex->info.modified_date = (GTime) ut;
                 info_ex->info.fields_mask |= EV_DOCUMENT_INFO_MOD_DATE;
@@ -204,6 +209,7 @@ ev_document_info_take_modified_datetime (EvDocumentInfo *info,
                 info_ex->info.modified_date = 0;
                 info_ex->info.fields_mask &= ~EV_DOCUMENT_INFO_MOD_DATE;
         }
+G_GNUC_END_IGNORE_DEPRECATIONS
 }
 
 /**
