@@ -307,6 +307,11 @@ EvSourceLink  *ev_source_link_copy     (EvSourceLink *link);
 EV_PUBLIC
 void           ev_source_link_free     (EvSourceLink *link);
 
+/* backends shall implement this function to be able to be opened by Evince
+ */
+EV_PUBLIC
+GType ev_backend_query_type (void);
+
 /* convenience macro to ease interface addition in the CODE
  * section of EV_BACKEND_REGISTER_WITH_CODE (this macro relies on
  * the g_define_type_id present within EV_BACKEND_REGISTER_WITH_CODE()).

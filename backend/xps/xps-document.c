@@ -42,13 +42,11 @@ struct _XPSDocumentClass {
 static void xps_document_document_links_iface_init (EvDocumentLinksInterface *iface);
 static void xps_document_document_print_iface_init (EvDocumentPrintInterface *iface);
 
-EV_BACKEND_REGISTER_WITH_CODE (XPSDocument, xps_document,
-	       {
-		       EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_LINKS,
-						       xps_document_document_links_iface_init);
-		       EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_PRINT,
-						       xps_document_document_print_iface_init);
-	       })
+G_DEFINE_TYPE_WITH_CODE (XPSDocument, xps_document, EV_TYPE_DOCUMENT,
+			 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_LINKS,
+						xps_document_document_links_iface_init)
+			 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_PRINT,
+						xps_document_document_print_iface_init))
 
 /* XPSDocument */
 static void

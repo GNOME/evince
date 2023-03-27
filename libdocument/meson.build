@@ -82,7 +82,6 @@ sources = files(
   'ev-link-dest.c',
   'ev-mapping-list.c',
   'ev-media.c',
-  'ev-module.c',
   'ev-page.c',
   'ev-portal.c',
   'ev-render-context.c',
@@ -127,7 +126,6 @@ common_deps = [
 
 deps = common_deps + [
   gmodule_dep,
-  gmodule_no_export_dep,
   libxml_dep,
   m_dep,
   synctex_dep,

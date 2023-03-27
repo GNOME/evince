@@ -78,10 +78,9 @@ static void dvi_document_do_color_special         (DviContext                   
 						   const char                    *prefix,
 						   const char                    *arg);
 
-EV_BACKEND_REGISTER_WITH_CODE (DviDocument, dvi_document,
-     {
-      EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_FILE_EXPORTER, dvi_document_file_exporter_iface_init);
-     });
+G_DEFINE_TYPE_WITH_CODE (DviDocument, dvi_document, EV_TYPE_DOCUMENT,
+			 G_IMPLEMENT_INTERFACE (EV_TYPE_FILE_EXPORTER,
+						dvi_document_file_exporter_iface_init))
 
 static gboolean
 dvi_document_load (EvDocument  *document,
@@ -525,4 +524,10 @@ dvi_document_init (DviDocument *dvi_document)
 
 	dvi_document->exporter_filename = NULL;
 	dvi_document->exporter_opts = NULL;
+}
+
+GType
+ev_backend_query_type (void)
+{
+	return DVI_TYPE_DOCUMENT;
 }

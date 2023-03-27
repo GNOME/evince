@@ -157,7 +157,6 @@ config_h.set_quoted('EXTRA_GDK_PIXBUF_LOADERS_DIR',
 gio_dep = dependency('gio-2.0', version: glib_req_version)
 glib_dep = dependency('glib-2.0', version: glib_req_version)
 gmodule_dep = dependency('gmodule-2.0')
-gmodule_no_export_dep = dependency('gmodule-no-export-2.0', version: glib_req_version)
 gtk_dep = dependency('gtk+-3.0', version: gtk_req_version)
 gthread_dep = dependency('gthread-2.0', version: glib_req_version)
 hdy_dep = dependency('libhandy-1', version: hdy_req_version)
