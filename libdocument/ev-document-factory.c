@@ -32,7 +32,6 @@
 #include "ev-backend-info.h"
 #include "ev-document-factory.h"
 #include "ev-file-helpers.h"
-#include "ev-module.h"
 
 #include "ev-backends-manager.h"
 
@@ -87,7 +86,9 @@ ev_document_factory_new_document_for_mime_type (const gchar *mime_type,
 {
         EvDocument    *document;
         EvBackendInfo *info;
-        GTypeModule *module = NULL;
+        GModule *module = NULL;
+	GType backend_type;
+	GType (*query_type_function) (void) = NULL;
 
         g_return_val_if_fail (mime_type != NULL, NULL);
 
@@ -117,8 +118,24 @@ ev_document_factory_new_document_for_mime_type (const gchar *mime_type,
                 gchar *path;
 
                 path = g_module_build_path (ev_backends_dir, info->module_name);
-                module = G_TYPE_MODULE (_ev_module_new (path, info->resident));
+		module = g_module_open (path, 0);
                 g_free (path);
+
+		if (!g_module_symbol (module, "ev_backend_query_type",
+				      (void *) &query_type_function)) {
+			const char *err = g_module_error ();
+			g_set_error (error, EV_DOCUMENT_ERROR, EV_DOCUMENT_ERROR_INVALID,
+				     "Failed to load backend for '%s': %s",
+				     mime_type, err ? err : "unknown error");
+			g_module_close (module);
+			return NULL;
+		}
+
+		/* Make the module resident so it can’t be unloaded: without using a
+		 * full #GTypePlugin implementation for the modules, it’s not safe to
+		 * re-load a module and re-register its types with GObject, as that will
+		 * confuse the GType system. */
+		g_module_make_resident (module);
 
                 if (ev_module_hash == NULL) {
                         ev_module_hash = g_hash_table_new_full (g_str_hash, g_str_equal,
@@ -128,18 +145,10 @@ ev_document_factory_new_document_for_mime_type (const gchar *mime_type,
                 g_hash_table_insert (ev_module_hash, g_strdup (info->module_name), module);
         }
 
-        if (!g_type_module_use (module)) {
-                const char *err;
+	backend_type = query_type_function ();
+	g_assert (g_type_is_a (backend_type, EV_TYPE_DOCUMENT));
 
-                err = g_module_error ();
-                g_set_error (error, EV_DOCUMENT_ERROR, EV_DOCUMENT_ERROR_INVALID,
-                             "Failed to load backend for '%s': %s",
-                             mime_type, err ? err : "unknown error");
-                return NULL;
-        }
-
-        document = EV_DOCUMENT (_ev_module_new_object (EV_MODULE (module)));
-        g_type_module_unuse (module);
+	document = g_object_new (backend_type, NULL);
 
         g_object_set_data_full (G_OBJECT (document), BACKEND_DATA_KEY,
                                 _ev_backend_info_ref (info),

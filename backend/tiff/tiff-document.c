@@ -55,11 +55,9 @@ typedef struct _TiffDocumentClass TiffDocumentClass;
 
 static void tiff_document_document_file_exporter_iface_init (EvFileExporterInterface *iface);
 
-EV_BACKEND_REGISTER_WITH_CODE (TiffDocument, tiff_document,
-			 {
-			   EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_FILE_EXPORTER,
-							   tiff_document_document_file_exporter_iface_init);
-			 });
+G_DEFINE_TYPE_WITH_CODE (TiffDocument, tiff_document, EV_TYPE_DOCUMENT,
+			 G_IMPLEMENT_INTERFACE (EV_TYPE_FILE_EXPORTER,
+						tiff_document_document_file_exporter_iface_init))
 
 static TIFFErrorHandler orig_error_handler = NULL;
 static TIFFErrorHandler orig_warning_handler = NULL;
@@ -534,4 +532,10 @@ static void
 tiff_document_init (TiffDocument *tiff_document)
 {
 	tiff_document->n_pages = -1;
+}
+
+GType
+ev_backend_query_type (void)
+{
+	return TIFF_TYPE_DOCUMENT;
 }

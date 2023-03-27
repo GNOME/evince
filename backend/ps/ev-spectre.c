@@ -42,11 +42,9 @@ struct _PSDocumentClass {
 
 static void ps_document_file_exporter_iface_init       (EvFileExporterInterface       *iface);
 
-EV_BACKEND_REGISTER_WITH_CODE (PSDocument, ps_document,
-                         {
-				 EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_FILE_EXPORTER,
-								 ps_document_file_exporter_iface_init);
-			 });
+G_DEFINE_TYPE_WITH_CODE (PSDocument, ps_document, EV_TYPE_DOCUMENT,
+			 G_IMPLEMENT_INTERFACE (EV_TYPE_FILE_EXPORTER,
+						ps_document_file_exporter_iface_init))
 
 /* PSDocument */
 static void
@@ -422,4 +420,10 @@ ps_document_file_exporter_iface_init (EvFileExporterInterface *iface)
 	iface->do_page = ps_document_file_exporter_do_page;
 	iface->end = ps_document_file_exporter_end;
 	iface->get_capabilities = ps_document_file_exporter_get_capabilities;
+}
+
+GType
+ev_backend_query_type (void)
+{
+	return PS_TYPE_DOCUMENT;
 }

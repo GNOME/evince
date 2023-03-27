@@ -55,14 +55,19 @@ static void djvu_document_document_links_iface_init  (EvDocumentLinksInterface *
 static void djvu_selection_iface_init (EvSelectionInterface *iface);
 static void djvu_document_text_iface_init (EvDocumentTextInterface *iface);
 
-EV_BACKEND_REGISTER_WITH_CODE (DjvuDocument, djvu_document,
-    {
-      EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_FILE_EXPORTER, djvu_document_file_exporter_iface_init);
-      EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_FIND, djvu_document_find_iface_init);
-      EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_LINKS, djvu_document_document_links_iface_init);
-      EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_SELECTION, djvu_selection_iface_init);
-      EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_TEXT, djvu_document_text_iface_init);
-     });
+G_DEFINE_TYPE_WITH_CODE (DjvuDocument,
+			 djvu_document,
+			 EV_TYPE_DOCUMENT,
+			 G_IMPLEMENT_INTERFACE (EV_TYPE_FILE_EXPORTER,
+						djvu_document_file_exporter_iface_init)
+			 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_FIND,
+						djvu_document_find_iface_init)
+			 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_LINKS,
+						djvu_document_document_links_iface_init)
+			 G_IMPLEMENT_INTERFACE (EV_TYPE_SELECTION,
+						djvu_selection_iface_init)
+			 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_TEXT,
+						djvu_document_text_iface_init))
 
 
 #define EV_DJVU_ERROR ev_djvu_error_quark ()
@@ -1027,4 +1032,10 @@ djvu_document_document_links_iface_init  (EvDocumentLinksInterface *iface)
 	iface->get_links = djvu_document_links_get_links;
 	iface->find_link_dest = djvu_links_find_link_dest;
 	iface->find_link_page = djvu_links_find_link_page;
+}
+
+GType
+ev_backend_query_type (void)
+{
+	return DJVU_TYPE_DOCUMENT;
 }

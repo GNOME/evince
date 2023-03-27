@@ -136,39 +136,39 @@ static gboolean    attachment_save_to_buffer (PopplerAttachment *attachment,
 					      gsize             *buffer_size,
 					      GError           **error);
 
-EV_BACKEND_REGISTER_WITH_CODE (PdfDocument, pdf_document,
-			 {
-				 EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_SECURITY,
-								 pdf_document_security_iface_init);
-				 EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_LINKS,
-								 pdf_document_document_links_iface_init);
-				 EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_IMAGES,
-								 pdf_document_document_images_iface_init);
-				 EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_FORMS,
-								 pdf_document_document_forms_iface_init);
-				 EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_FONTS,
-								 pdf_document_document_fonts_iface_init);
-				 EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_LAYERS,
-								 pdf_document_document_layers_iface_init);
-				 EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_PRINT,
-								 pdf_document_document_print_iface_init);
-				 EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_ANNOTATIONS,
-								 pdf_document_document_annotations_iface_init);
-				 EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_ATTACHMENTS,
-								 pdf_document_document_attachments_iface_init);
-				 EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_MEDIA,
-								 pdf_document_document_media_iface_init);
-				 EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_FIND,
-								 pdf_document_find_iface_init);
-				 EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_FILE_EXPORTER,
-								 pdf_document_file_exporter_iface_init);
-				 EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_SELECTION,
-								 pdf_selection_iface_init);
-				 EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_TRANSITION,
-								 pdf_document_page_transition_iface_init);
-				 EV_BACKEND_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_TEXT,
-								 pdf_document_text_iface_init);
-			 });
+G_DEFINE_TYPE_WITH_CODE (PdfDocument,
+			 pdf_document,
+			 EV_TYPE_DOCUMENT,
+			 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_SECURITY,
+						pdf_document_security_iface_init)
+			 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_LINKS,
+						pdf_document_document_links_iface_init)
+			 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_IMAGES,
+						pdf_document_document_images_iface_init)
+			 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_FORMS,
+						pdf_document_document_forms_iface_init)
+			 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_FONTS,
+						pdf_document_document_fonts_iface_init)
+			 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_LAYERS,
+						pdf_document_document_layers_iface_init)
+			 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_PRINT,
+						pdf_document_document_print_iface_init)
+			 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_ANNOTATIONS,
+						pdf_document_document_annotations_iface_init)
+			 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_ATTACHMENTS,
+						pdf_document_document_attachments_iface_init)
+			 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_MEDIA,
+						pdf_document_document_media_iface_init)
+			 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_FIND,
+						pdf_document_find_iface_init)
+			 G_IMPLEMENT_INTERFACE (EV_TYPE_FILE_EXPORTER,
+						pdf_document_file_exporter_iface_init)
+			 G_IMPLEMENT_INTERFACE (EV_TYPE_SELECTION,
+						pdf_selection_iface_init)
+			 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_TRANSITION,
+						pdf_document_page_transition_iface_init)
+			 G_IMPLEMENT_INTERFACE (EV_TYPE_DOCUMENT_TEXT,
+						pdf_document_text_iface_init));
 
 static void
 pdf_document_dispose (GObject *object)
@@ -4074,4 +4074,10 @@ pdf_document_document_layers_iface_init (EvDocumentLayersInterface *iface)
 	iface->show_layer = pdf_document_layers_show_layer;
 	iface->hide_layer = pdf_document_layers_hide_layer;
 	iface->layer_is_visible = pdf_document_layers_layer_is_visible;
+}
+
+GType
+ev_backend_query_type (void)
+{
+	return PDF_TYPE_DOCUMENT;
 }

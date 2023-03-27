@@ -55,7 +55,7 @@ struct _ComicsDocument
 	GHashTable    *page_positions; /* key: char *, value: uint + 1 */
 };
 
-EV_BACKEND_REGISTER (ComicsDocument, comics_document)
+G_DEFINE_TYPE (ComicsDocument, comics_document, EV_TYPE_DOCUMENT)
 
 #define FORMAT_UNKNOWN     0
 #define FORMAT_SUPPORTED   1
@@ -639,4 +639,10 @@ static void
 comics_document_init (ComicsDocument *comics_document)
 {
 	comics_document->archive = ev_archive_new ();
+}
+
+GType
+ev_backend_query_type (void)
+{
+	return COMICS_TYPE_DOCUMENT;
 }
