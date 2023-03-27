@@ -2791,12 +2791,15 @@ ev_annot_from_poppler_annot (PopplerAnnot *poppler_annot,
 			if (poppler_attachment &&
 			    attachment_save_to_buffer (poppler_attachment, &data, &size, &error)) {
 				EvAttachment *ev_attachment;
+				GDateTime *mtime, *ctime;
 
-				ev_attachment = ev_attachment_new (poppler_attachment->name,
-								   poppler_attachment->description,
-								   poppler_attachment->mtime,
-								   poppler_attachment->ctime,
-								   size, data);
+				mtime = poppler_attachment_get_mtime (poppler_attachment);
+				ctime = poppler_attachment_get_ctime (poppler_attachment);
+
+				ev_attachment = ev_attachment_new_with_datetime (poppler_attachment->name,
+										 poppler_attachment->description,
+										 mtime, ctime,
+										 size, data);
 				ev_annot = ev_annotation_attachment_new (page, ev_attachment);
 				g_object_unref (ev_attachment);
 			} else if (error) {
@@ -3901,11 +3904,15 @@ pdf_document_attachments_get_attachments (EvDocumentAttachments *document)
 		attachment = (PopplerAttachment *) list->data;
 
 		if (attachment_save_to_buffer (attachment, &data, &size, &error)) {
-			ev_attachment = ev_attachment_new (attachment->name,
-							   attachment->description,
-							   attachment->mtime,
-							   attachment->ctime,
-							   size, data);
+			GDateTime *mtime, *ctime;
+
+			mtime = poppler_attachment_get_mtime (attachment);
+			ctime = poppler_attachment_get_ctime (attachment);
+
+			ev_attachment = ev_attachment_new_with_datetime (attachment->name,
+									 attachment->description,
+									 mtime, ctime,
+									 size, data);
 
 			retval = g_list_prepend (retval, ev_attachment);
 		} else {
