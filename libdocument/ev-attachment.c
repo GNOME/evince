@@ -38,8 +38,12 @@ enum
 typedef struct {
 	gchar                   *name;
 	gchar                   *description;
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 	GTime                    mtime;
 	GTime                    ctime;
+G_GNUC_END_IGNORE_DEPRECATIONS
+	GDateTime               *mdatetime;
+	GDateTime               *cdatetime;
 	gsize                    size;
 	gchar                   *data;
 	gchar                   *mime_type;
@@ -75,6 +79,9 @@ ev_attachment_finalize (GObject *object)
 	g_clear_pointer (&priv->data, g_free);
 	g_clear_pointer (&priv->mime_type, g_free);
 	g_clear_object (&priv->app);
+
+	g_clear_pointer (&priv->mdatetime, g_date_time_unref);
+	g_clear_pointer (&priv->cdatetime, g_date_time_unref);
 
 	if (priv->tmp_file) {
 		ev_tmp_file_unlink (priv->tmp_file);
@@ -204,6 +211,7 @@ ev_attachment_init (EvAttachment *attachment)
 	priv->tmp_file = NULL;
 }
 
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 EvAttachment *
 ev_attachment_new (const gchar *name,
 		   const gchar *description,
@@ -222,6 +230,42 @@ ev_attachment_new (const gchar *name,
 				   "size", size,
 				   "data", data,
 				   NULL);
+
+	return attachment;
+}
+G_GNUC_END_IGNORE_DEPRECATIONS
+
+EvAttachment *
+ev_attachment_new_with_datetime (const gchar *name,
+				 const gchar *description,
+				 GDateTime   *mdatetime,
+				 GDateTime   *cdatetime,
+				 gsize        size,
+				 gpointer     data)
+{
+	EvAttachment *attachment;
+	EvAttachmentPrivate *priv;
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
+	GTime mtime = 0, ctime = 0;
+	gint64 ut;
+
+	if (mdatetime != NULL && (ut = g_date_time_to_unix (mdatetime)) < G_MAXINT)
+		mtime = (GTime) ut;
+	if (cdatetime != NULL && (ut = g_date_time_to_unix (cdatetime)) < G_MAXINT)
+		ctime = (GTime) ut;
+G_GNUC_END_IGNORE_DEPRECATIONS
+
+	attachment = g_object_new (EV_TYPE_ATTACHMENT,
+				   "name", name,
+				   "description", description,
+				   "mtime", mtime,
+				   "ctime", ctime,
+				   "size", size,
+				   "data", data,
+				   NULL);
+	priv = GET_PRIVATE(attachment);
+	priv->mdatetime = g_date_time_ref (mdatetime);
+	priv->cdatetime = g_date_time_ref (cdatetime);
 
 	return attachment;
 }
@@ -250,6 +294,7 @@ ev_attachment_get_description (EvAttachment *attachment)
 	return priv->description;
 }
 
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 GTime
 ev_attachment_get_modification_date (EvAttachment *attachment)
 {
@@ -261,7 +306,9 @@ ev_attachment_get_modification_date (EvAttachment *attachment)
 
 	return priv->mtime;
 }
+G_GNUC_END_IGNORE_DEPRECATIONS
 
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 GTime
 ev_attachment_get_creation_date (EvAttachment *attachment)
 {
@@ -272,6 +319,31 @@ ev_attachment_get_creation_date (EvAttachment *attachment)
 	priv = GET_PRIVATE (attachment);
 
 	return priv->ctime;
+}
+G_GNUC_END_IGNORE_DEPRECATIONS
+
+GDateTime*
+ev_attachment_get_modification_datetime (EvAttachment *attachment)
+{
+	EvAttachmentPrivate *priv;
+
+	g_return_val_if_fail (EV_IS_ATTACHMENT (attachment), 0);
+
+	priv = GET_PRIVATE (attachment);
+
+	return priv->mdatetime;
+}
+
+GDateTime*
+ev_attachment_get_creation_datetime (EvAttachment *attachment)
+{
+	EvAttachmentPrivate *priv;
+
+	g_return_val_if_fail (EV_IS_ATTACHMENT (attachment), 0);
+
+	priv = GET_PRIVATE (attachment);
+
+	return priv->cdatetime;
 }
 
 const gchar *

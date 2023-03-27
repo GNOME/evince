@@ -56,6 +56,7 @@ EV_PUBLIC
 GQuark        ev_attachment_error_quark          (void) G_GNUC_CONST;
 
 G_GNUC_BEGIN_IGNORE_DEPRECATIONS
+G_GNUC_DEPRECATED_FOR(ev_attachment_new_with_datetime)
 EV_PUBLIC
 EvAttachment *ev_attachment_new                  (const gchar  *name,
 						  const gchar  *description,
@@ -66,16 +67,31 @@ EvAttachment *ev_attachment_new                  (const gchar  *name,
 G_GNUC_END_IGNORE_DEPRECATIONS
 
 EV_PUBLIC
+EvAttachment *ev_attachment_new_with_datetime    (const gchar  *name,
+						  const gchar  *description,
+						  GDateTime    *mtime,
+						  GDateTime    *ctime,
+						  gsize         size,
+						  gpointer      data);
+
+EV_PUBLIC
 const gchar *ev_attachment_get_name              (EvAttachment *attachment);
 EV_PUBLIC
 const gchar *ev_attachment_get_description       (EvAttachment *attachment);
 
 G_GNUC_BEGIN_IGNORE_DEPRECATIONS
+G_GNUC_DEPRECATED_FOR(ev_attachment_get_modification_datetime)
 EV_PUBLIC
 GTime        ev_attachment_get_modification_date (EvAttachment *attachment);
+G_GNUC_DEPRECATED_FOR(ev_attachment_get_creation_datetime)
 EV_PUBLIC
 GTime        ev_attachment_get_creation_date     (EvAttachment *attachment);
 G_GNUC_END_IGNORE_DEPRECATIONS
+
+EV_PUBLIC
+GDateTime   *ev_attachment_get_modification_datetime (EvAttachment *attachment);
+EV_PUBLIC
+GDateTime   *ev_attachment_get_creation_datetime     (EvAttachment *attachment);
 
 EV_PUBLIC
 const gchar *ev_attachment_get_mime_type         (EvAttachment *attachment);
