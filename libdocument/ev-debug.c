@@ -43,7 +43,7 @@
 
 #ifdef EV_ENABLE_DEBUG
 static EvDebugSection ev_debug = EV_NO_DEBUG;
-static EvProfileSection ev_profile = EV_NO_PROFILE;
+static gboolean ev_profile = FALSE;
 static EvDebugBorders ev_debug_borders = EV_DEBUG_BORDER_NONE;
 
 static GHashTable *timers = NULL;
@@ -74,15 +74,10 @@ debug_init (void)
 static void
 profile_init (void)
 {
-	if (g_getenv ("EV_PROFILE") != NULL) {
-		/* enable all profiling */
-		ev_profile = ~EV_NO_PROFILE;
-	} else {
-		if (g_getenv ("EV_PROFILE_JOBS") != NULL)
-			ev_profile |= EV_PROFILE_JOBS;
-	}
+	if (g_getenv ("EV_PROFILE") != NULL ||
+	    g_getenv ("EV_PROFILE_JOBS") != NULL) {
+		ev_profile = TRUE;
 
-	if (ev_profile) {
 		timers = g_hash_table_new_full (g_str_hash,
 						g_str_equal,
 						(GDestroyNotify) g_free,
@@ -130,10 +125,9 @@ ev_debug_message (EvDebugSection  section,
 }
 
 void
-ev_profiler_start (EvProfileSection section,
-		   const gchar     *format, ...)
+ev_profiler_start (const gchar *format, ...)
 {
-	if (G_UNLIKELY (ev_profile & section)) {
+	if (G_UNLIKELY (ev_profile)) {
 		GTimer *timer;
 		gchar  *name;
 		va_list args;
@@ -156,10 +150,9 @@ ev_profiler_start (EvProfileSection section,
 }
 
 void
-ev_profiler_stop (EvProfileSection section,
-		  const gchar     *format, ...)
+ev_profiler_stop (const gchar *format, ...)
 {
-	if (G_UNLIKELY (ev_profile & section)) {
+	if (G_UNLIKELY (ev_profile)) {
 		GTimer *timer;
 		gchar  *name;
 		va_list args;

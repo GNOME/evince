@@ -81,16 +81,6 @@ typedef enum {
 
 #define DEBUG_JOBS      EV_DEBUG_JOBS,    __FILE__, __LINE__, G_STRFUNC
 
-/*
- * Set an environmental var of the same name to turn on
- * profiling. Setting EV_PROFILE will turn on all
- * sections.
- */
-typedef enum {
-	EV_NO_PROFILE   = 0,
-	EV_PROFILE_JOBS = 1 << 0
-} EvProfileSection;
-
 void _ev_debug_init     (void);
 void _ev_debug_shutdown (void);
 
@@ -101,11 +91,9 @@ void ev_debug_message  (EvDebugSection   section,
 			const gchar     *function,
 			const gchar     *format, ...) G_GNUC_PRINTF(5, 6);
 EV_PRIVATE
-void ev_profiler_start (EvProfileSection section,
-			const gchar     *format, ...) G_GNUC_PRINTF(2, 3);
+void ev_profiler_start (const gchar     *format, ...) G_GNUC_PRINTF(1, 2);
 EV_PRIVATE
-void ev_profiler_stop  (EvProfileSection section,
-			const gchar     *format, ...) G_GNUC_PRINTF(2, 3);
+void ev_profiler_stop  (const gchar     *format, ...) G_GNUC_PRINTF(1, 2);
 
 EV_PRIVATE
 EvDebugBorders ev_debug_get_debug_borders (void);

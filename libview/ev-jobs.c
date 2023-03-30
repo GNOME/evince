@@ -174,7 +174,7 @@ emit_finished (EvJob *job)
 	if (job->cancelled) {
 		ev_debug_message (DEBUG_JOBS, "%s (%p) job was cancelled, do not emit finished", EV_GET_TYPE_NAME (job), job);
 	} else {
-		ev_profiler_stop (EV_PROFILE_JOBS, "%s (%p)", EV_GET_TYPE_NAME (job), job);
+		ev_profiler_stop ("%s (%p)", EV_GET_TYPE_NAME (job), job);
 		g_signal_emit (job, job_signals[FINISHED], 0);
 	}
 
@@ -200,7 +200,7 @@ ev_job_emit_finished (EvJob *job)
 					 g_object_ref (job),
 					 (GDestroyNotify)g_object_unref);
 	} else {
-		ev_profiler_stop (EV_PROFILE_JOBS, "%s (%p)", EV_GET_TYPE_NAME (job), job);
+		ev_profiler_stop ("%s (%p)", EV_GET_TYPE_NAME (job), job);
 		g_signal_emit (job, job_signals[FINISHED], 0);
 	}
 }
@@ -220,7 +220,7 @@ ev_job_cancel (EvJob *job)
 		return;
 
 	ev_debug_message (DEBUG_JOBS, "job %s (%p) cancelled", EV_GET_TYPE_NAME (job), job);
-	ev_profiler_stop (EV_PROFILE_JOBS, "%s (%p)", EV_GET_TYPE_NAME (job), job);
+	ev_profiler_stop ("%s (%p)", EV_GET_TYPE_NAME (job), job);
 
 	/* This should never be called from a thread */
 	job->cancelled = TRUE;
@@ -375,7 +375,7 @@ ev_job_links_run (EvJob *job)
 	EvJobLinks *job_links = EV_JOB_LINKS (job);
 
 	ev_debug_message (DEBUG_JOBS, NULL);
-	ev_profiler_start (EV_PROFILE_JOBS, "%s (%p)", EV_GET_TYPE_NAME (job), job);
+	ev_profiler_start ("%s (%p)", EV_GET_TYPE_NAME (job), job);
 
 	ev_document_doc_mutex_lock ();
 	job_links->model = ev_document_links_get_links_model (EV_DOCUMENT_LINKS (job->document));
@@ -454,7 +454,7 @@ ev_job_attachments_run (EvJob *job)
 	EvJobAttachments *job_attachments = EV_JOB_ATTACHMENTS (job);
 
 	ev_debug_message (DEBUG_JOBS, NULL);
-	ev_profiler_start (EV_PROFILE_JOBS, "%s (%p)", EV_GET_TYPE_NAME (job), job);
+	ev_profiler_start ("%s (%p)", EV_GET_TYPE_NAME (job), job);
 
 	ev_document_doc_mutex_lock ();
 	job_attachments->attachments =
@@ -517,7 +517,7 @@ ev_job_annots_run (EvJob *job)
 	gint         i;
 
 	ev_debug_message (DEBUG_JOBS, NULL);
-	ev_profiler_start (EV_PROFILE_JOBS, "%s (%p)", EV_GET_TYPE_NAME (job), job);
+	ev_profiler_start ("%s (%p)", EV_GET_TYPE_NAME (job), job);
 
 	ev_document_doc_mutex_lock ();
 	for (i = 0; i < ev_document_get_n_pages (job->document); i++) {
@@ -596,11 +596,11 @@ ev_job_render_cairo_run (EvJob *job)
 	EvRenderContext *rc;
 
 	ev_debug_message (DEBUG_JOBS, "page: %d (%p)", job_render->page, job);
-	ev_profiler_start (EV_PROFILE_JOBS, "%s (%p)", EV_GET_TYPE_NAME (job), job);
+	ev_profiler_start ("%s (%p)", EV_GET_TYPE_NAME (job), job);
 
 	ev_document_doc_mutex_lock ();
 
-	ev_profiler_start (EV_PROFILE_JOBS, "Rendering page %d", job_render->page);
+	ev_profiler_start ("Rendering page %d", job_render->page);
 
 	ev_document_fc_mutex_lock ();
 
@@ -737,7 +737,7 @@ ev_job_page_data_run (EvJob *job)
 	EvPage        *ev_page;
 
 	ev_debug_message (DEBUG_JOBS, "page: %d (%p)", job_pd->page, job);
-	ev_profiler_start (EV_PROFILE_JOBS, "%s (%p)", EV_GET_TYPE_NAME (job), job);
+	ev_profiler_start ("%s (%p)", EV_GET_TYPE_NAME (job), job);
 
 	ev_document_doc_mutex_lock ();
 	ev_page = ev_document_get_page (job->document, job_pd->page);
@@ -847,7 +847,7 @@ ev_job_thumbnail_cairo_run (EvJob *job)
 	EvPage          *page;
 
 	ev_debug_message (DEBUG_JOBS, "%d (%p)", job_thumb->page, job);
-	ev_profiler_start (EV_PROFILE_JOBS, "%s (%p)", EV_GET_TYPE_NAME (job), job);
+	ev_profiler_start ("%s (%p)", EV_GET_TYPE_NAME (job), job);
 
 	ev_document_doc_mutex_lock ();
 
@@ -948,7 +948,7 @@ ev_job_fonts_run (EvJob *job)
 #ifdef EV_ENABLE_DEBUG
 	/* We use the #ifdef in this case because of the if */
 	if (ev_document_fonts_get_progress (fonts) == 0)
-		ev_profiler_start (EV_PROFILE_JOBS, "%s (%p)", EV_GET_TYPE_NAME (job), job);
+		ev_profiler_start ("%s (%p)", EV_GET_TYPE_NAME (job), job);
 #endif
 
 	job_fonts->scan_completed = !ev_document_fonts_scan (fonts, 20);
@@ -1023,7 +1023,7 @@ ev_job_load_run (EvJob *job)
 	GError    *error = NULL;
 
 	ev_debug_message (DEBUG_JOBS, "%s", job_load->uri);
-	ev_profiler_start (EV_PROFILE_JOBS, "%s (%p)", EV_GET_TYPE_NAME (job), job);
+	ev_profiler_start ("%s (%p)", EV_GET_TYPE_NAME (job), job);
 
 	ev_document_fc_mutex_lock ();
 
@@ -1146,7 +1146,7 @@ ev_job_load_stream_run (EvJob *job)
         EvJobLoadStreamPrivate *priv = ev_job_load_stream_get_instance_private (job_load_stream);
         GError *error = NULL;
 
-        ev_profiler_start (EV_PROFILE_JOBS, "%s (%p)", EV_GET_TYPE_NAME (job), job);
+        ev_profiler_start ("%s (%p)", EV_GET_TYPE_NAME (job), job);
 
         ev_document_fc_mutex_lock ();
 
@@ -1298,7 +1298,7 @@ ev_job_load_gfile_run (EvJob *job)
         EvJobLoadGFile *job_load_gfile = EV_JOB_LOAD_GFILE (job);
         GError    *error = NULL;
 
-        ev_profiler_start (EV_PROFILE_JOBS, "%s (%p)", EV_GET_TYPE_NAME (job), job);
+        ev_profiler_start ("%s (%p)", EV_GET_TYPE_NAME (job), job);
 
         ev_document_fc_mutex_lock ();
 
@@ -1473,7 +1473,7 @@ ev_job_load_fd_run (EvJob *job)
         if (fd == -1)
                 goto out;
 
-        ev_profiler_start (EV_PROFILE_JOBS, "%s (%p)", EV_GET_TYPE_NAME (job), job);
+        ev_profiler_start ("%s (%p)", EV_GET_TYPE_NAME (job), job);
 
         ev_document_fc_mutex_lock ();
 
@@ -1704,7 +1704,7 @@ ev_job_save_run (EvJob *job)
 	GError    *error = NULL;
 
 	ev_debug_message (DEBUG_JOBS, "uri: %s, document_uri: %s", job_save->uri, job_save->document_uri);
-	ev_profiler_start (EV_PROFILE_JOBS, "%s (%p)", EV_GET_TYPE_NAME (job), job);
+	ev_profiler_start ("%s (%p)", EV_GET_TYPE_NAME (job), job);
 
         fd = ev_mkstemp ("saveacopy.XXXXXX", &tmp_filename, &error);
         if (fd == -1) {
@@ -1866,7 +1866,7 @@ ev_job_find_run (EvJob *job)
 #ifdef EV_ENABLE_DEBUG
 	/* We use the #ifdef in this case because of the if */
 	if (job_find->current_page == job_find->start_page)
-		ev_profiler_start (EV_PROFILE_JOBS, "%s (%p)", EV_GET_TYPE_NAME (job), job);
+		ev_profiler_start ("%s (%p)", EV_GET_TYPE_NAME (job), job);
 #endif
 
 	ev_page = ev_document_get_page (job->document, job_find->current_page);
@@ -2040,7 +2040,7 @@ ev_job_layers_run (EvJob *job)
 	EvJobLayers *job_layers = EV_JOB_LAYERS (job);
 
 	ev_debug_message (DEBUG_JOBS, NULL);
-	ev_profiler_start (EV_PROFILE_JOBS, "%s (%p)", EV_GET_TYPE_NAME (job), job);
+	ev_profiler_start ("%s (%p)", EV_GET_TYPE_NAME (job), job);
 
 	ev_document_doc_mutex_lock ();
 	job_layers->model = ev_document_layers_get_layers (EV_DOCUMENT_LAYERS (job->document));
@@ -2105,7 +2105,7 @@ ev_job_export_run (EvJob *job)
 	g_assert (job_export->page != -1);
 
 	ev_debug_message (DEBUG_JOBS, NULL);
-	ev_profiler_start (EV_PROFILE_JOBS, "%s (%p)", EV_GET_TYPE_NAME (job), job);
+	ev_profiler_start ("%s (%p)", EV_GET_TYPE_NAME (job), job);
 
 	ev_document_doc_mutex_lock ();
 
@@ -2193,7 +2193,7 @@ ev_job_print_run (EvJob *job)
 	g_assert (job_print->cr != NULL);
 
 	ev_debug_message (DEBUG_JOBS, NULL);
-	ev_profiler_start (EV_PROFILE_JOBS, "%s (%p)", EV_GET_TYPE_NAME (job), job);
+	ev_profiler_start ("%s (%p)", EV_GET_TYPE_NAME (job), job);
 
 	job->failed = FALSE;
 	job->finished = FALSE;
