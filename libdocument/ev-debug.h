@@ -50,19 +50,9 @@ G_BEGIN_DECLS
 
 #define _ev_debug_init()
 #define _ev_debug_shutdown()
-#if defined(G_HAVE_GNUC_VARARGS)
-#define ev_debug_message(section, format, args...) G_STMT_START { } G_STMT_END
-#define ev_profiler_start(format, args...) G_STMT_START { } G_STMT_END
-#define ev_profiler_stop(format, args...) G_STMT_START { } G_STMT_END
-#elif defined(G_HAVE_ISO_VARARGS)
 #define ev_debug_message(...) G_STMT_START { } G_STMT_END
 #define ev_profiler_start(...) G_STMT_START { } G_STMT_END
 #define ev_profiler_stop(...) G_STMT_START { } G_STMT_END
-#else /* no varargs macros */
-static void ev_debug_message(EvDebugSection section, const gchar *file, gint line, const gchar *function, const gchar *format, ...) {}
-static void ev_profiler_start(EvProfileSection section,	const gchar *format, ...) {}
-static void ev_profiler_stop(EvProfileSection section, const gchar *format, ...) {}
-#endif
 
 #else /* ENABLE_DEBUG */
 
