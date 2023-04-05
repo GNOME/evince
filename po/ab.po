@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
-"POT-Creation-Date: 2022-12-09 18:30+0000\n"
+"POT-Creation-Date: 2023-03-03 18:30+0000\n"
 "Last-Translator: Нанба Наала <naala-nanba@rambler.ru>\n"
 "Language-Team: Abkhazian <daniel.abzakh@gmail.com>\n"
 "Language: ab\n"
@@ -9,11 +9,10 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-DamnedLies-Scope: partial\n"
 
 #: backend/comics/comics-document.c:190 backend/comics/comics-document.c:261
 msgid "File is corrupted"
-msgstr ""
+msgstr "Афаил ԥхасҭоуп"
 
 #: backend/comics/comics-document.c:251
 msgid "Archive is encrypted"
@@ -21,7 +20,7 @@ msgstr "Архив шифрркуп"
 
 #: backend/comics/comics-document.c:256
 msgid "No supported images in archive"
-msgstr ""
+msgstr "Архив аҟны иҟаӡам адкылара змоу асахьақәа"
 
 #: backend/comics/comics-document.c:266
 msgid "No files in archive"
@@ -30,67 +29,72 @@ msgstr "Архив аҟны афаилқәа ыҟаӡам"
 #: backend/comics/comics-document.c:315
 #, c-format
 msgid "Not a comic book MIME type: %s"
-msgstr ""
+msgstr "Адокумент ахкы MIME акомиксқәа рышәҟәы ахь иаҵанакӡом:%s"
 
 #: backend/comics/comics-document.c:322
 msgid ""
 "libarchive lacks support for this comic book’s compression, please contact "
 "your distributor"
 msgstr ""
+"libarchive  иаднакылаӡом ари акомикс ашәҟәы  аиҵацалара  аформат , "
+"адистибиутор шәидҵаал."
 
 #: backend/comics/comics-document.c:362
 msgid "Can not get local path for archive"
-msgstr ""
+msgstr "Архив азы илокалу амҩа аиура ауам"
 
 #: backend/comics/comicsdocument.evince-backend.desktop.in.in:4
 #: backend/comics/evince-comicsdocument.metainfo.xml.in.in:5
 msgid "Comic Books"
-msgstr ""
+msgstr "Акомиксқәа рышәҟәқәа"
 
 #: backend/comics/evince-comicsdocument.metainfo.xml.in.in:6
 msgid "Adds support for reading comic books"
 msgstr ""
+"Comic Book Archive аформат змоу  адокументқәа рыԥхьаразы амаҵура  иацнаҵоит"
 
 #: backend/djvu/djvu-document.c:179
 msgid "DjVu document has incorrect format"
-msgstr ""
+msgstr "Адокумент DjVu иамоуп ииашам аформат"
 
 #: backend/djvu/djvu-document.c:266
 msgid ""
 "The document is composed of several files. One or more of these files cannot "
 "be accessed."
 msgstr ""
+"Адокумент шьақәгылоуп  ԥыҭк афаилқәа рыла. Урҭ афаилқәа акы мамзар ԥыҭк рахь "
+"анеира залшом."
 
 #: backend/djvu/djvudocument.evince-backend.desktop.in.in:4
 #: backend/djvu/evince-djvudocument.metainfo.xml.in.in:5
 msgid "DjVu Documents"
-msgstr ""
+msgstr "DjVu аформат змоу адокументқәа"
 
 #: backend/djvu/evince-djvudocument.metainfo.xml.in.in:6
 msgid "Adds support for reading DjVu documents"
-msgstr ""
+msgstr "DjVu аформат змоу  адокументқәа рыԥхьаразы амаҵура  иацнаҵоит"
 
 #: backend/dvi/dvi-document.c:110
 msgid "DVI document has incorrect format"
-msgstr ""
+msgstr "Адокумент DVI иамоуп ииашам аформат"
 
 #: backend/dvi/dvidocument.evince-backend.desktop.in.in:4
 #: backend/dvi/evince-dvidocument.metainfo.xml.in.in:5
 msgid "DVI Documents"
-msgstr ""
+msgstr "DVI аформат змоу адокумент"
 
 #: backend/dvi/evince-dvidocument.metainfo.xml.in.in:6
 msgid "Adds support for reading DVI documents"
-msgstr ""
+msgstr "DVI  аформат змоу  адокументқәа рыԥхьаразы амаҵура  иацнаҵоит"
 
 #: backend/pdf/evince-pdfdocument.metainfo.xml.in.in:5
 #: backend/pdf/pdfdocument.evince-backend.desktop.in.in:5
 msgid "PDF Documents"
-msgstr ""
+msgstr "PDF аформат змоу адокументқәа"
 
 #: backend/pdf/evince-pdfdocument.metainfo.xml.in.in:6
 msgid "Adds support for reading PDF Documents"
-msgstr ""
+msgstr " PDF аформат змоу  адокументқәа рыԥхьаразы амаҵура  иацнаҵоит"
 
 #. translators: this is the document security state
 #: backend/pdf/ev-poppler.c:731 backend/pdf/ev-poppler.c:737
@@ -134,7 +138,7 @@ msgstr "TrueType (CID)"
 
 #: backend/pdf/ev-poppler.c:893
 msgid "Unknown font type"
-msgstr ""
+msgstr "Ашрифтқәа еилкаам рыхкы"
 
 #: backend/pdf/ev-poppler.c:937
 msgid ""
@@ -142,6 +146,9 @@ msgid ""
 "14 fonts. If the substitute fonts selected by fontconfig are not the same as "
 "the fonts used to create the PDF, the rendering may not be correct."
 msgstr ""
+"Ари адокумент иамоуп иҭаӡу  PDF Standard 14  иалам ашрифтқәа реизга."
+"Ацымхәрас иҟоу  fontconfig иалнахыз ашрифтқәа  PDF аԥҵараан рхы иадырхәоз "
+"ашрифтқәа иреиԥшымзар , адокумент аилыԥшаара ииашамкәа инагӡахар ҟалоит."
 
 #: backend/pdf/ev-poppler.c:942
 msgid "All fonts are either standard or embedded."
@@ -168,15 +175,15 @@ msgstr "Мап"
 
 #: backend/pdf/ev-poppler.c:989
 msgid "Embedded subset"
-msgstr ""
+msgstr "Иҭаӡу арацәеиҵа"
 
 #: backend/pdf/ev-poppler.c:991
 msgid "Embedded"
-msgstr ""
+msgstr "Иҭаӡу"
 
 #: backend/pdf/ev-poppler.c:993
 msgid "Not embedded"
-msgstr ""
+msgstr "Анҭыҵтәи"
 
 #. Translators: string starting with a space
 #. * because it is directly appended to the font
@@ -242,59 +249,60 @@ msgstr ""
 #: backend/ps/evince-psdocument.metainfo.xml.in.in:5
 #: backend/ps/psdocument.evince-backend.desktop.in.in:5
 msgid "PostScript Documents"
-msgstr ""
+msgstr "PostScript аформат змоу адокументқәа"
 
 #: backend/ps/evince-psdocument.metainfo.xml.in.in:6
 msgid "Adds support for reading PostScript documents"
-msgstr ""
+msgstr "PostScrip аформат змоу адокументқәа рыԥхьразы иацнаҵоит ацхыраара."
 
 #: backend/ps/ev-spectre.c:98
 #, c-format
 msgid "Failed to load document “%s”"
-msgstr ""
+msgstr "«%s» адокумент аартра залшом"
 
 #: backend/ps/ev-spectre.c:131
 #, c-format
 msgid "Failed to save document “%s”"
-msgstr ""
+msgstr "«%s» адокумент аиқәырхара залшом"
 
 #: backend/tiff/evince-tiffdocument.metainfo.xml.in.in:5
 #: backend/tiff/tiffdocument.evince-backend.desktop.in.in:4
 msgid "TIFF Documents"
-msgstr ""
+msgstr "TIFF аформат змоу адокумент"
 
 #: backend/tiff/evince-tiffdocument.metainfo.xml.in.in:6
 msgid "Adds support for reading TIFF documents"
-msgstr ""
+msgstr "TIFF аформат змоу адокументқәа рыԥхьразы иацнаҵоит ацхыраара."
 
 #: backend/tiff/tiff-document.c:124
 msgid "Invalid document"
-msgstr ""
+msgstr "Ииашам адокумент"
 
 #: backend/xps/evince-xpsdocument.metainfo.xml.in.in:5
 #: backend/xps/xpsdocument.evince-backend.desktop.in.in:5
 msgid "XPS Documents"
-msgstr ""
+msgstr " XPS аформат змоу адокумент"
 
 #: backend/xps/evince-xpsdocument.metainfo.xml.in.in:6
 msgid "Adds support for reading XPS documents"
-msgstr ""
+msgstr "XPS аформат змоу адокументқәа рыԥхьразы иацнаҵоит ацхыраара."
 
 #. Manually set name and icon
 #: data/org.gnome.Evince.desktop.in.in:3 org.gnome.Evince.appdata.xml.in:23
 #: shell/ev-window-title.c:134 shell/main.c:300
 msgid "Document Viewer"
-msgstr ""
+msgstr "Адокументқәа рыхәаԥшра"
 
 #: data/org.gnome.Evince.desktop.in.in:4
 msgid "View multi-page documents"
-msgstr ""
+msgstr "Адаҟьарацәа змоу адокументқәа рыхәаԥшра"
 
 #. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
 #: data/org.gnome.Evince.desktop.in.in:6
 msgid ""
 "pdf;ps;postscript;dvi;xps;djvu;tiff;document;presentation;viewer;evince;"
 msgstr ""
+"pdf;ps;postscript;dvi;xps;djvu;tiff;адокумент;аӡыргара;ахәаԥшра;evince;"
 
 #: data/org.gnome.Evince.desktop.in.in:19
 msgid "New Window"
@@ -302,11 +310,12 @@ msgstr "Аҧенџьыр ҿыц"
 
 #: data/org.gnome.Evince.gschema.xml:14
 msgid "Override document restrictions"
-msgstr ""
+msgstr "Аҳәаакрақәа рызхьамԥшра"
 
 #: data/org.gnome.Evince.gschema.xml:15
 msgid "Override document restrictions, like restriction to copy or to print."
 msgstr ""
+"Адокумент аҳәаакрақәа рызхьамԥшра, иаҳҳәап, ахкьыԥхьаареи акьыԥхьреи рҳәаакра"
 
 #: data/org.gnome.Evince.gschema.xml:19
 msgid "Automatically reload the document"
@@ -314,73 +323,79 @@ msgstr "Адокумент автоматикла аиҭаҿакра"
 
 #: data/org.gnome.Evince.gschema.xml:20
 msgid "The document is automatically reloaded on file change."
-msgstr ""
+msgstr "Афаил ахала еиҭаҭагалахоит афаил аԥсахраан"
 
 #: data/org.gnome.Evince.gschema.xml:24
 msgid "The URI of the directory last used to open or save a document"
 msgstr ""
+"Адокумент аартра, мамзар аиқәырхаразы аҵыхәтәантәи ахархәара змаз "
+"аизакхьӡынҵа URI"
 
 #: data/org.gnome.Evince.gschema.xml:28
 msgid "The URI of the directory last used to save a picture"
-msgstr ""
+msgstr "Асахьа аиқәырхаразы аҵыхәтәантәи аизакхьӡынҵа URI"
 
 #: data/org.gnome.Evince.gschema.xml:32
 msgid "Page cache size in MiB"
-msgstr ""
+msgstr "Адаҟьа МиБ аҟны кеш ашәагаа"
 
 #: data/org.gnome.Evince.gschema.xml:33
 msgid ""
 "The maximum size that will be used to cache rendered pages, limits maximum "
 "zoom level."
 msgstr ""
+"Иреиҳаӡоу ашәагаа, кеш азыҳәан ахархәара змоу иҭыху адаҟьақәа акеш рзуразы, "
+"ардура иҳаракӡоу аҩаӡара ҳәааныркоит."
 
 #: data/org.gnome.Evince.gschema.xml:37
 msgid ""
 "Show a dialog to confirm that the user wants to activate the caret "
 "navigation."
 msgstr ""
+"Ахырхарҭа ахырхагатә хыцқәа рыцхыраарала аҿакра зырҵабыргуа аиҽцәажәара  "
+"аарԥшра"
 
 #: data/org.gnome.Evince.gschema.xml:41
 msgid "Allow links to change the zoom level."
-msgstr ""
+msgstr "Азхьаԥшрақәа амасштаб рыԥсахыр рылшоит"
 
 #: data/org.gnome.Evince-previewer.desktop.in.in:3
 msgid "Print Preview"
-msgstr ""
+msgstr "Акьыԥхьра заа ахәаԥшра"
 
 #: data/org.gnome.Evince-previewer.desktop.in.in:4
 msgid "Preview before printing"
-msgstr ""
+msgstr "Акьыԥхьра мҩаԥгахаанӡа заа ахәаԥшра"
 
 #: libdocument/ev-attachment.c:330 libdocument/ev-attachment.c:351
 #, c-format
 msgid "Couldn’t save attachment “%s”: %s"
-msgstr ""
+msgstr "«%s» агәылаҵа аиқәырхара залымшеит: %s"
 
 #: libdocument/ev-attachment.c:398
 #, c-format
 msgid "Couldn’t open attachment “%s”: %s"
-msgstr ""
+msgstr "«%s» агәылаҵа аартра залымшеит: %s"
 
 #: libdocument/ev-attachment.c:437
 #, c-format
 msgid "Couldn’t open attachment “%s”"
-msgstr ""
+msgstr "«%s» агәылаҵа аартра залымшеит."
 
 #: libdocument/ev-document-factory.c:105
 #, c-format
 msgid "File type %s (%s) is not supported"
-msgstr ""
+msgstr "афаилқәа %s (%s) рыхкы иаҵанакуа адкылашьа рымаӡам"
 
 #: libdocument/ev-document-factory.c:378 libdocument/ev-file-helpers.c:418
 #: libdocument/ev-file-helpers.c:464 libdocument/ev-file-helpers.c:483
 #: libdocument/ev-file-helpers.c:564 libdocument/ev-file-helpers.c:573
 msgid "Unknown MIME Type"
-msgstr ""
+msgstr "Еилкаам MIME адокумент ахкы"
 
 #: libdocument/ev-document-factory.c:647
 msgid "All Documents"
-msgstr ""
+msgstr "Адокументқәа зегьы"
 
 #: libdocument/ev-document-factory.c:674 shell/ev-utils.c:272
 msgid "All Files"
@@ -389,37 +404,37 @@ msgstr "Афаилқәа зегьы"
 #: libdocument/ev-file-helpers.c:158
 #, c-format
 msgid "Failed to create a temporary file: %s"
-msgstr ""
+msgstr "Аамҭалатәи афаил аԥҵара залшом:%s"
 
 #: libdocument/ev-file-helpers.c:235
 #, c-format
 msgid "Failed to create a temporary directory: %s"
-msgstr ""
+msgstr "Аамҭалатәи аизакхьӡынҵа аԥҵара залшом:%s"
 
 #: libdocument/ev-xmp.c:350
 msgid "This work is in the Public Domain"
-msgstr ""
+msgstr "Ари аусура ауаажәларратә мал аҟны иҟоуп"
 
 #: libmisc/ev-page-action-widget.c:86 libmisc/ev-page-action-widget.c:125
 #, c-format
 msgid "(%d of %d)"
-msgstr ""
+msgstr "(%d аҟынтә %d)"
 
 #: libmisc/ev-page-action-widget.c:88 libmisc/ev-page-action-widget.c:129
 #, c-format
 msgid "of %d"
-msgstr ""
+msgstr "%d аҟынтә"
 
 #: libmisc/ev-page-action-widget.c:187 shell/ev-history.c:455
 #: shell/ev-sidebar-bookmarks.c:343 shell/ev-window.c:967
 #: shell/ev-window.c:5170
 #, c-format
 msgid "Page %s"
-msgstr ""
+msgstr "Адаҟьа %s"
 
 #: libmisc/ev-search-box.c:113
 msgid "Not found, click to change search options"
-msgstr ""
+msgstr "Иԥшааӡам, шәақәыӷәӷәа аԥшаара ахышәарақәа рыԥсахразы"
 
 #: libmisc/ev-search-box.c:187 libmisc/ev-search-box.c:243
 msgid "Search options"
@@ -444,22 +459,22 @@ msgstr "Аԥшаара ацәаҳәа анаҩстәи аҭалара аԥшаа
 #: libview/ev-jobs.c:658
 #, c-format
 msgid "Failed to render page %d: %s"
-msgstr ""
+msgstr "Адаҟьа аарԥшра залымшеит %d: %s"
 
 #: libview/ev-jobs.c:665
 #, c-format
 msgid "Failed to render page %d"
-msgstr ""
+msgstr "Адаҟьа аус адулара залымшеит %d"
 
 #: libview/ev-jobs.c:918
 #, c-format
 msgid "Failed to create thumbnail for page %d"
-msgstr ""
+msgstr "Адаҟьазы аескиз аԥҵара залымшеит %d"
 
 #: libview/ev-jobs.c:2367
 #, c-format
 msgid "Failed to print page %d: %s"
-msgstr ""
+msgstr "Адаҟьа акьыԥхьра залымшеит %d: %s"
 
 #. Initial state
 #: libview/ev-print-operation.c:353
@@ -468,12 +483,12 @@ msgstr "Заа ахәаԥшра аҽазыҟаҵара"
 
 #: libview/ev-print-operation.c:355 libview/ev-print-operation.c:365
 msgid "Finishing…"
-msgstr ""
+msgstr "Ахырқәшара..."
 
 #: libview/ev-print-operation.c:357
 #, c-format
 msgid "Generating preview: page %d of %d"
-msgstr ""
+msgstr "Заа ахәаԥшра аԥҵара: адаҟьа %d аҟынтә %d"
 
 #. Initial state
 #: libview/ev-print-operation.c:363
@@ -483,11 +498,11 @@ msgstr "Акьыԥхьра аҽазыҟаҵара..."
 #: libview/ev-print-operation.c:367
 #, c-format
 msgid "Printing page %d of %d…"
-msgstr ""
+msgstr "Адаҟьа акьыԥхьра %d аҟынтә %d"
 
 #: libview/ev-print-operation.c:1589 libview/ev-print-operation.c:2056
 msgid "Your print range selection does not include any pages"
-msgstr ""
+msgstr "Иалышәхыз адаҟьақәа рҵакыра иамаӡам адаҟьақәа"
 
 #. translators: Title of the print dialog
 #: libview/ev-print-operation.c:1730 libview/ev-print-operation.c:1828
@@ -497,11 +512,11 @@ msgstr "Print"
 
 #: libview/ev-print-operation.c:2030
 msgid "Requested format is not supported by this printer."
-msgstr ""
+msgstr "Ари апринтер иадҵаалаз аформат аднакылаӡом"
 
 #: libview/ev-print-operation.c:2053
 msgid "Invalid page selection"
-msgstr ""
+msgstr "Ииашам адаҟьа алхуп"
 
 #: libview/ev-print-operation.c:2054
 msgid "Warning"
@@ -509,15 +524,15 @@ msgstr "Агәҽанҵара"
 
 #: libview/ev-print-operation.c:2716
 msgid "Page Scaling:"
-msgstr ""
+msgstr "Адаҟьа амасштабркра:"
 
 #: libview/ev-print-operation.c:2723
 msgid "Shrink to Printable Area"
-msgstr ""
+msgstr "Акьыԥхьра аҵакыра аҟынӡа амырффара"
 
 #: libview/ev-print-operation.c:2724
 msgid "Fit to Printable Area"
-msgstr ""
+msgstr "Акьыԥхьра аҵакыра аркра"
 
 #: libview/ev-print-operation.c:2727
 msgid ""
@@ -555,7 +570,7 @@ msgstr ""
 
 #: libview/ev-print-operation.c:2754
 msgid "Draw border around pages"
-msgstr ""
+msgstr "Адаҟьа аҳәаақәа рҭыхра"
 
 #: libview/ev-print-operation.c:2756
 msgid "When enabled, a border will be drawn around each page."
@@ -563,27 +578,27 @@ msgstr ""
 
 #: libview/ev-print-operation.c:2858
 msgid "Page Handling"
-msgstr ""
+msgstr "Адаҟьа аус адулара"
 
 #: libview/ev-view-accessible.c:43
 msgid "Scroll Up"
-msgstr ""
+msgstr "Хыхьҟа аҭаргьежьра"
 
 #: libview/ev-view-accessible.c:44
 msgid "Scroll Down"
-msgstr ""
+msgstr "Ҵаҟа аҭаргьежьра"
 
 #: libview/ev-view-accessible.c:50
 msgid "Scroll View Up"
-msgstr ""
+msgstr "Адокумент хыхьҟа аҭаргьежьра"
 
 #: libview/ev-view-accessible.c:51
 msgid "Scroll View Down"
-msgstr ""
+msgstr "Адокумент ҵаҟа аҭаргьежьра"
 
 #: libview/ev-view-accessible.c:132
 msgid "Document View"
-msgstr ""
+msgstr "Адокумент аарпшра"
 
 #: libview/ev-view.c:2117
 msgid "Go to first page"
@@ -627,11 +642,11 @@ msgstr "Афаил «%s» ахь аиасра"
 #: libview/ev-view.c:2172
 #, c-format
 msgid "Launch %s"
-msgstr ""
+msgstr "Аус арура  %s"
 
 #: libview/ev-view.c:2179
 msgid "Reset form"
-msgstr ""
+msgstr "Аформа арыцкьара"
 
 #: libview/ev-view-presentation.c:740
 msgid "Jump to page:"
@@ -639,39 +654,44 @@ msgstr "Адаҟьа ахь аиасра:"
 
 #: libview/ev-view-presentation.c:1034
 msgid "End of presentation. Press Esc or click to exit."
-msgstr ""
+msgstr "Аӡыргара хырқәшоуп.Шәақәыӷәӷәа ҳәынаҧла мамзар арыд Esc аҭыҵразы."
 
 #: org.gnome.Evince.appdata.xml.in:24
 msgid "Document viewer for popular document formats"
-msgstr ""
+msgstr "Аҧшьы иаларҵәоу аформатқәа рыла иҟоу  адокументқәа  рыхәаҧшразы."
 
 #: org.gnome.Evince.appdata.xml.in:26
 msgid ""
 "A document viewer for the GNOME desktop. You can view, search or annotate "
 "documents in many different formats."
 msgstr ""
+"Аусуратә ишәа GNOME  адокументқәа рыхәаҧшраpзы аҧшьы. Шәара ишәылшоит "
+"адокументқәа ирацәаӡоу аформатқәа рыла ишәыҧшаалар мамзар ажәеилырккақәа "
+"анышәҵаларц ."
 
 #: org.gnome.Evince.appdata.xml.in:27
 msgid ""
 "Evince supports documents in: PDF, PS, EPS, XPS, DjVu, TIFF, DVI (with "
 "SyncTeX), and Comic Books archives (CBR, CBT, CBZ, CB7)."
 msgstr ""
+"Evince иаднакылоит адокументқәа анаҩстәи аформатқәа рыла: PDF, PS, EPS, XPS, "
+"DjVu, TIFF, DVI (с SyncTeX) и Comic Book Archive (CBR, CBT, CBZ, CB7)."
 
 #: org.gnome.Evince.appdata.xml.in:35
 msgid "A clear, simple UI"
-msgstr ""
+msgstr "Имариоу еилкаау аинтерфеис"
 
 #: org.gnome.Evince.appdata.xml.in:39
 msgid "Advanced highlighting and annotation"
-msgstr ""
+msgstr "Ирҭбаау алкаареи аннотациеи"
 
 #: previewer/ev-previewer.c:57
 msgid "Delete the temporary file"
-msgstr ""
+msgstr "Аамҭалатәи афаил аныхра"
 
 #: previewer/ev-previewer.c:59
 msgid "File specifying print settings"
-msgstr ""
+msgstr "Афаил, акьыҧхьра ахышәарақәа шьақәзыргыло"
 
 #: previewer/ev-previewer.c:59
 msgid "FILE"
@@ -679,7 +699,7 @@ msgstr "АФАИЛ"
 
 #: previewer/ev-previewer.c:61
 msgid "File descriptor of input file"
-msgstr ""
+msgstr "Аҭаларатә фаил адискриптор"
 
 #: previewer/ev-previewer.c:61 previewer/ev-previewer.c:65
 msgid "FD"
@@ -687,40 +707,40 @@ msgstr "FD"
 
 #: previewer/ev-previewer.c:63
 msgid "MIME type of input file"
-msgstr ""
+msgstr "MIME-аҭаларатә фаил ахкы"
 
 #: previewer/ev-previewer.c:63
 msgid "TYPE"
-msgstr ""
+msgstr "АХКЫ"
 
 #: previewer/ev-previewer.c:65
 msgid "File descriptor of print settings file"
-msgstr ""
+msgstr "Акьыҧхьра архиарақәа рфаил адискриптор"
 
 #: previewer/ev-previewer.c:297 previewer/ev-previewer.c:317
 msgid "GNOME Document Previewer"
-msgstr ""
+msgstr "Адокументқәа заа рыхәаҧшра"
 
 #: previewer/ev-previewer-toolbar.c:112 shell/ev-toolbar.c:218
 msgid "Select page or search in the index"
-msgstr ""
+msgstr "Иалышәха адаҟьа, мамзар ишәыҧшаа аиндекс аҟны"
 
 #: previewer/ev-previewer-toolbar.c:114 shell/ev-toolbar.c:219
 msgid "Select page"
-msgstr ""
+msgstr "Адаҟьа алышәх"
 
 #: previewer/ev-previewer-window.c:78 shell/ev-window.c:3676
 msgid "Failed to print document"
-msgstr ""
+msgstr "Адокумент акьыҧхьра залымшеит"
 
 #: previewer/ev-previewer-window.c:193 previewer/ev-previewer-window.c:590
 msgid "Evince Document Viewer"
-msgstr ""
+msgstr "Evince адокументқәа рыхәаҧшыга"
 
 #: previewer/ev-previewer-window.c:229
 #, c-format
 msgid "The selected printer “%s” could not be found"
-msgstr ""
+msgstr "Иалхоу апринтер «%s» ҧшааӡам"
 
 #: previewer/ev-previewer-window.c:568 shell/ev-window.c:4226
 msgid "Evince"
@@ -732,31 +752,31 @@ msgstr "_Акьыҧхьра"
 
 #: previewer/previewer.ui:10
 msgid "Print this document"
-msgstr ""
+msgstr "Адокумент акьыҧхьра"
 
 #: previewer/previewer.ui:20 shell/evince-menus.ui:232
 msgid "Previous Page"
-msgstr ""
+msgstr "Иаҧхьааиуа адаҟьа"
 
 #: previewer/previewer.ui:27 shell/evince-menus.ui:236
 msgid "Next Page"
-msgstr ""
+msgstr "Анаҩстәи  адаҟьа"
 
 #: previewer/previewer.ui:34
 msgid "Enlarge the document"
-msgstr ""
+msgstr "Адаҟьа ашәагаа ардура"
 
 #: previewer/previewer.ui:42
 msgid "Shrink the document"
-msgstr ""
+msgstr "Адаҟьа ашәагаа архәыҷра"
 
 #: previewer/previewer.ui:49
 msgid "Reset zoom and make the page fit in the window"
-msgstr ""
+msgstr "Амасштаб акажьра иара убас адаҟьа аҧенџьыр ашәагаа иашьашәалан аҟаҵара"
 
 #: properties/ev-properties-main.c:116
 msgid "Document"
-msgstr ""
+msgstr "Адокумент"
 
 #: properties/ev-properties-view.c:62
 msgid "Title:"
@@ -848,14 +868,14 @@ msgstr "%.2f × %.2f диуим"
 #: properties/ev-properties-view.c:342
 #, c-format
 msgid "%s, Portrait (%s)"
-msgstr ""
+msgstr "%s, ишиашо ицо (%s)"
 
 #. Note to translators: first placeholder is the paper name (eg.
 #. * A4), second placeholder is the paper size (eg. 297x210 mm)
 #: properties/ev-properties-view.c:349
 #, c-format
 msgid "%s, Landscape (%s)"
-msgstr ""
+msgstr "%s, иаарҳәу (%s)"
 
 #: properties/ev-properties-view.c:437
 #: shell/ev-annotation-properties-dialog.c:112
@@ -864,7 +884,7 @@ msgstr "Еилкаам"
 
 #: shell/ev-annotation-properties-dialog.c:97
 msgid "Icon:"
-msgstr ""
+msgstr "Адыргаҷа:"
 
 #: shell/ev-annotation-properties-dialog.c:103
 msgid "Note"
@@ -904,7 +924,7 @@ msgstr "Агьежь"
 
 #: shell/ev-annotation-properties-dialog.c:123
 msgid "Markup type:"
-msgstr ""
+msgstr "Адырганҵа арежим:"
 
 #: shell/ev-annotation-properties-dialog.c:129
 msgid "Highlight"
@@ -944,7 +964,7 @@ msgstr "Аҵәцамзаара:"
 
 #: shell/ev-annotation-properties-dialog.c:205
 msgid "Initial window state:"
-msgstr ""
+msgstr "Аҧенџьыр ахалагаратә ҭагылазаашьа:"
 
 #: shell/ev-annotation-properties-dialog.c:211
 msgid "Open"
@@ -957,7 +977,7 @@ msgstr "Аркра"
 #. Translators: an annotation that looks like a "sticky note"
 #: shell/ev-annotations-toolbar.c:133
 msgid "Note text"
-msgstr ""
+msgstr "Атекст азгәаҭа азыҟаҵара"
 
 #: shell/ev-annotations-toolbar.c:135
 msgid "Add text annotation"
@@ -997,7 +1017,7 @@ msgstr "Адокументқәа_зҭоу аҭаӡ аартра"
 
 #: shell/evince-menus.ui:58
 msgid "_Save As…"
-msgstr ""
+msgstr "Абас _еиҧш аиқәырхара..."
 
 #: shell/evince-menus.ui:64
 msgid "Present as _Slideshow"
@@ -1033,7 +1053,7 @@ msgstr "_Аҷыдаҟазшьақәа"
 
 #: shell/evince-menus.ui:106
 msgid "Save Current Settings as Defa_ult"
-msgstr ""
+msgstr "Уажәтәи ахышәарақәа _ишыҟоу еиҧш реиқәырхара"
 
 #: shell/evince-menus.ui:110
 msgid "_Keyboard Shortcuts"
@@ -1077,7 +1097,7 @@ msgstr "_Аиҭаҿакра"
 
 #: shell/evince-menus.ui:161
 msgid "Auto_scroll"
-msgstr ""
+msgstr "Автоматла а_ҭаргьежьра"
 
 #: shell/evince-menus.ui:167
 msgid "_Copy"
@@ -1103,11 +1123,11 @@ msgstr "_Агәылаҵа аартра"
 #: shell/evince-menus.ui:194 shell/evince-menus.ui:264
 #: shell/evince-menus.ui:288
 msgid "_Save Attachment As…"
-msgstr ""
+msgstr "_Алаҵа абас еиҧш аиқәырхара..."
 
 #: shell/evince-menus.ui:201
 msgid "Annotation _Properties…"
-msgstr ""
+msgstr "А_згәаҭа аҷыдаҟазшьақәа..."
 
 #: shell/evince-menus.ui:206
 msgid "R_emove Annotation"
@@ -1119,7 +1139,7 @@ msgstr ""
 
 #: shell/evince-menus.ui:226
 msgid "Navigation"
-msgstr ""
+msgstr "Ахырхарҭарбара"
 
 #: shell/evince-menus.ui:228
 msgid "First Page"
@@ -1166,6 +1186,7 @@ msgid ""
 "This document is locked and can only be read by entering the correct "
 "password."
 msgstr ""
+"Ари  адокумент аанкылоуп, ажәамаӡа аҭагалара ашьҭахь ауп аҧхьара аншәылшо"
 
 #: shell/evince-password-view.ui:37
 msgid "_Unlock Document"
@@ -1265,7 +1286,7 @@ msgstr "Адокумент алицензиџ"
 #: shell/ev-properties-fonts.c:137
 #, c-format
 msgid "Gathering font information… %3d%%"
-msgstr ""
+msgstr "Аинформациа аизгара ашрифтқәа ирызкны %3d%%"
 
 #: shell/ev-properties-license.c:146
 msgid "Usage terms"
@@ -1281,7 +1302,7 @@ msgstr "Иацҵоу адыррақәа"
 
 #: shell/ev-sidebar-annotations.c:373
 msgid "Document contains no annotations"
-msgstr ""
+msgstr "Адокумент азгәаҭақәа амаӡам"
 
 #: shell/ev-sidebar-annotations.c:410
 #, c-format
@@ -1295,12 +1316,13 @@ msgstr "Азгәаҭақәа"
 #: shell/ev-sidebar-attachments.c:485
 #, c-format
 msgid "A file named “%s” already exists. Do you want to replace it?"
-msgstr ""
+msgstr "Афаил «%s» ахьӡ змоу ыҟоуп. Иҧсахтәума?"
 
 #: shell/ev-sidebar-attachments.c:489
 #, c-format
 msgid "The file “%s” already exists. Replacing it will overwrite its contents."
 msgstr ""
+"Афаил ыҟоуп «%s» аҟны. Афаил аҧсахра аҭаҵа аиҭаҭаҩра  аҟынӡа инанагоит."
 
 #: shell/ev-sidebar-attachments.c:494
 msgid "_Replace"
@@ -1316,7 +1338,7 @@ msgstr "Агәылаҵақәа"
 
 #: shell/ev-sidebar-layers.c:444 shell/ev-window.c:7760
 msgid "Layers"
-msgstr ""
+msgstr "Аҿыгҳарақәа"
 
 #: shell/ev-sidebar-links.c:357
 msgid "Collapse all tree"
@@ -1324,18 +1346,18 @@ msgstr "Аҵла аикәырҳәра"
 
 #: shell/ev-sidebar-links.c:364
 msgid "Expand all tree"
-msgstr ""
+msgstr "Аҵла зегьы аиҵыхра"
 
 #: shell/ev-sidebar-links.c:371
 msgid "Expand all under this element"
-msgstr ""
+msgstr "Ари  аелемент аҵаҟа зегьы аиҵыхра"
 
 #. Translators: This is the title for the sidebar pane that
 #. * shows the Outline or Table of Contents of the document.
 #.
 #: shell/ev-sidebar-links.c:1431 shell/ev-window.c:7712
 msgid "Outline"
-msgstr ""
+msgstr "Ахсаала"
 
 #: shell/ev-sidebar-thumbnails.c:1045 shell/ev-window.c:7695
 msgid "Thumbnails"
@@ -1343,11 +1365,11 @@ msgstr "Аминиатиура"
 
 #: shell/ev-toolbar.c:173
 msgid "Find a word or phrase in the document"
-msgstr ""
+msgstr "Ажәа мамзар афраза адокумент аҟны аҧшаара"
 
 #: shell/ev-toolbar.c:179
 msgid "Search not available for this document"
-msgstr ""
+msgstr "Ари адокумент аҟны аҧшаара мап ацәкуп"
 
 #: shell/ev-toolbar.c:203
 msgid "Open…"
@@ -1363,11 +1385,11 @@ msgstr "Аваратәи апанель"
 
 #: shell/ev-toolbar.c:227
 msgid "Annotate the document"
-msgstr ""
+msgstr "Азгәаҭа адокумент ахь ацҵара"
 
 #: shell/ev-toolbar.c:228
 msgid "Annotate document"
-msgstr ""
+msgstr "Азгәаҭа адокумент ахь ацҵара"
 
 #: shell/ev-toolbar.c:236 shell/ev-toolbar.c:237
 msgid "File options"
@@ -1375,7 +1397,7 @@ msgstr "Афаил ахышәарақәа"
 
 #: shell/ev-toolbar.c:255
 msgid "Set zoom level"
-msgstr ""
+msgstr "Амасштаб ақәыргылара"
 
 #: shell/ev-utils.c:268
 msgid "Supported Image Files"
@@ -1383,44 +1405,44 @@ msgstr "Аԥшранҵақәа рҷыдахәрақәа  адкылара змо
 
 #: shell/ev-window.c:1766
 msgid "The document contains no pages"
-msgstr ""
+msgstr "Адокумент адаҟьақәа амаӡам"
 
 #: shell/ev-window.c:1769
 msgid "The document contains only empty pages"
-msgstr ""
+msgstr "Адокумент иҭацәу адаҟьақәа рымацара роуп иамоуп"
 
 #: shell/ev-window.c:2014 shell/ev-window.c:2196
 #, c-format
 msgid "Unable to open document “%s”."
-msgstr ""
+msgstr "Адокумент аартра залшом «%s»"
 
 #: shell/ev-window.c:2161
 #, c-format
 msgid "Loading document from “%s”"
-msgstr ""
+msgstr "Адокумент аҭагалара «%s» аҟынтә"
 
 #: shell/ev-window.c:2166 shell/ev-window.c:2638 shell/ev-window.c:3004
 #: shell/ev-window.c:3740 shell/ev-window.c:3988
 msgid "C_ancel"
-msgstr ""
+msgstr "А_ҧыхра"
 
 #: shell/ev-window.c:2320 shell/ev-window.c:2689
 #, c-format
 msgid "Downloading document (%d%%)"
-msgstr ""
+msgstr "Адокумент аҭагалара  (%d%%)"
 
 #: shell/ev-window.c:2353
 msgid "Failed to load remote file."
-msgstr ""
+msgstr "Анҭыҵ аҟынтә афаил аҭагалара ауит"
 
 #: shell/ev-window.c:2634
 #, c-format
 msgid "Reloading document from %s"
-msgstr ""
+msgstr "Адокумент арҿыцра %s  аҟынтә"
 
 #: shell/ev-window.c:2664
 msgid "Failed to reload document."
-msgstr ""
+msgstr "Адокумент арҿыцра  залымшеит"
 
 #: shell/ev-window.c:2912
 msgid "Open Document"
@@ -1433,41 +1455,41 @@ msgstr "_Аартра"
 #: shell/ev-window.c:2990
 #, c-format
 msgid "Saving document to %s"
-msgstr ""
+msgstr "Адоумент аиқәырхара %s аҟны"
 
 #: shell/ev-window.c:2993
 #, c-format
 msgid "Saving attachment to %s"
-msgstr ""
+msgstr "Агәылаҵа аиқәырхара %s аҟны"
 
 #: shell/ev-window.c:2996
 #, c-format
 msgid "Saving image to %s"
-msgstr ""
+msgstr "Асахьа аиқәырхара  %s аҟны"
 
 #: shell/ev-window.c:3038 shell/ev-window.c:3153
 #, c-format
 msgid "The file could not be saved as “%s”."
-msgstr ""
+msgstr "Адокумент еиқәырхазар ҟалаӡом афаил «%s» аҟны"
 
 #: shell/ev-window.c:3070
 #, c-format
 msgid "Uploading document (%d%%)"
-msgstr ""
+msgstr "Ианыху адокумент аиқәырхара (%d%%)"
 
 #: shell/ev-window.c:3074
 #, c-format
 msgid "Uploading attachment (%d%%)"
-msgstr ""
+msgstr "Ианыху аҧшьы аиқәырхара (%d%%)"
 
 #: shell/ev-window.c:3078
 #, c-format
 msgid "Uploading image (%d%%)"
-msgstr ""
+msgstr "Ианыху асахьа аиқәырхара (%d%%)"
 
 #: shell/ev-window.c:3211
 msgid "Save As…"
-msgstr ""
+msgstr "Абас еиҧш аиқәырхара..."
 
 #: shell/ev-window.c:3213 shell/ev-window.c:7097 shell/ev-window.c:7323
 msgid "_Save"
@@ -1475,7 +1497,7 @@ msgstr "_Аиқәырхара"
 
 #: shell/ev-window.c:3300
 msgid "Could not send current document"
-msgstr ""
+msgstr "Уажәтәи адкумент ашьҭра залымшеит"
 
 #: shell/ev-window.c:3627
 #, c-format
@@ -1487,24 +1509,24 @@ msgstr[1] ""
 #: shell/ev-window.c:3736
 #, c-format
 msgid "Printing job “%s”"
-msgstr ""
+msgstr "Адҵа акьыҧхьра «%s»"
 
 #: shell/ev-window.c:3954
 msgid "Document contains form fields that have been filled out."
-msgstr ""
+msgstr "Адокумент иамоуп ихарҭәааз аформақәа рцәаҳәақәа ."
 
 #: shell/ev-window.c:3957
 msgid "Document contains new or modified annotations."
-msgstr ""
+msgstr "Адокумент иамоуп иҿыцу мамзар иҧсахоу азгәаҭақәа"
 
 #: shell/ev-window.c:3969
 #, c-format
 msgid "Reload document “%s”?"
-msgstr ""
+msgstr "Еиҭаҿактәума адокумент «%s» ?"
 
 #: shell/ev-window.c:3971
 msgid "If you reload the document, changes will be permanently lost."
-msgstr ""
+msgstr "Адокумент еиҭаҿашәкыр , аҧсахрақәа шәцәыӡоит."
 
 #: shell/ev-window.c:3973
 msgid "_No"
@@ -1513,11 +1535,11 @@ msgstr "_Мап"
 #: shell/ev-window.c:3982
 #, c-format
 msgid "Save a copy of document “%s” before closing?"
-msgstr ""
+msgstr "Иаркхаанӡа адокумент «%s»  ахкьыҧхьаа еиқәырхатәума?"
 
 #: shell/ev-window.c:3984
 msgid "If you don’t save a copy, changes will be permanently lost."
-msgstr ""
+msgstr "Ахкьыҧхьаа анеиқәшәмырха аҧсахрақәа шәцәыӡоит"
 
 #: shell/ev-window.c:3986
 msgid "Close _without Saving"
@@ -1525,12 +1547,12 @@ msgstr "_Аиқәырхарада аркра"
 
 #: shell/ev-window.c:3990
 msgid "Save a _Copy"
-msgstr ""
+msgstr "Ахкьыҧхьаа_ аиқәырхара"
 
 #: shell/ev-window.c:4072
 #, c-format
 msgid "Wait until print job “%s” finishes before closing?"
-msgstr ""
+msgstr "Иаркхаанӡа  адҵа акьыҧхьра  «%s» ала  ахырқәшара иазҧштәума?"
 
 #. TRANS: the singular form is not really used as n_print_jobs > 1
 #. but some languages distinguish between different plurals forms,
@@ -1546,14 +1568,15 @@ msgstr[1] ""
 #: shell/ev-window.c:4093
 msgid "If you close the window, pending print jobs will not be printed."
 msgstr ""
+"Аҧенџьыр анашәыркы  акьыҧхьразы аишьҭагылара иқәгылоу адҵақәа нагӡахаӡом."
 
 #: shell/ev-window.c:4097
 msgid "Cancel _print and Close"
-msgstr ""
+msgstr "_Акьыҧхьра аҧыхны аркра"
 
 #: shell/ev-window.c:4101
 msgid "Close _after Printing"
-msgstr ""
+msgstr "Акьыҧхьра ашь_ҭахь  аркра"
 
 #: shell/ev-window.c:4228
 msgid "© 1996–2022 The Evince document viewer authors"
@@ -1561,7 +1584,7 @@ msgstr "© 1996-2022 Адокуметқәа Evince рыхәаԥшыга аԥҵа
 
 #: shell/ev-window.c:4231
 msgid "Evince is a simple document viewer for GNOME"
-msgstr ""
+msgstr "GNOME  адокументқәа рыхәаҧшразы аҧшьы"
 
 #: shell/ev-window.c:4234
 msgid "translator-credits"
@@ -1569,15 +1592,15 @@ msgstr "Нанба Наала <naala-nanba@rambler.ru>, 2022"
 
 #: shell/ev-window.c:4664
 msgid "Running in presentation mode"
-msgstr ""
+msgstr "Аӡыргара арежим аҿакра"
 
 #: shell/ev-window.c:5715
 msgid "The attachment could not be saved."
-msgstr ""
+msgstr "Агәылаҵа аиқәырхара залымшеит"
 
 #: shell/ev-window.c:6037
 msgid "Enable caret navigation?"
-msgstr ""
+msgstr "Ахырхагатә  хырхарҭарбара аҿактәума?"
 
 #: shell/ev-window.c:6038
 msgid "_Enable"
@@ -1589,28 +1612,31 @@ msgid ""
 "moveable cursor in text pages, allowing you to move around and select text "
 "with your keyboard. Do you want to enable the caret navigation?"
 msgstr ""
+"Арыд F7 ақәыӷәӷәара ахырхагатә хырхарҭарба  аҿакра анаҧхгара анаҭоит.Ари "
+"афункциа атексттә даҟьақәа рҟны ахырхага аиагара азин шәнаҭоит, иара убас "
+"атекст алкаара арыдқәа рыла .Иаҿактәума ахырхагатә  хырхарҭарбара ?"
 
 #: shell/ev-window.c:6046
 msgid "Don’t show this message again"
-msgstr ""
+msgstr "Уаҳа ари  ацҳамҭа армырбара"
 
 #: shell/ev-window.c:6724
 #, c-format
 msgid ""
 "Security alert: this document has been prevented from opening the file “%s”"
-msgstr ""
+msgstr "Ашәарҭадара алаҳәара: адокумент ала афаил “%s” аартра  аанкылоуп "
 
 #: shell/ev-window.c:6789
 msgid "Unable to open external link"
-msgstr ""
+msgstr "Адәныҟатәи азхьарҧш аартра залымшеит"
 
 #: shell/ev-window.c:7026
 msgid "Couldn’t find appropriate format to save image"
-msgstr ""
+msgstr "Асахьа аиқәырхаразы ианаало аформат аҧшаара залымшеит"
 
 #: shell/ev-window.c:7058
 msgid "The image could not be saved."
-msgstr ""
+msgstr "Асахьа аиқәырхара залымшеит"
 
 #: shell/ev-window.c:7094
 msgid "Save Image"
@@ -1618,20 +1644,20 @@ msgstr "Асахьа аиқәырхара"
 
 #: shell/ev-window.c:7252
 msgid "Unable to open attachment"
-msgstr ""
+msgstr "Агәылаҵа аартра залымшеит"
 
 #: shell/ev-window.c:7320
 msgid "Save Attachment"
-msgstr ""
+msgstr "Агәылаҵа аиқәырхара"
 
 #: shell/ev-window-title.c:108
 msgid "Recent Documents"
-msgstr ""
+msgstr "Ааигәатәи адокументқәа"
 
 #: shell/ev-window-title.c:154 shell/ev-window-title.c:156
 #: shell/ev-window-title.c:161
 msgid "Password Required"
-msgstr ""
+msgstr "Иаҭахуп ажәамаӡа"
 
 #: shell/ev-zoom-action.c:48
 msgid "50%"
@@ -2001,7 +2027,7 @@ msgstr ""
 
 #: shell/main.c:64 shell/main.c:271
 msgid "GNOME Document Viewer"
-msgstr ""
+msgstr "Адокументқәа рыхәаԥшра"
 
 #: shell/main.c:72
 msgid "Open a new window."
@@ -2013,7 +2039,7 @@ msgstr "Иарбоу акьамам аҟны адокумент аартра"
 
 #: shell/main.c:73
 msgid "PAGE"
-msgstr ""
+msgstr "АДАҞЬА"
 
 #: shell/main.c:74
 msgid "The page number of the document to display."
@@ -2029,23 +2055,23 @@ msgstr "Ихьӡырку азкызаара аартра."
 
 #: shell/main.c:75
 msgid "DEST"
-msgstr ""
+msgstr "АЗКЫЗААРА"
 
 #: shell/main.c:76
 msgid "Run evince in fullscreen mode"
-msgstr ""
+msgstr "Evince аекраннаӡа арежим аҟны аус арура"
 
 #: shell/main.c:77
 msgid "Run evince in presentation mode"
-msgstr ""
+msgstr "Evince аӡыргаратә режим аҟны аус арура"
 
 #: shell/main.c:78
 msgid "Run evince as a previewer"
-msgstr ""
+msgstr "Evince заа ахәаԥшра арежим аҟны аус арура"
 
 #: shell/main.c:79
 msgid "The word or phrase to find in the document"
-msgstr ""
+msgstr "Ажәа, мамзар афраза адокумент аҟны иԥшаатәу"
 
 #: shell/main.c:79
 msgid "STRING"
@@ -2054,3 +2080,4089 @@ msgstr "Ацәаҳәа"
 #: shell/main.c:83
 msgid "[FILE…]"
 msgstr "ФАИЛ"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#, fuzzy
