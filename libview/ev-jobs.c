@@ -220,7 +220,6 @@ ev_job_cancel (EvJob *job)
 		return;
 
 	ev_debug_message (DEBUG_JOBS, "job %s (%p) cancelled", EV_GET_TYPE_NAME (job), job);
-	ev_profiler_stop ("%s (%p)", EV_GET_TYPE_NAME (job), job);
 
 	/* This should never be called from a thread */
 	job->cancelled = TRUE;
@@ -599,9 +598,6 @@ ev_job_render_cairo_run (EvJob *job)
 	ev_profiler_start ("%s (%p)", EV_GET_TYPE_NAME (job), job);
 
 	ev_document_doc_mutex_lock ();
-
-	ev_profiler_start ("Rendering page %d", job_render->page);
-
 	ev_document_fc_mutex_lock ();
 
 	ev_page = ev_document_get_page (job->document, job_render->page);
