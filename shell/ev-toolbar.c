@@ -162,6 +162,11 @@ ev_toolbar_init (EvToolbar *ev_toolbar)
 
 	priv->toolbar_mode = EV_TOOLBAR_MODE_NORMAL;
 
+        /* Ensure GTK+ private types used by the template
+         * definition before calling gtk_widget_init_template() */
+        g_type_ensure (EV_TYPE_PAGE_ACTION_WIDGET);
+        g_type_ensure (EV_TYPE_ZOOM_ACTION);
+
 	gtk_widget_init_template (GTK_WIDGET (ev_toolbar));
 }
 
