@@ -4617,7 +4617,7 @@ ev_window_stop_fullscreen (EvWindow *window,
 	ev_document_model_set_fullscreen (priv->model, FALSE);
 	ev_window_update_fullscreen_action (window);
 
-	hdy_header_bar_set_show_close_button (HDY_HEADER_BAR (priv->toolbar), TRUE);
+	hdy_header_bar_set_show_close_button (ev_toolbar_get_header_bar (EV_TOOLBAR (priv->toolbar)), TRUE);
 
 	if (unfullscreen_window)
 		gtk_window_unfullscreen (GTK_WINDOW (window));
