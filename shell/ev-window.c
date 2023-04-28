@@ -449,6 +449,7 @@ ev_window_update_actions_sensitivity (EvWindow *ev_window)
 	gboolean recent_view_mode;
 	gboolean dual_mode = FALSE;
 	gboolean has_pages = FALSE;
+	gboolean text_is_selected = FALSE;
 	int      n_pages = 0, page = -1;
 
 	if (document) {
@@ -466,6 +467,7 @@ ev_window_update_actions_sensitivity (EvWindow *ev_window)
 
 	if (has_document && EV_IS_SELECTION (document)) {
 		can_get_text = TRUE;
+		text_is_selected = ev_view_get_has_selection (view);
 	}
 
 	if (has_pages && EV_IS_DOCUMENT_FIND (document)) {
@@ -535,6 +537,8 @@ ev_window_update_actions_sensitivity (EvWindow *ev_window)
 				      !recent_view_mode);
 	ev_window_set_action_enabled (ev_window, "highlight-annotation", can_annotate &&
 				      !recent_view_mode);
+	ev_window_set_action_enabled (ev_window, "annotate-selected-text", can_annotate &&
+				      text_is_selected && !recent_view_mode);
 	ev_window_set_action_enabled (ev_window, "toggle-edit-annots", can_annotate &&
 				      !recent_view_mode);
 	ev_window_set_action_enabled (ev_window, "rotate-left", has_pages &&
@@ -597,8 +601,7 @@ ev_window_update_actions_sensitivity (EvWindow *ev_window)
 	can_find_in_page = ev_search_box_has_results (EV_SEARCH_BOX (priv->search_box));
 
 	ev_window_set_action_enabled (ev_window, "copy",
-					has_pages &&
-					ev_view_get_has_selection (view) &&
+					has_pages && text_is_selected &&
 					!recent_view_mode);
 	ev_window_set_action_enabled (ev_window, "find-next",
 				      has_pages && can_find_in_page &&
@@ -1064,8 +1067,18 @@ static void
 view_selection_changed_cb (EvView   *view,
 			   EvWindow *window)
 {
-	ev_window_set_action_enabled (window, "copy",
-					ev_view_get_has_selection (view));
+	EvWindowPrivate *priv = ev_window_get_instance_private (window);
+	gboolean has_selection, enable_annotate_selected_text;
+
+	has_selection = ev_view_get_has_selection (view);
+	ev_window_set_action_enabled (window, "copy", has_selection);
+
+	enable_annotate_selected_text = EV_IS_DOCUMENT_ANNOTATIONS (priv->document) &&
+		ev_document_annotations_can_add_annotation (EV_DOCUMENT_ANNOTATIONS (priv->document)) &&
+		has_selection;
+
+	ev_window_set_action_enabled (window, "annotate-selected-text",
+				      enable_annotate_selected_text);
 }
 
 static void

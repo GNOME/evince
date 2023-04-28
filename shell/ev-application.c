@@ -990,6 +990,7 @@ ev_application_startup (GApplication *gapplication)
           "win.reload",                 "<Ctrl>R", NULL,
           "win.add-annotation",         "s", NULL,
           "win.highlight-annotation",   "<Ctrl>H", NULL,
+          "win.annotate-selected-text", "y", NULL,
           "win.help",                   "F1", NULL,
           "win.about",                  NULL, NULL,
           NULL
