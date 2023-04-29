@@ -5356,7 +5356,7 @@ static void
 ev_view_link_preview_popover_cleanup (EvView *view) {
 	if (view->link_preview.job) {
 		ev_job_cancel (view->link_preview.job);
-		g_object_unref (view->link_preview.job);
+		g_clear_object (&view->link_preview.job);
 	}
 
 	g_clear_pointer (&view->link_preview.popover, gtk_widget_destroy);
