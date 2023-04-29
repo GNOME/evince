@@ -335,9 +335,6 @@ static void     ev_window_popup_cmd_open_link_new_window(GSimpleAction    *actio
 static void     ev_window_popup_cmd_copy_link_address   (GSimpleAction    *action,
 							 GVariant         *parameter,
 							 gpointer          user_data);
-static void     ev_window_popup_cmd_annotate_selected_text (GSimpleAction    *action,
-							    GVariant         *parameter,
-							    gpointer          user_data);
 static void     ev_window_popup_cmd_save_image_as       (GSimpleAction    *action,
 							 GVariant         *parameter,
 							 gpointer          user_data);
@@ -576,7 +573,6 @@ ev_window_update_actions_sensitivity (EvWindow *ev_window)
 	 * popup is visible due to kinetic scrolling. The 'popup' functions
 	 * will enable appropriate actions when the popup is shown. */
 	if (recent_view_mode) {
-		ev_window_set_action_enabled (ev_window, "annotate-selected-text", FALSE);
 		ev_window_set_action_enabled (ev_window, "open-link", FALSE);
 		ev_window_set_action_enabled (ev_window, "open-link-new-window", FALSE);
 		ev_window_set_action_enabled (ev_window, "go-to-link", FALSE);
@@ -5583,6 +5579,20 @@ view_menu_annot_popup (EvWindow     *ev_window,
 	ev_window_set_action_enabled (ev_window, "save-attachment", show_attachment);
 }
 
+static void
+view_popup_hide_cb (GtkWidget *popup,
+		    EvWindow *ev_window)
+{
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
+	EvDocument *document = priv->document;
+	gboolean can_annotate;
+
+	can_annotate = EV_IS_DOCUMENT_ANNOTATIONS (document) &&
+		ev_document_annotations_can_add_annotation (EV_DOCUMENT_ANNOTATIONS (document));
+
+	ev_window_set_action_enabled (ev_window, "highlight-annotation", can_annotate);
+}
+
 static gboolean
 view_menu_popup_cb (EvView   *view,
 		    GList    *items,
@@ -5620,12 +5630,13 @@ view_menu_popup_cb (EvView   *view,
 		ev_document_annotations_can_add_annotation (EV_DOCUMENT_ANNOTATIONS (document)) &&
 		!has_annot && ev_view_get_has_selection (view);
 
-	ev_window_set_action_enabled (ev_window, "annotate-selected-text", can_annotate);
+	ev_window_set_action_enabled (ev_window, "highlight-annotation", can_annotate);
 
 	if (!priv->view_popup) {
 		priv->view_popup = gtk_menu_new_from_model (priv->view_popup_menu);
 		gtk_menu_attach_to_widget (GTK_MENU (priv->view_popup),
 					   GTK_WIDGET (ev_window), NULL);
+		g_signal_connect (priv->view_popup, "hide", G_CALLBACK (view_popup_hide_cb), ev_window);
 	}
 
 	gtk_menu_popup_at_pointer (GTK_MENU (priv->view_popup), NULL);
@@ -6316,12 +6327,11 @@ static const GActionEntry actions[] = {
 	{ "toggle-menu", ev_window_cmd_action_menu },
 	{ "caret-navigation", NULL, NULL, "false", ev_window_cmd_view_toggle_caret_navigation },
 	{ "add-annotation", NULL, NULL, "false", ev_window_cmd_add_annotation },
-	{ "highlight-annotation", NULL, NULL, "false", ev_window_cmd_add_highlight_annotation },
+	{ "highlight-annotation", ev_window_cmd_add_highlight_annotation },
 	{ "toggle-edit-annots", NULL, NULL, "false", ev_window_cmd_toggle_edit_annots },
 	{ "about", ev_window_cmd_about },
 	{ "help", ev_window_cmd_help },
 	/* Popups specific items */
-	{ "annotate-selected-text", ev_window_popup_cmd_annotate_selected_text },
 	{ "open-link", ev_window_popup_cmd_open_link },
 	{ "open-link-new-window", ev_window_popup_cmd_open_link_new_window },
 	{ "go-to-link", ev_window_popup_cmd_open_link },
@@ -6789,17 +6799,6 @@ ev_window_popup_cmd_open_link (GSimpleAction *action,
 	EvWindowPrivate *priv = GET_PRIVATE (window);
 
 	ev_view_handle_link (EV_VIEW (priv->view), priv->link);
-}
-
-static void
-ev_window_popup_cmd_annotate_selected_text (GSimpleAction *action,
-					    GVariant      *parameter,
-					    gpointer       user_data)
-{
-	EvWindow *ev_window = user_data;
-	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
-	EvView *view = EV_VIEW (priv->view);
-	ev_view_add_text_markup_annotation_for_selected_text (view);
 }
 
 static void
