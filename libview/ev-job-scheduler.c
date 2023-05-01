@@ -194,7 +194,7 @@ ev_job_idle (EvJob *job)
 	ev_debug_message (DEBUG_JOBS, "%s", EV_GET_TYPE_NAME (job));
 
 	if (g_cancellable_is_cancelled (job->cancellable))
-		return FALSE;
+		return G_SOURCE_REMOVE;
 
 	return ev_job_run (job);
 }

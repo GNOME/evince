@@ -461,7 +461,7 @@ process_matches_idle (EvFindSidebar *sidebar)
         if (!ev_job_find_has_results (priv->job)) {
                 if (ev_job_is_finished (EV_JOB (priv->job)))
                         g_clear_object (&priv->job);
-                return FALSE;
+		return G_SOURCE_REMOVE;
         }
 
         document = EV_JOB (priv->job)->document;
@@ -556,7 +556,7 @@ process_matches_idle (EvFindSidebar *sidebar)
         if (ev_job_is_finished (EV_JOB (priv->job)) && priv->current_page == priv->job->start_page)
                 ev_find_sidebar_highlight_first_match_of_page (sidebar, priv->first_match_page);
 
-        return FALSE;
+        return G_SOURCE_REMOVE;
 }
 
 static void

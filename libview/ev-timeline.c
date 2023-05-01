@@ -165,13 +165,13 @@ ev_timeline_run_frame (EvTimeline *timeline)
 			}
 
 			g_signal_emit (timeline, signals [FINISHED], 0);
-			return FALSE;
+			return G_SOURCE_REMOVE;
 		} else {
 			ev_timeline_rewind (timeline);
 		}
 	}
 
-	return TRUE;
+	return G_SOURCE_CONTINUE;
 }
 
 static void

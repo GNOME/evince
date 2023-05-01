@@ -178,7 +178,7 @@ emit_finished (EvJob *job)
 		g_signal_emit (job, job_signals[FINISHED], 0);
 	}
 
-	return FALSE;
+	return G_SOURCE_REMOVE;
 }
 
 static void

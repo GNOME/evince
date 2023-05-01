@@ -836,7 +836,7 @@ static gboolean
 refresh (EvSidebarThumbnails *sidebar_thumbnails)
 {
 	adjustment_changed_cb (sidebar_thumbnails);
-	return FALSE;
+	return G_SOURCE_REMOVE;
 }
 
 static void

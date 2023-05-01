@@ -2513,7 +2513,7 @@ ev_view_forms_remove_widgets (EvView *view)
 {
 	ev_view_remove_all_form_fields (view);
 
-	return FALSE;
+	return G_SOURCE_REMOVE;
 }
 
 static void
@@ -2853,7 +2853,7 @@ ev_view_form_field_choice_popup_shown_real (PopupShownData *data)
 	g_object_unref (data->field);
 	g_free (data);
 
-	return FALSE;
+	return G_SOURCE_REMOVE;
 }
 
 static void
@@ -4143,7 +4143,7 @@ blink_cb (EvView *view)
 		show_cursor (view);
 		view->cursor_blink_timeout_id = 0;
 
-		return FALSE;
+		return G_SOURCE_REMOVE;
 	}
 
 	blink_time = get_cursor_blink_time (view);
@@ -4158,7 +4158,7 @@ blink_cb (EvView *view)
 
 	view->cursor_blink_timeout_id = gdk_threads_add_timeout (blink_time / CURSOR_DIVIDER, (GSourceFunc)blink_cb, view);
 
-	return FALSE;
+	return G_SOURCE_REMOVE;
 }
 
 static void
@@ -5319,7 +5319,7 @@ link_preview_delayed_show (EvView *view)
 	gtk_widget_show (popover);
 
 	view->link_preview.delay_timeout_id = 0;
-	return FALSE;
+	return G_SOURCE_REMOVE;
 }
 
 static void
@@ -5883,7 +5883,7 @@ selection_update_idle_cb (EvView *view)
 			    &view->selection_info.start,
 			    &view->motion);
 	view->selection_update_id = 0;
-	return FALSE;
+	return G_SOURCE_REMOVE;
 }
 
 static gboolean
@@ -5922,7 +5922,7 @@ selection_scroll_timeout_cb (EvView *view)
 						 gtk_adjustment_get_upper (view->hadjustment) -
 						 gtk_adjustment_get_page_size (view->hadjustment)));
 
-	return TRUE;
+	return G_SOURCE_CONTINUE;
 }
 
 static gboolean
@@ -5930,7 +5930,7 @@ ev_view_drag_update_momentum (EvView *view)
 {
 	int i;
 	if (!view->drag_info.in_drag)
-		return FALSE;
+		return G_SOURCE_REMOVE;
 
 	for (i = DRAG_HISTORY - 1; i > 0; i--) {
 		view->drag_info.buffer[i].x = view->drag_info.buffer[i-1].x;
@@ -5944,7 +5944,7 @@ ev_view_drag_update_momentum (EvView *view)
 	view->drag_info.momentum.x = (view->drag_info.buffer[DRAG_HISTORY - 1].x - view->drag_info.buffer[0].x);
 	view->drag_info.momentum.y = (view->drag_info.buffer[DRAG_HISTORY - 1].y - view->drag_info.buffer[0].y);
 
-	return TRUE;
+	return G_SOURCE_CONTINUE;
 }
 
 static gboolean
@@ -5993,9 +5993,9 @@ ev_view_scroll_drag_release (EvView *view)
 
 	if (((view->drag_info.momentum.x < 1) && (view->drag_info.momentum.x > -1)) &&
 	    ((view->drag_info.momentum.y < 1) && (view->drag_info.momentum.y > -1)))
-		return FALSE;
+		return G_SOURCE_REMOVE;
 	else
-		return TRUE;
+		return G_SOURCE_CONTINUE;
 }
 
 static gboolean
@@ -7235,7 +7235,7 @@ ev_view_autoscroll_cb (EvView *view)
 	 * set to false but the timeout will continue; stop the timeout: */
 	if (!view->scroll_info.autoscrolling) {
 		view->scroll_info.timeout_id = 0;
-		return FALSE;
+		return G_SOURCE_REMOVE;
 	}
 
 	/* Replace 100 with your speed of choice: The lower the faster.
@@ -7254,7 +7254,7 @@ ev_view_autoscroll_cb (EvView *view)
 		       gtk_adjustment_get_page_size (view->vadjustment));
 	gtk_adjustment_set_value (view->vadjustment, value);
 
-	return TRUE;
+	return G_SOURCE_CONTINUE;
 
 }
 

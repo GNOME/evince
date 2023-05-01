@@ -844,7 +844,7 @@ show_loading_message_cb (EvWindow *window)
 	priv->loading_message_timeout = 0;
 	gtk_widget_show (priv->loading_message);
 
-	return FALSE;
+	return G_SOURCE_REMOVE;
 }
 
 static void
@@ -1717,7 +1717,7 @@ ev_window_setup_document (EvWindow *ev_window)
 	else if (!gtk_search_bar_get_search_mode (GTK_SEARCH_BAR (priv->search_bar)))
 		gtk_widget_grab_focus (priv->view);
 
-	return FALSE;
+	return G_SOURCE_REMOVE;
 }
 
 static void
@@ -2134,10 +2134,10 @@ show_loading_progress (EvWindow *ev_window)
 	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 	GtkWidget *area;
 	gchar     *text;
-	gchar 	  *display_name;
+	gchar     *display_name;
 
 	if (priv->message_area)
-		return FALSE;
+		return G_SOURCE_REMOVE;
 
 	text = g_uri_unescape_string (priv->uri, NULL);
 	display_name = g_markup_escape_text (text, -1);
@@ -2159,7 +2159,7 @@ show_loading_progress (EvWindow *ev_window)
 	g_free (text);
 	g_free (display_name);
 
-	return FALSE;
+	return G_SOURCE_REMOVE;
 }
 
 static void
@@ -2604,7 +2604,7 @@ show_reloading_progress (EvWindow *ev_window)
 	gchar     *text;
 
 	if (priv->message_area)
-		return FALSE;
+		return G_SOURCE_REMOVE;
 
 	text = g_strdup_printf (_("Reloading document from %s"),
 				priv->uri);
@@ -2620,7 +2620,7 @@ show_reloading_progress (EvWindow *ev_window)
 	ev_window_set_message_area (ev_window, area);
 	g_free (text);
 
-	return FALSE;
+	return G_SOURCE_REMOVE;
 }
 
 static void
@@ -2956,7 +2956,7 @@ show_saving_progress (GFile *dst)
 	priv->progress_idle = 0;
 
 	if (priv->message_area)
-		return FALSE;
+		return G_SOURCE_REMOVE;
 
 	save_type = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (dst), "save-type"));
 	uri = g_file_get_uri (dst);
@@ -2986,7 +2986,7 @@ show_saving_progress (GFile *dst)
 	ev_window_set_message_area (ev_window, area);
 	g_free (text);
 
-	return FALSE;
+	return G_SOURCE_REMOVE;
 }
 
 static void
@@ -3113,7 +3113,7 @@ destroy_window (GtkWidget *window)
 {
 	gtk_widget_destroy (window);
 
-	return FALSE;
+	return G_SOURCE_REMOVE;
 }
 
 static void
@@ -4535,7 +4535,7 @@ static gboolean
 find_next_idle_cb (EvWindow *ev_window)
 {
 	ev_window_find_next (ev_window);
-	return FALSE;
+	return G_SOURCE_REMOVE;
 }
 
 static void
@@ -4564,7 +4564,7 @@ static gboolean
 find_previous_idle_cb (EvWindow *ev_window)
 {
 	ev_window_find_previous (ev_window);
-	return FALSE;
+	return G_SOURCE_REMOVE;
 }
 
 static void

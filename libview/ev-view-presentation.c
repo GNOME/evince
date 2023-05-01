@@ -222,7 +222,7 @@ transition_next_page (EvViewPresentation *pview)
 	pview->trans_timeout_id = 0;
 	ev_view_presentation_next_page (pview);
 
-	return FALSE;
+	return G_SOURCE_REMOVE;
 }
 
 static void
@@ -925,7 +925,7 @@ hide_cursor_timeout_cb (EvViewPresentation *pview)
 	ev_view_presentation_set_cursor (pview, EV_VIEW_CURSOR_HIDDEN);
 	pview->hide_cursor_timeout_id = 0;
 
-	return FALSE;
+	return G_SOURCE_REMOVE;
 }
 
 static void
@@ -1275,7 +1275,7 @@ init_presentation (GtkWidget *widget)
 	ev_view_presentation_update_current_page (pview, pview->current_page);
 	ev_view_presentation_hide_cursor_timeout_start (pview);
 
-	return FALSE;
+	return G_SOURCE_REMOVE;
 }
 
 static void

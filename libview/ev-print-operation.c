@@ -946,7 +946,7 @@ export_print_page (EvPrintOperationExport *export)
 	EvPrintOperation *op = EV_PRINT_OPERATION (export);
 
 	if (!export->temp_file)
-		return FALSE; /* cancelled */
+		return G_SOURCE_REMOVE; /* cancelled */
 
 	export->total++;
 	export->collated++;
@@ -967,7 +967,7 @@ export_print_page (EvPrintOperationExport *export)
 			update_progress (export);
 			export_print_done (export);
 
-			return FALSE;
+			return G_SOURCE_REMOVE;
 		}
 	}
 
@@ -992,7 +992,7 @@ export_print_page (EvPrintOperationExport *export)
 					update_progress (export);
 
 					export_print_done (export);
-					return FALSE;
+					return G_SOURCE_REMOVE;
 				}
 			}
 
@@ -1026,7 +1026,7 @@ export_print_page (EvPrintOperationExport *export)
 
 	update_progress (export);
 
-	return FALSE;
+	return G_SOURCE_REMOVE;
 }
 
 static void
@@ -2462,11 +2462,11 @@ static gboolean
 draw_page_finish_idle (EvPrintOperationPrint *print)
 {
         if (ev_job_scheduler_get_running_thread_job () == print->job_print)
-                return TRUE;
+		return G_SOURCE_CONTINUE;
 
         gtk_print_operation_draw_page_finish (print->op);
 
-        return FALSE;
+	return G_SOURCE_REMOVE;
 }
 
 static void

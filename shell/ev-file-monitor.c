@@ -99,7 +99,7 @@ timeout_cb (EvFileMonitor *ev_monitor)
 	g_signal_emit (ev_monitor, signals[CHANGED], 0);
 
 	priv->timeout_id = 0;
-	return FALSE;
+	return G_SOURCE_REMOVE;
 }
 
 static void
