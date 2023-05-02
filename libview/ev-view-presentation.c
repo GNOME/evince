@@ -113,7 +113,7 @@ static void ev_view_presentation_set_cursor_for_location (EvViewPresentation *pv
 							  gdouble             x,
 							  gdouble             y);
 
-#define HIDE_CURSOR_TIMEOUT 5
+#define HIDE_CURSOR_TIMEOUT 5000
 
 G_DEFINE_TYPE (EvViewPresentation, ev_view_presentation, GTK_TYPE_WIDGET)
 
@@ -216,13 +216,11 @@ ev_view_presentation_get_page_area (EvViewPresentation *pview,
 }
 
 /* Page Transition */
-static gboolean
+static void
 transition_next_page (EvViewPresentation *pview)
 {
 	pview->trans_timeout_id = 0;
 	ev_view_presentation_next_page (pview);
-
-	return G_SOURCE_REMOVE;
 }
 
 static void
@@ -247,9 +245,9 @@ ev_view_presentation_transition_start (EvViewPresentation *pview)
 							     pview->current_page);
 	if (duration >= 0) {
 		        pview->trans_timeout_id =
-				g_timeout_add (duration * 1000,
-					       (GSourceFunc) transition_next_page,
-					       pview);
+				g_timeout_add_once (duration * 1000,
+						    (GSourceOnceFunc) transition_next_page,
+						    pview);
 	}
 }
 
@@ -911,13 +909,11 @@ ev_view_presentation_set_cursor_for_location (EvViewPresentation *pview,
 		ev_view_presentation_set_cursor (pview, EV_VIEW_CURSOR_NORMAL);
 }
 
-static gboolean
+static void
 hide_cursor_timeout_cb (EvViewPresentation *pview)
 {
 	ev_view_presentation_set_cursor (pview, EV_VIEW_CURSOR_HIDDEN);
 	pview->hide_cursor_timeout_id = 0;
-
-	return G_SOURCE_REMOVE;
 }
 
 static void
@@ -933,9 +929,9 @@ ev_view_presentation_hide_cursor_timeout_start (EvViewPresentation *pview)
 {
 	ev_view_presentation_hide_cursor_timeout_stop (pview);
 	pview->hide_cursor_timeout_id =
-		g_timeout_add_seconds (HIDE_CURSOR_TIMEOUT,
-				       (GSourceFunc)hide_cursor_timeout_cb,
-				       pview);
+		g_timeout_add_once (HIDE_CURSOR_TIMEOUT,
+				    (GSourceOnceFunc)hide_cursor_timeout_cb,
+				    pview);
 }
 
 static void
@@ -1258,7 +1254,7 @@ ev_view_presentation_update_monitor_geometry (EvViewPresentation *pview)
 #endif
 }
 
-static gboolean
+static void
 init_presentation (GtkWidget *widget)
 {
 	EvViewPresentation *pview = EV_VIEW_PRESENTATION (widget);
@@ -1267,8 +1263,6 @@ init_presentation (GtkWidget *widget)
 
 	ev_view_presentation_update_current_page (pview, pview->current_page);
 	ev_view_presentation_hide_cursor_timeout_start (pview);
-
-	return G_SOURCE_REMOVE;
 }
 
 static void
@@ -1307,7 +1301,7 @@ ev_view_presentation_realize (GtkWidget *widget)
 	gdk_window_set_user_data (window, widget);
 	gtk_widget_set_window (widget, window);
 
-	g_idle_add ((GSourceFunc)init_presentation, widget);
+	g_idle_add_once ((GSourceOnceFunc)init_presentation, widget);
 }
 
 static void

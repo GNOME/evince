@@ -814,13 +814,6 @@ page_changed_cb (EvSidebarThumbnails *sidebar,
 	ev_sidebar_thumbnails_set_current_page (sidebar, new_page);
 }
 
-static gboolean
-refresh (EvSidebarThumbnails *sidebar_thumbnails)
-{
-	adjustment_changed_cb (sidebar_thumbnails);
-	return G_SOURCE_REMOVE;
-}
-
 static void
 ev_sidebar_thumbnails_reload (EvSidebarThumbnails *sidebar_thumbnails)
 {
@@ -843,7 +836,7 @@ ev_sidebar_thumbnails_reload (EvSidebarThumbnails *sidebar_thumbnails)
 	sidebar_thumbnails->priv->end_page = -1;
 	ev_sidebar_thumbnails_set_current_page (sidebar_thumbnails,
 						ev_document_model_get_page (model));
-	g_idle_add ((GSourceFunc)refresh, sidebar_thumbnails);
+	g_idle_add_once ((GSourceOnceFunc)adjustment_changed_cb, sidebar_thumbnails);
 }
 
 static void
@@ -1086,13 +1079,6 @@ ev_sidebar_thumbnails_get_ev_sidebar (EvSidebarThumbnails *sidebar)
 						    EV_TYPE_SIDEBAR));
 }
 
-static gboolean
-check_reset_current_page (EvSidebarThumbnails *sidebar_thumbnails)
-{
-	ev_sidebar_check_reset_current_page (sidebar_thumbnails);
-	return G_SOURCE_REMOVE;
-}
-
 static void
 ev_sidebar_thumbnails_get_column_widths (EvSidebarThumbnails *sidebar,
 					 gint *one_column_width,
@@ -1177,7 +1163,7 @@ ev_sidebar_thumbnails_set_sidebar_width (EvSidebarThumbnails *sidebar,
 		priv = sidebar->priv;
 		priv->width = sidebar_width;
 		ev_window_set_divider_position (ev_window, sidebar_width);
-		g_idle_add ((GSourceFunc)check_reset_current_page, sidebar);
+		g_idle_add_once ((GSourceOnceFunc)ev_sidebar_check_reset_current_page, sidebar);
 	}
 }
 

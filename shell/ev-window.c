@@ -1580,7 +1580,7 @@ ev_window_ensure_settings (EvWindow *ev_window)
         return priv->settings;
 }
 
-static gboolean
+static void
 ev_window_setup_document (EvWindow *ev_window)
 {
 	const EvDocumentInfo *info;
@@ -1632,8 +1632,6 @@ ev_window_setup_document (EvWindow *ev_window)
 		gtk_widget_grab_focus (priv->presentation_view);
 	else if (!gtk_search_bar_get_search_mode (GTK_SEARCH_BAR (priv->search_bar)))
 		gtk_widget_grab_focus (priv->view);
-
-	return G_SOURCE_REMOVE;
 }
 
 static void
@@ -1706,7 +1704,7 @@ ev_window_set_document (EvWindow *ev_window, EvDocument *document)
 	if (priv->setup_document_idle > 0)
 		g_source_remove (priv->setup_document_idle);
 
-	priv->setup_document_idle = g_idle_add ((GSourceFunc)ev_window_setup_document, ev_window);
+	priv->setup_document_idle = g_idle_add_once ((GSourceOnceFunc)ev_window_setup_document, ev_window);
 }
 
 static void
@@ -2853,7 +2851,7 @@ ev_window_add_recent (EvWindow *window, const char *uri)
 	gtk_recent_manager_add_item (priv->recent_manager, uri);
 }
 
-static gboolean
+static void
 show_saving_progress (GFile *dst)
 {
 	EvWindow  *ev_window;
@@ -2867,7 +2865,7 @@ show_saving_progress (GFile *dst)
 	priv->progress_idle = 0;
 
 	if (priv->message_area)
-		return G_SOURCE_REMOVE;
+		return;
 
 	save_type = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (dst), "save-type"));
 	uri = g_file_get_uri (dst);
@@ -2896,8 +2894,6 @@ show_saving_progress (GFile *dst)
 	gtk_widget_show (area);
 	ev_window_set_message_area (ev_window, area);
 	g_free (text);
-
-	return G_SOURCE_REMOVE;
 }
 
 static void
@@ -2996,11 +2992,9 @@ ev_window_save_remote (EvWindow  *ev_window,
 			   (GAsyncReadyCallback)window_save_file_copy_ready_cb,
 			   dst);
 	priv->progress_idle =
-		g_timeout_add_seconds_full (G_PRIORITY_DEFAULT,
-					    1,
-					    (GSourceFunc)show_saving_progress,
-					    dst,
-					    NULL);
+		g_timeout_add_once (1000,
+				    (GSourceOnceFunc)show_saving_progress,
+				    dst);
 }
 
 static void
@@ -3017,14 +3011,6 @@ ev_window_clear_save_job (EvWindow *ev_window)
 						      ev_window);
 		g_clear_object (&priv->save_job);
 	}
-}
-
-static gboolean
-destroy_window (GtkWidget *window)
-{
-	gtk_widget_destroy (window);
-
-	return G_SOURCE_REMOVE;
 }
 
 static void
@@ -3044,7 +3030,7 @@ ev_window_save_job_cb (EvJob     *job,
 	ev_window_clear_save_job (window);
 
 	if (priv->close_after_save)
-		g_idle_add ((GSourceFunc)destroy_window, window);
+		g_idle_add_once ((GSourceOnceFunc)gtk_widget_destroy, window);
 }
 
 static void
@@ -3580,8 +3566,8 @@ ev_window_print_operation_done (EvPrintOperation       *op,
 	ev_window_print_update_pending_jobs_message (ev_window, n_jobs);
 
 	if (n_jobs == 0 && priv->close_after_print)
-		g_idle_add ((GSourceFunc)destroy_window,
-			    ev_window);
+		g_idle_add_once ((GSourceOnceFunc)gtk_widget_destroy,
+				 ev_window);
 }
 
 static void
@@ -4437,13 +4423,6 @@ ev_window_find_next (EvWindow *ev_window)
 	ev_find_sidebar_next (EV_FIND_SIDEBAR (priv->find_sidebar));
 }
 
-static gboolean
-find_next_idle_cb (EvWindow *ev_window)
-{
-	ev_window_find_next (ev_window);
-	return G_SOURCE_REMOVE;
-}
-
 static void
 ev_window_cmd_edit_find_next (GSimpleAction *action,
 			      GVariant      *parameter,
@@ -4461,16 +4440,9 @@ ev_window_cmd_edit_find_next (GSimpleAction *action,
 
 	/* Use idle to make sure view allocation happens before find */
 	if (!search_mode_enabled)
-		g_idle_add ((GSourceFunc)find_next_idle_cb, ev_window);
+		g_idle_add_once ((GSourceOnceFunc)ev_window_find_next, ev_window);
 	else
 		ev_window_find_next (ev_window);
-}
-
-static gboolean
-find_previous_idle_cb (EvWindow *ev_window)
-{
-	ev_window_find_previous (ev_window);
-	return G_SOURCE_REMOVE;
 }
 
 static void
@@ -4490,7 +4462,7 @@ ev_window_cmd_edit_find_previous (GSimpleAction *action,
 
 	/* Use idle to make sure view allocation happens before find */
 	if (!search_mode_enabled)
-		g_idle_add ((GSourceFunc)find_previous_idle_cb, ev_window);
+		g_idle_add_once ((GSourceOnceFunc)ev_window_find_previous, ev_window);
 	else
 		ev_window_find_previous (ev_window);
 }

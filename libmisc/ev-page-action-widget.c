@@ -212,11 +212,10 @@ activate_cb (EvPageActionWidget *action_widget)
 		ev_page_action_widget_set_current_page (action_widget, current_page);
 }
 
-static gboolean
+static void
 disable_completion_search (EvPageActionWidget *action_widget)
 {
 	ev_page_action_widget_enable_completion_search (action_widget, FALSE);
-	return G_SOURCE_REMOVE;
 }
 
 static gboolean
@@ -226,7 +225,7 @@ focus_out_cb (EvPageActionWidget *action_widget)
                                                 ev_document_model_get_page (action_widget->doc_model));
         g_object_set (action_widget->entry, "xalign", 1.0, NULL);
         ev_page_action_widget_update_max_width (action_widget);
-        g_idle_add ((GSourceFunc)disable_completion_search, action_widget);
+	g_idle_add_once ((GSourceOnceFunc)disable_completion_search, action_widget);
 
         return FALSE;
 }

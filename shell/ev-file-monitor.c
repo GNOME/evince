@@ -91,7 +91,7 @@ ev_file_monitor_class_init (EvFileMonitorClass *klass)
 			      G_TYPE_NONE, 0);
 }
 
-static gboolean
+static void
 timeout_cb (EvFileMonitor *ev_monitor)
 {
 	EvFileMonitorPrivate *priv = GET_PRIVATE (ev_monitor);
@@ -99,7 +99,6 @@ timeout_cb (EvFileMonitor *ev_monitor)
 	g_signal_emit (ev_monitor, signals[CHANGED], 0);
 
 	priv->timeout_id = 0;
-	return G_SOURCE_REMOVE;
 }
 
 static void
@@ -110,7 +109,7 @@ ev_file_monitor_timeout_start (EvFileMonitor *ev_monitor)
 	ev_file_monitor_timeout_stop (ev_monitor);
 
 	priv->timeout_id =
-		g_timeout_add_seconds (5, (GSourceFunc)timeout_cb, ev_monitor);
+		g_timeout_add_once (5000, (GSourceOnceFunc)timeout_cb, ev_monitor);
 }
 
 static void

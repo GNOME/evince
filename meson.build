@@ -144,7 +144,7 @@ po_dir = join_paths(source_root, 'po')
 
 top_inc = include_directories('.')
 
-glib_req_version = '>= 2.44.0'
+glib_req_version = '>= 2.74.0'
 gtk_req_version = '>= 3.22.0'
 hdy_req_version = '>= 1.5.0'
 libxml_req_version = '>= 2.5.0'
