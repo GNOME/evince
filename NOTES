@@ -34,7 +34,7 @@ THOUGHTS ON SELECTION:
  * selection_list must be ordered!!!
 
  * On motion_notify, we update selection_end and call compute_selection,
-   that keeps an ordered list of the selections.  
+   that keeps an ordered list of the selections.
 
  * If any of the selection changes, we notify the pixbuf_cache right
    away.
@@ -57,13 +57,12 @@ THOUGHTS ON HISTORY:
 ====================
 
  * We need single history button, back/forward will complicate things.
- 
+
  * When we jump on dest link we should add current page and link to the history.
- 
+
  * When we jump on external link we should just add external link.
- 
+
  * It's enough to have 7 entries in history, too many entries complicates things.
- 
+
  * We should avoid duplicate entries in history. If we'll activate entry
    that already exists (have the same title) we can just move it to the top.
-
