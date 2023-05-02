@@ -1,12 +1,20 @@
 include: 'https://gitlab.gnome.org/GNOME/citemplates/raw/master/flatpak/flatpak_ci_initiative.yml'
 
 stages:
+    - lint
     - build
     - deploy
     - image
 
 variables:
     BUNDLE: "org.gnome.Evince.flatpak"
+
+editorconfig:
+    stage: lint
+    image: alpine:edge
+    script:
+        - apk add editorconfig-checker
+        - ec --disable-indentation --exclude '^.git/|cut-n-paste'
 
 meson:
     image: registry.gitlab.gnome.org/gnome/evince/x86_64-ubuntu:latest
