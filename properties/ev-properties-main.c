@@ -39,7 +39,7 @@
 #include "ev-properties-view.h"
 
 static GType epp_type = 0;
-static void property_page_provider_iface_init
+static void property_model_provider_iface_init
 	(NautilusPropertiesModelProviderInterface *iface);
 static GList *ev_properties_get_models
 	(NautilusPropertiesModelProvider *provider, GList *files);
@@ -58,8 +58,8 @@ ev_properties_plugin_register_type (GTypeModule *module)
 		0,
 		(GInstanceInitFunc) NULL
 	};
-	const GInterfaceInfo property_page_provider_iface_info = {
-		(GInterfaceInitFunc)property_page_provider_iface_init,
+	const GInterfaceInfo property_model_provider_iface_info = {
+		(GInterfaceInitFunc)property_model_provider_iface_init,
 		NULL,
 		NULL
 	};
@@ -70,11 +70,11 @@ ev_properties_plugin_register_type (GTypeModule *module)
 	g_type_module_add_interface (module,
 			epp_type,
 			NAUTILUS_TYPE_PROPERTIES_MODEL_PROVIDER,
-			&property_page_provider_iface_info);
+			&property_model_provider_iface_info);
 }
 
 static void
-property_page_provider_iface_init (NautilusPropertiesModelProviderInterface *iface)
+property_model_provider_iface_init (NautilusPropertiesModelProviderInterface *iface)
 {
 	iface->get_models = ev_properties_get_models;
 }
