@@ -412,12 +412,6 @@ ev_properties_view_init (EvPropertiesView *properties)
 	gtk_widget_set_margin_end (properties->grid, 12);
 }
 
-void
-ev_properties_view_register_type (GTypeModule *module)
-{
-	ev_properties_view_get_type ();
-}
-
 GtkWidget *
 ev_properties_view_new (EvDocument *document)
 {

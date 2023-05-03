@@ -82,7 +82,6 @@ typedef struct _EvPropertiesViewPrivate EvPropertiesViewPrivate;
 #define EV_PROPERTIES_VIEW_GET_CLASS(object) 	(G_TYPE_INSTANCE_GET_CLASS((object), EV_TYPE_PROPERTIES, EvPropertiesViewClass))
 
 GType		ev_properties_view_get_type		(void);
-void		ev_properties_view_register_type	(GTypeModule *module);
 
 GtkWidget      *ev_properties_view_new			(EvDocument           *document);
 void		ev_properties_view_set_info		(EvPropertiesView     *properties,

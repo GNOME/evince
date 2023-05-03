@@ -32,7 +32,6 @@
 #include <string.h>
 
 #include <glib/gi18n-lib.h>
-#include <gtk/gtk.h>
 
 #include <nautilus-extension.h>
 
@@ -213,7 +212,6 @@ void
 nautilus_module_initialize (GTypeModule *module)
 {
 	ev_properties_plugin_register_type (module);
-	ev_properties_view_register_type (module);
 
         ev_init ();
 }
