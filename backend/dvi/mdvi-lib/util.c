@@ -331,7 +331,7 @@ char   *mdvi_build_path_from_cwd (const char *path)
 {
 	char  *ptr;
 	char  *buf = NULL;
-	size_t buf_size = 512;
+	size_t buf_size = 512, len;
 
 	while (1) {
 		buf = mdvi_realloc (buf, buf_size);
@@ -344,8 +344,9 @@ char   *mdvi_build_path_from_cwd (const char *path)
 	}
 
 	buf = mdvi_realloc (buf, strlen (buf) + strlen (path) + 2);
+	len = strlen (path);
 	strcat (buf, "/");
-	strncat (buf, path, strlen (path));
+	strncat (buf, path, len);
 
 	return buf;
 }
@@ -554,4 +555,3 @@ void	dstring_reset(Dstring *dstr)
 		mdvi_free(dstr->data);
 	dstring_init(dstr);
 }
-
