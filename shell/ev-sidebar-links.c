@@ -677,6 +677,8 @@ row_collapsed_cb (GtkTreeView *tree_view,
 			if (tmp) {
 				ev_metadata_set_string (metadata, "index-expand", tmp);
 				g_free (tmp);
+			} else {
+				ev_metadata_set_string (metadata, "index-expand", new_index);
 			}
 			g_free (new_index);
 		} else {
