@@ -121,6 +121,8 @@ if ev_debug
     '-Werror=pointer-arith',
     '-Werror=return-type',
   ])
+  libsysprof_capture_dep = dependency('sysprof-4')
+  common_flags += ['-DHAVE_SYSPROF']
 endif
 
 add_project_arguments(common_flags, language: 'c')

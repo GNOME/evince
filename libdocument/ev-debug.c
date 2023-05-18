@@ -43,13 +43,10 @@
 
 #ifdef EV_ENABLE_DEBUG
 static EvDebugSection ev_debug = EV_NO_DEBUG;
-static gboolean ev_profile = FALSE;
 static EvDebugBorders ev_debug_borders = EV_DEBUG_BORDER_NONE;
 
-static GHashTable *timers = NULL;
-
-static void
-debug_init (void)
+void
+_ev_debug_init (void)
 {
         const GDebugKey keys[] = {
                 { "jobs",    EV_DEBUG_JOBS         },
@@ -69,33 +66,6 @@ debug_init (void)
         if (ev_debug & EV_DEBUG_SHOW_BORDERS)
                 ev_debug_borders = g_parse_debug_string (g_getenv ("EV_DEBUG_SHOW_BORDERS"),
                                                          border_keys, G_N_ELEMENTS (border_keys));
-}
-
-static void
-profile_init (void)
-{
-	if (g_getenv ("EV_PROFILE") != NULL ||
-	    g_getenv ("EV_PROFILE_JOBS") != NULL) {
-		ev_profile = TRUE;
-
-		timers = g_hash_table_new_full (g_str_hash,
-						g_str_equal,
-						(GDestroyNotify) g_free,
-						(GDestroyNotify) g_timer_destroy);
-	}
-}
-
-void
-_ev_debug_init (void)
-{
-	debug_init ();
-	profile_init ();
-}
-
-void
-_ev_debug_shutdown (void)
-{
-	g_clear_pointer (&timers, g_hash_table_destroy);
 }
 
 void
@@ -121,58 +91,6 @@ ev_debug_message (EvDebugSection  section,
 		fflush (stdout);
 
 		g_free (msg);
-	}
-}
-
-void
-ev_profiler_start (const gchar *format, ...)
-{
-	if (G_UNLIKELY (ev_profile)) {
-		GTimer *timer;
-		gchar  *name;
-		va_list args;
-
-		if (!format)
-			return;
-
-		va_start (args, format);
-		name = g_strdup_vprintf (format, args);
-		va_end (args);
-
-		timer = g_hash_table_lookup (timers, name);
-		if (!timer) {
-			timer = g_timer_new ();
-			g_hash_table_insert (timers, g_strdup (name), timer);
-		} else {
-			g_timer_start (timer);
-		}
-	}
-}
-
-void
-ev_profiler_stop (const gchar *format, ...)
-{
-	if (G_UNLIKELY (ev_profile)) {
-		GTimer *timer;
-		gchar  *name;
-		va_list args;
-		gdouble seconds;
-
-		if (!format)
-			return;
-
-		va_start (args, format);
-		name = g_strdup_vprintf (format, args);
-		va_end (args);
-
-		timer = g_hash_table_lookup (timers, name);
-		if (!timer)
-			return;
-
-		g_timer_stop (timer);
-		seconds = g_timer_elapsed (timer, NULL);
-		g_print ("[ %s ] %f s elapsed\n", name, seconds);
-		fflush (stdout);
 	}
 }
 

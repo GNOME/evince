@@ -1,3 +1,7 @@
+expand_content_md_files = [
+  'profiling.md',
+]
+
 libevview_toml = configure_file(
   input: 'libevview.toml.in',
   output: 'libevview.toml',
@@ -23,6 +27,7 @@ custom_target('libevview-doc',
   ],
   depends: [ libevdocument_gir[0] ],
   build_by_default: true,
+  depend_files: [ expand_content_md_files ],
   install: true,
   install_dir: docs_dir,
 )

@@ -130,6 +130,7 @@ common_deps = [
 
 deps = common_deps + [
   gmodule_dep,
+  libsysprof_capture_dep,
   exempi_dep,
   m_dep,
   synctex_dep,

@@ -146,7 +146,6 @@ ev_shutdown (void)
 	xmp_terminate ();
         _ev_document_factory_shutdown ();
         _ev_file_helpers_shutdown ();
-        _ev_debug_shutdown ();
 }
 
 /*

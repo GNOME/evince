@@ -171,12 +171,10 @@ emit_finished (EvJob *job)
 
 	job->idle_finished_id = 0;
 
-	if (job->cancelled) {
+	if (job->cancelled)
 		ev_debug_message (DEBUG_JOBS, "%s (%p) job was cancelled, do not emit finished", EV_GET_TYPE_NAME (job), job);
-	} else {
-		ev_profiler_stop ("%s (%p)", EV_GET_TYPE_NAME (job), job);
+	else
 		g_signal_emit (job, job_signals[FINISHED], 0);
-	}
 
 	return G_SOURCE_REMOVE;
 }
@@ -200,7 +198,6 @@ ev_job_emit_finished (EvJob *job)
 					 g_object_ref (job),
 					 (GDestroyNotify)g_object_unref);
 	} else {
-		ev_profiler_stop ("%s (%p)", EV_GET_TYPE_NAME (job), job);
 		g_signal_emit (job, job_signals[FINISHED], 0);
 	}
 }
@@ -374,7 +371,7 @@ ev_job_links_run (EvJob *job)
 	EvJobLinks *job_links = EV_JOB_LINKS (job);
 
 	ev_debug_message (DEBUG_JOBS, NULL);
-	ev_profiler_start ("%s (%p)", EV_GET_TYPE_NAME (job), job);
+	EV_PROFILER_START (EV_GET_TYPE_NAME (job));
 
 	ev_document_doc_mutex_lock ();
 	job_links->model = ev_document_links_get_links_model (EV_DOCUMENT_LINKS (job->document));
@@ -384,6 +381,7 @@ ev_job_links_run (EvJob *job)
 
 	ev_job_succeeded (job);
 
+	EV_PROFILER_STOP ();
 	return FALSE;
 }
 
@@ -453,7 +451,7 @@ ev_job_attachments_run (EvJob *job)
 	EvJobAttachments *job_attachments = EV_JOB_ATTACHMENTS (job);
 
 	ev_debug_message (DEBUG_JOBS, NULL);
-	ev_profiler_start ("%s (%p)", EV_GET_TYPE_NAME (job), job);
+	EV_PROFILER_START (EV_GET_TYPE_NAME (job));
 
 	ev_document_doc_mutex_lock ();
 	job_attachments->attachments =
@@ -462,6 +460,7 @@ ev_job_attachments_run (EvJob *job)
 
 	ev_job_succeeded (job);
 
+	EV_PROFILER_STOP ();
 	return FALSE;
 }
 
@@ -516,7 +515,7 @@ ev_job_annots_run (EvJob *job)
 	gint         i;
 
 	ev_debug_message (DEBUG_JOBS, NULL);
-	ev_profiler_start ("%s (%p)", EV_GET_TYPE_NAME (job), job);
+	EV_PROFILER_START (EV_GET_TYPE_NAME (job));
 
 	ev_document_doc_mutex_lock ();
 	for (i = 0; i < ev_document_get_n_pages (job->document); i++) {
@@ -537,6 +536,7 @@ ev_job_annots_run (EvJob *job)
 
 	ev_job_succeeded (job);
 
+	EV_PROFILER_STOP ();
 	return FALSE;
 }
 
@@ -595,7 +595,7 @@ ev_job_render_cairo_run (EvJob *job)
 	EvRenderContext *rc;
 
 	ev_debug_message (DEBUG_JOBS, "page: %d (%p)", job_render->page, job);
-	ev_profiler_start ("%s (%p)", EV_GET_TYPE_NAME (job), job);
+	EV_PROFILER_START (EV_GET_TYPE_NAME (job));
 
 	ev_document_doc_mutex_lock ();
 	ev_document_fc_mutex_lock ();
@@ -630,6 +630,7 @@ ev_job_render_cairo_run (EvJob *job)
                                        job_render->page);
                 }
 
+		EV_PROFILER_STOP ();
 		return FALSE;
 	}
 
@@ -641,6 +642,7 @@ ev_job_render_cairo_run (EvJob *job)
 		ev_document_doc_mutex_unlock ();
 		g_object_unref (rc);
 
+		EV_PROFILER_STOP ();
 		return FALSE;
 	}
 
@@ -666,6 +668,7 @@ ev_job_render_cairo_run (EvJob *job)
 
 	ev_job_succeeded (job);
 
+	EV_PROFILER_STOP ();
 	return FALSE;
 }
 
@@ -733,7 +736,7 @@ ev_job_page_data_run (EvJob *job)
 	EvPage        *ev_page;
 
 	ev_debug_message (DEBUG_JOBS, "page: %d (%p)", job_pd->page, job);
-	ev_profiler_start ("%s (%p)", EV_GET_TYPE_NAME (job), job);
+	EV_PROFILER_START (EV_GET_TYPE_NAME (job));
 
 	ev_document_doc_mutex_lock ();
 	ev_page = ev_document_get_page (job->document, job_pd->page);
@@ -784,6 +787,7 @@ ev_job_page_data_run (EvJob *job)
 
 	ev_job_succeeded (job);
 
+	EV_PROFILER_STOP ();
 	return FALSE;
 }
 
@@ -843,7 +847,7 @@ ev_job_thumbnail_cairo_run (EvJob *job)
 	EvPage          *page;
 
 	ev_debug_message (DEBUG_JOBS, "%d (%p)", job_thumb->page, job);
-	ev_profiler_start ("%s (%p)", EV_GET_TYPE_NAME (job), job);
+	EV_PROFILER_START (EV_GET_TYPE_NAME (job));
 
 	ev_document_doc_mutex_lock ();
 
@@ -867,6 +871,7 @@ ev_job_thumbnail_cairo_run (EvJob *job)
 		ev_job_succeeded (job);
 	}
 
+	EV_PROFILER_STOP ();
 	return FALSE;
 }
 
@@ -931,6 +936,7 @@ ev_job_fonts_run (EvJob *job)
 {
 	EvJobFonts      *job_fonts = EV_JOB_FONTS (job);
 	EvDocumentFonts *fonts = EV_DOCUMENT_FONTS (job->document);
+	int64_t          sysprof_begin;
 
 	ev_debug_message (DEBUG_JOBS, NULL);
 
@@ -944,7 +950,10 @@ ev_job_fonts_run (EvJob *job)
 #ifdef EV_ENABLE_DEBUG
 	/* We use the #ifdef in this case because of the if */
 	if (ev_document_fonts_get_progress (fonts) == 0)
-		ev_profiler_start ("%s (%p)", EV_GET_TYPE_NAME (job), job);
+		/* Skipping EV_PROFILER_START () that would declare the
+		   variables within the `if` scope.
+		 */
+		sysprof_begin = SYSPROF_CAPTURE_CURRENT_TIME;
 #endif
 
 	job_fonts->scan_completed = !ev_document_fonts_scan (fonts, 20);
@@ -954,8 +963,17 @@ ev_job_fonts_run (EvJob *job)
 	ev_document_fc_mutex_unlock ();
 	ev_document_doc_mutex_unlock ();
 
-	if (job_fonts->scan_completed)
+	if (job_fonts->scan_completed) {
 		ev_job_succeeded (job);
+#ifdef EV_ENABLE_DEBUG
+		/* Because we skipped EV_PROFILER_START () to escape the
+		   scope, we must declare sysprof_name, which otherwise would
+		   be in the macro
+		 */
+		const char* sysprof_name  = EV_GET_TYPE_NAME (job);
+		EV_PROFILER_STOP ();
+#endif
+	}
 
 	return !job_fonts->scan_completed;
 }
@@ -1019,7 +1037,7 @@ ev_job_load_run (EvJob *job)
 	GError    *error = NULL;
 
 	ev_debug_message (DEBUG_JOBS, "%s", job_load->uri);
-	ev_profiler_start ("%s (%p)", EV_GET_TYPE_NAME (job), job);
+	EV_PROFILER_START (EV_GET_TYPE_NAME (job));
 
 	ev_document_fc_mutex_lock ();
 
@@ -1057,6 +1075,7 @@ ev_job_load_run (EvJob *job)
 		ev_job_succeeded (job);
 	}
 
+	EV_PROFILER_STOP ();
 	return FALSE;
 }
 
@@ -1142,7 +1161,7 @@ ev_job_load_stream_run (EvJob *job)
         EvJobLoadStreamPrivate *priv = ev_job_load_stream_get_instance_private (job_load_stream);
         GError *error = NULL;
 
-        ev_profiler_start ("%s (%p)", EV_GET_TYPE_NAME (job), job);
+	EV_PROFILER_START (EV_GET_TYPE_NAME (job));
 
         ev_document_fc_mutex_lock ();
 
@@ -1183,6 +1202,7 @@ ev_job_load_stream_run (EvJob *job)
                 ev_job_succeeded (job);
         }
 
+	EV_PROFILER_STOP ();
         return FALSE;
 }
 
@@ -1294,7 +1314,7 @@ ev_job_load_gfile_run (EvJob *job)
         EvJobLoadGFile *job_load_gfile = EV_JOB_LOAD_GFILE (job);
         GError    *error = NULL;
 
-        ev_profiler_start ("%s (%p)", EV_GET_TYPE_NAME (job), job);
+	EV_PROFILER_START (EV_GET_TYPE_NAME (job));
 
         ev_document_fc_mutex_lock ();
 
@@ -1333,6 +1353,7 @@ ev_job_load_gfile_run (EvJob *job)
                 ev_job_succeeded (job);
         }
 
+	EV_PROFILER_STOP ();
         return FALSE;
 }
 
@@ -1455,6 +1476,8 @@ ev_job_load_fd_run (EvJob *job)
         GError *error = NULL;
         int fd;
 
+	EV_PROFILER_START (EV_GET_TYPE_NAME (job));
+
         if (job_load_fd->fd == -1) {
                 g_set_error_literal (&error, G_FILE_ERROR, G_FILE_ERROR_BADF,
                                      "Invalid file descriptor");
@@ -1469,7 +1492,6 @@ ev_job_load_fd_run (EvJob *job)
         if (fd == -1)
                 goto out;
 
-        ev_profiler_start ("%s (%p)", EV_GET_TYPE_NAME (job), job);
 
         ev_document_fc_mutex_lock ();
 
@@ -1513,6 +1535,7 @@ ev_job_load_fd_run (EvJob *job)
                 ev_job_succeeded (job);
         }
 
+	EV_PROFILER_STOP ();
         return FALSE;
 }
 
@@ -1700,13 +1723,14 @@ ev_job_save_run (EvJob *job)
 	GError    *error = NULL;
 
 	ev_debug_message (DEBUG_JOBS, "uri: %s, document_uri: %s", job_save->uri, job_save->document_uri);
-	ev_profiler_start ("%s (%p)", EV_GET_TYPE_NAME (job), job);
+	EV_PROFILER_START (EV_GET_TYPE_NAME (job));
 
         fd = ev_mkstemp ("saveacopy.XXXXXX", &tmp_filename, &error);
         if (fd == -1) {
                 ev_job_failed_from_error (job, error);
                 g_error_free (error);
 
+		EV_PROFILER_STOP ();
 		return FALSE;
 	}
 	close (fd);
@@ -1726,6 +1750,7 @@ ev_job_save_run (EvJob *job)
 		ev_job_failed_from_error (job, error);
 		g_error_free (error);
 
+		EV_PROFILER_STOP ();
 		return FALSE;
 	}
 
@@ -1763,11 +1788,14 @@ ev_job_save_run (EvJob *job)
 		ev_job_failed_from_error (job, error);
 		g_error_free (error);
 
+		EV_PROFILER_STOP ();
 		return FALSE;
 	}
 
-	if (!local_uri)
+	if (!local_uri) {
+		EV_PROFILER_STOP ();
 		return FALSE;
+	}
 
 	ev_xfer_uri_simple (local_uri, job_save->uri, &error);
 	ev_tmp_uri_unlink (local_uri);
@@ -1785,6 +1813,7 @@ ev_job_save_run (EvJob *job)
 		ev_job_succeeded (job);
 	}
 
+	EV_PROFILER_STOP ();
 	return FALSE;
 }
 
@@ -1852,6 +1881,7 @@ ev_job_find_run (EvJob *job)
 	EvDocumentFind *find = EV_DOCUMENT_FIND (job->document);
 	EvPage         *ev_page;
 	GList          *matches;
+	int64_t         sysprof_begin;
 
 	ev_debug_message (DEBUG_JOBS, NULL);
 
@@ -1862,7 +1892,10 @@ ev_job_find_run (EvJob *job)
 #ifdef EV_ENABLE_DEBUG
 	/* We use the #ifdef in this case because of the if */
 	if (job_find->current_page == job_find->start_page)
-		ev_profiler_start ("%s (%p)", EV_GET_TYPE_NAME (job), job);
+		/* Skipping EV_PROFILER_START () that would declare the
+		   variables within the `if` scope.
+		 */
+		sysprof_begin = SYSPROF_CAPTURE_CURRENT_TIME;
 #endif
 
 	ev_page = ev_document_get_page (job->document, job_find->current_page);
@@ -1881,7 +1914,14 @@ ev_job_find_run (EvJob *job)
 	job_find->current_page = (job_find->current_page + 1) % job_find->n_pages;
 	if (job_find->current_page == job_find->start_page) {
 		ev_job_succeeded (job);
-
+#ifdef EV_ENABLE_DEBUG
+		/* Because we skipped EV_PROFILER_START () to escape the
+		   scope, we must declare sysprof_name, which otherwise would
+		   be in the macro
+		 */
+		const char* sysprof_name  = EV_GET_TYPE_NAME (job);
+		EV_PROFILER_STOP ();
+#endif
 		return FALSE;
 	}
 
@@ -2036,7 +2076,7 @@ ev_job_layers_run (EvJob *job)
 	EvJobLayers *job_layers = EV_JOB_LAYERS (job);
 
 	ev_debug_message (DEBUG_JOBS, NULL);
-	ev_profiler_start ("%s (%p)", EV_GET_TYPE_NAME (job), job);
+	EV_PROFILER_START (EV_GET_TYPE_NAME (job));
 
 	ev_document_doc_mutex_lock ();
 	job_layers->model = ev_document_layers_get_layers (EV_DOCUMENT_LAYERS (job->document));
@@ -2044,6 +2084,7 @@ ev_job_layers_run (EvJob *job)
 
 	ev_job_succeeded (job);
 
+	EV_PROFILER_STOP ();
 	return FALSE;
 }
 
@@ -2101,7 +2142,7 @@ ev_job_export_run (EvJob *job)
 	g_assert (job_export->page != -1);
 
 	ev_debug_message (DEBUG_JOBS, NULL);
-	ev_profiler_start ("%s (%p)", EV_GET_TYPE_NAME (job), job);
+	EV_PROFILER_START (EV_GET_TYPE_NAME (job));
 
 	ev_document_doc_mutex_lock ();
 
@@ -2123,6 +2164,7 @@ ev_job_export_run (EvJob *job)
 
 	ev_job_succeeded (job);
 
+	EV_PROFILER_STOP ();
 	return FALSE;
 }
 
@@ -2189,7 +2231,7 @@ ev_job_print_run (EvJob *job)
 	g_assert (job_print->cr != NULL);
 
 	ev_debug_message (DEBUG_JOBS, NULL);
-	ev_profiler_start ("%s (%p)", EV_GET_TYPE_NAME (job), job);
+	EV_PROFILER_START (EV_GET_TYPE_NAME (job));
 
 	job->failed = FALSE;
 	job->finished = FALSE;
@@ -2204,8 +2246,10 @@ ev_job_print_run (EvJob *job)
 
 	ev_document_doc_mutex_unlock ();
 
-        if (g_cancellable_is_cancelled (job->cancellable))
-                return FALSE;
+	if (g_cancellable_is_cancelled (job->cancellable)) {
+		EV_PROFILER_STOP ();
+		return FALSE;
+	}
 
 	cr_status = cairo_status (job_print->cr);
 	if (cr_status == CAIRO_STATUS_SUCCESS) {
@@ -2219,6 +2263,7 @@ ev_job_print_run (EvJob *job)
 			       cairo_status_to_string (cr_status));
 	}
 
+	EV_PROFILER_STOP ();
 	return FALSE;
 }
 

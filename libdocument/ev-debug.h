@@ -5,6 +5,7 @@
  * Copyright (C) 1998, 1999 Alex Roberts, Evan Lawrence
  * Copyright (C) 2000, 2001 Chema Celorio, Paolo Maggi
  * Copyright (C) 2002 - 2005 Paolo Maggi
+ * Copyright (C) 2023 Pablo Correa Gómez <ablocorrea@hotmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -49,10 +50,7 @@ G_BEGIN_DECLS
 #ifndef EV_ENABLE_DEBUG
 
 #define _ev_debug_init()
-#define _ev_debug_shutdown()
 #define ev_debug_message(...) G_STMT_START { } G_STMT_END
-#define ev_profiler_start(...) G_STMT_START { } G_STMT_END
-#define ev_profiler_stop(...) G_STMT_START { } G_STMT_END
 
 #else /* ENABLE_DEBUG */
 
@@ -82,7 +80,6 @@ typedef enum {
 #define DEBUG_JOBS      EV_DEBUG_JOBS,    __FILE__, __LINE__, G_STRFUNC
 
 void _ev_debug_init     (void);
-void _ev_debug_shutdown (void);
 
 EV_PRIVATE
 void ev_debug_message  (EvDebugSection   section,
@@ -90,14 +87,31 @@ void ev_debug_message  (EvDebugSection   section,
 			gint             line,
 			const gchar     *function,
 			const gchar     *format, ...) G_GNUC_PRINTF(5, 6);
-EV_PRIVATE
-void ev_profiler_start (const gchar     *format, ...) G_GNUC_PRINTF(1, 2);
-EV_PRIVATE
-void ev_profiler_stop  (const gchar     *format, ...) G_GNUC_PRINTF(1, 2);
 
 EV_PRIVATE
 EvDebugBorders ev_debug_get_debug_borders (void);
 
 #endif /* EV_ENABLE_DEBUG */
+
+#ifdef HAVE_SYSPROF
+
+#include <sysprof-capture.h>
+
+#define EV_PROFILER_START(job_type) \
+	int64_t sysprof_begin = SYSPROF_CAPTURE_CURRENT_TIME; \
+	const char* sysprof_name  = job_type;
+#define EV_PROFILER_STOP() \
+	sysprof_collector_mark(sysprof_begin,                                \
+			       SYSPROF_CAPTURE_CURRENT_TIME - sysprof_begin, \
+			       "evince",                                     \
+			       sysprof_name, \
+			       NULL);
+
+#else /* HAVE_SYSPROF */
+
+#define EV_PROFILER_START(job_type)
+#define EV_PROFILER_STOP()
+
+#endif /* HAVE_SYSPROF */
 
 G_END_DECLS
