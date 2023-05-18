@@ -723,7 +723,7 @@ ev_page_accessible_get_selection (AtkText *text,
 
 	for (l = view->selection_info.selections; l != NULL; l = l->next) {
 		EvViewSelection *selection = (EvViewSelection *)l->data;
-		gint start, end;
+		gint start = 0, end = 0;
 
 		if (selection->page != self->priv->page)
 			continue;
