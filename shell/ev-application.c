@@ -810,46 +810,6 @@ ev_application_open_uri_list (EvApplication *application,
 }
 
 static void
-ev_application_accel_map_save (EvApplication *application)
-{
-	gchar *accel_map_file;
-	gchar *tmp_filename;
-	gint   fd;
-
-        accel_map_file = g_build_filename (application->dot_dir, "accels", NULL);
-	tmp_filename = g_strdup_printf ("%s.XXXXXX", accel_map_file);
-
-	fd = g_mkstemp (tmp_filename);
-	if (fd == -1) {
-		g_free (accel_map_file);
-		g_free (tmp_filename);
-
-		return;
-	}
-	gtk_accel_map_save_fd (fd);
-	close (fd);
-
-        g_mkdir_with_parents (application->dot_dir, 0700);
-	if (g_rename (tmp_filename, accel_map_file) == -1) {
-		/* FIXME: win32? */
-		g_unlink (tmp_filename);
-	}
-
-	g_free (accel_map_file);
-	g_free (tmp_filename);
-}
-
-static void
-ev_application_accel_map_load (EvApplication *application)
-{
-	gchar *accel_map_file;
-
-        accel_map_file = g_build_filename (application->dot_dir, "accels", NULL);
-	gtk_accel_map_load (accel_map_file);
-	g_free (accel_map_file);
-}
-
-static void
 ev_application_startup (GApplication *gapplication)
 {
         const gchar *action_accels[] = {
@@ -925,8 +885,6 @@ ev_application_shutdown (GApplication *gapplication)
 					       application->uri);
 #endif
 	g_clear_pointer (&application->uri, g_free);
-
-	ev_application_accel_map_save (application);
 
 	g_clear_pointer (&application->dot_dir, g_free);
 
@@ -1027,8 +985,6 @@ ev_application_init (EvApplication *ev_application)
 {
         ev_application->dot_dir = g_build_filename (g_get_user_config_dir (),
                                                     "evince", NULL);
-
-	ev_application_accel_map_load (ev_application);
 }
 
 gboolean
