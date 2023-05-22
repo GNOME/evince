@@ -99,3 +99,9 @@ install_data(
   join_paths('symbolic', 'apps', '@0@-symbolic.svg'.format(ev_namespace)),
   install_dir: join_paths(ev_datadir, 'icons', 'hicolor', 'symbolic', 'apps'),
 )
+
+if ev_debug
+  devenv = environment()
+  devenv.set('EV_ICONS_DIR', meson.current_source_dir())
+  meson.add_devenv(devenv)
+endif

@@ -105,6 +105,8 @@ ev_stock_icons_init (void)
 	g_free (dir);
 #else
 	ev_icons_path = g_build_filename (EVINCEDATADIR, "icons", NULL);
+	if (g_getenv ("EV_ICONS_DIR") != NULL)
+		ev_icons_path = g_build_filename (g_getenv ("EV_ICONS_DIR"), NULL);
 #endif
 
         factory = gtk_icon_factory_new ();
@@ -144,4 +146,3 @@ ev_stock_icons_shutdown (void)
 {
 	g_free (ev_icons_path);
 }
-
