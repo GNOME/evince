@@ -254,7 +254,6 @@ typedef struct {
 
 #ifdef ENABLE_DBUS
 #define EV_WINDOW_DBUS_OBJECT_PATH "/org/gnome/evince/Window/%d"
-#define EV_WINDOW_DBUS_INTERFACE   "org.gnome.evince.Window"
 #endif
 
 #define GS_SCHEMA_NAME           "org.gnome.Evince"
@@ -282,13 +281,6 @@ typedef struct {
 #define EV_PRINT_SETTINGS_FILE  "print-settings"
 #define EV_PRINT_SETTINGS_GROUP "Print Settings"
 #define EV_PAGE_SETUP_GROUP     "Page Setup"
-
-#define EV_TOOLBARS_FILENAME "evince-toolbar.xml"
-
-#define TOOLBAR_RESOURCE_PATH "/org/gnome/evince/shell/ui/toolbar.xml"
-
-#define FULLSCREEN_POPUP_TIMEOUT 2
-#define FULLSCREEN_TRANSITION_DURATION 1000 /* in milliseconds */
 
 static const gchar *document_print_settings[] = {
 	GTK_PRINT_SETTINGS_COLLATE,
