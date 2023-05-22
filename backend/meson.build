@@ -71,3 +71,9 @@ foreach backend, backend_mime_types: backends
     install_dir: ev_appstreamdir,
   )
 endforeach
+
+if ev_debug
+  devenv = environment()
+  devenv.set('EV_BACKENDS_DIR', meson.current_build_dir())
+  meson.add_devenv(devenv)
+endif

@@ -50,10 +50,16 @@ if enable_dbus
 endif
 
 # GSettings schema
+gschema_file = ev_namespace + '.gschema.xml'
 install_data(
-  ev_namespace + '.gschema.xml',
+  gschema_file,
   install_dir: join_paths(ev_datadir, 'glib-2.0', 'schemas'),
 )
+if ev_debug
+  gnome.compile_schemas(
+    depend_files: gschema_file,
+  )
+endif
 
 # man file
 man_pages = ['evince.1', 'evince-previewer.1', 'evince-thumbnailer.1']
