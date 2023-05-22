@@ -78,17 +78,6 @@ evince_cflags = [
 
 evince_ldflags = common_ldflags
 
-if ev_platform == 'win32'
-  resource = 'evince-icon.o'
-
-  evince_ldflag += custom_target(
-    resource,
-    input: 'evince-icon.rc',
-    output: resource,
-    command: [find_program('windres'), '@INPUT@', '-I', data_dir, '@OUTPUT@'],
-  )
-endif
-
 if enable_dbus
   evince_sources += files('ev-media-player-keys.c')
 
