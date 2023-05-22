@@ -1,5 +1,3 @@
-msgfmt = find_program('msgfmt')
-
 backends_common_incs = [top_inc]
 backends_common_deps = [libevdocument_dep]
 backends_common_cflags = [
