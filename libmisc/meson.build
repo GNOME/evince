@@ -8,7 +8,6 @@ libevmisc = static_library(
   sources: sources,
   include_directories: top_inc,
   dependencies: libevview_dep,
-  c_args: '-DEVINCEDATADIR="@0@"'.format(ev_pkgdatadir),
 )
 
 libevmisc_dep = declare_dependency(
