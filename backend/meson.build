@@ -3,8 +3,6 @@ backends_common_deps = [libevdocument_dep]
 backends_common_cflags = [
   '-DGNOMELOCALEDIR="@0@"'.format(ev_localedir),
   '-DEVINCE_COMPILATION',
-  '-DGDK_MULTIHEAD_SAFE',
-  '-DGTK_MULTIHEAD_SAFE',
 ]
 
 foreach backend, backend_mime_types: backends

@@ -75,8 +75,6 @@ evince_cflags = [
   '-DBINDIR="@0@"'.format(ev_bindir),
   '-DGNOMEDATADIR="@0@"'.format(ev_datadir),
   '-DEVINCE_COMPILATION',
-  '-DGDK_MULTIHEAD_SAFE',
-  '-DGTK_MULTIHEAD_SAFE',
 ]
 
 evince_ldflags = common_ldflags
