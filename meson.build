@@ -181,14 +181,6 @@ assert(zlib_dep.found() and cc.has_function('inflate', dependencies: zlib_dep) a
 
 ev_platform = get_option('platform')
 if ev_platform == 'gnome'
-  # Evince has a rather soft run-time dependency on hicolor-icon-theme.
-  # If the hicolor theme is not available, Evince fails to display some
-  # icons. Because we cannot check for it at run-time, we instead
-  # would like to require the icon theme at compile-time. But, because
-  # the hicolor-icon-theme does not have a pkgconfig file, on gnome we
-  # require the gnome icon theme instead.
-  adwaita_icon_theme_dep = dependency('adwaita-icon-theme', version: '>= 2.17.1')
-
   # *** Nautilus property page build ***
   enable_nautilus = get_option('nautilus')
   if enable_nautilus
@@ -221,7 +213,6 @@ if ev_platform == 'gnome'
   endif
 
 else
-  message('Evince has a soft run-time dependency on hicolor-icon-theme. You are advised to have this theme installed when running Evince.')
   enable_nautilus = false
   enable_dbus = false
   enable_keyring = false

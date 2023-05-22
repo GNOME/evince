@@ -87,8 +87,6 @@ if ev_platform == 'win32'
     output: resource,
     command: [find_program('windres'), '@INPUT@', '-I', data_dir, '@OUTPUT@'],
   )
-else
-  evince_deps += adwaita_icon_theme_dep
 endif
 
 if enable_dbus
