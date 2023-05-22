@@ -55,11 +55,6 @@ install_data(
   install_dir: join_paths(ev_datadir, 'glib-2.0', 'schemas'),
 )
 
-install_data(
-  'evince.convert',
-  install_dir: join_paths(ev_datadir, 'GConf', 'gsettings'),
-)
-
 # man file
 man_pages = ['evince.1', 'evince-previewer.1', 'evince-thumbnailer.1']
 foreach man_page: man_pages
