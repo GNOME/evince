@@ -73,7 +73,6 @@ evince_deps = [
 
 evince_cflags = [
   '-DBINDIR="@0@"'.format(ev_bindir),
-  '-DGNOMEDATADIR="@0@"'.format(ev_datadir),
   '-DEVINCE_COMPILATION',
 ]
 
