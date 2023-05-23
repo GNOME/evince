@@ -98,10 +98,8 @@ ev_annotations_toolbar_create_toggle_button (EvAnnotationsToolbar *toolbar,
 
         gtk_widget_set_tooltip_text (button, tooltip);
 
-        if (label) {
+	if (label)
                 gtk_button_set_label (GTK_BUTTON (button), label);
-                atk_object_set_name (gtk_widget_get_accessible (button), label);
-        }
 
         if (icon_name) {
                 GtkWidget *image = gtk_image_new_from_icon_name (icon_name, GTK_ICON_SIZE_BUTTON);
