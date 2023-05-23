@@ -32,29 +32,11 @@ evince_sources = files(
   'main.c',
 )
 
-resource_data = files(
-  'evince.css',
-  '../data/thumbnail-frame.png',
-  'evince-menus.ui',
-  'evince-message-area.ui',
-  'evince-password-view.ui',
-  'evince-properties-fonts.ui',
-  'evince-progress-message-area.ui',
-  'evince-recent-view.ui',
-  'evince-sidebar.ui',
-  'evince-sidebar-annotations.ui',
-  'evince-sidebar-bookmarks.ui',
-  'evince-toolbar.ui',
-  'evince-zoom-action.ui',
-  'help-overlay.ui',
-)
-
 evince_sources += gnome.compile_resources(
   'ev-resources',
   'evince.gresource.xml',
   source_dir: data_dir,
   c_name: ev_code_prefix.to_lower(),
-  dependencies: resource_data,
 )
 
 evince_deps = [
