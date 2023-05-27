@@ -513,13 +513,23 @@ process_matches_idle (EvFindSidebar *sidebar)
 
                         new_offset = get_match_offset (areas, n_areas, match, offset);
                         if (new_offset == -1) {
-                                g_warning ("No offset found for match \"%s\" at page %d after processing %d results\n",
-                                           priv->job->text, current_page, result);
-                                /* It may happen that a vertical text match has no corresponding text area, skip
-                                 * that but keep iterating to show any other matches in page (issue #1545) */
-                                continue;
+                                /* It may happen that a text match has no corresponding text area available,
+                                 * (due to limitations/bugs of Poppler's TextPage->getSelectionWords() used by
+                                 * poppler-glib poppler_page_get_text_layout_for_area() function) so in that
+                                 * case we just show matched text because we cannot retrieve surrounding text.
+                                 * Issue #1943 and related #1545 */
+                                markup = g_strdup_printf ("<b>%s</b>", priv->job->text);
+                        } else {
+                                offset = new_offset;
+                                markup = get_surrounding_text_markup (page_text,
+                                                                      priv->job->text,
+                                                                      priv->job->case_sensitive,
+                                                                      text_log_attrs,
+                                                                      text_log_attrs_length,
+                                                                      offset,
+                                                                      match->next_line,
+                                                                      match->after_hyphen);
                         }
-                        offset = new_offset;
 
                         if (current_page >= priv->job->start_page) {
                                 gtk_list_store_append (GTK_LIST_STORE (model), &iter);
@@ -528,15 +538,6 @@ process_matches_idle (EvFindSidebar *sidebar)
                                                        priv->insert_position);
                                 priv->insert_position++;
                         }
-
-                        markup = get_surrounding_text_markup (page_text,
-                                                              priv->job->text,
-                                                              priv->job->case_sensitive,
-                                                              text_log_attrs,
-                                                              text_log_attrs_length,
-                                                              offset,
-                                                              match->next_line,
-                                                              match->after_hyphen);
 
                         gtk_list_store_set (GTK_LIST_STORE (model), &iter,
                                             TEXT_COLUMN, markup,
