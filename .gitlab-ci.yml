@@ -65,6 +65,22 @@ nightly:
         - flatpak
     extends: .publish_nightly
 
+pages:
+    image: registry.gitlab.gnome.org/gnome/evince/x86_64-ubuntu:latest
+    stage: deploy
+    rules:
+        - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_PROJECT_NAMESPACE == "GNOME"
+    script:
+        - meson setup _build
+        - ninja -C _build
+        - mkdir public
+        - mv _build/help/reference/libdocument/libevdocument public/document/
+        - mv _build/help/reference/libview/libevview public/view/
+    artifacts:
+        paths:
+            - public/
+        expire_in: 2 days
+
 update image:
     variables:
         IMAGE_TAG: $CI_REGISTRY_IMAGE/x86_64-ubuntu
