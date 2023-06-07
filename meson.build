@@ -148,6 +148,7 @@ top_inc = include_directories('.')
 glib_req_version = '>= 2.44.0'
 gtk_req_version = '>= 3.22.0'
 hdy_req_version = '>= 1.5.0'
+libxml_req_version = '>= 2.5.0'
 
 gdk_pixbuf_dep = dependency('gdk-pixbuf-2.0', version: '>= 2.40.0')
 config_h.set_quoted('EXTRA_GDK_PIXBUF_LOADERS_DIR',
@@ -160,6 +161,7 @@ gmodule_no_export_dep = dependency('gmodule-no-export-2.0', version: glib_req_ve
 gtk_dep = dependency('gtk+-3.0', version: gtk_req_version)
 gthread_dep = dependency('gthread-2.0', version: glib_req_version)
 hdy_dep = dependency('libhandy-1', version: hdy_req_version)
+libxml_dep = dependency('libxml-2.0', version: libxml_req_version)
 
 m_dep = cc.find_library('m')
 
@@ -394,10 +396,7 @@ endif
 poppler_req_version = '>= 22.02.0'
 poppler_glib_dep = dependency('poppler-glib', version: poppler_req_version, required: get_option('pdf'))
 
-libxml_req_version = '>= 2.5.0'
-libxml_dep = dependency('libxml-2.0', version: libxml_req_version, required: get_option('pdf'))
-
-enable_pdf = poppler_glib_dep.found() and libxml_dep.found()
+enable_pdf = poppler_glib_dep.found()
 if enable_pdf
   cairo_pdf_dep = dependency('cairo-pdf', required: false)
   cairo_ps_dep = dependency('cairo-ps', required: false)
@@ -405,7 +404,7 @@ if enable_pdf
   backends += {'pdf': mime_types_list.get('pdf')}
   evince_mime_types += mime_types_list.get('pdf')
 elif get_option('pdf').auto()
-  warning('PDF support is disabled since poppler-glib version ' + poppler_req_version + ' or libxml-2.0 version ' + libxml_req_version + ' not found')
+  warning('PDF support is disabled since poppler-glib version ' + poppler_req_version + ' not found')
 endif
 
 # *** PostScript ***
