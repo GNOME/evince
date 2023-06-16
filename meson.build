@@ -525,6 +525,23 @@ gnome.post_install(
   update_desktop_database: true,
 )
 
+is_stable = (ev_minor_version != 'alpha' and
+  ev_minor_version != 'beta' and
+  ev_minor_version != 'rc')
+if is_stable
+  meson.add_dist_script(
+    find_program('check-news.sh').full_path(),
+    '@0@'.format(meson.project_version()),
+    'NEWS',
+    'org.gnome.Evince.appdata.xml.in'
+  )
+else
+  meson.add_dist_script(
+    find_program('check-news.sh').full_path(),
+    '@0@'.format(meson.project_version()),
+    'NEWS',
+  )
+endif
 
 summary({'Platform...................': ev_platform,
          'Debug mode.................': ev_debug,
