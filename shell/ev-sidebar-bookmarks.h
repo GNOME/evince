@@ -40,8 +40,6 @@ typedef struct _EvSidebarBookmarksPrivate EvSidebarBookmarksPrivate;
 
 struct _EvSidebarBookmarks {
 	GtkBox base_instance;
-
-	EvSidebarBookmarksPrivate *priv;
 };
 
 struct _EvSidebarBookmarksClass {
