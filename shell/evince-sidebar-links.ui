@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk" version="4.0"/>
+  <requires lib="libadwaita" version="1.0"/>
+  <template class="EvSidebarLinks" parent="GtkBox">
+    <property name="orientation">vertical</property>
+    <child type="start">
+      <object class="GtkScrolledWindow" id="swindow">
+        <property name="halign">fill</property>
+        <property name="hexpand">True</property>
+        <property name="vexpand">True</property>
+        <child>
+          <object class="GtkTreeView" id="tree_view">
+            <property name="model">list-model</property>
+            <property name="headers-visible">False</property>
+            <property name="tooltip-column">0</property>
+            <property name="enable-search">False</property>
+            <signal name="row-collapsed" handler="row_collapsed_cb" />
+            <signal name="row-expanded" handler="row_expanded_cb" />
+            <child>
+              <object class="GtkTreeViewColumn">
+                <property name="expand">True</property>
+                <child>
+                  <object class="GtkCellRendererText">
+                    <property name="ellipsize">end</property>
+                  </object>
+                  <attributes>
+                    <attribute name="markup">0</attribute>
+                  </attributes>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkTreeViewColumn">
+                <child>
+                  <object class="GtkCellRendererText">
+                    <property name="ellipsize">middle</property>
+                    <property name="width-chars">7</property>
+                    <property name="style">italic</property>
+                    <property name="xalign">1.0</property>
+                  </object>
+                  <attributes>
+                    <attribute name="text">3</attribute>
+                  </attributes>
+                </child>
+              </object>
+            </child>
+            <child internal-child="selection">
+              <object class="GtkTreeSelection" id="selection">
+                <property name="mode">none</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkGestureClick">
+                <property name="button">3</property>
+                <signal name="pressed" handler="button_press_cb" />
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="GtkPopoverMenu" id="popup">
+        <property name="has-arrow">False</property>
+        <property name="halign">start</property>
+        <property name="menu-model">links-menu</property>
+      </object>
+    </child>
+  </template>
+
+  <object class="GtkListStore" id="list-model">
+    <columns>
+      <column type="gchararray" />
+      <column type="GObject" />
+      <column type="gboolean" />
+      <column type="gchararray" />
+    </columns>
+  </object>
+
+  <menu id="links-menu">
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">Search in the outline…</attribute>
+        <attribute name="action">links.search-outline</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Collapse all tree</attribute>
+        <attribute name="action">links.collapse-all</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Expand all tree</attribute>
+        <attribute name="action">links.expand-all</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Expand all under this element</attribute>
+        <attribute name="action">links.expand-all-under</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">Print this section…</attribute>
+        <attribute name="action">links.print</attribute>
+      </item>
+    </section>
+  </menu>
+</interface>
