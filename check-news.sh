@@ -65,7 +65,7 @@ check_version()
 
 has_verify_latest_version()
 {
-	appstream-util 2>&1 | grep -q get-latest-version
+	appstreamcli --help 2>&1 | grep -q get-latest-version
 	return $?
 }
 
@@ -73,7 +73,7 @@ verify_latest_version()
 {
 	VERSION=$1
 	FILE=$SRC_ROOT/"$2"
-	LATEST_VERSION=`appstream-util get-latest-version "$FILE" | tr -d '\d'`
+	LATEST_VERSION=`appstreamcli get-latest-version "$FILE" | tr -d '\d'`
 	if [ "$LATEST_VERSION" != "$VERSION" ] ; then
 		echo "Expected latest version $VERSION in $FILE, got $LATEST_VERSION"
 		exit 1
