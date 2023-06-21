@@ -1006,6 +1006,7 @@ ev_view_presentation_draw_end_page (EvViewPresentation *pview,
 	PangoLayout *layout;
 	PangoFontDescription *font_desc;
 	gchar *markup;
+	int text_width, text_height, x_center;
 	const gchar *text = _("End of presentation. Press Esc or click to exit.");
 
 	if (pview->state != EV_PRESENTATION_END)
@@ -1019,9 +1020,9 @@ ev_view_presentation_draw_end_page (EvViewPresentation *pview,
 	font_desc = pango_font_description_new ();
 	pango_font_description_set_size (font_desc, 16 * PANGO_SCALE);
 	pango_layout_set_font_description (layout, font_desc);
-
-        gtk_render_layout (gtk_widget_get_style_context (widget),
-                           cr, 15, 15, layout);
+	pango_layout_get_pixel_size (layout, &text_width, &text_height);
+	x_center = gtk_widget_get_allocated_width (widget) / 2 - text_width / 2;
+	gtk_render_layout (gtk_widget_get_style_context (widget), cr, x_center, 15, layout);
 
 	pango_font_description_free (font_desc);
 	g_object_unref (layout);
