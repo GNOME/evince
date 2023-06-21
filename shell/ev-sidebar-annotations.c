@@ -393,15 +393,14 @@ job_finished_callback (EvJobAnnots          *job,
 			contents = ev_annotation_get_contents (annot);
 
 			if (modified)
-				tooltip = g_strdup_printf ("<span weight=\"bold\">%s</span>\n%s",
-							   label, modified);
+				tooltip = g_strdup_printf ("<span weight=\"bold\">%s</span>\n%s", label, modified);
 			else
 				tooltip = g_strdup_printf ("<span weight=\"bold\">%s</span>", label);
 
-			if (contents)
+			if (contents && *contents != '\0')
 				markup = g_strdup_printf ("%s", contents);
 			else
-				markup = g_strdup_printf ("%s", tooltip);
+				markup = g_strdup_printf ("<i>%s</i>", _("No Comment"));
 
 			if (EV_IS_ANNOTATION_TEXT (annot)) {
 				icon_name = EV_STOCK_ANNOT_TEXT;
