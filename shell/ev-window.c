@@ -397,6 +397,9 @@ static void     recent_view_item_activated_cb           (EvRecentView     *recen
 static void     ev_window_begin_add_annot               (EvWindow         *ev_window,
 							 EvAnnotationType  annot_type);
 static void	ev_window_cancel_add_annot		(EvWindow *window);
+static void     ev_window_cmd_toggle_edit_annots 	(GSimpleAction *action,
+							 GVariant      *state,
+							 gpointer       user_data);
 
 static gchar *nautilus_sendto = NULL;
 
@@ -4754,15 +4757,28 @@ static void
 ev_window_run_presentation (EvWindow *window)
 {
 	EvWindowPrivate *priv = GET_PRIVATE (window);
-	gboolean fullscreen_window = TRUE;
-	guint    current_page;
-	guint    rotation;
-	gboolean inverted_colors;
+	GAction  *action;
+	GVariant *annot_state;
+	gboolean  fullscreen_window = TRUE;
+	guint     current_page;
+	guint     rotation;
+	gboolean  inverted_colors;
 
 	if (EV_WINDOW_IS_PRESENTATION (priv))
 		return;
 
 	ev_window_close_find_bar (window);
+
+	/* We do not want to show the annotation toolbar during
+	 * the presentation mode. But we would like to restore it
+	 * afterwards
+	 */
+	action = g_action_map_lookup_action (G_ACTION_MAP (window),
+					     "toggle-edit-annots");
+	annot_state = g_variant_new_boolean (FALSE);
+	ev_window_cmd_toggle_edit_annots (G_SIMPLE_ACTION (action),
+					  annot_state,
+					  window);
 
 	if (ev_document_model_get_fullscreen (priv->model)) {
 		ev_window_stop_fullscreen (window, FALSE);
