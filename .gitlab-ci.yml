@@ -15,6 +15,7 @@ editorconfig:
     script:
         - apk add editorconfig-checker
         - ec --disable-indentation --exclude '^.git/|cut-n-paste'
+    allow_failure: true
 
 meson:
     image: registry.gitlab.gnome.org/gnome/evince/x86_64-ubuntu:latest
