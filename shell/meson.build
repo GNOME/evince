@@ -12,6 +12,7 @@ evince_sources = files(
   'ev-password-view.c',
   'ev-progress-message-area.c',
   'ev-properties-dialog.c',
+  'ev-properties-view.c',
   'ev-properties-fonts.c',
   'ev-properties-license.c',
   'ev-recent-view.c',

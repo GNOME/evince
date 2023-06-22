@@ -1,6 +1,6 @@
 libevproperties = static_library(
   'evproperties',
-  sources: ['ev-properties.c', 'ev-properties-view.c'],
+  sources: ['ev-properties.c'],
   include_directories: top_inc,
   dependencies: libevdocument_dep,
   gnu_symbol_visibility: 'hidden',
