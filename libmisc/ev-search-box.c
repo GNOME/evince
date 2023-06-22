@@ -599,12 +599,14 @@ ev_search_box_init (EvSearchBox *box)
         priv->prev_button = gtk_button_new_from_icon_name ("go-up-symbolic", GTK_ICON_SIZE_MENU);
         gtk_widget_set_tooltip_text (priv->prev_button, _("Find previous occurrence of the search string"));
         gtk_widget_set_sensitive (priv->prev_button, FALSE);
+        gtk_widget_set_focus_on_click (priv->prev_button, FALSE);
         gtk_container_add (GTK_CONTAINER (box), priv->prev_button);
         gtk_widget_show (priv->prev_button);
 
         priv->next_button = gtk_button_new_from_icon_name ("go-down-symbolic", GTK_ICON_SIZE_MENU);
         gtk_widget_set_tooltip_text (priv->next_button, _("Find next occurrence of the search string"));
         gtk_widget_set_sensitive (priv->next_button, FALSE);
+        gtk_widget_set_focus_on_click (priv->next_button, FALSE);
         gtk_container_add (GTK_CONTAINER (box), priv->next_button);
         gtk_widget_show (priv->next_button);
 
