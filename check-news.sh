@@ -94,7 +94,7 @@ fi
 
 for i in $@ ; do
 	case "$i" in
-	*"metainfo"*)
+	*"appdata"*)
 		if has_verify_latest_version ; then
 			verify_latest_version $VERSION "$i"
 		fi
