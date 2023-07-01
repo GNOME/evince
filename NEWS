@@ -1,3 +1,107 @@
+=================
+Evince   45.alpha
+=================
+
+shell:
+  * Add git-blame-ignore-refs (Pablo Correa Gómez)
+  * Fix files not addering to code style defined in editorconfig (Pablo Correa Gómez)
+  * Fix minor typo (Yuri Chornoivan)
+  * Remove evince.convert for pre-gsettings conversion (Pablo Correa Gómez)
+  * Remove evince.ico formerly used for windows resources (Pablo Correa Gómez)
+  * Update POTFILES.in (Piotr Drąg)
+  * Use G_SOURCE_CONTINUE and G_SOURCE_REMOVE when appropriate (Pablo Correa Gómez)
+  * EvSearchbox: Make buttons don't grab focus on click (Nelson Benítez León)
+  * Do not set unnecessary accessiblei in the Annotation toolbar (Pablo Correa Gómez)
+  * Do not migrate old config dir (Pablo Correa Gómez)
+  * Remove loading and saving of custom accels file (Pablo Correa Gómez)
+  * Unconditionally create popup menu (Pablo Correa Gómez)
+  * Use composite template (Pablo Correa Gómez)
+  * Fix crash when instantiating .ui template (#1930, Nelson Benítez León)
+  * Fix restoring close button after fullscreen (#1929, Nelson Benítez León)
+  * Remove some unused macros (Pablo Correa Gómez)
+  * Simplify dispose by not checking previous to ev_window_clear* (Pablo Correa Gómez)
+  * Simplify some logic in ev_window_open_uri (Pablo Correa Gómez)
+  * Simplify freeing memory by better exploiting glib functions (Pablo Correa Gómez)
+  * Don't discard matches without text area (#1943, Nelson Benítez León)
+  * Add a placeholder text when annotations has no content (#1620, Chayut Liewlom)
+  * Close the annotation toolbar in presentation mode (#1733, Volte--Vieira Philippe)
+  * Remove 'annotate-selected-text' action (#1919, Nelson Benítez León)
+  * Save settings automatically at closing a document (#1138, Germán Poo-Caamaño)
+  * Fix Outline collapse status not being saved (#1936, Nelson Benítez León)
+
+backend:
+  * Dvi: fix warning about strncat (Qiu Wenbo)
+  * Rename all mentions of appdata to metainfo (Pablo Correa Gómez)
+  * Remove search for msgfmt (Pablo Correa Gómez)
+  * Drop use of deprecated poppler_page_get_selection_region (Pablo Correa Gomez)
+  * Make private a function only used in the .c file (Pablo Correa Gómez)
+  * Remove all cast chekcs for poppler version (Pablo Correa Gómez)
+
+build:
+  * Add support for validating appdata versions (#1950, Bastien Nocera)
+  * Check for NEWS and appdata updates for new releases (Bastien Nocera)
+  * Release version bump (Germán Poo-Caamaño)
+  * Require poppler 22.05 for PDF rendering (Pablo Correa Gómez)
+  * Do not explicitly require adwaita-icon-theme (Pablo Correa Gómez)
+  * Make it possible to run evince with "meson devenv" (Pablo Correa Gómez)
+  * Remove definition of G{TD}K_MULTIHEAD_SAFE macros (Pablo Correa Gómez)
+  * Remove libhandy subproject (#1683, Pablo Correa Gómez)
+  * Remove libxml2 dependency from PDF backend (Pablo Correa Gómez)
+  * Do not add extra dependencies for gnome.compile_resources (Pablo Correa Gómez)
+  * Remove unused GNOMEDATADIR define (Pablo Correa Gómez)
+  * Remove unused EVINCEDATADIR define (Pablo Correa Gómez)
+
+ci:
+  * Add check for code style respecting the repository .editorconfig (Pablo Correa Gómez)
+  * Let the lint job be lenient (Germán Poo-Caamaño)
+  * Publish developer docs on gitlab pages (Corey Berla)
+  * Update pre-installed packages (Germán Poo-Caamaño)
+
+data:
+  * Document settings keys (Germán Poo-Caamaño)
+  * Fix years on 44.x releases (Germán Poo-Caamaño)
+  * Remove hand-open.png and its installation (Pablo Correa Gómez)
+  * Remove unused show-toolbar setting from schema (Germán Poo-Caamaño)
+
+git-blame-ignore-refs:
+  * Add commit from ec-checker fixes (Pablo Correa Gómez)
+
+libdocument:
+  * Simplify freeing memory by better exploiting glib functions (Pablo Correa Gómez)
+
+libmisc:
+  * Simplify freeing memory by better exploiting glib functions (Pablo Correa Gómez)
+
+libview:
+  * Make it possible to get libview icon directory from env var (Pablo Correa Gómez)
+  * Move the caret by word relative to the selection's boundaries (#387, #704631, Antia Puentes)
+  * Move the caret to prev/next line relative to the selection (#387, #704631, Antia Puentes)
+  * Move the caret to start/end line relative to the selection (#387, #704631, Antia Puentes)
+  * Move the caret to the boundaries of a selection (#387, #704631, Antia Puentes)
+  * Place at the top center "end of presentation" text (Raffaele)
+  * Remove trailing whitespaces (Qiu Wenbo)
+  * Select caret to doc's start/end relative to the selection (#387, #704631, Antia Puentes)
+  * Simplify freeing memory by better exploiting glib functions (Pablo Correa Gómez)
+  * Improve centering the page on scroll_to_page (#1868, #1905, Nelson Benítez León)
+  * Remove clear_link_selected private function (Pablo Correa Gómez)
+  * Remove non-needed call to deprecated gtk_style_context_set_background (#692988, Pablo Correa Gómez)
+  * Remove deprecated call to gtk_style_context_set_background (Pablo Correa Gómez)
+  * Simplify reset_jobs calls (Pablo Correa Gómez)
+  * Fix crash when hovering links (#1933, Nelson Benítez León)
+
+Developers:
+  * Antia Puentes, Bastien Nocera, Chayut Liewlom, Corey Berla, Germán Poo-Caamaño, Nelson Benítez León, Pablo Correa Gomez, Pablo Correa Gómez, Piotr Drąg, Qiu Wenbo, Raffaele, Volte--Vieira Philippe, Yuri Chornoivan
+
+Translations:
+  * Bruce Cowan (British English)
+  * Alexander Shopov (Bulgarian)
+  * Jordi Mas i Hernandez (Catalan)
+  * Irénée THIRION (French)
+  * Fabio Tomat (Friulian)
+  * Aleksandr Melman (Russian)
+  * Sabri Ünal (Turkish)
+  * Yuri Chornoivan (Ukrainian)
+
 =============
 Evince   44.0
 =============
