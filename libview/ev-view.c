@@ -3366,10 +3366,9 @@ annotation_window_closed (EvAnnotationWindow *window,
 	child->visible = FALSE;
 }
 
-static void
+static gboolean
 annotation_window_moved (EvAnnotationWindow *window,
-			 gint                x,
-			 gint                y,
+			 GdkEventConfigure  *event,
 			 EvView             *view)
 {
 	EvViewWindowChild *child;
@@ -3377,29 +3376,31 @@ annotation_window_moved (EvAnnotationWindow *window,
 	GtkBorder          border;
 	GdkRectangle       view_rect;
 	EvRectangle        doc_rect;
-	gint               width, height;
 
 	child = ev_view_get_window_child (view, GTK_WIDGET (window));
-	if (child->x == x && child->y == y)
-		return;
+	if (!child)
+		return FALSE;
+	if (child->x == event->x && child->y == event->y)
+		return FALSE;
 
 	child->moved = TRUE;
-	child->x = x;
-	child->y = y;
+	child->x = event->x;
+	child->y = event->y;
 
 	/* Window has been moved by the user,
 	 * we have to set a new origin in doc coords
 	 */
-	gtk_window_get_size (GTK_WINDOW (window), &width, &height);
-	view_rect.x = (x - child->parent_x) + view->scroll_x;
-	view_rect.y = (y - child->parent_y) + view->scroll_y;
-	view_rect.width = width;
-	view_rect.height = height;
+	view_rect.x = (event->x - child->parent_x) + view->scroll_x;
+	view_rect.y = (event->y - child->parent_y) + view->scroll_y;
+	view_rect.width = event->width;
+	view_rect.height = event->height;
 
 	ev_view_get_page_extents (view, child->page, &page_area, &border);
 	_ev_view_transform_view_rect_to_doc_rect (view, &view_rect, &page_area, &border, &doc_rect);
 	child->orig_x = doc_rect.x1;
 	child->orig_y = doc_rect.y1;
+
+	return FALSE;
 }
 
 static void
@@ -3434,7 +3435,7 @@ ev_view_create_annotation_window (EvView       *view,
 	g_signal_connect (window, "closed",
 			  G_CALLBACK (annotation_window_closed),
 			  view);
-	g_signal_connect (window, "moved",
+	g_signal_connect (window, "configure-event",
 			  G_CALLBACK (annotation_window_moved),
 			  view);
 	g_signal_connect_swapped (annot, "notify::contents",
