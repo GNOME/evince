@@ -43,7 +43,6 @@ enum {
 
 enum {
 	CLOSED,
-	MOVED,
 	N_SIGNALS
 };
 
@@ -62,12 +61,6 @@ struct _EvAnnotationWindow {
 	gboolean      is_open;
 	EvRectangle   rect;
 
-	gboolean      in_move;
-	gint          x;
-	gint          y;
-	gint          orig_x;
-	gint          orig_y;
-
 #if WITH_GSPELL
 	GspellTextView *spellcheck_view;
 	gboolean      enable_spellchecking;
@@ -78,9 +71,6 @@ struct _EvAnnotationWindowClass {
 	GtkWindowClass base_class;
 
 	void (* closed) (EvAnnotationWindow *window);
-	void (* moved)  (EvAnnotationWindow *window,
-			 gint                x,
-			 gint                y);
 };
 
 static guint signals[N_SIGNALS];
@@ -286,12 +276,7 @@ static gboolean
 ev_annotation_window_button_press_event (GtkWidget      *widget,
 					 GdkEventButton *event)
 {
-	EvAnnotationWindow *window = EV_ANNOTATION_WINDOW (widget);
-
 	if (event->type == GDK_BUTTON_PRESS && event->button == 1) {
-		window->in_move = TRUE;
-		window->x = event->x_root - event->x;
-		window->y = event->y_root - event->y;
 		gtk_window_begin_move_drag (GTK_WINDOW (widget),
 					    event->button,
 					    event->x_root,
@@ -501,34 +486,10 @@ ev_annotation_window_constructor (GType                  type,
 }
 
 static gboolean
-ev_annotation_window_configure_event (GtkWidget         *widget,
-				      GdkEventConfigure *event)
-{
-	EvAnnotationWindow *window = EV_ANNOTATION_WINDOW (widget);
-
-	if (window->in_move &&
-	    (window->x != event->x || window->y != event->y)) {
-		window->x = event->x;
-		window->y = event->y;
-	}
-
-	return GTK_WIDGET_CLASS (ev_annotation_window_parent_class)->configure_event (widget, event);
-}
-
-static gboolean
 ev_annotation_window_focus_in_event (GtkWidget     *widget,
 				     GdkEventFocus *event)
 {
 	EvAnnotationWindow *window = EV_ANNOTATION_WINDOW (widget);
-
-	if (window->in_move) {
-		if (window->orig_x != window->x || window->orig_y != window->y) {
-			window->orig_x = window->x;
-			window->orig_y = window->y;
-			g_signal_emit (window, signals[MOVED], 0, window->x, window->y);
-		}
-		window->in_move = FALSE;
-	}
 
 	gtk_widget_grab_focus (window->text_view);
 	send_focus_change (window->text_view, TRUE);
@@ -570,7 +531,6 @@ ev_annotation_window_class_init (EvAnnotationWindowClass *klass)
 	g_object_class->set_property = ev_annotation_window_set_property;
 	g_object_class->dispose = ev_annotation_window_dispose;
 
-	gtk_widget_class->configure_event = ev_annotation_window_configure_event;
 	gtk_widget_class->focus_in_event = ev_annotation_window_focus_in_event;
 	gtk_widget_class->focus_out_event = ev_annotation_window_focus_out_event;
         gtk_widget_class->key_press_event = ev_annotation_window_key_press_event;
@@ -602,15 +562,6 @@ ev_annotation_window_class_init (EvAnnotationWindowClass *klass)
 			      NULL, NULL,
 			      g_cclosure_marshal_VOID__VOID,
 			      G_TYPE_NONE, 0, G_TYPE_NONE);
-	signals[MOVED] =
-		g_signal_new ("moved",
-			      G_TYPE_FROM_CLASS (g_object_class),
-			      G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
-			      G_STRUCT_OFFSET (EvAnnotationWindowClass, moved),
-			      NULL, NULL,
-			      ev_view_marshal_VOID__INT_INT,
-			      G_TYPE_NONE, 2,
-			      G_TYPE_INT, G_TYPE_INT);
 }
 
 /* Public methods */
