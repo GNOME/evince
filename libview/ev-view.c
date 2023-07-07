@@ -3163,74 +3163,16 @@ ev_view_get_window_child (EvView    *view,
 }
 
 static void
-ev_view_window_child_move (EvView            *view,
-			   EvViewWindowChild *child,
-			   gint               x,
-			   gint               y)
-{
-	GtkAllocation allocation;
-	gint          width, height;
-
-	gtk_widget_get_allocation (GTK_WIDGET (view), &allocation);
-	gtk_window_get_size (GTK_WINDOW (child->window), &width, &height);
-
-	child->x = x;
-	child->y = y;
-	gtk_window_move (GTK_WINDOW (child->window),
-			 CLAMP (x, child->parent_x,
-				child->parent_x + allocation.width - width),
-			 CLAMP (y, child->parent_y,
-				child->parent_y + allocation.height - height));
-}
-
-static void
-ev_view_window_child_move_with_parent (EvView    *view,
-				       GtkWidget *window)
-{
-	EvViewWindowChild *child;
-	gint               root_x, root_y;
-
-	child = ev_view_get_window_child (view, window);
-	gdk_window_get_origin (gtk_widget_get_window (GTK_WIDGET (view)),
-			       &root_x, &root_y);
-	if (root_x != child->parent_x || root_y != child->parent_y) {
-		gint dest_x, dest_y;
-
-		dest_x = child->x + (root_x - child->parent_x);
-		dest_y = child->y + (root_y - child->parent_y);
-		child->parent_x = root_x;
-		child->parent_y = root_y;
-		ev_view_window_child_move (view, child, dest_x, dest_y);
-	}
-
-	if (child->visible && !gtk_widget_get_visible (window))
-		gtk_widget_show (window);
-}
-
-static void
 ev_view_window_child_put (EvView    *view,
 			  GtkWidget *window,
-			  guint      page,
-			  gint       x,
-			  gint       y,
-			  gdouble    orig_x,
-			  gdouble    orig_y)
+			  guint      page)
 {
 	EvViewWindowChild *child;
-	gint               root_x, root_y;
-
-	gdk_window_get_origin (gtk_widget_get_window (GTK_WIDGET (view)),
-			       &root_x, &root_y);
 
 	child = g_new0 (EvViewWindowChild, 1);
 	child->window = window;
 	child->page = page;
-	child->orig_x = orig_x;
-	child->orig_y = orig_y;
-	child->parent_x = root_x;
-	child->parent_y = root_y;
 	child->visible = ev_annotation_window_is_open (EV_ANNOTATION_WINDOW (window));
-	ev_view_window_child_move (view, child, x + root_x, y + root_y);
 
 	if (child->visible)
 		gtk_widget_show (window);
@@ -3305,43 +3247,6 @@ annotation_window_closed (EvAnnotationWindow *window,
 	child->visible = FALSE;
 }
 
-static gboolean
-annotation_window_moved (EvAnnotationWindow *window,
-			 GdkEventConfigure  *event,
-			 EvView             *view)
-{
-	EvViewWindowChild *child;
-	GdkRectangle       page_area;
-	GtkBorder          border;
-	GdkRectangle       view_rect;
-	EvRectangle        doc_rect;
-
-	child = ev_view_get_window_child (view, GTK_WIDGET (window));
-	if (!child)
-		return FALSE;
-	if (child->x == event->x && child->y == event->y)
-		return FALSE;
-
-	child->moved = TRUE;
-	child->x = event->x;
-	child->y = event->y;
-
-	/* Window has been moved by the user,
-	 * we have to set a new origin in doc coords
-	 */
-	view_rect.x = (event->x - child->parent_x) + view->scroll_x;
-	view_rect.y = (event->y - child->parent_y) + view->scroll_y;
-	view_rect.width = event->width;
-	view_rect.height = event->height;
-
-	ev_view_get_page_extents (view, child->page, &page_area, &border);
-	_ev_view_transform_view_rect_to_doc_rect (view, &view_rect, &page_area, &border, &doc_rect);
-	child->orig_x = doc_rect.x1;
-	child->orig_y = doc_rect.y1;
-
-	return FALSE;
-}
-
 static void
 ev_view_annotation_save_contents (EvView       *view,
 				  GParamSpec   *pspec,
@@ -3363,8 +3268,6 @@ ev_view_create_annotation_window (EvView       *view,
 				  GtkWindow    *parent)
 {
 	GtkWidget   *window;
-	EvRectangle  doc_rect;
-	GdkRectangle view_rect;
 	guint        page;
 
 	window = ev_annotation_window_new (annot, parent);
@@ -3374,23 +3277,14 @@ ev_view_create_annotation_window (EvView       *view,
 	g_signal_connect (window, "closed",
 			  G_CALLBACK (annotation_window_closed),
 			  view);
-	g_signal_connect (window, "configure-event",
-			  G_CALLBACK (annotation_window_moved),
-			  view);
 	g_signal_connect_swapped (annot, "notify::contents",
 				  G_CALLBACK (ev_view_annotation_save_contents),
 				  view);
 	map_annot_to_window (view, annot, window);
 
 	page = ev_annotation_get_page_index (annot);
-	ev_annotation_window_get_rectangle (EV_ANNOTATION_WINDOW (window), &doc_rect);
-	_ev_view_transform_doc_rect_to_view_rect (view, page, &doc_rect, &view_rect);
-	view_rect.x -= view->scroll_x;
-	view_rect.y -= view->scroll_y;
 
-	ev_view_window_child_put (view, window, page,
-				  view_rect.x, view_rect.y,
-				  doc_rect.x1, doc_rect.y1);
+	ev_view_window_child_put (view, window, page);
         ev_annotation_window_set_enable_spellchecking (EV_ANNOTATION_WINDOW (window), ev_view_get_enable_spellchecking (view));
 	return window;
 }
@@ -3421,7 +3315,9 @@ show_annotation_windows (EvView *view,
 
 		window = get_window_for_annot (view, annot);
 		if (window) {
-			ev_view_window_child_move_with_parent (view, window);
+			EvViewWindowChild *child;
+			child = ev_view_get_window_child (view, window);
+			gtk_widget_set_visible (window, child->visible);
 		} else {
 			ev_view_create_annotation_window (view, annot, parent);
 		}
@@ -3556,7 +3452,6 @@ ev_view_annotation_show_popup_window (EvView    *view,
 	child = ev_view_get_window_child (view, window);
 	if (!child->visible) {
 		child->visible = TRUE;
-		ev_view_window_child_move (view, child, child->x, child->y);
 		gtk_widget_show (window);
 	}
 }
@@ -3611,14 +3506,10 @@ ev_view_handle_annotation (EvView       *view,
 			parent = GTK_WINDOW (gtk_widget_get_toplevel (GTK_WIDGET (view)));
 			window = ev_view_create_annotation_window (view, annot, parent);
 		} else if (window && ev_annotation_markup_has_popup (EV_ANNOTATION_MARKUP (annot))) {
-			EvViewWindowChild *child;
 			EvMappingList     *annots;
 			EvRectangle        popup_rect;
 			EvMapping         *mapping;
-			GdkPoint           view_point;
-			EvPoint            annotation_corner;
 
-			child = ev_view_get_window_child (view, window);
 			annots = ev_page_cache_get_annot_mapping (view->page_cache,
 								  ev_annotation_get_page_index (annot));
 			mapping = ev_mapping_list_find (annots, annot);
@@ -3633,18 +3524,6 @@ ev_view_handle_annotation (EvView       *view,
 				      "rectangle", &popup_rect,
 				      "popup_is_open", TRUE,
 				      NULL);
-
-			annotation_corner.x = mapping->area.x2;
-			annotation_corner.y = mapping->area.y2;
-
-			_ev_view_transform_doc_point_to_view_point (view,
-								    ev_annotation_get_page_index (annot),
-								    &annotation_corner,
-								    &view_point);
-
-			ev_view_window_child_move (view, child,
-						   child->parent_x + view_point.x - view->scroll_x,
-						   child->parent_y + view_point.y - view->scroll_y);
 		}
 		ev_view_annotation_show_popup_window (view, window);
 	}
@@ -4475,7 +4354,6 @@ ev_view_size_allocate (GtkWidget      *widget,
 {
 	EvView *view = EV_VIEW (widget);
 	GList  *l;
-	gint    root_x, root_y;
 
 	gtk_widget_set_allocation (widget, allocation);
 
@@ -4526,33 +4404,6 @@ ev_view_size_allocate (GtkWidget      *widget,
 
 		gtk_widget_set_size_request (child->widget, view_area.width, view_area.height);
 		gtk_widget_size_allocate (child->widget, &view_area);
-	}
-
-	if (view->window_children)
-		gdk_window_get_origin (gtk_widget_get_window (GTK_WIDGET (view)),
-				       &root_x, &root_y);
-
-	for (l = view->window_children; l && l->data; l = g_list_next (l)) {
-		EvViewWindowChild *child;
-		EvRectangle        doc_rect;
-		GdkRectangle       view_rect;
-
-		child = (EvViewWindowChild *)l->data;
-
-		ev_annotation_window_get_rectangle (EV_ANNOTATION_WINDOW (child->window), &doc_rect);
-		if (child->moved) {
-			doc_rect.x1 = child->orig_x;
-			doc_rect.y1 = child->orig_y;
-		}
-		_ev_view_transform_doc_rect_to_view_rect (view, child->page, &doc_rect, &view_rect);
-		view_rect.x -= view->scroll_x;
-		view_rect.y -= view->scroll_y;
-
-		if (view_rect.x != child->orig_x || view_rect.y != child->orig_y) {
-			child->parent_x = root_x;
-			child->parent_y = root_y;
-			ev_view_window_child_move (view, child, view_rect.x + root_x, view_rect.y + root_y);
-		}
 	}
 }
 
@@ -8702,14 +8553,6 @@ on_adjustment_value_changed (GtkAdjustment *adjustment,
 		child->y += dy;
 		if (gtk_widget_get_visible (child->widget) && gtk_widget_get_visible (widget))
 			gtk_widget_queue_resize (widget);
-	}
-
-	for (l = view->window_children; l && l->data; l = g_list_next (l)) {
-		EvViewWindowChild *child;
-
-		child = (EvViewWindowChild *)l->data;
-
-		ev_view_window_child_move (view, child, child->x + dx, child->y + dy);
 	}
 
 	if (view->pending_resize) {

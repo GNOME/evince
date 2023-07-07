@@ -83,20 +83,7 @@ typedef struct {
 	GtkWidget *window;
 	guint      page;
 
-	/* Current position */
-	gint       x;
-	gint       y;
-
-	/* EvView root position */
-	gint       parent_x;
-	gint       parent_y;
-
-	/* Document coords */
-	gdouble    orig_x;
-	gdouble    orig_y;
-
 	gboolean   visible;
-	gboolean   moved;
 } EvViewWindowChild;
 
 typedef enum {
