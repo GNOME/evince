@@ -8441,6 +8441,7 @@ ev_view_init (EvView *view)
 	view->caret_enabled = FALSE;
 	view->cursor_page = 0;
 	view->allow_links_change_zoom = TRUE;
+	view->window_children = NULL;
 	view->zoom_center_x = -1;
 	view->zoom_center_y = -1;
 
