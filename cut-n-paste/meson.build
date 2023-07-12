@@ -1,6 +1,5 @@
 cut_n_paste_inc = include_directories('.')
 
-subdir('gimpcellrenderertoggle')
 subdir('libdazzle')
 
 if not external_synctex

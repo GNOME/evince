@@ -49,7 +49,6 @@ evince_deps = [
   libevview_dep,
   libevproperties_dep,
   libdazzle_dep,
-  libgimpcellrenderertoggle_dep,
   m_dep,
 ]
 
