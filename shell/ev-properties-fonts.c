@@ -201,11 +201,5 @@ ev_properties_fonts_set_document (EvPropertiesFonts *properties,
 GtkWidget *
 ev_properties_fonts_new (void)
 {
-	GtkWidget *retval;
-
-	retval = GTK_WIDGET (g_object_new (EV_TYPE_PROPERTIES_FONTS, NULL));
-
-	gtk_widget_show_all (retval);
-
-	return retval;
+	return GTK_WIDGET (g_object_new (EV_TYPE_PROPERTIES_FONTS, NULL));
 }

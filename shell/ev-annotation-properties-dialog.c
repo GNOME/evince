@@ -159,6 +159,11 @@ ev_annotation_properties_dialog_init (EvAnnotationPropertiesDialog *annot_dialog
 	content_area = gtk_dialog_get_content_area (dialog);
 	gtk_box_set_spacing (GTK_BOX (content_area), 12);
 
+	gtk_widget_set_margin_start (content_area, 6);
+	gtk_widget_set_margin_end (content_area, 6);
+	gtk_widget_set_margin_top (content_area, 6);
+	gtk_widget_set_margin_bottom (content_area, 6);
+
 	grid = gtk_grid_new ();
 	annot_dialog->grid = grid;
 	gtk_grid_set_column_spacing (GTK_GRID (grid), 12);
