@@ -232,14 +232,6 @@ gnome_desktop_dep = dependency('gnome-desktop-3.0', required: get_option('thumbn
 enable_thumbnail_cache = gdk_pixbuf_dep.found() and gnome_desktop_dep.found()
 config_h.set('HAVE_LIBGNOME_DESKTOP', enable_thumbnail_cache)
 
-# *** GStreamer (Multimedia) ***
-gstreamer_base_dep = dependency('gstreamer-base-1.0', required: get_option('multimedia'))
-gstreamer_dep = dependency('gstreamer-1.0', required: get_option('multimedia'))
-gstreamer_video_dep = dependency('gstreamer-video-1.0', required: get_option('multimedia'))
-
-enable_multimedia = gstreamer_dep.found() and gstreamer_base_dep.found() and gstreamer_video_dep.found()
-config_h.set('ENABLE_MULTIMEDIA', enable_multimedia)
-
 # *** Gspell ***
 gspell_dep = dependency('gspell-1', version: '>= 1.6.0', required: get_option('gspell'))
 enable_gspell = gspell_dep.found()
@@ -540,7 +532,6 @@ summary({'Gtk-doc reference..........': enable_gtk_doc,
          'Keyring integration........': enable_keyring,
          'GTK+ Unix print ...........': enable_gtk_unix_print,
          'Thumbnail cache ...........': enable_thumbnail_cache,
-         'Multimedia ................': enable_multimedia,
          'Spell checker .............': enable_gspell,
          'SyncTex ...................': external_synctex.to_string('external', 'internal'),
         }, section: 'Features', bool_yn: true)
