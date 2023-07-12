@@ -29,11 +29,6 @@
 #include "ev-view-marshal.h"
 #include "ev-document-misc.h"
 
-#if WITH_GSPELL
-#include <glib/gi18n.h>
-#include <gspell/gspell.h>
-#endif
-
 enum {
 	PROP_0,
 	PROP_ANNOTATION,
@@ -60,11 +55,6 @@ struct _EvAnnotationWindow {
 
 	gboolean      is_open;
 	EvRectangle   rect;
-
-#if WITH_GSPELL
-	GspellTextView *spellcheck_view;
-	gboolean      enable_spellchecking;
-#endif
 };
 
 struct _EvAnnotationWindowClass {
@@ -296,12 +286,6 @@ ev_annotation_window_init (EvAnnotationWindow *window)
 	swindow = gtk_scrolled_window_new (NULL, NULL);
 	window->text_view = gtk_text_view_new ();
 
-#if WITH_GSPELL
-	window->spellcheck_view = NULL;
-	window->spellcheck_view = gspell_text_view_get_from_gtk_text_view (GTK_TEXT_VIEW (window->text_view));
-	gspell_text_view_basic_setup (window->spellcheck_view);
-#endif
-
 	gtk_container_set_border_width (GTK_CONTAINER (window->text_view), 6);
 	gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (window->text_view), GTK_WRAP_WORD);
 	g_signal_connect (window->text_view, "state-flags-changed",
@@ -394,9 +378,6 @@ ev_annotation_window_constructor (GType                  type,
 			  G_CALLBACK (ev_annotation_window_opacity_changed),
 			  window);
 
-#if WITH_GSPELL
-        gspell_text_view_set_inline_spell_checking (window->spellcheck_view, ev_annotation_window_get_enable_spellchecking (window));
-#endif
 	return object;
 }
 
@@ -576,23 +557,11 @@ ev_annotation_window_set_enable_spellchecking (EvAnnotationWindow *window,
                                                gboolean enable_spellchecking)
 {
         g_return_if_fail (EV_IS_ANNOTATION_WINDOW (window));
-
-#if WITH_GSPELL
-        if (enable_spellchecking == ev_annotation_window_get_enable_spellchecking (window))
-                return;
-
-        window->enable_spellchecking = enable_spellchecking;
-        gspell_text_view_set_inline_spell_checking (window->spellcheck_view, enable_spellchecking);
-#endif
 }
 
 gboolean
 ev_annotation_window_get_enable_spellchecking (EvAnnotationWindow *window)
 {
         g_return_val_if_fail (EV_IS_ANNOTATION_WINDOW (window), FALSE);
-#if WITH_GSPELL
-        return window->enable_spellchecking;
-#else
         return FALSE;
-#endif
 }
