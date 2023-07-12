@@ -33,49 +33,6 @@
 
 #include "ev-properties-view.h"
 
-typedef enum {
-	TITLE_PROPERTY,
-	URI_PROPERTY,
-	SUBJECT_PROPERTY,
-	AUTHOR_PROPERTY,
-	KEYWORDS_PROPERTY,
-	PRODUCER_PROPERTY,
-	CREATOR_PROPERTY,
-	CREATION_DATE_PROPERTY,
-	MOD_DATE_PROPERTY,
-	N_PAGES_PROPERTY,
-	LINEARIZED_PROPERTY,
-	FORMAT_PROPERTY,
-	SECURITY_PROPERTY,
-	CONTAINS_JS_PROPERTY,
-	PAPER_SIZE_PROPERTY,
-	FILE_SIZE_PROPERTY,
-	N_PROPERTIES,
-} Property;
-
-typedef struct {
-	Property property;
-	const char *label;
-} PropertyInfo;
-
-static const PropertyInfo properties_info[] = {
-	{ TITLE_PROPERTY,         N_("Title:") },
-	{ URI_PROPERTY,           N_("Location:") },
-	{ SUBJECT_PROPERTY,       N_("Subject:") },
-	{ AUTHOR_PROPERTY,        N_("Author:") },
-	{ KEYWORDS_PROPERTY,      N_("Keywords:") },
-	{ PRODUCER_PROPERTY,      N_("Producer:") },
-	{ CREATOR_PROPERTY,       N_("Creator:") },
-	{ CREATION_DATE_PROPERTY, N_("Created:") },
-	{ MOD_DATE_PROPERTY,      N_("Modified:") },
-	{ N_PAGES_PROPERTY,       N_("Number of Pages:") },
-	{ LINEARIZED_PROPERTY,    N_("Optimized:") },
-	{ FORMAT_PROPERTY,        N_("Format:") },
-	{ SECURITY_PROPERTY,      N_("Security:") },
-	{ CONTAINS_JS_PROPERTY,   N_("Contains Javascript:") },
-	{ PAPER_SIZE_PROPERTY,    N_("Paper Size:") },
-	{ FILE_SIZE_PROPERTY,     N_("Size:") }
-};
 
 struct _EvPropertiesView {
 	GtkBox base_instance;
@@ -242,12 +199,9 @@ set_property (EvPropertiesView *properties,
 	}
 
 	if (property_label && value_label) {
-		atk_object_add_relationship (gtk_widget_get_accessible (property_label),
-					     ATK_RELATION_LABEL_FOR,
-					     gtk_widget_get_accessible (value_label));
-		atk_object_add_relationship (gtk_widget_get_accessible (value_label),
-					     ATK_RELATION_LABELLED_BY,
-					     gtk_widget_get_accessible (property_label));
+		gtk_accessible_update_relation (GTK_ACCESSIBLE (value_label),
+				GTK_ACCESSIBLE_RELATION_LABELLED_BY, property_label,
+				NULL, -1);
 	}
 
 	gtk_widget_show (value_label);
@@ -297,7 +251,7 @@ get_tolerance (gdouble size)
 		return 3.0f;
 }
 
-static char *
+char *
 ev_regular_paper_size (const EvDocumentInfo *info)
 {
 	GList *paper_sizes, *l;
@@ -444,15 +398,17 @@ ev_properties_view_set_info (EvPropertiesView *properties, const EvDocumentInfo 
 static void
 ev_properties_view_init (EvPropertiesView *properties)
 {
+	GtkWidget *widget = GTK_WIDGET (properties);
+
+	gtk_widget_set_margin_bottom (widget, 12);
+	gtk_widget_set_margin_top (widget, 12);
+	gtk_widget_set_margin_start (widget, 12);
+	gtk_widget_set_margin_end (widget, 12);
+
 	properties->grid = gtk_grid_new ();
 	gtk_grid_set_column_spacing (GTK_GRID (properties->grid), 12);
 	gtk_grid_set_row_spacing (GTK_GRID (properties->grid), 6);
-	gtk_box_pack_start (GTK_BOX (properties), properties->grid, TRUE, TRUE, 0);
-	gtk_widget_show (properties->grid);
-	gtk_widget_set_margin_bottom (properties->grid, 12);
-	gtk_widget_set_margin_top (properties->grid, 12);
-	gtk_widget_set_margin_start (properties->grid, 12);
-	gtk_widget_set_margin_end (properties->grid, 12);
+	gtk_box_prepend (GTK_BOX (properties), properties->grid);
 }
 
 void

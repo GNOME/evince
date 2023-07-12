@@ -41,9 +41,9 @@
 
 static GType epp_type = 0;
 static void property_page_provider_iface_init
-	(NautilusPropertyPageProviderIface *iface);
-static GList *ev_properties_get_pages
-	(NautilusPropertyPageProvider *provider, GList *files);
+	(NautilusPropertiesModelProviderInterface *iface);
+static GList *ev_properties_get_models
+	(NautilusPropertiesModelProvider *provider, GList *files);
 
 static void
 ev_properties_plugin_register_type (GTypeModule *module)
@@ -70,28 +70,109 @@ ev_properties_plugin_register_type (GTypeModule *module)
 			&info, 0);
 	g_type_module_add_interface (module,
 			epp_type,
-			NAUTILUS_TYPE_PROPERTY_PAGE_PROVIDER,
+			NAUTILUS_TYPE_PROPERTIES_MODEL_PROVIDER,
 			&property_page_provider_iface_info);
 }
 
 static void
-property_page_provider_iface_init (NautilusPropertyPageProviderIface *iface)
+property_page_provider_iface_init (NautilusPropertiesModelProviderInterface *iface)
 {
-	iface->get_pages = ev_properties_get_pages;
+	iface->get_models = ev_properties_get_models;
+}
+
+static GListModel *
+build_properties (EvDocument *document)
+{
+	EvDocumentInfo *info = ev_document_get_info (document);
+	GListStore *model = g_list_store_new (NAUTILUS_TYPE_PROPERTIES_ITEM);
+	const char *uri = ev_document_get_uri (document);
+	GDateTime *datetime = NULL;
+	char *text;
+
+#define SET_PROPERTY(p, value) 	do  {				\
+	g_list_store_append (model, 				\
+		nautilus_properties_item_new (_(properties_info[p##_PROPERTY].label), value)); \
+	} while (0)
+
+#define FIELD_SET_PROPERTY(p, value) 			\
+	if (info->fields_mask & EV_DOCUMENT_INFO_##p) {	\
+		SET_PROPERTY (p, value);		\
+	}
+
+	FIELD_SET_PROPERTY (TITLE, info->title);
+	SET_PROPERTY (URI, uri);
+	FIELD_SET_PROPERTY (SUBJECT, info->subject);
+	FIELD_SET_PROPERTY (AUTHOR, info->author);
+	FIELD_SET_PROPERTY (KEYWORDS, info->keywords);
+	FIELD_SET_PROPERTY (PRODUCER, info->producer);
+	FIELD_SET_PROPERTY (CREATOR, info->creator);
+
+	datetime = ev_document_info_get_created_datetime(info);
+	if (datetime != NULL) {
+		text = ev_document_misc_format_datetime(datetime);
+		SET_PROPERTY(CREATION_DATE, text);
+		g_free(text);
+	} else {
+		SET_PROPERTY(CREATION_DATE, NULL);
+	}
+	datetime = ev_document_info_get_modified_datetime(info);
+	if (datetime != NULL) {
+		text = ev_document_misc_format_datetime(datetime);
+		SET_PROPERTY(MOD_DATE, text);
+		g_free(text);
+	} else {
+		SET_PROPERTY(MOD_DATE, NULL);
+	}
+
+	FIELD_SET_PROPERTY (FORMAT, info->format);
+
+	if (info->fields_mask & EV_DOCUMENT_INFO_N_PAGES) {
+		text = g_strdup_printf ("%d", info->n_pages);
+		SET_PROPERTY (N_PAGES, text);
+		g_free (text);
+	}
+	FIELD_SET_PROPERTY (LINEARIZED, info->linearized);
+	FIELD_SET_PROPERTY (SECURITY, info->security);
+
+	if (info->fields_mask & EV_DOCUMENT_INFO_PAPER_SIZE) {
+		text = ev_regular_paper_size (info);
+		SET_PROPERTY (PAPER_SIZE, text);
+		g_free (text);
+	}
+
+	if (info->fields_mask & EV_DOCUMENT_INFO_CONTAINS_JS) {
+		if (info->contains_js == EV_DOCUMENT_CONTAINS_JS_YES) {
+			text = _("Yes");
+		} else if (info->contains_js == EV_DOCUMENT_CONTAINS_JS_NO) {
+			text = _("No");
+		} else {
+			text = _("Unknown");
+		}
+		SET_PROPERTY (CONTAINS_JS, text);
+	}
+
+	if (ev_document_get_size (document)) {
+		text = g_format_size (ev_document_get_size (document));
+		SET_PROPERTY (FILE_SIZE, text);
+		g_free (text);
+	}
+
+	return G_LIST_MODEL (model);
+#undef SET_PROPERTY
+#undef FIELD_SET_PROPERTY
 }
 
 static GList *
-ev_properties_get_pages (NautilusPropertyPageProvider *provider,
+ev_properties_get_models (NautilusPropertiesModelProvider *provider,
 			 GList *files)
 {
 	GError *error = NULL;
 	EvDocument *document = NULL;
-	GList *pages = NULL;
+	GList *models = NULL;
 	NautilusFileInfo *file;
 	gchar *uri = NULL;
-	GtkWidget *page, *label;
-	GtkWidget *scrolled;
-	NautilusPropertyPage *property_page;
+	gchar *mime_type = NULL;
+	NautilusPropertiesModel *properties_group;
 
 	/* only add properties page if a single file is selected */
 	if (files == NULL || files->next != NULL)
@@ -105,32 +186,21 @@ ev_properties_get_pages (NautilusPropertyPageProvider *provider,
 	if (!document)
 		goto end;
 
-	label = gtk_label_new (_("Document"));
-	page = ev_properties_view_new (document);
-	ev_properties_view_set_info (EV_PROPERTIES_VIEW (page),
-				     ev_document_get_info (document));
-	gtk_widget_show (page);
+	ev_document_load (document, uri, &error);
+	if (error) {
+		g_error_free (error);
+		goto end;
+	}
 
-	scrolled = gtk_scrolled_window_new (NULL, NULL);
-	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled),
-					GTK_POLICY_NEVER,
-					GTK_POLICY_AUTOMATIC);
-	gtk_scrolled_window_set_propagate_natural_width (GTK_SCROLLED_WINDOW (scrolled),
-							 TRUE);
-	gtk_container_add (GTK_CONTAINER (scrolled), page);
-	gtk_widget_show (scrolled);
+	properties_group = nautilus_properties_model_new (_("Document"), build_properties (document));
 
-	property_page = nautilus_property_page_new ("document-properties",
-			label, scrolled);
-
-	pages = g_list_prepend (pages, property_page);
-
+	models = g_list_prepend (models, properties_group);
 end:
 	g_free (uri);
 	g_clear_pointer (&error, g_error_free);
 	g_clear_object (&document);
 
-	return pages;
+	return models;
 }
 
 /* --- extension interface --- */
