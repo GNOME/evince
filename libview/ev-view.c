@@ -47,10 +47,6 @@
 #include "ev-view-type-builtins.h"
 #include "ev-debug.h"
 
-#ifdef ENABLE_MULTIMEDIA
-#include "ev-media-player.h"
-#endif
-
 enum {
 	SIGNAL_SCROLL,
 	SIGNAL_HANDLE_LINK,
@@ -3096,22 +3092,7 @@ get_media_mapping_at_location (EvView *view,
 			       gdouble y,
 			       gint *page)
 {
-#ifdef ENABLE_MULTIMEDIA
-	gint x_new = 0, y_new = 0;
-	EvMappingList *media_mapping;
-
-	if (!EV_IS_DOCUMENT_MEDIA (view->document))
-		return NULL;
-
-	if (!get_doc_point_from_location (view, x, y, page, &x_new, &y_new))
-		return NULL;
-
-	media_mapping = ev_page_cache_get_media_mapping (view->page_cache, *page);
-
-	return media_mapping ? ev_mapping_list_get (media_mapping, x_new, y_new) : NULL;
-#else
 	return NULL;
-#endif
 }
 
 static EvMedia *
@@ -3131,20 +3112,6 @@ static gboolean
 ev_view_find_player_for_media (EvView  *view,
 			       EvMedia *media)
 {
-#ifdef ENABLE_MULTIMEDIA
-	GList *l;
-
-	for (l = view->children; l; l = g_list_next (l)) {
-		EvViewChild *child = (EvViewChild *)l->data;
-
-		if (!EV_IS_MEDIA_PLAYER (child->widget))
-			continue;
-
-		if (ev_media_player_get_media (EV_MEDIA_PLAYER (child->widget)) == media)
-			return TRUE;
-	}
-#endif
-
 	return FALSE;
 }
 
@@ -3152,31 +3119,6 @@ static void
 ev_view_handle_media (EvView  *view,
 		      EvMedia *media)
 {
-#ifdef ENABLE_MULTIMEDIA
-	GtkWidget     *player;
-	EvMappingList *media_mapping;
-	EvMapping     *mapping;
-	GdkRectangle   render_area;
-	guint          page;
-
-	page = ev_media_get_page_index (media);
-	media_mapping = ev_page_cache_get_media_mapping (view->page_cache, page);
-
-	/* TODO: focus? */
-
-	if (ev_view_find_player_for_media (view, media))
-		return;
-
-	player = ev_media_player_new (media);
-
-	mapping = ev_mapping_list_find (media_mapping, media);
-	_ev_view_transform_doc_rect_to_view_rect (view, page, &mapping->area, &render_area);
-	render_area.x -= view->scroll_x;
-	render_area.y -= view->scroll_y;
-
-	ev_view_put (view, player, render_area.x, render_area.y, page, &mapping->area);
-	gtk_widget_show (player);
-#endif /* ENABLE_MULTIMEDIA */
 }
 
 /* Annotations */
@@ -8586,9 +8528,6 @@ static void
 ev_view_init (EvView *view)
 {
 	GtkStyleContext *context;
-#if defined (ENABLE_MULTIMEDIA) && defined (GDK_WINDOWING_X11)
-	GdkVisual       *visual;
-#endif
 
 	gtk_widget_set_has_window (GTK_WIDGET (view), TRUE);
 	gtk_widget_set_can_focus (GTK_WIDGET (view), TRUE);
@@ -8598,15 +8537,6 @@ ev_view_init (EvView *view)
 	context = gtk_widget_get_style_context (GTK_WIDGET (view));
 	gtk_style_context_add_class (context, "content-view");
 	gtk_style_context_add_class (context, "view");
-
-#if defined (ENABLE_MULTIMEDIA) && defined (GDK_WINDOWING_X11)
-	/* Use always the system visual, instead of the one inherited from the
-	 * window, because gst xvimagesink doesn't work with RGBA visuals.
-	 * See https://bugzilla.gnome.org/show_bug.cgi?id=721148
-	 */
-	visual = gdk_screen_get_system_visual (gdk_screen_get_default ());
-	gtk_widget_set_visual (GTK_WIDGET (view), visual);
-#endif
 
 	gtk_widget_set_events (GTK_WIDGET (view),
 			       GDK_TOUCH_MASK |
