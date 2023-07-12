@@ -546,11 +546,7 @@ ev_window_update_actions_sensitivity (EvWindow *ev_window)
 				      !recent_view_mode);
 	ev_window_set_action_enabled (ev_window, "inverted-colors",
 				      has_pages && !recent_view_mode);
-#if WITH_GSPELL
-	ev_window_set_action_enabled (ev_window, "enable-spellchecking", TRUE);
-#else
 	ev_window_set_action_enabled (ev_window, "enable-spellchecking", FALSE);
-#endif
 
 	/* Bookmarks menu */
 	ev_window_set_action_enabled (ev_window, "add-bookmark",
@@ -1601,13 +1597,7 @@ ev_window_setup_default (EvWindow *ev_window)
 	g_simple_action_set_state (
 		G_SIMPLE_ACTION (g_action_map_lookup_action (G_ACTION_MAP (ev_window),
 		                                             "enable-spellchecking")),
-		g_variant_new_boolean (
-#ifdef WITH_GSPELL
-		g_settings_get_boolean (settings, "enable-spellchecking")
-#else
-		FALSE
-#endif
-		)
+		g_variant_new_boolean (FALSE)
 	);
 	ev_view_set_enable_spellchecking (EV_VIEW (priv->view),
 		g_settings_get_boolean (settings, "enable-spellchecking"));

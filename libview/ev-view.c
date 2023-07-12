@@ -6363,11 +6363,7 @@ ev_view_get_enable_spellchecking (EvView *view)
 {
         g_return_val_if_fail (EV_IS_VIEW (view), FALSE);
 
-#ifdef WITH_GSPELL
-        return view->enable_spellchecking;
-#else
         return FALSE;
-#endif
 }
 
 static gboolean
