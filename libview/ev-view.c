@@ -1431,8 +1431,36 @@ _ev_view_transform_view_point_to_doc_point (EvView       *view,
 					    double       *doc_point_x,
 					    double       *doc_point_y)
 {
-	*doc_point_x = MAX ((double) (view_point->x - page_area->x - border->left) / view->scale, 0);
-	*doc_point_y = MAX ((double) (view_point->y - page_area->y - border->top) / view->scale, 0);
+	double x, y, width, height, doc_x, doc_y;
+
+	x = doc_x = MAX ((double) (view_point->x - page_area->x - border->left) / view->scale, 0);
+	y = doc_y = MAX ((double) (view_point->y - page_area->y - border->top) / view->scale, 0);
+
+	ev_document_get_page_size (view->document, view->current_page, &width, &height);
+
+	switch (view->rotation) {
+	case 0:
+		x = doc_x;
+		y = doc_y;
+		break;
+	case 90:
+		x = doc_y;
+		y = height - doc_x;
+		break;
+	case 180:
+		x = width - doc_x;
+		y = height - doc_y;
+		break;
+	case 270:
+		x = width - doc_y;
+		y = doc_x;
+		break;
+	default:
+		g_assert_not_reached ();
+	}
+
+	*doc_point_x = x;
+	*doc_point_y = y;
 }
 
 void
