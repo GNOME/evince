@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince HEAD\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
-"POT-Creation-Date: 2023-06-21 01:14+0000\n"
-"PO-Revision-Date: 2023-07-31 02:00+0330\n"
+"POT-Creation-Date: 2023-07-30 22:31+0000\n"
+"PO-Revision-Date: 2023-07-31 02:22+0330\n"
 "Last-Translator: Danial Behzadi <dani.behzi@ubuntu.com>\n"
 "Language-Team: Persian\n"
 "Language: fa\n"
@@ -111,50 +111,50 @@ msgid "Adds support for reading PDF Documents"
 msgstr "پشتیبانی از خواندن سندهای PDF را اضافه می‌کند"
 
 #. translators: this is the document security state
-#: backend/pdf/ev-poppler.c:731 backend/pdf/ev-poppler.c:737
+#: backend/pdf/ev-poppler.c:725 backend/pdf/ev-poppler.c:731
 #: properties/ev-properties-view.c:429
 msgid "Yes"
 msgstr "بله"
 
 #. translators: this is the document security state
-#: backend/pdf/ev-poppler.c:734 backend/pdf/ev-poppler.c:737
+#: backend/pdf/ev-poppler.c:728 backend/pdf/ev-poppler.c:731
 #: properties/ev-properties-view.c:431
 msgid "No"
 msgstr "خیر"
 
-#: backend/pdf/ev-poppler.c:879
+#: backend/pdf/ev-poppler.c:867
 msgid "Type 1"
 msgstr "نوع ۱"
 
-#: backend/pdf/ev-poppler.c:881
+#: backend/pdf/ev-poppler.c:869
 msgid "Type 1C"
 msgstr "نوع ‎1C"
 
-#: backend/pdf/ev-poppler.c:883
+#: backend/pdf/ev-poppler.c:871
 msgid "Type 3"
 msgstr "نوع ۳"
 
-#: backend/pdf/ev-poppler.c:885
+#: backend/pdf/ev-poppler.c:873
 msgid "TrueType"
 msgstr "تروتایپ"
 
-#: backend/pdf/ev-poppler.c:887
+#: backend/pdf/ev-poppler.c:875
 msgid "Type 1 (CID)"
 msgstr "نوع ۱ (CID)"
 
-#: backend/pdf/ev-poppler.c:889
+#: backend/pdf/ev-poppler.c:877
 msgid "Type 1C (CID)"
 msgstr "نوع ‏1C‏ (CID)"
 
-#: backend/pdf/ev-poppler.c:891
+#: backend/pdf/ev-poppler.c:879
 msgid "TrueType (CID)"
 msgstr "تروتایپ (CID)"
 
-#: backend/pdf/ev-poppler.c:893
+#: backend/pdf/ev-poppler.c:881
 msgid "Unknown font type"
 msgstr "نوع قلم نامعلوم"
 
-#: backend/pdf/ev-poppler.c:937
+#: backend/pdf/ev-poppler.c:925
 msgid ""
 "This document contains non-embedded fonts that are not from the PDF Standard 14 "
 "fonts. If the substitute fonts selected by fontconfig are not the same as the "
@@ -164,11 +164,11 @@ msgstr ""
 "جایگزین انتخاب شده به‌وسیلهٔ fontconfig مشابه قلم‌های استفاده شده در ساخت PDF "
 "نباشند، ممکن است نمایش آن صحیح نباشد."
 
-#: backend/pdf/ev-poppler.c:942
+#: backend/pdf/ev-poppler.c:930
 msgid "All fonts are either standard or embedded."
 msgstr "تمام قلم‌ها یا استاندارد هستند یا توکار."
 
-#: backend/pdf/ev-poppler.c:972
+#: backend/pdf/ev-poppler.c:960
 msgid "No name"
 msgstr "بدون نام"
 
@@ -182,20 +182,20 @@ msgstr "بدون نام"
 #. Author: None
 #. Keywords: None
 #.
-#: backend/pdf/ev-poppler.c:981 libview/ev-print-operation.c:2691
+#: backend/pdf/ev-poppler.c:969 libview/ev-print-operation.c:2691
 #: properties/ev-properties-view.c:230
 msgid "None"
 msgstr "هیچ‌کدام"
 
-#: backend/pdf/ev-poppler.c:989
+#: backend/pdf/ev-poppler.c:977
 msgid "Embedded subset"
 msgstr "زیرمجموعهٔ توکار"
 
-#: backend/pdf/ev-poppler.c:991
+#: backend/pdf/ev-poppler.c:979
 msgid "Embedded"
 msgstr "توکار"
 
-#: backend/pdf/ev-poppler.c:993
+#: backend/pdf/ev-poppler.c:981
 msgid "Not embedded"
 msgstr "غیر توکار"
 
@@ -204,7 +204,7 @@ msgstr "غیر توکار"
 #. * type. Example:
 #. * "Type 1 (One of the Standard 14 Fonts)"
 #.
-#: backend/pdf/ev-poppler.c:1000
+#: backend/pdf/ev-poppler.c:988
 msgid " (One of the Standard 14 Fonts)"
 msgstr " (یکی از ۱۴ قلم اصلی)"
 
@@ -213,7 +213,7 @@ msgstr " (یکی از ۱۴ قلم اصلی)"
 #. * type. Example:
 #. * "TrueType (Not one of the Standard 14 Fonts)"
 #.
-#: backend/pdf/ev-poppler.c:1007
+#: backend/pdf/ev-poppler.c:995
 msgid " (Not one of the Standard 14 Fonts)"
 msgstr " (یکی از ۱۴ قلم اصلی نیست)"
 
@@ -227,7 +227,7 @@ msgstr " (یکی از ۱۴ قلم اصلی نیست)"
 #. * Substituting with TeXGyreTermes-Regular
 #. * (/usr/share/textmf/.../texgyretermes-regular.otf)
 #.
-#: backend/pdf/ev-poppler.c:1026
+#: backend/pdf/ev-poppler.c:1014
 #, c-format
 msgid ""
 "%s%s\n"
@@ -251,7 +251,7 @@ msgstr ""
 #. * Encoding: Custom
 #. * Embedded subset
 #.
-#: backend/pdf/ev-poppler.c:1044
+#: backend/pdf/ev-poppler.c:1032
 #, c-format
 msgid ""
 "%s%s\n"
@@ -372,11 +372,11 @@ msgstr "به پیوندها اجازه بده تا سطح زوم را تغییر
 
 #: data/org.gnome.Evince.gschema.xml:49
 msgid "Check spelling when writing annotation notes or filling text forms."
-msgstr ""
+msgstr "بررسی نوشتاری هنگام نوشتن یادداشت‌های حاشیه‌نویسی یا پر کردن فرم‌های متنی."
 
 #: data/org.gnome.Evince.gschema.xml:53
 msgid "Show a side bar next to the document to help navigate the document."
-msgstr ""
+msgstr "نمایش نواری کنار سند برای کمک به پیمایش سند."
 
 #: data/org.gnome.Evince.gschema.xml:63
 msgid "Set the default zoom level to display a document."
@@ -385,7 +385,7 @@ msgstr "تنظمی سطج بزرگ‌نمایی پیش‌گزیده برای ن�
 #: data/org.gnome.Evince.gschema.xml:70
 msgid ""
 "Display the document as a continuous stream of pages instead of page at a time."
-msgstr ""
+msgstr "نمایش سند به شکل جریانی پیوسته از صفحه‌ها به جای یک صفحه در هر زمان."
 
 #: data/org.gnome.Evince.gschema.xml:74
 msgid "Show two pages side by side."
@@ -395,7 +395,7 @@ msgstr "نمایش دو صفحه در کنار هم."
 msgid ""
 "Show the first page (odd page) on the left (when displaying two pages side by "
 "side)"
-msgstr ""
+msgstr "نمایش صفحهٔ نخست (صفحهٔ فرد) در چپ (هنگام نمایش دو صفحه در کنار هم)"
 
 #: data/org.gnome.Evince-previewer.desktop.in.in:3
 msgid "Print Preview"
@@ -489,7 +489,7 @@ msgstr "_حساس به کوچکی و بزرگی حروف"
 msgid "Find previous occurrence of the search string"
 msgstr "یافتن رخداد پیشین رشتهٔ جستجو شده"
 
-#: libmisc/ev-search-box.c:606
+#: libmisc/ev-search-box.c:607
 msgid "Find next occurrence of the search string"
 msgstr "یافتن رخداد بعدی رشتهٔ جستجو شده"
 
@@ -650,51 +650,51 @@ msgstr "لغزشِ نما به پایین"
 msgid "Document View"
 msgstr "نمای سند"
 
-#: libview/ev-view.c:2113
+#: libview/ev-view.c:2141
 msgid "Go to first page"
 msgstr "رفتن به صفحهٔ نخست"
 
-#: libview/ev-view.c:2115
+#: libview/ev-view.c:2143
 msgid "Go to previous page"
 msgstr "رفتن به صفحهٔ پیشین"
 
-#: libview/ev-view.c:2117
+#: libview/ev-view.c:2145
 msgid "Go to next page"
 msgstr "رفتن به صفحهٔ بعدی"
 
-#: libview/ev-view.c:2119
+#: libview/ev-view.c:2147
 msgid "Go to last page"
 msgstr "رفتن به صفحهٔ پایانی"
 
-#: libview/ev-view.c:2121
+#: libview/ev-view.c:2149
 msgid "Go to page"
 msgstr "رفتن به صفحه"
 
-#: libview/ev-view.c:2123
+#: libview/ev-view.c:2151
 msgid "Find"
 msgstr "یافتن"
 
-#: libview/ev-view.c:2151
+#: libview/ev-view.c:2179
 #, c-format
 msgid "Go to page %s"
 msgstr "رفتن به صفحهٔ %s"
 
-#: libview/ev-view.c:2157
+#: libview/ev-view.c:2185
 #, c-format
 msgid "Go to %s on file “%s”"
 msgstr "برو به %s در پروندهٔ «%s»"
 
-#: libview/ev-view.c:2160
+#: libview/ev-view.c:2188
 #, c-format
 msgid "Go to file “%s”"
 msgstr "رفتن به پروندهٔ «%s»"
 
-#: libview/ev-view.c:2168
+#: libview/ev-view.c:2196
 #, c-format
 msgid "Launch %s"
 msgstr "راه‌اندازی %s"
 
-#: libview/ev-view.c:2175
+#: libview/ev-view.c:2203
 msgid "Reset form"
 msgstr "بازنشانی فرم"
 
@@ -702,7 +702,7 @@ msgstr "بازنشانی فرم"
 msgid "Jump to page:"
 msgstr "پریدن به صفحه‌:"
 
-#: libview/ev-view-presentation.c:1009
+#: libview/ev-view-presentation.c:1010
 msgid "End of presentation. Press Esc or click to exit."
 msgstr "پایان ارائه. برای خروج کلید گریز را بزنید."
 
