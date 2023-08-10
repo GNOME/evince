@@ -299,13 +299,11 @@ ev_register_doc_data_free (EvRegisterDocData *data)
 	if (!data)
 		return;
 
-	g_free (data->uri);
-	if (data->search_string)
-		g_free (data->search_string);
-	if (data->dest)
-		g_object_unref (data->dest);
+	g_clear_pointer (&data->uri, g_free);
+	g_clear_pointer (&data->search_string, g_free);
+	g_clear_object (&data->dest);
 
-	g_free (data);
+	g_clear_pointer (&data, g_free);
 }
 
 static void
@@ -359,7 +357,7 @@ on_register_uri_cb (GObject      *source_object,
 						  data->mode,
 						  data->search_string,
 						  data->timestamp);
-		ev_register_doc_data_free (data);
+		ev_register_doc_data_free (g_steal_pointer (&data));
 
 		return;
 	}
@@ -381,7 +379,7 @@ on_register_uri_cb (GObject      *source_object,
 						  data->mode,
 						  data->search_string,
 						  data->timestamp);
-		ev_register_doc_data_free (data);
+		ev_register_doc_data_free (g_steal_pointer(&data));
 
                 return;
         }
@@ -438,7 +436,7 @@ on_register_uri_cb (GObject      *source_object,
 				NULL);
         g_application_hold (G_APPLICATION (application));
 	g_variant_unref (value);
-	ev_register_doc_data_free (data);
+	ev_register_doc_data_free (g_steal_pointer (&data));
 }
 
 /*
@@ -509,7 +507,7 @@ ev_application_register_uri (EvApplication  *application,
 				-1,
 				NULL,
 				on_register_uri_cb,
-				data);
+				g_steal_pointer (&data));
 
         g_application_hold (G_APPLICATION (application));
 }
