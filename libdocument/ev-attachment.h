@@ -30,63 +30,32 @@
 
 G_BEGIN_DECLS
 
-typedef struct _EvAttachment        EvAttachment;
-typedef struct _EvAttachmentClass   EvAttachmentClass;
-
 #define EV_TYPE_ATTACHMENT              (ev_attachment_get_type())
-#define EV_ATTACHMENT(object)           (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_ATTACHMENT, EvAttachment))
-#define EV_ATTACHMENT_CLASS(klass)      (G_TYPE_CHECK_CLASS_CAST((klass), EV_TYPE_ATTACHMENT, EvAttachmentClass))
-#define EV_IS_ATTACHMENT(object)        (G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_ATTACHMENT))
-#define EV_IS_ATTACHMENT_CLASS(klass)   (G_TYPE_CHECK_CLASS_TYPE((klass), EV_TYPE_ATTACHMENT))
-#define EV_ATTACHMENT_GET_CLASS(object) (G_TYPE_INSTANCE_GET_CLASS((object), EV_TYPE_ATTACHMENT, EvAttachmentClass))
 
 #define EV_ATTACHMENT_ERROR (ev_attachment_error_quark ())
 
-struct _EvAttachment {
-	GObject base_instance;
-};
+EV_PUBLIC
+G_DECLARE_DERIVABLE_TYPE (EvAttachment, ev_attachment, EV, ATTACHMENT, GObject);
 
 struct _EvAttachmentClass {
 	GObjectClass base_class;
 };
 
 EV_PUBLIC
-GType         ev_attachment_get_type             (void) G_GNUC_CONST;
-EV_PUBLIC
 GQuark        ev_attachment_error_quark          (void) G_GNUC_CONST;
 
-G_GNUC_BEGIN_IGNORE_DEPRECATIONS
-G_GNUC_DEPRECATED_FOR(ev_attachment_new_with_datetime)
 EV_PUBLIC
-EvAttachment *ev_attachment_new                  (const gchar  *name,
-						  const gchar  *description,
-						  GTime         mtime,
-						  GTime         ctime,
-						  gsize         size,
-						  gpointer      data);
-G_GNUC_END_IGNORE_DEPRECATIONS
-
-EV_PUBLIC
-EvAttachment *ev_attachment_new_with_datetime    (const gchar  *name,
-						  const gchar  *description,
-						  GDateTime    *mtime,
-						  GDateTime    *ctime,
-						  gsize         size,
-						  gpointer      data);
+EvAttachment *ev_attachment_new (const gchar  *name,
+				 const gchar  *description,
+				 GDateTime    *mtime,
+				 GDateTime    *ctime,
+				 gsize         size,
+				 gpointer      data);
 
 EV_PUBLIC
 const gchar *ev_attachment_get_name              (EvAttachment *attachment);
 EV_PUBLIC
 const gchar *ev_attachment_get_description       (EvAttachment *attachment);
-
-G_GNUC_BEGIN_IGNORE_DEPRECATIONS
-G_GNUC_DEPRECATED_FOR(ev_attachment_get_modification_datetime)
-EV_PUBLIC
-GTime        ev_attachment_get_modification_date (EvAttachment *attachment);
-G_GNUC_DEPRECATED_FOR(ev_attachment_get_creation_datetime)
-EV_PUBLIC
-GTime        ev_attachment_get_creation_date     (EvAttachment *attachment);
-G_GNUC_END_IGNORE_DEPRECATIONS
 
 EV_PUBLIC
 GDateTime   *ev_attachment_get_modification_datetime (EvAttachment *attachment);
