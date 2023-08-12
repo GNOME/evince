@@ -44,20 +44,20 @@ ev_appstreamdir = join_paths(ev_datadir, 'metainfo')
 # - If the interface is the same as the previous version, change to C:R+1:A
 
 # Libtool version of the backend library
-ev_document_current = 4
+ev_document_current = 5
 ev_document_revision = 0
 ev_document_age = 0
 ev_document_version = '@0@.@1@.@2@'.format(ev_document_current, ev_document_revision, ev_document_age)
 ev_document_current_minus_age = ev_document_current - ev_document_age
 
 # Libtool version of the view library
-ev_view_current = 3
+ev_view_current = 4
 ev_view_revision = 0
 ev_view_age = 0
 ev_view_version = '@0@.@1@.@2@'.format(ev_view_current, ev_view_revision, ev_view_age)
 ev_view_current_minus_age = ev_view_current - ev_view_age
 
-ev_api_version = '3.0'
+ev_api_version = '4.0'
 
 ev_include_subdir = join_paths(ev_name, ev_api_version)
 
