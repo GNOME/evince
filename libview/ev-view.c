@@ -6797,8 +6797,8 @@ ev_view_move_cursor (EvView         *view,
 	gint            prev_offset;
 	gint            prev_page;
 	GdkRectangle    select_start_rect;
-	gint            select_start_offset;
-	gint            select_start_page;
+	gint            select_start_offset = 0;
+	gint            select_start_page = 0;
 	cairo_region_t *damage_region;
 	gboolean        changed_page;
 	gboolean        clear_selections = FALSE;
