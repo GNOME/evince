@@ -2011,13 +2011,6 @@ ev_job_find_get_options (EvJobFind *job)
         return job->options;
 }
 
-gint
-ev_job_find_get_n_results (EvJobFind *job,
-			   gint       page)
-{
-	return g_list_length (job->pages[page]);
-}
-
 /**
  * ev_job_find_get_n_main_results:
  * @job: an #EvJobFind job
