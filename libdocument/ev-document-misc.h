@@ -58,12 +58,6 @@ cairo_surface_t *ev_document_misc_render_thumbnail_surface_with_frame (GtkWidget
 								       int              width,
 								       int              height);
 
-EV_DEPRECATED
-EV_PUBLIC
-void       ev_document_misc_get_page_border_size (gint          page_width,
-						  gint          page_height,
-						  GtkBorder    *border);
-
 EV_PUBLIC
 cairo_surface_t *ev_document_misc_surface_from_pixbuf (GdkPixbuf *pixbuf);
 EV_PUBLIC
