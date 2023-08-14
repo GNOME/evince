@@ -92,14 +92,6 @@ struct _EvDocumentFindInterface
 
 EV_PUBLIC
 GType         ev_document_find_get_type               (void) G_GNUC_CONST;
-G_GNUC_BEGIN_IGNORE_DEPRECATIONS
-EV_DEPRECATED_FOR(ev_document_find_find_text_extended)
-EV_PUBLIC
-GList        *ev_document_find_find_text              (EvDocumentFind *document_find,
-						       EvPage         *page,
-						       const gchar    *text,
-						       gboolean        case_sensitive);
-G_GNUC_END_IGNORE_DEPRECATIONS
 EV_PUBLIC
 GList        *ev_document_find_find_text_with_options (EvDocumentFind *document_find,
 						       EvPage         *page,
