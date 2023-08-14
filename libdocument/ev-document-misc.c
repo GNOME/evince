@@ -110,22 +110,6 @@ ev_document_misc_get_thumbnail_frame (int        width,
 	return create_thumbnail_frame (width, height, source_pixbuf, TRUE);
 }
 
-/**
- * ev_document_misc_get_loading_thumbnail:
- * @width: the desired width
- * @height: the desired height
- * @inverted_colors: whether to invert colors
- *
- * Returns: (transfer full): a #GdkPixbuf
- */
-GdkPixbuf *
-ev_document_misc_get_loading_thumbnail (int      width,
-					int      height,
-					gboolean inverted_colors)
-{
-	return create_thumbnail_frame (width, height, NULL, !inverted_colors);
-}
-
 static cairo_surface_t *
 ev_document_misc_render_thumbnail_frame (GtkWidget       *widget,
                                          int              width,
