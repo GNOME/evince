@@ -37,11 +37,6 @@ EV_PUBLIC
 GdkPixbuf *ev_document_misc_get_thumbnail_frame  (int           width,
 						  int           height,
 						  GdkPixbuf    *source_pixbuf);
-EV_DEPRECATED
-EV_PUBLIC
-GdkPixbuf *ev_document_misc_get_loading_thumbnail (int      width,
-						   int      height,
-						   gboolean inverted_colors);
 
 EV_PUBLIC
 GdkPixbuf *ev_document_misc_render_loading_thumbnail    (GtkWidget *widget,
