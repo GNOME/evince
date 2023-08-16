@@ -26,7 +26,6 @@
 
 #include "ev-annotation-window.h"
 #include "ev-color-contrast.h"
-#include "ev-stock-icons.h"
 #include "ev-view-marshal.h"
 #include "ev-document-misc.h"
 
@@ -52,6 +51,7 @@ struct _EvAnnotationWindow {
 	EvAnnotation *annotation;
 	GtkWindow    *parent;
 
+	GtkWidget    *titlebar;
 	GtkWidget    *title;
 	GtkWidget    *close_button;
 	GtkWidget    *text_view;
@@ -125,7 +125,8 @@ ev_annotation_window_set_color (EvAnnotationWindow *window,
 				    "button:active {background: darker(%1$s);}\n"
 				    "evannotationwindow.background { color: %2$s; }\n"
 				    "evannotationwindow.background:backdrop { color: alpha(%2$s, .75); }\n"
-				    "evannotationwindow.background, button {background: %1$s}",
+				    "evannotationwindow.background, button {background: %1$s}\n"
+				    ".titlebar:not(headerbar) {background: %1$s}",
 				    rgba_str, icon_color_str);
 
 	gtk_css_provider_load_from_data (css_provider, css_data, strlen (css_data), &error);
@@ -133,6 +134,8 @@ ev_annotation_window_set_color (EvAnnotationWindow *window,
 		g_error ("%s", error->message);
 
 	gtk_style_context_add_provider (gtk_widget_get_style_context (GTK_WIDGET (window)),
+					GTK_STYLE_PROVIDER (css_provider), GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+	gtk_style_context_add_provider (gtk_widget_get_style_context (GTK_WIDGET (window->titlebar)),
 					GTK_STYLE_PROVIDER (css_provider), GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 	gtk_style_context_add_provider (gtk_widget_get_style_context (window->close_button),
 					GTK_STYLE_PROVIDER (css_provider), GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
@@ -213,48 +216,6 @@ ev_annotation_window_set_property (GObject      *object,
 	}
 }
 
-static gboolean
-ev_annotation_window_resize (EvAnnotationWindow *window,
-			     GdkEventButton     *event,
-			     GtkWidget          *ebox)
-{
-	if (event->type == GDK_BUTTON_PRESS && event->button == 1) {
-		gtk_window_begin_resize_drag (GTK_WINDOW (window),
-					      window->resize_sw == ebox ?
-					      GDK_WINDOW_EDGE_SOUTH_WEST :
-					      GDK_WINDOW_EDGE_SOUTH_EAST,
-					      event->button, event->x_root,
-					      event->y_root, event->time);
-		return TRUE;
-	}
-
-	return FALSE;
-}
-
-static void
-ev_annotation_window_set_resize_cursor (GtkWidget          *widget,
-					EvAnnotationWindow *window)
-{
-	GdkWindow *gdk_window = gtk_widget_get_window (widget);
-
-	if (!gdk_window)
-		return;
-
-	if (gtk_widget_is_sensitive (widget)) {
-		GdkDisplay *display = gtk_widget_get_display (widget);
-		GdkCursor  *cursor;
-
-		cursor = gdk_cursor_new_for_display (display,
-						     widget == window->resize_sw ?
-						     GDK_BOTTOM_LEFT_CORNER :
-						     GDK_BOTTOM_RIGHT_CORNER);
-		gdk_window_set_cursor (gdk_window, cursor);
-		g_object_unref (cursor);
-	} else {
-		gdk_window_set_cursor (gdk_window, NULL);
-	}
-}
-
 static void
 text_view_state_flags_changed (GtkWidget     *widget,
 			       GtkStateFlags  previous_flags)
@@ -291,24 +252,21 @@ ev_annotation_window_button_press_event (GtkWidget      *widget,
 static void
 ev_annotation_window_init (EvAnnotationWindow *window)
 {
-	GtkWidget    *vbox, *hbox;
+	GtkWidget    *vbox;
 	GtkWidget    *icon;
 	GtkWidget    *swindow;
 	GtkWidget    *header;
-	GtkIconTheme *icon_theme;
-	GdkPixbuf    *pixbuf;
-
-	icon_theme = gtk_icon_theme_get_default ();
 
 	gtk_widget_set_can_focus (GTK_WIDGET (window), TRUE);
 
 	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 
 	/* Title bar */
-	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
+	window->titlebar = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
+	gtk_window_set_titlebar (GTK_WINDOW (window), window->titlebar);
 
 	icon = gtk_image_new (); /* FIXME: use the annot icon */
-	gtk_box_pack_start (GTK_BOX (hbox), icon, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (window->titlebar), icon, FALSE, FALSE, 0);
 	gtk_widget_show (icon);
 
 	header = gtk_event_box_new ();
@@ -321,19 +279,18 @@ ev_annotation_window_init (EvAnnotationWindow *window)
 	gtk_container_add (GTK_CONTAINER (header), window->title);
 	gtk_widget_show (window->title);
 
-	gtk_box_pack_start (GTK_BOX (hbox), header, TRUE, TRUE, 0);
+	gtk_box_pack_start (GTK_BOX (window->titlebar), header, TRUE, TRUE, 0);
 	gtk_widget_show (header);
 
 	window->close_button = gtk_button_new_from_icon_name ("window-close-symbolic", GTK_ICON_SIZE_BUTTON);
 	g_signal_connect_swapped (window->close_button, "clicked",
 				  G_CALLBACK (ev_annotation_window_close),
 				  window);
+	gtk_widget_set_valign (GTK_WIDGET (window->close_button), GTK_ALIGN_CENTER);
 
-	gtk_box_pack_start (GTK_BOX (hbox), window->close_button, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (window->titlebar), window->close_button, FALSE, FALSE, 0);
 	gtk_widget_show (window->close_button);
-
-	gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
-	gtk_widget_show (hbox);
+	gtk_widget_show (window->titlebar);
 
 	/* Contents */
 	swindow = gtk_scrolled_window_new (NULL, NULL);
@@ -356,48 +313,6 @@ ev_annotation_window_init (EvAnnotationWindow *window)
 	gtk_box_pack_start (GTK_BOX (vbox), swindow, TRUE, TRUE, 0);
 	gtk_widget_show (swindow);
 
-	/* Resize bar */
-	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
-
-	window->resize_sw = gtk_event_box_new ();
-	gtk_widget_add_events (window->resize_sw, GDK_BUTTON_PRESS_MASK);
-	g_signal_connect_swapped (window->resize_sw, "button-press-event",
-				  G_CALLBACK (ev_annotation_window_resize),
-				  window);
-	g_signal_connect (window->resize_sw, "realize",
-			  G_CALLBACK (ev_annotation_window_set_resize_cursor),
-			  window);
-
-	pixbuf = gtk_icon_theme_load_icon (icon_theme, EV_STOCK_RESIZE_SW, 8,
-					   GTK_ICON_LOOKUP_FORCE_SIZE, NULL);
-	icon = gtk_image_new_from_pixbuf (pixbuf);
-	g_object_unref (pixbuf);
-	gtk_container_add (GTK_CONTAINER (window->resize_sw), icon);
-	gtk_widget_show (icon);
-	gtk_box_pack_start (GTK_BOX (hbox), window->resize_sw, FALSE, FALSE, 0);
-	gtk_widget_show (window->resize_sw);
-
-	window->resize_se = gtk_event_box_new ();
-	gtk_widget_add_events (window->resize_se, GDK_BUTTON_PRESS_MASK);
-	g_signal_connect_swapped (window->resize_se, "button-press-event",
-				  G_CALLBACK (ev_annotation_window_resize),
-				  window);
-	g_signal_connect (window->resize_se, "realize",
-			  G_CALLBACK (ev_annotation_window_set_resize_cursor),
-			  window);
-
-	pixbuf = gtk_icon_theme_load_icon (icon_theme, EV_STOCK_RESIZE_SE, 8,
-					   GTK_ICON_LOOKUP_FORCE_SIZE, NULL);
-	icon = gtk_image_new_from_pixbuf (pixbuf);
-	g_object_unref (pixbuf);
-	gtk_container_add (GTK_CONTAINER (window->resize_se), icon);
-	gtk_widget_show (icon);
-	gtk_box_pack_end (GTK_BOX (hbox), window->resize_se, FALSE, FALSE, 0);
-	gtk_widget_show (window->resize_se);
-
-	gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
-	gtk_widget_show (hbox);
-
 	gtk_container_add (GTK_CONTAINER (window), vbox);
 	gtk_widget_show (vbox);
 
@@ -407,7 +322,7 @@ ev_annotation_window_init (EvAnnotationWindow *window)
 
 	gtk_container_set_border_width (GTK_CONTAINER (window), 2);
 
-	gtk_window_set_decorated (GTK_WINDOW (window), FALSE);
+	gtk_window_set_decorated (GTK_WINDOW (window), TRUE);
 	gtk_window_set_skip_taskbar_hint (GTK_WINDOW (window), TRUE);
 	gtk_window_set_skip_pager_hint (GTK_WINDOW (window), TRUE);
 	gtk_window_set_resizable (GTK_WINDOW (window), TRUE);
