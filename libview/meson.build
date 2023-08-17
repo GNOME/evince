@@ -7,7 +7,6 @@ headers = files(
   'ev-job-scheduler.h',
   'ev-jobs.h',
   'ev-print-operation.h',
-  'ev-stock-icons.h',
   'ev-view-presentation.h',
   'ev-view.h',
 )
@@ -30,7 +29,6 @@ sources = files(
   'ev-page-cache.c',
   'ev-pixbuf-cache.c',
   'ev-print-operation.c',
-  'ev-stock-icons.c',
   'ev-timeline.c',
   'ev-transition-animation.c',
   'ev-view.c',
