@@ -74,7 +74,6 @@
 #include "ev-sidebar-page.h"
 #include "ev-sidebar-thumbnails.h"
 #include "ev-sidebar-layers.h"
-#include "ev-stock-icons.h"
 #include "ev-utils.h"
 #include "ev-keyring.h"
 #include "ev-view.h"
@@ -271,7 +270,7 @@ typedef struct {
 #define LAYERS_SIDEBAR_ID "layers"
 #define ANNOTS_SIDEBAR_ID "annotations"
 #define BOOKMARKS_SIDEBAR_ID "bookmarks"
-#define LINKS_SIDEBAR_ICON EV_STOCK_OUTLINE
+#define LINKS_SIDEBAR_ICON "outline-symbolic"
 #define THUMBNAILS_SIDEBAR_ICON "view-grid-symbolic"
 #define ATTACHMENTS_SIDEBAR_ICON "mail-attachment-symbolic"
 #define LAYERS_SIDEBAR_ICON "view-paged-symbolic"

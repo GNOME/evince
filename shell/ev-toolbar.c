@@ -27,7 +27,6 @@
 
 #include "ev-toolbar.h"
 
-#include "ev-stock-icons.h"
 #include "ev-zoom-action.h"
 #include "ev-application.h"
 #include "ev-page-action-widget.h"
@@ -102,7 +101,7 @@ ev_toolbar_find_button_sensitive_changed (GtkWidget  *find_button,
 	} else {
                 gtk_widget_set_tooltip_text (find_button,
                                              _("Search not available for this document"));
-		image = gtk_image_new_from_icon_name (EV_STOCK_FIND_UNSUPPORTED,
+		image = gtk_image_new_from_icon_name ("find-unsupported-symbolic",
 						      GTK_ICON_SIZE_MENU);
 		gtk_button_set_image (GTK_BUTTON (find_button), image);
 	}

@@ -38,7 +38,6 @@
 
 #include "ev-application.h"
 #include "ev-file-helpers.h"
-#include "ev-stock-icons.h"
 
 #ifdef ENABLE_DBUS
 #include "ev-gdbus-generated.h"
@@ -564,10 +563,8 @@ ev_application_open_uri_in_window (EvApplication  *application,
         if (uri == NULL)
                 uri = application->uri;
 
-	if (screen) {
-		ev_stock_icons_set_screen (screen);
+	if (screen)
 		gtk_window_set_screen (GTK_WINDOW (ev_window), screen);
-	}
 
 	/* We need to load uri before showing the window, so
 	   we can restore window size without flickering */
@@ -680,10 +677,8 @@ ev_application_open_recent_view (EvApplication *application,
 	GdkWindow *gdk_window;
 #endif
 
-	if (screen) {
-		ev_stock_icons_set_screen (screen);
+	if (screen)
 		gtk_window_set_screen (GTK_WINDOW (new_window), screen);
-	}
 
 	if (!gtk_widget_get_realized (new_window))
 		gtk_widget_realize (new_window);
