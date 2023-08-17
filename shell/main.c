@@ -30,7 +30,6 @@
 #include "ev-debug.h"
 #include "ev-init.h"
 #include "ev-file-helpers.h"
-#include "ev-stock-icons.h"
 #include "ev-metadata.h"
 
 #ifdef G_OS_WIN32
@@ -294,8 +293,6 @@ main (int argc, char *argv[])
         if (!ev_init ())
                 return 1;
 
-	ev_stock_icons_init ();
-
 	/* Manually set name and icon */
 	g_set_application_name (_("Document Viewer"));
 	gtk_window_set_default_icon_name (PACKAGE_ICON_NAME);
@@ -320,7 +317,6 @@ main (int argc, char *argv[])
     done:
 	ev_job_scheduler_wait ();
 	ev_shutdown ();
-	ev_stock_icons_shutdown ();
 
         g_object_unref (application);
 	return status;

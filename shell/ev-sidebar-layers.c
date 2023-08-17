@@ -27,7 +27,6 @@
 #include "ev-sidebar-page.h"
 #include "ev-jobs.h"
 #include "ev-job-scheduler.h"
-#include "ev-stock-icons.h"
 #include "ev-sidebar-layers.h"
 
 struct _EvSidebarLayersPrivate {
@@ -240,7 +239,7 @@ ev_sidebar_layers_create_tree_view (EvSidebarLayers *ev_layers)
 
 	column = gtk_tree_view_column_new ();
 
-	renderer = gimp_cell_renderer_toggle_new (EV_STOCK_VISIBLE);
+	renderer = gimp_cell_renderer_toggle_new ("visible-symbolic");
 	gtk_tree_view_column_pack_start (column, renderer, FALSE);
 	gtk_tree_view_column_set_attributes (column, renderer,
 					     "active", EV_DOCUMENT_LAYERS_COLUMN_VISIBLE,
