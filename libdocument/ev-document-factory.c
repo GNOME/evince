@@ -145,6 +145,15 @@ ev_document_factory_new_document_for_mime_type (const gchar *mime_type,
                 g_hash_table_insert (ev_module_hash, g_strdup (info->module_name), module);
         }
 
+	if (!query_type_function && !g_module_symbol (module, "ev_backend_query_type",
+			      (void *) &query_type_function)) {
+		const char *err = g_module_error ();
+		g_set_error (error, EV_DOCUMENT_ERROR, EV_DOCUMENT_ERROR_INVALID,
+			     "Failed to load backend for '%s': %s",
+			     mime_type, err ? err : "unknown error");
+		return NULL;
+	}
+
 	backend_type = query_type_function ();
 	g_assert (g_type_is_a (backend_type, EV_TYPE_DOCUMENT));
 
