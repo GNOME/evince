@@ -29,6 +29,10 @@
 #include "ev-view-marshal.h"
 #include "ev-document-misc.h"
 
+#ifdef GDK_WINDOWING_X11
+#include <gdk/x11/gdkx.h>
+#endif
+
 enum {
 	PROP_0,
 	PROP_ANNOTATION,
@@ -97,11 +101,12 @@ ev_annotation_window_set_color (EvAnnotationWindow *window,
 				    "button:active {background: darker(%1$s);}\n"
 				    "evannotationwindow.background { color: %2$s; }\n"
 				    "evannotationwindow.background:backdrop { color: alpha(%2$s, .75); }\n"
-				    "evannotationwindow.background, button {background: %1$s}\n"
-				    ".titlebar:not(headerbar) {background: %1$s}",
+				    "evannotationwindow.background, button {background: %1$s;}\n"
+				    ".titlebar:not(headerbar) {background: %1$s;}\n"
+				    "evannotationwindow {padding-left: 2px; padding-right: 2px;}",
 				    rgba_str, icon_color_str);
 
-	gtk_css_provider_load_from_data (css_provider, css_data, strlen (css_data), &error);
+	gtk_css_provider_load_from_data (css_provider, css_data, strlen (css_data));
 	if (error != NULL)
 		g_error ("%s", error->message);
 
@@ -111,7 +116,8 @@ ev_annotation_window_set_color (EvAnnotationWindow *window,
 					GTK_STYLE_PROVIDER (css_provider), GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 	gtk_style_context_add_provider (gtk_widget_get_style_context (window->close_button),
 					GTK_STYLE_PROVIDER (css_provider), GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
-	gtk_style_context_add_class (gtk_widget_get_style_context (window->close_button), "circular");
+
+	gtk_widget_add_css_class(window->close_button, "circular");
 }
 
 static void
@@ -195,20 +201,22 @@ ev_annotation_window_close (EvAnnotationWindow *window)
 	g_signal_emit (window, signals[CLOSED], 0);
 }
 
-static gboolean
-ev_annotation_window_button_press_event (GtkWidget      *widget,
-					 GdkEventButton *event)
+static void
+ev_annotation_window_button_press_event (GtkGestureClick	*self,
+					 gint			 n_press,
+					 gdouble		 x,
+					 gdouble		 y,
+					 gpointer		 user_data)
 {
-	if (event->type == GDK_BUTTON_PRESS && event->button == 1) {
-		gtk_window_begin_move_drag (GTK_WINDOW (widget),
-					    event->button,
-					    event->x_root,
-					    event->y_root,
-					    event->time);
-		return TRUE;
-	}
+	EvAnnotationWindow *window = EV_ANNOTATION_WINDOW (user_data);
+	GtkEventController *controller = GTK_EVENT_CONTROLLER (self);
+	GtkNative *native = gtk_widget_get_native (GTK_WIDGET (window));
+	GdkSurface *toplevel = gtk_native_get_surface (native);
+	GdkDevice *device = gtk_event_controller_get_current_event_device (controller);
+	guint32 timestamp = gtk_event_controller_get_current_event_time (controller);
 
-	return FALSE;
+	gdk_toplevel_begin_move (GDK_TOPLEVEL (toplevel), device, GDK_BUTTON_PRIMARY,
+			x, y, timestamp);
 }
 
 static void
@@ -224,9 +232,8 @@ static void
 ev_annotation_window_init (EvAnnotationWindow *window)
 {
 	GtkWidget    *vbox;
-	GtkWidget    *icon;
 	GtkWidget    *swindow;
-	GtkWidget    *header;
+	GtkEventController *controller;
 
 	gtk_widget_set_can_focus (GTK_WIDGET (window), TRUE);
 
@@ -236,61 +243,55 @@ ev_annotation_window_init (EvAnnotationWindow *window)
 	window->titlebar = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
 	gtk_window_set_titlebar (GTK_WINDOW (window), window->titlebar);
 
-	icon = gtk_image_new (); /* FIXME: use the annot icon */
-	gtk_box_pack_start (GTK_BOX (window->titlebar), icon, FALSE, FALSE, 0);
-	gtk_widget_show (icon);
-
-	header = gtk_event_box_new ();
-	gtk_widget_add_events (header, GDK_BUTTON_PRESS_MASK);
-	g_signal_connect_swapped (header, "button-press-event",
-				  G_CALLBACK (ev_annotation_window_button_press_event),
-			          window);
-
 	window->title = gtk_label_new (NULL);
-	gtk_container_add (GTK_CONTAINER (header), window->title);
-	gtk_widget_show (window->title);
+	gtk_widget_set_halign (window->title, GTK_ALIGN_FILL);
+	gtk_widget_set_hexpand (window->title, TRUE);
 
-	gtk_box_pack_start (GTK_BOX (window->titlebar), header, TRUE, TRUE, 0);
-	gtk_widget_show (header);
+	controller = GTK_EVENT_CONTROLLER (gtk_gesture_click_new ());
+	g_signal_connect (controller, "pressed",
+			  G_CALLBACK (ev_annotation_window_button_press_event),
+			  window);
+	gtk_widget_add_controller (window->title, controller);
+	gtk_box_append (GTK_BOX (window->titlebar), window->title);
 
-	window->close_button = gtk_button_new_from_icon_name ("window-close-symbolic", GTK_ICON_SIZE_BUTTON);
+	window->close_button = gtk_button_new_from_icon_name ("window-close-symbolic");
 	g_signal_connect_swapped (window->close_button, "clicked",
 				  G_CALLBACK (ev_annotation_window_close),
 				  window);
-
-	gtk_box_pack_start (GTK_BOX (window->titlebar), window->close_button, FALSE, FALSE, 0);
-	gtk_widget_show (window->close_button);
-	gtk_widget_show (window->titlebar);
+	gtk_widget_set_valign (GTK_WIDGET (window->close_button), GTK_ALIGN_CENTER);
+	gtk_box_append (GTK_BOX (window->titlebar), window->close_button);
 
 	/* Contents */
-	swindow = gtk_scrolled_window_new (NULL, NULL);
+	swindow = gtk_scrolled_window_new ();
 	window->text_view = gtk_text_view_new ();
 
-	gtk_container_set_border_width (GTK_CONTAINER (window->text_view), 6);
 	gtk_text_view_set_cursor_visible (GTK_TEXT_VIEW (window->text_view), TRUE);
 	gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (window->text_view), GTK_WRAP_WORD);
-	gtk_container_add (GTK_CONTAINER (swindow), window->text_view);
-	gtk_widget_show (window->text_view);
+	gtk_scrolled_window_set_child (GTK_SCROLLED_WINDOW (swindow), window->text_view);
+	gtk_widget_set_valign (swindow, GTK_ALIGN_FILL);
+	gtk_widget_set_vexpand (swindow, TRUE);
 	gtk_window_set_focus (GTK_WINDOW (window), window->text_view);
 	g_signal_connect (window->text_view, "notify::has-focus",
 			  G_CALLBACK (ev_annotation_window_has_focus_changed),
 			  window);
 
-	gtk_box_pack_start (GTK_BOX (vbox), swindow, TRUE, TRUE, 0);
-	gtk_widget_show (swindow);
+	gtk_box_append (GTK_BOX (vbox), swindow);
 
-	gtk_container_add (GTK_CONTAINER (window), vbox);
-	gtk_widget_show (vbox);
+	gtk_window_set_child (GTK_WINDOW (window), vbox);
 
-	gtk_widget_add_events (GTK_WIDGET (window),
-			       GDK_BUTTON_PRESS_MASK |
-			       GDK_KEY_PRESS_MASK);
+#ifdef GDK_WINDOWING_X11
+	{
+		GtkNative *native = gtk_widget_get_native (GTK_WIDGET (window));
+		GdkSurface *surface = gtk_native_get_surface (native);
 
-	gtk_container_set_border_width (GTK_CONTAINER (window), 2);
+		if (GDK_IS_X11_SURFACE (surface)) {
+			gdk_x11_surface_set_skip_taskbar_hint (GDK_X11_SURFACE (surface), TRUE);
+			gdk_x11_surface_set_skip_pager_hint (GDK_X11_SURFACE (surface), TRUE);
+		}
+	}
+#endif
 
 	gtk_window_set_decorated (GTK_WINDOW (window), TRUE);
-	gtk_window_set_skip_taskbar_hint (GTK_WINDOW (window), TRUE);
-	gtk_window_set_skip_pager_hint (GTK_WINDOW (window), TRUE);
 	gtk_window_set_resizable (GTK_WINDOW (window), TRUE);
 }
 
@@ -363,15 +364,12 @@ ev_annotation_window_constructor (GType                  type,
 }
 
 static gboolean
-ev_annotation_window_key_press_event (GtkWidget   *widget,
-                                      GdkEventKey *event)
+ev_annotation_window_escape_pressed (GtkWidget	*widget,
+				     GVariant	*args,
+				     gpointer	user_data)
 {
-        if (event->keyval == GDK_KEY_Escape) {
-                ev_annotation_window_close (EV_ANNOTATION_WINDOW (widget));
-                return TRUE;
-        }
-
-        return GTK_WIDGET_CLASS (ev_annotation_window_parent_class)->key_press_event (widget, event);
+	ev_annotation_window_close (EV_ANNOTATION_WINDOW (widget));
+	return TRUE;
 }
 
 static void
@@ -384,7 +382,8 @@ ev_annotation_window_class_init (EvAnnotationWindowClass *klass)
 	g_object_class->set_property = ev_annotation_window_set_property;
 	g_object_class->dispose = ev_annotation_window_dispose;
 
-        gtk_widget_class->key_press_event = ev_annotation_window_key_press_event;
+	gtk_widget_class_add_binding (gtk_widget_class, GDK_KEY_Escape, 0,
+				      ev_annotation_window_escape_pressed, NULL);
 
 	gtk_widget_class_set_css_name (gtk_widget_class, "evannotationwindow");
 	g_object_class_install_property (g_object_class,
