@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince.HEAD\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
-"POT-Creation-Date: 2023-07-14 14:41+0000\n"
-"PO-Revision-Date: 2023-07-28 07:36+0200\n"
+"POT-Creation-Date: 2023-07-28 05:39+0000\n"
+"PO-Revision-Date: 2023-08-18 20:01+0200\n"
 "Last-Translator: Ekaterine Papava <papava.e@gtu.ge>\n"
 "Language-Team: Georgian <(nothing)>\n"
 "Language: ka\n"
@@ -371,10 +371,12 @@ msgstr "ბმულებისთვის მასშტაბის ზო�
 #: data/org.gnome.Evince.gschema.xml:49
 msgid "Check spelling when writing annotation notes or filling text forms."
 msgstr ""
+"მართლწერის შემოწმება ტექსტური ფორმების შევსებისა და ანოტაციის შენიშვნების "
+"დაწერისას."
 
 #: data/org.gnome.Evince.gschema.xml:53
 msgid "Show a side bar next to the document to help navigate the document."
-msgstr ""
+msgstr "დოკუმენტში ნავიგაციაში დამხმარე გვერდითი პანელის ჩვენება."
 
 #: data/org.gnome.Evince.gschema.xml:63
 msgid "Set the default zoom level to display a document."
@@ -384,7 +386,7 @@ msgstr "დააყენეთ დოკუმენტის საჩვე�
 msgid ""
 "Display the document as a continuous stream of pages instead of page at a "
 "time."
-msgstr ""
+msgstr "ერთი გვერდის მაგიერ დოკუმენტის გვერდების უწყვეტ ნაკადად ჩვენება."
 
 #: data/org.gnome.Evince.gschema.xml:74
 msgid "Show two pages side by side."
@@ -395,6 +397,8 @@ msgid ""
 "Show the first page (odd page) on the left (when displaying two pages side "
 "by side)"
 msgstr ""
+"პირველი გვერდის (კენტის) მარცხენა მხარეს ჩვენება (ორი გვერდის გვერდიგვერდ "
+"ჩვენებისას)"
 
 #: data/org.gnome.Evince-previewer.desktop.in.in:3
 msgid "Print Preview"
@@ -638,51 +642,51 @@ msgstr "ჩვენება ქვემოთ"
 msgid "Document View"
 msgstr "დოკუმენტის ნახვა"
 
-#: libview/ev-view.c:2113
+#: libview/ev-view.c:2141
 msgid "Go to first page"
 msgstr "პირველ გვერდზე"
 
-#: libview/ev-view.c:2115
+#: libview/ev-view.c:2143
 msgid "Go to previous page"
 msgstr "წინა გვერდზე"
 
-#: libview/ev-view.c:2117
+#: libview/ev-view.c:2145
 msgid "Go to next page"
 msgstr "შემდეგ გვერდზე გადასვლა"
 
-#: libview/ev-view.c:2119
+#: libview/ev-view.c:2147
 msgid "Go to last page"
 msgstr "ბოლო გვერდზე"
 
-#: libview/ev-view.c:2121
+#: libview/ev-view.c:2149
 msgid "Go to page"
 msgstr "გვერდზე გადასვლა"
 
-#: libview/ev-view.c:2123
+#: libview/ev-view.c:2151
 msgid "Find"
 msgstr "ძებნა"
 
-#: libview/ev-view.c:2151
+#: libview/ev-view.c:2179
 #, c-format
 msgid "Go to page %s"
 msgstr "%s გვერდზე"
 
-#: libview/ev-view.c:2157
+#: libview/ev-view.c:2185
 #, c-format
 msgid "Go to %s on file “%s”"
 msgstr "%s-ზე გადასვლა “%s” ფაილში"
 
-#: libview/ev-view.c:2160
+#: libview/ev-view.c:2188
 #, c-format
 msgid "Go to file “%s”"
 msgstr "გადასვლა ფაილზე “%s”"
 
-#: libview/ev-view.c:2168
+#: libview/ev-view.c:2196
 #, c-format
 msgid "Launch %s"
 msgstr "%s-ის გაშვება"
 
-#: libview/ev-view.c:2175
+#: libview/ev-view.c:2203
 msgid "Reset form"
 msgstr "ფორმის საწყის მდგომარეობაში დაბრუნება"
 
@@ -977,7 +981,7 @@ msgstr "ხაზგასმული"
 
 #: shell/ev-annotation-properties-dialog.c:129
 msgid "Squiggly"
-msgstr ""
+msgstr "ტალღებიანი"
 
 #: shell/ev-annotation-properties-dialog.c:150 shell/evince-menus.ui:170
 msgid "Annotation Properties"
@@ -1601,7 +1605,7 @@ msgstr[0] "აქტიურია ბეჭდვის %d დავალე�
 
 #: shell/ev-window.c:4053
 msgid "If you close the window, pending print jobs will not be printed."
-msgstr ""
+msgstr "თუ ამ ფანჯარას დახურავთ, დარჩენილი დაბეჭდვის დავალებები არ დაიბეჭდება."
 
 #: shell/ev-window.c:4057
 msgid "Cancel _print and Close"
