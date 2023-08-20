@@ -129,14 +129,4 @@ void             ev_document_model_set_fullscreen    (EvDocumentModel *model,
 EV_PUBLIC
 gboolean         ev_document_model_get_fullscreen    (EvDocumentModel *model);
 
-/* deprecated */
-
-EV_DEPRECATED_FOR(ev_document_model_set_page_layout)
-EV_PUBLIC
-void             ev_document_model_set_dual_page     (EvDocumentModel *model,
-						      gboolean         dual_page);
-EV_DEPRECATED_FOR(ev_document_model_get_page_layout)
-EV_PUBLIC
-gboolean         ev_document_model_get_dual_page     (EvDocumentModel *model);
-
 G_END_DECLS
