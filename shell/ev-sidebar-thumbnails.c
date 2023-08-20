@@ -717,7 +717,7 @@ ev_sidebar_init_icon_view (EvSidebarThumbnails *ev_sidebar_thumbnails)
 	g_signal_connect_swapped (priv->icon_view, "size-allocate",
 				  G_CALLBACK (check_toggle_blank_first_dual_mode_when_resizing), ev_sidebar_thumbnails);
 
-	g_signal_connect_data (priv->model, "notify::dual-page",
+	g_signal_connect_data (priv->model, "notify::page-layout",
 			       G_CALLBACK (check_toggle_blank_first_dual_mode), ev_sidebar_thumbnails,
 			       NULL, G_CONNECT_SWAPPED | G_CONNECT_AFTER);
 
@@ -1283,7 +1283,7 @@ check_toggle_blank_first_dual_mode_real (EvSidebarThumbnails *sidebar_thumbnails
 
 	priv = sidebar_thumbnails->priv;
 
-	dual_mode = ev_document_model_get_dual_page (priv->model);
+	dual_mode = ev_document_model_get_page_layout (priv->model) == EV_PAGE_LAYOUT_DUAL;
 	odd_pages_left = ev_document_model_get_dual_page_odd_pages_left (priv->model);
 	should_be_enabled = dual_mode && !odd_pages_left;
 
