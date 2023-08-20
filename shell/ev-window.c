@@ -448,7 +448,7 @@ ev_window_update_actions_sensitivity (EvWindow *ev_window)
 		page = ev_document_model_get_page (priv->model);
 		n_pages = ev_document_get_n_pages (priv->document);
 		has_pages = n_pages > 0;
-		dual_mode = ev_document_model_get_dual_page (priv->model);
+		dual_mode = ev_document_model_get_page_layout (priv->model) == EV_PAGE_LAYOUT_DUAL;
 	}
 
 	if (!info || info->fields_mask == 0) {
@@ -1364,7 +1364,8 @@ setup_model_from_metadata (EvWindow *window)
 
 	/* Dual page */
 	if (ev_metadata_get_boolean (priv->metadata, "dual-page", &dual_page)) {
-		ev_document_model_set_dual_page (priv->model, dual_page);
+		ev_document_model_set_page_layout (priv->model,
+			dual_page ? EV_PAGE_LAYOUT_DUAL : EV_PAGE_LAYOUT_SINGLE);
 	}
 
 	/* Dual page odd pages left */
@@ -1441,7 +1442,7 @@ setup_document_from_metadata (EvWindow *window)
 	 * in Evince, that's why is located *after* the previous return that exits
 	 * when evince metadata for window_width{height} already exists. */
 	if (n_pages == 1)
-		ev_document_model_set_dual_page (priv->model, FALSE);
+		ev_document_model_set_page_layout (priv->model, EV_PAGE_LAYOUT_SINGLE);
 	else if (n_pages == 2)
 		ev_document_model_set_dual_page_odd_pages_left (priv->model, TRUE);
 
@@ -1588,7 +1589,8 @@ ev_window_setup_default (EvWindow *ev_window)
 
 	/* Document model */
 	ev_document_model_set_continuous (model, g_settings_get_boolean (settings, "continuous"));
-	ev_document_model_set_dual_page (model, g_settings_get_boolean (settings, "dual-page"));
+	ev_document_model_set_page_layout (model, g_settings_get_boolean (settings, "dual-page") ?
+			EV_PAGE_LAYOUT_DUAL : EV_PAGE_LAYOUT_SINGLE);
 	ev_document_model_set_dual_page_odd_pages_left (model, g_settings_get_boolean (settings, "dual-page-odd-left"));
 	ev_document_model_set_rtl (model, gtk_widget_get_default_direction () == GTK_TEXT_DIR_RTL ? TRUE : FALSE);
 	ev_document_model_set_inverted_colors (model, g_settings_get_boolean (settings, "inverted-colors"));
@@ -4082,7 +4084,7 @@ ev_window_save_settings (EvWindow *ev_window)
 	g_settings_set_boolean (settings, "continuous",
 				ev_document_model_get_continuous (model));
 	g_settings_set_boolean (settings, "dual-page",
-		                ev_document_model_get_dual_page (model));
+		                ev_document_model_get_page_layout (model) == EV_PAGE_LAYOUT_DUAL);
 	g_settings_set_boolean (settings, "dual-page-odd-left",
 				ev_document_model_get_dual_page_odd_pages_left (model));
 	g_settings_set_boolean (settings, "fullscreen",
@@ -4349,7 +4351,8 @@ ev_window_cmd_dual (GSimpleAction *action,
 	dual_page = g_variant_get_boolean (state);
 
 	ev_window_stop_presentation (window, TRUE);
-	ev_document_model_set_dual_page (priv->model, dual_page);
+	ev_document_model_set_page_layout (priv->model,
+			dual_page ? EV_PAGE_LAYOUT_DUAL : EV_PAGE_LAYOUT_SINGLE);
 	g_simple_action_set_state (action, state);
 
 	recent_view_mode = ev_window_is_recent_view (window);
@@ -5368,7 +5371,7 @@ ev_window_dual_mode_changed_cb (EvDocumentModel *model,
 	gboolean dual_page;
 	GAction *action;
 
-	dual_page = ev_document_model_get_dual_page (model);
+	dual_page = ev_document_model_get_page_layout (model) == EV_PAGE_LAYOUT_DUAL;
 
 	action = g_action_map_lookup_action (G_ACTION_MAP (ev_window), "dual-page");
 	g_simple_action_set_state (G_SIMPLE_ACTION (action), g_variant_new_boolean (dual_page));
