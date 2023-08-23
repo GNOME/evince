@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
-"POT-Creation-Date: 2023-04-02 22:30+0000\n"
-"PO-Revision-Date: 2023-05-10 23:01+0200\n"
+"POT-Creation-Date: 2023-08-20 18:21+0000\n"
+"PO-Revision-Date: 2023-08-23 17:16+0200\n"
 "Last-Translator: maite guix <maite.guix@me.com>\n"
 "Language-Team: Catalan <tradgnome@softcatala.org>\n"
 "Language: ca\n"
@@ -105,50 +105,50 @@ msgid "Adds support for reading PDF Documents"
 msgstr "Permet la lectura de documents PDF"
 
 #. translators: this is the document security state
-#: backend/pdf/ev-poppler.c:731 backend/pdf/ev-poppler.c:737
+#: backend/pdf/ev-poppler.c:725 backend/pdf/ev-poppler.c:731
 #: properties/ev-properties-view.c:429
 msgid "Yes"
 msgstr "Sí"
 
 #. translators: this is the document security state
-#: backend/pdf/ev-poppler.c:734 backend/pdf/ev-poppler.c:737
+#: backend/pdf/ev-poppler.c:728 backend/pdf/ev-poppler.c:731
 #: properties/ev-properties-view.c:431
 msgid "No"
 msgstr "No"
 
-#: backend/pdf/ev-poppler.c:879
+#: backend/pdf/ev-poppler.c:867
 msgid "Type 1"
 msgstr "Tipus 1"
 
-#: backend/pdf/ev-poppler.c:881
+#: backend/pdf/ev-poppler.c:869
 msgid "Type 1C"
 msgstr "Tipus 1C"
 
-#: backend/pdf/ev-poppler.c:883
+#: backend/pdf/ev-poppler.c:871
 msgid "Type 3"
 msgstr "Tipus 3"
 
-#: backend/pdf/ev-poppler.c:885
+#: backend/pdf/ev-poppler.c:873
 msgid "TrueType"
 msgstr "TrueType"
 
-#: backend/pdf/ev-poppler.c:887
+#: backend/pdf/ev-poppler.c:875
 msgid "Type 1 (CID)"
 msgstr "Tipus 1 (CID)"
 
-#: backend/pdf/ev-poppler.c:889
+#: backend/pdf/ev-poppler.c:877
 msgid "Type 1C (CID)"
 msgstr "Tipus 1C (CID)"
 
-#: backend/pdf/ev-poppler.c:891
+#: backend/pdf/ev-poppler.c:879
 msgid "TrueType (CID)"
 msgstr "TrueType (CID)"
 
-#: backend/pdf/ev-poppler.c:893
+#: backend/pdf/ev-poppler.c:881
 msgid "Unknown font type"
 msgstr "Tipus de lletra desconegut"
 
-#: backend/pdf/ev-poppler.c:937
+#: backend/pdf/ev-poppler.c:925
 msgid ""
 "This document contains non-embedded fonts that are not from the PDF Standard "
 "14 fonts. If the substitute fonts selected by fontconfig are not the same as "
@@ -159,11 +159,11 @@ msgstr ""
 "els tipus de lletra que seleccioni fontconfig no són iguals que els tipus de "
 "lletra amb què es va crear el PDF."
 
-#: backend/pdf/ev-poppler.c:942
+#: backend/pdf/ev-poppler.c:930
 msgid "All fonts are either standard or embedded."
 msgstr "Tots els tipus de lletra són o bé estàndards o bé encastats."
 
-#: backend/pdf/ev-poppler.c:972
+#: backend/pdf/ev-poppler.c:960
 msgid "No name"
 msgstr "Sense nom"
 
@@ -177,20 +177,20 @@ msgstr "Sense nom"
 #. Author: None
 #. Keywords: None
 #.
-#: backend/pdf/ev-poppler.c:981 libview/ev-print-operation.c:2691
+#: backend/pdf/ev-poppler.c:969 libview/ev-print-operation.c:2691
 #: properties/ev-properties-view.c:230
 msgid "None"
 msgstr "Cap"
 
-#: backend/pdf/ev-poppler.c:989
+#: backend/pdf/ev-poppler.c:977
 msgid "Embedded subset"
 msgstr "Subconjunt encastat"
 
-#: backend/pdf/ev-poppler.c:991
+#: backend/pdf/ev-poppler.c:979
 msgid "Embedded"
 msgstr "Encastat"
 
-#: backend/pdf/ev-poppler.c:993
+#: backend/pdf/ev-poppler.c:981
 msgid "Not embedded"
 msgstr "No encastat"
 
@@ -199,7 +199,7 @@ msgstr "No encastat"
 #. * type. Example:
 #. * "Type 1 (One of the Standard 14 Fonts)"
 #.
-#: backend/pdf/ev-poppler.c:1000
+#: backend/pdf/ev-poppler.c:988
 msgid " (One of the Standard 14 Fonts)"
 msgstr " (un dels 14 tipus de lletra estàndards)"
 
@@ -208,7 +208,7 @@ msgstr " (un dels 14 tipus de lletra estàndards)"
 #. * type. Example:
 #. * "TrueType (Not one of the Standard 14 Fonts)"
 #.
-#: backend/pdf/ev-poppler.c:1007
+#: backend/pdf/ev-poppler.c:995
 msgid " (Not one of the Standard 14 Fonts)"
 msgstr ""
 " (un tipus de lletra que no és dins dels 14 tipus de lletra estàndards)"
@@ -223,7 +223,7 @@ msgstr ""
 #. * Substituting with TeXGyreTermes-Regular
 #. * (/usr/share/textmf/.../texgyretermes-regular.otf)
 #.
-#: backend/pdf/ev-poppler.c:1026
+#: backend/pdf/ev-poppler.c:1014
 #, c-format
 msgid ""
 "%s%s\n"
@@ -247,7 +247,7 @@ msgstr ""
 #. * Encoding: Custom
 #. * Embedded subset
 #.
-#: backend/pdf/ev-poppler.c:1044
+#: backend/pdf/ev-poppler.c:1032
 #, c-format
 msgid ""
 "%s%s\n"
@@ -472,8 +472,8 @@ msgid "of %d"
 msgstr "de %d"
 
 #: libmisc/ev-page-action-widget.c:201 shell/ev-history.c:454
-#: shell/ev-sidebar-bookmarks.c:343 shell/ev-window.c:963
-#: shell/ev-window.c:5156
+#: shell/ev-sidebar-bookmarks.c:343 shell/ev-window.c:954
+#: shell/ev-window.c:5155
 #, c-format
 msgid "Page %s"
 msgstr "Pàgina %s"
@@ -498,7 +498,7 @@ msgstr "_Distingeix entre majúscules i minúscules"
 msgid "Find previous occurrence of the search string"
 msgstr "Cerca l'anterior ocurrència de la cadena de cerca"
 
-#: libmisc/ev-search-box.c:606
+#: libmisc/ev-search-box.c:607
 msgid "Find next occurrence of the search string"
 msgstr "Cerca la següent ocurrència de cadena de cerca"
 
@@ -661,51 +661,51 @@ msgstr "Desplaça la visualització cap avall"
 msgid "Document View"
 msgstr "Visualització del document"
 
-#: libview/ev-view.c:2113
+#: libview/ev-view.c:2141
 msgid "Go to first page"
 msgstr "Ves a la primera pàgina"
 
-#: libview/ev-view.c:2115
+#: libview/ev-view.c:2143
 msgid "Go to previous page"
 msgstr "Ves a la pàgina anterior"
 
-#: libview/ev-view.c:2117
+#: libview/ev-view.c:2145
 msgid "Go to next page"
 msgstr "Ves a la pàgina següent"
 
-#: libview/ev-view.c:2119
+#: libview/ev-view.c:2147
 msgid "Go to last page"
 msgstr "Ves a l'última pàgina"
 
-#: libview/ev-view.c:2121
+#: libview/ev-view.c:2149
 msgid "Go to page"
 msgstr "Ves a la pàgina"
 
-#: libview/ev-view.c:2123
+#: libview/ev-view.c:2151
 msgid "Find"
 msgstr "Cerca"
 
-#: libview/ev-view.c:2151
+#: libview/ev-view.c:2179
 #, c-format
 msgid "Go to page %s"
 msgstr "Ves a la pàgina %s"
 
-#: libview/ev-view.c:2157
+#: libview/ev-view.c:2185
 #, c-format
 msgid "Go to %s on file “%s”"
 msgstr "Ves a %s en el fitxer «%s»"
 
-#: libview/ev-view.c:2160
+#: libview/ev-view.c:2188
 #, c-format
 msgid "Go to file “%s”"
 msgstr "Ves al fitxer «%s»"
 
-#: libview/ev-view.c:2168
+#: libview/ev-view.c:2196
 #, c-format
 msgid "Launch %s"
 msgstr "Engega %s"
 
-#: libview/ev-view.c:2175
+#: libview/ev-view.c:2203
 msgid "Reset form"
 msgstr "Reinicialitza el formulari"
 
@@ -713,7 +713,7 @@ msgstr "Reinicialitza el formulari"
 msgid "Jump to page:"
 msgstr "Salta a la pàgina:"
 
-#: libview/ev-view-presentation.c:1009
+#: libview/ev-view-presentation.c:1010
 msgid "End of presentation. Press Esc or click to exit."
 msgstr "Final de la presentació. Premeu Esc o clic per a sortir."
 
@@ -790,7 +790,7 @@ msgstr "Selecciona la pàgina o cerca a la taula de continguts"
 msgid "Select page"
 msgstr "Selecciona la pàgina"
 
-#: previewer/ev-previewer-window.c:78 shell/ev-window.c:3650
+#: previewer/ev-previewer-window.c:78 shell/ev-window.c:3636
 msgid "Failed to print document"
 msgstr "No s'ha pogut imprimir el document"
 
@@ -803,7 +803,7 @@ msgstr "Visualitzador de documents Evince"
 msgid "The selected printer “%s” could not be found"
 msgstr "No s'ha pogut trobar la impressora «%s»"
 
-#: previewer/ev-previewer-window.c:536 shell/ev-window.c:4241
+#: previewer/ev-previewer-window.c:536 shell/ev-window.c:4227
 msgid "Evince"
 msgstr "Evince"
 
@@ -1036,19 +1036,19 @@ msgid "Close"
 msgstr "Tanca"
 
 #. Translators: an annotation that looks like a "sticky note"
-#: shell/ev-annotations-toolbar.c:134
+#: shell/ev-annotations-toolbar.c:132
 msgid "Note text"
 msgstr "Nota de text"
 
-#: shell/ev-annotations-toolbar.c:136
+#: shell/ev-annotations-toolbar.c:134
 msgid "Add text annotation"
 msgstr "Afegeix una anotació de text"
 
-#: shell/ev-annotations-toolbar.c:141
+#: shell/ev-annotations-toolbar.c:139
 msgid "Highlight text"
 msgstr "Ressalta el text"
 
-#: shell/ev-annotations-toolbar.c:143
+#: shell/ev-annotations-toolbar.c:141
 msgid "Add highlight annotation"
 msgstr "Afegeix una anotació realçada"
 
@@ -1076,7 +1076,7 @@ msgstr "Pàgina _anterior"
 msgid "_Next Page"
 msgstr "Pàgina _següent"
 
-#: shell/evince-menus.ui:54 shell/ev-window.c:3949
+#: shell/evince-menus.ui:54 shell/ev-window.c:3935
 msgid "_Reload"
 msgstr "_Torna a carregar"
 
@@ -1342,8 +1342,8 @@ msgid "Password required"
 msgstr "Cal una contrasenya"
 
 #: shell/ev-password-view.c:238 shell/ev-sidebar-attachments.c:493
-#: shell/ev-window.c:2891 shell/ev-window.c:3188 shell/ev-window.c:4073
-#: shell/ev-window.c:6981 shell/ev-window.c:7207
+#: shell/ev-window.c:2877 shell/ev-window.c:3174 shell/ev-window.c:4059
+#: shell/ev-window.c:6983 shell/ev-window.c:7209
 msgid "_Cancel"
 msgstr "_Cancel·la"
 
@@ -1400,16 +1400,20 @@ msgstr "Text de la llicència"
 msgid "Further Information"
 msgstr "Més informació"
 
-#: shell/ev-sidebar-annotations.c:338
+#: shell/ev-sidebar-annotations.c:341
 msgid "Document contains no annotations"
 msgstr "El document no conté cap anotació"
 
-#: shell/ev-sidebar-annotations.c:366
+#: shell/ev-sidebar-annotations.c:369
 #, c-format
 msgid "Page %d"
 msgstr "Pàgina %d"
 
-#: shell/ev-sidebar-annotations.c:576 shell/ev-window.c:7590
+#: shell/ev-sidebar-annotations.c:403
+msgid "No Comment"
+msgstr "Sense comentari"
+
+#: shell/ev-sidebar-annotations.c:564 shell/ev-window.c:7592
 msgid "Annotations"
 msgstr "Anotacions"
 
@@ -1428,26 +1432,26 @@ msgstr ""
 msgid "_Replace"
 msgstr "_Reemplaça"
 
-#: shell/ev-sidebar-attachments.c:892 shell/ev-window.c:7614
+#: shell/ev-sidebar-attachments.c:892 shell/ev-window.c:7616
 msgid "Attachments"
 msgstr "Adjuncions"
 
-#: shell/ev-sidebar-bookmarks.c:553 shell/ev-window.c:7598
+#: shell/ev-sidebar-bookmarks.c:553 shell/ev-window.c:7600
 msgid "Bookmarks"
 msgstr "Marcadors"
 
-#: shell/ev-sidebar-layers.c:439 shell/ev-window.c:7626
+#: shell/ev-sidebar-layers.c:439 shell/ev-window.c:7628
 msgid "Layers"
 msgstr "Capes"
 
 #. Translators: This is the title for the sidebar pane that
 #. * shows the Outline or Table of Contents of the document.
 #.
-#: shell/ev-sidebar-links.c:1448 shell/ev-window.c:7578
+#: shell/ev-sidebar-links.c:1450 shell/ev-window.c:7580
 msgid "Outline"
 msgstr "Taula de continguts"
 
-#: shell/ev-sidebar-thumbnails.c:1038 shell/ev-window.c:7561
+#: shell/ev-sidebar-thumbnails.c:1038 shell/ev-window.c:7563
 msgid "Thumbnails"
 msgstr "Miniatures"
 
@@ -1463,153 +1467,153 @@ msgstr "La cerca no està disponible per a aquest document"
 msgid "Supported Image Files"
 msgstr "Fitxers d'imatge admesos"
 
-#: shell/ev-window.c:1762
+#: shell/ev-window.c:1753
 msgid "The document contains no pages"
 msgstr "El document no conté cap pàgina"
 
-#: shell/ev-window.c:1765
+#: shell/ev-window.c:1756
 msgid "The document contains only empty pages"
 msgstr "El document només conté pàgines buides"
 
-#: shell/ev-window.c:2006 shell/ev-window.c:2180
+#: shell/ev-window.c:1997 shell/ev-window.c:2171
 #, c-format
 msgid "Unable to open document “%s”."
 msgstr "No es pot obrir el document «%s»."
 
-#: shell/ev-window.c:2145
+#: shell/ev-window.c:2136
 #, c-format
 msgid "Loading document from “%s”"
 msgstr "S'està carregant el document des de «%s»"
 
-#: shell/ev-window.c:2150 shell/ev-window.c:2613 shell/ev-window.c:2979
-#: shell/ev-window.c:3714 shell/ev-window.c:3962
+#: shell/ev-window.c:2141 shell/ev-window.c:2599 shell/ev-window.c:2965
+#: shell/ev-window.c:3700 shell/ev-window.c:3948
 msgid "C_ancel"
 msgstr "C_ancel·la"
 
-#: shell/ev-window.c:2302 shell/ev-window.c:2664
+#: shell/ev-window.c:2293 shell/ev-window.c:2650
 #, c-format
 msgid "Downloading document (%d%%)"
 msgstr "S'està baixant el document (%d%%)"
 
-#: shell/ev-window.c:2335
+#: shell/ev-window.c:2326
 msgid "Failed to load remote file."
 msgstr "No s'ha pogut carregar el fitxer remot."
 
-#: shell/ev-window.c:2609
+#: shell/ev-window.c:2595
 #, c-format
 msgid "Reloading document from %s"
 msgstr "S'està tornant a carregar el document des de %s"
 
-#: shell/ev-window.c:2639
+#: shell/ev-window.c:2625
 msgid "Failed to reload document."
 msgstr "No s'ha pogut tornar a carregar el document."
 
-#: shell/ev-window.c:2887
+#: shell/ev-window.c:2873
 msgid "Open Document"
 msgstr "Obre un document"
 
-#: shell/ev-window.c:2890
+#: shell/ev-window.c:2876
 msgid "_Open"
 msgstr "_Obre"
 
-#: shell/ev-window.c:2965
+#: shell/ev-window.c:2951
 #, c-format
 msgid "Saving document to %s"
 msgstr "S'està desant el document a %s"
 
-#: shell/ev-window.c:2968
+#: shell/ev-window.c:2954
 #, c-format
 msgid "Saving attachment to %s"
 msgstr "S'està desant l'adjunció a %s"
 
-#: shell/ev-window.c:2971
+#: shell/ev-window.c:2957
 #, c-format
 msgid "Saving image to %s"
 msgstr "S'està desant la imatge %s"
 
-#: shell/ev-window.c:3013 shell/ev-window.c:3127
+#: shell/ev-window.c:2999 shell/ev-window.c:3113
 #, c-format
 msgid "The file could not be saved as “%s”."
 msgstr "No s'ha pogut desar el fitxer com a «%s»."
 
-#: shell/ev-window.c:3045
+#: shell/ev-window.c:3031
 #, c-format
 msgid "Uploading document (%d%%)"
 msgstr "S'està pujant el document (%d%%)"
 
-#: shell/ev-window.c:3049
+#: shell/ev-window.c:3035
 #, c-format
 msgid "Uploading attachment (%d%%)"
 msgstr "S'està pujant l'adjunció (%d%%)"
 
-#: shell/ev-window.c:3053
+#: shell/ev-window.c:3039
 #, c-format
 msgid "Uploading image (%d%%)"
 msgstr "S'està pujant la imatge (%d%%)"
 
-#: shell/ev-window.c:3185
+#: shell/ev-window.c:3171
 msgid "Save As…"
 msgstr "Anomena i desa…"
 
-#: shell/ev-window.c:3187 shell/ev-window.c:6980 shell/ev-window.c:7206
+#: shell/ev-window.c:3173 shell/ev-window.c:6982 shell/ev-window.c:7208
 msgid "_Save"
 msgstr "_Desa"
 
-#: shell/ev-window.c:3274
+#: shell/ev-window.c:3260
 msgid "Could not send current document"
 msgstr "No s'ha pogut enviar el document actual"
 
-#: shell/ev-window.c:3601
+#: shell/ev-window.c:3587
 #, c-format
 msgid "%d pending job in queue"
 msgid_plural "%d pending jobs in queue"
 msgstr[0] "%d tasca pendent a la cua"
 msgstr[1] "%d tasques pendents a la cua"
 
-#: shell/ev-window.c:3710
+#: shell/ev-window.c:3696
 #, c-format
 msgid "Printing job “%s”"
 msgstr "S'està imprimint la tasca «%s»"
 
-#: shell/ev-window.c:3928
+#: shell/ev-window.c:3914
 msgid "Document contains form fields that have been filled out."
 msgstr "El document conté camps de formulari que s'han emplenat."
 
-#: shell/ev-window.c:3931
+#: shell/ev-window.c:3917
 msgid "Document contains new or modified annotations."
 msgstr "El document conté anotacions modificades o noves."
 
-#: shell/ev-window.c:3943
+#: shell/ev-window.c:3929
 #, c-format
 msgid "Reload document “%s”?"
 msgstr "Voleu tornar a carregar el document «%s»?"
 
-#: shell/ev-window.c:3945
+#: shell/ev-window.c:3931
 msgid "If you reload the document, changes will be permanently lost."
 msgstr "Si torneu a carregar el document, els canvis es perdran permanentment."
 
-#: shell/ev-window.c:3947
+#: shell/ev-window.c:3933
 msgid "_No"
 msgstr "_No"
 
-#: shell/ev-window.c:3956
+#: shell/ev-window.c:3942
 #, c-format
 msgid "Save a copy of document “%s” before closing?"
 msgstr "Voleu desar una còpia del document «%s» abans de tancar?"
 
-#: shell/ev-window.c:3958
+#: shell/ev-window.c:3944
 msgid "If you don’t save a copy, changes will be permanently lost."
 msgstr "Si no en deseu una còpia, els canvis es perdran permanentment."
 
-#: shell/ev-window.c:3960
+#: shell/ev-window.c:3946
 msgid "Close _without Saving"
 msgstr "Tanca _sense desar"
 
-#: shell/ev-window.c:3964
+#: shell/ev-window.c:3950
 msgid "Save a _Copy"
 msgstr "Desa'n una _còpia"
 
-#: shell/ev-window.c:4046
+#: shell/ev-window.c:4032
 #, c-format
 msgid "Wait until print job “%s” finishes before closing?"
 msgstr "Voleu esperar per a tancar fins que s'acabi la tasca d'impressió «%s»?"
@@ -1617,7 +1621,7 @@ msgstr "Voleu esperar per a tancar fins que s'acabi la tasca d'impressió «%s»
 #. TRANS: the singular form is not really used as n_print_jobs > 1
 #. but some languages distinguish between different plurals forms,
 #. so the ngettext is needed.
-#: shell/ev-window.c:4052
+#: shell/ev-window.c:4038
 #, c-format
 msgid "There is %d print job active. Wait until print finishes before closing?"
 msgid_plural ""
@@ -1629,27 +1633,27 @@ msgstr[1] ""
 "Hi ha %d tasques d'impressió actives. Voleu esperar per a tancar fins que "
 "s'acabin d'imprimir?"
 
-#: shell/ev-window.c:4067
+#: shell/ev-window.c:4053
 msgid "If you close the window, pending print jobs will not be printed."
 msgstr "Si tanqueu la finestra, no s'imprimiran les tasques pendents."
 
-#: shell/ev-window.c:4071
+#: shell/ev-window.c:4057
 msgid "Cancel _print and Close"
 msgstr "Cancel·la la im_pressió i tanca"
 
-#: shell/ev-window.c:4075
+#: shell/ev-window.c:4061
 msgid "Close _after Printing"
 msgstr "Tanca després d'im_primir"
 
-#: shell/ev-window.c:4243
+#: shell/ev-window.c:4229
 msgid "© 1996–2022 The Evince document viewer authors"
 msgstr "© 1996–2022 Els autors del visualitzador de documents Evince"
 
-#: shell/ev-window.c:4246
+#: shell/ev-window.c:4232
 msgid "Evince is a simple document viewer for GNOME"
 msgstr "L'Evince és un visualitzador de documents pel GNOME"
 
-#: shell/ev-window.c:4249
+#: shell/ev-window.c:4235
 msgid "translator-credits"
 msgstr ""
 "Gil Forcada <gilforcada@guifi.net>\n"
@@ -1657,23 +1661,23 @@ msgstr ""
 "Miquel-Àngel Burgos i Fradeja <miquel.angel.burgos@gmail.com>"
 
 # FIXME
-#: shell/ev-window.c:4727
+#: shell/ev-window.c:4713
 msgid "Running in presentation mode"
 msgstr "S'està executant en mode de presentació"
 
-#: shell/ev-window.c:5686
+#: shell/ev-window.c:5700
 msgid "The attachment could not be saved."
 msgstr "No s'ha pogut desar l'adjunció."
 
-#: shell/ev-window.c:6008
+#: shell/ev-window.c:6022
 msgid "Enable caret navigation?"
 msgstr "Voleu habilitar la navegació per cursor?"
 
-#: shell/ev-window.c:6009
+#: shell/ev-window.c:6023
 msgid "_Enable"
 msgstr "_Habilita"
 
-#: shell/ev-window.c:6012
+#: shell/ev-window.c:6026
 msgid ""
 "Pressing F7 turns the caret navigation on or off. This feature places a "
 "moveable cursor in text pages, allowing you to move around and select text "
@@ -1684,38 +1688,38 @@ msgstr ""
 "que us permet moure's pel document i seleccionar el text amb el teclat. "
 "Voleu habilitar la navegació per cursor?"
 
-#: shell/ev-window.c:6017
+#: shell/ev-window.c:6031
 msgid "Don’t show this message again"
 msgstr "No tornis a mostrar aquest missatge"
 
-#: shell/ev-window.c:6607
+#: shell/ev-window.c:6620
 #, c-format
 msgid ""
 "Security alert: this document has been prevented from opening the file “%s”"
 msgstr ""
 "Alerta de seguretat: s'ha impedit que aquest document obri el fitxer «%s»"
 
-#: shell/ev-window.c:6672
+#: shell/ev-window.c:6685
 msgid "Unable to open external link"
 msgstr "No s'ha pogut obrir l'enllaç extern"
 
-#: shell/ev-window.c:6909
+#: shell/ev-window.c:6911
 msgid "Couldn’t find appropriate format to save image"
 msgstr "No s'ha trobat cap format adequat per a desar la imatge"
 
-#: shell/ev-window.c:6941
+#: shell/ev-window.c:6943
 msgid "The image could not be saved."
 msgstr "No s'ha pogut desar la imatge."
 
-#: shell/ev-window.c:6977
+#: shell/ev-window.c:6979
 msgid "Save Image"
 msgstr "Desa la imatge"
 
-#: shell/ev-window.c:7135
+#: shell/ev-window.c:7137
 msgid "Unable to open attachment"
 msgstr "No s'ha pogut obrir l'adjunció"
 
-#: shell/ev-window.c:7203
+#: shell/ev-window.c:7205
 msgid "Save Attachment"
 msgstr "Desa l'adjunció"
 
