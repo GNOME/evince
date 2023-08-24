@@ -69,3 +69,13 @@ foreach man_page: man_pages
     install_dir: join_paths(ev_mandir, 'man1'),
   )
 endforeach
+
+# Metainfo file
+metainfo = ev_namespace + '.metainfo.xml'
+i18n.merge_file(
+  input: metainfo + '.in',
+  output: metainfo,
+  po_dir: po_dir,
+  install: true,
+  install_dir: ev_appstreamdir,
+)
