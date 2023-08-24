@@ -479,17 +479,6 @@ install_headers(
   subdir: ev_include_subdir,
 )
 
-# Metainfo file
-metainfo = ev_namespace + '.metainfo.xml'
-
-i18n.merge_file(
-  input: metainfo + '.in',
-  output: metainfo,
-  po_dir: po_dir,
-  install: true,
-  install_dir: ev_appstreamdir,
-)
-
 configure_file(
   output: 'config.h',
   configuration: config_h,
@@ -509,7 +498,7 @@ if is_stable
     find_program('check-news.sh').full_path(),
     '@0@'.format(meson.project_version()),
     'NEWS',
-    'org.gnome.Evince.metainfo.xml.in'
+    join_paths('data', 'org.gnome.Evince.metainfo.xml.in')
   )
 else
   meson.add_dist_script(
