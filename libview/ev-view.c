@@ -648,6 +648,17 @@ ev_view_scroll_to_page_position (EvView *view, GtkOrientation orientation)
 }
 
 static void
+ev_view_set_loading (EvView       *view,
+		     gboolean      loading)
+{
+	if (view->loading == loading)
+		return;
+
+	view->loading = loading;
+	g_object_notify (G_OBJECT (view), "is-loading");
+}
+
+static void
 ev_view_set_adjustment_values (EvView         *view,
 			       GtkOrientation  orientation)
 {
@@ -8878,24 +8889,6 @@ ev_view_set_page_cache_size (EvView *view,
 		ev_pixbuf_cache_set_max_size (view->pixbuf_cache, cache_size);
 
 	view_update_scale_limits (view);
-}
-
-/**
- * ev_view_set_loading:
- * @view:
- * @loading:
- *
- * Deprecated: 3.8
- */
-void
-ev_view_set_loading (EvView 	  *view,
-		     gboolean      loading)
-{
-	if (view->loading == loading)
-		return;
-
-	view->loading = loading;
-	g_object_notify (G_OBJECT (view), "is-loading");
 }
 
 /**

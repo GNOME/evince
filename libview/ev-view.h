@@ -50,10 +50,6 @@ GtkWidget*	ev_view_new		    (void);
 EV_PUBLIC
 void		ev_view_set_model	    (EvView          *view,
 					     EvDocumentModel *model);
-EV_DEPRECATED
-EV_PUBLIC
-void 		ev_view_set_loading         (EvView 	     *view,
-					     gboolean         loading);
 EV_PUBLIC
 gboolean        ev_view_is_loading          (EvView          *view);
 EV_PUBLIC
