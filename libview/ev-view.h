@@ -111,11 +111,6 @@ void            ev_view_find_search_changed       (EvView         *view);
 EV_PUBLIC
 void     	ev_view_find_set_highlight_search (EvView         *view,
 						   gboolean        value);
-EV_DEPRECATED_FOR(ev_view_find_started)
-EV_PUBLIC
-void            ev_view_find_changed              (EvView         *view,
-						   GList         **results,
-						   gint            page);
 EV_PUBLIC
 void            ev_view_find_cancel               (EvView         *view);
 
