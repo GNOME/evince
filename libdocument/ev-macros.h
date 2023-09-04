@@ -18,7 +18,7 @@
 
 #pragma once
 
-#if defined(EV_DISABLE_DEPRECATION_WARNINGS) || defined(EVINCE_COMPILATION)
+#if defined(EV_DISABLE_DEPRECATION_WARNINGS)
 #define EV_DEPRECATED
 #define EV_DEPRECATED_FOR(f)
 #define EV_UNAVAILABLE(maj,min)
