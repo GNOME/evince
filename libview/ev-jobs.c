@@ -866,7 +866,8 @@ ev_job_thumbnail_run (EvJob *job)
         /* EV_JOB_THUMBNAIL_SURFACE is not compatible with has_frame = TRUE */
         if (job_thumb->format == EV_JOB_THUMBNAIL_PIXBUF && pixbuf) {
                 job_thumb->thumbnail = job_thumb->has_frame ?
-                        ev_document_misc_get_thumbnail_frame (-1, -1, pixbuf) : g_object_ref (pixbuf);
+			ev_document_misc_render_thumbnail_with_frame (job_thumb->widget, pixbuf) :
+			g_object_ref (pixbuf);
                 g_object_unref (pixbuf);
         }
 
@@ -895,7 +896,8 @@ ev_job_thumbnail_class_init (EvJobThumbnailClass *class)
 }
 
 EvJob *
-ev_job_thumbnail_new (EvDocument *document,
+ev_job_thumbnail_new (GtkWidget  *widget,
+		      EvDocument *document,
 		      gint        page,
 		      gint        rotation,
 		      gdouble     scale)
@@ -907,6 +909,7 @@ ev_job_thumbnail_new (EvDocument *document,
 	job = g_object_new (EV_TYPE_JOB_THUMBNAIL, NULL);
 
 	EV_JOB (job)->document = g_object_ref (document);
+	job->widget = widget;
 	job->page = page;
 	job->rotation = rotation;
 	job->scale = scale;
@@ -919,13 +922,14 @@ ev_job_thumbnail_new (EvDocument *document,
 }
 
 EvJob *
-ev_job_thumbnail_new_with_target_size (EvDocument *document,
+ev_job_thumbnail_new_with_target_size (GtkWidget  *widget,
+				       EvDocument *document,
                                        gint        page,
                                        gint        rotation,
                                        gint        target_width,
                                        gint        target_height)
 {
-        EvJob *job = ev_job_thumbnail_new (document, page, rotation, 1.);
+        EvJob *job = ev_job_thumbnail_new (widget, document, page, rotation, 1.);
         EvJobThumbnail  *job_thumb = EV_JOB_THUMBNAIL (job);
 
         job_thumb->target_width = target_width;
