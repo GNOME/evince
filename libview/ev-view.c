@@ -2297,7 +2297,8 @@ handle_cursor_over_link (EvView *view, EvLink *link, gint x, gint y)
 #ifdef HAVE_HIDPI_SUPPORT
 	device_scale = gtk_widget_get_scale_factor (GTK_WIDGET (view));
 #endif
-	view->link_preview.job = ev_job_thumbnail_new (view->document,
+	view->link_preview.job = ev_job_thumbnail_new (GTK_WIDGET (view),
+						       view->document,
 						       link_dest_page,
 						       view->rotation,
 						       view->scale * device_scale);

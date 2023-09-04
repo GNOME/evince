@@ -508,7 +508,8 @@ add_range (EvSidebarThumbnails *sidebar_thumbnails,
 			gint thumbnail_width, thumbnail_height;
 			get_size_for_page (sidebar_thumbnails, page, &thumbnail_width, &thumbnail_height);
 
-			job = ev_job_thumbnail_new_with_target_size (priv->document,
+			job = ev_job_thumbnail_new_with_target_size (GTK_WIDGET (sidebar_thumbnails),
+								     priv->document,
 								     page, priv->rotation,
 								     thumbnail_width, thumbnail_height);
                         ev_job_thumbnail_set_has_frame (EV_JOB_THUMBNAIL (job), FALSE);
