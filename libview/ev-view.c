@@ -9731,7 +9731,17 @@ jump_to_find_page (EvView *view, EvViewFindDirection direction, gint shift)
 static void
 find_job_updated_cb (EvJobFind *job, gint page, EvView *view)
 {
-	ev_view_find_changed (view, ev_job_find_get_results (job), page);
+	view->find_pages = ev_job_find_get_results (job);
+	if (view->find_page == -1)
+		view->find_page = view->current_page;
+
+	if (view->jump_to_find_result == TRUE) {
+		jump_to_find_page (view, EV_VIEW_FIND_NEXT, 0);
+		jump_to_find_result (view);
+	}
+
+	if (view->find_page == page)
+		gtk_widget_queue_draw (GTK_WIDGET (view));
 }
 
 /**
@@ -9753,32 +9763,6 @@ ev_view_find_started (EvView *view, EvJobFind *job)
 	view->find_result = 0;
 
 	g_signal_connect (job, "updated", G_CALLBACK (find_job_updated_cb), view);
-}
-
-/**
- * ev_view_find_changed: (skip)
- * @view: an #EvView
- * @results: the results as returned by ev_job_find_get_results()
- * @page: page index
- *
- * Deprecated: 3.6: Use ev_view_find_started() instead
- */
-void
-ev_view_find_changed (EvView *view, GList **results, gint page)
-{
-	g_return_if_fail (view->current_page >= 0);
-
-	view->find_pages = results;
-	if (view->find_page == -1)
-		view->find_page = view->current_page;
-
-	if (view->jump_to_find_result == TRUE) {
-		jump_to_find_page (view, EV_VIEW_FIND_NEXT, 0);
-		jump_to_find_result (view);
-	}
-
-	if (view->find_page == page)
-		gtk_widget_queue_draw (GTK_WIDGET (view));
 }
 
 /**
