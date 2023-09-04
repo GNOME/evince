@@ -123,9 +123,6 @@ typedef struct {
 #define LINK_PREVIEW_VERTICAL_LINK_POS 0.3    /* as fraction of preview height */
 #define LINK_PREVIEW_DELAY_MS 300             /* Delay before showing preview in milliseconds */
 
-/*** Scrolling ***/
-static void       view_update_range_and_current_page         (EvView             *view);
-
 /*** Geometry computations ***/
 static void       compute_border                             (EvView             *view,
 							      GtkBorder          *border);
