@@ -362,9 +362,9 @@ ev_annotation_window_constructor (GType                  type,
 
 	/* Rectangle is at doc resolution (72.0) */
 	scale = ev_document_misc_get_widget_dpi (GTK_WIDGET (window)) / 72.0;
-	gtk_window_resize (GTK_WINDOW (window),
-			   (gint)((rect->x2 - rect->x1) * scale),
-			   (gint)((rect->y2 - rect->y1) * scale));
+	gtk_window_set_default_size (GTK_WINDOW (window),
+				     (gint)((rect->x2 - rect->x1) * scale),
+				     (gint)((rect->y2 - rect->y1) * scale));
 
 	ev_annotation_get_rgba (annot, &color);
 	ev_annotation_window_set_color (window, &color);

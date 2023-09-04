@@ -1468,9 +1468,9 @@ setup_document_from_metadata (EvWindow *window)
 		}
 
 		if (request_width > 0 && request_height > 0) {
-			gtk_window_resize (GTK_WINDOW (window),
-					   request_width,
-					   request_height);
+			gtk_window_set_default_size (GTK_WINDOW (window),
+						     request_width,
+						     request_height);
 		}
 	}
 }
@@ -1495,7 +1495,7 @@ setup_size_from_metadata (EvWindow *window)
 
         if (ev_metadata_get_int (priv->metadata, "window_width", &width) &&
 	    ev_metadata_get_int (priv->metadata, "window_height", &height)) {
-		gtk_window_resize (GTK_WINDOW (window), width, height);
+		gtk_window_set_default_size (GTK_WINDOW (window), width, height);
 	}
 
 	if (ev_metadata_get_boolean (priv->metadata, "window_maximized", &maximized)) {
