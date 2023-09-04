@@ -122,11 +122,6 @@ EV_PUBLIC
 void           ev_view_show_cursor        (EvView         *view);
 
 /* Navigation */
-EV_DEPRECATED_FOR(g_signal_emit_by_name)
-EV_PUBLIC
-void	       ev_view_scroll             (EvView         *view,
-	                                   GtkScrollType   scroll,
-					   gboolean        horizontal);
 EV_PUBLIC
 void	       ev_view_handle_link        (EvView         *view,
 					   EvLink         *link);

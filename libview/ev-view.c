@@ -1025,18 +1025,10 @@ ev_view_last_page (EvView *view)
 	ev_document_model_set_page (view->model, n_pages - 1);
 }
 
-/**
- * ev_view_scroll:
- * @view: a #EvView
- * @scroll:
- * @horizontal:
- *
- * Deprecated: 3.10
- */
-void
-ev_view_scroll (EvView        *view,
-	        GtkScrollType  scroll,
-		gboolean       horizontal)
+static void
+ev_view_scroll (EvView         *view,
+		GtkScrollType   scroll,
+		GtkOrientation  orientation)
 {
 	GtkAdjustment *adjustment;
 	double value, increment;
@@ -1045,6 +1037,7 @@ ev_view_scroll (EvView        *view,
 	gdouble step_increment;
 	gboolean first_page = FALSE;
 	gboolean last_page = FALSE;
+	gboolean horizontal = orientation == GTK_ORIENTATION_HORIZONTAL;
 
 	if (view->key_binding_handled)
 		return;
@@ -1148,14 +1141,6 @@ ev_view_scroll (EvView        *view,
 	value = CLAMP (value, lower, upper - page_size);
 
 	gtk_adjustment_set_value (adjustment, value);
-}
-
-static void
-ev_view_scroll_internal (EvView        *view,
-			 GtkScrollType  scroll,
-			 GtkOrientation orientation)
-{
-	ev_view_scroll (view, scroll, orientation == GTK_ORIENTATION_HORIZONTAL);
 }
 
 #define MARGIN 5
@@ -8318,7 +8303,7 @@ ev_view_class_init (EvViewClass *class)
 	container_class->remove = ev_view_remove;
 	container_class->forall = ev_view_forall;
 
-	class->scroll = ev_view_scroll_internal;
+	class->scroll = ev_view_scroll;
 	class->move_cursor = ev_view_move_cursor;
 	class->activate = ev_view_activate;
 
