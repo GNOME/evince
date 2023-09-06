@@ -1915,8 +1915,8 @@ ev_job_find_run (EvJob *job)
 #endif
 
 	ev_page = ev_document_get_page (job->document, job_find->current_page);
-	matches = ev_document_find_find_text_extended (find, ev_page, job_find->text,
-                                                       job_find->options);
+	matches = ev_document_find_find_text (find, ev_page, job_find->text,
+					      job_find->options);
 	g_object_unref (ev_page);
 
 	ev_document_doc_mutex_unlock ();
