@@ -1508,60 +1508,10 @@ pdf_document_document_images_iface_init (EvDocumentImagesInterface *iface)
 }
 
 static GList *
-pdf_document_find_find_text_with_options (EvDocumentFind *document_find,
-                                          EvPage         *page,
-                                          const gchar    *text,
-                                          EvFindOptions   options)
-{
-        GList *matches, *l;
-        PopplerPage *poppler_page;
-        gdouble height;
-        GList *retval = NULL;
-        guint find_flags = 0;
-
-        g_return_val_if_fail (POPPLER_IS_PAGE (page->backend_page), NULL);
-        g_return_val_if_fail (text != NULL, NULL);
-
-        poppler_page = POPPLER_PAGE (page->backend_page);
-
-        if (options & EV_FIND_CASE_SENSITIVE)
-                find_flags |= POPPLER_FIND_CASE_SENSITIVE;
-        else    /* When search is not case sensitive, do also ignore diacritics
-                to broaden our search in order to match on more expected results */
-                find_flags |= POPPLER_FIND_IGNORE_DIACRITICS;
-
-        if (options & EV_FIND_WHOLE_WORDS_ONLY)
-                find_flags |= POPPLER_FIND_WHOLE_WORDS_ONLY;
-        matches = poppler_page_find_text_with_options (poppler_page, text, (PopplerFindFlags)find_flags);
-        if (!matches)
-                return NULL;
-
-        poppler_page_get_size (poppler_page, NULL, &height);
-        for (l = matches; l && l->data; l = g_list_next (l)) {
-                PopplerRectangle *rect = (PopplerRectangle *)l->data;
-                EvRectangle      *ev_rect;
-
-                ev_rect = ev_rectangle_new ();
-                ev_rect->x1 = rect->x1;
-                ev_rect->x2 = rect->x2;
-                /* Invert this for X-style coordinates */
-                ev_rect->y1 = height - rect->y2;
-                ev_rect->y2 = height - rect->y1;
-
-                retval = g_list_prepend (retval, ev_rect);
-        }
-
-        g_list_foreach (matches, (GFunc)poppler_rectangle_free, NULL);
-        g_list_free (matches);
-
-        return g_list_reverse (retval);
-}
-
-static GList *
-pdf_document_find_find_text_extended (EvDocumentFind *document_find,
-				      EvPage         *page,
-				      const gchar    *text,
-				      EvFindOptions   options)
+pdf_document_find_find_text (EvDocumentFind *document_find,
+			     EvPage         *page,
+			     const gchar    *text,
+			     EvFindOptions   options)
 {
 	GList *matches, *l;
 	PopplerPage *poppler_page;
@@ -1609,20 +1559,6 @@ pdf_document_find_find_text_extended (EvDocumentFind *document_find,
 	return g_list_reverse (retval);
 }
 
-static GList *
-pdf_document_find_find_text (EvDocumentFind *document_find,
-			     EvPage         *page,
-			     const gchar    *text,
-			     gboolean        case_sensitive)
-{
-	guint options = 0;
-
-	if (case_sensitive)
-		options |= EV_FIND_CASE_SENSITIVE;
-
-	return pdf_document_find_find_text_with_options (document_find, page, text, (EvFindOptions)options);
-}
-
 static EvFindOptions
 pdf_document_find_get_supported_options (EvDocumentFind *document_find)
 {
@@ -1633,8 +1569,6 @@ static void
 pdf_document_find_iface_init (EvDocumentFindInterface *iface)
 {
         iface->find_text = pdf_document_find_find_text;
-	iface->find_text_with_options = pdf_document_find_find_text_with_options;
-	iface->find_text_extended = pdf_document_find_find_text_extended;
 	iface->get_supported_options = pdf_document_find_get_supported_options;
 }
 

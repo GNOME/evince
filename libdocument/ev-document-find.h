@@ -75,16 +75,8 @@ struct _EvDocumentFindInterface
 	GTypeInterface base_iface;
 
         /* Methods */
-	GList 	     *(* find_text)              (EvDocumentFind *document_find,
-						  EvPage         *page,
-						  const gchar    *text,
-						  gboolean        case_sensitive);
-	GList        *(* find_text_with_options) (EvDocumentFind *document_find,
-						  EvPage         *page,
-						  const gchar    *text,
-						  EvFindOptions   options);
 	EvFindOptions (*get_supported_options)   (EvDocumentFind *document_find);
-	GList        *(* find_text_extended)     (EvDocumentFind *document_find,
+	GList        *(* find_text)              (EvDocumentFind *document_find,
 						  EvPage         *page,
 						  const gchar    *text,
 						  EvFindOptions   options);
@@ -93,14 +85,9 @@ struct _EvDocumentFindInterface
 EV_PUBLIC
 GType         ev_document_find_get_type               (void) G_GNUC_CONST;
 EV_PUBLIC
-GList        *ev_document_find_find_text_with_options (EvDocumentFind *document_find,
-						       EvPage         *page,
-						       const gchar    *text,
-						       EvFindOptions   options);
-EV_PUBLIC
 EvFindOptions ev_document_find_get_supported_options  (EvDocumentFind *document_find);
 EV_PUBLIC
-GList        *ev_document_find_find_text_extended     (EvDocumentFind *document_find,
+GList        *ev_document_find_find_text              (EvDocumentFind *document_find,
 						       EvPage         *page,
 						       const gchar    *text,
 						       EvFindOptions   options);
