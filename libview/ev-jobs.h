@@ -463,7 +463,6 @@ struct _EvJobFind
 	gint n_pages;
 	GList **pages;
 	gchar *text;
-	gboolean case_sensitive;
 	gboolean has_results;
         EvFindOptions options;
 };
@@ -707,10 +706,7 @@ EvJob          *ev_job_find_new           (EvDocument      *document,
 					   gint             start_page,
 					   gint             n_pages,
 					   const gchar     *text,
-					   gboolean         case_sensitive);
-EV_PUBLIC
-void            ev_job_find_set_options   (EvJobFind       *job,
-                                           EvFindOptions    options);
+					   EvFindOptions    options);
 EV_PUBLIC
 EvFindOptions   ev_job_find_get_options   (EvJobFind       *job);
 EV_PUBLIC

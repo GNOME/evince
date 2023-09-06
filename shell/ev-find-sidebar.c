@@ -523,7 +523,7 @@ process_matches_idle (EvFindSidebar *sidebar)
                                 offset = new_offset;
                                 markup = get_surrounding_text_markup (page_text,
                                                                       priv->job->text,
-                                                                      priv->job->case_sensitive,
+								      priv->job->options & EV_FIND_CASE_SENSITIVE,
                                                                       text_log_attrs,
                                                                       text_log_attrs_length,
                                                                       offset,

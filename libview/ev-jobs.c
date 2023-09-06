@@ -1958,11 +1958,11 @@ ev_job_find_class_init (EvJobFindClass *class)
 }
 
 EvJob *
-ev_job_find_new (EvDocument  *document,
-		 gint         start_page,
-		 gint         n_pages,
-		 const gchar *text,
-		 gboolean     case_sensitive)
+ev_job_find_new (EvDocument    *document,
+		 gint           start_page,
+		 gint           n_pages,
+		 const gchar   *text,
+		 EvFindOptions  options)
 {
 	EvJobFind *job;
 
@@ -1976,29 +1976,10 @@ ev_job_find_new (EvDocument  *document,
 	job->n_pages = n_pages;
 	job->pages = g_new0 (GList *, n_pages);
 	job->text = g_strdup (text);
-        /* Keep for compatibility */
-	job->case_sensitive = case_sensitive;
 	job->has_results = FALSE;
-        if (case_sensitive)
-                job->options |= EV_FIND_CASE_SENSITIVE;
+	job->options = options;
 
 	return EV_JOB (job);
-}
-
-/**
- * ev_job_find_set_options:
- * @job:
- * @options:
- *
- * Since: 3.6
- */
-void
-ev_job_find_set_options (EvJobFind     *job,
-                         EvFindOptions  options)
-{
-        job->options = options;
-        /* Keep compatibility */
-        job->case_sensitive = options & EV_FIND_CASE_SENSITIVE;
 }
 
 /**
