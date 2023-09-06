@@ -428,7 +428,6 @@ struct _EvJobThumbnailTextureClass
 struct _EvJobFonts
 {
 	EvJob parent;
-	gboolean scan_completed;
 };
 
 struct _EvJobFontsClass

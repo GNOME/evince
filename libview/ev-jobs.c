@@ -1280,6 +1280,7 @@ ev_job_fonts_run (EvJob *job)
 	EvJobFonts      *job_fonts = EV_JOB_FONTS (job);
 	EvDocumentFonts *fonts = EV_DOCUMENT_FONTS (job->document);
 	int64_t          sysprof_begin;
+	gboolean         scan_completed;
 
 	ev_debug_message (DEBUG_JOBS, NULL);
 
@@ -1299,14 +1300,14 @@ ev_job_fonts_run (EvJob *job)
 		sysprof_begin = SYSPROF_CAPTURE_CURRENT_TIME;
 #endif
 
-	job_fonts->scan_completed = !ev_document_fonts_scan (fonts, 20);
+	scan_completed = !ev_document_fonts_scan (fonts, 20);
 	g_signal_emit (job_fonts, job_fonts_signals[FONTS_UPDATED], 0,
 		       ev_document_fonts_get_progress (fonts));
 
 	ev_document_fc_mutex_unlock ();
 	ev_document_doc_mutex_unlock ();
 
-	if (job_fonts->scan_completed) {
+	if (scan_completed)
 		ev_job_succeeded (job);
 #ifdef EV_ENABLE_DEBUG
 		/* Because we skipped EV_PROFILER_START () to escape the
@@ -1318,7 +1319,7 @@ ev_job_fonts_run (EvJob *job)
 #endif
 	}
 
-	return !job_fonts->scan_completed;
+	return !scan_completed;
 }
 
 static void
