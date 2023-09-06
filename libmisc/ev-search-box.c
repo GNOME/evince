@@ -194,8 +194,7 @@ search_changed_cb (GtkSearchEntry *entry,
                                              ev_document_model_get_page (priv->model),
                                              ev_document_get_n_pages (doc),
                                              search_string,
-                                             FALSE);
-                ev_job_find_set_options (EV_JOB_FIND (priv->job), priv->options);
+					     priv->options);
                 g_signal_connect (priv->job, "finished",
                                   G_CALLBACK (find_job_finished_cb),
                                   box);
