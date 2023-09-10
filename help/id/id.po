@@ -1,13 +1,13 @@
 # Indonesian translation for evince.
 # Copyright (C) 2012 evince's COPYRIGHT HOLDER
 # This file is distributed under the same license as the evince package.
-# Andika Triwidada <andika@gmail.com>, 2012, 2013, 2014.
+# Andika Triwidada <andika@gmail.com>, 2012-2014, 2016, 2017, 2020, 2021, 2023.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: evince-help master\n"
-"POT-Creation-Date: 2021-08-25 13:26+0000\n"
-"PO-Revision-Date: 2021-08-30 08:00+0700\n"
+"Project-Id-Version: evince-help main\n"
+"POT-Creation-Date: 2023-08-20 18:21+0000\n"
+"PO-Revision-Date: 2023-09-10 19:58+0700\n"
 "Last-Translator: Andika Triwidada <andika@gmail.com>\n"
 "Language-Team: Indonesian <gnome@i15n.org>\n"
 "Language: id\n"
@@ -15,13 +15,13 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 2.4.2\n"
+"X-Generator: Poedit 3.3.2\n"
 
 #. Put one translator per line, in the form NAME <EMAIL>, YEAR1, YEAR2
 msgctxt "_"
 msgid "translator-credits"
 msgstr ""
-"Andika Triwidada <andika@gmail.com>, 2012-2014, 2016, 2017, 2020, 2021."
+"Andika Triwidada <andika@gmail.com>, 2012-2014, 2016, 2017, 2020, 2021, 2023."
 
 #. (itstool) path: info/desc
 #: C/synctex-beamer.page:7
@@ -778,13 +778,13 @@ msgstr ""
 msgid ""
 "To contribute to the Documentation Project, feel free to get in touch with "
 "us using <link href=\"https://cbe003.chat.mibbit.com/?url=irc%3A%2F%2Firc."
-"gnome.org%2Fdocs\">irc</link>, or via our <link href=\"http://mail.gnome.org/"
-"mailman/listinfo/gnome-doc-list\">mailing list</link>."
+"gnome.org%2Fdocs\">irc</link>, or via <link href=\"https://discourse.gnome."
+"org/tag/documentation\">GNOME Discourse</link>."
 msgstr ""
 "Untuk berkontribusi ke Projek Dokumentasi, silakan kontak kami memakai <link "
 "href=\"https://cbe003.chat.mibbit.com/?url=irc%3A%2F%2Firc.gnome.org%2Fdocs"
-"\">irc</link>, atau melalui <link href=\"http://mail.gnome.org/mailman/"
-"listinfo/gnome-doc-list\">milis</link> kami."
+"\">irc</link>, atau melalui <link href=\"https://discourse.gnome.org/tag/"
+"documentation\">GNOME Discourse</link>."
 
 #. (itstool) path: page/p
 #: C/documentation.page:25
@@ -1358,14 +1358,19 @@ msgstr "Dalam <app>gedit</app>, fungsikan Plugin SyncTeX:"
 #. (itstool) path: item/p
 #: C/synctex-support.page:47
 msgid ""
-"Click <guiseq><gui>Edit</gui><gui>Preferences</gui><gui>Plugins</gui></"
-"guiseq> tab."
+"Press the menu button in the top-right corner of the window and select <gui "
+"style=\"menuitem\">Preferences</gui>."
 msgstr ""
-"Klik tab <guiseq><gui>Sunting</gui><gui>Preferensi</gui><gui>Plugin</gui></"
-"guiseq>."
+"Tekan tombol menu di pojok kanan atas jendela dan pilih <gui style=\"menuitem"
+"\">Preferensi</gui>."
 
 #. (itstool) path: item/p
-#: C/synctex-support.page:52
+#: C/synctex-support.page:50
+msgid "Select the <gui>Plugins</gui> tab."
+msgstr "Pilih tab <gui>Pengaya</gui>."
+
+#. (itstool) path: item/p
+#: C/synctex-support.page:55
 msgid "Check <gui>SyncTeX</gui>."
 msgstr "Contreng <gui>SyncTeX</gui>."
 
@@ -1543,13 +1548,11 @@ msgstr ""
 #. (itstool) path: page/p
 #: C/translate.page:37
 msgid ""
-"Alternatively, you can contact the Internationalization Team using their "
-"<link href=\"http://mail.gnome.org/mailman/listinfo/gnome-i18n\">mailing "
-"list</link>."
+"Alternatively, you can contact the Internationalization Team using <link "
+"href=\"https://discourse.gnome.org/tag/i18n\">GNOME Discourse</link>."
 msgstr ""
-"Sebagai alternatif, Anda dapat mengubungi Tim Internasionalisasi memakai "
-"<link href=\"http://mail.gnome.org/mailman/listinfo/gnome-i18n\">milis</"
-"link> mereka."
+"Sebagai alternatif, Anda dapat menghubungi Tim Internasionalisasi memakai "
+"<link href=\"https://discourse.gnome.org/tag/i18n\">GNOME Discourse</link>."
 
 #. (itstool) path: info/desc
 #: C/default-settings.page:7
@@ -1822,9 +1825,9 @@ msgid "The <app>document viewer</app> supports the following formats:"
 msgstr "<app>Penampil dokumen</app> mendukung format-format berikut:"
 
 #. (itstool) path: item/p
-#: C/formats.page:33 C/presentations.page:77
-msgid "Comic Book Archive (.cbr and .cbz)"
-msgstr "Comic Book Archive (.cbr and .cbz)"
+#: C/formats.page:33
+msgid "Comic Book Archive (.cb7, .cbr, .cbt, and .cbz)"
+msgstr "Comic Book Archive (.cb7, .cbr, .cbt, dan .cbz)"
 
 #. (itstool) path: item/p
 #: C/formats.page:34 C/printing.page:49 C/presentations.page:78
@@ -2057,14 +2060,14 @@ msgid ""
 "If you would like to <link href=\"https://wiki.gnome.org/Apps/Evince\">help "
 "develop</link> the <app>Document Viewer</app>, you can get in touch with the "
 "developers using <link href=\"https://cbe005.chat.mibbit.com/?url=irc%3A%2F"
-"%2Firc.gnome.org%2Fevince\">irc</link>, or via our <link href=\"https://mail."
-"gnome.org/mailman/listinfo/evince-list\">mailing list</link>."
+"%2Firc.gnome.org%2Fevince\">irc</link>, or via <link href=\"https://"
+"discourse.gnome.org/tag/evince\">GNOME Discourse</link>."
 msgstr ""
 "Bila Anda ingin <link href=\"https://wiki.gnome.org/Apps/Evince\">membantu "
 "mengembangkan</link> <app>Penampil Dokumen</app>, Anda dapat menghubungi "
 "para pengembang memakai <link href=\"https://cbe005.chat.mibbit.com/?url=irc"
 "%3A%2F%2Firc.gnome.org%2Fevince\">irc</link>, atau melalui <link href="
-"\"https://mail.gnome.org/mailman/listinfo/evince-list\">milis</link> kami."
+"\"https://discourse.gnome.org/tag/evince\">GNOME Discourse</link>."
 
 #. (itstool) path: info/desc
 #: C/printing.page:9
@@ -3303,6 +3306,11 @@ msgstr "Format berkas presentasi yang didukung"
 #: C/presentations.page:73
 msgid "The following file formats can be used for presentations:"
 msgstr "Format berkas berikut dapat dipakai untuk presentasi:"
+
+#. (itstool) path: item/p
+#: C/presentations.page:77
+msgid "Comic Book Archive (.cbr and .cbz)"
+msgstr "Comic Book Archive (.cbr and .cbz)"
 
 #. (itstool) path: item/p
 #: C/presentations.page:80
