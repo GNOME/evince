@@ -109,10 +109,8 @@ typedef enum {
 } EvWindowPageMode;
 
 typedef enum {
-        EV_CHROME_TOOLBAR            = 1 << 0,
         EV_CHROME_RAISE_TOOLBAR      = 1 << 2,
         EV_CHROME_SIDEBAR            = 1 << 4,
-        EV_CHROME_NORMAL             = EV_CHROME_TOOLBAR | EV_CHROME_SIDEBAR
 } EvChrome;
 
 typedef enum {
@@ -644,8 +642,7 @@ update_chrome_visibility (EvWindow *window)
 
 	presentation = EV_WINDOW_IS_PRESENTATION (priv);
 
-	toolbar = ((priv->chrome & EV_CHROME_TOOLBAR) != 0  ||
-		   (priv->chrome & EV_CHROME_RAISE_TOOLBAR) != 0) && !presentation;
+	toolbar = !presentation;
 	sidebar = (priv->chrome & EV_CHROME_SIDEBAR) != 0 && priv->document && !presentation;
 
 	gtk_widget_set_visible (priv->toolbar, toolbar);
@@ -7412,7 +7409,7 @@ ev_window_init (EvWindow *ev_window)
 	priv->model = ev_document_model_new ();
 
 	priv->page_mode = PAGE_MODE_DOCUMENT;
-	priv->chrome = EV_CHROME_NORMAL;
+	priv->chrome = EV_CHROME_SIDEBAR;
         priv->presentation_mode_inhibit_id = 0;
 
 	priv->history = ev_history_new (priv->model);
