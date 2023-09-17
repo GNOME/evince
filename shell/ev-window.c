@@ -1244,15 +1244,12 @@ ev_window_init_metadata_with_default_values (EvWindow *window)
 static void
 setup_chrome_from_metadata (EvWindow *window)
 {
-	gboolean show_toolbar;
 	gboolean show_sidebar;
 	EvWindowPrivate *priv = GET_PRIVATE (window);
 
 	if (!priv->metadata)
 		return;
 
-	if (ev_metadata_get_boolean (priv->metadata, "show_toolbar", &show_toolbar))
-		update_chrome_flag (window, EV_CHROME_TOOLBAR, show_toolbar);
 	if (ev_metadata_get_boolean (priv->metadata, "sidebar_visibility", &show_sidebar))
 		update_chrome_flag (window, EV_CHROME_SIDEBAR, show_sidebar);
 	update_chrome_visibility (window);
