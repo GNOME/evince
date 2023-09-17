@@ -109,10 +109,6 @@ typedef enum {
 } EvWindowPageMode;
 
 typedef enum {
-        EV_CHROME_SIDEBAR            = 1 << 4,
-} EvChrome;
-
-typedef enum {
 	EV_SAVE_DOCUMENT,
 	EV_SAVE_ATTACHMENT,
 	EV_SAVE_IMAGE
@@ -125,8 +121,6 @@ typedef enum {
 
 typedef struct {
 	/* UI */
-	EvChrome chrome;
-
 	GtkWidget *main_box;
 	GtkWidget *toolbar;
 	GtkWidget *hpaned;
@@ -630,34 +624,6 @@ ev_window_update_actions_sensitivity (EvWindow *ev_window)
 				      ev_view_supports_caret_navigation (view) &&
 				      !presentation_mode &&
 				      !recent_view_mode);
-}
-
-static void
-update_chrome_visibility (EvWindow *window)
-{
-	EvWindowPrivate *priv = GET_PRIVATE (window);
-	gboolean toolbar, sidebar;
-	gboolean presentation;
-
-	presentation = EV_WINDOW_IS_PRESENTATION (priv);
-
-	toolbar = !presentation;
-	sidebar = (priv->chrome & EV_CHROME_SIDEBAR) != 0 && priv->document && !presentation;
-
-	gtk_widget_set_visible (priv->toolbar, toolbar);
-	gtk_widget_set_visible (priv->sidebar, sidebar);
-}
-
-static void
-update_chrome_flag (EvWindow *window, EvChrome flag, gboolean active)
-{
-	EvWindowPrivate *priv = GET_PRIVATE (window);
-
-	if (active) {
-		priv->chrome |= flag;
-	} else {
-		priv->chrome &= ~flag;
-	}
 }
 
 static void
@@ -1180,13 +1146,11 @@ ev_window_init_metadata_with_default_values (EvWindow *window)
 	GSettings  *settings = priv->default_settings;
 	EvMetadata *metadata = priv->metadata;
 
-	/* Chrome */
+	/* Sidebar */
 	if (!ev_metadata_has_key (metadata, "sidebar_visibility")) {
 		ev_metadata_set_boolean (metadata, "sidebar_visibility",
 					 g_settings_get_boolean (settings, "show-sidebar"));
 	}
-
-	/* Sidebar */
 	if (!ev_metadata_has_key (metadata, "sidebar_size")) {
 		ev_metadata_set_int (metadata, "sidebar_size",
 				     g_settings_get_int (settings, "sidebar-size"));
@@ -1238,28 +1202,18 @@ ev_window_init_metadata_with_default_values (EvWindow *window)
 }
 
 static void
-setup_chrome_from_metadata (EvWindow *window)
-{
-	gboolean show_sidebar;
-	EvWindowPrivate *priv = GET_PRIVATE (window);
-
-	if (!priv->metadata)
-		return;
-
-	if (ev_metadata_get_boolean (priv->metadata, "sidebar_visibility", &show_sidebar))
-		update_chrome_flag (window, EV_CHROME_SIDEBAR, show_sidebar);
-	update_chrome_visibility (window);
-}
-
-static void
 setup_sidebar_from_metadata (EvWindow *window)
 {
+	gboolean show_sidebar;
 	gchar *page_id;
 	gint   sidebar_size;
 	EvWindowPrivate *priv = GET_PRIVATE (window);
 
 	if (!priv->metadata)
 		return;
+
+	if (ev_metadata_get_boolean (priv->metadata, "sidebar_visibility", &show_sidebar))
+		gtk_widget_set_visible (priv->sidebar, show_sidebar);
 
 	if (ev_metadata_get_int (priv->metadata, "sidebar_size", &sidebar_size))
 		gtk_paned_set_position (GTK_PANED (priv->hpaned), sidebar_size);
@@ -1554,14 +1508,10 @@ ev_window_setup_default (EvWindow *ev_window)
 	EvDocumentModel *model = priv->model;
 	GSettings       *settings = priv->default_settings;
 
-	/* Chrome */
-	update_chrome_flag (ev_window, EV_CHROME_SIDEBAR,
-			    g_settings_get_boolean (settings, "show-sidebar"));
-	update_chrome_visibility (ev_window);
-
 	/* Sidebar */
 	gtk_paned_set_position (GTK_PANED (priv->hpaned),
 				g_settings_get_int (settings, "sidebar-size"));
+	gtk_widget_set_visible (priv->sidebar, g_settings_get_boolean (settings, "show-sidebar"));
 
 	/* Document model */
 	ev_document_model_set_continuous (model, g_settings_get_boolean (settings, "continuous"));
@@ -1880,7 +1830,6 @@ ev_window_load_job_cb (EvJob *job,
 #ifdef ENABLE_DBUS
 		ev_window_emit_doc_loaded (ev_window);
 #endif
-		setup_chrome_from_metadata (ev_window);
 		setup_document_from_metadata (ev_window);
 		setup_view_from_metadata (ev_window);
 
@@ -2876,7 +2825,8 @@ ev_window_open_copy_at_dest (EvWindow   *window,
 	ev_window_open_document (new_window,
 				 priv->document,
 				 dest, 0, NULL);
-	new_priv->chrome = priv->chrome;
+	gtk_widget_set_visible (new_priv->sidebar,
+				gtk_widget_is_visible (priv->sidebar));
 
 	gtk_window_present (GTK_WINDOW (new_window));
 }
@@ -4772,7 +4722,7 @@ ev_window_run_presentation (EvWindow *window)
 			    TRUE, TRUE, 0);
 
 	gtk_widget_hide (priv->hpaned);
-	update_chrome_visibility (window);
+	gtk_widget_set_visible (priv->toolbar, FALSE);
 
 	gtk_widget_grab_focus (priv->presentation_view);
 	if (fullscreen_window)
@@ -4807,7 +4757,7 @@ ev_window_stop_presentation (EvWindow *window,
 	priv->presentation_view = NULL;
 
 	gtk_widget_show (priv->hpaned);
-	update_chrome_visibility (window);
+	gtk_widget_set_visible (priv->toolbar, TRUE);
 	if (unfullscreen_window)
 		gtk_window_unfullscreen (GTK_WINDOW (window));
 
@@ -5409,9 +5359,7 @@ ev_window_view_cmd_toggle_sidebar (GSimpleAction *action,
 
 	show_side_pane = g_variant_get_boolean (state);
 	g_simple_action_set_state (action, g_variant_new_boolean (show_side_pane));
-
-	update_chrome_flag (ev_window, EV_CHROME_SIDEBAR, show_side_pane);
-	update_chrome_visibility (ev_window);
+	gtk_widget_set_visible (priv->sidebar, show_side_pane);
 }
 
 static void
@@ -7402,7 +7350,6 @@ ev_window_init (EvWindow *ev_window)
 	priv->model = ev_document_model_new ();
 
 	priv->page_mode = PAGE_MODE_DOCUMENT;
-	priv->chrome = EV_CHROME_SIDEBAR;
         priv->presentation_mode_inhibit_id = 0;
 
 	priv->history = ev_history_new (priv->model);
@@ -7491,7 +7438,7 @@ ev_window_init (EvWindow *ev_window)
 			      priv->model);
 	gtk_paned_pack1 (GTK_PANED (priv->hpaned),
 			 priv->sidebar, FALSE, FALSE);
-	gtk_widget_show (priv->sidebar);
+	gtk_widget_set_visible (priv->sidebar, FALSE);
 
 	/* Stub sidebar, for now */
 
