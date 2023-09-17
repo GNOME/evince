@@ -638,17 +638,6 @@ ev_window_update_actions_sensitivity (EvWindow *ev_window)
 }
 
 static void
-set_widget_visibility (GtkWidget *widget, gboolean visible)
-{
-	g_assert (GTK_IS_WIDGET (widget));
-
-	if (visible)
-		gtk_widget_show (widget);
-	else
-		gtk_widget_hide (widget);
-}
-
-static void
 update_chrome_visibility (EvWindow *window)
 {
 	EvWindowPrivate *priv = GET_PRIVATE (window);
@@ -661,8 +650,8 @@ update_chrome_visibility (EvWindow *window)
 		   (priv->chrome & EV_CHROME_RAISE_TOOLBAR) != 0) && !presentation;
 	sidebar = (priv->chrome & EV_CHROME_SIDEBAR) != 0 && priv->document && !presentation;
 
-	set_widget_visibility (priv->toolbar, toolbar);
-	set_widget_visibility (priv->sidebar, sidebar);
+	gtk_widget_set_visible (priv->toolbar, toolbar);
+	gtk_widget_set_visible (priv->sidebar, sidebar);
 }
 
 static void
