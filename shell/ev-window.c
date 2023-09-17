@@ -109,7 +109,6 @@ typedef enum {
 } EvWindowPageMode;
 
 typedef enum {
-        EV_CHROME_RAISE_TOOLBAR      = 1 << 2,
         EV_CHROME_SIDEBAR            = 1 << 4,
 } EvChrome;
 
@@ -4217,9 +4216,6 @@ ev_window_focus_page_selector (EvWindow *window)
 
 	priv = GET_PRIVATE (window);
 
-	update_chrome_flag (window, EV_CHROME_RAISE_TOOLBAR, TRUE);
-	update_chrome_visibility (window);
-
 	toolbar = EV_TOOLBAR (priv->toolbar);
 	page_selector = ev_toolbar_get_page_selector (toolbar);
 	ev_page_action_widget_grab_focus (EV_PAGE_ACTION_WIDGET (page_selector));
@@ -6444,9 +6440,6 @@ view_actions_focus_in_cb (GtkWidget *widget, GdkEventFocus *event, EvWindow *win
 	if (keys)
 		ev_media_player_keys_focused (EV_MEDIA_PLAYER_KEYS (keys));
 #endif /* ENABLE_DBUS */
-
-	update_chrome_flag (window, EV_CHROME_RAISE_TOOLBAR, FALSE);
-	update_chrome_visibility (window);
 
 	return FALSE;
 }
