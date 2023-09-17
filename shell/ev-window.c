@@ -110,9 +110,7 @@ typedef enum {
 
 typedef enum {
         EV_CHROME_TOOLBAR            = 1 << 0,
-        EV_CHROME_FINDBAR            = 1 << 1,
         EV_CHROME_RAISE_TOOLBAR      = 1 << 2,
-        EV_CHROME_FULLSCREEN_TOOLBAR = 1 << 3,
         EV_CHROME_SIDEBAR            = 1 << 4,
         EV_CHROME_NORMAL             = EV_CHROME_TOOLBAR | EV_CHROME_SIDEBAR
 } EvChrome;
