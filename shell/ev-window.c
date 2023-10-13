@@ -308,6 +308,7 @@ static void     ev_window_zoom_changed_cb 	        (EvDocumentModel  *model,
 							 EvWindow         *ev_window);
 static void     ev_window_add_recent                    (EvWindow         *window,
 							 const char       *uri);
+static gboolean ev_window_is_fullscreen                 (EvWindow         *window);
 static void     ev_window_run_fullscreen                (EvWindow         *window);
 static void     ev_window_stop_fullscreen               (EvWindow         *window,
 							 gboolean          unfullscreen_window);
@@ -4011,7 +4012,7 @@ ev_window_save_settings (EvWindow *ev_window)
 	g_settings_set_boolean (settings, "dual-page-odd-left",
 				ev_document_model_get_dual_page_odd_pages_left (model));
 	g_settings_set_boolean (settings, "fullscreen",
-				ev_document_model_get_fullscreen (model));
+				ev_window_is_fullscreen (ev_window));
 	g_settings_set_boolean (settings, "inverted-colors",
 				ev_document_model_get_inverted_colors (model));
 	sizing_mode = ev_document_model_get_sizing_mode (model);
@@ -4540,15 +4541,24 @@ ev_window_update_links_model (EvWindow *window)
 }
 
 static void
-ev_window_update_fullscreen_action (EvWindow *window)
+ev_window_update_fullscreen_action (EvWindow *window,
+				    gboolean  fullscreen)
 {
-	EvWindowPrivate *priv = GET_PRIVATE (window);
 	GAction *action;
-	gboolean fullscreen;
 
 	action = g_action_map_lookup_action (G_ACTION_MAP (window), "fullscreen");
-	fullscreen = ev_document_model_get_fullscreen (priv->model);
 	g_simple_action_set_state (G_SIMPLE_ACTION (action), g_variant_new_boolean (fullscreen));
+}
+
+static gboolean
+ev_window_is_fullscreen (EvWindow *window)
+{
+	GAction *action;
+	g_autoptr (GVariant) variant;
+
+	action = g_action_map_lookup_action (G_ACTION_MAP (window), "fullscreen");
+	variant = g_action_get_state (action);
+	return g_variant_get_boolean (variant);
 }
 
 static void
@@ -4557,7 +4567,7 @@ ev_window_run_fullscreen (EvWindow *window)
 	EvWindowPrivate *priv = GET_PRIVATE (window);
 	gboolean fullscreen_window = TRUE;
 
-	if (ev_document_model_get_fullscreen (priv->model))
+	if (ev_window_is_fullscreen (window))
 		return;
 
 	if (EV_WINDOW_IS_PRESENTATION (priv)) {
@@ -4565,10 +4575,7 @@ ev_window_run_fullscreen (EvWindow *window)
 		fullscreen_window = FALSE;
 	}
 
-	ev_window_update_links_model (window);
-
-	ev_document_model_set_fullscreen (priv->model, TRUE);
-	ev_window_update_fullscreen_action (window);
+	ev_window_update_fullscreen_action (window, TRUE);
 
 	hdy_header_bar_set_show_close_button (ev_toolbar_get_header_bar (EV_TOOLBAR (priv->toolbar)), FALSE);
 
@@ -4586,11 +4593,10 @@ ev_window_stop_fullscreen (EvWindow *window,
 {
 	EvWindowPrivate *priv = GET_PRIVATE (window);
 
-	if (!ev_document_model_get_fullscreen (priv->model))
+	if (!ev_window_is_fullscreen (window))
 		return;
 
-	ev_document_model_set_fullscreen (priv->model, FALSE);
-	ev_window_update_fullscreen_action (window);
+	ev_window_update_fullscreen_action (window, FALSE);
 
 	hdy_header_bar_set_show_close_button (ev_toolbar_get_header_bar (EV_TOOLBAR (priv->toolbar)), TRUE);
 
@@ -4695,7 +4701,7 @@ ev_window_run_presentation (EvWindow *window)
 					  annot_state,
 					  window);
 
-	if (ev_document_model_get_fullscreen (priv->model)) {
+	if (ev_window_is_fullscreen (window)) {
 		ev_window_stop_fullscreen (window, FALSE);
 		fullscreen_window = FALSE;
 	}
@@ -4803,12 +4809,12 @@ ev_window_state_event (GtkWidget           *widget,
 		return FALSE;
 
 	if (event->new_window_state & GDK_WINDOW_STATE_FULLSCREEN) {
-		if (ev_document_model_get_fullscreen (priv->model) || EV_WINDOW_IS_PRESENTATION (priv))
+		if (ev_window_is_fullscreen (window) || EV_WINDOW_IS_PRESENTATION (priv))
 			return FALSE;
 
 		ev_window_run_fullscreen (window);
 	} else {
-		if (ev_document_model_get_fullscreen (priv->model))
+		if (ev_window_is_fullscreen (window))
 			ev_window_stop_fullscreen (window, FALSE);
 		else if (EV_WINDOW_IS_PRESENTATION (priv))
 			ev_window_stop_presentation (window, FALSE);
@@ -5129,7 +5135,7 @@ ev_window_cmd_escape (GSimpleAction *action,
 
 	if (gtk_search_bar_get_search_mode (GTK_SEARCH_BAR (priv->search_bar)))
 		ev_window_close_find_bar (window);
-	else if (ev_document_model_get_fullscreen (priv->model))
+	else if (ev_window_is_fullscreen (window))
 		ev_window_stop_fullscreen (window, TRUE);
 	else if (EV_WINDOW_IS_PRESENTATION (priv))
 		ev_window_stop_presentation (window, TRUE);
