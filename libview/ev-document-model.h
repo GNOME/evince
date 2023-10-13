@@ -123,10 +123,5 @@ void             ev_document_model_set_rtl (EvDocumentModel *model,
                                             gboolean         rtl);
 EV_PUBLIC
 gboolean         ev_document_model_get_rtl (EvDocumentModel *model);
-EV_PUBLIC
-void             ev_document_model_set_fullscreen    (EvDocumentModel *model,
-						      gboolean         fullscreen);
-EV_PUBLIC
-gboolean         ev_document_model_get_fullscreen    (EvDocumentModel *model);
 
 G_END_DECLS
