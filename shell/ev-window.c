@@ -4516,6 +4516,7 @@ ev_window_run_fullscreen (EvWindow *window)
 {
 	EvWindowPrivate *priv = GET_PRIVATE (window);
 	gboolean fullscreen_window = TRUE;
+	gboolean maximized = FALSE;
 
 	if (ev_window_is_fullscreen (window))
 		return;
@@ -4533,8 +4534,11 @@ ev_window_run_fullscreen (EvWindow *window)
 		gtk_window_fullscreen (GTK_WINDOW (window));
 	gtk_widget_grab_focus (priv->view);
 
-	if (priv->metadata && !ev_window_is_empty (window))
-		ev_metadata_set_boolean (priv->metadata, "fullscreen", TRUE);
+	if (priv->metadata && !ev_window_is_empty (window)) {
+		ev_metadata_get_boolean (priv->metadata, "window_maximized", &maximized);
+		if (!maximized)
+			ev_metadata_set_boolean (priv->metadata, "fullscreen", TRUE);
+	}
 }
 
 static void
