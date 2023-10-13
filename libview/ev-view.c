@@ -8430,7 +8430,6 @@ ev_view_init (EvView *view)
 	view->selection_info.in_drag = FALSE;
 	view->continuous = TRUE;
 	view->dual_even_left = TRUE;
-	view->fullscreen = FALSE;
 	view->sizing_mode = EV_SIZING_FIT_WIDTH;
 	view->page_layout = EV_PAGE_LAYOUT_SINGLE;
 	view->pending_scroll = SCROLL_TO_KEEP_POSITION;
@@ -8933,17 +8932,6 @@ ev_view_direction_changed_cb (EvDocumentModel *model,
 	gtk_widget_queue_resize (GTK_WIDGET (view));
 }
 
-static void
-ev_view_fullscreen_changed_cb (EvDocumentModel *model,
-			       GParamSpec      *pspec,
-			       EvView          *view)
-{
-	gboolean fullscreen = ev_document_model_get_fullscreen (model);
-
-	view->fullscreen = fullscreen;
-	gtk_widget_queue_resize (GTK_WIDGET (view));
-}
-
 void
 ev_view_set_model (EvView          *view,
 		   EvDocumentModel *model)
@@ -8967,7 +8955,6 @@ ev_view_set_model (EvView          *view,
 	view->continuous = ev_document_model_get_continuous (view->model);
 	view->page_layout = ev_document_model_get_page_layout (view->model);
 	gtk_widget_set_direction (GTK_WIDGET(view), ev_document_model_get_rtl (view->model));
-	view->fullscreen = ev_document_model_get_fullscreen (view->model);
 	ev_view_document_changed_cb (view->model, NULL, view);
 
 	g_signal_connect (view->model, "notify::document",
@@ -9002,9 +8989,6 @@ ev_view_set_model (EvView          *view,
 			  view);
 	g_signal_connect (view->model, "notify::rtl",
 			  G_CALLBACK (ev_view_direction_changed_cb),
-			  view);
-	g_signal_connect (view->model, "notify::fullscreen",
-			  G_CALLBACK (ev_view_fullscreen_changed_cb),
 			  view);
 	g_signal_connect (view->model, "page-changed",
 			  G_CALLBACK (ev_view_page_changed_cb),

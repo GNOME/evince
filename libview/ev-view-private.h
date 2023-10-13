@@ -190,7 +190,6 @@ struct _EvView {
 	gboolean can_zoom_out;
 	gboolean continuous;
 	gboolean dual_even_left;
-	gboolean fullscreen;
 	EvSizingMode sizing_mode;
 	EvPageLayout page_layout;
 	GtkWidget *loading_window;
