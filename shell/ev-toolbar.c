@@ -231,7 +231,6 @@ ev_toolbar_set_mode (EvToolbar     *ev_toolbar,
 
         switch (mode) {
         case EV_TOOLBAR_MODE_NORMAL:
-        case EV_TOOLBAR_MODE_FULLSCREEN:
                 gtk_widget_show (priv->sidebar_button);
                 gtk_widget_show (priv->action_menu_button);
                 gtk_widget_show (priv->zoom_action);
