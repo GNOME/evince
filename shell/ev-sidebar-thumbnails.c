@@ -298,23 +298,6 @@ ev_sidebar_thumbnails_map (GtkWidget *widget)
 }
 
 static void
-ev_sidebar_fullscreen_cb (EvSidebarThumbnails *sidebar)
-{
-	/* After activating or deactivating fullscreen mode, the sidebar
-	 * window is automatically moved to its start, while scroll bar
-	 * stays in its original position.
-	 *
-	 * The sidebar window move is unwanted and unsolicited, and it's
-	 * most probably caused by GtkIconView or GtkScrolledWindow bug.
-	 *
-	 * Workaround this by having the sidebar sync its window with the
-	 * current scroll position after a fullscreen operation, do that by
-	 * just emitting a "value-changed" on the current scroll adjustment.
-	 * Fixes https://bugzilla.gnome.org/show_bug.cgi?id=783404 */
-	g_signal_emit_by_name (sidebar->priv->vadjustment, "value-changed");
-}
-
-static void
 ev_sidebar_check_reset_current_page (EvSidebarThumbnails *sidebar)
 {
 	guint page;
@@ -965,9 +948,6 @@ ev_sidebar_thumbnails_document_changed_cb (EvDocumentModel     *model,
 	g_signal_connect (priv->model, "notify::inverted-colors",
 			  G_CALLBACK (ev_sidebar_thumbnails_inverted_colors_changed_cb),
 			  sidebar_thumbnails);
-	g_signal_connect_swapped (priv->model, "notify::fullscreen",
-			          G_CALLBACK (ev_sidebar_fullscreen_cb),
-			          sidebar_thumbnails);
 	sidebar_thumbnails->priv->start_page = -1;
 	sidebar_thumbnails->priv->end_page = -1;
 	ev_sidebar_thumbnails_set_current_page (sidebar_thumbnails,
