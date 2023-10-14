@@ -158,7 +158,7 @@ find_job_updated_cb (EvJobFind   *job,
                 ev_search_box_update_progress (box);
                 gtk_widget_set_sensitive (priv->next_button, has_results);
                 gtk_widget_set_sensitive (priv->prev_button, has_results);
-                g_signal_emit (box, signals[UPDATED], 0);
+                g_signal_emit (box, signals[UPDATED], 0, page);
         }
 }
 
