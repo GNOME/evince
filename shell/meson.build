@@ -20,6 +20,7 @@ evince_sources = files(
   'ev-utils.c',
   'ev-window.c',
   'ev-window-title.c',
+  'ev-search-box.c',
   'ev-sidebar-annotations.c',
   'ev-sidebar-attachments.c',
   'ev-sidebar-bookmarks.c',

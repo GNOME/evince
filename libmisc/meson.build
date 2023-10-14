@@ -1,6 +1,5 @@
 sources = files(
   'ev-page-action-widget.c',
-  'ev-search-box.c',
 )
 
 libevmisc = static_library(
