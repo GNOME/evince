@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
-"POT-Creation-Date: 2023-08-20 18:21+0000\n"
-"PO-Revision-Date: 2023-09-28 01:21+0300\n"
+"POT-Creation-Date: 2023-10-01 18:29+0000\n"
+"PO-Revision-Date: 2023-10-14 11:06+0300\n"
 "Last-Translator: Sabri Ünal <libreajans@gmail.com>\n"
 "Language-Team: Turkish <takim@gnome.org.tr>\n"
 "Language: tr\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 3.3.2\n"
+"X-Generator: Poedit 3.4\n"
 "X-Project-Style: gnome\n"
 
 #: backend/comics/comics-document.c:190 backend/comics/comics-document.c:261
@@ -307,8 +307,9 @@ msgid "Adds support for reading XPS documents"
 msgstr "XPS belgelerini görüntüleme desteği ekler"
 
 #. Manually set name and icon
-#: data/org.gnome.Evince.desktop.in.in:3 org.gnome.Evince.metainfo.xml.in:23
-#: shell/ev-window-title.c:131 shell/main.c:300
+#: data/org.gnome.Evince.desktop.in.in:3
+#: data/org.gnome.Evince.metainfo.xml.in:23 shell/ev-window-title.c:131
+#: shell/main.c:300
 msgid "Document Viewer"
 msgstr "Belge Görüntüleyici"
 
@@ -403,6 +404,34 @@ msgid ""
 "by side)"
 msgstr ""
 "(İki sayfayı yan yana görüntülerken) ilk sayfayı (tek sayfayı) solda göster"
+
+#: data/org.gnome.Evince.metainfo.xml.in:24
+msgid "Document viewer for popular document formats"
+msgstr "Gözde belge biçimleri için belge görüntüleyici"
+
+#: data/org.gnome.Evince.metainfo.xml.in:26
+msgid ""
+"A document viewer for the GNOME desktop. You can view, search or annotate "
+"documents in many different formats."
+msgstr ""
+"GNOME masaüstü için belge görüntüleyici. Birçok değişik biçimdeki belgeyi "
+"görüntüleyebilir, arayabilir ve açımlayabilirsiniz."
+
+#: data/org.gnome.Evince.metainfo.xml.in:27
+msgid ""
+"Evince supports documents in: PDF, PS, EPS, XPS, DjVu, TIFF, DVI (with "
+"SyncTeX), and Comic Books archives (CBR, CBT, CBZ, CB7)."
+msgstr ""
+"Evince şu belgeleri destekler: PDF, PS, EPS, XPS, DjVu, TIFF, DVI (SyncTeX "
+"ile), ve Çizgi Roman arşivleri (CBR, CBT, CBZ, CB7)."
+
+#: data/org.gnome.Evince.metainfo.xml.in:35
+msgid "A clear, simple UI"
+msgstr "Temiz, basit kullanıcı arayüzü"
+
+#: data/org.gnome.Evince.metainfo.xml.in:39
+msgid "Advanced highlighting and annotation"
+msgstr "Gelişmiş vurgulama ve açıklama"
 
 #: data/org.gnome.Evince-previewer.desktop.in.in:3
 msgid "Print Preview"
@@ -716,34 +745,6 @@ msgstr "Sayfaya git:"
 #: libview/ev-view-presentation.c:1010
 msgid "End of presentation. Press Esc or click to exit."
 msgstr "Sunumun sonu. Çıkmak için tıklayın veya Escʼye basın."
-
-#: org.gnome.Evince.metainfo.xml.in:24
-msgid "Document viewer for popular document formats"
-msgstr "Gözde belge biçimleri için belge görüntüleyici"
-
-#: org.gnome.Evince.metainfo.xml.in:26
-msgid ""
-"A document viewer for the GNOME desktop. You can view, search or annotate "
-"documents in many different formats."
-msgstr ""
-"GNOME masaüstü için belge görüntüleyici. Birçok değişik biçimdeki belgeyi "
-"görüntüleyebilir, arayabilir ve açımlayabilirsiniz."
-
-#: org.gnome.Evince.metainfo.xml.in:27
-msgid ""
-"Evince supports documents in: PDF, PS, EPS, XPS, DjVu, TIFF, DVI (with "
-"SyncTeX), and Comic Books archives (CBR, CBT, CBZ, CB7)."
-msgstr ""
-"Evince şu belgeleri destekler: PDF, PS, EPS, XPS, DjVu, TIFF, DVI (SyncTeX "
-"ile), ve Çizgi Roman arşivleri (CBR, CBT, CBZ, CB7)."
-
-#: org.gnome.Evince.metainfo.xml.in:35
-msgid "A clear, simple UI"
-msgstr "Temiz, basit kullanıcı arayüzü"
-
-#: org.gnome.Evince.metainfo.xml.in:39
-msgid "Advanced highlighting and annotation"
-msgstr "Gelişmiş vurgulama ve açıklama"
 
 #: previewer/ev-previewer.c:57
 msgid "Delete the temporary file"
@@ -1341,7 +1342,7 @@ msgstr "Parola gerekli"
 #: shell/ev-window.c:2877 shell/ev-window.c:3174 shell/ev-window.c:4059
 #: shell/ev-window.c:6983 shell/ev-window.c:7209
 msgid "_Cancel"
-msgstr "İptal _Et"
+msgstr "İ_ptal"
 
 #: shell/ev-password-view.c:239
 msgid "_Unlock"
@@ -1483,7 +1484,7 @@ msgstr "“%s” konumundan belge yükleniyor"
 #: shell/ev-window.c:2141 shell/ev-window.c:2599 shell/ev-window.c:2965
 #: shell/ev-window.c:3700 shell/ev-window.c:3948
 msgid "C_ancel"
-msgstr "İpt_al Et"
+msgstr "İ_ptal"
 
 #: shell/ev-window.c:2293 shell/ev-window.c:2650
 #, c-format
