@@ -18,7 +18,7 @@ editorconfig:
     allow_failure: true
 
 meson:
-    image: registry.gitlab.gnome.org/gnome/evince/x86_64-ubuntu:latest
+    image: registry.gitlab.gnome.org/gnome/evince/x86_64-ubuntu:gtk3
     stage: build
 
     script:
@@ -36,7 +36,7 @@ meson:
         expire_in: 2 days
 
 meson-internal-synctex:
-    image: registry.gitlab.gnome.org/gnome/evince/x86_64-ubuntu:latest
+    image: registry.gitlab.gnome.org/gnome/evince/x86_64-ubuntu:gtk3
     stage: build
 
     script:
@@ -75,7 +75,7 @@ nightly:
     extends: .publish_nightly
 
 pages:
-    image: registry.gitlab.gnome.org/gnome/evince/x86_64-ubuntu:latest
+    image: registry.gitlab.gnome.org/gnome/evince/x86_64-ubuntu:gtk3
     stage: deploy
     rules:
         - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_PROJECT_NAMESPACE == "GNOME"
