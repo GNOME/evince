@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince.HEAD\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
-"POT-Creation-Date: 2023-08-20 18:21+0000\n"
-"PO-Revision-Date: 2023-09-30 13:11+0200\n"
+"POT-Creation-Date: 2023-10-14 19:24+0000\n"
+"PO-Revision-Date: 2023-10-15 05:52+0200\n"
 "Last-Translator: Ekaterine Papava <papava.e@gtu.ge>\n"
 "Language-Team: Georgian <(nothing)>\n"
 "Language: ka\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 3.3.2\n"
+"X-Generator: Poedit 3.4\n"
 
 #: backend/comics/comics-document.c:190 backend/comics/comics-document.c:261
 msgid "File is corrupted"
@@ -299,8 +299,9 @@ msgid "Adds support for reading XPS documents"
 msgstr "XPS დოკუმენტების კითხვის მხარდაჭერის დამატება"
 
 #. Manually set name and icon
-#: data/org.gnome.Evince.desktop.in.in:3 org.gnome.Evince.metainfo.xml.in:23
-#: shell/ev-window-title.c:131 shell/main.c:300
+#: data/org.gnome.Evince.desktop.in.in:3
+#: data/org.gnome.Evince.metainfo.xml.in:23 shell/ev-window-title.c:131
+#: shell/main.c:300
 msgid "Document Viewer"
 msgstr "დოკუმენტების მნახველი"
 
@@ -399,6 +400,34 @@ msgid ""
 msgstr ""
 "პირველი გვერდის (კენტის) მარცხენა მხარეს ჩვენება (ორი გვერდის გვერდიგვერდ "
 "ჩვენებისას)"
+
+#: data/org.gnome.Evince.metainfo.xml.in:24
+msgid "Document viewer for popular document formats"
+msgstr "დოკუმენტების პოპულარული ფორმატების გამხსნელი"
+
+#: data/org.gnome.Evince.metainfo.xml.in:26
+msgid ""
+"A document viewer for the GNOME desktop. You can view, search or annotate "
+"documents in many different formats."
+msgstr ""
+"GNOME სამუშაო მაგიდის დოკუმენტების დამთვალიერებელი. შეგიძლიათ დაათვალიეროთ, "
+"მოძებნოთ და ანოტაცია გაუკეთოთ მრავალი სახის დოკუმენტს."
+
+#: data/org.gnome.Evince.metainfo.xml.in:27
+msgid ""
+"Evince supports documents in: PDF, PS, EPS, XPS, DjVu, TIFF, DVI (with "
+"SyncTeX), and Comic Books archives (CBR, CBT, CBZ, CB7)."
+msgstr ""
+"Evince-ს აქვს მხარდაჭერა: PDF, PS, EPS, XPS, DjVu, TIFF, DVI (SyncTeX-ით) და "
+"კომიქსების წიგნების არქივების (CBR, CBT, CBZ, CB7)."
+
+#: data/org.gnome.Evince.metainfo.xml.in:35
+msgid "A clear, simple UI"
+msgstr "სუფთა, მარტივი UI"
+
+#: data/org.gnome.Evince.metainfo.xml.in:39
+msgid "Advanced highlighting and annotation"
+msgstr "დამატებითი გამკვეთა და ანოტაცია"
 
 #: data/org.gnome.Evince-previewer.desktop.in.in:3
 msgid "Print Preview"
@@ -657,51 +686,51 @@ msgstr "ჩვენება ქვემოთ"
 msgid "Document View"
 msgstr "დოკუმენტის ნახვა"
 
-#: libview/ev-view.c:2141
+#: libview/ev-view.c:2138
 msgid "Go to first page"
 msgstr "პირველ გვერდზე"
 
-#: libview/ev-view.c:2143
+#: libview/ev-view.c:2140
 msgid "Go to previous page"
 msgstr "წინა გვერდზე"
 
-#: libview/ev-view.c:2145
+#: libview/ev-view.c:2142
 msgid "Go to next page"
 msgstr "შემდეგ გვერდზე გადასვლა"
 
-#: libview/ev-view.c:2147
+#: libview/ev-view.c:2144
 msgid "Go to last page"
 msgstr "ბოლო გვერდზე"
 
-#: libview/ev-view.c:2149
+#: libview/ev-view.c:2146
 msgid "Go to page"
 msgstr "გვერდზე გადასვლა"
 
-#: libview/ev-view.c:2151
+#: libview/ev-view.c:2148
 msgid "Find"
 msgstr "ძებნა"
 
-#: libview/ev-view.c:2179
+#: libview/ev-view.c:2176
 #, c-format
 msgid "Go to page %s"
 msgstr "%s გვერდზე"
 
-#: libview/ev-view.c:2185
+#: libview/ev-view.c:2182
 #, c-format
 msgid "Go to %s on file “%s”"
 msgstr "%s-ზე გადასვლა “%s” ფაილში"
 
-#: libview/ev-view.c:2188
+#: libview/ev-view.c:2185
 #, c-format
 msgid "Go to file “%s”"
 msgstr "გადასვლა ფაილზე “%s”"
 
-#: libview/ev-view.c:2196
+#: libview/ev-view.c:2193
 #, c-format
 msgid "Launch %s"
 msgstr "%s-ის გაშვება"
 
-#: libview/ev-view.c:2203
+#: libview/ev-view.c:2200
 msgid "Reset form"
 msgstr "ფორმის საწყის მდგომარეობაში დაბრუნება"
 
@@ -712,34 +741,6 @@ msgstr "გვერდზე გადასვლა:"
 #: libview/ev-view-presentation.c:1010
 msgid "End of presentation. Press Esc or click to exit."
 msgstr "პრეზენტაციის დასასრული. გამოსასვლელად დააჭირეთ Esc-ს ან დააწკაპუნეთ."
-
-#: org.gnome.Evince.metainfo.xml.in:24
-msgid "Document viewer for popular document formats"
-msgstr "დოკუმენტების პოპულარული ფორმატების გამხსნელი"
-
-#: org.gnome.Evince.metainfo.xml.in:26
-msgid ""
-"A document viewer for the GNOME desktop. You can view, search or annotate "
-"documents in many different formats."
-msgstr ""
-"GNOME სამუშაო მაგიდის დოკუმენტების დამთვალიერებელი. შეგიძლიათ დაათვალიეროთ, "
-"მოძებნოთ და ანოტაცია გაუკეთოთ მრავალი სახის დოკუმენტს."
-
-#: org.gnome.Evince.metainfo.xml.in:27
-msgid ""
-"Evince supports documents in: PDF, PS, EPS, XPS, DjVu, TIFF, DVI (with "
-"SyncTeX), and Comic Books archives (CBR, CBT, CBZ, CB7)."
-msgstr ""
-"Evince-ს აქვს მხარდაჭერა: PDF, PS, EPS, XPS, DjVu, TIFF, DVI (SyncTeX-ით) და "
-"კომიქსების წიგნების არქივების (CBR, CBT, CBZ, CB7)."
-
-#: org.gnome.Evince.metainfo.xml.in:35
-msgid "A clear, simple UI"
-msgstr "სუფთა, მარტივი UI"
-
-#: org.gnome.Evince.metainfo.xml.in:39
-msgid "Advanced highlighting and annotation"
-msgstr "დამატებითი გამკვეთა და ანოტაცია"
 
 #: previewer/ev-previewer.c:57
 msgid "Delete the temporary file"
@@ -1631,8 +1632,8 @@ msgid "Close _after Printing"
 msgstr "_დახურვა დაბეჭდვის შემდეგ"
 
 #: shell/ev-window.c:4229
-msgid "© 1996–2022 The Evince document viewer authors"
-msgstr "© 1996–2022 The Evince document viewer authors"
+msgid "© 1996–2023 The Evince document viewer authors"
+msgstr "© 1996–2023 Evince-ის ავტორები"
 
 #: shell/ev-window.c:4232
 msgid "Evince is a simple document viewer for GNOME"
