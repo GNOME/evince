@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince.HEAD\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
-"POT-Creation-Date: 2023-07-03 21:15+0000\n"
-"PO-Revision-Date: 2023-08-01 23:18+0300\n"
+"POT-Creation-Date: 2023-10-14 19:24+0000\n"
+"PO-Revision-Date: 2023-10-15 09:46+0300\n"
 "Last-Translator: Efstathios Iosifidis <eiosifidis@gnome.org>\n"
 "Language-Team: Ελληνικά <>\n"
 "Language: el\n"
@@ -25,7 +25,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.3.2\n"
+"X-Generator: Poedit 3.4\n"
 "X-Project-Style: gnome\n"
 
 #: backend/comics/comics-document.c:190 backend/comics/comics-document.c:261
@@ -309,8 +309,9 @@ msgid "Adds support for reading XPS documents"
 msgstr "Προσθέτει υποστήριξη για την ανάγνωση εγγράφων XPS"
 
 #. Manually set name and icon
-#: data/org.gnome.Evince.desktop.in.in:3 org.gnome.Evince.metainfo.xml.in:23
-#: shell/ev-window-title.c:131 shell/main.c:300
+#: data/org.gnome.Evince.desktop.in.in:3
+#: data/org.gnome.Evince.metainfo.xml.in:23 shell/ev-window-title.c:131
+#: shell/main.c:300
 msgid "Document Viewer"
 msgstr "Προβολή εγγράφων"
 
@@ -418,6 +419,34 @@ msgid ""
 msgstr ""
 "Εμφάνιση της πρώτης σελίδας (μονή σελίδα) στα αριστερά (όταν εμφανίζονται "
 "δύο σελίδες δίπλα-δίπλα)"
+
+#: data/org.gnome.Evince.metainfo.xml.in:24
+msgid "Document viewer for popular document formats"
+msgstr "Εφαρμογή προβολής εγγράφων για δημοφιλείς μορφές εγγράφων"
+
+#: data/org.gnome.Evince.metainfo.xml.in:26
+msgid ""
+"A document viewer for the GNOME desktop. You can view, search or annotate "
+"documents in many different formats."
+msgstr ""
+"Μια εφαρμογή προβολής εγγράφων του GNOME. Μπορείτε να δείτε, αναζητήσετε ή "
+"να σχολιάσετε έγγραφα σε πολλές διαφορετικές μορφές."
+
+#: data/org.gnome.Evince.metainfo.xml.in:27
+msgid ""
+"Evince supports documents in: PDF, PS, EPS, XPS, DjVu, TIFF, DVI (with "
+"SyncTeX), and Comic Books archives (CBR, CBT, CBZ, CB7)."
+msgstr ""
+"Υποστηρίζει τις παρακάτω μορφές εγγράφων: PDF, PS, EPS, XPS, DjVu, TIFF, DVI "
+"(με SyncTeX), και αρχεία βιβλίων κόμικ (CBR, CBT, CBZ, CB7)."
+
+#: data/org.gnome.Evince.metainfo.xml.in:35
+msgid "A clear, simple UI"
+msgstr "Μια καθαρή, απλή γραφική διεπαφή χρήστη"
+
+#: data/org.gnome.Evince.metainfo.xml.in:39
+msgid "Advanced highlighting and annotation"
+msgstr "Επισήμανση και σχολιασμός για προχωρημένους"
 
 #: data/org.gnome.Evince-previewer.desktop.in.in:3
 msgid "Print Preview"
@@ -679,51 +708,51 @@ msgstr "Κύλιση προβολής κάτω"
 msgid "Document View"
 msgstr "Προβολή εγγράφου"
 
-#: libview/ev-view.c:2113
+#: libview/ev-view.c:2138
 msgid "Go to first page"
 msgstr "Μετάβαση στην πρώτη σελίδα"
 
-#: libview/ev-view.c:2115
+#: libview/ev-view.c:2140
 msgid "Go to previous page"
 msgstr "Μετάβαση στην προηγούμενη σελίδα"
 
-#: libview/ev-view.c:2117
+#: libview/ev-view.c:2142
 msgid "Go to next page"
 msgstr "Μετάβαση στην επόμενη σελίδα"
 
-#: libview/ev-view.c:2119
+#: libview/ev-view.c:2144
 msgid "Go to last page"
 msgstr "Μετάβαση στην τελευταία σελίδα"
 
-#: libview/ev-view.c:2121
+#: libview/ev-view.c:2146
 msgid "Go to page"
 msgstr "Μετάβαση στη σελίδα"
 
-#: libview/ev-view.c:2123
+#: libview/ev-view.c:2148
 msgid "Find"
 msgstr "Εύρεση"
 
-#: libview/ev-view.c:2151
+#: libview/ev-view.c:2176
 #, c-format
 msgid "Go to page %s"
 msgstr "Μετάβαση στη σελίδα %s"
 
-#: libview/ev-view.c:2157
+#: libview/ev-view.c:2182
 #, c-format
 msgid "Go to %s on file “%s”"
 msgstr "Μετάβαση σε %s στο αρχείο «%s»"
 
-#: libview/ev-view.c:2160
+#: libview/ev-view.c:2185
 #, c-format
 msgid "Go to file “%s”"
 msgstr "Μετάβαση στο αρχείο «%s»"
 
-#: libview/ev-view.c:2168
+#: libview/ev-view.c:2193
 #, c-format
 msgid "Launch %s"
 msgstr "Εκκίνηση %s"
 
-#: libview/ev-view.c:2175
+#: libview/ev-view.c:2200
 msgid "Reset form"
 msgstr "Επαναφορά φόρμας"
 
@@ -734,34 +763,6 @@ msgstr "Μετάβαση στη σελίδα:"
 #: libview/ev-view-presentation.c:1010
 msgid "End of presentation. Press Esc or click to exit."
 msgstr "Τέλος παρουσίασης. Πατήστε το πλήκτρο Esc ή κάντε κλικ για έξοδο."
-
-#: org.gnome.Evince.metainfo.xml.in:24
-msgid "Document viewer for popular document formats"
-msgstr "Εφαρμογή προβολής εγγράφων για δημοφιλείς μορφές εγγράφων"
-
-#: org.gnome.Evince.metainfo.xml.in:26
-msgid ""
-"A document viewer for the GNOME desktop. You can view, search or annotate "
-"documents in many different formats."
-msgstr ""
-"Μια εφαρμογή προβολής εγγράφων του GNOME. Μπορείτε να δείτε, αναζητήσετε ή "
-"να σχολιάσετε έγγραφα σε πολλές διαφορετικές μορφές."
-
-#: org.gnome.Evince.metainfo.xml.in:27
-msgid ""
-"Evince supports documents in: PDF, PS, EPS, XPS, DjVu, TIFF, DVI (with "
-"SyncTeX), and Comic Books archives (CBR, CBT, CBZ, CB7)."
-msgstr ""
-"Υποστηρίζει τις παρακάτω μορφές εγγράφων: PDF, PS, EPS, XPS, DjVu, TIFF, DVI "
-"(με SyncTeX), και αρχεία βιβλίων κόμικ (CBR, CBT, CBZ, CB7)."
-
-#: org.gnome.Evince.metainfo.xml.in:35
-msgid "A clear, simple UI"
-msgstr "Μια καθαρή, απλή γραφική διεπαφή χρήστη"
-
-#: org.gnome.Evince.metainfo.xml.in:39
-msgid "Advanced highlighting and annotation"
-msgstr "Επισήμανση και σχολιασμός για προχωρημένους"
 
 #: previewer/ev-previewer.c:57
 msgid "Delete the temporary file"
@@ -1669,8 +1670,8 @@ msgid "Close _after Printing"
 msgstr "Κλείσι_μο μετά την εκτύπωση"
 
 #: shell/ev-window.c:4229
-msgid "© 1996–2022 The Evince document viewer authors"
-msgstr "© 1996–2022 Οι δημιουργοί του Προβολή εγγράφων Evince"
+msgid "© 1996–2023 The Evince document viewer authors"
+msgstr "© 1996–2023 Οι δημιουργοί του Προβολή εγγράφων Evince"
 
 #: shell/ev-window.c:4232
 msgid "Evince is a simple document viewer for GNOME"
