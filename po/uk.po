@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
-"POT-Creation-Date: 2023-07-14 14:41+0000\n"
-"PO-Revision-Date: 2023-07-28 21:19+0300\n"
+"POT-Creation-Date: 2023-10-14 19:24+0000\n"
+"PO-Revision-Date: 2023-10-15 08:52+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
 "Language: uk\n"
@@ -301,8 +301,9 @@ msgid "Adds support for reading XPS documents"
 msgstr "Додає підтримування читання документів XPS"
 
 #. Manually set name and icon
-#: data/org.gnome.Evince.desktop.in.in:3 org.gnome.Evince.metainfo.xml.in:23
-#: shell/ev-window-title.c:131 shell/main.c:300
+#: data/org.gnome.Evince.desktop.in.in:3
+#: data/org.gnome.Evince.metainfo.xml.in:23 shell/ev-window-title.c:131
+#: shell/main.c:300
 msgid "Document Viewer"
 msgstr "Переглядач документів"
 
@@ -407,6 +408,36 @@ msgid ""
 msgstr ""
 "Показувати першу сторінку (непарну сторінку) ліворуч (при показі двох "
 "сторінок обабіч)"
+
+#: data/org.gnome.Evince.metainfo.xml.in:24
+msgid "Document viewer for popular document formats"
+msgstr "Переглядач документів для популярних форматів"
+
+#: data/org.gnome.Evince.metainfo.xml.in:26
+msgid ""
+"A document viewer for the GNOME desktop. You can view, search or annotate "
+"documents in many different formats."
+msgstr ""
+"Програма для перегляду документів у середовищі GNOME. За її допомогою ви "
+"зможете переглядати документи у багатьох форматах, шукати у них дані та "
+"анотувати ці документи."
+
+#: data/org.gnome.Evince.metainfo.xml.in:27
+msgid ""
+"Evince supports documents in: PDF, PS, EPS, XPS, DjVu, TIFF, DVI (with "
+"SyncTeX), and Comic Books archives (CBR, CBT, CBZ, CB7)."
+msgstr ""
+"У Evince передбачено підтримку документів у таких форматах: PDF, PS, EPS, "
+"XPS, DjVu, TIFF, DVI (з SyncTeX), а також архіви коміксів (CBR, CBT, CBZ, "
+"CB7)."
+
+#: data/org.gnome.Evince.metainfo.xml.in:35
+msgid "A clear, simple UI"
+msgstr "Простий і зрозумілий інтерфейс"
+
+#: data/org.gnome.Evince.metainfo.xml.in:39
+msgid "Advanced highlighting and annotation"
+msgstr "Широкі можливості із позначення та анотування документів"
 
 #: data/org.gnome.Evince-previewer.desktop.in.in:3
 msgid "Print Preview"
@@ -663,51 +694,51 @@ msgstr "Прокрутка документа вниз"
 msgid "Document View"
 msgstr "Перегляд документа"
 
-#: libview/ev-view.c:2113
+#: libview/ev-view.c:2138
 msgid "Go to first page"
 msgstr "Перейти до першої сторінки"
 
-#: libview/ev-view.c:2115
+#: libview/ev-view.c:2140
 msgid "Go to previous page"
 msgstr "Перейти до попередньої сторінки"
 
-#: libview/ev-view.c:2117
+#: libview/ev-view.c:2142
 msgid "Go to next page"
 msgstr "Перейти до наступної сторінки"
 
-#: libview/ev-view.c:2119
+#: libview/ev-view.c:2144
 msgid "Go to last page"
 msgstr "Перейти до останньої сторінки"
 
-#: libview/ev-view.c:2121
+#: libview/ev-view.c:2146
 msgid "Go to page"
 msgstr "Перейти до сторінки"
 
-#: libview/ev-view.c:2123
+#: libview/ev-view.c:2148
 msgid "Find"
 msgstr "Знайти"
 
-#: libview/ev-view.c:2151
+#: libview/ev-view.c:2176
 #, c-format
 msgid "Go to page %s"
 msgstr "Перейти до сторінки %s"
 
-#: libview/ev-view.c:2157
+#: libview/ev-view.c:2182
 #, c-format
 msgid "Go to %s on file “%s”"
 msgstr "Перейти до %s у файлі «%s»"
 
-#: libview/ev-view.c:2160
+#: libview/ev-view.c:2185
 #, c-format
 msgid "Go to file “%s”"
 msgstr "Перейти до файла «%s»"
 
-#: libview/ev-view.c:2168
+#: libview/ev-view.c:2193
 #, c-format
 msgid "Launch %s"
 msgstr "Запустити %s"
 
-#: libview/ev-view.c:2175
+#: libview/ev-view.c:2200
 msgid "Reset form"
 msgstr "Відновити початковий стан форми"
 
@@ -718,36 +749,6 @@ msgstr "Перейти до сторінки:"
 #: libview/ev-view-presentation.c:1010
 msgid "End of presentation. Press Esc or click to exit."
 msgstr "Кінець презентації. Натисніть Esc або клацніть для виходу."
-
-#: org.gnome.Evince.metainfo.xml.in:24
-msgid "Document viewer for popular document formats"
-msgstr "Переглядач документів для популярних форматів"
-
-#: org.gnome.Evince.metainfo.xml.in:26
-msgid ""
-"A document viewer for the GNOME desktop. You can view, search or annotate "
-"documents in many different formats."
-msgstr ""
-"Програма для перегляду документів у середовищі GNOME. За її допомогою ви "
-"зможете переглядати документи у багатьох форматах, шукати у них дані та "
-"анотувати ці документи."
-
-#: org.gnome.Evince.metainfo.xml.in:27
-msgid ""
-"Evince supports documents in: PDF, PS, EPS, XPS, DjVu, TIFF, DVI (with "
-"SyncTeX), and Comic Books archives (CBR, CBT, CBZ, CB7)."
-msgstr ""
-"У Evince передбачено підтримку документів у таких форматах: PDF, PS, EPS, "
-"XPS, DjVu, TIFF, DVI (з SyncTeX), а також архіви коміксів (CBR, CBT, CBZ, "
-"CB7)."
-
-#: org.gnome.Evince.metainfo.xml.in:35
-msgid "A clear, simple UI"
-msgstr "Простий і зрозумілий інтерфейс"
-
-#: org.gnome.Evince.metainfo.xml.in:39
-msgid "Advanced highlighting and annotation"
-msgstr "Широкі можливості із позначення та анотування документів"
 
 #: previewer/ev-previewer.c:57
 msgid "Delete the temporary file"
@@ -1413,7 +1414,6 @@ msgid "Page %d"
 msgstr "Сторінка %d"
 
 #: shell/ev-sidebar-annotations.c:403
-#| msgid "Comment"
 msgid "No Comment"
 msgstr "Немає коментарів"
 
@@ -1658,8 +1658,9 @@ msgid "Close _after Printing"
 msgstr "Закрити п_ісля друкування"
 
 #: shell/ev-window.c:4229
-msgid "© 1996–2022 The Evince document viewer authors"
-msgstr "© Автори програми для перегляду документів Evince, 1996–2022"
+#| msgid "© 1996–2022 The Evince document viewer authors"
+msgid "© 1996–2023 The Evince document viewer authors"
+msgstr "© Автори програми для перегляду документів Evince, 1996–2023"
 
 #: shell/ev-window.c:4232
 msgid "Evince is a simple document viewer for GNOME"
