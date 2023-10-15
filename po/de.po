@@ -32,8 +32,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Evince master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
-"POT-Creation-Date: 2023-08-20 18:21+0000\n"
-"PO-Revision-Date: 2023-08-27 22:07+0200\n"
+"POT-Creation-Date: 2023-10-14 19:24+0000\n"
+"PO-Revision-Date: 2023-10-15 20:01+0200\n"
 "Last-Translator: Jürgen Benvenuti <gastornis@posteo.org>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "Language: de\n"
@@ -41,7 +41,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.3.1\n"
+"X-Generator: Poedit 3.4\n"
 
 #: backend/comics/comics-document.c:190 backend/comics/comics-document.c:261
 msgid "File is corrupted"
@@ -326,8 +326,9 @@ msgid "Adds support for reading XPS documents"
 msgstr "Fügt Unterstützung für das Lesen von XPS-Dokumenten hinzu"
 
 #. Manually set name and icon
-#: data/org.gnome.Evince.desktop.in.in:3 org.gnome.Evince.metainfo.xml.in:23
-#: shell/ev-window-title.c:131 shell/main.c:300
+#: data/org.gnome.Evince.desktop.in.in:3
+#: data/org.gnome.Evince.metainfo.xml.in:23 shell/ev-window-title.c:131
+#: shell/main.c:300
 msgid "Document Viewer"
 msgstr "Dokumentenbetrachter"
 
@@ -436,6 +437,35 @@ msgid ""
 msgstr ""
 "Die erste Seite (ungerade) auf der linken Seite anzeigen (wenn zwei Seiten "
 "nebeneinander angezeigt werden)"
+
+#: data/org.gnome.Evince.metainfo.xml.in:24
+msgid "Document viewer for popular document formats"
+msgstr "Dokumentenbetrachter für gängige Dokumentformate"
+
+#: data/org.gnome.Evince.metainfo.xml.in:26
+msgid ""
+"A document viewer for the GNOME desktop. You can view, search or annotate "
+"documents in many different formats."
+msgstr ""
+"Ein Dokumentenbetrachter für die GNOME-Arbeitsumgebung. Sie können Dokumente "
+"in vielen verschiedenen Formaten betrachten, durchsuchen oder mit "
+"Anmerkungen versehen."
+
+#: data/org.gnome.Evince.metainfo.xml.in:27
+msgid ""
+"Evince supports documents in: PDF, PS, EPS, XPS, DjVu, TIFF, DVI (with "
+"SyncTeX), and Comic Books archives (CBR, CBT, CBZ, CB7)."
+msgstr ""
+"Die folgenden Dokumentformate werden unterstützt: PDF, PS, EPS, XPS, DjVu, "
+"TIFF, DVI (inkl. SyncTeX) und Comicbuch-Archive (CBR, CBT, CBZ, CB7)."
+
+#: data/org.gnome.Evince.metainfo.xml.in:35
+msgid "A clear, simple UI"
+msgstr "Eine klare, einfache Benutzeroberfläche"
+
+#: data/org.gnome.Evince.metainfo.xml.in:39
+msgid "Advanced highlighting and annotation"
+msgstr "Fortgeschrittene Hervorhebung und Anmerkungen"
 
 #: data/org.gnome.Evince-previewer.desktop.in.in:3
 msgid "Print Preview"
@@ -692,51 +722,51 @@ msgstr "Ansicht nach unten verschieben"
 msgid "Document View"
 msgstr "Dokumentenansicht"
 
-#: libview/ev-view.c:2141
+#: libview/ev-view.c:2138
 msgid "Go to first page"
 msgstr "Zur ersten Seite gehen"
 
-#: libview/ev-view.c:2143
+#: libview/ev-view.c:2140
 msgid "Go to previous page"
 msgstr "Zur vorherigen Seite gehen"
 
-#: libview/ev-view.c:2145
+#: libview/ev-view.c:2142
 msgid "Go to next page"
 msgstr "Zur nächsten Seite gehen"
 
-#: libview/ev-view.c:2147
+#: libview/ev-view.c:2144
 msgid "Go to last page"
 msgstr "Zur letzten Seite gehen"
 
-#: libview/ev-view.c:2149
+#: libview/ev-view.c:2146
 msgid "Go to page"
 msgstr "Zu Seite gehen"
 
-#: libview/ev-view.c:2151
+#: libview/ev-view.c:2148
 msgid "Find"
 msgstr "Suchen"
 
-#: libview/ev-view.c:2179
+#: libview/ev-view.c:2176
 #, c-format
 msgid "Go to page %s"
 msgstr "Zu Seite %s gehen"
 
-#: libview/ev-view.c:2185
+#: libview/ev-view.c:2182
 #, c-format
 msgid "Go to %s on file “%s”"
 msgstr "Zu %s in Datei »%s« gehen"
 
-#: libview/ev-view.c:2188
+#: libview/ev-view.c:2185
 #, c-format
 msgid "Go to file “%s”"
 msgstr "Zu Datei »%s« gehen"
 
-#: libview/ev-view.c:2196
+#: libview/ev-view.c:2193
 #, c-format
 msgid "Launch %s"
 msgstr "%s starten"
 
-#: libview/ev-view.c:2203
+#: libview/ev-view.c:2200
 msgid "Reset form"
 msgstr "Formular zurücksetzen"
 
@@ -747,35 +777,6 @@ msgstr "Zu folgender Seite gehen:"
 #: libview/ev-view-presentation.c:1010
 msgid "End of presentation. Press Esc or click to exit."
 msgstr "Ende der Präsentation. Klicken Sie zum Schließen oder drücken Sie Esc."
-
-#: org.gnome.Evince.metainfo.xml.in:24
-msgid "Document viewer for popular document formats"
-msgstr "Dokumentenbetrachter für gängige Dokumentformate"
-
-#: org.gnome.Evince.metainfo.xml.in:26
-msgid ""
-"A document viewer for the GNOME desktop. You can view, search or annotate "
-"documents in many different formats."
-msgstr ""
-"Ein Dokumentenbetrachter für die GNOME-Arbeitsumgebung. Sie können Dokumente "
-"in vielen verschiedenen Formaten betrachten, durchsuchen oder mit "
-"Anmerkungen versehen."
-
-#: org.gnome.Evince.metainfo.xml.in:27
-msgid ""
-"Evince supports documents in: PDF, PS, EPS, XPS, DjVu, TIFF, DVI (with "
-"SyncTeX), and Comic Books archives (CBR, CBT, CBZ, CB7)."
-msgstr ""
-"Die folgenden Dokumentformate werden unterstützt: PDF, PS, EPS, XPS, DjVu, "
-"TIFF, DVI (inkl. SyncTeX) und Comicbuch-Archive (CBR, CBT, CBZ, CB7)."
-
-#: org.gnome.Evince.metainfo.xml.in:35
-msgid "A clear, simple UI"
-msgstr "Eine klare, einfache Benutzeroberfläche"
-
-#: org.gnome.Evince.metainfo.xml.in:39
-msgid "Advanced highlighting and annotation"
-msgstr "Fortgeschrittene Hervorhebung und Anmerkungen"
 
 #: previewer/ev-previewer.c:57
 msgid "Delete the temporary file"
@@ -1685,8 +1686,8 @@ msgid "Close _after Printing"
 msgstr "Nach dem Drucken _schließen"
 
 #: shell/ev-window.c:4229
-msgid "© 1996–2022 The Evince document viewer authors"
-msgstr "© 1996-2022 Die Evince-Dokumentenbetrachter-Autoren"
+msgid "© 1996–2023 The Evince document viewer authors"
+msgstr "© 1996-2023 Die Evince-Dokumentenbetrachter-Autoren"
 
 #: shell/ev-window.c:4232
 msgid "Evince is a simple document viewer for GNOME"
@@ -1735,7 +1736,7 @@ msgid ""
 msgstr ""
 "Das Drücken von F7 aktiviert und deaktiviert die Eingabemarke-Navigation. "
 "Diese Funktion platziert eine bewegliche Eingabemarke in Textseiten und "
-"erlaubt es Ihnen mit der Tastatur zu navigieren sowie Text zu markieren. "
+"erlaubt es Ihnen, mit der Tastatur zu navigieren sowie Text zu markieren. "
 "Möchten Sie die Eingabemarke-Navigation einschalten?"
 
 #: shell/ev-window.c:6031
@@ -2117,7 +2118,7 @@ msgstr "Primäres Menü anzeigen/ausblenden"
 #: shell/help-overlay.ui:395
 msgctxt "shortcut window"
 msgid "Keyboard shortcuts"
-msgstr "Tastenkombinationen"
+msgstr "Tastenkürzel"
 
 #: shell/help-overlay.ui:402
 msgctxt "shortcut window"
