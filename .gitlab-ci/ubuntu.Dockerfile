@@ -1,4 +1,4 @@
-FROM ubuntu:22.04
+FROM ubuntu:23.10
 
 ENV LANG=C.UTF-8 DEBIAN_FRONTEND=noninteractive
 
@@ -17,7 +17,7 @@ RUN apt-get -yqq update \
     libgnome-desktop-3-dev libnautilus-extension-dev \
     libspectre-dev libtiff5-dev libdjvulibre-dev \
     libkpathsea-dev libgxps-dev libsynctex-dev \
-    libgtk-4-dev libgnome-desktop-4-dev \
+    libgtk-4-dev libgnome-desktop-4-dev libadwaita-1-dev \
     git ccache systemd ninja-build meson \
     cmake desktop-file-utils gi-docgen \
 && apt-get -yqq install --no-install-recommends \
