@@ -161,8 +161,6 @@ ev_progress_message_area_new (const gchar *icon_name,
 	ev_message_area_set_image_from_icon_name (EV_MESSAGE_AREA (widget),
 						  icon_name);
 
-	gtk_info_bar_set_show_close_button (GTK_INFO_BAR (widget), TRUE);
-
 	return widget;
 }
 
