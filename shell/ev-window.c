@@ -4114,10 +4114,7 @@ ev_window_close (EvWindow *ev_window)
 		ev_document_model_set_page (priv->model, current_page);
 	}
 
-	if (priv->modified_handler_id) {
-		g_signal_handler_disconnect (priv->document, priv->modified_handler_id);
-		priv->modified_handler_id = 0;
-	}
+	g_clear_signal_handler (&priv->modified_handler_id, priv->document);
 
 	if (ev_window_check_document_modified (ev_window, EV_WINDOW_ACTION_CLOSE))
 		return FALSE;

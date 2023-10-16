@@ -153,11 +153,8 @@ ev_recent_view_dispose (GObject *obj)
 		g_clear_object (&priv->model);
         }
 
-        if (priv->recent_manager_changed_handler_id) {
-                g_signal_handler_disconnect (priv->recent_manager,
-                                             priv->recent_manager_changed_handler_id);
-                priv->recent_manager_changed_handler_id = 0;
-        }
+	g_clear_signal_handler (&priv->recent_manager_changed_handler_id,
+				priv->recent_manager);
         priv->recent_manager = NULL;
 
 #ifdef HAVE_LIBGNOME_DESKTOP
