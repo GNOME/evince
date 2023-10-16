@@ -6470,23 +6470,6 @@ view_actions_focus_in_cb (GtkWidget *widget, GdkEventFocus *event, EvWindow *win
 	return FALSE;
 }
 
-static void
-sidebar_page_main_widget_update_cb (GObject *ev_sidebar_page,
-				    GParamSpec         *pspec,
-				    EvWindow           *ev_window)
-{
-	GtkWidget *widget;
-
-	g_object_get (ev_sidebar_page, "main_widget", &widget, NULL);
-
-    	if (widget != NULL) {
-		g_signal_connect_object (widget, "focus_in_event",
-				         G_CALLBACK (view_actions_focus_in_cb),
-					 ev_window, 0);
-		g_object_unref (widget);
-	}
-}
-
 static gboolean
 window_state_event_cb (EvWindow *window, GdkEventWindowState *event, gpointer dummy)
 {
@@ -7539,11 +7522,6 @@ ev_window_init (EvWindow *ev_window)
 	/* Stub sidebar, for now */
 
 	priv->sidebar_thumbs = ev_sidebar_thumbnails_new ();
-	g_signal_connect (priv->sidebar_thumbs,
-			  "notify::main-widget",
-			  G_CALLBACK (sidebar_page_main_widget_update_cb),
-			  ev_window);
-	sidebar_page_main_widget_update_cb (G_OBJECT (priv->sidebar_thumbs), NULL, ev_window);
 	gtk_widget_show (priv->sidebar_thumbs);
 	ev_sidebar_add_page (EV_SIDEBAR (priv->sidebar),
 			      priv->sidebar_thumbs,
@@ -7559,7 +7537,6 @@ ev_window_init (EvWindow *ev_window)
 			  "link_activated",
 			  G_CALLBACK (sidebar_links_link_activated_cb),
 			  ev_window);
-	sidebar_page_main_widget_update_cb (G_OBJECT (priv->sidebar_links), NULL, ev_window);
 	gtk_widget_show (priv->sidebar_links);
 	ev_sidebar_add_page (EV_SIDEBAR (priv->sidebar),
 			      priv->sidebar_links,

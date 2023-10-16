@@ -957,7 +957,6 @@ ev_sidebar_thumbnails_document_changed_cb (EvDocumentModel     *model,
 
 	if (! priv->icon_view) {
 		ev_sidebar_init_icon_view (sidebar_thumbnails);
-		g_object_notify (G_OBJECT (sidebar_thumbnails), "main_widget");
 	} else {
 		gtk_widget_queue_resize (priv->icon_view);
 	}
