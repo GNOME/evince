@@ -7397,7 +7397,6 @@ ev_window_init (EvWindow *ev_window)
 {
 	GtkBuilder *builder;
 	GError *error = NULL;
-	GtkWidget *sidebar_widget;
 	GtkWidget *overlay;
 	GObject *mpkeys;
 	guint page_cache_mb;
@@ -7539,81 +7538,75 @@ ev_window_init (EvWindow *ev_window)
 
 	/* Stub sidebar, for now */
 
-	sidebar_widget = ev_sidebar_thumbnails_new ();
-	priv->sidebar_thumbs = sidebar_widget;
-	g_signal_connect (sidebar_widget,
+	priv->sidebar_thumbs = ev_sidebar_thumbnails_new ();
+	g_signal_connect (priv->sidebar_thumbs,
 			  "notify::main-widget",
 			  G_CALLBACK (sidebar_page_main_widget_update_cb),
 			  ev_window);
-	sidebar_page_main_widget_update_cb (G_OBJECT (sidebar_widget), NULL, ev_window);
-	gtk_widget_show (sidebar_widget);
+	sidebar_page_main_widget_update_cb (G_OBJECT (priv->sidebar_thumbs), NULL, ev_window);
+	gtk_widget_show (priv->sidebar_thumbs);
 	ev_sidebar_add_page (EV_SIDEBAR (priv->sidebar),
-			      sidebar_widget,
+			      priv->sidebar_thumbs,
 			      THUMBNAILS_SIDEBAR_ID, _("Thumbnails"),
 			      THUMBNAILS_SIDEBAR_ICON);
 
-	sidebar_widget = ev_sidebar_links_new ();
-	priv->sidebar_links = sidebar_widget;
-	g_signal_connect (sidebar_widget,
+	priv->sidebar_links = ev_sidebar_links_new ();
+	g_signal_connect (priv->sidebar_links,
 			  "notify::model",
 			  G_CALLBACK (sidebar_widget_model_set),
 			  ev_window);
-	g_signal_connect (sidebar_widget,
+	g_signal_connect (priv->sidebar_links,
 			  "link_activated",
 			  G_CALLBACK (sidebar_links_link_activated_cb),
 			  ev_window);
-	sidebar_page_main_widget_update_cb (G_OBJECT (sidebar_widget), NULL, ev_window);
-	gtk_widget_show (sidebar_widget);
+	sidebar_page_main_widget_update_cb (G_OBJECT (priv->sidebar_links), NULL, ev_window);
+	gtk_widget_show (priv->sidebar_links);
 	ev_sidebar_add_page (EV_SIDEBAR (priv->sidebar),
-			      sidebar_widget,
+			      priv->sidebar_links,
 			      LINKS_SIDEBAR_ID, _("Outline"),
 			      LINKS_SIDEBAR_ICON);
 
-	sidebar_widget = ev_sidebar_annotations_new ();
-	priv->sidebar_annots = sidebar_widget;
-	g_signal_connect (sidebar_widget,
+	priv->sidebar_annots = ev_sidebar_annotations_new ();
+	g_signal_connect (priv->sidebar_annots,
 			  "annot_activated",
 			  G_CALLBACK (sidebar_annots_annot_activated_cb),
 			  ev_window);
-	gtk_widget_show (sidebar_widget);
+	gtk_widget_show (priv->sidebar_annots);
 	ev_sidebar_add_page (EV_SIDEBAR (priv->sidebar),
-			      sidebar_widget,
+			      priv->sidebar_annots,
 			      ANNOTS_SIDEBAR_ID, _("Annotations"),
 			      ANNOTS_SIDEBAR_ICON);
 
-	sidebar_widget = ev_sidebar_bookmarks_new ();
-	priv->sidebar_bookmarks = sidebar_widget;
-	gtk_widget_show (sidebar_widget);
+	priv->sidebar_bookmarks = ev_sidebar_bookmarks_new ();
+	gtk_widget_show (priv->sidebar_bookmarks);
 	ev_sidebar_add_page (EV_SIDEBAR (priv->sidebar),
-			      sidebar_widget,
+			      priv->sidebar_bookmarks,
 			      BOOKMARKS_SIDEBAR_ID, _("Bookmarks"),
 			      BOOKMARKS_SIDEBAR_ICON);
 
-	sidebar_widget = ev_sidebar_attachments_new ();
-	priv->sidebar_attachments = sidebar_widget;
-	g_signal_connect_object (sidebar_widget,
+	priv->sidebar_attachments = ev_sidebar_attachments_new ();
+	g_signal_connect_object (priv->sidebar_attachments,
 				 "popup",
 				 G_CALLBACK (attachment_bar_menu_popup_cb),
 				 ev_window, 0);
-	g_signal_connect_object (sidebar_widget,
+	g_signal_connect_object (priv->sidebar_attachments,
 				 "save-attachment",
 				 G_CALLBACK (attachment_bar_save_attachment_cb),
 				 ev_window, 0);
-	gtk_widget_show (sidebar_widget);
+	gtk_widget_show (priv->sidebar_attachments);
 	ev_sidebar_add_page (EV_SIDEBAR (priv->sidebar),
-			      sidebar_widget,
+			      priv->sidebar_attachments,
 			      ATTACHMENTS_SIDEBAR_ID, _("Attachments"),
 			      ATTACHMENTS_SIDEBAR_ICON);
 
-	sidebar_widget = ev_sidebar_layers_new ();
-	priv->sidebar_layers = sidebar_widget;
-	g_signal_connect (sidebar_widget,
+	priv->sidebar_layers = ev_sidebar_layers_new ();
+	g_signal_connect (priv->sidebar_layers,
 			  "layers_visibility_changed",
 			  G_CALLBACK (sidebar_layers_visibility_changed),
 			  ev_window);
-	gtk_widget_show (sidebar_widget);
+	gtk_widget_show (priv->sidebar_layers);
 	ev_sidebar_add_page (EV_SIDEBAR (priv->sidebar),
-			      sidebar_widget,
+			      priv->sidebar_layers,
 			      LAYERS_SIDEBAR_ID, _("Layers"),
 			      LAYERS_SIDEBAR_ICON);
 
