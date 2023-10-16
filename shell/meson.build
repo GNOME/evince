@@ -81,7 +81,7 @@ if enable_keyring
 endif
 
 evince = executable(
-  'evince',
+  ev_app,
   sources: evince_sources,
   include_directories: top_inc,
   dependencies: evince_deps,
@@ -117,7 +117,7 @@ if enable_dbus
   ]
 
   evinced = executable(
-    'evinced',
+    ev_daemon,
     evinced_sources,
     include_directories: top_inc,
     dependencies: evinced_deps,

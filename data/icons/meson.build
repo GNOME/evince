@@ -1,5 +1,5 @@
 install_data(
-  join_paths('scalable', 'apps', '@0@.svg'.format(app_id)),
+  join_paths('scalable', 'apps', '@0@.svg'.format(ev_app_id)),
   install_dir: join_paths(ev_datadir, 'icons', 'hicolor', 'scalable', 'apps'),
 )
 install_data(

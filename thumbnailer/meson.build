@@ -17,7 +17,7 @@ thumbnailer_deps = [
 ]
 
 thumbnailer = executable(
-  'evince-thumbnailer',
+  '@0@-thumbnailer'.format(ev_app),
   sources: thumbnailer_sources,
   include_directories: top_inc,
   dependencies: thumbnailer_deps,

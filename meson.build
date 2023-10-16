@@ -8,13 +8,17 @@ project(
   ]
 )
 
-if get_option('development')
-  app_id = 'org.gnome.Evince.Devel'
-else
-  app_id = 'org.gnome.Evince'
-endif
-
 ev_name = meson.project_name().to_lower()
+
+if get_option('development')
+  ev_app_id = 'org.gnome.Evince.Devel'
+  ev_app = '@0@-devel'.format(ev_name)
+  ev_daemon = '@0@d-devel'.format(ev_name)
+else
+  ev_app_id = 'org.gnome.Evince'
+  ev_app = ev_name
+  ev_daemon = '@0@d'.format(ev_name)
+endif
 
 ev_version = meson.project_version()
 version_array = ev_version.split('.')
@@ -78,7 +82,7 @@ config_h = configuration_data()
 config_h.set10('_GNU_SOURCE', true)
 
 # package
-config_h.set_quoted('PACKAGE_ICON_NAME', app_id)
+config_h.set_quoted('PACKAGE_ICON_NAME', ev_app_id)
 config_h.set_quoted('PACKAGE_VERSION', ev_version)
 config_h.set_quoted('VERSION', ev_version)
 
@@ -427,7 +431,7 @@ endif
 
 mime_types_conf = configuration_data()
 mime_types_conf.set('EVINCE_MIME_TYPES', ';'.join(evince_mime_types))
-mime_types_conf.set('PACKAGE_ICON_NAME', app_id)
+mime_types_conf.set('PACKAGE_ICON_NAME', ev_app_id)
 
 subdir('cut-n-paste')
 subdir('libdocument')
