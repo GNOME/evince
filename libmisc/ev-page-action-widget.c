@@ -290,13 +290,8 @@ ev_page_action_widget_set_document (EvPageActionWidget *action_widget,
                 gtk_widget_set_sensitive (GTK_WIDGET (action_widget), ev_document_get_n_pages (document) > 0);
         }
 
-        if (action_widget->signal_id > 0) {
-                if (action_widget->doc_model != NULL) {
-                        g_signal_handler_disconnect (action_widget->doc_model,
-                                                     action_widget->signal_id);
-                }
-                action_widget->signal_id = 0;
-        }
+	g_clear_signal_handler (&action_widget->signal_id,
+				action_widget->doc_model);
 
         if (action_widget->document)
                 g_object_unref (action_widget->document);
@@ -348,17 +343,11 @@ ev_page_action_widget_finalize (GObject *object)
 {
 	EvPageActionWidget *action_widget = EV_PAGE_ACTION_WIDGET (object);
 
+	g_clear_signal_handler (&action_widget->signal_id,
+				action_widget->doc_model);
+	g_clear_signal_handler (&action_widget->notify_document_signal_id,
+				action_widget->doc_model);
 	if (action_widget->doc_model != NULL) {
-		if (action_widget->signal_id > 0) {
-			g_signal_handler_disconnect (action_widget->doc_model,
-						     action_widget->signal_id);
-			action_widget->signal_id = 0;
-		}
-		if (action_widget->notify_document_signal_id > 0) {
-			g_signal_handler_disconnect (action_widget->doc_model,
-						     action_widget->notify_document_signal_id);
-			action_widget->notify_document_signal_id = 0;
-		}
 		g_object_remove_weak_pointer (G_OBJECT (action_widget->doc_model),
 					      (gpointer)&action_widget->doc_model);
 		action_widget->doc_model = NULL;
