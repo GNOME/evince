@@ -9,23 +9,22 @@
 # Juanje Ojeda Croissier <jojeda@emergya.es>, 2008, 2009.
 # Jorge González <jorgegonz@svn.gnome.org>, 2007, 2008, 2010.
 # Alberto Caso <alberto@acaso.net>, 2016.
-# Daniel Mustieles <daniel.mustieles@gmail.com>, 2010-2022.
-# Daniel Mustieles García <daniel.mustieles@gmail.com>, 2023.
+# Daniel Mustieles <daniel.mustieles@gmail.com>, 2010-2023.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: evince.master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
-"POT-Creation-Date: 2023-07-03 21:15+0000\n"
-"PO-Revision-Date: 2023-08-08 07:30+0200\n"
-"Last-Translator: Daniel Mustieles García <daniel.mustieles@gmail.com>\n"
+"POT-Creation-Date: 2023-10-14 19:24+0000\n"
+"PO-Revision-Date: 2023-10-17 15:50+0200\n"
+"Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Spanish - Spain <gnome-es-list@gnome.org>\n"
 "Language: es_ES\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"X-Generator: Gtranslator 42.0\n"
+"X-Generator: Gtranslator 45.alpha0\n"
 
 #: backend/comics/comics-document.c:190 backend/comics/comics-document.c:261
 msgid "File is corrupted"
@@ -307,8 +306,9 @@ msgid "Adds support for reading XPS documents"
 msgstr "Añade soporte para leer documentos XPS"
 
 #. Manually set name and icon
-#: data/org.gnome.Evince.desktop.in.in:3 org.gnome.Evince.metainfo.xml.in:23
-#: shell/ev-window-title.c:131 shell/main.c:300
+#: data/org.gnome.Evince.desktop.in.in:3
+#: data/org.gnome.Evince.metainfo.xml.in:23 shell/ev-window-title.c:131
+#: shell/main.c:300
 msgid "Document Viewer"
 msgstr "Visor de documentos"
 
@@ -413,6 +413,35 @@ msgid ""
 msgstr ""
 "Mostrar la primera página (página impar) a la izquierda (al mostrar dos "
 "paginas una junto a la otra)"
+
+#: data/org.gnome.Evince.metainfo.xml.in:24
+msgid "Document viewer for popular document formats"
+msgstr "Visor de documentos para formatos de documentos populares"
+
+#: data/org.gnome.Evince.metainfo.xml.in:26
+msgid ""
+"A document viewer for the GNOME desktop. You can view, search or annotate "
+"documents in many different formats."
+msgstr ""
+"Un visor de documentos para el escritorio GNOME. Puede ver, buscar o hacer "
+"anotaciones en documentos en varios formatos."
+
+#: data/org.gnome.Evince.metainfo.xml.in:27
+msgid ""
+"Evince supports documents in: PDF, PS, EPS, XPS, DjVu, TIFF, DVI (with "
+"SyncTeX), and Comic Books archives (CBR, CBT, CBZ, CB7)."
+msgstr ""
+"Evince soporta los siguientes formatos de documentos: PDF, PS, EPS, XPS, "
+"DjVu, TIFF, DVI (con SyncTeX), y archivos de libros de cómics (CBR, CBT, "
+"CBZ, CB7)."
+
+#: data/org.gnome.Evince.metainfo.xml.in:35
+msgid "A clear, simple UI"
+msgstr "Una IU simple y limpia"
+
+#: data/org.gnome.Evince.metainfo.xml.in:39
+msgid "Advanced highlighting and annotation"
+msgstr "Resaltado avanzado y anotación"
 
 #: data/org.gnome.Evince-previewer.desktop.in.in:3
 msgid "Print Preview"
@@ -673,51 +702,51 @@ msgstr "Desplazar la vista hacia abajo"
 msgid "Document View"
 msgstr "Vista de documento"
 
-#: libview/ev-view.c:2113
+#: libview/ev-view.c:2138
 msgid "Go to first page"
 msgstr "Ir a la primera página"
 
-#: libview/ev-view.c:2115
+#: libview/ev-view.c:2140
 msgid "Go to previous page"
 msgstr "Ir a la página anterior"
 
-#: libview/ev-view.c:2117
+#: libview/ev-view.c:2142
 msgid "Go to next page"
 msgstr "Ir a la página siguiente"
 
-#: libview/ev-view.c:2119
+#: libview/ev-view.c:2144
 msgid "Go to last page"
 msgstr "Ir a la última página"
 
-#: libview/ev-view.c:2121
+#: libview/ev-view.c:2146
 msgid "Go to page"
 msgstr "Ir a la página"
 
-#: libview/ev-view.c:2123
+#: libview/ev-view.c:2148
 msgid "Find"
 msgstr "Buscar"
 
-#: libview/ev-view.c:2151
+#: libview/ev-view.c:2176
 #, c-format
 msgid "Go to page %s"
 msgstr "Ir a la página %s"
 
-#: libview/ev-view.c:2157
+#: libview/ev-view.c:2182
 #, c-format
 msgid "Go to %s on file “%s”"
 msgstr "Ir a %s en el archivo «%s»"
 
-#: libview/ev-view.c:2160
+#: libview/ev-view.c:2185
 #, c-format
 msgid "Go to file “%s”"
 msgstr "Ir al archivo «%s»"
 
-#: libview/ev-view.c:2168
+#: libview/ev-view.c:2193
 #, c-format
 msgid "Launch %s"
 msgstr "Lanzar %s"
 
-#: libview/ev-view.c:2175
+#: libview/ev-view.c:2200
 msgid "Reset form"
 msgstr "Reiniciar formulario"
 
@@ -728,35 +757,6 @@ msgstr "Saltar a la página:"
 #: libview/ev-view-presentation.c:1010
 msgid "End of presentation. Press Esc or click to exit."
 msgstr "Fin de la presentación. Pulse Esc o con el ratón para salir."
-
-#: org.gnome.Evince.metainfo.xml.in:24
-msgid "Document viewer for popular document formats"
-msgstr "Visor de documentos para formatos de documentos populares"
-
-#: org.gnome.Evince.metainfo.xml.in:26
-msgid ""
-"A document viewer for the GNOME desktop. You can view, search or annotate "
-"documents in many different formats."
-msgstr ""
-"Un visor de documentos para el escritorio GNOME. Puede ver, buscar o hacer "
-"anotaciones en documentos en varios formatos."
-
-#: org.gnome.Evince.metainfo.xml.in:27
-msgid ""
-"Evince supports documents in: PDF, PS, EPS, XPS, DjVu, TIFF, DVI (with "
-"SyncTeX), and Comic Books archives (CBR, CBT, CBZ, CB7)."
-msgstr ""
-"Evince soporta los siguientes formatos de documentos: PDF, PS, EPS, XPS, "
-"DjVu, TIFF, DVI (con SyncTeX), y archivos de libros de cómics (CBR, CBT, "
-"CBZ, CB7)."
-
-#: org.gnome.Evince.metainfo.xml.in:35
-msgid "A clear, simple UI"
-msgstr "Una IU simple y limpia"
-
-#: org.gnome.Evince.metainfo.xml.in:39
-msgid "Advanced highlighting and annotation"
-msgstr "Resaltado avanzado y anotación"
 
 #: previewer/ev-previewer.c:57
 msgid "Delete the temporary file"
@@ -1660,8 +1660,8 @@ msgid "Close _after Printing"
 msgstr "Cerrar _después de imprimir"
 
 #: shell/ev-window.c:4229
-msgid "© 1996–2022 The Evince document viewer authors"
-msgstr "© 1996–2022 Los autores de Evince"
+msgid "© 1996–2023 The Evince document viewer authors"
+msgstr "© 1996–2023 los autores del visor de documentos Evince"
 
 #: shell/ev-window.c:4232
 msgid "Evince is a simple document viewer for GNOME"
