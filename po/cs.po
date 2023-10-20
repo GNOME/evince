@@ -19,8 +19,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: evince\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
-"POT-Creation-Date: 2023-07-14 14:41+0000\n"
-"PO-Revision-Date: 2023-08-16 14:44+0200\n"
+"POT-Creation-Date: 2023-10-17 13:53+0000\n"
+"PO-Revision-Date: 2023-10-20 02:32+0200\n"
 "Last-Translator: Daniel Rusek <mail@asciiwolf.com>\n"
 "Language-Team: čeština <gnome-cs-list@gnome.org>\n"
 "Language: cs\n"
@@ -28,7 +28,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Poedit 3.3.2\n"
+"X-Generator: Poedit 3.4\n"
 "X-Poedit-SourceCharset: utf-8\n"
 
 #: backend/comics/comics-document.c:190 backend/comics/comics-document.c:261
@@ -311,8 +311,9 @@ msgid "Adds support for reading XPS documents"
 msgstr "Přidává podporu pro čtení dokumentů XPS"
 
 #. Manually set name and icon
-#: data/org.gnome.Evince.desktop.in.in:3 org.gnome.Evince.metainfo.xml.in:23
-#: shell/ev-window-title.c:131 shell/main.c:300
+#: data/org.gnome.Evince.desktop.in.in:3
+#: data/org.gnome.Evince.metainfo.xml.in:23 shell/ev-window-title.c:131
+#: shell/main.c:300
 msgid "Document Viewer"
 msgstr "Prohlížeč dokumentů"
 
@@ -416,6 +417,34 @@ msgid ""
 msgstr ""
 "Zobrazit první stránku (lichá stránka) vlevo (při zobrazení dvou stránek "
 "vedle sebe)"
+
+#: data/org.gnome.Evince.metainfo.xml.in:24
+msgid "Document viewer for popular document formats"
+msgstr "Prohlížeč dokumentů pro populární formáty dokumentů"
+
+#: data/org.gnome.Evince.metainfo.xml.in:26
+msgid ""
+"A document viewer for the GNOME desktop. You can view, search or annotate "
+"documents in many different formats."
+msgstr ""
+"Prohlížeč dokumentů pro uživatelské prostředí GNOME. Můžete si prohlížet, "
+"prohledávat a komentovat dokumenty v rozličných formátech."
+
+#: data/org.gnome.Evince.metainfo.xml.in:27
+msgid ""
+"Evince supports documents in: PDF, PS, EPS, XPS, DjVu, TIFF, DVI (with "
+"SyncTeX), and Comic Books archives (CBR, CBT, CBZ, CB7)."
+msgstr ""
+"Podporuje následující formáty dokumentů: PDF, PS, EPS, XPS, DjVu, TIFF, DVI "
+"(pomocí SyncTeX) a archivy s komiksy (CBR, CBT, CBZ, CB7)."
+
+#: data/org.gnome.Evince.metainfo.xml.in:35
+msgid "A clear, simple UI"
+msgstr "Čisté a jednoduché uživatelské rozhraní"
+
+#: data/org.gnome.Evince.metainfo.xml.in:39
+msgid "Advanced highlighting and annotation"
+msgstr "Pokročilé zvýrazňování a psaní poznámek"
 
 #: data/org.gnome.Evince-previewer.desktop.in.in:3
 msgid "Print Preview"
@@ -673,51 +702,51 @@ msgstr "Posunout pohled dolů"
 msgid "Document View"
 msgstr "Pohled na dokument"
 
-#: libview/ev-view.c:2113
+#: libview/ev-view.c:2138
 msgid "Go to first page"
 msgstr "Přejít na první stránku"
 
-#: libview/ev-view.c:2115
+#: libview/ev-view.c:2140
 msgid "Go to previous page"
 msgstr "Přejít na předchozí stránku"
 
-#: libview/ev-view.c:2117
+#: libview/ev-view.c:2142
 msgid "Go to next page"
 msgstr "Přejít na následující stránku"
 
-#: libview/ev-view.c:2119
+#: libview/ev-view.c:2144
 msgid "Go to last page"
 msgstr "Přejít na poslední stránku"
 
-#: libview/ev-view.c:2121
+#: libview/ev-view.c:2146
 msgid "Go to page"
 msgstr "Přejít na stránku"
 
-#: libview/ev-view.c:2123
+#: libview/ev-view.c:2148
 msgid "Find"
 msgstr "Najít"
 
-#: libview/ev-view.c:2151
+#: libview/ev-view.c:2176
 #, c-format
 msgid "Go to page %s"
 msgstr "Přejít na stránku %s"
 
-#: libview/ev-view.c:2157
+#: libview/ev-view.c:2182
 #, c-format
 msgid "Go to %s on file “%s”"
 msgstr "Přejít na %s v souboru „%s“"
 
-#: libview/ev-view.c:2160
+#: libview/ev-view.c:2185
 #, c-format
 msgid "Go to file “%s”"
 msgstr "Přejít na soubor “%s”"
 
-#: libview/ev-view.c:2168
+#: libview/ev-view.c:2193
 #, c-format
 msgid "Launch %s"
 msgstr "Spustit %s"
 
-#: libview/ev-view.c:2175
+#: libview/ev-view.c:2200
 msgid "Reset form"
 msgstr "Čistý formulář"
 
@@ -728,34 +757,6 @@ msgstr "Přejít na stránku:"
 #: libview/ev-view-presentation.c:1010
 msgid "End of presentation. Press Esc or click to exit."
 msgstr "Konec prezentace. Opustíte ji kliknutím nebo klávesou Esc."
-
-#: org.gnome.Evince.metainfo.xml.in:24
-msgid "Document viewer for popular document formats"
-msgstr "Prohlížeč dokumentů pro populární formáty dokumentů"
-
-#: org.gnome.Evince.metainfo.xml.in:26
-msgid ""
-"A document viewer for the GNOME desktop. You can view, search or annotate "
-"documents in many different formats."
-msgstr ""
-"Prohlížeč dokumentů pro uživatelské prostředí GNOME. Můžete si prohlížet, "
-"prohledávat a komentovat dokumenty v rozličných formátech."
-
-#: org.gnome.Evince.metainfo.xml.in:27
-msgid ""
-"Evince supports documents in: PDF, PS, EPS, XPS, DjVu, TIFF, DVI (with "
-"SyncTeX), and Comic Books archives (CBR, CBT, CBZ, CB7)."
-msgstr ""
-"Podporuje následující formáty dokumentů: PDF, PS, EPS, XPS, DjVu, TIFF, DVI "
-"(pomocí SyncTeX) a archivy s komiksy (CBR, CBT, CBZ, CB7)."
-
-#: org.gnome.Evince.metainfo.xml.in:35
-msgid "A clear, simple UI"
-msgstr "Čisté a jednoduché uživatelské rozhraní"
-
-#: org.gnome.Evince.metainfo.xml.in:39
-msgid "Advanced highlighting and annotation"
-msgstr "Pokročilé zvýrazňování a psaní poznámek"
 
 #: previewer/ev-previewer.c:57
 msgid "Delete the temporary file"
@@ -1656,8 +1657,8 @@ msgid "Close _after Printing"
 msgstr "Zavřít _po vytištění"
 
 #: shell/ev-window.c:4229
-msgid "© 1996–2022 The Evince document viewer authors"
-msgstr "© 1996 — 2022 autoři prohlížeče dokumentů Evince"
+msgid "© 1996–2023 The Evince document viewer authors"
+msgstr "© 1996 — 2023 autoři prohlížeče dokumentů Evince"
 
 #: shell/ev-window.c:4232
 msgid "Evince is a simple document viewer for GNOME"
