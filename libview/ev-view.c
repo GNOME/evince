@@ -3225,16 +3225,6 @@ ev_view_window_children_free (EvView *view)
 		g_free (child);
 	}
 	g_clear_pointer (&view->window_children, g_list_free);
-	view->window_child_focus = NULL;
-}
-
-static void
-annotation_window_grab_focus (GtkWidget *widget,
-			      EvView    *view)
-{
-	if (view->window_child_focus)
-		ev_annotation_window_ungrab_focus (EV_ANNOTATION_WINDOW (view->window_child_focus->window));
-	view->window_child_focus = ev_view_get_window_child (view, widget);
 }
 
 static void
@@ -3271,9 +3261,6 @@ ev_view_create_annotation_window (EvView       *view,
 	guint        page;
 
 	window = ev_annotation_window_new (annot, parent);
-	g_signal_connect (window, "grab_focus",
-			  G_CALLBACK (annotation_window_grab_focus),
-			  view);
 	g_signal_connect (window, "closed",
 			  G_CALLBACK (annotation_window_closed),
 			  view);
@@ -5453,14 +5440,6 @@ ev_view_button_press_event (GtkWidget      *widget,
 		gtk_widget_grab_focus (widget);
 	}
 
-	if (view->window_child_focus) {
-		EvAnnotationWindow *window;
-
-		window = EV_ANNOTATION_WINDOW (view->window_child_focus->window);
-		ev_annotation_window_ungrab_focus (window);
-		view->window_child_focus = NULL;
-	}
-
 	view->pressed_button = event->button;
 	view->selection_info.in_drag = FALSE;
 
@@ -6392,11 +6371,8 @@ ev_view_forward_key_event_to_focused_child (EvView      *view,
 	GdkEventKey *new_event;
 	gboolean     handled;
 
-	if (view->window_child_focus) {
-		child_widget = view->window_child_focus->window;
-	} else if (view->children) {
+	if (view->children) {
 		EvViewChild *child = (EvViewChild *)view->children->data;
-
 		child_widget = child->widget;
 	} else {
 		return FALSE;

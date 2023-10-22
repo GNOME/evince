@@ -67,24 +67,6 @@ static guint signals[N_SIGNALS];
 
 G_DEFINE_TYPE (EvAnnotationWindow, ev_annotation_window, GTK_TYPE_WINDOW)
 
-/* Cut and paste from gtkwindow.c */
-static void
-send_focus_change (GtkWidget *widget,
-		   gboolean   in)
-{
-	GdkEvent *fevent = gdk_event_new (GDK_FOCUS_CHANGE);
-
-	fevent->focus_change.type = GDK_FOCUS_CHANGE;
-	fevent->focus_change.window = gtk_widget_get_window (widget);
-	fevent->focus_change.in = in;
-	if (fevent->focus_change.window)
-		g_object_ref (fevent->focus_change.window);
-
-	gtk_widget_send_focus_change (widget, fevent);
-
-	gdk_event_free (fevent);
-}
-
 static void
 ev_annotation_window_sync_contents (EvAnnotationWindow *window)
 {
@@ -207,16 +189,6 @@ ev_annotation_window_set_property (GObject      *object,
 }
 
 static void
-text_view_state_flags_changed (GtkWidget     *widget,
-			       GtkStateFlags  previous_flags)
-{
-	GtkStateFlags current_flags = gtk_widget_get_state_flags (widget);
-
-	if (current_flags & GTK_STATE_FLAG_BACKDROP)
-		gtk_text_view_set_cursor_visible (GTK_TEXT_VIEW (widget), FALSE);
-}
-
-static void
 ev_annotation_window_close (EvAnnotationWindow *window)
 {
 	gtk_widget_hide (GTK_WIDGET (window));
@@ -237,6 +209,15 @@ ev_annotation_window_button_press_event (GtkWidget      *widget,
 	}
 
 	return FALSE;
+}
+
+static void
+ev_annotation_window_has_focus_changed (GtkTextView        *text_view,
+					GParamSpec         *pspec,
+					EvAnnotationWindow *window)
+{
+	if (!gtk_widget_has_focus (GTK_WIDGET (text_view)) && window->annotation)
+		ev_annotation_window_sync_contents (window);
 }
 
 static void
@@ -287,12 +268,14 @@ ev_annotation_window_init (EvAnnotationWindow *window)
 	window->text_view = gtk_text_view_new ();
 
 	gtk_container_set_border_width (GTK_CONTAINER (window->text_view), 6);
+	gtk_text_view_set_cursor_visible (GTK_TEXT_VIEW (window->text_view), TRUE);
 	gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (window->text_view), GTK_WRAP_WORD);
-	g_signal_connect (window->text_view, "state-flags-changed",
-			  G_CALLBACK (text_view_state_flags_changed),
-			  window);
 	gtk_container_add (GTK_CONTAINER (swindow), window->text_view);
 	gtk_widget_show (window->text_view);
+	gtk_window_set_focus (GTK_WINDOW (window), window->text_view);
+	g_signal_connect (window->text_view, "notify::has-focus",
+			  G_CALLBACK (ev_annotation_window_has_focus_changed),
+			  window);
 
 	gtk_box_pack_start (GTK_BOX (vbox), swindow, TRUE, TRUE, 0);
 	gtk_widget_show (swindow);
@@ -382,30 +365,6 @@ ev_annotation_window_constructor (GType                  type,
 }
 
 static gboolean
-ev_annotation_window_focus_in_event (GtkWidget     *widget,
-				     GdkEventFocus *event)
-{
-	EvAnnotationWindow *window = EV_ANNOTATION_WINDOW (widget);
-
-	gtk_widget_grab_focus (window->text_view);
-	send_focus_change (window->text_view, TRUE);
-	gtk_text_view_set_cursor_visible (GTK_TEXT_VIEW (window->text_view), TRUE);
-
-	return FALSE;
-}
-
-static gboolean
-ev_annotation_window_focus_out_event (GtkWidget     *widget,
-				      GdkEventFocus *event)
-{
-	EvAnnotationWindow *window = EV_ANNOTATION_WINDOW (widget);
-
-	ev_annotation_window_sync_contents (window);
-
-	return FALSE;
-}
-
-static gboolean
 ev_annotation_window_key_press_event (GtkWidget   *widget,
                                       GdkEventKey *event)
 {
@@ -427,8 +386,6 @@ ev_annotation_window_class_init (EvAnnotationWindowClass *klass)
 	g_object_class->set_property = ev_annotation_window_set_property;
 	g_object_class->dispose = ev_annotation_window_dispose;
 
-	gtk_widget_class->focus_in_event = ev_annotation_window_focus_in_event;
-	gtk_widget_class->focus_out_event = ev_annotation_window_focus_out_event;
         gtk_widget_class->key_press_event = ev_annotation_window_key_press_event;
 
 	gtk_widget_class_set_css_name (gtk_widget_class, "evannotationwindow");
@@ -511,29 +468,6 @@ ev_annotation_window_set_rectangle (EvAnnotationWindow *window,
 	g_return_if_fail (rect != NULL);
 
 	window->rect = *rect;
-}
-
-void
-ev_annotation_window_grab_focus (EvAnnotationWindow *window)
-{
-	g_return_if_fail (EV_IS_ANNOTATION_WINDOW (window));
-
-	if (!gtk_widget_has_focus (window->text_view)) {
-		gtk_widget_grab_focus (GTK_WIDGET (window));
-		send_focus_change (window->text_view, TRUE);
-	}
-}
-
-void
-ev_annotation_window_ungrab_focus (EvAnnotationWindow *window)
-{
-	g_return_if_fail (EV_IS_ANNOTATION_WINDOW (window));
-
-	if (gtk_widget_has_focus (window->text_view)) {
-		send_focus_change (window->text_view, FALSE);
-	}
-
-	ev_annotation_window_sync_contents (window);
 }
 
 void

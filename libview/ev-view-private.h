@@ -224,7 +224,6 @@ struct _EvView {
 
 	/* Annotations */
 	GList             *window_children;
-	EvViewWindowChild *window_child_focus;
 	AddingAnnotInfo    adding_annot_info;
 	MovingAnnotInfo    moving_annot_info;
 	GHashTable        *annot_window_map;
