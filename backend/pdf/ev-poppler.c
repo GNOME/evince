@@ -654,6 +654,7 @@ pdf_document_get_info (EvDocument *document)
 			break;
 		case POPPLER_PAGE_LAYOUT_TWO_COLUMN_RIGHT:
 			info->layout = EV_DOCUMENT_LAYOUT_TWO_COLUMN_RIGHT;
+			break;
 		case POPPLER_PAGE_LAYOUT_TWO_PAGE_LEFT:
 			info->layout = EV_DOCUMENT_LAYOUT_TWO_PAGE_LEFT;
 			break;
