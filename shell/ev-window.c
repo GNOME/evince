@@ -196,7 +196,7 @@ typedef struct {
 
 	/* Has the document been modified? */
 	gboolean is_modified;
-	guint modified_handler_id;
+	gulong   modified_handler_id;
 
 	/* Load params */
 	EvLinkDest       *dest;

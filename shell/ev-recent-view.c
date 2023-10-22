@@ -52,7 +52,7 @@ typedef struct {
         GtkListStore     *model;
         GtkRecentManager *recent_manager;
         GtkTreePath      *pressed_item_tree_path;
-        guint             recent_manager_changed_handler_id;
+	gulong            recent_manager_changed_handler_id;
 
 #ifdef HAVE_LIBGNOME_DESKTOP
         GnomeDesktopThumbnailFactory *thumbnail_factory;
