@@ -485,22 +485,6 @@ ev_annotation_window_get_annotation (EvAnnotationWindow *window)
 	return window->annotation;
 }
 
-void
-ev_annotation_window_set_annotation (EvAnnotationWindow *window,
-				     EvAnnotation       *annot)
-{
-	g_return_if_fail (EV_IS_ANNOTATION_WINDOW (window));
-	g_return_if_fail (EV_IS_ANNOTATION (annot));
-
-	if (annot == window->annotation)
-		return;
-
-	g_object_unref (window->annotation);
-	window->annotation = g_object_ref (annot);
-	ev_annotation_window_sync_contents (window);
-	g_object_notify (G_OBJECT (window), "annotation");
-}
-
 gboolean
 ev_annotation_window_is_open (EvAnnotationWindow *window)
 {
