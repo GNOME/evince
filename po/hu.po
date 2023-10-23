@@ -4,21 +4,21 @@
 #
 # Gabor Kelemen <kelemeng at gnome dot hu>, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2015, 2016.
 # Balázs Úr <ur.balazs at fsf dot hu>, 2014, 2015, 2017, 2018, 2019, 2020, 2021, 2022, 2023.
-# Balázs Meskó <mesko.balazs at fsf dot hu>, 2021.
+# Balázs Meskó <mesko.balazs at fsf dot hu>, 2021, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: evince master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
-"POT-Creation-Date: 2023-07-14 14:41+0000\n"
-"PO-Revision-Date: 2023-07-26 00:19+0200\n"
-"Last-Translator: Balázs Úr <ur.balazs at fsf dot hu>\n"
+"POT-Creation-Date: 2023-10-17 13:53+0000\n"
+"PO-Revision-Date: 2023-10-21 18:19+0200\n"
+"Last-Translator: Balázs Meskó <mesko.balazs at fsf dot hu>\n"
 "Language-Team: Hungarian <openscope at fsf dot hu>\n"
 "Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 23.04.1\n"
+"X-Generator: Lokalize 22.08.0\n"
 
 #: backend/comics/comics-document.c:190 backend/comics/comics-document.c:261
 msgid "File is corrupted"
@@ -298,8 +298,9 @@ msgid "Adds support for reading XPS documents"
 msgstr "Támogatást nyújt XPS dokumentumok olvasásához"
 
 #. Manually set name and icon
-#: data/org.gnome.Evince.desktop.in.in:3 org.gnome.Evince.metainfo.xml.in:23
-#: shell/ev-window-title.c:131 shell/main.c:300
+#: data/org.gnome.Evince.desktop.in.in:3
+#: data/org.gnome.Evince.metainfo.xml.in:23 shell/ev-window-title.c:131
+#: shell/main.c:300
 msgid "Document Viewer"
 msgstr "Dokumentummegjelenítő"
 
@@ -376,22 +377,22 @@ msgstr ""
 #: data/org.gnome.Evince.gschema.xml:53
 msgid "Show a side bar next to the document to help navigate the document."
 msgstr ""
-"Oldalsáv megjelenítése a dokumentum mellett a dokumentumban való navigáció"
-" megkönnyítéséhez."
+"Oldalsáv megjelenítése a dokumentum mellett a dokumentumban való navigáció "
+"megkönnyítéséhez."
 
 #: data/org.gnome.Evince.gschema.xml:63
-#| msgid "Select or set the zoom level of the document"
 msgid "Set the default zoom level to display a document."
 msgstr ""
-"Az alapértelmezett nagyítási szint beállítása egy dokumentum megjelenítéséhez."
+"Az alapértelmezett nagyítási szint beállítása egy dokumentum "
+"megjelenítéséhez."
 
 #: data/org.gnome.Evince.gschema.xml:70
 msgid ""
 "Display the document as a continuous stream of pages instead of page at a "
 "time."
 msgstr ""
-"A dokumentum megjelenítése folyamatos oldalfolyamként az egyszerre egy oldal"
-" megjelenítése helyett."
+"A dokumentum megjelenítése folyamatos oldalfolyamként az egyszerre egy oldal "
+"megjelenítése helyett."
 
 #: data/org.gnome.Evince.gschema.xml:74
 msgid "Show two pages side by side."
@@ -402,8 +403,37 @@ msgid ""
 "Show the first page (odd page) on the left (when displaying two pages side "
 "by side)"
 msgstr ""
-"Az első oldal (páratlan oldal) megjelenítése a bal oldalon (két oldal egymás"
-" melletti megjelenítésekor)"
+"Az első oldal (páratlan oldal) megjelenítése a bal oldalon (két oldal egymás "
+"melletti megjelenítésekor)"
+
+#: data/org.gnome.Evince.metainfo.xml.in:24
+msgid "Document viewer for popular document formats"
+msgstr "Dokumentummegjelenítő a népszerű dokumentumformátumokhoz"
+
+#: data/org.gnome.Evince.metainfo.xml.in:26
+msgid ""
+"A document viewer for the GNOME desktop. You can view, search or annotate "
+"documents in many different formats."
+msgstr ""
+"Dokumentummegjelenítő a GNOME asztali környezethez. Megtekintheti, keresheti "
+"és jegyzetekkel láthatja el a dokumentumokat számos formátumban."
+
+#: data/org.gnome.Evince.metainfo.xml.in:27
+msgid ""
+"Evince supports documents in: PDF, PS, EPS, XPS, DjVu, TIFF, DVI (with "
+"SyncTeX), and Comic Books archives (CBR, CBT, CBZ, CB7)."
+msgstr ""
+"Az Evince a következő dokumentumformátumokat támogatja: PDF, PS, EPS, XPS, "
+"DjVu, TIFF, DVI (SyncTeX-kel), valamint képregény-archívumok (CBR, CBT, CBZ, "
+"CB7)."
+
+#: data/org.gnome.Evince.metainfo.xml.in:35
+msgid "A clear, simple UI"
+msgstr "Egyszerű, letisztult felület"
+
+#: data/org.gnome.Evince.metainfo.xml.in:39
+msgid "Advanced highlighting and annotation"
+msgstr "Fejlett kiemelés és jegyzetek hozzáadása"
 
 #: data/org.gnome.Evince-previewer.desktop.in.in:3
 msgid "Print Preview"
@@ -661,51 +691,51 @@ msgstr "Nézet görgetése lefelé"
 msgid "Document View"
 msgstr "Dokumentumnézet"
 
-#: libview/ev-view.c:2113
+#: libview/ev-view.c:2138
 msgid "Go to first page"
 msgstr "Ugrás az első oldalra"
 
-#: libview/ev-view.c:2115
+#: libview/ev-view.c:2140
 msgid "Go to previous page"
 msgstr "Ugrás az előző oldalra"
 
-#: libview/ev-view.c:2117
+#: libview/ev-view.c:2142
 msgid "Go to next page"
 msgstr "Ugrás a következő oldalra"
 
-#: libview/ev-view.c:2119
+#: libview/ev-view.c:2144
 msgid "Go to last page"
 msgstr "Ugrás az utolsó oldalra"
 
-#: libview/ev-view.c:2121
+#: libview/ev-view.c:2146
 msgid "Go to page"
 msgstr "Ugrás:"
 
-#: libview/ev-view.c:2123
+#: libview/ev-view.c:2148
 msgid "Find"
 msgstr "Keresés"
 
-#: libview/ev-view.c:2151
+#: libview/ev-view.c:2176
 #, c-format
 msgid "Go to page %s"
 msgstr "Ugrás a(z) %s oldalra"
 
-#: libview/ev-view.c:2157
+#: libview/ev-view.c:2182
 #, c-format
 msgid "Go to %s on file “%s”"
 msgstr "Ugrás erre: %s a következő fájlban: „%s”"
 
-#: libview/ev-view.c:2160
+#: libview/ev-view.c:2185
 #, c-format
 msgid "Go to file “%s”"
 msgstr "Ugrás a(z) %s fájlra"
 
-#: libview/ev-view.c:2168
+#: libview/ev-view.c:2193
 #, c-format
 msgid "Launch %s"
 msgstr "%s indítása"
 
-#: libview/ev-view.c:2175
+#: libview/ev-view.c:2200
 msgid "Reset form"
 msgstr "Űrlap visszaállítása"
 
@@ -717,35 +747,6 @@ msgstr "Ugrás oldalra:"
 msgid "End of presentation. Press Esc or click to exit."
 msgstr ""
 "Vége a bemutatónak. A kilépéshez kattintson, vagy nyomja meg az Esc gombot."
-
-#: org.gnome.Evince.metainfo.xml.in:24
-msgid "Document viewer for popular document formats"
-msgstr "Dokumentummegjelenítő a népszerű dokumentumformátumokhoz"
-
-#: org.gnome.Evince.metainfo.xml.in:26
-msgid ""
-"A document viewer for the GNOME desktop. You can view, search or annotate "
-"documents in many different formats."
-msgstr ""
-"Dokumentummegjelenítő a GNOME asztali környezethez. Megtekintheti, keresheti "
-"és jegyzetekkel láthatja el a dokumentumokat számos formátumban."
-
-#: org.gnome.Evince.metainfo.xml.in:27
-msgid ""
-"Evince supports documents in: PDF, PS, EPS, XPS, DjVu, TIFF, DVI (with "
-"SyncTeX), and Comic Books archives (CBR, CBT, CBZ, CB7)."
-msgstr ""
-"Az Evince a következő dokumentumformátumokat támogatja: PDF, PS, EPS, XPS, "
-"DjVu, TIFF, DVI (SyncTeX-kel), valamint képregény-archívumok (CBR, CBT, CBZ, "
-"CB7)."
-
-#: org.gnome.Evince.metainfo.xml.in:35
-msgid "A clear, simple UI"
-msgstr "Egyszerű, letisztult felület"
-
-#: org.gnome.Evince.metainfo.xml.in:39
-msgid "Advanced highlighting and annotation"
-msgstr "Fejlett kiemelés és jegyzetek hozzáadása"
 
 #: previewer/ev-previewer.c:57
 msgid "Delete the temporary file"
@@ -1410,7 +1411,6 @@ msgid "Page %d"
 msgstr "%d. oldal"
 
 #: shell/ev-sidebar-annotations.c:403
-#| msgid "Comment"
 msgid "No Comment"
 msgstr "Nincs megjegyzés"
 
@@ -1647,8 +1647,9 @@ msgid "Close _after Printing"
 msgstr "Bezárás nyomtatás _után"
 
 #: shell/ev-window.c:4229
-msgid "© 1996–2022 The Evince document viewer authors"
-msgstr "© 1996-2022 Az Evince dokumentummegjelenítő szerzői"
+#| msgid "© 1996–2022 The Evince document viewer authors"
+msgid "© 1996–2023 The Evince document viewer authors"
+msgstr "© 1996–2023 Az Evince dokumentummegjelenítő szerzői"
 
 #: shell/ev-window.c:4232
 msgid "Evince is a simple document viewer for GNOME"
