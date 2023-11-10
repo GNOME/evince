@@ -225,6 +225,9 @@ ev_sidebar_thumbnails_page_is_in_visible_range (EvSidebarThumbnails *sidebar,
         gboolean     retval;
         GList *selection;
 
+	if (!sidebar->priv->icon_view)
+		return FALSE;
+
         selection = gtk_icon_view_get_selected_items (GTK_ICON_VIEW (sidebar->priv->icon_view));
         if (!selection)
                 return FALSE;
