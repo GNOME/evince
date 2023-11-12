@@ -2,6 +2,12 @@ sources = files(
   'ev-page-action-widget.c',
 )
 
+sources += gnome.compile_resources(
+  'ev-resources',
+  'libmisc.gresource.xml',
+  c_name: 'libmisc',
+)
+
 libevmisc = static_library(
   'evmisc',
   sources: sources,

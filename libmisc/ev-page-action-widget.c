@@ -231,45 +231,7 @@ focus_out_cb (EvPageActionWidget *action_widget)
 static void
 ev_page_action_widget_init (EvPageActionWidget *action_widget)
 {
-	AtkObject *obj;
-        GtkStyleContext *style_context;
-
-	style_context = gtk_widget_get_style_context (GTK_WIDGET (action_widget));
-        gtk_style_context_add_class (style_context, "raised");
-        gtk_style_context_add_class (style_context, "linked");
-        gtk_style_context_add_class (style_context, "tnum");
-
-	action_widget->entry = gtk_entry_new ();
-	gtk_widget_add_events (action_widget->entry,
-			       GDK_BUTTON_MOTION_MASK);
-	gtk_entry_set_width_chars (GTK_ENTRY (action_widget->entry), 5);
-	gtk_entry_set_text (GTK_ENTRY (action_widget->entry), "");
-	g_signal_connect_swapped (action_widget->entry, "scroll-event",
-				  G_CALLBACK (page_scroll_cb),
-				  action_widget);
-	g_signal_connect_swapped (action_widget->entry, "activate",
-				  G_CALLBACK (activate_cb),
-				  action_widget);
-        g_signal_connect_swapped (action_widget->entry, "focus-out-event",
-                                  G_CALLBACK (focus_out_cb),
-                                  action_widget);
-	g_object_set (action_widget->entry, "xalign", 1.0, NULL);
-
-	obj = gtk_widget_get_accessible (action_widget->entry);
-	atk_object_set_name (obj, "page-label-entry");
-
-	gtk_box_pack_start (GTK_BOX (action_widget), action_widget->entry,
-			    FALSE, FALSE, 0);
-	gtk_widget_show (action_widget->entry);
-
-	action_widget->label = gtk_entry_new ();
-        gtk_widget_set_sensitive (action_widget->label, FALSE);
-        gtk_entry_set_width_chars (GTK_ENTRY (action_widget->label), 5);
-	gtk_box_pack_start (GTK_BOX (action_widget), action_widget->label,
-			    FALSE, FALSE, 0);
-	gtk_widget_show (action_widget->label);
-
-        gtk_widget_set_sensitive (GTK_WIDGET (action_widget), FALSE);
+	gtk_widget_init_template (GTK_WIDGET (action_widget));
 }
 
 static void
@@ -358,6 +320,15 @@ ev_page_action_widget_class_init (EvPageActionWidgetClass *klass)
         GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
 
 	object_class->finalize = ev_page_action_widget_finalize;
+
+	gtk_widget_class_set_template_from_resource (widget_class,
+						     "/org/gnome/evince/ui/ev-page-action-widget.ui");
+	gtk_widget_class_bind_template_child (widget_class, EvPageActionWidget, entry);
+	gtk_widget_class_bind_template_child (widget_class, EvPageActionWidget, label);
+
+	gtk_widget_class_bind_template_callback (widget_class, page_scroll_cb);
+	gtk_widget_class_bind_template_callback (widget_class, activate_cb);
+	gtk_widget_class_bind_template_callback (widget_class, focus_out_cb);
 
 	widget_signals[WIDGET_ACTIVATE_LINK] =
 		g_signal_new ("activate_link",
