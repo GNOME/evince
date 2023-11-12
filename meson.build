@@ -469,11 +469,11 @@ subdir('properties')
 # *** Document Viewer ***
 enable_viewer = get_option('viewer')
 if enable_viewer
-  #subdir('shell')
+  subdir('shell')
 endif
 
 subdir('po')
-#subdir('help')
+subdir('help')
 
 # *** Thumbnailer ***
 enable_thumbnailer = get_option('thumbnailer')
