@@ -71,7 +71,7 @@ show_page_number_in_pages_label (EvPageActionWidget *action_widget,
                 return FALSE;
 
         page_label = g_strdup_printf ("%d", page + 1);
-        retval = g_strcmp0 (page_label, gtk_entry_get_text (GTK_ENTRY (action_widget->entry))) != 0;
+        retval = g_strcmp0 (page_label, gtk_editable_get_text (GTK_EDITABLE (action_widget->entry))) != 0;
         g_free (page_label);
 
         return retval;
@@ -89,7 +89,7 @@ update_pages_label (EvPageActionWidget *action_widget,
                 label_text = g_strdup_printf (_("(%d of %d)"), page + 1, n_pages);
         else
                 label_text = g_strdup_printf (_("of %d"), n_pages);
-	gtk_entry_set_text (GTK_ENTRY (action_widget->label), label_text);
+	gtk_editable_set_text (GTK_EDITABLE (action_widget->label), label_text);
 	g_free (label_text);
 }
 
@@ -101,11 +101,11 @@ ev_page_action_widget_set_current_page (EvPageActionWidget *action_widget,
 		gchar *page_label;
 
 		page_label = ev_document_get_page_label (action_widget->document, page);
-		gtk_entry_set_text (GTK_ENTRY (action_widget->entry), page_label);
+		gtk_editable_set_text (GTK_EDITABLE (action_widget->entry), page_label);
 		gtk_editable_set_position (GTK_EDITABLE (action_widget->entry), -1);
 		g_free (page_label);
 	} else {
-		gtk_entry_set_text (GTK_ENTRY (action_widget->entry), "");
+		gtk_editable_set_text (GTK_EDITABLE (action_widget->entry), "");
 	}
 
 	update_pages_label (action_widget, page);
@@ -134,11 +134,11 @@ ev_page_action_widget_update_max_width (EvPageActionWidget *action_widget)
         }
         g_free (max_page_label);
 
-        gtk_entry_set_width_chars (GTK_ENTRY (action_widget->label), max_label_len);
+        gtk_editable_set_width_chars (GTK_EDITABLE (action_widget->label), max_label_len);
         g_free (max_label);
 
         max_label_len = ev_document_get_max_label_len (action_widget->document);
-        gtk_entry_set_width_chars (GTK_ENTRY (action_widget->entry),
+        gtk_editable_set_width_chars (GTK_EDITABLE (action_widget->entry),
                                    CLAMP (max_label_len, strlen (max_page_numeric_label) + 1, 12));
         g_free (max_page_numeric_label);
 }
@@ -153,16 +153,22 @@ page_changed_cb (EvDocumentModel    *model,
 }
 
 static gboolean
-page_scroll_cb (EvPageActionWidget *action_widget, GdkEventScroll *event)
+page_scroll_cb (GtkEventControllerScroll	*self,
+		gdouble				 dx,
+		gdouble				 dy,
+		gpointer			 user_data)
 {
+	EvPageActionWidget *action_widget = EV_PAGE_ACTION_WIDGET (user_data);
 	EvDocumentModel *model = action_widget->doc_model;
-	gint pageno;
+	GdkEvent *event = gtk_event_controller_get_current_event (
+			GTK_EVENT_CONTROLLER (self));
+	GdkScrollDirection direction = gdk_scroll_event_get_direction (event);
+	gint pageno = ev_document_model_get_page (model);
 
-	pageno = ev_document_model_get_page (model);
-	if ((event->direction == GDK_SCROLL_DOWN) &&
+	if ((direction == GDK_SCROLL_DOWN) &&
 	    (pageno < ev_document_get_n_pages (action_widget->document) - 1))
 		pageno++;
-	if ((event->direction == GDK_SCROLL_UP) && (pageno > 0))
+	if ((direction == GDK_SCROLL_UP) && (pageno > 0))
 		pageno--;
 	ev_document_model_set_page (model, pageno);
 
@@ -225,14 +231,14 @@ activate_cb (EvPageActionWidget *action_widget)
 	model = action_widget->doc_model;
 	current_page = ev_document_model_get_page (model);
 
-	text = gtk_entry_get_text (GTK_ENTRY (action_widget->entry));
+	text = gtk_editable_get_text (GTK_EDITABLE (action_widget->entry));
 
 	/* If we are not in search mode, i.e. we are entering a page number */
 	if (!ev_page_action_widget_completion_search_is_enabled (action_widget)) {
 		/* Convert utf8 fullwidth numbers (eg. japanese) to halfwidth - fixes #1518 */
 		new_text = g_utf8_normalize (text, -1, G_NORMALIZE_ALL);
-		gtk_entry_set_text (GTK_ENTRY (action_widget->entry), new_text);
-		text = gtk_entry_get_text (GTK_ENTRY (action_widget->entry));
+		gtk_editable_set_text (GTK_EDITABLE (action_widget->entry), new_text);
+		text = gtk_editable_get_text (GTK_EDITABLE (action_widget->entry));
 		g_free (new_text);
 	}
 
@@ -387,7 +393,7 @@ static void
 ev_page_action_widget_class_init (EvPageActionWidgetClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-        GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
+	GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
 
 	object_class->dispose = ev_page_action_widget_dispose;
 	object_class->finalize = ev_page_action_widget_finalize;
@@ -628,7 +634,7 @@ ev_page_action_widget_grab_focus (EvPageActionWidget *proxy)
 void
 ev_page_action_widget_clear (EvPageActionWidget *proxy)
 {
-	gtk_entry_set_text (GTK_ENTRY (proxy->entry), "");
+	gtk_editable_set_text (GTK_EDITABLE (proxy->entry), "");
 }
 
 /* Sets width of the text entry, width will be restablished
@@ -638,7 +644,7 @@ ev_page_action_widget_clear (EvPageActionWidget *proxy)
 void
 ev_page_action_widget_set_temporary_entry_width (EvPageActionWidget *proxy, gint width)
 {
-	gtk_entry_set_width_chars (GTK_ENTRY (proxy->entry), width);
+	gtk_editable_set_width_chars (GTK_EDITABLE (proxy->entry), width);
 	/* xalign will also be restablished on focus_out */
 	g_object_set (proxy->entry, "xalign", 0., NULL);
 }

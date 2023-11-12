@@ -1,31 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <template class="EvPageActionWidget" parent="GtkBox">
+    <style>
+      <class name="linked" />
+      <class name="tnum" />
+    </style>
     <property name="orientation">horizontal</property>
     <property name="sensitive">False</property>
-    <style>
-      <class name="linked"/>
-      <class name="raised"/>
-      <class name="tnum"/>
-    </style>
     <child>
       <object class="GtkEntry" id="entry">
-        <property name="visible">True</property>
+        <accessibility>
+          <property name="label" translatable="yes">page-label-entry</property>
+        </accessibility>
+        <property name="max-width-chars">0</property>
         <property name="width-chars">5</property>
         <property name="xalign">1.0</property>
-        <signal name="activate" handler="activate_cb" swapped="yes"/>
-        <signal name="scroll-event" handler="page_scroll_cb"/>
-        <signal name="focus-out-event" handler="focus_out_cb" swapped="yes"/>
-        <child internal-child="accessible">
-          <object class="AtkObject">
-            <property name="AtkObject::accessible-name" translatable="yes">page-label-entry</property>
+        <signal name="activate" handler="activate_cb" swapped="yes" />
+        <child>
+          <object class="GtkEventControllerScroll">
+            <property name="flags">vertical|discrete</property>
+            <signal name="scroll" handler="page_scroll_cb" />
+          </object>
+        </child>
+        <child>
+          <object class="GtkEventControllerFocus">
+            <signal name="leave" handler="focus_out_cb" swapped="yes" />
           </object>
         </child>
       </object>
     </child>
     <child>
       <object class="GtkEntry" id="label">
-        <property name="visible">True</property>
+        <property name="max-width-chars">0</property>
         <property name="width-chars">5</property>
         <property name="sensitive">False</property>
       </object>
