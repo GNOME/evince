@@ -222,6 +222,7 @@ endif
 
 # *** GObject Introspection ***
 enable_introspection = get_option('introspection')
+enable_user_doc = get_option('user_doc')
 enable_gtk_doc = get_option('gtk_doc')
 if enable_introspection
   dependency('gobject-introspection-1.0', version: '>= 1.0')
@@ -458,31 +459,31 @@ mime_types_conf.set('EVINCE_MIME_TYPES', ';'.join(evince_mime_types))
 mime_types_conf.set('app_id', application_id)
 
 subdir('cut-n-paste')
-subdir('libdocument')
-subdir('backend')
-subdir('libview')
-subdir('libmisc')
-subdir('properties')
+#subdir('libdocument')
+#subdir('backend')
+#subdir('libview')
+#subdir('libmisc')
+#subdir('properties')
 
 # *** Document Viewer ***
 enable_viewer = get_option('viewer')
 if enable_viewer
-  subdir('shell')
+  #subdir('shell')
 endif
 
 subdir('po')
-subdir('help')
+#subdir('help')
 
 # *** Thumbnailer ***
 enable_thumbnailer = get_option('thumbnailer')
 if enable_thumbnailer
-  subdir('thumbnailer')
+  #subdir('thumbnailer')
 endif
 
 # Print Previewer
 enable_previewer = get_option('previewer')
 if enable_previewer
-  subdir('previewer')
+  #subdir('previewer')
 endif
 
 subdir('data')

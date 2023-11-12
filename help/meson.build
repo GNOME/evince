@@ -1,4 +1,3 @@
-enable_user_doc = get_option('user_doc')
 if enable_gtk_doc
   glib_prefix = glib_dep.get_variable(pkgconfig: 'prefix')
   gtk_prefix = gtk_dep.get_variable(pkgconfig: 'prefix')
