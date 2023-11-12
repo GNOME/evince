@@ -387,14 +387,13 @@ ev_attachment_launch_app (EvAttachment *attachment,
 
 gboolean
 ev_attachment_open (EvAttachment *attachment,
-		    GdkScreen    *screen,
+		    GdkDisplay   *display,
 		    guint32       timestamp,
 		    GError      **error)
 {
 	GAppInfo *app_info;
 	gboolean  retval = FALSE;
 	EvAttachmentPrivate *priv;
-	GdkDisplay *display = gdk_screen_get_display (screen);
 
 	g_return_val_if_fail (EV_IS_ATTACHMENT (attachment), FALSE);
 
