@@ -36,7 +36,6 @@ ev_document_misc_render_thumbnail_frame (GtkWidget       *widget,
                                          cairo_surface_t *source_surface)
 {
         GtkStyleContext *context = gtk_widget_get_style_context (widget);
-        GtkStateFlags    state = gtk_widget_get_state_flags (widget);
         double           width_r, height_r;
         double           width_f, height_f;
         cairo_surface_t *surface;
@@ -70,7 +69,7 @@ ev_document_misc_render_thumbnail_frame (GtkWidget       *widget,
         if (inverted_colors)
                 gtk_style_context_add_class (context, "inverted");
 
-        gtk_style_context_get_border (context, state, &border);
+        gtk_style_context_get_border (context, &border);
         width_f = width_r + border.left + border.right;
         height_f = height_r + border.top + border.bottom;
 
@@ -261,20 +260,18 @@ ev_document_misc_invert_surface (cairo_surface_t *surface) {
 gdouble
 ev_document_misc_get_widget_dpi (GtkWidget *widget)
 {
-	GdkRectangle  geometry;
-	GdkDisplay   *display;
-	GdkMonitor   *monitor;
-	GdkWindow    *window;
+	GdkDisplay   *display = gtk_widget_get_display (widget);
+	GtkNative    *native = gtk_widget_get_native (widget);
+	GdkSurface   *surface = NULL;
+	GdkMonitor   *monitor = NULL;
 	gboolean      is_landscape;
+	GdkRectangle  geometry;
 
-	display = gtk_widget_get_display (widget);
-	window = gtk_widget_get_window (widget);
-	if (window != NULL) {
-		monitor = gdk_display_get_monitor_at_window (display, window);
-	} else {
-		monitor = gdk_display_get_primary_monitor (display);
-		if (monitor == NULL)
-			monitor = gdk_display_get_monitor (display, 0);
+	if (native != NULL)
+		surface = gtk_native_get_surface (native);
+
+	if (surface != NULL) {
+		monitor = gdk_display_get_monitor_at_surface (display, surface);
 	}
 
 	/* The only safe assumption you can make, on Unix-like/X11 and
@@ -332,30 +329,45 @@ ev_document_misc_get_pointer_position (GtkWidget *widget,
                                        gint      *x,
                                        gint      *y)
 {
-        GdkSeat      *seat;
-        GdkDevice    *device_pointer;
-        GdkRectangle  allocation;
+	gdouble     dx, dy;
+	GdkSeat    *seat;
+	GtkNative  *native;
+	GdkDevice  *device_pointer;
+	GdkSurface *surface;
 
-        if (x)
-                *x = -1;
-        if (y)
-                *y = -1;
+	if (x)
+		*x = -1;
+	if (y)
+		*y = -1;
 
-        if (!gtk_widget_get_realized (widget))
-                return;
+	if (!gtk_widget_get_realized (widget))
+		return;
 
-        seat = gdk_display_get_default_seat (gtk_widget_get_display (widget));
-        device_pointer = gdk_seat_get_pointer (seat);
-        gdk_window_get_device_position (gtk_widget_get_window (widget),
-                                        device_pointer,
-                                        x, y, NULL);
+	seat = gdk_display_get_default_seat (gtk_widget_get_display (widget));
 
-        if (gtk_widget_get_has_window (widget))
-                return;
+	device_pointer = gdk_seat_get_pointer (seat);
+	native = gtk_widget_get_native (widget);
 
-        gtk_widget_get_allocation (widget, &allocation);
-        if (x)
-                *x -= allocation.x;
-        if (y)
-                *y -= allocation.y;
+	if (!native)
+		return;
+
+	surface = gtk_native_get_surface (native);
+	if (!surface)
+		return;
+
+	gdk_surface_get_device_position (surface,
+					 device_pointer,
+					 &dx, &dy, NULL);
+
+	if (x)
+		*x = dx;
+	if (y)
+		*y = dy;
+
+	gtk_widget_translate_coordinates (widget, GTK_WIDGET (native), 0, 0, &dx, &dy);
+
+	if (x)
+		*x -= dx;
+	if (y)
+		*y -= dy;
 }
