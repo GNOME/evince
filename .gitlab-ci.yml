@@ -65,6 +65,7 @@ meson-internal-synctex:
 flatpak:
     extends: .flatpak
     stage: build
+    when: manual
 
 nightly:
     extends: .publish_nightly
