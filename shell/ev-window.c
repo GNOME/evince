@@ -280,7 +280,6 @@ static void     ev_window_save_job_cb                   (EvJob            *save,
 							 EvWindow         *window);
 static void     ev_window_add_recent                    (EvWindow         *window,
 							 const char       *uri);
-static gboolean ev_window_is_fullscreen                 (EvWindow         *window);
 static void     ev_window_run_fullscreen                (EvWindow         *window);
 static void     ev_window_stop_fullscreen               (EvWindow         *window,
 							 gboolean          unfullscreen_window);
@@ -3971,7 +3970,8 @@ ev_window_save_settings (EvWindow *ev_window)
 	g_settings_set_boolean (settings, "dual-page-odd-left",
 				ev_document_model_get_dual_page_odd_pages_left (model));
 	g_settings_set_boolean (settings, "fullscreen",
-				ev_window_is_fullscreen (ev_window));
+				gtk_window_is_fullscreen (GTK_WINDOW (ev_window)) &&
+				!EV_WINDOW_IS_PRESENTATION (priv));
 	g_settings_set_boolean (settings, "inverted-colors",
 				ev_document_model_get_inverted_colors (model));
 	sizing_mode = ev_document_model_get_sizing_mode (model);
@@ -4471,17 +4471,6 @@ ev_window_update_fullscreen_action (EvWindow *window,
 	g_simple_action_set_state (G_SIMPLE_ACTION (action), g_variant_new_boolean (fullscreen));
 }
 
-static gboolean
-ev_window_is_fullscreen (EvWindow *window)
-{
-	GAction *action;
-	g_autoptr (GVariant) variant;
-
-	action = g_action_map_lookup_action (G_ACTION_MAP (window), "fullscreen");
-	variant = g_action_get_state (action);
-	return g_variant_get_boolean (variant);
-}
-
 static void
 ev_window_run_fullscreen (EvWindow *window)
 {
@@ -4489,13 +4478,13 @@ ev_window_run_fullscreen (EvWindow *window)
 	gboolean fullscreen_window = TRUE;
 	gboolean maximized = FALSE;
 
-	if (ev_window_is_fullscreen (window))
-		return;
-
 	if (EV_WINDOW_IS_PRESENTATION (priv)) {
 		ev_window_stop_presentation (window, FALSE);
 		fullscreen_window = FALSE;
 	}
+
+	if (fullscreen_window && gtk_window_is_fullscreen (GTK_WINDOW (window)))
+		return;
 
 	ev_window_update_fullscreen_action (window, TRUE);
 
@@ -4519,7 +4508,7 @@ ev_window_stop_fullscreen (EvWindow *window,
 {
 	EvWindowPrivate *priv = GET_PRIVATE (window);
 
-	if (!ev_window_is_fullscreen (window))
+	if (!gtk_window_is_fullscreen (GTK_WINDOW (window)))
 		return;
 
 	ev_window_update_fullscreen_action (window, FALSE);
@@ -4612,7 +4601,7 @@ ev_window_run_presentation (EvWindow *window)
 					  annot_state,
 					  window);
 
-	if (ev_window_is_fullscreen (window)) {
+	if (gtk_window_is_fullscreen (GTK_WINDOW (window))) {
 		ev_window_stop_fullscreen (window, FALSE);
 		fullscreen_window = FALSE;
 	}
@@ -5018,10 +5007,10 @@ ev_window_cmd_escape (GSimpleAction *action,
 
 	if (gtk_search_bar_get_search_mode (GTK_SEARCH_BAR (priv->search_bar)))
 		ev_window_close_find_bar (window);
-	else if (ev_window_is_fullscreen (window))
-		ev_window_stop_fullscreen (window, TRUE);
 	else if (EV_WINDOW_IS_PRESENTATION (priv))
 		ev_window_stop_presentation (window, TRUE);
+	else if (gtk_window_is_fullscreen (GTK_WINDOW (window)))
+		ev_window_stop_fullscreen (window, TRUE);
 	else {
 		/* Cancel any annotation in progress and untoggle the
 		 * toolbar button. */
