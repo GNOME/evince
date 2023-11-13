@@ -72,7 +72,7 @@ cflags = [
 ]
 
 libevview = shared_library(
-  'evview3',
+  'evview-' + ev_api_version,
   version: ev_view_version,
   sources: sources + marshal_sources + enum_sources,
   include_directories: top_inc,

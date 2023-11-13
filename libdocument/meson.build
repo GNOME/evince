@@ -141,7 +141,7 @@ cflags = [
 ]
 
 libevdocument = shared_library(
-  'evdocument3',
+  'evdocument-' + ev_api_version,
   version: ev_document_version,
   sources: sources + enum_sources + [version_header],
   include_directories: top_inc,

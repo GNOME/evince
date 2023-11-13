@@ -62,8 +62,7 @@ ev_api_version = '4.0'
 ev_include_subdir = join_paths(ev_name, ev_api_version)
 
 # Backends directory
-ev_binary_version = ev_document_current
-ev_backends_binary_version = ev_binary_version
+ev_backends_binary_version = ev_document_current
 ev_backends_subdir = join_paths(ev_name, ev_backends_binary_version.to_string(), 'backends')
 ev_backendsdir = join_paths(ev_libdir, ev_backends_subdir)
 

@@ -1,6 +1,6 @@
 libevdocument_toml = configure_file(
   input: 'libevdocument.toml.in',
-  output: 'libevdocument.toml',
+  output: 'libevdocument-' + ev_api_version + '.toml',
   configuration: toml_conf,
   install: true,
   install_dir: docs_dir / 'libevdocument',
