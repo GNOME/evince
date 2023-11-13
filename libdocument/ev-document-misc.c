@@ -48,23 +48,17 @@ ev_document_misc_render_thumbnail_frame (GtkWidget       *widget,
         if (source_surface) {
                 width_r = cairo_image_surface_get_width (source_surface);
                 height_r = cairo_image_surface_get_height (source_surface);
-#ifdef HAVE_HIDPI_SUPPORT
                 cairo_surface_get_device_scale (source_surface, &device_scale_x, &device_scale_y);
-#endif
         } else if (source_pixbuf) {
                 g_return_val_if_fail (GDK_IS_PIXBUF (source_pixbuf), NULL);
 
                 width_r = gdk_pixbuf_get_width (source_pixbuf);
                 height_r = gdk_pixbuf_get_height (source_pixbuf);
-#ifdef HAVE_HIDPI_SUPPORT
                 device_scale_x = device_scale_y = gtk_widget_get_scale_factor (widget);
-#endif
         } else {
                 width_r = width;
                 height_r = height;
-#ifdef HAVE_HIDPI_SUPPORT
                 device_scale_x = device_scale_y = gtk_widget_get_scale_factor (widget);
-#endif
         }
 
         width_r /= device_scale_x;
@@ -84,9 +78,7 @@ ev_document_misc_render_thumbnail_frame (GtkWidget       *widget,
                                               device_scale_x * width_f,
                                               device_scale_y * height_f);
 
-#ifdef HAVE_HIDPI_SUPPORT
         cairo_surface_set_device_scale (surface, device_scale_x, device_scale_y);
-#endif
 
         cr = cairo_create (surface);
         if (source_surface) {

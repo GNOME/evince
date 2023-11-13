@@ -245,22 +245,14 @@ ev_pixbuf_cache_set_max_size (EvPixbufCache *pixbuf_cache,
 static int
 get_device_scale (EvPixbufCache *pixbuf_cache)
 {
-#ifdef HAVE_HIDPI_SUPPORT
         return gtk_widget_get_scale_factor (pixbuf_cache->view);
-#else
-        return 1;
-#endif
 }
 
 static void
 set_device_scale_on_surface (cairo_surface_t *surface,
                              int              device_scale)
 {
-#ifdef HAVE_HIDPI_SUPPORT
         cairo_surface_set_device_scale (surface, device_scale, device_scale);
-#else
-        g_return_if_fail (device_scale == 1);
-#endif
 }
 
 static void

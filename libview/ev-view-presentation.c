@@ -288,12 +288,8 @@ get_surface_from_job (EvViewPresentation *pview,
         if (!surface)
                 return NULL;
 
-#ifdef HAVE_HIDPI_SUPPORT
-        {
-                int scale_factor = gtk_widget_get_scale_factor (GTK_WIDGET (pview));
-                cairo_surface_set_device_scale (surface, scale_factor, scale_factor);
-        }
-#endif
+        int scale_factor = gtk_widget_get_scale_factor (GTK_WIDGET (pview));
+        cairo_surface_set_device_scale (surface, scale_factor, scale_factor);
 
         return surface;
 }
@@ -378,13 +374,9 @@ ev_view_presentation_schedule_new_job (EvViewPresentation *pview,
 		return NULL;
 
         ev_view_presentation_get_view_size (pview, page, &view_width, &view_height);
-#ifdef HAVE_HIDPI_SUPPORT
-	{
-		gint device_scale = gtk_widget_get_scale_factor (GTK_WIDGET (pview));
-		view_width *= device_scale;
-		view_height *= device_scale;
-	}
-#endif
+	gint device_scale = gtk_widget_get_scale_factor (GTK_WIDGET (pview));
+	view_width *= device_scale;
+	view_height *= device_scale;
         job = ev_job_render_new (pview->document, page, pview->rotation, 0.,
                                  view_width, view_height);
 	g_signal_connect (job, "finished",

@@ -392,9 +392,7 @@ ev_sidebar_thumbnails_get_loading_icon (EvSidebarThumbnails *sidebar_thumbnails,
 		gboolean inverted_colors;
                 gint device_scale = 1;
 
-#ifdef HAVE_HIDPI_SUPPORT
                 device_scale = gtk_widget_get_scale_factor (GTK_WIDGET (sidebar_thumbnails));
-#endif
 
 		inverted_colors = ev_document_model_get_inverted_colors (priv->model);
                 icon = ev_document_misc_render_loading_thumbnail_surface (GTK_WIDGET (sidebar_thumbnails),
@@ -461,12 +459,9 @@ get_size_for_page (EvSidebarThumbnails *sidebar_thumbnails,
 {
 	EvSidebarThumbnailsPrivate *priv = sidebar_thumbnails->priv;
         gdouble width, height;
-        gint thumbnail_height;
-        gint device_scale = 1;
+        gint thumbnail_height, device_scale;
 
-#ifdef HAVE_HIDPI_SUPPORT
         device_scale = gtk_widget_get_scale_factor (GTK_WIDGET (sidebar_thumbnails));
-#endif
         ev_document_get_page_size (priv->document, page, &width, &height);
         thumbnail_height = (int)(THUMBNAIL_WIDTH * height / width + 0.5);
 
@@ -898,17 +893,13 @@ thumbnail_job_completed_callback (EvJobThumbnail      *job,
 	EvSidebarThumbnailsPrivate *priv = sidebar_thumbnails->priv;
 	GtkTreeIter                *iter;
         cairo_surface_t            *surface;
-#ifdef HAVE_HIDPI_SUPPORT
         gint                        device_scale;
-#endif
 
         if (ev_job_is_failed (EV_JOB (job)))
           return;
 
-#ifdef HAVE_HIDPI_SUPPORT
         device_scale = gtk_widget_get_scale_factor (widget);
         cairo_surface_set_device_scale (job->thumbnail_surface, device_scale, device_scale);
-#endif
 
         surface = ev_document_misc_render_thumbnail_surface_with_frame (widget,
                                                                         job->thumbnail_surface,

@@ -2339,9 +2339,7 @@ handle_cursor_over_link (EvView *view, EvLink *link, gint x, gint y)
 
 	/* Start thumbnailing job async */
 	link_dest_page = ev_link_dest_get_page (dest);
-#ifdef HAVE_HIDPI_SUPPORT
 	device_scale = gtk_widget_get_scale_factor (GTK_WIDGET (view));
-#endif
 	view->link_preview.job = ev_job_thumbnail_new (GTK_WIDGET (view),
 						       view->document,
 						       link_dest_page,
@@ -5109,9 +5107,7 @@ link_preview_show_thumbnail (cairo_surface_t *page_surface,
 	x = view->link_preview.left;
 	y = view->link_preview.top;
 
-#ifdef HAVE_HIDPI_SUPPORT
 	cairo_surface_get_device_scale (page_surface, &device_scale_x, &device_scale_y);
-#endif
 	pwidth = cairo_image_surface_get_width (page_surface) / device_scale_x;
 	pheight = cairo_image_surface_get_height (page_surface) / device_scale_y;
 
@@ -5197,10 +5193,8 @@ link_preview_job_finished_cb (EvJobThumbnail *job,
 		return;
 	}
 
-#ifdef HAVE_HIDPI_SUPPORT
         device_scale = gtk_widget_get_scale_factor (GTK_WIDGET (view));
         cairo_surface_set_device_scale (job->thumbnail_surface, device_scale, device_scale);
-#endif
 
 	if (ev_document_model_get_inverted_colors (view->model))
 		ev_document_misc_invert_surface (job->thumbnail_surface);
@@ -7362,9 +7356,7 @@ draw_surface (cairo_t 	      *cr,
 	gdouble width, height;
 	gdouble device_scale_x = 1, device_scale_y = 1;
 
-#ifdef HAVE_HIDPI_SUPPORT
 	cairo_surface_get_device_scale (surface, &device_scale_x, &device_scale_y);
-#endif
 	width = cairo_image_surface_get_width (surface) / device_scale_x;
 	height = cairo_image_surface_get_height (surface) / device_scale_y;
 
@@ -7533,9 +7525,7 @@ draw_one_page (EvView       *view,
 			scale_x = (gdouble)width / cairo_image_surface_get_width (page_surface);
 			scale_y = (gdouble)height / cairo_image_surface_get_height (page_surface);
 
-#ifdef HAVE_HIDPI_SUPPORT
 			cairo_surface_get_device_scale (page_surface, &device_scale_x, &device_scale_y);
-#endif
 
 			scale_x *= device_scale_x;
 			scale_y *= device_scale_y;
