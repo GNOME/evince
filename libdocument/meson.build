@@ -4,7 +4,6 @@ include_subdir = join_paths(ev_include_subdir, 'libdocument')
 
 headers = files(
   'ev-annotation.h',
-  'ev-async-renderer.h',
   'ev-attachment.h',
   'ev-backends-manager.h',
   'ev-document-annotations.h',
@@ -50,7 +49,6 @@ install_headers(
 
 sources = files(
   'ev-annotation.c',
-  'ev-async-renderer.c',
   'ev-attachment.c',
   'ev-backend-info.c',
   'ev-debug.c',
