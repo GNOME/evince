@@ -4491,28 +4491,6 @@ ev_window_sidebar_position_change_cb (GObject    *object,
 }
 
 static void
-ev_window_update_links_model (EvWindow *window)
-{
-	EvWindowPrivate *priv = GET_PRIVATE (window);
-	GtkTreeModel *model;
-	GtkWidget *page_selector;
-
-	g_object_get (priv->sidebar_links,
-		      "model", &model,
-		      NULL);
-
-	if (!model)
-		return;
-
-	page_selector = ev_toolbar_get_page_selector (EV_TOOLBAR (priv->toolbar));
-	ev_page_action_widget_update_links_model (EV_PAGE_ACTION_WIDGET (page_selector), model);
-	/* Let's disable initially the completion search so it does not misfire when the user
-	 * is entering page numbers. Fixes issue #1759 */
-	ev_page_action_widget_enable_completion_search (EV_PAGE_ACTION_WIDGET (page_selector), FALSE);
-	g_object_unref (model);
-}
-
-static void
 ev_window_update_fullscreen_action (EvWindow *window,
 				    gboolean  fullscreen)
 {
@@ -6352,11 +6330,27 @@ ev_window_cancel_add_annot(EvWindow *window)
 }
 
 static void
-sidebar_widget_model_set (EvSidebarLinks *ev_sidebar_links,
-			  GParamSpec     *pspec,
-			  EvWindow       *ev_window)
+sidebar_links_link_model_changed (EvSidebarLinks *ev_sidebar_links,
+				  GParamSpec     *pspec,
+				  EvWindow       *window)
 {
-	ev_window_update_links_model (ev_window);
+	EvWindowPrivate *priv = GET_PRIVATE (window);
+	GtkTreeModel *model;
+	GtkWidget *page_selector;
+
+	g_object_get (ev_sidebar_links,
+		      "model", &model,
+		      NULL);
+
+	if (!model)
+		return;
+
+	page_selector = ev_toolbar_get_page_selector (EV_TOOLBAR (priv->toolbar));
+	ev_page_action_widget_update_links_model (EV_PAGE_ACTION_WIDGET (page_selector), model);
+	/* Let's disable initially the completion search so it does not misfire when the user
+	 * is entering page numbers. Fixes issue #1759 */
+	ev_page_action_widget_enable_completion_search (EV_PAGE_ACTION_WIDGET (page_selector), FALSE);
+	g_object_unref (model);
 }
 
 static gboolean
@@ -7433,7 +7427,7 @@ ev_window_init (EvWindow *ev_window)
 	priv->sidebar_links = ev_sidebar_links_new ();
 	g_signal_connect (priv->sidebar_links,
 			  "notify::model",
-			  G_CALLBACK (sidebar_widget_model_set),
+			  G_CALLBACK (sidebar_links_link_model_changed),
 			  ev_window);
 	g_signal_connect (priv->sidebar_links,
 			  "link_activated",
