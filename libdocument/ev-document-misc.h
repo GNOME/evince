@@ -33,10 +33,6 @@
 G_BEGIN_DECLS
 
 EV_PUBLIC
-GdkPixbuf *ev_document_misc_render_thumbnail_with_frame (GtkWidget *widget,
-							 GdkPixbuf *source_pixbuf);
-
-EV_PUBLIC
 cairo_surface_t *ev_document_misc_render_loading_thumbnail_surface (GtkWidget *widget,
 								    int        width,
 								    int        height,

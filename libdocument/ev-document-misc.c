@@ -119,31 +119,6 @@ ev_document_misc_render_loading_thumbnail_surface (GtkWidget *widget,
 }
 
 /**
- * ev_document_misc_render_thumbnail_with_frame:
- * @widget: a #GtkWidget to use for style information
- * @source_pixbuf: a #GdkPixbuf
- *
- * Returns: (transfer full): a #GdkPixbuf
- *
- * Since: 3.8
- */
-GdkPixbuf *
-ev_document_misc_render_thumbnail_with_frame (GtkWidget *widget,
-                                              GdkPixbuf *source_pixbuf)
-{
-        GdkPixbuf *retval;
-        cairo_surface_t *surface;
-
-        surface = ev_document_misc_render_thumbnail_frame (widget, -1, -1, FALSE, source_pixbuf, NULL);
-        retval = gdk_pixbuf_get_from_surface (surface, 0, 0,
-                                              cairo_image_surface_get_width (surface),
-                                              cairo_image_surface_get_height (surface));
-        cairo_surface_destroy (surface);
-
-        return retval;
-}
-
-/**
  * ev_document_misc_render_thumbnail_surface_with_frame:
  * @widget: a #GtkWidget to use for style information
  * @source_surface: a #cairo_surface_t
