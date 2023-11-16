@@ -394,11 +394,8 @@ document_load_job_completed_callback (EvJobLoad                *job_load,
                         target_height = ICON_VIEW_SIZE;
                 }
 
-		data->job = ev_job_thumbnail_new_with_target_size (GTK_WIDGET (data->ev_recent_view),
-								   document, 0, 0,
+		data->job = ev_job_thumbnail_new_with_target_size (document, 0, 0,
 								   target_width, target_height);
-                ev_job_thumbnail_set_has_frame (EV_JOB_THUMBNAIL (data->job), FALSE);
-                ev_job_thumbnail_set_output_format (EV_JOB_THUMBNAIL (data->job), EV_JOB_THUMBNAIL_SURFACE);
                 g_signal_connect (data->job, "finished",
                                   G_CALLBACK (thumbnail_job_completed_callback),
                                   data);

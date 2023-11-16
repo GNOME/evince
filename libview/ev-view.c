@@ -2340,13 +2340,10 @@ handle_cursor_over_link (EvView *view, EvLink *link, gint x, gint y)
 	/* Start thumbnailing job async */
 	link_dest_page = ev_link_dest_get_page (dest);
 	device_scale = gtk_widget_get_scale_factor (GTK_WIDGET (view));
-	view->link_preview.job = ev_job_thumbnail_new (GTK_WIDGET (view),
-						       view->document,
+	view->link_preview.job = ev_job_thumbnail_new (view->document,
 						       link_dest_page,
 						       view->rotation,
 						       view->scale * device_scale);
-	ev_job_thumbnail_set_output_format (EV_JOB_THUMBNAIL (view->link_preview.job),
-					    EV_JOB_THUMBNAIL_SURFACE);
 
 	link_dest_doc.x = ev_link_dest_get_left (dest, NULL);
 	link_dest_doc.y = ev_link_dest_get_top (dest, NULL);

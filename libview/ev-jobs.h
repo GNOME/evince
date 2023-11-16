@@ -342,26 +342,16 @@ struct _EvJobPageDataClass
 	EvJobClass parent_class;
 };
 
-typedef enum {
-        EV_JOB_THUMBNAIL_PIXBUF,
-        EV_JOB_THUMBNAIL_SURFACE
-} EvJobThumbnailFormat;
-
 struct _EvJobThumbnail
 {
 	EvJob parent;
 
-	GtkWidget *widget;
 	gint page;
 	gint rotation;
 	gdouble scale;
 	gint target_width;
 	gint target_height;
 
-	GdkPixbuf *thumbnail;
-        gboolean has_frame;
-
-        EvJobThumbnailFormat format;
         cairo_surface_t *thumbnail_surface;
 };
 
@@ -590,24 +580,16 @@ EvJob          *ev_job_page_data_new      (EvDocument      *document,
 EV_PUBLIC
 GType           ev_job_thumbnail_get_type      (void) G_GNUC_CONST;
 EV_PUBLIC
-EvJob          *ev_job_thumbnail_new           (GtkWidget       *widget,
-						EvDocument      *document,
+EvJob          *ev_job_thumbnail_new           (EvDocument      *document,
                                                 gint             page,
                                                 gint             rotation,
                                                 gdouble          scale);
 EV_PUBLIC
-EvJob          *ev_job_thumbnail_new_with_target_size (GtkWidget  *widget,
-						       EvDocument *document,
+EvJob          *ev_job_thumbnail_new_with_target_size (EvDocument *document,
 						       gint        page,
 						       gint        rotation,
 						       gint        target_width,
 						       gint        target_height);
-EV_PUBLIC
-void            ev_job_thumbnail_set_has_frame (EvJobThumbnail  *job,
-                                                gboolean         has_frame);
-EV_PUBLIC
-void            ev_job_thumbnail_set_output_format (EvJobThumbnail      *job,
-                                                    EvJobThumbnailFormat format);
 /* EvJobFonts */
 EV_PUBLIC
 GType 		ev_job_fonts_get_type 	  (void) G_GNUC_CONST;

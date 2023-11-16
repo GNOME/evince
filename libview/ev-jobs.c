@@ -831,7 +831,6 @@ ev_job_thumbnail_dispose (GObject *object)
 
 	ev_debug_message (DEBUG_JOBS, "%d (%p)", job->page, job);
 
-	g_clear_object (&job->thumbnail);
 	g_clear_pointer (&job->thumbnail_surface, cairo_surface_destroy);
 
 	(* G_OBJECT_CLASS (ev_job_thumbnail_parent_class)->dispose) (object);
@@ -842,7 +841,6 @@ ev_job_thumbnail_run (EvJob *job)
 {
 	EvJobThumbnail  *job_thumb = EV_JOB_THUMBNAIL (job);
 	EvRenderContext *rc;
-	GdkPixbuf       *pixbuf = NULL;
 	EvPage          *page;
 
 	ev_debug_message (DEBUG_JOBS, "%d (%p)", job_thumb->page, job);
@@ -856,23 +854,11 @@ ev_job_thumbnail_run (EvJob *job)
 					   job_thumb->target_width, job_thumb->target_height);
 	g_object_unref (page);
 
-        if (job_thumb->format == EV_JOB_THUMBNAIL_PIXBUF)
-                pixbuf = ev_document_get_thumbnail (job->document, rc);
-        else
-                job_thumb->thumbnail_surface = ev_document_get_thumbnail_surface (job->document, rc);
+	job_thumb->thumbnail_surface = ev_document_get_thumbnail_surface (job->document, rc);
 	g_object_unref (rc);
 	ev_document_doc_mutex_unlock ();
 
-        /* EV_JOB_THUMBNAIL_SURFACE is not compatible with has_frame = TRUE */
-        if (job_thumb->format == EV_JOB_THUMBNAIL_PIXBUF && pixbuf) {
-                job_thumb->thumbnail = job_thumb->has_frame ?
-			ev_document_misc_render_thumbnail_with_frame (job_thumb->widget, pixbuf) :
-			g_object_ref (pixbuf);
-                g_object_unref (pixbuf);
-        }
-
-	if ((job_thumb->format == EV_JOB_THUMBNAIL_PIXBUF && pixbuf == NULL) ||
-	    (job_thumb->format != EV_JOB_THUMBNAIL_PIXBUF && job_thumb->thumbnail_surface == NULL)) {
+	if (job_thumb->thumbnail_surface == NULL) {
 		ev_job_failed (job,
 			       EV_DOCUMENT_ERROR,
 			       EV_DOCUMENT_ERROR_INVALID,
@@ -896,8 +882,7 @@ ev_job_thumbnail_class_init (EvJobThumbnailClass *class)
 }
 
 EvJob *
-ev_job_thumbnail_new (GtkWidget  *widget,
-		      EvDocument *document,
+ev_job_thumbnail_new (EvDocument *document,
 		      gint        page,
 		      gint        rotation,
 		      gdouble     scale)
@@ -909,12 +894,9 @@ ev_job_thumbnail_new (GtkWidget  *widget,
 	job = g_object_new (EV_TYPE_JOB_THUMBNAIL, NULL);
 
 	EV_JOB (job)->document = g_object_ref (document);
-	job->widget = widget;
 	job->page = page;
 	job->rotation = rotation;
 	job->scale = scale;
-        job->has_frame = TRUE;
-        job->format = EV_JOB_THUMBNAIL_PIXBUF;
         job->target_width = -1;
         job->target_height = -1;
 
@@ -922,50 +904,19 @@ ev_job_thumbnail_new (GtkWidget  *widget,
 }
 
 EvJob *
-ev_job_thumbnail_new_with_target_size (GtkWidget  *widget,
-				       EvDocument *document,
+ev_job_thumbnail_new_with_target_size (EvDocument *document,
                                        gint        page,
                                        gint        rotation,
                                        gint        target_width,
                                        gint        target_height)
 {
-        EvJob *job = ev_job_thumbnail_new (widget, document, page, rotation, 1.);
+        EvJob *job = ev_job_thumbnail_new (document, page, rotation, 1.);
         EvJobThumbnail  *job_thumb = EV_JOB_THUMBNAIL (job);
 
         job_thumb->target_width = target_width;
         job_thumb->target_height = target_height;
 
         return job;
-}
-
-/**
- * ev_job_thumbnail_set_has_frame:
- * @job:
- * @has_frame:
- *
- * Since: 3.8
- */
-void
-ev_job_thumbnail_set_has_frame (EvJobThumbnail  *job,
-                                gboolean         has_frame)
-{
-        job->has_frame = has_frame;
-}
-
-/**
- * ev_job_thumbnail_set_output_format:
- * @job: a #EvJobThumbnail
- * @format: a #EvJobThumbnailFormat
- *
- * Set the desired output format for the generated thumbnail
- *
- * Since: 3.14
- */
-void
-ev_job_thumbnail_set_output_format (EvJobThumbnail      *job,
-                                    EvJobThumbnailFormat format)
-{
-        job->format = format;
 }
 
 /* EvJobFonts */
