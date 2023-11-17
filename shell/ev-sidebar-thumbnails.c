@@ -98,7 +98,7 @@ static void         ev_sidebar_thumbnails_page_iface_init  (EvSidebarPageInterfa
 static const gchar* ev_sidebar_thumbnails_get_label        (EvSidebarPage           *sidebar_page);
 static void         ev_sidebar_thumbnails_set_current_page (EvSidebarThumbnails *sidebar,
 							    gint     page);
-static void         thumbnail_job_completed_callback       (EvJobThumbnail          *job,
+static void         thumbnail_job_completed_callback       (EvJobThumbnailCairo     *job,
 							    EvSidebarThumbnails     *sidebar_thumbnails);
 static void         ev_sidebar_thumbnails_reload           (EvSidebarThumbnails     *sidebar_thumbnails);
 static void         adjustment_changed_cb                  (EvSidebarThumbnails     *sidebar_thumbnails);
@@ -406,7 +406,7 @@ cancel_running_jobs (EvSidebarThumbnails *sidebar_thumbnails,
 	for (result = gtk_tree_model_get_iter (GTK_TREE_MODEL (priv->list_store), &iter, path);
 	     result && start_page <= end_page;
 	     result = gtk_tree_model_iter_next (GTK_TREE_MODEL (priv->list_store), &iter), start_page ++) {
-		EvJobThumbnail *job;
+		EvJobThumbnailCairo *job;
 		gboolean thumbnail_set;
 
 		gtk_tree_model_get (GTK_TREE_MODEL (priv->list_store),
@@ -489,9 +489,10 @@ add_range (EvSidebarThumbnails *sidebar_thumbnails,
 			gint thumbnail_width, thumbnail_height;
 			get_size_for_page (sidebar_thumbnails, page, &thumbnail_width, &thumbnail_height);
 
-			job = ev_job_thumbnail_new_with_target_size (priv->document,
-								     page, priv->rotation,
-								     thumbnail_width, thumbnail_height);
+			job = ev_job_thumbnail_cairo_new_with_target_size (priv->document,
+									   page, priv->rotation,
+									   thumbnail_width,
+									   thumbnail_height);
 			g_object_set_data_full (G_OBJECT (job), "tree_iter",
 						gtk_tree_iter_copy (&iter),
 						(GDestroyNotify) gtk_tree_iter_free);
@@ -746,7 +747,7 @@ ev_sidebar_thumbnails_init (EvSidebarThumbnails *ev_sidebar_thumbnails)
 					       G_TYPE_STRING,
 					       CAIRO_GOBJECT_TYPE_SURFACE,
 					       G_TYPE_BOOLEAN,
-					       EV_TYPE_JOB_THUMBNAIL);
+					       EV_TYPE_JOB_THUMBNAIL_CAIRO);
 
 	signal_id = g_signal_lookup ("row-changed", GTK_TYPE_TREE_MODEL);
 	g_signal_connect (GTK_TREE_MODEL (priv->list_store), "row-changed",
@@ -859,7 +860,7 @@ ev_sidebar_thumbnails_inverted_colors_changed_cb (EvDocumentModel     *model,
 }
 
 static void
-thumbnail_job_completed_callback (EvJobThumbnail      *job,
+thumbnail_job_completed_callback (EvJobThumbnailCairo *job,
 				  EvSidebarThumbnails *sidebar_thumbnails)
 {
         GtkWidget                  *widget = GTK_WIDGET (sidebar_thumbnails);

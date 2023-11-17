@@ -51,32 +51,32 @@ struct _EvJobLoadStreamPrivate
         char *mime_type;
 };
 
-static void ev_job_init                    (EvJob                 *job);
-static void ev_job_class_init              (EvJobClass            *class);
-static void ev_job_links_init              (EvJobLinks            *job);
-static void ev_job_links_class_init        (EvJobLinksClass       *class);
-static void ev_job_attachments_init        (EvJobAttachments      *job);
-static void ev_job_attachments_class_init  (EvJobAttachmentsClass *class);
-static void ev_job_annots_init             (EvJobAnnots           *job);
-static void ev_job_annots_class_init       (EvJobAnnotsClass      *class);
-static void ev_job_render_cairo_init       (EvJobRenderCairo      *job);
-static void ev_job_render_cairo_class_init (EvJobRenderCairoClass *class);
-static void ev_job_page_data_init          (EvJobPageData         *job);
-static void ev_job_page_data_class_init    (EvJobPageDataClass    *class);
-static void ev_job_thumbnail_init          (EvJobThumbnail        *job);
-static void ev_job_thumbnail_class_init    (EvJobThumbnailClass   *class);
-static void ev_job_load_init               (EvJobLoad             *job);
-static void ev_job_load_class_init         (EvJobLoadClass        *class);
-static void ev_job_save_init               (EvJobSave             *job);
-static void ev_job_save_class_init         (EvJobSaveClass        *class);
-static void ev_job_find_init               (EvJobFind             *job);
-static void ev_job_find_class_init         (EvJobFindClass        *class);
-static void ev_job_layers_init             (EvJobLayers           *job);
-static void ev_job_layers_class_init       (EvJobLayersClass      *class);
-static void ev_job_export_init             (EvJobExport           *job);
-static void ev_job_export_class_init       (EvJobExportClass      *class);
-static void ev_job_print_init              (EvJobPrint            *job);
-static void ev_job_print_class_init        (EvJobPrintClass       *class);
+static void ev_job_init                       (EvJob                    *job);
+static void ev_job_class_init                 (EvJobClass               *class);
+static void ev_job_links_init                 (EvJobLinks               *job);
+static void ev_job_links_class_init           (EvJobLinksClass          *class);
+static void ev_job_attachments_init           (EvJobAttachments         *job);
+static void ev_job_attachments_class_init     (EvJobAttachmentsClass    *class);
+static void ev_job_annots_init                (EvJobAnnots              *job);
+static void ev_job_annots_class_init          (EvJobAnnotsClass         *class);
+static void ev_job_render_cairo_init          (EvJobRenderCairo         *job);
+static void ev_job_render_cairo_class_init    (EvJobRenderCairoClass    *class);
+static void ev_job_page_data_init             (EvJobPageData            *job);
+static void ev_job_page_data_class_init       (EvJobPageDataClass       *class);
+static void ev_job_thumbnail_cairo_init       (EvJobThumbnailCairo      *job);
+static void ev_job_thumbnail_cairo_class_init (EvJobThumbnailCairoClass *class);
+static void ev_job_load_init                  (EvJobLoad                *job);
+static void ev_job_load_class_init            (EvJobLoadClass           *class);
+static void ev_job_save_init                  (EvJobSave                *job);
+static void ev_job_save_class_init            (EvJobSaveClass           *class);
+static void ev_job_find_init                  (EvJobFind                *job);
+static void ev_job_find_class_init            (EvJobFindClass           *class);
+static void ev_job_layers_init                (EvJobLayers              *job);
+static void ev_job_layers_class_init          (EvJobLayersClass         *class);
+static void ev_job_export_init                (EvJobExport              *job);
+static void ev_job_export_class_init          (EvJobExportClass         *class);
+static void ev_job_print_init                 (EvJobPrint               *job);
+static void ev_job_print_class_init           (EvJobPrintClass          *class);
 
 enum {
 	CANCELLED,
@@ -104,7 +104,7 @@ G_DEFINE_TYPE (EvJobAttachments, ev_job_attachments, EV_TYPE_JOB)
 G_DEFINE_TYPE (EvJobAnnots, ev_job_annots, EV_TYPE_JOB)
 G_DEFINE_TYPE (EvJobRenderCairo, ev_job_render_cairo, EV_TYPE_JOB)
 G_DEFINE_TYPE (EvJobPageData, ev_job_page_data, EV_TYPE_JOB)
-G_DEFINE_TYPE (EvJobThumbnail, ev_job_thumbnail, EV_TYPE_JOB)
+G_DEFINE_TYPE (EvJobThumbnailCairo, ev_job_thumbnail_cairo, EV_TYPE_JOB)
 G_DEFINE_TYPE (EvJobFonts, ev_job_fonts, EV_TYPE_JOB)
 G_DEFINE_TYPE (EvJobLoad, ev_job_load, EV_TYPE_JOB)
 G_DEFINE_TYPE_WITH_PRIVATE (EvJobLoadStream, ev_job_load_stream, EV_TYPE_JOB)
@@ -817,31 +817,32 @@ ev_job_page_data_new (EvDocument        *document,
 	return EV_JOB (job);
 }
 
-/* EvJobThumbnail */
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
+/* EvJobThumbnailCairo */
 static void
-ev_job_thumbnail_init (EvJobThumbnail *job)
+ev_job_thumbnail_cairo_init (EvJobThumbnailCairo *job)
 {
 	EV_JOB (job)->run_mode = EV_JOB_RUN_THREAD;
 }
 
 static void
-ev_job_thumbnail_dispose (GObject *object)
+ev_job_thumbnail_cairo_dispose (GObject *object)
 {
-	EvJobThumbnail *job;
+	EvJobThumbnailCairo *job;
 
-	job = EV_JOB_THUMBNAIL (object);
+	job = EV_JOB_THUMBNAIL_CAIRO (object);
 
 	ev_debug_message (DEBUG_JOBS, "%d (%p)", job->page, job);
 
 	g_clear_pointer (&job->thumbnail_surface, cairo_surface_destroy);
 
-	(* G_OBJECT_CLASS (ev_job_thumbnail_parent_class)->dispose) (object);
+	G_OBJECT_CLASS (ev_job_thumbnail_cairo_parent_class)->dispose (object);
 }
 
 static gboolean
-ev_job_thumbnail_run (EvJob *job)
+ev_job_thumbnail_cairo_run (EvJob *job)
 {
-	EvJobThumbnail  *job_thumb = EV_JOB_THUMBNAIL (job);
+	EvJobThumbnailCairo  *job_thumb = EV_JOB_THUMBNAIL_CAIRO (job);
 	EvRenderContext *rc;
 	EvPage          *page;
 
@@ -874,26 +875,26 @@ ev_job_thumbnail_run (EvJob *job)
 }
 
 static void
-ev_job_thumbnail_class_init (EvJobThumbnailClass *class)
+ev_job_thumbnail_cairo_class_init (EvJobThumbnailCairoClass *class)
 {
 	GObjectClass *oclass = G_OBJECT_CLASS (class);
 	EvJobClass   *job_class = EV_JOB_CLASS (class);
 
-	oclass->dispose = ev_job_thumbnail_dispose;
-	job_class->run = ev_job_thumbnail_run;
+	oclass->dispose = ev_job_thumbnail_cairo_dispose;
+	job_class->run = ev_job_thumbnail_cairo_run;
 }
 
 EvJob *
-ev_job_thumbnail_new (EvDocument *document,
-		      gint        page,
-		      gint        rotation,
-		      gdouble     scale)
+ev_job_thumbnail_cairo_new (EvDocument *document,
+			    gint        page,
+			    gint        rotation,
+			    gdouble     scale)
 {
-	EvJobThumbnail *job;
+	EvJobThumbnailCairo *job;
 
 	ev_debug_message (DEBUG_JOBS, "%d", page);
 
-	job = g_object_new (EV_TYPE_JOB_THUMBNAIL, NULL);
+	job = g_object_new (EV_TYPE_JOB_THUMBNAIL_CAIRO, NULL);
 
 	EV_JOB (job)->document = g_object_ref (document);
 	job->page = page;
@@ -906,20 +907,21 @@ ev_job_thumbnail_new (EvDocument *document,
 }
 
 EvJob *
-ev_job_thumbnail_new_with_target_size (EvDocument *document,
-                                       gint        page,
-                                       gint        rotation,
-                                       gint        target_width,
-                                       gint        target_height)
+ev_job_thumbnail_cairo_new_with_target_size (EvDocument *document,
+					     gint        page,
+					     gint        rotation,
+					     gint        target_width,
+					     gint        target_height)
 {
-        EvJob *job = ev_job_thumbnail_new (document, page, rotation, 1.);
-        EvJobThumbnail  *job_thumb = EV_JOB_THUMBNAIL (job);
+	EvJob *job = ev_job_thumbnail_cairo_new (document, page, rotation, 1.);
+	EvJobThumbnailCairo  *job_thumb = EV_JOB_THUMBNAIL_CAIRO (job);
 
         job_thumb->target_width = target_width;
         job_thumb->target_height = target_height;
 
         return job;
 }
+G_GNUC_END_IGNORE_DEPRECATIONS
 
 /* EvJobFonts */
 static void

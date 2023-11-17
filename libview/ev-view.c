@@ -158,8 +158,8 @@ static void       get_link_area                              (EvView            
 							      GdkRectangle       *area);
 static void       link_preview_show_thumbnail                (cairo_surface_t    *page_surface,
 							      EvView             *view);
-static void       link_preview_job_finished_cb               (EvJobThumbnail     *job,
-							      EvView             *view);
+static void       link_preview_job_finished_cb               (EvJobThumbnailCairo *job,
+							      EvView              *view);
 static gboolean   link_preview_popover_motion_notify         (EvView             *view,
 							      GdkEventMotion     *event);
 static void       link_preview_delayed_show                  (EvView *view);
@@ -2340,10 +2340,10 @@ handle_cursor_over_link (EvView *view, EvLink *link, gint x, gint y)
 	/* Start thumbnailing job async */
 	link_dest_page = ev_link_dest_get_page (dest);
 	device_scale = gtk_widget_get_scale_factor (GTK_WIDGET (view));
-	view->link_preview.job = ev_job_thumbnail_new (view->document,
-						       link_dest_page,
-						       view->rotation,
-						       view->scale * device_scale);
+	view->link_preview.job = ev_job_thumbnail_cairo_new (view->document,
+							     link_dest_page,
+							     view->rotation,
+							     view->scale * device_scale);
 
 	link_dest_doc.x = ev_link_dest_get_left (dest, NULL);
 	link_dest_doc.y = ev_link_dest_get_top (dest, NULL);
@@ -5166,7 +5166,7 @@ link_preview_delayed_show (EvView *view)
 }
 
 static void
-link_preview_job_finished_cb (EvJobThumbnail *job,
+link_preview_job_finished_cb (EvJobThumbnailCairo *job,
 			      EvView *view)
 {
 	GtkWidget *popover = view->link_preview.popover;

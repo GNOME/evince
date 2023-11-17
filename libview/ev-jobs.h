@@ -41,8 +41,8 @@ typedef struct _EvJobRenderCairoClass EvJobRenderCairoClass;
 typedef struct _EvJobPageData EvJobPageData;
 typedef struct _EvJobPageDataClass EvJobPageDataClass;
 
-typedef struct _EvJobThumbnail EvJobThumbnail;
-typedef struct _EvJobThumbnailClass EvJobThumbnailClass;
+typedef struct _EvJobThumbnailCairo EvJobThumbnailCairo;
+typedef struct _EvJobThumbnailCairoClass EvJobThumbnailCairoClass;
 
 typedef struct _EvJobLinks EvJobLinks;
 typedef struct _EvJobLinksClass EvJobLinksClass;
@@ -125,12 +125,12 @@ typedef struct _EvJobPrintClass EvJobPrintClass;
 #define EV_IS_JOB_PAGE_DATA_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), EV_TYPE_JOB_PAGE_DATA))
 #define EV_JOB_PAGE_DATA_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), EV_TYPE_JOB_PAGE_DATA, EvJobPageDataClass))
 
-#define EV_TYPE_JOB_THUMBNAIL            (ev_job_thumbnail_get_type())
-#define EV_JOB_THUMBNAIL(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), EV_TYPE_JOB_THUMBNAIL, EvJobThumbnail))
-#define EV_IS_JOB_THUMBNAIL(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), EV_TYPE_JOB_THUMBNAIL))
-#define EV_JOB_THUMBNAIL_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), EV_TYPE_JOB_THUMBNAIL, EvJobThumbnailClass))
-#define EV_IS_JOB_THUMBNAIL_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), EV_TYPE_JOB_THUMBNAIL))
-#define EV_JOB_THUMBNAIL_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), EV_TYPE_JOB_THUMBNAIL, EvJobThumbnailClass))
+#define EV_TYPE_JOB_THUMBNAIL_CAIRO            (ev_job_thumbnail_cairo_get_type())
+#define EV_JOB_THUMBNAIL_CAIRO(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), EV_TYPE_JOB_THUMBNAIL_CAIRO, EvJobThumbnailCairo))
+#define EV_IS_JOB_THUMBNAIL_CAIRO(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), EV_TYPE_JOB_THUMBNAIL_CAIRO))
+#define EV_JOB_THUMBNAIL_CAIRO_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), EV_TYPE_JOB_THUMBNAIL_CAIRO, EvJobThumbnailCairoClass))
+#define EV_IS_JOB_THUMBNAIL_CAIRO_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), EV_TYPE_JOB_THUMBNAIL_CAIRO))
+#define EV_JOB_THUMBNAIL_CAIRO_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), EV_TYPE_JOB_THUMBNAIL_CAIRO, EvJobThumbnailCairoClass))
 
 #define EV_TYPE_JOB_FONTS            (ev_job_fonts_get_type())
 #define EV_JOB_FONTS(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), EV_TYPE_JOB_FONTS, EvJobFonts))
@@ -342,7 +342,7 @@ struct _EvJobPageDataClass
 	EvJobClass parent_class;
 };
 
-struct _EvJobThumbnail
+struct _EvJobThumbnailCairo
 {
 	EvJob parent;
 
@@ -355,7 +355,7 @@ struct _EvJobThumbnail
         cairo_surface_t *thumbnail_surface;
 };
 
-struct _EvJobThumbnailClass
+struct _EvJobThumbnailCairoClass
 {
 	EvJobClass parent_class;
 };
@@ -576,20 +576,20 @@ EvJob          *ev_job_page_data_new      (EvDocument      *document,
 					   gint             page,
 					   EvJobPageDataFlags flags);
 
-/* EvJobThumbnail */
-EV_PUBLIC
-GType           ev_job_thumbnail_get_type      (void) G_GNUC_CONST;
-EV_PUBLIC
-EvJob          *ev_job_thumbnail_new           (EvDocument      *document,
-                                                gint             page,
-                                                gint             rotation,
-                                                gdouble          scale);
-EV_PUBLIC
-EvJob          *ev_job_thumbnail_new_with_target_size (EvDocument *document,
-						       gint        page,
-						       gint        rotation,
-						       gint        target_width,
-						       gint        target_height);
+/* EvJobThumbnailCairo */
+EV_DEPRECATED EV_PUBLIC
+GType           ev_job_thumbnail_cairo_get_type      (void) G_GNUC_CONST;
+EV_DEPRECATED EV_PUBLIC
+EvJob          *ev_job_thumbnail_cairo_new           (EvDocument      *document,
+						      gint             page,
+						      gint             rotation,
+						      gdouble          scale);
+EV_DEPRECATED EV_PUBLIC
+EvJob          *ev_job_thumbnail_cairo_new_with_target_size (EvDocument *document,
+							     gint        page,
+							     gint        rotation,
+							     gint        target_width,
+							     gint        target_height);
 /* EvJobFonts */
 EV_PUBLIC
 GType 		ev_job_fonts_get_type 	  (void) G_GNUC_CONST;

@@ -308,7 +308,7 @@ save_thumbnail_in_cache_thread (GTask                    *task,
         GError *error = NULL;
 #endif
 
-        surface = EV_JOB_THUMBNAIL (data->job)->thumbnail_surface;
+	surface = EV_JOB_THUMBNAIL_CAIRO (data->job)->thumbnail_surface;
         thumbnail = gdk_pixbuf_get_from_surface (surface, 0, 0,
                                                  cairo_image_surface_get_width (surface),
                                                  cairo_image_surface_get_height (surface));
@@ -356,7 +356,7 @@ save_document_thumbnail_in_cache (GetDocumentInfoAsyncData *data)
 }
 
 static void
-thumbnail_job_completed_callback (EvJobThumbnail           *job,
+thumbnail_job_completed_callback (EvJobThumbnailCairo      *job,
                                   GetDocumentInfoAsyncData *data)
 {
         if (g_cancellable_is_cancelled (data->cancellable) ||
@@ -397,8 +397,9 @@ document_load_job_completed_callback (EvJobLoad                *job_load,
                         target_height = ICON_VIEW_SIZE;
                 }
 
-		data->job = ev_job_thumbnail_new_with_target_size (document, 0, 0,
-								   target_width, target_height);
+		data->job = ev_job_thumbnail_cairo_new_with_target_size (document, 0, 0,
+									 target_width,
+									 target_height);
                 g_signal_connect (data->job, "finished",
                                   G_CALLBACK (thumbnail_job_completed_callback),
                                   data);
