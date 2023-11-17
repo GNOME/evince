@@ -35,8 +35,8 @@ G_BEGIN_DECLS
 typedef struct _EvJob EvJob;
 typedef struct _EvJobClass EvJobClass;
 
-typedef struct _EvJobRender EvJobRender;
-typedef struct _EvJobRenderClass EvJobRenderClass;
+typedef struct _EvJobRenderCairo EvJobRenderCairo;
+typedef struct _EvJobRenderCairoClass EvJobRenderCairoClass;
 
 typedef struct _EvJobPageData EvJobPageData;
 typedef struct _EvJobPageDataClass EvJobPageDataClass;
@@ -111,12 +111,12 @@ typedef struct _EvJobPrintClass EvJobPrintClass;
 #define EV_IS_JOB_ANNOTS_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), EV_TYPE_JOB_ANNOTS))
 #define EV_JOB_ANNOTS_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), EV_TYPE_JOB_ANNOTS, EvJobAnnotsClass))
 
-#define EV_TYPE_JOB_RENDER            (ev_job_render_get_type())
-#define EV_JOB_RENDER(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), EV_TYPE_JOB_RENDER, EvJobRender))
-#define EV_IS_JOB_RENDER(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), EV_TYPE_JOB_RENDER))
-#define EV_JOB_RENDER_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), EV_TYPE_JOB_RENDER, EvJobRenderClass))
-#define EV_IS_JOB_RENDER_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), EV_TYPE_JOB_RENDER))
-#define EV_JOB_RENDER_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), EV_TYPE_JOB_RENDER, EvJobRenderClass))
+#define EV_TYPE_JOB_RENDER_CAIRO            (ev_job_render_cairo_get_type())
+#define EV_JOB_RENDER_CAIRO(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), EV_TYPE_JOB_RENDER_CAIRO, EvJobRenderCairo))
+#define EV_IS_JOB_RENDER_CAIRO(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), EV_TYPE_JOB_RENDER_CAIRO))
+#define EV_JOB_RENDER_CAIRO_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), EV_TYPE_JOB_RENDER_CAIRO, EvJobRenderCairoClass))
+#define EV_IS_JOB_RENDER_CAIRO_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), EV_TYPE_JOB_RENDER_CAIRO))
+#define EV_JOB_RENDER_CAIRO_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), EV_TYPE_JOB_RENDER_CAIRO, EvJobRenderCairoClass))
 
 #define EV_TYPE_JOB_PAGE_DATA            (ev_job_page_data_get_type())
 #define EV_JOB_PAGE_DATA(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), EV_TYPE_JOB_PAGE_DATA, EvJobPageData))
@@ -274,7 +274,7 @@ struct _EvJobAnnotsClass
 	EvJobClass parent_class;
 };
 
-struct _EvJobRender
+struct _EvJobRenderCairo
 {
 	EvJob parent;
 
@@ -296,7 +296,7 @@ struct _EvJobRender
 	GdkRGBA text;
 };
 
-struct _EvJobRenderClass
+struct _EvJobRenderCairoClass
 {
 	EvJobClass parent_class;
 };
@@ -552,22 +552,22 @@ GType           ev_job_annots_get_type      (void) G_GNUC_CONST;
 EV_PUBLIC
 EvJob          *ev_job_annots_new           (EvDocument     *document);
 
-/* EvJobRender */
+/* EvJobRenderCairo */
 EV_PUBLIC
-GType           ev_job_render_get_type    (void) G_GNUC_CONST;
-EV_PUBLIC
-EvJob          *ev_job_render_new         (EvDocument      *document,
-					   gint             page,
-					   gint             rotation,
-					   gdouble          scale,
-					   gint             width,
-					   gint             height);
-EV_PUBLIC
-void     ev_job_render_set_selection_info (EvJobRender     *job,
-					   EvRectangle     *selection_points,
-					   EvSelectionStyle selection_style,
-					   GdkRGBA         *text,
-					   GdkRGBA         *base);
+GType           ev_job_render_cairo_get_type    (void) G_GNUC_CONST;
+EV_DEPRECATED EV_PUBLIC
+EvJob          *ev_job_render_cairo_new         (EvDocument      *document,
+						 gint             page,
+						 gint             rotation,
+						 gdouble          scale,
+						 gint             width,
+						 gint             height);
+EV_DEPRECATED EV_PUBLIC
+void     ev_job_render_cairo_set_selection_info (EvJobRenderCairo     *job,
+						 EvRectangle     *selection_points,
+						 EvSelectionStyle selection_style,
+						 GdkRGBA         *text,
+						 GdkRGBA         *base);
 /* EvJobPageData */
 EV_PUBLIC
 GType           ev_job_page_data_get_type (void) G_GNUC_CONST;

@@ -282,7 +282,7 @@ get_surface_from_job (EvViewPresentation *pview,
         if (!job)
                 return NULL;
 
-        surface = EV_JOB_RENDER(job)->surface;
+	surface = EV_JOB_RENDER_CAIRO(job)->surface;
         if (!surface)
                 return NULL;
 
@@ -314,7 +314,7 @@ ev_view_presentation_animation_start (EvViewPresentation *pview,
 
 	pview->animation = ev_transition_animation_new (effect);
 
-	surface = pview->curr_job ? EV_JOB_RENDER (pview->curr_job)->surface : NULL;
+	surface = pview->curr_job ? EV_JOB_RENDER_CAIRO (pview->curr_job)->surface : NULL;
 	ev_transition_animation_set_origin_surface (pview->animation,
 						    surface != NULL ?
 						    surface : pview->current_surface);
@@ -343,7 +343,7 @@ static void
 job_finished_cb (EvJob              *job,
 		 EvViewPresentation *pview)
 {
-	EvJobRender *job_render = EV_JOB_RENDER (job);
+	EvJobRenderCairo *job_render = EV_JOB_RENDER_CAIRO (job);
 
 	if (pview->inverted_colors)
 		ev_document_misc_invert_surface (job_render->surface);
@@ -375,8 +375,8 @@ ev_view_presentation_schedule_new_job (EvViewPresentation *pview,
 	gint device_scale = gtk_widget_get_scale_factor (GTK_WIDGET (pview));
 	view_width *= device_scale;
 	view_height *= device_scale;
-        job = ev_job_render_new (pview->document, page, pview->rotation, 0.,
-                                 view_width, view_height);
+	job = ev_job_render_cairo_new (pview->document, page, pview->rotation, 0.,
+				       view_width, view_height);
 	g_signal_connect (job, "finished",
 			  G_CALLBACK (job_finished_cb),
 			  pview);
@@ -508,7 +508,7 @@ ev_view_presentation_update_current_page (EvViewPresentation *pview,
 		ev_view_presentation_set_cursor_for_location (pview, x, y);
 	}
 
-	if (EV_JOB_RENDER (pview->curr_job)->surface)
+	if (EV_JOB_RENDER_CAIRO (pview->curr_job)->surface)
 		gtk_widget_queue_draw (GTK_WIDGET (pview));
 }
 
