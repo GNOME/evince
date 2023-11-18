@@ -66,7 +66,7 @@ enum {
 
 static guint signals[NUM_SIGNALS] = { 0, };
 
-G_DEFINE_TYPE_WITH_PRIVATE (EvRecentView, ev_recent_view, GTK_TYPE_SCROLLED_WINDOW)
+G_DEFINE_TYPE_WITH_PRIVATE (EvRecentView, ev_recent_view, GTK_TYPE_BIN)
 
 #define ICON_VIEW_SIZE 128
 #define MAX_RECENT_VIEW_ITEMS 64
