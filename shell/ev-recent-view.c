@@ -49,6 +49,7 @@ typedef enum {
 
 typedef struct {
 	GtkWidget        *stack;
+	GtkWidget        *scrolled;
         GtkWidget        *view;
 	GtkWidget        *empty;
         GtkListStore     *model;
@@ -757,7 +758,7 @@ ev_recent_view_refresh (EvRecentView *ev_recent_view)
         }
 
 	if (n_items != 0)
-		gtk_stack_set_visible_child (GTK_STACK (priv->stack), priv->view);
+		gtk_stack_set_visible_child (GTK_STACK (priv->stack), priv->scrolled);
 	else
 		gtk_stack_set_visible_child (GTK_STACK (priv->stack), priv->empty);
 
@@ -820,6 +821,7 @@ ev_recent_view_class_init (EvRecentViewClass *klass)
         g_type_ensure (GD_TYPE_TWO_LINES_RENDERER);
         gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/evince/ui/recent-view.ui");
 	gtk_widget_class_bind_template_child_private (widget_class, EvRecentView, stack);
+	gtk_widget_class_bind_template_child_private (widget_class, EvRecentView, scrolled);
         gtk_widget_class_bind_template_child_private (widget_class, EvRecentView, view);
 	gtk_widget_class_bind_template_child_private (widget_class, EvRecentView, empty);
 
