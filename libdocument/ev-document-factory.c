@@ -701,17 +701,6 @@ EvDocument  *ev_backends_manager_get_document (const gchar *mime_type)
 }
 
 /**
- * ev_backends_manager_get_document_type_info: (skip)
- * @document: a #EvDocument
- *
- * Returns: a EvTypeInfo
- */
-EvTypeInfo *ev_backends_manager_get_document_type_info (EvDocument  *document)
-{
-        return (EvTypeInfo *) get_backend_info_for_document (document);
-}
-
-/**
  * ev_backends_manager_get_all_types_info: (skip)
  *
  * Returns: @list: (element-type EvBackendInfo): a shallow copy of #GList
