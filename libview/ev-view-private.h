@@ -135,9 +135,7 @@ typedef struct {
 	guint      delay_timeout_id;
 } EvLinkPreview;
 
-struct _EvView {
-	GtkWidget parent;
-
+typedef struct _EvViewPrivate {
 	EvDocument *document;
 
 	/* Find */
@@ -260,7 +258,7 @@ struct _EvView {
 
 	/* Link preview */
 	EvLinkPreview link_preview;
-};
+} EvViewPrivate;
 
 struct _EvViewClass {
 	GtkWidgetClass parent_class;

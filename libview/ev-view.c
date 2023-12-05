@@ -308,7 +308,10 @@ static void       ev_view_check_cursor_blink                 (EvView            
 
 
 G_DEFINE_TYPE_WITH_CODE (EvView, ev_view, GTK_TYPE_WIDGET,
+			 G_ADD_PRIVATE (EvView)
 			 G_IMPLEMENT_INTERFACE (GTK_TYPE_SCROLLABLE, NULL))
+
+#define GET_PRIVATE(o) ev_view_get_instance_private (o)
 
 /* HeightToPage cache */
 #define EV_HEIGHT_TO_PAGE_CACHE_KEY "ev-height-to-page-cache"
@@ -323,9 +326,10 @@ ev_view_build_height_to_page_cache (EvView		*view,
 	double saved_height;
 	gdouble u_width, u_height;
 	gint n_pages;
-	EvDocument *document = view->document;
+	EvViewPrivate *priv = GET_PRIVATE (view);
+	EvDocument *document = priv->document;
 
-	swap = (view->rotation == 90 || view->rotation == 270);
+	swap = (priv->rotation == 90 || priv->rotation == 270);
 
 	uniform = ev_document_is_page_size_uniform (document);
 	n_pages = ev_document_get_n_pages (document);
@@ -333,8 +337,8 @@ ev_view_build_height_to_page_cache (EvView		*view,
 	g_free (cache->height_to_page);
 	g_free (cache->dual_height_to_page);
 
-	cache->rotation = view->rotation;
-	cache->dual_even_left = view->dual_even_left;
+	cache->rotation = priv->rotation;
+	cache->dual_even_left = priv->dual_even_left;
 	cache->height_to_page = g_new0 (gdouble, n_pages + 1);
 	cache->dual_height_to_page = g_new0 (gdouble, n_pages + 2);
 
@@ -417,15 +421,16 @@ static EvHeightToPageCache *
 ev_view_get_height_to_page_cache (EvView *view)
 {
 	EvHeightToPageCache *cache;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	if (!view->document)
+	if (!priv->document)
 		return NULL;
 
-	cache = g_object_get_data (G_OBJECT (view->document), EV_HEIGHT_TO_PAGE_CACHE_KEY);
+	cache = g_object_get_data (G_OBJECT (priv->document), EV_HEIGHT_TO_PAGE_CACHE_KEY);
 	if (!cache) {
 		cache = g_new0 (EvHeightToPageCache, 1);
 		ev_view_build_height_to_page_cache (view, cache);
-		g_object_set_data_full (G_OBJECT (view->document),
+		g_object_set_data_full (G_OBJECT (priv->document),
 					EV_HEIGHT_TO_PAGE_CACHE_KEY,
 					cache,
 					(GDestroyNotify)ev_height_to_page_cache_free);
@@ -441,25 +446,26 @@ ev_view_get_height_to_page (EvView *view,
 			    gint   *dual_height)
 {
 	EvHeightToPageCache *cache = NULL;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 	gdouble h, dh;
 
-	if (!view->height_to_page_cache)
+	if (!priv->height_to_page_cache)
 		return;
 
-	cache = view->height_to_page_cache;
-	if (cache->rotation != view->rotation ||
-	    cache->dual_even_left != view->dual_even_left) {
+	cache = priv->height_to_page_cache;
+	if (cache->rotation != priv->rotation ||
+	    cache->dual_even_left != priv->dual_even_left) {
 		ev_view_build_height_to_page_cache (view, cache);
 	}
 
 	if (height) {
 		h = cache->height_to_page[page];
-		*height = (gint)(h * view->scale + 0.5);
+		*height = (gint)(h * priv->scale + 0.5);
     }
 
 	if (dual_height) {
 		dh = cache->dual_height_to_page[page];
-		*dual_height = (gint)(dh * view->scale + 0.5);
+		*dual_height = (gint)(dh * priv->scale + 0.5);
 	}
 }
 
@@ -469,8 +475,9 @@ is_dual_page (EvView   *view,
 {
 	gboolean dual = FALSE;
 	gboolean odd_left = FALSE;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	switch (view->page_layout) {
+	switch (priv->page_layout) {
 	case EV_PAGE_LAYOUT_AUTOMATIC: {
 		double        scale;
 		double        doc_width;
@@ -479,22 +486,22 @@ is_dual_page (EvView   *view,
 
 		scale = ev_document_misc_get_widget_dpi (GTK_WIDGET (view)) / 72.0;
 
-		ev_document_get_max_page_size (view->document, &doc_width, &doc_height);
+		ev_document_get_max_page_size (priv->document, &doc_width, &doc_height);
 		gtk_widget_get_allocation (GTK_WIDGET (view), &allocation);
 
 		/* If the width is ok and the height is pretty close, try to fit it in */
-		if (ev_document_get_n_pages (view->document) > 1 &&
+		if (ev_document_get_n_pages (priv->document) > 1 &&
 		    doc_width < doc_height &&
 		    allocation.width > (2 * doc_width * scale) &&
 		    allocation.height > (doc_height * scale * 0.9)) {
-			odd_left = !view->dual_even_left;
+			odd_left = !priv->dual_even_left;
 			dual = TRUE;
 		}
 	}
 		break;
 	case EV_PAGE_LAYOUT_DUAL:
-		odd_left = !view->dual_even_left;
-		if (ev_document_get_n_pages (view->document) > 1)
+		odd_left = !priv->dual_even_left;
+		if (ev_document_get_n_pages (priv->document) > 1)
 			dual = TRUE;
 		break;
 	case EV_PAGE_LAYOUT_SINGLE:
@@ -517,29 +524,30 @@ scroll_to_point (EvView        *view,
 {
 	gdouble page_size;
 	gdouble upper, lower;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
 	if (orientation == GTK_ORIENTATION_VERTICAL) {
-		page_size = gtk_adjustment_get_page_size (view->vadjustment);
-		upper = gtk_adjustment_get_upper (view->vadjustment);
-		lower = gtk_adjustment_get_lower (view->vadjustment);
+		page_size = gtk_adjustment_get_page_size (priv->vadjustment);
+		upper = gtk_adjustment_get_upper (priv->vadjustment);
+		lower = gtk_adjustment_get_lower (priv->vadjustment);
 
-		if (view->continuous) {
-    			gtk_adjustment_clamp_page (view->vadjustment,
+		if (priv->continuous) {
+			gtk_adjustment_clamp_page (priv->vadjustment,
 						   y, y + page_size);
 		} else {
-			gtk_adjustment_set_value (view->vadjustment,
+			gtk_adjustment_set_value (priv->vadjustment,
 						  CLAMP (y, lower, upper - page_size));
 		}
 	} else {
-		page_size = gtk_adjustment_get_page_size (view->hadjustment);
-		upper = gtk_adjustment_get_upper (view->hadjustment);
-		lower = gtk_adjustment_get_lower (view->hadjustment);
+		page_size = gtk_adjustment_get_page_size (priv->hadjustment);
+		upper = gtk_adjustment_get_upper (priv->hadjustment);
+		lower = gtk_adjustment_get_lower (priv->hadjustment);
 
 		if (is_dual_page (view, NULL)) {
-			gtk_adjustment_clamp_page (view->hadjustment, x,
+			gtk_adjustment_clamp_page (priv->hadjustment, x,
 						   x + page_size);
 		} else {
-			gtk_adjustment_set_value (view->hadjustment,
+			gtk_adjustment_set_value (priv->hadjustment,
 						  CLAMP (x, lower, upper - page_size));
 		}
 	}
@@ -549,30 +557,31 @@ static void
 ev_view_scroll_to_page_position (EvView *view, GtkOrientation orientation)
 {
 	gdouble x, y;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	if (!view->document)
+	if (!priv->document)
 		return;
 
-	if ((orientation == GTK_ORIENTATION_VERTICAL && view->pending_point.y == 0) ||
-	    (orientation == GTK_ORIENTATION_HORIZONTAL && view->pending_point.x == 0)) {
+	if ((orientation == GTK_ORIENTATION_VERTICAL && priv->pending_point.y == 0) ||
+	    (orientation == GTK_ORIENTATION_HORIZONTAL && priv->pending_point.x == 0)) {
 		GdkRectangle page_area;
 		GtkBorder    border;
 
-		ev_view_get_page_extents (view, view->current_page, &page_area, &border);
+		ev_view_get_page_extents (view, priv->current_page, &page_area, &border);
 		x = page_area.x;
 		y = page_area.y;
 
-		if (view->continuous && view->sizing_mode == EV_SIZING_FIT_PAGE) {
-			y -= view->spacing + (border.top / 2);
+		if (priv->continuous && priv->sizing_mode == EV_SIZING_FIT_PAGE) {
+			y -= priv->spacing + (border.top / 2);
 		}
 
-		if (view->current_page == 0)
+		if (priv->current_page == 0)
 			y = 0.;
 	} else {
 		GdkPoint view_point;
 
-		_ev_view_transform_doc_point_to_view_point (view, view->current_page,
-							    &view->pending_point, &view_point);
+		_ev_view_transform_doc_point_to_view_point (view, priv->current_page,
+							    &priv->pending_point, &view_point);
 		x = view_point.x;
 		y = view_point.y;
 	}
@@ -584,10 +593,11 @@ static void
 ev_view_set_loading (EvView       *view,
 		     gboolean      loading)
 {
-	if (view->loading == loading)
+	EvViewPrivate *priv = GET_PRIVATE (view);
+	if (priv->loading == loading)
 		return;
 
-	view->loading = loading;
+	priv->loading = loading;
 	g_object_notify (G_OBJECT (view), "is-loading");
 }
 
@@ -602,19 +612,20 @@ ev_view_set_adjustment_values (EvView         *view,
 	GtkAllocation allocation;
 	gint req_size, alloc_size, new_value;
 	gdouble page_size, value, upper, factor, zoom_center;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
 	gtk_widget_get_allocation (widget, &allocation);
 
 	if (orientation == GTK_ORIENTATION_HORIZONTAL)  {
-		req_size = view->requisition.width;
+		req_size = priv->requisition.width;
 		alloc_size = allocation.width;
-		adjustment = view->hadjustment;
-		zoom_center = view->zoom_center_x;
+		adjustment = priv->hadjustment;
+		zoom_center = priv->zoom_center_x;
 	} else {
-		req_size = view->requisition.height;
+		req_size = priv->requisition.height;
 		alloc_size = allocation.height;
-		adjustment = view->vadjustment;
-		zoom_center = view->zoom_center_y;
+		adjustment = priv->vadjustment;
+		zoom_center = priv->zoom_center_y;
 	}
 
 	if (!adjustment)
@@ -628,7 +639,7 @@ ev_view_set_adjustment_values (EvView         *view,
 		zoom_center = page_size * 0.5;
 
 	if (upper != .0) {
-		switch (view->pending_scroll) {
+		switch (priv->pending_scroll) {
     	        case SCROLL_TO_KEEP_POSITION:
     	        case SCROLL_TO_FIND_LOCATION:
 			factor = value / upper;
@@ -650,7 +661,7 @@ ev_view_set_adjustment_values (EvView         *view,
 	/*
 	 * We add 0.5 to the values before to average out our rounding errors.
 	 */
-	switch (view->pending_scroll) {
+	switch (priv->pending_scroll) {
     	        case SCROLL_TO_KEEP_POSITION:
     	        case SCROLL_TO_FIND_LOCATION:
 			new_value = CLAMP (upper * factor + 0.5, 0, upper - page_size);
@@ -662,9 +673,9 @@ ev_view_set_adjustment_values (EvView         *view,
 	        case SCROLL_TO_CENTER:
 			new_value = CLAMP (upper * factor - zoom_center + 0.5, 0, upper - page_size);
 			if (orientation == GTK_ORIENTATION_HORIZONTAL)
-				view->zoom_center_x = -1.0;
+				priv->zoom_center_x = -1.0;
 			else
-				view->zoom_center_y = -1.0;
+				priv->zoom_center_y = -1.0;
 			gtk_adjustment_set_value (adjustment, new_value);
 			break;
 	}
@@ -673,15 +684,16 @@ ev_view_set_adjustment_values (EvView         *view,
 static void
 view_update_range_and_current_page (EvView *view)
 {
-	gint start = view->start_page;
-	gint end = view->end_page;
+	EvViewPrivate *priv = GET_PRIVATE (view);
+	gint start = priv->start_page;
+	gint end = priv->end_page;
 	gboolean odd_left;
 
-	if (ev_document_get_n_pages (view->document) <= 0 ||
-	    !ev_document_check_dimensions (view->document))
+	if (ev_document_get_n_pages (priv->document) <= 0 ||
+	    !ev_document_check_dimensions (priv->document))
 		return;
 
-	if (view->continuous) {
+	if (priv->continuous) {
 		GdkRectangle current_area, unused, page_area;
 		GtkBorder border;
 		gboolean found = FALSE;
@@ -690,15 +702,15 @@ view_update_range_and_current_page (EvView *view)
 		gint n_pages;
 		int i, j = 0;
 
-		if (!(view->vadjustment && view->hadjustment))
+		if (!(priv->vadjustment && priv->hadjustment))
 			return;
 
-		current_area.x = gtk_adjustment_get_value (view->hadjustment);
-		current_area.width = gtk_adjustment_get_page_size (view->hadjustment);
-		current_area.y = gtk_adjustment_get_value (view->vadjustment);
-		current_area.height = gtk_adjustment_get_page_size (view->vadjustment);
+		current_area.x = gtk_adjustment_get_value (priv->hadjustment);
+		current_area.width = gtk_adjustment_get_page_size (priv->hadjustment);
+		current_area.y = gtk_adjustment_get_value (priv->vadjustment);
+		current_area.height = gtk_adjustment_get_page_size (priv->vadjustment);
 
-		n_pages = ev_document_get_n_pages (view->document);
+		n_pages = ev_document_get_n_pages (priv->document);
 		compute_border (view, &border);
 		for (i = 0; i < n_pages; i++) {
 
@@ -709,7 +721,7 @@ view_update_range_and_current_page (EvView *view)
 
 				if (!found) {
 					area_max = area;
-					view->start_page = i;
+					priv->start_page = i;
 					found = TRUE;
 					best_current_page = i;
 				}
@@ -718,9 +730,9 @@ view_update_range_and_current_page (EvView *view)
 					area_max = area;
 				}
 
-				view->end_page = i;
+				priv->end_page = i;
 				j = 0;
-			} else if (found && view->current_page <= view->end_page) {
+			} else if (found && priv->current_page <= priv->end_page) {
 				if (is_dual_page (view, NULL) && j < 1) {
 					/* In dual mode  we stop searching
 					 * after two consecutive non-visible pages.
@@ -732,67 +744,67 @@ view_update_range_and_current_page (EvView *view)
 			}
 		}
 
-		if (view->pending_scroll == SCROLL_TO_KEEP_POSITION ||
-		    view->pending_scroll == SCROLL_TO_FIND_LOCATION) {
-			best_current_page = MAX (best_current_page, view->start_page);
+		if (priv->pending_scroll == SCROLL_TO_KEEP_POSITION ||
+		    priv->pending_scroll == SCROLL_TO_FIND_LOCATION) {
+			best_current_page = MAX (best_current_page, priv->start_page);
 
-			if (best_current_page >= 0 && view->current_page != best_current_page) {
-				view->current_page = best_current_page;
+			if (best_current_page >= 0 && priv->current_page != best_current_page) {
+				priv->current_page = best_current_page;
 				ev_view_set_loading (view, FALSE);
-				ev_document_model_set_page (view->model, best_current_page);
+				ev_document_model_set_page (priv->model, best_current_page);
 			}
 		}
 	} else if (is_dual_page (view, &odd_left)) {
-		if (view->current_page % 2 == !odd_left) {
-			view->start_page = view->current_page;
-			if (view->current_page + 1 < ev_document_get_n_pages (view->document))
-				view->end_page = view->start_page + 1;
+		if (priv->current_page % 2 == !odd_left) {
+			priv->start_page = priv->current_page;
+			if (priv->current_page + 1 < ev_document_get_n_pages (priv->document))
+				priv->end_page = priv->start_page + 1;
 			else
-				view->end_page = view->start_page;
+				priv->end_page = priv->start_page;
 		} else {
-			if (view->current_page < 1)
-				view->start_page = view->current_page;
+			if (priv->current_page < 1)
+				priv->start_page = priv->current_page;
 			else
-				view->start_page = view->current_page - 1;
-			view->end_page = view->current_page;
+				priv->start_page = priv->current_page - 1;
+			priv->end_page = priv->current_page;
 		}
 	} else {
-		view->start_page = view->current_page;
-		view->end_page = view->current_page;
+		priv->start_page = priv->current_page;
+		priv->end_page = priv->current_page;
 	}
 
-	if (view->start_page == -1 || view->end_page == -1)
+	if (priv->start_page == -1 || priv->end_page == -1)
 		return;
 
-	if (start < view->start_page || end > view->end_page) {
+	if (start < priv->start_page || end > priv->end_page) {
 		gint i;
 
-		for (i = start; i < view->start_page && start != -1; i++) {
+		for (i = start; i < priv->start_page && start != -1; i++) {
 			hide_annotation_windows (view, i);
 		}
 
-		for (i = end; i > view->end_page && end != -1; i--) {
+		for (i = end; i > priv->end_page && end != -1; i--) {
 			hide_annotation_windows (view, i);
 		}
 
 		ev_view_check_cursor_blink (view);
 	}
 
-	ev_page_cache_set_page_range (view->page_cache,
-				      view->start_page,
-				      view->end_page);
-	ev_pixbuf_cache_set_page_range (view->pixbuf_cache,
-					view->start_page,
-					view->end_page,
-					view->selection_info.selections);
+	ev_page_cache_set_page_range (priv->page_cache,
+				      priv->start_page,
+				      priv->end_page);
+	ev_pixbuf_cache_set_page_range (priv->pixbuf_cache,
+					priv->start_page,
+					priv->end_page,
+					priv->selection_info.selections);
 #if 0
-	if (view->accessible)
-		ev_view_accessible_set_page_range (EV_VIEW_ACCESSIBLE (view->accessible),
-						   view->start_page,
-						   view->end_page);
+	if (priv->accessible)
+		ev_view_accessible_set_page_range (EV_VIEW_ACCESSIBLE (priv->accessible),
+						   priv->start_page,
+						   priv->end_page);
 #endif
 
-	if (ev_pixbuf_cache_get_texture (view->pixbuf_cache, view->current_page))
+	if (ev_pixbuf_cache_get_texture (priv->pixbuf_cache, priv->current_page))
 		gtk_widget_queue_draw (GTK_WIDGET (view));
 }
 
@@ -801,14 +813,15 @@ ev_view_set_scroll_adjustment (EvView         *view,
 			       GtkOrientation  orientation,
 			       GtkAdjustment  *adjustment)
 {
+	EvViewPrivate *priv = GET_PRIVATE (view);
 	GtkAdjustment **to_set;
 	const gchar    *prop_name;
 
 	if (orientation == GTK_ORIENTATION_HORIZONTAL) {
-		to_set = &view->hadjustment;
+		to_set = &priv->hadjustment;
 		prop_name = "hadjustment";
 	} else {
-		to_set = &view->vadjustment;
+		to_set = &priv->vadjustment;
 		prop_name = "vadjustment";
 	}
 
@@ -852,8 +865,9 @@ static gdouble
 compute_scroll_increment (EvView        *view,
 			  GtkScrollType  scroll)
 {
+	EvViewPrivate *priv = GET_PRIVATE (view);
 	GtkWidget *widget = GTK_WIDGET (view);
-	GtkAdjustment *adjustment = view->vadjustment;
+	GtkAdjustment *adjustment = priv->vadjustment;
 	cairo_region_t *text_region, *region;
 	GtkAllocation allocation;
 	gint page;
@@ -866,16 +880,16 @@ compute_scroll_increment (EvView        *view,
 	if (scroll != GTK_SCROLL_PAGE_BACKWARD && scroll != GTK_SCROLL_PAGE_FORWARD)
 		return gtk_adjustment_get_page_size (adjustment);
 
-	page = scroll == GTK_SCROLL_PAGE_BACKWARD ? view->start_page : view->end_page;
+	page = scroll == GTK_SCROLL_PAGE_BACKWARD ? priv->start_page : priv->end_page;
 
-	text_region = ev_page_cache_get_text_mapping (view->page_cache, page);
+	text_region = ev_page_cache_get_text_mapping (priv->page_cache, page);
 	if (!text_region || cairo_region_is_empty (text_region))
 		return gtk_adjustment_get_page_size (adjustment);
 
 	gtk_widget_get_allocation (widget, &allocation);
 	ev_view_get_page_extents (view, page, &page_area, &border);
-	rect.x = page_area.x + view->scroll_x;
-	rect.y = view->scroll_y + (scroll == GTK_SCROLL_PAGE_BACKWARD ? 5 : allocation.height - 5);
+	rect.x = page_area.x + priv->scroll_x;
+	rect.y = priv->scroll_y + (scroll == GTK_SCROLL_PAGE_BACKWARD ? 5 : allocation.height - 5);
 	rect.width = page_area.width;
 	rect.height = 1;
 	_ev_view_transform_view_rect_to_doc_rect (view, &rect, &page_area, &border, &doc_rect);
@@ -894,8 +908,8 @@ compute_scroll_increment (EvView        *view,
 		cairo_region_t *sel_region;
 
 		cairo_region_get_rectangle (region, 0, &rect);
-		ev_page = ev_document_get_page (view->document, page);
-		rc = ev_render_context_new (ev_page, view->rotation, 0.);
+		ev_page = ev_document_get_page (priv->document, page);
+		rc = ev_render_context_new (ev_page, priv->rotation, 0.);
 		ev_render_context_set_target_size (rc,
 						   page_area.width - (border.left + border.right),
 						   page_area.height - (border.left + border.right));
@@ -905,7 +919,7 @@ compute_scroll_increment (EvView        *view,
 		doc_rect.y1 = doc_rect.y2 = rect.y + 0.5;
 
 		ev_document_doc_mutex_lock ();
-		sel_region = ev_selection_get_selection_region (EV_SELECTION (view->document),
+		sel_region = ev_selection_get_selection_region (EV_SELECTION (priv->document),
 								rc, EV_SELECTION_STYLE_LINE,
 								&doc_rect);
 		ev_document_doc_mutex_unlock ();
@@ -931,22 +945,24 @@ compute_scroll_increment (EvView        *view,
 static void
 ev_view_first_page (EvView *view)
 {
-	ev_document_model_set_page (view->model, 0);
+	EvViewPrivate *priv = GET_PRIVATE (view);
+	ev_document_model_set_page (priv->model, 0);
 }
 
 static void
 ev_view_last_page (EvView *view)
 {
 	gint n_pages;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	if (!view->document)
+	if (!priv->document)
 		return;
 
-	n_pages = ev_document_get_n_pages (view->document);
+	n_pages = ev_document_get_n_pages (priv->document);
 	if (n_pages <= 1)
 		return;
 
-	ev_document_model_set_page (view->model, n_pages - 1);
+	ev_document_model_set_page (priv->model, n_pages - 1);
 }
 
 static void
@@ -957,11 +973,12 @@ ev_view_scroll (EvView        *view,
 	GtkAdjustment *adjustment;
 	gdouble value, increment, upper, lower, page_size, step_increment;
 	gboolean first_page = FALSE, last_page = FALSE;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	if (view->key_binding_handled || view->caret_enabled)
+	if (priv->key_binding_handled || priv->caret_enabled)
 		return;
 
-	view->jump_to_find_result = FALSE;
+	priv->jump_to_find_result = FALSE;
 
 	if (ev_view_page_fits (view, orientation)) {
 		switch (scroll) {
@@ -987,7 +1004,7 @@ ev_view_scroll (EvView        *view,
 
 	/* Assign values for increment and vertical adjustment */
 	adjustment = orientation == GTK_ORIENTATION_HORIZONTAL ?
-			view->hadjustment : view->vadjustment;
+			priv->hadjustment : priv->vadjustment;
 	value = gtk_adjustment_get_value (adjustment);
 	upper = gtk_adjustment_get_upper (adjustment);
 	lower = gtk_adjustment_get_lower (adjustment);
@@ -995,9 +1012,9 @@ ev_view_scroll (EvView        *view,
 	step_increment = gtk_adjustment_get_step_increment (adjustment);
 
 	/* Assign boolean for first and last page */
-	if (view->current_page == 0)
+	if (priv->current_page == 0)
 		first_page = TRUE;
-	if (view->current_page == ev_document_get_n_pages (view->document) - 1)
+	if (priv->current_page == ev_document_get_n_pages (priv->document) - 1)
 		last_page = TRUE;
 
 	switch (scroll) {
@@ -1051,7 +1068,7 @@ ev_view_scroll (EvView        *view,
 			if (!last_page)
 				ev_view_last_page (view);
 			/* Changing pages causes the top to be shown. Here we want the bottom shown. */
-			view->pending_point.y = value;
+			priv->pending_point.y = value;
 			break;
         	default:
 			break;
@@ -1072,33 +1089,34 @@ _ev_view_ensure_rectangle_is_visible (EvView *view, GdkRectangle *rect)
 	GtkAllocation allocation;
 	gdouble adj_value;
 	int value;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	view->pending_scroll = SCROLL_TO_FIND_LOCATION;
+	priv->pending_scroll = SCROLL_TO_FIND_LOCATION;
 
 	gtk_widget_get_allocation (widget, &allocation);
 
-	adjustment = view->vadjustment;
+	adjustment = priv->vadjustment;
 	adj_value = gtk_adjustment_get_value (adjustment);
 
 	if (rect->y < adj_value) {
 		value = MAX (gtk_adjustment_get_lower (adjustment), rect->y - MARGIN);
-		gtk_adjustment_set_value (view->vadjustment, value);
+		gtk_adjustment_set_value (priv->vadjustment, value);
 	} else if (rect->y + rect->height > adj_value + allocation.height) {
 		value = MIN (gtk_adjustment_get_upper (adjustment), rect->y + rect->height -
 			     allocation.height + MARGIN);
-		gtk_adjustment_set_value (view->vadjustment, value);
+		gtk_adjustment_set_value (priv->vadjustment, value);
 	}
 
-	adjustment = view->hadjustment;
+	adjustment = priv->hadjustment;
 	adj_value = gtk_adjustment_get_value (adjustment);
 
 	if (rect->x < adj_value) {
 		value = MAX (gtk_adjustment_get_lower (adjustment), rect->x - MARGIN);
-		gtk_adjustment_set_value (view->hadjustment, value);
+		gtk_adjustment_set_value (priv->hadjustment, value);
 	} else if (rect->x + rect->height > adj_value + allocation.width) {
 		value = MIN (gtk_adjustment_get_upper (adjustment), rect->x + rect->width -
 			     allocation.width + MARGIN);
-		gtk_adjustment_set_value (view->hadjustment, value);
+		gtk_adjustment_set_value (priv->hadjustment, value);
 	}
 }
 
@@ -1144,10 +1162,11 @@ ev_view_get_page_size (EvView *view,
 		       gint   *page_width,
 		       gint   *page_height)
 {
-	_get_page_size_for_scale_and_rotation (view->document,
+	EvViewPrivate *priv = GET_PRIVATE (view);
+	_get_page_size_for_scale_and_rotation (priv->document,
 					       page,
-					       view->scale,
-					       view->rotation,
+					       priv->scale,
+					       priv->rotation,
 					       page_width,
 					       page_height);
 }
@@ -1159,16 +1178,17 @@ ev_view_get_max_page_size (EvView *view,
 {
 	double w, h;
 	gint   width, height;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	ev_document_get_max_page_size (view->document, &w, &h);
+	ev_document_get_max_page_size (priv->document, &w, &h);
 
-	width = (gint)(w * view->scale + 0.5);
-	height = (gint)(h * view->scale + 0.5);
+	width = (gint)(w * priv->scale + 0.5);
+	height = (gint)(h * priv->scale + 0.5);
 
 	if (max_width)
-		*max_width = (view->rotation == 0 || view->rotation == 180) ? width : height;
+		*max_width = (priv->rotation == 0 || priv->rotation == 180) ? width : height;
 	if (max_height)
-		*max_height = (view->rotation == 0 || view->rotation == 180) ? height : width;
+		*max_height = (priv->rotation == 0 || priv->rotation == 180) ? height : width;
 }
 
 static void
@@ -1176,16 +1196,17 @@ get_page_y_offset (EvView *view, int page, int *y_offset, GtkBorder *border)
 {
 	int offset = 0;
 	gboolean odd_left;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
 	g_return_if_fail (y_offset != NULL);
 
 	if (is_dual_page (view, &odd_left)) {
 		ev_view_get_height_to_page (view, page, NULL, &offset);
-		offset += ((page + !odd_left) / 2 + 1) * view->spacing +
+		offset += ((page + !odd_left) / 2 + 1) * priv->spacing +
 			((page + !odd_left) / 2 ) * (border->top + border->bottom);
 	} else {
 		ev_view_get_height_to_page (view, page, &offset, NULL);
-		offset += (page + 1) * view->spacing + page * (border->top + border->bottom);
+		offset += (page + 1) * priv->spacing + page * (border->top + border->bottom);
 	}
 
 	*y_offset = offset;
@@ -1220,6 +1241,7 @@ real_ev_view_get_page_extents (EvView       *view,
 	GtkWidget *widget;
 	int width, height;
 	GtkAllocation allocation;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
 	widget = GTK_WIDGET (view);
 	gtk_widget_get_allocation (widget, &allocation);
@@ -1231,7 +1253,7 @@ real_ev_view_get_page_extents (EvView       *view,
 	page_area->width = width + border->left + border->right;
 	page_area->height = height + border->top + border->bottom;
 
-	if (view->continuous) {
+	if (priv->continuous) {
 		gint max_width;
 		gint x, y;
 		gboolean odd_left;
@@ -1245,13 +1267,13 @@ real_ev_view_get_page_extents (EvView       *view,
 			right_page = (gtk_widget_get_direction (widget) == GTK_TEXT_DIR_LTR && page % 2 == !odd_left) ||
 			             (gtk_widget_get_direction (widget) == GTK_TEXT_DIR_RTL && page % 2 == odd_left);
 
-			x = view->spacing + (right_page ? 0 : 1) * (max_width + view->spacing);
-			x = x + MAX (0, allocation.width - (max_width * 2 + view->spacing * 3)) / 2;
+			x = priv->spacing + (right_page ? 0 : 1) * (max_width + priv->spacing);
+			x = x + MAX (0, allocation.width - (max_width * 2 + priv->spacing * 3)) / 2;
 			if (right_page)
 				x = x + (max_width - width - border->left - border->right);
 		} else {
-			x = view->spacing;
-			x = x + MAX (0, allocation.width - (width + border->left + border->right + view->spacing * 2)) / 2;
+			x = priv->spacing;
+			x = x + MAX (0, allocation.width - (width + border->left + border->right + priv->spacing * 2)) / 2;
 		}
 
 		get_page_y_offset (view, page, &y, border);
@@ -1272,7 +1294,7 @@ real_ev_view_get_page_extents (EvView       *view,
 			other_page = (page % 2 == !odd_left) ? page + 1: page - 1;
 
 			/* First, we get the bounding box of the two pages */
-			if (other_page < ev_document_get_n_pages (view->document)
+			if (other_page < ev_document_get_n_pages (priv->document)
 			    && (0 <= other_page)) {
 				ev_view_get_page_size (view, other_page,
 						       &width_2, &height_2);
@@ -1287,29 +1309,29 @@ real_ev_view_get_page_extents (EvView       *view,
 				overall_border = *border;
 
 			/* Find the offsets */
-			x = view->spacing;
-			y = view->spacing;
+			x = priv->spacing;
+			y = priv->spacing;
 
 			/* Adjust for being the left or right page */
 			if ((gtk_widget_get_direction (widget) == GTK_TEXT_DIR_LTR && page % 2 == !odd_left) ||
 			    (gtk_widget_get_direction (widget) == GTK_TEXT_DIR_RTL && page % 2 == odd_left))
 				x = x + max_width - width;
 			else
-				x = x + (max_width + overall_border.left + overall_border.right) + view->spacing;
+				x = x + (max_width + overall_border.left + overall_border.right) + priv->spacing;
 
 			y = y + (max_height - height)/2;
 
 			/* Adjust for extra allocation */
 			x = x + MAX (0, allocation.width -
-				     ((max_width + overall_border.left + overall_border.right) * 2 + view->spacing * 3))/2;
-			y = y + MAX (0, allocation.height - (height + view->spacing * 2))/2;
+				     ((max_width + overall_border.left + overall_border.right) * 2 + priv->spacing * 3))/2;
+			y = y + MAX (0, allocation.height - (height + priv->spacing * 2))/2;
 		} else {
-			x = view->spacing;
-			y = view->spacing;
+			x = priv->spacing;
+			y = priv->spacing;
 
 			/* Adjust for extra allocation */
-			x = x + MAX (0, allocation.width - (width + border->left + border->right + view->spacing * 2))/2;
-			y = y + MAX (0, allocation.height - (height + border->top + border->bottom +  view->spacing * 2))/2;
+			x = x + MAX (0, allocation.width - (width + border->left + border->right + priv->spacing * 2))/2;
+			y = y + MAX (0, allocation.height - (height + border->top + border->bottom +  priv->spacing * 2))/2;
 		}
 
 		page_area->x = x;
@@ -1326,9 +1348,10 @@ get_doc_page_size (EvView  *view,
 		   gdouble *height)
 {
 	double w, h;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	ev_document_get_page_size (view->document, page, &w, &h);
-	if (view->rotation == 0 || view->rotation == 180) {
+	ev_document_get_page_size (priv->document, page, &w, &h);
+	if (priv->rotation == 0 || priv->rotation == 180) {
 		if (width) *width = w;
 		if (height) *height = h;
 	} else {
@@ -1346,13 +1369,14 @@ _ev_view_transform_view_point_to_doc_point (EvView       *view,
 					    double       *doc_point_y)
 {
 	double x, y, width, height, doc_x, doc_y;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	x = doc_x = MAX ((double) (view_point->x - page_area->x - border->left) / view->scale, 0);
-	y = doc_y = MAX ((double) (view_point->y - page_area->y - border->top) / view->scale, 0);
+	x = doc_x = MAX ((double) (view_point->x - page_area->x - border->left) / priv->scale, 0);
+	y = doc_y = MAX ((double) (view_point->y - page_area->y - border->top) / priv->scale, 0);
 
-	ev_document_get_page_size (view->document, view->current_page, &width, &height);
+	ev_document_get_page_size (priv->document, priv->current_page, &width, &height);
 
-	switch (view->rotation) {
+	switch (priv->rotation) {
 	case 0:
 		x = doc_x;
 		y = doc_y;
@@ -1384,10 +1408,11 @@ _ev_view_transform_view_rect_to_doc_rect (EvView       *view,
 					  GtkBorder    *border,
 					  EvRectangle  *doc_rect)
 {
-	doc_rect->x1 = MAX ((double) (view_rect->x - page_area->x - border->left) / view->scale, 0);
-	doc_rect->y1 = MAX ((double) (view_rect->y - page_area->y - border->top) / view->scale, 0);
-	doc_rect->x2 = doc_rect->x1 + (double) view_rect->width / view->scale;
-	doc_rect->y2 = doc_rect->y1 + (double) view_rect->height / view->scale;
+	EvViewPrivate *priv = GET_PRIVATE (view);
+	doc_rect->x1 = MAX ((double) (view_rect->x - page_area->x - border->left) / priv->scale, 0);
+	doc_rect->y1 = MAX ((double) (view_rect->y - page_area->y - border->top) / priv->scale, 0);
+	doc_rect->x2 = doc_rect->x1 + (double) view_rect->width / priv->scale;
+	doc_rect->y2 = doc_rect->y1 + (double) view_rect->height / priv->scale;
 }
 
 void
@@ -1399,8 +1424,9 @@ _ev_view_transform_doc_point_by_rotation_scale (EvView   *view,
 	GdkRectangle page_area;
 	GtkBorder border;
 	double x, y, view_x, view_y;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	switch (view->rotation) {
+	switch (priv->rotation) {
 	case 0:
 		x = doc_point->x;
 		y = doc_point->y;
@@ -1436,8 +1462,8 @@ _ev_view_transform_doc_point_by_rotation_scale (EvView   *view,
 
 	ev_view_get_page_extents (view, page, &page_area, &border);
 
-	view_x = CLAMP ((gint)(x * view->scale + 0.5), 0, page_area.width);
-	view_y = CLAMP ((gint)(y * view->scale + 0.5), 0, page_area.height);
+	view_x = CLAMP ((gint)(x * priv->scale + 0.5), 0, page_area.width);
+	view_y = CLAMP ((gint)(y * priv->scale + 0.5), 0, page_area.height);
 
 	view_point->x = view_x;
 	view_point->y = view_y;
@@ -1468,8 +1494,9 @@ _ev_view_transform_doc_rect_to_view_rect (EvView       *view,
 	GdkRectangle page_area;
 	GtkBorder border;
 	double x, y, w, h;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	switch (view->rotation) {
+	switch (priv->rotation) {
 	case 0:
 		x = doc_rect->x1;
 		y = doc_rect->y1;
@@ -1513,10 +1540,10 @@ _ev_view_transform_doc_rect_to_view_rect (EvView       *view,
 
 	ev_view_get_page_extents (view, page, &page_area, &border);
 
-	view_rect->x = (gint)(x * view->scale + 0.5) + page_area.x + border.left;
-	view_rect->y = (gint)(y * view->scale + 0.5) + page_area.y + border.top;
-	view_rect->width = (gint)(w * view->scale + 0.5);
-	view_rect->height = (gint)(h * view->scale + 0.5);
+	view_rect->x = (gint)(x * priv->scale + 0.5) + page_area.x + border.left;
+	view_rect->y = (gint)(y * priv->scale + 0.5) + page_area.y + border.top;
+	view_rect->width = (gint)(w * priv->scale + 0.5);
+	view_rect->height = (gint)(h * priv->scale + 0.5);
 }
 
 static void
@@ -1527,10 +1554,11 @@ find_page_at_location (EvView  *view,
 		       gint    *x_offset,
 		       gint    *y_offset)
 {
+	EvViewPrivate *priv = GET_PRIVATE (view);
 	int i;
 	GtkBorder border;
 
-	if (view->document == NULL)
+	if (priv->document == NULL)
 		return;
 
 	g_assert (page);
@@ -1538,7 +1566,7 @@ find_page_at_location (EvView  *view,
 	g_assert (y_offset);
 
 	compute_border (view, &border);
-	for (i = view->start_page; i >= 0 && i <= view->end_page; i++) {
+	for (i = priv->start_page; i >= 0 && i <= priv->end_page; i++) {
 		GdkRectangle page_area;
 
 		if (! ev_view_get_page_extents_for_border (view, i, &border, &page_area))
@@ -1563,6 +1591,7 @@ location_in_text (EvView  *view,
 		  gdouble  x,
 		  gdouble  y)
 {
+	EvViewPrivate *priv = GET_PRIVATE (view);
 	cairo_region_t *region;
 	gint page = -1;
 	gint x_offset = 0, y_offset = 0;
@@ -1572,10 +1601,10 @@ location_in_text (EvView  *view,
 	if (page == -1)
 		return FALSE;
 
-	region = ev_page_cache_get_text_mapping (view->page_cache, page);
+	region = ev_page_cache_get_text_mapping (priv->page_cache, page);
 
 	if (region)
-		return cairo_region_contains_point (region, x_offset / view->scale, y_offset / view->scale);
+		return cairo_region_contains_point (region, x_offset / priv->scale, y_offset / priv->scale);
 	else
 		return FALSE;
 }
@@ -1585,6 +1614,7 @@ location_in_selected_text (EvView  *view,
 			   gdouble  x,
 			   gdouble  y)
 {
+	EvViewPrivate *priv = GET_PRIVATE (view);
 	cairo_region_t *region;
 	gint page = -1;
 	gint x_offset = 0, y_offset = 0;
@@ -1594,7 +1624,7 @@ location_in_selected_text (EvView  *view,
 	if (page == -1)
 		return FALSE;
 
-	region = ev_pixbuf_cache_get_selection_region (view->pixbuf_cache, page, view->scale);
+	region = ev_pixbuf_cache_get_selection_region (priv->pixbuf_cache, page, priv->scale);
 
 	if (region)
 		return cairo_region_contains_point (region, x_offset, y_offset);
@@ -1610,24 +1640,25 @@ get_doc_point_from_offset (EvView *view,
 			   gint   *x_new,
 			   gint   *y_new)
 {
+	EvViewPrivate *priv = GET_PRIVATE (view);
         gdouble width, height;
 	double x, y;
 
 	get_doc_page_size (view, page, &width, &height);
 
-	x_offset = x_offset / view->scale;
-	y_offset = y_offset / view->scale;
+	x_offset = x_offset / priv->scale;
+	y_offset = y_offset / priv->scale;
 
-        if (view->rotation == 0) {
+        if (priv->rotation == 0) {
                 x = x_offset;
                 y = y_offset;
-        } else if (view->rotation == 90) {
+        } else if (priv->rotation == 90) {
                 x = y_offset;
                 y = width - x_offset;
-        } else if (view->rotation == 180) {
+        } else if (priv->rotation == 180) {
                 x = width - x_offset;
                 y = height - y_offset;
-        } else if (view->rotation == 270) {
+        } else if (priv->rotation == 270) {
                 x = height - y_offset;
                 y = x_offset;
         } else {
@@ -1648,10 +1679,11 @@ get_doc_point_from_location (EvView  *view,
 			     gint    *x_new,
 			     gint    *y_new)
 {
+	EvViewPrivate *priv = GET_PRIVATE (view);
 	gint x_offset = 0, y_offset = 0;
 
-	x += view->scroll_x;
-	y += view->scroll_y;
+	x += priv->scroll_x;
+	y += priv->scroll_y;
 	find_page_at_location (view, x, y, page, &x_offset, &y_offset);
 	if (*page == -1)
 		return FALSE;
@@ -1666,12 +1698,14 @@ ev_view_get_area_from_mapping (EvView        *view,
 			       gconstpointer  data,
 			       GdkRectangle  *area)
 {
+	EvViewPrivate *priv = GET_PRIVATE (view);
+
 	EvMapping *mapping;
 
 	mapping = ev_mapping_list_find (mapping_list, data);
 	_ev_view_transform_doc_rect_to_view_rect (view, page, &mapping->area, area);
-	area->x -= view->scroll_x;
-	area->y -= view->scroll_y;
+	area->x -= priv->scroll_x;
+	area->y -= priv->scroll_y;
 }
 
 static void
@@ -1709,11 +1743,12 @@ ev_view_put_to_doc_rect (EvView      *view,
 			 guint        page,
 			 EvRectangle *doc_rect)
 {
+	EvViewPrivate *priv = GET_PRIVATE (view);
 	GdkRectangle area;
 
 	_ev_view_transform_doc_rect_to_view_rect (view, page, doc_rect, &area);
-	area.x -= view->scroll_x;
-	area.y -= view->scroll_y;
+	area.x -= priv->scroll_x;
+	area.y -= priv->scroll_y;
 	ev_view_put (view, child_widget, area.x, area.y, page, doc_rect);
 }
 
@@ -1724,16 +1759,17 @@ get_link_mapping_at_location (EvView  *view,
 			      gdouble  y,
 			      gint    *page)
 {
+	EvViewPrivate *priv = GET_PRIVATE (view);
 	gint x_new = 0, y_new = 0;
 	EvMappingList *link_mapping;
 
-	if (!EV_IS_DOCUMENT_LINKS (view->document))
+	if (!EV_IS_DOCUMENT_LINKS (priv->document))
 		return NULL;
 
 	if (!get_doc_point_from_location (view, x, y, page, &x_new, &y_new))
 		return NULL;
 
-	link_mapping = ev_page_cache_get_link_mapping (view->page_cache, *page);
+	link_mapping = ev_page_cache_get_link_mapping (priv->page_cache, *page);
 	if (link_mapping)
 		return ev_mapping_list_get (link_mapping, x_new, y_new);
 
@@ -1756,6 +1792,7 @@ ev_view_get_link_at_location (EvView  *view,
 static void
 goto_fitr_dest (EvView *view, EvLinkDest *dest)
 {
+	EvViewPrivate *priv = GET_PRIVATE (view);
 	EvPoint doc_point;
 	gdouble left, top;
 	gboolean change_left, change_top;
@@ -1763,7 +1800,7 @@ goto_fitr_dest (EvView *view, EvLinkDest *dest)
 	left = ev_link_dest_get_left (dest, &change_left);
 	top = ev_link_dest_get_top (dest, &change_top);
 
-	if (view->allow_links_change_zoom) {
+	if (priv->allow_links_change_zoom) {
 		gdouble doc_width, doc_height;
 		gdouble zoom;
 		GtkAllocation allocation;
@@ -1778,8 +1815,8 @@ goto_fitr_dest (EvView *view, EvLinkDest *dest)
 					       allocation.width,
 					       allocation.height);
 
-		ev_document_model_set_sizing_mode (view->model, EV_SIZING_FREE);
-		ev_document_model_set_scale (view->model, zoom);
+		ev_document_model_set_sizing_mode (priv->model, EV_SIZING_FREE);
+		ev_document_model_set_scale (priv->model, zoom);
 
 		/* center the target box within the view */
 		left -= (allocation.width / zoom - doc_width) / 2;
@@ -1788,7 +1825,7 @@ goto_fitr_dest (EvView *view, EvLinkDest *dest)
 
 	doc_point.x = change_left ? left : 0;
 	doc_point.y = change_top ? top : 0;
-	view->pending_point = doc_point;
+	priv->pending_point = doc_point;
 
 	ev_view_change_page (view, ev_link_dest_get_page (dest));
 }
@@ -1796,6 +1833,7 @@ goto_fitr_dest (EvView *view, EvLinkDest *dest)
 static void
 goto_fitv_dest (EvView *view, EvLinkDest *dest)
 {
+	EvViewPrivate *priv = GET_PRIVATE (view);
 	EvPoint doc_point;
 	gint page;
 	double left;
@@ -1807,24 +1845,24 @@ goto_fitv_dest (EvView *view, EvLinkDest *dest)
 	doc_point.x = change_left ? left : 0;
 	doc_point.y = 0;
 
-	if (view->allow_links_change_zoom) {
+	if (priv->allow_links_change_zoom) {
 		GtkAllocation allocation;
 		gdouble doc_width, doc_height;
 		double zoom;
 
 		gtk_widget_get_allocation (GTK_WIDGET (view), &allocation);
 
-		ev_document_get_page_size (view->document, page, &doc_width, &doc_height);
+		ev_document_get_page_size (priv->document, page, &doc_width, &doc_height);
 
 		zoom = zoom_for_size_fit_height (doc_width - doc_point.x, doc_height,
 						 allocation.width,
 						 allocation.height);
 
-		ev_document_model_set_sizing_mode (view->model, EV_SIZING_FREE);
-		ev_document_model_set_scale (view->model, zoom);
+		ev_document_model_set_sizing_mode (priv->model, EV_SIZING_FREE);
+		ev_document_model_set_scale (priv->model, zoom);
 	}
 
-	view->pending_point = doc_point;
+	priv->pending_point = doc_point;
 
 	ev_view_change_page (view, page);
 }
@@ -1832,6 +1870,7 @@ goto_fitv_dest (EvView *view, EvLinkDest *dest)
 static void
 goto_fith_dest (EvView *view, EvLinkDest *dest)
 {
+	EvViewPrivate *priv = GET_PRIVATE (view);
 	EvPoint doc_point;
 	gint page;
 	gdouble top;
@@ -1843,24 +1882,24 @@ goto_fith_dest (EvView *view, EvLinkDest *dest)
 	doc_point.x = 0;
 	doc_point.y = change_top ? top : 0;
 
-	if (view->allow_links_change_zoom) {
+	if (priv->allow_links_change_zoom) {
 		GtkAllocation allocation;
 		gdouble doc_width;
 		gdouble zoom;
 
 		gtk_widget_get_allocation (GTK_WIDGET (view), &allocation);
 
-		ev_document_get_page_size (view->document, page, &doc_width, NULL);
+		ev_document_get_page_size (priv->document, page, &doc_width, NULL);
 
 		zoom = zoom_for_size_fit_width (doc_width, top,
 						allocation.width,
 						allocation.height);
 
-		ev_document_model_set_sizing_mode (view->model, EV_SIZING_FIT_WIDTH);
-		ev_document_model_set_scale (view->model, zoom);
+		ev_document_model_set_sizing_mode (priv->model, EV_SIZING_FIT_WIDTH);
+		ev_document_model_set_scale (priv->model, zoom);
 	}
 
-	view->pending_point = doc_point;
+	priv->pending_point = doc_point;
 
 	ev_view_change_page (view, page);
 }
@@ -1868,25 +1907,26 @@ goto_fith_dest (EvView *view, EvLinkDest *dest)
 static void
 goto_fit_dest (EvView *view, EvLinkDest *dest)
 {
+	EvViewPrivate *priv = GET_PRIVATE (view);
 	int page;
 
 	page = ev_link_dest_get_page (dest);
 
-	if (view->allow_links_change_zoom) {
+	if (priv->allow_links_change_zoom) {
 		double zoom;
 		gdouble doc_width, doc_height;
 		GtkAllocation allocation;
 
 		gtk_widget_get_allocation (GTK_WIDGET (view), &allocation);
 
-		ev_document_get_page_size (view->document, page, &doc_width, &doc_height);
+		ev_document_get_page_size (priv->document, page, &doc_width, &doc_height);
 
 		zoom = zoom_for_size_fit_page (doc_width, doc_height,
 					       allocation.width,
 					       allocation.height);
 
-		ev_document_model_set_sizing_mode (view->model, EV_SIZING_FIT_PAGE);
-		ev_document_model_set_scale (view->model, zoom);
+		ev_document_model_set_sizing_mode (priv->model, EV_SIZING_FIT_PAGE);
+		ev_document_model_set_scale (priv->model, zoom);
 	}
 
 	ev_view_change_page (view, page);
@@ -1895,6 +1935,7 @@ goto_fit_dest (EvView *view, EvLinkDest *dest)
 static void
 goto_xyz_dest (EvView *view, EvLinkDest *dest)
 {
+	EvViewPrivate *priv = GET_PRIVATE (view);
 	EvPoint doc_point;
 	gint page;
 	gdouble zoom, left, top;
@@ -1903,9 +1944,9 @@ goto_xyz_dest (EvView *view, EvLinkDest *dest)
 	zoom = ev_link_dest_get_zoom (dest, &change_zoom);
 	page = ev_link_dest_get_page (dest);
 
-	if (view->allow_links_change_zoom && change_zoom && zoom > 1) {
-		ev_document_model_set_sizing_mode (view->model, EV_SIZING_FREE);
-		ev_document_model_set_scale (view->model, zoom);
+	if (priv->allow_links_change_zoom && change_zoom && zoom > 1) {
+		ev_document_model_set_sizing_mode (priv->model, EV_SIZING_FREE);
+		ev_document_model_set_scale (priv->model, zoom);
 	}
 
 	left = ev_link_dest_get_left (dest, &change_left);
@@ -1913,7 +1954,7 @@ goto_xyz_dest (EvView *view, EvLinkDest *dest)
 
 	doc_point.x = change_left ? left : 0;
 	doc_point.y = change_top ? top : 0;
-	view->pending_point = doc_point;
+	priv->pending_point = doc_point;
 
 	ev_view_change_page (view, page);
 }
@@ -1921,22 +1962,23 @@ goto_xyz_dest (EvView *view, EvLinkDest *dest)
 static void
 goto_dest (EvView *view, EvLinkDest *dest)
 {
+	EvViewPrivate *priv = GET_PRIVATE (view);
 	EvLinkDestType type;
 	int page, n_pages, current_page;
 
 	page = ev_link_dest_get_page (dest);
-	n_pages = ev_document_get_n_pages (view->document);
+	n_pages = ev_document_get_n_pages (priv->document);
 
 	if (page < 0 || page >= n_pages)
 		return;
 
-	current_page = view->current_page;
+	current_page = priv->current_page;
 
 	type = ev_link_dest_get_dest_type (dest);
 
 	switch (type) {
 		case EV_LINK_DEST_TYPE_PAGE:
-			ev_document_model_set_page (view->model, page);
+			ev_document_model_set_page (priv->model, page);
 			break;
 		case EV_LINK_DEST_TYPE_FIT:
 			goto_fit_dest (view, dest);
@@ -1954,19 +1996,20 @@ goto_dest (EvView *view, EvLinkDest *dest)
 			goto_xyz_dest (view, dest);
 			break;
 		case EV_LINK_DEST_TYPE_PAGE_LABEL:
-			ev_document_model_set_page_by_label (view->model, ev_link_dest_get_page_label (dest));
+			ev_document_model_set_page_by_label (priv->model, ev_link_dest_get_page_label (dest));
 			break;
 		default:
 			g_assert_not_reached ();
  	}
 
-	if (current_page != view->current_page)
-		ev_document_model_set_page (view->model, view->current_page);
+	if (current_page != priv->current_page)
+		ev_document_model_set_page (priv->model, priv->current_page);
 }
 
 static void
 ev_view_goto_dest (EvView *view, EvLinkDest *dest)
 {
+	EvViewPrivate *priv = GET_PRIVATE (view);
 	EvLinkDestType type;
 
 	type = ev_link_dest_get_dest_type (dest);
@@ -1976,7 +2019,7 @@ ev_view_goto_dest (EvView *view, EvLinkDest *dest)
 		const gchar *named_dest;
 
 		named_dest = ev_link_dest_get_named_dest (dest);
-		dest2 = ev_document_links_find_link_dest (EV_DOCUMENT_LINKS (view->document),
+		dest2 = ev_document_links_find_link_dest (EV_DOCUMENT_LINKS (priv->document),
 							  named_dest);
 		if (dest2) {
 			goto_dest (view, dest2);
@@ -1992,16 +2035,17 @@ ev_view_goto_dest (EvView *view, EvLinkDest *dest)
 static void
 ev_view_link_to_current_view (EvView *view, EvLink **backlink)
 {
+	EvViewPrivate *priv = GET_PRIVATE (view);
 	EvLinkDest   *backlink_dest = NULL;
 	EvLinkAction *backlink_action = NULL;
 
-	gint          backlink_page = view->start_page;
-	gdouble       zoom = ev_document_model_get_scale (view->model);
+	gint          backlink_page = priv->start_page;
+	gdouble       zoom = ev_document_model_get_scale (priv->model);
 
 	GtkBorder     border;
 	GdkRectangle  backlink_page_area;
 
-	gboolean is_dual = ev_document_model_get_page_layout (view->model) == EV_PAGE_LAYOUT_DUAL;
+	gboolean is_dual = ev_document_model_get_page_layout (priv->model) == EV_PAGE_LAYOUT_DUAL;
 	gint x_offset;
 	gint y_offset;
 
@@ -2009,8 +2053,8 @@ ev_view_link_to_current_view (EvView *view, EvLink **backlink)
 	x_offset = backlink_page_area.x;
 	y_offset = backlink_page_area.y;
 
-	if (!view->continuous && is_dual && view->scroll_x > backlink_page_area.width + border.left) {
-		/* For dual-column, non-continuous mode, view->start_page is always
+	if (!priv->continuous && is_dual && priv->scroll_x > backlink_page_area.width + border.left) {
+		/* For dual-column, non-continuous mode, priv->start_page is always
 		 * the page in the left-hand column, even if that page isn't visible.
 		 * We adjust for that here when we know the page can't be visible due
 		 * to horizontal scroll. */
@@ -2022,8 +2066,8 @@ ev_view_link_to_current_view (EvView *view, EvLink **backlink)
 		x_offset = backlink_page_area.x;
 	}
 
-	gdouble backlink_dest_x = (view->scroll_x - x_offset - border.left) / view->scale;
-	gdouble backlink_dest_y = (view->scroll_y - y_offset - border.top) / view->scale;
+	gdouble backlink_dest_x = (priv->scroll_x - x_offset - border.left) / priv->scale;
+	gdouble backlink_dest_y = (priv->scroll_y - y_offset - border.top) / priv->scale;
 
 	backlink_dest = ev_link_dest_new_xyz (backlink_page, backlink_dest_x,
 					      backlink_dest_y, zoom, TRUE,
@@ -2039,6 +2083,7 @@ ev_view_link_to_current_view (EvView *view, EvLink **backlink)
 void
 ev_view_handle_link (EvView *view, EvLink *link)
 {
+	EvViewPrivate *priv = GET_PRIVATE (view);
 	EvLinkAction    *action = NULL;
 	EvLinkActionType type;
 
@@ -2069,7 +2114,7 @@ ev_view_handle_link (EvView *view, EvLink *link)
 			GList            *l;
 			EvDocumentLayers *document_layers;
 
-			document_layers = EV_DOCUMENT_LAYERS (view->document);
+			document_layers = EV_DOCUMENT_LAYERS (priv->document);
 
 			show = ev_link_action_get_show_list (action);
 			for (l = show; l; l = g_list_next (l)) {
@@ -2131,6 +2176,7 @@ tip_from_action_named (EvLinkAction *action)
 static char *
 tip_from_link (EvView *view, EvLink *link)
 {
+	EvViewPrivate *priv = GET_PRIVATE (view);
 	EvLinkAction *action;
 	EvLinkActionType type;
 	char *msg = NULL;
@@ -2147,7 +2193,7 @@ tip_from_link (EvView *view, EvLink *link)
 
 	switch (type) {
 	        case EV_LINK_ACTION_TYPE_GOTO_DEST:
-			page_label = ev_document_links_get_dest_page_label (EV_DOCUMENT_LINKS (view->document),
+			page_label = ev_document_links_get_dest_page_label (EV_DOCUMENT_LINKS (priv->document),
 									    ev_link_action_get_dest (action));
 			if (page_label) {
     				msg = g_strdup_printf (_("Go to page %s"), page_label);
@@ -2198,6 +2244,7 @@ link_preview_popover_motion_notify (GtkEventControllerMotion	*self,
 static void
 handle_cursor_over_link (EvView *view, EvLink *link, gint x, gint y, gboolean from_motion)
 {
+	EvViewPrivate *priv = GET_PRIVATE (view);
 	GdkRectangle     link_area;
 	EvLinkAction    *action;
 	EvLinkDest      *dest;
@@ -2212,7 +2259,7 @@ handle_cursor_over_link (EvView *view, EvLink *link, gint x, gint y, gboolean fr
 
 	ev_view_set_cursor (view, EV_VIEW_CURSOR_LINK);
 
-	if (link == view->link_preview.link)
+	if (link == priv->link_preview.link)
 		return;
 
 	/* Display thumbnail, if applicable */
@@ -2230,14 +2277,14 @@ handle_cursor_over_link (EvView *view, EvLink *link, gint x, gint y, gboolean fr
 
 	type = ev_link_dest_get_dest_type (dest);
 	if (type == EV_LINK_DEST_TYPE_NAMED) {
-		dest = ev_document_links_find_link_dest (EV_DOCUMENT_LINKS (view->document),
+		dest = ev_document_links_find_link_dest (EV_DOCUMENT_LINKS (priv->document),
 							 ev_link_dest_get_named_dest (dest));
 	}
 
 	ev_view_link_preview_popover_cleanup (view);
 
 	/* Init popover */
-	view->link_preview.popover = popover = gtk_popover_new ();
+	priv->link_preview.popover = popover = gtk_popover_new ();
 	gtk_popover_set_position (GTK_POPOVER (popover), GTK_POS_TOP);
 	gtk_widget_set_parent (popover, GTK_WIDGET (view));
 	get_link_area (view, x, y, link, &link_area);
@@ -2256,69 +2303,70 @@ handle_cursor_over_link (EvView *view, EvLink *link, gint x, gint y, gboolean fr
 	/* Start thumbnailing job async */
 	link_dest_page = ev_link_dest_get_page (dest);
 	device_scale = gtk_widget_get_scale_factor (GTK_WIDGET (view));
-	view->link_preview.job = ev_job_thumbnail_cairo_new (view->document,
+	priv->link_preview.job = ev_job_thumbnail_cairo_new (priv->document,
 							     link_dest_page,
-							     view->rotation,
-							     view->scale * device_scale);
+							     priv->rotation,
+							     priv->scale * device_scale);
 
 	link_dest_doc.x = ev_link_dest_get_left (dest, NULL);
 	link_dest_doc.y = ev_link_dest_get_top (dest, NULL);
 	_ev_view_transform_doc_point_by_rotation_scale (view, link_dest_page,
 							&link_dest_doc, &link_dest_view);
-	view->link_preview.left = link_dest_view.x;
-	view->link_preview.top = link_dest_view.y;
-	view->link_preview.link = link;
+	priv->link_preview.left = link_dest_view.x;
+	priv->link_preview.top = link_dest_view.y;
+	priv->link_preview.link = link;
 
-	page_texture = ev_pixbuf_cache_get_texture (view->pixbuf_cache, link_dest_page);
+	page_texture = ev_pixbuf_cache_get_texture (priv->pixbuf_cache, link_dest_page);
 
 	if (page_texture)
 		link_preview_show_thumbnail (page_texture, view);
 	else {
-		g_signal_connect (view->link_preview.job, "finished",
+		g_signal_connect (priv->link_preview.job, "finished",
 				  G_CALLBACK (link_preview_job_finished_cb),
 				  view);
-		ev_job_scheduler_push_job (view->link_preview.job, EV_JOB_PRIORITY_LOW);
+		ev_job_scheduler_push_job (priv->link_preview.job, EV_JOB_PRIORITY_LOW);
 	}
 
 	if (type == EV_LINK_DEST_TYPE_NAMED)
 		g_object_unref (dest);
 
-	view->link_preview.delay_timeout_id =
+	priv->link_preview.delay_timeout_id =
 		g_timeout_add_once (LINK_PREVIEW_DELAY_MS,
 				    (GSourceOnceFunc)link_preview_delayed_show,
 				    view);
-	g_source_set_name_by_id (view->link_preview.delay_timeout_id,
+	g_source_set_name_by_id (priv->link_preview.delay_timeout_id,
 				 "[evince] link_preview_timeout");
 }
 
 static void
 ev_view_handle_cursor_over_xy (EvView *view, gint x, gint y, gboolean from_motion)
 {
+	EvViewPrivate *priv = GET_PRIVATE (view);
 	EvLink       *link;
 	EvFormField  *field;
 	EvAnnotation *annot = NULL;
 	EvMedia      *media;
 
-	if (view->cursor == EV_VIEW_CURSOR_HIDDEN)
+	if (priv->cursor == EV_VIEW_CURSOR_HIDDEN)
 		return;
 
-	if (view->adding_annot_info.adding_annot) {
-		if (view->adding_annot_info.type == EV_ANNOTATION_TYPE_TEXT_MARKUP) {
+	if (priv->adding_annot_info.adding_annot) {
+		if (priv->adding_annot_info.type == EV_ANNOTATION_TYPE_TEXT_MARKUP) {
 			ev_view_set_cursor (view, EV_VIEW_CURSOR_IBEAM);
-		} else if (!view->adding_annot_info.annot) {
+		} else if (!priv->adding_annot_info.annot) {
 			ev_view_set_cursor (view, EV_VIEW_CURSOR_ADD);
 		}
 		return;
 	}
 
-	if (view->drag_info.in_drag) {
-		if (view->cursor != EV_VIEW_CURSOR_DRAG)
+	if (priv->drag_info.in_drag) {
+		if (priv->cursor != EV_VIEW_CURSOR_DRAG)
 			ev_view_set_cursor (view, EV_VIEW_CURSOR_DRAG);
 		return;
 	}
 
-	if (view->scroll_info.autoscrolling) {
-		if (view->cursor != EV_VIEW_CURSOR_AUTOSCROLL)
+	if (priv->scroll_info.autoscrolling) {
+		if (priv->cursor != EV_VIEW_CURSOR_AUTOSCROLL)
 			ev_view_set_cursor (view, EV_VIEW_CURSOR_AUTOSCROLL);
 		return;
 	}
@@ -2328,13 +2376,13 @@ ev_view_handle_cursor_over_xy (EvView *view, gint x, gint y, gboolean from_motio
 		handle_cursor_over_link (view, link, x, y, from_motion);
 	} else {
 		ev_view_link_preview_popover_cleanup (view);
-		view->link_preview.link = NULL;
+		priv->link_preview.link = NULL;
 
 		if ((field = ev_view_get_form_field_at_location (view, x, y))) {
 			if (field->is_read_only) {
-				if (view->cursor == EV_VIEW_CURSOR_LINK ||
-				    view->cursor == EV_VIEW_CURSOR_IBEAM ||
-				    view->cursor == EV_VIEW_CURSOR_DRAG)
+				if (priv->cursor == EV_VIEW_CURSOR_LINK ||
+				    priv->cursor == EV_VIEW_CURSOR_IBEAM ||
+				    priv->cursor == EV_VIEW_CURSOR_DRAG)
 					ev_view_set_cursor (view, EV_VIEW_CURSOR_NORMAL);
 			} else if (EV_IS_FORM_FIELD_TEXT (field)) {
 				ev_view_set_cursor (view, EV_VIEW_CURSOR_IBEAM);
@@ -2348,14 +2396,14 @@ ev_view_handle_cursor_over_xy (EvView *view, gint x, gint y, gboolean from_motio
 				ev_view_set_cursor (view, EV_VIEW_CURSOR_NORMAL);
 		} else if ((annot = ev_view_get_annotation_at_location (view, x, y))) {
 			ev_view_set_cursor (view, EV_VIEW_CURSOR_LINK);
-		} else if (location_in_text (view, x + view->scroll_x, y + view->scroll_y)) {
+		} else if (location_in_text (view, x + priv->scroll_x, y + priv->scroll_y)) {
 			ev_view_set_cursor (view, EV_VIEW_CURSOR_IBEAM);
 		} else {
-			if (view->cursor == EV_VIEW_CURSOR_LINK ||
-			    view->cursor == EV_VIEW_CURSOR_IBEAM ||
-			    view->cursor == EV_VIEW_CURSOR_DRAG ||
-			    view->cursor == EV_VIEW_CURSOR_AUTOSCROLL ||
-			    view->cursor == EV_VIEW_CURSOR_ADD)
+			if (priv->cursor == EV_VIEW_CURSOR_LINK ||
+			    priv->cursor == EV_VIEW_CURSOR_IBEAM ||
+			    priv->cursor == EV_VIEW_CURSOR_DRAG ||
+			    priv->cursor == EV_VIEW_CURSOR_AUTOSCROLL ||
+			    priv->cursor == EV_VIEW_CURSOR_ADD)
 				ev_view_set_cursor (view, EV_VIEW_CURSOR_NORMAL);
 		}
 	}
@@ -2367,17 +2415,18 @@ ev_view_get_image_at_location (EvView  *view,
 			       gdouble  x,
 			       gdouble  y)
 {
+	EvViewPrivate *priv = GET_PRIVATE (view);
 	gint page = -1;
 	gint x_new = 0, y_new = 0;
 	EvMappingList *image_mapping;
 
-	if (!EV_IS_DOCUMENT_IMAGES (view->document))
+	if (!EV_IS_DOCUMENT_IMAGES (priv->document))
 		return NULL;
 
 	if (!get_doc_point_from_location (view, x, y, &page, &x_new, &y_new))
 		return NULL;
 
-	image_mapping = ev_page_cache_get_image_mapping (view->page_cache, page);
+	image_mapping = ev_page_cache_get_image_mapping (priv->page_cache, page);
 
 	if (image_mapping)
 		return ev_mapping_list_get_data (image_mapping, x_new, y_new);
@@ -2390,15 +2439,16 @@ static gboolean
 ev_view_get_focused_area (EvView       *view,
 			  GdkRectangle *area)
 {
-	if (!view->focused_element)
+	EvViewPrivate *priv = GET_PRIVATE (view);
+	if (!priv->focused_element)
 		return FALSE;
 
 	_ev_view_transform_doc_rect_to_view_rect (view,
-						  view->focused_element_page,
-						  &view->focused_element->area,
+						  priv->focused_element_page,
+						  &priv->focused_element->area,
 						  area);
-	area->x -= view->scroll_x + 1;
-	area->y -= view->scroll_y + 1;
+	area->x -= priv->scroll_x + 1;
+	area->y -= priv->scroll_y + 1;
 	area->width += 1;
 	area->height += 1;
 
@@ -2412,17 +2462,18 @@ _ev_view_set_focused_element (EvView *view,
 {
 	GdkRectangle    view_rect;
 	cairo_region_t *region = NULL;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
 #if 0
-	if (view->accessible)
-		ev_view_accessible_set_focused_element (EV_VIEW_ACCESSIBLE (view->accessible), element_mapping, page);
+	if (priv->accessible)
+		ev_view_accessible_set_focused_element (EV_VIEW_ACCESSIBLE (priv->accessible), element_mapping, page);
 #endif
 
 	if (ev_view_get_focused_area (view, &view_rect))
 		region = cairo_region_create_rectangle (&view_rect);
 
-	view->focused_element = element_mapping;
-	view->focused_element_page = page;
+	priv->focused_element = element_mapping;
+	priv->focused_element_page = page;
 
 	if (ev_view_get_focused_area (view, &view_rect)) {
 		if (!region)
@@ -2430,9 +2481,9 @@ _ev_view_set_focused_element (EvView *view,
 		else
 			cairo_region_union_rectangle (region, &view_rect);
 
-		ev_document_model_set_page (view->model, page);
-		view_rect.x += view->scroll_x;
-		view_rect.y += view->scroll_y;
+		ev_document_model_set_page (priv->model, page);
+		view_rect.x += priv->scroll_x;
+		view_rect.y += priv->scroll_y;
 		_ev_view_ensure_rectangle_is_visible (view, &view_rect);
 	}
 
@@ -2446,16 +2497,17 @@ get_form_field_mapping_at_location (EvView  *view,
 				    gdouble  y,
 				    gint    *page)
 {
+	EvViewPrivate *priv = GET_PRIVATE (view);
 	gint x_new = 0, y_new = 0;
 	EvMappingList *forms_mapping;
 
-	if (!EV_IS_DOCUMENT_FORMS (view->document))
+	if (!EV_IS_DOCUMENT_FORMS (priv->document))
 		return NULL;
 
 	if (!get_doc_point_from_location (view, x, y, page, &x_new, &y_new))
 		return NULL;
 
-	forms_mapping = ev_page_cache_get_form_field_mapping (view->page_cache, *page);
+	forms_mapping = ev_page_cache_get_form_field_mapping (priv->page_cache, *page);
 
 	if (forms_mapping)
 		return ev_mapping_list_get (forms_mapping, x_new, y_new);
@@ -2480,10 +2532,11 @@ static cairo_region_t *
 ev_view_form_field_get_region (EvView      *view,
 			       EvFormField *field)
 {
+	EvViewPrivate *priv = GET_PRIVATE (view);
 	GdkRectangle   view_area;
 	EvMappingList *forms_mapping;
 
-	forms_mapping = ev_page_cache_get_form_field_mapping (view->page_cache,
+	forms_mapping = ev_page_cache_get_form_field_mapping (priv->page_cache,
 							      field->page->index);
 	ev_view_get_area_from_mapping (view, field->page->index,
 				       forms_mapping,
@@ -2503,6 +2556,7 @@ static void
 ev_view_form_field_button_toggle (EvView      *view,
 				  EvFormField *field)
 {
+	EvViewPrivate *priv = GET_PRIVATE (view);
 	EvMappingList     *forms_mapping;
 	cairo_region_t    *region;
 	gboolean           state;
@@ -2512,7 +2566,7 @@ ev_view_form_field_button_toggle (EvView      *view,
 	if (field_button->type == EV_FORM_FIELD_BUTTON_PUSH)
 		return;
 
-	state = ev_document_forms_form_field_button_get_state (EV_DOCUMENT_FORMS (view->document),
+	state = ev_document_forms_form_field_button_get_state (EV_DOCUMENT_FORMS (priv->document),
 							       field);
 
 	/* FIXME: it actually depends on NoToggleToOff flags */
@@ -2524,7 +2578,7 @@ ev_view_form_field_button_toggle (EvView      *view,
 	/* For radio buttons and checkbox buttons that are in a set
 	 * we need to update also the region for the current selected item
 	 */
-	forms_mapping = ev_page_cache_get_form_field_mapping (view->page_cache,
+	forms_mapping = ev_page_cache_get_form_field_mapping (priv->page_cache,
 							      field->page->index);
 
 	for (l = ev_mapping_list_get_list (forms_mapping); l; l = g_list_next (l)) {
@@ -2546,14 +2600,14 @@ ev_view_form_field_button_toggle (EvView      *view,
 	}
 
 	/* Update state */
-	ev_document_forms_form_field_button_set_state (EV_DOCUMENT_FORMS (view->document),
+	ev_document_forms_form_field_button_set_state (EV_DOCUMENT_FORMS (priv->document),
 						       field,
 						       !state);
 	field_button->state = !state;
 
 #if 0
-	if (view->accessible)
-		ev_view_accessible_update_element_state (EV_VIEW_ACCESSIBLE (view->accessible),
+	if (priv->accessible)
+		ev_view_accessible_update_element_state (EV_VIEW_ACCESSIBLE (priv->accessible),
 							 ev_mapping_list_find (forms_mapping, field),
 							 field->page->index);
 #endif
@@ -2566,6 +2620,7 @@ static GtkWidget *
 ev_view_form_field_button_create_widget (EvView      *view,
 					 EvFormField *field)
 {
+	EvViewPrivate *priv = GET_PRIVATE (view);
 	EvMappingList *form_mapping;
 	EvMapping     *mapping;
 
@@ -2573,7 +2628,7 @@ ev_view_form_field_button_create_widget (EvView      *view,
 	if (!gtk_widget_has_focus (GTK_WIDGET (view)))
 		gtk_widget_grab_focus (GTK_WIDGET (view));
 
-	form_mapping = ev_page_cache_get_form_field_mapping (view->page_cache,
+	form_mapping = ev_page_cache_get_form_field_mapping (priv->page_cache,
 							     field->page->index);
 	mapping = ev_mapping_list_find (form_mapping, field);
 	_ev_view_set_focused_element (view, mapping, field->page->index);
@@ -2585,9 +2640,10 @@ static void
 ev_view_form_field_text_save (EvView    *view,
 			      GtkWidget *widget)
 {
+	EvViewPrivate *priv = GET_PRIVATE (view);
 	EvFormField *field;
 
-	if (!view->document)
+	if (!priv->document)
 		return;
 
 	field = g_object_get_data (G_OBJECT (widget), "form-field");
@@ -2598,7 +2654,7 @@ ev_view_form_field_text_save (EvView    *view,
 
 		field_region = ev_view_form_field_get_region (view, field);
 
-		ev_document_forms_form_field_text_set_text (EV_DOCUMENT_FORMS (view->document),
+		ev_document_forms_form_field_text_set_text (EV_DOCUMENT_FORMS (priv->document),
 							    field, field_text->text);
 		field->changed = FALSE;
 		ev_view_reload_page (view, field->page->index, field_region);
@@ -2653,13 +2709,14 @@ static GtkWidget *
 ev_view_form_field_text_create_widget (EvView      *view,
 				       EvFormField *field)
 {
+	EvViewPrivate *priv = GET_PRIVATE (view);
 	EvFormFieldText *field_text = EV_FORM_FIELD_TEXT (field);
 	GtkWidget       *text = NULL;
 	gchar           *txt;
 	GtkStyleContext *context;
 	GtkEventController *controller;
 
-	txt = ev_document_forms_form_field_text_get_text (EV_DOCUMENT_FORMS (view->document),
+	txt = ev_document_forms_form_field_text_get_text (EV_DOCUMENT_FORMS (priv->document),
 							  field);
 
 	switch (field_text->type) {
@@ -2717,9 +2774,10 @@ static void
 ev_view_form_field_choice_save (EvView    *view,
 				GtkWidget *widget)
 {
+	EvViewPrivate *priv = GET_PRIVATE (view);
 	EvFormField *field;
 
-	if (!view->document)
+	if (!priv->document)
 		return;
 
 	field = g_object_get_data (G_OBJECT (widget), "form-field");
@@ -2732,12 +2790,12 @@ ev_view_form_field_choice_save (EvView    *view,
 		field_region = ev_view_form_field_get_region (view, field);
 
 		if (field_choice->is_editable) {
-			ev_document_forms_form_field_choice_set_text (EV_DOCUMENT_FORMS (view->document),
+			ev_document_forms_form_field_choice_set_text (EV_DOCUMENT_FORMS (priv->document),
 								      field, field_choice->text);
 		} else {
-			ev_document_forms_form_field_choice_unselect_all (EV_DOCUMENT_FORMS (view->document), field);
+			ev_document_forms_form_field_choice_unselect_all (EV_DOCUMENT_FORMS (priv->document), field);
 			for (l = field_choice->selected_items; l; l = g_list_next (l)) {
-				ev_document_forms_form_field_choice_select_item (EV_DOCUMENT_FORMS (view->document),
+				ev_document_forms_form_field_choice_select_item (EV_DOCUMENT_FORMS (priv->document),
 										 field,
 										 GPOINTER_TO_INT (l->data));
 			}
@@ -2853,23 +2911,24 @@ static GtkWidget *
 ev_view_form_field_choice_create_widget (EvView      *view,
 					 EvFormField *field)
 {
+	EvViewPrivate *priv = GET_PRIVATE (view);
 	EvFormFieldChoice *field_choice = EV_FORM_FIELD_CHOICE (field);
 	GtkWidget         *choice;
 	GtkTreeModel      *model;
 	gint               n_items, i;
 	gint               selected_item = -1;
 
-	n_items = ev_document_forms_form_field_choice_get_n_items (EV_DOCUMENT_FORMS (view->document),
+	n_items = ev_document_forms_form_field_choice_get_n_items (EV_DOCUMENT_FORMS (priv->document),
 								   field);
 	model = GTK_TREE_MODEL (gtk_list_store_new (2, G_TYPE_STRING, G_TYPE_INT));
 	for (i = 0; i < n_items; i++) {
 		GtkTreeIter iter;
 		gchar      *item;
 
-		item = ev_document_forms_form_field_choice_get_item (EV_DOCUMENT_FORMS (view->document),
+		item = ev_document_forms_form_field_choice_get_item (EV_DOCUMENT_FORMS (priv->document),
 								     field, i);
 		if (ev_document_forms_form_field_choice_is_item_selected (
-			    EV_DOCUMENT_FORMS (view->document), field, i)) {
+			    EV_DOCUMENT_FORMS (priv->document), field, i)) {
 			selected_item = i;
 			/* FIXME: we need a get_selected_items function in poppler */
 			field_choice->selected_items = g_list_prepend (field_choice->selected_items,
@@ -2928,7 +2987,7 @@ ev_view_form_field_choice_create_widget (EvView      *view,
 		gtk_editable_set_width_chars (GTK_EDITABLE (combo_entry), 1);
 		gtk_combo_box_set_entry_text_column (GTK_COMBO_BOX (choice), 0);
 
-		text = ev_document_forms_form_field_choice_get_text (EV_DOCUMENT_FORMS (view->document), field);
+		text = ev_document_forms_form_field_choice_get_text (EV_DOCUMENT_FORMS (priv->document), field);
 		if (text) {
 			gtk_editable_set_text (GTK_EDITABLE (combo_entry), text);
 			g_free (text);
@@ -2974,6 +3033,7 @@ void
 _ev_view_focus_form_field (EvView      *view,
 			  EvFormField *field)
 {
+	EvViewPrivate *priv = GET_PRIVATE (view);
 	GtkWidget     *field_widget = NULL;
 	EvMappingList *form_field_mapping;
 	EvMapping     *mapping;
@@ -3004,7 +3064,7 @@ _ev_view_focus_form_field (EvView      *view,
 				g_object_ref (field),
 				(GDestroyNotify)g_object_unref);
 
-	form_field_mapping = ev_page_cache_get_form_field_mapping (view->page_cache,
+	form_field_mapping = ev_page_cache_get_form_field_mapping (priv->page_cache,
 								   field->page->index);
 	mapping = ev_mapping_list_find (form_field_mapping, field);
 	_ev_view_set_focused_element (view, mapping, field->page->index);
@@ -3037,16 +3097,17 @@ get_media_mapping_at_location (EvView *view,
 			       gdouble y,
 			       gint *page)
 {
+	EvViewPrivate *priv = GET_PRIVATE (view);
 	gint x_new = 0, y_new = 0;
 	EvMappingList *media_mapping;
 
-	if (!EV_IS_DOCUMENT_MEDIA (view->document))
+	if (!EV_IS_DOCUMENT_MEDIA (priv->document))
 		return NULL;
 
 	if (!get_doc_point_from_location (view, x, y, page, &x_new, &y_new))
 		return NULL;
 
-	media_mapping = ev_page_cache_get_media_mapping (view->page_cache, *page);
+	media_mapping = ev_page_cache_get_media_mapping (priv->page_cache, *page);
 
 	return media_mapping ? ev_mapping_list_get (media_mapping, x_new, y_new) : NULL;
 }
@@ -3086,6 +3147,7 @@ static void
 ev_view_handle_media (EvView  *view,
 		      EvMedia *media)
 {
+	EvViewPrivate *priv = GET_PRIVATE (view);
 	GtkWidget     *player;
 	EvMappingList *media_mapping;
 	EvMapping     *mapping;
@@ -3094,7 +3156,7 @@ ev_view_handle_media (EvView  *view,
 	GFile	      *uri;
 
 	page = ev_media_get_page_index (media);
-	media_mapping = ev_page_cache_get_media_mapping (view->page_cache, page);
+	media_mapping = ev_page_cache_get_media_mapping (priv->page_cache, page);
 
 	/* TODO: focus? */
 
@@ -3112,8 +3174,8 @@ ev_view_handle_media (EvView  *view,
 
 	mapping = ev_mapping_list_find (media_mapping, media);
 	_ev_view_transform_doc_rect_to_view_rect (view, page, &mapping->area, &render_area);
-	render_area.x -= view->scroll_x;
-	render_area.y -= view->scroll_y;
+	render_area.x -= priv->scroll_x;
+	render_area.y -= priv->scroll_y;
 
 	ev_view_put (view, player, render_area.x, render_area.y, page, &mapping->area);
 }
@@ -3123,10 +3185,11 @@ static GtkWidget *
 get_window_for_annot (EvView       *view,
 		      EvAnnotation *annot)
 {
-	if (view->annot_window_map == NULL)
+	EvViewPrivate *priv = GET_PRIVATE (view);
+	if (priv->annot_window_map == NULL)
 		return NULL;
 
-	return g_hash_table_lookup (view->annot_window_map, annot);
+	return g_hash_table_lookup (priv->annot_window_map, annot);
 }
 
 static void
@@ -3134,17 +3197,19 @@ map_annot_to_window (EvView       *view,
                      EvAnnotation *annot,
 		     GtkWidget    *window)
 {
-	if (view->annot_window_map == NULL)
-		view->annot_window_map = g_hash_table_new (g_direct_hash, NULL);
+	EvViewPrivate *priv = GET_PRIVATE (view);
+	if (priv->annot_window_map == NULL)
+		priv->annot_window_map = g_hash_table_new (g_direct_hash, NULL);
 
-	g_hash_table_insert (view->annot_window_map, annot, window);
+	g_hash_table_insert (priv->annot_window_map, annot, window);
 }
 
 static EvViewWindowChild *
 ev_view_get_window_child (EvView    *view,
 			  GtkWidget *window)
 {
-	GList *children = view->window_children;
+	EvViewPrivate *priv = GET_PRIVATE (view);
+	GList *children = priv->window_children;
 
 	while (children) {
 		EvViewWindowChild *child;
@@ -3164,6 +3229,7 @@ ev_view_window_child_put (EvView    *view,
 			  GtkWidget *window,
 			  guint      page)
 {
+	EvViewPrivate *priv = GET_PRIVATE (view);
 	EvViewWindowChild *child;
 
 	child = g_new0 (EvViewWindowChild, 1);
@@ -3173,7 +3239,7 @@ ev_view_window_child_put (EvView    *view,
 
 	gtk_widget_set_visible (window, child->visible);
 
-	view->window_children = g_list_append (view->window_children, child);
+	priv->window_children = g_list_append (priv->window_children, child);
 }
 
 static void
@@ -3181,7 +3247,8 @@ ev_view_remove_window_child_for_annot (EvView       *view,
 				       guint         page,
 				       EvAnnotation *annot)
 {
-	GList *children = view->window_children;
+	EvViewPrivate *priv = GET_PRIVATE (view);
+	GList *children = priv->window_children;
 
 	while (children) {
 		EvViewWindowChild *child;
@@ -3196,7 +3263,7 @@ ev_view_remove_window_child_for_annot (EvView       *view,
 		wannot = ev_annotation_window_get_annotation (EV_ANNOTATION_WINDOW (child->window));
 		if (ev_annotation_equal (wannot, annot)) {
 			gtk_window_destroy (GTK_WINDOW (child->window));
-			view->window_children = g_list_delete_link (view->window_children, children);
+			priv->window_children = g_list_delete_link (priv->window_children, children);
 			break;
 		}
 		children = children->next;
@@ -3207,18 +3274,19 @@ static void
 ev_view_window_children_free (EvView *view)
 {
 	GList *l;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	if (!view->window_children)
+	if (!priv->window_children)
 		return;
 
-	for (l = view->window_children; l && l->data; l = g_list_next (l)) {
+	for (l = priv->window_children; l && l->data; l = g_list_next (l)) {
 		EvViewWindowChild *child;
 
 		child = (EvViewWindowChild *)l->data;
 		gtk_window_destroy (GTK_WINDOW (child->window));
 		g_free (child);
 	}
-	g_clear_pointer (&view->window_children, g_list_free);
+	g_clear_pointer (&priv->window_children, g_list_free);
 }
 
 static void
@@ -3236,11 +3304,12 @@ ev_view_annotation_save_contents (EvView       *view,
 				  GParamSpec   *pspec,
 				  EvAnnotation *annot)
 {
-	if (!view->document)
+	EvViewPrivate *priv = GET_PRIVATE (view);
+	if (!priv->document)
 		return;
 
 	ev_document_doc_mutex_lock ();
-	ev_document_annotations_save_annotation (EV_DOCUMENT_ANNOTATIONS (view->document),
+	ev_document_annotations_save_annotation (EV_DOCUMENT_ANNOTATIONS (priv->document),
 						 annot, EV_ANNOTATIONS_SAVE_CONTENTS);
 	ev_document_doc_mutex_unlock ();
 	g_signal_emit (view, signals[SIGNAL_ANNOT_CHANGED], 0, annot);
@@ -3276,13 +3345,14 @@ static void
 show_annotation_windows (EvView *view,
 			 gint    page)
 {
+	EvViewPrivate *priv = GET_PRIVATE (view);
 	EvMappingList *annots;
 	GList         *l;
 	GtkWindow     *parent;
 
 	parent = GTK_WINDOW (gtk_widget_get_native (GTK_WIDGET (view)));
 
-	annots = ev_page_cache_get_annot_mapping (view->page_cache, page);
+	annots = ev_page_cache_get_annot_mapping (priv->page_cache, page);
 
 	for (l = ev_mapping_list_get_list (annots); l && l->data; l = g_list_next (l)) {
 		EvAnnotation      *annot;
@@ -3311,10 +3381,11 @@ static void
 hide_annotation_windows (EvView *view,
 			 gint    page)
 {
+	EvViewPrivate *priv = GET_PRIVATE (view);
 	EvMappingList *annots;
 	GList         *l;
 
-	annots = ev_page_cache_get_annot_mapping (view->page_cache, page);
+	annots = ev_page_cache_get_annot_mapping (priv->page_cache, page);
 
 	for (l = ev_mapping_list_get_list (annots); l && l->data; l = g_list_next (l)) {
 		EvAnnotation *annot;
@@ -3361,6 +3432,7 @@ get_annotation_mapping_at_location (EvView *view,
 				    gdouble y,
 				    gint *page)
 {
+	EvViewPrivate *priv = GET_PRIVATE (view);
 	gint x_new = 0, y_new = 0;
 	EvMappingList *annotations_mapping;
 	EvDocumentAnnotations *doc_annots;
@@ -3368,10 +3440,10 @@ get_annotation_mapping_at_location (EvView *view,
 	EvMapping *best;
 	GList *list;
 
-	if (!EV_IS_DOCUMENT_ANNOTATIONS (view->document))
+	if (!EV_IS_DOCUMENT_ANNOTATIONS (priv->document))
 		return NULL;
 
-	doc_annots = EV_DOCUMENT_ANNOTATIONS (view->document);
+	doc_annots = EV_DOCUMENT_ANNOTATIONS (priv->document);
 
 	if (!doc_annots)
 		return NULL;
@@ -3379,7 +3451,7 @@ get_annotation_mapping_at_location (EvView *view,
 	if (!get_doc_point_from_location (view, x, y, page, &x_new, &y_new))
 		return NULL;
 
-	annotations_mapping = ev_page_cache_get_annot_mapping (view->page_cache, *page);
+	annotations_mapping = ev_page_cache_get_annot_mapping (priv->page_cache, *page);
 
 	if (!annotations_mapping)
 		return NULL;
@@ -3462,6 +3534,7 @@ ev_view_handle_annotation (EvView       *view,
 			   gdouble       y,
 			   guint32       timestamp)
 {
+	EvViewPrivate *priv = GET_PRIVATE (view);
 	if (EV_IS_ANNOTATION_MARKUP (annot)) {
 		GtkWidget *window;
 
@@ -3472,7 +3545,7 @@ ev_view_handle_annotation (EvView       *view,
 			EvMappingList *annots;
 			EvMapping     *mapping;
 
-			annots = ev_page_cache_get_annot_mapping (view->page_cache,
+			annots = ev_page_cache_get_annot_mapping (priv->page_cache,
 								  ev_annotation_get_page_index (annot));
 			mapping = ev_mapping_list_find (annots, annot);
 
@@ -3493,7 +3566,7 @@ ev_view_handle_annotation (EvView       *view,
 			EvRectangle        popup_rect;
 			EvMapping         *mapping;
 
-			annots = ev_page_cache_get_annot_mapping (view->page_cache,
+			annots = ev_page_cache_get_annot_mapping (priv->page_cache,
 								  ev_annotation_get_page_index (annot));
 			mapping = ev_mapping_list_find (annots, annot);
 			ev_annotation_markup_get_rectangle (EV_ANNOTATION_MARKUP (annot),
@@ -3537,6 +3610,7 @@ ev_view_create_annotation_real (EvView *view,
 				EvPoint start,
 				EvPoint end)
 {
+	EvViewPrivate *priv = GET_PRIVATE (view);
 	EvAnnotation   *annot;
 	EvRectangle     doc_rect, popup_rect;
 	EvPage         *page;
@@ -3545,8 +3619,8 @@ ev_view_create_annotation_real (EvView *view,
 	cairo_region_t *region;
 
 	ev_document_doc_mutex_lock ();
-	page = ev_document_get_page (view->document, annot_page);
-        switch (view->adding_annot_info.type) {
+	page = ev_document_get_page (priv->document, annot_page);
+        switch (priv->adding_annot_info.type) {
         case EV_ANNOTATION_TYPE_TEXT:
                 doc_rect.x1 = end.x;
                 doc_rect.y1 = end.y;
@@ -3588,29 +3662,30 @@ ev_view_create_annotation_real (EvView *view,
 			      "opacity", 1.0,
 			      NULL);
 	}
-	ev_document_annotations_add_annotation (EV_DOCUMENT_ANNOTATIONS (view->document),
+	ev_document_annotations_add_annotation (EV_DOCUMENT_ANNOTATIONS (priv->document),
 						annot, &doc_rect);
 	/* Re-fetch area as eg. adding Text Markup annots updates area for its bounding box */
 	ev_annotation_get_area (annot, &doc_rect);
 	ev_document_doc_mutex_unlock ();
 
 	/* If the page didn't have annots, mark the cache as dirty */
-	if (!ev_page_cache_get_annot_mapping (view->page_cache, annot_page))
-		ev_page_cache_mark_dirty (view->page_cache, annot_page, EV_PAGE_DATA_INCLUDE_ANNOTS);
+	if (!ev_page_cache_get_annot_mapping (priv->page_cache, annot_page))
+		ev_page_cache_mark_dirty (priv->page_cache, annot_page, EV_PAGE_DATA_INCLUDE_ANNOTS);
 
 	_ev_view_transform_doc_rect_to_view_rect (view, annot_page, &doc_rect, &view_rect);
-	view_rect.x -= view->scroll_x;
-	view_rect.y -= view->scroll_y;
+	view_rect.x -= priv->scroll_x;
+	view_rect.y -= priv->scroll_y;
 	region = cairo_region_create_rectangle (&view_rect);
 	ev_view_reload_page (view, annot_page, region);
 	cairo_region_destroy (region);
 
-	view->adding_annot_info.annot = annot;
+	priv->adding_annot_info.annot = annot;
 }
 
 static void
 ev_view_create_annotation (EvView *view)
 {
+	EvViewPrivate *priv = GET_PRIVATE (view);
 	EvPoint         start;
 	EvPoint         end;
 	gint            annot_page;
@@ -3618,16 +3693,16 @@ ev_view_create_annotation (EvView *view)
 	GdkRectangle    page_area;
 	GtkBorder       border;
 
-	find_page_at_location (view, view->adding_annot_info.start.x, view->adding_annot_info.start.y, &annot_page, &offset, &offset);
+	find_page_at_location (view, priv->adding_annot_info.start.x, priv->adding_annot_info.start.y, &annot_page, &offset, &offset);
 	if (annot_page == -1) {
 		ev_view_cancel_add_annotation (view);
 		return;
 	}
 
 	ev_view_get_page_extents (view, annot_page, &page_area, &border);
-	_ev_view_transform_view_point_to_doc_point (view, &view->adding_annot_info.start, &page_area, &border,
+	_ev_view_transform_view_point_to_doc_point (view, &priv->adding_annot_info.start, &page_area, &border,
 						    &start.x, &start.y);
-	_ev_view_transform_view_point_to_doc_point (view, &view->adding_annot_info.stop, &page_area, &border,
+	_ev_view_transform_view_point_to_doc_point (view, &priv->adding_annot_info.stop, &page_area, &border,
 						    &end.x, &end.y);
 
 	ev_view_create_annotation_real (view, annot_page, start, end);
@@ -3639,14 +3714,15 @@ ev_view_get_doc_points_from_selection_region (EvView  *view,
 					      EvPoint *begin,
 					      EvPoint *end)
 {
+	EvViewPrivate *priv = GET_PRIVATE (view);
 	cairo_rectangle_int_t first, last;
 	GdkPoint start, stop;
 	cairo_region_t *region = NULL;
 
-	if (!view->pixbuf_cache)
+	if (!priv->pixbuf_cache)
 		return FALSE;
 
-	region = ev_pixbuf_cache_get_selection_region (view->pixbuf_cache, page, view->scale);
+	region = ev_pixbuf_cache_get_selection_region (priv->pixbuf_cache, page, priv->scale);
 
 	if (!region)
 		return FALSE;
@@ -3697,8 +3773,8 @@ void
 ev_view_focus_annotation (EvView    *view,
 			  EvMapping *annot_mapping)
 {
-
-	if (!EV_IS_DOCUMENT_ANNOTATIONS (view->document))
+	EvViewPrivate *priv = GET_PRIVATE (view);
+	if (!EV_IS_DOCUMENT_ANNOTATIONS (priv->document))
 		return;
 
 	_ev_view_set_focused_element (view, annot_mapping,
@@ -3709,14 +3785,15 @@ void
 ev_view_begin_add_annotation (EvView          *view,
 			      EvAnnotationType annot_type)
 {
+	EvViewPrivate *priv = GET_PRIVATE (view);
 	if (annot_type == EV_ANNOTATION_TYPE_UNKNOWN)
 		return;
 
-	if (view->adding_annot_info.adding_annot)
+	if (priv->adding_annot_info.adding_annot)
 		return;
 
-	view->adding_annot_info.adding_annot = TRUE;
-	view->adding_annot_info.type = annot_type;
+	priv->adding_annot_info.adding_annot = TRUE;
+	priv->adding_annot_info.type = annot_type;
 	ev_view_set_cursor (view, EV_VIEW_CURSOR_ADD);
 }
 
@@ -3725,24 +3802,25 @@ ev_view_cancel_add_annotation (EvView *view)
 {
 	gint x, y;
 	guint annot_page;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	if (!view->adding_annot_info.adding_annot)
+	if (!priv->adding_annot_info.adding_annot)
 		return;
 
-	if (view->adding_annot_info.annot && view->pressed_button == GDK_BUTTON_PRIMARY) {
-		annot_page = ev_annotation_get_page_index (view->adding_annot_info.annot);
+	if (priv->adding_annot_info.annot && priv->pressed_button == GDK_BUTTON_PRIMARY) {
+		annot_page = ev_annotation_get_page_index (priv->adding_annot_info.annot);
 		ev_document_doc_mutex_lock ();
-		ev_document_annotations_remove_annotation (EV_DOCUMENT_ANNOTATIONS (view->document),
-							   view->adding_annot_info.annot);
+		ev_document_annotations_remove_annotation (EV_DOCUMENT_ANNOTATIONS (priv->document),
+							   priv->adding_annot_info.annot);
 		ev_document_doc_mutex_unlock ();
-		ev_page_cache_mark_dirty (view->page_cache, annot_page, EV_PAGE_DATA_INCLUDE_ANNOTS);
-		view->adding_annot_info.annot = NULL;
-		view->pressed_button = -1;
+		ev_page_cache_mark_dirty (priv->page_cache, annot_page, EV_PAGE_DATA_INCLUDE_ANNOTS);
+		priv->adding_annot_info.annot = NULL;
+		priv->pressed_button = -1;
 		ev_view_reload_page (view, annot_page, NULL);
 	}
 
-	view->adding_annot_info.adding_annot = FALSE;
-	g_assert(!view->adding_annot_info.annot);
+	priv->adding_annot_info.adding_annot = FALSE;
+	g_assert(!priv->adding_annot_info.annot);
 	ev_document_misc_get_pointer_position (GTK_WIDGET (view), &x, &y);
 	ev_view_handle_cursor_over_xy (view, x, y, FALSE);
 }
@@ -3752,6 +3830,7 @@ ev_view_remove_annotation (EvView       *view,
                            EvAnnotation *annot)
 {
         guint page;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
         g_return_if_fail (EV_IS_VIEW (view));
         g_return_if_fail (EV_IS_ANNOTATION (annot));
@@ -3762,17 +3841,17 @@ ev_view_remove_annotation (EvView       *view,
 
         if (EV_IS_ANNOTATION_MARKUP (annot))
 		ev_view_remove_window_child_for_annot (view, page, annot);
-	if (view->annot_window_map != NULL)
-		g_hash_table_remove (view->annot_window_map, annot);
+	if (priv->annot_window_map != NULL)
+		g_hash_table_remove (priv->annot_window_map, annot);
 
         _ev_view_set_focused_element (view, NULL, -1);
 
         ev_document_doc_mutex_lock ();
-        ev_document_annotations_remove_annotation (EV_DOCUMENT_ANNOTATIONS (view->document),
+        ev_document_annotations_remove_annotation (EV_DOCUMENT_ANNOTATIONS (priv->document),
                                                    annot);
         ev_document_doc_mutex_unlock ();
 
-        ev_page_cache_mark_dirty (view->page_cache, page, EV_PAGE_DATA_INCLUDE_ANNOTS);
+        ev_page_cache_mark_dirty (priv->page_cache, page, EV_PAGE_DATA_INCLUDE_ANNOTS);
 
 	/* FIXME: only redraw the annot area */
         ev_view_reload_page (view, page, NULL);
@@ -3789,14 +3868,15 @@ ev_view_synctex_backward_search (EvView *view,
 	gint page = -1;
 	gint x_new = 0, y_new = 0;
 	EvSourceLink *link;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	if (!ev_document_has_synctex (view->document))
+	if (!ev_document_has_synctex (priv->document))
 		return FALSE;
 
 	if (!get_doc_point_from_location (view, x, y, &page, &x_new, &y_new))
 		return FALSE;
 
-	link = ev_document_synctex_backward_search (view->document, page, x_new, y_new);
+	link = ev_document_synctex_backward_search (priv->document, page, x_new, y_new);
 	if (link) {
 		g_signal_emit (view, signals[SIGNAL_SYNC_SOURCE], 0, link);
 		ev_source_link_free (link);
@@ -3816,20 +3896,22 @@ ev_view_synctex_backward_search (EvView *view,
 static inline gboolean
 cursor_is_in_visible_page (EvView *view)
 {
-	return (view->cursor_page == view->current_page ||
-		(view->cursor_page >= view->start_page &&
-		 view->cursor_page <= view->end_page));
+	EvViewPrivate *priv = GET_PRIVATE (view);
+	return (priv->cursor_page == priv->current_page ||
+		(priv->cursor_page >= priv->start_page &&
+		 priv->cursor_page <= priv->end_page));
 }
 
 static gboolean
 cursor_should_blink (EvView *view)
 {
-	if (view->caret_enabled &&
-	    view->rotation == 0 &&
+	EvViewPrivate *priv = GET_PRIVATE (view);
+	if (priv->caret_enabled &&
+	    priv->rotation == 0 &&
 	    cursor_is_in_visible_page (view) &&
 	    gtk_widget_has_focus (GTK_WIDGET (view)) &&
-	    view->pixbuf_cache &&
-	    !ev_pixbuf_cache_get_selection_region (view->pixbuf_cache, view->cursor_page, view->scale)) {
+	    priv->pixbuf_cache &&
+	    !ev_pixbuf_cache_get_selection_region (priv->pixbuf_cache, priv->cursor_page, priv->scale)) {
 		GtkSettings *settings;
 		gboolean blink;
 
@@ -3870,19 +3952,20 @@ get_caret_cursor_area (EvView       *view,
 		       gint          offset,
 		       GdkRectangle *area)
 {
+	EvViewPrivate *priv = GET_PRIVATE (view);
 	EvRectangle *areas = NULL;
 	EvRectangle *doc_rect;
 	guint        n_areas = 0;
 	gdouble      cursor_aspect_ratio;
 	gint         stem_width;
 
-	if (!view->caret_enabled || view->rotation != 0)
+	if (!priv->caret_enabled || priv->rotation != 0)
 		return FALSE;
 
-	if (!view->page_cache)
+	if (!priv->page_cache)
 		return FALSE;
 
-	ev_page_cache_get_text_layout (view->page_cache, page, &areas, &n_areas);
+	ev_page_cache_get_text_layout (priv->page_cache, page, &areas, &n_areas);
 	if (!areas)
 		return FALSE;
 
@@ -3910,8 +3993,8 @@ get_caret_cursor_area (EvView       *view,
 		_ev_view_transform_doc_rect_to_view_rect (view, page, doc_rect, area);
 	}
 
-	area->x -= view->scroll_x;
-	area->y -= view->scroll_y;
+	area->x -= priv->scroll_x;
+	area->y -= priv->scroll_y;
 
 	g_object_get (gtk_settings_get_for_display (
 		gtk_style_context_get_display (gtk_widget_get_style_context (GTK_WIDGET (view)))),
@@ -3930,14 +4013,15 @@ show_cursor (EvView *view)
 {
 	GtkWidget   *widget;
 	GdkRectangle view_rect;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	if (view->cursor_visible)
+	if (priv->cursor_visible)
 		return;
 
 	widget = GTK_WIDGET (view);
-	view->cursor_visible = TRUE;
+	priv->cursor_visible = TRUE;
 	if (gtk_widget_has_focus (widget) &&
-	    get_caret_cursor_area (view, view->cursor_page, view->cursor_offset, &view_rect)) {
+	    get_caret_cursor_area (view, priv->cursor_page, priv->cursor_offset, &view_rect)) {
 		gtk_widget_queue_draw (widget);
 	}
 }
@@ -3947,14 +4031,15 @@ hide_cursor (EvView *view)
 {
 	GtkWidget   *widget;
 	GdkRectangle view_rect;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	if (!view->cursor_visible)
+	if (!priv->cursor_visible)
 		return;
 
 	widget = GTK_WIDGET (view);
-	view->cursor_visible = FALSE;
+	priv->cursor_visible = FALSE;
 	if (gtk_widget_has_focus (widget) &&
-	    get_caret_cursor_area (view, view->cursor_page, view->cursor_offset, &view_rect)) {
+	    get_caret_cursor_area (view, priv->cursor_page, priv->cursor_offset, &view_rect)) {
 		gtk_widget_queue_draw (widget);
 	}
 }
@@ -3964,27 +4049,28 @@ blink_cb (EvView *view)
 {
 	gint blink_timeout;
 	guint blink_time;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
 	blink_timeout = get_cursor_blink_timeout_id (view);
-	if (view->cursor_blink_time > 1000 * blink_timeout && blink_timeout < G_MAXINT / 1000) {
+	if (priv->cursor_blink_time > 1000 * blink_timeout && blink_timeout < G_MAXINT / 1000) {
 		/* We've blinked enough without the user doing anything, stop blinking */
 		show_cursor (view);
-		view->cursor_blink_timeout_id = 0;
+		priv->cursor_blink_timeout_id = 0;
 
 		return G_SOURCE_REMOVE;
 	}
 
 	blink_time = get_cursor_blink_time (view);
-	if (view->cursor_visible) {
+	if (priv->cursor_visible) {
 		hide_cursor (view);
 		blink_time *= CURSOR_OFF_MULTIPLIER;
 	} else {
 		show_cursor (view);
-		view->cursor_blink_time += blink_time;
+		priv->cursor_blink_time += blink_time;
 		blink_time *= CURSOR_ON_MULTIPLIER;
 	}
 
-	view->cursor_blink_timeout_id = g_timeout_add (blink_time / CURSOR_DIVIDER, (GSourceFunc)blink_cb, view);
+	priv->cursor_blink_timeout_id = g_timeout_add (blink_time / CURSOR_DIVIDER, (GSourceFunc)blink_cb, view);
 
 	return G_SOURCE_REMOVE;
 }
@@ -3992,36 +4078,38 @@ blink_cb (EvView *view)
 static void
 ev_view_check_cursor_blink (EvView *view)
 {
+	EvViewPrivate *priv = GET_PRIVATE (view);
 	if (cursor_should_blink (view))	{
-		if (view->cursor_blink_timeout_id == 0) {
+		if (priv->cursor_blink_timeout_id == 0) {
 			show_cursor (view);
-			view->cursor_blink_timeout_id = g_timeout_add (get_cursor_blink_time (view) * CURSOR_ON_MULTIPLIER / CURSOR_DIVIDER,
+			priv->cursor_blink_timeout_id = g_timeout_add (get_cursor_blink_time (view) * CURSOR_ON_MULTIPLIER / CURSOR_DIVIDER,
 										 (GSourceFunc)blink_cb, view);
 		}
 
 		return;
 	}
 
-	if (view->cursor_blink_timeout_id > 0) {
-		g_source_remove (view->cursor_blink_timeout_id);
-		view->cursor_blink_timeout_id = 0;
+	if (priv->cursor_blink_timeout_id > 0) {
+		g_source_remove (priv->cursor_blink_timeout_id);
+		priv->cursor_blink_timeout_id = 0;
 	}
 
-	view->cursor_visible = TRUE;
-	view->cursor_blink_time = 0;
+	priv->cursor_visible = TRUE;
+	priv->cursor_blink_time = 0;
 }
 
 static void
 ev_view_pend_cursor_blink (EvView *view)
 {
+	EvViewPrivate *priv = GET_PRIVATE (view);
 	if (!cursor_should_blink (view))
 		return;
 
-	if (view->cursor_blink_timeout_id > 0)
-		g_source_remove (view->cursor_blink_timeout_id);
+	if (priv->cursor_blink_timeout_id > 0)
+		g_source_remove (priv->cursor_blink_timeout_id);
 
 	show_cursor (view);
-	view->cursor_blink_timeout_id = g_timeout_add (get_cursor_blink_time (view) * CURSOR_PEND_MULTIPLIER / CURSOR_DIVIDER,
+	priv->cursor_blink_timeout_id = g_timeout_add (get_cursor_blink_time (view) * CURSOR_PEND_MULTIPLIER / CURSOR_DIVIDER,
 								 (GSourceFunc)blink_cb, view);
 }
 
@@ -4029,8 +4117,9 @@ static void
 preload_pages_for_caret_navigation (EvView *view)
 {
 	gint n_pages;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	if (!view->document)
+	if (!priv->document)
 		return;
 
 	/* Upload to the cache the first and last pages,
@@ -4038,14 +4127,14 @@ preload_pages_for_caret_navigation (EvView *view)
 	 * in the beginning/end of the document, for example
 	 * when pressing <Ctr>Home/End
 	 */
-	n_pages = ev_document_get_n_pages (view->document);
+	n_pages = ev_document_get_n_pages (priv->document);
 
 	/* For documents with at least 3 pages, those are already cached anyway */
 	if (n_pages > 0 && n_pages <= 3)
 		return;
 
-	ev_page_cache_ensure_page (view->page_cache, 0);
-	ev_page_cache_ensure_page (view->page_cache, n_pages - 1);
+	ev_page_cache_ensure_page (priv->page_cache, 0);
+	ev_page_cache_ensure_page (priv->page_cache, n_pages - 1);
 }
 
 /**
@@ -4060,11 +4149,12 @@ gboolean
 ev_view_supports_caret_navigation (EvView *view)
 {
 	EvDocumentTextInterface *iface;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	if (!view->document || !EV_IS_DOCUMENT_TEXT (view->document))
+	if (!priv->document || !EV_IS_DOCUMENT_TEXT (priv->document))
 		return FALSE;
 
-	iface = EV_DOCUMENT_TEXT_GET_IFACE (view->document);
+	iface = EV_DOCUMENT_TEXT_GET_IFACE (priv->document);
 	if (!iface->get_text_layout || !iface->get_text)
 		return FALSE;
 
@@ -4085,10 +4175,11 @@ ev_view_set_caret_navigation_enabled (EvView   *view,
 				      gboolean enabled)
 {
 	g_return_if_fail (EV_IS_VIEW (view));
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	if (view->caret_enabled != enabled) {
-		view->caret_enabled = enabled;
-		if (view->caret_enabled)
+	if (priv->caret_enabled != enabled) {
+		priv->caret_enabled = enabled;
+		if (priv->caret_enabled)
 			preload_pages_for_caret_navigation (view);
 
 		ev_view_check_cursor_blink (view);
@@ -4110,8 +4201,9 @@ gboolean
 ev_view_is_caret_navigation_enabled (EvView *view)
 {
 	g_return_val_if_fail (EV_IS_VIEW (view), FALSE);
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	return view->caret_enabled;
+	return priv->caret_enabled;
 }
 
 /**
@@ -4127,18 +4219,19 @@ ev_view_set_caret_cursor_position (EvView *view,
 				   guint   page,
 				   guint   offset)
 {
+	EvViewPrivate *priv = GET_PRIVATE (view);
 	g_return_if_fail (EV_IS_VIEW (view));
-	g_return_if_fail (EV_IS_DOCUMENT (view->document));
-	g_return_if_fail (page < ev_document_get_n_pages (view->document));
+	g_return_if_fail (EV_IS_DOCUMENT (priv->document));
+	g_return_if_fail (page < ev_document_get_n_pages (priv->document));
 
-	if (view->cursor_page != page || view->cursor_offset != offset) {
-		view->cursor_page = page;
-		view->cursor_offset = offset;
+	if (priv->cursor_page != page || priv->cursor_offset != offset) {
+		priv->cursor_page = page;
+		priv->cursor_offset = offset;
 
 		g_signal_emit (view, signals[SIGNAL_CURSOR_MOVED], 0,
-			       view->cursor_page, view->cursor_offset);
+			       priv->cursor_page, priv->cursor_offset);
 
-		if (view->caret_enabled && cursor_is_in_visible_page (view))
+		if (priv->caret_enabled && cursor_is_in_visible_page (view))
 			gtk_widget_queue_draw (GTK_WIDGET (view));
 	}
 }
@@ -4150,12 +4243,13 @@ ev_view_size_request_continuous_dual_page (EvView         *view,
 {
 	gint n_pages;
 	GtkBorder border;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	n_pages = ev_document_get_n_pages (view->document) + 1;
+	n_pages = ev_document_get_n_pages (priv->document) + 1;
 	compute_border (view, &border);
 	get_page_y_offset (view, n_pages, &requisition->height, &border);
 
-	switch (view->sizing_mode) {
+	switch (priv->sizing_mode) {
 	        case EV_SIZING_FIT_WIDTH:
 	        case EV_SIZING_FIT_PAGE:
 	        case EV_SIZING_AUTOMATIC:
@@ -4166,7 +4260,7 @@ ev_view_size_request_continuous_dual_page (EvView         *view,
 			gint max_width;
 
 			ev_view_get_max_page_size (view, &max_width, NULL);
-			requisition->width = (max_width + border.left + border.right) * 2 + (view->spacing * 3);
+			requisition->width = (max_width + border.left + border.right) * 2 + (priv->spacing * 3);
 		}
 			break;
 	        default:
@@ -4180,12 +4274,13 @@ ev_view_size_request_continuous (EvView         *view,
 {
 	gint n_pages;
 	GtkBorder border;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	n_pages = ev_document_get_n_pages (view->document);
+	n_pages = ev_document_get_n_pages (priv->document);
 	compute_border (view, &border);
 	get_page_y_offset (view, n_pages, &requisition->height, &border);
 
-	switch (view->sizing_mode) {
+	switch (priv->sizing_mode) {
 	        case EV_SIZING_FIT_WIDTH:
 	        case EV_SIZING_FIT_PAGE:
 	        case EV_SIZING_AUTOMATIC:
@@ -4196,7 +4291,7 @@ ev_view_size_request_continuous (EvView         *view,
 			gint max_width;
 
 			ev_view_get_max_page_size (view, &max_width, NULL);
-			requisition->width = max_width + (view->spacing * 2) + border.left + border.right;
+			requisition->width = max_width + (priv->spacing * 2) + border.left + border.right;
 		}
 			break;
 	        default:
@@ -4210,8 +4305,9 @@ ev_view_size_request_dual_page (EvView         *view,
 {
 	GtkBorder border;
 	gint width, height;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	if (view->sizing_mode == EV_SIZING_FIT_PAGE) {
+	if (priv->sizing_mode == EV_SIZING_FIT_PAGE) {
 		requisition->width = 1;
 		requisition->height = 1;
 
@@ -4220,12 +4316,12 @@ ev_view_size_request_dual_page (EvView         *view,
 
 	/* Find the largest of the two. */
 	ev_view_get_page_size (view,
-			       view->current_page,
+			       priv->current_page,
 			       &width, &height);
-	if (view->current_page + 1 < ev_document_get_n_pages (view->document)) {
+	if (priv->current_page + 1 < ev_document_get_n_pages (priv->document)) {
 		gint width_2, height_2;
 		ev_view_get_page_size (view,
-				       view->current_page + 1,
+				       priv->current_page + 1,
 				       &width_2, &height_2);
 		if (width_2 > width) {
 			width = width_2;
@@ -4234,9 +4330,9 @@ ev_view_size_request_dual_page (EvView         *view,
 	}
 	compute_border (view, &border);
 
-	requisition->width = view->sizing_mode == EV_SIZING_FIT_WIDTH ? 1 :
-		((width + border.left + border.right) * 2) + (view->spacing * 3);
-	requisition->height = (height + border.top + border.bottom) + (view->spacing * 2);
+	requisition->width = priv->sizing_mode == EV_SIZING_FIT_WIDTH ? 1 :
+		((width + border.left + border.right) * 2) + (priv->spacing * 3);
+	requisition->height = (height + border.top + border.bottom) + (priv->spacing * 2);
 }
 
 static void
@@ -4245,20 +4341,21 @@ ev_view_size_request_single_page (EvView         *view,
 {
 	GtkBorder border;
 	gint width, height;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	if (view->sizing_mode == EV_SIZING_FIT_PAGE) {
+	if (priv->sizing_mode == EV_SIZING_FIT_PAGE) {
 		requisition->width = 1;
 		requisition->height = 1;
 
 		return;
 	}
 
-	ev_view_get_page_size (view, view->current_page, &width, &height);
+	ev_view_get_page_size (view, priv->current_page, &width, &height);
 	compute_border (view, &border);
 
-	requisition->width = view->sizing_mode == EV_SIZING_FIT_WIDTH ? 1 :
-		width + border.left + border.right + (2 * view->spacing);
-	requisition->height = height + border.top + border.bottom + (2 * view->spacing);
+	requisition->width = priv->sizing_mode == EV_SIZING_FIT_WIDTH ? 1 :
+		width + border.left + border.right + (2 * priv->spacing);
+	requisition->height = height + border.top + border.bottom + (2 * priv->spacing);
 }
 
 static void
@@ -4267,24 +4364,25 @@ ev_view_size_request (GtkWidget      *widget,
 {
 	EvView *view = EV_VIEW (widget);
 	gboolean dual_page;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	if (view->document == NULL) {
-		view->requisition.width = 1;
-		view->requisition.height = 1;
+	if (priv->document == NULL) {
+		priv->requisition.width = 1;
+		priv->requisition.height = 1;
 	} else {
 		dual_page = is_dual_page(view, NULL);
-		if (view->continuous && dual_page)
-			ev_view_size_request_continuous_dual_page(view, &view->requisition);
-		else if (view->continuous)
-			ev_view_size_request_continuous(view, &view->requisition);
+		if (priv->continuous && dual_page)
+			ev_view_size_request_continuous_dual_page(view, &priv->requisition);
+		else if (priv->continuous)
+			ev_view_size_request_continuous(view, &priv->requisition);
 		else if (dual_page)
-			ev_view_size_request_dual_page(view, &view->requisition);
+			ev_view_size_request_dual_page(view, &priv->requisition);
 		else
-			ev_view_size_request_single_page(view, &view->requisition);
+			ev_view_size_request_single_page(view, &priv->requisition);
 	}
 
 	if (requisition)
-		*requisition = view->requisition;
+		*requisition = priv->requisition;
 }
 
 static void
@@ -4314,13 +4412,14 @@ ev_view_size_allocate (GtkWidget      *widget,
 		       int	       baseline)
 {
 	EvView *view = EV_VIEW (widget);
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
 	if (!priv->document || ev_view_is_loading (view))
 		return;
 
-	if (view->sizing_mode == EV_SIZING_FIT_WIDTH ||
-	    view->sizing_mode == EV_SIZING_FIT_PAGE ||
-	    view->sizing_mode == EV_SIZING_AUTOMATIC) {
+	if (priv->sizing_mode == EV_SIZING_FIT_WIDTH ||
+	    priv->sizing_mode == EV_SIZING_FIT_PAGE ||
+	    priv->sizing_mode == EV_SIZING_AUTOMATIC) {
 		ev_view_zoom_for_size (view, width, height);
 		ev_view_size_request (widget, NULL);
 	}
@@ -4330,10 +4429,10 @@ ev_view_size_allocate (GtkWidget      *widget,
 
 	view_update_range_and_current_page (view);
 
-	view->pending_scroll = SCROLL_TO_KEEP_POSITION;
-	view->pending_resize = FALSE;
-	view->pending_point.x = 0;
-	view->pending_point.y = 0;
+	priv->pending_scroll = SCROLL_TO_KEEP_POSITION;
+	priv->pending_resize = FALSE;
+	priv->pending_point.x = 0;
+	priv->pending_point.y = 0;
 
 	for (GtkWidget *child = gtk_widget_get_first_child (widget);
 		child != NULL;
@@ -4345,8 +4444,8 @@ ev_view_size_allocate (GtkWidget      *widget,
 			continue;
 
 		_ev_view_transform_doc_rect_to_view_rect (view, data->page, &data->doc_rect, &view_area);
-		view_area.x -= view->scroll_x;
-		view_area.y -= view->scroll_y;
+		view_area.x -= priv->scroll_x;
+		view_area.y -= priv->scroll_y;
 
 		gtk_widget_set_size_request (child, view_area.width, view_area.height);
 		// TODO: this is a temporary solution to eliminate the warning
@@ -4354,14 +4453,15 @@ ev_view_size_allocate (GtkWidget      *widget,
 		gtk_widget_size_allocate (child, &view_area, baseline);
 	}
 
-	if (view->link_preview.popover)
-		gtk_popover_present (GTK_POPOVER (view->link_preview.popover));
+	if (priv->link_preview.popover)
+		gtk_popover_present (GTK_POPOVER (priv->link_preview.popover));
 }
 
 static gboolean
 ev_view_scroll_event (GtkEventControllerScroll *self, gdouble dx, gdouble dy, GtkWidget *widget)
 {
 	EvView *view = EV_VIEW (widget);
+	EvViewPrivate *priv = GET_PRIVATE (view);
 	GdkEvent *event;
 	guint state;
 	GdkScrollDirection direction;
@@ -4378,9 +4478,9 @@ ev_view_scroll_event (GtkEventControllerScroll *self, gdouble dx, gdouble dy, Gt
 
 
 	if (state == GDK_CONTROL_MASK) {
-		ev_document_model_set_sizing_mode (view->model, EV_SIZING_FREE);
-		view->zoom_center_x = x;
-		view->zoom_center_y = y;
+		ev_document_model_set_sizing_mode (priv->model, EV_SIZING_FREE);
+		priv->zoom_center_x = x;
+		priv->zoom_center_y = y;
 
 		switch (direction) {
 		case GDK_SCROLL_DOWN:
@@ -4406,7 +4506,7 @@ ev_view_scroll_event (GtkEventControllerScroll *self, gdouble dx, gdouble dy, Gt
 		return TRUE;
 	}
 
-	view->jump_to_find_result = FALSE;
+	priv->jump_to_find_result = FALSE;
 
 #if 0
 	/* TODO: implement this in GTK4 */
@@ -4434,7 +4534,7 @@ ev_view_scroll_event (GtkEventControllerScroll *self, gdouble dx, gdouble dy, Gt
 
 	fit_width = ev_view_page_fits (view, GTK_ORIENTATION_HORIZONTAL);
 	fit_height = ev_view_page_fits (view, GTK_ORIENTATION_VERTICAL);
-	if (state == 0 && !view->continuous && (fit_width || fit_height)) {
+	if (state == 0 && !priv->continuous && (fit_width || fit_height)) {
 		switch (event->direction) {
 		case GDK_SCROLL_DOWN:
 			if (fit_height) {
@@ -4466,10 +4566,10 @@ ev_view_scroll_event (GtkEventControllerScroll *self, gdouble dx, gdouble dy, Gt
 			    ((fit_height && event->delta_x == 0.0) ||
 			     (fit_width && event->delta_y == 0.0))) {
 				/* Emulate normal scrolling by summing the deltas */
-				view->total_delta += event->delta_x + event->delta_y;
+				priv->total_delta += event->delta_x + event->delta_y;
 
-				decrement = view->total_delta < 0 ? -1.0 : 1.0;
-				for (; fabs (view->total_delta) >= 1.0; view->total_delta -= decrement) {
+				decrement = priv->total_delta < 0 ? -1.0 : 1.0;
+				for (; fabs (priv->total_delta) >= 1.0; priv->total_delta -= decrement) {
 					if (decrement < 0)
 						ev_view_previous_page (view);
 					else
@@ -4507,8 +4607,9 @@ find_selection_for_page (EvView *view,
 			 gint    page)
 {
 	GList *list;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	for (list = view->selection_info.selections; list != NULL; list = list->next) {
+	for (list = priv->selection_info.selections; list != NULL; list = list->next) {
 		EvViewSelection *selection;
 
 		selection = (EvViewSelection *) list->data;
@@ -4528,8 +4629,9 @@ draw_caret_cursor (EvView	*view,
 	GdkRectangle view_rect;
 	GdkRGBA      cursor_color;
 	GtkStyleContext *context = gtk_widget_get_style_context (GTK_WIDGET (view));
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	if (!get_caret_cursor_area (view, view->cursor_page, view->cursor_offset, &view_rect))
+	if (!get_caret_cursor_area (view, priv->cursor_page, priv->cursor_offset, &view_rect))
 		return;
 
 	gtk_style_context_get_color (context, &cursor_color);
@@ -4550,11 +4652,12 @@ static gboolean
 should_draw_caret_cursor (EvView  *view,
 			  gint     page)
 {
-	return (view->caret_enabled &&
-		view->cursor_page == page &&
-		view->cursor_visible &&
+	EvViewPrivate *priv = GET_PRIVATE (view);
+	return (priv->caret_enabled &&
+		priv->cursor_page == page &&
+		priv->cursor_visible &&
 		gtk_widget_has_focus (GTK_WIDGET (view)) &&
-		!ev_pixbuf_cache_get_selection_region (view->pixbuf_cache, page, view->scale));
+		!ev_pixbuf_cache_get_selection_region (priv->pixbuf_cache, page, priv->scale));
 }
 
 static void
@@ -4566,8 +4669,9 @@ draw_focus (EvView       *view,
 	GtkWidget   *widget = GTK_WIDGET (view);
 	GdkRectangle rect;
 	GdkRectangle intersect;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	if (view->focused_element_page != page)
+	if (priv->focused_element_page != page)
 		return;
 
 	if (!gtk_widget_has_focus (widget))
@@ -4614,10 +4718,11 @@ stroke_doc_rect (EvView       *view,
 		 EvRectangle  *doc_rect)
 {
 	GdkRectangle view_rect;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
 	_ev_view_transform_doc_rect_to_view_rect (view, page, doc_rect, &view_rect);
-	view_rect.x -= view->scroll_x;
-	view_rect.y -= view->scroll_y;
+	view_rect.x -= priv->scroll_x;
+	view_rect.y -= priv->scroll_y;
 	stroke_view_rect (snapshot, clip, color, &view_rect);
 }
 
@@ -4631,8 +4736,9 @@ show_chars_border (EvView       *view,
 	guint        n_areas = 0;
 	guint        i;
 	GdkRGBA      color = { 1, 0, 0, 1 };
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	ev_page_cache_get_text_layout (view->page_cache, page, &areas, &n_areas);
+	ev_page_cache_get_text_layout (priv->page_cache, page, &areas, &n_areas);
 	if (!areas)
 		return;
 
@@ -4667,8 +4773,9 @@ show_links_border (EvView       *view,
 		   GdkRectangle *clip)
 {
 	GdkRGBA color = { 0, 0, 1, 1 };
+	EvViewPrivate *priv = GET_PRIVATE (view);
 	show_mapping_list_border (view, snapshot, &color, page, clip,
-				  ev_page_cache_get_link_mapping (view->page_cache, page));
+				  ev_page_cache_get_link_mapping (priv->page_cache, page));
 }
 
 static void
@@ -4677,9 +4784,10 @@ show_forms_border (EvView       *view,
 		   gint          page,
 		   GdkRectangle *clip)
 {
+	EvViewPrivate *priv = GET_PRIVATE (view);
 	GdkRGBA color = { 0, 1, 0, 1 };
 	show_mapping_list_border (view, snapshot, &color, page, clip,
-				  ev_page_cache_get_form_field_mapping (view->page_cache, page));
+				  ev_page_cache_get_form_field_mapping (priv->page_cache, page));
 }
 
 static void
@@ -4688,9 +4796,10 @@ show_annots_border (EvView       *view,
 		    gint          page,
 		    GdkRectangle *clip)
 {
+	EvViewPrivate *priv = GET_PRIVATE (view);
 	GdkRGBA color = { 0, 1, 1, 1 };
 	show_mapping_list_border (view, snapshot, &color, page, clip,
-				  ev_page_cache_get_annot_mapping (view->page_cache, page));
+				  ev_page_cache_get_annot_mapping (priv->page_cache, page));
 }
 
 static void
@@ -4699,9 +4808,10 @@ show_images_border (EvView       *view,
 		    gint          page,
 		    GdkRectangle *clip)
 {
+	EvViewPrivate *priv = GET_PRIVATE (view);
 	GdkRGBA color = { 1, 0, 1, 1 };
 	show_mapping_list_border (view, snapshot, &color, page, clip,
-				  ev_page_cache_get_image_mapping (view->page_cache, page));
+				  ev_page_cache_get_image_mapping (priv->page_cache, page));
 }
 
 static void
@@ -4710,9 +4820,10 @@ show_media_border (EvView       *view,
 		   gint          page,
 		   GdkRectangle *clip)
 {
+	EvViewPrivate *priv = GET_PRIVATE (view);
 	GdkRGBA color = { 1, 1, 0, 1 };
 	show_mapping_list_border (view, snapshot, &color, page, clip,
-				  ev_page_cache_get_media_mapping (view->page_cache, page));
+				  ev_page_cache_get_media_mapping (priv->page_cache, page));
 }
 
 
@@ -4725,8 +4836,9 @@ show_selections_border (EvView       *view,
 	cairo_region_t *region;
 	guint           i, n_rects;
 	GdkRGBA color = { 0.75, 0.50, 0.25, 1 };
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	region = ev_page_cache_get_text_mapping (view->page_cache, page);
+	region = ev_page_cache_get_text_mapping (priv->page_cache, page);
 	if (!region)
 		return;
 
@@ -4781,6 +4893,7 @@ static void ev_view_snapshot(GtkWidget *widget, GtkSnapshot *snapshot)
 	gint         i;
 	GdkRectangle clip_rect;
 	GtkBorder border;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
 	width = gtk_widget_get_width(widget);
 	height = gtk_widget_get_height(widget);
@@ -4793,33 +4906,33 @@ static void ev_view_snapshot(GtkWidget *widget, GtkSnapshot *snapshot)
 	clip_rect.width = width;
 	clip_rect.height = height;
 
-	if (view->document == NULL)
+	if (priv->document == NULL)
 		return;
 
 	gtk_snapshot_push_clip (snapshot, &GRAPHENE_RECT_INIT (0, 0, width, height));
 
 	compute_border (view, &border);
-	for (i = view->start_page; i >= 0 && i <= view->end_page; i++) {
+	for (i = priv->start_page; i >= 0 && i <= priv->end_page; i++) {
 		GdkRectangle page_area;
 		gboolean page_ready = TRUE;
 
 		if (!ev_view_get_page_extents_for_border (view, i, &border, &page_area))
 			continue;
 
-		page_area.x -= view->scroll_x;
-		page_area.y -= view->scroll_y;
+		page_area.x -= priv->scroll_x;
+		page_area.y -= priv->scroll_y;
 
 		draw_one_page (view, i, snapshot, &page_area, &border, &clip_rect, &page_ready);
 
 		if (page_ready && should_draw_caret_cursor (view, i))
 			draw_caret_cursor (view, snapshot);
-		if (page_ready && view->find_pages && view->highlight_find_results)
+		if (page_ready && priv->find_pages && priv->highlight_find_results)
 			highlight_find_results (view, snapshot, i);
-		if (page_ready && EV_IS_DOCUMENT_ANNOTATIONS (view->document))
+		if (page_ready && EV_IS_DOCUMENT_ANNOTATIONS (priv->document))
 			show_annotation_windows (view, i);
-		if (page_ready && view->focused_element)
+		if (page_ready && priv->focused_element)
 			draw_focus (view, snapshot, i, &clip_rect);
-		if (page_ready && view->synctex_result)
+		if (page_ready && priv->synctex_result)
 			highlight_forward_search_results (view, snapshot, i);
 #ifdef EV_ENABLE_DEBUG
 		if (page_ready)
@@ -4902,13 +5015,14 @@ get_link_area (EvView       *view,
 	EvMappingList *link_mapping;
 	gint           page;
 	gint           x_offset = 0, y_offset = 0;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	x += view->scroll_x;
-	y += view->scroll_y;
+	x += priv->scroll_x;
+	y += priv->scroll_y;
 
 	find_page_at_location (view, x, y, &page, &x_offset, &y_offset);
 
-	link_mapping = ev_page_cache_get_link_mapping (view->page_cache, page);
+	link_mapping = ev_page_cache_get_link_mapping (priv->page_cache, page);
 	ev_view_get_area_from_mapping (view, page,
 				       link_mapping,
 				       link, area);
@@ -4924,13 +5038,14 @@ get_annot_area (EvView       *view,
 	EvMappingList *annot_mapping;
 	gint           page;
 	gint           x_offset = 0, y_offset = 0;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	x += view->scroll_x;
-	y += view->scroll_y;
+	x += priv->scroll_x;
+	y += priv->scroll_y;
 
 	find_page_at_location (view, x, y, &page, &x_offset, &y_offset);
 
-	annot_mapping = ev_page_cache_get_annot_mapping (view->page_cache, page);
+	annot_mapping = ev_page_cache_get_annot_mapping (priv->page_cache, page);
 	ev_view_get_area_from_mapping (view, page,
 				       annot_mapping,
 				       annot, area);
@@ -4946,13 +5061,14 @@ get_field_area (EvView       *view,
 	EvMappingList *field_mapping;
 	gint           page;
 	gint           x_offset = 0, y_offset = 0;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	x += view->scroll_x;
-	y += view->scroll_y;
+	x += priv->scroll_x;
+	y += priv->scroll_y;
 
 	find_page_at_location (view, x, y, &page, &x_offset, &y_offset);
 
-	field_mapping = ev_page_cache_get_form_field_mapping (view->page_cache, page);
+	field_mapping = ev_page_cache_get_form_field_mapping (priv->page_cache, page);
 	ev_view_get_area_from_mapping (view, page, field_mapping, field, area);
 }
 
@@ -4961,7 +5077,8 @@ static void
 link_preview_show_thumbnail (GdkTexture *page_texture,
 			     EvView *view)
 {
-	GtkWidget       *popover = view->link_preview.popover;
+	EvViewPrivate *priv = GET_PRIVATE (view);
+	GtkWidget       *popover = priv->link_preview.popover;
 	GtkWidget       *picture;
 	GtkSnapshot	*snapshot;
 	gdouble          x, y;   /* position of the link on destination page */
@@ -4970,8 +5087,8 @@ link_preview_show_thumbnail (GdkTexture *page_texture,
 	gint             width, height;    /* dimensions of popup */
 	gint             left, top;
 
-	x = view->link_preview.left;
-	y = view->link_preview.top;
+	x = priv->link_preview.left;
+	y = priv->link_preview.top;
 
 	pwidth = gdk_texture_get_width (page_texture);
 	pheight = gdk_texture_get_height (page_texture);
@@ -5021,12 +5138,13 @@ link_preview_show_thumbnail (GdkTexture *page_texture,
 static void
 link_preview_delayed_show (EvView *view)
 {
-	GtkWidget *popover = view->link_preview.popover;
+	EvViewPrivate *priv = GET_PRIVATE (view);
+	GtkWidget *popover = priv->link_preview.popover;
 
 	gtk_popover_present (GTK_POPOVER (popover));
 	gtk_popover_popup (GTK_POPOVER (popover));
 
-	view->link_preview.delay_timeout_id = 0;
+	priv->link_preview.delay_timeout_id = 0;
 }
 
 static GdkTexture *
@@ -5060,35 +5178,38 @@ static void
 link_preview_job_finished_cb (EvJobThumbnailCairo *job,
 			      EvView *view)
 {
+	EvViewPrivate *priv = GET_PRIVATE (view);
 	if (ev_job_is_failed (EV_JOB (job))) {
-		gtk_widget_unparent (view->link_preview.popover);
-		view->link_preview.popover = NULL;
+		gtk_widget_unparent (priv->link_preview.popover);
+		priv->link_preview.popover = NULL;
 		g_object_unref (job);
-		view->link_preview.job = NULL;
+		priv->link_preview.job = NULL;
 		return;
 	}
 
 	link_preview_show_thumbnail (gdk_texture_new_for_surface (job->thumbnail_surface), view);
 
 	g_object_unref (job);
-	view->link_preview.job = NULL;
+	priv->link_preview.job = NULL;
 }
 
 static void
-ev_view_link_preview_popover_cleanup (EvView *view) {
-	if (view->link_preview.job) {
-		ev_job_cancel (view->link_preview.job);
-		g_clear_object (&view->link_preview.job);
+ev_view_link_preview_popover_cleanup (EvView *view)
+{
+	EvViewPrivate *priv = GET_PRIVATE (view);
+	if (priv->link_preview.job) {
+		ev_job_cancel (priv->link_preview.job);
+		g_clear_object (&priv->link_preview.job);
 	}
 
-	if (view->link_preview.popover) {
-		gtk_popover_popdown (GTK_POPOVER (view->link_preview.popover));
-		g_clear_pointer (&view->link_preview.popover, gtk_widget_unparent);
+	if (priv->link_preview.popover) {
+		gtk_popover_popdown (GTK_POPOVER (priv->link_preview.popover));
+		g_clear_pointer (&priv->link_preview.popover, gtk_widget_unparent);
 	}
 
-	if (view->link_preview.delay_timeout_id) {
-		g_source_remove (view->link_preview.delay_timeout_id);
-		view->link_preview.delay_timeout_id = 0;
+	if (priv->link_preview.delay_timeout_id) {
+		g_source_remove (priv->link_preview.delay_timeout_id);
+		priv->link_preview.delay_timeout_id = 0;
 	}
 }
 
@@ -5164,29 +5285,30 @@ start_selection_for_event (EvView	*view,
 			   gdouble	 y,
 			   gint		 n_press)
 {
+	EvViewPrivate *priv = GET_PRIVATE (view);
 	clear_selection (view);
 
-	view->selection_info.in_select = TRUE;
-	view->selection_info.start.x = x + view->scroll_x;
-	view->selection_info.start.y = y + view->scroll_y;
+	priv->selection_info.in_select = TRUE;
+	priv->selection_info.start.x = x + priv->scroll_x;
+	priv->selection_info.start.y = y + priv->scroll_y;
 
 	switch (n_press) {
 	        case 2:
-			view->selection_info.style = EV_SELECTION_STYLE_WORD;
+			priv->selection_info.style = EV_SELECTION_STYLE_WORD;
 			break;
 	        case 3:
-			view->selection_info.style = EV_SELECTION_STYLE_LINE;
+			priv->selection_info.style = EV_SELECTION_STYLE_LINE;
 			break;
 	        default:
-			view->selection_info.style = EV_SELECTION_STYLE_GLYPH;
+			priv->selection_info.style = EV_SELECTION_STYLE_GLYPH;
 			return;
 	}
 
 	/* In case of WORD or LINE, compute selections now */
 	compute_selections (view,
-			    view->selection_info.style,
-			    &(view->selection_info.start),
-			    &(view->selection_info.start));
+			    priv->selection_info.style,
+			    &(priv->selection_info.start),
+			    &(priv->selection_info.start));
 }
 
 gint
@@ -5202,8 +5324,9 @@ _ev_view_get_caret_cursor_offset_at_doc_point (EvView *view,
 	gint         last_line_offset = -1;
 	EvRectangle *rect;
 	guint        i;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	ev_page_cache_get_text_layout (view->page_cache, page, &areas, &n_areas);
+	ev_page_cache_get_text_layout (priv->page_cache, page, &areas, &n_areas);
 	if (!areas)
 		return -1;
 
@@ -5276,14 +5399,15 @@ position_caret_cursor_at_doc_point (EvView *view,
 				    gdouble doc_y)
 {
 	gint offset;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
 	offset = _ev_view_get_caret_cursor_offset_at_doc_point (view, page, doc_x, doc_y);
 	if (offset == -1)
 		return FALSE;
 
-	if (view->cursor_offset != offset || view->cursor_page != page) {
-		view->cursor_offset = offset;
-		view->cursor_page = page;
+	if (priv->cursor_offset != offset || priv->cursor_page != page) {
+		priv->cursor_offset = offset;
+		priv->cursor_page = page;
 
 		return TRUE;
 	}
@@ -5298,11 +5422,12 @@ position_caret_cursor_at_location (EvView *view,
 {
 	gint page;
 	gint doc_x, doc_y;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	if (!view->caret_enabled || view->rotation != 0)
+	if (!priv->caret_enabled || priv->rotation != 0)
 		return FALSE;
 
-	if (!view->page_cache)
+	if (!priv->page_cache)
 		return FALSE;
 
 	/* Get the offset from the doc point */
@@ -5320,19 +5445,20 @@ position_caret_cursor_for_event (EvView         *view,
 {
 	GdkRectangle area;
 	GdkRectangle prev_area = { 0, 0, 0, 0 };
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
 	if (redraw)
-		get_caret_cursor_area (view, view->cursor_page, view->cursor_offset, &prev_area);
+		get_caret_cursor_area (view, priv->cursor_page, priv->cursor_offset, &prev_area);
 
 	if (!position_caret_cursor_at_location (view, x, y))
 		return FALSE;
 
-	if (!get_caret_cursor_area (view, view->cursor_page, view->cursor_offset, &area))
+	if (!get_caret_cursor_area (view, priv->cursor_page, priv->cursor_offset, &area))
 		return FALSE;
 
-	view->cursor_line_offset = area.x;
+	priv->cursor_line_offset = area.x;
 
-	g_signal_emit (view, signals[SIGNAL_CURSOR_MOVED], 0, view->cursor_page, view->cursor_offset);
+	g_signal_emit (view, signals[SIGNAL_CURSOR_MOVED], 0, priv->cursor_page, priv->cursor_offset);
 
 	if (redraw) {
 		gtk_widget_queue_draw (GTK_WIDGET (view));
@@ -5354,18 +5480,18 @@ ev_view_button_press_event (GtkGestureClick	*gesture,
 	guint button;
 	GdkModifierType state = gtk_event_controller_get_current_event_state (controller);
 
-
 	EvView *view = EV_VIEW (widget);
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
 	ev_view_link_preview_popover_cleanup (view);
 
-	if (!view->document || ev_document_get_n_pages (view->document) <= 0)
+	if (!priv->document || ev_document_get_n_pages (priv->document) <= 0)
 		return;
 
-	if (gtk_gesture_is_recognized (view->zoom_gesture))
+	if (gtk_gesture_is_recognized (priv->zoom_gesture))
 		return;
 
-	if (gtk_gesture_is_recognized (view->pan_gesture))
+	if (gtk_gesture_is_recognized (priv->pan_gesture))
 		return;
 
 	if (!gtk_widget_has_focus (widget)) {
@@ -5374,20 +5500,20 @@ ev_view_button_press_event (GtkGestureClick	*gesture,
 
 	button = gdk_button_event_get_button (event);
 
-	view->pressed_button = button;
-	view->selection_info.in_drag = FALSE;
-	view->selection_info.in_select = FALSE;
+	priv->pressed_button = button;
+	priv->selection_info.in_drag = FALSE;
+	priv->selection_info.in_select = FALSE;
 
-	if (view->scroll_info.autoscrolling)
+	if (priv->scroll_info.autoscrolling)
 		return;
 
-	if (view->adding_annot_info.adding_annot && !view->adding_annot_info.annot) {
+	if (priv->adding_annot_info.adding_annot && !priv->adding_annot_info.annot) {
 		if (button != GDK_BUTTON_PRIMARY)
 			return;
 
-		view->adding_annot_info.start.x = x + view->scroll_x;
-		view->adding_annot_info.start.y = y + view->scroll_y;
-		view->adding_annot_info.stop = view->adding_annot_info.start;
+		priv->adding_annot_info.start.x = x + priv->scroll_x;
+		priv->adding_annot_info.start.y = y + priv->scroll_y;
+		priv->adding_annot_info.stop = priv->adding_annot_info.start;
 		ev_view_create_annotation (view);
 
 		return;
@@ -5407,23 +5533,23 @@ ev_view_button_press_event (GtkGestureClick	*gesture,
 				return;
 			}
 
-			if (EV_IS_SELECTION (view->document) && view->selection_info.selections) {
+			if (EV_IS_SELECTION (priv->document) && priv->selection_info.selections) {
 				if (n_press == 3) {
 					start_selection_for_event (view, x, y, n_press);
 				} else if (state & GDK_SHIFT_MASK) {
 					GdkPoint end_point;
 
-					end_point.x = x + view->scroll_x;
-					end_point.y = y + view->scroll_y;
-					extend_selection (view, &view->selection_info.start, &end_point);
+					end_point.x = x + priv->scroll_x;
+					end_point.y = y + priv->scroll_y;
+					extend_selection (view, &priv->selection_info.start, &end_point);
 				} else if (location_in_selected_text (view,
-							       x + view->scroll_x,
-							       y + view->scroll_y)) {
-					view->selection_info.in_drag = TRUE;
+							       x + priv->scroll_x,
+							       y + priv->scroll_y)) {
+					priv->selection_info.in_drag = TRUE;
 				} else {
 					start_selection_for_event (view, x, y, n_press);
 					if (position_caret_cursor_for_event (view, x, y, TRUE)) {
-						view->cursor_blink_time = 0;
+						priv->cursor_blink_time = 0;
 						ev_view_pend_cursor_blink (view);
 					}
 				}
@@ -5442,18 +5568,18 @@ ev_view_button_press_event (GtkGestureClick	*gesture,
 					 * on an annotation. We need moving_annot
 					 * to distinguish moving an annotation from
 					 * showing its popup upon button release. */
-					view->moving_annot_info.annot_clicked = TRUE;
-					view->moving_annot_info.moving_annot = FALSE;
-					view->moving_annot_info.annot = annot;
+					priv->moving_annot_info.annot_clicked = TRUE;
+					priv->moving_annot_info.moving_annot = FALSE;
+					priv->moving_annot_info.annot = annot;
 					ev_annotation_get_area (annot, &current_area);
 
-					view_point.x = x + view->scroll_x;
-					view_point.y = y + view->scroll_y;
+					view_point.x = x + priv->scroll_x;
+					view_point.y = y + priv->scroll_y;
 
 					/* Remember the coordinates of the button press event
 					 * in order to implement a minimum threshold for moving
 					 * annotations. */
-					view->moving_annot_info.start = view_point;
+					priv->moving_annot_info.start = view_point;
 					annot_page = ev_annotation_get_page_index (annot);
 					ev_view_get_page_extents (view, annot_page, &page_area, &border);
 					_ev_view_transform_view_point_to_doc_point (view, &view_point,
@@ -5463,37 +5589,37 @@ ev_view_button_press_event (GtkGestureClick	*gesture,
 					/* Remember the offset of the cursor with respect to
 					 * the annotation area in order to prevent the annotation from
 					 * jumping under the cursor while moving it. */
-					view->moving_annot_info.cursor_offset.x = doc_point.x - current_area.x1;
-					view->moving_annot_info.cursor_offset.y = doc_point.y - current_area.y1;
+					priv->moving_annot_info.cursor_offset.x = doc_point.x - current_area.x1;
+					priv->moving_annot_info.cursor_offset.y = doc_point.y - current_area.y1;
 				}
 			} else if ((field = ev_view_get_form_field_at_location (view, x, y))) {
 				ev_view_remove_all_form_fields (view);
 				ev_view_handle_form_field (view, field);
 			} else if ((link = get_link_mapping_at_location (view, x, y, &page))){
 				_ev_view_set_focused_element (view, link, page);
-			} else if (!location_in_text (view, x + view->scroll_x, y + view->scroll_y) &&
+			} else if (!location_in_text (view, x + priv->scroll_x, y + priv->scroll_y) &&
 				   (image = ev_view_get_image_at_location (view, x, y))) {
-				if (view->image_dnd_info.image)
-					g_object_unref (view->image_dnd_info.image);
-				view->image_dnd_info.image = g_object_ref (image);
-				view->image_dnd_info.in_drag = TRUE;
+				if (priv->image_dnd_info.image)
+					g_object_unref (priv->image_dnd_info.image);
+				priv->image_dnd_info.image = g_object_ref (image);
+				priv->image_dnd_info.in_drag = TRUE;
 
-				view->image_dnd_info.start.x = x + view->scroll_x;
-				view->image_dnd_info.start.y = y + view->scroll_y;
+				priv->image_dnd_info.start.x = x + priv->scroll_x;
+				priv->image_dnd_info.start.y = y + priv->scroll_y;
 			} else {
 				ev_view_remove_all_form_fields (view);
 				_ev_view_set_focused_element (view, NULL, -1);
 
-				if (view->synctex_result) {
-					g_clear_pointer (&view->synctex_result, g_free);
+				if (priv->synctex_result) {
+					g_clear_pointer (&priv->synctex_result, g_free);
 					gtk_widget_queue_draw (widget);
 				}
 
-				if (EV_IS_SELECTION (view->document))
+				if (EV_IS_SELECTION (priv->document))
 					start_selection_for_event (view, x, y, n_press);
 
 				if (position_caret_cursor_for_event (view, x, y, TRUE)) {
-					view->cursor_blink_time = 0;
+					priv->cursor_blink_time = 0;
 					ev_view_pend_cursor_blink (view);
 				}
 			}
@@ -5503,7 +5629,7 @@ ev_view_button_press_event (GtkGestureClick	*gesture,
 			ev_view_set_focused_element_at_location (view, x, y);
 			return;
 		case GDK_BUTTON_SECONDARY:
-			view->scroll_info.start_y = y;
+			priv->scroll_info.start_y = y;
 			ev_view_set_focused_element_at_location (view, x, y);
 			ev_view_do_popup_menu (view, x, y);
 	}
@@ -5513,20 +5639,21 @@ static gboolean
 ev_view_drag_update_momentum (EvView *view)
 {
 	int i;
-	if (!view->drag_info.in_drag)
+	EvViewPrivate *priv = GET_PRIVATE (view);
+	if (!priv->drag_info.in_drag)
 		return G_SOURCE_REMOVE;
 
 	for (i = DRAG_HISTORY - 1; i > 0; i--) {
-		view->drag_info.buffer[i].x = view->drag_info.buffer[i-1].x;
-		view->drag_info.buffer[i].y = view->drag_info.buffer[i-1].y;
+		priv->drag_info.buffer[i].x = priv->drag_info.buffer[i-1].x;
+		priv->drag_info.buffer[i].y = priv->drag_info.buffer[i-1].y;
 	}
 
 	/* Momentum is a moving average of 10ms granularity over
 	 * the last 100ms with each 10ms stored in buffer.
 	 */
 
-	view->drag_info.momentum.x = (view->drag_info.buffer[DRAG_HISTORY - 1].x - view->drag_info.buffer[0].x);
-	view->drag_info.momentum.y = (view->drag_info.buffer[DRAG_HISTORY - 1].y - view->drag_info.buffer[0].y);
+	priv->drag_info.momentum.x = (priv->drag_info.buffer[DRAG_HISTORY - 1].x - priv->drag_info.buffer[0].x);
+	priv->drag_info.momentum.y = (priv->drag_info.buffer[DRAG_HISTORY - 1].y - priv->drag_info.buffer[0].y);
 
 	return G_SOURCE_CONTINUE;
 }
@@ -5539,44 +5666,45 @@ ev_view_scroll_drag_release (EvView *view)
 	gdouble h_page_size, v_page_size;
 	gdouble h_upper, v_upper;
 	GtkAllocation allocation;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	view->drag_info.momentum.x /= 1.2;
-	view->drag_info.momentum.y /= 1.2; /* Alter these constants to change "friction" */
+	priv->drag_info.momentum.x /= 1.2;
+	priv->drag_info.momentum.y /= 1.2; /* Alter these constants to change "friction" */
 
 	gtk_widget_get_allocation (GTK_WIDGET (view), &allocation);
 
-	h_page_size = gtk_adjustment_get_page_size (view->hadjustment);
-	v_page_size = gtk_adjustment_get_page_size (view->vadjustment);
+	h_page_size = gtk_adjustment_get_page_size (priv->hadjustment);
+	v_page_size = gtk_adjustment_get_page_size (priv->vadjustment);
 
 	dhadj_value = h_page_size *
-		      (gdouble)view->drag_info.momentum.x / allocation.width;
+		      (gdouble)priv->drag_info.momentum.x / allocation.width;
 	dvadj_value = v_page_size *
-		      (gdouble)view->drag_info.momentum.y / allocation.height;
+		      (gdouble)priv->drag_info.momentum.y / allocation.height;
 
-	oldhadjustment = gtk_adjustment_get_value (view->hadjustment);
-	oldvadjustment = gtk_adjustment_get_value (view->vadjustment);
+	oldhadjustment = gtk_adjustment_get_value (priv->hadjustment);
+	oldvadjustment = gtk_adjustment_get_value (priv->vadjustment);
 
-	h_upper = gtk_adjustment_get_upper (view->hadjustment);
-	v_upper = gtk_adjustment_get_upper (view->vadjustment);
+	h_upper = gtk_adjustment_get_upper (priv->hadjustment);
+	v_upper = gtk_adjustment_get_upper (priv->vadjustment);
 
 	/* When we reach the edges, we need either to absorb some momentum and bounce by
 	 * multiplying it on -0.5 or stop scrolling by setting momentum to 0. */
 	if (((oldhadjustment + dhadj_value) > (h_upper - h_page_size)) ||
 	    ((oldhadjustment + dhadj_value) < 0))
-		view->drag_info.momentum.x = 0;
+		priv->drag_info.momentum.x = 0;
 	if (((oldvadjustment + dvadj_value) > (v_upper - v_page_size)) ||
 	    ((oldvadjustment + dvadj_value) < 0))
-		view->drag_info.momentum.y = 0;
+		priv->drag_info.momentum.y = 0;
 
-	gtk_adjustment_set_value (view->hadjustment,
+	gtk_adjustment_set_value (priv->hadjustment,
 				  MIN (oldhadjustment + dhadj_value,
 				       h_upper - h_page_size));
-	gtk_adjustment_set_value (view->vadjustment,
+	gtk_adjustment_set_value (priv->vadjustment,
 				  MIN (oldvadjustment + dvadj_value,
 				       v_upper - v_page_size));
 
-	if (((view->drag_info.momentum.x < 1) && (view->drag_info.momentum.x > -1)) &&
-	    ((view->drag_info.momentum.y < 1) && (view->drag_info.momentum.y > -1)))
+	if (((priv->drag_info.momentum.x < 1) && (priv->drag_info.momentum.x > -1)) &&
+	    ((priv->drag_info.momentum.y < 1) && (priv->drag_info.momentum.y > -1)))
 		return G_SOURCE_REMOVE;
 	else
 		return G_SOURCE_CONTINUE;
@@ -5588,25 +5716,26 @@ middle_clicked_drag_begin_cb (GtkGestureDrag	*self,
 			      gdouble		 start_y,
 			      EvView		*view)
 {
+	EvViewPrivate *priv = GET_PRIVATE (view);
 	/* use root coordinates as reference point because
 	 * scrolling changes window relative coordinates */
-	view->drag_info.hadj = gtk_adjustment_get_value (view->hadjustment);
-	view->drag_info.vadj = gtk_adjustment_get_value (view->vadjustment);
+	priv->drag_info.hadj = gtk_adjustment_get_value (priv->hadjustment);
+	priv->drag_info.vadj = gtk_adjustment_get_value (priv->vadjustment);
 
 	ev_view_set_cursor (view, EV_VIEW_CURSOR_DRAG);
 
-	view->drag_info.drag_timeout_id = g_timeout_add (10,
+	priv->drag_info.drag_timeout_id = g_timeout_add (10,
 				(GSourceFunc)ev_view_drag_update_momentum, view);
 	/* Set 100 to choose how long it takes to build up momentum */
 	/* Clear out previous momentum info: */
 	for (int i = 0; i < DRAG_HISTORY; i++) {
-		view->drag_info.buffer[i].x = start_x;
-		view->drag_info.buffer[i].y = start_y;
+		priv->drag_info.buffer[i].x = start_x;
+		priv->drag_info.buffer[i].y = start_y;
 	}
-	view->drag_info.momentum.x = 0;
-	view->drag_info.momentum.y = 0;
+	priv->drag_info.momentum.x = 0;
+	priv->drag_info.momentum.y = 0;
 
-	view->drag_info.in_drag = TRUE;
+	priv->drag_info.in_drag = TRUE;
 }
 
 static void
@@ -5615,10 +5744,11 @@ middle_clicked_drag_end_cb (GtkGestureDrag	*self,
 			    gdouble		 offset_y,
 			    EvView		*view)
 {
-	view->drag_info.release_timeout_id =
+	EvViewPrivate *priv = GET_PRIVATE (view);
+	priv->drag_info.release_timeout_id =
 			g_timeout_add (20, (GSourceFunc)ev_view_scroll_drag_release, view);
 
-	view->drag_info.in_drag = FALSE;
+	priv->drag_info.in_drag = FALSE;
 }
 
 static void
@@ -5630,37 +5760,38 @@ middle_clicked_drag_update_cb (GtkGestureDrag	*self,
 	GdkEvent *event = gtk_event_controller_get_current_event (GTK_EVENT_CONTROLLER (self));
 	gdouble dhadj_value, dvadj_value;
 	GtkAllocation allocation;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
 	gtk_widget_get_allocation (GTK_WIDGET (view), &allocation);
 
-	dhadj_value = gtk_adjustment_get_page_size (view->hadjustment) *
+	dhadj_value = gtk_adjustment_get_page_size (priv->hadjustment) *
 				      offset_x / allocation.width;
-	dvadj_value = gtk_adjustment_get_page_size (view->vadjustment) *
+	dvadj_value = gtk_adjustment_get_page_size (priv->vadjustment) *
 				      offset_y / allocation.height;
 
 	/* We will update the drag event's start position if
 	 * the adjustment value is changed, but only if the
 	 * change was not caused by this function. */
 
-	view->drag_info.in_notify = TRUE;
+	priv->drag_info.in_notify = TRUE;
 
 	/* clamp scrolling to visible area */
-	gtk_adjustment_set_value (view->hadjustment, MIN (view->drag_info.hadj - dhadj_value,
-					gtk_adjustment_get_upper (view->hadjustment) -
-					gtk_adjustment_get_page_size (view->hadjustment)));
-	gtk_adjustment_set_value (view->vadjustment, MIN (view->drag_info.vadj - dvadj_value,
-					gtk_adjustment_get_upper (view->vadjustment) -
-					gtk_adjustment_get_page_size (view->vadjustment)));
+	gtk_adjustment_set_value (priv->hadjustment, MIN (priv->drag_info.hadj - dhadj_value,
+					gtk_adjustment_get_upper (priv->hadjustment) -
+					gtk_adjustment_get_page_size (priv->hadjustment)));
+	gtk_adjustment_set_value (priv->vadjustment, MIN (priv->drag_info.vadj - dvadj_value,
+					gtk_adjustment_get_upper (priv->vadjustment) -
+					gtk_adjustment_get_page_size (priv->vadjustment)));
 
-	view->drag_info.in_notify = FALSE;
+	priv->drag_info.in_notify = FALSE;
 
 	gdouble x, y;
 
 	gdk_event_get_axis (event, GDK_AXIS_X, &x);
 	gdk_event_get_axis (event, GDK_AXIS_Y, &y);
 
-	view->drag_info.buffer[0].x = x;
-	view->drag_info.buffer[0].y = y;
+	priv->drag_info.buffer[0].x = x;
+	priv->drag_info.buffer[0].y = y;
 }
 
 static void
@@ -5703,22 +5834,23 @@ drag_prepare_cb (GtkDragSource	*self,
 	GdkPixbuf *pixbuf;
 	const char *tmp_uri;
 	GFile *file;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	if (view->selection_info.in_select)
+	if (priv->selection_info.in_select)
 		return NULL;
 
-	if (EV_IS_SELECTION (view->document) && view->selection_info.in_drag &&
-	    location_in_selected_text (view, x + view->scroll_x, y + view->scroll_y)) {
+	if (EV_IS_SELECTION (priv->document) && priv->selection_info.in_drag &&
+	    location_in_selected_text (view, x + priv->scroll_x, y + priv->scroll_y)) {
 		gchar *text = get_selected_text (view);
 
 		return gdk_content_provider_new_for_bytes ("text/plain",
 				g_bytes_new_take (text, strlen (text)));
 	}
 
-	if (!location_in_text (view, x + view->scroll_x, y + view->scroll_y) &&
+	if (!location_in_text (view, x + priv->scroll_x, y + priv->scroll_y) &&
 				   (image = ev_view_get_image_at_location (view, x, y))) {
 		ev_document_doc_mutex_lock ();
-		pixbuf = ev_document_images_get_image (EV_DOCUMENT_IMAGES (view->document), image);
+		pixbuf = ev_document_images_get_image (EV_DOCUMENT_IMAGES (priv->document), image);
 		ev_document_doc_mutex_unlock ();
 
 		tmp_uri = ev_image_save_tmp (image, pixbuf);
@@ -5736,11 +5868,12 @@ drag_prepare_cb (GtkDragSource	*self,
 static void
 selection_update_idle_cb (EvView *view)
 {
+	EvViewPrivate *priv = GET_PRIVATE (view);
 	compute_selections (view,
-			    view->selection_info.style,
-			    &view->selection_info.start,
-			    &view->motion);
-	view->selection_update_id = 0;
+			    priv->selection_info.style,
+			    &priv->selection_info.start,
+			    &priv->motion);
+	priv->selection_update_id = 0;
 }
 
 static gboolean
@@ -5749,6 +5882,7 @@ selection_scroll_timeout_cb (EvView *view)
 	gint x, y, shift = 0;
 	GtkWidget *widget = GTK_WIDGET (view);
 	GtkAllocation allocation;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
 	gtk_widget_get_allocation (widget, &allocation);
 	ev_document_misc_get_pointer_position (widget, &x, &y);
@@ -5760,11 +5894,11 @@ selection_scroll_timeout_cb (EvView *view)
 	}
 
 	if (shift)
-		gtk_adjustment_set_value (view->vadjustment,
-					  CLAMP (gtk_adjustment_get_value (view->vadjustment) + shift,
-						 gtk_adjustment_get_lower (view->vadjustment),
-						 gtk_adjustment_get_upper (view->vadjustment) -
-						 gtk_adjustment_get_page_size (view->vadjustment)));
+		gtk_adjustment_set_value (priv->vadjustment,
+					  CLAMP (gtk_adjustment_get_value (priv->vadjustment) + shift,
+						 gtk_adjustment_get_lower (priv->vadjustment),
+						 gtk_adjustment_get_upper (priv->vadjustment) -
+						 gtk_adjustment_get_page_size (priv->vadjustment)));
 
 	if (x > allocation.width) {
 		shift = (x - allocation.width) / 2;
@@ -5773,11 +5907,11 @@ selection_scroll_timeout_cb (EvView *view)
 	}
 
 	if (shift)
-		gtk_adjustment_set_value (view->hadjustment,
-					  CLAMP (gtk_adjustment_get_value (view->hadjustment) + shift,
-						 gtk_adjustment_get_lower (view->hadjustment),
-						 gtk_adjustment_get_upper (view->hadjustment) -
-						 gtk_adjustment_get_page_size (view->hadjustment)));
+		gtk_adjustment_set_value (priv->hadjustment,
+					  CLAMP (gtk_adjustment_get_value (priv->hadjustment) + shift,
+						 gtk_adjustment_get_lower (priv->hadjustment),
+						 gtk_adjustment_get_upper (priv->hadjustment) -
+						 gtk_adjustment_get_page_size (priv->hadjustment)));
 
 	return TRUE;
 }
@@ -5791,28 +5925,29 @@ ev_view_motion_notify_event (GtkEventControllerMotion	*self,
 	EvView    *view = EV_VIEW (user_data);
 	GtkWidget *widget = GTK_WIDGET (view);
 	GdkModifierType state = gtk_event_controller_get_current_event_state (GTK_EVENT_CONTROLLER (self));
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	if (!view->document)
+	if (!priv->document)
 		return;
 
-	if (gtk_gesture_is_recognized (view->zoom_gesture))
+	if (gtk_gesture_is_recognized (priv->zoom_gesture))
 		return;
 
-	if (view->scroll_info.autoscrolling) {
+	if (priv->scroll_info.autoscrolling) {
 		if (y >= 0)
-			view->scroll_info.last_y = y;
+			priv->scroll_info.last_y = y;
 		return;
 	}
 
-	switch (view->pressed_button) {
+	switch (priv->pressed_button) {
 	case GDK_BUTTON_PRIMARY:
 		/* For the Evince 0.4.x release, we limit selection to un-rotated
 		 * documents only.
 		 */
-		if (view->rotation != 0)
+		if (priv->rotation != 0)
 			return;
 
-		if (view->adding_annot_info.adding_annot) {
+		if (priv->adding_annot_info.adding_annot) {
 			EvRectangle  rect;
 			EvRectangle  current_area;
 			EvPoint      start;
@@ -5821,21 +5956,21 @@ ev_view_motion_notify_event (GtkEventControllerMotion	*self,
 			GtkBorder    border;
 			guint        annot_page;
 
-			if (!view->adding_annot_info.annot)
+			if (!priv->adding_annot_info.annot)
 				return;
 
-			ev_annotation_get_area (view->adding_annot_info.annot, &current_area);
+			ev_annotation_get_area (priv->adding_annot_info.annot, &current_area);
 
-			view->adding_annot_info.stop.x = x + view->scroll_x;
-			view->adding_annot_info.stop.y = y + view->scroll_y;
-			annot_page = ev_annotation_get_page_index (view->adding_annot_info.annot);
+			priv->adding_annot_info.stop.x = x + priv->scroll_x;
+			priv->adding_annot_info.stop.y = y + priv->scroll_y;
+			annot_page = ev_annotation_get_page_index (priv->adding_annot_info.annot);
 			ev_view_get_page_extents (view, annot_page, &page_area, &border);
-			_ev_view_transform_view_point_to_doc_point (view, &view->adding_annot_info.start, &page_area, &border,
+			_ev_view_transform_view_point_to_doc_point (view, &priv->adding_annot_info.start, &page_area, &border,
 								    &start.x, &start.y);
-			_ev_view_transform_view_point_to_doc_point (view, &view->adding_annot_info.stop, &page_area, &border,
+			_ev_view_transform_view_point_to_doc_point (view, &priv->adding_annot_info.stop, &page_area, &border,
 								    &end.x, &end.y);
 
-			switch (view->adding_annot_info.type) {
+			switch (priv->adding_annot_info.type) {
 			case EV_ANNOTATION_TYPE_TEXT:
 				rect.x1 = end.x;
 				rect.y1 = end.y;
@@ -5855,9 +5990,9 @@ ev_view_motion_notify_event (GtkEventControllerMotion	*self,
 			/* Take the mutex before set_area, because the notify signal
 			 * updates the mappings in the backend */
 			ev_document_doc_mutex_lock ();
-			if (ev_annotation_set_area (view->adding_annot_info.annot, &rect)) {
-				ev_document_annotations_save_annotation (EV_DOCUMENT_ANNOTATIONS (view->document),
-									 view->adding_annot_info.annot,
+			if (ev_annotation_set_area (priv->adding_annot_info.annot, &rect)) {
+				ev_document_annotations_save_annotation (EV_DOCUMENT_ANNOTATIONS (priv->document),
+									 priv->adding_annot_info.annot,
 									 EV_ANNOTATIONS_SAVE_AREA);
 			}
 			ev_document_doc_mutex_unlock ();
@@ -5865,7 +6000,7 @@ ev_view_motion_notify_event (GtkEventControllerMotion	*self,
 
 			/* FIXME: reload only annotation area */
 			ev_view_reload_page (view, annot_page, NULL);
-		} else if (view->moving_annot_info.annot_clicked) {
+		} else if (priv->moving_annot_info.annot_clicked) {
 			EvRectangle  rect;
 			EvRectangle  current_area;
 			GdkPoint     view_point;
@@ -5876,33 +6011,33 @@ ev_view_motion_notify_event (GtkEventControllerMotion	*self,
 			double       page_width;
 			double       page_height;
 
-			if (!view->moving_annot_info.annot)
+			if (!priv->moving_annot_info.annot)
 				return;
 
-			view_point.x = x + view->scroll_x;
-			view_point.y = y + view->scroll_y;
+			view_point.x = x + priv->scroll_x;
+			view_point.y = y + priv->scroll_y;
 
-			if (!view->moving_annot_info.moving_annot) {
+			if (!priv->moving_annot_info.moving_annot) {
 				/* Only move the annotation if the threshold is exceeded */
 				if (!gtk_drag_check_threshold (widget,
-							       view->moving_annot_info.start.x,
-							       view->moving_annot_info.start.y,
+							       priv->moving_annot_info.start.x,
+							       priv->moving_annot_info.start.y,
 							       view_point.x,
 							       view_point.y))
 					return;
-				view->moving_annot_info.moving_annot = TRUE;
+				priv->moving_annot_info.moving_annot = TRUE;
 			}
 
-			ev_annotation_get_area (view->moving_annot_info.annot, &current_area);
-			annot_page = ev_annotation_get_page_index (view->moving_annot_info.annot);
+			ev_annotation_get_area (priv->moving_annot_info.annot, &current_area);
+			annot_page = ev_annotation_get_page_index (priv->moving_annot_info.annot);
 			ev_view_get_page_extents (view, annot_page, &page_area, &border);
 			_ev_view_transform_view_point_to_doc_point (view, &view_point, &page_area, &border,
 								    &doc_point.x, &doc_point.y);
 
-			ev_document_get_page_size (view->document, annot_page, &page_width, &page_height);
+			ev_document_get_page_size (priv->document, annot_page, &page_width, &page_height);
 
-			rect.x1 = MAX (0, doc_point.x - view->moving_annot_info.cursor_offset.x);
-			rect.y1 = MAX (0, doc_point.y - view->moving_annot_info.cursor_offset.y);
+			rect.x1 = MAX (0, doc_point.x - priv->moving_annot_info.cursor_offset.x);
+			rect.y1 = MAX (0, doc_point.y - priv->moving_annot_info.cursor_offset.y);
 			rect.x2 = rect.x1 + current_area.x2 - current_area.x1;
 			rect.y2 = rect.y1 + current_area.y2 - current_area.y1;
 
@@ -5919,39 +6054,39 @@ ev_view_motion_notify_event (GtkEventControllerMotion	*self,
 			/* Take the mutex before set_area, because the notify signal
 			 * updates the mappings in the backend */
 			ev_document_doc_mutex_lock ();
-			if (ev_annotation_set_area (view->moving_annot_info.annot, &rect)) {
-				ev_document_annotations_save_annotation (EV_DOCUMENT_ANNOTATIONS (view->document),
-									 view->moving_annot_info.annot,
+			if (ev_annotation_set_area (priv->moving_annot_info.annot, &rect)) {
+				ev_document_annotations_save_annotation (EV_DOCUMENT_ANNOTATIONS (priv->document),
+									 priv->moving_annot_info.annot,
 									 EV_ANNOTATIONS_SAVE_AREA);
 			}
 			ev_document_doc_mutex_unlock ();
 
 			/* FIXME: reload only annotation area */
 			ev_view_reload_page (view, annot_page, NULL);
-		} else if (ev_document_has_synctex (view->document) && (state & GDK_CONTROL_MASK)) {
+		} else if (ev_document_has_synctex (priv->document) && (state & GDK_CONTROL_MASK)) {
 			/* Ignore spurious motion event triggered by slightly moving mouse
 			 * while clicking for launching synctex. Issue #951 */
 			return;
 		} else {
 			/* Schedule timeout to scroll during selection and additionally
 			 * scroll once to allow arbitrary speed. */
-			if (!view->selection_scroll_id)
-				view->selection_scroll_id = g_timeout_add (SCROLL_TIME,
+			if (!priv->selection_scroll_id)
+				priv->selection_scroll_id = g_timeout_add (SCROLL_TIME,
 									   (GSourceFunc)selection_scroll_timeout_cb,
 									   view);
 			else
 				selection_scroll_timeout_cb (view);
 
-			view->motion.x = x + view->scroll_x;
-			view->motion.y = y + view->scroll_y;
+			priv->motion.x = x + priv->scroll_x;
+			priv->motion.y = y + priv->scroll_y;
 
 			/* Queue an idle to handle the motion.  We do this because
 			 * handling any selection events in the motion could be slower
 			 * than new motion events reach us.  We always put it in the
 			 * idle to make sure we catch up and don't visibly lag the
 			 * mouse. */
-			if (view->selection_info.in_select && !view->selection_update_id)
-				view->selection_update_id =
+			if (priv->selection_info.in_select && !priv->selection_update_id)
+				priv->selection_update_id =
 					g_idle_add_once ((GSourceOnceFunc)selection_update_idle_cb,
 							 view);
 		}
@@ -6001,27 +6136,28 @@ gboolean
 ev_view_add_text_markup_annotation_for_selected_text (EvView  *view)
 {
 	GList *l;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	if (view->adding_annot_info.annot || view->adding_annot_info.adding_annot ||
+	if (priv->adding_annot_info.annot || priv->adding_annot_info.adding_annot ||
 	    !ev_view_has_selection (view))
 		return FALSE;
 
-	for (l = view->selection_info.selections; l != NULL; l = l->next) {
+	for (l = priv->selection_info.selections; l != NULL; l = l->next) {
 		EvViewSelection *selection = (EvViewSelection *)l->data;
 
-		view->adding_annot_info.adding_annot = TRUE;
-		view->adding_annot_info.type = EV_ANNOTATION_TYPE_TEXT_MARKUP;
+		priv->adding_annot_info.adding_annot = TRUE;
+		priv->adding_annot_info.type = EV_ANNOTATION_TYPE_TEXT_MARKUP;
 
 		ev_view_create_annotation_from_selection (view, selection);
 
-		if (view->adding_annot_info.adding_annot)
-			g_signal_emit (view, signals[SIGNAL_ANNOT_ADDED], 0, view->adding_annot_info.annot);
+		if (priv->adding_annot_info.adding_annot)
+			g_signal_emit (view, signals[SIGNAL_ANNOT_ADDED], 0, priv->adding_annot_info.annot);
 	}
 
 	clear_selection (view);
 
-	view->adding_annot_info.adding_annot = FALSE;
-	view->adding_annot_info.annot = NULL;
+	priv->adding_annot_info.adding_annot = FALSE;
+	priv->adding_annot_info.annot = NULL;
 
 	return TRUE;
 }
@@ -6034,16 +6170,17 @@ ev_view_set_enable_spellchecking (EvView *view,
         GList         *l;
         gint           n_pages = 0;
         gint           current_page;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
         g_return_if_fail (EV_IS_VIEW (view));
 
-        view->enable_spellchecking = enabled;
+        priv->enable_spellchecking = enabled;
 
-        if (view->document)
-                n_pages = ev_document_get_n_pages (view->document);
+        if (priv->document)
+                n_pages = ev_document_get_n_pages (priv->document);
 
         for (current_page = 0; current_page < n_pages; current_page++) {
-                annots = ev_page_cache_get_annot_mapping (view->page_cache, current_page);
+                annots = ev_page_cache_get_annot_mapping (priv->page_cache, current_page);
 
                 for (l = ev_mapping_list_get_list (annots); l && l->data; l = g_list_next (l)) {
                         EvAnnotation      *annot;
@@ -6057,7 +6194,7 @@ ev_view_set_enable_spellchecking (EvView *view,
                         window = get_window_for_annot (view, annot);
 
                         if (window) {
-                                ev_annotation_window_set_enable_spellchecking (EV_ANNOTATION_WINDOW (window), view->enable_spellchecking);
+                                ev_annotation_window_set_enable_spellchecking (EV_ANNOTATION_WINDOW (window), priv->enable_spellchecking);
                         }
                 }
         }
@@ -6084,61 +6221,62 @@ ev_view_button_release_event(GtkGestureClick		*self,
 	GdkModifierType state = gtk_event_controller_get_current_event_state (controller);
 	guint32 time = gtk_event_controller_get_current_event_time (controller);
 	EvLink *link = NULL;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	view->image_dnd_info.in_drag = FALSE;
-	view->selection_info.in_select = FALSE;
+	priv->image_dnd_info.in_drag = FALSE;
+	priv->selection_info.in_select = FALSE;
 
-	if (gtk_gesture_is_recognized (view->zoom_gesture))
+	if (gtk_gesture_is_recognized (priv->zoom_gesture))
 		return;
 
-	if (gtk_gesture_is_recognized (view->pan_gesture))
+	if (gtk_gesture_is_recognized (priv->pan_gesture))
 		return;
 
-	if (view->scroll_info.autoscrolling) {
+	if (priv->scroll_info.autoscrolling) {
 		ev_view_autoscroll_stop (view);
-		view->pressed_button = -1;
+		priv->pressed_button = -1;
 
 		return;
 	}
 
-	if (view->pressed_button == GDK_BUTTON_PRIMARY && state & GDK_CONTROL_MASK) {
-		view->pressed_button = -1;
+	if (priv->pressed_button == GDK_BUTTON_PRIMARY && state & GDK_CONTROL_MASK) {
+		priv->pressed_button = -1;
 		return;
 	}
 
-	if (view->document && !view->drag_info.in_drag &&
-	    (view->pressed_button == GDK_BUTTON_PRIMARY ||
-	     view->pressed_button == GDK_BUTTON_MIDDLE)) {
+	if (priv->document && !priv->drag_info.in_drag &&
+	    (priv->pressed_button == GDK_BUTTON_PRIMARY ||
+	     priv->pressed_button == GDK_BUTTON_MIDDLE)) {
 		link = ev_view_get_link_at_location (view, x, y);
 	}
 
-	view->drag_info.in_drag = FALSE;
+	priv->drag_info.in_drag = FALSE;
 
-	if (view->adding_annot_info.adding_annot && !view->selection_scroll_id) {
+	if (priv->adding_annot_info.adding_annot && !priv->selection_scroll_id) {
 		gboolean annot_added = TRUE;
 
 		/* We ignore right-click buttons while in annotation add mode */
-		if (view->pressed_button != GDK_BUTTON_PRIMARY)
+		if (priv->pressed_button != GDK_BUTTON_PRIMARY)
 			return;
-		g_assert (view->adding_annot_info.annot);
+		g_assert (priv->adding_annot_info.annot);
 
-		if (EV_IS_ANNOTATION_MARKUP (view->adding_annot_info.annot)) {
+		if (EV_IS_ANNOTATION_MARKUP (priv->adding_annot_info.annot)) {
 			EvRectangle area;
 			EvRectangle popup_rect;
 
-			ev_annotation_get_area (view->adding_annot_info.annot, &area);
+			ev_annotation_get_area (priv->adding_annot_info.annot, &area);
 
 			if (area.x1 == 0 && area.y1 == 0 && area.x2 == 0 && area.y2 == 0) {
 				/* Do not create empty annots */
 				annot_added = FALSE;
 
 				ev_document_doc_mutex_lock ();
-				ev_document_annotations_remove_annotation (EV_DOCUMENT_ANNOTATIONS (view->document),
-									   view->adding_annot_info.annot);
+				ev_document_annotations_remove_annotation (EV_DOCUMENT_ANNOTATIONS (priv->document),
+									   priv->adding_annot_info.annot);
 				ev_document_doc_mutex_unlock ();
 
-				ev_page_cache_mark_dirty (view->page_cache,
-							  ev_annotation_get_page_index (view->adding_annot_info.annot),
+				ev_page_cache_mark_dirty (priv->page_cache,
+							  ev_annotation_get_page_index (priv->adding_annot_info.annot),
 							  EV_PAGE_DATA_INCLUDE_ANNOTS);
 			} else {
 				popup_rect.x1 = area.x2;
@@ -6146,79 +6284,79 @@ ev_view_button_release_event(GtkGestureClick		*self,
 				popup_rect.y1 = area.y2;
 				popup_rect.y2 = popup_rect.y1 + ANNOT_POPUP_WINDOW_DEFAULT_HEIGHT;
 
-				if (ev_annotation_markup_set_rectangle (EV_ANNOTATION_MARKUP (view->adding_annot_info.annot),
+				if (ev_annotation_markup_set_rectangle (EV_ANNOTATION_MARKUP (priv->adding_annot_info.annot),
 									&popup_rect)) {
 					ev_document_doc_mutex_lock ();
-					ev_document_annotations_save_annotation (EV_DOCUMENT_ANNOTATIONS (view->document),
-										 view->adding_annot_info.annot,
+					ev_document_annotations_save_annotation (EV_DOCUMENT_ANNOTATIONS (priv->document),
+										 priv->adding_annot_info.annot,
 										 EV_ANNOTATIONS_SAVE_POPUP_RECT);
 					ev_document_doc_mutex_unlock ();
 				}
 			}
 		}
 
-		if (view->adding_annot_info.type == EV_ANNOTATION_TYPE_TEXT)
-			ev_view_annotation_create_show_popup_window (view, view->adding_annot_info.annot);
+		if (priv->adding_annot_info.type == EV_ANNOTATION_TYPE_TEXT)
+			ev_view_annotation_create_show_popup_window (view, priv->adding_annot_info.annot);
 
-		view->adding_annot_info.stop.x = x + view->scroll_x;
-		view->adding_annot_info.stop.y = y + view->scroll_y;
+		priv->adding_annot_info.stop.x = x + priv->scroll_x;
+		priv->adding_annot_info.stop.y = y + priv->scroll_y;
 		if (annot_added)
-			g_signal_emit (view, signals[SIGNAL_ANNOT_ADDED], 0, view->adding_annot_info.annot);
+			g_signal_emit (view, signals[SIGNAL_ANNOT_ADDED], 0, priv->adding_annot_info.annot);
 		else
 			g_signal_emit (view, signals[SIGNAL_ANNOT_CANCEL_ADD], 0, NULL);
 
-		view->adding_annot_info.adding_annot = FALSE;
-		view->adding_annot_info.annot = NULL;
+		priv->adding_annot_info.adding_annot = FALSE;
+		priv->adding_annot_info.annot = NULL;
 		ev_view_handle_cursor_over_xy (view, x, y, FALSE);
-		view->pressed_button = -1;
+		priv->pressed_button = -1;
 
 		return;
 	}
 
-	if (view->moving_annot_info.annot_clicked) {
-		if (view->moving_annot_info.moving_annot)
+	if (priv->moving_annot_info.annot_clicked) {
+		if (priv->moving_annot_info.moving_annot)
 			ev_view_handle_cursor_over_xy (view, x, y, FALSE);
 		else
-			ev_view_handle_annotation (view, view->moving_annot_info.annot, x, y, time);
+			ev_view_handle_annotation (view, priv->moving_annot_info.annot, x, y, time);
 
-		view->moving_annot_info.annot_clicked = FALSE;
-		view->moving_annot_info.moving_annot = FALSE;
-		view->moving_annot_info.annot = NULL;
-		view->pressed_button = -1;
+		priv->moving_annot_info.annot_clicked = FALSE;
+		priv->moving_annot_info.moving_annot = FALSE;
+		priv->moving_annot_info.annot = NULL;
+		priv->pressed_button = -1;
 
 		return;
 	}
 
-	if (view->pressed_button == GDK_BUTTON_PRIMARY) {
+	if (priv->pressed_button == GDK_BUTTON_PRIMARY) {
 		EvAnnotation *annot = ev_view_get_annotation_at_location (view, x, y);
 
 		if (annot)
 			ev_view_handle_annotation (view, annot, x, y, time);
 	}
 
-	if (view->pressed_button == GDK_BUTTON_MIDDLE) {
+	if (priv->pressed_button == GDK_BUTTON_MIDDLE) {
 		ev_view_handle_cursor_over_xy (view, x, y, FALSE);
 	}
 
-	view->pressed_button = -1;
+	priv->pressed_button = -1;
 
-	if (view->selection_scroll_id) {
-	    g_source_remove (view->selection_scroll_id);
-	    view->selection_scroll_id = 0;
+	if (priv->selection_scroll_id) {
+	    g_source_remove (priv->selection_scroll_id);
+	    priv->selection_scroll_id = 0;
 	}
-	if (view->selection_update_id) {
-	    g_source_remove (view->selection_update_id);
-	    view->selection_update_id = 0;
+	if (priv->selection_update_id) {
+	    g_source_remove (priv->selection_update_id);
+	    priv->selection_update_id = 0;
 	}
 
-	if (view->selection_info.selections) {
-		g_clear_object (&view->link_selected);
+	if (priv->selection_info.selections) {
+		g_clear_object (&priv->link_selected);
 
 		position_caret_cursor_for_event (view, x, y, FALSE);
 
-		if (view->selection_info.in_drag)
+		if (priv->selection_info.in_drag)
 			clear_selection (view);
-		view->selection_info.in_drag = FALSE;
+		priv->selection_info.in_drag = FALSE;
 	} else if (link) {
 		if (gdk_button_event_get_button (event) == GDK_BUTTON_MIDDLE) {
 			EvLinkAction    *action;
@@ -6246,11 +6384,12 @@ go_to_next_page (EvView *view,
 {
 	int      n_pages;
 	gboolean dual_page;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	if (!view->document)
+	if (!priv->document)
 		return -1;
 
-	n_pages = ev_document_get_n_pages (view->document);
+	n_pages = ev_document_get_n_pages (priv->document);
 
 	dual_page = is_dual_page (view, NULL);
 	page += dual_page ? 2 : 1;
@@ -6269,8 +6408,9 @@ go_to_previous_page (EvView *view,
 		     gint    page)
 {
 	gboolean dual_page;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	if (!view->document)
+	if (!priv->document)
 		return -1;
 
 	dual_page = is_dual_page (view, NULL);
@@ -6288,7 +6428,8 @@ go_to_previous_page (EvView *view,
 static gboolean
 cursor_go_to_page_start (EvView *view)
 {
-	view->cursor_offset = 0;
+	EvViewPrivate *priv = GET_PRIVATE (view);
+	priv->cursor_offset = 0;
 
 	return TRUE;
 }
@@ -6298,15 +6439,16 @@ cursor_go_to_page_end (EvView *view)
 {
 	PangoLogAttr *log_attrs = NULL;
 	gulong        n_attrs;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	if (!view->page_cache)
+	if (!priv->page_cache)
 		return FALSE;
 
-	ev_page_cache_get_text_log_attrs (view->page_cache, view->cursor_page, &log_attrs, &n_attrs);
+	ev_page_cache_get_text_log_attrs (priv->page_cache, priv->cursor_page, &log_attrs, &n_attrs);
 	if (!log_attrs)
 		return FALSE;
 
-	view->cursor_offset = n_attrs;
+	priv->cursor_offset = n_attrs;
 
 	return TRUE;
 }
@@ -6315,10 +6457,11 @@ static gboolean
 cursor_go_to_next_page (EvView *view)
 {
 	gint new_page;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	new_page = go_to_next_page (view, view->cursor_page);
+	new_page = go_to_next_page (view, priv->cursor_page);
 	if (new_page != -1) {
-		view->cursor_page = new_page;
+		priv->cursor_page = new_page;
 		return cursor_go_to_page_start (view);
 	}
 
@@ -6329,10 +6472,11 @@ static gboolean
 cursor_go_to_previous_page (EvView *view)
 {
 	gint new_page;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	new_page = go_to_previous_page (view, view->cursor_page);
+	new_page = go_to_previous_page (view, priv->cursor_page);
 	if (new_page != -1) {
-		view->cursor_page = new_page;
+		priv->cursor_page = new_page;
 		return cursor_go_to_page_end (view);
 	}
 	return FALSE;
@@ -6341,39 +6485,42 @@ cursor_go_to_previous_page (EvView *view)
 static gboolean
 cursor_go_to_document_start (EvView *view)
 {
-	view->cursor_page = 0;
+	EvViewPrivate *priv = GET_PRIVATE (view);
+	priv->cursor_page = 0;
 	return cursor_go_to_page_start (view);
 }
 
 static gboolean
 cursor_go_to_document_end (EvView *view)
 {
-	if (!view->document)
+	EvViewPrivate *priv = GET_PRIVATE (view);
+	if (!priv->document)
 		return FALSE;
 
-	view->cursor_page = ev_document_get_n_pages (view->document) - 1;
+	priv->cursor_page = ev_document_get_n_pages (priv->document) - 1;
 	return cursor_go_to_page_end (view);
 }
 
 static gboolean
 cursor_backward_char (EvView *view)
 {
+	EvViewPrivate *priv = GET_PRIVATE (view);
 	PangoLogAttr *log_attrs = NULL;
 	gulong        n_attrs;
 
-	if (!view->page_cache)
+	if (!priv->page_cache)
 		return FALSE;
 
-	ev_page_cache_get_text_log_attrs (view->page_cache, view->cursor_page, &log_attrs, &n_attrs);
+	ev_page_cache_get_text_log_attrs (priv->page_cache, priv->cursor_page, &log_attrs, &n_attrs);
 	if (!log_attrs)
 		return FALSE;
 
-	if (view->cursor_offset == 0)
+	if (priv->cursor_offset == 0)
 		return cursor_go_to_previous_page (view);
 
 	do {
-		view->cursor_offset--;
-	} while (view->cursor_offset >= 0 && !log_attrs[view->cursor_offset].is_cursor_position);
+		priv->cursor_offset--;
+	} while (priv->cursor_offset >= 0 && !log_attrs[priv->cursor_offset].is_cursor_position);
 
 	return TRUE;
 }
@@ -6381,22 +6528,23 @@ cursor_backward_char (EvView *view)
 static gboolean
 cursor_forward_char (EvView *view)
 {
+	EvViewPrivate *priv = GET_PRIVATE (view);
 	PangoLogAttr *log_attrs = NULL;
 	gulong        n_attrs;
 
-	if (!view->page_cache)
+	if (!priv->page_cache)
 		return FALSE;
 
-	ev_page_cache_get_text_log_attrs (view->page_cache, view->cursor_page, &log_attrs, &n_attrs);
+	ev_page_cache_get_text_log_attrs (priv->page_cache, priv->cursor_page, &log_attrs, &n_attrs);
 	if (!log_attrs)
 		return FALSE;
 
-	if (view->cursor_offset >= n_attrs)
+	if (priv->cursor_offset >= n_attrs)
 		return cursor_go_to_next_page (view);
 
 	do {
-		view->cursor_offset++;
-	} while (view->cursor_offset <= n_attrs && !log_attrs[view->cursor_offset].is_cursor_position);
+		priv->cursor_offset++;
+	} while (priv->cursor_offset <= n_attrs && !log_attrs[priv->cursor_offset].is_cursor_position);
 
 	return TRUE;
 }
@@ -6404,19 +6552,20 @@ cursor_forward_char (EvView *view)
 static gboolean
 cursor_backward_word_start (EvView *view)
 {
+	EvViewPrivate *priv = GET_PRIVATE (view);
 	PangoLogAttr *log_attrs = NULL;
 	gulong        n_attrs;
 	gint          i, j;
 
-	if (!view->page_cache)
+	if (!priv->page_cache)
 		return FALSE;
 
-	ev_page_cache_get_text_log_attrs (view->page_cache, view->cursor_page, &log_attrs, &n_attrs);
+	ev_page_cache_get_text_log_attrs (priv->page_cache, priv->cursor_page, &log_attrs, &n_attrs);
 	if (!log_attrs)
 		return FALSE;
 
 	/* Skip current word starts */
-	for (i = view->cursor_offset; i >= 0 && log_attrs[i].is_word_start; i--);
+	for (i = priv->cursor_offset; i >= 0 && log_attrs[i].is_word_start; i--);
 	if (i <= 0) {
 		if (cursor_go_to_previous_page (view))
 			return cursor_backward_word_start (view);
@@ -6425,7 +6574,7 @@ cursor_backward_word_start (EvView *view)
 
 	/* Move to the beginning of the word */
 	for (j = i; j >= 0 && !log_attrs[j].is_word_start; j--);
-	view->cursor_offset = MAX (0, j);
+	priv->cursor_offset = MAX (0, j);
 
 	return TRUE;
 }
@@ -6436,16 +6585,17 @@ cursor_forward_word_end (EvView *view)
 	PangoLogAttr *log_attrs = NULL;
 	gulong        n_attrs;
 	gint          i, j;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	if (!view->page_cache)
+	if (!priv->page_cache)
 		return FALSE;
 
-	ev_page_cache_get_text_log_attrs (view->page_cache, view->cursor_page, &log_attrs, &n_attrs);
+	ev_page_cache_get_text_log_attrs (priv->page_cache, priv->cursor_page, &log_attrs, &n_attrs);
 	if (!log_attrs)
 		return FALSE;
 
 	/* Skip current word ends */
-	for (i = view->cursor_offset; i < n_attrs && log_attrs[i].is_word_end; i++);
+	for (i = priv->cursor_offset; i < n_attrs && log_attrs[i].is_word_end; i++);
 	if (i >= n_attrs) {
 		if (cursor_go_to_next_page (view))
 			return cursor_forward_word_end (view);
@@ -6454,7 +6604,7 @@ cursor_forward_word_end (EvView *view)
 
 	/* Move to the end of the word. */
 	for (j = i; j < n_attrs && !log_attrs[j].is_word_end; j++);
-	view->cursor_offset = MIN (j, n_attrs);
+	priv->cursor_offset = MIN (j, n_attrs);
 
 	return TRUE;
 }
@@ -6465,16 +6615,17 @@ cursor_go_to_line_start (EvView *view)
 	PangoLogAttr *log_attrs = NULL;
 	gulong        n_attrs;
 	gint          i;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	if (!view->page_cache)
+	if (!priv->page_cache)
 		return FALSE;
 
-	ev_page_cache_get_text_log_attrs (view->page_cache, view->cursor_page, &log_attrs, &n_attrs);
+	ev_page_cache_get_text_log_attrs (priv->page_cache, priv->cursor_page, &log_attrs, &n_attrs);
 	if (!log_attrs)
 		return FALSE;
 
-	for (i = view->cursor_offset; i >= 0 && !log_attrs[i].is_mandatory_break; i--);
-	view->cursor_offset = MAX (0, i);
+	for (i = priv->cursor_offset; i >= 0 && !log_attrs[i].is_mandatory_break; i--);
+	priv->cursor_offset = MAX (0, i);
 
 	return TRUE;
 }
@@ -6484,19 +6635,20 @@ cursor_backward_line (EvView *view)
 {
 	PangoLogAttr *log_attrs = NULL;
 	gulong        n_attrs;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
 	if (!cursor_go_to_line_start (view))
 		return FALSE;
 
-	if (view->cursor_offset == 0)
+	if (priv->cursor_offset == 0)
 		return cursor_go_to_previous_page (view);
 
-	ev_page_cache_get_text_log_attrs (view->page_cache, view->cursor_page, &log_attrs, &n_attrs);
+	ev_page_cache_get_text_log_attrs (priv->page_cache, priv->cursor_page, &log_attrs, &n_attrs);
 
 	do {
-		view->cursor_offset--;
-	} while (view->cursor_offset >= 0 && !log_attrs[view->cursor_offset].is_mandatory_break);
-	view->cursor_offset = MAX (0, view->cursor_offset);
+		priv->cursor_offset--;
+	} while (priv->cursor_offset >= 0 && !log_attrs[priv->cursor_offset].is_mandatory_break);
+	priv->cursor_offset = MAX (0, priv->cursor_offset);
 
 	return TRUE;
 }
@@ -6507,23 +6659,24 @@ cursor_go_to_line_end (EvView *view)
 	PangoLogAttr *log_attrs = NULL;
 	gulong        n_attrs;
 	gint          i;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	if (!view->page_cache)
+	if (!priv->page_cache)
 		return FALSE;
 
-	ev_page_cache_get_text_log_attrs (view->page_cache, view->cursor_page, &log_attrs, &n_attrs);
+	ev_page_cache_get_text_log_attrs (priv->page_cache, priv->cursor_page, &log_attrs, &n_attrs);
 	if (!log_attrs)
 		return FALSE;
 
-	for (i = view->cursor_offset + 1; i <= n_attrs && !log_attrs[i].is_mandatory_break; i++);
-	view->cursor_offset = MIN (i, n_attrs);
+	for (i = priv->cursor_offset + 1; i <= n_attrs && !log_attrs[i].is_mandatory_break; i++);
+	priv->cursor_offset = MIN (i, n_attrs);
 
-	if (view->cursor_offset == n_attrs)
+	if (priv->cursor_offset == n_attrs)
 		return TRUE;
 
 	do {
-		view->cursor_offset--;
-	} while (view->cursor_offset >= 0 && !log_attrs[view->cursor_offset].is_cursor_position);
+		priv->cursor_offset--;
+	} while (priv->cursor_offset >= 0 && !log_attrs[priv->cursor_offset].is_cursor_position);
 
 	return TRUE;
 }
@@ -6533,18 +6686,19 @@ cursor_forward_line (EvView *view)
 {
 	PangoLogAttr *log_attrs = NULL;
 	gulong        n_attrs;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
 	if (!cursor_go_to_line_end (view))
 		return FALSE;
 
-	ev_page_cache_get_text_log_attrs (view->page_cache, view->cursor_page, &log_attrs, &n_attrs);
+	ev_page_cache_get_text_log_attrs (priv->page_cache, priv->cursor_page, &log_attrs, &n_attrs);
 
-	if (view->cursor_offset == n_attrs)
+	if (priv->cursor_offset == n_attrs)
 		return cursor_go_to_next_page (view);
 
 	do {
-		view->cursor_offset++;
-	} while (view->cursor_offset <= n_attrs && !log_attrs[view->cursor_offset].is_cursor_position);
+		priv->cursor_offset++;
+	} while (priv->cursor_offset <= n_attrs && !log_attrs[priv->cursor_offset].is_cursor_position);
 
 	return TRUE;
 }
@@ -6554,14 +6708,15 @@ extend_selection (EvView *view,
 		  GdkPoint *start_point,
 		  GdkPoint *end_point)
 {
-	if (!view->selection_info.selections) {
-		view->selection_info.start.x = start_point->x;
-		view->selection_info.start.y = start_point->y;
+	EvViewPrivate *priv = GET_PRIVATE (view);
+	if (!priv->selection_info.selections) {
+		priv->selection_info.start.x = start_point->x;
+		priv->selection_info.start.y = start_point->y;
 	}
 
 	compute_selections (view,
 			    EV_SELECTION_STYLE_GLYPH,
-			    &(view->selection_info.start),
+			    &(priv->selection_info.start),
 			    end_point);
 }
 
@@ -6575,14 +6730,15 @@ cursor_clear_selection (EvView  *view,
 	cairo_region_t        *region, *tmp_region = NULL;
 	gint                  doc_x, doc_y;
 	GdkRectangle          area;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
 	/* When clearing the selection, move the cursor to
 	 * the limits of the selection region.
 	 */
-	if (!view->selection_info.selections)
+	if (!priv->selection_info.selections)
 		return FALSE;
 
-	l = forward ? g_list_last (view->selection_info.selections) : view->selection_info.selections;
+	l = forward ? g_list_last (priv->selection_info.selections) : priv->selection_info.selections;
 	selection = (EvViewSelection *)l->data;
 
 	region = selection->covered_region;
@@ -6594,11 +6750,11 @@ cursor_clear_selection (EvView  *view,
 
 		ev_document_doc_mutex_lock ();
 
-		page = ev_document_get_page (view->document, selection->page);
-		rc = ev_render_context_new (page, view->rotation, view->scale);
+		page = ev_document_get_page (priv->document, selection->page);
+		rc = ev_render_context_new (page, priv->rotation, priv->scale);
 		g_object_unref (page);
 
-		tmp_region = ev_selection_get_selection_region (EV_SELECTION (view->document),
+		tmp_region = ev_selection_get_selection_region (EV_SELECTION (priv->document),
 								rc,
 								EV_SELECTION_STYLE_GLYPH,
 								&(selection->rect));
@@ -6630,8 +6786,8 @@ cursor_clear_selection (EvView  *view,
 
 	position_caret_cursor_at_doc_point (view, selection->page, doc_x, doc_y);
 
-	if (get_caret_cursor_area (view, view->cursor_page, view->cursor_offset, &area))
-		view->cursor_line_offset = area.x;
+	if (get_caret_cursor_area (view, priv->cursor_page, priv->cursor_offset, &area))
+		priv->cursor_line_offset = area.x;
 
 	return TRUE;
 }
@@ -6652,19 +6808,20 @@ ev_view_move_cursor (EvView         *view,
 	gboolean        changed_page;
 	gboolean        clear_selections = FALSE;
 	const gboolean  forward = count >= 0;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	if (!view->caret_enabled || view->rotation != 0)
+	if (!priv->caret_enabled || priv->rotation != 0)
 		return FALSE;
 
-	view->key_binding_handled = TRUE;
-	view->cursor_blink_time = 0;
+	priv->key_binding_handled = TRUE;
+	priv->cursor_blink_time = 0;
 
-	prev_offset = view->cursor_offset;
-	prev_page = view->cursor_page;
+	prev_offset = priv->cursor_offset;
+	prev_page = priv->cursor_page;
 
 	if (extend_selections) {
-		select_start_offset = view->cursor_offset;
-		select_start_page = view->cursor_page;
+		select_start_offset = priv->cursor_offset;
+		select_start_page = priv->cursor_page;
 	}
 
 	clear_selections = !extend_selections && ev_view_has_selection (view);
@@ -6720,8 +6877,8 @@ ev_view_move_cursor (EvView         *view,
 		   of the previous selection */
 		if (extend_selections && ev_view_has_selection (view)) {
 			if (cursor_clear_selection (view, FALSE)) {
-				select_start_offset = view->cursor_offset;
-				select_start_page = view->cursor_page;
+				select_start_offset = priv->cursor_offset;
+				select_start_page = priv->cursor_page;
 			}
 		}
 
@@ -6738,22 +6895,22 @@ ev_view_move_cursor (EvView         *view,
 
 	/* Notify the user that it was not possible to move the caret cursor */
 	if (!clear_selections &&
-	    prev_offset == view->cursor_offset && prev_page == view->cursor_page) {
+	    prev_offset == priv->cursor_offset && prev_page == priv->cursor_page) {
 		gtk_widget_error_bell (GTK_WIDGET (view));
 		return TRUE;
 	}
 
 	/* Scroll to make the caret visible */
-	if (!get_caret_cursor_area (view, view->cursor_page, view->cursor_offset, &rect))
+	if (!get_caret_cursor_area (view, priv->cursor_page, priv->cursor_offset, &rect))
 		return TRUE;
 
-	if (!view->continuous) {
+	if (!priv->continuous) {
 		changed_page = FALSE;
-		if (prev_page < view->cursor_page) {
+		if (prev_page < priv->cursor_page) {
 			ev_view_next_page (view);
 			cursor_go_to_page_start (view);
 			changed_page = TRUE;
-		} else if (prev_page > view->cursor_page) {
+		} else if (prev_page > priv->cursor_page) {
 			ev_view_previous_page (view);
 			cursor_go_to_page_end (view);
 			_ev_view_ensure_rectangle_is_visible (view, &rect);
@@ -6761,61 +6918,61 @@ ev_view_move_cursor (EvView         *view,
 		}
 
 		if (changed_page) {
-                       rect.x += view->scroll_x;
-                       rect.y += view->scroll_y;
+                       rect.x += priv->scroll_x;
+                       rect.y += priv->scroll_y;
                        _ev_view_ensure_rectangle_is_visible (view, &rect);
-			g_signal_emit (view, signals[SIGNAL_CURSOR_MOVED], 0, view->cursor_page, view->cursor_offset);
+			g_signal_emit (view, signals[SIGNAL_CURSOR_MOVED], 0, priv->cursor_page, priv->cursor_offset);
 			clear_selection (view);
 			return TRUE;
 		}
 	}
 
 	if (step == GTK_MOVEMENT_DISPLAY_LINES) {
-		const gint prev_cursor_offset = view->cursor_offset;
+		const gint prev_cursor_offset = priv->cursor_offset;
 
 		position_caret_cursor_at_location (view,
-						   MAX (rect.x, view->cursor_line_offset),
+						   MAX (rect.x, priv->cursor_line_offset),
 						   rect.y + (rect.height / 2));
 		/* Make sure we didn't move the cursor in the wrong direction
 		 * in case the visual order isn't the same as the logical one,
 		 * in order to avoid cursor movement loops */
-		if ((forward && prev_cursor_offset > view->cursor_offset) ||
-		    (!forward && prev_cursor_offset < view->cursor_offset)) {
-			view->cursor_offset = prev_cursor_offset;
+		if ((forward && prev_cursor_offset > priv->cursor_offset) ||
+		    (!forward && prev_cursor_offset < priv->cursor_offset)) {
+			priv->cursor_offset = prev_cursor_offset;
 		}
 		if (!clear_selections &&
-		    prev_offset == view->cursor_offset && prev_page == view->cursor_page) {
+		    prev_offset == priv->cursor_offset && prev_page == priv->cursor_page) {
 			gtk_widget_error_bell (GTK_WIDGET (view));
 			return TRUE;
 		}
 
-		if (!get_caret_cursor_area (view, view->cursor_page, view->cursor_offset, &rect))
+		if (!get_caret_cursor_area (view, priv->cursor_page, priv->cursor_offset, &rect))
 			return TRUE;
 	} else {
-		view->cursor_line_offset = rect.x;
+		priv->cursor_line_offset = rect.x;
 	}
 
 	get_caret_cursor_area (view, prev_page, prev_offset, &prev_rect);
 
-	rect.x += view->scroll_x;
-	rect.y += view->scroll_y;
+	rect.x += priv->scroll_x;
+	rect.y += priv->scroll_y;
 
-	ev_document_model_set_page (view->model, view->cursor_page);
+	ev_document_model_set_page (priv->model, priv->cursor_page);
 	_ev_view_ensure_rectangle_is_visible (view, &rect);
 
-	g_signal_emit (view, signals[SIGNAL_CURSOR_MOVED], 0, view->cursor_page, view->cursor_offset);
+	g_signal_emit (view, signals[SIGNAL_CURSOR_MOVED], 0, priv->cursor_page, priv->cursor_offset);
 
 	gtk_widget_queue_draw (GTK_WIDGET (view));
 
 	/* Select text */
-	if (extend_selections && EV_IS_SELECTION (view->document)) {
+	if (extend_selections && EV_IS_SELECTION (priv->document)) {
 		GdkPoint start_point, end_point;
 
 		if (!get_caret_cursor_area (view, select_start_page, select_start_offset, &select_start_rect))
 			return TRUE;
 
-		start_point.x = select_start_rect.x + view->scroll_x;
-		start_point.y = select_start_rect.y + (select_start_rect.height / 2) + view->scroll_y;
+		start_point.x = select_start_rect.x + priv->scroll_x;
+		start_point.y = select_start_rect.y + (select_start_rect.height / 2) + priv->scroll_y;
 
 		end_point.x = rect.x;
 		end_point.y = rect.y + rect.height / 2;
@@ -6889,18 +7046,19 @@ ev_view_activate_link (EvView *view,
 static void
 ev_view_activate (EvView *view)
 {
-	if (!view->focused_element)
+	EvViewPrivate *priv = GET_PRIVATE (view);
+	if (!priv->focused_element)
 		return;
 
-	if (EV_IS_DOCUMENT_FORMS (view->document) &&
-	    EV_IS_FORM_FIELD (view->focused_element->data)) {
-		view->key_binding_handled = ev_view_activate_form_field (view, EV_FORM_FIELD (view->focused_element->data));
+	if (EV_IS_DOCUMENT_FORMS (priv->document) &&
+	    EV_IS_FORM_FIELD (priv->focused_element->data)) {
+		priv->key_binding_handled = ev_view_activate_form_field (view, EV_FORM_FIELD (priv->focused_element->data));
 		return;
 	}
 
-	if (EV_IS_DOCUMENT_LINKS (view->document) &&
-	    EV_IS_LINK (view->focused_element->data)) {
-		view->key_binding_handled = ev_view_activate_link (view, EV_LINK (view->focused_element->data));
+	if (EV_IS_DOCUMENT_LINKS (priv->document) &&
+	    EV_IS_LINK (priv->focused_element->data)) {
+		priv->key_binding_handled = ev_view_activate_link (view, EV_LINK (priv->focused_element->data));
 		return;
 	}
 }
@@ -6908,12 +7066,13 @@ ev_view_activate (EvView *view)
 static gboolean
 ev_view_autoscroll_cb (EvView *view)
 {
+	EvViewPrivate *priv = GET_PRIVATE (view);
 	gdouble speed, value;
 
 	/* If the user stops autoscrolling, autoscrolling will be
 	 * set to false but the timeout will continue; stop the timeout: */
-	if (!view->scroll_info.autoscrolling) {
-		view->scroll_info.timeout_id = 0;
+	if (!priv->scroll_info.autoscrolling) {
+		priv->scroll_info.timeout_id = 0;
 		return G_SOURCE_REMOVE;
 	}
 
@@ -6922,16 +7081,16 @@ ev_view_autoscroll_cb (EvView *view)
 	 * 	based on the distance of the starting point from the mouse
 	 * (All also effected by the timeout interval of this callback) */
 
-	if (view->scroll_info.start_y > view->scroll_info.last_y)
-		speed = -pow ((((gdouble)view->scroll_info.start_y - view->scroll_info.last_y) / 100), 3);
+	if (priv->scroll_info.start_y > priv->scroll_info.last_y)
+		speed = -pow ((((gdouble)priv->scroll_info.start_y - priv->scroll_info.last_y) / 100), 3);
 	else
-		speed = pow ((((gdouble)view->scroll_info.last_y - view->scroll_info.start_y) / 100), 3);
+		speed = pow ((((gdouble)priv->scroll_info.last_y - priv->scroll_info.start_y) / 100), 3);
 
-	value = gtk_adjustment_get_value (view->vadjustment);
+	value = gtk_adjustment_get_value (priv->vadjustment);
 	value = CLAMP (value + speed, 0,
-		       gtk_adjustment_get_upper (view->vadjustment) -
-		       gtk_adjustment_get_page_size (view->vadjustment));
-	gtk_adjustment_set_value (view->vadjustment, value);
+		       gtk_adjustment_get_upper (priv->vadjustment) -
+		       gtk_adjustment_get_page_size (priv->vadjustment));
+	gtk_adjustment_set_value (priv->vadjustment, value);
 
 	return G_SOURCE_CONTINUE;
 
@@ -6940,13 +7099,14 @@ ev_view_autoscroll_cb (EvView *view)
 static void
 ev_view_autoscroll_resume (EvView *view)
 {
-	if (!view->scroll_info.autoscrolling)
+	EvViewPrivate *priv = GET_PRIVATE (view);
+	if (!priv->scroll_info.autoscrolling)
 		return;
 
-	if (view->scroll_info.timeout_id > 0)
+	if (priv->scroll_info.timeout_id > 0)
 		return;
 
-	view->scroll_info.timeout_id =
+	priv->scroll_info.timeout_id =
 		g_timeout_add (20, (GSourceFunc)ev_view_autoscroll_cb,
 			       view);
 }
@@ -6954,14 +7114,15 @@ ev_view_autoscroll_resume (EvView *view)
 static void
 ev_view_autoscroll_pause (EvView *view)
 {
-	if (!view->scroll_info.autoscrolling)
+	EvViewPrivate *priv = GET_PRIVATE (view);
+	if (!priv->scroll_info.autoscrolling)
 		return;
 
-	if (view->scroll_info.timeout_id == 0)
+	if (priv->scroll_info.timeout_id == 0)
 		return;
 
-	g_source_remove (view->scroll_info.timeout_id);
-	view->scroll_info.timeout_id = 0;
+	g_source_remove (priv->scroll_info.timeout_id);
+	priv->scroll_info.timeout_id = 0;
 }
 
 static void
@@ -6969,9 +7130,10 @@ ev_view_focus_in (GtkEventControllerFocus	*self,
 		  gpointer			 user_data)
 {
 	EvView *view = EV_VIEW (user_data);
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	if (view->pixbuf_cache)
-		ev_pixbuf_cache_style_changed (view->pixbuf_cache);
+	if (priv->pixbuf_cache)
+		ev_pixbuf_cache_style_changed (priv->pixbuf_cache);
 
 	ev_view_autoscroll_resume (view);
 
@@ -6984,9 +7146,10 @@ ev_view_focus_out (GtkEventControllerFocus	*self,
 		   gpointer			 user_data)
 {
 	EvView *view = EV_VIEW (user_data);
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	if (view->pixbuf_cache)
-		ev_pixbuf_cache_style_changed (view->pixbuf_cache);
+	if (priv->pixbuf_cache)
+		ev_pixbuf_cache_style_changed (priv->pixbuf_cache);
 
 	ev_view_autoscroll_pause (view);
 
@@ -6999,8 +7162,9 @@ ev_view_leave_notify_event (GtkEventControllerMotion	*self,
 			    gpointer			 user_data)
 {
 	EvView *view = EV_VIEW (user_data);
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	if (view->cursor != EV_VIEW_CURSOR_NORMAL)
+	if (priv->cursor != EV_VIEW_CURSOR_NORMAL)
 		ev_view_set_cursor (view, EV_VIEW_CURSOR_NORMAL);
 }
 
@@ -7022,6 +7186,7 @@ draw_rubberband (EvView             *view,
 		 gboolean            active)
 {
 	GtkStyleContext *context;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
 	context = gtk_widget_get_style_context (GTK_WIDGET (view));
 	gtk_style_context_save (context);
@@ -7032,8 +7197,8 @@ draw_rubberband (EvView             *view,
 		gtk_style_context_set_state (context, GTK_STATE_FLAG_SELECTED);
 
 	gtk_snapshot_render_background (snapshot, context,
-			  rect->x - view->scroll_x,
-			  rect->y - view->scroll_y,
+			  rect->x - priv->scroll_x,
+			  rect->y - priv->scroll_y,
 			  rect->width, rect->height);
 	gtk_style_context_restore (context);
 }
@@ -7046,6 +7211,7 @@ highlight_find_results (EvView		*view,
 {
 	EvRectangle *ev_rect;
 	gint i, n_results = 0;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
 	n_results = ev_view_find_get_n_results (view, page);
 	ev_rect = ev_rectangle_new ();
@@ -7061,7 +7227,7 @@ highlight_find_results (EvView		*view,
 		ev_rect->y1 = find_rect->y1;
 		ev_rect->y2 = find_rect->y2;
 
-		active = page == view->find_page && i == view->find_result;
+		active = page == priv->find_page && i == priv->find_result;
 		_ev_view_transform_doc_rect_to_view_rect (view, page, ev_rect, &view_rectangle);
 		draw_rubberband (view, snapshot, &view_rectangle, active);
 
@@ -7087,7 +7253,8 @@ highlight_forward_search_results (EvView	*view,
                                   int		 page)
 {
 	GdkRectangle rect;
-	EvMapping   *mapping = view->synctex_result;
+	EvViewPrivate *priv = GET_PRIVATE (view);
+	EvMapping   *mapping = priv->synctex_result;
 	GdkRGBA color = { 1.0, 0.0, 0.0, 0.3 };
 
 	if (GPOINTER_TO_INT (mapping->data) != page)
@@ -7097,8 +7264,8 @@ highlight_forward_search_results (EvView	*view,
 
 	gtk_snapshot_append_color (snapshot, &color,
 			&GRAPHENE_RECT_INIT (
-			 rect.x - view->scroll_x,
-			 rect.y - view->scroll_y,
+			 rect.x - priv->scroll_x,
+			 rect.y - priv->scroll_y,
 			 rect.width, rect.height));
 }
 
@@ -7210,6 +7377,7 @@ draw_one_page (EvView       *view,
 	GdkRectangle     real_page_area;
 	gint             current_page;
 	GtkWidget	*widget = GTK_WIDGET (view);
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
 	if (! gdk_rectangle_intersect (page_area, expose_area, &overlap))
 		return;
@@ -7224,14 +7392,14 @@ draw_one_page (EvView       *view,
 	*page_ready = TRUE;
 
 	context = gtk_widget_get_style_context (GTK_WIDGET (view));
-	current_page = ev_document_model_get_page (view->model);
+	current_page = ev_document_model_get_page (priv->model);
 
 	gtk_style_context_save (context);
 	gtk_style_context_add_class (context, EV_STYLE_CLASS_DOCUMENT_PAGE);
-	if (ev_document_model_get_inverted_colors (view->model))
+	if (ev_document_model_get_inverted_colors (priv->model))
 		gtk_style_context_add_class (context, EV_STYLE_CLASS_INVERTED);
 
-	if (view->continuous && page == current_page)
+	if (priv->continuous && page == current_page)
 		gtk_style_context_set_state (context, GTK_STATE_FLAG_ACTIVE);
 
 	gtk_snapshot_render_background (snapshot, context, page_area->x, page_area->y, page_area->width, page_area->height);
@@ -7244,9 +7412,9 @@ draw_one_page (EvView       *view,
 		graphene_point_t point;
 		graphene_rect_t area;
 		cairo_region_t *region = NULL;
-		gboolean inverted = ev_document_model_get_inverted_colors (view->model);
+		gboolean inverted = ev_document_model_get_inverted_colors (priv->model);
 
-		page_texture = ev_pixbuf_cache_get_texture (view->pixbuf_cache, page);
+		page_texture = ev_pixbuf_cache_get_texture (priv->pixbuf_cache, page);
 
 		if (!page_texture) {
 			if (page == current_page)
@@ -7273,17 +7441,17 @@ draw_one_page (EvView       *view,
 		if (!find_selection_for_page (view, page))
 			return;
 
-		selection_texture = ev_pixbuf_cache_get_selection_texture (view->pixbuf_cache,
+		selection_texture = ev_pixbuf_cache_get_selection_texture (priv->pixbuf_cache,
 									   page,
-									   view->scale);
+									   priv->scale);
 		if (selection_texture) {
 			draw_surface (snapshot, selection_texture, &point, &area, false);
 			return;
 		}
 
-		region = ev_pixbuf_cache_get_selection_region (view->pixbuf_cache,
+		region = ev_pixbuf_cache_get_selection_region (priv->pixbuf_cache,
 							       page,
-							       view->scale);
+							       priv->scale);
 		if (region) {
 			double scale_x, scale_y;
 			GdkRGBA color;
@@ -7304,14 +7472,15 @@ static void
 ev_view_finalize (GObject *object)
 {
 	EvView *view = EV_VIEW (object);
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	g_list_free_full (g_steal_pointer (&view->selection_info.selections), (GDestroyNotify)selection_free);
-	g_clear_object (&view->link_selected);
+	g_list_free_full (g_steal_pointer (&priv->selection_info.selections), (GDestroyNotify)selection_free);
+	g_clear_object (&priv->link_selected);
 
-	g_clear_pointer (&view->synctex_result, g_free);
+	g_clear_pointer (&priv->synctex_result, g_free);
 
-	g_clear_object (&view->image_dnd_info.image);
-	g_clear_pointer (&view->annot_window_map, g_hash_table_destroy);
+	g_clear_object (&priv->image_dnd_info.image);
+	g_clear_pointer (&priv->annot_window_map, g_hash_table_destroy);
 
 	G_OBJECT_CLASS (ev_view_parent_class)->finalize (object);
 }
@@ -7320,63 +7489,64 @@ static void
 ev_view_dispose (GObject *object)
 {
 	EvView *view = EV_VIEW (object);
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	if (view->model) {
-		g_signal_handlers_disconnect_by_data (view->model, view);
-		g_clear_object (&view->model);
+	if (priv->model) {
+		g_signal_handlers_disconnect_by_data (priv->model, view);
+		g_clear_object (&priv->model);
 	}
 
-	g_clear_object (&view->pixbuf_cache);
-	g_clear_object (&view->document);
-	g_clear_object (&view->page_cache);
+	g_clear_object (&priv->pixbuf_cache);
+	g_clear_object (&priv->document);
+	g_clear_object (&priv->page_cache);
 
 	ev_view_find_cancel (view);
 
 	ev_view_window_children_free (view);
 
-	if (view->update_cursor_idle_id) {
-		g_source_remove (view->update_cursor_idle_id);
-		view->update_cursor_idle_id = 0;
+	if (priv->update_cursor_idle_id) {
+		g_source_remove (priv->update_cursor_idle_id);
+		priv->update_cursor_idle_id = 0;
 	}
 
-	if (view->selection_scroll_id) {
-	    g_source_remove (view->selection_scroll_id);
-	    view->selection_scroll_id = 0;
+	if (priv->selection_scroll_id) {
+	    g_source_remove (priv->selection_scroll_id);
+	    priv->selection_scroll_id = 0;
 	}
 
-	if (view->selection_update_id) {
-	    g_source_remove (view->selection_update_id);
-	    view->selection_update_id = 0;
+	if (priv->selection_update_id) {
+	    g_source_remove (priv->selection_update_id);
+	    priv->selection_update_id = 0;
 	}
 
-	if (view->scroll_info.timeout_id) {
-	    g_source_remove (view->scroll_info.timeout_id);
-	    view->scroll_info.timeout_id = 0;
+	if (priv->scroll_info.timeout_id) {
+	    g_source_remove (priv->scroll_info.timeout_id);
+	    priv->scroll_info.timeout_id = 0;
 	}
 
-	if (view->drag_info.drag_timeout_id) {
-		g_source_remove (view->drag_info.drag_timeout_id);
-		view->drag_info.drag_timeout_id = 0;
+	if (priv->drag_info.drag_timeout_id) {
+		g_source_remove (priv->drag_info.drag_timeout_id);
+		priv->drag_info.drag_timeout_id = 0;
 	}
 
-	if (view->drag_info.release_timeout_id) {
-		g_source_remove (view->drag_info.release_timeout_id);
-		view->drag_info.release_timeout_id = 0;
+	if (priv->drag_info.release_timeout_id) {
+		g_source_remove (priv->drag_info.release_timeout_id);
+		priv->drag_info.release_timeout_id = 0;
 	}
 
-	if (view->cursor_blink_timeout_id) {
-		g_source_remove (view->cursor_blink_timeout_id);
-		view->cursor_blink_timeout_id = 0;
+	if (priv->cursor_blink_timeout_id) {
+		g_source_remove (priv->cursor_blink_timeout_id);
+		priv->cursor_blink_timeout_id = 0;
 	}
 
-	if (view->child_focus_idle_id) {
-		g_source_remove (view->child_focus_idle_id);
-		view->child_focus_idle_id = 0;
+	if (priv->child_focus_idle_id) {
+		g_source_remove (priv->child_focus_idle_id);
+		priv->child_focus_idle_id = 0;
 	}
 
-	if (view->link_preview.job) {
-		ev_job_cancel (view->link_preview.job);
-		g_clear_object (&view->link_preview.job);
+	if (priv->link_preview.job) {
+		ev_job_cancel (priv->link_preview.job);
+		g_clear_object (&priv->link_preview.job);
 	}
 
         gtk_scrollable_set_hadjustment (GTK_SCROLLABLE (view), NULL);
@@ -7392,28 +7562,29 @@ ev_view_get_property (GObject     *object,
 		      GParamSpec  *pspec)
 {
 	EvView *view = EV_VIEW (object);
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
 	switch (prop_id) {
 	case PROP_IS_LOADING:
-		g_value_set_boolean (value, view->loading);
+		g_value_set_boolean (value, priv->loading);
 		break;
 	case PROP_CAN_ZOOM_IN:
-		g_value_set_boolean (value, view->can_zoom_in);
+		g_value_set_boolean (value, priv->can_zoom_in);
 		break;
 	case PROP_CAN_ZOOM_OUT:
-		g_value_set_boolean (value, view->can_zoom_out);
+		g_value_set_boolean (value, priv->can_zoom_out);
 		break;
 	case PROP_HADJUSTMENT:
-		g_value_set_object (value, view->hadjustment);
+		g_value_set_object (value, priv->hadjustment);
 		break;
 	case PROP_VADJUSTMENT:
-		g_value_set_object (value, view->vadjustment);
+		g_value_set_object (value, priv->vadjustment);
 		break;
 	case PROP_HSCROLL_POLICY:
-		g_value_set_enum (value, view->hscroll_policy);
+		g_value_set_enum (value, priv->hscroll_policy);
 		break;
 	case PROP_VSCROLL_POLICY:
-		g_value_set_enum (value, view->vscroll_policy);
+		g_value_set_enum (value, priv->vscroll_policy);
 		break;
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -7428,6 +7599,7 @@ ev_view_set_property (GObject      *object,
 		      GParamSpec   *pspec)
 {
 	EvView *view = EV_VIEW (object);
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
 	switch (prop_id) {
 	case PROP_IS_LOADING:
@@ -7442,11 +7614,11 @@ ev_view_set_property (GObject      *object,
 					       (GtkAdjustment *) g_value_get_object (value));
 		break;
 	case PROP_HSCROLL_POLICY:
-		view->hscroll_policy = g_value_get_enum (value);
+		priv->hscroll_policy = g_value_get_enum (value);
 		gtk_widget_queue_resize (GTK_WIDGET (view));
 		break;
 	case PROP_VSCROLL_POLICY:
-		view->vscroll_policy = g_value_get_enum (value);
+		priv->vscroll_policy = g_value_get_enum (value);
 		gtk_widget_queue_resize (GTK_WIDGET (view));
 		break;
 	default:
@@ -7463,21 +7635,22 @@ view_update_scale_limits (EvView *view)
 	gdouble    max_scale;
 	gdouble    dpi;
 	gint       rotation;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	if (!view->document)
+	if (!priv->document)
 		return;
 
-	rotation = ev_document_model_get_rotation (view->model);
+	rotation = ev_document_model_get_rotation (priv->model);
 
 	dpi = ev_document_misc_get_widget_dpi (GTK_WIDGET (view)) / 72.0;
 
-	ev_document_get_min_page_size (view->document, &min_width, &min_height);
+	ev_document_get_min_page_size (priv->document, &min_width, &min_height);
 	width = (rotation == 0 || rotation == 180) ? min_width : min_height;
 	height = (rotation == 0 || rotation == 180) ? min_height : min_width;
-	max_scale = sqrt (view->pixbuf_cache_size / (width * dpi * 4 * height * dpi));
+	max_scale = sqrt (priv->pixbuf_cache_size / (width * dpi * 4 * height * dpi));
 
-	ev_document_model_set_min_scale (view->model, MIN_SCALE * dpi);
-	ev_document_model_set_max_scale (view->model, max_scale * dpi);
+	ev_document_model_set_min_scale (priv->model, MIN_SCALE * dpi);
+	ev_document_model_set_max_scale (priv->model, max_scale * dpi);
 }
 
 static void
@@ -7486,12 +7659,13 @@ pan_gesture_pan_cb (GtkGesturePan   *gesture,
 		    gdouble          offset,
 		    EvView          *view)
 {
+	EvViewPrivate *priv = GET_PRIVATE (view);
 	GtkAllocation allocation;
 
 	gtk_widget_get_allocation (GTK_WIDGET (view), &allocation);
 
-	if (view->continuous ||
-	    allocation.width < view->requisition.width) {
+	if (priv->continuous ||
+	    allocation.width < priv->requisition.width) {
 		gtk_gesture_set_state (GTK_GESTURE (gesture),
 				       GTK_EVENT_SEQUENCE_DENIED);
 		return;
@@ -7499,15 +7673,15 @@ pan_gesture_pan_cb (GtkGesturePan   *gesture,
 
 #define PAN_ACTION_DISTANCE 200
 
-	view->pan_action = EV_PAN_ACTION_NONE;
+	priv->pan_action = EV_PAN_ACTION_NONE;
 	gtk_gesture_set_state (GTK_GESTURE (gesture), GTK_EVENT_SEQUENCE_CLAIMED);
 
 	if (offset > PAN_ACTION_DISTANCE) {
 		if (direction == GTK_PAN_DIRECTION_LEFT ||
 		    gtk_widget_get_direction (GTK_WIDGET (view)) == GTK_TEXT_DIR_RTL)
-			view->pan_action = EV_PAN_ACTION_NEXT;
+			priv->pan_action = EV_PAN_ACTION_NEXT;
 		else
-			view->pan_action = EV_PAN_ACTION_PREV;
+			priv->pan_action = EV_PAN_ACTION_PREV;
 	}
 #undef PAN_ACTION_DISTANCE
 }
@@ -7517,15 +7691,17 @@ pan_gesture_end_cb (GtkGesture       *gesture,
 		    GdkEventSequence *sequence,
 		    EvView           *view)
 {
+	EvViewPrivate *priv = GET_PRIVATE (view);
+
 	if (!gtk_gesture_handles_sequence (gesture, sequence))
 		return;
 
-	if (view->pan_action == EV_PAN_ACTION_PREV)
+	if (priv->pan_action == EV_PAN_ACTION_PREV)
 		ev_view_previous_page (view);
-	else if (view->pan_action == EV_PAN_ACTION_NEXT)
+	else if (priv->pan_action == EV_PAN_ACTION_NEXT)
 		ev_view_next_page (view);
 
-	view->pan_action = EV_PAN_ACTION_NONE;
+	priv->pan_action = EV_PAN_ACTION_NONE;
 }
 
 static void
@@ -7583,8 +7759,9 @@ ev_view_get_sorted_mapping_list (EvView          *view,
 {
 	GList         *mapping_list = NULL, *l;
 	EvMappingList *forms_mapping;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	forms_mapping = ev_page_cache_get_form_field_mapping (view->page_cache, page);
+	forms_mapping = ev_page_cache_get_form_field_mapping (priv->page_cache, page);
 
 	for (l = ev_mapping_list_get_list (forms_mapping); l; l = g_list_next (l)) {
 		EvMapping   *mapping = (EvMapping *)l->data;
@@ -7612,8 +7789,9 @@ static gboolean
 child_focus_forward_idle_cb (gpointer user_data)
 {
 	EvView *view = EV_VIEW (user_data);
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	view->child_focus_idle_id = 0;
+	priv->child_focus_idle_id = 0;
 	gtk_widget_child_focus (GTK_WIDGET (view), GTK_DIR_TAB_FORWARD);
 
 	return G_SOURCE_REMOVE;
@@ -7623,8 +7801,9 @@ static gboolean
 child_focus_backward_idle_cb (gpointer user_data)
 {
 	EvView *view = EV_VIEW (user_data);
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	view->child_focus_idle_id = 0;
+	priv->child_focus_idle_id = 0;
 	gtk_widget_child_focus (GTK_WIDGET (view), GTK_DIR_TAB_BACKWARD);
 
 	return G_SOURCE_REMOVE;
@@ -7634,9 +7813,10 @@ static void
 schedule_child_focus_in_idle (EvView           *view,
 			      GtkDirectionType  direction)
 {
-	if (view->child_focus_idle_id)
-		g_source_remove (view->child_focus_idle_id);
-	view->child_focus_idle_id =
+	EvViewPrivate *priv = GET_PRIVATE (view);
+	if (priv->child_focus_idle_id)
+		g_source_remove (priv->child_focus_idle_id);
+	priv->child_focus_idle_id =
 		g_idle_add (direction == GTK_DIR_TAB_FORWARD ? child_focus_forward_idle_cb : child_focus_backward_idle_cb,
 			    view);
 }
@@ -7648,17 +7828,18 @@ ev_view_focus_next (EvView           *view,
 	EvMapping *focus_element;
 	GList     *elements;
 	gboolean   had_focused_element;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	if (view->focused_element) {
+	if (priv->focused_element) {
 		GList *l;
 
-		elements = ev_view_get_sorted_mapping_list (view, direction, view->focused_element_page);
-		l = g_list_find (elements, view->focused_element);
+		elements = ev_view_get_sorted_mapping_list (view, direction, priv->focused_element_page);
+		l = g_list_find (elements, priv->focused_element);
 		l = g_list_next (l);
 		focus_element = l ? l->data : NULL;
 		had_focused_element = TRUE;
 	} else {
-		elements = ev_view_get_sorted_mapping_list (view, direction, view->current_page);
+		elements = ev_view_get_sorted_mapping_list (view, direction, priv->current_page);
 		focus_element = elements ? elements->data : NULL;
 		had_focused_element = FALSE;
 	}
@@ -7703,8 +7884,9 @@ ev_view_focus (GtkWidget        *widget,
 	       GtkDirectionType  direction)
 {
 	EvView *view = EV_VIEW (widget);
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	if (view->document) {
+	if (priv->document) {
 		if (direction == GTK_DIR_TAB_FORWARD || direction == GTK_DIR_TAB_BACKWARD)
 			return ev_view_focus_next (view, direction);
 	}
@@ -7716,7 +7898,9 @@ static void
 notify_scale_factor_cb (EvView     *view,
 			GParamSpec *pspec)
 {
-	if (view->document)
+	EvViewPrivate *priv = GET_PRIVATE (view);
+
+	if (priv->document)
 		view_update_range_and_current_page (view);
 }
 
@@ -7725,7 +7909,9 @@ zoom_gesture_begin_cb (GtkGesture       *gesture,
 		       GdkEventSequence *sequence,
 		       EvView           *view)
 {
-	view->prev_zoom_gesture_scale = 1;
+	EvViewPrivate *priv = GET_PRIVATE (view);
+
+	priv->prev_zoom_gesture_scale = 1;
 }
 
 static void
@@ -7733,16 +7919,17 @@ zoom_gesture_scale_changed_cb (GtkGestureZoom *gesture,
 			       gdouble         scale,
 			       EvView         *view)
 {
+	EvViewPrivate *priv = GET_PRIVATE (view);
 	gdouble factor;
 
-	view->drag_info.in_drag = FALSE;
-	view->image_dnd_info.in_drag = FALSE;
+	priv->drag_info.in_drag = FALSE;
+	priv->image_dnd_info.in_drag = FALSE;
 
-	factor = scale - view->prev_zoom_gesture_scale + 1;
-	view->prev_zoom_gesture_scale = scale;
-	ev_document_model_set_sizing_mode (view->model, EV_SIZING_FREE);
+	factor = scale - priv->prev_zoom_gesture_scale + 1;
+	priv->prev_zoom_gesture_scale = scale;
+	ev_document_model_set_sizing_mode (priv->model, EV_SIZING_FREE);
 
-	gtk_gesture_get_bounding_box_center (GTK_GESTURE (gesture), &view->zoom_center_x, &view->zoom_center_y);
+	gtk_gesture_get_bounding_box_center (GTK_GESTURE (gesture), &priv->zoom_center_x, &priv->zoom_center_y);
 
 	if ((factor < 1.0 && ev_view_can_zoom_out (view)) ||
 	    (factor >= 1.0 && ev_view_can_zoom_in (view)))
@@ -7775,8 +7962,8 @@ ev_view_class_init (EvViewClass *class)
 	gtk_widget_class_set_template_from_resource (widget_class,
 			"/org/gnome/evince/ui/view.ui");
 
-	gtk_widget_class_bind_template_child (widget_class, EvView, zoom_gesture);
-	gtk_widget_class_bind_template_child (widget_class, EvView, pan_gesture);
+	gtk_widget_class_bind_template_child_private (widget_class, EvView, zoom_gesture);
+	gtk_widget_class_bind_template_child_private (widget_class, EvView, pan_gesture);
 
 	gtk_widget_class_bind_template_callback (widget_class, ev_view_button_press_event);
 	gtk_widget_class_bind_template_callback (widget_class, ev_view_button_release_event);
@@ -8029,34 +8216,36 @@ ev_view_class_init (EvViewClass *class)
 static void
 ev_view_init (EvView *view)
 {
-	view->start_page = -1;
-	view->end_page = -1;
-	view->spacing = 14;
-	view->scale = 1.0;
-	view->current_page = -1;
-	view->pressed_button = -1;
-	view->cursor = EV_VIEW_CURSOR_NORMAL;
-	view->drag_info.in_drag = FALSE;
-	view->scroll_info.autoscrolling = FALSE;
-	view->selection_info.selections = NULL;
-	view->selection_info.in_drag = FALSE;
-	view->continuous = TRUE;
-	view->dual_even_left = TRUE;
-	view->sizing_mode = EV_SIZING_FIT_WIDTH;
-	view->page_layout = EV_PAGE_LAYOUT_SINGLE;
-	view->pending_scroll = SCROLL_TO_PAGE_POSITION;
-	view->pending_point.x = 0;
-	view->pending_point.y = 0;
-	view->find_page = -1;
-	view->jump_to_find_result = TRUE;
-	view->highlight_find_results = FALSE;
-	view->pixbuf_cache_size = DEFAULT_PIXBUF_CACHE_SIZE;
-	view->caret_enabled = FALSE;
-	view->cursor_page = 0;
-	view->allow_links_change_zoom = TRUE;
-	view->window_children = NULL;
-	view->zoom_center_x = -1;
-	view->zoom_center_y = -1;
+	EvViewPrivate *priv = GET_PRIVATE (view);
+
+	priv->start_page = -1;
+	priv->end_page = -1;
+	priv->spacing = 14;
+	priv->scale = 1.0;
+	priv->current_page = -1;
+	priv->pressed_button = -1;
+	priv->cursor = EV_VIEW_CURSOR_NORMAL;
+	priv->drag_info.in_drag = FALSE;
+	priv->scroll_info.autoscrolling = FALSE;
+	priv->selection_info.selections = NULL;
+	priv->selection_info.in_drag = FALSE;
+	priv->continuous = TRUE;
+	priv->dual_even_left = TRUE;
+	priv->sizing_mode = EV_SIZING_FIT_WIDTH;
+	priv->page_layout = EV_PAGE_LAYOUT_SINGLE;
+	priv->pending_scroll = SCROLL_TO_PAGE_POSITION;
+	priv->pending_point.x = 0;
+	priv->pending_point.y = 0;
+	priv->find_page = -1;
+	priv->jump_to_find_result = TRUE;
+	priv->highlight_find_results = FALSE;
+	priv->pixbuf_cache_size = DEFAULT_PIXBUF_CACHE_SIZE;
+	priv->caret_enabled = FALSE;
+	priv->cursor_page = 0;
+	priv->allow_links_change_zoom = TRUE;
+	priv->window_children = NULL;
+	priv->zoom_center_x = -1;
+	priv->zoom_center_y = -1;
 
 	gtk_widget_init_template (GTK_WIDGET (view));
 }
@@ -8068,9 +8257,10 @@ ev_view_change_page (EvView *view,
 		     gint    new_page)
 {
 	gint x, y;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	view->current_page = new_page;
-	view->pending_scroll = SCROLL_TO_PAGE_POSITION;
+	priv->current_page = new_page;
+	priv->pending_scroll = SCROLL_TO_PAGE_POSITION;
 
 	ev_view_set_loading (view, FALSE);
 
@@ -8094,10 +8284,11 @@ ev_view_page_changed_cb (EvDocumentModel *model,
 			 gint             new_page,
 			 EvView          *view)
 {
-	if (!view->document)
+	EvViewPrivate *priv = GET_PRIVATE (view);
+	if (!priv->document)
 		return;
 
-	if (view->current_page != new_page) {
+	if (priv->current_page != new_page) {
 		ev_view_change_page (view, new_page);
 	} else {
 		gtk_widget_queue_draw (GTK_WIDGET (view));
@@ -8109,9 +8300,10 @@ static gboolean
 cursor_scroll_update (gpointer data)
 {
 	EvView *view = data;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 	gint x, y;
 
-	view->update_cursor_idle_id = 0;
+	priv->update_cursor_idle_id = 0;
 	ev_document_misc_get_pointer_position (GTK_WIDGET (view), &x, &y);
 	ev_view_handle_cursor_over_xy (view, x, y, FALSE);
 
@@ -8121,10 +8313,11 @@ cursor_scroll_update (gpointer data)
 static void
 schedule_scroll_cursor_update (EvView *view)
 {
-	if (view->update_cursor_idle_id)
+	EvViewPrivate *priv = GET_PRIVATE (view);
+	if (priv->update_cursor_idle_id)
 		return;
 
-	view->update_cursor_idle_id =
+	priv->update_cursor_idle_id =
 		g_idle_add (cursor_scroll_update, view);
 }
 #endif
@@ -8134,6 +8327,7 @@ adjustment_value_changed_cb (GtkAdjustment *adjustment,
 			     EvView        *view)
 {
 	GtkWidget *widget = GTK_WIDGET (view);
+	EvViewPrivate *priv = GET_PRIVATE (view);
 	int dx = 0, dy = 0;
 	gint value;
 
@@ -8142,25 +8336,25 @@ adjustment_value_changed_cb (GtkAdjustment *adjustment,
 
 	/* If the adjustment value is set during a drag event, update the drag
 	 * start position so it can continue from the new location. */
-	if (view->drag_info.in_drag && !view->drag_info.in_notify) {
-		view->drag_info.hadj += gtk_adjustment_get_value (view->hadjustment) - view->scroll_x;
-		view->drag_info.vadj += gtk_adjustment_get_value (view->vadjustment) - view->scroll_y;
+	if (priv->drag_info.in_drag && !priv->drag_info.in_notify) {
+		priv->drag_info.hadj += gtk_adjustment_get_value (priv->hadjustment) - priv->scroll_x;
+		priv->drag_info.vadj += gtk_adjustment_get_value (priv->vadjustment) - priv->scroll_y;
 	}
 
-	if (view->hadjustment) {
-		value = (gint) gtk_adjustment_get_value (view->hadjustment);
-		dx = view->scroll_x - value;
-		view->scroll_x = value;
+	if (priv->hadjustment) {
+		value = (gint) gtk_adjustment_get_value (priv->hadjustment);
+		dx = priv->scroll_x - value;
+		priv->scroll_x = value;
 	} else {
-		view->scroll_x = 0;
+		priv->scroll_x = 0;
 	}
 
-	if (view->vadjustment) {
-		value = (gint) gtk_adjustment_get_value (view->vadjustment);
-		dy = view->scroll_y - value;
-		view->scroll_y = value;
+	if (priv->vadjustment) {
+		value = (gint) gtk_adjustment_get_value (priv->vadjustment);
+		dy = priv->scroll_y - value;
+		priv->scroll_y = value;
 	} else {
-		view->scroll_y = 0;
+		priv->scroll_y = 0;
 	}
 
 	for (GtkWidget *child = gtk_widget_get_first_child (widget);
@@ -8177,7 +8371,7 @@ adjustment_value_changed_cb (GtkAdjustment *adjustment,
 			gtk_widget_queue_resize (widget);
 	}
 
-	if (view->pending_resize) {
+	if (priv->pending_resize) {
 		gtk_widget_queue_draw (widget);
 	}
 
@@ -8198,7 +8392,7 @@ adjustment_value_changed_cb (GtkAdjustment *adjustment,
 		schedule_scroll_cursor_update (view);
 #endif
 
-	if (view->document)
+	if (priv->document)
 		view_update_range_and_current_page (view);
 }
 
@@ -8215,25 +8409,27 @@ ev_view_new (void)
 static void
 setup_caches (EvView *view)
 {
-	view->height_to_page_cache = ev_view_get_height_to_page_cache (view);
-	view->pixbuf_cache = ev_pixbuf_cache_new (GTK_WIDGET (view), view->model, view->pixbuf_cache_size);
-	view->page_cache = ev_page_cache_new (view->document);
+	EvViewPrivate *priv = GET_PRIVATE (view);
+	priv->height_to_page_cache = ev_view_get_height_to_page_cache (view);
+	priv->pixbuf_cache = ev_pixbuf_cache_new (GTK_WIDGET (view), priv->model, priv->pixbuf_cache_size);
+	priv->page_cache = ev_page_cache_new (priv->document);
 
-	ev_page_cache_set_flags (view->page_cache,
-				 ev_page_cache_get_flags (view->page_cache) |
+	ev_page_cache_set_flags (priv->page_cache,
+				 ev_page_cache_get_flags (priv->page_cache) |
 				 EV_PAGE_DATA_INCLUDE_TEXT_LAYOUT |
 				 EV_PAGE_DATA_INCLUDE_TEXT |
 				 EV_PAGE_DATA_INCLUDE_TEXT_ATTRS |
 		                 EV_PAGE_DATA_INCLUDE_TEXT_LOG_ATTRS);
 
-	g_signal_connect (view->pixbuf_cache, "job-finished", G_CALLBACK (job_finished_cb), view);
+	g_signal_connect (priv->pixbuf_cache, "job-finished", G_CALLBACK (job_finished_cb), view);
 }
 
 static void
 clear_caches (EvView *view)
 {
-	g_clear_object (&view->pixbuf_cache);
-	g_clear_object (&view->page_cache);
+	EvViewPrivate *priv = GET_PRIVATE (view);
+	g_clear_object (&priv->pixbuf_cache);
+	g_clear_object (&priv->page_cache);
 }
 
 /**
@@ -8253,12 +8449,13 @@ void
 ev_view_set_page_cache_size (EvView *view,
 			     gsize   cache_size)
 {
-	if (view->pixbuf_cache_size == cache_size)
+	EvViewPrivate *priv = GET_PRIVATE (view);
+	if (priv->pixbuf_cache_size == cache_size)
 		return;
 
-	view->pixbuf_cache_size = cache_size;
-	if (view->pixbuf_cache)
-		ev_pixbuf_cache_set_max_size (view->pixbuf_cache, cache_size);
+	priv->pixbuf_cache_size = cache_size;
+	if (priv->pixbuf_cache)
+		ev_pixbuf_cache_set_max_size (priv->pixbuf_cache, cache_size);
 
 	view_update_scale_limits (view);
 }
@@ -8274,7 +8471,8 @@ ev_view_set_page_cache_size (EvView *view,
 gboolean
 ev_view_is_loading (EvView *view)
 {
-	return view->loading;
+	EvViewPrivate *priv = GET_PRIVATE (view);
+	return priv->loading;
 }
 
 void
@@ -8283,11 +8481,12 @@ ev_view_autoscroll_start (EvView *view)
 	gint x, y;
 
 	g_return_if_fail (EV_IS_VIEW (view));
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	if (view->scroll_info.autoscrolling)
+	if (priv->scroll_info.autoscrolling)
 		return;
 
-	view->scroll_info.autoscrolling = TRUE;
+	priv->scroll_info.autoscrolling = TRUE;
 	ev_view_autoscroll_resume (view);
 
 	ev_document_misc_get_pointer_position (GTK_WIDGET (view), &x, &y);
@@ -8300,11 +8499,12 @@ ev_view_autoscroll_stop (EvView *view)
 	gint x, y;
 
 	g_return_if_fail (EV_IS_VIEW (view));
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	if (!view->scroll_info.autoscrolling)
+	if (!priv->scroll_info.autoscrolling)
 		return;
 
-	view->scroll_info.autoscrolling = FALSE;
+	priv->scroll_info.autoscrolling = FALSE;
 	ev_view_autoscroll_pause (view);
 
 	ev_document_misc_get_pointer_position (GTK_WIDGET (view), &x, &y);
@@ -8317,38 +8517,39 @@ ev_view_document_changed_cb (EvDocumentModel *model,
 			     EvView          *view)
 {
 	EvDocument *document = ev_document_model_get_document (model);
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	if (document != view->document) {
+	if (document != priv->document) {
 		gint current_page;
 
 		ev_view_remove_all (view);
 		clear_caches (view);
 
-		if (view->document) {
-			g_object_unref (view->document);
+		if (priv->document) {
+			g_object_unref (priv->document);
                 }
 
-		view->document = document ? g_object_ref (document) : NULL;
-		view->find_page = -1;
-		view->find_result = 0;
+		priv->document = document ? g_object_ref (document) : NULL;
+		priv->find_page = -1;
+		priv->find_result = 0;
 
-		if (view->document) {
-			if (ev_document_get_n_pages (view->document) <= 0 ||
-			    !ev_document_check_dimensions (view->document))
+		if (priv->document) {
+			if (ev_document_get_n_pages (priv->document) <= 0 ||
+			    !ev_document_check_dimensions (priv->document))
 				return;
 
 			ev_view_set_loading (view, FALSE);
 			setup_caches (view);
 
-			if (view->caret_enabled)
+			if (priv->caret_enabled)
 				preload_pages_for_caret_navigation (view);
 		}
 
 		current_page = ev_document_model_get_page (model);
-		if (view->current_page != current_page) {
+		if (priv->current_page != current_page) {
 			ev_view_change_page (view, current_page);
 		} else {
-			view->pending_scroll = SCROLL_TO_KEEP_POSITION;
+			priv->pending_scroll = SCROLL_TO_KEEP_POSITION;
 			gtk_widget_queue_resize (GTK_WIDGET (view));
 		}
 
@@ -8362,13 +8563,14 @@ ev_view_rotation_changed_cb (EvDocumentModel *model,
 			     EvView          *view)
 {
 	gint rotation = ev_document_model_get_rotation (model);
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	view->rotation = rotation;
+	priv->rotation = rotation;
 
-	if (view->pixbuf_cache) {
-		ev_pixbuf_cache_clear (view->pixbuf_cache);
-		if (!ev_document_is_page_size_uniform (view->document))
-			view->pending_scroll = SCROLL_TO_PAGE_POSITION;
+	if (priv->pixbuf_cache) {
+		ev_pixbuf_cache_clear (priv->pixbuf_cache);
+		if (!ev_document_is_page_size_uniform (priv->document))
+			priv->pending_scroll = SCROLL_TO_PAGE_POSITION;
 		gtk_widget_queue_resize (GTK_WIDGET (view));
 	}
 
@@ -8393,8 +8595,9 @@ ev_view_sizing_mode_changed_cb (EvDocumentModel *model,
 				EvView          *view)
 {
 	EvSizingMode mode = ev_document_model_get_sizing_mode (model);
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	view->sizing_mode = mode;
+	priv->sizing_mode = mode;
 	if (mode != EV_SIZING_FREE)
 		gtk_widget_queue_resize (GTK_WIDGET (view));
 }
@@ -8406,20 +8609,21 @@ update_can_zoom (EvView *view)
 	gdouble max_scale;
 	gboolean can_zoom_in;
 	gboolean can_zoom_out;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	min_scale = ev_document_model_get_min_scale (view->model);
-	max_scale = ev_document_model_get_max_scale (view->model);
+	min_scale = ev_document_model_get_min_scale (priv->model);
+	max_scale = ev_document_model_get_max_scale (priv->model);
 
-	can_zoom_in = view->scale <= max_scale;
-	can_zoom_out = view->scale > min_scale;
+	can_zoom_in = priv->scale <= max_scale;
+	can_zoom_out = priv->scale > min_scale;
 
-	if (can_zoom_in != view->can_zoom_in) {
-		view->can_zoom_in = can_zoom_in;
+	if (can_zoom_in != priv->can_zoom_in) {
+		priv->can_zoom_in = can_zoom_in;
 		g_object_notify (G_OBJECT (view), "can-zoom-in");
 	}
 
-	if (can_zoom_out != view->can_zoom_out) {
-		view->can_zoom_out = can_zoom_out;
+	if (can_zoom_out != priv->can_zoom_out) {
+		priv->can_zoom_out = can_zoom_out;
 		g_object_notify (G_OBJECT (view), "can-zoom-out");
 	}
 }
@@ -8430,10 +8634,11 @@ ev_view_page_layout_changed_cb (EvDocumentModel *model,
 				EvView          *view)
 {
 	EvPageLayout layout = ev_document_model_get_page_layout (model);
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	view->page_layout = layout;
+	priv->page_layout = layout;
 
-	view->pending_scroll = SCROLL_TO_PAGE_POSITION;
+	priv->pending_scroll = SCROLL_TO_PAGE_POSITION;
 	gtk_widget_queue_resize (GTK_WIDGET (view));
 
 	/* FIXME: if we're keeping the pixbuf cache around, we should extend the
@@ -8448,14 +8653,15 @@ ev_view_scale_changed_cb (EvDocumentModel *model,
 			  EvView          *view)
 {
 	gdouble scale = ev_document_model_get_scale (model);
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	if (ABS (view->scale - scale) < EPSILON)
+	if (ABS (priv->scale - scale) < EPSILON)
 		return;
 
-	view->scale = scale;
+	priv->scale = scale;
 
-	view->pending_resize = TRUE;
-	if (view->sizing_mode == EV_SIZING_FREE)
+	priv->pending_resize = TRUE;
+	if (priv->sizing_mode == EV_SIZING_FREE)
 		gtk_widget_queue_resize (GTK_WIDGET (view));
 
 	update_can_zoom (view);
@@ -8483,22 +8689,23 @@ ev_view_continuous_changed_cb (EvDocumentModel *model,
 			       EvView          *view)
 {
 	gboolean continuous = ev_document_model_get_continuous (model);
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	if (view->document) {
+	if (priv->document) {
 		GdkPoint     view_point;
 		GdkRectangle page_area;
 		GtkBorder    border;
 
-		view_point.x = view->scroll_x;
-		view_point.y = view->scroll_y;
-		ev_view_get_page_extents (view, view->start_page, &page_area, &border);
+		view_point.x = priv->scroll_x;
+		view_point.y = priv->scroll_y;
+		ev_view_get_page_extents (view, priv->start_page, &page_area, &border);
 		_ev_view_transform_view_point_to_doc_point (view, &view_point,
 							    &page_area, &border,
-							    &view->pending_point.x,
-							    &view->pending_point.y);
+							    &priv->pending_point.x,
+							    &priv->pending_point.y);
 	}
-	view->continuous = continuous;
-	view->pending_scroll = SCROLL_TO_PAGE_POSITION;
+	priv->continuous = continuous;
+	priv->pending_scroll = SCROLL_TO_PAGE_POSITION;
 	gtk_widget_queue_resize (GTK_WIDGET (view));
 }
 
@@ -8507,8 +8714,9 @@ ev_view_dual_odd_left_changed_cb (EvDocumentModel *model,
 				  GParamSpec      *pspec,
 				  EvView          *view)
 {
-	view->dual_even_left = !ev_document_model_get_dual_page_odd_pages_left (model);
-	view->pending_scroll = SCROLL_TO_PAGE_POSITION;
+	EvViewPrivate *priv = GET_PRIVATE (view);
+	priv->dual_even_left = !ev_document_model_get_dual_page_odd_pages_left (model);
+	priv->pending_scroll = SCROLL_TO_PAGE_POSITION;
 	if (ev_document_model_get_page_layout (model) == EV_PAGE_LAYOUT_DUAL)
 		/* odd_left may be set when not in dual mode,
 		   queue_resize is not needed in that case */
@@ -8520,9 +8728,10 @@ ev_view_direction_changed_cb (EvDocumentModel *model,
                               GParamSpec      *pspec,
                               EvView          *view)
 {
+	EvViewPrivate *priv = GET_PRIVATE (view);
 	gboolean rtl = ev_document_model_get_rtl (model);
 	gtk_widget_set_direction (GTK_WIDGET (view), rtl ? GTK_TEXT_DIR_RTL : GTK_TEXT_DIR_LTR);
-	view->pending_scroll = SCROLL_TO_PAGE_POSITION;
+	priv->pending_scroll = SCROLL_TO_PAGE_POSITION;
 	gtk_widget_queue_resize (GTK_WIDGET (view));
 }
 
@@ -8532,65 +8741,66 @@ ev_view_set_model (EvView          *view,
 {
 	g_return_if_fail (EV_IS_VIEW (view));
 	g_return_if_fail (EV_IS_DOCUMENT_MODEL (model));
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	if (model == view->model)
+	if (model == priv->model)
 		return;
 
-	if (view->model) {
-		g_signal_handlers_disconnect_by_data (view->model, view);
-		g_object_unref (view->model);
+	if (priv->model) {
+		g_signal_handlers_disconnect_by_data (priv->model, view);
+		g_object_unref (priv->model);
 	}
-	view->model = g_object_ref (model);
+	priv->model = g_object_ref (model);
 
 	/* Initialize view from model */
-	view->rotation = ev_document_model_get_rotation (view->model);
-	view->sizing_mode = ev_document_model_get_sizing_mode (view->model);
-	view->scale = ev_document_model_get_scale (view->model);
-	view->continuous = ev_document_model_get_continuous (view->model);
-	view->page_layout = ev_document_model_get_page_layout (view->model);
-	gtk_widget_set_direction (GTK_WIDGET(view), ev_document_model_get_rtl (view->model));
-	ev_view_document_changed_cb (view->model, NULL, view);
+	priv->rotation = ev_document_model_get_rotation (priv->model);
+	priv->sizing_mode = ev_document_model_get_sizing_mode (priv->model);
+	priv->scale = ev_document_model_get_scale (priv->model);
+	priv->continuous = ev_document_model_get_continuous (priv->model);
+	priv->page_layout = ev_document_model_get_page_layout (priv->model);
+	gtk_widget_set_direction (GTK_WIDGET(view), ev_document_model_get_rtl (priv->model));
+	ev_view_document_changed_cb (priv->model, NULL, view);
 
-	g_signal_connect (view->model, "notify::document",
+	g_signal_connect (priv->model, "notify::document",
 			  G_CALLBACK (ev_view_document_changed_cb),
 			  view);
-	g_signal_connect (view->model, "notify::rotation",
+	g_signal_connect (priv->model, "notify::rotation",
 			  G_CALLBACK (ev_view_rotation_changed_cb),
 			  view);
-	g_signal_connect (view->model, "notify::inverted-colors",
+	g_signal_connect (priv->model, "notify::inverted-colors",
 			  G_CALLBACK (ev_view_inverted_colors_changed_cb),
 			  view);
-	g_signal_connect (view->model, "notify::sizing-mode",
+	g_signal_connect (priv->model, "notify::sizing-mode",
 			  G_CALLBACK (ev_view_sizing_mode_changed_cb),
 			  view);
-	g_signal_connect (view->model, "notify::page-layout",
+	g_signal_connect (priv->model, "notify::page-layout",
 			  G_CALLBACK (ev_view_page_layout_changed_cb),
 			  view);
-	g_signal_connect (view->model, "notify::scale",
+	g_signal_connect (priv->model, "notify::scale",
 			  G_CALLBACK (ev_view_scale_changed_cb),
 			  view);
-	g_signal_connect (view->model, "notify::min-scale",
+	g_signal_connect (priv->model, "notify::min-scale",
 			  G_CALLBACK (ev_view_min_scale_changed_cb),
 			  view);
-	g_signal_connect (view->model, "notify::max-scale",
+	g_signal_connect (priv->model, "notify::max-scale",
 			  G_CALLBACK (ev_view_max_scale_changed_cb),
 			  view);
-	g_signal_connect (view->model, "notify::continuous",
+	g_signal_connect (priv->model, "notify::continuous",
 			  G_CALLBACK (ev_view_continuous_changed_cb),
 			  view);
-	g_signal_connect (view->model, "notify::dual-odd-left",
+	g_signal_connect (priv->model, "notify::dual-odd-left",
 			  G_CALLBACK (ev_view_dual_odd_left_changed_cb),
 			  view);
-	g_signal_connect (view->model, "notify::rtl",
+	g_signal_connect (priv->model, "notify::rtl",
 			  G_CALLBACK (ev_view_direction_changed_cb),
 			  view);
-	g_signal_connect (view->model, "page-changed",
+	g_signal_connect (priv->model, "page-changed",
 			  G_CALLBACK (ev_view_page_changed_cb),
 			  view);
 #if 0
-	if (view->accessible)
-		ev_view_accessible_set_model (EV_VIEW_ACCESSIBLE (view->accessible),
-					      view->model);
+	if (priv->accessible)
+		ev_view_accessible_set_model (EV_VIEW_ACCESSIBLE (priv->accessible),
+					      priv->model);
 #endif
 }
 
@@ -8599,17 +8809,19 @@ ev_view_reload_page (EvView         *view,
 		     gint            page,
 		     cairo_region_t *region)
 {
-	ev_pixbuf_cache_reload_page (view->pixbuf_cache,
+	EvViewPrivate *priv = GET_PRIVATE (view);
+	ev_pixbuf_cache_reload_page (priv->pixbuf_cache,
 				     region,
 				     page,
-				     view->rotation,
-				     view->scale);
+				     priv->rotation,
+				     priv->scale);
 }
 
 void
 ev_view_reload (EvView *view)
 {
-	ev_pixbuf_cache_clear (view->pixbuf_cache);
+	EvViewPrivate *priv = GET_PRIVATE (view);
+	ev_pixbuf_cache_clear (priv->pixbuf_cache);
 	view_update_range_and_current_page (view);
 }
 
@@ -8631,25 +8843,28 @@ ev_view_can_zoom (EvView *view, gdouble factor)
 gboolean
 ev_view_can_zoom_in (EvView *view)
 {
-	return view->can_zoom_in;
+	EvViewPrivate *priv = GET_PRIVATE (view);
+	return priv->can_zoom_in;
 }
 
 gboolean
 ev_view_can_zoom_out (EvView *view)
 {
-	return view->can_zoom_out;
+	EvViewPrivate *priv = GET_PRIVATE (view);
+	return priv->can_zoom_out;
 }
 
 static void
 ev_view_zoom (EvView *view, gdouble factor)
 {
 	gdouble scale;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	g_return_if_fail (view->sizing_mode == EV_SIZING_FREE);
+	g_return_if_fail (priv->sizing_mode == EV_SIZING_FREE);
 
-	view->pending_scroll = SCROLL_TO_CENTER;
-	scale = ev_document_model_get_scale (view->model) * factor;
-	ev_document_model_set_scale (view->model, scale);
+	priv->pending_scroll = SCROLL_TO_CENTER;
+	scale = ev_document_model_get_scale (priv->model) * factor;
+	ev_document_model_set_scale (priv->model, scale);
 }
 
 void
@@ -8732,9 +8947,10 @@ ev_view_zoom_for_size_continuous_and_dual_page (EvView *view,
 	gdouble doc_width, doc_height;
 	GtkBorder border;
 	gdouble scale;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	ev_document_get_max_page_size (view->document, &doc_width, &doc_height);
-	if (view->rotation == 90 || view->rotation == 270) {
+	ev_document_get_max_page_size (priv->document, &doc_width, &doc_height);
+	if (priv->rotation == 90 || priv->rotation == 270) {
 		gdouble tmp;
 
 		tmp = doc_width;
@@ -8745,10 +8961,10 @@ ev_view_zoom_for_size_continuous_and_dual_page (EvView *view,
 	compute_border (view, &border);
 
 	doc_width *= 2;
-	width -= (2 * (border.left + border.right) + 3 * view->spacing);
-	height -= (border.top + border.bottom + 2 * view->spacing);
+	width -= (2 * (border.left + border.right) + 3 * priv->spacing);
+	height -= (border.top + border.bottom + 2 * priv->spacing);
 
-	switch (view->sizing_mode) {
+	switch (priv->sizing_mode) {
 	case EV_SIZING_FIT_WIDTH:
 		scale = zoom_for_size_fit_width (doc_width, doc_height, width, height);
 		break;
@@ -8763,7 +8979,7 @@ ev_view_zoom_for_size_continuous_and_dual_page (EvView *view,
 		g_assert_not_reached ();
 	}
 
-	ev_document_model_set_scale (view->model, scale);
+	ev_document_model_set_scale (priv->model, scale);
 }
 
 static void
@@ -8774,9 +8990,10 @@ ev_view_zoom_for_size_continuous (EvView *view,
 	gdouble doc_width, doc_height;
 	GtkBorder border;
 	gdouble scale;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	ev_document_get_max_page_size (view->document, &doc_width, &doc_height);
-	if (view->rotation == 90 || view->rotation == 270) {
+	ev_document_get_max_page_size (priv->document, &doc_width, &doc_height);
+	if (priv->rotation == 90 || priv->rotation == 270) {
 		gdouble tmp;
 
 		tmp = doc_width;
@@ -8786,10 +9003,10 @@ ev_view_zoom_for_size_continuous (EvView *view,
 
 	compute_border (view, &border);
 
-	width -= (border.left + border.right + 2 * view->spacing);
-	height -= (border.top + border.bottom + 2 * view->spacing);
+	width -= (border.left + border.right + 2 * priv->spacing);
+	height -= (border.top + border.bottom + 2 * priv->spacing);
 
-	switch (view->sizing_mode) {
+	switch (priv->sizing_mode) {
 	case EV_SIZING_FIT_WIDTH:
 		scale = zoom_for_size_fit_width (doc_width, doc_height, width, height);
 		break;
@@ -8804,7 +9021,7 @@ ev_view_zoom_for_size_continuous (EvView *view,
 		g_assert_not_reached ();
 	}
 
-	ev_document_model_set_scale (view->model, scale);
+	ev_document_model_set_scale (priv->model, scale);
 }
 
 static void
@@ -8816,12 +9033,13 @@ ev_view_zoom_for_size_dual_page (EvView *view,
 	gdouble doc_width, doc_height;
 	gdouble scale;
 	gint other_page;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	other_page = view->current_page ^ 1;
+	other_page = priv->current_page ^ 1;
 
 	/* Find the largest of the two. */
-	get_doc_page_size (view, view->current_page, &doc_width, &doc_height);
-	if (other_page < ev_document_get_n_pages (view->document)) {
+	get_doc_page_size (view, priv->current_page, &doc_width, &doc_height);
+	if (other_page < ev_document_get_n_pages (priv->document)) {
 		gdouble width_2, height_2;
 
 		get_doc_page_size (view, other_page, &width_2, &height_2);
@@ -8833,10 +9051,10 @@ ev_view_zoom_for_size_dual_page (EvView *view,
 	compute_border (view, &border);
 
 	doc_width = doc_width * 2;
-	width -= ((border.left + border.right)* 2 + 3 * view->spacing);
-	height -= (border.top + border.bottom + 2 * view->spacing);
+	width -= ((border.left + border.right)* 2 + 3 * priv->spacing);
+	height -= (border.top + border.bottom + 2 * priv->spacing);
 
-	switch (view->sizing_mode) {
+	switch (priv->sizing_mode) {
 	case EV_SIZING_FIT_WIDTH:
 		scale = zoom_for_size_fit_width (doc_width, doc_height, width, height);
 		break;
@@ -8851,7 +9069,7 @@ ev_view_zoom_for_size_dual_page (EvView *view,
 		g_assert_not_reached ();
 	}
 
-	ev_document_model_set_scale (view->model, scale);
+	ev_document_model_set_scale (priv->model, scale);
 }
 
 static void
@@ -8862,16 +9080,17 @@ ev_view_zoom_for_size_single_page (EvView *view,
 	gdouble doc_width, doc_height;
 	GtkBorder border;
 	gdouble scale;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	get_doc_page_size (view, view->current_page, &doc_width, &doc_height);
+	get_doc_page_size (view, priv->current_page, &doc_width, &doc_height);
 
 	/* Get an approximate border */
 	compute_border (view, &border);
 
-	width -= (border.left + border.right + 2 * view->spacing);
-	height -= (border.top + border.bottom + 2 * view->spacing);
+	width -= (border.left + border.right + 2 * priv->spacing);
+	height -= (border.top + border.bottom + 2 * priv->spacing);
 
-	switch (view->sizing_mode) {
+	switch (priv->sizing_mode) {
 	case EV_SIZING_FIT_WIDTH:
 		scale = zoom_for_size_fit_width (doc_width, doc_height, width, height);
 		break;
@@ -8886,7 +9105,7 @@ ev_view_zoom_for_size_single_page (EvView *view,
 		g_assert_not_reached ();
 	}
 
-	ev_document_model_set_scale (view->model, scale);
+	ev_document_model_set_scale (priv->model, scale);
 }
 
 static void
@@ -8895,21 +9114,23 @@ ev_view_zoom_for_size (EvView *view,
 		       int     height)
 {
 	gboolean dual_page;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
 	g_return_if_fail (EV_IS_VIEW (view));
-	g_return_if_fail (view->sizing_mode == EV_SIZING_FIT_WIDTH ||
-			  view->sizing_mode == EV_SIZING_FIT_PAGE ||
-			  view->sizing_mode == EV_SIZING_AUTOMATIC);
+	g_return_if_fail (priv->sizing_mode == EV_SIZING_FIT_WIDTH ||
+			  priv->sizing_mode == EV_SIZING_FIT_PAGE ||
+			  priv->sizing_mode == EV_SIZING_AUTOMATIC);
 	g_return_if_fail (width >= 0);
 	g_return_if_fail (height >= 0);
 
-	if (view->document == NULL)
+
+	if (priv->document == NULL)
 		return;
 
 	dual_page = is_dual_page (view, NULL);
-	if (view->continuous && dual_page)
+	if (priv->continuous && dual_page)
 		ev_view_zoom_for_size_continuous_and_dual_page (view, width, height);
-	else if (view->continuous)
+	else if (priv->continuous)
 		ev_view_zoom_for_size_continuous (view, width, height);
 	else if (dual_page)
 		ev_view_zoom_for_size_dual_page (view, width, height);
@@ -8924,13 +9145,14 @@ ev_view_page_fits (EvView         *view,
 	GtkRequisition requisition;
 	GtkAllocation  allocation;
 	double         size;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	if (view->sizing_mode == EV_SIZING_FIT_PAGE)
+	if (priv->sizing_mode == EV_SIZING_FIT_PAGE)
 		return TRUE;
 
 	if (orientation == GTK_ORIENTATION_HORIZONTAL &&
-	    (view->sizing_mode == EV_SIZING_FIT_WIDTH ||
-	     view->sizing_mode == EV_SIZING_AUTOMATIC))
+	    (priv->sizing_mode == EV_SIZING_FIT_WIDTH ||
+	     priv->sizing_mode == EV_SIZING_AUTOMATIC))
 		return TRUE;
 
 	gtk_widget_get_allocation (GTK_WIDGET (view), &allocation);
@@ -8963,22 +9185,28 @@ ev_view_page_fits (EvView         *view,
 static gint
 ev_view_find_get_n_results (EvView *view, gint page)
 {
-	return view->find_pages ? g_list_length (view->find_pages[page]) : 0;
+	EvViewPrivate *priv = GET_PRIVATE (view);
+
+	return priv->find_pages ? g_list_length (priv->find_pages[page]) : 0;
 }
 
 static EvFindRectangle *
 ev_view_find_get_result (EvView *view, gint page, gint result)
 {
-	return view->find_pages ? (EvFindRectangle *) g_list_nth_data (view->find_pages[page], result) : NULL;
+	EvViewPrivate *priv = GET_PRIVATE (view);
+
+	return priv->find_pages ? (EvFindRectangle *) g_list_nth_data (priv->find_pages[page], result) : NULL;
 }
 
 static gboolean
 ev_view_find_is_next_line (EvView *view, gint page, gint result)
 {
-	if (!view->find_pages)
+	EvViewPrivate *priv = GET_PRIVATE (view);
+
+	if (!priv->find_pages)
 		return FALSE;
 
-	GList *elem = g_list_nth (view->find_pages[page], result);
+	GList *elem = g_list_nth (priv->find_pages[page], result);
 	return elem && ((EvFindRectangle *) elem->data)->next_line;
 }
 
@@ -8987,20 +9215,21 @@ jump_to_find_result (EvView *view)
 {
 	EvRectangle *rect;
 	gint n_results;
-	gint page = view->find_page;
+	EvViewPrivate *priv = GET_PRIVATE (view);
+	gint page = priv->find_page;
 
 	n_results = ev_view_find_get_n_results (view, page);
 	rect = ev_rectangle_new ();
 
-	if (n_results > 0 && view->find_result < n_results) {
+	if (n_results > 0 && priv->find_result < n_results) {
 		EvFindRectangle *find_rect, *rect_next;
 		GdkRectangle view_rect;
 
 		rect_next = NULL;
-		find_rect = ev_view_find_get_result (view, page, view->find_result);
+		find_rect = ev_view_find_get_result (view, page, priv->find_result);
 		if (find_rect->next_line) {
 			/* For an across-lines match, make sure both rectangles are visible */
-			rect_next = ev_view_find_get_result (view, page, view->find_result + 1);
+			rect_next = ev_view_find_get_result (view, page, priv->find_result + 1);
 			rect->x1 = MIN (find_rect->x1, rect_next->x1);
 			rect->y1 = MIN (find_rect->y1, rect_next->y1);
 			rect->x2 = MAX (find_rect->x2, rect_next->x2);
@@ -9013,10 +9242,10 @@ jump_to_find_result (EvView *view)
 		}
 		_ev_view_transform_doc_rect_to_view_rect (view, page, rect, &view_rect);
 		_ev_view_ensure_rectangle_is_visible (view, &view_rect);
-		if (view->caret_enabled && view->rotation == 0)
+		if (priv->caret_enabled && priv->rotation == 0)
 			position_caret_cursor_at_doc_point (view, page, find_rect->x1, find_rect->y1);
 
-		view->jump_to_find_result = FALSE;
+		priv->jump_to_find_result = FALSE;
 	}
 
 	ev_rectangle_free (rect);
@@ -9036,16 +9265,17 @@ static void
 jump_to_find_page (EvView *view, EvViewFindDirection direction, gint shift)
 {
 	int n_pages, i;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	n_pages = ev_document_get_n_pages (view->document);
+	n_pages = ev_document_get_n_pages (priv->document);
 
 	for (i = 0; i < n_pages; i++) {
 		int page;
 
 		if (direction == EV_VIEW_FIND_NEXT)
-			page = view->find_page + i;
+			page = priv->find_page + i;
 		else
-			page = view->find_page - i;
+			page = priv->find_page - i;
 		page += shift;
 
 		if (page >= n_pages)
@@ -9053,29 +9283,31 @@ jump_to_find_page (EvView *view, EvViewFindDirection direction, gint shift)
 		else if (page < 0)
 			page = page + n_pages;
 
-		if (view->find_pages && view->find_pages[page]) {
-			view->find_page = page;
+		if (priv->find_pages && priv->find_pages[page]) {
+			priv->find_page = page;
 			break;
 		}
 	}
 
-	if (!view->continuous)
-		ev_document_model_set_page (view->model, view->find_page);
+	if (!priv->continuous)
+		ev_document_model_set_page (priv->model, priv->find_page);
 }
 
 static void
 find_job_updated_cb (EvJobFind *job, gint page, EvView *view)
 {
-	view->find_pages = ev_job_find_get_results (job);
-	if (view->find_page == -1)
-		view->find_page = view->current_page;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	if (view->jump_to_find_result == TRUE) {
+	priv->find_pages = ev_job_find_get_results (job);
+	if (priv->find_page == -1)
+		priv->find_page = priv->current_page;
+
+	if (priv->jump_to_find_result == TRUE) {
 		jump_to_find_page (view, EV_VIEW_FIND_NEXT, 0);
 		jump_to_find_result (view);
 	}
 
-	if (view->find_page == page)
+	if (priv->find_page == page)
 		gtk_widget_queue_draw (GTK_WIDGET (view));
 }
 
@@ -9089,13 +9321,15 @@ find_job_updated_cb (EvJobFind *job, gint page, EvView *view)
 void
 ev_view_find_started (EvView *view, EvJobFind *job)
 {
-	if (view->find_job == job)
+	EvViewPrivate *priv = GET_PRIVATE (view);
+
+	if (priv->find_job == job)
 		return;
 
 	ev_view_find_cancel (view);
-	view->find_job = g_object_ref (job);
-	view->find_page = view->current_page;
-	view->find_result = 0;
+	priv->find_job = g_object_ref (job);
+	priv->find_page = priv->current_page;
+	priv->find_result = 0;
 
 	g_signal_connect (job, "updated", G_CALLBACK (find_job_updated_cb), view);
 }
@@ -9113,11 +9347,13 @@ void
 ev_view_find_restart (EvView *view,
 		      gint    page)
 {
-	if (!view->find_job)
+	EvViewPrivate *priv = GET_PRIVATE (view);
+
+	if (!priv->find_job)
 		return;
 
-	view->find_page = page;
-	view->find_result = 0;
+	priv->find_page = page;
+	priv->find_result = 0;
 	jump_to_find_page (view, EV_VIEW_FIND_NEXT, 0);
 	jump_to_find_result (view);
 	gtk_widget_queue_draw (GTK_WIDGET (view));
@@ -9127,15 +9363,16 @@ void
 ev_view_find_next (EvView *view)
 {
 	gint n_results;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	n_results = ev_view_find_get_n_results (view, view->find_page);
-	view->find_result += ev_view_find_is_next_line (view, view->find_page, view->find_result)
+	n_results = ev_view_find_get_n_results (view, priv->find_page);
+	priv->find_result += ev_view_find_is_next_line (view, priv->find_page, priv->find_result)
 	                     ? 2 : 1;
 
-	if (view->find_result >= n_results) {
-		view->find_result = 0;
+	if (priv->find_result >= n_results) {
+		priv->find_result = 0;
 		jump_to_find_page (view, EV_VIEW_FIND_NEXT, 1);
-	} else if (view->find_page != view->current_page) {
+	} else if (priv->find_page != priv->current_page) {
 		jump_to_find_page (view, EV_VIEW_FIND_NEXT, 0);
 	}
 
@@ -9146,15 +9383,17 @@ ev_view_find_next (EvView *view)
 void
 ev_view_find_previous (EvView *view)
 {
-	view->find_result -= ev_view_find_is_next_line (view, view->find_page, view->find_result - 2)
+	EvViewPrivate *priv = GET_PRIVATE (view);
+
+	priv->find_result -= ev_view_find_is_next_line (view, priv->find_page, priv->find_result - 2)
 	                     ? 2 : 1;
 
-	if (view->find_result < 0) {
+	if (priv->find_result < 0) {
 		jump_to_find_page (view, EV_VIEW_FIND_PREV, -1);
-		view->find_result = MAX (0, ev_view_find_get_n_results (view, view->find_page) - 1);
-		if (view->find_result && ev_view_find_is_next_line (view, view->find_page, view->find_result))
-			view->find_result--; /* set to last "non-nextline" result */
-	} else if (view->find_page != view->current_page) {
+		priv->find_result = MAX (0, ev_view_find_get_n_results (view, priv->find_page) - 1);
+		if (priv->find_result && ev_view_find_is_next_line (view, priv->find_page, priv->find_result))
+			priv->find_result--; /* set to last "non-nextline" result */
+	} else if (priv->find_page != priv->current_page) {
 		jump_to_find_page (view, EV_VIEW_FIND_PREV, 0);
 	}
 
@@ -9175,8 +9414,10 @@ ev_view_find_previous (EvView *view)
 void
 ev_view_find_set_result (EvView *view, gint page, gint result)
 {
-	view->find_page = page;
-	view->find_result = result;
+	EvViewPrivate *priv = GET_PRIVATE (view);
+
+	priv->find_page = page;
+	priv->find_result = result;
 	jump_to_find_page (view, EV_VIEW_FIND_NEXT, 0);
 	jump_to_find_result (view);
 	gtk_widget_queue_draw (GTK_WIDGET (view));
@@ -9185,30 +9426,35 @@ ev_view_find_set_result (EvView *view, gint page, gint result)
 void
 ev_view_find_search_changed (EvView *view)
 {
+	EvViewPrivate *priv = GET_PRIVATE (view);
+
 	/* search string has changed, focus on new search result */
-	view->jump_to_find_result = TRUE;
+	priv->jump_to_find_result = TRUE;
 	ev_view_find_cancel (view);
 }
 
 void
 ev_view_find_set_highlight_search (EvView *view, gboolean value)
 {
-	view->highlight_find_results = value;
+	EvViewPrivate *priv = GET_PRIVATE (view);
+
+	priv->highlight_find_results = value;
 	gtk_widget_queue_draw (GTK_WIDGET (view));
 }
 
 void
 ev_view_find_cancel (EvView *view)
 {
-	view->find_pages = NULL;
-	view->find_page = -1;
-	view->find_result = 0;
+	EvViewPrivate *priv = GET_PRIVATE (view);
+	priv->find_pages = NULL;
+	priv->find_page = -1;
+	priv->find_result = 0;
 
-	if (!view->find_job)
+	if (!priv->find_job)
 		return;
 
-	g_signal_handlers_disconnect_by_func (view->find_job, find_job_updated_cb, view);
-	g_clear_object (&view->find_job);
+	g_signal_handlers_disconnect_by_func (priv->find_job, find_job_updated_cb, view);
+	g_clear_object (&priv->find_job);
 }
 
 /*** Synctex ***/
@@ -9219,20 +9465,21 @@ ev_view_highlight_forward_search (EvView       *view,
 	EvMapping   *mapping;
 	gint         page;
 	GdkRectangle view_rect;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	if (!ev_document_has_synctex (view->document))
+	if (!ev_document_has_synctex (priv->document))
 		return;
 
-	mapping = ev_document_synctex_forward_search (view->document, link);
+	mapping = ev_document_synctex_forward_search (priv->document, link);
 	if (!mapping)
 		return;
 
-	if (view->synctex_result)
-		g_free (view->synctex_result);
-	view->synctex_result = mapping;
+	if (priv->synctex_result)
+		g_free (priv->synctex_result);
+	priv->synctex_result = mapping;
 
 	page = GPOINTER_TO_INT (mapping->data);
-	ev_document_model_set_page (view->model, page);
+	ev_document_model_set_page (priv->model, page);
 
 	_ev_view_transform_doc_rect_to_view_rect (view, page, &mapping->area, &view_rect);
 	_ev_view_ensure_rectangle_is_visible (view, &view_rect);
@@ -9269,21 +9516,22 @@ get_selection_page_range (EvView          *view,
 	gint first, last;
 	gint i, n_pages;
 	GtkBorder border;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	n_pages = ev_document_get_n_pages (view->document);
+	n_pages = ev_document_get_n_pages (priv->document);
 
 	if (gdk_point_equal (start, stop)) {
-		start_page = view->start_page;
-		end_page = view->end_page;
-	} else if (view->continuous) {
+		start_page = priv->start_page;
+		end_page = priv->end_page;
+	} else if (priv->continuous) {
 		start_page = 0;
 		end_page = n_pages - 1;
 	} else if (is_dual_page (view, NULL)) {
-		start_page = view->start_page;
-		end_page = view->end_page;
+		start_page = priv->start_page;
+		end_page = priv->end_page;
 	} else {
-		start_page = view->current_page;
-		end_page = view->current_page;
+		start_page = priv->current_page;
+		end_page = priv->current_page;
 	}
 
 	first = -1;
@@ -9389,12 +9637,13 @@ merge_selection_region (EvView *view,
 {
 	GList *old_list;
 	GList *new_list_ptr, *old_list_ptr;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
 	/* Update the selection */
-	old_list = ev_pixbuf_cache_get_selection_list (view->pixbuf_cache);
-	g_list_free_full (view->selection_info.selections, (GDestroyNotify)selection_free);
-	view->selection_info.selections = new_list;
-	ev_pixbuf_cache_set_selection_list (view->pixbuf_cache, new_list);
+	old_list = ev_pixbuf_cache_get_selection_list (priv->pixbuf_cache);
+	g_list_free_full (priv->selection_info.selections, (GDestroyNotify)selection_free);
+	priv->selection_info.selections = new_list;
+	ev_pixbuf_cache_set_selection_list (priv->pixbuf_cache, new_list);
 	g_signal_emit (view, signals[SIGNAL_SELECTION_CHANGED], 0, NULL);
 
 	new_list_ptr = new_list;
@@ -9432,7 +9681,7 @@ merge_selection_region (EvView *view,
 
 		/* is the page we're looking at on the screen?*/
 		cur_page = new_sel ? new_sel->page : old_sel->page;
-		if (cur_page < view->start_page || cur_page > view->end_page)
+		if (cur_page < priv->start_page || cur_page > priv->end_page)
 			continue;
 
 		/* seed the cache with a new page.  We are going to need the new
@@ -9440,9 +9689,9 @@ merge_selection_region (EvView *view,
 		if (new_sel) {
 			cairo_region_t *tmp_region;
 
-			tmp_region = ev_pixbuf_cache_get_selection_region (view->pixbuf_cache,
+			tmp_region = ev_pixbuf_cache_get_selection_region (priv->pixbuf_cache,
 									   cur_page,
-									   view->scale);
+									   priv->scale);
 			if (tmp_region)
 				new_sel->covered_region = cairo_region_reference (tmp_region);
 		}
@@ -9499,12 +9748,13 @@ ev_view_select_all (EvView *view)
 {
 	GList *selections = NULL;
 	int n_pages, i;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
 	/* Disable selection on rotated pages for the 0.4.0 series */
-	if (view->rotation != 0)
+	if (priv->rotation != 0)
 		return;
 
-	n_pages = ev_document_get_n_pages (view->document);
+	n_pages = ev_document_get_n_pages (priv->document);
 	for (i = 0; i < n_pages; i++) {
 		gdouble width, height;
 		EvViewSelection *selection;
@@ -9527,9 +9777,10 @@ ev_view_select_all (EvView *view)
 gboolean
 ev_view_has_selection (EvView *view)
 {
+	EvViewPrivate *priv = GET_PRIVATE (view);
 	g_return_val_if_fail(EV_IS_VIEW(view), FALSE);
 
-	return view->selection_info.selections != NULL;
+	return priv->selection_info.selections != NULL;
 }
 
 void
@@ -9552,18 +9803,19 @@ get_selected_text (EvView *view)
 	GString *text;
 	GList *l;
 	gchar *normalized_text;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
 	text = g_string_new (NULL);
 
 	ev_document_doc_mutex_lock ();
 
-	for (l = view->selection_info.selections; l != NULL; l = l->next) {
+	for (l = priv->selection_info.selections; l != NULL; l = l->next) {
 		EvViewSelection *selection = (EvViewSelection *)l->data;
 		EvPage *page;
 		gchar *tmp;
 
-		page = ev_document_get_page (view->document, selection->page);
-		tmp = ev_selection_get_selected_text (EV_SELECTION (view->document),
+		page = ev_document_get_page (priv->document, selection->page);
+		tmp = ev_selection_get_selected_text (EV_SELECTION (priv->document),
 						      page, selection->style,
 						      &(selection->rect));
 		g_object_unref (page);
@@ -9592,15 +9844,16 @@ ev_view_clipboard_copy (EvView      *view,
 }
 
 void
-ev_view_copy (EvView *ev_view)
+ev_view_copy (EvView *view)
 {
 	char *text;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	if (!EV_IS_SELECTION (ev_view->document))
+	if (!EV_IS_SELECTION (priv->document))
 		return;
 
-	text = get_selected_text (ev_view);
-	ev_view_clipboard_copy (ev_view, text);
+	text = get_selected_text (view);
+	ev_view_clipboard_copy (view, text);
 	g_free (text);
 }
 
@@ -9608,22 +9861,26 @@ void
 ev_view_copy_link_address (EvView       *view,
 			   EvLinkAction *action)
 {
-	g_clear_object (&view->link_selected);
+	EvViewPrivate *priv = GET_PRIVATE (view);
+
+	g_clear_object (&priv->link_selected);
 
 	ev_view_clipboard_copy (view, ev_link_action_get_uri (action));
 
-	view->link_selected = g_object_ref (action);
+	priv->link_selected = g_object_ref (action);
 }
 
 /*** Cursor operations ***/
 static void
 ev_view_set_cursor (EvView *view, EvViewCursor new_cursor)
 {
-	if (view->cursor == new_cursor) {
+	EvViewPrivate *priv = GET_PRIVATE (view);
+
+	if (priv->cursor == new_cursor) {
 		return;
 	}
 
-	view->cursor = new_cursor;
+	priv->cursor = new_cursor;
 
 	gtk_widget_set_cursor_from_name (GTK_WIDGET (view),
 			ev_view_cursor_name (new_cursor));
@@ -9645,14 +9902,15 @@ gboolean
 ev_view_next_page (EvView *view)
 {
 	gint next_page;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
 	g_return_val_if_fail (EV_IS_VIEW (view), FALSE);
 
-	next_page = go_to_next_page (view, view->current_page);
+	next_page = go_to_next_page (view, priv->current_page);
 	if (next_page == -1)
 		return FALSE;
 
-	ev_document_model_set_page (view->model, next_page);
+	ev_document_model_set_page (priv->model, next_page);
 
 	return TRUE;
 }
@@ -9661,14 +9919,15 @@ gboolean
 ev_view_previous_page (EvView *view)
 {
 	gint prev_page;
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
 	g_return_val_if_fail (EV_IS_VIEW (view), FALSE);
 
-	prev_page = go_to_previous_page (view, view->current_page);
+	prev_page = go_to_previous_page (view, priv->current_page);
 	if (prev_page == -1)
 		return FALSE;
 
-	ev_document_model_set_page (view->model, prev_page);
+	ev_document_model_set_page (priv->model, prev_page);
 
 	return TRUE;
 }
@@ -9677,14 +9936,16 @@ void
 ev_view_set_allow_links_change_zoom (EvView *view, gboolean allowed)
 {
 	g_return_if_fail (EV_IS_VIEW (view));
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	view->allow_links_change_zoom = allowed;
+	priv->allow_links_change_zoom = allowed;
 }
 
 gboolean
 ev_view_get_allow_links_change_zoom (EvView *view)
 {
 	g_return_val_if_fail (EV_IS_VIEW (view), FALSE);
+	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	return view->allow_links_change_zoom;
+	return priv->allow_links_change_zoom;
 }
