@@ -997,7 +997,7 @@ ev_page_accessible_remove_selection (AtkText *text,
 	EvPageAccessible *self = EV_PAGE_ACCESSIBLE (text);
 	EvView *view = ev_page_accessible_get_view (self);
 
-	if (ev_view_get_has_selection (view)) {
+	if (ev_view_has_selection (view)) {
 		_ev_view_clear_selection (view);
 		return TRUE;
 	}

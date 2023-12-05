@@ -6003,7 +6003,7 @@ ev_view_add_text_markup_annotation_for_selected_text (EvView  *view)
 	GList *l;
 
 	if (view->adding_annot_info.annot || view->adding_annot_info.adding_annot ||
-	    view->selection_info.selections == NULL)
+	    !ev_view_has_selection (view))
 		return FALSE;
 
 	for (l = view->selection_info.selections; l != NULL; l = l->next) {
@@ -6667,7 +6667,7 @@ ev_view_move_cursor (EvView         *view,
 		select_start_page = view->cursor_page;
 	}
 
-	clear_selections = !extend_selections && view->selection_info.selections != NULL;
+	clear_selections = !extend_selections && ev_view_has_selection (view);
 
 	switch (step) {
 	case GTK_MOVEMENT_VISUAL_POSITIONS:
@@ -6718,7 +6718,7 @@ ev_view_move_cursor (EvView         *view,
 		/* If we are selecting and there is a previous selection,
 		   set the new selection's start point to the start point
 		   of the previous selection */
-		if (extend_selections && view->selection_info.selections != NULL) {
+		if (extend_selections && ev_view_has_selection (view)) {
 			if (cursor_clear_selection (view, FALSE)) {
 				select_start_offset = view->cursor_offset;
 				select_start_page = view->cursor_page;
@@ -9525,8 +9525,10 @@ ev_view_select_all (EvView *view)
 }
 
 gboolean
-ev_view_get_has_selection (EvView *view)
+ev_view_has_selection (EvView *view)
 {
+	g_return_val_if_fail(EV_IS_VIEW(view), FALSE);
+
 	return view->selection_info.selections != NULL;
 }
 

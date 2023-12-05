@@ -73,7 +73,7 @@ void            ev_view_copy_link_address (EvView         *view,
 EV_PUBLIC
 void		ev_view_select_all	  (EvView         *view);
 EV_PUBLIC
-gboolean        ev_view_get_has_selection (EvView         *view);
+gboolean        ev_view_has_selection	  (EvView         *view);
 EV_PUBLIC
 char *   ev_view_get_selected_text (EvView  *view);
 

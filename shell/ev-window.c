@@ -542,7 +542,7 @@ ev_window_update_actions_sensitivity (EvWindow *ev_window)
 
 	ev_window_set_action_enabled (ev_window, "copy",
 					has_pages &&
-					ev_view_get_has_selection (view) &&
+					ev_view_has_selection (view) &&
 					!recent_view_mode);
 	ev_window_set_action_enabled (ev_window, "find-next",
 				      has_pages && can_find_in_page &&
@@ -971,7 +971,7 @@ view_selection_changed_cb (EvView   *view,
 			   EvWindow *window)
 {
 	ev_window_set_action_enabled (window, "copy",
-					ev_view_get_has_selection (view));
+					ev_view_has_selection (view));
 }
 
 static void
@@ -5429,7 +5429,7 @@ view_menu_popup_cb (EvView   *view,
 
 	can_annotate = EV_IS_DOCUMENT_ANNOTATIONS (document) &&
 		ev_document_annotations_can_add_annotation (EV_DOCUMENT_ANNOTATIONS (document)) &&
-		!has_annot && ev_view_get_has_selection (view);
+		!has_annot && ev_view_has_selection (view);
 
 	ev_window_set_action_enabled (ev_window, "highlight-annotation", can_annotate);
 
@@ -6094,7 +6094,7 @@ ev_window_begin_add_annot (EvWindow        *window,
 	EvWindowPrivate *priv = GET_PRIVATE (window);
 
 	if (annot_type == EV_ANNOTATION_TYPE_TEXT_MARKUP &&
-	    ev_view_get_has_selection (EV_VIEW (priv->view))) {
+	    ev_view_has_selection (EV_VIEW (priv->view))) {
 		ev_view_add_text_markup_annotation_for_selected_text (EV_VIEW (priv->view));
 		return;
 	}
