@@ -30,29 +30,15 @@
 
 G_BEGIN_DECLS
 
-typedef struct _EvImage        EvImage;
-typedef struct _EvImageClass   EvImageClass;
-typedef struct _EvImagePrivate EvImagePrivate;
-
 #define EV_TYPE_IMAGE              (ev_image_get_type())
-#define EV_IMAGE(object)           (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_IMAGE, EvImage))
-#define EV_IMAGE_CLASS(klass)      (G_TYPE_CHECK_CLASS_CAST((klass), EV_TYPE_IMAGE, EvImageClass))
-#define EV_IS_IMAGE(object)        (G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_IMAGE))
-#define EV_IS_IMAGE_CLASS(klass)   (G_TYPE_CHECK_CLASS_TYPE((klass), EV_TYPE_IMAGE))
-#define EV_IMAGE_GET_CLASS(object) (G_TYPE_INSTANCE_GET_CLASS((object), EV_TYPE_IMAGE, EvImageClass))
+
+EV_PUBLIC
+G_DECLARE_FINAL_TYPE (EvImage, ev_image, EV, IMAGE, GObject)
 
 struct _EvImage {
 	GObject base_instance;
-
-	EvImagePrivate *priv;
 };
 
-struct _EvImageClass {
-	GObjectClass base_class;
-};
-
-EV_PUBLIC
-GType        ev_image_get_type         (void) G_GNUC_CONST;
 EV_PUBLIC
 EvImage     *ev_image_new              (gint             page,
 					gint             img_id);
