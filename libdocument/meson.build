@@ -104,12 +104,19 @@ version_header = configure_file(
 )
 
 enum_types = 'ev-document-type-builtins'
+enum_header_prefix = '''
+#if !defined (__EV_EVINCE_DOCUMENT_H_INSIDE__) && !defined (EVINCE_COMPILATION)
+#error "Only <evince-document.h> can be included directly."
+#endif
 
-enum_sources = gnome.mkenums(
+#include "ev-macros.h"
+'''
+
+enum_sources = gnome.mkenums_simple(
   enum_types,
   sources: headers,
-  h_template: enum_types + '.h.template',
-  c_template: enum_types + '.c.template',
+  header_prefix: enum_header_prefix,
+  decorator: 'EV_PUBLIC',
   install_header: true,
   install_dir: join_paths(ev_includedir, include_subdir),
 )
