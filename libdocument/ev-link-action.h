@@ -31,16 +31,10 @@
 
 G_BEGIN_DECLS
 
-typedef struct _EvLinkAction        EvLinkAction;
-typedef struct _EvLinkActionClass   EvLinkActionClass;
-typedef struct _EvLinkActionPrivate EvLinkActionPrivate;
-
 #define EV_TYPE_LINK_ACTION              (ev_link_action_get_type())
-#define EV_LINK_ACTION(object)           (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_LINK_ACTION, EvLinkAction))
-#define EV_LINK_ACTION_CLASS(klass)      (G_TYPE_CHECK_CLASS_CAST((klass), EV_TYPE_LINK_ACTION, EvLinkActionClass))
-#define EV_IS_LINK_ACTION(object)        (G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_LINK_ACTION))
-#define EV_IS_LINK_ACTION_CLASS(klass)   (G_TYPE_CHECK_CLASS_TYPE((klass), EV_TYPE_LINK_ACTION))
-#define EV_LINK_ACTION_GET_CLASS(object) (G_TYPE_INSTANCE_GET_CLASS((object), EV_TYPE_LINK_ACTION, EvLinkActionClass))
+
+EV_PUBLIC
+G_DECLARE_FINAL_TYPE (EvLinkAction, ev_link_action, EV, LINK_ACTION, GObject)
 
 typedef enum {
 	EV_LINK_ACTION_TYPE_GOTO_DEST,
@@ -53,9 +47,6 @@ typedef enum {
 	/* We'll probably fill this in more as we support the other types of
 	 * actions */
 } EvLinkActionType;
-
-EV_PUBLIC
-GType            ev_link_action_get_type                 (void) G_GNUC_CONST;
 
 EV_PUBLIC
 EvLinkActionType ev_link_action_get_action_type          (EvLinkAction *self);

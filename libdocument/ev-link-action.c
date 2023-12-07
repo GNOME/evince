@@ -39,12 +39,6 @@ enum {
 
 struct _EvLinkAction {
 	GObject base_instance;
-
-	EvLinkActionPrivate *priv;
-};
-
-struct _EvLinkActionClass {
-	GObjectClass base_class;
 };
 
 struct _EvLinkActionPrivate {
@@ -61,14 +55,19 @@ struct _EvLinkActionPrivate {
 	gboolean          exclude_reset_fields;
 };
 
+typedef struct _EvLinkActionPrivate EvLinkActionPrivate;
+
+#define GET_PRIVATE(o) ev_link_action_get_instance_private (o)
+
 G_DEFINE_TYPE_WITH_PRIVATE (EvLinkAction, ev_link_action, G_TYPE_OBJECT)
 
 EvLinkActionType
 ev_link_action_get_action_type (EvLinkAction *self)
 {
 	g_return_val_if_fail (EV_IS_LINK_ACTION (self), 0);
+	EvLinkActionPrivate *priv = GET_PRIVATE (self);
 
-	return self->priv->type;
+	return priv->type;
 }
 
 /**
@@ -81,40 +80,45 @@ EvLinkDest *
 ev_link_action_get_dest (EvLinkAction *self)
 {
 	g_return_val_if_fail (EV_IS_LINK_ACTION (self), NULL);
+	EvLinkActionPrivate *priv = GET_PRIVATE (self);
 
-	return self->priv->dest;
+	return priv->dest;
 }
 
 const gchar *
 ev_link_action_get_uri (EvLinkAction *self)
 {
 	g_return_val_if_fail (EV_IS_LINK_ACTION (self), NULL);
+	EvLinkActionPrivate *priv = GET_PRIVATE (self);
 
-	return self->priv->uri;
+	return priv->uri;
 }
 
 const gchar *
 ev_link_action_get_filename (EvLinkAction *self)
 {
 	g_return_val_if_fail (EV_IS_LINK_ACTION (self), NULL);
+	EvLinkActionPrivate *priv = GET_PRIVATE (self);
 
-	return self->priv->filename;
+	return priv->filename;
 }
 
 const gchar *
 ev_link_action_get_params (EvLinkAction *self)
 {
 	g_return_val_if_fail (EV_IS_LINK_ACTION (self), NULL);
+	EvLinkActionPrivate *priv = GET_PRIVATE (self);
 
-	return self->priv->params;
+	return priv->params;
 }
 
 const gchar *
 ev_link_action_get_name (EvLinkAction *self)
 {
 	g_return_val_if_fail (EV_IS_LINK_ACTION (self), NULL);
+	EvLinkActionPrivate *priv = GET_PRIVATE (self);
 
-	return self->priv->name;
+	return priv->name;
 }
 
 /**
@@ -127,8 +131,9 @@ GList *
 ev_link_action_get_show_list (EvLinkAction *self)
 {
 	g_return_val_if_fail (EV_IS_LINK_ACTION (self), NULL);
+	EvLinkActionPrivate *priv = GET_PRIVATE (self);
 
-	return self->priv->show_list;
+	return priv->show_list;
 }
 
 /**
@@ -141,8 +146,9 @@ GList *
 ev_link_action_get_hide_list (EvLinkAction *self)
 {
 	g_return_val_if_fail (EV_IS_LINK_ACTION (self), NULL);
+	EvLinkActionPrivate *priv = GET_PRIVATE (self);
 
-	return self->priv->hide_list;
+	return priv->hide_list;
 }
 
 /**
@@ -155,8 +161,9 @@ GList *
 ev_link_action_get_toggle_list (EvLinkAction *self)
 {
 	g_return_val_if_fail (EV_IS_LINK_ACTION (self), NULL);
+	EvLinkActionPrivate *priv = GET_PRIVATE (self);
 
-	return self->priv->toggle_list;
+	return priv->toggle_list;
 }
 
 /**
@@ -169,8 +176,9 @@ GList *
 ev_link_action_get_reset_fields (EvLinkAction *self)
 {
 	g_return_val_if_fail (EV_IS_LINK_ACTION (self), NULL);
+	EvLinkActionPrivate *priv = GET_PRIVATE (self);
 
-	return self->priv->reset_fields;
+	return priv->reset_fields;
 }
 
 /**
@@ -183,8 +191,9 @@ gboolean
 ev_link_action_get_exclude_reset_fields (EvLinkAction *self)
 {
 	g_return_val_if_fail (EV_IS_LINK_ACTION (self), FALSE);
+	EvLinkActionPrivate *priv = GET_PRIVATE (self);
 
-	return self->priv->exclude_reset_fields;
+	return priv->exclude_reset_fields;
 }
 
 static void
@@ -193,43 +202,42 @@ ev_link_action_get_property (GObject    *object,
 			     GValue     *value,
 			     GParamSpec *param_spec)
 {
-	EvLinkAction *self;
-
-	self = EV_LINK_ACTION (object);
+	EvLinkAction *self = EV_LINK_ACTION (object);
+	EvLinkActionPrivate *priv = GET_PRIVATE (self);
 
 	switch (prop_id) {
 	        case PROP_TYPE:
-		        g_value_set_enum (value, self->priv->type);
+		        g_value_set_enum (value, priv->type);
 		        break;
 	        case PROP_DEST:
-		        g_value_set_object (value, self->priv->dest);
+		        g_value_set_object (value, priv->dest);
 			break;
 	        case PROP_URI:
-			g_value_set_string (value, self->priv->uri);
+			g_value_set_string (value, priv->uri);
 			break;
 	        case PROP_FILENAME:
-			g_value_set_string (value, self->priv->filename);
+			g_value_set_string (value, priv->filename);
 			break;
 	        case PROP_PARAMS:
-			g_value_set_string (value, self->priv->params);
+			g_value_set_string (value, priv->params);
 			break;
 	        case PROP_NAME:
-			g_value_set_string (value, self->priv->name);
+			g_value_set_string (value, priv->name);
 			break;
 	        case PROP_SHOW_LIST:
-			g_value_set_pointer (value, self->priv->show_list);
+			g_value_set_pointer (value, priv->show_list);
 			break;
 	        case PROP_HIDE_LIST:
-			g_value_set_pointer (value, self->priv->hide_list);
+			g_value_set_pointer (value, priv->hide_list);
 			break;
 	        case PROP_TOGGLE_LIST:
-			g_value_set_pointer (value, self->priv->toggle_list);
+			g_value_set_pointer (value, priv->toggle_list);
 			break;
 	        case PROP_RESET_FIELDS:
-			g_value_set_pointer (value, self->priv->reset_fields);
+			g_value_set_pointer (value, priv->reset_fields);
 			break;
 	        case PROP_EXCLUDE_RESET_FIELDS:
-			g_value_set_boolean (value, self->priv->exclude_reset_fields);
+			g_value_set_boolean (value, priv->exclude_reset_fields);
 			break;
 	        default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object,
@@ -246,44 +254,45 @@ ev_link_action_set_property (GObject      *object,
 			     GParamSpec   *param_spec)
 {
 	EvLinkAction *self = EV_LINK_ACTION (object);
+	EvLinkActionPrivate *priv = GET_PRIVATE (self);
 
 	switch (prop_id) {
 	        case PROP_TYPE:
-			self->priv->type = g_value_get_enum (value);
+			priv->type = g_value_get_enum (value);
 			break;
 	        case PROP_DEST:
-			self->priv->dest = g_value_dup_object (value);
+			priv->dest = g_value_dup_object (value);
 			break;
 	        case PROP_URI:
-			g_free (self->priv->uri);
-			self->priv->uri = g_value_dup_string (value);
+			g_free (priv->uri);
+			priv->uri = g_value_dup_string (value);
 			break;
 	        case PROP_FILENAME:
-			g_free (self->priv->filename);
-			self->priv->filename = g_value_dup_string (value);
+			g_free (priv->filename);
+			priv->filename = g_value_dup_string (value);
 			break;
 	        case PROP_PARAMS:
-			g_free (self->priv->params);
-			self->priv->params = g_value_dup_string (value);
+			g_free (priv->params);
+			priv->params = g_value_dup_string (value);
 			break;
 	        case PROP_NAME:
-			g_free (self->priv->name);
-			self->priv->name = g_value_dup_string (value);
+			g_free (priv->name);
+			priv->name = g_value_dup_string (value);
 			break;
 	        case PROP_SHOW_LIST:
-			self->priv->show_list = g_value_get_pointer (value);
+			priv->show_list = g_value_get_pointer (value);
 			break;
 	        case PROP_HIDE_LIST:
-			self->priv->hide_list = g_value_get_pointer (value);
+			priv->hide_list = g_value_get_pointer (value);
 			break;
 	        case PROP_TOGGLE_LIST:
-			self->priv->toggle_list = g_value_get_pointer (value);
+			priv->toggle_list = g_value_get_pointer (value);
 			break;
 	        case PROP_RESET_FIELDS:
-			self->priv->reset_fields = g_value_get_pointer (value);
+			priv->reset_fields = g_value_get_pointer (value);
 			break;
 	        case PROP_EXCLUDE_RESET_FIELDS:
-			self->priv->exclude_reset_fields = g_value_get_boolean (value);
+			priv->exclude_reset_fields = g_value_get_boolean (value);
 			break;
 	        default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object,
@@ -296,9 +305,7 @@ ev_link_action_set_property (GObject      *object,
 static void
 ev_link_action_finalize (GObject *object)
 {
-	EvLinkActionPrivate *priv;
-
-	priv = EV_LINK_ACTION (object)->priv;
+	EvLinkActionPrivate *priv = GET_PRIVATE (EV_LINK_ACTION (object));
 
 	g_clear_object (&priv->dest);
 
@@ -318,15 +325,6 @@ ev_link_action_finalize (GObject *object)
 static void
 ev_link_action_init (EvLinkAction *ev_link_action)
 {
-	ev_link_action->priv = ev_link_action_get_instance_private (ev_link_action);
-
-	ev_link_action->priv->dest = NULL;
-	ev_link_action->priv->uri = NULL;
-	ev_link_action->priv->filename = NULL;
-	ev_link_action->priv->params = NULL;
-	ev_link_action->priv->name = NULL;
-	ev_link_action->priv->reset_fields = NULL;
-	ev_link_action->priv->exclude_reset_fields = FALSE;
 }
 
 static void
@@ -544,30 +542,32 @@ ev_link_action_equal (EvLinkAction *a,
 {
         g_return_val_if_fail (EV_IS_LINK_ACTION (a), FALSE);
         g_return_val_if_fail (EV_IS_LINK_ACTION (b), FALSE);
+	EvLinkActionPrivate *a_priv = GET_PRIVATE (a);
+	EvLinkActionPrivate *b_priv = GET_PRIVATE (b);
 
         if (a == b)
                 return TRUE;
 
-        if (a->priv->type != b->priv->type)
+        if (a_priv->type != b_priv->type)
                 return FALSE;
 
-        switch (a->priv->type) {
+        switch (a_priv->type) {
         case EV_LINK_ACTION_TYPE_GOTO_DEST:
-                return ev_link_dest_equal (a->priv->dest, b->priv->dest);
+                return ev_link_dest_equal (a_priv->dest, b_priv->dest);
 
         case EV_LINK_ACTION_TYPE_GOTO_REMOTE:
-                return ev_link_dest_equal (a->priv->dest, b->priv->dest) &&
-                        !g_strcmp0 (a->priv->filename, b->priv->filename);
+                return ev_link_dest_equal (a_priv->dest, b_priv->dest) &&
+                        !g_strcmp0 (a_priv->filename, b_priv->filename);
 
         case EV_LINK_ACTION_TYPE_EXTERNAL_URI:
-                return !g_strcmp0 (a->priv->uri, b->priv->uri);
+                return !g_strcmp0 (a_priv->uri, b_priv->uri);
 
         case EV_LINK_ACTION_TYPE_LAUNCH:
-                return !g_strcmp0 (a->priv->filename, b->priv->filename) &&
-                        !g_strcmp0 (a->priv->params, b->priv->params);
+                return !g_strcmp0 (a_priv->filename, b_priv->filename) &&
+                        !g_strcmp0 (a_priv->params, b_priv->params);
 
         case EV_LINK_ACTION_TYPE_NAMED:
-                return !g_strcmp0 (a->priv->name, b->priv->name);
+                return !g_strcmp0 (a_priv->name, b_priv->name);
 
         default:
                 return FALSE;
