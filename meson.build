@@ -376,6 +376,14 @@ if enable_pdf
   cairo_pdf_dep = dependency('cairo-pdf', required: false)
   cairo_ps_dep = dependency('cairo-ps', required: false)
 
+  if cairo_pdf_dep.found()
+    config_h.set('HAVE_CAIRO_PDF', true)
+  endif
+
+  if cairo_ps_dep.found()
+    config_h.set('HAVE_CAIRO_PS', true)
+  endif
+
   backends += {'pdf': mime_types_list.get('pdf')}
   evince_mime_types += mime_types_list.get('pdf')
 elif get_option('pdf').auto()
