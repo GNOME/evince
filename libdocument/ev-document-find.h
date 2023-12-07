@@ -32,14 +32,10 @@
 G_BEGIN_DECLS
 
 #define EV_TYPE_DOCUMENT_FIND	    (ev_document_find_get_type ())
-#define EV_DOCUMENT_FIND(o)		    (G_TYPE_CHECK_INSTANCE_CAST ((o), EV_TYPE_DOCUMENT_FIND, EvDocumentFind))
-#define EV_DOCUMENT_FIND_IFACE(k)	    (G_TYPE_CHECK_CLASS_CAST((k), EV_TYPE_DOCUMENT_FIND, EvDocumentFindInterface))
-#define EV_IS_DOCUMENT_FIND(o)	    (G_TYPE_CHECK_INSTANCE_TYPE ((o), EV_TYPE_DOCUMENT_FIND))
-#define EV_IS_DOCUMENT_FIND_IFACE(k)	    (G_TYPE_CHECK_CLASS_TYPE ((k), EV_TYPE_DOCUMENT_FIND))
-#define EV_DOCUMENT_FIND_GET_IFACE(inst) (G_TYPE_INSTANCE_GET_INTERFACE ((inst), EV_TYPE_DOCUMENT_FIND, EvDocumentFindInterface))
 
-typedef struct _EvDocumentFind	        EvDocumentFind;
-typedef struct _EvDocumentFindInterface EvDocumentFindInterface;
+EV_PUBLIC
+G_DECLARE_INTERFACE (EvDocumentFind, ev_document_find, EV, DOCUMENT_FIND, GObject)
+
 typedef struct _EvFindRectangle         EvFindRectangle;
 
 #define EV_TYPE_FIND_RECTANGLE (ev_find_rectangle_get_type ())
@@ -82,8 +78,6 @@ struct _EvDocumentFindInterface
 						  EvFindOptions   options);
 };
 
-EV_PUBLIC
-GType         ev_document_find_get_type               (void) G_GNUC_CONST;
 EV_PUBLIC
 EvFindOptions ev_document_find_get_supported_options  (EvDocumentFind *document_find);
 EV_PUBLIC

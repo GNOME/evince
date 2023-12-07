@@ -33,14 +33,9 @@
 G_BEGIN_DECLS
 
 #define EV_TYPE_DOCUMENT_PRINT		   (ev_document_print_get_type ())
-#define EV_DOCUMENT_PRINT(o)		   (G_TYPE_CHECK_INSTANCE_CAST ((o), EV_TYPE_DOCUMENT_PRINT, EvDocumentPrint))
-#define EV_DOCUMENT_PRINT_IFACE(k)	   (G_TYPE_CHECK_CLASS_CAST((k), EV_TYPE_DOCUMENT_PRINT, EvDocumentPrintInterface))
-#define EV_IS_DOCUMENT_PRINT(o)	           (G_TYPE_CHECK_INSTANCE_TYPE ((o), EV_TYPE_DOCUMENT_PRINT))
-#define EV_IS_DOCUMENT_PRINT_IFACE(k)	   (G_TYPE_CHECK_CLASS_TYPE ((k), EV_TYPE_DOCUMENT_PRINT))
-#define EV_DOCUMENT_PRINT_GET_IFACE(inst)  (G_TYPE_INSTANCE_GET_INTERFACE ((inst), EV_TYPE_DOCUMENT_PRINT, EvDocumentPrintInterface))
 
-typedef struct _EvDocumentPrint          EvDocumentPrint;
-typedef struct _EvDocumentPrintInterface EvDocumentPrintInterface;
+EV_PUBLIC
+G_DECLARE_INTERFACE (EvDocumentPrint, ev_document_print, EV, DOCUMENT_PRINT, GObject)
 
 struct _EvDocumentPrintInterface
 {
@@ -51,9 +46,6 @@ struct _EvDocumentPrintInterface
 			     EvPage          *page,
 			     cairo_t         *cr);
 };
-
-EV_PUBLIC
-GType ev_document_print_get_type   (void) G_GNUC_CONST;
 
 EV_PUBLIC
 void  ev_document_print_print_page (EvDocumentPrint *document_print,

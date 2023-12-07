@@ -39,14 +39,9 @@
 G_BEGIN_DECLS
 
 #define EV_TYPE_DOCUMENT_LINKS		  (ev_document_links_get_type ())
-#define EV_DOCUMENT_LINKS(o)		  (G_TYPE_CHECK_INSTANCE_CAST ((o), EV_TYPE_DOCUMENT_LINKS, EvDocumentLinks))
-#define EV_DOCUMENT_LINKS_IFACE(k)	  (G_TYPE_CHECK_CLASS_CAST((k), EV_TYPE_DOCUMENT_LINKS, EvDocumentLinksInterface))
-#define EV_IS_DOCUMENT_LINKS(o)		  (G_TYPE_CHECK_INSTANCE_TYPE ((o), EV_TYPE_DOCUMENT_LINKS))
-#define EV_IS_DOCUMENT_LINKS_IFACE(k)	  (G_TYPE_CHECK_CLASS_TYPE ((k), EV_TYPE_DOCUMENT_LINKS))
-#define EV_DOCUMENT_LINKS_GET_IFACE(inst) (G_TYPE_INSTANCE_GET_INTERFACE ((inst), EV_TYPE_DOCUMENT_LINKS, EvDocumentLinksInterface))
 
-typedef struct _EvDocumentLinks	         EvDocumentLinks;
-typedef struct _EvDocumentLinksInterface EvDocumentLinksInterface;
+EV_PUBLIC
+G_DECLARE_INTERFACE (EvDocumentLinks, ev_document_links, EV, DOCUMENT_LINKS, GObject)
 
 enum {
 	EV_DOCUMENT_LINKS_COLUMN_MARKUP,
@@ -71,8 +66,6 @@ struct _EvDocumentLinksInterface
 					       const gchar     *link_name);
 };
 
-EV_PUBLIC
-GType          ev_document_links_get_type            (void) G_GNUC_CONST;
 EV_PUBLIC
 gboolean       ev_document_links_has_document_links  (EvDocumentLinks *document_links);
 EV_PUBLIC

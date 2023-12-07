@@ -34,14 +34,9 @@
 G_BEGIN_DECLS
 
 #define EV_TYPE_DOCUMENT_FORMS	          (ev_document_forms_get_type ())
-#define EV_DOCUMENT_FORMS(o)	          (G_TYPE_CHECK_INSTANCE_CAST ((o), EV_TYPE_DOCUMENT_FORMS, EvDocumentForms))
-#define EV_DOCUMENT_FORMS_IFACE(k)	  (G_TYPE_CHECK_CLASS_CAST((k), EV_TYPE_DOCUMENT_FORMS, EvDocumentFormsInterface))
-#define EV_IS_DOCUMENT_FORMS(o)	          (G_TYPE_CHECK_INSTANCE_TYPE ((o), EV_TYPE_DOCUMENT_FORMS))
-#define EV_IS_DOCUMENT_FORMS_IFACE(k)     (G_TYPE_CHECK_CLASS_TYPE ((k), EV_TYPE_DOCUMENT_FORMS))
-#define EV_DOCUMENT_FORMS_GET_IFACE(inst) (G_TYPE_INSTANCE_GET_INTERFACE ((inst), EV_TYPE_DOCUMENT_FORMS, EvDocumentFormsInterface))
 
-typedef struct _EvDocumentForms          EvDocumentForms;
-typedef struct _EvDocumentFormsInterface EvDocumentFormsInterface;
+EV_PUBLIC
+G_DECLARE_INTERFACE (EvDocumentForms, ev_document_forms, EV, DOCUMENT_FORMS, GObject)
 
 struct _EvDocumentFormsInterface
 {
@@ -86,8 +81,6 @@ struct _EvDocumentFormsInterface
 							       EvLinkAction      *action);
 };
 
-EV_PUBLIC
-GType          ev_document_forms_get_type                           (void) G_GNUC_CONST;
 EV_PUBLIC
 EvMappingList *ev_document_forms_get_form_fields                    (EvDocumentForms   *document_forms,
 								     EvPage            *page);

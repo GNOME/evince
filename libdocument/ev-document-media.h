@@ -35,14 +35,9 @@
 G_BEGIN_DECLS
 
 #define EV_TYPE_DOCUMENT_MEDIA            (ev_document_media_get_type ())
-#define EV_DOCUMENT_MEDIA(o)              (G_TYPE_CHECK_INSTANCE_CAST ((o), EV_TYPE_DOCUMENT_MEDIA, EvDocumentMedia))
-#define EV_IS_DOCUMENT_MEDIA(o)           (G_TYPE_CHECK_INSTANCE_TYPE ((o), EV_TYPE_DOCUMENT_MEDIA))
-#define EV_DOCUMENT_MEDIA_IFACE(k)        (G_TYPE_CHECK_CLASS_CAST((k), EV_TYPE_DOCUMENT_MEDIA, EvDocumentMediaInterface))
-#define EV_IS_DOCUMENT_MEDIA_IFACE(k)     (G_TYPE_CHECK_CLASS_TYPE ((k), EV_TYPE_DOCUMENT_MEDIA))
-#define EV_DOCUMENT_MEDIA_GET_IFACE(inst) (G_TYPE_INSTANCE_GET_INTERFACE ((inst), EV_TYPE_DOCUMENT_MEDIA, EvDocumentMediaInterface))
 
-typedef struct _EvDocumentMedia          EvDocumentMedia;
-typedef struct _EvDocumentMediaInterface EvDocumentMediaInterface;
+EV_PUBLIC
+G_DECLARE_INTERFACE (EvDocumentMedia, ev_document_media, EV, DOCUMENT_MEDIA, GObject)
 
 struct _EvDocumentMediaInterface {
         GTypeInterface base_iface;
@@ -52,8 +47,6 @@ struct _EvDocumentMediaInterface {
                                               EvPage          *page);
 };
 
-EV_PUBLIC
-GType          ev_document_media_get_type          (void) G_GNUC_CONST;
 EV_PUBLIC
 EvMappingList *ev_document_media_get_media_mapping (EvDocumentMedia *document_media,
                                                     EvPage          *page);

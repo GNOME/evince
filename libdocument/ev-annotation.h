@@ -43,11 +43,9 @@ G_BEGIN_DECLS
 
 /* EvAnnotationMarkup */
 #define EV_TYPE_ANNOTATION_MARKUP               (ev_annotation_markup_get_type ())
-#define EV_ANNOTATION_MARKUP(o)                 (G_TYPE_CHECK_INSTANCE_CAST ((o), EV_TYPE_ANNOTATION_MARKUP, EvAnnotationMarkup))
-#define EV_ANNOTATION_MARKUP_IFACE(k)           (G_TYPE_CHECK_CLASS_CAST((k), EV_TYPE_ANNOTATION_MARKUP, EvAnnotationMarkupInterface))
-#define EV_IS_ANNOTATION_MARKUP(o)              (G_TYPE_CHECK_INSTANCE_TYPE ((o), EV_TYPE_ANNOTATION_MARKUP))
-#define EV_IS_ANNOTATION_MARKUP_IFACE(k)        (G_TYPE_CHECK_CLASS_TYPE ((k), EV_TYPE_ANNOTATION_MARKUP))
-#define EV_ANNOTATION_MARKUP_GET_IFACE(inst)    (G_TYPE_INSTANCE_GET_INTERFACE ((inst), EV_TYPE_ANNOTATION_MARKUP, EvAnnotationMarkupInterface))
+
+EV_PUBLIC
+G_DECLARE_INTERFACE (EvAnnotationMarkup, ev_annotation_markup, EV, ANNOTATION_MARKUP, GObject)
 
 /* EvAnnotationText */
 #define EV_TYPE_ANNOTATION_TEXT                 (ev_annotation_text_get_type())
@@ -75,9 +73,6 @@ G_BEGIN_DECLS
 
 typedef struct _EvAnnotation                EvAnnotation;
 typedef struct _EvAnnotationClass           EvAnnotationClass;
-
-typedef struct _EvAnnotationMarkup          EvAnnotationMarkup;
-typedef struct _EvAnnotationMarkupInterface EvAnnotationMarkupInterface;
 
 typedef struct _EvAnnotationText            EvAnnotationText;
 typedef struct _EvAnnotationTextClass       EvAnnotationTextClass;
@@ -161,8 +156,6 @@ gboolean             ev_annotation_set_area                  (EvAnnotation      
                                                               const EvRectangle      *area);
 
 /* EvAnnotationMarkup */
-EV_PUBLIC
-GType                ev_annotation_markup_get_type           (void) G_GNUC_CONST;
 EV_PUBLIC
 const gchar         *ev_annotation_markup_get_label          (EvAnnotationMarkup     *markup);
 EV_PUBLIC

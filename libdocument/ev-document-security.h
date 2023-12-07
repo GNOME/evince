@@ -37,16 +37,10 @@
 
 G_BEGIN_DECLS
 
-
 #define EV_TYPE_DOCUMENT_SECURITY		  (ev_document_security_get_type ())
-#define EV_DOCUMENT_SECURITY(o)			  (G_TYPE_CHECK_INSTANCE_CAST ((o), EV_TYPE_DOCUMENT_SECURITY, EvDocumentSecurity))
-#define EV_DOCUMENT_SECURITY_IFACE(k)	  	  (G_TYPE_CHECK_CLASS_CAST((k), EV_TYPE_DOCUMENT_SECURITY, EvDocumentSecurityInterface))
-#define EV_IS_DOCUMENT_SECURITY(o)		  (G_TYPE_CHECK_INSTANCE_TYPE ((o), EV_TYPE_DOCUMENT_SECURITY))
-#define EV_IS_DOCUMENT_SECURITY_IFACE(k)	  (G_TYPE_CHECK_CLASS_TYPE ((k), EV_TYPE_DOCUMENT_SECURITY))
-#define EV_DOCUMENT_SECURITY_GET_IFACE(inst) 	  (G_TYPE_INSTANCE_GET_INTERFACE ((inst), EV_TYPE_DOCUMENT_SECURITY, EvDocumentSecurityInterface))
 
-typedef struct _EvDocumentSecurity          EvDocumentSecurity;
-typedef struct _EvDocumentSecurityInterface EvDocumentSecurityInterface;
+EV_PUBLIC
+G_DECLARE_INTERFACE (EvDocumentSecurity, ev_document_security, EV, DOCUMENT_SECURITY, GObject)
 
 struct _EvDocumentSecurityInterface
 {
@@ -58,8 +52,6 @@ struct _EvDocumentSecurityInterface
 							const char         *password);
 };
 
-EV_PUBLIC
-GType    ev_document_security_get_type              (void);
 EV_PUBLIC
 gboolean ev_document_security_has_document_security (EvDocumentSecurity *document_security);
 EV_PUBLIC

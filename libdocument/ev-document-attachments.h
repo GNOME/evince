@@ -32,14 +32,9 @@
 G_BEGIN_DECLS
 
 #define EV_TYPE_DOCUMENT_ATTACHMENTS		(ev_document_attachments_get_type ())
-#define EV_DOCUMENT_ATTACHMENTS(o)		(G_TYPE_CHECK_INSTANCE_CAST ((o), EV_TYPE_DOCUMENT_ATTACHMENTS, EvDocumentAttachments))
-#define EV_DOCUMENT_ATTACHMENTS_IFACE(k)	(G_TYPE_CHECK_CLASS_CAST((k), EV_TYPE_DOCUMENT_ATTACHMENTS, EvDocumentAttachmentsInterface))
-#define EV_IS_DOCUMENT_ATTACHMENTS(o)	        (G_TYPE_CHECK_INSTANCE_TYPE ((o), EV_TYPE_DOCUMENT_ATTACHMENTS))
-#define EV_IS_DOCUMENT_ATTACHMENTS_IFACE(k)	(G_TYPE_CHECK_CLASS_TYPE ((k), EV_TYPE_DOCUMENT_ATTACHMENTS))
-#define EV_DOCUMENT_ATTACHMENTS_GET_IFACE(inst) (G_TYPE_INSTANCE_GET_INTERFACE ((inst), EV_TYPE_DOCUMENT_ATTACHMENTS, EvDocumentAttachmentsInterface))
 
-typedef struct _EvDocumentAttachments          EvDocumentAttachments;
-typedef struct _EvDocumentAttachmentsInterface EvDocumentAttachmentsInterface;
+EV_PUBLIC
+G_DECLARE_INTERFACE (EvDocumentAttachments, ev_document_attachments, EV, DOCUMENT_ATTACHMENTS, GObject)
 
 struct _EvDocumentAttachmentsInterface
 {
@@ -49,9 +44,6 @@ struct _EvDocumentAttachmentsInterface
 	gboolean  (* has_attachments) (EvDocumentAttachments *document_attachments);
 	GList    *(* get_attachments) (EvDocumentAttachments *document_attachments);
 };
-
-EV_PUBLIC
-GType     ev_document_attachments_get_type        (void) G_GNUC_CONST;
 
 EV_PUBLIC
 gboolean  ev_document_attachments_has_attachments (EvDocumentAttachments *document_attachments);
