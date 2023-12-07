@@ -441,8 +441,7 @@ static GHashTable *print_queue = NULL;
 static void
 queue_free (GQueue *queue)
 {
-	g_queue_foreach (queue, (GFunc)g_object_unref, NULL);
-	g_queue_free (queue);
+	g_queue_free_full (queue, g_object_unref);
 }
 
 static void

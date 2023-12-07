@@ -335,6 +335,12 @@ tiff_document_render (EvDocument      *document,
 	return rotated_surface;
 }
 
+static void
+free_buffer (guchar *pixels, gpointer data)
+{
+	g_free (pixels);
+}
+
 static GdkPixbuf *
 tiff_document_get_thumbnail (EvDocument      *document,
 			     EvRenderContext *rc)
@@ -397,7 +403,7 @@ tiff_document_get_thumbnail (EvDocument      *document,
 
 	pixbuf = gdk_pixbuf_new_from_data (pixels, GDK_COLORSPACE_RGB, TRUE, 8,
 					   width, height, rowstride,
-					   (GdkPixbufDestroyNotify) g_free, NULL);
+					   free_buffer, NULL);
 	pop_handlers ();
 
 	ev_render_context_compute_scaled_size (rc, width, height * (x_res / y_res),

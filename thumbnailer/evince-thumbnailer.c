@@ -88,8 +88,10 @@ time_monitor_stop (void)
 }
 
 static void
-delete_temp_file (GFile *file)
+delete_temp_file (gpointer data, GObject *object)
 {
+	GFile *file = G_FILE (data);
+
 	ev_tmp_file_unlink (file);
 	g_object_unref (file);
 }
@@ -164,7 +166,7 @@ evince_thumbnailer_get_document (GFile *file)
 	if (tmp_file) {
 		if (document) {
 			g_object_weak_ref (G_OBJECT (document),
-					   (GWeakNotify)delete_temp_file,
+					   delete_temp_file,
 					   tmp_file);
 		} else {
 			ev_tmp_file_unlink (tmp_file);
