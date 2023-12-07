@@ -45,12 +45,6 @@ typedef enum {
 
 struct _EvLinkDest {
 	GObject base_instance;
-
-	EvLinkDestPrivate *priv;
-};
-
-struct _EvLinkDestClass {
-	GObjectClass base_class;
 };
 
 struct _EvLinkDestPrivate {
@@ -66,22 +60,28 @@ struct _EvLinkDestPrivate {
 	gchar	      *page_label;
 };
 
+typedef struct _EvLinkDestPrivate EvLinkDestPrivate;
+
+#define GET_PRIVATE(o) ev_link_dest_get_instance_private (o)
+
 G_DEFINE_TYPE_WITH_PRIVATE (EvLinkDest, ev_link_dest, G_TYPE_OBJECT)
 
 EvLinkDestType
 ev_link_dest_get_dest_type (EvLinkDest *self)
 {
 	g_return_val_if_fail (EV_IS_LINK_DEST (self), 0);
+	EvLinkDestPrivate *priv = GET_PRIVATE (self);
 
-	return self->priv->type;
+	return priv->type;
 }
 
 gint
 ev_link_dest_get_page (EvLinkDest *self)
 {
 	g_return_val_if_fail (EV_IS_LINK_DEST (self), -1);
+	EvLinkDestPrivate *priv = GET_PRIVATE (self);
 
-	return self->priv->page;
+	return priv->page;
 }
 
 gdouble
@@ -89,11 +89,12 @@ ev_link_dest_get_top (EvLinkDest *self,
 		      gboolean   *change_top)
 {
 	g_return_val_if_fail (EV_IS_LINK_DEST (self), 0);
+	EvLinkDestPrivate *priv = GET_PRIVATE (self);
 
 	if (change_top)
-		*change_top = (self->priv->change & EV_DEST_CHANGE_TOP);
+		*change_top = (priv->change & EV_DEST_CHANGE_TOP);
 
-	return self->priv->top;
+	return priv->top;
 }
 
 gdouble
@@ -101,27 +102,30 @@ ev_link_dest_get_left (EvLinkDest *self,
 		       gboolean   *change_left)
 {
 	g_return_val_if_fail (EV_IS_LINK_DEST (self), 0);
+	EvLinkDestPrivate *priv = GET_PRIVATE (self);
 
 	if (change_left)
-		*change_left = (self->priv->change & EV_DEST_CHANGE_LEFT);
+		*change_left = (priv->change & EV_DEST_CHANGE_LEFT);
 
-	return self->priv->left;
+	return priv->left;
 }
 
 gdouble
 ev_link_dest_get_bottom (EvLinkDest *self)
 {
 	g_return_val_if_fail (EV_IS_LINK_DEST (self), 0);
+	EvLinkDestPrivate *priv = GET_PRIVATE (self);
 
-	return self->priv->bottom;
+	return priv->bottom;
 }
 
 gdouble
 ev_link_dest_get_right (EvLinkDest *self)
 {
 	g_return_val_if_fail (EV_IS_LINK_DEST (self), 0);
+	EvLinkDestPrivate *priv = GET_PRIVATE (self);
 
-	return self->priv->right;
+	return priv->right;
 }
 
 gdouble
@@ -129,27 +133,30 @@ ev_link_dest_get_zoom (EvLinkDest *self,
 		       gboolean   *change_zoom)
 {
 	g_return_val_if_fail (EV_IS_LINK_DEST (self), 0);
+	EvLinkDestPrivate *priv = GET_PRIVATE (self);
 
 	if (change_zoom)
-		*change_zoom = (self->priv->change & EV_DEST_CHANGE_ZOOM);
+		*change_zoom = (priv->change & EV_DEST_CHANGE_ZOOM);
 
-	return self->priv->zoom;
+	return priv->zoom;
 }
 
 const gchar *
 ev_link_dest_get_named_dest (EvLinkDest *self)
 {
 	g_return_val_if_fail (EV_IS_LINK_DEST (self), NULL);
+	EvLinkDestPrivate *priv = GET_PRIVATE (self);
 
-	return self->priv->named;
+	return priv->named;
 }
 
 const gchar *
 ev_link_dest_get_page_label (EvLinkDest *self)
 {
 	g_return_val_if_fail (EV_IS_LINK_DEST (self), NULL);
+	EvLinkDestPrivate *priv = GET_PRIVATE (self);
 
-	return self->priv->page_label;
+	return priv->page_label;
 }
 
 static void
@@ -158,40 +165,39 @@ ev_link_dest_get_property (GObject    *object,
 			   GValue     *value,
 			   GParamSpec *param_spec)
 {
-	EvLinkDest *self;
-
-	self = EV_LINK_DEST (object);
+	EvLinkDest *self = EV_LINK_DEST (object);
+	EvLinkDestPrivate *priv = GET_PRIVATE (self);
 
 	switch (prop_id) {
 	        case PROP_TYPE:
-			g_value_set_enum (value, self->priv->type);
+			g_value_set_enum (value, priv->type);
 			break;
 	        case PROP_PAGE:
-			g_value_set_int (value, self->priv->page);
+			g_value_set_int (value, priv->page);
 			break;
 	        case PROP_TOP:
-			g_value_set_double (value, self->priv->top);
+			g_value_set_double (value, priv->top);
 			break;
 	        case PROP_LEFT:
-			g_value_set_double (value, self->priv->left);
+			g_value_set_double (value, priv->left);
 			break;
 	        case PROP_BOTTOM:
-			g_value_set_double (value, self->priv->bottom);
+			g_value_set_double (value, priv->bottom);
 			break;
 	        case PROP_RIGHT:
-			g_value_set_double (value, self->priv->left);
+			g_value_set_double (value, priv->left);
 			break;
 	        case PROP_ZOOM:
-			g_value_set_double (value, self->priv->zoom);
+			g_value_set_double (value, priv->zoom);
 			break;
 	        case PROP_CHANGE:
-			g_value_set_uint (value, self->priv->change);
+			g_value_set_uint (value, priv->change);
 			break;
 	        case PROP_NAMED:
-			g_value_set_string (value, self->priv->named);
+			g_value_set_string (value, priv->named);
 			break;
 	        case PROP_PAGE_LABEL:
-			g_value_set_string (value, self->priv->page_label);
+			g_value_set_string (value, priv->page_label);
 			break;
 	        default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object,
@@ -208,37 +214,38 @@ ev_link_dest_set_property (GObject      *object,
 			   GParamSpec   *param_spec)
 {
 	EvLinkDest *self = EV_LINK_DEST (object);
+	EvLinkDestPrivate *priv = GET_PRIVATE (self);
 
 	switch (prop_id) {
 	        case PROP_TYPE:
-			self->priv->type = g_value_get_enum (value);
+			priv->type = g_value_get_enum (value);
 			break;
 	        case PROP_PAGE:
-			self->priv->page = g_value_get_int (value);
+			priv->page = g_value_get_int (value);
 			break;
 	        case PROP_TOP:
-			self->priv->top = g_value_get_double (value);
+			priv->top = g_value_get_double (value);
 			break;
 	        case PROP_LEFT:
-			self->priv->left = g_value_get_double (value);
+			priv->left = g_value_get_double (value);
 			break;
 	        case PROP_BOTTOM:
-			self->priv->bottom = g_value_get_double (value);
+			priv->bottom = g_value_get_double (value);
 			break;
 	        case PROP_RIGHT:
-			self->priv->right = g_value_get_double (value);
+			priv->right = g_value_get_double (value);
 			break;
 	        case PROP_ZOOM:
-			self->priv->zoom = g_value_get_double (value);
+			priv->zoom = g_value_get_double (value);
 			break;
 	        case PROP_CHANGE:
-			self->priv->change = g_value_get_uint (value);
+			priv->change = g_value_get_uint (value);
 			break;
 	        case PROP_NAMED:
-			self->priv->named = g_value_dup_string (value);
+			priv->named = g_value_dup_string (value);
 			break;
 	        case PROP_PAGE_LABEL:
-			self->priv->page_label = g_value_dup_string (value);
+			priv->page_label = g_value_dup_string (value);
 			break;
 	        default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object,
@@ -251,9 +258,7 @@ ev_link_dest_set_property (GObject      *object,
 static void
 ev_link_dest_finalize (GObject *object)
 {
-	EvLinkDestPrivate *priv;
-
-	priv = EV_LINK_DEST (object)->priv;
+	EvLinkDestPrivate *priv = GET_PRIVATE (EV_LINK_DEST (object));
 
 	g_clear_pointer (&priv->named, g_free);
 	g_clear_pointer (&priv->page_label, g_free);
@@ -264,9 +269,6 @@ ev_link_dest_finalize (GObject *object)
 static void
 ev_link_dest_init (EvLinkDest *ev_link_dest)
 {
-	ev_link_dest->priv = ev_link_dest_get_instance_private (ev_link_dest);
-
-	ev_link_dest->priv->named = NULL;
 }
 
 static void
@@ -527,49 +529,52 @@ ev_link_dest_equal (EvLinkDest *a,
         g_return_val_if_fail (EV_IS_LINK_DEST (a), FALSE);
         g_return_val_if_fail (EV_IS_LINK_DEST (b), FALSE);
 
+	EvLinkDestPrivate *a_priv = GET_PRIVATE (a);
+	EvLinkDestPrivate *b_priv = GET_PRIVATE (b);
+
         if (a == b)
                 return TRUE;
 
-        if (a->priv->type != b->priv->type)
+        if (a_priv->type != b_priv->type)
                 return FALSE;
 
-        switch (a->priv->type) {
+        switch (a_priv->type) {
         case EV_LINK_DEST_TYPE_PAGE:
-                return a->priv->page == b->priv->page;
+                return a_priv->page == b_priv->page;
 
         case EV_LINK_DEST_TYPE_XYZ:
-                return a->priv->page == b->priv->page &&
-                        a->priv->left == b->priv->left &&
-                        a->priv->top == b->priv->top &&
-                        a->priv->zoom == b->priv->zoom &&
-                        a->priv->change == b->priv->change;
+                return a_priv->page == b_priv->page &&
+                        a_priv->left == b_priv->left &&
+                        a_priv->top == b_priv->top &&
+                        a_priv->zoom == b_priv->zoom &&
+                        a_priv->change == b_priv->change;
 
         case EV_LINK_DEST_TYPE_FIT:
-                return a->priv->page == b->priv->page;
+                return a_priv->page == b_priv->page;
 
         case EV_LINK_DEST_TYPE_FITH:
-                return a->priv->page == b->priv->page &&
-                        a->priv->top == b->priv->top &&
-                        a->priv->change == b->priv->change;
+                return a_priv->page == b_priv->page &&
+                        a_priv->top == b_priv->top &&
+                        a_priv->change == b_priv->change;
 
         case EV_LINK_DEST_TYPE_FITV:
-                return a->priv->page == b->priv->page &&
-                        a->priv->left == b->priv->left &&
-                        a->priv->change == b->priv->change;
+                return a_priv->page == b_priv->page &&
+                        a_priv->left == b_priv->left &&
+                        a_priv->change == b_priv->change;
 
         case EV_LINK_DEST_TYPE_FITR:
-                return a->priv->page == b->priv->page &&
-                        a->priv->left == b->priv->left &&
-                        a->priv->top == b->priv->top &&
-                        a->priv->right == b->priv->right &&
-                        a->priv->bottom == b->priv->bottom &&
-                        a->priv->change == b->priv->change;
+                return a_priv->page == b_priv->page &&
+                        a_priv->left == b_priv->left &&
+                        a_priv->top == b_priv->top &&
+                        a_priv->right == b_priv->right &&
+                        a_priv->bottom == b_priv->bottom &&
+                        a_priv->change == b_priv->change;
 
         case EV_LINK_DEST_TYPE_NAMED:
-                return !g_strcmp0 (a->priv->named, b->priv->named);
+                return !g_strcmp0 (a_priv->named, b_priv->named);
 
         case EV_LINK_DEST_TYPE_PAGE_LABEL:
-                return !g_strcmp0 (a->priv->page_label, b->priv->page_label);
+                return !g_strcmp0 (a_priv->page_label, b_priv->page_label);
 
         default:
                 return FALSE;

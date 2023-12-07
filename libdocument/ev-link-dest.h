@@ -30,16 +30,10 @@
 
 G_BEGIN_DECLS
 
-typedef struct _EvLinkDest        EvLinkDest;
-typedef struct _EvLinkDestClass   EvLinkDestClass;
-typedef struct _EvLinkDestPrivate EvLinkDestPrivate;
-
 #define EV_TYPE_LINK_DEST              (ev_link_dest_get_type())
-#define EV_LINK_DEST(object)           (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_LINK_DEST, EvLinkDest))
-#define EV_LINK_DEST_CLASS(klass)      (G_TYPE_CHECK_CLASS_CAST((klass), EV_TYPE_LINK_DEST, EvLinkDestClass))
-#define EV_IS_LINK_DEST(object)        (G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_LINK_DEST))
-#define EV_IS_LINK_DEST_CLASS(klass)   (G_TYPE_CHECK_CLASS_TYPE((klass), EV_TYPE_LINK_DEST))
-#define EV_LINK_DEST_GET_CLASS(object) (G_TYPE_INSTANCE_GET_CLASS((object), EV_TYPE_LINK_DEST, EvLinkDestClass))
+
+EV_PUBLIC
+G_DECLARE_FINAL_TYPE (EvLinkDest, ev_link_dest, EV, LINK_DEST, GObject)
 
 typedef enum {
 	EV_LINK_DEST_TYPE_PAGE,
@@ -52,9 +46,6 @@ typedef enum {
 	EV_LINK_DEST_TYPE_PAGE_LABEL,
 	EV_LINK_DEST_TYPE_UNKNOWN
 } EvLinkDestType;
-
-EV_PUBLIC
-GType           ev_link_dest_get_type       (void) G_GNUC_CONST;
 
 EV_PUBLIC
 EvLinkDestType  ev_link_dest_get_dest_type  (EvLinkDest  *self);
