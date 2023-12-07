@@ -37,15 +37,9 @@
 G_BEGIN_DECLS
 
 #define EV_TYPE_DOCUMENT            (ev_document_get_type ())
-#define EV_DOCUMENT(o)              (G_TYPE_CHECK_INSTANCE_CAST ((o), EV_TYPE_DOCUMENT, EvDocument))
-#define EV_DOCUMENT_CLASS(k)        (G_TYPE_CHECK_CLASS_CAST((k), EV_TYPE_DOCUMENT, EvDocumentClass))
-#define EV_IS_DOCUMENT(o)           (G_TYPE_CHECK_INSTANCE_TYPE ((o), EV_TYPE_DOCUMENT))
-#define EV_IS_DOCUMENT_CLASS(k)     (G_TYPE_CHECK_CLASS_TYPE ((k), EV_TYPE_DOCUMENT))
-#define EV_DOCUMENT_GET_CLASS(inst) (G_TYPE_INSTANCE_GET_CLASS ((inst), EV_TYPE_DOCUMENT, EvDocumentClass))
 
-typedef struct _EvDocument        EvDocument;
-typedef struct _EvDocumentClass   EvDocumentClass;
-typedef struct _EvDocumentPrivate EvDocumentPrivate;
+EV_PUBLIC
+G_DECLARE_DERIVABLE_TYPE (EvDocument, ev_document, EV, DOCUMENT, GObject)
 
 #define EV_DOCUMENT_ERROR ev_document_error_quark ()
 #define EV_DOC_MUTEX_LOCK (ev_document_doc_mutex_lock ())
@@ -78,13 +72,6 @@ struct _EvDocumentBackendInfo
 {
 	const gchar *name;
 	const gchar *version;
-};
-
-struct _EvDocument
-{
-	GObject base;
-
-	EvDocumentPrivate *priv;
 };
 
 struct _EvDocumentClass
@@ -136,8 +123,6 @@ struct _EvDocumentClass
 						     GError             **error);
 };
 
-EV_PUBLIC
-GType            ev_document_get_type             (void) G_GNUC_CONST;
 EV_PUBLIC
 GQuark           ev_document_error_quark          (void);
 
