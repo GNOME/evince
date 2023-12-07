@@ -4121,7 +4121,7 @@ ev_window_cmd_about (GSimpleAction *action,
                 "Tiffany Antpolski <tiffany.antopolski@gmail.com>",
                 NULL
         };
-#ifdef ENABLE_NLS
+
         const char **p;
 
         for (p = authors; *p; ++p)
@@ -4129,7 +4129,6 @@ ev_window_cmd_about (GSimpleAction *action,
 
         for (p = documenters; *p; ++p)
                 *p = _(*p);
-#endif
 
         gtk_show_about_dialog (GTK_WINDOW (ev_window),
                                "name", _("Evince"),

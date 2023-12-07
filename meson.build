@@ -84,7 +84,6 @@ config_h.set_quoted('VERSION', ev_version)
 
 # i18n
 config_h.set_quoted('GETTEXT_PACKAGE', ev_name)
-config_h.set('ENABLE_NLS', true)
 
 # Support for nl_langinfo (_NL_MEASUREMENT_MEASUREMENT) (optional)
 langinfo_measurement_src = '''

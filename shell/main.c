@@ -260,12 +260,10 @@ main (int argc, char *argv[])
 	}
 #endif
 
-#ifdef ENABLE_NLS
 	/* Initialize the i18n stuff */
 	bindtextdomain (GETTEXT_PACKAGE, ev_get_locale_dir());
 	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
 	textdomain (GETTEXT_PACKAGE);
-#endif
 
 	context = g_option_context_new (N_("GNOME Document Viewer"));
 	g_option_context_set_translation_domain(context, GETTEXT_PACKAGE);

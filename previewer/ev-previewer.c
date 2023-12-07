@@ -283,12 +283,10 @@ main (gint argc, gchar **argv)
 	}
 #endif
 
-#ifdef ENABLE_NLS
 	/* Initialize the i18n stuff */
 	bindtextdomain (GETTEXT_PACKAGE, ev_get_locale_dir());
 	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
 	textdomain (GETTEXT_PACKAGE);
-#endif
 
         g_set_prgname ("evince-previewer");
 

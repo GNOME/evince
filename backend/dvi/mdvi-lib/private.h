@@ -45,14 +45,9 @@
 #define SKIPSP(p)	while(ISSP(p)) p++
 #define SKIPNSP(p)	while(*(p) && !ISSP(p)) p++
 
-#ifdef ENABLE_NLS
 #include <libintl.h>
 #define _(x)	gettext(x)
 #define _G(x)	x
-#else
-#define _(x)	x
-#define _G(x)	x
-#endif /* ENABLE_NLS */
 
 #if defined (__i386__) && defined (__GNUC__) && __GNUC__ >= 2
 #define	_BREAKPOINT()		do { __asm__ __volatile__ ("int $03"); } while(0)
