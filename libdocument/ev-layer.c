@@ -26,6 +26,10 @@ struct _EvLayerPrivate {
 	gint     rb_group;
 };
 
+typedef struct _EvLayerPrivate EvLayerPrivate;
+
+#define GET_PRIVATE(o) ev_layer_get_instance_private (o);
+
 G_DEFINE_TYPE_WITH_PRIVATE (EvLayer, ev_layer, G_TYPE_OBJECT)
 
 static void
@@ -36,7 +40,6 @@ ev_layer_class_init (EvLayerClass *klass)
 static void
 ev_layer_init (EvLayer *layer)
 {
-	layer->priv = ev_layer_get_instance_private (layer);
 }
 
 EvLayer *
@@ -44,10 +47,12 @@ ev_layer_new (gboolean is_parent,
 	      gint     rb_group)
 {
 	EvLayer *layer;
+	EvLayerPrivate *priv;
 
 	layer = EV_LAYER (g_object_new (EV_TYPE_LAYER, NULL));
-	layer->priv->is_parent = is_parent;
-	layer->priv->rb_group = rb_group;
+	priv = GET_PRIVATE (layer);
+	priv->is_parent = is_parent;
+	priv->rb_group = rb_group;
 
 	return layer;
 }
@@ -56,14 +61,16 @@ gboolean
 ev_layer_is_parent (EvLayer *layer)
 {
 	g_return_val_if_fail (EV_IS_LAYER (layer), FALSE);
+	EvLayerPrivate *priv = GET_PRIVATE (layer);
 
-	return layer->priv->is_parent;
+	return priv->is_parent;
 }
 
 gint
 ev_layer_get_rb_group (EvLayer *layer)
 {
 	g_return_val_if_fail (EV_IS_LAYER (layer), 0);
+	EvLayerPrivate *priv = GET_PRIVATE (layer);
 
-	return layer->priv->rb_group;
+	return priv->rb_group;
 }

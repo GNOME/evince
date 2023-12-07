@@ -29,29 +29,15 @@
 
 G_BEGIN_DECLS
 
-typedef struct _EvLayer        EvLayer;
-typedef struct _EvLayerClass   EvLayerClass;
-typedef struct _EvLayerPrivate EvLayerPrivate;
-
 #define EV_TYPE_LAYER              (ev_layer_get_type())
-#define EV_LAYER(object)           (G_TYPE_CHECK_INSTANCE_CAST((object), EV_TYPE_LAYER, EvLayer))
-#define EV_LAYER_CLASS(klass)      (G_TYPE_CHECK_CLASS_CAST((klass), EV_TYPE_LAYER, EvLayerClass))
-#define EV_IS_LAYER(object)        (G_TYPE_CHECK_INSTANCE_TYPE((object), EV_TYPE_LAYER))
-#define EV_IS_LAYER_CLASS(klass)   (G_TYPE_CHECK_CLASS_TYPE((klass), EV_TYPE_LAYER))
-#define EV_LAYER_GET_CLASS(object) (G_TYPE_INSTANCE_GET_CLASS((object), EV_TYPE_LAYER, EvLayerClass))
+
+EV_PUBLIC
+G_DECLARE_FINAL_TYPE (EvLayer, ev_layer, EV, LAYER, GObject)
 
 struct _EvLayer {
 	GObject base_instance;
-
-	EvLayerPrivate *priv;
 };
 
-struct _EvLayerClass {
-	GObjectClass base_class;
-};
-
-EV_PUBLIC
-GType     ev_layer_get_type     (void) G_GNUC_CONST;
 EV_PUBLIC
 EvLayer  *ev_layer_new          (gboolean is_parent,
 				 gint     rb_group);
