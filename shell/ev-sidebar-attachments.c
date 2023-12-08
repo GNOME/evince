@@ -147,6 +147,8 @@ icon_view_item_activated_cb (GtkIconView		*self,
 	EvAttachment *attachment;
 	GtkTreeIter iter;
 	GError *error = NULL;
+	GdkDisplay *display = gtk_widget_get_display (GTK_WIDGET (ev_attachbar));
+	GdkAppLaunchContext *context = gdk_display_get_app_launch_context (display);
 
 	gtk_tree_model_get_iter (GTK_TREE_MODEL (priv->model),
 				 &iter, path);
@@ -158,10 +160,7 @@ icon_view_item_activated_cb (GtkIconView		*self,
 	if (!attachment)
 		return;
 
-	ev_attachment_open (attachment,
-				gtk_widget_get_display (GTK_WIDGET (ev_attachbar)),
-				GDK_CURRENT_TIME,
-				&error);
+	ev_attachment_open (attachment, G_APP_LAUNCH_CONTEXT (context), &error);
 
 	if (error) {
 		g_warning ("%s", error->message);
@@ -169,6 +168,7 @@ icon_view_item_activated_cb (GtkIconView		*self,
 	}
 
 	g_object_unref (attachment);
+	g_clear_object (&context);
 }
 
 static void

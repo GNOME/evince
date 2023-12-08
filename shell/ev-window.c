@@ -6803,16 +6803,19 @@ ev_window_popup_cmd_open_attachment (GSimpleAction *action,
 	for (l = priv->attach_list; l && l->data; l = g_list_next (l)) {
 		EvAttachment *attachment;
 		GError       *error = NULL;
+		GdkAppLaunchContext *context = gdk_display_get_app_launch_context (display);
 
 		attachment = (EvAttachment *) l->data;
 
-		ev_attachment_open (attachment, display, GDK_CURRENT_TIME, &error);
+		ev_attachment_open (attachment, G_APP_LAUNCH_CONTEXT (context), &error);
 
 		if (error) {
 			ev_window_error_message (window, error,
 						 "%s", _("Unable to open attachment"));
 			g_error_free (error);
 		}
+
+		g_clear_object (&context);
 	}
 }
 

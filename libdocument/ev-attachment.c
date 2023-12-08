@@ -20,7 +20,6 @@
 #include <config.h>
 #include <glib/gi18n-lib.h>
 #include <glib/gstdio.h>
-#include <gtk/gtk.h>
 #include "ev-file-helpers.h"
 #include "ev-attachment.h"
 
@@ -341,14 +340,12 @@ ev_attachment_save (EvAttachment *attachment,
 }
 
 static gboolean
-ev_attachment_launch_app (EvAttachment *attachment,
-			  GdkDisplay    *display,
-			  guint32       timestamp,
-			  GError      **error)
+ev_attachment_launch_app (EvAttachment		 *attachment,
+			  GAppLaunchContext	 *context,
+			  GError		**error)
 {
 	gboolean             result;
 	GList               *files = NULL;
-	GdkAppLaunchContext *context;
 	GError              *ioerror = NULL;
 	EvAttachmentPrivate *priv = GET_PRIVATE (attachment);
 
@@ -357,14 +354,7 @@ ev_attachment_launch_app (EvAttachment *attachment,
 
 	files = g_list_prepend (files, priv->tmp_file);
 
-	display = display ?: gdk_display_get_default ();
-	context = gdk_display_get_app_launch_context (display);
-	gdk_app_launch_context_set_timestamp (context, timestamp);
-
-	result = g_app_info_launch (priv->app, files,
-				    G_APP_LAUNCH_CONTEXT (context),
-                                    &ioerror);
-        g_object_unref (context);
+	result = g_app_info_launch (priv->app, files, context, &ioerror);
 
 	if (!result) {
 		g_set_error (error,
@@ -386,10 +376,9 @@ ev_attachment_launch_app (EvAttachment *attachment,
 }
 
 gboolean
-ev_attachment_open (EvAttachment *attachment,
-		    GdkDisplay   *display,
-		    guint32       timestamp,
-		    GError      **error)
+ev_attachment_open (EvAttachment	 *attachment,
+		    GAppLaunchContext	 *context,
+		    GError		**error)
 {
 	GAppInfo *app_info;
 	gboolean  retval = FALSE;
@@ -415,8 +404,7 @@ ev_attachment_open (EvAttachment *attachment,
 	}
 
 	if (priv->tmp_file) {
-		retval = ev_attachment_launch_app (attachment, display,
-						   timestamp, error);
+		retval = ev_attachment_launch_app (attachment, context, error);
 	} else {
                 char *basename;
                 char *temp_dir;
@@ -441,8 +429,7 @@ ev_attachment_open (EvAttachment *attachment,
 				g_object_unref (priv->tmp_file);
 			priv->tmp_file = g_object_ref (file);
 
-			retval = ev_attachment_launch_app (attachment, display,
-							   timestamp, error);
+			retval = ev_attachment_launch_app (attachment, context, error);
 		}
 
 		g_object_unref (file);

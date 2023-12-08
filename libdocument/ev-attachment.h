@@ -69,9 +69,8 @@ gboolean     ev_attachment_save                  (EvAttachment *attachment,
 						  GFile        *file,
 						  GError      **error);
 EV_PUBLIC
-gboolean     ev_attachment_open                  (EvAttachment *attachment,
-						  GdkDisplay   *display,
-						  guint32       timestamp,
-						  GError      **error);
+gboolean     ev_attachment_open                  (EvAttachment       *attachment,
+						  GAppLaunchContext  *context,
+						  GError            **error);
 
 G_END_DECLS

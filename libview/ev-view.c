@@ -3568,16 +3568,20 @@ ev_view_handle_annotation (EvView       *view,
 		attachment = ev_annotation_attachment_get_attachment (EV_ANNOTATION_ATTACHMENT (annot));
 		if (attachment) {
 			GError *error = NULL;
+			GdkDisplay *display = gtk_widget_get_display (GTK_WIDGET (view));
+			GdkAppLaunchContext *context = gdk_display_get_app_launch_context (display);
+			gdk_app_launch_context_set_timestamp (context, timestamp);
 
 			ev_attachment_open (attachment,
-					    gtk_widget_get_display (GTK_WIDGET (view)),
-					    timestamp,
+					    G_APP_LAUNCH_CONTEXT (context),
 					    &error);
 
 			if (error) {
 				g_warning ("%s", error->message);
 				g_error_free (error);
 			}
+
+			g_clear_object (&context);
 		}
 	}
 }
