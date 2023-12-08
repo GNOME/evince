@@ -74,7 +74,6 @@ deps = [
 
 cflags = [
   '-DG_LOG_DOMAIN="EvinceView"',
-  '-DEVINCEDATADIR="@0@"'.format(ev_pkgdatadir),
   '-DEVINCE_COMPILATION'
 ]
 
