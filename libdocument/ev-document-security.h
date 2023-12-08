@@ -30,7 +30,6 @@
 
 #include <glib-object.h>
 #include <glib.h>
-#include <gdk/gdk.h>
 
 #include "ev-macros.h"
 #include "ev-document.h"

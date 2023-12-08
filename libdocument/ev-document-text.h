@@ -24,8 +24,8 @@
 #endif
 
 #include <glib-object.h>
+#include <pango/pango.h>
 #include <glib.h>
-#include <gdk/gdk.h>
 
 #include "ev-macros.h"
 #include "ev-document.h"

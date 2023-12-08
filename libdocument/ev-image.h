@@ -24,7 +24,7 @@
 #endif
 
 #include <glib-object.h>
-#include <gdk/gdk.h>
+#include <gdk-pixbuf/gdk-pixbuf.h>
 
 #include "ev-macros.h"
 

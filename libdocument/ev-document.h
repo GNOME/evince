@@ -26,7 +26,7 @@
 #include <glib-object.h>
 #include <glib.h>
 #include <gio/gio.h>
-#include <gdk/gdk.h>
+#include <gdk-pixbuf/gdk-pixbuf.h>
 #include <cairo.h>
 
 #include "ev-macros.h"
