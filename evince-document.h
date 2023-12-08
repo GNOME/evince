@@ -22,7 +22,6 @@
 
 #include <libdocument/ev-annotation.h>
 #include <libdocument/ev-attachment.h>
-#include <libdocument/ev-backends-manager.h>
 #include <libdocument/ev-document-annotations.h>
 #include <libdocument/ev-document-attachments.h>
 #include <libdocument/ev-document-factory.h>

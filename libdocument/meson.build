@@ -5,7 +5,6 @@ include_subdir = join_paths(ev_include_subdir, 'libdocument')
 headers = files(
   'ev-annotation.h',
   'ev-attachment.h',
-  'ev-backends-manager.h',
   'ev-document-annotations.h',
   'ev-document-attachments.h',
   'ev-document-factory.h',

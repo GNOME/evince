@@ -33,8 +33,6 @@
 #include "ev-document-factory.h"
 #include "ev-file-helpers.h"
 
-#include "ev-backends-manager.h"
-
 /* Backends manager */
 
 #define BACKEND_DATA_KEY "ev-backend-info"
@@ -685,29 +683,4 @@ ev_document_factory_add_filters (GtkFileChooser *chooser, EvDocument *document)
 
 	gtk_file_chooser_set_filter (chooser,
 				     document == NULL ? document_filter : default_filter);
-}
-
-/* Deprecated API/ABI compatibility wrappers */
-
-/**
- * ev_backends_manager_get_document:
- * @mime_type: a mime type hint
- *
- * Returns: (transfer full): a new #EvDocument
- */
-EvDocument  *ev_backends_manager_get_document (const gchar *mime_type)
-{
-        return ev_document_factory_new_document_for_mime_type (mime_type, NULL);
-}
-
-/**
- * ev_backends_manager_get_all_types_info: (skip)
- *
- * Returns: @list: (element-type EvBackendInfo): a shallow copy of #GList
- *    containing #EvBackendInfo objects
- */
-GList *
-ev_backends_manager_get_all_types_info       (void)
-{
-        return g_list_copy (ev_backends_list);
 }
