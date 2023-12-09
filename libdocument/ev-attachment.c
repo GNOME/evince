@@ -201,14 +201,6 @@ ev_attachment_class_init (EvAttachmentClass *klass)
 static void
 ev_attachment_init (EvAttachment *attachment)
 {
-	EvAttachmentPrivate *priv = GET_PRIVATE (attachment);
-
-	priv->name = NULL;
-	priv->description = NULL;
-	priv->data = NULL;
-	priv->mime_type = NULL;
-
-	priv->tmp_file = NULL;
 }
 
 EvAttachment *
