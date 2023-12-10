@@ -191,7 +191,7 @@ ev_properties_get_models (NautilusPropertiesModelProvider *provider,
 		goto end;
 	}
 
-	properties_group = nautilus_properties_model_new (_("Document"), build_properties (document));
+	properties_group = nautilus_properties_model_new (_("Document Properties"), build_properties (document));
 
 	models = g_list_prepend (models, properties_group);
 end:
