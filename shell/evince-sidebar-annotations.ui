@@ -1,60 +1,78 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <requires lib="gtk" version="4.0"/>
-  <requires lib="libadwaita" version="1.0"/>
+  <requires lib="gtk" version="4.0" />
+  <requires lib="libadwaita" version="1.0" />
   <template class="EvSidebarAnnotations" parent="GtkBox">
     <property name="orientation">vertical</property>
     <child type="start">
-      <object class="GtkScrolledWindow" id="swindow">
-        <property name="halign">fill</property>
-        <property name="hexpand">True</property>
-        <property name="vexpand">True</property>
+      <object class="AdwViewStack" id="stack">
         <child>
-          <object class="GtkTreeView" id="tree_view">
-            <property name="model">list-model</property>
-            <property name="headers-visible">False</property>
-            <property name="tooltip-column">3</property>
-            <child>
-              <object class="GtkTreeViewColumn">
-                <child type="start">
-                  <object class="GtkCellRendererPixbuf">
+          <object class="AdwViewStackPage">
+            <property name="name">empty</property>
+            <property name="child">
+              <object class="AdwStatusPage">
+                <property name="title" translatable="yes">No Annotations</property>
+                <property name="icon-name">x-office-document-symbolic</property>
+              </object>
+            </property>
+          </object>
+        </child>
+        <child>
+          <object class="AdwViewStackPage">
+            <property name="name">annot</property>
+            <property name="child">
+              <object class="GtkScrolledWindow">
+                <property name="halign">fill</property>
+                <property name="hexpand">True</property>
+                <property name="vexpand">True</property>
+                <child>
+                  <object class="GtkListBox" id="list_box">
+                    <property name="selection-mode">none</property>
+                    <property name="margin-start">6</property>
+                    <property name="margin-end">6</property>
+                    <property name="margin-top">6</property>
+                    <property name="margin-bottom">6</property>
+                    <style>
+                      <class name="boxed-list" />
+                    </style>
                   </object>
-                  <attributes>
-                    <attribute name="icon-name">1</attribute>
-                  </attributes>
-                </child>
-                <child type="start">
-                  <object class="GtkCellRendererText">
-                  </object>
-                  <attributes>
-                    <attribute name="markup">0</attribute>
-                  </attributes>
                 </child>
               </object>
-            </child>
-            <child internal-child="selection">
-              <object class="GtkTreeSelection" id="selection">
-                <property name="mode">none</property>
-              </object>
-            </child>
+            </property>
           </object>
         </child>
       </object>
     </child>
-
+    <child>
+      <object class="GtkPopoverMenu" id="popup">
+        <property name="has-arrow">False</property>
+        <property name="halign">start</property>
+        <property name="menu-model">annotation-popup</property>
+      </object>
+    </child>
   </template>
-      <object class="GtkListStore" id="list-model">
-      <columns>
-        <column type="gchararray" />
-        <column type="gchararray" />
-        <column type="gpointer" />
-        <column type="gchararray" />
-      </columns>
-      <data>
-        <row>
-          <col id="0">Loading...</col>
-        </row>
-      </data>
-    </object>
+  <menu id="annotation-popup">
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">Annotation Properties</attribute>
+        <attribute name="action">win.annot-properties</attribute>
+        <attribute name='hidden-when'>action-disabled</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Remove Annotation</attribute>
+        <attribute name="action">win.remove-annot</attribute>
+        <attribute name='hidden-when'>action-disabled</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">_Open Attachment</attribute>
+        <attribute name="action">win.open-attachment</attribute>
+        <attribute name='hidden-when'>action-disabled</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">_Save Attachment As…</attribute>
+        <attribute name="action">win.save-attachment</attribute>
+        <attribute name='hidden-when'>action-disabled</attribute>
+      </item>
+    </section>
+  </menu>
 </interface>
-

@@ -21,6 +21,7 @@
 #include "config.h"
 
 #include <glib/gi18n.h>
+#include <adwaita.h>
 
 #include "ev-document-annotations.h"
 #include "ev-sidebar-page.h"
@@ -52,14 +53,12 @@ enum {
 struct _EvSidebarAnnotationsPrivate {
 	EvDocumentModel  *model;
 
-        GtkWidget   *swindow;
-	GtkWidget   *tree_view;
+	GtkWidget   *list_box;
+	GtkWidget   *stack;
 
-	GMenuModel  *popup_model;
 	GtkWidget   *popup;
 
 	EvJob       *job;
-	guint        selection_changed_id;
 };
 
 static void ev_sidebar_annotations_page_iface_init (EvSidebarPageInterface *iface);
@@ -96,33 +95,7 @@ ev_sidebar_annotations_dispose (GObject *object)
 	}
 
 	g_clear_object (&priv->model);
-	g_clear_object (&priv->popup_model);
 	G_OBJECT_CLASS (ev_sidebar_annotations_parent_class)->dispose (object);
-}
-
-static GtkTreeModel *
-ev_sidebar_annotations_create_simple_model (const gchar *message)
-{
-	GtkTreeModel *retval;
-	GtkTreeIter iter;
-	gchar *markup;
-
-	/* Creates a fake model to indicate that we're loading */
-	retval = (GtkTreeModel *)gtk_list_store_new (N_COLUMNS,
-						     G_TYPE_STRING,
-						     G_TYPE_STRING,
-						     G_TYPE_POINTER,
-						     G_TYPE_STRING);
-
-	gtk_list_store_append (GTK_LIST_STORE (retval), &iter);
-	markup = g_strdup_printf ("<span size=\"larger\" style=\"italic\">%s</span>",
-				  message);
-	gtk_list_store_set (GTK_LIST_STORE (retval), &iter,
-			    COLUMN_MARKUP, markup,
-			    -1);
-	g_free (markup);
-
-	return retval;
 }
 
 static void
@@ -142,7 +115,7 @@ ev_sidebar_annotations_get_property (GObject    *object,
 
 	switch (prop_id) {
 	        case PROP_WIDGET:
-			g_value_set_object (value, priv->swindow);
+			g_value_set_object (value, priv->stack);
 			break;
 	        default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -182,8 +155,9 @@ ev_sidebar_annotations_class_init (EvSidebarAnnotationsClass *klass)
 
 	gtk_widget_class_set_template_from_resource (widget_class,
 			"/org/gnome/evince/ui/sidebar-annotations.ui");
-	gtk_widget_class_bind_template_child_private (widget_class, EvSidebarAnnotations, swindow);
-	gtk_widget_class_bind_template_child_private (widget_class, EvSidebarAnnotations, tree_view);
+	gtk_widget_class_bind_template_child_private (widget_class, EvSidebarAnnotations, list_box);
+	gtk_widget_class_bind_template_child_private (widget_class, EvSidebarAnnotations, stack);
+	gtk_widget_class_bind_template_child_private (widget_class, EvSidebarAnnotations, popup);
 
 	g_object_class_override_property (g_object_class, PROP_DOCUMENT_MODEL, "document-model");
 	g_object_class_override_property (g_object_class, PROP_WIDGET, "main-widget");
@@ -225,166 +199,82 @@ ev_sidebar_annotations_annot_removed (EvSidebarAnnotations *sidebar_annots)
 	ev_sidebar_annotations_load (sidebar_annots);
 }
 
-/**
- * iter_has_mapping:
- * @model: a #GtkTreeModel
- * @iter: a #GtkTreeIter contained in @model
- * @mapping_out: (out) (allow-none): if non-%NULL, will be
- *               filled with the found mapping (#EvMapping)
- *
- * Checks whether @iter contains a #EvMapping, optionally
- * placing it in @mapping_out.
- */
-static gboolean
-iter_has_mapping (GtkTreeModel  *model,
-		  GtkTreeIter   *iter,
-		  EvMapping     **mapping_out)
-{
-	EvMapping *mapping = NULL;
-
-	gtk_tree_model_get (model, iter,
-			    COLUMN_ANNOT_MAPPING, &mapping,
-			    -1);
-
-	if (mapping_out && mapping)
-		*mapping_out = mapping;
-
-	return mapping != NULL;
-}
-
 static void
-ev_sidebar_annotations_activate_result_at_iter (EvSidebarAnnotations *sidebar_annots,
-                                                GtkTreeModel  *model,
-                                                GtkTreeIter   *iter)
+sidebar_annots_button_press_cb (GtkGestureClick *self,
+				gint		 n_press,
+				gdouble		 x,
+				gdouble		 y,
+				EvMapping	*mapping)
 {
-		EvMapping *mapping;
+	GtkEventController *controller = GTK_EVENT_CONTROLLER (self);
+	GdkEvent *event = gtk_event_controller_get_current_event (controller);
+	guint button = gdk_button_event_get_button (event);
+	GtkWidget *row = gtk_event_controller_get_widget (controller);
+	GtkWidget *sidebar_annots = gtk_widget_get_ancestor (row, EV_TYPE_SIDEBAR_ANNOTATIONS);
+	EvSidebarAnnotationsPrivate *priv = GET_PRIVATE (EV_SIDEBAR_ANNOTATIONS (sidebar_annots));
+	GtkWindow *window;
+	double sidebar_annots_x, sidebar_annots_y;
 
-		if (iter_has_mapping (model, iter, &mapping))
+	if (!mapping)
+		return;
+
+	switch (button) {
+		case GDK_BUTTON_PRIMARY:
 			g_signal_emit (sidebar_annots, signals[ANNOT_ACTIVATED], 0, mapping);
-}
+			break;
+		case GDK_BUTTON_SECONDARY:
+			if (!EV_IS_ANNOTATION (mapping->data))
+				return;
 
-static void
-selection_changed_cb (GtkTreeSelection     *selection,
-		      EvSidebarAnnotations *sidebar_annots)
-{
-	GtkTreeModel *model;
-	GtkTreeIter   iter;
+			window = GTK_WINDOW (gtk_widget_get_native (GTK_WIDGET (sidebar_annots)));
 
-	if (gtk_tree_selection_get_selected (selection, &model, &iter))
-	    ev_sidebar_annotations_activate_result_at_iter (sidebar_annots, model, &iter);
-}
+			ev_window_handle_annot_popup (EV_WINDOW (window), EV_ANNOTATION (mapping->data));
 
-#if 0
-static gboolean
-sidebar_tree_button_press_cb (GtkTreeView    *view,
-                              GdkEventButton *event,
-                              EvSidebarAnnotations  *sidebar_annots)
-{
-        GtkTreeModel         *model;
-        GtkTreePath          *path;
-        GtkTreeIter           iter;
-        GtkTreeSelection     *selection;
-        EvMapping            *annot_mapping;
-        GdkRectangle          rect;
+			gtk_widget_translate_coordinates (row,
+				gtk_widget_get_parent (priv->popup),
+				x, y, &sidebar_annots_x, &sidebar_annots_y);
 
-        gtk_tree_view_get_path_at_pos (view, event->x, event->y, &path,
-                                       NULL, NULL, NULL);
-        if (!path)
-                return GDK_EVENT_PROPAGATE;
-
-	model = gtk_tree_view_get_model (view);
-	gtk_tree_model_get_iter (model, &iter, path);
-	gtk_tree_path_free (path);
-        selection = gtk_tree_view_get_selection (view);
-
-	if (gdk_event_triggers_context_menu ((const GdkEvent *) event) &&
-	    iter_has_mapping (model, &iter, &annot_mapping)) {
-
-		ev_sidebar_annotations_activate_result_at_iter (sidebar_annots, model, &iter);
-
-		if (!EV_IS_ANNOTATION (annot_mapping->data))
-			return GDK_EVENT_PROPAGATE;
-
-		gtk_tree_selection_select_iter (selection, &iter);
-
-		rect.x = event->x;
-		rect.y = event->y;
-		rect.width = rect.height = 1;
-		ev_sidebar_annotations_popup_menu_show (sidebar_annots,
-							gtk_tree_view_get_bin_window (view),
-							&rect, annot_mapping, (GdkEvent *) event);
-
-		return GDK_EVENT_STOP;
-	} else {
-		if (!gtk_tree_selection_iter_is_selected (selection, &iter))
-			gtk_tree_selection_select_iter (selection, &iter);
-		else
-			/* This will reveal annotation again in case was scrolled out of EvView */
-			ev_sidebar_annotations_activate_result_at_iter (sidebar_annots, model, &iter);
+			gtk_popover_set_pointing_to (GTK_POPOVER (priv->popup),
+				&(const GdkRectangle) { sidebar_annots_x, sidebar_annots_y, 1, 1 });
+			gtk_popover_popup (GTK_POPOVER (priv->popup));
+			break;
+		default:
+			break;
 	}
-
-        /* Propagate so the tree view gets the event and can update the selection etc. */
-        return GDK_EVENT_PROPAGATE;
 }
-
-#endif
 
 static void
 job_finished_callback (EvJobAnnots          *job,
 		       EvSidebarAnnotations *sidebar_annots)
 {
 	EvSidebarAnnotationsPrivate *priv = GET_PRIVATE (sidebar_annots);
-	GtkTreeStore *model;
-	GtkTreeSelection *selection;
 	GList *l;
 
 	if (!job->annots) {
-		GtkTreeModel *list;
-
-		list = ev_sidebar_annotations_create_simple_model (_("Document contains no annotations"));
-		gtk_tree_view_set_model (GTK_TREE_VIEW (priv->tree_view), list);
-		g_object_unref (list);
-
-		g_object_unref (job);
-		priv->job = NULL;
-
+		adw_view_stack_set_visible_child_name (ADW_VIEW_STACK (priv->stack),
+						       "empty");
+		g_clear_object (&priv->job);
 		return;
 	}
 
-	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (priv->tree_view));
-	gtk_tree_selection_set_mode (selection, GTK_SELECTION_SINGLE);
-	if (priv->selection_changed_id == 0) {
-		priv->selection_changed_id =
-			g_signal_connect (selection, "changed",
-					  G_CALLBACK (selection_changed_cb),
-					  sidebar_annots);
-	}
-#if 0
-    g_signal_connect (priv->tree_view, "button-press-event",
-                      G_CALLBACK (sidebar_tree_button_press_cb),
-                      sidebar_annots);
-#endif
-
-	model = gtk_tree_store_new (N_COLUMNS,
-				    G_TYPE_STRING,
-				    G_TYPE_STRING,
-				    G_TYPE_POINTER,
-				    G_TYPE_STRING);
+	gtk_list_box_remove_all (GTK_LIST_BOX (priv->list_box));
 
 	for (l = job->annots; l; l = g_list_next (l)) {
 		EvMappingList *mapping_list;
 		GList         *ll;
 		gchar         *page_label;
-		GtkTreeIter    iter;
 		gboolean       found = FALSE;
+		GtkWidget     *expander;
 
 		mapping_list = (EvMappingList *)l->data;
 		page_label = g_strdup_printf (_("Page %d"),
 					      ev_mapping_list_get_page (mapping_list) + 1);
-		gtk_tree_store_append (model, &iter, NULL);
-		gtk_tree_store_set (model, &iter,
-				    COLUMN_MARKUP, page_label,
-				    -1);
+
+		expander = adw_expander_row_new ();
+		adw_preferences_row_set_title (ADW_PREFERENCES_ROW (expander), page_label);
+		adw_expander_row_set_expanded (ADW_EXPANDER_ROW (expander), TRUE);
+		gtk_list_box_append (GTK_LIST_BOX (priv->list_box), expander);
+
 		g_free (page_label);
 
 		for (ll = ev_mapping_list_get_list (mapping_list); ll; ll = g_list_next (ll)) {
@@ -394,8 +284,9 @@ job_finished_callback (EvJobAnnots          *job,
 			const gchar  *contents;
 			gchar        *markup = NULL;
 			gchar        *tooltip = NULL;
-			GtkTreeIter   child_iter;
 			const gchar  *icon_name = NULL;
+			GtkWidget    *row;
+			GtkEventController *controller;
 
 			annot = ((EvMapping *)(ll->data))->data;
 			if (!EV_IS_ANNOTATION_MARKUP (annot))
@@ -436,29 +327,32 @@ job_finished_callback (EvJobAnnots          *job,
                                 }
                         }
 
-			gtk_tree_store_append (model, &child_iter, &iter);
-			gtk_tree_store_set (model, &child_iter,
-					    COLUMN_MARKUP, markup,
-					    COLUMN_ICON, icon_name,
-					    COLUMN_ANNOT_MAPPING, ll->data,
-					    COLUMN_TOOLTIP, tooltip,
-					    -1);
+			row = adw_action_row_new ();
+			adw_action_row_set_icon_name (ADW_ACTION_ROW (row), icon_name);
+			adw_preferences_row_set_title (ADW_PREFERENCES_ROW (row), markup);
+			gtk_widget_set_tooltip_markup (row, tooltip);
+			adw_expander_row_add_row (ADW_EXPANDER_ROW (expander), row);
+
+			controller = GTK_EVENT_CONTROLLER (gtk_gesture_click_new ());
+			gtk_gesture_single_set_button (GTK_GESTURE_SINGLE (controller), 0);
+			gtk_widget_add_controller (row, controller);
+
+			g_signal_connect (G_OBJECT (controller), "pressed",
+					  (GCallback)sidebar_annots_button_press_cb, ll->data);
+
 			g_free (markup);
 			g_free (tooltip);
 			found = TRUE;
 		}
 
 		if (!found)
-			gtk_tree_store_remove (model, &iter);
+			gtk_list_box_remove (GTK_LIST_BOX (priv->list_box), expander);
 	}
 
-	gtk_tree_view_set_model (GTK_TREE_VIEW (priv->tree_view),
-				 GTK_TREE_MODEL (model));
-	gtk_tree_view_expand_all (GTK_TREE_VIEW (priv->tree_view));
-	g_object_unref (model);
+	adw_view_stack_set_visible_child_name (ADW_VIEW_STACK (priv->stack),
+					       "annot");
 
-	g_object_unref (job);
-	priv->job = NULL;
+	g_clear_object (&priv->job);
 }
 
 static void
@@ -494,66 +388,6 @@ ev_sidebar_annotations_document_changed_cb (EvDocumentModel      *model,
 
 	ev_sidebar_annotations_load (sidebar_annots);
 }
-
-#if 0
-/* event parameter can be NULL, that means popup was triggered from keyboard */
-static gboolean
-ev_sidebar_annotations_popup_menu_show (EvSidebarAnnotations *sidebar_annots,
-					GdkWindow            *rect_window,
-					const GdkRectangle   *rect,
-					EvMapping            *annot_mapping,
-					const GdkEvent       *event)
-{
-	GtkWidget *window;
-
-	EvSidebarAnnotationsPrivate *priv = sidebar_annots->priv;
-
-	if (!EV_IS_ANNOTATION (annot_mapping->data))
-		return FALSE;
-
-	window = gtk_widget_get_toplevel (GTK_WIDGET (sidebar_annots));
-
-	ev_window_handle_annot_popup (EV_WINDOW (window), EV_ANNOTATION (annot_mapping->data));
-	gtk_menu_popup_at_rect (GTK_MENU (priv->popup), rect_window, rect,
-				GDK_GRAVITY_SOUTH_WEST, GDK_GRAVITY_NORTH_WEST, event);
-	return TRUE;
-}
-
-static gboolean
-ev_sidebar_annotations_popup_menu (GtkWidget *widget)
-{
-	GtkTreeView          *tree_view;
-	GtkTreeModel         *model;
-	GtkTreePath          *path;
-	GtkTreeSelection     *selection;
-	EvMapping            *annot_mapping;
-	GtkTreeIter           iter;
-	GdkRectangle          rect;
-
-	EvSidebarAnnotations *sidebar_annots = EV_SIDEBAR_ANNOTATIONS (widget);
-	EvSidebarAnnotationsPrivate *priv = sidebar_annots->priv;
-
-	tree_view = GTK_TREE_VIEW (priv->tree_view);
-	selection = gtk_tree_view_get_selection (tree_view);
-	if (!gtk_tree_selection_get_selected (selection, &model, &iter))
-		return FALSE;
-
-	if (!iter_has_mapping (model, &iter, &annot_mapping))
-		return FALSE;
-
-	path = gtk_tree_model_get_path (model, &iter);
-
-	gtk_tree_view_get_cell_area (tree_view, path,
-				     gtk_tree_view_get_column (tree_view, 0),
-				     &rect);
-	gtk_tree_path_free (path);
-
-	return ev_sidebar_annotations_popup_menu_show (sidebar_annots,
-						       gtk_tree_view_get_bin_window (tree_view),
-						       &rect, annot_mapping, NULL);
-}
-
-#endif
 
 /* EvSidebarPageIface */
 static void
