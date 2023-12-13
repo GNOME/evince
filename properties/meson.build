@@ -26,7 +26,6 @@ if enable_nautilus
     link_with: libevproperties,
     install: true,
     install_dir: nautilus_extension_dir,
-    name_suffix: name_suffix,
     gnu_symbol_visibility: 'hidden',
   )
 endif

@@ -24,7 +24,6 @@ foreach backend, backend_mime_types: backends
     gnu_symbol_visibility: 'hidden',
     install: true,
     install_dir: ev_backendsdir,
-    name_suffix: name_suffix,
   )
 
   backend_mime_types_conf = configuration_data()

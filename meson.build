@@ -109,13 +109,6 @@ if build_machine.system() == 'windows'
   common_ldflags = cc.get_supported_link_arguments('-mwindows')
 endif
 
-# GLib on macOS expects so as shared_module suffix, while meson uses dylib by default
-if host_machine.system() == 'darwin'
-  name_suffix = 'so'
-else
-  name_suffix = []
-endif
-
 if ev_debug
   common_flags += ['-DEV_ENABLE_DEBUG'] + cc.get_supported_arguments([
     '-Wnested-externs',
@@ -143,7 +136,7 @@ po_dir = join_paths(source_root, 'po')
 
 top_inc = include_directories('.')
 
-glib_req_version = '>= 2.74.0'
+glib_req_version = '>= 2.75.0'
 gtk_req_version = '>= 3.22.0'
 hdy_req_version = '>= 1.5.0'
 exempi_req_version = '>= 2.0'
