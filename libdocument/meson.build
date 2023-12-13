@@ -138,7 +138,7 @@ deps = common_deps + [
 
 cflags = [
   '-DG_LOG_DOMAIN="EvinceDocument"',
-  '-DGNOMELOCALEDIR="@0@"'.format(ev_localedir),
+  '-DEV_LOCALEDIR="@0@"'.format(ev_localedir),
   '-DEV_BACKENDSDIR="@0@"'.format(ev_backendsdir),
   '-DEV_BACKENDSBINARYVERSION="@0@"'.format(ev_backends_binary_version),
   '-DEVINCE_COMPILATION',

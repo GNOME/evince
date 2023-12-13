@@ -89,7 +89,7 @@ ev_get_locale_dir (void)
 #ifdef G_OS_WIN32
 	return _ev_win32_get_locale_dir (evdocument_dll);
 #else
-	return GNOMELOCALEDIR;
+	return EV_LOCALEDIR;
 #endif
 }
 

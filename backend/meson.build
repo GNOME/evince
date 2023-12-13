@@ -1,7 +1,7 @@
 backends_common_incs = [top_inc]
 backends_common_deps = [libevdocument_dep]
 backends_common_cflags = [
-  '-DGNOMELOCALEDIR="@0@"'.format(ev_localedir),
+  '-DEV_LOCALEDIR="@0@"'.format(ev_localedir),
   '-DEVINCE_COMPILATION',
 ]
 
