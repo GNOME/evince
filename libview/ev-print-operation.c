@@ -30,7 +30,7 @@
 #include "ev-jobs.h"
 #include "ev-job-scheduler.h"
 
-#if GTK_CHECK_VERSION (3, 22, 0) && defined (G_OS_UNIX)
+#if defined (G_OS_UNIX)
 #define PORTAL_ENABLED
 #endif
 
