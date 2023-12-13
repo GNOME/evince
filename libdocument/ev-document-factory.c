@@ -113,11 +113,12 @@ ev_document_factory_new_document_for_mime_type (const gchar *mime_type,
                 module = g_hash_table_lookup (ev_module_hash, info->module_name);
         }
         if (module == NULL) {
-                gchar *path;
+		g_autofree gchar *path = NULL;
 
-                path = g_module_build_path (ev_backends_dir, info->module_name);
+		path = g_strconcat (ev_backends_dir, G_DIR_SEPARATOR_S,
+				    info->module_name, NULL);
+
 		module = g_module_open (path, 0);
-                g_free (path);
 
 		if (!g_module_symbol (module, "ev_backend_query_type",
 				      (void *) &query_type_function)) {
