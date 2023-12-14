@@ -44,7 +44,7 @@ EV_PUBLIC
 GType		ev_view_presentation_get_type	      (void) G_GNUC_CONST;
 
 EV_PUBLIC
-GtkWidget      *ev_view_presentation_new	      (EvDocument         *document,
+EvViewPresentation *ev_view_presentation_new	      (EvDocument         *document,
 						       guint               current_page,
 						       guint               rotation,
 						       gboolean            inverted_colors);

@@ -37,7 +37,7 @@ EV_PUBLIC
 G_DECLARE_DERIVABLE_TYPE (EvView, ev_view, EV, VIEW, GtkWidget)
 
 EV_PUBLIC
-GtkWidget*	ev_view_new		    (void);
+EvView *	ev_view_new		    (void);
 EV_PUBLIC
 void		ev_view_set_model	    (EvView          *view,
 					     EvDocumentModel *model);

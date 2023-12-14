@@ -4604,10 +4604,10 @@ ev_window_run_presentation (EvWindow *window)
 	current_page = ev_document_model_get_page (priv->model);
 	rotation = ev_document_model_get_rotation (priv->model);
 	inverted_colors = ev_document_model_get_inverted_colors (priv->model);
-	priv->presentation_view = ev_view_presentation_new (priv->document,
-								    current_page,
-								    rotation,
-								    inverted_colors);
+	priv->presentation_view = GTK_WIDGET (ev_view_presentation_new (priv->document,
+									current_page,
+									rotation,
+									inverted_colors));
 	g_signal_connect_swapped (priv->presentation_view, "finished",
 				  G_CALLBACK (ev_window_view_presentation_finished),
 				  window);
@@ -7262,17 +7262,13 @@ ev_window_class_init (EvWindowClass *ev_window_class)
  *
  * Returns: the #GtkWidget that represents the window.
  */
-GtkWidget *
+EvWindow *
 ev_window_new (void)
 {
-	GtkWidget *ev_window;
-
-	ev_window = GTK_WIDGET (g_object_new (EV_TYPE_WINDOW,
-                                              "application", g_application_get_default (),
-					      "show-menubar", FALSE,
-					      NULL));
-
-	return ev_window;
+	return g_object_new (EV_TYPE_WINDOW,
+			     "application", g_application_get_default (),
+			     "show-menubar", FALSE,
+			     NULL);
 }
 
 const gchar *

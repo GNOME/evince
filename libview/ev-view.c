@@ -8321,14 +8321,10 @@ adjustment_value_changed_cb (GtkAdjustment *adjustment,
 		view_update_range_and_current_page (view);
 }
 
-GtkWidget*
+EvView *
 ev_view_new (void)
 {
-	GtkWidget *view;
-
-	view = g_object_new (EV_TYPE_VIEW, NULL);
-
-	return view;
+	return g_object_new (EV_TYPE_VIEW, NULL);
 }
 
 static void

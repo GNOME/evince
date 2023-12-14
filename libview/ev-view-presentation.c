@@ -1469,7 +1469,7 @@ ev_view_presentation_init (EvViewPresentation *pview)
 	ev_view_presentation_goto_window_create (pview);
 }
 
-GtkWidget *
+EvViewPresentation *
 ev_view_presentation_new (EvDocument *document,
 			  guint       current_page,
 			  guint       rotation,
@@ -1478,12 +1478,12 @@ ev_view_presentation_new (EvDocument *document,
 	g_return_val_if_fail (EV_IS_DOCUMENT (document), NULL);
 	g_return_val_if_fail (current_page < ev_document_get_n_pages (document), NULL);
 
-	return GTK_WIDGET (g_object_new (EV_TYPE_VIEW_PRESENTATION,
-					 "document", document,
-					 "current_page", current_page,
-					 "rotation", rotation,
-					 "inverted_colors", inverted_colors,
-					 NULL));
+	return g_object_new (EV_TYPE_VIEW_PRESENTATION,
+			     "document", document,
+			     "current_page", current_page,
+			     "rotation", rotation,
+			     "inverted_colors", inverted_colors,
+			     NULL);
 }
 
 guint

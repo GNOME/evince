@@ -630,7 +630,7 @@ void
 ev_application_open_recent_view (EvApplication *application,
                                  GdkDisplay    *display)
 {
-	GtkWidget *new_window = ev_window_new ();
+	GtkWidget *new_window = GTK_WIDGET (ev_window_new ());
 
 	ev_window_open_recent_view (EV_WINDOW (new_window));
 
