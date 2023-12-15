@@ -1,6 +1,4 @@
 previewer_sources = files(
-  'ev-previewer-toolbar.c',
-  'ev-previewer-toolbar.h',
   'ev-previewer-window.c',
   'ev-previewer-window.h',
   'ev-previewer.c',

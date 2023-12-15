@@ -32,7 +32,6 @@
 #include "ev-page-action-widget.h"
 
 #include "ev-previewer-window.h"
-#include "ev-previewer-toolbar.h"
 
 struct _EvPreviewerWindow {
 	GtkApplicationWindow base_instance;
@@ -42,7 +41,7 @@ struct _EvPreviewerWindow {
 	EvDocument       *document;
 
 	EvView           *view;
-	GtkWidget        *toolbar;
+	GtkWidget        *page_selector;
 
 	/* Printing */
 	GtkPrintSettings *print_settings;
@@ -146,7 +145,7 @@ ev_previewer_window_zoom_default (GSimpleAction *action,
 }
 
 static void
-ev_previewer_window_action_page_activated (GtkAction         *action,
+ev_previewer_window_action_page_activated (GObject           *object,
                                            EvLink            *link,
                                            EvPreviewerWindow *window)
 {
@@ -160,10 +159,8 @@ ev_previewer_window_focus_page_selector (GSimpleAction *action,
                                          gpointer       user_data)
 {
         EvPreviewerWindow *window = EV_PREVIEWER_WINDOW (user_data);
-	GtkWidget *page_selector;
 
-	page_selector = ev_previewer_toolbar_get_page_selector (EV_PREVIEWER_TOOLBAR (window->toolbar));
-	ev_page_action_widget_grab_focus (EV_PAGE_ACTION_WIDGET (page_selector));
+	ev_page_action_widget_grab_focus (EV_PAGE_ACTION_WIDGET (window->page_selector));
 }
 
 #if GTKUNIXPRINT_ENABLED
@@ -378,13 +375,11 @@ ev_previewer_window_init (EvPreviewerWindow *window)
 {
 	window->source_fd = -1;
 
-	gtk_window_set_default_size (GTK_WINDOW (window), 600, 600);
+	gtk_widget_init_template (GTK_WIDGET (window));
 
 	g_action_map_add_action_entries (G_ACTION_MAP (window),
 					 actions, G_N_ELEMENTS (actions),
 					 window);
-
-	gtk_window_set_default_size (GTK_WINDOW (window), 600, 600);
 }
 
 static gboolean
@@ -412,8 +407,6 @@ static void
 ev_previewer_window_constructed (GObject *object)
 {
 	EvPreviewerWindow *window = EV_PREVIEWER_WINDOW (object);
-	GtkWidget         *vbox;
-	GtkWidget         *swindow;
 	GError            *error = NULL;
 	gdouble            dpi;
         GtkCssProvider    *css_provider;
@@ -421,6 +414,10 @@ ev_previewer_window_constructed (GObject *object)
 	G_OBJECT_CLASS (ev_previewer_window_parent_class)->constructed (object);
 
 	window->model = ev_document_model_new ();
+	ev_document_model_set_continuous (window->model, FALSE);
+	ev_view_set_model (window->view, window->model);
+	ev_page_action_widget_set_model (EV_PAGE_ACTION_WIDGET (window->page_selector),
+					 window->model);
 
 	dpi = ev_document_misc_get_widget_dpi (GTK_WIDGET (window));
 	ev_document_model_set_min_scale (window->model, MIN_SCALE * dpi / 72.0);
@@ -439,45 +436,29 @@ ev_previewer_window_constructed (GObject *object)
 
 	view_sizing_mode_changed (window->model, NULL, window);
 
-	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
-
-	window->toolbar = ev_previewer_toolbar_new (window);
-	gtk_widget_set_no_show_all (window->toolbar, TRUE);
-	gtk_header_bar_set_show_close_button (GTK_HEADER_BAR (window->toolbar),
-                                              TRUE);
-	gtk_window_set_titlebar (GTK_WINDOW (window), window->toolbar);
-	gtk_widget_show (window->toolbar);
-
-	g_signal_connect (ev_previewer_toolbar_get_page_selector (EV_PREVIEWER_TOOLBAR (window->toolbar)),
+	g_signal_connect (window->page_selector,
 			  "activate-link",
 			  G_CALLBACK (ev_previewer_window_action_page_activated),
 			  window);
 
-	swindow = gtk_scrolled_window_new (NULL, NULL);
-
-	window->view = EV_VIEW (ev_view_new ());
-	ev_view_set_model (window->view, window->model);
-	ev_document_model_set_continuous (window->model, FALSE);
-
 	g_signal_connect_object (window->model, "page-changed",
 				 G_CALLBACK (model_page_changed),
 				 window, 0);
-
-	gtk_container_add (GTK_CONTAINER (swindow), GTK_WIDGET (window->view));
-	gtk_widget_show (GTK_WIDGET (window->view));
-
-	gtk_box_pack_start (GTK_BOX (vbox), swindow, TRUE, TRUE, 0);
-	gtk_widget_show (swindow);
-
-	gtk_container_add (GTK_CONTAINER (window), vbox);
-	gtk_widget_show (vbox);
 }
-
 
 static void
 ev_previewer_window_class_init (EvPreviewerWindowClass *klass)
 {
 	GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
+	GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
+
+	g_type_ensure (EV_TYPE_PAGE_ACTION_WIDGET);
+	g_type_ensure (EV_TYPE_VIEW);
+	gtk_widget_class_set_template_from_resource (widget_class,
+						     "/org/gnome/evince/previewer/ui/previewer-window.ui");
+
+	gtk_widget_class_bind_template_child (widget_class, EvPreviewerWindow, view);
+	gtk_widget_class_bind_template_child (widget_class, EvPreviewerWindow, page_selector);
 
 	gobject_class->constructed = ev_previewer_window_constructed;
 	gobject_class->dispose = ev_previewer_window_dispose;
