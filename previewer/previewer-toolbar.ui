@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk+" version="3.22" />
+  <template class="EvPreviewerToolbar" parent="GtkHeaderBar">
+    <property name="visible">true</property>
+    <child>
+      <object class="GtkBox">
+        <property name="visible">true</property>
+        <property name="orientation">horizontal</property>
+        <style>
+          <class name="linked" />
+        </style>
+        <child>
+          <object class="GtkButton">
+            <property name="visible">true</property>
+            <property name="tooltip-text" translatable="yes">Previous Page</property>
+            <property name="action-name">win.go-previous-page</property>
+            <child>
+              <object class="GtkImage">
+                <property name="icon-name">go-up-symbolic</property>
+                <property name="visible">true</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkButton">
+            <property name="visible">true</property>
+            <property name="tooltip-text" translatable="yes">Next Page</property>
+            <property name="action-name">win.go-next-page</property>
+            <child>
+              <object class="GtkImage">
+                <property name="icon-name">go-down-symbolic</property>
+                <property name="visible">true</property>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+      <packing>
+        <property name="pack-type">start</property>
+      </packing>
+    </child>
+    <child>
+      <object class="EvPageActionWidget" id="page_selector">
+        <property name="visible">true</property>
+        <property name="tooltip-text" translatable="yes">Select Page or Search in the Outline</property>
+        <child internal-child="accessible">
+          <object class="AtkObject">
+            <property name="AtkObject::accessible-name" translatable="yes">Select page</property>
+          </object>
+        </child>
+      </object>
+      <packing>
+        <property name="pack-type">start</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkButton">
+        <property name="visible">true</property>
+        <property name="label" translatable="yes">_Print</property>
+        <property name="tooltip-text" translatable="yes">Print this Document</property>
+        <property name="action-name">win.print</property>
+        <property name="use-underline">True</property>
+        <style>
+          <class name="suggested-action" />
+        </style>
+      </object>
+      <packing>
+        <property name="pack-type">end</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkBox">
+        <property name="visible">true</property>
+        <property name="orientation">horizontal</property>
+        <style>
+          <class name="linked" />
+        </style>
+        <child>
+          <object class="GtkButton">
+            <property name="visible">true</property>
+            <property name="tooltip-text" translatable="yes">Shrink the Document</property>
+            <property name="action-name">win.zoom-out</property>
+            <child>
+              <object class="GtkImage">
+                <property name="icon-name">zoom-out-symbolic</property>
+                <property name="visible">true</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkButton">
+            <property name="visible">true</property>
+            <property name="tooltip-text" translatable="yes">Reset Zoom and Make the Page Fit in the Window</property>
+            <property name="action-name">win.zoom-default</property>
+            <child>
+              <object class="GtkImage">
+                <property name="icon-name">zoom-fit-best-symbolic</property>
+                <property name="visible">true</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkButton">
+            <property name="visible">true</property>
+            <property name="tooltip-text" translatable="yes">Enlarge the Document</property>
+            <property name="action-name">win.zoom-in</property>
+            <child>
+              <object class="GtkImage">
+                <property name="icon-name">zoom-in-symbolic</property>
+                <property name="visible">true</property>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+      <packing>
+        <property name="pack-type">end</property>
+      </packing>
+    </child>
+  </template>
+</interface>
