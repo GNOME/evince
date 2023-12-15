@@ -146,7 +146,7 @@ top_inc = include_directories('.')
 glib_req_version = '>= 2.74.0'
 gtk_req_version = '>= 3.22.0'
 hdy_req_version = '>= 1.5.0'
-libxml_req_version = '>= 2.5.0'
+exempi_req_version = '>= 2.0'
 
 gdk_pixbuf_dep = dependency('gdk-pixbuf-2.0', version: '>= 2.40.0')
 config_h.set_quoted('EXTRA_GDK_PIXBUF_LOADERS_DIR',
@@ -158,7 +158,7 @@ gmodule_dep = dependency('gmodule-2.0')
 gtk_dep = dependency('gtk+-3.0', version: gtk_req_version)
 gthread_dep = dependency('gthread-2.0', version: glib_req_version)
 hdy_dep = dependency('libhandy-1', version: hdy_req_version)
-libxml_dep = dependency('libxml-2.0', version: libxml_req_version)
+exempi_dep = dependency('exempi-2.0', version: exempi_req_version)
 
 m_dep = cc.find_library('m')
 

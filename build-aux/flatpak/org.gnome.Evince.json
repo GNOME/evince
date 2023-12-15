@@ -120,6 +120,20 @@
             ]
         },
         {
+            "name" : "exempi",
+            "config-opts" : [
+                "--disable-unittest",
+                "--disable-samples"
+            ],
+            "sources" : [
+                {
+                    "type" : "git",
+                    "url" : "https://gitlab.freedesktop.org/libopenraw/exempi.git",
+                    "tag" : "2.6.4"
+                }
+            ]
+        },
+        {
             "name": "djvulibre",
             "config-opts": [
                 "--disable-desktopfiles"

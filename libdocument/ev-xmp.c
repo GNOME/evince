@@ -27,111 +27,39 @@
 #include <glib/gi18n-lib.h>
 #include <pango/pango.h>
 
-#include <libxml/tree.h>
-#include <libxml/parser.h>
-#include <libxml/xpath.h>
-#include <libxml/xpathInternals.h>
+#include <exempi/xmp.h>
+#include <exempi/xmpconsts.h>
 
-/* Fields for checking the license info suggested by Creative Commons
- * Main reference: http://wiki.creativecommons.org/XMP
- */
+#define NS_PDFA_ID	"http://www.aiim.org/pdfa/ns/id/"
+#define NS_PDFX_ID	"http://www.npes.org/pdfx/ns/id/"
+#define NS_PDFX		"http://ns.adobe.com/pdfx/1.3/"
 
-/* fields from the XMP Rights Management Schema, XMP Specification Sept 2005, pag. 42 */
-#define LICENSE_MARKED "/rdf:RDF/rdf:Description/xmpRights:Marked"
-#define LICENSE_TEXT "/x:xmpmeta/rdf:RDF/rdf:Description/xmpRights:UsageTerms/rdf:Alt/rdf:li[lang('%s')]"
-#define LICENSE_WEB_STATEMENT "/rdf:RDF/rdf:Description/xmpRights:WebStatement"
-/* license field from Creative Commons schema, http://creativecommons.org/ns */
-#define LICENSE_URI "/rdf:RDF/rdf:Description/cc:license/@rdf:resource"
-
-/* alternative field from the Dublic Core Schema for checking the informal rights statement
- * as suggested by the Creative Commons template [1]. This field has been replaced or
- * complemented by its XMP counterpart [2].
- * References:
- *    [1] http://wiki.creativecommons.org/XMP_help_for_Adobe_applications
- *    [2] http://code.creativecommons.org/issues/issue505
- */
-#define LICENSE_TEXT_ALT "/x:xmpmeta/rdf:RDF/rdf:Description/dc:rights/rdf:Alt/rdf:li[lang('%s')]"
-#define GET_LICENSE_TEXT(a) ( (a < 1) ? LICENSE_TEXT : LICENSE_TEXT_ALT )
-
-/* fields for authors and keywords */
-#define AUTHORS "/rdf:RDF/rdf:Description/dc:creator/rdf:Seq/rdf:li"
-#define KEYWORDS "/rdf:RDF/rdf:Description/dc:subject/rdf:Bag/rdf:li"
-/* fields for title and subject */
-#define TITLE "/rdf:RDF/rdf:Description/dc:title/rdf:Alt/rdf:li[lang('%s')]"
-#define SUBJECT "/rdf:RDF/rdf:Description/dc:description/rdf:Alt/rdf:li[lang('%s')]"
-/* fields for creation and modification dates */
-#define MOD_DATE "/rdf:RDF/rdf:Description/xmp:ModifyDate"
-#define CREATE_DATE "/rdf:RDF/rdf:Description/xmp:CreateDate"
-#define META_DATE "/rdf:RDF/rdf:Description/xmp:MetadataDate"
-/* fields for pdf creator tool and producer */
-#define CREATOR "/rdf:RDF/rdf:Description/xmp:CreatorTool"
-#define PRODUCER "/rdf:RDF/rdf:Description/pdf:Producer"
-
-/*
- * strexchange:
- * @str: (transfer full): a string from libxml allocator
- *
- * Returns: (transfer full): @str from glib allocator
- */
 static char *
-strexchange (xmlChar *str)
+ev_xmp_get_name (XmpPtr xmp,
+		 const char *ns,
+		 const char *name)
 {
-        char *rv = g_strdup ((char*)str);
-        xmlFree (str);
-        return rv;
-}
+	XmpStringPtr property = xmp_string_new ();
+	char *result = NULL;
 
-static xmlChar *
-xmp_get_tag_from_xpath (xmlXPathContextPtr xpathCtx,
-                        const char* xpath)
-{
-        xmlXPathObjectPtr xpathObj;
-        xmlChar *result = NULL;
-        char *xmpmetapath;
+	if (xmp_get_property (xmp, ns, name, property, NULL))
+		result = g_strdup (xmp_string_cstr (property));
 
-        /* Try in /rdf:RDF/ */
-        xpathObj = xmlXPathEvalExpression (BAD_CAST xpath, xpathCtx);
-        if (xpathObj == NULL)
-                return NULL;
+	xmp_string_free (property);
 
-        if (xpathObj->nodesetval != NULL && xpathObj->nodesetval->nodeNr != 0)
-                result = xmlNodeGetContent (xpathObj->nodesetval->nodeTab[0]);
-
-        xmlXPathFreeObject (xpathObj);
-
-        if (result != NULL)
-                return result;
-
-        /*
-          Try in /x:xmpmeta/ (xmpmeta is optional)
-          https://wwwimages2.adobe.com/content/dam/acom/en/devnet/xmp/pdfs/XMP SDK Release cc-2016-08/XMPSpecificationPart1.pdf (Section 7.3.3)
-        */
-        xmpmetapath = g_strdup_printf ("%s%s", "/x:xmpmeta", xpath);
-        xpathObj = xmlXPathEvalExpression (BAD_CAST xmpmetapath, xpathCtx);
-        g_free (xmpmetapath);
-        if (xpathObj == NULL)
-                return NULL;
-
-        if (xpathObj->nodesetval != NULL && xpathObj->nodesetval->nodeNr != 0)
-                result = xmlNodeGetContent (xpathObj->nodesetval->nodeTab[0]);
-
-        xmlXPathFreeObject (xpathObj);
-        return result;
+	return result;
 }
 
 static GDateTime *
-xmp_get_datetime_from_xpath (xmlXPathContextPtr xpathCtx,
-                             const char* xpath)
+ev_xmp_get_datetime (XmpPtr xmp, const gchar *name)
 {
-        xmlChar *tag;
-        GDateTime *datetime;
+        GDateTime *datetime = NULL;
+	XmpStringPtr date = xmp_string_new ();
 
-        tag = xmp_get_tag_from_xpath (xpathCtx, xpath);
-        if (tag == NULL)
-                return NULL;
+	if (xmp_get_property (xmp, NS_XAP, name, date, NULL))
+	        datetime = g_date_time_new_from_iso8601 (xmp_string_cstr (date), NULL);
 
-        datetime = g_date_time_new_from_iso8601 ((const char*)tag, NULL);
-        xmlFree (tag);
+	xmp_string_free (date);
 
         return datetime;
 }
@@ -140,36 +68,24 @@ xmp_get_datetime_from_xpath (xmlXPathContextPtr xpathCtx,
  * http://www.pdfa.org/lib/exe/fetch.php?id=pdfa%3Aen%3Atechdoc&cache=cache&media=pdfa:techdoc:tn0001_pdfa-1_and_namespaces_2008-03-18.pdf
  */
 static char *
-xmp_get_pdf_format (xmlXPathContextPtr xpathCtx)
+ev_xmp_get_pdf_format (XmpPtr xmp)
 {
-        xmlChar *part = NULL;
-        xmlChar *conf = NULL;
-        xmlChar *pdfxid = NULL;
+        g_autofree char *part = NULL;
+        g_autofree char *conf = NULL;
+        g_autofree char *pdfxid = NULL;
         char *result = NULL;
         int i;
 
         /* reads pdf/a part */
-        /* first syntax: child node */
-        part = xmp_get_tag_from_xpath (xpathCtx, "/rdf:RDF/rdf:Description/pdfaid:part");
-        if (part == NULL) {
-                /* second syntax: attribute */
-                part = xmp_get_tag_from_xpath (xpathCtx, "/rdf:RDF/rdf:Description/@pdfaid:part");
-        }
+        part = ev_xmp_get_name (xmp, NS_PDFA_ID, "part");
 
         /* reads pdf/a conformance */
-        /* first syntax: child node */
-        conf =  xmp_get_tag_from_xpath (xpathCtx, "/rdf:RDF/rdf:Description/pdfaid:conformance");
-        if (conf == NULL) {
-                /* second syntax: attribute */
-                conf =  xmp_get_tag_from_xpath (xpathCtx, "/rdf:RDF/rdf:Description/@pdfaid:conformance");
-        }
+        conf = ev_xmp_get_name (xmp, NS_PDFA_ID, "conformance");
 
         /* reads pdf/x id  */
-        /* first syntax: pdfxid */
-        pdfxid = xmp_get_tag_from_xpath (xpathCtx, "/rdf:RDF/rdf:Description/pdfxid:GTS_PDFXVersion");
+        pdfxid = ev_xmp_get_name (xmp, NS_PDFX_ID, "GTS_PDFXVersion");
         if (pdfxid == NULL) {
-                /* second syntax: pdfx */
-                pdfxid = xmp_get_tag_from_xpath (xpathCtx, "/rdf:RDF/rdf:Description/pdfx:GTS_PDFXVersion");
+                pdfxid = ev_xmp_get_name (xmp, NS_PDFX, "GTS_PDFXVersion");
         }
 
         if (part != NULL && conf != NULL) {
@@ -184,169 +100,105 @@ xmp_get_pdf_format (xmlXPathContextPtr xpathCtx)
                 result = g_strdup_printf ("%s", pdfxid);
         }
 
-        /* Cleanup */
-        xmlFree (part);
-        xmlFree (conf);
-        xmlFree (pdfxid);
         return result;
 }
 
 static char *
-xmp_get_lists_from_dc_tags (xmlXPathContextPtr xpathCtx,
-                            const char* xpath)
+ev_xmp_get_lists_from_dc_tags (XmpPtr xmp,
+                               const char *name)
 {
-        xmlXPathObjectPtr xpathObj;
-        int i;
-        char* elements = NULL;
-        char* tmp_elements = NULL;
-        char* result = NULL;
-        xmlChar* content;
+	char* elements = NULL;
+	char* tmp_elements = NULL;
+	XmpStringPtr content = xmp_string_new ();
+	int index = 1;
 
-        /* reads pdf/a sequence*/
-        xpathObj = xmlXPathEvalExpression (BAD_CAST xpath, xpathCtx);
-        if (xpathObj == NULL)
-                return NULL;
+	while (xmp_get_array_item (xmp, NS_DC, name, index, content, NULL)) {
+		if (index > 1) {
+			tmp_elements = g_strdup (elements);
+			g_free (elements);
+			elements = g_strdup_printf ("%s, %s", tmp_elements,
+						    xmp_string_cstr (content));
+			g_free (tmp_elements);
+		} else {
+			elements = g_strdup_printf ("%s", xmp_string_cstr (content));
+		}
 
-        if (xpathObj->nodesetval != NULL && xpathObj->nodesetval->nodeNr != 0) {
-                for (i = 0; i < xpathObj->nodesetval->nodeNr; i++) {
-                        content = xmlNodeGetContent (xpathObj->nodesetval->nodeTab[i]);
-                        if (i) {
-                                tmp_elements = g_strdup (elements);
-                                g_free (elements);
-                                elements = g_strdup_printf ("%s, %s", tmp_elements, content);
-                                g_free (tmp_elements);
-                        } else {
-                                elements = g_strdup_printf ("%s", content);
-                        }
-                        xmlFree(content);
-                }
-        }
-        xmlXPathFreeObject (xpathObj);
+		index++;
+	}
 
-        if (elements != NULL) {
-                /* return buffer */
-                result = g_strdup (elements);
-        }
+	xmp_string_free (content);
 
-        /* Cleanup */
-        g_free (elements);
-
-        return result;
+	return elements;
 }
 
 static char *
-xmp_get_author (xmlXPathContextPtr xpathCtx)
+ev_xmp_get_author (XmpPtr xmp)
 {
-        char* result = NULL;
-        char* xmpmetapath;
-
-        /* Try in /rdf:RDF/ */
-        result = xmp_get_lists_from_dc_tags (xpathCtx, AUTHORS);
-        if (result != NULL)
-                return result;
-
-        /* Try in /x:xmpmeta/ */
-        xmpmetapath = g_strdup_printf ("%s%s", "/x:xmpmeta", AUTHORS);
-        result = xmp_get_lists_from_dc_tags (xpathCtx, xmpmetapath);
-        g_free (xmpmetapath);
-
-        return result;
+	return ev_xmp_get_lists_from_dc_tags (xmp, "creator");
 }
 
 static char *
-xmp_get_keywords (xmlXPathContextPtr xpathCtx)
+ev_xmp_get_keywords (XmpPtr xmp)
 {
-        char* result = NULL;
-        char* xmpmetapath;
-
-        /* Try in /rdf:RDF/ */
-        result = xmp_get_lists_from_dc_tags (xpathCtx, KEYWORDS);
-        if (result != NULL)
-                return result;
-
-        /* Try in /x:xmpmeta/ */
-        xmpmetapath = g_strdup_printf ("%s%s", "/x:xmpmeta", KEYWORDS);
-        result = xmp_get_lists_from_dc_tags (xpathCtx, xmpmetapath);
-        g_free (xmpmetapath);
-
-        return result;
+	return ev_xmp_get_lists_from_dc_tags (xmp, "subject");
 }
 
-static G_GNUC_FORMAT (2) char *
-xmp_get_localized_object_from_xpath_format (xmlXPathContextPtr xpathCtx,
-                                            const char* xpath_format)
+static char *
+ev_xmp_get_localized_object (XmpPtr xmp,
+			  const char *ns,
+			  const char *name)
 {
         const char *language_string;
-        char  *aux;
-        gchar **tags;
-        gchar *tag, *tag_aux;
-        int i, j;
-        xmlChar *loc_object= NULL;
+	gchar **tags, *result = NULL;
+	XmpStringPtr value = xmp_string_new ();
 
         /* 1) checking for a suitable localized string */
         language_string = pango_language_to_string (pango_language_get_default ());
+
         tags = g_strsplit (language_string, "-", -1);
-        i = g_strv_length (tags);
-        while (i-- && !loc_object) {
-                tag = g_strdup (tags[0]);
-                for (j = 1; j <= i; j++) {
-                        tag_aux = g_strdup_printf ("%s-%s", tag, tags[j]);
-                        g_free (tag);
-                        tag = tag_aux;
-                }
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wformat-nonliteral"
-                aux = g_strdup_printf (xpath_format, tag);
-#pragma GCC diagnostic pop
-                loc_object = xmp_get_tag_from_xpath (xpathCtx, aux);
-                g_free (tag);
-                g_free (aux);
-        }
+
+	/* This function will fallback to x-default when tag[0] is NULL */
+	if (xmp_get_localized_text (xmp, ns, name, tags[0], language_string,
+				    NULL, value, NULL))
+		result = g_strdup (xmp_string_cstr (value));
+
         g_strfreev (tags);
+	xmp_string_free (value);
 
-        /* 2) if not, use the default string */
-        if (!loc_object) {
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wformat-nonliteral"
-                aux = g_strdup_printf (xpath_format, "x-default");
-#pragma GCC diagnostic pop
-                loc_object = xmp_get_tag_from_xpath (xpathCtx, aux);
-                g_free (aux);
-        }
-        return strexchange (loc_object);
+        return result;
 }
 
 static char *
-xmp_get_title (xmlXPathContextPtr xpathCtx)
+ev_xmp_get_title (XmpPtr xmp)
 {
-        return xmp_get_localized_object_from_xpath_format (xpathCtx, TITLE);
+        return ev_xmp_get_localized_object (xmp, NS_DC, "title");
 }
 
 static char *
-xmp_get_subject (xmlXPathContextPtr xpathCtx)
+ev_xmp_get_subject (XmpPtr xmp)
 {
-        return xmp_get_localized_object_from_xpath_format (xpathCtx, SUBJECT);
+	return ev_xmp_get_localized_object (xmp, NS_DC, "description");
 }
 
 static EvDocumentLicense *
-xmp_get_license (xmlXPathContextPtr xpathCtx)
+ev_xmp_get_license (XmpPtr xmp)
 {
-        xmlChar *marked = NULL;
+        bool marked, has_mark;
         EvDocumentLicense *license;
 
         /* checking if the document has been marked as defined on the XMP Rights
          * Management Schema */
-        marked = xmp_get_tag_from_xpath (xpathCtx, LICENSE_MARKED);
+	has_mark = xmp_get_property_bool (xmp, NS_XAP_RIGHTS, "Marked", &marked, NULL);
 
         /* a) Not marked => No XMP Rights information */
-        if (!marked)
+        if (!has_mark)
                 return NULL;
 
         license = ev_document_license_new ();
 
         /* b) Marked False => Public Domain, no copyrighted material and no
          * license needed */
-        if (g_strrstr ((char *) marked, "False") != NULL) {
+        if (!marked) {
                 license->text = g_strdup (_("This work is in the Public Domain"));
                 /* c) Marked True => Copyrighted material */
         } else {
@@ -354,24 +206,30 @@ xmp_get_license (xmlXPathContextPtr xpathCtx)
                  * Schema. This field is recomended to be checked by Creative
                  * Commons */
                 /* 1) checking for a suitable localized string */
-                int lt;
 
-                for (lt = 0; !license->text && lt < 2; lt++)
-                        license->text = xmp_get_localized_object_from_xpath_format (xpathCtx,
-                                                                                    GET_LICENSE_TEXT (lt));
+		/* alternative field from the Dublic Core Schema for checking the informal rights statement
+		 * as suggested by the Creative Commons template [1]. This field has been replaced or
+		 * complemented by its XMP counterpart [2].
+		 * References:
+		 *    [1] http://wiki.creativecommons.org/XMP_help_for_Adobe_applications
+		 *    [2] http://code.creativecommons.org/issues/issue505
+		 */
+		license->text = ev_xmp_get_localized_object (xmp, NS_XAP_RIGHTS, "UsageTerms");
+
+		if (!license->text)
+			license->text = ev_xmp_get_localized_object (xmp, NS_DC, "rights");
 
                 /* Checking the license URI as defined by the Creative Commons
                  * Schema. This field is recomended to be checked by Creative
                  * Commons */
-                license->uri = strexchange (xmp_get_tag_from_xpath (xpathCtx, LICENSE_URI));
+                license->uri = ev_xmp_get_name (xmp, NS_CC, "license");
 
                 /* Checking the web statement as defined by the XMP Rights
                  * Management Schema. Checking it out is a sort of above-and-beyond
                  * the basic recommendations by Creative Commons. It can be
                  * considered as a "reinforcement" approach to add certainty. */
-                license->web_statement = strexchange (xmp_get_tag_from_xpath (xpathCtx, LICENSE_WEB_STATEMENT));
+                license->web_statement = ev_xmp_get_name (xmp, NS_XAP_RIGHTS, "WebStatement");
         }
-        xmlFree (marked);
 
         if (!license->text && !license->uri && !license->web_statement) {
                 ev_document_license_free (license);
@@ -394,8 +252,6 @@ ev_xmp_parse (const char    *metadata,
               gsize          size,
               EvDocumentInfo *info)
 {
-        xmlDocPtr          doc;
-        xmlXPathContextPtr xpathCtx;
         gchar             *fmt;
         gchar             *author;
         gchar             *keywords;
@@ -406,36 +262,15 @@ ev_xmp_parse (const char    *metadata,
         GDateTime         *modified_datetime;
         GDateTime         *metadata_datetime = NULL;
         GDateTime         *datetime;
+	XmpPtr             xmp;
 
-        doc = xmlParseMemory (metadata, size);
-        if (doc == NULL)
-                return FALSE; /* invalid xml metadata */
+	xmp = xmp_new (metadata, size);
 
-        xpathCtx = xmlXPathNewContext (doc);
-        if (xpathCtx == NULL) {
-                xmlFreeDoc (doc);
-                return FALSE; /* invalid xpath context */
-        }
-
-        /* Register namespaces */
-        /* XMP */
-        xmlXPathRegisterNs (xpathCtx, BAD_CAST "dc", BAD_CAST "http://purl.org/dc/elements/1.1/");
-        xmlXPathRegisterNs (xpathCtx, BAD_CAST "x", BAD_CAST "adobe:ns:meta/");
-        xmlXPathRegisterNs (xpathCtx, BAD_CAST "xmp", BAD_CAST "http://ns.adobe.com/xap/1.0/");
-        /* XMP Rights Management Schema */
-        xmlXPathRegisterNs (xpathCtx, BAD_CAST "xmpRights", BAD_CAST "http://ns.adobe.com/xap/1.0/rights/");
-        /* RDF */
-        xmlXPathRegisterNs (xpathCtx, BAD_CAST "rdf", BAD_CAST "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
-        /* PDF/A and PDF/X namespaces */
-        xmlXPathRegisterNs (xpathCtx, BAD_CAST "pdf", BAD_CAST "http://ns.adobe.com/pdf/1.3/");
-        xmlXPathRegisterNs (xpathCtx, BAD_CAST "pdfaid", BAD_CAST "http://www.aiim.org/pdfa/ns/id/");
-        xmlXPathRegisterNs (xpathCtx, BAD_CAST "pdfx", BAD_CAST "http://ns.adobe.com/pdfx/1.3/");
-        xmlXPathRegisterNs (xpathCtx, BAD_CAST "pdfxid", BAD_CAST "http://www.npes.org/pdfx/ns/id/");
-        /* Creative Commons Schema */
-        xmlXPathRegisterNs (xpathCtx, BAD_CAST "cc", BAD_CAST "http://creativecommons.org/ns#");
+        if (xmp == NULL)
+                return FALSE; /* invalid xmp metadata */
 
         /* Read metadata date */
-        metadata_datetime = xmp_get_datetime_from_xpath (xpathCtx, META_DATE);
+        metadata_datetime = ev_xmp_get_datetime (xmp, "MetadataDate");
 
         /* From PDF spec, if the PDF modified date is newer than metadata date,
          * it indicates that the file was edited by a non-XMP aware software.
@@ -446,50 +281,49 @@ ev_xmp_parse (const char    *metadata,
         if (modified_datetime == NULL ||
             metadata_datetime == NULL ||
             g_date_time_compare (metadata_datetime, modified_datetime) >= 0) {
-
-                fmt = xmp_get_pdf_format (xpathCtx);
+                fmt = ev_xmp_get_pdf_format (xmp);
                 if (fmt != NULL) {
                         g_free (info->format);
                         info->format = fmt;
                         info->fields_mask |= EV_DOCUMENT_INFO_FORMAT;
                 }
 
-                author = xmp_get_author (xpathCtx);
+                author = ev_xmp_get_author (xmp);
                 if (author != NULL) {
                         g_free (info->author);
                         info->author = author;
                         info->fields_mask |= EV_DOCUMENT_INFO_AUTHOR;
                 }
 
-                keywords = xmp_get_keywords (xpathCtx);
+                keywords = ev_xmp_get_keywords (xmp);
                 if (keywords != NULL) {
                         g_free (info->keywords);
                         info->keywords = keywords;
                         info->fields_mask |= EV_DOCUMENT_INFO_KEYWORDS;
                 }
 
-                title = xmp_get_title (xpathCtx);
+                title = ev_xmp_get_title (xmp);
                 if (title != NULL) {
                         g_free (info->title);
                         info->title = title;
                         info->fields_mask |= EV_DOCUMENT_INFO_TITLE;
                 }
 
-                subject = xmp_get_subject (xpathCtx);
+                subject = ev_xmp_get_subject (xmp);
                 if (subject != NULL) {
                         g_free (info->subject);
                         info->subject = subject;
                         info->fields_mask |= EV_DOCUMENT_INFO_SUBJECT;
                 }
 
-                creatortool = strexchange (xmp_get_tag_from_xpath (xpathCtx, CREATOR));
+                creatortool = ev_xmp_get_name (xmp, NS_XAP, "CreatorTool");
                 if (creatortool != NULL) {
                         g_free (info->creator);
                         info->creator = creatortool;
                         info->fields_mask |= EV_DOCUMENT_INFO_CREATOR;
                 }
 
-                producer = strexchange (xmp_get_tag_from_xpath (xpathCtx, PRODUCER));
+                producer = ev_xmp_get_name (xmp, NS_PDF, "Producer");
                 if (producer != NULL) {
                         g_free (info->producer);
                         info->producer = producer;
@@ -497,24 +331,22 @@ ev_xmp_parse (const char    *metadata,
                 }
 
                 /* reads modify date */
-                datetime = xmp_get_datetime_from_xpath (xpathCtx, MOD_DATE);
+                datetime = ev_xmp_get_datetime (xmp, "ModifyDate");
                 if (datetime)
                         ev_document_info_take_modified_datetime (info, datetime);
 
                 /* reads pdf create date */
-                datetime = xmp_get_datetime_from_xpath (xpathCtx, CREATE_DATE);
+                datetime = ev_xmp_get_datetime (xmp, "CreateDate");
                 if (datetime)
                         ev_document_info_take_created_datetime (info, datetime);
         }
 
-        info->license = xmp_get_license (xpathCtx);
+        info->license = ev_xmp_get_license (xmp);
         if (info->license)
                 info->fields_mask |= EV_DOCUMENT_INFO_LICENSE;
 
-
         g_clear_pointer (&metadata_datetime, g_date_time_unref);
-        xmlXPathFreeContext (xpathCtx);
-        xmlFreeDoc (doc);
+	xmp_free (xmp);
 
         return TRUE;
 }

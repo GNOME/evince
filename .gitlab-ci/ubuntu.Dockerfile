@@ -11,7 +11,7 @@ RUN apt-get -yqq update \
     libgirepository1.0-dev libgtk-3-dev \
     libhandy-1-dev \
     libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev \
-    libxml2-dev libxml2-utils \
+    libexempi-dev \
     libarchive-dev \
     libsecret-1-dev libgspell-1-dev \
     libgnome-desktop-3-dev libnautilus-extension-dev \
