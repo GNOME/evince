@@ -7,7 +7,7 @@ stages:
     - image
 
 variables:
-    BUNDLE: "org.gnome.Evince.flatpak"
+    BUNDLE: "org.gnome.Evince.Devel.flatpak"
 
 editorconfig:
     stage: lint
@@ -54,11 +54,11 @@ flatpak:
     stage: build
 
     variables:
-        MANIFEST_PATH: "build-aux/flatpak/org.gnome.Evince.json"
+        MANIFEST_PATH: "build-aux/flatpak/org.gnome.Evince.Devel.json"
         RUNTIME_REPO: "https://nightly.gnome.org/gnome-nightly.flatpakrepo"
         FLATPAK_MODULE: "evince"
         MESON_ARGS: "-Dnautilus=false -Ddevelopment=true"
-        APP_ID: "org.gnome.Evince"
+        APP_ID: "org.gnome.Evince.Devel"
     artifacts:
         # Rewrite paths and reports to "remove" testlog.txt and junit files,
         # which do not exists in evince build, yet.
