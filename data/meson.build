@@ -50,7 +50,7 @@ if enable_dbus
 endif
 
 # GSettings schema
-gschema_file = ev_namespace + '.gschema.xml'
+gschema_file = 'org.gnome.Evince.gschema.xml'
 install_data(
   gschema_file,
   install_dir: join_paths(ev_datadir, 'glib-2.0', 'schemas'),
