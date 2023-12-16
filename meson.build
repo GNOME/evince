@@ -443,7 +443,7 @@ endif
 
 mime_types_conf = configuration_data()
 mime_types_conf.set('EVINCE_MIME_TYPES', ';'.join(evince_mime_types))
-mime_types_conf.set('PACKAGE_ICON_NAME', ev_app_id)
+mime_types_conf.set('app_id', ev_app_id)
 
 subdir('cut-n-paste')
 subdir('libdocument')
