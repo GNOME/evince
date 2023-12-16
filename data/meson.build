@@ -1,30 +1,28 @@
 subdir('icons')
 
-# Desktop file [input filename, output filename]
-desktops = [['org.gnome.Evince.desktop',
-             '@0@.desktop'.format(ev_app_id)]]
+# Desktop files
+desktop_in = configure_file(
+  input: 'org.gnome.Evince.desktop.in.in',
+  output: 'org.gnome.Evince.desktop.in',
+  configuration: mime_types_conf,
+)
+i18n.merge_file(
+  type: 'desktop',
+  input: desktop_in,
+  output: '@0@.desktop'.format(ev_app_id),
+  po_dir: po_dir,
+  install: true,
+  install_dir: join_paths(ev_datadir, 'applications'),
+)
 
-if enable_previewer
-  desktops += [['org.gnome.Evince-previewer.desktop',
-                '@0@-previewer.desktop'.format(ev_app_id)]]
-endif
-
-foreach desktop: desktops
-  desktop_in = configure_file(
-    input: desktop[0] + '.in.in',
-    output: desktop[1] + '.in',
-    configuration: mime_types_conf,
-  )
-
-  i18n.merge_file(
-    type: 'desktop',
-    input: desktop_in,
-    output: desktop[1],
-    po_dir: po_dir,
-    install: true,
-    install_dir: join_paths(ev_datadir, 'applications'),
-  )
-endforeach
+i18n.merge_file(
+  type: 'desktop',
+  input: 'org.gnome.Evince-previewer.desktop.in',
+  output: '@0@-previewer.desktop'.format(ev_app_id),
+  po_dir: po_dir,
+  install: true,
+  install_dir: join_paths(ev_datadir, 'applications'),
+)
 
 # DBus service file
 if enable_dbus
