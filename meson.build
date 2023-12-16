@@ -83,6 +83,7 @@ config_h.set10('_GNU_SOURCE', true)
 
 # package
 config_h.set_quoted('PACKAGE_ICON_NAME', ev_app_id)
+config_h.set_quoted('APPLICATION_ID', ev_app_id)
 config_h.set_quoted('PACKAGE_VERSION', ev_version)
 config_h.set_quoted('VERSION', ev_version)
 
