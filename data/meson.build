@@ -71,10 +71,16 @@ foreach man_page: man_pages
 endforeach
 
 # Metainfo file
-metainfo = ev_namespace + '.metainfo.xml'
-i18n.merge_file(
-  input: metainfo + '.in',
-  output: metainfo,
+metainfo_config = configuration_data()
+metainfo_config.set('app_id', ev_app_id)
+metainfo_file_in = configure_file(
+          input: 'org.gnome.Evince.metainfo.xml.in.in',
+         output: 'org.gnome.Evince.metainfo.xml.in',
+  configuration: metainfo_config,
+)
+metainfo_file = i18n.merge_file(
+  input: metainfo_file_in,
+  output: '@0@.metainfo.xml'.format(ev_app_id),
   po_dir: po_dir,
   install: true,
   install_dir: ev_appstreamdir,
@@ -85,7 +91,7 @@ appstreamcli = find_program('appstreamcli', required: false)
 if (appstreamcli.found())
   test('validate-appdata',
     appstreamcli,
-    args: ['validate', '--no-net', '--explain', metainfo],
+    args: ['validate', '--no-net', '--explain', metainfo_file],
     workdir: meson.current_build_dir()
   )
 endif
