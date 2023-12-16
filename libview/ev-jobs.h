@@ -38,11 +38,17 @@ typedef struct _EvJobClass EvJobClass;
 typedef struct _EvJobRenderCairo EvJobRenderCairo;
 typedef struct _EvJobRenderCairoClass EvJobRenderCairoClass;
 
+typedef struct _EvJobRenderTexture EvJobRenderTexture;
+typedef struct _EvJobRenderTextureClass EvJobRenderTextureClass;
+
 typedef struct _EvJobPageData EvJobPageData;
 typedef struct _EvJobPageDataClass EvJobPageDataClass;
 
 typedef struct _EvJobThumbnailCairo EvJobThumbnailCairo;
 typedef struct _EvJobThumbnailCairoClass EvJobThumbnailCairoClass;
+
+typedef struct _EvJobThumbnailTexture EvJobThumbnailTexture;
+typedef struct _EvJobThumbnailTextureClass EvJobThumbnailTextureClass;
 
 typedef struct _EvJobLinks EvJobLinks;
 typedef struct _EvJobLinksClass EvJobLinksClass;
@@ -118,6 +124,13 @@ typedef struct _EvJobPrintClass EvJobPrintClass;
 #define EV_IS_JOB_RENDER_CAIRO_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), EV_TYPE_JOB_RENDER_CAIRO))
 #define EV_JOB_RENDER_CAIRO_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), EV_TYPE_JOB_RENDER_CAIRO, EvJobRenderCairoClass))
 
+#define EV_TYPE_JOB_RENDER_TEXTURE            (ev_job_render_texture_get_type())
+#define EV_JOB_RENDER_TEXTURE(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), EV_TYPE_JOB_RENDER_TEXTURE, EvJobRenderTexture))
+#define EV_IS_JOB_RENDER_TEXTURE(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), EV_TYPE_JOB_RENDER_TEXTURE))
+#define EV_JOB_RENDER_TEXTURE_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), EV_TYPE_JOB_RENDER_TEXTURE, EvJobRenderTextureClass))
+#define EV_IS_JOB_RENDER_TEXTURE_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), EV_TYPE_JOB_RENDER_TEXTURE))
+#define EV_JOB_RENDER_TEXTURE_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), EV_TYPE_JOB_RENDER_TEXTURE, EvJobRenderTextureClass))
+
 #define EV_TYPE_JOB_PAGE_DATA            (ev_job_page_data_get_type())
 #define EV_JOB_PAGE_DATA(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), EV_TYPE_JOB_PAGE_DATA, EvJobPageData))
 #define EV_IS_JOB_PAGE_DATA(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), EV_TYPE_JOB_PAGE_DATA))
@@ -131,6 +144,13 @@ typedef struct _EvJobPrintClass EvJobPrintClass;
 #define EV_JOB_THUMBNAIL_CAIRO_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), EV_TYPE_JOB_THUMBNAIL_CAIRO, EvJobThumbnailCairoClass))
 #define EV_IS_JOB_THUMBNAIL_CAIRO_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), EV_TYPE_JOB_THUMBNAIL_CAIRO))
 #define EV_JOB_THUMBNAIL_CAIRO_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), EV_TYPE_JOB_THUMBNAIL_CAIRO, EvJobThumbnailCairoClass))
+
+#define EV_TYPE_JOB_THUMBNAIL_TEXTURE            (ev_job_thumbnail_texture_get_type())
+#define EV_JOB_THUMBNAIL_TEXTURE(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), EV_TYPE_JOB_THUMBNAIL_TEXTURE, EvJobThumbnailTexture))
+#define EV_IS_JOB_THUMBNAIL_TEXTURE(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), EV_TYPE_JOB_THUMBNAIL_TEXTURE))
+#define EV_JOB_THUMBNAIL_TEXTURE_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), EV_TYPE_JOB_THUMBNAIL_TEXTURE, EvJobThumbnailTextureClass))
+#define EV_IS_JOB_THUMBNAIL_TEXTURE_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), EV_TYPE_JOB_THUMBNAIL_TEXTURE))
+#define EV_JOB_THUMBNAIL_TEXTURE_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), EV_TYPE_JOB_THUMBNAIL_TEXTURE, EvJobThumbnailTextureClass))
 
 #define EV_TYPE_JOB_FONTS            (ev_job_fonts_get_type())
 #define EV_JOB_FONTS(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), EV_TYPE_JOB_FONTS, EvJobFonts))
@@ -301,6 +321,33 @@ struct _EvJobRenderCairoClass
 	EvJobClass parent_class;
 };
 
+struct _EvJobRenderTexture
+{
+	EvJob parent;
+
+	gint page;
+	gint rotation;
+	gdouble scale;
+
+	gboolean page_ready;
+	gint target_width;
+	gint target_height;
+	GdkTexture *texture;
+
+	gboolean include_selection;
+	GdkTexture *selection;
+	cairo_region_t *selection_region;
+	EvRectangle selection_points;
+	EvSelectionStyle selection_style;
+	GdkRGBA base;
+	GdkRGBA text;
+};
+
+struct _EvJobRenderTextureClass
+{
+	EvJobClass parent_class;
+};
+
 typedef enum {
         EV_PAGE_DATA_INCLUDE_NONE           = 0,
         EV_PAGE_DATA_INCLUDE_LINKS          = 1 << 0,
@@ -356,6 +403,24 @@ struct _EvJobThumbnailCairo
 };
 
 struct _EvJobThumbnailCairoClass
+{
+	EvJobClass parent_class;
+};
+
+struct _EvJobThumbnailTexture
+{
+	EvJob parent;
+
+	gint page;
+	gint rotation;
+	gdouble scale;
+	gint target_width;
+	gint target_height;
+
+        GdkTexture *thumbnail_texture;
+};
+
+struct _EvJobThumbnailTextureClass
 {
 	EvJobClass parent_class;
 };
@@ -568,6 +633,24 @@ void     ev_job_render_cairo_set_selection_info (EvJobRenderCairo     *job,
 						 EvSelectionStyle selection_style,
 						 GdkRGBA         *text,
 						 GdkRGBA         *base);
+
+/* EvJobRenderTexture */
+EV_PUBLIC
+GType           ev_job_render_texture_get_type    (void) G_GNUC_CONST;
+EV_PUBLIC
+EvJob          *ev_job_render_texture_new         (EvDocument      *document,
+						 gint             page,
+						 gint             rotation,
+						 gdouble          scale,
+						 gint             width,
+						 gint             height);
+EV_PUBLIC
+void     ev_job_render_texture_set_selection_info (EvJobRenderTexture     *job,
+						 EvRectangle     *selection_points,
+						 EvSelectionStyle selection_style,
+						 GdkRGBA         *text,
+						 GdkRGBA         *base);
+
 /* EvJobPageData */
 EV_PUBLIC
 GType           ev_job_page_data_get_type (void) G_GNUC_CONST;
@@ -590,6 +673,22 @@ EvJob          *ev_job_thumbnail_cairo_new_with_target_size (EvDocument *documen
 							     gint        rotation,
 							     gint        target_width,
 							     gint        target_height);
+
+/* EvJobThumbnailTexture */
+EV_PUBLIC
+GType           ev_job_thumbnail_texture_get_type      (void) G_GNUC_CONST;
+EV_PUBLIC
+EvJob          *ev_job_thumbnail_texture_new           (EvDocument      *document,
+						      gint             page,
+						      gint             rotation,
+						      gdouble          scale);
+EV_PUBLIC
+EvJob          *ev_job_thumbnail_texture_new_with_target_size (EvDocument *document,
+							     gint        page,
+							     gint        rotation,
+							     gint        target_width,
+							     gint        target_height);
+
 /* EvJobFonts */
 EV_PUBLIC
 GType 		ev_job_fonts_get_type 	  (void) G_GNUC_CONST;

@@ -20,6 +20,7 @@
 
 #include <config.h>
 
+#include "cairo.h"
 #include "ev-jobs.h"
 #include "ev-document-links.h"
 #include "ev-document-images.h"
@@ -61,10 +62,14 @@ static void ev_job_annots_init                (EvJobAnnots              *job);
 static void ev_job_annots_class_init          (EvJobAnnotsClass         *class);
 static void ev_job_render_cairo_init          (EvJobRenderCairo         *job);
 static void ev_job_render_cairo_class_init    (EvJobRenderCairoClass    *class);
+static void ev_job_render_texture_init        (EvJobRenderTexture         *job);
+static void ev_job_render_texture_class_init  (EvJobRenderTextureClass    *class);
 static void ev_job_page_data_init             (EvJobPageData            *job);
 static void ev_job_page_data_class_init       (EvJobPageDataClass       *class);
 static void ev_job_thumbnail_cairo_init       (EvJobThumbnailCairo      *job);
 static void ev_job_thumbnail_cairo_class_init (EvJobThumbnailCairoClass *class);
+static void ev_job_thumbnail_texture_init       (EvJobThumbnailTexture      *job);
+static void ev_job_thumbnail_texture_class_init (EvJobThumbnailTextureClass *class);
 static void ev_job_load_init                  (EvJobLoad                *job);
 static void ev_job_load_class_init            (EvJobLoadClass           *class);
 static void ev_job_save_init                  (EvJobSave                *job);
@@ -103,8 +108,10 @@ G_DEFINE_TYPE (EvJobLinks, ev_job_links, EV_TYPE_JOB)
 G_DEFINE_TYPE (EvJobAttachments, ev_job_attachments, EV_TYPE_JOB)
 G_DEFINE_TYPE (EvJobAnnots, ev_job_annots, EV_TYPE_JOB)
 G_DEFINE_TYPE (EvJobRenderCairo, ev_job_render_cairo, EV_TYPE_JOB)
+G_DEFINE_TYPE (EvJobRenderTexture, ev_job_render_texture, EV_TYPE_JOB)
 G_DEFINE_TYPE (EvJobPageData, ev_job_page_data, EV_TYPE_JOB)
 G_DEFINE_TYPE (EvJobThumbnailCairo, ev_job_thumbnail_cairo, EV_TYPE_JOB)
+G_DEFINE_TYPE (EvJobThumbnailTexture, ev_job_thumbnail_texture, EV_TYPE_JOB)
 G_DEFINE_TYPE (EvJobFonts, ev_job_fonts, EV_TYPE_JOB)
 G_DEFINE_TYPE (EvJobLoad, ev_job_load, EV_TYPE_JOB)
 G_DEFINE_TYPE_WITH_PRIVATE (EvJobLoadStream, ev_job_load_stream, EV_TYPE_JOB)
@@ -722,6 +729,201 @@ ev_job_render_cairo_set_selection_info (EvJobRenderCairo *job,
 }
 G_GNUC_END_IGNORE_DEPRECATIONS
 
+/* EvJobRenderTexture */
+static void
+ev_job_render_texture_init (EvJobRenderTexture *job)
+{
+	EV_JOB (job)->run_mode = EV_JOB_RUN_THREAD;
+}
+
+static void
+ev_job_render_texture_dispose (GObject *object)
+{
+	EvJobRenderTexture *job;
+
+	job = EV_JOB_RENDER_TEXTURE (object);
+
+	ev_debug_message (DEBUG_JOBS, "page: %d (%p)", job->page, job);
+
+	g_clear_object (&job->texture);
+	g_clear_object (&job->selection);
+	g_clear_pointer (&job->selection_region, cairo_region_destroy);
+
+	(* G_OBJECT_CLASS (ev_job_render_texture_parent_class)->dispose) (object);
+}
+
+static GdkTexture *
+gdk_texture_new_for_surface (cairo_surface_t *surface)
+{
+	GdkTexture *texture;
+	GBytes *bytes;
+
+	g_return_val_if_fail (surface != NULL, NULL);
+	g_return_val_if_fail (cairo_surface_get_type (surface) == CAIRO_SURFACE_TYPE_IMAGE, NULL);
+	g_return_val_if_fail (cairo_image_surface_get_width (surface) > 0, NULL);
+	g_return_val_if_fail (cairo_image_surface_get_height (surface) > 0, NULL);
+
+	bytes = g_bytes_new_with_free_func (cairo_image_surface_get_data (surface),
+					    cairo_image_surface_get_height (surface) * cairo_image_surface_get_stride (surface),
+					    (GDestroyNotify)cairo_surface_destroy,
+					    cairo_surface_reference (surface));
+
+	texture = gdk_memory_texture_new (cairo_image_surface_get_width (surface),
+					  cairo_image_surface_get_height (surface),
+					  GDK_MEMORY_DEFAULT,
+					  bytes,
+					  cairo_image_surface_get_stride (surface));
+
+	g_bytes_unref (bytes);
+
+	return texture;
+}
+
+EvJob *
+ev_job_render_texture_new (EvDocument   *document,
+			 gint          page,
+			 gint          rotation,
+			 gdouble       scale,
+			 gint          width,
+			 gint          height)
+{
+	EvJobRenderTexture *job;
+
+	ev_debug_message (DEBUG_JOBS, "page: %d", page);
+
+	job = g_object_new (EV_TYPE_JOB_RENDER_TEXTURE, NULL);
+
+	EV_JOB (job)->document = g_object_ref (document);
+	job->page = page;
+	job->rotation = rotation;
+	job->scale = scale;
+	job->target_width = width;
+	job->target_height = height;
+
+	return EV_JOB (job);
+}
+
+static gboolean
+ev_job_render_texture_run (EvJob *job)
+{
+	EvJobRenderTexture     *job_render = EV_JOB_RENDER_TEXTURE (job);
+	EvPage          *ev_page;
+	EvRenderContext *rc;
+	cairo_surface_t *surface, *selection = NULL;
+
+	ev_debug_message (DEBUG_JOBS, "page: %d (%p)", job_render->page, job);
+	EV_PROFILER_START (EV_GET_TYPE_NAME (job));
+
+	ev_document_doc_mutex_lock ();
+
+	ev_document_fc_mutex_lock ();
+
+	ev_page = ev_document_get_page (job->document, job_render->page);
+	rc = ev_render_context_new (ev_page, job_render->rotation, job_render->scale);
+	ev_render_context_set_target_size (rc,
+					   job_render->target_width, job_render->target_height);
+	g_object_unref (ev_page);
+
+	surface = ev_document_render (job->document, rc);
+
+	if (surface == NULL ||
+	    cairo_surface_status (surface) != CAIRO_STATUS_SUCCESS) {
+		ev_document_fc_mutex_unlock ();
+		ev_document_doc_mutex_unlock ();
+		g_object_unref (rc);
+
+                if (surface != NULL) {
+                        cairo_status_t status = cairo_surface_status (surface);
+                        ev_job_failed (job,
+                                       EV_DOCUMENT_ERROR,
+                                       EV_DOCUMENT_ERROR_INVALID,
+                                       _("Failed to render page %d: %s"),
+                                       job_render->page,
+                                       cairo_status_to_string (status));
+                } else {
+                        ev_job_failed (job,
+                                       EV_DOCUMENT_ERROR,
+                                       EV_DOCUMENT_ERROR_INVALID,
+                                       _("Failed to render page %d"),
+                                       job_render->page);
+                }
+
+		job_render->texture = NULL;
+		EV_PROFILER_STOP ();
+		return FALSE;
+	}
+
+	job_render->texture = gdk_texture_new_for_surface (surface);
+	cairo_surface_destroy (surface);
+
+	/* If job was cancelled during the page rendering,
+	 * we return now, so that the thread is finished ASAP
+	 */
+	if (g_cancellable_is_cancelled (job->cancellable)) {
+		ev_document_fc_mutex_unlock ();
+		ev_document_doc_mutex_unlock ();
+		g_object_unref (rc);
+		EV_PROFILER_STOP ();
+
+		return FALSE;
+	}
+
+	if (job_render->include_selection && EV_IS_SELECTION (job->document)) {
+		ev_selection_render_selection (EV_SELECTION (job->document),
+					       rc,
+					       &selection,
+					       &(job_render->selection_points),
+					       NULL,
+					       job_render->selection_style,
+					       &(job_render->text), &(job_render->base));
+		job_render->selection_region =
+			ev_selection_get_selection_region (EV_SELECTION (job->document),
+							   rc,
+							   job_render->selection_style,
+							   &(job_render->selection_points));
+
+		if (selection != NULL) {
+			job_render->selection = gdk_texture_new_for_surface (selection);
+			cairo_surface_destroy (selection);
+		}
+	}
+
+	g_object_unref (rc);
+
+	ev_document_fc_mutex_unlock ();
+	ev_document_doc_mutex_unlock ();
+
+	ev_job_succeeded (job);
+
+	EV_PROFILER_STOP ();
+	return FALSE;
+}
+
+static void
+ev_job_render_texture_class_init (EvJobRenderTextureClass *class)
+{
+	GObjectClass *oclass = G_OBJECT_CLASS (class);
+	EvJobClass   *job_class = EV_JOB_CLASS (class);
+
+	oclass->dispose = ev_job_render_texture_dispose;
+	job_class->run = ev_job_render_texture_run;
+}
+
+void
+ev_job_render_texture_set_selection_info (EvJobRenderTexture *job,
+					EvRectangle      *selection_points,
+					EvSelectionStyle  selection_style,
+					GdkRGBA          *text,
+					GdkRGBA          *base)
+{
+	job->include_selection = TRUE;
+
+	job->selection_points = *selection_points;
+	job->selection_style = selection_style;
+	job->text = *text;
+	job->base = *base;
+}
+
 /* EvJobPageData */
 static void
 ev_job_page_data_init (EvJobPageData *job)
@@ -923,6 +1125,115 @@ ev_job_thumbnail_cairo_new_with_target_size (EvDocument *document,
         return job;
 }
 G_GNUC_END_IGNORE_DEPRECATIONS
+
+/* EvJobThumbnailTexture */
+static void
+ev_job_thumbnail_texture_init (EvJobThumbnailTexture *job)
+{
+	EV_JOB (job)->run_mode = EV_JOB_RUN_THREAD;
+}
+
+static void
+ev_job_thumbnail_texture_dispose (GObject *object)
+{
+	EvJobThumbnailTexture *job;
+
+	job = EV_JOB_THUMBNAIL_TEXTURE (object);
+
+	ev_debug_message (DEBUG_JOBS, "%d (%p)", job->page, job);
+
+	g_clear_object (&job->thumbnail_texture);
+
+	G_OBJECT_CLASS (ev_job_thumbnail_texture_parent_class)->dispose (object);
+}
+
+static gboolean
+ev_job_thumbnail_texture_run (EvJob *job)
+{
+	EvJobThumbnailTexture  *job_thumb = EV_JOB_THUMBNAIL_TEXTURE(job);
+	EvRenderContext *rc;
+	EvPage          *page;
+	cairo_surface_t *surface;
+
+	ev_debug_message (DEBUG_JOBS, "%d (%p)", job_thumb->page, job);
+	EV_PROFILER_START (EV_GET_TYPE_NAME (job));
+
+	ev_document_doc_mutex_lock ();
+
+	page = ev_document_get_page (job->document, job_thumb->page);
+	rc = ev_render_context_new (page, job_thumb->rotation, job_thumb->scale);
+	ev_render_context_set_target_size (rc,
+					   job_thumb->target_width, job_thumb->target_height);
+	g_object_unref (page);
+
+	surface = ev_document_get_thumbnail_surface (job->document, rc);
+
+	job_thumb->thumbnail_texture = gdk_texture_new_for_surface (surface);
+	cairo_surface_destroy(surface);
+	g_object_unref (rc);
+	ev_document_doc_mutex_unlock ();
+
+	if (job_thumb->thumbnail_texture == NULL) {
+		ev_job_failed (job,
+			       EV_DOCUMENT_ERROR,
+			       EV_DOCUMENT_ERROR_INVALID,
+			       _("Failed to create thumbnail for page %d"),
+			       job_thumb->page);
+	} else {
+		ev_job_succeeded (job);
+	}
+
+	EV_PROFILER_STOP ();
+	return FALSE;
+}
+
+static void
+ev_job_thumbnail_texture_class_init (EvJobThumbnailTextureClass *class)
+{
+	GObjectClass *oclass = G_OBJECT_CLASS (class);
+	EvJobClass   *job_class = EV_JOB_CLASS (class);
+
+	oclass->dispose = ev_job_thumbnail_texture_dispose;
+	job_class->run = ev_job_thumbnail_texture_run;
+}
+
+EvJob *
+ev_job_thumbnail_texture_new (EvDocument *document,
+		      gint        page,
+		      gint        rotation,
+		      gdouble     scale)
+{
+	EvJobThumbnailTexture *job;
+
+	ev_debug_message (DEBUG_JOBS, "%d", page);
+
+	job = g_object_new (EV_TYPE_JOB_THUMBNAIL_TEXTURE, NULL);
+
+	EV_JOB (job)->document = g_object_ref (document);
+	job->page = page;
+	job->rotation = rotation;
+	job->scale = scale;
+        job->target_width = -1;
+        job->target_height = -1;
+
+	return EV_JOB (job);
+}
+
+EvJob *
+ev_job_thumbnail_texture_new_with_target_size (EvDocument *document,
+                                       gint        page,
+                                       gint        rotation,
+                                       gint        target_width,
+                                       gint        target_height)
+{
+        EvJob *job = ev_job_thumbnail_texture_new (document, page, rotation, 1.);
+        EvJobThumbnailTexture  *job_thumb = EV_JOB_THUMBNAIL_TEXTURE(job);
+
+        job_thumb->target_width = target_width;
+        job_thumb->target_height = target_height;
+
+        return job;
+}
 
 /* EvJobFonts */
 static void
