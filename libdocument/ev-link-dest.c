@@ -84,6 +84,11 @@ ev_link_dest_get_page (EvLinkDest *self)
 	return priv->page;
 }
 
+/**
+ * ev_link_dest_get_top: (get-property top)
+ * @self: a `EvLinkDest`
+ * @change_top: (out caller-allocates): whether the `EV_DEST_CHANGE_TOP` flag is set
+ */
 gdouble
 ev_link_dest_get_top (EvLinkDest *self,
 		      gboolean   *change_top)
@@ -97,6 +102,11 @@ ev_link_dest_get_top (EvLinkDest *self,
 	return priv->top;
 }
 
+/**
+ * ev_link_dest_get_left: (get-property left)
+ * @self: a `EvLinkDest`
+ * @change_left: (out caller-allocates): whether the `EV_DEST_CHANGE_LEFT` flag is set
+ */
 gdouble
 ev_link_dest_get_left (EvLinkDest *self,
 		       gboolean   *change_left)
@@ -128,6 +138,11 @@ ev_link_dest_get_right (EvLinkDest *self)
 	return priv->right;
 }
 
+/**
+ * ev_link_dest_get_zoom: (get-property zoom)
+ * @self: a `EvLinkDest`
+ * @change_zoom: (out caller-allocates): whether the `EV_DEST_CHANGE_ZOOM` flag is set
+ */
 gdouble
 ev_link_dest_get_zoom (EvLinkDest *self,
 		       gboolean   *change_zoom)
