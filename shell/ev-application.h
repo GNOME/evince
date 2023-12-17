@@ -58,7 +58,6 @@ gboolean	  ev_application_has_window	     (EvApplication   *application);
 guint             ev_application_get_n_windows       (EvApplication   *application);
 const gchar *     ev_application_get_uri             (EvApplication   *application);
 void              ev_application_clear_uri           (EvApplication   *application);
-GObject		 *ev_application_get_media_keys	     (EvApplication   *application);
 
 const gchar      *ev_application_get_dot_dir         (EvApplication   *application,
                                                       gboolean         create);
