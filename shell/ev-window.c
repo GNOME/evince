@@ -92,7 +92,6 @@
 
 #ifdef ENABLE_DBUS
 #include "ev-gdbus-generated.h"
-#include "ev-media-player-keys.h"
 #endif /* ENABLE_DBUS */
 
 #ifdef GDK_WINDOWING_X11
@@ -361,9 +360,6 @@ static void     view_external_link_cb                   (EvWindow         *windo
 							 EvLinkAction     *action);
 static void     ev_window_load_file_remote              (EvWindow         *ev_window,
 							 GFile            *source_file);
-static void     ev_window_media_player_key_pressed      (EvWindow         *window,
-							 const gchar      *key,
-							 gpointer          user_data);
 #ifdef ENABLE_DBUS
 static void	ev_window_emit_closed			(EvWindow         *window);
 static void 	ev_window_emit_doc_loaded		(EvWindow	  *window);
@@ -5958,13 +5954,6 @@ ev_window_dispose (GObject *object)
 {
 	EvWindow *window = EV_WINDOW (object);
 	EvWindowPrivate *priv = GET_PRIVATE (window);
-	GObject *mpkeys = ev_application_get_media_keys (EV_APP);
-
-	if (mpkeys) {
-		g_signal_handlers_disconnect_by_func (mpkeys,
-						      ev_window_media_player_key_pressed,
-						      window);
-	}
 
 #ifdef ENABLE_DBUS
 	if (priv->skeleton != NULL) {
@@ -6350,20 +6339,6 @@ sidebar_links_link_model_changed (EvSidebarLinks *ev_sidebar_links,
 	 * is entering page numbers. Fixes issue #1759 */
 	ev_page_action_widget_enable_completion_search (EV_PAGE_ACTION_WIDGET (page_selector), FALSE);
 	g_object_unref (model);
-}
-
-static gboolean
-view_actions_focus_in_cb (GtkWidget *widget, GdkEventFocus *event, EvWindow *window)
-{
-#ifdef ENABLE_DBUS
-	GObject *keys;
-
-	keys = ev_application_get_media_keys (EV_APP);
-	if (keys)
-		ev_media_player_keys_focused (EV_MEDIA_PLAYER_KEYS (keys));
-#endif /* ENABLE_DBUS */
-
-	return FALSE;
 }
 
 static gboolean
@@ -7094,43 +7069,6 @@ ev_window_popup_cmd_save_attachment_as (GSimpleAction *action,
 	gtk_native_dialog_run (GTK_NATIVE_DIALOG (fc));
 }
 
-static void
-ev_window_media_player_key_pressed (EvWindow    *window,
-				    const gchar *key,
-				    gpointer     user_data)
-{
-	EvWindowPrivate *priv = GET_PRIVATE (window);
-
-	if (!gtk_window_is_active (GTK_WINDOW (window)))
-		return;
-
-	/* Note how Previous/Next only go to the
-	 * next/previous page despite their icon telling you
-	 * they should go to the beginning/end.
-	 *
-	 * There's very few keyboards with FFW/RWD though,
-	 * so we stick the most useful keybinding on the most
-	 * often seen keys
-	 */
-	if (strcmp (key, "Play") == 0) {
-		ev_window_run_presentation (window);
-	} else if (strcmp (key, "Previous") == 0) {
-		if (EV_WINDOW_IS_PRESENTATION (priv))
-			ev_view_presentation_previous_page (EV_VIEW_PRESENTATION (priv->presentation_view));
-		else
-			g_action_group_activate_action (G_ACTION_GROUP (window), "go-previous-page", NULL);
-	} else if (strcmp (key, "Next") == 0) {
-		if (EV_WINDOW_IS_PRESENTATION (priv))
-			ev_view_presentation_next_page (EV_VIEW_PRESENTATION (priv->presentation_view));
-		else
-			g_action_group_activate_action (G_ACTION_GROUP (window), "go-next-page", NULL);
-	} else if (strcmp (key, "FastForward") == 0) {
-		g_action_group_activate_action (G_ACTION_GROUP (window), "go-last-page", NULL);
-	} else if (strcmp (key, "Rewind") == 0) {
-		g_action_group_activate_action (G_ACTION_GROUP (window), "go-first-page", NULL);
-	}
-}
-
 #ifdef ENABLE_DBUS
 static void
 ev_window_sync_source (EvWindow     *window,
@@ -7277,7 +7215,6 @@ ev_window_init (EvWindow *ev_window)
 	GtkBuilder *builder;
 	GError *error = NULL;
 	GtkWidget *overlay;
-	GObject *mpkeys;
 	guint page_cache_mb;
 	gboolean allow_links_change_zoom;
 	GtkEntry *search_entry;
@@ -7526,9 +7463,6 @@ ev_window_init (EvWindow *ev_window)
 				  "cancelled",
 				  G_CALLBACK (ev_window_password_view_cancelled),
 				  ev_window);
-	g_signal_connect_object (priv->view, "focus_in_event",
-			         G_CALLBACK (view_actions_focus_in_cb),
-				 ev_window, 0);
 	g_signal_connect_swapped (priv->view, "external-link",
 				  G_CALLBACK (view_external_link_cb),
 				  ev_window);
@@ -7683,14 +7617,6 @@ ev_window_init (EvWindow *ev_window)
 	priv->view_popup_menu = g_object_ref (G_MENU_MODEL (gtk_builder_get_object (builder, "view-popup-menu")));
 	priv->attachment_popup_menu = g_object_ref (G_MENU_MODEL (gtk_builder_get_object (builder, "attachments-popup")));
 	g_object_unref (builder);
-
-	/* Media player keys */
-	mpkeys = ev_application_get_media_keys (EV_APP);
-	if (mpkeys) {
-		g_signal_connect_swapped (mpkeys, "key_pressed",
-					  G_CALLBACK (ev_window_media_player_key_pressed),
-					  ev_window);
-	}
 
 	/* Give focus to the document view */
 	gtk_widget_grab_focus (priv->view);

@@ -41,7 +41,6 @@
 
 #ifdef ENABLE_DBUS
 #include "ev-gdbus-generated.h"
-#include "ev-media-player-keys.h"
 #endif /* ENABLE_DBUS */
 
 struct _EvApplication {
@@ -53,7 +52,6 @@ struct _EvApplication {
 
 #ifdef ENABLE_DBUS
         EvEvinceApplication *skeleton;
-	EvMediaPlayerKeys *keys;
 	gboolean doc_registered;
 #endif
 };
@@ -922,8 +920,6 @@ ev_application_dbus_register (GApplication    *gapplication,
         g_signal_connect (skeleton, "handle-reload",
                           G_CALLBACK (handle_reload_cb),
                           application);
-        application->keys = ev_media_player_keys_new ();
-
         return TRUE;
 }
 
@@ -933,8 +929,6 @@ ev_application_dbus_unregister (GApplication    *gapplication,
                                 const gchar     *object_path)
 {
         EvApplication *application = EV_APPLICATION (gapplication);
-
-	g_clear_object (&application->keys);
 
         if (application->skeleton != NULL) {
                 g_dbus_interface_skeleton_unexport (G_DBUS_INTERFACE_SKELETON (application->skeleton));
@@ -1024,24 +1018,6 @@ ev_application_clear_uri (EvApplication *application)
 	ev_application_unregister_uri (application, application->uri);
 #endif
 	g_clear_pointer (&application->uri, g_free);
-}
-
-/**
- * ev_application_get_media_keys:
- * @application: The instance of the application.
- *
- * It gives you access to the media player keys handler object.
- *
- * Returns: A #EvMediaPlayerKeys.
- */
-GObject *
-ev_application_get_media_keys (EvApplication *application)
-{
-#ifdef ENABLE_DBUS
-	return G_OBJECT (application->keys);
-#else
-	return NULL;
-#endif /* ENABLE_DBUS */
 }
 
 const gchar *

@@ -62,8 +62,6 @@ evince_cflags = [
 evince_ldflags = common_ldflags
 
 if enable_dbus
-  evince_sources += files('ev-media-player-keys.c')
-
   gdbus = 'ev-gdbus'
 
   evince_sources += gnome.gdbus_codegen(
