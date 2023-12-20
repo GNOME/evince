@@ -567,7 +567,7 @@ ev_application_open_uri_in_window (EvApplication  *application,
 	} else
 #endif /* GDK_WINDOWING_X11 */
 	{
-		gtk_window_present_with_time (GTK_WINDOW (ev_window), timestamp);
+		gtk_window_present (GTK_WINDOW (ev_window));
 	}
 }
 
@@ -681,7 +681,7 @@ ev_application_open_recent_view (EvApplication *application,
 	} else
 #endif /* GDK_WINDOWING_X11 */
 	{
-		gtk_window_present_with_time (GTK_WINDOW (new_window), timestamp);
+		gtk_window_present (GTK_WINDOW (new_window));
 	}
 }
 

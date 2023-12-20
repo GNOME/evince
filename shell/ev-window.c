@@ -7000,7 +7000,7 @@ handle_sync_view_cb (EvEvinceWindow        *object,
 		link.filename = (char *) source_file;
 		g_variant_get (source_point, "(ii)", &link.line, &link.col);
 		ev_view_highlight_forward_search (EV_VIEW (priv->view), &link);
-		gtk_window_present_with_time (GTK_WINDOW (window), timestamp);
+		gtk_window_present (GTK_WINDOW (window));
 	}
 
 	ev_evince_window_complete_sync_view (object, invocation);
