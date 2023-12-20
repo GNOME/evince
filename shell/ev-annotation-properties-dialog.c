@@ -95,18 +95,19 @@ ev_annotation_properties_dialog_constructed (GObject *object)
 		g_object_set (G_OBJECT (label), "xalign", 0., "yalign", 0.5, NULL);
 		gtk_grid_attach (GTK_GRID (grid), label, 0, 4, 1, 1);
 
-		dialog->icon = gtk_combo_box_text_new ();
-		gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (dialog->icon), _("Note"));
-		gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (dialog->icon), _("Comment"));
-		gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (dialog->icon), _("Key"));
-		gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (dialog->icon), _("Help"));
-		gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (dialog->icon), _("New Paragraph"));
-		gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (dialog->icon), _("Paragraph"));
-		gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (dialog->icon), _("Insert"));
-		gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (dialog->icon), _("Cross"));
-		gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (dialog->icon), _("Circle"));
-		gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (dialog->icon), _("Unknown"));
-		gtk_combo_box_set_active (GTK_COMBO_BOX (dialog->icon), 0);
+		dialog->icon = gtk_drop_down_new_from_strings ((const char *[]) {
+								_("Note"),
+								_("Comment"),
+								_("Key"),
+								_("Help"),
+								_("New Paragraph"),
+								_("Paragraph"),
+								_("Insert"),
+								_("Cross"),
+								_("Circle"),
+								_("Unknown"),
+								NULL });
+		gtk_drop_down_set_selected (GTK_DROP_DOWN (dialog->icon), 0);
 		gtk_grid_attach (GTK_GRID (grid), dialog->icon, 1, 4, 1, 1);
                 gtk_widget_set_hexpand (dialog->icon, TRUE);
 
@@ -119,12 +120,13 @@ ev_annotation_properties_dialog_constructed (GObject *object)
                 g_object_set (G_OBJECT (label), "xalign", 0., "yalign", 0.5, NULL);
                 gtk_grid_attach (GTK_GRID (grid), label, 0, 5, 1, 1);
 
-                dialog->text_markup_type = gtk_combo_box_text_new ();
-                gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (dialog->text_markup_type), _("Highlight"));
-                gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (dialog->text_markup_type), _("Strike out"));
-                gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (dialog->text_markup_type), _("Underline"));
-                gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (dialog->text_markup_type), _("Squiggly"));
-                gtk_combo_box_set_active (GTK_COMBO_BOX (dialog->text_markup_type), 0);
+		dialog->text_markup_type = gtk_drop_down_new_from_strings ((const char *[]) {
+								_("Highlight"),
+								_("Strike out"),
+								_("Underline"),
+								_("Squiggly"),
+								NULL });
+		gtk_drop_down_set_selected (GTK_DROP_DOWN (dialog->text_markup_type), 0);
                 gtk_grid_attach (GTK_GRID (grid), dialog->text_markup_type, 1, 5, 1, 1);
                 gtk_widget_set_hexpand (dialog->text_markup_type, TRUE);
                 break;
@@ -196,10 +198,11 @@ ev_annotation_properties_dialog_init (EvAnnotationPropertiesDialog *annot_dialog
 	g_object_set (G_OBJECT (label), "xalign", 0., "yalign", 0.5, NULL);
 	gtk_grid_attach (GTK_GRID (grid), label, 0, 3, 1, 1);
 
-	annot_dialog->popup_state = gtk_combo_box_text_new ();
-	gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (annot_dialog->popup_state), _("Open"));
-	gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (annot_dialog->popup_state), _("Close"));
-	gtk_combo_box_set_active (GTK_COMBO_BOX (annot_dialog->popup_state), 1);
+	annot_dialog->popup_state = gtk_drop_down_new_from_strings ((const char *[]) {
+									_("Open"),
+									_("Close"),
+									NULL });
+	gtk_drop_down_set_selected (GTK_DROP_DOWN (annot_dialog->popup_state), 1);
 	gtk_grid_attach (GTK_GRID (grid), annot_dialog->popup_state, 1, 3, 1, 1);
         gtk_widget_set_hexpand (annot_dialog->popup_state, TRUE);
 }
@@ -256,19 +259,18 @@ ev_annotation_properties_dialog_new_with_annotation (EvAnnotation *annot)
 	gtk_range_set_value (GTK_RANGE (dialog->opacity), opacity * 100);
 
 	is_open = ev_annotation_markup_get_popup_is_open (EV_ANNOTATION_MARKUP (annot));
-	gtk_combo_box_set_active (GTK_COMBO_BOX (dialog->popup_state),
-				  is_open ? 0 : 1);
+	gtk_drop_down_set_selected (GTK_DROP_DOWN (dialog->popup_state), is_open ? 0 : 1);
 
 	if (EV_IS_ANNOTATION_TEXT (annot)) {
 		EvAnnotationText *annot_text = EV_ANNOTATION_TEXT (annot);
 
-		gtk_combo_box_set_active (GTK_COMBO_BOX (dialog->icon),
-					  ev_annotation_text_get_icon (annot_text));
+		gtk_drop_down_set_selected (GTK_DROP_DOWN (dialog->icon),
+					    ev_annotation_text_get_icon (annot_text));
 	} else if (EV_IS_ANNOTATION_TEXT_MARKUP (annot)) {
                 EvAnnotationTextMarkup *annot_markup = EV_ANNOTATION_TEXT_MARKUP (annot);
 
-                gtk_combo_box_set_active (GTK_COMBO_BOX (dialog->text_markup_type),
-                                          ev_annotation_text_markup_get_markup_type (annot_markup));
+		gtk_drop_down_set_selected (GTK_DROP_DOWN (dialog->text_markup_type),
+					    ev_annotation_text_markup_get_markup_type (annot_markup));
         }
 
 	return GTK_WIDGET (dialog);
@@ -296,17 +298,17 @@ ev_annotation_properties_dialog_get_opacity (EvAnnotationPropertiesDialog *dialo
 gboolean
 ev_annotation_properties_dialog_get_popup_is_open (EvAnnotationPropertiesDialog *dialog)
 {
-	return gtk_combo_box_get_active (GTK_COMBO_BOX (dialog->popup_state)) == 0;
+	return gtk_drop_down_get_selected (GTK_DROP_DOWN (dialog->popup_state)) == 0;
 }
 
 EvAnnotationTextIcon
 ev_annotation_properties_dialog_get_text_icon (EvAnnotationPropertiesDialog *dialog)
 {
-	return gtk_combo_box_get_active (GTK_COMBO_BOX (dialog->icon));
+	return gtk_drop_down_get_selected (GTK_DROP_DOWN (dialog->icon));
 }
 
 EvAnnotationTextMarkupType
 ev_annotation_properties_dialog_get_text_markup_type (EvAnnotationPropertiesDialog *dialog)
 {
-        return gtk_combo_box_get_active (GTK_COMBO_BOX (dialog->text_markup_type));
+	return gtk_drop_down_get_selected (GTK_DROP_DOWN (dialog->text_markup_type));
 }
