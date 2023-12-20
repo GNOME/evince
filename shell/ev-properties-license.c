@@ -60,7 +60,7 @@ get_license_text_widget (EvDocumentLicense *license)
 
 	buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (textview));
 	gtk_text_buffer_set_text (buffer, ev_document_license_get_text (license), -1);
-	gtk_widget_show (textview);
+	gtk_widget_set_visible (textview, TRUE);
 
 	return textview;
 }
@@ -117,12 +117,10 @@ ev_properties_license_add_section (EvPropertiesLicense *properties,
 	gtk_label_set_markup (GTK_LABEL (title), markup);
 	g_free (markup);
 	gtk_box_prepend (GTK_BOX (properties), title);
-	gtk_widget_show (title);
 
 	g_object_set (G_OBJECT (contents), "margin-left", 12, NULL);
 
 	gtk_box_prepend (GTK_BOX (properties), contents);
-	gtk_widget_show (contents);
 }
 
 void

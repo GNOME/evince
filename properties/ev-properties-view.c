@@ -157,7 +157,6 @@ set_property (EvPropertiesView *properties,
 		g_free (markup);
 
 		gtk_grid_attach (grid, property_label, 0, *row, 1, 1);
-		gtk_widget_show (property_label);
 	}
 
 	if (!properties->labels[property]) {
@@ -203,8 +202,6 @@ set_property (EvPropertiesView *properties,
 				GTK_ACCESSIBLE_RELATION_LABELLED_BY, property_label,
 				NULL, -1);
 	}
-
-	gtk_widget_show (value_label);
 
 	*row += 1;
 }

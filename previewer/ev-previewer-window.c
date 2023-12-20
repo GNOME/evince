@@ -78,8 +78,6 @@ ev_previewer_window_error_dialog_run (EvPreviewerWindow *window,
 					 "%s", _("Failed to print document"));
 	gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog),
 						  "%s", error->message);
-
-	gtk_widget_show (dialog);
 }
 
 static void
@@ -208,7 +206,7 @@ ev_previewer_window_do_print (EvPreviewerWindow *window)
 		g_error_free (error);
 	}
 
-	gtk_widget_hide (GTK_WIDGET (window));
+	gtk_widget_set_visible (GTK_WIDGET (window), FALSE);
 }
 
 static void

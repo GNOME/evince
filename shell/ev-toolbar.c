@@ -220,31 +220,31 @@ ev_toolbar_set_mode (EvToolbar     *ev_toolbar,
 
         switch (mode) {
         case EV_TOOLBAR_MODE_NORMAL:
-                gtk_widget_show (priv->sidebar_button);
-                gtk_widget_show (priv->action_menu_button);
-                gtk_widget_show (priv->zoom_action);
-                gtk_widget_show (priv->page_selector);
-                gtk_widget_show (priv->find_button);
-                gtk_widget_show (priv->annots_button);
-                gtk_widget_hide (priv->open_button);
+                gtk_widget_set_visible (priv->sidebar_button, TRUE);
+                gtk_widget_set_visible (priv->action_menu_button, TRUE);
+                gtk_widget_set_visible (priv->zoom_action, TRUE);
+                gtk_widget_set_visible (priv->page_selector, TRUE);
+                gtk_widget_set_visible (priv->find_button, TRUE);
+                gtk_widget_set_visible (priv->annots_button, TRUE);
+                gtk_widget_set_visible (priv->open_button, FALSE);
                 break;
 	case EV_TOOLBAR_MODE_RECENT_VIEW:
-                gtk_widget_hide (priv->sidebar_button);
-                gtk_widget_hide (priv->action_menu_button);
-                gtk_widget_hide (priv->zoom_action);
-                gtk_widget_hide (priv->page_selector);
-                gtk_widget_hide (priv->find_button);
-                gtk_widget_hide (priv->annots_button);
-                gtk_widget_show (priv->open_button);
+                gtk_widget_set_visible (priv->sidebar_button, FALSE);
+                gtk_widget_set_visible (priv->action_menu_button, FALSE);
+                gtk_widget_set_visible (priv->zoom_action, FALSE);
+                gtk_widget_set_visible (priv->page_selector, FALSE);
+                gtk_widget_set_visible (priv->find_button, FALSE);
+                gtk_widget_set_visible (priv->annots_button, FALSE);
+                gtk_widget_set_visible (priv->open_button, TRUE);
                 break;
 	case EV_TOOLBAR_MODE_PASSWORD_VIEW:
-		gtk_widget_hide (priv->sidebar_button);
-		gtk_widget_hide (priv->action_menu_button);
-		gtk_widget_hide (priv->zoom_action);
-		gtk_widget_hide (priv->page_selector);
-		gtk_widget_hide (priv->find_button);
-		gtk_widget_hide (priv->annots_button);
-		gtk_widget_hide (priv->open_button);
+		gtk_widget_set_visible (priv->sidebar_button, FALSE);
+		gtk_widget_set_visible (priv->action_menu_button, FALSE);
+		gtk_widget_set_visible (priv->zoom_action, FALSE);
+		gtk_widget_set_visible (priv->page_selector, FALSE);
+		gtk_widget_set_visible (priv->find_button, FALSE);
+		gtk_widget_set_visible (priv->annots_button, FALSE);
+		gtk_widget_set_visible (priv->open_button, FALSE);
 		break;
         }
 }

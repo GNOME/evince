@@ -65,7 +65,6 @@ ev_properties_dialog_init (EvPropertiesDialog *properties)
 	properties->notebook = gtk_notebook_new ();
 	gtk_notebook_set_show_border (GTK_NOTEBOOK (properties->notebook), FALSE);
 	gtk_box_prepend (content_area, properties->notebook);
-	gtk_widget_show (properties->notebook);
 }
 
 void
@@ -85,7 +84,6 @@ ev_properties_dialog_set_document (EvPropertiesDialog *properties,
 		properties->general_page = ev_properties_view_new (document);
 		gtk_notebook_append_page (GTK_NOTEBOOK (properties->notebook),
 					  properties->general_page, label);
-		gtk_widget_show (properties->general_page);
 	}
 	ev_properties_view_set_info (EV_PROPERTIES_VIEW (properties->general_page), info);
 
@@ -95,7 +93,6 @@ ev_properties_dialog_set_document (EvPropertiesDialog *properties,
 			properties->fonts_page = ev_properties_fonts_new ();
 			gtk_notebook_append_page (GTK_NOTEBOOK (properties->notebook),
 						  properties->fonts_page, label);
-			gtk_widget_show (properties->fonts_page);
 		}
 
 		ev_properties_fonts_set_document
@@ -108,7 +105,6 @@ ev_properties_dialog_set_document (EvPropertiesDialog *properties,
 			properties->license_page = ev_properties_license_new ();
 			gtk_notebook_append_page (GTK_NOTEBOOK (properties->notebook),
 						  properties->license_page, label);
-			gtk_widget_show (properties->license_page);
 		}
 
 		ev_properties_license_set_license

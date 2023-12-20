@@ -359,11 +359,11 @@ ev_message_area_set_secondary_text (EvMessageArea *area,
 		msg = g_strdup_printf ("<small>%s</small>", str);
 		gtk_label_set_markup (GTK_LABEL (priv->secondary_label), msg);
 		g_free (msg);
-		gtk_widget_show (priv->secondary_label);
 	} else {
 		gtk_label_set_markup (GTK_LABEL (priv->secondary_label), NULL);
-		gtk_widget_hide (priv->secondary_label);
 	}
+
+	gtk_widget_set_visible (priv->secondary_label, str != NULL);
 
 	g_object_notify (G_OBJECT (area), "secondary-text");
 }

@@ -2910,7 +2910,6 @@ ev_view_form_field_choice_create_widget (EvView      *view,
 
 		choice = gtk_scrolled_window_new ();
 		gtk_scrolled_window_set_child (GTK_SCROLLED_WINDOW (choice), tree_view);
-		gtk_widget_show (tree_view);
 
 		g_signal_connect (selection, "changed",
 				  G_CALLBACK (ev_view_form_field_choice_changed),
@@ -3010,7 +3009,7 @@ _ev_view_focus_form_field (EvView      *view,
 	mapping = ev_mapping_list_find (form_field_mapping, field);
 	_ev_view_set_focused_element (view, mapping, field->page->index);
 	ev_view_put_to_doc_rect (view, field_widget, field->page->index, &mapping->area);
-	gtk_widget_show (field_widget);
+	gtk_widget_set_visible (field_widget, TRUE);
 	gtk_widget_grab_focus (field_widget);
 }
 
@@ -3172,10 +3171,7 @@ ev_view_window_child_put (EvView    *view,
 	child->page = page;
 	child->visible = ev_annotation_window_is_open (EV_ANNOTATION_WINDOW (window));
 
-	if (child->visible)
-		gtk_widget_show (window);
-	else
-		gtk_widget_hide (window);
+	gtk_widget_set_visible (window, child->visible);
 
 	view->window_children = g_list_append (view->window_children, child);
 }
@@ -3331,7 +3327,7 @@ hide_annotation_windows (EvView *view,
 
 		window = get_window_for_annot (view, annot);
 		if (window)
-			gtk_widget_hide (window);
+			gtk_widget_set_visible (window, FALSE);
 	}
 }
 
@@ -3439,7 +3435,7 @@ ev_view_annotation_show_popup_window (EvView    *view,
 	child = ev_view_get_window_child (view, window);
 	if (!child->visible) {
 		child->visible = TRUE;
-		gtk_widget_show (window);
+		gtk_widget_set_visible (window, TRUE);
 	}
 }
 

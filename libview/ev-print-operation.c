@@ -2027,7 +2027,7 @@ export_unix_print_dialog_response_cb (GtkDialog              *dialog,
 		g_signal_connect (message_dialog, "response",
 				  G_CALLBACK (gtk_window_destroy),
 				  NULL);
-		gtk_widget_show (message_dialog);
+		gtk_widget_set_visible (message_dialog, TRUE);
 
 		return;
 	}
@@ -2684,7 +2684,7 @@ ev_print_operation_print_create_custom_widget (EvPrintOperationPrint *print,
 
 	label = gtk_label_new (_("Page Scaling:"));
 	gtk_grid_attach (GTK_GRID (grid), label, 0, 0, 1, 1);
-	gtk_widget_show (label);
+	gtk_widget_set_visible (label, TRUE);
 
 	print->scale_combo = gtk_combo_box_text_new ();
 	/* translators: Value for 'Page Scaling:' to not scale the document pages on printing */
@@ -2703,7 +2703,7 @@ ev_print_operation_print_create_custom_widget (EvPrintOperationPrint *print,
 		  "• “Fit to Printable Area”: Document pages are enlarged or reduced as"
 		  " required to fit the printable area of the printer page.\n"));
 	gtk_grid_attach (GTK_GRID (grid), print->scale_combo, 1, 0, 1, 1);
-	gtk_widget_show (print->scale_combo);
+	gtk_widget_set_visible (print->scale_combo, TRUE);
 
 	print->autorotate_button = gtk_check_button_new_with_label (_("Auto Rotate and Center"));
 	gtk_check_button_set_active (GTK_CHECK_BUTTON (print->autorotate_button), autorotate);
@@ -2711,21 +2711,21 @@ ev_print_operation_print_create_custom_widget (EvPrintOperationPrint *print,
 		_("Rotate printer page orientation of each page to match orientation of each document page. "
 		  "Document pages will be centered within the printer page."));
 	gtk_grid_attach (GTK_GRID (grid), print->autorotate_button, 0, 1, 2, 1);
-	gtk_widget_show (print->autorotate_button);
+	gtk_widget_set_visible (print->autorotate_button, TRUE);
 
 	print->source_button = gtk_check_button_new_with_label (_("Select page size using document page size"));
 	gtk_check_button_set_active (GTK_CHECK_BUTTON (print->source_button), use_source_size);
 	gtk_widget_set_tooltip_text (print->source_button, _("When enabled, each page will be printed on "
 							     "the same size paper as the document page."));
 	gtk_grid_attach (GTK_GRID (grid), print->source_button, 0, 2, 2, 1);
-	gtk_widget_show (print->source_button);
+	gtk_widget_set_visible (print->source_button, TRUE);
 
 	print->borders_button = gtk_check_button_new_with_label (_("Draw border around pages"));
 	gtk_check_button_set_active (GTK_CHECK_BUTTON (print->borders_button), draw_borders);
 	gtk_widget_set_tooltip_text (print->borders_button, _("When enabled, a border will be drawn "
 							     "around each page."));
 	gtk_grid_attach (GTK_GRID (grid), print->borders_button, 0, 3, 2, 1);
-	gtk_widget_show (print->borders_button);
+	gtk_widget_set_visible (print->borders_button, TRUE);
 
 	return G_OBJECT (grid);
 }

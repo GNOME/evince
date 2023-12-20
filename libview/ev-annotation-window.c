@@ -197,7 +197,7 @@ ev_annotation_window_set_property (GObject      *object,
 static void
 ev_annotation_window_close (EvAnnotationWindow *window)
 {
-	gtk_widget_hide (GTK_WIDGET (window));
+	gtk_widget_set_visible (GTK_WIDGET (window), FALSE);
 	g_signal_emit (window, signals[CLOSED], 0);
 }
 

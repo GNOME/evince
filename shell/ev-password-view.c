@@ -245,7 +245,6 @@ ev_password_view_ask_password (EvPasswordView *password_view)
 	gtk_box_prepend (GTK_BOX (message_area), grid);
 
 	gtk_widget_set_halign (grid, GTK_ALIGN_CENTER);
-	gtk_widget_show (grid);
 
 	label = gtk_label_new_with_mnemonic (_("_Password:"));
 	g_object_set (G_OBJECT (label), "xalign", 0., "yalign", 0.5, NULL);

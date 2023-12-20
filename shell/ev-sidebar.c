@@ -208,7 +208,7 @@ ev_sidebar_document_changed_cb (EvDocumentModel *model,
 			ev_sidebar_set_page (ev_sidebar, GTK_WIDGET (first_supported_page));
 		}
 	} else {
-		gtk_widget_hide (GTK_WIDGET (ev_sidebar));
+		gtk_widget_set_visible (GTK_WIDGET (ev_sidebar), FALSE);
 	}
 }
 

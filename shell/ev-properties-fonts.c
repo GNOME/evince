@@ -137,10 +137,9 @@ update_progress_label (GtkWidget *label, double progress)
 						 (int) (progress * 100));
 		gtk_label_set_text (GTK_LABEL (label), progress_text);
 		g_free (progress_text);
-		gtk_widget_show (label);
-	} else {
-		gtk_widget_hide (label);
 	}
+
+	gtk_widget_set_visible (label, progress > 0);
 }
 
 static void
@@ -158,7 +157,7 @@ job_fonts_finished_cb (EvJob *job, EvPropertiesFonts *properties)
 				    font_summary);
 		/* show the label only when fonts are scanned, so the label
 		 * does not take space while it is loading */
-		gtk_widget_show (properties->fonts_summary);
+		gtk_widget_set_visible (properties->fonts_summary, TRUE);
 	}
 }
 
