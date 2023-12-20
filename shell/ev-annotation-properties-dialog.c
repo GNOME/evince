@@ -180,7 +180,9 @@ ev_annotation_properties_dialog_init (EvAnnotationPropertiesDialog *annot_dialog
 	g_object_set (G_OBJECT (label), "xalign", 0., "yalign", 0.5, NULL);
 	gtk_grid_attach (GTK_GRID (grid), label, 0, 1, 1, 1);
 
-	annot_dialog->color = gtk_color_button_new_with_rgba (&yellow);
+	annot_dialog->color = gtk_color_dialog_button_new (gtk_color_dialog_new ());
+	gtk_color_dialog_button_set_rgba (GTK_COLOR_DIALOG_BUTTON (annot_dialog->color), &yellow);
+
 	gtk_grid_attach (GTK_GRID (grid), annot_dialog->color, 1, 1, 1, 1);
         gtk_widget_set_hexpand (annot_dialog->color, TRUE);
 
@@ -253,7 +255,7 @@ ev_annotation_properties_dialog_new_with_annotation (EvAnnotation *annot)
 		gtk_editable_set_text (GTK_EDITABLE (dialog->author), label);
 
 	ev_annotation_get_rgba (annot, &rgba);
-	gtk_color_chooser_set_rgba (GTK_COLOR_CHOOSER (dialog->color), &rgba);
+	gtk_color_dialog_button_set_rgba (GTK_COLOR_DIALOG_BUTTON (dialog->color), &rgba);
 
 	opacity = ev_annotation_markup_get_opacity (EV_ANNOTATION_MARKUP (annot));
 	gtk_range_set_value (GTK_RANGE (dialog->opacity), opacity * 100);
@@ -286,7 +288,7 @@ void
 ev_annotation_properties_dialog_get_rgba (EvAnnotationPropertiesDialog *dialog,
 					  GdkRGBA                      *rgba)
 {
-	gtk_color_chooser_get_rgba (GTK_COLOR_CHOOSER (dialog->color), rgba);
+	*rgba = *gtk_color_dialog_button_get_rgba (GTK_COLOR_DIALOG_BUTTON (dialog->color));
 }
 
 gdouble
