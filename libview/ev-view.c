@@ -482,18 +482,16 @@ is_dual_page (EvView   *view,
 		double        scale;
 		double        doc_width;
 		double        doc_height;
-		GtkAllocation allocation;
 
 		scale = ev_document_misc_get_widget_dpi (GTK_WIDGET (view)) / 72.0;
 
 		ev_document_get_max_page_size (priv->document, &doc_width, &doc_height);
-		gtk_widget_get_allocation (GTK_WIDGET (view), &allocation);
 
 		/* If the width is ok and the height is pretty close, try to fit it in */
 		if (ev_document_get_n_pages (priv->document) > 1 &&
 		    doc_width < doc_height &&
-		    allocation.width > (2 * doc_width * scale) &&
-		    allocation.height > (doc_height * scale * 0.9)) {
+		    gtk_widget_get_width (GTK_WIDGET (view)) > (2 * doc_width * scale) &&
+		    gtk_widget_get_height (GTK_WIDGET (view)) > (doc_height * scale * 0.9)) {
 			odd_left = !priv->dual_even_left;
 			dual = TRUE;
 		}
@@ -607,23 +605,19 @@ ev_view_set_adjustment_values (EvView         *view,
 			       int	       width,
 			       int	       height)
 {
-	GtkWidget *widget = GTK_WIDGET (view);
 	GtkAdjustment *adjustment;
-	GtkAllocation allocation;
 	gint req_size, alloc_size, new_value;
 	gdouble page_size, value, upper, factor, zoom_center;
 	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	gtk_widget_get_allocation (widget, &allocation);
-
 	if (orientation == GTK_ORIENTATION_HORIZONTAL)  {
 		req_size = priv->requisition.width;
-		alloc_size = allocation.width;
+		alloc_size = gtk_widget_get_width (GTK_WIDGET (view));
 		adjustment = priv->hadjustment;
 		zoom_center = priv->zoom_center_x;
 	} else {
 		req_size = priv->requisition.height;
-		alloc_size = allocation.height;
+		alloc_size = gtk_widget_get_height (GTK_WIDGET (view));
 		adjustment = priv->vadjustment;
 		zoom_center = priv->zoom_center_y;
 	}
@@ -866,10 +860,8 @@ compute_scroll_increment (EvView        *view,
 			  GtkScrollType  scroll)
 {
 	EvViewPrivate *priv = GET_PRIVATE (view);
-	GtkWidget *widget = GTK_WIDGET (view);
 	GtkAdjustment *adjustment = priv->vadjustment;
 	cairo_region_t *text_region, *region;
-	GtkAllocation allocation;
 	gint page;
 	GdkRectangle rect;
 	EvRectangle doc_rect;
@@ -886,10 +878,9 @@ compute_scroll_increment (EvView        *view,
 	if (!text_region || cairo_region_is_empty (text_region))
 		return gtk_adjustment_get_page_size (adjustment);
 
-	gtk_widget_get_allocation (widget, &allocation);
 	ev_view_get_page_extents (view, page, &page_area, &border);
 	rect.x = page_area.x + priv->scroll_x;
-	rect.y = priv->scroll_y + (scroll == GTK_SCROLL_PAGE_BACKWARD ? 5 : allocation.height - 5);
+	rect.y = priv->scroll_y + (scroll == GTK_SCROLL_PAGE_BACKWARD ? 5 : gtk_widget_get_height (GTK_WIDGET (view)) - 5);
 	rect.width = page_area.width;
 	rect.height = 1;
 	_ev_view_transform_view_rect_to_doc_rect (view, &rect, &page_area, &border, &doc_rect);
@@ -1084,16 +1075,14 @@ ev_view_scroll (EvView        *view,
 void
 _ev_view_ensure_rectangle_is_visible (EvView *view, GdkRectangle *rect)
 {
-	GtkWidget *widget = GTK_WIDGET (view);
 	GtkAdjustment *adjustment;
-	GtkAllocation allocation;
 	gdouble adj_value;
 	int value;
 	EvViewPrivate *priv = GET_PRIVATE (view);
+	int widget_width = gtk_widget_get_width (GTK_WIDGET (view));
+	int widget_height = gtk_widget_get_height (GTK_WIDGET (view));
 
 	priv->pending_scroll = SCROLL_TO_FIND_LOCATION;
-
-	gtk_widget_get_allocation (widget, &allocation);
 
 	adjustment = priv->vadjustment;
 	adj_value = gtk_adjustment_get_value (adjustment);
@@ -1101,9 +1090,9 @@ _ev_view_ensure_rectangle_is_visible (EvView *view, GdkRectangle *rect)
 	if (rect->y < adj_value) {
 		value = MAX (gtk_adjustment_get_lower (adjustment), rect->y - MARGIN);
 		gtk_adjustment_set_value (priv->vadjustment, value);
-	} else if (rect->y + rect->height > adj_value + allocation.height) {
+	} else if (rect->y + rect->height > adj_value + widget_height) {
 		value = MIN (gtk_adjustment_get_upper (adjustment), rect->y + rect->height -
-			     allocation.height + MARGIN);
+			     widget_height + MARGIN);
 		gtk_adjustment_set_value (priv->vadjustment, value);
 	}
 
@@ -1113,9 +1102,9 @@ _ev_view_ensure_rectangle_is_visible (EvView *view, GdkRectangle *rect)
 	if (rect->x < adj_value) {
 		value = MAX (gtk_adjustment_get_lower (adjustment), rect->x - MARGIN);
 		gtk_adjustment_set_value (priv->hadjustment, value);
-	} else if (rect->x + rect->height > adj_value + allocation.width) {
+	} else if (rect->x + rect->height > adj_value + widget_width) {
 		value = MIN (gtk_adjustment_get_upper (adjustment), rect->x + rect->width -
-			     allocation.width + MARGIN);
+			     widget_width + MARGIN);
 		gtk_adjustment_set_value (priv->hadjustment, value);
 	}
 }
@@ -1238,13 +1227,12 @@ real_ev_view_get_page_extents (EvView       *view,
 			       GtkBorder    *border,
 			       gboolean      use_passed_border)
 {
-	GtkWidget *widget;
-	int width, height;
-	GtkAllocation allocation;
+	GtkWidget *widget = GTK_WIDGET (view);
 	EvViewPrivate *priv = GET_PRIVATE (view);
+	int width, height, widget_width, widget_height;
 
-	widget = GTK_WIDGET (view);
-	gtk_widget_get_allocation (widget, &allocation);
+	widget_width = gtk_widget_get_width (widget);
+	widget_height = gtk_widget_get_height (widget);
 
 	/* Get the size of the page */
 	ev_view_get_page_size (view, page, &width, &height);
@@ -1268,12 +1256,12 @@ real_ev_view_get_page_extents (EvView       *view,
 			             (gtk_widget_get_direction (widget) == GTK_TEXT_DIR_RTL && page % 2 == odd_left);
 
 			x = priv->spacing + (right_page ? 0 : 1) * (max_width + priv->spacing);
-			x = x + MAX (0, allocation.width - (max_width * 2 + priv->spacing * 3)) / 2;
+			x = x + MAX (0, widget_width - (max_width * 2 + priv->spacing * 3)) / 2;
 			if (right_page)
 				x = x + (max_width - width - border->left - border->right);
 		} else {
 			x = priv->spacing;
-			x = x + MAX (0, allocation.width - (width + border->left + border->right + priv->spacing * 2)) / 2;
+			x = x + MAX (0, widget_width - (width + border->left + border->right + priv->spacing * 2)) / 2;
 		}
 
 		get_page_y_offset (view, page, &y, border);
@@ -1322,16 +1310,16 @@ real_ev_view_get_page_extents (EvView       *view,
 			y = y + (max_height - height)/2;
 
 			/* Adjust for extra allocation */
-			x = x + MAX (0, allocation.width -
+			x = x + MAX (0, widget_width -
 				     ((max_width + overall_border.left + overall_border.right) * 2 + priv->spacing * 3))/2;
-			y = y + MAX (0, allocation.height - (height + priv->spacing * 2))/2;
+			y = y + MAX (0, widget_height - (height + priv->spacing * 2))/2;
 		} else {
 			x = priv->spacing;
 			y = priv->spacing;
 
 			/* Adjust for extra allocation */
-			x = x + MAX (0, allocation.width - (width + border->left + border->right + priv->spacing * 2))/2;
-			y = y + MAX (0, allocation.height - (height + border->top + border->bottom +  priv->spacing * 2))/2;
+			x = x + MAX (0, widget_width - (width + border->left + border->right + priv->spacing * 2))/2;
+			y = y + MAX (0, widget_height - (height + border->top + border->bottom +  priv->spacing * 2))/2;
 		}
 
 		page_area->x = x;
@@ -1796,6 +1784,8 @@ goto_fitr_dest (EvView *view, EvLinkDest *dest)
 	EvPoint doc_point;
 	gdouble left, top;
 	gboolean change_left, change_top;
+	int widget_width = gtk_widget_get_width (GTK_WIDGET (view));
+	int widget_height = gtk_widget_get_height (GTK_WIDGET (view));
 
 	left = ev_link_dest_get_left (dest, &change_left);
 	top = ev_link_dest_get_top (dest, &change_top);
@@ -1803,24 +1793,21 @@ goto_fitr_dest (EvView *view, EvLinkDest *dest)
 	if (priv->allow_links_change_zoom) {
 		gdouble doc_width, doc_height;
 		gdouble zoom;
-		GtkAllocation allocation;
-
-		gtk_widget_get_allocation (GTK_WIDGET (view), &allocation);
 
 		doc_width = ev_link_dest_get_right (dest) - left;
 		doc_height = ev_link_dest_get_bottom (dest) - top;
 
 		zoom = zoom_for_size_fit_page (doc_width,
 					       doc_height,
-					       allocation.width,
-					       allocation.height);
+					       widget_width,
+					       widget_height);
 
 		ev_document_model_set_sizing_mode (priv->model, EV_SIZING_FREE);
 		ev_document_model_set_scale (priv->model, zoom);
 
 		/* center the target box within the view */
-		left -= (allocation.width / zoom - doc_width) / 2;
-		top -= (allocation.height / zoom - doc_height) / 2;
+		left -= (widget_width / zoom - doc_width) / 2;
+		top -= (widget_height / zoom - doc_height) / 2;
 	}
 
 	doc_point.x = change_left ? left : 0;
@@ -1846,17 +1833,14 @@ goto_fitv_dest (EvView *view, EvLinkDest *dest)
 	doc_point.y = 0;
 
 	if (priv->allow_links_change_zoom) {
-		GtkAllocation allocation;
 		gdouble doc_width, doc_height;
 		double zoom;
-
-		gtk_widget_get_allocation (GTK_WIDGET (view), &allocation);
 
 		ev_document_get_page_size (priv->document, page, &doc_width, &doc_height);
 
 		zoom = zoom_for_size_fit_height (doc_width - doc_point.x, doc_height,
-						 allocation.width,
-						 allocation.height);
+						 gtk_widget_get_width (GTK_WIDGET (view)),
+						 gtk_widget_get_height (GTK_WIDGET (view)));
 
 		ev_document_model_set_sizing_mode (priv->model, EV_SIZING_FREE);
 		ev_document_model_set_scale (priv->model, zoom);
@@ -1883,17 +1867,14 @@ goto_fith_dest (EvView *view, EvLinkDest *dest)
 	doc_point.y = change_top ? top : 0;
 
 	if (priv->allow_links_change_zoom) {
-		GtkAllocation allocation;
 		gdouble doc_width;
 		gdouble zoom;
-
-		gtk_widget_get_allocation (GTK_WIDGET (view), &allocation);
 
 		ev_document_get_page_size (priv->document, page, &doc_width, NULL);
 
 		zoom = zoom_for_size_fit_width (doc_width, top,
-						allocation.width,
-						allocation.height);
+						gtk_widget_get_width (GTK_WIDGET (view)),
+						gtk_widget_get_height (GTK_WIDGET (view)));
 
 		ev_document_model_set_sizing_mode (priv->model, EV_SIZING_FIT_WIDTH);
 		ev_document_model_set_scale (priv->model, zoom);
@@ -1915,15 +1896,12 @@ goto_fit_dest (EvView *view, EvLinkDest *dest)
 	if (priv->allow_links_change_zoom) {
 		double zoom;
 		gdouble doc_width, doc_height;
-		GtkAllocation allocation;
-
-		gtk_widget_get_allocation (GTK_WIDGET (view), &allocation);
 
 		ev_document_get_page_size (priv->document, page, &doc_width, &doc_height);
 
 		zoom = zoom_for_size_fit_page (doc_width, doc_height,
-					       allocation.width,
-					       allocation.height);
+					       gtk_widget_get_width (GTK_WIDGET (view)),
+					       gtk_widget_get_height (GTK_WIDGET (view)));
 
 		ev_document_model_set_sizing_mode (priv->model, EV_SIZING_FIT_PAGE);
 		ev_document_model_set_scale (priv->model, zoom);
@@ -5093,8 +5071,8 @@ link_preview_show_thumbnail (GdkTexture *page_texture,
 	pwidth = gdk_texture_get_width (page_texture);
 	pheight = gdk_texture_get_height (page_texture);
 
-	vwidth = gtk_widget_get_allocated_width (GTK_WIDGET (view));
-	vheight = gtk_widget_get_allocated_height (GTK_WIDGET (view));
+	vwidth = gtk_widget_get_width (GTK_WIDGET (view));
+	vheight = gtk_widget_get_height (GTK_WIDGET (view));
 
 	/* Horizontally, we try to display the full width of the destination
 	 * page. This is needed to make the popup useful for two-column papers.
@@ -5665,21 +5643,18 @@ ev_view_scroll_drag_release (EvView *view)
 	gdouble oldhadjustment, oldvadjustment;
 	gdouble h_page_size, v_page_size;
 	gdouble h_upper, v_upper;
-	GtkAllocation allocation;
 	EvViewPrivate *priv = GET_PRIVATE (view);
 
 	priv->drag_info.momentum.x /= 1.2;
 	priv->drag_info.momentum.y /= 1.2; /* Alter these constants to change "friction" */
 
-	gtk_widget_get_allocation (GTK_WIDGET (view), &allocation);
-
 	h_page_size = gtk_adjustment_get_page_size (priv->hadjustment);
 	v_page_size = gtk_adjustment_get_page_size (priv->vadjustment);
 
 	dhadj_value = h_page_size *
-		      (gdouble)priv->drag_info.momentum.x / allocation.width;
+		      (gdouble)priv->drag_info.momentum.x / gtk_widget_get_width (GTK_WIDGET (view));
 	dvadj_value = v_page_size *
-		      (gdouble)priv->drag_info.momentum.y / allocation.height;
+		      (gdouble)priv->drag_info.momentum.y / gtk_widget_get_height (GTK_WIDGET (view));
 
 	oldhadjustment = gtk_adjustment_get_value (priv->hadjustment);
 	oldvadjustment = gtk_adjustment_get_value (priv->vadjustment);
@@ -5759,15 +5734,12 @@ middle_clicked_drag_update_cb (GtkGestureDrag	*self,
 {
 	GdkEvent *event = gtk_event_controller_get_current_event (GTK_EVENT_CONTROLLER (self));
 	gdouble dhadj_value, dvadj_value;
-	GtkAllocation allocation;
 	EvViewPrivate *priv = GET_PRIVATE (view);
 
-	gtk_widget_get_allocation (GTK_WIDGET (view), &allocation);
-
 	dhadj_value = gtk_adjustment_get_page_size (priv->hadjustment) *
-				      offset_x / allocation.width;
+				      offset_x / gtk_widget_get_width (GTK_WIDGET (view));
 	dvadj_value = gtk_adjustment_get_page_size (priv->vadjustment) *
-				      offset_y / allocation.height;
+				      offset_y / gtk_widget_get_height (GTK_WIDGET (view));
 
 	/* We will update the drag event's start position if
 	 * the adjustment value is changed, but only if the
@@ -5881,14 +5853,14 @@ selection_scroll_timeout_cb (EvView *view)
 {
 	gint x, y, shift = 0;
 	GtkWidget *widget = GTK_WIDGET (view);
-	GtkAllocation allocation;
 	EvViewPrivate *priv = GET_PRIVATE (view);
+	int widget_width = gtk_widget_get_width (widget);
+	int widget_height = gtk_widget_get_height (widget);
 
-	gtk_widget_get_allocation (widget, &allocation);
 	ev_document_misc_get_pointer_position (widget, &x, &y);
 
-	if (y > allocation.height) {
-		shift = (y - allocation.height) / 2;
+	if (y > widget_height) {
+		shift = (y - widget_height) / 2;
 	} else if (y < 0) {
 		shift = y / 2;
 	}
@@ -5900,8 +5872,8 @@ selection_scroll_timeout_cb (EvView *view)
 						 gtk_adjustment_get_upper (priv->vadjustment) -
 						 gtk_adjustment_get_page_size (priv->vadjustment)));
 
-	if (x > allocation.width) {
-		shift = (x - allocation.width) / 2;
+	if (x > widget_width) {
+		shift = (x - widget_width) / 2;
 	} else if (x < 0) {
 		shift = x / 2;
 	}
@@ -7660,12 +7632,9 @@ pan_gesture_pan_cb (GtkGesturePan   *gesture,
 		    EvView          *view)
 {
 	EvViewPrivate *priv = GET_PRIVATE (view);
-	GtkAllocation allocation;
-
-	gtk_widget_get_allocation (GTK_WIDGET (view), &allocation);
 
 	if (priv->continuous ||
-	    allocation.width < priv->requisition.width) {
+	    gtk_widget_get_width (GTK_WIDGET (view)) < priv->requisition.width) {
 		gtk_gesture_set_state (GTK_GESTURE (gesture),
 				       GTK_EVENT_SEQUENCE_DENIED);
 		return;
@@ -9143,9 +9112,10 @@ ev_view_page_fits (EvView         *view,
 		   GtkOrientation  orientation)
 {
 	GtkRequisition requisition;
-	GtkAllocation  allocation;
 	double         size;
 	EvViewPrivate *priv = GET_PRIVATE (view);
+	int widget_width = gtk_widget_get_width (GTK_WIDGET (view));
+	int widget_height = gtk_widget_get_height (GTK_WIDGET (view));
 
 	if (priv->sizing_mode == EV_SIZING_FIT_PAGE)
 		return TRUE;
@@ -9155,15 +9125,14 @@ ev_view_page_fits (EvView         *view,
 	     priv->sizing_mode == EV_SIZING_AUTOMATIC))
 		return TRUE;
 
-	gtk_widget_get_allocation (GTK_WIDGET (view), &allocation);
 	ev_view_size_request (GTK_WIDGET (view), &requisition);
 
 	if (orientation == GTK_ORIENTATION_HORIZONTAL) {
 		if (requisition.width == 1) {
 			size = 1.0;
 		} else {
-			if (allocation.width > 0.0)
-				size = (double) requisition.width / allocation.width;
+			if (widget_width > 0.0)
+				size = (double) requisition.width / widget_width;
 			else
 				size = 1.0;
 		}
@@ -9171,8 +9140,8 @@ ev_view_page_fits (EvView         *view,
 		if (requisition.height == 1) {
 			size = 1.0;
 		} else {
-			if (allocation.height > 0.0)
-				size = (double) requisition.height / allocation.height;
+			if (widget_height > 0.0)
+				size = (double) requisition.height / widget_height;
 			else
 				size = 1.0;
 		}

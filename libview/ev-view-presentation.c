@@ -859,7 +859,7 @@ ev_view_presentation_snapshot_end_page (EvViewPresentation *pview, GtkSnapshot *
 	pango_font_description_set_size (font_desc, 16 * PANGO_SCALE);
 	pango_layout_set_font_description (layout, font_desc);
 	pango_layout_get_pixel_size (layout, &text_width, &text_height);
-	x_center = gtk_widget_get_allocated_width (widget) / 2 - text_width / 2;
+	x_center = gtk_widget_get_width (widget) / 2 - text_width / 2;
 
 	gtk_snapshot_render_layout (snapshot, gtk_widget_get_style_context (widget),
 				x_center, 15, layout);
