@@ -25,9 +25,6 @@
 
 G_BEGIN_DECLS
 
-GdkPixbuf*		ev_pixbuf_add_shadow (GdkPixbuf *src, int size,
-					      int x_offset, int y_offset, double opacity);
-
 void			ev_print_region_contents (cairo_region_t *region);
 
 void           		file_chooser_dialog_add_writable_pixbuf_formats (GtkFileChooser *chooser);
