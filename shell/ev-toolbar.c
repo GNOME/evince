@@ -30,7 +30,6 @@
 #include "ev-zoom-action.h"
 #include "ev-application.h"
 #include "ev-page-action-widget.h"
-#include <math.h>
 
 enum
 {
