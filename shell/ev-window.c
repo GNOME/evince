@@ -751,7 +751,7 @@ ev_window_show_loading_message (EvWindow *window)
 	if (priv->loading_message_timeout)
 		return;
 	priv->loading_message_timeout =
-		g_timeout_add_full (G_PRIORITY_LOW, 1, (GSourceFunc)show_loading_message_cb, window, NULL);
+		g_timeout_add_seconds_full (G_PRIORITY_LOW, 3, (GSourceFunc)show_loading_message_cb, window, NULL);
 }
 
 static void
