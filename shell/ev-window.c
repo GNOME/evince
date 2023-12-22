@@ -151,8 +151,6 @@ typedef struct {
 	GtkWindow *properties;
 	GtkWindow *print_dialog;
 
-	GtkRecentManager *recent_manager;
-
 	/* Popup view */
 	GtkWidget    *view_popup;
 	EvLink       *link;
@@ -277,8 +275,6 @@ static void     ev_window_reload_job_cb                 (EvJob            *job,
 							 EvWindow         *window);
 static void     ev_window_save_job_cb                   (EvJob            *save,
 							 EvWindow         *window);
-static void     ev_window_add_recent                    (EvWindow         *window,
-							 const char       *uri);
 static void     ev_window_run_fullscreen                (EvWindow         *window);
 static void     ev_window_stop_fullscreen               (EvWindow         *window,
 							 gboolean          unfullscreen_window);
@@ -1792,7 +1788,7 @@ ev_window_load_job_cb (EvJob *job,
 		setup_document_from_metadata (ev_window);
 		setup_view_from_metadata (ev_window);
 
-		ev_window_add_recent (ev_window, priv->uri);
+		gtk_recent_manager_add_item (gtk_recent_manager_get_default (), priv->uri);
 
 		ev_window_title_set_type (priv->title,
 					  EV_WINDOW_TITLE_DOCUMENT);
@@ -2816,14 +2812,6 @@ ev_window_cmd_file_open_copy (GSimpleAction *action,
 }
 
 static void
-ev_window_add_recent (EvWindow *window, const char *uri)
-{
-	EvWindowPrivate *priv = GET_PRIVATE (window);
-
-	gtk_recent_manager_add_item (priv->recent_manager, uri);
-}
-
-static void
 show_saving_progress (GFile *dst)
 {
 	EvWindow  *ev_window;
@@ -2996,7 +2984,8 @@ ev_window_save_job_cb (EvJob     *job,
 					 _("The file could not be saved as “%s”."),
 					 EV_JOB_SAVE (job)->uri);
 	} else {
-		ev_window_add_recent (window, EV_JOB_SAVE (job)->uri);
+		gtk_recent_manager_add_item (gtk_recent_manager_get_default (),
+					     EV_JOB_SAVE (job)->uri);
 	}
 
 	ev_window_clear_save_job (window);
@@ -5881,8 +5870,6 @@ ev_window_dispose (GObject *object)
 
 	g_clear_object (&priv->attachment_popup_menu);
 
-	priv->recent_manager = NULL;
-
 	g_clear_object (&priv->settings);
 	if (priv->default_settings) {
 		g_settings_apply (priv->default_settings);
@@ -7059,7 +7046,6 @@ ev_window_init (EvWindow *ev_window)
 
 	priv->page_mode = PAGE_MODE_DOCUMENT;
         priv->presentation_mode_inhibit_id = 0;
-	priv->recent_manager = gtk_recent_manager_get_default ();
 	priv->title = ev_window_title_new (ev_window);
 	priv->history = ev_history_new (priv->model);
 
