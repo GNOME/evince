@@ -117,7 +117,6 @@ typedef struct {
 	GtkWidget *main_box;
 	GtkWidget *toolbar;
 	GtkWidget *hpaned;
-	GtkWidget *view_box;
 	GtkWidget *sidebar;
 	GtkWidget *search_box;
 	GtkWidget *search_bar;
