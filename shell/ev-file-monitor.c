@@ -117,10 +117,7 @@ ev_file_monitor_timeout_stop (EvFileMonitor *ev_monitor)
 {
 	EvFileMonitorPrivate *priv = GET_PRIVATE (ev_monitor);
 
-	if (priv->timeout_id > 0) {
-		g_source_remove (priv->timeout_id);
-		priv->timeout_id = 0;
-	}
+	g_clear_handle_id (&priv->timeout_id, g_source_remove);
 }
 
 static void

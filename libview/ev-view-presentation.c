@@ -228,9 +228,7 @@ transition_next_page (EvViewPresentation *pview)
 static void
 ev_view_presentation_transition_stop (EvViewPresentation *pview)
 {
-	if (pview->trans_timeout_id > 0)
-		g_source_remove (pview->trans_timeout_id);
-	pview->trans_timeout_id = 0;
+	g_clear_handle_id (&pview->trans_timeout_id, g_source_remove);
 }
 
 static void
@@ -802,9 +800,7 @@ hide_cursor_timeout_cb (EvViewPresentation *pview)
 static void
 ev_view_presentation_hide_cursor_timeout_stop (EvViewPresentation *pview)
 {
-	if (pview->hide_cursor_timeout_id > 0)
-		g_source_remove (pview->hide_cursor_timeout_id);
-	pview->hide_cursor_timeout_id = 0;
+	g_clear_handle_id (&pview->hide_cursor_timeout_id, g_source_remove);
 }
 
 static void
@@ -833,6 +829,9 @@ ev_view_presentation_dispose (GObject *object)
 	g_clear_object (&pview->previous_texture);
 
 	g_clear_pointer (&pview->goto_popup, gtk_widget_unparent);
+
+	g_clear_handle_id (&pview->trans_timeout_id, g_source_remove);
+	g_clear_handle_id (&pview->hide_cursor_timeout_id, g_source_remove);
 
 	G_OBJECT_CLASS (ev_view_presentation_parent_class)->dispose (object);
 }

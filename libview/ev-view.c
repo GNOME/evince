@@ -4067,10 +4067,7 @@ ev_view_check_cursor_blink (EvView *view)
 		return;
 	}
 
-	if (priv->cursor_blink_timeout_id > 0) {
-		g_source_remove (priv->cursor_blink_timeout_id);
-		priv->cursor_blink_timeout_id = 0;
-	}
+	g_clear_handle_id (&priv->cursor_blink_timeout_id, g_source_remove);
 
 	priv->cursor_visible = TRUE;
 	priv->cursor_blink_time = 0;
@@ -4083,8 +4080,7 @@ ev_view_pend_cursor_blink (EvView *view)
 	if (!cursor_should_blink (view))
 		return;
 
-	if (priv->cursor_blink_timeout_id > 0)
-		g_source_remove (priv->cursor_blink_timeout_id);
+	g_clear_handle_id (&priv->cursor_blink_timeout_id, g_source_remove);
 
 	show_cursor (view);
 	priv->cursor_blink_timeout_id = g_timeout_add (get_cursor_blink_time (view) * CURSOR_PEND_MULTIPLIER / CURSOR_DIVIDER,
@@ -5185,10 +5181,7 @@ ev_view_link_preview_popover_cleanup (EvView *view)
 		g_clear_pointer (&priv->link_preview.popover, gtk_widget_unparent);
 	}
 
-	if (priv->link_preview.delay_timeout_id) {
-		g_source_remove (priv->link_preview.delay_timeout_id);
-		priv->link_preview.delay_timeout_id = 0;
-	}
+	g_clear_handle_id (&priv->link_preview.delay_timeout_id, g_source_remove);
 }
 
 static gboolean
@@ -6312,14 +6305,8 @@ ev_view_button_release_event(GtkGestureClick		*self,
 
 	priv->pressed_button = -1;
 
-	if (priv->selection_scroll_id) {
-	    g_source_remove (priv->selection_scroll_id);
-	    priv->selection_scroll_id = 0;
-	}
-	if (priv->selection_update_id) {
-	    g_source_remove (priv->selection_update_id);
-	    priv->selection_update_id = 0;
-	}
+	g_clear_handle_id (&priv->selection_scroll_id, g_source_remove);
+	g_clear_handle_id (&priv->selection_update_id, g_source_remove);
 
 	if (priv->selection_info.selections) {
 		g_clear_object (&priv->link_selected);
@@ -7090,11 +7077,7 @@ ev_view_autoscroll_pause (EvView *view)
 	if (!priv->scroll_info.autoscrolling)
 		return;
 
-	if (priv->scroll_info.timeout_id == 0)
-		return;
-
-	g_source_remove (priv->scroll_info.timeout_id);
-	priv->scroll_info.timeout_id = 0;
+	g_clear_handle_id (&priv->scroll_info.timeout_id, g_source_remove);
 }
 
 static void
@@ -7476,45 +7459,14 @@ ev_view_dispose (GObject *object)
 
 	ev_view_window_children_free (view);
 
-	if (priv->update_cursor_idle_id) {
-		g_source_remove (priv->update_cursor_idle_id);
-		priv->update_cursor_idle_id = 0;
-	}
-
-	if (priv->selection_scroll_id) {
-	    g_source_remove (priv->selection_scroll_id);
-	    priv->selection_scroll_id = 0;
-	}
-
-	if (priv->selection_update_id) {
-	    g_source_remove (priv->selection_update_id);
-	    priv->selection_update_id = 0;
-	}
-
-	if (priv->scroll_info.timeout_id) {
-	    g_source_remove (priv->scroll_info.timeout_id);
-	    priv->scroll_info.timeout_id = 0;
-	}
-
-	if (priv->drag_info.drag_timeout_id) {
-		g_source_remove (priv->drag_info.drag_timeout_id);
-		priv->drag_info.drag_timeout_id = 0;
-	}
-
-	if (priv->drag_info.release_timeout_id) {
-		g_source_remove (priv->drag_info.release_timeout_id);
-		priv->drag_info.release_timeout_id = 0;
-	}
-
-	if (priv->cursor_blink_timeout_id) {
-		g_source_remove (priv->cursor_blink_timeout_id);
-		priv->cursor_blink_timeout_id = 0;
-	}
-
-	if (priv->child_focus_idle_id) {
-		g_source_remove (priv->child_focus_idle_id);
-		priv->child_focus_idle_id = 0;
-	}
+	g_clear_handle_id (&priv->update_cursor_idle_id, g_source_remove);
+	g_clear_handle_id (&priv->selection_scroll_id, g_source_remove);
+	g_clear_handle_id (&priv->selection_update_id, g_source_remove);
+	g_clear_handle_id (&priv->scroll_info.timeout_id, g_source_remove);
+	g_clear_handle_id (&priv->drag_info.drag_timeout_id, g_source_remove);
+	g_clear_handle_id (&priv->drag_info.release_timeout_id, g_source_remove);
+	g_clear_handle_id (&priv->cursor_blink_timeout_id, g_source_remove);
+	g_clear_handle_id (&priv->child_focus_idle_id, g_source_remove);
 
 	if (priv->link_preview.job) {
 		ev_job_cancel (priv->link_preview.job);
@@ -7783,8 +7735,8 @@ schedule_child_focus_in_idle (EvView           *view,
 			      GtkDirectionType  direction)
 {
 	EvViewPrivate *priv = GET_PRIVATE (view);
-	if (priv->child_focus_idle_id)
-		g_source_remove (priv->child_focus_idle_id);
+
+	g_clear_handle_id (&priv->child_focus_idle_id, g_source_remove);
 	priv->child_focus_idle_id =
 		g_idle_add (direction == GTK_DIR_TAB_FORWARD ? child_focus_forward_idle_cb : child_focus_backward_idle_cb,
 			    view);

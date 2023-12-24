@@ -767,10 +767,7 @@ ev_window_hide_loading_message (EvWindow *window)
 {
 	EvWindowPrivate *priv = GET_PRIVATE (window);
 
-	if (priv->loading_message_timeout) {
-		g_source_remove (priv->loading_message_timeout);
-		priv->loading_message_timeout = 0;
-	}
+	g_clear_handle_id (&priv->loading_message_timeout, g_source_remove);
 
 	gtk_widget_set_visible (priv->loading_message, FALSE);
 }
@@ -1666,8 +1663,7 @@ ev_window_set_document (EvWindow *ev_window, EvDocument *document)
 	priv->is_modified = FALSE;
 	priv->modified_handler_id = g_signal_connect (document, "notify::modified", G_CALLBACK (ev_window_document_modified_cb), ev_window);
 
-	if (priv->setup_document_idle > 0)
-		g_source_remove (priv->setup_document_idle);
+	g_clear_handle_id (&priv->setup_document_idle, g_source_remove);
 
 	priv->setup_document_idle = g_idle_add_once ((GSourceOnceFunc)ev_window_setup_document, ev_window);
 }
@@ -1953,9 +1949,7 @@ ev_window_clear_progress_idle (EvWindow *ev_window)
 {
 	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 
-	if (priv->progress_idle > 0)
-		g_source_remove (priv->progress_idle);
-	priv->progress_idle = 0;
+	g_clear_handle_id (&priv->progress_idle, g_source_remove);
 }
 
 static void
@@ -1973,8 +1967,8 @@ ev_window_show_progress_message (EvWindow   *ev_window,
 {
 	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 
-	if (priv->progress_idle > 0)
-		g_source_remove (priv->progress_idle);
+	g_clear_handle_id (&priv->progress_idle, g_source_remove);
+
 	priv->progress_idle =
 		g_timeout_add_seconds_full (G_PRIORITY_DEFAULT,
 					    interval, function,
@@ -5878,15 +5872,8 @@ ev_window_dispose (GObject *object)
 	g_clear_object (&priv->bookmarks);
 	g_clear_object (&priv->metadata);
 
-	if (priv->setup_document_idle > 0) {
-		g_source_remove (priv->setup_document_idle);
-		priv->setup_document_idle = 0;
-	}
-
-	if (priv->loading_message_timeout) {
-		g_source_remove (priv->loading_message_timeout);
-		priv->loading_message_timeout = 0;
-	}
+	g_clear_handle_id (&priv->setup_document_idle, g_source_remove);
+	g_clear_handle_id (&priv->loading_message_timeout, g_source_remove);
 
 	g_clear_object (&priv->monitor);
 	g_clear_pointer (&priv->title, ev_window_title_free);

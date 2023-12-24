@@ -903,9 +903,7 @@ export_cancel (EvPrintOperationExport *export)
 {
 	EvPrintOperation *op = EV_PRINT_OPERATION (export);
 
-	if (export->idle_id > 0)
-		g_source_remove (export->idle_id);
-	export->idle_id = 0;
+	g_clear_handle_id (&export->idle_id, g_source_remove);
 
 	if (export->job_export) {
 		g_signal_handlers_disconnect_by_func (export->job_export,
@@ -1259,10 +1257,7 @@ ev_print_operation_export_finalize (GObject *object)
 {
 	EvPrintOperationExport *export = EV_PRINT_OPERATION_EXPORT (object);
 
-	if (export->idle_id > 0) {
-		g_source_remove (export->idle_id);
-		export->idle_id = 0;
-	}
+	g_clear_handle_id (&export->idle_id, g_source_remove);
 
 	if (export->fd != -1) {
 		close (export->fd);

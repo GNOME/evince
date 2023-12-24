@@ -66,10 +66,7 @@ ev_find_sidebar_cancel (EvFindSidebar *sidebar)
 {
         EvFindSidebarPrivate *priv = GET_PRIVATE (sidebar);
 
-        if (priv->process_matches_idle_id > 0) {
-                g_source_remove (priv->process_matches_idle_id);
-                priv->process_matches_idle_id = 0;
-        }
+	g_clear_handle_id (&priv->process_matches_idle_id, g_source_remove);
         g_clear_object (&priv->job);
 }
 

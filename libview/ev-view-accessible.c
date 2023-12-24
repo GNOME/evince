@@ -107,8 +107,9 @@ ev_view_accessible_finalize (GObject *object)
 		g_signal_handlers_disconnect_by_data (priv->model, object);
 		g_clear_object (&priv->model);
 	}
-	if (priv->action_idle_handler)
-		g_source_remove (priv->action_idle_handler);
+
+	g_clear_handle_id (&priv->action_idle_handler, g_source_remove);
+
 	for (i = 0; i < LAST_ACTION; i++)
 		g_free (priv->action_descriptions [i]);
 
