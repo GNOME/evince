@@ -157,7 +157,7 @@ ev_previewer_window_focus_page_selector (GSimpleAction *action,
 {
         EvPreviewerWindow *window = EV_PREVIEWER_WINDOW (user_data);
 
-	ev_page_action_widget_grab_focus (EV_PAGE_ACTION_WIDGET (window->page_selector));
+	gtk_widget_grab_focus (window->page_selector);
 }
 
 #if GTKUNIXPRINT_ENABLED

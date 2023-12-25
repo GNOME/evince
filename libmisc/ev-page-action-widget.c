@@ -389,6 +389,12 @@ ev_page_action_widget_finalize (GObject *object)
 	G_OBJECT_CLASS (ev_page_action_widget_parent_class)->finalize (object);
 }
 
+static gboolean
+ev_page_action_widget_grab_focus (GtkWidget *proxy)
+{
+	return gtk_widget_grab_focus (EV_PAGE_ACTION_WIDGET (proxy)->entry);
+}
+
 static void
 ev_page_action_widget_class_init (EvPageActionWidgetClass *klass)
 {
@@ -397,6 +403,7 @@ ev_page_action_widget_class_init (EvPageActionWidgetClass *klass)
 
 	object_class->dispose = ev_page_action_widget_dispose;
 	object_class->finalize = ev_page_action_widget_finalize;
+	widget_class->grab_focus = ev_page_action_widget_grab_focus;
 
 	gtk_widget_class_set_template_from_resource (widget_class,
 						     "/org/gnome/evince/ui/ev-page-action-widget.ui");
@@ -623,12 +630,6 @@ ev_page_action_widget_update_links_model (EvPageActionWidget *proxy, GtkTreeMode
 					    (GtkCellLayoutDataFunc) display_completion_text,
 					    proxy, NULL);
 	gtk_entry_set_completion (GTK_ENTRY (proxy->entry), completion);
-}
-
-void
-ev_page_action_widget_grab_focus (EvPageActionWidget *proxy)
-{
-	gtk_widget_grab_focus (proxy->entry);
 }
 
 void

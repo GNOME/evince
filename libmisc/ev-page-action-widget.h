@@ -47,7 +47,6 @@ void ev_page_action_widget_update_links_model (EvPageActionWidget *proxy,
 
 void ev_page_action_widget_set_model          (EvPageActionWidget *action_widget,
 					       EvDocumentModel    *doc_model);
-void ev_page_action_widget_grab_focus         (EvPageActionWidget *proxy);
 void ev_page_action_widget_clear              (EvPageActionWidget *proxy);
 void ev_page_action_widget_set_temporary_entry_width (EvPageActionWidget *proxy, gint width);
 void ev_page_action_widget_enable_completion_search (EvPageActionWidget *proxy, gboolean enable);

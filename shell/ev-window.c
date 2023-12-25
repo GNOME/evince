@@ -4116,8 +4116,7 @@ ev_window_focus_page_selector (EvWindow *window)
 
 	priv = GET_PRIVATE (window);
 
-	ev_page_action_widget_grab_focus (EV_PAGE_ACTION_WIDGET (
-		ev_toolbar_get_page_selector (EV_TOOLBAR(priv->toolbar))));
+	gtk_widget_grab_focus (ev_toolbar_get_page_selector (EV_TOOLBAR(priv->toolbar)));
 }
 
 /**
