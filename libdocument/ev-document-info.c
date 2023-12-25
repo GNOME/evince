@@ -75,6 +75,8 @@ ev_document_info_copy (EvDocumentInfo *info)
 	copy->n_pages = info->n_pages;
 	copy->license = ev_document_license_copy (info->license);
 
+	copy->fields_mask = info->fields_mask;
+
         return copy;
 }
 
