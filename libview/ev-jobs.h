@@ -596,6 +596,8 @@ EvJobRunMode    ev_job_get_run_mode       (EvJob          *job);
 EV_PUBLIC
 void            ev_job_set_run_mode       (EvJob          *job,
 					   EvJobRunMode    run_mode);
+EV_PUBLIC
+EvDocument     *ev_job_get_document	  (EvJob	  *job);
 
 /* EvJobLinks */
 EV_PUBLIC

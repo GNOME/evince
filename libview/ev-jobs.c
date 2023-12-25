@@ -319,6 +319,21 @@ ev_job_set_run_mode (EvJob       *job,
 	job->run_mode = run_mode;
 }
 
+
+/**
+ * ev_job_get_document:
+ * @job: an #EvJob
+ *
+ * Returns: (transfer none): The #EvDocument of this job.
+ */
+EvDocument *
+ev_job_get_document (EvJob	 *job)
+{
+	g_return_val_if_fail (EV_IS_JOB (job), NULL);
+
+	return job->document;
+}
+
 /* EvJobLinks */
 static void
 ev_job_links_init (EvJobLinks *job)
