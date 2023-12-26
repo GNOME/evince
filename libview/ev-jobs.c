@@ -1250,6 +1250,23 @@ ev_job_thumbnail_texture_new_with_target_size (EvDocument *document,
         return job;
 }
 
+/**
+ * ev_job_thumbnail_texture_get_texture:
+ * @job: an #EvJobThumbnailTexture job
+ *
+ * This is similar to ev_job_find_get_n_results() but it takes
+ * care to treat any multi-line matches as being only one result.
+ *
+ * Returns: (nullable) (transfer none): total number of match results in @page
+ */
+GdkTexture *
+ev_job_thumbnail_texture_get_texture (EvJobThumbnailTexture *job)
+{
+	g_return_val_if_fail (EV_IS_JOB_THUMBNAIL_TEXTURE (job), NULL);
+
+	return job->thumbnail_texture;
+}
+
 /* EvJobFonts */
 static void
 ev_job_fonts_init (EvJobFonts *job)

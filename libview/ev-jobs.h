@@ -690,6 +690,8 @@ EvJob          *ev_job_thumbnail_texture_new_with_target_size (EvDocument *docum
 							     gint        rotation,
 							     gint        target_width,
 							     gint        target_height);
+EV_PUBLIC
+GdkTexture     *ev_job_thumbnail_texture_get_texture (EvJobThumbnailTexture *job);
 
 /* EvJobFonts */
 EV_PUBLIC
