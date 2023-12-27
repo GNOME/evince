@@ -60,21 +60,6 @@ ev_sidebar_page_set_model (EvSidebarPage   *sidebar_page,
 	iface->set_model (sidebar_page, model);
 }
 
-const gchar *
-ev_sidebar_page_get_label (EvSidebarPage *sidebar_page)
-{
-	EvSidebarPageInterface *iface;
-
-        g_return_val_if_fail (EV_IS_SIDEBAR_PAGE (sidebar_page), NULL);
-
-	iface = EV_SIDEBAR_PAGE_GET_IFACE (sidebar_page);
-
-	g_assert (iface->get_label);
-
-	return iface->get_label (sidebar_page);
-}
-
-
 static void
 ev_sidebar_page_default_init (EvSidebarPageInterface *iface)
 {

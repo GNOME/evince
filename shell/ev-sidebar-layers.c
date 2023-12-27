@@ -456,16 +456,9 @@ ev_sidebar_layers_support_document (EvSidebarPage *sidebar_page,
 		ev_document_layers_has_layers (EV_DOCUMENT_LAYERS (document)));
 }
 
-static const gchar*
-ev_sidebar_layers_get_label (EvSidebarPage *sidebar_page)
-{
-	return _("Layers");
-}
-
 static void
 ev_sidebar_layers_page_iface_init (EvSidebarPageInterface *iface)
 {
 	iface->support_document = ev_sidebar_layers_support_document;
 	iface->set_model = ev_sidebar_layers_set_model;
-	iface->get_label = ev_sidebar_layers_get_label;
 }

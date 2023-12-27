@@ -537,16 +537,9 @@ ev_sidebar_attachments_support_document (EvSidebarPage   *sidebar_page,
 		ev_document_attachments_has_attachments (EV_DOCUMENT_ATTACHMENTS (document)));
 }
 
-static const gchar*
-ev_sidebar_attachments_get_label (EvSidebarPage *sidebar_page)
-{
-	return _("Attachments");
-}
-
 static void
 ev_sidebar_attachments_page_iface_init (EvSidebarPageInterface *iface)
 {
 	iface->support_document = ev_sidebar_attachments_support_document;
 	iface->set_model = ev_sidebar_attachments_set_model;
-	iface->get_label = ev_sidebar_attachments_get_label;
 }

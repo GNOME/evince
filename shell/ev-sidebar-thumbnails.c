@@ -98,7 +98,6 @@ static gboolean     ev_sidebar_thumbnails_support_document (EvSidebarPage       
 static void         ev_sidebar_thumbnails_set_model	   (EvSidebarPage   *sidebar_page,
 							    EvDocumentModel *model);
 static void         ev_sidebar_thumbnails_page_iface_init  (EvSidebarPageInterface  *iface);
-static const gchar* ev_sidebar_thumbnails_get_label        (EvSidebarPage           *sidebar_page);
 static void         ev_sidebar_thumbnails_set_current_page (EvSidebarThumbnails *sidebar,
 							    gint     page);
 static void         thumbnail_job_completed_callback       (EvJobThumbnailCairo     *job,
@@ -984,18 +983,11 @@ ev_sidebar_thumbnails_support_document (EvSidebarPage   *sidebar_page,
 	return TRUE;
 }
 
-static const gchar*
-ev_sidebar_thumbnails_get_label (EvSidebarPage *sidebar_page)
-{
-	return _("Thumbnails");
-}
-
 static void
 ev_sidebar_thumbnails_page_iface_init (EvSidebarPageInterface *iface)
 {
 	iface->support_document = ev_sidebar_thumbnails_support_document;
 	iface->set_model = ev_sidebar_thumbnails_set_model;
-	iface->get_label = ev_sidebar_thumbnails_get_label;
 }
 
 static gboolean

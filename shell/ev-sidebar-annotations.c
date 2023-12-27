@@ -421,16 +421,9 @@ ev_sidebar_annotations_support_document (EvSidebarPage *sidebar_page,
 	return (EV_IS_DOCUMENT_ANNOTATIONS (document));
 }
 
-static const gchar *
-ev_sidebar_annotations_get_label (EvSidebarPage *sidebar_page)
-{
-	return _("Annotations");
-}
-
 static void
 ev_sidebar_annotations_page_iface_init (EvSidebarPageInterface *iface)
 {
 	iface->support_document = ev_sidebar_annotations_support_document;
 	iface->set_model = ev_sidebar_annotations_set_model;
-	iface->get_label = ev_sidebar_annotations_get_label;
 }

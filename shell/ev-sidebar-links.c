@@ -85,7 +85,6 @@ static void sidebar_collapse_recursive                  (EvSidebarLinks *sidebar
 static void ev_sidebar_links_page_iface_init 		(EvSidebarPageInterface *iface);
 static gboolean ev_sidebar_links_support_document	(EvSidebarPage  *sidebar_page,
 						         EvDocument     *document);
-static const gchar* ev_sidebar_links_get_label 		(EvSidebarPage *sidebar_page);
 static void ev_sidebar_links_set_model			(EvSidebarPage   *sidebar_page,
 							 EvDocumentModel *model);
 
@@ -1361,19 +1360,9 @@ ev_sidebar_links_support_document (EvSidebarPage  *sidebar_page,
 		    ev_document_links_has_document_links (EV_DOCUMENT_LINKS (document)));
 }
 
-static const gchar*
-ev_sidebar_links_get_label (EvSidebarPage *sidebar_page)
-{
-	/* Translators: This is the title for the sidebar pane that
-	 * shows the Outline or Table of Contents of the document.
-	 */
-	return _("Outline");
-}
-
 static void
 ev_sidebar_links_page_iface_init (EvSidebarPageInterface *iface)
 {
 	iface->support_document = ev_sidebar_links_support_document;
 	iface->set_model = ev_sidebar_links_set_model;
-	iface->get_label = ev_sidebar_links_get_label;
 }

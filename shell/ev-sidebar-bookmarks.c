@@ -551,16 +551,9 @@ ev_sidebar_bookmarks_support_document (EvSidebarPage *sidebar_page,
         return TRUE;
 }
 
-static const gchar *
-ev_sidebar_bookmarks_get_label (EvSidebarPage *sidebar_page)
-{
-        return _("Bookmarks");
-}
-
 static void
 ev_sidebar_bookmarks_page_iface_init (EvSidebarPageInterface *iface)
 {
         iface->support_document = ev_sidebar_bookmarks_support_document;
         iface->set_model = ev_sidebar_bookmarks_set_model;
-        iface->get_label = ev_sidebar_bookmarks_get_label;
 }

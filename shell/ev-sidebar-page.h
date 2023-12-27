@@ -40,14 +40,12 @@ struct _EvSidebarPageInterface
 				           EvDocument *document);
 	void 	    (* set_model)	  (EvSidebarPage   *sidebar_page,
 					   EvDocumentModel *model);
-	const gchar*(* get_label)         (EvSidebarPage  *sidebar_page);
 };
 
 gboolean      ev_sidebar_page_support_document  (EvSidebarPage    *sidebar_page,
 	 			                 EvDocument *document);
 void          ev_sidebar_page_set_model         (EvSidebarPage    *sidebar_page,
 				                 EvDocumentModel *model);
-const gchar*  ev_sidebar_page_get_label         (EvSidebarPage *page);
 
 
 G_END_DECLS
