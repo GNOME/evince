@@ -69,7 +69,6 @@ ev_properties_dialog_init (EvPropertiesDialog *properties)
 
 void
 ev_properties_dialog_set_document (EvPropertiesDialog *properties,
-				   const gchar        *uri,
 			           EvDocument         *document)
 {
 	GtkWidget *label;

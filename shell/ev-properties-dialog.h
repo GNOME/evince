@@ -39,7 +39,6 @@ typedef struct _EvPropertiesDialogPrivate EvPropertiesDialogPrivate;
 GType		 ev_properties_dialog_get_type     (void);
 GtkWidget	*ev_properties_dialog_new          (void);
 void	         ev_properties_dialog_set_document (EvPropertiesDialog *properties,
-						    const gchar        *uri,
 					  	    EvDocument         *document);
 
 G_END_DECLS
