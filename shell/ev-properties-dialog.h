@@ -21,6 +21,7 @@
 #pragma once
 
 #include "ev-document.h"
+#include <gtk/gtk.h>
 
 G_BEGIN_DECLS
 
