@@ -52,6 +52,8 @@ typedef struct {
 
 static guint password_view_signals [LAST_SIGNAL] = { 0 };
 
+#define GET_PRIVATE(o) ev_password_view_get_instance_private (o)
+
 G_DEFINE_TYPE_WITH_PRIVATE (EvPasswordView, ev_password_view, GTK_TYPE_BOX)
 
 static void ev_password_view_clicked_cb (GtkWidget      *button,
@@ -61,9 +63,7 @@ static void
 ev_password_view_finalize (GObject *object)
 {
 	EvPasswordView *password_view = EV_PASSWORD_VIEW (object);
-	EvPasswordViewPrivate *priv;
-
-	priv = ev_password_view_get_instance_private (password_view);
+	EvPasswordViewPrivate *priv = GET_PRIVATE (password_view);
 
 	g_clear_pointer (&priv->password, g_free);
 	g_clear_pointer (&priv->filename, g_free);
@@ -116,9 +116,7 @@ ev_password_view_clicked_cb (GtkWidget      *button,
 static void
 ev_password_view_init (EvPasswordView *password_view)
 {
-	EvPasswordViewPrivate *priv;
-
-	priv = ev_password_view_get_instance_private (password_view);
+	EvPasswordViewPrivate *priv = GET_PRIVATE (password_view);
 
 	priv->password_save = G_PASSWORD_SAVE_NEVER;
 
@@ -130,12 +128,10 @@ void
 ev_password_view_set_filename (EvPasswordView *password_view,
 			       const char     *filename)
 {
-	EvPasswordViewPrivate *priv;
+	EvPasswordViewPrivate *priv = GET_PRIVATE (password_view);
 
 	g_return_if_fail (EV_IS_PASSWORD_VIEW (password_view));
 	g_return_if_fail (filename != NULL);
-
-	priv = ev_password_view_get_instance_private (password_view);
 
 	if (g_strcmp0 (priv->filename, filename) == 0)
 		return;
@@ -149,9 +145,7 @@ ev_password_dialog_got_response (GtkDialog      *dialog,
 				 gint            response_id,
 				 EvPasswordView *password_view)
 {
-	EvPasswordViewPrivate *priv;
-
-	priv = ev_password_view_get_instance_private (password_view);
+	EvPasswordViewPrivate *priv = GET_PRIVATE (password_view);
 
 	gtk_widget_set_sensitive (GTK_WIDGET (password_view), TRUE);
 
@@ -174,9 +168,7 @@ static void
 ev_password_dialog_remember_button_toggled (GtkCheckButton *button,
 					    EvPasswordView  *password_view)
 {
-	EvPasswordViewPrivate *priv;
-
-	priv = ev_password_view_get_instance_private (password_view);
+	EvPasswordViewPrivate *priv = GET_PRIVATE (password_view);
 
 	if (gtk_check_button_get_active (button)) {
 		gpointer data;
@@ -213,10 +205,8 @@ ev_password_view_ask_password (EvPasswordView *password_view)
 	GtkWidget *grid, *label;
 	GtkWidget *password_entry;
 	gchar     *text;
-	EvPasswordViewPrivate *priv;
+	EvPasswordViewPrivate *priv = GET_PRIVATE (password_view);
 	GtkWindow *parent_window;
-
-	priv = ev_password_view_get_instance_private (password_view);
 
         text = g_markup_printf_escaped (_("The document “%s” is locked and requires a password before it can be opened."),
                                         priv->filename);
@@ -322,9 +312,7 @@ ev_password_view_ask_password (EvPasswordView *password_view)
 const gchar *
 ev_password_view_get_password (EvPasswordView *password_view)
 {
-	EvPasswordViewPrivate *priv;
-
-	priv = ev_password_view_get_instance_private (password_view);
+	EvPasswordViewPrivate *priv = GET_PRIVATE (password_view);
 
 	return priv->password;
 }
@@ -332,9 +320,7 @@ ev_password_view_get_password (EvPasswordView *password_view)
 GPasswordSave
 ev_password_view_get_password_save_flags (EvPasswordView *password_view)
 {
-	EvPasswordViewPrivate *priv;
-
-	priv = ev_password_view_get_instance_private (password_view);
+	EvPasswordViewPrivate *priv = GET_PRIVATE (password_view);
 
 	return priv->password_save;
 }
