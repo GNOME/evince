@@ -634,13 +634,10 @@ update_sizing_buttons (EvWindow *window)
  *          loaded, %FALSE in other case.
  */
 gboolean
-ev_window_is_empty (const EvWindow *ev_window)
+ev_window_is_empty (EvWindow *ev_window)
 {
-	EvWindowPrivate *priv;
-
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 	g_return_val_if_fail (EV_IS_WINDOW (ev_window), FALSE);
-
-	priv = GET_PRIVATE (EV_WINDOW (ev_window));
 
 	return (priv->document == NULL) &&
 		(priv->load_job == NULL);
