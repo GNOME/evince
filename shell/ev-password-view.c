@@ -84,7 +84,7 @@ ev_password_view_class_init (EvPasswordViewClass *class)
 		g_signal_new ("unlock",
 			      G_TYPE_FROM_CLASS (g_object_class),
 			      G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
-			      G_STRUCT_OFFSET (EvPasswordViewClass, unlock),
+			      0,
 			      NULL, NULL,
 			      g_cclosure_marshal_VOID__VOID,
 			      G_TYPE_NONE, 0);
@@ -93,7 +93,7 @@ ev_password_view_class_init (EvPasswordViewClass *class)
 		g_signal_new ("cancelled",
 			      G_TYPE_FROM_CLASS (g_object_class),
 			      G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
-			      G_STRUCT_OFFSET (EvPasswordViewClass, cancelled),
+			      0,
 			      NULL, NULL,
 			      g_cclosure_marshal_VOID__VOID,
 			      G_TYPE_NONE, 0);

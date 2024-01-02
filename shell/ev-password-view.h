@@ -25,14 +25,10 @@
 G_BEGIN_DECLS
 
 #define EV_TYPE_PASSWORD_VIEW            (ev_password_view_get_type ())
-G_DECLARE_DERIVABLE_TYPE (EvPasswordView, ev_password_view, EV, PASSWORD_VIEW, GtkBox);
+G_DECLARE_FINAL_TYPE (EvPasswordView, ev_password_view, EV, PASSWORD_VIEW, GtkBox);
 
-struct _EvPasswordViewClass {
-	GtkBoxClass parent_class;
-
-	/* signals */
-	void (*unlock)    (EvPasswordView	*self);
-	void (*cancelled) (EvPasswordView	*self);
+struct _EvPasswordView {
+	GtkBox parent_instance;
 };
 
 EvPasswordView *ev_password_view_new                     (void);
