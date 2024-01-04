@@ -243,7 +243,7 @@ load_files (const char **files)
 
 	if (!files || new_window) {
 		if (!ev_application_has_window (EV_APP) || new_window)
-			ev_application_open_recent_view (EV_APP, display, GDK_CURRENT_TIME);
+			ev_application_open_recent_view (EV_APP, display);
 		return;
 	}
 

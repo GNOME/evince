@@ -643,23 +643,16 @@ ev_application_new_window (EvApplication *application,
 /**
  * ev_application_open_recent_view:
  * @application: The instance of the application.
- * @timestamp: Current time value.
  *
  * Creates a new window showing the recent view
  */
 void
 ev_application_open_recent_view (EvApplication *application,
-                                 GdkDisplay    *display,
-                                 guint32        timestamp)
+                                 GdkDisplay    *display)
 {
 	GtkWidget *new_window = ev_window_new ();
 
 	ev_window_open_recent_view (EV_WINDOW (new_window));
-
-#ifdef GDK_WINDOWING_X11
-	GdkSurface *gdk_surface;
-	GtkNative *native;
-#endif
 
 	if (display)
 		gtk_window_set_display (GTK_WINDOW (new_window), display);
@@ -668,21 +661,7 @@ ev_application_open_recent_view (EvApplication *application,
 	if (!gtk_widget_get_realized (new_window))
 		gtk_widget_realize (new_window);
 
-#ifdef GDK_WINDOWING_X11
-	native = gtk_widget_get_native (GTK_WIDGET (new_window));
-	if (native) {
-		gdk_surface = gtk_native_get_surface (native);
-		if (GDK_IS_X11_SURFACE (gdk_surface)) {
-			if (timestamp <= 0)
-				timestamp = gdk_x11_get_server_time (gdk_surface);
-			gdk_x11_surface_set_user_time (gdk_surface, timestamp);
-			gtk_window_present (GTK_WINDOW (new_window));
-		}
-	} else
-#endif /* GDK_WINDOWING_X11 */
-	{
-		gtk_window_present (GTK_WINDOW (new_window));
-	}
+	gtk_window_present (GTK_WINDOW (new_window));
 }
 
 #ifdef ENABLE_DBUS
