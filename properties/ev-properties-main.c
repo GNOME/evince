@@ -171,7 +171,6 @@ ev_properties_get_models (NautilusPropertiesModelProvider *provider,
 	GList *models = NULL;
 	NautilusFileInfo *file;
 	gchar *uri = NULL;
-	gchar *mime_type = NULL;
 	NautilusPropertiesModel *properties_group;
 
 	/* only add properties page if a single file is selected */
