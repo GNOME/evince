@@ -31,9 +31,6 @@
 #include <glib/gstdio.h>
 #include <gtk/gtk.h>
 #include <adwaita.h>
-#ifdef GDK_WINDOWING_X11
-#include <gdk/x11/gdkx.h>
-#endif
 #include <unistd.h>
 
 #include "ev-application.h"
@@ -538,11 +535,6 @@ ev_application_open_uri_in_window (EvApplication  *application,
 				   const gchar    *search_string,
 				   guint           timestamp)
 {
-#ifdef GDK_WINDOWING_X11
-	GdkSurface *gdk_surface;
-	GtkNative *native;
-#endif
-
         if (uri == NULL)
                 uri = application->uri;
 
@@ -555,20 +547,8 @@ ev_application_open_uri_in_window (EvApplication  *application,
 
 	if (!gtk_widget_get_realized (GTK_WIDGET (ev_window)))
 		gtk_widget_realize (GTK_WIDGET (ev_window));
-#ifdef GDK_WINDOWING_X11
-	native = gtk_widget_get_native (GTK_WIDGET (ev_window));
-	gdk_surface = gtk_native_get_surface (native);
-	if (GDK_IS_X11_SURFACE (gdk_surface)) {
-		if (timestamp <= 0)
-			timestamp = gdk_x11_get_server_time (gdk_surface);
-		gdk_x11_surface_set_user_time (gdk_surface, timestamp);
 
-		gtk_window_present (GTK_WINDOW (ev_window));
-	} else
-#endif /* GDK_WINDOWING_X11 */
-	{
-		gtk_window_present (GTK_WINDOW (ev_window));
-	}
+	gtk_window_present (GTK_WINDOW (ev_window));
 }
 
 static void
