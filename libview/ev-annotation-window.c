@@ -93,7 +93,6 @@ ev_annotation_window_set_color (EvAnnotationWindow *window,
 	GtkCssProvider     *css_provider = gtk_css_provider_new ();
 	g_autofree char    *rgba_str = gdk_rgba_to_string (color);
 	g_autofree char    *css_data = NULL;
-	g_autoptr (GError)  error = NULL;
 	g_autoptr (GdkRGBA) icon_color = ev_color_contrast_get_best_foreground_color (color);
 	g_autofree char    *icon_color_str = gdk_rgba_to_string (icon_color);
 	css_data = g_strdup_printf ("button {border-color: %1$s; color: %2$s; -gtk-icon-shadow:0 0; box-shadow:0 0;}\n"
@@ -106,9 +105,7 @@ ev_annotation_window_set_color (EvAnnotationWindow *window,
 				    "evannotationwindow {padding-left: 2px; padding-right: 2px;}",
 				    rgba_str, icon_color_str);
 
-	gtk_css_provider_load_from_data (css_provider, css_data, strlen (css_data));
-	if (error != NULL)
-		g_error ("%s", error->message);
+	gtk_css_provider_load_from_string (css_provider, css_data);
 
 	gtk_style_context_add_provider (gtk_widget_get_style_context (GTK_WIDGET (window)),
 					GTK_STYLE_PROVIDER (css_provider), GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
