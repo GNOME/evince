@@ -7269,6 +7269,14 @@ ev_window_get_dbus_object_path (EvWindow *ev_window)
 #endif
 }
 
+
+/**
+ * ev_window_get_toolbar:
+ *
+ * @ev_window: the #EvWindow
+ *
+ * Returns: (transfer none): the #AdwHeaderBar that represents the toolbar of the window.
+ */
 AdwHeaderBar *
 ev_window_get_toolbar (EvWindow *ev_window)
 {
@@ -7293,14 +7301,19 @@ ev_window_focus_view (EvWindow *ev_window)
 	gtk_widget_grab_focus (priv->view);
 }
 
+
+/**
+ * ev_window_get_metadata:
+ *
+ * @ev_window: the #EvWindow
+ *
+ * Returns: (transfer none): the #EvMetadata of the document shown in the window.
+ */
 EvMetadata *
 ev_window_get_metadata (EvWindow *ev_window)
 {
-	EvWindowPrivate *priv;
-
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
 	g_return_val_if_fail (EV_WINDOW (ev_window), NULL);
-
-	priv = GET_PRIVATE (ev_window);
 
 	return priv->metadata;
 }
