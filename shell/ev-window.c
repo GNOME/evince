@@ -2381,6 +2381,27 @@ set_filenames (EvWindow *ev_window, GFile *f)
 		priv->edit_name = g_file_get_basename (f);
 }
 
+static void
+open_uri_check_local_cb (GObject      *object,
+                         GAsyncResult *res,
+                         gpointer      user_data)
+{
+	EvWindow *ev_window = user_data;
+	EvWindowPrivate *priv = GET_PRIVATE (ev_window);
+	GFile *source_file = G_FILE (object);
+	g_autoptr (GFileInputStream) source_stream = NULL;
+
+	source_stream = g_file_read_finish (source_file, res, NULL);
+
+	if (source_stream && !g_seekable_can_seek (G_SEEKABLE (source_stream))) {
+		ev_window_load_file_remote (ev_window, source_file);
+	} else {
+		ev_window_show_loading_message (ev_window);
+		g_object_unref (source_file);
+		ev_job_scheduler_push_job (priv->load_job, EV_JOB_PRIORITY_NONE);
+	}
+}
+
 void
 ev_window_open_uri (EvWindow       *ev_window,
 		    const char     *uri,
@@ -2454,9 +2475,12 @@ ev_window_open_uri (EvWindow       *ev_window,
 	if (path == NULL && !priv->local_uri) {
 		ev_window_load_file_remote (ev_window, source_file);
 	} else {
-		ev_window_show_loading_message (ev_window);
-		g_object_unref (source_file);
-		ev_job_scheduler_push_job (priv->load_job, EV_JOB_PRIORITY_NONE);
+		/* source_file is probably local, but make sure it's seekable
+		 * before loading it directly.
+		 */
+		g_file_read_async (source_file,
+				   G_PRIORITY_DEFAULT, NULL,
+				   open_uri_check_local_cb, ev_window);
 	}
 }
 
