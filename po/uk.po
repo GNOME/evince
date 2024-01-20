@@ -3,13 +3,13 @@
 # This file is distributed under the same license as the evince package.
 # Maxim Dziumanenko <dziumanenko@gmail.com>, 2005-2010.
 # Daniel Korostil <ted.korostiled@gmail.com>, 2013, 2014, 2015, 2016, 2017.
-# Yuri Chornoivan <yurchor@ukr.net>, 2020, 2021, 2022, 2023.
+# Yuri Chornoivan <yurchor@ukr.net>, 2020, 2021, 2022, 2023, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: evince\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
-"POT-Creation-Date: 2023-12-05 08:41+0000\n"
-"PO-Revision-Date: 2023-12-05 17:12+0200\n"
+"POT-Creation-Date: 2024-01-19 13:35+0000\n"
+"PO-Revision-Date: 2024-01-20 21:51+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
 "Language: uk\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Lokalize 20.12.0\n"
+"X-Generator: Lokalize 23.04.1\n"
 "X-Project-Style: gnome\n"
 
 #: backend/comics/comics-document.c:190 backend/comics/comics-document.c:261
@@ -439,9 +439,10 @@ msgstr "Простий і зрозумілий інтерфейс"
 msgid "Advanced highlighting and annotation"
 msgstr "Широкі можливості із позначення та анотування документів"
 
-#: data/org.gnome.Evince.metainfo.xml.in:222
-msgid "Restore libraries soname."
-msgstr "Відновлення so-назв бібліотек."
+#. developer_name tag deprecated with Appstream 1.0
+#: data/org.gnome.Evince.metainfo.xml.in:49
+msgid "The GNOME Project"
+msgstr "Проєкт GNOME"
 
 #: data/org.gnome.Evince-previewer.desktop.in.in:3
 msgid "Print Preview"
@@ -2162,6 +2163,9 @@ msgstr "РЯДОК"
 #: shell/main.c:83
 msgid "[FILE…]"
 msgstr "[ФАЙЛ…]"
+
+#~ msgid "Restore libraries soname."
+#~ msgstr "Відновлення so-назв бібліотек."
 
 #~ msgid "Save Current Settings as Defa_ult"
 #~ msgstr "Зберегти поточні налаштування як _типові"
