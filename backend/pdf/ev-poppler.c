@@ -101,7 +101,6 @@ struct _PdfDocument
 
 	PopplerFontInfo *font_info;
 	PopplerFontsIter *fonts_iter;
-	int fonts_scanned_pages;
 	gboolean missing_fonts;
 
 	PdfPrintContext *print_ctx;
@@ -819,17 +818,6 @@ pdf_document_security_iface_init (EvDocumentSecurityInterface *iface)
 	iface->set_password = pdf_document_set_password;
 }
 
-static gdouble
-pdf_document_fonts_get_progress (EvDocumentFonts *document_fonts)
-{
-	PdfDocument *pdf_document = PDF_DOCUMENT (document_fonts);
-	int n_pages;
-
-        n_pages = pdf_document_get_n_pages (EV_DOCUMENT (pdf_document));
-
-	return (double)pdf_document->fonts_scanned_pages / (double)n_pages;
-}
-
 static gboolean
 pdf_document_fonts_scan (EvDocumentFonts *document_fonts,
 			 int              n_pages)
@@ -847,12 +835,9 @@ pdf_document_fonts_scan (EvDocumentFonts *document_fonts,
 		poppler_fonts_iter_free (pdf_document->fonts_iter);
 	}
 
-	pdf_document->fonts_scanned_pages += n_pages;
-
 	result = poppler_font_info_scan (pdf_document->font_info, n_pages,
 				         &pdf_document->fonts_iter);
 	if (!result) {
-		pdf_document->fonts_scanned_pages = 0;
 		poppler_font_info_free (pdf_document->font_info);
 		pdf_document->font_info = NULL;
 	}
@@ -1052,7 +1037,6 @@ pdf_document_document_fonts_iface_init (EvDocumentFontsInterface *iface)
 	iface->fill_model = pdf_document_fonts_fill_model;
 	iface->get_fonts_summary = pdf_document_fonts_get_fonts_summary;
 	iface->scan = pdf_document_fonts_scan;
-	iface->get_progress = pdf_document_fonts_get_progress;
 }
 
 static gboolean
