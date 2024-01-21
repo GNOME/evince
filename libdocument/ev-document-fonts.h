@@ -55,7 +55,6 @@ struct _EvDocumentFontsInterface
         /* Methods */
         gboolean     (* scan)              (EvDocumentFonts *document_fonts,
                                             int              n_pages);
-        double       (* get_progress)      (EvDocumentFonts *document_fonts);
         void         (* fill_model)        (EvDocumentFonts *document_fonts,
                                             GtkTreeModel    *model);
         const gchar *(* get_fonts_summary) (EvDocumentFonts *document_fonts);
@@ -64,8 +63,6 @@ struct _EvDocumentFontsInterface
 EV_PUBLIC
 gboolean     ev_document_fonts_scan              (EvDocumentFonts *document_fonts,
                                                   int              n_pages);
-EV_PUBLIC
-double       ev_document_fonts_get_progress      (EvDocumentFonts *document_fonts);
 EV_PUBLIC
 void         ev_document_fonts_fill_model        (EvDocumentFonts *document_fonts,
                                                   GtkTreeModel    *model);

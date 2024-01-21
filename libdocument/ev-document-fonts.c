@@ -32,14 +32,6 @@ ev_document_fonts_default_init (EvDocumentFontsInterface *klass)
 {
 }
 
-double
-ev_document_fonts_get_progress (EvDocumentFonts *document_fonts)
-{
-	EvDocumentFontsInterface *iface = EV_DOCUMENT_FONTS_GET_IFACE (document_fonts);
-
-	return iface->get_progress (document_fonts);
-}
-
 gboolean
 ev_document_fonts_scan (EvDocumentFonts *document_fonts,
 			int              n_pages)
