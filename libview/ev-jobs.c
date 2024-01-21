@@ -90,17 +90,11 @@ enum {
 };
 
 enum {
-	FONTS_UPDATED,
-	FONTS_LAST_SIGNAL
-};
-
-enum {
 	FIND_UPDATED,
 	FIND_LAST_SIGNAL
 };
 
 static guint job_signals[LAST_SIGNAL] = { 0 };
-static guint job_fonts_signals[FONTS_LAST_SIGNAL] = { 0 };
 static guint job_find_signals[FIND_LAST_SIGNAL] = { 0 };
 
 G_DEFINE_ABSTRACT_TYPE (EvJob, ev_job, G_TYPE_OBJECT)
@@ -1271,55 +1265,34 @@ ev_job_thumbnail_texture_get_texture (EvJobThumbnailTexture *job)
 static void
 ev_job_fonts_init (EvJobFonts *job)
 {
-	EV_JOB (job)->run_mode = EV_JOB_RUN_MAIN_LOOP;
+	EV_JOB (job)->run_mode = EV_JOB_RUN_THREAD;
 }
 
 static gboolean
 ev_job_fonts_run (EvJob *job)
 {
-	EvJobFonts      *job_fonts = EV_JOB_FONTS (job);
-	EvDocumentFonts *fonts = EV_DOCUMENT_FONTS (job->document);
-	int64_t          sysprof_begin;
-	gboolean         scan_completed;
+	EvDocument      *document = ev_job_get_document (job);
+	gint             npages;
+	gboolean         fonts_remaining;
 
 	ev_debug_message (DEBUG_JOBS, NULL);
+	EV_PROFILER_START (EV_GET_TYPE_NAME (job));
 
-	/* Do not block the main loop */
-	if (!ev_document_doc_mutex_trylock ())
-		return TRUE;
+	npages = ev_document_get_n_pages (document);
 
-	if (!ev_document_fc_mutex_trylock ())
-		return TRUE;
+	ev_document_doc_mutex_lock ();
+	ev_document_fc_mutex_lock ();
 
-#ifdef EV_ENABLE_DEBUG
-	/* We use the #ifdef in this case because of the if */
-	if (ev_document_fonts_get_progress (fonts) == 0)
-		/* Skipping EV_PROFILER_START () that would declare the
-		   variables within the `if` scope.
-		 */
-		sysprof_begin = SYSPROF_CAPTURE_CURRENT_TIME;
-#endif
-
-	scan_completed = !ev_document_fonts_scan (fonts, 20);
-	g_signal_emit (job_fonts, job_fonts_signals[FONTS_UPDATED], 0,
-		       ev_document_fonts_get_progress (fonts));
+	fonts_remaining = ev_document_fonts_scan (EV_DOCUMENT_FONTS (document), npages);
+	g_assert (fonts_remaining == TRUE);
 
 	ev_document_fc_mutex_unlock ();
 	ev_document_doc_mutex_unlock ();
 
-	if (scan_completed)
-		ev_job_succeeded (job);
-#ifdef EV_ENABLE_DEBUG
-		/* Because we skipped EV_PROFILER_START () to escape the
-		   scope, we must declare sysprof_name, which otherwise would
-		   be in the macro
-		 */
-		const char* sysprof_name  = EV_GET_TYPE_NAME (job);
-		EV_PROFILER_STOP ();
-#endif
-	}
+	ev_job_succeeded (job);
 
-	return !scan_completed;
+	EV_PROFILER_STOP ();
+	return FALSE;
 }
 
 static void
@@ -1328,16 +1301,6 @@ ev_job_fonts_class_init (EvJobFontsClass *class)
 	EvJobClass *job_class = EV_JOB_CLASS (class);
 
 	job_class->run = ev_job_fonts_run;
-
-	job_fonts_signals[FONTS_UPDATED] =
-		g_signal_new ("updated",
-			      EV_TYPE_JOB_FONTS,
-			      G_SIGNAL_RUN_LAST,
-			      G_STRUCT_OFFSET (EvJobFontsClass, updated),
-			      NULL, NULL,
-			      g_cclosure_marshal_VOID__DOUBLE,
-			      G_TYPE_NONE,
-			      1, G_TYPE_DOUBLE);
 }
 
 EvJob *
