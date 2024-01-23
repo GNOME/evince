@@ -1188,7 +1188,10 @@ expand_open_links (GtkTreeView  *tree_view,
 static gint
 page_link_tree_sort (gconstpointer a, gconstpointer b, void *data)
 {
-	return GPOINTER_TO_INT (a) - GPOINTER_TO_INT (b);
+	gint a_int = GPOINTER_TO_INT (a);
+	gint b_int = GPOINTER_TO_INT (b);
+
+	return (a_int < b_int) ? -1 : (a_int > b_int);
 }
 
 static gboolean
