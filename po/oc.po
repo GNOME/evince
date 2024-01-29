@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Evince HEAD\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
-"POT-Creation-Date: 2023-10-17 13:53+0000\n"
-"PO-Revision-Date: 2023-10-18 18:01+0200\n"
+"POT-Creation-Date: 2024-01-21 13:44+0000\n"
+"PO-Revision-Date: 2024-01-29 11:06+0100\n"
 "Last-Translator: Quentin PAGÈS\n"
 "Language-Team: Tot En Òc\n"
 "Language: oc\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 3.4\n"
+"X-Generator: Poedit 3.4.2\n"
 "X-Project-Style: gnome\n"
 
 #: backend/comics/comics-document.c:190 backend/comics/comics-document.c:261
@@ -105,50 +105,50 @@ msgid "Adds support for reading PDF Documents"
 msgstr "Apond la presa en carga de la lectura dels documents PDF"
 
 #. translators: this is the document security state
-#: backend/pdf/ev-poppler.c:725 backend/pdf/ev-poppler.c:731
+#: backend/pdf/ev-poppler.c:726 backend/pdf/ev-poppler.c:732
 #: properties/ev-properties-view.c:429
 msgid "Yes"
 msgstr "Òc"
 
 #. translators: this is the document security state
-#: backend/pdf/ev-poppler.c:728 backend/pdf/ev-poppler.c:731
+#: backend/pdf/ev-poppler.c:729 backend/pdf/ev-poppler.c:732
 #: properties/ev-properties-view.c:431
 msgid "No"
 msgstr "Non"
 
-#: backend/pdf/ev-poppler.c:867
+#: backend/pdf/ev-poppler.c:868
 msgid "Type 1"
 msgstr "Tipe 1"
 
-#: backend/pdf/ev-poppler.c:869
+#: backend/pdf/ev-poppler.c:870
 msgid "Type 1C"
 msgstr "Tipe 1C"
 
-#: backend/pdf/ev-poppler.c:871
+#: backend/pdf/ev-poppler.c:872
 msgid "Type 3"
 msgstr "Tipe 3"
 
-#: backend/pdf/ev-poppler.c:873
+#: backend/pdf/ev-poppler.c:874
 msgid "TrueType"
 msgstr "TrueType"
 
-#: backend/pdf/ev-poppler.c:875
+#: backend/pdf/ev-poppler.c:876
 msgid "Type 1 (CID)"
 msgstr "Tipe 1 (CID)"
 
-#: backend/pdf/ev-poppler.c:877
+#: backend/pdf/ev-poppler.c:878
 msgid "Type 1C (CID)"
 msgstr "Tipe 1C (CID)"
 
-#: backend/pdf/ev-poppler.c:879
+#: backend/pdf/ev-poppler.c:880
 msgid "TrueType (CID)"
 msgstr "TrueTipe (CID)"
 
-#: backend/pdf/ev-poppler.c:881
+#: backend/pdf/ev-poppler.c:882
 msgid "Unknown font type"
 msgstr "Tipe de poliça desconegut"
 
-#: backend/pdf/ev-poppler.c:925
+#: backend/pdf/ev-poppler.c:926
 msgid ""
 "This document contains non-embedded fonts that are not from the PDF Standard "
 "14 fonts. If the substitute fonts selected by fontconfig are not the same as "
@@ -159,11 +159,11 @@ msgstr ""
 "« fontconfig » son pas las meteissas que las poliças utilizadas per crear lo "
 "PDF, lo rendut risca d'èsser incorrècte."
 
-#: backend/pdf/ev-poppler.c:930
+#: backend/pdf/ev-poppler.c:931
 msgid "All fonts are either standard or embedded."
 msgstr "Totas las poliças son siá estandards o integradas."
 
-#: backend/pdf/ev-poppler.c:960
+#: backend/pdf/ev-poppler.c:961
 msgid "No name"
 msgstr "Sens nom"
 
@@ -177,20 +177,20 @@ msgstr "Sens nom"
 #. Author: None
 #. Keywords: None
 #.
-#: backend/pdf/ev-poppler.c:969 libview/ev-print-operation.c:2691
+#: backend/pdf/ev-poppler.c:970 libview/ev-print-operation.c:2691
 #: properties/ev-properties-view.c:230
 msgid "None"
 msgstr "Pas cap"
 
-#: backend/pdf/ev-poppler.c:977
+#: backend/pdf/ev-poppler.c:978
 msgid "Embedded subset"
 msgstr "Sosensemble integrat"
 
-#: backend/pdf/ev-poppler.c:979
+#: backend/pdf/ev-poppler.c:980
 msgid "Embedded"
 msgstr "Integrat"
 
-#: backend/pdf/ev-poppler.c:981
+#: backend/pdf/ev-poppler.c:982
 msgid "Not embedded"
 msgstr "Pas integrat"
 
@@ -199,7 +199,7 @@ msgstr "Pas integrat"
 #. * type. Example:
 #. * "Type 1 (One of the Standard 14 Fonts)"
 #.
-#: backend/pdf/ev-poppler.c:988
+#: backend/pdf/ev-poppler.c:989
 msgid " (One of the Standard 14 Fonts)"
 msgstr " (una de las 14 poliças estandardas)"
 
@@ -208,7 +208,7 @@ msgstr " (una de las 14 poliças estandardas)"
 #. * type. Example:
 #. * "TrueType (Not one of the Standard 14 Fonts)"
 #.
-#: backend/pdf/ev-poppler.c:995
+#: backend/pdf/ev-poppler.c:996
 msgid " (Not one of the Standard 14 Fonts)"
 msgstr " (pas una de las 14 poliças estandardas)"
 
@@ -222,7 +222,7 @@ msgstr " (pas una de las 14 poliças estandardas)"
 #. * Substituting with TeXGyreTermes-Regular
 #. * (/usr/share/textmf/.../texgyretermes-regular.otf)
 #.
-#: backend/pdf/ev-poppler.c:1014
+#: backend/pdf/ev-poppler.c:1015
 #, c-format
 msgid ""
 "%s%s\n"
@@ -246,7 +246,7 @@ msgstr ""
 #. * Encoding: Custom
 #. * Embedded subset
 #.
-#: backend/pdf/ev-poppler.c:1032
+#: backend/pdf/ev-poppler.c:1033
 #, c-format
 msgid ""
 "%s%s\n"
@@ -439,6 +439,11 @@ msgstr "Una interfàcia clara e simpla"
 msgid "Advanced highlighting and annotation"
 msgstr "Anotacion e suslinhatge avançats"
 
+#. developer_name tag deprecated with Appstream 1.0
+#: data/org.gnome.Evince.metainfo.xml.in:49
+msgid "The GNOME Project"
+msgstr "Lo projècte GNOME"
+
 #: data/org.gnome.Evince-previewer.desktop.in.in:3
 msgid "Print Preview"
 msgstr "Apercebut abans impression"
@@ -507,7 +512,7 @@ msgstr "sus %d"
 
 #: libmisc/ev-page-action-widget.c:201 shell/ev-history.c:454
 #: shell/ev-sidebar-bookmarks.c:343 shell/ev-window.c:954
-#: shell/ev-window.c:5155
+#: shell/ev-window.c:5159
 #, c-format
 msgid "Page %s"
 msgstr "Pagina %s"
@@ -1351,7 +1356,7 @@ msgstr "Senhal requesit"
 
 #: shell/ev-password-view.c:238 shell/ev-sidebar-attachments.c:493
 #: shell/ev-window.c:2877 shell/ev-window.c:3174 shell/ev-window.c:4059
-#: shell/ev-window.c:6983 shell/ev-window.c:7209
+#: shell/ev-window.c:6987 shell/ev-window.c:7213
 msgid "_Cancel"
 msgstr "_Anullar"
 
@@ -1421,7 +1426,7 @@ msgstr "Page %d"
 msgid "No Comment"
 msgstr "Pas cap de comentari"
 
-#: shell/ev-sidebar-annotations.c:564 shell/ev-window.c:7592
+#: shell/ev-sidebar-annotations.c:564 shell/ev-window.c:7596
 msgid "Annotations"
 msgstr "Anotacions"
 
@@ -1439,26 +1444,26 @@ msgstr "Lo fichièr « %s » existís ja. Lo remplaçar subrecargarà son cont
 msgid "_Replace"
 msgstr "_Remplaçar"
 
-#: shell/ev-sidebar-attachments.c:892 shell/ev-window.c:7616
+#: shell/ev-sidebar-attachments.c:892 shell/ev-window.c:7620
 msgid "Attachments"
 msgstr "Pèças juntas"
 
-#: shell/ev-sidebar-bookmarks.c:553 shell/ev-window.c:7600
+#: shell/ev-sidebar-bookmarks.c:553 shell/ev-window.c:7604
 msgid "Bookmarks"
 msgstr "Signets"
 
-#: shell/ev-sidebar-layers.c:439 shell/ev-window.c:7628
+#: shell/ev-sidebar-layers.c:439 shell/ev-window.c:7632
 msgid "Layers"
 msgstr "Jaces"
 
 #. Translators: This is the title for the sidebar pane that
 #. * shows the Outline or Table of Contents of the document.
 #.
-#: shell/ev-sidebar-links.c:1450 shell/ev-window.c:7580
+#: shell/ev-sidebar-links.c:1450 shell/ev-window.c:7584
 msgid "Outline"
 msgstr "Esquèma"
 
-#: shell/ev-sidebar-thumbnails.c:1038 shell/ev-window.c:7563
+#: shell/ev-sidebar-thumbnails.c:1038 shell/ev-window.c:7567
 msgid "Thumbnails"
 msgstr "Vinhetas"
 
@@ -1562,7 +1567,7 @@ msgstr "Mandadís de l'imatge (%d %%)"
 msgid "Save As…"
 msgstr "Enregistrar jos…"
 
-#: shell/ev-window.c:3173 shell/ev-window.c:6982 shell/ev-window.c:7208
+#: shell/ev-window.c:3173 shell/ev-window.c:6986 shell/ev-window.c:7212
 msgid "_Save"
 msgstr "_Enregistrar"
 
@@ -1671,23 +1676,23 @@ msgstr ""
 "Cédric Valmary <cvalmary@yahoo.fr>\n"
 "Quentin PAGÈS"
 
-#: shell/ev-window.c:4713
+#: shell/ev-window.c:4717
 msgid "Running in presentation mode"
 msgstr "Execucion en mòde presentacion"
 
-#: shell/ev-window.c:5700
+#: shell/ev-window.c:5704
 msgid "The attachment could not be saved."
 msgstr "La pèça junta pòt pas èsser enregistrada."
 
-#: shell/ev-window.c:6022
+#: shell/ev-window.c:6026
 msgid "Enable caret navigation?"
 msgstr "Activar la navigacion al cursor ?"
 
-#: shell/ev-window.c:6023
+#: shell/ev-window.c:6027
 msgid "_Enable"
 msgstr "_Activar"
 
-#: shell/ev-window.c:6026
+#: shell/ev-window.c:6030
 msgid ""
 "Pressing F7 turns the caret navigation on or off. This feature places a "
 "moveable cursor in text pages, allowing you to move around and select text "
@@ -1698,11 +1703,11 @@ msgstr ""
 "permet de se desplaçar e de seleccionar de tèxte amb vòstre clavièr. Volètz "
 "activar la navigacion amb lo cursor ?"
 
-#: shell/ev-window.c:6031
+#: shell/ev-window.c:6035
 msgid "Don’t show this message again"
 msgstr "Mostrar pas mai aqueste messatge"
 
-#: shell/ev-window.c:6620
+#: shell/ev-window.c:6624
 #, c-format
 msgid ""
 "Security alert: this document has been prevented from opening the file “%s”"
@@ -1710,27 +1715,27 @@ msgstr ""
 "Alterta de seguretat : avèm empachat aquesta document de dobrir lo fichièr "
 "« %s »"
 
-#: shell/ev-window.c:6685
+#: shell/ev-window.c:6689
 msgid "Unable to open external link"
 msgstr "Impossible de dobrir lo ligam extèrne"
 
-#: shell/ev-window.c:6911
+#: shell/ev-window.c:6915
 msgid "Couldn’t find appropriate format to save image"
 msgstr "Impossible de trobar lo format apropriat per enregistrar l'imatge"
 
-#: shell/ev-window.c:6943
+#: shell/ev-window.c:6947
 msgid "The image could not be saved."
 msgstr "L'imatge pòt pas èsser enregistrada."
 
-#: shell/ev-window.c:6979
+#: shell/ev-window.c:6983
 msgid "Save Image"
 msgstr "Enregistrar l'imatge"
 
-#: shell/ev-window.c:7137
+#: shell/ev-window.c:7141
 msgid "Unable to open attachment"
 msgstr "Impossible de dobrir la pèça junta"
 
-#: shell/ev-window.c:7205
+#: shell/ev-window.c:7209
 msgid "Save Attachment"
 msgstr "Enregistrar la pèça junta"
 
