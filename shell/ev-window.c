@@ -1303,7 +1303,7 @@ setup_model_from_metadata (EvWindow *window)
 	gboolean inverted_colors = FALSE;
 	gboolean continuous = FALSE;
 	gboolean dual_page = FALSE;
-	gboolean dual_page_odd_left = FALSE;
+	gboolean dual_page_odd_left = TRUE;
 	gboolean rtl = FALSE;
 	gboolean fullscreen = FALSE;
 	EvWindowPrivate *priv = GET_PRIVATE (window);
@@ -6306,7 +6306,7 @@ static const GActionEntry actions[] = {
 	{ "select-page", ev_window_cmd_focus_page_selector },
 	{ "continuous", NULL, NULL, "true", ev_window_cmd_continuous },
 	{ "dual-page", NULL, NULL, "false", ev_window_cmd_dual },
-	{ "dual-odd-left", NULL, NULL, "false", ev_window_cmd_dual_odd_pages_left },
+	{ "dual-odd-left", NULL, NULL, "true", ev_window_cmd_dual_odd_pages_left },
 	{ "rtl", NULL, NULL, "false", ev_window_cmd_rtl },
 	{ "show-side-pane", NULL, NULL, "false", ev_window_view_cmd_toggle_sidebar },
 	{ "inverted-colors", NULL, NULL, "false", ev_window_cmd_view_inverted_colors },
