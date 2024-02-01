@@ -53,16 +53,14 @@ struct _EvDocumentFontsInterface
 	GTypeInterface base_iface;
 
         /* Methods */
-        gboolean     (* scan)              (EvDocumentFonts *document_fonts,
-                                            int              n_pages);
+        void         (* scan)              (EvDocumentFonts *document_fonts);
         void         (* fill_model)        (EvDocumentFonts *document_fonts,
                                             GtkTreeModel    *model);
         const gchar *(* get_fonts_summary) (EvDocumentFonts *document_fonts);
 };
 
 EV_PUBLIC
-gboolean     ev_document_fonts_scan              (EvDocumentFonts *document_fonts,
-                                                  int              n_pages);
+void         ev_document_fonts_scan              (EvDocumentFonts *document_fonts);
 EV_PUBLIC
 void         ev_document_fonts_fill_model        (EvDocumentFonts *document_fonts,
                                                   GtkTreeModel    *model);

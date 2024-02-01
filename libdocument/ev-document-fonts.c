@@ -32,13 +32,12 @@ ev_document_fonts_default_init (EvDocumentFontsInterface *klass)
 {
 }
 
-gboolean
-ev_document_fonts_scan (EvDocumentFonts *document_fonts,
-			int              n_pages)
+void
+ev_document_fonts_scan (EvDocumentFonts *document_fonts)
 {
 	EvDocumentFontsInterface *iface = EV_DOCUMENT_FONTS_GET_IFACE (document_fonts);
 
-	return iface->scan (document_fonts, n_pages);
+	iface->scan (document_fonts);
 }
 
 void
