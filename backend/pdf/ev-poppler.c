@@ -99,7 +99,6 @@ struct _PdfDocument
 	gboolean forms_modified;
 	gboolean annots_modified;
 
-	PopplerFontInfo *font_info;
 	PopplerFontsIter *fonts_iter;
 	gboolean missing_fonts;
 
@@ -185,7 +184,6 @@ pdf_document_dispose (GObject *object)
 	}
 
         g_clear_object (&pdf_document->document);
-        g_clear_pointer (&pdf_document->font_info, poppler_font_info_free);
         g_clear_pointer (&pdf_document->fonts_iter, poppler_fonts_iter_free);
 
 	G_OBJECT_CLASS (pdf_document_parent_class)->dispose (object);
@@ -818,31 +816,24 @@ pdf_document_security_iface_init (EvDocumentSecurityInterface *iface)
 	iface->set_password = pdf_document_set_password;
 }
 
-static gboolean
-pdf_document_fonts_scan (EvDocumentFonts *document_fonts,
-			 int              n_pages)
+static void
+pdf_document_fonts_scan (EvDocumentFonts *document_fonts)
 {
 	PdfDocument *pdf_document = PDF_DOCUMENT (document_fonts);
-	gboolean result;
+	PopplerFontInfo *font_info;
+	PopplerFontsIter *fonts_iter;
+	int n_pages;
 
-	g_return_val_if_fail (PDF_IS_DOCUMENT (document_fonts), FALSE);
+	g_return_if_fail (PDF_IS_DOCUMENT (document_fonts));
 
-	if (pdf_document->font_info == NULL) {
-		pdf_document->font_info = poppler_font_info_new (pdf_document->document);
-	}
+	font_info = poppler_font_info_new (pdf_document->document);
+	n_pages = pdf_document_get_n_pages (EV_DOCUMENT (document_fonts));
+	poppler_font_info_scan (font_info, n_pages, &fonts_iter);
 
-	if (pdf_document->fonts_iter) {
-		poppler_fonts_iter_free (pdf_document->fonts_iter);
-	}
+	g_clear_pointer (&pdf_document->fonts_iter, poppler_fonts_iter_free);
+	pdf_document->fonts_iter = fonts_iter;
 
-	result = poppler_font_info_scan (pdf_document->font_info, n_pages,
-				         &pdf_document->fonts_iter);
-	if (!result) {
-		poppler_font_info_free (pdf_document->font_info);
-		pdf_document->font_info = NULL;
-	}
-
-	return result;
+	poppler_font_info_free (font_info);
 }
 
 static const char *

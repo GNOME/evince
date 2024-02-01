@@ -1272,19 +1272,14 @@ static gboolean
 ev_job_fonts_run (EvJob *job)
 {
 	EvDocument      *document = ev_job_get_document (job);
-	gint             npages;
-	gboolean         fonts_remaining;
 
 	ev_debug_message (DEBUG_JOBS, NULL);
 	EV_PROFILER_START (EV_GET_TYPE_NAME (job));
 
-	npages = ev_document_get_n_pages (document);
-
 	ev_document_doc_mutex_lock ();
 	ev_document_fc_mutex_lock ();
 
-	fonts_remaining = ev_document_fonts_scan (EV_DOCUMENT_FONTS (document), npages);
-	g_assert (fonts_remaining == TRUE);
+	ev_document_fonts_scan (EV_DOCUMENT_FONTS (document));
 
 	ev_document_fc_mutex_unlock ();
 	ev_document_doc_mutex_unlock ();
