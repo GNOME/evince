@@ -55,6 +55,7 @@ struct _EvPageActionWidget
 	GtkTreeModel *filter_model;
 	GtkTreeModel *model;
 	GtkEntryCompletion *completion;
+	guint idle_completion_id;
 };
 
 static guint widget_signals[WIDGET_N_SIGNALS] = {0, };
@@ -216,6 +217,8 @@ static gboolean
 disable_completion_search (EvPageActionWidget *action_widget)
 {
 	ev_page_action_widget_enable_completion_search (action_widget, FALSE);
+	action_widget->idle_completion_id = 0;
+
 	return G_SOURCE_REMOVE;
 }
 
@@ -226,9 +229,10 @@ focus_out_cb (EvPageActionWidget *action_widget)
                                                 ev_document_model_get_page (action_widget->doc_model));
         g_object_set (action_widget->entry, "xalign", 1.0, NULL);
         ev_page_action_widget_update_max_width (action_widget);
-        g_idle_add ((GSourceFunc)disable_completion_search, action_widget);
+        action_widget->idle_completion_id =
+		g_idle_add ((GSourceFunc)disable_completion_search, action_widget);
 
-        return FALSE;
+        return GDK_EVENT_PROPAGATE;
 }
 
 static void
@@ -344,6 +348,18 @@ ev_page_action_widget_set_model (EvPageActionWidget *action_widget,
 }
 
 static void
+ev_page_action_widget_dispose (GObject *object)
+{
+	EvPageActionWidget *action_widget = EV_PAGE_ACTION_WIDGET (object);
+	if (action_widget->idle_completion_id) {
+		g_source_remove (action_widget->idle_completion_id);
+		action_widget->idle_completion_id = 0;
+	}
+
+        G_OBJECT_CLASS (ev_page_action_widget_parent_class)->dispose (object);
+}
+
+static void
 ev_page_action_widget_finalize (GObject *object)
 {
 	EvPageActionWidget *action_widget = EV_PAGE_ACTION_WIDGET (object);
@@ -394,6 +410,7 @@ ev_page_action_widget_class_init (EvPageActionWidgetClass *klass)
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
         GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
 
+	object_class->dispose = ev_page_action_widget_dispose;
 	object_class->finalize = ev_page_action_widget_finalize;
         widget_class->get_preferred_width = ev_page_action_widget_get_preferred_width;
 
