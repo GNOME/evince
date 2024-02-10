@@ -171,6 +171,46 @@ page_scroll_cb (EvPageActionWidget *action_widget, GdkEventScroll *event)
 	return TRUE;
 }
 
+static inline gboolean
+is_roman (const char s)
+{
+	return s == 'l' || s == 'L' ||
+	       s == 'x' || s == 'X' ||
+	       s == 'v' || s == 'V' ||
+	       s == 'i' || s == 'I';
+}
+
+/* Returns TRUE if the passed string is a number [0-9] or
+ * a roman numeral i.e. only have these characters [lxvi] .
+ * Returns FALSE otherwise. */
+static gboolean
+is_roman_numeral_or_number (const char *text)
+{
+	gboolean look_for_roman;
+	gboolean look_for_digits;
+	char *s;
+
+	s = (char *) text;
+	g_strstrip (s);
+
+	look_for_digits = g_ascii_isdigit (*s);
+	look_for_roman = look_for_digits ? FALSE : is_roman (*s);
+
+	if (!look_for_digits && !look_for_roman)
+		return FALSE;
+
+	s++;
+	while (*s != 0) {
+		if (look_for_digits && !g_ascii_isdigit (*s))
+			return FALSE;
+		if (look_for_roman && !is_roman (*s))
+			return FALSE;
+		s++;
+	}
+
+	return TRUE;
+}
+
 static void
 activate_cb (EvPageActionWidget *action_widget)
 {
@@ -182,6 +222,7 @@ activate_cb (EvPageActionWidget *action_widget)
 	gchar *link_text;
 	gchar *new_text;
 	gint current_page;
+	gboolean has_sidebar_links;
 
 	model = action_widget->doc_model;
 	current_page = ev_document_model_get_page (model);
@@ -195,6 +236,17 @@ activate_cb (EvPageActionWidget *action_widget)
 		gtk_entry_set_text (GTK_ENTRY (action_widget->entry), new_text);
 		text = gtk_entry_get_text (GTK_ENTRY (action_widget->entry));
 		g_free (new_text);
+	}
+
+	has_sidebar_links = EV_IS_DOCUMENT_LINKS (action_widget->document) &&
+		ev_document_links_has_document_links (EV_DOCUMENT_LINKS (action_widget->document));
+
+	if (has_sidebar_links && !is_roman_numeral_or_number (text)) {
+		/* Change to search-outline mode */
+		ev_page_action_widget_set_temporary_entry_width (action_widget, 15);
+		ev_page_action_widget_enable_completion_search (action_widget, TRUE);
+		g_signal_emit_by_name (GTK_EDITABLE (action_widget->entry), "changed", NULL);
+		return;
 	}
 
 	link_dest = ev_link_dest_new_page_label (text);
