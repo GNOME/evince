@@ -18,14 +18,14 @@
 # Mingcong Bai <jeffbai@aosc.xyz>, 2017, 2018.
 # Dingzhong Chen <wsxy162@gmail.com>, 2017, 2018, 2019.
 # Nanling <neithern@outlook.com>, 2023.
-# lumingzh <lumingzh@qq.com>, 2022-2023.
+# lumingzh <lumingzh@qq.com>, 2022-2024.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: evince master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
-"POT-Creation-Date: 2023-10-23 19:15+0000\n"
-"PO-Revision-Date: 2023-10-24 20:02+0800\n"
+"POT-Creation-Date: 2024-01-21 13:44+0000\n"
+"PO-Revision-Date: 2024-02-22 20:28+0800\n"
 "Last-Translator: lumingzh <lumingzh@qq.com>\n"
 "Language-Team: Chinese - China <i18n-zh@googlegroups.com>\n"
 "Language: zh_CN\n"
@@ -33,7 +33,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0\n"
-"X-Generator: Gtranslator 45.2\n"
+"X-Generator: Gtranslator 45.3\n"
 "X-DamnedLies-Scope: partial\n"
 
 #: backend/comics/comics-document.c:190 backend/comics/comics-document.c:261
@@ -430,6 +430,11 @@ msgstr "简洁明了的用户界面"
 msgid "Advanced highlighting and annotation"
 msgstr "高级突出显示和注释"
 
+#. developer_name tag deprecated with Appstream 1.0
+#: data/org.gnome.Evince.metainfo.xml.in:49
+msgid "The GNOME Project"
+msgstr "GNOME 项目"
+
 #: data/org.gnome.Evince-previewer.desktop.in.in:3
 msgid "Print Preview"
 msgstr "打印预览"
@@ -498,7 +503,7 @@ msgstr "共 %d 页"
 
 #: libmisc/ev-page-action-widget.c:201 shell/ev-history.c:454
 #: shell/ev-sidebar-bookmarks.c:343 shell/ev-window.c:954
-#: shell/ev-window.c:5155
+#: shell/ev-window.c:5159
 #, c-format
 msgid "Page %s"
 msgstr "第 %s 页"
@@ -1331,7 +1336,7 @@ msgstr "需要密码"
 
 #: shell/ev-password-view.c:238 shell/ev-sidebar-attachments.c:493
 #: shell/ev-window.c:2877 shell/ev-window.c:3174 shell/ev-window.c:4059
-#: shell/ev-window.c:6983 shell/ev-window.c:7209
+#: shell/ev-window.c:6987 shell/ev-window.c:7213
 msgid "_Cancel"
 msgstr "取消(_C)"
 
@@ -1401,7 +1406,7 @@ msgstr "第 %d 页"
 msgid "No Comment"
 msgstr "无注释"
 
-#: shell/ev-sidebar-annotations.c:564 shell/ev-window.c:7592
+#: shell/ev-sidebar-annotations.c:564 shell/ev-window.c:7596
 msgid "Annotations"
 msgstr "批注"
 
@@ -1419,26 +1424,26 @@ msgstr "文件“%s”已存在。替换该文件将覆盖其内容。"
 msgid "_Replace"
 msgstr "替换(_R)"
 
-#: shell/ev-sidebar-attachments.c:892 shell/ev-window.c:7616
+#: shell/ev-sidebar-attachments.c:892 shell/ev-window.c:7620
 msgid "Attachments"
 msgstr "附件"
 
-#: shell/ev-sidebar-bookmarks.c:553 shell/ev-window.c:7600
+#: shell/ev-sidebar-bookmarks.c:553 shell/ev-window.c:7604
 msgid "Bookmarks"
 msgstr "书签"
 
-#: shell/ev-sidebar-layers.c:439 shell/ev-window.c:7628
+#: shell/ev-sidebar-layers.c:439 shell/ev-window.c:7632
 msgid "Layers"
 msgstr "层"
 
 #. Translators: This is the title for the sidebar pane that
 #. * shows the Outline or Table of Contents of the document.
 #.
-#: shell/ev-sidebar-links.c:1450 shell/ev-window.c:7580
+#: shell/ev-sidebar-links.c:1450 shell/ev-window.c:7584
 msgid "Outline"
 msgstr "大纲"
 
-#: shell/ev-sidebar-thumbnails.c:1038 shell/ev-window.c:7563
+#: shell/ev-sidebar-thumbnails.c:1038 shell/ev-window.c:7567
 msgid "Thumbnails"
 msgstr "缩略图"
 
@@ -1542,7 +1547,7 @@ msgstr "正在上传图片 (%d%%)"
 msgid "Save As…"
 msgstr "另存为…"
 
-#: shell/ev-window.c:3173 shell/ev-window.c:6982 shell/ev-window.c:7208
+#: shell/ev-window.c:3173 shell/ev-window.c:6986 shell/ev-window.c:7212
 msgid "_Save"
 msgstr "保存(S)"
 
@@ -1651,7 +1656,7 @@ msgstr ""
 "Mingcong Bai <jeffbai@aosc.xyz>, 2017, 2018\n"
 "Dingzhong Chen <wsxy162@gmail.com>, 2017, 2018, 2019\n"
 "Yuchen Guo <egyc@live.com>, 2020.\n"
-"lumingzh <lumingzh@qq.com>, 2023\n"
+"lumingzh <lumingzh@qq.com>, 2023-2024\n"
 "\n"
 "Launchpad Contributions:\n"
 "Chen Ming https://launchpad.net/~chenming\n"
@@ -1664,23 +1669,23 @@ msgstr ""
 "rainofchaos https://launchpad.net/~rainofchaos\n"
 "zhangmiao https://launchpad.net/~mymzhang"
 
-#: shell/ev-window.c:4713
+#: shell/ev-window.c:4717
 msgid "Running in presentation mode"
 msgstr "以放映模式运行"
 
-#: shell/ev-window.c:5700
+#: shell/ev-window.c:5704
 msgid "The attachment could not be saved."
 msgstr "无法保存附件。"
 
-#: shell/ev-window.c:6022
+#: shell/ev-window.c:6026
 msgid "Enable caret navigation?"
 msgstr "启用光标浏览？"
 
-#: shell/ev-window.c:6023
+#: shell/ev-window.c:6027
 msgid "_Enable"
 msgstr "启用(_E)"
 
-#: shell/ev-window.c:6026
+#: shell/ev-window.c:6030
 msgid ""
 "Pressing F7 turns the caret navigation on or off. This feature places a "
 "moveable cursor in text pages, allowing you to move around and select text "
@@ -1689,37 +1694,37 @@ msgstr ""
 "按下 F7 可以打开或关闭光标浏览功能。这个功能会在文字页面中显示一个可移动光"
 "标，允许您用键盘四处移动并选择文字。您想要启用光标浏览吗？"
 
-#: shell/ev-window.c:6031
+#: shell/ev-window.c:6035
 msgid "Don’t show this message again"
 msgstr "不再显示这条信息"
 
-#: shell/ev-window.c:6620
+#: shell/ev-window.c:6624
 #, c-format
 msgid ""
 "Security alert: this document has been prevented from opening the file “%s”"
 msgstr "安全提示：已禁止文档打开文件 “%s”"
 
-#: shell/ev-window.c:6685
+#: shell/ev-window.c:6689
 msgid "Unable to open external link"
 msgstr "无法打开外部链接"
 
-#: shell/ev-window.c:6911
+#: shell/ev-window.c:6915
 msgid "Couldn’t find appropriate format to save image"
 msgstr "无法找到合适的格式来保存图像"
 
-#: shell/ev-window.c:6943
+#: shell/ev-window.c:6947
 msgid "The image could not be saved."
 msgstr "无法保存图像。"
 
-#: shell/ev-window.c:6979
+#: shell/ev-window.c:6983
 msgid "Save Image"
 msgstr "保存图像"
 
-#: shell/ev-window.c:7137
+#: shell/ev-window.c:7141
 msgid "Unable to open attachment"
 msgstr "无法打开附件"
 
-#: shell/ev-window.c:7205
+#: shell/ev-window.c:7209
 msgid "Save Attachment"
 msgstr "保存附件"
 
