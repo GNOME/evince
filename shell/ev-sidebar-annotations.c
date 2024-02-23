@@ -355,7 +355,9 @@ job_finished_callback (EvJobAnnots          *job,
 			  G_CALLBACK (sidebar_tree_button_press_cb),
 			  sidebar_annots);
 
+	g_signal_handler_block (selection, priv->selection_changed_id);
 	gtk_tree_store_clear (model);
+	g_signal_handler_unblock (selection, priv->selection_changed_id);
 
 	for (l = job->annots; l; l = g_list_next (l)) {
 		EvMappingList *mapping_list;
