@@ -5,13 +5,13 @@
 # Mikel Olasagasti <hey_neken@mundurat.net>, 2005.
 # Iñaki Larrañaga Murgoitio <dooteo@zundan.com>, 2005, 2006, 2007, 2008, 2009, 2010.
 # Iñaki Larrañaga Murgoitio <dooteo@zundan.com>, 2011, 2012, 2013, 2014, 2015, 2016, 2017.
-# Asier Sarasua Garmendia <asiersarasua@ni.eus>, 2019, 2020, 2021, 2022, 2023.
+# Asier Sarasua Garmendia <asiersarasua@ni.eus>, 2019, 2020, 2021, 2022, 2023, 2024.
 #
 msgid ""
 msgstr "Project-Id-Version: evince master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
-"POT-Creation-Date: 2023-10-23 19:15+0000\n"
-"PO-Revision-Date: 2023-10-27 10:00+0100\n"
+"POT-Creation-Date: 2024-01-21 13:44+0000\n"
+"PO-Revision-Date: 2024-02-25 10:00+0100\n"
 "Last-Translator: Asier Sarasua Garmendia <asiersarasua@ni.eus>\n"
 "Language-Team: Basque <librezale@librezale.eus>\n"
 "Language: eu\n"
@@ -406,6 +406,11 @@ msgstr "Interfaze argi eta sinplea"
 msgid "Advanced highlighting and annotation"
 msgstr "Nabarmentze eta oharren sortze aurreratua"
 
+#. developer_name tag deprecated with Appstream 1.0
+#: data/org.gnome.Evince.metainfo.xml.in:49
+msgid "The GNOME Project"
+msgstr "GNOME proiektua"
+
 #: data/org.gnome.Evince-previewer.desktop.in.in:3
 msgid "Print Preview"
 msgstr "Inprimatzeko aurrebista"
@@ -474,7 +479,7 @@ msgstr "/ %d"
 
 #: libmisc/ev-page-action-widget.c:201 shell/ev-history.c:454
 #: shell/ev-sidebar-bookmarks.c:343 shell/ev-window.c:954
-#: shell/ev-window.c:5155
+#: shell/ev-window.c:5159
 #, c-format
 msgid "Page %s"
 msgstr "%s orrialdea"
@@ -1302,7 +1307,7 @@ msgstr "Pasahitza behar da"
 
 #: shell/ev-password-view.c:238 shell/ev-sidebar-attachments.c:493
 #: shell/ev-window.c:2877 shell/ev-window.c:3174 shell/ev-window.c:4059
-#: shell/ev-window.c:6983 shell/ev-window.c:7209
+#: shell/ev-window.c:6987 shell/ev-window.c:7213
 msgid "_Cancel"
 msgstr "_Utzi"
 
@@ -1372,7 +1377,7 @@ msgstr "%d. orria"
 msgid "No Comment"
 msgstr "Iruzkinik ez"
 
-#: shell/ev-sidebar-annotations.c:564 shell/ev-window.c:7592
+#: shell/ev-sidebar-annotations.c:564 shell/ev-window.c:7596
 msgid "Annotations"
 msgstr "Oharpenak"
 
@@ -1390,26 +1395,26 @@ msgstr "“%s” fitxategia badago lehendik ere. Hura ordeztean bere edukia gain
 msgid "_Replace"
 msgstr "_Ordeztu"
 
-#: shell/ev-sidebar-attachments.c:892 shell/ev-window.c:7616
+#: shell/ev-sidebar-attachments.c:892 shell/ev-window.c:7620
 msgid "Attachments"
 msgstr "Eranskinak"
 
-#: shell/ev-sidebar-bookmarks.c:553 shell/ev-window.c:7600
+#: shell/ev-sidebar-bookmarks.c:553 shell/ev-window.c:7604
 msgid "Bookmarks"
 msgstr "Laster-markak"
 
-#: shell/ev-sidebar-layers.c:439 shell/ev-window.c:7628
+#: shell/ev-sidebar-layers.c:439 shell/ev-window.c:7632
 msgid "Layers"
 msgstr "Geruzak"
 
 #. Translators: This is the title for the sidebar pane that
 #. * shows the Outline or Table of Contents of the document.
 #.
-#: shell/ev-sidebar-links.c:1450 shell/ev-window.c:7580
+#: shell/ev-sidebar-links.c:1450 shell/ev-window.c:7584
 msgid "Outline"
 msgstr "Eskema"
 
-#: shell/ev-sidebar-thumbnails.c:1038 shell/ev-window.c:7563
+#: shell/ev-sidebar-thumbnails.c:1038 shell/ev-window.c:7567
 msgid "Thumbnails"
 msgstr "Koadro txikiak"
 
@@ -1513,7 +1518,7 @@ msgstr "Irudia igotzen (%% %d)"
 msgid "Save As…"
 msgstr "Gorde honela…"
 
-#: shell/ev-window.c:3173 shell/ev-window.c:6982 shell/ev-window.c:7208
+#: shell/ev-window.c:3173 shell/ev-window.c:6986 shell/ev-window.c:7212
 msgid "_Save"
 msgstr "_Gorde"
 
@@ -1611,60 +1616,60 @@ msgstr "Evince GNOMErako dokumentu-ikustaile sinplea da"
 msgid "translator-credits"
 msgstr "translator-credits"
 
-#: shell/ev-window.c:4713
+#: shell/ev-window.c:4717
 msgid "Running in presentation mode"
 msgstr "Exekutatu aurkezpen moduan"
 
-#: shell/ev-window.c:5700
+#: shell/ev-window.c:5704
 msgid "The attachment could not be saved."
 msgstr "Eranskina ezin izan da gorde."
 
-#: shell/ev-window.c:6022
+#: shell/ev-window.c:6026
 msgid "Enable caret navigation?"
 msgstr "Gaitu kurtsorearen bidezko nabigazioa?"
 
-#: shell/ev-window.c:6023
+#: shell/ev-window.c:6027
 msgid "_Enable"
 msgstr "_Gaitu"
 
-#: shell/ev-window.c:6026
+#: shell/ev-window.c:6030
 msgid ""
 "Pressing F7 turns the caret navigation on or off. This feature places a "
 "moveable cursor in text pages, allowing you to move around and select text "
 "with your keyboard. Do you want to enable the caret navigation?"
 msgstr "F7 sakatzeak kurtsorearen bidezko nabigazioa aktibatzen eta desaktibatzen du. Eginbide honek kurtsore mugikor bat kokatzen du testu-orrialdeetan, haren inguruan mugitu eta teklatuarekin testua hautatzeko aukera eskainiz. Kurtsorearen bidezko nabigazioa aktibatu nahi duzu?"
 
-#: shell/ev-window.c:6031
+#: shell/ev-window.c:6035
 msgid "Don’t show this message again"
 msgstr "Ez erakutsi mezu hau berriro"
 
-#: shell/ev-window.c:6620
+#: shell/ev-window.c:6624
 #, c-format
 msgid ""
 "Security alert: this document has been prevented from opening the file “%s”"
 msgstr "Segurtasun-alerta: dokumentu honek “%s” fitxategia ireki dezan eragotzi da"
 
-#: shell/ev-window.c:6685
+#: shell/ev-window.c:6689
 msgid "Unable to open external link"
 msgstr "Ezin da kanpoko esteka ireki"
 
-#: shell/ev-window.c:6911
+#: shell/ev-window.c:6915
 msgid "Couldn’t find appropriate format to save image"
 msgstr "Ezin izan da formatu egokirik aurkitu irudia gordetzeko"
 
-#: shell/ev-window.c:6943
+#: shell/ev-window.c:6947
 msgid "The image could not be saved."
 msgstr "Irudia ezin izan da gorde."
 
-#: shell/ev-window.c:6979
+#: shell/ev-window.c:6983
 msgid "Save Image"
 msgstr "Gorde irudia"
 
-#: shell/ev-window.c:7137
+#: shell/ev-window.c:7141
 msgid "Unable to open attachment"
 msgstr "Ezin da eranskina ireki"
 
-#: shell/ev-window.c:7205
+#: shell/ev-window.c:7209
 msgid "Save Attachment"
 msgstr "Gorde eranskina"
 
