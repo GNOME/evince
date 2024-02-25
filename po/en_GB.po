@@ -6,13 +6,14 @@
 # Chris Leonard <cjl@laptop.org>, 2012.
 # Bruce Cowan <bruce@bcowan.me.uk>, 2010-2024.
 # Zander Brown <zbrown@gnome.org>, 2019-2021.
+# Andi Chandler <andi@gowling.com>, 2024.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: evince\n"
-"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues\n"
-"POT-Creation-Date: 2023-12-05 15:13+0000\n"
-"PO-Revision-Date: 2024-01-08 21:21+0000\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/evince/issues/\n"
+"POT-Creation-Date: 2024-02-23 14:12+0000\n"
+"PO-Revision-Date: 2024-02-25 00:04+0000\n"
 "Last-Translator: Bruce Cowan <bruce@bcowan.me.uk>\n"
 "Language-Team: English - United Kingdom <en_GB@li.org>\n"
 "Language: en_GB\n"
@@ -20,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.4\n"
+"X-Generator: Poedit 3.4.2\n"
 "X-Project-Style: gnome\n"
 
 #: backend/comics/comics-document.c:190 backend/comics/comics-document.c:261
@@ -380,7 +381,6 @@ msgid "Show a side bar next to the document to help navigate the document."
 msgstr "Show a side bar next to the document to help navigate the document."
 
 #: data/org.gnome.Evince.gschema.xml:63
-#| msgid "Select or set the zoom level of the document"
 msgid "Set the default zoom level to display a document."
 msgstr "Set the default zoom level to display a document."
 
@@ -393,7 +393,6 @@ msgstr ""
 "time."
 
 #: data/org.gnome.Evince.gschema.xml:74
-#| msgid "Show two pages at once"
 msgid "Show two pages side by side."
 msgstr "Show two pages side by side."
 
@@ -432,6 +431,11 @@ msgstr "A clear, simple UI"
 #: data/org.gnome.Evince.metainfo.xml.in:39
 msgid "Advanced highlighting and annotation"
 msgstr "Advanced highlighting and annotation"
+
+#. developer_name tag deprecated with Appstream 1.0
+#: data/org.gnome.Evince.metainfo.xml.in:49
+msgid "The GNOME Project"
+msgstr "The GNOME Project"
 
 #: data/org.gnome.Evince-previewer.desktop.in.in:3
 msgid "Print Preview"
@@ -489,17 +493,17 @@ msgstr "Failed to create a temporary directory: %s"
 msgid "This work is in the Public Domain"
 msgstr "This work is in the Public Domain"
 
-#: libmisc/ev-page-action-widget.c:90 libmisc/ev-page-action-widget.c:129
+#: libmisc/ev-page-action-widget.c:91 libmisc/ev-page-action-widget.c:130
 #, c-format
 msgid "(%d of %d)"
 msgstr "(%d of %d)"
 
-#: libmisc/ev-page-action-widget.c:92 libmisc/ev-page-action-widget.c:133
+#: libmisc/ev-page-action-widget.c:93 libmisc/ev-page-action-widget.c:134
 #, c-format
 msgid "of %d"
 msgstr "of %d"
 
-#: libmisc/ev-page-action-widget.c:201 shell/ev-history.c:454
+#: libmisc/ev-page-action-widget.c:254 shell/ev-history.c:454
 #: shell/ev-sidebar-bookmarks.c:343 shell/ev-window.c:954
 #: shell/ev-window.c:5159
 #, c-format
@@ -781,7 +785,6 @@ msgid "GNOME Document Previewer"
 msgstr "GNOME Document Previewer"
 
 #: previewer/ev-previewer-toolbar.c:112 shell/evince-toolbar.ui:35
-#| msgid "Select page or search in the index"
 msgid "Select page or search in the outline"
 msgstr "Select page or search in the outline"
 
@@ -893,7 +896,7 @@ msgstr "Security:"
 
 #: properties/ev-properties-view.c:75
 msgid "Contains Javascript:"
-msgstr "Contains JavaScript:"
+msgstr "Contains Javascript:"
 
 #: properties/ev-properties-view.c:76
 msgid "Paper Size:"
@@ -1108,7 +1111,6 @@ msgid "_Save Attachment As…"
 msgstr "_Save Attachment As…"
 
 #: shell/evince-menus.ui:98
-#| msgid "Annotation Properties"
 msgid "Annotation _Properties"
 msgstr "Annotation _Properties"
 
@@ -1169,7 +1171,6 @@ msgid "Search in the outline…"
 msgstr "Search in the outline…"
 
 #: shell/evince-menus.ui:218
-#| msgid "Print this document"
 msgid "Print this section…"
 msgstr "Print this section…"
 
@@ -1405,17 +1406,16 @@ msgstr "Further Information"
 msgid "Document contains no annotations"
 msgstr "Document contains no annotations"
 
-#: shell/ev-sidebar-annotations.c:369
+#: shell/ev-sidebar-annotations.c:371
 #, c-format
 msgid "Page %d"
 msgstr "Page %d"
 
-#: shell/ev-sidebar-annotations.c:403
-#| msgid "Comment"
+#: shell/ev-sidebar-annotations.c:405
 msgid "No Comment"
 msgstr "No Comment"
 
-#: shell/ev-sidebar-annotations.c:564 shell/ev-window.c:7596
+#: shell/ev-sidebar-annotations.c:566 shell/ev-window.c:7596
 msgid "Annotations"
 msgstr "Annotations"
 
@@ -1646,7 +1646,6 @@ msgid "Close _after Printing"
 msgstr "Close _after Printing"
 
 #: shell/ev-window.c:4229
-#| msgid "© 1996–2022 The Evince document viewer authors"
 msgid "© 1996–2023 The Evince document viewer authors"
 msgstr "© 1996–2023 The Evince document viewer authors"
 
@@ -1663,7 +1662,8 @@ msgstr ""
 "Bruce Cowan <bruce@bcowan.me.uk>\n"
 "Chris Leonard <cjl@laptop.org>\n"
 "David King <amigadave@amigadave.com>\n"
-"Zander Brown <zbrown@gnome.org>"
+"Zander Brown <zbrown@gnome.org>\n"
+"Andi Chandler <andi@gowling.com>"
 
 #: shell/ev-window.c:4717
 msgid "Running in presentation mode"
