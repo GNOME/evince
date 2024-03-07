@@ -486,6 +486,9 @@ ev_page_accessible_get_substring (AtkText *text,
 		return NULL;
 
 	page_text = ev_page_cache_get_text (view->page_cache, self->priv->page);
+	if (!page_text)
+		return NULL;
+
 	if (end_offset < 0 || end_offset > g_utf8_strlen (page_text, -1))
 		end_offset = strlen (page_text);
 	start_offset = CLAMP (start_offset, 0, end_offset);
@@ -633,11 +636,13 @@ ev_page_accessible_get_character_count (AtkText *text)
 {
 	EvPageAccessible *self = EV_PAGE_ACCESSIBLE (text);
 	EvView *view = ev_page_accessible_get_view (self);
-	gint retval;
+	const gchar *page_text;
 
-	retval = g_utf8_strlen (ev_page_cache_get_text (view->page_cache, self->priv->page), -1);
+	page_text = ev_page_cache_get_text (view->page_cache, self->priv->page);
+	if (!page_text)
+		return 0;
 
-	return retval;
+	return g_utf8_strlen (page_text, -1);
 }
 
 static gboolean
