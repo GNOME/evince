@@ -1,3 +1,86 @@
+==============
+Evince   46.rc
+==============
+
+backend:
+  * Add missing break to make two columns right work (#1395, Alexandre Franke)
+
+ci:
+  * Set tag for docker image to build against gtk3 (Germán Poo-Caamaño)
+
+data:
+  * Add vcs-browser URL support (Sabri Ünal)
+  * Improve appdata for AppStream 1.0 (Sabri Ünal)
+  * Remove none OARS tags (Sabri Ünal)
+  * Fix URLs in metadata (#2024, Germán Poo-Caamaño)
+  * Update the copyright year (Sabri Ünal)
+  * Fix wrong developer id (Sophie Herold)
+  * Replace non-existing mailing list with GNOME Discourse URL (Andre Klapper)
+
+help:
+  * Fix invalid markup in Hungarian translation (Andre Klapper)
+
+libview:
+  * Do not define unnecessary function prototype ahead (Pablo Correa Gómez)
+
+shell:
+  * Only set "fullscreen" in metadata if it's not maximized (#1985, Pablo Correa Gomez)
+  * Activate search-outline mode from text entry (#1991, Nelson Benítez León)
+  * Fix Evince crash when exiting (Nelson Benítez León)
+  * Fix crash when annotation window is closed outside of Evince (#2009, Nelson Benítez León)
+  * Fix invalid markup in Brazilian Portuguese help translation (Andre Klapper)
+  * Avoid crash when deleting annotation (#2022, Nelson Benítez León)
+  * Don't set show close button on infobar (Pablo Correa Gómez)
+
+Developers:
+  * Alexandre Franke, Andre Klapper, Germán Poo-Caamaño, Nelson Benítez León, Pablo Correa Gomez, Pablo Correa Gómez, Sabri Ünal, Sophie Herold
+
+Translations:
+  * Asier Sarasua Garmendia (Basque)
+  * Vasil Pupkin (Belarusian)
+  * Juliano de Souza Camargo (Brazilian Portuguese)
+  * Rafael Fontenelle (Brazilian Portuguese)
+  * Andi Chandler (British English)
+  * Bruce Cowan (British English)
+  * zayar lwin (Burmese)
+  * Jordi Mas i Hernandez (Catalan)
+  * Luming Zh (Chinese (China))
+  * Daniel Rusek (Czech)
+  * Alan Mortensen (Danish)
+  * Nathan Follens (Dutch)
+  * Kristjan SCHMIDT (Esperanto)
+  * Jiri Grönroos (Finnish)
+  * Irénée THIRION (French)
+  * Vincent Chatelain (French)
+  * Fabio Tomat (Friulian)
+  * Fran Dieguez (Galician)
+  * Ekaterine Papava (Georgian)
+  * Jürgen Benvenuti (German)
+  * Efstathios Iosifidis (Greek)
+  * Yaron Shahrabani (Hebrew)
+  * Yosef Or Boczko (Hebrew)
+  * Balázs Meskó (Hungarian)
+  * Balázs Úr (Hungarian)
+  * Andika Triwidada (Indonesian)
+  * Kukuh Syafaat (Indonesian)
+  * Baurzhan Muftakhidinov (Kazakh)
+  * Rūdolfs Mazurs (Latvian)
+  * Aurimas Černius (Lithuanian)
+  * Brage Fuglseth (Norwegian Bokmål)
+  * Quentin PAGÈS (Occitan)
+  * Danial Behzadi (Persian)
+  * Piotr Drąg (Polish)
+  * Daniel Șerbănescu (Romanian)
+  * Florentina Mușat (Romanian)
+  * Artur S0 (Russian)
+  * Dušan Kazik (Slovak)
+  * Martin (Slovenian)
+  * Matej Urbančič (Slovenian)
+  * Daniel Mustieles (Spanish)
+  * Anders Jonsson (Swedish)
+  * Sabri Ünal (Turkish)
+  * Yuri Chornoivan (Ukrainian)
+
 =============
 Evince   45.0
 =============
